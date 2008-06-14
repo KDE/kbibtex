@@ -20,6 +20,8 @@
 #ifndef BIBTEXVALUE_H
 #define BIBTEXVALUE_H
 
+#include <QLinkedList>
+
 namespace KBibTeX
 {
 namespace IO {
@@ -35,7 +37,7 @@ public:
     virtual QString text() const;
     QString simplifiedText() const;
     virtual void replace(const QString &before, const QString &after);
-    virtual bool containsPattern(const QString &pattern, Qt::CaseSensitivity cs = Qt::CaseInsensitive);
+    virtual bool containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive);
 
 private:
     QString m_text;

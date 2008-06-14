@@ -20,7 +20,6 @@
 #include <QRegExp>
 #include <QString>
 #include <QStringList>
-#include <QLinkedList>
 #include <QDebug>
 
 #include "value.h"

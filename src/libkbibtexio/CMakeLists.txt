@@ -1,8 +1,15 @@
 include_directories(
 	${QT_INCLUDES}
+	${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 set( libkbibtexio_SRCS
+	comment.cpp
+	element.cpp
+	entry.cpp
+	entryfield.cpp
+	file.cpp
+	macro.cpp
 	value.cpp
 )
 
