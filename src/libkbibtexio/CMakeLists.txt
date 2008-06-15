@@ -38,3 +38,13 @@ target_link_libraries( kbibtexio
 	${QT_QTCORE_LIBRARY}
 )
 
+
+# Test
+
+set( kbibtexiotest_SRCS
+	kbibtexiotest.cpp
+)
+
+add_executable(kbibtexiotest ${kbibtexiotest_SRCS})
+
+target_link_libraries(kbibtexiotest kbibtexio)
