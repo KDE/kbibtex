@@ -1,7 +1,10 @@
 include_directories(
 	${QT_INCLUDES}
 	${CMAKE_CURRENT_SOURCE_DIR}
+	${CMAKE_CURRENT_BINARY_DIR}
 )
+
+# KBibTeXIO library
 
 set( libkbibtexio_SRCS
 	comment.cpp
@@ -21,8 +24,17 @@ set( libkbibtexio_SRCS
 	value.cpp
 )
 
+set( libkbibtexio_MOC_SRCS
+	file.h
+	fileexporterbibtex.h
+	fileimporterbibtex.h
+)
+
+QT4_AUTOMOC(${libkbibtexio_SRCS})
+
 add_library( kbibtexio SHARED ${libkbibtexio_SRCS} )
 
 target_link_libraries( kbibtexio
 	${QT_QTCORE_LIBRARY}
 )
+

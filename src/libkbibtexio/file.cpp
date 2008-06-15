@@ -348,3 +348,4 @@ void File::replaceValue(const QString& oldText, const QString& newText, const En
 //     }
 // }
 
+#include "file.moc"
