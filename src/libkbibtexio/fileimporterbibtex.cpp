@@ -45,7 +45,7 @@ FileImporterBibTeX::FileImporterBibTeX(const QString& encoding, bool ignoreComme
     m_textStream = NULL;
 
     const char *encodingFrom = m_encoding == "latex" ? "utf-8\0" : m_encoding.append("\0").toAscii();
-    iconv_t m_iconvHandle = iconv_open("utf-8", encodingFrom);
+    m_iconvHandle = iconv_open("utf-8", encodingFrom);
 }
 
 
@@ -73,7 +73,7 @@ File* FileImporterBibTeX::load(QIODevice *iodevice)
             break;
         }
         if (rawLen > 0) {
-            qDebug("iconv could not convert complete string, only %i out of %i chars", len - rawLen, len);
+            qCritical() << "iconv could not convert complete string, only " << (len - rawLen) << " out of " << len << " chars";
             break;
         }
         enc[0] = '\0';
@@ -91,9 +91,8 @@ File* FileImporterBibTeX::load(QIODevice *iodevice)
     m_textStream->setCodec("UTF-8");
 
     File *result = new File();
-    QIODevice *streamDevice = m_textStream->device();
     while (!cancelFlag && !m_textStream->atEnd()) {
-        emit progress(streamDevice->pos(), streamDevice->size());
+        emit progress(m_textStream->pos(), rawText.length());
         qApp->processEvents();
         Element * element = nextElement();
         if (element != NULL) {
@@ -108,7 +107,7 @@ File* FileImporterBibTeX::load(QIODevice *iodevice)
     emit progress(100, 100);
 
     if (cancelFlag) {
-        qDebug("Loading file has been canceled");
+        qWarning("Loading file has been canceled");
         delete result;
         result = NULL;
     }
@@ -145,14 +144,14 @@ Element *FileImporterBibTeX::nextElement()
         else if (!elementType.isEmpty())
             return readEntryElement(elementType);
         else {
-            qDebug("ElementType is empty");
+            qWarning("ElementType is empty");
             return NULL;
         }
     } else if (token == tUnknown)
         return readPlainCommentElement();
 
     if (token != tEOF)
-        qDebug("Don't know how to parse next token: %i", (int)token);
+        qWarning("Don't know how to parse next token: %i", (int)token);
 
     return NULL;
 }
@@ -183,7 +182,7 @@ Macro *FileImporterBibTeX::readMacroElement()
     Token token = nextToken();
     while (token != tBracketOpen) {
         if (token == tEOF) {
-            qDebug("Error in parsing unknown macro: Opening curly brace ({) expected");
+            qWarning("Error in parsing unknown macro: Opening curly brace ({) expected");
             return NULL;
         }
         token = nextToken();
@@ -191,7 +190,7 @@ Macro *FileImporterBibTeX::readMacroElement()
 
     QString key = readSimpleString();
     if (nextToken() != tAssign) {
-        qDebug() << "Error in parsing macro '" << key << "': Assign symbol (=) expected";
+        qCritical() << "Error in parsing macro '" << key << "': Assign symbol (=) expected";
         return NULL;
     }
 
@@ -215,7 +214,7 @@ Preamble *FileImporterBibTeX::readPreambleElement()
     Token token = nextToken();
     while (token != tBracketOpen) {
         if (token == tEOF) {
-            qDebug("Error in parsing unknown preamble: Opening curly brace ({) expected");
+            qWarning("Error in parsing unknown preamble: Opening curly brace ({) expected");
             return NULL;
         }
         token = nextToken();
@@ -241,7 +240,7 @@ Entry *FileImporterBibTeX::readEntryElement(const QString& typeString)
     Token token = nextToken();
     while (token != tBracketOpen) {
         if (token == tEOF) {
-            qDebug("Error in parsing unknown entry: Opening curly brace ({) expected");
+            qWarning("Error in parsing unknown entry: Opening curly brace ({) expected");
             return NULL;
         }
         token = nextToken();
@@ -441,7 +440,7 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value *value, EntryField
         switch (fieldType) {
         case EntryField::ftKeywords: {
             if (isStringKey)
-                qDebug("WARNING: Cannot handle keywords that are macros");
+                qWarning("WARNING: Cannot handle keywords that are macros");
             else
                 value->items.append(new KeywordContainer(text));
         }
@@ -449,7 +448,7 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value *value, EntryField
         case EntryField::ftAuthor:
         case EntryField::ftEditor: {
             if (isStringKey)
-                qDebug("WARNING: Cannot handle authors/editors that are macros");
+                qWarning("WARNING: Cannot handle authors/editors that are macros");
             else {
                 QStringList persons;
                 splitPersons(text, persons);
