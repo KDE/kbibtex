@@ -81,7 +81,7 @@ Keyword::Keyword(const QString& text)
 // nothing
 }
 
-Keyword *Keyword::clone()
+Keyword *Keyword::clone() const
 {
     return new Keyword(text());
 }
@@ -98,10 +98,10 @@ KeywordContainer::KeywordContainer(const QString& text)
     setText(text);
 }
 
-KeywordContainer::KeywordContainer(KeywordContainer *other)
+KeywordContainer::KeywordContainer(const KeywordContainer *other)
         : ValueItem(QString::null)
 {
-    for (QLinkedList<Keyword*>::Iterator it = other->keywords.begin(); it != other->keywords.end(); ++it)
+    for (QLinkedList<Keyword*>::ConstIterator it = other->keywords.constBegin(); it != other->keywords.constEnd(); ++it)
         keywords.append((*it)->clone());
 }
 
@@ -111,7 +111,7 @@ KeywordContainer::KeywordContainer(const QStringList& list)
     setList(list);
 }
 
-ValueItem *KeywordContainer::clone()
+ValueItem *KeywordContainer::clone() const
 {
     return new KeywordContainer(this);
 }
@@ -179,21 +179,21 @@ void KeywordContainer::replace(const QString &before, const QString &after)
         (*it)->replace(before, after);
 }
 
-Person::Person(const QString& text, bool firstNameFirst)
-        : ValueTextInterface(text), m_firstNameFirst(firstNameFirst)
+Person::Person(const QString& text)
+        : ValueTextInterface(text)
 {
     setText(text);
 }
 
-Person::Person(const QString& firstName, const QString& lastName, bool firstNameFirst)
-        : ValueTextInterface(firstName + " " + lastName), m_firstName(firstName), m_lastName(lastName), m_firstNameFirst(firstNameFirst)
+Person::Person(const QString& firstName, const QString& lastName)
+        : ValueTextInterface(firstName + " " + lastName), m_firstName(firstName), m_lastName(lastName)
 {
 // nothing
 }
 
-Person *Person::clone()
+Person *Person::clone() const
 {
-    return new Person(m_firstName, m_lastName, m_firstNameFirst);
+    return new Person(m_firstName, m_lastName);
 }
 
 void Person::setText(const QString& text)
@@ -262,11 +262,6 @@ void Person::setText(const QString& text)
     }
 }
 
-QString Person::text() const
-{
-    return text(m_firstNameFirst);
-}
-
 QString Person::text(bool firstNameFirst) const
 {
 
@@ -280,6 +275,7 @@ QString Person::firstName()
 {
     return m_firstName;
 }
+
 QString Person::lastName()
 {
     return m_lastName;
@@ -320,21 +316,21 @@ bool Person::splitName(const QString& text, QStringList& segments)
     return result;
 }
 
-PersonContainer::PersonContainer(bool firstNameFirst)
-        : ValueItem(QString::null), m_firstNameFirst(firstNameFirst)
+PersonContainer::PersonContainer()
+        : ValueItem(QString::null)
 {
     // nothing
 }
 
-PersonContainer::PersonContainer(const QString& text, bool firstNameFirst)
-        : ValueItem(text), m_firstNameFirst(firstNameFirst)
+PersonContainer::PersonContainer(const QString& text)
+        : ValueItem(text)
 {
-    persons.append(new Person(text, m_firstNameFirst));
+    persons.append(new Person(text));
 }
 
-ValueItem *PersonContainer::clone()
+ValueItem *PersonContainer::clone() const
 {
-    PersonContainer *result = new PersonContainer(m_firstNameFirst);
+    PersonContainer *result = new PersonContainer();
     for (QLinkedList<Person*>::ConstIterator it = persons.begin(); it != persons.end(); ++it)
         result->persons.append((*it)->clone());
 
@@ -375,7 +371,7 @@ MacroKey::MacroKey(const QString& text)
     m_isValid = isValidInternal();
 }
 
-ValueItem *MacroKey::clone()
+ValueItem *MacroKey::clone() const
 {
     return new MacroKey(text());
 }
@@ -402,7 +398,7 @@ PlainText::PlainText(const QString& text)
     // nothing
 }
 
-ValueItem *PlainText::clone()
+ValueItem *PlainText::clone() const
 {
     return new PlainText(text());
 }

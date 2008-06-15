@@ -17,60 +17,41 @@
 *   Free Software Foundation, Inc.,                                       *
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
-#include <QRegExp>
-#include <QStringList>
+#include <QBuffer>
+#include <QTextStream>
 
-#include <comment.h>
+#include "fileimporter.h"
 
 using namespace KBibTeX::IO;
 
-Comment::Comment(const QString& text)
-        : Element(), m_text(text)
+FileImporter::FileImporter()
+        : QObject()
 {
     // nothing
 }
 
-Comment::Comment(const Comment *other)
-{
-    m_text = other->m_text;
-}
-
-Comment::~Comment()
+FileImporter::~FileImporter()
 {
     // nothing
 }
 
-QString Comment::text() const
+File* FileImporter::load(const QString& text)
 {
-    return m_text;
+    if (text.isNull() || text.isEmpty())
+        return NULL;
+
+    QBuffer buffer;
+    buffer.open(QIODevice::WriteOnly);
+    QTextStream stream(&buffer);
+    stream.setCodec("UTF-8");
+    stream << text;
+    buffer.close();
+
+    buffer.open(QIODevice::ReadOnly);
+    File *result = load(&buffer);
+    buffer.close();
+
+    return result;
 }
 
-void Comment::setText(const QString &text)
-{
-    m_text = text;
-}
-
-bool Comment::containsPattern(const QString& pattern, EntryField::FieldType fieldType, FilterType filterType, Qt::CaseSensitivity caseSensitive) const
-{
-    if (filterType == ftExact) {
-        /** check for exact match */
-        return fieldType == EntryField::ftUnknown && m_text.contains(pattern, caseSensitive);
-    } else {
-        /** for each word in the search pattern ... */
-        QStringList words = pattern.split(QRegExp("\\s+"), QString::SkipEmptyParts);
-        unsigned int hits = 0;
-        for (QStringList::Iterator it = words.begin(); it != words.end(); ++it) {
-            /** check if word is contained in text */
-            if (fieldType == EntryField::ftUnknown && m_text.contains(*it, caseSensitive))
-                ++hits;
-        }
-
-        /** return success depending on filter type and number of hits */
-        return (filterType == ftAnyWord && hits > 0 || filterType == ftEveryWord && hits == words.count());
-    }
-}
-
-Element* Comment::clone() const
-{
-    return new Comment(this);
-}
+// #include "fileimporter.moc"

@@ -46,7 +46,7 @@ public:
     Entry(const QString& entryTypeString, const QString& id);
     Entry(const Entry *other);
     virtual ~Entry();
-    Element* clone();
+    Element* clone() const;
     bool equals(const Entry &other);
     QString text() const;
 

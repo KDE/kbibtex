@@ -31,7 +31,8 @@
 
 using namespace KBibTeX::IO;
 
-File::File() : QObject(), fileName(QString::null)
+File::File()
+        : QObject(), fileName(QString::null)
 {
     // nothing
 }
@@ -57,7 +58,7 @@ unsigned int File::count()
 void File::append(const File *other, const Element *after)
 {
     for (ElementList::ConstIterator it = other->constBegin(); it != other->constEnd(); it++)
-        appendElement(cloneElement(*it), after);
+        appendElement((*it)->clone(), after);
 }
 
 void File::appendElement(Element *element, const Element *after)
@@ -87,45 +88,45 @@ void File::deleteElement(Element *element)
         qDebug("BibTeX::File got told to delete an element which is not in this file.");
 }
 
-Element* File::cloneElement(Element *element)
-{
-    Entry * entry = dynamic_cast<Entry*>(element);
-    if (entry)
-        return new Entry(entry);
-    else {
-        Macro *macro = dynamic_cast<Macro*>(element);
-        if (macro)
-            return new Macro(macro);
-        else {
-            Comment *comment = dynamic_cast<Comment*>(element);
-            if (comment)
-                return new Comment(comment);
-            else
-                return NULL;
-        }
-    }
-}
+// Element* File::cloneElement(Element *element)
+// {
+//     Entry * entry = dynamic_cast<Entry*>(element);
+//     if (entry)
+//         return new Entry(entry);
+//     else {
+//         Macro *macro = dynamic_cast<Macro*>(element);
+//         if (macro)
+//             return new Macro(macro);
+//         else {
+//             Comment *comment = dynamic_cast<Comment*>(element);
+//             if (comment)
+//                 return new Comment(comment);
+//             else
+//                 return NULL;
+//         }
+//     }
+// }
 
-Element *File::containsKey(const QString &key)
-{
-    for (ElementList::iterator it = elements.begin(); it != elements.end(); it++) {
-        Entry* entry = dynamic_cast<Entry*>(*it);
-        if (entry != NULL) {
-            if (entry->id() == key)
-                return entry;
-        } else {
-            Macro* macro = dynamic_cast<Macro*>(*it);
-            if (macro != NULL) {
-                if (macro->key() == key)
-                    return macro;
-            }
-        }
-    }
+// Element *File::containsKey(const QString &key)
+// {
+//     for (ElementList::iterator it = elements.begin(); it != elements.end(); it++) {
+//         Entry* entry = dynamic_cast<Entry*>(*it);
+//         if (entry != NULL) {
+//             if (entry->id() == key)
+//                 return entry;
+//         } else {
+//             Macro* macro = dynamic_cast<Macro*>(*it);
+//             if (macro != NULL) {
+//                 if (macro->key() == key)
+//                     return macro;
+//             }
+//         }
+//     }
+//
+//     return NULL;
+// }
 
-    return NULL;
-}
-
-const Element *File::containsKeyConst(const QString &key) const
+const Element *File::containsKey(const QString &key) const
 {
     for (ElementList::const_iterator it = elements.begin(); it != elements.end(); it++) {
         Entry* entry = dynamic_cast<Entry*>(*it);
@@ -174,12 +175,12 @@ QString File::text()
     return result;
 }
 
-File::ElementList::iterator File::begin()
+File::ElementList::Iterator File::begin()
 {
     return elements.begin();
 }
 
-File::ElementList::iterator File::end()
+File::ElementList::Iterator File::end()
 {
     return elements.end();
 }
@@ -303,47 +304,47 @@ void File::replaceValue(const QString& oldText, const QString& newText, const En
     }
 }
 
-Entry *File::completeReferencedFieldsConst(const Entry *entry) const
-{
-    Entry *myEntry = new Entry(entry);
-    completeReferencedFields(myEntry);
-    return myEntry;
-}
+// Entry *File::completeReferencedFieldsConst(const Entry *entry) const
+// {
+//     Entry *myEntry = new Entry(entry);
+//     completeReferencedFields(myEntry);
+//     return myEntry;
+// }
 
-void File::completeReferencedFields(Entry *entry) const
-{
-    EntryField *crossRefField = entry->getField(EntryField::ftCrossRef);
-    const Entry *parent = NULL;
-    if (crossRefField != NULL && (parent = dynamic_cast<const Entry*>(containsKeyConst(crossRefField->value()->text()))) != NULL) {
-        for (int ef = (int)EntryField::ftAbstract; ef <= (int)EntryField::ftYear; ++ef) {
-            EntryField *entryField = entry->getField((EntryField::FieldType) ef);
-            if (entryField == NULL) {
-                EntryField *parentEntryField = parent->getField((EntryField::FieldType) ef);
-                if (parentEntryField != NULL) {
-                    entryField = new EntryField((EntryField::FieldType)ef);
-                    entryField->setValue(parentEntryField->value());
-                    entry->addField(entryField);
-                }
-            }
-        }
-
-        EntryField *entryField = entry->getField(EntryField::ftBookTitle);
-        EntryField *parentEntryField = parent->getField(EntryField::ftTitle);
-        if ((entry->entryType() == Entry::etInProceedings || entry->entryType() == Entry::etInBook) && entryField == NULL && parentEntryField != NULL) {
-            entryField = new EntryField(EntryField::ftBookTitle);
-            entryField->setValue(parentEntryField->value());
-            entry->addField(entryField);
-        }
-    }
-
-    for (int ef = (int)EntryField::ftAbstract; ef <= (int)EntryField::ftYear; ++ef) {
-        EntryField *entryField = entry->getField((EntryField::FieldType) ef);
-        if (entryField != NULL && entryField->value() != NULL && !entryField->value()->items.isEmpty()) {
-            MacroKey *macroKey = dynamic_cast<MacroKey*>(entryField->value()->items.first());
-            const Macro *macro = NULL;
-            if (macroKey != NULL && (macro = dynamic_cast<const Macro*>(containsKeyConst(macroKey->text()))) != NULL)
-                entryField->setValue(macro->value());
-        }
-    }
-}
+// void File::completeReferencedFields(Entry *entry) const
+// {
+//     EntryField *crossRefField = entry->getField(EntryField::ftCrossRef);
+//     const Entry *parent = NULL;
+//     if (crossRefField != NULL && (parent = dynamic_cast<const Entry*>(containsKeyConst(crossRefField->value()->text()))) != NULL) {
+//         for (int ef = (int)EntryField::ftAbstract; ef <= (int)EntryField::ftYear; ++ef) {
+//             EntryField *entryField = entry->getField((EntryField::FieldType) ef);
+//             if (entryField == NULL) {
+//                 EntryField *parentEntryField = parent->getField((EntryField::FieldType) ef);
+//                 if (parentEntryField != NULL) {
+//                     entryField = new EntryField((EntryField::FieldType)ef);
+//                     entryField->setValue(parentEntryField->value());
+//                     entry->addField(entryField);
+//                 }
+//             }
+//         }
+//
+//         EntryField *entryField = entry->getField(EntryField::ftBookTitle);
+//         EntryField *parentEntryField = parent->getField(EntryField::ftTitle);
+//         if ((entry->entryType() == Entry::etInProceedings || entry->entryType() == Entry::etInBook) && entryField == NULL && parentEntryField != NULL) {
+//             entryField = new EntryField(EntryField::ftBookTitle);
+//             entryField->setValue(parentEntryField->value());
+//             entry->addField(entryField);
+//         }
+//     }
+//
+//     for (int ef = (int)EntryField::ftAbstract; ef <= (int)EntryField::ftYear; ++ef) {
+//         EntryField *entryField = entry->getField((EntryField::FieldType) ef);
+//         if (entryField != NULL && entryField->value() != NULL && !entryField->value()->items.isEmpty()) {
+//             MacroKey *macroKey = dynamic_cast<MacroKey*>(entryField->value()->items.first());
+//             const Macro *macro = NULL;
+//             if (macroKey != NULL && (macro = dynamic_cast<const Macro*>(containsKeyConst(macroKey->text()))) != NULL)
+//                 entryField->setValue(macro->value());
+//         }
+//     }
+// }
 

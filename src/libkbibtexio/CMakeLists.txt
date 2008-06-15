@@ -6,10 +6,18 @@ include_directories(
 set( libkbibtexio_SRCS
 	comment.cpp
 	element.cpp
+	encoder.cpp
+	encoderlatex.cpp
+	encoderxml.cpp
 	entry.cpp
 	entryfield.cpp
 	file.cpp
+	fileexporter.cpp
+	fileexporterbibtex.cpp
+	fileimporter.cpp
+	fileimporterbibtex.cpp
 	macro.cpp
+	preamble.cpp
 	value.cpp
 )
 

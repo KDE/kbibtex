@@ -59,7 +59,7 @@ Entry::~Entry()
     }
 }
 
-Element* Entry::clone()
+Element* Entry::clone() const
 {
     return new Entry(this);
 }

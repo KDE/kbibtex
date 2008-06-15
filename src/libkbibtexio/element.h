@@ -36,7 +36,7 @@ public:
     virtual ~Element();
 
     virtual bool containsPattern(const QString& /* pattern */, EntryField::FieldType /* fieldType */, FilterType /* filterType */ = Element::ftExact, Qt::CaseSensitivity /* caseSensitive */ = Qt::CaseInsensitive) const = 0;
-    virtual Element* clone() = 0;
+    virtual Element* clone() const = 0;
     virtual QString text() const = 0;
 
     static bool isSimpleString(const QString &text);

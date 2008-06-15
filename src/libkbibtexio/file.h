@@ -55,18 +55,20 @@ class File : public QObject
 {
     Q_OBJECT
 
-    friend class FileExporterXML;
-    friend class FileExporterBibTeX;
-    friend class FileExporterRIS;
-    friend class FileExporter;
-    friend class FileParser;
+    /*
+        friend class FileExporterXML;
+        friend class FileExporterBibTeX;
+        friend class FileExporterRIS;
+        friend class FileExporter;
+        friend class FileParser;
+    */
 
 public:
     typedef QLinkedList<Element*> ElementList;
 
-    enum FileFormat { formatUndefined = 0, formatBibTeX = 1, formatXML = 2, formatHTML = 3, formatPDF = 4, formatPS = 5, formatRTF = 6, formatRIS = 7, formatEndNote = 8, formatISI = 9 };
-    enum Encoding {encImplicit = 0, encLaTeX = 1, encUTF8 = 2};
-    enum StringProtection { spNone, spParanthesis, spQuote, spBoth };
+//     enum FileFormat { formatUndefined = 0, formatBibTeX = 1, formatXML = 2, formatHTML = 3, formatPDF = 4, formatPS = 5, formatRTF = 6, formatRIS = 7, formatEndNote = 8, formatISI = 9 };
+//     enum Encoding {encImplicit = 0, encLaTeX = 1, encUTF8 = 2};
+//     enum StringProtection { spNone, spParanthesis, spQuote, spBoth };
 
     File();
     ~File();
@@ -78,23 +80,23 @@ public:
     void append(const File *other, const Element *after = NULL);
     void appendElement(Element *element, const Element *after = NULL);
     void deleteElement(Element *element);
-    static Element* cloneElement(Element *element);
+//     static Element* cloneElement(Element *element);
 
-    Element *containsKey(const QString &key);
-    const Element *containsKeyConst(const QString &key) const;
+//     Element *containsKey(const QString &key);
+    const Element *containsKey(const QString &key) const;
     QStringList allKeys();
     QString text();
 
-    ElementList::iterator begin();
-    ElementList::iterator end();
-    ElementList::const_iterator constBegin() const;
-    ElementList::const_iterator constEnd() const;
+    ElementList::Iterator begin();
+    ElementList::Iterator end();
+    ElementList::ConstIterator constBegin() const;
+    ElementList::ConstIterator constEnd() const;
 
     QStringList getAllValuesAsStringList(const EntryField::FieldType fieldType) const;
     QMap<QString, int> getAllValuesAsStringListWithCount(const EntryField::FieldType fieldType) const;
     void replaceValue(const QString& oldText, const QString& newText, const EntryField::FieldType fieldType);
-    Entry *completeReferencedFieldsConst(const Entry *entry) const;
-    void completeReferencedFields(Entry *entry) const;
+//     Entry *completeReferencedFieldsConst(const Entry *entry) const;
+//     void completeReferencedFields(Entry *entry) const;
 
     QString fileName;
 

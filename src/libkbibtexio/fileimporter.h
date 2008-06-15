@@ -17,41 +17,48 @@
 *   Free Software Foundation, Inc.,                                       *
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
-#ifndef BIBTEXMACRO_H
-#define BIBTEXMACRO_H
+#ifndef BIBTEXFILEIMPORTER_H
+#define BIBTEXFILEIMPORTER_H
 
-#include <element.h>
-#include <entryfield.h>
-#include <value.h>
+#include <QObject>
+#include <QMutex>
 
-class QString;
+class QIODevice;
 
 namespace KBibTeX
 {
 namespace IO {
 
-class Macro : public Element
+class File;
+
+/**
+@author Thomas Fischer
+*/
+class FileImporter : public QObject
 {
+    Q_OBJECT
 public:
-    Macro(const QString &key);
-    Macro(const Macro *other);
-    virtual ~Macro();
+    FileImporter();
+    ~FileImporter();
 
-    void setKey(const QString &key);
-    QString key() const;
+    File* load(const QString& text);
+    virtual File* load(QIODevice *iodevice) = 0;
 
-    Value *value() const;
-    void setValue(Value *value);
+    static bool guessCanDecode(const QString &) {
+        return FALSE;
+    };
 
-    bool containsPattern(const QString& pattern, EntryField::FieldType fieldType = EntryField::ftUnknown, FilterType filterType = Element::ftExact, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const;
+signals:
+    void parseError(int errorId);
+    void progress(int current, int total);
 
-    Element* clone() const;
-    void copyFrom(const Macro *other);
-    QString text() const;
+public slots:
+    virtual void cancel() {
+        // nothing
+    };
 
-private:
-    QString m_key;
-    Value *m_value;
+protected:
+    QMutex m_mutex;
 };
 
 }

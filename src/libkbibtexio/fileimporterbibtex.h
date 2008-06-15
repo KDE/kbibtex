@@ -17,41 +17,70 @@
 *   Free Software Foundation, Inc.,                                       *
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
-#ifndef BIBTEXMACRO_H
-#define BIBTEXMACRO_H
+#ifndef BIBTEXFILEIMPORTERBIBTEX_H
+#define BIBTEXFILEIMPORTERBIBTEX_H
 
-#include <element.h>
+#include <QTextStream>
+
+#include <fileimporter.h>
 #include <entryfield.h>
-#include <value.h>
-
-class QString;
 
 namespace KBibTeX
 {
 namespace IO {
 
-class Macro : public Element
+class Element;
+class Comment;
+class Preamble;
+class Macro;
+class Entry;
+class Value;
+
+/**
+@author Thomas Fischer
+*/
+class FileImporterBibTeX : public FileImporter
 {
 public:
-    Macro(const QString &key);
-    Macro(const Macro *other);
-    virtual ~Macro();
+    FileImporterBibTeX(const QString& = "utf-8", bool = true);
+    ~FileImporterBibTeX();
 
-    void setKey(const QString &key);
-    QString key() const;
+    File* load(QIODevice *iodevice);
+    static bool guessCanDecode(const QString & text);
 
-    Value *value() const;
-    void setValue(Value *value);
-
-    bool containsPattern(const QString& pattern, EntryField::FieldType fieldType = EntryField::ftUnknown, FilterType filterType = Element::ftExact, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const;
-
-    Element* clone() const;
-    void copyFrom(const Macro *other);
-    QString text() const;
+public slots:
+    void cancel();
 
 private:
-    QString m_key;
-    Value *m_value;
+    enum Token {
+        tAt, tBracketOpen, tBracketClose, tAlphaNumText, tComma, tSemicolon, tAssign, tDoublecross, tEOF, tUnknown
+    };
+
+    bool cancelFlag;
+    QTextStream *m_textStream;
+    QChar m_currentChar;
+    bool m_ignoreComments;
+    char *m_lineBuffer;
+    const int m_lineBufferSize;
+    QString m_encoding;
+    iconv_t m_iconvHandle;
+
+    Comment *readCommentElement();
+    Comment *readPlainCommentElement();
+    Macro *readMacroElement();
+    Preamble *readPreambleElement();
+    Entry *readEntryElement(const QString& typeString);
+    Element *nextElement();
+    Token nextToken();
+    QString readString(bool &isStringKey);
+    QString readSimpleString(QChar until = '\0');
+    QString readQuotedString();
+    QString readLine();
+    QString readBracketString(const QChar openingBracket);
+    Token readValue(Value *value, EntryField::FieldType fieldType);
+
+    void unescapeLaTeXChars(QString &text);
+    void splitPersons(const QString& test, QStringList &persons);
 };
 
 }

@@ -29,21 +29,18 @@ namespace IO {
 class Comment : public Element
 {
 public:
-    Comment(const QString &text, bool useCommand = false);
-    Comment(Comment *other);
+    Comment(const QString &text);
+    Comment(const Comment *other);
     virtual ~Comment();
 
     QString text() const;
     void setText(const QString &text);
-    bool useCommand() const;
-    void setUseCommand(bool useCommand);
 
     bool containsPattern(const QString& pattern, EntryField::FieldType fieldType = EntryField::ftUnknown, FilterType filterType = Element::ftExact, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const;
-    Element* clone();
+    Element* clone() const;
 
 private:
     QString m_text;
-    bool m_useCommand;
 };
 
 }

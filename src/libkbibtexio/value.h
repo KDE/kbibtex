@@ -49,7 +49,7 @@ class ValueItem: public ValueTextInterface
 public:
     ValueItem(const QString& text);
 
-    virtual ValueItem *clone() {
+    virtual ValueItem *clone() const {
         return NULL;
     };
 };
@@ -61,7 +61,7 @@ public:
     Keyword(Keyword *other);
     Keyword(const QString& text);
 
-    Keyword *clone();
+    Keyword *clone() const;
 };
 
 class KeywordContainer: public ValueItem
@@ -69,10 +69,10 @@ class KeywordContainer: public ValueItem
 public:
     KeywordContainer();
     KeywordContainer(const QString& text);
-    KeywordContainer(KeywordContainer *other);
+    KeywordContainer(const KeywordContainer *other);
     KeywordContainer(const QStringList& list);
 
-    ValueItem *clone();
+    ValueItem *clone() const;
     void setList(const QStringList& list);
     void append(const QString& text);
     void remove(const QString& text);
@@ -86,13 +86,12 @@ public:
 class Person: public ValueTextInterface
 {
 public:
-    Person(const QString& text, bool firstNameFirst = FALSE);
-    Person(const QString& firstName, const QString& lastName, bool firstNameFirst = FALSE);
+    Person(const QString& text);
+    Person(const QString& firstName, const QString& lastName);
 
-    Person *clone();
+    Person *clone() const;
     void setText(const QString& text);
-    QString text() const;
-    QString text(bool firstNameFirst) const;
+    QString text(bool firstNameFirst = false) const;
 
     QString firstName();
     QString lastName();
@@ -100,7 +99,6 @@ public:
 protected:
     QString m_firstName;
     QString m_lastName;
-    bool m_firstNameFirst;
 
     bool splitName(const QString& text, QStringList& segments);
 };
@@ -108,18 +106,15 @@ protected:
 class PersonContainer: public ValueItem
 {
 public:
-    PersonContainer(bool firstNameFirst = FALSE);
-    PersonContainer(const QString& text, bool firstNameFirst = FALSE);
+    PersonContainer();
+    PersonContainer(const QString& text);
 
-    ValueItem *clone();
+    ValueItem *clone() const;
     void setText(const QString& text);
     QString text() const;
     void replace(const QString &before, const QString &after);
 
     QLinkedList<Person*> persons;
-
-private:
-    bool m_firstNameFirst;
 };
 
 class MacroKey: public ValueItem
@@ -131,7 +126,7 @@ private:
 public:
     MacroKey(const QString& text);
 
-    ValueItem *clone();
+    ValueItem *clone() const;
 
     void setText(const QString& text);
     bool isValid();
@@ -142,7 +137,7 @@ class PlainText: public ValueItem
 public:
     PlainText(const QString& text);
 
-    ValueItem *clone();
+    ValueItem *clone() const;
 };
 
 class Value: public ValueTextInterface

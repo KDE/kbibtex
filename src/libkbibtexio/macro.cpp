@@ -30,7 +30,7 @@ Macro::Macro(const QString &key)
     // nothing
 }
 
-Macro::Macro(Macro *other)
+Macro::Macro(const Macro *other)
         : Element(), m_value(NULL)
 {
     copyFrom(other);
@@ -90,12 +90,12 @@ bool Macro::containsPattern(const QString& pattern, EntryField::FieldType fieldT
     }
 }
 
-Element* Macro::clone()
+Element* Macro::clone() const
 {
     return new Macro(this);
 }
 
-void Macro::copyFrom(Macro *other)
+void Macro::copyFrom(const Macro *other)
 {
     m_key = other->m_key;
     if (m_value != NULL) delete m_value;

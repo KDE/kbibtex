@@ -17,60 +17,49 @@
 *   Free Software Foundation, Inc.,                                       *
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
-#include <QRegExp>
-#include <QStringList>
+#ifndef BIBTEXFILEEXPORTER_H
+#define BIBTEXFILEEXPORTER_H
 
-#include <comment.h>
+#include <QObject>
+#include <QMutex>
 
-using namespace KBibTeX::IO;
+#include <file.h>
 
-Comment::Comment(const QString& text)
-        : Element(), m_text(text)
+class QIODevice;
+
+namespace KBibTeX
 {
-    // nothing
+namespace IO {
+
+class File;
+class Element;
+
+/**
+@author Thomas Fischer
+*/
+class FileExporter : public QObject
+{
+    Q_OBJECT
+public:
+    FileExporter();
+    ~FileExporter();
+
+    virtual bool save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog = NULL) = 0;
+    virtual bool save(QIODevice *iodevice, const Element* element, QStringList *errorLog = NULL) = 0;
+
+signals:
+    void progress(int current, int total);
+
+public slots:
+    virtual void cancel() {
+        // nothing
+    };
+
+protected:
+    QMutex m_mutex;
+};
+
+}
 }
 
-Comment::Comment(const Comment *other)
-{
-    m_text = other->m_text;
-}
-
-Comment::~Comment()
-{
-    // nothing
-}
-
-QString Comment::text() const
-{
-    return m_text;
-}
-
-void Comment::setText(const QString &text)
-{
-    m_text = text;
-}
-
-bool Comment::containsPattern(const QString& pattern, EntryField::FieldType fieldType, FilterType filterType, Qt::CaseSensitivity caseSensitive) const
-{
-    if (filterType == ftExact) {
-        /** check for exact match */
-        return fieldType == EntryField::ftUnknown && m_text.contains(pattern, caseSensitive);
-    } else {
-        /** for each word in the search pattern ... */
-        QStringList words = pattern.split(QRegExp("\\s+"), QString::SkipEmptyParts);
-        unsigned int hits = 0;
-        for (QStringList::Iterator it = words.begin(); it != words.end(); ++it) {
-            /** check if word is contained in text */
-            if (fieldType == EntryField::ftUnknown && m_text.contains(*it, caseSensitive))
-                ++hits;
-        }
-
-        /** return success depending on filter type and number of hits */
-        return (filterType == ftAnyWord && hits > 0 || filterType == ftEveryWord && hits == words.count());
-    }
-}
-
-Element* Comment::clone() const
-{
-    return new Comment(this);
-}
+#endif

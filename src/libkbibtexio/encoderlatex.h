@@ -17,60 +17,48 @@
 *   Free Software Foundation, Inc.,                                       *
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
+#ifndef ENCODERLATEX_H
+#define ENCODERLATEX_H
+
+#include <QLinkedList>
 #include <QRegExp>
-#include <QStringList>
 
-#include <comment.h>
+#include <encoder.h>
+#include <entry.h>
 
-using namespace KBibTeX::IO;
+class QString;
 
-Comment::Comment(const QString& text)
-        : Element(), m_text(text)
+namespace KBibTeX
 {
-    // nothing
+namespace IO {
+
+class EncoderLaTeX: public Encoder
+{
+public:
+    EncoderLaTeX();
+    ~EncoderLaTeX();
+
+    QString decode(const QString &text);
+    QString encode(const QString &text);
+    QString encode(const QString &text, const QChar &replace);
+    QString encodeSpecialized(const QString &text, const EntryField::FieldType fieldType = EntryField::ftUnknown);
+
+    static EncoderLaTeX *currentEncoderLaTeX();
+    static void deleteCurrentEncoderLaTeX();
+
+private:
+    struct CharMappingItem {
+        QRegExp regExp;
+        QChar unicode;
+        QString latex;
+    };
+
+    QLinkedList<CharMappingItem> m_charMapping;
+
+    void buildCharMapping();
+};
+
+}
 }
 
-Comment::Comment(const Comment *other)
-{
-    m_text = other->m_text;
-}
-
-Comment::~Comment()
-{
-    // nothing
-}
-
-QString Comment::text() const
-{
-    return m_text;
-}
-
-void Comment::setText(const QString &text)
-{
-    m_text = text;
-}
-
-bool Comment::containsPattern(const QString& pattern, EntryField::FieldType fieldType, FilterType filterType, Qt::CaseSensitivity caseSensitive) const
-{
-    if (filterType == ftExact) {
-        /** check for exact match */
-        return fieldType == EntryField::ftUnknown && m_text.contains(pattern, caseSensitive);
-    } else {
-        /** for each word in the search pattern ... */
-        QStringList words = pattern.split(QRegExp("\\s+"), QString::SkipEmptyParts);
-        unsigned int hits = 0;
-        for (QStringList::Iterator it = words.begin(); it != words.end(); ++it) {
-            /** check if word is contained in text */
-            if (fieldType == EntryField::ftUnknown && m_text.contains(*it, caseSensitive))
-                ++hits;
-        }
-
-        /** return success depending on filter type and number of hits */
-        return (filterType == ftAnyWord && hits > 0 || filterType == ftEveryWord && hits == words.count());
-    }
-}
-
-Element* Comment::clone() const
-{
-    return new Comment(this);
-}
+#endif
