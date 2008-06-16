@@ -17,6 +17,11 @@ set( libkbibtexio_SRCS
 	file.cpp
 	fileexporter.cpp
 	fileexporterbibtex.cpp
+	fileexporterpdf.cpp
+	fileexporterps.cpp
+	fileexporterris.cpp
+	fileexportertoolchain.cpp
+	fileexporterxml.cpp
 	fileimporter.cpp
 	fileimporterbibtex.cpp
 	macro.cpp
