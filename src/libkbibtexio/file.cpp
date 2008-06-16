@@ -40,7 +40,7 @@ File::File()
 File::~File()
 {
     for (ElementList::iterator it = elements.begin(); it != elements.end(); it++)
-        delete * it;
+        delete *it;
 }
 
 unsigned int File::count()

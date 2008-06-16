@@ -45,7 +45,7 @@ FileImporterBibTeX::FileImporterBibTeX(const QString& encoding, bool ignoreComme
     m_textStream = NULL;
 
     const char *encodingFrom = m_encoding == "latex" ? "utf-8\0" : m_encoding.append("\0").toAscii();
-    m_iconvHandle = iconv_open("utf-8", encodingFrom);
+    m_iconvHandle = iconv_open("utf-8\0", encodingFrom);
 }
 
 
@@ -486,7 +486,7 @@ void FileImporterBibTeX::splitPersons(const QString& text, QStringList &persons)
     QString word;
     int bracketCounter = 0;
 
-    for (unsigned int pos = 0;pos < text.length();++pos) {
+    for (int pos = 0; pos < text.length(); ++pos) {
         if (text[pos] == '{')
             ++bracketCounter;
         else if (text[pos] == '}')

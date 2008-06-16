@@ -219,10 +219,10 @@ void Person::setText(const QString& text)
 
         if (singleCapitalLettersCounter > 0) {
             // this is a special case for names from PubMed, which are formatted like "Fischer T"
-            for (int i = 0;i < p;++i)
+            for (int i = 0; i < p; ++i)
                 m_lastName.append(segments[i]).append(" ");
             m_lastName.append(segments[p]);
-            for (unsigned int i = p + 1;i < segments.count() - 1;++i)
+            for (int i = p + 1; i < segments.count() - 1; ++i)
                 m_firstName.append(segments[i]).append(" ");
             m_firstName.append(segments[segments.count() - 1]);
         } else {
@@ -248,7 +248,7 @@ void Person::setText(const QString& text)
         }
     } else {
         bool inLastName = TRUE;
-        for (unsigned int i = 0; i < segments.count();++i) {
+        for (int i = 0; i < segments.count(); ++i) {
             if (segments[i] == ",")
                 inLastName = FALSE;
             else if (inLastName) {
@@ -288,7 +288,7 @@ bool Person::splitName(const QString& text, QStringList& segments)
     bool result = FALSE;
     QString buffer = "";
 
-    for (unsigned int pos = 0; pos < text.length();++pos) {
+    for (int pos = 0; pos < text.length(); ++pos) {
         if (text[pos] == '{')
             ++bracketCounter;
         else if (text[pos] == '}')
