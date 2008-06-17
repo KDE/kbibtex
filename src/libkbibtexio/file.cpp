@@ -77,9 +77,9 @@ void File::appendElement(Element *element, const Element *after)
 void File::deleteElement(Element *element)
 {
     bool found = false;
-    for (ElementList::ConstIterator it = elements.begin(); it != elements.end(); it++)
+    for (ElementList::Iterator it = elements.begin(); it != elements.end(); it++)
         if (found = (*it == element)) {
-            elements.removeOne(*it);
+            elements.erase(it);
             delete element;
             break;
         }

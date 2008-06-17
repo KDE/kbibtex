@@ -320,7 +320,7 @@ QString EncoderLaTeX::decode(const QString & text)
             QStringList::Iterator cur = it;
             ++it;
             (*cur).append('$').append(*it);
-            intermediate.removeOne(*it);
+            intermediate.erase(it);
             it = cur;
         } else
             ++it;

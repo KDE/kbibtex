@@ -139,7 +139,7 @@ void KeywordContainer::remove(const QString& text)
     bool contains = FALSE;
     for (QLinkedList<Keyword*>::Iterator it = keywords.begin(); !contains && it != keywords.end(); ++it)
         if ((*it)->text() == text) {
-            keywords.removeOne(*it);
+            keywords.erase(it);
             break;
         }
 }

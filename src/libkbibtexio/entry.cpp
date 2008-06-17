@@ -219,10 +219,10 @@ EntryField* Entry::getField(const QString & fieldName) const
 
 bool Entry::deleteField(const QString & fieldName)
 {
-    for (EntryFields::ConstIterator it = m_fields.begin(); it != m_fields.end(); it++)
+    for (EntryFields::Iterator it = m_fields.begin(); it != m_fields.end(); it++)
         if ((*it) ->fieldTypeName().toLower() == fieldName.toLower()) {
             delete(*it);
-            m_fields.removeOne(*it);
+            m_fields.erase(it);
             return TRUE;
         }
 
@@ -231,10 +231,10 @@ bool Entry::deleteField(const QString & fieldName)
 
 bool Entry::deleteField(const EntryField::FieldType fieldType)
 {
-    for (EntryFields::ConstIterator it = m_fields.begin(); it != m_fields.end(); it++)
+    for (EntryFields::Iterator it = m_fields.begin(); it != m_fields.end(); it++)
         if ((*it) ->fieldType() == fieldType) {
             delete(*it);
-            m_fields.removeOne(*it);
+            m_fields.erase(it);
             return TRUE;
         }
 

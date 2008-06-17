@@ -46,21 +46,20 @@ bool FileExporterToolchain::runProcesses(const QStringList &progs, QStringList *
 
     emit progress(0, progs.size());
     for (QStringList::ConstIterator it = progs.begin(); result && it != progs.end(); it++) {
-        qApp->processEvents();
+        QCoreApplication::instance()->processEvents();
         QStringList args = (*it).split(' ');
         QString cmd = args.first();
-        args.removeOne(cmd);
+        args.erase(args.begin());
         result &= runProcess(cmd, args, errorLog);
         emit progress(i++, progs.size());
     }
-    qApp->processEvents();
+    QCoreApplication::instance()->processEvents();
     return result;
 }
 
 bool FileExporterToolchain::runProcess(const QString &cmd,  const QStringList &args, QStringList *errorLog)
 {
     bool result = FALSE;
-// FIXME        QApplication::setOverrideCursor( Qt::waitCursor );
 
     m_process = new QProcess();
     m_process->setWorkingDirectory(workingDir);
@@ -72,11 +71,11 @@ bool FileExporterToolchain::runProcess(const QString &cmd,  const QStringList &a
     int counter = 0;
 
     if (m_process->waitForStarted(3000)) {
-        qApp->processEvents();
+        QCoreApplication::instance()->processEvents();
         m_waitCondMutex.lock();
         while (m_process->state() == QProcess::Running) {
             m_waitCond.wait(&m_waitCondMutex, 250);
-            qApp->processEvents();
+            QCoreApplication::instance()->processEvents();
 
             counter++;
             if (counter > 400)
@@ -95,7 +94,6 @@ bool FileExporterToolchain::runProcess(const QString &cmd,  const QStringList &a
     delete(m_process);
     m_process = NULL;
 
-// FIXME        QApplication::restoreOverrideCursor();
     return result;
 }
 
@@ -203,7 +201,7 @@ bool FileExporterToolchain::kpsewhich(const QString& filename)
         waitCondMutex.lock();
         while (kpsewhich.state() == QProcess::Running) {
             waitCond.wait(&waitCondMutex, 250);
-            qApp->processEvents();
+            QCoreApplication::instance()->processEvents();
 
             counter++;
             if (counter > 50)
