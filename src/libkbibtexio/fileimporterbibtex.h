@@ -60,10 +60,7 @@ private:
     QTextStream *m_textStream;
     QChar m_currentChar;
     bool m_ignoreComments;
-    char *m_lineBuffer;
-    const int m_lineBufferSize;
     QString m_encoding;
-    iconv_t m_iconvHandle;
 
     Comment *readCommentElement();
     Comment *readPlainCommentElement();

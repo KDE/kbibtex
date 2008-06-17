@@ -38,21 +38,15 @@ using namespace KBibTeX::IO;
 const QString extraAlphaNumChars = QString("?'`-_:.+/$\\\"&");
 
 FileImporterBibTeX::FileImporterBibTeX(const QString& encoding, bool ignoreComments)
-        : FileImporter(), m_currentChar(' '), m_ignoreComments(ignoreComments), m_lineBufferSize(4096), m_encoding(encoding)
+        : FileImporter(), m_currentChar(' '), m_ignoreComments(ignoreComments), m_encoding(encoding)
 {
     cancelFlag = FALSE;
-    m_lineBuffer = new char[m_lineBufferSize];
     m_textStream = NULL;
-
-    const char *encodingFrom = m_encoding == "latex" ? "utf-8\0" : m_encoding.append("\0").toAscii();
-    m_iconvHandle = iconv_open("utf-8\0", encodingFrom);
 }
 
 
 FileImporterBibTeX::~FileImporterBibTeX()
 {
-    iconv_close(m_iconvHandle);
-    delete[] m_lineBuffer;
 }
 
 File* FileImporterBibTeX::load(QIODevice *iodevice)
@@ -60,27 +54,10 @@ File* FileImporterBibTeX::load(QIODevice *iodevice)
     m_mutex.lock();
     cancelFlag = FALSE;
 
-    QString rawText;
-    char *convertedLine = new char[m_lineBufferSize];
-    int len;
-    while (iodevice->isReadable() && (len = iodevice->readLine(m_lineBuffer, m_lineBufferSize)) > 0) {
-        char *raw = m_lineBuffer;
-        char *enc = convertedLine;
-        size_t encLen = m_lineBufferSize, rawLen = (size_t)len;
-        size_t result = iconv(m_iconvHandle, &raw, &rawLen, &enc, &encLen);
-        if (result != 0) {
-            qCritical() << "iconv resulted in error code " << result << " for source encoding " << m_encoding;
-            break;
-        }
-        if (rawLen > 0) {
-            qCritical() << "iconv could not convert complete string, only " << (len - rawLen) << " out of " << len << " chars";
-            break;
-        }
-        enc[0] = '\0';
-        QString line = QString::fromUtf8(convertedLine);
-        rawText.append(line);
-    }
-    delete[] convertedLine;
+    m_textStream = new QTextStream(iodevice);
+    m_textStream->setCodec(m_encoding == "latex" ? "UTF-8" : m_encoding.toAscii());
+    QString rawText = m_textStream->readAll();
+    delete m_textStream;
 
     /** Cleaning up code comming from DBLP */
     rawText = rawText.replace("<pre>", "\n\n").replace("</pre>", "\n\n").remove("<a href=\"http://www.informatik.uni-trier.de/~ley/db/about/bibtex.html\">DBLP</a>:");
@@ -93,7 +70,7 @@ File* FileImporterBibTeX::load(QIODevice *iodevice)
     File *result = new File();
     while (!cancelFlag && !m_textStream->atEnd()) {
         emit progress(m_textStream->pos(), rawText.length());
-        qApp->processEvents();
+        QCoreApplication::instance()->processEvents();
         Element * element = nextElement();
         if (element != NULL) {
             Comment *comment = dynamic_cast<Comment*>(element);
@@ -102,7 +79,7 @@ File* FileImporterBibTeX::load(QIODevice *iodevice)
             else
                 delete element;
         }
-        qApp->processEvents();
+        QCoreApplication::instance()->processEvents();
     }
     emit progress(100, 100);
 

@@ -20,8 +20,6 @@
 #ifndef BIBTEXFILEEXPORTERBIBTEX_H
 #define BIBTEXFILEEXPORTERBIBTEX_H
 
-#include <iconv.h>
-
 #include <element.h>
 #include <entryfield.h>
 #include <fileexporter.h>
@@ -56,10 +54,6 @@ public slots:
     void cancel();
 
 private:
-    iconv_t m_iconvHandle;
-    char *m_iconvBuffer;
-    const int m_iconvBufferSize;
-
     QChar m_stringOpenDelimiter;
     QChar m_stringCloseDelimiter;
     KeywordCasing m_keywordCasing;
@@ -68,11 +62,11 @@ private:
     bool m_protectCasing;
     bool cancelFlag;
 
-    bool writeEntry(QIODevice &device, const Entry* entry);
-    bool writeMacro(QIODevice &device, const Macro *macro);
-    bool writeComment(QIODevice &device, const Comment *comment);
-    bool writePreamble(QIODevice &device, const  Preamble* preamble);
-    bool writeString(QIODevice &device, const QString& text);
+    bool writeEntry(QTextStream &stream, const Entry* entry);
+    bool writeMacro(QTextStream &stream, const Macro *macro);
+    bool writeComment(QTextStream &stream, const Comment *comment);
+    bool writePreamble(QTextStream &stream, const  Preamble* preamble);
+    bool writeString(QTextStream &stream, const QString& text);
 
     QString valueToString(const Value *value, const EntryField::FieldType fieldType = EntryField::ftUnknown);
 
