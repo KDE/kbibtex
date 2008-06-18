@@ -359,7 +359,7 @@ QString EncoderLaTeX::encode(const QString & text)
     for (QLinkedList<CharMappingItem>::ConstIterator it = m_charMapping.begin(); it != m_charMapping.end(); ++it)
         result.replace((*it).unicode, (*it).latex);
 
-    for (unsigned int i = 0; i < result.length(); i++)
+    for (int i = 0; i < result.length(); i++)
         if (result.at(i) == '"' && (i == 0 || result.at(i - 1) != '\\')) {
             if (beginningQuotationNext)
                 result.replace(i, 1, "``");

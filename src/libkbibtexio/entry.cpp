@@ -150,7 +150,7 @@ bool Entry::containsPattern(const QString & pattern, EntryField::FieldType field
                     hits[i] |= (*fit) ->value() ->containsPattern(*wit, caseSensitive);
         }
 
-        unsigned int hitCount = 0;
+        int hitCount = 0;
         for (i = words.count() - 1; i >= 0; --i)
             if (hits[i]) ++hitCount;
         delete[] hits;
