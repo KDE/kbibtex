@@ -4,6 +4,7 @@
 #include <QFile>
 
 #include <fileimporterbibtex.h>
+#include <fileimporterris.h>
 #include <fileexporterbibtex.h>
 #include <fileexporterpdf.h>
 #include <fileexporterps.h>
@@ -47,6 +48,8 @@ int KBibTeXIOTest::run()
 
     if (m_inputFileName.endsWith(".bib"))
         importer = new KBibTeX::IO::FileImporterBibTeX();
+    else if (m_inputFileName.endsWith(".ris"))
+        importer = new KBibTeX::IO::FileImporterRIS();
     else {
         qCritical("Input format not supported");
         return 3;

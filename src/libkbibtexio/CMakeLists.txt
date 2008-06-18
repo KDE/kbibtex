@@ -24,6 +24,7 @@ set( libkbibtexio_SRCS
 	fileexporterxml.cpp
 	fileimporter.cpp
 	fileimporterbibtex.cpp
+	fileimporterris.cpp
 	macro.cpp
 	preamble.cpp
 	value.cpp
