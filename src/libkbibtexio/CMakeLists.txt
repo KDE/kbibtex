@@ -2,6 +2,7 @@ include_directories(
 	${QT_INCLUDES}
 	${CMAKE_CURRENT_SOURCE_DIR}
 	${CMAKE_CURRENT_BINARY_DIR}
+	# ${BIBUTILSIncDir} # FIXME: Make inclusion depending on HAVE_BIBUTILS check
 )
 
 # KBibTeXIO library
@@ -24,6 +25,7 @@ set( libkbibtexio_SRCS
 	fileexporterxml.cpp
 	fileimporter.cpp
 	fileimporterbibtex.cpp
+	# fileimporterbibutils.cpp # FIXME: Make inclusion depending on HAVE_BIBUTILS check
 	fileimporterris.cpp
 	macro.cpp
 	preamble.cpp
@@ -36,12 +38,14 @@ set( libkbibtexio_MOC_SRCS
 	fileimporterbibtex.h
 )
 
-QT4_AUTOMOC(${libkbibtexio_SRCS})
+QT4_AUTOMOC( ${libkbibtexio_SRCS} )
 
 add_library( kbibtexio SHARED ${libkbibtexio_SRCS} )
 
 target_link_libraries( kbibtexio
 	${QT_QTCORE_LIBRARY}
+	# ${BIBUTILSLinkFlags} # FIXME: Make inclusion depending on HAVE_BIBUTILS check
+	# ${BIBUTILSLinkDir} # FIXME: Make inclusion depending on HAVE_BIBUTILS check
 )
 
 
@@ -51,6 +55,10 @@ set( kbibtexiotest_SRCS
 	kbibtexiotest.cpp
 )
 
-add_executable(kbibtexiotest ${kbibtexiotest_SRCS})
+add_executable( kbibtexiotest ${kbibtexiotest_SRCS} )
 
-target_link_libraries(kbibtexiotest kbibtexio)
+# target_link_libraries( kbibtexiotest kbibtexio )
+target_link_libraries( kbibtexiotest
+	${QT_QTCORE_LIBRARY}
+	kbibtexio
+)
