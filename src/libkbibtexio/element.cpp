@@ -38,7 +38,7 @@ bool Element::isSimpleString(const QString &text)
     bool result = TRUE;
     const QString goodChars = "abcdefghijklmnopqrstuvwxyz0123456789-_";
 
-    for (unsigned int i = 0; result && i < text.length(); i++)
+    for (int i = 0; result && i < text.length(); i++)
         result = goodChars.contains(text[i], Qt::CaseInsensitive);
 
     return result;

@@ -78,7 +78,7 @@ bool Macro::containsPattern(const QString& pattern, EntryField::FieldType fieldT
     } else {
         /** for each word in the search pattern ... */
         QStringList words = pattern.split(QRegExp("\\s+"), QString::SkipEmptyParts);
-        unsigned int hits = 0;
+        int hits = 0;
         for (QStringList::Iterator it = words.begin(); it != words.end(); ++it) {
             /** check if word is contained in text */
             if (fieldType == EntryField::ftUnknown && text.contains(*it, caseSensitive))
