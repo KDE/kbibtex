@@ -52,24 +52,20 @@ bool FileExporterRIS::save(QIODevice* iodevice, const Element* element, QStringL
 bool FileExporterRIS::save(QIODevice* iodevice, const File* bibtexfile, QStringList* /*errorLog*/)
 {
     m_mutex.lock();
-    qDebug("Exporting RIS");
     bool result = TRUE;
     m_cancelFlag = FALSE;
     QTextStream stream(iodevice);
 
     for (File::ElementList::ConstIterator it = bibtexfile->constBegin(); it != bibtexfile->constEnd() && result && !m_cancelFlag; it++) {
-        qDebug("Casting element");
         Entry *entry = dynamic_cast<Entry*>(*it);
         if (entry != NULL) {
 //                 FIXME Entry *myEntry = bibtexfile->completeReferencedFieldsConst( entry );
             Entry *myEntry = new Entry(entry);
             result &= writeEntry(stream, myEntry);
             delete myEntry;
-        } else
-            qDebug("Casting FAILED");
+        }
     }
 
-    qDebug("Exporting RIS done");
     m_mutex.unlock();
     return result && !m_cancelFlag;
 }
@@ -82,7 +78,6 @@ void FileExporterRIS::cancel()
 bool FileExporterRIS::writeEntry(QTextStream &stream, const Entry* entry)
 {
     bool result = TRUE;
-    qDebug("Writing Entry");
 
     switch (entry->entryType()) {
     case Entry::etBook:
