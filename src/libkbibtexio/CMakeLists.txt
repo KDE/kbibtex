@@ -21,6 +21,7 @@ set( libkbibtexio_SRCS
 	fileexporterpdf.cpp
 	fileexporterps.cpp
 	fileexporterris.cpp
+	fileexporterrtf.cpp
 	fileexportertoolchain.cpp
 	fileexporterxml.cpp
 	fileimporter.cpp

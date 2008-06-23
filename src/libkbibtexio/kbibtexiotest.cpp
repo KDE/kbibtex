@@ -9,6 +9,7 @@
 #include <fileexporterpdf.h>
 #include <fileexporterps.h>
 #include <fileexporterris.h>
+#include <fileexporterrtf.h>
 #include <fileexporterxml.h>
 
 class KBibTeXIOTest
@@ -63,6 +64,8 @@ int KBibTeXIOTest::run()
         exporter = new KBibTeX::IO::FileExporterPS();
     else if (m_outputFileName.endsWith(".ris"))
         exporter = new KBibTeX::IO::FileExporterRIS();
+    else if (m_outputFileName.endsWith(".rtf"))
+        exporter = new KBibTeX::IO::FileExporterRTF();
     else if (m_outputFileName.endsWith(".xml"))
         exporter = new KBibTeX::IO::FileExporterXML();
     else {
