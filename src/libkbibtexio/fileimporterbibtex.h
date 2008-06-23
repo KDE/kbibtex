@@ -42,7 +42,7 @@ class Value;
 class FileImporterBibTeX : public FileImporter
 {
 public:
-    FileImporterBibTeX(const QString& = "utf-8", bool = true);
+    FileImporterBibTeX(const QString& = "latex", bool = true);
     ~FileImporterBibTeX();
 
     File* load(QIODevice *iodevice);

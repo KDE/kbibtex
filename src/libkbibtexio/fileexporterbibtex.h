@@ -44,7 +44,7 @@ public:
     enum KeywordCasing {kcLowerCase, kcInitialCapital, kcCamelCase, kcCapital};
     enum QuoteComment { qcNone, qcCommand, qcPercentSign };
 
-    FileExporterBibTeX(const QString& = "utf-8", const QChar& = '"', const QChar& = '"', KeywordCasing = kcCamelCase, QuoteComment = qcNone, bool = false);
+    FileExporterBibTeX(const QString& = "latex", const QChar& = '"', const QChar& = '"', KeywordCasing = kcCamelCase, QuoteComment = qcNone, bool = false);
     ~FileExporterBibTeX();
 
     bool save(QIODevice* iodevice, const File* bibtexfile, QStringList *errorLog = NULL);
