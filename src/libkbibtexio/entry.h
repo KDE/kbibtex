@@ -41,6 +41,8 @@ public:
 
     enum FieldRequireStatus {frsRequired, frsOptional, frsIgnored};
 
+    enum MergeSemantics {msIgnoreOther, msAddNew, msForceAdding};
+
     Entry();
     Entry(const EntryType entryType, const QString &id);
     Entry(const QString& entryTypeString, const QString& id);
@@ -72,7 +74,7 @@ public:
     void clearFields();
 
     void copyFrom(const Entry *other);
-    void merge(Entry *other, bool forceAdding = TRUE);
+    void merge(Entry *other, MergeSemantics mergeSemantics);
 
     static QString entryTypeToString(const EntryType entryType);
     static EntryType entryTypeFromString(const QString &entryTypeString);

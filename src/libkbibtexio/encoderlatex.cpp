@@ -27,6 +27,65 @@ using namespace KBibTeX::IO;
 
 EncoderLaTeX *encoderLaTeX = NULL;
 
+static struct Decomposition {
+    const char *latexCommand;
+    unsigned int unicode;
+}
+decompositions[] = {
+    {"`", 0x0300},
+    {"'", 0x0301},
+    {"^", 0x0302},
+    {"~", 0x0303},
+    {"=", 0x0304},
+    /*{"x", 0x0305},  OVERLINE */
+    {"u", 0x0306},
+    {".", 0x0307},
+    {"\"", 0x0308},
+    /*{"x", 0x0309},  HOOK ABOVE */
+    {"r", 0x030a},
+    {"H", 0x030b},
+    {"v", 0x030c},
+    /*{"x", 0x030d},  VERTICAL LINE ABOVE */
+    /*{"x", 0x030e},  DOUBLE VERTICAL LINE ABOVE */
+    /*{"x", 0x030f},  DOUBLE GRAVE ACCENT */
+    /*{"x", 0x0310},  CANDRABINDU */
+    /*{"x", 0x0311},  INVERTED BREVE */
+    /*{"x", 0x0312},  TURNED COMMA ABOVE */
+    /*{"x", 0x0313},  COMMA ABOVE */
+    /*{"x", 0x0314},  REVERSED COMMA ABOVE */
+    /*{"x", 0x0315},   */
+    /*{"x", 0x0316},   */
+    /*{"x", 0x0317},   */
+    /*{"x", 0x0318},   */
+    /*{"x", 0x0319},   */
+    /*{"x", 0x031a},   */
+    /*{"x", 0x031b},   */
+    /*{"x", 0x031c},   */
+    /*{"x", 0x031d},   */
+    /*{"x", 0x031e},   */
+    /*{"x", 0x031f},   */
+    /*{"x", 0x0320},   */
+    /*{"x", 0x0321},   */
+    /*{"x", 0x0322},   */
+    {"d", 0x0323},
+    /*{"x", 0x0324},   */
+    /*{"x", 0x0325},   */
+    /*{"x", 0x0326},   */
+    {"d", 0x0327},
+    {"k", 0x0328},
+    /*{"x", 0x0329},   */
+    /*{"x", 0x032a},   */
+    /*{"x", 0x032b},   */
+    /*{"x", 0x032c},   */
+    /*{"x", 0x032d},   */
+    /*{"x", 0x032e},   */
+    /*{"x", 0x032f},   */
+    {"b", 0x0331},
+    {"t", 0x0361}
+};
+
+static const int decompositionscount = sizeof(decompositions) / sizeof(decompositions[ 0 ]) ;
+
 static const struct EncoderLaTeXCommandMapping {
     const char *letters;
     unsigned int unicode;
@@ -295,6 +354,7 @@ EncoderLaTeX::EncoderLaTeX()
         : Encoder()
 {
     buildCharMapping();
+    buildCombinedMapping();
 }
 
 EncoderLaTeX::~EncoderLaTeX()
@@ -304,8 +364,12 @@ EncoderLaTeX::~EncoderLaTeX()
 
 QString EncoderLaTeX::decode(const QString & text)
 {
+    QString result = text;
+    decomposedUTF8toLaTeX(result);
+
+
     // split text into math and non-math regions
-    QStringList intermediate = text.split('$', QString::SkipEmptyParts);
+    QStringList intermediate = result.split('$', QString::SkipEmptyParts);
     QStringList::Iterator it = intermediate.begin();
     while (it != intermediate.end()) {
         /**
@@ -342,9 +406,7 @@ QString EncoderLaTeX::decode(const QString & text)
             qWarning() << "Very long math equation using $ found, maybe due to broken inline math: " << (*it).left(48);
     }
 
-    QString result = intermediate.join("$");
-
-    // result.replace( "\\\\", "\\" );
+    result = intermediate.join("$");
 
     return result;
 }
@@ -374,6 +436,8 @@ QString EncoderLaTeX::encode(const QString & text)
     if (result.contains("\\url{"))
         result.replace("\\&", "&");
 
+    decomposedUTF8toLaTeX(result);
+
     return result;
 }
 
@@ -402,6 +466,30 @@ QString EncoderLaTeX::encodeSpecialized(const QString & text, const EntryField::
     }
 
     return result;
+}
+
+QString& EncoderLaTeX::decomposedUTF8toLaTeX(QString &text)
+{
+    for (QLinkedList<CombinedMappingItem>::Iterator it = m_combinedMapping.begin(); it != m_combinedMapping.end(); ++it) {
+        int i = (*it).regExp.indexIn(text);
+        while (i >= 0) {
+            QString a = (*it).regExp.cap(1);
+            text = text.left(i) + "\\" + (*it).latex + "{" + a + "}" + text.mid(i + 2);
+            i = (*it).regExp.indexIn(text, i + 1);
+        }
+    }
+
+    return text;
+}
+
+void EncoderLaTeX::buildCombinedMapping()
+{
+    for (int i = 0; i < decompositionscount; i++) {
+        CombinedMappingItem item;
+        item.regExp = QRegExp("(.)" + QString(QChar(decompositions[i].unicode)));
+        item.latex = decompositions[i].latexCommand;
+        m_combinedMapping.append(item);
+    }
 }
 
 void EncoderLaTeX::buildCharMapping()

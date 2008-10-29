@@ -42,11 +42,21 @@ public:
     QString encode(const QString &text);
     QString encode(const QString &text, const QChar &replace);
     QString encodeSpecialized(const QString &text, const EntryField::FieldType fieldType = EntryField::ftUnknown);
+    QString& decomposedUTF8toLaTeX(QString &text);
 
     static EncoderLaTeX *currentEncoderLaTeX();
     static void deleteCurrentEncoderLaTeX();
 
 private:
+    struct CombinedMappingItem {
+        QRegExp regExp;
+        QString latex;
+    };
+
+    QLinkedList<CombinedMappingItem> m_combinedMapping;
+
+    void buildCombinedMapping();
+
     struct CharMappingItem {
         QRegExp regExp;
         QChar unicode;
@@ -61,4 +71,4 @@ private:
 }
 }
 
-#endif
+#endif // ENCODERLATEX_H

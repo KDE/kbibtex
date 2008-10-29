@@ -85,7 +85,7 @@ QString Entry::text() const
     QString result = "Id: ";
     result.append(m_id).append("  (").append(entryTypeString()).append(")\n");
 
-    for (EntryFields::const_iterator it = m_fields.begin(); it != m_fields.end(); it++) {
+    for (EntryFields::ConstIterator it = m_fields.begin(); it != m_fields.end(); it++) {
         result.append((*it)->fieldTypeName()).append(": ");
         result.append((*it)->value()->text()).append("\n");
     }
@@ -241,12 +241,12 @@ bool Entry::deleteField(const EntryField::FieldType fieldType)
     return FALSE;
 }
 
-Entry::EntryFields::const_iterator Entry::begin() const
+Entry::EntryFields::ConstIterator Entry::begin() const
 {
     return m_fields.constBegin();
 }
 
-Entry::EntryFields::const_iterator Entry::end() const
+Entry::EntryFields::ConstIterator Entry::end() const
 {
     return m_fields.constEnd();
 }
@@ -271,11 +271,11 @@ void Entry::copyFrom(const Entry *other)
     m_entryTypeString = other->m_entryTypeString;
     m_id = other->m_id;
     clearFields();
-    for (EntryFields::const_iterator it = other->m_fields.begin(); it != other->m_fields.end(); it++)
+    for (EntryFields::ConstIterator it = other->m_fields.begin(); it != other->m_fields.end(); it++)
         m_fields.append(new EntryField(*it));
 }
 
-void Entry::merge(Entry *other, bool forceAdding)
+void Entry::merge(Entry *other, MergeSemantics mergeSemantics)
 {
     for (EntryFields::ConstIterator it = other->m_fields.begin(); it != other->m_fields.end(); it++) {
         EntryField *otherField = new EntryField(*it);
@@ -283,13 +283,13 @@ void Entry::merge(Entry *other, bool forceAdding)
         QString otherFieldTypeName = otherField->fieldTypeName();
         EntryField *thisField = otherFieldType != EntryField::ftUnknown ? getField(otherFieldType) : getField(otherFieldTypeName);
 
-        if (thisField != NULL && !forceAdding) continue;
-
-        if (thisField != NULL) {
-            otherFieldTypeName.prepend("OPT");
-            otherField->setFieldType(EntryField::ftUnknown, otherFieldTypeName);
+        if (thisField == NULL || mergeSemantics != msIgnoreOther) {
+            if (thisField != NULL && (otherField->value()->text() != thisField->value()->text() || mergeSemantics == msForceAdding)) {
+                otherFieldTypeName.prepend("OPT");
+                otherField->setFieldType(EntryField::ftUnknown, otherFieldTypeName);
+            }
+            m_fields.append(otherField);
         }
-        m_fields.append(otherField);
     }
 }
 

@@ -106,12 +106,9 @@ Element *FileImporterRIS::nextElement(QTextStream &textStream)
             authorList.append((*it).value);
         } else if ((*it).key == "ED" || (*it).key == "A2") {
             editorList.append((*it).value);
-        }
-        //             else if ( ( *it ).key == "ID" )
-        //             {
-        //                 entry->setId( ( *it ).value );
-        //             }
-        else if ((*it).key == "Y1" || (*it).key == "PY") {
+        } else if ((*it).key == "ID") {
+            entry->setId((*it).value);
+        } else if ((*it).key == "Y1" || (*it).key == "PY") {
             date = (*it).value;
         } else if ((*it).key == "Y2") {
             if (date.isEmpty())

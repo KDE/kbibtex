@@ -247,6 +247,17 @@ Entry *FileImporterBibTeX::readEntryElement(const QString& typeString)
             return NULL;
         }
 
+        /** check for duplicate fields */
+        if (entry->getField(fieldTypeName) != NULL) {
+            int i = 1;
+            QString appendix = QString::number(i);
+            while (entry->getField(fieldTypeName + appendix) != NULL) {
+                ++i;
+                appendix = QString::number(i);
+            }
+            fieldTypeName += appendix;
+        }
+
         EntryField *entryField = new EntryField(fieldTypeName);
 
         token = readValue(entryField->value(), entryField->fieldType());
@@ -264,7 +275,7 @@ FileImporterBibTeX::Token FileImporterBibTeX::nextToken()
 
     Token curToken = tUnknown;
 
-    while (m_currentChar.isSpace() && !m_textStream->atEnd())
+    while ((m_currentChar.isSpace() || m_currentChar == '\t') && !m_textStream->atEnd())
         *m_textStream >> m_currentChar;
 
     switch (m_currentChar.toAscii()) {
