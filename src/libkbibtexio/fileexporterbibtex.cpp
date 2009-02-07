@@ -56,21 +56,21 @@ bool FileExporterBibTeX::save(QIODevice* iodevice, const File* bibtexfile, QStri
       * in the correct order.
       */
 
-    QLinkedList<Preamble*> preambleList;
-    QLinkedList<Macro*> macroList;
-    QLinkedList<Entry*> crossRefingEntryList;
-    QLinkedList<Element*> remainingList;
+    QLinkedList<const Preamble*> preambleList;
+    QLinkedList<const Macro*> macroList;
+    QLinkedList<const Entry*> crossRefingEntryList;
+    QLinkedList<const Element*> remainingList;
 
-    for (File::ElementList::ConstIterator it = bibtexfile->constBegin(); it != bibtexfile->constEnd() && result && !cancelFlag; it++) {
-        Preamble *preamble = dynamic_cast<Preamble*>(*it);
+    for (File::ConstIterator it = bibtexfile->begin(); it != bibtexfile->end() && result && !cancelFlag; it++) {
+        const Preamble *preamble = dynamic_cast<const Preamble*>(*it);
         if (preamble != NULL)
             preambleList.append(preamble);
         else {
-            Macro *macro = dynamic_cast<Macro*>(*it);
+            const Macro *macro = dynamic_cast<const Macro*>(*it);
             if (macro != NULL)
                 macroList.append(macro);
             else {
-                Entry *entry = dynamic_cast<Entry*>(*it);
+                const Entry *entry = dynamic_cast<const Entry*>(*it);
                 if ((entry != NULL) && (entry->getField(EntryField::ftCrossRef) != NULL))
                     crossRefingEntryList.append(entry);
                 else
@@ -83,25 +83,25 @@ bool FileExporterBibTeX::save(QIODevice* iodevice, const File* bibtexfile, QStri
     stream.setCodec(m_encoding == "latex" ? "UTF-8" : m_encoding.toAscii());
 
     /** first, write preambles and strings (macros) at the beginning */
-    for (QLinkedList<Preamble*>::ConstIterator it = preambleList.begin(); it != preambleList.end() && result && !cancelFlag; it++)
-        result &= writePreamble(stream, *it);
+    for (QLinkedList<const Preamble*>::ConstIterator it = preambleList.begin(); it != preambleList.end() && result && !cancelFlag; it++)
+        result &= writePreamble(stream, **it);
 
-    for (QLinkedList<Macro*>::ConstIterator it = macroList.begin(); it != macroList.end() && result && !cancelFlag; it++)
-        result &= writeMacro(stream, *it);
+    for (QLinkedList<const Macro*>::ConstIterator it = macroList.begin(); it != macroList.end() && result && !cancelFlag; it++)
+        result &= writeMacro(stream, **it);
 
     /** second, write cross-referencing elements */
-    for (QLinkedList<Entry*>::ConstIterator it = crossRefingEntryList.begin(); it != crossRefingEntryList.end() && result && !cancelFlag; it++)
-        result &= writeEntry(stream, *it);
+    for (QLinkedList<const Entry*>::ConstIterator it = crossRefingEntryList.begin(); it != crossRefingEntryList.end() && result && !cancelFlag; it++)
+        result &= writeEntry(stream, **it);
 
     /** third, write remaining elements */
-    for (QLinkedList<Element*>::ConstIterator it = remainingList.begin(); it != remainingList.end() && result && !cancelFlag; it++) {
-        Entry *entry = dynamic_cast<Entry*>(*it);
+    for (QLinkedList<const Element*>::ConstIterator it = remainingList.begin(); it != remainingList.end() && result && !cancelFlag; it++) {
+        const Entry *entry = dynamic_cast<const Entry*>(*it);
         if (entry != NULL)
-            result &= writeEntry(stream, entry);
+            result &= writeEntry(stream, *entry);
         else {
-            Comment *comment = dynamic_cast<Comment*>(*it);
+            const Comment *comment = dynamic_cast<const Comment*>(*it);
             if (comment != NULL)
-                result &= writeComment(stream, comment);
+                result &= writeComment(stream, *comment);
         }
     }
 
@@ -145,11 +145,11 @@ void FileExporterBibTeX::cancel()
     cancelFlag = TRUE;
 }
 
-bool FileExporterBibTeX::writeEntry(QTextStream &stream, const Entry* entry)
+bool FileExporterBibTeX::writeEntry(QTextStream &stream, const Entry& entry)
 {
-    stream << "@" << applyKeywordCasing(entry->entryTypeString()) << "{" << entry->id();
+    stream << "@" << applyKeywordCasing(entry.entryTypeString()) << "{" << entry.id();
 
-    for (Entry::EntryFields::ConstIterator it = entry->begin(); it != entry->end(); ++it) {
+    for (Entry::EntryFields::ConstIterator it = entry.begin(); it != entry.end(); ++it) {
         EntryField *field = *it;
         QString text = valueToString(field->value(), field->fieldType());
         if (m_protectCasing && dynamic_cast<PlainText*>(field->value()->items.first()) != NULL && (field->fieldType() == EntryField::ftTitle || field->fieldType() == EntryField::ftBookTitle || field->fieldType() == EntryField::ftSeries))
@@ -160,20 +160,20 @@ bool FileExporterBibTeX::writeEntry(QTextStream &stream, const Entry* entry)
     return TRUE;
 }
 
-bool FileExporterBibTeX::writeMacro(QTextStream &stream, const Macro *macro)
+bool FileExporterBibTeX::writeMacro(QTextStream &stream, const Macro& macro)
 {
-    QString text = valueToString(macro->value());
+    QString text = valueToString(macro.value());
     if (m_protectCasing)
         addProtectiveCasing(text);
 
-    stream << "@" << applyKeywordCasing("String") << "{ " << macro->key() << " = " << text << " }" << endl << endl;
+    stream << "@" << applyKeywordCasing("String") << "{ " << macro.key() << " = " << text << " }" << endl << endl;
 
     return TRUE;
 }
 
-bool FileExporterBibTeX::writeComment(QTextStream &stream, const Comment *comment)
+bool FileExporterBibTeX::writeComment(QTextStream &stream, const Comment& comment)
 {
-    QString text = comment->text() ;
+    QString text = comment.text() ;
     escapeLaTeXChars(text);
     if (m_encoding == "latex")
         text = EncoderLaTeX::currentEncoderLaTeX() ->encode(text);
@@ -192,9 +192,9 @@ bool FileExporterBibTeX::writeComment(QTextStream &stream, const Comment *commen
     return TRUE;
 }
 
-bool FileExporterBibTeX::writePreamble(QTextStream &stream, const Preamble* preamble)
+bool FileExporterBibTeX::writePreamble(QTextStream &stream, const Preamble& preamble)
 {
-    stream << "@" << applyKeywordCasing("Preamble") << "{" << valueToString(preamble->value()) << "}" << endl << endl;
+    stream << "@" << applyKeywordCasing("Preamble") << "{" << valueToString(preamble.value()) << "}" << endl << endl;
 
     return TRUE;
 }

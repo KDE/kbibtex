@@ -91,7 +91,8 @@ public:
 
     Person *clone() const;
     void setText(const QString& text);
-    QString text(bool firstNameFirst = false) const;
+    QString text() const;
+    QString text(bool firstNameFirst) const;
 
     QString firstName();
     QString lastName();

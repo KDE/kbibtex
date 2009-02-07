@@ -38,7 +38,7 @@ class Macro;
 @author Thomas Fischer
 */
 
-class FileExporterBibTeX : public FileExporter
+class KBIBTEXIO_EXPORT FileExporterBibTeX : public FileExporter
 {
 public:
     enum KeywordCasing {kcLowerCase, kcInitialCapital, kcCamelCase, kcCapital};
@@ -62,10 +62,10 @@ private:
     bool m_protectCasing;
     bool cancelFlag;
 
-    bool writeEntry(QTextStream &stream, const Entry* entry);
-    bool writeMacro(QTextStream &stream, const Macro *macro);
-    bool writeComment(QTextStream &stream, const Comment *comment);
-    bool writePreamble(QTextStream &stream, const  Preamble* preamble);
+    bool writeEntry(QTextStream &stream, const Entry& entry);
+    bool writeMacro(QTextStream &stream, const Macro& macro);
+    bool writeComment(QTextStream &stream, const Comment& comment);
+    bool writePreamble(QTextStream &stream, const  Preamble& preamble);
     bool writeString(QTextStream &stream, const QString& text);
 
     QString valueToString(const Value *value, const EntryField::FieldType fieldType = EntryField::ftUnknown);

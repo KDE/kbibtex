@@ -31,7 +31,7 @@ namespace IO {
 /**
 @author Thomas Fischer
 */
-class FileExporterRTF : public FileExporterToolchain
+class KBIBTEXIO_EXPORT FileExporterRTF : public FileExporterToolchain
 {
 public:
     FileExporterRTF(const QString& latexBibStyle = "plain", const QString& latexLanguage = "english");
@@ -41,9 +41,9 @@ public:
     bool save(QIODevice* iodevice, const Element* element, QStringList *errorLog = NULL);
 
 private:
-    QString laTeXFilename;
-    QString bibTeXFilename;
-    QString outputFilename;
+    QString m_laTeXFilename;
+    QString m_bibTeXFilename;
+    QString m_outputFilename;
     QString m_latexLanguage;
     QString m_latexBibStyle;
 

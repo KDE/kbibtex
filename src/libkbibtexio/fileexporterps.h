@@ -31,7 +31,7 @@ namespace IO {
 /**
 @author Thomas Fischer
 */
-class FileExporterPS : public FileExporterToolchain
+class KBIBTEXIO_EXPORT FileExporterPS : public FileExporterToolchain
 {
 public:
     FileExporterPS();
@@ -44,9 +44,9 @@ public:
     void setLaTeXBibliographyStyle(const QString& bibStyle);
 
 private:
-    QString laTeXFilename;
-    QString bibTeXFilename;
-    QString outputFilename;
+    QString m_laTeXFilename;
+    QString m_bibTeXFilename;
+    QString m_outputFilename;
     QString m_latexLanguage;
     QString m_latexBibStyle;
 

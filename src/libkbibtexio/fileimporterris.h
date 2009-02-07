@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2006 by Thomas Fischer                             *
+*   Copyright (C) 2004-2009 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -32,7 +32,7 @@ namespace IO {
 /**
  @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
 */
-class FileImporterRIS : public FileImporter
+class KBIBTEXIO_EXPORT FileImporterRIS : public FileImporter
 {
 public:
     FileImporterRIS();

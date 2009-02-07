@@ -17,8 +17,8 @@
 *   Free Software Foundation, Inc.,                                       *
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
-#ifndef BIBTEXFILEIMPORTERBIBTEX_H
-#define BIBTEXFILEIMPORTERBIBTEX_H
+#ifndef KBIBTEX_IO_FILEIMPORTERBIBTEX_H
+#define KBIBTEX_IO_FILEIMPORTERBIBTEX_H
 
 #include <QTextStream>
 
@@ -39,10 +39,10 @@ class Value;
 /**
 @author Thomas Fischer
 */
-class FileImporterBibTeX : public FileImporter
+class KBIBTEXIO_EXPORT FileImporterBibTeX : public FileImporter
 {
 public:
-    FileImporterBibTeX(const QString& = "latex", bool = true);
+    FileImporterBibTeX(const QString& encoding = "latex", bool ignoreComments = true);
     ~FileImporterBibTeX();
 
     File* load(QIODevice *iodevice);
@@ -83,4 +83,4 @@ private:
 }
 }
 
-#endif
+#endif // KBIBTEX_IO_FILEIMPORTERBIBTEX_H

@@ -44,7 +44,6 @@ FileImporterBibTeX::FileImporterBibTeX(const QString& encoding, bool ignoreComme
     m_textStream = NULL;
 }
 
-
 FileImporterBibTeX::~FileImporterBibTeX()
 {
 }
@@ -75,7 +74,7 @@ File* FileImporterBibTeX::load(QIODevice *iodevice)
         if (element != NULL) {
             Comment *comment = dynamic_cast<Comment*>(element);
             if (!m_ignoreComments || comment == NULL)
-                result->appendElement(element);
+                result->append(element);
             else
                 delete element;
         }

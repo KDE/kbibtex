@@ -17,8 +17,8 @@
 *   Free Software Foundation, Inc.,                                       *
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
-#ifndef BIBTEXFILEEXPORTER_H
-#define BIBTEXFILEEXPORTER_H
+#ifndef KBIBTEX_IO_FILEEXPORTER_H
+#define KBIBTEX_IO_FILEEXPORTER_H
 
 #include <QObject>
 #include <QMutex>
@@ -40,11 +40,12 @@ class Element;
 class FileExporter : public QObject
 {
     Q_OBJECT
+
 public:
     FileExporter();
     ~FileExporter();
 
-    virtual bool save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog = NULL) = 0;
+    virtual bool save(QIODevice *iodevice, const File* bibtexfile, QStringList *errorLog = NULL) = 0;
     virtual bool save(QIODevice *iodevice, const Element* element, QStringList *errorLog = NULL) = 0;
 
 signals:
@@ -62,4 +63,4 @@ protected:
 }
 }
 
-#endif
+#endif // KBIBTEX_IO_FILEEXPORTER_H

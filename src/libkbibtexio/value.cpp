@@ -262,6 +262,11 @@ void Person::setText(const QString& text)
     }
 }
 
+QString Person::text() const
+{
+    return text(false);
+}
+
 QString Person::text(bool firstNameFirst) const
 {
 

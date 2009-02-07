@@ -31,4 +31,4 @@ FileExporter::~FileExporter()
     // nothing
 }
 
-#include "fileexporter.moc"
+// #include "fileexporter.moc"

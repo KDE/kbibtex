@@ -32,7 +32,7 @@ namespace KBibTeX
 {
 namespace IO {
 
-class Entry : public Element
+class KBIBTEXIO_EXPORT Entry : public Element
 {
 public:
     typedef QLinkedList<EntryField*> EntryFields;
@@ -90,4 +90,4 @@ private:
 }
 }
 
-#endif
+#endif // BIBTEXBIBTEXENTRY_H

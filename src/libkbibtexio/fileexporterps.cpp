@@ -30,9 +30,9 @@ using namespace KBibTeX::IO;
 FileExporterPS::FileExporterPS()
         : FileExporterToolchain(), m_latexLanguage("english"), m_latexBibStyle("plain")
 {
-    laTeXFilename = QString(workingDir).append("/bibtex-to-ps.tex");
-    bibTeXFilename = QString(workingDir).append("/bibtex-to-ps.bib");
-    outputFilename = QString(workingDir).append("/bibtex-to-ps.ps");
+    m_laTeXFilename = QString(workingDir).append("/bibtex-to-ps.tex");
+    m_bibTeXFilename = QString(workingDir).append("/bibtex-to-ps.bib");
+    m_outputFilename = QString(workingDir).append("/bibtex-to-ps.ps");
 }
 
 FileExporterPS::~FileExporterPS()
@@ -45,11 +45,11 @@ bool FileExporterPS::save(QIODevice* iodevice, const File* bibtexfile, QStringLi
     m_mutex.lock();
     bool result = FALSE;
 
-    QFile bibtexFile(bibTeXFilename);
-    if (bibtexFile.open(QIODevice::WriteOnly)) {
+    QFile output(m_bibTeXFilename);
+    if (output.open(QIODevice::WriteOnly)) {
         FileExporter * bibtexExporter = new FileExporterBibTeX();
-        result = bibtexExporter->save(&bibtexFile, bibtexfile, errorLog);
-        bibtexFile.close();
+        result = bibtexExporter->save(&output, bibtexfile, errorLog);
+        output.close();
         delete bibtexExporter;
     }
 
@@ -65,11 +65,11 @@ bool FileExporterPS::save(QIODevice* iodevice, const Element* element, QStringLi
     m_mutex.lock();
     bool result = FALSE;
 
-    QFile bibtexFile(bibTeXFilename);
-    if (bibtexFile.open(QIODevice::WriteOnly)) {
+    QFile output(m_bibTeXFilename);
+    if (output.open(QIODevice::WriteOnly)) {
         FileExporter * bibtexExporter = new FileExporterBibTeX();
-        result = bibtexExporter->save(&bibtexFile, element, errorLog);
-        bibtexFile.close();
+        result = bibtexExporter->save(&output, element, errorLog);
+        output.close();
         delete bibtexExporter;
     }
 
@@ -94,7 +94,7 @@ bool FileExporterPS::generatePS(QIODevice* iodevice, QStringList *errorLog)
 {
     QStringList cmdLines = QString("latex -halt-on-error bibtex-to-ps.tex|bibtex bibtex-to-ps|latex -halt-on-error bibtex-to-ps.tex|latex -halt-on-error bibtex-to-ps.tex|dvips -o bibtex-to-ps.ps bibtex-to-ps.dvi").split('|');
 
-    if (writeLatexFile(laTeXFilename) && runProcesses(cmdLines, errorLog) && writeFileToIODevice(outputFilename, iodevice))
+    if (writeLatexFile(m_laTeXFilename) && runProcesses(cmdLines, errorLog) && writeFileToIODevice(m_outputFilename, iodevice))
         return TRUE;
     else
         return FALSE;

@@ -32,9 +32,9 @@ using namespace KBibTeX::IO;
 FileExporterPDF::FileExporterPDF(bool embedFiles)
         : FileExporterToolchain(), m_latexLanguage("english"), m_latexBibStyle("plain"), m_embedFiles(embedFiles)
 {
-    laTeXFilename = QString(workingDir).append("/bibtex-to-pdf.tex");
-    bibTeXFilename = QString(workingDir).append("/bibtex-to-pdf.bib");
-    outputFilename = QString(workingDir).append("/bibtex-to-pdf.pdf");
+    m_laTeXFilename = QString(workingDir).append("/bibtex-to-pdf.tex");
+    m_bibTeXFilename = QString(workingDir).append("/bibtex-to-pdf.bib");
+    m_outputFilename = QString(workingDir).append("/bibtex-to-pdf.pdf");
 }
 
 FileExporterPDF::~FileExporterPDF()
@@ -48,15 +48,15 @@ bool FileExporterPDF::save(QIODevice* iodevice, const File* bibtexfile, QStringL
     bool result = FALSE;
     m_embeddedFileList.clear();
     if (m_embedFiles) {
-        m_embeddedFileList.append(QString("%1|%2").arg("BibTeX source").arg(bibTeXFilename));
+        m_embeddedFileList.append(QString("%1|%2").arg("BibTeX source").arg(m_bibTeXFilename));
         fillEmbeddedFileList(bibtexfile);
     }
 
-    QFile bibtexFile(bibTeXFilename);
-    if (bibtexFile.open(QIODevice::WriteOnly)) {
-        FileExporter * bibtexExporter = new FileExporterBibTeX();
-        result = bibtexExporter->save(&bibtexFile, bibtexfile, errorLog);
-        bibtexFile.close();
+    QFile output(m_bibTeXFilename);
+    if (output.open(QIODevice::WriteOnly)) {
+        FileExporter* bibtexExporter = new FileExporterBibTeX();
+        result = bibtexExporter->save(&output, bibtexfile, errorLog);
+        output.close();
         delete bibtexExporter;
     }
 
@@ -75,11 +75,11 @@ bool FileExporterPDF::save(QIODevice* iodevice, const Element* element, QStringL
     if (m_embedFiles)
         fillEmbeddedFileList(element);
 
-    QFile bibtexFile(bibTeXFilename);
-    if (bibtexFile.open(QIODevice::WriteOnly)) {
+    QFile output(m_bibTeXFilename);
+    if (output.open(QIODevice::WriteOnly)) {
         FileExporter * bibtexExporter = new FileExporterBibTeX();
-        result = bibtexExporter->save(&bibtexFile, element, errorLog);
-        bibtexFile.close();
+        result = bibtexExporter->save(&output, element, errorLog);
+        output.close();
         delete bibtexExporter;
     }
 
@@ -109,7 +109,7 @@ bool FileExporterPDF::generatePDF(QIODevice* iodevice, QStringList *errorLog)
 {
     QStringList cmdLines = QString("pdflatex -halt-on-error bibtex-to-pdf.tex|bibtex bibtex-to-pdf|pdflatex -halt-on-error bibtex-to-pdf.tex|pdflatex -halt-on-error bibtex-to-pdf.tex").split('|');
 
-    if (writeLatexFile(laTeXFilename) && runProcesses(cmdLines, errorLog) && writeFileToIODevice(outputFilename, iodevice))
+    if (writeLatexFile(m_laTeXFilename) && runProcesses(cmdLines, errorLog) && writeFileToIODevice(m_outputFilename, iodevice))
         return TRUE;
     else
         return FALSE;
@@ -157,7 +157,7 @@ bool FileExporterPDF::writeLatexFile(const QString &filename)
 
 void FileExporterPDF::fillEmbeddedFileList(const File* bibtexfile)
 {
-    for (File::ElementList::ConstIterator it = bibtexfile->constBegin(); it != bibtexfile->constEnd(); ++it)
+    for (File::ConstIterator it = bibtexfile->begin(); it != bibtexfile->end(); ++it)
         fillEmbeddedFileList(*it);
 }
 

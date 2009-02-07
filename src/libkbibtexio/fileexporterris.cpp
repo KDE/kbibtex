@@ -38,7 +38,7 @@ FileExporterRIS::~FileExporterRIS()
 bool FileExporterRIS::save(QIODevice* iodevice, const Element* element, QStringList* /*errorLog*/)
 {
     m_mutex.lock();
-    bool result = FALSE;
+    bool result = false;
     QTextStream stream(iodevice);
 
     const Entry *entry = dynamic_cast<const Entry*>(element);
@@ -52,12 +52,12 @@ bool FileExporterRIS::save(QIODevice* iodevice, const Element* element, QStringL
 bool FileExporterRIS::save(QIODevice* iodevice, const File* bibtexfile, QStringList* /*errorLog*/)
 {
     m_mutex.lock();
-    bool result = TRUE;
-    m_cancelFlag = FALSE;
+    bool result = true;
+    m_cancelFlag = false;
     QTextStream stream(iodevice);
 
-    for (File::ElementList::ConstIterator it = bibtexfile->constBegin(); it != bibtexfile->constEnd() && result && !m_cancelFlag; it++) {
-        Entry *entry = dynamic_cast<Entry*>(*it);
+    for (File::ConstIterator it = bibtexfile->begin(); it != bibtexfile->end() && result && !m_cancelFlag; it++) {
+        const Entry *entry = dynamic_cast<const Entry*>(*it);
         if (entry != NULL) {
 //                 FIXME Entry *myEntry = bibtexfile->completeReferencedFieldsConst( entry );
             Entry *myEntry = new Entry(entry);
@@ -72,12 +72,12 @@ bool FileExporterRIS::save(QIODevice* iodevice, const File* bibtexfile, QStringL
 
 void FileExporterRIS::cancel()
 {
-    m_cancelFlag = TRUE;
+    m_cancelFlag = true;
 }
 
 bool FileExporterRIS::writeEntry(QTextStream &stream, const Entry* entry)
 {
-    bool result = TRUE;
+    bool result = true;
 
     switch (entry->entryType()) {
     case Entry::etBook:
@@ -177,5 +177,5 @@ bool FileExporterRIS::writeKeyValue(QTextStream &stream, const QString& key, con
         stream << value;
     stream << endl;
 
-    return TRUE;
+    return true;
 }

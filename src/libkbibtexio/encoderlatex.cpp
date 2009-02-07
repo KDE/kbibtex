@@ -31,6 +31,7 @@ static struct Decomposition {
     const char *latexCommand;
     unsigned int unicode;
 }
+
 decompositions[] = {
     {"`", 0x0300},
     {"'", 0x0301},
@@ -367,7 +368,6 @@ QString EncoderLaTeX::decode(const QString & text)
     QString result = text;
     decomposedUTF8toLaTeX(result);
 
-
     // split text into math and non-math regions
     QStringList intermediate = result.split('$', QString::SkipEmptyParts);
     QStringList::Iterator it = intermediate.begin();
@@ -421,7 +421,7 @@ QString EncoderLaTeX::encode(const QString & text)
     for (QLinkedList<CharMappingItem>::ConstIterator it = m_charMapping.begin(); it != m_charMapping.end(); ++it)
         result.replace((*it).unicode, (*it).latex);
 
-    for (int i = 0; i < result.length(); i++)
+    for (int i = 0; i < result.length(); ++i)
         if (result.at(i) == '"' && (i == 0 || result.at(i - 1) != '\\')) {
             if (beginningQuotationNext)
                 result.replace(i, 1, "``");

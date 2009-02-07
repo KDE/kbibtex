@@ -31,7 +31,7 @@ namespace IO {
 /**
 @author Thomas Fischer
 */
-class FileExporterPDF : public FileExporterToolchain
+class KBIBTEXIO_EXPORT FileExporterPDF : public FileExporterToolchain
 {
 public:
     FileExporterPDF(bool embedFiles = FALSE);
@@ -45,9 +45,9 @@ public:
     void setDocumentSearchPaths(const QStringList& searchPaths);
 
 private:
-    QString laTeXFilename;
-    QString bibTeXFilename;
-    QString outputFilename;
+    QString m_laTeXFilename;
+    QString m_bibTeXFilename;
+    QString m_outputFilename;
     QString m_latexLanguage;
     QString m_latexBibStyle;
     bool m_embedFiles;

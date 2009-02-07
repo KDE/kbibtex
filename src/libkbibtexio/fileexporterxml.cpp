@@ -44,7 +44,7 @@ FileExporterXML::~FileExporterXML()
 bool FileExporterXML::save(QIODevice* iodevice, const File* bibtexfile, QStringList * /*errorLog*/)
 {
     m_mutex.lock();
-    bool result = TRUE;
+    bool result = true;
     m_cancelFlag = FALSE;
     QTextStream stream(iodevice);
     stream.setCodec("UTF-8");
@@ -54,10 +54,8 @@ bool FileExporterXML::save(QIODevice* iodevice, const File* bibtexfile, QStringL
     stream << "<!-- http://home.gna.org/kbibtex/ -->" << endl;
     stream << "<bibliography>" << endl;
 
-    for (File::ElementList::ConstIterator it = bibtexfile->constBegin(); it != bibtexfile->constEnd() && result && !m_cancelFlag; it++) {
-        Element *element = *it;
-        write(stream, element, bibtexfile);
-    }
+    for (File::ConstIterator it = bibtexfile->begin(); it != bibtexfile->end() && result && !m_cancelFlag; ++it)
+        write(stream, *it, bibtexfile);
 
     stream << "</bibliography>" << endl;
 
@@ -76,10 +74,10 @@ bool FileExporterXML::save(QIODevice* iodevice, const Element* element, QStringL
 
 void FileExporterXML::cancel()
 {
-    m_cancelFlag = TRUE;
+    m_cancelFlag = true;
 }
 
-bool FileExporterXML::write(QTextStream&stream, const Element *element, const File* bibtexfile)
+bool FileExporterXML::write(QTextStream& stream, const Element* element, const File* bibtexfile)
 {
     bool result = FALSE;
 
@@ -112,7 +110,7 @@ bool FileExporterXML::write(QTextStream&stream, const Element *element, const Fi
 bool FileExporterXML::writeEntry(QTextStream &stream, const Entry* entry)
 {
     stream << " <entry id=\"" << EncoderXML::currentEncoderXML() ->encode(entry->id()) << "\" type=\"" << entry->entryTypeString().toLower() << "\">" << endl;
-    for (Entry::EntryFields::const_iterator it = entry->begin(); it != entry->end(); it++) {
+    for (Entry::EntryFields::ConstIterator it = entry->begin(); it != entry->end(); ++it) {
         EntryField *field = *it;
         switch (field->fieldType()) {
         case EntryField::ftAuthor:
@@ -120,7 +118,7 @@ bool FileExporterXML::writeEntry(QTextStream &stream, const Entry* entry)
             QString tag = field->fieldTypeName().toLower();
             stream << "  <" << tag << "s>" << endl;
             QStringList persons = EncoderXML::currentEncoderXML() ->encode(valueToString(field->value())).split(QRegExp("\\s+(,|and|&)+\\s+", Qt::CaseInsensitive));
-            for (QStringList::Iterator it = persons.begin(); it != persons.end(); it++)
+            for (QStringList::Iterator it = persons.begin(); it != persons.end(); ++it)
                 stream << "   <person>" << *it << "</person>" << endl;
             stream << "  </" << tag << "s>" << endl;
         }
@@ -141,7 +139,7 @@ bool FileExporterXML::writeEntry(QTextStream &stream, const Entry* entry)
                                 month = i + 1;
                             }
                             content.append(Months[ i ]);
-                            ok = TRUE;
+                            ok = true;
                             break;
                         }
                 } else
@@ -168,33 +166,33 @@ bool FileExporterXML::writeEntry(QTextStream &stream, const Entry* entry)
     }
     stream << " </entry>" << endl;
 
-    return TRUE;
+    return true;
 }
 
-bool FileExporterXML::writeMacro(QTextStream &stream, const Macro *macro)
+bool FileExporterXML::writeMacro(QTextStream &stream, const Macro* macro)
 {
     stream << " <string key=\"" << macro->key() << "\">";
     stream << EncoderXML::currentEncoderXML() ->encode(valueToString(macro->value()));
     stream << "</string>" << endl;
 
-    return TRUE;
+    return true;
 }
 
-bool FileExporterXML::writeComment(QTextStream &stream, const Comment *comment)
+bool FileExporterXML::writeComment(QTextStream &stream, const Comment* comment)
 {
     stream << " <comment>" ;
     stream << EncoderXML::currentEncoderXML() ->encode(comment->text());
     stream << "</comment>" << endl;
 
-    return TRUE;
+    return true;
 }
 
 QString FileExporterXML::valueToString(Value *value)
 {
     QString result;
-    bool isFirst = TRUE;
+    bool isFirst = true;
 
-    for (QLinkedList<ValueItem*>::ConstIterator it = value->items.begin(); it != value->items.end(); it++) {
+    for (QLinkedList<ValueItem*>::ConstIterator it = value->items.begin(); it != value->items.end(); ++it) {
         if (!isFirst)
             result.append(' ');
         isFirst = FALSE;

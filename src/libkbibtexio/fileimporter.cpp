@@ -54,4 +54,4 @@ File* FileImporter::load(const QString& text)
     return result;
 }
 
-#include "fileimporter.moc"
+// #include "fileimporter.moc"

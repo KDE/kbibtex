@@ -23,11 +23,13 @@
 #include <file.h>
 #include <entryfield.h>
 
+#include "kbibtexio_export.h"
+
 namespace KBibTeX
 {
 namespace IO {
 
-class Element
+class KBIBTEXIO_EXPORT Element
 {
 public:
     enum FilterType {ftExact, ftEveryWord, ftAnyWord};

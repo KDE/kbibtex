@@ -215,4 +215,4 @@ bool FileExporterToolchain::kpsewhich(const QString& filename)
     return result;
 }
 
-#include "fileexportertoolchain.moc"
+// #include "fileexportertoolchain.moc"

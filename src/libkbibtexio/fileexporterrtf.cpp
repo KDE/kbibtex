@@ -27,11 +27,12 @@
 
 using namespace KBibTeX::IO;
 
-FileExporterRTF::FileExporterRTF(const QString& latexBibStyle, const QString& latexLanguage) : FileExporterToolchain(), m_latexLanguage(latexLanguage), m_latexBibStyle(latexBibStyle)
+FileExporterRTF::FileExporterRTF(const QString& latexBibStyle, const QString& latexLanguage)
+        : FileExporterToolchain(), m_latexLanguage(latexLanguage), m_latexBibStyle(latexBibStyle)
 {
-    laTeXFilename = QString(workingDir).append("/bibtex-to-rtf.tex");
-    bibTeXFilename = QString(workingDir).append("/bibtex-to-rtf.bib");
-    outputFilename = QString(workingDir).append("/bibtex-to-rtf.rtf");
+    m_laTeXFilename = QString(workingDir).append("/bibtex-to-rtf.tex");
+    m_bibTeXFilename = QString(workingDir).append("/bibtex-to-rtf.bib");
+    m_outputFilename = QString(workingDir).append("/bibtex-to-rtf.rtf");
 }
 
 FileExporterRTF::~FileExporterRTF()
@@ -44,11 +45,11 @@ bool FileExporterRTF::save(QIODevice* iodevice, const File* bibtexfile, QStringL
     m_mutex.lock();
     bool result = FALSE;
 
-    QFile bibtexFile(bibTeXFilename);
-    if (bibtexFile.open(QIODevice::WriteOnly)) {
+    QFile output(m_bibTeXFilename);
+    if (output.open(QIODevice::WriteOnly)) {
         FileExporter * bibtexExporter = new FileExporterBibTeX();
-        result = bibtexExporter->save(&bibtexFile, bibtexfile, errorLog);
-        bibtexFile.close();
+        result = bibtexExporter->save(&output, bibtexfile, errorLog);
+        output.close();
         delete bibtexExporter;
     }
 
@@ -64,11 +65,11 @@ bool FileExporterRTF::save(QIODevice* iodevice, const Element* element, QStringL
     m_mutex.lock();
     bool result = FALSE;
 
-    QFile bibtexFile(bibTeXFilename);
-    if (bibtexFile.open(QIODevice::WriteOnly)) {
+    QFile output(m_bibTeXFilename);
+    if (output.open(QIODevice::WriteOnly)) {
         FileExporter * bibtexExporter = new FileExporterBibTeX();
-        result = bibtexExporter->save(&bibtexFile, element, errorLog);
-        bibtexFile.close();
+        result = bibtexExporter->save(&output, element, errorLog);
+        output.close();
         delete bibtexExporter;
     }
 
@@ -81,10 +82,9 @@ bool FileExporterRTF::save(QIODevice* iodevice, const Element* element, QStringL
 
 bool FileExporterRTF::generateRTF(QIODevice* iodevice, QStringList *errorLog)
 {
-    QStringList cmdLines;
-    cmdLines << "latex bibtex-to-rtf.tex" << "bibtex bibtex-to-rtf" << "latex bibtex-to-rtf.tex" << "latex2rtf bibtex-to-rtf.tex";
+    QStringList cmdLines = QString("latex bibtex-to-rtf.tex|bibtex bibtex-to-rtf|latex bibtex-to-rtf.tex|latex2rtf bibtex-to-rtf.tex").split('|');
 
-    if (writeLatexFile(laTeXFilename) && runProcesses(cmdLines, errorLog) && writeFileToIODevice(outputFilename, iodevice))
+    if (writeLatexFile(m_laTeXFilename) && runProcesses(cmdLines, errorLog) && writeFileToIODevice(m_outputFilename, iodevice))
         return TRUE;
     else
         return FALSE;
@@ -95,15 +95,14 @@ bool FileExporterRTF::writeLatexFile(const QString &filename)
     QFile latexFile(filename);
     if (latexFile.open(QIODevice::WriteOnly)) {
         QTextStream ts(&latexFile);
-        ts.setCodec("latin1");
+        ts.setCodec("UTF-8");
         ts << "\\documentclass{article}\n";
         if (kpsewhich("t2aenc.dfu") &&  kpsewhich("t1enc.dfu"))
             ts << "\\usepackage[T1,T2A]{fontenc}\n";
-        ts << "\\usepackage[latin1]{inputenc}\n";
-        ts << "\\usepackage[" << m_latexLanguage << "]{babel}\n";
-        if (kpsewhich("hyperref.sty"))
-            ts << "\\usepackage[pdfproducer={KBibTeX: http://www.t-fischer.net/kbibtex/},pdftex]{hyperref}\n";
-        else if (kpsewhich("url.sty"))
+        ts << "\\usepackage[utf8]{inputenc}\n";
+        if (kpsewhich("babel.sty"))
+            ts << "\\usepackage[" << m_latexLanguage << "]{babel}\n";
+        if (kpsewhich("url.sty"))
             ts << "\\usepackage{url}\n";
         if (m_latexBibStyle.startsWith("apacite") && kpsewhich("apacite.sty"))
             ts << "\\usepackage[bibnewpage]{apacite}\n";

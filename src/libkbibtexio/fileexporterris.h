@@ -28,7 +28,7 @@ namespace KBibTeX
 {
 namespace IO {
 
-class FileExporterRIS : public FileExporter
+class KBIBTEXIO_EXPORT FileExporterRIS : public FileExporter
 {
 public:
     FileExporterRIS();

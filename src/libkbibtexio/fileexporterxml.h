@@ -37,7 +37,7 @@ class Comment;
 /**
 @author Thomas Fischer
 */
-class FileExporterXML : public FileExporter
+class KBIBTEXIO_EXPORT FileExporterXML : public FileExporter
 {
 public:
     FileExporterXML();
@@ -52,10 +52,10 @@ public slots:
 private:
     bool m_cancelFlag;
 
-    bool write(QTextStream&stream, const Element *element, const File* bibtexfile = NULL);
+    bool write(QTextStream&stream, const Element* element, const File* bibtexfile = NULL);
     bool writeEntry(QTextStream &stream, const Entry* entry);
-    bool writeMacro(QTextStream &stream, const Macro *macro);
-    bool writeComment(QTextStream &stream, const Comment *comment);
+    bool writeMacro(QTextStream &stream, const Macro* macro);
+    bool writeComment(QTextStream &stream, const Comment* comment);
 
     QString valueToString(Value *value);
 };

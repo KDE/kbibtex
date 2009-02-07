@@ -17,8 +17,8 @@
 *   Free Software Foundation, Inc.,                                       *
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
-#ifndef BIBTEXFILEIMPORTER_H
-#define BIBTEXFILEIMPORTER_H
+#ifndef KBIBTEX_IO_FILEIMPORTER_H
+#define KBIBTEX_IO_FILEIMPORTER_H
 
 #include <QObject>
 #include <QMutex>
@@ -64,4 +64,4 @@ protected:
 }
 }
 
-#endif
+#endif // KBIBTEX_IO_FILEIMPORTER_H

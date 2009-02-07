@@ -24,11 +24,13 @@
 
 #include <value.h>
 
+#include "kbibtexio_export.h"
+
 namespace KBibTeX
 {
 namespace IO {
 
-class EntryField
+class KBIBTEXIO_EXPORT EntryField
 {
 public:
     enum FieldType {ftAbstract, ftAddress, ftAnnote, ftAuthor, ftBookTitle, ftChapter, ftCrossRef, ftDoi, ftEdition, ftEditor, ftHowPublished, ftInstitution, ftISBN, ftISSN, ftJournal, ftKey, ftKeywords, ftLocalFile, ftLocation, ftMonth, ftNote, ftNumber, ftOrganization, ftPages, ftPublisher, ftSchool, ftSeries, ftTitle, ftType, ftURL, ftVolume, ftYear, ftUnknown = -1};

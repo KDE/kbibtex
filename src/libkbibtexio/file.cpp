@@ -32,61 +32,51 @@
 using namespace KBibTeX::IO;
 
 File::File()
-        : QObject(), fileName(QString::null)
+        : QList<KBibTeX::IO::Element*>(), fileName(QString::null)
 {
     // nothing
 }
 
 File::~File()
 {
-    for (ElementList::iterator it = elements.begin(); it != elements.end(); it++)
-        delete *it;
+    // nothing
 }
 
-unsigned int File::count()
+void File::append(KBibTeX::IO::Element* element)
 {
-    return elements.count();
+    QList<KBibTeX::IO::Element*>::append(element);
 }
 
-/* FIXME: Port
-    Element* File::at( const unsigned int index )
-    {
-        return *( elements[ index] );
-    }
-*/
-
-void File::append(const File *other, const Element *after)
+void File::append(File* other)
 {
-    for (ElementList::ConstIterator it = other->constBegin(); it != other->constEnd(); it++)
-        appendElement((*it)->clone(), after);
+    // TODO
 }
 
-void File::appendElement(Element *element, const Element *after)
-{
-    if (after == NULL)
-        elements.append(element);
-    else {
-        for (ElementList::iterator it = elements.begin() ; it != elements.end(); it++)
-            if ((*it) == after) {
-                elements.insert(++it, element);
-                break;
-            }
-    }
-}
-
-void File::deleteElement(Element *element)
+void File::erase(Element* element)
 {
     bool found = false;
-    for (ElementList::Iterator it = elements.begin(); it != elements.end(); it++)
-        if (found = (*it == element)) {
-            elements.erase(it);
-            delete element;
-            break;
-        }
+
+    for (Iterator it = begin(); !found && it != end(); ++it)
+        if (found = (*it == element))
+            QList<KBibTeX::IO::Element*>::erase(it);
 
     if (!found)
         qDebug("BibTeX::File got told to delete an element which is not in this file.");
 }
+
+// void File::deleteElement(Element *element)
+// {
+//     bool found = false;
+//     for (ElementList::Iterator it = elements.begin(); it != elements.end(); it++)
+//         if (found = (*it == element)) {
+//             elements.erase(it);
+//             delete element;
+//             break;
+//         }
+//
+//     if (!found)
+//         qDebug("BibTeX::File got told to delete an element which is not in this file.");
+// }
 
 // Element* File::cloneElement(Element *element)
 // {
@@ -128,13 +118,13 @@ void File::deleteElement(Element *element)
 
 const Element *File::containsKey(const QString &key) const
 {
-    for (ElementList::const_iterator it = elements.begin(); it != elements.end(); it++) {
-        Entry* entry = dynamic_cast<Entry*>(*it);
+    for (ConstIterator it = begin(); it != end(); ++it) {
+        const Entry* entry = dynamic_cast<const Entry*>(*it);
         if (entry != NULL) {
             if (entry->id() == key)
                 return entry;
         } else {
-            Macro* macro = dynamic_cast<Macro*>(*it);
+            const Macro* macro = dynamic_cast<const Macro*>(*it);
             if (macro != NULL) {
                 if (macro->key() == key)
                     return macro;
@@ -145,16 +135,16 @@ const Element *File::containsKey(const QString &key) const
     return NULL;
 }
 
-QStringList File::allKeys()
+QStringList File::allKeys() const
 {
     QStringList result;
 
-    for (ElementList::iterator it = elements.begin(); it != elements.end(); it++) {
-        Entry* entry = dynamic_cast<Entry*>(*it);
+    for (ConstIterator it = begin(); it != end(); ++it) {
+        const Entry* entry = dynamic_cast<const Entry*>(*it);
         if (entry != NULL)
             result.append(entry->id());
         else {
-            Macro* macro = dynamic_cast<Macro*>(*it);
+            const Macro* macro = dynamic_cast<const Macro*>(*it);
             if (macro != NULL)
                 result.append(macro->key());
         }
@@ -163,11 +153,11 @@ QStringList File::allKeys()
     return result;
 }
 
-QString File::text()
+QString File::text() const
 {
     QString result;
 
-    for (ElementList::iterator it = elements.begin(); it != elements.end(); it++) {
+    for (ConstIterator it = begin(); it != end(); ++it) {
         result.append((*it)->text());
         result.append("\n");
     }
@@ -175,31 +165,11 @@ QString File::text()
     return result;
 }
 
-File::ElementList::Iterator File::begin()
-{
-    return elements.begin();
-}
-
-File::ElementList::Iterator File::end()
-{
-    return elements.end();
-}
-
-File::ElementList::ConstIterator File::constBegin() const
-{
-    return elements.constBegin();
-}
-
-File::ElementList::ConstIterator File::constEnd() const
-{
-    return elements.constEnd();
-}
-
 QStringList File::getAllValuesAsStringList(const EntryField::FieldType fieldType) const
 {
     QStringList result;
-    for (ElementList::ConstIterator eit = elements.constBegin(); eit != elements.constEnd(); ++eit) {
-        Entry* entry = dynamic_cast<Entry*>(*eit);
+    for (ConstIterator eit = constBegin(); eit != constEnd(); ++eit) {
+        const Entry* entry = dynamic_cast<const Entry*>(*eit);
         EntryField * field = NULL;
         if (entry != NULL && (field = entry->getField(fieldType)) != NULL) {
             QLinkedList<ValueItem*> valueItems = field->value()->items;
@@ -243,8 +213,8 @@ QStringList File::getAllValuesAsStringList(const EntryField::FieldType fieldType
 QMap<QString, int> File::getAllValuesAsStringListWithCount(const EntryField::FieldType fieldType) const
 {
     QMap<QString, int> result;
-    for (ElementList::ConstIterator eit = elements.begin(); eit != elements.end(); ++eit) {
-        Entry* entry = dynamic_cast<Entry*>(*eit);
+    for (ConstIterator eit = begin(); eit != end(); ++eit) {
+        const Entry* entry = dynamic_cast<const Entry*>(*eit);
         EntryField * field = NULL;
         if (entry != NULL && (field = entry->getField(fieldType)) != NULL) {
             QLinkedList<ValueItem*> valueItems = field->value()->items;
@@ -292,16 +262,17 @@ QMap<QString, int> File::getAllValuesAsStringListWithCount(const EntryField::Fie
 
 void File::replaceValue(const QString& oldText, const QString& newText, const EntryField::FieldType fieldType)
 {
-    for (ElementList::ConstIterator it = elements.begin(); it != elements.end(); it++) {
-        Entry* entry = dynamic_cast<Entry*>(*it);
-        if (entry != NULL) {
-            if (fieldType != EntryField::ftUnknown) {
-                EntryField * field = entry->getField(fieldType);
-                if (field != NULL)
-                    field->value() ->replace(oldText, newText);
+// FIXME
+    /*    for (ConstIterator it = begin(); it != end(); ++it) {
+            const Entry* entry = dynamic_cast<const Entry*>(*it);
+            if (entry != NULL) {
+                if (fieldType != EntryField::ftUnknown) {
+                    EntryField * field = entry->getField(fieldType);
+                    if (field != NULL)
+                        field->value() ->replace(oldText, newText);
+                }
             }
-        }
-    }
+        }*/
 }
 
 // Entry *File::completeReferencedFieldsConst(const Entry *entry) const
@@ -347,5 +318,3 @@ void File::replaceValue(const QString& oldText, const QString& newText, const En
 //         }
 //     }
 // }
-
-#include "file.moc"

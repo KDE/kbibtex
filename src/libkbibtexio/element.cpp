@@ -35,10 +35,10 @@ Element::~Element()
 
 bool Element::isSimpleString(const QString &text)
 {
-    bool result = TRUE;
+    bool result = true;
     const QString goodChars = "abcdefghijklmnopqrstuvwxyz0123456789-_";
 
-    for (int i = 0; result && i < text.length(); i++)
+    for (int i = 0; result && i < text.length(); ++i)
         result = goodChars.contains(text[i], Qt::CaseInsensitive);
 
     return result;

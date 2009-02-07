@@ -26,7 +26,7 @@ protected:
 KBibTeXIOTest::KBibTeXIOTest(int argc, char *argv[])
         : m_inputFileName(argc >= 3 ? QString(argv[argc-2]) : QString::null), m_outputFileName(argc >= 3 ? QString(argv[argc-1]) : QString::null)
 {
-// nothing
+    // nothing
 }
 
 int KBibTeXIOTest::run()
@@ -48,7 +48,9 @@ int KBibTeXIOTest::run()
     }
 
     if (m_inputFileName.endsWith(".bib"))
-        importer = new KBibTeX::IO::FileImporterBibTeX();
+        importer = new KBibTeX::IO::FileImporterBibTeX("latex", true);
+    else if (m_inputFileName.endsWith(".ris"))
+        importer = new KBibTeX::IO::FileImporterRIS();
     else if (m_inputFileName.endsWith(".ris"))
         importer = new KBibTeX::IO::FileImporterRIS();
     else {
@@ -84,9 +86,10 @@ int KBibTeXIOTest::run()
     exporter->save(&outputfile, bibtexfile);
     outputfile.close();
 
+    delete bibtexfile;
+
     delete importer;
     delete exporter;
-    delete bibtexfile;
     return 0;
 }
 

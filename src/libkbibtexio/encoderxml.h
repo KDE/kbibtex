@@ -17,8 +17,8 @@
 *   Free Software Foundation, Inc.,                                       *
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
-#ifndef BIBTEXENCODERXML_H
-#define BIBTEXENCODERXML_H
+#ifndef KBIBTEX_IO_ENCODERXML_H
+#define KBIBTEX_IO_ENCODERXML_H
 
 #include <encoder.h>
 
@@ -59,4 +59,4 @@ private:
 }
 }
 
-#endif
+#endif // KBIBTEX_IO_ENCODERXML_H

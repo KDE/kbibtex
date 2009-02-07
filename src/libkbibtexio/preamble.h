@@ -17,8 +17,8 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef BIBTEXPreamble_H
-#define BIBTEXPreamble_H
+#ifndef KBIBTEX_IO_PREAMBLE_H
+#define KBIBTEX_IO_PREAMBLE_H
 
 #include <element.h>
 
@@ -53,4 +53,4 @@ private:
 }
 }
 
-#endif
+#endif // KBIBTEX_IO_PREAMBLE_H
