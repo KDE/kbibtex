@@ -24,15 +24,16 @@
 
 using namespace KBibTeX::IO;
 
-Comment::Comment(const QString& text)
-        : Element(), m_text(text)
+Comment::Comment(const QString& text, bool useCommand)
+        : Element(), m_text(text), m_useCommand(useCommand)
 {
     // nothing
 }
 
 Comment::Comment(const Comment *other)
+        : Element(), m_text(other->m_text), m_useCommand(other->m_useCommand)
 {
-    m_text = other->m_text;
+    // nothing
 }
 
 Comment::~Comment()
@@ -48,6 +49,16 @@ QString Comment::text() const
 void Comment::setText(const QString &text)
 {
     m_text = text;
+}
+
+bool Comment::useCommand() const
+{
+    return m_useCommand;
+}
+
+void Comment::setUseCommand(bool useCommand)
+{
+    m_useCommand = useCommand;
 }
 
 bool Comment::containsPattern(const QString& pattern, EntryField::FieldType fieldType, FilterType filterType, Qt::CaseSensitivity caseSensitive) const

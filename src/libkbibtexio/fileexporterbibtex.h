@@ -42,7 +42,7 @@ class KBIBTEXIO_EXPORT FileExporterBibTeX : public FileExporter
 {
 public:
     enum KeywordCasing {kcLowerCase, kcInitialCapital, kcCamelCase, kcCapital};
-    enum QuoteComment { qcNone, qcCommand, qcPercentSign };
+    enum QuoteComment {qcNone, qcCommand, qcPercentSign};
 
     FileExporterBibTeX(const QString& = "latex", const QChar& = '"', const QChar& = '"', KeywordCasing = kcCamelCase, QuoteComment = qcNone, bool = false);
     ~FileExporterBibTeX();

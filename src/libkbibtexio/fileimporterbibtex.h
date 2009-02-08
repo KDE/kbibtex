@@ -78,6 +78,7 @@ private:
 
     void unescapeLaTeXChars(QString &text);
     void splitPersons(const QString& test, QStringList &persons);
+    void evaluateParameterComments(QTextStream *textStream, const QString &line);
 };
 
 }

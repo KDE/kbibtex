@@ -186,7 +186,7 @@ Person::Person(const QString& text)
 }
 
 Person::Person(const QString& firstName, const QString& lastName)
-        : ValueTextInterface(firstName + " " + lastName), m_firstName(firstName), m_lastName(lastName)
+        : ValueTextInterface(QString(firstName).append(" ").append(lastName)), m_firstName(firstName), m_lastName(lastName)
 {
 // nothing
 }

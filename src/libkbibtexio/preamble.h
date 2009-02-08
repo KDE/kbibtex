@@ -34,6 +34,7 @@ class Preamble : public Element
 public:
 public:
     Preamble();
+    Preamble(const QString& text);
     Preamble(const Preamble *other);
     virtual ~Preamble();
 

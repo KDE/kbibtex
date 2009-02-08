@@ -19,6 +19,7 @@
 ***************************************************************************/
 #include <QTextCodec>
 #include <QTextStream>
+#include <QDebug>
 
 #include <file.h>
 #include <element.h>
@@ -34,8 +35,7 @@
 using namespace KBibTeX::IO;
 
 FileExporterBibTeX::FileExporterBibTeX(const QString& encoding, const QChar& stringOpenDelimiter, const QChar& stringCloseDelimiter, KeywordCasing keywordCasing, QuoteComment quoteComment, bool protectCasing)
-        : FileExporter(),
-        m_stringOpenDelimiter(stringOpenDelimiter), m_stringCloseDelimiter(stringCloseDelimiter), m_keywordCasing(keywordCasing), m_quoteComment(quoteComment), m_encoding(encoding), m_protectCasing(protectCasing), cancelFlag(FALSE)
+        : FileExporter(), m_stringOpenDelimiter(stringOpenDelimiter), m_stringCloseDelimiter(stringCloseDelimiter), m_keywordCasing(keywordCasing), m_quoteComment(quoteComment), m_encoding(encoding), m_protectCasing(protectCasing), cancelFlag(FALSE)
 {
 // nothing
 }
@@ -56,6 +56,7 @@ bool FileExporterBibTeX::save(QIODevice* iodevice, const File* bibtexfile, QStri
       * in the correct order.
       */
 
+    QLinkedList<const Comment*> parameterCommentsList;
     QLinkedList<const Preamble*> preambleList;
     QLinkedList<const Macro*> macroList;
     QLinkedList<const Entry*> crossRefingEntryList;
@@ -73,25 +74,53 @@ bool FileExporterBibTeX::save(QIODevice* iodevice, const File* bibtexfile, QStri
                 const Entry *entry = dynamic_cast<const Entry*>(*it);
                 if ((entry != NULL) && (entry->getField(EntryField::ftCrossRef) != NULL))
                     crossRefingEntryList.append(entry);
-                else
-                    remainingList.append(*it);
+                else {
+                    const Comment *comment = dynamic_cast<const Comment*>(*it);
+                    QString commentText = QString::null;
+                    /** check if this file requests a special encoding */
+                    if (comment != NULL && comment->useCommand() && ((commentText = comment->text())).startsWith("x-kbibtex-encoding=")) {
+                        QString encoding = commentText.mid(19);
+                        QTextCodec *codec = QTextCodec::codecForName(encoding.toAscii());
+                        if (codec != NULL) {
+                            m_encoding = encoding;
+                            parameterCommentsList.append(comment);
+                        } else
+                            qWarning() << "User set encoding to \"" << encoding << "\" which is not recognized by the system." << endl;
+                    } else
+                        remainingList.append(*it);
+                }
             }
         }
     }
 
+    int totalElements = (int) bibtexfile->count();
+    int currentPos = 0;
+
     QTextStream stream(iodevice);
     stream.setCodec(m_encoding == "latex" ? "UTF-8" : m_encoding.toAscii());
 
-    /** first, write preambles and strings (macros) at the beginning */
-    for (QLinkedList<const Preamble*>::ConstIterator it = preambleList.begin(); it != preambleList.end() && result && !cancelFlag; it++)
-        result &= writePreamble(stream, **it);
+    /** before anything else, write parameter comments */
+    for (QLinkedList<const Comment*>::ConstIterator it = parameterCommentsList.begin(); it != parameterCommentsList.end() && result && !cancelFlag; it++) {
+        result &= writeComment(stream, **it);
+        emit progress(++currentPos, totalElements);
+    }
 
-    for (QLinkedList<const Macro*>::ConstIterator it = macroList.begin(); it != macroList.end() && result && !cancelFlag; it++)
+    /** first, write preambles and strings (macros) at the beginning */
+    for (QLinkedList<const Preamble*>::ConstIterator it = preambleList.begin(); it != preambleList.end() && result && !cancelFlag; it++) {
+        result &= writePreamble(stream, **it);
+        emit progress(++currentPos, totalElements);
+    }
+
+    for (QLinkedList<const Macro*>::ConstIterator it = macroList.begin(); it != macroList.end() && result && !cancelFlag; it++) {
         result &= writeMacro(stream, **it);
+        emit progress(++currentPos, totalElements);
+    }
 
     /** second, write cross-referencing elements */
-    for (QLinkedList<const Entry*>::ConstIterator it = crossRefingEntryList.begin(); it != crossRefingEntryList.end() && result && !cancelFlag; it++)
+    for (QLinkedList<const Entry*>::ConstIterator it = crossRefingEntryList.begin(); it != crossRefingEntryList.end() && result && !cancelFlag; it++) {
         result &= writeEntry(stream, **it);
+        emit progress(++currentPos, totalElements);
+    }
 
     /** third, write remaining elements */
     for (QLinkedList<const Element*>::ConstIterator it = remainingList.begin(); it != remainingList.end() && result && !cancelFlag; it++) {
@@ -103,6 +132,7 @@ bool FileExporterBibTeX::save(QIODevice* iodevice, const File* bibtexfile, QStri
             if (comment != NULL)
                 result &= writeComment(stream, *comment);
         }
+        emit progress(++currentPos, totalElements);
     }
 
     m_mutex.unlock();
@@ -178,7 +208,9 @@ bool FileExporterBibTeX::writeComment(QTextStream &stream, const Comment& commen
     if (m_encoding == "latex")
         text = EncoderLaTeX::currentEncoderLaTeX() ->encode(text);
 
-    if (m_quoteComment != qcCommand) {
+    if (comment.useCommand() || m_quoteComment == qcCommand)
+        stream << "@" << applyKeywordCasing("Comment") << "{" << text << "}" << endl << endl;
+    else    if (m_quoteComment == qcPercentSign) {
         QStringList commentLines = text.split('\n', QString::SkipEmptyParts);
         for (QStringList::Iterator it = commentLines.begin(); it != commentLines.end(); it++) {
             if (m_quoteComment == qcPercentSign)
@@ -186,9 +218,9 @@ bool FileExporterBibTeX::writeComment(QTextStream &stream, const Comment& commen
             stream << (*it) << endl;
         }
         stream << endl;
-    } else {
-        stream << "@" << applyKeywordCasing("Comment") << "{" << text << "}" << endl << endl;
-    }
+    } else
+        stream << text << endl << endl;
+
     return TRUE;
 }
 

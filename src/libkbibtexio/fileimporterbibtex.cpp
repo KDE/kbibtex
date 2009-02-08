@@ -51,18 +51,30 @@ FileImporterBibTeX::~FileImporterBibTeX()
 File* FileImporterBibTeX::load(QIODevice *iodevice)
 {
     m_mutex.lock();
+    QCoreApplication::instance()->processEvents();
     cancelFlag = FALSE;
 
     m_textStream = new QTextStream(iodevice);
     m_textStream->setCodec(m_encoding == "latex" ? "UTF-8" : m_encoding.toAscii());
-    QString rawText = m_textStream->readAll();
+    QString rawText = "";
+    while (!m_textStream->atEnd()) {
+        QString line = m_textStream->readLine();
+        evaluateParameterComments(m_textStream, line);
+        rawText.append(line).append("\n");
+    }
     delete m_textStream;
+
+    QCoreApplication::instance()->processEvents();
 
     /** Cleaning up code comming from DBLP */
     rawText = rawText.replace("<pre>", "\n\n").replace("</pre>", "\n\n").remove("<a href=\"http://www.informatik.uni-trier.de/~ley/db/about/bibtex.html\">DBLP</a>:");
 
     rawText = EncoderLaTeX::currentEncoderLaTeX() ->decode(rawText);
+    QCoreApplication::instance()->processEvents();
+
     unescapeLaTeXChars(rawText);
+    QCoreApplication::instance()->processEvents();
+
     m_textStream = new QTextStream(&rawText, QIODevice::ReadOnly);
     m_textStream->setCodec("UTF-8");
 
@@ -142,6 +154,7 @@ Comment *FileImporterBibTeX::readCommentElement()
 
 Comment *FileImporterBibTeX::readPlainCommentElement()
 {
+    qDebug() << "readPlainCommentElement" << endl;
     QString result = readLine();
     *m_textStream >> m_currentChar;
     while (!m_textStream->atEnd() && m_currentChar != '@' && !m_currentChar.isSpace()) {
@@ -150,6 +163,7 @@ Comment *FileImporterBibTeX::readPlainCommentElement()
         result.append(readLine());
         *m_textStream >> m_currentChar;
     }
+    qDebug() << "   result = " << result << endl;
     return new Comment(result);
 }
 
@@ -493,4 +507,15 @@ void FileImporterBibTeX::splitPersons(const QString& text, QStringList &persons)
 
     wordList.append(word);
     persons.append(wordList.join(" "));
+}
+
+void FileImporterBibTeX::evaluateParameterComments(QTextStream *textStream, const QString &line)
+{
+    /** check if this file requests a special encoding */
+    if (line.startsWith("@comment{x-kbibtex-encoding=") && line.endsWith("}")) {
+        QString newEncoding = line.mid(28, line.length() - 29);
+        qDebug() << "x-kbibtex-encoding=" << newEncoding << endl;
+        if (newEncoding == "latex") newEncoding = "utf-8";
+        textStream->setCodec(newEncoding.toAscii());
+    }
 }

@@ -21,7 +21,7 @@
 #include <QRegExp>
 #include <QDebug>
 
-#include <encoderlatex.h>
+#include "encoderlatex.h"
 
 using namespace KBibTeX::IO;
 
@@ -249,28 +249,35 @@ static const struct EncoderLaTeXModCharMapping {
 modcharmappingdatalatex[] = {
     {"\\\\`", "A", 0x00C0},
     {"\\\\'", "A", 0x00C1},
-    {"\\\\\\^", "A", 0x00C21},
+    {"\\\\\\^", "A", 0x00C2},
     {"\\\\~", "A", 0x00C3},
     {"\\\\\"", "A", 0x00C4},
     {"\\\\r", "A", 0x00C5},
+    /** 0x00C6 */
     {"\\\\c", "C", 0x00C7},
     {"\\\\`", "E", 0x00C8},
     {"\\\\'", "E", 0x00C9},
     {"\\\\\\^", "E", 0x00CA},
     {"\\\\\"", "E", 0x00CB},
+    {"\\\\`", "I", 0x00CC},
     {"\\\\'", "I", 0x00CD},
     {"\\\\\\^", "I", 0x00CE},
+    {"\\\\\"", "I", 0x00CF},
+    /** 0x00D0 */
     {"\\\\~", "N", 0x00D1},
     {"\\\\`", "O", 0x00D2},
     {"\\\\'", "O", 0x00D3},
     {"\\\\\\^", "O", 0x00D4},
+    /** 0x00D5 */
     {"\\\\\"", "O", 0x00D6},
+    /** 0x00D7 */
     {"\\\\", "O", 0x00D8},
     {"\\\\`", "U", 0x00D9},
     {"\\\\'", "U", 0x00DA},
     {"\\\\\\^", "U", 0x00DB},
     {"\\\\\"", "U", 0x00DC},
     {"\\\\'", "Y", 0x00DD},
+    /** 0x00DE */
     {"\\\\\"", "s", 0x00DF},
     {"\\\\`", "a", 0x00E0},
     {"\\\\'", "a", 0x00E1},
@@ -278,6 +285,7 @@ modcharmappingdatalatex[] = {
     {"\\\\~", "a", 0x00E3},
     {"\\\\\"", "a", 0x00E4},
     {"\\\\r", "a", 0x00E5},
+    /** 0x00E6 */
     {"\\\\c", "c", 0x00E7},
     {"\\\\`", "e", 0x00E8},
     {"\\\\'", "e", 0x00E9},
@@ -286,41 +294,152 @@ modcharmappingdatalatex[] = {
     {"\\\\'", "i", 0x00ED},
     {"\\\\'", "\\\\i", 0x00ED},
     {"\\\\\\^", "i", 0x00EE},
+    /** 0x00EF */
+    /** 0x00F0 */
     {"\\\\~", "n", 0x00F1},
     {"\\\\`", "o", 0x00F2},
     {"\\\\'", "o", 0x00F3},
     {"\\\\\\^", "o", 0x00F4},
+    /** 0x00F5 */
     {"\\\\\"", "o", 0x00F6},
+    /** 0x00F7 */
     {"\\\\", "o", 0x00F8},
     {"\\\\`", "u", 0x00F9},
     {"\\\\'", "u", 0x00FA},
     {"\\\\\\^", "u", 0x00FB},
     {"\\\\\"", "u", 0x00FC},
     {"\\\\'", "y", 0x00FD},
+    /** 0x00FE */
+    /** 0x00FF */
+    /** 0x0100 */
+    /** 0x0101 */
     {"\\\\u", "A", 0x0102},
     {"\\\\u", "a", 0x0103},
+    /** 0x0104 */
+    /** 0x0105 */
     {"\\\\'", "C", 0x0106},
     {"\\\\'", "c", 0x0107},
+    /** 0x0108 */
+    /** 0x0109 */
     {"\\\\v", "E", 0x010A},
     {"\\\\v", "e", 0x010B},
     {"\\\\v", "C", 0x010C},
     {"\\\\v", "c", 0x010D},
+    /** 0x010E */
+    /** 0x010F */
+    /** 0x0110 */
+    /** 0x0111 */
+    /** 0x0112 */
+    /** 0x0113 */
+    /** 0x0114 */
+    /** 0x0115 */
+    /** 0x0116 */
+    /** 0x0117 */
     {"\\\\c", "E", 0x0118},
     {"\\\\c", "e", 0x0119},
+    /** 0x011A */
+    /** 0x011B */
+    /** 0x011C */
+    /** 0x011D */
     {"\\\\u", "G", 0x011E},
     {"\\\\u", "g", 0x011F},
+    /** 0x0120 */
+    /** 0x0121 */
+    /** 0x0122 */
+    /** 0x0123 */
+    /** 0x0124 */
+    /** 0x0125 */
+    /** 0x0126 */
+    /** 0x0127 */
+    /** 0x0128 */
+    /** 0x0129 */
+    /** 0x012A */
+    /** 0x012B */
+    /** 0x012C */
+    /** 0x012D */
+    /** 0x012E */
+    /** 0x012F */
+    /** 0x0130 */
+    /** 0x0131 */
+    /** 0x0132 */
+    /** 0x0133 */
+    /** 0x0134 */
+    /** 0x0135 */
+    /** 0x0136 */
+    /** 0x0137 */
+    /** 0x0138 */
+    /** 0x0139 */
+    /** 0x013A */
+    /** 0x013B */
+    /** 0x013C */
+    /** 0x013D */
+    /** 0x013E */
+    /** 0x013F */
+    /** 0x0140 */
+    /** 0x0141 */
+    /** 0x0142 */
     {"\\\\'", "N", 0x0143},
     {"\\\\'", "n", 0x0144},
+    /** 0x0145 */
+    /** 0x0146 */
+    /** 0x0147 */
+    /** 0x0148 */
+    /** 0x0149 */
+    /** 0x014A */
+    /** 0x014B */
+    /** 0x014C */
+    /** 0x014D */
+    /** 0x014E */
+    /** 0x014F */
     {"\\\\H", "O", 0x0150},
     {"\\\\H", "o", 0x0151},
+    /** 0x0152 */
+    /** 0x0153 */
+    /** 0x0154 */
+    /** 0x0155 */
+    /** 0x0156 */
+    /** 0x0157 */
+    /** 0x0158 */
+    /** 0x0159 */
     {"\\\\'", "S", 0x015A},
     {"\\\\'", "s", 0x015B},
+    /** 0x015C */
+    /** 0x015D */
     {"\\\\c", "S", 0x015E},
     {"\\\\c", "s", 0x015F},
     {"\\\\v", "S", 0x0160},
     {"\\\\v", "s", 0x0161},
+    /** 0x0162 */
+    /** 0x0163 */
+    /** 0x0164 */
+    /** 0x0165 */
+    /** 0x0166 */
+    /** 0x0167 */
+    /** 0x0168 */
+    /** 0x0169 */
+    /** 0x016A */
+    /** 0x016B */
+    /** 0x016C */
+    /** 0x016D */
     {"\\\\r", "U", 0x016E},
     {"\\\\r", "u", 0x016F},
+    /** 0x0170 */
+    /** 0x0171 */
+    /** 0x0172 */
+    /** 0x0173 */
+    /** 0x0174 */
+    /** 0x0175 */
+    /** 0x0176 */
+    /** 0x0177 */
+    {"\\\\\"", "Y", 0x0178},
+    {"\\\\'", "Z", 0x0179},
+    {"\\\\'", "z", 0x017A},
+    /** 0x017B */
+    /** 0x017C */
+    {"\\\\v", "Z", 0x017D},
+    {"\\\\v", "z", 0x017E},
+    /** 0x017F */
+    /** 0x0180 */
     {"\\\\v", "A", 0x01CD},
     {"\\\\v", "a", 0x01CE},
     {"\\\\v", "G", 0x01E6},
@@ -341,7 +460,7 @@ static const struct EncoderLaTeXCharMapping {
 }
 charmappingdatalatex[] = {
     {"\\\\#", 0x0023, "\\#"},
-    /*{"\\\\&", 0x0026, "\\&"},*/
+    {"\\\\_", 0x005F, "\\_"},
     {"!`", 0x00A1, "!`"},
     {"\"<", 0x00AB, "\"<"},
     {"\">", 0x00BB, "\">"},
@@ -365,6 +484,7 @@ EncoderLaTeX::~EncoderLaTeX()
 
 QString EncoderLaTeX::decode(const QString & text)
 {
+    const QString splitMarker = "|KBIBTEX|";
     QString result = text;
     decomposedUTF8toLaTeX(result);
 
@@ -390,14 +510,13 @@ QString EncoderLaTeX::decode(const QString & text)
             ++it;
     }
 
-    if (intermediate.size() > 100)
-        qWarning("This BibTeX source code contains many inline math fragements (%d) which thwarts KBibTeX when parsing the code.", intermediate.size());
-    for (QStringList::Iterator it = intermediate.begin(); it != intermediate.end(); it++) {
-        for (QLinkedList<CharMappingItem>::ConstIterator cmit = m_charMapping.begin(); cmit != m_charMapping.end(); ++cmit)
-            (*it).replace((*cmit).regExp, (*cmit).unicode);
+    result = "";
+    for (QStringList::Iterator it = intermediate.begin(); it != intermediate.end(); ++it) {
+        if (!result.isEmpty()) result.append(splitMarker);
+        result.append(*it);
 
         // skip math regions
-        it++;
+        ++it;
 
         if (it == intermediate.end())
             break;
@@ -406,7 +525,20 @@ QString EncoderLaTeX::decode(const QString & text)
             qWarning() << "Very long math equation using $ found, maybe due to broken inline math: " << (*it).left(48);
     }
 
-    result = intermediate.join("$");
+    for (QLinkedList<CharMappingItem>::ConstIterator cmit = m_charMapping.begin(); cmit != m_charMapping.end(); ++cmit)
+        result.replace((*cmit).regExp, (*cmit).unicode);
+    QStringList transformed = result.split(splitMarker, QString::SkipEmptyParts);
+
+    result = "";
+    for (QStringList::Iterator itt = transformed.begin(), iti = intermediate.begin(); itt != transformed.end() && iti != intermediate.end(); ++itt, ++iti) {
+        result.append(*itt);
+
+        ++iti;
+        if (iti == intermediate.end())
+            break;
+
+        result.append("$").append(*iti).append("$");
+    }
 
     return result;
 }
@@ -431,10 +563,10 @@ QString EncoderLaTeX::encode(const QString & text)
             beginningQuotationNext = !beginningQuotationNext;
         }
 
-    /** \url accepts unquotet &
-       May introduce new problem tough */
-    if (result.contains("\\url{"))
-        result.replace("\\&", "&");
+    /** \url accepts unquotet & and _
+    May introduce new problem tough */
+    if (result.contains("\\url {"))
+        result.replace("\\&", "&").replace("\\_", "_");
 
     decomposedUTF8toLaTeX(result);
 
@@ -458,7 +590,10 @@ QString EncoderLaTeX::encodeSpecialized(const QString & text, const EntryField::
     switch (fieldType) {
     case EntryField::ftPages:
         result.replace(QChar(0x2013), "--");
+        break;
 
+    case EntryField::ftURL:
+        result.replace("\\_", "_");
         break;
 
     default:
@@ -519,7 +654,7 @@ void EncoderLaTeX::buildCharMapping()
     for (int i = 0; i < modcharmappingdatalatexcount; ++i) {
         QString modifierRegExp = QString(modcharmappingdatalatex[i].modifier);
         QString modifier = modifierRegExp;
-        modifier.replace("\\^", "^").replace("\\\\", "\\");
+        modifier.replace("\\ ^ ", " ^ ").replace("\\\\", "\\");
 
         /** first batch of replacement rules, where no separator is required between modifier and character (e.g. \"a) */
         if (!modifierRegExp.at(modifierRegExp.length() - 1).isLetter())

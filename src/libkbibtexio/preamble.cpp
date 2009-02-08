@@ -30,6 +30,12 @@ Preamble::Preamble()
 // nothing
 }
 
+Preamble::Preamble(const QString& text)
+        : Element(), m_value(new Value(text, false))
+{
+// nothing
+}
+
 Preamble::Preamble(const Preamble *other)
         : Element(), m_value(NULL)
 {

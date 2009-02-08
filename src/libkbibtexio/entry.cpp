@@ -163,29 +163,39 @@ bool Entry::containsPattern(const QString & pattern, EntryField::FieldType field
 QStringList Entry::urls() const
 {
     QStringList result;
-    QString fieldNames[] = {"localfile", "pdf", "ps", "postscript", "doi", "url", "howpublished", "ee", "biburl"};
+    const QString fieldNames[] = {"localfile", "pdf", "ps", "postscript", "doi", "url", "howpublished", "ee", "biburl", "note"};
+    const int fieldNamesCount = sizeof(fieldNames) / sizeof(fieldNames[0]);
 
-    for (unsigned int i = 0; i < sizeof(fieldNames) / sizeof(fieldNames[0]); i++) {
-        EntryField * field = getField(fieldNames[ i ]);
-        if ((field && !field->value() ->items.isEmpty())) {
-            PlainText *plainText = dynamic_cast<PlainText*>(field->value()->items.first());
-            if (plainText != NULL) {
-                QString plain = plainText->text();
-                int urlPos = plain.indexOf("\\url{", 0, Qt::CaseInsensitive);
-                if (urlPos > -1) {
-                    plain = plain.mid(urlPos + 5);
-                    urlPos = plain.indexOf("}", 0, Qt::CaseInsensitive);
-                    if (urlPos > 0)
-                        plain = plain.left(urlPos - 1);
+    for (int j = 1; j < 5 ; ++j)   /** there may be variants such as url3 or doi2 */
+        for (int i = 0; i < fieldNamesCount; i++) {
+            EntryField * field = getField(fieldNames[ i ]);
+            if ((field && !field->value() ->items.isEmpty())) {
+                QString fieldName = fieldNames[i];
+                /** field names should be like url, url2, url3, ... */
+                if (j > 1) fieldName.append(QString::number(j));
+
+                EntryField * field = getField(fieldName);
+                if ((field && !field->value()->items.isEmpty())) {
+                    PlainText *plainText = dynamic_cast<PlainText*>(field->value()->items.first());
+                    if (plainText != NULL) {
+                        QString plain = plainText->text();
+                        int urlPos = plain.indexOf("\\url{", 0, Qt::CaseInsensitive);
+                        if (urlPos > -1) {
+                            plain = plain.mid(urlPos + 5);
+                            urlPos = plain.indexOf("}", 0, Qt::CaseInsensitive);
+                            if (urlPos > 0)
+                                plain = plain.left(urlPos - 1);
+                        }
+
+
+                        if (fieldNames[ i ] == "doi" && !plain.startsWith("http", Qt::CaseInsensitive))
+                            plain.prepend("http://dx.doi.org/");
+
+                        result.append(plain);
+                    }
                 }
-
-                if (fieldNames[ i ] == "doi" && !plain.startsWith("http", Qt::CaseInsensitive))
-                    plain.prepend("http://dx.doi.org/");
-
-                result.append(plain);
             }
         }
-    }
 
     return result;
 }
