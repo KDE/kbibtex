@@ -1,0 +1,12 @@
+[title]
+Label=Title
+Width=14
+
+[author]
+Label=Author
+Width=7
+
+[year]
+Label=Year
+Width=4
+
