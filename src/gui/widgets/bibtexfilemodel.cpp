@@ -1,8 +1,28 @@
+/***************************************************************************
+*   Copyright (C) 2004-2009 by Thomas Fischer                             *
+*   fischer@unix-ag.uni-kl.de                                             *
+*                                                                         *
+*   This program is free software; you can redistribute it and/or modify  *
+*   it under the terms of the GNU General Public License as published by  *
+*   the Free Software Foundation; either version 2 of the License, or     *
+*   (at your option) any later version.                                   *
+*                                                                         *
+*   This program is distributed in the hope that it will be useful,       *
+*   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+*   GNU General Public License for more details.                          *
+*                                                                         *
+*   You should have received a copy of the GNU General Public License     *
+*   along with this program; if not, write to the                         *
+*   Free Software Foundation, Inc.,                                       *
+*   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+***************************************************************************/
 #include <QFile>
 #include <QString>
 
 #include <element.h>
 #include <entry.h>
+#include <macro.h>
 
 #include "bibtexfilemodel.h"
 
@@ -11,7 +31,7 @@ using namespace KBibTeX::GUI::Widgets;
 BibTeXFileModel::BibTeXFileModel(QObject * parent)
         : QAbstractItemModel(parent), m_bibtexFile(NULL)
 {
-    initFieldNames();
+    m_bibtexFields = KBibTeX::GUI::Config::BibTeXFields::self();
 // TODO
 }
 
@@ -48,7 +68,7 @@ int BibTeXFileModel::rowCount(const QModelIndex & parent) const
 
 int BibTeXFileModel::columnCount(const QModelIndex & parent) const
 {
-    return 3; //parent==QModelIndex()?0:1;
+    return m_bibtexFields->count();
 }
 
 QVariant BibTeXFileModel::data(const QModelIndex &index, int role) const
@@ -62,13 +82,15 @@ QVariant BibTeXFileModel::data(const QModelIndex &index, int role) const
     if (role != Qt::DisplayRole)
         return QVariant();
 
-    if (index.row() < m_bibtexFile->count() && index.column() < m_fieldNames.count()) {
+    if (index.row() < m_bibtexFile->count() && index.column() < m_bibtexFields->count()) {
+        QString raw = m_bibtexFields->at(index.column()).raw;
         KBibTeX::IO::Element* element = (*m_bibtexFile)[index.row()];
         KBibTeX::IO::Entry* entry = dynamic_cast<KBibTeX::IO::Entry*>(element);
         if (entry != NULL) {
-            QString raw = m_fieldNames[index.column()].raw;
             if (raw == "^id")
                 return QVariant(entry->id());
+            else if (raw == "^type")
+                return QVariant(KBibTeX::IO::Entry::entryTypeToString(entry->entryType()));
             else {
                 KBibTeX::IO::EntryField *field = NULL;
                 KBibTeX::IO::Value *value = NULL;
@@ -77,10 +99,22 @@ QVariant BibTeXFileModel::data(const QModelIndex &index, int role) const
                 else
                     return QVariant(index.column());
             }
-        } else
-            return QVariant(index.column());
+        } else {
+            KBibTeX::IO::Macro* macro = dynamic_cast<KBibTeX::IO::Macro*>(element);
+            if (macro != NULL) {
+                if (raw == "^id")
+                    return QVariant(macro->key());
+                else if (raw == "^type")
+                    return QVariant("Macro"); // TODO: i18n
+                else if (raw == "title")
+                    return QVariant(macro->value()->text());
+                else
+                    return QVariant();
+            } else
+                return QVariant("?");
+        }
     } else
-        return QVariant(index.column());
+        return QVariant("?");
 }
 
 QVariant BibTeXFileModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -89,27 +123,10 @@ QVariant BibTeXFileModel::headerData(int section, Qt::Orientation orientation, i
         return QVariant();
 
     if (orientation == Qt::Horizontal) {
-        if (section < m_fieldNames.count())
-            return m_fieldNames[section].i18nzed;
+        if (section < m_bibtexFields->count())
+            return m_bibtexFields->at(section).label;
         else
             return QString("Column %1").arg(section);
     } else
         return QString("Row %1").arg(section);
-}
-
-void BibTeXFileModel::initFieldNames()
-{
-    ColumnDescr cdescr;
-    cdescr.raw = QString("^id"); // FIXME QLatin1String
-    cdescr.i18nzed = QString("Identifier"); // FIXME i18n
-    m_fieldNames << cdescr;
-
-    // TODO Create configuration file which contains all fields
-    cdescr.raw = QString("title"); // FIXME QLatin1String
-    cdescr.i18nzed = QString("Title"); // FIXME i18n
-    m_fieldNames << cdescr;
-
-    cdescr.raw = QString("author"); // FIXME QLatin1String
-    cdescr.i18nzed = QString("Author"); // FIXME i18n
-    m_fieldNames << cdescr;
 }

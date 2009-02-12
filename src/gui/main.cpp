@@ -1,6 +1,8 @@
 #include <QDirModel>
 #include <QApplication>
 
+#include <kcomponentdata.h>
+
 #include <file.h>
 #include <fileimporterbibtex.h>
 
@@ -10,6 +12,8 @@
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
+
+    KComponentData compData("kbibtex");
 
     KBibTeX::IO::File *bibtexFile = NULL;
     if (argc > 1) {
