@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2008 by Thomas Fischer                             *
+*   Copyright (C) 2004-2009 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -17,8 +17,8 @@
 *   Free Software Foundation, Inc.,                                       *
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
-#ifndef BIBTEXCOMMENT_H
-#define BIBTEXCOMMENT_H
+#ifndef KBIBTEX_IO_COMMENT_H
+#define KBIBTEX_IO_COMMENT_H
 
 #include <element.h>
 
@@ -49,4 +49,4 @@ private:
 }
 }
 
-#endif
+#endif // KBIBTEX_IO_COMMENT_H

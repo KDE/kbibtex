@@ -30,7 +30,7 @@ namespace KBibTeX
 {
 namespace IO {
 
-class Macro : public Element
+class KBIBTEXIO_EXPORT Macro : public Element
 {
 public:
     Macro(const QString &key);
