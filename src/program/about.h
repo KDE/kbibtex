@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2006 by Thomas Fischer                             *
+*   Copyright (C) 2004-2009 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -18,44 +18,22 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#ifndef KBIBTEX_IO_MACRO_H
-#define KBIBTEX_IO_MACRO_H
+#ifndef KBIBTEX_PROGRAM_ABOUT_H
+#define KBIBTEX_PROGRAM_ABOUT_H
 
-#include <element.h>
-#include <entryfield.h>
-#include <value.h>
-
-class QString;
+#include <kaboutdata.h>
 
 namespace KBibTeX
 {
-namespace IO {
+namespace Program {
 
-class KBIBTEXIO_EXPORT Macro : public Element
+class KBibTeXAboutData : public KAboutData
 {
 public:
-    Macro(const QString &key);
-    Macro(const Macro *other);
-    virtual ~Macro();
-
-    void setKey(const QString &key);
-    QString key() const;
-
-    Value *value() const;
-    void setValue(Value *value);
-
-    bool containsPattern(const QString& pattern, EntryField::FieldType fieldType = EntryField::ftUnknown, FilterType filterType = Element::ftExact, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const;
-
-    Element* clone() const;
-    void copyFrom(const Macro *other);
-    QString text() const;
-
-private:
-    QString m_key;
-    Value *m_value;
+    KBibTeXAboutData();
 };
 
 }
 }
 
-#endif
+#endif // KBIBTEX_PROGRAM_ABOUT_H

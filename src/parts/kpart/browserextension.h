@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2006 by Thomas Fischer                             *
+*   Copyright (C) 2004-2009 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -18,44 +18,39 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#ifndef KBIBTEX_IO_MACRO_H
-#define KBIBTEX_IO_MACRO_H
+#ifndef KBIBTEX_PART_BROWSEREXTENSION_H
+#define KBIBTEX_PART_BROWSEREXTENSION_H
 
-#include <element.h>
-#include <entryfield.h>
-#include <value.h>
+#include <kparts/browserextension.h>
 
-class QString;
+class KBibTeXPart;
 
-namespace KBibTeX
+
+/**
+ * @short Extension for better support for embedding in browsers
+ * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ */
+class KBibTeXBrowserExtension : public KParts::BrowserExtension
 {
-namespace IO {
+    Q_OBJECT
 
-class KBIBTEXIO_EXPORT Macro : public Element
-{
 public:
-    Macro(const QString &key);
-    Macro(const Macro *other);
-    virtual ~Macro();
+    explicit KBibTeXBrowserExtension(KBibTeXPart *part);
 
-    void setKey(const QString &key);
-    QString key() const;
+public: // KParts::BrowserExtension API
+    virtual void saveState(QDataStream &stream);
+    virtual void restoreState(QDataStream &stream);
 
-    Value *value() const;
-    void setValue(Value *value);
+public Q_SLOTS:
+    /** copy text to clipboard */
+//     void copy();
 
-    bool containsPattern(const QString& pattern, EntryField::FieldType fieldType = EntryField::ftUnknown, FilterType filterType = Element::ftExact, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const;
+private Q_SLOTS:
+    /** selection has changed */
+//     void onSelectionChanged( bool );
 
-    Element* clone() const;
-    void copyFrom(const Macro *other);
-    QString text() const;
-
-private:
-    QString m_key;
-    Value *m_value;
+protected:
+    KBibTeXPart *part;
 };
 
-}
-}
-
-#endif
+#endif // KBIBTEX_PART_BROWSEREXTENSION_H

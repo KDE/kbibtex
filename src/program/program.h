@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2006 by Thomas Fischer                             *
+*   Copyright (C) 2004-2009 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -18,44 +18,54 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#ifndef KBIBTEX_IO_MACRO_H
-#define KBIBTEX_IO_MACRO_H
+#ifndef KBIBTEX_PROGRAM_PROGRAM_H
+#define KBIBTEX_PROGRAM_PROGRAM_H
 
-#include <element.h>
-#include <entryfield.h>
-#include <value.h>
+#include "about.h"
 
-class QString;
+/*
+class KDocumentManager;
+class KViewManager;
+*/
 
 namespace KBibTeX
 {
-namespace IO {
+namespace Program {
 
-class KBIBTEXIO_EXPORT Macro : public Element
+class KBibTeXProgram
 {
 public:
-    Macro(const QString &key);
-    Macro(const Macro *other);
-    virtual ~Macro();
+    KBibTeXProgram(int argc, char *argv[]);
+    ~KBibTeXProgram();
 
-    void setKey(const QString &key);
-    QString key() const;
+public:
+    int execute();
+    void quit();
 
-    Value *value() const;
-    void setValue(Value *value);
+public:
+//     KDocumentManager *documentManager();
+//     KViewManager *viewManager();
 
-    bool containsPattern(const QString& pattern, EntryField::FieldType fieldType = EntryField::ftUnknown, FilterType filterType = Element::ftExact, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const;
+protected:
+    KBibTeXAboutData m_aboutData;
 
-    Element* clone() const;
-    void copyFrom(const Macro *other);
-    QString text() const;
-
-private:
-    QString m_key;
-    Value *m_value;
+//     KDocumentManager *m_documentManager;
+//     KViewManager *m_viewManager;
 };
 
+/*
+inline KDocumentManager* KBibTeXProgram::documentManager()
+{
+    return m_documentManager;
+}
+inline KViewManager* KBibTeXProgram::viewManager()
+{
+    return m_viewManager;
+}
+*/
+
 }
 }
 
-#endif
+#endif // KBIBTEX_PROGRAM_PROGRAM_H
+

@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2006 by Thomas Fischer                             *
+*   Copyright (C) 2004-2009 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -18,44 +18,20 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#ifndef KBIBTEX_IO_MACRO_H
-#define KBIBTEX_IO_MACRO_H
+#include <klocale.h>
+#include <kdeversion.h>
 
-#include <element.h>
-#include <entryfield.h>
-#include <value.h>
+#include "about.h"
 
-class QString;
+using namespace KBibTeX::Program;
 
-namespace KBibTeX
+static const char ProgramId[] =          "kbibtex";
+static const char ProgramVersion[] =     "0.3.0";
+static const char ProgramHomepage[] =    "http://home.gna.org/kbibtex/";
+
+KBibTeXAboutData::KBibTeXAboutData()
+        : KAboutData(ProgramId, 0, ki18n("KBibTeX"), ProgramVersion, ki18n("BibTeX editor for KDE"), KAboutData::License_GPL_V2, ki18n("Copyright 2004-2009 Thomas Fischer"), ki18n("Edit bibliography files"), ProgramHomepage)
 {
-namespace IO {
-
-class KBIBTEXIO_EXPORT Macro : public Element
-{
-public:
-    Macro(const QString &key);
-    Macro(const Macro *other);
-    virtual ~Macro();
-
-    void setKey(const QString &key);
-    QString key() const;
-
-    Value *value() const;
-    void setValue(Value *value);
-
-    bool containsPattern(const QString& pattern, EntryField::FieldType fieldType = EntryField::ftUnknown, FilterType filterType = Element::ftExact, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const;
-
-    Element* clone() const;
-    void copyFrom(const Macro *other);
-    QString text() const;
-
-private:
-    QString m_key;
-    Value *m_value;
-};
-
+//     setOrganizationDomain( "kde.org" );
+    addAuthor(ki18n("Thomas Fischer"), ki18n("Author"), "fischer@unix-ag.uni-kl.de");
 }
-}
-
-#endif

@@ -8,5 +8,17 @@ add_definitions( ${QT_DEFINITIONS} ${KDE4_DEFINITIONS} )
 
 configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h )
 
+add_definitions(
+	${QT_DEFINITIONS}
+	${KDE4_DEFINITIONS}
+)
+include_directories(
+	${CMAKE_SOURCE_DIR}
+	${CMAKE_BINARY_DIR}
+	${KDE4_INCLUDES}
+)
+
 add_subdirectory( libkbibtexio )
 add_subdirectory( gui )
+add_subdirectory( program )
+

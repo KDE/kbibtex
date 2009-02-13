@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2006 by Thomas Fischer                             *
+*   Copyright (C) 2004-2009 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -18,44 +18,66 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#ifndef KBIBTEX_IO_MACRO_H
-#define KBIBTEX_IO_MACRO_H
+#include <kcmdlineargs.h>
+#include <kapplication.h>
 
-#include <element.h>
-#include <entryfield.h>
-#include <value.h>
+#include "program.h"
+#include "mainwindow.h"
 
-class QString;
+using namespace KBibTeX::Program;
 
-namespace KBibTeX
+KBibTeXProgram::KBibTeXProgram(int argc, char *argv[])
+/*: m_documentManager(new KDocumentManager()), m_viewManager(new KViewManager(m_documentManager))*/
 {
-namespace IO {
+    KCmdLineOptions programOptions;
+    programOptions.add("+[URL(s)]", ki18n("File(s) to load"), 0);
 
-class KBIBTEXIO_EXPORT Macro : public Element
-{
-public:
-    Macro(const QString &key);
-    Macro(const Macro *other);
-    virtual ~Macro();
-
-    void setKey(const QString &key);
-    QString key() const;
-
-    Value *value() const;
-    void setValue(Value *value);
-
-    bool containsPattern(const QString& pattern, EntryField::FieldType fieldType = EntryField::ftUnknown, FilterType filterType = Element::ftExact, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const;
-
-    Element* clone() const;
-    void copyFrom(const Macro *other);
-    QString text() const;
-
-private:
-    QString m_key;
-    Value *m_value;
-};
-
-}
+    KCmdLineArgs::init(argc, argv, &m_aboutData);
+    KCmdLineArgs::addCmdLineOptions(programOptions);
 }
 
-#endif
+
+KBibTeXProgram::~KBibTeXProgram()
+{
+    /*
+        delete m_documentManager;
+        delete m_viewManager;
+    */
+}
+
+int KBibTeXProgram::execute()
+{
+    KApplication programCore;
+
+    KGlobal::locale()->insertCatalog("libkbibtexio");
+
+    // started by session management?
+    if (programCore.isSessionRestored()) {
+        RESTORE(KBibTeXMainWindow(this));
+    } else {
+        // no session.. just start up normally
+        KBibTeXMainWindow *mainWindow = new KBibTeXMainWindow(this);
+
+        KCmdLineArgs *arguments = KCmdLineArgs::parsedArgs();
+
+        // take arguments
+        if (arguments->count() > 0) {
+            // TODO
+        }
+        mainWindow->show();
+
+        arguments->clear();
+    }
+
+    return programCore.exec();
+}
+
+
+void KBibTeXProgram::quit()
+{
+    kapp->quit();
+}
+
+
+
+

@@ -1,10 +1,3 @@
-include_directories(
-	${QT_INCLUDES}
-	${KDE4_INCLUDES}
-	${CMAKE_CURRENT_SOURCE_DIR}
-	# ${BIBUTILSIncDir} # FIXME: Make inclusion depending on HAVE_BIBUTILS check
-)
-
 # KBibTeXIO library
 
 set( kbibtexio_LIB_SRCS

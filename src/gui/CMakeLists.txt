@@ -1,8 +1,6 @@
 include( CheckIncludeFiles )
 
 include_directories(
-	${QT_INCLUDES}
-	${KDE4_INCLUDES}
 	${CMAKE_CURRENT_SOURCE_DIR}/widgets
 	${CMAKE_CURRENT_SOURCE_DIR}/config
 	${CMAKE_CURRENT_SOURCE_DIR}
@@ -13,19 +11,22 @@ link_directories(
 	${CMAKE_CURRENT_BINARY_DIR}/../../lib
 )
 
+# KBibTeX main program
 
-set( guitest_SRCS
+set( kbibtex_SRCS
 	main.cpp
+	mainwindow.cpp
 	widgets/bibtexfileview.cpp
 	widgets/bibtexfilemodel.cpp
 	config/bibtexfields.cpp
 )
 
-kde4_add_executable( guitest ${guitest_SRCS} )
+kde4_add_executable( kbibtex ${kbibtex_SRCS} )
 
-target_link_libraries( guitest
+target_link_libraries( kbibtex
 	${KDE4_KDEUI_LIBS}
+	${KDE4_KPARTS_LIBS}
 	kbibtexio
 )
 
-install( TARGETS guitest ${INSTALL_TARGETS_DEFAULT_ARGS} )
+install( TARGETS kbibtex ${INSTALL_TARGETS_DEFAULT_ARGS} )

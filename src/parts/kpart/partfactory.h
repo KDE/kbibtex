@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2006 by Thomas Fischer                             *
+*   Copyright (C) 2004-2009 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -18,44 +18,26 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#ifndef KBIBTEX_IO_MACRO_H
-#define KBIBTEX_IO_MACRO_H
+#ifndef KBIBTEX_PART_PARTFACTORY_H
+#define KBIBTEX_PART_PARTFACTORY_H
 
-#include <element.h>
-#include <entryfield.h>
-#include <value.h>
+#include <kparts/factory.h>
 
-class QString;
+class KComponentData;
 
-namespace KBibTeX
+class KBibTeXPartFactory : public KParts::Factory
 {
-namespace IO {
+    Q_OBJECT
 
-class KBIBTEXIO_EXPORT Macro : public Element
-{
 public:
-    Macro(const QString &key);
-    Macro(const Macro *other);
-    virtual ~Macro();
+    KBibTeXPartFactory();
+    virtual ~KBibTeXPartFactory();
 
-    void setKey(const QString &key);
-    QString key() const;
+public:
+    virtual KParts::Part* createPartObject(QWidget *parentWidget, QObject *parent, const char *classname, const QStringList &args);
 
-    Value *value() const;
-    void setValue(Value *value);
-
-    bool containsPattern(const QString& pattern, EntryField::FieldType fieldType = EntryField::ftUnknown, FilterType filterType = Element::ftExact, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const;
-
-    Element* clone() const;
-    void copyFrom(const Macro *other);
-    QString text() const;
-
-private:
-    QString m_key;
-    Value *m_value;
+public:
+    static const KComponentData &componentData();
 };
 
-}
-}
-
-#endif
+#endif // KBIBTEX_PART_PARTFACTORY_H

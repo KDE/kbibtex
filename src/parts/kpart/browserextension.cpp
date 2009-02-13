@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2006 by Thomas Fischer                             *
+*   Copyright (C) 2004-2009 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -18,44 +18,47 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#ifndef KBIBTEX_IO_MACRO_H
-#define KBIBTEX_IO_MACRO_H
+#include <kaction.h>
 
-#include <element.h>
-#include <entryfield.h>
-#include <value.h>
+#include "browserextension.h"
+#include "part.h"
 
-class QString;
-
-namespace KBibTeX
+KBibTeXBrowserExtension::KBibTeXBrowserExtension(KBibTeXPart *p)
+        : KParts::BrowserExtension(p), part(p)
 {
-namespace IO {
-
-class KBIBTEXIO_EXPORT Macro : public Element
-{
-public:
-    Macro(const QString &key);
-    Macro(const Macro *other);
-    virtual ~Macro();
-
-    void setKey(const QString &key);
-    QString key() const;
-
-    Value *value() const;
-    void setValue(Value *value);
-
-    bool containsPattern(const QString& pattern, EntryField::FieldType fieldType = EntryField::ftUnknown, FilterType filterType = Element::ftExact, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const;
-
-    Element* clone() const;
-    void copyFrom(const Macro *other);
-    QString text() const;
-
-private:
-    QString m_key;
-    Value *m_value;
-};
-
-}
+    setObjectName("kbibtexpartbrowserextension");
+//     connect( part->view, SIGNAL( selectionChanged( bool ) ), SLOT( onSelectionChanged( bool ) ) );
 }
 
-#endif
+/*
+void KBibTeXBrowserExtension::copy()
+{
+    part->view->copy();
+}
+*/
+
+/*
+void KBibTeXBrowserExtension::onSelectionChanged( bool HasSelection )
+{
+    emit enableAction( "copy", HasSelection );
+}
+*/
+
+void KBibTeXBrowserExtension::saveState(QDataStream &stream)
+{
+    KParts::BrowserExtension::saveState(stream);
+
+    // TODO
+}
+
+
+void KBibTeXBrowserExtension::restoreState(QDataStream &stream)
+{
+    KParts::BrowserExtension::restoreState(stream);
+
+    // TODO
+
+    part->fitActionSettings();
+}
+
+#include "browserextension.moc"

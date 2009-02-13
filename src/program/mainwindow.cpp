@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2006 by Thomas Fischer                             *
+*   Copyright (C) 2004-2009 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -18,44 +18,46 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#ifndef KBIBTEX_IO_MACRO_H
-#define KBIBTEX_IO_MACRO_H
+#include <KGlobal>
 
-#include <element.h>
-#include <entryfield.h>
-#include <value.h>
+#include "mainwindow.h"
+#include "program.h"
 
-class QString;
+using namespace KBibTeX::Program;
 
-namespace KBibTeX
+KBibTeXMainWindow::KBibTeXMainWindow(KBibTeXProgram *program)
+        : /* ShellWindow( program->documentManager(), program->viewManager() ),*/ m_program(program)
 {
-namespace IO {
+    setObjectName(QLatin1String("Shell"));   // FIXME
 
-class KBIBTEXIO_EXPORT Macro : public Element
-{
-public:
-    Macro(const QString &key);
-    Macro(const Macro *other);
-    virtual ~Macro();
+    /*
+        const char mainWindowStateKey[] = "State";
+        KConfigGroup group( KGlobal::config(), "MainWindow" );
+        if( !group.hasKey(mainWindowStateKey) )
+            group.writeEntry( mainWindowStateKey, mainWindowState );
+    */
 
-    void setKey(const QString &key);
-    QString key() const;
-
-    Value *value() const;
-    void setValue(Value *value);
-
-    bool containsPattern(const QString& pattern, EntryField::FieldType fieldType = EntryField::ftUnknown, FilterType filterType = Element::ftExact, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const;
-
-    Element* clone() const;
-    void copyFrom(const Macro *other);
-    QString text() const;
-
-private:
-    QString m_key;
-    Value *m_value;
-};
-
-}
+    setupControllers();
+    setupGUI();
 }
 
-#endif
+KBibTeXMainWindow::~KBibTeXMainWindow()
+{
+    // nothing
+}
+
+
+void KBibTeXMainWindow::setupControllers()
+{
+    // TODO
+}
+
+void KBibTeXMainWindow::saveProperties(KConfigGroup &configGroup)
+{
+    // TODO
+}
+
+void KBibTeXMainWindow::readProperties(const KConfigGroup &configGroup)
+{
+    // TOD
+}

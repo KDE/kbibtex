@@ -154,7 +154,6 @@ Comment *FileImporterBibTeX::readCommentElement()
 
 Comment *FileImporterBibTeX::readPlainCommentElement()
 {
-    qDebug() << "readPlainCommentElement" << endl;
     QString result = readLine();
     *m_textStream >> m_currentChar;
     while (!m_textStream->atEnd() && m_currentChar != '@' && !m_currentChar.isSpace()) {
@@ -163,7 +162,6 @@ Comment *FileImporterBibTeX::readPlainCommentElement()
         result.append(readLine());
         *m_textStream >> m_currentChar;
     }
-    qDebug() << "   result = " << result << endl;
     return new Comment(result);
 }
 

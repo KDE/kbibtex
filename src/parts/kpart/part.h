@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2006 by Thomas Fischer                             *
+*   Copyright (C) 2004-2009 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -18,44 +18,48 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#ifndef KBIBTEX_IO_MACRO_H
-#define KBIBTEX_IO_MACRO_H
+#ifndef KBIBTEX_PART_PART_H
+#define KBIBTEX_PART_PART_H
 
-#include <element.h>
-#include <entryfield.h>
-#include <value.h>
+#include <kparts/part.h>
 
-class QString;
-
-namespace KBibTeX
+class KBibTeXPart : public KParts::ReadOnlyPart
 {
-namespace IO {
+    Q_OBJECT
 
-class KBIBTEXIO_EXPORT Macro : public Element
-{
+    friend class KBibTeXBrowserExtension;
+
 public:
-    Macro(const QString &key);
-    Macro(const Macro *other);
-    virtual ~Macro();
+    KBibTeXPart(QWidget *parentWidget, QObject *parent, bool browserViewWanted);
+    virtual ~KBibTeXPart();
 
-    void setKey(const QString &key);
-    QString key() const;
+protected: // KParts::ReadOnlyPart API
+    virtual bool openFile();
 
-    Value *value() const;
-    void setValue(Value *value);
+protected:
+    void setupActions(bool BrowserViewWanted);
+    void fitActionSettings();
 
-    bool containsPattern(const QString& pattern, EntryField::FieldType fieldType = EntryField::ftUnknown, FilterType filterType = Element::ftExact, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const;
+    /*
+      protected Q_SLOTS: // action slots
+        void onSelectAll();
+        void onUnselect();
+        void onSetCoding( int Coding );
+        void onSetEncoding( int Encoding );
+        void onSetShowsNonprinting( bool on );
+        void onSetResizeStyle( int Style );
+        void onToggleOffsetColumn( bool on );
+        void onToggleValueCharColumns( int VisibleColunms );
+    */
 
-    Element* clone() const;
-    void copyFrom(const Macro *other);
-    QString text() const;
+    /*
+      private Q_SLOTS:
+        // used to catch changes in the bytearray widget
+        void onSelectionChanged( bool HasSelection );
+    */
 
 private:
-    QString m_key;
-    Value *m_value;
+    // TODO
 };
 
-}
-}
-
-#endif
+#endif // KBIBTEX_PART_PART_H

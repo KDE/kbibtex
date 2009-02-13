@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2006 by Thomas Fischer                             *
+*   Copyright (C) 2004-2009 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -18,44 +18,58 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#ifndef KBIBTEX_IO_MACRO_H
-#define KBIBTEX_IO_MACRO_H
+#include <klocale.h>
+#include <kaction.h>
+#include <kactioncollection.h>
+#include <kstandardaction.h>
+#include <kselectaction.h>
+#include <ktoggleaction.h>
 
-#include <element.h>
-#include <entryfield.h>
-#include <value.h>
+#include "part.h"
+#include "partfactory.h"
+#include "browserextension.h"
 
-class QString;
+static const char RCFileName[] = "kbibtexpartui.rc";
 
-namespace KBibTeX
+KBibTeXPart::KBibTeXPart(QWidget *parentWidget, QObject *parent, bool browserViewWanted)
+        : KParts::ReadOnlyPart(parent)
 {
-namespace IO {
+    setComponentData(KBibTeXPartFactory::componentData());
 
-class KBIBTEXIO_EXPORT Macro : public Element
-{
-public:
-    Macro(const QString &key);
-    Macro(const Macro *other);
-    virtual ~Macro();
+    // TODO Setup view
 
-    void setKey(const QString &key);
-    QString key() const;
+    setupActions(browserViewWanted);
 
-    Value *value() const;
-    void setValue(Value *value);
-
-    bool containsPattern(const QString& pattern, EntryField::FieldType fieldType = EntryField::ftUnknown, FilterType filterType = Element::ftExact, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const;
-
-    Element* clone() const;
-    void copyFrom(const Macro *other);
-    QString text() const;
-
-private:
-    QString m_key;
-    Value *m_value;
-};
-
-}
+    if (browserViewWanted)
+        new KBibTeXBrowserExtension(this);
 }
 
-#endif
+KBibTeXPart::~KBibTeXPart()
+{
+    // nothing
+}
+
+void KBibTeXPart::setupActions(bool browserViewWanted)
+{
+    KActionCollection *actions = actionCollection();
+
+    // TODO
+
+    fitActionSettings();
+
+    setXMLFile(RCFileName);
+}
+
+
+void KBibTeXPart::fitActionSettings()
+{
+    // TODO
+}
+
+
+bool KBibTeXPart::openFile()
+{
+    // TODO
+
+    return true;
+}
