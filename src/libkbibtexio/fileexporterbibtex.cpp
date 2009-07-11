@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2008 by Thomas Fischer                             *
+*   Copyright (C) 2004-2009 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -80,12 +80,7 @@ bool FileExporterBibTeX::save(QIODevice* iodevice, const File* bibtexfile, QStri
                     /** check if this file requests a special encoding */
                     if (comment != NULL && comment->useCommand() && ((commentText = comment->text())).startsWith("x-kbibtex-encoding=")) {
                         QString encoding = commentText.mid(19);
-                        QTextCodec *codec = QTextCodec::codecForName(encoding.toAscii());
-                        if (codec != NULL) {
-                            m_encoding = encoding;
-                            parameterCommentsList.append(comment);
-                        } else
-                            qWarning() << "User set encoding to \"" << encoding << "\" which is not recognized by the system." << endl;
+                        qDebug() << "Old x-kbibtex-encoding is \"" << encoding << "\"" << endl;
                     } else
                         remainingList.append(*it);
                 }
@@ -98,6 +93,8 @@ bool FileExporterBibTeX::save(QIODevice* iodevice, const File* bibtexfile, QStri
 
     QTextStream stream(iodevice);
     stream.setCodec(m_encoding == "latex" ? "UTF-8" : m_encoding.toAscii());
+    parameterCommentsList << new Comment("x-kbibtex-encoding=" + m_encoding, false);
+    qDebug() << "New x-kbibtex-encoding is \"" << m_encoding << "\"" << endl;
 
     /** before anything else, write parameter comments */
     for (QLinkedList<const Comment*>::ConstIterator it = parameterCommentsList.begin(); it != parameterCommentsList.end() && result && !cancelFlag; it++) {
@@ -305,7 +302,7 @@ QString FileExporterBibTeX::valueToString(const Value *value, const EntryField::
               */
             QChar stringOpenDelimiter = m_stringOpenDelimiter;
             QChar stringCloseDelimiter = m_stringCloseDelimiter;
-            if (result.contains('"') && (m_stringOpenDelimiter == '"' || m_stringCloseDelimiter == '"')) {
+            if (text.contains('"') && (m_stringOpenDelimiter == '"' || m_stringCloseDelimiter == '"')) {
                 stringOpenDelimiter = '{';
                 stringCloseDelimiter = '}';
             }
@@ -335,14 +332,17 @@ QString FileExporterBibTeX::applyKeywordCasing(const QString &keyword)
 bool FileExporterBibTeX::requiresPersonQuoting(const QString &text, bool isLastName)
 {
     if (isLastName && !text.contains(" "))
+        /** Last name contains NO spaces, no quoting necessary */
         return FALSE;
     else if (!isLastName && !text.contains(" and "))
+        /** First name contains no " and " no quoting necessary */
         return FALSE;
     else if (text[0] != '{' || text[text.length()-1] != '}')
+        /** as either last name contains spaces or first name contains " and " and there is no protective quoting yet, there must be a protective quoting added */
         return TRUE;
 
     int bracketCounter = 0;
-    for (int i = text.length() - 1;i >= 0;--i) {
+    for (int i = text.length() - 1; i >= 0; --i) {
         if (text[i] == '{')
             ++bracketCounter;
         else if (text[i] == '}')

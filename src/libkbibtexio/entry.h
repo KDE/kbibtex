@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2008 by Thomas Fischer                             *
+*   Copyright (C) 2004-2009 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -41,7 +41,7 @@ public:
 
     enum FieldRequireStatus {frsRequired, frsOptional, frsIgnored};
 
-    enum MergeSemantics {msIgnoreOther, msAddNew, msForceAdding};
+    enum MergeSemantics {msAddNew, msForceAdding};
 
     Entry();
     Entry(const EntryType entryType, const QString &id);

@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2008 by Thomas Fischer                             *
+*   Copyright (C) 2004-2009 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -156,7 +156,7 @@ bool Entry::containsPattern(const QString & pattern, EntryField::FieldType field
         delete[] hits;
 
         /** return success depending on filter type and number of hits */
-        return (filterType == ftAnyWord && hitCount > 0 || filterType == ftEveryWord && hitCount == words.count());
+        return ((filterType == ftAnyWord && hitCount > 0) || (filterType == ftEveryWord && hitCount == words.count()));
     }
 }
 
@@ -293,11 +293,11 @@ void Entry::merge(Entry *other, MergeSemantics mergeSemantics)
         QString otherFieldTypeName = otherField->fieldTypeName();
         EntryField *thisField = otherFieldType != EntryField::ftUnknown ? getField(otherFieldType) : getField(otherFieldTypeName);
 
-        if (thisField == NULL || mergeSemantics != msIgnoreOther) {
-            if (thisField != NULL && (otherField->value()->text() != thisField->value()->text() || mergeSemantics == msForceAdding)) {
-                otherFieldTypeName.prepend("OPT");
-                otherField->setFieldType(EntryField::ftUnknown, otherFieldTypeName);
-            }
+        if (thisField == NULL) {
+            m_fields.append(otherField);
+        } else if (otherField->value()->text() == thisField->value()->text() && mergeSemantics == msForceAdding) {
+            otherFieldTypeName.prepend("OPT");
+            otherField->setFieldType(EntryField::ftUnknown, otherFieldTypeName);
             m_fields.append(otherField);
         }
     }

@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2008 by Thomas Fischer                             *
+*   Copyright (C) 2004-2009 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -47,7 +47,7 @@ void File::append(KBibTeX::IO::Element* element)
     QList<KBibTeX::IO::Element*>::append(element);
 }
 
-void File::append(File* other)
+void File::append(File* /*other*/)
 {
     // TODO
 }
@@ -57,7 +57,7 @@ void File::erase(Element* element)
     bool found = false;
 
     for (Iterator it = begin(); !found && it != end(); ++it)
-        if (found = (*it == element))
+        if ((found = (*it == element)))
             QList<KBibTeX::IO::Element*>::erase(it);
 
     if (!found)

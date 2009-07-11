@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2008 by Thomas Fischer                             *
+*   Copyright (C) 2004-2009 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -20,6 +20,7 @@
 #include <QIODevice>
 #include <QRegExp>
 #include <QCoreApplication>
+#include <QRegExp>
 #include <QDebug>
 
 #include <file.h>
@@ -36,12 +37,12 @@
 using namespace KBibTeX::IO;
 
 const QString extraAlphaNumChars = QString("?'`-_:.+/$\\\"&");
+const QRegExp htmlRegExp = QRegExp("</?(a|pre)[^>]*>", Qt::CaseInsensitive);
 
 FileImporterBibTeX::FileImporterBibTeX(const QString& encoding, bool ignoreComments)
-        : FileImporter(), m_currentChar(' '), m_ignoreComments(ignoreComments), m_encoding(encoding)
+        : FileImporter(), m_cancelFlag(false), m_lineNo(1), m_textStream(NULL), m_currentChar(' '), m_ignoreComments(ignoreComments), m_encoding(encoding)
 {
-    cancelFlag = FALSE;
-    m_textStream = NULL;
+    // nothing
 }
 
 FileImporterBibTeX::~FileImporterBibTeX()
@@ -52,22 +53,23 @@ File* FileImporterBibTeX::load(QIODevice *iodevice)
 {
     m_mutex.lock();
     QCoreApplication::instance()->processEvents();
-    cancelFlag = FALSE;
+    m_cancelFlag = false;
 
     m_textStream = new QTextStream(iodevice);
     m_textStream->setCodec(m_encoding == "latex" ? "UTF-8" : m_encoding.toAscii());
     QString rawText = "";
     while (!m_textStream->atEnd()) {
         QString line = m_textStream->readLine();
-        evaluateParameterComments(m_textStream, line);
-        rawText.append(line).append("\n");
+        bool skipline = evaluateParameterComments(m_textStream, line);
+        if (!skipline)
+            rawText.append(line).append("\n");
     }
     delete m_textStream;
 
     QCoreApplication::instance()->processEvents();
 
-    /** Cleaning up code comming from DBLP */
-    rawText = rawText.replace("<pre>", "\n\n").replace("</pre>", "\n\n").remove("<a href=\"http://www.informatik.uni-trier.de/~ley/db/about/bibtex.html\">DBLP</a>:");
+    /** Remove HTML code from the input source */
+    rawText = rawText.replace(htmlRegExp, "");
 
     rawText = EncoderLaTeX::currentEncoderLaTeX() ->decode(rawText);
     QCoreApplication::instance()->processEvents();
@@ -77,9 +79,10 @@ File* FileImporterBibTeX::load(QIODevice *iodevice)
 
     m_textStream = new QTextStream(&rawText, QIODevice::ReadOnly);
     m_textStream->setCodec("UTF-8");
+    m_lineNo = 1;
 
     File *result = new File();
-    while (!cancelFlag && !m_textStream->atEnd()) {
+    while (!m_cancelFlag && !m_textStream->atEnd()) {
         emit progress(m_textStream->pos(), rawText.length());
         QCoreApplication::instance()->processEvents();
         Element * element = nextElement();
@@ -94,7 +97,7 @@ File* FileImporterBibTeX::load(QIODevice *iodevice)
     }
     emit progress(100, 100);
 
-    if (cancelFlag) {
+    if (m_cancelFlag) {
         qWarning("Loading file has been canceled");
         delete result;
         result = NULL;
@@ -114,7 +117,7 @@ bool FileImporterBibTeX::guessCanDecode(const QString & rawText)
 
 void FileImporterBibTeX::cancel()
 {
-    cancelFlag = TRUE;
+    m_cancelFlag = TRUE;
 }
 
 Element *FileImporterBibTeX::nextElement()
@@ -139,15 +142,17 @@ Element *FileImporterBibTeX::nextElement()
         return readPlainCommentElement();
 
     if (token != tEOF)
-        qWarning("Don't know how to parse next token: %i", (int)token);
+        qWarning() << "Don't know how to parse next token of type " << token << " in line " << m_lineNo << endl;
 
     return NULL;
 }
 
 Comment *FileImporterBibTeX::readCommentElement()
 {
-    while (m_currentChar != '{' && m_currentChar != '(' && !m_textStream->atEnd())
+    while (m_currentChar != '{' && m_currentChar != '(' && !m_textStream->atEnd()) {
+        if (m_currentChar == '\n') ++m_lineNo;
         *m_textStream >> m_currentChar;
+    }
 
     return new Comment(readBracketString(m_currentChar));
 }
@@ -155,11 +160,14 @@ Comment *FileImporterBibTeX::readCommentElement()
 Comment *FileImporterBibTeX::readPlainCommentElement()
 {
     QString result = readLine();
+    if (m_currentChar == '\n') ++m_lineNo;
     *m_textStream >> m_currentChar;
     while (!m_textStream->atEnd() && m_currentChar != '@' && !m_currentChar.isSpace()) {
         result.append('\n').append(m_currentChar);
+        if (m_currentChar == '\n') ++m_lineNo;
         *m_textStream >> m_currentChar;
         result.append(readLine());
+        if (m_currentChar == '\n') ++m_lineNo;
         *m_textStream >> m_currentChar;
     }
     return new Comment(result);
@@ -286,8 +294,10 @@ FileImporterBibTeX::Token FileImporterBibTeX::nextToken()
 
     Token curToken = tUnknown;
 
-    while ((m_currentChar.isSpace() || m_currentChar == '\t') && !m_textStream->atEnd())
+    while ((m_currentChar.isSpace() || m_currentChar == '\t') && !m_textStream->atEnd()) {
+        if (m_currentChar == '\n') ++m_lineNo;
         *m_textStream >> m_currentChar;
+    }
 
     switch (m_currentChar.toAscii()) {
     case '@':
@@ -318,8 +328,10 @@ FileImporterBibTeX::Token FileImporterBibTeX::nextToken()
             curToken = tEOF;
     }
 
-    if (curToken != tUnknown && curToken != tEOF)
+    if (curToken != tUnknown && curToken != tEOF) {
+        if (m_currentChar == '\n') ++m_lineNo;
         *m_textStream >> m_currentChar;
+    }
 
     return curToken;
 }
@@ -328,6 +340,7 @@ QString FileImporterBibTeX::readString(bool &isStringKey)
 {
     if (m_currentChar.isSpace()) {
         m_textStream->skipWhiteSpace();
+        if (m_currentChar == '\n') ++m_lineNo;
         *m_textStream >> m_currentChar;
     }
 
@@ -350,11 +363,13 @@ QString FileImporterBibTeX::readSimpleString(QChar until)
 
     while (m_currentChar.isSpace()) {
         m_textStream->skipWhiteSpace();
+        if (m_currentChar == '\n') ++m_lineNo;
         *m_textStream >> m_currentChar;
     }
 
     if (m_currentChar.isLetterOrNumber() || extraAlphaNumChars.contains(m_currentChar)) {
         result.append(m_currentChar);
+        if (m_currentChar == '\n') ++m_lineNo;
         *m_textStream >> m_currentChar;
     }
 
@@ -369,6 +384,7 @@ QString FileImporterBibTeX::readSimpleString(QChar until)
                 result.append(m_currentChar);
             else
                 break;
+        if (m_currentChar == '\n') ++m_lineNo;
         *m_textStream >> m_currentChar;
     }
     return result;
@@ -378,6 +394,7 @@ QString FileImporterBibTeX::readQuotedString()
 {
     QString result;
     QChar lastChar = m_currentChar;
+    if (m_currentChar == '\n') ++m_lineNo;
     *m_textStream >> m_currentChar;
     while (!m_textStream->atEnd()) {
         if (m_currentChar != '"' || lastChar == '\\')
@@ -385,10 +402,12 @@ QString FileImporterBibTeX::readQuotedString()
         else
             break;
         lastChar = m_currentChar;
+        if (m_currentChar == '\n') ++m_lineNo;
         *m_textStream >> m_currentChar;
     }
 
     /** read character after closing " */
+    if (m_currentChar == '\n') ++m_lineNo;
     *m_textStream >> m_currentChar;
 
     return result;
@@ -399,6 +418,7 @@ QString FileImporterBibTeX::readLine()
     QString result;
     while (!m_textStream->atEnd() && m_currentChar != '\n') {
         result.append(m_currentChar);
+        if (m_currentChar == '\n') ++m_lineNo;
         *m_textStream >> m_currentChar;
     }
     return result;
@@ -411,6 +431,7 @@ QString FileImporterBibTeX::readBracketString(const QChar openingBracket)
     if (openingBracket == '(')
         closingBracket = ')';
     int counter = 1;
+    if (m_currentChar == '\n') ++m_lineNo;
     *m_textStream >> m_currentChar;
     while (!m_textStream->atEnd()) {
         if (m_currentChar == openingBracket)
@@ -422,8 +443,10 @@ QString FileImporterBibTeX::readBracketString(const QChar openingBracket)
             break;
         else
             result.append(m_currentChar);
+        if (m_currentChar == '\n') ++m_lineNo;
         *m_textStream >> m_currentChar;
     }
+    if (m_currentChar == '\n') ++m_lineNo;
     *m_textStream >> m_currentChar;
     return result;
 }
@@ -507,13 +530,16 @@ void FileImporterBibTeX::splitPersons(const QString& text, QStringList &persons)
     persons.append(wordList.join(" "));
 }
 
-void FileImporterBibTeX::evaluateParameterComments(QTextStream *textStream, const QString &line)
+bool FileImporterBibTeX::evaluateParameterComments(QTextStream *textStream, const QString &line)
 {
     /** check if this file requests a special encoding */
     if (line.startsWith("@comment{x-kbibtex-encoding=") && line.endsWith("}")) {
         QString newEncoding = line.mid(28, line.length() - 29);
         qDebug() << "x-kbibtex-encoding=" << newEncoding << endl;
-        if (newEncoding == "latex") newEncoding = "utf-8";
+        if (newEncoding == "latex") newEncoding = "UTF-8";
         textStream->setCodec(newEncoding.toAscii());
+        return true;
     }
+
+    return false;
 }

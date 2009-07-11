@@ -26,7 +26,7 @@ namespace KBibTeX
 {
 namespace IO {
 
-class Comment : public Element
+class KBIBTEXIO_EXPORT Comment : public Element
 {
 public:
     Comment(const QString &text, bool useCommand = false);

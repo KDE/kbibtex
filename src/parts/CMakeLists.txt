@@ -1,4 +1,3 @@
-project( kbibtexparts )
-
-add_subdirectory( kpart )
+add_subdirectory( simplekpart )
+# add_subdirectory( extendedkpart )
 

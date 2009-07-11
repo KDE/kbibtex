@@ -17,8 +17,7 @@
 *   Free Software Foundation, Inc.,                                       *
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
-#include <bibtexfields.h>
-
+#include "bibtexfields.h"
 #include "bibtexfileview.h"
 
 using namespace KBibTeX::GUI::Widgets;
@@ -34,7 +33,7 @@ BibTeXFileView::~BibTeXFileView()
 // TODO
 }
 
-void BibTeXFileView::resizeEvent(QResizeEvent *event)
+void BibTeXFileView::resizeEvent(QResizeEvent */*event*/)
 {
     KBibTeX::GUI::Config::BibTeXFields *bibtexFields = KBibTeX::GUI::Config::BibTeXFields::self();
     int sum = 0, widgetWidth = size().width() - 64;

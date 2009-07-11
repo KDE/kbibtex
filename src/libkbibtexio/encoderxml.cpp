@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2008 by Thomas Fischer                             *
+*   Copyright (C) 2004-2009 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -31,7 +31,7 @@ static const struct EncoderXMLCharMapping {
     const char *latex;
 }
 charmappingdataxml[] = {
-    {"&quot;", 0x0022, "&quot;"},
+    {"&quot;", 0x0022, "&quot;"}, /** FIXME: is this one required? */
     {"&amp;", 0x0026, "&amp;"},
     {"&lt;", 0x003C, "&lt;"},
     {"&gt;", 0x003E, "&gt;"}

@@ -23,6 +23,7 @@
 #include <element.h>
 #include <entry.h>
 #include <macro.h>
+#include <comment.h>
 
 #include "bibtexfilemodel.h"
 
@@ -46,12 +47,12 @@ void BibTeXFileModel::setBibTeXFile(KBibTeX::IO::File *bibtexFile)
     m_bibtexFile = bibtexFile;
 }
 
-QModelIndex BibTeXFileModel::index(int row, int column, const QModelIndex & parent) const
+QModelIndex BibTeXFileModel::index(int row, int column, const QModelIndex & /*parent*/) const
 {
     return createIndex(row, column, (void*)NULL); // parent == QModelIndex() ? createIndex(row, column, (void*)NULL) : QModelIndex();
 }
 
-QModelIndex BibTeXFileModel::parent(const QModelIndex & index) const
+QModelIndex BibTeXFileModel::parent(const QModelIndex & /*index*/) const
 {
     return QModelIndex();
 }
@@ -61,12 +62,12 @@ bool BibTeXFileModel::hasChildren(const QModelIndex & parent) const
     return parent == QModelIndex();
 }
 
-int BibTeXFileModel::rowCount(const QModelIndex & parent) const
+int BibTeXFileModel::rowCount(const QModelIndex & /*parent*/) const
 {
     return m_bibtexFile != NULL ? m_bibtexFile->count() : 0;
 }
 
-int BibTeXFileModel::columnCount(const QModelIndex & parent) const
+int BibTeXFileModel::columnCount(const QModelIndex & /*parent*/) const
 {
     return m_bibtexFields->count();
 }
@@ -110,8 +111,18 @@ QVariant BibTeXFileModel::data(const QModelIndex &index, int role) const
                     return QVariant(macro->value()->text());
                 else
                     return QVariant();
-            } else
-                return QVariant("?");
+            } else {
+                KBibTeX::IO::Comment* comment = dynamic_cast<KBibTeX::IO::Comment*>(element);
+                if (comment != NULL) {
+                    if (raw == "^type")
+                        return QVariant("Comment"); // TODO: i18n
+                    else if (raw == "title")
+                        return QVariant(comment->text());
+                    else
+                        return QVariant();
+                } else
+                    return ("?");
+            }
         }
     } else
         return QVariant("?");

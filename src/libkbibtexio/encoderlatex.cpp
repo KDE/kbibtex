@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2008 by Thomas Fischer                             *
+*   Copyright (C) 2004-2009 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -41,7 +41,6 @@ decompositions[] = {
     /*{"x", 0x0305},  OVERLINE */
     {"u", 0x0306},
     {".", 0x0307},
-    {"\"", 0x0308},
     /*{"x", 0x0309},  HOOK ABOVE */
     {"r", 0x030a},
     {"H", 0x030b},
@@ -99,146 +98,25 @@ commandmappingdatalatex[] = {
     {"ae", 0x00E6},
     {"OE", 0x0152},
     {"oe", 0x0153},
+    {"ldots", 0x2026}, /** \ldots must be before \l */
     {"L", 0x0141},
     {"l", 0x0142},
     {"grqq", 0x201C},
     {"glqq", 0x201E},
     {"frqq", 0x00BB},
-    {"flqq", 0x00AB},
-
-// awk -F '[{}\\\\]+' '/DeclareUnicodeCharacter/ { print "{\""$4"\", 0x"$3"},"}' /usr/share/texmf-dist/tex/latex/base/t2aenc.dfu | grep '0x04' | sort -r -f
-    {"cyrzhdsc", 0x0497},
-    {"CYRZHDSC", 0x0496},
-    {"cyrzh", 0x0436},
-    {"CYRZH", 0x0416},
-    {"cyrzdsc", 0x0499},
-    {"CYRZDSC", 0x0498},
-    {"cyrz", 0x0437},
-    {"CYRZ", 0x0417},
-    {"cyryu", 0x044E},
-    {"CYRYU", 0x042E},
-    {"cyryo", 0x0451},
-    {"CYRYO", 0x0401},
-    {"cyryi", 0x0457},
-    {"CYRYI", 0x0407},
-    {"cyryhcrs", 0x04B1},
-    {"CYRYHCRS", 0x04B0},
-    {"cyrya", 0x044F},
-    {"CYRYA", 0x042F},
-    {"cyry", 0x04AF},
-    {"CYRY", 0x04AE},
-    {"cyrv", 0x0432},
-    {"CYRV", 0x0412},
-    {"cyrushrt", 0x045E},
-    {"CYRUSHRT", 0x040E},
-    {"cyru", 0x0443},
-    {"CYRU", 0x0423},
-    {"cyrtshe", 0x045B},
-    {"CYRTSHE", 0x040B},
-    {"cyrtdsc", 0x04AD},
-    {"CYRTDSC", 0x04AC},
-    {"cyrt", 0x0442},
-    {"CYRT", 0x0422},
-    {"cyrshha", 0x04BB},
-    {"CYRSHHA", 0x04BA},
-    {"cyrshch", 0x0449},
-    {"CYRSHCH", 0x0429},
-    {"cyrsh", 0x0448},
-    {"CYRSH", 0x0428},
-    {"cyrsftsn", 0x044C},
-    {"CYRSFTSN", 0x042C},
-    {"cyrsdsc", 0x04AB},
-    {"CYRSDSC", 0x04AA},
-    {"cyrschwa", 0x04D9},
-    {"CYRSCHWA", 0x04D8},
-    {"cyrs", 0x0441},
-    {"CYRS", 0x0421},
-    {"cyrr", 0x0440},
-    {"CYRR", 0x0420},
-    {"CYRpalochka", 0x04C0},
-    {"cyrp", 0x043F},
-    {"CYRP", 0x041F},
-    {"cyrotld", 0x04E9},
-    {"CYROTLD", 0x04E8},
-    {"cyro", 0x043E},
-    {"CYRO", 0x041E},
-    {"cyrnje", 0x045A},
-    {"CYRNJE", 0x040A},
-    {"cyrng", 0x04A5},
-    {"CYRNG", 0x04A4},
-    {"cyrndsc", 0x04A3},
-    {"CYRNDSC", 0x04A2},
-    {"cyrn", 0x043D},
-    {"CYRN", 0x041D},
-    {"cyrm", 0x043C},
-    {"CYRM", 0x041C},
-    {"cyrlje", 0x0459},
-    {"CYRLJE", 0x0409},
-    {"cyrl", 0x043B},
-    {"CYRL", 0x041B},
-    {"cyrkvcrs", 0x049D},
-    {"CYRKVCRS", 0x049C},
-    {"cyrkdsc", 0x049B},
-    {"CYRKDSC", 0x049A},
-    {"cyrk", 0x043A},
-    {"CYRK", 0x041A},
-    {"cyrje", 0x0458},
-    {"CYRJE", 0x0408},
-    {"cyrishrt", 0x0439},
-    {"CYRISHRT", 0x0419},
-    {"cyrii", 0x0456},
-    {"CYRII", 0x0406},
-    {"cyrie", 0x0454},
-    {"CYRIE", 0x0404},
-    {"cyri", 0x0438},
-    {"CYRI", 0x0418},
-    {"cyrhrdsn", 0x044A},
-    {"CYRHRDSN", 0x042A},
-    {"cyrhdsc", 0x04B3},
-    {"CYRHDSC", 0x04B2},
-    {"cyrh", 0x0445},
-    {"CYRH", 0x0425},
-    {"cyrgup", 0x0491},
-    {"CYRGUP", 0x0490},
-    {"cyrghcrs", 0x0493},
-    {"CYRGHCRS", 0x0492},
-    {"cyrg", 0x0433},
-    {"CYRG", 0x0413},
-    {"cyrf", 0x0444},
-    {"CYRF", 0x0424},
-    {"cyrery", 0x044B},
-    {"CYRERY", 0x042B},
-    {"cyrerev", 0x044D},
-    {"CYREREV", 0x042D},
-    {"cyre", 0x0435},
-    {"CYRE", 0x0415},
-    {"cyrdzhe", 0x045F},
-    {"CYRDZHE", 0x040F},
-    {"cyrdze", 0x0455},
-    {"CYRDZE", 0x0405},
-    {"cyrdje", 0x0452},
-    {"CYRDJE", 0x0402},
-    {"cyrd", 0x0434},
-    {"CYRD", 0x0414},
-    {"cyrchvcrs", 0x04B9},
-    {"CYRCHVCRS", 0x04B8},
-    {"cyrchrdsc", 0x04B7},
-    {"CYRCHRDSC", 0x04B6},
-    {"cyrch", 0x0447},
-    {"CYRCH", 0x0427},
-    {"cyrc", 0x0446},
-    {"CYRC", 0x0426},
-    {"cyrb", 0x0431},
-    {"CYRB", 0x0411},
-    {"cyrae", 0x04D5},
-    {"CYRAE", 0x04D4},
-    {"cyra", 0x0430},
-    {"CYRA", 0x0410}
+    {"flqq", 0x00AB}
 };
 
 static const int commandmappingdatalatexcount = sizeof(commandmappingdatalatex) / sizeof(commandmappingdatalatex[ 0 ]) ;
 
-const char *expansionsCmd[] = {"\\{\\\\%1\\}", "\\\\%1\\{\\}", "\\\\%1"};
+/** Command can be either
+    (1) {embraced}
+    (2) delimited by {},
+    (3) <space>, line end,
+    (4) \following_command (including \<space>, which must be maintained!),
+    (5) } (end of entry or group)
+ **/
+const char *expansionsCmd[] = {"\\{\\\\%1\\}", "\\\\%1\\{\\}", "\\\\%1(\\n|\\r|\\\\|\\})", "\\\\%1\\s"};
 static const  int expansionscmdcount = sizeof(expansionsCmd) / sizeof(expansionsCmd[0]);
 
 static const struct EncoderLaTeXModCharMapping {
@@ -486,9 +364,28 @@ QString EncoderLaTeX::decode(const QString & text)
 {
     const QString splitMarker = "|KBIBTEX|";
     QString result = text;
+
+    /** Collect (all?) urls from the BibTeX file and store them in urls */
+    /** Problem is that the replace function below will replace
+      * character sequences in the URL rendering the URL invalid.
+      * Later, all URLs will be replaced back to their original
+      * in the hope nothing breaks ... */
+    QStringList urls;
+    QRegExp httpRegExp("(ht|f)tps?://[^\"} ]+");
+    httpRegExp.setMinimal(false);
+    int pos = 0;
+    while (pos >= 0) {
+        pos = result.indexOf(httpRegExp, pos);
+        if (pos >= 0) {
+            ++pos;
+            QString url = httpRegExp.cap(0);
+            urls << url;
+        }
+    }
+
     decomposedUTF8toLaTeX(result);
 
-    // split text into math and non-math regions
+    /** split text into math and non-math regions */
     QStringList intermediate = result.split('$', QString::SkipEmptyParts);
     QStringList::Iterator it = intermediate.begin();
     while (it != intermediate.end()) {
@@ -540,33 +437,78 @@ QString EncoderLaTeX::decode(const QString & text)
         result.append("$").append(*iti).append("$");
     }
 
+    /** Reinserting original URLs as explained above */
+    pos = 0;
+    int idx = 0;
+    while (pos >= 0) {
+        pos = result.indexOf(httpRegExp, pos);
+        if (pos >= 0) {
+            ++pos;
+            int len = httpRegExp.cap(0).length();
+            result = result.left(pos - 1).append(urls[idx++]).append(result.mid(pos + len - 1));
+        }
+    }
+
     return result;
 }
 
 QString EncoderLaTeX::encode(const QString & text)
 {
+    const QString splitMarker = "|KBIBTEX|";
     QString result = text;
-    bool beginningQuotationNext = TRUE;
 
-    // result.replace( "\\", "\\\\" );
+    /** split text into math and non-math regions */
+    QStringList intermediate = result.split('$', QString::SkipEmptyParts);
+    QStringList::Iterator it = intermediate.begin();
+    while (it != intermediate.end()) {
+        /**
+         * Sometimes we split strings like "\$", which is not intended.
+         * So, we have to manually fix things by checking for strings
+         * ending with "\" and append both the removed dollar sign and
+         * the following string (which was never supposed to be an
+         * independent string). Finally, we remove the unnecessary
+         * string and continue.
+         */
+        if ((*it).endsWith("\\")) {
+            QStringList::Iterator cur = it;
+            ++it;
+            (*cur).append('$').append(*it);
+            it = intermediate.erase(it);
+        } else
+            ++it;
+    }
 
-    for (QLinkedList<CharMappingItem>::ConstIterator it = m_charMapping.begin(); it != m_charMapping.end(); ++it)
-        result.replace((*it).unicode, (*it).latex);
+    result = "";
+    for (QStringList::Iterator it = intermediate.begin(); it != intermediate.end(); ++it) {
+        if (!result.isEmpty()) result.append(splitMarker);
+        result.append(*it);
+        ++it;
+        if (it == intermediate.end())
+            break;
+        if ((*it).length() > 256)
+            qDebug() << "Very long math equation using $ found, maybe due to broken inline math:" << (*it).left(48) << endl;
+    }
 
-    for (int i = 0; i < result.length(); ++i)
-        if (result.at(i) == '"' && (i == 0 || result.at(i - 1) != '\\')) {
-            if (beginningQuotationNext)
-                result.replace(i, 1, "``");
-            else
-                result.replace(i, 1, "''");
+    for (QLinkedList<CharMappingItem>::ConstIterator cmit = m_charMapping.begin(); cmit != m_charMapping.end(); ++cmit)
+        result.replace((*cmit).unicode, (*cmit).latex);
 
-            beginningQuotationNext = !beginningQuotationNext;
-        }
+    QStringList transformed = result.split(splitMarker, QString::KeepEmptyParts, Qt::CaseSensitive);
+
+    result = "";
+    for (QStringList::Iterator itt = transformed.begin(), iti = intermediate.begin(); itt != transformed.end() && iti != intermediate.end(); ++itt, ++iti) {
+        result.append(*itt);
+
+        ++iti;
+        if (iti == intermediate.end())
+            break;
+
+        result.append("$").append(*iti).append("$");
+    }
 
     /** \url accepts unquotet & and _
     May introduce new problem tough */
     if (result.contains("\\url {"))
-        result.replace("\\&", "&").replace("\\_", "_");
+        result.replace("\\&", "&").replace("\\_", "_").replace(QChar(0x2013), "--").replace("\\#", "#");
 
     decomposedUTF8toLaTeX(result);
 
@@ -593,7 +535,7 @@ QString EncoderLaTeX::encodeSpecialized(const QString & text, const EntryField::
         break;
 
     case EntryField::ftURL:
-        result.replace("\\_", "_");
+        result.replace("\\_", "_").replace(QChar(0x2013), "--").replace("\\#", "#");
         break;
 
     default:
@@ -645,6 +587,8 @@ void EncoderLaTeX::buildCharMapping()
             CharMappingItem charMappingItem;
             charMappingItem.regExp = QRegExp(QString(expansionsCmd[j]).arg(commandmappingdatalatex[i].letters));
             charMappingItem.unicode = QChar(commandmappingdatalatex[i].unicode);
+            if (charMappingItem.regExp.numCaptures() > 0)
+                charMappingItem.unicode += QString("\\1");
             charMappingItem.latex = QString("{\\%1}").arg(commandmappingdatalatex[i].letters);
             m_charMapping.append(charMappingItem);
         }

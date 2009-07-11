@@ -23,6 +23,8 @@
 
 #include <kparts/part.h>
 
+#include <bibtexfileview.h>
+
 class KBibTeXPart : public KParts::ReadOnlyPart
 {
     Q_OBJECT
@@ -60,6 +62,7 @@ protected:
 
 private:
     // TODO
+    KBibTeX::GUI::Widgets::BibTeXFileView *m_view;
 };
 
 #endif // KBIBTEX_PART_PART_H

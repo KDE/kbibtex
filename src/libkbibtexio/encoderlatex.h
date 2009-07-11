@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2008 by Thomas Fischer                             *
+*   Copyright (C) 2004-2009 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -21,12 +21,12 @@
 #define ENCODERLATEX_H
 
 #include <QLinkedList>
-#include <QRegExp>
 
 #include <encoder.h>
 #include <entry.h>
 
 class QString;
+class QRegExp;
 
 namespace KBibTeX
 {
@@ -59,7 +59,7 @@ private:
 
     struct CharMappingItem {
         QRegExp regExp;
-        QChar unicode;
+        QString unicode;
         QString latex;
     };
 

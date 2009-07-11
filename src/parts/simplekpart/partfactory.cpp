@@ -25,9 +25,9 @@
 #include "part.h"
 #include "partfactory.h"
 
-static const char PartId[] =           "kbibtexpart";
-static const char PartName[] =         I18N_NOOP("KBibTeXPart");
-static const char PartDescription[] =  I18N_NOOP("Embedded BibTeX editor");
+static const char PartId[] =           "simplekbibtexpart";
+static const char PartName[] =         I18N_NOOP("SimpleKBibTeXPart");
+static const char PartDescription[] =  I18N_NOOP("Embedded Simple BibTeX editor");
 static const char PartVersion[] =      "0.3.0";
 static const char PartCopyright[] =    "2004-2009 Thomas Fischer";
 static const char PartContactEMail[] = "fischer@unix-ag.uni-kl.de"; // FIXME Use some GNA mailinglist address
@@ -66,13 +66,13 @@ const KComponentData &KBibTeXPartFactory::componentData()
 {
     if (!_componentData) {
         _aboutData = new KAboutData(PartId, 0, ki18n(PartName), PartVersion, ki18n(PartDescription), KAboutData::License_GPL_V2, ki18n(PartCopyright), KLocalizedString(), 0, PartContactEMail);
-        _aboutData->addAuthor("Thomas Fischer", ki18n("Author"), "fischer@unix-ag.uni-kl.de");
+        _aboutData->addAuthor(ki18n("Thomas Fischer"), ki18n("Author"), "fischer@unix-ag.uni-kl.de", "http://www.t-fischer.net/");
         _componentData = new KComponentData(_aboutData);
     }
     return *_componentData;
 }
 
 
-K_EXPORT_COMPONENT_FACTORY(libkbibtexpart, KBibTeXPartFactory)
+K_EXPORT_COMPONENT_FACTORY(libsimplekbibtexpart, KBibTeXPartFactory)
 
 #include "partfactory.moc"

@@ -52,12 +52,12 @@ void KBibTeXMainWindow::setupControllers()
     // TODO
 }
 
-void KBibTeXMainWindow::saveProperties(KConfigGroup &configGroup)
+void KBibTeXMainWindow::saveProperties(KConfigGroup &/*configGroup*/)
 {
     // TODO
 }
 
-void KBibTeXMainWindow::readProperties(const KConfigGroup &configGroup)
+void KBibTeXMainWindow::readProperties(const KConfigGroup &/*configGroup*/)
 {
-    // TOD
+    // TODO
 }

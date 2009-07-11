@@ -87,7 +87,7 @@ bool Macro::containsPattern(const QString& pattern, EntryField::FieldType fieldT
         }
 
         /** return success depending on filter type and number of hits */
-        return (filterType == ftAnyWord && hits > 0 || filterType == ftEveryWord && hits == words.count());
+        return ((filterType == ftAnyWord && hits > 0) || (filterType == ftEveryWord && hits == words.count()));
     }
 }
 

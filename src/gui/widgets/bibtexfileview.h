@@ -22,6 +22,8 @@
 
 #include <QTreeView>
 
+#include <kbibtexgui_export.h>
+
 namespace KBibTeX
 {
 namespace GUI {
@@ -30,7 +32,7 @@ namespace Widgets {
 /**
 @author Thomas Fischer
 */
-class BibTeXFileView : public QTreeView
+class KBIBTEXGUI_EXPORT BibTeXFileView : public QTreeView
 {
 public:
     BibTeXFileView(QWidget * parent = 0);

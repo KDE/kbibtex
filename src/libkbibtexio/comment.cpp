@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2008 by Thomas Fischer                             *
+*   Copyright (C) 2004-2009 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -77,7 +77,7 @@ bool Comment::containsPattern(const QString& pattern, EntryField::FieldType fiel
         }
 
         /** return success depending on filter type and number of hits */
-        return (filterType == ftAnyWord && hits > 0 || filterType == ftEveryWord && hits == words.count());
+        return ((filterType == ftAnyWord && hits > 0) || (filterType == ftEveryWord && hits == words.count()));
     }
 }
 

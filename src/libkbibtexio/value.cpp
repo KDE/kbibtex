@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2008 by Thomas Fischer                             *
+*   Copyright (C) 2004-2009 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -209,7 +209,9 @@ void Person::setText(const QString& text)
         return;
 
     if (!containsComma) {
-        QString lastItem = segments[segments.count() - 1];
+        /** PubMed uses a special writing style for names, where the last name is followed by single capital letter,
+          * each being the first letter of each first name
+          * So, check how many single capital letters are at the end of the given segment list */
         int singleCapitalLettersCounter = 0;
         int p = segments.count() - 1;
         while (segments[p].length() == 1 && segments[p].compare(segments[p].toUpper()) == 0) {
@@ -218,10 +220,12 @@ void Person::setText(const QString& text)
         }
 
         if (singleCapitalLettersCounter > 0) {
-            // this is a special case for names from PubMed, which are formatted like "Fischer T"
+            /** this is a special case for names from PubMed, which are formatted like "Fischer T"
+              * all segment values until the first single letter segment are last name parts */
             for (int i = 0; i < p; ++i)
                 m_lastName.append(segments[i]).append(" ");
             m_lastName.append(segments[p]);
+            /** single letter segments are first name parts */
             for (int i = p + 1; i < segments.count() - 1; ++i)
                 m_firstName.append(segments[i]).append(" ");
             m_firstName.append(segments[segments.count() - 1]);
@@ -238,7 +242,7 @@ void Person::setText(const QString& text)
             }
 
             if (from > 0) {
-                /** there is something left for the first name */
+                /** there are segments left for the first name */
                 m_firstName = *segments.begin();
                 for (QStringList::Iterator it = ++segments.begin(); from > 1; ++it, --from) {
                     m_firstName.append(" ");

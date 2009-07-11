@@ -53,10 +53,11 @@ public slots:
 
 private:
     enum Token {
-        tAt, tBracketOpen, tBracketClose, tAlphaNumText, tComma, tSemicolon, tAssign, tDoublecross, tEOF, tUnknown
+        tAt = 1, tBracketOpen = 2, tBracketClose = 3, tAlphaNumText = 4, tComma = 5, tSemicolon = 6, tAssign = 7, tDoublecross = 8, tEOF = 0xffff, tUnknown = -1
     };
 
-    bool cancelFlag;
+    bool m_cancelFlag;
+    unsigned int m_lineNo;
     QTextStream *m_textStream;
     QChar m_currentChar;
     bool m_ignoreComments;
@@ -78,7 +79,7 @@ private:
 
     void unescapeLaTeXChars(QString &text);
     void splitPersons(const QString& test, QStringList &persons);
-    void evaluateParameterComments(QTextStream *textStream, const QString &line);
+    bool evaluateParameterComments(QTextStream *textStream, const QString &line);
 };
 
 }

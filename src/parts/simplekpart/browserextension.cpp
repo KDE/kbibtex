@@ -26,7 +26,7 @@
 KBibTeXBrowserExtension::KBibTeXBrowserExtension(KBibTeXPart *p)
         : KParts::BrowserExtension(p), part(p)
 {
-    setObjectName("kbibtexpartbrowserextension");
+    setObjectName("simplekbibtexpartbrowserextension");
 //     connect( part->view, SIGNAL( selectionChanged( bool ) ), SLOT( onSelectionChanged( bool ) ) );
 }
 

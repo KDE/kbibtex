@@ -24,6 +24,8 @@
 #include <QLatin1String>
 #include <QList>
 
+#include <kbibtexgui_export.h>
+
 #include <file.h>
 #include <bibtexfields.h>
 
@@ -35,7 +37,7 @@ namespace Widgets {
 /**
 @author Thomas Fischer
 */
-class BibTeXFileModel : public QAbstractItemModel
+class KBIBTEXGUI_EXPORT BibTeXFileModel : public QAbstractItemModel
 {
 public:
     BibTeXFileModel(QObject * parent = 0);

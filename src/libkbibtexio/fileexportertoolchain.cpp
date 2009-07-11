@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2008 by Thomas Fischer                             *
+*   Copyright (C) 2004-2009 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -152,7 +152,7 @@ void FileExporterToolchain::deleteTempDir(const QString& directory)
     QDir().rmdir(directory);
 }
 
-void FileExporterToolchain::slotProcessExited(int exitCode, QProcess::ExitStatus exitStatus)
+void FileExporterToolchain::slotProcessExited(int /*exitCode*/, QProcess::ExitStatus /*exitStatus*/)
 {
     m_waitCond.wakeAll();
 }
