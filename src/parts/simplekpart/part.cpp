@@ -40,7 +40,7 @@
 static const char RCFileName[] = "simplekbibtexpartui.rc";
 
 KBibTeXPart::KBibTeXPart(QWidget *parentWidget, QObject *parent, bool browserViewWanted)
-        : KParts::ReadOnlyPart(parent)
+        : KParts::ReadWritePart(parent)
 {
     setComponentData(KBibTeXPartFactory::componentData());
 
@@ -70,6 +70,11 @@ void KBibTeXPart::setupActions(bool browserViewWanted)
     setXMLFile(RCFileName);
 }
 
+bool KBibTeXPart::saveFile()
+{
+    // TODO
+    return false;
+}
 
 void KBibTeXPart::fitActionSettings()
 {
@@ -82,7 +87,7 @@ bool KBibTeXPart::openFile()
     KBibTeX::IO::FileImporterBibTeX *importer = new KBibTeX::IO::FileImporterBibTeX("latex", false);
     QFile inputfile(localFilePath());
     inputfile.open(QIODevice::ReadOnly);
-    KBibTeX::IO::File *bibtexFile = bibtexFile = importer->load(&inputfile);
+    KBibTeX::IO::File *bibtexFile = importer->load(&inputfile);
     inputfile.close();
     delete importer;
 

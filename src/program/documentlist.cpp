@@ -18,53 +18,32 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#ifndef KBIBTEX_PROGRAM_MAINWINDOW_H
-#define KBIBTEX_PROGRAM_MAINWINDOW_H
+#include <QStringListModel>
 
-#include <kparts/mainwindow.h>
-#include <KConfigGroup>
-
+#include <KDebug>
 
 #include "documentlist.h"
 
-class QDockWidget;
-//class DocumentList;
+using namespace KBibTeX::Program;
 
-namespace KBibTeX
+DocumentList::DocumentList(QWidget *parent)
+        : QListWidget(parent)
 {
-namespace Program {
-
-class KBibTeXProgram;
-
-class KBibTeXMainWindow : public KParts::MainWindow
-{
-    Q_OBJECT
-
-public:
-    explicit KBibTeXMainWindow(KBibTeXProgram *program);
-    virtual ~KBibTeXMainWindow();
-
-public slots:
-    void openDocument(const KUrl& url);
-
-protected: // KMainWindow API
-    virtual void saveProperties(KConfigGroup &configGroup);
-    virtual void readProperties(const KConfigGroup &configGroup);
-
-protected:
-    void setupControllers();
-
-protected:
-    KBibTeXProgram *m_program;
-    QDockWidget *m_dockDocumentList;
-    DocumentList *m_listDocumentList;
-    KParts::ReadWritePart *m_part;
-
-protected slots:
-    void slotOpenFile();
-};
-
-}
+    // nothing
 }
 
-#endif // KBIBTEX_PROGRAM_MAINWINDOW_H
+DocumentList::~DocumentList()
+{
+    //nothing
+}
+
+void DocumentList::addOpen(KUrl &url)
+{
+    QList<QListWidgetItem *> matches = findItems(url.prettyUrl(), Qt::MatchExactly);
+    if (matches.isEmpty())
+        addItem(url.prettyUrl());
+
+    kDebug() << "DocumentList::addOpen " << url.prettyUrl() << endl;
+    emit open(url);
+    // TODO
+}

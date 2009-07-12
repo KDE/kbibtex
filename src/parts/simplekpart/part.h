@@ -25,7 +25,7 @@
 
 #include <bibtexfileview.h>
 
-class KBibTeXPart : public KParts::ReadOnlyPart
+class KBibTeXPart : public KParts::ReadWritePart
 {
     Q_OBJECT
 
@@ -37,6 +37,7 @@ public:
 
 protected: // KParts::ReadOnlyPart API
     virtual bool openFile();
+    virtual bool saveFile();
 
 protected:
     void setupActions(bool BrowserViewWanted);

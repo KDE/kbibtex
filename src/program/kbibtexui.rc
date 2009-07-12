@@ -1,4 +1,8 @@
 <!DOCTYPE kpartgui>
 <kpartgui name="KBibTeX" version="1">
+<MenuBar>
+  <Menu name="file">
+  </Menu>
+</MenuBar>
 <!-- TODO -->
 </kpartgui>

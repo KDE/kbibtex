@@ -1,15 +1,16 @@
 project( kbibtexprogram )
 
 include_directories(
-	../libkbibtexio
-	../gui
+	${CMAKE_CURRENT_SOURCE_DIR}
+	${CMAKE_CURRENT_SOURCE_DIR}/../gui
 )
 
 set( kbibtex_SRCS
-  main.cpp
-  program.cpp
-  about.cpp
-  mainwindow.cpp
+	main.cpp
+	program.cpp
+	about.cpp
+	mainwindow.cpp
+	documentlist.cpp
 )
 
 # TODO kde4_add_app_icon( okteta_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/hi*-app-kbibtex.png" )
@@ -17,8 +18,9 @@ set( kbibtex_SRCS
 kde4_add_executable( kbibtex  ${kbibtex_SRCS} )
 
 target_link_libraries( kbibtex
-  kbibtexio
   ${KDE4_KIO_LIBS}
+  ${KDE4_KPARTS_LIBS}
+  kbibtexio
 )
 
 install( TARGETS kbibtex  ${INSTALL_TARGETS_DEFAULT_ARGS} )
