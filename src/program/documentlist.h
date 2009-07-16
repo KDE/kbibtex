@@ -21,25 +21,50 @@
 #ifndef KBIBTEX_PROGRAM_DOCUMENTLIST_H
 #define KBIBTEX_PROGRAM_DOCUMENTLIST_H
 
-#include <QListWidget>
+#include <QTabWidget>
 
+#include <KListWidget>
 #include <KUrl>
 
 namespace KBibTeX
 {
 namespace Program {
 
-class DocumentList : public QListWidget
+class DocumentList : public QTabWidget
 {
     Q_OBJECT
 public:
+    enum Category { OpenFiles = 0, RecentFiles = 1, Favorites = 2 };
+
     DocumentList(QWidget *parent = 0);
     virtual ~DocumentList();
 
-    void addOpen(KUrl &url);
+    void add(const KUrl &url, const QString& encoding, Category category = OpenFiles);
 
 signals:
-    void open(KUrl &url);
+    void open(const KUrl &url, const QString& encoding);
+
+private slots:
+    void itemExecuted(QListWidgetItem * item);
+
+private:
+    KListWidget *m_listOpenFiles;
+    KListWidget *m_listRecentFiles;
+    KListWidget *m_listFavorites;
+};
+
+class DocumentListItem : public QListWidgetItem
+{
+public:
+    DocumentListItem(const KUrl &url, const QString &encoding, KListWidget *parent, int type = QListWidgetItem::Type);
+
+    const KUrl url();
+    const QString encoding();
+    void setEncoding(const QString &encoding);
+
+protected:
+    KUrl m_url;
+    QString m_encoding;
 };
 
 }

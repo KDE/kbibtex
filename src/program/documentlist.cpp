@@ -21,15 +21,24 @@
 #include <QStringListModel>
 
 #include <KDebug>
+#include <KLocale>
 
 #include "documentlist.h"
 
 using namespace KBibTeX::Program;
 
 DocumentList::DocumentList(QWidget *parent)
-        : QListWidget(parent)
+        : QTabWidget(parent)
 {
-    // nothing
+    m_listOpenFiles = new KListWidget(this);
+    addTab(m_listOpenFiles, i18n("Open Files"));
+    connect(m_listOpenFiles, SIGNAL(executed(QListWidgetItem*)), this, SLOT(itemExecuted(QListWidgetItem*)));
+    m_listRecentFiles = new KListWidget(this);
+    addTab(m_listRecentFiles, i18n("Recent Files"));
+    connect(m_listRecentFiles, SIGNAL(executed(QListWidgetItem*)), this, SLOT(itemExecuted(QListWidgetItem*)));
+    m_listFavorites = new KListWidget(this);
+    addTab(m_listFavorites, i18n("Favorites"));
+    connect(m_listFavorites, SIGNAL(executed(QListWidgetItem*)), this, SLOT(itemExecuted(QListWidgetItem*)));
 }
 
 DocumentList::~DocumentList()
@@ -37,13 +46,61 @@ DocumentList::~DocumentList()
     //nothing
 }
 
-void DocumentList::addOpen(KUrl &url)
+void DocumentList::add(const KUrl &url, const QString& encoding, Category category)
 {
-    QList<QListWidgetItem *> matches = findItems(url.prettyUrl(), Qt::MatchExactly);
-    if (matches.isEmpty())
-        addItem(url.prettyUrl());
+    KListWidget *list = NULL;
+    switch (category) {
+    case OpenFiles: list=m_listOpenFiles; break;
+    case RecentFiles: list=m_listRecentFiles; break;
+    case Favorites: list=m_listFavorites; break;
+    }
 
-    kDebug() << "DocumentList::addOpen " << url.prettyUrl() << endl;
-    emit open(url);
-    // TODO
+    bool match = false;
+    DocumentListItem *it = NULL;
+    for (int i = list->count() - 1; !match && i >= 0; --i) {
+        it = dynamic_cast<DocumentListItem*>(list->item(i));
+        match = url.equals(it->url());
+    }
+
+    if (match && it != NULL)
+        it->setEncoding(encoding);
+    else if (!match) {
+        it = new DocumentListItem(url, encoding, list);
+    }
+    if (it != NULL)
+        list->setCurrentItem(it);
+
+    if (category != RecentFiles)
+        add(url, encoding, RecentFiles);
+}
+
+void DocumentList::itemExecuted(QListWidgetItem * item)
+{
+    DocumentListItem *it = dynamic_cast<DocumentListItem*>(item);
+    if (it != NULL) {
+        KUrl url = it->url();
+        QString encoding = it->encoding();
+        emit open(url, encoding);
+    }
+}
+
+DocumentListItem::DocumentListItem(const KUrl &url, const QString &encoding, KListWidget *parent, int type)
+        : QListWidgetItem(parent, type), m_url(url), m_encoding(encoding)
+{
+    setText(url.fileName());
+}
+
+const KUrl DocumentListItem::url()
+{
+    return m_url;
+}
+
+const QString DocumentListItem::encoding()
+{
+    return m_encoding;
+}
+
+void DocumentListItem::setEncoding(const QString &encoding)
+{
+    m_encoding = encoding;
 }

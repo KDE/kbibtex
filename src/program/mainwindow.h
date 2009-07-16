@@ -45,7 +45,7 @@ public:
     virtual ~KBibTeXMainWindow();
 
 public slots:
-    void openDocument(const KUrl& url);
+    void openDocument(const KUrl& url, const QString& encoding);
 
 protected: // KMainWindow API
     virtual void saveProperties(KConfigGroup &configGroup);
@@ -61,7 +61,7 @@ protected:
     KParts::ReadWritePart *m_part;
 
 protected slots:
-    void slotOpenFile();
+    void openDocumentDialog();
 };
 
 }

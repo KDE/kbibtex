@@ -56,6 +56,7 @@ KBibTeXMainWindow::KBibTeXMainWindow(KBibTeXProgram *program)
     m_dockDocumentList->setWidget(m_listDocumentList);
     m_dockDocumentList->setObjectName("dockDocumentList");
     m_dockDocumentList->setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
+    connect(m_listDocumentList, SIGNAL(open(const KUrl &, const QString&)), this, SLOT(openDocument(const KUrl&, const QString&)));
 
     // this routine will find and load our Part.
     KPluginFactory* factory = KPluginLoader("libsimplekbibtexpart").factory();
@@ -84,7 +85,7 @@ KBibTeXMainWindow::KBibTeXMainWindow(KBibTeXProgram *program)
         return;
     }
 
-    actionCollection()->addAction(KStandardAction::Open,  this, SLOT(slotOpenFile()));
+    actionCollection()->addAction(KStandardAction::Open,  this, SLOT(openDocumentDialog()));
     actionCollection()->addAction(KStandardAction::Quit,  kapp, SLOT(quit()));
 
     setupControllers();
@@ -112,19 +113,18 @@ void KBibTeXMainWindow::readProperties(const KConfigGroup &/*configGroup*/)
     // TODO
 }
 
-void KBibTeXMainWindow::slotOpenFile()
+void KBibTeXMainWindow::openDocumentDialog()
 {
     KEncodingFileDialog::Result loadResult = KEncodingFileDialog::getOpenUrlAndEncoding(QString(), ":open", QString(), this);
     KUrl url = loadResult.URLs.first();
-    if (!url.isEmpty())
-        m_listDocumentList->addOpen(url);
-
+    if (!url.isEmpty()) {
+        m_listDocumentList->add(url, loadResult.encoding);
+        openDocument(url, loadResult.encoding);
+    }
 }
 
-void KBibTeXMainWindow::openDocument(const KUrl& url)
+void KBibTeXMainWindow::openDocument(const KUrl& url, const QString& encoding)
 {
     kDebug() << "Opening document \"" << url.prettyUrl() << "\"" << endl;
     m_part->openUrl(url);
 }
-
-

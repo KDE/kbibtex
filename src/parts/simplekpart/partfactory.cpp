@@ -19,7 +19,7 @@
 ***************************************************************************/
 
 #include <kcomponentdata.h>
-#include <kaboutdata.h>
+#include <KAboutData>
 #include <klocale.h>
 
 #include "part.h"

@@ -21,7 +21,7 @@
 #ifndef KBIBTEX_PROGRAM_ABOUT_H
 #define KBIBTEX_PROGRAM_ABOUT_H
 
-#include <kaboutdata.h>
+#include <KAboutData>
 
 namespace KBibTeX
 {

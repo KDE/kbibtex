@@ -20,6 +20,7 @@
 
 #include <kcmdlineargs.h>
 #include <kapplication.h>
+#include <KDebug>
 
 #include "program.h"
 #include "mainwindow.h"
@@ -50,6 +51,7 @@ int KBibTeXProgram::execute()
     KApplication programCore;
 
     KGlobal::locale()->insertCatalog("libkbibtexio");
+    KGlobal::locale()->insertCatalog("libkbibtexgui");
 
     // started by session management?
     if (programCore.isSessionRestored()) {
@@ -60,9 +62,11 @@ int KBibTeXProgram::execute()
 
         KCmdLineArgs *arguments = KCmdLineArgs::parsedArgs();
 
-        // take arguments
-        if (arguments->count() > 0) {
-            // TODO
+        for (int i = 0; i < arguments->count(); ++i) {
+            kDebug(0) << "Arg-" << i << " : " << arguments->arg(i) << endl;
+            KUrl url(arguments->arg(i));
+            if (url.isValid())
+                mainWindow->openDocument(url, QString::null);
         }
         mainWindow->show();
 

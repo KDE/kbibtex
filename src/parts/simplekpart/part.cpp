@@ -27,7 +27,7 @@
 #include <kactioncollection.h>
 #include <kstandardaction.h>
 #include <kselectaction.h>
-#include <ktoggleaction.h>
+#include <KToggleAction>
 
 #include <file.h>
 #include <fileimporterbibtex.h>
