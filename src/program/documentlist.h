@@ -39,7 +39,7 @@ public:
     DocumentList(QWidget *parent = 0);
     virtual ~DocumentList();
 
-    void add(const KUrl &url, const QString& encoding, Category category = OpenFiles);
+    void addToOpen(const KUrl &url, const QString& encoding);
 
 signals:
     void open(const KUrl &url, const QString& encoding);
@@ -47,16 +47,38 @@ signals:
 private slots:
     void itemExecuted(QListWidgetItem * item);
 
+protected:
+    static const QString configGroupNameRecentlyUsed;
+    static const QString configGroupNameFavorites;
+    static const int maxNumRecentlyUsedFiles;
+
+    void addToRecentFiles(const KUrl &url, const QString& encoding);
+    void readConfig();
+    void writeConfig();
+
 private:
     KListWidget *m_listOpenFiles;
     KListWidget *m_listRecentFiles;
     KListWidget *m_listFavorites;
+
+    void readConfig(KListWidget *fromList, const QString& configGroupName);
+    void writeConfig(KListWidget *fromList, const QString& configGroupName);
+    void refreshRecentlyUsed(const KUrl& url);
+    void refreshOpenFiles(const KUrl& url);
+
+    int m_rowToMoveUpInternallyRecentlyUsed;
+
+private slots:
+    void moveUpInternallyRecentlyUsed();
 };
+
+static const int RecentlyUsedItemType = QListWidgetItem::UserType + 23;
+static const int FavoritesItemType = QListWidgetItem::UserType + 24;
 
 class DocumentListItem : public QListWidgetItem
 {
 public:
-    DocumentListItem(const KUrl &url, const QString &encoding, KListWidget *parent, int type = QListWidgetItem::Type);
+    DocumentListItem(const KUrl &url, const QString &encoding, KListWidget *parent = NULL, int type = QListWidgetItem::UserType);
 
     const KUrl url();
     const QString encoding();

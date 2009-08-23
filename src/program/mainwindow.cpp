@@ -118,13 +118,13 @@ void KBibTeXMainWindow::openDocumentDialog()
     KEncodingFileDialog::Result loadResult = KEncodingFileDialog::getOpenUrlAndEncoding(QString(), ":open", QString(), this);
     KUrl url = loadResult.URLs.first();
     if (!url.isEmpty()) {
-        m_listDocumentList->add(url, loadResult.encoding);
+        m_listDocumentList->addToOpen(url, loadResult.encoding);
         openDocument(url, loadResult.encoding);
     }
 }
 
 void KBibTeXMainWindow::openDocument(const KUrl& url, const QString& encoding)
 {
-    kDebug() << "Opening document \"" << url.prettyUrl() << "\"" << endl;
+    kDebug() << "Opening document " << url.prettyUrl() << " with encoding " << encoding << endl;
     m_part->openUrl(url);
 }
