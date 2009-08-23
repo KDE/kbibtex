@@ -21,138 +21,168 @@
 #define BIBTEXVALUE_H
 
 #include <QLinkedList>
+#include <QRegExp>
+
+#include "kbibtexio_export.h"
 
 namespace KBibTeX
 {
 namespace IO {
 
-class ValueTextInterface
+class File;
+
+/**
+  * Generic class of an information element in a @see Value object.
+  * In BibTeX, ValueItems are concatenated by "#".
+  */
+class ValueItem
 {
 public:
-    ValueTextInterface(const ValueTextInterface* other);
-    ValueTextInterface(const QString& text);
-    virtual ~ValueTextInterface() {};
+    virtual ~ValueItem() { /* nothing */ };
 
-    virtual void setText(const QString& text);
-    virtual QString text() const;
-    QString simplifiedText() const;
-    virtual void replace(const QString &before, const QString &after);
-    virtual bool containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive);
+    virtual void replace(const QString &before, const QString &after) = 0;
 
-private:
+    /**
+      * Check if this object contains text pattern @p pattern.
+      * @param pattern Pattern to check for
+      * @param caseSensitive Case sensitivity setting for check
+      * @return TRUE if pattern is contained within this value, otherwise FALSE
+      */
+    virtual bool containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const = 0;
+};
+
+class Keyword: public ValueItem
+{
+public:
+    ~Keyword() { /* nothing */ };
+
+    Keyword(const Keyword& other);
+    Keyword(const QString& text);
+
+    void setText(const QString& text);
+    QString text() const;
+
+    void replace(const QString &before, const QString &after);
+    bool containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const;
+
+protected:
     QString m_text;
 };
 
-
-class ValueItem: public ValueTextInterface
-{
-public:
-    ValueItem(const QString& text);
-
-    virtual ValueItem *clone() const {
-        return NULL;
-    };
-};
-
-
-class Keyword: public ValueTextInterface
-{
-public:
-    Keyword(Keyword *other);
-    Keyword(const QString& text);
-
-    Keyword *clone() const;
-};
-
-class KeywordContainer: public ValueItem
+class KeywordContainer: public ValueItem, public QLinkedList<Keyword*>
 {
 public:
     KeywordContainer();
-    KeywordContainer(const QString& text);
-    KeywordContainer(const KeywordContainer *other);
-    KeywordContainer(const QStringList& list);
+    KeywordContainer(const KeywordContainer& other);
 
-    ValueItem *clone() const;
-    void setList(const QStringList& list);
-    void append(const QString& text);
-    void remove(const QString& text);
-    void setText(const QString& text);
-    QString text() const;
     void replace(const QString &before, const QString &after);
-
-    QLinkedList<Keyword*> keywords;
+    bool containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const;
 };
 
-class Person: public ValueTextInterface
+class Person: public ValueItem
 {
 public:
-    Person(const QString& text);
-    Person(const QString& firstName, const QString& lastName);
+    /**
+    * Create a representation for a person's name. In bibliographies, a person is either an author or an editor.
+    * The four parameters cover all common parts of a name. Only first and last name are mandatory (each person should have those).
+    * Example: A name like "Dr. Wernher von Braun" would be split as follows: "Wernher" is assigned to @p firstName, "von Braun" to @p lastName, and "Dr." to @p prefix.
+    @param firstName First name of a person. Example: "Peter"
+    @param lastName Last name of a person. Example: "Smith"
+    @param prefix Prefix in front of a name. Example: "Dr."
+    @param suffix Suffix after a name. Example: "jr."
+    */
+    Person(const QString& firstName, const QString& lastName, const QString& prefix = QString::null, const QString& suffix = QString::null);
+    Person(const Person& other);
 
-    Person *clone() const;
-    void setText(const QString& text);
-    QString text() const;
-    QString text(bool firstNameFirst) const;
+    void setName(const QString& firstName, const QString& lastName, const QString& prefix = QString::null, const QString& suffix = QString::null);
+    QString firstName() const;
+    QString lastName() const;
+    QString prefix() const;
+    QString suffix() const;
 
-    QString firstName();
-    QString lastName();
+    void replace(const QString &before, const QString &after);
+    bool containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const;
 
-protected:
+private:
     QString m_firstName;
     QString m_lastName;
-
-    bool splitName(const QString& text, QStringList& segments);
+    QString m_prefix;
+    QString m_suffix;
 };
 
-class PersonContainer: public ValueItem
+class PersonContainer: public ValueItem, public QLinkedList<Person*>
 {
 public:
     PersonContainer();
-    PersonContainer(const QString& text);
+    PersonContainer(const PersonContainer& person);
 
-    ValueItem *clone() const;
-    void setText(const QString& text);
-    QString text() const;
     void replace(const QString &before, const QString &after);
-
-    QLinkedList<Person*> persons;
+    bool containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const;
 };
 
 class MacroKey: public ValueItem
 {
-private:
-    bool m_isValid;
-    bool isValidInternal();
-
 public:
+    MacroKey(const MacroKey& other);
     MacroKey(const QString& text);
 
-    ValueItem *clone() const;
-
     void setText(const QString& text);
+    QString text() const;
     bool isValid();
+
+    void replace(const QString &before, const QString &after);
+    bool containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const;
+
+protected:
+    QString m_text;
+    static const QRegExp validMakroKeyChars;
 };
 
 class PlainText: public ValueItem
 {
 public:
+    PlainText(const PlainText& other);
     PlainText(const QString& text);
-
-    ValueItem *clone() const;
-};
-
-class Value: public ValueTextInterface
-{
-public:
-    Value();
-    Value(const Value *other);
-    Value(const QString& text, bool isMacroKey = false);
 
     void setText(const QString& text);
     QString text() const;
+
+    void replace(const QString &before, const QString &after);
+    bool containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const;
+
+protected:
+    QString m_text;
+};
+
+/**
+  * Container class to hold values of BibTeX entry fields and similar value types in BibTeX file.
+  * A Value object is built from a list of @see ValueItem objects.
+  */
+class Value: public QLinkedList<ValueItem*>
+{
+public:
+    Value();
+    Value(const Value& other);
+
     void replace(const QString &before, const QString &after);
 
-    QLinkedList<ValueItem*> items;
+    /**
+      * Check if this value contains text pattern @p pattern.
+      * @param pattern Pattern to check for
+      * @param caseSensitive Case sensitivity setting for check
+      * @return TRUE if pattern is contained within this value, otherwise FALSE
+      */
+    bool containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const;
+};
+
+class KBIBTEXIO_EXPORT PlainTextValue
+{
+public:
+    static QString text(const Value& value, const File* file = NULL);
+    static QString text(const ValueItem& valueItem, const File* file = NULL);
+
+private:
+    static QRegExp removeCurlyBrackets;
 };
 
 }

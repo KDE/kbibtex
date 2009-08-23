@@ -17,443 +17,336 @@
 *   Free Software Foundation, Inc.,                                       *
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
-#include <QRegExp>
 #include <QString>
 #include <QStringList>
 #include <QDebug>
 
+#include <file.h>
 #include "value.h"
 
 using namespace KBibTeX::IO;
 
-ValueTextInterface::ValueTextInterface(const ValueTextInterface* other)
-        : m_text(other->text())
+
+Keyword::Keyword(const Keyword& other)
+        : m_text(other.m_text)
 {
-// nothing
+    // nothing
 }
 
-ValueTextInterface::ValueTextInterface(const QString& text) : m_text(text)
+Keyword::Keyword(const QString& text)
+        : m_text(text)
 {
-// nothing
+    // nothing
 }
 
-void ValueTextInterface::setText(const QString& text)
+void Keyword::setText(const QString& text)
 {
     m_text = text;
 }
 
-QString ValueTextInterface::text() const
+QString Keyword::text() const
 {
     return m_text;
 }
 
-QString ValueTextInterface::simplifiedText() const
+void Keyword::replace(const QString &before, const QString &after)
 {
-    return text().replace(QRegExp("\\\\[A-Za-z0-9]+"), "").replace('{', "").replace('}', "");
+    if (m_text == before)
+        m_text = after;
 }
 
-void ValueTextInterface::replace(const QString &before, const QString &after)
+bool Keyword::containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive) const
 {
-    if (before == text() || before == simplifiedText())
-        setText(after);
+    return m_text.contains(pattern, caseSensitive);
 }
 
-bool ValueTextInterface::containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive)
-{
-    return text().contains(pattern, caseSensitive) || simplifiedText().contains(pattern, caseSensitive);
-}
-
-ValueItem::ValueItem(const QString& text)
-        : ValueTextInterface(text)
-{
-// nothing
-}
-
-Keyword::Keyword(Keyword *other)
-        : ValueTextInterface(other)
-{
-// nothing
-}
-
-Keyword::Keyword(const QString& text)
-        : ValueTextInterface(text)
-{
-// nothing
-}
-
-Keyword *Keyword::clone() const
-{
-    return new Keyword(text());
-}
 
 KeywordContainer::KeywordContainer()
-        : ValueItem("")
 {
-// nothing
+    // nothing
 }
 
-KeywordContainer::KeywordContainer(const QString& text)
-        : ValueItem(text)
+KeywordContainer::KeywordContainer(const KeywordContainer& other)
+        : QLinkedList<Keyword*>()
 {
-    setText(text);
-}
-
-KeywordContainer::KeywordContainer(const KeywordContainer *other)
-        : ValueItem(QString::null)
-{
-    for (QLinkedList<Keyword*>::ConstIterator it = other->keywords.constBegin(); it != other->keywords.constEnd(); ++it)
-        keywords.append((*it)->clone());
-}
-
-KeywordContainer::KeywordContainer(const QStringList& list)
-        : ValueItem(QString::null)
-{
-    setList(list);
-}
-
-ValueItem *KeywordContainer::clone() const
-{
-    return new KeywordContainer(this);
-}
-
-void KeywordContainer::setList(const QStringList& list)
-{
-    keywords.clear();
-    for (QStringList::ConstIterator it = list.begin(); it != list.end(); ++it)
-        keywords.append(new Keyword(*it));
-}
-
-void KeywordContainer::append(const QString& text)
-{
-    bool contains = FALSE;
-
-    for (QLinkedList<Keyword*>::ConstIterator it = keywords.begin(); !contains && it != keywords.end(); ++it)
-        contains = QString::compare((*it)->text(), text) == 0;
-
-    if (contains == 0)
-        keywords.append(new Keyword(text));
-}
-
-void KeywordContainer::remove(const QString& text)
-{
-    bool contains = FALSE;
-    for (QLinkedList<Keyword*>::Iterator it = keywords.begin(); !contains && it != keywords.end(); ++it)
-        if ((*it)->text() == text) {
-            keywords.erase(it);
-            break;
-        }
-}
-
-void KeywordContainer::setText(const QString& text)
-{
-    ValueItem::setText(text);
-
-    QRegExp splitRegExp;
-    if (text.contains(";"))
-        splitRegExp = QRegExp("\\s*;\\s*");
-    else
-        splitRegExp = QRegExp("\\s*,\\s*");
-
-    keywords.clear();
-    QStringList keywordList = text.split(splitRegExp, QString::SkipEmptyParts);
-    for (QStringList::ConstIterator it = keywordList.begin(); it != keywordList.end(); ++it)
-        keywords.append(new Keyword(*it));
-}
-
-QString KeywordContainer::text() const
-{
-    QString result;
-    bool first = true;
-    for (QLinkedList<Keyword*>::ConstIterator it = keywords.begin(); it != keywords.end(); ++it) {
-        if (!first)
-            result.append("; ");
-        else first = false;
-        result.append((*it)->text());
+    for (QLinkedList<Keyword*>::ConstIterator it = other.begin(); it != other.end(); ++it) {
+        append(new Keyword(**it));
     }
-    return result;
 }
 
 void KeywordContainer::replace(const QString &before, const QString &after)
 {
-    for (QLinkedList<Keyword*>::ConstIterator it = keywords.begin(); it != keywords.end(); ++it)
+    for (QLinkedList<Keyword*>::Iterator it = begin(); it != end(); ++it) {
         (*it)->replace(before, after);
-}
-
-Person::Person(const QString& text)
-        : ValueTextInterface(text)
-{
-    setText(text);
-}
-
-Person::Person(const QString& firstName, const QString& lastName)
-        : ValueTextInterface(QString(firstName).append(" ").append(lastName)), m_firstName(firstName), m_lastName(lastName)
-{
-// nothing
-}
-
-Person *Person::clone() const
-{
-    return new Person(m_firstName, m_lastName);
-}
-
-void Person::setText(const QString& text)
-{
-    ValueTextInterface::setText(text);
-
-    QStringList segments;
-    bool containsComma = splitName(text, segments);
-    m_firstName = "";
-    m_lastName = "";
-
-    if (segments.isEmpty())
-        return;
-
-    if (!containsComma) {
-        /** PubMed uses a special writing style for names, where the last name is followed by single capital letter,
-          * each being the first letter of each first name
-          * So, check how many single capital letters are at the end of the given segment list */
-        int singleCapitalLettersCounter = 0;
-        int p = segments.count() - 1;
-        while (segments[p].length() == 1 && segments[p].compare(segments[p].toUpper()) == 0) {
-            --p;
-            ++singleCapitalLettersCounter;
-        }
-
-        if (singleCapitalLettersCounter > 0) {
-            /** this is a special case for names from PubMed, which are formatted like "Fischer T"
-              * all segment values until the first single letter segment are last name parts */
-            for (int i = 0; i < p; ++i)
-                m_lastName.append(segments[i]).append(" ");
-            m_lastName.append(segments[p]);
-            /** single letter segments are first name parts */
-            for (int i = p + 1; i < segments.count() - 1; ++i)
-                m_firstName.append(segments[i]).append(" ");
-            m_firstName.append(segments[segments.count() - 1]);
-        } else {
-            int from = segments.count() - 1;
-            m_lastName = segments[from];
-            /** check for lower case parts of the last name such as "van", "von", "de", ... */
-            while (from > 0) {
-                if (segments[from - 1].compare(segments[from - 1].toLower()) != 0)
-                    break;
-                --from;
-                m_lastName.prepend(" ");
-                m_lastName.prepend(segments[from]);
-            }
-
-            if (from > 0) {
-                /** there are segments left for the first name */
-                m_firstName = *segments.begin();
-                for (QStringList::Iterator it = ++segments.begin(); from > 1; ++it, --from) {
-                    m_firstName.append(" ");
-                    m_firstName.append(*it);
-                }
-            }
-        }
-    } else {
-        bool inLastName = TRUE;
-        for (int i = 0; i < segments.count(); ++i) {
-            if (segments[i] == ",")
-                inLastName = FALSE;
-            else if (inLastName) {
-                if (!m_lastName.isEmpty()) m_lastName.append(" ");
-                m_lastName.append(segments[i]);
-            } else {
-                if (!m_firstName.isEmpty()) m_firstName.append(" ");
-                m_firstName.append(segments[i]);
-            }
-        }
     }
 }
 
-QString Person::text() const
+bool KeywordContainer::containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive) const
 {
-    return text(false);
+    bool result = false;
+    for (QLinkedList<Keyword*>::ConstIterator it = begin(); !result && it != end(); ++it) {
+        result |= (*it)->containsPattern(pattern, caseSensitive);
+    }
+    return result;
 }
 
-QString Person::text(bool firstNameFirst) const
-{
 
-    if (m_firstName.isEmpty())
-        return m_lastName;
-    else
-        return firstNameFirst ? m_firstName + " " + m_lastName : m_lastName + ", " + m_firstName;
+Person::Person(const QString& firstName, const QString& lastName, const QString& prefix, const QString& suffix)
+        : m_firstName(firstName), m_lastName(lastName), m_prefix(prefix), m_suffix(suffix)
+{
+    // nothing
 }
 
-QString Person::firstName()
+Person::Person(const Person& other)
+        : m_firstName(other.firstName()), m_lastName(other.lastName()), m_prefix(other.prefix()), m_suffix(other.suffix())
+{
+    // nothing
+}
+
+void Person::setName(const QString& firstName, const QString& lastName, const QString& prefix, const QString& suffix)
+{
+    m_firstName = firstName;
+    m_lastName = lastName;
+    m_prefix = prefix;
+    m_suffix = suffix;
+}
+
+QString Person::firstName() const
 {
     return m_firstName;
 }
 
-QString Person::lastName()
+QString Person::lastName() const
 {
     return m_lastName;
 }
 
-/** Splits a name into single words. If the name's text was reversed (Last, First), the result will be true and the comma will be added to segments. Otherwise the functions result will be false. This function respects protecting {...}. */
-bool Person::splitName(const QString& text, QStringList& segments)
+QString Person::prefix() const
 {
-    int bracketCounter = 0;
-    bool result = FALSE;
-    QString buffer = "";
-
-    for (int pos = 0; pos < text.length(); ++pos) {
-        if (text[pos] == '{')
-            ++bracketCounter;
-        else if (text[pos] == '}')
-            --bracketCounter;
-
-        if (text[pos] == ' ' && bracketCounter == 0) {
-            if (!buffer.isEmpty()) {
-                segments.append(buffer);
-                buffer = "";
-            }
-        } else if (text[pos] == ',' && bracketCounter == 0) {
-            if (!buffer.isEmpty()) {
-                segments.append(buffer);
-                buffer = "";
-            }
-            segments.append(",");
-            result = TRUE;
-        } else
-            buffer.append(text[pos]);
-    }
-
-    if (!buffer.isEmpty())
-        segments.append(buffer);
-
-    return result;
+    return m_prefix;
 }
 
+QString Person::suffix() const
+{
+    return m_suffix;
+}
+
+void Person::replace(const QString &before, const QString &after)
+{
+    if (m_firstName == before)
+        m_firstName = after;
+    if (m_lastName == before)
+        m_lastName = after;
+    if (m_prefix == before)
+        m_prefix = after;
+    if (m_suffix == before)
+        m_suffix = after;
+}
+
+bool Person::containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive) const
+{
+    return m_firstName.contains(pattern, caseSensitive) ||  m_firstName.contains(pattern, caseSensitive) ||  m_prefix.contains(pattern, caseSensitive) ||  m_suffix.contains(pattern, caseSensitive);
+}
+
+
 PersonContainer::PersonContainer()
-        : ValueItem(QString::null)
 {
     // nothing
 }
 
-PersonContainer::PersonContainer(const QString& text)
-        : ValueItem(text)
+PersonContainer::PersonContainer(const PersonContainer& other)
+        : QLinkedList<Person*>()
 {
-    persons.append(new Person(text));
-}
-
-ValueItem *PersonContainer::clone() const
-{
-    PersonContainer *result = new PersonContainer();
-    for (QLinkedList<Person*>::ConstIterator it = persons.begin(); it != persons.end(); ++it)
-        result->persons.append((*it)->clone());
-
-    return result;
-}
-
-void PersonContainer::setText(const QString& text)
-{
-    ValueTextInterface::setText(text);
-    qWarning() << "You cannot set a text ('" << text << "') to a PersonContainer object";
-}
-
-QString PersonContainer::text() const
-{
-    QString result;
-    bool first = TRUE;
-
-    for (QLinkedList<Person*>::ConstIterator it = persons.begin(); it != persons.end(); ++it) {
-        if (!first)
-            result.append(" and ");
-        else
-            first = FALSE;
-        result.append((*it)->text());
+    for (QLinkedList<Person*>::ConstIterator it = other.begin(); it != other.end(); ++it) {
+        append(new Person(**it));
     }
-
-    return result;
 }
 
 void PersonContainer::replace(const QString &before, const QString &after)
 {
-    for (QLinkedList<Person*>::ConstIterator it = persons.begin(); it != persons.end(); ++it)
+    for (QLinkedList<Person*>::Iterator it = begin(); it != end(); ++it) {
         (*it)->replace(before, after);
+    }
+}
+
+bool PersonContainer::containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive) const
+{
+    bool result = false;
+    for (QLinkedList<Person*>::ConstIterator it = begin(); !result && it != end(); ++it) {
+        result |= (*it)->containsPattern(pattern, caseSensitive);
+    }
+    return result;
+}
+
+const QRegExp MacroKey::validMakroKeyChars = QRegExp("![-.:/+_a-zA-Z0-9]");
+
+MacroKey::MacroKey(const MacroKey& other)
+        : m_text(other.m_text)
+{
+    // nothing
 }
 
 MacroKey::MacroKey(const QString& text)
-        : ValueItem(text)
+        : m_text(text)
 {
-    m_isValid = isValidInternal();
-}
-
-ValueItem *MacroKey::clone() const
-{
-    return new MacroKey(text());
+    // nothing
 }
 
 void MacroKey::setText(const QString& text)
 {
-    ValueItem::setText(text);
-    m_isValid = isValidInternal();
+    m_text = text;
+}
+
+QString MacroKey::text() const
+{
+    return m_text;
 }
 
 bool MacroKey::isValid()
 {
-    return m_isValid;
+    return !text().contains(validMakroKeyChars);
 }
 
-bool MacroKey::isValidInternal()
+void MacroKey::replace(const QString &before, const QString &after)
 {
-    return !text().contains(QRegExp("![-.:/+_a-zA-Z0-9]"));
+    if (m_text == before)
+        m_text = after;
+}
+
+bool MacroKey::containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive) const
+{
+    return m_text.contains(pattern, caseSensitive);
+}
+
+
+PlainText::PlainText(const PlainText& other)
+        : m_text(other.text())
+{
+    // nothing
 }
 
 PlainText::PlainText(const QString& text)
-        : ValueItem(text)
+        : m_text(text)
 {
     // nothing
 }
 
-ValueItem *PlainText::clone() const
+void PlainText::setText(const QString& text)
 {
-    return new PlainText(text());
+    m_text = text;
 }
+
+QString PlainText::text() const
+{
+    return m_text;
+}
+
+void PlainText::replace(const QString &before, const QString &after)
+{
+    if (m_text == before)
+        m_text = after;
+}
+
+bool PlainText::containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive) const
+{
+    return m_text.contains(pattern, caseSensitive);
+}
+
 
 Value::Value()
-        : ValueTextInterface(QString::null)
 {
     // nothing
 }
 
-Value::Value(const Value *other)
-        : ValueTextInterface(other)
+Value::Value(const Value& other)
+        : QLinkedList<ValueItem*>()
 {
-    for (QLinkedList<ValueItem*>::ConstIterator it = other->items.begin(); it != other->items.end(); ++it)
-        items.append((*it)->clone());
-}
-
-Value::Value(const QString& text, bool isMacroKey)
-        : ValueTextInterface(text)
-{
-    ValueItem *item = NULL;
-    if (isMacroKey)
-        item = new MacroKey(text);
-    else
-        item = new PlainText(text);
-    items.append(item);
-}
-
-void Value::setText(const QString& text)
-{
-    ValueTextInterface::setText(text);
-    qWarning() << "You cannot set a text ('" << text << "') to a Value object";
-}
-
-QString Value::text() const
-{
-    QString result;
-
-    for (QLinkedList<ValueItem*>::ConstIterator it = items.begin(); it != items.end(); ++it)
-        result.append((*it)->text());
-
-    return result;
+    for (QLinkedList<ValueItem*>::ConstIterator it = other.begin(); it != other.end(); ++it) {
+        PlainText *plainText = dynamic_cast<PlainText*>(*it);
+        if (plainText != NULL)
+            append(new PlainText(*plainText));
+    }
 }
 
 void Value::replace(const QString &before, const QString &after)
 {
-    for (QLinkedList<ValueItem*>::ConstIterator it = items.begin(); it != items.end(); ++it)
+    for (QLinkedList<ValueItem*>::Iterator it = begin(); it != end(); ++it)
         (*it)->replace(before, after);
 }
+
+bool Value::containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive) const
+{
+    bool result = false;
+    for (QLinkedList<ValueItem*>::ConstIterator it = begin(); !result && it != end(); ++it) {
+        result |= (*it)->containsPattern(pattern, caseSensitive);
+    }
+    return result;
+}
+
+QRegExp PlainTextValue::removeCurlyBrackets = QRegExp("([^\\\\])[{}]");
+
+QString PlainTextValue::text(const Value& value, const File* file)
+{
+    QString result = "";
+    for (QLinkedList<ValueItem*>::ConstIterator it = value.begin(); it != value.end(); ++it) {
+        QString nextText = text(**it, file);
+        if (!nextText.isNull()) {
+            if (!result.isEmpty())
+                result.append(" ");
+            result.append(nextText);
+        }
+    }
+    return result;
+}
+
+QString PlainTextValue::text(const ValueItem& valueItem, const File* /*file*/)
+{
+    QString result = QString::null;
+
+    const PlainText *plainText = dynamic_cast<const PlainText*>(&valueItem);
+    if (plainText != NULL)
+        result = plainText->text();
+    else {
+        const MacroKey *macroKey = dynamic_cast<const MacroKey*>(&valueItem);
+        if (macroKey != NULL)
+            result = macroKey->text(); // TODO Use File to resolve key to full text
+        else {
+            const PersonContainer *personContainer = dynamic_cast<const PersonContainer*>(&valueItem);
+            if (personContainer != NULL) {
+                result = "";
+                int count = 0;
+                for (PersonContainer::ConstIterator it = personContainer->begin(); it != personContainer->end(); ++it, ++count) {
+                    if (count > 0) {
+                        if (count < personContainer->size() - 1)
+                            result += ", ";
+                        else if (personContainer->size() > 2)
+                            result += ", and ";
+                        else
+                            result += " and ";
+                    }
+                    result += (*it)->firstName() + " " + (*it)->lastName();
+                }
+            } else {
+                const KeywordContainer *keywordContainer = dynamic_cast<const KeywordContainer*>(&valueItem);
+                if (keywordContainer != NULL) {
+                    result = "";
+                    bool first = true;
+                    for (KeywordContainer::ConstIterator it = keywordContainer->begin(); it != keywordContainer->end(); ++it) {
+                        if (!first) result += "; ";
+                        first = false;
+                        result += (*it)->text();
+                    }
+                }
+            }
+        }
+    }
+
+    int i = -1;
+    while ((i = result.indexOf(removeCurlyBrackets, i + 1)) >= 0) {
+        result = result.replace(removeCurlyBrackets.cap(0), removeCurlyBrackets.cap(1));
+    }
+
+    return result;
+}
+
+
