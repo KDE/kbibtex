@@ -23,6 +23,7 @@
 #include <QAbstractItemModel>
 #include <QLatin1String>
 #include <QList>
+#include <QRegExp>
 
 #include <kbibtexgui_export.h>
 
@@ -56,6 +57,8 @@ public:
 private:
     KBibTeX::IO::File *m_bibtexFile;
     KBibTeX::GUI::Config::BibTeXFields *m_bibtexFields;
+
+    static const QRegExp whiteSpace;
 };
 
 }

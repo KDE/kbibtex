@@ -29,6 +29,8 @@
 
 using namespace KBibTeX::GUI::Widgets;
 
+const QRegExp BibTeXFileModel::whiteSpace = QRegExp("(\\s\\n\\r\\t)+");
+
 BibTeXFileModel::BibTeXFileModel(QObject * parent)
         : QAbstractItemModel(parent), m_bibtexFile(NULL)
 {
@@ -93,11 +95,12 @@ QVariant BibTeXFileModel::data(const QModelIndex &index, int role) const
             else if (raw == "^type")
                 return QVariant(KBibTeX::IO::Entry::entryTypeToString(entry->entryType()));
             else {
-                KBibTeX::IO::EntryField *field = NULL;
-                KBibTeX::IO::Value *value = NULL;
-                if ((field = entry->getField(raw)) && (value = field->value()))
-                    return QVariant(value->text());
-                else
+                KBibTeX::IO::Field *field = NULL;
+                if ((field = entry->getField(raw)) != NULL) {
+                    QString text = KBibTeX::IO::PlainTextValue::text(field->value(), m_bibtexFile);
+                    text = text.replace(whiteSpace, " ");
+                    return QVariant(text);
+                } else
                     return QVariant(index.column());
             }
         } else {
@@ -107,18 +110,21 @@ QVariant BibTeXFileModel::data(const QModelIndex &index, int role) const
                     return QVariant(macro->key());
                 else if (raw == "^type")
                     return QVariant("Macro"); // TODO: i18n
-                else if (raw == "title")
-                    return QVariant(macro->value()->text());
-                else
+                else if (raw == "title") {
+                    QString text = KBibTeX::IO::PlainTextValue::text(macro->value(), m_bibtexFile);
+                    text = text.replace(whiteSpace, " ");
+                    return QVariant(text);
+                } else
                     return QVariant();
             } else {
                 KBibTeX::IO::Comment* comment = dynamic_cast<KBibTeX::IO::Comment*>(element);
                 if (comment != NULL) {
                     if (raw == "^type")
                         return QVariant("Comment"); // TODO: i18n
-                    else if (raw == "title")
-                        return QVariant(comment->text());
-                    else
+                    else if (raw == "title") {
+                        QString text = comment->text().replace(QRegExp("[\\s\\n\\r\\t]+"), " ");
+                        return QVariant(text);
+                    } else
                         return QVariant();
                 } else
                     return ("?");
