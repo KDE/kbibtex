@@ -110,30 +110,29 @@ bool FileExporterXML::write(QTextStream& stream, const Element* element, const F
 bool FileExporterXML::writeEntry(QTextStream &stream, const Entry* entry)
 {
     stream << " <entry id=\"" << EncoderXML::currentEncoderXML() ->encode(entry->id()) << "\" type=\"" << entry->entryTypeString().toLower() << "\">" << endl;
-    for (Entry::EntryFields::ConstIterator it = entry->begin(); it != entry->end(); ++it) {
-        EntryField *field = *it;
+    for (Entry::Fields::ConstIterator it = entry->begin(); it != entry->end(); ++it) {
+        Field *field = *it;
         switch (field->fieldType()) {
-        case EntryField::ftAuthor:
-        case EntryField::ftEditor: {
+        case Field::ftAuthor:
+        case Field::ftEditor: {
             QString tag = field->fieldTypeName().toLower();
             stream << "  <" << tag << "s>" << endl;
-            QStringList persons = EncoderXML::currentEncoderXML() ->encode(valueToString(field->value())).split(QRegExp("\\s+(,|and|&)+\\s+", Qt::CaseInsensitive));
-            for (QStringList::Iterator it = persons.begin(); it != persons.end(); ++it)
-                stream << "   <person>" << *it << "</person>" << endl;
+            stream << valueToXML(field->value(), field->fieldType()) << endl;
             stream << "  </" << tag << "s>" << endl;
         }
         break;
-        case EntryField::ftMonth: {
+        case Field::ftMonth: {
             stream << "  <month";
             bool ok = FALSE;
 
             int month = -1;
             QString tag = "";
             QString content = "";
-            for (QLinkedList<ValueItem*>::ConstIterator it = field->value()->items.begin(); it != field->value()->items.end(); ++it) {
-                if (dynamic_cast<MacroKey*>(*it) != NULL) {
-                    for (int i = 0; i < 12; i++)
-                        if (QString::compare((*it)->text(), MonthsTriple[ i ]) == 0) {
+            for (QLinkedList<ValueItem*>::ConstIterator it = field->value().begin(); it != field->value().end(); ++it) {
+                MacroKey*  macro = dynamic_cast<MacroKey*>(*it);
+                if (macro != NULL)
+                    for (int i = 0; i < 12; i++) {
+                        if (QString::compare(macro->text(), MonthsTriple[ i ]) == 0) {
                             if (month < 1) {
                                 tag = MonthsTriple[ i ];
                                 month = i + 1;
@@ -142,12 +141,13 @@ bool FileExporterXML::writeEntry(QTextStream &stream, const Entry* entry)
                             ok = true;
                             break;
                         }
-                } else
-                    content.append(EncoderXML::currentEncoderXML() ->encode((*it)->text()));
+                    }
+                else
+                    content.append(PlainTextValue::text(**it));
             }
 
             if (!ok)
-                content = EncoderXML::currentEncoderXML() ->encode(field->value()->simplifiedText()) ;
+                content = valueToXML(field->value()) ;
             if (!tag.isEmpty())
                 stream << " tag=\"" << tag << "\"";
             if (month > 0)
@@ -158,7 +158,7 @@ bool FileExporterXML::writeEntry(QTextStream &stream, const Entry* entry)
         break;
         default: {
             QString tag = field->fieldTypeName().toLower();
-            stream << "  <" << tag << ">" << EncoderXML::currentEncoderXML() ->encode(valueToString(field->value())) << "</" << tag << ">" << endl;
+            stream << "  <" << tag << ">" << valueToXML(field->value()) << "</" << tag << ">" << endl;
         }
         break;
         }
@@ -172,7 +172,7 @@ bool FileExporterXML::writeEntry(QTextStream &stream, const Entry* entry)
 bool FileExporterXML::writeMacro(QTextStream &stream, const Macro* macro)
 {
     stream << " <string key=\"" << macro->key() << "\">";
-    stream << EncoderXML::currentEncoderXML() ->encode(valueToString(macro->value()));
+    stream << valueToXML(macro->value());
     stream << "</string>" << endl;
 
     return true;
@@ -187,18 +187,42 @@ bool FileExporterXML::writeComment(QTextStream &stream, const Comment* comment)
     return true;
 }
 
-QString FileExporterXML::valueToString(Value *value)
+QString FileExporterXML::valueToXML(const Value& value, const Field::FieldType)
 {
     QString result;
     bool isFirst = true;
 
-    for (QLinkedList<ValueItem*>::ConstIterator it = value->items.begin(); it != value->items.end(); ++it) {
+    for (QLinkedList<ValueItem*>::ConstIterator it = value.begin(); it != value.end(); ++it) {
         if (!isFirst)
             result.append(' ');
         isFirst = FALSE;
 
-        result.append((*it) ->simplifiedText());
+        ValueItem *item = *it;
+
+        PlainText *plainText = dynamic_cast<PlainText*>(item);
+        if (plainText != NULL)
+            result.append("<text>" + PlainTextValue::text(*item) + "</text>");
+        else {
+            PersonContainer *personContainer = dynamic_cast<PersonContainer*>(item);
+            if (personContainer != NULL) {
+                for (PersonContainer::Iterator pit = personContainer->begin(); pit != personContainer->end(); ++pit) {
+                    result.append("<person>");
+                    Person *p = *pit;
+                    if (!p->prefix().isEmpty())
+                        result.append("<prefix>" + p->lastName() + "</prefix>");
+                    if (!p->firstName().isEmpty())
+                        result.append("<firstname>" + p->firstName() + "</firstname>");
+                    if (!p->lastName().isEmpty())
+                        result.append("<lastname>" + p->lastName() + "</lastname>");
+                    if (!p->suffix().isEmpty())
+                        result.append("<suffix>" + p->suffix() + "</suffix>");
+                }
+            }
+            // TODO: Other data types
+            else  result.append("<text>" + PlainTextValue::text(*item) + "</text>");
+        }
     }
 
-    return result;
+    return  EncoderXML::currentEncoderXML() ->encode(result);
 }
+

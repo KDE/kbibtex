@@ -30,15 +30,14 @@ namespace KBibTeX
 {
 namespace IO {
 
-class KBIBTEXIO_EXPORT EntryField
+class KBIBTEXIO_EXPORT Field
 {
 public:
     enum FieldType {ftAbstract, ftAddress, ftAnnote, ftAuthor, ftBookTitle, ftChapter, ftCrossRef, ftDoi, ftEdition, ftEditor, ftHowPublished, ftInstitution, ftISBN, ftISSN, ftJournal, ftKey, ftKeywords, ftLocalFile, ftLocation, ftMonth, ftNote, ftNumber, ftOrganization, ftPages, ftPublisher, ftSchool, ftSeries, ftTitle, ftType, ftURL, ftVolume, ftYear, ftUnknown = -1};
 
-    EntryField(FieldType fieldType);
-    EntryField(const QString &fieldTypeName);
-    EntryField(EntryField *other);
-    ~EntryField();
+    Field(FieldType fieldType);
+    Field(const QString& fieldTypeName);
+    Field(const Field& other);
 
     QString fieldTypeName() const;
     FieldType fieldType() const;
@@ -47,13 +46,14 @@ public:
     static QString fieldTypeToString(const FieldType fieldType);
     static FieldType fieldTypeFromString(const QString &fieldTypeString);
 
-    Value *value();
-    void setValue(const Value *value);
+    Value& value();
+    const Value& value() const;
+    void setValue(const Value& value);
 
 private:
     FieldType m_fieldType;
     QString m_fieldTypeName;
-    Value *m_value;
+    Value m_value;
 };
 
 }

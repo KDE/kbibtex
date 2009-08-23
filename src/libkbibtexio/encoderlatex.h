@@ -41,7 +41,7 @@ public:
     QString decode(const QString &text);
     QString encode(const QString &text);
     QString encode(const QString &text, const QChar &replace);
-    QString encodeSpecialized(const QString &text, const EntryField::FieldType fieldType = EntryField::ftUnknown);
+    QString encodeSpecialized(const QString &text, const Field::FieldType fieldType = Field::ftUnknown);
     QString& decomposedUTF8toLaTeX(QString &text);
 
     static EncoderLaTeX *currentEncoderLaTeX();

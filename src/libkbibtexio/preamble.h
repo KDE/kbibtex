@@ -34,21 +34,16 @@ class Preamble : public Element
 public:
 public:
     Preamble();
-    Preamble(const QString& text);
-    Preamble(const Preamble *other);
-    virtual ~Preamble();
+    Preamble(const Preamble& other);
 
-    Value *value() const;
-    void setValue(Value *value);
+    Value& value();
+    const Value& value() const;
+    void setValue(const Value& value);
 
-    bool containsPattern(const QString& pattern, EntryField::FieldType fieldType = EntryField::ftUnknown, FilterType filterType = Element::ftExact, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const;
-
-    Element* clone() const;
-    void copyFrom(const Preamble *other);
-    QString text() const;
+    bool containsPattern(const QString& pattern, Field::FieldType fieldType = Field::ftUnknown, FilterType filterType = Element::ftExact, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const;
 
 private:
-    Value *m_value;
+    Value m_value;
 };
 
 }

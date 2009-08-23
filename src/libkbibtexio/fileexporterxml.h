@@ -46,6 +46,8 @@ public:
     bool save(QIODevice* iodevice, const File* bibtexfile, QStringList *errorLog = NULL);
     bool save(QIODevice* iodevice, const Element* element, QStringList *errorLog = NULL);
 
+    static QString valueToXML(const Value& value, const Field::FieldType fieldType = Field::ftUnknown);
+
 public slots:
     void cancel();
 
@@ -56,8 +58,6 @@ private:
     bool writeEntry(QTextStream &stream, const Entry* entry);
     bool writeMacro(QTextStream &stream, const Macro* macro);
     bool writeComment(QTextStream &stream, const Comment* comment);
-
-    QString valueToString(Value *value);
 };
 
 }

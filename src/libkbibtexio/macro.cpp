@@ -26,20 +26,21 @@
 using namespace KBibTeX::IO;
 
 Macro::Macro(const QString &key)
-        : Element(), m_key(key), m_value(new Value())
+        : Element(), m_key(key)
 {
     // nothing
 }
 
 Macro::Macro(const Macro *other)
-        : Element(), m_value(NULL)
+        : Element()
 {
-    copyFrom(other);
+    m_key = other->m_key;
+    m_value = other->m_value;
 }
 
 Macro::~Macro()
 {
-    delete m_value;
+    // nothing
 }
 
 void Macro::setKey(const QString &key)
@@ -52,37 +53,38 @@ QString Macro::key() const
     return m_key;
 }
 
-Value *Macro::value() const
+Value& Macro::value()
 {
     return m_value;
 }
 
-void Macro::setValue(Value *value)
+const Value& Macro::value() const
 {
-    if (value != m_value) {
-        delete m_value;
-
-        if (value != NULL)
-            m_value = new Value(value);
-        else
-            m_value = NULL;
-    }
+    return m_value;
 }
 
-bool Macro::containsPattern(const QString& pattern, EntryField::FieldType fieldType, FilterType filterType, Qt::CaseSensitivity caseSensitive) const
+void Macro::setValue(const Value& value)
 {
-    QString text = QString(m_key).append(m_value->simplifiedText());
+    m_value = value;
+}
+
+bool Macro::containsPattern(const QString& pattern, Field::FieldType fieldType, FilterType filterType, Qt::CaseSensitivity caseSensitive) const
+{
+    if (fieldType != Field::ftUnknown)
+        return false;
+
+    QString text = QString(m_key).append(PlainTextValue::text(m_value));
 
     if (filterType == ftExact) {
         /** check for exact match */
-        return fieldType == EntryField::ftUnknown && text.contains(pattern, caseSensitive);
+        return text.contains(pattern, caseSensitive);
     } else {
         /** for each word in the search pattern ... */
         QStringList words = pattern.split(QRegExp("\\s+"), QString::SkipEmptyParts);
         int hits = 0;
         for (QStringList::Iterator it = words.begin(); it != words.end(); ++it) {
             /** check if word is contained in text */
-            if (fieldType == EntryField::ftUnknown && text.contains(*it, caseSensitive))
+            if (text.contains(*it, caseSensitive))
                 ++hits;
         }
 
@@ -91,19 +93,3 @@ bool Macro::containsPattern(const QString& pattern, EntryField::FieldType fieldT
     }
 }
 
-Element* Macro::clone() const
-{
-    return new Macro(this);
-}
-
-void Macro::copyFrom(const Macro *other)
-{
-    m_key = other->m_key;
-    if (m_value != NULL) delete m_value;
-    m_value = new Value(other->m_value);
-}
-
-QString Macro::text() const
-{
-    return m_key + "=" + m_value->text();
-}

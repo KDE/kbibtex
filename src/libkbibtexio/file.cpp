@@ -153,6 +153,7 @@ QStringList File::allKeys() const
     return result;
 }
 
+/* FIXME: Is this function required?
 QString File::text() const
 {
     QString result;
@@ -164,7 +165,9 @@ QString File::text() const
 
     return result;
 }
+*/
 
+/* FIXME: Is this function required?
 QStringList File::getAllValuesAsStringList(const EntryField::FieldType fieldType) const
 {
     QStringList result;
@@ -209,7 +212,9 @@ QStringList File::getAllValuesAsStringList(const EntryField::FieldType fieldType
     result.sort();
     return result;
 }
+*/
 
+/* FIXME: Is this function required?
 QMap<QString, int> File::getAllValuesAsStringListWithCount(const EntryField::FieldType fieldType) const
 {
     QMap<QString, int> result;
@@ -259,11 +264,12 @@ QMap<QString, int> File::getAllValuesAsStringListWithCount(const EntryField::Fie
 
     return result;
 }
+*/
 
+/* FIXME: Is this function required?
 void File::replaceValue(const QString& oldText, const QString& newText, const EntryField::FieldType fieldType)
 {
-// FIXME
-    /*    for (ConstIterator it = begin(); it != end(); ++it) {
+      for (ConstIterator it = begin(); it != end(); ++it) {
             const Entry* entry = dynamic_cast<const Entry*>(*it);
             if (entry != NULL) {
                 if (fieldType != EntryField::ftUnknown) {
@@ -272,8 +278,9 @@ void File::replaceValue(const QString& oldText, const QString& newText, const En
                         field->value() ->replace(oldText, newText);
                 }
             }
-        }*/
+        }
 }
+*/
 
 // Entry *File::completeReferencedFieldsConst(const Entry *entry) const
 // {

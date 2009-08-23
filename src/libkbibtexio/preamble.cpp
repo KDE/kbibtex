@@ -25,79 +25,52 @@
 using namespace KBibTeX::IO;
 
 Preamble::Preamble()
-        : Element(), m_value(new Value())
+        : Element()
 {
 // nothing
 }
 
-Preamble::Preamble(const QString& text)
-        : Element(), m_value(new Value(text, false))
+Preamble::Preamble(const Preamble& other)
+        : Element()
 {
-// nothing
+    m_value = other.m_value;
 }
 
-Preamble::Preamble(const Preamble *other)
-        : Element(), m_value(NULL)
-{
-    copyFrom(other);
-}
-
-Preamble::~Preamble()
-{
-    delete m_value;
-}
-
-Value *Preamble::value() const
+Value& Preamble::value()
 {
     return m_value;
 }
 
-void Preamble::setValue(Value *value)
+const Value& Preamble::value() const
 {
-    if (value != m_value) {
-        delete m_value;
-
-        if (value != NULL)
-            m_value = new Value(value);
-        else
-            m_value = NULL;
-    }
+    return m_value;
 }
 
-bool Preamble::containsPattern(const QString& pattern, EntryField::FieldType fieldType, FilterType filterType, Qt::CaseSensitivity caseSensitive) const
+void Preamble::setValue(const Value& value)
 {
-    QString text = m_value->simplifiedText();
+    m_value = value;
+
+}
+
+bool Preamble::containsPattern(const QString& pattern, Field::FieldType fieldType, FilterType filterType, Qt::CaseSensitivity caseSensitive) const
+{
+    if (fieldType != Field::ftUnknown)
+        return false;
 
     if (filterType == ftExact) {
         /** check for exact match */
-        return fieldType == EntryField::ftUnknown && text.contains(pattern, caseSensitive);
+        return m_value.containsPattern(pattern, caseSensitive);
     } else {
         /** for each word in the search pattern ... */
         QStringList words = pattern.split(QRegExp("\\s+"));
         int hits = 0;
         for (QStringList::Iterator it = words.begin(); it != words.end(); ++it) {
             /** check if word is contained in text */
-            if (fieldType == EntryField::ftUnknown && text.contains(*it, caseSensitive))
+            if (m_value.containsPattern(*it, caseSensitive))
                 ++hits;
         }
 
         /** return success depending on filter type and number of hits */
         return ((filterType == ftAnyWord && hits > 0) || (filterType == ftEveryWord && hits == words.count()));
     }
-}
-
-Element* Preamble::clone() const
-{
-    return new Preamble(this);
-}
-
-void Preamble::copyFrom(const Preamble *other)
-{
-    if (m_value != NULL) delete m_value;
-    m_value = new Value(other->m_value);
-}
-
-QString Preamble::text() const
-{
-    return "Preamble: " + m_value->text();
 }

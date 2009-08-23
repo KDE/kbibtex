@@ -95,7 +95,7 @@ QString EncoderXML::encode(const QString &text)
     return result;
 }
 
-QString EncoderXML::encodeSpecialized(const QString &text, const EntryField::FieldType  /* fieldType */)
+QString EncoderXML::encodeSpecialized(const QString &text, const Field::FieldType  /* fieldType */)
 {
     return encode(text);
 }

@@ -21,7 +21,7 @@
 #define BIBTEXFILEEXPORTERBIBTEX_H
 
 #include <element.h>
-#include <entryfield.h>
+#include <field.h>
 #include <fileexporter.h>
 
 class QChar;
@@ -50,8 +50,14 @@ public:
     bool save(QIODevice* iodevice, const File* bibtexfile, QStringList *errorLog = NULL);
     bool save(QIODevice* iodevice, const Element* element, QStringList *errorLog = NULL);
 
+    static QString valueToBibTeX(const Value& value, const Field::FieldType fieldType = Field::ftUnknown);
+
 public slots:
     void cancel();
+
+protected:
+    static  bool requiresPersonQuoting(const QString &text, bool isLastName);
+    static void escapeLaTeXChars(QString &text);
 
 private:
     QChar m_stringOpenDelimiter;
@@ -68,11 +74,7 @@ private:
     bool writePreamble(QTextStream &stream, const  Preamble& preamble);
     bool writeString(QTextStream &stream, const QString& text);
 
-    QString valueToString(const Value *value, const EntryField::FieldType fieldType = EntryField::ftUnknown);
-
-    void escapeLaTeXChars(QString &text);
     QString applyKeywordCasing(const QString &keyword);
-    bool requiresPersonQuoting(const QString &text, bool isLastName);
     void addProtectiveCasing(QString &text);
 };
 

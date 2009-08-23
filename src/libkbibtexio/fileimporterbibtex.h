@@ -23,7 +23,7 @@
 #include <QTextStream>
 
 #include <fileimporter.h>
-#include <entryfield.h>
+#include <field.h>
 
 namespace KBibTeX
 {
@@ -75,10 +75,22 @@ private:
     QString readQuotedString();
     QString readLine();
     QString readBracketString(const QChar openingBracket);
-    Token readValue(Value *value, EntryField::FieldType fieldType);
+    Token readValue(Value& value, Field::FieldType fieldType);
 
     void unescapeLaTeXChars(QString &text);
-    void splitPersons(const QString& test, QStringList &persons);
+    void splitPersonList(const QString& text, QStringList &resultList);
+
+    /**
+      * Split a person's name into its parts and construct a Person object from them.
+      * This is a functions specialized on the properties of (La)TeX code considering
+      * e.g. curly brackets.
+      * @param name The persons name
+      * @return A Person object containing the name
+      * @see Person
+      */
+    Person *splitName(const QString& text);
+
+    bool splitName(const QString& text, QStringList& segments);
     bool evaluateParameterComments(QTextStream *textStream, const QString &line);
 };
 

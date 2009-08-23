@@ -21,7 +21,7 @@
 #define BIBTEXELEMENT_H
 
 #include <file.h>
-#include <entryfield.h>
+#include <field.h>
 
 #include "kbibtexio_export.h"
 
@@ -37,9 +37,9 @@ public:
     Element();
     virtual ~Element();
 
-    virtual bool containsPattern(const QString& /* pattern */, EntryField::FieldType /* fieldType */, FilterType /* filterType */ = Element::ftExact, Qt::CaseSensitivity /* caseSensitive */ = Qt::CaseInsensitive) const = 0;
-    virtual Element* clone() const = 0;
-    virtual QString text() const = 0;
+    virtual bool containsPattern(const QString& /* pattern */, Field::FieldType /* fieldType */, FilterType /* filterType */ = Element::ftExact, Qt::CaseSensitivity /* caseSensitive */ = Qt::CaseInsensitive) const = 0;
+    // virtual Element* clone() const = 0; // FIXME: Is this function required?
+    // virtual QString text() const = 0; // FIXME: Is this function required?
 
     static bool isSimpleString(const QString &text);
 

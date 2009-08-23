@@ -61,18 +61,18 @@ void Comment::setUseCommand(bool useCommand)
     m_useCommand = useCommand;
 }
 
-bool Comment::containsPattern(const QString& pattern, EntryField::FieldType fieldType, FilterType filterType, Qt::CaseSensitivity caseSensitive) const
+bool Comment::containsPattern(const QString& pattern, Field::FieldType fieldType, FilterType filterType, Qt::CaseSensitivity caseSensitive) const
 {
     if (filterType == ftExact) {
         /** check for exact match */
-        return fieldType == EntryField::ftUnknown && m_text.contains(pattern, caseSensitive);
+        return fieldType == Field::ftUnknown && m_text.contains(pattern, caseSensitive);
     } else {
         /** for each word in the search pattern ... */
         QStringList words = pattern.split(QRegExp("\\s+"), QString::SkipEmptyParts);
         int hits = 0;
         for (QStringList::Iterator it = words.begin(); it != words.end(); ++it) {
             /** check if word is contained in text */
-            if (fieldType == EntryField::ftUnknown && m_text.contains(*it, caseSensitive))
+            if (fieldType == Field::ftUnknown && m_text.contains(*it, caseSensitive))
                 ++hits;
         }
 

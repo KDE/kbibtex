@@ -20,7 +20,7 @@
 #ifndef BIBTEXENCODER_H
 #define BIBTEXENCODER_H
 
-#include <entryfield.h>
+#include <field.h>
 
 class QString;
 
@@ -42,7 +42,7 @@ public:
     virtual QString encode(const QString & /*text*/) {
         return QString::null;
     };
-    virtual QString encodeSpecialized(const QString & /*text*/, const EntryField::FieldType /*fieldType*/ = EntryField::ftUnknown) {
+    virtual QString encodeSpecialized(const QString & /*text*/, const Field::FieldType /*fieldType*/ = Field::ftUnknown) {
         return QString::null;
     };
 };

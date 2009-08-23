@@ -23,6 +23,7 @@
 #include <QRegExp>
 #include <QDebug>
 
+
 #include <file.h>
 #include <comment.h>
 #include <macro.h>
@@ -86,6 +87,7 @@ File* FileImporterBibTeX::load(QIODevice *iodevice)
         emit progress(m_textStream->pos(), rawText.length());
         QCoreApplication::instance()->processEvents();
         Element * element = nextElement();
+
         if (element != NULL) {
             Comment *comment = dynamic_cast<Comment*>(element);
             if (!m_ignoreComments || comment == NULL)
@@ -195,9 +197,9 @@ Macro *FileImporterBibTeX::readMacroElement()
         bool isStringKey = FALSE;
         QString text = readString(isStringKey).replace(QRegExp("\\s+"), " ");
         if (isStringKey)
-            macro->value()->items.append(new MacroKey(text));
+            macro->value().append(new MacroKey(text));
         else
-            macro->value()->items.append(new PlainText(text));
+            macro->value().append(new PlainText(text));
 
         token = nextToken();
     } while (token == tDoublecross);
@@ -221,9 +223,9 @@ Preamble *FileImporterBibTeX::readPreambleElement()
         bool isStringKey = FALSE;
         QString text = readString(isStringKey).replace(QRegExp("\\s+"), " ");
         if (isStringKey)
-            preamble->value()->items.append(new MacroKey(text));
+            preamble->value().append(new MacroKey(text));
         else
-            preamble->value()->items.append(new PlainText(text));
+            preamble->value().append(new PlainText(text));
 
         token = nextToken();
     } while (token == tDoublecross);
@@ -277,12 +279,13 @@ Entry *FileImporterBibTeX::readEntryElement(const QString& typeString)
             fieldTypeName += appendix;
         }
 
-        EntryField *entryField = new EntryField(fieldTypeName);
+        Field *field = new Field(fieldTypeName);
 
-        token = readValue(entryField->value(), entryField->fieldType());
+        Value& value = field->value();
+        token = readValue(value, field->fieldType());
 
-        entry->addField(entryField);
-    } while (TRUE);
+        entry->addField(field);
+    } while (true);
 
     return entry;
 }
@@ -451,7 +454,7 @@ QString FileImporterBibTeX::readBracketString(const QChar openingBracket)
     return result;
 }
 
-FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value *value, EntryField::FieldType fieldType)
+FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value& value, Field::FieldType fieldType)
 {
     Token token = tUnknown;
 
@@ -460,34 +463,40 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value *value, EntryField
         QString text = readString(isStringKey).replace(QRegExp("\\s+"), " ");
 
         switch (fieldType) {
-        case EntryField::ftKeywords: {
+        case Field::ftKeywords: {
             if (isStringKey)
                 qWarning("WARNING: Cannot handle keywords that are macros");
-            else
-                value->items.append(new KeywordContainer(text));
+            else {
+                KeywordContainer *kc = new KeywordContainer();
+                kc->append(new Keyword(text));
+                value.append(kc);
+            }
         }
         break;
-        case EntryField::ftAuthor:
-        case EntryField::ftEditor: {
+        case Field::ftAuthor:
+        case Field::ftEditor: {
             if (isStringKey)
                 qWarning("WARNING: Cannot handle authors/editors that are macros");
             else {
                 QStringList persons;
-                splitPersons(text, persons);
+                splitPersonList(text, persons);
                 PersonContainer *container = new PersonContainer();
-                for (QStringList::ConstIterator pit = persons.constBegin(); pit != persons.constEnd(); ++pit)
-                    container->persons.append(new Person(*pit));
-                value->items.append(container);
+                for (QStringList::ConstIterator pit = persons.constBegin(); pit != persons.constEnd(); ++pit) {
+                    Person *person = splitName(*pit);
+                    if (person != NULL)
+                        container->append(person);
+                }
+                value.append(container);
             }
         }
         break;
-        case EntryField::ftPages:
+        case Field::ftPages:
             text.replace(QRegExp("\\s*--?\\s*"), QChar(0x2013));
         default: {
             if (isStringKey)
-                value->items.append(new MacroKey(text));
+                value.append(new MacroKey(text));
             else
-                value->items.append(new PlainText(text));
+                value.append(new PlainText(text));
         }
         }
 
@@ -502,11 +511,12 @@ void FileImporterBibTeX::unescapeLaTeXChars(QString &text)
     text.replace("\\&", "&");
 }
 
-void FileImporterBibTeX::splitPersons(const QString& text, QStringList &persons)
+void FileImporterBibTeX::splitPersonList(const QString& text, QStringList &resultList)
 {
     QStringList wordList;
     QString word;
     int bracketCounter = 0;
+    resultList.clear();
 
     for (int pos = 0; pos < text.length(); ++pos) {
         if (text[pos] == '{')
@@ -514,9 +524,9 @@ void FileImporterBibTeX::splitPersons(const QString& text, QStringList &persons)
         else if (text[pos] == '}')
             --bracketCounter;
 
-        if (text[pos] == ' ' || text[pos] == '\n' || text[pos] == '\r') {
+        if (text[pos] == ' ' || text[pos] == '\t' || text[pos] == '\n' || text[pos] == '\r') {
             if (word == "and" && bracketCounter == 0) {
-                persons.append(wordList.join(" "));
+                resultList.append(wordList.join(" "));
                 wordList.clear();
             } else if (!word.isEmpty())
                 wordList.append(word);
@@ -526,8 +536,115 @@ void FileImporterBibTeX::splitPersons(const QString& text, QStringList &persons)
             word.append(text[pos]);
     }
 
-    wordList.append(word);
-    persons.append(wordList.join(" "));
+    if (!word.isEmpty())
+        wordList.append(word);
+    if (!wordList.isEmpty())
+        resultList.append(wordList.join(" "));
+}
+
+Person *FileImporterBibTeX::splitName(const QString& text)
+{
+    QStringList segments;
+    bool containsComma = splitName(text, segments);
+    QString firstName = "";
+    QString lastName = "";
+
+    if (segments.isEmpty())
+        return NULL;
+
+    if (!containsComma) {
+        /** PubMed uses a special writing style for names, where the last name is followed by single capital letter,
+          * each being the first letter of each first name
+          * So, check how many single capital letters are at the end of the given segment list */
+        int singleCapitalLettersCounter = 0;
+        int p = segments.count() - 1;
+        while (segments[p].length() == 1 && segments[p].compare(segments[p].toUpper()) == 0) {
+            --p;
+            ++singleCapitalLettersCounter;
+        }
+
+        if (singleCapitalLettersCounter > 0) {
+            /** this is a special case for names from PubMed, which are formatted like "Fischer T"
+              * all segment values until the first single letter segment are last name parts */
+            for (int i = 0; i < p; ++i)
+                lastName.append(segments[i]).append(" ");
+            lastName.append(segments[p]);
+            /** single letter segments are first name parts */
+            for (int i = p + 1; i < segments.count() - 1; ++i)
+                firstName.append(segments[i]).append(" ");
+            firstName.append(segments[segments.count() - 1]);
+        } else {
+            int from = segments.count() - 1;
+            lastName = segments[from];
+            /** check for lower case parts of the last name such as "van", "von", "de", ... */
+            while (from > 0) {
+                if (segments[from - 1].compare(segments[from - 1].toLower()) != 0)
+                    break;
+                --from;
+                lastName.prepend(" ");
+                lastName.prepend(segments[from]);
+            }
+
+            if (from > 0) {
+                /** there are segments left for the first name */
+                firstName = *segments.begin();
+                for (QStringList::Iterator it = ++segments.begin(); from > 1; ++it, --from) {
+                    firstName.append(" ");
+                    firstName.append(*it);
+                }
+            }
+        }
+    } else {
+        bool inLastName = TRUE;
+        for (int i = 0; i < segments.count(); ++i) {
+            if (segments[i] == ",")
+                inLastName = FALSE;
+            else if (inLastName) {
+                if (!lastName.isEmpty()) lastName.append(" ");
+                lastName.append(segments[i]);
+            } else {
+                if (!firstName.isEmpty()) firstName.append(" ");
+                firstName.append(segments[i]);
+            }
+        }
+    }
+
+    return new Person(firstName, lastName);
+}
+
+/** Splits a name into single words. If the name's text was reversed (Last, First), the result will be true and the comma will be added to segments. Otherwise the functions result will be false. This function respects protecting {...}. */
+bool FileImporterBibTeX::splitName(const QString& text, QStringList& segments)
+{
+    int bracketCounter = 0;
+    bool result = FALSE;
+    QString buffer = "";
+
+    for (int pos = 0; pos < text.length(); ++pos) {
+        if (text[pos] == '{')
+            ++bracketCounter;
+        else if (text[pos] == '}')
+            --bracketCounter;
+
+        if (text[pos] == ' ' && bracketCounter == 0) {
+            if (!buffer.isEmpty()) {
+                segments.append(buffer);
+                buffer = "";
+            }
+        } else if (text[pos] == ',' && bracketCounter == 0) {
+            if (!buffer.isEmpty()) {
+                segments.append(buffer);
+                buffer = "";
+            }
+            segments.append(",");
+            result = TRUE;
+        } else
+            buffer.append(text[pos]);
+    }
+
+    if (!buffer.isEmpty())
+        segments.append(buffer);
+
+    return result;
 }
 
 bool FileImporterBibTeX::evaluateParameterComments(QTextStream *textStream, const QString &line)

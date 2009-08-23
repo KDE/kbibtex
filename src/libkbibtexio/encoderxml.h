@@ -40,7 +40,7 @@ public:
 
     QString decode(const QString &text);
     QString encode(const QString &text);
-    QString encodeSpecialized(const QString &text, const EntryField::FieldType fieldType = EntryField::ftUnknown);
+    QString encodeSpecialized(const QString &text, const Field::FieldType fieldType = Field::ftUnknown);
 
     static EncoderXML *currentEncoderXML();
 

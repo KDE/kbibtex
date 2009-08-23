@@ -17,52 +17,45 @@
 *   Free Software Foundation, Inc.,                                       *
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
-#include "entryfield.h"
+#include "field.h"
 
 using namespace KBibTeX::IO;
 
-EntryField::EntryField(FieldType fieldType)
+Field::Field(FieldType fieldType)
         : m_fieldType(fieldType)
 {
     m_fieldTypeName = fieldTypeToString(m_fieldType);
-    m_value = new Value();
 }
 
-EntryField::EntryField(const QString &fieldTypeName)
+Field::Field(const QString &fieldTypeName)
         : m_fieldTypeName(fieldTypeName)
 {
     m_fieldType = fieldTypeFromString(m_fieldTypeName);
-    m_value = new Value();
 }
 
-EntryField::EntryField(EntryField *other)
-        : m_fieldType(other->m_fieldType), m_fieldTypeName(other->m_fieldTypeName), m_value(NULL)
+Field::Field(const Field &other)
+        : m_fieldType(other.m_fieldType), m_fieldTypeName(other.m_fieldTypeName), m_value(other.m_value)
 {
-    setValue(other->m_value);
+    // nothing
 }
 
-EntryField::~EntryField()
-{
-    delete m_value;
-}
-
-QString EntryField::fieldTypeName() const
+QString Field::fieldTypeName() const
 {
     return m_fieldTypeName;
 }
 
-void EntryField::setFieldType(FieldType fieldType, const QString& fieldTypeName)
+void Field::setFieldType(FieldType fieldType, const QString& fieldTypeName)
 {
     m_fieldType = fieldType;
     m_fieldTypeName = fieldTypeName;
 }
 
-EntryField::FieldType EntryField::fieldType() const
+Field::FieldType Field::fieldType() const
 {
     return m_fieldType;
 }
 
-QString EntryField::fieldTypeToString(const FieldType fieldType)
+QString Field::fieldTypeToString(const FieldType fieldType)
 {
     switch (fieldType) {
     case ftAbstract:
@@ -134,7 +127,7 @@ QString EntryField::fieldTypeToString(const FieldType fieldType)
     }
 }
 
-EntryField::FieldType EntryField::fieldTypeFromString(const QString & fieldTypeString)
+Field::FieldType Field::fieldTypeFromString(const QString & fieldTypeString)
 {
     QString fieldTypeStringLower = fieldTypeString.toLower();
 
@@ -206,19 +199,17 @@ EntryField::FieldType EntryField::fieldTypeFromString(const QString & fieldTypeS
         return ftUnknown;
 }
 
-Value *EntryField::value()
+Value& Field::value()
 {
     return m_value;
 }
 
-void EntryField::setValue(const Value *value)
+const Value& Field::value() const
 {
-    if (value != m_value) {
-        delete m_value;
+    return m_value;
+}
 
-        if (value != NULL) {
-            m_value = new Value(value);
-        } else
-            m_value = new Value();
-    }
+void Field::setValue(const Value& value)
+{
+    m_value = value;
 }

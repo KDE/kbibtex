@@ -56,26 +56,26 @@ bool FileExporterBibTeX::save(QIODevice* iodevice, const File* bibtexfile, QStri
       * in the correct order.
       */
 
-    QLinkedList<const Comment*> parameterCommentsList;
-    QLinkedList<const Preamble*> preambleList;
-    QLinkedList<const Macro*> macroList;
-    QLinkedList<const Entry*> crossRefingEntryList;
-    QLinkedList<const Element*> remainingList;
+    QLinkedList<Comment*> parameterCommentsList;
+    QLinkedList<Preamble*> preambleList;
+    QLinkedList<Macro*> macroList;
+    QLinkedList<Entry*> crossRefingEntryList;
+    QLinkedList<Element*> remainingList;
 
     for (File::ConstIterator it = bibtexfile->begin(); it != bibtexfile->end() && result && !cancelFlag; it++) {
-        const Preamble *preamble = dynamic_cast<const Preamble*>(*it);
+        Preamble *preamble = dynamic_cast<Preamble*>(*it);
         if (preamble != NULL)
             preambleList.append(preamble);
         else {
-            const Macro *macro = dynamic_cast<const Macro*>(*it);
+            Macro *macro = dynamic_cast<Macro*>(*it);
             if (macro != NULL)
                 macroList.append(macro);
             else {
-                const Entry *entry = dynamic_cast<const Entry*>(*it);
-                if ((entry != NULL) && (entry->getField(EntryField::ftCrossRef) != NULL))
+                Entry *entry = dynamic_cast<Entry*>(*it);
+                if ((entry != NULL) && (entry->getField(Field::ftCrossRef) != NULL))
                     crossRefingEntryList.append(entry);
                 else {
-                    const Comment *comment = dynamic_cast<const Comment*>(*it);
+                    Comment *comment = dynamic_cast<Comment*>(*it);
                     QString commentText = QString::null;
                     /** check if this file requests a special encoding */
                     if (comment != NULL && comment->useCommand() && ((commentText = comment->text())).startsWith("x-kbibtex-encoding=")) {
@@ -97,35 +97,35 @@ bool FileExporterBibTeX::save(QIODevice* iodevice, const File* bibtexfile, QStri
     qDebug() << "New x-kbibtex-encoding is \"" << m_encoding << "\"" << endl;
 
     /** before anything else, write parameter comments */
-    for (QLinkedList<const Comment*>::ConstIterator it = parameterCommentsList.begin(); it != parameterCommentsList.end() && result && !cancelFlag; it++) {
+    for (QLinkedList<Comment*>::ConstIterator it = parameterCommentsList.begin(); it != parameterCommentsList.end() && result && !cancelFlag; it++) {
         result &= writeComment(stream, **it);
         emit progress(++currentPos, totalElements);
     }
 
     /** first, write preambles and strings (macros) at the beginning */
-    for (QLinkedList<const Preamble*>::ConstIterator it = preambleList.begin(); it != preambleList.end() && result && !cancelFlag; it++) {
+    for (QLinkedList<Preamble*>::ConstIterator it = preambleList.begin(); it != preambleList.end() && result && !cancelFlag; it++) {
         result &= writePreamble(stream, **it);
         emit progress(++currentPos, totalElements);
     }
 
-    for (QLinkedList<const Macro*>::ConstIterator it = macroList.begin(); it != macroList.end() && result && !cancelFlag; it++) {
+    for (QLinkedList<Macro*>::ConstIterator it = macroList.begin(); it != macroList.end() && result && !cancelFlag; it++) {
         result &= writeMacro(stream, **it);
         emit progress(++currentPos, totalElements);
     }
 
     /** second, write cross-referencing elements */
-    for (QLinkedList<const Entry*>::ConstIterator it = crossRefingEntryList.begin(); it != crossRefingEntryList.end() && result && !cancelFlag; it++) {
+    for (QLinkedList<Entry*>::ConstIterator it = crossRefingEntryList.begin(); it != crossRefingEntryList.end() && result && !cancelFlag; it++) {
         result &= writeEntry(stream, **it);
         emit progress(++currentPos, totalElements);
     }
 
     /** third, write remaining elements */
-    for (QLinkedList<const Element*>::ConstIterator it = remainingList.begin(); it != remainingList.end() && result && !cancelFlag; it++) {
-        const Entry *entry = dynamic_cast<const Entry*>(*it);
+    for (QLinkedList<Element*>::ConstIterator it = remainingList.begin(); it != remainingList.end() && result && !cancelFlag; it++) {
+        Entry *entry = dynamic_cast<Entry*>(*it);
         if (entry != NULL)
             result &= writeEntry(stream, *entry);
         else {
-            const Comment *comment = dynamic_cast<const Comment*>(*it);
+            Comment *comment = dynamic_cast<Comment*>(*it);
             if (comment != NULL)
                 result &= writeComment(stream, *comment);
         }
@@ -150,7 +150,7 @@ bool FileExporterBibTeX::save(QIODevice* iodevice, const Element* element, QStri
     else {
         const Macro * macro = dynamic_cast<const Macro*>(element);
         if (macro != NULL)
-            result |= writeMacro(stream, macro);
+            result |= writeMacro(stream, *macro);
         else {
             const Comment * comment = dynamic_cast<const Comment*>(element);
             if (comment != NULL)
@@ -158,7 +158,7 @@ bool FileExporterBibTeX::save(QIODevice* iodevice, const Element* element, QStri
             else {
                 const Preamble * preamble = dynamic_cast<const Preamble*>(element);
                 if (preamble != NULL)
-                    result |= writePreamble(stream, preamble);
+                    result |= writePreamble(stream, *preamble);
             }
         }
     }
@@ -176,10 +176,10 @@ bool FileExporterBibTeX::writeEntry(QTextStream &stream, const Entry& entry)
 {
     stream << "@" << applyKeywordCasing(entry.entryTypeString()) << "{" << entry.id();
 
-    for (Entry::EntryFields::ConstIterator it = entry.begin(); it != entry.end(); ++it) {
-        EntryField *field = *it;
-        QString text = valueToString(field->value(), field->fieldType());
-        if (m_protectCasing && dynamic_cast<PlainText*>(field->value()->items.first()) != NULL && (field->fieldType() == EntryField::ftTitle || field->fieldType() == EntryField::ftBookTitle || field->fieldType() == EntryField::ftSeries))
+    for (Entry::Fields::ConstIterator it = entry.begin(); it != entry.end(); ++it) {
+        Field *field = *it;
+        QString text = valueToBibTeX(field->value(), field->fieldType());
+        if (m_protectCasing && dynamic_cast<PlainText*>(field->value().first()) != NULL && (field->fieldType() == Field::ftTitle || field->fieldType() == Field::ftBookTitle || field->fieldType() == Field::ftSeries))
             addProtectiveCasing(text);
         stream << "," << endl << "\t" << field->fieldTypeName() << " = " << text;
     }
@@ -189,7 +189,7 @@ bool FileExporterBibTeX::writeEntry(QTextStream &stream, const Entry& entry)
 
 bool FileExporterBibTeX::writeMacro(QTextStream &stream, const Macro& macro)
 {
-    QString text = valueToString(macro.value());
+    QString text = valueToBibTeX(macro.value());
     if (m_protectCasing)
         addProtectiveCasing(text);
 
@@ -223,86 +223,86 @@ bool FileExporterBibTeX::writeComment(QTextStream &stream, const Comment& commen
 
 bool FileExporterBibTeX::writePreamble(QTextStream &stream, const Preamble& preamble)
 {
-    stream << "@" << applyKeywordCasing("Preamble") << "{" << valueToString(preamble.value()) << "}" << endl << endl;
+    stream << "@" << applyKeywordCasing("Preamble") << "{" << valueToBibTeX(preamble.value()) << "}" << endl << endl;
 
     return TRUE;
 }
 
-QString FileExporterBibTeX::valueToString(const Value *value, const EntryField::FieldType fieldType)
+QString FileExporterBibTeX::valueToBibTeX(const Value& value, const Field::FieldType fieldType)
 {
-    if (value == NULL)
+    if (value.isEmpty())
         return "";
 
     QString result;
-    bool isFirst = TRUE;
+    bool isFirst = true;
     EncoderLaTeX *encoder = EncoderLaTeX::currentEncoderLaTeX();
 
-    for (QLinkedList<ValueItem*>::ConstIterator it = value->items.begin(); it != value->items.end(); ++it) {
+    for (QLinkedList<ValueItem*>::ConstIterator it = value.begin(); it != value.end(); ++it) {
         if (!isFirst)
             result.append(" # ");
-        else
-            isFirst = FALSE;
+        isFirst = false;
 
         MacroKey *macroKey = dynamic_cast<MacroKey*>(*it);
         if (macroKey != NULL)
             result.append(macroKey->text());
         else {
             QString text;
-            PersonContainer *personContainer = dynamic_cast<PersonContainer*>(*it);
             PlainText *plainText = dynamic_cast<PlainText*>(*it);
-            KeywordContainer *keywordContainer = dynamic_cast<KeywordContainer*>(*it);
-
             if (plainText != NULL)
                 text = plainText->text();
-            else if (keywordContainer != NULL) {
-                bool first = TRUE;
-                for (QLinkedList<Keyword*>::ConstIterator it = keywordContainer->keywords.begin(); it != keywordContainer->keywords.end(); ++it) {
-                    if (!first)
-                        text.append(", ");
-                    else
-                        first = FALSE;
-                    text.append((*it)->text());
-                }
-            } else if (personContainer != NULL) {
-                bool first = TRUE;
-                for (QLinkedList<Person*>::ConstIterator it = personContainer->persons.begin(); it != personContainer->persons.end(); ++it) {
-                    if (!first)
-                        text.append(" and ");
-                    else
-                        first = FALSE;
+            else {
+                PersonContainer *personContainer = dynamic_cast<PersonContainer*>(*it);
+                if (personContainer != NULL) {
+                    bool first = true;
+                    for (QLinkedList<Person*>::ConstIterator it = personContainer->begin(); it != personContainer->end(); ++it) {
+                        if (!first)
+                            text.append(" and ");
+                        first = false;
 
-                    QString v = (*it)->firstName();
-                    if (!v.isEmpty()) {
-                        bool requiresQuoting = requiresPersonQuoting(v, FALSE);
-                        if (requiresQuoting) text.append("{");
-                        text.append(v);
-                        if (requiresQuoting) text.append("}");
-                        text.append(" ");
+                        QString v = (*it)->firstName();
+                        if (!v.isEmpty()) {
+                            bool requiresQuoting = requiresPersonQuoting(v, false);
+                            if (requiresQuoting) text.append("{");
+                            text.append(v);
+                            if (requiresQuoting) text.append("}");
+                            text.append(" ");
+                        }
+
+                        v = (*it)->lastName();
+                        if (!v.isEmpty()) {
+                            bool requiresQuoting = requiresPersonQuoting(v, false);
+                            if (requiresQuoting) text.append("{");
+                            text.append(v);
+                            if (requiresQuoting) text.append("}");
+                        }
                     }
-
-                    v = (*it)->lastName();
-                    if (!v.isEmpty()) {
-                        bool requiresQuoting = requiresPersonQuoting(v, TRUE);
-                        if (requiresQuoting) text.append("{");
-                        text.append(v);
-                        if (requiresQuoting) text.append("}");
+                } else {
+                    KeywordContainer *keywordContainer = dynamic_cast<KeywordContainer*>(*it);
+                    if (keywordContainer != NULL) {
+                        bool first = true;
+                        for (QLinkedList<Keyword*>::ConstIterator it = keywordContainer->begin(); it != keywordContainer->end(); ++it) {
+                            if (!first)
+                                text.append("; ");
+                            first = false;
+                            text.append((*it)->text());
+                        }
                     }
                 }
             }
 
             escapeLaTeXChars(text);
 
-            if (m_encoding == "latex")
-                text = encoder->encodeSpecialized(text, fieldType);
+            // FIXME if (m_encoding == "latex")
+            text = encoder->encodeSpecialized(text, fieldType);
 
             /** if the text to save contains a quote char ("),
               * force string delimiters to be curly brackets,
               * as quote chars as string delimiters would result
               * in parser failures
               */
-            QChar stringOpenDelimiter = m_stringOpenDelimiter;
-            QChar stringCloseDelimiter = m_stringCloseDelimiter;
-            if (text.contains('"') && (m_stringOpenDelimiter == '"' || m_stringCloseDelimiter == '"')) {
+            QChar stringOpenDelimiter = '{'; // FIXME m_stringOpenDelimiter;
+            QChar stringCloseDelimiter = '}'; // FIXME m_stringCloseDelimiter;
+            if (text.contains('"') /* FIXME && (m_stringOpenDelimiter == '"' || m_stringCloseDelimiter == '"')*/) {
                 stringOpenDelimiter = '{';
                 stringCloseDelimiter = '}';
             }

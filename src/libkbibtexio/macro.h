@@ -22,7 +22,7 @@
 #define KBIBTEX_IO_MACRO_H
 
 #include <element.h>
-#include <entryfield.h>
+#include <field.h>
 #include <value.h>
 
 class QString;
@@ -41,18 +41,15 @@ public:
     void setKey(const QString &key);
     QString key() const;
 
-    Value *value() const;
-    void setValue(Value *value);
+    const Value& value() const;
+    Value& value();
+    void setValue(const Value& value);
 
-    bool containsPattern(const QString& pattern, EntryField::FieldType fieldType = EntryField::ftUnknown, FilterType filterType = Element::ftExact, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const;
-
-    Element* clone() const;
-    void copyFrom(const Macro *other);
-    QString text() const;
+    bool containsPattern(const QString& pattern, Field::FieldType fieldType = Field::ftUnknown, FilterType filterType = Element::ftExact, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const;
 
 private:
     QString m_key;
-    Value *m_value;
+    Value m_value;
 };
 
 }

@@ -24,7 +24,7 @@
 #include <QStringList>
 
 #include <element.h>
-#include <entryfield.h>
+#include <field.h>
 
 class QString;
 
@@ -35,7 +35,7 @@ namespace IO {
 class KBIBTEXIO_EXPORT Entry : public Element
 {
 public:
-    typedef QLinkedList<EntryField*> EntryFields;
+    typedef QLinkedList<Field*> Fields;
 
     enum EntryType {etArticle, etBook, etBooklet, etCollection, etElectronic, etInBook, etInCollection, etInProceedings, etManual, etMastersThesis, etMisc, etPhDThesis, etProceedings, etTechReport, etUnpublished, etUnknown};
 
@@ -49,8 +49,8 @@ public:
     Entry(const Entry *other);
     virtual ~Entry();
     Element* clone() const;
-    bool equals(const Entry &other);
-    QString text() const;
+    // bool equals(const Entry &other); // FIXME Is this function required?
+    // QString text() const; // FIXME: Is this function required?
 
     void setEntryType(const EntryType elementType);
     void setEntryTypeString(const QString& elementTypeString);
@@ -59,17 +59,17 @@ public:
     void setId(const QString& id);
     QString id() const;
 
-    bool containsPattern(const QString& pattern, EntryField::FieldType fieldType = EntryField::ftUnknown, Element::FilterType filterType = Element::ftExact, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const;
+    bool containsPattern(const QString& pattern, Field::FieldType fieldType = Field::ftUnknown, Element::FilterType filterType = Element::ftExact, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const;
     QStringList urls() const;
 
-    bool addField(EntryField *field);
-    EntryField* getField(const EntryField::FieldType fieldType) const;
-    EntryField* getField(const QString& fieldName) const;
-    bool deleteField(const EntryField::FieldType fieldType);
+    bool addField(Field *field);
+    Field* getField(const Field::FieldType fieldType) const;
+    Field* getField(const QString& fieldName) const;
+    bool deleteField(const Field::FieldType fieldType);
     bool deleteField(const QString &fieldName);
 
-    EntryFields::const_iterator begin() const;
-    EntryFields::const_iterator end() const;
+    Fields::const_iterator begin() const;
+    Fields::const_iterator end() const;
     int getFieldCount() const;
     void clearFields();
 
@@ -78,13 +78,13 @@ public:
 
     static QString entryTypeToString(const EntryType entryType);
     static EntryType entryTypeFromString(const QString &entryTypeString);
-    static Entry::FieldRequireStatus getRequireStatus(Entry::EntryType entryType, EntryField::FieldType fieldType);
+    static Entry::FieldRequireStatus getRequireStatus(Entry::EntryType entryType, Field::FieldType fieldType);
 
 private:
     EntryType m_entryType;
     QString m_entryTypeString;
     QString m_id;
-    EntryFields m_fields;
+    Fields m_fields;
 };
 
 }

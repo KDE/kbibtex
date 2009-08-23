@@ -24,7 +24,7 @@
 #include <QLinkedList>
 #include <QMap>
 
-#include <entryfield.h>
+#include <field.h>
 #include <element.h>
 
 #include "kbibtexio_export.h"
@@ -67,11 +67,11 @@ public:
 
     const Element *containsKey(const QString &key) const;
     QStringList allKeys() const;
-    QString text() const;
+    // QString text() const; // FIXME: Is this function required?
 
-    QStringList getAllValuesAsStringList(const EntryField::FieldType fieldType) const;
-    QMap<QString, int> getAllValuesAsStringListWithCount(const EntryField::FieldType fieldType) const;
-    void replaceValue(const QString& oldText, const QString& newText, const EntryField::FieldType fieldType);
+    // QStringList getAllValuesAsStringList(const EntryField::FieldType fieldType) const; // FIXME: Is this function required?
+    // QMap<QString, int> getAllValuesAsStringListWithCount(const EntryField::FieldType fieldType) const; // FIXME: Is this function required?
+    //void replaceValue(const QString& oldText, const QString& newText, const Field::FieldType fieldType); // FIXME: Is this function required?
 
     QString fileName;
 

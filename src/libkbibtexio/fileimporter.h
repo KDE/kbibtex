@@ -30,6 +30,7 @@ namespace KBibTeX
 namespace IO {
 
 class File;
+class Person;
 
 /**
 @author Thomas Fischer
@@ -59,6 +60,16 @@ public slots:
 
 protected:
     QMutex m_mutex;
+
+    /**
+      * Split a person's name into its parts and construct a Person object from them.
+      * This is a rather general functions and takes e.g. the curly brackets used in
+      * (La)TeX not into account.
+      * @param name The persons name
+      * @return A Person object containing the name
+      * @see Person
+      */
+    virtual Person* splitName(const QString& name);
 };
 
 }

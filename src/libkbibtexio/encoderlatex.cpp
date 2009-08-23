@@ -524,17 +524,17 @@ QString EncoderLaTeX::encode(const QString &text, const QChar &replace)
     return result;
 }
 
-QString EncoderLaTeX::encodeSpecialized(const QString & text, const EntryField::FieldType fieldType)
+QString EncoderLaTeX::encodeSpecialized(const QString & text, const Field::FieldType fieldType)
 
 {
     QString result = encode(text);
 
     switch (fieldType) {
-    case EntryField::ftPages:
+    case Field::ftPages:
         result.replace(QChar(0x2013), "--");
         break;
 
-    case EntryField::ftURL:
+    case Field::ftURL:
         result.replace("\\_", "_").replace(QChar(0x2013), "--").replace("\\#", "#");
         break;
 

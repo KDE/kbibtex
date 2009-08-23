@@ -75,7 +75,7 @@ void FileExporterRIS::cancel()
     m_cancelFlag = true;
 }
 
-bool FileExporterRIS::writeEntry(QTextStream &stream, const Entry* entry)
+bool FileExporterRIS::writeEntry(QTextStream &stream, const Entry* entry, const File* bibtexfile)
 {
     bool result = true;
 
@@ -105,59 +105,67 @@ bool FileExporterRIS::writeEntry(QTextStream &stream, const Entry* entry)
     QString year = "";
     QString month = "";
 
-    for (Entry::EntryFields::ConstIterator it = entry->begin(); result && it != entry->end(); it++) {
-        EntryField *field = *it;
+    for (Entry::Fields::ConstIterator it = entry->begin(); result && it != entry->end(); it++) {
+        Field *field = *it;
+        QString plainText = PlainTextValue::text(field->value(), bibtexfile);
+        Value value = field->value();
 
-        if (field->fieldType() == EntryField::ftUnknown && field->fieldTypeName().startsWith("RISfield_"))
-            result &= writeKeyValue(stream, field->fieldTypeName().right(2), field->value()->simplifiedText());
-        else if (field->fieldType() == EntryField::ftAuthor) {
-            QStringList authors =  field->value() ->simplifiedText().split(QRegExp("\\s+(,|and|&)\\s+", Qt::CaseInsensitive));
-            for (QStringList::Iterator it = authors.begin(); result && it != authors.end(); ++it)
-                result &= writeKeyValue(stream, "AU", *it);
-        } else if (field->fieldType() == EntryField::ftEditor) {
-            QStringList authors = field->value() ->simplifiedText().split(QRegExp("\\s+(,|and|&)\\s+", Qt::CaseInsensitive));
-            for (QStringList::Iterator it = authors.begin(); result && it != authors.end(); ++it)
-                result &= writeKeyValue(stream, "ED", *it);
-        } else if (field->fieldType() == EntryField::ftTitle)
-            result &= writeKeyValue(stream, "TI", field->value() ->simplifiedText());
-        else if (field->fieldType() == EntryField::ftJournal)
-            result &= writeKeyValue(stream, "JO", field->value() ->simplifiedText());
-        else if (field->fieldType() == EntryField::ftChapter)
-            result &= writeKeyValue(stream, "CP", field->value() ->simplifiedText());
-        else if (field->fieldType() == EntryField::ftISSN)
-            result &= writeKeyValue(stream, "SN", field->value() ->simplifiedText());
-        else if (field->fieldType() == EntryField::ftISBN)
-            result &= writeKeyValue(stream, "SN", field->value() ->simplifiedText());
-        else if (field->fieldType() == EntryField::ftVolume)
-            result &= writeKeyValue(stream, "VL", field->value() ->simplifiedText());
-        else if (field->fieldType() == EntryField::ftNumber)
-            result &= writeKeyValue(stream, "IS", field->value() ->simplifiedText());
-        else if (field->fieldType() == EntryField::ftNote)
-            result &= writeKeyValue(stream, "N1", field->value() ->simplifiedText());
-        else if (field->fieldType() == EntryField::ftAbstract)
-            result &= writeKeyValue(stream, "N2", field->value() ->simplifiedText());
-        else if (field->fieldType() == EntryField::ftPublisher)
-            result &= writeKeyValue(stream, "PB", field->value() ->simplifiedText());
-        else if (field->fieldType() == EntryField::ftLocation)
-            result &= writeKeyValue(stream, "CY", field->value() ->simplifiedText());
-        else if (field->fieldType() == EntryField::ftKeywords)
-            result &= writeKeyValue(stream, "KW", field->value() ->simplifiedText());
-        else if (field->fieldType() == EntryField::ftYear)
-            year = field->value() ->simplifiedText();
-        else if (field->fieldType() == EntryField::ftMonth)
-            month = field->value() ->simplifiedText();
-        else if (field->fieldType() == EntryField::ftAddress)
-            result &= writeKeyValue(stream, "AD", field->value() ->simplifiedText());
-        else if (field->fieldType() == EntryField::ftURL)
-            result &= writeKeyValue(stream, "UR", field->value() ->simplifiedText());
-        else if (field->fieldType() == EntryField::ftPages) {
-            QStringList pageRange = field->value() ->simplifiedText().split(QRegExp(QString("--|-|%1").arg(QChar(0x2013))));
+        if (field->fieldType() == Field::ftUnknown && field->fieldTypeName().startsWith("RISfield_"))
+            result &= writeKeyValue(stream, field->fieldTypeName().right(2), plainText);
+        else if (field->fieldType() == Field::ftAuthor) {
+            for (QLinkedList<ValueItem*>::ConstIterator it = value.begin();  result && it != value.end(); ++it) {
+                PersonContainer *pc = dynamic_cast<PersonContainer*>(*it);
+                if (pc == NULL) continue;
+                for (PersonContainer::Iterator pit = pc->begin(); result && pit != pc->end(); ++pit)
+                    result &= writeKeyValue(stream, "AU", PlainTextValue::text(**it, bibtexfile));
+            }
+        } else if (field->fieldType() == Field::ftEditor) {
+            for (QLinkedList<ValueItem*>::ConstIterator it = value.begin();  result && it != value.end(); ++it) {
+                PersonContainer *pc = dynamic_cast<PersonContainer*>(*it);
+                if (pc == NULL) continue;
+                for (PersonContainer::Iterator pit = pc->begin(); result && pit != pc->end(); ++pit)
+                    result &= writeKeyValue(stream, "ED", PlainTextValue::text(**it, bibtexfile));
+            }
+        } else if (field->fieldType() == Field::ftTitle)
+            result &= writeKeyValue(stream, "TI", PlainTextValue::text(value, bibtexfile));
+        else if (field->fieldType() == Field::ftJournal)
+            result &= writeKeyValue(stream, "JO", PlainTextValue::text(value, bibtexfile));
+        else if (field->fieldType() == Field::ftChapter)
+            result &= writeKeyValue(stream, "CP", PlainTextValue::text(value, bibtexfile));
+        else if (field->fieldType() == Field::ftISSN)
+            result &= writeKeyValue(stream, "SN", PlainTextValue::text(value, bibtexfile));
+        else if (field->fieldType() == Field::ftISBN)
+            result &= writeKeyValue(stream, "SN", PlainTextValue::text(value, bibtexfile));
+        else if (field->fieldType() == Field::ftVolume)
+            result &= writeKeyValue(stream, "VL", PlainTextValue::text(value, bibtexfile));
+        else if (field->fieldType() == Field::ftNumber)
+            result &= writeKeyValue(stream, "IS", PlainTextValue::text(value, bibtexfile));
+        else if (field->fieldType() == Field::ftNote)
+            result &= writeKeyValue(stream, "N1", PlainTextValue::text(value, bibtexfile));
+        else if (field->fieldType() == Field::ftAbstract)
+            result &= writeKeyValue(stream, "N2", PlainTextValue::text(value, bibtexfile));
+        else if (field->fieldType() == Field::ftPublisher)
+            result &= writeKeyValue(stream, "PB", PlainTextValue::text(value, bibtexfile));
+        else if (field->fieldType() == Field::ftLocation)
+            result &= writeKeyValue(stream, "CY", PlainTextValue::text(value, bibtexfile));
+        else if (field->fieldType() == Field::ftKeywords)
+            result &= writeKeyValue(stream, "KW", PlainTextValue::text(value, bibtexfile));
+        else if (field->fieldType() == Field::ftYear)
+            year = PlainTextValue::text(value, bibtexfile);
+        else if (field->fieldType() == Field::ftMonth)
+            month = PlainTextValue::text(value, bibtexfile);
+        else if (field->fieldType() == Field::ftAddress)
+            result &= writeKeyValue(stream, "AD", PlainTextValue::text(value, bibtexfile));
+        else if (field->fieldType() == Field::ftURL)
+            result &= writeKeyValue(stream, "UR", PlainTextValue::text(value, bibtexfile));
+        else if (field->fieldType() == Field::ftPages) {
+            QStringList pageRange = PlainTextValue::text(value, bibtexfile).split(QRegExp(QString("--|-|%1").arg(QChar(0x2013))));
             if (pageRange.count() == 2) {
                 result &= writeKeyValue(stream, "SP", pageRange[ 0 ]);
                 result &= writeKeyValue(stream, "EP", pageRange[ 1 ]);
             }
         } else if (field->fieldTypeName().toLower() == "doi")
-            result &= writeKeyValue(stream, "UR", field->value() ->simplifiedText());
+            result &= writeKeyValue(stream, "UR", PlainTextValue::text(value, bibtexfile));
     }
 
     if (!year.isEmpty() || !month.isEmpty()) {
@@ -170,7 +178,7 @@ bool FileExporterRIS::writeEntry(QTextStream &stream, const Entry* entry)
     return result;
 }
 
-bool FileExporterRIS::writeKeyValue(QTextStream &stream, const QString& key, const QString&value)
+bool FileExporterRIS::writeKeyValue(QTextStream &stream, const QString& key, const QString& value)
 {
     stream << key << "  - ";
     if (!value.isEmpty())
