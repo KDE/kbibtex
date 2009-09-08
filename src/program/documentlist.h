@@ -40,6 +40,8 @@ public:
     virtual ~DocumentList();
 
     void addToOpen(const KUrl &url, const QString& encoding);
+    void closeUrl(const KUrl &url);
+    void highlightUrl(const KUrl &url);
 
 signals:
     void open(const KUrl &url, const QString& encoding);
@@ -55,6 +57,7 @@ protected:
     void addToRecentFiles(const KUrl &url, const QString& encoding);
     void readConfig();
     void writeConfig();
+    void highlightUrl(const KUrl &url, KListWidget *list);
 
 private:
     KListWidget *m_listOpenFiles;

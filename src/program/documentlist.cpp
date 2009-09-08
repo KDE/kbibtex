@@ -18,6 +18,7 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
+#include <QFontMetrics>
 #include <QStringListModel>
 #include <QTimer>
 
@@ -36,13 +37,17 @@ DocumentList::DocumentList(QWidget *parent)
 {
     m_listOpenFiles = new KListWidget(this);
     addTab(m_listOpenFiles, i18n("Open Files"));
-    connect(m_listOpenFiles, SIGNAL(executed(QListWidgetItem*)), this, SLOT(itemExecuted(QListWidgetItem*)));
+    connect(m_listOpenFiles, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(itemExecuted(QListWidgetItem*))); // FIXME Signal itemExecute(..) triggers *twice* ???
     m_listRecentFiles = new KListWidget(this);
     addTab(m_listRecentFiles, i18n("Recent Files"));
-    connect(m_listRecentFiles, SIGNAL(executed(QListWidgetItem*)), this, SLOT(itemExecuted(QListWidgetItem*)));
+    connect(m_listRecentFiles, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(itemExecuted(QListWidgetItem*))); // FIXME Signal itemExecute(..) triggers *twice* ???
     m_listFavorites = new KListWidget(this);
     addTab(m_listFavorites, i18n("Favorites"));
-    connect(m_listFavorites, SIGNAL(executed(QListWidgetItem*)), this, SLOT(itemExecuted(QListWidgetItem*)));
+    connect(m_listFavorites, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(itemExecuted(QListWidgetItem*))); // FIXME Signal itemExecute(..) triggers *twice* ???
+
+    /** set minimum width of widget depending on tab's text width */
+    QFontMetrics fm(font());
+    setMinimumWidth(fm.width(tabText(0))*(count() + 1));
 
     readConfig();
 }
@@ -70,6 +75,39 @@ void DocumentList::addToOpen(const KUrl &url, const QString& encoding)
     addToRecentFiles(url, encoding);
 }
 
+void DocumentList::closeUrl(const KUrl &url)
+{
+    /** check if given URL is contained in Open Files list*/
+    DocumentListItem *item = NULL;
+    for (int i = m_listOpenFiles->count() - 1; item == NULL && i >= 0; --i) {
+        item = dynamic_cast<DocumentListItem*>(m_listOpenFiles->item(i));
+        if (!url.equals(item->url())) item = NULL;
+    }
+
+    if (item != NULL) {
+        /** file is in Open Files list */
+        delete item; //< remove item
+    }
+}
+
+void DocumentList::highlightUrl(const KUrl &url)
+{
+    highlightUrl(url, m_listOpenFiles);
+    highlightUrl(url, m_listRecentFiles);
+    highlightUrl(url, m_listFavorites);
+}
+
+void DocumentList::highlightUrl(const KUrl &url, KListWidget *list)
+{
+    for (int i = list->count() - 1; i >= 0; --i) {
+        DocumentListItem *item = dynamic_cast<DocumentListItem*>(list->item(i));
+        if (item->url().equals(url)) {
+            list->setCurrentItem(item);
+            return;
+        }
+    }
+}
+
 void DocumentList::addToRecentFiles(const KUrl &url, const QString& encoding)
 {
     /** check if given URL is already contained in Recent Files list*/
@@ -84,10 +122,10 @@ void DocumentList::addToRecentFiles(const KUrl &url, const QString& encoding)
         /** file was not already in Open Files list */
         item = new DocumentListItem(url, encoding);
         m_listRecentFiles->insertItem(0, item);
-    } else if (m_rowToMoveUpInternallyRecentlyUsed==-1) {
+    } else if (m_rowToMoveUpInternallyRecentlyUsed == -1) {
         /** move existing item up to first position */
         m_rowToMoveUpInternallyRecentlyUsed = m_listRecentFiles->row(item);
-        QTimer::singleShot(300, this, SLOT(moveUpInternallyRecentlyUsed()));
+        QTimer::singleShot(250, this, SLOT(moveUpInternallyRecentlyUsed()));
     }
 }
 
