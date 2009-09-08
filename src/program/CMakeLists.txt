@@ -11,6 +11,8 @@ set( kbibtex_SRCS
 	about.cpp
 	mainwindow.cpp
 	documentlist.cpp
+	mdiwidget.cpp
+	referencepreview.cpp
 )
 
 # TODO kde4_add_app_icon( okteta_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/hi*-app-kbibtex.png" )
@@ -18,6 +20,7 @@ set( kbibtex_SRCS
 kde4_add_executable( kbibtex  ${kbibtex_SRCS} )
 
 target_link_libraries( kbibtex
+  ${QT_QTWEBKIT_LIBRARIES}
   ${KDE4_KIO_LIBS}
   ${KDE4_KPARTS_LIBS}
   kbibtexio
