@@ -45,8 +45,8 @@ KBibTeXPart::KBibTeXPart(QWidget *parentWidget, QObject *parent, bool browserVie
     setComponentData(KBibTeXPartFactory::componentData());
 
     // TODO Setup view
-    m_view = new KBibTeX::GUI::Widgets::BibTeXFileView();
-    setWidget(m_view);
+    m_widget = new KBibTeX::GUI::BibTeXEditor(parentWidget);
+    setWidget(m_widget);
 
     setupActions(browserViewWanted);
 
@@ -95,7 +95,7 @@ bool KBibTeXPart::openFile()
     KBibTeX::GUI::Widgets::BibTeXFileModel *model = new   KBibTeX::GUI::Widgets::BibTeXFileModel();
     model->setBibTeXFile(bibtexFile);
 
-    m_view->setModel(model);
+    m_widget->setModel(model);
 
     return true;
 }

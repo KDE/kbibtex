@@ -18,52 +18,30 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#ifndef KBIBTEX_PART_PART_H
-#define KBIBTEX_PART_PART_H
+#ifndef KBIBTEX_GUI_BIBTEXEDITOR_H
+#define KBIBTEX_GUI_BIBTEXEDITOR_H
 
-#include <kparts/part.h>
+#include <QWidget>
 
-#include <bibtexeditor.h>
+#include <kbibtexgui_export.h>
 
-class KBibTeXPart : public KParts::ReadWritePart
+#include <bibtexeditorinterface.h>
+#include <bibtexfileview.h>
+
+namespace KBibTeX
 {
-    Q_OBJECT
+namespace GUI {
 
-    friend class KBibTeXBrowserExtension;
-
+/**
+@author Thomas Fischer
+*/
+class KBIBTEXGUI_EXPORT BibTeXEditor : public BibTeXEditorInterface, public KBibTeX::GUI::Widgets::BibTeXFileView
+{
 public:
-    KBibTeXPart(QWidget *parentWidget, QObject *parent, bool browserViewWanted);
-    virtual ~KBibTeXPart();
-
-protected: // KParts::ReadOnlyPart API
-    virtual bool openFile();
-    virtual bool saveFile();
-
-protected:
-    void setupActions(bool BrowserViewWanted);
-    void fitActionSettings();
-
-    /*
-      protected Q_SLOTS: // action slots
-        void onSelectAll();
-        void onUnselect();
-        void onSetCoding( int Coding );
-        void onSetEncoding( int Encoding );
-        void onSetShowsNonprinting( bool on );
-        void onSetResizeStyle( int Style );
-        void onToggleOffsetColumn( bool on );
-        void onToggleValueCharColumns( int VisibleColunms );
-    */
-
-    /*
-      private Q_SLOTS:
-        // used to catch changes in the bytearray widget
-        void onSelectionChanged( bool HasSelection );
-    */
-
-private:
-    // TODO
-    KBibTeX::GUI::BibTeXEditor *m_widget;
+    BibTeXEditor(QWidget *parent);
 };
 
-#endif // KBIBTEX_PART_PART_H
+}
+}
+
+#endif // KBIBTEX_GUI_BIBTEXEDITOR_H

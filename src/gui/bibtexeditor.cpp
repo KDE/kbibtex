@@ -18,52 +18,13 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#ifndef KBIBTEX_PART_PART_H
-#define KBIBTEX_PART_PART_H
+#include "bibtexeditor.h"
 
-#include <kparts/part.h>
+using namespace KBibTeX::GUI;
 
-#include <bibtexeditor.h>
-
-class KBibTeXPart : public KParts::ReadWritePart
+BibTeXEditor::BibTeXEditor(QWidget *parent)
+        : KBibTeX::GUI::Widgets::BibTeXFileView(parent)
 {
-    Q_OBJECT
+    // nothing
+}
 
-    friend class KBibTeXBrowserExtension;
-
-public:
-    KBibTeXPart(QWidget *parentWidget, QObject *parent, bool browserViewWanted);
-    virtual ~KBibTeXPart();
-
-protected: // KParts::ReadOnlyPart API
-    virtual bool openFile();
-    virtual bool saveFile();
-
-protected:
-    void setupActions(bool BrowserViewWanted);
-    void fitActionSettings();
-
-    /*
-      protected Q_SLOTS: // action slots
-        void onSelectAll();
-        void onUnselect();
-        void onSetCoding( int Coding );
-        void onSetEncoding( int Encoding );
-        void onSetShowsNonprinting( bool on );
-        void onSetResizeStyle( int Style );
-        void onToggleOffsetColumn( bool on );
-        void onToggleValueCharColumns( int VisibleColunms );
-    */
-
-    /*
-      private Q_SLOTS:
-        // used to catch changes in the bytearray widget
-        void onSelectionChanged( bool HasSelection );
-    */
-
-private:
-    // TODO
-    KBibTeX::GUI::BibTeXEditor *m_widget;
-};
-
-#endif // KBIBTEX_PART_PART_H
