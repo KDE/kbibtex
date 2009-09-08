@@ -19,11 +19,11 @@
 ***************************************************************************/
 
 #include <QDockWidget>
-#include <QListWidget>
 
 #include <kio/netaccess.h>
 #include <KDebug>
 #include <KApplication>
+#include <KAction>
 #include <KEncodingFileDialog>
 #include <KGlobal>
 #include <KActionCollection>
@@ -34,11 +34,13 @@
 #include "mainwindow.h"
 #include "documentlist.h"
 #include "program.h"
+#include "mdiwidget.h"
+#include "referencepreview.h"
 
 using namespace KBibTeX::Program;
 
 KBibTeXMainWindow::KBibTeXMainWindow(KBibTeXProgram *program)
-        : /* ShellWindow( program->documentManager(), program->viewManager() ),*/ m_program(program)
+        : KXmlGuiWindow(), m_program(program)
 {
     setObjectName(QLatin1String("Shell"));   // FIXME
 
@@ -58,34 +60,24 @@ KBibTeXMainWindow::KBibTeXMainWindow(KBibTeXProgram *program)
     m_dockDocumentList->setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
     connect(m_listDocumentList, SIGNAL(open(const KUrl &, const QString&)), this, SLOT(openDocument(const KUrl&, const QString&)));
 
-    // this routine will find and load our Part.
-    KPluginFactory* factory = KPluginLoader("libsimplekbibtexpart").factory();
-    if (factory) {
-        // now that the Part is loaded, we cast it to a Part to get
-        // our hands on it
-        m_part = factory->create<KParts::ReadWritePart>(this);
+    m_dockReferencePreview = new QDockWidget(i18n("Reference Preview"), this);
+    m_dockReferencePreview->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+    addDockWidget(Qt::BottomDockWidgetArea, m_dockReferencePreview);
+    m_referencePreview = new ReferencePreview(m_dockReferencePreview);
+    m_dockReferencePreview->setWidget(m_referencePreview);
+    m_dockReferencePreview->setObjectName("dockReferencePreview");
+    m_dockReferencePreview->setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
 
-        if (m_part) {
-            // tell the KParts::MainWindow that this is indeed
-            // the main widget
-            setCentralWidget(m_part->widget());
+    setXMLFile("kbibtexui.rc");
+    createGUI();
 
-            setupGUI(ToolBar | Keys | StatusBar | Save);
+    m_mdiWidget = new MDIWidget(this);
+    setCentralWidget(m_mdiWidget);
+    connect(m_mdiWidget, SIGNAL(documentSwitch()), this, SLOT(documentSwitched()));
 
-            // and integrate the part's GUI with the shell's
-            createGUI(m_part);
-        }
-    } else {
-        // if we couldn't find our Part, we exit since the Shell by
-        // itself can't do anything useful
-        KMessageBox::error(this, "Could not find our Part!");
-        kapp->quit();
-        // we return here, cause qApp->quit() only means "exit the
-        // next time we enter the event loop...
-        return;
-    }
-
-    actionCollection()->addAction(KStandardAction::Open,  this, SLOT(openDocumentDialog()));
+    actionCollection()->addAction(KStandardAction::Open, this, SLOT(openDocumentDialog()));
+    m_actionClose = actionCollection()->addAction(KStandardAction::Close, this, SLOT(closeDocument()));
+    m_actionClose->setEnabled(false);
     actionCollection()->addAction(KStandardAction::Quit,  kapp, SLOT(quit()));
 
     setupControllers();
@@ -123,8 +115,30 @@ void KBibTeXMainWindow::openDocumentDialog()
     }
 }
 
+void KBibTeXMainWindow::closeDocument()
+{
+    KUrl url = m_mdiWidget->currentUrl();
+    if (url.isValid()) {
+        m_listDocumentList->closeUrl(url);
+        m_mdiWidget->closeUrl(url);
+    }
+}
+
+void KBibTeXMainWindow::documentSwitched()
+{
+    KUrl url = m_mdiWidget->currentUrl();
+    m_actionClose->setEnabled(url.isValid());
+
+    setCaption((url.isValid() ? url.fileName() + " - " : "") + "KBibTeX");
+
+    if (url.isValid())
+        m_listDocumentList->highlightUrl(url);
+
+    m_referencePreview->setEnabled(m_mdiWidget->editor() != NULL);
+}
+
 void KBibTeXMainWindow::openDocument(const KUrl& url, const QString& encoding)
 {
     kDebug() << "Opening document " << url.prettyUrl() << " with encoding " << encoding << endl;
-    m_part->openUrl(url);
+    m_mdiWidget->setUrl(url, encoding);
 }

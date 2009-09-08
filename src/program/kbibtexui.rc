@@ -2,6 +2,9 @@
 <kpartgui name="KBibTeX" version="1">
 <MenuBar>
   <Menu name="file">
+<Action name="open" />
+<Action name="openfile" />
+<Action name="fileopen" />
   </Menu>
 </MenuBar>
 <!-- TODO -->
