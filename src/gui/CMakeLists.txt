@@ -13,6 +13,7 @@ set( kbibtexgui_LIB_SRCS
 	widgets/bibtexfileview.cpp
 	widgets/bibtexfilemodel.cpp
 	config/bibtexfields.cpp
+	bibtexeditor.cpp
 )
 
 add_definitions( -DMAKE_KBIBTEXGUI_LIB )
@@ -28,24 +29,3 @@ target_link_libraries( kbibtexgui
 
 install(TARGETS kbibtexgui DESTINATION ${LIB_INSTALL_DIR})
 
-
-# KBibTeX widget test program
-
-set( widgettestprogram_SRCS
-	main.cpp
-	mainwindow.cpp
-)
-
-link_directories(
-	${CMAKE_CURRENT_BINARY_DIR}/../../lib
-)
-
-kde4_add_executable( widgettestprogram ${widgettestprogram_SRCS} )
-
-target_link_libraries( widgettestprogram
-	${KDE4_KPARTS_LIBS}
-	kbibtexio
-	kbibtexgui
-)
-
-install( TARGETS widgettestprogram ${INSTALL_TARGETS_DEFAULT_ARGS} )
