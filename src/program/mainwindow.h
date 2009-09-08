@@ -21,22 +21,24 @@
 #ifndef KBIBTEX_PROGRAM_MAINWINDOW_H
 #define KBIBTEX_PROGRAM_MAINWINDOW_H
 
-#include <kparts/mainwindow.h>
+#include <KXmlGuiWindow>
 #include <KConfigGroup>
-
 
 #include "documentlist.h"
 
 class QDockWidget;
-//class DocumentList;
+class KAction;
+class QTextEdit;
 
 namespace KBibTeX
 {
 namespace Program {
 
 class KBibTeXProgram;
+class MDIWidget;
+class ReferencePreview;
 
-class KBibTeXMainWindow : public KParts::MainWindow
+class KBibTeXMainWindow : public KXmlGuiWindow
 {
     Q_OBJECT
 
@@ -57,11 +59,18 @@ protected:
 protected:
     KBibTeXProgram *m_program;
     QDockWidget *m_dockDocumentList;
+    QDockWidget *m_dockReferencePreview;
     DocumentList *m_listDocumentList;
-    KParts::ReadWritePart *m_part;
+    MDIWidget *m_mdiWidget;
+    ReferencePreview *m_referencePreview;
 
 protected slots:
     void openDocumentDialog();
+    void closeDocument();
+    void documentSwitched();
+
+private:
+    KAction *m_actionClose;
 };
 
 }
