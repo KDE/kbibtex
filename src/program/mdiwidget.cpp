@@ -21,6 +21,7 @@
 #include <QList>
 #include <QPair>
 #include <QLabel>
+#include <QApplication>
 
 #include <KDebug>
 #include <KMessageBox>
@@ -85,6 +86,7 @@ public:
 
         if (part == NULL) {
             kError() << "Cannot find part for mimetype " << mimeTypeName << endl;
+            KMessageBox::error(p, QString("<qt>There is no editor component available for mime type\n<b>%1</b>\nto open file\n%2</qt>").arg(mimeTypeName).arg(url.fileName()), "Error opening file");
             return NULL;
         }
 
@@ -102,18 +104,25 @@ public:
             if ((*it).url.equals(url)) {
                 (*it).encoding = encoding;
                 p->setCurrentWidget((*it).container);
-                kDebug() << "URL " << url.prettyUrl() << "is already known" << endl;
-                return false;
+                return true;
             }
+
+        qApp->setOverrideCursor(Qt::WaitCursor);
 
         struct Triple triple;
         triple.url = url;
         triple.encoding = encoding;
         triple.container = createWidget(url, encoding);
+
+        if (triple.container == NULL) {
+            qApp->restoreOverrideCursor();
+            return false;
+        }
+
         p->setCurrentWidget(triple.container);
         openFiles.append(triple);
 
-        kDebug() << "URL " << url.prettyUrl() << "is added to internal list" << endl;
+        qApp->restoreOverrideCursor();
         return true;
     }
 
@@ -123,11 +132,9 @@ public:
             if ((*it).url.equals(url)) {
                 p->removeWidget((*it).container);
                 openFiles.removeAt(i);
-                kDebug() << "URL " << url.prettyUrl() << "is removed from internal list" << endl;
                 return true;
             }
 
-        kDebug() << "URL " << url.prettyUrl() << "is not known to internal list" << endl;
         return false;
     }
 };
@@ -145,11 +152,14 @@ bool MDIWidget::setUrl(const KUrl &url, const QString &encoding)
     struct MDIWidgetPrivate::Triple triple;
     KUrl oldUrl = d->getTriple(currentWidget(), triple) ? triple.url : KUrl();
 
-    d->addUniqueUrl(url, encoding);
+    bool addingSucceeded = d->addUniqueUrl(url, encoding);
+
+    if (!addingSucceeded)
+        return false;
 
     if (!oldUrl.equals(url)) emit documentSwitch();
 
-    return false;
+    return true;
 }
 
 
@@ -157,9 +167,9 @@ bool MDIWidget::closeUrl(const KUrl &url)
 {
     bool wasClosing = d->removeUrl(url);
 
-    if (wasClosing)emit documentSwitch();
+    if (wasClosing) emit documentSwitch();
 
-    return false;
+    return true;
 }
 
 KUrl MDIWidget::currentUrl() const
