@@ -24,6 +24,8 @@
 
 #include <kbibtexgui_export.h>
 
+class QSignalMapper;
+
 namespace KBibTeX
 {
 namespace GUI {
@@ -34,12 +36,19 @@ namespace Widgets {
 */
 class KBIBTEXGUI_EXPORT BibTeXFileView : public QTreeView
 {
+    Q_OBJECT
 public:
     BibTeXFileView(QWidget * parent = 0);
     virtual ~BibTeXFileView();
 
 protected:
     void resizeEvent(QResizeEvent *event);
+
+private:
+    QSignalMapper *m_signalMapperBibTeXFields;
+
+private slots:
+    void headerActionToggled(QObject *action);
 };
 
 

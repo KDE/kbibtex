@@ -87,6 +87,7 @@ QVariant BibTeXFileModel::data(const QModelIndex &index, int role) const
 
     if (index.row() < m_bibtexFile->count() && index.column() < m_bibtexFields->count()) {
         QString raw = m_bibtexFields->at(index.column()).raw;
+        QString rawAlt = m_bibtexFields->at(index.column()).rawAlt;
         KBibTeX::IO::Element* element = (*m_bibtexFile)[index.row()];
         KBibTeX::IO::Entry* entry = dynamic_cast<KBibTeX::IO::Entry*>(element);
         if (entry != NULL) {
@@ -100,8 +101,12 @@ QVariant BibTeXFileModel::data(const QModelIndex &index, int role) const
                     QString text = KBibTeX::IO::PlainTextValue::text(field->value(), m_bibtexFile);
                     text = text.replace(whiteSpace, " ");
                     return QVariant(text);
+                } else if (!rawAlt.isNull() && (field = entry->getField(rawAlt)) != NULL) {
+                    QString text = KBibTeX::IO::PlainTextValue::text(field->value(), m_bibtexFile);
+                    text = text.replace(whiteSpace, " ");
+                    return QVariant(text);
                 } else
-                    return QVariant(index.column());
+                    return QVariant();
             }
         } else {
             KBibTeX::IO::Macro* macro = dynamic_cast<KBibTeX::IO::Macro*>(element);

@@ -19,7 +19,7 @@
 ***************************************************************************/
 #include <kglobal.h>
 #include <kstandarddirs.h>
-#include <kconfig.h>
+#include <KSharedConfig>
 #include <kconfiggroup.h>
 
 #include "bibtexfields.h"
@@ -30,13 +30,14 @@ BibTeXFields *BibTeXFields::m_self = NULL;
 
 BibTeXFields::BibTeXFields()
 {
-    m_config = new KConfig(KStandardDirs::locateLocal("data", "kbibtex/fieldtypes.rc"), KConfig::NoGlobals);
+    m_systemDefaultsConfig = new KConfig(KStandardDirs::locate("appdata", "fieldtypes.rc"), KConfig::SimpleConfig);
+    m_userConfig = KSharedConfig::openConfig(KStandardDirs::locateLocal("appdata", "ui.rc"), KConfig::SimpleConfig);
     load();
 }
 
 BibTeXFields::~BibTeXFields()
 {
-    delete m_config;
+    delete m_systemDefaultsConfig;
 }
 
 BibTeXFields* BibTeXFields::self()
@@ -48,30 +49,37 @@ BibTeXFields* BibTeXFields::self()
 
 void BibTeXFields::load()
 {
+    const int maxColumns = 256;
     FieldDescription fd;
 
-    fd.raw = QString("^type"); // FIXME QLatin1String
-    fd.label = QString("Type"); // FIXME i18n
-    fd.width = 5;
-    append(fd);
-
-    fd.raw = QString("^id"); // FIXME QLatin1String
-    fd.label = QString("Identifier"); // FIXME i18n
-    fd.width = 6;
-    append(fd);
-
-    QStringList groupList = m_config->groupList();
-
-    for (QStringList::ConstIterator it = groupList.begin(); it != groupList.end(); ++it) {
-        KConfigGroup group(m_config, *it);
-        fd.raw = *it;
-        fd.label = group.readEntry("Label", *it);
-        fd.width = group.readEntry("Width", 4);
+    clear();
+    for (int col = 1; col < maxColumns; ++col) {
+        QString groupName = QString("Column%1").arg(col);
+        KConfigGroup usercg(m_userConfig, groupName);
+        KConfigGroup systemcg(m_systemDefaultsConfig, groupName);
+        fd.raw = systemcg.readEntry("Raw", "");
+        if (fd.raw.isEmpty()) break;
+        fd.rawAlt = systemcg.readEntry("RawAlt", "");
+        if (fd.rawAlt.isEmpty()) fd.rawAlt = QString::null;
+        fd.label = systemcg.readEntry("Label", fd.raw);
+        fd.defaultWidth = systemcg.readEntry("DefaultWidth", 4);
+        fd.width = usercg.readEntry("Width", fd.defaultWidth);
+        fd.visible = systemcg.readEntry("Visible", true);
+        fd.visible = usercg.readEntry("Visible", fd.visible);
         append(fd);
     }
 }
 
 void BibTeXFields::save()
 {
-// TODO
+    int col = 1;
+    for (Iterator it = begin(); it != end(); ++it, ++col) {
+        QString groupName = QString("Column%1").arg(col);
+        KConfigGroup usercg(m_userConfig, groupName);
+        FieldDescription &fd = *it;
+        usercg.writeEntry("Width", fd.width);
+        usercg.writeEntry("Visible", fd.visible);
+    }
+
+    m_userConfig->sync();
 }

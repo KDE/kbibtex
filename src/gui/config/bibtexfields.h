@@ -23,7 +23,10 @@
 #include <QString>
 #include <QList>
 
+#include <KSharedPtr>
+
 class KConfig;
+class KSharedConfig;
 
 namespace KBibTeX
 {
@@ -32,8 +35,11 @@ namespace Config {
 
 typedef struct {
     QString raw;
+    QString rawAlt;
     QString label;
     int width;
+    int defaultWidth;
+    bool visible;
 } FieldDescription;
 
 /**
@@ -54,7 +60,8 @@ protected:
     static BibTeXFields *m_self;
 
 private:
-    KConfig *m_config;
+    KConfig *m_systemDefaultsConfig;
+    KSharedPtr<KSharedConfig> m_userConfig;
 };
 }
 }
