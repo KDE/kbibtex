@@ -12,6 +12,7 @@ include_directories(
 set( kbibtexgui_LIB_SRCS
 	widgets/bibtexfileview.cpp
 	widgets/bibtexfilemodel.cpp
+	widgets/fieldeditor.cpp
 	config/bibtexfields.cpp
 	bibtexeditor.cpp
 )
