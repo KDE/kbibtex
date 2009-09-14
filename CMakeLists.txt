@@ -6,4 +6,5 @@ find_package( Qt4 REQUIRED )
 find_package( KDE4 REQUIRED )
 
 add_subdirectory( src )
+add_subdirectory( config )
 
