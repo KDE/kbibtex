@@ -25,7 +25,6 @@
 
 #include <kbibtexgui_export.h>
 
-#include <bibtexeditorinterface.h>
 #include <bibtexfileview.h>
 
 namespace KBibTeX
@@ -35,7 +34,7 @@ namespace GUI {
 /**
 @author Thomas Fischer
 */
-class KBIBTEXGUI_EXPORT BibTeXEditor : public BibTeXEditorInterface, public KBibTeX::GUI::Widgets::BibTeXFileView
+class KBIBTEXGUI_EXPORT BibTeXEditor : public KBibTeX::GUI::Widgets::BibTeXFileView
 {
 public:
     BibTeXEditor(QWidget *parent);
