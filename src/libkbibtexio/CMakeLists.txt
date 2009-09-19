@@ -35,15 +35,3 @@ target_link_libraries( kbibtexio
 
 install(TARGETS kbibtexio DESTINATION ${LIB_INSTALL_DIR})
 
-# Test
-
-set( kbibtexiotest_SRCS
-	kbibtexiotest.cpp
-)
-
-automoc4_add_executable( kbibtexiotest ${kbibtexiotest_SRCS} )
-
-target_link_libraries( kbibtexiotest
-	${QT_QTCORE_LIBRARY}
-	kbibtexio
-)
