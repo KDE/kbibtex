@@ -152,3 +152,8 @@ QVariant BibTeXFileModel::headerData(int section, Qt::Orientation orientation, i
     } else
         return QString("Row %1").arg(section);
 }
+
+KBibTeX::IO::Element* BibTeXFileModel::element(int row) const
+{
+    return (*m_bibtexFile)[row];
+}

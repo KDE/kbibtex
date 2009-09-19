@@ -24,6 +24,7 @@
 #include <KXmlGuiWindow>
 #include <KConfigGroup>
 
+#include <bibtexeditor.h>
 #include "documentlist.h"
 
 class QDockWidget;
@@ -67,7 +68,7 @@ protected:
 protected slots:
     void openDocumentDialog();
     void closeDocument();
-    void documentSwitched();
+    void documentSwitched(KBibTeX::GUI::BibTeXEditor*, KBibTeX::GUI::BibTeXEditor*);
 
 private:
     KAction *m_actionClose;

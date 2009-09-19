@@ -24,6 +24,8 @@
 
 #include <kbibtexgui_export.h>
 
+#include <element.h>
+
 class QSignalMapper;
 
 namespace KBibTeX
@@ -41,11 +43,24 @@ public:
     BibTeXFileView(QWidget * parent = 0);
     virtual ~BibTeXFileView();
 
+    const QList<KBibTeX::IO::Element*>& selectedElements() const;
+    const KBibTeX::IO::Element* currentElement() const;
+
+signals:
+    void selectedElementsChanged();
+    void currentElementChanged(const KBibTeX::IO::Element*);
+
 protected:
     void resizeEvent(QResizeEvent *event);
 
+protected slots:
+    void currentChanged(const QModelIndex & current, const QModelIndex & previous);
+    void selectionChanged(const QItemSelection & selected, const QItemSelection & deselected);
+
 private:
     QSignalMapper *m_signalMapperBibTeXFields;
+    KBibTeX::IO::Element* m_current;
+    QList<KBibTeX::IO::Element*> m_selection;
 
 private slots:
     void headerActionToggled(QObject *action);

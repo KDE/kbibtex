@@ -54,6 +54,8 @@ public:
     virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
+    KBibTeX::IO::Element* element(int row) const;
+
 private:
     KBibTeX::IO::File *m_bibtexFile;
     KBibTeX::GUI::Config::BibTeXFields *m_bibtexFields;

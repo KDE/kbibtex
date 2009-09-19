@@ -18,6 +18,10 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
+#include <QBuffer>
+
+#include <fileexporterbibtex.h>
+
 #include "referencepreview.h"
 
 using namespace KBibTeX::Program;
@@ -44,4 +48,24 @@ void ReferencePreview::setEnabled(bool enabled)
     else
         QWebView::setHtml(notAvailableMessage, m_baseUrl);
     QWebView::setEnabled(enabled);
+}
+
+void ReferencePreview::setElement(const KBibTeX::IO::Element* element)
+{
+    KBibTeX::IO::FileExporterBibTeX *exporter = new KBibTeX::IO::FileExporterBibTeX();
+    QBuffer buffer(this);
+    buffer.open(QBuffer::WriteOnly);
+    exporter->save(&buffer, element);
+    buffer.close();
+    delete exporter;
+
+    buffer.open(QBuffer::ReadOnly);
+    QTextStream ts(&buffer);
+    QString text = ts.readAll();
+    buffer.close();
+
+    text.prepend("<html><body><h1>Source</h1><pre>");
+    text.append("</pre></body></html>");
+
+    setHtml(text);
 }

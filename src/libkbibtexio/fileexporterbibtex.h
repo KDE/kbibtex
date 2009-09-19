@@ -20,6 +20,8 @@
 #ifndef BIBTEXFILEEXPORTERBIBTEX_H
 #define BIBTEXFILEEXPORTERBIBTEX_H
 
+#include <QTextStream>
+
 #include <element.h>
 #include <field.h>
 #include <fileexporter.h>

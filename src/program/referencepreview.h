@@ -23,6 +23,8 @@
 
 #include <QWebView>
 
+#include <element.h>
+
 namespace KBibTeX
 {
 namespace Program {
@@ -35,6 +37,9 @@ public:
 
     void setHtml(const QString & html, const QUrl & baseUrl = QUrl());
     void setEnabled(bool);
+
+public slots:
+    void setElement(const KBibTeX::IO::Element*);
 
 private:
     QString m_htmlText;

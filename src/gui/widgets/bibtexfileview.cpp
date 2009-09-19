@@ -24,6 +24,7 @@
 #include <KDebug>
 
 #include <bibtexfields.h>
+#include "bibtexfilemodel.h"
 #include "bibtexfileview.h"
 
 using namespace KBibTeX::GUI::Widgets;
@@ -31,6 +32,9 @@ using namespace KBibTeX::GUI::Widgets;
 BibTeXFileView::BibTeXFileView(QWidget * parent)
         : QTreeView(parent), m_signalMapperBibTeXFields(new QSignalMapper(this))
 {
+    setSelectionMode(QAbstractItemView::ExtendedSelection);
+    setSelectionBehavior(QAbstractItemView::SelectRows);
+
     header()->setContextMenuPolicy(Qt::ActionsContextMenu);
     KBibTeX::GUI::Config::BibTeXFields *bibtexFields = KBibTeX::GUI::Config::BibTeXFields::self();
 
@@ -69,6 +73,11 @@ BibTeXFileView::~BibTeXFileView()
     bibtexFields->save();
 }
 
+const QList<KBibTeX::IO::Element*>& BibTeXFileView::selectedElements() const
+{
+    return m_selection;
+}
+
 void BibTeXFileView::resizeEvent(QResizeEvent */*event*/)
 {
     KBibTeX::GUI::Config::BibTeXFields *bibtexFields = KBibTeX::GUI::Config::BibTeXFields::self();
@@ -81,6 +90,35 @@ void BibTeXFileView::resizeEvent(QResizeEvent */*event*/)
         setColumnWidth(col, (*it).width * widgetWidth / sum);
         setColumnHidden(col, !((*it).visible));
     }
+}
+
+void BibTeXFileView::currentChanged(const QModelIndex & current, const QModelIndex & previous)
+{
+    QTreeView::currentChanged(current, previous);
+
+    BibTeXFileModel *bibTeXFileModel = dynamic_cast<BibTeXFileModel*>(model());
+    m_current = bibTeXFileModel->element(current.row());
+
+    emit currentElementChanged(m_current);
+}
+
+void BibTeXFileView::selectionChanged(const QItemSelection & selected, const QItemSelection & deselected)
+{
+    QTreeView::selectionChanged(selected, deselected);
+
+    BibTeXFileModel *bibTeXFileModel = dynamic_cast<BibTeXFileModel*>(model());
+
+    QModelIndexList set = selected.indexes();
+    for (QModelIndexList::Iterator it = set.begin(); it != set.end(); ++it) {
+        m_selection.append(bibTeXFileModel->element(it->row()));
+    }
+
+    set = deselected.indexes();
+    for (QModelIndexList::Iterator it = set.begin(); it != set.end(); ++it) {
+        m_selection.removeOne(bibTeXFileModel->element(it->row()));
+    }
+
+    emit selectedElementsChanged();
 }
 
 void BibTeXFileView::headerActionToggled(QObject *obj)

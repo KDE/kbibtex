@@ -25,7 +25,7 @@
 
 #include <KUrl>
 
-#include <bibtexeditorinterface.h>
+#include <bibtexeditor.h>
 
 namespace KBibTeX
 {
@@ -42,10 +42,10 @@ public:
     bool closeUrl(const KUrl &url);
 
     KUrl currentUrl() const;
-    KBibTeX::GUI::BibTeXEditorInterface *editor();
+    KBibTeX::GUI::BibTeXEditor *editor();
 
 signals:
-    void documentSwitch();
+    void documentSwitch(KBibTeX::GUI::BibTeXEditor *, KBibTeX::GUI::BibTeXEditor *);
 
 private:
     class MDIWidgetPrivate;

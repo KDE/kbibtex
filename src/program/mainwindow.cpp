@@ -73,7 +73,7 @@ KBibTeXMainWindow::KBibTeXMainWindow(KBibTeXProgram *program)
 
     m_mdiWidget = new MDIWidget(this);
     setCentralWidget(m_mdiWidget);
-    connect(m_mdiWidget, SIGNAL(documentSwitch()), this, SLOT(documentSwitched()));
+    connect(m_mdiWidget, SIGNAL(documentSwitch(KBibTeX::GUI::BibTeXEditor *, KBibTeX::GUI::BibTeXEditor *)), this, SLOT(documentSwitched(KBibTeX::GUI::BibTeXEditor *, KBibTeX::GUI::BibTeXEditor *)));
 
     actionCollection()->addAction(KStandardAction::Open, this, SLOT(openDocumentDialog()));
     m_actionClose = actionCollection()->addAction(KStandardAction::Close, this, SLOT(closeDocument()));
@@ -124,7 +124,7 @@ void KBibTeXMainWindow::closeDocument()
     }
 }
 
-void KBibTeXMainWindow::documentSwitched()
+void KBibTeXMainWindow::documentSwitched(KBibTeX::GUI::BibTeXEditor *newEditor, KBibTeX::GUI::BibTeXEditor *oldEditor)
 {
     KUrl url = m_mdiWidget->currentUrl();
     m_actionClose->setEnabled(url.isValid());
@@ -134,7 +134,11 @@ void KBibTeXMainWindow::documentSwitched()
     if (url.isValid())
         m_listDocumentList->highlightUrl(url);
 
-    m_referencePreview->setEnabled(m_mdiWidget->editor() != NULL);
+    m_referencePreview->setEnabled(newEditor != NULL);
+    if (oldEditor != NULL)
+        disconnect(oldEditor, SIGNAL(currentElementChanged(const KBibTeX::IO::Element*)), m_referencePreview, SLOT(setElement(const KBibTeX::IO::Element*)));
+    if (newEditor != NULL)
+        connect(newEditor, SIGNAL(currentElementChanged(const KBibTeX::IO::Element*)), m_referencePreview, SLOT(setElement(const KBibTeX::IO::Element*)));
 }
 
 void KBibTeXMainWindow::openDocument(const KUrl& url, const QString& encoding)

@@ -157,7 +157,7 @@ bool MDIWidget::setUrl(const KUrl &url, const QString &encoding)
     if (!addingSucceeded)
         return false;
 
-    if (!oldUrl.equals(url)) emit documentSwitch();
+    if (!oldUrl.equals(url)) emit documentSwitch(editor(), oldUrl.isValid() ? dynamic_cast<KBibTeX::GUI::BibTeXEditor*>(triple.container) : NULL);
 
     return true;
 }
@@ -165,9 +165,11 @@ bool MDIWidget::setUrl(const KUrl &url, const QString &encoding)
 
 bool MDIWidget::closeUrl(const KUrl &url)
 {
+    KBibTeX::GUI::BibTeXEditor *prevEditor = editor();
+
     bool wasClosing = d->removeUrl(url);
 
-    if (wasClosing) emit documentSwitch();
+    if (wasClosing) emit documentSwitch(NULL, prevEditor);
 
     return true;
 }
@@ -181,11 +183,11 @@ KUrl MDIWidget::currentUrl() const
     return KUrl();
 }
 
-KBibTeX::GUI::BibTeXEditorInterface *MDIWidget::editor()
+KBibTeX::GUI::BibTeXEditor *MDIWidget::editor()
 {
     struct MDIWidgetPrivate::Triple triple;
     if (d->getTriple(currentWidget(), triple)) {
-        return dynamic_cast<KBibTeX::GUI::BibTeXEditorInterface*>(triple.container);
+        return dynamic_cast<KBibTeX::GUI::BibTeXEditor*>(triple.container);
     }
 
     return NULL;

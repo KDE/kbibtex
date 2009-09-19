@@ -3,6 +3,8 @@ project( kbibtexprogram )
 include_directories(
 	${CMAKE_CURRENT_SOURCE_DIR}
 	${CMAKE_CURRENT_SOURCE_DIR}/../gui
+	${CMAKE_CURRENT_SOURCE_DIR}/../gui/widgets
+	${CMAKE_CURRENT_SOURCE_DIR}/../libkbibtexio
 )
 
 set( kbibtex_SRCS
@@ -24,6 +26,7 @@ target_link_libraries( kbibtex
   ${KDE4_KIO_LIBS}
   ${KDE4_KPARTS_LIBS}
   kbibtexio
+  kbibtexgui
 )
 
 install( TARGETS kbibtex  ${INSTALL_TARGETS_DEFAULT_ARGS} )
