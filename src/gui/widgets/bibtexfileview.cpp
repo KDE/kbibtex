@@ -46,6 +46,14 @@ BibTeXFileView::BibTeXFileView(QWidget * parent)
         header()->addAction(action);
     }
     connect(m_signalMapperBibTeXFields, SIGNAL(mapped(QObject*)), this, SLOT(headerActionToggled(QObject*)));
+
+    KAction *action = new KAction(header());
+    action->setSeparator(true);
+    header()->addAction(action);
+
+    action = new KAction("Reset to defaults", header());
+    connect(action, SIGNAL(triggered()), this, SLOT(headerResetToDefaults()));
+    header()->addAction(action);
 }
 
 BibTeXFileView::~BibTeXFileView()
@@ -89,5 +97,11 @@ void BibTeXFileView::headerActionToggled(QObject *obj)
     if (fd.width < 4) fd.width = width() / 10;
     bibtexFields->replace(col, fd);
 
+    resizeEvent(NULL);
+}
+
+void BibTeXFileView::headerResetToDefaults()
+{
+    KBibTeX::GUI::Config::BibTeXFields::self()->resetToDefaults();
     resizeEvent(NULL);
 }

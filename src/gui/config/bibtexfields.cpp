@@ -27,6 +27,7 @@
 using namespace KBibTeX::GUI::Config;
 
 BibTeXFields *BibTeXFields::m_self = NULL;
+const int maxColumns = 256;
 
 BibTeXFields::BibTeXFields()
 {
@@ -49,7 +50,7 @@ BibTeXFields* BibTeXFields::self()
 
 void BibTeXFields::load()
 {
-    const int maxColumns = 256;
+    unsigned int sumWidth = 5;
     FieldDescription fd;
 
     clear();
@@ -58,12 +59,13 @@ void BibTeXFields::load()
         KConfigGroup usercg(m_userConfig, groupName);
         KConfigGroup systemcg(m_systemDefaultsConfig, groupName);
         fd.raw = systemcg.readEntry("Raw", "");
-        if (fd.raw.isEmpty()) break;
+        if (fd.raw.isEmpty()) continue;
         fd.rawAlt = systemcg.readEntry("RawAlt", "");
         if (fd.rawAlt.isEmpty()) fd.rawAlt = QString::null;
         fd.label = systemcg.readEntry("Label", fd.raw);
-        fd.defaultWidth = systemcg.readEntry("DefaultWidth", 4);
+        fd.defaultWidth = systemcg.readEntry("DefaultWidth", sumWidth / col);
         fd.width = usercg.readEntry("Width", fd.defaultWidth);
+        sumWidth += fd.width;
         fd.visible = systemcg.readEntry("Visible", true);
         fd.visible = usercg.readEntry("Visible", fd.visible);
         append(fd);
@@ -83,3 +85,15 @@ void BibTeXFields::save()
 
     m_userConfig->sync();
 }
+
+void BibTeXFields::resetToDefaults()
+{
+    for (int col = 1; col < maxColumns; ++col) {
+        QString groupName = QString("Column%1").arg(col);
+        KConfigGroup usercg(m_userConfig, groupName);
+        usercg.deleteGroup();
+    }
+
+    load();
+}
+

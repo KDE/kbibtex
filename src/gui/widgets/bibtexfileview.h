@@ -49,8 +49,8 @@ private:
 
 private slots:
     void headerActionToggled(QObject *action);
+    void headerResetToDefaults();
 };
-
 
 }
 }

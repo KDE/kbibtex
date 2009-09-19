@@ -283,7 +283,7 @@ bool Value::containsPattern(const QString &pattern, Qt::CaseSensitivity caseSens
     return result;
 }
 
-QRegExp PlainTextValue::removeCurlyBrackets = QRegExp("([^\\\\])[{}]");
+QRegExp PlainTextValue::removeCurlyBrackets = QRegExp("(^|[^\\\\])[{}]");
 
 QString PlainTextValue::text(const Value& value, const File* file)
 {

@@ -53,6 +53,7 @@ public:
     static BibTeXFields *self();
     void load();
     void save();
+    void resetToDefaults();
 
 protected:
     BibTeXFields();

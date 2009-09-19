@@ -12,87 +12,94 @@ DefaultWidth=6
 Raw=title
 Label=Title
 DefaultWidth=14
+Visible=false
 
 [Column4]
-Raw=author
-RawAlt=editor
-Label=Author/Editor
-DefaultWidth=7
+Raw=title
+RawAlt=booktitle
+Label=Title or Book Title
+DefaultWidth=14
 
 [Column5]
+Raw=author
+RawAlt=editor
+Label=Author or Editor
+DefaultWidth=7
+
+[Column6]
 Raw=author
 Label=Author
 DefaultWidth=7
 Visible=false
 
-[Column6]
+[Column7]
 Raw=editor
 Label=Editor
 DefaultWidth=7
 Visible=false
 
-[Column7]
+[Column8]
 Raw=month
 Label=Month
-DefaultWidth=4
+DefaultWidth=3
 Visible=false
-
-[Column8]
-Raw=year
-Label=Year
-DefaultWidth=4
 
 [Column9]
-Raw=journal
-Label=Journal
+Raw=year
+Label=Year
 DefaultWidth=1
-Visible=false
 
 [Column10]
+Raw=journal
+Label=Journal
+DefaultWidth=4
+Visible=false
+
+[Column11]
 Raw=volume
 Label=Volume
 DefaultWidth=1
 Visible=false
 
-[Column11]
+[Column12]
 Raw=number
 Label=Number
 DefaultWidth=1
 Visible=false
 
-[Column12]
+[Column13]
 Raw=issn
 Label=ISSN
-DefaultWidth=5
-Visible=false
-
-[Column13]
-Raw=isbn
-Label=ISBN
-DefaultWidth=5
+DefaultWidth=2
 Visible=false
 
 [Column14]
 Raw=isbn
-RawAlt=issn
-Label=ISBN/ISSN
-DefaultWidth=5
+Label=ISBN
+DefaultWidth=2
 Visible=false
 
 [Column15]
-Raw=howpublished
-Label=How Published
-DefaultWidth=7
+Raw=isbn
+RawAlt=issn
+Label=ISBN or ISSN
+DefaultWidth=2
 Visible=false
 
 [Column16]
+Raw=howpublished
+Label=How Published
+DefaultWidth=5
+Visible=false
+
+[Column17]
 Raw=note
 Label=Note
 DefaultWidth=5
 Visible=false
 
-[Column16]
+[Column18]
 Raw=abstract
 Label=Abstract
-DefaultWidth=9
+DefaultWidth=7
 Visible=false
