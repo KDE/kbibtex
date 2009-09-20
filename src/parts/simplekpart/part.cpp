@@ -48,6 +48,8 @@ KBibTeXPart::KBibTeXPart(QWidget *parentWidget, QObject *parent, bool browserVie
     m_widget = new KBibTeX::GUI::BibTeXEditor(parentWidget);
     setWidget(m_widget);
 
+    connect(m_widget, SIGNAL(elementExecuted(const KBibTeX::IO::Element*)), m_widget, SLOT(viewElement(const KBibTeX::IO::Element*)));
+
     setupActions(browserViewWanted);
 
     if (browserViewWanted)

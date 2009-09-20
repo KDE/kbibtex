@@ -4,6 +4,7 @@ include( CheckIncludeFiles )
 
 include_directories(
 	${CMAKE_CURRENT_SOURCE_DIR}
+	${CMAKE_CURRENT_SOURCE_DIR}/dialogs
 	${CMAKE_CURRENT_SOURCE_DIR}/widgets
 	${CMAKE_CURRENT_SOURCE_DIR}/config
 	${CMAKE_CURRENT_SOURCE_DIR}/../libkbibtexio/
@@ -14,6 +15,8 @@ set( kbibtexgui_LIB_SRCS
 	widgets/bibtexfilemodel.cpp
 	widgets/fieldeditor.cpp
 	config/bibtexfields.cpp
+	dialogs/entryviewer.cpp
+	dialogs/entryeditor.cpp
 	bibtexeditor.cpp
 )
 
