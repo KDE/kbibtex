@@ -26,6 +26,8 @@
 #include <kbibtexgui_export.h>
 
 #include <bibtexfileview.h>
+#include <element.h>
+
 
 namespace KBibTeX
 {
@@ -36,8 +38,30 @@ namespace GUI {
 */
 class KBIBTEXGUI_EXPORT BibTeXEditor : public KBibTeX::GUI::Widgets::BibTeXFileView
 {
+    Q_OBJECT
 public:
     BibTeXEditor(QWidget *parent);
+
+    const QList<KBibTeX::IO::Element*>& selectedElements() const;
+    const KBibTeX::IO::Element* currentElement() const;
+
+signals:
+    void selectedElementsChanged();
+    void currentElementChanged(const KBibTeX::IO::Element*);
+    void elementExecuted(const KBibTeX::IO::Element*);
+
+public slots:
+    void viewCurrentElement();
+    void viewElement(const KBibTeX::IO::Element*);
+
+protected slots:
+    void currentChanged(const QModelIndex & current, const QModelIndex & previous);
+    void selectionChanged(const QItemSelection & selected, const QItemSelection & deselected);
+    void itemActivated(const QModelIndex & index);
+
+private:
+    KBibTeX::IO::Element* m_current;
+    QList<KBibTeX::IO::Element*> m_selection;
 };
 
 }
