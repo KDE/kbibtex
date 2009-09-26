@@ -129,10 +129,11 @@ QString Entry::id() const
     return m_id;
 }
 
+/*
 bool Entry::containsPattern(const QString & pattern, Field::FieldType fieldType, Element::FilterType filterType, Qt::CaseSensitivity caseSensitive) const
 {
     if (filterType == ftExact) {
-        /** check for exact match */
+        ** check for exact match *
         bool result = fieldType == Field::ftUnknown && m_id.contains(pattern, caseSensitive);
 
         for (Fields::ConstIterator it = m_fields.begin(); !result && it != m_fields.end(); it++)
@@ -141,14 +142,14 @@ bool Entry::containsPattern(const QString & pattern, Field::FieldType fieldType,
 
         return result;
     } else {
-        /** for each word in the search pattern ... */
+        ** for each word in the search pattern ... *
         QStringList words = pattern.split(QRegExp("\\s+"), QString::SkipEmptyParts);
         bool *hits = new bool[words.count()];
         int i = 0;
         for (QStringList::ConstIterator wit = words.begin(); wit != words.end(); ++wit, ++i) {
             hits[i] = fieldType == Field::ftUnknown && m_id.contains(*wit, caseSensitive);
 
-            /** check if word is contained in any field */
+            ** check if word is contained in any field *
             for (Fields::ConstIterator fit = m_fields.begin(); fit != m_fields.end(); ++fit)
                 if (fieldType == Field::ftUnknown || (*fit) ->fieldType() == fieldType)
                     hits[i] |= (*fit) ->value().containsPattern(*wit, caseSensitive);
@@ -159,10 +160,11 @@ bool Entry::containsPattern(const QString & pattern, Field::FieldType fieldType,
             if (hits[i]) ++hitCount;
         delete[] hits;
 
-        /** return success depending on filter type and number of hits */
+        ** return success depending on filter type and number of hits *
         return ((filterType == ftAnyWord && hitCount > 0) || (filterType == ftEveryWord && hitCount == words.count()));
     }
 }
+*/
 
 QStringList Entry::urls() const
 {
@@ -210,43 +212,21 @@ bool Entry::addField(Field * field)
     return TRUE;
 }
 
-Field* Entry::getField(const Field::FieldType fieldType) const
+Field* Entry::getField(const QString & fieldType) const
 {
     Field * result = NULL;
 
     for (Fields::ConstIterator it = m_fields.begin(); (it != m_fields.end()) && (result == NULL); it++)
-        if ((*it) ->fieldType() == fieldType) result = *it;
-
-    return result;
-}
-
-Field* Entry::getField(const QString & fieldName) const
-{
-    Field * result = NULL;
-
-    for (Fields::ConstIterator it = m_fields.begin(); (it != m_fields.end()) && (result == NULL); it++)
-        if ((*it) ->fieldTypeName().toLower() == fieldName.toLower())
+        if ((*it) ->fieldType().toLower() == fieldType.toLower())
             result = *it;
 
     return result;
 }
 
-bool Entry::deleteField(const QString & fieldName)
+bool Entry::deleteField(const QString & fieldType)
 {
     for (Fields::Iterator it = m_fields.begin(); it != m_fields.end(); it++)
-        if ((*it) ->fieldTypeName().toLower() == fieldName.toLower()) {
-            delete(*it);
-            m_fields.erase(it);
-            return TRUE;
-        }
-
-    return FALSE;
-}
-
-bool Entry::deleteField(const Field::FieldType fieldType)
-{
-    for (Fields::Iterator it = m_fields.begin(); it != m_fields.end(); it++)
-        if ((*it) ->fieldType() == fieldType) {
+        if ((*it) ->fieldType().toLower() == fieldType.toLower()) {
             delete(*it);
             m_fields.erase(it);
             return TRUE;
@@ -293,15 +273,14 @@ void Entry::merge(Entry *other, MergeSemantics mergeSemantics)
 {
     for (Fields::ConstIterator it = other->m_fields.begin(); it != other->m_fields.end(); it++) {
         Field *otherField = new Field(**it);
-        Field::FieldType otherFieldType = otherField->fieldType();
-        QString otherFieldTypeName = otherField->fieldTypeName();
-        Field *thisField = otherFieldType != Field::ftUnknown ? getField(otherFieldType) : getField(otherFieldTypeName);
+        QString otherFieldType = otherField->fieldType();
+        Field *thisField = getField(otherFieldType);
 
         if (thisField == NULL) {
             m_fields.append(otherField);
         } else if (mergeSemantics == msForceAdding) {
-            otherFieldTypeName.prepend("OPT");
-            otherField->setFieldType(Field::ftUnknown, otherFieldTypeName);
+            otherFieldType.prepend("OPT");
+            otherField->setFieldType(otherFieldType);
             m_fields.append(otherField);
         }
     }
@@ -382,303 +361,8 @@ Entry::EntryType Entry::entryTypeFromString(const QString & entryTypeString)
         return etUnknown;
 }
 
-Entry::FieldRequireStatus Entry::getRequireStatus(Entry::EntryType entryType, Field::FieldType fieldType)
+Entry::FieldRequireStatus Entry::getRequireStatus(Entry::EntryType /*entryType*/, const QString& /*fieldType*/)
 {
-    switch (entryType) {
-    case etArticle:
-        switch (fieldType) {
-        case Field::ftAuthor:
-        case Field::ftTitle:
-        case Field::ftJournal:
-        case Field::ftYear:
-            return Entry::frsRequired;
-        case Field::ftVolume:
-        case Field::ftMonth:
-        case Field::ftDoi:
-        case Field::ftNumber:
-        case Field::ftPages:
-        case Field::ftNote:
-        case Field::ftKey:
-        case Field::ftISSN:
-        case Field::ftURL:
-        case Field::ftLocalFile:
-            return Entry::frsOptional;
-        default:
-            return Entry::frsIgnored;
-        }
-    case etBook:
-        switch (fieldType) {
-        case Field::ftAuthor:
-        case Field::ftEditor:
-        case Field::ftTitle:
-        case Field::ftPublisher:
-        case Field::ftYear:
-            return Entry::frsRequired;
-        case Field::ftVolume:
-        case Field::ftSeries:
-        case Field::ftAddress:
-        case Field::ftDoi:
-        case Field::ftEdition:
-        case Field::ftMonth:
-        case Field::ftNote:
-        case Field::ftKey:
-        case Field::ftISBN:
-        case Field::ftURL:
-        case Field::ftLocalFile:
-            return Entry::frsOptional;
-        default:
-            return Entry::frsIgnored;
-        }
-    case etBooklet:
-        switch (fieldType) {
-        case Field::ftTitle:
-            return Entry::frsRequired;
-        case Field::ftAuthor:
-        case Field::ftHowPublished:
-        case Field::ftAddress:
-        case Field::ftDoi:
-        case Field::ftMonth:
-        case Field::ftYear:
-        case Field::ftNote:
-        case Field::ftKey:
-        case Field::ftISBN:
-        case Field::ftURL:
-        case Field::ftLocalFile:
-            return Entry::frsOptional;
-        default:
-            return Entry::frsIgnored;
-        }
-    case etElectronic:
-        switch (fieldType) {
-        case Field::ftTitle:
-        case Field::ftURL:
-            return Entry::frsRequired;
-        case Field::ftAuthor:
-        case Field::ftHowPublished:
-        case Field::ftDoi:
-        case Field::ftMonth:
-        case Field::ftYear:
-        case Field::ftKey:
-        case Field::ftLocalFile:
-            return Entry::frsOptional;
-        default:
-            return Entry::frsIgnored;
-        }
-    case etInBook:
-        switch (fieldType) {
-        case Field::ftAuthor:
-        case Field::ftEditor:
-        case Field::ftTitle:
-        case Field::ftPages:
-        case Field::ftChapter:
-        case Field::ftPublisher:
-        case Field::ftYear:
-            return Entry::frsRequired;
-        case Field::ftVolume:
-        case Field::ftSeries:
-        case Field::ftAddress:
-        case Field::ftDoi:
-        case Field::ftEdition:
-        case Field::ftMonth:
-        case Field::ftNote:
-        case Field::ftCrossRef:
-        case Field::ftKey:
-        case Field::ftISBN:
-        case Field::ftURL:
-        case Field::ftLocalFile:
-            return Entry::frsOptional;
-        default:
-            return Entry::frsIgnored;
-        }
-    case etInCollection:
-        switch (fieldType) {
-        case Field::ftAuthor:
-        case Field::ftTitle:
-        case Field::ftBookTitle:
-        case Field::ftPublisher:
-        case Field::ftYear:
-            return Entry::frsRequired;
-        case Field::ftEditor:
-        case Field::ftPages:
-        case Field::ftOrganization:
-        case Field::ftAddress:
-        case Field::ftMonth:
-        case Field::ftLocation:
-        case Field::ftNote:
-        case Field::ftCrossRef:
-        case Field::ftDoi:
-        case Field::ftKey:
-        case Field::ftType:
-        case Field::ftISBN:
-        case Field::ftURL:
-        case Field::ftLocalFile:
-            return Entry::frsOptional;
-        default:
-            return Entry::frsIgnored;
-        }
-    case etInProceedings:
-        switch (fieldType) {
-        case Field::ftAuthor:
-        case Field::ftTitle:
-        case Field::ftYear:
-        case Field::ftBookTitle:
-            return Entry::frsRequired;
-        case Field::ftPages:
-        case Field::ftEditor:
-        case Field::ftVolume:
-        case Field::ftNumber:
-        case Field::ftSeries:
-        case Field::ftType:
-        case Field::ftChapter:
-        case Field::ftAddress:
-        case Field::ftDoi:
-        case Field::ftEdition:
-        case Field::ftLocation:
-        case Field::ftMonth:
-        case Field::ftNote:
-        case Field::ftCrossRef:
-        case Field::ftPublisher:
-        case Field::ftISBN:
-        case Field::ftURL:
-        case Field::ftLocalFile:
-            return Entry::frsOptional;
-        default:
-            return Entry::frsIgnored;
-        }
-    case etManual:
-        switch (fieldType) {
-        case Field::ftTitle:
-            return Entry::frsRequired;
-        case Field::ftAuthor:
-        case Field::ftOrganization:
-        case Field::ftAddress:
-        case Field::ftDoi:
-        case Field::ftEdition:
-        case Field::ftMonth:
-        case Field::ftYear:
-        case Field::ftNote:
-        case Field::ftISBN:
-        case Field::ftURL:
-        case Field::ftLocalFile:
-            return Entry::frsOptional;
-        default:
-            return Entry::frsIgnored;
-        }
-    case etMastersThesis:
-        switch (fieldType) {
-        case Field::ftAuthor:
-        case Field::ftTitle:
-        case Field::ftSchool:
-        case Field::ftYear:
-            return Entry::frsRequired;
-        case Field::ftAddress:
-        case Field::ftMonth:
-        case Field::ftDoi:
-        case Field::ftNote:
-        case Field::ftKey:
-        case Field::ftURL:
-        case Field::ftLocalFile:
-            return Entry::frsOptional;
-        default:
-            return Entry::frsIgnored;
-        }
-    case etMisc:
-        switch (fieldType) {
-        case Field::ftAuthor:
-        case Field::ftTitle:
-        case Field::ftHowPublished:
-        case Field::ftMonth:
-        case Field::ftYear:
-        case Field::ftDoi:
-        case Field::ftNote:
-        case Field::ftKey:
-        case Field::ftURL:
-        case Field::ftLocalFile:
-            return Entry::frsOptional;
-        default:
-            return Entry::frsIgnored;
-        }
-    case etPhDThesis:
-        switch (fieldType) {
-        case Field::ftAuthor:
-        case Field::ftTitle:
-        case Field::ftSchool:
-        case Field::ftYear:
-            return Entry::frsRequired;
-        case Field::ftAddress:
-        case Field::ftMonth:
-        case Field::ftNote:
-        case Field::ftDoi:
-        case Field::ftKey:
-        case Field::ftISBN:
-        case Field::ftURL:
-        case Field::ftLocalFile:
-            return Entry::frsOptional;
-        default:
-            return Entry::frsIgnored;
-        }
-    case etCollection:
-    case etProceedings:
-        switch (fieldType) {
-        case Field::ftTitle:
-        case Field::ftYear:
-            return Entry::frsRequired;
-        case Field::ftEditor:
-        case Field::ftPublisher:
-        case Field::ftOrganization:
-        case Field::ftAddress:
-        case Field::ftMonth:
-        case Field::ftLocation:
-        case Field::ftNote:
-        case Field::ftDoi:
-        case Field::ftKey:
-        case Field::ftSeries:
-        case Field::ftBookTitle:
-        case Field::ftISBN:
-        case Field::ftURL:
-        case Field::ftLocalFile:
-            return Entry::frsOptional;
-        default:
-            return Entry::frsIgnored;
-        }
-    case etTechReport:
-        switch (fieldType) {
-        case Field::ftAuthor:
-        case Field::ftTitle:
-        case Field::ftInstitution:
-        case Field::ftYear:
-            return Entry::frsRequired;
-        case Field::ftType:
-        case Field::ftDoi:
-        case Field::ftNumber:
-        case Field::ftAddress:
-        case Field::ftMonth:
-        case Field::ftNote:
-        case Field::ftKey:
-        case Field::ftURL:
-        case Field::ftLocalFile:
-        case Field::ftISSN:
-            return Entry::frsOptional;
-        default:
-            return Entry::frsIgnored;
-        }
-    case etUnpublished:
-        switch (fieldType) {
-        case Field::ftAuthor:
-        case Field::ftTitle:
-        case Field::ftNote:
-            return Entry::frsRequired;
-        case Field::ftMonth:
-        case Field::ftYear:
-        case Field::ftDoi:
-        case Field::ftKey:
-        case Field::ftURL:
-        case Field::ftLocalFile:
-            return Entry::frsOptional;
-        default:
-            return Entry::frsIgnored;
-        }
-    default:
-        return Entry::frsOptional;
-    }
+// FIXME: This should be configured in an external file
+    return Entry::frsIgnored; // dummy return
 }
