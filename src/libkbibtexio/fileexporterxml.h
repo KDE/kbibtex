@@ -46,7 +46,7 @@ public:
     bool save(QIODevice* iodevice, const File* bibtexfile, QStringList *errorLog = NULL);
     bool save(QIODevice* iodevice, const Element* element, QStringList *errorLog = NULL);
 
-    static QString valueToXML(const Value& value, const Field::FieldType fieldType = Field::ftUnknown);
+    static QString valueToXML(const Value& value, const QString& fieldType = QString::null);
 
 public slots:
     void cancel();

@@ -524,23 +524,15 @@ QString EncoderLaTeX::encode(const QString &text, const QChar &replace)
     return result;
 }
 
-QString EncoderLaTeX::encodeSpecialized(const QString & text, const Field::FieldType fieldType)
+QString EncoderLaTeX::encodeSpecialized(const QString & text, const QString& fieldType)
 
 {
     QString result = encode(text);
 
-    switch (fieldType) {
-    case Field::ftPages:
+    if (fieldType.toLower() == "pages")
         result.replace(QChar(0x2013), "--");
-        break;
-
-    case Field::ftURL:
+    else if (fieldType.toLower() == "url") // FIXME There should be some "verbatim" flag instead
         result.replace("\\_", "_").replace(QChar(0x2013), "--").replace("\\#", "#");
-        break;
-
-    default:
-        break;
-    }
 
     return result;
 }

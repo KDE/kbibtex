@@ -31,6 +31,7 @@ kde4_add_library( kbibtexio SHARED ${kbibtexio_LIB_SRCS} )
 
 target_link_libraries( kbibtexio
 	${QT_QTCORE_LIBRARY}
+	${KDE4_KDECORE_LIBS}
 )
 
 install(TARGETS kbibtexio DESTINATION ${LIB_INSTALL_DIR})

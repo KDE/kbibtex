@@ -52,13 +52,13 @@ public:
     bool save(QIODevice* iodevice, const File* bibtexfile, QStringList *errorLog = NULL);
     bool save(QIODevice* iodevice, const Element* element, QStringList *errorLog = NULL);
 
-    static QString valueToBibTeX(const Value& value, const Field::FieldType fieldType = Field::ftUnknown);
+    static QString valueToBibTeX(const Value& value, const QString& fieldType = QString::null);
 
 public slots:
     void cancel();
 
 protected:
-    static  bool requiresPersonQuoting(const QString &text, bool isLastName);
+    static bool requiresPersonQuoting(const QString &text, bool isLastName);
     static void escapeLaTeXChars(QString &text);
 
 private:
@@ -78,6 +78,8 @@ private:
 
     QString applyKeywordCasing(const QString &keyword);
     void addProtectiveCasing(QString &text);
+
+    static bool flushAccumulatedText(QString &accumulatedText, QString &result, const QString& fieldType);
 };
 
 }

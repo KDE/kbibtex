@@ -21,182 +21,52 @@
 
 using namespace KBibTeX::IO;
 
-Field::Field(FieldType fieldType)
+// FIXME: Check if using those constants in the program is really necessary
+// or can be replace by config files
+const QLatin1String Field::ftAbstract = QLatin1String("abstract");
+const QLatin1String Field::ftAddress = QLatin1String("address");
+const QLatin1String Field::ftAuthor = QLatin1String("author");
+const QLatin1String Field::ftBookTitle = QLatin1String("booktitle");
+const QLatin1String Field::ftChapter = QLatin1String("chapter");
+const QLatin1String Field::ftCrossRef = QLatin1String("crossref");
+const QLatin1String Field::ftDOI = QLatin1String("doi");
+const QLatin1String Field::ftEditor = QLatin1String("editor");
+const QLatin1String Field::ftISSN = QLatin1String("issn");
+const QLatin1String Field::ftISBN = QLatin1String("isbn");
+const QLatin1String Field::ftJournal = QLatin1String("journal");
+const QLatin1String Field::ftKeywords = QLatin1String("Keywords");
+const QLatin1String Field::ftLocation = QLatin1String("location");
+const QLatin1String Field::ftMonth = QLatin1String("month");
+const QLatin1String Field::ftNote = QLatin1String("note");
+const QLatin1String Field::ftNumber = QLatin1String("number");
+const QLatin1String Field::ftPages = QLatin1String("pages");
+const QLatin1String Field::ftPublisher = QLatin1String("publisher");
+const QLatin1String Field::ftSeries = QLatin1String("series");
+const QLatin1String Field::ftTitle = QLatin1String("title");
+const QLatin1String Field::ftURL = QLatin1String("url");
+const QLatin1String Field::ftVolume = QLatin1String("volume");
+const QLatin1String Field::ftYear = QLatin1String("year");
+
+Field::Field(const QString& fieldType, const Value& value)
         : m_fieldType(fieldType)
 {
-    m_fieldTypeName = fieldTypeToString(m_fieldType);
-}
-
-Field::Field(const QString &fieldTypeName)
-        : m_fieldTypeName(fieldTypeName)
-{
-    m_fieldType = fieldTypeFromString(m_fieldTypeName);
+    setValue(value);
 }
 
 Field::Field(const Field &other)
-        : m_fieldType(other.m_fieldType), m_fieldTypeName(other.m_fieldTypeName), m_value(other.m_value)
+        : m_fieldType(other.m_fieldType), m_value(other.m_value)
 {
     // nothing
 }
 
-QString Field::fieldTypeName() const
-{
-    return m_fieldTypeName;
-}
-
-void Field::setFieldType(FieldType fieldType, const QString& fieldTypeName)
-{
-    m_fieldType = fieldType;
-    m_fieldTypeName = fieldTypeName;
-}
-
-Field::FieldType Field::fieldType() const
+QString Field::fieldType() const
 {
     return m_fieldType;
 }
 
-QString Field::fieldTypeToString(const FieldType fieldType)
+void Field::setFieldType(const QString& fieldType)
 {
-    switch (fieldType) {
-    case ftAbstract:
-        return QString("abstract");
-    case ftAddress:
-        return QString("address");
-    case ftAnnote:
-        return QString("annote");
-    case ftAuthor:
-        return QString("author");
-    case ftBookTitle:
-        return QString("booktitle");
-    case ftChapter:
-        return QString("chapter");
-    case ftCrossRef:
-        return QString("crossref");
-    case ftDoi:
-        return QString("doi");
-    case ftEdition:
-        return QString("edition");
-    case ftEditor:
-        return QString("editor");
-    case ftHowPublished:
-        return QString("howpublished");
-    case ftInstitution:
-        return QString("institution");
-    case ftISBN:
-        return QString("isbn");
-    case ftISSN:
-        return QString("issn");
-    case ftJournal:
-        return QString("journal");
-    case ftKey:
-        return QString("key");
-    case ftKeywords:
-        return QString("keywords");
-    case ftLocalFile:
-        return QString("localfile");
-    case ftLocation:
-        return QString("location");
-    case ftMonth:
-        return QString("month");
-    case ftNote:
-        return QString("note");
-    case ftNumber:
-        return QString("number");
-    case ftOrganization:
-        return QString("organization");
-    case ftPages:
-        return QString("pages");
-    case ftPublisher:
-        return QString("publisher");
-    case ftSeries:
-        return QString("series");
-    case ftSchool:
-        return QString("school");
-    case ftTitle:
-        return QString("title");
-    case ftType:
-        return QString("type");
-    case ftURL:
-        return QString("url");
-    case ftVolume:
-        return QString("volume");
-    case ftYear:
-        return QString("year");
-    default:
-        return QString("unknown");
-    }
-}
-
-Field::FieldType Field::fieldTypeFromString(const QString & fieldTypeString)
-{
-    QString fieldTypeStringLower = fieldTypeString.toLower();
-
-    if (fieldTypeStringLower == "abstract")
-        return ftAbstract;
-    else if (fieldTypeStringLower == "address")
-        return ftAddress;
-    else if (fieldTypeStringLower == "annote")
-        return ftAnnote;
-    else if (fieldTypeStringLower == "author")
-        return ftAuthor;
-    else if (fieldTypeStringLower == "booktitle")
-        return ftBookTitle;
-    else if (fieldTypeStringLower == "chapter")
-        return ftChapter;
-    else if (fieldTypeStringLower == "crossref")
-        return ftCrossRef;
-    else if (fieldTypeStringLower == "doi")
-        return ftDoi;
-    else if (fieldTypeStringLower == "edition")
-        return ftEdition;
-    else if (fieldTypeStringLower == "editor")
-        return ftEditor;
-    else if (fieldTypeStringLower == "howpublished")
-        return ftHowPublished;
-    else if (fieldTypeStringLower == "institution")
-        return ftInstitution;
-    else if (fieldTypeStringLower == "isbn")
-        return ftISBN;
-    else if (fieldTypeStringLower == "issn")
-        return ftISSN;
-    else if (fieldTypeStringLower == "journal")
-        return ftJournal;
-    else if (fieldTypeStringLower == "key")
-        return ftKey;
-    else if (fieldTypeStringLower == "keywords")
-        return ftKeywords;
-    else if (fieldTypeStringLower == "localfile")
-        return ftLocalFile;
-    else if (fieldTypeStringLower == "location")
-        return ftLocation;
-    else if (fieldTypeStringLower == "month")
-        return ftMonth;
-    else if (fieldTypeStringLower == "note")
-        return ftNote;
-    else if (fieldTypeStringLower == "number")
-        return ftNumber;
-    else if (fieldTypeStringLower == "organization")
-        return ftOrganization;
-    else if (fieldTypeStringLower == "pages")
-        return ftPages;
-    else if (fieldTypeStringLower == "publisher")
-        return ftPublisher;
-    else if (fieldTypeStringLower == "series")
-        return ftSeries;
-    else if (fieldTypeStringLower == "school")
-        return ftSchool;
-    else if (fieldTypeStringLower == "title")
-        return ftTitle;
-    else if (fieldTypeStringLower == "type")
-        return ftType;
-    else if (fieldTypeStringLower == "url")
-        return ftURL;
-    else if (fieldTypeStringLower == "volume")
-        return ftVolume;
-    else if (fieldTypeStringLower == "year")
-        return ftYear;
-    else
-        return ftUnknown;
+    m_fieldType = fieldType;
 }
 
 Value& Field::value()

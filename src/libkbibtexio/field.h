@@ -33,26 +33,42 @@ namespace IO {
 class KBIBTEXIO_EXPORT Field
 {
 public:
-    enum FieldType {ftAbstract, ftAddress, ftAnnote, ftAuthor, ftBookTitle, ftChapter, ftCrossRef, ftDoi, ftEdition, ftEditor, ftHowPublished, ftInstitution, ftISBN, ftISSN, ftJournal, ftKey, ftKeywords, ftLocalFile, ftLocation, ftMonth, ftNote, ftNumber, ftOrganization, ftPages, ftPublisher, ftSchool, ftSeries, ftTitle, ftType, ftURL, ftVolume, ftYear, ftUnknown = -1};
-
-    Field(FieldType fieldType);
-    Field(const QString& fieldTypeName);
+    Field(const QString& fieldType, const Value& value = Value());
     Field(const Field& other);
 
-    QString fieldTypeName() const;
-    FieldType fieldType() const;
-    void setFieldType(FieldType fieldType, const QString& fieldTypeName);
-
-    static QString fieldTypeToString(const FieldType fieldType);
-    static FieldType fieldTypeFromString(const QString &fieldTypeString);
+    QString fieldType() const;
+    void setFieldType(const QString& fieldTypeName);
 
     Value& value();
     const Value& value() const;
     void setValue(const Value& value);
 
+    static const QLatin1String ftAbstract;
+    static const QLatin1String ftAddress;
+    static const QLatin1String ftAuthor;
+    static const QLatin1String ftBookTitle;
+    static const QLatin1String ftChapter;
+    static const QLatin1String ftCrossRef;
+    static const QLatin1String ftDOI;
+    static const QLatin1String ftEditor;
+    static const QLatin1String ftISSN;
+    static const QLatin1String ftISBN;
+    static const QLatin1String ftJournal;
+    static const QLatin1String ftKeywords;
+    static const QLatin1String ftLocation;
+    static const QLatin1String ftMonth;
+    static const QLatin1String ftNote;
+    static const QLatin1String ftNumber;
+    static const QLatin1String ftPages;
+    static const QLatin1String ftPublisher;
+    static const QLatin1String ftSeries;
+    static const QLatin1String ftTitle;
+    static const QLatin1String ftURL;
+    static const QLatin1String ftVolume;
+    static const QLatin1String ftYear;
+
 private:
-    FieldType m_fieldType;
-    QString m_fieldTypeName;
+    QString m_fieldType;
     Value m_value;
 };
 

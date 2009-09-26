@@ -75,7 +75,7 @@ private:
     QString readQuotedString();
     QString readLine();
     QString readBracketString(const QChar openingBracket);
-    Token readValue(Value& value, Field::FieldType fieldType);
+    Token readValue(Value& value, const QString& fieldType);
 
     void unescapeLaTeXChars(QString &text);
     void splitPersonList(const QString& text, QStringList &resultList);

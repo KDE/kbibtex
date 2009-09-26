@@ -59,17 +59,15 @@ public:
     void setId(const QString& id);
     QString id() const;
 
-    bool containsPattern(const QString& pattern, Field::FieldType fieldType = Field::ftUnknown, Element::FilterType filterType = Element::ftExact, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const;
+    // bool containsPattern(const QString& pattern, Field::FieldType fieldType = Field::ftUnknown, Element::FilterType filterType = Element::ftExact, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const; // FIXME: Rewrite filtering code
     QStringList urls() const;
 
     bool addField(Field *field);
-    Field* getField(const Field::FieldType fieldType) const;
     Field* getField(const QString& fieldName) const;
-    bool deleteField(const Field::FieldType fieldType);
     bool deleteField(const QString &fieldName);
 
-    Fields::const_iterator begin() const;
-    Fields::const_iterator end() const;
+    Fields::ConstIterator begin() const;
+    Fields::ConstIterator end() const;
     int getFieldCount() const;
     void clearFields();
 
@@ -78,7 +76,7 @@ public:
 
     static QString entryTypeToString(const EntryType entryType);
     static EntryType entryTypeFromString(const QString &entryTypeString);
-    static Entry::FieldRequireStatus getRequireStatus(Entry::EntryType entryType, Field::FieldType fieldType);
+    static Entry::FieldRequireStatus getRequireStatus(Entry::EntryType entryType, const QString& fieldType);
 
 private:
     EntryType m_entryType;

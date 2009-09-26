@@ -112,23 +112,19 @@ bool FileExporterXML::writeEntry(QTextStream &stream, const Entry* entry)
     stream << " <entry id=\"" << EncoderXML::currentEncoderXML() ->encode(entry->id()) << "\" type=\"" << entry->entryTypeString().toLower() << "\">" << endl;
     for (Entry::Fields::ConstIterator it = entry->begin(); it != entry->end(); ++it) {
         Field *field = *it;
-        switch (field->fieldType()) {
-        case Field::ftAuthor:
-        case Field::ftEditor: {
-            QString tag = field->fieldTypeName().toLower();
+        QString tag = field->fieldType().toLower();
+        if (tag == Field::ftAuthor || tag == Field::ftEditor) {
             stream << "  <" << tag << "s>" << endl;
             stream << valueToXML(field->value(), field->fieldType()) << endl;
             stream << "  </" << tag << "s>" << endl;
-        }
-        break;
-        case Field::ftMonth: {
+        } else if (tag == Field::ftMonth) {
             stream << "  <month";
             bool ok = FALSE;
 
             int month = -1;
             QString tag = "";
             QString content = "";
-            for (QLinkedList<ValueItem*>::ConstIterator it = field->value().begin(); it != field->value().end(); ++it) {
+            for (QList<ValueItem*>::ConstIterator it = field->value().begin(); it != field->value().end(); ++it) {
                 MacroKey*  macro = dynamic_cast<MacroKey*>(*it);
                 if (macro != NULL)
                     for (int i = 0; i < 12; i++) {
@@ -154,13 +150,8 @@ bool FileExporterXML::writeEntry(QTextStream &stream, const Entry* entry)
                 stream << " month=\"" << month << "\"";
             stream << '>' << content;
             stream << "</month>" << endl;
-        }
-        break;
-        default: {
-            QString tag = field->fieldTypeName().toLower();
+        } else {
             stream << "  <" << tag << ">" << valueToXML(field->value()) << "</" << tag << ">" << endl;
-        }
-        break;
         }
 
     }
@@ -187,12 +178,12 @@ bool FileExporterXML::writeComment(QTextStream &stream, const Comment* comment)
     return true;
 }
 
-QString FileExporterXML::valueToXML(const Value& value, const Field::FieldType)
+QString FileExporterXML::valueToXML(const Value& value, const QString&)
 {
     QString result;
     bool isFirst = true;
 
-    for (QLinkedList<ValueItem*>::ConstIterator it = value.begin(); it != value.end(); ++it) {
+    for (QList<ValueItem*>::ConstIterator it = value.begin(); it != value.end(); ++it) {
         if (!isFirst)
             result.append(' ');
         isFirst = FALSE;
@@ -203,23 +194,21 @@ QString FileExporterXML::valueToXML(const Value& value, const Field::FieldType)
         if (plainText != NULL)
             result.append("<text>" + PlainTextValue::text(*item) + "</text>");
         else {
-            PersonContainer *personContainer = dynamic_cast<PersonContainer*>(item);
-            if (personContainer != NULL) {
-                for (PersonContainer::Iterator pit = personContainer->begin(); pit != personContainer->end(); ++pit) {
-                    result.append("<person>");
-                    Person *p = *pit;
-                    if (!p->prefix().isEmpty())
-                        result.append("<prefix>" + p->lastName() + "</prefix>");
-                    if (!p->firstName().isEmpty())
-                        result.append("<firstname>" + p->firstName() + "</firstname>");
-                    if (!p->lastName().isEmpty())
-                        result.append("<lastname>" + p->lastName() + "</lastname>");
-                    if (!p->suffix().isEmpty())
-                        result.append("<suffix>" + p->suffix() + "</suffix>");
-                }
+            Person *p = dynamic_cast<Person*>(item);
+            if (p != NULL) {
+                result.append("<person>");
+                if (!p->prefix().isEmpty())
+                    result.append("<prefix>" + p->lastName() + "</prefix>");
+                if (!p->firstName().isEmpty())
+                    result.append("<firstname>" + p->firstName() + "</firstname>");
+                if (!p->lastName().isEmpty())
+                    result.append("<lastname>" + p->lastName() + "</lastname>");
+                if (!p->suffix().isEmpty())
+                    result.append("<suffix>" + p->suffix() + "</suffix>");
             }
             // TODO: Other data types
-            else  result.append("<text>" + PlainTextValue::text(*item) + "</text>");
+            else
+                result.append("<text>" + PlainTextValue::text(*item) + "</text>");
         }
     }
 

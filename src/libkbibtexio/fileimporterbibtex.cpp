@@ -454,7 +454,7 @@ QString FileImporterBibTeX::readBracketString(const QChar openingBracket)
     return result;
 }
 
-FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value& value, Field::FieldType fieldType)
+FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value& value, const QString& fieldType)
 {
     Token token = tUnknown;
 
@@ -462,42 +462,29 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value& value, Field::Fie
         bool isStringKey = FALSE;
         QString text = readString(isStringKey).replace(QRegExp("\\s+"), " ");
 
-        switch (fieldType) {
-        case Field::ftKeywords: {
+        if (fieldType == Field::ftAuthor || fieldType == Field::ftEditor) {
             if (isStringKey)
-                qWarning("WARNING: Cannot handle keywords that are macros");
-            else {
-                KeywordContainer *kc = new KeywordContainer();
-                kc->append(new Keyword(text));
-                value.append(kc);
-            }
-        }
-        break;
-        case Field::ftAuthor:
-        case Field::ftEditor: {
-            if (isStringKey)
-                qWarning("WARNING: Cannot handle authors/editors that are macros");
+                value.append(new MacroKey(text));
             else {
                 QStringList persons;
                 splitPersonList(text, persons);
-                PersonContainer *container = new PersonContainer();
                 for (QStringList::ConstIterator pit = persons.constBegin(); pit != persons.constEnd(); ++pit) {
                     Person *person = splitName(*pit);
                     if (person != NULL)
-                        container->append(person);
+                        value.append(person);
                 }
-                value.append(container);
             }
-        }
-        break;
-        case Field::ftPages:
+        } else if (fieldType == Field::ftPages) {
             text.replace(QRegExp("\\s*--?\\s*"), QChar(0x2013));
-        default: {
             if (isStringKey)
                 value.append(new MacroKey(text));
             else
                 value.append(new PlainText(text));
-        }
+        }        else {
+            if (isStringKey)
+                value.append(new MacroKey(text));
+            else
+                value.append(new PlainText(text));
         }
 
         token = nextToken();

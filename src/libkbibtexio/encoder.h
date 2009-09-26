@@ -42,7 +42,7 @@ public:
     virtual QString encode(const QString & /*text*/) {
         return QString::null;
     };
-    virtual QString encodeSpecialized(const QString & /*text*/, const Field::FieldType /*fieldType*/ = Field::ftUnknown) {
+    virtual QString encodeSpecialized(const QString & /*text*/, const QString& /*fieldType*/ = QString::null) {
         return QString::null;
     };
 };

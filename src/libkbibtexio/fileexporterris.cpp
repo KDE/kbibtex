@@ -19,6 +19,8 @@
 ***************************************************************************/
 #include <QRegExp>
 
+#include <KDebug>
+
 #include <entry.h>
 
 #include "fileexporterris.h"
@@ -110,21 +112,23 @@ bool FileExporterRIS::writeEntry(QTextStream &stream, const Entry* entry, const 
         QString plainText = PlainTextValue::text(field->value(), bibtexfile);
         Value value = field->value();
 
-        if (field->fieldType() == Field::ftUnknown && field->fieldTypeName().startsWith("RISfield_"))
-            result &= writeKeyValue(stream, field->fieldTypeName().right(2), plainText);
+        if (field->fieldType().startsWith("RISfield_"))
+            result &= writeKeyValue(stream, field->fieldType().right(2), plainText);
         else if (field->fieldType() == Field::ftAuthor) {
-            for (QLinkedList<ValueItem*>::ConstIterator it = value.begin();  result && it != value.end(); ++it) {
-                PersonContainer *pc = dynamic_cast<PersonContainer*>(*it);
-                if (pc == NULL) continue;
-                for (PersonContainer::Iterator pit = pc->begin(); result && pit != pc->end(); ++pit)
+            for (QList<ValueItem*>::ConstIterator it = value.begin(); result && it != value.end(); ++it) {
+                Person *person = dynamic_cast<Person*>(*it);
+                if (person != NULL)
                     result &= writeKeyValue(stream, "AU", PlainTextValue::text(**it, bibtexfile));
+                else
+                    kWarning() << "Cannot write value " << PlainTextValue::text(**it, bibtexfile) << " for field AU (author), not supported by RIS format" << endl;
             }
-        } else if (field->fieldType() == Field::ftEditor) {
-            for (QLinkedList<ValueItem*>::ConstIterator it = value.begin();  result && it != value.end(); ++it) {
-                PersonContainer *pc = dynamic_cast<PersonContainer*>(*it);
-                if (pc == NULL) continue;
-                for (PersonContainer::Iterator pit = pc->begin(); result && pit != pc->end(); ++pit)
+        } else if (field->fieldType().toLower() == Field::ftEditor) {
+            for (QList<ValueItem*>::ConstIterator it = value.begin(); result && it != value.end(); ++it) {
+                Person *person = dynamic_cast<Person*>(*it);
+                if (person != NULL)
                     result &= writeKeyValue(stream, "ED", PlainTextValue::text(**it, bibtexfile));
+                else
+                    kWarning() << "Cannot write value " << PlainTextValue::text(**it, bibtexfile) << " for field ED (editor), not supported by RIS format" << endl;
             }
         } else if (field->fieldType() == Field::ftTitle)
             result &= writeKeyValue(stream, "TI", PlainTextValue::text(value, bibtexfile));
@@ -164,7 +168,7 @@ bool FileExporterRIS::writeEntry(QTextStream &stream, const Entry* entry, const 
                 result &= writeKeyValue(stream, "SP", pageRange[ 0 ]);
                 result &= writeKeyValue(stream, "EP", pageRange[ 1 ]);
             }
-        } else if (field->fieldTypeName().toLower() == "doi")
+        } else if (field->fieldType() == Field::ftDOI)
             result &= writeKeyValue(stream, "UR", PlainTextValue::text(value, bibtexfile));
     }
 
