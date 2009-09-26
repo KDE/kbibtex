@@ -200,7 +200,7 @@ Element *FileImporterRIS::nextElement(QTextStream &textStream)
             value.append(new PlainText((*it).value));
             field->setValue(value);
         } else if ((*it).key == "SN") {
-            Field::FieldType fieldType = entryType == Entry::etBook || entryType == Entry::etInBook ? Field::ftISBN : Field::ftISSN;
+            QString fieldType = entryType == Entry::etBook || entryType == Entry::etInBook ? Field::ftISBN : Field::ftISSN;
             Field * field = entry->getField(fieldType);
             if (field == NULL) {
                 field = new Field(fieldType);
@@ -275,12 +275,10 @@ Element *FileImporterRIS::nextElement(QTextStream &textStream)
             entry->addField(field);
         }
         Value value;
-        PersonContainer *container = new PersonContainer();
-        value.append(container);
         for (QStringList::Iterator pit = authorList.begin(); pit != authorList.end(); ++pit) {
             Person *person = splitName(*pit);
             if (person != NULL)
-                container->append(person);
+                value.append(person);
         }
         field->setValue(value);
     }
@@ -292,12 +290,10 @@ Element *FileImporterRIS::nextElement(QTextStream &textStream)
             entry->addField(field);
         }
         Value value;
-        PersonContainer *container = new PersonContainer();
-        value.append(container);
         for (QStringList::Iterator pit = authorList.begin(); pit != authorList.end(); ++pit) {
             Person *person = splitName(*pit);
             if (person != NULL)
-                container->append(person);
+                value.append(person);
         }
         field->setValue(value);
     }
@@ -309,10 +305,8 @@ Element *FileImporterRIS::nextElement(QTextStream &textStream)
             entry->addField(field);
         }
         Value value;
-        KeywordContainer *container = new KeywordContainer();
-        value.append(container);
         for (QStringList::Iterator pit = keywordList.begin(); pit != keywordList.end();++pit)
-            container->append(new Keyword(*pit));
+            value.append(new Keyword(*pit));
         field->setValue(value);
     }
 

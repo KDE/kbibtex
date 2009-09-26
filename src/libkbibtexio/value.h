@@ -20,7 +20,7 @@
 #ifndef BIBTEXVALUE_H
 #define BIBTEXVALUE_H
 
-#include <QLinkedList>
+#include <QList>
 #include <QRegExp>
 
 #include "kbibtexio_export.h"
@@ -69,16 +69,6 @@ protected:
     QString m_text;
 };
 
-class KeywordContainer: public ValueItem, public QLinkedList<Keyword*>
-{
-public:
-    KeywordContainer();
-    KeywordContainer(const KeywordContainer& other);
-
-    void replace(const QString &before, const QString &after);
-    bool containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const;
-};
-
 class Person: public ValueItem
 {
 public:
@@ -108,16 +98,6 @@ private:
     QString m_lastName;
     QString m_prefix;
     QString m_suffix;
-};
-
-class PersonContainer: public ValueItem, public QLinkedList<Person*>
-{
-public:
-    PersonContainer();
-    PersonContainer(const PersonContainer& person);
-
-    void replace(const QString &before, const QString &after);
-    bool containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const;
 };
 
 class MacroKey: public ValueItem
@@ -158,7 +138,7 @@ protected:
   * Container class to hold values of BibTeX entry fields and similar value types in BibTeX file.
   * A Value object is built from a list of @see ValueItem objects.
   */
-class Value: public QLinkedList<ValueItem*>
+class Value: public QList<ValueItem*>
 {
 public:
     Value();
@@ -182,7 +162,10 @@ public:
     static QString text(const ValueItem& valueItem, const File* file = NULL);
 
 private:
+    enum ValueItemType { VITOther = 0, VITPerson, VITKeyword} lastItem;
     static QRegExp removeCurlyBrackets;
+
+    static QString text(const ValueItem& valueItem, ValueItemType &vit, const File* file = NULL);
 };
 
 }

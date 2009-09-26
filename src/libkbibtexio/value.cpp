@@ -19,7 +19,8 @@
 ***************************************************************************/
 #include <QString>
 #include <QStringList>
-#include <QDebug>
+
+#include <KDebug>
 
 #include <file.h>
 #include "value.h"
@@ -58,36 +59,6 @@ void Keyword::replace(const QString &before, const QString &after)
 bool Keyword::containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive) const
 {
     return m_text.contains(pattern, caseSensitive);
-}
-
-
-KeywordContainer::KeywordContainer()
-{
-    // nothing
-}
-
-KeywordContainer::KeywordContainer(const KeywordContainer& other)
-        : QLinkedList<Keyword*>()
-{
-    for (QLinkedList<Keyword*>::ConstIterator it = other.begin(); it != other.end(); ++it) {
-        append(new Keyword(**it));
-    }
-}
-
-void KeywordContainer::replace(const QString &before, const QString &after)
-{
-    for (QLinkedList<Keyword*>::Iterator it = begin(); it != end(); ++it) {
-        (*it)->replace(before, after);
-    }
-}
-
-bool KeywordContainer::containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive) const
-{
-    bool result = false;
-    for (QLinkedList<Keyword*>::ConstIterator it = begin(); !result && it != end(); ++it) {
-        result |= (*it)->containsPattern(pattern, caseSensitive);
-    }
-    return result;
 }
 
 
@@ -148,35 +119,6 @@ bool Person::containsPattern(const QString &pattern, Qt::CaseSensitivity caseSen
     return m_firstName.contains(pattern, caseSensitive) ||  m_firstName.contains(pattern, caseSensitive) ||  m_prefix.contains(pattern, caseSensitive) ||  m_suffix.contains(pattern, caseSensitive);
 }
 
-
-PersonContainer::PersonContainer()
-{
-    // nothing
-}
-
-PersonContainer::PersonContainer(const PersonContainer& other)
-        : QLinkedList<Person*>()
-{
-    for (QLinkedList<Person*>::ConstIterator it = other.begin(); it != other.end(); ++it) {
-        append(new Person(**it));
-    }
-}
-
-void PersonContainer::replace(const QString &before, const QString &after)
-{
-    for (QLinkedList<Person*>::Iterator it = begin(); it != end(); ++it) {
-        (*it)->replace(before, after);
-    }
-}
-
-bool PersonContainer::containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive) const
-{
-    bool result = false;
-    for (QLinkedList<Person*>::ConstIterator it = begin(); !result && it != end(); ++it) {
-        result |= (*it)->containsPattern(pattern, caseSensitive);
-    }
-    return result;
-}
 
 const QRegExp MacroKey::validMakroKeyChars = QRegExp("![-.:/+_a-zA-Z0-9]");
 
@@ -259,9 +201,9 @@ Value::Value()
 }
 
 Value::Value(const Value& other)
-        : QLinkedList<ValueItem*>()
+        : QList<ValueItem*>()
 {
-    for (QLinkedList<ValueItem*>::ConstIterator it = other.begin(); it != other.end(); ++it) {
+    for (QList<ValueItem*>::ConstIterator it = other.begin(); it != other.end(); ++it) {
         PlainText *plainText = dynamic_cast<PlainText*>(*it);
         if (plainText != NULL)
             append(new PlainText(*plainText));
@@ -270,14 +212,14 @@ Value::Value(const Value& other)
 
 void Value::replace(const QString &before, const QString &after)
 {
-    for (QLinkedList<ValueItem*>::Iterator it = begin(); it != end(); ++it)
+    for (QList<ValueItem*>::Iterator it = begin(); it != end(); ++it)
         (*it)->replace(before, after);
 }
 
 bool Value::containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive) const
 {
     bool result = false;
-    for (QLinkedList<ValueItem*>::ConstIterator it = begin(); !result && it != end(); ++it) {
+    for (QList<ValueItem*>::ConstIterator it = begin(); !result && it != end(); ++it) {
         result |= (*it)->containsPattern(pattern, caseSensitive);
     }
     return result;
@@ -287,21 +229,37 @@ QRegExp PlainTextValue::removeCurlyBrackets = QRegExp("(^|[^\\\\])[{}]");
 
 QString PlainTextValue::text(const Value& value, const File* file)
 {
+    ValueItemType vit = VITOther;
+    ValueItemType lastVit = VITOther;
+
     QString result = "";
-    for (QLinkedList<ValueItem*>::ConstIterator it = value.begin(); it != value.end(); ++it) {
-        QString nextText = text(**it, file);
+    for (QList<ValueItem*>::ConstIterator it = value.begin(); it != value.end(); ++it) {
+        QString nextText = text(**it, vit, file);
         if (!nextText.isNull()) {
-            if (!result.isEmpty())
+            if (lastVit == VITPerson && vit == VITPerson)
+                result.append(" and ");
+            else if (lastVit == VITKeyword && vit == VITKeyword)
+                result.append("; ");
+            else if (!result.isEmpty())
                 result.append(" ");
             result.append(nextText);
+
+            lastVit = vit;
         }
     }
     return result;
 }
 
-QString PlainTextValue::text(const ValueItem& valueItem, const File* /*file*/)
+QString PlainTextValue::text(const ValueItem& valueItem, const File* file)
+{
+    ValueItemType vit;
+    return text(valueItem, vit, file);
+}
+
+QString PlainTextValue::text(const ValueItem& valueItem, ValueItemType &vit, const File* /*file*/)
 {
     QString result = QString::null;
+    vit = VITOther;
 
     const PlainText *plainText = dynamic_cast<const PlainText*>(&valueItem);
     if (plainText != NULL)
@@ -311,31 +269,15 @@ QString PlainTextValue::text(const ValueItem& valueItem, const File* /*file*/)
         if (macroKey != NULL)
             result = macroKey->text(); // TODO Use File to resolve key to full text
         else {
-            const PersonContainer *personContainer = dynamic_cast<const PersonContainer*>(&valueItem);
-            if (personContainer != NULL) {
-                result = "";
-                int count = 0;
-                for (PersonContainer::ConstIterator it = personContainer->begin(); it != personContainer->end(); ++it, ++count) {
-                    if (count > 0) {
-                        if (count < personContainer->size() - 1)
-                            result += ", ";
-                        else if (personContainer->size() > 2)
-                            result += ", and ";
-                        else
-                            result += " and ";
-                    }
-                    result += (*it)->firstName() + " " + (*it)->lastName();
-                }
+            const Person *person = dynamic_cast<const Person*>(&valueItem);
+            if (person != NULL) {
+                result = person->firstName() + " " + person->lastName();
+                vit = VITPerson;
             } else {
-                const KeywordContainer *keywordContainer = dynamic_cast<const KeywordContainer*>(&valueItem);
-                if (keywordContainer != NULL) {
-                    result = "";
-                    bool first = true;
-                    for (KeywordContainer::ConstIterator it = keywordContainer->begin(); it != keywordContainer->end(); ++it) {
-                        if (!first) result += "; ";
-                        first = false;
-                        result += (*it)->text();
-                    }
+                const Keyword *keyword = dynamic_cast<const Keyword*>(&valueItem);
+                if (keyword != NULL) {
+                    result = keyword->text();
+                    vit = VITKeyword;
                 }
             }
         }
@@ -348,5 +290,3 @@ QString PlainTextValue::text(const ValueItem& valueItem, const File* /*file*/)
 
     return result;
 }
-
-
