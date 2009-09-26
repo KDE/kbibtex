@@ -72,7 +72,7 @@ public:
         return false;
     }
 
-    QWidget *createWidget(const KUrl &url, const QString &encoding) {
+    QWidget *createWidget(const KUrl &url, const QString &/*FIXME encoding*/) {
         QString mimeTypeName = KIO::NetAccess::mimetype(url, 0);
         kDebug() << "mimetype is " << mimeTypeName << endl;
 

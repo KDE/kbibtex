@@ -29,7 +29,7 @@
 
 using namespace KBibTeX::GUI::Dialogs;
 
-EntryViewer::EntryViewer(const KBibTeX::IO::Entry *entry, QWidget *parent)
+EntryViewer::EntryViewer(const KBibTeX::IO::Entry */*entry*/, QWidget *parent)
         : QWidget(parent)
 {
     // TODO

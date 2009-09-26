@@ -61,9 +61,9 @@ KBibTeXPart::~KBibTeXPart()
     // nothing
 }
 
-void KBibTeXPart::setupActions(bool browserViewWanted)
+void KBibTeXPart::setupActions(bool /*browserViewWanted FIXME*/)
 {
-    KActionCollection *actions = actionCollection();
+    // KActionCollection *actions = actionCollection(); // FIXME
 
     // TODO
 
