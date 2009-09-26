@@ -20,6 +20,8 @@
 #ifndef KBIBTEX_IO_ENCODERXML_H
 #define KBIBTEX_IO_ENCODERXML_H
 
+#include <QList>
+
 #include <encoder.h>
 
 class QString;
@@ -40,7 +42,7 @@ public:
 
     QString decode(const QString &text);
     QString encode(const QString &text);
-    QString encodeSpecialized(const QString &text, const Field::FieldType fieldType = Field::ftUnknown);
+    QString encodeSpecialized(const QString &text, const QString& fieldType = QString::null);
 
     static EncoderXML *currentEncoderXML();
 
@@ -51,7 +53,7 @@ private:
         QString latex;
     };
 
-    QLinkedList<CharMappingItem> m_charMapping;
+    QList<CharMappingItem> m_charMapping;
 
     void buildCharMapping();
 };

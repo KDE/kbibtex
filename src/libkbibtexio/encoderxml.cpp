@@ -53,7 +53,7 @@ QString EncoderXML::decode(const QString &text)
 {
     QString result = text;
 
-    for (QLinkedList<CharMappingItem>::ConstIterator it = m_charMapping.begin(); it != m_charMapping.end(); ++it)
+    for (QList<CharMappingItem>::ConstIterator it = m_charMapping.begin(); it != m_charMapping.end(); ++it)
         result.replace((*it).regExp, (*it).unicode);
 
     /**
@@ -89,13 +89,13 @@ QString EncoderXML::encode(const QString &text)
 {
     QString result = text;
 
-    for (QLinkedList<CharMappingItem>::ConstIterator it = m_charMapping.begin(); it != m_charMapping.end(); ++it)
+    for (QList<CharMappingItem>::ConstIterator it = m_charMapping.begin(); it != m_charMapping.end(); ++it)
         result.replace((*it).unicode, (*it).latex);
 
     return result;
 }
 
-QString EncoderXML::encodeSpecialized(const QString &text, const Field::FieldType  /* fieldType */)
+QString EncoderXML::encodeSpecialized(const QString &text, const QString& /* fieldType */)
 {
     return encode(text);
 }
