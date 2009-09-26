@@ -68,6 +68,8 @@ void Macro::setValue(const Value& value)
     m_value = value;
 }
 
+/*
+   // FIXME: Rewrite filtering code
 bool Macro::containsPattern(const QString& pattern, Field::FieldType fieldType, FilterType filterType, Qt::CaseSensitivity caseSensitive) const
 {
     if (fieldType != Field::ftUnknown)
@@ -76,20 +78,20 @@ bool Macro::containsPattern(const QString& pattern, Field::FieldType fieldType, 
     QString text = QString(m_key).append(PlainTextValue::text(m_value));
 
     if (filterType == ftExact) {
-        /** check for exact match */
+        ** check for exact match *
         return text.contains(pattern, caseSensitive);
     } else {
-        /** for each word in the search pattern ... */
+        ** for each word in the search pattern ... *
         QStringList words = pattern.split(QRegExp("\\s+"), QString::SkipEmptyParts);
         int hits = 0;
         for (QStringList::Iterator it = words.begin(); it != words.end(); ++it) {
-            /** check if word is contained in text */
+            ** check if word is contained in text
             if (text.contains(*it, caseSensitive))
                 ++hits;
         }
 
-        /** return success depending on filter type and number of hits */
+        ** return success depending on filter type and number of hits *
         return ((filterType == ftAnyWord && hits > 0) || (filterType == ftEveryWord && hits == words.count()));
     }
 }
-
+*/

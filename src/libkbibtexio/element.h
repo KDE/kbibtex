@@ -32,12 +32,12 @@ namespace IO {
 class KBIBTEXIO_EXPORT Element
 {
 public:
-    enum FilterType {ftExact, ftEveryWord, ftAnyWord};
+    //enum FilterType {ftExact, ftEveryWord, ftAnyWord};
 
     Element();
     virtual ~Element();
 
-    virtual bool containsPattern(const QString& /* pattern */, Field::FieldType /* fieldType */, FilterType /* filterType */ = Element::ftExact, Qt::CaseSensitivity /* caseSensitive */ = Qt::CaseInsensitive) const = 0;
+    // virtual bool containsPattern(const QString& /* pattern */, Field::FieldType /* fieldType */, FilterType /* filterType */ = Element::ftExact, Qt::CaseSensitivity /* caseSensitive */ = Qt::CaseInsensitive) const = 0; // FIXME: Rewrite filtering code
     // virtual Element* clone() const = 0; // FIXME: Is this function required?
     // virtual QString text() const = 0; // FIXME: Is this function required?
 

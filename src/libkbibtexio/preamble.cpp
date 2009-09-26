@@ -52,25 +52,27 @@ void Preamble::setValue(const Value& value)
 
 }
 
+/*
 bool Preamble::containsPattern(const QString& pattern, Field::FieldType fieldType, FilterType filterType, Qt::CaseSensitivity caseSensitive) const
 {
     if (fieldType != Field::ftUnknown)
         return false;
 
     if (filterType == ftExact) {
-        /** check for exact match */
+        ** check for exact match *
         return m_value.containsPattern(pattern, caseSensitive);
     } else {
-        /** for each word in the search pattern ... */
+        ** for each word in the search pattern ... *
         QStringList words = pattern.split(QRegExp("\\s+"));
         int hits = 0;
         for (QStringList::Iterator it = words.begin(); it != words.end(); ++it) {
-            /** check if word is contained in text */
+            ** check if word is contained in text *
             if (m_value.containsPattern(*it, caseSensitive))
                 ++hits;
         }
 
-        /** return success depending on filter type and number of hits */
+        ** return success depending on filter type and number of hits *
         return ((filterType == ftAnyWord && hits > 0) || (filterType == ftEveryWord && hits == words.count()));
     }
 }
+*/
