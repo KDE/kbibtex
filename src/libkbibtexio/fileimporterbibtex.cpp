@@ -257,32 +257,32 @@ Entry *FileImporterBibTeX::readEntryElement(const QString& typeString)
             return NULL;
         }
 
-        QString fieldTypeName = readSimpleString();
+        QString keyName = readSimpleString();
         token = nextToken();
-        if (fieldTypeName == QString::null || token == tBracketClose) {
+        if (keyName == QString::null || token == tBracketClose) {
             // entry is buggy, but we still accept it
             break;
         } else if (token != tAssign) {
-            qCritical() << "Error in parsing entry '" << key << "': Assign symbol (=) expected after field name '" << fieldTypeName << "'";
+            qCritical() << "Error in parsing entry '" << key << "': Assign symbol (=) expected after field name '" << keyName << "'";
             delete entry;
             return NULL;
         }
 
         /** check for duplicate fields */
-        if (entry->getField(fieldTypeName) != NULL) {
+        if (entry->getField(keyName) != NULL) {
             int i = 1;
             QString appendix = QString::number(i);
-            while (entry->getField(fieldTypeName + appendix) != NULL) {
+            while (entry->getField(keyName + appendix) != NULL) {
                 ++i;
                 appendix = QString::number(i);
             }
-            fieldTypeName += appendix;
+            keyName += appendix;
         }
 
-        Field *field = new Field(fieldTypeName);
+        Field *field = new Field(keyName);
 
         Value& value = field->value();
-        token = readValue(value, field->fieldType());
+        token = readValue(value, field->key());
 
         entry->addField(field);
     } while (true);
@@ -454,7 +454,7 @@ QString FileImporterBibTeX::readBracketString(const QChar openingBracket)
     return result;
 }
 
-FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value& value, const QString& fieldType)
+FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value& value, const QString& key)
 {
     Token token = tUnknown;
 
@@ -462,7 +462,7 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value& value, const QStr
         bool isStringKey = FALSE;
         QString text = readString(isStringKey).replace(QRegExp("\\s+"), " ");
 
-        if (fieldType == Field::ftAuthor || fieldType == Field::ftEditor) {
+        if (key == Field::ftAuthor || key == Field::ftEditor) {
             if (isStringKey)
                 value.append(new MacroKey(text));
             else {
@@ -474,7 +474,7 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value& value, const QStr
                         value.append(person);
                 }
             }
-        } else if (fieldType == Field::ftPages) {
+        } else if (key == Field::ftPages) {
             text.replace(QRegExp("\\s*--?\\s*"), QChar(0x2013));
             if (isStringKey)
                 value.append(new MacroKey(text));

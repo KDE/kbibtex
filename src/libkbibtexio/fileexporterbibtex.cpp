@@ -180,11 +180,11 @@ bool FileExporterBibTeX::writeEntry(QTextStream &stream, const Entry& entry)
 
     for (Entry::Fields::ConstIterator it = entry.begin(); it != entry.end(); ++it) {
         Field *field = *it;
-        QString text = valueToBibTeX(field->value(), field->fieldType());
-        if (text.isEmpty()) kWarning() << "Value for field " << field->fieldType() << " is empty" << endl;
-        if (m_protectCasing && dynamic_cast<PlainText*>(field->value().first()) != NULL && (field->fieldType() == Field::ftTitle || field->fieldType() == Field::ftBookTitle || field->fieldType() == Field::ftSeries))
+        QString text = valueToBibTeX(field->value(), field->key());
+        if (text.isEmpty()) kWarning() << "Value for field " << field->key() << " is empty" << endl;
+        if (m_protectCasing && dynamic_cast<PlainText*>(field->value().first()) != NULL && (field->key() == Field::ftTitle || field->key() == Field::ftBookTitle || field->key() == Field::ftSeries))
             addProtectiveCasing(text);
-        stream << "," << endl << "\t" << field->fieldType() << " = " << text;
+        stream << "," << endl << "\t" << field->key() << " = " << text;
     }
     stream << endl << "}" << endl << endl;
     return TRUE;
@@ -231,7 +231,7 @@ bool FileExporterBibTeX::writePreamble(QTextStream &stream, const Preamble& prea
     return TRUE;
 }
 
-QString FileExporterBibTeX::valueToBibTeX(const Value& value, const QString& fieldType)
+QString FileExporterBibTeX::valueToBibTeX(const Value& value, const QString& key)
 {
     enum ValueItemType { VITOther = 0, VITPerson, VITKeyword} lastItem;
     lastItem = VITOther;
@@ -244,7 +244,7 @@ QString FileExporterBibTeX::valueToBibTeX(const Value& value, const QString& fie
     for (QList<ValueItem*>::ConstIterator it = value.begin(); it != value.end(); ++it) {
         MacroKey *macroKey = dynamic_cast<MacroKey*>(*it);
         if (macroKey != NULL) {
-            bool nonEmptyFlush = flushAccumulatedText(accumulatedText, result, fieldType);
+            bool nonEmptyFlush = flushAccumulatedText(accumulatedText, result, key);
             if (nonEmptyFlush)
                 result.append(" # ");
             result.append(macroKey->text());
@@ -253,7 +253,7 @@ QString FileExporterBibTeX::valueToBibTeX(const Value& value, const QString& fie
             QString text;
             PlainText *plainText = dynamic_cast<PlainText*>(*it);
             if (plainText != NULL) {
-                bool nonEmptyFlush = flushAccumulatedText(accumulatedText, result, fieldType);
+                bool nonEmptyFlush = flushAccumulatedText(accumulatedText, result, key);
                 if (nonEmptyFlush)
                     result.append(" # ");
                 accumulatedText = plainText->text();
@@ -263,7 +263,7 @@ QString FileExporterBibTeX::valueToBibTeX(const Value& value, const QString& fie
 
                 if (person != NULL) {
                     if (lastItem != VITPerson) {
-                        bool nonEmptyFlush = flushAccumulatedText(accumulatedText, result, fieldType);
+                        bool nonEmptyFlush = flushAccumulatedText(accumulatedText, result, key);
                         if (nonEmptyFlush)
                             result.append(" # ");
                     } else
@@ -290,7 +290,7 @@ QString FileExporterBibTeX::valueToBibTeX(const Value& value, const QString& fie
                     Keyword *keyword = dynamic_cast<Keyword*>(*it);
                     if (keyword != NULL) {
                         if (lastItem != VITKeyword) {
-                            bool nonEmptyFlush = flushAccumulatedText(accumulatedText, result, fieldType);
+                            bool nonEmptyFlush = flushAccumulatedText(accumulatedText, result, key);
                             if (nonEmptyFlush)
                                 result.append(" # ");
                         } else
@@ -306,12 +306,12 @@ QString FileExporterBibTeX::valueToBibTeX(const Value& value, const QString& fie
 
     }
 
-    flushAccumulatedText(accumulatedText, result, fieldType);
+    flushAccumulatedText(accumulatedText, result, key);
 
     return result;
 }
 
-bool FileExporterBibTeX::flushAccumulatedText(QString &accumulatedText, QString &result, const QString& fieldType)
+bool FileExporterBibTeX::flushAccumulatedText(QString &accumulatedText, QString &result, const QString& key)
 {
     if (accumulatedText.isEmpty())
         return false;
@@ -320,7 +320,7 @@ bool FileExporterBibTeX::flushAccumulatedText(QString &accumulatedText, QString 
 
     EncoderLaTeX *encoder = EncoderLaTeX::currentEncoderLaTeX();
     // FIXME if (m_encoding == "latex")
-    accumulatedText = encoder->encodeSpecialized(accumulatedText, fieldType);
+    accumulatedText = encoder->encodeSpecialized(accumulatedText, key);
 
     /** if the text to save contains a quote char ("),
       * force string delimiters to be curly brackets,

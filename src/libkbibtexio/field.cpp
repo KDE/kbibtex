@@ -43,43 +43,57 @@ const QLatin1String Field::ftPages = QLatin1String("pages");
 const QLatin1String Field::ftPublisher = QLatin1String("publisher");
 const QLatin1String Field::ftSeries = QLatin1String("series");
 const QLatin1String Field::ftTitle = QLatin1String("title");
-const QLatin1String Field::ftURL = QLatin1String("url");
+const QLatin1String Field::ftUrl = QLatin1String("url");
 const QLatin1String Field::ftVolume = QLatin1String("volume");
 const QLatin1String Field::ftYear = QLatin1String("year");
 
-Field::Field(const QString& fieldType, const Value& value)
-        : m_fieldType(fieldType)
+class Field::FieldPrivate
 {
+public:
+    QString m_key;
+    Value m_value;
+};
+
+Field::Field(const QString& key, const Value& value)
+        : d(new Field::FieldPrivate())
+{
+    setKey(key);
     setValue(value);
 }
 
 Field::Field(const Field &other)
-        : m_fieldType(other.m_fieldType), m_value(other.m_value)
+        : d(new Field::FieldPrivate())
 {
-    // nothing
+    setKey(other.key());
+    setValue(other.value());
 }
 
-QString Field::fieldType() const
+Field::~Field()
 {
-    return m_fieldType;
+    delete d;
 }
 
-void Field::setFieldType(const QString& fieldType)
+QString Field::key() const
 {
-    m_fieldType = fieldType;
+    return d->m_key;
+}
+
+void Field::setKey(const QString& key)
+{
+    d->m_key = key.toLower();
 }
 
 Value& Field::value()
 {
-    return m_value;
+    return d->m_value;
 }
 
 const Value& Field::value() const
 {
-    return m_value;
+    return d->m_value;
 }
 
 void Field::setValue(const Value& value)
 {
-    m_value = value;
+    d->m_value = value;
 }

@@ -245,9 +245,9 @@ Element *FileImporterRIS::nextElement(QTextStream &textStream)
                     entry->addField(field);
                 }
             } else {
-                field = entry->getField(Field::ftURL);
+                field = entry->getField(Field::ftUrl);
                 if (field == NULL) {
-                    field = new Field(Field::ftURL);
+                    field = new Field(Field::ftUrl);
                     entry->addField(field);
                 }
             }

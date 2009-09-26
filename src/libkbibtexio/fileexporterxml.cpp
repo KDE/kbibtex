@@ -112,10 +112,10 @@ bool FileExporterXML::writeEntry(QTextStream &stream, const Entry* entry)
     stream << " <entry id=\"" << EncoderXML::currentEncoderXML() ->encode(entry->id()) << "\" type=\"" << entry->entryTypeString().toLower() << "\">" << endl;
     for (Entry::Fields::ConstIterator it = entry->begin(); it != entry->end(); ++it) {
         Field *field = *it;
-        QString tag = field->fieldType().toLower();
+        QString tag = field->key().toLower();
         if (tag == Field::ftAuthor || tag == Field::ftEditor) {
             stream << "  <" << tag << "s>" << endl;
-            stream << valueToXML(field->value(), field->fieldType()) << endl;
+            stream << valueToXML(field->value(), field->key()) << endl;
             stream << "  </" << tag << "s>" << endl;
         } else if (tag == Field::ftMonth) {
             stream << "  <month";

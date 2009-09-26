@@ -72,7 +72,7 @@ bool Entry::equals(const Entry &other)
 
     for (Fields::ConstIterator it = m_fields.begin(); it != m_fields.end(); it++) {
         Field *field1 = *it;
-        Field *field2 = other.getField(field1->fieldTypeName());
+        Field *field2 = other.getField(field1->keyName());
 
         if (field2 == NULL || field1->value() == NULL || field2->value() == NULL || field1->value()->text().compare(field2->value()->text()) != 0)
             return false;
@@ -89,7 +89,7 @@ QString Entry::text() const
     result.append(m_id).append("  (").append(entryTypeString()).append(")\n");
 
     for (Fields::ConstIterator it = m_fields.begin(); it != m_fields.end(); it++) {
-        result.append((*it)->fieldTypeName()).append(": ");
+        result.append((*it)->keyName()).append(": ");
         result.append((*it)->value()->text()).append("\n");
     }
 
@@ -130,14 +130,14 @@ QString Entry::id() const
 }
 
 /*
-bool Entry::containsPattern(const QString & pattern, Field::FieldType fieldType, Element::FilterType filterType, Qt::CaseSensitivity caseSensitive) const
+bool Entry::containsPattern(const QString & pattern, Field::FieldType key, Element::FilterType filterType, Qt::CaseSensitivity caseSensitive) const
 {
     if (filterType == ftExact) {
         ** check for exact match *
-        bool result = fieldType == Field::ftUnknown && m_id.contains(pattern, caseSensitive);
+        bool result = key == Field::ftUnknown && m_id.contains(pattern, caseSensitive);
 
         for (Fields::ConstIterator it = m_fields.begin(); !result && it != m_fields.end(); it++)
-            if (fieldType == Field::ftUnknown || (*it) ->fieldType() == fieldType)
+            if (key == Field::ftUnknown || (*it) ->key() == key)
                 result |= (*it) ->value().containsPattern(pattern, caseSensitive);
 
         return result;
@@ -147,11 +147,11 @@ bool Entry::containsPattern(const QString & pattern, Field::FieldType fieldType,
         bool *hits = new bool[words.count()];
         int i = 0;
         for (QStringList::ConstIterator wit = words.begin(); wit != words.end(); ++wit, ++i) {
-            hits[i] = fieldType == Field::ftUnknown && m_id.contains(*wit, caseSensitive);
+            hits[i] = key == Field::ftUnknown && m_id.contains(*wit, caseSensitive);
 
             ** check if word is contained in any field *
             for (Fields::ConstIterator fit = m_fields.begin(); fit != m_fields.end(); ++fit)
-                if (fieldType == Field::ftUnknown || (*fit) ->fieldType() == fieldType)
+                if (key == Field::ftUnknown || (*fit) ->key() == key)
                     hits[i] |= (*fit) ->value().containsPattern(*wit, caseSensitive);
         }
 
@@ -212,21 +212,21 @@ bool Entry::addField(Field * field)
     return TRUE;
 }
 
-Field* Entry::getField(const QString & fieldType) const
+Field* Entry::getField(const QString & key) const
 {
     Field * result = NULL;
 
     for (Fields::ConstIterator it = m_fields.begin(); (it != m_fields.end()) && (result == NULL); it++)
-        if ((*it) ->fieldType().toLower() == fieldType.toLower())
+        if ((*it) ->key().toLower() == key.toLower())
             result = *it;
 
     return result;
 }
 
-bool Entry::deleteField(const QString & fieldType)
+bool Entry::deleteField(const QString & key)
 {
     for (Fields::Iterator it = m_fields.begin(); it != m_fields.end(); it++)
-        if ((*it) ->fieldType().toLower() == fieldType.toLower()) {
+        if ((*it) ->key().toLower() == key.toLower()) {
             delete(*it);
             m_fields.erase(it);
             return TRUE;
@@ -273,14 +273,14 @@ void Entry::merge(Entry *other, MergeSemantics mergeSemantics)
 {
     for (Fields::ConstIterator it = other->m_fields.begin(); it != other->m_fields.end(); it++) {
         Field *otherField = new Field(**it);
-        QString otherFieldType = otherField->fieldType();
-        Field *thisField = getField(otherFieldType);
+        QString otherKey = otherField->key();
+        Field *thisField = getField(otherKey);
 
         if (thisField == NULL) {
             m_fields.append(otherField);
         } else if (mergeSemantics == msForceAdding) {
-            otherFieldType.prepend("OPT");
-            otherField->setFieldType(otherFieldType);
+            otherKey.prepend("OPT");
+            otherField->setKey(otherKey);
             m_fields.append(otherField);
         }
     }
@@ -361,7 +361,7 @@ Entry::EntryType Entry::entryTypeFromString(const QString & entryTypeString)
         return etUnknown;
 }
 
-Entry::FieldRequireStatus Entry::getRequireStatus(Entry::EntryType /*entryType*/, const QString& /*fieldType*/)
+Entry::FieldRequireStatus Entry::getRequireStatus(Entry::EntryType /*entryType*/, const QString& /*key*/)
 {
 // FIXME: This should be configured in an external file
     return Entry::frsIgnored; // dummy return
