@@ -69,7 +69,7 @@ protected:
     QString m_text;
 };
 
-class Person: public ValueItem
+class KBIBTEXIO_EXPORT Person: public ValueItem
 {
 public:
     /**
@@ -100,7 +100,7 @@ private:
     QString m_suffix;
 };
 
-class MacroKey: public ValueItem
+class KBIBTEXIO_EXPORT MacroKey: public ValueItem
 {
 public:
     MacroKey(const MacroKey& other);
@@ -118,7 +118,7 @@ protected:
     static const QRegExp validMakroKeyChars;
 };
 
-class PlainText: public ValueItem
+class KBIBTEXIO_EXPORT PlainText: public ValueItem
 {
 public:
     PlainText(const PlainText& other);
@@ -138,7 +138,7 @@ protected:
   * Container class to hold values of BibTeX entry fields and similar value types in BibTeX file.
   * A Value object is built from a list of @see ValueItem objects.
   */
-class Value: public QList<ValueItem*>
+class KBIBTEXIO_EXPORT Value: public QList<ValueItem*>
 {
 public:
     Value();
@@ -153,6 +153,11 @@ public:
       * @return TRUE if pattern is contained within this value, otherwise FALSE
       */
     bool containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const;
+
+    Value& operator=(const Value& rhs);
+
+private:
+    void copyFrom(const Value& other);
 };
 
 class KBIBTEXIO_EXPORT PlainTextValue

@@ -196,6 +196,7 @@ bool PlainText::containsPattern(const QString &pattern, Qt::CaseSensitivity case
 
 
 Value::Value()
+        : QList<ValueItem*>()
 {
     // nothing
 }
@@ -203,11 +204,7 @@ Value::Value()
 Value::Value(const Value& other)
         : QList<ValueItem*>()
 {
-    for (QList<ValueItem*>::ConstIterator it = other.begin(); it != other.end(); ++it) {
-        PlainText *plainText = dynamic_cast<PlainText*>(*it);
-        if (plainText != NULL)
-            append(new PlainText(*plainText));
-    }
+    copyFrom(other);
 }
 
 void Value::replace(const QString &before, const QString &after)
@@ -223,6 +220,39 @@ bool Value::containsPattern(const QString &pattern, Qt::CaseSensitivity caseSens
         result |= (*it)->containsPattern(pattern, caseSensitive);
     }
     return result;
+}
+
+Value& Value::operator=(const Value & rhs)
+{
+    copyFrom(rhs);
+    return *this;
+}
+
+void Value::copyFrom(const Value& other)
+{
+    clear();
+    for (QList<ValueItem*>::ConstIterator it = other.begin(); it != other.end(); ++it) {
+        PlainText *plainText = dynamic_cast<PlainText*>(*it);
+        if (plainText != NULL)
+            append(new PlainText(*plainText));
+        else {
+            Person *person = dynamic_cast<Person*>(*it);
+            if (person != NULL)
+                append(new Person(*person));
+            else {
+                Keyword *keyword = dynamic_cast<Keyword*>(*it);
+                if (keyword != NULL)
+                    append(new Keyword(*keyword));
+                else {
+                    MacroKey *macroKey = dynamic_cast<MacroKey*>(*it);
+                    if (macroKey != NULL)
+                        append(new MacroKey(*macroKey));
+                    else
+                        kError() << "cannot copy from unknown data type" << endl;
+                }
+            }
+        }
+    }
 }
 
 QRegExp PlainTextValue::removeCurlyBrackets = QRegExp("(^|[^\\\\])[{}]");
