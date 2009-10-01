@@ -17,65 +17,79 @@
 *   Free Software Foundation, Inc.,                                       *
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
+#ifndef KBIBTEX_GUI_FIELDLINEEDIT_H
+#define KBIBTEX_GUI_FIELDLINEEDIT_H
 
-#include <QFocusFrame>
+#include <kbibtexgui_export.h>
 
-#include "fieldeditor.h"
-#include "fieldlineedit.h"
+#include <KIcon>
 
-using namespace KBibTeX::GUI::Widgets;
+#include "value.h"
+#include "menulineedit.h"
 
-class FieldEditor::FieldEditorPrivate
+class QMenu;
+class QSignalMapper;
+
+namespace KBibTeX
 {
+namespace GUI {
+namespace Widgets {
+
+/**
+@author Thomas Fischer
+*/
+class FieldLineEdit : public MenuLineEdit
+{
+    Q_OBJECT
+
 public:
-    EditMode m_editMode;
-    FieldLineEdit **m_widgets;
+    enum TypeFlag {
+        Text = 0x1,
+        Reference = 0x2,
+        Person = 0x4,
+        Keyword = 0x8,
+        Source = 0x100
+    };
+    Q_DECLARE_FLAGS(TypeFlags, TypeFlag)
+
+    FieldLineEdit(TypeFlags typeFlags, QWidget *parent);
+
+    TypeFlag setTypeFlag(TypeFlag typeFlag);
+
+    void setValue(const KBibTeX::IO::Value& value);
+    void applyTo(KBibTeX::IO::Value& value);
+
+public slots:
+    void reset();
+
+protected:
+
+    TypeFlags m_typeFlags;
+    TypeFlag m_typeFlag;
+
     KBibTeX::IO::Value m_originalValue;
+
+    KIcon iconForTypeFlag(TypeFlag typeFlag);
+
+    void loadValue(const KBibTeX::IO::Value& value);
+
+private:
+    bool m_incompleteRepresentation;
+
+    QMenu *m_menuTypes;
+    QSignalMapper *m_menuTypesSignalMapper;
+
+    void setupMenu();
+    void updatePushButtonType();
+
+private slots:
+    void slotTypeChanged(int);
 };
 
-FieldEditor::FieldEditor(EditMode editMode, QWidget *parent)
-        : QStackedWidget(parent), d(new FieldEditorPrivate)
-{
-    QFocusFrame *ff = new QFocusFrame();
-    ff->setWidget(this);
+Q_DECLARE_OPERATORS_FOR_FLAGS(FieldLineEdit::TypeFlags)
 
-    d->m_editMode = editMode;
-    d->m_widgets = new FieldLineEdit*[4];
-
-    d->m_widgets[0] = new FieldLineEdit(FieldLineEdit::Text | FieldLineEdit::Source, this);
-    d->m_widgets[0]->setTypeFlag(FieldLineEdit::Source);
-    addWidget(d->m_widgets[0]);
-
-    setBackgroundRole(QPalette::Base);
+}
+}
 }
 
-FieldEditor::~FieldEditor()
-{
-    delete[] d->m_widgets;
-}
-
-void FieldEditor::setEditMode(EditMode editMode)
-{
-    d->m_editMode = editMode;
-}
-
-FieldEditor::EditMode FieldEditor::editMode()
-{
-    return d->m_editMode;
-}
-
-void FieldEditor::setValue(const KBibTeX::IO::Value& value)
-{
-    d->m_originalValue = value;
-    d->m_widgets[0]->setValue(value);
-}
-
-void FieldEditor::applyTo(KBibTeX::IO::Value& /*value*/)
-{
-    // TODO
-}
-
-void FieldEditor::reset()
-{
-    // TODO
-}
+#endif // KBIBTEX_GUI_FIELDLINEEDIT_H

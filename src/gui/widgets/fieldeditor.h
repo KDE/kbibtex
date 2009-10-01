@@ -22,14 +22,9 @@
 
 #include <kbibtexgui_export.h>
 
-#include <QFrame>
+#include <QStackedWidget>
 
-#include <KIcon>
-
-class QMenu;
-class QSignalMapper;
-class KPushButton;
-class KLineEdit;
+#include <value.h>
 
 namespace KBibTeX
 {
@@ -39,58 +34,33 @@ namespace Widgets {
 /**
 @author Thomas Fischer
 */
-class KBIBTEXGUI_EXPORT FieldEditor : public QFrame
+class KBIBTEXGUI_EXPORT FieldEditor : public QStackedWidget
 {
     Q_OBJECT
     Q_ENUMS(EditMode)
     Q_PROPERTY(EditMode editMode READ editMode WRITE setEditMode)
 
 public:
-    enum TypeFlag {
-        Text = 0x1,
-        Reference = 0x2,
-        Person = 0x4,
-        Source = 0x8
-    };
-    Q_DECLARE_FLAGS(TypeFlags, TypeFlag)
-
     enum EditMode {
-        SingleLine
+        SingleLine = 0, MultiLine = 1, List = 2, SourceCode = 3
     };
 
-    FieldEditor(TypeFlags typeFlags, QWidget *parent);
+    FieldEditor(EditMode editMode = SingleLine, QWidget *parent = 0);
+    ~FieldEditor();
 
     void setEditMode(EditMode);
     EditMode editMode();
 
-    TypeFlag typeFlag();
-    KIcon iconForTypeFlag(TypeFlag typeFlag);
+    void setValue(const KBibTeX::IO::Value& value);
+    void applyTo(KBibTeX::IO::Value& value);
 
-signals:
-    void typeChanged(TypeFlag);
-
-protected:
-    KPushButton *m_pushButtonType;
-    KLineEdit *m_lineEditText;
-
-    TypeFlags m_typeFlags;
-    TypeFlag m_typeFlag;
-    EditMode m_editMode;
-
-    void setupUI();
+public slots:
+    void reset();
 
 private:
-    QMenu *m_menuTypes;
-    QSignalMapper *m_menuTypesSignalMapper;
-
-    void setupMenu();
-    void updatePpushButtonType();
-
-private slots:
-    void slotTypeChanged(int);
+    class FieldEditorPrivate;
+    FieldEditorPrivate * const d;
 };
-
-Q_DECLARE_OPERATORS_FOR_FLAGS(FieldEditor::TypeFlags)
 
 }
 }
