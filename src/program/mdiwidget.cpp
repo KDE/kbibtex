@@ -24,7 +24,6 @@
 #include <QApplication>
 
 #include <KDebug>
-#include <KMessageBox>
 #include <kio/netaccess.h>
 #include <kmimetypetrader.h>
 #include <kparts/part.h>
@@ -73,7 +72,7 @@ public:
     }
 
     QWidget *createWidget(const KUrl &url, const QString &/*FIXME encoding*/) {
-        QString mimeTypeName = KIO::NetAccess::mimetype(url, 0);
+        QString mimeTypeName = "text/x-bibtex";//KIO::NetAccess::mimetype(url, 0); // FIXME: Only for debugging!
         kDebug() << "mimetype is " << mimeTypeName << endl;
 
         KService::List list = KMimeTypeTrader::self()->query(mimeTypeName, QString::fromLatin1("KParts/ReadWritePart"));
@@ -86,7 +85,6 @@ public:
 
         if (part == NULL) {
             kError() << "Cannot find part for mimetype " << mimeTypeName << endl;
-            KMessageBox::error(p, QString("<qt>There is no editor component available for mime type\n<b>%1</b>\nto open file\n%2</qt>").arg(mimeTypeName).arg(url.fileName()), "Error opening file");
             return NULL;
         }
 

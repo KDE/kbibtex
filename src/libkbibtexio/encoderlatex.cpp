@@ -19,7 +19,9 @@
 ***************************************************************************/
 #include <QString>
 #include <QRegExp>
-#include <QDebug>
+#include <QStringList>
+
+#include <KDebug>
 
 #include "encoderlatex.h"
 
@@ -419,7 +421,7 @@ QString EncoderLaTeX::decode(const QString & text)
             break;
 
         if ((*it).length() > 256)
-            qWarning() << "Very long math equation using $ found, maybe due to broken inline math: " << (*it).left(48);
+            kWarning() << "Very long math equation using $ found, maybe due to broken inline math: " << (*it).left(48);
     }
 
     for (QLinkedList<CharMappingItem>::ConstIterator cmit = m_charMapping.begin(); cmit != m_charMapping.end(); ++cmit)

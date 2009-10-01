@@ -29,7 +29,6 @@
 #include <KActionCollection>
 #include <KPluginFactory>
 #include <KPluginLoader>
-#include <KMessageBox>
 
 #include "mainwindow.h"
 #include "documentlist.h"
