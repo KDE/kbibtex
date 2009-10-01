@@ -103,3 +103,10 @@ Raw=abstract
 Label=Abstract
 DefaultWidth=7
 Visible=false
+
+[Column19]
+Raw=pages
+Label=Pages
+DefaultWidth=2
+Visible=true
+
