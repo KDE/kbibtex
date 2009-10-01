@@ -20,9 +20,7 @@
 #ifndef BIBTEXENCODER_H
 #define BIBTEXENCODER_H
 
-#include <field.h>
-
-class QString;
+#include <QString>
 
 namespace KBibTeX
 {

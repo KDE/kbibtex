@@ -17,52 +17,87 @@
 *   Free Software Foundation, Inc.,                                       *
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
-#include <QString>
-#include <QRegExp>
+#include <QList>
 
 #include <entry.h>
 #include <file.h>
-#include <field.h>
 
 #define max(a,b) ((a)>(b)?(a):(b))
 
 using namespace KBibTeX::IO;
 
-Entry::Entry()
-        : Element(), m_entryType(etUnknown), m_entryTypeString(QString::null), m_id(QString::null)
+// FIXME: Check if using those constants in the program is really necessary
+// or can be replace by config files
+const QLatin1String Entry::ftAbstract = QLatin1String("abstract");
+const QLatin1String Entry::ftAddress = QLatin1String("address");
+const QLatin1String Entry::ftAuthor = QLatin1String("author");
+const QLatin1String Entry::ftBookTitle = QLatin1String("booktitle");
+const QLatin1String Entry::ftChapter = QLatin1String("chapter");
+const QLatin1String Entry::ftCrossRef = QLatin1String("crossref");
+const QLatin1String Entry::ftDOI = QLatin1String("doi");
+const QLatin1String Entry::ftEditor = QLatin1String("editor");
+const QLatin1String Entry::ftISSN = QLatin1String("issn");
+const QLatin1String Entry::ftISBN = QLatin1String("isbn");
+const QLatin1String Entry::ftJournal = QLatin1String("journal");
+const QLatin1String Entry::ftKeywords = QLatin1String("Keywords");
+const QLatin1String Entry::ftLocation = QLatin1String("location");
+const QLatin1String Entry::ftMonth = QLatin1String("month");
+const QLatin1String Entry::ftNote = QLatin1String("note");
+const QLatin1String Entry::ftNumber = QLatin1String("number");
+const QLatin1String Entry::ftPages = QLatin1String("pages");
+const QLatin1String Entry::ftPublisher = QLatin1String("publisher");
+const QLatin1String Entry::ftSeries = QLatin1String("series");
+const QLatin1String Entry::ftTitle = QLatin1String("title");
+const QLatin1String Entry::ftUrl = QLatin1String("url");
+const QLatin1String Entry::ftVolume = QLatin1String("volume");
+const QLatin1String Entry::ftYear = QLatin1String("year");
+
+const QLatin1String Entry::etArticle = QLatin1String("article");
+const QLatin1String Entry::etBook = QLatin1String("book");
+const QLatin1String Entry::etInBook = QLatin1String("inbook");
+const QLatin1String Entry::etInProceedings = QLatin1String("inproceedings");
+const QLatin1String Entry::etMisc = QLatin1String("misc");
+const QLatin1String Entry::etPhDThesis = QLatin1String("phdthesis");
+const QLatin1String Entry::etTechReport = QLatin1String("techreport");
+
+class Entry::EntryPrivate
 {
-    // nothing
+public:
+    QString m_type;
+    QString m_id;
+};
+
+Entry::Entry(const QString& type, const QString& id)
+        : Element(), QMap<QString, Value>(), d(new Entry::EntryPrivate)
+{
+    d->m_type = type;
+    d->m_id = id;
 }
 
-Entry::Entry(const EntryType entryType, const QString &id)
-        : Element(), m_entryType(entryType), m_id(id)
+Entry::Entry(const Entry &other)
+        : Element(), QMap<QString, Value>(), d(new Entry::EntryPrivate)
 {
-    m_entryTypeString = entryTypeToString(entryType);
-}
-
-Entry::Entry(const QString& entryTypeString, const QString& id) : Element(), m_entryTypeString(entryTypeString), m_id(id)
-{
-    m_entryType = entryTypeFromString(entryTypeString);
-    if (m_entryType != etUnknown)
-        m_entryTypeString = entryTypeToString(m_entryType);
-}
-
-Entry::Entry(const Entry *other)
-{
-    copyFrom(other);
+    d->m_type = other.type();
+    d->m_id = other.id();
+    for (QMap<QString, Value>::ConstIterator it = other.begin(); it != other.end(); ++it)
+        insert(it.key(), it.value());
 }
 
 Entry::~Entry()
 {
+    /*
     for (Fields::ConstIterator it = m_fields.begin(); it != m_fields.end(); it++) {
         delete(*it);
     }
+    */
 }
 
+/*
 Element* Entry::clone() const
 {
     return new Entry(this);
 }
+*/
 
 /* FIXME: Is this function required?
 bool Entry::equals(const Entry &other)
@@ -97,36 +132,24 @@ QString Entry::text() const
 }
 */
 
-void Entry::setEntryType(const EntryType entryType)
+void Entry::setType(const QString& type)
 {
-    m_entryType = entryType;
-    m_entryTypeString = entryTypeToString(entryType);
+    d->m_type = type;
 }
 
-void Entry::setEntryTypeString(const QString& entryTypeString)
+QString Entry::type() const
 {
-    m_entryTypeString = entryTypeString;
-    m_entryType = entryTypeFromString(entryTypeString);
-}
-
-Entry::EntryType Entry::entryType() const
-{
-    return m_entryType;
-}
-
-QString Entry::entryTypeString() const
-{
-    return m_entryTypeString;
+    return d->m_type;
 }
 
 void Entry::setId(const QString& id)
 {
-    m_id = id;
+    d->m_id = id;
 }
 
 QString Entry::id() const
 {
-    return m_id;
+    return d->m_id;
 }
 
 /*
@@ -166,18 +189,19 @@ bool Entry::containsPattern(const QString & pattern, Field::FieldType key, Eleme
 }
 */
 
+/*
 QStringList Entry::urls() const
 {
     QStringList result;
     const QString fieldNames[] = {"localfile", "pdf", "ps", "postscript", "doi", "url", "howpublished", "ee", "biburl", "note"};
     const int fieldNamesCount = sizeof(fieldNames) / sizeof(fieldNames[0]);
 
-    for (int j = 1; j < 5 ; ++j)   /** there may be variants such as url3 or doi2 */
+    for (int j = 1; j < 5 ; ++j)   ** there may be variants such as url3 or doi2 *
         for (int i = 0; i < fieldNamesCount; i++) {
             Field * field = getField(fieldNames[ i ]);
             if ((field && !field->value().isEmpty())) {
                 QString fieldName = fieldNames[i];
-                /** field names should be like url, url2, url3, ... */
+                ** field names should be like url, url2, url3, ... *
                 if (j > 1) fieldName.append(QString::number(j));
 
                 Field * field = getField(fieldName);
@@ -205,7 +229,9 @@ QStringList Entry::urls() const
 
     return result;
 }
+*/
 
+/*
 bool Entry::addField(Field * field)
 {
     m_fields.append(field);
@@ -256,7 +282,9 @@ void Entry::clearFields()
         delete(*it);
     m_fields.clear();
 }
+*/
 
+/*
 void Entry::copyFrom(const Entry *other)
 {
     if (other == NULL) return;
@@ -268,7 +296,9 @@ void Entry::copyFrom(const Entry *other)
     for (Fields::ConstIterator it = other->m_fields.begin(); it != other->m_fields.end(); it++)
         m_fields.append(new Field(**it));
 }
+*/
 
+/*
 void Entry::merge(Entry *other, MergeSemantics mergeSemantics)
 {
     for (Fields::ConstIterator it = other->m_fields.begin(); it != other->m_fields.end(); it++) {
@@ -285,7 +315,9 @@ void Entry::merge(Entry *other, MergeSemantics mergeSemantics)
         }
     }
 }
+*/
 
+/*
 QString Entry::entryTypeToString(const EntryType entryType)
 {
     switch (entryType) {
@@ -360,9 +392,13 @@ Entry::EntryType Entry::entryTypeFromString(const QString & entryTypeString)
     else
         return etUnknown;
 }
+*/
 
-Entry::FieldRequireStatus Entry::getRequireStatus(Entry::EntryType /*entryType*/, const QString& /*key*/)
+/*
+Entry::FieldRequireStatus Entry::getRequireStatus(Entry::EntryType *entryType*, const QString& *key*)
 {
 // FIXME: This should be configured in an external file
     return Entry::frsIgnored; // dummy return
 }
+*/
+

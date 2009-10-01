@@ -20,7 +20,8 @@
 #ifndef KBIBTEX_IO_PREAMBLE_H
 #define KBIBTEX_IO_PREAMBLE_H
 
-#include <element.h>
+#include "element.h"
+#include "value.h"
 
 namespace KBibTeX
 {

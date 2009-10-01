@@ -21,8 +21,9 @@
 #include <QRegExp>
 #include <QCoreApplication>
 #include <QRegExp>
-#include <QDebug>
+#include <QStringList>
 
+#include <KDebug>
 
 #include <file.h>
 #include <comment.h>
@@ -269,22 +270,20 @@ Entry *FileImporterBibTeX::readEntryElement(const QString& typeString)
         }
 
         /** check for duplicate fields */
-        if (entry->getField(keyName) != NULL) {
+        if (entry->contains(keyName)) {
             int i = 1;
             QString appendix = QString::number(i);
-            while (entry->getField(keyName + appendix) != NULL) {
+            while (entry->contains(keyName + appendix)) {
                 ++i;
                 appendix = QString::number(i);
             }
             keyName += appendix;
         }
 
-        Field *field = new Field(keyName);
+        Value value;
+        token = readValue(value, keyName);
 
-        Value& value = field->value();
-        token = readValue(value, field->key());
-
-        entry->addField(field);
+        entry->insert(keyName, value);
     } while (true);
 
     return entry;

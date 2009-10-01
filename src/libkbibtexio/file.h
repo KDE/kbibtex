@@ -23,14 +23,13 @@
 
 #include <QLinkedList>
 #include <QMap>
+#include <QString>
 
-#include <field.h>
 #include <element.h>
 
 #include "kbibtexio_export.h"
 
 class QDir;
-class QString;
 class QChar;
 class QStringList;
 class QWaitCondition;

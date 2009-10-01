@@ -19,7 +19,7 @@
 ***************************************************************************/
 #include <QTextCodec>
 #include <QTextStream>
-#include <QDebug>
+#include <QStringList>
 
 #include <KDebug>
 
@@ -74,7 +74,7 @@ bool FileExporterBibTeX::save(QIODevice* iodevice, const File* bibtexfile, QStri
                 macroList.append(macro);
             else {
                 Entry *entry = dynamic_cast<Entry*>(*it);
-                if ((entry != NULL) && (entry->getField(Field::ftCrossRef) != NULL))
+                if ((entry != NULL) && entry->contains(Entry::ftCrossRef))
                     crossRefingEntryList.append(entry);
                 else {
                     Comment *comment = dynamic_cast<Comment*>(*it);
@@ -176,15 +176,16 @@ void FileExporterBibTeX::cancel()
 
 bool FileExporterBibTeX::writeEntry(QTextStream &stream, const Entry& entry)
 {
-    stream << "@" << applyKeywordCasing(entry.entryTypeString()) << "{" << entry.id();
+    stream << "@" << applyKeywordCasing(entry.type()) << "{" << entry.id();
 
-    for (Entry::Fields::ConstIterator it = entry.begin(); it != entry.end(); ++it) {
-        Field *field = *it;
-        QString text = valueToBibTeX(field->value(), field->key());
-        if (text.isEmpty()) kWarning() << "Value for field " << field->key() << " is empty" << endl;
-        if (m_protectCasing && dynamic_cast<PlainText*>(field->value().first()) != NULL && (field->key() == Field::ftTitle || field->key() == Field::ftBookTitle || field->key() == Field::ftSeries))
+    for (Entry::ConstIterator it = entry.begin(); it != entry.end(); ++it) {
+        QString key = it.key();
+        Value value = it.value();
+        QString text = valueToBibTeX(value, key);
+        if (text.isEmpty()) kWarning() << "Value for field " << key << " is empty" << endl;
+        if (m_protectCasing && dynamic_cast<PlainText*>(value.first()) != NULL && (key == Entry::ftTitle || key == Entry::ftBookTitle || key == Entry::ftSeries))
             addProtectiveCasing(text);
-        stream << "," << endl << "\t" << field->key() << " = " << text;
+        stream << "," << endl << "\t" << key << " = " << text;
     }
     stream << endl << "}" << endl << endl;
     return TRUE;
@@ -269,22 +270,27 @@ QString FileExporterBibTeX::valueToBibTeX(const Value& value, const QString& key
                     } else
                         accumulatedText.append(" and ");
 
+                    QString thisName = "";
                     QString v = person->firstName();
                     if (!v.isEmpty()) {
                         bool requiresQuoting = requiresPersonQuoting(v, false);
-                        if (requiresQuoting) accumulatedText.append("{");
-                        accumulatedText.append(v);
-                        if (requiresQuoting) accumulatedText.append("}");
-                        accumulatedText.append(" ");
+                        if (requiresQuoting) thisName.append("{");
+                        thisName.append(v);
+                        if (requiresQuoting) thisName.append("}");
+                        thisName.append(" ");
                     }
 
                     v = person->lastName();
                     if (!v.isEmpty()) {
                         bool requiresQuoting = requiresPersonQuoting(v, false);
-                        if (requiresQuoting) accumulatedText.append("{");
-                        accumulatedText.append(v);
-                        if (requiresQuoting) accumulatedText.append("}");
+                        if (requiresQuoting) thisName.append("{");
+                        thisName.append(v);
+                        if (requiresQuoting) thisName.append("}");
                     }
+
+                    // TODO: Prefix and suffix
+
+                    accumulatedText.append(thisName);
                     lastItem = VITPerson;
                 } else {
                     Keyword *keyword = dynamic_cast<Keyword*>(*it);

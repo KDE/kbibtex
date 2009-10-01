@@ -22,9 +22,9 @@
 
 #include <QTextStream>
 
-#include <element.h>
-#include <field.h>
-#include <fileexporter.h>
+#include "element.h"
+#include "fileexporter.h"
+#include "value.h"
 
 class QChar;
 

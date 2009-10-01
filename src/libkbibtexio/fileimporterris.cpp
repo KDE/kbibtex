@@ -20,8 +20,12 @@
 #include <QTextStream>
 #include <QRegExp>
 #include <QCoreApplication>
+#include <QStringList>
 
-#include <entry.h>
+#include <KDebug>
+
+#include "entry.h"
+#include "value.h"
 
 #include "fileimporterris.h"
 
@@ -81,11 +85,10 @@ Element *FileImporterRIS::nextElement(QTextStream &textStream)
     if (list.empty())
         return NULL;
 
-    Entry::EntryType entryType = Entry::etMisc;
+    QString entryType = Entry::etMisc;
     Entry *entry = new Entry(entryType, QString("RIS_%1").arg(m_refNr++));
     QStringList authorList, editorList, keywordList;
     QString journalName, abstract, startPage, endPage, date;
-    int fieldNr = 0;
 
     for (RISitemList::iterator it = list.begin(); it != list.end(); ++it) {
         if ((*it).key == "TY") {
@@ -101,7 +104,7 @@ Element *FileImporterRIS::nextElement(QTextStream &textStream)
                 entryType = Entry::etTechReport;
             else if ((*it).value.startsWith("THES"))
                 entryType = Entry::etPhDThesis;
-            entry->setEntryType(entryType);
+            entry->setType(entryType);
         } else if ((*it).key == "AU" || (*it).key == "A1") {
             authorList.append((*it).value);
         } else if ((*it).key == "ED" || (*it).key == "A2") {
@@ -114,14 +117,8 @@ Element *FileImporterRIS::nextElement(QTextStream &textStream)
             if (date.isEmpty())
                 date = (*it).value;
         } else if ((*it).key == "N1" /*|| ( *it ).key == "N2"*/) {
-            Field * field = entry->getField(Field::ftNote);
-            if (field == NULL) {
-                field = new Field(Field::ftNote);
-                entry->addField(field);
-            }
-            Value value;
+            Value value = entry->value(Entry::ftNote);
             value.append(new PlainText((*it).value));
-            field->setValue(value);
         } else if ((*it).key == "N2") {
             if (abstract.isEmpty())
                 abstract = (*it).value ;
@@ -141,152 +138,125 @@ Element *FileImporterRIS::nextElement(QTextStream &textStream)
                     ++it)
                 keywordList.append(*it);
         } else if ((*it).key == "TI" || (*it).key == "T1") {
-            Field * field = entry->getField(Field::ftTitle);
-            if (field == NULL) {
-                field = new Field(Field::ftTitle);
-                entry->addField(field);
-            }
-            Value value;
+            Value value = entry->value(Entry::ftTitle);
             value.append(new PlainText((*it).value));
-            field->setValue(value);
         } else if ((*it).key == "T3") {
-            Field * field = entry->getField(Field::ftSeries);
-            if (field == NULL) {
-                field = new Field(Field::ftSeries);
-                entry->addField(field);
-            }
-            Value value;
+            Value value = entry->value(Entry::ftSeries);
             value.append(new PlainText((*it).value));
-            field->setValue(value);
         } else if ((*it).key == "JA" || (*it).key == "J1" || (*it).key == "J2") {
             if (journalName.isEmpty())
                 journalName = (*it).value;
         } else if ((*it).key == "JF" || (*it).key == "JO") {
             journalName = (*it).value;
         } else if ((*it).key == "VL") {
-            Field * field = entry->getField(Field::ftVolume);
-            if (field == NULL) {
-                field = new Field(Field::ftVolume);
-                entry->addField(field);
-            }
-            Value value;
+            Value value = entry->value(Entry::ftVolume);
             value.append(new PlainText((*it).value));
-            field->setValue(value);
         } else if ((*it).key == "CP") {
-            Field * field = entry->getField(Field::ftVolume);
-            if (field == NULL) {
-                field = new Field(Field::ftChapter);
-                entry->addField(field);
-            }
-            Value value;
+            Value value = entry->value(Entry::ftVolume);
+            if (value.isEmpty())
+                value = entry->value(Entry::ftChapter);
             value.append(new PlainText((*it).value));
-            field->setValue(value);
         } else if ((*it).key == "IS") {
-            Field * field = entry->getField(Field::ftNumber);
-            if (field == NULL) {
-                field = new Field(Field::ftNumber);
-                entry->addField(field);
-            }
-            Value value;
+            Value value = entry->value(Entry::ftNumber);
             value.append(new PlainText((*it).value));
-            field->setValue(value);
         } else if ((*it).key == "PB") {
-            Field * field = entry->getField(Field::ftPublisher);
-            if (field == NULL) {
-                field = new Field(Field::ftPublisher);
-                entry->addField(field);
-            }
-            Value value;
+            Value value = entry->value(Entry::ftPublisher);
             value.append(new PlainText((*it).value));
-            field->setValue(value);
-        } else if ((*it).key == "SN") {
-            QString fieldType = entryType == Entry::etBook || entryType == Entry::etInBook ? Field::ftISBN : Field::ftISSN;
-            Field * field = entry->getField(fieldType);
-            if (field == NULL) {
-                field = new Field(fieldType);
-                entry->addField(field);
-            }
-            Value value;
-            value.append(new PlainText((*it).value));
-            field->setValue(value);
-        } else if ((*it).key == "CY") {
-            Field * field = entry->getField(Field::ftLocation);
-            if (field == NULL) {
-                field = new Field(Field::ftLocation);
-                entry->addField(field);
-            }
-            Value value;
-            value.append(new PlainText((*it).value));
-            field->setValue(value);
-        } else if ((*it).key == "AD") {
-            Field * field = entry->getField(Field::ftAddress);
-            if (field == NULL) {
-                field = new Field(Field::ftAddress);
-                entry->addField(field);
-            }
-            Value value;
-            value.append(new PlainText((*it).value));
-            field->setValue(value);
-        } else if ((*it).key == "L1") {
-            Field * field = entry->getField("PDF");
-            if (field == NULL) {
-                field = new Field("PDF");
-                entry->addField(field);
-            }
-            Value value;
-            value.append(new PlainText((*it).value));
-            field->setValue(value);
-        } else if ((*it).key == "UR") {
-            Field * field = NULL;
-            if ((*it).value.contains("dx.doi.org")) {
-                field = entry->getField("DOI");
+            /*} else if ((*it).key == "SN") {
+                QString fieldType = entryType == Entry::etBook || entryType == Entry::etInBook ? Entry::ftISBN : Entry::ftISSN;
+                Field * field = entry->getField(fieldType);
                 if (field == NULL) {
-                    field = new Field("DOI");
+                    field = new Field(fieldType);
                     entry->addField(field);
                 }
-            } else {
-                field = entry->getField(Field::ftUrl);
+                Value value;
+                value.append(new PlainText((*it).value));
+                field->setValue(value);
+            } else if ((*it).key == "CY") {
+                Field * field = entry->getField(Entry::ftLocation);
                 if (field == NULL) {
-                    field = new Field(Field::ftUrl);
+                    field = new Field(Entry::ftLocation);
                     entry->addField(field);
                 }
-            }
-            Value value;
-            value.append(new PlainText((*it).value));
-            field->setValue(value);
+                Value value;
+                value.append(new PlainText((*it).value));
+                field->setValue(value);
+            } else if ((*it).key == "AD") {
+                Field * field = entry->getField(Entry::ftAddress);
+                if (field == NULL) {
+                    field = new Field(Entry::ftAddress);
+                    entry->addField(field);
+                }
+                Value value;
+                value.append(new PlainText((*it).value));
+                field->setValue(value);
+            } else if ((*it).key == "L1") {
+                Field * field = entry->getField("PDF");
+                if (field == NULL) {
+                    field = new Field("PDF");
+                    entry->addField(field);
+                }
+                Value value;
+                value.append(new PlainText((*it).value));
+                field->setValue(value);
+            } else if ((*it).key == "UR") {
+                Field * field = NULL;
+                if ((*it).value.contains("dx.doi.org")) {
+                    field = entry->getField("DOI");
+                    if (field == NULL) {
+                        field = new Field("DOI");
+                        entry->addField(field);
+                    }
+                } else {
+                    field = entry->getField(Entry::ftUrl);
+                    if (field == NULL) {
+                        field = new Field(Entry::ftUrl);
+                        entry->addField(field);
+                    }
+                }
+                Value value;
+                value.append(new PlainText((*it).value));
+                field->setValue(value);
+                */
         } else if ((*it).key == "SP") {
             startPage = (*it).value;
         } else if ((*it).key == "EP") {
             endPage = (*it).value;
-        } else {
-            QString fieldName = QString("RISfield_%1_%2").arg(fieldNr++).arg((*it).key.left(2));
-            Field * field = new Field(fieldName);
-            entry->addField(field);
-            Value value;
-            value.append(new PlainText((*it).value));
-            field->setValue(value);
+            /*} else {
+                QString fieldName = QString("RISfield_%1_%2").arg(fieldNr++).arg((*it).key.left(2));
+                Field * field = new Field(fieldName);
+                entry->addField(field);
+                Value value;
+                value.append(new PlainText((*it).value));
+                field->setValue(value);
+            */
         }
     }
 
+
     if (!authorList.empty()) {
-        Field * field = entry->getField(Field::ftAuthor);
-        if (field == NULL) {
-            field = new Field(Field::ftAuthor);
-            entry->addField(field);
-        }
-        Value value;
+        Value value = entry->value(Entry::ftAuthor);
         for (QStringList::Iterator pit = authorList.begin(); pit != authorList.end(); ++pit) {
             Person *person = splitName(*pit);
+            kDebug() << "pit=" << *pit << endl;
+            kDebug() << "person=" << (person == NULL ? "NULL" : "ok") << endl;
             if (person != NULL)
                 value.append(person);
         }
-        field->setValue(value);
+        kDebug() << "value size " << value.size() << endl;
+        kDebug() << "Author 1 count= " << entry->value(KBibTeX::IO::Entry::ftAuthor).size() << "  " << entry->size() << endl;
+        entry->insert(Entry::ftAuthor, value);
+        kDebug() << "Author 2 count= " << entry->value(KBibTeX::IO::Entry::ftAuthor).size() << "  " << entry->size() << endl;
+        for (Entry::Iterator it = entry->begin(); it != entry->end(); ++it) {
+            kDebug() << "key = " << it.key() << endl;
+        }
     }
 
+    /*
     if (!editorList.empty()) {
-        Field * field = entry->getField(Field::ftEditor);
+        Field * field = entry->getField(Entry::ftEditor);
         if (field == NULL) {
-            field = new Field(Field::ftEditor);
+            field = new Field(Entry::ftEditor);
             entry->addField(field);
         }
         Value value;
@@ -299,9 +269,9 @@ Element *FileImporterRIS::nextElement(QTextStream &textStream)
     }
 
     if (!keywordList.empty()) {
-        Field * field = entry->getField(Field::ftKeywords);
+        Field * field = entry->getField(Entry::ftKeywords);
         if (field == NULL) {
-            field = new Field(Field::ftKeywords);
+            field = new Field(Entry::ftKeywords);
             entry->addField(field);
         }
         Value value;
@@ -311,9 +281,9 @@ Element *FileImporterRIS::nextElement(QTextStream &textStream)
     }
 
     if (!journalName.isEmpty()) {
-        Field * field = entry->getField(entryType == Entry::etInBook || entryType == Entry::etInProceedings ? Field::ftBookTitle : Field::ftJournal);
+        Field * field = entry->getField(entryType == Entry::etInBook || entryType == Entry::etInProceedings ? Entry::ftBookTitle : Entry::ftJournal);
         if (field == NULL) {
-            field = new Field(Field::ftJournal);
+            field = new Field(Entry::ftJournal);
             entry->addField(field);
         }
         Value value;
@@ -322,22 +292,17 @@ Element *FileImporterRIS::nextElement(QTextStream &textStream)
     }
 
     if (!abstract.isEmpty()) {
-        Field * field = entry->getField(Field::ftAbstract);
+        Field * field = entry->getField(Entry::ftAbstract);
         if (field == NULL) {
-            field = new Field(Field::ftAbstract);
+            field = new Field(Entry::ftAbstract);
             entry->addField(field);
         }
         Value value;
         value.append(new PlainText(abstract));
         field->setValue(value);
     }
-
+    */
     if (!startPage.isEmpty() || !endPage.isEmpty()) {
-        Field * field = entry->getField(Field::ftPages);
-        if (field == NULL) {
-            field = new Field(Field::ftPages);
-            entry->addField(field);
-        }
         QString page;
         if (startPage.isEmpty())
             page = endPage;
@@ -348,38 +313,31 @@ Element *FileImporterRIS::nextElement(QTextStream &textStream)
 
         Value value;
         value.append(new PlainText(page));
-        field->setValue(value);
+        entry->insert(Entry::ftPages, value);
     }
+
 
     QStringList dateFragments = date.split("/", QString::SkipEmptyParts);
     if (dateFragments.count() > 0) {
         bool ok;
         int year = dateFragments[ 0 ].toInt(&ok);
         if (ok && year > 1000 && year < 3000) {
-            Field * field = entry->getField(Field::ftYear);
-            if (field == NULL) {
-                field = new Field(Field::ftYear);
-                entry->addField(field);
-            }
-            Value value;
+            Value value = entry->value(Entry::ftYear);
             value.append(new PlainText(QString::number(year)));
-            field->setValue(value);
+            entry->insert(Entry::ftYear, value);
         }
     }
     if (dateFragments.count() > 1) {
         bool ok;
         int month = dateFragments[ 0 ].toInt(&ok);
         if (ok && month > 0 && month < 13) {
-            Field * field = entry->getField(Field::ftMonth);
-            if (field == NULL) {
-                field = new Field(Field::ftMonth);
-                entry->addField(field);
-            }
-            Value value;
+            Value value = entry->value(Entry::ftMonth);
             value.append(new PlainText(QString::number(month)));
-            field->setValue(value);
+            entry->insert(Entry::ftMonth, value);
         }
     }
+
+    kDebug() << "Author count= " << entry->value(KBibTeX::IO::Entry::ftAuthor).size() << endl;
 
     return entry;
 }

@@ -94,19 +94,18 @@ QVariant BibTeXFileModel::data(const QModelIndex &index, int role) const
             if (raw == "^id")
                 return QVariant(entry->id());
             else if (raw == "^type")
-                return QVariant(KBibTeX::IO::Entry::entryTypeToString(entry->entryType()));
+                return QVariant(entry->type());
             else {
-                KBibTeX::IO::Field *field = NULL;
-                if ((field = entry->getField(raw)) != NULL) {
-                    QString text = KBibTeX::IO::PlainTextValue::text(field->value(), m_bibtexFile);
+                if (entry->contains(raw)) {
+                    QString text = KBibTeX::IO::PlainTextValue::text(entry->value(raw), m_bibtexFile);
                     text = text.replace(whiteSpace, " ");
                     return QVariant(text);
-                } else if (!rawAlt.isNull() && (field = entry->getField(rawAlt)) != NULL) {
-                    QString text = KBibTeX::IO::PlainTextValue::text(field->value(), m_bibtexFile);
+                } else if (!rawAlt.isNull() && entry->contains(rawAlt)) {
+                    QString text = KBibTeX::IO::PlainTextValue::text(entry->value(rawAlt), m_bibtexFile);
                     text = text.replace(whiteSpace, " ");
                     return QVariant(text);
                 } else
-                    return QVariant();
+                    return QVariant(raw);
             }
         } else {
             KBibTeX::IO::Macro* macro = dynamic_cast<KBibTeX::IO::Macro*>(element);

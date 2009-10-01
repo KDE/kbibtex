@@ -85,7 +85,7 @@ bool FileExporterXML::write(QTextStream& stream, const Element* element, const F
     if (entry != NULL) {
         if (bibtexfile != NULL) {
 // FIXME                entry = bibtexfile->completeReferencedFieldsConst( entry );
-            entry = new Entry(entry);
+            entry = new Entry(*entry);
         }
         result |= writeEntry(stream, entry);
         if (bibtexfile != NULL)
@@ -109,22 +109,23 @@ bool FileExporterXML::write(QTextStream& stream, const Element* element, const F
 
 bool FileExporterXML::writeEntry(QTextStream &stream, const Entry* entry)
 {
-    stream << " <entry id=\"" << EncoderXML::currentEncoderXML() ->encode(entry->id()) << "\" type=\"" << entry->entryTypeString().toLower() << "\">" << endl;
-    for (Entry::Fields::ConstIterator it = entry->begin(); it != entry->end(); ++it) {
-        Field *field = *it;
-        QString tag = field->key().toLower();
-        if (tag == Field::ftAuthor || tag == Field::ftEditor) {
-            stream << "  <" << tag << "s>" << endl;
-            stream << valueToXML(field->value(), field->key()) << endl;
-            stream << "  </" << tag << "s>" << endl;
-        } else if (tag == Field::ftMonth) {
+    stream << " <entry id=\"" << EncoderXML::currentEncoderXML() ->encode(entry->id()) << "\" type=\"" << entry->type().toLower() << "\">" << endl;
+    for (Entry::ConstIterator it = entry->begin(); it != entry->end(); ++it) {
+        const QString key = it.key();
+        const Value value = it.value();
+
+        if (key == Entry::ftAuthor || key == Entry::ftEditor) {
+            stream << "  <" << key << "s>" << endl;
+            stream << valueToXML(value, key) << endl;
+            stream << "  </" << key << "s>" << endl;
+        } else if (key == Entry::ftMonth) {
             stream << "  <month";
             bool ok = FALSE;
 
             int month = -1;
             QString tag = "";
             QString content = "";
-            for (QList<ValueItem*>::ConstIterator it = field->value().begin(); it != field->value().end(); ++it) {
+            for (QList<ValueItem*>::ConstIterator it = value.begin(); it != value.end(); ++it) {
                 MacroKey*  macro = dynamic_cast<MacroKey*>(*it);
                 if (macro != NULL)
                     for (int i = 0; i < 12; i++) {
@@ -143,15 +144,15 @@ bool FileExporterXML::writeEntry(QTextStream &stream, const Entry* entry)
             }
 
             if (!ok)
-                content = valueToXML(field->value()) ;
+                content = valueToXML(value) ;
             if (!tag.isEmpty())
-                stream << " tag=\"" << tag << "\"";
+                stream << " tag=\"" << key << "\"";
             if (month > 0)
                 stream << " month=\"" << month << "\"";
             stream << '>' << content;
             stream << "</month>" << endl;
         } else {
-            stream << "  <" << tag << ">" << valueToXML(field->value()) << "</" << tag << ">" << endl;
+            stream << "  <" << key << ">" << valueToXML(value) << "</" << key << ">" << endl;
         }
 
     }

@@ -22,7 +22,6 @@
 #define KBIBTEX_IO_MACRO_H
 
 #include <element.h>
-#include <field.h>
 #include <value.h>
 
 class QString;
