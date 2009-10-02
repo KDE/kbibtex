@@ -80,7 +80,7 @@ private:
     QSignalMapper *m_menuTypesSignalMapper;
 
     void setupMenu();
-    void updatePushButtonType();
+    void updateGUI();
 
 private slots:
     void slotTypeChanged(int);

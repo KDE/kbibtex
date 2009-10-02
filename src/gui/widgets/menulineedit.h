@@ -44,8 +44,10 @@ public:
 
     void setMenu(QMenu *menu);
     void setReadOnly(bool);
+    QString text() const;
     void setText(const QString &);
     void setIcon(const KIcon & icon);
+    void setFont(const QFont & font);
     void setButtonToolTip(const QString &);
 
 private:

@@ -18,8 +18,6 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include <QFocusFrame>
-
 #include "fieldeditor.h"
 #include "fieldlineedit.h"
 
@@ -36,15 +34,12 @@ public:
 FieldEditor::FieldEditor(EditMode editMode, QWidget *parent)
         : QStackedWidget(parent), d(new FieldEditorPrivate)
 {
-    QFocusFrame *ff = new QFocusFrame();
-    ff->setWidget(this);
-
     d->m_editMode = editMode;
-    d->m_widgets = new FieldLineEdit*[4];
+    d->m_widgets = new FieldLineEdit*[EditModeMax];
 
-    d->m_widgets[0] = new FieldLineEdit(FieldLineEdit::Text | FieldLineEdit::Source, this);
-    d->m_widgets[0]->setTypeFlag(FieldLineEdit::Source);
-    addWidget(d->m_widgets[0]);
+    d->m_widgets[SingleLine] = new FieldLineEdit(FieldLineEdit::Text | FieldLineEdit::Source, this);
+    d->m_widgets[SingleLine]->setTypeFlag(FieldLineEdit::Source);
+    addWidget(d->m_widgets[SingleLine]);
 
     setBackgroundRole(QPalette::Base);
 }

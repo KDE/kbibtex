@@ -20,10 +20,16 @@
 
 #include <QMenu>
 #include <QSignalMapper>
+#include <QBuffer>
+
+#include <KDebug>
+#include <KMessageBox>
+#include <KGlobalSettings>
 
 #include "fieldlineedit.h"
 #include "fileexporterbibtex.h"
 #include "fileimporterbibtex.h"
+#include "entry.h"
 
 using namespace KBibTeX::GUI::Widgets;
 
@@ -44,7 +50,7 @@ FieldLineEdit::TypeFlag FieldLineEdit::setTypeFlag(FieldLineEdit::TypeFlag typeF
     else if (m_typeFlags&Keyword) m_typeFlag = Keyword;
     else if (m_typeFlags&Source) m_typeFlag = Source;
 
-    updatePushButtonType();
+    updateGUI();
 
     return m_typeFlag;
 }
@@ -55,11 +61,46 @@ void FieldLineEdit::setValue(const KBibTeX::IO::Value& value)
     loadValue(m_originalValue);
 }
 
-void FieldLineEdit::applyTo(KBibTeX::IO::Value& /*value*/)
+void FieldLineEdit::applyTo(KBibTeX::IO::Value& value)
 {
-    KBibTeX::IO::FileImporterBibTeX *importer = new KBibTeX::IO::FileImporterBibTeX();
-    // TODO Write a QString to value function
-    delete importer;
+    value.clear();
+    switch (m_typeFlag) {
+    case Text:
+        value.append(new KBibTeX::IO::PlainText(text()));
+        break;
+    case Reference:
+        value.append(new KBibTeX::IO::MacroKey(text())); // FIXME Check that text contains only valid characters!
+        break;
+    case Person:
+        value.append(KBibTeX::IO::FileImporterBibTeX::splitName(text()));
+        break;
+    case Keyword: {
+        QList<KBibTeX::IO::Keyword*> keywords = KBibTeX::IO::FileImporterBibTeX::splitKeywords(text());
+        for (QList<KBibTeX::IO::Keyword*>::Iterator it = keywords.begin(); it != keywords.end(); ++it)
+            value.append(*it);
+    }
+    break;
+    case Source: {
+        QString key = "author"; // FIXME "author" is only required for persons, use something else for plain text
+        KBibTeX::IO::FileImporterBibTeX importer;
+        QString fakeBibTeXFile = QString("@article{ dummy, %1=%2 }").arg(key).arg(text());
+        kDebug() << "fakeBibTeXFile=" << fakeBibTeXFile << endl;
+        QBuffer buffer;
+        buffer.open(QIODevice::WriteOnly);
+        QTextStream ts(&buffer);
+        ts << fakeBibTeXFile << endl;
+        buffer.close();
+
+        buffer.open(QIODevice::ReadOnly);
+        KBibTeX::IO::File *file = importer.load(&buffer);
+        KBibTeX::IO::Entry *entry = dynamic_cast< KBibTeX::IO::Entry*>(file->first());
+        value = entry->value(key);
+        kDebug() << "value->count()=" << value.count() << "  " << entry->value(key).count() << endl;
+        delete file;
+        buffer.close();
+    }
+    break;
+    }
 }
 
 void FieldLineEdit::reset()
@@ -117,6 +158,8 @@ void FieldLineEdit::loadValue(const KBibTeX::IO::Value& value)
         }
     }
 
+    if (m_incompleteRepresentation)
+        m_incompleteRepresentation = KMessageBox::warningContinueCancel(this, "The chosen representation cannot display the value of this field.\n\nUsing this representation will cause lost of data.", "Chosen representation", KGuiItem("Continue with data loss", "continue"), KGuiItem("Make field read-only", "readonly")) != KMessageBox::Continue;
     setReadOnly(m_incompleteRepresentation);
     setText(text);
 }
@@ -147,14 +190,18 @@ void FieldLineEdit::setupMenu()
     }
 }
 
-void FieldLineEdit::updatePushButtonType()
+void FieldLineEdit::updateGUI()
 {
+    setFont(KGlobalSettings::generalFont());
     setIcon(iconForTypeFlag(m_typeFlag));
     switch (m_typeFlag) {
     case Text: setButtonToolTip("Plain Text"); break;
     case Reference: setButtonToolTip("Reference"); break;
     case Person: setButtonToolTip("Person"); break;
-    case Source: setButtonToolTip("Source Code"); break;
+    case Source:
+        setButtonToolTip("Source Code");
+        setFont(KGlobalSettings::fixedFont());
+        break;
     default: setButtonToolTip(""); break;
     };
 }
@@ -166,7 +213,7 @@ void FieldLineEdit::slotTypeChanged(int newTypeFlag)
         applyTo(value);
 
     m_typeFlag = (TypeFlag)newTypeFlag;
-    updatePushButtonType();
+    updateGUI();
 
     loadValue(value);
 }

@@ -42,7 +42,7 @@ class KBIBTEXGUI_EXPORT FieldEditor : public QStackedWidget
 
 public:
     enum EditMode {
-        SingleLine = 0, MultiLine = 1, List = 2, SourceCode = 3
+        SingleLine = 0, MultiLine = 1, List = 2, SourceCode = 3, EditModeMax = 4
     };
 
     FieldEditor(EditMode editMode = SingleLine, QWidget *parent = 0);

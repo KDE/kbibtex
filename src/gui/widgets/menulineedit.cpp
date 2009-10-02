@@ -81,6 +81,11 @@ void MenuLineEdit::setReadOnly(bool readOnly)
     d->m_lineEditText->setReadOnly(readOnly);
 }
 
+QString MenuLineEdit::text() const
+{
+    return d->m_lineEditText->text();
+}
+
 void MenuLineEdit::setText(const QString &text)
 {
     d->m_lineEditText->setText(text);
@@ -89,6 +94,11 @@ void MenuLineEdit::setText(const QString &text)
 void MenuLineEdit::setIcon(const KIcon & icon)
 {
     d->m_pushButtonType->setIcon(icon);
+}
+
+void MenuLineEdit::setFont(const QFont & font)
+{
+    d->m_lineEditText->setFont(font);
 }
 
 void MenuLineEdit::setButtonToolTip(const QString &text)

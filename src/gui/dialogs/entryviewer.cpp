@@ -24,7 +24,6 @@
 
 #include <fieldeditor.h>
 #include <value.h>
-#include <field.h>
 #include "entryviewer.h"
 
 using namespace KBibTeX::GUI::Dialogs;
