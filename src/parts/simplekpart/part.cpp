@@ -31,6 +31,7 @@
 
 #include <file.h>
 #include <fileimporterbibtex.h>
+#include <fileimporterris.h>
 #include <bibtexfilemodel.h>
 
 #include "part.h"
@@ -86,7 +87,19 @@ void KBibTeXPart::fitActionSettings()
 
 bool KBibTeXPart::openFile()
 {
-    KBibTeX::IO::FileImporterBibTeX *importer = new KBibTeX::IO::FileImporterBibTeX("latex", false);
+    QString ending = localFilePath().toLower();
+    int p = ending.lastIndexOf(".");
+    ending = ending.mid(p + 1);
+
+    KBibTeX::IO::FileImporter *importer = NULL;
+    if (ending == "ris") {
+        kDebug() << "Selecting KBibTeX::IO::FileImporterRIS" << endl;
+        importer = new KBibTeX::IO::FileImporterRIS();
+    } else {
+        kDebug() << "Selecting KBibTeX::IO::FileImporterBibTeX" << endl;
+        importer = new KBibTeX::IO::FileImporterBibTeX("latex", false);
+    }
+
     QFile inputfile(localFilePath());
     inputfile.open(QIODevice::ReadOnly);
     KBibTeX::IO::File *bibtexFile = importer->load(&inputfile);

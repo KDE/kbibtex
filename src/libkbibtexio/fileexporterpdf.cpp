@@ -161,8 +161,9 @@ void FileExporterPDF::fillEmbeddedFileList(const File* bibtexfile)
         fillEmbeddedFileList(*it);
 }
 
-void FileExporterPDF::fillEmbeddedFileList(const Element* element)
+void FileExporterPDF::fillEmbeddedFileList(const Element* /*element*/)
 {
+    /* FIXME
     const Entry *entry = dynamic_cast<const Entry*>(element);
     if (entry != NULL) {
         QString id = entry->id();
@@ -181,4 +182,5 @@ void FileExporterPDF::fillEmbeddedFileList(const Element* element)
                 }
         }
     }
+    */
 }
