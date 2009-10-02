@@ -48,6 +48,24 @@ public:
     File* load(QIODevice *iodevice);
     static bool guessCanDecode(const QString & text);
 
+    /**
+     * Split a list of keyword separated by ";" or "," into single Keyword objects.
+     * @param name The persons name
+     * @return A Person object containing the name
+     * @see Person
+     */
+    static QList<Keyword*> splitKeywords(const QString& text);
+
+    /**
+     * Split a person's name into its parts and construct a Person object from them.
+     * This is a functions specialized on the properties of (La)TeX code considering
+     * e.g. curly brackets.
+     * @param name The persons name
+     * @return A Person object containing the name
+     * @see Person
+     */
+    static Person *splitName(const QString& name);
+
 public slots:
     void cancel();
 
@@ -78,19 +96,10 @@ private:
     Token readValue(Value& value, const QString& fieldType);
 
     void unescapeLaTeXChars(QString &text);
-    void splitPersonList(const QString& text, QStringList &resultList);
 
-    /**
-      * Split a person's name into its parts and construct a Person object from them.
-      * This is a functions specialized on the properties of (La)TeX code considering
-      * e.g. curly brackets.
-      * @param name The persons name
-      * @return A Person object containing the name
-      * @see Person
-      */
-    Person *splitName(const QString& text);
+    static void splitPersonList(const QString& name, QStringList &resultList);
+    static bool splitName(const QString& name, QStringList& segments);
 
-    bool splitName(const QString& text, QStringList& segments);
     bool evaluateParameterComments(QTextStream *textStream, const QString &line);
 };
 

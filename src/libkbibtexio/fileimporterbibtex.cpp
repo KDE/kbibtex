@@ -497,6 +497,27 @@ void FileImporterBibTeX::unescapeLaTeXChars(QString &text)
     text.replace("\\&", "&");
 }
 
+QList<Keyword*> FileImporterBibTeX::splitKeywords(const QString& text)
+{
+    QList<Keyword*> result;
+    const QLatin1String sepText[] = {QLatin1String(";"), QLatin1String(",")};
+    const int max = sizeof(sepText) / sizeof(sepText[0]);
+
+    for (int i = 0; i < max; ++i)
+        if (text.contains(sepText[i])) {
+            QRegExp sepRegExp("\\s*" + sepText[0] + "\\s*");
+            QStringList token = text.split(sepRegExp, QString::SkipEmptyParts);
+            for (QStringList::Iterator it = token.begin(); it != token.end(); ++it)
+                result.append(new Keyword(*it));
+            break;
+        }
+
+    if (result.isEmpty())
+        result.append(new Keyword(text));
+
+    return result;
+}
+
 void FileImporterBibTeX::splitPersonList(const QString& text, QStringList &resultList)
 {
     QStringList wordList;
