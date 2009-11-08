@@ -35,9 +35,10 @@ using namespace KBibTeX::Program;
 class MDIWidget::MDIWidgetPrivate
 {
 public:
-    struct Triple {
+    struct OpenFileInfo {
         KUrl url;
         QString encoding;
+        KParts::Part *part;
         QWidget *container;
     };
 
@@ -46,33 +47,34 @@ public:
         // nothing
     }
 
-    QList<struct Triple> openFiles;
+    QList<struct OpenFileInfo> openFiles;
     MDIWidget *p;
-
-    bool getTriple(const KUrl &url, struct Triple &triple) {
-        for (QList<struct Triple>::Iterator it = openFiles.begin(); it != openFiles.end(); ++it)
+    bool getOpenFileInfo(const KUrl &url, struct OpenFileInfo &openFileInfo) {
+        for (QList<struct OpenFileInfo>::Iterator it = openFiles.begin(); it != openFiles.end(); ++it)
             if ((*it).url.equals(url)) {
-                triple.url = (*it).url;
-                triple.encoding = (*it).encoding;
-                triple.container = (*it).container;
+                openFileInfo.url = (*it).url;
+                openFileInfo.encoding = (*it).encoding;
+                openFileInfo.part = (*it).part;
+                openFileInfo.container = (*it).container;
                 return true;
             }
         return false;
     }
 
-    bool getTriple(QWidget *container, struct Triple &triple) {
-        for (QList<struct Triple>::Iterator it = openFiles.begin(); it != openFiles.end(); ++it)
+    bool getOpenFileInfo(QWidget *container, struct OpenFileInfo &openFileInfo) {
+        for (QList<struct OpenFileInfo>::Iterator it = openFiles.begin(); it != openFiles.end(); ++it)
             if ((*it).container == container) {
-                triple.url = (*it).url;
-                triple.encoding = (*it).encoding;
-                triple.container = (*it).container;
+                openFileInfo.url = (*it).url;
+                openFileInfo.encoding = (*it).encoding;
+                openFileInfo.part = (*it).part;
+                openFileInfo.container = (*it).container;
                 return true;
             }
         return false;
     }
 
-    QWidget *createWidget(const KUrl &url, const QString &/*FIXME encoding*/) {
-        QString mimeTypeName = "text/x-bibtex";//KIO::NetAccess::mimetype(url, 0); // FIXME: Only for debugging!
+    bool createPartAndWidget(struct OpenFileInfo &openFileInfo) {
+        QString mimeTypeName = KIO::NetAccess::mimetype(openFileInfo.url, 0);
         kDebug() << "mimetype is " << mimeTypeName << endl;
 
         KService::List list = KMimeTypeTrader::self()->query(mimeTypeName, QString::fromLatin1("KParts/ReadWritePart"));
@@ -85,20 +87,23 @@ public:
 
         if (part == NULL) {
             kError() << "Cannot find part for mimetype " << mimeTypeName << endl;
-            return NULL;
+            return false;
         }
 
         QWidget *newWidget = part->widget();
         newWidget->setParent(p);
         p->addWidget(newWidget);
 
-        part->openUrl(url);
+        part->openUrl(openFileInfo.url);
 
-        return newWidget;
+        openFileInfo.part = part;
+        openFileInfo.container = newWidget;
+
+        return true;
     }
 
     bool addUniqueUrl(const KUrl &url, const QString &encoding) {
-        for (QList<struct Triple>::Iterator it = openFiles.begin(); it != openFiles.end(); ++it)
+        for (QList<struct OpenFileInfo>::Iterator it = openFiles.begin(); it != openFiles.end(); ++it)
             if ((*it).url.equals(url)) {
                 (*it).encoding = encoding;
                 p->setCurrentWidget((*it).container);
@@ -107,18 +112,16 @@ public:
 
         qApp->setOverrideCursor(Qt::WaitCursor);
 
-        struct Triple triple;
-        triple.url = url;
-        triple.encoding = encoding;
-        triple.container = createWidget(url, encoding);
-
-        if (triple.container == NULL) {
+        struct OpenFileInfo openFileInfo;
+        openFileInfo.url = url;
+        openFileInfo.encoding = encoding;
+        if (!createPartAndWidget(openFileInfo)) {
             qApp->restoreOverrideCursor();
             return false;
         }
 
-        p->setCurrentWidget(triple.container);
-        openFiles.append(triple);
+        p->setCurrentWidget(openFileInfo.container);
+        openFiles.append(openFileInfo);
 
         qApp->restoreOverrideCursor();
         return true;
@@ -126,7 +129,7 @@ public:
 
     bool removeUrl(const KUrl &url) {
         int i = 0;
-        for (QList<struct Triple>::Iterator it = openFiles.begin(); it != openFiles.end(); ++it, ++i)
+        for (QList<struct OpenFileInfo>::Iterator it = openFiles.begin(); it != openFiles.end(); ++it, ++i)
             if ((*it).url.equals(url)) {
                 p->removeWidget((*it).container);
                 openFiles.removeAt(i);
@@ -147,15 +150,19 @@ MDIWidget::MDIWidget(QWidget *parent)
 
 bool MDIWidget::setUrl(const KUrl &url, const QString &encoding)
 {
-    struct MDIWidgetPrivate::Triple triple;
-    KUrl oldUrl = d->getTriple(currentWidget(), triple) ? triple.url : KUrl();
+    struct MDIWidgetPrivate::OpenFileInfo oldOpenFileInfo;
+    KUrl oldUrl = d->getOpenFileInfo(currentWidget(), oldOpenFileInfo) ? oldOpenFileInfo.url : KUrl();
 
     bool addingSucceeded = d->addUniqueUrl(url, encoding);
 
     if (!addingSucceeded)
         return false;
 
-    if (!oldUrl.equals(url)) emit documentSwitch(editor(), oldUrl.isValid() ? dynamic_cast<KBibTeX::GUI::BibTeXEditor*>(triple.container) : NULL);
+    struct MDIWidgetPrivate::OpenFileInfo newOpenFileInfo;
+    if (!oldUrl.equals(url) && d->getOpenFileInfo(url, newOpenFileInfo)) {
+        emit documentSwitch(editor(), oldUrl.isValid() ? dynamic_cast<KBibTeX::GUI::BibTeXEditor*>(oldOpenFileInfo.container) : NULL);
+        emit activePartChanged(newOpenFileInfo.part);
+    }
 
     return true;
 }
@@ -174,18 +181,18 @@ bool MDIWidget::closeUrl(const KUrl &url)
 
 KUrl MDIWidget::currentUrl() const
 {
-    struct MDIWidgetPrivate::Triple triple;
-    if (d->getTriple(currentWidget(), triple)) {
-        return triple.url;
+    struct MDIWidgetPrivate::OpenFileInfo openFileInfo;
+    if (d->getOpenFileInfo(currentWidget(), openFileInfo)) {
+        return openFileInfo.url;
     }
     return KUrl();
 }
 
 KBibTeX::GUI::BibTeXEditor *MDIWidget::editor()
 {
-    struct MDIWidgetPrivate::Triple triple;
-    if (d->getTriple(currentWidget(), triple)) {
-        return dynamic_cast<KBibTeX::GUI::BibTeXEditor*>(triple.container);
+    struct MDIWidgetPrivate::OpenFileInfo openFileInfo;
+    if (d->getOpenFileInfo(currentWidget(), openFileInfo)) {
+        return dynamic_cast<KBibTeX::GUI::BibTeXEditor*>(openFileInfo.container);
     }
 
     return NULL;
