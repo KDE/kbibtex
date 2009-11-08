@@ -95,7 +95,7 @@ bool FileExporterBibTeX::save(QIODevice* iodevice, const File* bibtexfile, QStri
 
     QTextStream stream(iodevice);
     stream.setCodec(m_encoding == "latex" ? "UTF-8" : m_encoding.toAscii());
-    parameterCommentsList << new Comment("x-kbibtex-encoding=" + m_encoding, false);
+    parameterCommentsList << new Comment("x-kbibtex-encoding=" + m_encoding, true);
     qDebug() << "New x-kbibtex-encoding is \"" << m_encoding << "\"" << endl;
 
     /** before anything else, write parameter comments */
