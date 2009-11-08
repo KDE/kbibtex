@@ -61,9 +61,12 @@ protected:
         void onSelectionChanged( bool HasSelection );
     */
 
+protected slots:
+    void saveDocumentDialog();
+
 private:
-    // TODO
-    KBibTeX::GUI::BibTeXEditor *m_widget;
+    class KBibTeXPartPrivate;
+    KBibTeXPartPrivate * const d;
 };
 
 #endif // KBIBTEX_PART_PART_H
