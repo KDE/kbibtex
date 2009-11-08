@@ -44,6 +44,11 @@ BibTeXFileModel::~BibTeXFileModel()
 // TODO
 }
 
+KBibTeX::IO::File *BibTeXFileModel::bibTeXFile()
+{
+    return m_bibtexFile;
+}
+
 void BibTeXFileModel::setBibTeXFile(KBibTeX::IO::File *bibtexFile)
 {
     m_bibtexFile = bibtexFile;

@@ -44,6 +44,7 @@ public:
     BibTeXFileModel(QObject * parent = 0);
     virtual ~BibTeXFileModel();
 
+    KBibTeX::IO::File *bibTeXFile();
     void setBibTeXFile(KBibTeX::IO::File *bibtexFile);
 
     virtual QModelIndex index(int row, int column, const QModelIndex & parent = QModelIndex()) const;
