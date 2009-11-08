@@ -23,6 +23,7 @@
 #include <QApplication>
 
 #include <KEncodingFileDialog>
+#include <KMessageBox>
 #include <klocale.h>
 #include <kdebug.h>
 #include <kaction.h>
@@ -118,6 +119,11 @@ bool KBibTeXPart::saveFile()
 {
     if (!isReadWrite())
         return false; //< if part is in read-only mode, then forbid any write operation
+    if (!url().isLocalFile()) { // FIXME: non-local files must be handled
+        KMessageBox::information(widget(), i18n("Can only save to local files"), i18n("Saving file"));
+        return false;
+    }
+    setLocalFilePath(url().path());
 
     qApp->setOverrideCursor(Qt::WaitCursor);
 
