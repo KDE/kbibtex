@@ -21,7 +21,7 @@
 #ifndef KBIBTEX_PROGRAM_MAINWINDOW_H
 #define KBIBTEX_PROGRAM_MAINWINDOW_H
 
-#include <KXmlGuiWindow>
+#include <kparts/mainwindow.h>
 #include <KConfigGroup>
 
 #include <bibtexeditor.h>
@@ -39,7 +39,7 @@ class KBibTeXProgram;
 class MDIWidget;
 class ReferencePreview;
 
-class KBibTeXMainWindow : public KXmlGuiWindow
+class KBibTeXMainWindow : public KParts::MainWindow
 {
     Q_OBJECT
 
@@ -66,6 +66,7 @@ protected:
     ReferencePreview *m_referencePreview;
 
 protected slots:
+    void newDocument();
     void openDocumentDialog();
     void closeDocument();
     void documentSwitched(KBibTeX::GUI::BibTeXEditor*, KBibTeX::GUI::BibTeXEditor*);

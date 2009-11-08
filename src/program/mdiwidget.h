@@ -46,6 +46,7 @@ public:
 
 signals:
     void documentSwitch(KBibTeX::GUI::BibTeXEditor *, KBibTeX::GUI::BibTeXEditor *);
+    void activePartChanged(KParts::Part *);
 
 private:
     class MDIWidgetPrivate;

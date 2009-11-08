@@ -39,7 +39,7 @@
 using namespace KBibTeX::Program;
 
 KBibTeXMainWindow::KBibTeXMainWindow(KBibTeXProgram *program)
-        : KXmlGuiWindow(), m_program(program)
+        : KParts::MainWindow(), m_program(program)
 {
     setObjectName(QLatin1String("Shell"));   // FIXME
 
@@ -68,12 +68,13 @@ KBibTeXMainWindow::KBibTeXMainWindow(KBibTeXProgram *program)
     m_dockReferencePreview->setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
 
     setXMLFile("kbibtexui.rc");
-    createGUI();
 
     m_mdiWidget = new MDIWidget(this);
     setCentralWidget(m_mdiWidget);
     connect(m_mdiWidget, SIGNAL(documentSwitch(KBibTeX::GUI::BibTeXEditor *, KBibTeX::GUI::BibTeXEditor *)), this, SLOT(documentSwitched(KBibTeX::GUI::BibTeXEditor *, KBibTeX::GUI::BibTeXEditor *)));
+    connect(m_mdiWidget, SIGNAL(activePartChanged(KParts::Part*)), this, SLOT(createGUI(KParts::Part*)));
 
+    actionCollection()->addAction(KStandardAction::New, this, SLOT(newDocument()));
     actionCollection()->addAction(KStandardAction::Open, this, SLOT(openDocumentDialog()));
     m_actionClose = actionCollection()->addAction(KStandardAction::Close, this, SLOT(closeDocument()));
     m_actionClose->setEnabled(false);
@@ -100,6 +101,11 @@ void KBibTeXMainWindow::saveProperties(KConfigGroup &/*configGroup*/)
 }
 
 void KBibTeXMainWindow::readProperties(const KConfigGroup &/*configGroup*/)
+{
+    // TODO
+}
+
+void KBibTeXMainWindow::newDocument()
 {
     // TODO
 }
