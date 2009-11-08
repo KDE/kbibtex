@@ -20,6 +20,8 @@
 
 #include <QBuffer>
 
+#include <KLocale>
+
 #include <fileexporterbibtex.h>
 
 #include "referencepreview.h"

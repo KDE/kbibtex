@@ -25,6 +25,7 @@
 #include <KDebug>
 #include <KMessageBox>
 #include <KGlobalSettings>
+#include <KLocale>
 
 #include "fieldlineedit.h"
 #include "fileexporterbibtex.h"
