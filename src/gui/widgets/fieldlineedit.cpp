@@ -159,33 +159,33 @@ void FieldLineEdit::loadValue(const KBibTeX::IO::Value& value)
     }
 
     if (m_incompleteRepresentation)
-        m_incompleteRepresentation = KMessageBox::warningContinueCancel(this, "The chosen representation cannot display the value of this field.\n\nUsing this representation will cause lost of data.", "Chosen representation", KGuiItem("Continue with data loss", "continue"), KGuiItem("Make field read-only", "readonly")) != KMessageBox::Continue;
+        m_incompleteRepresentation = KMessageBox::warningContinueCancel(this, i18n("The chosen representation cannot display the value of this field.\n\nUsing this representation will cause lost of data."), i18n("Chosen representation"), KGuiItem(i18n("Continue with data loss"), "continue"), KGuiItem(i18n("Make field read-only"), "readonly")) != KMessageBox::Continue;
     setReadOnly(m_incompleteRepresentation);
     setText(text);
 }
 
 void FieldLineEdit::setupMenu()
 {
-    m_menuTypes = new QMenu("Types", this);
+    m_menuTypes = new QMenu(i18n("Types"), this);
     setMenu(m_menuTypes);
 
     m_menuTypesSignalMapper = new QSignalMapper(this);
     connect(m_menuTypesSignalMapper, SIGNAL(mapped(int)), this, SLOT(slotTypeChanged(int)));
 
     if (m_typeFlags&Text) {
-        QAction *action = m_menuTypes->addAction(iconForTypeFlag(Text), "Plain Text", m_menuTypesSignalMapper, SLOT(map()));
+        QAction *action = m_menuTypes->addAction(iconForTypeFlag(Text), i18n("Plain Text"), m_menuTypesSignalMapper, SLOT(map()));
         m_menuTypesSignalMapper->setMapping(action, Text);
     }
     if (m_typeFlags&Reference) {
-        QAction *action = m_menuTypes->addAction(iconForTypeFlag(Reference), "Reference", m_menuTypesSignalMapper, SLOT(map()));
+        QAction *action = m_menuTypes->addAction(iconForTypeFlag(Reference), i18n("Reference"), m_menuTypesSignalMapper, SLOT(map()));
         m_menuTypesSignalMapper->setMapping(action, Reference);
     }
     if (m_typeFlags&Person) {
-        QAction *action = m_menuTypes->addAction(iconForTypeFlag(Person), "Person", m_menuTypesSignalMapper, SLOT(map()));
+        QAction *action = m_menuTypes->addAction(iconForTypeFlag(Person), i18n("Person"), m_menuTypesSignalMapper, SLOT(map()));
         m_menuTypesSignalMapper->setMapping(action, Person);
     }
     if (m_typeFlags&Source) {
-        QAction *action = m_menuTypes->addAction(iconForTypeFlag(Source), "Source Code", m_menuTypesSignalMapper, SLOT(map()));
+        QAction *action = m_menuTypes->addAction(iconForTypeFlag(Source), i18n("Source Code"), m_menuTypesSignalMapper, SLOT(map()));
         m_menuTypesSignalMapper->setMapping(action, Source);
     }
 }
@@ -195,11 +195,11 @@ void FieldLineEdit::updateGUI()
     setFont(KGlobalSettings::generalFont());
     setIcon(iconForTypeFlag(m_typeFlag));
     switch (m_typeFlag) {
-    case Text: setButtonToolTip("Plain Text"); break;
-    case Reference: setButtonToolTip("Reference"); break;
-    case Person: setButtonToolTip("Person"); break;
+    case Text: setButtonToolTip(i18n("Plain Text")); break;
+    case Reference: setButtonToolTip(i18n("Reference")); break;
+    case Person: setButtonToolTip(i18n("Person")); break;
     case Source:
-        setButtonToolTip("Source Code");
+        setButtonToolTip(i18n("Source Code"));
         setFont(KGlobalSettings::fixedFont());
         break;
     default: setButtonToolTip(""); break;

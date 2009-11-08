@@ -134,7 +134,7 @@ void KBibTeXMainWindow::documentSwitched(KBibTeX::GUI::BibTeXEditor *newEditor, 
     KUrl url = m_mdiWidget->currentUrl();
     m_actionClose->setEnabled(url.isValid());
 
-    setCaption((url.isValid() ? url.fileName() + " - " : "") + "KBibTeX");
+    setCaption(url.isValid() ? QString(i18n("%1 - KBibTeX")).arg(url.fileName()) : i18n("KBibTeX"));
 
     if (url.isValid())
         m_listDocumentList->highlightUrl(url);

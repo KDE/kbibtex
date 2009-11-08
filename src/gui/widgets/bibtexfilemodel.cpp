@@ -20,6 +20,8 @@
 #include <QFile>
 #include <QString>
 
+#include <KLocale>
+
 #include <element.h>
 #include <entry.h>
 #include <macro.h>
@@ -118,7 +120,7 @@ QVariant BibTeXFileModel::data(const QModelIndex &index, int role) const
                 if (raw == "^id")
                     return QVariant(macro->key());
                 else if (raw == "^type")
-                    return QVariant("Macro"); // TODO: i18n
+                    return QVariant(i18n("Macro"));
                 else if (raw == "title") {
                     QString text = KBibTeX::IO::PlainTextValue::text(macro->value(), m_bibtexFile);
                     text = text.replace(whiteSpace, " ");
@@ -129,7 +131,7 @@ QVariant BibTeXFileModel::data(const QModelIndex &index, int role) const
                 KBibTeX::IO::Comment* comment = dynamic_cast<KBibTeX::IO::Comment*>(element);
                 if (comment != NULL) {
                     if (raw == "^type")
-                        return QVariant("Comment"); // TODO: i18n
+                        return QVariant(i18n("Comment"));
                     else if (raw == "title") {
                         QString text = comment->text().replace(QRegExp("[\\s\\n\\r\\t]+"), " ");
                         return QVariant(text);
@@ -152,9 +154,9 @@ QVariant BibTeXFileModel::headerData(int section, Qt::Orientation orientation, i
         if (section < m_bibtexFields->count())
             return m_bibtexFields->at(section).label;
         else
-            return QString("Column %1").arg(section);
+            return QString(i18n("Column %1")).arg(section);
     } else
-        return QString("Row %1").arg(section);
+        return QString(i18n("Row %1")).arg(section);
 }
 
 KBibTeX::IO::Element* BibTeXFileModel::element(int row) const

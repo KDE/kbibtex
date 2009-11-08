@@ -22,6 +22,7 @@
 
 #include <KAction>
 #include <KDebug>
+#include <KLocale>
 
 #include <bibtexfields.h>
 #include "bibtexfilemodel.h"
@@ -55,7 +56,7 @@ BibTeXFileView::BibTeXFileView(QWidget * parent)
     action->setSeparator(true);
     header()->addAction(action);
 
-    action = new KAction("Reset to defaults", header());
+    action = new KAction(i18n("Reset to defaults"), header());
     connect(action, SIGNAL(triggered()), this, SLOT(headerResetToDefaults()));
     header()->addAction(action);
 }

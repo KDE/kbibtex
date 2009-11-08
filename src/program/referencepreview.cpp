@@ -26,7 +26,7 @@
 
 using namespace KBibTeX::Program;
 
-const QString notAvailableMessage = "<html><body bgcolor=\"#fff\" fgcolor=\"#000\"><em>No preview available</em></body></html>";
+const QString notAvailableMessage = i18n("<html><body bgcolor=\"#fff\" fgcolor=\"#000\"><em>No preview available</em></body></html>");
 
 ReferencePreview::ReferencePreview(QWidget *parent)
         : QWebView(parent)
@@ -64,8 +64,8 @@ void ReferencePreview::setElement(const KBibTeX::IO::Element* element)
     QString text = ts.readAll();
     buffer.close();
 
-    text.prepend("<html><body><h1>Source</h1><pre>");
-    text.append("</pre></body></html>");
+    text.prepend(i18n("<html><body><h1>Source</h1><pre>"));
+    text.append(i18n("</pre></body></html>"));
 
     setHtml(text);
 }

@@ -143,7 +143,7 @@ public:
 MDIWidget::MDIWidget(QWidget *parent)
         : QStackedWidget(parent), d(new MDIWidgetPrivate(this))
 {
-    QLabel *label = new QLabel("<qt>Welcome to <b>KBibTeX</b> for <b>KDE 4</b><br/><br/>Please select a file to open</qt>", this);
+    QLabel *label = new QLabel(i18n("<qt>Welcome to <b>KBibTeX</b> for <b>KDE 4</b><br/><br/>Please select a file to open</qt>"), this);
     label->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
     addWidget(label);
 }
