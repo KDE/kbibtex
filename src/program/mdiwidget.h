@@ -27,6 +27,11 @@
 
 #include <bibtexeditor.h>
 
+namespace KParts
+{
+    class Part;
+}
+
 namespace KBibTeX
 {
 namespace Program {
