@@ -29,7 +29,7 @@
 
 namespace KParts
 {
-    class Part;
+class Part;
 }
 
 namespace KBibTeX

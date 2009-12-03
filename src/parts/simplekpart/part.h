@@ -35,7 +35,7 @@ public:
     KBibTeXPart(QWidget *parentWidget, QObject *parent, bool browserViewWanted);
     virtual ~KBibTeXPart();
 
-protected: // KParts::ReadOnlyPart API
+protected:
     virtual bool openFile();
     virtual bool saveFile();
 
