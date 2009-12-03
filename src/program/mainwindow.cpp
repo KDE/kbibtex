@@ -113,10 +113,12 @@ void KBibTeXMainWindow::newDocument()
 void KBibTeXMainWindow::openDocumentDialog()
 {
     KEncodingFileDialog::Result loadResult = KEncodingFileDialog::getOpenUrlAndEncoding(QString(), ":open", QString(), this);
-    KUrl url = loadResult.URLs.first();
-    if (!url.isEmpty()) {
-        m_listDocumentList->addToOpen(url, loadResult.encoding);
-        openDocument(url, loadResult.encoding);
+    if (!loadResult.URLs.isEmpty()) {
+        KUrl url = loadResult.URLs.first();
+        if (!url.isEmpty()) {
+            m_listDocumentList->addToOpen(url, loadResult.encoding);
+            openDocument(url, loadResult.encoding);
+        }
     }
 }
 

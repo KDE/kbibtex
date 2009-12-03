@@ -141,11 +141,13 @@ bool KBibTeXPart::saveFile()
 
 void KBibTeXPart::saveDocumentDialog()
 {
-    KEncodingFileDialog::Result loadResult = KEncodingFileDialog::getSaveUrlAndEncoding(QString(), ":save", QString(), widget());
-    KUrl url = loadResult.URLs.first();
-    if (!url.isEmpty()) {
-        setUrl(url);
-        saveFile();
+    KEncodingFileDialog::Result loadResult = KEncodingFileDialog::getSaveUrlAndEncoding(QString(), ":save", QString("text/x-bibtex"), widget());
+    if (!loadResult.URLs.isEmpty()) {
+        KUrl url = loadResult.URLs.first();
+        if (!url.isEmpty()) {
+            setUrl(url);
+            saveFile();
+        }
     }
 }
 
@@ -153,7 +155,6 @@ void KBibTeXPart::fitActionSettings()
 {
     // TODO
 }
-
 
 bool KBibTeXPart::openFile()
 {
