@@ -144,9 +144,10 @@ void KBibTeXMainWindow::closeDocument()
 void KBibTeXMainWindow::documentSwitched(KBibTeX::GUI::BibTeXEditor *newEditor, KBibTeX::GUI::BibTeXEditor *oldEditor)
 {
     OpenFileInfo *openFileInfo = OpenFileInfoManager::getOpenFileInfoManager()->currentFile();
-    m_actionClose->setEnabled(openFileInfo != NULL);
+    bool validFile=openFileInfo != NULL;
+    m_actionClose->setEnabled(validFile);
 
-    setCaption(openFileInfo != NULL ? i18n("%1 - KBibTeX", openFileInfo->caption()) : i18n("KBibTeX"));
+    setCaption(validFile ? i18n("%1 - KBibTeX", openFileInfo->caption()) : i18n("KBibTeX"));
 
     /*
     if (url.isValid())

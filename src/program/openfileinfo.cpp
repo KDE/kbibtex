@@ -300,15 +300,17 @@ void OpenFileInfoManager::close(OpenFileInfo *openFileInfo)
 
     OpenFileInfo *nextCurrent = (d->currentFileInfo == openFileInfo) ? NULL : d->currentFileInfo;
 
-    for (QList<OpenFileInfo*>::Iterator it = d->openFileInfoList.begin(); it != d->openFileInfoList.end(); ++it) {
+    for (QList<OpenFileInfo*>::Iterator it = d->openFileInfoList.begin(); it != d->openFileInfoList.end(); ) {
         OpenFileInfo *ofi = *it;
-        if (ofi == openFileInfo) {
-            d->openFileInfoList.erase(it);
+        if (!closing && ofi == openFileInfo) {
+            it=d->openFileInfoList.erase(it);
             delete ofi;
             closing = true;
-            break;
-        } else if (nextCurrent == NULL && ofi->flags().testFlag(OpenFileInfo::Open))
+        } else if (nextCurrent == NULL && ofi->flags().testFlag(OpenFileInfo::Open)){
             nextCurrent = ofi;
+            ++it;
+        }else
+             ++it;
     }
 
     if (closing)
@@ -325,6 +327,8 @@ void OpenFileInfoManager::setCurrentFile(OpenFileInfo *openFileInfo)
 {
     bool hasChanged = d->currentFileInfo != openFileInfo;
     d->currentFileInfo = openFileInfo;
+    if (d->currentFileInfo != NULL)
+        d->currentFileInfo->setFlags(OpenFileInfo::Open);
     if (hasChanged)
         emit currentChanged(openFileInfo);
 }

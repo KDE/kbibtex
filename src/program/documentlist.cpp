@@ -78,6 +78,7 @@ public:
     void itemExecuted(QListWidgetItem * item) {
         const DocumentListItem *dli = dynamic_cast<const DocumentListItem*>(item);
         if (item != NULL) {
+            kDebug() << "itemExecuted on " << dli->openFileInfo()->fullCaption() << endl;
             openFileInfoManager->setCurrentFile(dli->openFileInfo());
         }
     }

@@ -59,9 +59,12 @@ void MDIWidget::setFile(OpenFileInfo *openFileInfo)
     KBibTeX::GUI::BibTeXEditor *oldEditor = NULL;
     bool hasChanged = true;
 
-    KParts::Part* part = openFileInfo->part(this);
-    QWidget *widget = part->widget();
-    widget->setParent(this);
+    KParts::Part* part = openFileInfo == NULL ? NULL : openFileInfo->part(this);
+    QWidget *widget = d->welcomeLabel;
+    if (part != NULL) {
+        widget = part->widget();
+        widget->setParent(this);
+    }
 
     if (indexOf(widget) >= 0) {
         oldEditor = dynamic_cast<KBibTeX::GUI::BibTeXEditor *>(currentWidget());
