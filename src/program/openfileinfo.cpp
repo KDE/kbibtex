@@ -22,6 +22,7 @@
 #include <QLatin1String>
 #include <QTimer>
 
+#include <KMessageBox>
 #include <KConfig>
 #include <KConfigGroup>
 #include <KDebug>
@@ -143,6 +144,22 @@ unsigned int OpenFileInfo::counter()
     return d->counter;
 }
 
+QString OpenFileInfo::caption()
+{
+    if (d->url.isValid())
+        return d->url.fileName();
+    else
+        return i18n("Unnamed-%1", counter());
+}
+
+QString OpenFileInfo::fullCaption()
+{
+    if (d->url.isValid())
+        return d->url.prettyUrl();
+    else
+        return caption();
+}
+
 KParts::ReadWritePart* OpenFileInfo::part(QWidget *parent)
 {
     return d->createPart(parent);
@@ -178,10 +195,10 @@ public:
     const QString configGroupNameRecentlyUsed;
     const QString configGroupNameFavorites;
     const int maxNumRecentlyUsedFiles, maxNumFiles;
-    OpenFileInfo *currentFileInfoList;
+    OpenFileInfo *currentFileInfo;
 
     OpenFileInfoManagerPrivate(OpenFileInfoManager *parent)
-            : p(parent), configGroupNameRecentlyUsed("DocumentList-RecentlyUsed"), configGroupNameFavorites("DocumentList-Favorites"), maxNumRecentlyUsedFiles(8), maxNumFiles(256), currentFileInfoList(NULL) {
+            : p(parent), configGroupNameRecentlyUsed("DocumentList-RecentlyUsed"), configGroupNameFavorites("DocumentList-Favorites"), maxNumRecentlyUsedFiles(8), maxNumFiles(256), currentFileInfo(NULL) {
         // nothing
     }
 
@@ -279,25 +296,35 @@ OpenFileInfo *OpenFileInfoManager::contains(const KUrl&url) const
 
 void OpenFileInfoManager::close(OpenFileInfo *openFileInfo)
 {
+    bool closing = false;
+
+    OpenFileInfo *nextCurrent = (d->currentFileInfo == openFileInfo) ? NULL : d->currentFileInfo;
+
     for (QList<OpenFileInfo*>::Iterator it = d->openFileInfoList.begin(); it != d->openFileInfoList.end(); ++it) {
         OpenFileInfo *ofi = *it;
         if (ofi == openFileInfo) {
             d->openFileInfoList.erase(it);
             delete ofi;
+            closing = true;
             break;
-        }
+        } else if (nextCurrent == NULL && ofi->flags().testFlag(OpenFileInfo::Open))
+            nextCurrent = ofi;
     }
+
+    if (closing)
+        emit listsChanged(OpenFileInfo::Open);
+    setCurrentFile(nextCurrent);
 }
 
 OpenFileInfo *OpenFileInfoManager::currentFile() const
 {
-    return d->currentFileInfoList;
+    return d->currentFileInfo;
 }
 
 void OpenFileInfoManager::setCurrentFile(OpenFileInfo *openFileInfo)
 {
-    bool hasChanged = d->currentFileInfoList != openFileInfo;
-    d->currentFileInfoList = openFileInfo;
+    bool hasChanged = d->currentFileInfo != openFileInfo;
+    d->currentFileInfo = openFileInfo;
     if (hasChanged)
         emit currentChanged(openFileInfo);
 }

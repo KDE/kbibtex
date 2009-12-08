@@ -84,6 +84,7 @@ KBibTeXPart::KBibTeXPart(QWidget *parentWidget, QObject *parent, bool browserVie
         : KParts::ReadWritePart(parent), d(new KBibTeXPartPrivate())
 {
     setComponentData(KBibTeXPartFactory::componentData());
+    setObjectName("KBibTeXPart::KBibTeXPart");
 
     // TODO Setup view
     d->widget = new KBibTeX::GUI::BibTeXEditor(parentWidget);
@@ -165,6 +166,9 @@ bool KBibTeXPart::openFile()
     qApp->setOverrideCursor(Qt::WaitCursor);
 
     kDebug() << "Opening URL " << url().prettyUrl() << endl;
+
+    setObjectName("KBibTeXPart::KBibTeXPart for " + url().prettyUrl());
+
 
     KBibTeX::IO::FileImporter *importer = d->fileImporterFactory(url());
     QFile inputfile(localFilePath());

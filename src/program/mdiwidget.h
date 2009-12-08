@@ -46,6 +46,7 @@ public:
     MDIWidget(QWidget *parent);
 
     KBibTeX::GUI::BibTeXEditor *editor();
+    OpenFileInfo *currentFile();
 
 public slots:
     void setFile(OpenFileInfo *openFileInfo);

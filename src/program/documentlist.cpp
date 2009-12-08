@@ -127,14 +127,8 @@ public:
 DocumentListItem::DocumentListItem(OpenFileInfo *openFileInfo, KListWidget *parent, int type)
         : QListWidgetItem(parent, type), d(new DocumentListItemPrivate(this))
 {
-    KUrl url = openFileInfo->url();
-    if (url.isValid()) {
-        setText(url.fileName());
-        setToolTip(url.prettyUrl());
-    } else {
-        setText(i18n("Unnamed-%1", openFileInfo->counter()));
-        setToolTip(text());
-    }
+    setText(openFileInfo->caption());
+    setToolTip(openFileInfo->fullCaption());
 
     d->openFileInfo = openFileInfo;
 }

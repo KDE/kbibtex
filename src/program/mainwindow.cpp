@@ -29,6 +29,7 @@
 #include <KActionCollection>
 #include <KPluginFactory>
 #include <KPluginLoader>
+#include <KMessageBox>
 
 #include "mainwindow.h"
 #include "documentlist.h"
@@ -42,7 +43,7 @@ using namespace KBibTeX::Program;
 KBibTeXMainWindow::KBibTeXMainWindow(KBibTeXProgram *program)
         : KParts::MainWindow(), m_program(program), m_openFileInfoManager(OpenFileInfoManager::getOpenFileInfoManager())
 {
-    setObjectName(QLatin1String("Shell"));   // FIXME
+    setObjectName(QLatin1String("KBibTeXShell"));
 
     /*
         const char mainWindowStateKey[] = "State";
@@ -58,7 +59,7 @@ KBibTeXMainWindow::KBibTeXMainWindow(KBibTeXProgram *program)
     m_dockDocumentList->setWidget(m_listDocumentList);
     m_dockDocumentList->setObjectName("dockDocumentList");
     m_dockDocumentList->setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
-    connect(m_listDocumentList, SIGNAL(open(const KUrl &, const QString&)), this, SLOT(openDocument(const KUrl&, const QString&)));
+    // connect(m_listDocumentList, SIGNAL(open(const KUrl &, const QString&)), this, SLOT(openDocument(const KUrl&, const QString&)));
 
     m_dockReferencePreview = new QDockWidget(i18n("Reference Preview"), this);
     m_dockReferencePreview->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
@@ -136,25 +137,27 @@ void KBibTeXMainWindow::openDocument(const KUrl& url, const QString& encoding)
 
 void KBibTeXMainWindow::closeDocument()
 {
+    m_actionClose->setEnabled(false);
     m_openFileInfoManager->close(m_openFileInfoManager->currentFile());
 }
 
 void KBibTeXMainWindow::documentSwitched(KBibTeX::GUI::BibTeXEditor *newEditor, KBibTeX::GUI::BibTeXEditor *oldEditor)
 {
-    // FIXME
+    OpenFileInfo *openFileInfo = OpenFileInfoManager::getOpenFileInfoManager()->currentFile();
+    m_actionClose->setEnabled(openFileInfo != NULL);
+
+    setCaption(openFileInfo != NULL ? i18n("%1 - KBibTeX", openFileInfo->caption()) : i18n("KBibTeX"));
+
     /*
-    KUrl url = m_mdiWidget->currentUrl();
-    m_actionClose->setEnabled(url.isValid());
-
-    setCaption(url.isValid() ? QString(i18n("%1 - KBibTeX")).arg(url.fileName()) : i18n("KBibTeX"));
-
     if (url.isValid())
         m_listDocumentList->highlightUrl(url);
+        */
+
 
     m_referencePreview->setEnabled(newEditor != NULL);
     if (oldEditor != NULL)
         disconnect(oldEditor, SIGNAL(currentElementChanged(const KBibTeX::IO::Element*)), m_referencePreview, SLOT(setElement(const KBibTeX::IO::Element*)));
     if (newEditor != NULL)
         connect(newEditor, SIGNAL(currentElementChanged(const KBibTeX::IO::Element*)), m_referencePreview, SLOT(setElement(const KBibTeX::IO::Element*)));
-        */
 }
+

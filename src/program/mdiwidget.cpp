@@ -37,27 +37,32 @@ class MDIWidget::MDIWidgetPrivate
 {
 public:
     MDIWidget *p;
+    OpenFileInfo *currentFile;
+    QLabel *welcomeLabel;
 
     MDIWidgetPrivate(MDIWidget *parent)
-            : p(parent) {
-        // nothing
+            : p(parent), currentFile(NULL) {
+        welcomeLabel = new QLabel(i18n("<qt>Welcome to <b>KBibTeX</b> for <b>KDE 4</b><br/><br/>Please select a file to open</qt>"), p);
+        welcomeLabel->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
+        p->addWidget(welcomeLabel);
     }
 };
 
 MDIWidget::MDIWidget(QWidget *parent)
         : QStackedWidget(parent), d(new MDIWidgetPrivate(this))
 {
-    QLabel *label = new QLabel(i18n("<qt>Welcome to <b>KBibTeX</b> for <b>KDE 4</b><br/><br/>Please select a file to open</qt>"), this);
-    label->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
-    addWidget(label);
-
+    // nothing
 }
 
 void MDIWidget::setFile(OpenFileInfo *openFileInfo)
 {
     KBibTeX::GUI::BibTeXEditor *oldEditor = NULL;
     bool hasChanged = true;
-    QWidget *widget = openFileInfo->part(this)->widget();
+
+    KParts::Part* part = openFileInfo->part(this);
+    QWidget *widget = part->widget();
+    widget->setParent(this);
+
     if (indexOf(widget) >= 0) {
         oldEditor = dynamic_cast<KBibTeX::GUI::BibTeXEditor *>(currentWidget());
         hasChanged = widget != currentWidget();
@@ -65,6 +70,7 @@ void MDIWidget::setFile(OpenFileInfo *openFileInfo)
         addWidget(widget);
     }
     setCurrentWidget(widget);
+    d->currentFile = openFileInfo;
 
     if (dynamic_cast<QLabel*>(widget) == NULL)
         setFrameStyle(QFrame::Panel | QFrame::Sunken);
@@ -73,18 +79,27 @@ void MDIWidget::setFile(OpenFileInfo *openFileInfo)
 
     if (hasChanged) {
         KBibTeX::GUI::BibTeXEditor *newEditor = dynamic_cast<KBibTeX::GUI::BibTeXEditor *>(widget);
+        emit activePartChanged(part);
         emit documentSwitch(oldEditor, newEditor);
     }
 }
 
 void MDIWidget::closeFile(OpenFileInfo *openFileInfo)
 {
+    kDebug() << "closeFile" << endl;
+
     QWidget *widget = openFileInfo->part(this)->widget();
     if (indexOf(widget) >= 0) {
-        KBibTeX::GUI::BibTeXEditor *oldEditor = dynamic_cast<KBibTeX::GUI::BibTeXEditor *>(currentWidget());
+        QWidget *curWidget = currentWidget();
+
+        if (curWidget == widget) {
+            KBibTeX::GUI::BibTeXEditor *oldEditor = dynamic_cast<KBibTeX::GUI::BibTeXEditor *>(widget);
+            setCurrentWidget(d->welcomeLabel);
+            emit activePartChanged(NULL);
+            emit documentSwitch(oldEditor, NULL);
+        }
+
         removeWidget(widget);
-        KBibTeX::GUI::BibTeXEditor *newEditor = dynamic_cast<KBibTeX::GUI::BibTeXEditor *>(currentWidget());
-        emit documentSwitch(oldEditor, newEditor);
     }
 }
 
@@ -92,4 +107,9 @@ KBibTeX::GUI::BibTeXEditor *MDIWidget::editor()
 {
     OpenFileInfo *ofi = OpenFileInfoManager::getOpenFileInfoManager()->currentFile();
     return dynamic_cast<KBibTeX::GUI::BibTeXEditor*>(ofi->part(this)->widget());
+}
+
+OpenFileInfo *MDIWidget::currentFile()
+{
+    return d->currentFile;
 }

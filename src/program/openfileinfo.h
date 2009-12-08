@@ -55,7 +55,10 @@ public:
     KUrl url() const;
     void setProperty(const QString &key, const QString &value);
     QString property(const QString &key) const;
+
     unsigned int counter();
+    QString caption();
+    QString fullCaption();
 
     StatusFlags flags() const;
     void setFlags(StatusFlags statusFlags);
@@ -85,6 +88,7 @@ public:
     void close(OpenFileInfo *openFileInfo);
     void setCurrentFile(OpenFileInfo *openFileInfo);
     QList<OpenFileInfo*> filteredItems(OpenFileInfo::StatusFlags required, OpenFileInfo::StatusFlags forbidden = 0);
+
 
     friend class OpenFileInfo;
 
