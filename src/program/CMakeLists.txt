@@ -5,6 +5,9 @@ include_directories(
 	${CMAKE_CURRENT_SOURCE_DIR}/../gui
 	${CMAKE_CURRENT_SOURCE_DIR}/../gui/widgets
 	${CMAKE_CURRENT_SOURCE_DIR}/../libkbibtexio
+	${CMAKE_CURRENT_SOURCE_DIR}/../../../
+	${CMAKE_CURRENT_SOURCE_DIR}/../../
+	${CMAKE_CURRENT_SOURCE_DIR}/../
 )
 
 set( kbibtex_SRCS
@@ -15,6 +18,7 @@ set( kbibtex_SRCS
 	documentlist.cpp
 	mdiwidget.cpp
 	referencepreview.cpp
+	openfileinfo.cpp
 )
 
 # TODO kde4_add_app_icon( okteta_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/hi*-app-kbibtex.png" )

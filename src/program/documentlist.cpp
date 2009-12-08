@@ -25,191 +25,121 @@
 #include <KDebug>
 #include <KLocale>
 #include <KGlobal>
-#include <KConfig>
-#include <KConfigGroup>
 
 #include "documentlist.h"
 
 using namespace KBibTeX::Program;
 
-DocumentList::DocumentList(QWidget *parent)
-        : QTabWidget(parent), m_rowToMoveUpInternallyRecentlyUsed(-1)
+class DocumentList::DocumentListPrivate
 {
-    m_listOpenFiles = new KListWidget(this);
-    addTab(m_listOpenFiles, i18n("Open Files"));
-    connect(m_listOpenFiles, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(itemExecuted(QListWidgetItem*))); // FIXME Signal itemExecute(..) triggers *twice* ???
-    m_listRecentFiles = new KListWidget(this);
-    addTab(m_listRecentFiles, i18n("Recent Files"));
-    connect(m_listRecentFiles, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(itemExecuted(QListWidgetItem*))); // FIXME Signal itemExecute(..) triggers *twice* ???
-    m_listFavorites = new KListWidget(this);
-    addTab(m_listFavorites, i18n("Favorites"));
-    connect(m_listFavorites, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(itemExecuted(QListWidgetItem*))); // FIXME Signal itemExecute(..) triggers *twice* ???
+public:
+    DocumentList *p;
 
-    /** set minimum width of widget depending on tab's text width */
-    QFontMetrics fm(font());
-    setMinimumWidth(fm.width(tabText(0))*(count() + 1));
+    OpenFileInfoManager *openFileInfoManager;
+    KListWidget *listOpenFiles;
+    KListWidget *listRecentFiles;
+    KListWidget *listFavorites;
 
-    readConfig();
-}
-
-DocumentList::~DocumentList()
-{
-    writeConfig();
-}
-
-void DocumentList::addToOpen(const KUrl &url, const QString& encoding)
-{
-    /** check if given URL is already contained in Open Files list*/
-    DocumentListItem *item = NULL;
-    for (int i = m_listOpenFiles->count() - 1; item == NULL && i >= 0; --i) {
-        item = dynamic_cast<DocumentListItem*>(m_listOpenFiles->item(i));
-        if (!url.equals(item->url())) item = NULL;
-        else item->setEncoding(encoding); //< update encoding
+    DocumentListPrivate(DocumentList *p) {
+        this->p = p;
     }
 
-    if (item == NULL) {
-        /** file was not already in Open Files list */
-        m_listOpenFiles->addItem(new DocumentListItem(url, encoding));
+    void setupGui() {
+        listOpenFiles = new KListWidget(p);
+        p->addTab(listOpenFiles, i18n("Open Files"));
+        connect(listOpenFiles, SIGNAL(itemDoubleClicked(QListWidgetItem*)), p, SLOT(itemExecuted(QListWidgetItem*))); // FIXME Signal itemExecute(..) triggers *twice* ???
+        listRecentFiles = new KListWidget(p);
+        p->addTab(listRecentFiles, i18n("Recent Files"));
+        connect(listRecentFiles, SIGNAL(itemDoubleClicked(QListWidgetItem*)), p, SLOT(itemExecuted(QListWidgetItem*))); // FIXME Signal itemExecute(..) triggers *twice* ???
+        listFavorites = new KListWidget(p);
+        p->addTab(listFavorites, i18n("Favorites"));
+        connect(listFavorites, SIGNAL(itemDoubleClicked(QListWidgetItem*)), p, SLOT(itemExecuted(QListWidgetItem*))); // FIXME Signal itemExecute(..) triggers *twice* ???
+
+        /** set minimum width of widget depending on tab's text width */
+        QFontMetrics fm(p->font());
+        p->setMinimumWidth(fm.width(p->tabText(0))*(p->count() + 1));
     }
 
-    addToRecentFiles(url, encoding);
-}
+    void updateList(Category category) {
+        KListWidget *listWidget = category == DocumentList::OpenFiles ? listOpenFiles : category == DocumentList::RecentFiles ? listRecentFiles : listFavorites;
+        OpenFileInfo::StatusFlags statusFlags = category == DocumentList::OpenFiles ? OpenFileInfo::Open : category == DocumentList::RecentFiles ? OpenFileInfo::RecentlyUsed : OpenFileInfo::Favorite;
+        QList<OpenFileInfo*> ofiList = openFileInfoManager->filteredItems(statusFlags);
 
-void DocumentList::closeUrl(const KUrl &url)
-{
-    /** check if given URL is contained in Open Files list*/
-    DocumentListItem *item = NULL;
-    for (int i = m_listOpenFiles->count() - 1; item == NULL && i >= 0; --i) {
-        item = dynamic_cast<DocumentListItem*>(m_listOpenFiles->item(i));
-        if (!url.equals(item->url())) item = NULL;
-    }
+        listWidget->clear();
+        for (QList<OpenFileInfo*>::Iterator it = ofiList.begin(); it != ofiList.end(); ++it) {
+            OpenFileInfo *ofi = *it;
+            DocumentListItem *item = new DocumentListItem(ofi);
 
-    if (item != NULL) {
-        /** file is in Open Files list */
-        delete item; //< remove item
-    }
-}
-
-void DocumentList::highlightUrl(const KUrl &url)
-{
-    highlightUrl(url, m_listOpenFiles);
-    highlightUrl(url, m_listRecentFiles);
-    highlightUrl(url, m_listFavorites);
-}
-
-void DocumentList::highlightUrl(const KUrl &url, KListWidget *list)
-{
-    for (int i = list->count() - 1; i >= 0; --i) {
-        DocumentListItem *item = dynamic_cast<DocumentListItem*>(list->item(i));
-        if (item->url().equals(url)) {
-            list->setCurrentItem(item);
-            return;
+            listWidget->addItem(item);
+            listWidget->setItemSelected(item, openFileInfoManager->currentFile() == ofi);
         }
     }
-}
 
-void DocumentList::addToRecentFiles(const KUrl &url, const QString& encoding)
-{
-    /** check if given URL is already contained in Recent Files list*/
-    DocumentListItem *item = NULL;
-    for (int i = m_listRecentFiles->count() - 1; item == NULL && i >= 0; --i) {
-        item = dynamic_cast<DocumentListItem*>(m_listRecentFiles->item(i));
-        if (!url.equals(item->url())) item = NULL;
-        else item->setEncoding(encoding); //< update encoding
+    void itemExecuted(QListWidgetItem * item) {
+        const DocumentListItem *dli = dynamic_cast<const DocumentListItem*>(item);
+        if (item != NULL) {
+            openFileInfoManager->setCurrentFile(dli->openFileInfo());
+        }
     }
 
-    if (item == NULL) {
-        /** file was not already in Open Files list */
-        item = new DocumentListItem(url, encoding);
-        m_listRecentFiles->insertItem(0, item);
-    } else if (m_rowToMoveUpInternallyRecentlyUsed == -1) {
-        /** move existing item up to first position */
-        m_rowToMoveUpInternallyRecentlyUsed = m_listRecentFiles->row(item);
-        QTimer::singleShot(250, this, SLOT(moveUpInternallyRecentlyUsed()));
+    void listsChanged(OpenFileInfo::StatusFlags statusFlags) {
+        if (statusFlags.testFlag(OpenFileInfo::Open))
+            updateList(OpenFiles);
+        if (statusFlags.testFlag(OpenFileInfo::RecentlyUsed))
+            updateList(RecentFiles);
+        if (statusFlags.testFlag(OpenFileInfo::Favorite))
+            updateList(Favorites);
     }
-}
+};
 
-void DocumentList::moveUpInternallyRecentlyUsed()
+DocumentList::DocumentList(OpenFileInfoManager *openFileInfoManager, QWidget *parent)
+        : QTabWidget(parent), d(new DocumentListPrivate(this))
 {
-    QListWidgetItem *item = m_listRecentFiles->item(m_rowToMoveUpInternallyRecentlyUsed);
-    m_listRecentFiles->takeItem(m_rowToMoveUpInternallyRecentlyUsed);
-    m_listRecentFiles->insertItem(0, item);
-    m_listRecentFiles->setCurrentRow(0);
-    m_rowToMoveUpInternallyRecentlyUsed = -1;
+    d->openFileInfoManager = openFileInfoManager;
+    connect(openFileInfoManager, SIGNAL(listsChanged(OpenFileInfo::StatusFlags)), this, SLOT(listsChanged(OpenFileInfo::StatusFlags)));
+    d->setupGui();
+    QFlags<OpenFileInfo::StatusFlag> flags = OpenFileInfo::RecentlyUsed;
+    flags |= OpenFileInfo::Favorite;
+    d->listsChanged(flags);
 }
 
 void DocumentList::itemExecuted(QListWidgetItem * item)
 {
-    DocumentListItem *dli = dynamic_cast<DocumentListItem*>(item);
-    if (dli != NULL) {
-        KUrl url = dli->url();
-        QString encoding = dli->encoding();
-        addToOpen(url, encoding);
-        emit open(url, encoding);
+    d->itemExecuted(item);
+}
+
+void DocumentList::listsChanged(OpenFileInfo::StatusFlags statusFlags)
+{
+    d->listsChanged(statusFlags);
+}
+
+class DocumentListItem::DocumentListItemPrivate
+{
+public:
+    DocumentListItem *p;
+    OpenFileInfo *openFileInfo;
+
+    DocumentListItemPrivate(DocumentListItem *p) {
+        this->p = p;
     }
-}
+};
 
-const QString DocumentList::configGroupNameRecentlyUsed = QLatin1String("DocumentList-RecentlyUsed");
-const QString DocumentList::configGroupNameFavorites = QLatin1String("DocumentList-Favorites");
-const int DocumentList::maxNumRecentlyUsedFiles = 32;
-
-void DocumentList::readConfig()
+DocumentListItem::DocumentListItem(OpenFileInfo *openFileInfo, KListWidget *parent, int type)
+        : QListWidgetItem(parent, type), d(new DocumentListItemPrivate(this))
 {
-    readConfig(m_listRecentFiles, configGroupNameRecentlyUsed);
-    readConfig(m_listFavorites, configGroupNameFavorites);
-}
-
-void DocumentList::writeConfig()
-{
-    writeConfig(m_listRecentFiles, configGroupNameRecentlyUsed);
-    writeConfig(m_listFavorites, configGroupNameFavorites);
-}
-
-void DocumentList::readConfig(KListWidget *fromList, const QString& configGroupName)
-{
-    KSharedConfig::Ptr config = KGlobal::config();
-
-    fromList->clear();
-    KConfigGroup cg(config, configGroupName);
-    for (int i = 0; i < maxNumRecentlyUsedFiles; ++i) {
-        QString fileUrl = cg.readEntry(QString("URL-%1").arg(i), "");
-        if (fileUrl == "") break;
-        QString encoding = cg.readEntry(QString("Encoding-%1").arg(i), "");
-        fromList->addItem(new DocumentListItem(KUrl(fileUrl), encoding, m_listRecentFiles, RecentlyUsedItemType));
+    KUrl url = openFileInfo->url();
+    if (url.isValid()) {
+        setText(url.fileName());
+        setToolTip(url.prettyUrl());
+    } else {
+        setText(i18n("Unnamed-%1", openFileInfo->counter()));
+        setToolTip(text());
     }
+
+    d->openFileInfo = openFileInfo;
 }
 
-void DocumentList::writeConfig(KListWidget *fromList, const QString& configGroupName)
+OpenFileInfo *DocumentListItem::openFileInfo() const
 {
-    KSharedConfig::Ptr config = KGlobal::config();
-    KConfigGroup cg(config, configGroupName);
-    for (int i = qMin(maxNumRecentlyUsedFiles, fromList->count()) - 1; i >= 0; --i) {
-        DocumentListItem *item = dynamic_cast<DocumentListItem*>(fromList->item(i));
-        if (item == NULL) break;
-        cg.writeEntry(QString("URL-%1").arg(i), item->url().prettyUrl());
-        cg.writeEntry(QString("Encoding-%1").arg(i), item->encoding());
-    }
-    config->sync();
-}
-
-DocumentListItem::DocumentListItem(const KUrl &url, const QString &encoding, KListWidget *parent, int type)
-        : QListWidgetItem(parent, type), m_url(url), m_encoding(encoding)
-{
-    setText(url.fileName());
-    setToolTip(url.prettyUrl());
-}
-
-const KUrl DocumentListItem::url()
-{
-    return m_url;
-}
-
-const QString DocumentListItem::encoding()
-{
-    return m_encoding;
-}
-
-void DocumentListItem::setEncoding(const QString &encoding)
-{
-    m_encoding = encoding;
+    return d->openFileInfo;
 }

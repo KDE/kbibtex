@@ -48,7 +48,8 @@ static const char RCFileName[] = "simplekbibtexpartui.rc";
 class KBibTeXPart::KBibTeXPartPrivate
 {
 public:
-    KBibTeX::GUI::BibTeXEditor *m_widget;
+    KBibTeX::GUI::BibTeXEditor *widget;
+    KBibTeX::GUI::Widgets::BibTeXFileModel *model;
 
     KBibTeX::IO::FileImporter *fileImporterFactory(const KUrl& url) {
         QString ending = url.path().toLower();
@@ -85,10 +86,13 @@ KBibTeXPart::KBibTeXPart(QWidget *parentWidget, QObject *parent, bool browserVie
     setComponentData(KBibTeXPartFactory::componentData());
 
     // TODO Setup view
-    d->m_widget = new KBibTeX::GUI::BibTeXEditor(parentWidget);
-    setWidget(d->m_widget);
+    d->widget = new KBibTeX::GUI::BibTeXEditor(parentWidget);
+    setWidget(d->widget);
 
-    connect(d->m_widget, SIGNAL(elementExecuted(const KBibTeX::IO::Element*)), d->m_widget, SLOT(viewElement(const KBibTeX::IO::Element*)));
+    d->model = new KBibTeX::GUI::Widgets::BibTeXFileModel();
+    d->widget->setModel(d->model);
+
+    connect(d->widget, SIGNAL(elementExecuted(const KBibTeX::IO::Element*)), d->widget, SLOT(viewElement(const KBibTeX::IO::Element*)));
 
     setupActions(browserViewWanted);
 
@@ -130,7 +134,7 @@ bool KBibTeXPart::saveFile()
     KBibTeX::IO::FileExporter *exporter = d->fileExporterFactory(url());
     QFile outputfile(localFilePath());
     outputfile.open(QIODevice::WriteOnly);
-    KBibTeX::GUI::Widgets::BibTeXFileModel *model = dynamic_cast<KBibTeX::GUI::Widgets::BibTeXFileModel *>(d->m_widget->model());
+    KBibTeX::GUI::Widgets::BibTeXFileModel *model = dynamic_cast<KBibTeX::GUI::Widgets::BibTeXFileModel *>(d->widget->model());
     exporter->save(&outputfile, model->bibTeXFile());
     outputfile.close();
     delete exporter;
@@ -141,7 +145,7 @@ bool KBibTeXPart::saveFile()
 
 void KBibTeXPart::saveDocumentDialog()
 {
-    KEncodingFileDialog::Result loadResult = KEncodingFileDialog::getSaveUrlAndEncoding(QString(), ":save", QString("text/x-bibtex"), widget());
+    KEncodingFileDialog::Result loadResult = KEncodingFileDialog::getSaveUrlAndEncoding(QString(), ":save", QLatin1String("text/x-bibtex"), widget());
     if (!loadResult.URLs.isEmpty()) {
         KUrl url = loadResult.URLs.first();
         if (!url.isEmpty()) {
@@ -169,10 +173,7 @@ bool KBibTeXPart::openFile()
     inputfile.close();
     delete importer;
 
-    KBibTeX::GUI::Widgets::BibTeXFileModel *model = new KBibTeX::GUI::Widgets::BibTeXFileModel();
-    model->setBibTeXFile(bibtexFile);
-
-    d->m_widget->setModel(model);
+    d->model->setBibTeXFile(bibtexFile);
 
     qApp->restoreOverrideCursor();
     return true;

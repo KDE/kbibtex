@@ -36,6 +36,8 @@ namespace KBibTeX
 {
 namespace Program {
 
+class OpenFileInfo;
+
 class MDIWidget : public QStackedWidget
 {
     Q_OBJECT
@@ -43,11 +45,11 @@ class MDIWidget : public QStackedWidget
 public:
     MDIWidget(QWidget *parent);
 
-    bool setUrl(const KUrl &url, const QString &encoding);
-    bool closeUrl(const KUrl &url);
-
-    KUrl currentUrl() const;
     KBibTeX::GUI::BibTeXEditor *editor();
+
+public slots:
+    void setFile(OpenFileInfo *openFileInfo);
+    void closeFile(OpenFileInfo *openFileInfo);
 
 signals:
     void documentSwitch(KBibTeX::GUI::BibTeXEditor *, KBibTeX::GUI::BibTeXEditor *);

@@ -26,7 +26,7 @@
 using namespace KBibTeX::Program;
 
 static const char ProgramId[] =          "kbibtex";
-static const char ProgramVersion[] =     "0.3.0";
+static const char ProgramVersion[] =     "0.3.50";
 static const char ProgramHomepage[] =    "http://home.gna.org/kbibtex/";
 
 KBibTeXAboutData::KBibTeXAboutData()

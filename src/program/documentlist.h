@@ -26,9 +26,13 @@
 #include <KListWidget>
 #include <KUrl>
 
+#include "openfileinfo.h"
+
 namespace KBibTeX
 {
 namespace Program {
+
+class OpenFileInfoManager;
 
 class DocumentList : public QTabWidget
 {
@@ -36,43 +40,15 @@ class DocumentList : public QTabWidget
 public:
     enum Category { OpenFiles = 0, RecentFiles = 1, Favorites = 2 };
 
-    DocumentList(QWidget *parent = 0);
-    virtual ~DocumentList();
-
-    void addToOpen(const KUrl &url, const QString& encoding);
-    void closeUrl(const KUrl &url);
-    void highlightUrl(const KUrl &url);
-
-signals:
-    void open(const KUrl &url, const QString& encoding);
+    DocumentList(OpenFileInfoManager *openFileInfoManager, QWidget *parent = 0);
 
 private slots:
     void itemExecuted(QListWidgetItem * item);
-
-protected:
-    static const QString configGroupNameRecentlyUsed;
-    static const QString configGroupNameFavorites;
-    static const int maxNumRecentlyUsedFiles;
-
-    void addToRecentFiles(const KUrl &url, const QString& encoding);
-    void readConfig();
-    void writeConfig();
-    void highlightUrl(const KUrl &url, KListWidget *list);
+    void listsChanged(OpenFileInfo::StatusFlags statusFlags);
 
 private:
-    KListWidget *m_listOpenFiles;
-    KListWidget *m_listRecentFiles;
-    KListWidget *m_listFavorites;
-
-    void readConfig(KListWidget *fromList, const QString& configGroupName);
-    void writeConfig(KListWidget *fromList, const QString& configGroupName);
-    void refreshRecentlyUsed(const KUrl& url);
-    void refreshOpenFiles(const KUrl& url);
-
-    int m_rowToMoveUpInternallyRecentlyUsed;
-
-private slots:
-    void moveUpInternallyRecentlyUsed();
+    class DocumentListPrivate;
+    DocumentListPrivate *d;
 };
 
 static const int RecentlyUsedItemType = QListWidgetItem::UserType + 23;
@@ -81,15 +57,12 @@ static const int FavoritesItemType = QListWidgetItem::UserType + 24;
 class DocumentListItem : public QListWidgetItem
 {
 public:
-    DocumentListItem(const KUrl &url, const QString &encoding, KListWidget *parent = NULL, int type = QListWidgetItem::UserType);
+    DocumentListItem(OpenFileInfo *openFileInfo, KListWidget *parent = NULL, int type = QListWidgetItem::UserType);
+    OpenFileInfo *openFileInfo() const;
 
-    const KUrl url();
-    const QString encoding();
-    void setEncoding(const QString &encoding);
-
-protected:
-    KUrl m_url;
-    QString m_encoding;
+private:
+    class DocumentListItemPrivate;
+    DocumentListItemPrivate *d;
 };
 
 }

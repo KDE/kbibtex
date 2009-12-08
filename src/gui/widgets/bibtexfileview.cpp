@@ -35,6 +35,7 @@ BibTeXFileView::BibTeXFileView(QWidget * parent)
 {
     setSelectionMode(QAbstractItemView::ExtendedSelection);
     setSelectionBehavior(QAbstractItemView::SelectRows);
+    setFrameStyle(QFrame::NoFrame);
 
     header()->setContextMenuPolicy(Qt::ActionsContextMenu);
     KBibTeX::GUI::Config::BibTeXFields *bibtexFields = KBibTeX::GUI::Config::BibTeXFields::self();

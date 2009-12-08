@@ -35,11 +35,12 @@
 #include "program.h"
 #include "mdiwidget.h"
 #include "referencepreview.h"
+#include "openfileinfo.h"
 
 using namespace KBibTeX::Program;
 
 KBibTeXMainWindow::KBibTeXMainWindow(KBibTeXProgram *program)
-        : KParts::MainWindow(), m_program(program)
+        : KParts::MainWindow(), m_program(program), m_openFileInfoManager(OpenFileInfoManager::getOpenFileInfoManager())
 {
     setObjectName(QLatin1String("Shell"));   // FIXME
 
@@ -53,7 +54,7 @@ KBibTeXMainWindow::KBibTeXMainWindow(KBibTeXProgram *program)
     m_dockDocumentList = new QDockWidget(i18n("List of Documents"), this);
     m_dockDocumentList->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
     addDockWidget(Qt::LeftDockWidgetArea, m_dockDocumentList);
-    m_listDocumentList = new DocumentList(m_dockDocumentList);
+    m_listDocumentList = new DocumentList(OpenFileInfoManager::getOpenFileInfoManager(), m_dockDocumentList);
     m_dockDocumentList->setWidget(m_listDocumentList);
     m_dockDocumentList->setObjectName("dockDocumentList");
     m_dockDocumentList->setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
@@ -73,6 +74,7 @@ KBibTeXMainWindow::KBibTeXMainWindow(KBibTeXProgram *program)
     setCentralWidget(m_mdiWidget);
     connect(m_mdiWidget, SIGNAL(documentSwitch(KBibTeX::GUI::BibTeXEditor *, KBibTeX::GUI::BibTeXEditor *)), this, SLOT(documentSwitched(KBibTeX::GUI::BibTeXEditor *, KBibTeX::GUI::BibTeXEditor *)));
     connect(m_mdiWidget, SIGNAL(activePartChanged(KParts::Part*)), this, SLOT(createGUI(KParts::Part*)));
+    connect(m_openFileInfoManager, SIGNAL(currentChanged(OpenFileInfo*)), m_mdiWidget, SLOT(setFile(OpenFileInfo*)));
 
     actionCollection()->addAction(KStandardAction::New, this, SLOT(newDocument()));
     actionCollection()->addAction(KStandardAction::Open, this, SLOT(openDocumentDialog()));
@@ -107,7 +109,10 @@ void KBibTeXMainWindow::readProperties(const KConfigGroup &/*configGroup*/)
 
 void KBibTeXMainWindow::newDocument()
 {
-    // TODO
+    OpenFileInfo *openFileInfo = m_openFileInfoManager->create(OpenFileInfo::mimetypeBibTeX);
+    openFileInfo->setProperty(OpenFileInfo::propertyEncoding, "UTF-8");
+    m_openFileInfoManager->setCurrentFile(openFileInfo);
+    openFileInfo->setFlags(OpenFileInfo::Open);
 }
 
 void KBibTeXMainWindow::openDocumentDialog()
@@ -116,23 +121,28 @@ void KBibTeXMainWindow::openDocumentDialog()
     if (!loadResult.URLs.isEmpty()) {
         KUrl url = loadResult.URLs.first();
         if (!url.isEmpty()) {
-            m_listDocumentList->addToOpen(url, loadResult.encoding);
             openDocument(url, loadResult.encoding);
         }
     }
 }
 
+void KBibTeXMainWindow::openDocument(const KUrl& url, const QString& encoding)
+{
+    kDebug() << "Opening document " << url.prettyUrl() << " with encoding " << encoding << endl;
+    OpenFileInfo *openFileInfo = m_openFileInfoManager->create(KIO::NetAccess::mimetype(url, 0), url);
+    openFileInfo->setProperty(OpenFileInfo::propertyEncoding, encoding);
+    m_openFileInfoManager->setCurrentFile(openFileInfo);
+}
+
 void KBibTeXMainWindow::closeDocument()
 {
-    KUrl url = m_mdiWidget->currentUrl();
-    if (url.isValid()) {
-        m_listDocumentList->closeUrl(url);
-        m_mdiWidget->closeUrl(url);
-    }
+    m_openFileInfoManager->close(m_openFileInfoManager->currentFile());
 }
 
 void KBibTeXMainWindow::documentSwitched(KBibTeX::GUI::BibTeXEditor *newEditor, KBibTeX::GUI::BibTeXEditor *oldEditor)
 {
+    // FIXME
+    /*
     KUrl url = m_mdiWidget->currentUrl();
     m_actionClose->setEnabled(url.isValid());
 
@@ -146,10 +156,5 @@ void KBibTeXMainWindow::documentSwitched(KBibTeX::GUI::BibTeXEditor *newEditor, 
         disconnect(oldEditor, SIGNAL(currentElementChanged(const KBibTeX::IO::Element*)), m_referencePreview, SLOT(setElement(const KBibTeX::IO::Element*)));
     if (newEditor != NULL)
         connect(newEditor, SIGNAL(currentElementChanged(const KBibTeX::IO::Element*)), m_referencePreview, SLOT(setElement(const KBibTeX::IO::Element*)));
-}
-
-void KBibTeXMainWindow::openDocument(const KUrl& url, const QString& encoding)
-{
-    kDebug() << "Opening document " << url.prettyUrl() << " with encoding " << encoding << endl;
-    m_mdiWidget->setUrl(url, encoding);
+        */
 }

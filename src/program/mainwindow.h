@@ -64,6 +64,7 @@ protected:
     DocumentList *m_listDocumentList;
     MDIWidget *m_mdiWidget;
     ReferencePreview *m_referencePreview;
+    OpenFileInfoManager *m_openFileInfoManager;
 
 protected slots:
     void newDocument();
