@@ -48,6 +48,7 @@ BibTeXFileModel::~BibTeXFileModel()
 
 KBibTeX::IO::File *BibTeXFileModel::bibTeXFile()
 {
+    if (m_bibtexFile == NULL) m_bibtexFile = new KBibTeX::IO::File();
     return m_bibtexFile;
 }
 
@@ -161,5 +162,7 @@ QVariant BibTeXFileModel::headerData(int section, Qt::Orientation orientation, i
 
 KBibTeX::IO::Element* BibTeXFileModel::element(int row) const
 {
+    if (m_bibtexFile == NULL) return NULL;
+
     return (*m_bibtexFile)[row];
 }
