@@ -22,6 +22,7 @@
 #define KBIBTEX_PROGRAM_OPENFILEINFO_H
 
 #include <QList>
+#include <QDateTime>
 
 namespace KParts
 {
@@ -34,7 +35,7 @@ namespace Program {
 
 class OpenFileInfoManager;
 
-class OpenFileInfo
+class OpenFileInfo : protected QObject
 {
 
 public:
@@ -51,7 +52,6 @@ public:
     ~OpenFileInfo();
 
     KParts::ReadWritePart* part(QWidget *parent);
-    void setUrl(const KUrl& url);
     KUrl url() const;
     void setProperty(const QString &key, const QString &value);
     QString property(const QString &key) const;
@@ -64,10 +64,14 @@ public:
     void setFlags(StatusFlags statusFlags);
     void clearFlags(StatusFlags statusFlags);
 
+    QDateTime lastAccess() const;
+
     friend class OpenFileInfoManager;
 
 protected:
     OpenFileInfo(OpenFileInfoManager *openFileInfoManager, const QString &mimeType, const KUrl &url);
+    void setUrl(const KUrl& url);
+    void setLastAccess(const QDateTime& dateTime);
 
 private:
     class OpenFileInfoPrivate;
@@ -85,6 +89,7 @@ public:
     OpenFileInfo *create(const QString &mimeType = QLatin1String("application/x-bibtex"), const KUrl & url = KUrl());
     OpenFileInfo *contains(const KUrl&url) const;
     OpenFileInfo *currentFile() const;
+    void changeUrl(OpenFileInfo *openFileInfo, const KUrl & url);
     void close(OpenFileInfo *openFileInfo);
     void setCurrentFile(OpenFileInfo *openFileInfo);
     QList<OpenFileInfo*> filteredItems(OpenFileInfo::StatusFlags required, OpenFileInfo::StatusFlags forbidden = 0);
