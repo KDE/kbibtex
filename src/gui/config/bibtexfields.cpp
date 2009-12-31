@@ -17,35 +17,56 @@
 *   Free Software Foundation, Inc.,                                       *
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
-#include <kglobal.h>
-#include <kstandarddirs.h>
+#include <KGlobal>
+#include <KStandardDirs>
 #include <KSharedConfig>
-#include <kconfiggroup.h>
+#include <KConfigGroup>
+#include <KSharedPtr>
 
 #include "bibtexfields.h"
 
 using namespace KBibTeX::GUI::Config;
 
-BibTeXFields *BibTeXFields::m_self = NULL;
-const int maxColumns = 256;
+class BibTeXFields::BibTeXFieldsPrivate
+{
+public:
+    BibTeXFields *p;
+
+    KConfig *systemDefaultsConfig;
+    KSharedPtr<KSharedConfig> userConfig;
+
+    static BibTeXFields *singleton;
+    const int maxColumns;
+
+    BibTeXFieldsPrivate(BibTeXFields *parent)
+            : p(parent), maxColumns(256) {
+        systemDefaultsConfig = new KConfig(KStandardDirs::locate("appdata", "fieldtypes.rc"), KConfig::SimpleConfig);
+        userConfig = KSharedConfig::openConfig(KStandardDirs::locateLocal("appdata", "ui.rc"), KConfig::SimpleConfig);
+    }
+
+    ~BibTeXFieldsPrivate() {
+        delete systemDefaultsConfig;
+    }
+};
+
+BibTeXFields *BibTeXFields::BibTeXFieldsPrivate::singleton = NULL;
 
 BibTeXFields::BibTeXFields()
+        : d(new BibTeXFieldsPrivate(this))
 {
-    m_systemDefaultsConfig = new KConfig(KStandardDirs::locate("appdata", "fieldtypes.rc"), KConfig::SimpleConfig);
-    m_userConfig = KSharedConfig::openConfig(KStandardDirs::locateLocal("appdata", "ui.rc"), KConfig::SimpleConfig);
     load();
 }
 
 BibTeXFields::~BibTeXFields()
 {
-    delete m_systemDefaultsConfig;
+    delete d;
 }
 
 BibTeXFields* BibTeXFields::self()
 {
-    if (m_self == NULL)
-        m_self = new BibTeXFields();
-    return m_self;
+    if (BibTeXFieldsPrivate::singleton == NULL)
+        BibTeXFieldsPrivate::singleton  = new BibTeXFields();
+    return BibTeXFieldsPrivate::singleton;
 }
 
 void BibTeXFields::load()
@@ -54,10 +75,10 @@ void BibTeXFields::load()
     FieldDescription fd;
 
     clear();
-    for (int col = 1; col < maxColumns; ++col) {
+    for (int col = 1; col < d->maxColumns; ++col) {
         QString groupName = QString("Column%1").arg(col);
-        KConfigGroup usercg(m_userConfig, groupName);
-        KConfigGroup systemcg(m_systemDefaultsConfig, groupName);
+        KConfigGroup usercg(d->userConfig, groupName);
+        KConfigGroup systemcg(d->systemDefaultsConfig, groupName);
         fd.raw = systemcg.readEntry("Raw", "");
         if (fd.raw.isEmpty()) continue;
         fd.rawAlt = systemcg.readEntry("RawAlt", "");
@@ -77,20 +98,20 @@ void BibTeXFields::save()
     int col = 1;
     for (Iterator it = begin(); it != end(); ++it, ++col) {
         QString groupName = QString("Column%1").arg(col);
-        KConfigGroup usercg(m_userConfig, groupName);
+        KConfigGroup usercg(d->userConfig, groupName);
         FieldDescription &fd = *it;
         usercg.writeEntry("Width", fd.width);
         usercg.writeEntry("Visible", fd.visible);
     }
 
-    m_userConfig->sync();
+    d->userConfig->sync();
 }
 
 void BibTeXFields::resetToDefaults()
 {
-    for (int col = 1; col < maxColumns; ++col) {
+    for (int col = 1; col < d->maxColumns; ++col) {
         QString groupName = QString("Column%1").arg(col);
-        KConfigGroup usercg(m_userConfig, groupName);
+        KConfigGroup usercg(d->userConfig, groupName);
         usercg.deleteGroup();
     }
 

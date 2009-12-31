@@ -23,11 +23,6 @@
 #include <QString>
 #include <QList>
 
-#include <KSharedPtr>
-
-class KConfig;
-class KSharedConfig;
-
 namespace KBibTeX
 {
 namespace GUI {
@@ -58,11 +53,9 @@ public:
 protected:
     BibTeXFields();
 
-    static BibTeXFields *m_self;
-
 private:
-    KConfig *m_systemDefaultsConfig;
-    KSharedPtr<KSharedConfig> m_userConfig;
+    class BibTeXFieldsPrivate;
+    BibTeXFieldsPrivate *d;
 };
 }
 }
