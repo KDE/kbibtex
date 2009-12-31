@@ -89,7 +89,7 @@ KBibTeXMainWindow::KBibTeXMainWindow(KBibTeXProgram *program)
 
 KBibTeXMainWindow::~KBibTeXMainWindow()
 {
-    // nothing
+    delete m_openFileInfoManager;
 }
 
 
@@ -144,7 +144,7 @@ void KBibTeXMainWindow::closeDocument()
 void KBibTeXMainWindow::documentSwitched(KBibTeX::GUI::BibTeXEditor *newEditor, KBibTeX::GUI::BibTeXEditor *oldEditor)
 {
     OpenFileInfo *openFileInfo = OpenFileInfoManager::getOpenFileInfoManager()->currentFile();
-    bool validFile=openFileInfo != NULL;
+    bool validFile = openFileInfo != NULL;
     m_actionClose->setEnabled(validFile);
 
     setCaption(validFile ? i18n("%1 - KBibTeX", openFileInfo->caption()) : i18n("KBibTeX"));
