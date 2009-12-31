@@ -22,6 +22,7 @@
 #include <QPair>
 #include <QLabel>
 #include <QApplication>
+#include <QSignalMapper>
 
 #include <KDebug>
 #include <kmimetypetrader.h>
@@ -39,12 +40,21 @@ public:
     MDIWidget *p;
     OpenFileInfo *currentFile;
     QLabel *welcomeLabel;
+    QSignalMapper signalMapperCompleted;
 
     MDIWidgetPrivate(MDIWidget *parent)
             : p(parent), currentFile(NULL) {
         welcomeLabel = new QLabel(i18n("<qt>Welcome to <b>KBibTeX</b> for <b>KDE 4</b><br/><br/>Please select a file to open</qt>"), p);
         welcomeLabel->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
         p->addWidget(welcomeLabel);
+
+        connect(&signalMapperCompleted, SIGNAL(mapped(QObject*)), p, SLOT(slotCompleted(QObject*)));
+    }
+
+    void addToMapper(OpenFileInfo *openFileInfo) {
+        KParts::ReadWritePart *part = openFileInfo->part(p);
+        signalMapperCompleted.setMapping(part, openFileInfo);
+        connect(part, SIGNAL(completed()), &signalMapperCompleted, SLOT(map()));
     }
 };
 
@@ -71,6 +81,7 @@ void MDIWidget::setFile(OpenFileInfo *openFileInfo)
         hasChanged = widget != currentWidget();
     } else {
         addWidget(widget);
+        d->addToMapper(openFileInfo);
     }
     setCurrentWidget(widget);
     d->currentFile = openFileInfo;
@@ -115,4 +126,16 @@ KBibTeX::GUI::BibTeXEditor *MDIWidget::editor()
 OpenFileInfo *MDIWidget::currentFile()
 {
     return d->currentFile;
+}
+
+void MDIWidget::slotCompleted(QObject *obj)
+{
+    OpenFileInfo *ofi = static_cast<OpenFileInfo*>(obj);
+    KUrl oldUrl = ofi->url();
+    KUrl newUrl = ofi->part(this)->url();
+
+    if (!oldUrl.equals(newUrl)) {
+        kDebug() << "Url changed from " << oldUrl.prettyUrl() << " to " << newUrl.prettyUrl() << endl;
+        OpenFileInfoManager::getOpenFileInfoManager()->changeUrl(ofi, newUrl);
+    }
 }

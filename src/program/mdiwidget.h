@@ -59,6 +59,9 @@ signals:
 private:
     class MDIWidgetPrivate;
     MDIWidgetPrivate *d;
+
+private slots:
+    void slotCompleted(QObject *);
 };
 }
 }
