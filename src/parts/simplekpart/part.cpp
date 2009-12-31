@@ -141,6 +141,9 @@ bool KBibTeXPart::saveFile()
     delete exporter;
 
     qApp->restoreOverrideCursor();
+
+    emit completed();
+    emit setWindowCaption(url().prettyUrl());
     return true;
 }
 
@@ -180,5 +183,8 @@ bool KBibTeXPart::openFile()
     d->model->setBibTeXFile(bibtexFile);
 
     qApp->restoreOverrideCursor();
+
+    emit completed();
+    emit setWindowCaption(url().prettyUrl());
     return true;
 }
