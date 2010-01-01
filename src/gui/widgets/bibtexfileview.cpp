@@ -67,7 +67,7 @@ BibTeXFileView::~BibTeXFileView()
 {
     KBibTeX::GUI::Config::BibTeXFields *bibtexFields = KBibTeX::GUI::Config::BibTeXFields::self();
 
-    for (int i = header()->count()-1; i>=0; --i) {
+    for (int i = header()->count() - 1; i >= 0; --i) {
         KBibTeX::GUI::Config::FieldDescription fd = bibtexFields->at(i);
         fd.width = columnWidth(i);
         bibtexFields->replace(i, fd);
@@ -79,7 +79,7 @@ void BibTeXFileView::resizeEvent(QResizeEvent */*event*/)
 {
     KBibTeX::GUI::Config::BibTeXFields *bibtexFields = KBibTeX::GUI::Config::BibTeXFields::self();
     int sum = 0;
-    int widgetWidth=size().width()-verticalScrollBar()->size().width();
+    int widgetWidth = size().width() - verticalScrollBar()->size().width();
 
     for (KBibTeX::GUI::Config::BibTeXFields::Iterator it = bibtexFields->begin(); it != bibtexFields->end(); ++it)
         if ((*it).visible)
