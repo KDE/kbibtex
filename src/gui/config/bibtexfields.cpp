@@ -71,7 +71,7 @@ BibTeXFields* BibTeXFields::self()
 
 void BibTeXFields::load()
 {
-    unsigned int sumWidth = 5;
+    unsigned int sumWidth = 0;
     FieldDescription fd;
 
     clear();

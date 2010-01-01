@@ -19,9 +19,9 @@
 ***************************************************************************/
 #include <QHeaderView>
 #include <QSignalMapper>
+#include <QScrollBar>
 
 #include <KAction>
-#include <KDebug>
 #include <KLocale>
 
 #include <bibtexfields.h>
@@ -35,6 +35,7 @@ BibTeXFileView::BibTeXFileView(QWidget * parent)
 {
     setSelectionMode(QAbstractItemView::ExtendedSelection);
     setSelectionBehavior(QAbstractItemView::SelectRows);
+    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
     setFrameStyle(QFrame::NoFrame);
 
     header()->setContextMenuPolicy(Qt::ActionsContextMenu);
@@ -64,10 +65,9 @@ BibTeXFileView::BibTeXFileView(QWidget * parent)
 
 BibTeXFileView::~BibTeXFileView()
 {
-    int columnCount = header()->count();
     KBibTeX::GUI::Config::BibTeXFields *bibtexFields = KBibTeX::GUI::Config::BibTeXFields::self();
 
-    for (int i = 0; i < columnCount; ++i) {
+    for (int i = header()->count()-1; i>=0; --i) {
         KBibTeX::GUI::Config::FieldDescription fd = bibtexFields->at(i);
         fd.width = columnWidth(i);
         bibtexFields->replace(i, fd);
@@ -78,10 +78,13 @@ BibTeXFileView::~BibTeXFileView()
 void BibTeXFileView::resizeEvent(QResizeEvent */*event*/)
 {
     KBibTeX::GUI::Config::BibTeXFields *bibtexFields = KBibTeX::GUI::Config::BibTeXFields::self();
-    int sum = 1, widgetWidth = size().width() - 64; // FIXME Use action width value
+    int sum = 0;
+    int widgetWidth=size().width()-verticalScrollBar()->size().width();
+
     for (KBibTeX::GUI::Config::BibTeXFields::Iterator it = bibtexFields->begin(); it != bibtexFields->end(); ++it)
         if ((*it).visible)
             sum += (*it).width;
+
     int col = 0;
     for (KBibTeX::GUI::Config::BibTeXFields::Iterator it = bibtexFields->begin(); it != bibtexFields->end(); ++it, ++col) {
         setColumnWidth(col, (*it).width * widgetWidth / sum);
