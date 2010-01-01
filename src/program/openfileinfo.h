@@ -69,7 +69,7 @@ public:
     friend class OpenFileInfoManager;
 
 protected:
-    OpenFileInfo(OpenFileInfoManager *openFileInfoManager, const QString &mimeType, const KUrl &url);
+    OpenFileInfo(OpenFileInfoManager *openFileInfoManager, const KUrl &url);
     void setUrl(const KUrl& url);
     void setLastAccess(const QDateTime& dateTime);
 
@@ -86,7 +86,7 @@ public:
 
     static OpenFileInfoManager* getOpenFileInfoManager();
 
-    OpenFileInfo *create(const QString &mimeType = QLatin1String("application/x-bibtex"), const KUrl & url = KUrl());
+    OpenFileInfo *create(const KUrl & url = KUrl());
     OpenFileInfo *contains(const KUrl&url) const;
     OpenFileInfo *currentFile() const;
     void changeUrl(OpenFileInfo *openFileInfo, const KUrl & url);

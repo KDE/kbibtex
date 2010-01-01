@@ -130,7 +130,7 @@ void KBibTeXMainWindow::openDocumentDialog()
 void KBibTeXMainWindow::openDocument(const KUrl& url, const QString& encoding)
 {
     kDebug() << "Opening document " << url.prettyUrl() << " with encoding " << encoding << endl;
-    OpenFileInfo *openFileInfo = m_openFileInfoManager->create(KIO::NetAccess::mimetype(url, 0), url);
+    OpenFileInfo *openFileInfo = m_openFileInfoManager->create(url);
     openFileInfo->setProperty(OpenFileInfo::propertyEncoding, encoding);
     m_openFileInfoManager->setCurrentFile(openFileInfo);
 }

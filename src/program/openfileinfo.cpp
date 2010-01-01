@@ -26,10 +26,10 @@
 #include <KConfig>
 #include <KConfigGroup>
 #include <KDebug>
+#include <KMimeType>
 #include <KMimeTypeTrader>
 #include <KUrl>
 #include <kparts/part.h>
-#include <kio/netaccess.h>
 
 #include "openfileinfo.h"
 
@@ -50,7 +50,7 @@ public:
 
     OpenFileInfo *p;
 
-    QString mimeType;
+    //QString mimeType;
     KUrl url;
     QMap<QString, QString> properties;
     QMap<QWidget*, KParts::ReadWritePart*> partPerParent;
@@ -79,6 +79,12 @@ public:
             return partPerParent[parent];
 
         KParts::ReadWritePart *part = NULL;
+        QString mimeType = OpenFileInfo::mimetypeBibTeX;
+        if (url.isValid()) {
+            KMimeType::Ptr mimeTypePtr = KMimeType::findByUrl(url);
+            mimeType = mimeTypePtr->name();
+        }
+
         KService::List list = KMimeTypeTrader::self()->query(mimeType, QString::fromLatin1("KParts/ReadWritePart"));
         for (KService::List::Iterator it = list.begin(); it != list.end(); ++it) {
             kDebug() << "service name is " << (*it)->name() << endl;
@@ -114,10 +120,9 @@ const QString OpenFileInfo::OpenFileInfoPrivate::dateTimeFormat = QLatin1String(
 const QString OpenFileInfo::OpenFileInfoPrivate::keyLastAccess = QLatin1String("LastAccess");
 const QString OpenFileInfo::OpenFileInfoPrivate::keyURL = QLatin1String("URL");
 
-OpenFileInfo::OpenFileInfo(OpenFileInfoManager *openFileInfoManager, const QString &mimeType, const KUrl &url)
+OpenFileInfo::OpenFileInfo(OpenFileInfoManager *openFileInfoManager, const KUrl &url)
         : d(new OpenFileInfoPrivate(this))
 {
-    d->mimeType = mimeType;
     d->url = url;
     d->openFileInfoManager = openFileInfoManager;
 }
@@ -247,8 +252,7 @@ public:
             if (!fileUrl.isValid()) break;
             OpenFileInfo *ofi = p->contains(fileUrl);
             if (ofi == NULL) {
-                QString mimeType = KIO::NetAccess::mimetype(fileUrl, 0);
-                ofi = p->create(mimeType, fileUrl);
+                ofi = p->create(fileUrl);
             }
             ofi->setFlags(statusFlags);
             QString encoding = cg.readEntry(QString("%1-%2").arg(OpenFileInfo::propertyEncoding).arg(i), "");
@@ -258,10 +262,8 @@ public:
     }
 
     void writeConfig(OpenFileInfo::StatusFlags statusFlags, const QString& configGroupName) {
-        // TODO: use lastAccess to store only the most recently used files
         KSharedConfig::Ptr config = KGlobal::config();
         KConfigGroup cg(config, configGroupName);
-
         QList<OpenFileInfo*> list = p->filteredItems(statusFlags);
 
         if (statusFlags & OpenFileInfo::RecentlyUsed) {
@@ -279,7 +281,6 @@ public:
             if ((statusFlags & OpenFileInfo::RecentlyUsed) && ofi->lastAccess() < lruDateTimeList[maxNumRecentlyUsedFiles-1])
                 continue;
 
-            kDebug() << "Writing url " << ofi->url().prettyUrl() << endl;
             cg.writeEntry(QString("%1-%2").arg(OpenFileInfo::OpenFileInfoPrivate::keyURL).arg(i), ofi->url().prettyUrl());
             cg.writeEntry(QString("%1-%2").arg(OpenFileInfo::propertyEncoding).arg(i), ofi->property(OpenFileInfo::propertyEncoding));
             cg.writeEntry(QString("%1-%2").arg(OpenFileInfo::OpenFileInfoPrivate::keyLastAccess).arg(i), ofi->lastAccess().toString(OpenFileInfo::OpenFileInfoPrivate::dateTimeFormat));
@@ -330,12 +331,12 @@ OpenFileInfoManager::~OpenFileInfoManager()
     delete d;
 }
 
-OpenFileInfo *OpenFileInfoManager::create(const QString &mimeType, const KUrl & url)
+OpenFileInfo *OpenFileInfoManager::create(const KUrl & url)
 {
     OpenFileInfo *result = contains(url);
     if (result == NULL) {
         /// file not yet open or completely new file
-        result = new OpenFileInfo(this, mimeType, url);
+        result = new OpenFileInfo(this, url);
         d->openFileInfoList << result;
     }
     result->setLastAccess(QDateTime::currentDateTime());
@@ -373,8 +374,7 @@ void OpenFileInfoManager::changeUrl(OpenFileInfo *openFileInfo, const KUrl & url
     if (!url.equals(oldUrl) && oldUrl.isValid()) {
         /// current document was most probabily renamed (e.g. due to "Save As")
         /// add old URL to recently used files, but exclude the open files list
-        QString mimeType = KIO::NetAccess::mimetype(oldUrl, 0);
-        OpenFileInfo *ofi = create(mimeType, oldUrl);
+        OpenFileInfo *ofi = create(oldUrl);
         OpenFileInfo::StatusFlags statusFlags = (openFileInfo->flags() & (~OpenFileInfo::Open)) | OpenFileInfo::RecentlyUsed;
         ofi->setFlags(statusFlags);
         ofi->setProperty(OpenFileInfo::propertyEncoding, openFileInfo->property(OpenFileInfo::propertyEncoding));
