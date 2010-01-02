@@ -76,6 +76,7 @@ KBibTeXMainWindow::KBibTeXMainWindow(KBibTeXProgram *program)
     connect(m_mdiWidget, SIGNAL(documentSwitch(KBibTeX::GUI::BibTeXEditor *, KBibTeX::GUI::BibTeXEditor *)), this, SLOT(documentSwitched(KBibTeX::GUI::BibTeXEditor *, KBibTeX::GUI::BibTeXEditor *)));
     connect(m_mdiWidget, SIGNAL(activePartChanged(KParts::Part*)), this, SLOT(createGUI(KParts::Part*)));
     connect(m_openFileInfoManager, SIGNAL(currentChanged(OpenFileInfo*)), m_mdiWidget, SLOT(setFile(OpenFileInfo*)));
+    connect(m_openFileInfoManager, SIGNAL(closing(OpenFileInfo*)), m_mdiWidget, SLOT(closeFile(OpenFileInfo*)));
 
     actionCollection()->addAction(KStandardAction::New, this, SLOT(newDocument()));
     actionCollection()->addAction(KStandardAction::Open, this, SLOT(openDocumentDialog()));

@@ -62,7 +62,8 @@ public:
 
     StatusFlags flags() const;
     void setFlags(StatusFlags statusFlags);
-    void clearFlags(StatusFlags statusFlags);
+    void addFlags(StatusFlags statusFlags);
+    void removeFlags(StatusFlags statusFlags);
 
     QDateTime lastAccess() const;
 
@@ -99,6 +100,7 @@ public:
 
 signals:
     void currentChanged(OpenFileInfo *);
+    void closing(OpenFileInfo *);
     void listsChanged(OpenFileInfo::StatusFlags statusFlags);
 
 protected:

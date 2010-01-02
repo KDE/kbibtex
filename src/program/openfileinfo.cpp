@@ -99,7 +99,7 @@ public:
 
         if (url.isValid()) {
             part->openUrl(url);
-            p->setFlags(OpenFileInfo::RecentlyUsed);
+            p->addFlags(OpenFileInfo::RecentlyUsed);
         } else {
             ++globalCounter;
             counter = globalCounter;
@@ -108,7 +108,7 @@ public:
 
         partPerParent[parent] = part;
 
-        p->setFlags(OpenFileInfo::Open);
+        p->addFlags(OpenFileInfo::Open);
 
         return part;
     }
@@ -182,7 +182,16 @@ OpenFileInfo::StatusFlags OpenFileInfo::flags() const
 {
     return d->flags;
 }
+
 void OpenFileInfo::setFlags(StatusFlags statusFlags)
+{
+    bool hasChanged = d->flags != statusFlags;
+    d->flags = statusFlags;
+    if (hasChanged)
+        d->openFileInfoManager->flagsChangedInternal(statusFlags);
+}
+
+void OpenFileInfo::addFlags(StatusFlags statusFlags)
 {
     bool hasChanged = (~d->flags & statusFlags) > 0;
     d->flags |= statusFlags;
@@ -190,7 +199,7 @@ void OpenFileInfo::setFlags(StatusFlags statusFlags)
         d->openFileInfoManager->flagsChangedInternal(statusFlags);
 }
 
-void OpenFileInfo::clearFlags(StatusFlags statusFlags)
+void OpenFileInfo::removeFlags(StatusFlags statusFlags)
 {
     bool hasChanged = (d->flags & statusFlags) > 0;
     d->flags &= ~statusFlags;
@@ -254,7 +263,7 @@ public:
             if (ofi == NULL) {
                 ofi = p->create(fileUrl);
             }
-            ofi->setFlags(statusFlags);
+            ofi->addFlags(statusFlags);
             QString encoding = cg.readEntry(QString("%1-%2").arg(OpenFileInfo::propertyEncoding).arg(i), "");
             ofi->setLastAccess(QDateTime::fromString(cg.readEntry(QString("%1-%2").arg(OpenFileInfo::OpenFileInfoPrivate::keyLastAccess).arg(i), ""), OpenFileInfo::OpenFileInfoPrivate::dateTimeFormat));
             ofi->setProperty(OpenFileInfo::propertyEncoding, encoding);
@@ -383,26 +392,23 @@ void OpenFileInfoManager::changeUrl(OpenFileInfo *openFileInfo, const KUrl & url
 
 void OpenFileInfoManager::close(OpenFileInfo *openFileInfo)
 {
-    bool closing = false;
+    bool isClosing = false;
 
     OpenFileInfo *nextCurrent = (d->currentFileInfo == openFileInfo) ? NULL : d->currentFileInfo;
 
-    for (QList<OpenFileInfo*>::Iterator it = d->openFileInfoList.begin(); it != d->openFileInfoList.end();) {
+    for (QList<OpenFileInfo*>::Iterator it = d->openFileInfoList.begin(); it != d->openFileInfoList.end(); ++it) {
         OpenFileInfo *ofi = *it;
-        if (!closing && ofi == openFileInfo) {
-            it = d->openFileInfoList.erase(it);
-            delete ofi;
-            closing = true;
-        } else if (nextCurrent == NULL && ofi->flags().testFlag(OpenFileInfo::Open)) {
+        if (!isClosing && ofi == openFileInfo) {
+            isClosing = true;
+            openFileInfo->removeFlags(OpenFileInfo::Open);
+        } else if (nextCurrent == NULL && ofi->flags().testFlag(OpenFileInfo::Open))
             nextCurrent = ofi;
-            ++it;
-        } else
-            ++it;
     }
 
-    if (closing)
-        emit listsChanged(OpenFileInfo::Open);
     setCurrentFile(nextCurrent);
+
+    if (isClosing)
+        emit closing(openFileInfo);
 }
 
 OpenFileInfo *OpenFileInfoManager::currentFile() const
@@ -414,10 +420,11 @@ void OpenFileInfoManager::setCurrentFile(OpenFileInfo *openFileInfo)
 {
     bool hasChanged = d->currentFileInfo != openFileInfo;
     d->currentFileInfo = openFileInfo;
-    openFileInfo->setLastAccess(QDateTime::currentDateTime());
 
-    if (d->currentFileInfo != NULL)
-        d->currentFileInfo->setFlags(OpenFileInfo::Open);
+    if (d->currentFileInfo != NULL) {
+        d->currentFileInfo->addFlags(OpenFileInfo::Open);
+        d->currentFileInfo->setLastAccess(QDateTime::currentDateTime());
+    }
     if (hasChanged)
         emit currentChanged(openFileInfo);
 }
