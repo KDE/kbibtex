@@ -18,42 +18,13 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include <QScrollArea>
-#include <QLabel>
-#include <QLayout>
-#include <QListView>
+#include "entrylistview.h"
+#include "entrylistdelegate.h"
 
-#include <fieldeditor.h>
-#include <value.h>
-#include <entrylistview.h>
-#include <entrylistmodel.h>
-#include "entryviewer.h"
+using namespace KBibTeX::GUI::Widgets;
 
-using namespace KBibTeX::GUI::Dialogs;
-
-
-class EntryViewer::EntryViewerPrivate
+EntryListView::EntryListView(QWidget* parent)
+        : QTreeView(parent)
 {
-public:
-    EntryViewer *p;
-    const KBibTeX::IO::Entry *entry;
-    KBibTeX::GUI::Widgets::EntryListView *listView;
-    KBibTeX::GUI::Widgets::EntryListModel *listModel;
-
-    EntryViewerPrivate(const KBibTeX::IO::Entry *e, EntryViewer *parent)
-            : p(parent), entry(e) {
-        listView = new KBibTeX::GUI::Widgets::EntryListView(p);
-        listModel = new KBibTeX::GUI::Widgets::EntryListModel(entry, listView);
-        listView->setModel(listModel);
-
-        QVBoxLayout *layout = new QVBoxLayout(p);
-        layout->addWidget(listView);
-    }
-};
-
-EntryViewer::EntryViewer(const KBibTeX::IO::Entry *entry, QWidget *parent)
-        : QWidget(parent), d(new EntryViewerPrivate(entry, this))
-{
-    // TODO
+    setItemDelegate(new EntryListDelegate(this));
 }
-

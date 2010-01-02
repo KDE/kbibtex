@@ -17,43 +17,32 @@
 *   Free Software Foundation, Inc.,                                       *
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
+#ifndef KBIBTEX_GUI_ENTRYLISTDELEGATE_H
+#define KBIBTEX_GUI_ENTRYLISTDELEGATE_H
 
-#include <QScrollArea>
-#include <QLabel>
-#include <QLayout>
-#include <QListView>
+#include <QItemDelegate>
 
-#include <fieldeditor.h>
-#include <value.h>
-#include <entrylistview.h>
-#include <entrylistmodel.h>
-#include "entryviewer.h"
+namespace KBibTeX
+{
+namespace GUI {
+namespace Widgets {
 
-using namespace KBibTeX::GUI::Dialogs;
-
-
-class EntryViewer::EntryViewerPrivate
+/**
+@author Thomas Fischer
+*/
+class EntryListDelegate : public QItemDelegate
 {
 public:
-    EntryViewer *p;
-    const KBibTeX::IO::Entry *entry;
-    KBibTeX::GUI::Widgets::EntryListView *listView;
-    KBibTeX::GUI::Widgets::EntryListModel *listModel;
+    EntryListDelegate(QObject *parent);
+    QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem & option, const QModelIndex &index) const;
+    void setEditorData(QWidget *editor, const QModelIndex &index) const;
+    void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
+    void updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &/* index */) const;
 
-    EntryViewerPrivate(const KBibTeX::IO::Entry *e, EntryViewer *parent)
-            : p(parent), entry(e) {
-        listView = new KBibTeX::GUI::Widgets::EntryListView(p);
-        listModel = new KBibTeX::GUI::Widgets::EntryListModel(entry, listView);
-        listView->setModel(listModel);
-
-        QVBoxLayout *layout = new QVBoxLayout(p);
-        layout->addWidget(listView);
-    }
 };
 
-EntryViewer::EntryViewer(const KBibTeX::IO::Entry *entry, QWidget *parent)
-        : QWidget(parent), d(new EntryViewerPrivate(entry, this))
-{
-    // TODO
+}
+}
 }
 
+#endif // KBIBTEX_GUI_ENTRYLISTDELEGATE_H

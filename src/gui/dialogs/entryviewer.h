@@ -40,6 +40,9 @@ class KBIBTEXGUI_EXPORT EntryViewer : public QWidget
 public:
     EntryViewer(const KBibTeX::IO::Entry *entry, QWidget *parent);
 
+private:
+    class EntryViewerPrivate;
+    EntryViewerPrivate *d;
 };
 
 }

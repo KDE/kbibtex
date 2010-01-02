@@ -17,43 +17,28 @@
 *   Free Software Foundation, Inc.,                                       *
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
+#ifndef KBIBTEX_GUI_ENTRYLISTVIEW_H
+#define KBIBTEX_GUI_ENTRYLISTVIEW_H
 
-#include <QScrollArea>
-#include <QLabel>
-#include <QLayout>
-#include <QListView>
+#include <QTreeView>
 
-#include <fieldeditor.h>
-#include <value.h>
-#include <entrylistview.h>
-#include <entrylistmodel.h>
-#include "entryviewer.h"
+namespace KBibTeX
+{
+namespace GUI {
+namespace Widgets {
 
-using namespace KBibTeX::GUI::Dialogs;
-
-
-class EntryViewer::EntryViewerPrivate
+/**
+@author Thomas Fischer
+*/
+class EntryListView : public QTreeView
 {
 public:
-    EntryViewer *p;
-    const KBibTeX::IO::Entry *entry;
-    KBibTeX::GUI::Widgets::EntryListView *listView;
-    KBibTeX::GUI::Widgets::EntryListModel *listModel;
+    EntryListView(QWidget* parent);
 
-    EntryViewerPrivate(const KBibTeX::IO::Entry *e, EntryViewer *parent)
-            : p(parent), entry(e) {
-        listView = new KBibTeX::GUI::Widgets::EntryListView(p);
-        listModel = new KBibTeX::GUI::Widgets::EntryListModel(entry, listView);
-        listView->setModel(listModel);
-
-        QVBoxLayout *layout = new QVBoxLayout(p);
-        layout->addWidget(listView);
-    }
 };
 
-EntryViewer::EntryViewer(const KBibTeX::IO::Entry *entry, QWidget *parent)
-        : QWidget(parent), d(new EntryViewerPrivate(entry, this))
-{
-    // TODO
+}
+}
 }
 
+#endif // KBIBTEX_GUI_ENTRYLISTVIEW_H

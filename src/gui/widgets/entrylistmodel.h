@@ -17,43 +17,44 @@
 *   Free Software Foundation, Inc.,                                       *
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
+#ifndef KBIBTEX_GUI_ENTRYLISTMODEL_H
+#define KBIBTEX_GUI_ENTRYLISTMODEL_H
 
-#include <QScrollArea>
-#include <QLabel>
-#include <QLayout>
-#include <QListView>
+#include <QAbstractItemModel>
 
-#include <fieldeditor.h>
-#include <value.h>
-#include <entrylistview.h>
-#include <entrylistmodel.h>
-#include "entryviewer.h"
-
-using namespace KBibTeX::GUI::Dialogs;
-
-
-class EntryViewer::EntryViewerPrivate
+namespace KBibTeX
 {
-public:
-    EntryViewer *p;
-    const KBibTeX::IO::Entry *entry;
-    KBibTeX::GUI::Widgets::EntryListView *listView;
-    KBibTeX::GUI::Widgets::EntryListModel *listModel;
-
-    EntryViewerPrivate(const KBibTeX::IO::Entry *e, EntryViewer *parent)
-            : p(parent), entry(e) {
-        listView = new KBibTeX::GUI::Widgets::EntryListView(p);
-        listModel = new KBibTeX::GUI::Widgets::EntryListModel(entry, listView);
-        listView->setModel(listModel);
-
-        QVBoxLayout *layout = new QVBoxLayout(p);
-        layout->addWidget(listView);
-    }
-};
-
-EntryViewer::EntryViewer(const KBibTeX::IO::Entry *entry, QWidget *parent)
-        : QWidget(parent), d(new EntryViewerPrivate(entry, this))
-{
-    // TODO
+namespace IO {
+class Entry;
 }
 
+namespace GUI {
+namespace Widgets {
+
+/**
+@author Thomas Fischer
+*/
+class EntryListModel : public QAbstractItemModel
+{
+public:
+    EntryListModel(const KBibTeX::IO::Entry *entry, QAbstractItemView * parent);
+
+    QModelIndex index(int row, int column, const QModelIndex & parent = QModelIndex()) const;
+    QModelIndex parent(const QModelIndex & index = QModelIndex()) const;
+    bool hasChildren(const QModelIndex & parent = QModelIndex()) const;
+    int rowCount(const QModelIndex & parent = QModelIndex()) const;
+    int columnCount(const QModelIndex & parent = QModelIndex()) const;
+    QVariant data(const QModelIndex &index, int role) const;
+    QVariant headerData(int section, Qt::Orientation orientation, int role) const;
+    Qt::ItemFlags flags(const QModelIndex &index = QModelIndex()) const;
+
+private:
+    class EntryListModelPrivate;
+    EntryListModelPrivate *d;
+};
+
+}
+}
+}
+
+#endif // KBIBTEX_GUI_ENTRYLISTMODEL_H
