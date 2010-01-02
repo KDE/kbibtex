@@ -47,7 +47,7 @@ Visible=false
 [Column9]
 Raw=year
 Label=Year
-DefaultWidth=1
+DefaultWidth=2
 
 [Column10]
 Raw=journal
