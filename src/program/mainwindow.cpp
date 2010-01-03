@@ -142,7 +142,7 @@ void KBibTeXMainWindow::closeDocument()
     m_openFileInfoManager->close(m_openFileInfoManager->currentFile());
 }
 
-void KBibTeXMainWindow::documentSwitched(KBibTeX::GUI::BibTeXEditor *newEditor, KBibTeX::GUI::BibTeXEditor *oldEditor)
+void KBibTeXMainWindow::documentSwitched(KBibTeX::GUI::BibTeXEditor *oldEditor, KBibTeX::GUI::BibTeXEditor *newEditor)
 {
     OpenFileInfo *openFileInfo = OpenFileInfoManager::getOpenFileInfoManager()->currentFile();
     bool validFile = openFileInfo != NULL;
@@ -161,5 +161,6 @@ void KBibTeXMainWindow::documentSwitched(KBibTeX::GUI::BibTeXEditor *newEditor, 
         disconnect(oldEditor, SIGNAL(currentElementChanged(const KBibTeX::IO::Element*)), m_referencePreview, SLOT(setElement(const KBibTeX::IO::Element*)));
     if (newEditor != NULL)
         connect(newEditor, SIGNAL(currentElementChanged(const KBibTeX::IO::Element*)), m_referencePreview, SLOT(setElement(const KBibTeX::IO::Element*)));
+    m_referencePreview->setElement(NULL);
 }
 

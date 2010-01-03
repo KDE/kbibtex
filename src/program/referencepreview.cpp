@@ -19,10 +19,16 @@
 ***************************************************************************/
 
 #include <QBuffer>
+#include <QWebView>
+#include <QLayout>
+#include <QApplication>
 
 #include <KLocale>
+#include <KDebug>
+#include <KComboBox>
 
 #include <fileexporterbibtex.h>
+#include <fileexporterbibtex2html.h>
 
 #include "referencepreview.h"
 
@@ -30,34 +36,110 @@ using namespace KBibTeX::Program;
 
 const QString notAvailableMessage = i18n("<html><body bgcolor=\"#fff\" fgcolor=\"#000\"><em>No preview available</em></body></html>");
 
+class ReferencePreview::ReferencePreviewPrivate
+{
+private:
+    ReferencePreview *p;
+
+public:
+    QString htmlText;
+    QUrl baseUrl;
+    QWebView *webView;
+    KComboBox *comboBox;
+    const KBibTeX::IO::Element* element;
+
+    ReferencePreviewPrivate(ReferencePreview *parent)
+            : p(parent), element(NULL) {
+        QVBoxLayout *layout = new QVBoxLayout(p);
+        layout->setMargin(0);
+        comboBox = new KComboBox(p);
+        layout->addWidget(comboBox);
+        webView = new QWebView(p);
+        layout->addWidget(webView);
+
+        comboBox->addItem(i18n("Source"));
+        comboBox->addItem(i18n("abbrv (bibtex2html)"));
+        comboBox->addItem(i18n("acm (bibtex2html)"));
+        comboBox->addItem(i18n("alpha (bibtex2html)"));
+        comboBox->addItem(i18n("apalike (bibtex2html)"));
+        comboBox->addItem(i18n("ieeetr (bibtex2html)"));
+        comboBox->addItem(i18n("plain (bibtex2html)"));
+        comboBox->addItem(i18n("siam (bibtex2html)"));
+        comboBox->addItem(i18n("unsrt (bibtex2html)"));
+        connect(comboBox, SIGNAL(currentIndexChanged(int)), p, SLOT(renderHTML()));
+    }
+
+};
+
 ReferencePreview::ReferencePreview(QWidget *parent)
-        : QWebView(parent)
+        : QWidget(parent), d(new ReferencePreviewPrivate(this))
 {
     setEnabled(false);
 }
 
 void ReferencePreview::setHtml(const QString & html, const QUrl & baseUrl)
 {
-    m_htmlText = html;
-    m_baseUrl = baseUrl;
-    QWebView::setHtml(html, baseUrl);
+    d->htmlText = html;
+    d->baseUrl = baseUrl;
+    d->webView->setHtml(html, baseUrl);
 }
 
 void ReferencePreview::setEnabled(bool enabled)
 {
     if (enabled)
-        QWebView::setHtml(m_htmlText, m_baseUrl);
+        d->webView->setHtml(d->htmlText, d->baseUrl);
     else
-        QWebView::setHtml(notAvailableMessage, m_baseUrl);
-    QWebView::setEnabled(enabled);
+        d->webView->setHtml(notAvailableMessage, d->baseUrl);
+    d->webView->setEnabled(enabled);
 }
 
 void ReferencePreview::setElement(const KBibTeX::IO::Element* element)
 {
-    KBibTeX::IO::FileExporterBibTeX *exporter = new KBibTeX::IO::FileExporterBibTeX();
+    d->element = element;
+    renderHTML();
+}
+
+void ReferencePreview::renderHTML()
+{
+    if (d->element == NULL) {
+        d->webView->setHtml(notAvailableMessage, d->baseUrl);
+        return;
+    }
+
+    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+
+    QStringList errorLog;
+    KBibTeX::IO::FileExporter *exporter = NULL;
+
+    if (d->comboBox->currentIndex() == 0)
+        exporter = new KBibTeX::IO::FileExporterBibTeX();
+    else {
+        KBibTeX::IO::FileExporterBibTeX2HTML *exporterHTML = new KBibTeX::IO::FileExporterBibTeX2HTML();
+        switch (d->comboBox->currentIndex()) {
+        case 1: /// BibTeX2HTML (abbrv)
+            exporterHTML->setLaTeXBibliographyStyle(QLatin1String("abbrv"));
+        case 2: /// BibTeX2HTML (acm)
+            exporterHTML->setLaTeXBibliographyStyle(QLatin1String("acm"));
+        case 3: /// BibTeX2HTML (alpha)
+            exporterHTML->setLaTeXBibliographyStyle(QLatin1String("alpha"));
+        case 4: /// BibTeX2HTML (apalike)
+            exporterHTML->setLaTeXBibliographyStyle(QLatin1String("apalike"));
+        case 5: /// BibTeX2HTML (ieeetr)
+            exporterHTML->setLaTeXBibliographyStyle(QLatin1String("ieeetr"));
+        case 6: /// BibTeX2HTML (plain)
+            exporterHTML->setLaTeXBibliographyStyle(QLatin1String("plain"));
+        case 7: /// BibTeX2HTML (siam)
+            exporterHTML->setLaTeXBibliographyStyle(QLatin1String("siam"));
+        case 8: /// BibTeX2HTML (unsrt)
+            exporterHTML->setLaTeXBibliographyStyle(QLatin1String("unsrt"));
+            break;
+        }
+        exporter = exporterHTML;
+    }
+
     QBuffer buffer(this);
     buffer.open(QBuffer::WriteOnly);
-    exporter->save(&buffer, element);
+    exporter->save(&buffer, d->element, &errorLog);
     buffer.close();
     delete exporter;
 
@@ -66,8 +148,25 @@ void ReferencePreview::setElement(const KBibTeX::IO::Element* element)
     QString text = ts.readAll();
     buffer.close();
 
-    text.prepend(i18n("<html><body><h1>Source</h1><pre>"));
-    text.append(i18n("</pre></body></html>"));
+    if (text.isEmpty()) /// something went wrong, no output ...
+        text = notAvailableMessage;
 
-    setHtml(text);
+    if (d->comboBox->currentIndex() == 0) {
+        /// source
+        text.prepend("<html><body><pre style=\"font-family: '" + KGlobalSettings::fixedFont().family() + "'; font-size: " + QString::number(KGlobalSettings::fixedFont().pointSize()*4 / 3) + "pt;\">"); //FIXME: Font size seems to be too small, therefore scaling up
+        text.append("</pre></body></html>");
+    } else {
+        /// bibtex2html
+
+        /// remove "generated by" line from HTML code if BibTeX2HTML was used
+        text.replace(QRegExp("<hr><p><em>.*</p>"), "");
+
+        text.prepend("<html><body style=\"font-family: '" + font().family() + "'; font-size: " + QString::number(font().pointSize()) + "pt;\">");
+        text.append("</body></html>");
+    }
+
+    kDebug() << "text= " << text << endl;
+    d->webView->setHtml(text);
+
+    QApplication::restoreOverrideCursor();
 }

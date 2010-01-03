@@ -21,7 +21,8 @@
 #ifndef KBIBTEX_PROGRAM_REFERENCEPREVIEW_H
 #define KBIBTEX_PROGRAM_REFERENCEPREVIEW_H
 
-#include <QWebView>
+#include <QWidget>
+#include <QUrl>
 
 #include <element.h>
 
@@ -29,7 +30,7 @@ namespace KBibTeX
 {
 namespace Program {
 
-class ReferencePreview : public QWebView
+class ReferencePreview : public QWidget
 {
     Q_OBJECT
 public:
@@ -42,8 +43,11 @@ public slots:
     void setElement(const KBibTeX::IO::Element*);
 
 private:
-    QString m_htmlText;
-    QUrl m_baseUrl;
+    class ReferencePreviewPrivate;
+    ReferencePreviewPrivate *d;
+
+private slots:
+    void renderHTML();
 };
 
 }
