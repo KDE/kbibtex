@@ -50,7 +50,6 @@ public:
 
     OpenFileInfo *p;
 
-    //QString mimeType;
     KUrl url;
     QMap<QString, QString> properties;
     QMap<QWidget*, KParts::ReadWritePart*> partPerParent;

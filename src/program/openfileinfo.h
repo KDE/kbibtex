@@ -37,7 +37,6 @@ class OpenFileInfoManager;
 
 class OpenFileInfo : protected QObject
 {
-
 public:
     static const QString propertyEncoding;
     static const QString mimetypeBibTeX;
