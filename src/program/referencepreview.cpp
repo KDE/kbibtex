@@ -118,18 +118,25 @@ void ReferencePreview::renderHTML()
         switch (d->comboBox->currentIndex()) {
         case 1: /// BibTeX2HTML (abbrv)
             exporterHTML->setLaTeXBibliographyStyle(QLatin1String("abbrv"));
+            break;
         case 2: /// BibTeX2HTML (acm)
             exporterHTML->setLaTeXBibliographyStyle(QLatin1String("acm"));
+            break;
         case 3: /// BibTeX2HTML (alpha)
             exporterHTML->setLaTeXBibliographyStyle(QLatin1String("alpha"));
+            break;
         case 4: /// BibTeX2HTML (apalike)
             exporterHTML->setLaTeXBibliographyStyle(QLatin1String("apalike"));
+            break;
         case 5: /// BibTeX2HTML (ieeetr)
             exporterHTML->setLaTeXBibliographyStyle(QLatin1String("ieeetr"));
+            break;
         case 6: /// BibTeX2HTML (plain)
             exporterHTML->setLaTeXBibliographyStyle(QLatin1String("plain"));
+            break;
         case 7: /// BibTeX2HTML (siam)
             exporterHTML->setLaTeXBibliographyStyle(QLatin1String("siam"));
+            break;
         case 8: /// BibTeX2HTML (unsrt)
             exporterHTML->setLaTeXBibliographyStyle(QLatin1String("unsrt"));
             break;
