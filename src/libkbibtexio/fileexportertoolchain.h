@@ -53,6 +53,7 @@ protected:
     bool runProcess(const QString &cmd, const QStringList &args, QStringList *errorLog = NULL);
     bool writeFileToIODevice(const QString &filename, QIODevice *device);
     bool kpsewhich(const QString& filename);
+    bool which(const QString& filename);
 
 private:
     QWaitCondition m_waitCond;
