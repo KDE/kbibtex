@@ -24,15 +24,14 @@
 #include <kparts/mainwindow.h>
 #include <KConfigGroup>
 
-#include <bibtexeditor.h>
-#include "documentlist.h"
-
-class QDockWidget;
-class KAction;
 class QTextEdit;
 
 namespace KBibTeX
 {
+namespace GUI {
+class BibTeXEditor;
+}
+
 namespace Program {
 
 class KBibTeXProgram;
@@ -57,15 +56,6 @@ protected: // KMainWindow API
 protected:
     void setupControllers();
 
-protected:
-    KBibTeXProgram *m_program;
-    QDockWidget *m_dockDocumentList;
-    QDockWidget *m_dockReferencePreview;
-    DocumentList *m_listDocumentList;
-    MDIWidget *m_mdiWidget;
-    ReferencePreview *m_referencePreview;
-    OpenFileInfoManager *m_openFileInfoManager;
-
 protected slots:
     void newDocument();
     void openDocumentDialog();
@@ -73,7 +63,8 @@ protected slots:
     void documentSwitched(KBibTeX::GUI::BibTeXEditor*, KBibTeX::GUI::BibTeXEditor*);
 
 private:
-    KAction *m_actionClose;
+    class KBibTeXMainWindowPrivate;
+    KBibTeXMainWindowPrivate *d;
 };
 
 }

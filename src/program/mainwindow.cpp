@@ -37,12 +37,38 @@
 #include "mdiwidget.h"
 #include "referencepreview.h"
 #include "openfileinfo.h"
+#include "bibtexeditor.h"
+#include "documentlist.h"
 
 using namespace KBibTeX::Program;
 
-KBibTeXMainWindow::KBibTeXMainWindow(KBibTeXProgram *program)
-        : KParts::MainWindow(), m_program(program), m_openFileInfoManager(OpenFileInfoManager::getOpenFileInfoManager())
+class KBibTeXMainWindow::KBibTeXMainWindowPrivate
 {
+private:
+    KBibTeXMainWindow *p;
+
+public:
+    KAction *actionClose;
+    QDockWidget *dockDocumentList;
+    QDockWidget *dockReferencePreview;
+    KBibTeXProgram *program;
+    DocumentList *listDocumentList;
+    MDIWidget *mdiWidget;
+    ReferencePreview *referencePreview;
+    OpenFileInfoManager *openFileInfoManager;
+
+    KBibTeXMainWindowPrivate(KBibTeXMainWindow *parent)
+            : p(parent) {
+        // nothing
+    }
+};
+
+KBibTeXMainWindow::KBibTeXMainWindow(KBibTeXProgram *program)
+        : KParts::MainWindow(), d(new KBibTeXMainWindowPrivate(this))
+{
+    d->program = program;
+    d->openFileInfoManager = OpenFileInfoManager::getOpenFileInfoManager();
+
     setObjectName(QLatin1String("KBibTeXShell"));
 
     /*
@@ -52,36 +78,36 @@ KBibTeXMainWindow::KBibTeXMainWindow(KBibTeXProgram *program)
             group.writeEntry( mainWindowStateKey, mainWindowState );
     */
 
-    m_dockDocumentList = new QDockWidget(i18n("List of Documents"), this);
-    m_dockDocumentList->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-    addDockWidget(Qt::LeftDockWidgetArea, m_dockDocumentList);
-    m_listDocumentList = new DocumentList(OpenFileInfoManager::getOpenFileInfoManager(), m_dockDocumentList);
-    m_dockDocumentList->setWidget(m_listDocumentList);
-    m_dockDocumentList->setObjectName("dockDocumentList");
-    m_dockDocumentList->setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
-    // connect(m_listDocumentList, SIGNAL(open(const KUrl &, const QString&)), this, SLOT(openDocument(const KUrl&, const QString&)));
+    d->dockDocumentList = new QDockWidget(i18n("List of Documents"), this);
+    d->dockDocumentList->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+    addDockWidget(Qt::LeftDockWidgetArea, d->dockDocumentList);
+    d->listDocumentList = new DocumentList(OpenFileInfoManager::getOpenFileInfoManager(), d->dockDocumentList);
+    d->dockDocumentList->setWidget(d->listDocumentList);
+    d->dockDocumentList->setObjectName("dockDocumentList");
+    d->dockDocumentList->setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
+    // connect(d->listDocumentList, SIGNAL(open(const KUrl &, const QString&)), this, SLOT(openDocument(const KUrl&, const QString&)));
 
-    m_dockReferencePreview = new QDockWidget(i18n("Reference Preview"), this);
-    m_dockReferencePreview->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-    addDockWidget(Qt::BottomDockWidgetArea, m_dockReferencePreview);
-    m_referencePreview = new ReferencePreview(m_dockReferencePreview);
-    m_dockReferencePreview->setWidget(m_referencePreview);
-    m_dockReferencePreview->setObjectName("dockReferencePreview");
-    m_dockReferencePreview->setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
+    d->dockReferencePreview = new QDockWidget(i18n("Reference Preview"), this);
+    d->dockReferencePreview->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+    addDockWidget(Qt::BottomDockWidgetArea, d->dockReferencePreview);
+    d->referencePreview = new ReferencePreview(d->dockReferencePreview);
+    d->dockReferencePreview->setWidget(d->referencePreview);
+    d->dockReferencePreview->setObjectName("dockReferencePreview");
+    d->dockReferencePreview->setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
 
     setXMLFile("kbibtexui.rc");
 
-    m_mdiWidget = new MDIWidget(this);
-    setCentralWidget(m_mdiWidget);
-    connect(m_mdiWidget, SIGNAL(documentSwitch(KBibTeX::GUI::BibTeXEditor *, KBibTeX::GUI::BibTeXEditor *)), this, SLOT(documentSwitched(KBibTeX::GUI::BibTeXEditor *, KBibTeX::GUI::BibTeXEditor *)));
-    connect(m_mdiWidget, SIGNAL(activePartChanged(KParts::Part*)), this, SLOT(createGUI(KParts::Part*)));
-    connect(m_openFileInfoManager, SIGNAL(currentChanged(OpenFileInfo*)), m_mdiWidget, SLOT(setFile(OpenFileInfo*)));
-    connect(m_openFileInfoManager, SIGNAL(closing(OpenFileInfo*)), m_mdiWidget, SLOT(closeFile(OpenFileInfo*)));
+    d->mdiWidget = new MDIWidget(this);
+    setCentralWidget(d->mdiWidget);
+    connect(d->mdiWidget, SIGNAL(documentSwitch(KBibTeX::GUI::BibTeXEditor *, KBibTeX::GUI::BibTeXEditor *)), this, SLOT(documentSwitched(KBibTeX::GUI::BibTeXEditor *, KBibTeX::GUI::BibTeXEditor *)));
+    connect(d->mdiWidget, SIGNAL(activePartChanged(KParts::Part*)), this, SLOT(createGUI(KParts::Part*)));
+    connect(d->openFileInfoManager, SIGNAL(currentChanged(OpenFileInfo*)), d->mdiWidget, SLOT(setFile(OpenFileInfo*)));
+    connect(d->openFileInfoManager, SIGNAL(closing(OpenFileInfo*)), d->mdiWidget, SLOT(closeFile(OpenFileInfo*)));
 
     actionCollection()->addAction(KStandardAction::New, this, SLOT(newDocument()));
     actionCollection()->addAction(KStandardAction::Open, this, SLOT(openDocumentDialog()));
-    m_actionClose = actionCollection()->addAction(KStandardAction::Close, this, SLOT(closeDocument()));
-    m_actionClose->setEnabled(false);
+    d->actionClose = actionCollection()->addAction(KStandardAction::Close, this, SLOT(closeDocument()));
+    d->actionClose->setEnabled(false);
     actionCollection()->addAction(KStandardAction::Quit,  kapp, SLOT(quit()));
 
     setupControllers();
@@ -90,7 +116,7 @@ KBibTeXMainWindow::KBibTeXMainWindow(KBibTeXProgram *program)
 
 KBibTeXMainWindow::~KBibTeXMainWindow()
 {
-    delete m_openFileInfoManager;
+    delete d->openFileInfoManager;
 }
 
 
@@ -111,9 +137,9 @@ void KBibTeXMainWindow::readProperties(const KConfigGroup &/*configGroup*/)
 
 void KBibTeXMainWindow::newDocument()
 {
-    OpenFileInfo *openFileInfo = m_openFileInfoManager->create(OpenFileInfo::mimetypeBibTeX);
+    OpenFileInfo *openFileInfo = d->openFileInfoManager->create(OpenFileInfo::mimetypeBibTeX);
     openFileInfo->setProperty(OpenFileInfo::propertyEncoding, "UTF-8");
-    m_openFileInfoManager->setCurrentFile(openFileInfo);
+    d->openFileInfoManager->setCurrentFile(openFileInfo);
     openFileInfo->setFlags(OpenFileInfo::Open);
 }
 
@@ -131,36 +157,30 @@ void KBibTeXMainWindow::openDocumentDialog()
 void KBibTeXMainWindow::openDocument(const KUrl& url, const QString& encoding)
 {
     kDebug() << "Opening document " << url.prettyUrl() << " with encoding " << encoding << endl;
-    OpenFileInfo *openFileInfo = m_openFileInfoManager->create(url);
+    OpenFileInfo *openFileInfo = d->openFileInfoManager->create(url);
     openFileInfo->setProperty(OpenFileInfo::propertyEncoding, encoding);
-    m_openFileInfoManager->setCurrentFile(openFileInfo);
+    d->openFileInfoManager->setCurrentFile(openFileInfo);
 }
 
 void KBibTeXMainWindow::closeDocument()
 {
-    m_actionClose->setEnabled(false);
-    m_openFileInfoManager->close(m_openFileInfoManager->currentFile());
+    d->actionClose->setEnabled(false);
+    d->openFileInfoManager->close(d->openFileInfoManager->currentFile());
 }
 
 void KBibTeXMainWindow::documentSwitched(KBibTeX::GUI::BibTeXEditor *oldEditor, KBibTeX::GUI::BibTeXEditor *newEditor)
 {
     OpenFileInfo *openFileInfo = OpenFileInfoManager::getOpenFileInfoManager()->currentFile();
     bool validFile = openFileInfo != NULL;
-    m_actionClose->setEnabled(validFile);
+    d->actionClose->setEnabled(validFile);
 
     setCaption(validFile ? i18n("%1 - KBibTeX", openFileInfo->caption()) : i18n("KBibTeX"));
 
-    /*
-    if (url.isValid())
-        m_listDocumentList->highlightUrl(url);
-        */
-
-
-    m_referencePreview->setEnabled(newEditor != NULL);
+    d->referencePreview->setEnabled(newEditor != NULL);
     if (oldEditor != NULL)
-        disconnect(oldEditor, SIGNAL(currentElementChanged(const KBibTeX::IO::Element*)), m_referencePreview, SLOT(setElement(const KBibTeX::IO::Element*)));
+        disconnect(oldEditor, SIGNAL(currentElementChanged(const KBibTeX::IO::Element*)), d->referencePreview, SLOT(setElement(const KBibTeX::IO::Element*)));
     if (newEditor != NULL)
-        connect(newEditor, SIGNAL(currentElementChanged(const KBibTeX::IO::Element*)), m_referencePreview, SLOT(setElement(const KBibTeX::IO::Element*)));
-    m_referencePreview->setElement(NULL);
+        connect(newEditor, SIGNAL(currentElementChanged(const KBibTeX::IO::Element*)), d->referencePreview, SLOT(setElement(const KBibTeX::IO::Element*)));
+    d->referencePreview->setElement(NULL);
 }
 
