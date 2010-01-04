@@ -34,8 +34,7 @@
 
 using namespace KBibTeX::Program;
 
-const QString notAvailableMessage = "<html><body style=\"font-family: '" + KGlobalSettings::generalFont().family() + "'; font-size: " + QString::number(KGlobalSettings::generalFont().pointSize() * 4 / 3) + "pt; font-style: italic; color: #333;\">" + i18n("No preview available") + "</body></html>"; //FIXME: Font size seems to be too small, therefore scaling up
-
+const QString notAvailableMessage = "<html><body style=\"font-family: '" + KGlobalSettings::generalFont().family() + "'; font-size: " + QString::number(KGlobalSettings::generalFont().pointSize()) + "pt; font-style: italic; color: #333;\">" + i18n("No preview available") + "</body></html>"; //FIXME: Font size seems to be too small
 class ReferencePreview::ReferencePreviewPrivate
 {
 private:
@@ -91,6 +90,7 @@ void ReferencePreview::setEnabled(bool enabled)
     else
         d->webView->setHtml(notAvailableMessage, d->baseUrl);
     d->webView->setEnabled(enabled);
+    d->comboBox->setEnabled(enabled);
 }
 
 void ReferencePreview::setElement(const KBibTeX::IO::Element* element)
@@ -160,7 +160,7 @@ void ReferencePreview::renderHTML()
 
     if (d->comboBox->currentIndex() == 0) {
         /// source
-        text.prepend("<html><body><pre style=\"font-family: '" + KGlobalSettings::fixedFont().family() + "'; font-size: " + QString::number(KGlobalSettings::fixedFont().pointSize() * 4 / 3) + "pt;\">"); //FIXME: Font size seems to be too small, therefore scaling up
+        text.prepend("<html><body><pre style=\"font-family: '" + KGlobalSettings::fixedFont().family() + "'; font-size: " + QString::number(KGlobalSettings::fixedFont().pointSize()) + "pt;\">"); //FIXME: Font size seems to be too small
         text.append("</pre></body></html>");
     } else {
         /// bibtex2html

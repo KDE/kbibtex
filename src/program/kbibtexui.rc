@@ -5,8 +5,8 @@
 
     <Action name="file_new" />
     <Action name="file_open" />
-    <DefineGroup name="save_merge" append="save_merge" />
     <Action name="file_close" />
+    <DefineGroup name="save_merge" append="save_merge" />
     <Separator/>
 
     <Action name="file_quit"/>
@@ -16,8 +16,9 @@
 <ToolBar noMerge="1" name="mainToolBar">
     <Action name="file_new" />
     <Action name="file_open" />
-    <Merge/>
     <Action name="file_close" />
+    <Separator/>
+    <Merge/>
 </ToolBar>
 <!-- TODO -->
 </kpartgui>
