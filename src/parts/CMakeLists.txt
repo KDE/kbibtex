@@ -1,3 +1,3 @@
-add_subdirectory( simplekpart )
-# add_subdirectory( extendedkpart )
+# add_subdirectory( simplekpart )
+add_subdirectory( kpart )
 

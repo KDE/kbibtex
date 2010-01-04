@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Service
+Icon=kbibtex
+Name=Embedded BibTeX Editor
+Name[x-test]=xxEmbedded BibTeX Editorxx
+Comment=Embedded BibTeX Editor
+Comment[x-test]=xxEmbedded BibTeX Editorxx
+MimeType=text/x-bibtex;
+X-KDE-ServiceTypes=KParts/ReadOnlyPart,KParts/ReadWritePart,Browser/View
+X-KDE-Library=libkbibtexpart
