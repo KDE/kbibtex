@@ -19,6 +19,7 @@ set( kbibtexgui_LIB_SRCS
 	widgets/entrylistdelegate.cpp
 	widgets/entrylistview.cpp
 	widgets/entrylistmodel.cpp
+	widgets/filterbar.cpp
 	config/bibtexfields.cpp
 	dialogs/entryviewer.cpp
 	dialogs/entryeditor.cpp
