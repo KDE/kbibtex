@@ -25,6 +25,7 @@
 #include <QSignalMapper>
 
 #include <KDebug>
+#include <KMessageBox>
 #include <kmimetypetrader.h>
 #include <kparts/part.h>
 #include <kio/netaccess.h>
@@ -74,6 +75,10 @@ void MDIWidget::setFile(OpenFileInfo *openFileInfo)
     if (part != NULL) {
         widget = part->widget();
         widget->setParent(this);
+    } else if (openFileInfo != NULL) {
+        KMessageBox::error(this, i18n("No part available for file '%1'.", openFileInfo->url().fileName()), i18n("No part available"));
+        OpenFileInfoManager::getOpenFileInfoManager()->close(openFileInfo);
+        return;
     }
 
     if (indexOf(widget) >= 0) {
@@ -86,11 +91,6 @@ void MDIWidget::setFile(OpenFileInfo *openFileInfo)
     setCurrentWidget(widget);
     d->currentFile = openFileInfo;
 
-    if (dynamic_cast<QLabel*>(widget) == NULL)
-        setFrameStyle(QFrame::Panel | QFrame::Sunken);
-    else
-        setFrameStyle(QFrame::NoFrame);
-
     if (hasChanged) {
         KBibTeX::GUI::BibTeXEditor *newEditor = dynamic_cast<KBibTeX::GUI::BibTeXEditor *>(widget);
         emit activePartChanged(part);
@@ -102,7 +102,7 @@ void MDIWidget::closeFile(OpenFileInfo *openFileInfo)
 {
     kDebug() << "closeFile" << endl;
 
-    QWidget *widget = openFileInfo->part(this)->widget();
+    QWidget *widget = openFileInfo->part(this) != NULL ? openFileInfo->part(this)->widget() : NULL;
     if (indexOf(widget) >= 0) {
         QWidget *curWidget = currentWidget();
 
