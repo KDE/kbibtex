@@ -21,8 +21,11 @@
 #ifndef KBIBTEX_PROGRAM_OPENFILEINFO_H
 #define KBIBTEX_PROGRAM_OPENFILEINFO_H
 
+#include <QObject>
 #include <QList>
 #include <QDateTime>
+
+#include <KUrl>
 
 namespace KParts
 {
@@ -35,7 +38,7 @@ namespace Program {
 
 class OpenFileInfoManager;
 
-class OpenFileInfo : protected QObject
+class OpenFileInfo : public QObject
 {
 public:
     static const QString propertyEncoding;
