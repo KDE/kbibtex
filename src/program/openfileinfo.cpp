@@ -22,7 +22,6 @@
 #include <QLatin1String>
 #include <QTimer>
 
-#include <KMessageBox>
 #include <KConfig>
 #include <KConfigGroup>
 #include <KDebug>

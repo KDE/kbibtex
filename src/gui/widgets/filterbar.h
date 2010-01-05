@@ -34,12 +34,29 @@ namespace Widgets {
 */
 class KBIBTEXGUI_EXPORT FilterBar : public QWidget
 {
+    Q_OBJECT
 public:
+    enum FilterCombination {AnyWord = 0, EveryWord = 1, ExactPhrase = 2 };
+    struct FilterQuery {
+        QVariant request;
+        FilterCombination combination;
+        QString field;
+    };
+
     FilterBar(QWidget *parent);
+
+    void clearFilter();
+    FilterQuery filter();
+
+signals:
+    void filterChanged(FilterBar::FilterQuery);
 
 private:
     class FilterBarPrivate;
     FilterBarPrivate *d;
+
+private slots:
+    void widgetsChanged();
 };
 
 }

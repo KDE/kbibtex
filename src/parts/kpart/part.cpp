@@ -40,6 +40,7 @@
 #include <fileexporterris.h>
 #include <fileexporterbibtex2html.h>
 #include <bibtexfilemodel.h>
+#include "filterbar.h"
 
 #include "part.h"
 #include "partfactory.h"
@@ -52,6 +53,7 @@ class KBibTeXPart::KBibTeXPartPrivate
 public:
     KBibTeX::GUI::BibTeXEditor *editor;
     KBibTeX::GUI::Widgets::BibTeXFileModel *model;
+    KBibTeX::GUI::Widgets::FilterBar *filterBar;
 
     KBibTeX::IO::FileImporter *fileImporterFactory(const KUrl& url) {
         QString ending = url.path().toLower();
@@ -117,6 +119,14 @@ void KBibTeXPart::setupActions(bool /*browserViewWanted FIXME*/)
 {
     actionCollection()->addAction(KStandardAction::Save, this, SLOT(save()));
     actionCollection()->addAction(KStandardAction::SaveAs, this, SLOT(saveDocumentDialog()));
+
+    d->filterBar = new KBibTeX::GUI::Widgets::FilterBar(0);
+    KAction *filterWidgetAction = new KAction(this);
+    actionCollection()->addAction("toolbar_filter_widget", filterWidgetAction);
+    filterWidgetAction->setText(i18n("Filter"));
+    filterWidgetAction->setShortcut(Qt::CTRL + Qt::Key_F);
+    filterWidgetAction->setDefaultWidget(d->filterBar);
+    connect(filterWidgetAction, SIGNAL(triggered()), d->filterBar, SLOT(setFocus()));
 
     // TODO
 
