@@ -21,6 +21,7 @@
 #define KBIBTEX_GUI_BIBTEXFILEMODEL_H
 
 #include <QAbstractItemModel>
+#include <QSortFilterProxyModel>
 #include <QLatin1String>
 #include <QList>
 #include <QRegExp>
@@ -28,6 +29,7 @@
 #include <kbibtexgui_export.h>
 
 #include <file.h>
+#include <entry.h>
 #include <bibtexfields.h>
 
 namespace KBibTeX
@@ -38,7 +40,44 @@ namespace Widgets {
 /**
 @author Thomas Fischer
 */
-class KBIBTEXGUI_EXPORT BibTeXFileModel : public QAbstractItemModel
+class AbstractBibTeXFileModel
+{
+public:
+    virtual ~AbstractBibTeXFileModel() { /* nothing */ };
+    virtual  KBibTeX::IO::Element* element(int row) const = 0;
+};
+
+
+/**
+@author Thomas Fischer
+*/
+class KBIBTEXGUI_EXPORT SortFilterBibTeXFileModel : public QSortFilterProxyModel, public AbstractBibTeXFileModel
+{
+    Q_OBJECT
+
+public:
+    SortFilterBibTeXFileModel(QObject * parent = 0)
+            : QSortFilterProxyModel(parent) {
+        m_internalModel = NULL;
+    };
+
+    virtual void setSourceModel(QAbstractItemModel *model);
+
+    KBibTeX::IO::Element* element(int row) const;
+
+protected:
+    virtual bool lessThan(const QModelIndex & left, const QModelIndex & right) const;
+
+private:
+    AbstractBibTeXFileModel *m_internalModel;
+    KBibTeX::GUI::Config::BibTeXFields *m_bibtexFields;
+};
+
+
+/**
+@author Thomas Fischer
+*/
+class KBIBTEXGUI_EXPORT BibTeXFileModel : public QAbstractItemModel, public AbstractBibTeXFileModel
 {
 public:
     BibTeXFileModel(QObject * parent = 0);

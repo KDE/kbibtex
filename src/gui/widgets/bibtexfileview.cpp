@@ -37,6 +37,10 @@ BibTeXFileView::BibTeXFileView(QWidget * parent)
     setSelectionBehavior(QAbstractItemView::SelectRows);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
     setFrameStyle(QFrame::NoFrame);
+    header()->setClickable(true);
+    header()->setSortIndicatorShown(true);
+    header()->setSortIndicator(-1, Qt::AscendingOrder);
+    connect(header(), SIGNAL(sortIndicatorChanged(int, Qt::SortOrder)), this, SLOT(sort(int, Qt::SortOrder)));
 
     header()->setContextMenuPolicy(Qt::ActionsContextMenu);
     KBibTeX::GUI::Config::BibTeXFields *bibtexFields = KBibTeX::GUI::Config::BibTeXFields::self();
@@ -113,4 +117,9 @@ void BibTeXFileView::headerResetToDefaults()
 {
     KBibTeX::GUI::Config::BibTeXFields::self()->resetToDefaults();
     resizeEvent(NULL);
+}
+
+void BibTeXFileView::sort(int t, Qt::SortOrder s)
+{
+    model()->sort(t, s);
 }

@@ -53,7 +53,13 @@ class KBibTeXPart::KBibTeXPartPrivate
 public:
     KBibTeX::GUI::BibTeXEditor *editor;
     KBibTeX::GUI::Widgets::BibTeXFileModel *model;
+    QSortFilterProxyModel *sortFilterProxyModel;
     KBibTeX::GUI::Widgets::FilterBar *filterBar;
+
+    KBibTeXPartPrivate()
+            : sortFilterProxyModel(NULL) {
+        // nothing
+    }
 
     KBibTeX::IO::FileImporter *fileImporterFactory(const KUrl& url) {
         QString ending = url.path().toLower();
@@ -196,6 +202,12 @@ bool KBibTeXPart::openFile()
     delete importer;
 
     d->model->setBibTeXFile(bibtexFile);
+    d->editor->setModel(d->model);
+    if (d->sortFilterProxyModel != NULL) delete d->sortFilterProxyModel;
+    d->sortFilterProxyModel = new KBibTeX::GUI::Widgets::SortFilterBibTeXFileModel(this);
+    d->sortFilterProxyModel->setSourceModel(d->model);
+    d->editor->setModel(d->sortFilterProxyModel);
+    d->sortFilterProxyModel->sort(1, Qt::AscendingOrder);
 
     qApp->restoreOverrideCursor();
 

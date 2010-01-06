@@ -67,8 +67,8 @@ void BibTeXEditor::currentChanged(const QModelIndex & current, const QModelIndex
 {
     QTreeView::currentChanged(current, previous);
 
-    KBibTeX::GUI::Widgets::BibTeXFileModel *bibTeXFileModel = dynamic_cast<KBibTeX::GUI::Widgets::BibTeXFileModel*>(model());
-    m_current = bibTeXFileModel->element(current.row());
+    KBibTeX::GUI::Widgets::AbstractBibTeXFileModel *bibTeXFileModel = dynamic_cast<KBibTeX::GUI::Widgets::AbstractBibTeXFileModel*>(model());
+    m_current = bibTeXFileModel == NULL ? NULL : bibTeXFileModel->element(current.row());
 
     emit currentElementChanged(m_current);
 }
