@@ -24,6 +24,8 @@
 
 #include <QWidget>
 
+#include "bibtexfilemodel.h"
+
 namespace KBibTeX
 {
 namespace GUI {
@@ -36,20 +38,15 @@ class KBIBTEXGUI_EXPORT FilterBar : public QWidget
 {
     Q_OBJECT
 public:
-    enum FilterCombination {AnyWord = 0, EveryWord = 1, ExactPhrase = 2 };
-    struct FilterQuery {
-        QVariant request;
-        FilterCombination combination;
-        QString field;
-    };
-
     FilterBar(QWidget *parent);
 
+    KBibTeX::GUI::Widgets::SortFilterBibTeXFileModel::FilterQuery filter();
+
+public slots:
     void clearFilter();
-    FilterQuery filter();
 
 signals:
-    void filterChanged(FilterBar::FilterQuery);
+    void filterChanged(KBibTeX::GUI::Widgets::SortFilterBibTeXFileModel::FilterQuery);
 
 private:
     class FilterBarPrivate;

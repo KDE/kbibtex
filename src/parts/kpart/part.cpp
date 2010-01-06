@@ -53,7 +53,7 @@ class KBibTeXPart::KBibTeXPartPrivate
 public:
     KBibTeX::GUI::BibTeXEditor *editor;
     KBibTeX::GUI::Widgets::BibTeXFileModel *model;
-    QSortFilterProxyModel *sortFilterProxyModel;
+    KBibTeX::GUI::Widgets::SortFilterBibTeXFileModel *sortFilterProxyModel;
     KBibTeX::GUI::Widgets::FilterBar *filterBar;
 
     KBibTeXPartPrivate()
@@ -208,6 +208,7 @@ bool KBibTeXPart::openFile()
     d->sortFilterProxyModel->setSourceModel(d->model);
     d->editor->setModel(d->sortFilterProxyModel);
     d->sortFilterProxyModel->sort(1, Qt::AscendingOrder);
+    connect(d->filterBar, SIGNAL(filterChanged(KBibTeX::GUI::Widgets::SortFilterBibTeXFileModel::FilterQuery)), d->sortFilterProxyModel, SLOT(updateFilter(KBibTeX::GUI::Widgets::SortFilterBibTeXFileModel::FilterQuery)));
 
     qApp->restoreOverrideCursor();
 

@@ -26,6 +26,7 @@
 #include <entry.h>
 #include <macro.h>
 #include <comment.h>
+#include <preamble.h>
 
 #include "bibtexfilemodel.h"
 
@@ -43,10 +44,15 @@ KBibTeX::IO::Element* SortFilterBibTeXFileModel::element(int row) const
     return m_internalModel == NULL ? NULL : m_internalModel->element(row);
 }
 
+void SortFilterBibTeXFileModel::updateFilter(KBibTeX::GUI::Widgets::SortFilterBibTeXFileModel::FilterQuery filterQuery)
+{
+    m_filterQuery = filterQuery;
+    invalidateFilter();
+}
+
 bool SortFilterBibTeXFileModel::lessThan(const QModelIndex & left, const QModelIndex & right) const
 {
-    if (left.column() == right.column() && (m_bibtexFields->at(left.column()).raw == QLatin1String("author") || m_bibtexFields->at(left.column()).raw == ("editor"))) /// special sorting for authors or editors: check all names, compare last and then first names
-    {
+    if (left.column() == right.column() && (m_bibtexFields->at(left.column()).raw == QLatin1String("author") || m_bibtexFields->at(left.column()).raw == ("editor"))) { /// special sorting for authors or editors: check all names, compare last and then first names
         KBibTeX::IO::Entry *entryA = dynamic_cast<KBibTeX::IO::Entry*>(element(left.row()));
         KBibTeX::IO::Entry *entryB = dynamic_cast<KBibTeX::IO::Entry*>(element(right.row()));
         if (entryA == NULL || entryB == NULL) return  QSortFilterProxyModel::lessThan(left, right);
@@ -82,6 +88,45 @@ bool SortFilterBibTeXFileModel::lessThan(const QModelIndex & left, const QModelI
     } else
         return QSortFilterProxyModel::lessThan(left, right);
 }
+
+bool SortFilterBibTeXFileModel::filterAcceptsRow(int source_row, const QModelIndex & source_parent) const
+{
+    Q_UNUSED(source_parent)
+
+    KBibTeX::IO::Element *rowElement = element(source_row);
+    KBibTeX::IO::Entry *entry = dynamic_cast<KBibTeX::IO::Entry*>(rowElement);
+
+    if (entry != NULL) {
+        for (KBibTeX::IO::Entry::ConstIterator it = entry->constBegin(); it != entry->constEnd(); ++it)
+            if (m_filterQuery.field.isNull() || m_filterQuery.field == it.key()) {
+                bool all = true;
+                for (QStringList::ConstIterator itsl = m_filterQuery.terms.constBegin(); itsl != m_filterQuery.terms.constEnd(); ++itsl) {
+                    bool contains = it.value().containsPattern(*itsl);
+                    if (m_filterQuery.combination == KBibTeX::GUI::Widgets::SortFilterBibTeXFileModel::AnyTerm && contains)
+                        return true;
+                    all &= contains;
+                }
+                if (all) return true;
+            }
+    } else {
+        KBibTeX::IO::Macro *macro = dynamic_cast<KBibTeX::IO::Macro*>(rowElement);
+        if (macro != NULL) {
+            // TODO
+        } else {
+            KBibTeX::IO::Comment *comment = dynamic_cast<KBibTeX::IO::Comment*>(rowElement);
+            if (comment != NULL) {
+                // TODO
+            } else {
+                KBibTeX::IO::Preamble *preamble = dynamic_cast<KBibTeX::IO::Preamble*>(rowElement);
+                if (preamble != NULL) {
+                    // TODO
+                }  }  }
+    }
+
+    return false;
+}
+
+
 
 const QRegExp BibTeXFileModel::whiteSpace = QRegExp("(\\s\\n\\r\\t)+");
 

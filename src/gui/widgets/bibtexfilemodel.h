@@ -25,6 +25,7 @@
 #include <QLatin1String>
 #include <QList>
 #include <QRegExp>
+#include <QStringList>
 
 #include <kbibtexgui_export.h>
 
@@ -56,6 +57,13 @@ class KBIBTEXGUI_EXPORT SortFilterBibTeXFileModel : public QSortFilterProxyModel
     Q_OBJECT
 
 public:
+    enum FilterCombination {AnyTerm = 0, EveryTerm = 1 };
+    struct FilterQuery {
+        QStringList terms;
+        FilterCombination combination;
+        QString field;
+    };
+
     SortFilterBibTeXFileModel(QObject * parent = 0)
             : QSortFilterProxyModel(parent) {
         m_internalModel = NULL;
@@ -65,12 +73,17 @@ public:
 
     KBibTeX::IO::Element* element(int row) const;
 
+public slots:
+    void updateFilter(KBibTeX::GUI::Widgets::SortFilterBibTeXFileModel::FilterQuery);
+
 protected:
     virtual bool lessThan(const QModelIndex & left, const QModelIndex & right) const;
+    virtual bool filterAcceptsRow(int source_row, const QModelIndex & source_parent) const;
 
 private:
     AbstractBibTeXFileModel *m_internalModel;
     KBibTeX::GUI::Config::BibTeXFields *m_bibtexFields;
+    KBibTeX::GUI::Widgets::SortFilterBibTeXFileModel::FilterQuery m_filterQuery;
 };
 
 

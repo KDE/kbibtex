@@ -52,13 +52,14 @@ public:
         comboBoxField->setCurrentIndex(0);
     }
 
-    FilterQuery filter() {
-        FilterQuery result;
-        result.combination = (FilterCombination)comboBoxCombination->currentIndex();
-        if (result.combination == ExactPhrase) /// exact phrase
-            result.request = comboBoxFilterText->lineEdit()->text();
+    KBibTeX::GUI::Widgets::SortFilterBibTeXFileModel::FilterQuery filter() {
+        KBibTeX::GUI::Widgets::SortFilterBibTeXFileModel::FilterQuery result;
+        result.combination = comboBoxCombination->currentIndex() == 0 ? KBibTeX::GUI::Widgets::SortFilterBibTeXFileModel::AnyTerm : KBibTeX::GUI::Widgets::SortFilterBibTeXFileModel::EveryTerm;
+        result.terms.clear();
+        if (comboBoxCombination->currentIndex() == 2) /// exact phrase
+            result.terms << comboBoxFilterText->lineEdit()->text();
         else /// any or every word
-            result.request = comboBoxFilterText->lineEdit()->text().split(QRegExp(QLatin1String("\\s+")), QString::SkipEmptyParts);
+            result.terms = comboBoxFilterText->lineEdit()->text().split(QRegExp(QLatin1String("\\s+")), QString::SkipEmptyParts);
         result.field = comboBoxField->currentIndex() == 0 ? QString::null : comboBoxField->itemData(comboBoxField->currentIndex(), Qt::UserRole).toString();
 
         return result;
@@ -85,7 +86,8 @@ FilterBar::FilterBar(QWidget *parent)
     d->comboBoxFilterText->setEditable(true);
     QFontMetrics metrics(d->comboBoxFilterText->font());
     d->comboBoxFilterText->setMinimumWidth(metrics.width(QLatin1String("AIWaiw"))*7);
-    dynamic_cast<KLineEdit*>(d->comboBoxFilterText->lineEdit())->setClearButtonShown(true);
+    KLineEdit *lineEdit = dynamic_cast<KLineEdit*>(d->comboBoxFilterText->lineEdit());
+    lineEdit->setClearButtonShown(true);
 
     d->comboBoxCombination = new KComboBox(false, this);
     layout->addWidget(d->comboBoxCombination, 1, 2);
@@ -105,6 +107,7 @@ FilterBar::FilterBar(QWidget *parent)
             d->comboBoxField->addItem((*it).label, (*it).raw);
 
     connect(d->comboBoxFilterText->lineEdit(), SIGNAL(textChanged(QString)), this, SLOT(widgetsChanged()));
+    connect(lineEdit, SIGNAL(clearButtonClicked()), this, SLOT(clearFilter()));
     connect(d->comboBoxCombination, SIGNAL(currentIndexChanged(int)), this, SLOT(widgetsChanged()));
     connect(d->comboBoxField, SIGNAL(currentIndexChanged(int)), this, SLOT(widgetsChanged()));
 }
@@ -115,7 +118,7 @@ void FilterBar::clearFilter()
     emit filterChanged(d->filter());
 }
 
-FilterBar::FilterQuery FilterBar::filter()
+KBibTeX::GUI::Widgets::SortFilterBibTeXFileModel::FilterQuery FilterBar::filter()
 {
     return d->filter();
 }
