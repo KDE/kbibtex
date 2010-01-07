@@ -23,9 +23,9 @@ set( kbibtex_SRCS
 
 # TODO kde4_add_app_icon( okteta_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/hi*-app-kbibtex.png" )
 
-kde4_add_executable( kbibtex  ${kbibtex_SRCS} )
+kde4_add_executable( kbibtex${BINARY_POSTFIX}  ${kbibtex_SRCS} )
 
-target_link_libraries( kbibtex
+target_link_libraries( kbibtex${BINARY_POSTFIX}
   ${QT_QTWEBKIT_LIBRARIES}
   ${KDE4_KIO_LIBS}
   ${KDE4_KPARTS_LIBS}
@@ -33,7 +33,7 @@ target_link_libraries( kbibtex
   kbibtexgui
 )
 
-install( TARGETS kbibtex  ${INSTALL_TARGETS_DEFAULT_ARGS} )
+install( TARGETS kbibtex${BINARY_POSTFIX}  ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 install( FILES kbibtex.desktop  DESTINATION ${XDG_APPS_INSTALL_DIR} )
 install( FILES kbibtexui.rc  DESTINATION ${DATA_INSTALL_DIR}/kbibtex )
