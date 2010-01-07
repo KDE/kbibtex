@@ -145,7 +145,14 @@ void KBibTeXMainWindow::newDocument()
 
 void KBibTeXMainWindow::openDocumentDialog()
 {
-    KEncodingFileDialog::Result loadResult = KEncodingFileDialog::getOpenUrlAndEncoding(QString(), ":open", QString(), this);
+    QString startDir = QLatin1String(":open");
+    OpenFileInfo *ofi = d->openFileInfoManager->currentFile();
+    if (ofi != NULL) {
+        KUrl url = ofi->url();
+        if (url.isValid()) startDir = url.path();
+    }
+
+    KEncodingFileDialog::Result loadResult = KEncodingFileDialog::getOpenUrlAndEncoding(QString(), startDir, QLatin1String("text/x-bibtex application/x-research-info-systems application/x-endnote-refer all/all"), this);
     if (!loadResult.URLs.isEmpty()) {
         KUrl url = loadResult.URLs.first();
         if (!url.isEmpty()) {

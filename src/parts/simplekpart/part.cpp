@@ -149,7 +149,10 @@ bool KBibTeXPart::saveFile()
 
 void KBibTeXPart::saveDocumentDialog()
 {
-    KEncodingFileDialog::Result loadResult = KEncodingFileDialog::getSaveUrlAndEncoding(QString(), ":save", QLatin1String("text/x-bibtex"), widget());
+    QString startDir = QLatin1String(":save");
+    if (url().isValid()) startDir = url().prettyUrl();
+
+    KEncodingFileDialog::Result loadResult = KEncodingFileDialog::getSaveUrlAndEncoding(QString(), startDir, QLatin1String("text/x-bibtex application/x-research-info-systems application/x-endnote-refer all/all"), widget());
     if (!loadResult.URLs.isEmpty()) {
         KUrl url = loadResult.URLs.first();
         if (!url.isEmpty()) {
