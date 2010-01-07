@@ -59,7 +59,7 @@ const QList<KBibTeX::IO::Element*>& BibTeXEditor::selectedElements() const
 
 const KBibTeX::IO::Element* BibTeXEditor::currentElement() const
 {
-    KBibTeX::GUI::Widgets::BibTeXFileModel *bibTeXFileModel = dynamic_cast<KBibTeX::GUI::Widgets::BibTeXFileModel*>(model());
+    KBibTeX::GUI::Widgets::AbstractBibTeXFileModel *bibTeXFileModel = dynamic_cast<KBibTeX::GUI::Widgets::AbstractBibTeXFileModel*>(model());
     return bibTeXFileModel->element(currentIndex().row());
 }
 
@@ -77,7 +77,7 @@ void BibTeXEditor::selectionChanged(const QItemSelection & selected, const QItem
 {
     QTreeView::selectionChanged(selected, deselected);
 
-    KBibTeX::GUI::Widgets::BibTeXFileModel *bibTeXFileModel = dynamic_cast<KBibTeX::GUI::Widgets::BibTeXFileModel*>(model());
+    KBibTeX::GUI::Widgets::AbstractBibTeXFileModel *bibTeXFileModel = dynamic_cast<KBibTeX::GUI::Widgets::AbstractBibTeXFileModel*>(model());
 
     QModelIndexList set = selected.indexes();
     for (QModelIndexList::Iterator it = set.begin(); it != set.end(); ++it)
@@ -92,7 +92,7 @@ void BibTeXEditor::selectionChanged(const QItemSelection & selected, const QItem
 
 void BibTeXEditor::itemActivated(const QModelIndex & index)
 {
-    KBibTeX::GUI::Widgets::BibTeXFileModel *bibTeXFileModel = dynamic_cast<KBibTeX::GUI::Widgets::BibTeXFileModel*>(model());
+    KBibTeX::GUI::Widgets::AbstractBibTeXFileModel *bibTeXFileModel = dynamic_cast<KBibTeX::GUI::Widgets::AbstractBibTeXFileModel*>(model());
     emit elementExecuted(bibTeXFileModel->element(index.row()));
 }
 

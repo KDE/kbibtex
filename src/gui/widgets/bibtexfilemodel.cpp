@@ -41,7 +41,7 @@ void SortFilterBibTeXFileModel::setSourceModel(QAbstractItemModel *model)
 
 KBibTeX::IO::Element* SortFilterBibTeXFileModel::element(int row) const
 {
-    return m_internalModel == NULL ? NULL : m_internalModel->element(row);
+    return m_internalModel == NULL || row < 0 ? NULL : m_internalModel->element(row);
 }
 
 void SortFilterBibTeXFileModel::updateFilter(KBibTeX::GUI::Widgets::SortFilterBibTeXFileModel::FilterQuery filterQuery)
@@ -93,12 +93,14 @@ bool SortFilterBibTeXFileModel::filterAcceptsRow(int source_row, const QModelInd
 {
     Q_UNUSED(source_parent)
 
-    KBibTeX::IO::Element *rowElement = element(source_row);
+    if (m_filterQuery.terms.isEmpty()) return true; /// empty filter query
+
+    KBibTeX::IO::Element *rowElement = element(source_row); Q_ASSERT(rowElement != NULL);
     KBibTeX::IO::Entry *entry = dynamic_cast<KBibTeX::IO::Entry*>(rowElement);
 
     if (entry != NULL) {
         for (KBibTeX::IO::Entry::ConstIterator it = entry->constBegin(); it != entry->constEnd(); ++it)
-            if (m_filterQuery.field.isNull() || m_filterQuery.field == it.key()) {
+            if (m_filterQuery.field.isEmpty() || m_filterQuery.field == it.key()) {
                 bool all = true;
                 for (QStringList::ConstIterator itsl = m_filterQuery.terms.constBegin(); itsl != m_filterQuery.terms.constEnd(); ++itsl) {
                     bool contains = it.value().containsPattern(*itsl);
@@ -259,7 +261,7 @@ QVariant BibTeXFileModel::headerData(int section, Qt::Orientation orientation, i
 
 KBibTeX::IO::Element* BibTeXFileModel::element(int row) const
 {
-    if (m_bibtexFile == NULL) return NULL;
+    if (m_bibtexFile == NULL || row < 0 || row >= m_bibtexFile->count()) return NULL;
 
     return (*m_bibtexFile)[row];
 }
