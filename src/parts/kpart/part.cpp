@@ -153,11 +153,12 @@ bool KBibTeXPart::saveFile()
 
     qApp->setOverrideCursor(Qt::WaitCursor);
 
+    KBibTeX::GUI::Widgets::SortFilterBibTeXFileModel *model = dynamic_cast<KBibTeX::GUI::Widgets::SortFilterBibTeXFileModel *>(d->editor->model());
+    Q_ASSERT(model != NULL);
     KBibTeX::IO::FileExporter *exporter = d->fileExporterFactory(url());
     QFile outputfile(localFilePath());
     outputfile.open(QIODevice::WriteOnly);
-    KBibTeX::GUI::Widgets::BibTeXFileModel *model = dynamic_cast<KBibTeX::GUI::Widgets::BibTeXFileModel *>(d->editor->model());
-    exporter->save(&outputfile, model->bibTeXFile());
+    exporter->save(&outputfile, model->bibTeXSourceModel()->bibTeXFile());
     outputfile.close();
     delete exporter;
 

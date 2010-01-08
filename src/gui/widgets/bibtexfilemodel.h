@@ -38,21 +38,12 @@ namespace KBibTeX
 namespace GUI {
 namespace Widgets {
 
-/**
-@author Thomas Fischer
-*/
-class AbstractBibTeXFileModel
-{
-public:
-    virtual ~AbstractBibTeXFileModel() { /* nothing */ };
-    virtual  KBibTeX::IO::Element* element(int row) const = 0;
-};
-
+class BibTeXFileModel;
 
 /**
 @author Thomas Fischer
 */
-class KBIBTEXGUI_EXPORT SortFilterBibTeXFileModel : public QSortFilterProxyModel, public AbstractBibTeXFileModel
+class KBIBTEXGUI_EXPORT SortFilterBibTeXFileModel : public QSortFilterProxyModel
 {
     Q_OBJECT
 
@@ -70,8 +61,7 @@ public:
     };
 
     virtual void setSourceModel(QAbstractItemModel *model);
-
-    KBibTeX::IO::Element* element(int row) const;
+    BibTeXFileModel *bibTeXSourceModel();
 
 public slots:
     void updateFilter(KBibTeX::GUI::Widgets::SortFilterBibTeXFileModel::FilterQuery);
@@ -81,7 +71,7 @@ protected:
     virtual bool filterAcceptsRow(int source_row, const QModelIndex & source_parent) const;
 
 private:
-    AbstractBibTeXFileModel *m_internalModel;
+    BibTeXFileModel *m_internalModel;
     KBibTeX::GUI::Config::BibTeXFields *m_bibtexFields;
     KBibTeX::GUI::Widgets::SortFilterBibTeXFileModel::FilterQuery m_filterQuery;
 };
@@ -90,7 +80,7 @@ private:
 /**
 @author Thomas Fischer
 */
-class KBIBTEXGUI_EXPORT BibTeXFileModel : public QAbstractItemModel, public AbstractBibTeXFileModel
+class KBIBTEXGUI_EXPORT BibTeXFileModel : public QAbstractItemModel
 {
 public:
     BibTeXFileModel(QObject * parent = 0);

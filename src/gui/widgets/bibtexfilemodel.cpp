@@ -35,13 +35,13 @@ using namespace KBibTeX::GUI::Widgets;
 void SortFilterBibTeXFileModel::setSourceModel(QAbstractItemModel *model)
 {
     QSortFilterProxyModel::setSourceModel(model);
-    m_internalModel = dynamic_cast<AbstractBibTeXFileModel*>(model);
+    m_internalModel = dynamic_cast<BibTeXFileModel*>(model);
     m_bibtexFields = KBibTeX::GUI::Config::BibTeXFields::self();
 }
 
-KBibTeX::IO::Element* SortFilterBibTeXFileModel::element(int row) const
+BibTeXFileModel *SortFilterBibTeXFileModel::bibTeXSourceModel()
 {
-    return m_internalModel == NULL || row < 0 ? NULL : m_internalModel->element(row);
+    return m_internalModel;
 }
 
 void SortFilterBibTeXFileModel::updateFilter(KBibTeX::GUI::Widgets::SortFilterBibTeXFileModel::FilterQuery filterQuery)
@@ -53,8 +53,8 @@ void SortFilterBibTeXFileModel::updateFilter(KBibTeX::GUI::Widgets::SortFilterBi
 bool SortFilterBibTeXFileModel::lessThan(const QModelIndex & left, const QModelIndex & right) const
 {
     if (left.column() == right.column() && (m_bibtexFields->at(left.column()).raw == QLatin1String("author") || m_bibtexFields->at(left.column()).raw == ("editor"))) { /// special sorting for authors or editors: check all names, compare last and then first names
-        KBibTeX::IO::Entry *entryA = dynamic_cast<KBibTeX::IO::Entry*>(element(left.row()));
-        KBibTeX::IO::Entry *entryB = dynamic_cast<KBibTeX::IO::Entry*>(element(right.row()));
+        KBibTeX::IO::Entry *entryA = dynamic_cast<KBibTeX::IO::Entry*>(m_internalModel->element(left.row()));
+        KBibTeX::IO::Entry *entryB = dynamic_cast<KBibTeX::IO::Entry*>(m_internalModel->element(right.row()));
         if (entryA == NULL || entryB == NULL) return  QSortFilterProxyModel::lessThan(left, right);
 
         KBibTeX::IO::Value valueA = entryA->value(KBibTeX::IO::Entry::ftAuthor);
@@ -95,7 +95,8 @@ bool SortFilterBibTeXFileModel::filterAcceptsRow(int source_row, const QModelInd
 
     if (m_filterQuery.terms.isEmpty()) return true; /// empty filter query
 
-    KBibTeX::IO::Element *rowElement = element(source_row); Q_ASSERT(rowElement != NULL);
+    KBibTeX::IO::Element *rowElement = m_internalModel->element(source_row);
+    Q_ASSERT(rowElement != NULL);
     KBibTeX::IO::Entry *entry = dynamic_cast<KBibTeX::IO::Entry*>(rowElement);
 
     if (entry != NULL) {
