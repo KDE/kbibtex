@@ -24,7 +24,6 @@
 #include <QApplication>
 
 #include <KLocale>
-#include <KDebug>
 #include <KComboBox>
 
 #include <fileexporterbibtex.h>
@@ -172,7 +171,6 @@ void ReferencePreview::renderHTML()
         text.append("</body></html>");
     }
 
-    kDebug() << "text= " << text << endl;
     d->webView->setHtml(text);
 
     QApplication::restoreOverrideCursor();
