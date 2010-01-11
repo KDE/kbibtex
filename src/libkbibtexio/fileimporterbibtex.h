@@ -71,7 +71,7 @@ public slots:
 
 private:
     enum Token {
-        tAt = 1, tBracketOpen = 2, tBracketClose = 3, tAlphaNumText = 4, tComma = 5, tSemicolon = 6, tAssign = 7, tDoublecross = 8, tEOF = 0xffff, tUnknown = -1
+        tAt = 1, tBracketOpen = 2, tBracketClose = 3, tAlphaNumText = 4, tComma = 5, tAssign = 6, tDoublecross = 7, tEOF = 0xffff, tUnknown = -1
     };
 
     bool m_cancelFlag;

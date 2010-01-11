@@ -316,9 +316,6 @@ FileImporterBibTeX::Token FileImporterBibTeX::nextToken()
     case ',':
         curToken = tComma;
         break;
-    case ';':
-        curToken = tSemicolon;
-        break;
     case '=':
         curToken = tAssign;
         break;
