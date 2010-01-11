@@ -171,6 +171,7 @@ modcharmappingdatalatex[] = {
     {"\\\\'", "e", 0x00E9},
     {"\\\\\\^", "e", 0x00EA},
     {"\\\\\"", "e", 0x00EB},
+    {"\\\\`", "i", 0x00EC},
     {"\\\\'", "i", 0x00ED},
     {"\\\\'", "\\\\i", 0x00ED},
     {"\\\\\\^", "i", 0x00EE},
@@ -201,11 +202,11 @@ modcharmappingdatalatex[] = {
     {"\\\\'", "c", 0x0107},
     /** 0x0108 */
     /** 0x0109 */
-    {"\\\\v", "E", 0x010A},
-    {"\\\\v", "e", 0x010B},
+    /** 0x010A */
+    /** 0x010B */
     {"\\\\v", "C", 0x010C},
     {"\\\\v", "c", 0x010D},
-    /** 0x010E */
+    {"\\\\v", "D", 0x010E},
     /** 0x010F */
     /** 0x0110 */
     /** 0x0111 */
@@ -217,8 +218,8 @@ modcharmappingdatalatex[] = {
     /** 0x0117 */
     {"\\\\c", "E", 0x0118},
     {"\\\\c", "e", 0x0119},
-    /** 0x011A */
-    /** 0x011B */
+    {"\\\\v", "E", 0x011A},
+    {"\\\\v", "e", 0x011B},
     /** 0x011C */
     /** 0x011D */
     {"\\\\u", "G", 0x011E},
@@ -235,8 +236,8 @@ modcharmappingdatalatex[] = {
     /** 0x0129 */
     /** 0x012A */
     /** 0x012B */
-    /** 0x012C */
-    /** 0x012D */
+    {"\\\\u", "I", 0x012C},
+    {"\\\\u", "i", 0x012D},
     /** 0x012E */
     /** 0x012F */
     /** 0x0130 */
@@ -248,8 +249,8 @@ modcharmappingdatalatex[] = {
     /** 0x0136 */
     /** 0x0137 */
     /** 0x0138 */
-    /** 0x0139 */
-    /** 0x013A */
+    {"\\\\'", "L", 0x0139},
+    {"\\\\'", "l", 0x013A},
     /** 0x013B */
     /** 0x013C */
     /** 0x013D */
@@ -262,25 +263,25 @@ modcharmappingdatalatex[] = {
     {"\\\\'", "n", 0x0144},
     /** 0x0145 */
     /** 0x0146 */
-    /** 0x0147 */
-    /** 0x0148 */
+    {"\\\\v", "N", 0x0147},
+    {"\\\\v", "n", 0x0148},
     /** 0x0149 */
     /** 0x014A */
     /** 0x014B */
     /** 0x014C */
     /** 0x014D */
-    /** 0x014E */
-    /** 0x014F */
+    {"\\\\u", "O", 0x014E},
+    {"\\\\u", "o", 0x014F},
     {"\\\\H", "O", 0x0150},
     {"\\\\H", "o", 0x0151},
     /** 0x0152 */
     /** 0x0153 */
-    /** 0x0154 */
-    /** 0x0155 */
+    {"\\\\'", "R", 0x0154},
+    {"\\\\'", "r", 0x0155},
     /** 0x0156 */
     /** 0x0157 */
-    /** 0x0158 */
-    /** 0x0159 */
+    {"\\\\v", "R", 0x0158},
+    {"\\\\v", "r", 0x0159},
     {"\\\\'", "S", 0x015A},
     {"\\\\'", "s", 0x015B},
     /** 0x015C */
@@ -291,7 +292,7 @@ modcharmappingdatalatex[] = {
     {"\\\\v", "s", 0x0161},
     /** 0x0162 */
     /** 0x0163 */
-    /** 0x0164 */
+    {"\\\\v", "T", 0x0164},
     /** 0x0165 */
     /** 0x0166 */
     /** 0x0167 */
@@ -299,8 +300,8 @@ modcharmappingdatalatex[] = {
     /** 0x0169 */
     /** 0x016A */
     /** 0x016B */
-    /** 0x016C */
-    /** 0x016D */
+    {"\\\\u", "U", 0x016C},
+    {"\\\\u", "u", 0x016D},
     {"\\\\r", "U", 0x016E},
     {"\\\\r", "u", 0x016F},
     /** 0x0170 */
@@ -459,6 +460,24 @@ QString EncoderLaTeX::encode(const QString & text)
     const QString splitMarker = "|KBIBTEX|";
     QString result = text;
 
+    /** Collect (all?) urls from the BibTeX file and store them in urls */
+    /** Problem is that the replace function below will replace
+      * character sequences in the URL rendering the URL invalid.
+      * Later, all URLs will be replaced back to their original
+      * in the hope nothing breaks ... */
+    QStringList urls;
+    QRegExp httpRegExp("(ht|f)tps?://[^\"} ]+");
+    httpRegExp.setMinimal(false);
+    int pos = 0;
+    while (pos >= 0) {
+        pos = result.indexOf(httpRegExp, pos);
+        if (pos >= 0) {
+            ++pos;
+            QString url = httpRegExp.cap(0);
+            urls << url;
+        }
+    }
+
     /** split text into math and non-math regions */
     QStringList intermediate = result.split('$', QString::SkipEmptyParts);
     QStringList::Iterator it = intermediate.begin();
@@ -509,10 +528,22 @@ QString EncoderLaTeX::encode(const QString & text)
 
     /** \url accepts unquotet & and _
     May introduce new problem tough */
-    if (result.contains("\\url {"))
+    if (result.contains("\\url{"))
         result.replace("\\&", "&").replace("\\_", "_").replace(QChar(0x2013), "--").replace("\\#", "#");
 
     decomposedUTF8toLaTeX(result);
+
+    /** Reinserting original URLs as explained above */
+    pos = 0;
+    int idx = 0;
+    while (pos >= 0) {
+        pos = result.indexOf(httpRegExp, pos);
+        if (pos >= 0) {
+            ++pos;
+            int len = httpRegExp.cap(0).length();
+            result = result.left(pos - 1).append(urls[idx++]).append(result.mid(pos + len - 1));
+        }
+    }
 
     return result;
 }
