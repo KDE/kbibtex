@@ -116,7 +116,7 @@ void Person::replace(const QString &before, const QString &after)
 
 bool Person::containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive) const
 {
-    return m_firstName.contains(pattern, caseSensitive) ||  m_firstName.contains(pattern, caseSensitive) ||  m_prefix.contains(pattern, caseSensitive) ||  m_suffix.contains(pattern, caseSensitive);
+    return m_firstName.contains(pattern, caseSensitive) ||  m_lastName.contains(pattern, caseSensitive) ||  m_prefix.contains(pattern, caseSensitive) ||  m_suffix.contains(pattern, caseSensitive);
 }
 
 
