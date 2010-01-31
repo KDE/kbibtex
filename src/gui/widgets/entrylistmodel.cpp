@@ -32,95 +32,42 @@
 
 using namespace KBibTeX::GUI::Widgets;
 
-class EntryListModel::EntryListModelPrivate
+EntryListModel::EntryListModel(QObject * parent)
+        : QAbstractListModel(parent)
 {
-public:
-    EntryListModel *p;
-    QAbstractItemView *view;
-    KBibTeX::GUI::Config::BibTeXFields *bibtexFields;
-    const KBibTeX::IO::Entry *entry;
+    // TODO
+}
 
-    EntryListModelPrivate(const KBibTeX::IO::Entry *e, EntryListModel *parent)
-            : p(parent), entry(e) {
-        bibtexFields = KBibTeX::GUI::Config::BibTeXFields::self();
+int EntryListModel::rowCount(const QModelIndex & parent) const
+{
+    Q_UNUSED(parent);
+    return m_entry.count();
+}
+
+QVariant EntryListModel::data(const QModelIndex & index, int role) const
+{
+    QString key = m_keys[index.row()];
+    switch (role) {
+    case LabelRole:
+        return key;
+    case SourceRole: {
+        KBibTeX::IO::Value value = m_entry.value(key);
+        return KBibTeX::IO::PlainTextValue::text(value);
     }
-};
-
-EntryListModel::EntryListModel(const KBibTeX::IO::Entry *entry, QAbstractItemView * parent)
-        : QAbstractItemModel(parent), d(new EntryListModelPrivate(entry, this))
-{
-    d->view = parent;
-}
-
-QModelIndex EntryListModel::index(int row, int column, const QModelIndex & /*parent*/) const
-{
-    return createIndex(row, column, (void*)NULL);
-}
-
-QModelIndex EntryListModel::parent(const QModelIndex & /*index*/) const
-{
-    return QModelIndex();
-}
-
-bool EntryListModel::hasChildren(const QModelIndex & parent) const
-{
-    return parent == QModelIndex();
-}
-
-int EntryListModel::rowCount(const QModelIndex & /*parent*/) const
-{
-    return d->bibtexFields->count(); // FIXME
-}
-
-int EntryListModel::columnCount(const QModelIndex & /*parent*/) const
-{
-    return 2;
-}
-
-QVariant EntryListModel::data(const QModelIndex &index, int role) const
-{
-    if (!index.isValid())
-        return QVariant();
-
-    if (role == Qt::DisplayRole) {
-        if (index.column() == 0) {
-            return QVariant(d->bibtexFields->at(index.row()).label);
-        } else if (index.column() == 1) {
-            KBibTeX::IO::Value value = d->entry->value(d->bibtexFields->at(index.row()).raw);
-            QString text = KBibTeX::IO::PlainTextValue::text(value, NULL);
-            return QVariant(text);
-        }
-    } else if (role == Qt::EditRole) {
-        if (index.column() == 1) {
-            static KBibTeX::IO::Value value; // FIXME: Dirty solution!
-            value = d->entry->value(d->bibtexFields->at(index.row()).raw);
-            return qVariantFromValue((void*)&value);
-        }
     }
 
     return QVariant();
 }
 
-QVariant EntryListModel::headerData(int section, Qt::Orientation /*orientation*/, int role) const
+void EntryListModel::setEntry(const KBibTeX::IO::Entry& entry)
 {
-    if (role != Qt::DisplayRole)
-        return QVariant();
-
-    if (section == 0)
-        return QVariant(i18n("Key"));
-    else if (section == 1)
-        return QVariant(i18n("Value"));
-
-    return QVariant();
+    m_entry = KBibTeX::IO::Entry(entry);
+    m_keys = QStringList(m_entry.keys());
 }
 
-Qt::ItemFlags EntryListModel::flags(const QModelIndex &index) const
+KBibTeX::IO::Value EntryListModel::valueForIndex(const QModelIndex& index) const
 {
-    if (!index.isValid())
-        return Qt::ItemIsEnabled;
-
-    if (index.column() == 1)
-        return QAbstractItemModel::flags(index) | Qt::ItemIsEditable;
-
-    return QAbstractItemModel::flags(index);
+    Q_UNUSED(index);
+    return KBibTeX::IO::Value(); // FIXME
 }
+

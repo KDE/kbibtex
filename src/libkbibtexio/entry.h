@@ -91,9 +91,12 @@ public:
 
     //enum MergeSemantics {msAddNew, msForceAdding};
 
-    Entry(const QString& type, const QString &id);
+    Entry(const QString& type = QString::null, const QString &id = QString::null);
     Entry(const Entry &other);
     virtual ~Entry();
+
+    Entry& operator= (const Entry& other);
+
     //Element* clone() const;
     // bool equals(const Entry &other); // FIXME Is this function required?
     // QString text() const; // FIXME: Is this function required?

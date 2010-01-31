@@ -39,12 +39,15 @@ public:
     const KBibTeX::IO::Entry *entry;
     KBibTeX::GUI::Widgets::EntryListView *listView;
     KBibTeX::GUI::Widgets::EntryListModel *listModel;
+    KBibTeX::GUI::Widgets::ValueItemDelegate *delegate;
 
     EntryViewerPrivate(const KBibTeX::IO::Entry *e, EntryViewer *parent)
             : p(parent), entry(e) {
         listView = new KBibTeX::GUI::Widgets::EntryListView(p);
-        listModel = new KBibTeX::GUI::Widgets::EntryListModel(entry, listView);
+        listModel = new KBibTeX::GUI::Widgets::EntryListModel(p);
         listView->setModel(listModel);
+        delegate = new KBibTeX::GUI::Widgets::ValueItemDelegate(listView);
+        listView->setItemDelegate(delegate);
 
         QVBoxLayout *layout = new QVBoxLayout(p);
         layout->addWidget(listView);
@@ -54,6 +57,7 @@ public:
 EntryViewer::EntryViewer(const KBibTeX::IO::Entry *entry, QWidget *parent)
         : QWidget(parent), d(new EntryViewerPrivate(entry, this))
 {
+    d->listModel->setEntry(*entry);
     // TODO
 }
 

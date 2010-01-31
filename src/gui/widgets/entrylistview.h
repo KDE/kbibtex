@@ -20,7 +20,13 @@
 #ifndef KBIBTEX_GUI_ENTRYLISTVIEW_H
 #define KBIBTEX_GUI_ENTRYLISTVIEW_H
 
-#include <QTreeView>
+#include <QListView>
+#include <QAbstractListModel>
+
+#include <KWidgetItemDelegate>
+
+#include <value.h>
+#include <entry.h>
 
 namespace KBibTeX
 {
@@ -30,11 +36,34 @@ namespace Widgets {
 /**
 @author Thomas Fischer
 */
-class EntryListView : public QTreeView
+class ValueItemDelegate : public KWidgetItemDelegate
+{
+    Q_OBJECT
+
+public:
+    ValueItemDelegate(QAbstractItemView *itemView, QObject *parent = NULL);
+
+    // paint the item at index with all its attributes shown
+    virtual void paint(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const;
+
+    // get the list of widgets
+    virtual QList<QWidget*> createItemWidgets() const;
+
+    // update the widgets
+    virtual void updateItemWidgets(const QList<QWidget*> widgets, const QStyleOptionViewItem &option, const QPersistentModelIndex &index) const;
+
+    virtual QSize sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index) const;
+};
+
+
+
+/**
+@author Thomas Fischer
+*/
+class EntryListView : public QListView
 {
 public:
     EntryListView(QWidget* parent);
-
 };
 
 }

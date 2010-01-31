@@ -18,13 +18,93 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include "entrylistview.h"
-#include "entrylistdelegate.h"
+#include <QApplication>
+#include <QPainter>
+#include <QPen>
+
+#include <KLineEdit>
+
+#include <entrylistview.h>
+#include <entrylistmodel.h>
 
 using namespace KBibTeX::GUI::Widgets;
 
-EntryListView::EntryListView(QWidget* parent)
-        : QTreeView(parent)
+ValueItemDelegate::ValueItemDelegate(QAbstractItemView *itemView, QObject *parent)
+        : KWidgetItemDelegate(itemView, parent)
 {
-    setItemDelegate(new EntryListDelegate(this));
+    // TODO
+}
+
+void ValueItemDelegate::paint(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const
+{
+    Q_UNUSED(index);
+
+    QStyle *style = QApplication::style();
+    style->drawPrimitive(QStyle::PE_PanelItemViewItem, &option, painter, 0);
+
+    painter->save();
+
+    if (option.state & QStyle::State_Selected) {
+        painter->setPen(QPen(option.palette.highlightedText().color()));
+    } else {
+        painter->setPen(QPen(option.palette.text().color()));
+    }
+    // TODO
+
+    QRect textRect = option.rect;
+    textRect.setTop(textRect.top() + 4);
+    textRect.setLeft(textRect.left() + 4);
+    painter->drawText(option.rect, Qt::AlignLeft | Qt::AlignTop, index.data(EntryListModel::LabelRole).toString());
+
+    painter->restore();
+}
+
+QList<QWidget*> ValueItemDelegate::createItemWidgets() const
+{
+    QList<QWidget*> list;
+
+    list << new KLineEdit();
+    // TODO
+
+    return list;
+}
+
+void ValueItemDelegate::updateItemWidgets(const QList<QWidget*> widgets, const QStyleOptionViewItem &option, const QPersistentModelIndex &index) const
+{
+    Q_UNUSED(index);
+
+    int right = option.rect.width();
+    int margin = option.fontMetrics.height() / 2;
+    // TODO
+
+    KLineEdit *linEdit = qobject_cast<KLineEdit*>(widgets.at(0));
+    QSize size(option.rect.width() - option.fontMetrics.width('A') * 10, linEdit->sizeHint().height());
+    linEdit->resize(size);
+    linEdit->move(right - linEdit->width() - margin, margin);
+
+    linEdit->setText(index.data(EntryListModel::SourceRole).toString());
+}
+
+QSize ValueItemDelegate::sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index) const
+{
+    Q_UNUSED(option);
+    Q_UNUSED(index);
+
+    QSize size;
+
+    size.setWidth(option.fontMetrics.width('A') * 25);
+    size.setHeight(option.fontMetrics.height() * 2); // up to 6 lines of text, and two margins
+
+    // TODO
+
+    return size;
+}
+
+
+
+
+EntryListView::EntryListView(QWidget* parent)
+        : QListView(parent)
+{
+
 }

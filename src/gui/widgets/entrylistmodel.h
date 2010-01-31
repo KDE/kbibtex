@@ -22,36 +22,42 @@
 
 #include <QAbstractItemModel>
 
+#include <value.h>
+#include <entry.h>
+
 namespace KBibTeX
 {
-namespace IO {
-class Entry;
-}
-
 namespace GUI {
 namespace Widgets {
 
 /**
 @author Thomas Fischer
 */
-class EntryListModel : public QAbstractItemModel
+class EntryListModel : public QAbstractListModel
 {
-public:
-    EntryListModel(const KBibTeX::IO::Entry *entry, QAbstractItemView * parent);
+    Q_OBJECT
 
-    QModelIndex index(int row, int column, const QModelIndex & parent = QModelIndex()) const;
-    QModelIndex parent(const QModelIndex & index = QModelIndex()) const;
-    bool hasChildren(const QModelIndex & parent = QModelIndex()) const;
+public:
+    EntryListModel(QObject * parent = NULL);
+
+    enum EntryRoles {
+        /** source code for a value  */
+        SourceRole = Qt::UserRole,
+        /** label of a value */
+        LabelRole
+    };
+
     int rowCount(const QModelIndex & parent = QModelIndex()) const;
-    int columnCount(const QModelIndex & parent = QModelIndex()) const;
-    QVariant data(const QModelIndex &index, int role) const;
-    QVariant headerData(int section, Qt::Orientation orientation, int role) const;
-    Qt::ItemFlags flags(const QModelIndex &index = QModelIndex()) const;
+    QVariant data(const QModelIndex & index, int role = SourceRole) const;
+
+    void setEntry(const KBibTeX::IO::Entry& entry);
+    KBibTeX::IO::Value valueForIndex(const QModelIndex& index) const;
 
 private:
-    class EntryListModelPrivate;
-    EntryListModelPrivate *d;
+    KBibTeX::IO::Entry m_entry;
+    QStringList m_keys;
 };
+
 
 }
 }

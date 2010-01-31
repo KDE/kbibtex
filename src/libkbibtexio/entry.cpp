@@ -92,6 +92,19 @@ Entry::~Entry()
     */
 }
 
+Entry& Entry::operator= (const Entry & other)
+{
+    if (this != &other) {
+        d->m_type = other.type();
+        d->m_id = other.id();
+        clear();
+        for (QMap<QString, Value>::ConstIterator it = other.begin(); it != other.end(); ++it)
+            insert(it.key(), it.value());
+    }
+    return *this;
+}
+
+
 /*
 Element* Entry::clone() const
 {
