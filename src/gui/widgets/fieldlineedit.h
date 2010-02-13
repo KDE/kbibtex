@@ -52,12 +52,12 @@ public:
     };
     Q_DECLARE_FLAGS(TypeFlags, TypeFlag)
 
-    FieldLineEdit(TypeFlags typeFlags, QWidget *parent);
+    FieldLineEdit(TypeFlags typeFlags, QWidget *parent = NULL);
 
     TypeFlag setTypeFlag(TypeFlag typeFlag);
 
     void setValue(const KBibTeX::IO::Value& value);
-    void applyTo(KBibTeX::IO::Value& value);
+    void applyTo(KBibTeX::IO::Value& value) const;
 
 public slots:
     void reset();

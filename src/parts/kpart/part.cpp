@@ -208,7 +208,6 @@ bool KBibTeXPart::openFile()
     d->sortFilterProxyModel = new KBibTeX::GUI::Widgets::SortFilterBibTeXFileModel(this);
     d->sortFilterProxyModel->setSourceModel(d->model);
     d->editor->setModel(d->sortFilterProxyModel);
-    d->sortFilterProxyModel->sort(1, Qt::AscendingOrder);
     connect(d->filterBar, SIGNAL(filterChanged(KBibTeX::GUI::Widgets::SortFilterBibTeXFileModel::FilterQuery)), d->sortFilterProxyModel, SLOT(updateFilter(KBibTeX::GUI::Widgets::SortFilterBibTeXFileModel::FilterQuery)));
 
     qApp->restoreOverrideCursor();

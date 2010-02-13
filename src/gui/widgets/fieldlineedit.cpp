@@ -27,10 +27,11 @@
 #include <KGlobalSettings>
 #include <KLocale>
 
+#include <file.h>
+#include <entry.h>
+#include <fileimporterbibtex.h>
+#include <fileexporterbibtex.h>
 #include "fieldlineedit.h"
-#include "fileexporterbibtex.h"
-#include "fileimporterbibtex.h"
-#include "entry.h"
 
 using namespace KBibTeX::GUI::Widgets;
 
@@ -62,7 +63,7 @@ void FieldLineEdit::setValue(const KBibTeX::IO::Value& value)
     loadValue(m_originalValue);
 }
 
-void FieldLineEdit::applyTo(KBibTeX::IO::Value& value)
+void FieldLineEdit::applyTo(KBibTeX::IO::Value& value) const
 {
     value.clear();
     switch (m_typeFlag) {
