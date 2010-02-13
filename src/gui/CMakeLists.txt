@@ -16,10 +16,10 @@ set( kbibtexgui_LIB_SRCS
 	widgets/menulineedit.cpp
 	widgets/fieldlineedit.cpp
 	widgets/fieldeditor.cpp
-	widgets/entrylistdelegate.cpp
 	widgets/entrylistview.cpp
 	widgets/entrylistmodel.cpp
 	widgets/filterbar.cpp
+	widgets/fieldwidget.cpp
 	config/bibtexfields.cpp
 	dialogs/entryviewer.cpp
 	dialogs/entryeditor.cpp

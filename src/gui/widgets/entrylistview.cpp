@@ -22,10 +22,9 @@
 #include <QPainter>
 #include <QPen>
 
-#include <KLineEdit>
-
 #include <entrylistview.h>
 #include <entrylistmodel.h>
+#include <fieldlineedit.h>
 
 using namespace KBibTeX::GUI::Widgets;
 
@@ -37,8 +36,6 @@ ValueItemDelegate::ValueItemDelegate(QAbstractItemView *itemView, QObject *paren
 
 void ValueItemDelegate::paint(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const
 {
-    Q_UNUSED(index);
-
     QStyle *style = QApplication::style();
     style->drawPrimitive(QStyle::PE_PanelItemViewItem, &option, painter, 0);
 
@@ -63,7 +60,7 @@ QList<QWidget*> ValueItemDelegate::createItemWidgets() const
 {
     QList<QWidget*> list;
 
-    list << new KLineEdit();
+    list << new FieldLineEdit(FieldLineEdit::Source);
     // TODO
 
     return list;
@@ -77,12 +74,13 @@ void ValueItemDelegate::updateItemWidgets(const QList<QWidget*> widgets, const Q
     int margin = option.fontMetrics.height() / 2;
     // TODO
 
-    KLineEdit *linEdit = qobject_cast<KLineEdit*>(widgets.at(0));
-    QSize size(option.rect.width() - option.fontMetrics.width('A') * 10, linEdit->sizeHint().height());
-    linEdit->resize(size);
-    linEdit->move(right - linEdit->width() - margin, margin);
+    FieldLineEdit *fieldLineEdit = qobject_cast<FieldLineEdit*>(widgets.at(0));
+    QSize size(option.rect.width() - option.fontMetrics.width('A') * 10, fieldLineEdit->sizeHint().height());
+    fieldLineEdit->resize(size);
+    fieldLineEdit->move(right - fieldLineEdit->width() - margin, margin);
 
-    linEdit->setText(index.data(EntryListModel::SourceRole).toString());
+    KBibTeX::IO::Value value = index.data(EntryListModel::ValuePointerRole).value<KBibTeX::IO::Value>();
+    fieldLineEdit->setValue(value);
 }
 
 QSize ValueItemDelegate::sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index) const

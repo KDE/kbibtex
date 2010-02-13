@@ -22,6 +22,7 @@
 
 #include <QList>
 #include <QRegExp>
+#include <QVariant>
 
 #include "kbibtexio_export.h"
 
@@ -175,5 +176,6 @@ private:
 
 }
 }
+Q_DECLARE_METATYPE(KBibTeX::IO::Value);
 
 #endif

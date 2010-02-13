@@ -17,52 +17,30 @@
 *   Free Software Foundation, Inc.,                                       *
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
+#ifndef KBIBTEX_GUI_FIELDWIDGET_H
+#define KBIBTEX_GUI_FIELDWIDGET_H
 
-#include <QLayout>
-#include <QLabel>
-#include <QLineEdit>
-#include <QListView>
+#include <QWidget>
 
-#include <KLocale>
-
-#include "entrylistmodel.h"
-#include "bibtexfields.h"
-#include "entry.h"
-#include "value.h"
-
-using namespace KBibTeX::GUI::Widgets;
-
-EntryListModel::EntryListModel(QObject * parent)
-        : QAbstractListModel(parent)
+namespace KBibTeX
 {
-    // TODO
+namespace GUI {
+namespace Widgets {
+
+/**
+@author Thomas Fischer
+*/
+class FieldWidget : public QWidget
+{
+public:
+    FieldWidget(QWidget* parent = NULL);
+
+private:
+    class FieldWidgetPrivate;
+    FieldWidgetPrivate *d;
+};
+}
+}
 }
 
-int EntryListModel::rowCount(const QModelIndex & parent) const
-{
-    Q_UNUSED(parent);
-    return m_entry.count();
-}
-
-QVariant EntryListModel::data(const QModelIndex & index, int role) const
-{
-    QStringList keys = m_entry.keys();
-    Q_ASSERT(index.row() >= 0 && index.row() < keys.size());
-
-    QString key = keys[index.row()];
-    switch (role) {
-    case LabelRole:
-        return key;
-    case ValuePointerRole: {
-        KBibTeX::IO::Value value = m_entry.value(key);
-        return qVariantFromValue(value);
-    }
-    }
-
-    return QVariant();
-}
-
-void EntryListModel::setEntry(const KBibTeX::IO::Entry& entry)
-{
-    m_entry = KBibTeX::IO::Entry(entry);
-}
+#endif // KBIBTEX_GUI_FIELDWIDGET_H

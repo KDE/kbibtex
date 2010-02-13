@@ -18,51 +18,36 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include <QLayout>
+#include <QGridLayout>
+#include <QSpacerItem>
 #include <QLabel>
-#include <QLineEdit>
-#include <QListView>
 
-#include <KLocale>
-
-#include "entrylistmodel.h"
-#include "bibtexfields.h"
-#include "entry.h"
-#include "value.h"
+#include "fieldwidget.h"
+#include "fieldeditor.h"
 
 using namespace KBibTeX::GUI::Widgets;
 
-EntryListModel::EntryListModel(QObject * parent)
-        : QAbstractListModel(parent)
+class FieldWidget::FieldWidgetPrivate
+{
+public:
+    FieldWidget *p;
+    QLabel *label;
+    FieldEditor *editor;
+
+    FieldWidgetPrivate(FieldWidget *parent)
+            : p(parent) {
+        QGridLayout *layout = new QGridLayout(p);
+        label = new QLabel("test", p);
+        layout->addWidget(label, 0, 0, 1, 2);
+        QSpacerItem *space = new QSpacerItem(10, 10);
+        layout->addItem(space, 1, 0);
+        editor = new FieldEditor(FieldEditor::SingleLine, p);
+        layout->addWidget(editor, 1, 1);
+    }
+};
+
+FieldWidget::FieldWidget(QWidget* parent)
+        : QWidget(parent), d(new FieldWidgetPrivate(this))
 {
     // TODO
-}
-
-int EntryListModel::rowCount(const QModelIndex & parent) const
-{
-    Q_UNUSED(parent);
-    return m_entry.count();
-}
-
-QVariant EntryListModel::data(const QModelIndex & index, int role) const
-{
-    QStringList keys = m_entry.keys();
-    Q_ASSERT(index.row() >= 0 && index.row() < keys.size());
-
-    QString key = keys[index.row()];
-    switch (role) {
-    case LabelRole:
-        return key;
-    case ValuePointerRole: {
-        KBibTeX::IO::Value value = m_entry.value(key);
-        return qVariantFromValue(value);
-    }
-    }
-
-    return QVariant();
-}
-
-void EntryListModel::setEntry(const KBibTeX::IO::Entry& entry)
-{
-    m_entry = KBibTeX::IO::Entry(entry);
 }

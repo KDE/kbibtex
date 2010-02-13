@@ -41,21 +41,19 @@ public:
     EntryListModel(QObject * parent = NULL);
 
     enum EntryRoles {
-        /** source code for a value  */
-        SourceRole = Qt::UserRole,
         /** label of a value */
-        LabelRole
+        LabelRole = Qt::UserRole,
+        /** pointer to Value */
+        ValuePointerRole
     };
 
     int rowCount(const QModelIndex & parent = QModelIndex()) const;
-    QVariant data(const QModelIndex & index, int role = SourceRole) const;
+    QVariant data(const QModelIndex & index, int role) const;
 
     void setEntry(const KBibTeX::IO::Entry& entry);
-    KBibTeX::IO::Value valueForIndex(const QModelIndex& index) const;
 
 private:
     KBibTeX::IO::Entry m_entry;
-    QStringList m_keys;
 };
 
 
