@@ -35,8 +35,8 @@ class File;
 class Element;
 
 /**
-@author Thomas Fischer
-*/
+ * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ */
 class FileExporter : public QObject
 {
     Q_OBJECT

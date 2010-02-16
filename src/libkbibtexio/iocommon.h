@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2006 by Thomas Fischer                             *
+*   Copyright (C) 2004-2009 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -17,50 +17,23 @@
 *   Free Software Foundation, Inc.,                                       *
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
-#ifndef BIBTEXFILEEXPORTERXML_H
-#define BIBTEXFILEEXPORTERXML_H
 
-#include <QTextStream>
-
-#include <element.h>
-#include <fileexporter.h>
-#include <value.h>
+#ifndef KBIBTEX_IO_IOCOMMON_H
+#define KBIBTEX_IO_IOCOMMON_H
 
 namespace KBibTeX
 {
 namespace IO {
 
-class Entry;
-class Macro;
-class Comment;
+static const QString Months[] = {
+    QString("January"), QString("February"), QString("March"), QString("April"), QString("May"), QString("June"), QString("July"), QString("August"), QString("September"), QString("October"), QString("November"), QString("December")
+};
 
-/**
- * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
- */
-class KBIBTEXIO_EXPORT FileExporterXML : public FileExporter
-{
-public:
-    FileExporterXML();
-    ~FileExporterXML();
-
-    bool save(QIODevice* iodevice, const File* bibtexfile, QStringList *errorLog = NULL);
-    bool save(QIODevice* iodevice, const Element* element, QStringList *errorLog = NULL);
-
-    static QString valueToXML(const Value& value, const QString& fieldType = QString::null);
-
-public slots:
-    void cancel();
-
-private:
-    bool m_cancelFlag;
-
-    bool write(QTextStream&stream, const Element* element, const File* bibtexfile = NULL);
-    bool writeEntry(QTextStream &stream, const Entry* entry);
-    bool writeMacro(QTextStream &stream, const Macro* macro);
-    bool writeComment(QTextStream &stream, const Comment* comment);
+static const QString MonthsTriple[] = {
+    QString("jan"), QString("feb"), QString("mar"), QString("apr"), QString("may"), QString("jun"), QString("jul"), QString("aug"), QString("sep"), QString("oct"), QString("nov"), QString("dec")
 };
 
 }
 }
 
-#endif
+#endif // KBIBTEX_IO_IOCOMMON_H

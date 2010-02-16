@@ -35,11 +35,11 @@ namespace IO {
 class Comment;
 class Preamble;
 class Macro;
+class Entry;
 
 /**
-@author Thomas Fischer
-*/
-
+ * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ */
 class KBIBTEXIO_EXPORT FileExporterBibTeX : public FileExporter
 {
 public:

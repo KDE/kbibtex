@@ -26,6 +26,7 @@
 #include <encoderxml.h>
 #include <macro.h>
 #include <comment.h>
+#include "iocommon.h"
 #include "fileexporterxml.h"
 
 using namespace KBibTeX::IO;

@@ -37,15 +37,37 @@ class Entry;
 class Value;
 
 /**
-@author Thomas Fischer
-*/
+ * This class reads a BibTeX file from a QIODevice (such as a QFile) and
+ * creates a File object which can be used to access the BibTeX elements.
+ * @see File
+ * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ */
 class KBIBTEXIO_EXPORT FileImporterBibTeX : public FileImporter
 {
 public:
+    /**
+     * Creates an importer class to read a BibTeX file.
+     * @param encoding the file's encoding.
+     *     Supports all of iconv's encodings plus "latex",
+     *     which performs no encoding but relies on that
+     *     this file is pure ASCII only.
+     * @param ignoreComments ignore comments in file.
+     *     Useful if you for example read from an HTML file,
+     *     as all HTML content you be treated as comments otherwise.
+     */
     FileImporterBibTeX(const QString& encoding = "latex", bool ignoreComments = true);
     ~FileImporterBibTeX();
 
+    /**
+     * Read data from the given device and construct a File object holding
+     * the bibliographic data.
+     * @param iodevice opened QIODevice instance ready to read from
+     * @return @c valid File object with elements, @c NULL if reading failed for some reason
+     */
     File* load(QIODevice *iodevice);
+
+    /** TODO
+     */
     static bool guessCanDecode(const QString & text);
 
     /**

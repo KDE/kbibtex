@@ -21,38 +21,27 @@
 #ifndef KBIBTEX_IO_FILE_H
 #define KBIBTEX_IO_FILE_H
 
-#include <QLinkedList>
-#include <QMap>
-#include <QString>
+#include <QList>
+#include <QStringList>
 
 #include <element.h>
 
 #include "kbibtexio_export.h"
-
-class QDir;
-class QChar;
-class QStringList;
-class QWaitCondition;
-class QProcess;
-class QIODevice;
 
 namespace KBibTeX
 {
 namespace IO {
 
 class Element;
-class Entry;
-class String;
-class FileExporter;
 
-static const QString Months[] = {
-    QString("January"), QString("February"), QString("March"), QString("April"), QString("May"), QString("June"), QString("July"), QString("August"), QString("September"), QString("October"), QString("November"), QString("December")
-};
-
-static const QString MonthsTriple[] = {
-    QString("jan"), QString("feb"), QString("mar"), QString("apr"), QString("may"), QString("jun"), QString("jul"), QString("aug"), QString("sep"), QString("oct"), QString("nov"), QString("dec")
-};
-
+/**
+ * This class represents a bibliographic file such as a BibTeX
+ * (or any other format after proper conversion). The files content
+ * can be accessed using the inherited QList interface (for example
+ * list iterators).
+ * @see Element
+ * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ */
 class KBIBTEXIO_EXPORT File : public QList<KBibTeX::IO::Element*>
 {
 public:
@@ -60,23 +49,20 @@ public:
     File();
     virtual ~File();
 
-    void append(KBibTeX::IO::Element* element);
-    void append(File* other);
-    void erase(KBibTeX::IO::Element* element);
-
+    /**
+     * Check if a given key,for example a key for a macro or an id for an entry
+     * is contained in the file object.
+     * @see #allKeys() const
+     * @return @c the object addressed by the key @c NULL if no such file has been found
+     */
     const Element *containsKey(const QString &key) const;
+
+    /**
+     * Retrieves a list of all keys for example from macros or entries.
+     * @see #const containsKey(const QString &) const
+     * @return list of keys
+     */
     QStringList allKeys() const;
-    // QString text() const; // FIXME: Is this function required?
-
-    // QStringList getAllValuesAsStringList(const EntryField::FieldType fieldType) const; // FIXME: Is this function required?
-    // QMap<QString, int> getAllValuesAsStringListWithCount(const EntryField::FieldType fieldType) const; // FIXME: Is this function required?
-    //void replaceValue(const QString& oldText, const QString& newText, const Field::FieldType fieldType); // FIXME: Is this function required?
-
-    QString fileName;
-
-private:
-    void clearElements();
-
 };
 
 }

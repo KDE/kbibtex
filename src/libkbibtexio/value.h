@@ -136,9 +136,10 @@ protected:
 };
 
 /**
-  * Container class to hold values of BibTeX entry fields and similar value types in BibTeX file.
-  * A Value object is built from a list of @see ValueItem objects.
-  */
+ * Container class to hold values of BibTeX entry fields and similar value types in BibTeX file.
+ * A Value object is built from a list of @see ValueItem objects.
+ * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ */
 class KBIBTEXIO_EXPORT Value: public QList<ValueItem*>
 {
 public:
