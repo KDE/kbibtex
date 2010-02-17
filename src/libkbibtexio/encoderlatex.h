@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2009 by Thomas Fischer                             *
+*   Copyright (C) 2004-2010 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -20,18 +20,18 @@
 #ifndef ENCODERLATEX_H
 #define ENCODERLATEX_H
 
-#include <QLinkedList>
-
-#include <encoder.h>
-#include <entry.h>
-
-class QString;
-class QRegExp;
+#include "encoder.h"
 
 namespace KBibTeX
 {
 namespace IO {
 
+/**
+ * Base class for that convert between different textual representations
+ * for non-ASCII characters, specialized for LaTeX.
+ * Example for a character to convert is \"a.
+ * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ */
 class EncoderLaTeX: public Encoder
 {
 public:
@@ -48,24 +48,8 @@ public:
     static void deleteCurrentEncoderLaTeX();
 
 private:
-    struct CombinedMappingItem {
-        QRegExp regExp;
-        QString latex;
-    };
-
-    QLinkedList<CombinedMappingItem> m_combinedMapping;
-
-    void buildCombinedMapping();
-
-    struct CharMappingItem {
-        QRegExp regExp;
-        QString unicode;
-        QString latex;
-    };
-
-    QLinkedList<CharMappingItem> m_charMapping;
-
-    void buildCharMapping();
+    class EncoderLaTeXPrivate;
+    EncoderLaTeXPrivate * const d;
 };
 
 }

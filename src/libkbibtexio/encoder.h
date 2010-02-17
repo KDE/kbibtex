@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2009 by Thomas Fischer                             *
+*   Copyright (C) 2004-2010 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -27,21 +27,44 @@ namespace KBibTeX
 namespace IO {
 
 /**
-@author Thomas Fischer
-*/
+ * Base class for that convert between different textual representations
+ * for non-ASCII characters. Examples for external textual representations
+ * are \"a in LaTeX and &auml; in XML.
+ * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ */
 class Encoder
 {
 public:
     virtual ~Encoder() { /* nothing */};
 
-    virtual QString decode(const QString & /*text*/) {
-        return QString::null;
+    /**
+     * Decode from external textual representation to internal (UTF-8) representation.
+     * @param text text in external textual representation
+     * @return text in internal (UTF-8) representation
+     */
+    virtual QString decode(const QString & text) {
+        return text;
     };
-    virtual QString encode(const QString & /*text*/) {
-        return QString::null;
+
+    /**
+     * Encode from internal (UTF-8) representation to external textual representation.
+     * @param text in internal (UTF-8) representation
+     * @return text text in external textual representation
+     */
+    virtual QString encode(const QString & text) {
+        return text;
     };
-    virtual QString encodeSpecialized(const QString & /*text*/, const QString& /*fieldType*/ = QString::null) {
-        return QString::null;
+
+    /**
+     * Encode from internal (UTF-8) representation to external textual representation,
+     * but take into consideration which field (in an entry) is to be converted.
+     * @param text in internal (UTF-8) representation
+     * @param fieldType entry field to consider here
+     * @return text text in external textual representation
+     */
+    virtual QString encodeSpecialized(const QString & text, const QString& fieldType) {
+        Q_UNUSED(fieldType)
+        return text;
     };
 };
 

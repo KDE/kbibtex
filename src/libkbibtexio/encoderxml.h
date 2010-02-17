@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2009 by Thomas Fischer                             *
+*   Copyright (C) 2004-2010 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -20,8 +20,6 @@
 #ifndef KBIBTEX_IO_ENCODERXML_H
 #define KBIBTEX_IO_ENCODERXML_H
 
-#include <QList>
-
 #include <encoder.h>
 
 class QString;
@@ -32,8 +30,11 @@ namespace KBibTeX
 namespace IO {
 
 /**
-@author Thomas Fischer
-*/
+ * Base class for that convert between different textual representations
+ * for non-ASCII characters, specialized for XML.
+ * Example for a character to convert is &auml;.
+ * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ */
 class EncoderXML : public Encoder
 {
 public:
@@ -47,15 +48,8 @@ public:
     static EncoderXML *currentEncoderXML();
 
 private:
-    struct CharMappingItem {
-        QRegExp regExp;
-        QChar unicode;
-        QString latex;
-    };
-
-    QList<CharMappingItem> m_charMapping;
-
-    void buildCharMapping();
+    class EncoderXMLPrivate;
+    EncoderXMLPrivate * const d;
 };
 
 }

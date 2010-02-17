@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2009 by Thomas Fischer                             *
+*   Copyright (C) 2004-2010 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -18,6 +18,7 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 #include <QRegExp>
+#include <QList>
 
 #include "encoderxml.h"
 
@@ -38,10 +39,37 @@ charmappingdataxml[] = {
 };
 static const int charmappingdataxmlcount = sizeof(charmappingdataxml) / sizeof(charmappingdataxml[ 0 ]) ;
 
-EncoderXML::EncoderXML()
-        : Encoder()
+/**
+ * Private class to store internal variables that should not be visible
+ * in the interface as defined in the header file.
+ */
+class EncoderXML::EncoderXMLPrivate
 {
-    buildCharMapping();
+public:
+    struct CharMappingItem {
+        QRegExp regExp;
+        QChar unicode;
+        QString latex;
+    };
+
+    QList<CharMappingItem> charMapping;
+
+    void buildCharMapping() {
+        for (int i = 0; i < charmappingdataxmlcount; i++) {
+            CharMappingItem charMappingItem;
+            charMappingItem.regExp = QRegExp(charmappingdataxml[ i ].regexp);
+            charMappingItem.unicode = QChar(charmappingdataxml[ i ].unicode);
+            charMappingItem.latex = QString(charmappingdataxml[ i ].latex);
+            charMapping.append(charMappingItem);
+        }
+    }
+
+};
+
+EncoderXML::EncoderXML()
+        : Encoder(), d(new EncoderXML::EncoderXMLPrivate)
+{
+    d->buildCharMapping();
 }
 
 EncoderXML::~EncoderXML()
@@ -53,7 +81,7 @@ QString EncoderXML::decode(const QString &text)
 {
     QString result = text;
 
-    for (QList<CharMappingItem>::ConstIterator it = m_charMapping.begin(); it != m_charMapping.end(); ++it)
+    for (QList<EncoderXMLPrivate::CharMappingItem>::ConstIterator it = d->charMapping.begin(); it != d->charMapping.end(); ++it)
         result.replace((*it).regExp, (*it).unicode);
 
     /**
@@ -89,7 +117,7 @@ QString EncoderXML::encode(const QString &text)
 {
     QString result = text;
 
-    for (QList<CharMappingItem>::ConstIterator it = m_charMapping.begin(); it != m_charMapping.end(); ++it)
+    for (QList<EncoderXMLPrivate::CharMappingItem>::ConstIterator it = d->charMapping.begin(); it != d->charMapping.end(); ++it)
         result.replace((*it).unicode, (*it).latex);
 
     return result;
@@ -98,17 +126,6 @@ QString EncoderXML::encode(const QString &text)
 QString EncoderXML::encodeSpecialized(const QString &text, const QString& /* fieldType */)
 {
     return encode(text);
-}
-
-void EncoderXML::buildCharMapping()
-{
-    for (int i = 0; i < charmappingdataxmlcount; i++) {
-        CharMappingItem charMappingItem;
-        charMappingItem.regExp = QRegExp(charmappingdataxml[ i ].regexp);
-        charMappingItem.unicode = QChar(charmappingdataxml[ i ].unicode);
-        charMappingItem.latex = QString(charmappingdataxml[ i ].latex);
-        m_charMapping.append(charMappingItem);
-    }
 }
 
 EncoderXML *EncoderXML::currentEncoderXML()
