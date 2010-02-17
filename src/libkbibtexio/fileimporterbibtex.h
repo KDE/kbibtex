@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2006 by Thomas Fischer                             *
+*   Copyright (C) 2004-2010 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -23,7 +23,6 @@
 #include <QTextStream>
 
 #include <fileimporter.h>
-#include <field.h>
 
 namespace KBibTeX
 {
@@ -35,6 +34,7 @@ class Preamble;
 class Macro;
 class Entry;
 class Value;
+class Keyword;
 
 /**
  * This class reads a BibTeX file from a QIODevice (such as a QFile) and

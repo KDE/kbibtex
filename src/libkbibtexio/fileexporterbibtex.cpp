@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2009 by Thomas Fischer                             *
+*   Copyright (C) 2004-2010 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -353,6 +353,7 @@ void FileExporterBibTeX::escapeLaTeXChars(QString &text)
 
 QString FileExporterBibTeX::applyKeywordCasing(const QString &keyword)
 {
+    // TODO: kcCamelCase: Write file containing all camel cases
     switch (m_keywordCasing) {
     case kcLowerCase: return keyword.toLower();
     case kcInitialCapital: return keyword.at(0) + keyword.toLower().mid(1);

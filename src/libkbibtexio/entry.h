@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2009 by Thomas Fischer                             *
+*   Copyright (C) 2004-2010 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -29,8 +29,18 @@ namespace KBibTeX
 {
 namespace IO {
 
+/**
+ * This class represents an entry in a BibTeX file such as an article
+ * or a book. This class is essentially a map from keys such as title,
+ * year or other bibliography data to corresponding values.
+ * @see Value
+ * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ */
 class KBIBTEXIO_EXPORT Entry : public Element, public QMap<QString, Value>
 {
+    Q_PROPERTY(QString id READ id WRITE setId)
+    Q_PROPERTY(QString type READ type WRITE setType)
+
 public:
     /** Representation of the BibTeX field key "abstract" */
     static const QLatin1String ftAbstract;
@@ -79,41 +89,77 @@ public:
     /** Representation of the BibTeX field key "year" */
     static const QLatin1String ftYear;
 
+    /** Representation of the BibTeX entry type "Article" */
     static const QLatin1String etArticle;
+    /** Representation of the BibTeX entry type "Book" */
     static const QLatin1String etBook;
+    /** Representation of the BibTeX entry type "InBook" */
     static const QLatin1String etInBook;
+    /** Representation of the BibTeX entry type "InProceedings" */
     static const QLatin1String etInProceedings;
+    /** Representation of the BibTeX entry type "Misc" */
     static const QLatin1String etMisc;
+    /** Representation of the BibTeX entry type "TechReport" */
     static const QLatin1String etTechReport;
+    /** Representation of the BibTeX entry type "PhDThesis" */
     static const QLatin1String etPhDThesis;
 
-    //enum FieldRequireStatus {frsRequired, frsOptional, frsIgnored};
-
-    //enum MergeSemantics {msAddNew, msForceAdding};
-
+    /**
+     * Create a new entry type. Both type and id are optionally,
+     * allowing to call the constructor as Entry() only.
+     * Both type and id can be set and retrieved later.
+     * @param type type of this entry
+     */
     Entry(const QString& type = QString::null, const QString &id = QString::null);
+
+    /**
+     * Copy constructor cloning another entry object.
+     * @param other entry object to clone
+     */
     Entry(const Entry &other);
+
     virtual ~Entry();
 
+    /**
+     * Assignment operator, working similar to a copy constructor,
+     * but overwrites the current object's values.
+     */
     Entry& operator= (const Entry& other);
 
-    //Element* clone() const;
-    // bool equals(const Entry &other); // FIXME Is this function required?
-    // QString text() const; // FIXME: Is this function required?
-
+    /**
+     * Set the type of this entry. Common values are "article" or "book".
+     * @param type type of this entry
+     */
     void setType(const QString& type);
+
+    /**
+     * Retrieve the type of this entry. Common values are "article" or "book".
+     * @return type of this entry
+     */
     QString type() const;
 
+    /**
+     * Set the id of this entry. In LaTeX, this id is used to refer to a BibTeX
+     * entry using the "ref" command.
+     * @param id id of this entry
+     */
     void setId(const QString& id);
+
+    /**
+     * Retrieve the id of this entry. In LaTeX, this id is used to refer to a BibTeX
+     * entry using the "ref" command.
+     * @return id of this entry
+     */
     QString id() const;
 
-    // bool containsPattern(const QString& pattern, Field::FieldType fieldType = Field::ftUnknown, Element::FilterType filterType = Element::ftExact, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const; // FIXME: Rewrite filtering code
-    //QStringList urls() const;
-
-//    void copyFrom(const Entry *other);
-//   void merge(Entry *other, MergeSemantics mergeSemantics);
-
-//    static Entry::FieldRequireStatus getRequireStatus(Entry::EntryType entryType, const QString& fieldType);
+    /**
+     * Re-implementation of QMap's value function, but performing a case-insensitive
+     * match on the key. Querying for key "title" will find a key-value pair with
+     * key "TITLE".
+     * @param key field name to search for
+     * @return found value or Value() if nothing found
+     */
+    const Value value(const QString& key) const;
 
 private:
     class EntryPrivate;

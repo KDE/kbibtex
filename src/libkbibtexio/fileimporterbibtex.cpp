@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2009 by Thomas Fischer                             *
+*   Copyright (C) 2004-2010 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -458,7 +458,8 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value& value, const QStr
         bool isStringKey = FALSE;
         QString text = readString(isStringKey).replace(QRegExp("\\s+"), " ");
 
-        if (key == Field::ftAuthor || key == Field::ftEditor) {
+        // FIXME: comparisons should be made case-insensitive
+        if (key == Entry::ftAuthor || key == Entry::ftEditor) {
             if (isStringKey)
                 value.append(new MacroKey(text));
             else {
@@ -470,7 +471,7 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value& value, const QStr
                         value.append(person);
                 }
             }
-        } else if (key == Field::ftPages) {
+        } else if (key == Entry::ftPages) {
             text.replace(QRegExp("\\s*--?\\s*"), QChar(0x2013));
             if (isStringKey)
                 value.append(new MacroKey(text));

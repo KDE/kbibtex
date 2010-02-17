@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2009 by Thomas Fischer                             *
+*   Copyright (C) 2004-2010 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -25,17 +25,29 @@
 
 using namespace KBibTeX::IO;
 
-Macro::Macro(const QString &key)
-        : Element(), m_key(key)
+/**
+ * Private class to store internal variables that should not be visible
+ * in the interface as defined in the header file.
+ */
+class Macro::MacroPrivate
 {
-    // nothing
+public:
+    QString key;
+    Value value;
+};
+
+Macro::Macro(const QString& key, const Value& value)
+        : Element(), d(new Macro::MacroPrivate)
+{
+    d->key = key;
+    d->value = value;
 }
 
-Macro::Macro(const Macro *other)
-        : Element()
+Macro::Macro(const Macro& other)
+        : Element(), d(new Macro::MacroPrivate)
 {
-    m_key = other->m_key;
-    m_value = other->m_value;
+    d->key = other.d->key;
+    d->value = other.d->value;
 }
 
 Macro::~Macro()
@@ -45,53 +57,26 @@ Macro::~Macro()
 
 void Macro::setKey(const QString &key)
 {
-    m_key = key;
+    d->key = key;
 }
 
 QString Macro::key() const
 {
-    return m_key;
+    return d->key;
 }
 
 Value& Macro::value()
 {
-    return m_value;
+    return d->value;
 }
 
 const Value& Macro::value() const
 {
-    return m_value;
+    return d->value;
 }
 
 void Macro::setValue(const Value& value)
 {
-    m_value = value;
+    d->value = value;
 }
 
-/*
-   // FIXME: Rewrite filtering code
-bool Macro::containsPattern(const QString& pattern, Field::FieldType fieldType, FilterType filterType, Qt::CaseSensitivity caseSensitive) const
-{
-    if (fieldType != Field::ftUnknown)
-        return false;
-
-    QString text = QString(m_key).append(PlainTextValue::text(m_value));
-
-    if (filterType == ftExact) {
-        ** check for exact match *
-        return text.contains(pattern, caseSensitive);
-    } else {
-        ** for each word in the search pattern ... *
-        QStringList words = pattern.split(QRegExp("\\s+"), QString::SkipEmptyParts);
-        int hits = 0;
-        for (QStringList::Iterator it = words.begin(); it != words.end(); ++it) {
-            ** check if word is contained in text
-            if (text.contains(*it, caseSensitive))
-                ++hits;
-        }
-
-        ** return success depending on filter type and number of hits *
-        return ((filterType == ftAnyWord && hits > 0) || (filterType == ftEveryWord && hits == words.count()));
-    }
-}
-*/

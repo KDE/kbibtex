@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2006 by Thomas Fischer                             *
+*   Copyright (C) 2004-2010 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -30,25 +30,66 @@ namespace KBibTeX
 {
 namespace IO {
 
+/**
+ * This class represents a macro in a BibTeX file. Macros in BibTeX
+ * are similar to variables, allowing to use the same value such as
+ * journal titles in several entries.
+ * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ */
 class KBIBTEXIO_EXPORT Macro : public Element
 {
+    Q_PROPERTY(QString key READ key WRITE setKey)
+    Q_PROPERTY(Value value READ value WRITE setValue)
+
 public:
-    Macro(const QString &key);
-    Macro(const Macro *other);
+    /**
+     * Create a new macro with a given key-value pair.
+     * @param key macro's key
+     * @param value macro's value
+     */
+    Macro(const QString& key = QString::null, const Value& value = Value());
+
+    /**
+     * Copy constructor cloning another macro object.
+     * @param other macro object to clone
+     */
+    Macro(const Macro &other);
+
     virtual ~Macro();
 
+    /**
+     * Set the key of this macro.
+     * @param key new key of this macro
+     */
     void setKey(const QString &key);
+
+    /**
+     * Retrieve the key of this macro.
+     * @return key of this comment
+     */
     QString key() const;
 
+    /**
+     * Retrieve the key of this macro. Returns a reference which may not be modified.
+     * @return key of this comment
+     */
     const Value& value() const;
+
+    /**
+     * Retrieve the key of this macro. Returns a reference which may be modified.
+     * @return key of this comment
+     */
     Value& value();
+
+    /**
+     * Set the value of this macro.
+     * @param value new value of this macro
+     */
     void setValue(const Value& value);
 
-    // bool containsPattern(const QString& pattern, Field::FieldType fieldType = Field::ftUnknown, FilterType filterType = Element::ftExact, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const; // FIXME: Rewrite filtering code
-
 private:
-    QString m_key;
-    Value m_value;
+    class MacroPrivate;
+    MacroPrivate * const d;
 };
 
 }

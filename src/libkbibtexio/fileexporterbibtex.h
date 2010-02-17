@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2009 by Thomas Fischer                             *
+*   Copyright (C) 2004-2010 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -46,7 +46,7 @@ public:
     enum KeywordCasing {kcLowerCase, kcInitialCapital, kcCamelCase, kcCapital};
     enum QuoteComment {qcNone, qcCommand, qcPercentSign};
 
-    FileExporterBibTeX(const QString& = "latex", const QChar& = '"', const QChar& = '"', KeywordCasing = kcCamelCase, QuoteComment = qcNone, bool = false);
+    FileExporterBibTeX(const QString& encoding = "latex", const QChar& stringOpenDelimiter = '"', const QChar& stringCloseDelimiter = '"', KeywordCasing keywordCasing = kcCamelCase, QuoteComment quoteComment = qcNone, bool protectCasing = false);
     ~FileExporterBibTeX();
 
     bool save(QIODevice* iodevice, const File* bibtexfile, QStringList *errorLog = NULL);

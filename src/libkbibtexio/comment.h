@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2009 by Thomas Fischer                             *
+*   Copyright (C) 2004-2010 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -26,24 +26,61 @@ namespace KBibTeX
 {
 namespace IO {
 
+/**
+ * This class represents a comment in a BibTeX file. In BibTeX files,
+ * everything that cannot be interpreted as a BibTeX comment is see
+ * as a comment. Alternatively, the comment command can be used in BibTeX
+ * files.
+ * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ */
 class KBIBTEXIO_EXPORT Comment : public Element
 {
+    Q_PROPERTY(QString text READ text WRITE setText)
+    Q_PROPERTY(bool useCommand READ useCommand WRITE setUseCommand)
+
 public:
-    Comment(const QString &text, bool useCommand = false);
-    Comment(const Comment *other);
+    /**
+     * Create a new comment with a given text.
+     * @param text comment's textual content
+     * @param useCommand mark this comment to use BibTeX's comment command
+     */
+    Comment(const QString &text = QString::null, bool useCommand = false);
+
+    /**
+     * Copy constructor cloning another comment object.
+     * @param other comment object to clone
+     */
+    Comment(const Comment& other);
+
     virtual ~Comment();
 
+    /**
+     * Retrieve the text of this comment.
+     * @return text of this comment
+     */
     QString text() const;
+
+    /**
+     * Set the text of this comment.
+     * @param text text of this comment
+     */
     void setText(const QString &text);
+
+    /**
+     * Retrieve the flag whether to use BibTeX's comment command or not.
+     * @return mark if this comment has to use BibTeX's comment command
+     */
     bool useCommand() const;
+
+    /**
+     * Set the flag whether to use BibTeX's comment command or not.
+     * @param useCommand set if this comment has to use BibTeX's comment command
+     */
     void setUseCommand(bool useCommand);
 
-    // bool containsPattern(const QString& pattern, Field::FieldType fieldType = Field::ftUnknown, FilterType filterType = Element::ftExact, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const; // FIXME: Rewrite filtering code
-    Element* clone() const;
-
 private:
-    QString m_text;
-    bool m_useCommand;
+    class CommentPrivate;
+    CommentPrivate * const d;
 };
 
 }

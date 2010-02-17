@@ -7,7 +7,6 @@ set( kbibtexio_LIB_SRCS
 	encoderlatex.cpp
 	encoderxml.cpp
 	entry.cpp
-	field.cpp
 	file.cpp
 	fileexporter.cpp
 	fileexporterbibtex.cpp

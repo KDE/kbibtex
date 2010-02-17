@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2009 by Thomas Fischer                             *
+ *   Copyright (C) 2004-2010 by Thomas Fischer                             *
  *   fischer@unix-ag.uni-kl.de                                             *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -24,55 +24,40 @@
 
 using namespace KBibTeX::IO;
 
-Preamble::Preamble()
-        : Element()
+/**
+ * Private class to store internal variables that should not be visible
+ * in the interface as defined in the header file.
+ */
+class Preamble::PreamblePrivate
 {
-// nothing
+public:
+    Value value;
+};
+
+Preamble::Preamble(const Value& value)
+        : Element(), d(new Preamble::PreamblePrivate)
+{
+    d->value = value;
 }
 
 Preamble::Preamble(const Preamble& other)
-        : Element()
+        : Element(), d(new Preamble::PreamblePrivate)
 {
-    m_value = other.m_value;
+    d->value = other.d->value;
 }
 
 Value& Preamble::value()
 {
-    return m_value;
+    return d->value;
 }
 
 const Value& Preamble::value() const
 {
-    return m_value;
+    return d->value;
 }
 
 void Preamble::setValue(const Value& value)
 {
-    m_value = value;
+    d->value = value;
 
 }
-
-/*
-bool Preamble::containsPattern(const QString& pattern, Field::FieldType fieldType, FilterType filterType, Qt::CaseSensitivity caseSensitive) const
-{
-    if (fieldType != Field::ftUnknown)
-        return false;
-
-    if (filterType == ftExact) {
-        ** check for exact match *
-        return m_value.containsPattern(pattern, caseSensitive);
-    } else {
-        ** for each word in the search pattern ... *
-        QStringList words = pattern.split(QRegExp("\\s+"));
-        int hits = 0;
-        for (QStringList::Iterator it = words.begin(); it != words.end(); ++it) {
-            ** check if word is contained in text *
-            if (m_value.containsPattern(*it, caseSensitive))
-                ++hits;
-        }
-
-        ** return success depending on filter type and number of hits *
-        return ((filterType == ftAnyWord && hits > 0) || (filterType == ftEveryWord && hits == words.count()));
-    }
-}
-*/

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2009 by Thomas Fischer                             *
+ *   Copyright (C) 2004-2010 by Thomas Fischer                             *
  *   fischer@unix-ag.uni-kl.de                                             *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -28,13 +28,16 @@ namespace KBibTeX
 namespace IO {
 
 /**
- @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
-*/
+ * This class represents a preamble in a BibTeX file. Preables contain
+ * LaTeX commands required for the bibliography, such as hyphenation commands.
+ * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ */
 class Preamble : public Element
 {
+    Q_PROPERTY(Value value READ value WRITE setValue)
+
 public:
-public:
-    Preamble();
+    Preamble(const Value& value = Value());
     Preamble(const Preamble& other);
 
     Value& value();
@@ -44,7 +47,8 @@ public:
     // bool containsPattern(const QString& pattern, Field::FieldType fieldType = Field::ftUnknown, FilterType filterType = Element::ftExact, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const; // FIXME: Rewrite filtering code
 
 private:
-    Value m_value;
+    class PreamblePrivate;
+    PreamblePrivate * const d;
 };
 
 }
