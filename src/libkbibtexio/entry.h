@@ -154,12 +154,23 @@ public:
 
     /**
      * Re-implementation of QMap's value function, but performing a case-insensitive
-     * match on the key. Querying for key "title" will find a key-value pair with
+     * match on the key. E.g. querying for key "title" will find a key-value pair with
      * key "TITLE".
+     * @see #contains(const QString&)
      * @param key field name to search for
      * @return found value or Value() if nothing found
      */
     const Value value(const QString& key) const;
+
+    /**
+     * Re-implementation of QMap's contains function, but performing a case-insensitive
+     * match on the key. E.g. querying for key "title" will find a key-value pair with
+     * key "TITLE".
+     * @see #value(const QString&)
+     * @param key field name to search for
+     * @return true if value with key found, else false
+     */
+    bool contains(const QString& key) const;
 
 private:
     class EntryPrivate;

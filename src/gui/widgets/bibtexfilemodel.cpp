@@ -222,7 +222,7 @@ QVariant BibTeXFileModel::data(const QModelIndex &index, int role) const
                     return QVariant(macro->key());
                 else if (raw == "^type")
                     return QVariant(i18n("Macro"));
-                else if (raw == "title") {
+                else if (raw == KBibTeX::IO::Entry::ftTitle) {
                     QString text = KBibTeX::IO::PlainTextValue::text(macro->value(), m_bibtexFile);
                     text = text.replace(whiteSpace, " ");
                     return QVariant(text);
@@ -233,7 +233,7 @@ QVariant BibTeXFileModel::data(const QModelIndex &index, int role) const
                 if (comment != NULL) {
                     if (raw == "^type")
                         return QVariant(i18n("Comment"));
-                    else if (raw == "title") {
+                    else if (raw == KBibTeX::IO::Entry::ftTitle) {
                         QString text = comment->text().replace(QRegExp("[\\s\\n\\r\\t]+"), " ");
                         return QVariant(text);
                     } else

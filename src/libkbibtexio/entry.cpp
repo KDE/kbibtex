@@ -128,6 +128,17 @@ const Value Entry::value(const QString& key) const
         if (it.key().toLower() == lcKey)
             return it.value();
 
-    return QMap<QString, Value>::value(key);
+    return Value();
 }
+
+bool Entry::contains(const QString& key) const
+{
+    const QString lcKey = key.toLower();
+    for (Entry::ConstIterator it = constBegin(); it != constEnd(); ++it)
+        if (it.key().toLower() == lcKey)
+            return true;
+
+    return false;
+}
+
 
