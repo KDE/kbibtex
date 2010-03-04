@@ -22,6 +22,8 @@
 
 #include <kbibtexgui_export.h>
 
+#include <QVariant>
+
 #include <KIcon>
 
 #include "value.h"
@@ -52,9 +54,11 @@ public:
     };
     Q_DECLARE_FLAGS(TypeFlags, TypeFlag)
 
-    FieldLineEdit(TypeFlags typeFlags, QWidget *parent = NULL);
+    FieldLineEdit(TypeFlags typeFlags = Source, QWidget *parent = NULL);
 
+    TypeFlag typeFlag();
     TypeFlag setTypeFlag(TypeFlag typeFlag);
+    TypeFlag setTypeFlags(TypeFlags typeFlags);
 
     void setValue(const KBibTeX::IO::Value& value);
     void applyTo(KBibTeX::IO::Value& value) const;
@@ -91,5 +95,7 @@ Q_DECLARE_OPERATORS_FOR_FLAGS(FieldLineEdit::TypeFlags)
 }
 }
 }
+
+Q_DECLARE_METATYPE(KBibTeX::GUI::Widgets::FieldLineEdit::TypeFlags);
 
 #endif // KBIBTEX_GUI_FIELDLINEEDIT_H

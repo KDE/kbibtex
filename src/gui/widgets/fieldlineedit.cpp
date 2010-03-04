@@ -38,9 +38,19 @@ using namespace KBibTeX::GUI::Widgets;
 FieldLineEdit::FieldLineEdit(TypeFlags typeFlags, QWidget *parent)
         : MenuLineEdit(parent), m_typeFlags(typeFlags)
 {
+    m_menuTypes = new QMenu(i18n("Types"), this);
+    setMenu(m_menuTypes);
+    m_menuTypesSignalMapper = new QSignalMapper(this);
+    connect(m_menuTypesSignalMapper, SIGNAL(mapped(int)), this, SLOT(slotTypeChanged(int)));
+
     setupMenu();
 
     setTypeFlag(Text);
+}
+
+FieldLineEdit::TypeFlag FieldLineEdit::typeFlag()
+{
+    return m_typeFlag;
 }
 
 FieldLineEdit::TypeFlag FieldLineEdit::setTypeFlag(FieldLineEdit::TypeFlag typeFlag)
@@ -51,10 +61,23 @@ FieldLineEdit::TypeFlag FieldLineEdit::setTypeFlag(FieldLineEdit::TypeFlag typeF
     else if (m_typeFlags&Person) m_typeFlag = Person;
     else if (m_typeFlags&Keyword) m_typeFlag = Keyword;
     else if (m_typeFlags&Source) m_typeFlag = Source;
+    else {
+        kWarning() << "No valid TypeFlags given, resetting to Source";
+        m_typeFlags = Source;
+        m_typeFlag = Source;
+        setupMenu();
+    }
 
     updateGUI();
 
     return m_typeFlag;
+}
+
+FieldLineEdit::TypeFlag FieldLineEdit::setTypeFlags(TypeFlags typeFlags)
+{
+    m_typeFlags = typeFlags;
+    setupMenu();
+    return setTypeFlag(m_typeFlag);
 }
 
 void FieldLineEdit::setValue(const KBibTeX::IO::Value& value)
@@ -83,7 +106,7 @@ void FieldLineEdit::applyTo(KBibTeX::IO::Value& value) const
     }
     break;
     case Source: {
-        QString key = "author"; // FIXME "author" is only required for persons, use something else for plain text
+        QString key = "title"; // FIXME "author" is only required for persons, use something else for plain text
         KBibTeX::IO::FileImporterBibTeX importer;
         QString fakeBibTeXFile = QString("@article{ dummy, %1=%2 }").arg(key).arg(text());
         kDebug() << "fakeBibTeXFile=" << fakeBibTeXFile << endl;
@@ -96,8 +119,11 @@ void FieldLineEdit::applyTo(KBibTeX::IO::Value& value) const
         buffer.open(QIODevice::ReadOnly);
         KBibTeX::IO::File *file = importer.load(&buffer);
         KBibTeX::IO::Entry *entry = dynamic_cast< KBibTeX::IO::Entry*>(file->first());
-        value = entry->value(key);
-        kDebug() << "value->count()=" << value.count() << "  " << entry->value(key).count() << endl;
+        if (entry != NULL) {
+            value = entry->value(key);
+            kDebug() << "value->count()=" << value.count() << "  " << entry->value(key).count();
+        } else
+            kError() << "Cannot create value";
         delete file;
         buffer.close();
     }
@@ -126,11 +152,10 @@ KIcon FieldLineEdit::iconForTypeFlag(TypeFlag typeFlag)
 void FieldLineEdit::loadValue(const KBibTeX::IO::Value& value)
 {
     QString text = "";
-    m_incompleteRepresentation = true;
+    m_incompleteRepresentation = false;
 
     if (value.size() > 0) {
         if (m_typeFlag == Source) {
-            m_incompleteRepresentation = false;
             KBibTeX::IO::FileExporterBibTeX *exporter = new KBibTeX::IO::FileExporterBibTeX();
             text = exporter->valueToBibTeX(value);
             delete exporter;
@@ -160,19 +185,16 @@ void FieldLineEdit::loadValue(const KBibTeX::IO::Value& value)
         }
     }
 
+
     if (m_incompleteRepresentation)
         m_incompleteRepresentation = KMessageBox::warningContinueCancel(this, i18n("The chosen representation cannot display the value of this field.\n\nUsing this representation will cause lost of data."), i18n("Chosen representation"), KGuiItem(i18n("Continue with data loss"), "continue"), KGuiItem(i18n("Make field read-only"), "readonly")) != KMessageBox::Continue;
-    setReadOnly(m_incompleteRepresentation);
+    setReadOnly(m_incompleteRepresentation); // FIXME: This may cause trouble with "Apply"
     setText(text);
 }
 
 void FieldLineEdit::setupMenu()
 {
-    m_menuTypes = new QMenu(i18n("Types"), this);
-    setMenu(m_menuTypes);
-
-    m_menuTypesSignalMapper = new QSignalMapper(this);
-    connect(m_menuTypesSignalMapper, SIGNAL(mapped(int)), this, SLOT(slotTypeChanged(int)));
+    m_menuTypes->clear();
 
     if (m_typeFlags&Text) {
         QAction *action = m_menuTypes->addAction(iconForTypeFlag(Text), i18n("Plain Text"), m_menuTypesSignalMapper, SLOT(map()));
