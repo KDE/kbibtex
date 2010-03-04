@@ -48,7 +48,6 @@ public:
 signals:
     void selectedElementsChanged();
     void currentElementChanged(const KBibTeX::IO::Element*);
-    //void elementExecuted(const KBibTeX::IO::Element*);
     void elementExecuted(KBibTeX::IO::Element*);
 
 public slots:

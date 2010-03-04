@@ -19,7 +19,7 @@
 ***************************************************************************/
 
 #include <kcmdlineargs.h>
-#include <kapplication.h>
+#include <KApplication>
 #include <KDebug>
 
 #include "program.h"
