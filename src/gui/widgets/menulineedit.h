@@ -50,6 +50,9 @@ public:
     void setFont(const QFont & font);
     void setButtonToolTip(const QString &);
 
+signals:
+    void editingFinished();
+
 private:
     class MenuLineEditPrivate;
     MenuLineEditPrivate * const d;

@@ -28,6 +28,8 @@
 #include <value.h>
 #include <entry.h>
 
+class QAbstractItemModel;
+
 namespace KBibTeX
 {
 namespace GUI {
@@ -53,6 +55,15 @@ public:
     virtual void updateItemWidgets(const QList<QWidget*> widgets, const QStyleOptionViewItem &option, const QPersistentModelIndex &index) const;
 
     virtual QSize sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index) const;
+
+signals:
+    void modified();
+
+private slots:
+    void slotEditingFinished();
+
+private:
+    QAbstractItemModel *m_model;
 };
 
 

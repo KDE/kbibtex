@@ -35,8 +35,21 @@ namespace Dialogs {
 */
 class KBIBTEXGUI_EXPORT EntryEditor : public EntryViewer
 {
+    Q_OBJECT
 public:
     EntryEditor(KBibTeX::IO::Entry *entry, QWidget *parent);
+
+signals:
+    void modified(bool enableApply);
+
+public slots:
+    void apply();
+    void reset();
+    void fieldModified();
+
+private:
+    class EntryEditorPrivate;
+    EntryEditorPrivate *d;
 };
 
 }

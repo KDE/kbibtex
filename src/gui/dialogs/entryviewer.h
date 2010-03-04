@@ -30,6 +30,12 @@
 namespace KBibTeX
 {
 namespace GUI {
+
+namespace Widgets {
+class EntryListModel;
+class ValueItemDelegate;
+}
+
 namespace Dialogs {
 
 /**
@@ -37,8 +43,16 @@ namespace Dialogs {
 */
 class KBIBTEXGUI_EXPORT EntryViewer : public QWidget
 {
+    Q_OBJECT
 public:
     EntryViewer(const KBibTeX::IO::Entry *entry, QWidget *parent);
+
+public slots:
+    void reset();
+
+protected:
+    KBibTeX::GUI::Widgets::EntryListModel *model();
+    KBibTeX::GUI::Widgets::ValueItemDelegate *delegate();
 
 private:
     class EntryViewerPrivate;

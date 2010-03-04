@@ -48,11 +48,13 @@ public:
 signals:
     void selectedElementsChanged();
     void currentElementChanged(const KBibTeX::IO::Element*);
-    void elementExecuted(const KBibTeX::IO::Element*);
+    //void elementExecuted(const KBibTeX::IO::Element*);
+    void elementExecuted(KBibTeX::IO::Element*);
 
 public slots:
     void viewCurrentElement();
     void viewElement(const KBibTeX::IO::Element*);
+    void editElement(KBibTeX::IO::Element*);
 
 protected slots:
     void currentChanged(const QModelIndex & current, const QModelIndex & previous);

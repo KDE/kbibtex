@@ -106,7 +106,7 @@ KBibTeXPart::KBibTeXPart(QWidget *parentWidget, QObject *parent, bool browserVie
     d->model = new KBibTeX::GUI::Widgets::BibTeXFileModel();
     d->editor->setModel(d->model);
 
-    connect(d->editor, SIGNAL(elementExecuted(const KBibTeX::IO::Element*)), d->editor, SLOT(viewElement(const KBibTeX::IO::Element*)));
+    connect(d->editor, SIGNAL(elementExecuted(KBibTeX::IO::Element*)), d->editor, SLOT(editElement(KBibTeX::IO::Element*)));
 
     setupActions(browserViewWanted);
 

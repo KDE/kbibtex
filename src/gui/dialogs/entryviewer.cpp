@@ -31,7 +31,6 @@
 
 using namespace KBibTeX::GUI::Dialogs;
 
-
 class EntryViewer::EntryViewerPrivate
 {
 public:
@@ -51,13 +50,33 @@ public:
 
         QVBoxLayout *layout = new QVBoxLayout(p);
         layout->addWidget(listView);
+        p->setMinimumSize(512, 384);
+
+        reset();
+    }
+
+    void reset() {
+        listModel->setEntry(*entry);
     }
 };
 
 EntryViewer::EntryViewer(const KBibTeX::IO::Entry *entry, QWidget *parent)
         : QWidget(parent), d(new EntryViewerPrivate(entry, this))
 {
-    d->listModel->setEntry(*entry);
     // TODO
 }
 
+KBibTeX::GUI::Widgets::EntryListModel *EntryViewer::model()
+{
+    return d->listModel;
+}
+
+KBibTeX::GUI::Widgets::ValueItemDelegate *EntryViewer::delegate()
+{
+    return d->delegate;
+}
+
+void EntryViewer::reset()
+{
+    d->reset();
+}

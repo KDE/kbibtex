@@ -22,6 +22,7 @@
 #include <KDebug>
 
 #include <entryviewer.h>
+#include <entryeditor.h>
 #include <entry.h>
 #include <bibtexfilemodel.h>
 #include "bibtexeditor.h"
@@ -48,6 +49,27 @@ void BibTeXEditor::viewElement(const KBibTeX::IO::Element *element)
         KBibTeX::GUI::Dialogs::EntryViewer entryViewer(entry, &dialog);
         dialog.setMainWidget(&entryViewer);
         dialog.setButtons(KDialog::Close);
+        dialog.exec();
+    }
+}
+
+void BibTeXEditor::editElement(KBibTeX::IO::Element *element)
+{
+    KBibTeX::IO::Entry *entry = dynamic_cast<KBibTeX::IO::Entry *>(element);
+
+    if (entry != NULL) {
+        KDialog dialog(this);
+        KBibTeX::GUI::Dialogs::EntryEditor entryEditor(entry, &dialog);
+        dialog.setMainWidget(&entryEditor);
+        dialog.setButtons(KDialog::Ok | KDialog::Apply | KDialog::Cancel | KDialog::Reset);
+        dialog.enableButton(KDialog::Apply, false);
+
+        connect(&entryEditor, SIGNAL(modified(bool)), &dialog, SLOT(enableButtonApply(bool)));
+        connect(&entryEditor, SIGNAL(modified(bool)), &dialog, SLOT(enableButtonReset(bool)));
+        connect(&dialog, SIGNAL(applyClicked()), &entryEditor, SLOT(apply()));
+        connect(&dialog, SIGNAL(okClicked()), &entryEditor, SLOT(apply()));
+        connect(&dialog, SIGNAL(resetClicked()), &entryEditor, SLOT(reset()));
+
         dialog.exec();
     }
 }

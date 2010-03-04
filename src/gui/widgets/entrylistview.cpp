@@ -21,6 +21,11 @@
 #include <QApplication>
 #include <QPainter>
 #include <QPen>
+#include <QAbstractItemView>
+#include <QAbstractItemModel>
+#include <QMap>
+
+#include <KDebug>
 
 #include <entrylistview.h>
 #include <entrylistmodel.h>
@@ -28,8 +33,10 @@
 
 using namespace KBibTeX::GUI::Widgets;
 
+QMap<QWidget*, QModelIndex> widgetToIndex;
+
 ValueItemDelegate::ValueItemDelegate(QAbstractItemView *itemView, QObject *parent)
-        : KWidgetItemDelegate(itemView, parent)
+        : KWidgetItemDelegate(itemView, parent), m_model(itemView->model())
 {
     // TODO
 }
@@ -60,7 +67,10 @@ QList<QWidget*> ValueItemDelegate::createItemWidgets() const
 {
     QList<QWidget*> list;
 
-    list << new FieldLineEdit(FieldLineEdit::Source);
+    QWidget *newWidget = new FieldLineEdit(FieldLineEdit::Source);
+    connect(newWidget, SIGNAL(editingFinished()), this, SLOT(slotEditingFinished()));
+    list << newWidget;
+
     // TODO
 
     return list;
@@ -68,8 +78,6 @@ QList<QWidget*> ValueItemDelegate::createItemWidgets() const
 
 void ValueItemDelegate::updateItemWidgets(const QList<QWidget*> widgets, const QStyleOptionViewItem &option, const QPersistentModelIndex &index) const
 {
-    Q_UNUSED(index);
-
     int right = option.rect.width();
     int margin = option.fontMetrics.height() / 2;
     // TODO
@@ -81,11 +89,15 @@ void ValueItemDelegate::updateItemWidgets(const QList<QWidget*> widgets, const Q
 
     KBibTeX::IO::Value value = index.data(EntryListModel::ValuePointerRole).value<KBibTeX::IO::Value>();
     fieldLineEdit->setValue(value);
+    FieldLineEdit::TypeFlags flags = index.data(EntryListModel::TypeFlagsRole).value<FieldLineEdit::TypeFlags>();
+    fieldLineEdit->setTypeFlags(flags);
+
+    widgetToIndex.remove(fieldLineEdit);
+    widgetToIndex.insert(fieldLineEdit, index);
 }
 
 QSize ValueItemDelegate::sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index) const
 {
-    Q_UNUSED(option);
     Q_UNUSED(index);
 
     QSize size;
@@ -98,6 +110,20 @@ QSize ValueItemDelegate::sizeHint(const QStyleOptionViewItem & option, const QMo
     return size;
 }
 
+
+void ValueItemDelegate::slotEditingFinished()
+{
+    FieldLineEdit *fle = qobject_cast<FieldLineEdit*>(sender());
+    QModelIndex index = widgetToIndex.value(fle);
+    KBibTeX::IO::Value value;
+    fle->applyTo(value);
+    kDebug() << KBibTeX::IO::PlainTextValue::text(value);
+    m_model->setData(index, qVariantFromValue(value), EntryListModel::ValuePointerRole);
+    value = index.data(EntryListModel::ValuePointerRole).value<KBibTeX::IO::Value>();
+    kDebug() << "new: " << KBibTeX::IO::PlainTextValue::text(value);
+
+    emit modified();
+}
 
 
 

@@ -26,6 +26,7 @@
 #include <KLocale>
 
 #include "entrylistmodel.h"
+#include "fieldlineedit.h"
 #include "bibtexfields.h"
 #include "entry.h"
 #include "value.h"
@@ -57,12 +58,46 @@ QVariant EntryListModel::data(const QModelIndex & index, int role) const
         KBibTeX::IO::Value value = m_entry.value(key);
         return qVariantFromValue(value);
     }
+    case TypeFlagsRole: {
+        FieldLineEdit::TypeFlags flags = FieldLineEdit::Source;
+        if (key.toLower() == "title") flags |= FieldLineEdit::Text;
+        return qVariantFromValue(flags);
+    }
     }
 
     return QVariant();
 }
 
+bool EntryListModel::setData(const QModelIndex & index, const QVariant & value, int role)
+{
+    QStringList keys = m_entry.keys();
+    Q_ASSERT(index.row() >= 0 && index.row() < keys.size());
+    bool result = false;
+
+    switch (role) {
+    case ValuePointerRole: {
+        QString key = keys[index.row()];
+        KBibTeX::IO::Value kbibtexValue = qVariantValue<KBibTeX::IO::Value>(value);
+        m_entry[key] = kbibtexValue;
+        result = true;
+        break;
+    }
+    default:
+        result = false;
+    }
+
+    if (result) emit dataChanged(index, index);
+    return result;
+}
+
 void EntryListModel::setEntry(const KBibTeX::IO::Entry& entry)
 {
+    beginResetModel();
     m_entry = KBibTeX::IO::Entry(entry);
+    endResetModel();
+}
+
+void EntryListModel::applyToEntry(KBibTeX::IO::Entry& entry)
+{
+    entry = m_entry;
 }

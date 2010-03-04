@@ -57,6 +57,7 @@ public:
         hLayout->addWidget(m_lineEditText);
         m_lineEditText->setObjectName("FieldLineEditText");
         m_lineEditText->setClearButtonShown(true);
+        connect(m_lineEditText, SIGNAL(editingFinished()), p, SIGNAL(editingFinished()));
 
         qApp->setStyleSheet("QFrame#FieldLineEdit { background-color: " + QPalette().color(QPalette::Base).name() + "; } KLineEdit#FieldLineEditText { border-style: none; } KPushButton#FieldLineEditButton { padding: 0px; margin-left:2px; margin-right:2px; text-align: left; width: " + QString::number(m_pushButtonType->height() + 1) + "; background-color: " + QPalette().color(QPalette::Base).name() + "; border-style: none; }");
 

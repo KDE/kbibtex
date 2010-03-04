@@ -18,13 +18,48 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
+#include <entrylistmodel.h>
 #include "entryeditor.h"
 
 using namespace KBibTeX::GUI::Dialogs;
 
-EntryEditor::EntryEditor(KBibTeX::IO::Entry *entry, QWidget *parent)
-        : EntryViewer(entry, parent)
+class EntryEditor::EntryEditorPrivate
 {
-    // nothing
+public:
+    EntryEditor *p;
+    KBibTeX::IO::Entry *entry;
+    bool isModified;
+
+    EntryEditorPrivate(KBibTeX::IO::Entry *e, EntryEditor *parent)
+            : p(parent), entry(e) {
+        isModified = false;
+    }
+
+    void apply() {
+        p->model()->applyToEntry(*entry);
+    }
+};
+
+EntryEditor::EntryEditor(KBibTeX::IO::Entry *entry, QWidget *parent)
+        : EntryViewer(entry, parent), d(new EntryEditorPrivate(entry, this))
+{
+    connect((QObject*)delegate(), SIGNAL(modified()), this, SLOT(fieldModified())); // FIXME: For some reason, delegate has to be cast to QObject* ...
 }
 
+void EntryEditor::apply()
+{
+    d->apply();
+}
+
+void EntryEditor::reset()
+{
+    EntryViewer::reset();
+    d->isModified = false;
+    emit modified(false);
+}
+
+void EntryEditor::fieldModified()
+{
+    d->isModified = true;
+    emit modified(true);
+}
