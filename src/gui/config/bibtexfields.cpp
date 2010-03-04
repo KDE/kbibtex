@@ -118,3 +118,22 @@ void BibTeXFields::resetToDefaults()
     load();
 }
 
+QString BibTeXFields::format(const QString& name, Casing casing) const
+{
+    const QString iName = name.toLower();
+
+    for (ConstIterator it = begin(); it != end(); ++it) {
+        QString itName = (*it).raw.toLower();
+        if (itName == iName && (*it).rawAlt == QString::null) {
+            switch (casing) {
+            case cSmall: return iName;
+            case cCaptial: return name.toUpper();
+            case cCamelCase: return (*it).raw;
+            default:
+                return name;
+            }
+        }
+    }
+
+    return QString::null;
+}

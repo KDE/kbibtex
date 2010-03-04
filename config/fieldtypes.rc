@@ -9,103 +9,103 @@ Label=Identifier
 DefaultWidth=6
 
 [Column3]
-Raw=title
+Raw=Title
 Label=Title
 DefaultWidth=14
 Visible=false
 
 [Column4]
-Raw=title
-RawAlt=booktitle
+Raw=Title
+RawAlt=BookTitle
 Label=Title or Book Title
 DefaultWidth=14
 
 [Column5]
-Raw=author
-RawAlt=editor
+Raw=Author
+RawAlt=Editor
 Label=Author or Editor
 DefaultWidth=7
 
 [Column6]
-Raw=author
+Raw=Author
 Label=Author
 DefaultWidth=7
 Visible=false
 
 [Column7]
-Raw=editor
+Raw=Editor
 Label=Editor
 DefaultWidth=7
 Visible=false
 
 [Column8]
-Raw=month
+Raw=Month
 Label=Month
 DefaultWidth=3
 Visible=false
 
 [Column9]
-Raw=year
+Raw=Year
 Label=Year
 DefaultWidth=2
 
 [Column10]
-Raw=journal
+Raw=Journal
 Label=Journal
 DefaultWidth=4
 Visible=false
 
 [Column11]
-Raw=volume
+Raw=Volume
 Label=Volume
 DefaultWidth=1
 Visible=false
 
 [Column12]
-Raw=number
+Raw=Number
 Label=Number
 DefaultWidth=1
 Visible=false
 
 [Column13]
-Raw=issn
+Raw=ISSN
 Label=ISSN
 DefaultWidth=2
 Visible=false
 
 [Column14]
-Raw=isbn
+Raw=ISBN
 Label=ISBN
 DefaultWidth=2
 Visible=false
 
 [Column15]
-Raw=isbn
-RawAlt=issn
+Raw=ISBN
+RawAlt=ISSN
 Label=ISBN or ISSN
 DefaultWidth=2
 Visible=false
 
 [Column16]
-Raw=howpublished
+Raw=HowPublished
 Label=How Published
 DefaultWidth=5
 Visible=false
 
 [Column17]
-Raw=note
+Raw=Note
 Label=Note
 DefaultWidth=5
 Visible=false
 
 [Column18]
-Raw=abstract
+Raw=Abstract
 Label=Abstract
 DefaultWidth=7
 Visible=false
 
 [Column19]
-Raw=pages
+Raw=Pages
 Label=Pages
 DefaultWidth=2
 Visible=true

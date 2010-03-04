@@ -43,12 +43,19 @@ typedef struct {
 class BibTeXFields : public QList<FieldDescription>
 {
 public:
+    enum Casing {cSmall, cCaptial, cCamelCase};
+
     virtual ~BibTeXFields();
 
     static BibTeXFields *self();
     void load();
     void save();
     void resetToDefaults();
+
+    /**
+     * Change the casing of a given field name to one of the predefine formats.
+     */
+    QString format(const QString& name, Casing casing) const;
 
 protected:
     BibTeXFields();
