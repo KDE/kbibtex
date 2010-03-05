@@ -213,7 +213,7 @@ QVariant BibTeXFileModel::data(const QModelIndex &index, int role) const
                     text = text.replace(whiteSpace, " ");
                     return QVariant(text);
                 } else
-                    return QVariant(raw);
+                    return QVariant();
             }
         } else {
             KBibTeX::IO::Macro* macro = dynamic_cast<KBibTeX::IO::Macro*>(element);
