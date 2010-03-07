@@ -110,3 +110,15 @@ Label=Pages
 DefaultWidth=2
 Visible=true
 
+[Column20]
+Raw=Publisher
+Label=Publisher
+DefaultWidth=5
+Visible=false
+
+[Column21]
+Raw=Institution
+Label=Institution
+DefaultWidth=5
+Visible=false
+

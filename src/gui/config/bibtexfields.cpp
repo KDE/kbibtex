@@ -27,6 +27,8 @@
 
 using namespace KBibTeX::GUI::Config;
 
+static const int bibTeXFieldsMaxColumnCount = 256;
+
 class BibTeXFields::BibTeXFieldsPrivate
 {
 public:
@@ -36,10 +38,9 @@ public:
     KSharedPtr<KSharedConfig> userConfig;
 
     static BibTeXFields *singleton;
-    const int maxColumns;
 
     BibTeXFieldsPrivate(BibTeXFields *parent)
-            : p(parent), maxColumns(256) {
+            : p(parent) {
         systemDefaultsConfig = new KConfig(KStandardDirs::locate("appdata", "fieldtypes.rc"), KConfig::SimpleConfig);
         userConfig = KSharedConfig::openConfig(KStandardDirs::locateLocal("appdata", "ui.rc"), KConfig::SimpleConfig);
     }
@@ -75,7 +76,7 @@ void BibTeXFields::load()
     FieldDescription fd;
 
     clear();
-    for (int col = 1; col < d->maxColumns; ++col) {
+    for (int col = 1; col < bibTeXFieldsMaxColumnCount; ++col) {
         QString groupName = QString("Column%1").arg(col);
         KConfigGroup usercg(d->userConfig, groupName);
         KConfigGroup systemcg(d->systemDefaultsConfig, groupName);
@@ -109,7 +110,7 @@ void BibTeXFields::save()
 
 void BibTeXFields::resetToDefaults()
 {
-    for (int col = 1; col < d->maxColumns; ++col) {
+    for (int col = 1; col < bibTeXFieldsMaxColumnCount; ++col) {
         QString groupName = QString("Column%1").arg(col);
         KConfigGroup usercg(d->userConfig, groupName);
         usercg.deleteGroup();
@@ -122,18 +123,22 @@ QString BibTeXFields::format(const QString& name, Casing casing) const
 {
     const QString iName = name.toLower();
 
-    for (ConstIterator it = begin(); it != end(); ++it) {
-        QString itName = (*it).raw.toLower();
-        if (itName == iName && (*it).rawAlt == QString::null) {
-            switch (casing) {
-            case cSmall: return iName;
-            case cCaptial: return name.toUpper();
-            case cCamelCase: return (*it).raw;
-            default:
-                return name;
-            }
+    switch (casing) {
+    case cSmall: return iName;
+    case cCaptial: return name.toUpper();
+    case cCamelCase: {
+        for (ConstIterator it = begin(); it != end(); ++it) {
+            /// configuration file uses camel-case
+            QString itName = (*it).raw.toLower();
+            if (itName == iName && (*it).rawAlt == QString::null)
+                return (*it).raw;
+
+            /// make an educated guess how camel-case would look like
+            iName[0] = iName[0].toUpper();
+            return iName;
         }
     }
-
-    return QString::null;
+    default:
+        return name;
+    }
 }
