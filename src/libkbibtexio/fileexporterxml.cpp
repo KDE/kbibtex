@@ -114,7 +114,7 @@ bool FileExporterXML::writeEntry(QTextStream &stream, const Entry* entry)
 {
     stream << " <entry id=\"" << EncoderXML::currentEncoderXML() ->encode(entry->id()) << "\" type=\"" << entry->type().toLower() << "\">" << endl;
     for (Entry::ConstIterator it = entry->begin(); it != entry->end(); ++it) {
-        const QString key = it.key();
+        const QString key = it.key().toLower();
         const Value value = it.value();
 
         if (key == Entry::ftAuthor || key == Entry::ftEditor) {

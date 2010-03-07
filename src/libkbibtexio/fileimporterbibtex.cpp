@@ -453,13 +453,14 @@ QString FileImporterBibTeX::readBracketString(const QChar openingBracket)
 FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value& value, const QString& key)
 {
     Token token = tUnknown;
+    QString iKey = key.toLower();
 
     do {
         bool isStringKey = FALSE;
         QString text = readString(isStringKey).replace(QRegExp("\\s+"), " ");
 
         // FIXME: comparisons should be made case-insensitive
-        if (key == Entry::ftAuthor || key == Entry::ftEditor) {
+        if (iKey == Entry::ftAuthor || iKey == Entry::ftEditor) {
             if (isStringKey)
                 value.append(new MacroKey(text));
             else {
@@ -471,7 +472,7 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value& value, const QStr
                         value.append(person);
                 }
             }
-        } else if (key == Entry::ftPages) {
+        } else if (iKey == Entry::ftPages) {
             text.replace(QRegExp("\\s*--?\\s*"), QChar(0x2013));
             if (isStringKey)
                 value.append(new MacroKey(text));
