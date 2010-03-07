@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2009 by Thomas Fischer                             *
+*   Copyright (C) 2004-2010 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -31,11 +31,11 @@
 
 using namespace KBibTeX::IO;
 
-FileExporterXML::FileExporterXML() : FileExporter()
+FileExporterXML::FileExporterXML()
+        : FileExporter()
 {
     // nothing
 }
-
 
 FileExporterXML::~FileExporterXML()
 {
@@ -46,7 +46,7 @@ bool FileExporterXML::save(QIODevice* iodevice, const File* bibtexfile, QStringL
 {
     m_mutex.lock();
     bool result = true;
-    m_cancelFlag = FALSE;
+    m_cancelFlag = false;
     QTextStream stream(iodevice);
     stream.setCodec("UTF-8");
 
@@ -70,6 +70,8 @@ bool FileExporterXML::save(QIODevice* iodevice, const Element* element, QStringL
     stream.setCodec("UTF-8");
 
     stream << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << endl;
+    stream << "<!-- XML document written by KBibTeXIO as part of KBibTeX/KDE4 -->" << endl;
+    stream << "<!-- http://home.gna.org/kbibtex/ -->" << endl;
     return write(stream, element);
 }
 
@@ -194,26 +196,27 @@ QString FileExporterXML::valueToXML(const Value& value, const QString&)
 
         PlainText *plainText = dynamic_cast<PlainText*>(item);
         if (plainText != NULL)
-            result.append("<text>" + PlainTextValue::text(*item) + "</text>");
+            result.append("<text>" + EncoderXML::currentEncoderXML() ->encode(PlainTextValue::text(*item)) + "</text>");
         else {
             Person *p = dynamic_cast<Person*>(item);
             if (p != NULL) {
                 result.append("<person>");
                 if (!p->prefix().isEmpty())
-                    result.append("<prefix>" + p->lastName() + "</prefix>");
+                    result.append("<prefix>" + EncoderXML::currentEncoderXML() ->encode(p->lastName()) + "</prefix>");
                 if (!p->firstName().isEmpty())
-                    result.append("<firstname>" + p->firstName() + "</firstname>");
+                    result.append("<firstname>" + EncoderXML::currentEncoderXML() ->encode(p->firstName()) + "</firstname>");
                 if (!p->lastName().isEmpty())
-                    result.append("<lastname>" + p->lastName() + "</lastname>");
+                    result.append("<lastname>" + EncoderXML::currentEncoderXML() ->encode(p->lastName()) + "</lastname>");
                 if (!p->suffix().isEmpty())
-                    result.append("<suffix>" + p->suffix() + "</suffix>");
+                    result.append("<suffix>" + EncoderXML::currentEncoderXML() ->encode(p->suffix()) + "</suffix>");
+                result.append("</person>");
             }
             // TODO: Other data types
             else
-                result.append("<text>" + PlainTextValue::text(*item) + "</text>");
+                result.append("<text>" + EncoderXML::currentEncoderXML() ->encode(PlainTextValue::text(*item)) + "</text>");
         }
     }
 
-    return  EncoderXML::currentEncoderXML() ->encode(result);
+    return result;
 }
 
