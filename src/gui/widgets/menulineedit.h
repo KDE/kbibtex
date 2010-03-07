@@ -50,6 +50,8 @@ public:
     void setFont(const QFont & font);
     void setButtonToolTip(const QString &);
 
+    bool isModified() const;
+
 signals:
     void editingFinished();
 

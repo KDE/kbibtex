@@ -63,7 +63,6 @@ public:
 
         p->setSizePolicy(m_lineEditText->sizePolicy());
     }
-
 };
 
 MenuLineEdit::MenuLineEdit(QWidget *parent)
@@ -105,4 +104,9 @@ void MenuLineEdit::setFont(const QFont & font)
 void MenuLineEdit::setButtonToolTip(const QString &text)
 {
     d->m_pushButtonType->setToolTip(text);
+}
+
+bool MenuLineEdit::isModified() const
+{
+    return d->m_lineEditText->isModified();
 }
