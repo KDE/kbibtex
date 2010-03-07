@@ -338,6 +338,13 @@ OpenFileInfoManager::~OpenFileInfoManager()
     delete d;
 }
 
+OpenFileInfo *OpenFileInfoManager::createNew(const QString& mimeType)
+{
+    kDebug() << "mimeType=" << mimeType;
+    // TODO
+    return NULL;
+}
+
 OpenFileInfo *OpenFileInfoManager::create(const KUrl & url)
 {
     OpenFileInfo *result = contains(url);

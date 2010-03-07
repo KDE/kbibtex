@@ -89,8 +89,9 @@ public:
 
     static OpenFileInfoManager* getOpenFileInfoManager();
 
-    OpenFileInfo *create(const KUrl & url = KUrl());
-    OpenFileInfo *contains(const KUrl&url) const;
+    OpenFileInfo *createNew(const QString& mimeType = OpenFileInfo::mimetypeBibTeX);
+    OpenFileInfo *create(const KUrl& url = KUrl());
+    OpenFileInfo *contains(const KUrl& url) const;
     OpenFileInfo *currentFile() const;
     void changeUrl(OpenFileInfo *openFileInfo, const KUrl & url);
     void close(OpenFileInfo *openFileInfo);

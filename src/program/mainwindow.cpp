@@ -137,10 +137,14 @@ void KBibTeXMainWindow::readProperties(const KConfigGroup &/*configGroup*/)
 
 void KBibTeXMainWindow::newDocument()
 {
-    OpenFileInfo *openFileInfo = d->openFileInfoManager->create(OpenFileInfo::mimetypeBibTeX);
-    openFileInfo->setProperty(OpenFileInfo::propertyEncoding, "UTF-8");
-    d->openFileInfoManager->setCurrentFile(openFileInfo);
-    openFileInfo->setFlags(OpenFileInfo::Open);
+    const QString mimeType = OpenFileInfo::mimetypeBibTeX;
+    OpenFileInfo *openFileInfo = d->openFileInfoManager->createNew(mimeType);
+    if (openFileInfo) {
+        openFileInfo->setProperty(OpenFileInfo::propertyEncoding, "UTF-8");
+        d->openFileInfoManager->setCurrentFile(openFileInfo);
+        openFileInfo->setFlags(OpenFileInfo::Open);
+    } else
+        KMessageBox::error(this, i18n("Creating a new document of mime type \"%1\" failed as no editor component could be instanticated.", mimeType), i18n("Creating document failed"));
 }
 
 void KBibTeXMainWindow::openDocumentDialog()
