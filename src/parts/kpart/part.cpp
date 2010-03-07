@@ -39,6 +39,8 @@
 #include <fileimporterris.h>
 #include <fileexporterris.h>
 #include <fileexporterbibtex2html.h>
+#include <fileexporterxml.h>
+#include <fileexporterxslt.h>
 #include <bibtexfilemodel.h>
 #include "filterbar.h"
 
@@ -80,7 +82,13 @@ public:
         int p = ending.lastIndexOf(".");
         ending = ending.mid(p + 1);
 
-        if (ending == "ris") {
+        if (ending == "html") {
+            kDebug() << "Selecting KBibTeX::IO::FileExporterXSLT" << endl;
+            return new KBibTeX::IO::FileExporterXSLT();
+        } else if (ending == "xml") {
+            kDebug() << "Selecting KBibTeX::IO::FileExporterXML" << endl;
+            return new KBibTeX::IO::FileExporterXML();
+        } else if (ending == "ris") {
             kDebug() << "Selecting KBibTeX::IO::FileExporterRIS" << endl;
             return new KBibTeX::IO::FileExporterRIS();
         } else if (ending == "html" || ending == "html") {
@@ -171,7 +179,7 @@ bool KBibTeXPart::saveFile()
 
 void KBibTeXPart::saveDocumentDialog()
 {
-    KEncodingFileDialog::Result loadResult = KEncodingFileDialog::getSaveUrlAndEncoding(QString(), ":save", QLatin1String("text/x-bibtex"), widget());
+    KEncodingFileDialog::Result loadResult = KEncodingFileDialog::getSaveUrlAndEncoding(QString(), ":save", QLatin1String("text/x-bibtex application/xml text/html"), widget());
     if (!loadResult.URLs.isEmpty()) {
         KUrl url = loadResult.URLs.first();
         if (!url.isEmpty()) {
