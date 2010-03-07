@@ -35,10 +35,32 @@ using namespace KBibTeX::GUI::Widgets;
 
 QMap<QWidget*, QModelIndex> widgetToIndex;
 
-ValueItemDelegate::ValueItemDelegate(QAbstractItemView *itemView, QObject *parent)
-        : KWidgetItemDelegate(itemView, parent), m_model(itemView->model())
+const QLatin1String dummyText = QLatin1String("iyWgYGa967pQq");
+
+class ValueItemDelegate::ValueItemDelegatePrivate
 {
-    // TODO
+private:
+    ValueItemDelegate *p;
+
+public:
+    QAbstractItemModel *model;
+    int uiRecommendedHeight;
+    int uiMargin;
+    int uiDummyTextWidth;
+
+    ValueItemDelegatePrivate(ValueItemDelegate *parent) {
+        p = parent;
+    }
+};
+
+ValueItemDelegate::ValueItemDelegate(QAbstractItemView *itemView, QObject *parent)
+        : KWidgetItemDelegate(itemView, parent), d(new ValueItemDelegatePrivate(this))
+{
+    d->model = itemView->model();
+    FieldLineEdit fle;
+    d->uiMargin = fle.fontMetrics().height() / 2;
+    d->uiRecommendedHeight = fle.sizeHint().height() + d->uiMargin * 2;
+    d->uiDummyTextWidth = fle.fontMetrics().width(dummyText);
 }
 
 void ValueItemDelegate::paint(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const
@@ -55,10 +77,8 @@ void ValueItemDelegate::paint(QPainter * painter, const QStyleOptionViewItem & o
     }
     // TODO
 
-    QRect textRect = option.rect;
-    textRect.setTop(textRect.top() + 4);
-    textRect.setLeft(textRect.left() + 4);
-    painter->drawText(option.rect, Qt::AlignLeft | Qt::AlignTop, index.data(EntryListModel::LabelRole).toString());
+    QRect textRect(option.rect.left() + d->uiMargin, option.rect.top() + d->uiMargin, d->uiDummyTextWidth, option.fontMetrics.height());
+    painter->drawText(textRect, Qt::AlignLeft | Qt::AlignTop, index.data(EntryListModel::LabelRole).toString());
 
     painter->restore();
 }
@@ -78,14 +98,10 @@ QList<QWidget*> ValueItemDelegate::createItemWidgets() const
 
 void ValueItemDelegate::updateItemWidgets(const QList<QWidget*> widgets, const QStyleOptionViewItem &option, const QPersistentModelIndex &index) const
 {
-    int right = option.rect.width();
-    int margin = option.fontMetrics.height() / 2;
-    // TODO
-
     FieldLineEdit *fieldLineEdit = qobject_cast<FieldLineEdit*>(widgets.at(0));
-    QSize size(option.rect.width() - option.fontMetrics.width('A') * 10, fieldLineEdit->sizeHint().height());
+    QSize size(option.rect.width() - d->uiDummyTextWidth - 3*d->uiMargin, fieldLineEdit->sizeHint().height());
     fieldLineEdit->resize(size);
-    fieldLineEdit->move(right - fieldLineEdit->width() - margin, margin);
+    fieldLineEdit->move(option.rect.left() + 2*d->uiMargin + d->uiDummyTextWidth, (option.rect.height() - fieldLineEdit->sizeHint().height()) / 2);
 
     KBibTeX::IO::Value value = index.data(EntryListModel::ValuePointerRole).value<KBibTeX::IO::Value>();
     fieldLineEdit->setValue(value);
@@ -98,14 +114,12 @@ void ValueItemDelegate::updateItemWidgets(const QList<QWidget*> widgets, const Q
 
 QSize ValueItemDelegate::sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index) const
 {
+    Q_UNUSED(option);
     Q_UNUSED(index);
 
     QSize size;
-
-    size.setWidth(option.fontMetrics.width('A') * 25);
-    size.setHeight(option.fontMetrics.height() * 2); // up to 6 lines of text, and two margins
-
-    // TODO
+    size.setWidth(d->uiDummyTextWidth * 4);
+    size.setHeight(d->uiRecommendedHeight);
 
     return size;
 }
@@ -114,15 +128,14 @@ QSize ValueItemDelegate::sizeHint(const QStyleOptionViewItem & option, const QMo
 void ValueItemDelegate::slotEditingFinished()
 {
     FieldLineEdit *fle = qobject_cast<FieldLineEdit*>(sender());
-    QModelIndex index = widgetToIndex.value(fle);
-    KBibTeX::IO::Value value;
-    fle->applyTo(value);
-    kDebug() << KBibTeX::IO::PlainTextValue::text(value);
-    m_model->setData(index, qVariantFromValue(value), EntryListModel::ValuePointerRole);
-    value = index.data(EntryListModel::ValuePointerRole).value<KBibTeX::IO::Value>();
-    kDebug() << "new: " << KBibTeX::IO::PlainTextValue::text(value);
-
-    emit modified();
+    if (fle->isModified()) {
+        QModelIndex index = widgetToIndex.value(fle);
+        KBibTeX::IO::Value value;
+        fle->applyTo(value);
+        kDebug() << KBibTeX::IO::PlainTextValue::text(value);
+        d->model->setData(index, qVariantFromValue(value), EntryListModel::ValuePointerRole);
+        emit modified();
+    }
 }
 
 

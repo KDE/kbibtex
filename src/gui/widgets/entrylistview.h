@@ -63,7 +63,8 @@ private slots:
     void slotEditingFinished();
 
 private:
-    QAbstractItemModel *m_model;
+    class ValueItemDelegatePrivate;
+    ValueItemDelegatePrivate * const d;
 };
 
 
