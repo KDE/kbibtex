@@ -53,7 +53,7 @@ QVariant EntryListModel::data(const QModelIndex & index, int role) const
     QString key = keys[index.row()];
     switch (role) {
     case LabelRole:
-        return key;
+        return KBibTeX::GUI::Config::BibTeXFields::self()->format(key, KBibTeX::GUI::Config::BibTeXFields::cCamelCase);
     case ValuePointerRole: {
         KBibTeX::IO::Value value = m_entry.value(key);
         return qVariantFromValue(value);

@@ -108,7 +108,7 @@ void FieldLineEdit::applyTo(KBibTeX::IO::Value& value) const
     case Source: {
         QString key = "title"; // FIXME "author" is only required for persons, use something else for plain text
         KBibTeX::IO::FileImporterBibTeX importer;
-        QString fakeBibTeXFile = QString("@article{ dummy, %1=%2 }").arg(key).arg(text());
+        QString fakeBibTeXFile = QString("@article{dummy, %1=%2}").arg(key).arg(text());
         kDebug() << "fakeBibTeXFile=" << fakeBibTeXFile << endl;
         QBuffer buffer;
         buffer.open(QIODevice::WriteOnly);
