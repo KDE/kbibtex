@@ -1,0 +1,2 @@
+install( FILES fancy.xsl DESTINATION ${DATA_INSTALL_DIR}/kbibtex )
+install( FILES standard.xsl DESTINATION ${DATA_INSTALL_DIR}/kbibtex )
