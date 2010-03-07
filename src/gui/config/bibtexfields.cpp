@@ -121,7 +121,7 @@ void BibTeXFields::resetToDefaults()
 
 QString BibTeXFields::format(const QString& name, Casing casing) const
 {
-    const QString iName = name.toLower();
+    QString iName = name.toLower();
 
     switch (casing) {
     case cSmall: return iName;
