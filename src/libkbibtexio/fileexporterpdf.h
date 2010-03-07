@@ -34,7 +34,7 @@ namespace IO {
 class KBIBTEXIO_EXPORT FileExporterPDF : public FileExporterToolchain
 {
 public:
-    FileExporterPDF(bool embedFiles = FALSE);
+    FileExporterPDF(bool embedFiles = false);
     ~FileExporterPDF();
 
     bool save(QIODevice* iodevice, const File* bibtexfile, QStringList *errorLog = NULL);
