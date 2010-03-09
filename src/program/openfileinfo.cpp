@@ -40,7 +40,8 @@ const QString OpenFileInfo::mimetypeBibTeX = QLatin1String("text/x-bibtex");
 class OpenFileInfo::OpenFileInfoPrivate
 {
 private:
-    static unsigned int globalCounter;
+    static int globalCounter;
+    int m_counter;
 
 public:
     static const QString keyLastAccess;
@@ -55,10 +56,10 @@ public:
     QDateTime lastAccessDateTime;
     StatusFlags flags;
     OpenFileInfoManager *openFileInfoManager;
-    unsigned int counter;
+    QString mimeType;
 
     OpenFileInfoPrivate(OpenFileInfo *p)
-            : p(p), flags(0), counter(0) {
+            :  m_counter(-1), p(p), flags(0), mimeType(QString::null) {
         // nothing
     }
 
@@ -77,11 +78,11 @@ public:
             return partPerParent[parent];
 
         KParts::ReadWritePart *part = NULL;
-        QString mimeType = OpenFileInfo::mimetypeBibTeX;
-        if (url.isValid()) {
+        if (mimeType.isNull() && url.isValid()) {
             KMimeType::Ptr mimeTypePtr = KMimeType::findByUrl(url);
             mimeType = mimeTypePtr->name();
-        }
+        } else if (mimeType.isNull())
+            mimeType = OpenFileInfo::mimetypeBibTeX;
 
         KService::List list = KMimeTypeTrader::self()->query(mimeType, QString::fromLatin1("KParts/ReadWritePart"));
         for (KService::List::Iterator it = list.begin(); it != list.end(); ++it) {
@@ -99,8 +100,6 @@ public:
             part->openUrl(url);
             p->addFlags(OpenFileInfo::RecentlyUsed);
         } else {
-            ++globalCounter;
-            counter = globalCounter;
             part->openUrl(KUrl());
         }
 
@@ -111,9 +110,17 @@ public:
         return part;
     }
 
+    int counter() {
+        if (!url.isValid() && m_counter < 0)
+            m_counter = ++globalCounter;
+        else if (url.isValid())
+            kWarning() << "This function should not be called if URL is valid";
+        return m_counter;
+    }
+
 };
 
-unsigned int OpenFileInfo::OpenFileInfoPrivate::globalCounter = 0;
+int OpenFileInfo::OpenFileInfoPrivate::globalCounter = 0;
 const QString OpenFileInfo::OpenFileInfoPrivate::dateTimeFormat = QLatin1String("yyyy-MM-dd-hh-mm-ss-zzz");
 const QString OpenFileInfo::OpenFileInfoPrivate::keyLastAccess = QLatin1String("LastAccess");
 const QString OpenFileInfo::OpenFileInfoPrivate::keyURL = QLatin1String("URL");
@@ -125,6 +132,13 @@ OpenFileInfo::OpenFileInfo(OpenFileInfoManager *openFileInfoManager, const KUrl 
     d->openFileInfoManager = openFileInfoManager;
 }
 
+OpenFileInfo::OpenFileInfo(OpenFileInfoManager *openFileInfoManager, const QString &mimeType)
+        : d(new OpenFileInfoPrivate(this))
+{
+    d->mimeType = mimeType;
+    d->openFileInfoManager = openFileInfoManager;
+}
+
 OpenFileInfo::~OpenFileInfo()
 {
     delete d;
@@ -132,6 +146,7 @@ OpenFileInfo::~OpenFileInfo()
 
 void OpenFileInfo::setUrl(const KUrl& url)
 {
+    Q_ASSERT(url.isValid());
     d->url = url;
 }
 
@@ -150,9 +165,9 @@ QString OpenFileInfo::property(const QString &key) const
     return d->properties[key];
 }
 
-unsigned int OpenFileInfo::counter()
+int OpenFileInfo::counter()
 {
-    return d->counter;
+    return d->counter();
 }
 
 QString OpenFileInfo::caption()
@@ -259,7 +274,7 @@ public:
             if (!fileUrl.isValid()) break;
             OpenFileInfo *ofi = p->contains(fileUrl);
             if (ofi == NULL) {
-                ofi = p->create(fileUrl);
+                ofi = p->open(fileUrl);
             }
             ofi->addFlags(statusFlags);
             QString encoding = cg.readEntry(QString("%1-%2").arg(OpenFileInfo::propertyEncoding).arg(i), "");
@@ -341,15 +356,19 @@ OpenFileInfoManager::~OpenFileInfoManager()
 OpenFileInfo *OpenFileInfoManager::createNew(const QString& mimeType)
 {
     kDebug() << "mimeType=" << mimeType;
-    // TODO
-    return NULL;
+    OpenFileInfo *result = new OpenFileInfo(this, mimeType);
+    d->openFileInfoList << result;
+    result->setLastAccess(QDateTime::currentDateTime());
+    return result;
 }
 
-OpenFileInfo *OpenFileInfoManager::create(const KUrl & url)
+OpenFileInfo *OpenFileInfoManager::open(const KUrl & url)
 {
+    Q_ASSERT(url.isValid());
+
     OpenFileInfo *result = contains(url);
     if (result == NULL) {
-        /// file not yet open or completely new file
+        /// file not yet open
         result = new OpenFileInfo(this, url);
         d->openFileInfoList << result;
     }
@@ -388,7 +407,7 @@ void OpenFileInfoManager::changeUrl(OpenFileInfo *openFileInfo, const KUrl & url
     if (!url.equals(oldUrl) && oldUrl.isValid()) {
         /// current document was most probabily renamed (e.g. due to "Save As")
         /// add old URL to recently used files, but exclude the open files list
-        OpenFileInfo *ofi = create(oldUrl);
+        OpenFileInfo *ofi = open(oldUrl);
         OpenFileInfo::StatusFlags statusFlags = (openFileInfo->flags() & (~OpenFileInfo::Open)) | OpenFileInfo::RecentlyUsed;
         ofi->setFlags(statusFlags);
         ofi->setProperty(OpenFileInfo::propertyEncoding, openFileInfo->property(OpenFileInfo::propertyEncoding));

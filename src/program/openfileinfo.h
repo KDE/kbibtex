@@ -58,7 +58,7 @@ public:
     void setProperty(const QString &key, const QString &value);
     QString property(const QString &key) const;
 
-    unsigned int counter();
+    int counter();
     QString caption();
     QString fullCaption();
 
@@ -73,6 +73,7 @@ public:
 
 protected:
     OpenFileInfo(OpenFileInfoManager *openFileInfoManager, const KUrl &url);
+    OpenFileInfo(OpenFileInfoManager *openFileInfoManager, const QString &mimeType = OpenFileInfo::mimetypeBibTeX);
     void setUrl(const KUrl& url);
     void setLastAccess(const QDateTime& dateTime);
 
@@ -90,7 +91,7 @@ public:
     static OpenFileInfoManager* getOpenFileInfoManager();
 
     OpenFileInfo *createNew(const QString& mimeType = OpenFileInfo::mimetypeBibTeX);
-    OpenFileInfo *create(const KUrl& url = KUrl());
+    OpenFileInfo *open(const KUrl& url);
     OpenFileInfo *contains(const KUrl& url) const;
     OpenFileInfo *currentFile() const;
     void changeUrl(OpenFileInfo *openFileInfo, const KUrl & url);

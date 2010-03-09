@@ -168,7 +168,7 @@ void KBibTeXMainWindow::openDocumentDialog()
 void KBibTeXMainWindow::openDocument(const KUrl& url, const QString& encoding)
 {
     kDebug() << "Opening document " << url.prettyUrl() << " with encoding " << encoding << endl;
-    OpenFileInfo *openFileInfo = d->openFileInfoManager->create(url);
+    OpenFileInfo *openFileInfo = d->openFileInfoManager->open(url);
     openFileInfo->setProperty(OpenFileInfo::propertyEncoding, encoding);
     d->openFileInfoManager->setCurrentFile(openFileInfo);
 }
