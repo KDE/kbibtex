@@ -26,6 +26,7 @@
 #include <QMap>
 
 #include <KDebug>
+#include <KLineEdit>
 
 #include <entrylistview.h>
 #include <entrylistmodel.h>
@@ -91,7 +92,10 @@ QList<QWidget*> ValueItemDelegate::createItemWidgets() const
     connect(newWidget, SIGNAL(editingFinished()), this, SLOT(slotEditingFinished()));
     list << newWidget;
 
-    // TODO
+    KLineEdit *lineEdit = new KLineEdit();
+    lineEdit->setClearButtonShown(true);
+    list << lineEdit;
+    connect(lineEdit, SIGNAL(editingFinished()), this, SLOT(slotEditingFinished()));
 
     return list;
 }
@@ -99,17 +103,33 @@ QList<QWidget*> ValueItemDelegate::createItemWidgets() const
 void ValueItemDelegate::updateItemWidgets(const QList<QWidget*> widgets, const QStyleOptionViewItem &option, const QPersistentModelIndex &index) const
 {
     FieldLineEdit *fieldLineEdit = qobject_cast<FieldLineEdit*>(widgets.at(0));
+    KLineEdit *idLineEdit = qobject_cast<KLineEdit*>(widgets.at(1));
     QSize size(option.rect.width() - d->uiDummyTextWidth - 3*d->uiMargin, fieldLineEdit->sizeHint().height());
-    fieldLineEdit->resize(size);
-    fieldLineEdit->move(option.rect.left() + 2*d->uiMargin + d->uiDummyTextWidth, (option.rect.height() - fieldLineEdit->sizeHint().height()) / 2);
 
-    KBibTeX::IO::Value value = index.data(EntryListModel::ValuePointerRole).value<KBibTeX::IO::Value>();
-    fieldLineEdit->setValue(value);
-    FieldLineEdit::TypeFlags flags = index.data(EntryListModel::TypeFlagsRole).value<FieldLineEdit::TypeFlags>();
-    fieldLineEdit->setTypeFlags(flags);
+    if (index.data(EntryListModel::ValuePointerRole).canConvert<KBibTeX::IO::Value>()) {
+        fieldLineEdit->setVisible(true);
+        idLineEdit->setVisible(false);
+        fieldLineEdit->resize(size);
+        fieldLineEdit->move(option.rect.left() + 2*d->uiMargin + d->uiDummyTextWidth, (option.rect.height() - fieldLineEdit->sizeHint().height()) / 2);
 
-    widgetToIndex.remove(fieldLineEdit);
-    widgetToIndex.insert(fieldLineEdit, index);
+        KBibTeX::IO::Value value = index.data(EntryListModel::ValuePointerRole).value<KBibTeX::IO::Value>();
+        fieldLineEdit->setValue(value);
+        FieldLineEdit::TypeFlags flags = index.data(EntryListModel::TypeFlagsRole).value<FieldLineEdit::TypeFlags>();
+        fieldLineEdit->setTypeFlags(flags);
+
+        widgetToIndex.remove(fieldLineEdit);
+        widgetToIndex.insert(fieldLineEdit, index);
+    } else {
+        fieldLineEdit->setVisible(false);
+        idLineEdit->setVisible(true);
+        idLineEdit->resize(size);
+        idLineEdit->move(option.rect.left() + 2*d->uiMargin + d->uiDummyTextWidth, (option.rect.height() - idLineEdit->sizeHint().height()) / 2);
+        QString id = index.data(EntryListModel::ValuePointerRole).value<QString>();
+        idLineEdit->setText(id);
+
+        widgetToIndex.remove(idLineEdit);
+        widgetToIndex.insert(idLineEdit, index);
+    }
 }
 
 QSize ValueItemDelegate::sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index) const
@@ -128,13 +148,19 @@ QSize ValueItemDelegate::sizeHint(const QStyleOptionViewItem & option, const QMo
 void ValueItemDelegate::slotEditingFinished()
 {
     FieldLineEdit *fle = qobject_cast<FieldLineEdit*>(sender());
-    if (fle->isModified()) {
+    if (fle != NULL && fle->isModified()) {
         QModelIndex index = widgetToIndex.value(fle);
         KBibTeX::IO::Value value;
         fle->applyTo(value);
-        kDebug() << KBibTeX::IO::PlainTextValue::text(value);
         d->model->setData(index, qVariantFromValue(value), EntryListModel::ValuePointerRole);
         emit modified();
+    } else {
+        KLineEdit *le = qobject_cast<KLineEdit*>(sender());
+        if (le != NULL && le->isModified()) {
+            QModelIndex index = widgetToIndex.value(le);
+            d->model->setData(index, le->text(), EntryListModel::ValuePointerRole);
+            emit modified();
+        }
     }
 }
 

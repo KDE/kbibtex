@@ -33,6 +33,8 @@
 
 using namespace KBibTeX::GUI::Widgets;
 
+const int specialFieldOffset = 1;
+
 EntryListModel::EntryListModel(QObject * parent)
         : QAbstractListModel(parent)
 {
@@ -48,18 +50,29 @@ int EntryListModel::rowCount(const QModelIndex & parent) const
 QVariant EntryListModel::data(const QModelIndex & index, int role) const
 {
     QStringList keys = m_entry.keys();
-    Q_ASSERT(index.row() >= 0 && index.row() < keys.size());
+    Q_ASSERT(index.row() >= 0 && index.row() < keys.size() + specialFieldOffset);
 
-    QString key = keys[index.row()];
+    QString key;
+    switch (index.row()) {
+    case 0: key = QLatin1String("Id"); break;
+    default: key = keys[index.row()-specialFieldOffset];
+    }
+
     switch (role) {
     case LabelRole:
         return KBibTeX::GUI::Config::BibTeXFields::self()->format(key, KBibTeX::GUI::Config::BibTeXFields::cCamelCase);
     case ValuePointerRole: {
-        KBibTeX::IO::Value value = m_entry.value(key);
-        return qVariantFromValue(value);
+        switch (index.row()) {
+        case 0: return qVariantFromValue(m_entry.id());
+        default: {
+            Q_ASSERT(index.row() >= specialFieldOffset);
+            KBibTeX::IO::Value value = m_entry.value(key);
+            return qVariantFromValue(value);
+        }
+        }
     }
     case TypeFlagsRole: {
-        FieldLineEdit::TypeFlags flags = FieldLineEdit::Source;
+        FieldLineEdit::TypeFlags   flags = FieldLineEdit::Source;
         if (key.toLower() == "title") flags |= FieldLineEdit::Text;
         return qVariantFromValue(flags);
     }
@@ -71,14 +84,22 @@ QVariant EntryListModel::data(const QModelIndex & index, int role) const
 bool EntryListModel::setData(const QModelIndex & index, const QVariant & value, int role)
 {
     QStringList keys = m_entry.keys();
-    Q_ASSERT(index.row() >= 0 && index.row() < keys.size());
+    Q_ASSERT(index.row() >= 0 && index.row() < keys.size() + specialFieldOffset);
     bool result = false;
 
     switch (role) {
     case ValuePointerRole: {
-        QString key = keys[index.row()];
-        KBibTeX::IO::Value kbibtexValue = qVariantValue<KBibTeX::IO::Value>(value);
-        m_entry[key] = kbibtexValue;
+        switch (index.row()) {
+        case 0:
+            m_entry.setId(qVariantValue<QString>(value));
+            break;
+        default: {
+            Q_ASSERT(index.row() >= specialFieldOffset);
+            QString key = keys[index.row() - specialFieldOffset];
+            KBibTeX::IO::Value kbibtexValue = qVariantValue<KBibTeX::IO::Value>(value);
+            m_entry[key] = kbibtexValue;
+        }
+        }
         result = true;
         break;
     }
