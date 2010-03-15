@@ -12,7 +12,6 @@
 
 <xsl:template match="authors">
 <xsl:if test="string-length(.)>0">
-<xsl:text>Authors: </xsl:text>
 <xsl:for-each select="person">
 <span style="font-weight:bold;">
 <xsl:apply-templates select="."/></span><xsl:if test="position()!=last()"><xsl:text>, </xsl:text>
@@ -35,7 +34,6 @@
 
 <xsl:template match="booktitle">
 <i><xsl:value-of select="."/></i>
-<xsl:text>, </xsl:text>
 </xsl:template>
 
 <xsl:template match="school">
@@ -44,7 +42,7 @@
 </xsl:template>
 
 <xsl:template match="journal">
-<i><xsl:value-of select="."/>
+<i><xsl:value-of select="."/></i>
 <xsl:if test="string-length(../volume)>0">
 <xsl:text> </xsl:text>
 <xsl:value-of select="../volume"/>
@@ -54,8 +52,6 @@
 <xsl:text>)</xsl:text>
 </xsl:if>
 </xsl:if>
-</i>
-<xsl:text>, </xsl:text>
 </xsl:template>
 
 <xsl:template match="institution">
@@ -96,7 +92,7 @@
 </xsl:template>
 
 <xsl:template match="month">
-<xsl:value-of select="."/><xsl:text> </xsl:text>
+<xsl:value-of select="."/>
 </xsl:template>
 
 <xsl:template match="abstract">
@@ -104,10 +100,23 @@
 </xsl:template>
 
 <xsl:template match="entry">
-<div style="margin:0px; padding: 1ex; background: #ec6; font-size: 125%;">
+<div style="margin:0px; padding: 0.5ex; border-top: solid 0.25ex #c00;"><xsl:apply-templates select="authors" /></div>
+<div style="margin:0px; padding: 0.5ex; background: #ec6; font-size: 125%;">
 <xsl:apply-templates select="title" />
 </div>
-<div style="margin:0px; padding: 1ex; background: #fe9;"><xsl:apply-templates select="authors" /></div>
+<xsl:if test="string-length(journal)>0 or string-length(booktitle)>0 ">
+<div style="margin:0px; padding: 0.5ex; background: #900; color: white;">
+<xsl:if test="string-length(journal)>0"><xsl:apply-templates select="journal" /></xsl:if>
+<xsl:if test="string-length(booktitle)>0"><xsl:apply-templates select="booktitle" /></xsl:if>
+</div>
+</xsl:if>
+<xsl:if test="string-length(year)>0">
+<div style="margin:0px; padding: 0.5ex; text-align: right; font-size: 80%;">
+<xsl:text>Date: </xsl:text>
+<xsl:if test="string-length(month)>0"><xsl:apply-templates select="month" /><xsl:text> </xsl:text></xsl:if>
+<xsl:apply-templates select="year" />
+</div>
+</xsl:if>
 <!--
 <p>
 <xsl:apply-templates select="authors" />

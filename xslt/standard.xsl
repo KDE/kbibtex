@@ -44,7 +44,7 @@
 </xsl:template>
 
 <xsl:template match="journal">
-<i><xsl:value-of select="."/>
+<i><xsl:value-of select="."/></i>
 <xsl:if test="string-length(../volume)>0">
 <xsl:text> </xsl:text>
 <xsl:value-of select="../volume"/>
@@ -54,7 +54,6 @@
 <xsl:text>)</xsl:text>
 </xsl:if>
 </xsl:if>
-</i>
 <xsl:text>, </xsl:text>
 </xsl:template>
 
