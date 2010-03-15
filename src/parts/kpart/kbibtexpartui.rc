@@ -5,11 +5,16 @@
     <Action name="file_save" group="save_merge" />
     <Action name="file_save_as" group="save_merge" />
   </Menu>
+  <Menu name="element"><text>&amp;Element</text>
+    <Action name="element_new" />
+  </Menu>
 </MenuBar>
 
 <ToolBar name="mainToolBar" noMerge="1"><text>Main Toolbar</text>
   <Action name="file_save" group="file_operations" />
   <Action name="file_save_as" group="file_operations" />
+  <Separator/>
+  <Action name="element_new" />
   <Separator/>
   <Action name="toolbar_filter_widget" />
 </ToolBar>

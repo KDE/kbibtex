@@ -25,13 +25,15 @@
 
 #include <KEncodingFileDialog>
 #include <KMessageBox>
-#include <klocale.h>
-#include <kdebug.h>
-#include <kaction.h>
-#include <kactioncollection.h>
-#include <kstandardaction.h>
-#include <kselectaction.h>
+#include <KDebug>
+#include <KLocale>
+#include <KAction>
+#include <KActionCollection>
+#include <KStandardAction>
+#include <KActionMenu>
+#include <KSelectAction>
 #include <KToggleAction>
+#include <KMenu>
 
 #include <file.h>
 #include <fileimporterbibtex.h>
@@ -141,6 +143,16 @@ void KBibTeXPart::setupActions(bool /*browserViewWanted FIXME*/)
     filterWidgetAction->setShortcut(Qt::CTRL + Qt::Key_F);
     filterWidgetAction->setDefaultWidget(d->filterBar);
     connect(filterWidgetAction, SIGNAL(triggered()), d->filterBar, SLOT(setFocus()));
+
+    KActionMenu *newElementAction = new KActionMenu(KIcon("address-book-new"), i18n("New element"), this);
+    actionCollection()->addAction("element_new", newElementAction);
+    newElementAction->setShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_N);
+    KMenu *newElementMenu = new KMenu(newElementAction->text(), widget());
+    newElementAction->setMenu(newElementMenu);
+    newElementMenu->addAction(KIcon("address-book-new"), i18n("New entry"));
+    newElementMenu->addAction(KIcon("address-book-new"), i18n("New comment"));
+    newElementMenu->addAction(KIcon("address-book-new"), i18n("New macro"));
+    newElementMenu->addAction(KIcon("address-book-new"), i18n("New preamble"));
 
     // TODO
 
