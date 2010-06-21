@@ -28,8 +28,6 @@
 
 #include "documentlist.h"
 
-using namespace KBibTeX::Program;
-
 class DocumentList::DocumentListPrivate
 {
 public:

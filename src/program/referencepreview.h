@@ -26,10 +26,6 @@
 
 #include <element.h>
 
-namespace KBibTeX
-{
-namespace Program {
-
 class ReferencePreview : public QWidget
 {
     Q_OBJECT
@@ -40,7 +36,7 @@ public:
     void setEnabled(bool);
 
 public slots:
-    void setElement(const KBibTeX::IO::Element*);
+    void setElement(const Element*);
 
 private:
     class ReferencePreviewPrivate;
@@ -50,7 +46,5 @@ private slots:
     void renderHTML();
 };
 
-}
-}
 
 #endif // KBIBTEX_PROGRAM_REFERENCEPREVIEW_H

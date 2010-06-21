@@ -26,17 +26,10 @@
 
 class QTextEdit;
 
-namespace KBibTeX
-{
-namespace GUI {
-class BibTeXEditor;
-}
-
-namespace Program {
-
 class KBibTeXProgram;
 class MDIWidget;
 class ReferencePreview;
+class BibTeXEditor;
 
 class KBibTeXMainWindow : public KParts::MainWindow
 {
@@ -60,14 +53,11 @@ protected slots:
     void newDocument();
     void openDocumentDialog();
     void closeDocument();
-    void documentSwitched(KBibTeX::GUI::BibTeXEditor*, KBibTeX::GUI::BibTeXEditor*);
+    void documentSwitched(BibTeXEditor*, BibTeXEditor*);
 
 private:
     class KBibTeXMainWindowPrivate;
     KBibTeXMainWindowPrivate *d;
 };
-
-}
-}
 
 #endif // KBIBTEX_PROGRAM_MAINWINDOW_H

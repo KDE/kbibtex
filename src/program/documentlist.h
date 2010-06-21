@@ -28,10 +28,6 @@
 
 #include "openfileinfo.h"
 
-namespace KBibTeX
-{
-namespace Program {
-
 class OpenFileInfoManager;
 
 class DocumentList : public QTabWidget
@@ -65,7 +61,5 @@ private:
     DocumentListItemPrivate *d;
 };
 
-}
-}
 
 #endif // KBIBTEX_PROGRAM_DOCUMENTLIST_H

@@ -28,10 +28,6 @@ class KDocumentManager;
 class KViewManager;
 */
 
-namespace KBibTeX
-{
-namespace Program {
-
 class KBibTeXProgram
 {
 public:
@@ -63,9 +59,6 @@ inline KViewManager* KBibTeXProgram::viewManager()
     return m_viewManager;
 }
 */
-
-}
-}
 
 #endif // KBIBTEX_PROGRAM_PROGRAM_H
 

@@ -32,10 +32,6 @@ namespace KParts
 class Part;
 }
 
-namespace KBibTeX
-{
-namespace Program {
-
 class OpenFileInfo;
 
 class MDIWidget : public QStackedWidget
@@ -45,7 +41,7 @@ class MDIWidget : public QStackedWidget
 public:
     MDIWidget(QWidget *parent);
 
-    KBibTeX::GUI::BibTeXEditor *editor();
+    BibTeXEditor *editor();
     OpenFileInfo *currentFile();
 
 public slots:
@@ -53,7 +49,7 @@ public slots:
     void closeFile(OpenFileInfo *openFileInfo);
 
 signals:
-    void documentSwitch(KBibTeX::GUI::BibTeXEditor *, KBibTeX::GUI::BibTeXEditor *);
+    void documentSwitch(BibTeXEditor *, BibTeXEditor *);
     void activePartChanged(KParts::Part *);
 
 private:
@@ -63,7 +59,5 @@ private:
 private slots:
     void slotCompleted(QObject *);
 };
-}
-}
 
 #endif // KBIBTEX_PROGRAM_MDIWIDGET_H

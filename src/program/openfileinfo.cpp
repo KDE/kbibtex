@@ -32,8 +32,6 @@
 
 #include "openfileinfo.h"
 
-using namespace KBibTeX::Program;
-
 const QString OpenFileInfo::propertyEncoding = QLatin1String("encoding");
 const QString OpenFileInfo::mimetypeBibTeX = QLatin1String("text/x-bibtex");
 

@@ -25,8 +25,6 @@
 #include "program.h"
 #include "mainwindow.h"
 
-using namespace KBibTeX::Program;
-
 KBibTeXProgram::KBibTeXProgram(int argc, char *argv[])
 /*: m_documentManager(new KDocumentManager()), m_viewManager(new KViewManager(m_documentManager))*/
 {

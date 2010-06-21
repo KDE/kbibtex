@@ -33,8 +33,6 @@
 #include "mdiwidget.h"
 #include "openfileinfo.h"
 
-using namespace KBibTeX::Program;
-
 class MDIWidget::MDIWidgetPrivate
 {
 public:
@@ -67,7 +65,7 @@ MDIWidget::MDIWidget(QWidget *parent)
 
 void MDIWidget::setFile(OpenFileInfo *openFileInfo)
 {
-    KBibTeX::GUI::BibTeXEditor *oldEditor = NULL;
+    BibTeXEditor *oldEditor = NULL;
     bool hasChanged = true;
 
     KParts::Part* part = openFileInfo == NULL ? NULL : openFileInfo->part(this);
@@ -82,7 +80,7 @@ void MDIWidget::setFile(OpenFileInfo *openFileInfo)
     }
 
     if (indexOf(widget) >= 0) {
-        oldEditor = dynamic_cast<KBibTeX::GUI::BibTeXEditor *>(currentWidget());
+        oldEditor = dynamic_cast<BibTeXEditor *>(currentWidget());
         hasChanged = widget != currentWidget();
     } else {
         addWidget(widget);
@@ -92,7 +90,7 @@ void MDIWidget::setFile(OpenFileInfo *openFileInfo)
     d->currentFile = openFileInfo;
 
     if (hasChanged) {
-        KBibTeX::GUI::BibTeXEditor *newEditor = dynamic_cast<KBibTeX::GUI::BibTeXEditor *>(widget);
+        BibTeXEditor *newEditor = dynamic_cast<BibTeXEditor *>(widget);
         emit activePartChanged(part);
         emit documentSwitch(oldEditor, newEditor);
     }
@@ -107,7 +105,7 @@ void MDIWidget::closeFile(OpenFileInfo *openFileInfo)
         QWidget *curWidget = currentWidget();
 
         if (curWidget == widget) {
-            KBibTeX::GUI::BibTeXEditor *oldEditor = dynamic_cast<KBibTeX::GUI::BibTeXEditor *>(widget);
+            BibTeXEditor *oldEditor = dynamic_cast<BibTeXEditor *>(widget);
             setCurrentWidget(d->welcomeLabel);
             emit activePartChanged(NULL);
             emit documentSwitch(oldEditor, NULL);
@@ -117,10 +115,10 @@ void MDIWidget::closeFile(OpenFileInfo *openFileInfo)
     }
 }
 
-KBibTeX::GUI::BibTeXEditor *MDIWidget::editor()
+BibTeXEditor *MDIWidget::editor()
 {
     OpenFileInfo *ofi = OpenFileInfoManager::getOpenFileInfoManager()->currentFile();
-    return dynamic_cast<KBibTeX::GUI::BibTeXEditor*>(ofi->part(this)->widget());
+    return dynamic_cast<BibTeXEditor*>(ofi->part(this)->widget());
 }
 
 OpenFileInfo *MDIWidget::currentFile()

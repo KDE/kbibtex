@@ -33,8 +33,6 @@
 
 #include "referencepreview.h"
 
-using namespace KBibTeX::Program;
-
 const QString notAvailableMessage = "<html><body style=\"font-family: '" + KGlobalSettings::generalFont().family() + "'; font-size: " + QString::number(KGlobalSettings::generalFont().pointSize()) + "pt; font-style: italic; color: #333;\">" + i18n("No preview available") + "</body></html>"; //FIXME: Font size seems to be too small
 class ReferencePreview::ReferencePreviewPrivate
 {
@@ -46,7 +44,7 @@ public:
     QUrl baseUrl;
     QWebView *webView;
     KComboBox *comboBox;
-    const KBibTeX::IO::Element* element;
+    const Element* element;
 
     ReferencePreviewPrivate(ReferencePreview *parent)
             : p(parent), element(NULL) {
@@ -96,7 +94,7 @@ void ReferencePreview::setEnabled(bool enabled)
     d->comboBox->setEnabled(enabled);
 }
 
-void ReferencePreview::setElement(const KBibTeX::IO::Element* element)
+void ReferencePreview::setElement(const Element* element)
 {
     d->element = element;
     renderHTML();
@@ -112,12 +110,12 @@ void ReferencePreview::renderHTML()
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
     QStringList errorLog;
-    KBibTeX::IO::FileExporter *exporter = NULL;
+    FileExporter *exporter = NULL;
 
     if (d->comboBox->currentIndex() == 0)
-        exporter = new KBibTeX::IO::FileExporterBibTeX();
+        exporter = new FileExporterBibTeX();
     else if (d->comboBox->currentIndex() < 9) {
-        KBibTeX::IO::FileExporterBibTeX2HTML *exporterHTML = new KBibTeX::IO::FileExporterBibTeX2HTML();
+        FileExporterBibTeX2HTML *exporterHTML = new FileExporterBibTeX2HTML();
         switch (d->comboBox->currentIndex()) {
         case 1: /// BibTeX2HTML (abbrv)
             exporterHTML->setLaTeXBibliographyStyle(QLatin1String("abbrv"));
@@ -146,7 +144,7 @@ void ReferencePreview::renderHTML()
         }
         exporter = exporterHTML;
     } else {
-        KBibTeX::IO::FileExporterXSLT *exporterXSLT = new KBibTeX::IO::FileExporterXSLT();
+        FileExporterXSLT *exporterXSLT = new FileExporterXSLT();
         switch (d->comboBox->currentIndex()) {
         case 9: /// XML/XSLT (standard)
             exporterXSLT->setXSLTFilename(KStandardDirs::locate("appdata", "standard.xsl"));

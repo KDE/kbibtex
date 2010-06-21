@@ -22,7 +22,7 @@
 
 int main(int argc, char *argv[])
 {
-    KBibTeX::Program::KBibTeXProgram program(argc, argv);
+    KBibTeXProgram program(argc, argv);
 
     const int result = program.execute();
 

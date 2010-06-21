@@ -32,10 +32,6 @@ namespace KParts
 class ReadWritePart;
 }
 
-namespace KBibTeX
-{
-namespace Program {
-
 class OpenFileInfoManager;
 
 class OpenFileInfo : public QObject
@@ -47,7 +43,8 @@ public:
     enum StatusFlag {
         Open = 0x1,
         RecentlyUsed = 0x2,
-        Favorite = 0x4
+        Favorite = 0x4,
+        Search = 0x8
     };
     Q_DECLARE_FLAGS(StatusFlags, StatusFlag)
 
@@ -121,7 +118,5 @@ private:
 private slots:
     void deferredListsChanged();
 };
-}
-}
 
 #endif // KBIBTEX_PROGRAM_OPENFILEINFO_H
