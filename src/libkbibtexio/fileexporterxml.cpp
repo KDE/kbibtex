@@ -29,7 +29,7 @@
 #include "iocommon.h"
 #include "fileexporterxml.h"
 
-using namespace KBibTeX::IO;
+static QRegExp removal("[{}]+");
 
 FileExporterXML::FileExporterXML()
         : FileExporter()
@@ -121,6 +121,11 @@ bool FileExporterXML::writeEntry(QTextStream &stream, const Entry* entry)
             stream << "  <" << key << "s>" << endl;
             stream << valueToXML(value, key) << endl;
             stream << "  </" << key << "s>" << endl;
+        } else if (key == Entry::ftAbstract) {
+            /// clean up HTML artifacts
+            QString text = valueToXML(value);
+            text = text.replace(QRegExp("\\bAbstract[:]?([ ]|&nbsp;|&amp;nbsp;)*"), "");
+            stream << "  <" << key << ">" << text << "</" << key << ">" << endl;
         } else if (key == Entry::ftMonth) {
             stream << "  <month";
             bool ok = FALSE;
@@ -196,27 +201,33 @@ QString FileExporterXML::valueToXML(const Value& value, const QString&)
 
         PlainText *plainText = dynamic_cast<PlainText*>(item);
         if (plainText != NULL)
-            result.append("<text>" + EncoderXML::currentEncoderXML() ->encode(PlainTextValue::text(*item)) + "</text>");
+            result.append("<text>" +  cleanXML(EncoderXML::currentEncoderXML() ->encode(PlainTextValue::text(*item))) + "</text>");
         else {
             Person *p = dynamic_cast<Person*>(item);
             if (p != NULL) {
                 result.append("<person>");
                 if (!p->prefix().isEmpty())
-                    result.append("<prefix>" + EncoderXML::currentEncoderXML() ->encode(p->lastName()) + "</prefix>");
+                    result.append("<prefix>" +  cleanXML(EncoderXML::currentEncoderXML() ->encode(p->lastName())) + "</prefix>");
                 if (!p->firstName().isEmpty())
-                    result.append("<firstname>" + EncoderXML::currentEncoderXML() ->encode(p->firstName()) + "</firstname>");
+                    result.append("<firstname>" +  cleanXML(EncoderXML::currentEncoderXML() ->encode(p->firstName())) + "</firstname>");
                 if (!p->lastName().isEmpty())
-                    result.append("<lastname>" + EncoderXML::currentEncoderXML() ->encode(p->lastName()) + "</lastname>");
+                    result.append("<lastname>" +  cleanXML(EncoderXML::currentEncoderXML() ->encode(p->lastName())) + "</lastname>");
                 if (!p->suffix().isEmpty())
-                    result.append("<suffix>" + EncoderXML::currentEncoderXML() ->encode(p->suffix()) + "</suffix>");
+                    result.append("<suffix>" +  cleanXML(EncoderXML::currentEncoderXML() ->encode(p->suffix())) + "</suffix>");
                 result.append("</person>");
             }
             // TODO: Other data types
             else
-                result.append("<text>" + EncoderXML::currentEncoderXML() ->encode(PlainTextValue::text(*item)) + "</text>");
+                result.append("<text>" + cleanXML(EncoderXML::currentEncoderXML() ->encode(PlainTextValue::text(*item))) + "</text>");
         }
     }
 
     return result;
 }
 
+QString FileExporterXML::cleanXML(const QString &text)
+{
+    QString result = text;
+    result = result.replace(removal, "");
+    return result;
+}

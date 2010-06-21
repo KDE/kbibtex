@@ -26,10 +26,6 @@
 #include <fileexporter.h>
 #include <value.h>
 
-namespace KBibTeX
-{
-namespace IO {
-
 class Entry;
 class Macro;
 class Comment;
@@ -58,9 +54,8 @@ private:
     bool writeEntry(QTextStream &stream, const Entry* entry);
     bool writeMacro(QTextStream &stream, const Macro* macro);
     bool writeComment(QTextStream &stream, const Comment* comment);
-};
 
-}
-}
+    static QString cleanXML(const QString &text);
+};
 
 #endif
