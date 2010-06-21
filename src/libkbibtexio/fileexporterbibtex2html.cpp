@@ -25,8 +25,6 @@
 #include "fileexporterbibtex.h"
 #include "fileexporterbibtex2html.h"
 
-using namespace KBibTeX::IO;
-
 class FileExporterBibTeX2HTML::FileExporterBibTeX2HTMLPrivate
 {
 private:
@@ -93,7 +91,7 @@ public:
 };
 
 FileExporterBibTeX2HTML::FileExporterBibTeX2HTML()
-        : FileExporterToolchain(), d(new FileExporterBibTeX2HTMLPrivate(this, workingDir))
+        : FileExporterToolchain(), d(new FileExporterBibTeX2HTMLPrivate(this, tempDir.name()))
 {
     // nothing
 }

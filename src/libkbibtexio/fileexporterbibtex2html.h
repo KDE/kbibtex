@@ -22,10 +22,6 @@
 
 #include <fileexportertoolchain.h>
 
-namespace KBibTeX
-{
-namespace IO {
-
 /**
 @author Thomas Fischer
 */
@@ -44,8 +40,5 @@ private:
     class FileExporterBibTeX2HTMLPrivate;
     FileExporterBibTeX2HTMLPrivate *d;
 };
-
-}
-}
 
 #endif // KBIBTEX_IO_FILEEXPORTERBIBTEX2HTML_H
