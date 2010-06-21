@@ -21,46 +21,40 @@
 #ifndef KBIBTEX_GUI_DIALOGS_ENTRYVIEWER_H
 #define KBIBTEX_GUI_DIALOGS_ENTRYVIEWER_H
 
-#include <QWidget>
+#include <QTabWidget>
 
 #include <kbibtexgui_export.h>
 
-#include <entry.h>
+class QTextEdit;
 
-namespace KBibTeX
-{
-namespace GUI {
-
-namespace Widgets {
-class EntryListModel;
-class ValueItemDelegate;
-}
-
-namespace Dialogs {
+class FieldInput;
+class Entry;
 
 /**
 @author Thomas Fischer
 */
-class KBIBTEXGUI_EXPORT EntryViewer : public QWidget
+class KBIBTEXGUI_EXPORT EntryViewer : public QTabWidget
 {
     Q_OBJECT
 public:
-    EntryViewer(const KBibTeX::IO::Entry *entry, QWidget *parent);
+    EntryViewer(const Entry *entry, QWidget *parent);
 
 public slots:
     void reset();
 
 protected:
-    KBibTeX::GUI::Widgets::EntryListModel *model();
-    KBibTeX::GUI::Widgets::ValueItemDelegate *delegate();
+    QMap<QString, FieldInput*> bibtexKeyToWidget;
+    QTextEdit *sourceEdit;
+
+    void setReadOnly(bool isReadOnly);
+    void resetSource(const Entry *entry);
+
+private slots:
+    void resetSource();
 
 private:
     class EntryViewerPrivate;
     EntryViewerPrivate *d;
 };
-
-}
-}
-}
 
 #endif // KBIBTEX_GUI_DIALOGS_ENTRYVIEWER_H

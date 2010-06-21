@@ -18,32 +18,51 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include <entrylistmodel.h>
-#include "entryeditor.h"
+#include <KDebug>
 
-using namespace KBibTeX::GUI::Dialogs;
+#include <entry.h>
+#include <fieldinput.h>
+#include "entryeditor.h"
 
 class EntryEditor::EntryEditorPrivate
 {
 public:
+    Entry *entry;
     EntryEditor *p;
-    KBibTeX::IO::Entry *entry;
     bool isModified;
 
-    EntryEditorPrivate(KBibTeX::IO::Entry *e, EntryEditor *parent)
-            : p(parent), entry(e) {
+    EntryEditorPrivate(Entry *e, EntryEditor *parent)
+            : entry(e), p(parent) {
         isModified = false;
     }
 
     void apply() {
-        p->model()->applyToEntry(*entry);
+        apply(entry);
+    }
+
+    void apply(Entry *entry) {
+        entry->clear();
+
+        for (QMap<QString, FieldInput*>::Iterator it = p->bibtexKeyToWidget.begin(); it != p->bibtexKeyToWidget.end(); ++it) {
+            Value value;
+            it.value()->applyTo(value);
+            if (!value.isEmpty()) {
+                kDebug() << " inserting " << it.key() << " = " << PlainTextValue::text(value);
+                entry->insert(it.key(), value);
+            }
+        }
+
+        // TODO: other fields
     }
 };
 
-EntryEditor::EntryEditor(KBibTeX::IO::Entry *entry, QWidget *parent)
+EntryEditor::EntryEditor(Entry *entry, QWidget *parent)
         : EntryViewer(entry, parent), d(new EntryEditorPrivate(entry, this))
 {
-    connect((QObject*)delegate(), SIGNAL(modified()), this, SLOT(fieldModified())); // FIXME: For some reason, delegate has to be cast to QObject* ...
+    reset();
+    setReadOnly(false);
+
+    connect(this, SIGNAL(currentChanged(int)), this, SLOT(tabChanged(int)));
 }
 
 void EntryEditor::apply()
@@ -58,8 +77,12 @@ void EntryEditor::reset()
     emit modified(false);
 }
 
-void EntryEditor::fieldModified()
+void EntryEditor::tabChanged(int index)
 {
-    d->isModified = true;
-    emit modified(true);
+    if (index + 1 == count()) {
+        Entry temp(*(d->entry)); // FIXME: switch to references
+        d->apply(&temp);
+        resetSource(&temp);
+    } else {
+    }
 }

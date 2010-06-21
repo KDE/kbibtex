@@ -25,11 +25,6 @@
 
 #include "entryviewer.h"
 
-namespace KBibTeX
-{
-namespace GUI {
-namespace Dialogs {
-
 /**
 @author Thomas Fischer
 */
@@ -37,7 +32,7 @@ class KBIBTEXGUI_EXPORT EntryEditor : public EntryViewer
 {
     Q_OBJECT
 public:
-    EntryEditor(KBibTeX::IO::Entry *entry, QWidget *parent);
+    EntryEditor(Entry *entry, QWidget *parent);
 
 signals:
     void modified(bool enableApply);
@@ -45,15 +40,14 @@ signals:
 public slots:
     void apply();
     void reset();
-    void fieldModified();
+
+private slots:
+    void tabChanged(int index);
 
 private:
     class EntryEditorPrivate;
     EntryEditorPrivate *d;
 };
 
-}
-}
-}
 
 #endif // KBIBTEX_GUI_DIALOGS_ENTRYEDITOR_H
