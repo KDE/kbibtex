@@ -24,8 +24,6 @@
 
 #define max(a,b) ((a)>(b)?(a):(b))
 
-using namespace KBibTeX::IO;
-
 // FIXME: Check if using those constants in the program is really necessary
 // or can be replace by config files
 const QLatin1String Entry::ftAbstract = QLatin1String("abstract");

@@ -24,10 +24,6 @@
 
 #include "kbibtexio_export.h"
 
-namespace KBibTeX
-{
-namespace IO {
-
 /**
  * Base class for bibliographic elements in a BibTeX file.
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
@@ -38,8 +34,5 @@ public:
     Element();
     virtual ~Element();
 };
-
-}
-}
 
 #endif

@@ -27,10 +27,6 @@
 
 class QIODevice;
 
-namespace KBibTeX
-{
-namespace IO {
-
 class File;
 class Element;
 
@@ -59,8 +55,5 @@ public slots:
 protected:
     QMutex m_mutex;
 };
-
-}
-}
 
 #endif // KBIBTEX_IO_FILEEXPORTER_H

@@ -22,10 +22,6 @@
 
 #include <QString>
 
-namespace KBibTeX
-{
-namespace IO {
-
 /**
  * Base class for that convert between different textual representations
  * for non-ASCII characters. Examples for external textual representations
@@ -67,8 +63,5 @@ public:
         return text;
     };
 };
-
-}
-}
 
 #endif

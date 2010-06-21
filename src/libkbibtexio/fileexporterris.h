@@ -24,10 +24,6 @@
 
 #include <fileexporter.h>
 
-namespace KBibTeX
-{
-namespace IO {
-
 class KBIBTEXIO_EXPORT FileExporterRIS : public FileExporter
 {
 public:
@@ -47,8 +43,5 @@ private:
     bool writeEntry(QTextStream &stream, const Entry* entry, const File* bibtexfile = NULL);
     bool writeKeyValue(QTextStream &stream, const QString& key, const QString&value);
 };
-
-}
-}
 
 #endif

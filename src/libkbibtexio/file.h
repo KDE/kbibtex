@@ -28,9 +28,6 @@
 
 #include "kbibtexio_export.h"
 
-namespace KBibTeX
-{
-namespace IO {
 
 class Element;
 
@@ -42,7 +39,7 @@ class Element;
  * @see Element
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
-class KBIBTEXIO_EXPORT File : public QList<KBibTeX::IO::Element*>
+class KBIBTEXIO_EXPORT File : public QList<Element*>
 {
 public:
 
@@ -64,8 +61,5 @@ public:
      */
     QStringList allKeys() const;
 };
-
-}
-}
 
 #endif // KBIBTEX_IO_FILE_H

@@ -19,8 +19,6 @@
 ***************************************************************************/
 #include "fileexporter.h"
 
-using namespace KBibTeX::IO;
-
 FileExporter::FileExporter() : QObject()
 {
     // nothing

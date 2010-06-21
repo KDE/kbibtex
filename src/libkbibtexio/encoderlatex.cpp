@@ -26,8 +26,6 @@
 
 #include "encoderlatex.h"
 
-using namespace KBibTeX::IO;
-
 EncoderLaTeX *encoderLaTeX = NULL;
 
 static struct Decomposition {

@@ -21,8 +21,6 @@
 
 #include "element.h"
 
-using namespace KBibTeX::IO;
-
 Element::Element()
 {
     // nothing

@@ -22,8 +22,6 @@
 
 #include "encoderxml.h"
 
-using namespace KBibTeX::IO;
-
 EncoderXML *encoderXML = NULL;
 
 static const struct EncoderXMLCharMapping {

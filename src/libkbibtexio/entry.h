@@ -25,10 +25,6 @@
 #include "element.h"
 #include "value.h"
 
-namespace KBibTeX
-{
-namespace IO {
-
 /**
  * This class represents an entry in a BibTeX file such as an article
  * or a book. This class is essentially a map from keys such as title,
@@ -176,8 +172,5 @@ private:
     class EntryPrivate;
     EntryPrivate * const d;
 };
-
-}
-}
 
 #endif // BIBTEXBIBTEXENTRY_H

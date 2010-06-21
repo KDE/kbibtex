@@ -22,10 +22,6 @@
 
 #include "encoder.h"
 
-namespace KBibTeX
-{
-namespace IO {
-
 /**
  * Base class for that convert between different textual representations
  * for non-ASCII characters, specialized for LaTeX.
@@ -51,8 +47,5 @@ private:
     class EncoderLaTeXPrivate;
     EncoderLaTeXPrivate * const d;
 };
-
-}
-}
 
 #endif // ENCODERLATEX_H

@@ -25,10 +25,6 @@
 class QString;
 class QRegExp;
 
-namespace KBibTeX
-{
-namespace IO {
-
 /**
  * Base class for that convert between different textual representations
  * for non-ASCII characters, specialized for XML.
@@ -51,8 +47,5 @@ private:
     class EncoderXMLPrivate;
     EncoderXMLPrivate * const d;
 };
-
-}
-}
 
 #endif // KBIBTEX_IO_ENCODERXML_H

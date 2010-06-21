@@ -26,8 +26,6 @@
 
 #include "fileexporterris.h"
 
-using namespace KBibTeX::IO;
-
 FileExporterRIS::FileExporterRIS() : FileExporter()
 {
     // nothing

@@ -22,10 +22,6 @@
 
 #include <element.h>
 
-namespace KBibTeX
-{
-namespace IO {
-
 /**
  * This class represents a comment in a BibTeX file. In BibTeX files,
  * everything that cannot be interpreted as a BibTeX comment is see
@@ -82,8 +78,5 @@ private:
     class CommentPrivate;
     CommentPrivate * const d;
 };
-
-}
-}
 
 #endif // KBIBTEX_IO_COMMENT_H

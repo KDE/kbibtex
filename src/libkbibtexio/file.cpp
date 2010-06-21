@@ -31,10 +31,8 @@
 #include <macro.h>
 #include <comment.h>
 
-using namespace KBibTeX::IO;
-
 File::File()
-        : QList<KBibTeX::IO::Element*>()
+        : QList<Element*>()
 {
     // nothing
 }
