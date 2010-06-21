@@ -20,53 +20,78 @@
 
 #include <QLayout>
 #include <QApplication>
+#include <QTextEdit>
 
 #include <KPushButton>
 #include <KLineEdit>
 
 #include "menulineedit.h"
 
-using namespace KBibTeX::GUI::Widgets;
-
 class MenuLineEdit::MenuLineEditPrivate
 {
 private:
     MenuLineEdit *p;
+    bool isMultiLine;
+    QHBoxLayout *hLayout;
 
 public:
-    MenuLineEditPrivate(MenuLineEdit *parent) {
-        p = parent;
-    }
-
     KPushButton *m_pushButtonType;
-    KLineEdit *m_lineEditText;
+    KLineEdit *m_singleLineEditText;
+    QTextEdit *m_multiLineEditText;
+
+    MenuLineEditPrivate(bool isMultiLine, MenuLineEdit *parent)
+            : p(parent), m_singleLineEditText(NULL), m_multiLineEditText(NULL) {
+        this->isMultiLine = isMultiLine;
+    }
 
     void setupUI() {
         p->setObjectName("FieldLineEdit");
         p->setFrameShape(QFrame::StyledPanel);
 
-        QHBoxLayout *hLayout = new QHBoxLayout(p);
+        hLayout = new QHBoxLayout(p);
         hLayout->setMargin(0);
         hLayout->setSpacing(2);
 
         m_pushButtonType = new KPushButton(p);
         hLayout->addWidget(m_pushButtonType);
+        hLayout->setStretchFactor(m_pushButtonType, 0);
         m_pushButtonType->setObjectName("FieldLineEditButton");
 
-        m_lineEditText = new KLineEdit(p);
-        hLayout->addWidget(m_lineEditText);
-        m_lineEditText->setObjectName("FieldLineEditText");
-        m_lineEditText->setClearButtonShown(true);
-        connect(m_lineEditText, SIGNAL(editingFinished()), p, SIGNAL(editingFinished()));
+        if (isMultiLine) {
+            m_multiLineEditText = new QTextEdit(p);
+            hLayout->addWidget(m_multiLineEditText);
+            m_multiLineEditText->setObjectName("FieldLineEditText");
+            connect(m_multiLineEditText->document(), SIGNAL(modificationChanged(bool)), p, SIGNAL(editingFinished()));
+            m_multiLineEditText->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
+        } else {
+            m_singleLineEditText = new KLineEdit(p);
+            hLayout->addWidget(m_singleLineEditText);
+            hLayout->setStretchFactor(m_singleLineEditText, 100);
+            m_singleLineEditText->setObjectName("FieldLineEditText");
+            m_singleLineEditText->setClearButtonShown(true);
+            connect(m_singleLineEditText, SIGNAL(editingFinished()), p, SIGNAL(editingFinished()));
+            m_singleLineEditText->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
+        }
 
-        qApp->setStyleSheet("QFrame#FieldLineEdit { background-color: " + QPalette().color(QPalette::Base).name() + "; } KLineEdit#FieldLineEditText { border-style: none; } KPushButton#FieldLineEditButton { padding: 0px; margin-left:2px; margin-right:2px; text-align: left; width: " + QString::number(m_pushButtonType->height() + 1) + "; background-color: " + QPalette().color(QPalette::Base).name() + "; border-style: none; }");
+        qApp->setStyleSheet("QFrame#FieldLineEdit { background-color: " + QPalette().color(QPalette::Base).name() + "; } QTextEdit#FieldLineEditText { border-style: none; } KLineEdit#FieldLineEditText { border-style: none; } KPushButton#FieldLineEditButton { padding: 0px; margin-left:2px; margin-right:2px; text-align: left; background-color: " + QPalette().color(QPalette::Base).name() + "; border-style: none; } KPushButton#MonthSelector { padding: 0px; margin-left:2px; margin-right:2px; text-align: left; background-color: " + QPalette().color(QPalette::Base).name() + "; border-style: none; }");
 
-        p->setSizePolicy(m_lineEditText->sizePolicy());
+        p->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
     }
+
+    void prependWidget(QWidget *widget) {
+        widget->setParent(p);
+        hLayout->insertWidget(0, widget);
+    }
+
+    void appendWidget(QWidget *widget) {
+        widget->setParent(p);
+        hLayout->addWidget(widget);
+    }
+
 };
 
-MenuLineEdit::MenuLineEdit(QWidget *parent)
-        : QFrame(parent), d(new MenuLineEditPrivate(this))
+MenuLineEdit::MenuLineEdit(bool isMultiLine, QWidget *parent)
+        : QFrame(parent), d(new MenuLineEditPrivate(isMultiLine, this))
 {
     d->setupUI();
 }
@@ -78,17 +103,27 @@ void MenuLineEdit::setMenu(QMenu *menu)
 
 void MenuLineEdit::setReadOnly(bool readOnly)
 {
-    d->m_lineEditText->setReadOnly(readOnly);
+    if (d->m_singleLineEditText != NULL)
+        d->m_singleLineEditText->setReadOnly(readOnly);
+    if (d->m_multiLineEditText != NULL)
+        d->m_multiLineEditText->setReadOnly(readOnly);
 }
 
 QString MenuLineEdit::text() const
 {
-    return d->m_lineEditText->text();
+    if (d->m_singleLineEditText != NULL)
+        return d->m_singleLineEditText->text();
+    if (d->m_multiLineEditText != NULL)
+        return d->m_multiLineEditText->document()->toPlainText();
+    return QLatin1String("");
 }
 
 void MenuLineEdit::setText(const QString &text)
 {
-    d->m_lineEditText->setText(text);
+    if (d->m_singleLineEditText != NULL)
+        d->m_singleLineEditText->setText(text);
+    if (d->m_multiLineEditText != NULL)
+        d->m_multiLineEditText->document()->setPlainText(text);
 }
 
 void MenuLineEdit::setIcon(const KIcon & icon)
@@ -98,7 +133,10 @@ void MenuLineEdit::setIcon(const KIcon & icon)
 
 void MenuLineEdit::setFont(const QFont & font)
 {
-    d->m_lineEditText->setFont(font);
+    if (d->m_singleLineEditText != NULL)
+        d->m_singleLineEditText->setFont(font);
+    if (d->m_multiLineEditText != NULL)
+        d->m_multiLineEditText->document()->setDefaultFont(font);
 }
 
 void MenuLineEdit::setButtonToolTip(const QString &text)
@@ -106,7 +144,21 @@ void MenuLineEdit::setButtonToolTip(const QString &text)
     d->m_pushButtonType->setToolTip(text);
 }
 
+void MenuLineEdit::prependWidget(QWidget *widget)
+{
+    d->prependWidget(widget);
+}
+
+void MenuLineEdit::appendWidget(QWidget *widget)
+{
+    d->appendWidget(widget);
+}
+
 bool MenuLineEdit::isModified() const
 {
-    return d->m_lineEditText->isModified();
+    if (d->m_singleLineEditText != NULL)
+        return d->m_singleLineEditText->isModified();
+    if (d->m_multiLineEditText != NULL)
+        return d->m_multiLineEditText->document()->isModified();
+    return false;
 }

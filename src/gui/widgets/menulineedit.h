@@ -27,11 +27,6 @@
 class QMenu;
 class KIcon;
 
-namespace KBibTeX
-{
-namespace GUI {
-namespace Widgets {
-
 /**
 @author Thomas Fischer
 */
@@ -40,7 +35,7 @@ class MenuLineEdit : public QFrame
     Q_OBJECT
 
 public:
-    MenuLineEdit(QWidget *parent);
+    MenuLineEdit(bool isMultiLine, QWidget *parent);
 
     void setMenu(QMenu *menu);
     void setReadOnly(bool);
@@ -49,6 +44,9 @@ public:
     void setIcon(const KIcon & icon);
     void setFont(const QFont & font);
     void setButtonToolTip(const QString &);
+
+    void prependWidget(QWidget *widget);
+    void appendWidget(QWidget *widget);
 
     bool isModified() const;
 
@@ -60,9 +58,5 @@ private:
     MenuLineEditPrivate * const d;
 };
 
-
-}
-}
-}
 
 #endif // KBIBTEX_GUI_MENULINEEDIT_H
