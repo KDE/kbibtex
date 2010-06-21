@@ -23,17 +23,10 @@
 
 #include <KAboutData>
 
-namespace KBibTeX
-{
-namespace Program {
-
 class KBibTeXAboutData : public KAboutData
 {
 public:
     KBibTeXAboutData();
 };
-
-}
-}
 
 #endif // KBIBTEX_PROGRAM_ABOUT_H

@@ -23,14 +23,12 @@
 
 #include "about.h"
 
-using namespace KBibTeX::Program;
-
 static const char ProgramId[] =          "kbibtex";
 static const char ProgramVersion[] =     "0.3.50";
 static const char ProgramHomepage[] =    "http://home.gna.org/kbibtex/";
 
 KBibTeXAboutData::KBibTeXAboutData()
-        : KAboutData(ProgramId, 0, ki18n("KBibTeX"), ProgramVersion, ki18n("BibTeX editor for KDE"), KAboutData::License_GPL_V2, ki18n("Copyright 2004-2009 Thomas Fischer"), ki18n("Edit bibliography files"), ProgramHomepage)
+        : KAboutData(ProgramId, 0, ki18n("KBibTeX"), ProgramVersion, ki18n("BibTeX editor for KDE"), KAboutData::License_GPL_V2, ki18n("Copyright 2004-2010 Thomas Fischer"), ki18n("Edit bibliography files"), ProgramHomepage)
 {
 //     setOrganizationDomain( "kde.org" );
     addAuthor(ki18n("Thomas Fischer"), ki18n("Author"), "fischer@unix-ag.uni-kl.de");
