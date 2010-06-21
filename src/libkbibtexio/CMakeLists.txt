@@ -24,6 +24,8 @@ set( kbibtexio_LIB_SRCS
 	macro.cpp
 	preamble.cpp
 	value.cpp
+	config/bibtexfields.cpp
+	config/bibtexentries.cpp
 )
 
 add_definitions( -DMAKE_KBIBTEXIO_LIB )
