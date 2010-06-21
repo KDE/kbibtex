@@ -42,9 +42,8 @@
 </xsl:template>
 
 <xsl:template match="journal">
-<i><xsl:value-of select="."/></i>
+<span style="font-style:italic;"><xsl:value-of select="."/></span>
 <xsl:if test="string-length(../volume)>0">
-<xsl:text> </xsl:text>
 <xsl:value-of select="../volume"/>
 <xsl:if test="string-length(../number)>0">
 <xsl:text>(</xsl:text>
@@ -104,17 +103,20 @@
 <div style="margin:0px; padding: 0.5ex; background: #ec6; font-size: 125%;">
 <xsl:apply-templates select="title" />
 </div>
-<xsl:if test="string-length(journal)>0 or string-length(booktitle)>0 ">
+<xsl:if test="string-length(journal)>0 or string-length(booktitle)>0 or string-length(year)>0">
 <div style="margin:0px; padding: 0.5ex; background: #900; color: white;">
 <xsl:if test="string-length(journal)>0"><xsl:apply-templates select="journal" /></xsl:if>
 <xsl:if test="string-length(booktitle)>0"><xsl:apply-templates select="booktitle" /></xsl:if>
-</div>
-</xsl:if>
+<xsl:if test="( string-length(journal)>0 or string-length(booktitle)>0 ) and string-length(year)>0"><xsl:text>, </xsl:text></xsl:if>
 <xsl:if test="string-length(year)>0">
-<div style="margin:0px; padding: 0.5ex; text-align: right; font-size: 80%;">
-<xsl:text>Date: </xsl:text>
 <xsl:if test="string-length(month)>0"><xsl:apply-templates select="month" /><xsl:text> </xsl:text></xsl:if>
 <xsl:apply-templates select="year" />
+</xsl:if>
+</div>
+</xsl:if>
+<xsl:if test="string-length(abstract)>0">
+<div style="margin:0px; padding: 0.5ex; padding-top: 0ex; text-align: justify; font-size: 80%; color: #333;">
+<xsl:apply-templates select="abstract" />
 </div>
 </xsl:if>
 <!--
