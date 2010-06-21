@@ -6,21 +6,21 @@ include_directories(
 	${CMAKE_CURRENT_SOURCE_DIR}
 	${CMAKE_CURRENT_SOURCE_DIR}/dialogs
 	${CMAKE_CURRENT_SOURCE_DIR}/widgets
+	${CMAKE_CURRENT_SOURCE_DIR}/widgets/fieldinput
 	${CMAKE_CURRENT_SOURCE_DIR}/config
 	${CMAKE_CURRENT_SOURCE_DIR}/../libkbibtexio/
+	${CMAKE_CURRENT_SOURCE_DIR}/../libkbibtexio/config
 )
 
 set( kbibtexgui_LIB_SRCS
 	widgets/bibtexfileview.cpp
 	widgets/bibtexfilemodel.cpp
 	widgets/menulineedit.cpp
-	widgets/fieldlineedit.cpp
-	widgets/fieldeditor.cpp
-	widgets/entrylistview.cpp
-	widgets/entrylistmodel.cpp
+	widgets/fieldinput/fieldinput.cpp
+	widgets/fieldinput/fieldlineedit.cpp
+	widgets/fieldinput/fieldlistedit.cpp
 	widgets/filterbar.cpp
-	widgets/fieldwidget.cpp
-	config/bibtexfields.cpp
+	config/entrylayout.cpp
 	dialogs/entryviewer.cpp
 	dialogs/entryeditor.cpp
 	bibtexeditor.cpp

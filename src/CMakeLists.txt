@@ -13,6 +13,7 @@ add_definitions(
 	${KDE4_DEFINITIONS}
 )
 include_directories(
+	${PROJECT_SOURCE_DIR}/src
 	${CMAKE_SOURCE_DIR}
 	${CMAKE_BINARY_DIR}
 	${KDE4_INCLUDES}
