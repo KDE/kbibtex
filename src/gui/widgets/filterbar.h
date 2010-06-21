@@ -26,11 +26,6 @@
 
 #include "bibtexfilemodel.h"
 
-namespace KBibTeX
-{
-namespace GUI {
-namespace Widgets {
-
 /**
 @author Thomas Fischer
 */
@@ -40,13 +35,13 @@ class KBIBTEXGUI_EXPORT FilterBar : public QWidget
 public:
     FilterBar(QWidget *parent);
 
-    KBibTeX::GUI::Widgets::SortFilterBibTeXFileModel::FilterQuery filter();
+    SortFilterBibTeXFileModel::FilterQuery filter();
 
 public slots:
     void clearFilter();
 
 signals:
-    void filterChanged(KBibTeX::GUI::Widgets::SortFilterBibTeXFileModel::FilterQuery);
+    void filterChanged(SortFilterBibTeXFileModel::FilterQuery);
 
 private:
     class FilterBarPrivate;
@@ -55,9 +50,5 @@ private:
 private slots:
     void widgetsChanged();
 };
-
-}
-}
-}
 
 #endif // KBIBTEX_GUI_FILTERBAR_H

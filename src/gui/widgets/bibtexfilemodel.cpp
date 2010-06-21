@@ -30,13 +30,11 @@
 
 #include "bibtexfilemodel.h"
 
-using namespace KBibTeX::GUI::Widgets;
-
 void SortFilterBibTeXFileModel::setSourceModel(QAbstractItemModel *model)
 {
     QSortFilterProxyModel::setSourceModel(model);
     m_internalModel = dynamic_cast<BibTeXFileModel*>(model);
-    m_bibtexFields = KBibTeX::GUI::Config::BibTeXFields::self();
+    m_bibtexFields = BibTeXFields::self();
 }
 
 BibTeXFileModel *SortFilterBibTeXFileModel::bibTeXSourceModel()
@@ -44,7 +42,7 @@ BibTeXFileModel *SortFilterBibTeXFileModel::bibTeXSourceModel()
     return m_internalModel;
 }
 
-void SortFilterBibTeXFileModel::updateFilter(KBibTeX::GUI::Widgets::SortFilterBibTeXFileModel::FilterQuery filterQuery)
+void SortFilterBibTeXFileModel::updateFilter(SortFilterBibTeXFileModel::FilterQuery filterQuery)
 {
     m_filterQuery = filterQuery;
     invalidateFilter();
@@ -53,22 +51,22 @@ void SortFilterBibTeXFileModel::updateFilter(KBibTeX::GUI::Widgets::SortFilterBi
 bool SortFilterBibTeXFileModel::lessThan(const QModelIndex & left, const QModelIndex & right) const
 {
     if (left.column() == right.column() && (m_bibtexFields->at(left.column()).raw == QLatin1String("author") || m_bibtexFields->at(left.column()).raw == ("editor"))) { /// special sorting for authors or editors: check all names, compare last and then first names
-        KBibTeX::IO::Entry *entryA = dynamic_cast<KBibTeX::IO::Entry*>(m_internalModel->element(left.row()));
-        KBibTeX::IO::Entry *entryB = dynamic_cast<KBibTeX::IO::Entry*>(m_internalModel->element(right.row()));
+        Entry *entryA = dynamic_cast<Entry*>(m_internalModel->element(left.row()));
+        Entry *entryB = dynamic_cast<Entry*>(m_internalModel->element(right.row()));
         if (entryA == NULL || entryB == NULL) return  QSortFilterProxyModel::lessThan(left, right);
 
-        KBibTeX::IO::Value valueA = entryA->value(KBibTeX::IO::Entry::ftAuthor);
-        KBibTeX::IO::Value valueB = entryB->value(KBibTeX::IO::Entry::ftAuthor);
+        Value valueA = entryA->value(Entry::ftAuthor);
+        Value valueB = entryB->value(Entry::ftAuthor);
         if (valueA.isEmpty() &&  m_bibtexFields->at(left.column()).rawAlt == ("editor"))
-            valueA = entryA->value(KBibTeX::IO::Entry::ftEditor);
+            valueA = entryA->value(Entry::ftEditor);
         if (valueB.isEmpty() &&  m_bibtexFields->at(right.column()).rawAlt == ("editor"))
-            valueB = entryB->value(KBibTeX::IO::Entry::ftEditor);
+            valueB = entryB->value(Entry::ftEditor);
 
         if (valueA.isEmpty() || valueB.isEmpty()) return QSortFilterProxyModel::lessThan(left, right);
 
-        for (KBibTeX::IO::Value::Iterator itA = valueA.begin(), itB = valueB.begin(); itA != valueA.end() &&  itB != valueB.end(); ++itA, ++itB) {
-            KBibTeX::IO::Person *personA = dynamic_cast<KBibTeX::IO::Person *>(*itA);
-            KBibTeX::IO::Person *personB = dynamic_cast<KBibTeX::IO::Person *>(*itB);
+        for (Value::Iterator itA = valueA.begin(), itB = valueB.begin(); itA != valueA.end() &&  itB != valueB.end(); ++itA, ++itB) {
+            Person *personA = dynamic_cast<Person *>(*itA);
+            Person *personB = dynamic_cast<Person *>(*itB);
             if (personA == NULL || personB == NULL) return QSortFilterProxyModel::lessThan(left, right);
 
             QString nameA = personA->lastName().replace(QRegExp("[{}]"), "");
@@ -95,32 +93,32 @@ bool SortFilterBibTeXFileModel::filterAcceptsRow(int source_row, const QModelInd
 
     if (m_filterQuery.terms.isEmpty()) return true; /// empty filter query
 
-    KBibTeX::IO::Element *rowElement = m_internalModel->element(source_row);
+    Element *rowElement = m_internalModel->element(source_row);
     Q_ASSERT(rowElement != NULL);
-    KBibTeX::IO::Entry *entry = dynamic_cast<KBibTeX::IO::Entry*>(rowElement);
+    Entry *entry = dynamic_cast<Entry*>(rowElement);
 
     if (entry != NULL) {
-        for (KBibTeX::IO::Entry::ConstIterator it = entry->constBegin(); it != entry->constEnd(); ++it)
+        for (Entry::ConstIterator it = entry->constBegin(); it != entry->constEnd(); ++it)
             if (m_filterQuery.field.isEmpty() || m_filterQuery.field == it.key()) {
                 bool all = true;
                 for (QStringList::ConstIterator itsl = m_filterQuery.terms.constBegin(); itsl != m_filterQuery.terms.constEnd(); ++itsl) {
                     bool contains = it.value().containsPattern(*itsl);
-                    if (m_filterQuery.combination == KBibTeX::GUI::Widgets::SortFilterBibTeXFileModel::AnyTerm && contains)
+                    if (m_filterQuery.combination == SortFilterBibTeXFileModel::AnyTerm && contains)
                         return true;
                     all &= contains;
                 }
                 if (all) return true;
             }
     } else {
-        KBibTeX::IO::Macro *macro = dynamic_cast<KBibTeX::IO::Macro*>(rowElement);
+        Macro *macro = dynamic_cast<Macro*>(rowElement);
         if (macro != NULL) {
             // TODO
         } else {
-            KBibTeX::IO::Comment *comment = dynamic_cast<KBibTeX::IO::Comment*>(rowElement);
+            Comment *comment = dynamic_cast<Comment*>(rowElement);
             if (comment != NULL) {
                 // TODO
             } else {
-                KBibTeX::IO::Preamble *preamble = dynamic_cast<KBibTeX::IO::Preamble*>(rowElement);
+                Preamble *preamble = dynamic_cast<Preamble*>(rowElement);
                 if (preamble != NULL) {
                     // TODO
                 }  }  }
@@ -136,7 +134,7 @@ const QRegExp BibTeXFileModel::whiteSpace = QRegExp("(\\s\\n\\r\\t)+");
 BibTeXFileModel::BibTeXFileModel(QObject * parent)
         : QAbstractItemModel(parent), m_bibtexFile(NULL)
 {
-    m_bibtexFields = KBibTeX::GUI::Config::BibTeXFields::self();
+    m_bibtexFields = BibTeXFields::self();
 // TODO
 }
 
@@ -146,13 +144,13 @@ BibTeXFileModel::~BibTeXFileModel()
 // TODO
 }
 
-KBibTeX::IO::File *BibTeXFileModel::bibTeXFile()
+File *BibTeXFileModel::bibTeXFile()
 {
-    if (m_bibtexFile == NULL) m_bibtexFile = new KBibTeX::IO::File();
+    if (m_bibtexFile == NULL) m_bibtexFile = new File();
     return m_bibtexFile;
 }
 
-void BibTeXFileModel::setBibTeXFile(KBibTeX::IO::File *bibtexFile)
+void BibTeXFileModel::setBibTeXFile(File *bibtexFile)
 {
     m_bibtexFile = bibtexFile;
 }
@@ -196,8 +194,8 @@ QVariant BibTeXFileModel::data(const QModelIndex &index, int role) const
     if (index.row() < m_bibtexFile->count() && index.column() < m_bibtexFields->count()) {
         QString raw = m_bibtexFields->at(index.column()).raw;
         QString rawAlt = m_bibtexFields->at(index.column()).rawAlt;
-        KBibTeX::IO::Element* element = (*m_bibtexFile)[index.row()];
-        KBibTeX::IO::Entry* entry = dynamic_cast<KBibTeX::IO::Entry*>(element);
+        Element* element = (*m_bibtexFile)[index.row()];
+        Entry* entry = dynamic_cast<Entry*>(element);
         if (entry != NULL) {
             if (raw == "^id")
                 return QVariant(entry->id());
@@ -205,35 +203,35 @@ QVariant BibTeXFileModel::data(const QModelIndex &index, int role) const
                 return QVariant(entry->type());
             else {
                 if (entry->contains(raw)) {
-                    QString text = KBibTeX::IO::PlainTextValue::text(entry->value(raw), m_bibtexFile);
+                    QString text = PlainTextValue::text(entry->value(raw), m_bibtexFile);
                     text = text.replace(whiteSpace, " ");
                     return QVariant(text);
                 } else if (!rawAlt.isNull() && entry->contains(rawAlt)) {
-                    QString text = KBibTeX::IO::PlainTextValue::text(entry->value(rawAlt), m_bibtexFile);
+                    QString text = PlainTextValue::text(entry->value(rawAlt), m_bibtexFile);
                     text = text.replace(whiteSpace, " ");
                     return QVariant(text);
                 } else
                     return QVariant();
             }
         } else {
-            KBibTeX::IO::Macro* macro = dynamic_cast<KBibTeX::IO::Macro*>(element);
+            Macro* macro = dynamic_cast<Macro*>(element);
             if (macro != NULL) {
                 if (raw == "^id")
                     return QVariant(macro->key());
                 else if (raw == "^type")
                     return QVariant(i18n("Macro"));
-                else if (raw == KBibTeX::IO::Entry::ftTitle) {
-                    QString text = KBibTeX::IO::PlainTextValue::text(macro->value(), m_bibtexFile);
+                else if (raw == Entry::ftTitle) {
+                    QString text = PlainTextValue::text(macro->value(), m_bibtexFile);
                     text = text.replace(whiteSpace, " ");
                     return QVariant(text);
                 } else
                     return QVariant();
             } else {
-                KBibTeX::IO::Comment* comment = dynamic_cast<KBibTeX::IO::Comment*>(element);
+                Comment* comment = dynamic_cast<Comment*>(element);
                 if (comment != NULL) {
                     if (raw == "^type")
                         return QVariant(i18n("Comment"));
-                    else if (raw == KBibTeX::IO::Entry::ftTitle) {
+                    else if (raw == Entry::ftTitle) {
                         QString text = comment->text().replace(QRegExp("[\\s\\n\\r\\t]+"), " ");
                         return QVariant(text);
                     } else
@@ -260,7 +258,22 @@ QVariant BibTeXFileModel::headerData(int section, Qt::Orientation orientation, i
         return QString(i18n("Row %1")).arg(section);
 }
 
-KBibTeX::IO::Element* BibTeXFileModel::element(int row) const
+bool BibTeXFileModel::removeRow(int row, const QModelIndex & parent)
+{
+    if (row < 0 || row >= rowCount() || row >= m_bibtexFile->count())
+        return false;
+    if (parent != QModelIndex())
+        return false;
+
+    QModelIndex topLeft = index(qMax(0, row - 1), 0, parent);
+    QModelIndex bottomRight = index(qMin(rowCount() - 1, row + 1), 0, parent);
+    m_bibtexFile->removeAt(row);
+    emit dataChanged(topLeft, bottomRight);
+
+    return true;
+}
+
+Element* BibTeXFileModel::element(int row) const
 {
     if (m_bibtexFile == NULL || row < 0 || row >= m_bibtexFile->count()) return NULL;
 

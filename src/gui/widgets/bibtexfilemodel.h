@@ -33,11 +33,6 @@
 #include <entry.h>
 #include <bibtexfields.h>
 
-namespace KBibTeX
-{
-namespace GUI {
-namespace Widgets {
-
 class BibTeXFileModel;
 
 /**
@@ -64,7 +59,7 @@ public:
     BibTeXFileModel *bibTeXSourceModel();
 
 public slots:
-    void updateFilter(KBibTeX::GUI::Widgets::SortFilterBibTeXFileModel::FilterQuery);
+    void updateFilter(SortFilterBibTeXFileModel::FilterQuery);
 
 protected:
     virtual bool lessThan(const QModelIndex & left, const QModelIndex & right) const;
@@ -72,8 +67,8 @@ protected:
 
 private:
     BibTeXFileModel *m_internalModel;
-    KBibTeX::GUI::Config::BibTeXFields *m_bibtexFields;
-    KBibTeX::GUI::Widgets::SortFilterBibTeXFileModel::FilterQuery m_filterQuery;
+    BibTeXFields *m_bibtexFields;
+    SortFilterBibTeXFileModel::FilterQuery m_filterQuery;
 };
 
 
@@ -86,8 +81,8 @@ public:
     BibTeXFileModel(QObject * parent = 0);
     virtual ~BibTeXFileModel();
 
-    KBibTeX::IO::File *bibTeXFile();
-    void setBibTeXFile(KBibTeX::IO::File *bibtexFile);
+    File *bibTeXFile();
+    void setBibTeXFile(File *bibtexFile);
 
     virtual QModelIndex index(int row, int column, const QModelIndex & parent = QModelIndex()) const;
     virtual QModelIndex parent(const QModelIndex & index) const;
@@ -97,17 +92,16 @@ public:
     virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
-    KBibTeX::IO::Element* element(int row) const;
+    virtual bool removeRow(int row, const QModelIndex & parent = QModelIndex());
+
+    Element* element(int row) const;
 
 private:
-    KBibTeX::IO::File *m_bibtexFile;
-    KBibTeX::GUI::Config::BibTeXFields *m_bibtexFields;
+    File *m_bibtexFile;
+    BibTeXFields *m_bibtexFields;
 
     static const QRegExp whiteSpace;
 };
 
-}
-}
-}
 
 #endif // KBIBTEX_GUI_BIBTEXFILEMODEL_H

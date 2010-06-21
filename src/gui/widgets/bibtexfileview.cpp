@@ -28,8 +28,6 @@
 #include "bibtexfilemodel.h"
 #include "bibtexfileview.h"
 
-using namespace KBibTeX::GUI::Widgets;
-
 BibTeXFileView::BibTeXFileView(QWidget * parent)
         : QTreeView(parent), m_signalMapperBibTeXFields(new QSignalMapper(this))
 {
@@ -43,10 +41,10 @@ BibTeXFileView::BibTeXFileView(QWidget * parent)
     connect(header(), SIGNAL(sortIndicatorChanged(int, Qt::SortOrder)), this, SLOT(sort(int, Qt::SortOrder)));
 
     header()->setContextMenuPolicy(Qt::ActionsContextMenu);
-    KBibTeX::GUI::Config::BibTeXFields *bibtexFields = KBibTeX::GUI::Config::BibTeXFields::self();
+    BibTeXFields *bibtexFields = BibTeXFields::self();
 
     int col = 0;
-    for (KBibTeX::GUI::Config::BibTeXFields::Iterator it = bibtexFields->begin(); it != bibtexFields->end(); ++it, ++col) {
+    for (BibTeXFields::Iterator it = bibtexFields->begin(); it != bibtexFields->end(); ++it, ++col) {
         QString title = (*it).label;
         KAction *action = new KAction(title, header());
         action->setData(col);
@@ -69,10 +67,10 @@ BibTeXFileView::BibTeXFileView(QWidget * parent)
 
 BibTeXFileView::~BibTeXFileView()
 {
-    KBibTeX::GUI::Config::BibTeXFields *bibtexFields = KBibTeX::GUI::Config::BibTeXFields::self();
+    BibTeXFields *bibtexFields = BibTeXFields::self();
 
     for (int i = header()->count() - 1; i >= 0; --i) {
-        KBibTeX::GUI::Config::FieldDescription fd = bibtexFields->at(i);
+        FieldDescription fd = bibtexFields->at(i);
         fd.width = columnWidth(i);
         bibtexFields->replace(i, fd);
     }
@@ -81,16 +79,16 @@ BibTeXFileView::~BibTeXFileView()
 
 void BibTeXFileView::resizeEvent(QResizeEvent */*event*/)
 {
-    KBibTeX::GUI::Config::BibTeXFields *bibtexFields = KBibTeX::GUI::Config::BibTeXFields::self();
+    BibTeXFields *bibtexFields = BibTeXFields::self();
     int sum = 0;
     int widgetWidth = size().width() - verticalScrollBar()->size().width();
 
-    for (KBibTeX::GUI::Config::BibTeXFields::Iterator it = bibtexFields->begin(); it != bibtexFields->end(); ++it)
+    for (BibTeXFields::Iterator it = bibtexFields->begin(); it != bibtexFields->end(); ++it)
         if ((*it).visible)
             sum += (*it).width;
 
     int col = 0;
-    for (KBibTeX::GUI::Config::BibTeXFields::Iterator it = bibtexFields->begin(); it != bibtexFields->end(); ++it, ++col) {
+    for (BibTeXFields::Iterator it = bibtexFields->begin(); it != bibtexFields->end(); ++it, ++col) {
         setColumnWidth(col, (*it).width * widgetWidth / sum);
         setColumnHidden(col, !((*it).visible));
     }
@@ -104,8 +102,8 @@ void BibTeXFileView::headerActionToggled(QObject *obj)
     int col = (int)action->data().toInt(&ok);
     if (!ok) return;
 
-    KBibTeX::GUI::Config::BibTeXFields *bibtexFields = KBibTeX::GUI::Config::BibTeXFields::self();
-    KBibTeX::GUI::Config::FieldDescription fd = bibtexFields->at(col);
+    BibTeXFields *bibtexFields = BibTeXFields::self();
+    FieldDescription fd = bibtexFields->at(col);
     fd.visible = action->isChecked();
     if (fd.width < 4) fd.width = width() / 10;
     bibtexFields->replace(col, fd);
@@ -115,7 +113,7 @@ void BibTeXFileView::headerActionToggled(QObject *obj)
 
 void BibTeXFileView::headerResetToDefaults()
 {
-    KBibTeX::GUI::Config::BibTeXFields::self()->resetToDefaults();
+    BibTeXFields::self()->resetToDefaults();
     resizeEvent(NULL);
 }
 

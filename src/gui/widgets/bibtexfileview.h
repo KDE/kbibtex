@@ -26,11 +26,6 @@
 
 class QSignalMapper;
 
-namespace KBibTeX
-{
-namespace GUI {
-namespace Widgets {
-
 /**
 @author Thomas Fischer
 */
@@ -53,8 +48,5 @@ private slots:
     void sort(int, Qt::SortOrder);
 };
 
-}
-}
-}
 
 #endif // KBIBTEX_GUI_BIBTEXFILEVIEW_H

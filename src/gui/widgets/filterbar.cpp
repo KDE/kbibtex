@@ -29,8 +29,6 @@
 #include "filterbar.h"
 #include "bibtexfields.h"
 
-using namespace KBibTeX::GUI::Widgets;
-
 class FilterBar::FilterBarPrivate
 {
 private:
@@ -52,9 +50,9 @@ public:
         comboBoxField->setCurrentIndex(0);
     }
 
-    KBibTeX::GUI::Widgets::SortFilterBibTeXFileModel::FilterQuery filter() {
-        KBibTeX::GUI::Widgets::SortFilterBibTeXFileModel::FilterQuery result;
-        result.combination = comboBoxCombination->currentIndex() == 0 ? KBibTeX::GUI::Widgets::SortFilterBibTeXFileModel::AnyTerm : KBibTeX::GUI::Widgets::SortFilterBibTeXFileModel::EveryTerm;
+    SortFilterBibTeXFileModel::FilterQuery filter() {
+        SortFilterBibTeXFileModel::FilterQuery result;
+        result.combination = comboBoxCombination->currentIndex() == 0 ? SortFilterBibTeXFileModel::AnyTerm : SortFilterBibTeXFileModel::EveryTerm;
         result.terms.clear();
         if (comboBoxCombination->currentIndex() == 2) /// exact phrase
             result.terms << comboBoxFilterText->lineEdit()->text();
@@ -101,8 +99,8 @@ FilterBar::FilterBar(QWidget *parent)
     d->comboBoxField->addItem(i18n("every field"), QVariant());
     d->comboBoxField->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 
-    KBibTeX::GUI::Config::BibTeXFields *bibTeXFiles = KBibTeX::GUI::Config::BibTeXFields::self();
-    for (KBibTeX::GUI::Config::BibTeXFields::Iterator it = bibTeXFiles->begin(); it != bibTeXFiles->end(); ++it)
+    BibTeXFields *bibTeXFiles = BibTeXFields::self();
+    for (BibTeXFields::Iterator it = bibTeXFiles->begin(); it != bibTeXFiles->end(); ++it)
         if ((*it).rawAlt.isEmpty())
             d->comboBoxField->addItem((*it).label, (*it).raw);
 
@@ -118,7 +116,7 @@ void FilterBar::clearFilter()
     emit filterChanged(d->filter());
 }
 
-KBibTeX::GUI::Widgets::SortFilterBibTeXFileModel::FilterQuery FilterBar::filter()
+SortFilterBibTeXFileModel::FilterQuery FilterBar::filter()
 {
     return d->filter();
 }
