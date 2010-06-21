@@ -28,32 +28,31 @@
 #include <bibtexfileview.h>
 #include <element.h>
 
-
-namespace KBibTeX
-{
-namespace GUI {
-
 /**
 @author Thomas Fischer
 */
-class KBIBTEXGUI_EXPORT BibTeXEditor : public KBibTeX::GUI::Widgets::BibTeXFileView
+class KBIBTEXGUI_EXPORT BibTeXEditor : public BibTeXFileView
 {
     Q_OBJECT
 public:
     BibTeXEditor(QWidget *parent);
 
-    const QList<KBibTeX::IO::Element*>& selectedElements() const;
-    const KBibTeX::IO::Element* currentElement() const;
+    const QList<Element*>& selectedElements() const;
+    const Element* currentElement() const;
 
 signals:
     void selectedElementsChanged();
-    void currentElementChanged(const KBibTeX::IO::Element*);
-    void elementExecuted(KBibTeX::IO::Element*);
+    void currentElementChanged(const Element*);
+    void elementExecuted(Element*);
+    void keyPressed(QKeyEvent *);
 
 public slots:
     void viewCurrentElement();
-    void viewElement(const KBibTeX::IO::Element*);
-    void editElement(KBibTeX::IO::Element*);
+    void viewElement(const Element*);
+    void editElement(Element*);
+
+protected:
+    void virtual keyPressEvent(QKeyEvent *event);
 
 protected slots:
     void currentChanged(const QModelIndex & current, const QModelIndex & previous);
@@ -61,11 +60,9 @@ protected slots:
     void itemActivated(const QModelIndex & index);
 
 private:
-    KBibTeX::IO::Element* m_current;
-    QList<KBibTeX::IO::Element*> m_selection;
+    Element* m_current;
+    QList<Element*> m_selection;
 };
 
-}
-}
 
 #endif // KBIBTEX_GUI_BIBTEXEDITOR_H

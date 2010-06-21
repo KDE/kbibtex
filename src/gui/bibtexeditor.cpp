@@ -27,10 +27,8 @@
 #include <bibtexfilemodel.h>
 #include "bibtexeditor.h"
 
-using namespace KBibTeX::GUI;
-
 BibTeXEditor::BibTeXEditor(QWidget *parent)
-        : KBibTeX::GUI::Widgets::BibTeXFileView(parent)
+        : BibTeXFileView(parent)
 {
     connect(this, SIGNAL(activated(QModelIndex)), this, SLOT(itemActivated(QModelIndex)));
 }
@@ -40,13 +38,13 @@ void BibTeXEditor::viewCurrentElement()
     viewElement(currentElement());
 }
 
-void BibTeXEditor::viewElement(const KBibTeX::IO::Element *element)
+void BibTeXEditor::viewElement(const Element *element)
 {
-    const KBibTeX::IO::Entry *entry = dynamic_cast<const KBibTeX::IO::Entry *>(element);
+    const Entry *entry = dynamic_cast<const Entry *>(element);
 
     if (entry != NULL) {
         KDialog dialog(this);
-        KBibTeX::GUI::Dialogs::EntryViewer entryViewer(entry, &dialog);
+        EntryViewer entryViewer(entry, &dialog);
         dialog.setCaption(i18n("View Entry"));
         dialog.setMainWidget(&entryViewer);
         dialog.setButtons(KDialog::Close);
@@ -54,13 +52,13 @@ void BibTeXEditor::viewElement(const KBibTeX::IO::Element *element)
     }
 }
 
-void BibTeXEditor::editElement(KBibTeX::IO::Element *element)
+void BibTeXEditor::editElement(Element *element)
 {
-    KBibTeX::IO::Entry *entry = dynamic_cast<KBibTeX::IO::Entry *>(element);
+    Entry *entry = dynamic_cast<Entry *>(element);
 
     if (entry != NULL) {
         KDialog dialog(this);
-        KBibTeX::GUI::Dialogs::EntryEditor entryEditor(entry, &dialog);
+        EntryEditor entryEditor(entry, &dialog);
         dialog.setCaption(i18n("Edit Entry"));
         dialog.setMainWidget(&entryEditor);
         dialog.setButtons(KDialog::Ok | KDialog::Apply | KDialog::Cancel | KDialog::Reset);
@@ -75,24 +73,30 @@ void BibTeXEditor::editElement(KBibTeX::IO::Element *element)
     }
 }
 
-const QList<KBibTeX::IO::Element*>& BibTeXEditor::selectedElements() const
+const QList<Element*>& BibTeXEditor::selectedElements() const
 {
     return m_selection;
 }
 
-const KBibTeX::IO::Element* BibTeXEditor::currentElement() const
+const Element* BibTeXEditor::currentElement() const
 {
-    KBibTeX::GUI::Widgets::SortFilterBibTeXFileModel *bibTeXFileModel = dynamic_cast<KBibTeX::GUI::Widgets::SortFilterBibTeXFileModel*>(model());
+    SortFilterBibTeXFileModel *bibTeXFileModel = dynamic_cast<SortFilterBibTeXFileModel*>(model());
     Q_ASSERT(bibTeXFileModel != NULL);
     QModelIndex currentMapped = bibTeXFileModel->mapToSource(currentIndex());
     return bibTeXFileModel->bibTeXSourceModel()->element(currentMapped.row());
+}
+
+void BibTeXEditor::keyPressEvent(QKeyEvent *event)
+{
+    QTreeView::keyPressEvent(event);
+    emit keyPressed(event);
 }
 
 void BibTeXEditor::currentChanged(const QModelIndex & current, const QModelIndex & previous)
 {
     QTreeView::currentChanged(current, previous);
 
-    KBibTeX::GUI::Widgets::SortFilterBibTeXFileModel *bibTeXFileModel = dynamic_cast<KBibTeX::GUI::Widgets::SortFilterBibTeXFileModel*>(model());
+    SortFilterBibTeXFileModel *bibTeXFileModel = dynamic_cast<SortFilterBibTeXFileModel*>(model());
     Q_ASSERT(bibTeXFileModel != NULL);
     QModelIndex currentMapped = bibTeXFileModel->mapToSource(current);
     m_current = bibTeXFileModel == NULL ? NULL : bibTeXFileModel->bibTeXSourceModel()->element(currentMapped.row());
@@ -104,7 +108,7 @@ void BibTeXEditor::selectionChanged(const QItemSelection & selected, const QItem
 {
     QTreeView::selectionChanged(selected, deselected);
 
-    KBibTeX::GUI::Widgets::SortFilterBibTeXFileModel *bibTeXFileModel = dynamic_cast<KBibTeX::GUI::Widgets::SortFilterBibTeXFileModel*>(model());
+    SortFilterBibTeXFileModel *bibTeXFileModel = dynamic_cast<SortFilterBibTeXFileModel*>(model());
     Q_ASSERT(bibTeXFileModel);
 
     QModelIndexList set = selected.indexes();
@@ -124,7 +128,7 @@ void BibTeXEditor::selectionChanged(const QItemSelection & selected, const QItem
 
 void BibTeXEditor::itemActivated(const QModelIndex & index)
 {
-    KBibTeX::GUI::Widgets::SortFilterBibTeXFileModel *bibTeXFileModel = dynamic_cast<KBibTeX::GUI::Widgets::SortFilterBibTeXFileModel*>(model());
+    SortFilterBibTeXFileModel *bibTeXFileModel = dynamic_cast<SortFilterBibTeXFileModel*>(model());
     Q_ASSERT(bibTeXFileModel != NULL);
     QModelIndex indexMapped = bibTeXFileModel->mapToSource(index);
     emit elementExecuted(bibTeXFileModel->bibTeXSourceModel()->element(indexMapped.row()));
