@@ -18,6 +18,7 @@ set( kbibtex_SRCS
 	documentlist.cpp
 	mdiwidget.cpp
 	referencepreview.cpp
+	searchform.cpp
 	openfileinfo.cpp
 )
 

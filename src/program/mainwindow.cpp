@@ -36,11 +36,10 @@
 #include "program.h"
 #include "mdiwidget.h"
 #include "referencepreview.h"
+#include "searchform.h"
 #include "openfileinfo.h"
 #include "bibtexeditor.h"
 #include "documentlist.h"
-
-using namespace KBibTeX::Program;
 
 class KBibTeXMainWindow::KBibTeXMainWindowPrivate
 {
@@ -51,10 +50,12 @@ public:
     KAction *actionClose;
     QDockWidget *dockDocumentList;
     QDockWidget *dockReferencePreview;
+    QDockWidget *dockSearchForm;
     KBibTeXProgram *program;
     DocumentList *listDocumentList;
     MDIWidget *mdiWidget;
     ReferencePreview *referencePreview;
+    SearchForm *searchForm;
     OpenFileInfoManager *openFileInfoManager;
 
     KBibTeXMainWindowPrivate(KBibTeXMainWindow *parent)
@@ -95,11 +96,19 @@ KBibTeXMainWindow::KBibTeXMainWindow(KBibTeXProgram *program)
     d->dockReferencePreview->setObjectName("dockReferencePreview");
     d->dockReferencePreview->setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
 
+    d->dockSearchForm = new QDockWidget(i18n("Online Search"), this);
+    d->dockSearchForm->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+    addDockWidget(Qt::BottomDockWidgetArea, d->dockSearchForm);
+    d->searchForm = new SearchForm(d->dockSearchForm);
+    d->dockSearchForm->setWidget(d->searchForm);
+    d->dockSearchForm->setObjectName("dockSearchFrom");
+    d->dockSearchForm->setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
+
     setXMLFile("kbibtexui.rc");
 
     d->mdiWidget = new MDIWidget(this);
     setCentralWidget(d->mdiWidget);
-    connect(d->mdiWidget, SIGNAL(documentSwitch(KBibTeX::GUI::BibTeXEditor *, KBibTeX::GUI::BibTeXEditor *)), this, SLOT(documentSwitched(KBibTeX::GUI::BibTeXEditor *, KBibTeX::GUI::BibTeXEditor *)));
+    connect(d->mdiWidget, SIGNAL(documentSwitch(BibTeXEditor *, BibTeXEditor *)), this, SLOT(documentSwitched(BibTeXEditor *, BibTeXEditor *)));
     connect(d->mdiWidget, SIGNAL(activePartChanged(KParts::Part*)), this, SLOT(createGUI(KParts::Part*)));
     connect(d->openFileInfoManager, SIGNAL(currentChanged(OpenFileInfo*)), d->mdiWidget, SLOT(setFile(OpenFileInfo*)));
     connect(d->openFileInfoManager, SIGNAL(closing(OpenFileInfo*)), d->mdiWidget, SLOT(closeFile(OpenFileInfo*)));
@@ -179,7 +188,7 @@ void KBibTeXMainWindow::closeDocument()
     d->openFileInfoManager->close(d->openFileInfoManager->currentFile());
 }
 
-void KBibTeXMainWindow::documentSwitched(KBibTeX::GUI::BibTeXEditor *oldEditor, KBibTeX::GUI::BibTeXEditor *newEditor)
+void KBibTeXMainWindow::documentSwitched(BibTeXEditor *oldEditor, BibTeXEditor *newEditor)
 {
     OpenFileInfo *openFileInfo = OpenFileInfoManager::getOpenFileInfoManager()->currentFile();
     bool validFile = openFileInfo != NULL;
