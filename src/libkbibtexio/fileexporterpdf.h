@@ -24,10 +24,6 @@
 
 #include <fileexportertoolchain.h>
 
-namespace KBibTeX
-{
-namespace IO {
-
 /**
 @author Thomas Fischer
 */
@@ -59,8 +55,5 @@ private:
     void fillEmbeddedFileList(const File* bibtexfile);
     void fillEmbeddedFileList(const Element* element);
 };
-
-}
-}
 
 #endif

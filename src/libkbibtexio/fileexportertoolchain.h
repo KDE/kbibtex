@@ -24,14 +24,12 @@
 #include <QWaitCondition>
 #include <QMutex>
 
+#include <KTempDir>
+
 #include <fileexporter.h>
 
 class QString;
 class QStringList;
-
-namespace KBibTeX
-{
-namespace IO {
 
 /**
 @author Thomas Fischer
@@ -41,13 +39,12 @@ class FileExporterToolchain : public FileExporter
     Q_OBJECT
 public:
     FileExporterToolchain();
-    ~FileExporterToolchain();
 
 public slots:
     void cancel();
 
 protected:
-    QString workingDir;
+    KTempDir tempDir;
 
     bool runProcesses(const QStringList &progs, QStringList *errorLog = NULL);
     bool runProcess(const QString &cmd, const QStringList &args, QStringList *errorLog = NULL);
@@ -61,16 +58,10 @@ private:
     QProcess *m_process;
     QStringList *m_errorLog;
 
-    QString createTempDir();
-    void deleteTempDir(const QString& directory);
-
 private slots:
     void slotProcessExited(int, QProcess::ExitStatus);
     void slotReadProcessOutput();
 
 };
-
-}
-}
 
 #endif

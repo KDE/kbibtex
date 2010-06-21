@@ -30,9 +30,9 @@ using namespace KBibTeX::IO;
 FileExporterRTF::FileExporterRTF(const QString& latexBibStyle, const QString& latexLanguage)
         : FileExporterToolchain(), m_latexLanguage(latexLanguage), m_latexBibStyle(latexBibStyle)
 {
-    m_laTeXFilename = QString(workingDir).append("/bibtex-to-rtf.tex");
-    m_bibTeXFilename = QString(workingDir).append("/bibtex-to-rtf.bib");
-    m_outputFilename = QString(workingDir).append("/bibtex-to-rtf.rtf");
+    m_laTeXFilename = tempDir.name() + QLatin1String("/bibtex-to-rtf.tex");
+    m_bibTeXFilename = tempDir.name() + QLatin1String("/bibtex-to-rtf.bib");
+    m_outputFilename = tempDir.name() + QLatin1String("/bibtex-to-rtf.rtf");
 }
 
 FileExporterRTF::~FileExporterRTF()

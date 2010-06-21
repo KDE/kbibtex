@@ -26,17 +26,10 @@
 
 #include "fileexportertoolchain.h"
 
-using namespace KBibTeX::IO;
-
 FileExporterToolchain::FileExporterToolchain()
         : FileExporter(), m_waitCond(), m_waitCondMutex(), m_errorLog(NULL)
 {
-    workingDir = createTempDir();
-}
-
-FileExporterToolchain::~FileExporterToolchain()
-{
-    deleteTempDir(workingDir);
+    tempDir.setAutoRemove(true);
 }
 
 bool FileExporterToolchain::runProcesses(const QStringList &progs, QStringList *errorLog)
@@ -62,7 +55,7 @@ bool FileExporterToolchain::runProcess(const QString &cmd,  const QStringList &a
     bool result = FALSE;
 
     m_process = new QProcess();
-    m_process->setWorkingDirectory(workingDir);
+    m_process->setWorkingDirectory(tempDir.name());
     connect(m_process, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(slotProcessExited(int, QProcess::ExitStatus)));
     connect(m_process, SIGNAL(readyRead()), this, SLOT(slotReadProcessOutput()));
 
@@ -114,42 +107,6 @@ bool FileExporterToolchain::writeFileToIODevice(const QString &filename, QIODevi
         return result;
     } else
         return FALSE;
-}
-
-QString FileExporterToolchain::createTempDir()
-{
-    QString result = QString::null;
-    QFile *devrandom = new QFile("/dev/random");
-
-    if (devrandom->open(QIODevice::ReadOnly)) {
-        quint32 randomNumber;
-        if (devrandom->read((char*) & randomNumber, sizeof(randomNumber)) > 0) {
-            randomNumber |= 0x10000000;
-            result = QString("/tmp/bibtex-%1").arg(randomNumber, sizeof(randomNumber) * 2, 16);
-            if (!QDir().mkdir(result))
-                result = QString::null;
-        }
-        devrandom->close();
-    }
-
-    delete devrandom;
-
-    return result;
-}
-
-void FileExporterToolchain::deleteTempDir(const QString& directory)
-{
-    QDir dir = QDir(directory);
-    QStringList subDirs = dir.entryList(QDir::Dirs);
-    for (QStringList::Iterator it = subDirs.begin(); it != subDirs.end(); it++) {
-        if ((QString::compare(*it, ".") != 0) && (QString::compare(*it, "..") != 0))
-            deleteTempDir(*it);
-    }
-    QStringList allEntries = dir.entryList();
-    for (QStringList::Iterator it = allEntries.begin(); it != allEntries.end(); it++)
-        dir.remove(*it);
-
-    QDir().rmdir(directory);
 }
 
 void FileExporterToolchain::slotProcessExited(int /*exitCode*/, QProcess::ExitStatus /*exitStatus*/)

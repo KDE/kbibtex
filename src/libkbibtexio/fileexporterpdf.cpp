@@ -27,14 +27,12 @@
 #include <fileexporterbibtex.h>
 #include "fileexporterpdf.h"
 
-using namespace KBibTeX::IO;
-
 FileExporterPDF::FileExporterPDF(bool embedFiles)
         : FileExporterToolchain(), m_latexLanguage("english"), m_latexBibStyle("plain"), m_embedFiles(embedFiles)
 {
-    m_laTeXFilename = QString(workingDir).append("/bibtex-to-pdf.tex");
-    m_bibTeXFilename = QString(workingDir).append("/bibtex-to-pdf.bib");
-    m_outputFilename = QString(workingDir).append("/bibtex-to-pdf.pdf");
+    m_laTeXFilename = tempDir.name() + QLatin1String("/bibtex-to-pdf.tex");
+    m_bibTeXFilename = tempDir.name() + QLatin1String("/bibtex-to-pdf.bib");
+    m_outputFilename = tempDir.name() + QLatin1String("/bibtex-to-pdf.pdf");
 }
 
 FileExporterPDF::~FileExporterPDF()

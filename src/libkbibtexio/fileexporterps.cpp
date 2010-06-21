@@ -30,9 +30,9 @@ using namespace KBibTeX::IO;
 FileExporterPS::FileExporterPS()
         : FileExporterToolchain(), m_latexLanguage("english"), m_latexBibStyle("plain")
 {
-    m_laTeXFilename = QString(workingDir).append("/bibtex-to-ps.tex");
-    m_bibTeXFilename = QString(workingDir).append("/bibtex-to-ps.bib");
-    m_outputFilename = QString(workingDir).append("/bibtex-to-ps.ps");
+    m_laTeXFilename = tempDir.name() + QLatin1String("/bibtex-to-ps.tex");
+    m_bibTeXFilename = tempDir.name() + QLatin1String("/bibtex-to-ps.bib");
+    m_outputFilename = tempDir.name() + QLatin1String("/bibtex-to-ps.ps");
 }
 
 FileExporterPS::~FileExporterPS()
