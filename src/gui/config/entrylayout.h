@@ -17,55 +17,45 @@
 *   Free Software Foundation, Inc.,                                       *
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
-#ifndef KBIBTEX_GUI_BIBTEXFIELDS_H
-#define KBIBTEX_GUI_BIBTEXFIELDS_H
+#ifndef KBIBTEX_GUI_ENTRYLAYOUT_H
+#define KBIBTEX_GUI_ENTRYLAYOUT_H
 
 #include <QString>
 #include <QList>
 
-namespace KBibTeX
-{
-namespace GUI {
-namespace Config {
+#include <kbibtexnamespace.h>
 
 typedef struct {
-    QString raw;
-    QString rawAlt;
-    QString label;
-    int width;
-    int defaultWidth;
-    bool visible;
-} FieldDescription;
+    QString uiLabel;
+    QString bibtexLabel;
+    KBibTeX::FieldInputType fieldInputLayout;
+} SingleFieldLayout;
+
+typedef struct {
+    QString uiCaption;
+    int columns;
+    QList <SingleFieldLayout> singleFieldLayouts;
+} EntryTabLayout;
 
 /**
 @author Thomas Fischer
 */
-class BibTeXFields : public QList<FieldDescription>
+class EntryLayout : public QList<EntryTabLayout>
 {
 public:
-    enum Casing {cSmall, cCaptial, cCamelCase};
+    virtual ~EntryLayout();
 
-    virtual ~BibTeXFields();
-
-    static BibTeXFields *self();
+    static EntryLayout *self();
     void load();
     void save();
     void resetToDefaults();
 
-    /**
-     * Change the casing of a given field name to one of the predefine formats.
-     */
-    QString format(const QString& name, Casing casing) const;
-
 protected:
-    BibTeXFields();
+    EntryLayout();
 
 private:
-    class BibTeXFieldsPrivate;
-    BibTeXFieldsPrivate *d;
+    class EntryLayoutPrivate;
+    EntryLayoutPrivate *d;
 };
-}
-}
-}
 
-#endif // KBIBTEX_GUI_BIBTEXFIELDS_H
+#endif // KBIBTEX_GUI_ENTRYLAYOUT_H
