@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2009 by Thomas Fischer                             *
+*   Copyright (C) 2004-2010 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -17,32 +17,56 @@
 *   Free Software Foundation, Inc.,                                       *
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
-#ifndef KBIBTEX_GUI_ENTRYLISTDELEGATE_H
-#define KBIBTEX_GUI_ENTRYLISTDELEGATE_H
 
-#include <QItemDelegate>
+#include <QMenu>
+#include <QSignalMapper>
+#include <QBuffer>
 
-namespace KBibTeX
+#include <KDebug>
+#include <KMessageBox>
+#include <KGlobalSettings>
+#include <KLocale>
+
+#include <file.h>
+#include <entry.h>
+#include <fileimporterbibtex.h>
+#include <fileexporterbibtex.h>
+#include "fieldlistedit.h"
+
+FieldListEdit::FieldListEdit(QWidget *parent)
+        : QListWidget(parent)
 {
-namespace GUI {
-namespace Widgets {
+    updateGUI();
+// TODO
+}
 
-/**
-@author Thomas Fischer
-*/
-class EntryListDelegate : public QItemDelegate
+void FieldListEdit::setValue(const Value& value)
 {
-public:
-    EntryListDelegate(QObject *parent);
-    QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem & option, const QModelIndex &index) const;
-    void setEditorData(QWidget *editor, const QModelIndex &index) const;
-    void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
-    void updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &/* index */) const;
-
-};
-
-}
-}
+    m_originalValue = value;
+    loadValue(m_originalValue);
 }
 
-#endif // KBIBTEX_GUI_ENTRYLISTDELEGATE_H
+void FieldListEdit::applyTo(Value& value) const
+{
+    value.clear();
+    value = m_originalValue; // FIXME: just a dummy implementation
+}
+
+void FieldListEdit::reset()
+{
+    loadValue(m_originalValue);
+}
+
+
+void FieldListEdit::loadValue(const Value& value)
+{
+    Q_UNUSED(value)
+    // TODO
+}
+
+void FieldListEdit::updateGUI()
+{
+    setFont(KGlobalSettings::generalFont());
+
+    // TODO
+}

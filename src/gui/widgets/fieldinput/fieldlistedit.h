@@ -17,60 +17,36 @@
 *   Free Software Foundation, Inc.,                                       *
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
+#ifndef KBIBTEX_GUI_FIELDLISTEDIT_H
+#define KBIBTEX_GUI_FIELDLISTEDIT_H
 
-#include "fieldeditor.h"
-#include "fieldlineedit.h"
+#include <QListWidget>
 
-using namespace KBibTeX::GUI::Widgets;
+#include <value.h>
 
-class FieldEditor::FieldEditorPrivate
+/**
+@author Thomas Fischer
+*/
+class FieldListEdit : public QListWidget
 {
+    Q_OBJECT
+
 public:
-    EditMode m_editMode;
-    FieldLineEdit **m_widgets;
-    KBibTeX::IO::Value m_originalValue;
+    FieldListEdit(QWidget *parent = NULL);
+
+    void setValue(const Value& value);
+    void applyTo(Value& value) const;
+
+public slots:
+    void reset();
+
+protected:
+    Value m_originalValue;
+
+    void loadValue(const Value& value);
+
+private:
+    void updateGUI();
 };
 
-FieldEditor::FieldEditor(EditMode editMode, QWidget *parent)
-        : QStackedWidget(parent), d(new FieldEditorPrivate)
-{
-    d->m_editMode = editMode;
-    d->m_widgets = new FieldLineEdit*[EditModeMax];
-
-    d->m_widgets[SingleLine] = new FieldLineEdit(FieldLineEdit::Text | FieldLineEdit::Source, this);
-    d->m_widgets[SingleLine]->setTypeFlag(FieldLineEdit::Source);
-    addWidget(d->m_widgets[SingleLine]);
-
-    setBackgroundRole(QPalette::Base);
-}
-
-FieldEditor::~FieldEditor()
-{
-    delete[] d->m_widgets;
-}
-
-void FieldEditor::setEditMode(EditMode editMode)
-{
-    d->m_editMode = editMode;
-}
-
-FieldEditor::EditMode FieldEditor::editMode()
-{
-    return d->m_editMode;
-}
-
-void FieldEditor::setValue(const KBibTeX::IO::Value& value)
-{
-    d->m_originalValue = value;
-    d->m_widgets[0]->setValue(value);
-}
-
-void FieldEditor::applyTo(KBibTeX::IO::Value& /*value*/)
-{
-    // TODO
-}
-
-void FieldEditor::reset()
-{
-    // TODO
-}
+#endif // KBIBTEX_GUI_FIELDLISTEDIT_H

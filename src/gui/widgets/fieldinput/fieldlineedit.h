@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2009 by Thomas Fischer                             *
+*   Copyright (C) 2004-2010 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -17,69 +17,63 @@
 *   Free Software Foundation, Inc.,                                       *
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
-#ifndef KBIBTEX_GUI_ENTRYLISTVIEW_H
-#define KBIBTEX_GUI_ENTRYLISTVIEW_H
+#ifndef KBIBTEX_GUI_FIELDLINEEDIT_H
+#define KBIBTEX_GUI_FIELDLINEEDIT_H
 
-#include <QListView>
-#include <QAbstractListModel>
+#include <kbibtexgui_export.h>
 
-#include <KWidgetItemDelegate>
+#include <KIcon>
 
 #include <value.h>
-#include <entry.h>
+#include <menulineedit.h>
+#include <kbibtexnamespace.h>
 
-class QAbstractItemModel;
-
-namespace KBibTeX
-{
-namespace GUI {
-namespace Widgets {
+class QMenu;
+class QSignalMapper;
 
 /**
 @author Thomas Fischer
 */
-class ValueItemDelegate : public KWidgetItemDelegate
+class KBIBTEXGUI_EXPORT FieldLineEdit : public MenuLineEdit
 {
     Q_OBJECT
 
 public:
-    ValueItemDelegate(QAbstractItemView *itemView, QObject *parent = NULL);
 
-    // paint the item at index with all its attributes shown
-    virtual void paint(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const;
+    FieldLineEdit(KBibTeX::TypeFlags typeFlags = KBibTeX::tfSource, bool isMultiLine = false, QWidget *parent = NULL);
 
-    // get the list of widgets
-    virtual QList<QWidget*> createItemWidgets() const;
+    KBibTeX::TypeFlag typeFlag();
+    KBibTeX::TypeFlag setTypeFlag(KBibTeX::TypeFlag typeFlag);
+    KBibTeX::TypeFlag setTypeFlags(KBibTeX::TypeFlags typeFlags);
 
-    // update the widgets
-    virtual void updateItemWidgets(const QList<QWidget*> widgets, const QStyleOptionViewItem &option, const QPersistentModelIndex &index) const;
+    void setValue(const Value& value);
+    void applyTo(Value& value) const;
 
-    virtual QSize sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index) const;
+public slots:
+    void reset();
 
-signals:
-    void modified();
+protected:
 
-private slots:
-    void slotEditingFinished();
+    KBibTeX::TypeFlags m_typeFlags;
+    KBibTeX::TypeFlag m_typeFlag;
+
+    Value m_originalValue;
+
+    KIcon iconForTypeFlag(KBibTeX::TypeFlag typeFlag);
+
+    void loadValue(const Value& value);
 
 private:
-    class ValueItemDelegatePrivate;
-    ValueItemDelegatePrivate * const d;
+    bool m_incompleteRepresentation;
+
+    QMenu *m_menuTypes;
+    QSignalMapper *m_menuTypesSignalMapper;
+
+    void setupMenu();
+    void updateGUI();
+
+private slots:
+    void slotTypeChanged(int);
 };
 
-
-
-/**
-@author Thomas Fischer
-*/
-class EntryListView : public QListView
-{
-public:
-    EntryListView(QWidget* parent);
-};
-
-}
-}
-}
-
-#endif // KBIBTEX_GUI_ENTRYLISTVIEW_H
+#endif // KBIBTEX_GUI_FIELDLINEEDIT_H

@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2009 by Thomas Fischer                             *
+*   Copyright (C) 2004-2010 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -17,30 +17,37 @@
 *   Free Software Foundation, Inc.,                                       *
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
-#ifndef KBIBTEX_GUI_FIELDWIDGET_H
-#define KBIBTEX_GUI_FIELDWIDGET_H
+
+#include <kbibtexgui_export.h>
 
 #include <QWidget>
 
-namespace KBibTeX
-{
-namespace GUI {
-namespace Widgets {
+#include <value.h>
+#include <kbibtexnamespace.h>
 
 /**
 @author Thomas Fischer
 */
-class FieldWidget : public QWidget
+class KBIBTEXGUI_EXPORT FieldInput : public QWidget
 {
+    Q_OBJECT
+
 public:
-    FieldWidget(QWidget* parent = NULL);
+    FieldInput(KBibTeX::FieldInputType fieldInputType, KBibTeX::TypeFlags typeFlags = KBibTeX::tfSource, QWidget *parent = NULL);
+
+    void clear();
+    void setValue(const Value& value);
+    void applyTo(Value& value) const;
+
+    void setReadOnly(bool isReadOnly);
+
+signals:
+    void modified();
+
+private slots:
+    void setMonth(int month);
 
 private:
-    class FieldWidgetPrivate;
-    FieldWidgetPrivate *d;
+    class FieldInputPrivate;
+    FieldInputPrivate *d;
 };
-}
-}
-}
-
-#endif // KBIBTEX_GUI_FIELDWIDGET_H
