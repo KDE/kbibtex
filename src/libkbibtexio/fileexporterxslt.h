@@ -26,10 +26,6 @@
 #include <fileexporter.h>
 #include <value.h>
 
-namespace KBibTeX
-{
-namespace IO {
-
 class Entry;
 class Macro;
 class Comment;
@@ -55,8 +51,5 @@ private:
     bool m_cancelFlag;
     QString m_xsltFilename;
 };
-
-}
-}
 
 #endif

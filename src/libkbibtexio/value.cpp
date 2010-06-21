@@ -25,9 +25,6 @@
 #include <file.h>
 #include "value.h"
 
-using namespace KBibTeX::IO;
-
-
 Keyword::Keyword(const Keyword& other)
         : m_text(other.m_text)
 {

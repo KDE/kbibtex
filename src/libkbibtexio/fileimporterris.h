@@ -25,10 +25,6 @@
 #include <fileimporter.h>
 #include <entry.h>
 
-namespace KBibTeX
-{
-namespace IO {
-
 /**
  @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
 */
@@ -58,8 +54,5 @@ private:
     Element *nextElement(QTextStream &textStream);
     RISitemList readElement(QTextStream &textStream);
 };
-
-}
-}
 
 #endif

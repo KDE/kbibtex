@@ -29,8 +29,6 @@
 
 #include "fileimporterris.h"
 
-using namespace KBibTeX::IO;
-
 FileImporterRIS::FileImporterRIS() : FileImporter()
 {
 // nothing
@@ -244,9 +242,9 @@ Element *FileImporterRIS::nextElement(QTextStream &textStream)
                 value.append(person);
         }
         kDebug() << "value size " << value.size() << endl;
-        kDebug() << "Author 1 count= " << entry->value(KBibTeX::IO::Entry::ftAuthor).size() << "  " << entry->size() << endl;
+        kDebug() << "Author 1 count= " << entry->value(Entry::ftAuthor).size() << "  " << entry->size() << endl;
         entry->insert(Entry::ftAuthor, value);
-        kDebug() << "Author 2 count= " << entry->value(KBibTeX::IO::Entry::ftAuthor).size() << "  " << entry->size() << endl;
+        kDebug() << "Author 2 count= " << entry->value(Entry::ftAuthor).size() << "  " << entry->size() << endl;
         for (Entry::Iterator it = entry->begin(); it != entry->end(); ++it) {
             kDebug() << "key = " << it.key() << endl;
         }
@@ -337,7 +335,7 @@ Element *FileImporterRIS::nextElement(QTextStream &textStream)
         }
     }
 
-    kDebug() << "Author count= " << entry->value(KBibTeX::IO::Entry::ftAuthor).size() << endl;
+    kDebug() << "Author count= " << entry->value(Entry::ftAuthor).size() << endl;
 
     return entry;
 }

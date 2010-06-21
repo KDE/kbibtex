@@ -25,8 +25,6 @@
 #include <value.h>
 #include "fileimporter.h"
 
-using namespace KBibTeX::IO;
-
 FileImporter::FileImporter()
         : QObject()
 {

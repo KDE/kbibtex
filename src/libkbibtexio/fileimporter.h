@@ -25,10 +25,6 @@
 
 class QIODevice;
 
-namespace KBibTeX
-{
-namespace IO {
-
 class File;
 class Person;
 
@@ -71,8 +67,5 @@ public slots:
 protected:
     QMutex m_mutex;
 };
-
-}
-}
 
 #endif // KBIBTEX_IO_FILEIMPORTER_H

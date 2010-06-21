@@ -23,8 +23,6 @@
 
 #include "macro.h"
 
-using namespace KBibTeX::IO;
-
 /**
  * Private class to store internal variables that should not be visible
  * in the interface as defined in the header file.

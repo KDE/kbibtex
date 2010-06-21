@@ -24,10 +24,6 @@
 
 #include <fileimporter.h>
 
-namespace KBibTeX
-{
-namespace IO {
-
 class Element;
 class Comment;
 class Preamble;
@@ -124,8 +120,5 @@ private:
 
     bool evaluateParameterComments(QTextStream *textStream, const QString &line);
 };
-
-}
-}
 
 #endif // KBIBTEX_IO_FILEIMPORTERBIBTEX_H

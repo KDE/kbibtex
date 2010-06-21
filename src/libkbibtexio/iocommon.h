@@ -21,10 +21,6 @@
 #ifndef KBIBTEX_IO_IOCOMMON_H
 #define KBIBTEX_IO_IOCOMMON_H
 
-namespace KBibTeX
-{
-namespace IO {
-
 static const QString Months[] = {
     QString("January"), QString("February"), QString("March"), QString("April"), QString("May"), QString("June"), QString("July"), QString("August"), QString("September"), QString("October"), QString("November"), QString("December")
 };
@@ -32,8 +28,5 @@ static const QString Months[] = {
 static const QString MonthsTriple[] = {
     QString("jan"), QString("feb"), QString("mar"), QString("apr"), QString("may"), QString("jun"), QString("jul"), QString("aug"), QString("sep"), QString("oct"), QString("nov"), QString("dec")
 };
-
-}
-}
 
 #endif // KBIBTEX_IO_IOCOMMON_H

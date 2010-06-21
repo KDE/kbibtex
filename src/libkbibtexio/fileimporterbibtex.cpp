@@ -36,8 +36,6 @@
 
 #include "fileimporterbibtex.h"
 
-using namespace KBibTeX::IO;
-
 const QString extraAlphaNumChars = QString("?'`-_:.+/$\\\"&");
 const QRegExp htmlRegExp = QRegExp("</?(a|pre)[^>]*>", Qt::CaseInsensitive);
 

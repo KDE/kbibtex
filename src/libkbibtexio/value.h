@@ -26,10 +26,6 @@
 
 #include "kbibtexio_export.h"
 
-namespace KBibTeX
-{
-namespace IO {
-
 class File;
 
 /**
@@ -175,8 +171,6 @@ private:
     static QString text(const ValueItem& valueItem, ValueItemType &vit, const File* file = NULL);
 };
 
-}
-}
-Q_DECLARE_METATYPE(KBibTeX::IO::Value);
+Q_DECLARE_METATYPE(Value);
 
 #endif

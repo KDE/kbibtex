@@ -37,8 +37,6 @@
 #include "iocommon.h"
 #include "fileexporterxslt.h"
 
-using namespace KBibTeX::IO;
-
 class XSLTransform
 {
 

@@ -23,10 +23,6 @@
 #include "element.h"
 #include "value.h"
 
-namespace KBibTeX
-{
-namespace IO {
-
 /**
  * This class represents a preamble in a BibTeX file. Preables contain
  * LaTeX commands required for the bibliography, such as hyphenation commands.
@@ -50,8 +46,5 @@ private:
     class PreamblePrivate;
     PreamblePrivate * const d;
 };
-
-}
-}
 
 #endif // KBIBTEX_IO_PREAMBLE_H

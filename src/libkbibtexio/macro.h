@@ -26,10 +26,6 @@
 
 class QString;
 
-namespace KBibTeX
-{
-namespace IO {
-
 /**
  * This class represents a macro in a BibTeX file. Macros in BibTeX
  * are similar to variables, allowing to use the same value such as
@@ -92,7 +88,5 @@ private:
     MacroPrivate * const d;
 };
 
-}
-}
 
 #endif
