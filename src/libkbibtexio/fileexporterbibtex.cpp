@@ -34,9 +34,7 @@
 
 #include "fileexporterbibtex.h"
 
-using namespace KBibTeX::IO;
-
-FileExporterBibTeX::FileExporterBibTeX(const QString& encoding, const QChar& stringOpenDelimiter, const QChar& stringCloseDelimiter, KeywordCasing keywordCasing, QuoteComment quoteComment, bool protectCasing)
+FileExporterBibTeX::FileExporterBibTeX(const QString& encoding, const QChar& stringOpenDelimiter, const QChar& stringCloseDelimiter, KBibTeX::Casing keywordCasing, QuoteComment quoteComment, bool protectCasing)
         : FileExporter(), m_stringOpenDelimiter(stringOpenDelimiter), m_stringCloseDelimiter(stringCloseDelimiter), m_keywordCasing(keywordCasing), m_quoteComment(quoteComment), m_encoding(encoding), m_protectCasing(protectCasing), cancelFlag(FALSE)
 {
 // nothing
@@ -355,9 +353,9 @@ QString FileExporterBibTeX::applyKeywordCasing(const QString &keyword)
 {
     // TODO: kcCamelCase: Write file containing all camel cases
     switch (m_keywordCasing) {
-    case kcLowerCase: return keyword.toLower();
-    case kcInitialCapital: return keyword.at(0) + keyword.toLower().mid(1);
-    case kcCapital: return keyword.toUpper();
+    case KBibTeX::cLowerCase: return keyword.toLower();
+    case KBibTeX::cInitialCapital: return keyword.at(0) + keyword.toLower().mid(1);
+    case KBibTeX::cUpperCase: return keyword.toUpper();
     default: return keyword;
     }
 }

@@ -22,15 +22,12 @@
 
 #include <QTextStream>
 
+#include <kbibtexnamespace.h>
 #include "element.h"
 #include "fileexporter.h"
 #include "value.h"
 
 class QChar;
-
-namespace KBibTeX
-{
-namespace IO {
 
 class Comment;
 class Preamble;
@@ -43,10 +40,9 @@ class Entry;
 class KBIBTEXIO_EXPORT FileExporterBibTeX : public FileExporter
 {
 public:
-    enum KeywordCasing {kcLowerCase, kcInitialCapital, kcCamelCase, kcCapital};
     enum QuoteComment {qcNone, qcCommand, qcPercentSign};
 
-    FileExporterBibTeX(const QString& encoding = "latex", const QChar& stringOpenDelimiter = '"', const QChar& stringCloseDelimiter = '"', KeywordCasing keywordCasing = kcCamelCase, QuoteComment quoteComment = qcNone, bool protectCasing = false);
+    FileExporterBibTeX(const QString& encoding = "latex", const QChar& stringOpenDelimiter = '"', const QChar& stringCloseDelimiter = '"', KBibTeX::Casing keywordCasing = KBibTeX::cCamelCase, QuoteComment quoteComment = qcNone, bool protectCasing = false);
     ~FileExporterBibTeX();
 
     bool save(QIODevice* iodevice, const File* bibtexfile, QStringList *errorLog = NULL);
@@ -64,7 +60,7 @@ protected:
 private:
     QChar m_stringOpenDelimiter;
     QChar m_stringCloseDelimiter;
-    KeywordCasing m_keywordCasing;
+    KBibTeX::Casing m_keywordCasing;
     QuoteComment m_quoteComment;
     QString m_encoding;
     bool m_protectCasing;
@@ -81,8 +77,5 @@ private:
 
     static bool flushAccumulatedText(QString &accumulatedText, QString &result, const QString& fieldType);
 };
-
-}
-}
 
 #endif
