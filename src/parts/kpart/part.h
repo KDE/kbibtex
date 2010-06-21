@@ -64,6 +64,9 @@ protected:
 protected slots:
     void saveDocumentDialog();
 
+private slots:
+    void editorKeyPressed(QKeyEvent *event);
+
 private:
     class KBibTeXPartPrivate;
     KBibTeXPartPrivate * const d;

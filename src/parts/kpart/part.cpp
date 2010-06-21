@@ -22,10 +22,11 @@
 #include <QFile>
 #include <QApplication>
 #include <QLayout>
+#include <QKeyEvent>
 
+#include <KDebug>
 #include <KEncodingFileDialog>
 #include <KMessageBox>
-#include <KDebug>
 #include <KLocale>
 #include <KAction>
 #include <KActionCollection>
@@ -35,6 +36,7 @@
 #include <KToggleAction>
 #include <KMenu>
 
+#include <bibtexentries.h>
 #include <file.h>
 #include <fileimporterbibtex.h>
 #include <fileexporterbibtex.h>
@@ -55,50 +57,50 @@ static const char RCFileName[] = "kbibtexpartui.rc";
 class KBibTeXPart::KBibTeXPartPrivate
 {
 public:
-    KBibTeX::GUI::BibTeXEditor *editor;
-    KBibTeX::GUI::Widgets::BibTeXFileModel *model;
-    KBibTeX::GUI::Widgets::SortFilterBibTeXFileModel *sortFilterProxyModel;
-    KBibTeX::GUI::Widgets::FilterBar *filterBar;
+    BibTeXEditor *editor;
+    BibTeXFileModel *model;
+    SortFilterBibTeXFileModel *sortFilterProxyModel;
+    FilterBar *filterBar;
 
     KBibTeXPartPrivate()
             : sortFilterProxyModel(NULL) {
         // nothing
     }
 
-    KBibTeX::IO::FileImporter *fileImporterFactory(const KUrl& url) {
+    FileImporter *fileImporterFactory(const KUrl& url) {
         QString ending = url.path().toLower();
         int p = ending.lastIndexOf(".");
         ending = ending.mid(p + 1);
 
         if (ending == "ris") {
-            kDebug() << "Selecting KBibTeX::IO::FileImporterRIS" << endl;
-            return new KBibTeX::IO::FileImporterRIS();
+            kDebug() << "Selecting FileImporterRIS" << endl;
+            return new FileImporterRIS();
         } else {
-            kDebug() << "Selecting KBibTeX::IO::FileImporterBibTeX" << endl;
-            return new KBibTeX::IO::FileImporterBibTeX("latex", false);
+            kDebug() << "Selecting FileImporterBibTeX" << endl;
+            return new FileImporterBibTeX("latex", false);
         }
     }
 
-    KBibTeX::IO::FileExporter *fileExporterFactory(const KUrl& url) {
+    FileExporter *fileExporterFactory(const KUrl& url) {
         QString ending = url.path().toLower();
         int p = ending.lastIndexOf(".");
         ending = ending.mid(p + 1);
 
         if (ending == "html") {
-            kDebug() << "Selecting KBibTeX::IO::FileExporterXSLT" << endl;
-            return new KBibTeX::IO::FileExporterXSLT();
+            kDebug() << "Selecting FileExporterXSLT" << endl;
+            return new FileExporterXSLT();
         } else if (ending == "xml") {
-            kDebug() << "Selecting KBibTeX::IO::FileExporterXML" << endl;
-            return new KBibTeX::IO::FileExporterXML();
+            kDebug() << "Selecting FileExporterXML" << endl;
+            return new FileExporterXML();
         } else if (ending == "ris") {
-            kDebug() << "Selecting KBibTeX::IO::FileExporterRIS" << endl;
-            return new KBibTeX::IO::FileExporterRIS();
+            kDebug() << "Selecting FileExporterRIS" << endl;
+            return new FileExporterRIS();
         } else if (ending == "html" || ending == "html") {
-            kDebug() << "Selecting KBibTeX::IO::FileExporterBibTeX2HTML" << endl;
-            return new KBibTeX::IO::FileExporterBibTeX2HTML();
+            kDebug() << "Selecting FileExporterBibTeX2HTML" << endl;
+            return new FileExporterBibTeX2HTML();
         } else {
-            kDebug() << "Selecting KBibTeX::IO::FileExporterBibTeX" << endl;
-            return new KBibTeX::IO::FileExporterBibTeX();
+            kDebug() << "Selecting FileExporterBibTeX" << endl;
+            return new FileExporterBibTeX();
         }
     }
 };
@@ -110,13 +112,14 @@ KBibTeXPart::KBibTeXPart(QWidget *parentWidget, QObject *parent, bool browserVie
     setObjectName("KBibTeXPart::KBibTeXPart");
 
     // TODO Setup view
-    d->editor = new KBibTeX::GUI::BibTeXEditor(parentWidget);
+    d->editor = new BibTeXEditor(parentWidget);
     setWidget(d->editor);
 
-    d->model = new KBibTeX::GUI::Widgets::BibTeXFileModel();
+    d->model = new BibTeXFileModel();
     d->editor->setModel(d->model);
 
-    connect(d->editor, SIGNAL(elementExecuted(KBibTeX::IO::Element*)), d->editor, SLOT(editElement(KBibTeX::IO::Element*)));
+    connect(d->editor, SIGNAL(elementExecuted(Element*)), d->editor, SLOT(editElement(Element*)));
+    connect(d->editor, SIGNAL(keyPressed(QKeyEvent*)), this, SLOT(editorKeyPressed(QKeyEvent*)));
 
     setupActions(browserViewWanted);
 
@@ -136,7 +139,7 @@ void KBibTeXPart::setupActions(bool /*browserViewWanted FIXME*/)
     actionCollection()->addAction(KStandardAction::Save, this, SLOT(save()));
     actionCollection()->addAction(KStandardAction::SaveAs, this, SLOT(saveDocumentDialog()));
 
-    d->filterBar = new KBibTeX::GUI::Widgets::FilterBar(0);
+    d->filterBar = new FilterBar(0);
     KAction *filterWidgetAction = new KAction(this);
     actionCollection()->addAction("toolbar_filter_widget", filterWidgetAction);
     filterWidgetAction->setText(i18n("Filter"));
@@ -173,9 +176,9 @@ bool KBibTeXPart::saveFile()
 
     qApp->setOverrideCursor(Qt::WaitCursor);
 
-    KBibTeX::GUI::Widgets::SortFilterBibTeXFileModel *model = dynamic_cast<KBibTeX::GUI::Widgets::SortFilterBibTeXFileModel *>(d->editor->model());
+    SortFilterBibTeXFileModel *model = dynamic_cast<SortFilterBibTeXFileModel *>(d->editor->model());
     Q_ASSERT(model != NULL);
-    KBibTeX::IO::FileExporter *exporter = d->fileExporterFactory(url());
+    FileExporter *exporter = d->fileExporterFactory(url());
     QFile outputfile(localFilePath());
     outputfile.open(QIODevice::WriteOnly);
     exporter->save(&outputfile, model->bibTeXSourceModel()->bibTeXFile());
@@ -215,24 +218,34 @@ bool KBibTeXPart::openFile()
     setObjectName("KBibTeXPart::KBibTeXPart for " + url().prettyUrl());
 
 
-    KBibTeX::IO::FileImporter *importer = d->fileImporterFactory(url());
+    FileImporter *importer = d->fileImporterFactory(url());
     QFile inputfile(localFilePath());
     inputfile.open(QIODevice::ReadOnly);
-    KBibTeX::IO::File *bibtexFile = importer->load(&inputfile);
+    File *bibtexFile = importer->load(&inputfile);
     inputfile.close();
     delete importer;
+
+    BibTeXEntries::self()->format(*bibtexFile, KBibTeX::cCamelCase);
 
     d->model->setBibTeXFile(bibtexFile);
     d->editor->setModel(d->model);
     if (d->sortFilterProxyModel != NULL) delete d->sortFilterProxyModel;
-    d->sortFilterProxyModel = new KBibTeX::GUI::Widgets::SortFilterBibTeXFileModel(this);
+    d->sortFilterProxyModel = new SortFilterBibTeXFileModel(this);
     d->sortFilterProxyModel->setSourceModel(d->model);
     d->editor->setModel(d->sortFilterProxyModel);
-    connect(d->filterBar, SIGNAL(filterChanged(KBibTeX::GUI::Widgets::SortFilterBibTeXFileModel::FilterQuery)), d->sortFilterProxyModel, SLOT(updateFilter(KBibTeX::GUI::Widgets::SortFilterBibTeXFileModel::FilterQuery)));
+    connect(d->filterBar, SIGNAL(filterChanged(SortFilterBibTeXFileModel::FilterQuery)), d->sortFilterProxyModel, SLOT(updateFilter(SortFilterBibTeXFileModel::FilterQuery)));
 
     qApp->restoreOverrideCursor();
 
     emit completed();
     emit setWindowCaption(url().prettyUrl());
     return true;
+}
+
+void KBibTeXPart::editorKeyPressed(QKeyEvent *event)
+{
+    if (event->modifiers() == Qt::NoModifier && event->matches(QKeySequence::Delete)) { // FIXME: Make key sequence configurable
+        /// delete the current (selected) element
+        d->model->removeRow(d->editor->currentIndex().row());
+    }
 }
