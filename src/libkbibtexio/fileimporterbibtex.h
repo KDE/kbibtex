@@ -22,6 +22,7 @@
 
 #include <QTextStream>
 
+#include <kbibtexnamespace.h>
 #include <fileimporter.h>
 
 class Element;
@@ -51,7 +52,7 @@ public:
      *     Useful if you for example read from an HTML file,
      *     as all HTML content you be treated as comments otherwise.
      */
-    FileImporterBibTeX(const QString& encoding = "latex", bool ignoreComments = true);
+    FileImporterBibTeX(const QString& encoding = "latex", bool ignoreComments = true, KBibTeX::Casing keywordCasing = KBibTeX::cLowerCase);
     ~FileImporterBibTeX();
 
     /**
@@ -98,6 +99,7 @@ private:
     QChar m_currentChar;
     bool m_ignoreComments;
     QString m_encoding;
+    KBibTeX::Casing m_keywordCasing;
 
     Comment *readCommentElement();
     Comment *readPlainCommentElement();

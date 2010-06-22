@@ -23,7 +23,6 @@
 
 #include "kbibtexio_export.h"
 
-#include <file.h>
 #include <kbibtexnamespace.h>
 
 typedef struct {
@@ -45,8 +44,6 @@ public:
      * Change the casing of a given entry name to one of the predefine formats.
      */
     QString format(const QString& name, KBibTeX::Casing casing) const;
-
-    void format(File& file, KBibTeX::Casing casing) const;
 
 protected:
     BibTeXEntries();

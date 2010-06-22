@@ -33,14 +33,16 @@
 #include <element.h>
 #include <encoderlatex.h>
 #include <value.h>
+#include <bibtexentries.h>
+#include <bibtexfields.h>
 
 #include "fileimporterbibtex.h"
 
 const QString extraAlphaNumChars = QString("?'`-_:.+/$\\\"&");
 const QRegExp htmlRegExp = QRegExp("</?(a|pre)[^>]*>", Qt::CaseInsensitive);
 
-FileImporterBibTeX::FileImporterBibTeX(const QString& encoding, bool ignoreComments)
-        : FileImporter(), m_cancelFlag(false), m_lineNo(1), m_textStream(NULL), m_currentChar(' '), m_ignoreComments(ignoreComments), m_encoding(encoding)
+FileImporterBibTeX::FileImporterBibTeX(const QString& encoding, bool ignoreComments, KBibTeX::Casing keywordCasing)
+        : FileImporter(), m_cancelFlag(false), m_lineNo(1), m_textStream(NULL), m_currentChar(' '), m_ignoreComments(ignoreComments), m_encoding(encoding), m_keywordCasing(keywordCasing)
 {
     // nothing
 }
@@ -234,6 +236,9 @@ Preamble *FileImporterBibTeX::readPreambleElement()
 
 Entry *FileImporterBibTeX::readEntryElement(const QString& typeString)
 {
+    BibTeXEntries *be = BibTeXEntries::self();
+    BibTeXFields *bf = BibTeXFields::self();
+
     Token token = nextToken();
     while (token != tBracketOpen) {
         if (token == tEOF) {
@@ -244,7 +249,7 @@ Entry *FileImporterBibTeX::readEntryElement(const QString& typeString)
     }
 
     QString key = readSimpleString();
-    Entry *entry = new Entry(typeString, key);
+    Entry *entry = new Entry(be->format(typeString, m_keywordCasing), key);
 
     token = nextToken();
     do {
@@ -256,7 +261,7 @@ Entry *FileImporterBibTeX::readEntryElement(const QString& typeString)
             return NULL;
         }
 
-        QString keyName = readSimpleString();
+        QString keyName = bf->format(readSimpleString(), m_keywordCasing);
         token = nextToken();
         if (keyName == QString::null || token == tBracketClose) {
             // entry is buggy, but we still accept it

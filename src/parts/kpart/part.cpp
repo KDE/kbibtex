@@ -36,7 +36,6 @@
 #include <KToggleAction>
 #include <KMenu>
 
-#include <bibtexentries.h>
 #include <file.h>
 #include <fileimporterbibtex.h>
 #include <fileexporterbibtex.h>
@@ -244,8 +243,6 @@ bool KBibTeXPart::openFile()
         kWarning() << "Opening file failed";
         return false;
     }
-
-    BibTeXEntries::self()->format(*bibtexFile, KBibTeX::cCamelCase);
 
     d->model->setBibTeXFile(bibtexFile);
     d->editor->setModel(d->model);

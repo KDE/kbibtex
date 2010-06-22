@@ -92,29 +92,34 @@ QString BibTeXEntries::format(const QString& name, KBibTeX::Casing casing) const
     case KBibTeX::cInitialCapital:
         iName[0] = iName[0].toUpper();
         return iName;
-    case KBibTeX::cCamelCase: {
+    case KBibTeX::cLowerCamelCase: {
         for (ConstIterator it = begin(); it != end(); ++it) {
             /// configuration file uses camel-case
             QString itName = (*it).raw.toLower();
-            if (itName == iName)
-                return (*it).raw;
-
-            /// make an educated guess how camel-case would look like
-            iName[0] = iName[0].toUpper();
-            return iName;
+            if (itName == iName && (*it).raw == QString::null) {
+                iName = (*it).raw;
+                break;
+            }
         }
+
+        /// make an educated guess how camel-case would look like
+        iName[0] = iName[0].toLower();
+        return iName;
+    }
+    case KBibTeX::cUpperCamelCase: {
+        for (ConstIterator it = begin(); it != end(); ++it) {
+            /// configuration file uses camel-case
+            QString itName = (*it).raw.toLower();
+            if (itName == iName && (*it).raw == QString::null) {
+                iName = (*it).raw;
+                break;
+            }
+        }
+
+        /// make an educated guess how camel-case would look like
+        iName[0] = iName[0].toUpper();
+        return iName;
     }
     }
     return name;
-}
-
-void BibTeXEntries::format(File& file, KBibTeX::Casing casing) const
-{
-    for (File::Iterator it = file.begin(); it != file.end(); ++it) {
-        Entry *entry = dynamic_cast<Entry*>(*it);
-        if (entry != NULL) {
-            QString key = format(entry->id(), casing);
-            entry->setId(key);
-        }
-    }
 }

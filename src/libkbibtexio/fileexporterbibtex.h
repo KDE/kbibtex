@@ -42,7 +42,7 @@ class KBIBTEXIO_EXPORT FileExporterBibTeX : public FileExporter
 public:
     enum QuoteComment {qcNone, qcCommand, qcPercentSign};
 
-    FileExporterBibTeX(const QString& encoding = "latex", const QChar& stringOpenDelimiter = '"', const QChar& stringCloseDelimiter = '"', KBibTeX::Casing keywordCasing = KBibTeX::cCamelCase, QuoteComment quoteComment = qcNone, bool protectCasing = false);
+    FileExporterBibTeX(const QString& encoding = "latex", const QChar& stringOpenDelimiter = '"', const QChar& stringCloseDelimiter = '"', KBibTeX::Casing keywordCasing = KBibTeX::cLowerCase, QuoteComment quoteComment = qcNone, bool protectCasing = false);
     ~FileExporterBibTeX();
 
     bool save(QIODevice* iodevice, const File* bibtexfile, QStringList *errorLog = NULL);
@@ -72,7 +72,7 @@ private:
     bool writePreamble(QTextStream &stream, const  Preamble& preamble);
     bool writeString(QTextStream &stream, const QString& text);
 
-    QString applyKeywordCasing(const QString &keyword);
+    //QString applyKeywordCasing(const QString &keyword);
     void addProtectiveCasing(QString &text);
 
     static bool flushAccumulatedText(QString &accumulatedText, QString &result, const QString& fieldType);

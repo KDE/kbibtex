@@ -31,6 +31,8 @@
 #include <value.h>
 #include <comment.h>
 #include <encoderlatex.h>
+#include <bibtexentries.h>
+#include <bibtexfields.h>
 
 #include "fileexporterbibtex.h"
 
@@ -174,7 +176,10 @@ void FileExporterBibTeX::cancel()
 
 bool FileExporterBibTeX::writeEntry(QTextStream &stream, const Entry& entry)
 {
-    stream << "@" << applyKeywordCasing(entry.type()) << "{" << entry.id();
+    BibTeXEntries *be = BibTeXEntries::self();
+    BibTeXFields *bf = BibTeXFields::self();
+
+    stream << "@" << be->format(entry.type(), m_keywordCasing) << "{" << entry.id();
 
     for (Entry::ConstIterator it = entry.begin(); it != entry.end(); ++it) {
         QString key = it.key();
@@ -183,7 +188,7 @@ bool FileExporterBibTeX::writeEntry(QTextStream &stream, const Entry& entry)
         if (text.isEmpty()) kWarning() << "Value for field " << key << " is empty" << endl;
         if (m_protectCasing && dynamic_cast<PlainText*>(value.first()) != NULL && (key == Entry::ftTitle || key == Entry::ftBookTitle || key == Entry::ftSeries))
             addProtectiveCasing(text);
-        stream << "," << endl << "\t" << key << " = " << text;
+        stream << "," << endl << "\t" << bf->format(key, m_keywordCasing) << " = " << text;
     }
     stream << endl << "}" << endl << endl;
     return TRUE;
@@ -191,24 +196,28 @@ bool FileExporterBibTeX::writeEntry(QTextStream &stream, const Entry& entry)
 
 bool FileExporterBibTeX::writeMacro(QTextStream &stream, const Macro& macro)
 {
+    BibTeXEntries *be = BibTeXEntries::self();
+
     QString text = valueToBibTeX(macro.value());
     if (m_protectCasing)
         addProtectiveCasing(text);
 
-    stream << "@" << applyKeywordCasing("String") << "{ " << macro.key() << " = " << text << " }" << endl << endl;
+    stream << "@" << be->format(QLatin1String("String"), m_keywordCasing) << "{ " << macro.key() << " = " << text << " }" << endl << endl;
 
     return TRUE;
 }
 
 bool FileExporterBibTeX::writeComment(QTextStream &stream, const Comment& comment)
 {
+    BibTeXEntries *be = BibTeXEntries::self();
+
     QString text = comment.text() ;
     escapeLaTeXChars(text);
     if (m_encoding == "latex")
         text = EncoderLaTeX::currentEncoderLaTeX() ->encode(text);
 
     if (comment.useCommand() || m_quoteComment == qcCommand)
-        stream << "@" << applyKeywordCasing("Comment") << "{" << text << "}" << endl << endl;
+        stream << "@" << be->format(QLatin1String("Comment"), m_keywordCasing) << "{" << text << "}" << endl << endl;
     else    if (m_quoteComment == qcPercentSign) {
         QStringList commentLines = text.split('\n', QString::SkipEmptyParts);
         for (QStringList::Iterator it = commentLines.begin(); it != commentLines.end(); it++) {
@@ -225,7 +234,8 @@ bool FileExporterBibTeX::writeComment(QTextStream &stream, const Comment& commen
 
 bool FileExporterBibTeX::writePreamble(QTextStream &stream, const Preamble& preamble)
 {
-    stream << "@" << applyKeywordCasing("Preamble") << "{" << valueToBibTeX(preamble.value()) << "}" << endl << endl;
+    BibTeXEntries *be = BibTeXEntries::self();
+    stream << "@" << be->format(QLatin1String("Preamble"), m_keywordCasing) << "{" << valueToBibTeX(preamble.value()) << "}" << endl << endl;
 
     return TRUE;
 }
@@ -347,17 +357,6 @@ bool FileExporterBibTeX::flushAccumulatedText(QString &accumulatedText, QString 
 void FileExporterBibTeX::escapeLaTeXChars(QString &text)
 {
     text.replace("&", "\\&");
-}
-
-QString FileExporterBibTeX::applyKeywordCasing(const QString &keyword)
-{
-    // TODO: kcCamelCase: Write file containing all camel cases
-    switch (m_keywordCasing) {
-    case KBibTeX::cLowerCase: return keyword.toLower();
-    case KBibTeX::cInitialCapital: return keyword.at(0) + keyword.toLower().mid(1);
-    case KBibTeX::cUpperCase: return keyword.toUpper();
-    default: return keyword;
-    }
 }
 
 bool FileExporterBibTeX::requiresPersonQuoting(const QString &text, bool isLastName)
