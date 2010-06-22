@@ -101,8 +101,8 @@ FilterBar::FilterBar(QWidget *parent)
 
     BibTeXFields *bibTeXFiles = BibTeXFields::self();
     for (BibTeXFields::Iterator it = bibTeXFiles->begin(); it != bibTeXFiles->end(); ++it)
-        if ((*it).rawAlt.isEmpty())
-            d->comboBoxField->addItem((*it).label, (*it).raw);
+        if ((*it).upperCamelCaseAlt.isEmpty())
+            d->comboBoxField->addItem((*it).label, (*it).upperCamelCase);
 
     connect(d->comboBoxFilterText->lineEdit(), SIGNAL(textChanged(QString)), this, SLOT(widgetsChanged()));
     connect(lineEdit, SIGNAL(clearButtonClicked()), this, SLOT(clearFilter()));

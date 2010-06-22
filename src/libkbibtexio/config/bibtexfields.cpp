@@ -79,11 +79,11 @@ void BibTeXFields::load()
         QString groupName = QString("Column%1").arg(col);
         KConfigGroup usercg(d->userConfig, groupName);
         KConfigGroup systemcg(d->systemDefaultsConfig, groupName);
-        fd.raw = systemcg.readEntry("Raw", "");
-        if (fd.raw.isEmpty()) continue;
-        fd.rawAlt = systemcg.readEntry("RawAlt", "");
-        if (fd.rawAlt.isEmpty()) fd.rawAlt = QString::null;
-        fd.label = systemcg.readEntry("Label", fd.raw);
+        fd.upperCamelCase = systemcg.readEntry("UpperCamelCase", "");
+        if (fd.upperCamelCase.isEmpty()) continue;
+        fd.upperCamelCaseAlt = systemcg.readEntry("UpperCamelCaseAlt", "");
+        if (fd.upperCamelCaseAlt.isEmpty()) fd.upperCamelCaseAlt = QString::null;
+        fd.label = systemcg.readEntry("Label", fd.upperCamelCase);
         fd.defaultWidth = systemcg.readEntry("DefaultWidth", sumWidth / col);
         fd.width = usercg.readEntry("Width", fd.defaultWidth);
         sumWidth += fd.width;
@@ -128,17 +128,33 @@ QString BibTeXFields::format(const QString& name, KBibTeX::Casing casing) const
     case KBibTeX::cInitialCapital:
         iName[0] = iName[0].toUpper();
         return iName;
-    case KBibTeX::cCamelCase: {
+    case KBibTeX::cLowerCamelCase: {
         for (ConstIterator it = begin(); it != end(); ++it) {
             /// configuration file uses camel-case
-            QString itName = (*it).raw.toLower();
-            if (itName == iName && (*it).rawAlt == QString::null)
-                return (*it).raw;
-
-            /// make an educated guess how camel-case would look like
-            iName[0] = iName[0].toUpper();
-            return iName;
+            QString itName = (*it).upperCamelCase.toLower();
+            if (itName == iName && (*it).upperCamelCaseAlt == QString::null) {
+                iName = (*it).upperCamelCase;
+                break;
+            }
         }
+
+        /// make an educated guess how camel-case would look like
+        iName[0] = iName[0].toLower();
+        return iName;
+    }
+    case KBibTeX::cUpperCamelCase: {
+        for (ConstIterator it = begin(); it != end(); ++it) {
+            /// configuration file uses camel-case
+            QString itName = (*it).upperCamelCase.toLower();
+            if (itName == iName && (*it).upperCamelCaseAlt == QString::null) {
+                iName = (*it).upperCamelCase;
+                break;
+            }
+        }
+
+        /// make an educated guess how camel-case would look like
+        iName[0] = iName[0].toUpper();
+        return iName;
     }
     }
     return name;

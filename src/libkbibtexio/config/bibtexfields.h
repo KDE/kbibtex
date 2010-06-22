@@ -29,8 +29,8 @@
 #include <kbibtexnamespace.h>
 
 typedef struct {
-    QString raw;
-    QString rawAlt;
+    QString upperCamelCase;
+    QString upperCamelCaseAlt;
     QString label;
     int width;
     int defaultWidth;

@@ -30,6 +30,8 @@
 
 #include "bibtexfilemodel.h"
 
+static QRegExp curlyRegExp("[{}]");
+
 void SortFilterBibTeXFileModel::setSourceModel(QAbstractItemModel *model)
 {
     QSortFilterProxyModel::setSourceModel(model);
@@ -50,16 +52,16 @@ void SortFilterBibTeXFileModel::updateFilter(SortFilterBibTeXFileModel::FilterQu
 
 bool SortFilterBibTeXFileModel::lessThan(const QModelIndex & left, const QModelIndex & right) const
 {
-    if (left.column() == right.column() && (m_bibtexFields->at(left.column()).raw == QLatin1String("author") || m_bibtexFields->at(left.column()).raw == ("editor"))) { /// special sorting for authors or editors: check all names, compare last and then first names
+    if (left.column() == right.column() && (m_bibtexFields->at(left.column()).upperCamelCase == QLatin1String("Author") || m_bibtexFields->at(left.column()).upperCamelCase == QLatin1String("Editor"))) { /// special sorting for authors or editors: check all names, compare last and then first names
         Entry *entryA = dynamic_cast<Entry*>(m_internalModel->element(left.row()));
         Entry *entryB = dynamic_cast<Entry*>(m_internalModel->element(right.row()));
         if (entryA == NULL || entryB == NULL) return  QSortFilterProxyModel::lessThan(left, right);
 
         Value valueA = entryA->value(Entry::ftAuthor);
         Value valueB = entryB->value(Entry::ftAuthor);
-        if (valueA.isEmpty() &&  m_bibtexFields->at(left.column()).rawAlt == ("editor"))
+        if (valueA.isEmpty() &&  m_bibtexFields->at(left.column()).upperCamelCaseAlt == ("editor"))
             valueA = entryA->value(Entry::ftEditor);
-        if (valueB.isEmpty() &&  m_bibtexFields->at(right.column()).rawAlt == ("editor"))
+        if (valueB.isEmpty() &&  m_bibtexFields->at(right.column()).upperCamelCaseAlt == ("editor"))
             valueB = entryB->value(Entry::ftEditor);
 
         if (valueA.isEmpty() || valueB.isEmpty()) return QSortFilterProxyModel::lessThan(left, right);
@@ -69,14 +71,14 @@ bool SortFilterBibTeXFileModel::lessThan(const QModelIndex & left, const QModelI
             Person *personB = dynamic_cast<Person *>(*itB);
             if (personA == NULL || personB == NULL) return QSortFilterProxyModel::lessThan(left, right);
 
-            QString nameA = personA->lastName().replace(QRegExp("[{}]"), "");
-            QString nameB = personB->lastName().replace(QRegExp("[{}]"), "");
+            QString nameA = personA->lastName().replace(curlyRegExp, "");
+            QString nameB = personB->lastName().replace(curlyRegExp, "");
             int cmp = QString::compare(nameA, nameB, Qt::CaseInsensitive);
             if (cmp < 0) return true;
             if (cmp > 0) return false;
 
-            nameA = personA->firstName().replace(QRegExp("[{}]"), "");
-            nameB = personB->firstName().replace(QRegExp("[{}]"), "");
+            nameA = personA->firstName().replace(curlyRegExp, "");
+            nameB = personB->firstName().replace(curlyRegExp, "");
             cmp = QString::compare(nameA, nameB, Qt::CaseInsensitive);
             if (cmp < 0) return true;
             if (cmp > 0) return false;
@@ -192,8 +194,8 @@ QVariant BibTeXFileModel::data(const QModelIndex &index, int role) const
         return QVariant();
 
     if (index.row() < m_bibtexFile->count() && index.column() < m_bibtexFields->count()) {
-        QString raw = m_bibtexFields->at(index.column()).raw;
-        QString rawAlt = m_bibtexFields->at(index.column()).rawAlt;
+        QString raw = m_bibtexFields->at(index.column()).upperCamelCase;
+        QString rawAlt = m_bibtexFields->at(index.column()).upperCamelCaseAlt;
         Element* element = (*m_bibtexFile)[index.row()];
         Entry* entry = dynamic_cast<Entry*>(element);
         if (entry != NULL) {

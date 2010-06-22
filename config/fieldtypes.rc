@@ -1,123 +1,123 @@
 [Column1]
-Raw=^type
+UpperCamelCase=^type
 Label=Type
 DefaultWidth=5
 
 [Column2]
-Raw=^id
+UpperCamelCase=^id
 Label=Identifier
 DefaultWidth=6
 
 [Column3]
-Raw=Title
+UpperCamelCase=Title
 Label=Title
 DefaultWidth=14
 Visible=false
 
 [Column4]
-Raw=Title
-RawAlt=BookTitle
+UpperCamelCase=Title
+UpperCamelCaseAlt=BookTitle
 Label=Title or Book Title
 DefaultWidth=14
 
 [Column5]
-Raw=Author
-RawAlt=Editor
+UpperCamelCase=Author
+UpperCamelCaseAlt=Editor
 Label=Author or Editor
 DefaultWidth=7
 
 [Column6]
-Raw=Author
+UpperCamelCase=Author
 Label=Author
 DefaultWidth=7
 Visible=false
 
 [Column7]
-Raw=Editor
+UpperCamelCase=Editor
 Label=Editor
 DefaultWidth=7
 Visible=false
 
 [Column8]
-Raw=Month
+UpperCamelCase=Month
 Label=Month
 DefaultWidth=3
 Visible=false
 
 [Column9]
-Raw=Year
+UpperCamelCase=Year
 Label=Year
 DefaultWidth=2
 
 [Column10]
-Raw=Journal
+UpperCamelCase=Journal
 Label=Journal
 DefaultWidth=4
 Visible=false
 
 [Column11]
-Raw=Volume
+UpperCamelCase=Volume
 Label=Volume
 DefaultWidth=1
 Visible=false
 
 [Column12]
-Raw=Number
+UpperCamelCase=Number
 Label=Number
 DefaultWidth=1
 Visible=false
 
 [Column13]
-Raw=ISSN
+UpperCamelCase=ISSN
 Label=ISSN
 DefaultWidth=2
 Visible=false
 
 [Column14]
-Raw=ISBN
+UpperCamelCase=ISBN
 Label=ISBN
 DefaultWidth=2
 Visible=false
 
 [Column15]
-Raw=ISBN
-RawAlt=ISSN
+UpperCamelCase=ISBN
+UpperCamelCaseAlt=ISSN
 Label=ISBN or ISSN
 DefaultWidth=2
 Visible=false
 
 [Column16]
-Raw=HowPublished
+UpperCamelCase=HowPublished
 Label=How Published
 DefaultWidth=5
 Visible=false
 
 [Column17]
-Raw=Note
+UpperCamelCase=Note
 Label=Note
 DefaultWidth=5
 Visible=false
 
 [Column18]
-Raw=Abstract
+UpperCamelCase=Abstract
 Label=Abstract
 DefaultWidth=7
 Visible=false
 
 [Column19]
-Raw=Pages
+UpperCamelCase=Pages
 Label=Pages
 DefaultWidth=2
 Visible=true
 
 [Column20]
-Raw=Publisher
+UpperCamelCase=Publisher
 Label=Publisher
 DefaultWidth=5
 Visible=false
 
 [Column21]
-Raw=Institution
+UpperCamelCase=Institution
 Label=Institution
 DefaultWidth=5
 Visible=false
