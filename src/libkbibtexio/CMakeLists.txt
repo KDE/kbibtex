@@ -30,7 +30,12 @@ set( kbibtexio_LIB_SRCS
 )
 
 add_definitions( -DMAKE_KBIBTEXIO_LIB )
-include_directories( ${LIBXML2_INCLUDE_DIR} ${LIBXSLT_INCLUDE_DIR} ${POPPLER_QT4_INCLUDE_DIR} )
+include_directories(
+	${LIBXML2_INCLUDE_DIR}
+	${LIBXSLT_INCLUDE_DIR}
+	${POPPLER_QT4_INCLUDE_DIR}
+	${CMAKE_CURRENT_SOURCE_DIR}/config/
+)
 
 kde4_add_library( kbibtexio SHARED ${kbibtexio_LIB_SRCS} )
 

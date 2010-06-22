@@ -30,6 +30,7 @@
 #include "fileexporterxml.h"
 
 static QRegExp removal("[{}]+");
+static QRegExp abstractRegExp("\\bAbstract[:]?([ ]|&nbsp;|&amp;nbsp;)*", Qt::CaseInsensitive);
 
 FileExporterXML::FileExporterXML()
         : FileExporter()
@@ -124,7 +125,7 @@ bool FileExporterXML::writeEntry(QTextStream &stream, const Entry* entry)
         } else if (key == Entry::ftAbstract) {
             /// clean up HTML artifacts
             QString text = valueToXML(value);
-            text = text.replace(QRegExp("\\bAbstract[:]?([ ]|&nbsp;|&amp;nbsp;)*"), "");
+            text = text.replace(abstractRegExp, "");
             stream << "  <" << key << ">" << text << "</" << key << ">" << endl;
         } else if (key == Entry::ftMonth) {
             stream << "  <month";

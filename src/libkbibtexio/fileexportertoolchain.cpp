@@ -17,12 +17,12 @@
 *   Free Software Foundation, Inc.,                                       *
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
+#include <stdlib.h>
 
 #include <QCoreApplication>
 #include <QStringList>
 #include <QFile>
 #include <QDir>
-#include <QDebug>
 
 #include "fileexportertoolchain.h"
 
@@ -94,7 +94,7 @@ bool FileExporterToolchain::writeFileToIODevice(const QString &filename, QIODevi
 {
     QFile file(filename);
     if (file.open(QIODevice::ReadOnly)) {
-        bool result = TRUE;
+        bool result = true;
         qint64 buffersize = 0x10000;
         qint64 amount = 0;
         char* buffer = new char[ buffersize ];
@@ -104,9 +104,11 @@ bool FileExporterToolchain::writeFileToIODevice(const QString &filename, QIODevi
 
         file.close();
         delete[] buffer;
+
         return result;
-    } else
-        return FALSE;
+    }
+
+    return false;
 }
 
 void FileExporterToolchain::slotProcessExited(int /*exitCode*/, QProcess::ExitStatus /*exitStatus*/)
@@ -182,5 +184,3 @@ bool FileExporterToolchain::which(const QString& filename)
 
     return false;
 }
-
-// #include "fileexportertoolchain.moc"

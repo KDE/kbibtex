@@ -72,7 +72,6 @@ private:
     bool writePreamble(QTextStream &stream, const  Preamble& preamble);
     bool writeString(QTextStream &stream, const QString& text);
 
-    //QString applyKeywordCasing(const QString &keyword);
     void addProtectiveCasing(QString &text);
 
     static bool flushAccumulatedText(QString &accumulatedText, QString &result, const QString& fieldType);

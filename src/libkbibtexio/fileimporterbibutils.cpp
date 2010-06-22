@@ -33,8 +33,6 @@ lists asis  = { 0, 0, NULL };
 lists corps = { 0, 0, NULL };
 char progname[] = "KBibTeX";
 
-using namespace KBibTeX::IO;
-
 FileImporterBibUtils::FileImporterBibUtils(InputFormat inputFormat)
         : FileImporter(), m_workingDir(createTempDir()), m_inputFormat(inputFormat), m_bibTeXImporter(new FileImporterBibTeX(FALSE, "latin1"))
 {

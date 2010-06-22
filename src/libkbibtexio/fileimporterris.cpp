@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2009 by Thomas Fischer                             *
+*   Copyright (C) 2004-2010 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -43,7 +43,7 @@ FileImporterRIS::~FileImporterRIS()
 File* FileImporterRIS::load(QIODevice *iodevice)
 {
     m_mutex.lock();
-    cancelFlag = FALSE;
+    cancelFlag = false;
     m_refNr = 0;
     QTextStream textStream(iodevice);
 

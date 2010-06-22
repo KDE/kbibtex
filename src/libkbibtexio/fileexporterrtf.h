@@ -24,10 +24,6 @@
 
 class QTextStream;
 
-namespace KBibTeX
-{
-namespace IO {
-
 /**
 @author Thomas Fischer
 */
@@ -50,8 +46,5 @@ private:
     bool generateRTF(QIODevice* iodevice, QStringList *errorLog);
     bool writeLatexFile(const QString &filename);
 };
-
-}
-}
 
 #endif

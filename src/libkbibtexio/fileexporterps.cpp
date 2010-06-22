@@ -25,8 +25,6 @@
 #include <fileexporterbibtex.h>
 #include "fileexporterps.h"
 
-using namespace KBibTeX::IO;
-
 FileExporterPS::FileExporterPS()
         : FileExporterToolchain(), m_latexLanguage("english"), m_latexBibStyle("plain")
 {

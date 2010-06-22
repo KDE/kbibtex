@@ -25,8 +25,6 @@
 #include <fileexporterbibtex.h>
 #include "fileexporterrtf.h"
 
-using namespace KBibTeX::IO;
-
 FileExporterRTF::FileExporterRTF(const QString& latexBibStyle, const QString& latexLanguage)
         : FileExporterToolchain(), m_latexLanguage(latexLanguage), m_latexBibStyle(latexBibStyle)
 {

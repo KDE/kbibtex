@@ -28,10 +28,6 @@
 #include <fileimporter.h>
 #include <fileimporterbibtex.h>
 
-namespace KBibTeX
-{
-namespace IO {
-
 /**
  @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
 */
@@ -60,9 +56,6 @@ private:
     void deleteTempDir(const QString& directory);
 
 };
-
-}
-}
 
 #endif // BIBTEXFILEIMPORTBIBUTILS_H
 #endif // HAVE_BIBUTILS

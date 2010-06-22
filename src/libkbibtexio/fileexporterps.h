@@ -24,10 +24,6 @@
 
 class QStringList;
 
-namespace KBibTeX
-{
-namespace IO {
-
 /**
 @author Thomas Fischer
 */
@@ -54,7 +50,5 @@ private:
     bool writeLatexFile(const QString &filename);
 };
 
-}
-}
 
 #endif
