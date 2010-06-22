@@ -34,11 +34,14 @@ class QStringList;
 /**
 @author Thomas Fischer
 */
-class FileExporterToolchain : public FileExporter
+class KBIBTEXIO_EXPORT FileExporterToolchain : public FileExporter
 {
     Q_OBJECT
 public:
     FileExporterToolchain();
+
+    static bool kpsewhich(const QString& filename);
+    static bool which(const QString& filename);
 
 public slots:
     void cancel();
@@ -49,8 +52,6 @@ protected:
     bool runProcesses(const QStringList &progs, QStringList *errorLog = NULL);
     bool runProcess(const QString &cmd, const QStringList &args, QStringList *errorLog = NULL);
     bool writeFileToIODevice(const QString &filename, QIODevice *device);
-    bool kpsewhich(const QString& filename);
-    bool which(const QString& filename);
 
 private:
     QWaitCondition m_waitCond;
