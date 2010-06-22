@@ -28,7 +28,8 @@ namespace KBibTeX
 enum Casing {
     cLowerCase,
     cInitialCapital,
-    cCamelCase,
+    cUpperCamelCase,
+    cLowerCamelCase,
     cUpperCase
 };
 
