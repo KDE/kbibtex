@@ -21,6 +21,7 @@ set( kbibtexio_LIB_SRCS
 	fileimporter.cpp
 	fileimporterbibtex.cpp
 	fileimporterris.cpp
+	fileimporterpdf.cpp
 	macro.cpp
 	preamble.cpp
 	value.cpp
@@ -29,15 +30,17 @@ set( kbibtexio_LIB_SRCS
 )
 
 add_definitions( -DMAKE_KBIBTEXIO_LIB )
-include_directories( ${LIBXML2_INCLUDE_DIR} ${LIBXSLT_INCLUDE_DIR} )
+include_directories( ${LIBXML2_INCLUDE_DIR} ${LIBXSLT_INCLUDE_DIR} ${POPPLER_QT4_INCLUDE_DIR} )
 
 kde4_add_library( kbibtexio SHARED ${kbibtexio_LIB_SRCS} )
 
 target_link_libraries( kbibtexio
 	${QT_QTCORE_LIBRARY}
 	${KDE4_KDECORE_LIBS}
+	${KDE4_KIO_LIBS}
 	${LIBXML2_LIBRARIES}
 	${LIBXSLT_LIBRARIES}
+	${POPPLER_QT4_LIBRARIES}
 )
 
 install(TARGETS kbibtexio DESTINATION ${LIB_INSTALL_DIR})
