@@ -33,7 +33,7 @@
 
 #include "referencepreview.h"
 
-const QString notAvailableMessage = "<html><body style=\"font-family: '" + KGlobalSettings::generalFont().family() + "'; font-size: " + QString::number(KGlobalSettings::generalFont().pointSize()) + "pt; font-style: italic; color: #333;\">" + i18n("No preview available") + "</body></html>"; //FIXME: Font size seems to be too small
+const QString notAvailableMessage = "<html><body style=\"font-family: '" + KGlobalSettings::generalFont().family() + "';\"><p style=\"font-size: " + QString::number(KGlobalSettings::generalFont().pointSize()) + "pt; font-style: italic; color: #333;\">" + i18n("No preview available") + "</p><p style=\"font-size: " + QString::number(KGlobalSettings::generalFont().pointSize() * .9) + "pt; color: #666;\">" + i18n("Reason:") + " %1</p></body></html>"; //FIXME: Font size seems to be too small
 class ReferencePreview::ReferencePreviewPrivate
 {
 private:
@@ -89,7 +89,7 @@ void ReferencePreview::setEnabled(bool enabled)
     if (enabled)
         d->webView->setHtml(d->htmlText, d->baseUrl);
     else
-        d->webView->setHtml(notAvailableMessage, d->baseUrl);
+        d->webView->setHtml(notAvailableMessage.arg(i18n("Preview disabled")), d->baseUrl);
     d->webView->setEnabled(enabled);
     d->comboBox->setEnabled(enabled);
 }
@@ -103,7 +103,7 @@ void ReferencePreview::setElement(const Element* element)
 void ReferencePreview::renderHTML()
 {
     if (d->element == NULL) {
-        d->webView->setHtml(notAvailableMessage, d->baseUrl);
+        d->webView->setHtml(notAvailableMessage.arg(i18n("No element selected")), d->baseUrl);
         return;
     }
 
@@ -168,7 +168,7 @@ void ReferencePreview::renderHTML()
     buffer.close();
 
     if (text.isEmpty()) /// something went wrong, no output ...
-        text = notAvailableMessage;
+        text = notAvailableMessage.arg(i18n("No HTML output generated"));
 
     if (d->comboBox->currentIndex() == 0) {
         /// source
