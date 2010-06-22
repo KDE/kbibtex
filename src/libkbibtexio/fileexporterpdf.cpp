@@ -22,6 +22,9 @@
 #include <QUrl>
 #include <QTextStream>
 
+#include <KDebug>
+#include <KLocale>
+
 #include <element.h>
 #include <entry.h>
 #include <fileexporterbibtex.h>
@@ -108,9 +111,11 @@ bool FileExporterPDF::generatePDF(QIODevice* iodevice, QStringList *errorLog)
     QStringList cmdLines = QString("pdflatex -halt-on-error bibtex-to-pdf.tex|bibtex bibtex-to-pdf|pdflatex -halt-on-error bibtex-to-pdf.tex|pdflatex -halt-on-error bibtex-to-pdf.tex").split('|');
 
     if (writeLatexFile(m_laTeXFilename) && runProcesses(cmdLines, errorLog) && writeFileToIODevice(m_outputFilename, iodevice))
-        return TRUE;
-    else
-        return FALSE;
+        return true;
+    else {
+        kWarning() << "Generating PDF failed";
+        return false;
+    }
 }
 
 bool FileExporterPDF::writeLatexFile(const QString &filename)
@@ -121,8 +126,7 @@ bool FileExporterPDF::writeLatexFile(const QString &filename)
         QTextStream ts(&latexFile);
         ts.setCodec("UTF-8");
         ts << "\\documentclass{article}\n";
-        if (kpsewhich("t2aenc.dfu") &&  kpsewhich("t1enc.dfu"))
-            ts << "\\usepackage[T1,T2A]{fontenc}\n";
+        ts << "\\usepackage[T1]{fontenc}\n";
         ts << "\\usepackage[utf8]{inputenc}\n";
         ts << "\\usepackage[" << m_latexLanguage << "]{babel}\n";
         if (kpsewhich("hyperref.sty"))
@@ -131,18 +135,21 @@ bool FileExporterPDF::writeLatexFile(const QString &filename)
             ts << "\\usepackage{url}\n";
         if (m_latexBibStyle.startsWith("apacite") && kpsewhich("apacite.sty"))
             ts << "\\usepackage[bibnewpage]{apacite}\n";
-        if (m_embedFiles)
+        if (kpsewhich("embedfile.sty"))
             ts << "\\usepackage{embedfile}\n";
         ts << "\\bibliographystyle{" << m_latexBibStyle << "}\n";
         ts << "\\begin{document}\n";
 
-        if (m_embedFiles)
-            for (QStringList::ConstIterator it = m_embeddedFileList.begin(); it != m_embeddedFileList.end(); ++it) {
-                QStringList param = (*it).split("|");
-                QFile file(param[1]);
-                if (file.exists())
-                    ts << "\\embedfile[desc={" << param[0] << "}]{" << param[1] << "}\n";
-            }
+        if (kpsewhich("embedfile.sty")) {
+            ts << "\\embedfile[desc={" << i18n("BibTeX file") << "}]{bibtex-to-pdf.bib}\n";
+            if (m_embedFiles)
+                for (QStringList::ConstIterator it = m_embeddedFileList.begin(); it != m_embeddedFileList.end(); ++it) {
+                    QStringList param = (*it).split("|");
+                    QFile file(param[1]);
+                    if (file.exists())
+                        ts << "\\embedfile[desc={" << param[0] << "}]{" << param[1] << "}\n";
+                }
+        }
 
         ts << "\\nocite{*}\n";
         ts << "\\bibliography{bibtex-to-pdf}\n";
