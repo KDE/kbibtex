@@ -158,14 +158,14 @@ void KBibTeXMainWindow::newDocument()
 
 void KBibTeXMainWindow::openDocumentDialog()
 {
-    QString startDir = QLatin1String(":open");
+    QString startDir = QString();// QLatin1String(":open"); // FIXME: Does not work yet
     OpenFileInfo *ofi = d->openFileInfoManager->currentFile();
     if (ofi != NULL) {
         KUrl url = ofi->url();
         if (url.isValid()) startDir = url.path();
     }
 
-    KEncodingFileDialog::Result loadResult = KEncodingFileDialog::getOpenUrlAndEncoding(QString(), startDir, QLatin1String("text/x-bibtex application/x-research-info-systems application/x-endnote-refer all/all"), this);
+    KEncodingFileDialog::Result loadResult = KEncodingFileDialog::getOpenUrlAndEncoding(QString(), startDir, QLatin1String("text/x-bibtex application/xml application/pdf all/all"), this); // TODO application/x-research-info-systems application/x-endnote-refer
     if (!loadResult.URLs.isEmpty()) {
         KUrl url = loadResult.URLs.first();
         if (!url.isEmpty()) {
@@ -198,9 +198,9 @@ void KBibTeXMainWindow::documentSwitched(BibTeXEditor *oldEditor, BibTeXEditor *
 
     d->referencePreview->setEnabled(newEditor != NULL);
     if (oldEditor != NULL)
-        disconnect(oldEditor, SIGNAL(currentElementChanged(const KBibTeX::IO::Element*)), d->referencePreview, SLOT(setElement(const KBibTeX::IO::Element*)));
+        disconnect(oldEditor, SIGNAL(currentElementChanged(const Element*)), d->referencePreview, SLOT(setElement(const Element*)));
     if (newEditor != NULL)
-        connect(newEditor, SIGNAL(currentElementChanged(const KBibTeX::IO::Element*)), d->referencePreview, SLOT(setElement(const KBibTeX::IO::Element*)));
+        connect(newEditor, SIGNAL(currentElementChanged(const Element*)), d->referencePreview, SLOT(setElement(const Element*)));
     d->referencePreview->setElement(NULL);
 }
 
