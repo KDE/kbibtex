@@ -14,6 +14,8 @@ find_package(LibXml2)
 macro_log_feature(LIBXML2_FOUND "LibXML2" "Libraries used to develop XML
 applications" "http://xmlsoft.org" TRUE "" "Required to transform XML files")
 
+find_package(PopplerQt4)
+
 add_subdirectory( src )
 add_subdirectory( config )
 

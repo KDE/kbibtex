@@ -42,6 +42,8 @@
 #include <fileexporterbibtex.h>
 #include <fileimporterris.h>
 #include <fileexporterris.h>
+#include <fileimporterpdf.h>
+#include <fileexporterpdf.h>
 #include <fileexporterbibtex2html.h>
 #include <fileexporterxml.h>
 #include <fileexporterxslt.h>
@@ -72,7 +74,10 @@ public:
         int p = ending.lastIndexOf(".");
         ending = ending.mid(p + 1);
 
-        if (ending == "ris") {
+        if (ending == "pdf") {
+            kDebug() << "Selecting FileImporterPDF" << endl;
+            return new FileImporterPDF();
+        } else if (ending == "ris") {
             kDebug() << "Selecting FileImporterRIS" << endl;
             return new FileImporterRIS();
         } else {
@@ -95,6 +100,9 @@ public:
         } else if (ending == "ris") {
             kDebug() << "Selecting FileExporterRIS" << endl;
             return new FileExporterRIS();
+        } else if (ending == "pdf") {
+            kDebug() << "Selecting FileExporterPDF" << endl;
+            return new FileExporterPDF();
         } else if (ending == "html" || ending == "html") {
             kDebug() << "Selecting FileExporterBibTeX2HTML" << endl;
             return new FileExporterBibTeX2HTML();
@@ -194,7 +202,14 @@ bool KBibTeXPart::saveFile()
 
 void KBibTeXPart::saveDocumentDialog()
 {
-    KEncodingFileDialog::Result loadResult = KEncodingFileDialog::getSaveUrlAndEncoding(QString(), ":save", QLatin1String("text/x-bibtex application/xml text/html"), widget());
+    QString startDir = QString();// QLatin1String(":save"); // FIXME: Does not work yet
+    QString supportedMimeTypes = QLatin1String("text/x-bibtex application/xml");
+    if (FileExporterToolchain::kpsewhich(QLatin1String("embedfile.sty")))
+        supportedMimeTypes += QLatin1String(" application/pdf");
+    // TODO application/x-research-info-systems application/x-endnote-refer
+    supportedMimeTypes += QLatin1String(" text/html");
+
+    KEncodingFileDialog::Result loadResult = KEncodingFileDialog::getSaveUrlAndEncoding(QString(), startDir, supportedMimeTypes, widget());
     if (!loadResult.URLs.isEmpty()) {
         KUrl url = loadResult.URLs.first();
         if (!url.isEmpty()) {
@@ -224,6 +239,11 @@ bool KBibTeXPart::openFile()
     File *bibtexFile = importer->load(&inputfile);
     inputfile.close();
     delete importer;
+
+    if (bibtexFile == NULL) {
+        kWarning() << "Opening file failed";
+        return false;
+    }
 
     BibTeXEntries::self()->format(*bibtexFile, KBibTeX::cCamelCase);
 

@@ -28,8 +28,10 @@
 #include <KMimeType>
 #include <KMimeTypeTrader>
 #include <KUrl>
+#include <KMessageBox>
 #include <kparts/part.h>
 
+#include <fileimporterpdf.h>
 #include "openfileinfo.h"
 
 const QString OpenFileInfo::propertyEncoding = QLatin1String("encoding");
@@ -70,6 +72,14 @@ public:
         }
     }
 
+    bool canOpen(const KUrl &url) {
+        QString ending = url.path().toLower();
+        int p = ending.lastIndexOf(".");
+        ending = ending.mid(p + 1);
+
+        return ending == "bib" || ending == "ris" || (ending == "pdf" && FileImporterPDF::containsBibTeXData(url) && KMessageBox::questionYesNo(NULL, i18n("This PDF file contains bibliographic references.\n\nLoad bibliographic data instead of PDF data?"), i18n("PDF Import"), KGuiItem(i18n("Bibliographic data"), KIcon("server-database")), KGuiItem(i18n("PDF data"), KIcon("application-pdf"))) == KMessageBox::Yes); // FIXME use better icon for "bibliographic data"
+    }
+
     KParts::ReadWritePart* createPart(QWidget *parent) {
         /** use cached part for this parent if possible */
         if (partPerParent.contains(parent))
@@ -82,6 +92,10 @@ public:
         } else if (mimeType.isNull())
             mimeType = OpenFileInfo::mimetypeBibTeX;
 
+        if (canOpen(url))
+            mimeType = "text/x-bibtex"; // FIXME unclean
+
+        // FIXME: Check for ReadOnlyPart, too, but then set document into read-only mode
         KService::List list = KMimeTypeTrader::self()->query(mimeType, QString::fromLatin1("KParts/ReadWritePart"));
         for (KService::List::Iterator it = list.begin(); it != list.end(); ++it) {
             kDebug() << "service name is " << (*it)->name() << endl;
