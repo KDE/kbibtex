@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2009 by Thomas Fischer                             *
+*   Copyright (C) 2004-2010 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -18,32 +18,12 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#ifndef KBIBTEX_PROGRAM_SEARCHFORM_H
-#define KBIBTEX_PROGRAM_SEARCHFORM_H
+#include "websearchabstract.h"
 
-#include <QWidget>
+const QString WebSearchAbstract::queryKeyFreeText = QLatin1String("free");
+const QString WebSearchAbstract::queryKeyTitle = QLatin1String("title");
+const QString WebSearchAbstract::queryKeyAuthor = QLatin1String("author");
+const QString WebSearchAbstract::queryKeyYear = QLatin1String("year");
 
-class Entry;
-
-class SearchForm : public QWidget
-{
-    Q_OBJECT
-
-public:
-    SearchForm(QWidget *parent);
-
-public slots:
-    void updatedConfiguration();
-
-private:
-    class SearchFormPrivate;
-    SearchFormPrivate *d;
-
-private slots:
-    void startSearch();
-    void foundEntry(Entry*entry);
-    void stoppedSearch(int resultCode);
-};
-
-
-#endif // KBIBTEX_PROGRAM_SEARCHFORM_H
+const int WebSearchAbstract::resultNoError = 0;
+const int WebSearchAbstract::resultUnspecifiedError = 1;

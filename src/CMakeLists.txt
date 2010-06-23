@@ -20,6 +20,7 @@ include_directories(
 )
 
 add_subdirectory( libkbibtexio )
+add_subdirectory( websearch )
 add_subdirectory( gui )
 add_subdirectory( program )
 add_subdirectory( parts )

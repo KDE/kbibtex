@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2009 by Thomas Fischer                             *
+*   Copyright (C) 2004-2010 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -17,33 +17,39 @@
 *   Free Software Foundation, Inc.,                                       *
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
+#ifndef KBIBTEX_WEBSEARCH_ABSTRACT_H
+#define KBIBTEX_WEBSEARCH_ABSTRACT_H
 
-#ifndef KBIBTEX_PROGRAM_SEARCHFORM_H
-#define KBIBTEX_PROGRAM_SEARCHFORM_H
+#include "kbibtexio_export.h"
 
-#include <QWidget>
+#include <QObject>
+#include <QMap>
+#include <QString>
 
-class Entry;
+#include <entry.h>
 
-class SearchForm : public QWidget
+/**
+ * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ */
+class KBIBTEXIO_EXPORT WebSearchAbstract : public QObject
 {
     Q_OBJECT
 
 public:
-    SearchForm(QWidget *parent);
+    static const QString queryKeyFreeText;
+    static const QString queryKeyTitle;
+    static const QString queryKeyAuthor;
+    static const QString queryKeyYear;
 
-public slots:
-    void updatedConfiguration();
+    static const int resultNoError;
+    static const int resultUnspecifiedError;
 
-private:
-    class SearchFormPrivate;
-    SearchFormPrivate *d;
+    virtual void startSearch(const QMap<QString, QString> &query, int numResults) = 0;
+    virtual QString label() const = 0;
 
-private slots:
-    void startSearch();
-    void foundEntry(Entry*entry);
-    void stoppedSearch(int resultCode);
+signals:
+    void foundEntry(Entry*);
+    void stoppedSearch(int);
 };
 
-
-#endif // KBIBTEX_PROGRAM_SEARCHFORM_H
+#endif // KBIBTEX_WEBSEARCH_ABSTRACT_H

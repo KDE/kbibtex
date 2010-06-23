@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2009 by Thomas Fischer                             *
+*   Copyright (C) 2004-2010 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -17,33 +17,36 @@
 *   Free Software Foundation, Inc.,                                       *
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
+#ifndef KBIBTEX_WEBSEARCH_BIBSONOMY_H
+#define KBIBTEX_WEBSEARCH_BIBSONOMY_H
 
-#ifndef KBIBTEX_PROGRAM_SEARCHFORM_H
-#define KBIBTEX_PROGRAM_SEARCHFORM_H
+#include <QByteArray>
 
-#include <QWidget>
+#include <kio/jobclasses.h>
 
-class Entry;
+#include <websearchabstract.h>
 
-class SearchForm : public QWidget
+/**
+ * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ */
+class KBIBTEXIO_EXPORT WebSearchBibsonomy : public WebSearchAbstract
 {
     Q_OBJECT
 
 public:
-    SearchForm(QWidget *parent);
+    virtual void startSearch(const QMap<QString, QString> &query, int numResults);
+    virtual QString label() const;
 
 public slots:
-    void updatedConfiguration();
-
-private:
-    class SearchFormPrivate;
-    SearchFormPrivate *d;
+    void cancel();
 
 private slots:
-    void startSearch();
-    void foundEntry(Entry*entry);
-    void stoppedSearch(int resultCode);
+    void   data(KIO::Job *job, const QByteArray &data);
+    void jobDone(KJob *   job);
+
+private:
+    QByteArray m_buffer;
+    KIO::TransferJob *m_job;
 };
 
-
-#endif // KBIBTEX_PROGRAM_SEARCHFORM_H
+#endif // KBIBTEX_WEBSEARCH_BIBSONOMY_H
