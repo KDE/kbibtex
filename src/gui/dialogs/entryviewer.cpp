@@ -70,12 +70,14 @@ public:
             int col = 0, row = 0;
             for (QList<SingleFieldLayout>::ConstIterator sflit = etl.singleFieldLayouts.constBegin(); sflit != etl.singleFieldLayouts.constEnd(); ++sflit) {
                 QLabel *label = new QLabel((*sflit).uiLabel + ":", container);
-                layout->addWidget(label, row, col, 1, 1, Qt::AlignTop | Qt::AlignRight);
+                layout->addWidget(label, row, col, 1, 1);
+                label->setAlignment(Qt::AlignTop | Qt::AlignRight);
 
                 FieldInput *fieldInput = new FieldInput((*sflit).fieldInputLayout, KBibTeX::tfSource, container);
                 layout->setColumnStretch(col, 0);
+                layout->setRowStretch(row, 1);
                 layout->setColumnStretch(col + 1, 2);
-                layout->addWidget(fieldInput, row, col + 1, 1, 1, Qt::AlignTop | Qt::AlignLeft);
+                layout->addWidget(fieldInput, row, col + 1, 1, 1);
                 label->setBuddy(fieldInput);
 
                 p->bibtexKeyToWidget.insert((*sflit).bibtexLabel, fieldInput);
