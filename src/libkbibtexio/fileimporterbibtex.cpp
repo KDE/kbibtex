@@ -173,6 +173,12 @@ Comment *FileImporterBibTeX::readPlainCommentElement()
         if (m_currentChar == '\n') ++m_lineNo;
         *m_textStream >> m_currentChar;
     }
+
+    if (result.startsWith(QLatin1String("x-kbibtex"))) {
+        /// ignore special comments
+        return NULL;
+    }
+
     return new Comment(result);
 }
 
@@ -248,7 +254,7 @@ Entry *FileImporterBibTeX::readEntryElement(const QString& typeString)
         token = nextToken();
     }
 
-    QString key = readSimpleString();
+    QString key = readSimpleString(',').replace(" ", "");
     Entry *entry = new Entry(be->format(typeString, m_keywordCasing), key);
 
     token = nextToken();
@@ -256,9 +262,13 @@ Entry *FileImporterBibTeX::readEntryElement(const QString& typeString)
         if (token == tBracketClose || token == tEOF)
             break;
         else if (token != tComma) {
-            qCritical() << "Error in parsing entry '" << key << "': Comma symbol (,) expected";
-            delete entry;
-            return NULL;
+            if (m_currentChar.isLetter()) {
+                kWarning() << "Error in parsing entry '" << key << "': Comma symbol (,) expected but got letter " << m_currentChar;
+            } else {
+                kWarning() << "Error in parsing entry '" << key << "': Comma symbol (,) expected";
+                delete entry;
+                return NULL;
+            }
         }
 
         QString keyName = bf->format(readSimpleString(), m_keywordCasing);
@@ -280,6 +290,7 @@ Entry *FileImporterBibTeX::readEntryElement(const QString& typeString)
                 ++i;
                 appendix = QString::number(i);
             }
+            kWarning() << "Entry already contains a key " << keyName << ", using " << (keyName + appendix);
             keyName += appendix;
         }
 

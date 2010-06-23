@@ -20,6 +20,8 @@
 #ifndef KBIBTEX_IO_FILEIMPORTERBIBTEX_H
 #define KBIBTEX_IO_FILEIMPORTERBIBTEX_H
 
+#include "kbibtexio_export.h"
+
 #include <QTextStream>
 
 #include <kbibtexnamespace.h>
