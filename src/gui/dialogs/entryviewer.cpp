@@ -65,7 +65,7 @@ public:
             int mod = etl.singleFieldLayouts.size() / etl.columns;
             if (etl.singleFieldLayouts.size() % etl.columns > 0)
                 ++mod;
-            layout->setRowStretch(mod, 5);
+            layout->setRowStretch(mod, 1);
 
             int col = 0, row = 0;
             for (QList<SingleFieldLayout>::ConstIterator sflit = etl.singleFieldLayouts.constBegin(); sflit != etl.singleFieldLayouts.constEnd(); ++sflit) {
@@ -75,7 +75,10 @@ public:
 
                 FieldInput *fieldInput = new FieldInput((*sflit).fieldInputLayout, KBibTeX::tfSource, container);
                 layout->setColumnStretch(col, 0);
-                layout->setRowStretch(row, 1);
+                if ((*sflit).fieldInputLayout == KBibTeX::MultiLine || (*sflit).fieldInputLayout == KBibTeX::List)
+                    layout->setRowStretch(row, 100);
+                else
+                    layout->setRowStretch(row, 0);
                 layout->setColumnStretch(col + 1, 2);
                 layout->addWidget(fieldInput, row, col + 1, 1, 1);
                 label->setBuddy(fieldInput);
@@ -197,7 +200,6 @@ EntryViewer::EntryViewer(const Entry *entry, QWidget *parent)
         : QTabWidget(parent), d(new EntryViewerPrivate(entry, this))
 {
     d->createGUI();
-    reset();
     setReadOnly(true);
 }
 

@@ -59,7 +59,6 @@ public:
 EntryEditor::EntryEditor(Entry *entry, QWidget *parent)
         : EntryViewer(entry, parent), d(new EntryEditorPrivate(entry, this))
 {
-    reset();
     setReadOnly(false);
 
     connect(this, SIGNAL(currentChanged(int)), this, SLOT(tabChanged(int)));

@@ -59,6 +59,7 @@ void BibTeXEditor::editElement(Element *element)
     if (entry != NULL) {
         KDialog dialog(this);
         EntryEditor entryEditor(entry, &dialog);
+        entryEditor.reset();
         dialog.setCaption(i18n("Edit Entry"));
         dialog.setMainWidget(&entryEditor);
         dialog.setButtons(KDialog::Ok | KDialog::Apply | KDialog::Cancel | KDialog::Reset);
