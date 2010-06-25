@@ -32,6 +32,7 @@ typedef struct {
     QString upperCamelCase;
     QString upperCamelCaseAlt;
     QString label;
+    KBibTeX::TypeFlags typeFlags;
     int width;
     int defaultWidth;
     bool visible;
@@ -53,6 +54,11 @@ public:
      * Change the casing of a given field name to one of the predefine formats.
      */
     QString format(const QString& name, KBibTeX::Casing casing) const;
+
+    static KBibTeX::TypeFlags typeFlagsFromString(const QString &typeFlagsString);
+    static QString typeFlagsToString(KBibTeX::TypeFlags typeFlags);
+
+    const FieldDescription* find(const QString &name) const;
 
 protected:
     BibTeXFields();

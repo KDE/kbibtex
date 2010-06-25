@@ -21,6 +21,7 @@
 #include <QLayout>
 #include <QApplication>
 #include <QTextEdit>
+#include <QMenu>
 
 #include <KPushButton>
 #include <KLineEdit>
@@ -60,26 +61,16 @@ public:
         if (isMultiLine) {
             m_multiLineEditText = new QTextEdit(p);
             hLayout->addWidget(m_multiLineEditText);
-            m_multiLineEditText->setObjectName("FieldLineEditText");
             connect(m_multiLineEditText->document(), SIGNAL(modificationChanged(bool)), p, SIGNAL(editingFinished()));
             m_multiLineEditText->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
         } else {
             m_singleLineEditText = new KLineEdit(p);
             hLayout->addWidget(m_singleLineEditText);
             hLayout->setStretchFactor(m_singleLineEditText, 100);
-            m_singleLineEditText->setObjectName("FieldLineEditText");
             m_singleLineEditText->setClearButtonShown(true);
             connect(m_singleLineEditText, SIGNAL(editingFinished()), p, SIGNAL(editingFinished()));
             m_singleLineEditText->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
         }
-
-        // qApp->setStyleSheet("QFrame#FieldLineEdit { background-color: " + QPalette().color(QPalette::Base).name() + "; } QTextEdit#FieldLineEditText { border-style: none; } KLineEdit#FieldLineEditText { border-style: none; } KPushButton#FieldLineEditButton { padding: 0px; margin-left:2px; margin-right:2px; text-align: left; background-color: " + QPalette().color(QPalette::Base).name() + "; border-style: none; } KPushButton#MonthSelector { padding: 0px; margin-left:2px; margin-right:2px; text-align: left; background-color: " + QPalette().color(QPalette::Base).name() + "; border-style: none; }");
-        p->setStyleSheet(QLatin1String("background-color: ") + QPalette().color(QPalette::Base).name() + QLatin1String(";"));
-        m_pushButtonType->setStyleSheet(QLatin1String("padding: 0px; margin-left:2px; margin-right:2px; text-align: left; background-color: ") + QPalette().color(QPalette::Base).name() + QLatin1String("; border-style: none;"));
-        if (m_multiLineEditText != NULL)
-            m_multiLineEditText->setStyleSheet(QLatin1String("border-style: none;"));
-        if (m_singleLineEditText != NULL)
-            m_singleLineEditText->setStyleSheet(QLatin1String("border-style: none;"));
 
         p->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
     }

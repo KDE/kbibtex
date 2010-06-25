@@ -30,6 +30,7 @@
 #include <KLocale>
 #include <KPushButton>
 
+#include <bibtexfields.h>
 #include <fileexporterbibtex.h>
 #include <fieldinput.h>
 #include <value.h>
@@ -53,6 +54,7 @@ public:
     }
 
     void createGUI() {
+        BibTeXFields *bf = BibTeXFields::self();
         EntryLayout *el = EntryLayout::self();
 
         for (EntryLayout::ConstIterator elit = el->constBegin(); elit != el->constEnd(); ++elit) {
@@ -73,14 +75,19 @@ public:
                 layout->addWidget(label, row, col, 1, 1);
                 label->setAlignment(Qt::AlignTop | Qt::AlignRight);
 
-                FieldInput *fieldInput = new FieldInput((*sflit).fieldInputLayout, KBibTeX::tfSource, container);
+                const FieldDescription *fd = bf->find((*sflit).bibtexLabel);
+                KBibTeX::TypeFlags typeFlags = fd == NULL ? KBibTeX::tfSource : fd->typeFlags;
+                FieldInput *fieldInput = new FieldInput((*sflit).fieldInputLayout, typeFlags, container);
+                kDebug() << (*sflit).bibtexLabel << "  typeFlags= " << BibTeXFields::typeFlagsToString(typeFlags) << "  " << fd;
+                layout->addWidget(fieldInput, row, col + 1, 1, 1);
                 layout->setColumnStretch(col, 0);
                 if ((*sflit).fieldInputLayout == KBibTeX::MultiLine || (*sflit).fieldInputLayout == KBibTeX::List)
                     layout->setRowStretch(row, 100);
-                else
+                else {
                     layout->setRowStretch(row, 0);
+                    layout->setAlignment(fieldInput, Qt::AlignTop);
+                }
                 layout->setColumnStretch(col + 1, 2);
-                layout->addWidget(fieldInput, row, col + 1, 1, 1);
                 label->setBuddy(fieldInput);
 
                 p->bibtexKeyToWidget.insert((*sflit).bibtexLabel, fieldInput);
@@ -162,7 +169,7 @@ private:
 
         label = new QLabel(i18n("Content:"), container);
         layout->addWidget(label, 1, 0, 1, 1);
-        otherFieldsContent = new FieldInput(KBibTeX::List, KBibTeX::tfSource, container);
+        otherFieldsContent = new FieldInput(KBibTeX::MultiLine, KBibTeX::tfSource, container);
         layout->addWidget(otherFieldsContent, 1, 1, 1, 2);
         label->setBuddy(otherFieldsContent);
 

@@ -32,7 +32,7 @@ class FieldListEdit : public QScrollArea
     Q_OBJECT
 
 public:
-    FieldListEdit(QWidget *parent = NULL);
+    FieldListEdit(KBibTeX::TypeFlags typeFlags = KBibTeX::tfSource, QWidget *parent = NULL);
 
     void setValue(const Value& value);
     void applyTo(Value& value) const;

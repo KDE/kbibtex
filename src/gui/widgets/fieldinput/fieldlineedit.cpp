@@ -36,6 +36,7 @@
 FieldLineEdit::FieldLineEdit(KBibTeX::TypeFlags typeFlags, bool isMultiLine, QWidget *parent)
         : MenuLineEdit(isMultiLine, parent), m_typeFlags(typeFlags)
 {
+    setObjectName(QLatin1String("FieldLineEdit"));
     m_menuTypes = new QMenu(i18n("Types"), this);
     setMenu(m_menuTypes);
     m_menuTypesSignalMapper = new QSignalMapper(this);

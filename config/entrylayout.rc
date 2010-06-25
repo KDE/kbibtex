@@ -118,6 +118,10 @@ bibtexLabel4=abstract
 uiLabel4=Abstract
 fieldInputLayout4=MultiLine
 
+bibtexLabel5=keywords
+uiLabel5=Keywords
+fieldInputLayout5=List
+
 [Tab6]
 uiCaption=External
 columns=1

@@ -13,6 +13,7 @@ UpperCamelCase=Title
 Label=Title
 DefaultWidth=14
 Visible=false
+TypeFlags=Source;Text;Reference
 
 [Column4]
 UpperCamelCase=Title
@@ -31,12 +32,14 @@ UpperCamelCase=Author
 Label=Author
 DefaultWidth=7
 Visible=false
+TypeFlags=Person;Reference
 
 [Column7]
 UpperCamelCase=Editor
 Label=Editor
 DefaultWidth=7
 Visible=false
+TypeFlags=Person;Reference
 
 [Column8]
 UpperCamelCase=Month
@@ -121,4 +124,47 @@ UpperCamelCase=Institution
 Label=Institution
 DefaultWidth=5
 Visible=false
+
+[Column22]
+UpperCamelCase=BookTitle
+Label=Book Title
+DefaultWidth=14
+Visible=false
+
+[Column23]
+UpperCamelCase=Series
+Label=Series
+DefaultWidth=12
+Visible=false
+
+[Column24]
+UpperCamelCase=Edition
+Label=Edition
+DefaultWidth=2
+Visible=false
+
+[Column25]
+UpperCamelCase=Chapter
+Label=Chapter
+DefaultWidth=1
+Visible=false
+
+[Column26]
+UpperCamelCase=Organization
+Label=Organization
+DefaultWidth=2
+Visible=false
+
+[Column27]
+UpperCamelCase=School
+Label=School
+DefaultWidth=2
+Visible=false
+
+[Column28]
+UpperCamelCase=Keywords
+Label=Keywords
+DefaultWidth=3
+Visible=false
+TypeFlags=Source;Keyword
 

@@ -40,14 +40,15 @@ private:
     const int innerSpacing;
     QSignalMapper *smRemove, *smGoUp, *smGoDown;
     QVBoxLayout *layout;
+    KBibTeX::TypeFlags typeFlags;
 
 public:
     QList<FieldLineEdit*> lineEditList;
     QWidget *container;
     KPushButton *addButton;
 
-    FieldListEditPrivate(FieldListEdit *parent)
-            : p(parent), innerSpacing(4) {
+    FieldListEditPrivate(KBibTeX::TypeFlags tf, FieldListEdit *parent)
+            : p(parent), innerSpacing(4), typeFlags(tf) {
         smRemove = new QSignalMapper(parent);
         smGoUp = new QSignalMapper(parent);
         smGoDown = new QSignalMapper(parent);
@@ -89,9 +90,8 @@ public:
     }
 
     FieldLineEdit *addFieldLineEdit() {
-        FieldLineEdit *le = new FieldLineEdit(KBibTeX::tfSource, false, container);
+        FieldLineEdit *le = new FieldLineEdit(typeFlags, false, container);
         layout->insertWidget(layout->count() - 1, le);
-        le->setStyleSheet(le->styleSheet() + QLatin1String("border-style: none;"));
         lineEditList.append(le);
 
         KPushButton *remove = new KPushButton(KIcon("list-remove"), QLatin1String(""), le);
@@ -123,7 +123,7 @@ public:
     void removeFieldLineEdit(FieldLineEdit *fieldLineEdit) {
         lineEditList.removeOne(fieldLineEdit);
         layout->removeWidget(fieldLineEdit);
-        delete fieldLineEdit;//->deleteLater();
+        delete fieldLineEdit;
     }
 
     void goDownFieldLineEdit(FieldLineEdit *fieldLineEdit) {
@@ -147,8 +147,8 @@ public:
     }
 };
 
-FieldListEdit::FieldListEdit(QWidget *parent)
-        : QScrollArea(parent), d(new FieldListEditPrivate(this))
+FieldListEdit::FieldListEdit(KBibTeX::TypeFlags typeFlags, QWidget *parent)
+        : QScrollArea(parent), d(new FieldListEditPrivate(typeFlags, this))
 {
 // TODO
 }

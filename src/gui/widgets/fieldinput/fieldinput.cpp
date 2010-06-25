@@ -58,7 +58,7 @@ public:
             connect(fieldLineEdit, SIGNAL(editingFinished()), p, SIGNAL(modified()));
             break;
         case KBibTeX::List:
-            fieldListEdit = new FieldListEdit(p);
+            fieldListEdit = new FieldListEdit(typeFlags, p);
             layout->addWidget(fieldListEdit);
             break;
         case KBibTeX::Month: {
@@ -66,7 +66,6 @@ public:
             layout->addWidget(fieldLineEdit);
             connect(fieldLineEdit, SIGNAL(editingFinished()), p, SIGNAL(modified()));
             KPushButton *monthSelector = new KPushButton(KIcon("view-calendar-month"), "");
-            monthSelector->setStyleSheet(QLatin1String("padding: 0px; margin-left:2px; margin-right:2px; text-align: left; background-color: ") + QPalette().color(QPalette::Base).name() + QLatin1String("; border-style: none;"));
             fieldLineEdit->prependWidget(monthSelector);
 
             QSignalMapper *sm = new QSignalMapper(monthSelector);
