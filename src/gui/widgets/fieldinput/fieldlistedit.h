@@ -20,14 +20,14 @@
 #ifndef KBIBTEX_GUI_FIELDLISTEDIT_H
 #define KBIBTEX_GUI_FIELDLISTEDIT_H
 
-#include <QListWidget>
+#include <QScrollArea>
 
 #include <value.h>
 
 /**
 @author Thomas Fischer
 */
-class FieldListEdit : public QListWidget
+class FieldListEdit : public QScrollArea
 {
     Q_OBJECT
 
@@ -37,16 +37,24 @@ public:
     void setValue(const Value& value);
     void applyTo(Value& value) const;
 
-public slots:
-    void reset();
+    void clear();
+    void setReadOnly(bool isReadOnly);
+
+//public slots:
+    //  void reset();
 
 protected:
-    Value m_originalValue;
+    virtual void resizeEvent(QResizeEvent *event);
 
-    void loadValue(const Value& value);
+private slots:
+    void lineAdd();
+    void lineRemove(QWidget * widget);
+    void lineGoDown(QWidget * widget);
+    void lineGoUp(QWidget * widget);
 
 private:
-    void updateGUI();
+    class FieldListEditPrivate;
+    FieldListEditPrivate *d;
 };
 
 #endif // KBIBTEX_GUI_FIELDLISTEDIT_H
