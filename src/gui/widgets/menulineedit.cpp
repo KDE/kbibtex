@@ -73,7 +73,13 @@ public:
             m_singleLineEditText->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
         }
 
-        qApp->setStyleSheet("QFrame#FieldLineEdit { background-color: " + QPalette().color(QPalette::Base).name() + "; } QTextEdit#FieldLineEditText { border-style: none; } KLineEdit#FieldLineEditText { border-style: none; } KPushButton#FieldLineEditButton { padding: 0px; margin-left:2px; margin-right:2px; text-align: left; background-color: " + QPalette().color(QPalette::Base).name() + "; border-style: none; } KPushButton#MonthSelector { padding: 0px; margin-left:2px; margin-right:2px; text-align: left; background-color: " + QPalette().color(QPalette::Base).name() + "; border-style: none; }");
+        // qApp->setStyleSheet("QFrame#FieldLineEdit { background-color: " + QPalette().color(QPalette::Base).name() + "; } QTextEdit#FieldLineEditText { border-style: none; } KLineEdit#FieldLineEditText { border-style: none; } KPushButton#FieldLineEditButton { padding: 0px; margin-left:2px; margin-right:2px; text-align: left; background-color: " + QPalette().color(QPalette::Base).name() + "; border-style: none; } KPushButton#MonthSelector { padding: 0px; margin-left:2px; margin-right:2px; text-align: left; background-color: " + QPalette().color(QPalette::Base).name() + "; border-style: none; }");
+        p->setStyleSheet(QLatin1String("background-color: ") + QPalette().color(QPalette::Base).name() + QLatin1String(";"));
+        m_pushButtonType->setStyleSheet(QLatin1String("padding: 0px; margin-left:2px; margin-right:2px; text-align: left; background-color: ") + QPalette().color(QPalette::Base).name() + QLatin1String("; border-style: none;"));
+        if (m_multiLineEditText != NULL)
+            m_multiLineEditText->setStyleSheet(QLatin1String("border-style: none;"));
+        if (m_singleLineEditText != NULL)
+            m_singleLineEditText->setStyleSheet(QLatin1String("border-style: none;"));
 
         p->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
     }

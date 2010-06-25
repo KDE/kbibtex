@@ -35,10 +35,10 @@ class KBIBTEXGUI_EXPORT FieldInput : public QWidget
 public:
     FieldInput(KBibTeX::FieldInputType fieldInputType, KBibTeX::TypeFlags typeFlags = KBibTeX::tfSource, QWidget *parent = NULL);
 
-    void clear();
     void setValue(const Value& value);
     void applyTo(Value& value) const;
 
+    void clear();
     void setReadOnly(bool isReadOnly);
 
 signals:
