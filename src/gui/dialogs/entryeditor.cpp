@@ -19,7 +19,10 @@
 ***************************************************************************/
 
 #include <KDebug>
+#include <KComboBox>
+#include <KLineEdit>
 
+#include <bibtexentries.h>
 #include <entry.h>
 #include <fieldinput.h>
 #include "entryeditor.h"
@@ -43,11 +46,18 @@ public:
     void apply(Entry *entry) {
         entry->clear();
 
+        BibTeXEntries *be = BibTeXEntries::self();
+        QVariant var = p->comboboxType->itemData(p->comboboxType->currentIndex());
+        QString type = var.toString();
+        if (p->comboboxType->lineEdit()->isModified())
+            type = be->format(p->comboboxType->lineEdit()->text(), KBibTeX::cUpperCamelCase);
+        entry->setType(type);
+        entry->setId(p->entryId->text());
+
         for (QMap<QString, FieldInput*>::Iterator it = p->bibtexKeyToWidget.begin(); it != p->bibtexKeyToWidget.end(); ++it) {
             Value value;
             it.value()->applyTo(value);
             if (!value.isEmpty()) {
-                kDebug() << " inserting " << it.key() << " = " << PlainTextValue::text(value);
                 entry->insert(it.key(), value);
             }
         }

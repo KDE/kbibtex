@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2009 by Thomas Fischer                             *
+*   Copyright (C) 2004-2010 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -26,6 +26,10 @@
 #include <kbibtexgui_export.h>
 
 class QTextEdit;
+class QListWidget;
+
+class KComboBox;
+class KLineEdit;
 
 class FieldInput;
 class Entry;
@@ -45,6 +49,11 @@ public slots:
 protected:
     QMap<QString, FieldInput*> bibtexKeyToWidget;
     QTextEdit *sourceEdit;
+    KComboBox *comboboxType;
+    KLineEdit *entryId;
+    KLineEdit *otherFieldsName;
+    FieldInput *otherFieldsContent;
+    QListWidget *otherFieldsList;
 
     void setReadOnly(bool isReadOnly);
     void resetSource(const Entry *entry);

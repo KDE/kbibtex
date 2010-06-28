@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2009 by Thomas Fischer                             *
+*   Copyright (C) 2004-2010 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -26,10 +26,12 @@
 #include <QBuffer>
 
 #include <KDebug>
+#include <KComboBox>
 #include <KLineEdit>
 #include <KLocale>
 #include <KPushButton>
 
+#include <bibtexentries.h>
 #include <bibtexfields.h>
 #include <fileexporterbibtex.h>
 #include <fieldinput.h>
@@ -43,9 +45,6 @@ class EntryViewer::EntryViewerPrivate
 private:
     const Entry *entry;
     EntryViewer *p;
-    KLineEdit *otherFieldsName;
-    FieldInput *otherFieldsContent;
-    QListWidget *otherFieldsList;
 
 public:
     EntryViewerPrivate(const Entry *e, EntryViewer *parent)
@@ -54,6 +53,8 @@ public:
     }
 
     void createGUI() {
+        createReferenceGUI();
+
         BibTeXFields *bf = BibTeXFields::self();
         EntryLayout *el = EntryLayout::self();
 
@@ -78,7 +79,6 @@ public:
                 const FieldDescription *fd = bf->find((*sflit).bibtexLabel);
                 KBibTeX::TypeFlags typeFlags = fd == NULL ? KBibTeX::tfSource : fd->typeFlags;
                 FieldInput *fieldInput = new FieldInput((*sflit).fieldInputLayout, typeFlags, container);
-                kDebug() << (*sflit).bibtexLabel << "  typeFlags= " << BibTeXFields::typeFlagsToString(typeFlags) << "  " << fd;
                 layout->addWidget(fieldInput, row, col + 1, 1, 1);
                 layout->setColumnStretch(col, 0);
                 if ((*sflit).fieldInputLayout == KBibTeX::MultiLine || (*sflit).fieldInputLayout == KBibTeX::List)
@@ -109,6 +109,17 @@ public:
     }
 
     void reset(const Entry *entry) {
+        p->entryId->setText(entry->id());
+        BibTeXEntries *be = BibTeXEntries::self();
+        QString type = be->format(entry->type(), KBibTeX::cUpperCamelCase);
+        p->comboboxType->lineEdit()->setText(type);
+        type = type.toLower();
+        for (BibTeXEntries::ConstIterator it = be->constBegin(); it != be->constEnd(); ++it)
+            if (type == it->upperCamelCase.toLower()) {
+                p->comboboxType->lineEdit()->setText(it->label);
+                break;
+            }
+
         for (QMap<QString, FieldInput*>::Iterator it = p->bibtexKeyToWidget.begin(); it != p->bibtexKeyToWidget.end(); ++it)
             it.value()->clear();
 
@@ -140,11 +151,41 @@ public:
     }
 
     void setReadOnly(bool isReadOnly) {
+        p->entryId->setReadOnly(isReadOnly);
+        p->comboboxType->lineEdit()->setReadOnly(isReadOnly);
         for (QMap<QString, FieldInput*>::Iterator it = p->bibtexKeyToWidget.begin(); it != p->bibtexKeyToWidget.end(); ++it)
             it.value()->setReadOnly(isReadOnly);
     }
 
 private:
+    void createReferenceGUI() {
+        QWidget *container = new QWidget(p);
+        p->addTab(container, i18n("Reference"));
+        QGridLayout *layout = new QGridLayout(container);
+        layout->setColumnStretch(0, 0);
+        layout->setColumnStretch(1, 1);
+        layout->setRowStretch(0, 0);
+        layout->setRowStretch(1, 0);
+        layout->setRowStretch(2, 1);
+
+        QLabel *label = new QLabel(i18n("Type:"), container);
+        layout->addWidget(label, 0, 0, 1, 1);
+        p->comboboxType = new KComboBox(container);
+        p->comboboxType->setEditable(true);
+        layout->addWidget(p->comboboxType, 0, 1, 1, 1);
+        label->setBuddy(p->comboboxType);
+
+        label = new QLabel(i18n("Id:"), container);
+        layout->addWidget(label, 1, 0, 1, 1);
+        p->entryId = new KLineEdit(container);
+        layout->addWidget(p->entryId, 1, 1, 1, 1);
+        label->setBuddy(p->entryId);
+
+        BibTeXEntries *be = BibTeXEntries::self();
+        for (BibTeXEntries::ConstIterator it = be->constBegin(); it != be->constEnd(); ++it)
+            p->comboboxType->addItem(it->label, it->upperCamelCase);
+    }
+
     void createOtherFieldsGUI() {
         QWidget *container = new QWidget(p);
         p->addTab(container, i18n("Other Fields"));
@@ -160,24 +201,24 @@ private:
 
         QLabel *label = new QLabel(i18n("Name:"), container);
         layout->addWidget(label, 0, 0, 1, 1);
-        otherFieldsName = new KLineEdit(container);
-        layout->addWidget(otherFieldsName, 0, 1, 1, 1);
-        label->setBuddy(otherFieldsName);
+        p->otherFieldsName = new KLineEdit(container);
+        layout->addWidget(p->otherFieldsName, 0, 1, 1, 1);
+        label->setBuddy(p->otherFieldsName);
 
         KPushButton *buttonAddApply = new KPushButton(i18n("Add/Apply"), container);
         layout->addWidget(buttonAddApply, 0, 2, 1, 1);
 
         label = new QLabel(i18n("Content:"), container);
         layout->addWidget(label, 1, 0, 1, 1);
-        otherFieldsContent = new FieldInput(KBibTeX::MultiLine, KBibTeX::tfSource, container);
-        layout->addWidget(otherFieldsContent, 1, 1, 1, 2);
-        label->setBuddy(otherFieldsContent);
+        p->otherFieldsContent = new FieldInput(KBibTeX::MultiLine, KBibTeX::tfSource, container);
+        layout->addWidget(p->otherFieldsContent, 1, 1, 1, 2);
+        label->setBuddy(p->otherFieldsContent);
 
         label = new QLabel(i18n("List:"), container);
         layout->addWidget(label, 2, 0, 3, 1);
-        otherFieldsList = new QListWidget(container);
-        layout->addWidget(otherFieldsList, 2, 1, 3, 1);
-        label->setBuddy(otherFieldsList);
+        p->otherFieldsList = new QListWidget(container);
+        layout->addWidget(p->otherFieldsList, 2, 1, 3, 1);
+        label->setBuddy(p->otherFieldsList);
         KPushButton *buttonDelete = new KPushButton(i18n("Delete"), container);
         layout->addWidget(buttonDelete, 2, 2, 1, 1);
         KPushButton *buttonOpen = new KPushButton(i18n("Open"), container);
