@@ -26,7 +26,7 @@
 #include <kbibtexnamespace.h>
 
 typedef struct {
-    QString raw;
+    QString upperCamelCase;
     QString label;
 } EntryDescription;
 

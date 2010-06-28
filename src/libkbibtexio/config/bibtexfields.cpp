@@ -47,6 +47,32 @@ public:
     ~BibTeXFieldsPrivate() {
         delete systemDefaultsConfig;
     }
+
+    void load() {
+        unsigned int sumWidth = 0;
+        FieldDescription fd;
+
+        p->clear();
+        for (int col = 1; col < bibTeXFieldsMaxColumnCount; ++col) {
+            QString groupName = QString("Column%1").arg(col);
+            KConfigGroup usercg(userConfig, groupName);
+            KConfigGroup systemcg(systemDefaultsConfig, groupName);
+            fd.upperCamelCase = systemcg.readEntry("UpperCamelCase", "");
+            if (fd.upperCamelCase.isEmpty()) continue;
+            fd.upperCamelCaseAlt = systemcg.readEntry("UpperCamelCaseAlt", "");
+            if (fd.upperCamelCaseAlt.isEmpty()) fd.upperCamelCaseAlt = QString::null;
+            fd.label = systemcg.readEntry("Label", fd.upperCamelCase);
+            fd.defaultWidth = systemcg.readEntry("DefaultWidth", sumWidth / col);
+            fd.width = usercg.readEntry("Width", fd.defaultWidth);
+            sumWidth += fd.width;
+            fd.visible = systemcg.readEntry("Visible", true);
+            fd.visible = usercg.readEntry("Visible", fd.visible);
+            QString typeFlags = systemcg.readEntry("TypeFlags", "Source");
+            typeFlags = usercg.readEntry("TypeFlags", typeFlags);
+            fd.typeFlags = typeFlagsFromString(typeFlags);
+            p->append(fd);
+        }
+    }
 };
 
 BibTeXFields *BibTeXFields::BibTeXFieldsPrivate::singleton = NULL;
@@ -54,7 +80,7 @@ BibTeXFields *BibTeXFields::BibTeXFieldsPrivate::singleton = NULL;
 BibTeXFields::BibTeXFields()
         : d(new BibTeXFieldsPrivate(this))
 {
-    load();
+    d->load();
 }
 
 BibTeXFields::~BibTeXFields()
@@ -67,33 +93,6 @@ BibTeXFields* BibTeXFields::self()
     if (BibTeXFieldsPrivate::singleton == NULL)
         BibTeXFieldsPrivate::singleton = new BibTeXFields();
     return BibTeXFieldsPrivate::singleton;
-}
-
-void BibTeXFields::load()
-{
-    unsigned int sumWidth = 0;
-    FieldDescription fd;
-
-    clear();
-    for (int col = 1; col < bibTeXFieldsMaxColumnCount; ++col) {
-        QString groupName = QString("Column%1").arg(col);
-        KConfigGroup usercg(d->userConfig, groupName);
-        KConfigGroup systemcg(d->systemDefaultsConfig, groupName);
-        fd.upperCamelCase = systemcg.readEntry("UpperCamelCase", "");
-        if (fd.upperCamelCase.isEmpty()) continue;
-        fd.upperCamelCaseAlt = systemcg.readEntry("UpperCamelCaseAlt", "");
-        if (fd.upperCamelCaseAlt.isEmpty()) fd.upperCamelCaseAlt = QString::null;
-        fd.label = systemcg.readEntry("Label", fd.upperCamelCase);
-        fd.defaultWidth = systemcg.readEntry("DefaultWidth", sumWidth / col);
-        fd.width = usercg.readEntry("Width", fd.defaultWidth);
-        sumWidth += fd.width;
-        fd.visible = systemcg.readEntry("Visible", true);
-        fd.visible = usercg.readEntry("Visible", fd.visible);
-        QString typeFlags = systemcg.readEntry("TypeFlags", "Source");
-        typeFlags = usercg.readEntry("TypeFlags", typeFlags);
-        fd.typeFlags = typeFlagsFromString(typeFlags);
-        append(fd);
-    }
 }
 
 void BibTeXFields::save()
@@ -119,7 +118,7 @@ void BibTeXFields::resetToDefaults()
         usercg.deleteGroup();
     }
 
-    load();
+    d->load();
 }
 
 QString BibTeXFields::format(const QString& name, KBibTeX::Casing casing) const

@@ -27,6 +27,8 @@
 #include <entry.h>
 #include "bibtexentries.h"
 
+static const int BibTeXEntriesMax = 256;
+
 class BibTeXEntries::BibTeXEntriesPrivate
 {
 public:
@@ -46,6 +48,25 @@ public:
     ~BibTeXEntriesPrivate() {
         delete systemDefaultsConfig;
     }
+
+    void load() {
+// TODO
+        p->clear();
+
+        // TODO: Dummy implementation
+        EntryDescription ed;
+
+        for (int col = 1; col < BibTeXEntriesMax; ++col) {
+            QString groupName = QString("EntryType%1").arg(col);
+            KConfigGroup usercg(userConfig, groupName);
+            KConfigGroup systemcg(systemDefaultsConfig, groupName);
+
+            ed.upperCamelCase =  systemcg.readEntry("UpperCamelCase", "");
+            if (ed.upperCamelCase.isEmpty()) continue;
+            ed.label = systemcg.readEntry("Label", ed.upperCamelCase);;
+            p->append(ed);
+        }
+    }
 };
 
 BibTeXEntries *BibTeXEntries::BibTeXEntriesPrivate::singleton = NULL;
@@ -54,7 +75,7 @@ BibTeXEntries *BibTeXEntries::BibTeXEntriesPrivate::singleton = NULL;
 BibTeXEntries::BibTeXEntries()
         : d(new BibTeXEntriesPrivate(this))
 {
-    load();
+    d->load();
 }
 
 BibTeXEntries::~BibTeXEntries()
@@ -67,19 +88,6 @@ BibTeXEntries* BibTeXEntries::self()
     if (BibTeXEntriesPrivate::singleton == NULL)
         BibTeXEntriesPrivate::singleton = new BibTeXEntries();
     return BibTeXEntriesPrivate::singleton;
-}
-
-
-void BibTeXEntries::load()
-{
-// TODO
-    clear();
-
-    // TODO: Dummy implementation
-    EntryDescription ed;
-    ed.label = "Article";
-    ed.raw = "Article";
-    append(ed);
 }
 
 QString BibTeXEntries::format(const QString& name, KBibTeX::Casing casing) const
@@ -95,9 +103,9 @@ QString BibTeXEntries::format(const QString& name, KBibTeX::Casing casing) const
     case KBibTeX::cLowerCamelCase: {
         for (ConstIterator it = begin(); it != end(); ++it) {
             /// configuration file uses camel-case
-            QString itName = (*it).raw.toLower();
-            if (itName == iName && (*it).raw == QString::null) {
-                iName = (*it).raw;
+            QString itName = (*it).upperCamelCase.toLower();
+            if (itName == iName && (*it).upperCamelCase == QString::null) {
+                iName = (*it).upperCamelCase;
                 break;
             }
         }
@@ -109,9 +117,9 @@ QString BibTeXEntries::format(const QString& name, KBibTeX::Casing casing) const
     case KBibTeX::cUpperCamelCase: {
         for (ConstIterator it = begin(); it != end(); ++it) {
             /// configuration file uses camel-case
-            QString itName = (*it).raw.toLower();
-            if (itName == iName && (*it).raw == QString::null) {
-                iName = (*it).raw;
+            QString itName = (*it).upperCamelCase.toLower();
+            if (itName == iName && (*it).upperCamelCase == QString::null) {
+                iName = (*it).upperCamelCase;
                 break;
             }
         }

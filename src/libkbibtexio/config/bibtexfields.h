@@ -62,7 +62,6 @@ public:
 
 protected:
     BibTeXFields();
-    void load();
 
 private:
     class BibTeXFieldsPrivate;
