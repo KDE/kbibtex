@@ -66,6 +66,8 @@ protected slots:
 
 private slots:
     void editorKeyPressed(QKeyEvent *event);
+    void newElementTriggered(int event);
+    void newEntryTriggered();
 
 private:
     class KBibTeXPartPrivate;

@@ -23,6 +23,7 @@
 #include <QApplication>
 #include <QLayout>
 #include <QKeyEvent>
+#include <QSignalMapper>
 
 #include <KDebug>
 #include <KEncodingFileDialog>
@@ -54,17 +55,25 @@
 // #include "browserextension.h" // FIXME
 
 static const char RCFileName[] = "kbibtexpartui.rc";
+static const int smEntry = 1;
+static const int smComment = 2;
+static const int smPreamble = 3;
+static const int smMacro = 4;
 
 class KBibTeXPart::KBibTeXPartPrivate
 {
+private:
+    KBibTeXPart *p;
+
 public:
     BibTeXEditor *editor;
     BibTeXFileModel *model;
     SortFilterBibTeXFileModel *sortFilterProxyModel;
     FilterBar *filterBar;
+    QSignalMapper *signalMapperNewElement;
 
-    KBibTeXPartPrivate()
-            : sortFilterProxyModel(NULL) {
+    KBibTeXPartPrivate(KBibTeXPart *parent)
+            : p(parent), sortFilterProxyModel(NULL), signalMapperNewElement(new QSignalMapper(parent)) {
         // nothing
     }
 
@@ -110,10 +119,34 @@ public:
             return new FileExporterBibTeX();
         }
     }
+
+    QString findUnusedId() {
+        File *bibTeXFile = model->bibTeXFile();
+        int i = 1;
+        while (true) {
+            QString result = i18n("New%1", i);
+            if (!bibTeXFile->containsKey(result))
+                return result;
+            ++i;
+        }
+        return QString();
+    }
+
+    void initializeNew() {
+        kDebug() << " Initializing with empty data";
+        model = new BibTeXFileModel();
+        model->setBibTeXFile(new File());
+
+        if (sortFilterProxyModel != NULL) delete sortFilterProxyModel;
+        sortFilterProxyModel = new SortFilterBibTeXFileModel(p);
+        sortFilterProxyModel->setSourceModel(model);
+        editor->setModel(sortFilterProxyModel);
+        connect(filterBar, SIGNAL(filterChanged(SortFilterBibTeXFileModel::FilterQuery)), sortFilterProxyModel, SLOT(updateFilter(SortFilterBibTeXFileModel::FilterQuery)));
+    }
 };
 
 KBibTeXPart::KBibTeXPart(QWidget *parentWidget, QObject *parent, bool browserViewWanted)
-        : KParts::ReadWritePart(parent), d(new KBibTeXPartPrivate())
+        : KParts::ReadWritePart(parent), d(new KBibTeXPartPrivate(this))
 {
     setComponentData(KBibTeXPartFactory::componentData());
     setObjectName("KBibTeXPart::KBibTeXPart");
@@ -121,9 +154,6 @@ KBibTeXPart::KBibTeXPart(QWidget *parentWidget, QObject *parent, bool browserVie
     // TODO Setup view
     d->editor = new BibTeXEditor(parentWidget);
     setWidget(d->editor);
-
-    d->model = new BibTeXFileModel();
-    d->editor->setModel(d->model);
 
     connect(d->editor, SIGNAL(elementExecuted(Element*)), d->editor, SLOT(editElement(Element*)));
     connect(d->editor, SIGNAL(keyPressed(QKeyEvent*)), this, SLOT(editorKeyPressed(QKeyEvent*)));
@@ -134,6 +164,8 @@ KBibTeXPart::KBibTeXPart(QWidget *parentWidget, QObject *parent, bool browserVie
     if (browserViewWanted)
         new KBibTeXBrowserExtension(this);
         */
+
+    d->initializeNew();
 }
 
 KBibTeXPart::~KBibTeXPart()
@@ -157,12 +189,22 @@ void KBibTeXPart::setupActions(bool /*browserViewWanted FIXME*/)
     KActionMenu *newElementAction = new KActionMenu(KIcon("address-book-new"), i18n("New element"), this);
     actionCollection()->addAction("element_new", newElementAction);
     newElementAction->setShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_N);
+    connect(newElementAction, SIGNAL(triggered()), this, SLOT(newEntryTriggered()));
     KMenu *newElementMenu = new KMenu(newElementAction->text(), widget());
     newElementAction->setMenu(newElementMenu);
-    newElementMenu->addAction(KIcon("address-book-new"), i18n("New entry"));
-    newElementMenu->addAction(KIcon("address-book-new"), i18n("New comment"));
-    newElementMenu->addAction(KIcon("address-book-new"), i18n("New macro"));
-    newElementMenu->addAction(KIcon("address-book-new"), i18n("New preamble"));
+    QAction *newElement = newElementMenu->addAction(KIcon("address-book-new"), i18n("New entry"));
+    connect(newElement, SIGNAL(triggered()), d->signalMapperNewElement, SLOT(map()));
+    d->signalMapperNewElement->setMapping(newElement, smEntry);
+    newElement = newElementMenu->addAction(KIcon("address-book-new"), i18n("New comment"));
+    connect(newElement, SIGNAL(triggered()), d->signalMapperNewElement, SLOT(map()));
+    d->signalMapperNewElement->setMapping(newElement, smComment);
+    newElement = newElementMenu->addAction(KIcon("address-book-new"), i18n("New macro"));
+    connect(newElement, SIGNAL(triggered()), d->signalMapperNewElement, SLOT(map()));
+    d->signalMapperNewElement->setMapping(newElement, smMacro);
+    newElement = newElementMenu->addAction(KIcon("address-book-new"), i18n("New preamble"));
+    connect(newElement, SIGNAL(triggered()), d->signalMapperNewElement, SLOT(map()));
+    d->signalMapperNewElement->setMapping(newElement, smPreamble);
+    connect(d->signalMapperNewElement, SIGNAL(mapped(int)), this, SLOT(newElementTriggered(int)));
 
     // TODO
 
@@ -225,12 +267,10 @@ void KBibTeXPart::fitActionSettings()
 
 bool KBibTeXPart::openFile()
 {
+    kDebug() << "Opening file: " << url();
     qApp->setOverrideCursor(Qt::WaitCursor);
 
-    kDebug() << "Opening URL " << url().prettyUrl() << endl;
-
     setObjectName("KBibTeXPart::KBibTeXPart for " + url().prettyUrl());
-
 
     FileImporter *importer = d->fileImporterFactory(url());
     QFile inputfile(localFilePath());
@@ -240,7 +280,7 @@ bool KBibTeXPart::openFile()
     delete importer;
 
     if (bibtexFile == NULL) {
-        kWarning() << "Opening file failed";
+        kWarning() << "Opening file failed: " << url();
         return false;
     }
 
@@ -265,4 +305,27 @@ void KBibTeXPart::editorKeyPressed(QKeyEvent *event)
         /// delete the current (selected) element
         d->model->removeRow(d->editor->currentIndex().row());
     }
+}
+
+void KBibTeXPart::newElementTriggered(int event)
+{
+    switch (event) {
+    case smComment:
+        // FIXME to be implemented
+        break;
+    case smMacro:
+        // FIXME to be implemented
+        break;
+    case smPreamble:
+        // FIXME to be implemented
+        break;
+    default:
+        newEntryTriggered();
+    }
+}
+
+void KBibTeXPart::newEntryTriggered()
+{
+    Entry *newEntry = new Entry(QLatin1String("Article"), d->findUnusedId());
+    d->model->insertRow(newEntry, d->model->rowCount());
 }
