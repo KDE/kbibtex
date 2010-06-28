@@ -1,0 +1,19 @@
+[EntryType1]
+UpperCamelCase=Article
+Label=Journal Article
+
+[EntryType2]
+UpperCamelCase=InProceedings
+Label=Conference or Workshop Proceedings
+
+[EntryType3]
+UpperCamelCase=TechReport
+Label=Technical Report
+
+[EntryType4]
+UpperCamelCase=Misc
+Label=Miscellaneous
+
+[EntryType5]
+UpperCamelCase=Book
+
