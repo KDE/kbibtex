@@ -46,41 +46,48 @@ UpperCamelCase=Month
 Label=Month
 DefaultWidth=3
 Visible=false
+TypeFlags=Source;Text;Reference
 
 [Column9]
 UpperCamelCase=Year
 Label=Year
 DefaultWidth=2
+TypeFlags=Source;Text;Reference
 
 [Column10]
 UpperCamelCase=Journal
 Label=Journal
 DefaultWidth=4
 Visible=false
+TypeFlags=Source;Text;Reference
 
 [Column11]
 UpperCamelCase=Volume
 Label=Volume
 DefaultWidth=1
 Visible=false
+TypeFlags=Source;Text;Reference
 
 [Column12]
 UpperCamelCase=Number
 Label=Number
 DefaultWidth=1
 Visible=false
+TypeFlags=Source;Text;Reference
 
 [Column13]
 UpperCamelCase=ISSN
 Label=ISSN
 DefaultWidth=2
 Visible=false
+TypeFlags=Source;Text;Reference
 
 [Column14]
 UpperCamelCase=ISBN
 Label=ISBN
 DefaultWidth=2
 Visible=false
+TypeFlags=Source;Text;Reference
 
 [Column15]
 UpperCamelCase=ISBN
@@ -94,72 +101,84 @@ UpperCamelCase=HowPublished
 Label=How Published
 DefaultWidth=5
 Visible=false
+TypeFlags=Source;Text;Reference
 
 [Column17]
 UpperCamelCase=Note
 Label=Note
 DefaultWidth=5
 Visible=false
+TypeFlags=Source;Text;Reference
 
 [Column18]
 UpperCamelCase=Abstract
 Label=Abstract
 DefaultWidth=7
 Visible=false
+TypeFlags=Source;Text;Reference
 
 [Column19]
 UpperCamelCase=Pages
 Label=Pages
 DefaultWidth=2
 Visible=true
+TypeFlags=Source;Text;Reference
 
 [Column20]
 UpperCamelCase=Publisher
 Label=Publisher
 DefaultWidth=5
 Visible=false
+TypeFlags=Source;Text;Reference
 
 [Column21]
 UpperCamelCase=Institution
 Label=Institution
 DefaultWidth=5
 Visible=false
+TypeFlags=Source;Text;Reference
 
 [Column22]
 UpperCamelCase=BookTitle
 Label=Book Title
 DefaultWidth=14
 Visible=false
+TypeFlags=Source;Text;Reference
 
 [Column23]
 UpperCamelCase=Series
 Label=Series
 DefaultWidth=12
 Visible=false
+TypeFlags=Source;Text;Reference
 
 [Column24]
 UpperCamelCase=Edition
 Label=Edition
 DefaultWidth=2
 Visible=false
+TypeFlags=Source;Text;Reference
 
 [Column25]
 UpperCamelCase=Chapter
 Label=Chapter
 DefaultWidth=1
 Visible=false
+TypeFlags=Source;Text;Reference
 
 [Column26]
 UpperCamelCase=Organization
 Label=Organization
 DefaultWidth=2
 Visible=false
+TypeFlags=Source;Text;Reference
 
 [Column27]
 UpperCamelCase=School
 Label=School
 DefaultWidth=2
 Visible=false
+TypeFlags=Source;Text;Reference
 
 [Column28]
 UpperCamelCase=Keywords

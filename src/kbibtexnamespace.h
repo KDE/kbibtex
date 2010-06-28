@@ -52,12 +52,9 @@ Q_DECLARE_FLAGS(TypeFlags, TypeFlag)
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(TypeFlags)
 
-// Q_DECLARE_METATYPE(TypeFlags);
-
 static const QString MonthsTriple[] = {
     QLatin1String("jan"), QLatin1String("feb"), QLatin1String("mar"), QLatin1String("apr"), QLatin1String("may"), QLatin1String("jun"), QLatin1String("jul"), QLatin1String("aug"), QLatin1String("sep"), QLatin1String("oct"), QLatin1String("nov"), QLatin1String("dec")
 };
-
 
 }
 
