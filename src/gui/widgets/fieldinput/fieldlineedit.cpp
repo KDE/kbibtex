@@ -88,46 +88,49 @@ void FieldLineEdit::setValue(const Value& value)
 void FieldLineEdit::applyTo(Value& value) const
 {
     value.clear();
-    switch (m_typeFlag) {
-    case KBibTeX::tfText:
-        value.append(new PlainText(text()));
-        break;
-    case KBibTeX::tfReference:
-        value.append(new MacroKey(text())); // FIXME Check that text contains only valid characters!
-        break;
-    case KBibTeX::tfPerson:
-        value.append(FileImporterBibTeX::splitName(text()));
-        break;
-    case KBibTeX::tfKeyword: {
-        QList<Keyword*> keywords = FileImporterBibTeX::splitKeywords(text());
-        for (QList<Keyword*>::Iterator it = keywords.begin(); it != keywords.end(); ++it)
-            value.append(*it);
-    }
-    break;
-    case KBibTeX::tfSource:
-        if (!text().isEmpty()) {
-            QString key = "title"; // FIXME "author" is only required for persons, use something else for plain text
-            FileImporterBibTeX importer;
-            QString fakeBibTeXFile = QString("@article{dummy, %1=%2}").arg(key).arg(text());
-            kDebug() << "fakeBibTeXFile=" << fakeBibTeXFile << endl;
-            QBuffer buffer;
-            buffer.open(QIODevice::WriteOnly);
-            QTextStream ts(&buffer);
-            ts << fakeBibTeXFile << endl;
-            buffer.close();
 
-            buffer.open(QIODevice::ReadOnly);
-            File *file = importer.load(&buffer);
-            Entry *entry = dynamic_cast< Entry*>(file->first());
-            if (entry != NULL) {
-                value = entry->value(key);
-                kDebug() << "value->count()=" << value.count() << "  " << entry->value(key).count();
-            } else
-                kError() << "Cannot create value";
-            delete file;
-            buffer.close();
+    if (!text().isEmpty()) {
+        switch (m_typeFlag) {
+        case KBibTeX::tfText:
+            value.append(new PlainText(text()));
+            break;
+        case KBibTeX::tfReference:
+            value.append(new MacroKey(text())); // FIXME Check that text contains only valid characters!
+            break;
+        case KBibTeX::tfPerson:
+            value.append(FileImporterBibTeX::splitName(text()));
+            break;
+        case KBibTeX::tfKeyword: {
+            QList<Keyword*> keywords = FileImporterBibTeX::splitKeywords(text());
+            for (QList<Keyword*>::Iterator it = keywords.begin(); it != keywords.end(); ++it)
+                value.append(*it);
         }
         break;
+        case KBibTeX::tfSource:
+            if (!text().isEmpty()) {
+                QString key = "title"; // FIXME "author" is only required for persons, use something else for plain text
+                FileImporterBibTeX importer;
+                QString fakeBibTeXFile = QString("@article{dummy, %1=%2}").arg(key).arg(text());
+                kDebug() << "fakeBibTeXFile=" << fakeBibTeXFile << endl;
+                QBuffer buffer;
+                buffer.open(QIODevice::WriteOnly);
+                QTextStream ts(&buffer);
+                ts << fakeBibTeXFile << endl;
+                buffer.close();
+
+                buffer.open(QIODevice::ReadOnly);
+                File *file = importer.load(&buffer);
+                Entry *entry = dynamic_cast< Entry*>(file->first());
+                if (entry != NULL) {
+                    value = entry->value(key);
+                    kDebug() << "value->count()=" << value.count() << "  " << entry->value(key).count();
+                } else
+                    kError() << "Cannot create value";
+                delete file;
+                buffer.close();
+            }
+            break;
+        }
     }
 }
 
