@@ -21,6 +21,7 @@
 #include <QString>
 
 #include <KLocale>
+#include <KDebug>
 
 #include <element.h>
 #include <entry.h>
@@ -267,10 +268,23 @@ bool BibTeXFileModel::removeRow(int row, const QModelIndex & parent)
     if (parent != QModelIndex())
         return false;
 
-    QModelIndex topLeft = index(qMax(0, row - 1), 0, parent);
-    QModelIndex bottomRight = index(qMin(rowCount() - 1, row + 1), 0, parent);
     m_bibtexFile->removeAt(row);
-    emit dataChanged(topLeft, bottomRight);
+
+    reset();
+
+    return true;
+}
+
+bool BibTeXFileModel::insertRow(Element *element, int row, const QModelIndex & parent)
+{
+    if (row < 0 || row > rowCount())
+        return false;
+    if (parent != QModelIndex())
+        return false;
+
+    m_bibtexFile->insert(row, element);
+
+    reset();
 
     return true;
 }

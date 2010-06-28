@@ -93,6 +93,7 @@ public:
     virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
     virtual bool removeRow(int row, const QModelIndex & parent = QModelIndex());
+    bool insertRow(Element *element, int row, const QModelIndex & parent = QModelIndex());
 
     Element* element(int row) const;
 
