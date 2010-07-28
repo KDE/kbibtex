@@ -21,7 +21,6 @@ set( kbibtexgui_LIB_SRCS
 	widgets/fieldinput/fieldlistedit.cpp
 	widgets/filterbar.cpp
 	config/entrylayout.cpp
-	dialogs/entryviewer.cpp
 	dialogs/entryeditor.cpp
 	bibtexeditor.cpp
 )
