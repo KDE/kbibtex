@@ -38,9 +38,6 @@ public:
     EntryEditor(Entry *entry, QWidget *parent);
     void setReadOnly(bool isReadOnly = true);
 
-signals:
-    void modified(bool enableApply);
-
 public slots:
     void apply();
     void reset();

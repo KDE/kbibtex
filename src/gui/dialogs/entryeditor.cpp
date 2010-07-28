@@ -59,7 +59,6 @@ private:
         KPushButton *buttonRestore = new KPushButton(i18n("Restore"), this);
         layout->addWidget(buttonRestore, 1, 1, 1, 1);
         connect(buttonRestore, SIGNAL(clicked()), parent(), SLOT(reset()));
-        connect(sourceEdit->document(), SIGNAL(modificationChanged(bool)), this, SIGNAL(modified(bool)));
     }
 
 public:
@@ -115,9 +114,6 @@ public:
         Q_UNUSED(isReadOnly);
         // TODO
     }
-
-signals:
-    void modified(bool enableApply);
 };
 
 class EntryEditorGUI : public QWidget
@@ -325,9 +321,6 @@ public:
         for (QMap<QString, FieldInput*>::Iterator it = bibtexKeyToWidget.begin(); it != bibtexKeyToWidget.end(); ++it)
             it.value()->setReadOnly(isReadOnly);
     }
-
-signals:
-    void modified(bool enableApply);
 };
 
 class EntryEditor::EntryEditorPrivate
@@ -416,7 +409,6 @@ void EntryEditor::reset()
 {
     d->reset();
     d->isModified = false;
-    emit modified(false);
 }
 
 void EntryEditor::setReadOnly(bool isReadOnly)
