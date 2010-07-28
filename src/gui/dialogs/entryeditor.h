@@ -23,16 +23,20 @@
 
 #include <kbibtexgui_export.h>
 
-#include "entryviewer.h"
+#include <QTabWidget>
+
+class Entry;
 
 /**
 @author Thomas Fischer
 */
-class KBIBTEXGUI_EXPORT EntryEditor : public EntryViewer
+class KBIBTEXGUI_EXPORT EntryEditor : public QTabWidget
 {
     Q_OBJECT
 public:
+    EntryEditor(const Entry *entry, QWidget *parent);
     EntryEditor(Entry *entry, QWidget *parent);
+    void setReadOnly(bool isReadOnly = true);
 
 signals:
     void modified(bool enableApply);
@@ -42,12 +46,11 @@ public slots:
     void reset();
 
 private slots:
-    void tabChanged(int index);
+    void tabChanged();
 
 private:
     class EntryEditorPrivate;
     EntryEditorPrivate *d;
 };
-
 
 #endif // KBIBTEX_GUI_DIALOGS_ENTRYEDITOR_H

@@ -21,7 +21,6 @@
 #include <KDialog>
 #include <KLocale>
 
-#include <entryviewer.h>
 #include <entryeditor.h>
 #include <entry.h>
 #include <bibtexfilemodel.h>
@@ -44,9 +43,9 @@ void BibTeXEditor::viewElement(const Element *element)
 
     if (entry != NULL) {
         KDialog dialog(this);
-        EntryViewer entryViewer(entry, &dialog);
+        EntryEditor entryEditor(entry, &dialog);
         dialog.setCaption(i18n("View Entry"));
-        dialog.setMainWidget(&entryViewer);
+        dialog.setMainWidget(&entryEditor);
         dialog.setButtons(KDialog::Close);
         dialog.exec();
     }
