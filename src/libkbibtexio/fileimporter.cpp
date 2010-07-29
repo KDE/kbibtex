@@ -36,7 +36,7 @@ FileImporter::~FileImporter()
     // nothing
 }
 
-File* FileImporter::load(const QString& text)
+File* FileImporter::fromString(const QString& text)
 {
     if (text.isNull() || text.isEmpty())
         return NULL;

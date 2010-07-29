@@ -26,6 +26,8 @@
 
 class QSignalMapper;
 
+class BibTeXFileModel;
+
 /**
 @author Thomas Fischer
 */
@@ -36,11 +38,17 @@ public:
     BibTeXFileView(QWidget * parent = 0);
     virtual ~BibTeXFileView();
 
+    virtual void setModel(QAbstractItemModel * model);
+    virtual BibTeXFileModel *model();
+
+    void selectionDelete();
+
 protected:
     void resizeEvent(QResizeEvent *event);
 
 private:
     QSignalMapper *m_signalMapperBibTeXFields;
+    BibTeXFileModel *bibTeXFileModel;
 
 private slots:
     void headerActionToggled(QObject *action);

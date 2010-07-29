@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2009 by Thomas Fischer                             *
+*   Copyright (C) 2004-2010 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -23,9 +23,7 @@
 int main(int argc, char *argv[])
 {
     KBibTeXProgram program(argc, argv);
-
     const int result = program.execute();
-
     return result;
 }
 

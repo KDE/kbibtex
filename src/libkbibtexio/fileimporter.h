@@ -20,6 +20,8 @@
 #ifndef KBIBTEX_IO_FILEIMPORTER_H
 #define KBIBTEX_IO_FILEIMPORTER_H
 
+#include "kbibtexio_export.h"
+
 #include <QObject>
 #include <QMutex>
 
@@ -31,14 +33,14 @@ class Person;
 /**
 @author Thomas Fischer
 */
-class FileImporter : public QObject
+class KBIBTEXIO_EXPORT FileImporter : public QObject
 {
     Q_OBJECT
 public:
     FileImporter();
     ~FileImporter();
 
-    File* load(const QString& text);
+    File* fromString(const QString& text);
     virtual File* load(QIODevice *iodevice) = 0;
 
     static bool guessCanDecode(const QString &) {

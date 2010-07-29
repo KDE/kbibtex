@@ -80,10 +80,7 @@ const QList<Element*>& BibTeXEditor::selectedElements() const
 
 const Element* BibTeXEditor::currentElement() const
 {
-    SortFilterBibTeXFileModel *bibTeXFileModel = dynamic_cast<SortFilterBibTeXFileModel*>(model());
-    Q_ASSERT(bibTeXFileModel != NULL);
-    QModelIndex currentMapped = bibTeXFileModel->mapToSource(currentIndex());
-    return bibTeXFileModel->bibTeXSourceModel()->element(currentMapped.row());
+    return m_current;
 }
 
 void BibTeXEditor::keyPressEvent(QKeyEvent *event)
@@ -96,31 +93,21 @@ void BibTeXEditor::currentChanged(const QModelIndex & current, const QModelIndex
 {
     QTreeView::currentChanged(current, previous);
 
-    SortFilterBibTeXFileModel *bibTeXFileModel = dynamic_cast<SortFilterBibTeXFileModel*>(model());
-    Q_ASSERT(bibTeXFileModel != NULL);
-    QModelIndex currentMapped = bibTeXFileModel->mapToSource(current);
-    m_current = bibTeXFileModel == NULL ? NULL : bibTeXFileModel->bibTeXSourceModel()->element(currentMapped.row());
-
-    emit currentElementChanged(m_current);
+    emit currentElementChanged(model()->element(current.row()));
 }
 
 void BibTeXEditor::selectionChanged(const QItemSelection & selected, const QItemSelection & deselected)
 {
     QTreeView::selectionChanged(selected, deselected);
 
-    SortFilterBibTeXFileModel *bibTeXFileModel = dynamic_cast<SortFilterBibTeXFileModel*>(model());
-    Q_ASSERT(bibTeXFileModel);
-
     QModelIndexList set = selected.indexes();
     for (QModelIndexList::Iterator it = set.begin(); it != set.end(); ++it) {
-        QModelIndex mi = bibTeXFileModel->mapToSource(*it);
-        m_selection.append(bibTeXFileModel->bibTeXSourceModel()->element(mi.row()));
+        m_selection.append(model()->element((*it).row()));
     }
 
     set = deselected.indexes();
     for (QModelIndexList::Iterator it = set.begin(); it != set.end(); ++it) {
-        QModelIndex mi = bibTeXFileModel->mapToSource(*it);
-        m_selection.removeOne(bibTeXFileModel->bibTeXSourceModel()->element(mi.row()));
+        m_selection.removeOne(model()->element((*it).row()));
     }
 
     emit selectedElementsChanged();
@@ -128,8 +115,5 @@ void BibTeXEditor::selectionChanged(const QItemSelection & selected, const QItem
 
 void BibTeXEditor::itemActivated(const QModelIndex & index)
 {
-    SortFilterBibTeXFileModel *bibTeXFileModel = dynamic_cast<SortFilterBibTeXFileModel*>(model());
-    Q_ASSERT(bibTeXFileModel != NULL);
-    QModelIndex indexMapped = bibTeXFileModel->mapToSource(index);
-    emit elementExecuted(bibTeXFileModel->bibTeXSourceModel()->element(indexMapped.row()));
+    emit elementExecuted(model()->element(index.row()));
 }
