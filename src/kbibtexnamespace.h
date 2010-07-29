@@ -42,7 +42,7 @@ enum FieldInputType {
 };
 
 enum TypeFlag {
-    tfText = 0x1,
+    tfPlainText = 0x1,
     tfReference = 0x2,
     tfPerson = 0x4,
     tfKeyword = 0x8,

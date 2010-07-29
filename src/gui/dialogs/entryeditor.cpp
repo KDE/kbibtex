@@ -55,6 +55,7 @@ private:
         sourceEdit = new QTextEdit(this);
         layout->addWidget(sourceEdit, 0, 0, 1, 2);
         sourceEdit->document()->setDefaultFont(KGlobalSettings::fixedFont());
+        sourceEdit->setTabStopWidth(QFontMetrics(sourceEdit->font()).averageCharWidth() * 4);
 
         KPushButton *buttonRestore = new KPushButton(i18n("Restore"), this);
         layout->addWidget(buttonRestore, 1, 1, 1, 1);
@@ -70,12 +71,8 @@ public:
     bool apply(Entry *entry) {
         bool result = false;
         QString text = sourceEdit->document()->toPlainText();
-        QByteArray ba = text.toAscii();
-        QBuffer buffer(&ba);
-        buffer.open(QIODevice::ReadOnly);
         FileImporterBibTeX importer;
-        File *file = importer.load(&buffer);
-        buffer.close();
+        File *file = importer.fromString(text);
         if (file == NULL) return false;
 
         if (file->count() == 1) {
@@ -189,7 +186,8 @@ private:
 
                 const FieldDescription *fd = bf->find((*sflit).bibtexLabel);
                 KBibTeX::TypeFlags typeFlags = fd == NULL ? KBibTeX::tfSource : fd->typeFlags;
-                FieldInput *fieldInput = new FieldInput((*sflit).fieldInputLayout, typeFlags, container);
+                KBibTeX::TypeFlag preferredTypeFlag = fd == NULL ? KBibTeX::tfSource : fd->preferredTypeFlag;
+                FieldInput *fieldInput = new FieldInput((*sflit).fieldInputLayout, preferredTypeFlag, typeFlags, container);
                 layout->addWidget(fieldInput, row, col + 1, 1, 1);
                 layout->setColumnStretch(col, 0);
                 if ((*sflit).fieldInputLayout == KBibTeX::MultiLine || (*sflit).fieldInputLayout == KBibTeX::List)
@@ -237,7 +235,7 @@ private:
 
         label = new QLabel(i18n("Content:"), container);
         layout->addWidget(label, 1, 0, 1, 1);
-        otherFieldsContent = new FieldInput(KBibTeX::MultiLine, KBibTeX::tfSource, container);
+        otherFieldsContent = new FieldInput(KBibTeX::MultiLine, KBibTeX::tfSource, KBibTeX::tfSource, container);
         layout->addWidget(otherFieldsContent, 1, 1, 1, 2);
         label->setBuddy(otherFieldsContent);
 

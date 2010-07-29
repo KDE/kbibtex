@@ -40,6 +40,7 @@ private:
     const int innerSpacing;
     QSignalMapper *smRemove, *smGoUp, *smGoDown;
     QVBoxLayout *layout;
+    KBibTeX::TypeFlag preferredTypeFlag;
     KBibTeX::TypeFlags typeFlags;
 
 public:
@@ -47,8 +48,8 @@ public:
     QWidget *container;
     KPushButton *addButton;
 
-    FieldListEditPrivate(KBibTeX::TypeFlags tf, FieldListEdit *parent)
-            : p(parent), innerSpacing(4), typeFlags(tf) {
+    FieldListEditPrivate(KBibTeX::TypeFlag ptf, KBibTeX::TypeFlags tf, FieldListEdit *parent)
+            : p(parent), innerSpacing(4), preferredTypeFlag(ptf), typeFlags(tf) {
         smRemove = new QSignalMapper(parent);
         smGoUp = new QSignalMapper(parent);
         smGoDown = new QSignalMapper(parent);
@@ -90,7 +91,7 @@ public:
     }
 
     FieldLineEdit *addFieldLineEdit() {
-        FieldLineEdit *le = new FieldLineEdit(typeFlags, false, container);
+        FieldLineEdit *le = new FieldLineEdit(preferredTypeFlag, typeFlags, false, container);
         layout->insertWidget(layout->count() - 1, le);
         lineEditList.append(le);
 
@@ -147,32 +148,32 @@ public:
     }
 };
 
-FieldListEdit::FieldListEdit(KBibTeX::TypeFlags typeFlags, QWidget *parent)
-        : QScrollArea(parent), d(new FieldListEditPrivate(typeFlags, this))
+FieldListEdit::FieldListEdit(KBibTeX::TypeFlag preferredTypeFlag, KBibTeX::TypeFlags typeFlags, QWidget *parent)
+        : QScrollArea(parent), d(new FieldListEditPrivate(preferredTypeFlag, typeFlags, this))
 {
 // TODO
 }
 
-void FieldListEdit::setValue(const Value& value)
+void FieldListEdit::reset(const Value& value)
 {
     d->removeAllFieldLineEdits();
     for (Value::ConstIterator it = value.constBegin(); it != value.constEnd(); ++it) {
         Value v;
         v.append(*it);
         FieldLineEdit *fieldLineEdit = d->addFieldLineEdit();
-        fieldLineEdit->setValue(v);
+        fieldLineEdit->reset(v);
     }
     QSize size(d->container->width(), d->recommendedHeight());
     d->container->resize(size);
 }
 
-void FieldListEdit::applyTo(Value& value) const
+void FieldListEdit::apply(Value& value) const
 {
     value.clear();
 
     for (QList<FieldLineEdit*>::ConstIterator it = d->lineEditList.constBegin(); it != d->lineEditList.constEnd(); ++it) {
         Value v;
-        (*it)->applyTo(v);
+        (*it)->apply(v);
         for (Value::ConstIterator itv = v.constBegin(); itv != v.constEnd(); ++itv)
             value.append(*itv);
     }
@@ -189,13 +190,6 @@ void FieldListEdit::setReadOnly(bool isReadOnly)
         (*it)->setReadOnly(isReadOnly);
     d->addButton->setEnabled(!isReadOnly);
 }
-
-/*
-void FieldListEdit::reset()
-{
-    loadValue(m_originalValue);
-}
-*/
 
 void FieldListEdit::resizeEvent(QResizeEvent *event)
 {

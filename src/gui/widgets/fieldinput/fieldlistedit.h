@@ -32,16 +32,13 @@ class FieldListEdit : public QScrollArea
     Q_OBJECT
 
 public:
-    FieldListEdit(KBibTeX::TypeFlags typeFlags = KBibTeX::tfSource, QWidget *parent = NULL);
+    FieldListEdit(KBibTeX::TypeFlag preferredTypeFlag, KBibTeX::TypeFlags typeFlags, QWidget *parent = NULL);
 
-    void setValue(const Value& value);
-    void applyTo(Value& value) const;
+    void reset(const Value& value);
+    void apply(Value& value) const;
 
     void clear();
     void setReadOnly(bool isReadOnly);
-
-//public slots:
-    //  void reset();
 
 protected:
     virtual void resizeEvent(QResizeEvent *event);

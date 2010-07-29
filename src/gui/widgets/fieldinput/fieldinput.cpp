@@ -40,6 +40,7 @@ private:
 public:
     KBibTeX::FieldInputType fieldInputType;
     KBibTeX::TypeFlags typeFlags;
+    KBibTeX::TypeFlag preferredTypeFlag;
 
     FieldInputPrivate(FieldInput *parent)
             : p(parent), fieldLineEdit(NULL), fieldListEdit(NULL) {
@@ -53,16 +54,16 @@ public:
 
         switch (fieldInputType) {
         case KBibTeX::MultiLine:
-            fieldLineEdit = new FieldLineEdit(typeFlags, true, p);
+            fieldLineEdit = new FieldLineEdit(preferredTypeFlag, typeFlags, true, p);
             layout->addWidget(fieldLineEdit);
             connect(fieldLineEdit, SIGNAL(editingFinished()), p, SIGNAL(modified()));
             break;
         case KBibTeX::List:
-            fieldListEdit = new FieldListEdit(typeFlags, p);
+            fieldListEdit = new FieldListEdit(preferredTypeFlag, typeFlags, p);
             layout->addWidget(fieldListEdit);
             break;
         case KBibTeX::Month: {
-            fieldLineEdit = new FieldLineEdit(typeFlags, false, p);
+            fieldLineEdit = new FieldLineEdit(preferredTypeFlag, typeFlags, false, p);
             layout->addWidget(fieldLineEdit);
             connect(fieldLineEdit, SIGNAL(editingFinished()), p, SIGNAL(modified()));
             KPushButton *monthSelector = new KPushButton(KIcon("view-calendar-month"), "");
@@ -79,7 +80,7 @@ public:
         }
         break;
         default:
-            fieldLineEdit = new FieldLineEdit(typeFlags, false, p);
+            fieldLineEdit = new FieldLineEdit(preferredTypeFlag, typeFlags, false, p);
             layout->addWidget(fieldLineEdit);
             connect(fieldLineEdit, SIGNAL(editingFinished()), p, SIGNAL(modified()));
         }
@@ -94,16 +95,16 @@ public:
 
     void setValue(const Value& value) {
         if (fieldLineEdit != NULL)
-            fieldLineEdit->setValue(value);
+            fieldLineEdit->reset(value);
         else if (fieldListEdit != NULL)
-            fieldListEdit->setValue(value);
+            fieldListEdit->reset(value);
     }
 
     void applyTo(Value& value) const {
         if (fieldLineEdit != NULL)
-            fieldLineEdit->applyTo(value);
+            fieldLineEdit->apply(value);
         else if (fieldListEdit != NULL)
-            fieldListEdit->applyTo(value);
+            fieldListEdit->apply(value);
     }
 
     void setReadOnly(bool isReadOnly) {
@@ -114,11 +115,12 @@ public:
     }
 };
 
-FieldInput::FieldInput(KBibTeX::FieldInputType fieldInputType, KBibTeX::TypeFlags typeFlags, QWidget *parent)
+FieldInput::FieldInput(KBibTeX::FieldInputType fieldInputType, KBibTeX::TypeFlag preferredTypeFlag, KBibTeX::TypeFlags typeFlags, QWidget *parent)
         : QWidget(parent), d(new FieldInputPrivate(this))
 {
     d->fieldInputType = fieldInputType;
     d->typeFlags = typeFlags;
+    d->preferredTypeFlag = preferredTypeFlag;
     d->createGUI();
 }
 

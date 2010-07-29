@@ -70,6 +70,8 @@ public:
             QString typeFlags = systemcg.readEntry("TypeFlags", "Source");
             typeFlags = usercg.readEntry("TypeFlags", typeFlags);
             fd.typeFlags = typeFlagsFromString(typeFlags);
+            QString preferredTypeFlag = typeFlags.split(';').first();
+            fd.preferredTypeFlag = typeFlagFromString(preferredTypeFlag);
             p->append(fd);
         }
     }
@@ -104,7 +106,9 @@ void BibTeXFields::save()
         FieldDescription &fd = *it;
         usercg.writeEntry("Width", fd.width);
         usercg.writeEntry("Visible", fd.visible);
-        usercg.writeEntry("TypeFlags", typeFlagsToString(fd.typeFlags));
+        QString typeFlagsString = fd.typeFlags == fd.preferredTypeFlag ? "" : ";" + typeFlagsToString(fd.typeFlags);
+        typeFlagsString.prepend(typeFlagToString(fd.preferredTypeFlag));
+        usercg.writeEntry("TypeFlags", typeFlagsString);
     }
 
     d->userConfig->sync();
@@ -175,23 +179,32 @@ const FieldDescription* BibTeXFields::find(const QString &name) const
     return result;
 }
 
+KBibTeX::TypeFlag BibTeXFields::typeFlagFromString(const QString &typeFlagString)
+{
+    KBibTeX::TypeFlag result = (KBibTeX::TypeFlag)0;
+
+    if (typeFlagString == QLatin1String("Text"))
+        result = KBibTeX::tfPlainText;
+    else if (typeFlagString == QLatin1String("Source"))
+        result = KBibTeX::tfSource;
+    else if (typeFlagString == QLatin1String("Person"))
+        result = KBibTeX::tfPerson;
+    else if (typeFlagString == QLatin1String("Keyword"))
+        result = KBibTeX::tfKeyword;
+    else if (typeFlagString == QLatin1String("Reference"))
+        result = KBibTeX::tfReference;
+
+
+    return result;
+}
+
 KBibTeX::TypeFlags BibTeXFields::typeFlagsFromString(const QString &typeFlagsString)
 {
     KBibTeX::TypeFlags result;
 
     QStringList list = typeFlagsString.split(';');
-    for (QStringList::ConstIterator it = list.constBegin(); it != list.constEnd(); ++it) {
-        if (*it == QLatin1String("Text"))
-            result |= KBibTeX::tfText;
-        else   if (*it == QLatin1String("Source"))
-            result |= KBibTeX::tfSource;
-        else   if (*it == QLatin1String("Person"))
-            result |= KBibTeX::tfPerson;
-        else   if (*it == QLatin1String("Keyword"))
-            result |= KBibTeX::tfKeyword;
-        else   if (*it == QLatin1String("Reference"))
-            result |= KBibTeX::tfReference;
-    }
+    for (QStringList::ConstIterator it = list.constBegin(); it != list.constEnd(); ++it)
+        result |= typeFlagFromString(*it);
 
     return result;
 }
@@ -199,10 +212,20 @@ KBibTeX::TypeFlags BibTeXFields::typeFlagsFromString(const QString &typeFlagsStr
 QString BibTeXFields::typeFlagsToString(KBibTeX::TypeFlags typeFlags)
 {
     QStringList resultList;
-    if (typeFlags & KBibTeX::tfText) resultList << QLatin1String("Text");
+    if (typeFlags & KBibTeX::tfPlainText) resultList << QLatin1String("Text");
     if (typeFlags & KBibTeX::tfSource) resultList << QLatin1String("Source");
     if (typeFlags & KBibTeX::tfPerson) resultList << QLatin1String("Person");
     if (typeFlags & KBibTeX::tfKeyword) resultList << QLatin1String("Keyword");
     if (typeFlags & KBibTeX::tfReference) resultList << QLatin1String("Reference");
     return resultList.join(QChar(';'));
+}
+
+QString BibTeXFields::typeFlagToString(KBibTeX::TypeFlag typeFlag)
+{
+    if (typeFlag == KBibTeX::tfPlainText) return QLatin1String("Text");
+    if (typeFlag ==  KBibTeX::tfSource)return QLatin1String("Source");
+    if (typeFlag ==  KBibTeX::tfPerson)  return QLatin1String("Person");
+    if (typeFlag ==  KBibTeX::tfKeyword)   return QLatin1String("Keyword");
+    if (typeFlag ==  KBibTeX::tfReference)   return QLatin1String("Reference");
+    return QString::null;
 }

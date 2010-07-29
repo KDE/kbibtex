@@ -33,7 +33,7 @@ class KBIBTEXGUI_EXPORT FieldInput : public QWidget
     Q_OBJECT
 
 public:
-    FieldInput(KBibTeX::FieldInputType fieldInputType, KBibTeX::TypeFlags typeFlags = KBibTeX::tfSource, QWidget *parent = NULL);
+    FieldInput(KBibTeX::FieldInputType fieldInputType, KBibTeX::TypeFlag preferredTypeFlag, KBibTeX::TypeFlags typeFlags, QWidget *parent = NULL);
 
     void setValue(const Value& value);
     void applyTo(Value& value) const;

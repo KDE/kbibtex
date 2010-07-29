@@ -33,6 +33,7 @@ typedef struct {
     QString upperCamelCaseAlt;
     QString label;
     KBibTeX::TypeFlags typeFlags;
+    KBibTeX::TypeFlag preferredTypeFlag;
     int width;
     int defaultWidth;
     bool visible;
@@ -55,7 +56,9 @@ public:
      */
     QString format(const QString& name, KBibTeX::Casing casing) const;
 
+    static KBibTeX::TypeFlag typeFlagFromString(const QString &typeFlagString);
     static KBibTeX::TypeFlags typeFlagsFromString(const QString &typeFlagsString);
+    static QString typeFlagToString(KBibTeX::TypeFlag typeFlag);
     static QString typeFlagsToString(KBibTeX::TypeFlags typeFlags);
 
     const FieldDescription* find(const QString &name) const;
