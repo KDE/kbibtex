@@ -50,6 +50,7 @@
 #include <bibtexfilemodel.h>
 #include "filterbar.h"
 
+#include <clipboard.h>
 #include "part.h"
 #include "partfactory.h"
 // #include "browserextension.h" // FIXME
@@ -206,6 +207,11 @@ void KBibTeXPart::setupActions(bool /*browserViewWanted FIXME*/)
     d->signalMapperNewElement->setMapping(newElement, smPreamble);
     connect(d->signalMapperNewElement, SIGNAL(mapped(int)), this, SLOT(newElementTriggered(int)));
 
+    Clipboard *clipboard = new Clipboard(d->editor);
+    actionCollection()->addAction(KStandardAction::Cut, clipboard, SLOT(cut()));
+    actionCollection()->addAction(KStandardAction::Copy, clipboard, SLOT(copy()));
+    actionCollection()->addAction(KStandardAction::Paste, clipboard, SLOT(paste()));
+
     // TODO
 
     fitActionSettings();
@@ -301,9 +307,10 @@ bool KBibTeXPart::openFile()
 
 void KBibTeXPart::editorKeyPressed(QKeyEvent *event)
 {
-    if (event->modifiers() == Qt::NoModifier && event->matches(QKeySequence::Delete)) { // FIXME: Make key sequence configurable
-        /// delete the current (selected) element
-        d->model->removeRow(d->editor->currentIndex().row());
+    // FIXME: Make key sequences configurable (QAction/KAction)
+    if (event->modifiers() == Qt::NoModifier && event->matches(QKeySequence::Delete)) {
+        /// delete the selected elements
+        d->editor->selectionDelete();
     }
 }
 
@@ -311,12 +318,15 @@ void KBibTeXPart::newElementTriggered(int event)
 {
     switch (event) {
     case smComment:
+        kWarning() << "Not yet implemented";
         // FIXME to be implemented
         break;
     case smMacro:
+        kWarning() << "Not yet implemented";
         // FIXME to be implemented
         break;
     case smPreamble:
+        kWarning() << "Not yet implemented";
         // FIXME to be implemented
         break;
     default:

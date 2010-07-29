@@ -5,6 +5,11 @@
     <Action name="file_save" group="save_merge" />
     <Action name="file_save_as" group="save_merge" />
   </Menu>
+  <Menu name="edit" noMerge="1"><text>&amp;Edit</text>
+    <Action name="edit_cut" group="edit_paste_merge" />
+    <Action name="edit_copy" group="edit_paste_merge" />
+    <Action name="edit_paste" group="edit_paste_merge" />
+  </Menu>
   <Menu name="element"><text>&amp;Element</text>
     <Action name="element_new" />
   </Menu>
