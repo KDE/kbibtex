@@ -254,14 +254,14 @@ void Value::copyFrom(const Value& other)
 
 QRegExp PlainTextValue::removeCurlyBrackets = QRegExp("(^|[^\\\\])[{}]");
 
-QString PlainTextValue::text(const Value& value, const File* file)
+QString PlainTextValue::text(const Value& value, const File* file, bool debug)
 {
     ValueItemType vit = VITOther;
     ValueItemType lastVit = VITOther;
 
     QString result = "";
     for (QList<ValueItem*>::ConstIterator it = value.begin(); it != value.end(); ++it) {
-        QString nextText = text(**it, vit, file);
+        QString nextText = text(**it, vit, file, debug);
         if (!nextText.isNull()) {
             if (lastVit == VITPerson && vit == VITPerson)
                 result.append(" and ");
@@ -277,34 +277,38 @@ QString PlainTextValue::text(const Value& value, const File* file)
     return result;
 }
 
-QString PlainTextValue::text(const ValueItem& valueItem, const File* file)
+QString PlainTextValue::text(const ValueItem& valueItem, const File* file, bool debug)
 {
     ValueItemType vit;
-    return text(valueItem, vit, file);
+    return text(valueItem, vit, file, debug);
 }
 
-QString PlainTextValue::text(const ValueItem& valueItem, ValueItemType &vit, const File* /*file*/)
+QString PlainTextValue::text(const ValueItem& valueItem, ValueItemType &vit, const File* /*file*/, bool debug)
 {
     QString result = QString::null;
     vit = VITOther;
 
     const PlainText *plainText = dynamic_cast<const PlainText*>(&valueItem);
-    if (plainText != NULL)
+    if (plainText != NULL) {
         result = plainText->text();
-    else {
+        if (debug) result = "[:" + result + ":PlainText]";
+    } else {
         const MacroKey *macroKey = dynamic_cast<const MacroKey*>(&valueItem);
-        if (macroKey != NULL)
+        if (macroKey != NULL) {
             result = macroKey->text(); // TODO Use File to resolve key to full text
-        else {
+            if (debug) result = "[:" + result + ":MacroKey]";
+        } else {
             const Person *person = dynamic_cast<const Person*>(&valueItem);
             if (person != NULL) {
                 result = person->firstName() + " " + person->lastName();
                 vit = VITPerson;
+                if (debug) result = "[:" + result + ":Person]";
             } else {
                 const Keyword *keyword = dynamic_cast<const Keyword*>(&valueItem);
                 if (keyword != NULL) {
                     result = keyword->text();
                     vit = VITKeyword;
+                    if (debug) result = "[:" + result + ":Keyword]";
                 }
             }
         }
@@ -315,5 +319,6 @@ QString PlainTextValue::text(const ValueItem& valueItem, ValueItemType &vit, con
         result = result.replace(removeCurlyBrackets.cap(0), removeCurlyBrackets.cap(1));
     }
 
+    if (debug) result = "[:" + result + ":Debug]";
     return result;
 }

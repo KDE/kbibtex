@@ -48,7 +48,7 @@ public:
     virtual bool containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const = 0;
 };
 
-class Keyword: public ValueItem
+class KBIBTEXIO_EXPORT Keyword: public ValueItem
 {
 public:
     ~Keyword() { /* nothing */ };
@@ -161,14 +161,14 @@ private:
 class KBIBTEXIO_EXPORT PlainTextValue
 {
 public:
-    static QString text(const Value& value, const File* file = NULL);
-    static QString text(const ValueItem& valueItem, const File* file = NULL);
+    static QString text(const Value& value, const File* file = NULL, bool debug = false);
+    static QString text(const ValueItem& valueItem, const File* file = NULL, bool debug = false);
 
 private:
     enum ValueItemType { VITOther = 0, VITPerson, VITKeyword} lastItem;
     static QRegExp removeCurlyBrackets;
 
-    static QString text(const ValueItem& valueItem, ValueItemType &vit, const File* file = NULL);
+    static QString text(const ValueItem& valueItem, ValueItemType &vit, const File* file, bool debug);
 };
 
 Q_DECLARE_METATYPE(Value);
