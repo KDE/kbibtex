@@ -29,97 +29,107 @@
 
 #include <file.h>
 #include <entry.h>
+#include <value.h>
 #include <fileimporterbibtex.h>
 #include <fileexporterbibtex.h>
+#include <bibtexfields.h>
 #include "fieldlineedit.h"
 
-FieldLineEdit::FieldLineEdit(KBibTeX::TypeFlags typeFlags, bool isMultiLine, QWidget *parent)
-        : MenuLineEdit(isMultiLine, parent), m_typeFlags(typeFlags)
+class FieldLineEdit::FieldLineEditPrivate
 {
-    setObjectName(QLatin1String("FieldLineEdit"));
-    m_menuTypes = new QMenu(i18n("Types"), this);
-    setMenu(m_menuTypes);
-    m_menuTypesSignalMapper = new QSignalMapper(this);
-    connect(m_menuTypesSignalMapper, SIGNAL(mapped(int)), this, SLOT(slotTypeChanged(int)));
+private:
+    FieldLineEdit *parent;
+    Value currentValue;
+    KBibTeX::TypeFlag preferredTypeFlag;
+    KBibTeX::TypeFlags typeFlags;
+    QSignalMapper *menuTypesSignalMapper;
 
-    setupMenu();
+public:
+    QMenu *menuTypes;
+    KBibTeX::TypeFlag typeFlag;
 
-    setTypeFlag(KBibTeX::tfText);
-}
-
-KBibTeX::TypeFlag FieldLineEdit::typeFlag()
-{
-    return m_typeFlag;
-}
-
-KBibTeX::TypeFlag FieldLineEdit::setTypeFlag(KBibTeX::TypeFlag typeFlag)
-{
-    if (m_typeFlags&typeFlag) m_typeFlag = typeFlag;
-    else if (m_typeFlags&KBibTeX::tfText) m_typeFlag = KBibTeX::tfText;
-    else if (m_typeFlags&KBibTeX::tfReference) m_typeFlag = KBibTeX::tfReference;
-    else if (m_typeFlags&KBibTeX::tfPerson) m_typeFlag = KBibTeX::tfPerson;
-    else if (m_typeFlags&KBibTeX::tfKeyword) m_typeFlag = KBibTeX::tfKeyword;
-    else if (m_typeFlags&KBibTeX::tfSource) m_typeFlag = KBibTeX::tfSource;
-    else {
-        kWarning() << "No valid TypeFlags given, resetting to Source";
-        m_typeFlags = KBibTeX::tfSource;
-        m_typeFlag = KBibTeX::tfSource;
+    FieldLineEditPrivate(KBibTeX::TypeFlag ptf, KBibTeX::TypeFlags tf, FieldLineEdit *p)
+            : parent(p), preferredTypeFlag(ptf), typeFlags(tf) {
+        menuTypes = new QMenu(i18n("Types"), parent);
+        menuTypesSignalMapper = new QSignalMapper(parent);
         setupMenu();
+        connect(menuTypesSignalMapper, SIGNAL(mapped(int)), parent, SLOT(slotTypeChanged(int)));
+
+        Value value;
+        typeFlag = determineTypeFlag(value, preferredTypeFlag, typeFlags);
+        updateGUI(typeFlag);
     }
 
-    updateGUI();
+    void reset(const Value& value) {
+        QString text = "";
+        typeFlag = determineTypeFlag(value, typeFlag, typeFlags);
+        updateGUI(typeFlag);
 
-    return m_typeFlag;
-}
+        if (!value.isEmpty()) {
+            if (typeFlag == KBibTeX::tfSource) {
+                FileExporterBibTeX exporter;
+                text = exporter.valueToBibTeX(value);
+            } else {
+                const ValueItem *first = value.first();
+                const PlainText *plainText = dynamic_cast<const PlainText*>(first);
+                if (typeFlag == KBibTeX::tfPlainText && plainText != NULL) {
+                    text = plainText->text();
+                } else {
+                    const Person *person = dynamic_cast<const Person*>(first);
+                    if (typeFlag == KBibTeX::tfPerson && person != NULL) {
+                        text = person->lastName();
+                        QString temp = person->firstName();
+                        if (!temp.isEmpty()) text.prepend(temp + " ");
+                        temp = person->suffix();
+                        if (!temp.isEmpty()) text.append(", " + temp);
+                        temp = person->prefix();
+                        if (!temp.isEmpty()) text.prepend(temp + " ");
+                    } else {
+                        const MacroKey *macroKey = dynamic_cast<const MacroKey*>(first);
+                        if (typeFlag == KBibTeX::tfReference && macroKey != NULL) {
+                            text = macroKey->text();
+                        } else {
+                            const Keyword *keyword = dynamic_cast<const Keyword*>(first);
+                            if (typeFlag == KBibTeX::tfKeyword && keyword != NULL) {
+                                text = keyword->text();
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
-KBibTeX::TypeFlag FieldLineEdit::setTypeFlags(KBibTeX::TypeFlags typeFlags)
-{
-    m_typeFlags = typeFlags;
-    setupMenu();
-    return setTypeFlag(m_typeFlag);
-}
+        parent->setText(text);
+    }
 
-void FieldLineEdit::setValue(const Value& value)
-{
-    m_originalValue = value;
-    loadValue(m_originalValue);
-}
+    bool apply(Value& value) const {
+        value.clear();
+        QString text = parent->text();
 
-void FieldLineEdit::applyTo(Value& value) const
-{
-    value.clear();
-
-    if (!text().isEmpty()) {
-        switch (m_typeFlag) {
-        case KBibTeX::tfText:
-            value.append(new PlainText(text()));
-            break;
-        case KBibTeX::tfReference:
-            value.append(new MacroKey(text())); // FIXME Check that text contains only valid characters!
-            break;
-        case KBibTeX::tfPerson:
-            value.append(FileImporterBibTeX::splitName(text()));
-            break;
-        case KBibTeX::tfKeyword: {
-            QList<Keyword*> keywords = FileImporterBibTeX::splitKeywords(text());
+        if (text.isEmpty())
+            return true;
+        else if (typeFlag == KBibTeX::tfPlainText) {
+            value.append(new PlainText(text));
+            return true;
+        } else if (typeFlag == KBibTeX::tfReference && !text.contains(QRegExp("[^-_:/a-zA-Z0-9]"))) {
+            value.append(new MacroKey(text));
+            return true;
+        } else if (typeFlag == KBibTeX::tfPerson) {
+            value.append(FileImporterBibTeX::splitName(text));
+            return true;
+        } else if (typeFlag == KBibTeX::tfKeyword) {
+            QList<Keyword*> keywords = FileImporterBibTeX::splitKeywords(text);
             for (QList<Keyword*>::Iterator it = keywords.begin(); it != keywords.end(); ++it)
                 value.append(*it);
-        }
-        break;
-        case KBibTeX::tfSource:
-            if (!text().isEmpty()) {
-                QString key = "title"; // FIXME "author" is only required for persons, use something else for plain text
-                FileImporterBibTeX importer;
-                QString fakeBibTeXFile = QString("@article{dummy, %1=%2}").arg(key).arg(text());
-                kDebug() << "fakeBibTeXFile=" << fakeBibTeXFile << endl;
-                QBuffer buffer;
-                buffer.open(QIODevice::WriteOnly);
-                QTextStream ts(&buffer);
-                ts << fakeBibTeXFile << endl;
-                buffer.close();
+            return true;
+        } else if (typeFlag == KBibTeX::tfSource) {
+            QString key = typeFlags.testFlag(KBibTeX::tfPerson) ? "author" : "title";
+            FileImporterBibTeX importer;
+            QString fakeBibTeXFile = QString("@article{dummy, %1=%2}").arg(key).arg(text);
+            kDebug() << "fakeBibTeXFile=" << fakeBibTeXFile << endl;
 
-                buffer.open(QIODevice::ReadOnly);
-                File *file = importer.load(&buffer);
+            File *file = importer.fromString(fakeBibTeXFile);
+            if (file != NULL) {
                 Entry *entry = dynamic_cast< Entry*>(file->first());
                 if (entry != NULL) {
                     value = entry->value(key);
@@ -127,120 +137,134 @@ void FieldLineEdit::applyTo(Value& value) const
                 } else
                     kError() << "Cannot create value";
                 delete file;
-                buffer.close();
             }
-            break;
+            return !value.isEmpty();
         }
+
+        return false;
     }
-}
 
-void FieldLineEdit::reset()
-{
-    loadValue(m_originalValue);
-}
-
-KIcon FieldLineEdit::iconForTypeFlag(KBibTeX::TypeFlag typeFlag)
-{
-    switch (typeFlag) {
-    case KBibTeX::tfText: return KIcon("draw-text");
-    case KBibTeX::tfReference: return KIcon("emblem-symbolic-link");
-    case KBibTeX::tfPerson: return KIcon("user-identity");
-    case KBibTeX::tfKeyword: return KIcon("edit-find");
-    case KBibTeX::tfSource: return KIcon("code-context");
-    default: return KIcon();
-    };
-}
-
-
-void FieldLineEdit::loadValue(const Value& value)
-{
-    QString text = "";
-    m_incompleteRepresentation = false;
-
-    if (value.size() > 0) {
-        if (m_typeFlag == KBibTeX::tfSource) {
-            FileExporterBibTeX *exporter = new FileExporterBibTeX();
-            text = exporter->valueToBibTeX(value);
-            delete exporter;
+    KBibTeX::TypeFlag determineTypeFlag(const Value &value, KBibTeX::TypeFlag preferredTypeFlag, KBibTeX::TypeFlags availableTypeFlags) {
+        if (value.count() > 1) {
+            return KBibTeX::tfSource;
         } else {
-            m_incompleteRepresentation = value.size() > 1;
-            const ValueItem *first = value.first();
-            const PlainText *plainText = dynamic_cast<const PlainText*>(first);
-            if (plainText != NULL) {
-                text = plainText->text();
-            } else {
-                const Person *person = dynamic_cast<const Person*>(first);
-                if (person != NULL) {
-                    text = person->lastName();
-                    QString temp = person->firstName();
-                    if (!temp.isEmpty()) text.prepend(temp + " ");
-                    temp = person->suffix();
-                    if (!temp.isEmpty()) text.append(", " + temp);
-                    temp = person->prefix();
-                    if (!temp.isEmpty()) text.prepend(temp + " ");
-                } else {
-                    const MacroKey *macroKey = dynamic_cast<const MacroKey*>(first);
-                    if (macroKey != NULL) {
-                        text = macroKey->text();
-                    }
-                }
+            KBibTeX::TypeFlag result = preferredTypeFlag;
+            int p = 1;
+            for (int i = 1; i < 8; ++i, p <<= 1) {
+                KBibTeX::TypeFlag flag = (KBibTeX::TypeFlag)p;
+                if (availableTypeFlags.testFlag(flag) && typeFlagSupported(value, flag))
+                    result = flag;
             }
+            if (availableTypeFlags.testFlag(preferredTypeFlag) && typeFlagSupported(value, preferredTypeFlag))
+                result = preferredTypeFlag;
+
+            return result;
         }
     }
 
+    bool typeFlagSupported(const Value &value, KBibTeX::TypeFlag typeFlag) {
+        if (value.isEmpty() || typeFlag == KBibTeX::tfSource)
+            return true;
+        else if (value.count() > 1)
+            return typeFlag == KBibTeX::tfSource;
+        else if (typeFlag == KBibTeX::tfKeyword && dynamic_cast<Keyword*>(value.first()) != NULL)
+            return true;
+        else if (typeFlag == KBibTeX::tfPerson && dynamic_cast<Person*>(value.first()) != NULL)
+            return true;
+        else if (typeFlag == KBibTeX::tfPlainText && dynamic_cast<PlainText*>(value.first()) != NULL)
+            return true;
+        else if (typeFlag == KBibTeX::tfReference && dynamic_cast<MacroKey*>(value.first()) != NULL)
+            return true;
+        else return false;
+    }
 
-    if (m_incompleteRepresentation)
-        m_incompleteRepresentation = KMessageBox::warningContinueCancel(this, i18n("The chosen representation cannot display the value of this field.\n\nUsing this representation will cause lost of data."), i18n("Chosen representation"), KGuiItem(i18n("Continue with data loss"), "continue"), KGuiItem(i18n("Make field read-only"), "readonly")) != KMessageBox::Continue;
-    setReadOnly(m_incompleteRepresentation); // FIXME: This may cause trouble with "Apply"
-    setText(text);
+
+    void setupMenu() {
+        menuTypes->clear();
+
+        if (typeFlags.testFlag(KBibTeX::tfPlainText)) {
+            QAction *action = menuTypes->addAction(iconForTypeFlag(KBibTeX::tfPlainText), i18n("Plain Text"), menuTypesSignalMapper, SLOT(map()));
+            menuTypesSignalMapper->setMapping(action, KBibTeX::tfPlainText);
+        }
+        if (typeFlags.testFlag(KBibTeX::tfReference)) {
+            QAction *action = menuTypes->addAction(iconForTypeFlag(KBibTeX::tfReference), i18n("Reference"), menuTypesSignalMapper, SLOT(map()));
+            menuTypesSignalMapper->setMapping(action, KBibTeX::tfReference);
+        }
+        if (typeFlags.testFlag(KBibTeX::tfPerson)) {
+            QAction *action = menuTypes->addAction(iconForTypeFlag(KBibTeX::tfPerson), i18n("Person"), menuTypesSignalMapper, SLOT(map()));
+            menuTypesSignalMapper->setMapping(action, KBibTeX::tfPerson);
+        }
+        if (typeFlags.testFlag(KBibTeX::tfKeyword)) {
+            QAction *action = menuTypes->addAction(iconForTypeFlag(KBibTeX::tfKeyword), i18n("Keyword"), menuTypesSignalMapper, SLOT(map()));
+            menuTypesSignalMapper->setMapping(action, KBibTeX::tfKeyword);
+        }
+        if (typeFlags.testFlag(KBibTeX::tfSource)) {
+            QAction *action = menuTypes->addAction(iconForTypeFlag(KBibTeX::tfSource), i18n("Source Code"), menuTypesSignalMapper, SLOT(map()));
+            menuTypesSignalMapper->setMapping(action, KBibTeX::tfSource);
+        }
+    }
+
+    KIcon iconForTypeFlag(KBibTeX::TypeFlag typeFlag) {
+        switch (typeFlag) {
+        case KBibTeX::tfPlainText: return KIcon("draw-text");
+        case KBibTeX::tfReference: return KIcon("emblem-symbolic-link");
+        case KBibTeX::tfPerson: return KIcon("user-identity");
+        case KBibTeX::tfKeyword: return KIcon("edit-find");
+        case KBibTeX::tfSource: return KIcon("code-context");
+        default: return KIcon();
+        };
+    }
+
+    void updateGUI(KBibTeX::TypeFlag typeFlag) {
+        parent->setFont(KGlobalSettings::generalFont());
+        parent->setIcon(iconForTypeFlag(typeFlag));
+        switch (typeFlag) {
+        case KBibTeX::tfPlainText: parent->setButtonToolTip(i18n("Plain Text")); break;
+        case KBibTeX::tfReference: parent->setButtonToolTip(i18n("Reference")); break;
+        case KBibTeX::tfPerson: parent->setButtonToolTip(i18n("Person")); break;
+        case KBibTeX::tfKeyword: parent->setButtonToolTip(i18n("Keyword")); break;
+        case KBibTeX::tfSource:
+            parent->setButtonToolTip(i18n("Source Code"));
+            parent->setFont(KGlobalSettings::fixedFont());
+            break;
+        default: parent->setButtonToolTip(""); break;
+        };
+    }
+
+};
+
+FieldLineEdit::FieldLineEdit(KBibTeX::TypeFlag preferredTypeFlag, KBibTeX::TypeFlags typeFlags, bool isMultiLine, QWidget *parent)
+        : MenuLineEdit(isMultiLine, parent), d(new FieldLineEdit::FieldLineEditPrivate(preferredTypeFlag, typeFlags, this))
+{
+    setObjectName(QLatin1String("FieldLineEdit"));
+    setMenu(d->menuTypes);
 }
 
-void FieldLineEdit::setupMenu()
+void FieldLineEdit::apply(Value& value) const
 {
-    m_menuTypes->clear();
-
-    if (m_typeFlags&KBibTeX::tfText) {
-        QAction *action = m_menuTypes->addAction(iconForTypeFlag(KBibTeX::tfText), i18n("Plain Text"), m_menuTypesSignalMapper, SLOT(map()));
-        m_menuTypesSignalMapper->setMapping(action, KBibTeX::tfText);
-    }
-    if (m_typeFlags&KBibTeX::tfReference) {
-        QAction *action = m_menuTypes->addAction(iconForTypeFlag(KBibTeX::tfReference), i18n("Reference"), m_menuTypesSignalMapper, SLOT(map()));
-        m_menuTypesSignalMapper->setMapping(action, KBibTeX::tfReference);
-    }
-    if (m_typeFlags&KBibTeX::tfPerson) {
-        QAction *action = m_menuTypes->addAction(iconForTypeFlag(KBibTeX::tfPerson), i18n("Person"), m_menuTypesSignalMapper, SLOT(map()));
-        m_menuTypesSignalMapper->setMapping(action, KBibTeX::tfPerson);
-    }
-    if (m_typeFlags&KBibTeX::tfSource) {
-        QAction *action = m_menuTypes->addAction(iconForTypeFlag(KBibTeX::tfSource), i18n("Source Code"), m_menuTypesSignalMapper, SLOT(map()));
-        m_menuTypesSignalMapper->setMapping(action, KBibTeX::tfSource);
-    }
+    d->apply(value);
 }
 
-void FieldLineEdit::updateGUI()
+void FieldLineEdit::reset(const Value& value)
 {
-    setFont(KGlobalSettings::generalFont());
-    setIcon(iconForTypeFlag(m_typeFlag));
-    switch (m_typeFlag) {
-    case KBibTeX::tfText: setButtonToolTip(i18n("Plain Text")); break;
-    case KBibTeX::tfReference: setButtonToolTip(i18n("Reference")); break;
-    case KBibTeX::tfPerson: setButtonToolTip(i18n("Person")); break;
-    case KBibTeX::tfSource:
-        setButtonToolTip(i18n("Source Code"));
-        setFont(KGlobalSettings::fixedFont());
-        break;
-    default: setButtonToolTip(""); break;
-    };
+    d->reset(value);
 }
 
 void FieldLineEdit::slotTypeChanged(int newTypeFlag)
 {
-    Value value = m_originalValue;
-    if (!m_incompleteRepresentation)
-        applyTo(value);
+    KBibTeX::TypeFlag originalTypeFlag = d->typeFlag;
+    Value originalValue;
+    d->apply(originalValue);
 
-    m_typeFlag = (KBibTeX::TypeFlag)newTypeFlag;
-    updateGUI();
+    d->typeFlag = (KBibTeX::TypeFlag)newTypeFlag;
+    kDebug() << "new type is " << BibTeXFields::typeFlagToString(d->typeFlag);
 
-    loadValue(value);
+    Value testValue;
+    if (d->apply(testValue))
+        d->reset(testValue);
+    else {
+        KMessageBox::error(this, i18n("The current text cannot be used as value of type \"%1\".\n\nSwitching back to type \"%2\".", BibTeXFields::typeFlagToString(d->typeFlag), BibTeXFields::typeFlagToString(originalTypeFlag)));
+        d->typeFlag = originalTypeFlag;
+        d->reset(originalValue);
+    }
 }
