@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2009 by Thomas Fischer                             *
+*   Copyright (C) 2004-2010 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -23,7 +23,14 @@
 #include <KDebug>
 
 #include "program.h"
+#include "version.h"
 #include "mainwindow.h"
+
+static KAboutData aboutData("kbibtex", 0,
+                            ki18n("KBibTeX"), versionNumber,
+                            ki18n("A bibliography manager supporting BibTeX and other formats."), KAboutData::License_GPL_V2,
+                            ki18n("Copyright 2004-2010, Thomas Fischer"), ki18n("Feedback:\nfischer@unix-ag.uni-kl.de"),
+                            "http://home.gna.org/kbibtex/");
 
 KBibTeXProgram::KBibTeXProgram(int argc, char *argv[])
 /*: m_documentManager(new KDocumentManager()), m_viewManager(new KViewManager(m_documentManager))*/
@@ -31,7 +38,7 @@ KBibTeXProgram::KBibTeXProgram(int argc, char *argv[])
     KCmdLineOptions programOptions;
     programOptions.add("+[URL(s)]", ki18n("File(s) to load"), 0);
 
-    KCmdLineArgs::init(argc, argv, &m_aboutData);
+    KCmdLineArgs::init(argc, argv, &aboutData);
     KCmdLineArgs::addCmdLineOptions(programOptions);
 }
 
