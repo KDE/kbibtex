@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2009 by Thomas Fischer                             *
+*   Copyright (C) 2004-2010 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -17,12 +17,14 @@
 *   Free Software Foundation, Inc.,                                       *
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
+
 #include <QHeaderView>
 #include <QSignalMapper>
 #include <QScrollBar>
 
 #include <KAction>
 #include <KLocale>
+#include <KDebug>
 
 #include <bibtexfields.h>
 #include "bibtexfilemodel.h"
@@ -75,6 +77,33 @@ BibTeXFileView::~BibTeXFileView()
         bibtexFields->replace(i, fd);
     }
     bibtexFields->save();
+}
+
+void BibTeXFileView::setModel(QAbstractItemModel * model)
+{
+    QTreeView::setModel(model);
+    bibTeXFileModel = dynamic_cast<BibTeXFileModel*>(model);
+    if (bibTeXFileModel == NULL) {
+        SortFilterBibTeXFileModel *sfbfm = dynamic_cast<SortFilterBibTeXFileModel*>(model);
+        Q_ASSERT(sfbfm != NULL);
+        bibTeXFileModel = sfbfm->bibTeXSourceModel();
+    }
+    Q_ASSERT(bibTeXFileModel != NULL);
+}
+
+BibTeXFileModel *BibTeXFileView::model()
+{
+    return bibTeXFileModel;
+}
+
+void BibTeXFileView::selectionDelete()
+{
+    QModelIndexList mil = selectionModel()->selectedRows();
+    while (mil.begin() != mil.end()) {
+        bool r = bibTeXFileModel->removeRow(mil.begin()->row());
+        if (!r) kWarning() << "could not remove element in row " << mil.begin()->row();
+        mil.removeFirst();
+    }
 }
 
 void BibTeXFileView::resizeEvent(QResizeEvent */*event*/)
