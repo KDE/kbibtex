@@ -40,9 +40,12 @@ private:
     SearchFormPrivate *d;
 
 private slots:
+    void switchToEngines();
     void startSearch();
     void foundEntry(Entry*entry);
     void stoppedSearch(int resultCode);
+    void tabSwitched(int newTab);
+    void itemChanged();
 };
 
 

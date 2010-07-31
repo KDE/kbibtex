@@ -44,18 +44,20 @@ class SearchForm::SearchFormPrivate
 private:
     SearchForm *p;
     QTabWidget *tabWidget;
-    KPushButton *searchButton;
     QWidget *queryTermsContainer;
+    QWidget *listContainer;
     QListWidget *enginesList;
+    QLabel *whichEnginesLabel;
 
 public:
     QMap<QListWidgetItem*, WebSearchAbstract*> itemToWebSearch;
     QMap<QString, KLineEdit*> queryFields;
     int runningSearches;
     File *bibtexFile;
+    KPushButton *searchButton;
 
     SearchFormPrivate(SearchForm *parent)
-            : p(parent), runningSearches(0), bibtexFile(NULL) {
+            : p(parent), whichEnginesLabel(NULL), runningSearches(0), bibtexFile(NULL) {
 // TODO
     }
 
@@ -71,6 +73,7 @@ public:
 
         tabWidget = new QTabWidget(p);
         layout->addWidget(tabWidget, 0, 0, 1, 2);
+        connect(tabWidget, SIGNAL(currentChanged(int)), p, SLOT(tabSwitched(int)));
 
         searchButton = new KPushButton(KIcon("edit-find"), i18n("Search"), p);
         layout->addWidget(searchButton, 1, 1, 1, 1);
@@ -79,37 +82,44 @@ public:
         tabWidget->addTab(queryTermsContainer, KIcon("edit-rename"), i18n("Query Terms"));
 
         layout = new QGridLayout(queryTermsContainer);
+        whichEnginesLabel = new QLabel(queryTermsContainer);
+        layout->addWidget(whichEnginesLabel, 0, 0, 1, 2);
+        connect(whichEnginesLabel, SIGNAL(linkActivated(QString)), p, SLOT(switchToEngines()));
+
+        QSpacerItem *spacer = new QSpacerItem(8, 8);
+        layout->addItem(spacer, 1, 0, 1, 1);
+
         QLabel *label = new QLabel(i18n("Free text:"), queryTermsContainer);
-        layout->addWidget(label, 0, 0, 1, 1);
+        layout->addWidget(label, 2, 0, 1, 1);
         KLineEdit *lineEdit = new KLineEdit(queryTermsContainer);
-        layout->addWidget(lineEdit, 0, 1, 1, 1);
+        layout->addWidget(lineEdit, 2, 1, 1, 1);
         queryFields.insert(WebSearchAbstract::queryKeyFreeText, lineEdit);
         label->setBuddy(lineEdit);
 
         label = new QLabel(i18n("Title:"), queryTermsContainer);
-        layout->addWidget(label, 1, 0, 1, 1);
-        lineEdit = new KLineEdit(queryTermsContainer);
-        queryFields.insert(WebSearchAbstract::queryKeyTitle, lineEdit);
-        layout->addWidget(lineEdit, 1, 1, 1, 1);
-        label->setBuddy(lineEdit);
-
-        label = new QLabel(i18n("Author:"), queryTermsContainer);
-        layout->addWidget(label, 2, 0, 1, 1);
-        lineEdit = new KLineEdit(queryTermsContainer);
-        queryFields.insert(WebSearchAbstract::queryKeyAuthor, lineEdit);
-        layout->addWidget(lineEdit, 2, 1, 1, 1);
-        label->setBuddy(lineEdit);
-
-        label = new QLabel(i18n("Year:"), queryTermsContainer);
         layout->addWidget(label, 3, 0, 1, 1);
         lineEdit = new KLineEdit(queryTermsContainer);
-        queryFields.insert(WebSearchAbstract::queryKeyYear, lineEdit);
+        queryFields.insert(WebSearchAbstract::queryKeyTitle, lineEdit);
         layout->addWidget(lineEdit, 3, 1, 1, 1);
         label->setBuddy(lineEdit);
 
-        layout->setRowStretch(4, 100);
+        label = new QLabel(i18n("Author:"), queryTermsContainer);
+        layout->addWidget(label, 4, 0, 1, 1);
+        lineEdit = new KLineEdit(queryTermsContainer);
+        queryFields.insert(WebSearchAbstract::queryKeyAuthor, lineEdit);
+        layout->addWidget(lineEdit, 4, 1, 1, 1);
+        label->setBuddy(lineEdit);
 
-        QWidget *listContainer = new QWidget(tabWidget);
+        label = new QLabel(i18n("Year:"), queryTermsContainer);
+        layout->addWidget(label, 5, 0, 1, 1);
+        lineEdit = new KLineEdit(queryTermsContainer);
+        queryFields.insert(WebSearchAbstract::queryKeyYear, lineEdit);
+        layout->addWidget(lineEdit, 5, 1, 1, 1);
+        label->setBuddy(lineEdit);
+
+        layout->setRowStretch(6, 100);
+
+        listContainer = new QWidget(tabWidget);
         tabWidget->addTab(listContainer, KIcon("applications-engineering"), i18n("Engines"));
         layout = new QGridLayout(listContainer);
         layout->setRowStretch(0, 1);
@@ -117,10 +127,8 @@ public:
 
         enginesList = new QListWidget(listContainer);
         layout->addWidget(enginesList, 0, 0, 1, 1);
+        connect(enginesList, SIGNAL(itemChanged(QListWidgetItem*)), p, SLOT(itemChanged()));
         enginesList->setSelectionMode(QAbstractItemView::NoSelection);
-        label = new QLabel(i18n("Selecting no engine will make the search to use all engines."), listContainer);
-        label->setWordWrap(true);
-        layout->addWidget(label, 1, 0, 1, 1);
 
         loadEngines();
     }
@@ -129,6 +137,9 @@ public:
         enginesList->clear();
 
         addEngine(new WebSearchBibsonomy());
+
+        p->itemChanged();
+        updateGUI();
     }
 
     void addEngine(WebSearchAbstract *engine) {
@@ -156,6 +167,27 @@ public:
         searchButton->setIcon(KIcon("media-playback-stop"));
         tabWidget->setEnabled(false);
     }
+
+    void switchToEngines() {
+        tabWidget->setCurrentWidget(listContainer);
+    }
+
+    void updateGUI() {
+        if (whichEnginesLabel == NULL) return;
+
+        QStringList checkedEngines;
+        for (QMap<QListWidgetItem*, WebSearchAbstract*>::ConstIterator it = itemToWebSearch.constBegin(); it != itemToWebSearch.constEnd(); ++it)
+            if (it.key()->checkState() == Qt::Checked)
+                checkedEngines << it.key()->text();
+
+        switch (checkedEngines.size()) {
+        case 0: whichEnginesLabel->setText(i18n("No search engine selected. <a href=\"changeEngine\">Change</a>"));break;
+        case 1: whichEnginesLabel->setText(i18n("Search engine <b>%1</b> is selected. <a href=\"changeEngine\">Change</a>", checkedEngines.first()));break;
+        case 2: whichEnginesLabel->setText(i18n("Search engines <b>%1</b> and <b>%2</b> are selected. <a href=\"changeEngine\">Change</a>", checkedEngines.first(), checkedEngines.at(1)));break;
+        case 3:whichEnginesLabel->setText(i18n("Search engines <b>%1</b>, <b>%2</b>, and <b>%3</b> are selected. <a href=\"changeEngine\">Change</a>", checkedEngines.first(), checkedEngines.at(1), checkedEngines.at(2)));break;
+        default:whichEnginesLabel->setText(i18n("Search engines <b>%1</b>, <b>%2</b>, and more are selected. <a href=\"changeEngine\">Change</a>", checkedEngines.first(), checkedEngines.at(1)));break;
+        }
+    }
 };
 
 SearchForm::SearchForm(QWidget *parent)
@@ -168,6 +200,11 @@ SearchForm::SearchForm(QWidget *parent)
 void SearchForm::updatedConfiguration()
 {
     d->loadEngines();
+}
+
+void SearchForm::switchToEngines()
+{
+    d->switchToEngines();
 }
 
 void SearchForm::startSearch()
@@ -198,11 +235,8 @@ void SearchForm::startSearch()
             ++d->runningSearches;
         }
     if (d->runningSearches <= 0) {
-        /// if no search engine has been checked (selected), use all engines at once
-        for (QMap<QListWidgetItem*, WebSearchAbstract*>::ConstIterator it = d->itemToWebSearch.constBegin(); it != d->itemToWebSearch.constEnd(); ++it) {
-            it.value()->startSearch(queryTerms, 20); // FIXME number of hits
-            ++d->runningSearches;
-        }
+        /// if no search engine has been checked (selected), something went wrong
+        return;
     }
 
     d->switchToCancel();
@@ -237,5 +271,20 @@ void SearchForm::stoppedSearch(int resultCode)
         d->switchToSearch();
         delete d->bibtexFile;
     }
+}
 
+void SearchForm::tabSwitched(int newTab)
+{
+    Q_UNUSED(newTab);
+    d->updateGUI();
+}
+
+void SearchForm::itemChanged()
+{
+    int numCheckedEngines = 0;
+    for (QMap<QListWidgetItem*, WebSearchAbstract*>::ConstIterator it = d->itemToWebSearch.constBegin(); it != d->itemToWebSearch.constEnd(); ++it)
+        if (it.key()->checkState() == Qt::Checked)
+            ++numCheckedEngines;
+
+    d->searchButton->setEnabled(numCheckedEngines > 0);
 }
