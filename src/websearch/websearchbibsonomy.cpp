@@ -31,13 +31,24 @@
 
 void WebSearchBibsonomy::startSearch(const QMap<QString, QString> &query, int numResults)
 {
-    Q_UNUSED(numResults) /// Bibsonomy does not allow to control number of results
-// TODO
+    bool hasFreeText = !query[queryKeyFreeText].isEmpty();
+    bool hasTitle = !query[queryKeyTitle].isEmpty();
+    bool hasAuthor = !query[queryKeyAuthor].isEmpty();
+    bool hasYear = !query[queryKeyYear].isEmpty();
+
+    QString searchType = "search";
+    if (hasAuthor && !hasFreeText && !hasTitle && !hasYear) {
+        /// if only the author field is used, a special author search
+        /// on BibSonomy can be used
+        searchType = "author";
+    }
+
     QStringList queryFragments;
     for (QMap<QString, QString>::ConstIterator it = query.constBegin(); it != query.constEnd(); ++it) {
         queryFragments << it.value();
     }
-    KUrl url(QLatin1String("http://www.bibsonomy.org/bib/search/") + queryFragments.join(" "));
+    // FIXME: Number of results doesn't seem to be supported by BibSonomy
+    KUrl url(QLatin1String("http://www.bibsonomy.org/bib/") + searchType + "/" + queryFragments.join(" ") + QString("?.entriesPerPage=%1").arg(numResults));
     kDebug() << "url = " << url;
 
     m_buffer.clear();

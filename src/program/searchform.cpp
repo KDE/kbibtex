@@ -22,6 +22,7 @@
 #include <QTabWidget>
 #include <QLabel>
 #include <QListWidget>
+#include <QSpinBox>
 
 #include <KPushButton>
 #include <KLineEdit>
@@ -30,6 +31,7 @@
 #include <KDebug>
 #include <KMessageBox>
 #include <KTemporaryFile>
+#include <kparts/part.h>
 
 #include <websearchabstract.h>
 #include <websearchbibsonomy.h>
@@ -37,6 +39,9 @@
 #include <file.h>
 #include <comment.h>
 #include <openfileinfo.h>
+#include <bibtexeditor.h>
+#include <bibtexfilemodel.h>
+#include <mdiwidget.h>
 #include "searchform.h"
 
 class SearchForm::SearchFormPrivate
@@ -50,14 +55,16 @@ private:
     QLabel *whichEnginesLabel;
 
 public:
+    MDIWidget *m;
     QMap<QListWidgetItem*, WebSearchAbstract*> itemToWebSearch;
     QMap<QString, KLineEdit*> queryFields;
+    QSpinBox *numResultsField;
     int runningSearches;
     File *bibtexFile;
     KPushButton *searchButton;
 
-    SearchFormPrivate(SearchForm *parent)
-            : p(parent), whichEnginesLabel(NULL), runningSearches(0), bibtexFile(NULL) {
+    SearchFormPrivate(MDIWidget *mdiWidget, SearchForm *parent)
+            : p(parent), whichEnginesLabel(NULL), m(mdiWidget), runningSearches(0), bibtexFile(NULL) {
 // TODO
     }
 
@@ -117,7 +124,16 @@ public:
         layout->addWidget(lineEdit, 5, 1, 1, 1);
         label->setBuddy(lineEdit);
 
-        layout->setRowStretch(6, 100);
+        label = new QLabel(i18n("Number of Results:"), queryTermsContainer);
+        layout->addWidget(label, 6, 0, 1, 1);
+        numResultsField = new QSpinBox(queryTermsContainer);
+        numResultsField->setMinimum(3);
+        numResultsField->setMaximum(100);
+        numResultsField->setValue(20);
+        layout->addWidget(numResultsField, 6, 1, 1, 1);
+        label->setBuddy(numResultsField);
+
+        layout->setRowStretch(7, 100);
 
         listContainer = new QWidget(tabWidget);
         tabWidget->addTab(listContainer, KIcon("applications-engineering"), i18n("Engines"));
@@ -127,7 +143,7 @@ public:
 
         enginesList = new QListWidget(listContainer);
         layout->addWidget(enginesList, 0, 0, 1, 1);
-        connect(enginesList, SIGNAL(itemChanged(QListWidgetItem*)), p, SLOT(itemChanged()));
+        connect(enginesList, SIGNAL(itemChanged(QListWidgetItem*)), p, SLOT(itemCheckChanged()));
         enginesList->setSelectionMode(QAbstractItemView::NoSelection);
 
         loadEngines();
@@ -138,7 +154,7 @@ public:
 
         addEngine(new WebSearchBibsonomy());
 
-        p->itemChanged();
+        p->itemCheckChanged();
         updateGUI();
     }
 
@@ -190,8 +206,8 @@ public:
     }
 };
 
-SearchForm::SearchForm(QWidget *parent)
-        : QWidget(parent), d(new SearchFormPrivate(this))
+SearchForm::SearchForm(MDIWidget *mdiWidget, QWidget *parent)
+        : QWidget(parent), d(new SearchFormPrivate(mdiWidget, this))
 {
     d->createGUI();
     d->switchToSearch();
@@ -231,7 +247,7 @@ void SearchForm::startSearch()
 
     for (QMap<QListWidgetItem*, WebSearchAbstract*>::ConstIterator it = d->itemToWebSearch.constBegin(); it != d->itemToWebSearch.constEnd(); ++it)
         if (it.key()->checkState() == Qt::Checked) {
-            it.value()->startSearch(queryTerms, 20); // FIXME number of hits
+            it.value()->startSearch(queryTerms, d->numResultsField->value());
             ++d->runningSearches;
         }
     if (d->runningSearches <= 0) {
@@ -254,22 +270,18 @@ void SearchForm::stoppedSearch(int resultCode)
 
     --d->runningSearches;
     if (d->runningSearches <= 0) {
-        KTemporaryFile tempFile;
-        tempFile.setSuffix(".bib");
-        if (tempFile.open()) {
-            QFile file(tempFile.fileName());
-            file.open(QFile::WriteOnly);
-            FileExporterBibTeX exporter;
-            exporter.save(&file, d->bibtexFile);
-            file.close();
-            kDebug() << d->bibtexFile->count() << "  " << tempFile.fileName();
-            OpenFileInfo *openFileInfo =   OpenFileInfoManager::getOpenFileInfoManager()->open(QLatin1String("file://") + tempFile.fileName());
-            OpenFileInfoManager::getOpenFileInfoManager()->setCurrentFile(openFileInfo);
-            kDebug() << openFileInfo->caption();
-        }
+        /// last search engine stopped; now process collected results
+
+        OpenFileInfoManager *ofim = OpenFileInfoManager::getOpenFileInfoManager();
+        OpenFileInfo *openFileInfo = ofim->createNew(OpenFileInfo::mimetypeBibTeX);
+        BibTeXFileModel *model = dynamic_cast<BibTeXEditor*>(openFileInfo->part(d->m)->widget())->model(); /// let's hope there is no NULL ...
+
+        for (File::ConstIterator it = d->bibtexFile->constBegin(); it != d->bibtexFile->constEnd(); ++it)
+            model->insertRow(*it, model->rowCount());
 
         d->switchToSearch();
         delete d->bibtexFile;
+        ofim->setCurrentFile(openFileInfo);
     }
 }
 
@@ -279,7 +291,7 @@ void SearchForm::tabSwitched(int newTab)
     d->updateGUI();
 }
 
-void SearchForm::itemChanged()
+void SearchForm::itemCheckChanged()
 {
     int numCheckedEngines = 0;
     for (QMap<QListWidgetItem*, WebSearchAbstract*>::ConstIterator it = d->itemToWebSearch.constBegin(); it != d->itemToWebSearch.constEnd(); ++it)

@@ -79,6 +79,15 @@ KBibTeXMainWindow::KBibTeXMainWindow(KBibTeXProgram *program)
             group.writeEntry( mainWindowStateKey, mainWindowState );
     */
 
+    setXMLFile("kbibtexui.rc");
+
+    d->mdiWidget = new MDIWidget(this);
+    setCentralWidget(d->mdiWidget);
+    connect(d->mdiWidget, SIGNAL(documentSwitch(BibTeXEditor *, BibTeXEditor *)), this, SLOT(documentSwitched(BibTeXEditor *, BibTeXEditor *)));
+    connect(d->mdiWidget, SIGNAL(activePartChanged(KParts::Part*)), this, SLOT(createGUI(KParts::Part*)));
+    connect(d->openFileInfoManager, SIGNAL(currentChanged(OpenFileInfo*)), d->mdiWidget, SLOT(setFile(OpenFileInfo*)));
+    connect(d->openFileInfoManager, SIGNAL(closing(OpenFileInfo*)), d->mdiWidget, SLOT(closeFile(OpenFileInfo*)));
+
     d->dockDocumentList = new QDockWidget(i18n("List of Documents"), this);
     d->dockDocumentList->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
     addDockWidget(Qt::LeftDockWidgetArea, d->dockDocumentList);
@@ -99,19 +108,10 @@ KBibTeXMainWindow::KBibTeXMainWindow(KBibTeXProgram *program)
     d->dockSearchForm = new QDockWidget(i18n("Online Search"), this);
     d->dockSearchForm->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
     addDockWidget(Qt::BottomDockWidgetArea, d->dockSearchForm);
-    d->searchForm = new SearchForm(d->dockSearchForm);
+    d->searchForm = new SearchForm(d->mdiWidget, d->dockSearchForm);
     d->dockSearchForm->setWidget(d->searchForm);
     d->dockSearchForm->setObjectName("dockSearchFrom");
     d->dockSearchForm->setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
-
-    setXMLFile("kbibtexui.rc");
-
-    d->mdiWidget = new MDIWidget(this);
-    setCentralWidget(d->mdiWidget);
-    connect(d->mdiWidget, SIGNAL(documentSwitch(BibTeXEditor *, BibTeXEditor *)), this, SLOT(documentSwitched(BibTeXEditor *, BibTeXEditor *)));
-    connect(d->mdiWidget, SIGNAL(activePartChanged(KParts::Part*)), this, SLOT(createGUI(KParts::Part*)));
-    connect(d->openFileInfoManager, SIGNAL(currentChanged(OpenFileInfo*)), d->mdiWidget, SLOT(setFile(OpenFileInfo*)));
-    connect(d->openFileInfoManager, SIGNAL(closing(OpenFileInfo*)), d->mdiWidget, SLOT(closeFile(OpenFileInfo*)));
 
     actionCollection()->addAction(KStandardAction::New, this, SLOT(newDocument()));
     actionCollection()->addAction(KStandardAction::Open, this, SLOT(openDocumentDialog()));

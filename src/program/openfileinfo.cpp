@@ -93,7 +93,7 @@ public:
             mimeType = OpenFileInfo::mimetypeBibTeX;
 
         if (canOpen(url))
-            mimeType = "text/x-bibtex"; // FIXME unclean
+            mimeType = OpenFileInfo::mimetypeBibTeX; // FIXME unclean
 
         // FIXME: Check for ReadOnlyPart, too, but then set document into read-only mode
         KService::List list = KMimeTypeTrader::self()->query(mimeType, QString::fromLatin1("KParts/ReadWritePart"));

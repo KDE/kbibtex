@@ -24,13 +24,14 @@
 #include <QWidget>
 
 class Entry;
+class MDIWidget;
 
 class SearchForm : public QWidget
 {
     Q_OBJECT
 
 public:
-    SearchForm(QWidget *parent);
+    SearchForm(MDIWidget *mdiWidget, QWidget *parent);
 
 public slots:
     void updatedConfiguration();
@@ -45,7 +46,7 @@ private slots:
     void foundEntry(Entry*entry);
     void stoppedSearch(int resultCode);
     void tabSwitched(int newTab);
-    void itemChanged();
+    void itemCheckChanged();
 };
 
 
