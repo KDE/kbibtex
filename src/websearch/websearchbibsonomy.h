@@ -37,12 +37,15 @@ public:
     virtual void startSearch(const QMap<QString, QString> &query, int numResults);
     virtual QString label() const;
 
+protected:
+    KUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults);
+
 public slots:
     void cancel();
 
 private slots:
-    void   data(KIO::Job *job, const QByteArray &data);
-    void jobDone(KJob *   job);
+    void data(KIO::Job *job, const QByteArray &data);
+    void jobDone(KJob *job);
 
 private:
     QByteArray m_buffer;

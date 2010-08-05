@@ -90,6 +90,7 @@ public:
 
         layout = new QGridLayout(queryTermsContainer);
         whichEnginesLabel = new QLabel(queryTermsContainer);
+        whichEnginesLabel->setWordWrap(true);
         layout->addWidget(whichEnginesLabel, 0, 0, 1, 2);
         connect(whichEnginesLabel, SIGNAL(linkActivated(QString)), p, SLOT(switchToEngines()));
 

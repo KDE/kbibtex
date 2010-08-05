@@ -31,6 +31,20 @@
 
 void WebSearchBibsonomy::startSearch(const QMap<QString, QString> &query, int numResults)
 {
+    m_buffer.clear();
+
+    m_job = KIO::get(buildQueryUrl(query, numResults));
+    connect(m_job, SIGNAL(data(KIO::Job *, const QByteArray &)), this, SLOT(data(KIO::Job*, const QByteArray&)));
+    connect(m_job, SIGNAL(result(KJob *)), this, SLOT(jobDone(KJob*)));
+}
+
+QString WebSearchBibsonomy::label() const
+{
+    return i18n("Bibsonomy");
+}
+
+KUrl WebSearchBibsonomy::buildQueryUrl(const QMap<QString, QString> &query, int numResults)
+{
     bool hasFreeText = !query[queryKeyFreeText].isEmpty();
     bool hasTitle = !query[queryKeyTitle].isEmpty();
     bool hasAuthor = !query[queryKeyAuthor].isEmpty();
@@ -45,22 +59,14 @@ void WebSearchBibsonomy::startSearch(const QMap<QString, QString> &query, int nu
 
     QStringList queryFragments;
     for (QMap<QString, QString>::ConstIterator it = query.constBegin(); it != query.constEnd(); ++it) {
+        // FIXME: Is there a need for percent encoding?
         queryFragments << it.value();
     }
     // FIXME: Number of results doesn't seem to be supported by BibSonomy
-    KUrl url(QLatin1String("http://www.bibsonomy.org/bib/") + searchType + "/" + queryFragments.join(" ") + QString("?.entriesPerPage=%1").arg(numResults));
-    kDebug() << "url = " << url;
+    KUrl url(QLatin1String("http://www.bibsonomy.org/bib/") + searchType + "/" + queryFragments.join("+") + QString("?.entriesPerPage=%1").arg(numResults));
+    kDebug() << label() << " URL = " << url;
 
-    m_buffer.clear();
-
-    m_job =  KIO::get(url);
-    connect(m_job, SIGNAL(data(KIO::Job *, const QByteArray &)), this, SLOT(data(KIO::Job*, const QByteArray&)));
-    connect(m_job, SIGNAL(result(KJob *)), this, SLOT(jobDone(KJob*)));
-}
-
-QString WebSearchBibsonomy::label() const
-{
-    return i18n("Bibsonomy");
+    return url;
 }
 
 void WebSearchBibsonomy::cancel()
@@ -89,9 +95,10 @@ void WebSearchBibsonomy::jobDone(KJob *job)
                 if (entry != NULL)
                     emit foundEntry(entry);
             }
-        }
-        emit stoppedSearch(bibtexFile == NULL || bibtexFile->isEmpty() ? resultUnspecifiedError : resultNoError);
-        delete bibtexFile;
+            emit stoppedSearch(bibtexFile->isEmpty() ? resultUnspecifiedError : resultNoError);
+            delete bibtexFile;
+        } else
+            emit stoppedSearch(resultUnspecifiedError);
     } else {
         kWarning() << "Search using " << label() << "failed: " << job->errorString();
         emit stoppedSearch(resultUnspecifiedError);
