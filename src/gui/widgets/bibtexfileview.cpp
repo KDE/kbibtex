@@ -87,25 +87,31 @@ BibTeXFileView::~BibTeXFileView()
 void BibTeXFileView::setModel(QAbstractItemModel * model)
 {
     QTreeView::setModel(model);
-    bibTeXFileModel = dynamic_cast<BibTeXFileModel*>(model);
-    if (bibTeXFileModel == NULL) {
-        SortFilterBibTeXFileModel *sfbfm = dynamic_cast<SortFilterBibTeXFileModel*>(model);
-        Q_ASSERT(sfbfm != NULL);
-        bibTeXFileModel = sfbfm->bibTeXSourceModel();
+
+    m_sortFilterProxyModel=NULL;
+    m_bibTeXFileModel = dynamic_cast<BibTeXFileModel*>(model);
+    if (m_bibTeXFileModel == NULL) {
+m_sortFilterProxyModel= dynamic_cast<SortFilterBibTeXFileModel*>(model);
+        Q_ASSERT(m_sortFilterProxyModel != NULL);
+        m_bibTeXFileModel = dynamic_cast<BibTeXFileModel*>(m_sortFilterProxyModel->sourceModel());
     }
-    Q_ASSERT(bibTeXFileModel != NULL);
+    Q_ASSERT(m_bibTeXFileModel != NULL);
 }
 
-BibTeXFileModel *BibTeXFileView::model()
+BibTeXFileModel *BibTeXFileView::bibTeXModel()
 {
-    return bibTeXFileModel;
+    return m_bibTeXFileModel;
+}
+
+QSortFilterProxyModel *BibTeXFileView::sortFilterProxyModel(){
+    return m_sortFilterProxyModel;
 }
 
 void BibTeXFileView::selectionDelete()
 {
     QModelIndexList mil = selectionModel()->selectedRows();
     while (mil.begin() != mil.end()) {
-        bool r = bibTeXFileModel->removeRow(mil.begin()->row());
+        bool r = m_bibTeXFileModel->removeRow(mil.begin()->row());
         if (!r) kWarning() << "could not remove element in row " << mil.begin()->row();
         mil.removeFirst();
     }

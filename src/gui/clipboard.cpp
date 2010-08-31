@@ -60,7 +60,7 @@ void Clipboard::copy()
     QModelIndexList mil = d->bibTeXFileView->selectionModel()->selectedRows();
     File *file = new File();
     for (QModelIndexList::ConstIterator it = mil.constBegin(); it != mil.constEnd(); ++it) {
-        file->append(d->bibTeXFileView->model()->element(it->row()));
+        file->append(d->bibTeXFileView->bibTeXModel()->element(d->bibTeXFileView->sortFilterProxyModel()->mapToSource(*it).row()));
     }
 
     FileExporterBibTeX exporter;
@@ -87,6 +87,6 @@ void Clipboard::paste()
     File *file = importer.fromString(clipboard->text());
 
     for (File::Iterator it = file->begin(); it != file->end(); ++it)
-        d->bibTeXFileView->model()->insertRow(*it, d->bibTeXFileView->model()->rowCount());
+        d->bibTeXFileView->bibTeXModel()->insertRow(*it, d->bibTeXFileView->model()->rowCount());
 }
 

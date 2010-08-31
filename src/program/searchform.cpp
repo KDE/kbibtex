@@ -275,7 +275,7 @@ void SearchForm::stoppedSearch(int resultCode)
 
         OpenFileInfoManager *ofim = OpenFileInfoManager::getOpenFileInfoManager();
         OpenFileInfo *openFileInfo = ofim->createNew(OpenFileInfo::mimetypeBibTeX);
-        BibTeXFileModel *model = dynamic_cast<BibTeXEditor*>(openFileInfo->part(d->m)->widget())->model(); /// let's hope there is no NULL ...
+        BibTeXFileModel *model = dynamic_cast<BibTeXEditor*>(openFileInfo->part(d->m)->widget())->bibTeXModel(); /// let's hope there is no NULL ...
 
         for (File::ConstIterator it = d->bibtexFile->constBegin(); it != d->bibtexFile->constEnd(); ++it)
             model->insertRow(*it, model->rowCount());

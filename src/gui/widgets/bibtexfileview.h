@@ -27,6 +27,7 @@
 class QSignalMapper;
 
 class BibTeXFileModel;
+class QSortFilterProxyModel;
 
 /**
 @author Thomas Fischer
@@ -39,7 +40,8 @@ public:
     virtual ~BibTeXFileView();
 
     virtual void setModel(QAbstractItemModel * model);
-    virtual BibTeXFileModel *model();
+    BibTeXFileModel *bibTeXModel();
+    QSortFilterProxyModel *sortFilterProxyModel();
 
     void selectionDelete();
 
@@ -48,7 +50,8 @@ protected:
 
 private:
     QSignalMapper *m_signalMapperBibTeXFields;
-    BibTeXFileModel *bibTeXFileModel;
+    BibTeXFileModel *m_bibTeXFileModel;
+    QSortFilterProxyModel *m_sortFilterProxyModel;
 
 private slots:
     void headerActionToggled(QObject *action);
