@@ -41,8 +41,8 @@ class KBIBTEXGUI_EXPORT FieldLineEdit : public MenuLineEdit
 public:
     FieldLineEdit(KBibTeX::TypeFlag preferredTypeFlag, KBibTeX::TypeFlags typeFlags, bool isMultiLine = false, QWidget *parent = NULL);
 
-    void reset(const Value& value);
-    void apply(Value& value) const;
+    bool reset(const Value& value);
+    bool apply(Value& value) const;
 
 private:
     bool m_incompleteRepresentation;

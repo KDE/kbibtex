@@ -60,7 +60,8 @@ public:
         updateGUI(typeFlag);
     }
 
-    void reset(const Value& value) {
+    bool reset(const Value& value) {
+        bool result = false;
         QString text = "";
         typeFlag = determineTypeFlag(value, typeFlag, typeFlags);
         updateGUI(typeFlag);
@@ -69,11 +70,13 @@ public:
             if (typeFlag == KBibTeX::tfSource) {
                 FileExporterBibTeX exporter;
                 text = exporter.valueToBibTeX(value);
+                result = true;
             } else {
                 const ValueItem *first = value.first();
                 const PlainText *plainText = dynamic_cast<const PlainText*>(first);
                 if (typeFlag == KBibTeX::tfPlainText && plainText != NULL) {
                     text = plainText->text();
+                    result = true;
                 } else {
                     const Person *person = dynamic_cast<const Person*>(first);
                     if (typeFlag == KBibTeX::tfPerson && person != NULL) {
@@ -84,14 +87,17 @@ public:
                         if (!temp.isEmpty()) text.append(", " + temp);
                         temp = person->prefix();
                         if (!temp.isEmpty()) text.prepend(temp + " ");
+                        result = true;
                     } else {
                         const MacroKey *macroKey = dynamic_cast<const MacroKey*>(first);
                         if (typeFlag == KBibTeX::tfReference && macroKey != NULL) {
                             text = macroKey->text();
+                            result = true;
                         } else {
                             const Keyword *keyword = dynamic_cast<const Keyword*>(first);
                             if (typeFlag == KBibTeX::tfKeyword && keyword != NULL) {
                                 text = keyword->text();
+                                result = true;
                             }
                         }
                     }
@@ -100,6 +106,7 @@ public:
         }
 
         parent->setText(text);
+        return result;
     }
 
     bool apply(Value& value) const {
@@ -129,7 +136,7 @@ public:
             kDebug() << "fakeBibTeXFile=" << fakeBibTeXFile << endl;
 
             File *file = importer.fromString(fakeBibTeXFile);
-            if (file != NULL) {
+            if (file != NULL && !file->isEmpty()) {
                 Entry *entry = dynamic_cast< Entry*>(file->first());
                 if (entry != NULL) {
                     value = entry->value(key);
@@ -137,7 +144,8 @@ public:
                 } else
                     kError() << "Cannot create value";
                 delete file;
-            }
+            } else
+                kWarning() << "Parsing " << fakeBibTeXFile << " did not result in valid file";
             return !value.isEmpty();
         }
 
@@ -240,14 +248,14 @@ FieldLineEdit::FieldLineEdit(KBibTeX::TypeFlag preferredTypeFlag, KBibTeX::TypeF
     setMenu(d->menuTypes);
 }
 
-void FieldLineEdit::apply(Value& value) const
+bool FieldLineEdit::apply(Value& value) const
 {
-    d->apply(value);
+    return d->apply(value);
 }
 
-void FieldLineEdit::reset(const Value& value)
+bool FieldLineEdit::reset(const Value& value)
 {
-    d->reset(value);
+    return d->reset(value);
 }
 
 void FieldLineEdit::slotTypeChanged(int newTypeFlag)
@@ -259,10 +267,7 @@ void FieldLineEdit::slotTypeChanged(int newTypeFlag)
     d->typeFlag = (KBibTeX::TypeFlag)newTypeFlag;
     kDebug() << "new type is " << BibTeXFields::typeFlagToString(d->typeFlag);
 
-    Value testValue;
-    if (d->apply(testValue))
-        d->reset(testValue);
-    else {
+    if (!d->reset(originalValue)) {
         KMessageBox::error(this, i18n("The current text cannot be used as value of type \"%1\".\n\nSwitching back to type \"%2\".", BibTeXFields::typeFlagToString(d->typeFlag), BibTeXFields::typeFlagToString(originalTypeFlag)));
         d->typeFlag = originalTypeFlag;
         d->reset(originalValue);
