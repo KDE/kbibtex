@@ -23,6 +23,7 @@
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <KSharedPtr>
+#include <KDebug>
 
 #include "bibtexfields.h"
 
@@ -34,14 +35,16 @@ public:
     BibTeXFields *p;
 
     KConfig *systemDefaultsConfig;
-    KSharedPtr<KSharedConfig> userConfig;
+    KSharedConfigPtr userConfig;
 
     static BibTeXFields *singleton;
 
     BibTeXFieldsPrivate(BibTeXFields *parent)
             : p(parent) {
+        kDebug() << "looking for " << KStandardDirs::locate("appdata", "fieldtypes.rc");
         systemDefaultsConfig = new KConfig(KStandardDirs::locate("appdata", "fieldtypes.rc"), KConfig::SimpleConfig);
-        userConfig = KSharedConfig::openConfig(KStandardDirs::locateLocal("appdata", "ui.rc"), KConfig::SimpleConfig);
+        kDebug() << "looking for " << KStandardDirs::locateLocal("appdata", "fieldtypes.rc");
+        userConfig = KSharedConfig::openConfig(KStandardDirs::locateLocal("appdata", "fieldtypes.rc"), KConfig::SimpleConfig);
     }
 
     ~BibTeXFieldsPrivate() {
@@ -57,18 +60,31 @@ public:
             QString groupName = QString("Column%1").arg(col);
             KConfigGroup usercg(userConfig, groupName);
             KConfigGroup systemcg(systemDefaultsConfig, groupName);
+
             fd.upperCamelCase = systemcg.readEntry("UpperCamelCase", "");
+            fd.upperCamelCase = usercg.readEntry("UpperCamelCase", fd.upperCamelCase);
             if (fd.upperCamelCase.isEmpty()) continue;
+
             fd.upperCamelCaseAlt = systemcg.readEntry("UpperCamelCaseAlt", "");
+            fd.upperCamelCaseAlt = usercg.readEntry("UpperCamelCaseAlt", fd.upperCamelCaseAlt);
             if (fd.upperCamelCaseAlt.isEmpty()) fd.upperCamelCaseAlt = QString::null;
+
             fd.label = systemcg.readEntry("Label", fd.upperCamelCase);
+            fd.label = usercg.readEntry("Label", fd.label);
+
             fd.defaultWidth = systemcg.readEntry("DefaultWidth", sumWidth / col);
-            fd.width = usercg.readEntry("Width", fd.defaultWidth);
+            fd.defaultWidth = usercg.readEntry("DefaultWidth", fd.defaultWidth);
+
+            fd.width = systemcg.readEntry("Width", fd.defaultWidth);
+            fd.width = usercg.readEntry("Width", fd.width);
             sumWidth += fd.width;
+
             fd.visible = systemcg.readEntry("Visible", true);
             fd.visible = usercg.readEntry("Visible", fd.visible);
+
             QString typeFlags = systemcg.readEntry("TypeFlags", "Source");
             typeFlags = usercg.readEntry("TypeFlags", typeFlags);
+
             fd.typeFlags = typeFlagsFromString(typeFlags);
             QString preferredTypeFlag = typeFlags.split(';').first();
             fd.preferredTypeFlag = typeFlagFromString(preferredTypeFlag);
@@ -99,6 +115,7 @@ BibTeXFields* BibTeXFields::self()
 
 void BibTeXFields::save()
 {
+    return; // FIXME avoid saving config for now ...
     int col = 1;
     for (Iterator it = begin(); it != end(); ++it, ++col) {
         QString groupName = QString("Column%1").arg(col);

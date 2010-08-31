@@ -23,6 +23,7 @@
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <KSharedPtr>
+#include <KDebug>
 
 #include <entry.h>
 #include "bibtexentries.h"
@@ -35,14 +36,16 @@ public:
     BibTeXEntries *p;
 
     KConfig *systemDefaultsConfig;
-    KSharedPtr<KSharedConfig> userConfig;
+    KSharedConfigPtr userConfig;
 
     static BibTeXEntries *singleton;
 
     BibTeXEntriesPrivate(BibTeXEntries *parent)
             : p(parent) {
+        kDebug() << "looking for " << KStandardDirs::locate("appdata", "entrytypes.rc");
         systemDefaultsConfig = new KConfig(KStandardDirs::locate("appdata", "entrytypes.rc"), KConfig::SimpleConfig);
-        userConfig = KSharedConfig::openConfig(KStandardDirs::locateLocal("appdata", "ui.rc"), KConfig::SimpleConfig);
+        kDebug() << "looking for " << KStandardDirs::locateLocal("appdata", "entrytypes.rc");
+        userConfig = KSharedConfig::openConfig(KStandardDirs::locateLocal("appdata", "entrytypes.rc"), KConfig::SimpleConfig);
     }
 
     ~BibTeXEntriesPrivate() {
@@ -61,9 +64,11 @@ public:
             KConfigGroup usercg(userConfig, groupName);
             KConfigGroup systemcg(systemDefaultsConfig, groupName);
 
-            ed.upperCamelCase =  systemcg.readEntry("UpperCamelCase", "");
+            ed.upperCamelCase = systemcg.readEntry("UpperCamelCase", "");
+            ed.upperCamelCase = usercg.readEntry("UpperCamelCase", ed.upperCamelCase);
             if (ed.upperCamelCase.isEmpty()) continue;
             ed.label = systemcg.readEntry("Label", ed.upperCamelCase);;
+            ed.label = usercg.readEntry("Label", ed.label);;
             p->append(ed);
         }
     }

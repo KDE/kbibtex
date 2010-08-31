@@ -4,16 +4,21 @@ Label=Journal Article
 
 [EntryType2]
 UpperCamelCase=InProceedings
-Label=Conference or Workshop Proceedings
+Label=Publication in Conference Proceedings
 
 [EntryType3]
+UpperCamelCase=Proceedings
+Label=Conference or Workshop Proceedings
+
+[EntryType4]
 UpperCamelCase=TechReport
 Label=Technical Report
 
-[EntryType4]
+[EntryType5]
 UpperCamelCase=Misc
 Label=Miscellaneous
 
-[EntryType5]
+[EntryType6]
 UpperCamelCase=Book
+Label=Book
 

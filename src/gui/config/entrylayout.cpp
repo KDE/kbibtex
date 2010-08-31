@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2009 by Thomas Fischer                             *
+*   Copyright (C) 2004-2010 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -21,6 +21,7 @@
 #include <KConfigGroup>
 #include <KGlobal>
 #include <KStandardDirs>
+#include <KDebug>
 
 #include "entrylayout.h"
 
@@ -33,13 +34,15 @@ public:
     EntryLayout *p;
 
     KConfig *systemDefaultsConfig;
-    KSharedPtr<KSharedConfig> userConfig;
+    KSharedConfigPtr userConfig;
 
     static EntryLayout *singleton;
 
     EntryLayoutPrivate(EntryLayout *parent)
             : p(parent) {
+        kDebug() << "looking for " << KStandardDirs::locate("appdata", "entrylayout.rc");
         systemDefaultsConfig = new KConfig(KStandardDirs::locate("appdata", "entrylayout.rc"), KConfig::SimpleConfig);
+        kDebug() << "looking for " << KStandardDirs::locateLocal("appdata", "entrylayout.rc");
         userConfig = KSharedConfig::openConfig(KStandardDirs::locateLocal("appdata", "entrylayout.rc"), KConfig::SimpleConfig);
     }
 
