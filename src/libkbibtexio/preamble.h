@@ -28,7 +28,7 @@
  * LaTeX commands required for the bibliography, such as hyphenation commands.
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
-class Preamble : public Element
+class KBIBTEXIO_EXPORT Preamble : public Element
 {
     Q_PROPERTY(Value value READ value WRITE setValue)
 
