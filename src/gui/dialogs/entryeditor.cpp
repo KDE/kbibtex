@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2009 by Thomas Fischer                             *
+*   Copyright (C) 2004-2010 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -19,6 +19,7 @@
 ***************************************************************************/
 
 #include <QLayout>
+#include <QFormLayout>
 #include <QBuffer>
 #include <QLabel>
 #include <QTextEdit>
@@ -138,20 +139,19 @@ private:
         QWidget *container = new QWidget(parent);
         QHBoxLayout *layout = new QHBoxLayout(container);
 
-        QLabel *label = new QLabel(i18n("Type:"), container);
-        layout->addWidget(label, 0);
+        QFormLayout *formLayout = new QFormLayout();
         entryType = new KComboBox(container);
         entryType->setEditable(true);
-        layout->addWidget(entryType, 1);
-        label->setBuddy(entryType);
+        entryType->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
+        formLayout->addRow(i18n("Type:"), entryType);
+        layout->addLayout(formLayout, 1);
 
         layout->addSpacing(16);
 
-        label = new QLabel(i18n("Id:"), container);
-        layout->addWidget(label, 0);
+        formLayout = new QFormLayout();
         entryId = new KLineEdit(container);
-        layout->addWidget(entryId, 1);
-        label->setBuddy(entryId);
+        formLayout->addRow(i18n("Id:"), entryId);
+        layout->addLayout(formLayout, 1);
 
         BibTeXEntries *be = BibTeXEntries::self();
         for (BibTeXEntries::ConstIterator it = be->constBegin(); it != be->constEnd(); ++it)
@@ -171,39 +171,29 @@ private:
             QWidget *container = new QWidget(tabWidget);
             tabWidget->addTab(container, etl.uiCaption);
 
-            QGridLayout *layout = new QGridLayout(container);
+            QBoxLayout *boxLayout = new QHBoxLayout(container);
+            QFormLayout *formLayout = new QFormLayout();
+            boxLayout->addLayout(formLayout);
 
             int mod = etl.singleFieldLayouts.size() / etl.columns;
             if (etl.singleFieldLayouts.size() % etl.columns > 0)
                 ++mod;
-            layout->setRowStretch(mod, 1);
 
-            int col = 0, row = 0;
+            int row = 0;
             for (QList<SingleFieldLayout>::ConstIterator sflit = etl.singleFieldLayouts.constBegin(); sflit != etl.singleFieldLayouts.constEnd(); ++sflit) {
-                QLabel *label = new QLabel((*sflit).uiLabel + ":", container);
-                layout->addWidget(label, row, col, 1, 1);
-                label->setAlignment(Qt::AlignTop | Qt::AlignRight);
-
                 const FieldDescription *fd = bf->find((*sflit).bibtexLabel);
                 KBibTeX::TypeFlags typeFlags = fd == NULL ? KBibTeX::tfSource : fd->typeFlags;
                 KBibTeX::TypeFlag preferredTypeFlag = fd == NULL ? KBibTeX::tfSource : fd->preferredTypeFlag;
                 FieldInput *fieldInput = new FieldInput((*sflit).fieldInputLayout, preferredTypeFlag, typeFlags, container);
-                layout->addWidget(fieldInput, row, col + 1, 1, 1);
-                layout->setColumnStretch(col, 0);
-                if ((*sflit).fieldInputLayout == KBibTeX::MultiLine || (*sflit).fieldInputLayout == KBibTeX::List)
-                    layout->setRowStretch(row, 100);
-                else {
-                    layout->setRowStretch(row, 0);
-                    layout->setAlignment(fieldInput, Qt::AlignTop);
-                }
-                layout->setColumnStretch(col + 1, 2);
-                label->setBuddy(fieldInput);
-
                 bibtexKeyToWidget.insert((*sflit).bibtexLabel, fieldInput);
+
+                formLayout->addRow((*sflit).uiLabel + ":", fieldInput);
+
 
                 ++row;
                 if (row >= mod) {
-                    col += 2;
+                    formLayout = new QFormLayout();
+                    boxLayout->addLayout(formLayout);
                     row = 0;
                 }
             }
