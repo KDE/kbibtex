@@ -23,8 +23,11 @@
 #include <QLabel>
 #include <QApplication>
 #include <QSignalMapper>
+#include <QLayout>
 
 #include <KDebug>
+#include <KPushButton>
+#include <KIcon>
 #include <KMessageBox>
 #include <kmimetypetrader.h>
 #include <kparts/part.h>
@@ -35,17 +38,42 @@
 
 class MDIWidget::MDIWidgetPrivate
 {
+private:
+    void createWelcomeWidget() {
+        welcomeWidget = new QWidget(p);
+        QGridLayout *layout = new QGridLayout(welcomeWidget);
+        layout->setRowStretch(0, 1);
+        layout->setRowStretch(1, 0);
+        layout->setRowStretch(2, 0);
+        layout->setRowStretch(3, 1);
+        layout->setColumnStretch(0, 1);
+        layout->setColumnStretch(1, 0);
+        layout->setColumnStretch(2, 0);
+        layout->setColumnStretch(3, 1);
+
+        QLabel *label = new QLabel(i18n("<qt>Welcome to <b>KBibTeX</b> for <b>KDE 4</b></qt>"), p);
+        layout->addWidget(label, 1, 1, 1, 2, Qt::AlignHCenter | Qt::AlignTop);
+
+        KPushButton *buttonNew = new KPushButton(KIcon("document-new"), i18n("New"), p);
+        layout->addWidget(buttonNew, 2, 1, 1, 1, Qt::AlignLeft | Qt::AlignBottom);
+        connect(buttonNew, SIGNAL(clicked()), p, SIGNAL(documentNew()));
+
+        KPushButton *buttonOpen = new KPushButton(KIcon("document-open"), i18n("Open ..."), p);
+        layout->addWidget(buttonOpen, 2, 2, 1, 1, Qt::AlignRight | Qt::AlignBottom);
+        connect(buttonOpen, SIGNAL(clicked()), p, SIGNAL(documentOpen()));
+
+        p->addWidget(welcomeWidget);
+    }
+
 public:
     MDIWidget *p;
     OpenFileInfo *currentFile;
-    QLabel *welcomeLabel;
+    QWidget *welcomeWidget;
     QSignalMapper signalMapperCompleted;
 
     MDIWidgetPrivate(MDIWidget *parent)
             : p(parent), currentFile(NULL) {
-        welcomeLabel = new QLabel(i18n("<qt>Welcome to <b>KBibTeX</b> for <b>KDE 4</b><br/><br/>Please select a file to open</qt>"), p);
-        welcomeLabel->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
-        p->addWidget(welcomeLabel);
+        createWelcomeWidget();
 
         connect(&signalMapperCompleted, SIGNAL(mapped(QObject*)), p, SLOT(slotCompleted(QObject*)));
     }
@@ -69,7 +97,7 @@ void MDIWidget::setFile(OpenFileInfo *openFileInfo)
     bool hasChanged = true;
 
     KParts::Part* part = openFileInfo == NULL ? NULL : openFileInfo->part(this);
-    QWidget *widget = d->welcomeLabel;
+    QWidget *widget = d->welcomeWidget;
     if (part != NULL) {
         widget = part->widget();
         widget->setParent(this);
@@ -106,7 +134,7 @@ void MDIWidget::closeFile(OpenFileInfo *openFileInfo)
 
         if (curWidget == widget) {
             BibTeXEditor *oldEditor = dynamic_cast<BibTeXEditor *>(widget);
-            setCurrentWidget(d->welcomeLabel);
+            setCurrentWidget(d->welcomeWidget);
             emit activePartChanged(NULL);
             emit documentSwitch(oldEditor, NULL);
         }

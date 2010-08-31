@@ -51,6 +51,8 @@ public slots:
 signals:
     void documentSwitch(BibTeXEditor *, BibTeXEditor *);
     void activePartChanged(KParts::Part *);
+    void documentNew();
+    void documentOpen();
 
 private:
     class MDIWidgetPrivate;
