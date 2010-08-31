@@ -54,6 +54,12 @@ public:
     virtual ~Macro();
 
     /**
+     * Assignment operator, working similar to a copy constructor,
+     * but overwrites the current object's values.
+     */
+    Macro& operator= (const Macro& other);
+
+    /**
      * Set the key of this macro.
      * @param key new key of this macro
      */

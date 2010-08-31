@@ -53,6 +53,15 @@ Macro::~Macro()
     // nothing
 }
 
+Macro& Macro::operator= (const Macro & other)
+{
+    if (this != &other) {
+        d->key = other.key();
+        d->value = other.value();
+    }
+    return *this;
+}
+
 void Macro::setKey(const QString &key)
 {
     d->key = key;
