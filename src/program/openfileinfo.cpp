@@ -198,6 +198,11 @@ QString OpenFileInfo::fullCaption()
         return caption();
 }
 
+QString OpenFileInfo::mimeType()
+{
+    return d->mimeType;
+}
+
 KParts::ReadWritePart* OpenFileInfo::part(QWidget *parent)
 {
     return d->createPart(parent);

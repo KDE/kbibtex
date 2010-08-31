@@ -25,6 +25,8 @@
 #include <KDebug>
 #include <KLocale>
 #include <KGlobal>
+#include <KIcon>
+#include <KMimeType>
 
 #include "documentlist.h"
 
@@ -70,6 +72,12 @@ public:
 
             listWidget->addItem(item);
             listWidget->setItemSelected(item, openFileInfoManager->currentFile() == ofi);
+
+            KUrl url(ofi->fullCaption());
+            if (url.isValid()) {
+                KIcon icon(KMimeType::iconNameForUrl(url));
+                item->setIcon(icon);
+            }
         }
     }
 

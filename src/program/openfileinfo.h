@@ -58,6 +58,7 @@ public:
     int counter();
     QString caption();
     QString fullCaption();
+    QString mimeType();
 
     StatusFlags flags() const;
     void setFlags(StatusFlags statusFlags);
