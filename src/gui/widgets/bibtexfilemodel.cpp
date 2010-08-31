@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2009 by Thomas Fischer                             *
+*   Copyright (C) 2004-2010 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -115,16 +115,39 @@ bool SortFilterBibTeXFileModel::filterAcceptsRow(int source_row, const QModelInd
     } else {
         Macro *macro = dynamic_cast<Macro*>(rowElement);
         if (macro != NULL) {
-            // TODO
+            bool all = true;
+            for (QStringList::ConstIterator itsl = m_filterQuery.terms.constBegin(); itsl != m_filterQuery.terms.constEnd(); ++itsl) {
+                bool contains = macro->value().containsPattern(*itsl) || macro->key().contains(*itsl);
+                if (m_filterQuery.combination == SortFilterBibTeXFileModel::AnyTerm && contains)
+                    return true;
+                all &= contains;
+            }
+            if (all) return true;
         } else {
             Comment *comment = dynamic_cast<Comment*>(rowElement);
             if (comment != NULL) {
-                // TODO
+                bool all = true;
+                for (QStringList::ConstIterator itsl = m_filterQuery.terms.constBegin(); itsl != m_filterQuery.terms.constEnd(); ++itsl) {
+                    bool contains = comment->text().contains(*itsl);
+                    if (m_filterQuery.combination == SortFilterBibTeXFileModel::AnyTerm && contains)
+                        return true;
+                    all &= contains;
+                }
+                if (all) return true;
             } else {
                 Preamble *preamble = dynamic_cast<Preamble*>(rowElement);
                 if (preamble != NULL) {
-                    // TODO
-                }  }  }
+                    bool all = true;
+                    for (QStringList::ConstIterator itsl = m_filterQuery.terms.constBegin(); itsl != m_filterQuery.terms.constEnd(); ++itsl) {
+                        bool contains = preamble->value().containsPattern(*itsl);
+                        if (m_filterQuery.combination == SortFilterBibTeXFileModel::AnyTerm && contains)
+                            return true;
+                        all &= contains;
+                    }
+                    if (all) return true;
+                }
+            }
+        }
     }
 
     return false;
