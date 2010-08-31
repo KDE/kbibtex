@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2009 by Thomas Fischer                             *
+*   Copyright (C) 2004-2010 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -63,6 +63,7 @@ public:
             hLayout->addWidget(m_multiLineEditText);
             connect(m_multiLineEditText->document(), SIGNAL(modificationChanged(bool)), p, SIGNAL(editingFinished()));
             m_multiLineEditText->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
+            p->setFocusProxy(m_multiLineEditText);
         } else {
             m_singleLineEditText = new KLineEdit(p);
             hLayout->addWidget(m_singleLineEditText);
@@ -70,8 +71,10 @@ public:
             m_singleLineEditText->setClearButtonShown(true);
             connect(m_singleLineEditText, SIGNAL(editingFinished()), p, SIGNAL(editingFinished()));
             m_singleLineEditText->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
+            p->setFocusProxy(m_singleLineEditText);
         }
 
+        p->setFocusPolicy(Qt::StrongFocus);
         p->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
     }
 
