@@ -33,22 +33,25 @@
 BibTeXFileView::BibTeXFileView(QWidget * parent)
         : QTreeView(parent), m_signalMapperBibTeXFields(new QSignalMapper(this))
 {
+    /// general visual appearance and behaviour
     setSelectionMode(QAbstractItemView::ExtendedSelection);
     setSelectionBehavior(QAbstractItemView::SelectRows);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
     setFrameStyle(QFrame::NoFrame);
+
+    /// header appearance and behaviour
     header()->setClickable(true);
     header()->setSortIndicatorShown(true);
     header()->setSortIndicator(-1, Qt::AscendingOrder);
     connect(header(), SIGNAL(sortIndicatorChanged(int, Qt::SortOrder)), this, SLOT(sort(int, Qt::SortOrder)));
-
     header()->setContextMenuPolicy(Qt::ActionsContextMenu);
-    BibTeXFields *bibtexFields = BibTeXFields::self();
 
+    /// build context menu for header to show/hide single columns
+    BibTeXFields *bibtexFields = BibTeXFields::self();
     int col = 0;
     for (BibTeXFields::Iterator it = bibtexFields->begin(); it != bibtexFields->end(); ++it, ++col) {
-        QString title = (*it).label;
-        KAction *action = new KAction(title, header());
+        QString label = (*it).label;
+        KAction *action = new KAction(label, header());
         action->setData(col);
         action->setCheckable(true);
         action->setChecked((*it).visible);
@@ -58,10 +61,12 @@ BibTeXFileView::BibTeXFileView(QWidget * parent)
     }
     connect(m_signalMapperBibTeXFields, SIGNAL(mapped(QObject*)), this, SLOT(headerActionToggled(QObject*)));
 
+    /// add separator to header's context menu
     KAction *action = new KAction(header());
     action->setSeparator(true);
     header()->addAction(action);
 
+    /// add action to reset to defaults (regarding column visibility) to header's context menu
     action = new KAction(i18n("Reset to defaults"), header());
     connect(action, SIGNAL(triggered()), this, SLOT(headerResetToDefaults()));
     header()->addAction(action);
@@ -148,5 +153,7 @@ void BibTeXFileView::headerResetToDefaults()
 
 void BibTeXFileView::sort(int t, Qt::SortOrder s)
 {
-    model()->sort(t, s);
+    SortFilterBibTeXFileModel *sortedModel = dynamic_cast<SortFilterBibTeXFileModel*>(model());
+    if (sortedModel != NULL)
+        sortedModel->sort(t, s);
 }

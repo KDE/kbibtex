@@ -75,22 +75,23 @@ private:
 /**
 @author Thomas Fischer
 */
-class KBIBTEXGUI_EXPORT BibTeXFileModel : public QAbstractItemModel
+class KBIBTEXGUI_EXPORT BibTeXFileModel : public QAbstractTableModel
 {
 public:
     BibTeXFileModel(QObject * parent = 0);
     virtual ~BibTeXFileModel();
 
-    File *bibTeXFile();
-    void setBibTeXFile(File *bibtexFile);
+    virtual File *bibTeXFile();
+    virtual void setBibTeXFile(File *bibtexFile);
 
-    virtual QModelIndex index(int row, int column, const QModelIndex & parent = QModelIndex()) const;
+    //virtual QModelIndex index(int row, int column, const QModelIndex & parent = QModelIndex()) const;
     virtual QModelIndex parent(const QModelIndex & index) const;
     virtual bool hasChildren(const QModelIndex & parent = QModelIndex()) const;
     virtual int rowCount(const QModelIndex & parent = QModelIndex()) const;
     virtual int columnCount(const QModelIndex & parent = QModelIndex()) const;
     virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+    Qt::ItemFlags flags(const QModelIndex &index) const;
 
     virtual bool removeRow(int row, const QModelIndex & parent = QModelIndex());
     bool insertRow(Element *element, int row, const QModelIndex & parent = QModelIndex());

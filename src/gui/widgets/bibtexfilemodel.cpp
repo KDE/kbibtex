@@ -31,7 +31,7 @@
 
 #include "bibtexfilemodel.h"
 
-static QRegExp curlyRegExp("[{}]");
+static const QRegExp curlyRegExp("[{}]+");
 
 void SortFilterBibTeXFileModel::setSourceModel(QAbstractItemModel *model)
 {
@@ -53,16 +53,18 @@ void SortFilterBibTeXFileModel::updateFilter(SortFilterBibTeXFileModel::FilterQu
 
 bool SortFilterBibTeXFileModel::lessThan(const QModelIndex & left, const QModelIndex & right) const
 {
-    if (left.column() == right.column() && (m_bibtexFields->at(left.column()).upperCamelCase == QLatin1String("Author") || m_bibtexFields->at(left.column()).upperCamelCase == QLatin1String("Editor"))) { /// special sorting for authors or editors: check all names, compare last and then first names
+    if (left.column() == right.column() && (m_bibtexFields->at(left.column()).upperCamelCase == QLatin1String("Author") || m_bibtexFields->at(left.column()).upperCamelCase == QLatin1String("Editor"))) {
+        /// special sorting for authors or editors: check all names, compare last and then first names
         Entry *entryA = dynamic_cast<Entry*>(m_internalModel->element(left.row()));
         Entry *entryB = dynamic_cast<Entry*>(m_internalModel->element(right.row()));
-        if (entryA == NULL || entryB == NULL) return  QSortFilterProxyModel::lessThan(left, right);
+        if (entryA == NULL || entryB == NULL)
+            return QSortFilterProxyModel::lessThan(left, right);
 
         Value valueA = entryA->value(Entry::ftAuthor);
         Value valueB = entryB->value(Entry::ftAuthor);
-        if (valueA.isEmpty() &&  m_bibtexFields->at(left.column()).upperCamelCaseAlt == ("editor"))
+        if (valueA.isEmpty() && m_bibtexFields->at(left.column()).upperCamelCaseAlt == ("editor"))
             valueA = entryA->value(Entry::ftEditor);
-        if (valueB.isEmpty() &&  m_bibtexFields->at(right.column()).upperCamelCaseAlt == ("editor"))
+        if (valueB.isEmpty() && m_bibtexFields->at(right.column()).upperCamelCaseAlt == ("editor"))
             valueB = entryB->value(Entry::ftEditor);
 
         if (valueA.isEmpty() || valueB.isEmpty()) return QSortFilterProxyModel::lessThan(left, right);
@@ -101,23 +103,43 @@ bool SortFilterBibTeXFileModel::filterAcceptsRow(int source_row, const QModelInd
     Entry *entry = dynamic_cast<Entry*>(rowElement);
 
     if (entry != NULL) {
+        bool *all = new bool[m_filterQuery.terms.count()];
+        for (int i = m_filterQuery.terms.count() - 1; i >= 0; --i)
+            all[i] = false;
+
         for (Entry::ConstIterator it = entry->constBegin(); it != entry->constEnd(); ++it)
             if (m_filterQuery.field.isEmpty() || m_filterQuery.field == it.key()) {
-                bool all = true;
-                for (QStringList::ConstIterator itsl = m_filterQuery.terms.constBegin(); itsl != m_filterQuery.terms.constEnd(); ++itsl) {
+                int i = 0;
+                for (QStringList::ConstIterator itsl = m_filterQuery.terms.constBegin(); itsl != m_filterQuery.terms.constEnd(); ++itsl, ++i) {
                     bool contains = it.value().containsPattern(*itsl);
-                    if (m_filterQuery.combination == SortFilterBibTeXFileModel::AnyTerm && contains)
+                    if (m_filterQuery.combination == SortFilterBibTeXFileModel::AnyTerm && contains) {
+                        delete all;
                         return true;
-                    all &= contains;
+                    }
+                    all[i] &= contains;
                 }
-                if (all) return true;
             }
+
+        int i = 0;
+        for (QStringList::ConstIterator itsl = m_filterQuery.terms.constBegin(); itsl != m_filterQuery.terms.constEnd(); ++itsl, ++i) {
+            bool contains = entry->id().contains(*itsl);
+            if (m_filterQuery.combination == SortFilterBibTeXFileModel::AnyTerm && contains) {
+                delete all;
+                return true;
+            }
+            all[i] &= contains;
+        }
+
+        bool sum = true;
+        for (i = m_filterQuery.terms.count() - 1; i >= 0; --i) sum &= all[i];
+        delete all;
+        return sum;
     } else {
         Macro *macro = dynamic_cast<Macro*>(rowElement);
         if (macro != NULL) {
             bool all = true;
             for (QStringList::ConstIterator itsl = m_filterQuery.terms.constBegin(); itsl != m_filterQuery.terms.constEnd(); ++itsl) {
-                bool contains = macro->value().containsPattern(*itsl) || macro->key().contains(*itsl);
+                bool contains = macro->value().containsPattern(*itsl) || macro->key().contains(*itsl, Qt::CaseInsensitive);
                 if (m_filterQuery.combination == SortFilterBibTeXFileModel::AnyTerm && contains)
                     return true;
                 all &= contains;
@@ -128,7 +150,7 @@ bool SortFilterBibTeXFileModel::filterAcceptsRow(int source_row, const QModelInd
             if (comment != NULL) {
                 bool all = true;
                 for (QStringList::ConstIterator itsl = m_filterQuery.terms.constBegin(); itsl != m_filterQuery.terms.constEnd(); ++itsl) {
-                    bool contains = comment->text().contains(*itsl);
+                    bool contains = comment->text().contains(*itsl, Qt::CaseInsensitive);
                     if (m_filterQuery.combination == SortFilterBibTeXFileModel::AnyTerm && contains)
                         return true;
                     all &= contains;
@@ -158,7 +180,7 @@ bool SortFilterBibTeXFileModel::filterAcceptsRow(int source_row, const QModelInd
 const QRegExp BibTeXFileModel::whiteSpace = QRegExp("(\\s\\n\\r\\t)+");
 
 BibTeXFileModel::BibTeXFileModel(QObject * parent)
-        : QAbstractItemModel(parent), m_bibtexFile(NULL)
+        : QAbstractTableModel(parent), m_bibtexFile(NULL)
 {
     m_bibtexFields = BibTeXFields::self();
 // TODO
@@ -181,13 +203,17 @@ void BibTeXFileModel::setBibTeXFile(File *bibtexFile)
     m_bibtexFile = bibtexFile;
 }
 
-QModelIndex BibTeXFileModel::index(int row, int column, const QModelIndex & /*parent*/) const
+/*
+QModelIndex BibTeXFileModel::index(int row, int column, const QModelIndex & parent) const
 {
+    Q_UNUSED(parent)
     return createIndex(row, column, (void*)NULL); // parent == QModelIndex() ? createIndex(row, column, (void*)NULL) : QModelIndex();
 }
+*/
 
-QModelIndex BibTeXFileModel::parent(const QModelIndex & /*index*/) const
+QModelIndex BibTeXFileModel::parent(const QModelIndex & index) const
 {
+    Q_UNUSED(index)
     return QModelIndex();
 }
 
@@ -208,13 +234,16 @@ int BibTeXFileModel::columnCount(const QModelIndex & /*parent*/) const
 
 QVariant BibTeXFileModel::data(const QModelIndex &index, int role) const
 {
+    /// do not accept invalid indices
     if (!index.isValid())
         return QVariant();
 
-    if (m_bibtexFile == NULL || index.row() >= m_bibtexFile->count())
+    /// check backend storage (File object)
+    if (m_bibtexFile == NULL)
         return QVariant();
 
-    if (role != Qt::DisplayRole)
+    /// for now, only display data (no editing or icons etc)
+    if (role != Qt::DisplayRole && role != Qt::ToolTipRole)
         return QVariant();
 
     if (index.row() < m_bibtexFile->count() && index.column() < m_bibtexFields->count()) {
@@ -223,7 +252,7 @@ QVariant BibTeXFileModel::data(const QModelIndex &index, int role) const
         Element* element = (*m_bibtexFile)[index.row()];
         Entry* entry = dynamic_cast<Entry*>(element);
         if (entry != NULL) {
-            if (raw == "^id")
+            if (raw == "^id") // FIXME: Use constant here?
                 return QVariant(entry->id());
             else if (raw == "^type")
                 return QVariant(entry->type());
@@ -246,7 +275,7 @@ QVariant BibTeXFileModel::data(const QModelIndex &index, int role) const
                     return QVariant(macro->key());
                 else if (raw == "^type")
                     return QVariant(i18n("Macro"));
-                else if (raw == Entry::ftTitle) {
+                else if (raw == "Title") {
                     QString text = PlainTextValue::text(macro->value(), m_bibtexFile);
                     text = text.replace(whiteSpace, " ");
                     return QVariant(text);
@@ -272,16 +301,16 @@ QVariant BibTeXFileModel::data(const QModelIndex &index, int role) const
 
 QVariant BibTeXFileModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    if (role != Qt::DisplayRole)
+    if (role != Qt::DisplayRole || orientation != Qt::Horizontal || section < 0 || section >= m_bibtexFields->count())
         return QVariant();
 
-    if (orientation == Qt::Horizontal) {
-        if (section < m_bibtexFields->count())
-            return m_bibtexFields->at(section).label;
-        else
-            return QString(i18n("Column %1")).arg(section);
-    } else
-        return QString(i18n("Row %1")).arg(section);
+    return m_bibtexFields->at(section).label;
+}
+
+Qt::ItemFlags BibTeXFileModel::flags(const QModelIndex &index) const
+{
+    Q_UNUSED(index)
+    return Qt::ItemIsEnabled | Qt::ItemIsSelectable; // FIXME: What about drag'n'drop?
 }
 
 bool BibTeXFileModel::removeRow(int row, const QModelIndex & parent)
