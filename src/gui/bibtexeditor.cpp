@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2009 by Thomas Fischer                             *
+*   Copyright (C) 2004-2010 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -23,6 +23,8 @@
 
 #include <entryeditor.h>
 #include <entry.h>
+#include <macroeditor.h>
+#include <macro.h>
 #include <bibtexfilemodel.h>
 #include "bibtexeditor.h"
 
@@ -54,7 +56,6 @@ void BibTeXEditor::viewElement(const Element *element)
 void BibTeXEditor::editElement(Element *element)
 {
     Entry *entry = dynamic_cast<Entry *>(element);
-
     if (entry != NULL) {
         KDialog dialog(this);
         EntryEditor entryEditor(entry, &dialog);
@@ -70,6 +71,24 @@ void BibTeXEditor::editElement(Element *element)
         connect(&dialog, SIGNAL(resetClicked()), &entryEditor, SLOT(reset()));
 
         dialog.exec();
+    } else {
+        Macro *macro = dynamic_cast<Macro *>(element);
+        if (macro != NULL) {
+            KDialog dialog(this);
+            MacroEditor macroEditor(macro, &dialog);
+            macroEditor.reset();
+            dialog.setCaption(i18n("Edit Macro"));
+            dialog.setMainWidget(&macroEditor);
+            dialog.setButtons(KDialog::Ok | KDialog::Apply | KDialog::Cancel | KDialog::Reset);
+            dialog.enableButton(KDialog::Apply, false);
+
+            connect(&macroEditor, SIGNAL(modified(bool)), &dialog, SLOT(enableButtonApply(bool)));
+            connect(&dialog, SIGNAL(applyClicked()), &macroEditor, SLOT(apply()));
+            connect(&dialog, SIGNAL(okClicked()), &macroEditor, SLOT(apply()));
+            connect(&dialog, SIGNAL(resetClicked()), &macroEditor, SLOT(reset()));
+
+            dialog.exec();
+        }
     }
 }
 
