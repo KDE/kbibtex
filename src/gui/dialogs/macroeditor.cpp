@@ -47,16 +47,21 @@ private:
         QGridLayout *layout = new QGridLayout(this);
         layout->setColumnStretch(0, 1);
         layout->setColumnStretch(1, 0);
+        layout->setColumnStretch(2, 0);
         layout->setRowStretch(0, 1);
         layout->setRowStretch(1, 0);
 
         sourceEdit = new QTextEdit(this);
-        layout->addWidget(sourceEdit, 0, 0, 1, 2);
+        layout->addWidget(sourceEdit, 0, 0, 1, 3);
         sourceEdit->document()->setDefaultFont(KGlobalSettings::fixedFont());
         sourceEdit->setTabStopWidth(QFontMetrics(sourceEdit->font()).averageCharWidth() * 4);
 
-        KPushButton *buttonRestore = new KPushButton(i18n("Restore"), this);
-        layout->addWidget(buttonRestore, 1, 1, 1, 1);
+        KPushButton *buttonCheck = new KPushButton(i18n("Validate"), this);
+        layout->addWidget(buttonCheck, 1, 1, 1, 1);
+        buttonCheck->setEnabled(false);
+
+        KPushButton *buttonRestore = new KPushButton(KIcon("edit-undo"), i18n("Restore"), this);
+        layout->addWidget(buttonRestore, 1, 2, 1, 1);
         connect(buttonRestore, SIGNAL(clicked()), parent(), SLOT(reset()));
     }
 
@@ -231,7 +236,6 @@ public:
 MacroEditor::MacroEditor(Macro *macro, QWidget *parent)
         : QTabWidget(parent), d(new MacroEditorPrivate(macro, this))
 {
-    kDebug() << "Editing " << macro->key() << " = " << macro->value();
     d->createGUI();
     connect(this, SIGNAL(currentChanged(int)), this, SLOT(tabChanged()));
 }
@@ -239,7 +243,6 @@ MacroEditor::MacroEditor(Macro *macro, QWidget *parent)
 MacroEditor::MacroEditor(const Macro *macro, QWidget *parent)
         : QTabWidget(parent)
 {
-    kDebug() << "Editing " << macro->key() << " = " << macro->value();
     Macro *m = new Macro(*macro);
     d = new MacroEditorPrivate(m, this);
     d->createGUI();
