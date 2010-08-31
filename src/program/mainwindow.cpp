@@ -200,9 +200,9 @@ void KBibTeXMainWindow::documentSwitched(BibTeXEditor *oldEditor, BibTeXEditor *
 
     d->referencePreview->setEnabled(newEditor != NULL);
     if (oldEditor != NULL)
-        disconnect(oldEditor, SIGNAL(currentElementChanged(const Element*)), d->referencePreview, SLOT(setElement(const Element*)));
+        disconnect(oldEditor, SIGNAL(currentElementChanged(const Element*, const File *)), d->referencePreview, SLOT(setElement(const Element*, const File *)));
     if (newEditor != NULL)
-        connect(newEditor, SIGNAL(currentElementChanged(const Element*)), d->referencePreview, SLOT(setElement(const Element*)));
-    d->referencePreview->setElement(NULL);
+        connect(newEditor, SIGNAL(currentElementChanged(const Element*, const File *)), d->referencePreview, SLOT(setElement(const Element*, const File *)));
+    d->referencePreview->setElement(NULL, NULL);
 }
 

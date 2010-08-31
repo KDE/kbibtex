@@ -31,6 +31,9 @@
 #include <fileexporterbibtex.h>
 #include <fileexporterbibtex2html.h>
 #include <fileexporterxslt.h>
+#include <element.h>
+#include <file.h>
+#include <entry.h>
 
 #include "referencepreview.h"
 
@@ -46,6 +49,7 @@ public:
     QWebView *webView;
     KComboBox *comboBox;
     const Element* element;
+    const File *file;
 
     ReferencePreviewPrivate(ReferencePreview *parent)
             : p(parent), element(NULL) {
@@ -95,9 +99,10 @@ void ReferencePreview::setEnabled(bool enabled)
     d->comboBox->setEnabled(enabled);
 }
 
-void ReferencePreview::setElement(const Element* element)
+void ReferencePreview::setElement(const Element* element, const File *file)
 {
     d->element = element;
+    d->file = file;
     renderHTML();
 }
 
@@ -112,10 +117,12 @@ void ReferencePreview::renderHTML()
 
     QStringList errorLog;
     FileExporter *exporter = NULL;
+    bool includeCrossRef = false;
 
     if (d->comboBox->currentIndex() == 0)
         exporter = new FileExporterBibTeX();
     else if (d->comboBox->currentIndex() < 9) {
+        includeCrossRef = true;
         FileExporterBibTeX2HTML *exporterHTML = new FileExporterBibTeX2HTML();
         switch (d->comboBox->currentIndex()) {
         case 1: /// BibTeX2HTML (abbrv)
@@ -159,7 +166,20 @@ void ReferencePreview::renderHTML()
 
     QBuffer buffer(this);
     buffer.open(QBuffer::WriteOnly);
-    exporter->save(&buffer, d->element, &errorLog);
+
+    const Entry *entry = dynamic_cast<const Entry*>(d->element);
+    if (includeCrossRef && entry != NULL) {
+        QString crossRef = PlainTextValue::text(entry->value(QLatin1String("crossref")), d->file);
+        const Entry *crossRefEntry = dynamic_cast<const Entry*>((d->file != NULL) ? d->file->containsKey(crossRef) : NULL);
+        if (crossRefEntry != NULL) {
+            File file;
+            file.append(new Entry(*entry));
+            file.append(new Entry(*crossRefEntry));
+            exporter->save(&buffer, &file, &errorLog);
+        } else
+            exporter->save(&buffer, d->element, &errorLog);
+    } else
+        exporter->save(&buffer, d->element, &errorLog);
     buffer.close();
     delete exporter;
 

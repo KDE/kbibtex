@@ -24,7 +24,8 @@
 #include <QWidget>
 #include <QUrl>
 
-#include <element.h>
+class Element;
+class File;
 
 class ReferencePreview : public QWidget
 {
@@ -36,7 +37,7 @@ public:
     void setEnabled(bool);
 
 public slots:
-    void setElement(const Element*);
+    void setElement(const Element*, const File *);
 
 private:
     class ReferencePreviewPrivate;
