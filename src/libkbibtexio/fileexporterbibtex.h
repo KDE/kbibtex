@@ -42,8 +42,14 @@ class KBIBTEXIO_EXPORT FileExporterBibTeX : public FileExporter
 public:
     enum QuoteComment {qcNone, qcCommand, qcPercentSign};
 
-    FileExporterBibTeX(const QString& encoding = "latex", const QChar& stringOpenDelimiter = '"', const QChar& stringCloseDelimiter = '"', KBibTeX::Casing keywordCasing = KBibTeX::cLowerCase, QuoteComment quoteComment = qcNone, bool protectCasing = false);
+    FileExporterBibTeX();
     ~FileExporterBibTeX();
+
+    void setEncoding(const QString& encoding);
+    void setStringDelimiters(const QChar& stringOpenDelimiter, const QChar& stringCloseDelimiter);
+    void setKeywordCasing(KBibTeX::Casing keywordCasing);
+    void setQuoteComment(QuoteComment quoteComment);
+    void setProtectCasing(bool protectCasing);
 
     bool save(QIODevice* iodevice, const File* bibtexfile, QStringList *errorLog = NULL);
     bool save(QIODevice* iodevice, const Element* element, QStringList *errorLog = NULL);

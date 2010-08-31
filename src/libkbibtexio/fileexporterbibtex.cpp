@@ -36,8 +36,8 @@
 
 #include "fileexporterbibtex.h"
 
-FileExporterBibTeX::FileExporterBibTeX(const QString& encoding, const QChar& stringOpenDelimiter, const QChar& stringCloseDelimiter, KBibTeX::Casing keywordCasing, QuoteComment quoteComment, bool protectCasing)
-        : FileExporter(), m_stringOpenDelimiter(stringOpenDelimiter), m_stringCloseDelimiter(stringCloseDelimiter), m_keywordCasing(keywordCasing), m_quoteComment(quoteComment), m_encoding(encoding), m_protectCasing(protectCasing), cancelFlag(FALSE)
+FileExporterBibTeX::FileExporterBibTeX()
+        : FileExporter(), m_stringOpenDelimiter(QChar('"')), m_stringCloseDelimiter(QChar('"')), m_keywordCasing(KBibTeX::cLowerCase), m_quoteComment(qcNone), m_encoding(QLatin1String("latex")), m_protectCasing(false), cancelFlag(false)
 {
 // nothing
 }
@@ -45,6 +45,32 @@ FileExporterBibTeX::FileExporterBibTeX(const QString& encoding, const QChar& str
 FileExporterBibTeX::~FileExporterBibTeX()
 {
 // nothing
+}
+
+void FileExporterBibTeX::setEncoding(const QString& encoding)
+{
+    m_encoding = encoding;
+}
+
+void FileExporterBibTeX::setStringDelimiters(const QChar& stringOpenDelimiter, const QChar& stringCloseDelimiter)
+{
+    m_stringOpenDelimiter = stringOpenDelimiter;
+    m_stringCloseDelimiter = stringCloseDelimiter;
+}
+
+void FileExporterBibTeX::setKeywordCasing(KBibTeX::Casing keywordCasing)
+{
+    m_keywordCasing = keywordCasing;
+}
+
+void FileExporterBibTeX::setQuoteComment(QuoteComment quoteComment)
+{
+    m_quoteComment = quoteComment;
+}
+
+void FileExporterBibTeX::setProtectCasing(bool protectCasing)
+{
+    m_protectCasing = protectCasing;
 }
 
 bool FileExporterBibTeX::save(QIODevice* iodevice, const File* bibtexfile, QStringList * /*errorLog*/)
@@ -82,7 +108,7 @@ bool FileExporterBibTeX::save(QIODevice* iodevice, const File* bibtexfile, QStri
                     /** check if this file requests a special encoding */
                     if (comment != NULL && comment->useCommand() && ((commentText = comment->text())).startsWith("x-kbibtex-encoding=")) {
                         QString encoding = commentText.mid(19);
-                        qDebug() << "Old x-kbibtex-encoding is \"" << encoding << "\"" << endl;
+                        kDebug() << "Old x-kbibtex-encoding is \"" << encoding << "\"" << endl;
                     } else
                         remainingList.append(*it);
                 }
@@ -94,8 +120,9 @@ bool FileExporterBibTeX::save(QIODevice* iodevice, const File* bibtexfile, QStri
     int currentPos = 0;
 
     QTextStream stream(iodevice);
-    stream.setCodec(m_encoding == "latex" ? "UTF-8" : m_encoding.toAscii());
-    parameterCommentsList << new Comment("x-kbibtex-encoding=" + m_encoding, true);
+    stream.setCodec(m_encoding == QLatin1String("latex") ? "UTF-8" : m_encoding.toAscii());
+    if (m_encoding != QLatin1String("latex"))
+        parameterCommentsList << new Comment("x-kbibtex-encoding=" + m_encoding, true);
     qDebug() << "New x-kbibtex-encoding is \"" << m_encoding << "\"" << endl;
 
     /** before anything else, write parameter comments */
