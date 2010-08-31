@@ -244,6 +244,7 @@ public:
 FieldLineEdit::FieldLineEdit(KBibTeX::TypeFlag preferredTypeFlag, KBibTeX::TypeFlags typeFlags, bool isMultiLine, QWidget *parent)
         : MenuLineEdit(isMultiLine, parent), d(new FieldLineEdit::FieldLineEditPrivate(preferredTypeFlag, typeFlags, this))
 {
+    setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
     setObjectName(QLatin1String("FieldLineEdit"));
     setMenu(d->menuTypes);
 }

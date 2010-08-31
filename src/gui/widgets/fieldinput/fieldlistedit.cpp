@@ -151,7 +151,7 @@ public:
 FieldListEdit::FieldListEdit(KBibTeX::TypeFlag preferredTypeFlag, KBibTeX::TypeFlags typeFlags, QWidget *parent)
         : QScrollArea(parent), d(new FieldListEditPrivate(preferredTypeFlag, typeFlags, this))
 {
-// TODO
+    setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
 }
 
 void FieldListEdit::reset(const Value& value)
