@@ -41,20 +41,34 @@ void BibTeXEditor::viewCurrentElement()
 
 void BibTeXEditor::viewElement(const Element *element)
 {
+    // FIXME: Re-use code better
     const Entry *entry = dynamic_cast<const Entry *>(element);
 
     if (entry != NULL) {
         KDialog dialog(this);
         EntryEditor entryEditor(entry, &dialog);
+        entryEditor.setReadOnly(true);
         dialog.setCaption(i18n("View Entry"));
         dialog.setMainWidget(&entryEditor);
         dialog.setButtons(KDialog::Close);
         dialog.exec();
+    } else {
+        const Macro *macro = dynamic_cast<const Macro *>(element);
+        if (macro != NULL) {
+            KDialog dialog(this);
+            MacroEditor macroEditor(macro, &dialog);
+            macroEditor.setReadOnly(true);
+            dialog.setCaption(i18n("View Entry"));
+            dialog.setMainWidget(&macroEditor);
+            dialog.setButtons(KDialog::Close);
+            dialog.exec();
+        }
     }
 }
 
 void BibTeXEditor::editElement(Element *element)
 {
+    // FIXME: Re-use code better
     Entry *entry = dynamic_cast<Entry *>(element);
     if (entry != NULL) {
         KDialog dialog(this);
