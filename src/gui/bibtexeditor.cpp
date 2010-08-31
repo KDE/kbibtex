@@ -97,6 +97,31 @@ const QList<Element*>& BibTeXEditor::selectedElements() const
     return m_selection;
 }
 
+void BibTeXEditor::setSelectedElements(QList<Element*> &list)
+{
+    m_selection = list;
+
+    QItemSelectionModel *selModel = selectionModel();
+    selModel->clear();
+    for (QList<Element*>::ConstIterator it = list.constBegin(); it != list.constEnd(); ++it) {
+        int row = model()->row(*it);
+        QModelIndex idx = model()->index(row, 0);
+        selModel->setCurrentIndex(idx, QItemSelectionModel::SelectCurrent);
+    }
+}
+
+void BibTeXEditor::setSelectedElement(Element* element)
+{
+    m_selection.clear();
+    m_selection << element;
+
+    QItemSelectionModel *selModel = selectionModel();
+    selModel->clear();
+    int row = model()->row(element);
+    QModelIndex idx = model()->index(row, 0);
+    selModel->setCurrentIndex(idx, QItemSelectionModel::SelectCurrent);
+}
+
 const Element* BibTeXEditor::currentElement() const
 {
     return m_current;
@@ -112,7 +137,7 @@ void BibTeXEditor::currentChanged(const QModelIndex & current, const QModelIndex
 {
     QTreeView::currentChanged(current, previous);
 
-    emit currentElementChanged(model()->element(current.row()));
+    emit currentElementChanged(model()->element(current.row()), model()->bibTeXFile());
 }
 
 void BibTeXEditor::selectionChanged(const QItemSelection & selected, const QItemSelection & deselected)

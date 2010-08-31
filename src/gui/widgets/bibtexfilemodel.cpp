@@ -318,3 +318,8 @@ Element* BibTeXFileModel::element(int row) const
 
     return (*m_bibtexFile)[row];
 }
+
+int BibTeXFileModel::row(Element *element) const
+{
+    return m_bibtexFile->indexOf(element);
+}

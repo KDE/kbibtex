@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2009 by Thomas Fischer                             *
+*   Copyright (C) 2004-2010 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -42,7 +42,7 @@ public:
 
 signals:
     void selectedElementsChanged();
-    void currentElementChanged(const Element*);
+    void currentElementChanged(const Element*, const File *);
     void elementExecuted(Element*);
     void keyPressed(QKeyEvent *);
 
@@ -50,6 +50,8 @@ public slots:
     void viewCurrentElement();
     void viewElement(const Element*);
     void editElement(Element*);
+    void setSelectedElements(QList<Element*>&);
+    void setSelectedElement(Element*);
 
 protected:
     void virtual keyPressEvent(QKeyEvent *event);

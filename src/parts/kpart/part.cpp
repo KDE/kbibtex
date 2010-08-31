@@ -288,7 +288,8 @@ bool KBibTeXPart::openFile()
     if (bibtexFile == NULL) {
         kWarning() << "Opening file failed: " << url();
         return false;
-    }
+    } else
+        kDebug() << "File contains " << bibtexFile->count() << " entries";
 
     d->model->setBibTeXFile(bibtexFile);
     d->editor->setModel(d->model);
@@ -338,4 +339,6 @@ void KBibTeXPart::newEntryTriggered()
 {
     Entry *newEntry = new Entry(QLatin1String("Article"), d->findUnusedId());
     d->model->insertRow(newEntry, d->model->rowCount());
+    d->editor->setSelectedElement(newEntry);
+    d->editor->editElement(newEntry);
 }
