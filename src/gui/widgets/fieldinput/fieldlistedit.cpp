@@ -60,7 +60,7 @@ public:
         p->setBackgroundRole(QPalette::Base);
 
         container = new QWidget();
-        container->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
+        container->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
         p->setWidget(container);
         layout = new QVBoxLayout(container);
         layout->setMargin(0);

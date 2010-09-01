@@ -48,7 +48,6 @@ public:
     }
 
     void createGUI() {
-        p->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
         QVBoxLayout *layout = new QVBoxLayout(p);
         layout->setMargin(0);
 
