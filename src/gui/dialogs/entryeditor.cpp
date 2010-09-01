@@ -19,7 +19,6 @@
 ***************************************************************************/
 
 #include <QLayout>
-#include <QFormLayout>
 #include <QBuffer>
 #include <QLabel>
 #include <QTextEdit>
@@ -30,6 +29,7 @@
 #include <KLineEdit>
 #include <KLocale>
 #include <KPushButton>
+#include <KListWidget>
 
 #include <bibtexentries.h>
 #include <bibtexfields.h>
@@ -38,86 +38,8 @@
 #include <fieldinput.h>
 #include <fileexporterbibtex.h>
 #include <fileimporterbibtex.h>
+#include "elementwidgets.h"
 #include "entryeditor.h"
-
-class EntryEditorSource : public QWidget
-{
-private:
-    Entry *entry;
-    QTextEdit *sourceEdit;
-
-    void createGUI() {
-        QGridLayout *layout = new QGridLayout(this);
-        layout->setColumnStretch(0, 1);
-        layout->setColumnStretch(1, 0);
-        layout->setColumnStretch(2, 0);
-        layout->setRowStretch(0, 1);
-        layout->setRowStretch(1, 0);
-
-        sourceEdit = new QTextEdit(this);
-        layout->addWidget(sourceEdit, 0, 0, 1, 3);
-        sourceEdit->document()->setDefaultFont(KGlobalSettings::fixedFont());
-        sourceEdit->setTabStopWidth(QFontMetrics(sourceEdit->font()).averageCharWidth() * 4);
-
-        KPushButton *buttonCheck = new KPushButton(i18n("Validate"), this);
-        layout->addWidget(buttonCheck, 1, 1, 1, 1);
-        buttonCheck->setEnabled(false);
-
-        KPushButton *buttonRestore = new KPushButton(KIcon("edit-undo"), i18n("Restore"), this);
-        layout->addWidget(buttonRestore, 1, 2, 1, 1);
-        connect(buttonRestore, SIGNAL(clicked()), parent(), SLOT(reset()));
-    }
-
-public:
-    EntryEditorSource(QWidget *parent)
-            : QWidget(parent) {
-        createGUI();
-    }
-
-    bool apply(Entry *entry) {
-        bool result = false;
-        QString text = sourceEdit->document()->toPlainText();
-        FileImporterBibTeX importer;
-        File *file = importer.fromString(text);
-        if (file == NULL) return false;
-
-        if (file->count() == 1) {
-            Entry *readEntry = dynamic_cast<Entry*>(file->first());
-            if (readEntry != NULL) {
-                entry->operator =(*readEntry);
-                result = true;
-            }
-        }
-
-        delete file;
-        return result;
-    }
-
-    void reset(const Entry *entry) {
-        FileExporterBibTeX exporter;
-        QBuffer textBuffer;
-        textBuffer.open(QIODevice::WriteOnly);
-        exporter.save(&textBuffer, entry, NULL);
-        textBuffer.close();
-        textBuffer.open(QIODevice::ReadOnly);
-        QTextStream ts(&textBuffer);
-        QString text = ts.readAll();
-        sourceEdit->document()->setPlainText(text);
-    }
-
-    void apply() {
-        apply(entry);
-    }
-
-    void reset() {
-        reset(entry);
-    }
-
-    void setReadOnly(bool isReadOnly) {
-        Q_UNUSED(isReadOnly);
-        // TODO
-    }
-};
 
 class EntryEditorGUI : public QWidget
 {
@@ -142,21 +64,23 @@ private:
 
     QWidget *createReferenceGUI(QWidget *parent) {
         QWidget *container = new QWidget(parent);
-        QHBoxLayout *layout = new QHBoxLayout(container);
+        QGridLayout *layout = new QGridLayout(container);
 
-        QFormLayout *formLayout = new QFormLayout();
         entryType = new KComboBox(container);
         entryType->setEditable(true);
         entryType->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
-        formLayout->addRow(i18n("Type:"), entryType);
-        layout->addLayout(formLayout, 1);
+        QLabel *label = new QLabel(i18n("Type:"), container);
+        label->setBuddy(entryType);
+        layout->addWidget(label, 0, 0, 1, 1);
+        layout->addWidget(entryType, 0, 1, 1, 1);
 
-        layout->addSpacing(16);
+        layout->setColumnMinimumWidth(2, 16);
 
-        formLayout = new QFormLayout();
         entryId = new KLineEdit(container);
-        formLayout->addRow(i18n("Id:"), entryId);
-        layout->addLayout(formLayout, 1);
+        label = new QLabel(i18n("Id:"), container);
+        label->setBuddy(entryId);
+        layout->addWidget(label, 0, 3, 1, 1);
+        layout->addWidget(entryId, 0, 4, 1, 1);
 
         BibTeXEntries *be = BibTeXEntries::self();
         for (BibTeXEntries::ConstIterator it = be->constBegin(); it != be->constEnd(); ++it)
@@ -176,15 +100,13 @@ private:
             QWidget *container = new QWidget(tabWidget);
             tabWidget->addTab(container, etl.uiCaption);
 
-            QBoxLayout *boxLayout = new QHBoxLayout(container);
-            QFormLayout *formLayout = new QFormLayout();
-            boxLayout->addLayout(formLayout);
+            QGridLayout *gridLayout = new QGridLayout(container);
 
             int mod = etl.singleFieldLayouts.size() / etl.columns;
             if (etl.singleFieldLayouts.size() % etl.columns > 0)
                 ++mod;
 
-            int row = 0;
+            int row = 0, col = 0;
             for (QList<SingleFieldLayout>::ConstIterator sflit = etl.singleFieldLayouts.constBegin(); sflit != etl.singleFieldLayouts.constEnd(); ++sflit) {
                 const FieldDescription *fd = bf->find((*sflit).bibtexLabel);
                 KBibTeX::TypeFlags typeFlags = fd == NULL ? KBibTeX::tfSource : fd->typeFlags;
@@ -192,16 +114,24 @@ private:
                 FieldInput *fieldInput = new FieldInput((*sflit).fieldInputLayout, preferredTypeFlag, typeFlags, container);
                 bibtexKeyToWidget.insert((*sflit).bibtexLabel, fieldInput);
 
-                formLayout->addRow((*sflit).uiLabel + ":", fieldInput);
+                QLabel *label = new QLabel((*sflit).uiLabel + ":", container);
+                label->setBuddy(fieldInput);
+                gridLayout->addWidget(label, row, col, 1, 1, Qt::AlignTop | Qt::AlignRight);
+                gridLayout->addWidget(fieldInput, row, col + 1, 1, 1);
 
+                gridLayout->setRowStretch(row, ((*sflit).fieldInputLayout == KBibTeX::MultiLine || (*sflit).fieldInputLayout == KBibTeX::List) ? 1000 : 0);
+                gridLayout->setColumnStretch(col, 1);
+                gridLayout->setColumnStretch(col + 1, 1000);
 
                 ++row;
                 if (row >= mod) {
-                    formLayout = new QFormLayout();
-                    boxLayout->addLayout(formLayout);
+                    gridLayout->setColumnStretch(col, 1);
+                    gridLayout->setColumnStretch(col + 1, 1000);
                     row = 0;
+                    col += 2;
                 }
             }
+            gridLayout->setRowStretch(mod, 1);
         }
 
         return tabWidget;
@@ -320,7 +250,7 @@ class EntryEditor::EntryEditorPrivate
 {
 private:
     EntryEditorGUI *tabGlobal;
-    EntryEditorSource *tabSource;
+    SourceWidget *tabSource;
 
 public:
     Entry *entry;
@@ -335,7 +265,7 @@ public:
     void createGUI() {
         tabGlobal = new EntryEditorGUI(p);
         p->addTab(tabGlobal, i18n("Global"));
-        tabSource = new EntryEditorSource(p);
+        tabSource = new SourceWidget(p);
         p->addTab(tabSource, i18n("Source"));
     }
 

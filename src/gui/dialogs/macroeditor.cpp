@@ -35,86 +35,8 @@
 #include <fileexporterbibtex.h>
 #include <macro.h>
 #include <fieldlineedit.h>
+#include "elementwidgets.h"
 #include "macroeditor.h"
-
-class MacroEditorSource : public QWidget
-{
-private:
-    Macro *macro;
-    QTextEdit *sourceEdit;
-
-    void createGUI() {
-        QGridLayout *layout = new QGridLayout(this);
-        layout->setColumnStretch(0, 1);
-        layout->setColumnStretch(1, 0);
-        layout->setColumnStretch(2, 0);
-        layout->setRowStretch(0, 1);
-        layout->setRowStretch(1, 0);
-
-        sourceEdit = new QTextEdit(this);
-        layout->addWidget(sourceEdit, 0, 0, 1, 3);
-        sourceEdit->document()->setDefaultFont(KGlobalSettings::fixedFont());
-        sourceEdit->setTabStopWidth(QFontMetrics(sourceEdit->font()).averageCharWidth() * 4);
-
-        KPushButton *buttonCheck = new KPushButton(i18n("Validate"), this);
-        layout->addWidget(buttonCheck, 1, 1, 1, 1);
-        buttonCheck->setEnabled(false);
-
-        KPushButton *buttonRestore = new KPushButton(KIcon("edit-undo"), i18n("Restore"), this);
-        layout->addWidget(buttonRestore, 1, 2, 1, 1);
-        connect(buttonRestore, SIGNAL(clicked()), parent(), SLOT(reset()));
-    }
-
-public:
-    MacroEditorSource(QWidget *parent)
-            : QWidget(parent) {
-        createGUI();
-    }
-
-    bool apply(Macro *macro) {
-        bool result = false;
-        QString text = sourceEdit->document()->toPlainText();
-        FileImporterBibTeX importer;
-        File *file = importer.fromString(text);
-        if (file == NULL) return false;
-
-        if (file->count() == 1) {
-            Macro *readMacro = dynamic_cast<Macro*>(file->first());
-            if (readMacro != NULL) {
-                macro->operator =(*readMacro);
-                result = true;
-            }
-        }
-
-        delete file;
-        return result;
-    }
-
-    void reset(const Macro *macro) {
-        FileExporterBibTeX exporter;
-        QBuffer textBuffer;
-        textBuffer.open(QIODevice::WriteOnly);
-        exporter.save(&textBuffer, macro, NULL);
-        textBuffer.close();
-        textBuffer.open(QIODevice::ReadOnly);
-        QTextStream ts(&textBuffer);
-        QString text = ts.readAll();
-        sourceEdit->document()->setPlainText(text);
-    }
-
-    void apply() {
-        apply(macro);
-    }
-
-    void reset() {
-        reset(macro);
-    }
-
-    void setReadOnly(bool isReadOnly) {
-        Q_UNUSED(isReadOnly);
-        // TODO
-    }
-};
 
 class MacroEditorGUI : public QWidget
 {
@@ -176,7 +98,7 @@ class MacroEditor::MacroEditorPrivate
 {
 private:
     MacroEditorGUI *tabGlobal;
-    MacroEditorSource *tabSource;
+    SourceWidget *tabSource;
 
 public:
     Macro *macro;
@@ -191,7 +113,7 @@ public:
     void createGUI() {
         tabGlobal = new MacroEditorGUI(p);
         p->addTab(tabGlobal, i18n("Global"));
-        tabSource = new MacroEditorSource(p);
+        tabSource = new SourceWidget(p);
         p->addTab(tabSource, i18n("Source"));
     }
 
