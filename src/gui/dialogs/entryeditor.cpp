@@ -108,30 +108,38 @@ private:
 
             int row = 0, col = 0;
             for (QList<SingleFieldLayout>::ConstIterator sflit = etl.singleFieldLayouts.constBegin(); sflit != etl.singleFieldLayouts.constEnd(); ++sflit) {
+                if (row == 0 && col > 1)
+                    gridLayout->setColumnMinimumWidth(col - 1, 16); // FIXME use constant here
+
                 const FieldDescription *fd = bf->find((*sflit).bibtexLabel);
                 KBibTeX::TypeFlags typeFlags = fd == NULL ? KBibTeX::tfSource : fd->typeFlags;
                 KBibTeX::TypeFlag preferredTypeFlag = fd == NULL ? KBibTeX::tfSource : fd->preferredTypeFlag;
                 FieldInput *fieldInput = new FieldInput((*sflit).fieldInputLayout, preferredTypeFlag, typeFlags, container);
                 bibtexKeyToWidget.insert((*sflit).bibtexLabel, fieldInput);
 
+                bool isMultiLine = (*sflit).fieldInputLayout == KBibTeX::MultiLine || (*sflit).fieldInputLayout == KBibTeX::List;
+
                 QLabel *label = new QLabel((*sflit).uiLabel + ":", container);
                 label->setBuddy(fieldInput);
-                gridLayout->addWidget(label, row, col, 1, 1, Qt::AlignTop | Qt::AlignRight);
+                gridLayout->addWidget(label, row, col, 1, 1, (isMultiLine ? Qt::AlignTop : Qt::AlignVCenter) | Qt::AlignRight);
                 gridLayout->addWidget(fieldInput, row, col + 1, 1, 1);
 
-                gridLayout->setRowStretch(row, ((*sflit).fieldInputLayout == KBibTeX::MultiLine || (*sflit).fieldInputLayout == KBibTeX::List) ? 1000 : 0);
-                gridLayout->setColumnStretch(col, 1);
-                gridLayout->setColumnStretch(col + 1, 1000);
+                gridLayout->setRowStretch(row, isMultiLine ? 1000 : 0);
 
                 ++row;
                 if (row >= mod) {
                     gridLayout->setColumnStretch(col, 1);
                     gridLayout->setColumnStretch(col + 1, 1000);
                     row = 0;
-                    col += 2;
+                    col += 3;
                 }
             }
+
             gridLayout->setRowStretch(mod, 1);
+            if (row > 0) {
+                gridLayout->setColumnStretch(col, 1);
+                gridLayout->setColumnStretch(col + 1, 1000);
+            }
         }
 
         return tabWidget;
