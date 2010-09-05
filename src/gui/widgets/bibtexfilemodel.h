@@ -81,8 +81,8 @@ public:
     BibTeXFileModel(QObject * parent = 0);
     virtual ~BibTeXFileModel();
 
-    virtual File *bibTeXFile();
-    virtual void setBibTeXFile(File *bibtexFile);
+    File *bibTeXFile();
+    void setBibTeXFile(File *bibtexFile);
 
     //virtual QModelIndex index(int row, int column, const QModelIndex & parent = QModelIndex()) const;
     virtual QModelIndex parent(const QModelIndex & index) const;

@@ -88,10 +88,10 @@ void BibTeXFileView::setModel(QAbstractItemModel * model)
 {
     QTreeView::setModel(model);
 
-    m_sortFilterProxyModel=NULL;
+    m_sortFilterProxyModel = NULL;
     m_bibTeXFileModel = dynamic_cast<BibTeXFileModel*>(model);
     if (m_bibTeXFileModel == NULL) {
-m_sortFilterProxyModel= dynamic_cast<SortFilterBibTeXFileModel*>(model);
+        m_sortFilterProxyModel = dynamic_cast<SortFilterBibTeXFileModel*>(model);
         Q_ASSERT(m_sortFilterProxyModel != NULL);
         m_bibTeXFileModel = dynamic_cast<BibTeXFileModel*>(m_sortFilterProxyModel->sourceModel());
     }
@@ -103,7 +103,8 @@ BibTeXFileModel *BibTeXFileView::bibTeXModel()
     return m_bibTeXFileModel;
 }
 
-QSortFilterProxyModel *BibTeXFileView::sortFilterProxyModel(){
+QSortFilterProxyModel *BibTeXFileView::sortFilterProxyModel()
+{
     return m_sortFilterProxyModel;
 }
 
