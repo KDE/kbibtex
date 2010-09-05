@@ -92,18 +92,22 @@ public:
             fieldListEdit->clear();
     }
 
-    void setValue(const Value& value) {
+    bool reset(const Value& value) {
+        bool result = false;
         if (fieldLineEdit != NULL)
-            fieldLineEdit->reset(value);
+            result = fieldLineEdit->reset(value);
         else if (fieldListEdit != NULL)
-            fieldListEdit->reset(value);
+            result = fieldListEdit->reset(value);
+        return result;
     }
 
-    void applyTo(Value& value) const {
+    bool apply(Value& value) const {
+        bool result = false;
         if (fieldLineEdit != NULL)
-            fieldLineEdit->apply(value);
+            result = fieldLineEdit->apply(value);
         else if (fieldListEdit != NULL)
-            fieldListEdit->apply(value);
+            result = fieldListEdit->apply(value);
+        return result;
     }
 
     void setReadOnly(bool isReadOnly) {
@@ -128,14 +132,14 @@ void FieldInput::clear()
     d->clear();
 }
 
-void FieldInput::setValue(const Value& value)
+bool FieldInput::reset(const Value& value)
 {
-    d->setValue(value);
+    return  d->reset(value);
 }
 
-void FieldInput::applyTo(Value& value) const
+bool FieldInput::apply(Value& value) const
 {
-    d->applyTo(value);
+    return d->apply(value);
 }
 
 void FieldInput::setReadOnly(bool isReadOnly)
@@ -148,5 +152,5 @@ void FieldInput::setMonth(int month)
     MacroKey *macro = new MacroKey(KBibTeX::MonthsTriple[month-1]);
     Value value;
     value.append(macro);
-    setValue(value);
+    reset(value);
 }

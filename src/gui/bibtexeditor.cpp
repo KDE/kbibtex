@@ -21,9 +21,8 @@
 #include <KDialog>
 #include <KLocale>
 
-#include <entryeditor.h>
+#include <elementeditor.h>
 #include <entry.h>
-#include <macroeditor.h>
 #include <macro.h>
 #include <bibtexfilemodel.h>
 #include "bibtexeditor.h"
@@ -41,69 +40,29 @@ void BibTeXEditor::viewCurrentElement()
 
 void BibTeXEditor::viewElement(const Element *element)
 {
-    // FIXME: Re-use code better
-    const Entry *entry = dynamic_cast<const Entry *>(element);
-
-    if (entry != NULL) {
-        KDialog dialog(this);
-        EntryEditor entryEditor(entry, &dialog);
-        entryEditor.setReadOnly(true);
-        dialog.setCaption(i18n("View Entry"));
-        dialog.setMainWidget(&entryEditor);
-        dialog.setButtons(KDialog::Close);
-        dialog.exec();
-    } else {
-        const Macro *macro = dynamic_cast<const Macro *>(element);
-        if (macro != NULL) {
-            KDialog dialog(this);
-            MacroEditor macroEditor(macro, &dialog);
-            macroEditor.setReadOnly(true);
-            dialog.setCaption(i18n("View Entry"));
-            dialog.setMainWidget(&macroEditor);
-            dialog.setButtons(KDialog::Close);
-            dialog.exec();
-        }
-    }
+    KDialog dialog(this);
+    ElementEditor elementEditor(element, &dialog);
+    dialog.setCaption(i18n("View Element"));
+    dialog.setMainWidget(&elementEditor);
+    dialog.setButtons(KDialog::Close);
+    dialog.exec();
 }
 
 void BibTeXEditor::editElement(Element *element)
 {
-    // FIXME: Re-use code better
-    Entry *entry = dynamic_cast<Entry *>(element);
-    if (entry != NULL) {
-        KDialog dialog(this);
-        EntryEditor entryEditor(entry, &dialog);
-        entryEditor.reset();
-        dialog.setCaption(i18n("Edit Entry"));
-        dialog.setMainWidget(&entryEditor);
-        dialog.setButtons(KDialog::Ok | KDialog::Apply | KDialog::Cancel | KDialog::Reset);
-        dialog.enableButton(KDialog::Apply, false);
+    KDialog dialog(this);
+    ElementEditor elementEditor(element, &dialog);
+    dialog.setCaption(i18n("Edit Element"));
+    dialog.setMainWidget(&elementEditor);
+    dialog.setButtons(KDialog::Ok | KDialog::Apply | KDialog::Cancel | KDialog::Reset);
+    dialog.enableButton(KDialog::Apply, false);
 
-        connect(&entryEditor, SIGNAL(modified(bool)), &dialog, SLOT(enableButtonApply(bool)));
-        connect(&dialog, SIGNAL(applyClicked()), &entryEditor, SLOT(apply()));
-        connect(&dialog, SIGNAL(okClicked()), &entryEditor, SLOT(apply()));
-        connect(&dialog, SIGNAL(resetClicked()), &entryEditor, SLOT(reset()));
+    connect(&elementEditor, SIGNAL(modified(bool)), &dialog, SLOT(enableButtonApply(bool)));
+    connect(&dialog, SIGNAL(applyClicked()), &elementEditor, SLOT(apply()));
+    connect(&dialog, SIGNAL(okClicked()), &elementEditor, SLOT(apply()));
+    connect(&dialog, SIGNAL(resetClicked()), &elementEditor, SLOT(reset()));
 
-        dialog.exec();
-    } else {
-        Macro *macro = dynamic_cast<Macro *>(element);
-        if (macro != NULL) {
-            KDialog dialog(this);
-            MacroEditor macroEditor(macro, &dialog);
-            macroEditor.reset();
-            dialog.setCaption(i18n("Edit Macro"));
-            dialog.setMainWidget(&macroEditor);
-            dialog.setButtons(KDialog::Ok | KDialog::Apply | KDialog::Cancel | KDialog::Reset);
-            dialog.enableButton(KDialog::Apply, false);
-
-            connect(&macroEditor, SIGNAL(modified(bool)), &dialog, SLOT(enableButtonApply(bool)));
-            connect(&dialog, SIGNAL(applyClicked()), &macroEditor, SLOT(apply()));
-            connect(&dialog, SIGNAL(okClicked()), &macroEditor, SLOT(apply()));
-            connect(&dialog, SIGNAL(resetClicked()), &macroEditor, SLOT(reset()));
-
-            dialog.exec();
-        }
-    }
+    dialog.exec();
 }
 
 const QList<Element*>& BibTeXEditor::selectedElements() const

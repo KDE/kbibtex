@@ -291,8 +291,20 @@ QVariant BibTeXFileModel::data(const QModelIndex &index, int role) const
                         return QVariant(text);
                     } else
                         return QVariant();
-                } else
-                    return QVariant("?");
+                } else {
+                    Preamble* preamble = dynamic_cast<Preamble*>(element);
+                    if (preamble != NULL) {
+                        if (raw == "^type")
+                            return QVariant(i18n("Preamble"));
+                        else if (raw == Entry::ftTitle) {
+                            QString text = PlainTextValue::text(preamble->value(), m_bibtexFile);
+                            text = text.replace(QRegExp("[\\s\\n\\r\\t]+"), " ");
+                            return QVariant(text);
+                        } else
+                            return QVariant();
+                    } else
+                        return QVariant("?");
+                }
             }
         }
     } else

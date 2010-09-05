@@ -119,7 +119,15 @@ public:
             FieldLineEdit *fieldLineEdit = *lineEditList.begin();
             layout->removeWidget(fieldLineEdit);
             lineEditList.removeFirst();
+            delete fieldLineEdit;
         }
+
+        /// This fixes a layout problem where the container element
+        /// does not shrink correctly once the line edits have been
+        /// removed
+        QSize pSize = container->size();
+        pSize.setHeight(addButton->height());
+        container->resize(pSize);
     }
 
     void removeFieldLineEdit(FieldLineEdit *fieldLineEdit) {
@@ -155,7 +163,7 @@ FieldListEdit::FieldListEdit(KBibTeX::TypeFlag preferredTypeFlag, KBibTeX::TypeF
     setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
 }
 
-void FieldListEdit::reset(const Value& value)
+bool FieldListEdit::reset(const Value& value)
 {
     d->removeAllFieldLineEdits();
     for (Value::ConstIterator it = value.constBegin(); it != value.constEnd(); ++it) {
@@ -166,9 +174,11 @@ void FieldListEdit::reset(const Value& value)
     }
     QSize size(d->container->width(), d->recommendedHeight());
     d->container->resize(size);
+
+    return true;
 }
 
-void FieldListEdit::apply(Value& value) const
+bool FieldListEdit::apply(Value& value) const
 {
     value.clear();
 
@@ -178,6 +188,8 @@ void FieldListEdit::apply(Value& value) const
         for (Value::ConstIterator itv = v.constBegin(); itv != v.constEnd(); ++itv)
             value.append(*itv);
     }
+
+    return true;
 }
 
 void FieldListEdit::clear()

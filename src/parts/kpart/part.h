@@ -68,6 +68,9 @@ private slots:
     void editorKeyPressed(QKeyEvent *event);
     void newElementTriggered(int event);
     void newEntryTriggered();
+    void newMacroTriggered();
+    void newCommentTriggered();
+    void newPreambleTriggered();
 
 private:
     class KBibTeXPartPrivate;

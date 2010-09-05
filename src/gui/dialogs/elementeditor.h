@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2009 by Thomas Fischer                             *
+*   Copyright (C) 2004-2010 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -18,25 +18,28 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#ifndef KBIBTEX_GUI_DIALOGS_ENTRYEDITOR_H
-#define KBIBTEX_GUI_DIALOGS_ENTRYEDITOR_H
+#ifndef KBIBTEX_GUI_DIALOGS_ELEMENTSEDITOR_H
+#define KBIBTEX_GUI_DIALOGS_ELEMENTSEDITOR_H
 
 #include <kbibtexgui_export.h>
 
-#include <QTabWidget>
+#include <QWidget>
 
-class Entry;
+class Element;
 
 /**
 @author Thomas Fischer
 */
-class KBIBTEXGUI_EXPORT EntryEditor : public QTabWidget
+class KBIBTEXGUI_EXPORT ElementEditor : public QWidget
 {
     Q_OBJECT
 public:
-    EntryEditor(const Entry *entry, QWidget *parent);
-    EntryEditor(Entry *entry, QWidget *parent);
+    ElementEditor(const Element *element, QWidget *parent);
+    ElementEditor(Element *element, QWidget *parent);
     void setReadOnly(bool isReadOnly = true);
+
+signals:
+    void modified(bool);
 
 public slots:
     void apply();
@@ -46,8 +49,8 @@ private slots:
     void tabChanged();
 
 private:
-    class EntryEditorPrivate;
-    EntryEditorPrivate *d;
+    class ElementEditorPrivate;
+    ElementEditorPrivate *d;
 };
 
-#endif // KBIBTEX_GUI_DIALOGS_ENTRYEDITOR_H
+#endif // KBIBTEX_GUI_DIALOGS_ELEMENTSEDITOR_H

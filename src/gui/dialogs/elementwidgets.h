@@ -25,9 +25,18 @@
 
 #include <QWidget>
 
+#include <KIcon>
+
+#include <entrylayout.h>
+
 class QTextEdit;
+class QListWidget;
+
+class KLineEdit;
+class KComboBox;
 
 class Element;
+class FieldInput;
 
 class ElementWidget : public QWidget
 {
@@ -36,13 +45,100 @@ public:
     virtual bool apply(Element *element) const = 0;
     virtual bool reset(const Element *element) = 0;
     virtual void setReadOnly(bool isReadOnly) = 0;
+    virtual QString label() = 0;
+    virtual KIcon icon() = 0;
+
+    static bool canEdit(const Element *element) {
+        Q_UNUSED(element)
+        return false;
+    };
+};
+
+class EntryConfiguredWidget : public ElementWidget
+{
+private:
+    EntryTabLayout &etl;
+    QMap<QString, FieldInput*> bibtexKeyToWidget;
+    void createGUI();
+
+public:
+    EntryConfiguredWidget(EntryTabLayout &entryTabLayout, QWidget *parent);
+
+    bool apply(Element *element) const;
+    bool reset(const Element *element);
+    void setReadOnly(bool isReadOnly);
+    QString label();
+    KIcon icon();
+
+    static bool canEdit(const Element *element);
+};
+
+class ReferenceWidget : public ElementWidget
+{
+private:
+    KComboBox *entryType;
+    KLineEdit *entryId;
+    void createGUI();
+
+public:
+    ReferenceWidget(QWidget *parent);
+
+    bool apply(Element *element) const;
+    bool reset(const Element *element);
+    void setReadOnly(bool isReadOnly);
+    QString label();
+    KIcon icon();
+
+    static bool canEdit(const Element *element);
+};
+
+class OtherFieldsWidget : public ElementWidget
+{
+private:
+    KLineEdit *otherFieldsName;
+    FieldInput *otherFieldsContent;
+    QListWidget *otherFieldsList;
+
+    void createGUI();
+
+public:
+    OtherFieldsWidget(QWidget *parent);
+
+    bool apply(Element *element) const;
+    bool reset(const Element *element);
+    void setReadOnly(bool isReadOnly);
+    QString label();
+    KIcon icon();
+
+    static bool canEdit(const Element *element);
+};
+
+class MacroWidget : public ElementWidget
+{
+private:
+    FieldInput *fieldInputValue;
+
+    void createGUI();
+
+public:
+    MacroWidget(QWidget *parent);
+
+    bool apply(Element *element) const;
+    bool reset(const Element *element);
+    void setReadOnly(bool isReadOnly);
+    QString label();
+    KIcon icon();
+
+    static bool canEdit(const Element *element);
 };
 
 class SourceWidget : public ElementWidget
 {
+    Q_OBJECT
+
 private:
-    Element *element;
     QTextEdit *sourceEdit;
+    QString originalText;
 
     void createGUI();
 
@@ -51,9 +147,14 @@ public:
 
     bool apply(Element *element) const;
     bool reset(const Element *element);
-
     void setReadOnly(bool isReadOnly);
-};
+    QString label();
+    KIcon icon();
 
+    static bool canEdit(const Element *element);
+
+private slots:
+    void reset();
+};
 
 #endif // KBIBTEX_GUI_DIALOGS_ELEMENTSWIDGETS_H

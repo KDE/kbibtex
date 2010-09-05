@@ -48,6 +48,9 @@
 #include <fileexporterxml.h>
 #include <fileexporterxslt.h>
 #include <bibtexfilemodel.h>
+#include <macro.h>
+#include <preamble.h>
+#include <comment.h>
 #include "filterbar.h"
 
 #include <clipboard.h>
@@ -319,16 +322,14 @@ void KBibTeXPart::newElementTriggered(int event)
 {
     switch (event) {
     case smComment:
-        kWarning() << "Not yet implemented";
-        // FIXME to be implemented
+        newCommentTriggered();
+        break;
         break;
     case smMacro:
-        kWarning() << "Not yet implemented";
-        // FIXME to be implemented
+        newMacroTriggered();
         break;
     case smPreamble:
-        kWarning() << "Not yet implemented";
-        // FIXME to be implemented
+        newPreambleTriggered();
         break;
     default:
         newEntryTriggered();
@@ -341,4 +342,28 @@ void KBibTeXPart::newEntryTriggered()
     d->model->insertRow(newEntry, d->model->rowCount());
     d->editor->setSelectedElement(newEntry);
     d->editor->editElement(newEntry);
+}
+
+void KBibTeXPart::newMacroTriggered()
+{
+    Macro *newMacro = new Macro(d->findUnusedId());
+    d->model->insertRow(newMacro, d->model->rowCount());
+    d->editor->setSelectedElement(newMacro);
+    d->editor->editElement(newMacro);
+}
+
+void KBibTeXPart::newPreambleTriggered()
+{
+    Preamble *newPreamble = new Preamble();
+    d->model->insertRow(newPreamble, d->model->rowCount());
+    d->editor->setSelectedElement(newPreamble);
+    d->editor->editElement(newPreamble);
+}
+
+void KBibTeXPart::newCommentTriggered()
+{
+    Comment *newComment = new Comment();
+    d->model->insertRow(newComment, d->model->rowCount());
+    d->editor->setSelectedElement(newComment);
+    d->editor->editElement(newComment);
 }

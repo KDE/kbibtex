@@ -22,8 +22,7 @@ set( kbibtexgui_LIB_SRCS
 	widgets/filterbar.cpp
 	config/entrylayout.cpp
 	dialogs/elementwidgets.cpp
-	dialogs/macroeditor.cpp
-	dialogs/entryeditor.cpp
+	dialogs/elementeditor.cpp
 	clipboard.cpp
 	bibtexeditor.cpp
 )
