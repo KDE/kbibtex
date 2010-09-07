@@ -99,6 +99,27 @@ Entry& Entry::operator= (const Entry & other)
     return *this;
 }
 
+Value& Entry::operator[](const QString& key)
+{
+    const QString lcKey = key.toLower();
+    for (Entry::ConstIterator it = constBegin(); it != constEnd(); ++it)
+        if (it.key().toLower() == lcKey)
+            return QMap<QString, Value>::operator[](it.key());
+
+    return QMap<QString, Value>::operator[](key);
+}
+
+const  Value Entry::operator[](const QString& key) const
+{
+    const QString lcKey = key.toLower();
+    for (Entry::ConstIterator it = constBegin(); it != constEnd(); ++it)
+        if (it.key().toLower() == lcKey)
+            return QMap<QString, Value>::operator[](it.key());
+
+    return QMap<QString, Value>::operator[](key);
+}
+
+
 void Entry::setType(const QString& type)
 {
     d->type = type;
@@ -124,9 +145,19 @@ const Value Entry::value(const QString& key) const
     const QString lcKey = key.toLower();
     for (Entry::ConstIterator it = constBegin(); it != constEnd(); ++it)
         if (it.key().toLower() == lcKey)
-            return it.value();
+            return QMap<QString, Value>::value(it.key());
 
-    return Value();
+    return QMap<QString, Value>::value(key);
+}
+
+int Entry::remove(const QString& key)
+{
+    const QString lcKey = key.toLower();
+    for (Entry::ConstIterator it = constBegin(); it != constEnd(); ++it)
+        if (it.key().toLower() == lcKey)
+            return QMap<QString, Value>::remove(it.key());
+
+    return QMap<QString, Value>::remove(key);
 }
 
 bool Entry::contains(const QString& key) const

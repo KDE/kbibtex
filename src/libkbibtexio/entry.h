@@ -122,6 +122,9 @@ public:
      */
     Entry& operator= (const Entry& other);
 
+    Value& operator[](const QString& key);
+    const  Value operator[](const QString& key) const;
+
     /**
      * Set the type of this entry. Common values are "article" or "book".
      * @param type type of this entry
@@ -157,6 +160,8 @@ public:
      * @return found value or Value() if nothing found
      */
     const Value value(const QString& key) const;
+
+    int remove(const QString& key);
 
     /**
      * Re-implementation of QMap's contains function, but performing a case-insensitive
