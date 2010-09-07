@@ -26,6 +26,8 @@
 
 #include <websearchabstract.h>
 
+class KConfig;
+
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
@@ -44,13 +46,18 @@ public slots:
     void cancel();
 
 private slots:
-    void doneFetchingStartpage(KIO::Job *);
+    void doneFetchingStartPage(KJob *);
+    void doneFetchingConfigPage(KJob *);
+    void doneFetchingSetConfigPage(KJob *);
+    void doneFetchingQueryPage(KJob *);
+    void doneFetchingBibTeX(KJob *);
 
 private:
-    QByteArray m_buffer;
-
-    void modifyCookieConfig();
-    void restoreCookieConfig();
+    int m_numResults;
+    QString m_queryString;
+    QStringList m_listBibTeXurls;
+    bool m_hasBeenCancelled;
+    KIO::TransferJob *m_currentJob;
 };
 
 #endif // KBIBTEX_WEBSEARCH_GOOGLESCHOLAR_H
