@@ -120,10 +120,15 @@ QString MenuLineEdit::text() const
 
 void MenuLineEdit::setText(const QString &text)
 {
-    if (d->m_singleLineEditText != NULL)
+    if (d->m_singleLineEditText != NULL) {
         d->m_singleLineEditText->setText(text);
-    if (d->m_multiLineEditText != NULL)
+        d->m_singleLineEditText->setCursorPosition(0);
+    } else if (d->m_multiLineEditText != NULL) {
         d->m_multiLineEditText->document()->setPlainText(text);
+        QTextCursor tc = d->m_multiLineEditText->textCursor();
+        tc.setPosition(0);
+        d->m_multiLineEditText->setTextCursor(tc);
+    }
 }
 
 void MenuLineEdit::setIcon(const KIcon & icon)
