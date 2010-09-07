@@ -35,6 +35,7 @@
 
 #include <websearchabstract.h>
 #include <websearchbibsonomy.h>
+#include <websearchgooglescholar.h>
 #include <fileexporterbibtex.h>
 #include <file.h>
 #include <comment.h>
@@ -154,6 +155,7 @@ public:
         enginesList->clear();
 
         addEngine(new WebSearchBibsonomy());
+        addEngine(new WebSearchGoogleScholar());
 
         p->itemCheckChanged();
         updateGUI();
