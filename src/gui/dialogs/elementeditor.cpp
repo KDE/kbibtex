@@ -77,6 +77,12 @@ public:
                 widgets << widget;
             }
 
+        if (PreambleWidget::canEdit(element)) {
+            ElementWidget *widget = new PreambleWidget(tab);
+            tab->addTab(widget, widget->icon(), widget->label());
+            widgets << widget;
+        }
+
         if (MacroWidget::canEdit(element)) {
             ElementWidget *widget = new MacroWidget(tab);
             tab->addTab(widget, widget->icon(), widget->label());
