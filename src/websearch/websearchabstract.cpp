@@ -26,4 +26,5 @@ const QString WebSearchAbstract::queryKeyAuthor = QLatin1String("author");
 const QString WebSearchAbstract::queryKeyYear = QLatin1String("year");
 
 const int WebSearchAbstract::resultNoError = 0;
+const int WebSearchAbstract::resultCancelled = 0; /// may get redefined in the future!
 const int WebSearchAbstract::resultUnspecifiedError = 1;

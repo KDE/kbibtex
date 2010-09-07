@@ -62,8 +62,10 @@ KUrl WebSearchBibsonomy::buildQueryUrl(const QMap<QString, QString> &query, int 
         // FIXME: Is there a need for percent encoding?
         queryFragments << it.value();
     }
+
+    m_queryString = queryFragments.join("+");
     // FIXME: Number of results doesn't seem to be supported by BibSonomy
-    KUrl url(QLatin1String("http://www.bibsonomy.org/bib/") + searchType + "/" + queryFragments.join("+") + QString("?.entriesPerPage=%1").arg(numResults));
+    KUrl url(QLatin1String("http://www.bibsonomy.org/bib/") + searchType + "/" + m_queryString + QString("?.entriesPerPage=%1").arg(numResults));
     kDebug() << label() << " URL = " << url;
 
     return url;
@@ -92,8 +94,12 @@ void WebSearchBibsonomy::jobDone(KJob *job)
         if (bibtexFile != NULL) {
             for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
                 Entry *entry = dynamic_cast<Entry*>(*it);
-                if (entry != NULL)
+                if (entry != NULL) {
+                    Value v;
+                    v << new PlainText(i18n("%1 with search term \"%2\"", label(), m_queryString));
+                    entry->insert(QLatin1String("kbibtex-websearch"), v);
                     emit foundEntry(entry);
+                }
             }
             emit stoppedSearch(bibtexFile->isEmpty() ? resultUnspecifiedError : resultNoError);
             delete bibtexFile;

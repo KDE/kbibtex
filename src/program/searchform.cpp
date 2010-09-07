@@ -170,8 +170,15 @@ public:
     }
 
     void switchToSearch() {
-        for (QMap<QListWidgetItem*, WebSearchAbstract*>::ConstIterator it = itemToWebSearch.constBegin(); it != itemToWebSearch.constEnd(); ++it)
+        for (QMap<QListWidgetItem*, WebSearchAbstract*>::ConstIterator it = itemToWebSearch.constBegin(); it != itemToWebSearch.constEnd(); ++it) {
             disconnect(searchButton, SIGNAL(clicked()), it.value(), SLOT(cancel()));
+            for (QMap<QString, KLineEdit*>::ConstIterator it = queryFields.constBegin(); it != queryFields.constEnd(); ++it)
+                disconnect(it.value(), SIGNAL(returnPressed(const QString &)), p, SLOT(startSearch()));
+        }
+
+        for (QMap<QString, KLineEdit*>::ConstIterator it = queryFields.constBegin(); it != queryFields.constEnd(); ++it)
+            connect(it.value(), SIGNAL(returnPressed(const QString &)), p, SLOT(startSearch()));
+
         connect(searchButton, SIGNAL(clicked()), p, SLOT(startSearch()));
         searchButton->setText(i18n("Search"));
         searchButton->setIcon(KIcon("media-playback-start"));
@@ -180,6 +187,9 @@ public:
 
     void switchToCancel() {
         disconnect(searchButton, SIGNAL(clicked()), p, SLOT(startSearch()));
+        for (QMap<QString, KLineEdit*>::ConstIterator it = queryFields.constBegin(); it != queryFields.constEnd(); ++it)
+            disconnect(it.value(), SIGNAL(returnPressed(const QString &)), p, SLOT(startSearch()));
+
         for (QMap<QListWidgetItem*, WebSearchAbstract*>::ConstIterator it = itemToWebSearch.constBegin(); it != itemToWebSearch.constEnd(); ++it)
             connect(searchButton, SIGNAL(clicked()), it.value(), SLOT(cancel()));
         searchButton->setText(i18n("Cancel"));

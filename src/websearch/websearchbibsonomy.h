@@ -37,9 +37,6 @@ public:
     virtual void startSearch(const QMap<QString, QString> &query, int numResults);
     virtual QString label() const;
 
-protected:
-    KUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults);
-
 public slots:
     void cancel();
 
@@ -48,8 +45,11 @@ private slots:
     void jobDone(KJob *job);
 
 private:
+    QString m_queryString;
     QByteArray m_buffer;
     KIO::TransferJob *m_job;
+
+    KUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults);
 };
 
 #endif // KBIBTEX_WEBSEARCH_BIBSONOMY_H

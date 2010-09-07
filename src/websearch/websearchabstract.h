@@ -41,6 +41,7 @@ public:
     static const QString queryKeyAuthor;
     static const QString queryKeyYear;
 
+    static const int resultCancelled;
     static const int resultNoError;
     static const int resultUnspecifiedError;
 
