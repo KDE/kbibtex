@@ -25,15 +25,18 @@
 
 #include <QWidget>
 
+#include <KUrl>
 #include <KIcon>
 
 #include <entrylayout.h>
 
 class QTextEdit;
-class QListWidget;
+class QTreeWidget;
+class QTreeWidgetItem;
 
 class KLineEdit;
 class KComboBox;
+class KPushButton;
 
 class Element;
 class FieldInput;
@@ -94,15 +97,26 @@ public:
 
 class OtherFieldsWidget : public ElementWidget
 {
+    Q_OBJECT
+
 private:
     KLineEdit *otherFieldsName;
     FieldInput *otherFieldsContent;
-    QListWidget *otherFieldsList;
+    QTreeWidget *otherFieldsList;
+    KPushButton *buttonDelete;
+    KPushButton *buttonOpen;
+    KPushButton *buttonAddApply;
+    KUrl currentUrl;
+    QStringList blackListed;
+    Entry *internalEntry;
+    QStringList deletedKeys;
 
     void createGUI();
+    void updateList();
 
 public:
     OtherFieldsWidget(QWidget *parent);
+    ~OtherFieldsWidget();
 
     bool apply(Element *element) const;
     bool reset(const Element *element);
@@ -111,6 +125,14 @@ public:
     KIcon icon();
 
     static bool canEdit(const Element *element);
+
+private slots:
+    void listElementExecuted(QTreeWidgetItem *item, int column);
+    void listCurrentChanged(QTreeWidgetItem *item, QTreeWidgetItem *previous);
+    void actionAddApply();
+    void actionDelete();
+    void actionOpen();
+    void updateGUI();
 };
 
 class MacroWidget : public ElementWidget
@@ -122,6 +144,25 @@ private:
 
 public:
     MacroWidget(QWidget *parent);
+
+    bool apply(Element *element) const;
+    bool reset(const Element *element);
+    void setReadOnly(bool isReadOnly);
+    QString label();
+    KIcon icon();
+
+    static bool canEdit(const Element *element);
+};
+
+class PreambleWidget : public ElementWidget
+{
+private:
+    FieldInput *fieldInputValue;
+
+    void createGUI();
+
+public:
+    PreambleWidget(QWidget *parent);
 
     bool apply(Element *element) const;
     bool reset(const Element *element);

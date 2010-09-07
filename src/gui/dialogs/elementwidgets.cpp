@@ -22,13 +22,16 @@
 #include <QTextEdit>
 #include <QBuffer>
 #include <QLabel>
-#include <QListWidget>
+#include <QTreeWidget>
+#include <QFileInfo>
+#include <QDesktopServices>
 
 #include <KPushButton>
 #include <KGlobalSettings>
 #include <KLocale>
 #include <KLineEdit>
 #include <KComboBox>
+#include <KDebug>
 
 #include <bibtexentries.h>
 #include <bibtexfields.h>
@@ -38,6 +41,7 @@
 #include <fieldinput.h>
 #include <entry.h>
 #include <macro.h>
+#include <preamble.h>
 #include "elementwidgets.h"
 
 EntryConfiguredWidget::EntryConfiguredWidget(EntryTabLayout &entryTabLayout, QWidget *parent)
@@ -259,7 +263,14 @@ void ReferenceWidget::createGUI()
 OtherFieldsWidget::OtherFieldsWidget(QWidget *parent)
         : ElementWidget(parent)
 {
+    internalEntry = new Entry();
     createGUI();
+    blackListed << QLatin1String("title"); // FIXME do it properly
+}
+
+OtherFieldsWidget::~OtherFieldsWidget()
+{
+    delete internalEntry;
 }
 
 bool OtherFieldsWidget::apply(Element *element) const
@@ -269,6 +280,13 @@ bool OtherFieldsWidget::apply(Element *element) const
 
 bool OtherFieldsWidget::reset(const Element *element)
 {
+    const Entry* entry = dynamic_cast<const Entry*>(element);
+    if (entry == NULL) return false;
+
+    internalEntry->operator =(*entry);
+    updateList();
+    updateGUI();
+
     return false; // TODO
 }
 
@@ -293,6 +311,70 @@ bool OtherFieldsWidget::canEdit(const Element *element)
     return dynamic_cast<const Entry*>(element) != NULL;
 }
 
+void OtherFieldsWidget::listElementExecuted(QTreeWidgetItem *item, int column)
+{
+    Q_UNUSED(column)
+    QString key = item->text(0);
+    otherFieldsName->setText(key);
+    otherFieldsContent->reset(internalEntry->value(key));
+}
+
+void OtherFieldsWidget::listCurrentChanged(QTreeWidgetItem *item, QTreeWidgetItem *previous)
+{
+    Q_UNUSED(previous)
+    bool validUrl = false;
+    bool somethingSelected = item != NULL;
+    buttonDelete->setEnabled(somethingSelected);
+    if (somethingSelected) {
+        currentUrl = KUrl(item->text(1));
+        validUrl = currentUrl.isValid() && currentUrl.isLocalFile() & QFileInfo(currentUrl.prettyUrl()).exists();
+        if (!validUrl) {
+            const QRegExp urlRegExp("(http|ftp|webdav|file)s?://[^ {}\"]+");
+            if (urlRegExp.indexIn(item->text(1)) > -1) {
+                currentUrl = KUrl(urlRegExp.cap(0));
+                validUrl = currentUrl.isValid();
+                buttonOpen->setEnabled(validUrl);
+            }
+        }
+    }
+
+    if (!validUrl)
+        currentUrl = KUrl();
+    buttonOpen->setEnabled(validUrl);
+}
+
+void OtherFieldsWidget::actionAddApply()
+{
+    QString key = otherFieldsName->text();
+    Value value;
+    if (!otherFieldsContent->apply(value)) return;
+
+    if (internalEntry->contains(key))
+        internalEntry->remove(key);
+    internalEntry->insert(key, value);
+
+    updateList();
+    updateGUI();
+}
+
+void OtherFieldsWidget::actionDelete()
+{
+    Q_ASSERT(otherFieldsList->currentItem() != NULL);
+    QString key = otherFieldsList->currentItem()->text(0);
+    if (!deletedKeys.contains(key)) deletedKeys << key;
+
+    internalEntry->remove(key);
+    updateList();
+    updateGUI();
+    listCurrentChanged(otherFieldsList->currentItem(), NULL);
+}
+
+void OtherFieldsWidget::actionOpen()
+{
+    if (currentUrl.isValid())
+        QDesktopServices::openUrl(currentUrl); // TODO KDE way?
+}
+
 void OtherFieldsWidget::createGUI()
 {
     QGridLayout *layout = new QGridLayout(this);
@@ -311,7 +393,7 @@ void OtherFieldsWidget::createGUI()
     layout->addWidget(otherFieldsName, 0, 1, 1, 1);
     label->setBuddy(otherFieldsName);
 
-    KPushButton *buttonAddApply = new KPushButton(i18n("Add/Apply"), this);
+    buttonAddApply = new KPushButton(KIcon("add"), i18n("Add"), this);
     layout->addWidget(buttonAddApply, 0, 2, 1, 1);
 
     label = new QLabel(i18n("Content:"), this);
@@ -322,15 +404,58 @@ void OtherFieldsWidget::createGUI()
 
     label = new QLabel(i18n("List:"), this);
     layout->addWidget(label, 2, 0, 3, 1);
-    otherFieldsList = new QListWidget(this);
+    otherFieldsList = new QTreeWidget(this);
+    QStringList header;
+    header << i18n("Key") << i18n("Value");
+    otherFieldsList->setHeaderLabels(header);
     layout->addWidget(otherFieldsList, 2, 1, 3, 1);
     label->setBuddy(otherFieldsList);
-    KPushButton *buttonDelete = new KPushButton(i18n("Delete"), this);
+    buttonDelete = new KPushButton(KIcon("delete"), i18n("Delete"), this);
+    buttonDelete->setEnabled(false);
     layout->addWidget(buttonDelete, 2, 2, 1, 1);
-    KPushButton *buttonOpen = new KPushButton(i18n("Open"), this);
+    buttonOpen = new KPushButton(KIcon("file-open"), i18n("Open"), this);
+    buttonOpen->setEnabled(false);
     layout->addWidget(buttonOpen, 3, 2, 1, 1);
+
+    connect(otherFieldsList, SIGNAL(itemDoubleClicked(QTreeWidgetItem*, int)), this, SLOT(listElementExecuted(QTreeWidgetItem*, int)));
+    connect(otherFieldsList, SIGNAL(currentItemChanged(QTreeWidgetItem*, QTreeWidgetItem*)), this, SLOT(listCurrentChanged(QTreeWidgetItem*, QTreeWidgetItem*)));
+    connect(otherFieldsList, SIGNAL(itemSelectionChanged()), this, SLOT(updateGUI()));
+    connect(otherFieldsName, SIGNAL(textChanged(QString)), this, SLOT(updateGUI()));
+    connect(buttonAddApply, SIGNAL(clicked()), this, SLOT(actionAddApply()));
+    connect(buttonDelete, SIGNAL(clicked()), this, SLOT(actionDelete()));
+    connect(buttonOpen, SIGNAL(clicked()), this, SLOT(actionOpen()));
 }
 
+void OtherFieldsWidget::updateList()
+{
+    QString selText = otherFieldsList->selectedItems().isEmpty() ? QString::null : otherFieldsList->selectedItems().first()->text(0);
+    QString curText = otherFieldsList->currentItem() == NULL ? QString::null : otherFieldsList->currentItem()->text(0);
+    otherFieldsList->clear();
+
+    for (Entry::ConstIterator it = internalEntry->constBegin(); it != internalEntry->constEnd(); ++it)
+        if (!blackListed.contains(it.key().toLower())) {
+            QTreeWidgetItem *item = new QTreeWidgetItem();
+            item->setText(0, it.key());
+            item->setText(1, PlainTextValue::text(it.value()));
+            item->setIcon(0, KIcon("entry")); // FIXME
+            otherFieldsList->addTopLevelItem(item);
+            item->setSelected(selText == it.key());
+            if (it.key() == curText)
+                otherFieldsList->setCurrentItem(item);
+        }
+}
+
+void OtherFieldsWidget::updateGUI()
+{
+    QString key = otherFieldsName->text();
+    if (key.isEmpty() || blackListed.contains(key, Qt::CaseInsensitive)) // TODO check for more (e.g. spaces)
+        buttonAddApply->setEnabled(false);
+    else {
+        buttonAddApply->setEnabled(true);
+        buttonAddApply->setText(internalEntry->contains(key) ? i18n("Apply") : i18n("Add"));
+        buttonAddApply->setIcon(internalEntry->contains(key) ? KIcon("edit") : KIcon("add"));
+    }
+}
 
 MacroWidget::MacroWidget(QWidget *parent)
         : ElementWidget(parent)
@@ -380,6 +505,65 @@ bool MacroWidget::canEdit(const Element *element)
 }
 
 void MacroWidget::createGUI()
+{
+    QVBoxLayout *layout = new QVBoxLayout(this);
+
+    QLabel *label = new QLabel(i18n("Value:"), this);
+    layout->addWidget(label, 0);
+    fieldInputValue = new FieldInput(KBibTeX::MultiLine, KBibTeX::tfPlainText, KBibTeX::tfPlainText | KBibTeX::tfSource, this);
+    layout->addWidget(fieldInputValue, 1);
+    label->setBuddy(fieldInputValue);
+}
+
+
+PreambleWidget::PreambleWidget(QWidget *parent)
+        : ElementWidget(parent)
+{
+    createGUI();
+}
+
+bool PreambleWidget::apply(Element *element) const
+{
+    Preamble* preamble = dynamic_cast<Preamble*>(element);
+    if (preamble == NULL) return false;
+
+    Value value;
+    bool result = fieldInputValue->apply(value);
+    preamble->setValue(value);
+
+    return result;
+}
+
+bool PreambleWidget::reset(const Element *element)
+{
+    const Preamble* preamble = dynamic_cast<const Preamble*>(element);
+    if (preamble == NULL) return false;
+
+    return fieldInputValue->reset(preamble->value());
+}
+
+void PreambleWidget::setReadOnly(bool isReadOnly)
+{
+    Q_UNUSED(isReadOnly);
+    // TODO
+}
+
+QString PreambleWidget::label()
+{
+    return i18n("Preamble");
+}
+
+KIcon PreambleWidget::icon()
+{
+    return KIcon("preamble");
+}
+
+bool PreambleWidget::canEdit(const Element *element)
+{
+    return dynamic_cast<const Preamble*>(element) != NULL;
+}
+
+void PreambleWidget::createGUI()
 {
     QVBoxLayout *layout = new QVBoxLayout(this);
 
