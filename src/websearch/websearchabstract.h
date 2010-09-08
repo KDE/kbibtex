@@ -36,6 +36,10 @@ class KBIBTEXIO_EXPORT WebSearchAbstract : public QObject
     Q_OBJECT
 
 public:
+    WebSearchAbstract(QWidget *parent) {
+        m_parent = parent;
+    }
+
     static const QString queryKeyFreeText;
     static const QString queryKeyTitle;
     static const QString queryKeyAuthor;
@@ -47,6 +51,9 @@ public:
 
     virtual void startSearch(const QMap<QString, QString> &query, int numResults) = 0;
     virtual QString label() const = 0;
+
+protected:
+    QWidget *m_parent;
 
 signals:
     void foundEntry(Entry*);

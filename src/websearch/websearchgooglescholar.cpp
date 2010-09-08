@@ -21,6 +21,7 @@
 #include <QtDBus/QtDBus>
 
 #include <KLocale>
+#include <KMessageBox>
 #include <KDebug>
 #include <kio/job.h>
 #include <kio/netaccess.h>
@@ -51,6 +52,7 @@ void WebSearchGoogleScholar::startSearch(const QMap<QString, QString> &query, in
 
     KIO::TransferJob *job = KIO::get(startPageUrl, KIO::Reload);
     job->addMetaData("cookies", "auto");
+    job->addMetaData("cache", "reload");
     connect(job, SIGNAL(result(KJob *)), this, SLOT(doneFetchingStartPage(KJob*)));
     m_currentJob = job;
 }
@@ -73,6 +75,7 @@ void WebSearchGoogleScholar::doneFetchingStartPage(KJob *kJob)
 
     KIO::TransferJob * newJob = KIO::get(configPageUrl.arg(transferJob->url().host()), KIO::Reload);
     newJob->addMetaData("cookies", "auto");
+    newJob->addMetaData("cache", "reload");
     connect(newJob, SIGNAL(result(KJob *)), this, SLOT(doneFetchingConfigPage(KJob*)));
     m_currentJob = newJob;
 }
@@ -94,6 +97,7 @@ void WebSearchGoogleScholar::doneFetchingConfigPage(KJob *kJob)
 
     KIO::TransferJob * newJob = KIO::get(setConfigPageUrl.arg(transferJob->url().host()).arg(m_numResults), KIO::Reload);
     newJob->addMetaData("cookies", "auto");
+    newJob->addMetaData("cache", "reload");
     connect(newJob, SIGNAL(result(KJob *)), this, SLOT(doneFetchingSetConfigPage(KJob*)));
     m_currentJob = newJob;
 }
@@ -115,6 +119,7 @@ void WebSearchGoogleScholar::doneFetchingSetConfigPage(KJob *kJob)
 
     KIO::TransferJob * newJob = KIO::storedGet(queryPageUrl.arg(transferJob->url().host()).arg(m_numResults).arg(m_queryString), KIO::Reload);
     newJob->addMetaData("cookies", "auto");
+    newJob->addMetaData("cache", "reload");
     connect(newJob, SIGNAL(result(KJob *)), this, SLOT(doneFetchingQueryPage(KJob*)));
     m_currentJob = newJob;
 }
@@ -146,10 +151,17 @@ void WebSearchGoogleScholar::doneFetchingQueryPage(KJob *kJob)
         KIO::TransferJob * newJob = KIO::storedGet(m_listBibTeXurls.first(), KIO::Reload);
         m_listBibTeXurls.removeFirst();
         newJob->addMetaData("cookies", "auto");
+        newJob->addMetaData("cache", "reload");
         connect(newJob, SIGNAL(result(KJob *)), this, SLOT(doneFetchingBibTeX(KJob*)));
         m_currentJob = newJob;
     } else {
         kWarning() << "Searching " << label() << " resulted in no hits";
+        QStringList domainList;
+        domainList << "scholar.google.com";
+        QString ccSpecificDomain = transferJob->url().host();
+        if (!domainList.contains(ccSpecificDomain))
+            domainList << ccSpecificDomain;
+        KMessageBox::information(m_parent, i18n("<qt><p>No hits were found in Google Scholar.</p><p>One possible reason is that cookies are disabled for the following domains:</p><ul><li>%1</li></ul><p>In Konqueror's cookie settings, these domains can be allowed to set cookies in your system.</p></qt>", domainList.join("</li><li>")), label());
         emit stoppedSearch(resultUnspecifiedError);
     }
 }
@@ -199,6 +211,7 @@ void WebSearchGoogleScholar::doneFetchingBibTeX(KJob *kJob)
         KIO::TransferJob * newJob = KIO::storedGet(m_listBibTeXurls.first(), KIO::Reload);
         m_listBibTeXurls.removeFirst();
         newJob->addMetaData("cookies", "auto");
+        newJob->addMetaData("cache", "reload");
         connect(newJob, SIGNAL(result(KJob *)), this, SLOT(doneFetchingBibTeX(KJob*)));
         m_currentJob = newJob;
     } else

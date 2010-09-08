@@ -36,6 +36,9 @@ class KBIBTEXIO_EXPORT WebSearchGoogleScholar : public WebSearchAbstract
     Q_OBJECT
 
 public:
+    WebSearchGoogleScholar(QWidget *parent)
+            : WebSearchAbstract(parent) { /* nothing */ }
+
     virtual void startSearch(const QMap<QString, QString> &query, int numResults);
     virtual QString label() const;
 
