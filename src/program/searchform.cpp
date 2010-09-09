@@ -154,8 +154,8 @@ public:
     void loadEngines() {
         enginesList->clear();
 
-        addEngine(new WebSearchBibsonomy());
-        addEngine(new WebSearchGoogleScholar());
+        addEngine(new WebSearchBibsonomy(p));
+        addEngine(new WebSearchGoogleScholar(p));
 
         p->itemCheckChanged();
         updateGUI();
@@ -170,14 +170,12 @@ public:
     }
 
     void switchToSearch() {
-        for (QMap<QListWidgetItem*, WebSearchAbstract*>::ConstIterator it = itemToWebSearch.constBegin(); it != itemToWebSearch.constEnd(); ++it) {
+        for (QMap<QListWidgetItem*, WebSearchAbstract*>::ConstIterator it = itemToWebSearch.constBegin(); it != itemToWebSearch.constEnd(); ++it)
             disconnect(searchButton, SIGNAL(clicked()), it.value(), SLOT(cancel()));
-            for (QMap<QString, KLineEdit*>::ConstIterator it = queryFields.constBegin(); it != queryFields.constEnd(); ++it)
-                disconnect(it.value(), SIGNAL(returnPressed(const QString &)), p, SLOT(startSearch()));
-        }
 
         for (QMap<QString, KLineEdit*>::ConstIterator it = queryFields.constBegin(); it != queryFields.constEnd(); ++it)
             connect(it.value(), SIGNAL(returnPressed(const QString &)), p, SLOT(startSearch()));
+        connect(numResultsField, SIGNAL(returnPressed(const QString &)), p, SLOT(startSearch()));
 
         connect(searchButton, SIGNAL(clicked()), p, SLOT(startSearch()));
         searchButton->setText(i18n("Search"));
@@ -189,6 +187,7 @@ public:
         disconnect(searchButton, SIGNAL(clicked()), p, SLOT(startSearch()));
         for (QMap<QString, KLineEdit*>::ConstIterator it = queryFields.constBegin(); it != queryFields.constEnd(); ++it)
             disconnect(it.value(), SIGNAL(returnPressed(const QString &)), p, SLOT(startSearch()));
+        disconnect(numResultsField, SIGNAL(returnPressed(const QString &)), p, SLOT(startSearch()));
 
         for (QMap<QListWidgetItem*, WebSearchAbstract*>::ConstIterator it = itemToWebSearch.constBegin(); it != itemToWebSearch.constEnd(); ++it)
             connect(searchButton, SIGNAL(clicked()), it.value(), SLOT(cancel()));

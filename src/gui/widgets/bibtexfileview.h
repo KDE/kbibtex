@@ -43,6 +43,7 @@ public:
     BibTeXFileModel *bibTeXModel();
     QSortFilterProxyModel *sortFilterProxyModel();
 
+public slots:
     void selectionDelete();
 
 protected:
