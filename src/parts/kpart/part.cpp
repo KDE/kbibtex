@@ -75,6 +75,7 @@ public:
     SortFilterBibTeXFileModel *sortFilterProxyModel;
     FilterBar *filterBar;
     QSignalMapper *signalMapperNewElement;
+    KAction *editCutAction, *editDeleteAction, *editCopyAction, *editPasteAction, *editCopyReferencesAction;
 
     KBibTeXPartPrivate(KBibTeXPart *parent)
             : p(parent), sortFilterProxyModel(NULL), signalMapperNewElement(new QSignalMapper(parent)) {
@@ -183,9 +184,8 @@ void KBibTeXPart::setupActions(bool /*browserViewWanted FIXME*/)
     actionCollection()->addAction(KStandardAction::SaveAs, this, SLOT(saveDocumentDialog()));
 
     d->filterBar = new FilterBar(0);
-    KAction *filterWidgetAction = new KAction(this);
+    KAction *filterWidgetAction = new KAction(i18n("Filter"), this);
     actionCollection()->addAction("toolbar_filter_widget", filterWidgetAction);
-    filterWidgetAction->setText(i18n("Filter"));
     filterWidgetAction->setShortcut(Qt::CTRL + Qt::Key_F);
     filterWidgetAction->setDefaultWidget(d->filterBar);
     connect(filterWidgetAction, SIGNAL(triggered()), d->filterBar, SLOT(setFocus()));
@@ -211,11 +211,32 @@ void KBibTeXPart::setupActions(bool /*browserViewWanted FIXME*/)
     connect(d->signalMapperNewElement, SIGNAL(mapped(int)), this, SLOT(newElementTriggered(int)));
 
     Clipboard *clipboard = new Clipboard(d->editor);
-    actionCollection()->addAction(KStandardAction::Cut, clipboard, SLOT(cut()));
-    actionCollection()->addAction(KStandardAction::Copy, clipboard, SLOT(copy()));
-    actionCollection()->addAction(KStandardAction::Paste, clipboard, SLOT(paste()));
+
+    d->editCopyReferencesAction = new KAction(KIcon("edit-copy"), i18n("Copy References"), this);
+    d->editCopyReferencesAction->setShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_C);
+    connect(d->editCopyReferencesAction, SIGNAL(triggered()), clipboard, SLOT(copyReferences()));
+
+    d->editDeleteAction = new KAction(KIcon("edit-table-delete-row"), i18n("Delete"), this);
+    d->editDeleteAction->setShortcut(Qt::Key_Delete);
+    connect(d->editDeleteAction, SIGNAL(triggered()), d->editor, SLOT(selectionDelete()));
+
+    d->editCutAction = actionCollection()->addAction(KStandardAction::Cut, clipboard, SLOT(cut()));
+    d->editCopyAction = actionCollection()->addAction(KStandardAction::Copy, clipboard, SLOT(copy()));
+    actionCollection()->addAction(QLatin1String("edit_copy_references"),  d->editCopyReferencesAction);
+    d->editPasteAction = actionCollection()->addAction(KStandardAction::Paste, clipboard, SLOT(paste()));
+
+    d->editor->setContextMenuPolicy(Qt::ActionsContextMenu);
+    d->editor->insertAction(NULL, d->editCutAction);
+    d->editor->insertAction(NULL, d->editCopyAction);
+    d->editor->insertAction(NULL, d->editCopyReferencesAction);
+    d->editor->insertAction(NULL, d->editPasteAction);
+    d->editor->insertAction(NULL, d->editDeleteAction);
+
 
     // TODO
+
+    connect(d->editor, SIGNAL(selectedElementsChanged()), this, SLOT(updateActions()));
+    updateActions();
 
     fitActionSettings();
 
@@ -309,15 +330,6 @@ bool KBibTeXPart::openFile()
     return true;
 }
 
-void KBibTeXPart::editorKeyPressed(QKeyEvent *event)
-{
-    // FIXME: Make key sequences configurable (QAction/KAction)
-    if (event->modifiers() == Qt::NoModifier && event->matches(QKeySequence::Delete)) {
-        /// delete the selected elements
-        d->editor->selectionDelete();
-    }
-}
-
 void KBibTeXPart::newElementTriggered(int event)
 {
     switch (event) {
@@ -366,4 +378,13 @@ void KBibTeXPart::newCommentTriggered()
     d->model->insertRow(newComment, d->model->rowCount());
     d->editor->setSelectedElement(newComment);
     d->editor->editElement(newComment);
+}
+
+void KBibTeXPart::updateActions()
+{
+    bool emptySelection = d->editor->selectedElements().isEmpty();
+    d->editCopyAction->setEnabled(!emptySelection);
+    d->editCopyReferencesAction->setEnabled(!emptySelection);
+    d->editCutAction->setEnabled(!emptySelection);
+    d->editDeleteAction->setEnabled(!emptySelection);
 }

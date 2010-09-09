@@ -65,12 +65,12 @@ protected slots:
     void saveDocumentDialog();
 
 private slots:
-    void editorKeyPressed(QKeyEvent *event);
     void newElementTriggered(int event);
     void newEntryTriggered();
     void newMacroTriggered();
     void newCommentTriggered();
     void newPreambleTriggered();
+    void updateActions();
 
 private:
     class KBibTeXPartPrivate;
