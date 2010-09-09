@@ -21,6 +21,10 @@
 #ifndef KBIBTEX_GUI_CLIPBOARD_H
 #define KBIBTEX_GUI_CLIPBOARD_H
 
+#include "kbibtexio_export.h"
+
+#include <QObject>
+
 class BibTeXFileView;
 
 class KBIBTEXIO_EXPORT Clipboard : public QObject
