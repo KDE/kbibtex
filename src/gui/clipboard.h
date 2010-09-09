@@ -33,6 +33,7 @@ public:
 public slots:
     void cut();
     void copy();
+    void copyReferences();
     void paste();
 
 private:

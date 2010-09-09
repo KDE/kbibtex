@@ -78,6 +78,22 @@ void Clipboard::copy()
     clipboard->setText(text);
 }
 
+void Clipboard::copyReferences()
+{
+    QStringList references;
+    QModelIndexList mil = d->bibTeXFileView->selectionModel()->selectedRows();
+    for (QModelIndexList::ConstIterator it = mil.constBegin(); it != mil.constEnd(); ++it) {
+        Entry *entry = dynamic_cast<Entry*>(d->bibTeXFileView->bibTeXModel()->element(d->bibTeXFileView->sortFilterProxyModel()->mapToSource(*it).row()));
+        if (entry != NULL)
+            references << entry->id();
+    }
+
+    if (!references.isEmpty()) {
+        QClipboard *clipboard = QApplication::clipboard();
+        clipboard->setText(references.join(","));
+    }
+}
+
 void Clipboard::paste()
 {
     QItemSelectionModel *ism = d->bibTeXFileView->selectionModel();
