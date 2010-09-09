@@ -192,22 +192,21 @@ void KBibTeXPart::setupActions(bool /*browserViewWanted FIXME*/)
 
     KActionMenu *newElementAction = new KActionMenu(KIcon("address-book-new"), i18n("New element"), this);
     actionCollection()->addAction("element_new", newElementAction);
-    newElementAction->setShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_N);
-    connect(newElementAction, SIGNAL(triggered()), this, SLOT(newEntryTriggered()));
     KMenu *newElementMenu = new KMenu(newElementAction->text(), widget());
     newElementAction->setMenu(newElementMenu);
-    QAction *newElement = newElementMenu->addAction(KIcon("address-book-new"), i18n("New entry"));
-    connect(newElement, SIGNAL(triggered()), d->signalMapperNewElement, SLOT(map()));
-    d->signalMapperNewElement->setMapping(newElement, smEntry);
-    newElement = newElementMenu->addAction(KIcon("address-book-new"), i18n("New comment"));
-    connect(newElement, SIGNAL(triggered()), d->signalMapperNewElement, SLOT(map()));
-    d->signalMapperNewElement->setMapping(newElement, smComment);
-    newElement = newElementMenu->addAction(KIcon("address-book-new"), i18n("New macro"));
-    connect(newElement, SIGNAL(triggered()), d->signalMapperNewElement, SLOT(map()));
-    d->signalMapperNewElement->setMapping(newElement, smMacro);
-    newElement = newElementMenu->addAction(KIcon("address-book-new"), i18n("New preamble"));
-    connect(newElement, SIGNAL(triggered()), d->signalMapperNewElement, SLOT(map()));
-    d->signalMapperNewElement->setMapping(newElement, smPreamble);
+    QAction *newEntry = newElementMenu->addAction(KIcon("address-book-new"), i18n("New entry"));
+    newEntry->setShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_N);
+    connect(newEntry, SIGNAL(triggered()), d->signalMapperNewElement, SLOT(map()));
+    d->signalMapperNewElement->setMapping(newEntry, smEntry);
+    QAction *newComment = newElementMenu->addAction(KIcon("address-book-new"), i18n("New comment"));
+    connect(newComment, SIGNAL(triggered()), d->signalMapperNewElement, SLOT(map()));
+    d->signalMapperNewElement->setMapping(newComment, smComment);
+    QAction *newMacro = newElementMenu->addAction(KIcon("address-book-new"), i18n("New macro"));
+    connect(newMacro, SIGNAL(triggered()), d->signalMapperNewElement, SLOT(map()));
+    d->signalMapperNewElement->setMapping(newMacro, smMacro);
+    QAction *newPreamble = newElementMenu->addAction(KIcon("address-book-new"), i18n("New preamble"));
+    connect(newPreamble, SIGNAL(triggered()), d->signalMapperNewElement, SLOT(map()));
+    d->signalMapperNewElement->setMapping(newPreamble, smPreamble);
     connect(d->signalMapperNewElement, SIGNAL(mapped(int)), this, SLOT(newElementTriggered(int)));
 
     Clipboard *clipboard = new Clipboard(d->editor);

@@ -27,7 +27,7 @@
 
 static const char PartId[] =           "kbibtexpart";
 static const char PartName[] =         I18N_NOOP("KBibTeXPart");
-static const char PartDescription[] =  I18N_NOOP("Embedded BibTeX editor");
+static const char PartDescription[] =  I18N_NOOP("BibTeX Editor Component");
 static const char PartVersion[] =      "0.3.50";
 static const char PartCopyright[] =    "2004-2010 Thomas Fischer";
 static const char PartContactEMail[] = "fischer@unix-ag.uni-kl.de"; // FIXME Use some GNA mailinglist address

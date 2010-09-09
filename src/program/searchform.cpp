@@ -175,7 +175,6 @@ public:
 
         for (QMap<QString, KLineEdit*>::ConstIterator it = queryFields.constBegin(); it != queryFields.constEnd(); ++it)
             connect(it.value(), SIGNAL(returnPressed(const QString &)), p, SLOT(startSearch()));
-        connect(numResultsField, SIGNAL(returnPressed(const QString &)), p, SLOT(startSearch()));
 
         connect(searchButton, SIGNAL(clicked()), p, SLOT(startSearch()));
         searchButton->setText(i18n("Search"));
@@ -187,7 +186,6 @@ public:
         disconnect(searchButton, SIGNAL(clicked()), p, SLOT(startSearch()));
         for (QMap<QString, KLineEdit*>::ConstIterator it = queryFields.constBegin(); it != queryFields.constEnd(); ++it)
             disconnect(it.value(), SIGNAL(returnPressed(const QString &)), p, SLOT(startSearch()));
-        disconnect(numResultsField, SIGNAL(returnPressed(const QString &)), p, SLOT(startSearch()));
 
         for (QMap<QListWidgetItem*, WebSearchAbstract*>::ConstIterator it = itemToWebSearch.constBegin(); it != itemToWebSearch.constEnd(); ++it)
             connect(searchButton, SIGNAL(clicked()), it.value(), SLOT(cancel()));
@@ -286,7 +284,9 @@ void SearchForm::stoppedSearch(int resultCode)
 
         OpenFileInfoManager *ofim = OpenFileInfoManager::getOpenFileInfoManager();
         OpenFileInfo *openFileInfo = ofim->createNew(OpenFileInfo::mimetypeBibTeX);
-        BibTeXFileModel *model = dynamic_cast<BibTeXEditor*>(openFileInfo->part(d->m)->widget())->bibTeXModel(); /// let's hope there is no NULL ...
+        BibTeXEditor *editor = dynamic_cast<BibTeXEditor*>(openFileInfo->part(d->m)->widget()); /// let's hope there is no NULL ...
+        Q_ASSERT_X(editor != NULL, "SearchForm::stoppedSearch(int resultCode)", "Loaded KPart is not a KBibTeXPart");
+        BibTeXFileModel *model = editor->bibTeXModel(); /// let's hope there is no NULL ...
 
         for (File::ConstIterator it = d->bibtexFile->constBegin(); it != d->bibtexFile->constEnd(); ++it)
             model->insertRow(*it, model->rowCount());
