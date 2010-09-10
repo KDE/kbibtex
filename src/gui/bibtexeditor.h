@@ -39,6 +39,7 @@ public:
 
     const QList<Element*>& selectedElements() const;
     const Element* currentElement() const;
+    Element* currentElement();
 
 signals:
     void selectedElementsChanged();
@@ -49,16 +50,17 @@ signals:
 public slots:
     void viewCurrentElement();
     void viewElement(const Element*);
+    void editCurrentElement();
     void editElement(Element*);
     void setSelectedElements(QList<Element*>&);
     void setSelectedElement(Element*);
 
 protected:
-    void virtual keyPressEvent(QKeyEvent *event);
-
-protected slots:
+    void keyPressEvent(QKeyEvent *event);
     void currentChanged(const QModelIndex & current, const QModelIndex & previous);
     void selectionChanged(const QItemSelection & selected, const QItemSelection & deselected);
+
+protected slots:
     void itemActivated(const QModelIndex & index);
 
 private:

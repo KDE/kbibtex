@@ -30,7 +30,7 @@
 BibTeXEditor::BibTeXEditor(QWidget *parent)
         : BibTeXFileView(parent)
 {
-    connect(this, SIGNAL(activated(QModelIndex)), this, SLOT(itemActivated(QModelIndex)));
+    connect(this, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(itemActivated(QModelIndex)));
 }
 
 void BibTeXEditor::viewCurrentElement()
@@ -46,6 +46,11 @@ void BibTeXEditor::viewElement(const Element *element)
     dialog.setMainWidget(&elementEditor);
     dialog.setButtons(KDialog::Close);
     dialog.exec();
+}
+
+void BibTeXEditor::editCurrentElement()
+{
+    editElement(currentElement());
 }
 
 void BibTeXEditor::editElement(Element *element)
@@ -100,6 +105,11 @@ const Element* BibTeXEditor::currentElement() const
     return m_current;
 }
 
+Element* BibTeXEditor::currentElement()
+{
+    return m_current;
+}
+
 void BibTeXEditor::keyPressEvent(QKeyEvent *event)
 {
     QTreeView::keyPressEvent(event);
@@ -110,7 +120,8 @@ void BibTeXEditor::currentChanged(const QModelIndex & current, const QModelIndex
 {
     QTreeView::currentChanged(current, previous);
 
-    emit currentElementChanged(bibTeXModel()->element(sortFilterProxyModel()->mapToSource(current).row()), bibTeXModel()->bibTeXFile());
+    m_current = bibTeXModel()->element(current.row()), bibTeXModel()->bibTeXFile();
+    emit currentElementChanged(m_current, bibTeXModel()->bibTeXFile());
 }
 
 void BibTeXEditor::selectionChanged(const QItemSelection & selected, const QItemSelection & deselected)
@@ -119,13 +130,16 @@ void BibTeXEditor::selectionChanged(const QItemSelection & selected, const QItem
 
     QModelIndexList set = selected.indexes();
     for (QModelIndexList::Iterator it = set.begin(); it != set.end(); ++it) {
-        m_selection.append(bibTeXModel()->element(sortFilterProxyModel()->mapToSource(*it).row()));
+        m_selection.append(bibTeXModel()->element((*it).row()));
     }
+    if (m_current==NULL&& !set.isEmpty())
+        m_current=bibTeXModel()->element(set.first().row());
 
     set = deselected.indexes();
     for (QModelIndexList::Iterator it = set.begin(); it != set.end(); ++it) {
-        m_selection.removeOne(bibTeXModel()->element(sortFilterProxyModel()->mapToSource(*it).row()));
+        m_selection.removeOne(bibTeXModel()->element((*it).row()));
     }
+
 
     emit selectedElementsChanged();
 }

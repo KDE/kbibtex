@@ -48,6 +48,7 @@ public:
 
     ElementEditorPrivate(Element *m, ElementEditor *parent)
             : element(m), p(parent), previousWidget(NULL) {
+        Q_ASSERT_X(element != NULL, "ElementEditorPrivate(Element *m, ElementEditor *parent)", "element is NULL");
         isModified = false;
         createGUI();
         reset(m);
