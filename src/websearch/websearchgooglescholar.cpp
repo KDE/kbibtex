@@ -37,6 +37,19 @@ static const QRegExp linkToBib(QLatin1String("/scholar.bib\\?[^\" >]+"));
 
 FileImporterBibTeX importer;
 
+static void dumpData(const QByteArray &byteArray, int index)
+{
+    for (int i = index; i < 10; ++i) {
+        QFile hf(QString("/tmp/dump%1.html").arg(i));
+        hf.remove();
+    }
+
+    QFile f(QString("/tmp/dump%1.html").arg(index));
+    f.open(QIODevice::WriteOnly);
+    f.write(byteArray);
+    f.close();
+}
+
 void WebSearchGoogleScholar::startSearch(const QMap<QString, QString> &query, int numResults)
 {
     m_numResults = numResults;
@@ -50,7 +63,7 @@ void WebSearchGoogleScholar::startSearch(const QMap<QString, QString> &query, in
     }
     m_queryString = queryFragments.join(" ");
 
-    KIO::TransferJob *job = KIO::get(startPageUrl, KIO::Reload);
+    KIO::StoredTransferJob *job = KIO::storedGet(startPageUrl, KIO::Reload);
     job->addMetaData("cookies", "auto");
     job->addMetaData("cache", "reload");
     connect(job, SIGNAL(result(KJob *)), this, SLOT(doneFetchingStartPage(KJob*)));
@@ -70,10 +83,11 @@ void WebSearchGoogleScholar::doneFetchingStartPage(KJob *kJob)
         return;
     }
 
-    KIO::TransferJob *transferJob = static_cast<KIO::TransferJob *>(kJob);
+    KIO::StoredTransferJob *transferJob = static_cast<KIO::StoredTransferJob *>(kJob);
+    dumpData(transferJob->data(), 0);
     kDebug() << "Google host: " << transferJob->url().host();
 
-    KIO::TransferJob * newJob = KIO::get(configPageUrl.arg(transferJob->url().host()), KIO::Reload);
+    KIO::StoredTransferJob * newJob = KIO::storedGet(configPageUrl.arg(transferJob->url().host()), KIO::Reload);
     newJob->addMetaData("cookies", "auto");
     newJob->addMetaData("cache", "reload");
     connect(newJob, SIGNAL(result(KJob *)), this, SLOT(doneFetchingConfigPage(KJob*)));
@@ -93,9 +107,10 @@ void WebSearchGoogleScholar::doneFetchingConfigPage(KJob *kJob)
         return;
     }
 
-    KIO::TransferJob *transferJob = static_cast<KIO::TransferJob *>(kJob);
+    KIO::StoredTransferJob *transferJob = static_cast<KIO::StoredTransferJob *>(kJob);
+    dumpData(transferJob->data(), 1);
 
-    KIO::TransferJob * newJob = KIO::get(setConfigPageUrl.arg(transferJob->url().host()).arg(m_numResults), KIO::Reload);
+    KIO::StoredTransferJob * newJob = KIO::storedGet(setConfigPageUrl.arg(transferJob->url().host()).arg(m_numResults), KIO::Reload);
     newJob->addMetaData("cookies", "auto");
     newJob->addMetaData("cache", "reload");
     connect(newJob, SIGNAL(result(KJob *)), this, SLOT(doneFetchingSetConfigPage(KJob*)));
@@ -115,9 +130,10 @@ void WebSearchGoogleScholar::doneFetchingSetConfigPage(KJob *kJob)
         return;
     }
 
-    KIO::TransferJob *transferJob = static_cast<KIO::TransferJob *>(kJob);
+    KIO::StoredTransferJob *transferJob = static_cast<KIO::StoredTransferJob *>(kJob);
+    dumpData(transferJob->data(), 2);
 
-    KIO::TransferJob * newJob = KIO::storedGet(queryPageUrl.arg(transferJob->url().host()).arg(m_numResults).arg(m_queryString), KIO::Reload);
+    KIO::StoredTransferJob * newJob = KIO::storedGet(queryPageUrl.arg(transferJob->url().host()).arg(m_numResults).arg(m_queryString), KIO::Reload);
     newJob->addMetaData("cookies", "auto");
     newJob->addMetaData("cache", "reload");
     connect(newJob, SIGNAL(result(KJob *)), this, SLOT(doneFetchingQueryPage(KJob*)));
@@ -138,6 +154,7 @@ void WebSearchGoogleScholar::doneFetchingQueryPage(KJob *kJob)
     }
 
     KIO::StoredTransferJob *transferJob = static_cast<KIO::StoredTransferJob *>(kJob);
+    dumpData(transferJob->data(), 3);
 
     QString htmlText(transferJob->data());
     int pos = 0;
@@ -148,7 +165,7 @@ void WebSearchGoogleScholar::doneFetchingQueryPage(KJob *kJob)
     }
 
     if (!m_listBibTeXurls.isEmpty()) {
-        KIO::TransferJob * newJob = KIO::storedGet(m_listBibTeXurls.first(), KIO::Reload);
+        KIO::StoredTransferJob * newJob = KIO::storedGet(m_listBibTeXurls.first(), KIO::Reload);
         m_listBibTeXurls.removeFirst();
         newJob->addMetaData("cookies", "auto");
         newJob->addMetaData("cache", "reload");
@@ -181,6 +198,8 @@ void WebSearchGoogleScholar::doneFetchingBibTeX(KJob *kJob)
 
     // FIXME has this section to be protected by a mutex?
     KIO::StoredTransferJob *transferJob = static_cast<KIO::StoredTransferJob *>(kJob);
+    dumpData(transferJob->data(), 4);
+
     QByteArray ba(transferJob->data());
     QBuffer buffer(&ba);
     buffer.open(QIODevice::ReadOnly);
@@ -208,7 +227,7 @@ void WebSearchGoogleScholar::doneFetchingBibTeX(KJob *kJob)
     }
 
     if (!m_listBibTeXurls.isEmpty()) {
-        KIO::TransferJob * newJob = KIO::storedGet(m_listBibTeXurls.first(), KIO::Reload);
+        KIO::StoredTransferJob * newJob = KIO::storedGet(m_listBibTeXurls.first(), KIO::Reload);
         m_listBibTeXurls.removeFirst();
         newJob->addMetaData("cookies", "auto");
         newJob->addMetaData("cache", "reload");
