@@ -216,11 +216,11 @@ void KBibTeXMainWindow::documentSwitched(BibTeXEditor *oldEditor, BibTeXEditor *
 
     d->referencePreview->setEnabled(newEditor != NULL);
     if (oldEditor != NULL) {
-        disconnect(oldEditor, SIGNAL(currentElementChanged(const Element*, const File *)), d->referencePreview, SLOT(setElement(const Element*, const File *)));
-        disconnect(oldEditor, SIGNAL(currentElementChanged(const Element*, const File *)), d->elementForm, SLOT(setElement(const Element*, const File *)));
+        disconnect(oldEditor, SIGNAL(currentElementChanged(Element*, const File *)), d->referencePreview, SLOT(setElement(Element*, const File *)));
+        disconnect(oldEditor, SIGNAL(currentElementChanged(Element*, const File *)), d->elementForm, SLOT(setElement(const Element*, const File *)));
     }
     if (newEditor != NULL) {
-        connect(newEditor, SIGNAL(currentElementChanged(const Element*, const File *)), d->referencePreview, SLOT(setElement(const Element*, const File *)));
+        connect(newEditor, SIGNAL(currentElementChanged(Element*, const File *)), d->referencePreview, SLOT(setElement(Element*, const File *)));
         connect(newEditor, SIGNAL(currentElementChanged(Element*, const File *)), d->elementForm, SLOT(setElement(Element*, const File *)));
     }
     d->referencePreview->setElement(NULL, NULL);

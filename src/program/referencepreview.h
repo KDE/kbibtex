@@ -37,7 +37,7 @@ public:
     void setEnabled(bool);
 
 public slots:
-    void setElement(const Element*, const File *);
+    void setElement(Element*, const File *);
 
 private:
     class ReferencePreviewPrivate;

@@ -120,8 +120,8 @@ void BibTeXEditor::currentChanged(const QModelIndex & current, const QModelIndex
 {
     QTreeView::currentChanged(current, previous);
 
-    emit currentElementChanged((Element*)(bibTeXModel()->element(sortFilterProxyModel()->mapToSource(current).row())), bibTeXModel()->bibTeXFile());
-    emit currentElementChanged((const Element*)(bibTeXModel()->element(sortFilterProxyModel()->mapToSource(current).row())), bibTeXModel()->bibTeXFile());
+    Element *element = bibTeXModel()->element(sortFilterProxyModel()->mapToSource(current).row());
+    emit currentElementChanged(element, bibTeXModel()->bibTeXFile());
 }
 
 void BibTeXEditor::selectionChanged(const QItemSelection & selected, const QItemSelection & deselected)
@@ -132,8 +132,8 @@ void BibTeXEditor::selectionChanged(const QItemSelection & selected, const QItem
     for (QModelIndexList::Iterator it = set.begin(); it != set.end(); ++it) {
         m_selection.append(bibTeXModel()->element((*it).row()));
     }
-    if (m_current==NULL&& !set.isEmpty())
-        m_current=bibTeXModel()->element(set.first().row());
+    if (m_current == NULL && !set.isEmpty())
+        m_current = bibTeXModel()->element(set.first().row());
 
     set = deselected.indexes();
     for (QModelIndexList::Iterator it = set.begin(); it != set.end(); ++it) {

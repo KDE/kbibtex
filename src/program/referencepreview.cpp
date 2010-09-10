@@ -99,7 +99,7 @@ void ReferencePreview::setEnabled(bool enabled)
     d->comboBox->setEnabled(enabled);
 }
 
-void ReferencePreview::setElement(const Element* element, const File *file)
+void ReferencePreview::setElement(Element* element, const File *file)
 {
     d->element = element;
     d->file = file;
