@@ -37,6 +37,7 @@
 #include "mdiwidget.h"
 #include "referencepreview.h"
 #include "searchform.h"
+#include "elementform.h"
 #include "openfileinfo.h"
 #include "bibtexeditor.h"
 #include "documentlist.h"
@@ -51,11 +52,13 @@ public:
     QDockWidget *dockDocumentList;
     QDockWidget *dockReferencePreview;
     QDockWidget *dockSearchForm;
+    QDockWidget *dockElementForm;
     KBibTeXProgram *program;
     DocumentList *listDocumentList;
     MDIWidget *mdiWidget;
     ReferencePreview *referencePreview;
     SearchForm *searchForm;
+    ElementForm *elementForm;
     OpenFileInfoManager *openFileInfoManager;
 
     KBibTeXMainWindowPrivate(KBibTeXMainWindow *parent)
@@ -101,7 +104,7 @@ KBibTeXMainWindow::KBibTeXMainWindow(KBibTeXProgram *program)
 
     d->dockReferencePreview = new QDockWidget(i18n("Reference Preview"), this);
     d->dockReferencePreview->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-    addDockWidget(Qt::BottomDockWidgetArea, d->dockReferencePreview);
+    addDockWidget(Qt::LeftDockWidgetArea, d->dockReferencePreview);
     d->referencePreview = new ReferencePreview(d->dockReferencePreview);
     d->dockReferencePreview->setWidget(d->referencePreview);
     d->dockReferencePreview->setObjectName("dockReferencePreview");
@@ -109,11 +112,19 @@ KBibTeXMainWindow::KBibTeXMainWindow(KBibTeXProgram *program)
 
     d->dockSearchForm = new QDockWidget(i18n("Online Search"), this);
     d->dockSearchForm->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-    addDockWidget(Qt::BottomDockWidgetArea, d->dockSearchForm);
+    addDockWidget(Qt::LeftDockWidgetArea, d->dockSearchForm);
     d->searchForm = new SearchForm(d->mdiWidget, d->dockSearchForm);
     d->dockSearchForm->setWidget(d->searchForm);
     d->dockSearchForm->setObjectName("dockSearchFrom");
     d->dockSearchForm->setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
+
+    d->dockElementForm = new QDockWidget(i18n("Element Editor"), this);
+    d->dockElementForm->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+    addDockWidget(Qt::BottomDockWidgetArea, d->dockElementForm);
+    d->elementForm = new ElementForm(d->mdiWidget, d->dockElementForm);
+    d->dockElementForm->setWidget(d->elementForm);
+    d->dockElementForm->setObjectName("dockElementFrom");
+    d->dockElementForm->setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
 
     actionCollection()->addAction(KStandardAction::New, this, SLOT(newDocument()));
     actionCollection()->addAction(KStandardAction::Open, this, SLOT(openDocumentDialog()));
@@ -123,6 +134,11 @@ KBibTeXMainWindow::KBibTeXMainWindow(KBibTeXProgram *program)
 
     setupControllers();
     setupGUI();
+
+    setCorner(Qt::TopLeftCorner, Qt::LeftDockWidgetArea);
+    setCorner(Qt::TopRightCorner, Qt::RightDockWidgetArea);
+    setCorner(Qt::BottomLeftCorner, Qt::LeftDockWidgetArea);
+    setCorner(Qt::BottomRightCorner, Qt::RightDockWidgetArea);
 }
 
 KBibTeXMainWindow::~KBibTeXMainWindow()
@@ -199,10 +215,15 @@ void KBibTeXMainWindow::documentSwitched(BibTeXEditor *oldEditor, BibTeXEditor *
     setCaption(validFile ? i18n("%1 - KBibTeX", openFileInfo->caption()) : i18n("KBibTeX"));
 
     d->referencePreview->setEnabled(newEditor != NULL);
-    if (oldEditor != NULL)
+    if (oldEditor != NULL) {
         disconnect(oldEditor, SIGNAL(currentElementChanged(const Element*, const File *)), d->referencePreview, SLOT(setElement(const Element*, const File *)));
-    if (newEditor != NULL)
+        disconnect(oldEditor, SIGNAL(currentElementChanged(const Element*, const File *)), d->elementForm, SLOT(setElement(const Element*, const File *)));
+    }
+    if (newEditor != NULL) {
         connect(newEditor, SIGNAL(currentElementChanged(const Element*, const File *)), d->referencePreview, SLOT(setElement(const Element*, const File *)));
+        connect(newEditor, SIGNAL(currentElementChanged(Element*, const File *)), d->elementForm, SLOT(setElement(Element*, const File *)));
+    }
     d->referencePreview->setElement(NULL, NULL);
+    d->elementForm->setElement(NULL, NULL);
 }
 

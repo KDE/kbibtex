@@ -44,6 +44,8 @@ class FieldInput;
 
 class ElementWidget : public QWidget
 {
+    Q_OBJECT
+
 public:
     ElementWidget(QWidget *parent): QWidget(parent) {};
     virtual bool apply(Element *element) const = 0;
@@ -56,6 +58,9 @@ public:
         Q_UNUSED(element)
         return false;
     };
+
+signals:
+    void modified();
 };
 
 class EntryConfiguredWidget : public ElementWidget
@@ -197,6 +202,9 @@ public:
 
 private slots:
     void reset();
+
+private:
+    KPushButton *m_buttonRestore;
 };
 
 #endif // KBIBTEX_GUI_DIALOGS_ELEMENTSWIDGETS_H

@@ -120,8 +120,8 @@ void BibTeXEditor::currentChanged(const QModelIndex & current, const QModelIndex
 {
     QTreeView::currentChanged(current, previous);
 
-    m_current = bibTeXModel()->element(current.row()), bibTeXModel()->bibTeXFile();
-    emit currentElementChanged(m_current, bibTeXModel()->bibTeXFile());
+    emit currentElementChanged((Element*)(bibTeXModel()->element(sortFilterProxyModel()->mapToSource(current).row())), bibTeXModel()->bibTeXFile());
+    emit currentElementChanged((const Element*)(bibTeXModel()->element(sortFilterProxyModel()->mapToSource(current).row())), bibTeXModel()->bibTeXFile());
 }
 
 void BibTeXEditor::selectionChanged(const QItemSelection & selected, const QItemSelection & deselected)

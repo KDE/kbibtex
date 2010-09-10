@@ -48,7 +48,6 @@ public:
 
     ElementEditorPrivate(Element *m, ElementEditor *parent)
             : element(m), p(parent), previousWidget(NULL) {
-        Q_ASSERT_X(element != NULL, "ElementEditorPrivate(Element *m, ElementEditor *parent)", "element is NULL");
         isModified = false;
         createGUI();
         reset(m);
@@ -62,6 +61,7 @@ public:
 
         if (ReferenceWidget::canEdit(element)) {
             referenceWidget = new ReferenceWidget(p);
+            connect(referenceWidget, SIGNAL(modified()), p, SIGNAL(modified()));
             layout->addWidget(referenceWidget);
             widgets << referenceWidget;
         } else
@@ -74,30 +74,35 @@ public:
             for (EntryLayout::ConstIterator elit = el->constBegin(); elit != el->constEnd(); ++elit) {
                 EntryTabLayout etl = *elit;
                 ElementWidget *widget = new EntryConfiguredWidget(etl, tab);
+                connect(widget, SIGNAL(modified()), p, SIGNAL(modified()));
                 tab->addTab(widget, widget->icon(), widget->label());
                 widgets << widget;
             }
 
         if (PreambleWidget::canEdit(element)) {
             ElementWidget *widget = new PreambleWidget(tab);
+            connect(widget, SIGNAL(modified()), p, SIGNAL(modified()));
             tab->addTab(widget, widget->icon(), widget->label());
             widgets << widget;
         }
 
         if (MacroWidget::canEdit(element)) {
             ElementWidget *widget = new MacroWidget(tab);
+            connect(widget, SIGNAL(modified()), p, SIGNAL(modified()));
             tab->addTab(widget, widget->icon(), widget->label());
             widgets << widget;
         }
 
         if (OtherFieldsWidget::canEdit(element)) {
             ElementWidget *widget = new OtherFieldsWidget(tab);
+            connect(widget, SIGNAL(modified()), p, SIGNAL(modified()));
             tab->addTab(widget, widget->icon(), widget->label());
             widgets << widget;
         }
 
         if (SourceWidget::canEdit(element)) {
             sourceWidget = new SourceWidget(tab);
+            connect(sourceWidget, SIGNAL(modified()), p, SIGNAL(modified()));
             tab->addTab(sourceWidget, sourceWidget->icon(), sourceWidget->label());
             widgets << sourceWidget;
         }
@@ -142,6 +147,8 @@ public:
                     const Preamble *p = dynamic_cast<const Preamble*>(element);
                     if (p != NULL)
                         internalPreamble = new Preamble(*p);
+                    else
+                        Q_ASSERT_X(element == NULL, "ElementEditor::ElementEditorPrivate::reset(const Element *element)", "element is not NULL but could not be cast on a valid Element sub-class");
                 }
             }
         }

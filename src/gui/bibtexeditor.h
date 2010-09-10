@@ -44,6 +44,7 @@ public:
 signals:
     void selectedElementsChanged();
     void currentElementChanged(const Element*, const File *);
+    void currentElementChanged(Element*, const File *);
     void elementExecuted(Element*);
     void keyPressed(QKeyEvent *);
 

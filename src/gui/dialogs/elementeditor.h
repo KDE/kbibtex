@@ -39,7 +39,7 @@ public:
     void setReadOnly(bool isReadOnly = true);
 
 signals:
-    void modified(bool);
+    void modified();
 
 public slots:
     void apply();
