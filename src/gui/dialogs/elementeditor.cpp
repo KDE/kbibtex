@@ -187,7 +187,28 @@ ElementEditor::ElementEditor(Element *element, QWidget *parent)
 ElementEditor::ElementEditor(const Element *element, QWidget *parent)
         : QWidget(parent)
 {
-    Element *m = new Element(*element);
+    Element *m = NULL;
+    const Entry *entry = dynamic_cast<const Entry*>(element);
+    if (entry != NULL)
+        m = new Entry(*entry);
+    else {
+        const Macro *macro = dynamic_cast<const Macro*>(element);
+        if (macro != NULL)
+            m = new Macro(*macro);
+        else {
+            const Preamble *preamble = dynamic_cast<const Preamble*>(element);
+            if (preamble != NULL)
+                m = new Preamble(*preamble);
+            else {
+                const Comment *comment = dynamic_cast<const Comment*>(element);
+                if (comment != NULL)
+                    m = new Comment(*comment);
+                else
+                    Q_ASSERT_X(element == NULL, "ElementEditor::ElementEditor(const Element *element, QWidget *parent)", "element is not NULL but could not be cast on a valid Element sub-class");
+            }
+        }
+    }
+
     d = new ElementEditorPrivate(m, this);
     setReadOnly(true);
 }
