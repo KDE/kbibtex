@@ -22,8 +22,8 @@
 #include <QLayout>
 #include <QLabel>
 #include <QMap>
+#include <QFileInfo>
 
-#include <KUrl>
 #include <KLocale>
 #include <KComboBox>
 #include <KIcon>
@@ -35,6 +35,9 @@
 #include <kio/netaccess.h>
 #include <KPushButton>
 #include <KRun>
+#include <KDebug>
+#include <kio/jobclasses.h>
+#include <kio/job.h>
 
 #include <element.h>
 #include <entry.h>
@@ -54,12 +57,13 @@ private:
     QMap<QString, KUrl> cbxEntryToUrl;
     QMap<KUrl, QWidget*> urlToWidget;
     QGridLayout *layout;
+    KIO::StatJob *runningStatJob;
 
 public:
     const Entry* entry;
 
     UrlPreviewPrivate(UrlPreview *parent)
-            : p(parent), partWidget(NULL), currentWidget(NULL) {
+            : p(parent), partWidget(NULL), currentWidget(NULL), runningStatJob(NULL) {
         setupGUI();
     }
 
@@ -77,9 +81,6 @@ public:
         externalViewerButton = new KPushButton(KIcon("document-open"), i18n("Open..."), p);
         layout->addWidget(externalViewerButton, 0, 1, 1, 1);
 
-        message = new QLabel(i18n("No preview available"), p);
-        layout->addWidget(message, 1, 0, 1, 2, Qt::AlignCenter);
-
         connect(externalViewerButton, SIGNAL(clicked()), p, SLOT(openExternally()));
         connect(urlComboBox, SIGNAL(activated(const QString &)), p, SLOT(urlSelected(const QString &)));
     }
@@ -94,7 +95,8 @@ public:
             QString fn = (*it).fileName();
             QString full = (*it).prettyUrl();
             QString text = fn.isEmpty() ? full : QString("%1 [%2]").arg(fn).arg(full.left(full.size() - fn.size()));
-            urlComboBox->addItem(KIcon(KMimeType::iconNameForUrl(*it)), text);
+            QPair<QString, KIcon> mimeTypeIcon = mimeType(*it);
+            urlComboBox->addItem(mimeTypeIcon.second, text);
             cbxEntryToUrl.insert(text, *it);
         }
         if (urlComboBox->count() > 0) {
@@ -108,29 +110,50 @@ public:
     void urlSelected(const QString &text) {
         KUrl url = cbxEntryToUrl[text];
         QWidget *widget = urlToWidget[url];
+        bool stillWaiting = false;
+
+        p->setCursor(Qt::WaitCursor);
 
         if (widget == NULL) {
             KParts::ReadOnlyPart* part = NULL;
-            QString mimeType = KIO::NetAccess::mimetype(url, p);
 
-            KService::Ptr serivcePtr = KMimeTypeTrader::self()->preferredService(mimeType, "KParts/ReadOnlyPart");
-            if (!serivcePtr.isNull())
-                part = serivcePtr->createInstance<KParts::ReadOnlyPart>((QWidget*)p, (QObject*)p);
+            if (url.isLocalFile()) {
+                if (QFileInfo(url.prettyUrl()).exists()) {
+                    QPair<QString, KIcon> mimeTypeIcon = mimeType(url);
+                    KService::Ptr serivcePtr = KMimeTypeTrader::self()->preferredService(mimeTypeIcon.first, "KParts/ReadOnlyPart");
+                    if (!serivcePtr.isNull())
+                        part = serivcePtr->createInstance<KParts::ReadOnlyPart>((QWidget*)p, (QObject*)p);
 
-            if (part != NULL) {
-                urlToWidget.insert(url, part->widget());
-                part->openUrl(url);
-            } else
-                urlToWidget.insert(url, message);
-            widget = urlToWidget[url];
+                    if (part != NULL) {
+                        urlToWidget.insert(url, part->widget());
+                        part->openUrl(url);
+                    } else
+                        urlToWidget.insert(url, new QLabel(i18n("Cannot create preview"), p));
+                } else
+                    urlToWidget.insert(url, new QLabel(i18n("File does not exist"), p));
+            } else {
+                urlToWidget.insert(url, new QLabel(i18n("Retrieving file information ..."), p));
+                if (runningStatJob != NULL)
+                    runningStatJob->kill(KJob::Quietly);
+                runningStatJob = KIO::stat(url, true, 0); // FIXME: deprecated?
+                connect(runningStatJob, SIGNAL(finished(KJob*)), p, SLOT(statJobFinished(KJob*)));
+                stillWaiting = true;
+            }
         }
 
-        if (currentWidget != NULL)
-            currentWidget->hide();
+        switchWidget(urlToWidget[url]);
 
-        widget->show();
-        layout->addWidget(widget, 1, 0, 1, 2);
-        currentWidget = widget;
+        if (!stillWaiting)
+            p->unsetCursor();
+    }
+
+    void switchWidget(QWidget *newWidget) {
+        if (currentWidget != NULL)
+            delete currentWidget;
+
+        newWidget->show();
+        layout->addWidget(newWidget, 1, 0, 1, 2, Qt::AlignCenter);
+        currentWidget = newWidget;
     }
 
     void openExternally() {
@@ -138,6 +161,45 @@ public:
         KRun::runUrl(url, KIO::NetAccess::mimetype(url, p), p);
     }
 
+    QPair<QString, KIcon> mimeType(const KUrl &url) {
+        int accuracy = 0;
+        KMimeType::Ptr mimeTypePtr = KMimeType::findByUrl(url, 0, url.isLocalFile(), true, &accuracy);
+        if (accuracy < 50)
+            mimeTypePtr = KMimeType::findByPath(url.fileName(), 0, true, &accuracy);
+        QString mimeTypeName = mimeTypePtr->name(); // KIO::NetAccess::mimetype(url, p);
+        KIcon icon = KIcon(mimeTypePtr->iconName());
+
+        return QPair<QString, KIcon>(mimeTypeName, icon);
+    }
+
+    void statJobFinished(KIO::StatJob *job) {
+        Q_ASSERT(runningStatJob == job);
+        runningStatJob = NULL;
+
+        if (job->error() == 0) {
+            KParts::ReadOnlyPart* part = NULL;
+            KUrl url(job->url());
+            QPair<QString, KIcon> mimeTypeIcon = mimeType(url);
+            KService::Ptr serivcePtr = KMimeTypeTrader::self()->preferredService(mimeTypeIcon.first, "KParts/ReadOnlyPart");
+            if (!serivcePtr.isNull())
+                part = serivcePtr->createInstance<KParts::ReadOnlyPart>((QWidget*)p, (QObject*)p);
+
+            if (part != NULL) {
+                urlToWidget.insert(url, part->widget());
+                part->openUrl(url);
+            } else
+                urlToWidget.insert(url, new QLabel(i18n("Cannot create preview"), p));
+
+            switchWidget(urlToWidget[url]);
+        } else {
+            kDebug() << job->url() << " does not exist";
+            QLabel *label = dynamic_cast<QLabel*>(urlToWidget[job->url()]);
+            if (label != NULL)
+                label->setText(i18n("File does not exist"));
+        }
+
+        p->unsetCursor();
+    }
 };
 
 UrlPreview::UrlPreview(QWidget *parent)
@@ -160,4 +222,9 @@ void UrlPreview::urlSelected(const QString &text)
 void UrlPreview::openExternally()
 {
     d->openExternally();
+}
+
+void UrlPreview::statJobFinished(KJob *job)
+{
+    d->statJobFinished(static_cast<KIO::StatJob*>(job));
 }

@@ -23,6 +23,10 @@
 
 #include <QWidget>
 
+#include <KUrl>
+
+class KJob;
+
 class Element;
 class File;
 
@@ -39,9 +43,12 @@ private:
     class UrlPreviewPrivate;
     UrlPreviewPrivate *d;
 
+    QString mimeType(const KUrl &url);
+
 private slots:
     void urlSelected(const QString &);
     void openExternally();
+    void statJobFinished(KJob *);
 };
 
 #endif // KBIBTEX_PROGRAM_URLPREVIEW_H
