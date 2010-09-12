@@ -36,6 +36,7 @@
 #include "program.h"
 #include "mdiwidget.h"
 #include "referencepreview.h"
+#include "urlpreview.h"
 #include "searchform.h"
 #include "elementform.h"
 #include "openfileinfo.h"
@@ -51,12 +52,14 @@ public:
     KAction *actionClose;
     QDockWidget *dockDocumentList;
     QDockWidget *dockReferencePreview;
+    QDockWidget *dockUrlPreview;
     QDockWidget *dockSearchForm;
     QDockWidget *dockElementForm;
     KBibTeXProgram *program;
     DocumentList *listDocumentList;
     MDIWidget *mdiWidget;
     ReferencePreview *referencePreview;
+    UrlPreview *urlPreview;
     SearchForm *searchForm;
     ElementForm *elementForm;
     OpenFileInfoManager *openFileInfoManager;
@@ -109,6 +112,14 @@ KBibTeXMainWindow::KBibTeXMainWindow(KBibTeXProgram *program)
     d->dockReferencePreview->setWidget(d->referencePreview);
     d->dockReferencePreview->setObjectName("dockReferencePreview");
     d->dockReferencePreview->setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
+
+    d->dockUrlPreview = new QDockWidget(i18n("Preview"), this);
+    d->dockUrlPreview->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+    addDockWidget(Qt::RightDockWidgetArea, d->dockUrlPreview);
+    d->urlPreview = new UrlPreview(d->dockUrlPreview);
+    d->dockUrlPreview->setWidget(d->urlPreview);
+    d->dockUrlPreview->setObjectName("dockUrlPreview");
+    d->dockUrlPreview->setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
 
     d->dockSearchForm = new QDockWidget(i18n("Online Search"), this);
     d->dockSearchForm->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
@@ -215,15 +226,20 @@ void KBibTeXMainWindow::documentSwitched(BibTeXEditor *oldEditor, BibTeXEditor *
     setCaption(validFile ? i18n("%1 - KBibTeX", openFileInfo->caption()) : i18n("KBibTeX"));
 
     d->referencePreview->setEnabled(newEditor != NULL);
+    d->elementForm->setEnabled(newEditor != NULL);
+    d->urlPreview->setEnabled(newEditor != NULL);
     if (oldEditor != NULL) {
         disconnect(oldEditor, SIGNAL(currentElementChanged(Element*, const File *)), d->referencePreview, SLOT(setElement(Element*, const File *)));
-        disconnect(oldEditor, SIGNAL(currentElementChanged(Element*, const File *)), d->elementForm, SLOT(setElement(const Element*, const File *)));
+        disconnect(oldEditor, SIGNAL(currentElementChanged(Element*, const File *)), d->elementForm, SLOT(setElement(Element*, const File *)));
+        disconnect(oldEditor, SIGNAL(currentElementChanged(Element*, const File *)), d->urlPreview, SLOT(setElement(Element*, const File *)));
     }
     if (newEditor != NULL) {
         connect(newEditor, SIGNAL(currentElementChanged(Element*, const File *)), d->referencePreview, SLOT(setElement(Element*, const File *)));
         connect(newEditor, SIGNAL(currentElementChanged(Element*, const File *)), d->elementForm, SLOT(setElement(Element*, const File *)));
+        connect(newEditor, SIGNAL(currentElementChanged(Element*, const File *)), d->urlPreview, SLOT(setElement(Element*, const File *)));
     }
     d->referencePreview->setElement(NULL, NULL);
     d->elementForm->setElement(NULL, NULL);
+    d->urlPreview->setElement(NULL, NULL);
 }
 

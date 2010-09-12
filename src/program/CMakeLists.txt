@@ -22,6 +22,7 @@ set( kbibtex_SRCS
 	documentlist.cpp
 	mdiwidget.cpp
 	referencepreview.cpp
+	urlpreview.cpp
 	searchform.cpp
 	elementform.cpp
 	openfileinfo.cpp

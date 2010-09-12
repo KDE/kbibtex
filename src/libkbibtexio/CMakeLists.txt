@@ -8,6 +8,7 @@ set( kbibtexio_LIB_SRCS
 	encoderxml.cpp
 	entry.cpp
 	file.cpp
+	fileinfo.cpp
 	fileexporter.cpp
 	fileexporterbibtex.cpp
 	fileexporterpdf.cpp
