@@ -38,6 +38,7 @@ public:
 
 public slots:
     void setElement(Element*, const File *);
+    void setBibTeXUrl(const KUrl&);
 
 private:
     class UrlPreviewPrivate;

@@ -238,6 +238,8 @@ void KBibTeXMainWindow::documentSwitched(BibTeXEditor *oldEditor, BibTeXEditor *
         connect(newEditor, SIGNAL(currentElementChanged(Element*, const File *)), d->elementForm, SLOT(setElement(Element*, const File *)));
         connect(newEditor, SIGNAL(currentElementChanged(Element*, const File *)), d->urlPreview, SLOT(setElement(Element*, const File *)));
     }
+
+    d->urlPreview->setBibTeXUrl(validFile ? openFileInfo->url() : KUrl());
     d->referencePreview->setElement(NULL, NULL);
     d->elementForm->setElement(NULL, NULL);
     d->urlPreview->setElement(NULL, NULL);
