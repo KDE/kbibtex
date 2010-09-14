@@ -19,6 +19,7 @@
 ***************************************************************************/
 
 #include <QFileInfo>
+#include <QDir>
 
 #include <KDebug>
 
@@ -34,7 +35,7 @@ FileInfo::FileInfo()
     // TODO
 }
 
-QList<KUrl> FileInfo::entryUrls(const Entry *entry)
+QList<KUrl> FileInfo::entryUrls(const Entry *entry, const KUrl &baseUrl)
 {
     QList<KUrl> result;
     if (entry == NULL || entry->isEmpty())
@@ -52,11 +53,28 @@ QList<KUrl> FileInfo::entryUrls(const Entry *entry)
 
         pos = -1;
         while ((pos = doiRegExp.indexIn(plainText, pos + 1)) != -1) {
-            KUrl url(doiUrlPrefix + urlRegExp.cap(0));
-            if (url.isValid())
+            KUrl url(doiUrlPrefix + doiRegExp.cap(0));
+            if (url.isValid()) {
+                kDebug() << "DOI url = " << url;
                 result << url;
+            }
         }
+    }
 
+    if (baseUrl.isValid() && baseUrl.isLocalFile()) {
+        KUrl url = baseUrl;
+        url.setFileName(entry->id() + ".pdf"); // FIXME: Test more extensions
+        kDebug() << "local url=" << url;
+        if (QFileInfo(url.path()).exists())
+            result << url;
+
+        url = baseUrl;
+        QString basename = baseUrl.fileName().replace(QRegExp("\\.[^.]{2,5}$"), "");
+        url.setPath(url.path().replace(baseUrl.fileName(), basename) + QDir::separator() + basename);
+        url.setFileName(entry->id() + ".pdf"); // FIXME: Test more extensions
+        kDebug() << "local url=" << url;
+        if (QFileInfo(url.path()).exists())
+            result << url;
     }
 
     return result;

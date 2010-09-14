@@ -32,7 +32,7 @@ class Entry;
 class KBIBTEXIO_EXPORT FileInfo
 {
 public:
-    static QList<KUrl> entryUrls(const Entry *entry);
+    static QList<KUrl> entryUrls(const Entry *entry, const KUrl &baseUrl = KUrl());
 
 protected:
     FileInfo();
