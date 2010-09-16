@@ -165,7 +165,7 @@ bool ReferenceWidget::apply(Element *element) const
     Entry *entry = dynamic_cast<Entry*>(element);
     if (entry != NULL) {
         BibTeXEntries *be = BibTeXEntries::self();
-        QString type =  entryType->itemData(entryType->currentIndex()).toString();
+        QString type = entryType->itemData(entryType->currentIndex()).toString();
         if (entryType->lineEdit()->isModified())
             type = be->format(entryType->lineEdit()->text(), KBibTeX::cUpperCamelCase);
         entry->setType(type);
@@ -275,7 +275,17 @@ OtherFieldsWidget::~OtherFieldsWidget()
 
 bool OtherFieldsWidget::apply(Element *element) const
 {
-    return false; // TODO
+    Entry* entry = dynamic_cast<Entry*>(element);
+    if (entry == NULL) return false;
+
+    for (QStringList::ConstIterator it=deletedKeys.constBegin(); it!=deletedKeys.constEnd(); ++it)
+        entry->remove(*it);
+    for (QStringList::ConstIterator it=modifiedKeys.constBegin(); it!=modifiedKeys.constEnd(); ++it){
+        entry->remove(*it);
+        entry->insert(*it, internalEntry->value(*it));
+    }
+
+    return true;
 }
 
 bool OtherFieldsWidget::reset(const Element *element)
@@ -284,10 +294,12 @@ bool OtherFieldsWidget::reset(const Element *element)
     if (entry == NULL) return false;
 
     internalEntry->operator =(*entry);
+    deletedKeys.clear(); // FIXME clearing list may be premature here...
+    modifiedKeys.clear(); // FIXME clearing list may be premature here...
     updateList();
     updateGUI();
 
-    return false; // TODO
+    return true;
 }
 
 void OtherFieldsWidget::setReadOnly(bool isReadOnly)
@@ -353,8 +365,12 @@ void OtherFieldsWidget::actionAddApply()
         internalEntry->remove(key);
     internalEntry->insert(key, value);
 
+    if (!modifiedKeys.contains(key)) modifiedKeys << key;
+
     updateList();
     updateGUI();
+
+    emit modified();
 }
 
 void OtherFieldsWidget::actionDelete()
@@ -367,6 +383,8 @@ void OtherFieldsWidget::actionDelete()
     updateList();
     updateGUI();
     listCurrentChanged(otherFieldsList->currentItem(), NULL);
+
+    emit modified();
 }
 
 void OtherFieldsWidget::actionOpen()
@@ -417,7 +435,7 @@ void OtherFieldsWidget::createGUI()
     buttonOpen->setEnabled(false);
     layout->addWidget(buttonOpen, 3, 2, 1, 1);
 
-    connect(otherFieldsList, SIGNAL(itemDoubleClicked(QTreeWidgetItem*, int)), this, SLOT(listElementExecuted(QTreeWidgetItem*, int)));
+    connect(otherFieldsList, SIGNAL(itemActivated(QTreeWidgetItem*, int)), this, SLOT(listElementExecuted(QTreeWidgetItem*, int)));
     connect(otherFieldsList, SIGNAL(currentItemChanged(QTreeWidgetItem*, QTreeWidgetItem*)), this, SLOT(listCurrentChanged(QTreeWidgetItem*, QTreeWidgetItem*)));
     connect(otherFieldsList, SIGNAL(itemSelectionChanged()), this, SLOT(updateGUI()));
     connect(otherFieldsName, SIGNAL(textChanged(QString)), this, SLOT(updateGUI()));
@@ -625,7 +643,7 @@ bool SourceWidget::reset(const Element *element)
 
 void SourceWidget::setReadOnly(bool isReadOnly)
 {
-    Q_UNUSED(isReadOnly);
+    m_buttonRestore->setEnabled(!isReadOnly);
     // TODO
 }
 
@@ -663,9 +681,9 @@ void SourceWidget::createGUI()
     layout->addWidget(buttonCheck, 1, 1, 1, 1);
     buttonCheck->setEnabled(false); // TODO: implement functionalty
 
-    KPushButton *buttonRestore = new KPushButton(KIcon("edit-undo"), i18n("Restore"), this);
-    layout->addWidget(buttonRestore, 1, 2, 1, 1);
-    connect(buttonRestore, SIGNAL(clicked()), this, SLOT(reset()));
+    m_buttonRestore = new KPushButton(KIcon("edit-undo"), i18n("Restore"), this);
+    layout->addWidget(m_buttonRestore, 1, 2, 1, 1);
+    connect(m_buttonRestore, SIGNAL(clicked()), this, SLOT(reset()));
 }
 
 void SourceWidget::reset()

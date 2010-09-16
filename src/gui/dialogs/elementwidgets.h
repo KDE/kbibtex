@@ -115,7 +115,7 @@ private:
     KUrl currentUrl;
     QStringList blackListed;
     Entry *internalEntry;
-    QStringList deletedKeys;
+    QStringList deletedKeys, modifiedKeys;
 
     void createGUI();
     void updateList();
