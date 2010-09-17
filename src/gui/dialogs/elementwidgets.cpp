@@ -278,9 +278,9 @@ bool OtherFieldsWidget::apply(Element *element) const
     Entry* entry = dynamic_cast<Entry*>(element);
     if (entry == NULL) return false;
 
-    for (QStringList::ConstIterator it=deletedKeys.constBegin(); it!=deletedKeys.constEnd(); ++it)
+    for (QStringList::ConstIterator it = deletedKeys.constBegin(); it != deletedKeys.constEnd(); ++it)
         entry->remove(*it);
-    for (QStringList::ConstIterator it=modifiedKeys.constBegin(); it!=modifiedKeys.constEnd(); ++it){
+    for (QStringList::ConstIterator it = modifiedKeys.constBegin(); it != modifiedKeys.constEnd(); ++it) {
         entry->remove(*it);
         entry->insert(*it, internalEntry->value(*it));
     }

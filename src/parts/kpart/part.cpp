@@ -194,7 +194,7 @@ void KBibTeXPart::setupActions(bool /*browserViewWanted FIXME*/)
     actionCollection()->addAction("element_new", newElementAction);
     KMenu *newElementMenu = new KMenu(newElementAction->text(), widget());
     newElementAction->setMenu(newElementMenu);
-    connect(newElementAction, SIGNAL(triggered()),this, SLOT(newEntryTriggered()));
+    connect(newElementAction, SIGNAL(triggered()), this, SLOT(newEntryTriggered()));
     QAction *newEntry = newElementMenu->addAction(KIcon("address-book-new"), i18n("New entry"));
     newEntry->setShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_N);
     connect(newEntry, SIGNAL(triggered()), d->signalMapperNewElement, SLOT(map()));
@@ -234,7 +234,7 @@ void KBibTeXPart::setupActions(bool /*browserViewWanted FIXME*/)
 
     d->editor->setContextMenuPolicy(Qt::ActionsContextMenu);
     d->editor->insertAction(NULL, d->elementEditAction);
-    QAction *separator=new QAction(this);
+    QAction *separator = new QAction(this);
     separator->setSeparator(true);
     d->editor->insertAction(NULL, separator);
     d->editor->insertAction(NULL, d->editCutAction);
