@@ -37,6 +37,7 @@ public:
     ElementEditor(const Element *element, QWidget *parent);
     ElementEditor(Element *element, QWidget *parent);
     void setReadOnly(bool isReadOnly = true);
+    bool isModified();
 
 signals:
     void modified();
@@ -47,6 +48,7 @@ public slots:
 
 private slots:
     void tabChanged();
+    void widgetsModified();
 
 private:
     class ElementEditorPrivate;

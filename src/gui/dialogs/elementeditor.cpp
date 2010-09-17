@@ -42,7 +42,6 @@ private:
     ElementWidget *previousWidget, *referenceWidget, *sourceWidget;
 
 public:
-
     bool isModified;
     QTabWidget *tab;
 
@@ -50,7 +49,6 @@ public:
             : element(m), p(parent), previousWidget(NULL) {
         isModified = false;
         createGUI();
-        reset(m);
     }
 
     void createGUI() {
@@ -61,7 +59,7 @@ public:
 
         if (ReferenceWidget::canEdit(element)) {
             referenceWidget = new ReferenceWidget(p);
-            connect(referenceWidget, SIGNAL(modified()), p, SIGNAL(modified()));
+            connect(referenceWidget, SIGNAL(modified()), p, SLOT(widgetsModified()));
             layout->addWidget(referenceWidget);
             widgets << referenceWidget;
         } else
@@ -74,35 +72,40 @@ public:
             for (EntryLayout::ConstIterator elit = el->constBegin(); elit != el->constEnd(); ++elit) {
                 EntryTabLayout etl = *elit;
                 ElementWidget *widget = new EntryConfiguredWidget(etl, tab);
-                connect(widget, SIGNAL(modified()), p, SIGNAL(modified()));
+                connect(widget, SIGNAL(modified()), p, SLOT(widgetsModified()));
                 tab->addTab(widget, widget->icon(), widget->label());
                 widgets << widget;
             }
 
         if (PreambleWidget::canEdit(element)) {
             ElementWidget *widget = new PreambleWidget(tab);
-            connect(widget, SIGNAL(modified()), p, SIGNAL(modified()));
+            connect(widget, SIGNAL(modified()), p, SLOT(widgetsModified()));
             tab->addTab(widget, widget->icon(), widget->label());
             widgets << widget;
         }
 
         if (MacroWidget::canEdit(element)) {
             ElementWidget *widget = new MacroWidget(tab);
-            connect(widget, SIGNAL(modified()), p, SIGNAL(modified()));
+            connect(widget, SIGNAL(modified()), p, SLOT(widgetsModified()));
             tab->addTab(widget, widget->icon(), widget->label());
             widgets << widget;
         }
 
         if (OtherFieldsWidget::canEdit(element)) {
-            ElementWidget *widget = new OtherFieldsWidget(tab);
-            connect(widget, SIGNAL(modified()), p, SIGNAL(modified()));
+            QStringList blacklistedFields;
+            for (EntryLayout::ConstIterator elit = el->constBegin(); elit != el->constEnd(); ++elit)
+                for (QList<SingleFieldLayout>::ConstIterator sflit = (*elit).singleFieldLayouts.constBegin(); sflit != (*elit).singleFieldLayouts.constEnd();++sflit)
+                    blacklistedFields << (*sflit).bibtexLabel;
+
+            ElementWidget *widget = new OtherFieldsWidget(blacklistedFields, tab);
+            connect(widget, SIGNAL(modified()), p, SLOT(widgetsModified()));
             tab->addTab(widget, widget->icon(), widget->label());
             widgets << widget;
         }
 
         if (SourceWidget::canEdit(element)) {
             sourceWidget = new SourceWidget(tab);
-            connect(sourceWidget, SIGNAL(modified()), p, SIGNAL(modified()));
+            connect(sourceWidget, SIGNAL(modified()), p, SLOT(widgetsModified()));
             tab->addTab(sourceWidget, sourceWidget->icon(), sourceWidget->label());
             widgets << sourceWidget;
         }
@@ -189,6 +192,7 @@ ElementEditor::ElementEditor(Element *element, QWidget *parent)
         : QWidget(parent), d(new ElementEditorPrivate(element, this))
 {
     connect(d->tab, SIGNAL(currentChanged(int)), this, SLOT(tabChanged()));
+    d->reset();
 }
 
 ElementEditor::ElementEditor(const Element *element, QWidget *parent)
@@ -236,7 +240,18 @@ void ElementEditor::setReadOnly(bool isReadOnly)
     d->setReadOnly(isReadOnly);
 }
 
+bool ElementEditor::isModified()
+{
+    return d->isModified;
+}
+
 void ElementEditor::tabChanged()
 {
     d->switchTo(d->tab->currentWidget());
+}
+
+void ElementEditor::widgetsModified()
+{
+    d->isModified = true;
+    emit modified();
 }
