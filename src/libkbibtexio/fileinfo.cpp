@@ -23,10 +23,10 @@
 
 #include <KDebug>
 
+#include <kbibtexnamespace.h>
 #include <entry.h>
 #include "fileinfo.h"
 
-static const QRegExp urlRegExp("(http|s?ftp|webdav|file)s?://[^ {}\"]+", Qt::CaseInsensitive);
 static const QRegExp doiRegExp("10\\.\\d{4}/[-a-z0-9.()_:\\]+", Qt::CaseInsensitive);
 static const QString doiUrlPrefix = QLatin1String("http://dx.doi.org/");
 
@@ -45,9 +45,9 @@ QList<KUrl> FileInfo::entryUrls(const Entry *entry, const KUrl &baseUrl)
         QString plainText = PlainTextValue::text(*it, NULL);
 
         int pos = -1;
-        while ((pos = urlRegExp.indexIn(plainText, pos + 1)) != -1) {
-            KUrl url(urlRegExp.cap(0));
-            if (url.isValid() && (!url.isLocalFile() || QFileInfo(urlRegExp.cap(0)).exists()))
+        while ((pos = KBibTeX::urlRegExp.indexIn(plainText, pos + 1)) != -1) {
+            KUrl url(KBibTeX::urlRegExp.cap(0));
+            if (url.isValid() && (!url.isLocalFile() || QFileInfo(KBibTeX::urlRegExp.cap(0)).exists()))
                 result << url;
         }
 

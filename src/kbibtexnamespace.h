@@ -56,6 +56,8 @@ static const QString MonthsTriple[] = {
     QLatin1String("jan"), QLatin1String("feb"), QLatin1String("mar"), QLatin1String("apr"), QLatin1String("may"), QLatin1String("jun"), QLatin1String("jul"), QLatin1String("aug"), QLatin1String("sep"), QLatin1String("oct"), QLatin1String("nov"), QLatin1String("dec")
 };
 
+static const QRegExp urlRegExp("(http|s?ftp|webdav|file)s?://[^ {}\"]+", Qt::CaseInsensitive);
+
 }
 
 #endif // KBIBTEX_NAMESPACE_H
