@@ -28,7 +28,7 @@
 #include "bibtexeditor.h"
 
 BibTeXEditor::BibTeXEditor(QWidget *parent)
-        : BibTeXFileView(parent)
+        : BibTeXFileView(parent), m_current(NULL)
 {
     connect(this, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(itemActivated(QModelIndex)));
 }
@@ -55,6 +55,8 @@ void BibTeXEditor::editCurrentElement()
 
 void BibTeXEditor::editElement(Element *element)
 {
+    Q_ASSERT_X(element->uniqueId % 1000 == 42, "void BibTeXEditor::editElement(Element *element)", "Invalid Element passed as argument");
+
     KDialog dialog(this);
     ElementEditor elementEditor(element, &dialog);
     dialog.setCaption(i18n("Edit Element"));

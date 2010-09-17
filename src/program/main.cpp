@@ -18,10 +18,14 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
+#include <cstdlib>
+
 #include "program.h"
 
 int main(int argc, char *argv[])
 {
+    srand(23);
+
     KBibTeXProgram program(argc, argv);
     const int result = program.execute();
     return result;

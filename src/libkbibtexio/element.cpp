@@ -17,13 +17,15 @@
 *   Free Software Foundation, Inc.,                                       *
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
+#include <cstdlib>
+
 #include <QString>
 
 #include "element.h"
 
 Element::Element()
 {
-    // nothing
+    uniqueId = rand() % 10000 * 1000 + 42;
 }
 
 Element::~Element()
