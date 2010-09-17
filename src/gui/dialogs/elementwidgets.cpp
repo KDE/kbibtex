@@ -33,6 +33,7 @@
 #include <KComboBox>
 #include <KDebug>
 
+#include <kbibtexnamespace.h>
 #include <bibtexentries.h>
 #include <bibtexfields.h>
 #include <fileimporterbibtex.h>
@@ -44,6 +45,8 @@
 #include <preamble.h>
 #include "elementwidgets.h"
 
+static const unsigned int interColumnSpace = 16;
+
 EntryConfiguredWidget::EntryConfiguredWidget(EntryTabLayout &entryTabLayout, QWidget *parent)
         : ElementWidget(parent), etl(entryTabLayout)
 {
@@ -52,6 +55,8 @@ EntryConfiguredWidget::EntryConfiguredWidget(EntryTabLayout &entryTabLayout, QWi
 
 bool EntryConfiguredWidget::apply(Element *element) const
 {
+    if (isReadOnly) return false; /// never save data if in read-only mode
+
     Entry *entry = dynamic_cast<Entry*>(element);
     if (entry == NULL) return false;
 
@@ -88,8 +93,10 @@ bool EntryConfiguredWidget::reset(const Element *element)
 
 void EntryConfiguredWidget::setReadOnly(bool isReadOnly)
 {
-    Q_UNUSED(isReadOnly);
-    // TODO
+    ElementWidget::setReadOnly(isReadOnly);
+
+    for (QMap<QString, FieldInput*>::Iterator it = bibtexKeyToWidget.begin(); it != bibtexKeyToWidget.end(); ++it)
+        it.value()->setReadOnly(isReadOnly);
 }
 
 QString EntryConfiguredWidget::label()
@@ -119,7 +126,7 @@ void EntryConfiguredWidget::createGUI()
     int row = 0, col = 0;
     for (QList<SingleFieldLayout>::ConstIterator sflit = etl.singleFieldLayouts.constBegin(); sflit != etl.singleFieldLayouts.constEnd(); ++sflit) {
         if (row == 0 && col > 1)
-            gridLayout->setColumnMinimumWidth(col - 1, 16); // FIXME use constant here
+            gridLayout->setColumnMinimumWidth(col - 1, interColumnSpace);
 
         const FieldDescription *fd = bf->find((*sflit).bibtexLabel);
         KBibTeX::TypeFlags typeFlags = fd == NULL ? KBibTeX::tfSource : fd->typeFlags;
@@ -161,6 +168,8 @@ ReferenceWidget::ReferenceWidget(QWidget *parent)
 
 bool ReferenceWidget::apply(Element *element) const
 {
+    if (isReadOnly) return false; /// never save data if in read-only mode
+
     bool result = false;
     Entry *entry = dynamic_cast<Entry*>(element);
     if (entry != NULL) {
@@ -215,8 +224,10 @@ bool ReferenceWidget::reset(const Element *element)
 
 void ReferenceWidget::setReadOnly(bool isReadOnly)
 {
-    Q_UNUSED(isReadOnly);
-    // TODO
+    ElementWidget::setReadOnly(isReadOnly);
+
+    entryId->setReadOnly(isReadOnly);
+    entryType->lineEdit()->setReadOnly(isReadOnly);
 }
 
 QString ReferenceWidget::label()
@@ -246,9 +257,10 @@ void ReferenceWidget::createGUI()
     layout->addWidget(label);
     layout->addWidget(entryType);
 
-    layout->addSpacing(16); // FIXME use constant
+    layout->addSpacing(interColumnSpace);
 
     entryId = new KLineEdit(this);
+    entryId->setClearButtonShown(true);
     label = new QLabel(i18n("Id:"), this);
     label->setBuddy(entryId);
     layout->addWidget(label);
@@ -260,12 +272,11 @@ void ReferenceWidget::createGUI()
 }
 
 
-OtherFieldsWidget::OtherFieldsWidget(QWidget *parent)
-        : ElementWidget(parent)
+OtherFieldsWidget::OtherFieldsWidget(const QStringList &blacklistedFields, QWidget *parent)
+        : ElementWidget(parent), blackListed(blacklistedFields)
 {
     internalEntry = new Entry();
     createGUI();
-    blackListed << QLatin1String("title"); // FIXME do it properly
 }
 
 OtherFieldsWidget::~OtherFieldsWidget()
@@ -275,6 +286,8 @@ OtherFieldsWidget::~OtherFieldsWidget()
 
 bool OtherFieldsWidget::apply(Element *element) const
 {
+    if (isReadOnly) return false; /// never save data if in read-only mode
+
     Entry* entry = dynamic_cast<Entry*>(element);
     if (entry == NULL) return false;
 
@@ -304,8 +317,11 @@ bool OtherFieldsWidget::reset(const Element *element)
 
 void OtherFieldsWidget::setReadOnly(bool isReadOnly)
 {
-    Q_UNUSED(isReadOnly);
-    // TODO
+    ElementWidget::setReadOnly(isReadOnly);
+
+    /// will take care of enabled/disabling buttons
+    updateGUI();
+    updateList();
 }
 
 QString OtherFieldsWidget::label()
@@ -325,10 +341,10 @@ bool OtherFieldsWidget::canEdit(const Element *element)
 
 void OtherFieldsWidget::listElementExecuted(QTreeWidgetItem *item, int column)
 {
-    Q_UNUSED(column)
+    Q_UNUSED(column) /// we do not care which column got clicked
     QString key = item->text(0);
-    otherFieldsName->setText(key);
-    otherFieldsContent->reset(internalEntry->value(key));
+    fieldName->setText(key);
+    fieldContent->reset(internalEntry->value(key));
 }
 
 void OtherFieldsWidget::listCurrentChanged(QTreeWidgetItem *item, QTreeWidgetItem *previous)
@@ -336,14 +352,13 @@ void OtherFieldsWidget::listCurrentChanged(QTreeWidgetItem *item, QTreeWidgetIte
     Q_UNUSED(previous)
     bool validUrl = false;
     bool somethingSelected = item != NULL;
-    buttonDelete->setEnabled(somethingSelected);
+    buttonDelete->setEnabled(somethingSelected && !isReadOnly);
     if (somethingSelected) {
         currentUrl = KUrl(item->text(1));
         validUrl = currentUrl.isValid() && currentUrl.isLocalFile() & QFileInfo(currentUrl.prettyUrl()).exists();
         if (!validUrl) {
-            const QRegExp urlRegExp("(http|ftp|webdav|file)s?://[^ {}\"]+");
-            if (urlRegExp.indexIn(item->text(1)) > -1) {
-                currentUrl = KUrl(urlRegExp.cap(0));
+            if (KBibTeX::urlRegExp.indexIn(item->text(1)) > -1) {
+                currentUrl = KUrl(KBibTeX::urlRegExp.cap(0));
                 validUrl = currentUrl.isValid();
                 buttonOpen->setEnabled(validUrl);
             }
@@ -357,9 +372,11 @@ void OtherFieldsWidget::listCurrentChanged(QTreeWidgetItem *item, QTreeWidgetIte
 
 void OtherFieldsWidget::actionAddApply()
 {
-    QString key = otherFieldsName->text();
+    if (isReadOnly) return; /// never modify anything if in read-only mode
+
+    QString key = fieldName->text();
     Value value;
-    if (!otherFieldsContent->apply(value)) return;
+    if (!fieldContent->apply(value)) return;
 
     if (internalEntry->contains(key))
         internalEntry->remove(key);
@@ -375,6 +392,8 @@ void OtherFieldsWidget::actionAddApply()
 
 void OtherFieldsWidget::actionDelete()
 {
+    if (isReadOnly) return; /// never modify anything if in read-only mode
+
     Q_ASSERT(otherFieldsList->currentItem() != NULL);
     QString key = otherFieldsList->currentItem()->text(0);
     if (!deletedKeys.contains(key)) deletedKeys << key;
@@ -407,18 +426,19 @@ void OtherFieldsWidget::createGUI()
 
     QLabel *label = new QLabel(i18n("Name:"), this);
     layout->addWidget(label, 0, 0, 1, 1);
-    otherFieldsName = new KLineEdit(this);
-    layout->addWidget(otherFieldsName, 0, 1, 1, 1);
-    label->setBuddy(otherFieldsName);
+    fieldName = new KLineEdit(this);
+    layout->addWidget(fieldName, 0, 1, 1, 1);
+    label->setBuddy(fieldName);
 
     buttonAddApply = new KPushButton(KIcon("add"), i18n("Add"), this);
+    buttonAddApply->setEnabled(false);
     layout->addWidget(buttonAddApply, 0, 2, 1, 1);
 
     label = new QLabel(i18n("Content:"), this);
     layout->addWidget(label, 1, 0, 1, 1);
-    otherFieldsContent = new FieldInput(KBibTeX::MultiLine, KBibTeX::tfSource, KBibTeX::tfSource, this);
-    layout->addWidget(otherFieldsContent, 1, 1, 1, 2);
-    label->setBuddy(otherFieldsContent);
+    fieldContent = new FieldInput(KBibTeX::MultiLine, KBibTeX::tfSource, KBibTeX::tfSource, this);
+    layout->addWidget(fieldContent, 1, 1, 1, 2);
+    label->setBuddy(fieldContent);
 
     label = new QLabel(i18n("List:"), this);
     layout->addWidget(label, 2, 0, 3, 1);
@@ -438,7 +458,7 @@ void OtherFieldsWidget::createGUI()
     connect(otherFieldsList, SIGNAL(itemActivated(QTreeWidgetItem*, int)), this, SLOT(listElementExecuted(QTreeWidgetItem*, int)));
     connect(otherFieldsList, SIGNAL(currentItemChanged(QTreeWidgetItem*, QTreeWidgetItem*)), this, SLOT(listCurrentChanged(QTreeWidgetItem*, QTreeWidgetItem*)));
     connect(otherFieldsList, SIGNAL(itemSelectionChanged()), this, SLOT(updateGUI()));
-    connect(otherFieldsName, SIGNAL(textChanged(QString)), this, SLOT(updateGUI()));
+    connect(fieldName, SIGNAL(textChanged(QString)), this, SLOT(updateGUI()));
     connect(buttonAddApply, SIGNAL(clicked()), this, SLOT(actionAddApply()));
     connect(buttonDelete, SIGNAL(clicked()), this, SLOT(actionDelete()));
     connect(buttonOpen, SIGNAL(clicked()), this, SLOT(actionOpen()));
@@ -465,11 +485,11 @@ void OtherFieldsWidget::updateList()
 
 void OtherFieldsWidget::updateGUI()
 {
-    QString key = otherFieldsName->text();
+    QString key = fieldName->text();
     if (key.isEmpty() || blackListed.contains(key, Qt::CaseInsensitive)) // TODO check for more (e.g. spaces)
         buttonAddApply->setEnabled(false);
     else {
-        buttonAddApply->setEnabled(true);
+        buttonAddApply->setEnabled(!isReadOnly);
         buttonAddApply->setText(internalEntry->contains(key) ? i18n("Apply") : i18n("Add"));
         buttonAddApply->setIcon(internalEntry->contains(key) ? KIcon("edit") : KIcon("add"));
     }
@@ -483,6 +503,8 @@ MacroWidget::MacroWidget(QWidget *parent)
 
 bool MacroWidget::apply(Element *element) const
 {
+    if (isReadOnly) return false; /// never save data if in read-only mode
+
     Macro* macro = dynamic_cast<Macro*>(element);
     if (macro == NULL) return false;
 
@@ -503,8 +525,9 @@ bool MacroWidget::reset(const Element *element)
 
 void MacroWidget::setReadOnly(bool isReadOnly)
 {
-    Q_UNUSED(isReadOnly);
-    // TODO
+    ElementWidget::setReadOnly(isReadOnly);
+
+    fieldInputValue->setReadOnly(isReadOnly);
 }
 
 QString MacroWidget::label()
@@ -542,6 +565,8 @@ PreambleWidget::PreambleWidget(QWidget *parent)
 
 bool PreambleWidget::apply(Element *element) const
 {
+    if (isReadOnly) return false; /// never save data if in read-only mode
+
     Preamble* preamble = dynamic_cast<Preamble*>(element);
     if (preamble == NULL) return false;
 
@@ -562,8 +587,9 @@ bool PreambleWidget::reset(const Element *element)
 
 void PreambleWidget::setReadOnly(bool isReadOnly)
 {
-    Q_UNUSED(isReadOnly);
-    // TODO
+    ElementWidget::setReadOnly(isReadOnly);
+
+    fieldInputValue->setReadOnly(isReadOnly);
 }
 
 QString PreambleWidget::label()
@@ -601,6 +627,8 @@ SourceWidget::SourceWidget(QWidget *parent)
 
 bool SourceWidget::apply(Element *element) const
 {
+    if (isReadOnly) return false; /// never save data if in read-only mode
+
     QString text = sourceEdit->document()->toPlainText();
     FileImporterBibTeX importer;
     File *file = importer.fromString(text);
@@ -643,8 +671,10 @@ bool SourceWidget::reset(const Element *element)
 
 void SourceWidget::setReadOnly(bool isReadOnly)
 {
+    ElementWidget::setReadOnly(isReadOnly);
+
     m_buttonRestore->setEnabled(!isReadOnly);
-    // TODO
+    sourceEdit->setReadOnly(isReadOnly);
 }
 
 QString SourceWidget::label()
@@ -677,13 +707,11 @@ void SourceWidget::createGUI()
     sourceEdit->document()->setDefaultFont(KGlobalSettings::fixedFont());
     sourceEdit->setTabStopWidth(QFontMetrics(sourceEdit->font()).averageCharWidth() * 4);
 
-    KPushButton *buttonCheck = new KPushButton(i18n("Validate"), this);
-    layout->addWidget(buttonCheck, 1, 1, 1, 1);
-    buttonCheck->setEnabled(false); // TODO: implement functionalty
-
     m_buttonRestore = new KPushButton(KIcon("edit-undo"), i18n("Restore"), this);
     layout->addWidget(m_buttonRestore, 1, 2, 1, 1);
     connect(m_buttonRestore, SIGNAL(clicked()), this, SLOT(reset()));
+
+    connect(sourceEdit, SIGNAL(textChanged()), this, SIGNAL(modified()));
 }
 
 void SourceWidget::reset()

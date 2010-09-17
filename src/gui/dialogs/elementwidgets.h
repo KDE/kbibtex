@@ -47,10 +47,12 @@ class ElementWidget : public QWidget
     Q_OBJECT
 
 public:
-    ElementWidget(QWidget *parent): QWidget(parent) {};
+    ElementWidget(QWidget *parent): QWidget(parent), isReadOnly(false) {};
     virtual bool apply(Element *element) const = 0;
     virtual bool reset(const Element *element) = 0;
-    virtual void setReadOnly(bool isReadOnly) = 0;
+    virtual void setReadOnly(bool isReadOnly) {
+        this->isReadOnly = isReadOnly;
+    };
     virtual QString label() = 0;
     virtual KIcon icon() = 0;
 
@@ -58,6 +60,9 @@ public:
         Q_UNUSED(element)
         return false;
     };
+
+protected:
+    bool isReadOnly;
 
 signals:
     void modified();
@@ -106,22 +111,23 @@ class OtherFieldsWidget : public ElementWidget
     Q_OBJECT
 
 private:
-    KLineEdit *otherFieldsName;
-    FieldInput *otherFieldsContent;
+    KLineEdit *fieldName;
+    FieldInput *fieldContent;
     QTreeWidget *otherFieldsList;
     KPushButton *buttonDelete;
     KPushButton *buttonOpen;
     KPushButton *buttonAddApply;
     KUrl currentUrl;
-    QStringList blackListed;
+    const QStringList blackListed;
     Entry *internalEntry;
     QStringList deletedKeys, modifiedKeys;
+    bool m_isReadOnly;
 
     void createGUI();
     void updateList();
 
 public:
-    OtherFieldsWidget(QWidget *parent);
+    OtherFieldsWidget(const QStringList &blacklistedFields, QWidget *parent);
     ~OtherFieldsWidget();
 
     bool apply(Element *element) const;
