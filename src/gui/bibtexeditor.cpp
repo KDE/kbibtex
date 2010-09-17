@@ -70,6 +70,9 @@ void BibTeXEditor::editElement(Element *element)
     connect(&dialog, SIGNAL(resetClicked()), &elementEditor, SLOT(reset()));
 
     dialog.exec();
+
+    if (elementEditor.isModified())
+        emit currentElementChanged(currentElement(), bibTeXModel()->bibTeXFile());
 }
 
 const QList<Element*>& BibTeXEditor::selectedElements() const
@@ -110,12 +113,6 @@ const Element* BibTeXEditor::currentElement() const
 Element* BibTeXEditor::currentElement()
 {
     return m_current;
-}
-
-void BibTeXEditor::keyPressEvent(QKeyEvent *event)
-{
-    QTreeView::keyPressEvent(event);
-    emit keyPressed(event);
 }
 
 void BibTeXEditor::currentChanged(const QModelIndex & current, const QModelIndex & previous)

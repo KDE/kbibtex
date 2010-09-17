@@ -45,7 +45,6 @@ signals:
     void selectedElementsChanged();
     void currentElementChanged(Element*, const File *);
     void elementExecuted(Element*);
-    void keyPressed(QKeyEvent *);
 
 public slots:
     void viewCurrentElement();
@@ -56,7 +55,6 @@ public slots:
     void setSelectedElement(Element*);
 
 protected:
-    void keyPressEvent(QKeyEvent *event);
     void currentChanged(const QModelIndex & current, const QModelIndex & previous);
     void selectionChanged(const QItemSelection & selected, const QItemSelection & deselected);
 
