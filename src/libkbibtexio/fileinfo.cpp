@@ -27,7 +27,7 @@
 #include "fileinfo.h"
 
 static const QRegExp urlRegExp("(http|s?ftp|webdav|file)s?://[^ {}\"]+", Qt::CaseInsensitive);
-static const QRegExp doiRegExp("10\\.\\d{4}/[-a-z0-9.()_:]+", Qt::CaseInsensitive);
+static const QRegExp doiRegExp("10\\.\\d{4}/[-a-z0-9.()_:\\]+", Qt::CaseInsensitive);
 static const QString doiUrlPrefix = QLatin1String("http://dx.doi.org/");
 
 FileInfo::FileInfo()
@@ -53,18 +53,15 @@ QList<KUrl> FileInfo::entryUrls(const Entry *entry, const KUrl &baseUrl)
 
         pos = -1;
         while ((pos = doiRegExp.indexIn(plainText, pos + 1)) != -1) {
-            KUrl url(doiUrlPrefix + doiRegExp.cap(0));
-            if (url.isValid()) {
-                kDebug() << "DOI url = " << url;
+            KUrl url(doiUrlPrefix + doiRegExp.cap(0).replace("\\", ""));
+            if (url.isValid())
                 result << url;
-            }
         }
     }
 
     if (baseUrl.isValid() && baseUrl.isLocalFile()) {
         KUrl url = baseUrl;
         url.setFileName(entry->id() + ".pdf"); // FIXME: Test more extensions
-        kDebug() << "local url=" << url;
         if (QFileInfo(url.path()).exists())
             result << url;
 
@@ -72,7 +69,6 @@ QList<KUrl> FileInfo::entryUrls(const Entry *entry, const KUrl &baseUrl)
         QString basename = baseUrl.fileName().replace(QRegExp("\\.[^.]{2,5}$"), "");
         url.setPath(url.path().replace(baseUrl.fileName(), basename) + QDir::separator() + basename);
         url.setFileName(entry->id() + ".pdf"); // FIXME: Test more extensions
-        kDebug() << "local url=" << url;
         if (QFileInfo(url.path()).exists())
             result << url;
     }

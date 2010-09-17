@@ -97,6 +97,7 @@ public:
             runningStatJob = NULL;
         }
 
+        int localUrlIndex = 0; /// if no url below is local, use first entry as fall-back
         urlList = FileInfo::entryUrls(entry, baseUrl);
         for (QList<KUrl>::ConstIterator it = urlList.constBegin(); it != urlList.constEnd(); ++it) {
             QString fn = (*it).fileName();
@@ -105,9 +106,11 @@ public:
             QPair<QString, KIcon> mimeTypeIcon = mimeType(*it);
             urlComboBox->addItem(mimeTypeIcon.second, text);
             cbxEntryToUrl.insert(text, *it);
+            if ((*it).isLocalFile()) /// memorize url's index in drop-down list
+                localUrlIndex = urlComboBox->count() - 1;
         }
         if (urlComboBox->count() > 0) {
-            urlComboBox->setCurrentIndex(0);
+            urlComboBox->setCurrentIndex(localUrlIndex);
             urlSelected(urlComboBox->currentText());
         }
         urlComboBox->setEnabled(urlComboBox->count() > 0);
@@ -164,7 +167,7 @@ public:
     }
 
     void switchWidget(QWidget *newWidget) {
-        if (currentWidget != NULL)
+        if (dynamic_cast<QLabel*>(currentWidget) != NULL)
             delete currentWidget;
 
         newWidget->show();
