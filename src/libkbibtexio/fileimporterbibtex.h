@@ -123,6 +123,7 @@ private:
     static bool splitName(const QString& name, QStringList& segments);
 
     bool evaluateParameterComments(QTextStream *textStream, const QString &line);
+    QString tokenidToString(Token token);
 };
 
 #endif // KBIBTEX_IO_FILEIMPORTERBIBTEX_H

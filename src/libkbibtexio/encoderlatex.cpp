@@ -105,7 +105,9 @@ commandmappingdatalatex[] = {
     {"grqq", 0x201C},
     {"glqq", 0x201E},
     {"frqq", 0x00BB},
-    {"flqq", 0x00AB}
+    {"flqq", 0x00AB},
+    {"rq", 0x2019},
+    {"lq", 0x2018}
 };
 
 static const int commandmappingdatalatexcount = sizeof(commandmappingdatalatex) / sizeof(commandmappingdatalatex[ 0 ]) ;
@@ -340,6 +342,7 @@ static const struct EncoderLaTeXCharMapping {
 }
 charmappingdatalatex[] = {
     {"\\\\#", 0x0023, "\\#"},
+    {"\\\\&", 0x0026, "\\&"},
     {"\\\\_", 0x005F, "\\_"},
     {"!`", 0x00A1, "!`"},
     {"\"<", 0x00AB, "\"<"},
@@ -447,7 +450,12 @@ EncoderLaTeX::~EncoderLaTeX()
 QString EncoderLaTeX::decode(const QString & text)
 {
     const QString splitMarker = "|KBIBTEX|";
-    QString result = text;
+
+    /** start-stop marker ensures that each text starts and stops
+      * with plain text and not with an inline math environment.
+      * This invariant is exploited implicitly in the code below. */
+    const QString startStopMarker = "|STARTSTOP|";
+    QString result = startStopMarker + text + startStopMarker;
 
     /** Collect (all?) urls from the BibTeX file and store them in urls */
     /** Problem is that the replace function below will replace
@@ -486,7 +494,9 @@ QString EncoderLaTeX::decode(const QString & text)
             ++it;
             (*cur).append('$').append(*it);
             intermediate.erase(it);
-            it = cur;
+            /// we have to restart here, as the iterators seem to be messed up
+            // FIXME do this more efficient?
+            it = intermediate.begin();
         } else
             ++it;
     }
@@ -533,13 +543,18 @@ QString EncoderLaTeX::decode(const QString & text)
         }
     }
 
-    return result;
+    return result.replace(startStopMarker, "");
 }
 
 QString EncoderLaTeX::encode(const QString & text)
 {
     const QString splitMarker = "|KBIBTEX|";
-    QString result = text;
+
+    /** start-stop marker ensures that each text starts and stops
+      * with plain text and not with an inline math environment.
+      * This invariant is exploited implicitly in the code below. */
+    const QString startStopMarker = "|STARTSTOP|";
+    QString result = startStopMarker + text + startStopMarker;
 
     /** Collect (all?) urls from the BibTeX file and store them in urls */
     /** Problem is that the replace function below will replace
@@ -626,7 +641,7 @@ QString EncoderLaTeX::encode(const QString & text)
         }
     }
 
-    return result;
+    return result.replace(startStopMarker, "");
 }
 
 QString EncoderLaTeX::encode(const QString &text, const QChar &replace)

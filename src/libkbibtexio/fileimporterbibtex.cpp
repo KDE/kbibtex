@@ -53,8 +53,6 @@ FileImporterBibTeX::~FileImporterBibTeX()
 
 File* FileImporterBibTeX::load(QIODevice *iodevice)
 {
-    m_mutex.lock();
-    QCoreApplication::instance()->processEvents();
     m_cancelFlag = false;
 
     m_textStream = new QTextStream(iodevice);
@@ -68,16 +66,13 @@ File* FileImporterBibTeX::load(QIODevice *iodevice)
     }
     delete m_textStream;
 
-    QCoreApplication::instance()->processEvents();
 
     /** Remove HTML code from the input source */
     rawText = rawText.replace(htmlRegExp, "");
 
     rawText = EncoderLaTeX::currentEncoderLaTeX() ->decode(rawText);
-    QCoreApplication::instance()->processEvents();
 
     unescapeLaTeXChars(rawText);
-    QCoreApplication::instance()->processEvents();
 
     m_textStream = new QTextStream(&rawText, QIODevice::ReadOnly);
     m_textStream->setCodec("UTF-8");
@@ -86,7 +81,6 @@ File* FileImporterBibTeX::load(QIODevice *iodevice)
     File *result = new File();
     while (!m_cancelFlag && !m_textStream->atEnd()) {
         emit progress(m_textStream->pos(), rawText.length());
-        QCoreApplication::instance()->processEvents();
         Element * element = nextElement();
 
         if (element != NULL) {
@@ -96,19 +90,17 @@ File* FileImporterBibTeX::load(QIODevice *iodevice)
             else
                 delete element;
         }
-        QCoreApplication::instance()->processEvents();
     }
     emit progress(100, 100);
 
     if (m_cancelFlag) {
-        qWarning("Loading file has been canceled");
+        kWarning() << "Loading file has been canceled";
         delete result;
         result = NULL;
     }
 
     delete m_textStream;
 
-    m_mutex.unlock();
     return result;
 }
 
@@ -138,14 +130,16 @@ Element *FileImporterBibTeX::nextElement()
         else if (!elementType.isEmpty())
             return readEntryElement(elementType);
         else {
-            qWarning("ElementType is empty");
+            kWarning() << "ElementType is empty";
             return NULL;
         }
-    } else if (token == tUnknown)
+    } else if (token == tUnknown) {
+        kWarning() << "Unknown token near line " << m_lineNo << ", treating as comment";
         return readPlainCommentElement();
+    }
 
     if (token != tEOF)
-        qWarning() << "Don't know how to parse next token of type " << token << " in line " << m_lineNo << endl;
+        kWarning() << "Don't know how to parse next token of type " << tokenidToString(token) << " in line " << m_lineNo << endl;
 
     return NULL;
 }
@@ -187,7 +181,7 @@ Macro *FileImporterBibTeX::readMacroElement()
     Token token = nextToken();
     while (token != tBracketOpen) {
         if (token == tEOF) {
-            qWarning("Error in parsing unknown macro: Opening curly brace ({) expected");
+            kWarning() << "Error in parsing unknown macro' (near line " << m_lineNo << "): Opening curly brace ({) expected";
             return NULL;
         }
         token = nextToken();
@@ -195,7 +189,7 @@ Macro *FileImporterBibTeX::readMacroElement()
 
     QString key = readSimpleString();
     if (nextToken() != tAssign) {
-        qCritical() << "Error in parsing macro '" << key << "': Assign symbol (=) expected";
+        kError() << "Error in parsing macro '" << key << "'' (near line " << m_lineNo << "): Assign symbol (=) expected";
         return NULL;
     }
 
@@ -219,7 +213,7 @@ Preamble *FileImporterBibTeX::readPreambleElement()
     Token token = nextToken();
     while (token != tBracketOpen) {
         if (token == tEOF) {
-            qWarning("Error in parsing unknown preamble: Opening curly brace ({) expected");
+            kWarning() << "Error in parsing unknown preamble' (near line " << m_lineNo << "): Opening curly brace ({) expected";
             return NULL;
         }
         token = nextToken();
@@ -248,7 +242,7 @@ Entry *FileImporterBibTeX::readEntryElement(const QString& typeString)
     Token token = nextToken();
     while (token != tBracketOpen) {
         if (token == tEOF) {
-            qWarning("Error in parsing unknown entry: Opening curly brace ({) expected");
+            kWarning() << "Error in parsing unknown entry' (near line " << m_lineNo << "): Opening curly brace ({) expected";
             return NULL;
         }
         token = nextToken();
@@ -262,13 +256,12 @@ Entry *FileImporterBibTeX::readEntryElement(const QString& typeString)
         if (token == tBracketClose || token == tEOF)
             break;
         else if (token != tComma) {
-            if (m_currentChar.isLetter()) {
-                kWarning() << "Error in parsing entry '" << key << "': Comma symbol (,) expected but got letter " << m_currentChar;
-            } else {
-                kWarning() << "Error in parsing entry '" << key << "': Comma symbol (,) expected";
-                delete entry;
-                return NULL;
-            }
+            if (m_currentChar.isLetter())
+                kWarning() << "Error in parsing entry '" << key << "' (near line " << m_lineNo << "): Comma symbol (,) expected but got letter " << m_currentChar << " (token " << tokenidToString(token) << ")";
+            else
+                kWarning() << "Error in parsing entry '" << key << "' (near line " << m_lineNo << "): Comma symbol (,) expected but got character 0x" << QString::number(m_currentChar.unicode(), 16) << " (token " << tokenidToString(token) << ")";
+            delete entry;
+            return NULL;
         }
 
         QString keyName = bf->format(readSimpleString(), m_keywordCasing);
@@ -277,7 +270,7 @@ Entry *FileImporterBibTeX::readEntryElement(const QString& typeString)
             // entry is buggy, but we still accept it
             break;
         } else if (token != tAssign) {
-            qCritical() << "Error in parsing entry '" << key << "': Assign symbol (=) expected after field name '" << keyName << "'";
+            kError() << "Error in parsing entry '" << key << "'' (near line " << m_lineNo << "): Assign symbol (=) expected after field name '" << keyName << "'";
             delete entry;
             return NULL;
         }
@@ -290,7 +283,7 @@ Entry *FileImporterBibTeX::readEntryElement(const QString& typeString)
                 ++i;
                 appendix = QString::number(i);
             }
-            kWarning() << "Entry already contains a key " << keyName << ", using " << (keyName + appendix);
+            kWarning() << "Entry already contains a key " << keyName << "' (near line " << m_lineNo << "), using " << (keyName + appendix);
             keyName += appendix;
         }
 
@@ -679,4 +672,20 @@ bool FileImporterBibTeX::evaluateParameterComments(QTextStream *textStream, cons
     }
 
     return false;
+}
+
+QString FileImporterBibTeX::tokenidToString(Token token)
+{
+    switch (token) {
+    case tAt: return QString("At");
+    case tBracketClose: return QString("BracketClose");
+    case tBracketOpen: return QString("BracketOpen");
+    case tAlphaNumText: return QString("AlphaNumText");
+    case tAssign: return QString("Assign");
+    case tComma: return QString("Comma");
+    case tDoublecross: return QString("Doublecross");
+    case tEOF: return QString("EOF");
+    case tUnknown: return QString("Unknown");
+    default: return QString("<Unknown>");
+    }
 }
