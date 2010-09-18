@@ -34,7 +34,7 @@ typedef struct {
 typedef struct {
     QString uiCaption;
     int columns;
-    QList <SingleFieldLayout> singleFieldLayouts;
+    QList<SingleFieldLayout> singleFieldLayouts;
 } EntryTabLayout;
 
 /**

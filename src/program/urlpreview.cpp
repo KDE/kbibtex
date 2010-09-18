@@ -72,7 +72,7 @@ public:
             : p(parent), partWidget(NULL), currentWidget(NULL), currentPart(NULL), transferJob(NULL) {
         tempFile.setPrefix("kbibtex");
         tempFile.setSuffix("preview");
-                setupGUI();
+        setupGUI();
     }
 
     void setupGUI() {
@@ -153,16 +153,16 @@ public:
         p->setCursor(Qt::WaitCursor);
 
         if (widget == NULL) {
-                  QLabel *label = new QLabel(i18n("Retrieving file ..."), p);
-                label->setAlignment(Qt::AlignCenter);
-                urlToWidget.insert(url, label);
+            QLabel *label = new QLabel(i18n("Retrieving file ..."), p);
+            label->setAlignment(Qt::AlignCenter);
+            urlToWidget.insert(url, label);
 
-                if (transferJob != NULL)
-                    transferJob->kill(KJob::Quietly);
-                transferJob = KIO::storedGet(url, KIO::Reload);
-                connect(transferJob, SIGNAL(finished(KJob*)), p, SLOT(statJobFinished(KJob*)));
-                stillWaiting = true;
-         }
+            if (transferJob != NULL)
+                transferJob->kill(KJob::Quietly);
+            transferJob = KIO::storedGet(url, KIO::Reload);
+            connect(transferJob, SIGNAL(finished(KJob*)), p, SLOT(statJobFinished(KJob*)));
+            stillWaiting = true;
+        }
 
         switchWidget(urlToWidget[url]);
 
@@ -173,7 +173,7 @@ public:
     void switchWidget(QWidget *newWidget) {
         if (dynamic_cast<QLabel*>(currentWidget) != NULL)
             currentWidget->deleteLater();
-        if (dynamic_cast<QLabel*>(newWidget) != NULL&& currentPart!=NULL)
+        if (dynamic_cast<QLabel*>(newWidget) != NULL && currentPart != NULL)
             currentPart->deleteLater();
 
         newWidget->show();
@@ -219,17 +219,17 @@ public:
 
         if (job->error() == 0 && !job->data().isEmpty()) {
             KParts::ReadOnlyPart* part = NULL;
-            bool tempFileOk=false;
-            KUrl url=job->url();
+            bool tempFileOk = false;
+            KUrl url = job->url();
 
-            if (tempFile.open()){
-              tempFileOk=tempFile.write(job->data())==job->data().size();
-            tempFile.close();
-        }
+            if (tempFile.open()) {
+                tempFileOk = tempFile.write(job->data()) == job->data().size();
+                tempFile.close();
+            }
 
-            if (tempFileOk){
+            if (tempFileOk) {
                 tempFile.open();
-                KMimeType::Ptr mimeType=KMimeType::findByContent(&tempFile);
+                KMimeType::Ptr mimeType = KMimeType::findByContent(&tempFile);
                 tempFile.close();
 
                 KService::Ptr serivcePtr = KMimeTypeTrader::self()->preferredService(mimeType->name(), "KParts/ReadOnlyPart");
@@ -240,9 +240,9 @@ public:
             urlToWidget.remove(url);
             if (part != NULL) {
                 urlToWidget.insert(url, part->widget());
-                kDebug()<<" Part created, opening "<<url.prettyUrl();
+                kDebug() << " Part created, opening " << url.prettyUrl();
                 /// special treatment for web pages (containing "htm" in mime type)
-                part->openUrl(url.prettyUrl().contains("htm")?url.prettyUrl():tempFile.fileName());
+                part->openUrl(url.prettyUrl().contains("htm") ? url.prettyUrl() : tempFile.fileName());
             } else {
                 kWarning() << "Cannot create preview for " << url.prettyUrl();
                 QLabel *label = new QLabel(i18n("Cannot create preview for\n%1", url.prettyUrl()), p);
