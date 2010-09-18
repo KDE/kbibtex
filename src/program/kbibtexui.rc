@@ -11,6 +11,9 @@
 
     <Action name="file_quit"/>
   </Menu>
+  <Menu name="settings">
+    <Action name="settings_shown_panels" append="show_merge" />
+  </Menu>
   <Merge />
 </MenuBar>
 <ToolBar noMerge="1" name="mainToolBar">

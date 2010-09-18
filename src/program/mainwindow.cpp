@@ -24,12 +24,14 @@
 #include <KDebug>
 #include <KApplication>
 #include <KAction>
+#include <KActionMenu>
 #include <KEncodingFileDialog>
 #include <KGlobal>
 #include <KActionCollection>
 #include <KPluginFactory>
 #include <KPluginLoader>
 #include <KMessageBox>
+#include <KMenu>
 
 #include "mainwindow.h"
 #include "documentlist.h"
@@ -96,14 +98,21 @@ KBibTeXMainWindow::KBibTeXMainWindow(KBibTeXProgram *program)
     connect(d->openFileInfoManager, SIGNAL(currentChanged(OpenFileInfo*)), d->mdiWidget, SLOT(setFile(OpenFileInfo*)));
     connect(d->openFileInfoManager, SIGNAL(closing(OpenFileInfo*)), d->mdiWidget, SLOT(closeFile(OpenFileInfo*)));
 
+
+    KActionMenu *showPanelsAction = new KActionMenu(i18n("Show Panels"), this);
+    actionCollection()->addAction("settings_shown_panels", showPanelsAction);
+    KMenu *showPanelsMenu = new KMenu(showPanelsAction->text(), widget());
+    showPanelsAction->setMenu(showPanelsMenu);
+
     d->dockDocumentList = new QDockWidget(i18n("List of Documents"), this);
     d->dockDocumentList->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
     addDockWidget(Qt::LeftDockWidgetArea, d->dockDocumentList);
     d->listDocumentList = new DocumentList(OpenFileInfoManager::getOpenFileInfoManager(), d->dockDocumentList);
     d->dockDocumentList->setWidget(d->listDocumentList);
     d->dockDocumentList->setObjectName("dockDocumentList");
-    d->dockDocumentList->setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
+    d->dockDocumentList->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
     // connect(d->listDocumentList, SIGNAL(open(const KUrl &, const QString&)), this, SLOT(openDocument(const KUrl&, const QString&)));
+    showPanelsMenu->addAction(d->dockDocumentList->toggleViewAction());
 
     d->dockReferencePreview = new QDockWidget(i18n("Reference Preview"), this);
     d->dockReferencePreview->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
@@ -111,7 +120,8 @@ KBibTeXMainWindow::KBibTeXMainWindow(KBibTeXProgram *program)
     d->referencePreview = new ReferencePreview(d->dockReferencePreview);
     d->dockReferencePreview->setWidget(d->referencePreview);
     d->dockReferencePreview->setObjectName("dockReferencePreview");
-    d->dockReferencePreview->setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
+    d->dockReferencePreview->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
+    showPanelsMenu->addAction(d->dockReferencePreview->toggleViewAction());
 
     d->dockUrlPreview = new QDockWidget(i18n("Preview"), this);
     d->dockUrlPreview->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
@@ -119,7 +129,8 @@ KBibTeXMainWindow::KBibTeXMainWindow(KBibTeXProgram *program)
     d->urlPreview = new UrlPreview(d->dockUrlPreview);
     d->dockUrlPreview->setWidget(d->urlPreview);
     d->dockUrlPreview->setObjectName("dockUrlPreview");
-    d->dockUrlPreview->setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
+    d->dockUrlPreview->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
+    showPanelsMenu->addAction(d->dockUrlPreview->toggleViewAction());
 
     d->dockSearchForm = new QDockWidget(i18n("Online Search"), this);
     d->dockSearchForm->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
@@ -127,7 +138,8 @@ KBibTeXMainWindow::KBibTeXMainWindow(KBibTeXProgram *program)
     d->searchForm = new SearchForm(d->mdiWidget, d->dockSearchForm);
     d->dockSearchForm->setWidget(d->searchForm);
     d->dockSearchForm->setObjectName("dockSearchFrom");
-    d->dockSearchForm->setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
+    d->dockSearchForm->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
+    showPanelsMenu->addAction(d->dockSearchForm->toggleViewAction());
 
     d->dockElementForm = new QDockWidget(i18n("Element Editor"), this);
     d->dockElementForm->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
@@ -135,7 +147,8 @@ KBibTeXMainWindow::KBibTeXMainWindow(KBibTeXProgram *program)
     d->elementForm = new ElementForm(d->mdiWidget, d->dockElementForm);
     d->dockElementForm->setWidget(d->elementForm);
     d->dockElementForm->setObjectName("dockElementFrom");
-    d->dockElementForm->setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
+    d->dockElementForm->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
+    showPanelsMenu->addAction(d->dockElementForm->toggleViewAction());
 
     actionCollection()->addAction(KStandardAction::New, this, SLOT(newDocument()));
     actionCollection()->addAction(KStandardAction::Open, this, SLOT(openDocumentDialog()));
@@ -244,4 +257,3 @@ void KBibTeXMainWindow::documentSwitched(BibTeXEditor *oldEditor, BibTeXEditor *
     d->elementForm->setElement(NULL, NULL);
     d->urlPreview->setElement(NULL, NULL);
 }
-
