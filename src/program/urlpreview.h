@@ -50,6 +50,7 @@ private slots:
     void urlSelected(const QString &);
     void openExternally();
     void statJobFinished(KJob *);
+    void externalUrlExclusionChanged();
 };
 
 #endif // KBIBTEX_PROGRAM_URLPREVIEW_H
