@@ -1,15 +1,17 @@
 [Desktop Entry]
+Encoding=UTF-8
 Name=KBibTeX
-Name[x-test]=xxKBibTeXxx
+Name[de]=KBibTeX
+Comment=KDE-based editor for bibliographic files
+Comment[de]=KDE-basierter Editor für Bibliographiedateien
 GenericName=BibTeX Editor
-GenericName[x-test]=xxBibTeX Editorxx
+GenericName[de]=BibTeX-Editor
 Icon=kbibtex
 Exec=kbibtex -caption "%c" %U
 Type=Application
-X-DocPath=kbibtex/index.html
+Terminal=false
 Terminal=false
 X-KDE-StartupNotify=true
 # TODO X-DBUS-StartupType=Multi
-# TODO X-DBUS-ServiceName=org.kde.okteta
-# TODO Categories=Qt;KDE;Utility;X-KDE-Utilities-File;
-
+# TODO X-DBUS-ServiceName=org.kde.kbibtex
+TODO Categories=Qt;KDE;Office;Database;Science;Literature;

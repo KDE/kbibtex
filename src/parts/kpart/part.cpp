@@ -161,7 +161,6 @@ KBibTeXPart::KBibTeXPart(QWidget *parentWidget, QObject *parent, bool browserVie
     setWidget(d->editor);
 
     connect(d->editor, SIGNAL(elementExecuted(Element*)), d->editor, SLOT(editElement(Element*)));
-    connect(d->editor, SIGNAL(keyPressed(QKeyEvent*)), this, SLOT(editorKeyPressed(QKeyEvent*)));
 
     setupActions(browserViewWanted);
 
