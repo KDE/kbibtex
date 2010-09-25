@@ -21,8 +21,12 @@
 #include <QApplication>
 #include <QClipboard>
 #include <QBuffer>
+#include <QMouseEvent>
+#include <QDrag>
 
-#include <bibtexfileview.h>
+#include <KDebug>
+
+#include <bibtexeditor.h>
 #include <bibtexfilemodel.h>
 #include <fileimporterbibtex.h>
 #include <fileexporterbibtex.h>
@@ -35,45 +39,65 @@ private:
     Clipboard *parent;
 
 public:
-    BibTeXFileView *bibTeXFileView;
+    BibTeXEditor *bibTeXEditor;
+    QPoint previousPosition;
 
-    ClipboardPrivate(BibTeXFileView *bfv, Clipboard *p)
-            : parent(p), bibTeXFileView(bfv) {
+    ClipboardPrivate(BibTeXEditor *be, Clipboard *p)
+            : parent(p), bibTeXEditor(be) {
         // TODO
+    }
+
+    QString selectionToText() {
+        QModelIndexList mil = bibTeXEditor->selectionModel()->selectedRows();
+        File *file = new File();
+        for (QModelIndexList::ConstIterator it = mil.constBegin(); it != mil.constEnd(); ++it) {
+            file->append(bibTeXEditor->bibTeXModel()->element(bibTeXEditor->sortFilterProxyModel()->mapToSource(*it).row()));
+        }
+
+        FileExporterBibTeX exporter;
+        QBuffer buffer(bibTeXEditor);
+        buffer.open(QBuffer::WriteOnly);
+        exporter.save(&buffer, file);
+        buffer.close();
+
+        buffer.open(QBuffer::ReadOnly);
+        QTextStream ts(&buffer);
+        QString text = ts.readAll();
+        buffer.close();
+
+        return text;
+    }
+
+    void insertText(const QString &text) {
+        QItemSelectionModel *ism = bibTeXEditor->selectionModel();
+        ism->clear();
+        FileImporterBibTeX importer;
+        File *file = importer.fromString(text);
+
+        for (File::Iterator it = file->begin(); it != file->end(); ++it)
+            bibTeXEditor->bibTeXModel()->insertRow(*it, bibTeXEditor->model()->rowCount());
     }
 };
 
-Clipboard::Clipboard(BibTeXFileView *bibTeXFileView)
-        : QObject(bibTeXFileView), d(new ClipboardPrivate(bibTeXFileView, this))
+Clipboard::Clipboard(BibTeXEditor *bibTeXEditor)
+        : QObject(bibTeXEditor), d(new ClipboardPrivate(bibTeXEditor, this))
 {
-
+    connect(bibTeXEditor, SIGNAL(editorMouseEvent(QMouseEvent*)), this, SLOT(editorMouseEvent(QMouseEvent*)));
+    connect(bibTeXEditor, SIGNAL(editorDragEnterEvent(QDragEnterEvent*)), this, SLOT(editorDragEnterEvent(QDragEnterEvent*)));
+    connect(bibTeXEditor, SIGNAL(editorDragMoveEvent(QDragMoveEvent*)), this, SLOT(editorDragMoveEvent(QDragMoveEvent*)));
+    connect(bibTeXEditor, SIGNAL(editorDropEvent(QDropEvent*)), this, SLOT(editorDropEvent(QDropEvent*)));
+    bibTeXEditor->setAcceptDrops(true);
 }
 
 void Clipboard::cut()
 {
     copy();
-    d->bibTeXFileView->selectionDelete();
+    d->bibTeXEditor->selectionDelete();
 }
 
 void Clipboard::copy()
 {
-    QModelIndexList mil = d->bibTeXFileView->selectionModel()->selectedRows();
-    File *file = new File();
-    for (QModelIndexList::ConstIterator it = mil.constBegin(); it != mil.constEnd(); ++it) {
-        file->append(d->bibTeXFileView->bibTeXModel()->element(d->bibTeXFileView->sortFilterProxyModel()->mapToSource(*it).row()));
-    }
-
-    FileExporterBibTeX exporter;
-    QBuffer buffer(d->bibTeXFileView);
-    buffer.open(QBuffer::WriteOnly);
-    exporter.save(&buffer, file);
-    buffer.close();
-
-    buffer.open(QBuffer::ReadOnly);
-    QTextStream ts(&buffer);
-    QString text = ts.readAll();
-    buffer.close();
-
+    QString text = d->selectionToText();
     QClipboard *clipboard = QApplication::clipboard();
     clipboard->setText(text);
 }
@@ -81,9 +105,9 @@ void Clipboard::copy()
 void Clipboard::copyReferences()
 {
     QStringList references;
-    QModelIndexList mil = d->bibTeXFileView->selectionModel()->selectedRows();
+    QModelIndexList mil = d->bibTeXEditor->selectionModel()->selectedRows();
     for (QModelIndexList::ConstIterator it = mil.constBegin(); it != mil.constEnd(); ++it) {
-        Entry *entry = dynamic_cast<Entry*>(d->bibTeXFileView->bibTeXModel()->element(d->bibTeXFileView->sortFilterProxyModel()->mapToSource(*it).row()));
+        Entry *entry = dynamic_cast<Entry*>(d->bibTeXEditor->bibTeXModel()->element(d->bibTeXEditor->sortFilterProxyModel()->mapToSource(*it).row()));
         if (entry != NULL)
             references << entry->id();
     }
@@ -96,13 +120,48 @@ void Clipboard::copyReferences()
 
 void Clipboard::paste()
 {
-    QItemSelectionModel *ism = d->bibTeXFileView->selectionModel();
-    ism->clear();
-    FileImporterBibTeX importer;
     QClipboard *clipboard = QApplication::clipboard();
-    File *file = importer.fromString(clipboard->text());
-
-    for (File::Iterator it = file->begin(); it != file->end(); ++it)
-        d->bibTeXFileView->bibTeXModel()->insertRow(*it, d->bibTeXFileView->model()->rowCount());
+    d->insertText(clipboard->text());
 }
 
+
+void Clipboard::editorMouseEvent(QMouseEvent *event)
+{
+    if (!(event->buttons()&Qt::LeftButton))
+        return;
+
+    if (d->previousPosition.x() > -1 && (event->pos() - d->previousPosition).manhattanLength() >= QApplication::startDragDistance()) {
+        QString text = d->selectionToText();
+
+        QDrag *drag = new QDrag(d->bibTeXEditor);
+        QMimeData *mimeData = new QMimeData();
+        QByteArray data = text.toAscii();
+        mimeData->setData("text/plain", data);
+        drag->setMimeData(mimeData);
+
+        Qt::DropAction dropAction = drag->exec(Qt::CopyAction);
+        Q_ASSERT_X(dropAction == Qt::CopyAction, "void Clipboard::editorMouseEvent(QMouseEvent *event)", "Drag'n'drop is not the expected copy operation");
+    }
+
+    d->previousPosition = event->pos();
+}
+
+void Clipboard::editorDragEnterEvent(QDragEnterEvent *event)
+{
+    if (event->mimeData()->hasText())
+        event->acceptProposedAction();
+}
+
+void Clipboard::editorDragMoveEvent(QDragMoveEvent *event)
+{
+    if (event->mimeData()->hasText())
+        event->acceptProposedAction();
+}
+
+void Clipboard::editorDropEvent(QDropEvent *event)
+{
+    QString text = event->mimeData()->text();
+
+    if (!text.isEmpty())
+        d->insertText(text);
+}

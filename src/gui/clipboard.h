@@ -25,20 +25,26 @@
 
 #include <QObject>
 
-class BibTeXFileView;
+class BibTeXEditor;
 
 class KBIBTEXIO_EXPORT Clipboard : public QObject
 {
     Q_OBJECT
 
 public:
-    Clipboard(BibTeXFileView *bibTeXFileView);
+    Clipboard(BibTeXEditor *bibTeXEditor);
 
 public slots:
     void cut();
     void copy();
     void copyReferences();
     void paste();
+
+private slots:
+    void editorMouseEvent(QMouseEvent *event);
+    void editorDragEnterEvent(QDragEnterEvent *event);
+    void editorDragMoveEvent(QDragMoveEvent *event);
+    void editorDropEvent(QDropEvent *event);
 
 private:
     class ClipboardPrivate;

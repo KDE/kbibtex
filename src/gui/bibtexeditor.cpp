@@ -143,6 +143,26 @@ void BibTeXEditor::selectionChanged(const QItemSelection & selected, const QItem
     emit selectedElementsChanged();
 }
 
+void BibTeXEditor::mouseMoveEvent(QMouseEvent *event)
+{
+    emit editorMouseEvent(event);
+}
+
+void BibTeXEditor::dragEnterEvent(QDragEnterEvent *event)
+{
+    emit editorDragEnterEvent(event);
+}
+
+void BibTeXEditor::dropEvent(QDropEvent *event)
+{
+    emit editorDropEvent(event);
+}
+
+void BibTeXEditor::dragMoveEvent(QDragMoveEvent *event)
+{
+    emit editorDragMoveEvent(event);
+}
+
 void BibTeXEditor::itemActivated(const QModelIndex & index)
 {
     emit elementExecuted(bibTeXModel()->element(sortFilterProxyModel()->mapToSource(index).row()));

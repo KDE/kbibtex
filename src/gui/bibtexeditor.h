@@ -45,6 +45,10 @@ signals:
     void selectedElementsChanged();
     void currentElementChanged(Element*, const File *);
     void elementExecuted(Element*);
+    void editorMouseEvent(QMouseEvent *);
+    void editorDragEnterEvent(QDragEnterEvent *);
+    void editorDragMoveEvent(QDragMoveEvent *);
+    void editorDropEvent(QDropEvent *);
 
 public slots:
     void viewCurrentElement();
@@ -57,6 +61,11 @@ public slots:
 protected:
     void currentChanged(const QModelIndex & current, const QModelIndex & previous);
     void selectionChanged(const QItemSelection & selected, const QItemSelection & deselected);
+
+    void mouseMoveEvent(QMouseEvent *event);
+    void dragEnterEvent(QDragEnterEvent *event);
+    void dragMoveEvent(QDragMoveEvent *event);
+    void dropEvent(QDropEvent *event);
 
 protected slots:
     void itemActivated(const QModelIndex & index);
