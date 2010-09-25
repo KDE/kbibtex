@@ -19,6 +19,8 @@
 ***************************************************************************/
 
 #include <QDockWidget>
+#include <QDragEnterEvent>
+#include <QDropEvent>
 
 #include <kio/netaccess.h>
 #include <KDebug>
@@ -163,6 +165,8 @@ KBibTeXMainWindow::KBibTeXMainWindow(KBibTeXProgram *program)
     setCorner(Qt::TopRightCorner, Qt::RightDockWidgetArea);
     setCorner(Qt::BottomLeftCorner, Qt::LeftDockWidgetArea);
     setCorner(Qt::BottomRightCorner, Qt::RightDockWidgetArea);
+
+    setAcceptDrops(true);
 }
 
 KBibTeXMainWindow::~KBibTeXMainWindow()
@@ -184,6 +188,26 @@ void KBibTeXMainWindow::saveProperties(KConfigGroup &/*configGroup*/)
 void KBibTeXMainWindow::readProperties(const KConfigGroup &/*configGroup*/)
 {
     // TODO
+}
+
+void KBibTeXMainWindow::dragEnterEvent(QDragEnterEvent *event)
+{
+    if (event->mimeData()->hasUrls())
+        event->acceptProposedAction();
+}
+
+void KBibTeXMainWindow::dropEvent(QDropEvent *event)
+{
+    QList<QUrl> urlList = event->mimeData()->urls();
+
+    if (urlList.isEmpty()) {
+        QUrl url(event->mimeData()->text());
+        if (url.isValid()) urlList << url;
+    }
+
+    if (!urlList.isEmpty())
+        for (QList<QUrl>::ConstIterator it = urlList.constBegin(); it != urlList.constEnd(); ++it)
+            openDocument(*it, "latex");
 }
 
 void KBibTeXMainWindow::newDocument()

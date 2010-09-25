@@ -25,6 +25,8 @@
 #include <KConfigGroup>
 
 class QTextEdit;
+class QDragEnterEvent;
+class QDropEvent;
 
 class KBibTeXProgram;
 class MDIWidget;
@@ -45,6 +47,9 @@ public slots:
 protected: // KMainWindow API
     virtual void saveProperties(KConfigGroup &configGroup);
     virtual void readProperties(const KConfigGroup &configGroup);
+
+    void dragEnterEvent(QDragEnterEvent *event);
+    void dropEvent(QDropEvent *event);
 
 protected:
     void setupControllers();
