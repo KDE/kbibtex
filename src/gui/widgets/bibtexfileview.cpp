@@ -108,16 +108,6 @@ QSortFilterProxyModel *BibTeXFileView::sortFilterProxyModel()
     return m_sortFilterProxyModel;
 }
 
-void BibTeXFileView::selectionDelete()
-{
-    QModelIndexList mil = selectionModel()->selectedRows();
-    while (mil.begin() != mil.end()) {
-        bool r = m_bibTeXFileModel->removeRow(mil.begin()->row());
-        if (!r) kWarning() << "could not remove element in row " << mil.begin()->row();
-        mil.removeFirst();
-    }
-}
-
 void BibTeXFileView::resizeEvent(QResizeEvent */*event*/)
 {
     BibTeXFields *bibtexFields = BibTeXFields::self();

@@ -41,6 +41,9 @@ public:
     const Element* currentElement() const;
     Element* currentElement();
 
+    void setReadOnly(bool isReadOnly = true);
+    bool isReadOnly() const;
+
 signals:
     void selectedElementsChanged();
     void currentElementChanged(Element*, const File *);
@@ -57,8 +60,11 @@ public slots:
     void editElement(Element*);
     void setSelectedElements(QList<Element*>&);
     void setSelectedElement(Element*);
+    void selectionDelete();
 
 protected:
+    bool m_isReadOnly;
+
     void currentChanged(const QModelIndex & current, const QModelIndex & previous);
     void selectionChanged(const QItemSelection & selected, const QItemSelection & deselected);
 

@@ -28,7 +28,7 @@
 #include "bibtexeditor.h"
 
 BibTeXEditor::BibTeXEditor(QWidget *parent)
-        : BibTeXFileView(parent), m_current(NULL)
+        : BibTeXFileView(parent), m_isReadOnly(false), m_current(NULL)
 {
     connect(this, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(itemActivated(QModelIndex)));
 }
@@ -40,8 +40,11 @@ void BibTeXEditor::viewCurrentElement()
 
 void BibTeXEditor::viewElement(const Element *element)
 {
+    Q_ASSERT_X(element->uniqueId % 1000 == 42, "void BibTeXEditor::editElement(Element *element)", "Invalid Element passed as argument");
+
     KDialog dialog(this);
     ElementEditor elementEditor(element, &dialog);
+    elementEditor.setReadOnly(true);
     dialog.setCaption(i18n("View Element"));
     dialog.setMainWidget(&elementEditor);
     dialog.setButtons(KDialog::Close);
@@ -55,6 +58,12 @@ void BibTeXEditor::editCurrentElement()
 
 void BibTeXEditor::editElement(Element *element)
 {
+    if (isReadOnly()) {
+        /// read-only forbids editing elements, calling viewElement instead
+        viewElement(element);
+        return;
+    }
+
     Q_ASSERT_X(element->uniqueId % 1000 == 42, "void BibTeXEditor::editElement(Element *element)", "Invalid Element passed as argument");
 
     KDialog dialog(this);
@@ -141,6 +150,25 @@ void BibTeXEditor::selectionChanged(const QItemSelection & selected, const QItem
 
 
     emit selectedElementsChanged();
+}
+
+void BibTeXEditor::selectionDelete()
+{
+    QModelIndexList mil = selectionModel()->selectedRows();
+    while (mil.begin() != mil.end()) {
+        bibTeXModel()->removeRow(mil.begin()->row());
+        mil.removeFirst();
+    }
+}
+
+void BibTeXEditor::setReadOnly(bool isReadOnly)
+{
+    m_isReadOnly = isReadOnly;
+}
+
+bool BibTeXEditor::isReadOnly() const
+{
+    return m_isReadOnly;
 }
 
 void BibTeXEditor::mouseMoveEvent(QMouseEvent *event)
