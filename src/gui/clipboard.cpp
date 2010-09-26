@@ -140,6 +140,7 @@ void Clipboard::editorMouseEvent(QMouseEvent *event)
         drag->setMimeData(mimeData);
 
         Qt::DropAction dropAction = drag->exec(Qt::CopyAction);
+        kDebug() << "dropAction = " << dropAction;
         Q_ASSERT_X(dropAction == Qt::CopyAction, "void Clipboard::editorMouseEvent(QMouseEvent *event)", "Drag'n'drop is not the expected copy operation");
     }
 

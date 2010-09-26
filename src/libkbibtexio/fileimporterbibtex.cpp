@@ -134,7 +134,7 @@ Element *FileImporterBibTeX::nextElement()
             return NULL;
         }
     } else if (token == tUnknown) {
-        kWarning() << "Unknown token near line " << m_lineNo << ", treating as comment";
+        kDebug() << "Unknown token near line " << m_lineNo << ", treating as comment";
         return readPlainCommentElement();
     }
 
