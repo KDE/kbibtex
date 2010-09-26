@@ -493,10 +493,7 @@ QString EncoderLaTeX::decode(const QString & text)
             QStringList::Iterator cur = it;
             ++it;
             (*cur).append('$').append(*it);
-            intermediate.erase(it);
-            /// we have to restart here, as the iterators seem to be messed up
-            // FIXME do this more efficient?
-            it = intermediate.begin();
+            it = intermediate.erase(it);
         } else
             ++it;
     }
