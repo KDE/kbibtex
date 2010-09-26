@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2009 by Thomas Fischer                             *
+*   Copyright (C) 2004-2010 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -18,37 +18,36 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#ifndef KBIBTEX_PROGRAM_SEARCHFORM_H
-#define KBIBTEX_PROGRAM_SEARCHFORM_H
+#ifndef KBIBTEX_PROGRAM_SEARCHRESULTS_H
+#define KBIBTEX_PROGRAM_SEARCHRESULTS_H
 
 #include <QWidget>
 
-class Entry;
 class MDIWidget;
-class SearchResults;
 
-class SearchForm : public QWidget
+class Element;
+class BibTeXEditor;
+
+class SearchResults : public QWidget
 {
     Q_OBJECT
 
 public:
-    SearchForm(MDIWidget *mdiWidget, SearchResults *searchResults, QWidget *parent);
+    SearchResults(MDIWidget *mdiWidget, QWidget *parent);
+
+    void clear();
+    bool insertElement(Element *element);
 
 public slots:
-    void updatedConfiguration();
+    void documentSwitched(BibTeXEditor*, BibTeXEditor*);
 
 private:
-    class SearchFormPrivate;
-    SearchFormPrivate *d;
+    class SearchResultsPrivate;
+    SearchResultsPrivate *d;
 
 private slots:
-    void switchToEngines();
-    void startSearch();
-    void foundEntry(Entry*entry);
-    void stoppedSearch(int resultCode);
-    void tabSwitched(int newTab);
-    void itemCheckChanged();
+    void updateGUI();
+    void importSelected();
 };
 
-
-#endif // KBIBTEX_PROGRAM_SEARCHFORM_H
+#endif // KBIBTEX_PROGRAM_SEARCHRESULTS_H

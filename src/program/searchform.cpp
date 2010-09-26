@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2009 by Thomas Fischer                             *
+*   Copyright (C) 2004-2010 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -17,6 +17,7 @@
 *   Free Software Foundation, Inc.,                                       *
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
+
 #include <QLayout>
 #include <QMap>
 #include <QTabWidget>
@@ -43,6 +44,7 @@
 #include <bibtexeditor.h>
 #include <bibtexfilemodel.h>
 #include <mdiwidget.h>
+#include <searchresults.h>
 #include "searchform.h"
 
 class SearchForm::SearchFormPrivate
@@ -57,15 +59,15 @@ private:
 
 public:
     MDIWidget *m;
+    SearchResults *sr;
     QMap<QListWidgetItem*, WebSearchAbstract*> itemToWebSearch;
     QMap<QString, KLineEdit*> queryFields;
     QSpinBox *numResultsField;
     int runningSearches;
-    File *bibtexFile;
     KPushButton *searchButton;
 
-    SearchFormPrivate(MDIWidget *mdiWidget, SearchForm *parent)
-            : p(parent), whichEnginesLabel(NULL), m(mdiWidget), runningSearches(0), bibtexFile(NULL) {
+    SearchFormPrivate(MDIWidget *mdiWidget, SearchResults *searchResults, SearchForm *parent)
+            : p(parent), whichEnginesLabel(NULL), m(mdiWidget), sr(searchResults), runningSearches(0) {
 // TODO
     }
 
@@ -216,8 +218,8 @@ public:
     }
 };
 
-SearchForm::SearchForm(MDIWidget *mdiWidget, QWidget *parent)
-        : QWidget(parent), d(new SearchFormPrivate(mdiWidget, this))
+SearchForm::SearchForm(MDIWidget *mdiWidget, SearchResults *searchResults, QWidget *parent)
+        : QWidget(parent), d(new SearchFormPrivate(mdiWidget, searchResults, this))
 {
     d->createGUI();
     d->switchToSearch();
@@ -248,12 +250,8 @@ void SearchForm::startSearch()
     }
 
     d->runningSearches = 0;
-    d->bibtexFile = new File();
-    QStringList queryComment;
-    for (QMap<QString, QString>::ConstIterator it = queryTerms.constBegin(); it != queryTerms.constEnd(); ++it)
-        queryComment.append(it.key() + "->" + it.value());
-    Comment *comment = new Comment(QLatin1String("x-kbibtex-search=yes\nx-kbibtex-search-query=") + queryComment.join(";"));
-    d->bibtexFile->append(comment);
+    d->sr->clear();
+    d->sr->setEnabled(false);
 
     for (QMap<QListWidgetItem*, WebSearchAbstract*>::ConstIterator it = d->itemToWebSearch.constBegin(); it != d->itemToWebSearch.constEnd(); ++it)
         if (it.key()->checkState() == Qt::Checked) {
@@ -270,7 +268,7 @@ void SearchForm::startSearch()
 
 void SearchForm::foundEntry(Entry*entry)
 {
-    d->bibtexFile->append(entry);
+    d->sr->insertElement(entry);
 }
 
 void SearchForm::stoppedSearch(int resultCode)
@@ -280,20 +278,9 @@ void SearchForm::stoppedSearch(int resultCode)
 
     --d->runningSearches;
     if (d->runningSearches <= 0) {
-        /// last search engine stopped; now process collected results
-
-        OpenFileInfoManager *ofim = OpenFileInfoManager::getOpenFileInfoManager();
-        OpenFileInfo *openFileInfo = ofim->createNew(OpenFileInfo::mimetypeBibTeX);
-        BibTeXEditor *editor = dynamic_cast<BibTeXEditor*>(openFileInfo->part(d->m)->widget()); /// let's hope there is no NULL ...
-        Q_ASSERT_X(editor != NULL, "SearchForm::stoppedSearch(int resultCode)", "Loaded KPart is not a KBibTeXPart");
-        BibTeXFileModel *model = editor->bibTeXModel(); /// let's hope there is no NULL ...
-
-        for (File::ConstIterator it = d->bibtexFile->constBegin(); it != d->bibtexFile->constEnd(); ++it)
-            model->insertRow(*it, model->rowCount());
-
+        /// last search engine stopped
+        d->sr->setEnabled(true);
         d->switchToSearch();
-        delete d->bibtexFile;
-        ofim->setCurrentFile(openFileInfo);
     }
 }
 

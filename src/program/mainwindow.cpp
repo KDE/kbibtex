@@ -42,6 +42,7 @@
 #include "referencepreview.h"
 #include "urlpreview.h"
 #include "searchform.h"
+#include "searchresults.h"
 #include "elementform.h"
 #include "openfileinfo.h"
 #include "bibtexeditor.h"
@@ -58,6 +59,7 @@ public:
     QDockWidget *dockReferencePreview;
     QDockWidget *dockUrlPreview;
     QDockWidget *dockSearchForm;
+    QDockWidget *dockSearchResults;
     QDockWidget *dockElementForm;
     KBibTeXProgram *program;
     DocumentList *listDocumentList;
@@ -65,6 +67,7 @@ public:
     ReferencePreview *referencePreview;
     UrlPreview *urlPreview;
     SearchForm *searchForm;
+    SearchResults *searchResults;
     ElementForm *elementForm;
     OpenFileInfoManager *openFileInfoManager;
 
@@ -134,10 +137,20 @@ KBibTeXMainWindow::KBibTeXMainWindow(KBibTeXProgram *program)
     d->dockUrlPreview->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
     showPanelsMenu->addAction(d->dockUrlPreview->toggleViewAction());
 
+    d->dockSearchResults = new QDockWidget(i18n("Search Results"), this);
+    d->dockSearchResults->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+    addDockWidget(Qt::BottomDockWidgetArea, d->dockSearchResults);
+    d->searchResults = new SearchResults(d->mdiWidget, d->dockSearchResults);
+    d->dockSearchResults->setWidget(d->searchResults);
+    d->dockSearchResults->setObjectName("dockResultsFrom");
+    d->dockSearchResults->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
+    showPanelsMenu->addAction(d->dockSearchResults->toggleViewAction());
+    connect(d->mdiWidget, SIGNAL(documentSwitch(BibTeXEditor *, BibTeXEditor *)), d->searchResults, SLOT(documentSwitched(BibTeXEditor *, BibTeXEditor *)));
+
     d->dockSearchForm = new QDockWidget(i18n("Online Search"), this);
     d->dockSearchForm->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
     addDockWidget(Qt::LeftDockWidgetArea, d->dockSearchForm);
-    d->searchForm = new SearchForm(d->mdiWidget, d->dockSearchForm);
+    d->searchForm = new SearchForm(d->mdiWidget, d->searchResults, d->dockSearchForm);
     d->dockSearchForm->setWidget(d->searchForm);
     d->dockSearchForm->setObjectName("dockSearchFrom");
     d->dockSearchForm->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);

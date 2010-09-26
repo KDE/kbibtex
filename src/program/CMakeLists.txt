@@ -24,6 +24,7 @@ set( kbibtex_SRCS
 	referencepreview.cpp
 	urlpreview.cpp
 	searchform.cpp
+	searchresults.cpp
 	elementform.cpp
 	openfileinfo.cpp
 )
