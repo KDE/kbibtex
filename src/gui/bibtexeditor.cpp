@@ -48,6 +48,7 @@ void BibTeXEditor::viewElement(const Element *element)
     dialog.setCaption(i18n("View Element"));
     dialog.setMainWidget(&elementEditor);
     dialog.setButtons(KDialog::Close);
+    elementEditor.reset();
     dialog.exec();
 }
 

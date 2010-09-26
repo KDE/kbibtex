@@ -201,6 +201,7 @@ File *BibTeXFileModel::bibTeXFile()
 void BibTeXFileModel::setBibTeXFile(File *bibtexFile)
 {
     m_bibtexFile = bibtexFile;
+    reset(); // TODO necessary here?
 }
 
 /*
