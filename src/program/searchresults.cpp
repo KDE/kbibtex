@@ -56,7 +56,7 @@ public:
         editor->setContextMenuPolicy(Qt::ActionsContextMenu);
         layout->addWidget(editor, 0, 0, 1, 2);
 
-        buttonImport = new KPushButton(i18n("Import"), parent);
+        buttonImport = new KPushButton(KIcon("svn-update"), i18n("Import"), parent);
         layout->addWidget(buttonImport, 1, 1, 1, 1);
         buttonImport->setEnabled(false);
 
@@ -64,17 +64,17 @@ public:
         model->setSourceModel(new BibTeXFileModel(parent));
         editor->setModel(model);
 
-        actionViewCurrent = new KAction(KIcon("view"), i18n("View Element"), parent);
+        actionViewCurrent = new KAction(KIcon("document-preview"), i18n("View Element"), parent);
         editor->addAction(actionViewCurrent);
         actionViewCurrent->setEnabled(false);
         connect(actionViewCurrent, SIGNAL(triggered()), editor, SLOT(viewCurrentElement()));
 
-        actionImportSelected = new KAction(KIcon("import"), i18n("Import"), parent);
+        actionImportSelected = new KAction(KIcon("svn-update"), i18n("Import"), parent);
         editor->addAction(actionImportSelected);
         actionImportSelected->setEnabled(false);
         connect(actionImportSelected, SIGNAL(triggered()), parent, SLOT(importSelected()));
 
-        actionCopySelected = new KAction(KIcon("copy"), i18n("Copy"), parent);
+        actionCopySelected = new KAction(KIcon("edit-copy"), i18n("Copy"), parent);
         editor->addAction(actionCopySelected);
         actionCopySelected->setEnabled(false);
         connect(actionCopySelected, SIGNAL(triggered()), parent, SLOT(copySelected()));

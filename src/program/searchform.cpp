@@ -182,6 +182,9 @@ public:
         searchButton->setText(i18n("Search"));
         searchButton->setIcon(KIcon("media-playback-start"));
         tabWidget->setEnabled(true);
+        sr->setEnabled(true);
+        tabWidget->unsetCursor();
+        sr->unsetCursor();
     }
 
     void switchToCancel() {
@@ -194,6 +197,9 @@ public:
         searchButton->setText(i18n("Cancel"));
         searchButton->setIcon(KIcon("media-playback-stop"));
         tabWidget->setEnabled(false);
+        sr->setEnabled(false);
+        tabWidget->setCursor(Qt::WaitCursor);
+        sr->setCursor(Qt::WaitCursor);
     }
 
     void switchToEngines() {
@@ -251,7 +257,6 @@ void SearchForm::startSearch()
 
     d->runningSearches = 0;
     d->sr->clear();
-    d->sr->setEnabled(false);
 
     for (QMap<QListWidgetItem*, WebSearchAbstract*>::ConstIterator it = d->itemToWebSearch.constBegin(); it != d->itemToWebSearch.constEnd(); ++it)
         if (it.key()->checkState() == Qt::Checked) {
@@ -279,7 +284,6 @@ void SearchForm::stoppedSearch(int resultCode)
     --d->runningSearches;
     if (d->runningSearches <= 0) {
         /// last search engine stopped
-        d->sr->setEnabled(true);
         d->switchToSearch();
     }
 }
