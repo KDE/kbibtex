@@ -273,7 +273,7 @@ void KBibTeXMainWindow::documentSwitched(BibTeXEditor *oldEditor, BibTeXEditor *
     bool validFile = openFileInfo != NULL;
     d->actionClose->setEnabled(validFile);
 
-    setCaption(validFile ? i18n("%1 - KBibTeX", openFileInfo->caption()) : i18n("KBibTeX"));
+    setCaption(validFile ? i18n("%1 - KBibTeX", openFileInfo->shortCaption()) : i18n("KBibTeX"));
 
     d->referencePreview->setEnabled(newEditor != NULL);
     d->elementForm->setEnabled(newEditor != NULL);

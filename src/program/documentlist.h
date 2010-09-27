@@ -33,14 +33,20 @@ class OpenFileInfoManager;
 class DocumentList : public QTabWidget
 {
     Q_OBJECT
+
 public:
     enum Category { OpenFiles = 0, RecentFiles = 1, Favorites = 2 };
 
-    DocumentList(OpenFileInfoManager *openFileInfoManager, QWidget *parent = 0);
+    DocumentList(OpenFileInfoManager *openFileInfoManager, QWidget *parent = NULL);
 
 private slots:
     void itemExecuted(QListWidgetItem * item);
     void listsChanged(OpenFileInfo::StatusFlags statusFlags);
+    void addToFavorites(QWidget*);
+    void removeFromFavorites(QWidget*);
+    void openFile(QWidget*);
+    void closeFile(QWidget*);
+    void updateContextMenu();
 
 private:
     class DocumentListPrivate;
@@ -59,6 +65,15 @@ public:
 private:
     class DocumentListItemPrivate;
     DocumentListItemPrivate *d;
+};
+
+class DocumentListItemWidget : public QWidget
+{
+public:
+    DocumentListItemWidget(DocumentListItem *item, QWidget *parent = NULL);
+
+private:
+    DocumentListItem *m_item;
 };
 
 

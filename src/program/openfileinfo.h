@@ -25,6 +25,7 @@
 #include <QList>
 #include <QDateTime>
 
+#include <KService>
 #include <KUrl>
 
 namespace KParts
@@ -36,6 +37,8 @@ class OpenFileInfoManager;
 
 class OpenFileInfo : public QObject
 {
+    Q_OBJECT
+
 public:
     static const QString propertyEncoding;
     static const QString mimetypeBibTeX;
@@ -44,36 +47,40 @@ public:
         Open = 0x1,
         RecentlyUsed = 0x2,
         Favorite = 0x4,
-        Search = 0x8
+        HasName = 0x8,
+        IsModified = 0x16
     };
     Q_DECLARE_FLAGS(StatusFlags, StatusFlag)
 
     ~OpenFileInfo();
 
-    KParts::ReadWritePart* part(QWidget *parent);
-    KUrl url() const;
-    void setProperty(const QString &key, const QString &value);
-    QString property(const QString &key) const;
+    KParts::ReadWritePart* part(QWidget *parent, KService::Ptr servicePtr = KService::Ptr());
 
-    int counter();
-    QString caption();
-    QString fullCaption();
-    QString mimeType();
+    QString shortCaption() const;
+    QString fullCaption() const;
+    QString mimeType() const;
+    KUrl url() const;
 
     StatusFlags flags() const;
     void setFlags(StatusFlags statusFlags);
     void addFlags(StatusFlags statusFlags);
     void removeFlags(StatusFlags statusFlags);
 
+    void setProperty(const QString &key, const QString &value);
+    QString property(const QString &key) const;
+
     QDateTime lastAccess() const;
+    void setLastAccess(const QDateTime& dateTime = QDateTime::currentDateTime());
 
     friend class OpenFileInfoManager;
+
+signals:
+    void flagsChanged(OpenFileInfo::StatusFlags statusFlags);
 
 protected:
     OpenFileInfo(OpenFileInfoManager *openFileInfoManager, const KUrl &url);
     OpenFileInfo(OpenFileInfoManager *openFileInfoManager, const QString &mimeType = OpenFileInfo::mimetypeBibTeX);
     void setUrl(const KUrl& url);
-    void setLastAccess(const QDateTime& dateTime);
 
 private:
     class OpenFileInfoPrivate;
@@ -83,6 +90,7 @@ private:
 class OpenFileInfoManager: public QObject
 {
     Q_OBJECT
+
 public:
     ~OpenFileInfoManager();
 
@@ -103,10 +111,7 @@ public:
 signals:
     void currentChanged(OpenFileInfo *);
     void closing(OpenFileInfo *);
-    void listsChanged(OpenFileInfo::StatusFlags statusFlags);
-
-protected:
-    void flagsChangedInternal(OpenFileInfo::StatusFlags statusFlags);
+    void flagsChanged(OpenFileInfo::StatusFlags statusFlags);
 
 private:
     OpenFileInfoManager();

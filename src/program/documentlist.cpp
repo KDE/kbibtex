@@ -21,12 +21,16 @@
 #include <QFontMetrics>
 #include <QStringListModel>
 #include <QTimer>
+#include <QSignalMapper>
+#include <QGridLayout>
+#include <QLabel>
 
 #include <KDebug>
 #include <KLocale>
 #include <KGlobal>
 #include <KIcon>
 #include <KMimeType>
+#include <KAction>
 
 #include "documentlist.h"
 
@@ -39,21 +43,89 @@ public:
     KListWidget *listOpenFiles;
     KListWidget *listRecentFiles;
     KListWidget *listFavorites;
+    KAction *addFavListOpenFiles, *addFavListRecentFiles, *remFavListFavorites;
+    KAction *closeListOpenFiles, *openListRecentFiles, *openListFavorites;
 
-    DocumentListPrivate(DocumentList *p) {
+    DocumentListPrivate(OpenFileInfoManager *openFileInfoManager, DocumentList *p) {
+        this->openFileInfoManager = openFileInfoManager;
         this->p = p;
+
+        setupGui();
     }
 
     void setupGui() {
+        QStringList overlays;
+
         listOpenFiles = new KListWidget(p);
         p->addTab(listOpenFiles, i18n("Open Files"));
-        connect(listOpenFiles, SIGNAL(itemDoubleClicked(QListWidgetItem*)), p, SLOT(itemExecuted(QListWidgetItem*))); // FIXME Signal itemExecute(..) triggers *twice* ???
+        listOpenFiles->setContextMenuPolicy(Qt::ActionsContextMenu);
+        connect(listOpenFiles, SIGNAL(itemActivated(QListWidgetItem*)), p, SLOT(itemExecuted(QListWidgetItem*))); // FIXME Signal itemExecute(..) triggers *twice* ???
+        connect(listOpenFiles, SIGNAL(currentItemChanged(QListWidgetItem*, QListWidgetItem*)), p, SLOT(updateContextMenu()));
+        connect(listOpenFiles, SIGNAL(itemSelectionChanged()), p, SLOT(updateContextMenu()));
+
         listRecentFiles = new KListWidget(p);
         p->addTab(listRecentFiles, i18n("Recent Files"));
-        connect(listRecentFiles, SIGNAL(itemDoubleClicked(QListWidgetItem*)), p, SLOT(itemExecuted(QListWidgetItem*))); // FIXME Signal itemExecute(..) triggers *twice* ???
+        listRecentFiles->setContextMenuPolicy(Qt::ActionsContextMenu);
+        connect(listRecentFiles, SIGNAL(itemActivated(QListWidgetItem*)), p, SLOT(itemExecuted(QListWidgetItem*))); // FIXME Signal itemExecute(..) triggers *twice* ???
+        connect(listRecentFiles, SIGNAL(currentItemChanged(QListWidgetItem*, QListWidgetItem*)), p, SLOT(updateContextMenu()));
+        connect(listRecentFiles, SIGNAL(itemSelectionChanged()), p, SLOT(updateContextMenu()));
+
         listFavorites = new KListWidget(p);
         p->addTab(listFavorites, i18n("Favorites"));
-        connect(listFavorites, SIGNAL(itemDoubleClicked(QListWidgetItem*)), p, SLOT(itemExecuted(QListWidgetItem*))); // FIXME Signal itemExecute(..) triggers *twice* ???
+        listFavorites->setContextMenuPolicy(Qt::ActionsContextMenu);
+        connect(listFavorites, SIGNAL(itemActivated(QListWidgetItem*)), p, SLOT(itemExecuted(QListWidgetItem*))); // FIXME Signal itemExecute(..) triggers *twice* ???
+        connect(listFavorites, SIGNAL(currentItemChanged(QListWidgetItem*, QListWidgetItem*)), p, SLOT(updateContextMenu()));
+        connect(listFavorites, SIGNAL(itemSelectionChanged()), p, SLOT(updateContextMenu()));
+
+
+        QSignalMapper *openCloseSignalMapper = new QSignalMapper(p);
+        connect(openCloseSignalMapper, SIGNAL(mapped(QWidget*)), p, SLOT(closeFile(QWidget*)));
+
+        closeListOpenFiles = new KAction(KIcon("document-close"), i18n("Close File"), p);
+        connect(closeListOpenFiles, SIGNAL(triggered()), openCloseSignalMapper, SLOT(map()));
+        openCloseSignalMapper->setMapping(closeListOpenFiles, listOpenFiles);
+        listOpenFiles->addAction(closeListOpenFiles);
+
+        openCloseSignalMapper = new QSignalMapper(p);
+        connect(openCloseSignalMapper, SIGNAL(mapped(QWidget*)), p, SLOT(openFile(QWidget*)));
+
+        openListRecentFiles = new KAction(KIcon("document-open"), i18n("Open File"), p);
+        connect(openListRecentFiles, SIGNAL(triggered()), openCloseSignalMapper, SLOT(map()));
+        openCloseSignalMapper->setMapping(openListRecentFiles, listRecentFiles);
+        listRecentFiles->addAction(openListRecentFiles);
+
+        openListFavorites = new KAction(KIcon("document-open"), i18n("Open File"), p);
+        connect(openListFavorites, SIGNAL(triggered()), openCloseSignalMapper, SLOT(map()));
+        openCloseSignalMapper->setMapping(openListFavorites, listFavorites);
+        listFavorites->addAction(openListFavorites);
+
+
+        QSignalMapper *favoritesSignalMapper = new QSignalMapper(p);
+        connect(favoritesSignalMapper, SIGNAL(mapped(QWidget*)), p, SLOT(addToFavorites(QWidget*)));
+
+        overlays.clear();
+        overlays << "list-add";
+        addFavListOpenFiles = new KAction(KIcon("favorites", NULL, overlays), i18n("Add to Favorites"), p);
+        connect(addFavListOpenFiles, SIGNAL(triggered()), favoritesSignalMapper, SLOT(map()));
+        favoritesSignalMapper->setMapping(addFavListOpenFiles, listOpenFiles);
+        listOpenFiles->addAction(addFavListOpenFiles);
+
+        addFavListRecentFiles = new KAction(KIcon("favorites", NULL, overlays), i18n("Add to Favorites"), p);
+        connect(addFavListRecentFiles, SIGNAL(triggered()), favoritesSignalMapper, SLOT(map()));
+        favoritesSignalMapper->setMapping(addFavListRecentFiles, listRecentFiles);
+        listRecentFiles->addAction(addFavListRecentFiles);
+
+        favoritesSignalMapper = new QSignalMapper(p);
+        connect(favoritesSignalMapper, SIGNAL(mapped(QWidget*)), p, SLOT(removeFromFavorites(QWidget*)));
+
+        overlays.clear();
+        overlays << "list-remove";
+        remFavListFavorites = new KAction(KIcon("favorites", NULL, overlays), i18n("Remove from Favorites"), p);
+        connect(remFavListFavorites, SIGNAL(triggered()), favoritesSignalMapper, SLOT(map()));
+        favoritesSignalMapper->setMapping(remFavListFavorites, listFavorites);
+        listFavorites->addAction(remFavListFavorites);
+
+        connect(openFileInfoManager, SIGNAL(flagsChanged(OpenFileInfo::StatusFlags)), p, SLOT(listsChanged(OpenFileInfo::StatusFlags)));
 
         /** set minimum width of widget depending on tab's text width */
         QFontMetrics fm(p->font());
@@ -61,50 +133,72 @@ public:
     }
 
     void updateList(Category category) {
+        /// determine list widget and status flags for given category
         KListWidget *listWidget = category == DocumentList::OpenFiles ? listOpenFiles : category == DocumentList::RecentFiles ? listRecentFiles : listFavorites;
         OpenFileInfo::StatusFlags statusFlags = category == DocumentList::OpenFiles ? OpenFileInfo::Open : category == DocumentList::RecentFiles ? OpenFileInfo::RecentlyUsed : OpenFileInfo::Favorite;
-        QList<OpenFileInfo*> ofiList = openFileInfoManager->filteredItems(statusFlags);
+        /// get list of file handles where status flags are set accordingly
 
+        QList<OpenFileInfo*> ofiList = openFileInfoManager->filteredItems(statusFlags);
+        //OpenFileInfo* currentFile = openFileInfoManager->currentFile();
+
+        QString currentItemText = listWidget->currentItem() != NULL ? listWidget->currentItem()->text() : QString::null;
         listWidget->clear();
+        int h = 1;
         for (QList<OpenFileInfo*>::Iterator it = ofiList.begin(); it != ofiList.end(); ++it) {
             OpenFileInfo *ofi = *it;
             DocumentListItem *item = new DocumentListItem(ofi);
+            QWidget *w = new DocumentListItemWidget(item, listWidget);
+            item->setSizeHint(w->sizeHint());
+            h = qMax(h, w->height());
 
             listWidget->addItem(item);
-            listWidget->setItemSelected(item, openFileInfoManager->currentFile() == ofi);
+            listWidget->setItemSelected(item, item->text() == currentItemText || openFileInfoManager->currentFile() == ofi);
+            if (item->text() == currentItemText || openFileInfoManager->currentFile() == ofi)
+                listWidget->setCurrentItem(item);
 
-            KUrl url(ofi->fullCaption());
-            if (url.isValid()) {
-                KIcon icon(KMimeType::iconNameForUrl(url));
-                item->setIcon(icon);
-            }
+            listWidget->setItemWidget(item, w);
         }
+        listWidget->setIconSize(QSize(h*3 / 4, h*3 / 4));
     }
 
     void itemExecuted(QListWidgetItem * item) {
-        const DocumentListItem *dli = dynamic_cast<const DocumentListItem*>(item);
         if (item != NULL) {
-            kDebug() << "itemExecuted on " << dli->openFileInfo()->fullCaption() << endl;
+            const DocumentListItem *dli = static_cast<const DocumentListItem*>(item);
             openFileInfoManager->setCurrentFile(dli->openFileInfo());
         }
     }
 
     void listsChanged(OpenFileInfo::StatusFlags statusFlags) {
-        if (statusFlags.testFlag(OpenFileInfo::Open))
-            updateList(OpenFiles);
-        if (statusFlags.testFlag(OpenFileInfo::RecentlyUsed))
-            updateList(RecentFiles);
-        if (statusFlags.testFlag(OpenFileInfo::Favorite))
-            updateList(Favorites);
+        Q_UNUSED(statusFlags);
+
+        updateList(OpenFiles);
+        updateList(RecentFiles);
+        updateList(Favorites);
+
+        updateContextMenu();
+    }
+
+    void updateContextMenu() {
+        const DocumentListItem *dli = static_cast<const DocumentListItem*>(listOpenFiles->currentItem());
+        if (dli == NULL && !listOpenFiles->selectedItems().isEmpty()) dli = static_cast<const DocumentListItem*>(listOpenFiles->selectedItems().first());
+        addFavListOpenFiles->setEnabled(!listOpenFiles->selectedItems().isEmpty() && !dli->openFileInfo()->flags().testFlag(OpenFileInfo::Favorite));
+        closeListOpenFiles->setEnabled(!listOpenFiles->selectedItems().isEmpty());
+
+        dli = static_cast<const DocumentListItem*>(listRecentFiles->currentItem());
+        if (dli == NULL && !listRecentFiles->selectedItems().isEmpty()) dli = static_cast<const DocumentListItem*>(listRecentFiles->selectedItems().first());
+        addFavListRecentFiles->setEnabled(!listRecentFiles->selectedItems().isEmpty() && !dli->openFileInfo()->flags().testFlag(OpenFileInfo::Favorite));
+        openListRecentFiles->setEnabled(!listRecentFiles->selectedItems().isEmpty() && !dli->openFileInfo()->flags().testFlag(OpenFileInfo::Open));
+
+        dli = static_cast<const DocumentListItem*>(listFavorites->currentItem());
+        if (dli == NULL && !listFavorites->selectedItems().isEmpty()) dli = static_cast<const DocumentListItem*>(listFavorites->selectedItems().first());
+        remFavListFavorites->setEnabled(!listFavorites->selectedItems().isEmpty());
+        openListFavorites->setEnabled(!listFavorites->selectedItems().isEmpty() && !dli->openFileInfo()->flags().testFlag(OpenFileInfo::Open));
     }
 };
 
 DocumentList::DocumentList(OpenFileInfoManager *openFileInfoManager, QWidget *parent)
-        : QTabWidget(parent), d(new DocumentListPrivate(this))
+        : QTabWidget(parent), d(new DocumentListPrivate(openFileInfoManager, this))
 {
-    d->openFileInfoManager = openFileInfoManager;
-    connect(openFileInfoManager, SIGNAL(listsChanged(OpenFileInfo::StatusFlags)), this, SLOT(listsChanged(OpenFileInfo::StatusFlags)));
-    d->setupGui();
     QFlags<OpenFileInfo::StatusFlag> flags = OpenFileInfo::RecentlyUsed;
     flags |= OpenFileInfo::Favorite;
     d->listsChanged(flags);
@@ -120,27 +214,100 @@ void DocumentList::listsChanged(OpenFileInfo::StatusFlags statusFlags)
     d->listsChanged(statusFlags);
 }
 
+void DocumentList::addToFavorites(QWidget *w)
+{
+    KListWidget *list = static_cast<KListWidget*>(w);
+    QListWidgetItem * item = list->currentItem();
+    if (item != NULL) {
+        const DocumentListItem *dli = static_cast<const DocumentListItem*>(item);
+        dli->openFileInfo()->addFlags(OpenFileInfo::Favorite);
+    }
+}
+
+void DocumentList::removeFromFavorites(QWidget *w)
+{
+    KListWidget *list = static_cast<KListWidget*>(w);
+    QListWidgetItem * item = list->currentItem();
+    if (item != NULL) {
+        const DocumentListItem *dli = static_cast<const DocumentListItem*>(item);
+        dli->openFileInfo()->removeFlags(OpenFileInfo::Favorite);
+    }
+}
+
+void DocumentList::openFile(QWidget *w)
+{
+    KListWidget *list = static_cast<KListWidget*>(w);
+    QListWidgetItem * item = list->currentItem();
+    if (item != NULL) {
+        const DocumentListItem *dli = static_cast<const DocumentListItem*>(item);
+        OpenFileInfoManager::getOpenFileInfoManager()->setCurrentFile(dli->openFileInfo());
+    }
+}
+
+void DocumentList::closeFile(QWidget *w)
+{
+    KListWidget *list = static_cast<KListWidget*>(w);
+    QListWidgetItem * item = list->currentItem();
+    if (item != NULL) {
+        const DocumentListItem *dli = static_cast<const DocumentListItem*>(item);
+        OpenFileInfoManager::getOpenFileInfoManager()->close(dli->openFileInfo());
+    }
+}
+void DocumentList::updateContextMenu()
+{
+    d->updateContextMenu();
+}
+
 class DocumentListItem::DocumentListItemPrivate
 {
 public:
     DocumentListItem *p;
     OpenFileInfo *openFileInfo;
 
-    DocumentListItemPrivate(DocumentListItem *p) {
+    DocumentListItemPrivate(OpenFileInfo *openFileInfo, DocumentListItem *p) {
+        this->openFileInfo = openFileInfo;
         this->p = p;
     }
 };
 
 DocumentListItem::DocumentListItem(OpenFileInfo *openFileInfo, KListWidget *parent, int type)
-        : QListWidgetItem(parent, type), d(new DocumentListItemPrivate(this))
+        : QListWidgetItem(parent, type), d(new DocumentListItemPrivate(openFileInfo, this))
 {
-    setText(openFileInfo->caption());
+    //setText(openFileInfo->shortCaption());
     setToolTip(openFileInfo->fullCaption());
 
-    d->openFileInfo = openFileInfo;
+    /// determine mime type-based icon and overlays (e.g. for modified files)
+    QStringList overlays;
+    QString iconName = openFileInfo->mimeType().replace("/", "-");
+    if (openFileInfo->flags().testFlag(OpenFileInfo::IsModified))
+        overlays << "document-save";
+    if (openFileInfo->flags().testFlag(OpenFileInfo::Favorite))
+        overlays << "favorites";
+    if (openFileInfo->flags().testFlag(OpenFileInfo::RecentlyUsed))
+        overlays << "clock";
+    if (openFileInfo->flags().testFlag(OpenFileInfo::Open))
+        overlays << "folder-open";
+    setIcon(KIcon(iconName, NULL, overlays));
 }
 
 OpenFileInfo *DocumentListItem::openFileInfo() const
 {
     return d->openFileInfo;
+}
+
+DocumentListItemWidget::DocumentListItemWidget(DocumentListItem *item, QWidget *parent)
+        : QWidget(parent), m_item(item)
+{
+    QGridLayout *layout = new QGridLayout(this);
+    layout->setSpacing(0);
+    layout->setMargin(0);
+    QLabel *label = new QLabel(item->openFileInfo()->shortCaption());
+    layout->addWidget(label, 0, 1, 1, 1);
+    label = new QLabel(item->openFileInfo()->fullCaption());
+    QFont font = label->font();
+    font.setPointSize(font.pointSize()*3 / 4);
+    label->setFont(font);
+    layout->addWidget(label, 1, 1, 1, 1);
+
+    label->updateGeometry();
 }

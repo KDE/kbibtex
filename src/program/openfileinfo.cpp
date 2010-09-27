@@ -50,17 +50,19 @@ public:
 
     OpenFileInfo *p;
 
-    KUrl url;
     QMap<QString, QString> properties;
     QMap<QWidget*, KParts::ReadWritePart*> partPerParent;
     QDateTime lastAccessDateTime;
     StatusFlags flags;
     OpenFileInfoManager *openFileInfoManager;
     QString mimeType;
+    KUrl url;
 
-    OpenFileInfoPrivate(OpenFileInfo *p)
-            :  m_counter(-1), p(p), flags(0), mimeType(QString::null) {
-        // nothing
+    OpenFileInfoPrivate(OpenFileInfoManager *openFileInfoManager, const KUrl &url, const QString &mimeType, OpenFileInfo *p)
+            :  m_counter(-1), p(p), flags(0) {
+        this->openFileInfoManager = openFileInfoManager;
+        this->url = url;
+        this->mimeType = mimeType;
     }
 
     ~OpenFileInfoPrivate() {
@@ -72,37 +74,24 @@ public:
         }
     }
 
-    bool canOpen(const KUrl &url) {
-        QString ending = url.path().toLower();
-        int p = ending.lastIndexOf(".");
-        ending = ending.mid(p + 1);
-
-        return ending == "bib" || ending == "ris" || (ending == "pdf" && FileImporterPDF::containsBibTeXData(url) && KMessageBox::questionYesNo(NULL, i18n("This PDF file contains bibliographic references.\n\nLoad bibliographic data instead of PDF data?"), i18n("PDF Import"), KGuiItem(i18n("Bibliographic data"), KIcon("server-database")), KGuiItem(i18n("PDF data"), KIcon("application-pdf"))) == KMessageBox::Yes); // FIXME use better icon for "bibliographic data"
-    }
-
-    KParts::ReadWritePart* createPart(QWidget *parent) {
+    KParts::ReadWritePart* createPart(QWidget *parent, KService::Ptr servicePtr = KService::Ptr()) {
         /** use cached part for this parent if possible */
         if (partPerParent.contains(parent))
             return partPerParent[parent];
 
-        KParts::ReadWritePart *part = NULL;
-        if (mimeType.isNull() && url.isValid()) {
-            KMimeType::Ptr mimeTypePtr = KMimeType::findByUrl(url);
-            mimeType = mimeTypePtr->name();
-        } else if (mimeType.isNull())
-            mimeType = OpenFileInfo::mimetypeBibTeX;
 
-        if (canOpen(url))
-            mimeType = OpenFileInfo::mimetypeBibTeX; // FIXME unclean
-
-        // FIXME: Check for ReadOnlyPart, too, but then set document into read-only mode
-        KService::List list = KMimeTypeTrader::self()->query(mimeType, QString::fromLatin1("KParts/ReadWritePart"));
-        for (KService::List::Iterator it = list.begin(); it != list.end(); ++it) {
-            kDebug() << "service name is " << (*it)->name() << endl;
-            if (part == NULL || (*it)->name().contains("BibTeX", Qt::CaseInsensitive))
-                part = (*it)->createInstance<KParts::ReadWritePart>((QWidget*)parent, (QObject*)parent);
+        if (servicePtr.isNull()) {
+            /// no valid KService has been passed
+            /// try to find a read-write part to open file
+            servicePtr = KMimeTypeTrader::self()->preferredService(mimeType, "KParts/ReadWritePart");
+        }
+        if (servicePtr.isNull()) {
+            kError() << "Cannot find service to handle mimetype " << mimeType << endl;
+            return NULL;
         }
 
+        kDebug() << "using service " << servicePtr->name() << servicePtr->genericName() << servicePtr->keywords().join(",");
+        KParts::ReadWritePart *part = servicePtr->createInstance<KParts::ReadWritePart>(parent, (QObject*)parent);
         if (part == NULL) {
             kError() << "Cannot find part for mimetype " << mimeType << endl;
             return NULL;
@@ -111,6 +100,7 @@ public:
         if (url.isValid()) {
             part->openUrl(url);
             p->addFlags(OpenFileInfo::RecentlyUsed);
+            p->addFlags(OpenFileInfo::HasName);
         } else {
             part->openUrl(KUrl());
         }
@@ -138,17 +128,15 @@ const QString OpenFileInfo::OpenFileInfoPrivate::keyLastAccess = QLatin1String("
 const QString OpenFileInfo::OpenFileInfoPrivate::keyURL = QLatin1String("URL");
 
 OpenFileInfo::OpenFileInfo(OpenFileInfoManager *openFileInfoManager, const KUrl &url)
-        : d(new OpenFileInfoPrivate(this))
+        : d(new OpenFileInfoPrivate(openFileInfoManager, url, KMimeType::findByUrl(url)->name(), this))
 {
-    d->url = url;
-    d->openFileInfoManager = openFileInfoManager;
+    // nothing
 }
 
 OpenFileInfo::OpenFileInfo(OpenFileInfoManager *openFileInfoManager, const QString &mimeType)
-        : d(new OpenFileInfoPrivate(this))
+        : d(new OpenFileInfoPrivate(openFileInfoManager, KUrl(), mimeType, this))
 {
-    d->mimeType = mimeType;
-    d->openFileInfoManager = openFileInfoManager;
+    // nothing
 }
 
 OpenFileInfo::~OpenFileInfo()
@@ -160,11 +148,18 @@ void OpenFileInfo::setUrl(const KUrl& url)
 {
     Q_ASSERT(url.isValid());
     d->url = url;
+    d->mimeType = KMimeType::findByUrl(url)->name();
+    addFlags(OpenFileInfo::HasName);
 }
 
 KUrl OpenFileInfo::url() const
 {
     return d->url;
+}
+
+QString OpenFileInfo::mimeType() const
+{
+    return d->mimeType;
 }
 
 void OpenFileInfo::setProperty(const QString &key, const QString &value)
@@ -177,35 +172,25 @@ QString OpenFileInfo::property(const QString &key) const
     return d->properties[key];
 }
 
-int OpenFileInfo::counter()
-{
-    return d->counter();
-}
-
-QString OpenFileInfo::caption()
+QString OpenFileInfo::shortCaption() const
 {
     if (d->url.isValid())
         return d->url.fileName();
     else
-        return i18n("Unnamed-%1", counter());
+        return i18n("Unnamed-%1", d->counter());
 }
 
-QString OpenFileInfo::fullCaption()
+QString OpenFileInfo::fullCaption() const
 {
     if (d->url.isValid())
         return d->url.prettyUrl();
     else
-        return caption();
+        return shortCaption();
 }
 
-QString OpenFileInfo::mimeType()
+KParts::ReadWritePart* OpenFileInfo::part(QWidget *parent, KService::Ptr servicePtr)
 {
-    return d->mimeType;
-}
-
-KParts::ReadWritePart* OpenFileInfo::part(QWidget *parent)
-{
-    return d->createPart(parent);
+    return d->createPart(parent, servicePtr);
 }
 
 OpenFileInfo::StatusFlags OpenFileInfo::flags() const
@@ -218,7 +203,7 @@ void OpenFileInfo::setFlags(StatusFlags statusFlags)
     bool hasChanged = d->flags != statusFlags;
     d->flags = statusFlags;
     if (hasChanged)
-        d->openFileInfoManager->flagsChangedInternal(statusFlags);
+        emit flagsChanged(statusFlags);
 }
 
 void OpenFileInfo::addFlags(StatusFlags statusFlags)
@@ -226,7 +211,7 @@ void OpenFileInfo::addFlags(StatusFlags statusFlags)
     bool hasChanged = (~d->flags & statusFlags) > 0;
     d->flags |= statusFlags;
     if (hasChanged)
-        d->openFileInfoManager->flagsChangedInternal(statusFlags);
+        emit flagsChanged(statusFlags);
 }
 
 void OpenFileInfo::removeFlags(StatusFlags statusFlags)
@@ -234,7 +219,7 @@ void OpenFileInfo::removeFlags(StatusFlags statusFlags)
     bool hasChanged = (d->flags & statusFlags) > 0;
     d->flags &= ~statusFlags;
     if (hasChanged)
-        d->openFileInfoManager->flagsChangedInternal(statusFlags);
+        emit flagsChanged(statusFlags);
 }
 
 QDateTime OpenFileInfo::lastAccess() const
@@ -249,19 +234,20 @@ void OpenFileInfo::setLastAccess(const QDateTime& dateTime)
 
 class OpenFileInfoManager::OpenFileInfoManagerPrivate
 {
+private:
+    static const QString configGroupNameRecentlyUsed;
+    static const QString configGroupNameFavorites;
+    static const int maxNumRecentlyUsedFiles, maxNumFiles;
+
 public:
     OpenFileInfoManager *p;
 
     QList<OpenFileInfo*> openFileInfoList;
-    const QString configGroupNameRecentlyUsed;
-    const QString configGroupNameFavorites;
-    const int maxNumRecentlyUsedFiles, maxNumFiles;
     OpenFileInfo *currentFileInfo;
-    QDateTime *lruDateTimeList;
 
     OpenFileInfoManagerPrivate(OpenFileInfoManager *parent)
-            : p(parent), configGroupNameRecentlyUsed("DocumentList-RecentlyUsed"), configGroupNameFavorites("DocumentList-Favorites"), maxNumRecentlyUsedFiles(8), maxNumFiles(256), currentFileInfo(NULL) {
-        lruDateTimeList = new QDateTime[maxNumRecentlyUsedFiles];
+            : p(parent), currentFileInfo(NULL) {
+        // nothing
     }
 
     ~OpenFileInfoManagerPrivate() {
@@ -269,7 +255,14 @@ public:
             OpenFileInfo *ofi = *it;
             delete ofi;
         }
-        delete[] lruDateTimeList;
+    }
+
+    static bool byNameLessThan(const OpenFileInfo *left, const OpenFileInfo *right) {
+        return left->shortCaption() < right->shortCaption();
+    }
+
+    static  bool byLRULessThan(const OpenFileInfo *left, const OpenFileInfo *right) {
+        return left->lastAccess() > right->lastAccess(); /// reverse sorting!
     }
 
     void readConfig() {
@@ -282,7 +275,7 @@ public:
         writeConfig(OpenFileInfo::Favorite, configGroupNameFavorites);
     }
 
-    void readConfig(OpenFileInfo::StatusFlags statusFlags, const QString& configGroupName) {
+    void readConfig(OpenFileInfo::StatusFlag statusFlag, const QString& configGroupName) {
         KSharedConfig::Ptr config = KGlobal::config();
 
         KConfigGroup cg(config, configGroupName);
@@ -293,61 +286,34 @@ public:
             if (ofi == NULL) {
                 ofi = p->open(fileUrl);
             }
-            ofi->addFlags(statusFlags);
+            ofi->addFlags(statusFlag);
             QString encoding = cg.readEntry(QString("%1-%2").arg(OpenFileInfo::propertyEncoding).arg(i), "");
             ofi->setLastAccess(QDateTime::fromString(cg.readEntry(QString("%1-%2").arg(OpenFileInfo::OpenFileInfoPrivate::keyLastAccess).arg(i), ""), OpenFileInfo::OpenFileInfoPrivate::dateTimeFormat));
             ofi->setProperty(OpenFileInfo::propertyEncoding, encoding);
         }
     }
 
-    void writeConfig(OpenFileInfo::StatusFlags statusFlags, const QString& configGroupName) {
+    void writeConfig(OpenFileInfo::StatusFlag statusFlag, const QString& configGroupName) {
         KSharedConfig::Ptr config = KGlobal::config();
         KConfigGroup cg(config, configGroupName);
-        QList<OpenFileInfo*> list = p->filteredItems(statusFlags);
-
-        if (statusFlags & OpenFileInfo::RecentlyUsed) {
-            lruListReset();
-            for (QList<OpenFileInfo*>::Iterator it = list.begin(); it != list.end(); ++it) {
-                OpenFileInfo *ofi = *it;
-                lruListAdd(ofi->lastAccess());
-            }
-        }
+        QList<OpenFileInfo*> list = p->filteredItems(statusFlag);
 
         int i = 0;
-        for (QList<OpenFileInfo*>::Iterator it = list.begin(); i < maxNumFiles && it != list.end(); ++it) {
+        for (QList<OpenFileInfo*>::Iterator it = list.begin(); i < maxNumFiles && it != list.end(); ++it, ++i) {
             OpenFileInfo *ofi = *it;
-
-            if ((statusFlags & OpenFileInfo::RecentlyUsed) && ofi->lastAccess() < lruDateTimeList[maxNumRecentlyUsedFiles-1])
-                continue;
 
             cg.writeEntry(QString("%1-%2").arg(OpenFileInfo::OpenFileInfoPrivate::keyURL).arg(i), ofi->url().prettyUrl());
             cg.writeEntry(QString("%1-%2").arg(OpenFileInfo::propertyEncoding).arg(i), ofi->property(OpenFileInfo::propertyEncoding));
             cg.writeEntry(QString("%1-%2").arg(OpenFileInfo::OpenFileInfoPrivate::keyLastAccess).arg(i), ofi->lastAccess().toString(OpenFileInfo::OpenFileInfoPrivate::dateTimeFormat));
-
-            ++i;
         }
         config->sync();
     }
-
-    void lruListReset() {
-        static const QDateTime veryOldDate = QDateTime::fromString("1970-01-01", "yyyy-MM-dd");
-        for (int i = maxNumRecentlyUsedFiles - 1; i >= 0; --i)
-            lruDateTimeList[i] = veryOldDate;
-    }
-
-    void lruListAdd(const QDateTime& dateTime) {
-        int p;
-        for (p = 0; p < maxNumRecentlyUsedFiles; ++p) {
-            if (lruDateTimeList[p] < dateTime) break;
-        }
-
-        if (p < maxNumRecentlyUsedFiles) {
-            for (int i = maxNumRecentlyUsedFiles - 2; i >= p; --i)
-                lruDateTimeList[i+1] = lruDateTimeList[i];
-            lruDateTimeList[p] = dateTime;
-        }
-    }
 };
+
+const QString OpenFileInfoManager::OpenFileInfoManagerPrivate::configGroupNameRecentlyUsed = QLatin1String("DocumentList-RecentlyUsed");
+const QString OpenFileInfoManager::OpenFileInfoManagerPrivate::configGroupNameFavorites = QLatin1String("DocumentList-Favorites");
+const int OpenFileInfoManager::OpenFileInfoManagerPrivate::maxNumFiles = 256;
+const int OpenFileInfoManager::OpenFileInfoManagerPrivate::maxNumRecentlyUsedFiles = 8;
 
 OpenFileInfoManager *OpenFileInfoManager::singletonOpenFileInfoManager = NULL;
 
@@ -372,10 +338,10 @@ OpenFileInfoManager::~OpenFileInfoManager()
 
 OpenFileInfo *OpenFileInfoManager::createNew(const QString& mimeType)
 {
-    kDebug() << "mimeType=" << mimeType;
     OpenFileInfo *result = new OpenFileInfo(this, mimeType);
+    connect(result, SIGNAL(flagsChanged(OpenFileInfo::StatusFlags)), this, SIGNAL(flagsChanged(OpenFileInfo::StatusFlags)));
     d->openFileInfoList << result;
-    result->setLastAccess(QDateTime::currentDateTime());
+    result->setLastAccess();
     return result;
 }
 
@@ -387,9 +353,10 @@ OpenFileInfo *OpenFileInfoManager::open(const KUrl & url)
     if (result == NULL) {
         /// file not yet open
         result = new OpenFileInfo(this, url);
+        connect(result, SIGNAL(flagsChanged(OpenFileInfo::StatusFlags)), this, SIGNAL(flagsChanged(OpenFileInfo::StatusFlags)));
         d->openFileInfoList << result;
     }
-    result->setLastAccess(QDateTime::currentDateTime());
+    result->setLastAccess();
     return result;
 }
 
@@ -419,7 +386,7 @@ void OpenFileInfoManager::changeUrl(OpenFileInfo *openFileInfo, const KUrl & url
     openFileInfo->setUrl(url);
     if (openFileInfo == d->currentFileInfo)
         emit currentChanged(openFileInfo);
-    emit listsChanged(openFileInfo->flags());
+    emit flagsChanged(openFileInfo->flags());
 
     if (!url.equals(oldUrl) && oldUrl.isValid()) {
         /// current document was most probabily renamed (e.g. due to "Save As")
@@ -433,10 +400,12 @@ void OpenFileInfoManager::changeUrl(OpenFileInfo *openFileInfo, const KUrl & url
 
 void OpenFileInfoManager::close(OpenFileInfo *openFileInfo)
 {
+    Q_ASSERT_X(openFileInfo != NULL, "void OpenFileInfoManager::close(OpenFileInfo *openFileInfo)", "Cannot close openFileInfo which is NULL");
     bool isClosing = false;
+    openFileInfo->setLastAccess();
 
+    /// remove flag "open" from file to be closed and determine which file to show instead
     OpenFileInfo *nextCurrent = (d->currentFileInfo == openFileInfo) ? NULL : d->currentFileInfo;
-
     for (QList<OpenFileInfo*>::Iterator it = d->openFileInfoList.begin(); it != d->openFileInfoList.end(); ++it) {
         OpenFileInfo *ofi = *it;
         if (!isClosing && ofi == openFileInfo) {
@@ -445,7 +414,6 @@ void OpenFileInfoManager::close(OpenFileInfo *openFileInfo)
         } else if (nextCurrent == NULL && ofi->flags().testFlag(OpenFileInfo::Open))
             nextCurrent = ofi;
     }
-
     setCurrentFile(nextCurrent);
 
     if (isClosing)
@@ -460,14 +428,17 @@ OpenFileInfo *OpenFileInfoManager::currentFile() const
 void OpenFileInfoManager::setCurrentFile(OpenFileInfo *openFileInfo)
 {
     bool hasChanged = d->currentFileInfo != openFileInfo;
+    OpenFileInfo *previous = d->currentFileInfo;
     d->currentFileInfo = openFileInfo;
 
     if (d->currentFileInfo != NULL) {
         d->currentFileInfo->addFlags(OpenFileInfo::Open);
-        d->currentFileInfo->setLastAccess(QDateTime::currentDateTime());
+        d->currentFileInfo->setLastAccess();
     }
-    if (hasChanged)
+    if (hasChanged) {
+        if (previous != NULL) previous->setLastAccess();
         emit currentChanged(openFileInfo);
+    }
 }
 
 QList<OpenFileInfo*> OpenFileInfoManager::filteredItems(OpenFileInfo::StatusFlags required, OpenFileInfo::StatusFlags forbidden)
@@ -476,16 +447,17 @@ QList<OpenFileInfo*> OpenFileInfoManager::filteredItems(OpenFileInfo::StatusFlag
 
     for (QList<OpenFileInfo*>::Iterator it = d->openFileInfoList.begin(); it != d->openFileInfoList.end(); ++it) {
         OpenFileInfo *ofi = *it;
-        if ((ofi->flags()&required) == required && (ofi->flags()&forbidden) == 0)
+        if ((ofi->flags() & required) == required && (ofi->flags() & forbidden) == 0)
             result << ofi;
     }
 
-    return result;
-}
+    if (required == OpenFileInfo::RecentlyUsed)
+        qSort(result.begin(), result.end(), OpenFileInfoManagerPrivate::byLRULessThan);
+    else if (required == OpenFileInfo::Favorite || required == OpenFileInfo::Open)
+        qSort(result.begin(), result.end(), OpenFileInfoManagerPrivate::byNameLessThan);
 
-void OpenFileInfoManager::flagsChangedInternal(OpenFileInfo::StatusFlags statusFlags)
-{
-    emit listsChanged(statusFlags);
+
+    return result;
 }
 
 void OpenFileInfoManager::deferredListsChanged()
@@ -494,5 +466,5 @@ void OpenFileInfoManager::deferredListsChanged()
     OpenFileInfo::StatusFlags statusFlags = OpenFileInfo::Open;
     statusFlags |= OpenFileInfo::RecentlyUsed;
     statusFlags |= OpenFileInfo::Favorite;
-    emit listsChanged(statusFlags);
+    emit flagsChanged(statusFlags);
 }
