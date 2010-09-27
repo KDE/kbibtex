@@ -38,7 +38,8 @@ enum FieldInputType {
     MultiLine = 2,
     List = 3,
     URL = 4,
-    Month = 5
+    Month = 5,
+    Color = 6
 };
 
 enum TypeFlag {

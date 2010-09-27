@@ -52,6 +52,7 @@ public:
         case KBibTeX::MultiLine : return QLatin1String("MultiLine");
         case KBibTeX::URL : return QLatin1String("URL");
         case KBibTeX::Month : return QLatin1String("Month");
+        case KBibTeX::Color : return QLatin1String("Color");
         default: return QLatin1String("SingleLine");
         }
     }
@@ -65,6 +66,8 @@ public:
             return KBibTeX::URL;
         else if (text == QLatin1String("Month"))
             return KBibTeX::Month;
+        else if (text == QLatin1String("Color"))
+            return KBibTeX::Color;
         else
             return KBibTeX::SingleLine;
     }

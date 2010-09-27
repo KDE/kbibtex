@@ -122,6 +122,10 @@ bibtexLabel5=keywords
 uiLabel5=Keywords
 fieldInputLayout5=List
 
+bibtexLabel6=x-color
+uiLabel6=Color
+fieldInputLayout6=Color
+
 [Tab6]
 uiCaption=External
 columns=1

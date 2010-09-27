@@ -25,6 +25,7 @@
 
 #include <KDebug>
 #include <KPushButton>
+#include <KColorButton>
 
 #include <fieldlineedit.h>
 #include <fieldlistedit.h>
@@ -36,6 +37,7 @@ private:
     FieldInput *p;
     FieldLineEdit *fieldLineEdit;
     FieldListEdit *fieldListEdit;
+    KColorButton *colorButton;
 
 public:
     KBibTeX::FieldInputType fieldInputType;
@@ -43,12 +45,12 @@ public:
     KBibTeX::TypeFlag preferredTypeFlag;
 
     FieldInputPrivate(FieldInput *parent)
-            : p(parent), fieldLineEdit(NULL), fieldListEdit(NULL) {
+            : p(parent), fieldLineEdit(NULL), fieldListEdit(NULL), colorButton(NULL) {
         // TODO
     }
 
     void createGUI() {
-        QVBoxLayout *layout = new QVBoxLayout(p);
+        QHBoxLayout *layout = new QHBoxLayout(p);
         layout->setMargin(0);
 
         switch (fieldInputType) {
@@ -78,6 +80,10 @@ public:
             monthSelector->setMenu(monthMenu);
         }
         break;
+        case KBibTeX::Color:
+            colorButton = new KColorButton(p);
+            layout->addWidget(colorButton, 0, Qt::AlignLeft);
+            break;
         default:
             fieldLineEdit = new FieldLineEdit(preferredTypeFlag, typeFlags, false, p);
             layout->addWidget(fieldLineEdit);
@@ -98,6 +104,12 @@ public:
             result = fieldLineEdit->reset(value);
         else if (fieldListEdit != NULL)
             result = fieldListEdit->reset(value);
+        else if (colorButton != NULL) {
+            PlainText *plainText = NULL;
+            if (value.count() == 1 && (plainText = dynamic_cast<PlainText*>(value.first())) != NULL) {
+                colorButton->setColor(QColor(plainText->text()));
+            }
+        }
         return result;
     }
 
@@ -107,6 +119,12 @@ public:
             result = fieldLineEdit->apply(value);
         else if (fieldListEdit != NULL)
             result = fieldListEdit->apply(value);
+        else if (colorButton != NULL) {
+            value.clear();
+            PlainText *plainText = new PlainText(colorButton->color().name());
+            value << plainText;
+            result = true;
+        }
         return result;
     }
 
