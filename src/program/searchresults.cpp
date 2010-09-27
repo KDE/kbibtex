@@ -125,7 +125,6 @@ void SearchResults::documentSwitched(BibTeXEditor *oldEditor, BibTeXEditor *newE
 
 void SearchResults::updateGUI()
 {
-    kDebug() << "current file? " << (d->currentFile == NULL ? "NULL" : "ok") << "  selection: " << d->editor->selectedElements().count();
     d->buttonImport->setEnabled(d->currentFile != NULL && !d->editor->selectedElements().isEmpty());
     d->actionImportSelected->setEnabled(d->buttonImport->isEnabled());
     d->actionCopySelected->setEnabled(!d->editor->selectedElements().isEmpty());

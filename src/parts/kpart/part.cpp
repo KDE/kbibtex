@@ -158,6 +158,7 @@ KBibTeXPart::KBibTeXPart(QWidget *parentWidget, QObject *parent, bool browserVie
 
     // TODO Setup view
     d->editor = new BibTeXEditor(parentWidget);
+    d->editor->setReadOnly(!isReadWrite());
     setWidget(d->editor);
 
     connect(d->editor, SIGNAL(elementExecuted(Element*)), d->editor, SLOT(editElement(Element*)));
@@ -241,7 +242,6 @@ void KBibTeXPart::setupActions(bool /*browserViewWanted FIXME*/)
     d->editor->insertAction(NULL, d->editCopyReferencesAction);
     d->editor->insertAction(NULL, d->editPasteAction);
     d->editor->insertAction(NULL, d->editDeleteAction);
-
 
     // TODO
 

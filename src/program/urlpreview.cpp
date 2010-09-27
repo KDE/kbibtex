@@ -87,7 +87,7 @@ public:
         urlComboBox = new KComboBox(false, p);
         layout->addWidget(urlComboBox, 0, 0, 1, 1);
 
-        showExternalUrlsCheckBox = new QCheckBox(i18n("Exclude external references"), p);
+        showExternalUrlsCheckBox = new QCheckBox(i18n("Only local files"), p);
         layout->addWidget(showExternalUrlsCheckBox, 1, 0, 1, 2);
 
         externalViewerButton = new KPushButton(KIcon("document-open"), i18n("Open..."), p);

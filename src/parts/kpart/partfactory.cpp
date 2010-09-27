@@ -55,9 +55,10 @@ KParts::Part* KBibTeXPartFactory::createPartObject(QWidget *parentWidget, QObjec
 {
     const QByteArray classname(cn);
     const bool browserViewWanted = (classname == "Browser/View");   // FIXME Editor?
-    //bool ReadOnlyWanted = (BrowserViewWanted || ( Classname == "KParts::ReadOnlyPart" ));
+    bool readOnlyWanted = (browserViewWanted || (classname == "KParts::ReadOnlyPart"));
 
     KBibTeXPart* part = new KBibTeXPart(parentWidget, parent, browserViewWanted);
+    part->setReadWrite(!readOnlyWanted);
 
     return part;
 }

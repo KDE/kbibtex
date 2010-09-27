@@ -2,7 +2,7 @@
 Encoding=UTF-8
 Type=Service
 Icon=kbibtex
-Name=BibTeX View and Editor
+Name=BibTeX Viewer and Editor
 Name[de]=BibTeX-Betrachter und -Editor
 Comment=KParts component to view and edit bibliographic files
 Comment[de]=KParts-Komponente zum Betrachten und Editieren von Bibliographiedateien
