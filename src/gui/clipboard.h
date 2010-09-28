@@ -25,6 +25,11 @@
 
 #include <QObject>
 
+class QMouseEvent;
+class QDragEnterEvent;
+class QDragMoveEvent;
+class QDropEvent;
+
 class BibTeXEditor;
 
 class KBIBTEXIO_EXPORT Clipboard : public QObject
