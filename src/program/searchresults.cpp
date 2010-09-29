@@ -56,6 +56,8 @@ public:
         editor->setContextMenuPolicy(Qt::ActionsContextMenu);
         layout->addWidget(editor, 0, 0, 1, 2);
 
+        clipboard = new Clipboard(editor);
+
         buttonImport = new KPushButton(KIcon("svn-update"), i18n("Import"), parent);
         layout->addWidget(buttonImport, 1, 1, 1, 1);
         buttonImport->setEnabled(false);
@@ -77,9 +79,6 @@ public:
         actionCopySelected = new KAction(KIcon("edit-copy"), i18n("Copy"), parent);
         editor->addAction(actionCopySelected);
         actionCopySelected->setEnabled(false);
-        connect(actionCopySelected, SIGNAL(triggered()), parent, SLOT(copySelected()));
-
-        clipboard = new Clipboard(editor);
         connect(actionCopySelected, SIGNAL(triggered()), clipboard, SLOT(copy()));
 
         connect(editor, SIGNAL(doubleClicked(QModelIndex)), editor, SLOT(viewCurrentElement()));
