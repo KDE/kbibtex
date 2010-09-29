@@ -230,6 +230,7 @@ QDateTime OpenFileInfo::lastAccess() const
 void OpenFileInfo::setLastAccess(const QDateTime& dateTime)
 {
     d->lastAccessDateTime = dateTime;
+    emit flagsChanged(OpenFileInfo::RecentlyUsed);
 }
 
 class OpenFileInfoManager::OpenFileInfoManagerPrivate

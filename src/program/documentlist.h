@@ -22,6 +22,9 @@
 #define KBIBTEX_PROGRAM_DOCUMENTLIST_H
 
 #include <QTabWidget>
+#include <QListView>
+#include <QAbstractListModel>
+#include <QStyledItemDelegate>
 
 #include <KListWidget>
 #include <KUrl>
@@ -29,6 +32,55 @@
 #include "openfileinfo.h"
 
 class OpenFileInfoManager;
+
+class DocumentListDelegate : public QStyledItemDelegate
+{
+public:
+    DocumentListDelegate(QObject * parent = NULL);
+
+    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+    QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
+
+};
+
+class DocumentListModel : public QAbstractListModel
+{
+    Q_OBJECT
+
+public:
+    DocumentListModel(OpenFileInfo::StatusFlag statusFlag, OpenFileInfoManager *openFileInfoManager, QObject *parent = NULL);
+    int rowCount(const QModelIndex & parent = QModelIndex()) const;
+    QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
+    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+
+private:
+    class DocumentListModelPrivate;
+    DocumentListModelPrivate *d;
+
+private slots:
+    void listsChanged(OpenFileInfo::StatusFlags statusFlags);
+};
+
+class DocumentListView : public QListView
+{
+    Q_OBJECT
+
+public:
+    DocumentListView(OpenFileInfo::StatusFlag statusFlag, QWidget *parent);
+
+private slots:
+    void addToFavorites();
+    void removeFromFavorites();
+    void openFile();
+    void closeFile();
+
+protected:
+    void currentChanged(const QModelIndex &current, const QModelIndex &previous);
+
+private:
+    class DocumentListViewPrivate;
+    DocumentListViewPrivate *d;
+};
 
 class DocumentList : public QTabWidget
 {
@@ -39,15 +91,6 @@ public:
 
     DocumentList(OpenFileInfoManager *openFileInfoManager, QWidget *parent = NULL);
 
-private slots:
-    void itemExecuted(QListWidgetItem * item);
-    void listsChanged(OpenFileInfo::StatusFlags statusFlags);
-    void addToFavorites(QWidget*);
-    void removeFromFavorites(QWidget*);
-    void openFile(QWidget*);
-    void closeFile(QWidget*);
-    void updateContextMenu();
-
 private:
     class DocumentListPrivate;
     DocumentListPrivate *d;
@@ -55,26 +98,6 @@ private:
 
 static const int RecentlyUsedItemType = QListWidgetItem::UserType + 23;
 static const int FavoritesItemType = QListWidgetItem::UserType + 24;
-
-class DocumentListItem : public QListWidgetItem
-{
-public:
-    DocumentListItem(OpenFileInfo *openFileInfo, KListWidget *parent = NULL, int type = QListWidgetItem::UserType);
-    OpenFileInfo *openFileInfo() const;
-
-private:
-    class DocumentListItemPrivate;
-    DocumentListItemPrivate *d;
-};
-
-class DocumentListItemWidget : public QWidget
-{
-public:
-    DocumentListItemWidget(DocumentListItem *item, QWidget *parent = NULL);
-
-private:
-    DocumentListItem *m_item;
-};
 
 
 #endif // KBIBTEX_PROGRAM_DOCUMENTLIST_H

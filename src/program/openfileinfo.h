@@ -24,6 +24,7 @@
 #include <QObject>
 #include <QList>
 #include <QDateTime>
+#include <QVariant>
 
 #include <KService>
 #include <KUrl>
@@ -86,6 +87,9 @@ private:
     class OpenFileInfoPrivate;
     OpenFileInfoPrivate *d;
 };
+
+Q_DECLARE_METATYPE(OpenFileInfo*);
+
 
 class OpenFileInfoManager: public QObject
 {
