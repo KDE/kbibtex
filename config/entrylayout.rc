@@ -98,6 +98,10 @@ bibtexLabel17=howpublished
 uiLabel17=How Published
 fieldInputLayout17=SingleLine
 
+bibtexLabel18=crossref
+uiLabel18=Cross-Reference
+fieldInputLayout18=SingleLine
+
 [Tab4]
 uiCaption=Misc
 columns=1
@@ -132,5 +136,17 @@ columns=1
 
 bibtexLabel1=url
 uiLabel1=URL
-fieldInputLayout=URL
+fieldInputLayout1=URL
+
+bibtexLabel2=ee
+uiLabel2=EE
+fieldInputLayout2=URL
+
+bibtexLabel3=doi
+uiLabel3=Document Identifier (DOI)
+fieldInputLayout3=URL
+
+bibtexLabel4=localfile
+uiLabel4=Local Filename
+fieldInputLayout4=URL
 

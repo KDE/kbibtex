@@ -185,5 +185,5 @@ UpperCamelCase=Keywords
 Label=Keywords
 DefaultWidth=3
 Visible=false
-TypeFlags=Source;Keyword
+TypeFlags=Keyword
 
