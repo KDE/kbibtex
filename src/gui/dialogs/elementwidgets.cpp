@@ -18,6 +18,8 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
+#include <typeinfo>
+
 #include <QLayout>
 #include <QTextEdit>
 #include <QBuffer>
@@ -111,7 +113,7 @@ KIcon EntryConfiguredWidget::icon()
 
 bool EntryConfiguredWidget::canEdit(const Element *element)
 {
-    return dynamic_cast<const Entry*>(element) != NULL;
+    return typeid(*element) == typeid(Entry);
 }
 
 void EntryConfiguredWidget::createGUI()
@@ -242,7 +244,7 @@ KIcon ReferenceWidget::icon()
 
 bool ReferenceWidget::canEdit(const Element *element)
 {
-    return dynamic_cast<const Entry*>(element) != NULL || dynamic_cast<const Macro*>(element) != NULL;
+    return typeid(*element) == typeid(Entry) || typeid(*element) == typeid(Macro);
 }
 
 void ReferenceWidget::createGUI()
@@ -336,7 +338,7 @@ KIcon OtherFieldsWidget::icon()
 
 bool OtherFieldsWidget::canEdit(const Element *element)
 {
-    return dynamic_cast<const Entry*>(element) != NULL;
+    return typeid(*element) == typeid(Entry);
 }
 
 void OtherFieldsWidget::listElementExecuted(QTreeWidgetItem *item, int column)
@@ -542,7 +544,7 @@ KIcon MacroWidget::icon()
 
 bool MacroWidget::canEdit(const Element *element)
 {
-    return dynamic_cast<const Macro*>(element) != NULL;
+    return typeid(*element) == typeid(Macro);
 }
 
 void MacroWidget::createGUI()
@@ -604,7 +606,7 @@ KIcon PreambleWidget::icon()
 
 bool PreambleWidget::canEdit(const Element *element)
 {
-    return dynamic_cast<const Preamble*>(element) != NULL;
+    return typeid(*element) == typeid(Preamble);
 }
 
 void PreambleWidget::createGUI()

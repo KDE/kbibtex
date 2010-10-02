@@ -18,6 +18,8 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
+#include <typeinfo>
+
 #include <QMenu>
 #include <QSignalMapper>
 #include <QBuffer>
@@ -175,13 +177,13 @@ public:
             return true;
         else if (value.count() > 1)
             return typeFlag == KBibTeX::tfSource;
-        else if (typeFlag == KBibTeX::tfKeyword && dynamic_cast<Keyword*>(value.first()) != NULL)
+        else if (typeFlag == KBibTeX::tfKeyword && typeid(Keyword) == typeid(value.first()))
             return true;
-        else if (typeFlag == KBibTeX::tfPerson && dynamic_cast<Person*>(value.first()) != NULL)
+        else if (typeFlag == KBibTeX::tfPerson && typeid(Person) == typeid(value.first()))
             return true;
-        else if (typeFlag == KBibTeX::tfPlainText && dynamic_cast<PlainText*>(value.first()) != NULL)
+        else if (typeFlag == KBibTeX::tfPlainText && typeid(PlainText) == typeid(value.first()))
             return true;
-        else if (typeFlag == KBibTeX::tfReference && dynamic_cast<MacroKey*>(value.first()) != NULL)
+        else if (typeFlag == KBibTeX::tfReference && typeid(MacroKey) == typeid(value.first()))
             return true;
         else return false;
     }
