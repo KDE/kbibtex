@@ -41,6 +41,7 @@
 #include "mdiwidget.h"
 #include "referencepreview.h"
 #include "urlpreview.h"
+#include "valuelist.h"
 #include "searchform.h"
 #include "searchresults.h"
 #include "elementform.h"
@@ -58,6 +59,7 @@ public:
     QDockWidget *dockDocumentList;
     QDockWidget *dockReferencePreview;
     QDockWidget *dockUrlPreview;
+    QDockWidget *dockValueList;
     QDockWidget *dockSearchForm;
     QDockWidget *dockSearchResults;
     QDockWidget *dockElementForm;
@@ -66,6 +68,7 @@ public:
     MDIWidget *mdiWidget;
     ReferencePreview *referencePreview;
     UrlPreview *urlPreview;
+    ValueList *valueList;
     SearchForm *searchForm;
     SearchResults *searchResults;
     ElementForm *elementForm;
@@ -155,6 +158,15 @@ KBibTeXMainWindow::KBibTeXMainWindow(KBibTeXProgram *program)
     d->dockSearchForm->setObjectName("dockSearchFrom");
     d->dockSearchForm->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
     showPanelsMenu->addAction(d->dockSearchForm->toggleViewAction());
+
+    d->dockValueList = new QDockWidget(i18n("List of Values"), this);
+    d->dockValueList->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+    addDockWidget(Qt::LeftDockWidgetArea, d->dockValueList);
+    d->valueList = new ValueList(d->mdiWidget, d->dockSearchForm);
+    d->dockValueList->setWidget(d->valueList);
+    d->dockValueList->setObjectName("dockValueList");
+    d->dockValueList->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
+    showPanelsMenu->addAction(d->dockValueList->toggleViewAction());
 
     d->dockElementForm = new QDockWidget(i18n("Element Editor"), this);
     d->dockElementForm->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
@@ -282,15 +294,18 @@ void KBibTeXMainWindow::documentSwitched(BibTeXEditor *oldEditor, BibTeXEditor *
         disconnect(oldEditor, SIGNAL(currentElementChanged(Element*, const File *)), d->referencePreview, SLOT(setElement(Element*, const File *)));
         disconnect(oldEditor, SIGNAL(currentElementChanged(Element*, const File *)), d->elementForm, SLOT(setElement(Element*, const File *)));
         disconnect(oldEditor, SIGNAL(currentElementChanged(Element*, const File *)), d->urlPreview, SLOT(setElement(Element*, const File *)));
+        disconnect(oldEditor, SIGNAL(currentElementChanged(Element*, const File *)), d->valueList, SLOT(setElement(Element*, const File *)));
     }
     if (newEditor != NULL) {
         connect(newEditor, SIGNAL(currentElementChanged(Element*, const File *)), d->referencePreview, SLOT(setElement(Element*, const File *)));
         connect(newEditor, SIGNAL(currentElementChanged(Element*, const File *)), d->elementForm, SLOT(setElement(Element*, const File *)));
         connect(newEditor, SIGNAL(currentElementChanged(Element*, const File *)), d->urlPreview, SLOT(setElement(Element*, const File *)));
+        connect(newEditor, SIGNAL(currentElementChanged(Element*, const File *)), d->valueList, SLOT(setElement(Element*, const File *)));
     }
 
     d->urlPreview->setBibTeXUrl(validFile ? openFileInfo->url() : KUrl());
     d->referencePreview->setElement(NULL, NULL);
     d->elementForm->setElement(NULL, NULL);
     d->urlPreview->setElement(NULL, NULL);
+    d->valueList->setElement(NULL, NULL);
 }
