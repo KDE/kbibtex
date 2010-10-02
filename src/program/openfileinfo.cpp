@@ -200,6 +200,9 @@ OpenFileInfo::StatusFlags OpenFileInfo::flags() const
 
 void OpenFileInfo::setFlags(StatusFlags statusFlags)
 {
+    /// disallow files without name or valid url to become favorites
+    if (!d->url.isValid() || !d->flags.testFlag(HasName)) statusFlags &= ~Favorite;
+
     bool hasChanged = d->flags != statusFlags;
     d->flags = statusFlags;
     if (hasChanged)
@@ -208,6 +211,9 @@ void OpenFileInfo::setFlags(StatusFlags statusFlags)
 
 void OpenFileInfo::addFlags(StatusFlags statusFlags)
 {
+    /// disallow files without name or valid url to become favorites
+    if (!d->url.isValid() || !d->flags.testFlag(HasName)) statusFlags &= ~Favorite;
+
     bool hasChanged = (~d->flags & statusFlags) > 0;
     d->flags |= statusFlags;
     if (hasChanged)
@@ -288,6 +294,7 @@ public:
                 ofi = p->open(fileUrl);
             }
             ofi->addFlags(statusFlag);
+            ofi->addFlags(OpenFileInfo::HasName);
             QString encoding = cg.readEntry(QString("%1-%2").arg(OpenFileInfo::propertyEncoding).arg(i), "");
             ofi->setLastAccess(QDateTime::fromString(cg.readEntry(QString("%1-%2").arg(OpenFileInfo::OpenFileInfoPrivate::keyLastAccess).arg(i), ""), OpenFileInfo::OpenFileInfoPrivate::dateTimeFormat));
             ofi->setProperty(OpenFileInfo::propertyEncoding, encoding);

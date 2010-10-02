@@ -39,7 +39,7 @@
 DocumentListDelegate::DocumentListDelegate(QObject * parent)
         : QStyledItemDelegate(parent)
 {
-
+    // nothing
 }
 
 void DocumentListDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
@@ -256,13 +256,14 @@ void DocumentListView::currentChanged(const QModelIndex &current, const QModelIn
     bool hasCurrent = current != QModelIndex();
     bool isOpen = hasCurrent ? qvariant_cast<OpenFileInfo*>(current.data(Qt::UserRole))->flags().testFlag(OpenFileInfo::Open) : false;
     bool isFavorite = hasCurrent ? qvariant_cast<OpenFileInfo*>(current.data(Qt::UserRole))->flags().testFlag(OpenFileInfo::Favorite) : false;
+    bool hasName = hasCurrent ? qvariant_cast<OpenFileInfo*>(current.data(Qt::UserRole))->flags().testFlag(OpenFileInfo::HasName) : false;
 
     if (d->actionOpenFile != NULL)
         d->actionOpenFile->setEnabled(hasCurrent && !isOpen);
     if (d->actionCloseFile != NULL)
         d->actionCloseFile->setEnabled(hasCurrent && isOpen);
     if (d->actionAddToFav != NULL)
-        d->actionAddToFav->setEnabled(hasCurrent && !isFavorite);
+        d->actionAddToFav->setEnabled(hasCurrent && !isFavorite && hasName);
     if (d->actionRemFromFav != NULL)
         d->actionRemFromFav->setEnabled(hasCurrent && isFavorite);
 }

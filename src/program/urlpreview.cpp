@@ -146,6 +146,11 @@ public:
     }
 
     void urlSelected(const QString &text) {
+        if (!p->isVisible()) {
+            kDebug() << "Skipping loading URL, as widget is not visible";
+            return;
+        }
+
         KUrl url = cbxEntryToUrl[text];
         QWidget *widget = urlToWidget[url];
         bool stillWaiting = false;
