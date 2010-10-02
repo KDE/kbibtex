@@ -62,6 +62,16 @@ public:
 
         return result;
     }
+
+    void setFilter(SortFilterBibTeXFileModel::FilterQuery fq) {
+        comboBoxCombination->setCurrentIndex(fq.combination == SortFilterBibTeXFileModel::AnyTerm ? 0 : (fq.terms.count() < 2 ? 2 : 1));
+        comboBoxFilterText->lineEdit()->setText(fq.terms.join(" "));
+        for (int idx = 0; idx < comboBoxField->count();++idx)
+            if (fq.field == comboBoxField->itemText(idx) || comboBoxField->itemData(idx, Qt::UserRole).toString() == fq.field) {
+                comboBoxField->setCurrentIndex(idx);
+                break;
+            }
+    }
 };
 
 FilterBar::FilterBar(QWidget *parent)
@@ -114,6 +124,12 @@ void FilterBar::clearFilter()
 {
     d->clearFilter();
     emit filterChanged(d->filter());
+}
+
+void FilterBar::setFilter(SortFilterBibTeXFileModel::FilterQuery fq)
+{
+    d->setFilter(fq);
+    emit filterChanged(fq);
 }
 
 SortFilterBibTeXFileModel::FilterQuery FilterBar::filter()
