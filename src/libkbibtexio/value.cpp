@@ -113,11 +113,11 @@ void Person::replace(const QString &before, const QString &after)
 
 bool Person::containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive) const
 {
-    return m_firstName.contains(pattern, caseSensitive) ||  m_lastName.contains(pattern, caseSensitive) ||  m_prefix.contains(pattern, caseSensitive) ||  m_suffix.contains(pattern, caseSensitive);
+    return m_firstName.contains(pattern, caseSensitive) || m_lastName.contains(pattern, caseSensitive) ||  m_prefix.contains(pattern, caseSensitive) ||  m_suffix.contains(pattern, caseSensitive) || QString("%1 %2|%2, %1").arg(m_firstName).arg(m_lastName).contains(pattern, caseSensitive);
 }
 
 
-const QRegExp MacroKey::validMakroKeyChars = QRegExp("![-.:/+_a-zA-Z0-9]");
+const QRegExp MacroKey::validMacroKeyChars = QRegExp("![-.:/+_a-zA-Z0-9]");
 
 MacroKey::MacroKey(const MacroKey& other)
         : m_text(other.m_text)
@@ -143,7 +143,7 @@ QString MacroKey::text() const
 
 bool MacroKey::isValid()
 {
-    return !text().contains(validMakroKeyChars);
+    return !text().contains(validMacroKeyChars);
 }
 
 void MacroKey::replace(const QString &before, const QString &after)

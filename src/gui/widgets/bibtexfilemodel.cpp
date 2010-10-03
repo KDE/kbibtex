@@ -48,6 +48,7 @@ BibTeXFileModel *SortFilterBibTeXFileModel::bibTeXSourceModel()
 void SortFilterBibTeXFileModel::updateFilter(SortFilterBibTeXFileModel::FilterQuery filterQuery)
 {
     m_filterQuery = filterQuery;
+    m_filterQuery.field = filterQuery.field.toLower(); /// required for comparison in filter code
     invalidateFilter();
 }
 
@@ -100,40 +101,42 @@ bool SortFilterBibTeXFileModel::filterAcceptsRow(int source_row, const QModelInd
 
     Element *rowElement = m_internalModel->element(source_row);
     Q_ASSERT(rowElement != NULL);
-    Entry *entry = dynamic_cast<Entry*>(rowElement);
 
+    Entry *entry = dynamic_cast<Entry*>(rowElement);
     if (entry != NULL) {
+        /// if current row contains an Entry ...
+
+        bool any = false;
         bool *all = new bool[m_filterQuery.terms.count()];
         for (int i = m_filterQuery.terms.count() - 1; i >= 0; --i)
             all[i] = false;
 
         for (Entry::ConstIterator it = entry->constBegin(); it != entry->constEnd(); ++it)
-            if (m_filterQuery.field.isEmpty() || m_filterQuery.field == it.key()) {
+            if (m_filterQuery.field.isEmpty() || m_filterQuery.field == it.key().toLower()) {
                 int i = 0;
                 for (QStringList::ConstIterator itsl = m_filterQuery.terms.constBegin(); itsl != m_filterQuery.terms.constEnd(); ++itsl, ++i) {
                     bool contains = it.value().containsPattern(*itsl);
-                    if (m_filterQuery.combination == SortFilterBibTeXFileModel::AnyTerm && contains) {
-                        delete all;
-                        return true;
-                    }
-                    all[i] &= contains;
+                    any |= contains;
+                    all[i] |= contains;
                 }
             }
 
         int i = 0;
-        for (QStringList::ConstIterator itsl = m_filterQuery.terms.constBegin(); itsl != m_filterQuery.terms.constEnd(); ++itsl, ++i) {
-            bool contains = entry->id().contains(*itsl);
-            if (m_filterQuery.combination == SortFilterBibTeXFileModel::AnyTerm && contains) {
-                delete all;
-                return true;
+        if (m_filterQuery.field.isEmpty())
+            for (QStringList::ConstIterator itsl = m_filterQuery.terms.constBegin(); itsl != m_filterQuery.terms.constEnd(); ++itsl, ++i) {
+                bool contains = entry->id().contains(*itsl);
+                any |= contains;
+                all[i] |= contains;
             }
-            all[i] &= contains;
-        }
 
-        bool sum = true;
-        for (i = m_filterQuery.terms.count() - 1; i >= 0; --i) sum &= all[i];
-        delete all;
-        return sum;
+        bool every = true;
+        for (i = m_filterQuery.terms.count() - 1; i >= 0; --i) every &= all[i];
+        delete[] all;
+
+        if (m_filterQuery.combination == SortFilterBibTeXFileModel::AnyTerm)
+            return any;
+        else
+            return every;
     } else {
         Macro *macro = dynamic_cast<Macro*>(rowElement);
         if (macro != NULL) {
@@ -144,7 +147,7 @@ bool SortFilterBibTeXFileModel::filterAcceptsRow(int source_row, const QModelInd
                     return true;
                 all &= contains;
             }
-            if (all) return true;
+            return all;
         } else {
             Comment *comment = dynamic_cast<Comment*>(rowElement);
             if (comment != NULL) {
@@ -155,7 +158,7 @@ bool SortFilterBibTeXFileModel::filterAcceptsRow(int source_row, const QModelInd
                         return true;
                     all &= contains;
                 }
-                if (all) return true;
+                return all;
             } else {
                 Preamble *preamble = dynamic_cast<Preamble*>(rowElement);
                 if (preamble != NULL) {
@@ -166,7 +169,7 @@ bool SortFilterBibTeXFileModel::filterAcceptsRow(int source_row, const QModelInd
                             return true;
                         all &= contains;
                     }
-                    if (all) return true;
+                    return all;
                 }
             }
         }

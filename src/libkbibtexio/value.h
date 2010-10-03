@@ -112,7 +112,7 @@ public:
 
 protected:
     QString m_text;
-    static const QRegExp validMakroKeyChars;
+    static const QRegExp validMacroKeyChars;
 };
 
 class KBIBTEXIO_EXPORT PlainText: public ValueItem
