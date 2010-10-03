@@ -26,7 +26,6 @@ set( kbibtex_SRCS
 	searchform.cpp
 	searchresults.cpp
 	elementform.cpp
-	valuelist.cpp
 	openfileinfo.cpp
 )
 

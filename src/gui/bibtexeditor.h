@@ -28,6 +28,8 @@
 #include <bibtexfileview.h>
 #include <element.h>
 
+class ValueList;
+
 /**
 @author Thomas Fischer
 */
@@ -37,12 +39,16 @@ class KBIBTEXGUI_EXPORT BibTeXEditor : public BibTeXFileView
 public:
     BibTeXEditor(QWidget *parent);
 
+    virtual void setModel(QAbstractItemModel * model);
+
     const QList<Element*>& selectedElements() const;
     const Element* currentElement() const;
     Element* currentElement();
 
     void setReadOnly(bool isReadOnly = true);
     bool isReadOnly() const;
+
+    ValueList *valueListWidget();
 
 signals:
     void selectedElementsChanged();
@@ -79,6 +85,7 @@ protected slots:
 private:
     Element* m_current;
     QList<Element*> m_selection;
+    ValueList *m_valueListWidget;
 };
 
 

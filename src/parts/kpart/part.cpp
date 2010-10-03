@@ -53,6 +53,7 @@
 #include <comment.h>
 #include "filterbar.h"
 
+#include <valuelist.h>
 #include <clipboard.h>
 #include "part.h"
 #include "partfactory.h"
@@ -147,6 +148,7 @@ public:
         sortFilterProxyModel->setSourceModel(model);
         editor->setModel(sortFilterProxyModel);
         connect(filterBar, SIGNAL(filterChanged(SortFilterBibTeXFileModel::FilterQuery)), sortFilterProxyModel, SLOT(updateFilter(SortFilterBibTeXFileModel::FilterQuery)));
+        connect(editor->valueListWidget(), SIGNAL(filterChanged(SortFilterBibTeXFileModel::FilterQuery)), filterBar, SLOT(setFilter(SortFilterBibTeXFileModel::FilterQuery)));
     }
 };
 

@@ -23,7 +23,8 @@
 
 #include <QWidget>
 
-class MDIWidget;
+#include <bibtexfilemodel.h>
+
 class Element;
 class File;
 
@@ -32,13 +33,17 @@ class ValueList : public QWidget
     Q_OBJECT
 
 public:
-    ValueList(MDIWidget *mdiWidget, QWidget *parent);
+    ValueList(QWidget *parent);
 
 public slots:
     void setElement(Element*, const File *);
 
+signals:
+    void filterChanged(SortFilterBibTeXFileModel::FilterQuery);
+
 private slots:
     void comboboxChanged();
+    void listItemActivated(const QModelIndex &);
 
 private:
     class ValueListPrivate;

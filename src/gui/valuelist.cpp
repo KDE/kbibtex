@@ -18,6 +18,8 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
+#include <typeinfo>
+
 #include <KComboBox>
 #include <KDebug>
 
@@ -27,13 +29,11 @@
 
 #include <bibtexfields.h>
 #include <entry.h>
-#include <mdiwidget.h>
 #include "valuelist.h"
 
 class ValueListModel: public QStringListModel
 {
 private:
-    QStringList values;
     const File *file;
     const QString fName;
 
@@ -44,48 +44,55 @@ public:
     }
 
     void updateValues() {
-        values.clear();
+        QStringList valueList;
+
         for (File::ConstIterator fit = file->constBegin(); fit != file->constEnd(); ++fit) {
             const Entry *entry = dynamic_cast<const Entry*>(*fit);
             if (entry != NULL) {
                 for (Entry::ConstIterator eit = entry->constBegin(); eit != entry->constEnd(); ++eit) {
                     QString key = eit.key().toLower();
                     if (key == fName) {
-                        insertValue(eit.value());
+                        insertValue(eit.value(), valueList);
                         break;
                     }
                 }
             }
         }
-        values.sort();
-        setStringList(values);
+        valueList.sort();
+        setStringList(valueList);
     }
 
-    void insertValue(const Value &value) {
+    void insertValue(const Value &value, QStringList &valueList) {
         for (Value::ConstIterator it = value.constBegin(); it != value.constEnd(); ++it) {
-            // TODO
+            if (typeid(*(*it)) == typeid(Person)) {
+                const Person *person = static_cast<const Person*>(*it);
+                QString text = person->lastName();
+                if (!person->firstName().isEmpty()) text.append(", " + person->firstName());
+                // TODO: other parts of name
+                if (!valueList.contains(text))
+                    valueList << text;
+            } else {
+                const QString text = PlainTextValue::text(*(*it), file);
+                if (!valueList.contains(text))
+                    valueList << text;
+            }
         }
-        const QString ptv = PlainTextValue::text(value, file);
-        if (!values.contains(ptv))
-            values << ptv;
     }
 };
 
 class ValueList::ValueListPrivate
 {
 private:
-    MDIWidget *mdi;
     ValueList *p;
-    KComboBox *comboboxFieldNames;
     QListView *listviewFieldValues;
     const QString fieldName;
 
 public:
-    const Entry *entry;
     const File *file;
+    KComboBox *comboboxFieldNames;
 
-    ValueListPrivate(MDIWidget *mdiWidget, ValueList *parent)
-            : mdi(mdiWidget), p(parent) {
+    ValueListPrivate(ValueList *parent)
+            : p(parent) {
         setupGUI();
         initialize();
     }
@@ -98,10 +105,12 @@ public:
 
         listviewFieldValues = new QListView(p);
         layout->addWidget(listviewFieldValues, 1, 0, 1, 1);
+        listviewFieldValues->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
         p->setEnabled(false);
 
         connect(comboboxFieldNames, SIGNAL(activated(int)), p, SLOT(comboboxChanged()));
+        connect(listviewFieldValues, SIGNAL(activated(const QModelIndex &)), p, SLOT(listItemActivated(const QModelIndex &)));
     }
 
     void initialize() {
@@ -128,25 +137,37 @@ public:
     }
 };
 
-ValueList::ValueList(MDIWidget *mdiWidget, QWidget *parent)
-        : QWidget(parent), d(new ValueListPrivate(mdiWidget, this))
+ValueList::ValueList(QWidget *parent)
+        : QWidget(parent), d(new ValueListPrivate(this))
 {
     // TODO
 }
 
-void ValueList::setElement(Element* element, const File *file)
+void ValueList::setElement(Element*, const File *file)
 {
-    d->entry = dynamic_cast<const Entry*>(element);
-    if (d->entry != NULL && file != NULL && file != d->file) {
+    if (file != NULL && file != d->file) {
         d->file = file;
         d->update();
         setEnabled(true);
-    } else
-        setEnabled(false);
-
+    }
 }
 
 void ValueList::comboboxChanged()
 {
     d->comboboxChanged();
+}
+
+void ValueList::listItemActivated(const QModelIndex &index)
+{
+    QString itemText = index.data(Qt::DisplayRole).toString();
+    QVariant fieldVar = d->comboboxFieldNames->itemData(d->comboboxFieldNames->currentIndex());
+    QString fieldText = fieldVar.toString();
+    if (fieldText.isEmpty()) fieldText = d->comboboxFieldNames->currentText();
+
+    SortFilterBibTeXFileModel::FilterQuery fq;
+    fq.terms << itemText;
+    fq.combination = SortFilterBibTeXFileModel::EveryTerm;
+    fq.field = fieldText;
+
+    emit filterChanged(fq);
 }
