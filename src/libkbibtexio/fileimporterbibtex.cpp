@@ -485,6 +485,15 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value& value, const QStr
                 value.append(new MacroKey(text));
             else
                 value.append(new PlainText(text));
+        } else if (iKey.startsWith(Entry::ftUrl) || iKey.startsWith(Entry::ftLocalFile) || iKey.startsWith(Entry::ftDOI)) {
+            if (isStringKey)
+                value.append(new MacroKey(text));
+            else {
+                const QRegExp urlListRegExp(";[ ]*|[ ]+", Qt::CaseInsensitive);
+                const QStringList urls = text.split(urlListRegExp, QString::SkipEmptyParts);
+                for (QStringList::ConstIterator it = urls.constBegin(); it != urls.constEnd(); ++it)
+                    value.append(new VerbatimText(*it));
+            }
         } else if (iKey == Entry::ftColor) {
             if (isStringKey)
                 value.append(new MacroKey(text));

@@ -48,7 +48,7 @@ public:
     static const QLatin1String ftBookTitle;
     /** Representation of the BibTeX field key "chapter" */
     static const QLatin1String ftChapter;
-    /** Representation of the BibTeX field key "color" */
+    /** Representation of the BibTeX field key "x-color" */
     static const QLatin1String ftColor;
     /** Representation of the BibTeX field key "crossref" */
     static const QLatin1String ftCrossRef;
@@ -64,6 +64,8 @@ public:
     static const QLatin1String ftJournal;
     /** Representation of the BibTeX field key "keywords" */
     static const QLatin1String ftKeywords;
+    /** Representation of the BibTeX field key "localfile" */
+    static const QLatin1String ftLocalFile;
     /** Representation of the BibTeX field key "location" */
     static const QLatin1String ftLocation;
     /** Representation of the BibTeX field key "month" */

@@ -130,23 +130,3 @@ bibtexLabel6=x-color
 uiLabel6=Color
 fieldInputLayout6=Color
 
-[Tab6]
-uiCaption=External
-columns=1
-
-bibtexLabel1=url
-uiLabel1=URL
-fieldInputLayout1=URL
-
-bibtexLabel2=ee
-uiLabel2=EE
-fieldInputLayout2=URL
-
-bibtexLabel3=doi
-uiLabel3=Document Identifier (DOI)
-fieldInputLayout3=URL
-
-bibtexLabel4=localfile
-uiLabel4=Local Filename
-fieldInputLayout4=URL
-

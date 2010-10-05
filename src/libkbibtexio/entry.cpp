@@ -39,6 +39,7 @@ const QLatin1String Entry::ftISSN = QLatin1String("issn");
 const QLatin1String Entry::ftISBN = QLatin1String("isbn");
 const QLatin1String Entry::ftJournal = QLatin1String("journal");
 const QLatin1String Entry::ftKeywords = QLatin1String("Keywords");
+const QLatin1String Entry::ftLocalFile = QLatin1String("localfile");
 const QLatin1String Entry::ftLocation = QLatin1String("location");
 const QLatin1String Entry::ftMonth = QLatin1String("month");
 const QLatin1String Entry::ftNote = QLatin1String("note");
