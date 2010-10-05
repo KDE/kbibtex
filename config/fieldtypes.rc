@@ -187,3 +187,24 @@ DefaultWidth=3
 Visible=false
 TypeFlags=Keyword
 
+[Column29]
+UpperCamelCase=CrossRef
+Label=Cross Reference
+DefaultWidth=3
+Visible=false
+TypeFlags=Verbatim
+
+[Column30]
+UpperCamelCase=DOI
+Label=DOI
+DefaultWidth=1
+Visible=false
+TypeFlags=Verbatim
+
+[Column31]
+UpperCamelCase=URL
+Label=URL
+DefaultWidth=3
+Visible=false
+TypeFlags=Verbatim
+

@@ -141,7 +141,7 @@ void Clipboard::editorMouseEvent(QMouseEvent *event)
 
         Qt::DropAction dropAction = drag->exec(Qt::CopyAction);
         kDebug() << "dropAction = " << dropAction;
-        Q_ASSERT_X(dropAction == Qt::CopyAction, "void Clipboard::editorMouseEvent(QMouseEvent *event)", "Drag'n'drop is not the expected copy operation");
+        // Q_ASSERT_X(dropAction == Qt::CopyAction, "void Clipboard::editorMouseEvent(QMouseEvent *event)", "Drag'n'drop is not the expected copy operation");
     }
 
     d->previousPosition = event->pos();

@@ -97,16 +97,19 @@ public:
         lineEditList.append(le);
 
         KPushButton *remove = new KPushButton(KIcon("list-remove"), QLatin1String(""), le);
+        remove->setToolTip(i18n("Remove value"));
         le->appendWidget(remove);
         connect(remove, SIGNAL(clicked()), smRemove, SLOT(map()));
         smRemove->setMapping(remove, le);
 
         KPushButton *goDown = new KPushButton(KIcon("go-down"), QLatin1String(""), le);
+        goDown->setToolTip(i18n("Move value down"));
         le->appendWidget(goDown);
         connect(goDown, SIGNAL(clicked()), smGoDown, SLOT(map()));
         smGoDown->setMapping(goDown, le);
 
         KPushButton *goUp = new KPushButton(KIcon("go-up"), QLatin1String(""), le);
+        goUp->setToolTip(i18n("Move value up"));
         le->appendWidget(goUp);
         connect(goUp, SIGNAL(clicked()), smGoUp, SLOT(map()));
         smGoUp->setMapping(goUp, le);
