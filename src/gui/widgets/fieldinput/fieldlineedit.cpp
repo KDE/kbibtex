@@ -29,6 +29,7 @@
 #include <KGlobalSettings>
 #include <KLocale>
 
+#include <encoderlatex.h>
 #include <file.h>
 #include <entry.h>
 #include <value.h>
@@ -100,6 +101,12 @@ public:
                             if (typeFlag == KBibTeX::tfKeyword && keyword != NULL) {
                                 text = keyword->text();
                                 result = true;
+                            } else {
+                                const VerbatimText *verbatimText = dynamic_cast<const VerbatimText*>(first);
+                                if (typeFlag == KBibTeX::tfVerbatim && verbatimText != NULL) {
+                                    text = verbatimText->text();
+                                    result = true;
+                                }
                             }
                         }
                     }
@@ -149,6 +156,9 @@ public:
             } else
                 kWarning() << "Parsing " << fakeBibTeXFile << " did not result in valid file";
             return !value.isEmpty();
+        } else if (typeFlag == KBibTeX::tfVerbatim) {
+            value.append(new VerbatimText(text));
+            return true;
         }
 
         return false;
@@ -185,6 +195,8 @@ public:
             return true;
         else if (typeFlag == KBibTeX::tfReference && typeid(MacroKey) == typeid(value.first()))
             return true;
+        else if (typeFlag == KBibTeX::tfVerbatim && typeid(VerbatimText) == typeid(value.first()))
+            return true;
         else return false;
     }
 
@@ -212,6 +224,10 @@ public:
             QAction *action = menuTypes->addAction(iconForTypeFlag(KBibTeX::tfSource), i18n("Source Code"), menuTypesSignalMapper, SLOT(map()));
             menuTypesSignalMapper->setMapping(action, KBibTeX::tfSource);
         }
+        if (typeFlags.testFlag(KBibTeX::tfVerbatim)) {
+            QAction *action = menuTypes->addAction(iconForTypeFlag(KBibTeX::tfVerbatim), i18n("Verbatim Text"), menuTypesSignalMapper, SLOT(map()));
+            menuTypesSignalMapper->setMapping(action, KBibTeX::tfVerbatim);
+        }
     }
 
     KIcon iconForTypeFlag(KBibTeX::TypeFlag typeFlag) {
@@ -221,6 +237,7 @@ public:
         case KBibTeX::tfPerson: return KIcon("user-identity");
         case KBibTeX::tfKeyword: return KIcon("edit-find");
         case KBibTeX::tfSource: return KIcon("code-context");
+        case KBibTeX::tfVerbatim: return KIcon("preferences-desktop-keyboard");
         default: return KIcon();
         };
     }
@@ -237,10 +254,83 @@ public:
             parent->setButtonToolTip(i18n("Source Code"));
             parent->setFont(KGlobalSettings::fixedFont());
             break;
+        case KBibTeX::tfVerbatim: parent->setButtonToolTip(i18n("Verbatim Text")); break;
         default: parent->setButtonToolTip(""); break;
         };
     }
 
+    bool convertValueType(Value &value, KBibTeX::TypeFlag destType) {
+        if (value.isEmpty()) return true; /// simple case
+        if (destType == KBibTeX::tfSource) return true; /// simple case
+
+        bool result = true;
+        EncoderLaTeX *enc = EncoderLaTeX::currentEncoderLaTeX();
+        QString rawText = QString::null;
+        const ValueItem *first = value.first();
+
+        const PlainText *plainText = dynamic_cast<const PlainText*>(first);
+        if (plainText != NULL)
+            rawText = enc->encode(plainText->text());
+        else {
+            const VerbatimText *verbatimText = dynamic_cast<const VerbatimText*>(first);
+            if (verbatimText != NULL)
+                rawText = verbatimText->text();
+            else {
+                const MacroKey *macroKey = dynamic_cast<const MacroKey*>(first);
+                if (macroKey != NULL)
+                    rawText = macroKey->text();
+                else {
+                    const Person *person = dynamic_cast<const Person*>(first);
+                    if (person != NULL)
+                        rawText = enc->encode(QString("%1 %2").arg(person->firstName()).arg(person->lastName())); // FIXME proper name conversion
+                    else {
+                        const Keyword *keyword = dynamic_cast<const Keyword*>(first);
+                        if (keyword != NULL)
+                            rawText = enc->encode(keyword->text());
+                        else {
+                            // TODO case missed?
+                            result = false;
+                        }
+                    }
+                }
+            }
+        }
+
+        switch (destType) {
+        case KBibTeX::tfPlainText:
+            value.clear();
+            value.append(new PlainText(enc->decode(rawText)));
+            break;
+        case KBibTeX::tfVerbatim:
+            value.clear();
+            value.append(new VerbatimText(rawText));
+            break;
+        case KBibTeX::tfPerson:
+            value.clear();
+            value.append(FileImporterBibTeX::splitName(enc->decode(rawText)));
+            break;
+        case KBibTeX::tfReference: {
+            MacroKey *macroKey = new MacroKey(rawText);
+            if (macroKey->isValid()) {
+                value.clear();
+                value.append(macroKey);
+            } else {
+                delete macroKey;
+                result = false;
+            }
+        }
+        break;
+        case KBibTeX::tfKeyword:
+            value.append(new Keyword(enc->decode(rawText)));
+            break;
+        default: {
+            // TODO
+            result = false;
+        }
+        }
+
+        return result;
+    }
 };
 
 FieldLineEdit::FieldLineEdit(KBibTeX::TypeFlag preferredTypeFlag, KBibTeX::TypeFlags typeFlags, bool isMultiLine, QWidget *parent)
@@ -261,18 +351,17 @@ bool FieldLineEdit::reset(const Value& value)
     return d->reset(value);
 }
 
-void FieldLineEdit::slotTypeChanged(int newTypeFlag)
+void FieldLineEdit::slotTypeChanged(int newTypeFlagInt)
 {
-    KBibTeX::TypeFlag originalTypeFlag = d->typeFlag;
-    Value originalValue;
-    d->apply(originalValue);
+    KBibTeX::TypeFlag newTypeFlag = (KBibTeX::TypeFlag)newTypeFlagInt;
 
-    d->typeFlag = (KBibTeX::TypeFlag)newTypeFlag;
-    kDebug() << "new type is " << BibTeXFields::typeFlagToString(d->typeFlag);
+    Value value;
+    d->apply(value);
 
-    if (!d->reset(originalValue)) {
-        KMessageBox::error(this, i18n("The current text cannot be used as value of type \"%1\".\n\nSwitching back to type \"%2\".", BibTeXFields::typeFlagToString(d->typeFlag), BibTeXFields::typeFlagToString(originalTypeFlag)));
-        d->typeFlag = originalTypeFlag;
-        d->reset(originalValue);
-    }
+    if (d->convertValueType(value, newTypeFlag)) {
+        d->typeFlag = newTypeFlag;
+        d->reset(value);
+    } else
+        KMessageBox::error(this, i18n("The current text cannot be used as value of type \"%1\".\n\nSwitching back to type \"%2\".", BibTeXFields::typeFlagToString(newTypeFlag), BibTeXFields::typeFlagToString(d->typeFlag)));
 }
+

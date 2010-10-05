@@ -112,7 +112,7 @@ public:
 
 protected:
     QString m_text;
-    static const QRegExp validMacroKeyChars;
+    static const QRegExp validMacroKey;
 };
 
 class KBIBTEXIO_EXPORT PlainText: public ValueItem
@@ -120,6 +120,22 @@ class KBIBTEXIO_EXPORT PlainText: public ValueItem
 public:
     PlainText(const PlainText& other);
     PlainText(const QString& text);
+
+    void setText(const QString& text);
+    QString text() const;
+
+    void replace(const QString &before, const QString &after);
+    bool containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const;
+
+protected:
+    QString m_text;
+};
+
+class KBIBTEXIO_EXPORT VerbatimText: public ValueItem
+{
+public:
+    VerbatimText(const VerbatimText& other);
+    VerbatimText(const QString& text);
 
     void setText(const QString& text);
     QString text() const;

@@ -117,7 +117,7 @@ bool Person::containsPattern(const QString &pattern, Qt::CaseSensitivity caseSen
 }
 
 
-const QRegExp MacroKey::validMacroKeyChars = QRegExp("![-.:/+_a-zA-Z0-9]");
+const QRegExp MacroKey::validMacroKey = QRegExp("[a-z][-.:/+_a-z0-9]*", Qt::CaseInsensitive);
 
 MacroKey::MacroKey(const MacroKey& other)
         : m_text(other.m_text)
@@ -143,7 +143,9 @@ QString MacroKey::text() const
 
 bool MacroKey::isValid()
 {
-    return !text().contains(validMacroKeyChars);
+    const QString t = text();
+    int idx = validMacroKey.indexIn(t);
+    return idx > -1 && validMacroKey.cap(0) == t;
 }
 
 void MacroKey::replace(const QString &before, const QString &after)
@@ -187,6 +189,40 @@ void PlainText::replace(const QString &before, const QString &after)
 }
 
 bool PlainText::containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive) const
+{
+    return m_text.contains(pattern, caseSensitive);
+}
+
+
+VerbatimText::VerbatimText(const VerbatimText& other)
+        : m_text(other.text())
+{
+    // nothing
+}
+
+VerbatimText::VerbatimText(const QString& text)
+        : m_text(text)
+{
+    // nothing
+}
+
+void VerbatimText::setText(const QString& text)
+{
+    m_text = text;
+}
+
+QString VerbatimText::text() const
+{
+    return m_text;
+}
+
+void VerbatimText::replace(const QString &before, const QString &after)
+{
+    if (m_text == before)
+        m_text = after;
+}
+
+bool VerbatimText::containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive) const
 {
     return m_text.contains(pattern, caseSensitive);
 }
@@ -244,8 +280,13 @@ void Value::copyFrom(const Value& other)
                     MacroKey *macroKey = dynamic_cast<MacroKey*>(*it);
                     if (macroKey != NULL)
                         append(new MacroKey(*macroKey));
-                    else
-                        kError() << "cannot copy from unknown data type" << endl;
+                    else {
+                        VerbatimText *verbatimText = dynamic_cast<VerbatimText*>(*it);
+                        if (verbatimText != NULL)
+                            append(new VerbatimText(*verbatimText));
+                        else
+                            kError() << "cannot copy from unknown data type" << endl;
+                    }
                 }
             }
         }
@@ -309,6 +350,12 @@ QString PlainTextValue::text(const ValueItem& valueItem, ValueItemType &vit, con
                     result = keyword->text();
                     vit = VITKeyword;
                     if (debug) result = "[:" + result + ":Keyword]";
+                } else {
+                    const VerbatimText *verbatimText = dynamic_cast<const VerbatimText*>(&valueItem);
+                    if (verbatimText != NULL) {
+                        result = verbatimText->text();
+                        if (debug) result = "[:" + result + ":VerbatimText]";
+                    }
                 }
             }
         }

@@ -210,7 +210,8 @@ KBibTeX::TypeFlag BibTeXFields::typeFlagFromString(const QString &typeFlagString
         result = KBibTeX::tfKeyword;
     else if (typeFlagString == QLatin1String("Reference"))
         result = KBibTeX::tfReference;
-
+    else if (typeFlagString == QLatin1String("Verbatim"))
+        result = KBibTeX::tfVerbatim;
 
     return result;
 }
@@ -234,15 +235,17 @@ QString BibTeXFields::typeFlagsToString(KBibTeX::TypeFlags typeFlags)
     if (typeFlags & KBibTeX::tfPerson) resultList << QLatin1String("Person");
     if (typeFlags & KBibTeX::tfKeyword) resultList << QLatin1String("Keyword");
     if (typeFlags & KBibTeX::tfReference) resultList << QLatin1String("Reference");
+    if (typeFlags & KBibTeX::tfVerbatim) resultList << QLatin1String("Verbatim");
     return resultList.join(QChar(';'));
 }
 
 QString BibTeXFields::typeFlagToString(KBibTeX::TypeFlag typeFlag)
 {
     if (typeFlag == KBibTeX::tfPlainText) return QLatin1String("Text");
-    if (typeFlag ==  KBibTeX::tfSource)return QLatin1String("Source");
-    if (typeFlag ==  KBibTeX::tfPerson)  return QLatin1String("Person");
-    if (typeFlag ==  KBibTeX::tfKeyword)   return QLatin1String("Keyword");
-    if (typeFlag ==  KBibTeX::tfReference)   return QLatin1String("Reference");
+    if (typeFlag ==  KBibTeX::tfSource) return QLatin1String("Source");
+    if (typeFlag ==  KBibTeX::tfPerson) return QLatin1String("Person");
+    if (typeFlag ==  KBibTeX::tfKeyword) return QLatin1String("Keyword");
+    if (typeFlag ==  KBibTeX::tfReference) return QLatin1String("Reference");
+    if (typeFlag ==  KBibTeX::tfVerbatim) return QLatin1String("Verbatim");
     return QString::null;
 }

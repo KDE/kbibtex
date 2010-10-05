@@ -47,6 +47,7 @@ enum TypeFlag {
     tfReference = 0x2,
     tfPerson = 0x4,
     tfKeyword = 0x8,
+    tfVerbatim = 0x10,
     tfSource = 0x100
 };
 Q_DECLARE_FLAGS(TypeFlags, TypeFlag)
