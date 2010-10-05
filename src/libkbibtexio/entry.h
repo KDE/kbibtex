@@ -48,6 +48,8 @@ public:
     static const QLatin1String ftBookTitle;
     /** Representation of the BibTeX field key "chapter" */
     static const QLatin1String ftChapter;
+    /** Representation of the BibTeX field key "color" */
+    static const QLatin1String ftColor;
     /** Representation of the BibTeX field key "crossref" */
     static const QLatin1String ftCrossRef;
     /** Representation of the BibTeX field key "doi" */
@@ -123,7 +125,7 @@ public:
     Entry& operator= (const Entry& other);
 
     Value& operator[](const QString& key);
-    const  Value operator[](const QString& key) const;
+    const Value operator[](const QString& key) const;
 
     /**
      * Set the type of this entry. Common values are "article" or "book".

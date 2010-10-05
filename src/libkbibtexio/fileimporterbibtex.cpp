@@ -485,7 +485,12 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value& value, const QStr
                 value.append(new MacroKey(text));
             else
                 value.append(new PlainText(text));
-        }        else {
+        } else if (iKey == Entry::ftColor) {
+            if (isStringKey)
+                value.append(new MacroKey(text));
+            else
+                value.append(new VerbatimText(text));
+        } else {
             if (isStringKey)
                 value.append(new MacroKey(text));
             else

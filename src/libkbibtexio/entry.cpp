@@ -31,6 +31,7 @@ const QLatin1String Entry::ftAddress = QLatin1String("address");
 const QLatin1String Entry::ftAuthor = QLatin1String("author");
 const QLatin1String Entry::ftBookTitle = QLatin1String("booktitle");
 const QLatin1String Entry::ftChapter = QLatin1String("chapter");
+const QLatin1String Entry::ftColor = QLatin1String("x-color");
 const QLatin1String Entry::ftCrossRef = QLatin1String("crossref");
 const QLatin1String Entry::ftDOI = QLatin1String("doi");
 const QLatin1String Entry::ftEditor = QLatin1String("editor");

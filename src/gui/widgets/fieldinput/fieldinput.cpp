@@ -105,9 +105,9 @@ public:
         else if (fieldListEdit != NULL)
             result = fieldListEdit->reset(value);
         else if (colorButton != NULL) {
-            PlainText *plainText = NULL;
-            if (value.count() == 1 && (plainText = dynamic_cast<PlainText*>(value.first())) != NULL) {
-                colorButton->setColor(QColor(plainText->text()));
+            VerbatimText *verbatimText = NULL;
+            if (value.count() == 1 && (verbatimText = dynamic_cast<VerbatimText*>(value.first())) != NULL) {
+                colorButton->setColor(QColor(verbatimText->text()));
             }
         }
         return result;
@@ -121,8 +121,10 @@ public:
             result = fieldListEdit->apply(value);
         else if (colorButton != NULL) {
             value.clear();
-            PlainText *plainText = new PlainText(colorButton->color().name());
-            value << plainText;
+            if (!(colorButton->color() == QColor(Qt::black))) {
+                VerbatimText *verbatimText = new VerbatimText(colorButton->color().name());
+                value << verbatimText;
+            }
             result = true;
         }
         return result;
