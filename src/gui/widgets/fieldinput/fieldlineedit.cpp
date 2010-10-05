@@ -23,19 +23,23 @@
 #include <QMenu>
 #include <QSignalMapper>
 #include <QBuffer>
+#include <QFileInfo>
+#include <QDesktopServices>
 
 #include <KDebug>
 #include <KMessageBox>
 #include <KGlobalSettings>
 #include <KLocale>
+#include <KUrl>
+#include <KPushButton>
 
-#include <encoderlatex.h>
 #include <file.h>
 #include <entry.h>
 #include <value.h>
 #include <fileimporterbibtex.h>
 #include <fileexporterbibtex.h>
 #include <bibtexfields.h>
+#include <encoderlatex.h>
 #include "fieldlineedit.h"
 
 class FieldLineEdit::FieldLineEditPrivate
@@ -46,10 +50,12 @@ private:
     KBibTeX::TypeFlag preferredTypeFlag;
     KBibTeX::TypeFlags typeFlags;
     QSignalMapper *menuTypesSignalMapper;
+    KPushButton *buttonOpenUrl;
 
 public:
     QMenu *menuTypes;
     KBibTeX::TypeFlag typeFlag;
+    KUrl urlToOpen;
 
     FieldLineEditPrivate(KBibTeX::TypeFlag ptf, KBibTeX::TypeFlags tf, FieldLineEdit *p)
             : parent(p), preferredTypeFlag(ptf), typeFlags(tf) {
@@ -57,6 +63,11 @@ public:
         menuTypesSignalMapper = new QSignalMapper(parent);
         setupMenu();
         connect(menuTypesSignalMapper, SIGNAL(mapped(int)), parent, SLOT(slotTypeChanged(int)));
+
+        buttonOpenUrl = new KPushButton(KIcon("document-open-remote"), "", parent);
+        buttonOpenUrl->setVisible(false);
+        parent->appendWidget(buttonOpenUrl);
+        connect(buttonOpenUrl, SIGNAL(clicked()), parent, SLOT(slotOpenUrl()));
 
         Value value;
         typeFlag = determineTypeFlag(value, preferredTypeFlag, typeFlags);
@@ -76,6 +87,8 @@ public:
                 result = true;
             } else {
                 const ValueItem *first = value.first();
+                kDebug() << "value is of type " << typeid(*first).name();
+
                 const PlainText *plainText = dynamic_cast<const PlainText*>(first);
                 if (typeFlag == KBibTeX::tfPlainText && plainText != NULL) {
                     text = plainText->text();
@@ -113,6 +126,20 @@ public:
                 }
             }
         }
+
+        /// extract URL, local file, or DOI from current field
+        if (KBibTeX::urlRegExp.indexIn(text) > -1)
+            urlToOpen = KUrl(KBibTeX::urlRegExp.cap(0));
+        else if (KBibTeX::doiRegExp.indexIn(text) > -1)
+            urlToOpen = KUrl(KBibTeX::doiUrlPrefix + KBibTeX::doiRegExp.cap(0).replace("\\", ""));
+        else if (KBibTeX::fileRegExp.indexIn(text) > -1)
+            urlToOpen = KUrl(KBibTeX::fileRegExp.cap(0));
+        /// non-existing local files are to be ignored
+        if (urlToOpen.isValid() && urlToOpen.isLocalFile() && !QFileInfo(urlToOpen.prettyUrl()).exists())
+            urlToOpen = KUrl();
+        /// set special "open URL" button visible if URL (or file or DOI) found
+        buttonOpenUrl->setVisible(urlToOpen.isValid());
+        buttonOpenUrl->setToolTip(i18n("Open \"%1\"", urlToOpen.prettyUrl()));
 
         parent->setText(text);
         return result;
@@ -259,6 +286,11 @@ public:
         };
     }
 
+    void openUrl() {
+        if (urlToOpen.isValid())
+            QDesktopServices::openUrl(urlToOpen); // TODO KDE way?
+    }
+
     bool convertValueType(Value &value, KBibTeX::TypeFlag destType) {
         if (value.isEmpty()) return true; /// simple case
         if (destType == KBibTeX::tfSource) return true; /// simple case
@@ -354,6 +386,7 @@ bool FieldLineEdit::reset(const Value& value)
 void FieldLineEdit::slotTypeChanged(int newTypeFlagInt)
 {
     KBibTeX::TypeFlag newTypeFlag = (KBibTeX::TypeFlag)newTypeFlagInt;
+    kDebug() << "new type is " << BibTeXFields::typeFlagToString(newTypeFlag);
 
     Value value;
     d->apply(value);
@@ -365,3 +398,7 @@ void FieldLineEdit::slotTypeChanged(int newTypeFlagInt)
         KMessageBox::error(this, i18n("The current text cannot be used as value of type \"%1\".\n\nSwitching back to type \"%2\".", BibTeXFields::typeFlagToString(newTypeFlag), BibTeXFields::typeFlagToString(d->typeFlag)));
 }
 
+void FieldLineEdit::slotOpenUrl()
+{
+    d->openUrl();
+}

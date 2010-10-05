@@ -59,6 +59,7 @@ private:
 
 private slots:
     void slotTypeChanged(int);
+    void slotOpenUrl();
 };
 
 #endif // KBIBTEX_GUI_FIELDLINEEDIT_H
