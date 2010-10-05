@@ -58,7 +58,10 @@ static const QString MonthsTriple[] = {
     QLatin1String("jan"), QLatin1String("feb"), QLatin1String("mar"), QLatin1String("apr"), QLatin1String("may"), QLatin1String("jun"), QLatin1String("jul"), QLatin1String("aug"), QLatin1String("sep"), QLatin1String("oct"), QLatin1String("nov"), QLatin1String("dec")
 };
 
+static const QRegExp fileRegExp("\\b(file:)[^ ]+\\.\\w{2,4}\\b", Qt::CaseInsensitive);
 static const QRegExp urlRegExp("(http|s?ftp|webdav|file)s?://[^ {}\"]+", Qt::CaseInsensitive);
+static const QRegExp doiRegExp("10\\.\\d{4}/[-a-z0-9.()_:\\\\]+", Qt::CaseInsensitive);
+static const QString doiUrlPrefix = QLatin1String("http://dx.doi.org/");
 
 }
 

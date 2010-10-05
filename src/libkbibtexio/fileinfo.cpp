@@ -27,9 +27,6 @@
 #include <entry.h>
 #include "fileinfo.h"
 
-static const QRegExp doiRegExp("10\\.\\d{4}/[-a-z0-9.()_:\\]+", Qt::CaseInsensitive);
-static const QString doiUrlPrefix = QLatin1String("http://dx.doi.org/");
-
 FileInfo::FileInfo()
 {
     // TODO
@@ -52,8 +49,8 @@ QList<KUrl> FileInfo::entryUrls(const Entry *entry, const KUrl &baseUrl)
         }
 
         pos = -1;
-        while ((pos = doiRegExp.indexIn(plainText, pos + 1)) != -1) {
-            KUrl url(doiUrlPrefix + doiRegExp.cap(0).replace("\\", ""));
+        while ((pos = KBibTeX::doiRegExp.indexIn(plainText, pos + 1)) != -1) {
+            KUrl url(KBibTeX::doiUrlPrefix + KBibTeX::doiRegExp.cap(0).replace("\\", ""));
             if (url.isValid())
                 result << url;
         }
