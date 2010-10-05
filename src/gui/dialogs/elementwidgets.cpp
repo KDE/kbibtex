@@ -274,6 +274,115 @@ void ReferenceWidget::createGUI()
 }
 
 
+FilesWidget::FilesWidget(QWidget *parent)
+        : ElementWidget(parent)
+{
+    QVBoxLayout *layout = new QVBoxLayout(this);
+    fileList = new FieldInput(KBibTeX::List, KBibTeX::tfVerbatim, KBibTeX::tfVerbatim | KBibTeX::tfSource, this);
+    layout->addWidget(fileList);
+}
+
+bool FilesWidget::apply(Element *element) const
+{
+    if (isReadOnly) return false; /// never save data if in read-only mode
+
+    Entry* entry = dynamic_cast<Entry*>(element);
+    if (entry == NULL) return false;
+
+    Value combinedValue;
+    fileList->apply(combinedValue);
+
+    Value urlValue, doiValue, localFileValue;
+
+    for (Value::ConstIterator it = combinedValue.constBegin(); it != combinedValue.constEnd(); ++it) {
+        const VerbatimText *verbatimText = dynamic_cast<const VerbatimText *>(*it);
+        if (verbatimText != NULL) {
+            QString text = verbatimText->text();
+            if (KBibTeX::doiRegExp.indexIn(text) > -1)
+                doiValue.append(new VerbatimText(KBibTeX::doiRegExp.cap(0)));
+            else if (KBibTeX::urlRegExp.indexIn(text) > -1)
+                urlValue.append(new VerbatimText(KBibTeX::urlRegExp.cap(0)));
+            else
+                localFileValue.append(new VerbatimText(*verbatimText));
+        }
+    }
+
+    if (urlValue.isEmpty())
+        entry->remove(Entry::ftUrl);
+    else
+        entry->insert(Entry::ftUrl, urlValue);
+
+    if (localFileValue.isEmpty())
+        entry->remove(Entry::ftLocalFile);
+    else
+        entry->insert(Entry::ftLocalFile, localFileValue);
+
+    if (doiValue.isEmpty())
+        entry->remove(Entry::ftDOI);
+    else
+        entry->insert(Entry::ftDOI, doiValue);
+
+    return true;
+}
+
+bool FilesWidget::reset(const Element *element)
+{
+    const Entry* entry = dynamic_cast<const Entry*>(element);
+    if (entry == NULL) return false;
+
+    Value combinedValue;
+    for (int i = 1; i < 256; ++i) {  /// FIXME replace number by constant
+        QString key = QLatin1String(Entry::ftUrl);
+        if (i > 1) key.append(QString::number(i));
+        const Value &urlValue = entry->operator [](key);
+        for (Value::ConstIterator it = urlValue.constBegin(); it != urlValue.constEnd(); ++it)
+            combinedValue.append(*it);
+
+        key = QLatin1String(Entry::ftLocalFile);
+        if (i > 1) key.append(QString::number(i));
+        const Value &localFileValue = entry->operator [](key);
+        for (Value::ConstIterator it = localFileValue.constBegin(); it != localFileValue.constEnd(); ++it)
+            combinedValue.append(*it);
+
+        key = QLatin1String(Entry::ftDOI);
+        if (i > 1) key.append(QString::number(i));
+        const Value &doiValue = entry->operator [](key);
+        for (Value::ConstIterator it = doiValue.constBegin(); it != doiValue.constEnd(); ++it)
+            combinedValue.append(*it);
+
+        key = QLatin1String("ee");
+        if (i > 1) key.append(QString::number(i));
+        const Value &eeValue = entry->operator [](key);
+        for (Value::ConstIterator it = eeValue.constBegin(); it != eeValue.constEnd(); ++it)
+            combinedValue.append(*it);
+    }
+    fileList->reset(combinedValue);
+
+    return true;
+}
+
+void FilesWidget::setReadOnly(bool isReadOnly)
+{
+    ElementWidget::setReadOnly(isReadOnly);
+    fileList->setReadOnly(isReadOnly);
+}
+
+QString FilesWidget::label()
+{
+    return i18n("External");
+}
+
+KIcon FilesWidget::icon()
+{
+    return KIcon("external");
+}
+
+bool FilesWidget::canEdit(const Element *element)
+{
+    return typeid(*element) == typeid(Entry);
+}
+
+
 OtherFieldsWidget::OtherFieldsWidget(const QStringList &blacklistedFields, QWidget *parent)
         : ElementWidget(parent), blackListed(blacklistedFields)
 {

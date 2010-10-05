@@ -106,6 +106,23 @@ public:
     static bool canEdit(const Element *element);
 };
 
+class FilesWidget : public ElementWidget
+{
+private:
+    FieldInput *fileList;
+
+public:
+    FilesWidget(QWidget *parent);
+
+    bool apply(Element *element) const;
+    bool reset(const Element *element);
+    void setReadOnly(bool isReadOnly);
+    QString label();
+    KIcon icon();
+
+    static bool canEdit(const Element *element);
+};
+
 class OtherFieldsWidget : public ElementWidget
 {
     Q_OBJECT

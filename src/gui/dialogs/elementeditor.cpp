@@ -91,11 +91,24 @@ public:
             widgets << widget;
         }
 
+        if (FilesWidget::canEdit(element)) {
+            ElementWidget *widget = new FilesWidget(tab);
+            connect(widget, SIGNAL(modified()), p, SLOT(widgetsModified()));
+            tab->addTab(widget, widget->icon(), widget->label());
+            widgets << widget;
+        }
+
         if (OtherFieldsWidget::canEdit(element)) {
             QStringList blacklistedFields;
+            /// blacklist fields covered by EntryConfiguredWidget
             for (EntryLayout::ConstIterator elit = el->constBegin(); elit != el->constEnd(); ++elit)
                 for (QList<SingleFieldLayout>::ConstIterator sflit = (*elit).singleFieldLayouts.constBegin(); sflit != (*elit).singleFieldLayouts.constEnd();++sflit)
                     blacklistedFields << (*sflit).bibtexLabel;
+
+            /// blacklist fields covered by FilesWidget
+            blacklistedFields << QString(Entry::ftUrl) << QString(Entry::ftLocalFile) << QString(Entry::ftDOI);
+            for (int i = 2; i < 256; ++i) // FIXME replace number by constant
+                blacklistedFields << QString(Entry::ftUrl) + QString::number(i) << QString(Entry::ftLocalFile) + QString::number(i) <<  QString(Entry::ftDOI) + QString::number(i);
 
             ElementWidget *widget = new OtherFieldsWidget(blacklistedFields, tab);
             connect(widget, SIGNAL(modified()), p, SLOT(widgetsModified()));
