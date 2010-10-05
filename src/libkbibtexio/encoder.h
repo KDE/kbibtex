@@ -50,18 +50,6 @@ public:
     virtual QString encode(const QString & text) {
         return text;
     };
-
-    /**
-     * Encode from internal (UTF-8) representation to external textual representation,
-     * but take into consideration which field (in an entry) is to be converted.
-     * @param text in internal (UTF-8) representation
-     * @param fieldType entry field to consider here
-     * @return text text in external textual representation
-     */
-    virtual QString encodeSpecialized(const QString & text, const QString& fieldType) {
-        Q_UNUSED(fieldType)
-        return text;
-    };
 };
 
 #endif

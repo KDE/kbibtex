@@ -650,19 +650,6 @@ QString EncoderLaTeX::encode(const QString &text, const QChar &replace)
     return result;
 }
 
-QString EncoderLaTeX::encodeSpecialized(const QString & text, const QString& fieldType)
-
-{
-    QString result = encode(text);
-
-    if (fieldType.toLower() == "pages")
-        result.replace(QChar(0x2013), "--");
-    else if (fieldType.toLower() == "url") // FIXME There should be some "verbatim" flag instead
-        result.replace("\\_", "_").replace(QChar(0x2013), "--").replace("\\#", "#");
-
-    return result;
-}
-
 QString& EncoderLaTeX::decomposedUTF8toLaTeX(QString &text)
 {
     for (QList<EncoderLaTeXPrivate::CombinedMappingItem>::Iterator it = d->combinedMapping.begin(); it != d->combinedMapping.end(); ++it) {

@@ -121,11 +121,6 @@ QString EncoderXML::encode(const QString &text)
     return result;
 }
 
-QString EncoderXML::encodeSpecialized(const QString &text, const QString& /* fieldType */)
-{
-    return encode(text);
-}
-
 EncoderXML *EncoderXML::currentEncoderXML()
 {
     if (encoderXML == NULL)

@@ -17,6 +17,8 @@
 *   Free Software Foundation, Inc.,                                       *
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
+#include <typeinfo>
+
 #include <QTextCodec>
 #include <QTextStream>
 #include <QStringList>
@@ -269,121 +271,113 @@ bool FileExporterBibTeX::writePreamble(QTextStream &stream, const Preamble& prea
 
 QString FileExporterBibTeX::valueToBibTeX(const Value& value, const QString& key)
 {
-    enum ValueItemType { VITOther = 0, VITPerson, VITKeyword} lastItem;
-    lastItem = VITOther;
-
     if (value.isEmpty())
         return "";
 
+    EncoderLaTeX *encoder = EncoderLaTeX::currentEncoderLaTeX();
     QString result = "";
-    QString accumulatedText = "";
+    bool isOpen = false;
+    const ValueItem* prev = NULL;
     for (QList<ValueItem*>::ConstIterator it = value.begin(); it != value.end(); ++it) {
-        MacroKey *macroKey = dynamic_cast<MacroKey*>(*it);
+        const MacroKey *macroKey = dynamic_cast<const MacroKey*>(*it);
         if (macroKey != NULL) {
-            bool nonEmptyFlush = flushAccumulatedText(accumulatedText, result, key);
-            if (nonEmptyFlush)
-                result.append(" # ");
+            if (isOpen) result.append('}');
+            isOpen = false;
+            if (!result.isEmpty()) result.append(" # ");
             result.append(macroKey->text());
-            lastItem = VITOther;
+            prev = macroKey;
         } else {
-            QString text;
-            PlainText *plainText = dynamic_cast<PlainText*>(*it);
+            const PlainText *plainText = dynamic_cast<const PlainText*>(*it);
             if (plainText != NULL) {
-                bool nonEmptyFlush = flushAccumulatedText(accumulatedText, result, key);
-                if (nonEmptyFlush)
-                    result.append(" # ");
-                accumulatedText = plainText->text();
-                lastItem = VITOther;
+                if (!isOpen) {
+                    if (!result.isEmpty()) result.append(" # ");
+                    result.append('{');
+                } else if (prev != NULL && typeid(*prev) == typeid(PlainText))
+                    result.append(' ');
+                else
+                    result.append("} # {");
+                isOpen = true;
+                result.append(encoder->encode(plainText->text()));
+                prev = plainText;
             } else {
-                Person *person = dynamic_cast<Person*>(*it);
-
-                if (person != NULL) {
-                    if (lastItem != VITPerson) {
-                        bool nonEmptyFlush = flushAccumulatedText(accumulatedText, result, key);
-                        if (nonEmptyFlush)
-                            result.append(" # ");
+                const VerbatimText *verbatimText = dynamic_cast<const VerbatimText*>(*it);
+                if (verbatimText != NULL) {
+                    if (!isOpen) {
+                        if (!result.isEmpty()) result.append(" # ");
+                        result.append('{');
+                    } else if (prev != NULL && typeid(*prev) == typeid(VerbatimText)) {
+                        if (key.toLower().startsWith(Entry::ftUrl) || key.toLower().startsWith(Entry::ftLocalFile) || key.toLower().startsWith(Entry::ftDOI))
+                            result.append("; ");
+                        else
+                            result.append(' ');
                     } else
-                        accumulatedText.append(" and ");
-
-                    QString thisName = "";
-                    QString v = person->firstName();
-                    if (!v.isEmpty()) {
-                        bool requiresQuoting = requiresPersonQuoting(v, false);
-                        if (requiresQuoting) thisName.append("{");
-                        thisName.append(v);
-                        if (requiresQuoting) thisName.append("}");
-                        thisName.append(" ");
-                    }
-
-                    v = person->lastName();
-                    if (!v.isEmpty()) {
-                        bool requiresQuoting = requiresPersonQuoting(v, false);
-                        if (requiresQuoting) thisName.append("{");
-                        thisName.append(v);
-                        if (requiresQuoting) thisName.append("}");
-                    }
-
-                    // TODO: Prefix and suffix
-
-                    accumulatedText.append(thisName);
-                    lastItem = VITPerson;
+                        result.append("} # {");
+                    isOpen = true;
+                    result.append(verbatimText->text());
+                    prev = verbatimText;
                 } else {
-                    Keyword *keyword = dynamic_cast<Keyword*>(*it);
-                    if (keyword != NULL) {
-                        if (lastItem != VITKeyword) {
-                            bool nonEmptyFlush = flushAccumulatedText(accumulatedText, result, key);
-                            if (nonEmptyFlush)
-                                result.append(" # ");
-                        } else
-                            accumulatedText.append("; ");
+                    const Person *person = dynamic_cast<const Person*>(*it);
+                    if (person != NULL) {
+                        if (!isOpen) {
+                            if (!result.isEmpty()) result.append(" # ");
+                            result.append('{');
+                        } else if (prev != NULL && typeid(*prev) == typeid(Person))
+                            result.append(" and ");
+                        else
+                            result.append("} # {");
+                        isOpen = true;
 
-                        accumulatedText.append(keyword->text());
-                        lastItem = VITKeyword;
-                    } else
-                        lastItem = VITOther;
+                        QString thisName = "";
+                        QString v = person->firstName();
+                        if (!v.isEmpty()) {
+                            bool requiresQuoting = requiresPersonQuoting(v, false);
+                            if (requiresQuoting) thisName.append("{");
+                            thisName.append(v);
+                            if (requiresQuoting) thisName.append("}");
+                            thisName.append(" ");
+                        }
+
+                        v = person->lastName();
+                        if (!v.isEmpty()) {
+                            bool requiresQuoting = requiresPersonQuoting(v, false);
+                            if (requiresQuoting) thisName.append("{");
+                            thisName.append(v);
+                            if (requiresQuoting) thisName.append("}");
+                        }
+
+                        // TODO: Prefix and suffix
+
+                        result.append(encoder->encode(thisName));
+                        prev = person;
+                    } else {
+                        const Keyword *keyword = dynamic_cast<const Keyword*>(*it);
+                        if (keyword != NULL) {
+                            if (!isOpen) {
+                                if (!result.isEmpty()) result.append(" # ");
+                                result.append('{');
+                            } else if (prev != NULL && typeid(*prev) == typeid(Keyword))
+                                result.append("; ");
+                            else
+                                result.append("} # {");
+                            isOpen = true;
+
+                            result.append(encoder->encode(keyword->text()));
+                            prev = keyword;
+                        }
+                    }
                 }
             }
         }
-
+        prev = *it;
     }
 
-    flushAccumulatedText(accumulatedText, result, key);
-
+    if (isOpen) result.append('}');
     return result;
 }
 
-bool FileExporterBibTeX::flushAccumulatedText(QString &accumulatedText, QString &result, const QString& key)
+QString FileExporterBibTeX::escapeLaTeXChars(QString &text)
 {
-    if (accumulatedText.isEmpty())
-        return false;
-
-    escapeLaTeXChars(accumulatedText);
-
-    EncoderLaTeX *encoder = EncoderLaTeX::currentEncoderLaTeX();
-    // FIXME if (m_encoding == "latex")
-    accumulatedText = encoder->encodeSpecialized(accumulatedText, key);
-
-    /** if the text to save contains a quote char ("),
-      * force string delimiters to be curly brackets,
-      * as quote chars as string delimiters would result
-      * in parser failures
-      */
-    QChar stringOpenDelimiter = '{'; // FIXME m_stringOpenDelimiter;
-    QChar stringCloseDelimiter = '}'; // FIXME m_stringCloseDelimiter;
-    if (accumulatedText.contains('"') /* FIXME && (m_stringOpenDelimiter == '"' || m_stringCloseDelimiter == '"')*/) {
-        stringOpenDelimiter = '{';
-        stringCloseDelimiter = '}';
-    }
-
-    result.append(stringOpenDelimiter).append(accumulatedText).append(stringCloseDelimiter);
-    accumulatedText = "";
-
-    return true;
-}
-
-void FileExporterBibTeX::escapeLaTeXChars(QString &text)
-{
-    text.replace("&", "\\&");
+    return text.replace("&", "\\&"); // FIXME more?
 }
 
 bool FileExporterBibTeX::requiresPersonQuoting(const QString &text, bool isLastName)

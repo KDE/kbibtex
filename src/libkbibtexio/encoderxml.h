@@ -39,7 +39,6 @@ public:
 
     QString decode(const QString &text);
     QString encode(const QString &text);
-    QString encodeSpecialized(const QString &text, const QString& fieldType = QString::null);
 
     static EncoderXML *currentEncoderXML();
 

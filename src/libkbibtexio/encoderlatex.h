@@ -20,6 +20,8 @@
 #ifndef ENCODERLATEX_H
 #define ENCODERLATEX_H
 
+#include "kbibtexio_export.h"
+
 #include "encoder.h"
 
 /**
@@ -28,7 +30,7 @@
  * Example for a character to convert is \"a.
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
-class EncoderLaTeX: public Encoder
+class KBIBTEXIO_EXPORT EncoderLaTeX: public Encoder
 {
 public:
     EncoderLaTeX();
@@ -37,7 +39,6 @@ public:
     QString decode(const QString &text);
     QString encode(const QString &text);
     QString encode(const QString &text, const QChar &replace);
-    QString encodeSpecialized(const QString &text, const QString& fieldType = QString::null);
     QString& decomposedUTF8toLaTeX(QString &text);
 
     static EncoderLaTeX *currentEncoderLaTeX();

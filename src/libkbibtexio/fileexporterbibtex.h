@@ -61,7 +61,7 @@ public slots:
 
 protected:
     static bool requiresPersonQuoting(const QString &text, bool isLastName);
-    static void escapeLaTeXChars(QString &text);
+    static QString escapeLaTeXChars(QString &text);
 
 private:
     QChar m_stringOpenDelimiter;
@@ -79,8 +79,6 @@ private:
     bool writeString(QTextStream &stream, const QString& text);
 
     void addProtectiveCasing(QString &text);
-
-    static bool flushAccumulatedText(QString &accumulatedText, QString &result, const QString& fieldType);
 };
 
 #endif
