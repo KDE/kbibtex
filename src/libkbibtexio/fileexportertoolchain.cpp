@@ -23,8 +23,11 @@
 #include <QStringList>
 #include <QFile>
 #include <QDir>
+#include <QRegExp>
 
 #include "fileexportertoolchain.h"
+
+static const QRegExp chompRegExp = QRegExp("[\\n\\r]+$");
 
 FileExporterToolchain::FileExporterToolchain()
         : FileExporter(), m_waitCond(), m_waitCondMutex(), m_errorLog(NULL)
@@ -133,13 +136,13 @@ void FileExporterToolchain::slotReadProcessOutput()
         while (m_process->canReadLine()) {
             QString line = m_process->readLine();
             if (m_errorLog != NULL)
-                m_errorLog->append(line);
+                m_errorLog->append(line.replace(chompRegExp, ""));
         }
         m_process->setReadChannel(QProcess::StandardError);
         while (m_process->canReadLine()) {
             QString line = m_process->readLine();
             if (m_errorLog != NULL)
-                m_errorLog->append(line);
+                m_errorLog->append(line.replace(chompRegExp, ""));
         }
     }
 }
