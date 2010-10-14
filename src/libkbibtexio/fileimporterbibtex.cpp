@@ -485,7 +485,7 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value& value, const QStr
                 value.append(new MacroKey(text));
             else
                 value.append(new PlainText(text));
-        } else if (iKey.startsWith(Entry::ftUrl) || iKey.startsWith(Entry::ftLocalFile) || iKey.startsWith(Entry::ftDOI)) {
+        } else if (iKey.startsWith(Entry::ftUrl) || iKey.startsWith(Entry::ftLocalFile)) {
             if (isStringKey)
                 value.append(new MacroKey(text));
             else {
@@ -493,6 +493,18 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value& value, const QStr
                 const QStringList urls = text.split(urlListRegExp, QString::SkipEmptyParts);
                 for (QStringList::ConstIterator it = urls.constBegin(); it != urls.constEnd(); ++it)
                     value.append(new VerbatimText(*it));
+            }
+        } else if (iKey.startsWith(Entry::ftDOI)) {
+            if (isStringKey)
+                value.append(new MacroKey(text));
+            else {
+                const QRegExp doiListRegExp(";[ ]*|[ ]+", Qt::CaseInsensitive);
+                const QStringList dois = text.split(doiListRegExp, QString::SkipEmptyParts);
+                for (QStringList::ConstIterator it = dois.constBegin(); it != dois.constEnd(); ++it)
+                    if (KBibTeX::doiRegExp.indexIn(*it) >= 0)
+                        value.append(new VerbatimText(KBibTeX::doiRegExp.cap(0)));
+                    else
+                        value.append(new VerbatimText(*it));
             }
         } else if (iKey == Entry::ftColor) {
             if (isStringKey)

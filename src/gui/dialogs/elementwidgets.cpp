@@ -289,6 +289,21 @@ bool FilesWidget::apply(Element *element) const
     Entry* entry = dynamic_cast<Entry*>(element);
     if (entry == NULL) return false;
 
+    for (int i = 1; i < 32; ++i) {  /// FIXME replace number by constant
+        QString key = Entry::ftUrl;
+        if (i > 1) key.append(QString::number(i));
+        entry->remove(key);
+        key = Entry::ftLocalFile;
+        if (i > 1) key.append(QString::number(i));
+        entry->remove(key);
+        key = Entry::ftDOI;
+        if (i > 1) key.append(QString::number(i));
+        entry->remove(key);
+        key = QLatin1String("ee");
+        if (i > 1) key.append(QString::number(i));
+        entry->remove(key);
+    }
+
     Value combinedValue;
     fileList->apply(combinedValue);
 
@@ -331,20 +346,20 @@ bool FilesWidget::reset(const Element *element)
     if (entry == NULL) return false;
 
     Value combinedValue;
-    for (int i = 1; i < 256; ++i) {  /// FIXME replace number by constant
-        QString key = QLatin1String(Entry::ftUrl);
+    for (int i = 1; i < 32; ++i) {  /// FIXME replace number by constant
+        QString key = Entry::ftUrl;
         if (i > 1) key.append(QString::number(i));
         const Value &urlValue = entry->operator [](key);
         for (Value::ConstIterator it = urlValue.constBegin(); it != urlValue.constEnd(); ++it)
             combinedValue.append(*it);
 
-        key = QLatin1String(Entry::ftLocalFile);
+        key = Entry::ftLocalFile;
         if (i > 1) key.append(QString::number(i));
         const Value &localFileValue = entry->operator [](key);
         for (Value::ConstIterator it = localFileValue.constBegin(); it != localFileValue.constEnd(); ++it)
             combinedValue.append(*it);
 
-        key = QLatin1String(Entry::ftDOI);
+        key = Entry::ftDOI;
         if (i > 1) key.append(QString::number(i));
         const Value &doiValue = entry->operator [](key);
         for (Value::ConstIterator it = doiValue.constBegin(); it != doiValue.constEnd(); ++it)
