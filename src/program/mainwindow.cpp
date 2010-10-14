@@ -21,6 +21,7 @@
 #include <QDockWidget>
 #include <QDragEnterEvent>
 #include <QDropEvent>
+#include <QLabel>
 
 #include <kio/netaccess.h>
 #include <KDebug>
@@ -72,6 +73,7 @@ public:
     SearchResults *searchResults;
     ElementForm *elementForm;
     OpenFileInfoManager *openFileInfoManager;
+    QLabel *emptyValueList;
 
     KBibTeXMainWindowPrivate(KBibTeXMainWindow *parent)
             : p(parent) {
@@ -161,7 +163,9 @@ KBibTeXMainWindow::KBibTeXMainWindow(KBibTeXProgram *program)
     d->dockValueList = new QDockWidget(i18n("List of Values"), this);
     d->dockValueList->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
     addDockWidget(Qt::LeftDockWidgetArea, d->dockValueList);
-    /// widget will be set later
+    d->emptyValueList = new QLabel(i18n("No bibliography selected"), d->dockValueList);
+    d->emptyValueList->setAlignment(Qt::AlignCenter);
+    d->dockValueList->setWidget(d->emptyValueList);
     d->dockValueList->setObjectName("dockValueList");
     d->dockValueList->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
     showPanelsMenu->addAction(d->dockValueList->toggleViewAction());
@@ -298,9 +302,8 @@ void KBibTeXMainWindow::documentSwitched(BibTeXEditor *oldEditor, BibTeXEditor *
         connect(newEditor, SIGNAL(currentElementChanged(Element*, const File *)), d->elementForm, SLOT(setElement(Element*, const File *)));
         connect(newEditor, SIGNAL(currentElementChanged(Element*, const File *)), d->urlPreview, SLOT(setElement(Element*, const File *)));
         d->dockValueList->setWidget(newEditor->valueListWidget());
-    } else {
-        d->dockValueList->setWidget(NULL);
-    }
+    } else
+        d->dockSearchForm->setWidget(d->emptyValueList);
 
     d->urlPreview->setBibTeXUrl(validFile ? openFileInfo->url() : KUrl());
     d->referencePreview->setElement(NULL, NULL);
