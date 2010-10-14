@@ -54,13 +54,19 @@ private slots:
     void doneFetchingSetConfigPage(KJob *);
     void doneFetchingQueryPage(KJob *);
     void doneFetchingBibTeX(KJob *);
+    void permanentRedirection(KIO::Job *, const KUrl &, const KUrl &);
+    void redirection(KIO::Job *, const KUrl &);
 
 private:
+    QMap<QString, QString> m_oldCookiesSettings;
     int m_numResults;
     QString m_queryString;
     QStringList m_listBibTeXurls;
     bool m_hasBeenCancelled;
     KIO::TransferJob *m_currentJob;
+
+    void changeCookieSettings(const QString &url);
+    void restoreOldCookieSettings();
 };
 
 #endif // KBIBTEX_WEBSEARCH_GOOGLESCHOLAR_H
