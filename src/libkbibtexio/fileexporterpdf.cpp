@@ -130,7 +130,7 @@ bool FileExporterPDF::writeLatexFile(const QString &filename)
         ts << "\\usepackage[utf8]{inputenc}\n";
         ts << "\\usepackage[" << m_latexLanguage << "]{babel}\n";
         if (kpsewhich("hyperref.sty"))
-            ts << "\\usepackage[pdfproducer={KBibTeX: http://www.t-fischer.net/kbibtex/},pdftex]{hyperref}\n";
+            ts << "\\usepackage[pdfproducer={KBibTeX: http://home.gna.org/kbibtex/},pdftex]{hyperref}\n";
         else if (kpsewhich("url.sty"))
             ts << "\\usepackage{url}\n";
         if (m_latexBibStyle.startsWith("apacite") && kpsewhich("apacite.sty"))
