@@ -27,6 +27,8 @@
 #include <entry.h>
 #include "fileinfo.h"
 
+static const QRegExp regExpFileExtension = QRegExp("\\.[a-z0-9]{1,4}", Qt::CaseInsensitive);
+
 FileInfo::FileInfo()
 {
     // TODO
@@ -54,6 +56,11 @@ QList<KUrl> FileInfo::entryUrls(const Entry *entry, const KUrl &baseUrl)
             if (url.isValid())
                 result << url;
         }
+
+        QStringList fileList = plainText.split(QRegExp("[;]?[ \t\n\r]+"));
+        for (QStringList::ConstIterator ptit = fileList.constBegin(); ptit != fileList.constEnd();++ptit)
+            if (QFileInfo(*ptit).exists() && ((*ptit).contains(QDir::separator()) || (*ptit).contains(regExpFileExtension)))
+                result << KUrl(*ptit);
     }
 
     if (baseUrl.isValid() && baseUrl.isLocalFile()) {
