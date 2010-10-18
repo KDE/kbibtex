@@ -26,6 +26,10 @@
 #include <KUrl>
 
 class KJob;
+namespace KIO
+{
+class Job;
+}
 
 class Element;
 class File;
@@ -47,10 +51,8 @@ private:
     QString mimeType(const KUrl &url);
 
 private slots:
-    void urlSelected(const QString &);
     void openExternally();
-    void statJobFinished(KJob *);
-    void externalUrlExclusionChanged();
+    void onlyLocalFilesChanged();
 };
 
 #endif // KBIBTEX_PROGRAM_URLPREVIEW_H
