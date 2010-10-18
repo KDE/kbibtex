@@ -22,6 +22,7 @@
 
 #include <QScrollArea>
 
+#include <kbibtexnamespace.h>
 #include <value.h>
 
 /**

@@ -31,7 +31,6 @@
 #include <fileimporterbibtex.h>
 #include <fileexporterbibtex.h>
 #include <fieldlineedit.h>
-#include <kbibtexnamespace.h>
 #include "fieldlistedit.h"
 
 class FieldListEdit::FieldListEditPrivate
