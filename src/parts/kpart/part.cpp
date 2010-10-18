@@ -164,6 +164,7 @@ KBibTeXPart::KBibTeXPart(QWidget *parentWidget, QObject *parent, bool browserVie
     setWidget(d->editor);
 
     connect(d->editor, SIGNAL(elementExecuted(Element*)), d->editor, SLOT(editElement(Element*)));
+    connect(d->editor, SIGNAL(modified()), this, SLOT(setModified()));
 
     setupActions(browserViewWanted);
 
@@ -173,6 +174,8 @@ KBibTeXPart::KBibTeXPart(QWidget *parentWidget, QObject *parent, bool browserVie
         */
 
     d->initializeNew();
+
+    setModified(false);
 }
 
 KBibTeXPart::~KBibTeXPart()
@@ -259,8 +262,14 @@ bool KBibTeXPart::saveFile()
 {
     if (!isReadWrite())
         return false; //< if part is in read-only mode, then forbid any write operation
+
+    if (url().isEmpty()) {
+        saveDocumentDialog();
+        return false;
+    }
+
     if (!url().isLocalFile()) { // FIXME: non-local files must be handled
-        KMessageBox::information(widget(), i18n("Can only save to local files"), i18n("Saving file"));
+        KMessageBox::information(widget(), i18n("Can only save to local files:\n\n%1"), i18n("Saving file"));
         return false;
     }
     setLocalFilePath(url().path());

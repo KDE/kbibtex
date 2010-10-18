@@ -39,6 +39,9 @@ public:
 public slots:
     void setElement(Element*, const File *);
 
+signals:
+    void elementModified();
+
 private:
     class ElementFormPrivate;
     ElementFormPrivate *d;

@@ -91,8 +91,10 @@ void BibTeXEditor::editElement(Element *element)
 
     dialog.exec();
 
-    if (elementEditor.isModified())
+    if (elementEditor.isModified()) {
         emit currentElementChanged(currentElement(), bibTeXModel()->bibTeXFile());
+        emit modified();
+    }
 }
 
 const QList<Element*>& BibTeXEditor::selectedElements() const
@@ -170,6 +172,12 @@ void BibTeXEditor::selectionDelete()
         bibTeXModel()->removeRow(mil.begin()->row());
         mil.removeFirst();
     }
+    emit modified();
+}
+
+void BibTeXEditor::externalModification()
+{
+    emit modified();
 }
 
 void BibTeXEditor::setReadOnly(bool isReadOnly)

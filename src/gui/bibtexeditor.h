@@ -58,6 +58,7 @@ signals:
     void editorDragEnterEvent(QDragEnterEvent *);
     void editorDragMoveEvent(QDragMoveEvent *);
     void editorDropEvent(QDropEvent *);
+    void modified();
 
 public slots:
     void viewCurrentElement();
@@ -67,6 +68,7 @@ public slots:
     void setSelectedElements(QList<Element*>&);
     void setSelectedElement(Element*);
     void selectionDelete();
+    void externalModification();
 
 protected:
     bool m_isReadOnly;

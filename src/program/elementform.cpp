@@ -54,6 +54,8 @@ public:
         layout->addWidget(buttonReset, 1, 2, 1, 1);
 
         loadElement(NULL);
+
+        connect(buttonApply, SIGNAL(clicked()), p, SIGNAL(elementModified()));
     }
 
     void loadElement(Element *element) {
