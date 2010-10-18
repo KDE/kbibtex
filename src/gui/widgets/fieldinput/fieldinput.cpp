@@ -22,8 +22,11 @@
 #include <QMenu>
 #include <QDate>
 #include <QSignalMapper>
+#include <QPaintEngine>
+#include <Q3Painter>
 
 #include <KDebug>
+#include <KLocale>
 #include <KPushButton>
 #include <KColorButton>
 
@@ -38,6 +41,9 @@ private:
     FieldLineEdit *fieldLineEdit;
     FieldListEdit *fieldListEdit;
     KColorButton *colorButton;
+    KPushButton *predefColorButton;
+    QWidget *colorWidget;
+    QMenu *colorMenu;
 
 public:
     KBibTeX::FieldInputType fieldInputType;
@@ -45,7 +51,7 @@ public:
     KBibTeX::TypeFlag preferredTypeFlag;
 
     FieldInputPrivate(FieldInput *parent)
-            : p(parent), fieldLineEdit(NULL), fieldListEdit(NULL), colorButton(NULL) {
+            : p(parent), fieldLineEdit(NULL), fieldListEdit(NULL), colorButton(NULL), colorWidget(NULL) {
         // TODO
     }
 
@@ -80,15 +86,49 @@ public:
             monthSelector->setMenu(monthMenu);
         }
         break;
-        case KBibTeX::Color:
-            colorButton = new KColorButton(p);
-            layout->addWidget(colorButton, 0, Qt::AlignLeft);
-            break;
+        case KBibTeX::Color: {
+            colorWidget = new QWidget(p);
+            QBoxLayout *boxLayout = new QHBoxLayout(colorWidget);
+            boxLayout->setMargin(0);
+            predefColorButton = new KPushButton(KIcon("color-picker-white"), i18n("Predefined colors"), colorWidget);
+            boxLayout->addWidget(predefColorButton, 0);
+            colorButton = new KColorButton(colorWidget);
+            boxLayout->addWidget(colorButton, 0);
+            layout->addWidget(colorWidget, 0, Qt::AlignLeft);
+
+            QSignalMapper *sm = new QSignalMapper(predefColorButton);
+            connect(sm, SIGNAL(mapped(QString)), p, SLOT(setColor(QString)));
+            colorMenu = new QMenu(predefColorButton);
+            predefColorButton->setMenu(colorMenu);
+
+            // TODO: Make it configurable
+
+            QAction *action = colorAction(i18n("Important"), "#cc3300");
+            colorMenu->addAction(action);
+            sm->setMapping(action, "#cc3300");
+            connect(action, SIGNAL(triggered()), sm, SLOT(map()));
+
+            action = colorAction(i18n("Read"), "#009966");
+            colorMenu->addAction(action);
+            sm->setMapping(action, "#009966");
+            connect(action, SIGNAL(triggered()), sm, SLOT(map()));
+        }
+        break;
         default:
             fieldLineEdit = new FieldLineEdit(preferredTypeFlag, typeFlags, false, p);
             layout->addWidget(fieldLineEdit);
             connect(fieldLineEdit, SIGNAL(editingFinished()), p, SIGNAL(modified()));
         }
+    }
+
+    QAction *colorAction(const QString&label, const QString &color) {
+        int h = predefColorButton->fontMetrics().height() - 4;
+        QPixmap pm(h, h);
+        QPainter painter(&pm);
+        painter.setPen(QColor(color));
+        painter.setBrush(QBrush(painter.pen().color()));
+        painter.drawRect(0, 0, h, h);
+        return new QAction(KIcon(pm), label, p);
     }
 
     void clear() {
@@ -104,7 +144,7 @@ public:
             result = fieldLineEdit->reset(value);
         else if (fieldListEdit != NULL)
             result = fieldListEdit->reset(value);
-        else if (colorButton != NULL) {
+        else if (colorWidget != NULL) {
             VerbatimText *verbatimText = NULL;
             if (value.count() == 1 && (verbatimText = dynamic_cast<VerbatimText*>(value.first())) != NULL) {
                 colorButton->setColor(QColor(verbatimText->text()));
@@ -119,7 +159,7 @@ public:
             result = fieldLineEdit->apply(value);
         else if (fieldListEdit != NULL)
             result = fieldListEdit->apply(value);
-        else if (colorButton != NULL) {
+        else if (colorWidget != NULL) {
             value.clear();
             if (!(colorButton->color() == QColor(Qt::black))) {
                 VerbatimText *verbatimText = new VerbatimText(colorButton->color().name());
@@ -172,5 +212,13 @@ void FieldInput::setMonth(int month)
     MacroKey *macro = new MacroKey(KBibTeX::MonthsTriple[month-1]);
     Value value;
     value.append(macro);
+    reset(value);
+}
+
+void FieldInput::setColor(const QString&color)
+{
+    VerbatimText *verbatimText = new VerbatimText(color);
+    Value value;
+    value.append(verbatimText);
     reset(value);
 }

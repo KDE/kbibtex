@@ -17,6 +17,8 @@
 *   Free Software Foundation, Inc.,                                       *
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
+
+#include <QColor>
 #include <QFile>
 #include <QString>
 
@@ -247,7 +249,7 @@ QVariant BibTeXFileModel::data(const QModelIndex &index, int role) const
         return QVariant();
 
     /// for now, only display data (no editing or icons etc)
-    if (role != Qt::DisplayRole && role != Qt::ToolTipRole)
+    if (role != Qt::DisplayRole && role != Qt::ToolTipRole && role != Qt::DecorationRole)
         return QVariant();
 
     if (index.row() < m_bibtexFile->count() && index.column() < m_bibtexFields->count()) {
@@ -255,6 +257,16 @@ QVariant BibTeXFileModel::data(const QModelIndex &index, int role) const
         QString rawAlt = m_bibtexFields->at(index.column()).upperCamelCaseAlt;
         Element* element = (*m_bibtexFile)[index.row()];
         Entry* entry = dynamic_cast<Entry*>(element);
+
+        /// if BibTeX entry has a "x-color" field, use that color to highlight row
+        if (role == Qt::DecorationRole) {
+            QString color;
+            if (index.column() != 0 || entry == NULL || (color = PlainTextValue::text(entry->value("x-color"), m_bibtexFile)) == "#000000" || color.isEmpty())
+                return QVariant();
+            else
+                return QVariant(QColor(color));
+        }
+
         if (entry != NULL) {
             if (raw == "^id") // FIXME: Use constant here?
                 return QVariant(entry->id());

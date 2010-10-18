@@ -46,6 +46,7 @@ signals:
 
 private slots:
     void setMonth(int month);
+    void setColor(const QString&);
 
 private:
     class FieldInputPrivate;
