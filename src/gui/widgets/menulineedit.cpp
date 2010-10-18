@@ -62,6 +62,7 @@ public:
             m_multiLineEditText = new QTextEdit(p);
             hLayout->addWidget(m_multiLineEditText);
             connect(m_multiLineEditText->document(), SIGNAL(modificationChanged(bool)), p, SIGNAL(editingFinished()));
+            connect(m_multiLineEditText, SIGNAL(textChanged()), p, SLOT(slotTextChanged()));
             m_multiLineEditText->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
             p->setFocusProxy(m_multiLineEditText);
         } else {
@@ -70,6 +71,7 @@ public:
             hLayout->setStretchFactor(m_singleLineEditText, 100);
             m_singleLineEditText->setClearButtonShown(true);
             connect(m_singleLineEditText, SIGNAL(editingFinished()), p, SIGNAL(editingFinished()));
+            connect(m_singleLineEditText, SIGNAL(textChanged(QString)), p, SIGNAL(textChanged(QString)));
             m_singleLineEditText->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
             p->setFocusProxy(m_singleLineEditText);
         }
@@ -166,4 +168,10 @@ bool MenuLineEdit::isModified() const
     if (d->m_multiLineEditText != NULL)
         return d->m_multiLineEditText->document()->isModified();
     return false;
+}
+
+void MenuLineEdit::slotTextChanged()
+{
+    Q_ASSERT(d->m_multiLineEditText != NULL);
+    emit textChanged(d->m_multiLineEditText->toPlainText());
 }

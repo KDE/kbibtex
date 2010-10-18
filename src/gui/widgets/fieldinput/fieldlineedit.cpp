@@ -69,6 +69,8 @@ public:
         parent->appendWidget(buttonOpenUrl);
         connect(buttonOpenUrl, SIGNAL(clicked()), parent, SLOT(slotOpenUrl()));
 
+        connect(p, SIGNAL(textChanged(QString)), p, SLOT(slotTextChanged(QString)));
+
         Value value;
         typeFlag = determineTypeFlag(value, preferredTypeFlag, typeFlags);
         updateGUI(typeFlag);
@@ -87,7 +89,6 @@ public:
                 result = true;
             } else {
                 const ValueItem *first = value.first();
-                kDebug() << "value is of type " << typeid(*first).name();
 
                 const PlainText *plainText = dynamic_cast<const PlainText*>(first);
                 if (typeFlag == KBibTeX::tfPlainText && plainText != NULL) {
@@ -127,19 +128,7 @@ public:
             }
         }
 
-        /// extract URL, local file, or DOI from current field
-        if (KBibTeX::urlRegExp.indexIn(text) > -1)
-            urlToOpen = KUrl(KBibTeX::urlRegExp.cap(0));
-        else if (KBibTeX::doiRegExp.indexIn(text) > -1)
-            urlToOpen = KUrl(KBibTeX::doiUrlPrefix + KBibTeX::doiRegExp.cap(0).replace("\\", ""));
-        else if (KBibTeX::fileRegExp.indexIn(text) > -1)
-            urlToOpen = KUrl(KBibTeX::fileRegExp.cap(0));
-        /// non-existing local files are to be ignored
-        if (urlToOpen.isValid() && urlToOpen.isLocalFile() && !QFileInfo(urlToOpen.prettyUrl()).exists())
-            urlToOpen = KUrl();
-        /// set special "open URL" button visible if URL (or file or DOI) found
-        buttonOpenUrl->setVisible(urlToOpen.isValid());
-        buttonOpenUrl->setToolTip(i18n("Open \"%1\"", urlToOpen.prettyUrl()));
+        updateURL(text);
 
         parent->setText(text);
         return result;
@@ -363,6 +352,30 @@ public:
 
         return result;
     }
+
+    void updateURL(const QString &text) {
+        urlToOpen = KUrl();
+
+        /// extract URL, local file, or DOI from current field
+        if (KBibTeX::urlRegExp.indexIn(text) > -1)
+            urlToOpen = KUrl(KBibTeX::urlRegExp.cap(0));
+        else if (KBibTeX::doiRegExp.indexIn(text) > -1)
+            urlToOpen = KUrl(KBibTeX::doiUrlPrefix + KBibTeX::doiRegExp.cap(0).replace("\\", ""));
+        else if (KBibTeX::fileRegExp.indexIn(text) > -1)
+            urlToOpen = KUrl(KBibTeX::fileRegExp.cap(0));
+
+        /// non-existing local files are to be ignored
+        if (urlToOpen.isValid() && urlToOpen.isLocalFile() && !QFileInfo(urlToOpen.path()).exists())
+            urlToOpen = KUrl();
+
+        /// set special "open URL" button visible if URL (or file or DOI) found
+        buttonOpenUrl->setVisible(urlToOpen.isValid());
+        buttonOpenUrl->setToolTip(i18n("Open \"%1\"", urlToOpen.prettyUrl()));
+    }
+
+    void textChanged(const QString &text) {
+        updateURL(text);
+    }
 };
 
 FieldLineEdit::FieldLineEdit(KBibTeX::TypeFlag preferredTypeFlag, KBibTeX::TypeFlags typeFlags, bool isMultiLine, QWidget *parent)
@@ -401,4 +414,9 @@ void FieldLineEdit::slotTypeChanged(int newTypeFlagInt)
 void FieldLineEdit::slotOpenUrl()
 {
     d->openUrl();
+}
+
+void FieldLineEdit::slotTextChanged(const QString &text)
+{
+    d->textChanged(text);
 }

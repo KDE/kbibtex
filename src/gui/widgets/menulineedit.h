@@ -52,6 +52,10 @@ public:
 
 signals:
     void editingFinished();
+    void textChanged(const QString &);
+
+private slots:
+    void slotTextChanged();
 
 private:
     class MenuLineEditPrivate;
