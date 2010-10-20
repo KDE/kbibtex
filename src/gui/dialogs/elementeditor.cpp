@@ -266,5 +266,5 @@ void ElementEditor::tabChanged()
 void ElementEditor::widgetsModified()
 {
     d->isModified = true;
-    emit modified();
+    emit modified(d->isModified);
 }
