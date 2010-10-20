@@ -141,7 +141,7 @@ void BibTeXEditor::currentChanged(const QModelIndex & current, const QModelIndex
 {
     QTreeView::currentChanged(current, previous);
 
-    Element *element = bibTeXModel()->element(sortFilterProxyModel()->mapToSource(current).row());
+    Element *element = bibTeXModel()->element(current.row());
     emit currentElementChanged(element, bibTeXModel()->bibTeXFile());
 }
 

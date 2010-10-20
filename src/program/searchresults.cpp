@@ -138,7 +138,7 @@ void SearchResults::importSelected()
     BibTeXFileModel *sourceModel = d->editor->bibTeXModel();
     QList<QModelIndex> selList = d->editor->selectionModel()->selectedRows();
     for (QList<QModelIndex>::ConstIterator it = selList.constBegin(); it != selList.constEnd(); ++it) {
-        int row = (*it).row();
+        int row = d->editor->sortFilterProxyModel()->mapToSource(*it).row();
         Element *element = sourceModel->element(row);
         targetModel->insertRow(element, targetModel->rowCount());
     }
