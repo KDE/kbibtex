@@ -40,7 +40,7 @@ FileExporterRTF::~FileExporterRTF()
 
 bool FileExporterRTF::save(QIODevice* iodevice, const File* bibtexfile, QStringList *errorLog)
 {
-    m_mutex.lock();
+    // m_mutex.lock(); // FIXME: required?
     bool result = FALSE;
 
     QFile output(m_bibTeXFilename);
@@ -54,13 +54,13 @@ bool FileExporterRTF::save(QIODevice* iodevice, const File* bibtexfile, QStringL
     if (result)
         result = generateRTF(iodevice, errorLog);
 
-    m_mutex.unlock();
+    // m_mutex.unlock(); // FIXME: required?
     return result;
 }
 
 bool FileExporterRTF::save(QIODevice* iodevice, const Element* element, QStringList *errorLog)
 {
-    m_mutex.lock();
+    // m_mutex.lock(); // FIXME: required?
     bool result = FALSE;
 
     QFile output(m_bibTeXFilename);
@@ -74,7 +74,7 @@ bool FileExporterRTF::save(QIODevice* iodevice, const Element* element, QStringL
     if (result)
         result = generateRTF(iodevice, errorLog);
 
-    m_mutex.unlock();
+    // m_mutex.unlock(); // FIXME: required?
     return result;
 }
 

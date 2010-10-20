@@ -40,7 +40,7 @@ FileExporterPS::~FileExporterPS()
 
 bool FileExporterPS::save(QIODevice* iodevice, const File* bibtexfile, QStringList *errorLog)
 {
-    m_mutex.lock();
+    // m_mutex.lock(); // FIXME: required?
     bool result = FALSE;
 
     QFile output(m_bibTeXFilename);
@@ -54,13 +54,13 @@ bool FileExporterPS::save(QIODevice* iodevice, const File* bibtexfile, QStringLi
     if (result)
         result = generatePS(iodevice, errorLog);
 
-    m_mutex.unlock();
+    // m_mutex.unlock(); // FIXME: required?
     return result;
 }
 
 bool FileExporterPS::save(QIODevice* iodevice, const Element* element, QStringList *errorLog)
 {
-    m_mutex.lock();
+    // m_mutex.lock(); // FIXME: required?
     bool result = FALSE;
 
     QFile output(m_bibTeXFilename);
@@ -74,7 +74,7 @@ bool FileExporterPS::save(QIODevice* iodevice, const Element* element, QStringLi
     if (result)
         result = generatePS(iodevice, errorLog);
 
-    m_mutex.unlock();
+    // m_mutex.unlock(); // FIXME: required?
     return result;
 }
 

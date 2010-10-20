@@ -21,7 +21,7 @@
 #define KBIBTEX_IO_FILEEXPORTER_H
 
 #include <QObject>
-#include <QMutex>
+// #include <QMutex> // FIXME: required?
 
 #include <file.h>
 
@@ -53,7 +53,7 @@ public slots:
     };
 
 protected:
-    QMutex m_mutex;
+    // QMutex m_mutex; // FIXME: required?
 };
 
 #endif // KBIBTEX_IO_FILEEXPORTER_H

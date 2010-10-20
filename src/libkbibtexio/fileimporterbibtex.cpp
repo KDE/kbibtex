@@ -60,7 +60,7 @@ File* FileImporterBibTeX::load(QIODevice *iodevice)
     QString rawText = "";
     while (!m_textStream->atEnd()) {
         QString line = m_textStream->readLine();
-        bool skipline = evaluateParameterComments(m_textStream, line);
+        bool skipline = evaluateParameterComments(m_textStream, line.toLower());
         if (!skipline)
             rawText.append(line).append("\n");
     }

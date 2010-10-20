@@ -45,7 +45,7 @@ FileExporterXML::~FileExporterXML()
 
 bool FileExporterXML::save(QIODevice* iodevice, const File* bibtexfile, QStringList * /*errorLog*/)
 {
-    m_mutex.lock();
+    // m_mutex.lock(); // FIXME: required?
     bool result = true;
     m_cancelFlag = false;
     QTextStream stream(iodevice);
@@ -61,7 +61,7 @@ bool FileExporterXML::save(QIODevice* iodevice, const File* bibtexfile, QStringL
 
     stream << "</bibliography>" << endl;
 
-    m_mutex.unlock();
+    // m_mutex.unlock(); // FIXME: required?
     return result && !m_cancelFlag;
 }
 

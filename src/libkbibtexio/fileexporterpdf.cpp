@@ -45,7 +45,7 @@ FileExporterPDF::~FileExporterPDF()
 
 bool FileExporterPDF::save(QIODevice* iodevice, const File* bibtexfile, QStringList *errorLog)
 {
-    m_mutex.lock();
+    // m_mutex.lock(); // FIXME: required?
     bool result = FALSE;
     m_embeddedFileList.clear();
     if (m_embedFiles) {
@@ -64,13 +64,13 @@ bool FileExporterPDF::save(QIODevice* iodevice, const File* bibtexfile, QStringL
     if (result)
         result = generatePDF(iodevice, errorLog);
 
-    m_mutex.unlock();
+    // m_mutex.unlock(); // FIXME: required?
     return result;
 }
 
 bool FileExporterPDF::save(QIODevice* iodevice, const Element* element, QStringList *errorLog)
 {
-    m_mutex.lock();
+    // m_mutex.lock(); // FIXME: required?
     bool result = FALSE;
     m_embeddedFileList.clear();
     if (m_embedFiles)
@@ -87,7 +87,7 @@ bool FileExporterPDF::save(QIODevice* iodevice, const Element* element, QStringL
     if (result)
         result = generatePDF(iodevice, errorLog);
 
-    m_mutex.unlock();
+    // m_mutex.unlock(); // FIXME: required?
     return result;
 }
 

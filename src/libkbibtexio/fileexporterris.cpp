@@ -38,7 +38,7 @@ FileExporterRIS::~FileExporterRIS()
 
 bool FileExporterRIS::save(QIODevice* iodevice, const Element* element, QStringList* /*errorLog*/)
 {
-    m_mutex.lock();
+    // m_mutex.lock(); // FIXME: required?
     bool result = false;
     QTextStream stream(iodevice);
 
@@ -46,13 +46,13 @@ bool FileExporterRIS::save(QIODevice* iodevice, const Element* element, QStringL
     if (entry != NULL)
         result = writeEntry(stream, entry);
 
-    m_mutex.unlock();
+    // m_mutex.unlock(); // FIXME: required?
     return result && !m_cancelFlag;
 }
 
 bool FileExporterRIS::save(QIODevice* iodevice, const File* bibtexfile, QStringList* /*errorLog*/)
 {
-    m_mutex.lock();
+    // m_mutex.lock(); // FIXME: required?
     bool result = true;
     m_cancelFlag = false;
     QTextStream stream(iodevice);
@@ -67,7 +67,7 @@ bool FileExporterRIS::save(QIODevice* iodevice, const File* bibtexfile, QStringL
         }
     }
 
-    m_mutex.unlock();
+    // m_mutex.unlock(); // FIXME: required?
     return result && !m_cancelFlag;
 }
 
