@@ -40,7 +40,7 @@ public:
     bool isModified();
 
 signals:
-    void modified();
+    void modified(bool);
 
 public slots:
     void apply();

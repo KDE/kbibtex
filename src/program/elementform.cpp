@@ -65,7 +65,7 @@ public:
         layout->addWidget(elementEditor, 0, 0, 1, 3);
         elementEditor->setEnabled(element != NULL);
         elementEditor->layout()->setMargin(0);
-        connect(elementEditor, SIGNAL(modified()), p, SLOT(modified()));
+        connect(elementEditor, SIGNAL(modified(bool)), p, SLOT(modified()));
 
         buttonApply->setEnabled(false);
         buttonReset->setEnabled(false);
