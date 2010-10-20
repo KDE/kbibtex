@@ -155,6 +155,7 @@ KBibTeXMainWindow::KBibTeXMainWindow(KBibTeXProgram *program)
     d->dockSearchForm->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
     addDockWidget(Qt::LeftDockWidgetArea, d->dockSearchForm);
     d->searchForm = new SearchForm(d->mdiWidget, d->searchResults, d->dockSearchForm);
+    connect(d->searchForm, SIGNAL(doneSearching()), this, SLOT(showSearchResults()));
     d->dockSearchForm->setWidget(d->searchForm);
     d->dockSearchForm->setObjectName("dockSearchFrom");
     d->dockSearchForm->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
@@ -312,4 +313,9 @@ void KBibTeXMainWindow::documentSwitched(BibTeXEditor *oldEditor, BibTeXEditor *
     d->referencePreview->setElement(NULL, NULL);
     d->elementForm->setElement(NULL, NULL);
     d->urlPreview->setElement(NULL, NULL);
+}
+
+void KBibTeXMainWindow::showSearchResults()
+{
+    d->dockSearchResults->show();
 }

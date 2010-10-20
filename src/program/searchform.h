@@ -34,6 +34,9 @@ class SearchForm : public QWidget
 public:
     SearchForm(MDIWidget *mdiWidget, SearchResults *searchResults, QWidget *parent);
 
+signals:
+    void doneSearching();
+
 public slots:
     void updatedConfiguration();
 

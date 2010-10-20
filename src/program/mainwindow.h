@@ -60,6 +60,9 @@ protected slots:
     void closeDocument();
     void documentSwitched(BibTeXEditor*, BibTeXEditor*);
 
+private slots:
+    void showSearchResults();
+
 private:
     class KBibTeXMainWindowPrivate;
     KBibTeXMainWindowPrivate *d;

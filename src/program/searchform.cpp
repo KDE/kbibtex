@@ -103,6 +103,7 @@ public:
         QLabel *label = new QLabel(i18n("Free text:"), queryTermsContainer);
         layout->addWidget(label, 2, 0, 1, 1);
         KLineEdit *lineEdit = new KLineEdit(queryTermsContainer);
+        lineEdit->setClearButtonShown(true);
         layout->addWidget(lineEdit, 2, 1, 1, 1);
         queryFields.insert(WebSearchAbstract::queryKeyFreeText, lineEdit);
         label->setBuddy(lineEdit);
@@ -110,6 +111,7 @@ public:
         label = new QLabel(i18n("Title:"), queryTermsContainer);
         layout->addWidget(label, 3, 0, 1, 1);
         lineEdit = new KLineEdit(queryTermsContainer);
+        lineEdit->setClearButtonShown(true);
         queryFields.insert(WebSearchAbstract::queryKeyTitle, lineEdit);
         layout->addWidget(lineEdit, 3, 1, 1, 1);
         label->setBuddy(lineEdit);
@@ -117,6 +119,7 @@ public:
         label = new QLabel(i18n("Author:"), queryTermsContainer);
         layout->addWidget(label, 4, 0, 1, 1);
         lineEdit = new KLineEdit(queryTermsContainer);
+        lineEdit->setClearButtonShown(true);
         queryFields.insert(WebSearchAbstract::queryKeyAuthor, lineEdit);
         layout->addWidget(lineEdit, 4, 1, 1, 1);
         label->setBuddy(lineEdit);
@@ -124,6 +127,7 @@ public:
         label = new QLabel(i18n("Year:"), queryTermsContainer);
         layout->addWidget(label, 5, 0, 1, 1);
         lineEdit = new KLineEdit(queryTermsContainer);
+        lineEdit->setClearButtonShown(true);
         queryFields.insert(WebSearchAbstract::queryKeyYear, lineEdit);
         layout->addWidget(lineEdit, 5, 1, 1, 1);
         label->setBuddy(lineEdit);
@@ -285,6 +289,7 @@ void SearchForm::stoppedSearch(int resultCode)
     if (d->runningSearches <= 0) {
         /// last search engine stopped
         d->switchToSearch();
+        emit doneSearching();
     }
 }
 
