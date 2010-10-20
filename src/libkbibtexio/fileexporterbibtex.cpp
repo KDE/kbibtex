@@ -77,7 +77,7 @@ void FileExporterBibTeX::setProtectCasing(bool protectCasing)
 
 bool FileExporterBibTeX::save(QIODevice* iodevice, const File* bibtexfile, QStringList * /*errorLog*/)
 {
-    m_mutex.lock();
+    // m_mutex.lock(); // FIXME: required?
     bool result = TRUE;
 
     /**
@@ -108,10 +108,7 @@ bool FileExporterBibTeX::save(QIODevice* iodevice, const File* bibtexfile, QStri
                     Comment *comment = dynamic_cast<Comment*>(*it);
                     QString commentText = QString::null;
                     /** check if this file requests a special encoding */
-                    if (comment != NULL && comment->useCommand() && ((commentText = comment->text())).startsWith("x-kbibtex-encoding=")) {
-                        QString encoding = commentText.mid(19);
-                        kDebug() << "Old x-kbibtex-encoding is \"" << encoding << "\"" << endl;
-                    } else
+                    if (comment == NULL || !comment->text().startsWith("x-kbibtex-encoding="))
                         remainingList.append(*it);
                 }
             }
@@ -163,13 +160,13 @@ bool FileExporterBibTeX::save(QIODevice* iodevice, const File* bibtexfile, QStri
         emit progress(++currentPos, totalElements);
     }
 
-    m_mutex.unlock();
+    // m_mutex.unlock(); // FIXME: required?
     return result && !cancelFlag;
 }
 
 bool FileExporterBibTeX::save(QIODevice* iodevice, const Element* element, QStringList * /*errorLog*/)
 {
-    m_mutex.lock();
+    // m_mutex.lock(); // FIXME: required?
     bool result = FALSE;
 
     QTextStream stream(iodevice);
@@ -194,7 +191,7 @@ bool FileExporterBibTeX::save(QIODevice* iodevice, const Element* element, QStri
         }
     }
 
-    m_mutex.unlock();
+    //m_mutex.unlock(); // FIXME: required?
     return result && !cancelFlag;
 }
 
