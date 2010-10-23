@@ -18,6 +18,7 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
+#include <QFrame>
 #include <QBuffer>
 #include <QWebView>
 #include <QLayout>
@@ -57,7 +58,15 @@ public:
         layout->setMargin(0);
         comboBox = new KComboBox(p);
         layout->addWidget(comboBox);
-        webView = new QWebView(p);
+
+        QFrame *frame = new QFrame(p);
+        layout->addWidget(frame);
+        frame->setFrameShadow(QFrame::Sunken);
+        frame->setFrameShape(QFrame::StyledPanel);
+
+        layout = new QVBoxLayout(frame);
+        layout->setMargin(0);
+        webView = new QWebView(frame);
         layout->addWidget(webView);
 
         comboBox->addItem(i18n("Source"));

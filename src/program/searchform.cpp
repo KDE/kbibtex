@@ -76,6 +76,7 @@ public:
 
     void createGUI() {
         QGridLayout *layout = new QGridLayout(p);
+        layout->setMargin(0);
         layout->setRowStretch(0, 1);
         layout->setRowStretch(1, 0);
         layout->setColumnStretch(0, 1);

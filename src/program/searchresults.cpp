@@ -52,7 +52,8 @@ public:
 
         editor = new BibTeXEditor(parent);
         editor->setReadOnly(true);
-        editor->setFrameStyle(QFrame::Panel);
+        editor->setFrameShadow(QFrame::Sunken);
+        editor->setFrameShape(QFrame::StyledPanel);
         editor->setContextMenuPolicy(Qt::ActionsContextMenu);
         layout->addWidget(editor, 0, 0, 1, 2);
 
