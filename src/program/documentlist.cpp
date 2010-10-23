@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2009 by Thomas Fischer                             *
+*   Copyright (C) 2004-2010 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -33,8 +33,37 @@
 #include <KIcon>
 #include <KMimeType>
 #include <KAction>
+#include <KDirOperator>
+#include <KPushButton>
 
 #include "documentlist.h"
+
+class DirOperatorWidget : public QWidget
+{
+public:
+    KDirOperator *dirOperator;
+
+    DirOperatorWidget(QWidget *parent)
+            : QWidget(parent) {
+        QGridLayout *layout = new QGridLayout(this);
+        layout->setColumnStretch(0, 0);
+        layout->setColumnStretch(1, 0);
+        layout->setColumnStretch(2, 1);
+
+        KPushButton *buttonUp = new KPushButton(KIcon("go-up"), "", this);
+        layout->addWidget(buttonUp, 0, 0, 1, 1);
+
+        KPushButton *buttonHome = new KPushButton(KIcon("user-home"), "", this);
+        layout->addWidget(buttonHome, 0, 1, 1, 1);
+
+        dirOperator = new KDirOperator(KUrl("file:" + QDir::homePath()), this);
+        layout->addWidget(dirOperator, 1, 0, 1, 3);
+        dirOperator->setView(KFile::Detail);
+
+        connect(buttonUp, SIGNAL(clicked()), dirOperator, SLOT(cdUp()));
+        connect(buttonHome, SIGNAL(clicked()), dirOperator, SLOT(home()));
+    }
+};
 
 DocumentListDelegate::DocumentListDelegate(QObject * parent)
         : QStyledItemDelegate(parent)
@@ -276,22 +305,27 @@ public:
     DocumentListView *listOpenFiles;
     DocumentListView *listRecentFiles;
     DocumentListView *listFavorites;
+    DirOperatorWidget *dirOperator;
 
     DocumentListPrivate(OpenFileInfoManager *openFileInfoManager, DocumentList *p) {
         listOpenFiles = new DocumentListView(OpenFileInfo::Open, p);
         DocumentListModel *model = new DocumentListModel(OpenFileInfo::Open, openFileInfoManager, listOpenFiles);
         listOpenFiles->setModel(model);
-        p->addTab(listOpenFiles, i18n("Open Files"));
+        p->addTab(listOpenFiles, KIcon("document-open"), i18n("Open Files"));
 
         listRecentFiles = new DocumentListView(OpenFileInfo::RecentlyUsed, p);
         model = new DocumentListModel(OpenFileInfo::RecentlyUsed, openFileInfoManager, listRecentFiles);
         listRecentFiles->setModel(model);
-        p->addTab(listRecentFiles, i18n("Recently Used"));
+        p->addTab(listRecentFiles, KIcon("clock"), i18n("Recently Used"));
 
         listFavorites = new DocumentListView(OpenFileInfo::Favorite, p);
         model = new DocumentListModel(OpenFileInfo::Favorite, openFileInfoManager, listFavorites);
         listFavorites->setModel(model);
-        p->addTab(listFavorites, i18n("Favorites"));
+        p->addTab(listFavorites, KIcon("favorites"), i18n("Favorites"));
+
+        dirOperator = new DirOperatorWidget(p);
+        p->addTab(dirOperator, i18n("Filesystem Browser"));
+        connect(dirOperator->dirOperator, SIGNAL(fileSelected(KFileItem)), p, SLOT(fileSelected(KFileItem)));
 
         /** set minimum width of widget depending on tab's text width */
         QFontMetrics fm(p->font());
@@ -303,4 +337,10 @@ DocumentList::DocumentList(OpenFileInfoManager *openFileInfoManager, QWidget *pa
         : QTabWidget(parent), d(new DocumentListPrivate(openFileInfoManager, this))
 {
     // nothing
+}
+
+void DocumentList::fileSelected(const KFileItem &item)
+{
+    if (item.isFile() && item.isReadable())
+        emit openFile(item.url());
 }

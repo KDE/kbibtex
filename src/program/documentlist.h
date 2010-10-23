@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2009 by Thomas Fischer                             *
+*   Copyright (C) 2004-2010 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -30,6 +30,8 @@
 #include <KUrl>
 
 #include "openfileinfo.h"
+
+class KFileItem;
 
 class OpenFileInfoManager;
 
@@ -90,6 +92,12 @@ public:
     enum Category { OpenFiles = 0, RecentFiles = 1, Favorites = 2 };
 
     DocumentList(OpenFileInfoManager *openFileInfoManager, QWidget *parent = NULL);
+
+signals:
+    void openFile(const KUrl& url);
+
+private slots:
+    void fileSelected(const KFileItem &item);
 
 private:
     class DocumentListPrivate;
