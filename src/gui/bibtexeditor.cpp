@@ -25,11 +25,11 @@
 #include <entry.h>
 #include <macro.h>
 #include <bibtexfilemodel.h>
-#include "valuelist.h"
+#include "valuelistmodel.h"
 #include "bibtexeditor.h"
 
 BibTeXEditor::BibTeXEditor(QWidget *parent)
-        : BibTeXFileView(parent), m_isReadOnly(false), m_current(NULL), m_valueListWidget(NULL)
+        : BibTeXFileView(parent), m_isReadOnly(false), m_current(NULL)
 {
     connect(this, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(itemActivated(QModelIndex)));
 }
@@ -37,10 +37,6 @@ BibTeXEditor::BibTeXEditor(QWidget *parent)
 void BibTeXEditor::setModel(QAbstractItemModel * model)
 {
     BibTeXFileView::setModel(model);
-
-    BibTeXFileModel *bibteXModel = bibTeXModel();
-    if (bibteXModel != NULL &&  m_valueListWidget != NULL)
-        m_valueListWidget->setElement(NULL, bibteXModel->bibTeXFile());
 }
 
 void BibTeXEditor::viewCurrentElement()
@@ -190,17 +186,13 @@ bool BibTeXEditor::isReadOnly() const
     return m_isReadOnly;
 }
 
-ValueList *BibTeXEditor::valueListWidget()
+ValueListModel *BibTeXEditor::valueListModel(const QString &field)
 {
-    if (m_valueListWidget == NULL) {
-        m_valueListWidget = new ValueList(this);
-        BibTeXFileModel *bibteXModel = bibTeXModel();
-        if (bibteXModel != NULL)
-            m_valueListWidget->setElement(NULL, bibteXModel->bibTeXFile());
-        connect(this, SIGNAL(currentElementChanged(Element*, const File*)), m_valueListWidget, SLOT(setElement(Element*, const File*)));
-    }
+    BibTeXFileModel *bibteXModel = bibTeXModel();
+    if (bibteXModel != NULL)
+        return new ValueListModel(bibteXModel->bibTeXFile(), field, this);
 
-    return m_valueListWidget;
+    return NULL;
 }
 
 void BibTeXEditor::mouseMoveEvent(QMouseEvent *event)

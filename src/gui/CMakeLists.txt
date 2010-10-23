@@ -24,7 +24,7 @@ set( kbibtexgui_LIB_SRCS
 	dialogs/elementwidgets.cpp
 	dialogs/elementeditor.cpp
 	clipboard.cpp
-	valuelist.cpp
+	valuelistmodel.cpp
 	bibtexeditor.cpp
 )
 

@@ -53,7 +53,7 @@
 #include <comment.h>
 #include "filterbar.h"
 
-#include <valuelist.h>
+#include <valuelistmodel.h>
 #include <clipboard.h>
 #include "part.h"
 #include "partfactory.h"
@@ -139,7 +139,6 @@ public:
     }
 
     void initializeNew() {
-        kDebug() << " Initializing with empty data";
         model = new BibTeXFileModel();
         model->setBibTeXFile(new File());
 
@@ -148,7 +147,7 @@ public:
         sortFilterProxyModel->setSourceModel(model);
         editor->setModel(sortFilterProxyModel);
         connect(filterBar, SIGNAL(filterChanged(SortFilterBibTeXFileModel::FilterQuery)), sortFilterProxyModel, SLOT(updateFilter(SortFilterBibTeXFileModel::FilterQuery)));
-        connect(editor->valueListWidget(), SIGNAL(filterChanged(SortFilterBibTeXFileModel::FilterQuery)), filterBar, SLOT(setFilter(SortFilterBibTeXFileModel::FilterQuery)));
+        //connect(editor->valueListWidget(), SIGNAL(filterChanged(SortFilterBibTeXFileModel::FilterQuery)), filterBar, SLOT(setFilter(SortFilterBibTeXFileModel::FilterQuery))); //FIXME
     }
 };
 

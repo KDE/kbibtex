@@ -23,6 +23,7 @@ set( kbibtex_SRCS
 	mdiwidget.cpp
 	referencepreview.cpp
 	urlpreview.cpp
+	valuelist.cpp
 	searchform.cpp
 	searchresults.cpp
 	elementform.cpp
@@ -37,6 +38,7 @@ target_link_libraries( kbibtex${BINARY_POSTFIX}
   ${QT_QTWEBKIT_LIBRARIES}
   ${KDE4_KIO_LIBS}
   ${KDE4_KPARTS_LIBS}
+  ${KDE4_KFILE_LIBS}
   kbibtexio
   kbibtexgui
   kbibtexws

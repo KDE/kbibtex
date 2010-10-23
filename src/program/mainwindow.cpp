@@ -37,7 +37,7 @@
 #include <KMenu>
 
 #include "mainwindow.h"
-#include <valuelist.h>
+#include "valuelist.h"
 #include "documentlist.h"
 #include "program.h"
 #include "mdiwidget.h"
@@ -69,11 +69,11 @@ public:
     MDIWidget *mdiWidget;
     ReferencePreview *referencePreview;
     UrlPreview *urlPreview;
+    ValueList *valueList;
     SearchForm *searchForm;
     SearchResults *searchResults;
     ElementForm *elementForm;
     OpenFileInfoManager *openFileInfoManager;
-    QLabel *emptyValueList;
 
     KBibTeXMainWindowPrivate(KBibTeXMainWindow *parent)
             : p(parent) {
@@ -120,7 +120,7 @@ KBibTeXMainWindow::KBibTeXMainWindow(KBibTeXProgram *program)
     d->dockDocumentList->setWidget(d->listDocumentList);
     d->dockDocumentList->setObjectName("dockDocumentList");
     d->dockDocumentList->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
-    // connect(d->listDocumentList, SIGNAL(open(const KUrl &, const QString&)), this, SLOT(openDocument(const KUrl&, const QString&)));
+    connect(d->listDocumentList, SIGNAL(openFile(const KUrl&)), this, SLOT(openDocument(const KUrl&)));
     showPanelsMenu->addAction(d->dockDocumentList->toggleViewAction());
 
     d->dockReferencePreview = new QDockWidget(i18n("Reference Preview"), this);
@@ -164,9 +164,8 @@ KBibTeXMainWindow::KBibTeXMainWindow(KBibTeXProgram *program)
     d->dockValueList = new QDockWidget(i18n("List of Values"), this);
     d->dockValueList->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
     addDockWidget(Qt::LeftDockWidgetArea, d->dockValueList);
-    d->emptyValueList = new QLabel(i18n("No bibliography selected"), d->dockValueList);
-    d->emptyValueList->setAlignment(Qt::AlignCenter);
-    d->dockValueList->setWidget(d->emptyValueList);
+    d->valueList = new ValueList(d->dockValueList);
+    d->dockValueList->setWidget(d->valueList);
     d->dockValueList->setObjectName("dockValueList");
     d->dockValueList->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
     showPanelsMenu->addAction(d->dockValueList->toggleViewAction());
@@ -235,7 +234,7 @@ void KBibTeXMainWindow::dropEvent(QDropEvent *event)
 
     if (!urlList.isEmpty())
         for (QList<QUrl>::ConstIterator it = urlList.constBegin(); it != urlList.constEnd(); ++it)
-            openDocument(*it, "latex");
+            openDocument(*it);
 }
 
 void KBibTeXMainWindow::newDocument()
@@ -266,6 +265,11 @@ void KBibTeXMainWindow::openDocumentDialog()
             openDocument(url, loadResult.encoding);
         }
     }
+}
+
+void KBibTeXMainWindow::openDocument(const KUrl& url)
+{
+    openDocument(url, QLatin1String("latex"));
 }
 
 void KBibTeXMainWindow::openDocument(const KUrl& url, const QString& encoding)
@@ -304,15 +308,13 @@ void KBibTeXMainWindow::documentSwitched(BibTeXEditor *oldEditor, BibTeXEditor *
         connect(newEditor, SIGNAL(currentElementChanged(Element*, const File *)), d->elementForm, SLOT(setElement(Element*, const File *)));
         connect(newEditor, SIGNAL(currentElementChanged(Element*, const File *)), d->urlPreview, SLOT(setElement(Element*, const File *)));
         connect(d->elementForm, SIGNAL(elementModified()), newEditor, SLOT(externalModification()));
-
-        d->dockValueList->setWidget(newEditor->valueListWidget());
-    } else
-        d->dockSearchForm->setWidget(d->emptyValueList);
+    }
 
     d->urlPreview->setBibTeXUrl(validFile ? openFileInfo->url() : KUrl());
     d->referencePreview->setElement(NULL, NULL);
     d->elementForm->setElement(NULL, NULL);
     d->urlPreview->setElement(NULL, NULL);
+    d->valueList->setEditor(newEditor);
 }
 
 void KBibTeXMainWindow::showSearchResults()

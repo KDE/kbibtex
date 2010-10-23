@@ -28,7 +28,7 @@
 #include <bibtexfileview.h>
 #include <element.h>
 
-class ValueList;
+class ValueListModel;
 
 /**
 @author Thomas Fischer
@@ -48,7 +48,7 @@ public:
     void setReadOnly(bool isReadOnly = true);
     bool isReadOnly() const;
 
-    ValueList *valueListWidget();
+    ValueListModel *valueListModel(const QString &field);
 
 signals:
     void selectedElementsChanged();
@@ -87,7 +87,6 @@ protected slots:
 private:
     Element* m_current;
     QList<Element*> m_selection;
-    ValueList *m_valueListWidget;
 };
 
 

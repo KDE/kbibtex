@@ -42,6 +42,7 @@ public:
     virtual ~KBibTeXMainWindow();
 
 public slots:
+    void openDocument(const KUrl& url);
     void openDocument(const KUrl& url, const QString& encoding);
 
 protected: // KMainWindow API

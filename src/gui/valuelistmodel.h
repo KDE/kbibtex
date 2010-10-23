@@ -18,36 +18,33 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#ifndef KBIBTEX_PROGRAM_VALUELIST_H
-#define KBIBTEX_PROGRAM_VALUELIST_H
+#ifndef KBIBTEX_PROGRAM_VALUELISTMODEL_H
+#define KBIBTEX_PROGRAM_VALUELISTMODEL_H
 
-#include <QWidget>
+#include <QAbstractTableModel>
 
 #include <bibtexfilemodel.h>
 
-class Element;
-class File;
-
-class ValueList : public QWidget
+class ValueListModel : public QAbstractTableModel
 {
-    Q_OBJECT
+private:
+    const File *file;
+    const QString fName;
+    QStringList sortedValues;
+    QMap<QString, int> valueToCount;
 
 public:
-    ValueList(QWidget *parent);
+    ValueListModel(const File *bibtexFile, const QString &fieldName, QObject *parent);
 
-public slots:
-    void setElement(Element*, const File *);
-
-signals:
-    void filterChanged(SortFilterBibTeXFileModel::FilterQuery);
-
-private slots:
-    void comboboxChanged();
-    void listItemActivated(const QModelIndex &);
+    int rowCount(const QModelIndex & parent = QModelIndex()) const;
+    int columnCount(const QModelIndex & parent = QModelIndex()) const;
+    QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
+    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
 private:
-    class ValueListPrivate;
-    ValueListPrivate *d;
+    void updateValues();
+    void insertValue(const Value &value);
 };
 
-#endif // KBIBTEX_PROGRAM_VALUELIST_H
+
+#endif // KBIBTEX_PROGRAM_VALUELISTMODEL_H
