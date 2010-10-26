@@ -27,6 +27,7 @@
 
 class Element;
 class File;
+class BibTeXEditor;
 
 class ValueList : public QWidget
 {
