@@ -38,6 +38,8 @@ BibTeXFileView::BibTeXFileView(QWidget * parent)
     setSelectionBehavior(QAbstractItemView::SelectRows);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
     setFrameStyle(QFrame::NoFrame);
+    setAlternatingRowColors(true);
+    setAllColumnsShowFocus(true);
 
     /// header appearance and behaviour
     header()->setClickable(true);
