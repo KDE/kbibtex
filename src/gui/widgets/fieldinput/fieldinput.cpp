@@ -42,6 +42,7 @@ private:
     FieldListEdit *fieldListEdit;
     KColorButton *colorButton;
     KPushButton *predefColorButton;
+    KPushButton *resetColorButton;
     QWidget *colorWidget;
     QMenu *colorMenu;
 
@@ -94,7 +95,10 @@ public:
             boxLayout->addWidget(predefColorButton, 0);
             colorButton = new KColorButton(colorWidget);
             boxLayout->addWidget(colorButton, 0);
-            layout->addWidget(colorWidget, 0, Qt::AlignLeft);
+            layout->addWidget(colorWidget, 0);
+            resetColorButton = new KPushButton(KIcon("edit-clear-locationbar-rtl"), i18n("Reset"), colorWidget);
+            layout->addWidget(resetColorButton, 0, Qt::AlignLeft);
+            connect(resetColorButton, SIGNAL(clicked()), p, SLOT(resetColor()));
 
             QSignalMapper *sm = new QSignalMapper(predefColorButton);
             connect(sm, SIGNAL(mapped(QString)), p, SLOT(setColor(QString)));
@@ -146,9 +150,11 @@ public:
             result = fieldListEdit->reset(value);
         else if (colorWidget != NULL) {
             VerbatimText *verbatimText = NULL;
-            if (value.count() == 1 && (verbatimText = dynamic_cast<VerbatimText*>(value.first())) != NULL) {
+            if (value.count() == 1 && (verbatimText = dynamic_cast<VerbatimText*>(value.first())) != NULL)
                 colorButton->setColor(QColor(verbatimText->text()));
-            }
+            else
+                p->resetColor();
+            result = true;
         }
         return result;
     }
@@ -161,8 +167,9 @@ public:
             result = fieldListEdit->apply(value);
         else if (colorWidget != NULL) {
             value.clear();
-            if (!(colorButton->color() == QColor(Qt::black))) {
-                VerbatimText *verbatimText = new VerbatimText(colorButton->color().name());
+            const QString colorName = colorButton->color().name();
+            if (!(colorButton->color() == QColor(Qt::black)) && colorName != QLatin1String("#000000")) { // FIXME test looks redundant
+                VerbatimText *verbatimText = new VerbatimText(colorName);
                 value << verbatimText;
             }
             result = true;
@@ -218,6 +225,14 @@ void FieldInput::setMonth(int month)
 void FieldInput::setColor(const QString&color)
 {
     VerbatimText *verbatimText = new VerbatimText(color);
+    Value value;
+    value.append(verbatimText);
+    reset(value);
+}
+
+void FieldInput::resetColor()
+{
+    VerbatimText *verbatimText = new VerbatimText(QLatin1String("#000000"));
     Value value;
     value.append(verbatimText);
     reset(value);
