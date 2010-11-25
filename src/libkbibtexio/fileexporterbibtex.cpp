@@ -208,7 +208,7 @@ bool FileExporterBibTeX::writeEntry(QTextStream &stream, const Entry& entry)
     stream << "@" << be->format(entry.type(), m_keywordCasing) << "{" << entry.id();
 
     for (Entry::ConstIterator it = entry.begin(); it != entry.end(); ++it) {
-        QString key = it.key();
+        const QString key = it.key();
         Value value = it.value();
         QString text = valueToBibTeX(value, key);
         if (text.isEmpty()) kWarning() << "Value for field " << key << " is empty" << endl;
@@ -370,6 +370,17 @@ QString FileExporterBibTeX::valueToBibTeX(const Value& value, const QString& key
 
     if (isOpen) result.append('}');
     return result;
+}
+
+QString FileExporterBibTeX::elementToString(const Element* element)
+{
+    QStringList result;
+    const Entry *entry = dynamic_cast< const Entry *>(element);
+    if (entry != NULL) {
+        for (QMap<QString, Value>::ConstIterator it = entry->begin(); it != entry->end(); ++it)
+            result << QString("%1 = {%2}").arg(it.key()).arg(valueToBibTeX(it.value()));
+    }
+    return result.join("; ");
 }
 
 QString FileExporterBibTeX::escapeLaTeXChars(QString &text)

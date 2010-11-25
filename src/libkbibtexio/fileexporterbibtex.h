@@ -55,6 +55,7 @@ public:
     bool save(QIODevice* iodevice, const Element* element, QStringList *errorLog = NULL);
 
     static QString valueToBibTeX(const Value& value, const QString& fieldType = QString::null);
+    static QString elementToString(const Element* element);
 
 public slots:
     void cancel();
