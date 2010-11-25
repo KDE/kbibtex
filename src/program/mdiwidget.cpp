@@ -91,16 +91,16 @@ MDIWidget::MDIWidget(QWidget *parent)
     // nothing
 }
 
-void MDIWidget::setFile(OpenFileInfo *openFileInfo)
+void MDIWidget::setFile(OpenFileInfo *openFileInfo, KService::Ptr servicePtr)
 {
     BibTeXEditor *oldEditor = NULL;
     bool hasChanged = true;
 
-    KParts::Part* part = openFileInfo == NULL ? NULL : openFileInfo->part(this);
+    KParts::Part* part = openFileInfo == NULL ? NULL : openFileInfo->part(this, servicePtr);
     QWidget *widget = d->welcomeWidget;
     if (part != NULL) {
         widget = part->widget();
-        widget->setParent(this);
+        //widget->setParent(this); // FIXME: necessary?
     } else if (openFileInfo != NULL) {
         KMessageBox::error(this, i18n("No part available for file '%1'.", openFileInfo->url().fileName()), i18n("No part available"));
         OpenFileInfoManager::getOpenFileInfoManager()->close(openFileInfo);
@@ -126,8 +126,6 @@ void MDIWidget::setFile(OpenFileInfo *openFileInfo)
 
 void MDIWidget::closeFile(OpenFileInfo *openFileInfo)
 {
-    kDebug() << "closeFile" << endl;
-
     QWidget *widget = openFileInfo->part(this) != NULL ? openFileInfo->part(this)->widget() : NULL;
     if (indexOf(widget) >= 0) {
         QWidget *curWidget = currentWidget();

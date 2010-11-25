@@ -33,8 +33,10 @@
 #include <KIcon>
 #include <KMimeType>
 #include <KAction>
+#include <KActionMenu>
 #include <KDirOperator>
 #include <KPushButton>
+#include <KService>
 
 #include "documentlist.h"
 
@@ -206,10 +208,14 @@ private:
 public:
     KAction *actionAddToFav, *actionRemFromFav;
     KAction *actionCloseFile, *actionOpenFile;
+    KActionMenu *actionOpenMenu;
+    QList<KAction*> openMenuActions;
+    KService::List openMenuServices;
+    QSignalMapper openMenuSignalMapper;
 
     DocumentListViewPrivate(DocumentListView *parent)
             : p(parent), actionAddToFav(NULL), actionRemFromFav(NULL), actionCloseFile(NULL), actionOpenFile(NULL) {
-        // nothing
+        connect(&openMenuSignalMapper, SIGNAL(mapped(int)), p, SLOT(openFileWithService(int)));
     }
 };
 
@@ -228,6 +234,9 @@ DocumentListView::DocumentListView(OpenFileInfo::StatusFlag statusFlag, QWidget 
         connect(d->actionOpenFile, SIGNAL(triggered()), this, SLOT(openFile()));
         addAction(d->actionOpenFile);
     }
+
+    d->actionOpenMenu = new KActionMenu(KIcon("document-open"), i18n("Open with"), this);
+    addAction(d->actionOpenMenu);
 
     if (statusFlag == OpenFileInfo::Favorite) {
         d->actionRemFromFav = new KAction(KIcon("favorites"), i18n("Remove from Favorites"), this);
@@ -271,6 +280,15 @@ void DocumentListView::openFile()
     }
 }
 
+void DocumentListView::openFileWithService(int i)
+{
+    QModelIndex modelIndex = currentIndex();
+    if (modelIndex != QModelIndex()) {
+        OpenFileInfo *ofi = qvariant_cast<OpenFileInfo*>(modelIndex.data(Qt::UserRole));
+        OpenFileInfoManager::getOpenFileInfoManager()->setCurrentFile(ofi, d->openMenuServices[i]);
+    }
+}
+
 void DocumentListView::closeFile()
 {
     QModelIndex modelIndex = currentIndex();
@@ -283,9 +301,10 @@ void DocumentListView::closeFile()
 void DocumentListView::currentChanged(const QModelIndex &current, const QModelIndex &)
 {
     bool hasCurrent = current != QModelIndex();
-    bool isOpen = hasCurrent ? qvariant_cast<OpenFileInfo*>(current.data(Qt::UserRole))->flags().testFlag(OpenFileInfo::Open) : false;
-    bool isFavorite = hasCurrent ? qvariant_cast<OpenFileInfo*>(current.data(Qt::UserRole))->flags().testFlag(OpenFileInfo::Favorite) : false;
-    bool hasName = hasCurrent ? qvariant_cast<OpenFileInfo*>(current.data(Qt::UserRole))->flags().testFlag(OpenFileInfo::HasName) : false;
+    OpenFileInfo* ofi = hasCurrent ? qvariant_cast<OpenFileInfo*>(current.data(Qt::UserRole)) : NULL;
+    bool isOpen = hasCurrent ? ofi->flags().testFlag(OpenFileInfo::Open) : false;
+    bool isFavorite = hasCurrent ? ofi->flags().testFlag(OpenFileInfo::Favorite) : false;
+    bool hasName = hasCurrent ? ofi->flags().testFlag(OpenFileInfo::HasName) : false;
 
     if (d->actionOpenFile != NULL)
         d->actionOpenFile->setEnabled(hasCurrent && !isOpen);
@@ -295,6 +314,24 @@ void DocumentListView::currentChanged(const QModelIndex &current, const QModelIn
         d->actionAddToFav->setEnabled(hasCurrent && !isFavorite && hasName);
     if (d->actionRemFromFav != NULL)
         d->actionRemFromFav->setEnabled(hasCurrent && isFavorite);
+
+    foreach(KAction *action, d->openMenuActions)
+    d->actionOpenMenu->removeAction(action);
+    d->openMenuServices.clear();
+    if (ofi != NULL) {
+        d->openMenuServices = ofi->listOfServices();
+        int i = 0;
+        foreach(KService::Ptr servicePtr,  d->openMenuServices) {
+            KAction *menuItem = new KAction(KIcon(servicePtr->icon()), servicePtr->name(), this);
+            d->actionOpenMenu->addAction(menuItem);
+            d->openMenuActions << menuItem;
+
+            d->openMenuSignalMapper.setMapping(menuItem, i);
+            connect(menuItem, SIGNAL(triggered()), &d->openMenuSignalMapper, SLOT(map()));
+            ++i;
+        }
+    }
+    d->actionOpenMenu->setEnabled(!d->openMenuActions.isEmpty());
 }
 
 class DocumentList::DocumentListPrivate

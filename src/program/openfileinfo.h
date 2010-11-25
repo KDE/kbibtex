@@ -73,6 +73,10 @@ public:
     QDateTime lastAccess() const;
     void setLastAccess(const QDateTime& dateTime = QDateTime::currentDateTime());
 
+    KService::List listOfServices();
+    KService::Ptr defaultService();
+    KService::Ptr currentService();
+
     friend class OpenFileInfoManager;
 
 signals:
@@ -104,16 +108,15 @@ public:
     OpenFileInfo *open(const KUrl& url);
     OpenFileInfo *contains(const KUrl& url) const;
     OpenFileInfo *currentFile() const;
-    void changeUrl(OpenFileInfo *openFileInfo, const KUrl & url);
+    bool changeUrl(OpenFileInfo *openFileInfo, const KUrl & url);
     void close(OpenFileInfo *openFileInfo);
-    void setCurrentFile(OpenFileInfo *openFileInfo);
+    void setCurrentFile(OpenFileInfo *openFileInfo, KService::Ptr servicePtr = KService::Ptr());
     QList<OpenFileInfo*> filteredItems(OpenFileInfo::StatusFlags required, OpenFileInfo::StatusFlags forbidden = 0);
-
 
     friend class OpenFileInfo;
 
 signals:
-    void currentChanged(OpenFileInfo *);
+    void currentChanged(OpenFileInfo *, KService::Ptr);
     void closing(OpenFileInfo *);
     void flagsChanged(OpenFileInfo::StatusFlags statusFlags);
 

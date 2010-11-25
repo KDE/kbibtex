@@ -51,7 +51,9 @@ public:
     OpenFileInfo *p;
 
     QMap<QString, QString> properties;
-    QMap<QWidget*, KParts::ReadWritePart*> partPerParent;
+    KParts::ReadWritePart* part;
+    KService::Ptr internalServicePtr;
+    QWidget *internalWidgetParent;
     QDateTime lastAccessDateTime;
     StatusFlags flags;
     OpenFileInfoManager *openFileInfoManager;
@@ -59,56 +61,68 @@ public:
     KUrl url;
 
     OpenFileInfoPrivate(OpenFileInfoManager *openFileInfoManager, const KUrl &url, const QString &mimeType, OpenFileInfo *p)
-            :  m_counter(-1), p(p), flags(0) {
+            :  m_counter(-1), p(p), part(NULL), internalServicePtr(KService::Ptr()), internalWidgetParent(NULL), flags(0) {
         this->openFileInfoManager = openFileInfoManager;
         this->url = url;
         this->mimeType = mimeType;
     }
 
     ~OpenFileInfoPrivate() {
-        QList<KParts::ReadWritePart*> list = partPerParent.values();
-        for (QList<KParts::ReadWritePart*>::Iterator it = list.begin(); it != list.end(); ++it) {
-            KParts::ReadWritePart* part = *it;
+        if (part != NULL) {
             part->closeUrl(true);
             delete part;
         }
     }
 
-    KParts::ReadWritePart* createPart(QWidget *parent, KService::Ptr servicePtr = KService::Ptr()) {
+    KParts::ReadWritePart* createPart(QWidget *newWidgetParent, KService::Ptr newServicePtr = KService::Ptr()) {
+        Q_ASSERT(internalWidgetParent == NULL || internalWidgetParent == newWidgetParent);
+
         /** use cached part for this parent if possible */
-        if (partPerParent.contains(parent))
-            return partPerParent[parent];
+        if (internalWidgetParent == newWidgetParent && (newServicePtr == KService::Ptr() || internalServicePtr == newServicePtr)) {
+            Q_ASSERT(part != NULL);
+            return part;
+        } else if (part != NULL) {
+            part->closeUrl(true);
+            delete part;
+        }
 
+        /// reset to invalid values in case something goes wrong
+        internalServicePtr = KService::Ptr();
+        internalWidgetParent = NULL;
 
-        if (servicePtr.isNull()) {
+        if (newServicePtr.isNull()) {
             /// no valid KService has been passed
             /// try to find a read-write part to open file
-            servicePtr = KMimeTypeTrader::self()->preferredService(mimeType, "KParts/ReadWritePart");
+            newServicePtr = p->defaultService();
         }
-        if (servicePtr.isNull()) {
+        if (newServicePtr.isNull()) {
             kError() << "Cannot find service to handle mimetype " << mimeType << endl;
             return NULL;
         }
 
-        kDebug() << "using service " << servicePtr->name() << servicePtr->genericName() << servicePtr->keywords().join(",");
-        KParts::ReadWritePart *part = servicePtr->createInstance<KParts::ReadWritePart>(parent, (QObject*)parent);
+        kDebug() << "using service " << newServicePtr->name() << newServicePtr->genericName() << newServicePtr->keywords().join(",");
+        part = newServicePtr->createInstance<KParts::ReadWritePart>(newWidgetParent, (QObject*)newWidgetParent);
         if (part == NULL) {
             kError() << "Cannot find part for mimetype " << mimeType << endl;
             return NULL;
         }
 
         if (url.isValid()) {
+            /// open URL in part
             part->openUrl(url);
+            /// update document list widget accordingly
             p->addFlags(OpenFileInfo::RecentlyUsed);
             p->addFlags(OpenFileInfo::HasName);
         } else {
+            /// initialize part with empty document
             part->openUrl(KUrl());
         }
-
-        partPerParent[parent] = part;
-
         p->addFlags(OpenFileInfo::Open);
 
+        internalServicePtr = newServicePtr;
+        internalWidgetParent = newWidgetParent;
+
+        Q_ASSERT(part != NULL); /// test should not be necessary, but just to be save ...
         return part;
     }
 
@@ -237,6 +251,21 @@ void OpenFileInfo::setLastAccess(const QDateTime& dateTime)
 {
     d->lastAccessDateTime = dateTime;
     emit flagsChanged(OpenFileInfo::RecentlyUsed);
+}
+
+KService::List OpenFileInfo::listOfServices()
+{
+    return KMimeTypeTrader::self()->query(mimeType(), QLatin1String("KParts/ReadWritePart"));
+}
+
+KService::Ptr OpenFileInfo::defaultService()
+{
+    return KMimeTypeTrader::self()->preferredService(mimeType(), QLatin1String("KParts/ReadWritePart"));
+}
+
+KService::Ptr OpenFileInfo::currentService()
+{
+    return d->internalServicePtr;
 }
 
 class OpenFileInfoManager::OpenFileInfoManagerPrivate
@@ -380,20 +409,21 @@ OpenFileInfo *OpenFileInfoManager::contains(const KUrl&url) const
     return NULL;
 }
 
-void OpenFileInfoManager::changeUrl(OpenFileInfo *openFileInfo, const KUrl & url)
+bool OpenFileInfoManager::changeUrl(OpenFileInfo *openFileInfo, const KUrl & url)
 {
     OpenFileInfo *previouslyContained = contains(url);
 
     /// check if old url differs from new url and old url is valid
     if (previouslyContained != NULL && contains(url) != openFileInfo) {
         kWarning() << "Cannot change URL, open file with same URL already exists" << endl;
+        return false;
     }
 
     KUrl oldUrl = openFileInfo->url();
 
     openFileInfo->setUrl(url);
     if (openFileInfo == d->currentFileInfo)
-        emit currentChanged(openFileInfo);
+        emit currentChanged(openFileInfo, KService::Ptr());
     emit flagsChanged(openFileInfo->flags());
 
     if (!url.equals(oldUrl) && oldUrl.isValid()) {
@@ -404,6 +434,8 @@ void OpenFileInfoManager::changeUrl(OpenFileInfo *openFileInfo, const KUrl & url
         ofi->setFlags(statusFlags);
         ofi->setProperty(OpenFileInfo::propertyEncoding, openFileInfo->property(OpenFileInfo::propertyEncoding));
     }
+
+    return true;
 }
 
 void OpenFileInfoManager::close(OpenFileInfo *openFileInfo)
@@ -433,7 +465,7 @@ OpenFileInfo *OpenFileInfoManager::currentFile() const
     return d->currentFileInfo;
 }
 
-void OpenFileInfoManager::setCurrentFile(OpenFileInfo *openFileInfo)
+void OpenFileInfoManager::setCurrentFile(OpenFileInfo *openFileInfo, KService::Ptr servicePtr)
 {
     bool hasChanged = d->currentFileInfo != openFileInfo;
     OpenFileInfo *previous = d->currentFileInfo;
@@ -445,8 +477,9 @@ void OpenFileInfoManager::setCurrentFile(OpenFileInfo *openFileInfo)
     }
     if (hasChanged) {
         if (previous != NULL) previous->setLastAccess();
-        emit currentChanged(openFileInfo);
-    }
+        emit currentChanged(openFileInfo, servicePtr);
+    } else if (servicePtr != openFileInfo->currentService())
+        emit currentChanged(openFileInfo, servicePtr);
 }
 
 QList<OpenFileInfo*> OpenFileInfoManager::filteredItems(OpenFileInfo::StatusFlags required, OpenFileInfo::StatusFlags forbidden)

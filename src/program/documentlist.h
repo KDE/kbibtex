@@ -74,6 +74,7 @@ private slots:
     void addToFavorites();
     void removeFromFavorites();
     void openFile();
+    void openFileWithService(int i);
     void closeFile();
 
 protected:

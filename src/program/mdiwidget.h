@@ -24,6 +24,7 @@
 #include <QStackedWidget>
 
 #include <KUrl>
+#include <KService>
 
 #include <bibtexeditor.h>
 
@@ -45,7 +46,7 @@ public:
     OpenFileInfo *currentFile();
 
 public slots:
-    void setFile(OpenFileInfo *openFileInfo);
+    void setFile(OpenFileInfo *openFileInfo, KService::Ptr servicePtr = KService::Ptr());
     void closeFile(OpenFileInfo *openFileInfo);
 
 signals:
