@@ -22,3 +22,11 @@ Label=Miscellaneous
 UpperCamelCase=Book
 Label=Book
 
+[EntryType7]
+UpperCamelCase=PhDThesis
+Label=PhD Thesis
+
+[EntryType8]
+UpperCamelCase=MastersThesis
+Label=Master's Thesis
+
