@@ -18,14 +18,26 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
+#include <typeinfo>
+
 #include <QTabWidget>
 #include <QLayout>
+#include <QBuffer>
+#include <QTextStream>
+#include <QApplication>
+
+#include <KDebug>
+#include <KPushButton>
+#include <KMessageBox>
+#include <KLocale>
 
 #include <entry.h>
 #include <comment.h>
 #include <macro.h>
 #include <preamble.h>
 #include <element.h>
+#include <fileexporterblg.h>
+#include <fileexporterbibtex.h>
 #include "elementwidgets.h"
 #include "elementeditor.h"
 
@@ -55,18 +67,24 @@ public:
         widgets.clear();
         EntryLayout *el = EntryLayout::self();
 
-        QVBoxLayout *layout = new QVBoxLayout(p);
+        QGridLayout *layout = new QGridLayout(p);
+        layout->setColumnStretch(0, 1);
+        layout->setColumnStretch(1, 0);
 
         if (ReferenceWidget::canEdit(element)) {
             referenceWidget = new ReferenceWidget(p);
             connect(referenceWidget, SIGNAL(modified()), p, SLOT(widgetsModified()));
-            layout->addWidget(referenceWidget);
+            layout->addWidget(referenceWidget, 0, 0, 1, 2);
             widgets << referenceWidget;
         } else
             referenceWidget = NULL;
 
         tab = new QTabWidget(p);
-        layout->addWidget(tab);
+        layout->addWidget(tab, 1, 0, 1, 2);
+
+        KPushButton *checkButton = new KPushButton(KIcon("tools-check-spelling"), i18n("Check with BibTeX"), p);
+        layout->addWidget(checkButton, 2, 1, 1, 1);
+        connect(checkButton, SIGNAL(clicked()), p, SLOT(checkBibTeX()));
 
         if (EntryConfiguredWidget::canEdit(element))
             for (EntryLayout::ConstIterator elit = el->constBegin(); elit != el->constEnd(); ++elit) {
@@ -190,6 +208,7 @@ public:
                 temp = internalPreamble;
 
             previousWidget->apply(temp);
+            kDebug() << FileExporterBibTeX::elementToString(temp);
             if (isSourceWidget) referenceWidget->apply(temp);
             newWidget->reset(temp);
             if (dynamic_cast<SourceWidget*>(previousWidget) != NULL) referenceWidget->reset(temp);
@@ -198,6 +217,95 @@ public:
 
         for (QList<ElementWidget*>::Iterator it = widgets.begin();it != widgets.end();++it)
             (*it)->setEnabled(!isSourceWidget || *it == newTab);
+    }
+
+    /**
+      * Test current entry if it compiles with BibTeX.
+      * Show warnings and errors in message box.
+      */
+    void checkBibTeX() {
+        if (typeid(*element) == typeid(Entry)) {
+            /// only entries are supported, no macros, preambles, ...
+
+            /// disable GUI under process
+            p->setEnabled(false);
+            QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+
+            /// create temporary entry to work with
+            Entry entry(*internalEntry);
+            apply(&entry);
+
+            /// run special exporter to get BibTeX's ouput
+            QStringList bibtexOuput;
+            QByteArray ba;
+            QBuffer buffer(&ba);
+            buffer.open(QIODevice::WriteOnly);
+            FileExporterBLG exporter;
+            bool result = exporter.save(&buffer, &entry, &bibtexOuput);
+            buffer.close();
+
+            if (!result) {
+                KMessageBox::errorList(p, i18n("Running BibTeX failed.\n\nSee the following output to trace the error."), bibtexOuput);
+                p->setEnabled(true);
+                QApplication::restoreOverrideCursor();
+                return;
+            } else
+                kDebug() << bibtexOuput;
+
+            /// define variables how to parse BibTeX's ouput
+            const QString warningStart = QLatin1String("Warning--");
+            const QRegExp warningEmptyField("empty (\\w+) in ");
+            const QRegExp warningThereIsBut("there's a (\\w+) but no (\\w+) in");
+            const QRegExp warningSort2("to sort, need (\\w+) or (\\w+) in ");
+            const QRegExp errorLine("---line (\\d+)");
+
+            /// go line-by-line through BibTeX output and collect warnings/errors
+            QStringList warnings;
+            QString errorPlainText;
+            for (QStringList::ConstIterator it = bibtexOuput.constBegin(); it != bibtexOuput.constEnd();++it) {
+                QString line = *it;
+
+                if (errorLine.indexIn(line) > -1) {
+                    buffer.open(QIODevice::ReadOnly);
+                    kDebug() << "size= " << buffer.size();
+                    QTextStream ts(&buffer);
+                    kDebug() << "error line: " << errorLine.cap(1);
+                    for (int i = errorLine.cap(1).toInt();i > 1;--i) {
+                        errorPlainText = ts.readLine();
+                        kDebug() << "error text " << errorPlainText;
+                        buffer.close();
+                    }
+                } else if (line.startsWith(QLatin1String("Warning--"))) {
+                    /// is a warning ...
+
+                    if (warningEmptyField.indexIn(line) > -1) {
+                        /// empty/missing field
+                        warnings << i18n("Field <b>%1</b> is empty", warningEmptyField.cap(1));
+                    } else if (warningThereIsBut.indexIn(line) > -1) {
+                        /// there is a field which exists but another does not exist
+                        warnings << i18n("Field <b>%1</b> exists, but <b>%2</b> does not exist", warningThereIsBut.cap(1), warningThereIsBut.cap(2));
+                    } else if (warningSort2.indexIn(line) > -1) {
+                        /// one out of two fields missing for sorting
+                        warnings << i18n("Fields <b>%1</b> or <b>%2</b> are required to sort entry", warningSort2.cap(1), warningSort2.cap(2));
+                    } else {
+                        /// generic/unknown warning
+                        line = line.mid(warningStart.length());
+                        warnings << i18n("Unknown warning: %1", line);
+                    }
+                }
+            }
+
+            if (!errorPlainText.isEmpty())
+                KMessageBox::information(p, i18n("<qt><p>The following error was found:</p><pre>%1</pre>", errorPlainText));
+            else if (!warnings.isEmpty())
+                KMessageBox::information(p, i18n("<qt><p>The following warnings were found:</p><ul><li>%1</li></ul>", warnings.join("</li><li>")));
+            else
+                KMessageBox::information(p, i18n("No warnings or errors were found."));
+
+            p->setEnabled(true);
+            QApplication::restoreOverrideCursor();
+        }
+
     }
 };
 
@@ -267,4 +375,9 @@ void ElementEditor::widgetsModified()
 {
     d->isModified = true;
     emit modified(d->isModified);
+}
+
+void ElementEditor::checkBibTeX()
+{
+    d->checkBibTeX();
 }

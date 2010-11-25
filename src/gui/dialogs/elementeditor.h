@@ -49,6 +49,7 @@ public slots:
 private slots:
     void tabChanged();
     void widgetsModified();
+    void checkBibTeX();
 
 private:
     class ElementEditorPrivate;
