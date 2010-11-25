@@ -47,7 +47,9 @@ public:
 
     void setupUI() {
         p->setObjectName("FieldLineEdit");
+        // FIXME: proper frame with colored shadows when focused
         p->setFrameShape(QFrame::StyledPanel);
+        p->setFrameShadow(QFrame::Sunken);
 
         hLayout = new QHBoxLayout(p);
         hLayout->setMargin(0);

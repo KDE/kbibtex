@@ -556,7 +556,7 @@ void OtherFieldsWidget::createGUI()
     layout->addWidget(fieldName, 0, 1, 1, 1);
     label->setBuddy(fieldName);
 
-    buttonAddApply = new KPushButton(KIcon("add"), i18n("Add"), this);
+    buttonAddApply = new KPushButton(KIcon("list-add"), i18n("Add"), this);
     buttonAddApply->setEnabled(false);
     layout->addWidget(buttonAddApply, 0, 2, 1, 1);
 
@@ -574,10 +574,10 @@ void OtherFieldsWidget::createGUI()
     otherFieldsList->setHeaderLabels(header);
     layout->addWidget(otherFieldsList, 2, 1, 3, 1);
     label->setBuddy(otherFieldsList);
-    buttonDelete = new KPushButton(KIcon("delete"), i18n("Delete"), this);
+    buttonDelete = new KPushButton(KIcon("list-remove"), i18n("Delete"), this);
     buttonDelete->setEnabled(false);
     layout->addWidget(buttonDelete, 2, 2, 1, 1);
-    buttonOpen = new KPushButton(KIcon("file-open"), i18n("Open"), this);
+    buttonOpen = new KPushButton(KIcon("document-open"), i18n("Open"), this);
     buttonOpen->setEnabled(false);
     layout->addWidget(buttonOpen, 3, 2, 1, 1);
 
