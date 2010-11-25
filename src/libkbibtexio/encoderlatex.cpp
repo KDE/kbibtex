@@ -411,7 +411,7 @@ public:
         for (int i = 0; i < modcharmappingdatalatexcount; ++i) {
             QString modifierRegExp = QString(modcharmappingdatalatex[i].modifier);
             QString modifier = modifierRegExp;
-            modifier.replace("\\ ^ ", " ^ ").replace("\\\\", "\\");
+            modifier.replace("\\^", "^").replace("\\\\", "\\");
 
             /** first batch of replacement rules, where no separator is required between modifier and character (e.g. \"a) */
             if (!modifierRegExp.at(modifierRegExp.length() - 1).isLetter())
