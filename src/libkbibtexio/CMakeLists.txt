@@ -11,6 +11,7 @@ set( kbibtexio_LIB_SRCS
 	fileinfo.cpp
 	fileexporter.cpp
 	fileexporterbibtex.cpp
+	fileexporterblg.cpp
 	fileexporterpdf.cpp
 	fileexporterps.cpp
 	fileexporterris.cpp
