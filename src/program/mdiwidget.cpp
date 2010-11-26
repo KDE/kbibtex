@@ -168,7 +168,7 @@ void MDIWidget::slotCompleted(QObject *obj)
     KUrl newUrl = ofi->part(this)->url();
 
     if (!oldUrl.equals(newUrl)) {
-        kDebug() << "Url changed from " << oldUrl.prettyUrl() << " to " << newUrl.prettyUrl() << endl;
+        kDebug() << "Url changed from " << oldUrl.pathOrUrl() << " to " << newUrl.pathOrUrl() << endl;
         OpenFileInfoManager::getOpenFileInfoManager()->changeUrl(ofi, newUrl);
 
         emit setCaption(QString("%1 [%2]").arg(ofi->shortCaption()).arg(ofi->fullCaption()));

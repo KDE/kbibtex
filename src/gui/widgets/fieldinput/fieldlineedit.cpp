@@ -370,7 +370,7 @@ public:
 
         /// set special "open URL" button visible if URL (or file or DOI) found
         buttonOpenUrl->setVisible(urlToOpen.isValid());
-        buttonOpenUrl->setToolTip(i18n("Open \"%1\"", urlToOpen.prettyUrl()));
+        buttonOpenUrl->setToolTip(i18n("Open \"%1\"", urlToOpen.pathOrUrl()));
     }
 
     void textChanged(const QString &text) {

@@ -109,7 +109,7 @@ public:
             if (onlyLocalFilesCheckBox->isChecked() && !(*it).isLocalFile()) continue;
 
             QString fn = (*it).fileName();
-            QString full = (*it).prettyUrl();
+            QString full = (*it).pathOrUrl();
             QString dir = full.left(full.size() - fn.size());
             QString text = fn.isEmpty() ? full : (dir.isEmpty() ? fn : QString("%1 [%2]").arg(fn).arg(dir));
             QPair<QString, KIcon> mimeTypeIcon = mimeType(*it);
@@ -126,7 +126,7 @@ public:
                 stackedWidget->addWidget(part->widget());
                 part->openUrl(*it);
             } else {
-                QLabel *label = new QLabel(i18n("Cannot create preview for\n%1", (*it).prettyUrl()), stackedWidget);
+                QLabel *label = new QLabel(i18n("Cannot create preview for\n%1", (*it).pathOrUrl()), stackedWidget);
                 message->setAlignment(Qt::AlignCenter);
                 stackedWidget->addWidget(label);
             }
@@ -173,7 +173,7 @@ public:
         }
 
         KIcon icon = KIcon(mimeTypePtr->iconName());
-        kDebug() << "For url " << url.prettyUrl() << " selected mime type " << mimeTypeName << " (icon name " << mimeTypePtr->iconName() << ")";
+        kDebug() << "For url " << url.pathOrUrl() << " selected mime type " << mimeTypeName << " (icon name " << mimeTypePtr->iconName() << ")";
 
         return QPair<QString, KIcon>(mimeTypeName, icon);
     }
