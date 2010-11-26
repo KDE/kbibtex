@@ -45,6 +45,9 @@ public:
     BibTeXEditor *editor();
     OpenFileInfo *currentFile();
 
+signals:
+    void setCaption(const QString &);
+
 public slots:
     void setFile(OpenFileInfo *openFileInfo, KService::Ptr servicePtr = KService::Ptr());
     void closeFile(OpenFileInfo *openFileInfo);

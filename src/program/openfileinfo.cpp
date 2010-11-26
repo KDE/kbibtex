@@ -197,7 +197,7 @@ QString OpenFileInfo::shortCaption() const
 QString OpenFileInfo::fullCaption() const
 {
     if (d->url.isValid())
-        return d->url.prettyUrl();
+        return d->url.pathOrUrl();
     else
         return shortCaption();
 }
@@ -255,12 +255,18 @@ void OpenFileInfo::setLastAccess(const QDateTime& dateTime)
 
 KService::List OpenFileInfo::listOfServices()
 {
-    return KMimeTypeTrader::self()->query(mimeType(), QLatin1String("KParts/ReadWritePart"));
+    KService::List result = KMimeTypeTrader::self()->query(mimeType(), QLatin1String("KParts/ReadWritePart"));
+    if (result.isEmpty())
+        result = KMimeTypeTrader::self()->query(mimeType(), QLatin1String("KParts/ReadOnlyPart"));
+    return result;
 }
 
 KService::Ptr OpenFileInfo::defaultService()
 {
-    return KMimeTypeTrader::self()->preferredService(mimeType(), QLatin1String("KParts/ReadWritePart"));
+    KService::Ptr result = KMimeTypeTrader::self()->preferredService(mimeType(), QLatin1String("KParts/ReadWritePart"));
+    if (result.isNull())
+        result = KMimeTypeTrader::self()->preferredService(mimeType(), QLatin1String("KParts/ReadOnlyPart"));
+    return result;
 }
 
 KService::Ptr OpenFileInfo::currentService()
@@ -414,17 +420,13 @@ bool OpenFileInfoManager::changeUrl(OpenFileInfo *openFileInfo, const KUrl & url
     OpenFileInfo *previouslyContained = contains(url);
 
     /// check if old url differs from new url and old url is valid
-    if (previouslyContained != NULL && contains(url) != openFileInfo) {
-        kWarning() << "Cannot change URL, open file with same URL already exists" << endl;
-        return false;
+    if (previouslyContained != NULL && previouslyContained->flags().testFlag(OpenFileInfo::Open) && previouslyContained != openFileInfo) {
+        kDebug() << "Open file with same URL already exists, forcefully closing it" << endl;
+        close(previouslyContained);
     }
 
     KUrl oldUrl = openFileInfo->url();
-
     openFileInfo->setUrl(url);
-    if (openFileInfo == d->currentFileInfo)
-        emit currentChanged(openFileInfo, KService::Ptr());
-    emit flagsChanged(openFileInfo->flags());
 
     if (!url.equals(oldUrl) && oldUrl.isValid()) {
         /// current document was most probabily renamed (e.g. due to "Save As")
@@ -434,6 +436,23 @@ bool OpenFileInfoManager::changeUrl(OpenFileInfo *openFileInfo, const KUrl & url
         ofi->setFlags(statusFlags);
         ofi->setProperty(OpenFileInfo::propertyEncoding, openFileInfo->property(OpenFileInfo::propertyEncoding));
     }
+    if (previouslyContained != NULL) {
+        /// keep Favorite flag if set in file that have previously same URL
+        if (previouslyContained->flags().testFlag(OpenFileInfo::Favorite))
+            openFileInfo->setFlags(openFileInfo->flags() | OpenFileInfo::Favorite);
+
+        /// remove the old entry with the same url has it will be replaced by the new one
+        d->openFileInfoList.removeOne(previouslyContained);
+        previouslyContained->deleteLater();
+        OpenFileInfo::StatusFlags statusFlags = OpenFileInfo::Open;
+        statusFlags |= OpenFileInfo::RecentlyUsed;
+        statusFlags |= OpenFileInfo::Favorite;
+        emit flagsChanged(statusFlags);
+    }
+
+    if (openFileInfo == d->currentFileInfo)
+        emit currentChanged(openFileInfo, KService::Ptr());
+    emit flagsChanged(openFileInfo->flags());
 
     return true;
 }

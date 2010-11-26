@@ -122,6 +122,15 @@ void MDIWidget::setFile(OpenFileInfo *openFileInfo, KService::Ptr servicePtr)
         emit activePartChanged(part);
         emit documentSwitch(oldEditor, newEditor);
     }
+
+    if (openFileInfo != NULL) {
+        KUrl url = openFileInfo->url();
+        if (url.isValid())
+            emit setCaption(QString("%1 [%2]").arg(openFileInfo->shortCaption()).arg(openFileInfo->fullCaption()));
+        else
+            emit setCaption(openFileInfo->shortCaption());
+    } else
+        emit setCaption("");
 }
 
 void MDIWidget::closeFile(OpenFileInfo *openFileInfo)
@@ -161,5 +170,7 @@ void MDIWidget::slotCompleted(QObject *obj)
     if (!oldUrl.equals(newUrl)) {
         kDebug() << "Url changed from " << oldUrl.prettyUrl() << " to " << newUrl.prettyUrl() << endl;
         OpenFileInfoManager::getOpenFileInfoManager()->changeUrl(ofi, newUrl);
+
+        emit setCaption(QString("%1 [%2]").arg(ofi->shortCaption()).arg(ofi->fullCaption()));
     }
 }

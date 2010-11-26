@@ -106,7 +106,7 @@ KBibTeXMainWindow::KBibTeXMainWindow(KBibTeXProgram *program)
     connect(d->mdiWidget, SIGNAL(documentOpen()), this, SLOT(openDocumentDialog()));
     connect(d->openFileInfoManager, SIGNAL(currentChanged(OpenFileInfo*, KService::Ptr)), d->mdiWidget, SLOT(setFile(OpenFileInfo*, KService::Ptr)));
     connect(d->openFileInfoManager, SIGNAL(closing(OpenFileInfo*)), d->mdiWidget, SLOT(closeFile(OpenFileInfo*)));
-
+    connect(d->mdiWidget, SIGNAL(setCaption(QString)), this, SLOT(setCaption(QString)));
 
     KActionMenu *showPanelsAction = new KActionMenu(i18n("Show Panels"), this);
     actionCollection()->addAction("settings_shown_panels", showPanelsAction);
