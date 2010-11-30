@@ -117,7 +117,7 @@ bool Person::containsPattern(const QString &pattern, Qt::CaseSensitivity caseSen
 }
 
 
-const QRegExp MacroKey::validMacroKey = QRegExp("[a-z][-.:/+_a-z0-9]*", Qt::CaseInsensitive);
+const QRegExp MacroKey::validMacroKey = QRegExp("^[a-z][-.:/+_a-z0-9]*$|^[0-9]+$", Qt::CaseInsensitive);
 
 MacroKey::MacroKey(const MacroKey& other)
         : m_text(other.m_text)
