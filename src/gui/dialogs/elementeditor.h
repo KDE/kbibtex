@@ -26,6 +26,7 @@
 #include <QWidget>
 
 class Element;
+class File;
 
 /**
 @author Thomas Fischer
@@ -34,8 +35,8 @@ class KBIBTEXGUI_EXPORT ElementEditor : public QWidget
 {
     Q_OBJECT
 public:
-    ElementEditor(const Element *element, QWidget *parent);
-    ElementEditor(Element *element, QWidget *parent);
+    ElementEditor(const Element *element, const File *file, QWidget *parent);
+    ElementEditor(Element *element, const File *file, QWidget *parent);
     void setReadOnly(bool isReadOnly = true);
     bool isModified();
 

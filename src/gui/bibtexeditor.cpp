@@ -20,11 +20,13 @@
 
 #include <KDialog>
 #include <KLocale>
+#include <KDebug>
 
 #include <elementeditor.h>
 #include <entry.h>
 #include <macro.h>
 #include <bibtexfilemodel.h>
+#include <fileexporterbibtex.h>
 #include "valuelistmodel.h"
 #include "bibtexeditor.h"
 
@@ -49,7 +51,7 @@ void BibTeXEditor::viewElement(const Element *element)
     Q_ASSERT_X(element->uniqueId % 1000 == 42, "void BibTeXEditor::editElement(Element *element)", "Invalid Element passed as argument");
 
     KDialog dialog(this);
-    ElementEditor elementEditor(element, &dialog);
+    ElementEditor elementEditor(element, bibTeXModel()->bibTeXFile(), &dialog);
     elementEditor.setReadOnly(true);
     dialog.setCaption(i18n("View Element"));
     dialog.setMainWidget(&elementEditor);
@@ -74,7 +76,7 @@ void BibTeXEditor::editElement(Element *element)
     Q_ASSERT_X(element->uniqueId % 1000 == 42, "void BibTeXEditor::editElement(Element *element)", "Invalid Element passed as argument");
 
     KDialog dialog(this);
-    ElementEditor elementEditor(element, &dialog);
+    ElementEditor elementEditor(element, bibTeXModel()->bibTeXFile(), &dialog);
     dialog.setCaption(i18n("Edit Element"));
     dialog.setMainWidget(&elementEditor);
     dialog.setButtons(KDialog::Ok | KDialog::Apply | KDialog::Cancel | KDialog::Reset);
@@ -135,10 +137,10 @@ Element* BibTeXEditor::currentElement()
 
 void BibTeXEditor::currentChanged(const QModelIndex & current, const QModelIndex & previous)
 {
-    QTreeView::currentChanged(current, previous);
+    QTreeView::currentChanged(current, previous); // FIXME necessary?
 
-    Element *element = bibTeXModel()->element(current.row());
-    emit currentElementChanged(element, bibTeXModel()->bibTeXFile());
+    m_current = bibTeXModel()->element(sortFilterProxyModel()->mapToSource(current).row());
+    emit currentElementChanged(m_current, bibTeXModel()->bibTeXFile());
 }
 
 void BibTeXEditor::selectionChanged(const QItemSelection & selected, const QItemSelection & deselected)

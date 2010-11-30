@@ -53,15 +53,15 @@ public:
         buttonReset = new KPushButton(KIcon("reset"), i18n("Reset"), p);
         layout->addWidget(buttonReset, 1, 2, 1, 1);
 
-        loadElement(NULL);
+        loadElement(NULL, NULL);
 
         connect(buttonApply, SIGNAL(clicked()), p, SIGNAL(elementModified()));
     }
 
-    void loadElement(Element *element) {
+    void loadElement(Element *element, const File *file) {
         if (elementEditor != NULL)
             delete elementEditor;
-        elementEditor = element == NULL ? new ElementEditor(&emptyElement, p) : new ElementEditor(element, p);
+        elementEditor = element == NULL ? new ElementEditor(&emptyElement, file, p) : new ElementEditor(element, file, p);
         layout->addWidget(elementEditor, 0, 0, 1, 3);
         elementEditor->setEnabled(element != NULL);
         elementEditor->layout()->setMargin(0);
@@ -82,9 +82,9 @@ ElementForm::ElementForm(MDIWidget *mdiWidget, QWidget *parent)
     d->mdiWidget = mdiWidget;
 }
 
-void ElementForm::setElement(Element* element, const File *)
+void ElementForm::setElement(Element* element, const File *file)
 {
-    d->loadElement(element);
+    d->loadElement(element, file);
 }
 
 void ElementForm::modified()

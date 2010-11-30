@@ -36,8 +36,8 @@
 #include <macro.h>
 #include <preamble.h>
 #include <element.h>
+#include <file.h>
 #include <fileexporterblg.h>
-#include <fileexporterbibtex.h>
 #include "elementwidgets.h"
 #include "elementeditor.h"
 
@@ -46,19 +46,21 @@ class ElementEditor::ElementEditorPrivate
 private:
     QList<ElementWidget*> widgets;
     Element *element;
+    const File *file;
     Entry *internalEntry;
     Macro *internalMacro;
     Preamble *internalPreamble;
     Comment *internalComment;
     ElementEditor *p;
     ElementWidget *previousWidget, *referenceWidget, *sourceWidget;
+    KPushButton *buttonCheckWithBibTeX;
 
 public:
     bool isModified;
     QTabWidget *tab;
 
-    ElementEditorPrivate(Element *m, ElementEditor *parent)
-            : element(m), p(parent), previousWidget(NULL) {
+    ElementEditorPrivate(Element *m, const File *f, ElementEditor *parent)
+            : element(m), file(f), p(parent), previousWidget(NULL) {
         isModified = false;
         createGUI();
     }
@@ -82,9 +84,9 @@ public:
         tab = new QTabWidget(p);
         layout->addWidget(tab, 1, 0, 1, 2);
 
-        KPushButton *checkButton = new KPushButton(KIcon("tools-check-spelling"), i18n("Check with BibTeX"), p);
-        layout->addWidget(checkButton, 2, 1, 1, 1);
-        connect(checkButton, SIGNAL(clicked()), p, SLOT(checkBibTeX()));
+        buttonCheckWithBibTeX = new KPushButton(KIcon("tools-check-spelling"), i18n("Check with BibTeX"), p);
+        layout->addWidget(buttonCheckWithBibTeX, 2, 1, 1, 1);
+        connect(buttonCheckWithBibTeX, SIGNAL(clicked()), p, SLOT(checkBibTeX()));
 
         if (EntryConfiguredWidget::canEdit(element))
             for (EntryLayout::ConstIterator elit = el->constBegin(); elit != el->constEnd(); ++elit) {
@@ -186,6 +188,8 @@ public:
                 }
             }
         }
+
+        buttonCheckWithBibTeX->setVisible(typeid(*element) == typeid(Entry));
     }
 
     void setReadOnly(bool isReadOnly) {
@@ -208,7 +212,6 @@ public:
                 temp = internalPreamble;
 
             previousWidget->apply(temp);
-            kDebug() << FileExporterBibTeX::elementToString(temp);
             if (isSourceWidget) referenceWidget->apply(temp);
             newWidget->reset(temp);
             if (dynamic_cast<SourceWidget*>(previousWidget) != NULL) referenceWidget->reset(temp);
@@ -231,9 +234,31 @@ public:
             p->setEnabled(false);
             QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
+            /// use a dummy BibTeX file to collect all elements necessary for check
+            File dummyFile;
+
             /// create temporary entry to work with
             Entry entry(*internalEntry);
             apply(&entry);
+            dummyFile << &entry;
+
+            /// fetch and inser crossref'ed entry
+            QString crossRefStr = QString::null;
+            Value crossRefVal = entry.value(Entry::ftCrossRef);
+            if (!crossRefVal.isEmpty() && file != NULL) {
+                crossRefStr = PlainTextValue::text(crossRefVal, file);
+                const Element *crossRefDest = file->containsKey(crossRefStr);
+                if (crossRefDest != NULL && typeid(*crossRefDest) == typeid(Entry))
+                    dummyFile << new Entry(*dynamic_cast<const Entry*>(crossRefDest));
+                else
+                    crossRefStr = QString::null; /// memorize crossref'ing failed
+            }
+
+            /// include all macro definitions, in case they are referenced
+            if (file != NULL)
+                for (File::ConstIterator it = file->begin(); it != file->end(); ++it)
+                    if (typeid(**it) == typeid(Macro))
+                        dummyFile << *it;
 
             /// run special exporter to get BibTeX's ouput
             QStringList bibtexOuput;
@@ -241,7 +266,7 @@ public:
             QBuffer buffer(&ba);
             buffer.open(QIODevice::WriteOnly);
             FileExporterBLG exporter;
-            bool result = exporter.save(&buffer, &entry, &bibtexOuput);
+            bool result = exporter.save(&buffer, &dummyFile, &bibtexOuput);
             buffer.close();
 
             if (!result) {
@@ -249,8 +274,7 @@ public:
                 p->setEnabled(true);
                 QApplication::restoreOverrideCursor();
                 return;
-            } else
-                kDebug() << bibtexOuput;
+            }
 
             /// define variables how to parse BibTeX's ouput
             const QString warningStart = QLatin1String("Warning--");
@@ -295,28 +319,28 @@ public:
                 }
             }
 
+            QApplication::restoreOverrideCursor();
             if (!errorPlainText.isEmpty())
                 KMessageBox::information(p, i18n("<qt><p>The following error was found:</p><pre>%1</pre>", errorPlainText));
             else if (!warnings.isEmpty())
                 KMessageBox::information(p, i18n("<qt><p>The following warnings were found:</p><ul><li>%1</li></ul>", warnings.join("</li><li>")));
             else
-                KMessageBox::information(p, i18n("No warnings or errors were found."));
+                KMessageBox::information(p, i18n("No warnings or errors were found.%1", crossRefStr.isNull() ? QLatin1String("") : i18n("\n\nSome fields missing in this entry where taken from the crossref'ed entry \"%1\".", crossRefStr)));
 
             p->setEnabled(true);
-            QApplication::restoreOverrideCursor();
         }
 
     }
 };
 
-ElementEditor::ElementEditor(Element *element, QWidget *parent)
-        : QWidget(parent), d(new ElementEditorPrivate(element, this))
+ElementEditor::ElementEditor(Element *element, const File *file, QWidget *parent)
+        : QWidget(parent), d(new ElementEditorPrivate(element, file, this))
 {
     connect(d->tab, SIGNAL(currentChanged(int)), this, SLOT(tabChanged()));
     d->reset();
 }
 
-ElementEditor::ElementEditor(const Element *element, QWidget *parent)
+ElementEditor::ElementEditor(const Element *element, const File *file, QWidget *parent)
         : QWidget(parent)
 {
     Element *m = NULL;
@@ -341,7 +365,7 @@ ElementEditor::ElementEditor(const Element *element, QWidget *parent)
         }
     }
 
-    d = new ElementEditorPrivate(m, this);
+    d = new ElementEditorPrivate(m, file, this);
     setReadOnly(true);
 }
 
