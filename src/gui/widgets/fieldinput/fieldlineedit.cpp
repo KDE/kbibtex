@@ -84,10 +84,13 @@ public:
 
         if (!value.isEmpty()) {
             if (typeFlag == KBibTeX::tfSource) {
+                /// simple case: field's value is to be shown as BibTeX code, including surrounding curly braces
                 FileExporterBibTeX exporter;
                 text = exporter.valueToBibTeX(value);
                 result = true;
             } else {
+                /// except for the source view type flag, type flag views do not support composed values,
+                /// therefore only the first value will be shown
                 const ValueItem *first = value.first();
 
                 const PlainText *plainText = dynamic_cast<const PlainText*>(first);
@@ -121,7 +124,7 @@ public:
                                     text = verbatimText->text();
                                     result = true;
                                 } else
-                                    kWarning() << "Could not reset: " << typeFlag << " " << " " << typeid(*first).name();
+                                    kWarning() << "Could not reset: " << typeFlag << "(" << (typeFlag == KBibTeX::tfSource ? "Source" : (typeFlag == KBibTeX::tfReference ? "Reference" : (typeFlag == KBibTeX::tfPerson ? "Person" : (typeFlag == KBibTeX::tfPlainText ? "PlainText" : (typeFlag == KBibTeX::tfKeyword ? "Keyword" : (typeFlag == KBibTeX::tfVerbatim ? "Verbatim" : "???")))))) << ") " << (typeFlags.testFlag(KBibTeX::tfPerson) ? "Person" : "") << (typeFlags.testFlag(KBibTeX::tfPlainText) ? "PlainText" : "") << (typeFlags.testFlag(KBibTeX::tfReference) ? "Reference" : "") << (typeFlags.testFlag(KBibTeX::tfVerbatim) ? "Verbatim" : "") << " " << typeid(*first).name() << " : " << PlainTextValue::text(value);
                             }
                         }
                     }
@@ -182,21 +185,19 @@ public:
     }
 
     KBibTeX::TypeFlag determineTypeFlag(const Value &value, KBibTeX::TypeFlag preferredTypeFlag, KBibTeX::TypeFlags availableTypeFlags) {
-        if (value.count() > 1) {
-            return KBibTeX::tfSource;
-        } else {
-            KBibTeX::TypeFlag result = preferredTypeFlag;
+        KBibTeX::TypeFlag result = KBibTeX::tfSource;
+        if (availableTypeFlags.testFlag(preferredTypeFlag) && typeFlagSupported(value, preferredTypeFlag))
+            result = preferredTypeFlag;
+        else if (value.count() == 1) {
             int p = 1;
             for (int i = 1; i < 8; ++i, p <<= 1) {
                 KBibTeX::TypeFlag flag = (KBibTeX::TypeFlag)p;
-                if (availableTypeFlags.testFlag(flag) && typeFlagSupported(value, flag))
-                    result = flag;
+                if (availableTypeFlags.testFlag(flag) && typeFlagSupported(value, flag)) {
+                    result = flag; break;
+                }
             }
-            if (availableTypeFlags.testFlag(preferredTypeFlag) && typeFlagSupported(value, preferredTypeFlag))
-                result = preferredTypeFlag;
-
-            return result;
         }
+        return result;
     }
 
     bool typeFlagSupported(const Value &value, KBibTeX::TypeFlag typeFlag) {
@@ -204,17 +205,18 @@ public:
             return true;
         else if (value.count() > 1)
             return typeFlag == KBibTeX::tfSource;
-        else if (typeFlag == KBibTeX::tfKeyword && typeid(Keyword) == typeid(value.first()))
+        else if (typeFlag == KBibTeX::tfKeyword && typeid(Keyword) == typeid(*value.first()))
             return true;
-        else if (typeFlag == KBibTeX::tfPerson && typeid(Person) == typeid(value.first()))
+        else if (typeFlag == KBibTeX::tfPerson && typeid(Person) == typeid(*value.first()))
             return true;
-        else if (typeFlag == KBibTeX::tfPlainText && typeid(PlainText) == typeid(value.first()))
+        else if (typeFlag == KBibTeX::tfPlainText && typeid(PlainText) == typeid(*value.first()))
             return true;
-        else if (typeFlag == KBibTeX::tfReference && typeid(MacroKey) == typeid(value.first()))
+        else if (typeFlag == KBibTeX::tfReference && typeid(MacroKey) == typeid(*value.first()))
             return true;
-        else if (typeFlag == KBibTeX::tfVerbatim && typeid(VerbatimText) == typeid(value.first()))
+        else if (typeFlag == KBibTeX::tfVerbatim && typeid(VerbatimText) == typeid(*value.first()))
             return true;
-        else return false;
+        else
+            return false;
     }
 
 
