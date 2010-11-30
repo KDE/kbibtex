@@ -78,7 +78,7 @@ void FileExporterBibTeX::setProtectCasing(bool protectCasing)
 bool FileExporterBibTeX::save(QIODevice* iodevice, const File* bibtexfile, QStringList * /*errorLog*/)
 {
     // m_mutex.lock(); // FIXME: required?
-    bool result = TRUE;
+    bool result = true;
 
     /**
       * Categorize elements from the bib file into four groups,
@@ -120,9 +120,10 @@ bool FileExporterBibTeX::save(QIODevice* iodevice, const File* bibtexfile, QStri
 
     QTextStream stream(iodevice);
     stream.setCodec(m_encoding == QLatin1String("latex") ? "UTF-8" : m_encoding.toAscii());
-    if (m_encoding != QLatin1String("latex"))
+    if (m_encoding != QLatin1String("latex")) {
         parameterCommentsList << new Comment("x-kbibtex-encoding=" + m_encoding, true);
-    qDebug() << "New x-kbibtex-encoding is \"" << m_encoding << "\"" << endl;
+        kDebug() << "New x-kbibtex-encoding is \"" << m_encoding << "\"" << endl;
+    }
 
     /** before anything else, write parameter comments */
     for (QList<Comment*>::ConstIterator it = parameterCommentsList.begin(); it != parameterCommentsList.end() && result && !cancelFlag; it++) {

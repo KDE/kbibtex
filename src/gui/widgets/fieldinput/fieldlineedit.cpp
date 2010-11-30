@@ -120,7 +120,8 @@ public:
                                 if (typeFlag == KBibTeX::tfVerbatim && verbatimText != NULL) {
                                     text = verbatimText->text();
                                     result = true;
-                                }
+                                } else
+                                    kWarning() << "Could not reset: " << typeFlag << " " << " " << typeid(*first).name();
                             }
                         }
                     }
