@@ -51,8 +51,7 @@ static const unsigned int interColumnSpace = 16;
 
 ElementWidget::ElementWidget(QWidget *parent): QWidget(parent), isReadOnly(false), m_isModified(false)
 {
-    setAutoFillBackground(true);
-    setPalette(QPalette(Qt::blue));
+    // nothing
 };
 
 bool ElementWidget::isModified() const
