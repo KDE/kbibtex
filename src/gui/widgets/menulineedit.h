@@ -51,7 +51,6 @@ public:
     bool isModified() const;
 
 signals:
-    void editingFinished();
     void textChanged(const QString &);
 
 private slots:

@@ -56,12 +56,10 @@ private:
     KPushButton *buttonCheckWithBibTeX;
 
 public:
-    bool isModified;
     QTabWidget *tab;
 
     ElementEditorPrivate(Element *m, const File *f, ElementEditor *parent)
             : element(m), file(f), p(parent), previousWidget(NULL) {
-        isModified = false;
         createGUI();
     }
 
@@ -75,7 +73,7 @@ public:
 
         if (ReferenceWidget::canEdit(element)) {
             referenceWidget = new ReferenceWidget(p);
-            connect(referenceWidget, SIGNAL(modified()), p, SLOT(widgetsModified()));
+            connect(referenceWidget, SIGNAL(modified(bool)), p, SIGNAL(modified(bool)));
             layout->addWidget(referenceWidget, 0, 0, 1, 2);
             widgets << referenceWidget;
         } else
@@ -92,28 +90,28 @@ public:
             for (EntryLayout::ConstIterator elit = el->constBegin(); elit != el->constEnd(); ++elit) {
                 EntryTabLayout etl = *elit;
                 ElementWidget *widget = new EntryConfiguredWidget(etl, tab);
-                connect(widget, SIGNAL(modified()), p, SLOT(widgetsModified()));
+                connect(widget, SIGNAL(modified(bool)), p, SIGNAL(modified(bool)));
                 tab->addTab(widget, widget->icon(), widget->label());
                 widgets << widget;
             }
 
         if (PreambleWidget::canEdit(element)) {
             ElementWidget *widget = new PreambleWidget(tab);
-            connect(widget, SIGNAL(modified()), p, SLOT(widgetsModified()));
+            connect(widget, SIGNAL(modified(bool)), p, SIGNAL(modified(bool)));
             tab->addTab(widget, widget->icon(), widget->label());
             widgets << widget;
         }
 
         if (MacroWidget::canEdit(element)) {
             ElementWidget *widget = new MacroWidget(tab);
-            connect(widget, SIGNAL(modified()), p, SLOT(widgetsModified()));
+            connect(widget, SIGNAL(modified(bool)), p, SIGNAL(modified(bool)));
             tab->addTab(widget, widget->icon(), widget->label());
             widgets << widget;
         }
 
         if (FilesWidget::canEdit(element)) {
             ElementWidget *widget = new FilesWidget(tab);
-            connect(widget, SIGNAL(modified()), p, SLOT(widgetsModified()));
+            connect(widget, SIGNAL(modified(bool)), p, SIGNAL(modified(bool)));
             tab->addTab(widget, widget->icon(), widget->label());
             widgets << widget;
         }
@@ -131,14 +129,14 @@ public:
                 blacklistedFields << QString(Entry::ftUrl) + QString::number(i) << QString(Entry::ftLocalFile) + QString::number(i) <<  QString(Entry::ftDOI) + QString::number(i);
 
             ElementWidget *widget = new OtherFieldsWidget(blacklistedFields, tab);
-            connect(widget, SIGNAL(modified()), p, SLOT(widgetsModified()));
+            connect(widget, SIGNAL(modified(bool)), p, SIGNAL(modified(bool)));
             tab->addTab(widget, widget->icon(), widget->label());
             widgets << widget;
         }
 
         if (SourceWidget::canEdit(element)) {
             sourceWidget = new SourceWidget(tab);
-            connect(sourceWidget, SIGNAL(modified()), p, SLOT(widgetsModified()));
+            connect(sourceWidget, SIGNAL(modified(bool)), p, SIGNAL(modified(bool)));
             tab->addTab(sourceWidget, sourceWidget->icon(), sourceWidget->label());
             widgets << sourceWidget;
         }
@@ -152,8 +150,10 @@ public:
 
     void apply(Element *element) {
         referenceWidget->apply(element);
-        const ElementWidget *widget = dynamic_cast<const ElementWidget*>(tab->currentWidget());
+        referenceWidget->setModified(false);
+        ElementWidget *widget = dynamic_cast<ElementWidget*>(tab->currentWidget());
         widget->apply(element);
+        widget->setModified(false);
     }
 
     void reset() {
@@ -161,8 +161,10 @@ public:
     }
 
     void reset(const Element *element) {
-        for (QList<ElementWidget*>::Iterator it = widgets.begin(); it != widgets.end(); ++it)
+        for (QList<ElementWidget*>::Iterator it = widgets.begin(); it != widgets.end(); ++it) {
             (*it)->reset(element);
+            (*it)->setModified(false);
+        }
 
         internalEntry = NULL;
         internalMacro = NULL;
@@ -331,6 +333,14 @@ public:
         }
 
     }
+
+    bool isModified() {
+        bool result = false;
+        for (QList<ElementWidget*>::Iterator it = widgets.begin(); it != widgets.end(); ++it)
+            result |= (*it)->isModified();
+        return result;
+    }
+
 };
 
 ElementEditor::ElementEditor(Element *element, const File *file, QWidget *parent)
@@ -372,12 +382,12 @@ ElementEditor::ElementEditor(const Element *element, const File *file, QWidget *
 void ElementEditor::apply()
 {
     d->apply();
+    emit modified(false);
 }
 
 void ElementEditor::reset()
 {
     d->reset();
-    d->isModified = false;
 }
 
 void ElementEditor::setReadOnly(bool isReadOnly)
@@ -387,18 +397,12 @@ void ElementEditor::setReadOnly(bool isReadOnly)
 
 bool ElementEditor::isModified()
 {
-    return d->isModified;
+    return d->isModified();
 }
 
 void ElementEditor::tabChanged()
 {
     d->switchTo(d->tab->currentWidget());
-}
-
-void ElementEditor::widgetsModified()
-{
-    d->isModified = true;
-    emit modified(d->isModified);
 }
 
 void ElementEditor::checkBibTeX()

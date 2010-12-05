@@ -41,6 +41,9 @@ public:
     void clear();
     void setReadOnly(bool isReadOnly);
 
+signals:
+    void modified();
+
 protected:
     virtual void resizeEvent(QResizeEvent *event);
 

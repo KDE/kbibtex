@@ -69,10 +69,14 @@ public:
         addButton = new KPushButton(KIcon("list-add"), i18n("Add"), container);
         layout->addWidget(addButton);
         connect(addButton, SIGNAL(clicked()), p, SLOT(lineAdd()));
+        connect(addButton, SIGNAL(clicked()), p, SIGNAL(modified()));
 
         connect(smRemove, SIGNAL(mapped(QWidget*)), p, SLOT(lineRemove(QWidget*)));
+        connect(smRemove, SIGNAL(mapped(QWidget*)), p, SIGNAL(modified()));
         connect(smGoDown, SIGNAL(mapped(QWidget*)), p, SLOT(lineGoDown(QWidget*)));
+        connect(smGoDown, SIGNAL(mapped(QWidget*)), p, SIGNAL(modified()));
         connect(smGoUp, SIGNAL(mapped(QWidget*)), p, SLOT(lineGoUp(QWidget*)));
+        connect(smGoDown, SIGNAL(mapped(QWidget*)), p, SIGNAL(modified()));
 
         p->ensureWidgetVisible(container);
         // TODO

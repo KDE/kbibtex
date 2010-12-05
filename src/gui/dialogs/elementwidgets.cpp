@@ -49,6 +49,29 @@
 
 static const unsigned int interColumnSpace = 16;
 
+ElementWidget::ElementWidget(QWidget *parent): QWidget(parent), isReadOnly(false), m_isModified(false)
+{
+    setAutoFillBackground(true);
+    setPalette(QPalette(Qt::blue));
+};
+
+bool ElementWidget::isModified() const
+{
+    return m_isModified;
+}
+
+void ElementWidget::setModified(bool newIsModified)
+{
+    m_isModified = newIsModified;
+
+    emit modified(newIsModified);
+}
+
+void ElementWidget::gotModified()
+{
+    setModified(true);
+}
+
 EntryConfiguredWidget::EntryConfiguredWidget(EntryTabLayout &entryTabLayout, QWidget *parent)
         : ElementWidget(parent), etl(entryTabLayout)
 {
@@ -135,6 +158,7 @@ void EntryConfiguredWidget::createGUI()
         KBibTeX::TypeFlag preferredTypeFlag = fd == NULL ? KBibTeX::tfSource : fd->preferredTypeFlag;
         FieldInput *fieldInput = new FieldInput((*sflit).fieldInputLayout, preferredTypeFlag, typeFlags, this);
         bibtexKeyToWidget.insert((*sflit).bibtexLabel, fieldInput);
+        connect(fieldInput, SIGNAL(modified()), this, SLOT(gotModified()));
 
         bool isMultiLine = (*sflit).fieldInputLayout == KBibTeX::MultiLine || (*sflit).fieldInputLayout == KBibTeX::List;
 
@@ -196,6 +220,11 @@ bool ReferenceWidget::apply(Element *element) const
 
 bool ReferenceWidget::reset(const Element *element)
 {
+    /// if signals are not deactivated, the "modified" signal would be emitted when
+    /// resetting the widgets' values
+    disconnect(entryType, SIGNAL(editTextChanged(QString)), this, SLOT(gotModified()));
+    disconnect(entryId, SIGNAL(textChanged(QString)), this, SLOT(gotModified()));
+
     bool result = false;
     const Entry *entry = dynamic_cast<const Entry*>(element);
     if (entry != NULL) {
@@ -204,9 +233,10 @@ bool ReferenceWidget::reset(const Element *element)
         QString type = be->format(entry->type(), KBibTeX::cUpperCamelCase);
         entryType->lineEdit()->setText(type);
         type = type.toLower();
-        for (BibTeXEntries::ConstIterator it = be->constBegin(); it != be->constEnd(); ++it)
+        int index = 0;
+        for (BibTeXEntries::ConstIterator it = be->constBegin(); it != be->constEnd(); ++it, ++index)
             if (type == it->upperCamelCase.toLower()) {
-                entryType->lineEdit()->setText(it->label);
+                entryType->setCurrentIndex(index);
                 break;
             }
         entryId->setText(entry->id());
@@ -220,6 +250,9 @@ bool ReferenceWidget::reset(const Element *element)
             result = true;
         }
     }
+
+    connect(entryType, SIGNAL(editTextChanged(QString)), this, SLOT(gotModified()));
+    connect(entryId, SIGNAL(textChanged(QString)), this, SLOT(gotModified()));
 
     return result;
 }
@@ -271,6 +304,9 @@ void ReferenceWidget::createGUI()
     BibTeXEntries *be = BibTeXEntries::self();
     for (BibTeXEntries::ConstIterator it = be->constBegin(); it != be->constEnd(); ++it)
         entryType->addItem(it->label, it->upperCamelCase);
+
+    connect(entryType, SIGNAL(editTextChanged(QString)), this, SLOT(gotModified()));
+    connect(entryId, SIGNAL(textChanged(QString)), this, SLOT(gotModified()));
 }
 
 
@@ -280,6 +316,7 @@ FilesWidget::FilesWidget(QWidget *parent)
     QVBoxLayout *layout = new QVBoxLayout(this);
     fileList = new FieldInput(KBibTeX::List, KBibTeX::tfVerbatim, KBibTeX::tfVerbatim | KBibTeX::tfSource, this);
     layout->addWidget(fileList);
+    connect(fileList, SIGNAL(modified()), this, SLOT(gotModified()));
 }
 
 bool FilesWidget::apply(Element *element) const
@@ -513,7 +550,7 @@ void OtherFieldsWidget::actionAddApply()
     updateList();
     updateGUI();
 
-    emit modified();
+    gotModified();
 }
 
 void OtherFieldsWidget::actionDelete()
@@ -529,7 +566,7 @@ void OtherFieldsWidget::actionDelete()
     updateGUI();
     listCurrentChanged(otherFieldsList->currentItem(), NULL);
 
-    emit modified();
+    gotModified();
 }
 
 void OtherFieldsWidget::actionOpen()
@@ -680,6 +717,8 @@ void MacroWidget::createGUI()
     fieldInputValue = new FieldInput(KBibTeX::MultiLine, KBibTeX::tfPlainText, KBibTeX::tfPlainText | KBibTeX::tfSource, this);
     layout->addWidget(fieldInputValue, 1);
     label->setBuddy(fieldInputValue);
+
+    connect(fieldInputValue, SIGNAL(modified()), this, SLOT(gotModified()));
 }
 
 
@@ -742,6 +781,8 @@ void PreambleWidget::createGUI()
     fieldInputValue = new FieldInput(KBibTeX::MultiLine, KBibTeX::tfPlainText, KBibTeX::tfPlainText | KBibTeX::tfSource, this);
     layout->addWidget(fieldInputValue, 1);
     label->setBuddy(fieldInputValue);
+
+    connect(fieldInputValue, SIGNAL(modified()), this, SLOT(gotModified()));
 }
 
 
@@ -783,6 +824,10 @@ bool SourceWidget::apply(Element *element) const
 
 bool SourceWidget::reset(const Element *element)
 {
+    /// if signals are not deactivated, the "modified" signal would be emitted when
+    /// resetting the widget's value
+    disconnect(sourceEdit, SIGNAL(textChanged()), this, SLOT(gotModified()));
+
     FileExporterBibTeX exporter;
     QBuffer textBuffer;
     textBuffer.open(QIODevice::WriteOnly);
@@ -792,6 +837,9 @@ bool SourceWidget::reset(const Element *element)
     QTextStream ts(&textBuffer);
     originalText = ts.readAll();
     sourceEdit->document()->setPlainText(originalText);
+
+    connect(sourceEdit, SIGNAL(textChanged()), this, SLOT(gotModified()));
+
     return result;
 }
 
@@ -837,10 +885,17 @@ void SourceWidget::createGUI()
     layout->addWidget(m_buttonRestore, 1, 2, 1, 1);
     connect(m_buttonRestore, SIGNAL(clicked()), this, SLOT(reset()));
 
-    connect(sourceEdit, SIGNAL(textChanged()), this, SIGNAL(modified()));
+    connect(sourceEdit, SIGNAL(textChanged()), this, SLOT(gotModified()));
 }
 
 void SourceWidget::reset()
 {
+    /// if signals are not deactivated, the "modified" signal would be emitted when
+    /// resetting the widget's value
+    disconnect(sourceEdit, SIGNAL(textChanged()), this, SLOT(gotModified()));
+
     sourceEdit->document()->setPlainText(originalText);
+    setModified(false);
+
+    connect(sourceEdit, SIGNAL(textChanged()), this, SLOT(gotModified()));
 }

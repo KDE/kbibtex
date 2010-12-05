@@ -63,7 +63,6 @@ public:
         if (isMultiLine) {
             m_multiLineEditText = new QTextEdit(p);
             hLayout->addWidget(m_multiLineEditText);
-            connect(m_multiLineEditText->document(), SIGNAL(modificationChanged(bool)), p, SIGNAL(editingFinished()));
             connect(m_multiLineEditText, SIGNAL(textChanged()), p, SLOT(slotTextChanged()));
             m_multiLineEditText->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
             p->setFocusProxy(m_multiLineEditText);
@@ -72,7 +71,6 @@ public:
             hLayout->addWidget(m_singleLineEditText);
             hLayout->setStretchFactor(m_singleLineEditText, 100);
             m_singleLineEditText->setClearButtonShown(true);
-            connect(m_singleLineEditText, SIGNAL(editingFinished()), p, SIGNAL(editingFinished()));
             connect(m_singleLineEditText, SIGNAL(textChanged(QString)), p, SIGNAL(textChanged(QString)));
             m_singleLineEditText->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
             p->setFocusProxy(m_singleLineEditText);

@@ -47,7 +47,7 @@ class ElementWidget : public QWidget
     Q_OBJECT
 
 public:
-    ElementWidget(QWidget *parent): QWidget(parent), isReadOnly(false) {};
+    ElementWidget(QWidget *parent);
     virtual bool apply(Element *element) const = 0;
     virtual bool reset(const Element *element) = 0;
     virtual void setReadOnly(bool isReadOnly) {
@@ -55,6 +55,8 @@ public:
     };
     virtual QString label() = 0;
     virtual KIcon icon() = 0;
+    bool isModified() const;
+    void setModified(bool);
 
     static bool canEdit(const Element *element) {
         Q_UNUSED(element)
@@ -64,8 +66,14 @@ public:
 protected:
     bool isReadOnly;
 
+protected slots:
+    void gotModified();
+
+private:
+    bool m_isModified;
+
 signals:
-    void modified();
+    void modified(bool);
 };
 
 class EntryConfiguredWidget : public ElementWidget

@@ -45,6 +45,7 @@ private:
     KPushButton *resetColorButton;
     QWidget *colorWidget;
     QMenu *colorMenu;
+    QSignalMapper *colorSignalMapper;
 
 public:
     KBibTeX::FieldInputType fieldInputType;
@@ -64,7 +65,6 @@ public:
         case KBibTeX::MultiLine:
             fieldLineEdit = new FieldLineEdit(preferredTypeFlag, typeFlags, true, p);
             layout->addWidget(fieldLineEdit);
-            connect(fieldLineEdit, SIGNAL(editingFinished()), p, SIGNAL(modified()));
             break;
         case KBibTeX::List:
             fieldListEdit = new FieldListEdit(preferredTypeFlag, typeFlags, p);
@@ -73,7 +73,6 @@ public:
         case KBibTeX::Month: {
             fieldLineEdit = new FieldLineEdit(preferredTypeFlag, typeFlags, false, p);
             layout->addWidget(fieldLineEdit);
-            connect(fieldLineEdit, SIGNAL(editingFinished()), p, SIGNAL(modified()));
             KPushButton *monthSelector = new KPushButton(KIcon("view-calendar-month"), "");
             fieldLineEdit->prependWidget(monthSelector);
 
@@ -100,8 +99,8 @@ public:
             layout->addWidget(resetColorButton, 0, Qt::AlignLeft);
             connect(resetColorButton, SIGNAL(clicked()), p, SLOT(resetColor()));
 
-            QSignalMapper *sm = new QSignalMapper(predefColorButton);
-            connect(sm, SIGNAL(mapped(QString)), p, SLOT(setColor(QString)));
+            colorSignalMapper = new QSignalMapper(predefColorButton);
+            connect(colorSignalMapper, SIGNAL(mapped(QString)), p, SLOT(setColor(QString)));
             colorMenu = new QMenu(predefColorButton);
             predefColorButton->setMenu(colorMenu);
 
@@ -109,20 +108,21 @@ public:
 
             QAction *action = colorAction(i18n("Important"), "#cc3300");
             colorMenu->addAction(action);
-            sm->setMapping(action, "#cc3300");
-            connect(action, SIGNAL(triggered()), sm, SLOT(map()));
+            colorSignalMapper->setMapping(action, "#cc3300");
+            connect(action, SIGNAL(triggered()), colorSignalMapper, SLOT(map()));
 
             action = colorAction(i18n("Read"), "#009966");
             colorMenu->addAction(action);
-            sm->setMapping(action, "#009966");
-            connect(action, SIGNAL(triggered()), sm, SLOT(map()));
+            colorSignalMapper->setMapping(action, "#009966");
+            connect(action, SIGNAL(triggered()), colorSignalMapper, SLOT(map()));
         }
         break;
         default:
             fieldLineEdit = new FieldLineEdit(preferredTypeFlag, typeFlags, false, p);
             layout->addWidget(fieldLineEdit);
-            connect(fieldLineEdit, SIGNAL(editingFinished()), p, SIGNAL(modified()));
         }
+
+        enalbeModifiedSignal();
     }
 
     QAction *colorAction(const QString&label, const QString &color) {
@@ -136,19 +136,27 @@ public:
     }
 
     void clear() {
+        disableModifiedSignal();
         if (fieldLineEdit != NULL)
             fieldLineEdit->setText("");
         else if (fieldListEdit != NULL)
             fieldListEdit->clear();
+        enalbeModifiedSignal();
     }
 
     bool reset(const Value& value) {
+        /// if signals are not deactivated, the "modified" signal would be emitted when
+        /// resetting the widget's value
+        disableModifiedSignal();
+
         bool result = false;
         if (fieldLineEdit != NULL)
             result = fieldLineEdit->reset(value);
         else if (fieldListEdit != NULL)
             result = fieldListEdit->reset(value);
         else if (colorWidget != NULL) {
+            disconnect(colorButton, SIGNAL(changed(QColor)), p, SIGNAL(modified()));
+
             VerbatimText *verbatimText = NULL;
             if (value.count() == 1 && (verbatimText = dynamic_cast<VerbatimText*>(value.first())) != NULL)
                 colorButton->setColor(QColor(verbatimText->text()));
@@ -156,6 +164,8 @@ public:
                 p->resetColor();
             result = true;
         }
+
+        enalbeModifiedSignal();
         return result;
     }
 
@@ -183,6 +193,32 @@ public:
         else if (fieldListEdit != NULL)
             fieldListEdit->setReadOnly(isReadOnly);
     }
+
+    void enalbeModifiedSignal() {
+        if (fieldLineEdit != NULL)
+            connect(fieldLineEdit, SIGNAL(textChanged(QString)), p, SIGNAL(modified()));
+        if (fieldListEdit != NULL)
+            connect(fieldListEdit, SIGNAL(modified()), p, SIGNAL(modified()));
+        if (colorButton != NULL) {
+            connect(resetColorButton, SIGNAL(clicked()), p, SIGNAL(modified()));
+            connect(colorButton, SIGNAL(changed(QColor)), p, SIGNAL(modified()));
+            connect(colorSignalMapper, SIGNAL(mapped(int)), p, SIGNAL(modified()));
+        }
+        // TODO
+    }
+
+    void disableModifiedSignal() {
+        if (fieldLineEdit != NULL)
+            disconnect(fieldLineEdit, SIGNAL(textChanged(QString)), p, SIGNAL(modified()));
+        if (fieldListEdit != NULL)
+            disconnect(fieldListEdit, SIGNAL(modified()), p, SIGNAL(modified()));
+        if (colorButton != NULL) {
+            disconnect(resetColorButton, SIGNAL(clicked()), p, SIGNAL(modified()));
+            disconnect(colorButton, SIGNAL(changed(QColor)), p, SIGNAL(modified()));
+            disconnect(colorSignalMapper, SIGNAL(mapped(int)), p, SIGNAL(modified()));
+        }
+        // TODO
+    }
 };
 
 FieldInput::FieldInput(KBibTeX::FieldInputType fieldInputType, KBibTeX::TypeFlag preferredTypeFlag, KBibTeX::TypeFlags typeFlags, QWidget *parent)
@@ -201,7 +237,7 @@ void FieldInput::clear()
 
 bool FieldInput::reset(const Value& value)
 {
-    return  d->reset(value);
+    return d->reset(value);
 }
 
 bool FieldInput::apply(Value& value) const
