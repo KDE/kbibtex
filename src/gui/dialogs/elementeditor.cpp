@@ -272,17 +272,19 @@ public:
             buffer.close();
 
             if (!result) {
+                QApplication::restoreOverrideCursor();
                 KMessageBox::errorList(p, i18n("Running BibTeX failed.\n\nSee the following output to trace the error."), bibtexOuput);
                 p->setEnabled(true);
-                QApplication::restoreOverrideCursor();
                 return;
             }
 
             /// define variables how to parse BibTeX's ouput
             const QString warningStart = QLatin1String("Warning--");
             const QRegExp warningEmptyField("empty (\\w+) in ");
+            const QRegExp warningEmptyField2("empty (\\w+) or (\\w+) in ");
             const QRegExp warningThereIsBut("there's a (\\w+) but no (\\w+) in");
             const QRegExp warningSort2("to sort, need (\\w+) or (\\w+) in ");
+            const QRegExp warningSort3("to sort, need (\\w+), (\\w+), or (\\w+) in ");
             const QRegExp errorLine("---line (\\d+)");
 
             /// go line-by-line through BibTeX output and collect warnings/errors
@@ -307,12 +309,18 @@ public:
                     if (warningEmptyField.indexIn(line) > -1) {
                         /// empty/missing field
                         warnings << i18n("Field <b>%1</b> is empty", warningEmptyField.cap(1));
+                    } else if (warningEmptyField2.indexIn(line) > -1) {
+                        /// two empty/missing fields
+                        warnings << i18n("Field <b>%1</b> and <b>%2</b> is empty, need at least one", warningEmptyField2.cap(1), warningEmptyField2.cap(2));
                     } else if (warningThereIsBut.indexIn(line) > -1) {
                         /// there is a field which exists but another does not exist
                         warnings << i18n("Field <b>%1</b> exists, but <b>%2</b> does not exist", warningThereIsBut.cap(1), warningThereIsBut.cap(2));
                     } else if (warningSort2.indexIn(line) > -1) {
                         /// one out of two fields missing for sorting
                         warnings << i18n("Fields <b>%1</b> or <b>%2</b> are required to sort entry", warningSort2.cap(1), warningSort2.cap(2));
+                    } else if (warningSort3.indexIn(line) > -1) {
+                        /// one out of three fields missing for sorting
+                        warnings << i18n("Fields <b>%1</b>, <b>%2</b>, <b>%3</b> are required to sort entry", warningSort3.cap(1), warningSort3.cap(2), warningSort3.cap(3));
                     } else {
                         /// generic/unknown warning
                         line = line.mid(warningStart.length());
