@@ -150,10 +150,11 @@ public:
 
     void apply(Element *element) {
         referenceWidget->apply(element);
-        referenceWidget->setModified(false);
-        ElementWidget *widget = dynamic_cast<ElementWidget*>(tab->currentWidget());
-        widget->apply(element);
-        widget->setModified(false);
+        ElementWidget *currentElementWidget = dynamic_cast<ElementWidget*>(tab->currentWidget());
+        for (QList<ElementWidget*>::ConstIterator it = widgets.constBegin(); it != widgets.constEnd(); ++it)
+            if ((*it) != currentElementWidget && (*it) != sourceWidget)
+                (*it)->apply(element);
+        currentElementWidget->apply(element);
     }
 
     void reset() {
@@ -216,7 +217,8 @@ public:
             previousWidget->apply(temp);
             if (isSourceWidget) referenceWidget->apply(temp);
             newWidget->reset(temp);
-            if (dynamic_cast<SourceWidget*>(previousWidget) != NULL) referenceWidget->reset(temp);
+            if (dynamic_cast<SourceWidget*>(previousWidget) != NULL)
+                referenceWidget->reset(temp);
         }
         previousWidget = newWidget;
 
@@ -344,11 +346,15 @@ public:
 
     bool isModified() {
         bool result = false;
-        for (QList<ElementWidget*>::Iterator it = widgets.begin(); it != widgets.end(); ++it)
+        for (QList<ElementWidget*>::ConstIterator it = widgets.constBegin(); it != widgets.constEnd(); ++it)
             result |= (*it)->isModified();
         return result;
     }
 
+    void setModified(bool newIsModified) {
+        for (QList<ElementWidget*>::Iterator it = widgets.begin(); it != widgets.end(); ++it)
+            (*it)->setModified(newIsModified);
+    }
 };
 
 ElementEditor::ElementEditor(Element *element, const File *file, QWidget *parent)
@@ -390,12 +396,14 @@ ElementEditor::ElementEditor(const Element *element, const File *file, QWidget *
 void ElementEditor::apply()
 {
     d->apply();
+    d->setModified(false);
     emit modified(false);
 }
 
 void ElementEditor::reset()
 {
     d->reset();
+    emit modified(false);
 }
 
 void ElementEditor::setReadOnly(bool isReadOnly)
