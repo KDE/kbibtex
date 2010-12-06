@@ -62,7 +62,9 @@ protected:
     */
 
 protected slots:
-    void saveDocumentDialog();
+    bool documentSave();
+    bool documentSaveAs();
+    bool documentSaveCopyAs();
 
 private slots:
     void newElementTriggered(int event);
