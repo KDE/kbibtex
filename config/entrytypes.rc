@@ -30,3 +30,11 @@ Label=PhD Thesis
 UpperCamelCase=MastersThesis
 Label=Master's Thesis
 
+[EntryType9]
+UpperCamelCase=Unpublished
+Label=Unpublish Material
+
+[EntryType10]
+UpperCamelCase=Manual
+Label=Manual
+
