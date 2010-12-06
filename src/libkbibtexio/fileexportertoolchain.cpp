@@ -19,6 +19,8 @@
 ***************************************************************************/
 #include <stdlib.h>
 
+#include <KDebug>
+
 #include <QCoreApplication>
 #include <QStringList>
 #include <QFile>
@@ -30,7 +32,7 @@
 static const QRegExp chompRegExp = QRegExp("[\\n\\r]+$");
 
 FileExporterToolchain::FileExporterToolchain()
-        : FileExporter(), m_waitCond(), m_waitCondMutex(), m_errorLog(NULL)
+        : FileExporter(), m_errorLog(NULL)
 {
     tempDir.setAutoRemove(true);
 }
@@ -55,30 +57,24 @@ bool FileExporterToolchain::runProcesses(const QStringList &progs, QStringList *
 
 bool FileExporterToolchain::runProcess(const QString &cmd,  const QStringList &args, QStringList *errorLog)
 {
-    bool result = FALSE;
+    bool result = false;
 
     m_process = new QProcess();
+    QProcessEnvironment processEnvironment = QProcessEnvironment::systemEnvironment();
+    /// avoid some paranoid security settings in BibTeX
+    processEnvironment.insert("openout_any", "r");
+    m_process->setProcessEnvironment(processEnvironment);
     m_process->setWorkingDirectory(tempDir.name());
-    connect(m_process, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(slotProcessExited(int, QProcess::ExitStatus)));
     connect(m_process, SIGNAL(readyRead()), this, SLOT(slotReadProcessOutput()));
 
     m_process->start(cmd, args);
     m_errorLog = errorLog;
-    int counter = 0;
 
     if (m_process->waitForStarted(3000)) {
-        QCoreApplication::instance()->processEvents();
-        m_waitCondMutex.lock();
-        while (m_process->state() == QProcess::Running) {
-            m_waitCond.wait(&m_waitCondMutex, 250);
-            QCoreApplication::instance()->processEvents();
-
-            counter++;
-            if (counter > 400)
-                m_process->terminate();
-        }
-        m_waitCondMutex.unlock();
-        result = m_process->exitStatus() == QProcess::NormalExit && counter < 400;
+        if (m_process->waitForFinished(30000))
+            result = m_process->exitStatus() == QProcess::NormalExit;
+        else
+            result = false;
     } else
         result = false;
 
@@ -86,7 +82,6 @@ bool FileExporterToolchain::runProcess(const QString &cmd,  const QStringList &a
         errorLog->append(QString("Process '%1' failed.").arg(args.join(" ")));
 
     disconnect(m_process, SIGNAL(readyRead()), this, SLOT(slotReadProcessOutput()));
-    disconnect(m_process, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(slotProcessExited(int, QProcess::ExitStatus)));
     delete(m_process);
     m_process = NULL;
 
@@ -114,18 +109,12 @@ bool FileExporterToolchain::writeFileToIODevice(const QString &filename, QIODevi
     return false;
 }
 
-void FileExporterToolchain::slotProcessExited(int /*exitCode*/, QProcess::ExitStatus /*exitStatus*/)
-{
-    m_waitCond.wakeAll();
-}
-
 void FileExporterToolchain::cancel()
 {
     if (m_process != NULL) {
         qWarning("Canceling process");
         m_process->terminate();
         m_process->kill();
-        m_waitCond.wakeAll();
     }
 }
 
@@ -149,28 +138,18 @@ void FileExporterToolchain::slotReadProcessOutput()
 
 bool FileExporterToolchain::kpsewhich(const QString& filename)
 {
-    bool result = FALSE;
-    int counter = 0;
+    bool result = false;
 
-    QWaitCondition waitCond;
-    QMutex waitCondMutex;
     QProcess kpsewhich;
     QStringList param;
     param << filename;
     kpsewhich.start("kpsewhich", param);
 
     if (kpsewhich.waitForStarted(3000)) {
-        waitCondMutex.lock();
-        while (kpsewhich.state() == QProcess::Running) {
-            waitCond.wait(&waitCondMutex, 250);
-            QCoreApplication::instance()->processEvents();
-
-            counter++;
-            if (counter > 50)
-                kpsewhich.terminate();
-        }
-        waitCondMutex.unlock();
-        result = kpsewhich.exitStatus() == QProcess::NormalExit && counter < 50;
+        if (kpsewhich.waitForFinished(30000))
+            result = kpsewhich.exitStatus() == QProcess::NormalExit;
+        else
+            result = false;
     } else
         result = false;
 

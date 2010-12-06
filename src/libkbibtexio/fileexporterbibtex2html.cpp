@@ -52,15 +52,15 @@ public:
         QStringList args;
         args << "-s" << bibStyle; /// BibTeX style (plain, alpha, ...)
         args << "-o" << outputFilenameNoEnding; /// redirect the output
-        // args<<"-i"; /// ignore BibTeX errors
+        args << "-nokeys"; /// do not print the BibTeX keys
+        args << "-nolinks"; /// do not print any web link
         args << "-nodoc"; /// only produces the body of the HTML documents
         args << "-nobibsource"; /// do not produce the BibTeX entries file
         args << "-debug"; /// verbose mode (to find incorrect BibTeX entries)
         args << bibTeXFilename;
-        kDebug() << args.join(" ") << endl;
+
         bool result = p->runProcess("bibtex2html", args, errorLog) && p->writeFileToIODevice(outputFilename, iodevice);
 
-        if (errorLog != NULL) kDebug() << errorLog->join("") << endl;
         return result;
     }
 
@@ -103,7 +103,6 @@ FileExporterBibTeX2HTML::~FileExporterBibTeX2HTML()
 
 bool FileExporterBibTeX2HTML::save(QIODevice* iodevice, const File* bibtexfile, QStringList *errorLog)
 {
-    // m_mutex.lock(); // FIXME: required?
     bool result = false;
 
     QFile output(d->bibTeXFilename);
@@ -117,13 +116,11 @@ bool FileExporterBibTeX2HTML::save(QIODevice* iodevice, const File* bibtexfile, 
     if (result)
         result = d->generateHTML(iodevice, errorLog);
 
-    // m_mutex.unlock(); // FIXME: required?
     return result;
 }
 
 bool FileExporterBibTeX2HTML::save(QIODevice* iodevice, const Element* element, QStringList *errorLog)
 {
-    // m_mutex.lock(); // FIXME: required?
     bool result = false;
 
     QFile output(d->bibTeXFilename);
@@ -137,7 +134,6 @@ bool FileExporterBibTeX2HTML::save(QIODevice* iodevice, const Element* element, 
     if (result)
         result = d->generateHTML(iodevice, errorLog);
 
-    // m_mutex.unlock(); // FIXME: required?
     return result;
 }
 

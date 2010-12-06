@@ -21,8 +21,6 @@
 #define BIBTEXFILEEXPORTERTOOLCHAIN_H
 
 #include <QProcess>
-#include <QWaitCondition>
-#include <QMutex>
 
 #include <KTempDir>
 
@@ -54,13 +52,10 @@ protected:
     bool writeFileToIODevice(const QString &filename, QIODevice *device);
 
 private:
-    QWaitCondition m_waitCond;
-    QMutex m_waitCondMutex;
     QProcess *m_process;
     QStringList *m_errorLog;
 
 private slots:
-    void slotProcessExited(int, QProcess::ExitStatus);
     void slotReadProcessOutput();
 
 };
