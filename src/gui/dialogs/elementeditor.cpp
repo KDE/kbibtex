@@ -59,7 +59,7 @@ public:
     QTabWidget *tab;
 
     ElementEditorPrivate(Element *m, const File *f, ElementEditor *parent)
-            : element(m), file(f), p(parent), previousWidget(NULL) {
+            : element(m), file(f), p(parent), previousWidget(NULL), referenceWidget(NULL), sourceWidget(NULL) {
         createGUI();
     }
 
@@ -149,7 +149,8 @@ public:
     }
 
     void apply(Element *element) {
-        referenceWidget->apply(element);
+        if (referenceWidget != NULL)
+            referenceWidget->apply(element);
         ElementWidget *currentElementWidget = dynamic_cast<ElementWidget*>(tab->currentWidget());
         for (QList<ElementWidget*>::ConstIterator it = widgets.constBegin(); it != widgets.constEnd(); ++it)
             if ((*it) != currentElementWidget && (*it) != sourceWidget)
