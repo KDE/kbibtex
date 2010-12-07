@@ -25,6 +25,8 @@
 
 #include <KUrl>
 
+class QDockWidget;
+
 class KJob;
 namespace KIO
 {
@@ -38,7 +40,7 @@ class UrlPreview : public QWidget
 {
     Q_OBJECT
 public:
-    UrlPreview(QWidget *parent);
+    UrlPreview(QDockWidget *parent);
 
 public slots:
     void setElement(Element*, const File *);
@@ -53,6 +55,7 @@ private:
 private slots:
     void openExternally();
     void onlyLocalFilesChanged();
+    void visibilityChanged(bool);
 };
 
 #endif // KBIBTEX_PROGRAM_URLPREVIEW_H

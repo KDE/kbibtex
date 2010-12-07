@@ -28,6 +28,7 @@
 #include <QDesktopServices>
 #include <QCheckBox>
 #include <QStackedWidget>
+#include <QDockWidget>
 
 #include <KLocale>
 #include <KComboBox>
@@ -66,13 +67,22 @@ public:
     KUrl baseUrl;
 
     UrlPreviewPrivate(UrlPreview *parent)
-            : p(parent) {
+            : p(parent), entry(NULL) {
         setupGUI();
     }
 
+    /**
+      * Create user interface for this widget.
+      * It consists of some controlling widget on the top,
+      * but the most space is consumed by KPart widgets
+      * inside a QStackedWidget to show the external content
+      * (PDF file, web page, ...).
+      */
     void setupGUI() {
         QVBoxLayout *layout = new QVBoxLayout(p);
         layout->setMargin(0);
+
+        /// some widgets on the top to control the view
 
         QHBoxLayout *innerLayout = new QHBoxLayout();
         layout->addLayout(innerLayout, 0);
@@ -85,10 +95,14 @@ public:
         onlyLocalFilesCheckBox = new QCheckBox(i18n("Only local files"), p);
         layout->addWidget(onlyLocalFilesCheckBox, 0);
 
+        /// main part of the widget: A stacked widget to hold
+        /// one KPart widget per URL in above combo box
+
         stackedWidget = new QStackedWidget(p);
         layout->addWidget(stackedWidget, 1);
         stackedWidget->hide();
 
+        /// default widget if no preview is available
         message = new QLabel(i18n("No preview available"), p);
         message->setAlignment(Qt::AlignCenter);
         layout->addWidget(message, 1);
@@ -103,39 +117,52 @@ public:
         while (stackedWidget->count() > 0)
             stackedWidget->removeWidget(stackedWidget->currentWidget());
 
-        int localUrlIndex = 0; /// if no url below is local, use first entry as fall-back
-        QList<KUrl> urlList = FileInfo::entryUrls(entry, baseUrl);
-        for (QList<KUrl>::ConstIterator it = urlList.constBegin(); it != urlList.constEnd(); ++it) {
-            if (onlyLocalFilesCheckBox->isChecked() && !(*it).isLocalFile()) continue;
+        /// if no url below is local, use first entry as fall-back
+        int localUrlIndex = 0;
+        /// do not load external reference if widget is hidden
+        bool thereIsALocaleFile = false;
+        bool thereIsARemoteUrl = false;
+        if (isVisible()) {
+            QList<KUrl> urlList = FileInfo::entryUrls(entry, baseUrl);
+            for (QList<KUrl>::ConstIterator it = urlList.constBegin(); it != urlList.constEnd(); ++it) {
+                thereIsALocaleFile |= (*it).isLocalFile();
+                thereIsARemoteUrl |= !(*it).isLocalFile();
+                if (onlyLocalFilesCheckBox->isChecked() && !(*it).isLocalFile()) continue;
 
-            QString fn = (*it).fileName();
-            QString full = (*it).pathOrUrl();
-            QString dir = full.left(full.size() - fn.size());
-            QString text = fn.isEmpty() ? full : (dir.isEmpty() ? fn : QString("%1 [%2]").arg(fn).arg(dir));
-            QPair<QString, KIcon> mimeTypeIcon = mimeType(*it);
-            urlComboBox->addItem(mimeTypeIcon.second, text);
-            if ((*it).isLocalFile()) /// memorize url's index in drop-down list
-                localUrlIndex = urlComboBox->count() - 1;
-            cbxEntryToUrl.insert(urlComboBox->count() - 1, *it);
+                QString fn = (*it).fileName();
+                QString full = (*it).pathOrUrl();
+                QString dir = full.left(full.size() - fn.size());
+                QString text = fn.isEmpty() ? full : (dir.isEmpty() ? fn : QString("%1 [%2]").arg(fn).arg(dir));
+                QPair<QString, KIcon> mimeTypeIcon = mimeType(*it);
+                urlComboBox->addItem(mimeTypeIcon.second, text);
+                if ((*it).isLocalFile()) /// memorize url's index in drop-down list
+                    localUrlIndex = urlComboBox->count() - 1;
+                cbxEntryToUrl.insert(urlComboBox->count() - 1, *it);
 
-            KParts::ReadOnlyPart* part = NULL;
-            KService::Ptr serivcePtr = KMimeTypeTrader::self()->preferredService(mimeTypeIcon.first, "KParts/ReadOnlyPart");
-            if (!serivcePtr.isNull())
-                part = serivcePtr->createInstance<KParts::ReadOnlyPart>((QWidget*)p, (QObject*)p);
-            if (part != NULL) {
-                stackedWidget->addWidget(part->widget());
-                part->openUrl(*it);
-            } else {
-                QLabel *label = new QLabel(i18n("Cannot create preview for\n%1", (*it).pathOrUrl()), stackedWidget);
-                message->setAlignment(Qt::AlignCenter);
-                stackedWidget->addWidget(label);
+                KParts::ReadOnlyPart* part = NULL;
+                KService::Ptr serivcePtr = KMimeTypeTrader::self()->preferredService(mimeTypeIcon.first, "KParts/ReadOnlyPart");
+
+                if (!serivcePtr.isNull())
+                    part = serivcePtr->createInstance<KParts::ReadOnlyPart>((QWidget*)p, (QObject*)p);
+                if (part != NULL) {
+                    stackedWidget->addWidget(part->widget());
+                    part->openUrl(*it);
+                } else {
+                    QLabel *label = new QLabel(i18n("Cannot create preview for\n%1\n\nNo part available.", (*it).pathOrUrl()), stackedWidget);
+                    message->setAlignment(Qt::AlignCenter);
+                    stackedWidget->addWidget(label);
+                }
             }
         }
 
-        urlComboBox->setEnabled(urlComboBox->count() > 0);
-        externalViewerButton->setEnabled(urlComboBox->count() > 0);
+        /// enable/disable controlling widgets if there is something to control
+        bool somethingToControl = urlComboBox->count() > 0;
+        urlComboBox->setEnabled(somethingToControl);
+        externalViewerButton->setEnabled(somethingToControl);
+        onlyLocalFilesCheckBox->setEnabled(thereIsALocaleFile && thereIsARemoteUrl);
 
-        if (urlComboBox->count() > 0) {
+        /// show either stack widget with KPart widgets -or- message "nothing to see here"
+        if (somethingToControl) {
             urlComboBox->setCurrentIndex(localUrlIndex);
             message->hide();
             stackedWidget->show();
@@ -177,12 +204,19 @@ public:
 
         return QPair<QString, KIcon>(mimeTypeName, icon);
     }
+
+    bool isVisible() {
+        /// get dock where this widget is inside
+        /// static cast is save as constructor requires parent to be QDockWidget
+        QDockWidget *pp = static_cast<QDockWidget*>(p->parent());
+        return pp != NULL && !pp->isHidden();
+    }
 };
 
-UrlPreview::UrlPreview(QWidget *parent)
+UrlPreview::UrlPreview(QDockWidget *parent)
         : QWidget(parent), d(new UrlPreviewPrivate(this))
 {
-    setEnabled(false);
+    connect(parent, SIGNAL(visibilityChanged(bool)), this, SLOT(visibilityChanged(bool)));
 }
 
 void UrlPreview::setElement(Element* element, const File *)
@@ -202,6 +236,11 @@ void UrlPreview::setBibTeXUrl(const KUrl&url)
 }
 
 void UrlPreview::onlyLocalFilesChanged()
+{
+    d->update();
+}
+
+void UrlPreview::visibilityChanged(bool)
 {
     d->update();
 }
