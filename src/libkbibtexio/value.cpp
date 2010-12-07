@@ -361,10 +361,13 @@ QString PlainTextValue::text(const ValueItem& valueItem, ValueItemType &vit, con
         }
     }
 
+    /// remove curly brackets
     int i = -1;
     while ((i = result.indexOf(removeCurlyBrackets, i + 1)) >= 0) {
         result = result.replace(removeCurlyBrackets.cap(0), removeCurlyBrackets.cap(1));
     }
+    /// remove hyphenation commands
+    result = result.replace(QLatin1String("\\-"), QLatin1String(""));
 
     if (debug) result = "[:" + result + ":Debug]";
     return result;
