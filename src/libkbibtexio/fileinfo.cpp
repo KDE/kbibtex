@@ -28,6 +28,7 @@
 #include "fileinfo.h"
 
 static const QRegExp regExpFileExtension = QRegExp("\\.[a-z0-9]{1,4}", Qt::CaseInsensitive);
+static const QRegExp regExpEscapedChars = QRegExp("\\\\+([&_~])");
 
 FileInfo::FileInfo()
 {
@@ -44,6 +45,10 @@ QList<KUrl> FileInfo::entryUrls(const Entry *entry, const KUrl &baseUrl)
         QString plainText = PlainTextValue::text(*it, NULL);
 
         int pos = -1;
+        while ((pos = regExpEscapedChars.indexIn(plainText, pos + 1)) != -1)
+            plainText = plainText.replace(regExpEscapedChars.cap(0), regExpEscapedChars.cap(1));
+
+        pos = -1;
         while ((pos = KBibTeX::urlRegExp.indexIn(plainText, pos + 1)) != -1) {
             KUrl url(KBibTeX::urlRegExp.cap(0));
             if (url.isValid() && (!url.isLocalFile() || QFileInfo(KBibTeX::urlRegExp.cap(0)).exists()))
@@ -63,12 +68,34 @@ QList<KUrl> FileInfo::entryUrls(const Entry *entry, const KUrl &baseUrl)
                 result << KUrl(*ptit);
     }
 
+    /// explicitly check URL entry, may be an URL even if http:// or alike is missing
+    QString plainText = PlainTextValue::text(entry->value(Entry::ftUrl), NULL);
+    if (!plainText.isEmpty()) {
+        int pos = -1;
+        while ((pos = regExpEscapedChars.indexIn(plainText, pos + 1)) != -1)
+            plainText = plainText.replace(regExpEscapedChars.cap(0), regExpEscapedChars.cap(1));
+
+        if (plainText.indexOf("://")) {
+            /// no protocol, assume http
+            plainText = plainText.prepend("http://");
+        }
+
+        KUrl url(plainText);
+        if (url.isValid() && (!url.isLocalFile() || QFileInfo(KBibTeX::urlRegExp.cap(0)).exists()))
+            result << url;
+    }
+
     if (baseUrl.isValid() && baseUrl.isLocalFile()) {
+        /// check if in the same directory as the BibTeX file
+        /// a PDF file exists which filename is based on the entry's id
         KUrl url = baseUrl;
         url.setFileName(entry->id() + ".pdf"); // FIXME: Test more extensions
         if (QFileInfo(url.path()).exists())
             result << url;
 
+        /// check if in the same directory as the BibTeX file there is a subdirectory
+        /// similar to the BibTeX file's name and which contains a PDF file exists
+        /// which filename is based on the entry's id
         url = baseUrl;
         QString basename = baseUrl.fileName().replace(QRegExp("\\.[^.]{2,5}$"), "");
         url.setPath(url.path().replace(baseUrl.fileName(), basename) + QDir::separator() + basename);
