@@ -18,6 +18,8 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
+#include <QDropEvent>
+
 #include <KDialog>
 #include <KLocale>
 #include <KDebug>
@@ -209,7 +211,8 @@ void BibTeXEditor::dragEnterEvent(QDragEnterEvent *event)
 
 void BibTeXEditor::dropEvent(QDropEvent *event)
 {
-    emit editorDropEvent(event);
+    if (event->source() != this)
+        emit editorDropEvent(event);
 }
 
 void BibTeXEditor::dragMoveEvent(QDragMoveEvent *event)
