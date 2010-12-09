@@ -140,28 +140,33 @@ public:
 
     bool apply(Value& value) const {
         value.clear();
-        QString text = parent->text();
+        const QString text = parent->text();
 
-        if (text.isEmpty())
+        EncoderLaTeX *encoder = EncoderLaTeX::currentEncoderLaTeX();
+        const QString encodedText = encoder->decode(text);
+        if (encodedText != text)
+            parent->setText(encodedText);
+
+        if (encodedText.isEmpty())
             return true;
         else if (typeFlag == KBibTeX::tfPlainText) {
-            value.append(new PlainText(text));
+            value.append(new PlainText(encodedText));
             return true;
-        } else if (typeFlag == KBibTeX::tfReference && !text.contains(QRegExp("[^-_:/a-zA-Z0-9]"))) {
-            value.append(new MacroKey(text));
+        } else if (typeFlag == KBibTeX::tfReference && !encodedText.contains(QRegExp("[^-_:/a-zA-Z0-9]"))) {
+            value.append(new MacroKey(encodedText));
             return true;
         } else if (typeFlag == KBibTeX::tfPerson) {
-            value.append(FileImporterBibTeX::splitName(text));
+            value.append(FileImporterBibTeX::splitName(encodedText));
             return true;
         } else if (typeFlag == KBibTeX::tfKeyword) {
-            QList<Keyword*> keywords = FileImporterBibTeX::splitKeywords(text);
+            QList<Keyword*> keywords = FileImporterBibTeX::splitKeywords(encodedText);
             for (QList<Keyword*>::Iterator it = keywords.begin(); it != keywords.end(); ++it)
                 value.append(*it);
             return true;
         } else if (typeFlag == KBibTeX::tfSource) {
             QString key = typeFlags.testFlag(KBibTeX::tfPerson) ? "author" : "title";
             FileImporterBibTeX importer;
-            QString fakeBibTeXFile = QString("@article{dummy, %1=%2}").arg(key).arg(text);
+            QString fakeBibTeXFile = QString("@article{dummy, %1=%2}").arg(key).arg(encodedText);
             kDebug() << "fakeBibTeXFile=" << fakeBibTeXFile << endl;
 
             File *file = importer.fromString(fakeBibTeXFile);
@@ -177,7 +182,7 @@ public:
                 kWarning() << "Parsing " << fakeBibTeXFile << " did not result in valid file";
             return !value.isEmpty();
         } else if (typeFlag == KBibTeX::tfVerbatim) {
-            value.append(new VerbatimText(text));
+            value.append(new VerbatimText(encodedText));
             return true;
         }
 
