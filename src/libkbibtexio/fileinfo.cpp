@@ -75,7 +75,7 @@ QList<KUrl> FileInfo::entryUrls(const Entry *entry, const KUrl &baseUrl)
         while ((pos = regExpEscapedChars.indexIn(plainText, pos + 1)) != -1)
             plainText = plainText.replace(regExpEscapedChars.cap(0), regExpEscapedChars.cap(1));
 
-        if (plainText.indexOf("://")) {
+        if (plainText.indexOf("://") < 0) {
             /// no protocol, assume http
             plainText = plainText.prepend("http://");
         }
