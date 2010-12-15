@@ -51,21 +51,24 @@ QList<KUrl> FileInfo::entryUrls(const Entry *entry, const KUrl &baseUrl)
         pos = -1;
         while ((pos = KBibTeX::urlRegExp.indexIn(plainText, pos + 1)) != -1) {
             KUrl url(KBibTeX::urlRegExp.cap(0));
-            if (url.isValid() && (!url.isLocalFile() || QFileInfo(KBibTeX::urlRegExp.cap(0)).exists()))
+            if (url.isValid() && (!url.isLocalFile() || QFileInfo(KBibTeX::urlRegExp.cap(0)).exists()) && !result.contains(url))
                 result << url;
         }
 
         pos = -1;
         while ((pos = KBibTeX::doiRegExp.indexIn(plainText, pos + 1)) != -1) {
             KUrl url(KBibTeX::doiUrlPrefix + KBibTeX::doiRegExp.cap(0).replace("\\", ""));
-            if (url.isValid())
+            if (url.isValid() && !result.contains(url))
                 result << url;
         }
 
         QStringList fileList = plainText.split(QRegExp("[;]?[ \t\n\r]+"));
         for (QStringList::ConstIterator ptit = fileList.constBegin(); ptit != fileList.constEnd();++ptit)
-            if (QFileInfo(*ptit).exists() && ((*ptit).contains(QDir::separator()) || (*ptit).contains(regExpFileExtension)))
-                result << KUrl(*ptit);
+            if (QFileInfo(*ptit).exists() && ((*ptit).contains(QDir::separator()) || (*ptit).contains(regExpFileExtension))) {
+                KUrl url(*ptit);
+                if (!result.contains(url))
+                    result << url;
+            }
     }
 
     /// explicitly check URL entry, may be an URL even if http:// or alike is missing
@@ -81,8 +84,9 @@ QList<KUrl> FileInfo::entryUrls(const Entry *entry, const KUrl &baseUrl)
         }
 
         KUrl url(plainText);
-        if (url.isValid() && (!url.isLocalFile() || QFileInfo(KBibTeX::urlRegExp.cap(0)).exists()))
+        if (url.isValid() && (!url.isLocalFile() || QFileInfo(KBibTeX::urlRegExp.cap(0)).exists()) && !result.contains(url))
             result << url;
+
     }
 
     if (baseUrl.isValid() && baseUrl.isLocalFile()) {
@@ -90,7 +94,7 @@ QList<KUrl> FileInfo::entryUrls(const Entry *entry, const KUrl &baseUrl)
         /// a PDF file exists which filename is based on the entry's id
         KUrl url = baseUrl;
         url.setFileName(entry->id() + ".pdf"); // FIXME: Test more extensions
-        if (QFileInfo(url.path()).exists())
+        if (QFileInfo(url.path()).exists() && !result.contains(url))
             result << url;
 
         /// check if in the same directory as the BibTeX file there is a subdirectory
@@ -100,7 +104,7 @@ QList<KUrl> FileInfo::entryUrls(const Entry *entry, const KUrl &baseUrl)
         QString basename = baseUrl.fileName().replace(QRegExp("\\.[^.]{2,5}$"), "");
         url.setPath(url.path().replace(baseUrl.fileName(), basename) + QDir::separator() + basename);
         url.setFileName(entry->id() + ".pdf"); // FIXME: Test more extensions
-        if (QFileInfo(url.path()).exists())
+        if (QFileInfo(url.path()).exists() && !result.contains(url))
             result << url;
     }
 
