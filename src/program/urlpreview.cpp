@@ -113,6 +113,9 @@ public:
     }
 
     void update() {
+        QCursor prevCursor = p->cursor();
+        p->setCursor(Qt::WaitCursor);
+        p->setEnabled(false);
         urlComboBox->clear();
         while (stackedWidget->count() > 0)
             stackedWidget->removeWidget(stackedWidget->currentWidget());
@@ -125,18 +128,25 @@ public:
         if (isVisible()) {
             QList<KUrl> urlList = FileInfo::entryUrls(entry, baseUrl);
             for (QList<KUrl>::ConstIterator it = urlList.constBegin(); it != urlList.constEnd(); ++it) {
-                thereIsALocaleFile |= (*it).isLocalFile();
-                thereIsARemoteUrl |= !(*it).isLocalFile();
-                if (onlyLocalFilesCheckBox->isChecked() && !(*it).isLocalFile()) continue;
+                bool isLocal = (*it).isLocalFile();
+                thereIsALocaleFile |= isLocal;
+                thereIsARemoteUrl |= !isLocal;
+                if (onlyLocalFilesCheckBox->isChecked() && !isLocal) continue;
 
-                QString fn = (*it).fileName();
-                QString full = (*it).pathOrUrl();
-                QString dir = full.left(full.size() - fn.size());
-                QString text = fn.isEmpty() ? full : (dir.isEmpty() ? fn : QString("%1 [%2]").arg(fn).arg(dir));
                 QPair<QString, KIcon> mimeTypeIcon = mimeType(*it);
-                urlComboBox->addItem(mimeTypeIcon.second, text);
-                if ((*it).isLocalFile()) /// memorize url's index in drop-down list
+                if (isLocal) {
+                    /// create a drop-down list entry if file is a local file
+                    /// (based on patch by Luis Silva)
+                    QString fn = (*it).fileName();
+                    QString full = (*it).pathOrUrl();
+                    QString dir = (*it).directory();
+                    QString text = fn.isEmpty() ? full : (dir.isEmpty() ? fn : QString("%1 [%2]").arg(fn).arg(dir));
+                    urlComboBox->addItem(mimeTypeIcon.second, text);
                     localUrlIndex = urlComboBox->count() - 1;
+                } else {
+                    /// create a drop-down list entry if file is a remote file
+                    urlComboBox->addItem(mimeTypeIcon.second, (*it).prettyUrl());
+                }
                 cbxEntryToUrl.insert(urlComboBox->count() - 1, *it);
 
                 KParts::ReadOnlyPart* part = NULL;
@@ -159,18 +169,21 @@ public:
         bool somethingToControl = urlComboBox->count() > 0;
         urlComboBox->setEnabled(somethingToControl);
         externalViewerButton->setEnabled(somethingToControl);
-        onlyLocalFilesCheckBox->setEnabled(thereIsALocaleFile && thereIsARemoteUrl);
 
         /// show either stack widget with KPart widgets -or- message "nothing to see here"
         if (somethingToControl) {
             urlComboBox->setCurrentIndex(localUrlIndex);
             message->hide();
+            stackedWidget->setCurrentIndex(localUrlIndex);
             stackedWidget->show();
         } else {
             message->setText(i18n("No preview available"));
             message->show();
             stackedWidget->hide();
         }
+
+        p->setEnabled(true);
+        p->setCursor(prevCursor);
     }
 
     void openExternally() {
