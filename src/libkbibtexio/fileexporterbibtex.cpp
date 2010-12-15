@@ -229,7 +229,7 @@ bool FileExporterBibTeX::writeMacro(QTextStream &stream, const Macro& macro)
     if (m_protectCasing)
         addProtectiveCasing(text);
 
-    stream << "@" << be->format(QLatin1String("String"), m_keywordCasing) << "{ " << macro.key() << " = " << text << " }" << endl << endl;
+    stream << "@" << be->format(QLatin1String("String"), m_keywordCasing) << "{" << macro.key() << " = " << text << " }" << endl << endl;
 
     return TRUE;
 }
@@ -378,6 +378,7 @@ QString FileExporterBibTeX::elementToString(const Element* element)
     QStringList result;
     const Entry *entry = dynamic_cast< const Entry *>(element);
     if (entry != NULL) {
+        result << QString("ID = %1").arg(entry->id());
         for (QMap<QString, Value>::ConstIterator it = entry->begin(); it != entry->end(); ++it)
             result << QString("%1 = {%2}").arg(it.key()).arg(valueToBibTeX(it.value()));
     }

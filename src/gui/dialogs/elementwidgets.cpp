@@ -777,7 +777,7 @@ void PreambleWidget::createGUI()
 
     QLabel *label = new QLabel(i18n("Value:"), this);
     layout->addWidget(label, 0);
-    fieldInputValue = new FieldInput(KBibTeX::MultiLine, KBibTeX::tfPlainText, KBibTeX::tfPlainText | KBibTeX::tfSource, this);
+    fieldInputValue = new FieldInput(KBibTeX::MultiLine, KBibTeX::tfSource, KBibTeX::tfSource, this); // FIXME: other editing modes beyond Source applicable?
     layout->addWidget(fieldInputValue, 1);
     label->setBuddy(fieldInputValue);
 
