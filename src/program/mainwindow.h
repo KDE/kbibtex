@@ -29,7 +29,6 @@ class QDragEnterEvent;
 class QDropEvent;
 
 class KBibTeXProgram;
-class MDIWidget;
 class ReferencePreview;
 class BibTeXEditor;
 

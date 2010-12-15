@@ -75,8 +75,6 @@ void BibTeXEditor::editElement(Element *element)
         return;
     }
 
-    Q_ASSERT_X(element->uniqueId % 1000 == 42, "void BibTeXEditor::editElement(Element *element)", "Invalid Element passed as argument");
-
     KDialog dialog(this);
     ElementEditor elementEditor(element, bibTeXModel()->bibTeXFile(), &dialog);
     dialog.setCaption(i18n("Edit Element"));

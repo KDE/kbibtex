@@ -19,8 +19,6 @@
 ***************************************************************************/
 #include <stdlib.h>
 
-#include <KDebug>
-
 #include <QCoreApplication>
 #include <QStringList>
 #include <QFile>

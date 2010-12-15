@@ -24,7 +24,6 @@
 #include <QLayout>
 #include <QApplication>
 
-#include <KDebug>
 #include <KLocale>
 #include <KComboBox>
 #include <KStandardDirs>
@@ -218,7 +217,6 @@ void ReferencePreview::renderHTML()
         reAnchor.setMinimal(true);
         text.replace(reAnchor, "");
 
-        kDebug() << "HTML >>>>" << endl << text << endl << "HTML <<<<";
         text.prepend("<html><body style=\"font-family: '" + font().family() + "'; font-size: " + QString::number(font().pointSize()) + "pt;\">");
         text.append("</body></html>");
     } else {

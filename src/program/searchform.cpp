@@ -96,6 +96,7 @@ public:
         whichEnginesLabel = new QLabel(queryTermsContainer);
         whichEnginesLabel->setWordWrap(true);
         layout->addWidget(whichEnginesLabel, 0, 0, 1, 2);
+        layout->setRowStretch(0, 10);
         connect(whichEnginesLabel, SIGNAL(linkActivated(QString)), p, SLOT(switchToEngines()));
 
         QSpacerItem *spacer = new QSpacerItem(8, 8);
