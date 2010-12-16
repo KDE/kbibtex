@@ -464,7 +464,14 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value& value, const QStr
 
     do {
         bool isStringKey = FALSE;
-        QString text = readString(isStringKey).replace(QRegExp("\\s+"), " ");
+        QString text = readString(isStringKey);
+        /// for all entries except for abstracts ...
+        if (iKey != Entry::ftAbstract) {
+            /// ... remove redundant spaces including newlines
+            text = text.replace(QRegExp("\\s+"), " ");
+        }
+        /// abstracts will keep their formatting (regarding line breaks)
+        /// as requested by Thomas Jensch via mail (20 October 2010)
 
         // FIXME: comparisons should be made case-insensitive
         if (iKey == Entry::ftAuthor || iKey == Entry::ftEditor) {

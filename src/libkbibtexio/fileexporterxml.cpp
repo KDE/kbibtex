@@ -17,6 +17,7 @@
 *   Free Software Foundation, Inc.,                                       *
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
+
 #include <QRegExp>
 #include <QStringList>
 
@@ -31,6 +32,7 @@
 
 static QRegExp removal("[{}]+");
 static QRegExp abstractRegExp("\\bAbstract[:]?([ ]|&nbsp;|&amp;nbsp;)*", Qt::CaseInsensitive);
+static QRegExp lineBreaksRegExp("[ \\t]*[\\n\\r]");
 
 FileExporterXML::FileExporterXML()
         : FileExporter()
@@ -229,6 +231,6 @@ QString FileExporterXML::valueToXML(const Value& value, const QString&)
 QString FileExporterXML::cleanXML(const QString &text)
 {
     QString result = text;
-    result = result.replace(removal, "");
+    result = result.replace(lineBreaksRegExp, "<br/>").replace(removal, "");
     return result;
 }
