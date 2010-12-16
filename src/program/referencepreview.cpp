@@ -23,10 +23,16 @@
 #include <QWebView>
 #include <QLayout>
 #include <QApplication>
+#include <QTextStream>
+#include <QDesktopServices>
 
+#include <KTemporaryFile>
 #include <KLocale>
 #include <KComboBox>
 #include <KStandardDirs>
+#include <KPushButton>
+#include <KFileDialog>
+#include <kio/netaccess.h>
 
 #include <fileexporterbibtex.h>
 #include <fileexporterbibtex2html.h>
@@ -44,6 +50,7 @@ private:
     ReferencePreview *p;
 
 public:
+    KPushButton *buttonOpen, *buttonSaveAsHTML;
     QString htmlText;
     QUrl baseUrl;
     QWebView *webView;
@@ -53,20 +60,34 @@ public:
 
     ReferencePreviewPrivate(ReferencePreview *parent)
             : p(parent), element(NULL) {
-        QVBoxLayout *layout = new QVBoxLayout(p);
-        layout->setMargin(0);
+        QGridLayout *gridLayout = new QGridLayout(p);
+        gridLayout->setMargin(0);
+        gridLayout->setColumnStretch(0, 1);
+        gridLayout->setColumnStretch(1, 0);
+        gridLayout->setColumnStretch(2, 0);
+
         comboBox = new KComboBox(p);
-        layout->addWidget(comboBox);
+        gridLayout->addWidget(comboBox, 0, 0, 1, 3);
 
         QFrame *frame = new QFrame(p);
-        layout->addWidget(frame);
+        gridLayout->addWidget(frame, 1, 0, 1, 3);
         frame->setFrameShadow(QFrame::Sunken);
         frame->setFrameShape(QFrame::StyledPanel);
 
-        layout = new QVBoxLayout(frame);
+        QVBoxLayout *layout = new QVBoxLayout(frame);
         layout->setMargin(0);
         webView = new QWebView(frame);
         layout->addWidget(webView);
+
+        buttonOpen = new KPushButton(KIcon("document-open"), i18n("Open"), p);
+        buttonOpen->setToolTip(i18n("Open reference in web browser."));
+        gridLayout->addWidget(buttonOpen, 2, 1, 1, 1);
+        connect(buttonOpen, SIGNAL(clicked()), p, SLOT(openAsHTML()));
+
+        buttonSaveAsHTML = new KPushButton(KIcon("document-save"), i18n("Save as HTML"), p);
+        buttonSaveAsHTML->setToolTip(i18n("Save reference as HTML fragment."));
+        gridLayout->addWidget(buttonSaveAsHTML, 2, 2, 1, 1);
+        connect(buttonSaveAsHTML, SIGNAL(clicked()), p, SLOT(saveAsHTML()));
 
         comboBox->addItem(i18n("Source"));
         comboBox->addItem(i18n("abbrv (bibtex2html)"));
@@ -82,6 +103,31 @@ public:
         connect(comboBox, SIGNAL(currentIndexChanged(int)), p, SLOT(renderHTML()));
     }
 
+    bool saveHTML(const KUrl& url) {
+        KTemporaryFile file;
+        file.setAutoRemove(true);
+
+        bool result = saveHTML(file);
+
+        if (result) {
+            KIO::NetAccess::del(url, p); /// ignore error if file does not exist
+            result = KIO::NetAccess::file_copy(KUrl(file.fileName()), url, p);
+        }
+
+        return result;
+    }
+
+    bool saveHTML(KTemporaryFile &file) {
+        if (file.open()) {
+            QTextStream ts(&file);
+            ts << htmlText;
+            file.close();
+            return true;
+        }
+
+        return false;
+    }
+
 };
 
 ReferencePreview::ReferencePreview(QWidget *parent)
@@ -95,14 +141,19 @@ void ReferencePreview::setHtml(const QString & html, const QUrl & baseUrl)
     d->htmlText = html;
     d->baseUrl = baseUrl;
     d->webView->setHtml(html, baseUrl);
+    d->buttonOpen->setEnabled(true);
+    d->buttonSaveAsHTML->setEnabled(true);
 }
 
 void ReferencePreview::setEnabled(bool enabled)
 {
     if (enabled)
-        d->webView->setHtml(d->htmlText, d->baseUrl);
-    else
+        setHtml(d->htmlText, d->baseUrl);
+    else {
         d->webView->setHtml(notAvailableMessage.arg(i18n("Preview disabled")), d->baseUrl);
+        d->buttonOpen->setEnabled(false);
+        d->buttonSaveAsHTML->setEnabled(false);
+    }
     d->webView->setEnabled(enabled);
     d->comboBox->setEnabled(enabled);
 }
@@ -118,6 +169,8 @@ void ReferencePreview::renderHTML()
 {
     if (d->element == NULL) {
         d->webView->setHtml(notAvailableMessage.arg(i18n("No element selected")), d->baseUrl);
+        d->buttonOpen->setEnabled(false);
+        d->buttonSaveAsHTML->setEnabled(false);
         return;
     }
 
@@ -221,10 +274,26 @@ void ReferencePreview::renderHTML()
         text.append("</body></html>");
     } else {
         /// XML/XSLT
-/// nothing to do
+        /// nothing to do
     }
 
-    d->webView->setHtml(text);
+    setHtml(text, d->baseUrl);
 
     QApplication::restoreOverrideCursor();
+}
+
+void ReferencePreview::openAsHTML()
+{
+    KTemporaryFile file;
+    file.setSuffix(".html");
+    file.setAutoRemove(false); /// let file stay alive for browser
+    d->saveHTML(file);
+    QDesktopServices::openUrl(KUrl(file.fileName()));
+}
+
+void ReferencePreview::saveAsHTML()
+{
+    KUrl url = KFileDialog::getSaveUrl(KUrl(), "text/html", this, i18n("Save as HTML"));
+    if (url.isValid())
+        d->saveHTML(url);
 }

@@ -45,6 +45,8 @@ private:
 
 private slots:
     void renderHTML();
+    void openAsHTML();
+    void saveAsHTML();
 };
 
 
