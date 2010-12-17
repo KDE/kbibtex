@@ -1,8 +1,21 @@
 <xsl:stylesheet version = '1.0' xmlns:xsl='http://www.w3.org/1999/XSL/Transform'>
 <xsl:output encoding="UTF-8"/>
 
+
+<!-- ==============================================================================
+     Maintain original HTML tags
+-->
+<xsl:template match="a|abbr|acronym|address|applet|b|big|blockquote|br|cite|code|del|dfn|div|em|hr|i|kbd|p|param|pre|q|quote|samp|script|span|small|strike|strong|sub|sup|tt|var|button|fieldset|form|input|label|legend|object|option|optgroup|select|caption|col|colgroup|table|tbody|td|tfoot|th|thead|tr|dl|dd|dt|ol|ul|li|img|quote|quotation" xmlns:html="http://www.w3.org/1999/XSL/some">
+<xsl:copy>
+<xsl:copy-of select="@*" />
+<xsl:apply-templates />
+</xsl:copy>
+</xsl:template>
+
+
+
 <xsl:template match="text">
-<xsl:value-of select="."/>
+<xsl:apply-templates />
 </xsl:template>
 
 <xsl:template match="person">
@@ -25,24 +38,24 @@
 
 <xsl:template match="editors">
 <xsl:for-each select="person">
-<xsl:value-of select="."/><xsl:if test="position()!=last()"><xsl:text>, </xsl:text>
+<xsl:apply-templates /><xsl:if test="position()!=last()"><xsl:text>, </xsl:text>
 </xsl:if>
 <xsl:if test="position()=last()-1"><xsl:text> and </xsl:text></xsl:if></xsl:for-each><xsl:text>, </xsl:text>
 </xsl:template>
 
-<xsl:template match="title"><xsl:value-of select="."/></xsl:template>
+<xsl:template match="title"><xsl:apply-templates /></xsl:template>
 
 <xsl:template match="booktitle">
-<i><xsl:value-of select="."/></i>
+<i><xsl:apply-templates /></i>
 </xsl:template>
 
 <xsl:template match="school">
-<xsl:value-of select="."/>
+<xsl:apply-templates />
 <xsl:text>, </xsl:text>
 </xsl:template>
 
 <xsl:template match="journal">
-<span style="font-style:italic;"><xsl:value-of select="."/></span>
+<span style="font-style:italic;"><xsl:apply-templates /></span>
 <xsl:if test="string-length(../volume)>0">
 <xsl:value-of select="../volume"/>
 <xsl:if test="string-length(../number)>0">
@@ -54,7 +67,7 @@
 </xsl:template>
 
 <xsl:template match="institution">
-<i><xsl:value-of select="."/></i>
+<i><xsl:apply-templates /></i>
 <xsl:if test="string-length(../number)>0">
 <xsl:text> No. </xsl:text>
 <xsl:value-of select="../number"/>
@@ -63,39 +76,39 @@
 </xsl:template>
 
 <xsl:template match="publisher">
-<xsl:value-of select="."/>
+<xsl:apply-templates />
 <xsl:text>, </xsl:text>
 </xsl:template>
 
 <xsl:template match="volume">
 <xsl:text>volume </xsl:text>
-<xsl:value-of select="."/>
+<xsl:apply-templates />
 <xsl:text>, </xsl:text>
 </xsl:template>
 
 <xsl:template match="edition">
-<xsl:value-of select="."/>
+<xsl:apply-templates />
 <xsl:text> edition, </xsl:text>
 </xsl:template>
 
 <xsl:template match="pages">
-<xsl:value-of select="."/><xsl:text>, </xsl:text>
+<xsl:apply-templates /><xsl:text>, </xsl:text>
 </xsl:template>
 
 <xsl:template match="year">
-<xsl:value-of select="."/>
+<xsl:apply-templates />
 </xsl:template>
 
 <xsl:template match="note">
-<xsl:text>, </xsl:text><xsl:value-of select="."/>
+<xsl:text>, </xsl:text><xsl:apply-templates />
 </xsl:template>
 
 <xsl:template match="month">
-<xsl:value-of select="."/>
+<xsl:apply-templates />
 </xsl:template>
 
 <xsl:template match="abstract">
-<br/><i>Abstract</i><xsl:text>: </xsl:text><xsl:value-of select="."/>
+<br/><i>Abstract</i><xsl:text>: </xsl:text><xsl:apply-templates />
 </xsl:template>
 
 <xsl:template match="entry">
