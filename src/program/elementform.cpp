@@ -44,7 +44,7 @@ public:
     KPushButton *buttonApply, *buttonReset;
 
     ElementFormPrivate(ElementForm *parent)
-            : p(parent), elementEditor(NULL), element(NULL), file(NULL) {
+            : p(parent), element(NULL), file(NULL), elementEditor(NULL) {
         layout = new QGridLayout(p);
         layout->setColumnStretch(0, 1);
         layout->setColumnStretch(1, 0);
