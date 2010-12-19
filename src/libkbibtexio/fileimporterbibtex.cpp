@@ -496,7 +496,7 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value& value, const QStr
             if (isStringKey)
                 value.append(new MacroKey(text));
             else {
-                const QRegExp urlListRegExp(";[ ]*|[ ]+", Qt::CaseInsensitive);
+                const QRegExp urlListRegExp("[;\\n][ ]*", Qt::CaseInsensitive);
                 const QStringList urls = text.split(urlListRegExp, QString::SkipEmptyParts);
                 for (QStringList::ConstIterator it = urls.constBegin(); it != urls.constEnd(); ++it)
                     value.append(new VerbatimText(*it));
