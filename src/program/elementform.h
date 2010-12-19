@@ -24,8 +24,9 @@
 
 #include <QWidget>
 
-class MDIWidget;
+class QDockWidget;
 
+class MDIWidget;
 class Element;
 class File;
 
@@ -34,7 +35,7 @@ class ElementForm : public QWidget
     Q_OBJECT
 
 public:
-    ElementForm(MDIWidget *mdiWidget, QWidget *parent);
+    ElementForm(MDIWidget *mdiWidget, QDockWidget *parent);
 
 public slots:
     void setElement(Element*, const File *);
@@ -49,6 +50,7 @@ private:
 private slots:
     void modified();
     void modificationCleared();
+    void visibilityChanged(bool);
 };
 
 #endif // KBIBTEX_PROGRAM_ELEMENTFORM_H

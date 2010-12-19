@@ -19,6 +19,7 @@
 ***************************************************************************/
 
 #include <QLayout>
+#include <QDockWidget>
 
 #include <KPushButton>
 #include <KLocale>
@@ -34,6 +35,8 @@ private:
     ElementForm *p;
     QGridLayout *layout;
     Entry emptyElement;
+    Element *element;
+    const File *file;
 
 public:
     ElementEditor *elementEditor;
@@ -41,7 +44,7 @@ public:
     KPushButton *buttonApply, *buttonReset;
 
     ElementFormPrivate(ElementForm *parent)
-            : p(parent), elementEditor(NULL) {
+            : p(parent), elementEditor(NULL), element(NULL), file(NULL) {
         layout = new QGridLayout(p);
         layout->setColumnStretch(0, 1);
         layout->setColumnStretch(1, 0);
@@ -56,9 +59,28 @@ public:
         loadElement(NULL, NULL);
 
         connect(buttonApply, SIGNAL(clicked()), p, SIGNAL(elementModified()));
+        connect(buttonApply, SIGNAL(clicked()), p, SLOT(modificationCleared()));
+        connect(buttonReset, SIGNAL(clicked()), p, SLOT(modificationCleared()));
+    }
+
+    void refreshElement() {
+        loadElement(element, file);
     }
 
     void loadElement(Element *element, const File *file) {
+        /// store both element and file for later refresh
+        this->element = element;
+        this->file = file;
+
+        /// skip whole process of loading an element if not visible
+        if (isVisible())
+            p->setEnabled(true);
+        else {
+            p->setEnabled(false);
+            return;
+        }
+
+        /// recreate and reset element editor
         if (elementEditor != NULL)
             delete elementEditor;
         elementEditor = element == NULL ? new ElementEditor(&emptyElement, file, p) : new ElementEditor(element, file, p);
@@ -67,18 +89,25 @@ public:
         elementEditor->layout()->setMargin(0);
         connect(elementEditor, SIGNAL(modified(bool)), p, SLOT(modified()));
 
+        /// make apply and reset buttons aware of new element editor
         buttonApply->setEnabled(false);
         buttonReset->setEnabled(false);
         connect(buttonApply, SIGNAL(clicked()), elementEditor, SLOT(apply()));
         connect(buttonReset, SIGNAL(clicked()), elementEditor, SLOT(reset()));
-        connect(buttonApply, SIGNAL(clicked()), p, SLOT(modificationCleared()));
-        connect(buttonReset, SIGNAL(clicked()), p, SLOT(modificationCleared()));
+    }
+
+    bool isVisible() {
+        /// get dock where this widget is inside
+        /// static cast is save as constructor requires parent to be QDockWidget
+        QDockWidget *pp = static_cast<QDockWidget*>(p->parent());
+        return pp != NULL && !pp->isHidden();
     }
 };
 
-ElementForm::ElementForm(MDIWidget *mdiWidget, QWidget *parent)
+ElementForm::ElementForm(MDIWidget *mdiWidget, QDockWidget *parent)
         : QWidget(parent), d(new ElementFormPrivate(this))
 {
+    connect(parent, SIGNAL(visibilityChanged(bool)), this, SLOT(visibilityChanged(bool)));
     d->mdiWidget = mdiWidget;
 }
 
@@ -97,4 +126,9 @@ void ElementForm::modificationCleared()
 {
     d->buttonApply->setEnabled(false);
     d->buttonReset->setEnabled(false);
+}
+
+void ElementForm::visibilityChanged(bool)
+{
+    d->refreshElement();
 }
