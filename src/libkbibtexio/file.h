@@ -24,6 +24,8 @@
 #include <QList>
 #include <QStringList>
 
+#include <KUrl>
+
 #include <element.h>
 
 #include "kbibtexio_export.h"
@@ -59,6 +61,12 @@ public:
      * @return list of keys
      */
     QStringList allKeys() const;
+
+    void setUrl(const KUrl &url);
+    KUrl url() const;
+
+private:
+    KUrl m_url;
 };
 
 #endif // KBIBTEX_IO_FILE_H

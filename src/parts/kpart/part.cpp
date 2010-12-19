@@ -437,6 +437,8 @@ bool KBibTeXPart::openFile()
     } else
         kDebug() << "File contains " << bibtexFile->count() << " entries";
 
+    bibtexFile->setUrl(url());
+
     d->model->setBibTeXFile(bibtexFile);
     d->editor->setModel(d->model);
     if (d->sortFilterProxyModel != NULL) delete d->sortFilterProxyModel;

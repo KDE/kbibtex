@@ -33,7 +33,7 @@
 #include <comment.h>
 
 File::File()
-        : QList<Element*>()
+        : QList<Element*>(), m_url(KUrl())
 {
     // nothing
 }
@@ -80,3 +80,12 @@ QStringList File::allKeys() const
     return result;
 }
 
+void File::setUrl(const KUrl &url)
+{
+    m_url = url;
+}
+
+KUrl File::url() const
+{
+    return m_url;
+}
