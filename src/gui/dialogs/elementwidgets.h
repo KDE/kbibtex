@@ -58,6 +58,10 @@ public:
     bool isModified() const;
     void setModified(bool);
 
+    void setFile(const File *file) {
+        m_file = file;
+    }
+
     static bool canEdit(const Element *element) {
         Q_UNUSED(element)
         return false;
@@ -65,6 +69,7 @@ public:
 
 protected:
     bool isReadOnly;
+    const File *m_file;
 
 protected slots:
     void gotModified();

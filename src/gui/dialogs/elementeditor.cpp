@@ -164,6 +164,7 @@ public:
 
     void reset(const Element *element) {
         for (QList<ElementWidget*>::Iterator it = widgets.begin(); it != widgets.end(); ++it) {
+            (*it)->setFile(file);
             (*it)->reset(element);
             (*it)->setModified(false);
         }

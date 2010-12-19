@@ -47,9 +47,10 @@ public:
     QList<FieldLineEdit*> lineEditList;
     QWidget *container;
     KPushButton *addButton;
+    const File *file;
 
     FieldListEditPrivate(KBibTeX::TypeFlag ptf, KBibTeX::TypeFlags tf, FieldListEdit *parent)
-            : p(parent), innerSpacing(4), preferredTypeFlag(ptf), typeFlags(tf) {
+            : p(parent), innerSpacing(4), preferredTypeFlag(ptf), typeFlags(tf), file(NULL) {
         smRemove = new QSignalMapper(parent);
         smGoUp = new QSignalMapper(parent);
         smGoDown = new QSignalMapper(parent);
@@ -176,6 +177,7 @@ bool FieldListEdit::reset(const Value& value)
         Value v;
         v.append(*it);
         FieldLineEdit *fieldLineEdit = d->addFieldLineEdit();
+        fieldLineEdit->setFile(d->file);
         fieldLineEdit->reset(v);
     }
     QSize size(d->container->width(), d->recommendedHeight());
@@ -208,6 +210,11 @@ void FieldListEdit::setReadOnly(bool isReadOnly)
     for (QList<FieldLineEdit*>::ConstIterator it = d->lineEditList.constBegin(); it != d->lineEditList.constEnd(); ++it)
         (*it)->setReadOnly(isReadOnly);
     d->addButton->setEnabled(!isReadOnly);
+}
+
+void FieldListEdit::setFile(const File *file)
+{
+    d->file = file;
 }
 
 void FieldListEdit::resizeEvent(QResizeEvent *event)

@@ -40,6 +40,7 @@ public:
 
     void clear();
     void setReadOnly(bool isReadOnly);
+    void setFile(const File *file);
 
 signals:
     void modified();

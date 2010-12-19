@@ -194,6 +194,13 @@ public:
             fieldListEdit->setReadOnly(isReadOnly);
     }
 
+    void setFile(const File *file) {
+        if (fieldLineEdit != NULL)
+            fieldLineEdit->setFile(file);
+        if (fieldListEdit != NULL)
+            fieldListEdit->setFile(file);
+    }
+
     void enalbeModifiedSignal() {
         if (fieldLineEdit != NULL)
             connect(fieldLineEdit, SIGNAL(textChanged(QString)), p, SIGNAL(modified()));
@@ -248,6 +255,11 @@ bool FieldInput::apply(Value& value) const
 void FieldInput::setReadOnly(bool isReadOnly)
 {
     d->setReadOnly(isReadOnly);
+}
+
+void FieldInput::setFile(const File *file)
+{
+    d->setFile(file);
 }
 
 void FieldInput::setMonth(int month)

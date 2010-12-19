@@ -108,6 +108,7 @@ bool EntryConfiguredWidget::reset(const Element *element)
         const QString key = it.key().toLower();
         if (bibtexKeyToWidget.contains(key)) {
             FieldInput *fieldInput = bibtexKeyToWidget[key];
+            fieldInput->setFile(m_file);
             fieldInput->reset(it.value());
         }
     }
@@ -407,6 +408,7 @@ bool FilesWidget::reset(const Element *element)
         for (Value::ConstIterator it = eeValue.constBegin(); it != eeValue.constEnd(); ++it)
             combinedValue.append(*it);
     }
+    fileList->setFile(m_file);
     fileList->reset(combinedValue);
 
     return true;
