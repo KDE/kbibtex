@@ -25,6 +25,7 @@
 #include <QBuffer>
 #include <QFileInfo>
 #include <QDesktopServices>
+#include <QDir>
 
 #include <KDebug>
 #include <KMessageBox>
@@ -56,6 +57,7 @@ public:
     QMenu *menuTypes;
     KBibTeX::TypeFlag typeFlag;
     KUrl urlToOpen;
+    const File *file;
 
     FieldLineEditPrivate(KBibTeX::TypeFlag ptf, KBibTeX::TypeFlags tf, FieldLineEdit *p)
             : parent(p), preferredTypeFlag(ptf), typeFlags(tf) {
@@ -364,17 +366,29 @@ public:
     void updateURL(const QString &text) {
         urlToOpen = KUrl();
 
-        /// extract URL, local file, or DOI from current field
-        if (KBibTeX::urlRegExp.indexIn(text) > -1)
-            urlToOpen = KUrl(KBibTeX::urlRegExp.cap(0));
-        else if (KBibTeX::doiRegExp.indexIn(text) > -1)
-            urlToOpen = KUrl(KBibTeX::doiUrlPrefix + KBibTeX::doiRegExp.cap(0).replace("\\", ""));
-        else if (KBibTeX::fileRegExp.indexIn(text) > -1)
-            urlToOpen = KUrl(KBibTeX::fileRegExp.cap(0));
+        if (!text.isEmpty()) {
+            if (file != NULL && file->url().isValid()) {
+                const QString path = file->url().directory();
+                const QString full = path + QDir::separator() + text;
+                const QFileInfo fileInfo(full);
+                if (fileInfo.exists() && fileInfo.isFile())
+                    urlToOpen = KUrl(full);
+            }
 
-        /// non-existing local files are to be ignored
-        if (urlToOpen.isValid() && urlToOpen.isLocalFile() && !QFileInfo(urlToOpen.path()).exists())
-            urlToOpen = KUrl();
+            if (!urlToOpen.isValid()) {
+                /// extract URL, local file, or DOI from current field
+                if (KBibTeX::urlRegExp.indexIn(text) > -1)
+                    urlToOpen = KUrl(KBibTeX::urlRegExp.cap(0));
+                else if (KBibTeX::doiRegExp.indexIn(text) > -1)
+                    urlToOpen = KUrl(KBibTeX::doiUrlPrefix + KBibTeX::doiRegExp.cap(0).replace("\\", ""));
+                else if (KBibTeX::fileRegExp.indexIn(text) > -1)
+                    urlToOpen = KUrl(KBibTeX::fileRegExp.cap(0));
+
+                /// non-existing local files are to be ignored
+                if (urlToOpen.isValid() && urlToOpen.isLocalFile() && !QFileInfo(urlToOpen.path()).exists())
+                    urlToOpen = KUrl();
+            }
+        }
 
         /// set special "open URL" button visible if URL (or file or DOI) found
         buttonOpenUrl->setVisible(urlToOpen.isValid());
@@ -417,6 +431,11 @@ void FieldLineEdit::slotTypeChanged(int newTypeFlagInt)
         d->reset(value);
     } else
         KMessageBox::error(this, i18n("The current text cannot be used as value of type \"%1\".\n\nSwitching back to type \"%2\".", BibTeXFields::typeFlagToString(newTypeFlag), BibTeXFields::typeFlagToString(d->typeFlag)));
+}
+
+void FieldLineEdit::setFile(const File *file)
+{
+    d->file = file;
 }
 
 void FieldLineEdit::slotOpenUrl()

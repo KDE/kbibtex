@@ -44,6 +44,8 @@ public:
     bool reset(const Value& value);
     bool apply(Value& value) const;
 
+    void setFile(const File *file);
+
 private:
     bool m_incompleteRepresentation;
 
