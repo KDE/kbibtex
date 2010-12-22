@@ -68,14 +68,30 @@ public:
         return text;
     }
 
-    void insertText(const QString &text) {
-        QItemSelectionModel *ism = bibTeXEditor->selectionModel();
-        ism->clear();
+    bool insertText(const QString &text) {
+        /// use BibTeX importer to generate representation from plain text
         FileImporterBibTeX importer;
         File *file = importer.fromString(text);
 
+        /// insert new elements one by one
+        int startRow = bibTeXEditor->model()->rowCount(); ///< memorize row where insertion started
         for (File::Iterator it = file->begin(); it != file->end(); ++it)
             bibTeXEditor->bibTeXModel()->insertRow(*it, bibTeXEditor->model()->rowCount());
+        int endRow = bibTeXEditor->model()->rowCount() - 1; ///< memorize row where insertion ended
+
+        /// select newly inserted elements
+        QItemSelectionModel *ism = bibTeXEditor->selectionModel();
+        ism->clear();
+        QAbstractItemModel *model = bibTeXEditor->model();
+        QItemSelection selection(model->index(startRow, 0), model->index(endRow, model->columnCount() - 1));
+        ism->select(selection, QItemSelectionModel::Select);
+        /// scroll and show newly inserted elements
+        bibTeXEditor->scrollTo(model->index(startRow, 0), QAbstractItemView::PositionAtTop);
+
+        /// clean up
+        delete file;
+        /// return true if at least one element was inserted
+        return startRow <= endRow;
     }
 };
 
