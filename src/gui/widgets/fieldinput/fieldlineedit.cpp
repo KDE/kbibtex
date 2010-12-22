@@ -61,7 +61,7 @@ public:
     const File *file;
 
     FieldLineEditPrivate(KBibTeX::TypeFlag ptf, KBibTeX::TypeFlags tf, FieldLineEdit *p)
-            : parent(p), preferredTypeFlag(ptf), typeFlags(tf) {
+            : parent(p), preferredTypeFlag(ptf), typeFlags(tf), file(NULL) {
         menuTypes = new QMenu(i18n("Types"), parent);
         menuTypesSignalMapper = new QSignalMapper(parent);
         setupMenu();
