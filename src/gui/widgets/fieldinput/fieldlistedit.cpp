@@ -226,9 +226,10 @@ void FieldListEdit::resizeEvent(QResizeEvent *event)
 
 void FieldListEdit::lineAdd()
 {
-    d->addFieldLineEdit();
+    FieldLineEdit *newEdit = d->addFieldLineEdit();
     QSize size(d->container->width(), d->recommendedHeight());
     d->container->resize(size);
+    newEdit->setFocus(Qt::ShortcutFocusReason);
 }
 
 void FieldListEdit::lineRemove(QWidget * widget)
