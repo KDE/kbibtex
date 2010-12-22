@@ -32,7 +32,8 @@ class Entry;
 class KBIBTEXIO_EXPORT FileInfo
 {
 public:
-    static QList<KUrl> entryUrls(const Entry *entry, const KUrl &baseUrl = KUrl());
+    static QList<KUrl> urlsInText(const QString &text, bool testExistance, const QString &baseDirectory = QString());
+    static QList<KUrl> entryUrls(const Entry *entry, const KUrl &bibTeXUrl = KUrl());
 
 protected:
     FileInfo();

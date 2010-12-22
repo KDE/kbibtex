@@ -34,6 +34,7 @@
 #include <KUrl>
 #include <KPushButton>
 
+#include <fileinfo.h>
 #include <file.h>
 #include <entry.h>
 #include <value.h>
@@ -364,31 +365,11 @@ public:
     }
 
     void updateURL(const QString &text) {
-        urlToOpen = KUrl();
-
-        if (!text.isEmpty()) {
-            if (file != NULL && file->url().isValid()) {
-                const QString path = file->url().directory();
-                const QString full = path + QDir::separator() + text;
-                const QFileInfo fileInfo(full);
-                if (fileInfo.exists() && fileInfo.isFile())
-                    urlToOpen = KUrl(full);
-            }
-
-            if (!urlToOpen.isValid()) {
-                /// extract URL, local file, or DOI from current field
-                if (KBibTeX::urlRegExp.indexIn(text) > -1)
-                    urlToOpen = KUrl(KBibTeX::urlRegExp.cap(0));
-                else if (KBibTeX::doiRegExp.indexIn(text) > -1)
-                    urlToOpen = KUrl(KBibTeX::doiUrlPrefix + KBibTeX::doiRegExp.cap(0).replace("\\", ""));
-                else if (KBibTeX::fileRegExp.indexIn(text) > -1)
-                    urlToOpen = KUrl(KBibTeX::fileRegExp.cap(0));
-
-                /// non-existing local files are to be ignored
-                if (urlToOpen.isValid() && urlToOpen.isLocalFile() && !QFileInfo(urlToOpen.path()).exists())
-                    urlToOpen = KUrl();
-            }
-        }
+        QList<KUrl> urls = FileInfo::urlsInText(text, true, file != NULL && file->url().isValid() ? file->url().directory() : QString::null);
+        if (urls.isEmpty())
+            urlToOpen = KUrl();
+        else
+            urlToOpen = urls.first();
 
         /// set special "open URL" button visible if URL (or file or DOI) found
         buttonOpenUrl->setVisible(urlToOpen.isValid());

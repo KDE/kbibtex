@@ -25,6 +25,7 @@
 
 #include <KDebug>
 
+#include <fileinfo.h>
 #include <file.h>
 #include <comment.h>
 #include <macro.h>
@@ -496,10 +497,9 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value& value, const QStr
             if (isStringKey)
                 value.append(new MacroKey(text));
             else {
-                const QRegExp urlListRegExp("[;\\n][ ]*", Qt::CaseInsensitive);
-                const QStringList urls = text.split(urlListRegExp, QString::SkipEmptyParts);
-                for (QStringList::ConstIterator it = urls.constBegin(); it != urls.constEnd(); ++it)
-                    value.append(new VerbatimText(*it));
+                const QList<KUrl> urls = FileInfo::urlsInText(text, false);
+                for (QList<KUrl>::ConstIterator it = urls.constBegin(); it != urls.constEnd(); ++it)
+                    value.append(new VerbatimText((*it).pathOrUrl()));
             }
         } else if (iKey.startsWith(Entry::ftDOI)) {
             if (isStringKey)
