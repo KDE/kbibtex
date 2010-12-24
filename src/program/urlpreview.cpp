@@ -29,6 +29,7 @@
 #include <QCheckBox>
 #include <QStackedWidget>
 #include <QDockWidget>
+#include <QMutex>
 
 #include <KLocale>
 #include <KComboBox>
@@ -43,6 +44,7 @@
 #include <KDebug>
 #include <kio/jobclasses.h>
 #include <kio/job.h>
+#include <kio/jobuidelegate.h>
 #include <KTemporaryFile>
 
 #include <element.h>
@@ -61,8 +63,16 @@ private:
     QStackedWidget *stackedWidget;
     QLabel *message;
     QMap<int, KUrl> cbxEntryToUrl;
+    QMutex addingUrlMutex;
 
 public:
+    struct UrlInfo {
+        KUrl url;
+        QString mimeType;
+        KIcon icon;
+    };
+
+    QList<KIO::StatJob*> runningJobs;
     const Entry* entry;
     KUrl baseUrl;
 
@@ -112,16 +122,67 @@ public:
         connect(onlyLocalFilesCheckBox, SIGNAL(toggled(bool)), p, SLOT(onlyLocalFilesChanged()));
     }
 
+    bool addUrl(const struct UrlInfo &urlInfo) {
+        bool isLocal = urlInfo.url.isLocalFile();
+
+        if (onlyLocalFilesCheckBox->isChecked() && !isLocal) return true; ///< ignore URL if only local files are allowed
+
+        addingUrlMutex.lock();
+        if (isLocal) {
+            /// create a drop-down list entry if file is a local file
+            /// (based on patch by Luis Silva)
+            QString fn = urlInfo.url.fileName();
+            QString full = urlInfo.url.pathOrUrl();
+            QString dir = urlInfo.url.directory();
+            QString text = fn.isEmpty() ? full : (dir.isEmpty() ? fn : QString("%1 [%2]").arg(fn).arg(dir));
+            urlComboBox->addItem(urlInfo.icon, text);
+        } else {
+            /// create a drop-down list entry if file is a remote file
+            urlComboBox->addItem(urlInfo.icon, urlInfo.url.prettyUrl());
+        }
+        cbxEntryToUrl.insert(urlComboBox->count() - 1, urlInfo.url);
+        addingUrlMutex.unlock();
+
+        KParts::ReadOnlyPart* part = NULL;
+        KService::Ptr serivcePtr = KMimeTypeTrader::self()->preferredService(urlInfo.mimeType, "KParts/ReadOnlyPart");
+        if (!serivcePtr.isNull())
+            part = serivcePtr->createInstance<KParts::ReadOnlyPart>((QWidget*)p, (QObject*)p);
+        if (part != NULL) {
+            stackedWidget->addWidget(part->widget());
+            part->openUrl(urlInfo.url);
+        } else {
+            QLabel *label = new QLabel(i18n("Cannot create preview for\n%1\n\nNo part available.", urlInfo.url.pathOrUrl()), stackedWidget);
+            message->setAlignment(Qt::AlignCenter);
+            stackedWidget->addWidget(label);
+        }
+
+        urlComboBox->setEnabled(true);
+        externalViewerButton->setEnabled(true);
+        if (isLocal) {
+            urlComboBox->setCurrentIndex(urlComboBox->count() - 1);
+            stackedWidget->setCurrentIndex(urlComboBox->count() - 1);
+        }
+        message->hide();
+        stackedWidget->show();
+
+        return true;
+    }
+
     void update() {
         QCursor prevCursor = p->cursor();
         p->setCursor(Qt::WaitCursor);
-        p->setEnabled(false);
+
+        /// cancel/kill all running jobs
+        for (QList<KIO::StatJob*>::ConstIterator it = runningJobs.constBegin(); it != runningJobs.constEnd(); ++it)
+            (*it)->kill();
+        runningJobs.clear();
+        /// remove all shown widgets/parts
         urlComboBox->clear();
         while (stackedWidget->count() > 0)
             stackedWidget->removeWidget(stackedWidget->currentWidget());
+        urlComboBox->setEnabled(false);
+        externalViewerButton->setEnabled(false);
 
-        /// if no url below is local, use first entry as fall-back
-        int localUrlIndex = 0;
         /// do not load external reference if widget is hidden
         bool thereIsALocaleFile = false;
         bool thereIsARemoteUrl = false;
@@ -133,56 +194,18 @@ public:
                 thereIsARemoteUrl |= !isLocal;
                 if (onlyLocalFilesCheckBox->isChecked() && !isLocal) continue;
 
-                QPair<QString, KIcon> mimeTypeIcon = mimeType(*it);
-                if (isLocal) {
-                    /// create a drop-down list entry if file is a local file
-                    /// (based on patch by Luis Silva)
-                    QString fn = (*it).fileName();
-                    QString full = (*it).pathOrUrl();
-                    QString dir = (*it).directory();
-                    QString text = fn.isEmpty() ? full : (dir.isEmpty() ? fn : QString("%1 [%2]").arg(fn).arg(dir));
-                    urlComboBox->addItem(mimeTypeIcon.second, text);
-                    localUrlIndex = urlComboBox->count() - 1;
-                } else {
-                    /// create a drop-down list entry if file is a remote file
-                    urlComboBox->addItem(mimeTypeIcon.second, (*it).prettyUrl());
-                }
-                cbxEntryToUrl.insert(urlComboBox->count() - 1, *it);
-
-                KParts::ReadOnlyPart* part = NULL;
-                KService::Ptr serivcePtr = KMimeTypeTrader::self()->preferredService(mimeTypeIcon.first, "KParts/ReadOnlyPart");
-
-                if (!serivcePtr.isNull())
-                    part = serivcePtr->createInstance<KParts::ReadOnlyPart>((QWidget*)p, (QObject*)p);
-                if (part != NULL) {
-                    stackedWidget->addWidget(part->widget());
-                    part->openUrl(*it);
-                } else {
-                    QLabel *label = new QLabel(i18n("Cannot create preview for\n%1\n\nNo part available.", (*it).pathOrUrl()), stackedWidget);
-                    message->setAlignment(Qt::AlignCenter);
-                    stackedWidget->addWidget(label);
-                }
+                kDebug() << "testing url " << (*it).pathOrUrl();
+                KIO::StatJob *job = KIO::stat(*it, KIO::StatJob::SourceSide, 3/*, KIO::HideProgressInfo*/);
+                runningJobs << job;
+                job->ui()->setWindow(p);
+                connect(job, SIGNAL(result(KJob*)), p, SLOT(statFinished(KJob*)));
             }
         }
 
-        /// enable/disable controlling widgets if there is something to control
-        bool somethingToControl = urlComboBox->count() > 0;
-        urlComboBox->setEnabled(somethingToControl);
-        externalViewerButton->setEnabled(somethingToControl);
+        message->setText(i18n("No preview available"));
+        message->show();
+        stackedWidget->hide();
 
-        /// show either stack widget with KPart widgets -or- message "nothing to see here"
-        if (somethingToControl) {
-            urlComboBox->setCurrentIndex(localUrlIndex);
-            message->hide();
-            stackedWidget->setCurrentIndex(localUrlIndex);
-            stackedWidget->show();
-        } else {
-            message->setText(i18n("No preview available"));
-            message->show();
-            stackedWidget->hide();
-        }
-
-        p->setEnabled(true);
         p->setCursor(prevCursor);
     }
 
@@ -191,11 +214,16 @@ public:
         QDesktopServices::openUrl(url); // TODO KDE way?
     }
 
-    QPair<QString, KIcon> mimeType(const KUrl &url) {
+    UrlInfo urlMetaInfo(const KUrl &url) {
+        UrlInfo result;
+        result.url = url;
+
         if (!url.isLocalFile() && url.fileName().isEmpty()) {
             /// URLs not pointing to a specific file should be opened with a web browser component
-            kDebug() << "Falling back to text/html";
-            return QPair<QString, KIcon>(QLatin1String("text/html"), KIcon("text-html"));
+            kDebug() << "Not pointing to file, falling back to text/html for url " << url.pathOrUrl();
+            result.icon = KIcon("text-html");
+            result.mimeType = QLatin1String("text/html");
+            return result;
         }
 
         int accuracy = 0;
@@ -204,18 +232,25 @@ public:
             kDebug() << "discarding mime type " << mimeTypePtr->name() << ", trying filename ";
             mimeTypePtr = KMimeType::findByPath(url.fileName(), 0, true, &accuracy);
         }
-        QString mimeTypeName = mimeTypePtr->name();
+        result.mimeType = mimeTypePtr->name();
 
-        if (mimeTypeName == QLatin1String("application/octet-stream")) {
+        if (result.mimeType == QLatin1String("application/octet-stream")) {
             /// application/octet-stream is a fall-back if KDE did not know better
-            kDebug() << "Falling back to text/html";
-            return QPair<QString, KIcon>(QLatin1String("text/html"), KIcon("text-html"));
+            kDebug() << "Got mime type \"application/octet-stream\", falling back to text/html";
+            result.icon = KIcon("text-html");
+            result.mimeType = QLatin1String("text/html");
+            return result;
+        } else if (result.mimeType == QLatin1String("inode/directory") && result.url.protocol() == QLatin1String("http")) {
+            /// directory via http means normal webpage (not browsable directory)
+            kDebug() << "Got mime type \"inode/directory\" via http, falling back to text/html";
+            result.icon = KIcon("text-html");
+            result.mimeType = QLatin1String("text/html");
+            return result;
         }
 
-        KIcon icon = KIcon(mimeTypePtr->iconName());
-        kDebug() << "For url " << url.pathOrUrl() << " selected mime type " << mimeTypeName << " (icon name " << mimeTypePtr->iconName() << ")";
-
-        return QPair<QString, KIcon>(mimeTypeName, icon);
+        kDebug() << "For url " << result.url.pathOrUrl() << " selected mime type " << result.mimeType;
+        result.icon = KIcon(mimeTypePtr->iconName());
+        return result;
     }
 
     bool isVisible() {
@@ -256,4 +291,17 @@ void UrlPreview::onlyLocalFilesChanged()
 void UrlPreview::visibilityChanged(bool)
 {
     d->update();
+}
+
+void UrlPreview::statFinished(KJob *kjob)
+{
+    KIO::StatJob *job = static_cast<KIO::StatJob*>(kjob);
+    d->runningJobs.removeOne(job);
+    if (!job->error()) {
+        const KUrl url = job->mostLocalUrl();
+        kDebug() << "stat succeeded for " << url.pathOrUrl();
+        UrlPreviewPrivate::UrlInfo urlInfo = d->urlMetaInfo(url);
+        d->addUrl(urlInfo);
+    } else
+        kDebug() << job->errorString();
 }

@@ -56,6 +56,7 @@ private slots:
     void openExternally();
     void onlyLocalFilesChanged();
     void visibilityChanged(bool);
+    void statFinished(KJob*);
 };
 
 #endif // KBIBTEX_PROGRAM_URLPREVIEW_H
