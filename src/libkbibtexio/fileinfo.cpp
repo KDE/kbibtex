@@ -36,12 +36,10 @@ FileInfo::FileInfo()
     // TODO
 }
 
-QList<KUrl> FileInfo::urlsInText(const QString &text, bool testExistance, const QString &baseDirectory)
+void FileInfo::urlsInText(const QString &text, bool testExistance, const QString &baseDirectory, QList<KUrl> &result)
 {
-    QList<KUrl> result;
-
     if (text.isEmpty())
-        return result;
+        return;
 
     QStringList fileList = text.split(KBibTeX::fileListSeparatorRegExp, QString::SkipEmptyParts);
     for (QStringList::ConstIterator filesIt = fileList.constBegin(); filesIt != fileList.constEnd(); ++filesIt) {
@@ -49,17 +47,19 @@ QList<KUrl> FileInfo::urlsInText(const QString &text, bool testExistance, const 
 
         if (testExistance) {
             QFileInfo fileInfo(internalText);
-            if (fileInfo.exists() && fileInfo.isFile()) {
+            KUrl url = KUrl(fileInfo.filePath());
+            if (fileInfo.exists() && fileInfo.isFile() && !result.contains(url)) {
                 /// text points to existing file (most likely with absolute path)
-                result << KUrl(fileInfo.filePath());
+                result << url;
                 /// stop searching for urls or filenames in current internal text
                 continue;
             } else if (!baseDirectory.isEmpty()) {
                 const QString fullFilename = baseDirectory + QDir::separator() + internalText;
                 fileInfo = QFileInfo(fullFilename);
-                if (fileInfo.exists() && fileInfo.isFile()) {
+                url = KUrl(fileInfo.filePath());
+                if (fileInfo.exists() && fileInfo.isFile() && !result.contains(url)) {
                     /// text points to existing file in base directory
-                    result << KUrl(fileInfo.filePath());
+                    result << url;
                     /// stop searching for urls or filenames in current internal text
                     continue;
                 }
@@ -102,8 +102,6 @@ QList<KUrl> FileInfo::urlsInText(const QString &text, bool testExistance, const 
             }
         }
     }
-
-    return result;
 }
 
 QList<KUrl> FileInfo::entryUrls(const Entry *entry, const KUrl &bibTeXUrl)
@@ -121,7 +119,7 @@ QList<KUrl> FileInfo::entryUrls(const Entry *entry, const KUrl &bibTeXUrl)
         while ((pos = regExpEscapedChars.indexIn(plainText, pos + 1)) != -1)
             plainText = plainText.replace(regExpEscapedChars.cap(0), regExpEscapedChars.cap(1));
 
-        result.append(urlsInText(plainText, true, baseDirectory));
+        urlsInText(plainText, true, baseDirectory, result);
     }
 
     /// explicitly check URL entry, may be an URL even if http:// or alike is missing
