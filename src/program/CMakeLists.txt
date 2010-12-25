@@ -4,7 +4,8 @@ include_directories(
 	${CMAKE_CURRENT_SOURCE_DIR}
 	${CMAKE_CURRENT_SOURCE_DIR}/../gui
 	${CMAKE_CURRENT_SOURCE_DIR}/../gui/config
-	${CMAKE_CURRENT_SOURCE_DIR}/../gui/dialogs
+	${CMAKE_CURRENT_SOURCE_DIR}/../gui/bibtex
+	${CMAKE_CURRENT_SOURCE_DIR}/../gui/element
 	${CMAKE_CURRENT_SOURCE_DIR}/../gui/widgets
 	${CMAKE_CURRENT_SOURCE_DIR}/../libkbibtexio
 	${CMAKE_CURRENT_SOURCE_DIR}/../libkbibtexio/config

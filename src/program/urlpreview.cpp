@@ -195,7 +195,7 @@ public:
                 if (onlyLocalFilesCheckBox->isChecked() && !isLocal) continue;
 
                 kDebug() << "testing url " << (*it).pathOrUrl();
-                KIO::StatJob *job = KIO::stat(*it, KIO::StatJob::SourceSide, 3/*, KIO::HideProgressInfo*/);
+                KIO::StatJob *job = KIO::stat(*it, KIO::StatJob::SourceSide, 3, KIO::HideProgressInfo);
                 runningJobs << job;
                 job->ui()->setWindow(p);
                 connect(job, SIGNAL(result(KJob*)), p, SLOT(statFinished(KJob*)));

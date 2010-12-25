@@ -35,6 +35,8 @@ public:
     KBibTeXPart(QWidget *parentWidget, QObject *parent, bool browserViewWanted);
     virtual ~KBibTeXPart();
 
+    void setModified(bool modified);
+
 protected:
     virtual bool openFile();
     virtual bool saveFile();

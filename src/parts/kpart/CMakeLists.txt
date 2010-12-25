@@ -4,6 +4,7 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/../../gui
   ${CMAKE_CURRENT_SOURCE_DIR}/../../gui/config
   ${CMAKE_CURRENT_SOURCE_DIR}/../../gui/widgets
+  ${CMAKE_CURRENT_SOURCE_DIR}/../../gui/bibtex
 )
 
 

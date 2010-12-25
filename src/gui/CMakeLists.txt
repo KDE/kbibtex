@@ -4,28 +4,31 @@ include( CheckIncludeFiles )
 
 include_directories(
 	${CMAKE_CURRENT_SOURCE_DIR}
+	${CMAKE_CURRENT_SOURCE_DIR}/bibtex
 	${CMAKE_CURRENT_SOURCE_DIR}/dialogs
+	${CMAKE_CURRENT_SOURCE_DIR}/element
+	${CMAKE_CURRENT_SOURCE_DIR}/field
 	${CMAKE_CURRENT_SOURCE_DIR}/widgets
-	${CMAKE_CURRENT_SOURCE_DIR}/widgets/fieldinput
+	${CMAKE_CURRENT_SOURCE_DIR}/widgets
 	${CMAKE_CURRENT_SOURCE_DIR}/config
 	${CMAKE_CURRENT_SOURCE_DIR}/../libkbibtexio/
 	${CMAKE_CURRENT_SOURCE_DIR}/../libkbibtexio/config
 )
 
 set( kbibtexgui_LIB_SRCS
-	widgets/bibtexfileview.cpp
-	widgets/bibtexfilemodel.cpp
+	field/fieldinput.cpp
+	field/fieldlineedit.cpp
+	field/fieldlistedit.cpp
+	bibtex/bibtexeditor.cpp
+	bibtex/clipboard.cpp
+	bibtex/bibtexfilemodel.cpp
+	bibtex/bibtexfileview.cpp
+	element/elementeditor.cpp
+	element/elementwidgets.cpp
 	widgets/menulineedit.cpp
-	widgets/fieldinput/fieldinput.cpp
-	widgets/fieldinput/fieldlineedit.cpp
-	widgets/fieldinput/fieldlistedit.cpp
 	widgets/filterbar.cpp
 	config/entrylayout.cpp
-	dialogs/elementwidgets.cpp
-	dialogs/elementeditor.cpp
-	clipboard.cpp
 	valuelistmodel.cpp
-	bibtexeditor.cpp
 )
 
 add_definitions( -DMAKE_KBIBTEXGUI_LIB )

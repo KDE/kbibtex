@@ -53,7 +53,7 @@
 #include <macro.h>
 #include <preamble.h>
 #include <comment.h>
-#include "filterbar.h"
+#include <filterbar.h>
 
 #include <valuelistmodel.h>
 #include <clipboard.h>
@@ -78,7 +78,7 @@ public:
     SortFilterBibTeXFileModel *sortFilterProxyModel;
     FilterBar *filterBar;
     QSignalMapper *signalMapperNewElement;
-    KAction *editCutAction, *editDeleteAction, *editCopyAction, *editPasteAction, *editCopyReferencesAction, *elementEditAction;
+    KAction *editCutAction, *editDeleteAction, *editCopyAction, *editPasteAction, *editCopyReferencesAction, *elementEditAction, *fileSaveAction;
 
     KBibTeXPartPrivate(KBibTeXPart *parent)
             : p(parent), sortFilterProxyModel(NULL), signalMapperNewElement(new QSignalMapper(parent)) {
@@ -286,9 +286,16 @@ KBibTeXPart::~KBibTeXPart()
     // nothing
 }
 
+void KBibTeXPart::setModified(bool modified){
+    KParts::ReadWritePart::setModified(modified);
+
+    d->fileSaveAction->setEnabled(modified);
+}
+
 void KBibTeXPart::setupActions(bool /*browserViewWanted FIXME*/)
 {
-    actionCollection()->addAction(KStandardAction::Save, this, SLOT(documentSave()));
+    d->fileSaveAction=actionCollection()->addAction(KStandardAction::Save, this, SLOT(documentSave()));
+    d->fileSaveAction->setEnabled(false);
     actionCollection()->addAction(KStandardAction::SaveAs, this, SLOT(documentSaveAs()));
     KAction *saveCopyAsAction = new KAction(KIcon("document-save"), i18n("Save Copy As..."), this);
     actionCollection()->addAction("file_save_copy_as", saveCopyAsAction);
