@@ -32,9 +32,9 @@
 #include "websearchgooglescholar.h"
 
 static const QString startPageUrl = QLatin1String("http://scholar.google.com/?hl=en");
-static const QString configPageUrl = QLatin1String("http://%1/scholar_preferences?hl=en");
-static const QString setConfigPageUrl = QLatin1String("http://%1/scholar_setprefs?hl=en&inststart=0&instq=&inst=&submit=&lang=all&scis=yes&scisf=4&num=%2");
-static const QString queryPageUrl = QLatin1String("http://%1/scholar?hl=en&num=%2&q=%3&btnG=Search");
+static const QString configPageUrl = QLatin1String("http://%1/scholar_preferences?");
+static const QString setConfigPageUrl = QLatin1String("http://%1/scholar_setprefs?");
+static const QString queryPageUrl = QLatin1String("http://%1/scholar?");
 static const QRegExp linkToBib(QLatin1String("/scholar.bib\\?[^\" >]+"));
 
 FileImporterBibTeX importer;
@@ -66,10 +66,10 @@ void WebSearchGoogleScholar::startSearch(const QMap<QString, QString> &query, in
     m_queryString = queryFragments.join(" ");
 
     m_oldCookiesSettings.clear();
-    changeCookieSettings("http://www.google.com");
+    changeCookieSettings(startPageUrl);
 
     KIO::StoredTransferJob *job = KIO::storedGet(startPageUrl, KIO::Reload);
-    job->addMetaData("cookies", "manual");
+    job->addMetaData("cookies", "auto");
     job->addMetaData("cache", "reload");
     connect(job, SIGNAL(result(KJob *)), this, SLOT(doneFetchingStartPage(KJob*)));
     connect(job, SIGNAL(redirection(KIO::Job*, KUrl)), this, SLOT(redirection(KIO::Job*, KUrl)));
@@ -97,7 +97,11 @@ void WebSearchGoogleScholar::doneFetchingStartPage(KJob *kJob)
     dumpData(transferJob->data(), 0);
     kDebug() << "Google host: " << transferJob->url().host();
 
-    KIO::StoredTransferJob * newJob = KIO::storedGet(configPageUrl.arg(transferJob->url().host()), KIO::Reload);
+    QMap<QString, QString> inputMap = formParameters(transferJob->data());
+    inputMap["hl"] = "en";
+    QString url = configPageUrl;
+    url = url.arg(transferJob->url().host()).append(serializeFormParameters(inputMap));
+    KIO::StoredTransferJob * newJob = KIO::storedGet(url, KIO::Reload);
     newJob->addMetaData("cookies", "auto");
     newJob->addMetaData("cache", "reload");
     connect(newJob, SIGNAL(result(KJob *)), this, SLOT(doneFetchingConfigPage(KJob*)));
@@ -125,7 +129,14 @@ void WebSearchGoogleScholar::doneFetchingConfigPage(KJob *kJob)
     KIO::StoredTransferJob *transferJob = static_cast<KIO::StoredTransferJob *>(kJob);
     dumpData(transferJob->data(), 1);
 
-    KIO::StoredTransferJob * newJob = KIO::storedGet(setConfigPageUrl.arg(transferJob->url().host()).arg(m_numResults), KIO::Reload);
+    QMap<QString, QString> inputMap = formParameters(transferJob->data());
+    inputMap["hl"] = "en";
+    inputMap["scis"] = "yes";
+    inputMap["scisf"] = "4";
+    inputMap["num"] = QString::number(m_numResults);
+    QString url = setConfigPageUrl;
+    url = url.arg(transferJob->url().host()).append(serializeFormParameters(inputMap));
+    KIO::StoredTransferJob * newJob = KIO::storedGet(url, KIO::Reload);
     newJob->addMetaData("cookies", "auto");
     newJob->addMetaData("cache", "reload");
     connect(newJob, SIGNAL(result(KJob *)), this, SLOT(doneFetchingSetConfigPage(KJob*)));
@@ -153,7 +164,13 @@ void WebSearchGoogleScholar::doneFetchingSetConfigPage(KJob *kJob)
     KIO::StoredTransferJob *transferJob = static_cast<KIO::StoredTransferJob *>(kJob);
     dumpData(transferJob->data(), 2);
 
-    KIO::StoredTransferJob * newJob = KIO::storedGet(queryPageUrl.arg(transferJob->url().host()).arg(m_numResults).arg(m_queryString), KIO::Reload);
+    QMap<QString, QString> inputMap = formParameters(transferJob->data());
+    inputMap["hl"] = "en";
+    inputMap["num"] = QString::number(m_numResults);
+    inputMap["q"] = m_queryString;
+    QString url = queryPageUrl;
+    url = url.arg(transferJob->url().host()).append(serializeFormParameters(inputMap));
+    KIO::StoredTransferJob * newJob = KIO::storedGet(url, KIO::Reload);
     newJob->addMetaData("cookies", "auto");
     newJob->addMetaData("cache", "reload");
     connect(newJob, SIGNAL(result(KJob *)), this, SLOT(doneFetchingQueryPage(KJob*)));
@@ -309,8 +326,10 @@ void WebSearchGoogleScholar::changeCookieSettings(const QString &url)
         m_oldCookiesSettings.insert(url, replyGetDomainAdvice.value());
         QDBusReply<bool> replySetDomainAdvice = kcookiejar.call("setDomainAdvice", url, "accept");
         success = replySetDomainAdvice.isValid() && replySetDomainAdvice.value();
-        if (success)
-            kcookiejar.call("reloadPolicy");
+        if (success) {
+            QDBusReply<void> reply = kcookiejar.call("reloadPolicy");
+            success = reply.isValid();
+        }
     }
 
     if (!success) {
@@ -324,9 +343,102 @@ void WebSearchGoogleScholar::changeCookieSettings(const QString &url)
 void WebSearchGoogleScholar::restoreOldCookieSettings()
 {
     QDBusInterface kcookiejar("org.kde.kded", "/modules/kcookiejar", "org.kde.KCookieServer");
-    for (QMap<QString, QString>::ConstIterator it = m_oldCookiesSettings.constBegin(); it != m_oldCookiesSettings.constEnd();++it)
+    for (QMap<QString, QString>::ConstIterator it = m_oldCookiesSettings.constBegin(); it != m_oldCookiesSettings.constEnd(); ++it)
         QDBusReply<bool> replySetDomainAdvice = kcookiejar.call("setDomainAdvice", it.key(), it.value());
 
     kcookiejar.call("reloadPolicy");
     m_oldCookiesSettings.clear();
+}
+
+QMap<QString, QString> WebSearchGoogleScholar::formParameters(const QByteArray &byteArray)
+{
+    /// how to recognize HTML tags
+    static const QString formTagBegin = QLatin1String("<form ");
+    static const QString formTagEnd = QLatin1String("</form>");
+    static const QString inputTagBegin = QLatin1String("<input");
+    static const QString selectTagBegin = QLatin1String("<select ");
+    static const QString selectTagEnd = QLatin1String("</select>");
+    static const QString optionTagBegin = QLatin1String("<option ");
+    /// regular expressions to test or retrieve attributes in HTML tags
+    const QRegExp inputTypeRegExp("<input[^>]+\\btype=[\"]?([^\" >\n\t]+)");
+    const QRegExp inputNameRegExp("<input[^>]+\\bname=[\"]?([^\" >\n\t]+)");
+    const QRegExp inputValueRegExp("<input[^>]+\\bvalue=([^\"][^ >\n\t]+|\"[^\"]*\")");
+    const QRegExp inputIsCheckedRegExp("<input[^>]* checked([> \t\n]|=[\"]?checked)");
+    const QRegExp selectNameRegExp("<select[^>]+\\bname=[\"]?([^\" >\n\t]*)");
+    const QRegExp optionValueRegExp("<option[^>]+\\bvalue=[\"]?([^\" >\n\t]*)");
+    const QRegExp optionSelectedRegExp("<option[^>]* selected([> \t\n]|=[\"]?selected)");
+
+    /// initialize data
+    QTextStream ts(byteArray);
+    QString htmlText = ts.readAll();
+    QMap<QString, QString> result;
+
+    /// determined boundaries of (only) "form" tag
+    int startPos = htmlText.indexOf(formTagBegin);
+    int endPos = htmlText.indexOf(formTagEnd, startPos);
+
+    /// search for "input" tags within form
+    int p = htmlText.indexOf(inputTagBegin, startPos);
+    while (p > startPos && p < endPos) {
+        /// get "type", "name", and "value" attributes
+        QString inputType = htmlText.indexOf(inputTypeRegExp, p) == p ? inputTypeRegExp.cap(1) : QString::null;
+        QString inputName = htmlText.indexOf(inputNameRegExp, p) == p ? inputNameRegExp.cap(1) : QString::null;
+        QString inputValue = htmlText.indexOf(inputValueRegExp, p) == p ? inputValueRegExp.cap(1) : QString::null;
+        /// some values have quotation marks around, remove them
+        if (inputValue[0] == '"')
+            inputValue = inputValue.mid(1, inputValue.length() - 2);
+
+        /// get value of input types
+        if (inputType == "hidden" || inputType == "text" || inputType == "submit") {
+            result[inputName] = inputValue;
+        } else if (inputType == "radio" || inputType == "checkbox") {
+            /// must be checked or selected
+            if (htmlText.indexOf(inputIsCheckedRegExp, p) == p)
+                result[inputName] = inputValue;
+        }
+        /// ignore input type "image"
+
+        p = htmlText.indexOf(inputTagBegin, p + 1);
+    }
+
+    /// search for "select" tags within form
+    p = htmlText.indexOf(selectTagBegin, startPos);
+    while (p > startPos && p < endPos) {
+        /// get "name" attribute from "select" tag
+        QString selectName = htmlText.indexOf(selectNameRegExp, p) == p ? selectNameRegExp.cap(1) : QString::null;
+
+        /// "select" tag contains one or several "option" tags, search all
+        int popt = htmlText.indexOf(optionTagBegin, p);
+        int endSelect = htmlText.indexOf(selectTagEnd, p);
+        while (popt > p && popt < endSelect) {
+            /// get "value" attribute from "option" tag
+            QString optionValue = htmlText.indexOf(optionValueRegExp, popt) == popt ? optionValueRegExp.cap(1) : QString::null;
+            /// if this "option" tag is "selected", store value
+            if (htmlText.indexOf(optionSelectedRegExp, popt) == popt)
+                result[selectName] = optionValue;
+
+            popt = htmlText.indexOf(optionTagBegin, popt + 1);
+        }
+
+        p = htmlText.indexOf(selectTagBegin, p + 1);
+    }
+
+    return result;
+}
+
+QString WebSearchGoogleScholar::serializeFormParameters(QMap<QString, QString> &inputMap)
+{
+    QString result;
+    for (QMap<QString, QString>::ConstIterator it = inputMap.constBegin(); it != inputMap.constEnd(); ++it) {
+        if (!result.isEmpty())
+            result.append("&");
+        result.append(it.key()).append("=");
+
+        QString value = it.value();
+        /// replace some protected characters that would be invalid or ambiguous in an URL
+        value = value.replace(" ", "+").replace("%", "%25").replace("&", "%26").replace("=", "%3D").replace("?", "%3F");
+
+        result.append(value);
+    }
+    return result;
 }

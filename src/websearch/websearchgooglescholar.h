@@ -67,6 +67,8 @@ private:
 
     void changeCookieSettings(const QString &url);
     void restoreOldCookieSettings();
+    QMap<QString, QString> formParameters(const QByteArray &byteArray);
+    QString serializeFormParameters(QMap<QString, QString> &inputMap);
 };
 
 #endif // KBIBTEX_WEBSEARCH_GOOGLESCHOLAR_H
