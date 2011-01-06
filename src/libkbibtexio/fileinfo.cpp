@@ -130,8 +130,13 @@ QList<KUrl> FileInfo::entryUrls(const Entry *entry, const KUrl &bibTeXUrl)
             plainText = plainText.replace(regExpEscapedChars.cap(0), regExpEscapedChars.cap(1));
 
         if (plainText.indexOf("://") < 0) {
-            /// no protocol, assume http
-            plainText = plainText.prepend("http://");
+            if ((pos = KBibTeX::domainNameRegExp.indexIn(plainText)) != 0) {
+                /// text is not starting with a domain name
+                plainText = "";
+            } else {
+                /// looks like a valid domain name at the start, but no protocol given, assume http
+                plainText = plainText.prepend("http://");
+            }
         }
 
         KUrl url(plainText);
