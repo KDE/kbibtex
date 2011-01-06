@@ -50,6 +50,9 @@ public:
 
     bool isModified() const;
 
+protected:
+    virtual void focusInEvent(QFocusEvent *event);
+
 signals:
     void textChanged(const QString &);
 

@@ -373,7 +373,7 @@ public:
 DocumentList::DocumentList(OpenFileInfoManager *openFileInfoManager, QWidget *parent)
         : QTabWidget(parent), d(new DocumentListPrivate(openFileInfoManager, this))
 {
-    // nothing
+    setDocumentMode(true);
 }
 
 void DocumentList::fileSelected(const KFileItem &item)

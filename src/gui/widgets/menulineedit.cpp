@@ -170,6 +170,14 @@ bool MenuLineEdit::isModified() const
     return false;
 }
 
+void MenuLineEdit::focusInEvent(QFocusEvent *)
+{
+    if (d->m_singleLineEditText != NULL)
+        d->m_singleLineEditText->setFocus();
+    else if (d->m_multiLineEditText != NULL)
+        d->m_multiLineEditText->setFocus();
+}
+
 void MenuLineEdit::slotTextChanged()
 {
     Q_ASSERT(d->m_multiLineEditText != NULL);
