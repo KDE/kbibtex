@@ -348,7 +348,9 @@ charmappingdatalatex[] = {
     {"\"<", 0x00AB, "\"<"},
     {"\">", 0x00BB, "\">"},
     {"[?]`", 0x00BF, "?`"},
-    {"--", 0x2013, "--"}
+    {"--", 0x2013, "--"},
+    {"``", 0x201C, "``"},
+    {"''", 0x201D, "''"}
 };
 
 static const int charmappingdatalatexcount = sizeof(charmappingdatalatex) / sizeof(charmappingdatalatex[ 0 ]) ;
