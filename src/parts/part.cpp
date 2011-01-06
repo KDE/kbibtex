@@ -286,7 +286,8 @@ KBibTeXPart::~KBibTeXPart()
     // nothing
 }
 
-void KBibTeXPart::setModified(bool modified){
+void KBibTeXPart::setModified(bool modified)
+{
     KParts::ReadWritePart::setModified(modified);
 
     d->fileSaveAction->setEnabled(modified);
@@ -294,7 +295,7 @@ void KBibTeXPart::setModified(bool modified){
 
 void KBibTeXPart::setupActions(bool /*browserViewWanted FIXME*/)
 {
-    d->fileSaveAction=actionCollection()->addAction(KStandardAction::Save, this, SLOT(documentSave()));
+    d->fileSaveAction = actionCollection()->addAction(KStandardAction::Save, this, SLOT(documentSave()));
     d->fileSaveAction->setEnabled(false);
     actionCollection()->addAction(KStandardAction::SaveAs, this, SLOT(documentSaveAs()));
     KAction *saveCopyAsAction = new KAction(KIcon("document-save"), i18n("Save Copy As..."), this);

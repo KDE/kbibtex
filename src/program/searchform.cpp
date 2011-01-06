@@ -224,8 +224,8 @@ public:
         case 0: whichEnginesLabel->setText(i18n("No search engine selected. <a href=\"changeEngine\">Change</a>"));break;
         case 1: whichEnginesLabel->setText(i18n("Search engine <b>%1</b> is selected. <a href=\"changeEngine\">Change</a>", checkedEngines.first()));break;
         case 2: whichEnginesLabel->setText(i18n("Search engines <b>%1</b> and <b>%2</b> are selected. <a href=\"changeEngine\">Change</a>", checkedEngines.first(), checkedEngines.at(1)));break;
-        case 3:whichEnginesLabel->setText(i18n("Search engines <b>%1</b>, <b>%2</b>, and <b>%3</b> are selected. <a href=\"changeEngine\">Change</a>", checkedEngines.first(), checkedEngines.at(1), checkedEngines.at(2)));break;
-        default:whichEnginesLabel->setText(i18n("Search engines <b>%1</b>, <b>%2</b>, and more are selected. <a href=\"changeEngine\">Change</a>", checkedEngines.first(), checkedEngines.at(1)));break;
+        case 3: whichEnginesLabel->setText(i18n("Search engines <b>%1</b>, <b>%2</b>, and <b>%3</b> are selected. <a href=\"changeEngine\">Change</a>", checkedEngines.first(), checkedEngines.at(1), checkedEngines.at(2)));break;
+        default: whichEnginesLabel->setText(i18n("Search engines <b>%1</b>, <b>%2</b>, and more are selected. <a href=\"changeEngine\">Change</a>", checkedEngines.first(), checkedEngines.at(1)));break;
         }
     }
 };
@@ -257,7 +257,7 @@ void SearchForm::startSearch()
     }
 
     if (queryTerms.isEmpty()) {
-        KMessageBox::error(this, i18n("Could not start searching the Internet:\nNo search terms entered."), i18n("Searching the Internet"));
+        KMessageBox::sorry(this, i18n("Could not start searching the Internet:\nNo search terms entered."), i18n("Searching the Internet"));
         return;
     }
 
