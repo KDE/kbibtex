@@ -89,7 +89,7 @@ void BibTeXEditor::editElement(Element *element)
 
     dialog.exec();
 
-    if (elementEditor.isModified()) {
+    if (elementEditor.elementChanged()) {
         emit currentElementChanged(currentElement(), bibTeXModel()->bibTeXFile());
         emit modified();
     }

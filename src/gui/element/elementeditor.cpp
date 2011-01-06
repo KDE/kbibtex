@@ -57,9 +57,10 @@ private:
 
 public:
     QTabWidget *tab;
+    bool elementChanged;
 
     ElementEditorPrivate(Element *m, const File *f, ElementEditor *parent)
-            : element(m), file(f), p(parent), previousWidget(NULL), referenceWidget(NULL), sourceWidget(NULL) {
+            : element(m), file(f), p(parent), previousWidget(NULL), referenceWidget(NULL), sourceWidget(NULL), elementChanged(false) {
         createGUI();
     }
 
@@ -149,6 +150,7 @@ public:
     }
 
     void apply(Element *element) {
+        elementChanged = true;
         if (referenceWidget != NULL)
             referenceWidget->apply(element);
         ElementWidget *currentElementWidget = dynamic_cast<ElementWidget*>(tab->currentWidget());
@@ -346,13 +348,6 @@ public:
 
     }
 
-    bool isModified() {
-        bool result = false;
-        for (QList<ElementWidget*>::ConstIterator it = widgets.constBegin(); it != widgets.constEnd(); ++it)
-            result |= (*it)->isModified();
-        return result;
-    }
-
     void setModified(bool newIsModified) {
         for (QList<ElementWidget*>::Iterator it = widgets.begin(); it != widgets.end(); ++it)
             (*it)->setModified(newIsModified);
@@ -413,9 +408,9 @@ void ElementEditor::setReadOnly(bool isReadOnly)
     d->setReadOnly(isReadOnly);
 }
 
-bool ElementEditor::isModified()
+bool ElementEditor::elementChanged()
 {
-    return d->isModified();
+    return d->elementChanged;
 }
 
 void ElementEditor::tabChanged()

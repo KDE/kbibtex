@@ -38,7 +38,7 @@ public:
     ElementEditor(const Element *element, const File *file, QWidget *parent);
     ElementEditor(Element *element, const File *file, QWidget *parent);
     void setReadOnly(bool isReadOnly = true);
-    bool isModified();
+    bool elementChanged();
 
 signals:
     void modified(bool);
