@@ -36,8 +36,7 @@ class KBIBTEXIO_EXPORT WebSearchGoogleScholar : public WebSearchAbstract
     Q_OBJECT
 
 public:
-    WebSearchGoogleScholar(QWidget *parent)
-            : WebSearchAbstract(parent) { /* nothing */ }
+    WebSearchGoogleScholar(QWidget *parent);
 
     virtual void startSearch(const QMap<QString, QString> &query, int numResults);
     virtual QString label() const;
@@ -47,6 +46,9 @@ protected:
 
 public slots:
     void cancel();
+
+protected:
+    void doStopSearch(int);
 
 private slots:
     void doneFetchingStartPage(KJob *);
@@ -58,17 +60,8 @@ private slots:
     void redirection(KIO::Job *, const KUrl &);
 
 private:
-    QMap<QString, QString> m_oldCookiesSettings;
-    int m_numResults;
-    QString m_queryString;
-    QStringList m_listBibTeXurls;
-    bool m_hasBeenCancelled;
-    KIO::TransferJob *m_currentJob;
-
-    void changeCookieSettings(const QString &url);
-    void restoreOldCookieSettings();
-    QMap<QString, QString> formParameters(const QByteArray &byteArray);
-    QString serializeFormParameters(QMap<QString, QString> &inputMap);
+    class WebSearchGoogleScholarPrivate;
+    WebSearchGoogleScholarPrivate *d;
 };
 
 #endif // KBIBTEX_WEBSEARCH_GOOGLESCHOLAR_H
