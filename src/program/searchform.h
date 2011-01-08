@@ -36,7 +36,6 @@ public:
 
 signals:
     void doneSearching();
-    void readyStatusChanged(bool);
 
 public slots:
     void updatedConfiguration();
@@ -54,7 +53,6 @@ private slots:
     void itemCheckChanged();
     void openHomepage();
     void enginesListCurrentChanged(QListWidgetItem*, QListWidgetItem*);
-    void formReadStatusChanged();
 };
 
 

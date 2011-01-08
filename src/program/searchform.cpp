@@ -428,8 +428,3 @@ void SearchForm::enginesListCurrentChanged(QListWidgetItem *current, QListWidget
 {
     d->enginesListCurrentChanged(current);
 }
-
-void SearchForm::formReadStatusChanged()
-{
-    emit readyStatusChanged(d->generalQueryTermsForm->readyToStart());
-}
