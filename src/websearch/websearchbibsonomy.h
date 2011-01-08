@@ -22,9 +22,15 @@
 
 #include <QByteArray>
 
+#include <KIcon>
 #include <kio/jobclasses.h>
 
 #include <websearchabstract.h>
+
+class QSpinBox;
+class KComboBox;
+class KLineEdit;
+
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
@@ -34,11 +40,13 @@ class KBIBTEXIO_EXPORT WebSearchBibsonomy : public WebSearchAbstract
     Q_OBJECT
 
 public:
-    WebSearchBibsonomy(QWidget *parent)
-            : WebSearchAbstract(parent) { /* nothing */ }
+    WebSearchBibsonomy(QWidget *parent);
 
+    virtual void startSearch();
     virtual void startSearch(const QMap<QString, QString> &query, int numResults);
     virtual QString label() const;
+    virtual WebSearchQueryFormAbstract* customWidget(QWidget *parent);
+    virtual KUrl homepage() const;
 
 public slots:
     void cancel();
@@ -47,11 +55,17 @@ private slots:
     void data(KIO::Job *job, const QByteArray &data);
     void jobDone(KJob *job);
 
+protected:
+    virtual QString favIconUrl() const;
+
 private:
-    QString m_queryString;
+    class WebSearchQueryFormBibsonomy;
+    WebSearchQueryFormBibsonomy *form;
+
     QByteArray m_buffer;
     KIO::TransferJob *m_job;
 
+    KUrl buildQueryUrl();
     KUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults);
 };
 

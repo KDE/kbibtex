@@ -21,11 +21,15 @@
 #include <QtDBus/QtDBus>
 #include <QtDBus/QDBusInterface>
 #include <QtDBus/QDBusReply>
+#include <QSpinBox>
+#include <QLayout>
+#include <QLabel>
 
 #include <KLocale>
 #include <KMessageBox>
 #include <KDebug>
 #include <KConfigGroup>
+#include <KLineEdit>
 #include <kio/job.h>
 #include <kio/netaccess.h>
 
@@ -51,6 +55,83 @@ static void dumpData(const QByteArray &byteArray, int index)
     f.close();
     */
 }
+/**
+ * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ */
+class WebSearchGoogleScholar::WebSearchQueryFormGoogleScholar : public WebSearchQueryFormAbstract
+{
+public:
+    KLineEdit *lineEditAllWords, *lineEditAnyWord, *lineEditWithoutWords, *lineEditExactPhrase, *lineEditAuthor, *lineEditPublication, *lineEditYearStart, *lineEditYearEnd;
+    QSpinBox *numResultsField;
+
+    WebSearchQueryFormGoogleScholar(QWidget *parent)
+            : WebSearchQueryFormAbstract(parent) {
+        QGridLayout *layout = new QGridLayout(this);
+        layout->setMargin(0);
+
+        QLabel *label = new QLabel(i18n("<qt><b>All</b> words:</qt>"), this);
+        layout->addWidget(label, 0, 0, 1, 1, Qt::AlignVCenter | Qt::AlignRight);
+        lineEditAllWords = new KLineEdit(this);
+        layout->addWidget(lineEditAllWords, 0, 1, 1, 3);
+        label->setBuddy(lineEditAllWords);
+
+        label = new QLabel(i18n("<qt><b>Any</b> words:</qt>"), this);
+        layout->addWidget(label, 1, 0, 1, 1, Qt::AlignVCenter | Qt::AlignRight);
+        lineEditAnyWord = new KLineEdit(this);
+        layout->addWidget(lineEditAnyWord, 1, 1, 1, 3);
+        label->setBuddy(lineEditAnyWord);
+
+        label = new QLabel(i18n("<qt><b>Without</b> words:</qt>"), this);
+        layout->addWidget(label, 2, 0, 1, 1, Qt::AlignVCenter | Qt::AlignRight);
+        lineEditWithoutWords = new KLineEdit(this);
+        layout->addWidget(lineEditWithoutWords, 2, 1, 1, 3);
+        label->setBuddy(lineEditWithoutWords);
+
+        label = new QLabel(i18n("Exact phrase:"), this);
+        layout->addWidget(label, 3, 0, 1, 1, Qt::AlignVCenter | Qt::AlignRight);
+        lineEditExactPhrase = new KLineEdit(this);
+        layout->addWidget(lineEditExactPhrase, 3, 1, 1, 3);
+        label->setBuddy(lineEditExactPhrase);
+
+        label = new QLabel(i18n("Author:"), this);
+        layout->addWidget(label, 4, 0, 1, 1, Qt::AlignVCenter | Qt::AlignRight);
+        lineEditAuthor = new KLineEdit(this);
+        layout->addWidget(lineEditAuthor, 4, 1, 1, 3);
+        label->setBuddy(lineEditAuthor);
+
+        label = new QLabel(i18n("Publication:"), this);
+        layout->addWidget(label, 5, 0, 1, 1, Qt::AlignVCenter | Qt::AlignRight);
+        lineEditPublication = new KLineEdit(this);
+        layout->addWidget(lineEditPublication, 5, 1, 1, 3);
+        label->setBuddy(lineEditPublication);
+
+        label = new QLabel(i18n("Year:"), this);
+        layout->addWidget(label, 6, 0, 1, 1, Qt::AlignVCenter | Qt::AlignRight);
+        lineEditYearStart = new KLineEdit(this);
+        layout->addWidget(lineEditYearStart, 6, 1, 1, 1);
+        label->setBuddy(lineEditYearStart);
+        label = new QLabel(QChar(0x2013), this);
+        layout->addWidget(label, 6, 2, 1, 1);
+        lineEditYearEnd = new KLineEdit(this);
+        layout->addWidget(lineEditYearEnd, 6, 3, 1, 1);
+
+        label = new QLabel(i18n("Number of Results:"), this);
+        layout->addWidget(label, 7, 0, 1, 1);
+        numResultsField = new QSpinBox(this);
+        numResultsField->setMinimum(3);
+        numResultsField->setMaximum(100);
+        numResultsField->setValue(20);
+        layout->addWidget(numResultsField, 7, 1, 1, 3);
+        label->setBuddy(numResultsField);
+
+        layout->setRowStretch(8, 100);
+        lineEditAllWords->setFocus(Qt::TabFocusReason);
+    }
+
+    virtual bool readyToStart() const {
+        return !(lineEditAllWords->text().isEmpty() && lineEditAnyWord->text().isEmpty() && lineEditAuthor->text().isEmpty() && lineEditExactPhrase->text().isEmpty() && lineEditPublication->text().isEmpty() && lineEditWithoutWords->text().isEmpty() && lineEditYearEnd->text().isEmpty() && lineEditYearStart->text().isEmpty());
+    }
+};
 
 class WebSearchGoogleScholar::WebSearchGoogleScholarPrivate
 {
@@ -58,7 +139,6 @@ private:
     WebSearchGoogleScholar *p;
     QMap<QString, QString> originalCookiesSettings;
     bool originalCookiesEnabled;
-
 
 public:
     int numResults;
@@ -68,13 +148,17 @@ public:
     QStringList listBibTeXurls;
     QString queryString;
     QString startPageUrl;
+    QString advancedSearchPageUrl;
     QString configPageUrl;
     QString setConfigPageUrl;
     QString queryPageUrl;
+    bool goAdvanced;
+    WebSearchQueryFormGoogleScholar *form;
 
     WebSearchGoogleScholarPrivate(QWidget *widget, WebSearchGoogleScholar *parent)
-            : p(parent), w(widget) {
+            : p(parent), w(widget), goAdvanced(false), form(NULL) {
         startPageUrl = QLatin1String("http://scholar.google.com/?hl=en");
+        advancedSearchPageUrl = QLatin1String("http://%1/advanced_scholar_search?hl=en");
         configPageUrl = QLatin1String("http://%1/scholar_preferences?");
         setConfigPageUrl = QLatin1String("http://%1/scholar_setprefs?");
         queryPageUrl = QLatin1String("http://%1/scholar?");
@@ -245,6 +329,21 @@ public:
         }
         return result;
     }
+
+    void startSearch() {
+        hasBeenCancelled = false;
+        currentJob = NULL;
+
+        initializeCookieSettings();
+
+        KIO::StoredTransferJob *job = KIO::storedGet(startPageUrl, KIO::Reload);
+        job->addMetaData("cookies", "auto");
+        job->addMetaData("cache", "reload");
+        connect(job, SIGNAL(result(KJob *)), p, SLOT(doneFetchingStartPage(KJob*)));
+        connect(job, SIGNAL(redirection(KIO::Job*, KUrl)), p, SLOT(redirection(KIO::Job*, KUrl)));
+        connect(job, SIGNAL(permanentRedirection(KIO::Job*, KUrl, KUrl)), p, SLOT(permanentRedirection(KIO::Job*, KUrl, KUrl)));
+        currentJob = job;
+    }
 };
 
 WebSearchGoogleScholar::WebSearchGoogleScholar(QWidget *parent)
@@ -253,28 +352,26 @@ WebSearchGoogleScholar::WebSearchGoogleScholar(QWidget *parent)
     // nothing
 }
 
+void WebSearchGoogleScholar::startSearch()
+{
+    d->goAdvanced = true;
+    d->numResults = d->form->numResultsField->value();
+    d->queryString = QString::null;
+    d->startSearch();
+}
+
 void WebSearchGoogleScholar::startSearch(const QMap<QString, QString> &query, int numResults)
 {
+    d->goAdvanced = false;
     d->numResults = numResults;
-    d->hasBeenCancelled = false;
-    d->currentJob = NULL;
 
-    QStringList queryFragments;
-    for (QMap<QString, QString>::ConstIterator it = query.constBegin(); it != query.constEnd(); ++it) {
-        // FIXME: Is there a need for percent encoding?
-        queryFragments << it.value();
-    }
-    d->queryString = queryFragments.join(" ");
+    // FIXME: Is there a need for percent encoding?
+    d->queryString = query[queryKeyFreeText] + " " + query[queryKeyTitle];
+    if (!query[queryKeyAuthor].isEmpty())
+        d->queryString.append(" author:\"" + query[queryKeyAuthor] + "\"");
+    d->queryString.append(" " + query[queryKeyYear]);
 
-    d->initializeCookieSettings();
-
-    KIO::StoredTransferJob *job = KIO::storedGet(d->startPageUrl, KIO::Reload);
-    job->addMetaData("cookies", "auto");
-    job->addMetaData("cache", "reload");
-    connect(job, SIGNAL(result(KJob *)), this, SLOT(doneFetchingStartPage(KJob*)));
-    connect(job, SIGNAL(redirection(KIO::Job*, KUrl)), this, SLOT(redirection(KIO::Job*, KUrl)));
-    connect(job, SIGNAL(permanentRedirection(KIO::Job*, KUrl, KUrl)), this, SLOT(permanentRedirection(KIO::Job*, KUrl, KUrl)));
-    d->currentJob = job;
+    d->startSearch();
 }
 
 void WebSearchGoogleScholar::doneFetchingStartPage(KJob *kJob)
@@ -299,6 +396,7 @@ void WebSearchGoogleScholar::doneFetchingStartPage(KJob *kJob)
 
     QMap<QString, QString> inputMap = d->formParameters(transferJob->data());
     inputMap["hl"] = "en";
+
     QString url = d->configPageUrl;
     url = url.arg(transferJob->url().host()).append(d->serializeFormParameters(inputMap));
     KIO::StoredTransferJob * newJob = KIO::storedGet(url, KIO::Reload);
@@ -345,6 +443,48 @@ void WebSearchGoogleScholar::doneFetchingConfigPage(KJob *kJob)
     d->currentJob = newJob;
 }
 
+void WebSearchGoogleScholar::doneFetchingAdvSearchPage(KJob *kJob)
+{
+    d->currentJob = NULL;
+    if (d->hasBeenCancelled) {
+        kWarning() << "Searching " << label() << " got cancelled";
+        d->restoreOldCookieSettings();
+        emit stoppedSearch(resultCancelled);
+        return;
+    } else if (kJob->error() != KJob::NoError) {
+        kWarning() << "Searching " << label() << " failed with error message: " << kJob->errorString();
+        d->restoreOldCookieSettings();
+        KMessageBox::sorry(d->w, i18n("Searching \"%1\" failed with error message:\n\n%2", label(), kJob->errorString()));
+        emit stoppedSearch(resultUnspecifiedError);
+        return;
+    }
+
+    KIO::StoredTransferJob *transferJob = static_cast<KIO::StoredTransferJob *>(kJob);
+    dumpData(transferJob->data(), 1);
+
+    QMap<QString, QString> inputMap = d->formParameters(transferJob->data());
+    inputMap["hl"] = "en";
+    inputMap["num"] = QString::number(d->numResults);
+    inputMap["as_q"] = d->form->lineEditAllWords->text();
+    inputMap["as_epq"] = d->form->lineEditExactPhrase->text();
+    inputMap["as_oq"] = d->form->lineEditAnyWord->text();
+    inputMap["as_eq"] = d->form->lineEditWithoutWords->text();
+    inputMap["as_sauthors"] = d->form->lineEditAuthor->text();
+    inputMap["as_publication"] = d->form->lineEditPublication->text();
+    inputMap["as_ylo"] = d->form->lineEditYearStart->text();
+    inputMap["as_yhi"] = d->form->lineEditYearEnd->text();
+    QString url = d->queryPageUrl;
+    url = url.arg(transferJob->url().host()).append(d->serializeFormParameters(inputMap));
+    KIO::StoredTransferJob * newJob = KIO::storedGet(url, KIO::Reload);
+    newJob->addMetaData("cookies", "auto");
+    newJob->addMetaData("cache", "reload");
+    connect(newJob, SIGNAL(result(KJob *)), this, SLOT(doneFetchingQueryPage(KJob*)));
+    connect(newJob, SIGNAL(redirection(KIO::Job*, KUrl)), this, SLOT(redirection(KIO::Job*, KUrl)));
+    connect(newJob, SIGNAL(permanentRedirection(KIO::Job*, KUrl, KUrl)), this, SLOT(permanentRedirection(KIO::Job*, KUrl, KUrl)));
+    d->currentJob = newJob;
+}
+
+
 void WebSearchGoogleScholar::doneFetchingSetConfigPage(KJob *kJob)
 {
     d->currentJob = NULL;
@@ -366,14 +506,22 @@ void WebSearchGoogleScholar::doneFetchingSetConfigPage(KJob *kJob)
 
     QMap<QString, QString> inputMap = d->formParameters(transferJob->data());
     inputMap["hl"] = "en";
-    inputMap["num"] = QString::number(d->numResults);
-    inputMap["q"] = d->queryString;
-    QString url = d->queryPageUrl;
+
+    if (d->goAdvanced) {
+        // TODO
+    } else {
+        inputMap["num"] = QString::number(d->numResults);
+        inputMap["q"] = d->queryString;
+    }
+    QString url = d->goAdvanced ? d->advancedSearchPageUrl : d->queryPageUrl;
     url = url.arg(transferJob->url().host()).append(d->serializeFormParameters(inputMap));
     KIO::StoredTransferJob * newJob = KIO::storedGet(url, KIO::Reload);
     newJob->addMetaData("cookies", "auto");
     newJob->addMetaData("cache", "reload");
-    connect(newJob, SIGNAL(result(KJob *)), this, SLOT(doneFetchingQueryPage(KJob*)));
+    if (d->goAdvanced)
+        connect(newJob, SIGNAL(result(KJob *)), this, SLOT(doneFetchingAdvSearchPage(KJob*)));
+    else
+        connect(newJob, SIGNAL(result(KJob *)), this, SLOT(doneFetchingQueryPage(KJob*)));
     connect(newJob, SIGNAL(redirection(KIO::Job*, KUrl)), this, SLOT(redirection(KIO::Job*, KUrl)));
     connect(newJob, SIGNAL(permanentRedirection(KIO::Job*, KUrl, KUrl)), this, SLOT(permanentRedirection(KIO::Job*, KUrl, KUrl)));
     d->currentJob = newJob;
@@ -459,12 +607,8 @@ void WebSearchGoogleScholar::doneFetchingBibTeX(KJob *kJob)
     if (bibtexFile != NULL) {
         for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
             entry = dynamic_cast<Entry*>(*it);
-            if (entry != NULL) {
-                Value v;
-                v << new PlainText(i18n("%1 with search term \"%2\"", label(), d->queryString));
-                entry->insert(QLatin1String("kbibtex-websearch"), v);
+            if (entry != NULL)
                 emit foundEntry(entry);
-            }
         }
         delete bibtexFile;
     }
@@ -506,6 +650,21 @@ void WebSearchGoogleScholar::redirection(KIO::Job *, const KUrl &u)
 QString WebSearchGoogleScholar::label() const
 {
     return i18n("Google Scholar");
+}
+
+QString WebSearchGoogleScholar::favIconUrl() const
+{
+    return QLatin1String("http://scholar.google.com/favicon.ico");
+}
+
+WebSearchQueryFormAbstract* WebSearchGoogleScholar::customWidget(QWidget *parent)
+{
+    return (d->form = new WebSearchQueryFormGoogleScholar(parent));
+}
+
+KUrl WebSearchGoogleScholar::homepage() const
+{
+    return KUrl("http://scholar.google.com/");
 }
 
 void WebSearchGoogleScholar::cancel()

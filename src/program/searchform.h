@@ -36,6 +36,7 @@ public:
 
 signals:
     void doneSearching();
+    void readyStatusChanged(bool);
 
 public slots:
     void updatedConfiguration();
@@ -51,6 +52,9 @@ private slots:
     void stoppedSearch(int resultCode);
     void tabSwitched(int newTab);
     void itemCheckChanged();
+    void openHomepage();
+    void enginesListCurrentChanged(QListWidgetItem*, QListWidgetItem*);
+    void formReadStatusChanged();
 };
 
 

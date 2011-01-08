@@ -18,6 +18,11 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
+#include <QFileInfo>
+
+#include <KStandardDirs>
+#include <kio/netaccess.h>
+
 #include "websearchabstract.h"
 
 const QString WebSearchAbstract::queryKeyFreeText = QLatin1String("free");
@@ -28,3 +33,17 @@ const QString WebSearchAbstract::queryKeyYear = QLatin1String("year");
 const int WebSearchAbstract::resultNoError = 0;
 const int WebSearchAbstract::resultCancelled = 0; /// may get redefined in the future!
 const int WebSearchAbstract::resultUnspecifiedError = 1;
+
+KIcon WebSearchAbstract::icon() const
+{
+    QString fileName = favIconUrl();
+    fileName = fileName.replace(QRegExp("[^-a-z0-9_]", Qt::CaseInsensitive), "");
+    fileName.prepend(KStandardDirs::locateLocal("cache", "favicons/"));
+
+    if (!QFileInfo(fileName).exists()) {
+        if (!KIO::NetAccess::file_copy(KUrl(favIconUrl()), KUrl(fileName), NULL))
+            return KIcon();
+    }
+
+    return KIcon(fileName);
+}

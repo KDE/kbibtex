@@ -25,8 +25,30 @@
 #include <QObject>
 #include <QMap>
 #include <QString>
+#include <QWidget>
+#include <QMetaType>
+
+#include <KIcon>
 
 #include <entry.h>
+
+/**
+ * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ */
+class WebSearchQueryFormAbstract : public QWidget
+{
+public:
+    WebSearchQueryFormAbstract(QWidget *parent)
+            : QWidget(parent) {
+        // nothing
+    }
+
+    virtual bool readyToStart() const {
+        return false;
+    }
+};
+
+Q_DECLARE_METATYPE(WebSearchQueryFormAbstract*)
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
@@ -49,11 +71,17 @@ public:
     static const int resultNoError;
     static const int resultUnspecifiedError;
 
+    virtual void startSearch() = 0;
     virtual void startSearch(const QMap<QString, QString> &query, int numResults) = 0;
     virtual QString label() const = 0;
+    virtual KIcon icon() const;
+    virtual WebSearchQueryFormAbstract* customWidget(QWidget *parent) = 0;
+    virtual KUrl homepage() const = 0;
 
 protected:
     QWidget *m_parent;
+
+    virtual QString favIconUrl() const = 0;
 
 signals:
     void foundEntry(Entry*);

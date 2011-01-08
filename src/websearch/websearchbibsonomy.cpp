@@ -19,15 +19,72 @@
 ***************************************************************************/
 
 #include <QBuffer>
+#include <QLayout>
+#include <QSpinBox>
+#include <QLabel>
 
 #include <KLocale>
 #include <KDebug>
+#include <KIcon>
+#include <KLineEdit>
+#include <KComboBox>
 #include <kio/job.h>
 
 #include <fileimporterbibtex.h>
 #include <file.h>
 #include <entry.h>
 #include "websearchbibsonomy.h"
+
+class WebSearchBibsonomy::WebSearchQueryFormBibsonomy : public WebSearchQueryFormAbstract
+{
+public:
+    KComboBox *comboBoxSearchWhere;
+    KLineEdit *lineEditSearchTerm;
+    QSpinBox *numResultsField;
+
+    WebSearchQueryFormBibsonomy(QWidget *widget)
+            : WebSearchQueryFormAbstract(widget) {
+        QGridLayout *layout = new QGridLayout(this);
+        layout->setMargin(0);
+
+        comboBoxSearchWhere = new KComboBox(false, this);
+        layout->addWidget(comboBoxSearchWhere, 0, 0, 1, 1);
+        comboBoxSearchWhere->addItem(i18n("Tag"), "tag");
+        comboBoxSearchWhere->addItem(i18n("User"), "user");
+        comboBoxSearchWhere->addItem(i18n("Group"), "group");
+        comboBoxSearchWhere->addItem(i18n("Author"), "author");
+        comboBoxSearchWhere->addItem(i18n("Concept"), "concept/tag");
+        comboBoxSearchWhere->addItem(i18n("BibTeX Key"), "bibtexkey");
+        comboBoxSearchWhere->addItem(i18n("Everywhere"), "search");
+        comboBoxSearchWhere->setCurrentIndex(comboBoxSearchWhere->count() - 1);
+
+        lineEditSearchTerm = new KLineEdit(this);
+        layout->addWidget(lineEditSearchTerm, 0, 1, 1, 1);
+        lineEditSearchTerm->setClearButtonShown(true);
+
+        QLabel *label = new QLabel(i18n("Number of Results:"), this);
+        layout->addWidget(label, 1, 0, 1, 1);
+        numResultsField = new QSpinBox(this);
+        numResultsField->setMinimum(3);
+        numResultsField->setMaximum(100);
+        numResultsField->setValue(20);
+        layout->addWidget(numResultsField, 1, 1, 1, 1);
+        label->setBuddy(numResultsField);
+
+        layout->setRowStretch(2, 100);
+        lineEditSearchTerm->setFocus(Qt::TabFocusReason);
+    }
+
+    virtual bool readyToStart() const {
+        return !lineEditSearchTerm->text().isEmpty();
+    }
+};
+
+WebSearchBibsonomy::WebSearchBibsonomy(QWidget *parent)
+        : WebSearchAbstract(parent), form(NULL)
+{
+    // nothing
+}
 
 void WebSearchBibsonomy::startSearch(const QMap<QString, QString> &query, int numResults)
 {
@@ -38,13 +95,50 @@ void WebSearchBibsonomy::startSearch(const QMap<QString, QString> &query, int nu
     connect(m_job, SIGNAL(result(KJob *)), this, SLOT(jobDone(KJob*)));
 }
 
+void WebSearchBibsonomy::startSearch()
+{
+    m_buffer.clear();
+
+    m_job = KIO::get(buildQueryUrl());
+    connect(m_job, SIGNAL(data(KIO::Job *, const QByteArray &)), this, SLOT(data(KIO::Job*, const QByteArray&)));
+    connect(m_job, SIGNAL(result(KJob *)), this, SLOT(jobDone(KJob*)));
+}
+
 QString WebSearchBibsonomy::label() const
 {
     return i18n("Bibsonomy");
 }
 
+QString WebSearchBibsonomy::favIconUrl() const
+{
+    return QLatin1String("http://www.bibsonomy.org/resources/image/favicon.png");
+}
+
+WebSearchQueryFormAbstract* WebSearchBibsonomy::customWidget(QWidget *parent)
+{
+    return new WebSearchBibsonomy::WebSearchQueryFormBibsonomy(parent);
+}
+
+KUrl WebSearchBibsonomy::homepage() const
+{
+    return KUrl("http://www.bibsonomy.org/");
+}
+
+KUrl WebSearchBibsonomy::buildQueryUrl()
+{
+    if (form == NULL)
+        return KUrl();
+
+    // FIXME: Is there a need for percent encoding?
+    QString queryString = form->lineEditSearchTerm->text();
+    // FIXME: Number of results doesn't seem to be supported by BibSonomy
+    return KUrl("http://www.bibsonomy.org/bib/" + form->comboBoxSearchWhere->itemData(form->comboBoxSearchWhere->currentIndex()).toString() + "/" + queryString + QString("?.entriesPerPage=%1").arg(form->numResultsField->value()));
+}
+
 KUrl WebSearchBibsonomy::buildQueryUrl(const QMap<QString, QString> &query, int numResults)
 {
+    QString url = QLatin1String("http://www.bibsonomy.org/bib/");
+
     bool hasFreeText = !query[queryKeyFreeText].isEmpty();
     bool hasTitle = !query[queryKeyTitle].isEmpty();
     bool hasAuthor = !query[queryKeyAuthor].isEmpty();
@@ -63,12 +157,11 @@ KUrl WebSearchBibsonomy::buildQueryUrl(const QMap<QString, QString> &query, int 
         queryFragments << it.value();
     }
 
-    m_queryString = queryFragments.join("+");
+    QString queryString = queryFragments.join("+");
     // FIXME: Number of results doesn't seem to be supported by BibSonomy
-    KUrl url(QLatin1String("http://www.bibsonomy.org/bib/") + searchType + "/" + m_queryString + QString("?.entriesPerPage=%1").arg(numResults));
-    kDebug() << label() << " URL = " << url;
+    url.append(searchType + "/" + queryString + QString("?.entriesPerPage=%1").arg(numResults));
 
-    return url;
+    return KUrl(url);
 }
 
 void WebSearchBibsonomy::cancel()
@@ -94,12 +187,9 @@ void WebSearchBibsonomy::jobDone(KJob *job)
         if (bibtexFile != NULL) {
             for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
                 Entry *entry = dynamic_cast<Entry*>(*it);
-                if (entry != NULL) {
-                    Value v;
-                    v << new PlainText(i18n("%1 with search term \"%2\"", label(), m_queryString));
-                    entry->insert(QLatin1String("kbibtex-websearch"), v);
+                if (entry != NULL)
                     emit foundEntry(entry);
-                }
+
             }
             emit stoppedSearch(bibtexFile->isEmpty() ? resultUnspecifiedError : resultNoError);
             delete bibtexFile;

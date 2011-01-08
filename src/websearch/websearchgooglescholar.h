@@ -22,6 +22,7 @@
 
 #include <QByteArray>
 
+#include <KIcon>
 #include <kio/jobclasses.h>
 
 #include <websearchabstract.h>
@@ -38,21 +39,23 @@ class KBIBTEXIO_EXPORT WebSearchGoogleScholar : public WebSearchAbstract
 public:
     WebSearchGoogleScholar(QWidget *parent);
 
+    virtual void startSearch();
     virtual void startSearch(const QMap<QString, QString> &query, int numResults);
     virtual QString label() const;
-
-protected:
-    KUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults);
+    virtual WebSearchQueryFormAbstract* customWidget(QWidget *parent);
+    virtual KUrl homepage() const;
 
 public slots:
     void cancel();
 
 protected:
     void doStopSearch(int);
+    virtual QString favIconUrl() const;
 
 private slots:
     void doneFetchingStartPage(KJob *);
     void doneFetchingConfigPage(KJob *);
+    void doneFetchingAdvSearchPage(KJob *);
     void doneFetchingSetConfigPage(KJob *);
     void doneFetchingQueryPage(KJob *);
     void doneFetchingBibTeX(KJob *);
@@ -60,6 +63,8 @@ private slots:
     void redirection(KIO::Job *, const KUrl &);
 
 private:
+    class WebSearchQueryFormGoogleScholar;
+    WebSearchQueryFormGoogleScholar *form;
     class WebSearchGoogleScholarPrivate;
     WebSearchGoogleScholarPrivate *d;
 };
