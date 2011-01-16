@@ -19,6 +19,7 @@
 ***************************************************************************/
 
 #include <QDropEvent>
+#include <QTimer>
 
 #include <KDialog>
 #include <KLocale>
@@ -108,8 +109,10 @@ void BibTeXEditor::setSelectedElements(QList<Element*> &list)
     selModel->clear();
     for (QList<Element*>::ConstIterator it = list.constBegin(); it != list.constEnd(); ++it) {
         int row = bibTeXModel()->row(*it);
-        QModelIndex idx = model()->index(row, 0);
-        selModel->setCurrentIndex(idx, QItemSelectionModel::SelectCurrent);
+        for (int col = model()->columnCount(QModelIndex()) - 1; col >= 0; --col) {
+            QModelIndex idx = model()->index(row, col);
+            selModel->setCurrentIndex(idx, QItemSelectionModel::Select);
+        }
     }
 }
 
@@ -121,8 +124,10 @@ void BibTeXEditor::setSelectedElement(Element* element)
     QItemSelectionModel *selModel = selectionModel();
     selModel->clear();
     int row = bibTeXModel()->row(element);
-    QModelIndex idx = bibTeXModel()->index(row, 0);
-    selModel->setCurrentIndex(idx, QItemSelectionModel::SelectCurrent);
+    for (int col = model()->columnCount(QModelIndex()) - 1; col >= 0; --col) {
+        QModelIndex idx = model()->index(row, col);
+        selModel->setCurrentIndex(idx, QItemSelectionModel::Select);
+    }
 }
 
 const Element* BibTeXEditor::currentElement() const
