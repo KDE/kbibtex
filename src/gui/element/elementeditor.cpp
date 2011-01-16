@@ -25,11 +25,13 @@
 #include <QBuffer>
 #include <QTextStream>
 #include <QApplication>
+#include <QFileInfo>
 
 #include <KDebug>
 #include <KPushButton>
 #include <KMessageBox>
 #include <KLocale>
+#include <kio/netaccess.h>
 
 #include <entry.h>
 #include <comment.h>
@@ -37,6 +39,7 @@
 #include <preamble.h>
 #include <element.h>
 #include <file.h>
+#include <findpdf.h>
 #include <fileexporterblg.h>
 #include "elementwidgets.h"
 #include "elementeditor.h"
@@ -53,15 +56,21 @@ private:
     Comment *internalComment;
     ElementEditor *p;
     ElementWidget *previousWidget, *referenceWidget, *sourceWidget;
-    KPushButton *buttonCheckWithBibTeX;
+    KPushButton *buttonCheckWithBibTeX, *buttonFindPDF;
+
+    FindPDF *findPDF;
 
 public:
     QTabWidget *tab;
     bool elementChanged;
 
     ElementEditorPrivate(Element *m, const File *f, ElementEditor *parent)
-            : element(m), file(f), p(parent), previousWidget(NULL), referenceWidget(NULL), sourceWidget(NULL), elementChanged(false) {
+            : element(m), file(f), p(parent), previousWidget(NULL), referenceWidget(NULL), sourceWidget(NULL), findPDF(new FindPDF(parent)), elementChanged(false) {
         createGUI();
+    }
+
+    ~ElementEditorPrivate() {
+        findPDF->deleteLater(); ///< deleting findPDF directly would result in crash (why?)
     }
 
     void createGUI() {
@@ -75,16 +84,20 @@ public:
         if (ReferenceWidget::canEdit(element)) {
             referenceWidget = new ReferenceWidget(p);
             connect(referenceWidget, SIGNAL(modified(bool)), p, SIGNAL(modified(bool)));
-            layout->addWidget(referenceWidget, 0, 0, 1, 2);
+            layout->addWidget(referenceWidget, 0, 0, 1, 3);
             widgets << referenceWidget;
         } else
             referenceWidget = NULL;
 
         tab = new QTabWidget(p);
-        layout->addWidget(tab, 1, 0, 1, 2);
+        layout->addWidget(tab, 1, 0, 1, 3);
+
+        buttonFindPDF = new KPushButton(KIcon("application-pdf"), i18n("Find PDF"), p);
+        layout->addWidget(buttonFindPDF, 2, 1, 1, 1);
+        connect(buttonFindPDF, SIGNAL(clicked()), p, SLOT(slotFindPDF()));
 
         buttonCheckWithBibTeX = new KPushButton(KIcon("tools-check-spelling"), i18n("Check with BibTeX"), p);
-        layout->addWidget(buttonCheckWithBibTeX, 2, 1, 1, 1);
+        layout->addWidget(buttonCheckWithBibTeX, 2, 2, 1, 1);
         connect(buttonCheckWithBibTeX, SIGNAL(clicked()), p, SLOT(checkBibTeX()));
 
         if (EntryConfiguredWidget::canEdit(element))
@@ -352,6 +365,32 @@ public:
         for (QList<ElementWidget*>::Iterator it = widgets.begin(); it != widgets.end(); ++it)
             (*it)->setModified(newIsModified);
     }
+
+    void slotFindPDF() {
+        KUrl url = file->url();
+        if (!url.isValid()) {
+            KMessageBox::sorry(p, i18n("There is no valid filename or URL associated with this bibliography file."));
+            return;
+        }
+
+        /// create temporary entry to work with
+        Entry findPDFentry = *internalEntry;
+        apply(&findPDFentry);
+
+        if (findPDFentry.id().isEmpty()) {
+            KMessageBox::sorry(p, i18n("This entry needs to have a non-empty identifier."));
+            return;
+        }
+
+        QString cachedFilename = findPDF->findPDF(findPDFentry, file);
+        if (!cachedFilename.isEmpty()) {
+            url.setFileName(findPDFentry.id() + ".pdf");
+            if (!url.isLocalFile() || !QFileInfo(url.pathOrUrl()).exists() || KMessageBox::questionYesNo(p, i18n("Overwrite file \"%1\"?", url.pathOrUrl())) == KMessageBox::Yes) {
+                if (KIO::NetAccess::file_copy(KUrl(cachedFilename), url, p))
+                    KMessageBox::information(p, i18n("The PDF document has been saved as \"%1\".", url.pathOrUrl()));
+            }
+        }
+    }
 };
 
 ElementEditor::ElementEditor(Element *element, const File *file, QWidget *parent)
@@ -422,3 +461,9 @@ void ElementEditor::checkBibTeX()
 {
     d->checkBibTeX();
 }
+
+void ElementEditor::slotFindPDF()
+{
+    d->slotFindPDF();
+}
+

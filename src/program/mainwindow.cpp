@@ -125,7 +125,7 @@ KBibTeXMainWindow::KBibTeXMainWindow(KBibTeXProgram *program)
 
     d->dockReferencePreview = new QDockWidget(i18n("Reference Preview"), this);
     d->dockReferencePreview->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-    addDockWidget(Qt::LeftDockWidgetArea, d->dockReferencePreview);
+    addDockWidget(Qt::RightDockWidgetArea, d->dockReferencePreview);
     d->referencePreview = new ReferencePreview(d->dockReferencePreview);
     d->dockReferencePreview->setWidget(d->referencePreview);
     d->dockReferencePreview->setObjectName("dockReferencePreview");
@@ -200,7 +200,6 @@ KBibTeXMainWindow::~KBibTeXMainWindow()
 {
     delete d->openFileInfoManager;
 }
-
 
 void KBibTeXMainWindow::setupControllers()
 {

@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2010 by Thomas Fischer                             *
+*   Copyright (C) 2004-2011 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -18,43 +18,35 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#ifndef KBIBTEX_GUI_DIALOGS_ELEMENTSEDITOR_H
-#define KBIBTEX_GUI_DIALOGS_ELEMENTSEDITOR_H
+#ifndef KBIBTEX_GUI_FINDPDF_H
+#define KBIBTEX_GUI_FINDPDF_H
 
-#include <kbibtexgui_export.h>
+#include "kbibtexio_export.h"
 
-#include <QWidget>
+#include <QObject>
 
-class Element;
+class QWidget;
+
+class KJob;
+
 class File;
+class Entry;
 
-/**
-@author Thomas Fischer
-*/
-class KBIBTEXGUI_EXPORT ElementEditor : public QWidget
+class KBIBTEXIO_EXPORT FindPDF : public QObject
 {
     Q_OBJECT
 public:
-    ElementEditor(const Element *element, const File *file, QWidget *parent);
-    ElementEditor(Element *element, const File *file, QWidget *parent);
-    void setReadOnly(bool isReadOnly = true);
-    bool elementChanged();
-
-signals:
-    void modified(bool);
-
-public slots:
-    void apply();
-    void reset();
+    FindPDF(QWidget *parent);
+    QString findPDF(const Entry &entry, const File *file);
 
 private slots:
-    void tabChanged();
-    void checkBibTeX();
-    void slotFindPDF();
+    void finished(KJob *job);
+    void citeseerXfinished(KJob *job);
+    void forcedStop();
 
 private:
-    class ElementEditorPrivate;
-    ElementEditorPrivate *d;
+    class FindPDFPrivate;
+    FindPDFPrivate *d;
 };
 
-#endif // KBIBTEX_GUI_DIALOGS_ELEMENTSEDITOR_H
+#endif // KBIBTEX_GUI_FINDPDF_H
