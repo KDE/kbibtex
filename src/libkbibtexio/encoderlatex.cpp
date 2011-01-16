@@ -348,6 +348,7 @@ charmappingdatalatex[] = {
     {"\"<", 0x00AB, "\"<"},
     {"\">", 0x00BB, "\">"},
     {"[?]`", 0x00BF, "?`"},
+    {"---", 0x2014, "---"}, ///< has to be befor 0x2013, otherwise it would be interpreted as --{}-
     {"--", 0x2013, "--"},
     {"``", 0x201C, "``"},
     {"''", 0x201D, "''"}
