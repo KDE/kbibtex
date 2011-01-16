@@ -48,6 +48,7 @@
 #include "elementwidgets.h"
 
 static const unsigned int interColumnSpace = 16;
+static const QStringList keyStart = QStringList() << Entry::ftUrl << QLatin1String("postscript") << Entry::ftLocalFile << Entry::ftDOI << QLatin1String("ee") << QLatin1String("biburl");
 
 ElementWidget::ElementWidget(QWidget *parent): QWidget(parent), isReadOnly(false), m_isModified(false)
 {
@@ -326,20 +327,12 @@ bool FilesWidget::apply(Element *element) const
     Entry* entry = dynamic_cast<Entry*>(element);
     if (entry == NULL) return false;
 
-    for (int i = 1; i < 32; ++i) {  /// FIXME replace number by constant
-        QString key = Entry::ftUrl;
-        if (i > 1) key.append(QString::number(i));
-        entry->remove(key);
-        key = Entry::ftLocalFile;
-        if (i > 1) key.append(QString::number(i));
-        entry->remove(key);
-        key = Entry::ftDOI;
-        if (i > 1) key.append(QString::number(i));
-        entry->remove(key);
-        key = QLatin1String("ee");
-        if (i > 1) key.append(QString::number(i));
-        entry->remove(key);
-    }
+    for (QStringList::ConstIterator it = keyStart.constBegin(); it != keyStart.constEnd(); ++it)
+        for (int i = 1; i < 32; ++i) {  /// FIXME replace number by constant
+            QString key = *it;
+            if (i > 1) key.append(QString::number(i));
+            entry->remove(key);
+        }
 
     Value combinedValue;
     fileList->apply(combinedValue);
@@ -383,31 +376,14 @@ bool FilesWidget::reset(const Element *element)
     if (entry == NULL) return false;
 
     Value combinedValue;
-    for (int i = 1; i < 32; ++i) {  /// FIXME replace number by constant
-        QString key = Entry::ftUrl;
-        if (i > 1) key.append(QString::number(i));
-        const Value &urlValue = entry->operator [](key);
-        for (Value::ConstIterator it = urlValue.constBegin(); it != urlValue.constEnd(); ++it)
-            combinedValue.append(*it);
-
-        key = Entry::ftLocalFile;
-        if (i > 1) key.append(QString::number(i));
-        const Value &localFileValue = entry->operator [](key);
-        for (Value::ConstIterator it = localFileValue.constBegin(); it != localFileValue.constEnd(); ++it)
-            combinedValue.append(*it);
-
-        key = Entry::ftDOI;
-        if (i > 1) key.append(QString::number(i));
-        const Value &doiValue = entry->operator [](key);
-        for (Value::ConstIterator it = doiValue.constBegin(); it != doiValue.constEnd(); ++it)
-            combinedValue.append(*it);
-
-        key = QLatin1String("ee");
-        if (i > 1) key.append(QString::number(i));
-        const Value &eeValue = entry->operator [](key);
-        for (Value::ConstIterator it = eeValue.constBegin(); it != eeValue.constEnd(); ++it)
-            combinedValue.append(*it);
-    }
+    for (QStringList::ConstIterator it = keyStart.constBegin(); it != keyStart.constEnd(); ++it)
+        for (int i = 1; i < 32; ++i) {  /// FIXME replace number by constant
+            QString key = *it;
+            if (i > 1) key.append(QString::number(i));
+            const Value &value = entry->operator [](key);
+            for (Value::ConstIterator it = value.constBegin(); it != value.constEnd(); ++it)
+                combinedValue.append(*it);
+        }
     fileList->setFile(m_file);
     fileList->reset(combinedValue);
 

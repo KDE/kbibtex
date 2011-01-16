@@ -493,7 +493,7 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value& value, const QStr
                 value.append(new MacroKey(text));
             else
                 value.append(new PlainText(text));
-        } else if (iKey.startsWith(Entry::ftUrl) || iKey.startsWith(Entry::ftLocalFile)) {
+        } else if (iKey.startsWith(Entry::ftUrl) || iKey.startsWith(Entry::ftLocalFile) || iKey.compare(QLatin1String("ee"), Qt::CaseInsensitive) == 0 || iKey.compare(QLatin1String("biburl"), Qt::CaseInsensitive) == 0) {
             if (isStringKey)
                 value.append(new MacroKey(text));
             else {
