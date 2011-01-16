@@ -485,6 +485,7 @@ void KBibTeXPart::newEntryTriggered()
     d->model->insertRow(newEntry, d->model->rowCount());
     d->editor->setSelectedElement(newEntry);
     d->editor->editElement(newEntry);
+    d->editor->scrollToBottom();
 }
 
 void KBibTeXPart::newMacroTriggered()
@@ -493,6 +494,7 @@ void KBibTeXPart::newMacroTriggered()
     d->model->insertRow(newMacro, d->model->rowCount());
     d->editor->setSelectedElement(newMacro);
     d->editor->editElement(newMacro);
+    d->editor->scrollToBottom();
 }
 
 void KBibTeXPart::newPreambleTriggered()
@@ -501,6 +503,7 @@ void KBibTeXPart::newPreambleTriggered()
     d->model->insertRow(newPreamble, d->model->rowCount());
     d->editor->setSelectedElement(newPreamble);
     d->editor->editElement(newPreamble);
+    d->editor->scrollToBottom();
 }
 
 void KBibTeXPart::newCommentTriggered()
@@ -509,6 +512,7 @@ void KBibTeXPart::newCommentTriggered()
     d->model->insertRow(newComment, d->model->rowCount());
     d->editor->setSelectedElement(newComment);
     d->editor->editElement(newComment);
+    d->editor->scrollToBottom();
 }
 
 void KBibTeXPart::updateActions()
