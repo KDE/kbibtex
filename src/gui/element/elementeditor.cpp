@@ -159,11 +159,11 @@ public:
     }
 
     void apply() {
+        elementChanged = true;
         apply(element);
     }
 
     void apply(Element *element) {
-        elementChanged = true;
         if (referenceWidget != NULL)
             referenceWidget->apply(element);
         ElementWidget *currentElementWidget = dynamic_cast<ElementWidget*>(tab->currentWidget());
