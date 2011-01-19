@@ -172,7 +172,7 @@ void BibTeXEditor::selectionDelete()
 {
     QModelIndexList mil = selectionModel()->selectedRows();
     while (mil.begin() != mil.end()) {
-        bibTeXModel()->removeRow(mil.begin()->row());
+        bibTeXModel()->removeRow(sortFilterProxyModel()->mapToSource(*mil.begin()).row());
         mil.removeFirst();
     }
     emit modified();
