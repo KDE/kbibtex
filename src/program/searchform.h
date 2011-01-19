@@ -23,6 +23,8 @@
 
 #include <QWidget>
 
+class QListWidgetItem;
+
 class Entry;
 class MDIWidget;
 class SearchResults;
