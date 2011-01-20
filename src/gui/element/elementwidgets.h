@@ -38,6 +38,7 @@ class KLineEdit;
 class KComboBox;
 class KPushButton;
 
+class File;
 class Entry;
 class Element;
 class FieldInput;
