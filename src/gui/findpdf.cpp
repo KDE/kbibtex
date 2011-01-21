@@ -29,6 +29,7 @@
 #include <QFileInfo>
 #include <QMouseEvent>
 #include <QDesktopServices>
+#include <QTimer>
 
 #include <kio/jobclasses.h>
 #include <kio/job.h>
@@ -38,13 +39,13 @@
 #include <KDebug>
 #include <KUrl>
 #include <KLocale>
+#include <KMessageBox>
 
 #include <value.h>
 #include <entry.h>
 #include <fileinfo.h>
 #include "findpdf.h"
 
-//const int URLRole = Qt::UserRole + 42;
 const int CachedFilenameRole = Qt::UserRole + 43;
 const char *pdfMagic = "%PDF";
 
@@ -71,12 +72,16 @@ public:
             return QVariant();
 
         switch (role) {
-        case Qt::DecorationRole:
-            return KIcon("application-pdf");
+        case Qt::DecorationRole: {
+            QStringList overlays;
+            if (urlList[index.row()].isLocalFile()) {
+                /// file exists already locally
+                overlays << "dialog-ok";
+            }
+            return KIcon("application-pdf", NULL, overlays);
+        }
         case Qt::DisplayRole:
             return QVariant(urlList[index.row()].pathOrUrl());
-            /*      case URLRole:
-                      return QVariant::fromValue<KUrl>(urlList[index.row()]);*/
         case CachedFilenameRole:
             return fileNameFromUrl(urlList[index.row()]);
         default:
@@ -140,16 +145,18 @@ private:
 public:
     enum ExternalPDFProvider {Google, CiteSeerX};
 
-    int numAsynchronousJobs;
     QWidget *widget;
     KDialog *dlg;
+    QList<KIO::StoredTransferJob*> runningJobs;
 
     FindPDFPrivate(QWidget *w, FindPDF *p)
             : parent(p), widget(w), dlg(NULL) {
-        numAsynchronousJobs = 0;
+        // nothing
     }
 
     QString selectedFilename() {
+        if (listView->selectionModel()->selectedIndexes().isEmpty())
+            return QString::null;
         QModelIndex index = listView->selectionModel()->selectedIndexes().first();
         return index.data(CachedFilenameRole).toString();
     }
@@ -169,14 +176,19 @@ public:
         layout->addWidget(listView);
         listView->setModel(model);
         listView->setAlternatingRowColors(true);
+        connect(listView, SIGNAL(activated(QModelIndex)), parent, SLOT(selectionChanged(QModelIndex)));
+
+        int minWidth = container->fontMetrics().width(label->text());
+        parent->setMinimumSize(minWidth / 3, minWidth / 5);
+        parent->setInitialSize(QSize(minWidth / 3*2, minWidth / 5*2));
 
         return container;
     }
 
     void findPDFinFetchedWebpage(const KUrl &url) {
-        ++numAsynchronousJobs;
         kDebug() << "url = " << url.pathOrUrl();
         KIO::StoredTransferJob *job = KIO::storedGet(url);
+        runningJobs.append(job);
         job->ui()->setWindow(widget);
         connect(job, SIGNAL(result(KJob*)), parent, SLOT(finished(KJob*)));
     }
@@ -191,9 +203,9 @@ public:
             /// handle special case of SpringerLink
             KUrl url("http://www.springerlink.com/content/" + springerLink.cap(2) + "/fulltext.pdf");
             if (!model->isCached(url)) {
-                ++numAsynchronousJobs;
                 kDebug() << "url = " << url.pathOrUrl();
                 KIO::StoredTransferJob *job = KIO::storedGet(url);
+                runningJobs.append(job);
                 job->ui()->setWindow(widget);
                 connect(job, SIGNAL(result(KJob*)), parent, SLOT(finished(KJob*)));
             } else
@@ -202,9 +214,9 @@ public:
             /// handle special case of IEEE Xplore
             KUrl url(QString("http://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=%1").arg(ieeeExplorer.cap(1)));
             if (!model->isCached(url)) {
-                ++numAsynchronousJobs;
                 kDebug() << "url = " << url.pathOrUrl();
                 KIO::StoredTransferJob *job = KIO::storedGet(url);
+                runningJobs.append(job);
                 job->ui()->setWindow(widget);
                 connect(job, SIGNAL(result(KJob*)), parent, SLOT(finished(KJob*)));
             } else
@@ -218,9 +230,9 @@ public:
             KUrl url(QString("http://arxiv.org/pdf/%1v%2").arg(arXiv.cap(1)).arg(version - 1));
             if (version > 1) {
                 if (!model->isCached(url)) {
-                    ++numAsynchronousJobs;
                     kDebug() << "url = " << url.pathOrUrl();
                     KIO::StoredTransferJob *job = KIO::storedGet(url);
+                    runningJobs.append(job);
                     job->ui()->setWindow(widget);
                     connect(job, SIGNAL(result(KJob*)), parent, SLOT(finished(KJob*)));
                 } else model->append(url);
@@ -256,10 +268,10 @@ public:
 
             query = query.replace("-", "+").replace(" ", "+").replace("%", "%25").replace("\"", "%22").replace("&", "%26").replace(":", "%3A").replace("?", "%3F");
 
-            ++numAsynchronousJobs;
             KUrl url(QString("http://www.google.com/search?num=5&q=filetype%3Apdf+%1&ie=UTF-8&oe=UTF-8").arg(query));
             kDebug() << "google url " << url.pathOrUrl();
             KIO::StoredTransferJob *job = KIO::storedGet(url);
+            runningJobs.append(job);
             job->ui()->setWindow(widget);
             connect(job, SIGNAL(result(KJob*)), parent, SLOT(finished(KJob*)));
         }
@@ -271,10 +283,10 @@ public:
 
                 query = query.replace("-", "+").replace(" ", "+").replace("%", "%25").replace("\"", "%22").replace("&", "%26").replace(":", "%3A").replace("?", "%3F");
 
-                ++numAsynchronousJobs;
                 KUrl url(QString("http://citeseerx.ist.psu.edu/search?q=%1&submit=Search&sort=rel").arg(query));
                 kDebug() << "CiteSeerX url " << url.pathOrUrl();
                 KIO::StoredTransferJob *job = KIO::storedGet(url);
+                runningJobs.append(job);
                 job->ui()->setWindow(widget);
                 connect(job, SIGNAL(result(KJob*)), parent, SLOT(citeseerXfinished(KJob*)));
             }
@@ -286,9 +298,8 @@ public:
     }
 
     void downloadFinished(KIO::StoredTransferJob *job) {
+        runningJobs.removeOne(job);
         if (stoppedByForce) return; ///< ignore if was forced to stop
-
-        --numAsynchronousJobs;
 
         if (job->error() == 0) {
             KUrl url = job->url();
@@ -327,9 +338,9 @@ public:
                         }
 
                         if (!model->isCached(pdfUrl)) {
-                            ++numAsynchronousJobs;
                             kDebug() << "pdfUrl = " << pdfUrl.pathOrUrl();
                             KIO::StoredTransferJob *job = KIO::storedGet(pdfUrl);
+                            runningJobs.append(job);
                             job->ui()->setWindow(widget);
                             connect(job, SIGNAL(result(KJob*)), parent, SLOT(finished(KJob*)));
                         } else
@@ -356,9 +367,9 @@ public:
                         }
 
                         if (!model->isCached(pdfUrl)) {
-                            ++numAsynchronousJobs;
                             kDebug() << "pdfUrl = " << pdfUrl.pathOrUrl();
                             KIO::StoredTransferJob *job = KIO::storedGet(pdfUrl);
+                            runningJobs.append(job);
                             job->ui()->setWindow(widget);
                             connect(job, SIGNAL(result(KJob*)), parent, SLOT(finished(KJob*)));
                         } else
@@ -386,9 +397,9 @@ public:
                         }
 
                         if (!model->isCached(pdfUrl)) {
-                            ++numAsynchronousJobs;
                             kDebug() << "pdfUrl = " << pdfUrl.pathOrUrl();
                             KIO::StoredTransferJob *job = KIO::storedGet(pdfUrl);
+                            runningJobs.append(job);
                             job->ui()->setWindow(widget);
                             connect(job, SIGNAL(result(KJob*)), parent, SLOT(finished(KJob*)));
                         } else
@@ -400,14 +411,14 @@ public:
             kWarning() << "Receiving data failed";
         }
 
-        if (numAsynchronousJobs == 0)
+        if (runningJobs.isEmpty() == 0)
             stopSearch();
     }
 
     void downloadCiteSeerXFinished(KIO::StoredTransferJob *job) {
+        runningJobs.removeOne(job);
         if (stoppedByForce) return; ///< ignore if was forced to stop
 
-        --numAsynchronousJobs;
         if (job->error() == 0) {
             QRegExp anchor("<a [^>]*href=\"([^\"]+/summary\\?[^\"]+)\"[^>]*>", Qt::CaseInsensitive);
             anchor.setMinimal(true);
@@ -416,10 +427,10 @@ public:
             QString allText = ts.readAll();
 
             if (allText.indexOf(anchor) >= 0) {
-                ++numAsynchronousJobs;
                 QString href = anchor.cap(1);
                 kDebug() << "href = " << href;
                 KIO::StoredTransferJob *newJob = KIO::storedGet(KUrl(href));
+                runningJobs.append(job);
                 newJob->ui()->setWindow(job->ui()->window());
                 connect(newJob, SIGNAL(result(KJob*)), parent, SLOT(finished(KJob*)));
             }
@@ -427,7 +438,7 @@ public:
             kWarning() << "Receiving data failed";
         }
 
-        if (numAsynchronousJobs == 0)
+        if (runningJobs.isEmpty())
             stopSearch();
     }
 
@@ -451,16 +462,26 @@ public:
     }
 
     void stopSearch() {
-        container->setEnabled(true);
-        dlg->enableButton(KDialog::User1, false);
-        dlg->enableButton(KDialog::Ok, true);
-        dlg->enableButton(KDialog::Cancel, true);
-        QApplication::restoreOverrideCursor();
+        while (!runningJobs.isEmpty()) {
+            runningJobs.first()->kill(KJob::Quietly);
+            runningJobs.removeFirst();
+        }
+
+        /// skip multiple calls of function stopSearch
+        if (!container->isEnabled()) {
+            container->setEnabled(true);
+            dlg->enableButton(KDialog::User1, false);
+            dlg->enableButton(KDialog::Ok, false);
+            dlg->enableButton(KDialog::Cancel, true);
+            QApplication::restoreOverrideCursor();
+            if (model->rowCount(QModelIndex()) == 0)
+                KMessageBox::sorry(dlg, i18n("Could not find any PDF files."), dlg->windowTitle());
+        }
     }
 
     void forcedStop() {
+        kDebug() << "forced to stop";
         stoppedByForce = true;
-        numAsynchronousJobs = 0;
         stopSearch();
     }
 };
@@ -470,7 +491,6 @@ FindPDF::FindPDF(QWidget *parent)
 {
     // nothing
 }
-
 
 QString FindPDF::findPDF(const Entry &entry, const File *file)
 {
@@ -487,6 +507,7 @@ QString FindPDF::findPDF(const Entry &entry, const File *file)
     d->dlg->setMainWidget(d->createGUI(d->dlg));
 
     d->startSearch(entry, file);
+    QTimer::singleShot(30000, this, SLOT(forcedStop()));
 
     d->dlg->mainWidget()->setEnabled(false);
     d->dlg->enableButton(KDialog::Ok, false);
@@ -501,17 +522,22 @@ QString FindPDF::findPDF(const Entry &entry, const File *file)
 
 void FindPDF::finished(KJob *j)
 {
-    KIO::StoredTransferJob *job = static_cast<  KIO::StoredTransferJob*>(j);
+    KIO::StoredTransferJob *job = static_cast<KIO::StoredTransferJob*>(j);
     d->downloadFinished(job);
 }
 
 void FindPDF::citeseerXfinished(KJob *j)
 {
-    KIO::StoredTransferJob *job = static_cast<  KIO::StoredTransferJob*>(j);
+    KIO::StoredTransferJob *job = static_cast<KIO::StoredTransferJob*>(j);
     d->downloadCiteSeerXFinished(job);
 }
 
 void FindPDF::forcedStop()
 {
     d->forcedStop();
+}
+
+void FindPDF::selectionChanged(const QModelIndex &index)
+{
+    d->dlg->enableButtonOk(index != QModelIndex() && d->runningJobs.isEmpty());
 }

@@ -26,6 +26,7 @@
 #include <QObject>
 
 class QWidget;
+class QModelIndex;
 
 class KJob;
 
@@ -43,6 +44,7 @@ private slots:
     void finished(KJob *job);
     void citeseerXfinished(KJob *job);
     void forcedStop();
+    void selectionChanged(const QModelIndex &index);
 
 private:
     class FindPDFPrivate;
