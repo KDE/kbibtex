@@ -343,12 +343,31 @@ bool FilesWidget::apply(Element *element) const
         const VerbatimText *verbatimText = dynamic_cast<const VerbatimText *>(*it);
         if (verbatimText != NULL) {
             QString text = verbatimText->text();
-            if (KBibTeX::doiRegExp.indexIn(text) > -1)
-                doiValue.append(new VerbatimText(KBibTeX::doiRegExp.cap(0)));
-            else if (KBibTeX::urlRegExp.indexIn(text) > -1)
-                urlValue.append(new VerbatimText(KBibTeX::urlRegExp.cap(0)));
-            else
-                localFileValue.append(new VerbatimText(*verbatimText));
+            if (KBibTeX::urlRegExp.indexIn(text) > -1) {
+                /// add full URL
+                VerbatimText *newVT = new VerbatimText(KBibTeX::urlRegExp.cap(0));
+                /// test for duplicates
+                if (urlValue.contains(*newVT))
+                    delete newVT;
+                else
+                    urlValue.append(newVT);
+            } else if (KBibTeX::doiRegExp.indexIn(text) > -1) {
+                /// add DOI
+                VerbatimText *newVT = new VerbatimText(KBibTeX::doiRegExp.cap(0));
+                /// test for duplicates
+                if (doiValue.contains(*newVT))
+                    delete newVT;
+                else
+                    doiValue.append(newVT);
+            } else {
+                /// add anything else (e.g. local file)
+                VerbatimText *newVT = new VerbatimText(*verbatimText);
+                /// test for duplicates
+                if (localFileValue.contains(*newVT))
+                    delete newVT;
+                else
+                    localFileValue.append(newVT);
+            }
         }
     }
 
