@@ -249,7 +249,7 @@ Entry *FileImporterBibTeX::readEntryElement(const QString& typeString)
         token = nextToken();
     }
 
-    QString key = readSimpleString();
+    QString key = readSimpleString(',');
     Entry *entry = new Entry(be->format(typeString, m_keywordCasing), key);
 
     token = nextToken();
