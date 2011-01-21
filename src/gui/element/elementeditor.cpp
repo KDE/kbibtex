@@ -385,9 +385,11 @@ public:
         QString cachedFilename = findPDF->findPDF(findPDFentry, file);
         if (!cachedFilename.isEmpty()) {
             url.setFileName(findPDFentry.id() + ".pdf");
-            if (!url.isLocalFile() || !QFileInfo(url.pathOrUrl()).exists() || KMessageBox::questionYesNo(p, i18n("Overwrite file \"%1\"?", url.pathOrUrl())) == KMessageBox::Yes) {
+            if (!url.isLocalFile() || !QFileInfo(url.pathOrUrl()).exists() || KMessageBox::questionYesNo(p, i18n("Overwrite file\n\"%1\"?", url.pathOrUrl()), i18n("Overwrite File?"), KGuiItem(i18n("Overwrite"), "document-save", i18n("Overwrite file \"%1\"?", url.fileName()))) == KMessageBox::Yes) {
                 if (KIO::NetAccess::file_copy(KUrl(cachedFilename), url, p))
-                    KMessageBox::information(p, i18n("The PDF document has been saved as \"%1\".", url.pathOrUrl()));
+                    KMessageBox::information(p, i18n("The PDF document has been saved as\n\"%1\".", url.pathOrUrl()));
+                else
+                    KMessageBox::sorry(p, i18n("Saving document as\n\"%1\"\nfailed."), url.pathOrUrl());
             }
         }
     }
