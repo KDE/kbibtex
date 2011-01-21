@@ -58,6 +58,15 @@ bool Keyword::containsPattern(const QString &pattern, Qt::CaseSensitivity caseSe
     return m_text.contains(pattern, caseSensitive);
 }
 
+bool Keyword::operator==(const ValueItem &other) const
+{
+    const Keyword *otherKeyword = dynamic_cast<const Keyword*>(&other);
+    if (otherKeyword != NULL) {
+        return otherKeyword->text() == text();
+    } else
+        return false;
+}
+
 
 Person::Person(const QString& firstName, const QString& lastName, const QString& prefix, const QString& suffix)
         : m_firstName(firstName), m_lastName(lastName), m_prefix(prefix), m_suffix(suffix)
@@ -116,6 +125,14 @@ bool Person::containsPattern(const QString &pattern, Qt::CaseSensitivity caseSen
     return m_firstName.contains(pattern, caseSensitive) || m_lastName.contains(pattern, caseSensitive) ||  m_prefix.contains(pattern, caseSensitive) ||  m_suffix.contains(pattern, caseSensitive) || QString("%1 %2|%2, %1").arg(m_firstName).arg(m_lastName).contains(pattern, caseSensitive);
 }
 
+bool Person::operator==(const ValueItem &other) const
+{
+    const Person *otherPerson = dynamic_cast<const Person*>(&other);
+    if (otherPerson != NULL) {
+        return otherPerson->firstName() == firstName() && otherPerson->lastName() == lastName();
+    } else
+        return false;
+}
 
 const QRegExp MacroKey::validMacroKey = QRegExp("^[a-z][-.:/+_a-z0-9]*$|^[0-9]+$", Qt::CaseInsensitive);
 
@@ -159,6 +176,15 @@ bool MacroKey::containsPattern(const QString &pattern, Qt::CaseSensitivity caseS
     return m_text.contains(pattern, caseSensitive);
 }
 
+bool MacroKey::operator==(const ValueItem &other) const
+{
+    const MacroKey *otherMacroKey = dynamic_cast<const MacroKey*>(&other);
+    if (otherMacroKey != NULL) {
+        return otherMacroKey->text() == text();
+    } else
+        return false;
+}
+
 
 PlainText::PlainText(const PlainText& other)
         : m_text(other.text())
@@ -191,6 +217,15 @@ void PlainText::replace(const QString &before, const QString &after)
 bool PlainText::containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive) const
 {
     return m_text.contains(pattern, caseSensitive);
+}
+
+bool PlainText::operator==(const ValueItem &other) const
+{
+    const PlainText *otherPlainText = dynamic_cast<const PlainText*>(&other);
+    if (otherPlainText != NULL) {
+        return otherPlainText->text() == text();
+    } else
+        return false;
 }
 
 
@@ -227,6 +262,15 @@ bool VerbatimText::containsPattern(const QString &pattern, Qt::CaseSensitivity c
     return m_text.contains(pattern, caseSensitive);
 }
 
+bool VerbatimText::operator==(const ValueItem &other) const
+{
+    const VerbatimText *otherVerbatimText = dynamic_cast<const VerbatimText*>(&other);
+    if (otherVerbatimText != NULL) {
+        return otherVerbatimText->text() == text();
+    } else
+        return false;
+}
+
 
 Value::Value()
         : QList<ValueItem*>()
@@ -253,6 +297,14 @@ bool Value::containsPattern(const QString &pattern, Qt::CaseSensitivity caseSens
         result |= (*it)->containsPattern(pattern, caseSensitive);
     }
     return result;
+}
+
+bool Value::contains(const ValueItem& item) const
+{
+    for (QList<ValueItem*>::ConstIterator it = begin(); it != end(); ++it)
+        if ((*it)->operator==(item))
+            return true;
+    return false;
 }
 
 Value& Value::operator=(const Value & rhs)

@@ -46,6 +46,15 @@ public:
       * @return TRUE if pattern is contained within this value, otherwise FALSE
       */
     virtual bool containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const = 0;
+
+    /**
+      * Compare to instance if they contain the same content.
+      * Subclasses implement under which conditions two instances are equal.
+      * Subclasses of different type are never equal.
+      * @param other other instance to compare with
+      * @return TRUE if both instances are equal
+      */
+    virtual bool operator==(const ValueItem &other) const = 0;
 };
 
 class KBIBTEXIO_EXPORT Keyword: public ValueItem
@@ -61,6 +70,7 @@ public:
 
     void replace(const QString &before, const QString &after);
     bool containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const;
+    bool operator==(const ValueItem &other) const;
 
 protected:
     QString m_text;
@@ -89,6 +99,7 @@ public:
 
     void replace(const QString &before, const QString &after);
     bool containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const;
+    bool operator==(const ValueItem &other) const;
 
 private:
     QString m_firstName;
@@ -109,6 +120,7 @@ public:
 
     void replace(const QString &before, const QString &after);
     bool containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const;
+    bool operator==(const ValueItem &other) const;
 
 protected:
     QString m_text;
@@ -126,6 +138,7 @@ public:
 
     void replace(const QString &before, const QString &after);
     bool containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const;
+    bool operator==(const ValueItem &other) const;
 
 protected:
     QString m_text;
@@ -142,6 +155,7 @@ public:
 
     void replace(const QString &before, const QString &after);
     bool containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const;
+    bool operator==(const ValueItem &other) const;
 
 protected:
     QString m_text;
@@ -167,6 +181,8 @@ public:
       * @return TRUE if pattern is contained within this value, otherwise FALSE
       */
     bool containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const;
+
+    bool contains(const ValueItem& item) const;
 
     Value& operator=(const Value& rhs);
 
