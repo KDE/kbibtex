@@ -3,6 +3,7 @@
 set( websearch_LIB_SRCS
 	websearchabstract.cpp
 	websearchbibsonomy.cpp
+	websearcharxiv.cpp
 	websearchgooglescholar.cpp
 )
 

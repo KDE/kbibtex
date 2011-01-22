@@ -50,6 +50,8 @@ public:
     static const QLatin1String ftChapter;
     /** Representation of the BibTeX field key "x-color" */
     static const QLatin1String ftColor;
+    /** Representation of the BibTeX field key "comment" */
+    static const QLatin1String ftComment;
     /** Representation of the BibTeX field key "crossref" */
     static const QLatin1String ftCrossRef;
     /** Representation of the BibTeX field key "doi" */
@@ -78,6 +80,8 @@ public:
     static const QLatin1String ftPages;
     /** Representation of the BibTeX field key "publisher" */
     static const QLatin1String ftPublisher;
+    /** Representation of the BibTeX field key "school" */
+    static const QLatin1String ftSchool;
     /** Representation of the BibTeX field key "series" */
     static const QLatin1String ftSeries;
     /** Representation of the BibTeX field key "title" */

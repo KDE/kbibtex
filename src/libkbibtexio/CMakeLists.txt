@@ -1,6 +1,7 @@
 # KBibTeXIO library
 
 set( kbibtexio_LIB_SRCS
+	xsltransform.cpp
 	comment.cpp
 	element.cpp
 	encoder.cpp

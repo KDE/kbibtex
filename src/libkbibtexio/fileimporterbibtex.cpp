@@ -278,7 +278,7 @@ Entry *FileImporterBibTeX::readEntryElement(const QString& typeString)
 
         /** check for duplicate fields */
         if (entry->contains(keyName)) {
-            int i = 1;
+            int i = 2;
             QString appendix = QString::number(i);
             while (entry->contains(keyName + appendix)) {
                 ++i;
