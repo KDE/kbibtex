@@ -64,6 +64,7 @@ private:
     QLabel *message;
     QMap<int, KUrl> cbxEntryToUrl;
     QMutex addingUrlMutex;
+    QString arXivPDFUrlStart;
 
 public:
     struct UrlInfo {
@@ -77,7 +78,7 @@ public:
     KUrl baseUrl;
 
     UrlPreviewPrivate(UrlPreview *parent)
-            : p(parent), entry(NULL) {
+            : p(parent), arXivPDFUrlStart("http://arxiv.org/pdf/"), entry(NULL) {
         setupGUI();
     }
 
@@ -233,23 +234,27 @@ public:
             mimeTypePtr = KMimeType::findByPath(url.fileName(), 0, true, &accuracy);
         }
         result.mimeType = mimeTypePtr->name();
+        result.icon = KIcon(mimeTypePtr->iconName());
 
         if (result.mimeType == QLatin1String("application/octet-stream")) {
             /// application/octet-stream is a fall-back if KDE did not know better
             kDebug() << "Got mime type \"application/octet-stream\", falling back to text/html";
             result.icon = KIcon("text-html");
             result.mimeType = QLatin1String("text/html");
-            return result;
         } else if (result.mimeType == QLatin1String("inode/directory") && result.url.protocol() == QLatin1String("http")) {
             /// directory via http means normal webpage (not browsable directory)
             kDebug() << "Got mime type \"inode/directory\" via http, falling back to text/html";
             result.icon = KIcon("text-html");
             result.mimeType = QLatin1String("text/html");
-            return result;
+        }
+
+        if (url.pathOrUrl().startsWith(arXivPDFUrlStart)) {
+            kDebug() << "URL looks like a PDF url from arXiv";
+            result.icon = KIcon("application-pdf");
+            result.mimeType = QLatin1String("application/pdf");
         }
 
         kDebug() << "For url " << result.url.pathOrUrl() << " selected mime type " << result.mimeType;
-        result.icon = KIcon(mimeTypePtr->iconName());
         return result;
     }
 
