@@ -27,6 +27,7 @@
 #include <QStringListModel>
 #include <QScrollBar>
 #include <QTimer>
+#include <QSortFilterProxyModel>
 
 #include <bibtexfields.h>
 #include <entry.h>
@@ -42,11 +43,12 @@ private:
 public:
     BibTeXEditor *editor;
     QTreeView *treeviewFieldValues;
+    QSortFilterProxyModel *sortingModel;
     KComboBox *comboboxFieldNames;
     const int countWidth;
 
     ValueListPrivate(ValueList *parent)
-            : p(parent), countWidth(parent->fontMetrics().width(QLatin1String("Count888"))) {
+            : p(parent), sortingModel(NULL), countWidth(parent->fontMetrics().width(QLatin1String("Count888"))) {
         setupGUI();
         initialize();
     }
@@ -60,6 +62,7 @@ public:
         treeviewFieldValues = new QTreeView(p);
         layout->addWidget(treeviewFieldValues, 1, 0, 1, 1);
         treeviewFieldValues->setEditTriggers(QAbstractItemView::NoEditTriggers);
+        treeviewFieldValues->setSortingEnabled(true);
 
         p->setEnabled(false);
 
@@ -74,6 +77,7 @@ public:
         for (BibTeXFields::ConstIterator it = bibtexFields->constBegin(); it != bibtexFields->constEnd(); ++it) {
             FieldDescription fd = *it;
             if (!fd.upperCamelCaseAlt.isEmpty()) continue; /// keep only "single" fields and not combined ones like "Author or Editor"
+            if (fd.upperCamelCase.startsWith('^')) continue; /// skip "type" and "id"
             comboboxFieldNames->addItem(fd.label, fd.upperCamelCase);
         }
     }
@@ -87,7 +91,16 @@ public:
         QString text = var.toString();
         if (text.isEmpty()) text = comboboxFieldNames->currentText();
 
-        treeviewFieldValues->setModel(editor == NULL ? NULL : editor->valueListModel(text));
+        QAbstractItemModel *model = editor == NULL ? NULL : editor->valueListModel(text);
+        if (model != NULL) {
+            if (sortingModel != NULL) delete sortingModel;
+            sortingModel = new QSortFilterProxyModel(p);
+            sortingModel->setSourceModel(model);
+            sortingModel->sort(1, Qt::DescendingOrder);
+            sortingModel->setSortRole(SortRole);
+            model = sortingModel;
+        }
+        treeviewFieldValues->setModel(model);
     }
 };
 
@@ -118,7 +131,7 @@ void ValueList::comboboxChanged()
 
 void ValueList::listItemActivated(const QModelIndex &index)
 {
-    QString itemText = index.data(Qt::DisplayRole).toString();
+    QString itemText = d->sortingModel->mapToSource(index).data(Qt::DisplayRole).toString();
     QVariant fieldVar = d->comboboxFieldNames->itemData(d->comboboxFieldNames->currentIndex());
     QString fieldText = fieldVar.toString();
     if (fieldText.isEmpty()) fieldText = d->comboboxFieldNames->currentText();

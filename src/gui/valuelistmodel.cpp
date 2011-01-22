@@ -31,6 +31,8 @@
 #include <entry.h>
 #include "valuelistmodel.h"
 
+static QRegExp ignoredInSorting("[{}\\]+");
+
 ValueListModel::ValueListModel(const File *bibtexFile, const QString &fieldName, QObject *parent)
         : QAbstractTableModel(parent), file(bibtexFile), fName(fieldName.toLower())
 {
@@ -61,6 +63,12 @@ QVariant ValueListModel::data(const QModelIndex & index, int role) const
             return QVariant(Qt::AlignLeft);
         else
             return QVariant(Qt::AlignRight);
+    } else if (role == SortRole) {
+        if (index.column() == 0) {
+            QString buffer =  sortedValues[index.row()];
+            return QVariant(buffer.replace(ignoredInSorting, ""));
+        } else
+            return QVariant(valueToCount[sortedValues[index.row()]]);
     } else
         return QVariant();
 }

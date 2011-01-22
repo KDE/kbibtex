@@ -25,6 +25,8 @@
 
 #include <bibtexfilemodel.h>
 
+static const int SortRole = Qt::UserRole + 113;
+
 class ValueListModel : public QAbstractTableModel
 {
 private:
