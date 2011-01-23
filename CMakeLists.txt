@@ -19,4 +19,5 @@ find_package(PopplerQt4)
 add_subdirectory( src )
 add_subdirectory( config )
 add_subdirectory( xslt )
+add_subdirectory( icons )
 
