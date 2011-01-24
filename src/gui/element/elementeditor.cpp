@@ -221,7 +221,7 @@ public:
         bool isSourceWidget = newTab == sourceWidget;
         ElementWidget *newWidget = dynamic_cast<ElementWidget*>(newTab);
         if (previousWidget != NULL && newWidget != NULL) {
-            Element *temp;
+            Element *temp = NULL;
             if (internalEntry != NULL)
                 temp = internalEntry;
             else if (internalMacro != NULL)
@@ -230,6 +230,7 @@ public:
                 temp = internalComment;
             else if (internalPreamble != NULL)
                 temp = internalPreamble;
+            Q_ASSERT(temp != NULL);
 
             previousWidget->apply(temp);
             if (isSourceWidget) referenceWidget->apply(temp);

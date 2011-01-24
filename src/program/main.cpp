@@ -24,8 +24,6 @@
 
 int main(int argc, char *argv[])
 {
-    srand(23);
-
     KBibTeXProgram program(argc, argv);
     const int result = program.execute();
     return result;
