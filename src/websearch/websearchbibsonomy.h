@@ -22,15 +22,18 @@
 
 #include <QByteArray>
 
-#include <KIcon>
-#include <kio/jobclasses.h>
-
 #include <websearchabstract.h>
 
 class QSpinBox;
 class KComboBox;
 class KLineEdit;
 
+class KJob;
+namespace KIO
+{
+class TransferJob;
+class Job;
+}
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>

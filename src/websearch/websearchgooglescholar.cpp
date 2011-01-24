@@ -30,8 +30,10 @@
 #include <KDebug>
 #include <KConfigGroup>
 #include <KLineEdit>
+#include <KIcon>
 #include <kio/job.h>
 #include <kio/netaccess.h>
+#include <kio/jobclasses.h>
 
 #include <fileimporterbibtex.h>
 #include "websearchgooglescholar.h"

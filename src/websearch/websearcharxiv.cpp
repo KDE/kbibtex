@@ -275,6 +275,7 @@ QString WebSearchArXiv::favIconUrl() const
 
 WebSearchQueryFormAbstract* WebSearchArXiv::customWidget(QWidget *parent)
 {
+    Q_UNUSED(parent);
     // TODO
     return NULL;
 }

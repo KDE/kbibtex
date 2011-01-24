@@ -22,6 +22,8 @@
 
 #include <websearchabstract.h>
 
+class KJob;
+
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */

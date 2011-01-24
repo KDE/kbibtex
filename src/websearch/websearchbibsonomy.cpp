@@ -29,6 +29,7 @@
 #include <KLineEdit>
 #include <KComboBox>
 #include <kio/job.h>
+#include <kio/jobclasses.h>
 
 #include <fileimporterbibtex.h>
 #include <file.h>

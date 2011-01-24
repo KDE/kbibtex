@@ -22,12 +22,13 @@
 
 #include <QByteArray>
 
-#include <KIcon>
-#include <kio/jobclasses.h>
-
 #include <websearchabstract.h>
 
-class KConfig;
+class KJob;
+namespace KIO
+{
+class Job;
+}
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
