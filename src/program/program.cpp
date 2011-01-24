@@ -23,14 +23,10 @@
 #include <KDebug>
 
 #include "program.h"
-#include "version.h"
+#include "about.h"
 #include "mainwindow.h"
 
-static KAboutData aboutData("kbibtex", 0,
-                            ki18n("KBibTeX"), versionNumber,
-                            ki18n("A bibliography manager supporting BibTeX and other formats."), KAboutData::License_GPL_V2,
-                            ki18n("Copyright 2004-2010, Thomas Fischer"), ki18n("Feedback:\nfischer@unix-ag.uni-kl.de"),
-                            "http://home.gna.org/kbibtex/");
+static KBibTeXAboutData aboutData;
 
 KBibTeXProgram::KBibTeXProgram(int argc, char *argv[])
 /*: m_documentManager(new KDocumentManager()), m_viewManager(new KViewManager(m_documentManager))*/
