@@ -5,6 +5,7 @@ set( websearch_LIB_SRCS
 	websearchbibsonomy.cpp
 	websearcharxiv.cpp
 	websearchgooglescholar.cpp
+	websearchgeneral.cpp
 )
 
 add_definitions( -DMAKE_WEBSEARCH_LIB )

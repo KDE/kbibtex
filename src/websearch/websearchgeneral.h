@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2009 by Thomas Fischer                             *
+*   Copyright (C) 2004-2011 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -17,46 +17,30 @@
 *   Free Software Foundation, Inc.,                                       *
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
+#ifndef KBIBTEX_WEBSEARCH_GENERAL_H
+#define KBIBTEX_WEBSEARCH_GENERAL_H
 
-#ifndef KBIBTEX_PROGRAM_SEARCHFORM_H
-#define KBIBTEX_PROGRAM_SEARCHFORM_H
+#include "websearchabstract.h"
 
-#include <QWidget>
+class QSpinBox;
 
-class QListWidgetItem;
+class KLineEdit;
 
-class Entry;
-class MDIWidget;
-class SearchResults;
-
-class SearchForm : public QWidget
+class KBIBTEXIO_EXPORT WebSearchQueryFormGeneral : public WebSearchQueryFormAbstract
 {
     Q_OBJECT
 
 public:
-    SearchForm(MDIWidget *mdiWidget, SearchResults *searchResults, QWidget *parent);
+    WebSearchQueryFormGeneral(QWidget *parent);
 
-signals:
-    void doneSearching();
+    bool readyToStart() const;
 
-public slots:
-    void updatedConfiguration();
+    QMap<QString, QString> getQueryTerms();
+    int getNumResults();
 
 private:
-    class SearchFormPrivate;
-    SearchFormPrivate *d;
-
-private slots:
-    void switchToEngines();
-    void startSearch();
-    void foundEntry(Entry *entry);
-    void stoppedSearch(int resultCode);
-    void tabSwitched(int newTab);
-    void itemCheckChanged();
-    void openHomepage();
-    void enginesListCurrentChanged(QListWidgetItem*, QListWidgetItem*);
-    void currentStackWidgetChanged(int);
+    QMap<QString, KLineEdit*> queryFields;
+    QSpinBox *numResultsField;
 };
 
-
-#endif // KBIBTEX_PROGRAM_SEARCHFORM_H
+#endif // KBIBTEX_WEBSEARCH_GENERAL_H

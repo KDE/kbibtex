@@ -37,6 +37,8 @@
  */
 class WebSearchQueryFormAbstract : public QWidget
 {
+    Q_OBJECT
+
 public:
     WebSearchQueryFormAbstract(QWidget *parent)
             : QWidget(parent) {
@@ -46,6 +48,9 @@ public:
     virtual bool readyToStart() const {
         return false;
     }
+
+signals:
+    void returnPressed();
 };
 
 Q_DECLARE_METATYPE(WebSearchQueryFormAbstract*)

@@ -62,6 +62,7 @@ public:
         lineEditSearchTerm = new KLineEdit(this);
         layout->addWidget(lineEditSearchTerm, 0, 1, 1, 1);
         lineEditSearchTerm->setClearButtonShown(true);
+        connect(lineEditSearchTerm, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
 
         QLabel *label = new QLabel(i18n("Number of Results:"), this);
         layout->addWidget(label, 1, 0, 1, 1);

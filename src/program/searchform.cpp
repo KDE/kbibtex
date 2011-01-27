@@ -38,6 +38,7 @@
 #include <kparts/part.h>
 
 #include <websearchabstract.h>
+#include <websearchgeneral.h>
 #include <websearchbibsonomy.h>
 #include <websearchgooglescholar.h>
 #include <websearcharxiv.h>
@@ -53,80 +54,6 @@
 
 const int HomepageRole = Qt::UserRole + 5;
 const int WidgetRole = Qt::UserRole + 6;
-
-class WebSearchQueryFormGeneral : public WebSearchQueryFormAbstract
-{
-public:
-    QMap<QString, KLineEdit*> queryFields;
-    QSpinBox *numResultsField;
-
-    WebSearchQueryFormGeneral(QWidget *parent)
-            : WebSearchQueryFormAbstract(parent) {
-        QGridLayout *layout = new QGridLayout(this);
-        layout->setMargin(0);
-
-        QLabel *label = new QLabel(i18n("Free text:"), this);
-        layout->addWidget(label, 0, 0, 1, 1);
-        KLineEdit *lineEdit = new KLineEdit(this);
-        lineEdit->setClearButtonShown(true);
-        lineEdit->setFocus(Qt::TabFocusReason);
-        layout->addWidget(lineEdit, 0, 1, 1, 1);
-        queryFields.insert(WebSearchAbstract::queryKeyFreeText, lineEdit);
-        label->setBuddy(lineEdit);
-
-        label = new QLabel(i18n("Title:"), this);
-        layout->addWidget(label, 1, 0, 1, 1);
-        lineEdit = new KLineEdit(this);
-        lineEdit->setClearButtonShown(true);
-        queryFields.insert(WebSearchAbstract::queryKeyTitle, lineEdit);
-        layout->addWidget(lineEdit, 1, 1, 1, 1);
-        label->setBuddy(lineEdit);
-
-        label = new QLabel(i18n("Author:"), this);
-        layout->addWidget(label, 2, 0, 1, 1);
-        lineEdit = new KLineEdit(this);
-        lineEdit->setClearButtonShown(true);
-        queryFields.insert(WebSearchAbstract::queryKeyAuthor, lineEdit);
-        layout->addWidget(lineEdit, 2, 1, 1, 1);
-        label->setBuddy(lineEdit);
-
-        label = new QLabel(i18n("Year:"), this);
-        layout->addWidget(label, 3, 0, 1, 1);
-        lineEdit = new KLineEdit(this);
-        lineEdit->setClearButtonShown(true);
-        queryFields.insert(WebSearchAbstract::queryKeyYear, lineEdit);
-        layout->addWidget(lineEdit, 3, 1, 1, 1);
-        label->setBuddy(lineEdit);
-
-        label = new QLabel(i18n("Number of Results:"), this);
-        layout->addWidget(label, 4, 0, 1, 1);
-        numResultsField = new QSpinBox(this);
-        numResultsField->setMinimum(3);
-        numResultsField->setMaximum(100);
-        numResultsField->setValue(20);
-        layout->addWidget(numResultsField, 4, 1, 1, 1);
-        label->setBuddy(numResultsField);
-
-        layout->setRowStretch(5, 100);
-    }
-
-    bool readyToStart() const {
-        // TODO
-        return true;
-    }
-
-    QMap<QString, QString> getQueryTerms() {
-        QMap<QString, QString> result;
-
-        for (QMap<QString, KLineEdit*>::ConstIterator it = queryFields.constBegin(); it != queryFields.constEnd(); ++it) {
-            if (!it.value()->text().isEmpty())
-                result.insert(it.key(), it.value()->text());
-        }
-
-        return result;
-    }
-
-};
 
 class SearchForm::SearchFormPrivate
 {
@@ -175,6 +102,7 @@ public:
         queryTermsStack = new QStackedWidget(parent);
         vLayout->addWidget(queryTermsStack);
         queryTermsStack->addWidget(createGeneralQueryTermsForm(queryTermsStack));
+        connect(queryTermsStack, SIGNAL(currentChanged(int)), p, SLOT(currentStackWidgetChanged(int)));
 
         vLayout->addStretch(100);
 
@@ -226,6 +154,7 @@ public:
 
         searchButton = new KPushButton(KIcon("edit-find"), i18n("Search"), p);
         layout->addWidget(searchButton, 1, 1, 1, 1);
+        connect(generalQueryTermsForm, SIGNAL(returnPressed()), searchButton, SIGNAL(clicked()));
 
         loadEngines();
         updateGUI();
@@ -326,6 +255,16 @@ public:
     void enginesListCurrentChanged(QListWidgetItem *current) {
         actionOpenHomepage->setEnabled(current != NULL);
     }
+
+    void currentStackWidgetChanged(int index) {
+        for (int i = queryTermsStack->count() - 1; i >= 0; --i) {
+            WebSearchQueryFormAbstract *wsqfa = static_cast<WebSearchQueryFormAbstract*>(queryTermsStack->widget(i));
+            if (i == index)
+                connect(wsqfa, SIGNAL(returnPressed()), searchButton, SLOT(click()));
+            else
+                disconnect(wsqfa, SIGNAL(returnPressed()), searchButton, SLOT(click()));
+        }
+    }
 };
 
 SearchForm::SearchForm(MDIWidget *mdiWidget, SearchResults *searchResults, QWidget *parent)
@@ -360,7 +299,7 @@ void SearchForm::startSearch()
         /// start search using the general-purpose form's values
 
         QMap<QString, QString> queryTerms = d->generalQueryTermsForm->getQueryTerms();
-        int numResults = d->generalQueryTermsForm->numResultsField->value();
+        int numResults = d->generalQueryTermsForm->getNumResults();
         for (QMap<QListWidgetItem*, WebSearchAbstract*>::ConstIterator it = d->itemToWebSearch.constBegin(); it != d->itemToWebSearch.constEnd(); ++it)
             if (it.key()->checkState() == Qt::Checked) {
                 it.value()->startSearch(queryTerms, numResults);
@@ -429,4 +368,9 @@ void SearchForm::openHomepage()
 void SearchForm::enginesListCurrentChanged(QListWidgetItem *current, QListWidgetItem *)
 {
     d->enginesListCurrentChanged(current);
+}
+
+void SearchForm::currentStackWidgetChanged(int index)
+{
+    d->currentStackWidgetChanged(index);
 }

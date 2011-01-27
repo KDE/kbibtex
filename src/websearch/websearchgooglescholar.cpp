@@ -76,46 +76,54 @@ public:
         lineEditAllWords = new KLineEdit(this);
         layout->addWidget(lineEditAllWords, 0, 1, 1, 3);
         label->setBuddy(lineEditAllWords);
+        connect(lineEditAllWords, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
 
         label = new QLabel(i18n("<qt><b>Any</b> words:</qt>"), this);
         layout->addWidget(label, 1, 0, 1, 1, Qt::AlignVCenter | Qt::AlignRight);
         lineEditAnyWord = new KLineEdit(this);
         layout->addWidget(lineEditAnyWord, 1, 1, 1, 3);
         label->setBuddy(lineEditAnyWord);
+        connect(lineEditAnyWord, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
 
         label = new QLabel(i18n("<qt><b>Without</b> words:</qt>"), this);
         layout->addWidget(label, 2, 0, 1, 1, Qt::AlignVCenter | Qt::AlignRight);
         lineEditWithoutWords = new KLineEdit(this);
         layout->addWidget(lineEditWithoutWords, 2, 1, 1, 3);
         label->setBuddy(lineEditWithoutWords);
+        connect(lineEditWithoutWords, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
 
         label = new QLabel(i18n("Exact phrase:"), this);
         layout->addWidget(label, 3, 0, 1, 1, Qt::AlignVCenter | Qt::AlignRight);
         lineEditExactPhrase = new KLineEdit(this);
         layout->addWidget(lineEditExactPhrase, 3, 1, 1, 3);
         label->setBuddy(lineEditExactPhrase);
+        connect(lineEditExactPhrase, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
 
         label = new QLabel(i18n("Author:"), this);
         layout->addWidget(label, 4, 0, 1, 1, Qt::AlignVCenter | Qt::AlignRight);
         lineEditAuthor = new KLineEdit(this);
         layout->addWidget(lineEditAuthor, 4, 1, 1, 3);
         label->setBuddy(lineEditAuthor);
+        connect(lineEditAuthor, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
 
         label = new QLabel(i18n("Publication:"), this);
         layout->addWidget(label, 5, 0, 1, 1, Qt::AlignVCenter | Qt::AlignRight);
         lineEditPublication = new KLineEdit(this);
         layout->addWidget(lineEditPublication, 5, 1, 1, 3);
         label->setBuddy(lineEditPublication);
+        connect(lineEditPublication, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
 
         label = new QLabel(i18n("Year:"), this);
         layout->addWidget(label, 6, 0, 1, 1, Qt::AlignVCenter | Qt::AlignRight);
         lineEditYearStart = new KLineEdit(this);
         layout->addWidget(lineEditYearStart, 6, 1, 1, 1);
         label->setBuddy(lineEditYearStart);
+        connect(lineEditYearStart, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
         label = new QLabel(QChar(0x2013), this);
         layout->addWidget(label, 6, 2, 1, 1);
         lineEditYearEnd = new KLineEdit(this);
         layout->addWidget(lineEditYearEnd, 6, 3, 1, 1);
+        connect(lineEditYearEnd, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
 
         label = new QLabel(i18n("Number of Results:"), this);
         layout->addWidget(label, 7, 0, 1, 1);
@@ -125,6 +133,7 @@ public:
         numResultsField->setValue(20);
         layout->addWidget(numResultsField, 7, 1, 1, 3);
         label->setBuddy(numResultsField);
+        connect(numResultsField, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
 
         layout->setRowStretch(8, 100);
         lineEditAllWords->setFocus(Qt::TabFocusReason);
