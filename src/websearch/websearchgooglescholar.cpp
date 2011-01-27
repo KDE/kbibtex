@@ -133,7 +133,6 @@ public:
         numResultsField->setValue(20);
         layout->addWidget(numResultsField, 7, 1, 1, 3);
         label->setBuddy(numResultsField);
-        connect(numResultsField, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
 
         layout->setRowStretch(8, 100);
         lineEditAllWords->setFocus(Qt::TabFocusReason);
