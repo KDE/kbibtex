@@ -65,6 +65,7 @@ private:
     QMap<int, KUrl> cbxEntryToUrl;
     QMutex addingUrlMutex;
     QString arXivPDFUrlStart;
+    bool anyLocal;
 
 public:
     struct UrlInfo {
@@ -125,6 +126,7 @@ public:
 
     bool addUrl(const struct UrlInfo &urlInfo) {
         bool isLocal = urlInfo.url.isLocalFile();
+        anyLocal |= isLocal;
 
         if (onlyLocalFilesCheckBox->isChecked() && !isLocal) return true; ///< ignore URL if only local files are allowed
 
@@ -159,7 +161,9 @@ public:
 
         urlComboBox->setEnabled(true);
         externalViewerButton->setEnabled(true);
-        if (isLocal) {
+        if (isLocal || ///< local files always preferred over URLs
+                /// prefer arXiv summary URLs over other URLs
+                (!anyLocal && urlInfo.url.host().contains("arxiv.org/abs"))) {
             urlComboBox->setCurrentIndex(urlComboBox->count() - 1);
             stackedWidget->setCurrentIndex(urlComboBox->count() - 1);
         }
@@ -184,18 +188,16 @@ public:
         urlComboBox->setEnabled(false);
         externalViewerButton->setEnabled(false);
 
+        /// clear flag that memorizes if any local file was referenced
+        anyLocal = false;
+
         /// do not load external reference if widget is hidden
-        bool thereIsALocaleFile = false;
-        bool thereIsARemoteUrl = false;
         if (isVisible()) {
             QList<KUrl> urlList = FileInfo::entryUrls(entry, baseUrl);
             for (QList<KUrl>::ConstIterator it = urlList.constBegin(); it != urlList.constEnd(); ++it) {
                 bool isLocal = (*it).isLocalFile();
-                thereIsALocaleFile |= isLocal;
-                thereIsARemoteUrl |= !isLocal;
                 if (onlyLocalFilesCheckBox->isChecked() && !isLocal) continue;
 
-                kDebug() << "testing url " << (*it).pathOrUrl();
                 KIO::StatJob *job = KIO::stat(*it, KIO::StatJob::SourceSide, 3, KIO::HideProgressInfo);
                 runningJobs << job;
                 job->ui()->setWindow(p);
