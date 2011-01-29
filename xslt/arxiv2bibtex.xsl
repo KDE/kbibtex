@@ -15,7 +15,16 @@
 <!-- An entry is interpreted as a BibTeX @article -->
 <xsl:template match="entry">
 <xsl:text>@misc{</xsl:text><xsl:value-of select='substring(id,22,100)' />
-<xsl:apply-templates select="author" />
+
+<!-- process authors by merging all names with "and" -->
+<xsl:text>,
+    author = {</xsl:text>
+<xsl:for-each select="author/name" >
+<xsl:if test="position() > 1"><xsl:text> and </xsl:text></xsl:if>
+<xsl:value-of select="."/>
+</xsl:for-each>
+<xsl:text>}</xsl:text>
+
 <xsl:apply-templates select="title" />
 <xsl:apply-templates select="updated" />
 <xsl:apply-templates select="summary" />
@@ -37,13 +46,6 @@
 
 
 
-
-
-<xsl:template match="author">
-<!-- FIXME merge multiple authors to one author entry -->
-<xsl:text>,
-    author = {</xsl:text><xsl:value-of select="name" /><xsl:text>}</xsl:text>
-</xsl:template>
 
 <xsl:template match="title">
 <xsl:text>,
