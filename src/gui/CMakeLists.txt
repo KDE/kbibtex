@@ -29,7 +29,6 @@ set( kbibtexgui_LIB_SRCS
     widgets/filterbar.cpp
     config/entrylayout.cpp
     valuelistmodel.cpp
-    findpdf.cpp
 )
 
 add_definitions( -DMAKE_KBIBTEXGUI_LIB )

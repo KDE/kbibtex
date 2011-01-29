@@ -50,7 +50,6 @@ public slots:
 private slots:
     void tabChanged();
     void checkBibTeX();
-    void slotFindPDF();
 
 private:
     class ElementEditorPrivate;
