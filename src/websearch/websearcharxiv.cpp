@@ -19,7 +19,11 @@
 ***************************************************************************/
 
 #include <QTextStream>
+#include <QGridLayout>
+#include <QLabel>
+#include <QSpinBox>
 
+#include <KLineEdit>
 #include <KLocale>
 #include <KDebug>
 #include <KStandardDirs>
@@ -28,6 +32,45 @@
 #include "fileimporterbibtex.h"
 #include "websearcharxiv.h"
 #include "xsltransform.h"
+
+
+class WebSearchArXiv::WebSearchQueryFormArXiv : public WebSearchQueryFormAbstract
+{
+public:
+    KLineEdit *lineEditFreeText;
+    QSpinBox *numResultsField;
+
+    WebSearchQueryFormArXiv(QWidget *parent)
+            : WebSearchQueryFormAbstract(parent) {
+        QGridLayout *layout = new QGridLayout(this);
+        layout->setMargin(0);
+
+        QLabel *label = new QLabel(i18n("Free text:"), this);
+        layout->addWidget(label, 0, 0, 1, 1);
+        lineEditFreeText = new KLineEdit(this);
+        lineEditFreeText->setClearButtonShown(true);
+        lineEditFreeText->setFocus(Qt::TabFocusReason);
+        layout->addWidget(lineEditFreeText, 0, 1, 1, 1);
+        label->setBuddy(lineEditFreeText);
+        connect(lineEditFreeText, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
+
+        label = new QLabel(i18n("Number of Results:"), this);
+        layout->addWidget(label, 1, 0, 1, 1);
+        numResultsField = new QSpinBox(this);
+        numResultsField->setMinimum(3);
+        numResultsField->setMaximum(100);
+        numResultsField->setValue(20);
+        layout->addWidget(numResultsField, 1, 1, 1, 1);
+        label->setBuddy(numResultsField);
+
+        layout->setRowStretch(2, 100);
+    }
+
+    bool readyToStart() const {
+        return !lineEditFreeText->text().isEmpty();
+    }
+
+};
 
 class WebSearchArXiv::WebSearchArXivPrivate
 {
@@ -39,6 +82,7 @@ private:
 
 public:
     XSLTransform xslt;
+    WebSearchQueryFormArXiv *form;
 
     WebSearchArXivPrivate(QWidget *widget, WebSearchArXiv *parent)
             : w(widget), p(parent),
@@ -93,7 +137,7 @@ public:
                 Learned Publishing, 20(1) (January 2007) 16-22
             */
             jourRef6("^([a-zA-Z. ]+),\\s+(\\d+)\\((\\d+)\\)\\s+(\\(([A-Za-z]+\\s+)?(\\d{4})\\))?\\s+(\\d+)(-(\\d+))?$", Qt::CaseInsensitive),
-            regExpPhD("Ph\\.?D\\.? Thesis", Qt::CaseInsensitive), regExpTechRep("Tech(\\.|nical) Rep(\\.|ort)", Qt::CaseInsensitive), xslt(KStandardDirs::locate("appdata", "arxiv2bibtex.xsl")) {
+            regExpPhD("Ph\\.?D\\.? Thesis", Qt::CaseInsensitive), regExpTechRep("Tech(\\.|nical) Rep(\\.|ort)", Qt::CaseInsensitive), xslt(KStandardDirs::locate("appdata", "arxiv2bibtex.xsl")), form(NULL) {
         // nothing
     }
 
@@ -118,6 +162,23 @@ public:
         return result;
     }
 
+    KUrl buildQueryUrl() {
+        QString url = QLatin1String("http://export.arxiv.org/api/query?");
+
+        /// append search terms
+        QStringList queryFragments;
+
+        // FIXME: Is there a need for percent encoding?
+        queryFragments.append(splitRespectingQuotationMarks(form->lineEditFreeText->text()));
+
+        url.append("search_query=all:" + queryFragments.join("+AND+all:") + "");
+
+        /// set number of expected results
+        url.append(QString("&start=0&max_results=%1").arg(form->numResultsField->value()));
+
+        return KUrl(url);
+    }
+
     KUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) {
         QString url = QLatin1String("http://export.arxiv.org/api/query?");
 
@@ -132,7 +193,6 @@ public:
         /// set number of expected results
         url.append(QString("&start=0&max_results=%1").arg(numResults));
 
-        kDebug() << "url = " << url;
         return KUrl(url);
     }
 
@@ -254,7 +314,8 @@ WebSearchArXiv::WebSearchArXiv(QWidget *parent)
 
 void WebSearchArXiv::startSearch()
 {
-    // TODO
+    KIO::StoredTransferJob *job = KIO::storedGet(d->buildQueryUrl());
+    connect(job, SIGNAL(result(KJob *)), this, SLOT(jobDone(KJob*)));
 }
 
 void WebSearchArXiv::startSearch(const QMap<QString, QString> &query, int numResults)
@@ -275,9 +336,7 @@ QString WebSearchArXiv::favIconUrl() const
 
 WebSearchQueryFormAbstract* WebSearchArXiv::customWidget(QWidget *parent)
 {
-    Q_UNUSED(parent);
-    // TODO
-    return NULL;
+    return (d->form = new WebSearchArXiv::WebSearchQueryFormArXiv(parent));
 }
 
 KUrl WebSearchArXiv::homepage() const
