@@ -114,7 +114,7 @@ FilterBar::FilterBar(QWidget *parent)
         if ((*it).upperCamelCaseAlt.isEmpty())
             d->comboBoxField->addItem((*it).label, (*it).upperCamelCase);
 
-    connect(d->comboBoxFilterText->lineEdit(), SIGNAL(textChanged(QString)), this, SLOT(widgetsChanged()));
+    connect(d->comboBoxFilterText->lineEdit(), SIGNAL(returnPressed()), this, SLOT(widgetsChanged()));
     connect(lineEdit, SIGNAL(clearButtonClicked()), this, SLOT(clearFilter()));
     connect(d->comboBoxCombination, SIGNAL(currentIndexChanged(int)), this, SLOT(widgetsChanged()));
     connect(d->comboBoxField, SIGNAL(currentIndexChanged(int)), this, SLOT(widgetsChanged()));
