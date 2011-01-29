@@ -138,6 +138,7 @@ void Clipboard::paste()
 {
     QClipboard *clipboard = QApplication::clipboard();
     d->insertText(clipboard->text());
+    d->bibTeXEditor->externalModification();
 }
 
 
@@ -179,6 +180,8 @@ void Clipboard::editorDropEvent(QDropEvent *event)
 {
     QString text = event->mimeData()->text();
 
-    if (!text.isEmpty())
+    if (!text.isEmpty()) {
         d->insertText(text);
+        d->bibTeXEditor->externalModification();
+    }
 }
