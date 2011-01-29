@@ -25,12 +25,12 @@
 #include "about.h"
 
 const char *programVersion = versionNumber;
-static const char programHomepage[] = "http://home.gna.org/kbibtex/";
+static const char programHomepage[] = I18N_NOOP("http://home.gna.org/kbibtex/");
 static const char bugTrackerWebsite[] = "https://gna.org/bugs/?group=kbibtex";
 
 KBibTeXAboutData::KBibTeXAboutData()
-        : KAboutData("kbibtex", 0, ki18n("KBibTeX"), programVersion, ki18n("A BibTeX editor for KDE"), KAboutData::License_GPL_V2, ki18n("Copyright 2004-2011 Thomas Fischer"), ki18n("Edit bibliography files"), programHomepage)
+        : KAboutData("kbibtex", 0, ki18n("KBibTeX"), programVersion, ki18n("A BibTeX editor for KDE"), KAboutData::License_GPL_V2, ki18n("Copyright 2004-2011 Thomas Fischer"), KLocalizedString(), programHomepage)
 {
     addAuthor(ki18n("Thomas Fischer"), ki18n("Author"), "fischer@unix-ag.uni-kl.de");
-    setBugAddress(bugTrackerWebsite);
+    setCustomAuthorText(ki18n("Please use https://gna.org/bugs/?group=kbibtex to report bugs.\n"), ki18n("Please use <a href=\"https://gna.org/bugs/?group=kbibtex\">https://gna.org/bugs/?group=kbibtex</a> to report bugs.\n"));
 }
