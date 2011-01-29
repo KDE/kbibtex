@@ -257,7 +257,7 @@ void KBibTeXMainWindow::openDocumentDialog()
         if (url.isValid()) startDir = url.path();
     }
 
-    KEncodingFileDialog::Result loadResult = KEncodingFileDialog::getOpenUrlAndEncoding(QString(), startDir, QLatin1String("text/x-bibtex application/xml application/pdf all/all"), this); // TODO application/x-research-info-systems application/x-endnote-refer
+    KEncodingFileDialog::Result loadResult = KEncodingFileDialog::getOpenUrlAndEncoding(QString(), startDir, QLatin1String("text/x-bibtex application/xml all/all"), this); // TODO application/x-research-info-systems application/x-endnote-refer
     if (!loadResult.URLs.isEmpty()) {
         KUrl url = loadResult.URLs.first();
         if (!url.isEmpty()) {
