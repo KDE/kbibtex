@@ -237,6 +237,8 @@ public:
         qApp->restoreOverrideCursor();
         if (!result)
             KMessageBox::error(p->widget(), i18n("Saving the bibliography to file \"%1\" failed.", url.pathOrUrl()), i18n("Saving bibliography failed"));
+        else
+            model->bibTeXSourceModel()->bibTeXFile()->setUrl(url); /// store new URL in BibTeX File object
 
         return result;
     }
