@@ -78,6 +78,20 @@ void FileInfo::urlsInText(const QString &text, bool testExistance, const QString
             }
         }
 
+        /// explicitly check URL entry, may be an URL even if http:// or alike is missing
+        pos = -1;
+        while ((pos = KBibTeX::domainNameRegExp.indexIn(internalText, pos + 1)) != -1) {
+            int pos2 = internalText.indexOf(" ", pos + 1);
+            if (pos2 < 0) pos2 = internalText.length();
+            QString match = internalText.mid(pos, pos2 - pos);
+            KUrl url("http://" + match);
+            if (url.isValid() && !result.contains(url)) {
+                /// remove match from internal text to avoid duplicates
+                internalText = internalText.left(pos) + internalText.mid(pos + match.length());
+                result << url;
+            }
+        }
+
         /// extract DOI from current field
         pos = -1;
         while ((pos = KBibTeX::doiRegExp.indexIn(internalText, pos + 1)) != -1) {
@@ -113,35 +127,17 @@ QList<KUrl> FileInfo::entryUrls(const Entry *entry, const KUrl &bibTeXUrl)
     const QString baseDirectory = bibTeXUrl.isValid() ? bibTeXUrl.directory() : QString::null;
 
     for (Entry::ConstIterator it = entry->constBegin(); it != entry->constEnd(); ++it) {
-        QString plainText = PlainTextValue::text(*it, NULL);
+        Value v = *it;
 
-        int pos = -1;
-        while ((pos = regExpEscapedChars.indexIn(plainText, pos + 1)) != -1)
-            plainText = plainText.replace(regExpEscapedChars.cap(0), regExpEscapedChars.cap(1));
+        for (Value::ConstIterator vit = v.constBegin(); vit != v.constEnd();++vit) {
+            QString plainText = PlainTextValue::text(*(*vit), NULL);
 
-        urlsInText(plainText, true, baseDirectory, result);
-    }
+            int pos = -1;
+            while ((pos = regExpEscapedChars.indexIn(plainText, pos + 1)) != -1)
+                plainText = plainText.replace(regExpEscapedChars.cap(0), regExpEscapedChars.cap(1));
 
-    /// explicitly check URL entry, may be an URL even if http:// or alike is missing
-    QString plainText = PlainTextValue::text(entry->value(Entry::ftUrl), NULL);
-    if (!plainText.isEmpty()) {
-        int pos = -1;
-        while ((pos = regExpEscapedChars.indexIn(plainText, pos + 1)) != -1)
-            plainText = plainText.replace(regExpEscapedChars.cap(0), regExpEscapedChars.cap(1));
-
-        if (plainText.indexOf("://") < 0) {
-            if ((pos = KBibTeX::domainNameRegExp.indexIn(plainText)) != 0) {
-                /// text is not starting with a domain name
-                plainText = "";
-            } else {
-                /// looks like a valid domain name at the start, but no protocol given, assume http
-                plainText = plainText.prepend("http://");
-            }
+            urlsInText(plainText, true, baseDirectory, result);
         }
-
-        KUrl url(plainText);
-        if (url.isValid() && !result.contains(url))
-            result << url;
     }
 
     if (!baseDirectory.isEmpty()) {
