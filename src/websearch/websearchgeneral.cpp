@@ -84,8 +84,11 @@ WebSearchQueryFormGeneral::WebSearchQueryFormGeneral(QWidget *parent)
 
 bool WebSearchQueryFormGeneral::readyToStart() const
 {
-    // TODO
-    return true;
+    for (QMap<QString, KLineEdit*>::ConstIterator it = queryFields.constBegin(); it != queryFields.constEnd(); ++it)
+        if (!it.value()->text().isEmpty())
+            return true;
+
+    return false;
 }
 
 QMap<QString, QString> WebSearchQueryFormGeneral::getQueryTerms()
