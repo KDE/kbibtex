@@ -242,10 +242,10 @@ QString BibTeXFields::typeFlagsToString(KBibTeX::TypeFlags typeFlags)
 QString BibTeXFields::typeFlagToString(KBibTeX::TypeFlag typeFlag)
 {
     if (typeFlag == KBibTeX::tfPlainText) return QLatin1String("Text");
-    if (typeFlag ==  KBibTeX::tfSource) return QLatin1String("Source");
-    if (typeFlag ==  KBibTeX::tfPerson) return QLatin1String("Person");
-    if (typeFlag ==  KBibTeX::tfKeyword) return QLatin1String("Keyword");
-    if (typeFlag ==  KBibTeX::tfReference) return QLatin1String("Reference");
-    if (typeFlag ==  KBibTeX::tfVerbatim) return QLatin1String("Verbatim");
+    if (typeFlag == KBibTeX::tfSource) return QLatin1String("Source");
+    if (typeFlag == KBibTeX::tfPerson) return QLatin1String("Person");
+    if (typeFlag == KBibTeX::tfKeyword) return QLatin1String("Keyword");
+    if (typeFlag == KBibTeX::tfReference) return QLatin1String("Reference");
+    if (typeFlag == KBibTeX::tfVerbatim) return QLatin1String("Verbatim");
     return QString::null;
 }
