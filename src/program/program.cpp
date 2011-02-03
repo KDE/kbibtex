@@ -67,7 +67,7 @@ int KBibTeXProgram::execute()
             kDebug(0) << "Arg-" << i << " : " << arguments->arg(i) << endl;
             KUrl url(arguments->arg(i));
             if (url.isValid())
-                mainWindow->openDocument(url, QString::null);
+                mainWindow->openDocument(url);
         }
         mainWindow->show();
 

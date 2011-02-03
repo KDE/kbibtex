@@ -257,25 +257,16 @@ void KBibTeXMainWindow::openDocumentDialog()
         if (url.isValid()) startDir = url.path();
     }
 
-    KEncodingFileDialog::Result loadResult = KEncodingFileDialog::getOpenUrlAndEncoding(QString(), startDir, QLatin1String("text/x-bibtex application/xml all/all"), this); // TODO application/x-research-info-systems application/x-endnote-refer
-    if (!loadResult.URLs.isEmpty()) {
-        KUrl url = loadResult.URLs.first();
-        if (!url.isEmpty()) {
-            openDocument(url, loadResult.encoding);
-        }
+    // TODO application/x-research-info-systems application/x-endnote-refer
+    KUrl url = KFileDialog::getOpenUrl(startDir, QLatin1String("text/x-bibtex application/xml all/all"), this);
+    if (!url.isEmpty()) {
+        openDocument(url);
     }
 }
 
 void KBibTeXMainWindow::openDocument(const KUrl& url)
 {
-    openDocument(url, QLatin1String("latex"));
-}
-
-void KBibTeXMainWindow::openDocument(const KUrl& url, const QString& encoding)
-{
-    kDebug() << "Opening document " << url.pathOrUrl() << " with encoding " << encoding << endl;
     OpenFileInfo *openFileInfo = d->openFileInfoManager->open(url);
-    openFileInfo->setProperty(OpenFileInfo::propertyEncoding, encoding);
     d->openFileInfoManager->setCurrentFile(openFileInfo);
 }
 

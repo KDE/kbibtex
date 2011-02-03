@@ -187,7 +187,7 @@ public:
             KMessageBox::error(p->widget(), i18n("<qt>Could not create backup copies of document<br/><b>%1</b>.</qt>", url.pathOrUrl()), i18n("Backup copies"));
     }
 
-    KEncodingFileDialog::Result getSaveFilenames() {
+    KUrl getSaveFilename() {
         QString startDir = QString();// QLatin1String(":save"); // FIXME: Does not work yet
         QString supportedMimeTypes = QLatin1String("text/x-bibtex application/xml");
         if (FileExporterToolchain::kpsewhich(QLatin1String("embedfile.sty")))
@@ -195,7 +195,7 @@ public:
         // TODO application/x-research-info-systems application/x-endnote-refer
         supportedMimeTypes += QLatin1String(" text/html");
 
-        return KEncodingFileDialog::getSaveUrlAndEncoding(QString(), startDir, supportedMimeTypes, p->widget());
+        return KFileDialog::getSaveUrl(startDir, supportedMimeTypes, p->widget());
     }
 
     bool saveFile(const KUrl &url) {
@@ -404,22 +404,22 @@ bool KBibTeXPart::documentSave()
 
 bool KBibTeXPart::documentSaveAs()
 {
-    KEncodingFileDialog::Result res = d->getSaveFilenames();
-    if (res.URLs.isEmpty() || !d->checkOverwrite(res.URLs.first(), widget()))
+    KUrl url = d->getSaveFilename();
+    if (!url.isValid() || !d->checkOverwrite(url, widget()))
         return false;
 
-    return KParts::ReadWritePart::saveAs(res.URLs.first());
+    return KParts::ReadWritePart::saveAs(url);
 }
 
 bool KBibTeXPart::documentSaveCopyAs()
 {
-    KEncodingFileDialog::Result res = d->getSaveFilenames();
-    if (res.URLs.isEmpty() || !d->checkOverwrite(res.URLs.first(), widget()))
+    KUrl url = d->getSaveFilename();
+    if (!url.isValid() || !d->checkOverwrite(url, widget()))
         return false;
 
     /// difference from KParts::ReadWritePart::saveAs:
     /// current document's URL won't be changed
-    return d->saveFile(res.URLs.first());
+    return d->saveFile(url);
 }
 
 void KBibTeXPart::fitActionSettings()
