@@ -34,28 +34,27 @@
 </xsl:template>
 
 <xsl:template match="editors">
-<xsl:text>Eds: </xsl:text>
+<xsl:text>, Eds: </xsl:text>
 <xsl:for-each select="person">
 <xsl:apply-templates select="."/><xsl:if test="position()!=last()"><xsl:text>, </xsl:text>
 </xsl:if>
-<xsl:if test="position()=last()-1"><xsl:text> and </xsl:text></xsl:if></xsl:for-each><xsl:text>, </xsl:text>
+<xsl:if test="position()=last()-1"><xsl:text> and </xsl:text></xsl:if></xsl:for-each>
 </xsl:template>
 
 <xsl:template match="title">
-<b><xsl:apply-templates /></b><xsl:text>, </xsl:text>
+<b><xsl:apply-templates /></b>
 </xsl:template>
 
 <xsl:template match="booktitle">
-<i><xsl:apply-templates /></i>
-<xsl:text>, </xsl:text>
+<xsl:text>, </xsl:text><i><xsl:apply-templates /></i>
 </xsl:template>
 
 <xsl:template match="school">
-<xsl:apply-templates />
-<xsl:text>, </xsl:text>
+<xsl:text>, </xsl:text><xsl:apply-templates />
 </xsl:template>
 
 <xsl:template match="journal">
+<xsl:text>, </xsl:text>
 <i><xsl:apply-templates /></i>
 <xsl:if test="string-length(../volume)>0">
 <xsl:text> </xsl:text>
@@ -66,39 +65,49 @@
 <xsl:text>)</xsl:text>
 </xsl:if>
 </xsl:if>
-<xsl:text>, </xsl:text>
 </xsl:template>
 
 <xsl:template match="institution">
+<xsl:text>, </xsl:text>
 <i><xsl:apply-templates /></i>
 <xsl:if test="string-length(../number)>0">
 <xsl:text> No. </xsl:text>
 <xsl:value-of select="../number"/>
 </xsl:if>
-<xsl:text>, </xsl:text>
 </xsl:template>
 
 <xsl:template match="publisher">
-<xsl:apply-templates />
 <xsl:text>, </xsl:text>
+<xsl:apply-templates />
 </xsl:template>
 
 <xsl:template match="volume">
+<xsl:if test="string-length(../journal)=0">
+<!-- do not print volume if there is "journal" field,
+     which prints the volume, too.                     -->
+<xsl:text>, </xsl:text>
 <xsl:text>volume </xsl:text>
 <xsl:apply-templates />
-<xsl:text>, </xsl:text>
+</xsl:if>
 </xsl:template>
 
 <xsl:template match="edition">
+<xsl:text>, </xsl:text>
 <xsl:apply-templates />
-<xsl:text> edition, </xsl:text>
+<xsl:text> edition</xsl:text>
 </xsl:template>
 
 <xsl:template match="pages">
-<xsl:apply-templates /><xsl:text>, </xsl:text>
+<xsl:text>, </xsl:text>
+<xsl:apply-templates />
 </xsl:template>
 
 <xsl:template match="year">
+<xsl:text>, </xsl:text>
+<xsl:if test="string-length(../month)>0">
+<xsl:value-of select="../month"/>
+<xsl:text> </xsl:text>
+</xsl:if>
 <xsl:apply-templates />
 </xsl:template>
 
@@ -106,12 +115,8 @@
 <xsl:text>, </xsl:text><xsl:apply-templates />
 </xsl:template>
 
-<xsl:template match="month">
-<xsl:apply-templates /><xsl:text> </xsl:text>
-</xsl:template>
-
 <xsl:template match="abstract">
-<br/><i>Abstract</i><xsl:text>: </xsl:text><xsl:apply-templates />
+<br/><small><i>Abstract</i><xsl:text>: </xsl:text><xsl:apply-templates /></small>
 </xsl:template>
 
 <xsl:template match="entry">
@@ -127,7 +132,6 @@
 <xsl:apply-templates select="institution" />
 <xsl:apply-templates select="pages" />
 <xsl:apply-templates select="editors" />
-<xsl:apply-templates select="month" />
 <xsl:apply-templates select="year" />
 <xsl:apply-templates select="note" />
 <xsl:apply-templates select="abstract" />
