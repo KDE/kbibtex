@@ -65,8 +65,23 @@ public:
     void setUrl(const KUrl &url);
     KUrl url() const;
 
+    /**
+     * Sets the _preferred_ encoding for this file. The in-memory representation
+     * of this class is not affected. Indeed, this is just a recommendation for
+     * future save-to-file operations.
+     * @see #encoding() const;
+     */
+    void setEncoding(const QString &encoding);
+
+    /**
+     * Retrieves the preferred encoding for this file.
+     * @see #setEncoding(const QString &)
+     */
+    QString encoding() const;
+
 private:
     KUrl m_url;
+    QString m_encoding;
 };
 
 #endif // KBIBTEX_IO_FILE_H

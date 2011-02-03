@@ -33,7 +33,7 @@
 #include <comment.h>
 
 File::File()
-        : QList<Element*>(), m_url(KUrl())
+        : QList<Element*>(), m_url(KUrl()), m_encoding(QLatin1String("latex"))
 {
     // nothing
 }
@@ -88,4 +88,14 @@ void File::setUrl(const KUrl &url)
 KUrl File::url() const
 {
     return m_url;
+}
+
+void File::setEncoding(const QString &encoding)
+{
+    m_encoding = encoding;
+}
+
+QString File::encoding() const
+{
+    return m_encoding;
 }
