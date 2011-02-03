@@ -470,6 +470,7 @@ void OpenFileInfoManager::close(OpenFileInfo *openFileInfo)
         if (!isClosing && ofi == openFileInfo) {
             isClosing = true;
             openFileInfo->removeFlags(OpenFileInfo::Open);
+            openFileInfo->addFlags(OpenFileInfo::RecentlyUsed);
         } else if (nextCurrent == NULL && ofi->flags().testFlag(OpenFileInfo::Open))
             nextCurrent = ofi;
     }
