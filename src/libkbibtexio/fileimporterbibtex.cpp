@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2010 by Thomas Fischer                             *
+*   Copyright (C) 2004-2011 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -17,6 +17,8 @@
 *   Free Software Foundation, Inc.,                                       *
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
+
+#include <QTextCodec>
 #include <QIODevice>
 #include <QRegExp>
 #include <QCoreApplication>
@@ -80,6 +82,7 @@ File* FileImporterBibTeX::load(QIODevice *iodevice)
     m_lineNo = 1;
 
     File *result = new File();
+    result->setEncoding(m_textStream->codec()->name());
     while (!m_cancelFlag && !m_textStream->atEnd()) {
         emit progress(m_textStream->pos(), rawText.length());
         Element * element = nextElement();
