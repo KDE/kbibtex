@@ -90,6 +90,13 @@ void DocumentListDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
 
     OpenFileInfo *ofi = qvariant_cast<OpenFileInfo*>(index.data(Qt::UserRole));
 
+    if (OpenFileInfoManager::getOpenFileInfoManager()->currentFile() == ofi) {
+        /// for the currently open file, use a bold font to write file name
+        QFont font = painter->font();
+        font.setBold(true);
+        painter->setFont(font);
+    }
+
     QRect textRect = option.rect;
     textRect.setLeft(textRect.left() + height + 4);
     textRect.setHeight(height / 2);
