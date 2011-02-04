@@ -25,6 +25,8 @@
 #include "element.h"
 #include "value.h"
 
+class File;
+
 /**
  * This class represents an entry in a BibTeX file such as an article
  * or a book. This class is essentially a map from keys such as title,
@@ -180,6 +182,8 @@ public:
      * @return true if value with key found, else false
      */
     bool contains(const QString& key) const;
+
+    static Entry* resolveCrossref(const Entry &original, const File *bibTeXfile);
 
 private:
     class EntryPrivate;

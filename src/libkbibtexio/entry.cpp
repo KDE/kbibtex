@@ -174,4 +174,26 @@ bool Entry::contains(const QString& key) const
     return false;
 }
 
+Entry* Entry::resolveCrossref(const Entry &original, const File *bibTeXfile)
+{
+    Entry *result = new Entry(original);
 
+    QString crossRef = PlainTextValue::text(original.value(QLatin1String("crossref")), bibTeXfile);
+    const Entry *crossRefEntry = dynamic_cast<const Entry*>((bibTeXfile != NULL) ? bibTeXfile->containsKey(crossRef) : NULL);
+    if (crossRefEntry != NULL) {
+        /// copy all fields from crossref'ed entry to new entry which do not (yet) exist in the new entry
+        for (Entry::ConstIterator it = crossRefEntry->constBegin(); it != crossRefEntry->constEnd(); ++it)
+            if (!result->contains(it.key()))
+                result->insert(it.key(), Value(it.value()));
+
+        if (crossRefEntry->contains(ftTitle)) {
+            /// translate crossref's title into new entry's booktitle
+            result->insert(ftBookTitle, Value(crossRefEntry->operator [](ftTitle)));
+        }
+
+        /// remove crossref field (no longer of use)
+        result->remove(ftCrossRef);
+    }
+
+    return result;
+}

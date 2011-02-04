@@ -32,6 +32,7 @@
 #include <KStandardDirs>
 #include <KPushButton>
 #include <KFileDialog>
+#include <KDebug>
 #include <kio/netaccess.h>
 
 #include <fileexporterbibtex.h>
@@ -167,6 +168,11 @@ void ReferencePreview::setElement(Element* element, const File *file)
 
 void ReferencePreview::renderHTML()
 {
+    enum { ignore, /// do not include crossref'ed entry's values (one entry)
+           add, /// feed both the current entry as well as the crossref'ed entry into the exporter (two entries)
+           merge /// merge the crossref'ed entry's values into the current entry (one entry)
+         } crossRefHandling = ignore;
+
     if (d->element == NULL) {
         d->webView->setHtml(notAvailableMessage.arg(i18n("No element selected")), d->baseUrl);
         d->buttonOpen->setEnabled(false);
@@ -178,12 +184,11 @@ void ReferencePreview::renderHTML()
 
     QStringList errorLog;
     FileExporter *exporter = NULL;
-    bool includeCrossRef = false;
 
     if (d->comboBox->currentIndex() == 0)
         exporter = new FileExporterBibTeX();
     else if (d->comboBox->currentIndex() < 9) {
-        includeCrossRef = true;
+        crossRefHandling = merge;
         FileExporterBibTeX2HTML *exporterHTML = new FileExporterBibTeX2HTML();
         switch (d->comboBox->currentIndex()) {
         case 1: /// BibTeX2HTML (abbrv)
@@ -213,6 +218,7 @@ void ReferencePreview::renderHTML()
         }
         exporter = exporterHTML;
     } else {
+        crossRefHandling = merge;
         FileExporterXSLT *exporterXSLT = new FileExporterXSLT();
         switch (d->comboBox->currentIndex()) {
         case 9: /// XML/XSLT (standard)
@@ -229,7 +235,7 @@ void ReferencePreview::renderHTML()
     buffer.open(QBuffer::WriteOnly);
 
     const Entry *entry = dynamic_cast<const Entry*>(d->element);
-    if (includeCrossRef && entry != NULL) {
+    if (crossRefHandling == add && entry != NULL) {
         QString crossRef = PlainTextValue::text(entry->value(QLatin1String("crossref")), d->file);
         const Entry *crossRefEntry = dynamic_cast<const Entry*>((d->file != NULL) ? d->file->containsKey(crossRef) : NULL);
         if (crossRefEntry != NULL) {
@@ -239,6 +245,10 @@ void ReferencePreview::renderHTML()
             exporter->save(&buffer, &file, &errorLog);
         } else
             exporter->save(&buffer, d->element, &errorLog);
+    } else if (crossRefHandling == merge && entry != NULL) {
+        Entry *merged = Entry::resolveCrossref(*entry, d->file);
+        exporter->save(&buffer, merged, &errorLog);
+        delete merged;
     } else
         exporter->save(&buffer, d->element, &errorLog);
     buffer.close();
@@ -249,8 +259,11 @@ void ReferencePreview::renderHTML()
     QString text = ts.readAll();
     buffer.close();
 
-    if (text.isEmpty()) /// something went wrong, no output ...
+    if (text.isEmpty()) {
+        /// something went wrong, no output ...
         text = notAvailableMessage.arg(i18n("No HTML output generated"));
+        kDebug() << errorLog.join("\n");
+    }
 
     if (d->comboBox->currentIndex() == 0) {
         /// source
