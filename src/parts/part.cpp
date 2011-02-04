@@ -24,6 +24,7 @@
 #include <QLayout>
 #include <QKeyEvent>
 #include <QSignalMapper>
+#include <QDesktopServices>
 
 #include <KDebug>
 #include <KEncodingFileDialog>
@@ -40,6 +41,7 @@
 #include <kio/netaccess.h>
 
 #include <file.h>
+#include <fileinfo.h>
 #include <fileimporterbibtex.h>
 #include <fileexporterbibtex.h>
 #include <fileimporterris.h>
@@ -78,11 +80,13 @@ public:
     SortFilterBibTeXFileModel *sortFilterProxyModel;
     FilterBar *filterBar;
     QSignalMapper *signalMapperNewElement;
-    KAction *editCutAction, *editDeleteAction, *editCopyAction, *editPasteAction, *editCopyReferencesAction, *elementEditAction, *fileSaveAction;
+    KAction *editCutAction, *editDeleteAction, *editCopyAction, *editPasteAction, *editCopyReferencesAction, *elementEditAction, *elementViewDocumentAction, *fileSaveAction;
+    QMenu *viewDocumentMenu;
+    QSignalMapper *signalMapperViewDocument;
 
     KBibTeXPartPrivate(KBibTeXPart *parent)
-            : p(parent), sortFilterProxyModel(NULL), signalMapperNewElement(new QSignalMapper(parent)) {
-        // nothing
+            : p(parent), sortFilterProxyModel(NULL), signalMapperNewElement(new QSignalMapper(parent)), viewDocumentMenu(new QMenu(i18n("View Document"), parent->widget())), signalMapperViewDocument(new QSignalMapper(parent)) {
+        connect(signalMapperViewDocument, SIGNAL(mapped(QObject*)), p, SLOT(elementViewDocumentMenu(QObject*)));
     }
 
     FileImporter *fileImporterFactory(const KUrl& url) {
@@ -243,7 +247,6 @@ public:
         return result;
     }
 
-
     bool checkOverwrite(const KUrl &url, QWidget *parent) {
         if (!url.isLocalFile())
             return true;
@@ -254,6 +257,29 @@ public:
 
         return KMessageBox::Cancel != KMessageBox::warningContinueCancel(parent,     i18n("A file named \"%1\" already exists. Are you sure you want to overwrite it?",  info.fileName()),
                 i18n("Overwrite File?"), KStandardGuiItem::overwrite(),    KStandardGuiItem::cancel(), QString(), KMessageBox::Notify | KMessageBox::Dangerous);
+    }
+
+    int updateViewDocumentMenu() {
+        viewDocumentMenu->clear();
+        int result = 0;
+
+        Entry *entry = dynamic_cast<Entry*>(editor->currentElement());
+        if (entry != NULL) {
+            QList<KUrl> urlList = FileInfo::entryUrls(entry, editor->bibTeXModel()->bibTeXFile()->url());
+            if (!urlList.isEmpty()) {
+                for (QList<KUrl>::ConstIterator it = urlList.constBegin(); it != urlList.constEnd(); ++it) {
+                    // FIXME: the signal mapper will fill up with mappings, as they are never removed
+                    KAction *action = new KAction((*it).pathOrUrl(), p); // TODO beautify (icon, url)
+                    action->setData((*it).pathOrUrl());
+                    connect(action, SIGNAL(triggered()), signalMapperViewDocument, SLOT(map()));
+                    signalMapperViewDocument->setMapping(action, action);
+                    viewDocumentMenu->addAction(action);
+                }
+                result = urlList.count();
+            }
+        }
+
+        return result;
     }
 };
 
@@ -334,7 +360,10 @@ void KBibTeXPart::setupActions(bool /*browserViewWanted FIXME*/)
     d->elementEditAction->setShortcut(Qt::CTRL + Qt::Key_E);
     actionCollection()->addAction(QLatin1String("element_edit"),  d->elementEditAction);
     connect(d->elementEditAction, SIGNAL(triggered()), d->editor, SLOT(editCurrentElement()));
-
+    d->elementViewDocumentAction = new KAction(KIcon("application-pdf"), i18n("View Document"), this);
+    d->elementViewDocumentAction->setShortcut(Qt::CTRL + Qt::Key_D);
+    actionCollection()->addAction(QLatin1String("element_viewdocument"),  d->elementViewDocumentAction);
+    connect(d->elementViewDocumentAction, SIGNAL(triggered()), this, SLOT(elementViewDocument()));
 
     Clipboard *clipboard = new Clipboard(d->editor);
 
@@ -355,6 +384,7 @@ void KBibTeXPart::setupActions(bool /*browserViewWanted FIXME*/)
 
     d->editor->setContextMenuPolicy(Qt::ActionsContextMenu);
     d->editor->insertAction(NULL, d->elementEditAction);
+    d->editor->insertAction(NULL, d->elementViewDocumentAction);
     QAction *separator = new QAction(this);
     separator->setSeparator(true);
     d->editor->insertAction(NULL, separator);
@@ -420,6 +450,21 @@ bool KBibTeXPart::documentSaveCopyAs()
     /// difference from KParts::ReadWritePart::saveAs:
     /// current document's URL won't be changed
     return d->saveFile(url);
+}
+
+void KBibTeXPart::elementViewDocument()
+{
+    if (!d->viewDocumentMenu->actions().isEmpty()) {
+        // TODO: Choose "best" URL instead of first (local file over remote, PDF over website, ...)
+        QAction *action = d->viewDocumentMenu->actions().first();
+        QDesktopServices::openUrl(KUrl(action->text())); // TODO KDE way?
+    }
+}
+
+void KBibTeXPart::elementViewDocumentMenu(QObject *obj)
+{
+    QString text = static_cast<QAction*>(obj)->data().toString(); ///< only a KAction will be passed along
+    QDesktopServices::openUrl(KUrl(text)); // TODO KDE way?
 }
 
 void KBibTeXPart::fitActionSettings()
@@ -525,4 +570,10 @@ void KBibTeXPart::updateActions()
     d->editCopyReferencesAction->setEnabled(!emptySelection);
     d->editCutAction->setEnabled(!emptySelection);
     d->editDeleteAction->setEnabled(!emptySelection);
+
+    int numDocumentsToView = d->updateViewDocumentMenu();
+    /// enable menu item only if there is at least one document to view
+    d->elementViewDocumentAction->setEnabled(!emptySelection && numDocumentsToView > 0);
+    /// activate sub-menu only if there are at least two documents to view
+    d->elementViewDocumentAction->setMenu(numDocumentsToView > 1 ? d->viewDocumentMenu : NULL);
 }

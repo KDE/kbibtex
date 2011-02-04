@@ -67,6 +67,8 @@ protected slots:
     bool documentSave();
     bool documentSaveAs();
     bool documentSaveCopyAs();
+    void elementViewDocument();
+    void elementViewDocumentMenu(QObject *);
 
 private slots:
     void newElementTriggered(int event);

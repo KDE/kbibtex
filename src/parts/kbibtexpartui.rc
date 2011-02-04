@@ -17,6 +17,7 @@
     <Action name="element_new" />
     <Separator/>
     <Action name="element_edit" />
+    <Action name="element_viewdocument" />
   </Menu>
 </MenuBar>
 
