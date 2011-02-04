@@ -22,8 +22,6 @@
 
 #include <QString>
 
-#include <KDebug>
-
 #include <encoderlatex.h>
 #include "iconvlatex.h"
 
@@ -60,34 +58,31 @@ QByteArray IConvLaTeX::encode(const QString &input)
     char *inputBuffer = inputByteArray.data();
     QByteArray outputByteArray(maxBufferSize, '\0');
     char *outputBuffer = outputByteArray.data();
-    char *outputBufferStart = outputBuffer;
     size_t inputBufferBytesLeft = inputByteArray.size();
     size_t ouputBufferBytesLeft = maxBufferSize;
     Encoder *laTeXEncoder = EncoderLaTeX::currentEncoderLaTeX();
 
-    kDebug() << "inputBufferBytesLeft = " << inputBufferBytesLeft << "   ouputBufferBytesLeft = " << ouputBufferBytesLeft;
     while (iconv(d->iconvHandle, &inputBuffer, &inputBufferBytesLeft, &outputBuffer, &ouputBufferBytesLeft) == (size_t)(-1)) {
-        kDebug() << "1 outputBuffer = " << outputBufferStart << "   inputBuffer = " << inputBuffer;
+        /// split text into character where iconv stopped and remaining text
         QString remainingString = QString::fromUtf8(inputBuffer);
-        kDebug() << "unicode = " << remainingString.at(0).unicode() << " remaining = " << remainingString.mid(1);
         QChar problematicChar = remainingString.at(0);
         remainingString = remainingString.mid(1);
+
+        /// setup input buffer to continue with remaining text
         inputByteArray = remainingString.toUtf8();
         inputBuffer = inputByteArray.data();
         inputBufferBytesLeft = inputByteArray.size();
-        kDebug() << "inputBufferBytesLeft = " << inputBufferBytesLeft << "   ouputBufferBytesLeft = " << ouputBufferBytesLeft;
-        kDebug() << "2 outputBuffer = " << outputBufferStart << "   inputBuffer = " << inputBuffer;
 
+        /// encode problematic character in LaTeX encoding and append to output buffer
         QString encodedProblem = laTeXEncoder->encode(problematicChar);
-        kDebug() << "encodedProblem = " << encodedProblem;
         QByteArray encodedProblemByteArray = encodedProblem.toUtf8();
         qstrncpy(outputBuffer, encodedProblemByteArray.data(), ouputBufferBytesLeft);
-        kDebug()<<"size = "<<encodedProblemByteArray.size();
         ouputBufferBytesLeft -= encodedProblemByteArray.size();
         outputBuffer += encodedProblemByteArray.size();
     }
 
-    kDebug() << "3 outputBuffer = " << outputBufferStart << "   inputBuffer = " << inputBuffer;
+    /// cut away unused space
     outputByteArray.resize(maxBufferSize - ouputBufferBytesLeft);
+
     return outputByteArray;
 }
