@@ -62,27 +62,11 @@ public:
 public slots:
     void cancel();
 
-protected:
-    static bool requiresPersonQuoting(const QString &text, bool isLastName);
-    static QString escapeLaTeXChars(QString &text);
-
 private:
-    QChar m_stringOpenDelimiter;
-    QChar m_stringCloseDelimiter;
-    KBibTeX::Casing m_keywordCasing;
-    QuoteComment m_quoteComment;
-    QString m_encoding;
-    bool m_protectCasing;
-    bool cancelFlag;
-    IConvLaTeX *m_iconvLaTeX;
+    static bool requiresPersonQuoting(const QString &text, bool isLastName);
 
-    bool writeEntry(QIODevice* iodevice, const Entry& entry);
-    bool writeMacro(QIODevice* iodevice, const Macro& macro);
-    bool writeComment(QIODevice* iodevice, const Comment& comment);
-    bool writePreamble(QIODevice* iodevice, const  Preamble& preamble);
-    bool writeString(QIODevice* iodevice, const QString& text);
-
-    void addProtectiveCasing(QString &text);
+      class FileExporterBibTeXPrivate;
+    FileExporterBibTeXPrivate *d;
 };
 
 #endif

@@ -41,8 +41,161 @@
 
 #define encodercheck(encoder, text) ((encoder)?(encoder)->encode((text)):(text))
 
+class FileExporterBibTeX::FileExporterBibTeXPrivate
+{
+private:
+    FileExporterBibTeX *p;
+
+public:
+    QChar stringOpenDelimiter;
+    QChar stringCloseDelimiter;
+    KBibTeX::Casing keywordCasing;
+    QuoteComment quoteComment;
+    QString encoding;
+    bool protectCasing;
+    bool cancelFlag;
+    IConvLaTeX *iconvLaTeX;
+
+    FileExporterBibTeXPrivate(FileExporterBibTeX *parent)
+        : p(parent), stringOpenDelimiter(QChar('"')), stringCloseDelimiter(QChar('"')), keywordCasing(KBibTeX::cLowerCase), quoteComment(qcNone), encoding(QLatin1String("latex")), protectCasing(false), cancelFlag(false)
+    {
+        iconvLaTeX = new IConvLaTeX(encoding == QLatin1String("latex") ? QLatin1String("us-ascii") : encoding);
+    }
+
+    ~FileExporterBibTeXPrivate(){
+        delete iconvLaTeX;
+    }
+
+    bool writeEntry(QIODevice* iodevice, const Entry& entry)
+    {
+        BibTeXEntries *be = BibTeXEntries::self();
+        BibTeXFields *bf = BibTeXFields::self();
+
+        iodevice->putChar('@');
+        iodevice->write(be->format(entry.type(), keywordCasing).toAscii().data());
+        iodevice->putChar('{');
+        iodevice->write(iconvLaTeX->encode(entry.id()));
+
+        for (Entry::ConstIterator it = entry.begin(); it != entry.end(); ++it) {
+            const QString key = it.key();
+            Value value = it.value();
+            QString text = valueToBibTeX(value, key, leUTF8);
+            if (text.isEmpty()) kWarning() << "Value for field " << key << " is empty" << endl;
+            if (protectCasing && dynamic_cast<PlainText*>(value.first()) != NULL && (key == Entry::ftTitle || key == Entry::ftBookTitle || key == Entry::ftSeries))
+                addProtectiveCasing(text);
+
+            iodevice->putChar(',');
+            iodevice->putChar('\n');
+            iodevice->putChar('\t');
+            iodevice->write(iconvLaTeX->encode(bf->format(key, keywordCasing)));
+            iodevice->putChar(' ');
+            iodevice->putChar('=');
+            iodevice->putChar(' ');
+            iodevice->write(iconvLaTeX->encode(text));
+        }
+        iodevice->putChar('\n');
+        iodevice->putChar('}');
+        iodevice->putChar('\n');
+        iodevice->putChar('\n');
+
+        return true;
+    }
+
+    bool writeMacro(QIODevice* iodevice, const Macro& macro)
+    {
+        BibTeXEntries *be = BibTeXEntries::self();
+
+        QString text = valueToBibTeX(macro.value(), QString::null, leUTF8);
+        if (protectCasing)
+            addProtectiveCasing(text);
+
+        iodevice->putChar('@');
+        iodevice->write(be->format(QLatin1String("String"), keywordCasing).toAscii().data());
+        iodevice->putChar('{');
+        iodevice->write(iconvLaTeX->encode(macro.key()));
+        iodevice->putChar(' ');
+        iodevice->putChar('=');
+        iodevice->putChar(' ');
+        iodevice->write(iconvLaTeX->encode(text));
+        iodevice->putChar('}');
+        iodevice->putChar('\n');
+        iodevice->putChar('\n');
+
+        return true;
+    }
+
+    bool writeComment(QIODevice* iodevice, const Comment& comment)
+    {
+        BibTeXEntries *be = BibTeXEntries::self();
+
+        QString text = comment.text() ;
+
+        if (comment.useCommand() || quoteComment == qcCommand) {
+            iodevice->putChar('@');
+            iodevice->write(be->format(QLatin1String("Comment"), keywordCasing).toAscii().data());
+            iodevice->putChar('{');
+            iodevice->write(iconvLaTeX->encode(text));
+            iodevice->putChar('}');
+            iodevice->putChar('\n');
+            iodevice->putChar('\n');
+        } else if (quoteComment == qcPercentSign) {
+            QStringList commentLines = text.split('\n', QString::SkipEmptyParts);
+            for (QStringList::Iterator it = commentLines.begin(); it != commentLines.end(); it++) {
+                iodevice->putChar('%');
+                iodevice->putChar(' ');
+                iodevice->write(iconvLaTeX->encode(*it));
+                iodevice->putChar('\n');
+            }
+            iodevice->putChar('\n');
+        } else {
+            iodevice->write(iconvLaTeX->encode(text));
+            iodevice->putChar('\n');
+            iodevice->putChar('\n');
+        }
+
+        return true;
+    }
+
+    bool writePreamble(QIODevice* iodevice, const Preamble& preamble)
+    {
+        BibTeXEntries *be = BibTeXEntries::self();
+
+        iodevice->putChar('@');
+        iodevice->write(be->format(QLatin1String("Preamble"), keywordCasing).toAscii().data());
+        iodevice->putChar('{');
+        iodevice->write(iconvLaTeX->encode(valueToBibTeX(preamble.value(), QString::null, leUTF8)));
+        iodevice->putChar('}');
+        iodevice->putChar('\n');
+        iodevice->putChar('\n');
+
+        return true;
+    }
+
+    void addProtectiveCasing(QString &text)
+    {
+        if ((text[0] != '"' || text[text.length()-1] != '"') && (text[0] != '{' || text[text.length()-1] != '}')) {
+            /** nothing to protect, as this is no text string */
+            return;
+        }
+
+        bool addBrackets = TRUE;
+
+        if (text[1] == '{' && text[text.length() - 2] == '}') {
+            addBrackets = FALSE;
+            int count = 0;
+            for (int i = text.length() - 2; !addBrackets && i >= 1; --i)
+                if (text[i] == '{')++count;
+                else if (text[i] == '}')--count;
+                else if (count == 0) addBrackets = TRUE;
+        }
+
+        if (addBrackets)
+            text.insert(1, '{').insert(text.length(), '}');
+    }
+};
+
 FileExporterBibTeX::FileExporterBibTeX()
-        : FileExporter(), m_stringOpenDelimiter(QChar('"')), m_stringCloseDelimiter(QChar('"')), m_keywordCasing(KBibTeX::cLowerCase), m_quoteComment(qcNone), m_encoding(QLatin1String("latex")), m_protectCasing(false), cancelFlag(false), m_iconvLaTeX(NULL)
+        : FileExporter(), d(new FileExporterBibTeXPrivate(this))
 {
 // nothing
 }
@@ -54,28 +207,30 @@ FileExporterBibTeX::~FileExporterBibTeX()
 
 void FileExporterBibTeX::setEncoding(const QString& encoding)
 {
-    m_encoding = encoding;
+    d->encoding = encoding;
+    delete d->iconvLaTeX;
+    d->iconvLaTeX = new IConvLaTeX(encoding == QLatin1String("latex") ?  QLatin1String("us-ascii") : encoding);
 }
 
 void FileExporterBibTeX::setStringDelimiters(const QChar& stringOpenDelimiter, const QChar& stringCloseDelimiter)
 {
-    m_stringOpenDelimiter = stringOpenDelimiter;
-    m_stringCloseDelimiter = stringCloseDelimiter;
+    d->stringOpenDelimiter = stringOpenDelimiter;
+    d->stringCloseDelimiter = stringCloseDelimiter;
 }
 
 void FileExporterBibTeX::setKeywordCasing(KBibTeX::Casing keywordCasing)
 {
-    m_keywordCasing = keywordCasing;
+    d->keywordCasing = keywordCasing;
 }
 
 void FileExporterBibTeX::setQuoteComment(QuoteComment quoteComment)
 {
-    m_quoteComment = quoteComment;
+    d->quoteComment = quoteComment;
 }
 
 void FileExporterBibTeX::setProtectCasing(bool protectCasing)
 {
-    m_protectCasing = protectCasing;
+    d->protectCasing = protectCasing;
 }
 
 bool FileExporterBibTeX::save(QIODevice* iodevice, const File* bibtexfile, QStringList * /*errorLog*/)
@@ -94,7 +249,7 @@ bool FileExporterBibTeX::save(QIODevice* iodevice, const File* bibtexfile, QStri
     QList<Entry*> crossRefingEntryList;
     QList<Element*> remainingList;
 
-    for (File::ConstIterator it = bibtexfile->begin(); it != bibtexfile->end() && result && !cancelFlag; it++) {
+    for (File::ConstIterator it = bibtexfile->begin(); it != bibtexfile->end() && result && !d->cancelFlag; it++) {
         Preamble *preamble = dynamic_cast<Preamble*>(*it);
         if (preamble != NULL)
             preambleList.append(preamble);
@@ -120,194 +275,81 @@ bool FileExporterBibTeX::save(QIODevice* iodevice, const File* bibtexfile, QStri
     int totalElements = (int) bibtexfile->count();
     int currentPos = 0;
 
-    m_iconvLaTeX = new IConvLaTeX(m_encoding == QLatin1String("latex") ?  QLatin1String("us-ascii") : m_encoding);
-    if (m_encoding != QLatin1String("latex")) {
-        parameterCommentsList << new Comment("x-kbibtex-encoding=" + m_encoding, true);
-        kDebug() << "New x-kbibtex-encoding is \"" << m_encoding << "\"" << endl;
+    if (d->encoding != QLatin1String("latex")) {
+        parameterCommentsList << new Comment("x-kbibtex-encoding=" + d->encoding, true);
+        kDebug() << "New x-kbibtex-encoding is \"" << d->encoding << "\"" << endl;
     }
 
     /** before anything else, write parameter comments */
-    for (QList<Comment*>::ConstIterator it = parameterCommentsList.begin(); it != parameterCommentsList.end() && result && !cancelFlag; it++) {
-        result &= writeComment(iodevice, **it);
+    for (QList<Comment*>::ConstIterator it = parameterCommentsList.begin(); it != parameterCommentsList.end() && result && !d->cancelFlag; it++) {
+        result &= d->writeComment(iodevice, **it);
         emit progress(++currentPos, totalElements);
     }
 
     /** first, write preambles and strings (macros) at the beginning */
-    for (QList<Preamble*>::ConstIterator it = preambleList.begin(); it != preambleList.end() && result && !cancelFlag; it++) {
-        result &= writePreamble(iodevice, **it);
+    for (QList<Preamble*>::ConstIterator it = preambleList.begin(); it != preambleList.end() && result && !d->cancelFlag; it++) {
+        result &= d->writePreamble(iodevice, **it);
         emit progress(++currentPos, totalElements);
     }
 
-    for (QList<Macro*>::ConstIterator it = macroList.begin(); it != macroList.end() && result && !cancelFlag; it++) {
-        result &= writeMacro(iodevice, **it);
+    for (QList<Macro*>::ConstIterator it = macroList.begin(); it != macroList.end() && result && !d->cancelFlag; it++) {
+        result &= d->writeMacro(iodevice, **it);
         emit progress(++currentPos, totalElements);
     }
 
     /** second, write cross-referencing elements */
-    for (QList<Entry*>::ConstIterator it = crossRefingEntryList.begin(); it != crossRefingEntryList.end() && result && !cancelFlag; it++) {
-        result &= writeEntry(iodevice, **it);
+    for (QList<Entry*>::ConstIterator it = crossRefingEntryList.begin(); it != crossRefingEntryList.end() && result && !d->cancelFlag; it++) {
+        result &= d->writeEntry(iodevice, **it);
         emit progress(++currentPos, totalElements);
     }
 
     /** third, write remaining elements */
-    for (QList<Element*>::ConstIterator it = remainingList.begin(); it != remainingList.end() && result && !cancelFlag; it++) {
+    for (QList<Element*>::ConstIterator it = remainingList.begin(); it != remainingList.end() && result && !d->cancelFlag; it++) {
         Entry *entry = dynamic_cast<Entry*>(*it);
         if (entry != NULL)
-            result &= writeEntry(iodevice, *entry);
+            result &= d->writeEntry(iodevice, *entry);
         else {
             Comment *comment = dynamic_cast<Comment*>(*it);
             if (comment != NULL)
-                result &= writeComment(iodevice, *comment);
+                result &= d->writeComment(iodevice, *comment);
         }
         emit progress(++currentPos, totalElements);
     }
 
-    delete m_iconvLaTeX;
-    m_iconvLaTeX = NULL;
-
-    return result && !cancelFlag;
+    return result && !d->cancelFlag;
 }
 
 bool FileExporterBibTeX::save(QIODevice* iodevice, const Element* element, QStringList * /*errorLog*/)
 {
     bool result = false;
 
-    m_iconvLaTeX = new IConvLaTeX(m_encoding == QLatin1String("latex") ?  QLatin1String("us-ascii") : m_encoding);
-
     const Entry *entry = dynamic_cast<const Entry*>(element);
     if (entry != NULL)
-        result |= writeEntry(iodevice, *entry);
+        result |= d->writeEntry(iodevice, *entry);
     else {
-        const Macro * macro = dynamic_cast<const Macro*>(element);
+        const Macro *macro = dynamic_cast<const Macro*>(element);
         if (macro != NULL)
-            result |= writeMacro(iodevice, *macro);
+            result |= d->writeMacro(iodevice, *macro);
         else {
-            const Comment * comment = dynamic_cast<const Comment*>(element);
+            const Comment *comment = dynamic_cast<const Comment*>(element);
             if (comment != NULL)
-                result |= writeComment(iodevice, *comment);
+                result |= d->writeComment(iodevice, *comment);
             else {
-                const Preamble * preamble = dynamic_cast<const Preamble*>(element);
+                const Preamble *preamble = dynamic_cast<const Preamble*>(element);
                 if (preamble != NULL)
-                    result |= writePreamble(iodevice, *preamble);
+                    result |= d->writePreamble(iodevice, *preamble);
             }
         }
     }
 
-    delete m_iconvLaTeX;
-    m_iconvLaTeX = NULL;
-
-    return result && !cancelFlag;
+        return result && !d->cancelFlag;
 }
 
 void FileExporterBibTeX::cancel()
 {
-    cancelFlag = TRUE;
+    d->cancelFlag = true;
 }
 
-bool FileExporterBibTeX::writeEntry(QIODevice* iodevice, const Entry& entry)
-{
-    BibTeXEntries *be = BibTeXEntries::self();
-    BibTeXFields *bf = BibTeXFields::self();
-
-    iodevice->putChar('@');
-    iodevice->write(be->format(entry.type(), m_keywordCasing).toAscii().data());
-    iodevice->putChar('{');
-    iodevice->write(m_iconvLaTeX->encode(entry.id()));
-
-    for (Entry::ConstIterator it = entry.begin(); it != entry.end(); ++it) {
-        const QString key = it.key();
-        Value value = it.value();
-        QString text = valueToBibTeX(value, key, leUTF8);
-        if (text.isEmpty()) kWarning() << "Value for field " << key << " is empty" << endl;
-        if (m_protectCasing && dynamic_cast<PlainText*>(value.first()) != NULL && (key == Entry::ftTitle || key == Entry::ftBookTitle || key == Entry::ftSeries))
-            addProtectiveCasing(text);
-
-        iodevice->putChar(',');
-        iodevice->putChar('\n');
-        iodevice->putChar('\t');
-        iodevice->write(m_iconvLaTeX->encode(bf->format(key, m_keywordCasing)));
-        iodevice->putChar(' ');
-        iodevice->putChar('=');
-        iodevice->putChar(' ');
-        iodevice->write(m_iconvLaTeX->encode(text));
-    }
-    iodevice->putChar('\n');
-    iodevice->putChar('}');
-    iodevice->putChar('\n');
-    iodevice->putChar('\n');
-
-    return true;
-}
-
-bool FileExporterBibTeX::writeMacro(QIODevice* iodevice, const Macro& macro)
-{
-    BibTeXEntries *be = BibTeXEntries::self();
-
-    QString text = valueToBibTeX(macro.value(), QString::null, leUTF8);
-    if (m_protectCasing)
-        addProtectiveCasing(text);
-
-    iodevice->putChar('@');
-    iodevice->write(be->format(QLatin1String("String"), m_keywordCasing).toAscii().data());
-    iodevice->putChar('{');
-    iodevice->write(m_iconvLaTeX->encode(macro.key()));
-    iodevice->putChar(' ');
-    iodevice->putChar('=');
-    iodevice->putChar(' ');
-    iodevice->write(m_iconvLaTeX->encode(text));
-    iodevice->putChar('}');
-    iodevice->putChar('\n');
-    iodevice->putChar('\n');
-
-    return true;
-}
-
-bool FileExporterBibTeX::writeComment(QIODevice* iodevice, const Comment& comment)
-{
-    BibTeXEntries *be = BibTeXEntries::self();
-
-    QString text = comment.text() ;
-
-    if (comment.useCommand() || m_quoteComment == qcCommand) {
-        iodevice->putChar('@');
-        iodevice->write(be->format(QLatin1String("Comment"), m_keywordCasing).toAscii().data());
-        iodevice->putChar('{');
-        iodevice->write(m_iconvLaTeX->encode(text));
-        iodevice->putChar('}');
-        iodevice->putChar('\n');
-        iodevice->putChar('\n');
-    } else if (m_quoteComment == qcPercentSign) {
-        QStringList commentLines = text.split('\n', QString::SkipEmptyParts);
-        for (QStringList::Iterator it = commentLines.begin(); it != commentLines.end(); it++) {
-            iodevice->putChar('%');
-            iodevice->putChar(' ');
-            iodevice->write(m_iconvLaTeX->encode(*it));
-            iodevice->putChar('\n');
-        }
-        iodevice->putChar('\n');
-    } else {
-        iodevice->write(m_iconvLaTeX->encode(text));
-        iodevice->putChar('\n');
-        iodevice->putChar('\n');
-    }
-
-    return true;
-}
-
-bool FileExporterBibTeX::writePreamble(QIODevice* iodevice, const Preamble& preamble)
-{
-    BibTeXEntries *be = BibTeXEntries::self();
-
-    iodevice->putChar('@');
-    iodevice->write(be->format(QLatin1String("Preamble"), m_keywordCasing).toAscii().data());
-    iodevice->putChar('{');
-    iodevice->write(m_iconvLaTeX->encode(valueToBibTeX(preamble.value(), QString::null, leUTF8)));
-    iodevice->putChar('}');
-    iodevice->putChar('\n');
-    iodevice->putChar('\n');
-
-    return true;
-}
 
 QString FileExporterBibTeX::valueToBibTeX(const Value& value, const QString& key, UseLaTeXEncoding useLaTeXEncoding)
 {
@@ -428,11 +470,6 @@ QString FileExporterBibTeX::elementToString(const Element* element)
     return result.join("; ");
 }
 
-QString FileExporterBibTeX::escapeLaTeXChars(QString &text)
-{
-    return text.replace("&", "\\&"); // FIXME more?
-}
-
 bool FileExporterBibTeX::requiresPersonQuoting(const QString &text, bool isLastName)
 {
     if (isLastName && !text.contains(" "))
@@ -454,27 +491,5 @@ bool FileExporterBibTeX::requiresPersonQuoting(const QString &text, bool isLastN
         if (bracketCounter == 0 && i > 0)
             return TRUE;
     }
-    return FALSE;
-}
-
-void FileExporterBibTeX::addProtectiveCasing(QString &text)
-{
-    if ((text[0] != '"' || text[text.length()-1] != '"') && (text[0] != '{' || text[text.length()-1] != '}')) {
-        /** nothing to protect, as this is no text string */
-        return;
-    }
-
-    bool addBrackets = TRUE;
-
-    if (text[1] == '{' && text[text.length() - 2] == '}') {
-        addBrackets = FALSE;
-        int count = 0;
-        for (int i = text.length() - 2; !addBrackets && i >= 1; --i)
-            if (text[i] == '{')++count;
-            else if (text[i] == '}')--count;
-            else if (count == 0) addBrackets = TRUE;
-    }
-
-    if (addBrackets)
-        text.insert(1, '{').insert(text.length(), '}');
+    return false;
 }
