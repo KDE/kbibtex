@@ -103,6 +103,7 @@ commandmappingdatalatex[] = {
     {"L", 0x0141},
     {"l", 0x0142},
     {"grqq", 0x201C},
+    {"rqq", 0x201D},
     {"glqq", 0x201E},
     {"frqq", 0x00BB},
     {"flqq", 0x00AB},
