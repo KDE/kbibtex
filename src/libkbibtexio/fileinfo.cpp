@@ -67,53 +67,50 @@ void FileInfo::urlsInText(const QString &text, bool testExistance, const QString
         }
 
         /// extract URL from current field
-        int pos = -1;
-        while ((pos = KBibTeX::urlRegExp.indexIn(internalText, pos + 1)) != -1) {
+        int pos = 0;
+        while ((pos = KBibTeX::urlRegExp.indexIn(internalText, pos)) != -1) {
             QString match = KBibTeX::urlRegExp.cap(0);
             KUrl url(match);
-            if (url.isValid() && (!testExistance || !url.isLocalFile() || QFileInfo(url.path()).exists()) && !result.contains(url)) {
-                /// remove match from internal text to avoid duplicates
-                internalText = internalText.left(pos) + internalText.mid(pos + match.length());
+            if (url.isValid() && (!testExistance || !url.isLocalFile() || QFileInfo(url.path()).exists()) && !result.contains(url))
                 result << url;
-            }
+            /// remove match from internal text to avoid duplicates
+            internalText = internalText.left(pos) + internalText.mid(pos + match.length());
+        }
+
+        /// extract DOI from current field
+        pos = 0;
+        while ((pos = KBibTeX::doiRegExp.indexIn(internalText, pos)) != -1) {
+            QString match = KBibTeX::doiRegExp.cap(0);
+            KUrl url(KBibTeX::doiUrlPrefix + match.replace("\\", ""));
+            if (url.isValid() && !result.contains(url))
+                result << url;
+            /// remove match from internal text to avoid duplicates
+            internalText = internalText.left(pos) + internalText.mid(pos + match.length());
         }
 
         /// explicitly check URL entry, may be an URL even if http:// or alike is missing
-        pos = -1;
-        while ((pos = KBibTeX::domainNameRegExp.indexIn(internalText, pos + 1)) != -1) {
+        pos = 0;
+        while ((pos = KBibTeX::domainNameRegExp.indexIn(internalText, pos)) > -1) {
             int pos2 = internalText.indexOf(" ", pos + 1);
             if (pos2 < 0) pos2 = internalText.length();
             QString match = internalText.mid(pos, pos2 - pos);
             KUrl url("http://" + match);
-            if (url.isValid() && !result.contains(url)) {
-                /// remove match from internal text to avoid duplicates
-                internalText = internalText.left(pos) + internalText.mid(pos + match.length());
-                result << url;
-            }
-        }
-
-        /// extract DOI from current field
-        pos = -1;
-        while ((pos = KBibTeX::doiRegExp.indexIn(internalText, pos + 1)) != -1) {
-            QString match = KBibTeX::doiRegExp.cap(0);
-            KUrl url(KBibTeX::doiUrlPrefix + match.replace("\\", ""));
-            if (url.isValid() && !result.contains(url)) {
-                /// remove match from internal text to avoid duplicates
-                internalText = internalText.left(pos) + internalText.mid(pos + match.length());
-                result << url;
-            }
+            if (url.isValid() && !result.contains(url))
+                if (!result.contains(url))
+                    result << url;
+            /// remove match from internal text to avoid duplicates
+            internalText = internalText.left(pos) + internalText.mid(pos + match.length());
         }
 
         /// extract general file-like patterns
-        pos = -1;
-        while ((pos = KBibTeX::fileRegExp.indexIn(internalText, pos + 1)) != -1) {
+        pos = 0;
+        while ((pos = KBibTeX::fileRegExp.indexIn(internalText, pos)) != -1) {
             QString match = KBibTeX::fileRegExp.cap(0);
             KUrl url(match);
-            if (url.isValid() && (!testExistance || !url.isLocalFile() || QFileInfo(url.pathOrUrl()).exists()) && !result.contains(url)) {
-                /// remove match from internal text to avoid duplicates
-                internalText = internalText.left(pos) + internalText.mid(pos + match.length());
+            if (url.isValid() && (!testExistance || !url.isLocalFile() || QFileInfo(url.pathOrUrl()).exists()) && !result.contains(url))
                 result << url;
-            }
+            /// remove match from internal text to avoid duplicates
+            internalText = internalText.left(pos) + internalText.mid(pos + match.length());
         }
     }
 }
