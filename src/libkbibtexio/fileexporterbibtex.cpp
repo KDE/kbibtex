@@ -57,17 +57,15 @@ public:
     IConvLaTeX *iconvLaTeX;
 
     FileExporterBibTeXPrivate(FileExporterBibTeX *parent)
-        : p(parent), stringOpenDelimiter(QChar('"')), stringCloseDelimiter(QChar('"')), keywordCasing(KBibTeX::cLowerCase), quoteComment(qcNone), encoding(QLatin1String("latex")), protectCasing(false), cancelFlag(false)
-    {
+            : p(parent), stringOpenDelimiter(QChar('"')), stringCloseDelimiter(QChar('"')), keywordCasing(KBibTeX::cLowerCase), quoteComment(qcNone), encoding(QLatin1String("latex")), protectCasing(false), cancelFlag(false) {
         iconvLaTeX = new IConvLaTeX(encoding == QLatin1String("latex") ? QLatin1String("us-ascii") : encoding);
     }
 
-    ~FileExporterBibTeXPrivate(){
+    ~FileExporterBibTeXPrivate() {
         delete iconvLaTeX;
     }
 
-    bool writeEntry(QIODevice* iodevice, const Entry& entry)
-    {
+    bool writeEntry(QIODevice* iodevice, const Entry& entry) {
         BibTeXEntries *be = BibTeXEntries::self();
         BibTeXFields *bf = BibTeXFields::self();
 
@@ -101,8 +99,7 @@ public:
         return true;
     }
 
-    bool writeMacro(QIODevice* iodevice, const Macro& macro)
-    {
+    bool writeMacro(QIODevice* iodevice, const Macro& macro) {
         BibTeXEntries *be = BibTeXEntries::self();
 
         QString text = valueToBibTeX(macro.value(), QString::null, leUTF8);
@@ -124,8 +121,7 @@ public:
         return true;
     }
 
-    bool writeComment(QIODevice* iodevice, const Comment& comment)
-    {
+    bool writeComment(QIODevice* iodevice, const Comment& comment) {
         BibTeXEntries *be = BibTeXEntries::self();
 
         QString text = comment.text() ;
@@ -156,8 +152,7 @@ public:
         return true;
     }
 
-    bool writePreamble(QIODevice* iodevice, const Preamble& preamble)
-    {
+    bool writePreamble(QIODevice* iodevice, const Preamble& preamble) {
         BibTeXEntries *be = BibTeXEntries::self();
 
         iodevice->putChar('@');
@@ -171,8 +166,7 @@ public:
         return true;
     }
 
-    void addProtectiveCasing(QString &text)
-    {
+    void addProtectiveCasing(QString &text) {
         if ((text[0] != '"' || text[text.length()-1] != '"') && (text[0] != '{' || text[text.length()-1] != '}')) {
             /** nothing to protect, as this is no text string */
             return;
@@ -342,7 +336,7 @@ bool FileExporterBibTeX::save(QIODevice* iodevice, const Element* element, QStri
         }
     }
 
-        return result && !d->cancelFlag;
+    return result && !d->cancelFlag;
 }
 
 void FileExporterBibTeX::cancel()
