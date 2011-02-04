@@ -27,6 +27,7 @@ set( kbibtexio_LIB_SRCS
 	fileimporterpdf.cpp
 	macro.cpp
 	preamble.cpp
+	iconvlatex.cpp
 	value.cpp
 	config/bibtexfields.cpp
 	config/bibtexentries.cpp

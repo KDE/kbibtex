@@ -33,6 +33,7 @@ class Comment;
 class Preamble;
 class Macro;
 class Entry;
+class IConvLaTeX;
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
@@ -40,6 +41,7 @@ class Entry;
 class KBIBTEXIO_EXPORT FileExporterBibTeX : public FileExporter
 {
 public:
+    enum UseLaTeXEncoding {leUTF8, leLaTeX};
     enum QuoteComment {qcNone, qcCommand, qcPercentSign};
 
     FileExporterBibTeX();
@@ -54,7 +56,7 @@ public:
     bool save(QIODevice* iodevice, const File* bibtexfile, QStringList *errorLog = NULL);
     bool save(QIODevice* iodevice, const Element* element, QStringList *errorLog = NULL);
 
-    static QString valueToBibTeX(const Value& value, const QString& fieldType = QString::null);
+    static QString valueToBibTeX(const Value& value, const QString& fieldType = QString::null, UseLaTeXEncoding useLaTeXEncoding = leLaTeX);
     static QString elementToString(const Element* element);
 
 public slots:
@@ -72,12 +74,13 @@ private:
     QString m_encoding;
     bool m_protectCasing;
     bool cancelFlag;
+    IConvLaTeX *m_iconvLaTeX;
 
-    bool writeEntry(QTextStream &stream, const Entry& entry);
-    bool writeMacro(QTextStream &stream, const Macro& macro);
-    bool writeComment(QTextStream &stream, const Comment& comment);
-    bool writePreamble(QTextStream &stream, const  Preamble& preamble);
-    bool writeString(QTextStream &stream, const QString& text);
+    bool writeEntry(QIODevice* iodevice, const Entry& entry);
+    bool writeMacro(QIODevice* iodevice, const Macro& macro);
+    bool writeComment(QIODevice* iodevice, const Comment& comment);
+    bool writePreamble(QIODevice* iodevice, const  Preamble& preamble);
+    bool writeString(QIODevice* iodevice, const QString& text);
 
     void addProtectiveCasing(QString &text);
 };
