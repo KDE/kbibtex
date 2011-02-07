@@ -374,7 +374,7 @@ QString FileExporterBibTeX::valueToBibTeX(const Value& value, const QString& key
                 else
                     result.append("} # {");
                 isOpen = true;
-                result.append(encodercheck(encoder, plainText->text()));
+                result.append(encodercheck(encoder, escapeLaTeXChars(plainText->text())));
                 prev = plainText;
             } else {
                 const VerbatimText *verbatimText = dynamic_cast<const VerbatimText*>(*it);
@@ -424,7 +424,7 @@ QString FileExporterBibTeX::valueToBibTeX(const Value& value, const QString& key
 
                         // TODO: Prefix and suffix
 
-                        result.append(encodercheck(encoder, thisName));
+                        result.append(encodercheck(encoder, escapeLaTeXChars(thisName)));
                         prev = person;
                     } else {
                         const Keyword *keyword = dynamic_cast<const Keyword*>(*it);
@@ -438,7 +438,7 @@ QString FileExporterBibTeX::valueToBibTeX(const Value& value, const QString& key
                                 result.append("} # {");
                             isOpen = true;
 
-                            result.append(encodercheck(encoder, keyword->text()));
+                            result.append(encodercheck(encoder, escapeLaTeXChars(keyword->text())));
                             prev = keyword;
                         }
                     }
@@ -462,6 +462,17 @@ QString FileExporterBibTeX::elementToString(const Element* element)
             result << QString("%1 = {%2}").arg(it.key()).arg(valueToBibTeX(it.value()));
     }
     return result.join("; ");
+}
+
+QString FileExporterBibTeX::escapeLaTeXChars(const QString &text)
+{
+    QString result = text;
+
+    static QRegExp regExpEscape("[^\\\\][&#_%]");
+    int p = -1;
+    while ((p = regExpEscape.indexIn(text, p + 1)) != -1)
+        result = result.left(p + 1) + '\\' + result.mid(p + 1);
+    return result;
 }
 
 bool FileExporterBibTeX::requiresPersonQuoting(const QString &text, bool isLastName)

@@ -64,6 +64,7 @@ public slots:
 
 private:
     static bool requiresPersonQuoting(const QString &text, bool isLastName);
+    static QString escapeLaTeXChars(const QString &text);
 
     class FileExporterBibTeXPrivate;
     FileExporterBibTeXPrivate *d;
