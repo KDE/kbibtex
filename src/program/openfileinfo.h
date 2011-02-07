@@ -61,6 +61,7 @@ public:
     QString fullCaption() const;
     QString mimeType() const;
     KUrl url() const;
+    bool close();
 
     StatusFlags flags() const;
     void setFlags(StatusFlags statusFlags);
@@ -109,7 +110,7 @@ public:
     OpenFileInfo *contains(const KUrl& url) const;
     OpenFileInfo *currentFile() const;
     bool changeUrl(OpenFileInfo *openFileInfo, const KUrl & url);
-    void close(OpenFileInfo *openFileInfo);
+    bool close(OpenFileInfo *openFileInfo);
     void setCurrentFile(OpenFileInfo *openFileInfo, KService::Ptr servicePtr = KService::Ptr());
     QList<OpenFileInfo*> filteredItems(OpenFileInfo::StatusFlags required, OpenFileInfo::StatusFlags forbidden = 0);
 
@@ -117,7 +118,6 @@ public:
 
 signals:
     void currentChanged(OpenFileInfo *, KService::Ptr);
-    void closing(OpenFileInfo *);
     void flagsChanged(OpenFileInfo::StatusFlags statusFlags);
 
 private:

@@ -105,7 +105,6 @@ KBibTeXMainWindow::KBibTeXMainWindow(KBibTeXProgram *program)
     connect(d->mdiWidget, SIGNAL(documentNew()), this, SLOT(newDocument()));
     connect(d->mdiWidget, SIGNAL(documentOpen()), this, SLOT(openDocumentDialog()));
     connect(d->openFileInfoManager, SIGNAL(currentChanged(OpenFileInfo*, KService::Ptr)), d->mdiWidget, SLOT(setFile(OpenFileInfo*, KService::Ptr)));
-    connect(d->openFileInfoManager, SIGNAL(closing(OpenFileInfo*)), d->mdiWidget, SLOT(closeFile(OpenFileInfo*)));
     connect(d->mdiWidget, SIGNAL(setCaption(QString)), this, SLOT(setCaption(QString)));
 
     KActionMenu *showPanelsAction = new KActionMenu(i18n("Show Panels"), this);
@@ -272,8 +271,8 @@ void KBibTeXMainWindow::openDocument(const KUrl& url)
 
 void KBibTeXMainWindow::closeDocument()
 {
-    d->actionClose->setEnabled(false);
-    d->openFileInfoManager->close(d->openFileInfoManager->currentFile());
+    if (d->openFileInfoManager->close(d->openFileInfoManager->currentFile()))
+        d->actionClose->setEnabled(false);
 }
 
 void KBibTeXMainWindow::documentSwitched(BibTeXEditor *oldEditor, BibTeXEditor *newEditor)

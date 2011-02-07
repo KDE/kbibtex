@@ -75,6 +75,11 @@ public:
     }
 
     KParts::ReadWritePart* createPart(QWidget *newWidgetParent, KService::Ptr newServicePtr = KService::Ptr()) {
+        if (!p->flags().testFlag(OpenFileInfo::Open)) {
+            kWarning() << "Cannot create part for a file which is not open";
+            return NULL;
+        }
+
         Q_ASSERT(internalWidgetParent == NULL || internalWidgetParent == newWidgetParent);
 
         /** use cached part for this parent if possible */
@@ -169,6 +174,17 @@ void OpenFileInfo::setUrl(const KUrl& url)
 KUrl OpenFileInfo::url() const
 {
     return d->url;
+}
+
+bool OpenFileInfo::close()
+{
+    if (d->part->closeUrl(true)) {
+        d->part->deleteLater();
+        d->part = NULL;
+        d->internalWidgetParent = NULL;
+        return true;
+    }
+    return false;
 }
 
 QString OpenFileInfo::mimeType() const
@@ -457,7 +473,7 @@ bool OpenFileInfoManager::changeUrl(OpenFileInfo *openFileInfo, const KUrl & url
     return true;
 }
 
-void OpenFileInfoManager::close(OpenFileInfo *openFileInfo)
+bool OpenFileInfoManager::close(OpenFileInfo *openFileInfo)
 {
     Q_ASSERT_X(openFileInfo != NULL, "void OpenFileInfoManager::close(OpenFileInfo *openFileInfo)", "Cannot close openFileInfo which is NULL");
     bool isClosing = false;
@@ -467,17 +483,17 @@ void OpenFileInfoManager::close(OpenFileInfo *openFileInfo)
     OpenFileInfo *nextCurrent = (d->currentFileInfo == openFileInfo) ? NULL : d->currentFileInfo;
     for (QList<OpenFileInfo*>::Iterator it = d->openFileInfoList.begin(); it != d->openFileInfoList.end(); ++it) {
         OpenFileInfo *ofi = *it;
-        if (!isClosing && ofi == openFileInfo) {
+        if (!isClosing && ofi == openFileInfo && openFileInfo->close()) {
             isClosing = true;
             openFileInfo->removeFlags(OpenFileInfo::Open);
-            openFileInfo->addFlags(OpenFileInfo::RecentlyUsed);
+            if (openFileInfo->flags().testFlag(OpenFileInfo::HasName))
+                openFileInfo->addFlags(OpenFileInfo::RecentlyUsed);
         } else if (nextCurrent == NULL && ofi->flags().testFlag(OpenFileInfo::Open))
             nextCurrent = ofi;
     }
     setCurrentFile(nextCurrent);
 
-    if (isClosing)
-        emit closing(openFileInfo);
+    return isClosing;
 }
 
 OpenFileInfo *OpenFileInfoManager::currentFile() const

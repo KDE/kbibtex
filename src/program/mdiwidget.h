@@ -50,7 +50,6 @@ signals:
 
 public slots:
     void setFile(OpenFileInfo *openFileInfo, KService::Ptr servicePtr = KService::Ptr());
-    void closeFile(OpenFileInfo *openFileInfo);
 
 signals:
     void documentSwitch(BibTeXEditor *, BibTeXEditor *);

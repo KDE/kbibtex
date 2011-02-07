@@ -133,23 +133,6 @@ void MDIWidget::setFile(OpenFileInfo *openFileInfo, KService::Ptr servicePtr)
         emit setCaption("");
 }
 
-void MDIWidget::closeFile(OpenFileInfo *openFileInfo)
-{
-    QWidget *widget = openFileInfo->part(this) != NULL ? openFileInfo->part(this)->widget() : NULL;
-    if (indexOf(widget) >= 0) {
-        QWidget *curWidget = currentWidget();
-
-        if (curWidget == widget) {
-            BibTeXEditor *oldEditor = dynamic_cast<BibTeXEditor *>(widget);
-            setCurrentWidget(d->welcomeWidget);
-            emit activePartChanged(NULL);
-            emit documentSwitch(oldEditor, NULL);
-        }
-
-        removeWidget(widget);
-    }
-}
-
 BibTeXEditor *MDIWidget::editor()
 {
     OpenFileInfo *ofi = OpenFileInfoManager::getOpenFileInfoManager()->currentFile();
