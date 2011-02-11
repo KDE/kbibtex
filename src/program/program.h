@@ -21,8 +21,6 @@
 #ifndef KBIBTEX_PROGRAM_PROGRAM_H
 #define KBIBTEX_PROGRAM_PROGRAM_H
 
-#include "about.h"
-
 /*
 class KDocumentManager;
 class KViewManager;
@@ -31,7 +29,7 @@ class KViewManager;
 class KBibTeXProgram
 {
 public:
-    KBibTeXProgram(int argc, char *argv[]);
+    KBibTeXProgram(int argc, char *argv[], KAboutData *aboutData);
     ~KBibTeXProgram();
 
 public:
@@ -41,9 +39,6 @@ public:
 public:
 //     KDocumentManager *documentManager();
 //     KViewManager *viewManager();
-
-protected:
-    KBibTeXAboutData m_aboutData;
 
 //     KDocumentManager *m_documentManager;
 //     KViewManager *m_viewManager;

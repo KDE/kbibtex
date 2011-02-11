@@ -23,18 +23,16 @@
 #include <KDebug>
 
 #include "program.h"
-#include "about.h"
 #include "mainwindow.h"
 
-static KBibTeXAboutData aboutData;
-
-KBibTeXProgram::KBibTeXProgram(int argc, char *argv[])
+KBibTeXProgram::KBibTeXProgram(int argc, char *argv[], KAboutData *aboutData)
 /*: m_documentManager(new KDocumentManager()), m_viewManager(new KViewManager(m_documentManager))*/
 {
+
     KCmdLineOptions programOptions;
     programOptions.add("+[URL(s)]", ki18n("File(s) to load"), 0);
 
-    KCmdLineArgs::init(argc, argv, &aboutData);
+    KCmdLineArgs::init(argc, argv, aboutData);
     KCmdLineArgs::addCmdLineOptions(programOptions);
 }
 
