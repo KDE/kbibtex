@@ -55,6 +55,7 @@ public:
         smGoUp = new QSignalMapper(parent);
         smGoDown = new QSignalMapper(parent);
         setupGUI();
+        p->setStyleSheet(QLatin1String("QFrame#FieldLineEdit { border-style: none; background:red; }"));
     }
 
     void setupGUI() {
@@ -97,6 +98,7 @@ public:
 
     FieldLineEdit *addFieldLineEdit() {
         FieldLineEdit *le = new FieldLineEdit(preferredTypeFlag, typeFlags, false, container);
+        le->setFrameShape(QFrame::NoFrame);
         layout->insertWidget(layout->count() - 1, le);
         lineEditList.append(le);
 

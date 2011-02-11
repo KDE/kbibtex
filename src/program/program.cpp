@@ -74,7 +74,6 @@ int KBibTeXProgram::execute()
         arguments->clear();
     }
 
-    qApp->setStyleSheet("QFrame#FieldLineEdit { background-color: " + QPalette().color(QPalette::Base).name() + "; } QFrame#FieldLineEdit > QTextEdit { border-style: none; } QFrame#FieldLineEdit > KLineEdit { border-style: none; } QFrame#FieldLineEdit > KPushButton { border-style: none; background-color: " + QPalette().color(QPalette::Base).name() + "; padding: 0px; margin-left:2px; margin-right:2px; text-align: left; } QScrollArea QFrame#FieldLineEdit { border-style: none; }");
     return programCore.exec();
 }
 

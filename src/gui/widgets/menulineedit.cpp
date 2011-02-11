@@ -34,6 +34,7 @@ private:
     MenuLineEdit *p;
     bool isMultiLine;
     QHBoxLayout *hLayout;
+    const QString menuLineEditStyleSheet;
 
 public:
     KPushButton *m_pushButtonType;
@@ -41,8 +42,14 @@ public:
     QTextEdit *m_multiLineEditText;
 
     MenuLineEditPrivate(bool isMultiLine, MenuLineEdit *parent)
-            : p(parent), m_singleLineEditText(NULL), m_multiLineEditText(NULL) {
+            : p(parent), menuLineEditStyleSheet(
+                QLatin1String("QFrame { background-color: ") + QPalette().color(QPalette::Base).name() + QLatin1String("; }")
+                + QLatin1String("QFrame > QTextEdit { border-style: none; background-color: transparent; }")
+                + QLatin1String("QFrame > KLineEdit { border-style: none; background-color: transparent; }")
+                + QLatin1String("QFrame > KPushButton { border-style: none; background-color: transparent; padding: 0px; margin-left: 2px; margin-right:2px; text-align: left; }")
+            ), m_singleLineEditText(NULL), m_multiLineEditText(NULL) {
         this->isMultiLine = isMultiLine;
+        p->setStyleSheet(menuLineEditStyleSheet);
     }
 
     void setupUI() {
