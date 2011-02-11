@@ -59,10 +59,10 @@ private:
 
 public:
     QTabWidget *tab;
-    bool elementChanged;
+    bool elementChanged, elementUnapplied;
 
     ElementEditorPrivate(Element *m, const File *f, ElementEditor *parent)
-            : element(m), file(f), p(parent), previousWidget(NULL), referenceWidget(NULL), sourceWidget(NULL), elementChanged(false) {
+            : element(m), file(f), p(parent), previousWidget(NULL), referenceWidget(NULL), sourceWidget(NULL), elementChanged(false), elementUnapplied(false) {
         createGUI();
     }
 
@@ -76,7 +76,7 @@ public:
 
         if (ReferenceWidget::canEdit(element)) {
             referenceWidget = new ReferenceWidget(p);
-            connect(referenceWidget, SIGNAL(modified(bool)), p, SIGNAL(modified(bool)));
+            connect(referenceWidget, SIGNAL(modified(bool)), p, SLOT(childModified(bool)));
             layout->addWidget(referenceWidget, 0, 0, 1, 3);
             widgets << referenceWidget;
         } else
@@ -93,28 +93,28 @@ public:
             for (EntryLayout::ConstIterator elit = el->constBegin(); elit != el->constEnd(); ++elit) {
                 EntryTabLayout etl = *elit;
                 ElementWidget *widget = new EntryConfiguredWidget(etl, tab);
-                connect(widget, SIGNAL(modified(bool)), p, SIGNAL(modified(bool)));
+                connect(widget, SIGNAL(modified(bool)), p, SLOT(childModified(bool)));
                 tab->addTab(widget, widget->icon(), widget->label());
                 widgets << widget;
             }
 
         if (PreambleWidget::canEdit(element)) {
             ElementWidget *widget = new PreambleWidget(tab);
-            connect(widget, SIGNAL(modified(bool)), p, SIGNAL(modified(bool)));
+            connect(widget, SIGNAL(modified(bool)), p, SLOT(childModified(bool)));
             tab->addTab(widget, widget->icon(), widget->label());
             widgets << widget;
         }
 
         if (MacroWidget::canEdit(element)) {
             ElementWidget *widget = new MacroWidget(tab);
-            connect(widget, SIGNAL(modified(bool)), p, SIGNAL(modified(bool)));
+            connect(widget, SIGNAL(modified(bool)), p, SLOT(childModified(bool)));
             tab->addTab(widget, widget->icon(), widget->label());
             widgets << widget;
         }
 
         if (FilesWidget::canEdit(element)) {
             ElementWidget *widget = new FilesWidget(tab);
-            connect(widget, SIGNAL(modified(bool)), p, SIGNAL(modified(bool)));
+            connect(widget, SIGNAL(modified(bool)), p, SLOT(childModified(bool)));
             tab->addTab(widget, widget->icon(), widget->label());
             widgets << widget;
         }
@@ -132,14 +132,14 @@ public:
                 blacklistedFields << QString(Entry::ftUrl) + QString::number(i) << QString(Entry::ftLocalFile) + QString::number(i) <<  QString(Entry::ftDOI) + QString::number(i) << QLatin1String("ee") + QString::number(i) << QLatin1String("postscript") + QString::number(i);
 
             ElementWidget *widget = new OtherFieldsWidget(blacklistedFields, tab);
-            connect(widget, SIGNAL(modified(bool)), p, SIGNAL(modified(bool)));
+            connect(widget, SIGNAL(modified(bool)), p, SLOT(childModified(bool)));
             tab->addTab(widget, widget->icon(), widget->label());
             widgets << widget;
         }
 
         if (SourceWidget::canEdit(element)) {
             sourceWidget = new SourceWidget(tab);
-            connect(sourceWidget, SIGNAL(modified(bool)), p, SIGNAL(modified(bool)));
+            connect(sourceWidget, SIGNAL(modified(bool)), p, SLOT(childModified(bool)));
             tab->addTab(sourceWidget, sourceWidget->icon(), sourceWidget->label());
             widgets << sourceWidget;
         }
@@ -149,6 +149,7 @@ public:
 
     void apply() {
         elementChanged = true;
+        elementUnapplied = false;
         apply(element);
     }
 
@@ -163,6 +164,8 @@ public:
     }
 
     void reset() {
+        elementChanged = false;
+        elementUnapplied = false;
         reset(element);
     }
 
@@ -417,6 +420,11 @@ bool ElementEditor::elementChanged()
     return d->elementChanged;
 }
 
+bool ElementEditor::elementUnapplied()
+{
+    return d->elementUnapplied;
+}
+
 void ElementEditor::tabChanged()
 {
     d->switchTo(d->tab->currentWidget());
@@ -425,4 +433,11 @@ void ElementEditor::tabChanged()
 void ElementEditor::checkBibTeX()
 {
     d->checkBibTeX();
+}
+
+void ElementEditor::childModified(bool m)
+{
+    if (m)
+        d->elementUnapplied = true;
+    emit modified(m);
 }

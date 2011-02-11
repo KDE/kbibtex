@@ -24,6 +24,8 @@
 #include <KDialog>
 #include <KLocale>
 #include <KDebug>
+#include <KMessageBox>
+#include <KGuiItem>
 
 #include <elementeditor.h>
 #include <entry.h>
@@ -32,6 +34,57 @@
 #include <fileexporterbibtex.h>
 #include "valuelistmodel.h"
 #include "bibtexeditor.h"
+
+/**
+ * Specialized dialog for element editing. It will check if the used
+ * element editor widget has unapplied changes and ask the user if
+ * he/she actually wants to discard those changes before closing this
+ * dialog.
+ *
+ * @author Thomas Fischer
+ */
+class ElementEditorDialog : public KDialog
+{
+private:
+    ElementEditor *elementEditor;
+public:
+    ElementEditorDialog(QWidget *parent)
+            : KDialog(parent), elementEditor(NULL) {
+        // nothing
+    }
+
+    /**
+     * Store element editor widget for future reference.
+     */
+    void setElementEditor(ElementEditor *elementEditor) {
+        this->elementEditor = elementEditor;
+    }
+
+protected:
+    virtual void closeEvent(QCloseEvent *e) {
+        /// strangely enough, close events have always to be rejected ...
+        e->setAccepted(false);
+        KDialog::closeEvent(e);
+    }
+
+protected Q_SLOTS:
+    /// Will be triggered when closing the dialog
+    /// given a re-implementation of closeEvent as above
+    virtual void slotButtonClicked(int button) {
+        /// ignore button event if it is from the Cancel button
+        /// and the user does not want to discard his/her changes
+        if (button != KDialog::Cancel || allowedToClose())
+            KDialog::slotButtonClicked(button);
+    }
+
+private:
+    bool allowedToClose() {
+        /// if there unapplied changes in the editor widget ...
+        /// ... ask user for consent to discard changes ...
+        /// only the allow to close this dialog
+        return !elementEditor->elementUnapplied() || KMessageBox::warningContinueCancel(this, i18n("The current entry has been modified. Do you want do discard your changes?"), i18n("Discard changes?"), KGuiItem(i18n("Discard"), "edit-delete-shred"), KGuiItem(i18n("Continue Editing"), "edit-rename")) == KMessageBox::Continue;
+    }
+};
 
 BibTeXEditor::BibTeXEditor(QWidget *parent)
         : BibTeXFileView(parent), m_isReadOnly(false), m_current(NULL)
@@ -76,8 +129,9 @@ void BibTeXEditor::editElement(Element *element)
         return;
     }
 
-    KDialog dialog(this);
+    ElementEditorDialog dialog(this);
     ElementEditor elementEditor(element, bibTeXModel()->bibTeXFile(), &dialog);
+    dialog.setElementEditor(&elementEditor);
     dialog.setCaption(i18n("Edit Element"));
     dialog.setMainWidget(&elementEditor);
     dialog.setButtons(KDialog::Ok | KDialog::Apply | KDialog::Cancel | KDialog::Reset);

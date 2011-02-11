@@ -39,6 +39,7 @@ public:
     ElementEditor(Element *element, const File *file, QWidget *parent);
     void setReadOnly(bool isReadOnly = true);
     bool elementChanged();
+    bool elementUnapplied();
 
 signals:
     void modified(bool);
@@ -50,6 +51,7 @@ public slots:
 private slots:
     void tabChanged();
     void checkBibTeX();
+    void childModified(bool);
 
 private:
     class ElementEditorPrivate;
