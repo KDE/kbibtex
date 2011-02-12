@@ -56,21 +56,23 @@ void SortFilterBibTeXFileModel::updateFilter(SortFilterBibTeXFileModel::FilterQu
 
 bool SortFilterBibTeXFileModel::lessThan(const QModelIndex & left, const QModelIndex & right) const
 {
-    if (left.column() == right.column() && (m_bibtexFields->at(left.column()).upperCamelCase == QLatin1String("Author") || m_bibtexFields->at(left.column()).upperCamelCase == QLatin1String("Editor"))) {
+    int column = left.column();
+    if (column == right.column() && (m_bibtexFields->at(column).upperCamelCase == QLatin1String("Author") || m_bibtexFields->at(column).upperCamelCase == QLatin1String("Editor"))) {
         /// special sorting for authors or editors: check all names, compare last and then first names
         Entry *entryA = dynamic_cast<Entry*>(m_internalModel->element(left.row()));
         Entry *entryB = dynamic_cast<Entry*>(m_internalModel->element(right.row()));
         if (entryA == NULL || entryB == NULL)
             return QSortFilterProxyModel::lessThan(left, right);
 
-        Value valueA = entryA->value(Entry::ftAuthor);
-        Value valueB = entryB->value(Entry::ftAuthor);
-        if (valueA.isEmpty() && m_bibtexFields->at(left.column()).upperCamelCaseAlt == ("editor"))
-            valueA = entryA->value(Entry::ftEditor);
-        if (valueB.isEmpty() && m_bibtexFields->at(right.column()).upperCamelCaseAlt == ("editor"))
-            valueB = entryB->value(Entry::ftEditor);
+        Value valueA = entryA->value(m_bibtexFields->at(column).upperCamelCase);
+        Value valueB = entryB->value(m_bibtexFields->at(column).upperCamelCase);
+        if (valueA.isEmpty())
+            valueA = entryA->value(m_bibtexFields->at(column).upperCamelCaseAlt);
+        if (valueB.isEmpty())
+            valueB = entryB->value(m_bibtexFields->at(column).upperCamelCaseAlt);
 
-        if (valueA.isEmpty() || valueB.isEmpty()) return QSortFilterProxyModel::lessThan(left, right);
+        if (valueA.isEmpty() || valueB.isEmpty())
+            return QSortFilterProxyModel::lessThan(left, right);
 
         for (Value::Iterator itA = valueA.begin(), itB = valueB.begin(); itA != valueA.end() &&  itB != valueB.end(); ++itA, ++itB) {
             Person *personA = dynamic_cast<Person *>(*itA);
@@ -88,6 +90,8 @@ bool SortFilterBibTeXFileModel::lessThan(const QModelIndex & left, const QModelI
             cmp = QString::compare(nameA, nameB, Qt::CaseInsensitive);
             if (cmp < 0) return true;
             if (cmp > 0) return false;
+
+            // TODO Check for suffix and prefix?
         }
 
         return QSortFilterProxyModel::lessThan(left, right);
