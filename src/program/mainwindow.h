@@ -28,7 +28,6 @@ class QTextEdit;
 class QDragEnterEvent;
 class QDropEvent;
 
-class KBibTeXProgram;
 class ReferencePreview;
 class BibTeXEditor;
 
@@ -37,7 +36,7 @@ class KBibTeXMainWindow : public KParts::MainWindow
     Q_OBJECT
 
 public:
-    explicit KBibTeXMainWindow(KBibTeXProgram *program);
+    explicit KBibTeXMainWindow();
     virtual ~KBibTeXMainWindow();
 
 public slots:

@@ -16,7 +16,6 @@ include_directories(
 )
 
 set( kbibtex_SRCS
-	main.cpp
 	program.cpp
 	mainwindow.cpp
 	documentlist.cpp

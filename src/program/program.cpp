@@ -18,51 +18,50 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include <kcmdlineargs.h>
+#include <KCmdLineArgs>
 #include <KApplication>
-#include <KDebug>
+#include <KAboutData>
 
 #include "program.h"
 #include "mainwindow.h"
+#include "version.h"
 
-KBibTeXProgram::KBibTeXProgram(int argc, char *argv[], KAboutData *aboutData)
-/*: m_documentManager(new KDocumentManager()), m_viewManager(new KViewManager(m_documentManager))*/
+const char *programVersion = versionNumber;
+const char *description = I18N_NOOP("A BibTeX editor for KDE");
+const char *programHomepage = I18N_NOOP("http://home.gna.org/kbibtex/");
+
+
+int main(int argc, char *argv[])
 {
+    KAboutData aboutData("kbibtex", 0, ki18n("KBibTeX"), programVersion,
+                         ki18n(description), KAboutData::License_GPL_V2,
+                         ki18n("Copyright 2004-2011 Thomas Fischer"), KLocalizedString(),
+                         programHomepage);
+    aboutData.addAuthor(ki18n("Thomas Fischer"), ki18n("Maintainer"), "fischer@unix-ag.uni-kl.de", "http://www.t-fischer.net/");
+    aboutData.setCustomAuthorText(ki18n("Please use https://gna.org/bugs/?group=kbibtex to report bugs.\n"), ki18n("Please use <a href=\"https://gna.org/bugs/?group=kbibtex\">https://gna.org/bugs/?group=kbibtex</a> to report bugs.\n"));
+
+
+    KCmdLineArgs::init(argc, argv, &aboutData);
+    KApplication programCore;
 
     KCmdLineOptions programOptions;
     programOptions.add("+[URL(s)]", ki18n("File(s) to load"), 0);
-
-    KCmdLineArgs::init(argc, argv, aboutData);
     KCmdLineArgs::addCmdLineOptions(programOptions);
-}
-
-
-KBibTeXProgram::~KBibTeXProgram()
-{
-    /*
-        delete m_documentManager;
-        delete m_viewManager;
-    */
-}
-
-int KBibTeXProgram::execute()
-{
-    KApplication programCore;
 
     KGlobal::locale()->insertCatalog("libkbibtexio");
     KGlobal::locale()->insertCatalog("libkbibtexgui");
+    KGlobal::locale()->insertCatalog("libkbibtexws");
 
     // started by session management?
     if (programCore.isSessionRestored()) {
-        RESTORE(KBibTeXMainWindow(this));
+        RESTORE(KBibTeXMainWindow());
     } else {
         // no session.. just start up normally
-        KBibTeXMainWindow *mainWindow = new KBibTeXMainWindow(this);
+        KBibTeXMainWindow *mainWindow = new KBibTeXMainWindow();
 
         KCmdLineArgs *arguments = KCmdLineArgs::parsedArgs();
 
         for (int i = 0; i < arguments->count(); ++i) {
-            kDebug(0) << "Arg-" << i << " : " << arguments->arg(i) << endl;
             KUrl url(arguments->arg(i));
             if (url.isValid())
                 mainWindow->openDocument(url);
@@ -74,13 +73,5 @@ int KBibTeXProgram::execute()
 
     return programCore.exec();
 }
-
-
-void KBibTeXProgram::quit()
-{
-    kapp->quit();
-}
-
-
 
 

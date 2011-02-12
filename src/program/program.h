@@ -21,39 +21,6 @@
 #ifndef KBIBTEX_PROGRAM_PROGRAM_H
 #define KBIBTEX_PROGRAM_PROGRAM_H
 
-/*
-class KDocumentManager;
-class KViewManager;
-*/
-
-class KBibTeXProgram
-{
-public:
-    KBibTeXProgram(int argc, char *argv[], KAboutData *aboutData);
-    ~KBibTeXProgram();
-
-public:
-    int execute();
-    void quit();
-
-public:
-//     KDocumentManager *documentManager();
-//     KViewManager *viewManager();
-
-//     KDocumentManager *m_documentManager;
-//     KViewManager *m_viewManager;
-};
-
-/*
-inline KDocumentManager* KBibTeXProgram::documentManager()
-{
-    return m_documentManager;
-}
-inline KViewManager* KBibTeXProgram::viewManager()
-{
-    return m_viewManager;
-}
-*/
 
 #endif // KBIBTEX_PROGRAM_PROGRAM_H
 

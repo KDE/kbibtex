@@ -39,7 +39,6 @@
 #include "mainwindow.h"
 #include "valuelist.h"
 #include "documentlist.h"
-#include "program.h"
 #include "mdiwidget.h"
 #include "referencepreview.h"
 #include "urlpreview.h"
@@ -64,7 +63,6 @@ public:
     QDockWidget *dockSearchForm;
     QDockWidget *dockSearchResults;
     QDockWidget *dockElementForm;
-    KBibTeXProgram *program;
     DocumentList *listDocumentList;
     MDIWidget *mdiWidget;
     ReferencePreview *referencePreview;
@@ -81,10 +79,9 @@ public:
     }
 };
 
-KBibTeXMainWindow::KBibTeXMainWindow(KBibTeXProgram *program)
+KBibTeXMainWindow::KBibTeXMainWindow()
         : KParts::MainWindow(), d(new KBibTeXMainWindowPrivate(this))
 {
-    d->program = program;
     d->openFileInfoManager = OpenFileInfoManager::getOpenFileInfoManager();
 
     setObjectName(QLatin1String("KBibTeXShell"));
