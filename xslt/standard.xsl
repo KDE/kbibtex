@@ -26,10 +26,11 @@
 <xsl:for-each select="person">
 <xsl:apply-templates select="."/><xsl:if test="position()!=last()"><xsl:text>, </xsl:text>
 </xsl:if>
-<xsl:if test="position()=last()-1">
+<xsl:if test="position()=last()-1 and @etal!='true'">
 <xsl:text> and </xsl:text>
 </xsl:if>
 </xsl:for-each>
+<xsl:if test="@etal='true'"><xsl:text> </xsl:text><i>et&#160;al.</i></xsl:if>
 <xsl:text>: </xsl:text>
 </xsl:template>
 
@@ -38,7 +39,9 @@
 <xsl:for-each select="person">
 <xsl:apply-templates select="."/><xsl:if test="position()!=last()"><xsl:text>, </xsl:text>
 </xsl:if>
-<xsl:if test="position()=last()-1"><xsl:text> and </xsl:text></xsl:if></xsl:for-each>
+<xsl:if test="position()=last()-1 and @etal!='true'"><xsl:text> and </xsl:text></xsl:if>
+</xsl:for-each>
+<xsl:if test="@etal='true'"><xsl:text> </xsl:text><i>et&#160;al.</i></xsl:if>
 </xsl:template>
 
 <xsl:template match="title">

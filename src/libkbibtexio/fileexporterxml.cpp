@@ -18,6 +18,8 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
+#include <typeinfo>
+
 #include <QRegExp>
 #include <QStringList>
 
@@ -121,8 +123,17 @@ bool FileExporterXML::writeEntry(QTextStream &stream, const Entry* entry)
         const Value value = it.value();
 
         if (key == Entry::ftAuthor || key == Entry::ftEditor) {
-            stream << "  <" << key << "s>" << endl;
-            stream << valueToXML(value, key) << endl;
+            Value internal = value;
+            stream << "  <" << key << "s";
+            if (!value.isEmpty() && typeid(PlainText) == typeid(*internal.last())) {
+                PlainText *pt = static_cast<PlainText*>(internal.last());
+                if (pt->text() == QLatin1String("others")) {
+                    internal.removeLast();
+                    stream << " etal=\"true\"";
+                }
+            }
+            stream << ">" << endl;
+            stream << valueToXML(internal, key) << endl;
             stream << "  </" << key << "s>" << endl;
         } else if (key == Entry::ftAbstract) {
             /// clean up HTML artifacts
@@ -198,7 +209,7 @@ QString FileExporterXML::valueToXML(const Value& value, const QString&)
     for (QList<ValueItem*>::ConstIterator it = value.begin(); it != value.end(); ++it) {
         if (!isFirst)
             result.append(' ');
-        isFirst = FALSE;
+        isFirst = false;
 
         ValueItem *item = *it;
 

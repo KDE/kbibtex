@@ -18,9 +18,12 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
+#include <typeinfo>
+
+#include <QScrollArea>
 #include <QLayout>
-#include <QResizeEvent>
 #include <QSignalMapper>
+#include <QCheckBox>
 
 #include <KMessageBox>
 #include <KLocale>
@@ -45,9 +48,10 @@ private:
 
 public:
     QList<FieldLineEdit*> lineEditList;
-    QWidget *container;
     KPushButton *addButton;
     const File *file;
+    QWidget *container;
+    QScrollArea *scrollArea;
 
     FieldListEditPrivate(KBibTeX::TypeFlag ptf, KBibTeX::TypeFlags tf, FieldListEdit *parent)
             : p(parent), innerSpacing(4), preferredTypeFlag(ptf), typeFlags(tf), file(NULL) {
@@ -55,23 +59,29 @@ public:
         smGoUp = new QSignalMapper(parent);
         smGoDown = new QSignalMapper(parent);
         setupGUI();
-        p->setStyleSheet(QLatin1String("QFrame#FieldLineEdit { border-style: none; background:red; }"));
     }
 
     void setupGUI() {
-        p->setBackgroundRole(QPalette::Base);
+        QBoxLayout *outerLayout = new QVBoxLayout(p);
+        outerLayout->setMargin(0);
+        outerLayout->setSpacing(0);
+        scrollArea = new QScrollArea(p);
+        outerLayout->addWidget(scrollArea);
 
-        container = new QWidget();
-        container->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
-        p->setWidget(container);
+        container = new QWidget(scrollArea->viewport());
+        container->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Minimum);
+        scrollArea->setWidget(container);
         layout = new QVBoxLayout(container);
         layout->setMargin(0);
         layout->setSpacing(innerSpacing);
 
         addButton = new KPushButton(KIcon("list-add"), i18n("Add"), container);
-        layout->addWidget(addButton);
+        addButton->setObjectName(QLatin1String("addButton"));
         connect(addButton, SIGNAL(clicked()), p, SLOT(lineAdd()));
         connect(addButton, SIGNAL(clicked()), p, SIGNAL(modified()));
+        layout->addWidget(addButton);
+
+        layout->addStretch(100);
 
         connect(smRemove, SIGNAL(mapped(QWidget*)), p, SLOT(lineRemove(QWidget*)));
         connect(smRemove, SIGNAL(mapped(QWidget*)), p, SIGNAL(modified()));
@@ -80,8 +90,9 @@ public:
         connect(smGoUp, SIGNAL(mapped(QWidget*)), p, SLOT(lineGoUp(QWidget*)));
         connect(smGoDown, SIGNAL(mapped(QWidget*)), p, SIGNAL(modified()));
 
-        p->ensureWidgetVisible(container);
-        // TODO
+        scrollArea->setBackgroundRole(QPalette::Base);
+        scrollArea->ensureWidgetVisible(container);
+        scrollArea->setWidgetResizable(true);
     }
 
     int recommendedHeight() {
@@ -99,7 +110,7 @@ public:
     FieldLineEdit *addFieldLineEdit() {
         FieldLineEdit *le = new FieldLineEdit(preferredTypeFlag, typeFlags, false, container);
         le->setFrameShape(QFrame::NoFrame);
-        layout->insertWidget(layout->count() - 1, le);
+        layout->insertWidget(layout->count() - 2, le);
         lineEditList.append(le);
 
         KPushButton *remove = new KPushButton(KIcon("list-remove"), QLatin1String(""), le);
@@ -147,7 +158,7 @@ public:
 
     void goDownFieldLineEdit(FieldLineEdit *fieldLineEdit) {
         int idx = lineEditList.indexOf(fieldLineEdit);
-        if (idx < lineEditList.count() - 1) {
+        if (idx < lineEditList.count() - lineEditList.size()) {
             layout->removeWidget(fieldLineEdit);
             lineEditList.removeOne(fieldLineEdit);
             lineEditList.insert(idx + 1, fieldLineEdit);
@@ -167,7 +178,7 @@ public:
 };
 
 FieldListEdit::FieldListEdit(KBibTeX::TypeFlag preferredTypeFlag, KBibTeX::TypeFlags typeFlags, QWidget *parent)
-        : QScrollArea(parent), d(new FieldListEditPrivate(preferredTypeFlag, typeFlags, this))
+        : QWidget(parent), d(new FieldListEditPrivate(preferredTypeFlag, typeFlags, this))
 {
     setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
 }
@@ -219,13 +230,6 @@ void FieldListEdit::setFile(const File *file)
     d->file = file;
 }
 
-void FieldListEdit::resizeEvent(QResizeEvent *event)
-{
-
-    QSize size(event->size().width(), d->recommendedHeight());
-    d->container->resize(size);
-}
-
 void FieldListEdit::lineAdd()
 {
     FieldLineEdit *newEdit = d->addFieldLineEdit();
@@ -253,4 +257,38 @@ void FieldListEdit::lineGoUp(QWidget * widget)
     FieldLineEdit *fieldLineEdit = static_cast<FieldLineEdit*>(widget);
     d->goUpFieldLineEdit(fieldLineEdit);
 
+}
+
+PersonListEdit::PersonListEdit(KBibTeX::TypeFlag preferredTypeFlag, KBibTeX::TypeFlags typeFlags, QWidget *parent)
+        : FieldListEdit(preferredTypeFlag, typeFlags, parent)
+{
+    m_checkBoxOthers = new QCheckBox(i18n("... and others (et al.)"), this);
+    QBoxLayout *boxLayout = static_cast<QBoxLayout *>(layout());
+    boxLayout->addWidget(m_checkBoxOthers);
+}
+
+bool PersonListEdit::reset(const Value& value)
+{
+    Value internal = value;
+
+    m_checkBoxOthers->setCheckState(Qt::Unchecked);
+    if (!internal.isEmpty() && typeid(PlainText) == typeid(*internal.last())) {
+        PlainText *pt = static_cast<PlainText*>(internal.last());
+        if (pt->text() == QLatin1String("others")) {
+            internal.removeLast();
+            m_checkBoxOthers->setCheckState(Qt::Checked);
+        }
+    }
+
+    return FieldListEdit::reset(internal);
+}
+
+bool PersonListEdit::apply(Value& value) const
+{
+    bool result = FieldListEdit::apply(value);
+
+    if (result && m_checkBoxOthers->checkState() == Qt::Checked)
+        value.append(new PlainText(QLatin1String("others")));
+
+    return result;
 }

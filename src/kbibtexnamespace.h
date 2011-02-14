@@ -39,7 +39,8 @@ enum FieldInputType {
     List = 3,
     URL = 4,
     Month = 5,
-    Color = 6
+    Color = 6,
+    PersonList = 7
 };
 
 enum TypeFlag {

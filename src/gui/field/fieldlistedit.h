@@ -20,23 +20,25 @@
 #ifndef KBIBTEX_GUI_FIELDLISTEDIT_H
 #define KBIBTEX_GUI_FIELDLISTEDIT_H
 
-#include <QScrollArea>
+#include <QWidget>
 
 #include <kbibtexnamespace.h>
 #include <value.h>
 
+class QCheckBox;
+
 /**
 @author Thomas Fischer
 */
-class FieldListEdit : public QScrollArea
+class FieldListEdit : public QWidget
 {
     Q_OBJECT
 
 public:
     FieldListEdit(KBibTeX::TypeFlag preferredTypeFlag, KBibTeX::TypeFlags typeFlags, QWidget *parent = NULL);
 
-    bool reset(const Value& value);
-    bool apply(Value& value) const;
+    virtual bool reset(const Value& value);
+    virtual bool apply(Value& value) const;
 
     void clear();
     void setReadOnly(bool isReadOnly);
@@ -44,9 +46,6 @@ public:
 
 signals:
     void modified();
-
-protected:
-    virtual void resizeEvent(QResizeEvent *event);
 
 private slots:
     void lineAdd();
@@ -57,6 +56,22 @@ private slots:
 private:
     class FieldListEditPrivate;
     FieldListEditPrivate *d;
+};
+
+
+/**
+@author Thomas Fischer
+*/
+class PersonListEdit : public FieldListEdit
+{
+public:
+    PersonListEdit(KBibTeX::TypeFlag preferredTypeFlag, KBibTeX::TypeFlags typeFlags, QWidget *parent = NULL);
+
+    virtual bool reset(const Value& value);
+    virtual bool apply(Value& value) const;
+
+private:
+    QCheckBox *m_checkBoxOthers;
 };
 
 #endif // KBIBTEX_GUI_FIELDLISTEDIT_H

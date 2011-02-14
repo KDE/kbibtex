@@ -53,6 +53,7 @@ public:
         case KBibTeX::URL : return QLatin1String("URL");
         case KBibTeX::Month : return QLatin1String("Month");
         case KBibTeX::Color : return QLatin1String("Color");
+        case KBibTeX::PersonList : return QLatin1String("PersonList");
         default: return QLatin1String("SingleLine");
         }
     }
@@ -68,6 +69,8 @@ public:
             return KBibTeX::Month;
         else if (text == QLatin1String("Color"))
             return KBibTeX::Color;
+        else if (text == QLatin1String("PersonList"))
+            return KBibTeX::PersonList;
         else
             return KBibTeX::SingleLine;
     }

@@ -199,7 +199,7 @@ Macro *FileImporterBibTeX::readMacroElement()
 
     Macro *macro = new Macro(key);
     do {
-        bool isStringKey = FALSE;
+        bool isStringKey = false;
         QString text = readString(isStringKey).replace(QRegExp("\\s+"), " ");
         if (isStringKey)
             macro->value().append(new MacroKey(text));
@@ -483,12 +483,23 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value& value, const QStr
                 value.append(new MacroKey(text));
             else {
                 QStringList persons;
+
+                /// handle "et al." i.e. "and others"
+                bool hasOthers = false;
+                if (text.endsWith(QLatin1String("and others"))) {
+                    hasOthers = true;
+                    text = text.left(text.length() - 10);
+                }
+
                 splitPersonList(text, persons);
                 for (QStringList::ConstIterator pit = persons.constBegin(); pit != persons.constEnd(); ++pit) {
                     Person *person = splitName(*pit);
                     if (person != NULL)
                         value.append(person);
                 }
+
+                if (hasOthers)
+                    value.append(new PlainText(QLatin1String("others")));
             }
         } else if (iKey == Entry::ftPages) {
             text.replace(QRegExp("\\s*--?\\s*"), QChar(0x2013));

@@ -27,12 +27,15 @@
 <xsl:if test="string-length(.)>0">
 <xsl:for-each select="person">
 <span style="font-weight:bold;">
-<xsl:apply-templates select="."/></span><xsl:if test="position()!=last()"><xsl:text>, </xsl:text>
+<xsl:apply-templates select="."/>
+</span>
+<xsl:if test="position()!=last()"><xsl:text>, </xsl:text>
 </xsl:if>
-<xsl:if test="position()=last()-1">
+<xsl:if test="position()=last()-1 and @etal!='true'">
 <xsl:text> and </xsl:text>
 </xsl:if>
 </xsl:for-each>
+<xsl:if test="@etal='true'"><xsl:text> </xsl:text><i>et&#160;al.</i></xsl:if>
 </xsl:if>
 </xsl:template>
 
@@ -40,7 +43,10 @@
 <xsl:for-each select="person">
 <xsl:apply-templates /><xsl:if test="position()!=last()"><xsl:text>, </xsl:text>
 </xsl:if>
-<xsl:if test="position()=last()-1"><xsl:text> and </xsl:text></xsl:if></xsl:for-each><xsl:text>, </xsl:text>
+<xsl:if test="position()=last()-1 and @etal!='true'"><xsl:text> and </xsl:text></xsl:if>
+</xsl:for-each>
+<xsl:if test="@etal='true'"><xsl:text> </xsl:text><i>et&#160;al.</i></xsl:if>
+<xsl:text>, </xsl:text>
 </xsl:template>
 
 <xsl:template match="title"><xsl:apply-templates /></xsl:template>

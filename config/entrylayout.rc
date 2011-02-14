@@ -20,11 +20,11 @@ columns=2
 
 bibtexLabel1=author
 uiLabel1=Author
-fieldInputLayout1=List
+fieldInputLayout1=PersonList
 
 bibtexLabel2=editor
 uiLabel2=Editor
-fieldInputLayout2=List
+fieldInputLayout2=PersonList
 
 [Tab3]
 uiCaption=Publication

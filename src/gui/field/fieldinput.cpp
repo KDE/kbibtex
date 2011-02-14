@@ -117,6 +117,10 @@ public:
             connect(action, SIGNAL(triggered()), colorSignalMapper, SLOT(map()));
         }
         break;
+        case KBibTeX::PersonList:
+            fieldListEdit = new PersonListEdit(preferredTypeFlag, typeFlags, p);
+            layout->addWidget(fieldListEdit);
+            break;
         default:
             fieldLineEdit = new FieldLineEdit(preferredTypeFlag, typeFlags, false, p);
             layout->addWidget(fieldLineEdit);

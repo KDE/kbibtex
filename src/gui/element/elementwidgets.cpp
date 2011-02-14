@@ -161,14 +161,14 @@ void EntryConfiguredWidget::createGUI()
         bibtexKeyToWidget.insert((*sflit).bibtexLabel, fieldInput);
         connect(fieldInput, SIGNAL(modified()), this, SLOT(gotModified()));
 
-        bool isMultiLine = (*sflit).fieldInputLayout == KBibTeX::MultiLine || (*sflit).fieldInputLayout == KBibTeX::List;
+        bool isVerticallyMinimumExpaning = (*sflit).fieldInputLayout == KBibTeX::MultiLine || (*sflit).fieldInputLayout == KBibTeX::List || (*sflit).fieldInputLayout == KBibTeX::PersonList;
 
         QLabel *label = new QLabel((*sflit).uiLabel + ":", this);
         label->setBuddy(fieldInput);
-        gridLayout->addWidget(label, row, col, 1, 1, (isMultiLine ? Qt::AlignTop : Qt::AlignVCenter) | Qt::AlignRight);
+        gridLayout->addWidget(label, row, col, 1, 1, (isVerticallyMinimumExpaning ? Qt::AlignTop : Qt::AlignVCenter) | Qt::AlignRight);
         gridLayout->addWidget(fieldInput, row, col + 1, 1, 1);
 
-        gridLayout->setRowStretch(row, isMultiLine ? 1000 : 0);
+        gridLayout->setRowStretch(row, isVerticallyMinimumExpaning ? 1000 : 0);
 
         ++row;
         if (row >= mod) {
