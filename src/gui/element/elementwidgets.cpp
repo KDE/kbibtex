@@ -201,9 +201,11 @@ bool ReferenceWidget::apply(Element *element) const
     Entry *entry = dynamic_cast<Entry*>(element);
     if (entry != NULL) {
         BibTeXEntries *be = BibTeXEntries::self();
-        QString type = entryType->itemData(entryType->currentIndex()).toString();
-        if (entryType->lineEdit()->isModified())
+        QString type = QString::null;
+        if (entryType->currentIndex() < 0 || entryType->lineEdit()->isModified())
             type = be->format(entryType->lineEdit()->text(), KBibTeX::cUpperCamelCase);
+        else
+            type = entryType->itemData(entryType->currentIndex()).toString();
         entry->setType(type);
 
         entry->setId(entryId->text());
@@ -232,6 +234,7 @@ bool ReferenceWidget::reset(const Element *element)
         entryType->setEnabled(true);
         BibTeXEntries *be = BibTeXEntries::self();
         QString type = be->format(entry->type(), KBibTeX::cUpperCamelCase);
+        entryType->setCurrentIndex(-1);
         entryType->lineEdit()->setText(type);
         type = type.toLower();
         int index = 0;
