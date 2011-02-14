@@ -371,7 +371,10 @@ QString FileExporterBibTeX::valueToBibTeX(const Value& value, const QString& key
                     result.append('{');
                 } else if (prev != NULL && typeid(*prev) == typeid(PlainText))
                     result.append(' ');
-                else
+                else if (prev != NULL && typeid(*prev) == typeid(Person)) {
+                    /// handle "et al." i.e. "and others"
+                    result.append(" and ");
+                } else
                     result.append("} # {");
                 isOpen = true;
                 result.append(encodercheck(encoder, escapeLaTeXChars(plainText->text())));
