@@ -205,8 +205,6 @@ public:
     bool saveFile(const KUrl &url) {
         Q_ASSERT_X(!url.isEmpty(), "bool KBibTeXPart::KBibTeXPartPrivate:saveFile(const KUrl &url)", "url is not allowed to be empty");
 
-        qApp->setOverrideCursor(Qt::WaitCursor);
-
         /// configure and open temporary file
         KTemporaryFile temporaryFile;
         const QRegExp suffixRegExp("\\.[^.]{1,4}$");
@@ -215,6 +213,8 @@ public:
         temporaryFile.setAutoRemove(true);
         if (!temporaryFile.open())
             return false;
+
+        qApp->setOverrideCursor(Qt::WaitCursor);
 
         /// export bibliography data into temporary file
         SortFilterBibTeXFileModel *model = dynamic_cast<SortFilterBibTeXFileModel *>(editor->model());
@@ -488,6 +488,7 @@ bool KBibTeXPart::openFile()
 
     if (bibtexFile == NULL) {
         kWarning() << "Opening file failed: " << url();
+        qApp->restoreOverrideCursor();
         return false;
     } else
         kDebug() << "File contains " << bibtexFile->count() << " entries";
