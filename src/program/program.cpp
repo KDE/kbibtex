@@ -40,13 +40,12 @@ int main(int argc, char *argv[])
     aboutData.addAuthor(ki18n("Thomas Fischer"), ki18n("Maintainer"), "fischer@unix-ag.uni-kl.de", "http://www.t-fischer.net/");
     aboutData.setCustomAuthorText(ki18n("Please use https://gna.org/bugs/?group=kbibtex to report bugs.\n"), ki18n("Please use <a href=\"https://gna.org/bugs/?group=kbibtex\">https://gna.org/bugs/?group=kbibtex</a> to report bugs.\n"));
 
-
-    KCmdLineArgs::init(argc, argv, &aboutData);
-    KApplication programCore;
-
     KCmdLineOptions programOptions;
     programOptions.add("+[URL(s)]", ki18n("File(s) to load"), 0);
     KCmdLineArgs::addCmdLineOptions(programOptions);
+
+    KCmdLineArgs::init(argc, argv, &aboutData);
+    KApplication programCore;
 
     KGlobal::locale()->insertCatalog("libkbibtexio");
     KGlobal::locale()->insertCatalog("libkbibtexgui");
