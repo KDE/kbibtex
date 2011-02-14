@@ -52,6 +52,9 @@ include_directories(
 	${KDE4_INCLUDES}
 )
 
+# debug area for KBibTeX unless something else is specified
+add_definitions(-DKDE_DEFAULT_DEBUG_AREA=101010)
+
 add_subdirectory( libkbibtexio )
 add_subdirectory( websearch )
 add_subdirectory( gui )

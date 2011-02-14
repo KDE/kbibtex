@@ -34,6 +34,10 @@ set( kbibtexio_LIB_SRCS
 )
 
 add_definitions( -DMAKE_KBIBTEXIO_LIB )
+
+# debug area for KBibTeX's IO library unless something else is specified
+add_definitions(-DKDE_DEFAULT_DEBUG_AREA=101011)
+
 include_directories(
 	${LIBXML2_INCLUDE_DIR}
 	${LIBXSLT_INCLUDE_DIR}
