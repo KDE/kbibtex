@@ -44,6 +44,28 @@ public:
     virtual bool save(QIODevice *iodevice, const File* bibtexfile, QStringList *errorLog = NULL) = 0;
     virtual bool save(QIODevice *iodevice, const Element* element, QStringList *errorLog = NULL) = 0;
 
+    /**
+      * When exporting data, show a dialog where the user may select options on the
+      * export process such as selecting encoding. Re-implementing this function is
+      * optional and should only be done if user interaction is necessary at export
+      * actions.
+      * Return true if the configuration step was successful and the application
+      * may proceed. If returned false, the export process has to be stopped.
+      * The exporter may store configurations done here for future use (e.g. set default
+      * values based on user input).
+      * A calling application should call this function before calling save() or similar
+      * functions. However, an application may opt to not call this function, e.g. in case
+      * of a Save operation opposed to a SaveAs option which would call this function.
+      * The implementing class must be aware of this behaviour.
+      * The implementer may choose to show or not show a dialog, depending on e.g. if
+      * additional information is necessary or not.
+      */
+    virtual bool showExportDialog(QWidget *parent, File *bibtexfile) {
+        Q_UNUSED(parent);
+        Q_UNUSED(bibtexfile);
+        return true;
+    }
+
 signals:
     void progress(int current, int total);
 

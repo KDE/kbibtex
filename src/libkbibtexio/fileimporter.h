@@ -43,6 +43,25 @@ public:
     File* fromString(const QString& text);
     virtual File* load(QIODevice *iodevice) = 0;
 
+    /**
+      * When importing data, show a dialog where the user may select options on the
+      * import process such as selecting encoding. Re-implementing this function is
+      * optional and should only be done if user interaction is necessary at import
+      * actions.
+      * Return true if the configuration step was successful and the application
+      * may proceed. If returned false, the import process has to be stopped.
+      * The importer may store configurations done here for future use (e.g. set default
+      * values based on user input).
+      * A calling application should call this function before calling load() or similar
+      * functions.
+      * The implementer may choose to show or not show a dialog, depending on e.g. if
+      * additional information is necessary or not.
+      */
+    virtual bool showImportDialog(QWidget *parent) {
+        Q_UNUSED(parent);
+        return true;
+    }
+
     static bool guessCanDecode(const QString &) {
         return FALSE;
     };
