@@ -237,7 +237,6 @@ void KBibTeXMainWindow::newDocument()
     const QString mimeType = OpenFileInfo::mimetypeBibTeX;
     OpenFileInfo *openFileInfo = d->openFileInfoManager->createNew(mimeType);
     if (openFileInfo) {
-        openFileInfo->setProperty(OpenFileInfo::propertyEncoding, "UTF-8");
         d->openFileInfoManager->setCurrentFile(openFileInfo);
         openFileInfo->setFlags(OpenFileInfo::Open);
     } else

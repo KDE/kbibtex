@@ -41,7 +41,6 @@ class OpenFileInfo : public QObject
     Q_OBJECT
 
 public:
-    static const QString propertyEncoding;
     static const QString mimetypeBibTeX;
 
     enum StatusFlag {
@@ -67,9 +66,6 @@ public:
     void setFlags(StatusFlags statusFlags);
     void addFlags(StatusFlags statusFlags);
     void removeFlags(StatusFlags statusFlags);
-
-    void setProperty(const QString &key, const QString &value);
-    QString property(const QString &key) const;
 
     QDateTime lastAccess() const;
     void setLastAccess(const QDateTime& dateTime = QDateTime::currentDateTime());

@@ -34,7 +34,6 @@
 #include <fileimporterpdf.h>
 #include "openfileinfo.h"
 
-const QString OpenFileInfo::propertyEncoding = QLatin1String("encoding");
 const QString OpenFileInfo::mimetypeBibTeX = QLatin1String("text/x-bibtex");
 
 class OpenFileInfo::OpenFileInfoPrivate
@@ -50,7 +49,6 @@ public:
 
     OpenFileInfo *p;
 
-    QMap<QString, QString> properties;
     KParts::ReadWritePart* part;
     KService::Ptr internalServicePtr;
     QWidget *internalWidgetParent;
@@ -190,16 +188,6 @@ bool OpenFileInfo::close()
 QString OpenFileInfo::mimeType() const
 {
     return d->mimeType;
-}
-
-void OpenFileInfo::setProperty(const QString &key, const QString &value)
-{
-    d->properties[key] = value;
-}
-
-QString OpenFileInfo::property(const QString &key) const
-{
-    return d->properties[key];
 }
 
 QString OpenFileInfo::shortCaption() const
@@ -346,9 +334,7 @@ public:
             }
             ofi->addFlags(statusFlag);
             ofi->addFlags(OpenFileInfo::HasName);
-            QString encoding = cg.readEntry(QString("%1-%2").arg(OpenFileInfo::propertyEncoding).arg(i), "");
             ofi->setLastAccess(QDateTime::fromString(cg.readEntry(QString("%1-%2").arg(OpenFileInfo::OpenFileInfoPrivate::keyLastAccess).arg(i), ""), OpenFileInfo::OpenFileInfoPrivate::dateTimeFormat));
-            ofi->setProperty(OpenFileInfo::propertyEncoding, encoding);
         }
     }
 
@@ -362,7 +348,6 @@ public:
             OpenFileInfo *ofi = *it;
 
             cg.writeEntry(QString("%1-%2").arg(OpenFileInfo::OpenFileInfoPrivate::keyURL).arg(i), ofi->url().pathOrUrl());
-            cg.writeEntry(QString("%1-%2").arg(OpenFileInfo::propertyEncoding).arg(i), ofi->property(OpenFileInfo::propertyEncoding));
             cg.writeEntry(QString("%1-%2").arg(OpenFileInfo::OpenFileInfoPrivate::keyLastAccess).arg(i), ofi->lastAccess().toString(OpenFileInfo::OpenFileInfoPrivate::dateTimeFormat));
         }
         config->sync();
@@ -450,7 +435,6 @@ bool OpenFileInfoManager::changeUrl(OpenFileInfo *openFileInfo, const KUrl & url
         OpenFileInfo *ofi = open(oldUrl);
         OpenFileInfo::StatusFlags statusFlags = (openFileInfo->flags() & (~OpenFileInfo::Open)) | OpenFileInfo::RecentlyUsed;
         ofi->setFlags(statusFlags);
-        ofi->setProperty(OpenFileInfo::propertyEncoding, openFileInfo->property(OpenFileInfo::propertyEncoding));
     }
     if (previouslyContained != NULL) {
         /// keep Favorite flag if set in file that have previously same URL
