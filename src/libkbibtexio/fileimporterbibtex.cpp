@@ -67,8 +67,11 @@ File* FileImporterBibTeX::load(QIODevice *iodevice)
         if (!skipline)
             rawText.append(line).append("\n");
     }
-    delete m_textStream;
 
+    File *result = new File();
+    result->setEncoding(m_textStream->codec()->name());
+
+    delete m_textStream;
 
     /** Remove HTML code from the input source */
     rawText = rawText.replace(htmlRegExp, "");
@@ -81,8 +84,6 @@ File* FileImporterBibTeX::load(QIODevice *iodevice)
     m_textStream->setCodec("UTF-8");
     m_lineNo = 1;
 
-    File *result = new File();
-    result->setEncoding(m_textStream->codec()->name());
     while (!m_cancelFlag && !m_textStream->atEnd()) {
         emit progress(m_textStream->pos(), rawText.length());
         Element * element = nextElement();
@@ -721,6 +722,7 @@ bool FileImporterBibTeX::evaluateParameterComments(QTextStream *textStream, cons
         qDebug() << "x-kbibtex-encoding=" << newEncoding << endl;
         if (newEncoding == "latex") newEncoding = "UTF-8";
         textStream->setCodec(newEncoding.toAscii());
+        kDebug() << "newEncoding=" << newEncoding << "   m_textStream->codec()=" << m_textStream->codec()->name();
         return true;
     }
 

@@ -60,10 +60,9 @@ public:
       * The implementer may choose to show or not show a dialog, depending on e.g. if
       * additional information is necessary or not.
       */
-    virtual bool showExportDialog(QWidget *parent, File *bibtexfile) {
+    virtual void showExportDialog(QWidget *parent, File *bibtexfile) {
         Q_UNUSED(parent);
         Q_UNUSED(bibtexfile);
-        return true;
     }
 
 signals:

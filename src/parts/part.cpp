@@ -83,9 +83,10 @@ public:
     KAction *editCutAction, *editDeleteAction, *editCopyAction, *editPasteAction, *editCopyReferencesAction, *elementEditAction, *elementViewDocumentAction, *fileSaveAction;
     QMenu *viewDocumentMenu;
     QSignalMapper *signalMapperViewDocument;
+    bool isSaveAsOperation;
 
     KBibTeXPartPrivate(KBibTeXPart *parent)
-            : p(parent), sortFilterProxyModel(NULL), signalMapperNewElement(new QSignalMapper(parent)), viewDocumentMenu(new QMenu(i18n("View Document"), parent->widget())), signalMapperViewDocument(new QSignalMapper(parent)) {
+            : p(parent), sortFilterProxyModel(NULL), signalMapperNewElement(new QSignalMapper(parent)), viewDocumentMenu(new QMenu(i18n("View Document"), parent->widget())), signalMapperViewDocument(new QSignalMapper(parent)), isSaveAsOperation(false) {
         connect(signalMapperViewDocument, SIGNAL(mapped(QObject*)), p, SLOT(elementViewDocumentMenu(QObject*)));
     }
 
@@ -214,12 +215,18 @@ public:
         if (!temporaryFile.open())
             return false;
 
-        qApp->setOverrideCursor(Qt::WaitCursor);
-
         /// export bibliography data into temporary file
         SortFilterBibTeXFileModel *model = dynamic_cast<SortFilterBibTeXFileModel *>(editor->model());
         Q_ASSERT(model != NULL);
         FileExporter *exporter = fileExporterFactory(url);
+
+        if (isSaveAsOperation) {
+            /// only show export dialog at SaveAs or SaveCopyAs operations
+            exporter->showExportDialog(p->widget(), model->bibTeXSourceModel()->bibTeXFile());
+        }
+
+        qApp->setOverrideCursor(Qt::WaitCursor);
+
         QStringList errorLog;
         bool result = exporter->save(&temporaryFile, model->bibTeXSourceModel()->bibTeXFile(), &errorLog);
         delete exporter;
@@ -424,6 +431,7 @@ bool KBibTeXPart::saveFile()
 
 bool KBibTeXPart::documentSave()
 {
+    d->isSaveAsOperation = false;
     if (!isReadWrite())
         return documentSaveCopyAs();
     else if (!url().isValid())
@@ -434,6 +442,7 @@ bool KBibTeXPart::documentSave()
 
 bool KBibTeXPart::documentSaveAs()
 {
+    d->isSaveAsOperation = true;
     KUrl url = d->getSaveFilename();
     if (!url.isValid() || !d->checkOverwrite(url, widget()))
         return false;
@@ -443,6 +452,7 @@ bool KBibTeXPart::documentSaveAs()
 
 bool KBibTeXPart::documentSaveCopyAs()
 {
+    d->isSaveAsOperation = true;
     KUrl url = d->getSaveFilename();
     if (!url.isValid() || !d->checkOverwrite(url, widget()))
         return false;
@@ -475,11 +485,15 @@ void KBibTeXPart::fitActionSettings()
 bool KBibTeXPart::openFile()
 {
     kDebug() << "Opening file: " << url();
-    qApp->setOverrideCursor(Qt::WaitCursor);
 
     setObjectName("KBibTeXPart::KBibTeXPart for " + url().pathOrUrl());
 
     FileImporter *importer = d->fileImporterFactory(url());
+
+    importer->showImportDialog(widget());
+
+    qApp->setOverrideCursor(Qt::WaitCursor);
+
     QFile inputfile(localFilePath());
     inputfile.open(QIODevice::ReadOnly);
     File *bibtexFile = importer->load(&inputfile);

@@ -23,6 +23,8 @@
 
 #include "kbibtexio_export.h"
 
+class QStringList;
+
 /**
  * This class is a specialized wrapper around iconv. It will try to encode
  * all characters not supported by the chosen encoding using the special
@@ -42,9 +44,13 @@ public:
 
     QByteArray encode(const QString &input);
 
+    static const QStringList encodings();
+
 private:
     class IConvLaTeXPrivate;
     IConvLaTeXPrivate *d;
+
+    static QStringList encodingList;
 };
 
 #endif // KBIBTEX_ICONVLATEX_H

@@ -56,6 +56,8 @@ public:
     bool save(QIODevice* iodevice, const File* bibtexfile, QStringList *errorLog = NULL);
     bool save(QIODevice* iodevice, const Element* element, QStringList *errorLog = NULL);
 
+    virtual void showExportDialog(QWidget *parent, File *bibtexfile);
+
     static QString valueToBibTeX(const Value& value, const QString& fieldType = QString::null, UseLaTeXEncoding useLaTeXEncoding = leLaTeX);
     static QString elementToString(const Element* element);
 

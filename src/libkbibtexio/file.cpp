@@ -33,7 +33,7 @@
 #include <comment.h>
 
 File::File()
-        : QList<Element*>(), m_url(KUrl()), m_encoding(QLatin1String("latex"))
+        : QList<Element*>(), m_url(KUrl()), m_encoding(QString::null)
 {
     // nothing
 }

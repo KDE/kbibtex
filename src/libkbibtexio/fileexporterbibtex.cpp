@@ -22,8 +22,14 @@
 #include <QTextCodec>
 #include <QTextStream>
 #include <QStringList>
+#include <QLabel>
+#include <QLineEdit>
+#include <QFormLayout>
 
 #include <KDebug>
+#include <KDialog>
+#include <KLocale>
+#include <KComboBox>
 
 #include <file.h>
 #include <element.h>
@@ -40,6 +46,29 @@
 #include "fileexporterbibtex.h"
 
 #define encodercheck(encoder, text) ((encoder)?(encoder)->encode((text)):(text))
+
+class ExportWidget : public QWidget
+{
+public:
+    KComboBox *listOfEncodings;
+
+    ExportWidget(QWidget *parent)
+            : QWidget(parent) {
+        QFormLayout *layout = new QFormLayout(this);
+        setLayout(layout);
+        setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+
+        listOfEncodings = new KComboBox(true, this);
+        layout->addRow(i18n("Encoding:"), listOfEncodings);
+
+        listOfEncodings->addItems(IConvLaTeX::encodings());
+    }
+
+    void setProposedEncoding(const QString &proposedEncoding) {
+        listOfEncodings->lineEdit()->setText(proposedEncoding);
+        listOfEncodings->setCurrentIndex(listOfEncodings->findText(proposedEncoding, Qt::MatchFixedString));
+    }
+};
 
 class FileExporterBibTeX::FileExporterBibTeXPrivate
 {
@@ -344,6 +373,23 @@ void FileExporterBibTeX::cancel()
     d->cancelFlag = true;
 }
 
+void FileExporterBibTeX::showExportDialog(QWidget *parent, File *bibtexfile)
+{
+    KDialog dialog(parent);
+    dialog.setButtons(KDialog::Ok);
+
+    QString proposedEncoding = bibtexfile != NULL ? bibtexfile->encoding() : QString::null;
+    if (proposedEncoding.isNull())
+        proposedEncoding = d->encoding;
+
+    ExportWidget exportWidget(&dialog);
+    exportWidget.setProposedEncoding(proposedEncoding);
+    dialog.setMainWidget(&exportWidget);
+
+    if (dialog.exec() == QDialog::Accepted) {
+        setEncoding(exportWidget.listOfEncodings->lineEdit()->text());
+    }
+}
 
 QString FileExporterBibTeX::valueToBibTeX(const Value& value, const QString& key, UseLaTeXEncoding useLaTeXEncoding)
 {
