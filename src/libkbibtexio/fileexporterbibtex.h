@@ -47,7 +47,12 @@ public:
     FileExporterBibTeX();
     ~FileExporterBibTeX();
 
+    /**
+     * Set the encoding when saving a BibTeX file.
+     * Important: The File object's "Encoding" property has precendence over this setting.
+     */
     void setEncoding(const QString& encoding);
+    QString encoding() const;
     void setStringDelimiters(const QChar& stringOpenDelimiter, const QChar& stringCloseDelimiter);
     void setKeywordCasing(KBibTeX::Casing keywordCasing);
     void setQuoteComment(QuoteComment quoteComment);
@@ -56,7 +61,7 @@ public:
     bool save(QIODevice* iodevice, const File* bibtexfile, QStringList *errorLog = NULL);
     bool save(QIODevice* iodevice, const Element* element, QStringList *errorLog = NULL);
 
-    virtual void showExportDialog(QWidget *parent, File *bibtexfile);
+    virtual void showExportDialog(QWidget *parent, File *bibtexfile) const;
 
     static QString valueToBibTeX(const Value& value, const QString& fieldType = QString::null, UseLaTeXEncoding useLaTeXEncoding = leLaTeX);
     static QString elementToString(const Element* element);

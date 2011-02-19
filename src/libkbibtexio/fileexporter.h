@@ -21,7 +21,6 @@
 #define KBIBTEX_IO_FILEEXPORTER_H
 
 #include <QObject>
-// #include <QMutex> // FIXME: required?
 
 #include <file.h>
 
@@ -33,7 +32,7 @@ class Element;
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
-class FileExporter : public QObject
+class KBIBTEXIO_EXPORT FileExporter : public QObject
 {
     Q_OBJECT
 
@@ -49,10 +48,8 @@ public:
       * export process such as selecting encoding. Re-implementing this function is
       * optional and should only be done if user interaction is necessary at export
       * actions.
-      * Return true if the configuration step was successful and the application
-      * may proceed. If returned false, the export process has to be stopped.
-      * The exporter may store configurations done here for future use (e.g. set default
-      * values based on user input).
+      * Whatever settings are made in the export dialog have to be stored in the
+      * File object via its property map.
       * A calling application should call this function before calling save() or similar
       * functions. However, an application may opt to not call this function, e.g. in case
       * of a Save operation opposed to a SaveAs option which would call this function.
@@ -60,7 +57,11 @@ public:
       * The implementer may choose to show or not show a dialog, depending on e.g. if
       * additional information is necessary or not.
       */
-    virtual void showExportDialog(QWidget *parent, File *bibtexfile) {
+    /**
+     * @see File::setProperty()
+     * @see File::property()
+     */
+    virtual void showExportDialog(QWidget *parent, File *bibtexfile) const {
         Q_UNUSED(parent);
         Q_UNUSED(bibtexfile);
     }
@@ -72,9 +73,6 @@ public slots:
     virtual void cancel() {
         // nothing
     };
-
-protected:
-    // QMutex m_mutex; // FIXME: required?
 };
 
 #endif // KBIBTEX_IO_FILEEXPORTER_H

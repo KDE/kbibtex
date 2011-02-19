@@ -61,7 +61,10 @@ public:
         listOfEncodings = new KComboBox(true, this);
         layout->addRow(i18n("Encoding:"), listOfEncodings);
 
+        listOfEncodings->addItem(QLatin1String("LaTeX"));
+        listOfEncodings->insertSeparator(1);
         listOfEncodings->addItems(IConvLaTeX::encodings());
+        setProposedEncoding("LaTeX");
     }
 
     void setProposedEncoding(const QString &proposedEncoding) {
@@ -230,9 +233,17 @@ FileExporterBibTeX::~FileExporterBibTeX()
 
 void FileExporterBibTeX::setEncoding(const QString& encoding)
 {
-    d->encoding = encoding;
-    delete d->iconvLaTeX;
-    d->iconvLaTeX = new IConvLaTeX(encoding == QLatin1String("latex") ?  QLatin1String("us-ascii") : encoding);
+    QString normalizedEncoding = encoding.isNull() ? QLatin1String("latex") : encoding.toLower();
+    if (normalizedEncoding != d->encoding) {
+        d->encoding = normalizedEncoding;
+        delete d->iconvLaTeX;
+        d->iconvLaTeX = new IConvLaTeX(d->encoding == QLatin1String("latex") ?  QLatin1String("us-ascii") : encoding);
+    }
+}
+
+QString FileExporterBibTeX::encoding() const
+{
+    return d->encoding;
 }
 
 void FileExporterBibTeX::setStringDelimiters(const QChar& stringOpenDelimiter, const QChar& stringCloseDelimiter)
@@ -298,10 +309,16 @@ bool FileExporterBibTeX::save(QIODevice* iodevice, const File* bibtexfile, QStri
     int totalElements = (int) bibtexfile->count();
     int currentPos = 0;
 
-    if (d->encoding != QLatin1String("latex")) {
-        parameterCommentsList << new Comment("x-kbibtex-encoding=" + d->encoding, true);
-        kDebug() << "New x-kbibtex-encoding is \"" << d->encoding << "\"" << endl;
-    }
+    QString effectiveEncoding = QLatin1String("latex");
+    if (!d->encoding.isNull())
+        effectiveEncoding = d->encoding;
+    if (bibtexfile->hasProperty(File::Encoding))
+        effectiveEncoding = bibtexfile->property(File::Encoding).toString();
+    kDebug() << "Effective encoding is \"" << effectiveEncoding << "\"" << endl;
+    setEncoding(effectiveEncoding);
+
+    if (effectiveEncoding != QLatin1String("latex"))
+        parameterCommentsList << new Comment("x-kbibtex-encoding=" + effectiveEncoding, true);
 
     /** before anything else, write parameter comments */
     for (QList<Comment*>::ConstIterator it = parameterCommentsList.begin(); it != parameterCommentsList.end() && result && !d->cancelFlag; it++) {
@@ -373,22 +390,28 @@ void FileExporterBibTeX::cancel()
     d->cancelFlag = true;
 }
 
-void FileExporterBibTeX::showExportDialog(QWidget *parent, File *bibtexfile)
+void FileExporterBibTeX::showExportDialog(QWidget *parent, File *bibtexfile) const
 {
+    Q_ASSERT(bibtexfile != NULL);
+
     KDialog dialog(parent);
     dialog.setButtons(KDialog::Ok);
 
-    QString proposedEncoding = bibtexfile != NULL ? bibtexfile->encoding() : QString::null;
-    if (proposedEncoding.isNull())
+    /// default encoding is LaTeX
+    QString proposedEncoding = QLatin1String("latex");
+    /// check encoding set to this exporter
+    if (!d->encoding.isNull())
         proposedEncoding = d->encoding;
+    /// encoding as stored in the File has highest precendence
+    if (bibtexfile->hasProperty(File::Encoding))
+        proposedEncoding = bibtexfile->property(File::Encoding).toString();
 
     ExportWidget exportWidget(&dialog);
     exportWidget.setProposedEncoding(proposedEncoding);
     dialog.setMainWidget(&exportWidget);
 
-    if (dialog.exec() == QDialog::Accepted) {
-        setEncoding(exportWidget.listOfEncodings->lineEdit()->text());
-    }
+    if (dialog.exec() == QDialog::Accepted)
+        bibtexfile->setProperty(File::Encoding, exportWidget.listOfEncodings->lineEdit()->text());
 }
 
 QString FileExporterBibTeX::valueToBibTeX(const Value& value, const QString& key, UseLaTeXEncoding useLaTeXEncoding)
