@@ -32,8 +32,25 @@
 #include <macro.h>
 #include <comment.h>
 
+const QString File::Url = QLatin1String("Url");
+const QString File::Encoding = QLatin1String("Encoding");
+
+class File::FilePrivate
+{
+private:
+    File *p;
+
+public:
+    QMap<QString, QVariant> properties;
+
+    FilePrivate(File *parent)
+            : p(parent)        {
+        // TODO
+    }
+};
+
 File::File()
-        : QList<Element*>(), m_url(KUrl()), m_encoding(QString::null)
+        : QList<Element*>(), d(new FilePrivate(this))
 {
     // nothing
 }
@@ -80,22 +97,22 @@ QStringList File::allKeys() const
     return result;
 }
 
-void File::setUrl(const KUrl &url)
+void File::setProperty(const QString &key, const QVariant &value)
 {
-    m_url = url;
+    d->properties.insert(key, value);
 }
 
-KUrl File::url() const
+QVariant File::property(const QString &key) const
 {
-    return m_url;
+    return d->properties.value(key);
 }
 
-void File::setEncoding(const QString &encoding)
+QVariant File::property(const QString &key, const QVariant &defaultValue) const
 {
-    m_encoding = encoding;
+    return d->properties.value(key, defaultValue);
 }
 
-QString File::encoding() const
+bool File::hasProperty(const QString &key) const
 {
-    return m_encoding;
+    return d->properties.contains(key);
 }

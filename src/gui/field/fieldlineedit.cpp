@@ -366,7 +366,7 @@ public:
 
     void updateURL(const QString &text) {
         QList<KUrl> urls;
-        FileInfo::urlsInText(text, true, file != NULL && file->url().isValid() ? file->url().directory() : QString::null, urls);
+        FileInfo::urlsInText(text, true, file != NULL && file->property(File::Url).value<KUrl>().isValid() ? file->property(File::Url).value<KUrl>().directory() : QString::null, urls);
         if (urls.isEmpty())
             urlToOpen = KUrl();
         else
