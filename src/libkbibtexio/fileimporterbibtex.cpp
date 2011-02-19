@@ -69,7 +69,7 @@ File* FileImporterBibTeX::load(QIODevice *iodevice)
     }
 
     File *result = new File();
-    result->setEncoding(m_textStream->codec()->name());
+    result->setProperty(File::Encoding, m_textStream->codec()->name());
 
     delete m_textStream;
 
