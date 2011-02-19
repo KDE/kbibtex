@@ -64,7 +64,7 @@ QByteArray IConvLaTeX::encode(const QString &input)
     size_t ouputBufferBytesLeft = maxBufferSize;
     Encoder *laTeXEncoder = EncoderLaTeX::currentEncoderLaTeX();
 
-    while (iconv(d->iconvHandle, &inputBuffer, &inputBufferBytesLeft, &outputBuffer, &ouputBufferBytesLeft) == (size_t)(-1)) {
+    while (iconv(d->iconvHandle, &inputBuffer, &inputBufferBytesLeft, &outputBuffer, &ouputBufferBytesLeft) == (size_t)(-1) && inputBufferBytesLeft > 0) {
         /// split text into character where iconv stopped and remaining text
         QString remainingString = QString::fromUtf8(inputBuffer);
         QChar problematicChar = remainingString.at(0);
