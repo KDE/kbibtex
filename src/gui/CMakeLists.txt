@@ -33,6 +33,9 @@ set( kbibtexgui_LIB_SRCS
 
 add_definitions( -DMAKE_KBIBTEXGUI_LIB )
 
+# debug area for KBibTeX's IO library
+add_definitions(-DKDE_DEFAULT_DEBUG_AREA=101012)
+
 kde4_add_library( kbibtexgui SHARED ${kbibtexgui_LIB_SRCS} )
 
 target_link_libraries( kbibtexgui

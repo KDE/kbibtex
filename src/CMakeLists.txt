@@ -37,8 +37,6 @@ else (SVNVERSION)
 	add_definitions(-DSVNREVISION=" \(SVN r""${SVNVERSION}""\)")
 endif (NOT SVNVERSION OR SVNVERSION STREQUAL exported)
 
-add_definitions( ${QT_DEFINITIONS} ${KDE4_DEFINITIONS} )
-
 configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h )
 
 add_definitions(
@@ -51,9 +49,6 @@ include_directories(
 	${CMAKE_BINARY_DIR}
 	${KDE4_INCLUDES}
 )
-
-# debug area for KBibTeX unless something else is specified
-add_definitions(-DKDE_DEFAULT_DEBUG_AREA=101010)
 
 add_subdirectory( libkbibtexio )
 add_subdirectory( websearch )

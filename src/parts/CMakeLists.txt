@@ -7,6 +7,9 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/../gui/bibtex
 )
 
+# debug area for KBibTeX's IO library
+add_definitions(-DKDE_DEFAULT_DEBUG_AREA=101013)
+
 
 set( kbibtexpart_SRCS
 	part.cpp

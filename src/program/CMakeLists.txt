@@ -29,6 +29,9 @@ set( kbibtex_SRCS
 	openfileinfo.cpp
 )
 
+# debug area for KBibTeX's IO library
+add_definitions(-DKDE_DEFAULT_DEBUG_AREA=101014)
+
 kde4_add_app_icon( kbibtex_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/../../icons/hi*-app-kbibtex.png" )
 
 kde4_add_executable( kbibtex${BINARY_POSTFIX}  ${kbibtex_SRCS} )
