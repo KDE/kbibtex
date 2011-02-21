@@ -23,18 +23,22 @@ UpperCamelCase=Book
 Label=Book
 
 [EntryType7]
+UpperCamelCase=InBook
+Label=Part of a Book
+
+[EntryType8]
 UpperCamelCase=PhDThesis
 Label=PhD Thesis
 
-[EntryType8]
+[EntryType9]
 UpperCamelCase=MastersThesis
 Label=Master's Thesis
 
-[EntryType9]
+[EntryType10]
 UpperCamelCase=Unpublished
 Label=Unpublish Material
 
-[EntryType10]
+[EntryType11]
 UpperCamelCase=Manual
 Label=Manual
 
