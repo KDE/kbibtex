@@ -30,6 +30,7 @@
 #include <macro.h>
 #include <comment.h>
 #include <preamble.h>
+#include <bibtexentries.h>
 
 #include "bibtexfilemodel.h"
 
@@ -274,9 +275,16 @@ QVariant BibTeXFileModel::data(const QModelIndex &index, int role) const
         if (entry != NULL) {
             if (raw == "^id") // FIXME: Use constant here?
                 return QVariant(entry->id());
-            else if (raw == "^type")
-                return QVariant(entry->type());
-            else {
+            else if (raw == "^type") { // FIXME: Use constant here?
+                /// try to beautify type, e.g. translate "proceedings" into
+                /// "Conference or Workshop Proceedings"
+                QString label = BibTeXEntries::self()->label(entry->type());
+                if (label.isEmpty()) {
+                    /// fall-back to entry type as it is
+                    return QVariant(entry->type());
+                } else
+                    return QVariant(label);
+            } else {
                 if (entry->contains(raw)) {
                     QString text = PlainTextValue::text(entry->value(raw), m_bibtexFile);
                     text = text.replace(whiteSpace, " ");

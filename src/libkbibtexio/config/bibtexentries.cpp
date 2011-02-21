@@ -67,6 +67,8 @@ public:
             ed.upperCamelCase = systemcg.readEntry("UpperCamelCase", "");
             ed.upperCamelCase = usercg.readEntry("UpperCamelCase", ed.upperCamelCase);
             if (ed.upperCamelCase.isEmpty()) continue;
+            ed.upperCamelCaseAlt = systemcg.readEntry("UpperCamelCaseAlt", "");
+            ed.upperCamelCaseAlt = usercg.readEntry("UpperCamelCaseAlt", ed.upperCamelCaseAlt);
             ed.label = systemcg.readEntry("Label", ed.upperCamelCase);;
             ed.label = usercg.readEntry("Label", ed.label);;
             p->append(ed);
@@ -135,4 +137,17 @@ QString BibTeXEntries::format(const QString& name, KBibTeX::Casing casing) const
     }
     }
     return name;
+}
+
+QString BibTeXEntries::label(const QString& name) const
+{
+    const QString iName = name.toLower();
+
+    for (ConstIterator it = begin(); it != end(); ++it) {
+        /// configuration file uses camel-case
+        QString itName = (*it).upperCamelCase.toLower();
+        if (itName == iName || (!(itName = (*it).upperCamelCaseAlt.toLower()).isEmpty() && itName == iName))
+            return (*it).label;
+    }
+    return QString::null;
 }

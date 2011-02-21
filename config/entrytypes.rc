@@ -4,10 +4,12 @@ Label=Journal Article
 
 [EntryType2]
 UpperCamelCase=InProceedings
+UpperCamelCaseAlt=InConference
 Label=Publication in Conference Proceedings
 
 [EntryType3]
 UpperCamelCase=Proceedings
+UpperCamelCaseAlt=Conference
 Label=Conference or Workshop Proceedings
 
 [EntryType4]

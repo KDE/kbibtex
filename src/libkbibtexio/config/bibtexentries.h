@@ -27,6 +27,7 @@
 
 typedef struct {
     QString upperCamelCase;
+    QString upperCamelCaseAlt;
     QString label;
 } EntryDescription;
 
@@ -44,6 +45,8 @@ public:
      * Change the casing of a given entry name to one of the predefine formats.
      */
     QString format(const QString& name, KBibTeX::Casing casing) const;
+
+    QString label(const QString& name) const;
 
 protected:
     BibTeXEntries();
