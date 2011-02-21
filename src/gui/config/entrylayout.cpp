@@ -110,6 +110,7 @@ void EntryLayout::load()
 
         EntryTabLayout etl;
         etl.uiCaption = systemcg.readEntry("uiCaption", "");
+        etl.iconName = systemcg.readEntry("iconName", "entry");
         etl.columns = systemcg.readEntry("columns", 1);
         if (etl.uiCaption.isEmpty())
             continue;

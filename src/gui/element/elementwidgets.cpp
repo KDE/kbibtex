@@ -132,7 +132,7 @@ QString EntryConfiguredWidget::label()
 
 KIcon EntryConfiguredWidget::icon()
 {
-    return KIcon("entry"); // FIXME
+    return KIcon(etl.iconName);
 }
 
 bool EntryConfiguredWidget::canEdit(const Element *element)
@@ -239,7 +239,7 @@ bool ReferenceWidget::reset(const Element *element)
         type = type.toLower();
         int index = 0;
         for (BibTeXEntries::ConstIterator it = be->constBegin(); it != be->constEnd(); ++it, ++index)
-            if (type == it->upperCamelCase.toLower()) {
+            if (type == it->upperCamelCase.toLower() || type == it->upperCamelCaseAlt.toLower()) {
                 entryType->setCurrentIndex(index);
                 break;
             }
@@ -425,7 +425,7 @@ QString FilesWidget::label()
 
 KIcon FilesWidget::icon()
 {
-    return KIcon("external");
+    return KIcon("emblem-symbolic-link");
 }
 
 bool FilesWidget::canEdit(const Element *element)
@@ -857,7 +857,7 @@ QString SourceWidget::label()
 
 KIcon SourceWidget::icon()
 {
-    return KIcon("source");
+    return KIcon("code-context");
 }
 
 bool SourceWidget::canEdit(const Element *element)

@@ -16,6 +16,7 @@ fieldInputLayout3=SingleLine
 
 [Tab2]
 uiCaption=Author/Editor
+iconName=user-identity
 columns=2
 
 bibtexLabel1=author
