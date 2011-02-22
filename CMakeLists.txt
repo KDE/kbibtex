@@ -5,6 +5,17 @@ cmake_minimum_required(VERSION 2.6)
 find_package( Qt4 REQUIRED )
 find_package( KDE4 REQUIRED )
 
+# FIXME may have to be cleaned up a little bit
+# Contributed by Jeremy Cribb <cribb.jeremy@gmail.com>
+IF(APPLE)
+  FIND_LIBRARY(SYS_CONFIG_LIBRARY SystemConfiguration )
+  MARK_AS_ADVANCED(SYS_CONFIG_LIBRARY)
+# SET(TARGET_EXTERNAL_LIBRARIES iconv ${SYS_CONFIG_LIBRARY})
+   SET(ICONV_INCLUDE_DIR   "/opt/local/include")
+   SET(ICONV_LIBRARIES     "/opt/local/lib/libiconv.dylib")
+   SET(LIBXSLT_LIBRARIES   "/opt/local/lib/libxslt.dylib")
+ENDIF(APPLE)
+
 find_package(LibXslt)
 macro_log_feature(LIBXSLT_FOUND "LibXSLT" "A library to transform XML files
 into other XML files" "http://xmlsoft.org/XSLT" TRUE "" "Required to transform
