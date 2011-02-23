@@ -280,6 +280,10 @@ Entry *FileImporterBibTeX::readEntryElement(const QString& typeString)
             return NULL;
         }
 
+        /// some sources such as ACM's Digital Library use "issue" instead of "number" -> fix that
+        if (keyName.toLower() == QLatin1String("issue"))
+            keyName = QLatin1String("number"); // FIXME use constants here or even better code?
+
         /** check for duplicate fields */
         if (entry->contains(keyName)) {
             int i = 2;
