@@ -4,12 +4,11 @@ Label=Journal Article
 
 [EntryType2]
 UpperCamelCase=InProceedings
-UpperCamelCaseAlt=InConference
+UpperCamelCaseAlt=Conference
 Label=Publication in Conference Proceedings
 
 [EntryType3]
 UpperCamelCase=Proceedings
-UpperCamelCaseAlt=Conference
 Label=Conference or Workshop Proceedings
 
 [EntryType4]
@@ -29,18 +28,24 @@ UpperCamelCase=InBook
 Label=Part of a Book
 
 [EntryType8]
+UpperCamelCase=InCollection
+Label=Part of a Book with own Title
+
+[EntryType9]
 UpperCamelCase=PhDThesis
 Label=PhD Thesis
 
-[EntryType9]
+[EntryType10]
 UpperCamelCase=MastersThesis
 Label=Master's Thesis
 
-[EntryType10]
+[EntryType11]
 UpperCamelCase=Unpublished
 Label=Unpublish Material
 
-[EntryType11]
+[EntryType12]
 UpperCamelCase=Manual
 Label=Manual
 
+[EntryType13]
+UpperCamelCase=Booklet
