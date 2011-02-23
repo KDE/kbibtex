@@ -253,7 +253,7 @@ void KBibTeXMainWindow::openDocumentDialog()
     }
 
     // TODO application/x-research-info-systems application/x-endnote-refer
-    KUrl url = KFileDialog::getOpenUrl(startDir, QLatin1String("text/x-bibtex application/xml all/all"), this);
+    KUrl url = KFileDialog::getOpenUrl(startDir, QLatin1String("text/x-bibtex application/x-research-info-systems application/xml all/all"), this);
     if (!url.isEmpty()) {
         openDocument(url);
     }

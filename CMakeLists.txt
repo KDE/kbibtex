@@ -31,4 +31,4 @@ add_subdirectory( src )
 add_subdirectory( config )
 add_subdirectory( xslt )
 add_subdirectory( icons )
-
+add_subdirectory( mime )

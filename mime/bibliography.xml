@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+It comes with ABSOLUTELY NO WARRANTY, to the extent permitted by law. You may
+redistribute copies of update-mime-database under the terms of the GNU General
+Public License. For more information about these matters, see the file named
+COPYING.
+-->
+<!--
+Notes:
+- the mime types in this file are valid with the version 0.30 of the
+  shared-mime-info package.
+-->
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+    <mime-type type="application/x-research-info-system">
+        <sub-class-of type="text/plain"/>
+        <alias type="text/x-research-info-system"/>
+        <comment>RIS bibliography file</comment>
+        <acronym>RIS</acronym>
+        <expanded-acronym>Research Information Systems</expanded-acronym>
+        <glob pattern="*.ris"/>
+        <magic priority="90">
+            <match type="string" offset="0" value="TY  -"/>
+        </magic>
+    </mime-type>
+</mime-info>
