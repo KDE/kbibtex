@@ -48,6 +48,7 @@
 #include <fileexporterris.h>
 #include <fileimporterpdf.h>
 #include <fileexporterpdf.h>
+#include <fileexporterrtf.h>
 #include <fileexporterbibtex2html.h>
 #include <fileexporterxml.h>
 #include <fileexporterxslt.h>
@@ -124,6 +125,9 @@ public:
         } else if (ending == "pdf") {
             kDebug() << "Selecting FileExporterPDF" << endl;
             return new FileExporterPDF();
+        } else if (ending == "rtf") {
+            kDebug() << "Selecting FileExporterRTF" << endl;
+            return new FileExporterRTF();
         } else if (ending == "html" || ending == "html") {
             kDebug() << "Selecting FileExporterBibTeX2HTML" << endl;
             return new FileExporterBibTeX2HTML();
@@ -192,13 +196,16 @@ public:
             KMessageBox::error(p->widget(), i18n("<qt>Could not create backup copies of document<br/><b>%1</b>.</qt>", url.pathOrUrl()), i18n("Backup copies"));
     }
 
-    KUrl getSaveFilename() {
+    KUrl getSaveFilename(bool mustBeImportable = true) {
         QString startDir = QString();// QLatin1String(":save"); // FIXME: Does not work yet
-        QString supportedMimeTypes = QLatin1String("text/x-bibtex application/xml");
-        if (FileExporterToolchain::kpsewhich(QLatin1String("embedfile.sty")))
+        QString supportedMimeTypes = QLatin1String("text/x-bibtex application/xml application/x-research-info-systems");
+        if (!mustBeImportable && FileExporterToolchain::kpsewhich(QLatin1String("embedfile.sty")))
             supportedMimeTypes += QLatin1String(" application/pdf");
-        // TODO application/x-research-info-systems application/x-endnote-refer
-        supportedMimeTypes += QLatin1String(" text/html");
+        if (!mustBeImportable)
+            supportedMimeTypes += QLatin1String(" text/html");
+        if (!mustBeImportable && FileExporterToolchain::which(QLatin1String("latex2rtf")))
+            supportedMimeTypes += QLatin1String(" application/rtf");
+
 
         return KFileDialog::getSaveUrl(startDir, supportedMimeTypes, p->widget());
     }
@@ -463,7 +470,7 @@ bool KBibTeXPart::documentSaveAs()
 bool KBibTeXPart::documentSaveCopyAs()
 {
     d->isSaveAsOperation = true;
-    KUrl url = d->getSaveFilename();
+    KUrl url = d->getSaveFilename(false);
     if (!url.isValid() || !d->checkOverwrite(url, widget()))
         return false;
 
