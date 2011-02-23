@@ -63,6 +63,7 @@
 <xsl:template match="journal">
 <span style="font-style:italic;"><xsl:apply-templates /></span>
 <xsl:if test="string-length(../volume)>0">
+<xsl:text> </xsl:text>
 <xsl:value-of select="../volume"/>
 <xsl:if test="string-length(../number)>0">
 <xsl:text>(</xsl:text>
