@@ -41,9 +41,7 @@ public:
 
     BibTeXFieldsPrivate(BibTeXFields *parent)
             : p(parent) {
-        kDebug() << "looking for " << KStandardDirs::locate("appdata", "fieldtypes.rc");
         systemDefaultsConfig = new KConfig(KStandardDirs::locate("appdata", "fieldtypes.rc"), KConfig::SimpleConfig);
-        kDebug() << "looking for " << KStandardDirs::locateLocal("appdata", "fieldtypes.rc");
         userConfig = KSharedConfig::openConfig(KStandardDirs::locateLocal("appdata", "fieldtypes.rc"), KConfig::SimpleConfig);
     }
 

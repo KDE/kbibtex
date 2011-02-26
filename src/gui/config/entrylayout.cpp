@@ -40,9 +40,7 @@ public:
 
     EntryLayoutPrivate(EntryLayout *parent)
             : p(parent) {
-        kDebug() << "looking for " << KStandardDirs::locate("appdata", "entrylayout.rc");
         systemDefaultsConfig = new KConfig(KStandardDirs::locate("appdata", "entrylayout.rc"), KConfig::SimpleConfig);
-        kDebug() << "looking for " << KStandardDirs::locateLocal("appdata", "entrylayout.rc");
         userConfig = KSharedConfig::openConfig(KStandardDirs::locateLocal("appdata", "entrylayout.rc"), KConfig::SimpleConfig);
     }
 

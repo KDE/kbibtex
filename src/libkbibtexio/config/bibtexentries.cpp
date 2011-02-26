@@ -42,9 +42,7 @@ public:
 
     BibTeXEntriesPrivate(BibTeXEntries *parent)
             : p(parent) {
-        kDebug() << "looking for " << KStandardDirs::locate("appdata", "entrytypes.rc");
         systemDefaultsConfig = new KConfig(KStandardDirs::locate("appdata", "entrytypes.rc"), KConfig::SimpleConfig);
-        kDebug() << "looking for " << KStandardDirs::locateLocal("appdata", "entrytypes.rc");
         userConfig = KSharedConfig::openConfig(KStandardDirs::locateLocal("appdata", "entrytypes.rc"), KConfig::SimpleConfig);
     }
 
