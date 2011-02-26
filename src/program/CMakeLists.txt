@@ -2,6 +2,7 @@ project( kbibtexprogram )
 
 include_directories(
 	${CMAKE_CURRENT_SOURCE_DIR}
+	${CMAKE_CURRENT_SOURCE_DIR}/docklets
 	${CMAKE_CURRENT_SOURCE_DIR}/../gui
 	${CMAKE_CURRENT_SOURCE_DIR}/../gui/config
 	${CMAKE_CURRENT_SOURCE_DIR}/../gui/bibtex
@@ -20,12 +21,12 @@ set( kbibtex_SRCS
 	mainwindow.cpp
 	documentlist.cpp
 	mdiwidget.cpp
-	referencepreview.cpp
-	urlpreview.cpp
-	valuelist.cpp
-	searchform.cpp
-	searchresults.cpp
-	elementform.cpp
+	docklets/referencepreview.cpp
+	docklets/urlpreview.cpp
+	docklets/valuelist.cpp
+	docklets/searchform.cpp
+	docklets/searchresults.cpp
+	docklets/elementform.cpp
 	openfileinfo.cpp
 )
 
