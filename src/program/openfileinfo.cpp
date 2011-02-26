@@ -86,7 +86,8 @@ public:
             return part;
         } else if (part != NULL) {
             part->closeUrl(true);
-            delete part;
+            part->deleteLater();
+            part = NULL;
         }
 
         /// reset to invalid values in case something goes wrong
@@ -176,6 +177,11 @@ KUrl OpenFileInfo::url() const
 
 bool OpenFileInfo::close()
 {
+    if (d->part == NULL) {
+        /// if there is no part, closing always "succeeds"
+        return true;
+    }
+
     if (d->part->closeUrl(true)) {
         d->part->deleteLater();
         d->part = NULL;
