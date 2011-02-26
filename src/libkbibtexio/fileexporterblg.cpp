@@ -92,7 +92,7 @@ void FileExporterBLG::setLaTeXBibliographyStyle(const QString& bibStyle)
 
 bool FileExporterBLG::generateBLG(QStringList *errorLog)
 {
-    QStringList cmdLines = QString("pdflatex -halt-on-error bibtex-to-blg.tex|bibtex bibtex-to-blg").split('|');
+    QStringList cmdLines = QStringList() << QLatin1String("pdflatex -halt-on-error bibtex-to-blg.tex") << QLatin1String("bibtex bibtex-to-blg");
 
     if (writeLatexFile(m_laTeXFilename) && runProcesses(cmdLines, errorLog))
         return true;

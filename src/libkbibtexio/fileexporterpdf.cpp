@@ -45,8 +45,7 @@ FileExporterPDF::~FileExporterPDF()
 
 bool FileExporterPDF::save(QIODevice* iodevice, const File* bibtexfile, QStringList *errorLog)
 {
-    // m_mutex.lock(); // FIXME: required?
-    bool result = FALSE;
+    bool result = false;
     m_embeddedFileList.clear();
     if (m_embedFiles) {
         m_embeddedFileList.append(QString("%1|%2").arg("BibTeX source").arg(m_bibTeXFilename));
@@ -64,14 +63,12 @@ bool FileExporterPDF::save(QIODevice* iodevice, const File* bibtexfile, QStringL
     if (result)
         result = generatePDF(iodevice, errorLog);
 
-    // m_mutex.unlock(); // FIXME: required?
     return result;
 }
 
 bool FileExporterPDF::save(QIODevice* iodevice, const Element* element, QStringList *errorLog)
 {
-    // m_mutex.lock(); // FIXME: required?
-    bool result = FALSE;
+    bool result = false;
     m_embeddedFileList.clear();
     if (m_embedFiles)
         fillEmbeddedFileList(element);
@@ -87,7 +84,6 @@ bool FileExporterPDF::save(QIODevice* iodevice, const Element* element, QStringL
     if (result)
         result = generatePDF(iodevice, errorLog);
 
-    // m_mutex.unlock(); // FIXME: required?
     return result;
 }
 
@@ -108,7 +104,7 @@ void FileExporterPDF::setDocumentSearchPaths(const QStringList& searchPaths)
 
 bool FileExporterPDF::generatePDF(QIODevice* iodevice, QStringList *errorLog)
 {
-    QStringList cmdLines = QString("pdflatex -halt-on-error bibtex-to-pdf.tex|bibtex bibtex-to-pdf|pdflatex -halt-on-error bibtex-to-pdf.tex|pdflatex -halt-on-error bibtex-to-pdf.tex").split('|');
+    QStringList cmdLines = QStringList() << QLatin1String("pdflatex -halt-on-error bibtex-to-pdf.tex") << QLatin1String("bibtex bibtex-to-pdf") << QLatin1String("pdflatex -halt-on-error bibtex-to-pdf.tex") << QLatin1String("pdflatex -halt-on-error bibtex-to-pdf.tex");
 
     if (writeLatexFile(m_laTeXFilename) && runProcesses(cmdLines, errorLog) && writeFileToIODevice(m_outputFilename, iodevice))
         return true;

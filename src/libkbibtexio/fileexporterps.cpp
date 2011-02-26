@@ -40,8 +40,7 @@ FileExporterPS::~FileExporterPS()
 
 bool FileExporterPS::save(QIODevice* iodevice, const File* bibtexfile, QStringList *errorLog)
 {
-    // m_mutex.lock(); // FIXME: required?
-    bool result = FALSE;
+    bool result = false;
 
     QFile output(m_bibTeXFilename);
     if (output.open(QIODevice::WriteOnly)) {
@@ -54,14 +53,12 @@ bool FileExporterPS::save(QIODevice* iodevice, const File* bibtexfile, QStringLi
     if (result)
         result = generatePS(iodevice, errorLog);
 
-    // m_mutex.unlock(); // FIXME: required?
     return result;
 }
 
 bool FileExporterPS::save(QIODevice* iodevice, const Element* element, QStringList *errorLog)
 {
-    // m_mutex.lock(); // FIXME: required?
-    bool result = FALSE;
+    bool result = false;
 
     QFile output(m_bibTeXFilename);
     if (output.open(QIODevice::WriteOnly)) {
@@ -74,7 +71,6 @@ bool FileExporterPS::save(QIODevice* iodevice, const Element* element, QStringLi
     if (result)
         result = generatePS(iodevice, errorLog);
 
-    // m_mutex.unlock(); // FIXME: required?
     return result;
 }
 
@@ -90,7 +86,7 @@ void FileExporterPS::setLaTeXBibliographyStyle(const QString& bibStyle)
 
 bool FileExporterPS::generatePS(QIODevice* iodevice, QStringList *errorLog)
 {
-    QStringList cmdLines = QString("latex -halt-on-error bibtex-to-ps.tex|bibtex bibtex-to-ps|latex -halt-on-error bibtex-to-ps.tex|latex -halt-on-error bibtex-to-ps.tex|dvips -o bibtex-to-ps.ps bibtex-to-ps.dvi").split('|');
+    QStringList cmdLines = QStringList() << QLatin1String("latex -halt-on-error bibtex-to-ps.tex") << QLatin1String("bibtex bibtex-to-ps") << QLatin1String("latex -halt-on-error bibtex-to-ps.tex") << QLatin1String("latex -halt-on-error bibtex-to-ps.tex") << QLatin1String("dvips -o bibtex-to-ps.ps bibtex-to-ps.dvi");
 
     if (writeLatexFile(m_laTeXFilename) && runProcesses(cmdLines, errorLog) && writeFileToIODevice(m_outputFilename, iodevice))
         return TRUE;

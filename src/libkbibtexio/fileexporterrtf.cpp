@@ -77,7 +77,7 @@ bool FileExporterRTF::save(QIODevice* iodevice, const Element* element, QStringL
 
 bool FileExporterRTF::generateRTF(QIODevice* iodevice, QStringList *errorLog)
 {
-    QStringList cmdLines = QString("latex bibtex-to-rtf.tex|bibtex bibtex-to-rtf|latex bibtex-to-rtf.tex|latex2rtf bibtex-to-rtf.tex").split('|');
+    QStringList cmdLines = QStringList() << QLatin1String("latex -halt-on-error bibtex-to-rtf.tex") << QLatin1String("bibtex bibtex-to-rtf") << QLatin1String("latex -halt-on-error bibtex-to-rtf.tex") << QLatin1String("latex2rtf bibtex-to-rtf.tex");
 
     if (writeLatexFile(m_laTeXFilename) && runProcesses(cmdLines, errorLog) && writeFileToIODevice(m_outputFilename, iodevice))
         return TRUE;
