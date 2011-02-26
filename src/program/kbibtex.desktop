@@ -14,3 +14,4 @@ X-KDE-StartupNotify=true
 # TODO X-DBUS-StartupType=Multi
 # TODO X-DBUS-ServiceName=org.kde.kbibtex
 Categories=Qt;KDE;Office;Database;Science;Literature;
+MimeType=text/x-bibtex;application/x-research-info-systems;

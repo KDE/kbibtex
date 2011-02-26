@@ -23,7 +23,6 @@
 #include "kbibtexio_export.h"
 
 #include <QObject>
-#include <QMutex>
 
 class QIODevice;
 
@@ -84,9 +83,6 @@ public slots:
     virtual void cancel() {
         // nothing
     };
-
-protected:
-    QMutex m_mutex;
 };
 
 #endif // KBIBTEX_IO_FILEIMPORTER_H

@@ -41,18 +41,8 @@ public slots:
     void cancel();
 
 private:
-    typedef struct {
-        QString key;
-        QString value;
-    }
-    RISitem;
-    typedef QLinkedList<RISitem> RISitemList;
-
-    bool cancelFlag;
-    int m_refNr;
-
-    Element *nextElement(QTextStream &textStream);
-    RISitemList readElement(QTextStream &textStream);
+    class FileImporterRISPrivate;
+    FileImporterRISPrivate *d;
 };
 
 #endif // KBIBTEX_IO_FILEIMPORTERRIS_H
