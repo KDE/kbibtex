@@ -10,7 +10,7 @@ IF(SVNVERSION_EXECUTABLE)
 		COMMAND cmake -E echo "#define VERSION_H" >> "${CMAKE_BINARY_DIR}/version.h.tmp"
 		COMMAND cmake -E echo_append "const char *versionNumber = \"SVN r" >> "${CMAKE_BINARY_DIR}/version.h.tmp"
 		COMMAND svnversion -n ${CMAKE_CURRENT_SOURCE_DIR} >> "${CMAKE_BINARY_DIR}/version.h.tmp"
-		COMMAND cmake -E echo "\";" >>  "${CMAKE_BINARY_DIR}/version.h.tmp"
+		COMMAND cmake -E echo " (branch/0.3)\";" >>  "${CMAKE_BINARY_DIR}/version.h.tmp"
 		COMMAND cmake -E echo "#endif // VERSION_H" >>  "${CMAKE_BINARY_DIR}/version.h.tmp"
 		COMMAND cmake -E copy_if_different "${CMAKE_BINARY_DIR}/version.h.tmp" "${CMAKE_BINARY_DIR}/version.h"
 		COMMAND cmake -E remove "${CMAKE_BINARY_DIR}/version.h.tmp"
@@ -21,7 +21,7 @@ ELSE(SVNVERSION_EXECUTABLE)
 	ADD_CUSTOM_TARGET(svnversion ALL
 		cmake -E echo "#ifndef VERSION_H" > "${CMAKE_BINARY_DIR}/version.h.tmp"
 		COMMAND cmake -E echo "#define VERSION_H" >> "${CMAKE_BINARY_DIR}/version.h.tmp"
-		COMMAND cmake -E echo "const char *versionNumber = \"0.3\";" >> "${CMAKE_BINARY_DIR}/version.h.tmp"
+		COMMAND cmake -E echo "const char *versionNumber = \"0.3-beta1 (0.2.90)\";" >> "${CMAKE_BINARY_DIR}/version.h.tmp"
 		COMMAND cmake -E echo "#endif // VERSION_H" >>  "${CMAKE_BINARY_DIR}/version.h.tmp"
 		COMMAND cmake -E copy_if_different "${CMAKE_BINARY_DIR}/version.h.tmp" "${CMAKE_BINARY_DIR}/version.h"
 		COMMAND cmake -E remove "${CMAKE_BINARY_DIR}/version.h.tmp"
