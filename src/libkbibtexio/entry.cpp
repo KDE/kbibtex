@@ -61,6 +61,7 @@ const QLatin1String Entry::etInProceedings = QLatin1String("inproceedings");
 const QLatin1String Entry::etMisc = QLatin1String("misc");
 const QLatin1String Entry::etPhDThesis = QLatin1String("phdthesis");
 const QLatin1String Entry::etTechReport = QLatin1String("techreport");
+const QLatin1String Entry::etUnpublished = QLatin1String("unpublished");
 
 /**
  * Private class to store internal variables that should not be visible
