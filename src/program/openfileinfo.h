@@ -31,7 +31,7 @@
 
 namespace KParts
 {
-class ReadWritePart;
+class ReadOnlyPart;
 }
 
 class OpenFileInfoManager;
@@ -54,7 +54,7 @@ public:
 
     ~OpenFileInfo();
 
-    KParts::ReadWritePart* part(QWidget *parent, KService::Ptr servicePtr = KService::Ptr());
+    KParts::ReadOnlyPart* part(QWidget *parent, KService::Ptr servicePtr = KService::Ptr());
 
     QString shortCaption() const;
     QString fullCaption() const;

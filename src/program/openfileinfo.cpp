@@ -49,7 +49,7 @@ public:
 
     OpenFileInfo *p;
 
-    KParts::ReadWritePart* part;
+    KParts::ReadOnlyPart* part;
     KService::Ptr internalServicePtr;
     QWidget *internalWidgetParent;
     QDateTime lastAccessDateTime;
@@ -67,12 +67,14 @@ public:
 
     ~OpenFileInfoPrivate() {
         if (part != NULL) {
-            part->closeUrl(true);
+            KParts::ReadWritePart *rwp = dynamic_cast<KParts::ReadWritePart*>(part);
+            if (rwp != NULL)
+                rwp->closeUrl(true);
             delete part;
         }
     }
 
-    KParts::ReadWritePart* createPart(QWidget *newWidgetParent, KService::Ptr newServicePtr = KService::Ptr()) {
+    KParts::ReadOnlyPart* createPart(QWidget *newWidgetParent, KService::Ptr newServicePtr = KService::Ptr()) {
         if (!p->flags().testFlag(OpenFileInfo::Open)) {
             kWarning() << "Cannot create part for a file which is not open";
             return NULL;
@@ -85,7 +87,9 @@ public:
             Q_ASSERT(part != NULL);
             return part;
         } else if (part != NULL) {
-            part->closeUrl(true);
+            KParts::ReadWritePart *rwp = dynamic_cast<KParts::ReadWritePart*>(part);
+            if (rwp != NULL)
+                rwp->closeUrl(true);
             part->deleteLater();
             part = NULL;
         }
@@ -104,9 +108,14 @@ public:
             return NULL;
         }
 
-        kDebug() << "using service " << newServicePtr->name() << newServicePtr->genericName() << newServicePtr->keywords().join(",");
+        kDebug() << "using service " << newServicePtr->name() << "(name)  " << newServicePtr->library() << "(library)";
         part = newServicePtr->createInstance<KParts::ReadWritePart>(newWidgetParent, (QObject*)newWidgetParent);
         if (part == NULL) {
+            /// creating a read-write part failed, so maybe it is read-only (like Okular's PDF viewer)?
+            part = newServicePtr->createInstance<KParts::ReadOnlyPart>(newWidgetParent, (QObject*)newWidgetParent);
+        }
+        if (part == NULL) {
+            /// still cannot create part, must be error
             kError() << "Cannot find part for mimetype " << mimeType << endl;
             return NULL;
         }
@@ -182,7 +191,8 @@ bool OpenFileInfo::close()
         return true;
     }
 
-    if (d->part->closeUrl(true)) {
+    KParts::ReadWritePart *rwp = dynamic_cast<KParts::ReadWritePart*>(d->part);
+    if (rwp == NULL || rwp->closeUrl(true)) {
         d->part->deleteLater();
         d->part = NULL;
         d->internalWidgetParent = NULL;
@@ -212,7 +222,7 @@ QString OpenFileInfo::fullCaption() const
         return shortCaption();
 }
 
-KParts::ReadWritePart* OpenFileInfo::part(QWidget *parent, KService::Ptr servicePtr)
+KParts::ReadOnlyPart* OpenFileInfo::part(QWidget *parent, KService::Ptr servicePtr)
 {
     return d->createPart(parent, servicePtr);
 }
@@ -273,9 +283,11 @@ KService::List OpenFileInfo::listOfServices()
 
 KService::Ptr OpenFileInfo::defaultService()
 {
-    KService::Ptr result = KMimeTypeTrader::self()->preferredService(mimeType(), QLatin1String("KParts/ReadWritePart"));
+    const QString mt = mimeType();
+    kDebug() << "Looking for service for mimetype " << mt;
+    KService::Ptr result = KMimeTypeTrader::self()->preferredService(mt, QLatin1String("KParts/ReadWritePart"));
     if (result.isNull())
-        result = KMimeTypeTrader::self()->preferredService(mimeType(), QLatin1String("KParts/ReadOnlyPart"));
+        result = KMimeTypeTrader::self()->preferredService(mt, QLatin1String("KParts/ReadOnlyPart"));
     return result;
 }
 

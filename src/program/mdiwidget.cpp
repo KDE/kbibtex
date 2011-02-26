@@ -79,7 +79,7 @@ public:
     }
 
     void addToMapper(OpenFileInfo *openFileInfo) {
-        KParts::ReadWritePart *part = openFileInfo->part(p);
+        KParts::ReadOnlyPart *part = openFileInfo->part(p);
         signalMapperCompleted.setMapping(part, openFileInfo);
         connect(part, SIGNAL(completed()), &signalMapperCompleted, SLOT(map()));
     }
