@@ -74,6 +74,6 @@ const KComponentData &KBibTeXPartFactory::componentData()
 }
 
 
-K_EXPORT_COMPONENT_FACTORY(libkbibtexpart, KBibTeXPartFactory)
+K_EXPORT_COMPONENT_FACTORY(kbibtexpart, KBibTeXPartFactory)
 
 #include "partfactory.moc"
