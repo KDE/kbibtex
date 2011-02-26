@@ -17,7 +17,7 @@ set( kbibtexpart_SRCS
 	partfactory.cpp
 )
 
-kde4_add_plugin( kbibtexpart  WITH_PREFIX ${kbibtexpart_SRCS})
+kde4_add_plugin( kbibtexpart  ${kbibtexpart_SRCS})
 
 target_link_libraries( kbibtexpart
 	kbibtexio

@@ -1,7 +1,5 @@
 include( CheckIncludeFiles )
 
-# find_package( Automoc4 REQUIRED )
-find_package( KDE4 4.1.90 REQUIRED )
 include( KDE4Defaults )
 
 MARK_AS_ADVANCED(SVNVERSION_EXECUTABLE)
