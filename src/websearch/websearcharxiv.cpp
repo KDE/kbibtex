@@ -83,6 +83,7 @@ private:
 public:
     XSLTransform xslt;
     WebSearchQueryFormArXiv *form;
+    KIO::StoredTransferJob *job;
 
     WebSearchArXivPrivate(QWidget *widget, WebSearchArXiv *parent)
             : w(widget), p(parent),
@@ -137,29 +138,8 @@ public:
                 Learned Publishing, 20(1) (January 2007) 16-22
             */
             jourRef6("^([a-zA-Z. ]+),\\s+(\\d+)\\((\\d+)\\)\\s+(\\(([A-Za-z]+\\s+)?(\\d{4})\\))?\\s+(\\d+)(-(\\d+))?$", Qt::CaseInsensitive),
-            regExpPhD("Ph\\.?D\\.? Thesis", Qt::CaseInsensitive), regExpTechRep("Tech(\\.|nical) Rep(\\.|ort)", Qt::CaseInsensitive), xslt(KStandardDirs::locate("appdata", "arxiv2bibtex.xsl")), form(NULL) {
+            regExpPhD("Ph\\.?D\\.? Thesis", Qt::CaseInsensitive), regExpTechRep("Tech(\\.|nical) Rep(\\.|ort)", Qt::CaseInsensitive), xslt(KStandardDirs::locate("appdata", "arxiv2bibtex.xsl")), form(NULL), job(NULL) {
         // nothing
-    }
-
-    /**
-     * Split a string along spaces, but keep text in quotation marks together
-     */
-    QStringList splitRespectingQuotationMarks(const QString &text) {
-        int p1 = 0, p2, max = text.length();
-        QStringList result;
-
-        while (p1 < max) {
-            while (text[p1] == ' ') ++p1;
-            p2 = p1;
-            if (text[p2] == '"') {
-                ++p2;
-                while (p2 < max && text[p2] != '"')  ++p2;
-            } else
-                while (p2 < max && text[p2] != ' ') ++p2;
-            result << text.mid(p1, p2 - p1 + 1);
-            p1 = p2 + 1;
-        }
-        return result;
     }
 
     KUrl buildQueryUrl() {
@@ -169,9 +149,9 @@ public:
         QStringList queryFragments;
 
         // FIXME: Is there a need for percent encoding?
-        queryFragments.append(splitRespectingQuotationMarks(form->lineEditFreeText->text()));
+        queryFragments.append(p->splitRespectingQuotationMarks(form->lineEditFreeText->text()));
 
-        url.append("search_query=all:" + queryFragments.join("+AND+all:") + "");
+        url.append("search_query=all:\"" + queryFragments.join("\"+AND+all:\"") + "\"");
 
         /// set number of expected results
         url.append(QString("&start=0&max_results=%1").arg(form->numResultsField->value()));
@@ -186,9 +166,9 @@ public:
         QStringList queryFragments;
         for (QMap<QString, QString>::ConstIterator it = query.constBegin(); it != query.constEnd(); ++it) {
             // FIXME: Is there a need for percent encoding?
-            queryFragments.append(splitRespectingQuotationMarks(it.value()));
+            queryFragments.append(p->splitRespectingQuotationMarks(it.value()));
         }
-        url.append("search_query=all:" + queryFragments.join("+AND+all:") + "");
+        url.append("search_query=all:\"" + queryFragments.join("\"+AND+all:\"") + "\"");
 
         /// set number of expected results
         url.append(QString("&start=0&max_results=%1").arg(numResults));
@@ -314,14 +294,14 @@ WebSearchArXiv::WebSearchArXiv(QWidget *parent)
 
 void WebSearchArXiv::startSearch()
 {
-    KIO::StoredTransferJob *job = KIO::storedGet(d->buildQueryUrl());
-    connect(job, SIGNAL(result(KJob *)), this, SLOT(jobDone(KJob*)));
+    d->job = KIO::storedGet(d->buildQueryUrl());
+    connect(d->job, SIGNAL(result(KJob *)), this, SLOT(jobDone(KJob*)));
 }
 
 void WebSearchArXiv::startSearch(const QMap<QString, QString> &query, int numResults)
 {
-    KIO::StoredTransferJob *job = KIO::storedGet(d->buildQueryUrl(query, numResults));
-    connect(job, SIGNAL(result(KJob *)), this, SLOT(jobDone(KJob*)));
+    d->job = KIO::storedGet(d->buildQueryUrl(query, numResults));
+    connect(d->job, SIGNAL(result(KJob *)), this, SLOT(jobDone(KJob*)));
 }
 
 QString WebSearchArXiv::label() const
@@ -346,7 +326,8 @@ KUrl WebSearchArXiv::homepage() const
 
 void WebSearchArXiv::cancel()
 {
-// TODO
+    if (d->job != NULL)
+        d->job->kill(KJob::EmitResult);
 }
 
 
@@ -358,21 +339,23 @@ void WebSearchArXiv::jobDone(KJob *j)
         QString result = ts.readAll();
         result = result.replace("xmlns=\"http://www.w3.org/2005/Atom\"", ""); // FIXME fix arxiv2bibtex.xsl to handle namespace
 
+        /// use XSL transformation to get BibTeX document from XML result
         QString bibTeXcode = d->xslt.transform(result);
 
         FileImporterBibTeX importer;
         File *bibtexFile = importer.fromString(bibTeXcode);
 
         if (bibtexFile != NULL) {
+            bool hasEntry = false;
             for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
                 Entry *entry = dynamic_cast<Entry*>(*it);
                 if (entry != NULL) {
                     d->sanitize(entry);
+                    hasEntry = true;
                     emit foundEntry(entry);
                 }
-
             }
-            emit stoppedSearch(bibtexFile->isEmpty() ? resultUnspecifiedError : resultNoError);
+            emit stoppedSearch(hasEntry ? resultNoError : resultUnspecifiedError);
             delete bibtexFile;
         } else
             emit stoppedSearch(resultUnspecifiedError);
@@ -380,4 +363,6 @@ void WebSearchArXiv::jobDone(KJob *j)
         kWarning() << "Search using " << label() << "failed: " << j->errorString();
         emit stoppedSearch(resultUnspecifiedError);
     }
+
+    d->job = NULL;
 }
