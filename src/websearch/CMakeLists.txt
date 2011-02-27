@@ -10,7 +10,7 @@ set( websearch_LIB_SRCS
 
 add_definitions( -DMAKE_WEBSEARCH_LIB )
 
-# debug area for KBibTeX's IO library
+# debug area for KBibTeX's web search library
 add_definitions(-DKDE_DEFAULT_DEBUG_AREA=101015)
 
 include_directories(
