@@ -283,18 +283,17 @@ void ReferencePreview::renderHTML()
         reAnchor.setMinimal(true);
         text.replace(reAnchor, "");
 
-        /// beautify text
-        text.replace("``", "&ldquo;");
-        text.replace("''", "&rdquo;");
-
         text.prepend("<html><body style=\"font-family: '" + font().family() + "'; font-size: " + QString::number(font().pointSize()) + "pt;\">");
         text.append("</body></html>");
     } else {
         /// XML/XSLT
-        text.replace("<?xml version=\"1.0\" encoding=\"UTF-8\"?>", "");
         text.prepend("<html><body style=\"font-family: '" + font().family() + "'; font-size: " + QString::number(font().pointSize()) + "pt;\">");
         text.append("</body></html>");
     }
+
+    /// beautify text
+    text.replace("``", "&ldquo;");
+    text.replace("''", "&rdquo;");
 
     setHtml(text, d->baseUrl);
 
