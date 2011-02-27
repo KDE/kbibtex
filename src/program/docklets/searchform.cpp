@@ -41,6 +41,7 @@
 #include <websearchgeneral.h>
 #include <websearchbibsonomy.h>
 #include <websearchgooglescholar.h>
+#include <websearchpubmed.h>
 #include <websearcharxiv.h>
 #include <fileexporterbibtex.h>
 #include <file.h>
@@ -166,6 +167,7 @@ public:
         addEngine(new WebSearchBibsonomy(p));
         addEngine(new WebSearchGoogleScholar(p));
         addEngine(new WebSearchArXiv(p));
+        addEngine(new WebSearchPubMed(p));
 
         p->itemCheckChanged();
         updateGUI();
