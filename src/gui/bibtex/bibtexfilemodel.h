@@ -82,7 +82,7 @@ public:
     virtual ~BibTeXFileModel();
 
     File *bibTeXFile();
-    void setBibTeXFile(File *bibtexFile);
+    virtual void setBibTeXFile(File *bibtexFile);
 
     //virtual QModelIndex index(int row, int column, const QModelIndex & parent = QModelIndex()) const;
     virtual QModelIndex parent(const QModelIndex & index) const;
@@ -91,7 +91,7 @@ public:
     virtual int columnCount(const QModelIndex & parent = QModelIndex()) const;
     virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
-    Qt::ItemFlags flags(const QModelIndex &index) const;
+    virtual Qt::ItemFlags flags(const QModelIndex &index) const;
 
     virtual bool removeRow(int row, const QModelIndex & parent = QModelIndex());
     bool insertRow(Element *element, int row, const QModelIndex & parent = QModelIndex());

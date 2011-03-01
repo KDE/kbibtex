@@ -93,7 +93,7 @@ void BibTeXFileView::setModel(QAbstractItemModel * model)
     m_sortFilterProxyModel = NULL;
     m_bibTeXFileModel = dynamic_cast<BibTeXFileModel*>(model);
     if (m_bibTeXFileModel == NULL) {
-        m_sortFilterProxyModel = dynamic_cast<SortFilterBibTeXFileModel*>(model);
+        m_sortFilterProxyModel = dynamic_cast<QSortFilterProxyModel*>(model);
         Q_ASSERT(m_sortFilterProxyModel != NULL);
         m_bibTeXFileModel = dynamic_cast<BibTeXFileModel*>(m_sortFilterProxyModel->sourceModel());
     }

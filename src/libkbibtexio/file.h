@@ -47,6 +47,7 @@ public:
     const static QString Url, Encoding;
 
     File();
+    File(const File &other);
     virtual ~File();
 
     /**

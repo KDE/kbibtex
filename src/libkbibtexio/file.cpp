@@ -55,6 +55,12 @@ File::File()
     // nothing
 }
 
+File::File(const File &other)
+        : QList<Element*>(other), d(new FilePrivate(this))
+{
+    // nothing
+}
+
 File::~File()
 {
     // nothing
