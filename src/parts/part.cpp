@@ -57,6 +57,7 @@
 #include <preamble.h>
 #include <comment.h>
 #include <filterbar.h>
+#include <findduplicatesui.h>
 
 #include <valuelistmodel.h>
 #include <clipboard.h>
@@ -279,8 +280,7 @@ public:
         if (!info.exists())
             return true;
 
-        return KMessageBox::Cancel != KMessageBox::warningContinueCancel(parent,     i18n("A file named \"%1\" already exists. Are you sure you want to overwrite it?",  info.fileName()),
-                i18n("Overwrite File?"), KStandardGuiItem::overwrite(),    KStandardGuiItem::cancel(), QString(), KMessageBox::Notify | KMessageBox::Dangerous);
+        return KMessageBox::Cancel != KMessageBox::warningContinueCancel(parent, i18n("A file named \"%1\" already exists. Are you sure you want to overwrite it?",  info.fileName()), i18n("Overwrite File?"), KStandardGuiItem::overwrite(), KStandardGuiItem::cancel(), QString(), KMessageBox::Notify | KMessageBox::Dangerous);
     }
 
     int updateViewDocumentMenu() {
@@ -426,6 +426,8 @@ void KBibTeXPart::setupActions(bool /*browserViewWanted FIXME*/)
     fitActionSettings();
 
     setXMLFile(RCFileName);
+
+    new FindDuplicatesUI(this, d->editor);
 }
 
 bool KBibTeXPart::saveFile()

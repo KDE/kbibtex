@@ -1,0 +1,14 @@
+<!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
+<kpartgui name="kbibtexpart" version="1">
+<MenuBar>
+  <Menu name="edit">
+    <Separator/>
+    <Action name="findduplicates" />
+  </Menu>
+</MenuBar>
+
+<ToolBar name="mainToolBar">
+  <Separator/>
+  <Action name="findduplicates" />
+</ToolBar>
+</kpartgui>
