@@ -615,7 +615,7 @@ void WebSearchGoogleScholar::doneFetchingBibTeX(KJob *kJob)
 
     Entry *entry = NULL;
     if (bibtexFile != NULL) {
-        for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
+        for (File::ConstIterator it = bibtexFile->constBegin(); entry == NULL && it != bibtexFile->constEnd(); ++it) {
             entry = dynamic_cast<Entry*>(*it);
             if (entry != NULL)
                 emit foundEntry(entry);

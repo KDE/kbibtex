@@ -130,6 +130,7 @@ QString WebSearchPubMed::favIconUrl() const
 
 WebSearchQueryFormAbstract* WebSearchPubMed::customWidget(QWidget *parent)
 {
+    Q_UNUSED(parent)
     // TODO: No customized search widget
     // return (d->form = new WebSearchArXiv::WebSearchQueryFormArXiv(parent));
     return NULL;
