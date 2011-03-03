@@ -18,53 +18,26 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#ifndef KBIBTEX_WEBSEARCH_IEEEXPLORE_H
-#define KBIBTEX_WEBSEARCH_IEEEXPLORE_H
+#ifndef KBIBTEX_WEBSEARCH_COOKIEMANAGER_H
+#define KBIBTEX_WEBSEARCH_COOKIEMANAGER_H
 
-#include "websearchabstract.h"
-
-class KJob;
-namespace KIO
+class CookieManager
 {
-class Job;
-}
-
-/**
- * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
- */
-class KBIBTEXIO_EXPORT WebSearchIEEEXplore : public WebSearchAbstract
-{
-    Q_OBJECT
-
 public:
-    WebSearchIEEEXplore(QWidget *parent);
+    static CookieManager *singleton();
 
-    virtual void startSearch();
-    virtual void startSearch(const QMap<QString, QString> &query, int numResults);
-    virtual QString label() const;
-    virtual WebSearchQueryFormAbstract* customWidget(QWidget *parent);
-    virtual KUrl homepage() const;
-
-public slots:
-    void cancel();
+    void disableCookieRestrictions();
+    void enableCookieRestrictions();
+    bool whitelistUrl(const QString &url);
 
 protected:
-    virtual QString favIconUrl() const;
-    void doStopSearch(int e);
-
-private slots:
-    void doneFetchingStartPage(KJob *);
-    void doneFetchingSearchResults(KJob *);
-    void doneFetchingAbstract(KJob *);
-    void doneFetchingBibliography(KJob *);
-    void permanentRedirection(KIO::Job *, const KUrl &, const KUrl &);
-    void redirection(KIO::Job *, const KUrl &);
+    CookieManager();
 
 private:
-    class WebSearchQueryFormIEEEXplore;
-    WebSearchQueryFormIEEEXplore *form;
-    class WebSearchIEEEXplorePrivate;
-    WebSearchIEEEXplorePrivate *d;
+    class CookieManagerPrivate;
+    CookieManagerPrivate *d;
+
+    static CookieManager *instance;
 };
 
-#endif // KBIBTEX_WEBSEARCH_IEEEXPLORE_H
+#endif // KBIBTEX_WEBSEARCH_COOKIEMANAGER_H

@@ -37,7 +37,7 @@
 
 #include <fileimporterbibtex.h>
 #include "websearchgooglescholar.h"
-
+#include "cookiemanager.h"
 
 FileImporterBibTeX importer;
 
@@ -164,83 +164,15 @@ public:
     QString queryPageUrl;
     bool goAdvanced;
     WebSearchQueryFormGoogleScholar *form;
+    CookieManager *cookieManager;
 
     WebSearchGoogleScholarPrivate(QWidget *widget, WebSearchGoogleScholar *parent)
-            : p(parent), w(widget), goAdvanced(false), form(NULL) {
+            : p(parent), w(widget), goAdvanced(false), form(NULL), cookieManager(CookieManager::singleton()) {
         startPageUrl = QLatin1String("http://scholar.google.com/?hl=en");
         advancedSearchPageUrl = QLatin1String("http://%1/advanced_scholar_search?hl=en");
         configPageUrl = QLatin1String("http://%1/scholar_preferences?");
         setConfigPageUrl = QLatin1String("http://%1/scholar_setprefs?");
         queryPageUrl = QLatin1String("http://%1/scholar?");
-    }
-
-    bool cookiesEnabled() {
-        QDBusInterface kded("org.kde.kded", "/kded", "org.kde.kded");
-        QDBusReply<bool> reply = kded.call("loadModule", QString("kcookiejar"));
-
-        KConfig cfg("kcookiejarrc");
-        KConfigGroup group = cfg.group("Cookie Policy");
-        QString answer = group.readEntry("Cookies", "false");
-        return answer.toLower() == "true";
-    }
-
-    void setCookiesEnabled(bool enabled) {
-        QDBusInterface kded("org.kde.kded", "/kded", "org.kde.kded");
-        QDBusReply<bool> reply = kded.call("loadModule", QString("kcookiejar"));
-
-        KConfig cfg("kcookiejarrc");
-        KConfigGroup group = cfg.group("Cookie Policy");
-        group.writeEntry("Cookies", enabled ? "true" : "false");
-
-        if (enabled) {
-            QDBusInterface kcookiejar("org.kde.kded", "/modules/kcookiejar", "org.kde.KCookieServer");
-            kcookiejar.call("reloadPolicy");
-        } else {
-            QDBusInterface kded("org.kde.kded", "/modules/kcookiejar", "org.kde.KCookieServer", QDBusConnection::sessionBus());
-            kded.call("shutdown");
-        }
-    }
-
-    void changeCookieSettings(const QString &url) {
-        if (originalCookiesSettings.contains(url))
-            return;
-
-        bool success = false;
-        QDBusInterface kcookiejar("org.kde.kded", "/modules/kcookiejar", "org.kde.KCookieServer");
-        QDBusReply<QString> replyGetDomainAdvice = kcookiejar.call("getDomainAdvice", url);
-        if (replyGetDomainAdvice.isValid()) {
-            originalCookiesSettings.insert(url, replyGetDomainAdvice.value());
-            QDBusReply<bool> replySetDomainAdvice = kcookiejar.call("setDomainAdvice", url, "accept");
-            success = replySetDomainAdvice.isValid() && replySetDomainAdvice.value();
-            if (success) {
-                QDBusReply<void> reply = kcookiejar.call("reloadPolicy");
-                success = reply.isValid();
-            }
-        }
-
-        if (!success) {
-            restoreOldCookieSettings();
-            p->doStopSearch(resultUnspecifiedError);
-            KMessageBox::error(w, i18n("Could not change cookie policy for url \"%1\".\n\nIt is necessary that cookies are accepted from this source.", url));
-            return;
-        }
-    }
-
-    void initializeCookieSettings() {
-        originalCookiesEnabled = cookiesEnabled();
-        setCookiesEnabled(true);
-        originalCookiesSettings.clear();
-        changeCookieSettings(startPageUrl);
-    }
-
-    void restoreOldCookieSettings() {
-        QDBusInterface kcookiejar("org.kde.kded", "/modules/kcookiejar", "org.kde.KCookieServer");
-        for (QMap<QString, QString>::ConstIterator it = originalCookiesSettings.constBegin(); it != originalCookiesSettings.constEnd(); ++it)
-            QDBusReply<bool> replySetDomainAdvice = kcookiejar.call("setDomainAdvice", it.key(), it.value());
-
-        setCookiesEnabled(originalCookiesEnabled);
-        kcookiejar.call("reloadPolicy");
-        originalCookiesSettings.clear();
     }
 
     QMap<QString, QString> formParameters(const QByteArray &byteArray) {
@@ -344,7 +276,7 @@ public:
         hasBeenCancelled = false;
         currentJob = NULL;
 
-        initializeCookieSettings();
+        cookieManager->disableCookieRestrictions();
 
         KIO::StoredTransferJob *job = KIO::storedGet(startPageUrl, KIO::Reload);
         job->addMetaData("cookies", "auto");
@@ -389,13 +321,13 @@ void WebSearchGoogleScholar::doneFetchingStartPage(KJob *kJob)
     d->currentJob = NULL;
     if (d->hasBeenCancelled) {
         kWarning() << "Searching " << label() << " got cancelled";
-        d->restoreOldCookieSettings();
+        d->cookieManager->enableCookieRestrictions();
         emit stoppedSearch(resultCancelled);
         return;
     } else if (kJob->error() != KJob::NoError) {
         kWarning() << "Searching " << label() << " failed with error message: " << kJob->errorString();
         KMessageBox::error(d->w, i18n("Searching \"%1\" failed with error message:\n\n%2", label(), kJob->errorString()));
-        d->restoreOldCookieSettings();
+        d->cookieManager->enableCookieRestrictions();
         emit stoppedSearch(resultUnspecifiedError);
         return;
     }
@@ -423,12 +355,12 @@ void WebSearchGoogleScholar::doneFetchingConfigPage(KJob *kJob)
     d->currentJob = NULL;
     if (d->hasBeenCancelled) {
         kWarning() << "Searching " << label() << " got cancelled";
-        d->restoreOldCookieSettings();
+        d->cookieManager->enableCookieRestrictions();
         emit stoppedSearch(resultCancelled);
         return;
     } else if (kJob->error() != KJob::NoError) {
         kWarning() << "Searching " << label() << " failed with error message: " << kJob->errorString();
-        d->restoreOldCookieSettings();
+        d->cookieManager->enableCookieRestrictions();
         KMessageBox::sorry(d->w, i18n("Searching \"%1\" failed with error message:\n\n%2", label(), kJob->errorString()));
         emit stoppedSearch(resultUnspecifiedError);
         return;
@@ -458,12 +390,12 @@ void WebSearchGoogleScholar::doneFetchingAdvSearchPage(KJob *kJob)
     d->currentJob = NULL;
     if (d->hasBeenCancelled) {
         kWarning() << "Searching " << label() << " got cancelled";
-        d->restoreOldCookieSettings();
+        d->cookieManager->enableCookieRestrictions();
         emit stoppedSearch(resultCancelled);
         return;
     } else if (kJob->error() != KJob::NoError) {
         kWarning() << "Searching " << label() << " failed with error message: " << kJob->errorString();
-        d->restoreOldCookieSettings();
+        d->cookieManager->enableCookieRestrictions();
         KMessageBox::sorry(d->w, i18n("Searching \"%1\" failed with error message:\n\n%2", label(), kJob->errorString()));
         emit stoppedSearch(resultUnspecifiedError);
         return;
@@ -500,12 +432,12 @@ void WebSearchGoogleScholar::doneFetchingSetConfigPage(KJob *kJob)
     d->currentJob = NULL;
     if (d->hasBeenCancelled) {
         kWarning() << "Searching " << label() << " got cancelled";
-        d->restoreOldCookieSettings();
+        d->cookieManager->enableCookieRestrictions();
         emit stoppedSearch(resultCancelled);
         return;
     } else  if (kJob->error() != KJob::NoError) {
         kWarning() << "Searching " << label() << " failed with error message: " << kJob->errorString();
-        d->restoreOldCookieSettings();
+        d->cookieManager->enableCookieRestrictions();
         KMessageBox::sorry(d->w, i18n("Searching \"%1\" failed with error message:\n\n%2", label(), kJob->errorString()));
         emit stoppedSearch(resultUnspecifiedError);
         return;
@@ -542,12 +474,12 @@ void WebSearchGoogleScholar::doneFetchingQueryPage(KJob *kJob)
     d->currentJob = NULL;
     if (d->hasBeenCancelled) {
         kWarning() << "Searching " << label() << " got cancelled";
-        d->restoreOldCookieSettings();
+        d->cookieManager->enableCookieRestrictions();
         emit stoppedSearch(resultCancelled);
         return;
     } else if (kJob->error() != KJob::NoError) {
         kWarning() << "Searching " << label() << " failed with error message: " << kJob->errorString();
-        d->restoreOldCookieSettings();
+        d->cookieManager->enableCookieRestrictions();
         KMessageBox::sorry(d->w, i18n("Searching \"%1\" failed with error message:\n\n%2", label(), kJob->errorString()));
         emit stoppedSearch(resultUnspecifiedError);
         return;
@@ -582,7 +514,7 @@ void WebSearchGoogleScholar::doneFetchingQueryPage(KJob *kJob)
         if (!domainList.contains(ccSpecificDomain))
             domainList << ccSpecificDomain;
         KMessageBox::information(d->w, i18n("<qt><p>No hits were found in Google Scholar.</p><p>One possible reason is that cookies are disabled for the following domains:</p><ul><li>%1</li></ul><p>In Konqueror's cookie settings, these domains can be allowed to set cookies in your system.</p></qt>", domainList.join("</li><li>")), label());
-        d->restoreOldCookieSettings();
+        d->cookieManager->enableCookieRestrictions();
         emit stoppedSearch(resultUnspecifiedError);
     }
 }
@@ -592,12 +524,12 @@ void WebSearchGoogleScholar::doneFetchingBibTeX(KJob *kJob)
     d->currentJob = NULL;
     if (d->hasBeenCancelled) {
         kWarning() << "Searching " << label() << " got cancelled";
-        d->restoreOldCookieSettings();
+        d->cookieManager->enableCookieRestrictions();
         emit stoppedSearch(resultCancelled);
         return;
     } else if (kJob->error() != KJob::NoError) {
         kWarning() << "Searching " << label() << " failed with error message: " << kJob->errorString();
-        d->restoreOldCookieSettings();
+        d->cookieManager->enableCookieRestrictions();
         KMessageBox::sorry(d->w, i18n("Searching \"%1\" failed with error message:\n\n%2", label(), kJob->errorString()));
         emit stoppedSearch(resultUnspecifiedError);
         return;
@@ -625,7 +557,7 @@ void WebSearchGoogleScholar::doneFetchingBibTeX(KJob *kJob)
 
     if (entry == NULL) {
         kWarning() << "Searching " << label() << " resulted in invalid BibTeX data: " << QString(transferJob->data());
-        d->restoreOldCookieSettings();
+        d->cookieManager->enableCookieRestrictions();
         emit stoppedSearch(resultUnspecifiedError);
         return;
     }
@@ -640,7 +572,7 @@ void WebSearchGoogleScholar::doneFetchingBibTeX(KJob *kJob)
         connect(newJob, SIGNAL(permanentRedirection(KIO::Job*, KUrl, KUrl)), this, SLOT(permanentRedirection(KIO::Job*, KUrl, KUrl)));
         d->currentJob = newJob;
     } else {
-        d->restoreOldCookieSettings();
+        d->cookieManager->enableCookieRestrictions();
         emit stoppedSearch(resultNoError);
     }
 }
@@ -648,13 +580,13 @@ void WebSearchGoogleScholar::doneFetchingBibTeX(KJob *kJob)
 void WebSearchGoogleScholar::permanentRedirection(KIO::Job *, const KUrl &, const KUrl &u)
 {
     QString url = "http://" + u.host();
-    d->changeCookieSettings(url);
+    d->cookieManager->whitelistUrl(url);
 }
 
 void WebSearchGoogleScholar::redirection(KIO::Job *, const KUrl &u)
 {
     QString url = "http://" + u.host();
-    d->changeCookieSettings(url);
+    d->cookieManager->whitelistUrl(url);
 }
 
 QString WebSearchGoogleScholar::label() const

@@ -8,6 +8,7 @@ set( websearch_LIB_SRCS
 	websearchieeexplore.cpp
 	websearchpubmed.cpp
 	websearchgeneral.cpp
+	cookiemanager.cpp
 )
 
 add_definitions( -DMAKE_WEBSEARCH_LIB )
