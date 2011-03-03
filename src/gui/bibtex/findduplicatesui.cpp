@@ -177,7 +177,11 @@ public:
                 for (;index >= 0; --index)
                     if (alternativesList[index].fieldName == fieldName)
                         break;
+                /// assume that the data is consistent and the field name will be found
+                Q_ASSERT(index >= 0);
+
                 /// second, return number of alternatives for list of alternatives
+                /// plus one for an "else" option
                 return index < 0 ? 0 : alternativesList[index].alternativesCount + 1;
             }
         }
@@ -227,18 +231,21 @@ public:
                 switch (role) {
                 case Qt::DisplayRole:
                     if (index.row() < alternativesList[altIndex].alternativesCount)
+                        /// textual representation of the alternative's value
                         return PlainTextValue::text(alternativesList[altIndex].alternatives[index.row()]);
                     else
+                        /// add an "else" option
                         return i18n("None of the above");
                 case Qt::FontRole:
+                    /// for the "else" option, make font italic
                     if (index.row() >= alternativesList[altIndex].alternativesCount) {
                         QFont f = p->font();
                         f.setItalic(true);
                         return f;
                     }
-                case RadioSelectionRole: {
+                case RadioSelectionRole:
+                    /// return selection status (true or false) for this alternative
                     return QVariant::fromValue(alternativesList[altIndex].selectedAlternative == index.row());
-                }
                 }
             }
         }
@@ -247,16 +254,23 @@ public:
     }
 
     bool setData(const QModelIndex & index, const QVariant & value, int role = RadioSelectionRole) {
-        if (index.parent().parent() == QModelIndex() && role == RadioSelectionRole && value.canConvert<bool>()) {
+        if (index.parent().parent() == QModelIndex() && role == RadioSelectionRole && value.canConvert<bool>() && value.toBool() == true) {
+            /// start with determining which list of alternatives actually to use
             QString fieldName = index.parent().data(FieldNameRole).toString();
             if (!fieldName.isEmpty()) {
                 int altIndex = alternativesListCount - 1;
                 for (;altIndex >= 0; --altIndex)
                     if (alternativesList[altIndex].fieldName == fieldName)
                         break;
+                /// assume that the data is consistent and the field name will be found
+                Q_ASSERT(altIndex >= 0);
+
+                /// store which alternative was selected
                 alternativesList[altIndex].selectedAlternative = index.row();
 
+                /// update view on neighbouring alternatives
                 emit dataChanged(index.sibling(0, 0), index.sibling(rowCount(index.parent()), 0));
+
                 return true;
             }
         }
@@ -282,17 +296,21 @@ public:
 
     void paint(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const {
         if (index.parent() != QModelIndex()) {
+            /// determine size and spacing of radio buttons in current style
             int radioButtonWidth = QApplication::style()->pixelMetric(QStyle::PM_ExclusiveIndicatorWidth, &option);
             int spacing = QApplication::style()->pixelMetric(QStyle::PM_RadioButtonLabelSpacing, &option);
 
+            /// draw default appearance (text, highlighting) shifted to the left
             QStyleOptionViewItem myOption = option;
             int left = myOption.rect.left();
             myOption.rect.setLeft(left + spacing + radioButtonWidth);
             QStyledItemDelegate::paint(painter, myOption, index);
 
+            /// draw radio button in the open space
             myOption.rect.setLeft(left);
             myOption.rect.setWidth(radioButtonWidth);
             if (index.data(RadioSelectionRole).canConvert<bool>()) {
+                /// change radio button's visual appearance if selected or not
                 bool radioButtonSelected = index.data(RadioSelectionRole).value<bool>();
                 myOption.state |= radioButtonSelected ? QStyle::State_On : QStyle::State_Off;
             }
@@ -304,7 +322,9 @@ public:
     QSize sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index) const {
         QSize s = QStyledItemDelegate::sizeHint(option, index);
         if (index.parent() != QModelIndex()) {
+            /// determine size of radio buttons in current style
             int radioButtonHeight = QApplication::style()->pixelMetric(QStyle::PM_ExclusiveIndicatorHeight, &option);
+            /// ensure that line is tall enough to draw radio button
             s.setHeight(qMax(s.height(), radioButtonHeight));
         }
         return s;
@@ -324,6 +344,7 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event) {
         QModelIndex index = indexAt(event->pos());
         if (index != QModelIndex() && index.parent() != QModelIndex()) {
+            /// clicking on an alternative's item in tree view should select alternative
             model()->setData(index, QVariant::fromValue(true), RadioSelectionRole);
             event->accept();
         }
@@ -332,6 +353,7 @@ protected:
     void keyReleaseEvent(QKeyEvent *event) {
         QModelIndex index = currentIndex();
         if (index != QModelIndex() && index.parent() != QModelIndex() && event->key() == Qt::Key_Space) {
+            /// pressing space on an alternative's item in tree view should select alternative
             model()->setData(index, QVariant::fromValue(true), RadioSelectionRole);
             event->accept();
         }
@@ -406,7 +428,6 @@ public:
         bool ok;
         int checkState = value.toInt(&ok);
         if (role == Qt::CheckStateRole && index.column() == 1 && ok) {
-            kDebug() << "checkState=" << checkState;
             checkStatePerRow[index.row()] = checkState;
             return true;
         } else
