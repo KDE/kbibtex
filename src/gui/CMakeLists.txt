@@ -51,4 +51,4 @@ target_link_libraries( kbibtexgui
 
 install(TARGETS kbibtexgui DESTINATION ${LIB_INSTALL_DIR})
 
-install( FILES findduplicatesui.rc  DESTINATION ${DATA_INSTALL_DIR}/kbibtex )
+install( FILES bibtex/findduplicatesui.rc  DESTINATION ${DATA_INSTALL_DIR}/kbibtex )
