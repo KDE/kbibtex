@@ -24,6 +24,7 @@
 #include "kbibtexio_export.h"
 
 #include <QObject>
+#include <QTreeView>
 
 namespace KParts
 {
@@ -32,6 +33,25 @@ class Part;
 class KXMLGUIClient;
 
 class BibTeXEditor;
+
+
+/*
+class RadioButtonTreeView :public QTreeView{
+    Q_OBJECT
+
+public:
+    RadioButtonTreeView(QWidget *parent)
+        :QTreeView(parent){
+        connect(this,SIGNAL(clicked(QModelIndex)),this,SLOT(indexActivated(QModelIndex)));
+     }
+
+private slots:
+    void indexActivated(const QModelIndex & index){
+        model()->setData(index,QVariant::fromValue(true), Qt::UserRole + 102);
+    }
+};
+*/
+
 
 class KBIBTEXIO_EXPORT FindDuplicatesUI : public QObject
 {
