@@ -139,7 +139,7 @@ Element *FileImporterBibTeX::nextElement()
             return NULL;
         }
     } else if (token == tUnknown) {
-        kDebug() << "Unknown token near line " << m_lineNo << ", treating as comment";
+        kDebug() << "Unknown token \"" << m_currentChar << "(" << m_currentChar.unicode() << ")" << "\" near line " << m_lineNo << ", treating as comment";
         return readPlainCommentElement();
     }
 
