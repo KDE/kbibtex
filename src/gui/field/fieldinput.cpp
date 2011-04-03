@@ -74,6 +74,7 @@ public:
             fieldLineEdit = new FieldLineEdit(preferredTypeFlag, typeFlags, false, p);
             layout->addWidget(fieldLineEdit);
             KPushButton *monthSelector = new KPushButton(KIcon("view-calendar-month"), "");
+            monthSelector->setToolTip(i18n("Select a predefined month"));
             fieldLineEdit->prependWidget(monthSelector);
 
             QSignalMapper *sm = new QSignalMapper(monthSelector);
