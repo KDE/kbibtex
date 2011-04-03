@@ -47,6 +47,7 @@ public:
 
     void prependWidget(QWidget *widget);
     void appendWidget(QWidget *widget);
+    void setInnerWidgetsTransparency(bool makeInnerWidgetsTransparent);
 
     bool isModified() const;
 

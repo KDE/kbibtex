@@ -34,7 +34,8 @@ private:
     MenuLineEdit *p;
     bool isMultiLine;
     QHBoxLayout *hLayout;
-    const QString menuLineEditStyleSheet;
+    const QString transparentStyleSheet, normalStyleSheet;
+    bool makeInnerWidgetsTransparent;
 
 public:
     KPushButton *m_pushButtonType;
@@ -42,40 +43,40 @@ public:
     QTextEdit *m_multiLineEditText;
 
     MenuLineEditPrivate(bool isMultiLine, MenuLineEdit *parent)
-            : p(parent), menuLineEditStyleSheet(
-                QLatin1String("QFrame { background-color: ") + QPalette().color(QPalette::Base).name() + QLatin1String("; }")
-                + QLatin1String("QFrame > QTextEdit { border-style: none; background-color: transparent; }")
-                + QLatin1String("QFrame > KLineEdit { border-style: none; background-color: transparent; }")
-                + QLatin1String("QFrame > KPushButton { border-style: none; background-color: transparent; padding: 0px; margin-left: 2px; margin-right:2px; text-align: left; }")
-            ), m_singleLineEditText(NULL), m_multiLineEditText(NULL) {
+            : p(parent),
+            // FIXME much here is hard-coded. do it better?
+            transparentStyleSheet(
+                QLatin1String("QTextEdit { border-style: none; background-color: transparent; }")
+                + QLatin1String("KLineEdit { border-style: none; background-color: transparent; }")
+                + QLatin1String("KPushButton { border-style: none; background-color: transparent; padding: 0px; margin-left: 2px; margin-right:2px; text-align: left; }")
+            ), normalStyleSheet(
+                QLatin1String("KPushButton { padding:4px; margin:0px;  text-align: left; }")
+                + QLatin1String("QPushButton::menu-indicator {subcontrol-position: right center; subcontrol-origin: content;}")
+            ), makeInnerWidgetsTransparent(false), m_singleLineEditText(NULL), m_multiLineEditText(NULL) {
         this->isMultiLine = isMultiLine;
-        p->setStyleSheet(menuLineEditStyleSheet);
     }
 
     void setupUI() {
         p->setObjectName("FieldLineEdit");
-        // FIXME: proper frame with colored shadows when focused
-        p->setFrameShape(QFrame::StyledPanel);
-        p->setFrameShadow(QFrame::Sunken);
 
         hLayout = new QHBoxLayout(p);
         hLayout->setMargin(0);
         hLayout->setSpacing(2);
 
         m_pushButtonType = new KPushButton(p);
-        hLayout->addWidget(m_pushButtonType);
+        appendWidget(m_pushButtonType);
         hLayout->setStretchFactor(m_pushButtonType, 0);
         m_pushButtonType->setObjectName("FieldLineEditButton");
 
         if (isMultiLine) {
             m_multiLineEditText = new QTextEdit(p);
-            hLayout->addWidget(m_multiLineEditText);
+            appendWidget(m_multiLineEditText);
             connect(m_multiLineEditText, SIGNAL(textChanged()), p, SLOT(slotTextChanged()));
             m_multiLineEditText->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
             p->setFocusProxy(m_multiLineEditText);
         } else {
             m_singleLineEditText = new KLineEdit(p);
-            hLayout->addWidget(m_singleLineEditText);
+            appendWidget(m_singleLineEditText);
             hLayout->setStretchFactor(m_singleLineEditText, 100);
             m_singleLineEditText->setClearButtonShown(true);
             connect(m_singleLineEditText, SIGNAL(textChanged(QString)), p, SIGNAL(textChanged(QString)));
@@ -83,20 +84,30 @@ public:
             p->setFocusProxy(m_singleLineEditText);
         }
 
-        p->setFocusPolicy(Qt::StrongFocus);
+        p->setFocusPolicy(Qt::StrongFocus); // FIXME improve focus handling
         p->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
     }
 
     void prependWidget(QWidget *widget) {
         widget->setParent(p);
         hLayout->insertWidget(0, widget);
+        widget->setStyleSheet(makeInnerWidgetsTransparent ? transparentStyleSheet : normalStyleSheet);
     }
 
     void appendWidget(QWidget *widget) {
         widget->setParent(p);
         hLayout->addWidget(widget);
+        widget->setStyleSheet(makeInnerWidgetsTransparent ? transparentStyleSheet : normalStyleSheet);
     }
 
+    void setStyleSheet(bool makeInnerWidgetsTransparent) {
+        this->makeInnerWidgetsTransparent = makeInnerWidgetsTransparent;
+        for (int i = hLayout->count() - 1; i >= 0; --i) {
+            QWidget *w = hLayout->itemAt(i)->widget();
+            if (w != NULL)
+                w->setStyleSheet(makeInnerWidgetsTransparent ? transparentStyleSheet : normalStyleSheet);
+        }
+    }
 };
 
 MenuLineEdit::MenuLineEdit(bool isMultiLine, QWidget *parent)
@@ -166,6 +177,11 @@ void MenuLineEdit::prependWidget(QWidget *widget)
 void MenuLineEdit::appendWidget(QWidget *widget)
 {
     d->appendWidget(widget);
+}
+
+void MenuLineEdit::setInnerWidgetsTransparency(bool makeInnerWidgetsTransparent)
+{
+    d->setStyleSheet(makeInnerWidgetsTransparent);
 }
 
 bool MenuLineEdit::isModified() const

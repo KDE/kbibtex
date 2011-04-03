@@ -109,7 +109,7 @@ public:
 
     FieldLineEdit *addFieldLineEdit() {
         FieldLineEdit *le = new FieldLineEdit(preferredTypeFlag, typeFlags, false, container);
-        le->setFrameShape(QFrame::NoFrame);
+        le->setInnerWidgetsTransparency(true);
         layout->insertWidget(layout->count() - 2, le);
         lineEditList.append(le);
 
