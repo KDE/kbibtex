@@ -139,7 +139,7 @@ Element *FileImporterBibTeX::nextElement()
             return NULL;
         }
     } else if (token == tUnknown) {
-        kDebug() << "Unknown token near line " << m_lineNo << ", treating as comment";
+        kDebug() << "Unknown token \"" << m_currentChar << "(" << m_currentChar.unicode() << ")" << "\" near line " << m_lineNo << ", treating as comment";
         return readPlainCommentElement();
     }
 
@@ -472,8 +472,8 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value& value, const QStr
     QString iKey = key.toLower();
 
     do {
-        bool isStringKey = FALSE;
-        QString text = readString(isStringKey);
+        bool isStringKey = false;
+        QString text = readString(isStringKey).trimmed();
         /// for all entries except for abstracts ...
         if (iKey != Entry::ftAbstract) {
             /// ... remove redundant spaces including newlines
@@ -521,6 +521,13 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value& value, const QStr
                 for (QList<KUrl>::ConstIterator it = urls.constBegin(); it != urls.constEnd(); ++it)
                     value.append(new VerbatimText((*it).pathOrUrl()));
             }
+        } else if (iKey == Entry::ftMonth) {
+            if (isStringKey) {
+                if (QRegExp("^[a-z]{3}", Qt::CaseInsensitive).indexIn(text) == 0)
+                    text = text.left(3).toLower();
+                value.append(new MacroKey(text));
+            } else
+                value.append(new PlainText(text));
         } else if (iKey.startsWith(Entry::ftDOI)) {
             if (isStringKey)
                 value.append(new MacroKey(text));
