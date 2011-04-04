@@ -112,9 +112,15 @@ ValueList::ValueList(QWidget *parent)
 void ValueList::setEditor(BibTeXEditor *editor)
 {
     d->editor = editor;
+    update();
+}
+
+void ValueList::update()
+{
     d->update();
     setEnabled(d->editor != NULL);
     QTimer::singleShot(100, this, SLOT(resizeEvent()));
+
 }
 
 void ValueList::resizeEvent(QResizeEvent */*event*/)

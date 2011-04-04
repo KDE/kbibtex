@@ -38,6 +38,9 @@ public:
 
     void setEditor(BibTeXEditor *editor);
 
+public slots:
+    void update();
+
 protected slots:
     void resizeEvent(QResizeEvent *e = NULL);
 
