@@ -207,7 +207,6 @@ public:
         if (!mustBeImportable && FileExporterToolchain::which(QLatin1String("latex2rtf")))
             supportedMimeTypes += QLatin1String(" application/rtf");
 
-
         return KFileDialog::getSaveUrl(startDir, supportedMimeTypes, p->widget());
     }
 
@@ -262,7 +261,7 @@ public:
         else {
             File *file = model->bibTeXSourceModel()->bibTeXFile();
             /// store new URL in BibTeX File object
-            file->setProperty(File::Url, url);
+            file->setProperty(File::Url, url.pathOrUrl());
             /// store encoding in BibTeX File object
             if (exporterBibTeX != NULL)
                 file->setProperty(File::Encoding, exporterBibTeX->encoding());
@@ -526,7 +525,7 @@ bool KBibTeXPart::openFile()
     } else
         kDebug() << "File contains " << bibtexFile->count() << " entries";
 
-    bibtexFile->setProperty(File::Url, url());
+    bibtexFile->setProperty(File::Url, url().pathOrUrl());
 
     d->model->setBibTeXFile(bibtexFile);
     d->editor->setModel(d->model);
