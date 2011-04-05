@@ -27,6 +27,8 @@
 
 class QCheckBox;
 
+class KPushButton;
+
 /**
 @author Thomas Fischer
 */
@@ -47,15 +49,19 @@ public:
 signals:
     void modified();
 
+protected:
+    void addButton(KPushButton *button);
+    void lineAdd(Value *value);
+
 private slots:
     void lineAdd();
     void lineRemove(QWidget * widget);
     void lineGoDown(QWidget * widget);
     void lineGoUp(QWidget * widget);
 
-private:
-    class FieldListEditPrivate;
-    FieldListEditPrivate *d;
+protected:
+    class FieldListEditProtected;
+    FieldListEditProtected *d;
 };
 
 
@@ -72,6 +78,21 @@ public:
 
 private:
     QCheckBox *m_checkBoxOthers;
+};
+
+
+/**
+@author Thomas Fischer
+*/
+class UrlListEdit : public FieldListEdit
+{
+    Q_OBJECT
+
+public:
+    UrlListEdit(QWidget *parent = NULL);
+
+private slots:
+    void slotAddLocalFile();
 };
 
 #endif // KBIBTEX_GUI_FIELDLISTEDIT_H

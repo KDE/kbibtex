@@ -28,6 +28,7 @@
 #include <KMessageBox>
 #include <KLocale>
 #include <KPushButton>
+#include <KFileDialog>
 
 #include <file.h>
 #include <entry.h>
@@ -36,7 +37,7 @@
 #include <fieldlineedit.h>
 #include "fieldlistedit.h"
 
-class FieldListEdit::FieldListEditPrivate
+class FieldListEdit::FieldListEditProtected
 {
 private:
     FieldListEdit *p;
@@ -48,12 +49,14 @@ private:
 
 public:
     QList<FieldLineEdit*> lineEditList;
-    KPushButton *addButton;
+    QWidget *pushButtonContainer;
+    QBoxLayout *pushButtonContainerLayout;
+    KPushButton *addLineButton;
     const File *file;
     QWidget *container;
     QScrollArea *scrollArea;
 
-    FieldListEditPrivate(KBibTeX::TypeFlag ptf, KBibTeX::TypeFlags tf, FieldListEdit *parent)
+    FieldListEditProtected(KBibTeX::TypeFlag ptf, KBibTeX::TypeFlags tf, FieldListEdit *parent)
             : p(parent), innerSpacing(4), preferredTypeFlag(ptf), typeFlags(tf), file(NULL) {
         smRemove = new QSignalMapper(parent);
         smGoUp = new QSignalMapper(parent);
@@ -75,11 +78,16 @@ public:
         layout->setMargin(0);
         layout->setSpacing(innerSpacing);
 
-        addButton = new KPushButton(KIcon("list-add"), i18n("Add"), container);
-        addButton->setObjectName(QLatin1String("addButton"));
-        connect(addButton, SIGNAL(clicked()), p, SLOT(lineAdd()));
-        connect(addButton, SIGNAL(clicked()), p, SIGNAL(modified()));
-        layout->addWidget(addButton);
+        pushButtonContainer = new QWidget(container);
+        pushButtonContainerLayout = new QHBoxLayout(pushButtonContainer);
+        pushButtonContainerLayout->setMargin(0);
+        layout->addWidget(pushButtonContainer);
+
+        addLineButton = new KPushButton(KIcon("list-add"), i18n("Add"), pushButtonContainer);
+        addLineButton->setObjectName(QLatin1String("addButton"));
+        connect(addLineButton, SIGNAL(clicked()), p, SLOT(lineAdd()));
+        connect(addLineButton, SIGNAL(clicked()), p, SIGNAL(modified()));
+        pushButtonContainerLayout->addWidget(addLineButton);
 
         layout->addStretch(100);
 
@@ -95,6 +103,11 @@ public:
         scrollArea->setWidgetResizable(true);
     }
 
+    void addButton(KPushButton *button) {
+        button->setParent(pushButtonContainer);
+        pushButtonContainerLayout->addWidget(button);
+    }
+
     int recommendedHeight() {
         int heightHint = 0;
 
@@ -102,7 +115,7 @@ public:
             heightHint += (*it)->sizeHint().height();
 
         heightHint += lineEditList.count() * innerSpacing;
-        heightHint += addButton->sizeHint().height();
+        heightHint += addLineButton->sizeHint().height();
 
         return heightHint;
     }
@@ -146,7 +159,7 @@ public:
         /// does not shrink correctly once the line edits have been
         /// removed
         QSize pSize = container->size();
-        pSize.setHeight(addButton->height());
+        pSize.setHeight(addLineButton->height());
         container->resize(pSize);
     }
 
@@ -178,7 +191,7 @@ public:
 };
 
 FieldListEdit::FieldListEdit(KBibTeX::TypeFlag preferredTypeFlag, KBibTeX::TypeFlags typeFlags, QWidget *parent)
-        : QWidget(parent), d(new FieldListEditPrivate(preferredTypeFlag, typeFlags, this))
+        : QWidget(parent), d(new FieldListEditProtected(preferredTypeFlag, typeFlags, this))
 {
     setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
 }
@@ -222,12 +235,24 @@ void FieldListEdit::setReadOnly(bool isReadOnly)
 {
     for (QList<FieldLineEdit*>::ConstIterator it = d->lineEditList.constBegin(); it != d->lineEditList.constEnd(); ++it)
         (*it)->setReadOnly(isReadOnly);
-    d->addButton->setEnabled(!isReadOnly);
+    d->addLineButton->setEnabled(!isReadOnly);
 }
 
 void FieldListEdit::setFile(const File *file)
 {
     d->file = file;
+}
+
+void FieldListEdit::addButton(KPushButton *button)
+{
+    d->addButton(button);
+}
+
+void FieldListEdit::lineAdd(Value *value)
+{
+    FieldLineEdit *le = d->addFieldLineEdit();
+    if (value != NULL)
+        le->reset(*value);
 }
 
 void FieldListEdit::lineAdd()
@@ -291,4 +316,35 @@ bool PersonListEdit::apply(Value& value) const
         value.append(new PlainText(QLatin1String("others")));
 
     return result;
+}
+
+
+UrlListEdit::UrlListEdit(QWidget *parent)
+        : FieldListEdit(KBibTeX::tfVerbatim, KBibTeX::tfVerbatim, parent)
+{
+    KPushButton *addLocalFile = new KPushButton(KIcon("document-new"), i18n("Add local file"), this);
+    addButton(addLocalFile);
+    connect(addLocalFile, SIGNAL(clicked()), this, SLOT(slotAddLocalFile()));
+}
+
+void UrlListEdit::slotAddLocalFile()
+{
+    QString fileUrl(d->file != NULL ? d->file->property(File::Url, QVariant()).toString() : "");
+    QFileInfo fileUrlInfo = fileUrl.isEmpty() ? QFileInfo() : QFileInfo(fileUrl);
+
+    QString filename = KFileDialog::getOpenFileName(KUrl(fileUrlInfo.absolutePath()), QString(), this, i18n("Add Local File"));
+    if (!filename.isEmpty()) {
+        QFileInfo filenameInfo(filename);
+        if (!fileUrl.isEmpty() && (filenameInfo.absolutePath() == fileUrlInfo.absolutePath() || filenameInfo.absolutePath().startsWith(fileUrlInfo.absolutePath() + QDir::separator()))) {
+            QString relativePath = filenameInfo.absolutePath().mid(fileUrlInfo.absolutePath().length() + 1);
+            QString relativeFilename = relativePath + filenameInfo.fileName();
+            if (KMessageBox::questionYesNo(this, i18n("<qt><p>Use a path relative to the bibliography file?</p><p>The relative path would be<br/><tt>%1</tt></p>", relativeFilename), i18n("Relative Path"), KGuiItem(i18n("Relative Path")), KGuiItem(i18n("Absolute Path"))) == KMessageBox::Yes)
+                filename = relativeFilename;
+        }
+
+        Value *value = new Value();
+        ValueItem *vi = new VerbatimText(filename);
+        value->append(vi);
+        lineAdd(value);
+    }
 }
