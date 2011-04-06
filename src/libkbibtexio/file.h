@@ -51,10 +51,10 @@ public:
     virtual ~File();
 
     /**
-     * Check if a given key,for example a key for a macro or an id for an entry
+     * Check if a given key (e.g. a key for a macro or an id for an entry)
      * is contained in the file object.
      * @see #allKeys() const
-     * @return @c the object addressed by the key @c NULL if no such file has been found
+     * @return @c the object addressed by the key @c, NULL if no such file has been found
      */
     const Element *containsKey(const QString &key) const;
 
