@@ -185,7 +185,7 @@ UpperCamelCase=Keywords
 Label=Keywords
 DefaultWidth=3
 Visible=false
-TypeFlags=Keyword
+TypeFlags=Keyword;Source
 
 [Column29]
 UpperCamelCase=CrossRef

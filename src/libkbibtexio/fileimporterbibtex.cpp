@@ -550,6 +550,14 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value& value, const QStr
                 value.append(new MacroKey(text));
             else
                 value.append(new VerbatimText(text));
+        } else if (iKey == Entry::ftKeywords) {
+            if (isStringKey)
+                value.append(new MacroKey(text));
+            else {
+                QList<Keyword*> keywords = splitKeywords(text);
+                for (QList<Keyword*>::Iterator it = keywords.begin(); it != keywords.end(); ++it)
+                    value.append(*it);
+            }
         } else {
             if (isStringKey)
                 value.append(new MacroKey(text));

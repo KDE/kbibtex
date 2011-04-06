@@ -353,6 +353,7 @@ public:
         }
         break;
         case KBibTeX::tfKeyword:
+            value.clear();
             value.append(new Keyword(enc->decode(rawText)));
             break;
         default: {
