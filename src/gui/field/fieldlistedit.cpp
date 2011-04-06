@@ -122,6 +122,7 @@ public:
 
     FieldLineEdit *addFieldLineEdit() {
         FieldLineEdit *le = new FieldLineEdit(preferredTypeFlag, typeFlags, false, container);
+        le->setFile(file);
         le->setInnerWidgetsTransparency(true);
         layout->insertWidget(layout->count() - 2, le);
         lineEditList.append(le);
@@ -329,8 +330,8 @@ UrlListEdit::UrlListEdit(QWidget *parent)
 
 void UrlListEdit::slotAddLocalFile()
 {
-    QString fileUrl(d->file != NULL ? d->file->property(File::Url, QVariant()).toString() : "");
-    QFileInfo fileUrlInfo = fileUrl.isEmpty() ? QFileInfo() : QFileInfo(fileUrl);
+    KUrl fileUrl(d->file != NULL ? d->file->property(File::Url, QVariant()).value<KUrl>() : KUrl());
+    QFileInfo fileUrlInfo = fileUrl.isEmpty() ? QFileInfo() : QFileInfo(fileUrl.path());
 
     QString filename = KFileDialog::getOpenFileName(KUrl(fileUrlInfo.absolutePath()), QString(), this, i18n("Add Local File"));
     if (!filename.isEmpty()) {

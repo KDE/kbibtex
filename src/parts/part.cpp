@@ -233,7 +233,7 @@ public:
             exporter->showExportDialog(p->widget(), model->bibTeXSourceModel()->bibTeXFile());
         }
         if (exporterBibTeX != NULL)
-            exporterBibTeX->setEncoding(model->bibTeXSourceModel()->bibTeXFile()->property(File::Url).toString());
+            exporterBibTeX->setEncoding(model->bibTeXSourceModel()->bibTeXFile()->property(File::Encoding).toString());
 
         qApp->setOverrideCursor(Qt::WaitCursor);
 
@@ -261,7 +261,7 @@ public:
         else {
             File *file = model->bibTeXSourceModel()->bibTeXFile();
             /// store new URL in BibTeX File object
-            file->setProperty(File::Url, url.pathOrUrl());
+            file->setProperty(File::Url, url);
             /// store encoding in BibTeX File object
             if (exporterBibTeX != NULL)
                 file->setProperty(File::Encoding, exporterBibTeX->encoding());
@@ -525,7 +525,7 @@ bool KBibTeXPart::openFile()
     } else
         kDebug() << "File contains " << bibtexFile->count() << " entries";
 
-    bibtexFile->setProperty(File::Url, url().pathOrUrl());
+    bibtexFile->setProperty(File::Url, url());
 
     d->model->setBibTeXFile(bibtexFile);
     d->editor->setModel(d->model);
