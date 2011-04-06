@@ -301,7 +301,7 @@ class OpenFileInfoManager::OpenFileInfoManagerPrivate
 private:
     static const QString configGroupNameRecentlyUsed;
     static const QString configGroupNameFavorites;
-    static const int maxNumRecentlyUsedFiles, maxNumFiles;
+    static const int maxNumRecentlyUsedFiles, maxNumFavoriteFiles;
 
 public:
     OpenFileInfoManager *p;
@@ -330,16 +330,16 @@ public:
     }
 
     void readConfig() {
-        readConfig(OpenFileInfo::RecentlyUsed, configGroupNameRecentlyUsed);
-        readConfig(OpenFileInfo::Favorite, configGroupNameFavorites);
+        readConfig(OpenFileInfo::RecentlyUsed, configGroupNameRecentlyUsed, maxNumRecentlyUsedFiles);
+        readConfig(OpenFileInfo::Favorite, configGroupNameFavorites, maxNumFavoriteFiles);
     }
 
     void writeConfig() {
-        writeConfig(OpenFileInfo::RecentlyUsed, configGroupNameRecentlyUsed);
-        writeConfig(OpenFileInfo::Favorite, configGroupNameFavorites);
+        writeConfig(OpenFileInfo::RecentlyUsed, configGroupNameRecentlyUsed, maxNumRecentlyUsedFiles);
+        writeConfig(OpenFileInfo::Favorite, configGroupNameFavorites, maxNumFavoriteFiles);
     }
 
-    void readConfig(OpenFileInfo::StatusFlag statusFlag, const QString& configGroupName) {
+    void readConfig(OpenFileInfo::StatusFlag statusFlag, const QString& configGroupName, int maxNumFiles) {
         KSharedConfig::Ptr config = KGlobal::config();
 
         KConfigGroup cg(config, configGroupName);
@@ -356,7 +356,7 @@ public:
         }
     }
 
-    void writeConfig(OpenFileInfo::StatusFlag statusFlag, const QString& configGroupName) {
+    void writeConfig(OpenFileInfo::StatusFlag statusFlag, const QString& configGroupName, int maxNumFiles) {
         KSharedConfig::Ptr config = KGlobal::config();
         KConfigGroup cg(config, configGroupName);
         QList<OpenFileInfo*> list = p->filteredItems(statusFlag);
@@ -374,7 +374,7 @@ public:
 
 const QString OpenFileInfoManager::OpenFileInfoManagerPrivate::configGroupNameRecentlyUsed = QLatin1String("DocumentList-RecentlyUsed");
 const QString OpenFileInfoManager::OpenFileInfoManagerPrivate::configGroupNameFavorites = QLatin1String("DocumentList-Favorites");
-const int OpenFileInfoManager::OpenFileInfoManagerPrivate::maxNumFiles = 256;
+const int OpenFileInfoManager::OpenFileInfoManagerPrivate::maxNumFavoriteFiles = 256;
 const int OpenFileInfoManager::OpenFileInfoManagerPrivate::maxNumRecentlyUsedFiles = 8;
 
 OpenFileInfoManager *OpenFileInfoManager::singletonOpenFileInfoManager = NULL;
