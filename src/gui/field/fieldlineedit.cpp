@@ -401,6 +401,11 @@ bool FieldLineEdit::reset(const Value& value)
     return d->reset(value);
 }
 
+void FieldLineEdit::setReadOnly(bool isReadOnly)
+{
+    MenuLineEdit::setReadOnly(isReadOnly);
+}
+
 void FieldLineEdit::slotTypeChanged(int newTypeFlagInt)
 {
     KBibTeX::TypeFlag newTypeFlag = (KBibTeX::TypeFlag)newTypeFlagInt;

@@ -38,7 +38,7 @@ public:
     MenuLineEdit(bool isMultiLine, QWidget *parent);
 
     void setMenu(QMenu *menu);
-    void setReadOnly(bool);
+    virtual void setReadOnly(bool);
     QString text() const;
     void setText(const QString &);
     void setIcon(const KIcon & icon);

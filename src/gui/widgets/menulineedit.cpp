@@ -33,6 +33,7 @@ class MenuLineEdit::MenuLineEditPrivate
 private:
     MenuLineEdit *p;
     bool isMultiLine;
+    bool m_isReadOnly;
     QHBoxLayout *hLayout;
     const QString transparentStyleSheet, normalStyleSheet;
     bool makeInnerWidgetsTransparent;
@@ -43,7 +44,7 @@ public:
     QTextEdit *m_multiLineEditText;
 
     MenuLineEditPrivate(bool isMultiLine, MenuLineEdit *parent)
-            : p(parent),
+            : p(parent), m_isReadOnly(false),
             // FIXME much here is hard-coded. do it better?
             transparentStyleSheet(
                 QLatin1String("QTextEdit { border-style: none; background-color: transparent; }")
@@ -92,12 +93,14 @@ public:
         widget->setParent(p);
         hLayout->insertWidget(0, widget);
         widget->setStyleSheet(makeInnerWidgetsTransparent ? transparentStyleSheet : normalStyleSheet);
+        setWidgetReadOnly(widget, m_isReadOnly);
     }
 
     void appendWidget(QWidget *widget) {
         widget->setParent(p);
         hLayout->addWidget(widget);
         widget->setStyleSheet(makeInnerWidgetsTransparent ? transparentStyleSheet : normalStyleSheet);
+        setWidgetReadOnly(widget, m_isReadOnly);
     }
 
     void setStyleSheet(bool makeInnerWidgetsTransparent) {
@@ -106,6 +109,23 @@ public:
             QWidget *w = hLayout->itemAt(i)->widget();
             if (w != NULL)
                 w->setStyleSheet(makeInnerWidgetsTransparent ? transparentStyleSheet : normalStyleSheet);
+        }
+    }
+
+    void setWidgetReadOnly(QWidget *w, bool isReadOnly) {
+        if (m_singleLineEditText == w)
+            m_singleLineEditText->setReadOnly(isReadOnly);
+        else if (m_multiLineEditText == w)
+            m_multiLineEditText->setReadOnly(isReadOnly);
+        else
+            w->setEnabled(!isReadOnly);
+    }
+
+    void setReadOnly(bool isReadOnly) {
+        m_isReadOnly = isReadOnly;
+        for (int i = hLayout->count() - 1; i >= 0; --i) {
+            QWidget *w = hLayout->itemAt(i)->widget();
+            setWidgetReadOnly(w, isReadOnly);
         }
     }
 };
@@ -123,10 +143,7 @@ void MenuLineEdit::setMenu(QMenu *menu)
 
 void MenuLineEdit::setReadOnly(bool readOnly)
 {
-    if (d->m_singleLineEditText != NULL)
-        d->m_singleLineEditText->setReadOnly(readOnly);
-    if (d->m_multiLineEditText != NULL)
-        d->m_multiLineEditText->setReadOnly(readOnly);
+    d->setReadOnly(readOnly);
 }
 
 QString MenuLineEdit::text() const

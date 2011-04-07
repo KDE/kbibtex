@@ -481,6 +481,9 @@ void OtherFieldsWidget::setReadOnly(bool isReadOnly)
 {
     ElementWidget::setReadOnly(isReadOnly);
 
+    fieldName->setReadOnly(isReadOnly);
+    fieldContent->setReadOnly(isReadOnly);
+
     /// will take care of enabled/disabling buttons
     updateGUI();
     updateList();

@@ -43,6 +43,7 @@ public:
 
     bool reset(const Value& value);
     bool apply(Value& value) const;
+    virtual void setReadOnly(bool);
 
     void setFile(const File *file);
 

@@ -43,7 +43,7 @@ public:
     virtual bool apply(Value& value) const;
 
     void clear();
-    void setReadOnly(bool isReadOnly);
+    virtual void setReadOnly(bool isReadOnly);
     void setFile(const File *file);
 
 signals:
@@ -76,6 +76,8 @@ public:
     virtual bool reset(const Value& value);
     virtual bool apply(Value& value) const;
 
+    virtual void setReadOnly(bool isReadOnly);
+
 private:
     QCheckBox *m_checkBoxOthers;
 };
@@ -91,8 +93,13 @@ class UrlListEdit : public FieldListEdit
 public:
     UrlListEdit(QWidget *parent = NULL);
 
+    virtual void setReadOnly(bool isReadOnly);
+
 private slots:
     void slotAddLocalFile();
+
+private:
+    KPushButton *m_addLocalFile;
 };
 
 #endif // KBIBTEX_GUI_FIELDLISTEDIT_H

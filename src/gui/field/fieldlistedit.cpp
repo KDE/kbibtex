@@ -55,9 +55,10 @@ public:
     const File *file;
     QWidget *container;
     QScrollArea *scrollArea;
+    bool m_isReadOnly;
 
     FieldListEditProtected(KBibTeX::TypeFlag ptf, KBibTeX::TypeFlags tf, FieldListEdit *parent)
-            : p(parent), innerSpacing(4), preferredTypeFlag(ptf), typeFlags(tf), file(NULL) {
+            : p(parent), innerSpacing(4), preferredTypeFlag(ptf), typeFlags(tf), file(NULL), m_isReadOnly(false) {
         smRemove = new QSignalMapper(parent);
         smGoUp = new QSignalMapper(parent);
         smGoDown = new QSignalMapper(parent);
@@ -123,6 +124,7 @@ public:
     FieldLineEdit *addFieldLineEdit() {
         FieldLineEdit *le = new FieldLineEdit(preferredTypeFlag, typeFlags, false, container);
         le->setFile(file);
+        le->setReadOnly(m_isReadOnly);
         le->setInnerWidgetsTransparency(true);
         layout->insertWidget(layout->count() - 2, le);
         lineEditList.append(le);
@@ -234,6 +236,7 @@ void FieldListEdit::clear()
 
 void FieldListEdit::setReadOnly(bool isReadOnly)
 {
+    d->m_isReadOnly = isReadOnly;
     for (QList<FieldLineEdit*>::ConstIterator it = d->lineEditList.constBegin(); it != d->lineEditList.constEnd(); ++it)
         (*it)->setReadOnly(isReadOnly);
     d->addLineButton->setEnabled(!isReadOnly);
@@ -319,13 +322,19 @@ bool PersonListEdit::apply(Value& value) const
     return result;
 }
 
+void PersonListEdit::setReadOnly(bool isReadOnly)
+{
+    FieldListEdit::setReadOnly(isReadOnly);
+    m_checkBoxOthers->setEnabled(!isReadOnly);
+}
+
 
 UrlListEdit::UrlListEdit(QWidget *parent)
         : FieldListEdit(KBibTeX::tfVerbatim, KBibTeX::tfVerbatim, parent)
 {
-    KPushButton *addLocalFile = new KPushButton(KIcon("document-new"), i18n("Add local file"), this);
-    addButton(addLocalFile);
-    connect(addLocalFile, SIGNAL(clicked()), this, SLOT(slotAddLocalFile()));
+    m_addLocalFile = new KPushButton(KIcon("document-new"), i18n("Add local file"), this);
+    addButton(m_addLocalFile);
+    connect(m_addLocalFile, SIGNAL(clicked()), this, SLOT(slotAddLocalFile()));
 }
 
 void UrlListEdit::slotAddLocalFile()
@@ -348,4 +357,10 @@ void UrlListEdit::slotAddLocalFile()
         value->append(vi);
         lineAdd(value);
     }
+}
+
+void UrlListEdit::setReadOnly(bool isReadOnly)
+{
+    FieldListEdit::setReadOnly(isReadOnly);
+    m_addLocalFile->setEnabled(!isReadOnly);
 }
