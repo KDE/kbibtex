@@ -338,7 +338,7 @@ void UrlListEdit::slotAddLocalFile()
         QFileInfo filenameInfo(filename);
         if (!fileUrl.isEmpty() && (filenameInfo.absolutePath() == fileUrlInfo.absolutePath() || filenameInfo.absolutePath().startsWith(fileUrlInfo.absolutePath() + QDir::separator()))) {
             QString relativePath = filenameInfo.absolutePath().mid(fileUrlInfo.absolutePath().length() + 1);
-            QString relativeFilename = relativePath + filenameInfo.fileName();
+            QString relativeFilename = relativePath + (relativePath.isEmpty() ? QLatin1String("") : QString(QDir::separator())) + filenameInfo.fileName();
             if (KMessageBox::questionYesNo(this, i18n("<qt><p>Use a path relative to the bibliography file?</p><p>The relative path would be<br/><tt>%1</tt></p>", relativeFilename), i18n("Relative Path"), KGuiItem(i18n("Relative Path")), KGuiItem(i18n("Absolute Path"))) == KMessageBox::Yes)
                 filename = relativeFilename;
         }
