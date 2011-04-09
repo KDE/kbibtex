@@ -42,7 +42,7 @@ public:
 
     void clear();
     void setReadOnly(bool isReadOnly);
-    void setFile(const File *file);
+    virtual void setFile(const File *file);
 
 signals:
     void modified();
@@ -69,6 +69,8 @@ public:
 
     virtual bool reset(const Value& value);
     virtual bool apply(Value& value) const;
+
+    virtual void setReadOnly(bool isReadOnly);
 
 private:
     QCheckBox *m_checkBoxOthers;

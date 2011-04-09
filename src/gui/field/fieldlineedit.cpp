@@ -353,6 +353,7 @@ public:
         }
         break;
         case KBibTeX::tfKeyword:
+            value.clear();
             value.append(new Keyword(enc->decode(rawText)));
             break;
         default: {
@@ -398,6 +399,11 @@ bool FieldLineEdit::apply(Value& value) const
 bool FieldLineEdit::reset(const Value& value)
 {
     return d->reset(value);
+}
+
+void FieldLineEdit::setReadOnly(bool isReadOnly)
+{
+    MenuLineEdit::setReadOnly(isReadOnly);
 }
 
 void FieldLineEdit::slotTypeChanged(int newTypeFlagInt)

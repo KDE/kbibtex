@@ -52,9 +52,10 @@ public:
     const File *file;
     QWidget *container;
     QScrollArea *scrollArea;
+    bool m_isReadOnly;
 
     FieldListEditPrivate(KBibTeX::TypeFlag ptf, KBibTeX::TypeFlags tf, FieldListEdit *parent)
-            : p(parent), innerSpacing(4), preferredTypeFlag(ptf), typeFlags(tf), file(NULL) {
+            : p(parent), innerSpacing(4), preferredTypeFlag(ptf), typeFlags(tf), file(NULL), m_isReadOnly(false) {
         smRemove = new QSignalMapper(parent);
         smGoUp = new QSignalMapper(parent);
         smGoDown = new QSignalMapper(parent);
@@ -109,6 +110,7 @@ public:
 
     FieldLineEdit *addFieldLineEdit() {
         FieldLineEdit *le = new FieldLineEdit(preferredTypeFlag, typeFlags, false, container);
+        le->setReadOnly(m_isReadOnly);
         le->setInnerWidgetsTransparency(true);
         layout->insertWidget(layout->count() - 2, le);
         lineEditList.append(le);
@@ -220,6 +222,7 @@ void FieldListEdit::clear()
 
 void FieldListEdit::setReadOnly(bool isReadOnly)
 {
+    d->m_isReadOnly = isReadOnly;
     for (QList<FieldLineEdit*>::ConstIterator it = d->lineEditList.constBegin(); it != d->lineEditList.constEnd(); ++it)
         (*it)->setReadOnly(isReadOnly);
     d->addButton->setEnabled(!isReadOnly);
@@ -291,4 +294,10 @@ bool PersonListEdit::apply(Value& value) const
         value.append(new PlainText(QLatin1String("others")));
 
     return result;
+}
+
+void PersonListEdit::setReadOnly(bool isReadOnly)
+{
+    FieldListEdit::setReadOnly(isReadOnly);
+    m_checkBoxOthers->setEnabled(!isReadOnly);
 }

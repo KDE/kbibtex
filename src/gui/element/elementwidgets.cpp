@@ -318,7 +318,7 @@ FilesWidget::FilesWidget(QWidget *parent)
         : ElementWidget(parent)
 {
     QVBoxLayout *layout = new QVBoxLayout(this);
-    fileList = new FieldInput(KBibTeX::List, KBibTeX::tfVerbatim, KBibTeX::tfVerbatim | KBibTeX::tfSource, this);
+    fileList = new FieldInput(KBibTeX::List, KBibTeX::tfVerbatim, KBibTeX::tfVerbatim, this);
     layout->addWidget(fileList);
     connect(fileList, SIGNAL(modified()), this, SLOT(gotModified()));
 }
@@ -480,6 +480,9 @@ bool OtherFieldsWidget::reset(const Element *element)
 void OtherFieldsWidget::setReadOnly(bool isReadOnly)
 {
     ElementWidget::setReadOnly(isReadOnly);
+
+    fieldName->setReadOnly(isReadOnly);
+    fieldContent->setReadOnly(isReadOnly);
 
     /// will take care of enabled/disabling buttons
     updateGUI();
