@@ -2,6 +2,8 @@ project( kbibtex )
 
 cmake_minimum_required(VERSION 2.6)
 
+set(MANDIR "share/man" CACHE STRING "Where to install manpages")
+
 find_package( Qt4 REQUIRED )
 find_package( KDE4 REQUIRED )
 
@@ -31,4 +33,5 @@ add_subdirectory( src )
 add_subdirectory( config )
 add_subdirectory( xslt )
 add_subdirectory( icons )
+add_subdirectory( man )
 add_subdirectory( mime )
