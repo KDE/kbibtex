@@ -295,6 +295,7 @@ public:
             const QRegExp warningEmptyField("empty (\\w+) in ");
             const QRegExp warningEmptyField2("empty (\\w+) or (\\w+) in ");
             const QRegExp warningThereIsBut("there's a (\\w+) but no (\\w+) in");
+            const QRegExp warningCantUseBoth("can't use both (\\w+) and (\\w+) fields");
             const QRegExp warningSort2("to sort, need (\\w+) or (\\w+) in ");
             const QRegExp warningSort3("to sort, need (\\w+), (\\w+), or (\\w+) in ");
             const QRegExp errorLine("---line (\\d+)");
@@ -327,6 +328,9 @@ public:
                     } else if (warningThereIsBut.indexIn(line) > -1) {
                         /// there is a field which exists but another does not exist
                         warnings << i18n("Field <b>%1</b> exists, but <b>%2</b> does not exist", warningThereIsBut.cap(1), warningThereIsBut.cap(2));
+                    } else if (warningCantUseBoth.indexIn(line) > -1) {
+                        /// there are two conflicting fields, only one may be used
+                        warnings << i18n("Fields <b>%1</b> and <b>%2</b> cannot be used at the same time", warningCantUseBoth.cap(1), warningCantUseBoth.cap(2));
                     } else if (warningSort2.indexIn(line) > -1) {
                         /// one out of two fields missing for sorting
                         warnings << i18n("Fields <b>%1</b> or <b>%2</b> are required to sort entry", warningSort2.cap(1), warningSort2.cap(2));
