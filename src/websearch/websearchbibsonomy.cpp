@@ -118,7 +118,8 @@ QString WebSearchBibsonomy::favIconUrl() const
 
 WebSearchQueryFormAbstract* WebSearchBibsonomy::customWidget(QWidget *parent)
 {
-    return new WebSearchBibsonomy::WebSearchQueryFormBibsonomy(parent);
+    form = new WebSearchBibsonomy::WebSearchQueryFormBibsonomy(parent);
+    return form;
 }
 
 KUrl WebSearchBibsonomy::homepage() const
@@ -128,8 +129,10 @@ KUrl WebSearchBibsonomy::homepage() const
 
 KUrl WebSearchBibsonomy::buildQueryUrl()
 {
-    if (form == NULL)
+    if (form == NULL) {
+        kWarning() << "Cannot build query url if no form is specified";
         return KUrl();
+    }
 
     // FIXME: Is there a need for percent encoding?
     QString queryString = form->lineEditSearchTerm->text();
