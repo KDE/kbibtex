@@ -29,6 +29,7 @@ set( kbibtexgui_LIB_SRCS
     element/elementwidgets.cpp
     widgets/menulineedit.cpp
     widgets/filterbar.cpp
+    widgets/radiobuttontreeview.cpp
     config/entrylayout.cpp
     valuelistmodel.cpp
 )
