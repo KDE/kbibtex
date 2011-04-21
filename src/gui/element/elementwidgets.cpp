@@ -318,7 +318,7 @@ FilesWidget::FilesWidget(QWidget *parent)
         : ElementWidget(parent)
 {
     QVBoxLayout *layout = new QVBoxLayout(this);
-    fileList = new FieldInput(KBibTeX::List, KBibTeX::tfVerbatim, KBibTeX::tfVerbatim, this);
+    fileList = new FieldInput(KBibTeX::UrlList, KBibTeX::tfVerbatim, KBibTeX::tfVerbatim, this);
     layout->addWidget(fileList);
     connect(fileList, SIGNAL(modified()), this, SLOT(gotModified()));
 }

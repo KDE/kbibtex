@@ -27,6 +27,8 @@
 
 class QCheckBox;
 
+class KPushButton;
+
 /**
 @author Thomas Fischer
 */
@@ -41,11 +43,15 @@ public:
     virtual bool apply(Value& value) const;
 
     void clear();
-    void setReadOnly(bool isReadOnly);
-    virtual void setFile(const File *file);
+    virtual void setReadOnly(bool isReadOnly);
+    void setFile(const File *file);
 
 signals:
     void modified();
+
+protected:
+    void addButton(KPushButton *button);
+    void lineAdd(Value *value);
 
 private slots:
     void lineAdd();
@@ -53,9 +59,9 @@ private slots:
     void lineGoDown(QWidget * widget);
     void lineGoUp(QWidget * widget);
 
-private:
-    class FieldListEditPrivate;
-    FieldListEditPrivate *d;
+protected:
+    class FieldListEditProtected;
+    FieldListEditProtected *d;
 };
 
 
@@ -74,6 +80,26 @@ public:
 
 private:
     QCheckBox *m_checkBoxOthers;
+};
+
+
+/**
+@author Thomas Fischer
+*/
+class UrlListEdit : public FieldListEdit
+{
+    Q_OBJECT
+
+public:
+    UrlListEdit(QWidget *parent = NULL);
+
+    virtual void setReadOnly(bool isReadOnly);
+
+private slots:
+    void slotAddLocalFile();
+
+private:
+    KPushButton *m_addLocalFile;
 };
 
 #endif // KBIBTEX_GUI_FIELDLISTEDIT_H

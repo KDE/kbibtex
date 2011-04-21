@@ -122,6 +122,10 @@ public:
             fieldListEdit = new PersonListEdit(preferredTypeFlag, typeFlags, p);
             layout->addWidget(fieldListEdit);
             break;
+        case KBibTeX::UrlList:
+            fieldListEdit = new UrlListEdit(p);
+            layout->addWidget(fieldListEdit);
+            break;
         default:
             fieldLineEdit = new FieldLineEdit(preferredTypeFlag, typeFlags, false, p);
             layout->addWidget(fieldLineEdit);
