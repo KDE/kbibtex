@@ -267,8 +267,8 @@ void KBibTeXMainWindow::openDocument(const KUrl& url)
 
 void KBibTeXMainWindow::closeDocument()
 {
-    if (d->openFileInfoManager->close(d->openFileInfoManager->currentFile()))
-        d->actionClose->setEnabled(false);
+    d->openFileInfoManager->close(d->openFileInfoManager->currentFile());
+    d->actionClose->setEnabled(false);
 }
 
 void KBibTeXMainWindow::documentSwitched(BibTeXEditor *oldEditor, BibTeXEditor *newEditor)
