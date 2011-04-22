@@ -286,7 +286,7 @@ public:
         viewDocumentMenu->clear();
         int result = 0;
 
-        Entry *entry = dynamic_cast<Entry*>(editor->currentElement());
+        const Entry *entry = dynamic_cast<const Entry*>(editor->currentElement());
         if (entry != NULL) {
             QList<KUrl> urlList = FileInfo::entryUrls(entry, editor->bibTeXModel()->bibTeXFile()->property(File::Url).value<KUrl>());
             if (!urlList.isEmpty()) {

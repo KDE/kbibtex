@@ -78,12 +78,6 @@ RadioButtonTreeView::RadioButtonTreeView(QWidget *parent)
     // nothing
 }
 
-void RadioButtonTreeView::reset()
-{
-    QTreeView::reset();
-    kDebug() << model()->rowCount(QModelIndex());
-}
-
 void RadioButtonTreeView::mouseReleaseEvent(QMouseEvent *event)
 {
     QModelIndex index = indexAt(event->pos());

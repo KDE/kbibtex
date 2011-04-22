@@ -75,7 +75,7 @@ public:
 
     KBibTeXMainWindowPrivate(KBibTeXMainWindow *parent)
             : p(parent) {
-// nothing
+        // nothing
     }
 };
 

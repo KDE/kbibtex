@@ -338,9 +338,10 @@ void SearchForm::foundEntry(Entry*entry)
 void SearchForm::stoppedSearch(int resultCode)
 {
     WebSearchAbstract *engine = static_cast<WebSearchAbstract *>(sender());
-    kDebug() << " search from engine " << engine->label() << " stopped with code " << resultCode << " (" << (resultCode == 0 ? "OK)" : "Error)");
-
     --d->runningSearches;
+
+    kDebug() << "Search from engine" << engine->label() << "stopped with code" << resultCode  << (resultCode == 0 ? "(OK)," : "(Error),") << d->runningSearches << "engine(s) left";
+
     if (d->runningSearches <= 0) {
         /// last search engine stopped
         d->switchToSearch();
