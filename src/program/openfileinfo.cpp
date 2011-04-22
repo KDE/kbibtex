@@ -184,6 +184,24 @@ KUrl OpenFileInfo::url() const
     return d->url;
 }
 
+bool OpenFileInfo::isModified() const
+{
+    KParts::ReadWritePart *rwPart = dynamic_cast< KParts::ReadWritePart*>(d->part);
+    if (rwPart == NULL)
+        return false;
+    else
+        return rwPart->isModified();
+}
+
+bool OpenFileInfo::save()
+{
+    KParts::ReadWritePart *rwPart = dynamic_cast< KParts::ReadWritePart*>(d->part);
+    if (rwPart == NULL)
+        return true;
+    else
+        return rwPart->save();
+}
+
 bool OpenFileInfo::close()
 {
     if (d->part == NULL) {
