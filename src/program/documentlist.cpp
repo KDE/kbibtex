@@ -168,10 +168,6 @@ QVariant DocumentListModel::data(const QModelIndex &index, int role) const
         /// determine mime type-based icon and overlays (e.g. for modified files)
         QStringList overlays;
         QString iconName = openFileInfo->mimeType().replace("/", "-");
-        if (openFileInfo->flags().testFlag(OpenFileInfo::IsModified))
-            overlays << "document-save";
-        else
-            overlays << "";
         if (openFileInfo->flags().testFlag(OpenFileInfo::Favorite))
             overlays << "favorites";
         else
