@@ -57,7 +57,6 @@ private:
     bool originalCookiesEnabled;
 
 public:
-    QWidget *w;
     bool hasBeenCancelled;
     KIO::TransferJob *currentJob;
     WebSearchQueryFormIEEEXplore *form;
@@ -69,8 +68,8 @@ public:
     FileImporterBibTeX fileImporter;
     CookieManager *cookieManager;
 
-    WebSearchIEEEXplorePrivate(QWidget *widget, WebSearchIEEEXplore *parent)
-            : p(parent), w(widget), hasBeenCancelled(false), currentJob(NULL), form(NULL), job(NULL), cookieManager(CookieManager::singleton()) {
+    WebSearchIEEEXplorePrivate(WebSearchIEEEXplore *parent)
+            : p(parent), hasBeenCancelled(false), currentJob(NULL), form(NULL), job(NULL), cookieManager(CookieManager::singleton()) {
         startPageUrl = QLatin1String("http://ieeexplore.ieee.org/");
         searchRequestUrl = QLatin1String("http://ieeexplore.ieee.org/search/searchresult.jsp?newsearch=true&x=0&y=0&queryText=");
         fullAbstractUrl = QLatin1String("http://ieeexplore.ieee.org/search/srchabstract.jsp?tp=&arnumber=");
@@ -103,7 +102,7 @@ public:
 };
 
 WebSearchIEEEXplore::WebSearchIEEEXplore(QWidget *parent)
-        : WebSearchAbstract(parent), d(new WebSearchIEEEXplore::WebSearchIEEEXplorePrivate(parent, this))
+        : WebSearchAbstract(parent), d(new WebSearchIEEEXplore::WebSearchIEEEXplorePrivate(this))
 {
     // nothing
 }
@@ -130,13 +129,14 @@ void WebSearchIEEEXplore::doneFetchingStartPage(KJob *kJob)
 {
     d->currentJob = NULL;
     if (d->hasBeenCancelled) {
-        kWarning() << "Searching " << label() << " got cancelled";
+        kDebug() << "Searching" << label() << "got cancelled";
         d->cookieManager->enableCookieRestrictions();
         emit stoppedSearch(resultCancelled);
         return;
     } else if (kJob->error() != KJob::NoError) {
-        kWarning() << "Searching " << label() << " failed with error message: " << kJob->errorString();
-        KMessageBox::error(d->w, i18n("Searching \"%1\" failed with error message:\n\n%2", label(), kJob->errorString()));
+        KIO::StoredTransferJob *transferJob = static_cast<KIO::StoredTransferJob *>(kJob);
+        kWarning() << "Searching" << label() << "for URL" << transferJob->url().pathOrUrl() << "failed with error message:" << kJob->errorString();
+        KMessageBox::error(m_parent, kJob->errorString().isEmpty() ? i18n("Searching \"%1\" failed for unknown reason.", label()) : i18n("Searching \"%1\" failed with error message:\n\n%2", label(), kJob->errorString()));
         d->cookieManager->enableCookieRestrictions();
         emit stoppedSearch(resultUnspecifiedError);
         return;
@@ -154,21 +154,25 @@ void WebSearchIEEEXplore::doneFetchingStartPage(KJob *kJob)
 
 void WebSearchIEEEXplore::doneFetchingSearchResults(KJob *kJob)
 {
+    Q_ASSERT(kJob == d->currentJob);
     d->currentJob = NULL;
+
     if (d->hasBeenCancelled) {
-        kWarning() << "Searching " << label() << " got cancelled";
+        kDebug() << "Searching" << label() << "got cancelled";
         d->cookieManager->enableCookieRestrictions();
         emit stoppedSearch(resultCancelled);
-        return;
-    } else if (kJob->error() != KJob::NoError) {
-        kWarning() << "Searching " << label() << " failed with error message: " << kJob->errorString();
-        KMessageBox::error(d->w, i18n("Searching \"%1\" failed with error message:\n\n%2", label(), kJob->errorString()));
-        d->cookieManager->enableCookieRestrictions();
-        emit stoppedSearch(resultUnspecifiedError);
         return;
     }
 
     KIO::StoredTransferJob *transferJob = static_cast<KIO::StoredTransferJob *>(kJob);
+
+    if (kJob->error() != KJob::NoError) {
+        kWarning() << "Searching" << label() << "for URL" << transferJob->url().pathOrUrl() << "failed with error message:" << kJob->errorString();
+        KMessageBox::error(m_parent, kJob->errorString().isEmpty() ? i18n("Searching \"%1\" failed for unknown reason.", label()) : i18n("Searching \"%1\" failed with error message:\n\n%2", label(), kJob->errorString()));
+        d->cookieManager->enableCookieRestrictions();
+        emit stoppedSearch(resultUnspecifiedError);
+        return;
+    }
 
     QString htmlText(transferJob->data());
     QRegExp arnumberRegExp("arnumber=(\\d+)[^0-9]");
@@ -201,21 +205,26 @@ void WebSearchIEEEXplore::doneFetchingSearchResults(KJob *kJob)
 
 void WebSearchIEEEXplore::doneFetchingAbstract(KJob *kJob)
 {
+    Q_ASSERT(kJob == d->currentJob);
     d->currentJob = NULL;
+
     if (d->hasBeenCancelled) {
-        kWarning() << "Searching " << label() << " got cancelled";
+        kDebug() << "Searching" << label() << "got cancelled";
         d->cookieManager->enableCookieRestrictions();
         emit stoppedSearch(resultCancelled);
         return;
-    } else if (kJob->error() != KJob::NoError) {
-        kWarning() << "Searching " << label() << " failed with error message: " << kJob->errorString();
-        KMessageBox::error(d->w, i18n("Searching \"%1\" failed with error message:\n\n%2", label(), kJob->errorString()));
+    }
+
+    KIO::TransferJob *transferJob = static_cast<KIO::TransferJob *>(kJob);
+
+    if (kJob->error() != KJob::NoError) {
+        kWarning() << "Searching" << label() << "for URL" << transferJob->url().pathOrUrl() << "failed with error message:" << kJob->errorString();
+        KMessageBox::error(m_parent, kJob->errorString().isEmpty() ? i18n("Searching \"%1\" failed for unknown reason.", label()) : i18n("Searching \"%1\" failed with error message:\n\n%2", label(), kJob->errorString()));
         d->cookieManager->enableCookieRestrictions();
         emit stoppedSearch(resultUnspecifiedError);
         return;
     }
 
-    KIO::TransferJob *transferJob = static_cast<KIO::TransferJob *>(kJob);
     QString arnumber = transferJob->url().queryItemValue(QLatin1String("arnumber"));
     if (!arnumber.isEmpty()) {
         QString url = d->citationUrl + arnumber;
@@ -229,21 +238,26 @@ void WebSearchIEEEXplore::doneFetchingAbstract(KJob *kJob)
 
 void WebSearchIEEEXplore::doneFetchingBibliography(KJob *kJob)
 {
+    Q_ASSERT(kJob == d->currentJob);
     d->currentJob = NULL;
+
     if (d->hasBeenCancelled) {
-        kWarning() << "Searching " << label() << " got cancelled";
+        kDebug() << "Searching" << label() << "got cancelled";
         d->cookieManager->enableCookieRestrictions();
         emit stoppedSearch(resultCancelled);
         return;
-    } else if (kJob->error() != KJob::NoError) {
-        kWarning() << "Searching " << label() << " failed with error message: " << kJob->errorString();
-        KMessageBox::error(d->w, i18n("Searching \"%1\" failed with error message:\n\n%2", label(), kJob->errorString()));
+    }
+
+    KIO::StoredTransferJob *transferJob = static_cast<KIO::StoredTransferJob *>(kJob);
+
+    if (kJob->error() != KJob::NoError) {
+        kWarning() << "Searching" << label()  << "for URL" << transferJob->url().pathOrUrl() << "failed with error message:" << kJob->errorString();
+        KMessageBox::error(m_parent, kJob->errorString().isEmpty() ? i18n("Searching \"%1\" failed for unknown reason.", label()) : i18n("Searching \"%1\" failed with error message:\n\n%2", label(), kJob->errorString()));
         d->cookieManager->enableCookieRestrictions();
         emit stoppedSearch(resultUnspecifiedError);
         return;
     }
 
-    KIO::StoredTransferJob *transferJob = static_cast<KIO::StoredTransferJob *>(kJob);
     QString plainText = QString(transferJob->data()).replace("<br>", "");
 
     File *bibtexFile = d->fileImporter.fromString(plainText);
@@ -261,7 +275,7 @@ void WebSearchIEEEXplore::doneFetchingBibliography(KJob *kJob)
     }
 
     if (entry == NULL) {
-        kWarning() << "Searching " << label() << " resulted in invalid BibTeX data: " << QString(transferJob->data());
+        kWarning() << "Searching" << label() << "resulted in invalid BibTeX data:" << QString(transferJob->data());
         d->cookieManager->enableCookieRestrictions();
         emit stoppedSearch(resultUnspecifiedError);
         return;
@@ -320,6 +334,7 @@ KUrl WebSearchIEEEXplore::homepage() const
 
 void WebSearchIEEEXplore::cancel()
 {
+    d->hasBeenCancelled = true;
     if (d->job != NULL)
         d->job->kill(KJob::EmitResult);
 }

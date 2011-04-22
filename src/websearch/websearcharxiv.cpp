@@ -28,6 +28,7 @@
 #include <KDebug>
 #include <KStandardDirs>
 #include <kio/job.h>
+#include <KMessageBox>
 
 #include "fileimporterbibtex.h"
 #include "websearcharxiv.h"
@@ -75,7 +76,6 @@ public:
 class WebSearchArXiv::WebSearchArXivPrivate
 {
 private:
-    QWidget *w;
     WebSearchArXiv *p;
     QRegExp jourRef1, jourRef2, jourRef3, jourRef4, jourRef5, jourRef6, m_reJour, m_reYear, m_rePages;
     QRegExp regExpPhD, regExpTechRep;
@@ -84,9 +84,10 @@ public:
     XSLTransform xslt;
     WebSearchQueryFormArXiv *form;
     KIO::StoredTransferJob *job;
+    bool hasBeenCancelled;
 
-    WebSearchArXivPrivate(QWidget *widget, WebSearchArXiv *parent)
-            : w(widget), p(parent),
+    WebSearchArXivPrivate(WebSearchArXiv *parent)
+            : p(parent),
 
             /** examples:
                 Journal of Inefficient Algorithms 5 (2003) 35-39
@@ -138,7 +139,8 @@ public:
                 Learned Publishing, 20(1) (January 2007) 16-22
             */
             jourRef6("^([a-zA-Z. ]+),\\s+(\\d+)\\((\\d+)\\)\\s+(\\(([A-Za-z]+\\s+)?(\\d{4})\\))?\\s+(\\d+)(-(\\d+))?$", Qt::CaseInsensitive),
-            regExpPhD("Ph\\.?D\\.? Thesis", Qt::CaseInsensitive), regExpTechRep("Tech(\\.|nical) Rep(\\.|ort)", Qt::CaseInsensitive), xslt(KStandardDirs::locate("appdata", "arxiv2bibtex.xsl")), form(NULL), job(NULL) {
+            regExpPhD("Ph\\.?D\\.? Thesis", Qt::CaseInsensitive), regExpTechRep("Tech(\\.|nical) Rep(\\.|ort)", Qt::CaseInsensitive), xslt(KStandardDirs::locate("appdata", "arxiv2bibtex.xsl")),
+            form(NULL), job(NULL), hasBeenCancelled(false) {
         // nothing
     }
 
@@ -287,19 +289,21 @@ public:
 };
 
 WebSearchArXiv::WebSearchArXiv(QWidget *parent)
-        : WebSearchAbstract(parent), d(new WebSearchArXiv::WebSearchArXivPrivate(parent, this))
+        : WebSearchAbstract(parent), d(new WebSearchArXiv::WebSearchArXivPrivate(this))
 {
     // nothing
 }
 
 void WebSearchArXiv::startSearch()
 {
+    d->hasBeenCancelled = false;
     d->job = KIO::storedGet(d->buildQueryUrl());
     connect(d->job, SIGNAL(result(KJob *)), this, SLOT(jobDone(KJob*)));
 }
 
 void WebSearchArXiv::startSearch(const QMap<QString, QString> &query, int numResults)
 {
+    d->hasBeenCancelled = false;
     d->job = KIO::storedGet(d->buildQueryUrl(query, numResults));
     connect(d->job, SIGNAL(result(KJob *)), this, SLOT(jobDone(KJob*)));
 }
@@ -326,6 +330,7 @@ KUrl WebSearchArXiv::homepage() const
 
 void WebSearchArXiv::cancel()
 {
+    d->hasBeenCancelled = true;
     if (d->job != NULL)
         d->job->kill(KJob::EmitResult);
 }
@@ -333,8 +338,18 @@ void WebSearchArXiv::cancel()
 
 void WebSearchArXiv::jobDone(KJob *j)
 {
-    if (j->error() == 0) {
-        KIO::StoredTransferJob *job = static_cast<KIO::StoredTransferJob*>(j);
+    Q_ASSERT(j == d->job);
+    d->job = NULL;
+
+    if (d->hasBeenCancelled) {
+        kDebug() << "Searching" << label() << "got cancelled";
+        emit stoppedSearch(resultCancelled);
+        return;
+    }
+
+    KIO::StoredTransferJob *job = static_cast<KIO::StoredTransferJob*>(j);
+
+    if (j->error() == KJob::NoError) {
         QTextStream ts(job->data());
         QString result = ts.readAll();
         result = result.replace("xmlns=\"http://www.w3.org/2005/Atom\"", ""); // FIXME fix arxiv2bibtex.xsl to handle namespace
@@ -360,9 +375,8 @@ void WebSearchArXiv::jobDone(KJob *j)
         } else
             emit stoppedSearch(resultUnspecifiedError);
     } else {
-        kWarning() << "Search using " << label() << "failed: " << j->errorString();
+        kWarning() << "Search using" << label() << "for URL" << job->url().pathOrUrl() << "failed:" << j->errorString() ;
+        KMessageBox::error(m_parent, j->errorString().isEmpty() ? i18n("Searching \"%1\" failed for unknown reason.", label()) : i18n("Searching \"%1\" failed with error message:\n\n%2", label(), j->errorString()));
         emit stoppedSearch(resultUnspecifiedError);
     }
-
-    d->job = NULL;
 }

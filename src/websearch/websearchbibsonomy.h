@@ -67,6 +67,7 @@ private:
 
     QByteArray m_buffer;
     KIO::TransferJob *m_job;
+    bool m_hasBeenCancelled;
 
     KUrl buildQueryUrl();
     KUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults);

@@ -24,6 +24,7 @@
 #include <KLocale>
 #include <kio/job.h>
 #include <KStandardDirs>
+#include <KMessageBox>
 
 #include "websearchpubmed.h"
 #include "xsltransform.h"
@@ -46,7 +47,6 @@ public:
 class WebSearchPubMed::WebSearchPubMedPrivate
 {
 private:
-    QWidget *w;
     WebSearchPubMed *p;
     const QString pubMedUrlPrefix;
 
@@ -54,9 +54,10 @@ public:
     XSLTransform xslt;
     WebSearchQueryFormPubMed *form;
     KIO::StoredTransferJob *job;
+    bool hasBeenCancelled;
 
-    WebSearchPubMedPrivate(QWidget *widget, WebSearchPubMed *parent)
-            : w(widget), p(parent), pubMedUrlPrefix(QLatin1String("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/")), xslt(KStandardDirs::locate("appdata", "pubmed2bibtex.xsl")), form(NULL), job(NULL) {
+    WebSearchPubMedPrivate(WebSearchPubMed *parent)
+            : p(parent), pubMedUrlPrefix(QLatin1String("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/")), xslt(KStandardDirs::locate("appdata", "pubmed2bibtex.xsl")), form(NULL), job(NULL), hasBeenCancelled(false) {
         // nothing
     }
 
@@ -102,18 +103,20 @@ public:
 };
 
 WebSearchPubMed::WebSearchPubMed(QWidget *parent)
-        : WebSearchAbstract(parent), d(new WebSearchPubMed::WebSearchPubMedPrivate(parent, this))
+        : WebSearchAbstract(parent), d(new WebSearchPubMed::WebSearchPubMedPrivate(this))
 {
     // nothing
 }
 
 void WebSearchPubMed::startSearch()
 {
+    d->hasBeenCancelled = false;
     // TODO: No customized search widget
 }
 
 void WebSearchPubMed::startSearch(const QMap<QString, QString> &query, int numResults)
 {
+    d->hasBeenCancelled = false;
     d->job = KIO::storedGet(d->buildQueryUrl(query, numResults));
     connect(d->job, SIGNAL(result(KJob *)), this, SLOT(jobESearchDone(KJob*)));
 }
@@ -143,16 +146,25 @@ KUrl WebSearchPubMed::homepage() const
 
 void WebSearchPubMed::cancel()
 {
+    d->hasBeenCancelled = true;
     if (d->job != NULL)
         d->job->kill(KJob::EmitResult);
 }
 
 void WebSearchPubMed::jobESearchDone(KJob *j)
 {
+    Q_ASSERT(j == d->job);
     d->job = NULL;
 
-    if (j->error() == 0) {
-        KIO::StoredTransferJob *job = static_cast<KIO::StoredTransferJob*>(j);
+    if (d->hasBeenCancelled) {
+        kDebug() << "Searching" << label() << "got cancelled";
+        emit stoppedSearch(resultCancelled);
+        return;
+    }
+
+    KIO::StoredTransferJob *job = static_cast<KIO::StoredTransferJob*>(j);
+
+    if (j->error() == KJob::NoError) {
         QTextStream ts(job->data());
         QString result = ts.readAll();
 
@@ -171,17 +183,26 @@ void WebSearchPubMed::jobESearchDone(KJob *j)
             connect(d->job, SIGNAL(result(KJob *)), this, SLOT(jobEFetchDone(KJob*)));
         }
     } else {
-        kWarning() << "Search using " << label() << "failed: " << j->errorString();
+        kWarning() << "Search using" << label() << "for URL" << job->url().pathOrUrl() << "failed:" << j->errorString();
+        KMessageBox::error(m_parent, j->errorString().isEmpty() ? i18n("Searching \"%1\" failed for unknown reason.", label()) : i18n("Searching \"%1\" failed with error message:\n\n%2", label(), j->errorString()));
         emit stoppedSearch(resultUnspecifiedError);
     }
 }
 
 void WebSearchPubMed::jobEFetchDone(KJob *j)
 {
+    Q_ASSERT(j == d->job);
     d->job = NULL;
 
-    if (j->error() == 0) {
-        KIO::StoredTransferJob *job = static_cast<KIO::StoredTransferJob*>(j);
+    if (d->hasBeenCancelled) {
+        kDebug() << "Searching" << label() << "got cancelled";
+        emit stoppedSearch(resultCancelled);
+        return;
+    }
+
+    KIO::StoredTransferJob *job = static_cast<KIO::StoredTransferJob*>(j);
+
+    if (j->error() == KJob::NoError) {
         QTextStream ts(job->data());
         QString result = ts.readAll();
 
@@ -205,7 +226,8 @@ void WebSearchPubMed::jobEFetchDone(KJob *j)
         } else
             emit stoppedSearch(resultUnspecifiedError);
     } else {
-        kWarning() << "Search using " << label() << "failed: " << j->errorString();
+        kWarning() << "Search using" << label() << "for URL" << job->url().pathOrUrl() << "failed:" << j->errorString();
+        KMessageBox::error(m_parent, j->errorString().isEmpty() ? i18n("Searching \"%1\" failed for unknown reason.", label()) : i18n("Searching \"%1\" failed with error message:\n\n%2", label(), j->errorString()));
         emit stoppedSearch(resultUnspecifiedError);
     }
 }
