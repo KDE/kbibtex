@@ -94,6 +94,7 @@ public:
     virtual Qt::ItemFlags flags(const QModelIndex &index) const;
 
     virtual bool removeRow(int row, const QModelIndex & parent = QModelIndex());
+    bool removeRowList(const QList<int> &rows);
     bool insertRow(Element *element, int row, const QModelIndex & parent = QModelIndex());
 
     Element* element(int row) const;

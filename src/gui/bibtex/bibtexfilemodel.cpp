@@ -367,6 +367,22 @@ bool BibTeXFileModel::removeRow(int row, const QModelIndex & parent)
     return true;
 }
 
+bool BibTeXFileModel::removeRowList(const QList<int> &rows)
+{
+    QList<int> internalRows = rows;
+    qSort(internalRows.begin(), internalRows.end(), qGreater<int>());
+
+    foreach(int row, internalRows) {
+        if (row < 0 || row >= rowCount() || row >= m_bibtexFile->count())
+            return false;
+        m_bibtexFile->removeAt(row);
+    }
+
+    reset();
+
+    return true;
+}
+
 bool BibTeXFileModel::insertRow(Element *element, int row, const QModelIndex & parent)
 {
     if (row < 0 || row > rowCount())
