@@ -225,10 +225,12 @@ void BibTeXEditor::selectionChanged(const QItemSelection & selected, const QItem
 void BibTeXEditor::selectionDelete()
 {
     QModelIndexList mil = selectionModel()->selectedRows();
-    while (mil.begin() != mil.end()) {
-        bibTeXModel()->removeRow(sortFilterProxyModel()->mapToSource(*mil.begin()).row());
-        mil.removeFirst();
-    }
+    QList<int> rows;
+    foreach(QModelIndex idx, mil)
+    rows << sortFilterProxyModel()->mapToSource(idx).row();
+
+    bibTeXModel()->removeRowList(rows);
+
     emit modified();
 }
 
