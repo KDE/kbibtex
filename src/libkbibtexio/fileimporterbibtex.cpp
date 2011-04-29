@@ -312,7 +312,7 @@ FileImporterBibTeX::Token FileImporterBibTeX::nextToken()
 
     Token curToken = tUnknown;
 
-    while ((m_currentChar.isSpace() || m_currentChar == '\t') && !m_textStream->atEnd()) {
+    while (!m_textStream->atEnd() && (m_currentChar.isSpace() || m_currentChar == '\t')) {
         if (m_currentChar == '\n') ++m_lineNo;
         *m_textStream >> m_currentChar;
     }
