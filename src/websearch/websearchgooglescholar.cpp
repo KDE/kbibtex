@@ -386,23 +386,28 @@ void WebSearchGoogleScholar::startSearch(const QMap<QString, QString> &query, in
 
 void WebSearchGoogleScholar::doneFetchingStartPage(KJob *kJob)
 {
+    Q_ASSERT(kJob == d->currentJob);
     d->currentJob = NULL;
+
     if (d->hasBeenCancelled) {
-        kWarning() << "Searching " << label() << " got cancelled";
+        kDebug() << "Searching" << label() << "got cancelled";
         d->restoreOldCookieSettings();
         emit stoppedSearch(resultCancelled);
-        return;
-    } else if (kJob->error() != KJob::NoError) {
-        kWarning() << "Searching " << label() << " failed with error message: " << kJob->errorString();
-        KMessageBox::error(d->w, i18n("Searching \"%1\" failed with error message:\n\n%2", label(), kJob->errorString()));
-        d->restoreOldCookieSettings();
-        emit stoppedSearch(resultUnspecifiedError);
         return;
     }
 
     KIO::StoredTransferJob *transferJob = static_cast<KIO::StoredTransferJob *>(kJob);
+
+    if (kJob->error() != KJob::NoError) {
+        kWarning() << "Searching" << label() << "for URL" << transferJob->url().pathOrUrl() << "failed with error message:" << kJob->errorString();
+        d->restoreOldCookieSettings();
+        KMessageBox::error(m_parent, kJob->errorString().isEmpty() ? i18n("Searching \"%1\" failed for unknown reason.", label()) : i18n("Searching \"%1\" failed with error message:\n\n%2", label(), kJob->errorString()));
+        emit stoppedSearch(resultUnspecifiedError);
+        return;
+    }
+
     dumpData(transferJob->data(), 0);
-    kDebug() << "Google host: " << transferJob->url().host();
+    kDebug() << "Google host:" << transferJob->url().host();
 
     QMap<QString, QString> inputMap = d->formParameters(transferJob->data());
     inputMap["hl"] = "en";
@@ -420,21 +425,26 @@ void WebSearchGoogleScholar::doneFetchingStartPage(KJob *kJob)
 
 void WebSearchGoogleScholar::doneFetchingConfigPage(KJob *kJob)
 {
+    Q_ASSERT(kJob == d->currentJob);
     d->currentJob = NULL;
+
     if (d->hasBeenCancelled) {
-        kWarning() << "Searching " << label() << " got cancelled";
+        kDebug() << "Searching" << label() << "got cancelled";
         d->restoreOldCookieSettings();
         emit stoppedSearch(resultCancelled);
-        return;
-    } else if (kJob->error() != KJob::NoError) {
-        kWarning() << "Searching " << label() << " failed with error message: " << kJob->errorString();
-        d->restoreOldCookieSettings();
-        KMessageBox::sorry(d->w, i18n("Searching \"%1\" failed with error message:\n\n%2", label(), kJob->errorString()));
-        emit stoppedSearch(resultUnspecifiedError);
         return;
     }
 
     KIO::StoredTransferJob *transferJob = static_cast<KIO::StoredTransferJob *>(kJob);
+
+    if (kJob->error() != KJob::NoError) {
+        kWarning() << "Searching" << label() << "for URL" << transferJob->url().pathOrUrl() << "failed with error message:" << kJob->errorString();
+        d->restoreOldCookieSettings();
+        KMessageBox::error(m_parent, kJob->errorString().isEmpty() ? i18n("Searching \"%1\" failed for unknown reason.", label()) : i18n("Searching \"%1\" failed with error message:\n\n%2", label(), kJob->errorString()));
+        emit stoppedSearch(resultUnspecifiedError);
+        return;
+    }
+
     dumpData(transferJob->data(), 1);
 
     QMap<QString, QString> inputMap = d->formParameters(transferJob->data());
@@ -455,21 +465,26 @@ void WebSearchGoogleScholar::doneFetchingConfigPage(KJob *kJob)
 
 void WebSearchGoogleScholar::doneFetchingAdvSearchPage(KJob *kJob)
 {
+    Q_ASSERT(kJob == d->currentJob);
     d->currentJob = NULL;
+
     if (d->hasBeenCancelled) {
-        kWarning() << "Searching " << label() << " got cancelled";
+        kDebug() << "Searching" << label() << "got cancelled";
         d->restoreOldCookieSettings();
         emit stoppedSearch(resultCancelled);
-        return;
-    } else if (kJob->error() != KJob::NoError) {
-        kWarning() << "Searching " << label() << " failed with error message: " << kJob->errorString();
-        d->restoreOldCookieSettings();
-        KMessageBox::sorry(d->w, i18n("Searching \"%1\" failed with error message:\n\n%2", label(), kJob->errorString()));
-        emit stoppedSearch(resultUnspecifiedError);
         return;
     }
 
     KIO::StoredTransferJob *transferJob = static_cast<KIO::StoredTransferJob *>(kJob);
+
+    if (kJob->error() != KJob::NoError) {
+        kWarning() << "Searching" << label() << "for URL" << transferJob->url().pathOrUrl() << "failed with error message:" << kJob->errorString();
+        d->restoreOldCookieSettings();
+        KMessageBox::error(m_parent, kJob->errorString().isEmpty() ? i18n("Searching \"%1\" failed for unknown reason.", label()) : i18n("Searching \"%1\" failed with error message:\n\n%2", label(), kJob->errorString()));
+        emit stoppedSearch(resultUnspecifiedError);
+        return;
+    }
+
     dumpData(transferJob->data(), 1);
 
     QMap<QString, QString> inputMap = d->formParameters(transferJob->data());
@@ -497,21 +512,26 @@ void WebSearchGoogleScholar::doneFetchingAdvSearchPage(KJob *kJob)
 
 void WebSearchGoogleScholar::doneFetchingSetConfigPage(KJob *kJob)
 {
+    Q_ASSERT(kJob == d->currentJob);
     d->currentJob = NULL;
+
     if (d->hasBeenCancelled) {
-        kWarning() << "Searching " << label() << " got cancelled";
+        kDebug() << "Searching" << label() << "got cancelled";
         d->restoreOldCookieSettings();
         emit stoppedSearch(resultCancelled);
-        return;
-    } else  if (kJob->error() != KJob::NoError) {
-        kWarning() << "Searching " << label() << " failed with error message: " << kJob->errorString();
-        d->restoreOldCookieSettings();
-        KMessageBox::sorry(d->w, i18n("Searching \"%1\" failed with error message:\n\n%2", label(), kJob->errorString()));
-        emit stoppedSearch(resultUnspecifiedError);
         return;
     }
 
     KIO::StoredTransferJob *transferJob = static_cast<KIO::StoredTransferJob *>(kJob);
+
+    if (kJob->error() != KJob::NoError) {
+        kWarning() << "Searching" << label() << "for URL" << transferJob->url().pathOrUrl() << "failed with error message:" << kJob->errorString();
+        d->restoreOldCookieSettings();
+        KMessageBox::error(m_parent, kJob->errorString().isEmpty() ? i18n("Searching \"%1\" failed for unknown reason.", label()) : i18n("Searching \"%1\" failed with error message:\n\n%2", label(), kJob->errorString()));
+        emit stoppedSearch(resultUnspecifiedError);
+        return;
+    }
+
     dumpData(transferJob->data(), 2);
 
     QMap<QString, QString> inputMap = d->formParameters(transferJob->data());
@@ -539,21 +559,26 @@ void WebSearchGoogleScholar::doneFetchingSetConfigPage(KJob *kJob)
 
 void WebSearchGoogleScholar::doneFetchingQueryPage(KJob *kJob)
 {
+    Q_ASSERT(kJob == d->currentJob);
     d->currentJob = NULL;
+
     if (d->hasBeenCancelled) {
-        kWarning() << "Searching " << label() << " got cancelled";
+        kDebug() << "Searching" << label() << "got cancelled";
         d->restoreOldCookieSettings();
         emit stoppedSearch(resultCancelled);
-        return;
-    } else if (kJob->error() != KJob::NoError) {
-        kWarning() << "Searching " << label() << " failed with error message: " << kJob->errorString();
-        d->restoreOldCookieSettings();
-        KMessageBox::sorry(d->w, i18n("Searching \"%1\" failed with error message:\n\n%2", label(), kJob->errorString()));
-        emit stoppedSearch(resultUnspecifiedError);
         return;
     }
 
     KIO::StoredTransferJob *transferJob = static_cast<KIO::StoredTransferJob *>(kJob);
+
+    if (kJob->error() != KJob::NoError) {
+        kWarning() << "Searching" << label() << "for URL" << transferJob->url().pathOrUrl() << "failed with error message:" << kJob->errorString();
+        d->restoreOldCookieSettings();
+        KMessageBox::error(m_parent, kJob->errorString().isEmpty() ? i18n("Searching \"%1\" failed for unknown reason.", label()) : i18n("Searching \"%1\" failed with error message:\n\n%2", label(), kJob->errorString()));
+        emit stoppedSearch(resultUnspecifiedError);
+        return;
+    }
+
     dumpData(transferJob->data(), 3);
 
     QRegExp linkToBib("/scholar.bib\\?[^\" >]+");
@@ -575,13 +600,13 @@ void WebSearchGoogleScholar::doneFetchingQueryPage(KJob *kJob)
         connect(newJob, SIGNAL(permanentRedirection(KIO::Job*, KUrl, KUrl)), this, SLOT(permanentRedirection(KIO::Job*, KUrl, KUrl)));
         d->currentJob = newJob;
     } else {
-        kWarning() << "Searching " << label() << " resulted in no hits";
+        kDebug() << "Searching" << label() << "resulted in no hits";
         QStringList domainList;
         domainList << "scholar.google.com";
         QString ccSpecificDomain = transferJob->url().host();
         if (!domainList.contains(ccSpecificDomain))
             domainList << ccSpecificDomain;
-        KMessageBox::information(d->w, i18n("<qt><p>No hits were found in Google Scholar.</p><p>One possible reason is that cookies are disabled for the following domains:</p><ul><li>%1</li></ul><p>In Konqueror's cookie settings, these domains can be allowed to set cookies in your system.</p></qt>", domainList.join("</li><li>")), label());
+        KMessageBox::information(m_parent, i18n("<qt><p>No hits were found in Google Scholar.</p><p>One possible reason is that cookies are disabled for the following domains:</p><ul><li>%1</li></ul><p>In Konqueror's cookie settings, these domains can be allowed to set cookies in your system.</p></qt>", domainList.join("</li><li>")), label());
         d->restoreOldCookieSettings();
         emit stoppedSearch(resultUnspecifiedError);
     }
@@ -589,22 +614,27 @@ void WebSearchGoogleScholar::doneFetchingQueryPage(KJob *kJob)
 
 void WebSearchGoogleScholar::doneFetchingBibTeX(KJob *kJob)
 {
+    Q_ASSERT(kJob == d->currentJob);
     d->currentJob = NULL;
+
     if (d->hasBeenCancelled) {
-        kWarning() << "Searching " << label() << " got cancelled";
+        kDebug() << "Searching" << label() << "got cancelled";
         d->restoreOldCookieSettings();
         emit stoppedSearch(resultCancelled);
         return;
-    } else if (kJob->error() != KJob::NoError) {
-        kWarning() << "Searching " << label() << " failed with error message: " << kJob->errorString();
+    }
+
+    KIO::StoredTransferJob *transferJob = static_cast<KIO::StoredTransferJob *>(kJob);
+
+    if (kJob->error() != KJob::NoError) {
+        kWarning() << "Searching" << label() << "for URL" << transferJob->url().pathOrUrl() << "failed with error message:" << kJob->errorString();
         d->restoreOldCookieSettings();
-        KMessageBox::sorry(d->w, i18n("Searching \"%1\" failed with error message:\n\n%2", label(), kJob->errorString()));
+        KMessageBox::error(m_parent, kJob->errorString().isEmpty() ? i18n("Searching \"%1\" failed for unknown reason.", label()) : i18n("Searching \"%1\" failed with error message:\n\n%2", label(), kJob->errorString()));
         emit stoppedSearch(resultUnspecifiedError);
         return;
     }
 
     // FIXME has this section to be protected by a mutex?
-    KIO::StoredTransferJob *transferJob = static_cast<KIO::StoredTransferJob *>(kJob);
     dumpData(transferJob->data(), 4);
 
     QByteArray ba(transferJob->data());
@@ -615,7 +645,7 @@ void WebSearchGoogleScholar::doneFetchingBibTeX(KJob *kJob)
 
     Entry *entry = NULL;
     if (bibtexFile != NULL) {
-        for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
+        for (File::ConstIterator it = bibtexFile->constBegin(); entry == NULL && it != bibtexFile->constEnd(); ++it) {
             entry = dynamic_cast<Entry*>(*it);
             if (entry != NULL)
                 emit foundEntry(entry);
@@ -624,7 +654,7 @@ void WebSearchGoogleScholar::doneFetchingBibTeX(KJob *kJob)
     }
 
     if (entry == NULL) {
-        kWarning() << "Searching " << label() << " resulted in invalid BibTeX data: " << QString(transferJob->data());
+        kWarning() << "Searching" << label() << "resulted in invalid BibTeX data:" << QString(transferJob->data());
         d->restoreOldCookieSettings();
         emit stoppedSearch(resultUnspecifiedError);
         return;
@@ -679,9 +709,9 @@ KUrl WebSearchGoogleScholar::homepage() const
 
 void WebSearchGoogleScholar::cancel()
 {
+    d->hasBeenCancelled = true;
     if (d->currentJob != NULL)
         d->currentJob->kill(KJob::EmitResult);
-    d->hasBeenCancelled = true;
 }
 
 void WebSearchGoogleScholar::doStopSearch(int e)

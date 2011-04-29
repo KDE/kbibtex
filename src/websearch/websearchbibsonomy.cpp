@@ -30,6 +30,7 @@
 #include <KComboBox>
 #include <kio/job.h>
 #include <kio/jobclasses.h>
+#include <KMessageBox>
 
 #include <fileimporterbibtex.h>
 #include <file.h>
@@ -83,7 +84,7 @@ public:
 };
 
 WebSearchBibsonomy::WebSearchBibsonomy(QWidget *parent)
-        : WebSearchAbstract(parent), form(NULL)
+        : WebSearchAbstract(parent), form(NULL), m_job(NULL)
 {
     // nothing
 }
@@ -91,6 +92,7 @@ WebSearchBibsonomy::WebSearchBibsonomy(QWidget *parent)
 void WebSearchBibsonomy::startSearch(const QMap<QString, QString> &query, int numResults)
 {
     m_buffer.clear();
+    m_hasBeenCancelled = false;
 
     m_job = KIO::get(buildQueryUrl(query, numResults));
     connect(m_job, SIGNAL(data(KIO::Job *, const QByteArray &)), this, SLOT(data(KIO::Job*, const QByteArray&)));
@@ -100,6 +102,7 @@ void WebSearchBibsonomy::startSearch(const QMap<QString, QString> &query, int nu
 void WebSearchBibsonomy::startSearch()
 {
     m_buffer.clear();
+    m_hasBeenCancelled = false;
 
     m_job = KIO::get(buildQueryUrl());
     connect(m_job, SIGNAL(data(KIO::Job *, const QByteArray &)), this, SLOT(data(KIO::Job*, const QByteArray&)));
@@ -118,7 +121,8 @@ QString WebSearchBibsonomy::favIconUrl() const
 
 WebSearchQueryFormAbstract* WebSearchBibsonomy::customWidget(QWidget *parent)
 {
-    return new WebSearchBibsonomy::WebSearchQueryFormBibsonomy(parent);
+    form = new WebSearchBibsonomy::WebSearchQueryFormBibsonomy(parent);
+    return form;
 }
 
 KUrl WebSearchBibsonomy::homepage() const
@@ -128,8 +132,10 @@ KUrl WebSearchBibsonomy::homepage() const
 
 KUrl WebSearchBibsonomy::buildQueryUrl()
 {
-    if (form == NULL)
+    if (form == NULL) {
+        kWarning() << "Cannot build query url if no form is specified";
         return KUrl();
+    }
 
     // FIXME: Is there a need for percent encoding?
     QString queryString = form->lineEditSearchTerm->text();
@@ -168,7 +174,9 @@ KUrl WebSearchBibsonomy::buildQueryUrl(const QMap<QString, QString> &query, int 
 
 void WebSearchBibsonomy::cancel()
 {
-    m_job->kill(KJob::EmitResult);
+    m_hasBeenCancelled = true;
+    if (m_job != NULL)
+        m_job->kill(KJob::EmitResult);
 }
 
 void WebSearchBibsonomy::data(KIO::Job *job, const QByteArray &data)
@@ -179,7 +187,13 @@ void WebSearchBibsonomy::data(KIO::Job *job, const QByteArray &data)
 
 void WebSearchBibsonomy::jobDone(KJob *job)
 {
-    if (job->error() == 0) {
+    Q_ASSERT(m_job == job);
+    m_job = NULL;
+
+    if (m_hasBeenCancelled) {
+        kDebug() << "Searching" << label() << "got cancelled";
+        emit stoppedSearch(resultCancelled);
+    } else if (job->error() == KJob::NoError) {
         QBuffer buffer(&m_buffer);
         buffer.open(QBuffer::ReadOnly);
         FileImporterBibTeX importer;
@@ -198,7 +212,9 @@ void WebSearchBibsonomy::jobDone(KJob *job)
         } else
             emit stoppedSearch(resultUnspecifiedError);
     } else {
-        kWarning() << "Search using " << label() << "failed: " << job->errorString();
+        KIO::TransferJob *tJob = static_cast< KIO::TransferJob *>(job);
+        kWarning() << "Search using" << label() << "for URL" << tJob->url().pathOrUrl() << "failed:" << job->errorString() ;
+        KMessageBox::error(m_parent, job->errorString().isEmpty() ? i18n("Searching \"%1\" failed for unknown reason.", label()) : i18n("Searching \"%1\" failed with error message:\n\n%2", label(), job->errorString()));
         emit stoppedSearch(resultUnspecifiedError);
     }
 }

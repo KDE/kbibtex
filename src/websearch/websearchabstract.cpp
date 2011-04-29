@@ -47,3 +47,22 @@ KIcon WebSearchAbstract::icon() const
 
     return KIcon(fileName);
 }
+
+QStringList WebSearchAbstract::splitRespectingQuotationMarks(const QString &text)
+{
+    int p1 = 0, p2, max = text.length();
+    QStringList result;
+
+    while (p1 < max) {
+        while (text[p1] == ' ') ++p1;
+        p2 = p1;
+        if (text[p2] == '"') {
+            ++p2;
+            while (p2 < max && text[p2] != '"')  ++p2;
+        } else
+            while (p2 < max && text[p2] != ' ') ++p2;
+        result << text.mid(p1, p2 - p1 + 1);
+        p1 = p2 + 1;
+    }
+    return result;
+}

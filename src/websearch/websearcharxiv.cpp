@@ -28,6 +28,7 @@
 #include <KDebug>
 #include <KStandardDirs>
 #include <kio/job.h>
+#include <KMessageBox>
 
 #include "fileimporterbibtex.h"
 #include "websearcharxiv.h"
@@ -75,7 +76,6 @@ public:
 class WebSearchArXiv::WebSearchArXivPrivate
 {
 private:
-    QWidget *w;
     WebSearchArXiv *p;
     QRegExp jourRef1, jourRef2, jourRef3, jourRef4, jourRef5, jourRef6, m_reJour, m_reYear, m_rePages;
     QRegExp regExpPhD, regExpTechRep;
@@ -83,9 +83,11 @@ private:
 public:
     XSLTransform xslt;
     WebSearchQueryFormArXiv *form;
+    KIO::StoredTransferJob *job;
+    bool hasBeenCancelled;
 
-    WebSearchArXivPrivate(QWidget *widget, WebSearchArXiv *parent)
-            : w(widget), p(parent),
+    WebSearchArXivPrivate(WebSearchArXiv *parent)
+            : p(parent),
 
             /** examples:
                 Journal of Inefficient Algorithms 5 (2003) 35-39
@@ -137,29 +139,9 @@ public:
                 Learned Publishing, 20(1) (January 2007) 16-22
             */
             jourRef6("^([a-zA-Z. ]+),\\s+(\\d+)\\((\\d+)\\)\\s+(\\(([A-Za-z]+\\s+)?(\\d{4})\\))?\\s+(\\d+)(-(\\d+))?$", Qt::CaseInsensitive),
-            regExpPhD("Ph\\.?D\\.? Thesis", Qt::CaseInsensitive), regExpTechRep("Tech(\\.|nical) Rep(\\.|ort)", Qt::CaseInsensitive), xslt(KStandardDirs::locate("appdata", "arxiv2bibtex.xsl")), form(NULL) {
+            regExpPhD("Ph\\.?D\\.? Thesis", Qt::CaseInsensitive), regExpTechRep("Tech(\\.|nical) Rep(\\.|ort)", Qt::CaseInsensitive), xslt(KStandardDirs::locate("appdata", "arxiv2bibtex.xsl")),
+            form(NULL), job(NULL), hasBeenCancelled(false) {
         // nothing
-    }
-
-    /**
-     * Split a string along spaces, but keep text in quotation marks together
-     */
-    QStringList splitRespectingQuotationMarks(const QString &text) {
-        int p1 = 0, p2, max = text.length();
-        QStringList result;
-
-        while (p1 < max) {
-            while (text[p1] == ' ') ++p1;
-            p2 = p1;
-            if (text[p2] == '"') {
-                ++p2;
-                while (p2 < max && text[p2] != '"')  ++p2;
-            } else
-                while (p2 < max && text[p2] != ' ') ++p2;
-            result << text.mid(p1, p2 - p1 + 1);
-            p1 = p2 + 1;
-        }
-        return result;
     }
 
     KUrl buildQueryUrl() {
@@ -169,9 +151,9 @@ public:
         QStringList queryFragments;
 
         // FIXME: Is there a need for percent encoding?
-        queryFragments.append(splitRespectingQuotationMarks(form->lineEditFreeText->text()));
+        queryFragments.append(p->splitRespectingQuotationMarks(form->lineEditFreeText->text()));
 
-        url.append("search_query=all:" + queryFragments.join("+AND+all:") + "");
+        url.append("search_query=all:\"" + queryFragments.join("\"+AND+all:\"") + "\"");
 
         /// set number of expected results
         url.append(QString("&start=0&max_results=%1").arg(form->numResultsField->value()));
@@ -186,9 +168,9 @@ public:
         QStringList queryFragments;
         for (QMap<QString, QString>::ConstIterator it = query.constBegin(); it != query.constEnd(); ++it) {
             // FIXME: Is there a need for percent encoding?
-            queryFragments.append(splitRespectingQuotationMarks(it.value()));
+            queryFragments.append(p->splitRespectingQuotationMarks(it.value()));
         }
-        url.append("search_query=all:" + queryFragments.join("+AND+all:") + "");
+        url.append("search_query=all:\"" + queryFragments.join("\"+AND+all:\"") + "\"");
 
         /// set number of expected results
         url.append(QString("&start=0&max_results=%1").arg(numResults));
@@ -307,21 +289,23 @@ public:
 };
 
 WebSearchArXiv::WebSearchArXiv(QWidget *parent)
-        : WebSearchAbstract(parent), d(new WebSearchArXiv::WebSearchArXivPrivate(parent, this))
+        : WebSearchAbstract(parent), d(new WebSearchArXiv::WebSearchArXivPrivate(this))
 {
     // nothing
 }
 
 void WebSearchArXiv::startSearch()
 {
-    KIO::StoredTransferJob *job = KIO::storedGet(d->buildQueryUrl());
-    connect(job, SIGNAL(result(KJob *)), this, SLOT(jobDone(KJob*)));
+    d->hasBeenCancelled = false;
+    d->job = KIO::storedGet(d->buildQueryUrl());
+    connect(d->job, SIGNAL(result(KJob *)), this, SLOT(jobDone(KJob*)));
 }
 
 void WebSearchArXiv::startSearch(const QMap<QString, QString> &query, int numResults)
 {
-    KIO::StoredTransferJob *job = KIO::storedGet(d->buildQueryUrl(query, numResults));
-    connect(job, SIGNAL(result(KJob *)), this, SLOT(jobDone(KJob*)));
+    d->hasBeenCancelled = false;
+    d->job = KIO::storedGet(d->buildQueryUrl(query, numResults));
+    connect(d->job, SIGNAL(result(KJob *)), this, SLOT(jobDone(KJob*)));
 }
 
 QString WebSearchArXiv::label() const
@@ -346,38 +330,52 @@ KUrl WebSearchArXiv::homepage() const
 
 void WebSearchArXiv::cancel()
 {
-// TODO
+    d->hasBeenCancelled = true;
+    if (d->job != NULL)
+        d->job->kill(KJob::EmitResult);
 }
-
 
 void WebSearchArXiv::jobDone(KJob *j)
 {
-    if (j->error() == 0) {
-        KIO::StoredTransferJob *job = static_cast<KIO::StoredTransferJob*>(j);
+    Q_ASSERT(j == d->job);
+    d->job = NULL;
+
+    if (d->hasBeenCancelled) {
+        kDebug() << "Searching" << label() << "got cancelled";
+        emit stoppedSearch(resultCancelled);
+        return;
+    }
+
+    KIO::StoredTransferJob *job = static_cast<KIO::StoredTransferJob*>(j);
+
+    if (j->error() == KJob::NoError) {
         QTextStream ts(job->data());
         QString result = ts.readAll();
         result = result.replace("xmlns=\"http://www.w3.org/2005/Atom\"", ""); // FIXME fix arxiv2bibtex.xsl to handle namespace
 
+        /// use XSL transformation to get BibTeX document from XML result
         QString bibTeXcode = d->xslt.transform(result);
 
         FileImporterBibTeX importer;
         File *bibtexFile = importer.fromString(bibTeXcode);
 
         if (bibtexFile != NULL) {
+            bool hasEntry = false;
             for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
                 Entry *entry = dynamic_cast<Entry*>(*it);
                 if (entry != NULL) {
                     d->sanitize(entry);
+                    hasEntry = true;
                     emit foundEntry(entry);
                 }
-
             }
-            emit stoppedSearch(bibtexFile->isEmpty() ? resultUnspecifiedError : resultNoError);
+            emit stoppedSearch(hasEntry ? resultNoError : resultUnspecifiedError);
             delete bibtexFile;
         } else
             emit stoppedSearch(resultUnspecifiedError);
     } else {
-        kWarning() << "Search using " << label() << "failed: " << j->errorString();
+        kWarning() << "Search using" << label() << "for URL" << job->url().pathOrUrl() << "failed:" << j->errorString() ;
+        KMessageBox::error(m_parent, j->errorString().isEmpty() ? i18n("Searching \"%1\" failed for unknown reason.", label()) : i18n("Searching \"%1\" failed with error message:\n\n%2", label(), j->errorString()));
         emit stoppedSearch(resultUnspecifiedError);
     }
 }

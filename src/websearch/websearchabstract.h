@@ -88,6 +88,11 @@ protected:
 
     virtual QString favIconUrl() const = 0;
 
+    /**
+     * Split a string along spaces, but keep text in quotation marks together
+     */
+    QStringList splitRespectingQuotationMarks(const QString &text);
+
 signals:
     void foundEntry(Entry*);
     void stoppedSearch(int);
