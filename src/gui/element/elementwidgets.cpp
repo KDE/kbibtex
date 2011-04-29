@@ -874,7 +874,6 @@ void SourceWidget::createGUI()
     QGridLayout *layout = new QGridLayout(this);
     layout->setColumnStretch(0, 1);
     layout->setColumnStretch(1, 0);
-    layout->setColumnStretch(2, 0);
     layout->setRowStretch(0, 1);
     layout->setRowStretch(1, 0);
 
@@ -884,7 +883,7 @@ void SourceWidget::createGUI()
     sourceEdit->setTabStopWidth(QFontMetrics(sourceEdit->font()).averageCharWidth() * 4);
 
     m_buttonRestore = new KPushButton(KIcon("edit-undo"), i18n("Restore"), this);
-    layout->addWidget(m_buttonRestore, 1, 2, 1, 1);
+    layout->addWidget(m_buttonRestore, 1, 1, 1, 1);
     connect(m_buttonRestore, SIGNAL(clicked()), this, SLOT(reset()));
 
     connect(sourceEdit, SIGNAL(textChanged()), this, SLOT(gotModified()));
