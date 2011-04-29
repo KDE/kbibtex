@@ -5,6 +5,7 @@
 
     <Action name="file_new" />
     <Action name="file_open" />
+    <Action name="file_open_recent" />
     <Action name="file_close" />
     <DefineGroup name="save_merge" append="save_merge" />
     <Separator/>

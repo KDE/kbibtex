@@ -37,6 +37,7 @@
 #include <KDirOperator>
 #include <KPushButton>
 #include <KService>
+#include <KMessageBox>
 
 #include "documentlist.h"
 
@@ -168,10 +169,6 @@ QVariant DocumentListModel::data(const QModelIndex &index, int role) const
         /// determine mime type-based icon and overlays (e.g. for modified files)
         QStringList overlays;
         QString iconName = openFileInfo->mimeType().replace("/", "-");
-        if (openFileInfo->flags().testFlag(OpenFileInfo::IsModified))
-            overlays << "document-save";
-        else
-            overlays << "";
         if (openFileInfo->flags().testFlag(OpenFileInfo::Favorite))
             overlays << "favorites";
         else
@@ -292,7 +289,8 @@ void DocumentListView::openFileWithService(int i)
     QModelIndex modelIndex = currentIndex();
     if (modelIndex != QModelIndex()) {
         OpenFileInfo *ofi = qvariant_cast<OpenFileInfo*>(modelIndex.data(Qt::UserRole));
-        OpenFileInfoManager::getOpenFileInfoManager()->setCurrentFile(ofi, d->openMenuServices[i]);
+        if (!ofi->isModified() || (KMessageBox::questionYesNo(this, i18n("The current document document has to be saved before switching the viewer/editor component."), i18n("Save before switching?"), KGuiItem(i18n("Save document"), KIcon("document-save")), KGuiItem(i18n("Do not switch"), KIcon("dialog-cancel"))) == KMessageBox::Yes && ofi->save()))
+            OpenFileInfoManager::getOpenFileInfoManager()->setCurrentFile(ofi, d->openMenuServices[i]);
     }
 }
 

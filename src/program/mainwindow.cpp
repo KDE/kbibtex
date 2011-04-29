@@ -45,7 +45,6 @@
 #include "searchform.h"
 #include "searchresults.h"
 #include "elementform.h"
-#include "openfileinfo.h"
 #include "bibtexeditor.h"
 #include "documentlist.h"
 
@@ -72,6 +71,7 @@ public:
     SearchResults *searchResults;
     ElementForm *elementForm;
     OpenFileInfoManager *openFileInfoManager;
+    KMenu *actionMenuRecentFilesMenu;
 
     KBibTeXMainWindowPrivate(KBibTeXMainWindow *parent)
             : p(parent) {
@@ -102,12 +102,18 @@ KBibTeXMainWindow::KBibTeXMainWindow()
     connect(d->mdiWidget, SIGNAL(documentNew()), this, SLOT(newDocument()));
     connect(d->mdiWidget, SIGNAL(documentOpen()), this, SLOT(openDocumentDialog()));
     connect(d->openFileInfoManager, SIGNAL(currentChanged(OpenFileInfo*, KService::Ptr)), d->mdiWidget, SLOT(setFile(OpenFileInfo*, KService::Ptr)));
+    connect(d->openFileInfoManager, SIGNAL(flagsChanged(OpenFileInfo::StatusFlags)), this, SLOT(documentListsChanged(OpenFileInfo::StatusFlags)));
     connect(d->mdiWidget, SIGNAL(setCaption(QString)), this, SLOT(setCaption(QString)));
 
     KActionMenu *showPanelsAction = new KActionMenu(i18n("Show Panels"), this);
     actionCollection()->addAction("settings_shown_panels", showPanelsAction);
     KMenu *showPanelsMenu = new KMenu(showPanelsAction->text(), widget());
     showPanelsAction->setMenu(showPanelsMenu);
+
+    KActionMenu *actionMenuRecentFiles = new KActionMenu(KIcon("document-open-recent"), i18n("Recently used files"), this);
+    actionCollection()->addAction("file_open_recent", actionMenuRecentFiles);
+    d->actionMenuRecentFilesMenu = new KMenu(actionMenuRecentFiles->text(), widget());
+    actionMenuRecentFiles->setMenu(d->actionMenuRecentFilesMenu);
 
     d->dockDocumentList = new QDockWidget(i18n("List of Documents"), this);
     d->dockDocumentList->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
@@ -180,6 +186,8 @@ KBibTeXMainWindow::KBibTeXMainWindow()
     d->actionClose = actionCollection()->addAction(KStandardAction::Close, this, SLOT(closeDocument()));
     d->actionClose->setEnabled(false);
     actionCollection()->addAction(KStandardAction::Quit,  kapp, SLOT(quit()));
+
+    documentListsChanged(OpenFileInfo::RecentlyUsed); /// force initialization of menu of recently used files
 
     setupControllers();
     setupGUI();
@@ -267,8 +275,8 @@ void KBibTeXMainWindow::openDocument(const KUrl& url)
 
 void KBibTeXMainWindow::closeDocument()
 {
-    d->openFileInfoManager->close(d->openFileInfoManager->currentFile());
     d->actionClose->setEnabled(false);
+    d->openFileInfoManager->close(d->openFileInfoManager->currentFile());
 }
 
 void KBibTeXMainWindow::documentSwitched(BibTeXEditor *oldEditor, BibTeXEditor *newEditor)
@@ -286,12 +294,14 @@ void KBibTeXMainWindow::documentSwitched(BibTeXEditor *oldEditor, BibTeXEditor *
         disconnect(oldEditor, SIGNAL(currentElementChanged(Element*, const File *)), d->referencePreview, SLOT(setElement(Element*, const File *)));
         disconnect(oldEditor, SIGNAL(currentElementChanged(Element*, const File *)), d->elementForm, SLOT(setElement(Element*, const File *)));
         disconnect(oldEditor, SIGNAL(currentElementChanged(Element*, const File *)), d->urlPreview, SLOT(setElement(Element*, const File *)));
+        disconnect(oldEditor, SIGNAL(modified()), d->valueList, SLOT(update()));
         disconnect(d->elementForm, SIGNAL(elementModified()), newEditor, SLOT(externalModification()));
     }
     if (newEditor != NULL) {
         connect(newEditor, SIGNAL(currentElementChanged(Element*, const File *)), d->referencePreview, SLOT(setElement(Element*, const File *)));
         connect(newEditor, SIGNAL(currentElementChanged(Element*, const File *)), d->elementForm, SLOT(setElement(Element*, const File *)));
         connect(newEditor, SIGNAL(currentElementChanged(Element*, const File *)), d->urlPreview, SLOT(setElement(Element*, const File *)));
+        connect(newEditor, SIGNAL(modified()), d->valueList, SLOT(update()));
         connect(d->elementForm, SIGNAL(elementModified()), newEditor, SLOT(externalModification()));
     }
 
@@ -305,4 +315,26 @@ void KBibTeXMainWindow::documentSwitched(BibTeXEditor *oldEditor, BibTeXEditor *
 void KBibTeXMainWindow::showSearchResults()
 {
     d->dockSearchResults->show();
+}
+
+void KBibTeXMainWindow::documentListsChanged(OpenFileInfo::StatusFlags statusFlags)
+{
+    if (statusFlags.testFlag(OpenFileInfo::RecentlyUsed)) {
+        QList<OpenFileInfo*> list = d->openFileInfoManager->filteredItems(OpenFileInfo::RecentlyUsed);
+        d->actionMenuRecentFilesMenu->clear();
+        foreach(OpenFileInfo* cur, list) {
+            KAction *action = new KAction(QString("%1 [%2]").arg(cur->shortCaption()).arg(cur->fullCaption()), this);
+            action->setData(cur->url());
+            action->setIcon(KIcon(cur->mimeType().replace("/", "-")));
+            d->actionMenuRecentFilesMenu->addAction(action);
+            connect(action, SIGNAL(triggered()), this, SLOT(openRecentFile()));
+        }
+    }
+}
+
+void KBibTeXMainWindow::openRecentFile()
+{
+    KAction *action = static_cast<KAction*>(sender());
+    KUrl url = action->data().value<KUrl>();
+    openDocument(url);
 }

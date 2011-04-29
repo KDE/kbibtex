@@ -47,8 +47,7 @@ public:
         Open = 0x1,
         RecentlyUsed = 0x2,
         Favorite = 0x4,
-        HasName = 0x8,
-        IsModified = 0x16
+        HasName = 0x8
     };
     Q_DECLARE_FLAGS(StatusFlags, StatusFlag)
 
@@ -60,6 +59,8 @@ public:
     QString fullCaption() const;
     QString mimeType() const;
     KUrl url() const;
+    bool isModified() const;
+    bool save();
     bool close();
 
     StatusFlags flags() const;

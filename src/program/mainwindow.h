@@ -24,6 +24,8 @@
 #include <kparts/mainwindow.h>
 #include <KConfigGroup>
 
+#include "openfileinfo.h"
+
 class QTextEdit;
 class QDragEnterEvent;
 class QDropEvent;
@@ -60,6 +62,8 @@ protected slots:
 
 private slots:
     void showSearchResults();
+    void documentListsChanged(OpenFileInfo::StatusFlags statusFlags);
+    void openRecentFile();
 
 private:
     class KBibTeXMainWindowPrivate;
