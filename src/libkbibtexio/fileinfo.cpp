@@ -21,7 +21,6 @@
 #include <QFileInfo>
 #include <QDir>
 
-#include <KDebug>
 
 #include <kbibtexnamespace.h>
 #include <entry.h>
@@ -126,7 +125,7 @@ QList<KUrl> FileInfo::entryUrls(const Entry *entry, const KUrl &bibTeXUrl)
     for (Entry::ConstIterator it = entry->constBegin(); it != entry->constEnd(); ++it) {
         Value v = *it;
 
-        for (Value::ConstIterator vit = v.constBegin(); vit != v.constEnd();++vit) {
+        for (Value::ConstIterator vit = v.constBegin(); vit != v.constEnd(); ++vit) {
             QString plainText = PlainTextValue::text(*(*vit), NULL);
 
             int pos = -1;

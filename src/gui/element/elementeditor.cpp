@@ -27,7 +27,6 @@
 #include <QApplication>
 #include <QFileInfo>
 
-#include <KDebug>
 #include <KPushButton>
 #include <KMessageBox>
 #include <KLocale>
@@ -308,12 +307,9 @@ public:
 
                 if (errorLine.indexIn(line) > -1) {
                     buffer.open(QIODevice::ReadOnly);
-                    kDebug() << "size= " << buffer.size();
                     QTextStream ts(&buffer);
-                    kDebug() << "error line: " << errorLine.cap(1);
                     for (int i = errorLine.cap(1).toInt();i > 1;--i) {
                         errorPlainText = ts.readLine();
-                        kDebug() << "error text " << errorPlainText;
                         buffer.close();
                     }
                 } else if (line.startsWith(QLatin1String("Warning--"))) {

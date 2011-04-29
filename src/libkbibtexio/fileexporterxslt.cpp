@@ -105,7 +105,6 @@ bool FileExporterXSLT::save(QIODevice* iodevice, const Element* element, QString
 
 void FileExporterXSLT::setXSLTFilename(const QString& xsltFilename)
 {
-    kDebug() << "xsltFilename=" << xsltFilename;
     m_xsltFilename = xsltFilename;
 }
 
