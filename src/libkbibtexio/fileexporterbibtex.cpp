@@ -540,9 +540,9 @@ QString FileExporterBibTeX::escapeLaTeXChars(const QString &text)
 {
     QString result = text;
 
-    static QRegExp regExpEscape("[^\\\\][&#_%]");
+    const QRegExp regExpEscape("[^\\\\][&#_%]");
     int p = -1;
-    while ((p = regExpEscape.indexIn(text, p + 1)) != -1)
+    while ((p = regExpEscape.indexIn(result, p + 1)) != -1)
         result = result.left(p + 1) + '\\' + result.mid(p + 1);
     return result;
 }
