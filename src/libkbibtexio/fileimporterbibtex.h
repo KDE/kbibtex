@@ -98,6 +98,7 @@ private:
     bool m_cancelFlag;
     unsigned int m_lineNo;
     QTextStream *m_textStream;
+    int m_textStreamLastPos;
     QChar m_currentChar;
     bool m_ignoreComments;
     QString m_encoding;
