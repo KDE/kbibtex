@@ -86,7 +86,7 @@
 <xsl:template match="AuthorList">
 <xsl:text>,
     author = {</xsl:text>
-<xsl:apply-templates select="Author[@ValidYN='Y']"/>
+<xsl:apply-templates select="Author"/>
 <xsl:text>}</xsl:text>
 </xsl:template>
 
