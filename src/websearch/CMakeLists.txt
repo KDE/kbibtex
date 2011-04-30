@@ -7,6 +7,7 @@ set( websearch_LIB_SRCS
 	websearchgooglescholar.cpp
 	websearchieeexplore.cpp
 	websearchpubmed.cpp
+	websearchacmportal.cpp
 	websearchgeneral.cpp
 	cookiemanager.cpp
 )
@@ -24,6 +25,7 @@ kde4_add_library( kbibtexws SHARED ${websearch_LIB_SRCS} )
 
 target_link_libraries( kbibtexws
 	${QT_QTCORE_LIBRARY}
+	${QT_QTWEBKIT_LIBRARY}
 	${KDE4_KDECORE_LIBS}
 	${KDE4_KIO_LIBS}
 	kbibtexio

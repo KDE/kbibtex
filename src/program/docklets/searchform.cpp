@@ -43,6 +43,7 @@
 #include <websearchgooglescholar.h>
 #include <websearchpubmed.h>
 #include <websearchieeexplore.h>
+#include <websearchacmportal.h>
 #include <websearcharxiv.h>
 #include <fileexporterbibtex.h>
 #include <file.h>
@@ -167,6 +168,7 @@ public:
 
         addEngine(new WebSearchBibsonomy(p));
         addEngine(new WebSearchGoogleScholar(p));
+        addEngine(new WebSearchAcmPortal(p));
         addEngine(new WebSearchArXiv(p));
         addEngine(new WebSearchPubMed(p));
         addEngine(new WebSearchIEEEXplore(p));
