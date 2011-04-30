@@ -84,7 +84,6 @@ public:
     XSLTransform xslt;
     WebSearchQueryFormArXiv *form;
     KIO::StoredTransferJob *job;
-    bool hasBeenCancelled;
 
     WebSearchArXivPrivate(WebSearchArXiv *parent)
             : p(parent),
@@ -140,7 +139,7 @@ public:
             */
             jourRef6("^([a-zA-Z. ]+),\\s+(\\d+)\\((\\d+)\\)\\s+(\\(([A-Za-z]+\\s+)?(\\d{4})\\))?\\s+(\\d+)(-(\\d+))?$", Qt::CaseInsensitive),
             regExpPhD("Ph\\.?D\\.? Thesis", Qt::CaseInsensitive), regExpTechRep("Tech(\\.|nical) Rep(\\.|ort)", Qt::CaseInsensitive), xslt(KStandardDirs::locate("appdata", "arxiv2bibtex.xsl")),
-            form(NULL), job(NULL), hasBeenCancelled(false) {
+            form(NULL), job(NULL) {
         // nothing
     }
 
@@ -296,14 +295,14 @@ WebSearchArXiv::WebSearchArXiv(QWidget *parent)
 
 void WebSearchArXiv::startSearch()
 {
-    d->hasBeenCancelled = false;
+    m_hasBeenCanceled = false;
     d->job = KIO::storedGet(d->buildQueryUrl());
     connect(d->job, SIGNAL(result(KJob *)), this, SLOT(jobDone(KJob*)));
 }
 
 void WebSearchArXiv::startSearch(const QMap<QString, QString> &query, int numResults)
 {
-    d->hasBeenCancelled = false;
+    m_hasBeenCanceled = false;
     d->job = KIO::storedGet(d->buildQueryUrl(query, numResults));
     connect(d->job, SIGNAL(result(KJob *)), this, SLOT(jobDone(KJob*)));
 }
@@ -330,7 +329,7 @@ KUrl WebSearchArXiv::homepage() const
 
 void WebSearchArXiv::cancel()
 {
-    d->hasBeenCancelled = true;
+    WebSearchAbstract::cancel();
     if (d->job != NULL)
         d->job->kill(KJob::EmitResult);
 }
@@ -341,15 +340,8 @@ void WebSearchArXiv::jobDone(KJob *j)
     Q_ASSERT(j == d->job);
     d->job = NULL;
 
-    if (d->hasBeenCancelled) {
-        kDebug() << "Searching" << label() << "got cancelled";
-        emit stoppedSearch(resultCancelled);
-        return;
-    }
-
-    KIO::StoredTransferJob *job = static_cast<KIO::StoredTransferJob*>(j);
-
-    if (j->error() == KJob::NoError) {
+    if (handleErrors(j)) {
+        KIO::StoredTransferJob *job = static_cast<KIO::StoredTransferJob*>(j);
         QTextStream ts(job->data());
         QString result = ts.readAll();
         result = result.replace("xmlns=\"http://www.w3.org/2005/Atom\"", ""); // FIXME fix arxiv2bibtex.xsl to handle namespace
@@ -374,9 +366,5 @@ void WebSearchArXiv::jobDone(KJob *j)
             delete bibtexFile;
         } else
             emit stoppedSearch(resultUnspecifiedError);
-    } else {
-        kWarning() << "Search using" << label() << "for URL" << job->url().pathOrUrl() << "failed:" << j->errorString() ;
-        KMessageBox::error(m_parent, j->errorString().isEmpty() ? i18n("Searching \"%1\" failed for unknown reason.", label()) : i18n("Searching \"%1\" failed with error message:\n\n%2", label(), j->errorString()));
-        emit stoppedSearch(resultUnspecifiedError);
     }
 }

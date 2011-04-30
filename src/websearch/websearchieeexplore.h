@@ -50,7 +50,6 @@ public slots:
 
 protected:
     virtual QString favIconUrl() const;
-    void doStopSearch(int e);
 
 private slots:
     void doneFetchingStartPage(KJob *);

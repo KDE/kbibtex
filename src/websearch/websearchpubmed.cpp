@@ -54,10 +54,9 @@ public:
     XSLTransform xslt;
     WebSearchQueryFormPubMed *form;
     KIO::StoredTransferJob *job;
-    bool hasBeenCancelled;
 
     WebSearchPubMedPrivate(WebSearchPubMed *parent)
-            : p(parent), pubMedUrlPrefix(QLatin1String("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/")), xslt(KStandardDirs::locate("appdata", "pubmed2bibtex.xsl")), form(NULL), job(NULL), hasBeenCancelled(false) {
+            : p(parent), pubMedUrlPrefix(QLatin1String("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/")), xslt(KStandardDirs::locate("appdata", "pubmed2bibtex.xsl")), form(NULL), job(NULL) {
         // nothing
     }
 
@@ -110,13 +109,13 @@ WebSearchPubMed::WebSearchPubMed(QWidget *parent)
 
 void WebSearchPubMed::startSearch()
 {
-    d->hasBeenCancelled = false;
+    m_hasBeenCanceled = false;
     // TODO: No customized search widget
 }
 
 void WebSearchPubMed::startSearch(const QMap<QString, QString> &query, int numResults)
 {
-    d->hasBeenCancelled = false;
+    m_hasBeenCanceled = false;
     d->job = KIO::storedGet(d->buildQueryUrl(query, numResults));
     connect(d->job, SIGNAL(result(KJob *)), this, SLOT(jobESearchDone(KJob*)));
 }
@@ -146,7 +145,7 @@ KUrl WebSearchPubMed::homepage() const
 
 void WebSearchPubMed::cancel()
 {
-    d->hasBeenCancelled = true;
+    WebSearchAbstract::cancel();
     if (d->job != NULL)
         d->job->kill(KJob::EmitResult);
 }
@@ -156,15 +155,8 @@ void WebSearchPubMed::jobESearchDone(KJob *j)
     Q_ASSERT(j == d->job);
     d->job = NULL;
 
-    if (d->hasBeenCancelled) {
-        kDebug() << "Searching" << label() << "got cancelled";
-        emit stoppedSearch(resultCancelled);
-        return;
-    }
-
-    KIO::StoredTransferJob *job = static_cast<KIO::StoredTransferJob*>(j);
-
-    if (j->error() == KJob::NoError) {
+    if (handleErrors(j)) {
+        KIO::StoredTransferJob *job = static_cast<KIO::StoredTransferJob*>(j);
         QTextStream ts(job->data());
         QString result = ts.readAll();
 
@@ -182,10 +174,6 @@ void WebSearchPubMed::jobESearchDone(KJob *j)
             d->job = KIO::storedGet(d->buildFetchIdUrl(idList));
             connect(d->job, SIGNAL(result(KJob *)), this, SLOT(jobEFetchDone(KJob*)));
         }
-    } else {
-        kWarning() << "Search using" << label() << "for URL" << job->url().pathOrUrl() << "failed:" << j->errorString();
-        KMessageBox::error(m_parent, j->errorString().isEmpty() ? i18n("Searching \"%1\" failed for unknown reason.", label()) : i18n("Searching \"%1\" failed with error message:\n\n%2", label(), j->errorString()));
-        emit stoppedSearch(resultUnspecifiedError);
     }
 }
 
@@ -194,20 +182,13 @@ void WebSearchPubMed::jobEFetchDone(KJob *j)
     Q_ASSERT(j == d->job);
     d->job = NULL;
 
-    if (d->hasBeenCancelled) {
-        kDebug() << "Searching" << label() << "got cancelled";
-        emit stoppedSearch(resultCancelled);
-        return;
-    }
-
-    KIO::StoredTransferJob *job = static_cast<KIO::StoredTransferJob*>(j);
-
-    if (j->error() == KJob::NoError) {
+    if (handleErrors(j)) {
+        KIO::StoredTransferJob *job = static_cast<KIO::StoredTransferJob*>(j);
         QTextStream ts(job->data());
-        QString result = ts.readAll();
+        QString input = ts.readAll();
 
         /// use XSL transformation to get BibTeX document from XML result
-        QString bibTeXcode = d->xslt.transform(result);
+        QString bibTeXcode = d->xslt.transform(input);
 
         FileImporterBibTeX importer;
         File *bibtexFile = importer.fromString(bibTeXcode);
@@ -225,9 +206,5 @@ void WebSearchPubMed::jobEFetchDone(KJob *j)
             delete bibtexFile;
         } else
             emit stoppedSearch(resultUnspecifiedError);
-    } else {
-        kWarning() << "Search using" << label() << "for URL" << job->url().pathOrUrl() << "failed:" << j->errorString();
-        KMessageBox::error(m_parent, j->errorString().isEmpty() ? i18n("Searching \"%1\" failed for unknown reason.", label()) : i18n("Searching \"%1\" failed with error message:\n\n%2", label(), j->errorString()));
-        emit stoppedSearch(resultUnspecifiedError);
     }
 }

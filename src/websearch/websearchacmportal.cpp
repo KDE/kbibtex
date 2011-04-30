@@ -44,7 +44,6 @@ private:
     WebSearchAcmPortal *p;
 
 public:
-    bool hasBeenCancelled;
     QString joinedQueryString;
     int numExpectedResults;
     QWebPage *page;
@@ -56,7 +55,7 @@ public:
     QRegExp regExpId, regExpIdCFID, regExpIdCFTOKEN;
 
     WebSearchAcmPortalPrivate(WebSearchAcmPortal *parent)
-            : p(parent), hasBeenCancelled(false), page(new QWebPage(parent)),
+            : p(parent), page(new QWebPage(parent)),
             acmPortalBaseUrl(QLatin1String("http://portal.acm.org/")),
             acmPortalContinueUrl(QLatin1String("http://portal.acm.org/results.cfm?query=%4&querydisp=%4&source_query=&start=%1&srt=score+dsc&short=1&source_disp=&since_month=&since_year=&before_month=&before_year=&coll=DL&dl=GUIDE&termshow=matchall&range_query=&CFID=%2&CFTOKEN=%3")),
             regExpId("(\\?|&)id=(\\d+)\\.(\\d+)(&|$)"), regExpIdCFID("(\\?|&)CFID=(\\d+)(&|$)"), regExpIdCFTOKEN("(\\?|&)CFTOKEN=(\\d+)(&|$)") {
@@ -85,7 +84,7 @@ void WebSearchAcmPortal::startSearch(const QMap<QString, QString> &query, int nu
 {
     Q_UNUSED(numResults);
 
-    d->hasBeenCancelled = false;
+    m_hasBeenCanceled = false;
     d->joinedQueryString.clear();
     d->currentSearchPosition = 1;
     d->bibTeXUrls.clear();
@@ -102,7 +101,7 @@ void WebSearchAcmPortal::startSearch(const QMap<QString, QString> &query, int nu
 
 void WebSearchAcmPortal::startSearch()
 {
-    d->hasBeenCancelled = false;
+    m_hasBeenCanceled = false;
     emit stoppedSearch(resultNoError);
 }
 
@@ -128,17 +127,14 @@ KUrl WebSearchAcmPortal::homepage() const
 
 void WebSearchAcmPortal::cancel()
 {
-    d->hasBeenCancelled = true;
+    WebSearchAbstract::cancel();
 }
 
 void WebSearchAcmPortal::doneFetchingStartPage(bool ok)
 {
     disconnect(d->page, SIGNAL(loadFinished(bool)), this, SLOT(doneFetchingStartPage(bool)));
 
-    if (d->hasBeenCancelled) {
-        kDebug() << "Searching" << label() << "got cancelled";
-        emit stoppedSearch(resultCancelled);
-    } else if (ok) {
+    if (handleErrors(ok)) {
         QWebElement form = d->page->mainFrame()->findFirstElement("form[name=\"qiksearch\"]");
         if (!form.isNull()) {
             QString action = form.attribute(QLatin1String("action"));
@@ -152,10 +148,6 @@ void WebSearchAcmPortal::doneFetchingStartPage(bool ok)
             KMessageBox::error(m_parent, i18n("Searching \"%1\" failed for unknown reason.", label()));
             emit stoppedSearch(resultUnspecifiedError);
         }
-    } else {
-        kWarning() << "Search using" << label() << "failed.";
-        KMessageBox::error(m_parent, i18n("Searching \"%1\" failed for unknown reason.", label()));
-        emit stoppedSearch(resultUnspecifiedError);
     }
 }
 
@@ -163,10 +155,7 @@ void WebSearchAcmPortal::doneFetchingSearchPage(bool ok)
 {
     disconnect(d->page, SIGNAL(loadFinished(bool)), this, SLOT(doneFetchingSearchPage(bool)));
 
-    if (d->hasBeenCancelled) {
-        kDebug() << "Searching" << label() << "got cancelled";
-        emit stoppedSearch(resultCancelled);
-    } else if (ok) {
+    if (handleErrors(ok)) {
         /// find the position where the search results begin using a CSS2 selector
         QWebElementCollection collection = d->page->mainFrame()->findAllElements("table[style=\"padding: 5px; 5px; 5px; 5px;\"]");
 
@@ -200,24 +189,13 @@ void WebSearchAcmPortal::doneFetchingSearchPage(bool ok)
             d->bibTeXUrls.removeFirst();
         } else
             emit stoppedSearch(resultNoError);
-    } else {
-        kWarning() << "Search using" << label() << "failed.";
-        KMessageBox::error(m_parent, i18n("Searching \"%1\" failed for unknown reason.", label()));
-        emit stoppedSearch(resultUnspecifiedError);
     }
 }
 
 void WebSearchAcmPortal::doneFetchingBibTeX(KJob *kJob)
 {
-    if (d->hasBeenCancelled) {
-        kDebug() << "Searching" << label() << "got cancelled";
-        emit stoppedSearch(resultCancelled);
-        return;
-    }
-
-    KIO::StoredTransferJob *job = static_cast<KIO::StoredTransferJob*>(kJob);
-
-    if (kJob->error() == KJob::NoError) {
+    if (handleErrors(kJob)) {
+        KIO::StoredTransferJob *job = static_cast<KIO::StoredTransferJob*>(kJob);
         QTextStream ts(job->data());
         QString bibTeXcode = ts.readAll();
 
@@ -243,9 +221,5 @@ void WebSearchAcmPortal::doneFetchingBibTeX(KJob *kJob)
             d->bibTeXUrls.removeFirst();
         } else
             emit stoppedSearch(resultNoError);
-    } else {
-        kWarning() << "Search using" << label() << "for URL" << job->url().pathOrUrl() << "failed:" << job->errorString() ;
-        KMessageBox::error(m_parent, job->errorString().isEmpty() ? i18n("Searching \"%1\" failed for unknown reason.", label()) : i18n("Searching \"%1\" failed with error message:\n\n%2", label(), job->errorString()));
-        emit stoppedSearch(resultUnspecifiedError);
     }
 }

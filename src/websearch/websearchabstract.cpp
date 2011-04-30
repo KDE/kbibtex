@@ -22,6 +22,9 @@
 
 #include <KStandardDirs>
 #include <kio/netaccess.h>
+#include <KDebug>
+#include <KLocale>
+#include <KMessageBox>
 
 #include "websearchabstract.h"
 
@@ -48,6 +51,11 @@ KIcon WebSearchAbstract::icon() const
     return KIcon(fileName);
 }
 
+void WebSearchAbstract::cancel()
+{
+    m_hasBeenCanceled = true;
+}
+
 QStringList WebSearchAbstract::splitRespectingQuotationMarks(const QString &text)
 {
     int p1 = 0, p2, max = text.length();
@@ -65,4 +73,35 @@ QStringList WebSearchAbstract::splitRespectingQuotationMarks(const QString &text
         p1 = p2 + 1;
     }
     return result;
+}
+
+bool WebSearchAbstract::handleErrors(KJob *kJob)
+{
+    if (m_hasBeenCanceled) {
+        kDebug() << "Searching" << label() << "got cancelled";
+        emit stoppedSearch(resultCancelled);
+        return false;
+    } else if (kJob->error() != KJob::NoError) {
+        KIO::SimpleJob *sJob = static_cast<KIO::SimpleJob*>(kJob);
+        kWarning() << "Search using" << label() << (sJob != NULL ? QLatin1String("for URL ") + sJob->url().pathOrUrl() : QLatin1String("")) << "failed:" << kJob->errorString();
+        KMessageBox::error(m_parent, kJob->errorString().isEmpty() ? i18n("Searching \"%1\" failed for unknown reason.", label()) : i18n("Searching \"%1\" failed with error message:\n\n%2", label(), kJob->errorString()));
+        emit stoppedSearch(resultUnspecifiedError);
+        return false;
+    }
+    return true;
+}
+
+bool WebSearchAbstract::handleErrors(bool ok)
+{
+    if (m_hasBeenCanceled) {
+        kDebug() << "Searching" << label() << "got cancelled";
+        emit stoppedSearch(resultCancelled);
+        return false;
+    } else if (!ok) {
+        kWarning() << "Search using" << label() << "failed.";
+        KMessageBox::error(m_parent, i18n("Searching \"%1\" failed for unknown reason.", label()));
+        emit stoppedSearch(resultUnspecifiedError);
+        return false;
+    }
+    return true;
 }

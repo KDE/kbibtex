@@ -31,8 +31,7 @@ class KLineEdit;
 class KJob;
 namespace KIO
 {
-class TransferJob;
-class Job;
+class StoredTransferJob;
 }
 
 /**
@@ -55,7 +54,6 @@ public slots:
     void cancel();
 
 private slots:
-    void data(KIO::Job *job, const QByteArray &data);
     void jobDone(KJob *job);
 
 protected:
@@ -65,9 +63,7 @@ private:
     class WebSearchQueryFormBibsonomy;
     WebSearchQueryFormBibsonomy *form;
 
-    QByteArray m_buffer;
-    KIO::TransferJob *m_job;
-    bool m_hasBeenCancelled;
+    KIO::StoredTransferJob *m_job;
 
     KUrl buildQueryUrl();
     KUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults);

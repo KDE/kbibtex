@@ -91,21 +91,17 @@ WebSearchBibsonomy::WebSearchBibsonomy(QWidget *parent)
 
 void WebSearchBibsonomy::startSearch(const QMap<QString, QString> &query, int numResults)
 {
-    m_buffer.clear();
-    m_hasBeenCancelled = false;
+    m_hasBeenCanceled = false;
 
-    m_job = KIO::get(buildQueryUrl(query, numResults));
-    connect(m_job, SIGNAL(data(KIO::Job *, const QByteArray &)), this, SLOT(data(KIO::Job*, const QByteArray&)));
+    m_job = KIO::storedGet(buildQueryUrl(query, numResults));
     connect(m_job, SIGNAL(result(KJob *)), this, SLOT(jobDone(KJob*)));
 }
 
 void WebSearchBibsonomy::startSearch()
 {
-    m_buffer.clear();
-    m_hasBeenCancelled = false;
+    m_hasBeenCanceled = false;
 
-    m_job = KIO::get(buildQueryUrl());
-    connect(m_job, SIGNAL(data(KIO::Job *, const QByteArray &)), this, SLOT(data(KIO::Job*, const QByteArray&)));
+    m_job = KIO::storedGet(buildQueryUrl());
     connect(m_job, SIGNAL(result(KJob *)), this, SLOT(jobDone(KJob*)));
 }
 
@@ -174,15 +170,9 @@ KUrl WebSearchBibsonomy::buildQueryUrl(const QMap<QString, QString> &query, int 
 
 void WebSearchBibsonomy::cancel()
 {
-    m_hasBeenCancelled = true;
+    WebSearchAbstract::cancel();
     if (m_job != NULL)
         m_job->kill(KJob::EmitResult);
-}
-
-void WebSearchBibsonomy::data(KIO::Job *job, const QByteArray &data)
-{
-    Q_UNUSED(job)
-    m_buffer.append(data);
 }
 
 void WebSearchBibsonomy::jobDone(KJob *job)
@@ -190,15 +180,13 @@ void WebSearchBibsonomy::jobDone(KJob *job)
     Q_ASSERT(m_job == job);
     m_job = NULL;
 
-    if (m_hasBeenCancelled) {
-        kDebug() << "Searching" << label() << "got cancelled";
-        emit stoppedSearch(resultCancelled);
-    } else if (job->error() == KJob::NoError) {
-        QBuffer buffer(&m_buffer);
-        buffer.open(QBuffer::ReadOnly);
+    if (handleErrors(job)) {
+        KIO::StoredTransferJob *storedJob = static_cast< KIO::StoredTransferJob *>(job);
+        QTextStream ts(storedJob->data());
+        QString bibTeXcode = ts.readAll();
+
         FileImporterBibTeX importer;
-        File *bibtexFile = importer.load(&buffer);
-        buffer.close();
+        File *bibtexFile = importer.fromString(bibTeXcode);
 
         if (bibtexFile != NULL) {
             for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
@@ -211,10 +199,5 @@ void WebSearchBibsonomy::jobDone(KJob *job)
             delete bibtexFile;
         } else
             emit stoppedSearch(resultUnspecifiedError);
-    } else {
-        KIO::TransferJob *tJob = static_cast< KIO::TransferJob *>(job);
-        kWarning() << "Search using" << label() << "for URL" << tJob->url().pathOrUrl() << "failed:" << job->errorString() ;
-        KMessageBox::error(m_parent, job->errorString().isEmpty() ? i18n("Searching \"%1\" failed for unknown reason.", label()) : i18n("Searching \"%1\" failed with error message:\n\n%2", label(), job->errorString()));
-        emit stoppedSearch(resultUnspecifiedError);
     }
 }

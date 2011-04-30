@@ -50,7 +50,6 @@ public slots:
     void cancel();
 
 protected:
-    void doStopSearch(int);
     virtual QString favIconUrl() const;
 
 private slots:

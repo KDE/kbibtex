@@ -32,6 +32,8 @@
 
 #include <entry.h>
 
+class KJob;
+
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
@@ -83,8 +85,12 @@ public:
     virtual WebSearchQueryFormAbstract* customWidget(QWidget *parent) = 0;
     virtual KUrl homepage() const = 0;
 
+public slots:
+    void cancel();
+
 protected:
     QWidget *m_parent;
+    bool m_hasBeenCanceled;
 
     virtual QString favIconUrl() const = 0;
 
@@ -92,6 +98,24 @@ protected:
      * Split a string along spaces, but keep text in quotation marks together
      */
     QStringList splitRespectingQuotationMarks(const QString &text);
+
+    /**
+     * Will check for common problems with jobs. It will return true if there is no
+     * problem and you may process this job result. If there is a problem, this function
+     * will notify the user if necessary (KMessageBox), emit a "stoppedSearch" signal,
+     * and return false.
+     * @see handleErrors(bool)
+     */
+    bool handleErrors(KJob *kJob);
+
+    /**
+     * Will check for common problems with downloads via QWebPage. It will return true
+     * if there is no problem and you may process this job result. If there is a problem,
+     * this function will notify the user if necessary (KMessageBox), emit a
+     * "stoppedSearch" signal, and return false.
+     * @see handleErrors(KJob*)
+     */
+    bool handleErrors(bool ok);
 
 signals:
     void foundEntry(Entry*);
