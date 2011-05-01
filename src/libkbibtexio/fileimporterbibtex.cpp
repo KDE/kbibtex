@@ -58,6 +58,7 @@ File* FileImporterBibTeX::load(QIODevice *iodevice)
 {
     m_cancelFlag = false;
 
+    m_textStreamLastPos = 0;
     m_textStream = new QTextStream(iodevice);
     m_textStream->setCodec(m_encoding == "latex" ? "UTF-8" : m_encoding.toAscii());
     QString rawText = "";
@@ -80,6 +81,7 @@ File* FileImporterBibTeX::load(QIODevice *iodevice)
 
     unescapeLaTeXChars(rawText);
 
+    m_textStreamLastPos = 0;
     m_textStream = new QTextStream(&rawText, QIODevice::ReadOnly);
     m_textStream->setCodec("UTF-8");
     m_lineNo = 1;
@@ -132,7 +134,10 @@ Element *FileImporterBibTeX::nextElement()
             return readMacroElement();
         else if (elementType.toLower() == "preamble")
             return readPreambleElement();
-        else if (!elementType.isEmpty())
+        else if (elementType.toLower() == QLatin1String("import")) {
+            kDebug() << "Skipping potential HTML/JavaScript @import statement";
+            return NULL;
+        } else if (!elementType.isEmpty())
             return readEntryElement(elementType);
         else {
             kWarning() << "ElementType is empty";
@@ -309,6 +314,10 @@ FileImporterBibTeX::Token FileImporterBibTeX::nextToken()
 {
     if (m_textStream->atEnd())
         return tEOF;
+    if (m_textStream->pos() == m_textStreamLastPos) {
+        kDebug() << "textStream had no progress since last call of nextToken, forcing to read one character";
+        *m_textStream >> m_currentChar;
+    }
 
     Token curToken = tUnknown;
 
@@ -348,6 +357,7 @@ FileImporterBibTeX::Token FileImporterBibTeX::nextToken()
         *m_textStream >> m_currentChar;
     }
 
+    m_textStreamLastPos = m_textStream->pos();
     return curToken;
 }
 
