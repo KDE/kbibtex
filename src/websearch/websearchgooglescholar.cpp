@@ -57,6 +57,7 @@ static void dumpData(const QByteArray &byteArray, int index)
     f.close();
     */
 }
+
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
@@ -147,8 +148,6 @@ class WebSearchGoogleScholar::WebSearchGoogleScholarPrivate
 {
 private:
     WebSearchGoogleScholar *p;
-    //  QMap<QString, QString> originalCookiesSettings;
-    //  bool originalCookiesEnabled;
 
 public:
     int numResults;

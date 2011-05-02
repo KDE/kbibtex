@@ -28,9 +28,7 @@
 
 #include <KLocale>
 #include <KDebug>
-#include <KIcon>
 #include <kio/job.h>
-#include <kio/jobclasses.h>
 #include <KMessageBox>
 
 #include <fileimporterbibtex.h>
@@ -59,7 +57,7 @@ public:
             acmPortalBaseUrl(QLatin1String("http://portal.acm.org/")),
             acmPortalContinueUrl(QLatin1String("http://portal.acm.org/results.cfm?query=%4&querydisp=%4&source_query=&start=%1&srt=score+dsc&short=1&source_disp=&since_month=&since_year=&before_month=&before_year=&coll=DL&dl=GUIDE&termshow=matchall&range_query=&CFID=%2&CFTOKEN=%3")),
             regExpId("(\\?|&)id=(\\d+)\\.(\\d+)(&|$)"), regExpIdCFID("(\\?|&)CFID=(\\d+)(&|$)"), regExpIdCFTOKEN("(\\?|&)CFTOKEN=(\\d+)(&|$)") {
-        // nothing
+        page->settings()->setAttribute(QWebSettings::JavascriptEnabled, false);
     }
 
     void sanitizeBibTeXCode(QString &code) {
@@ -128,6 +126,7 @@ KUrl WebSearchAcmPortal::homepage() const
 void WebSearchAcmPortal::cancel()
 {
     WebSearchAbstract::cancel();
+    d->page->triggerAction(QWebPage::Stop);
 }
 
 void WebSearchAcmPortal::doneFetchingStartPage(bool ok)
