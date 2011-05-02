@@ -44,6 +44,7 @@
 #include <websearchpubmed.h>
 #include <websearchieeexplore.h>
 #include <websearchacmportal.h>
+#include <websearchsciencedirect.h>
 #include <websearcharxiv.h>
 #include <fileexporterbibtex.h>
 #include <file.h>
@@ -172,6 +173,7 @@ public:
         addEngine(new WebSearchArXiv(p));
         addEngine(new WebSearchPubMed(p));
         addEngine(new WebSearchIEEEXplore(p));
+        addEngine(new WebSearchScienceDirect(p));
 
         p->itemCheckChanged();
         updateGUI();

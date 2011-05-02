@@ -4,6 +4,7 @@ set( websearch_LIB_SRCS
 	websearchabstract.cpp
 	websearchbibsonomy.cpp
 	websearcharxiv.cpp
+	websearchsciencedirect.cpp
 	websearchgooglescholar.cpp
 	websearchieeexplore.cpp
 	websearchpubmed.cpp
