@@ -30,7 +30,9 @@ class QKeyEvent;
 const int RadioSelectedRole = Qt::UserRole + 102;
 const int IsRadioRole = Qt::UserRole + 103;
 
-
+/**
+ * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ */
 class RadioButtonItemDelegate : public QStyledItemDelegate
 {
 public:
@@ -40,13 +42,25 @@ public:
     QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
 };
 
-
+/**
+ * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *
+ * This class is a refinement of QTreeView, as it adds support
+ * for radio buttons for elements in the view.
+ * To use this view, set RadioButtonItemDelegate as the item delegate
+ * and use a model that respondes to the roles IsRadioRole and
+ * RadioSelectedRole. The role IsRadioRole returns a boolean value
+ * packed in a QVariant if a QModelIndex should have a radio button,
+ * RadioSelectedRole is boolean value as well, determining if a
+ * radio button is selected or not.
+ * This class will take care that if a QModelIndex receives a mouse
+ * click or a space key press, RadioSelectedRole will be set true for
+ * this QModelIndex and all sibling indices will be set to false.
+ */
 class RadioButtonTreeView : public QTreeView
 {
 public:
     RadioButtonTreeView(QWidget *parent);
-
-    virtual void reset();
 
 protected:
     void mouseReleaseEvent(QMouseEvent *event);
