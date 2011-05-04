@@ -289,19 +289,27 @@ Entry *FileImporterBibTeX::readEntryElement(const QString& typeString)
         if (keyName.toLower() == QLatin1String("issue"))
             keyName = QLatin1String("number"); // FIXME use constants here or even better code?
 
+        Value value;
+
         /** check for duplicate fields */
         if (entry->contains(keyName)) {
-            int i = 2;
-            QString appendix = QString::number(i);
-            while (entry->contains(keyName + appendix)) {
-                ++i;
-                appendix = QString::number(i);
+            if (keyName.toLower() == Entry::ftKeywords) {
+                /// special handling of keywords: instead of using fallback names
+                /// like "keywords2", "keywords3", ..., append new keywords to
+                /// already existing keyword value
+                value = entry->value(keyName);
+            } else {
+                int i = 2;
+                QString appendix = QString::number(i);
+                while (entry->contains(keyName + appendix)) {
+                    ++i;
+                    appendix = QString::number(i);
+                }
+                kDebug() << "Entry already contains a key " << keyName << "' (near line " << m_lineNo << "), using " << (keyName + appendix);
+                keyName += appendix;
             }
-            kWarning() << "Entry already contains a key " << keyName << "' (near line " << m_lineNo << "), using " << (keyName + appendix);
-            keyName += appendix;
         }
 
-        Value value;
         token = readValue(value, keyName);
 
         entry->insert(keyName, value);
@@ -542,13 +550,9 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value& value, const QStr
             if (isStringKey)
                 value.append(new MacroKey(text));
             else {
-                const QRegExp doiListRegExp(";[ ]*|[ ]+", Qt::CaseInsensitive);
-                const QStringList dois = text.split(doiListRegExp, QString::SkipEmptyParts);
-                for (QStringList::ConstIterator it = dois.constBegin(); it != dois.constEnd(); ++it)
-                    if (KBibTeX::doiRegExp.indexIn(*it) >= 0)
-                        value.append(new VerbatimText(KBibTeX::doiRegExp.cap(0)));
-                    else
-                        value.append(new VerbatimText(*it));
+                int p = -5;
+                while ((p = KBibTeX::doiRegExp.indexIn(text, p + 5)) >= 0)
+                    value.append(new VerbatimText(KBibTeX::doiRegExp.cap(0)));
             }
         } else if (iKey == Entry::ftColor) {
             if (isStringKey)
