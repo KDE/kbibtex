@@ -31,26 +31,32 @@ namespace KParts
 class Part;
 }
 class KXMLGUIClient;
+class KPushButton;
 
 class BibTeXEditor;
+class EntryClique;
 
+class RadioButtonTreeView;
+class AlternativesItemModel;
+class CheckableBibTeXFileModel;
+class FilterIdBibTeXFileModel;
 
-/*
-class RadioButtonTreeView :public QTreeView{
+class MergeWidget : public QWidget
+{
     Q_OBJECT
 
 public:
-    RadioButtonTreeView(QWidget *parent)
-        :QTreeView(parent){
-        connect(this,SIGNAL(clicked(QModelIndex)),this,SLOT(indexActivated(QModelIndex)));
-     }
+    MergeWidget(File *file, QList<EntryClique*> &cliques, QWidget *parent);
+    void showCurrentClique();
 
 private slots:
-    void indexActivated(const QModelIndex & index){
-        model()->setData(index,QVariant::fromValue(true), Qt::UserRole + 102);
-    }
+    void previousClique();
+    void nextClique();
+
+private:
+    class MergeWidgetPrivate;
+    MergeWidgetPrivate *d;
 };
-*/
 
 
 class KBIBTEXIO_EXPORT FindDuplicatesUI : public QObject

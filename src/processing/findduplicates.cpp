@@ -21,12 +21,149 @@
 #include <typeinfo>
 
 #include <KDebug>
+#include <KProgressDialog>
+#include <KLocale>
 
 #include "file.h"
 #include "entry.h"
 #include "findduplicates.h"
 
 #define getText(entry, fieldname) PlainTextValue::text((entry)->value((fieldname)))
+
+int EntryClique::entryCount() const
+{
+    return checkedEntries.count();
+}
+
+QList<Entry*> EntryClique::entryList() const
+{
+    return checkedEntries.keys();
+}
+
+bool EntryClique::isEntryChecked(Entry *entry) const
+{
+    return checkedEntries[entry];
+}
+
+void EntryClique::setEntryChecked(Entry *entry, bool isChecked)
+{
+    checkedEntries[entry] = isChecked;
+    recalculateValueMap();
+}
+
+int EntryClique::fieldCount() const
+{
+    return valueMap.count();
+}
+
+QList<QString> EntryClique::fieldList() const
+{
+    return valueMap.keys();
+}
+
+QList<Value> EntryClique::values(const QString &field) const
+{
+    return valueMap[field];
+}
+
+Value EntryClique::chosenValue(const QString &field) const
+{
+    return chosenValueMap[field];
+}
+
+void EntryClique::setChosenValue(const QString &field, Value &value)
+{
+    chosenValueMap[field] = value;
+}
+
+QString EntryClique::dump() const
+{
+    QString result(QLatin1String("dump START\n"));
+
+    for (QMap<Entry*, bool>::ConstIterator ceit = checkedEntries.constBegin(); ceit != checkedEntries.constEnd(); ++ceit)
+        result.append(QString("checkedEntries: %1 = %2\n").arg(ceit.key()->id()).arg(ceit.value() ? QLatin1String("TRUE") : QLatin1String("false")));
+
+    for (QMap<QString, QList<Value> >::ConstIterator vmit = valueMap.constBegin(); vmit != valueMap.constEnd(); ++vmit)
+        result.append(QString("valueMap: %1 = %2\n").arg(vmit.key()).arg(vmit.value().count()));
+
+    for (QMap<QString, Value >::ConstIterator cvmit = chosenValueMap.constBegin(); cvmit != chosenValueMap.constEnd(); ++cvmit)
+        result.append(QString("chosenValueMap: %1 = %2\n").arg(cvmit.key()).arg(PlainTextValue::text(cvmit.value())));
+
+    result.append(QLatin1String("dump END\n"));
+    return result;
+}
+
+void EntryClique::addEntry(Entry* entry)
+{
+    checkedEntries.insert(entry, false);
+//    recalculateValueMap();
+}
+
+void EntryClique::recalculateValueMap()
+{
+    valueMap.clear();
+    chosenValueMap.clear();
+
+    /// go through each and every entry ...
+    const QList<Entry*> el = entryList();
+    foreach(Entry *entry, el)
+    if (isEntryChecked(entry)) {
+
+        /// cover entry type
+        Value v;
+        v.append(new VerbatimText(entry->type()));
+        insertKeyValueToValueMap(QLatin1String("^type"), v, entry->type());
+
+        /// cover entry id
+        v.clear();
+        v.append(new VerbatimText(entry->id()));
+        insertKeyValueToValueMap(QLatin1String("^id"), v, entry->id());
+
+        /// go through each and every field of this entry
+        for (Entry::ConstIterator fieldIt = entry->constBegin(); fieldIt != entry->constEnd(); ++fieldIt) {
+            /// store both field name and value for later reference
+            const QString fieldName = fieldIt.key().toLower();
+            const Value fieldValue = fieldIt.value();
+            const QString fieldValueText = PlainTextValue::text(fieldValue);
+            insertKeyValueToValueMap(fieldName, fieldValue, fieldValueText);
+        }
+    }
+
+    QList<QString> fl = fieldList();
+    foreach(QString fieldName, fl)
+    if (valueMap[fieldName].count() < 2) {
+        valueMap.remove(fieldName);
+        chosenValueMap.remove(fieldName);
+    }
+}
+
+void EntryClique::insertKeyValueToValueMap(const QString &fieldName, const Value &fieldValue, const QString &fieldValueText)
+{
+    if (fieldValueText.isEmpty()) return;
+
+    if (valueMap.contains(fieldName)) {
+        /// in the list of alternatives, search of a value identical
+        /// to the current (as of fieldIt) value (to avoid duplicates)
+
+        bool alreadyContained = false;
+        QList<Value> alternatives = valueMap[fieldName];
+        foreach(Value v, alternatives)
+        if (PlainTextValue::text(v) == fieldValueText) {
+            alreadyContained = true;
+            break;
+        }
+
+        if (!alreadyContained) {
+            alternatives << fieldValue;
+            valueMap[fieldName] = alternatives;
+        }
+    } else {
+        QList<Value> alternatives = valueMap[fieldName];
+        alternatives << fieldValue;
+        valueMap.insert(fieldName, alternatives);
+        chosenValueMap.insert(fieldName, fieldValue);
+    }
+}
 
 class FindDuplicates::FindDuplicatesPrivate
 {
@@ -36,10 +173,19 @@ private:
 
 public:
     int sensitivity;
+    QWidget *widget;
+    KProgressDialog *progressDlg;
 
-    FindDuplicatesPrivate(FindDuplicates *parent, int sens)
-            : p(parent), maxDistance(10000), sensitivity(sens) {
-        // nothing
+    FindDuplicatesPrivate(FindDuplicates *parent, int sens, QWidget *w)
+            : p(parent), maxDistance(10000), sensitivity(sens), widget(w) {
+        progressDlg = new KProgressDialog(w, i18n("Finding Duplicates"));
+        progressDlg->setLabelText(i18n("Searching ..."));
+        progressDlg->setMinimumWidth(w->fontMetrics().averageCharWidth()*48);
+        progressDlg->setAllowCancel(false);
+    }
+
+    ~FindDuplicatesPrivate() {
+        delete progressDlg;
     }
 
     /**
@@ -147,15 +293,15 @@ public:
 };
 
 
-FindDuplicates::FindDuplicates(int sensitivity)
-        : d(new FindDuplicatesPrivate(this, sensitivity))
+FindDuplicates::FindDuplicates(QWidget *parent, int sensitivity)
+        : d(new FindDuplicatesPrivate(this, sensitivity, parent))
 {
     // nothing
 }
 
-QList<QList<Entry*> > FindDuplicates::findDuplicateEntries(File *file)
+QList<EntryClique*> FindDuplicates::findDuplicateEntries(File *file)
 {
-    QList<QList<Entry*> > result;
+    QList<EntryClique*> result;
 
     /// assemble list of entries only (ignoring comments, macros, ...)
     QList<Entry*> listOfEntries;
@@ -170,47 +316,110 @@ QList<QList<Entry*> > FindDuplicates::findDuplicateEntries(File *file)
         return result;
     }
 
+    int curProgress = 0, maxProgress = listOfEntries.count() * (listOfEntries.count() - 1) / 2;
+    int progressDelta = 1;
+
+    d->progressDlg->progressBar()->setMaximum(maxProgress);
+    d->progressDlg->show();
+    d->progressDlg->setLabelText(i18n("Searching ..."));
+
     /// go through all entries ...
     for (QList<Entry*>::ConstIterator eit = listOfEntries.constBegin(); eit != listOfEntries.constEnd(); ++eit) {
+        d->progressDlg->progressBar()->setValue(curProgress);
         /// ... and find a "clique" of entries where it will match, i.e. distance is below sensitivity
 
         /// assume current entry will match in no clique
         bool foundClique = false;
 
         /// go through all existing cliques
-        for (QList<QList<Entry*> >::Iterator cit = result.begin(); cit != result.end(); ++cit)
+        for (QList<EntryClique*>::Iterator cit = result.begin(); cit != result.end(); ++cit)
             /// check distance between current entry and clique's first entry
-            if (d->entryDistance(*eit, (*cit).first()) < d->sensitivity) {
+            if (d->entryDistance(*eit, (*cit)->entryList().first()) < d->sensitivity) {
                 /// if distance is below sensitivity, add current entry to clique
                 foundClique = true;
-                (*cit) << *eit;
+                (*cit)->addEntry(*eit);
                 break;
             }
 
         if (!foundClique) {
             /// no clique matched to current entry, so create and add new clique
             /// consisting only of the current entry
-            QList<Entry*> newClique = QList<Entry*>() << *eit;
+            EntryClique *newClique = new EntryClique();
+            newClique->addEntry(*eit);
             result << newClique;
         }
+
+        curProgress += progressDelta;
+        ++progressDelta;
+        d->progressDlg->progressBar()->setValue(curProgress);
     }
+    d->progressDlg->close();
 
     /// remove cliques with only one element (nothing to merge here) from the list of cliques
-    for (QList<QList<Entry*> >::Iterator cit = result.begin(); cit != result.end();)
-        if ((*cit).count() < 2)
+    for (QList<EntryClique*>::Iterator cit = result.begin(); cit != result.end();)
+        if ((*cit)->entryCount() < 2)
             cit = result.erase(cit);
         else
             ++cit;
 
-    for (QList<QList<Entry*> >::Iterator cit = result.begin(); cit != result.end(); ++cit) {
-        kDebug() << "BEGIN clique " << (*cit).count();
+    for (QList<EntryClique*>::Iterator cit = result.begin(); cit != result.end(); ++cit) {
+        kDebug() << "BEGIN clique " << (*cit)->entryCount();
 
-        for (QList<Entry*>::ConstIterator eit = (*cit).constBegin(); eit != (*cit).constEnd(); ++eit) {
-            kDebug() << "  " << (*eit)->id();
+        QList<Entry*> entryList = (*cit)->entryList();
+        foreach(Entry *entry, entryList) {
+            kDebug() << "  " << entry->id();
         }
 
         kDebug() << "END clique";
     }
 
     return result;
+}
+
+
+class MergeDuplicates::MergeDuplicatesPrivate
+{
+private:
+    MergeDuplicates *p;
+
+public:
+    QWidget *widget;
+
+    MergeDuplicatesPrivate(MergeDuplicates *parent, QWidget *w)
+            : p(parent), widget(w) {
+        // nothing
+    }
+};
+
+MergeDuplicates::MergeDuplicates(QWidget *parent)
+        : d(new MergeDuplicatesPrivate(this, parent))
+{
+    // TODO
+}
+
+bool MergeDuplicates::mergeDuplicateEntries(const QList<EntryClique*> &entryCliques, File *file)
+{
+    foreach(EntryClique *entryClique, entryCliques) {
+        Entry *mergedEntry = new Entry(Entry::etArticle, "unset");
+        foreach(QString field, entryClique->fieldList()) {
+            if (field == QLatin1String("^id"))
+                mergedEntry->setId(PlainTextValue::text(entryClique->chosenValue(field)));
+            else if (field == QLatin1String("^type"))
+                mergedEntry->setType(PlainTextValue::text(entryClique->chosenValue(field)));
+            else
+                mergedEntry->insert(field, entryClique->chosenValue(field));
+        }
+
+        foreach(Entry *entry, entryClique->entryList())
+        if (entryClique->isEntryChecked(entry)) {
+            for (Entry::ConstIterator it = entry->constBegin(); it != entry->constEnd(); ++it)
+                if (!mergedEntry->contains(it.key()))
+                    mergedEntry->insert(it.key(), it.value());
+            file->removeOne(entry);
+        }
+
+        file->append(mergedEntry);
+    }
+
+    return true;
 }

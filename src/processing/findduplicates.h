@@ -21,10 +21,46 @@
 #ifndef KBIBTEX_PROC_FINDDUPLICATES_H
 #define KBIBTEX_PROC_FINDDUPLICATES_H
 
+#include <QMap>
+
 #include "kbibtexio_export.h"
 
 class Entry;
 class File;
+
+class KBIBTEXIO_EXPORT FindDuplicates;
+
+/**
+ * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ */
+class KBIBTEXIO_EXPORT EntryClique
+{
+    friend class FindDuplicates;
+public:
+    int entryCount() const;
+    QList<Entry*> entryList() const;
+    bool isEntryChecked(Entry *entry) const;
+    void setEntryChecked(Entry *entry, bool isChecked);
+
+    int fieldCount() const;
+    QList<QString> fieldList() const;
+    QList<Value> values(const QString &field) const;
+    Value chosenValue(const QString &field) const;
+    void setChosenValue(const QString &field, Value &value);
+
+    QString dump() const;
+
+protected:
+    void addEntry(Entry* entry);
+
+private:
+    QMap<Entry*, bool> checkedEntries;
+    QMap<QString, QList<Value> > valueMap;
+    QMap<QString, Value> chosenValueMap;
+
+    void recalculateValueMap();
+    void insertKeyValueToValueMap(const QString &fieldName, const Value &fieldValue, const QString &fieldValueText);
+};
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
@@ -32,13 +68,28 @@ class File;
 class KBIBTEXIO_EXPORT FindDuplicates
 {
 public:
-    FindDuplicates(int sensitivity = 2500);
+    FindDuplicates(QWidget *parent, int sensitivity = 2500);
 
-    QList<QList<Entry*> > findDuplicateEntries(File *file);
+    QList<EntryClique*> findDuplicateEntries(File *file);
 
 private:
     class FindDuplicatesPrivate;
     FindDuplicatesPrivate *d;
+};
+
+/**
+ * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ */
+class KBIBTEXIO_EXPORT MergeDuplicates
+{
+public:
+    MergeDuplicates(QWidget *parent);
+
+    bool mergeDuplicateEntries(const QList<EntryClique*> &entryCliques, File *file);
+
+private:
+    class MergeDuplicatesPrivate;
+    MergeDuplicatesPrivate *d;
 };
 
 

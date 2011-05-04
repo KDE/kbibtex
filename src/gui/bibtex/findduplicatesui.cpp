@@ -30,6 +30,7 @@
 #include <QKeyEvent>
 #include <QSplitter>
 
+#include <KPushButton>
 #include <KAction>
 #include <KDialog>
 #include <KActionCollection>
@@ -39,115 +40,41 @@
 #include <KStandardDirs>
 #include <kparts/part.h>
 
+#include <radiobuttontreeview.h>
 #include "bibtexeditor.h"
 #include "bibtexfilemodel.h"
 #include "findduplicatesui.h"
 #include "findduplicates.h"
 #include "bibtexentries.h"
 
-/// return QString to get the field name of an alternative (e.g. "title" or "volume")
 const int FieldNameRole = Qt::UserRole + 101;
-/// return bool to know if an alternative is selected or not
-const int RadioSelectionRole = Qt::UserRole + 102;
-/// maximum number of different fields in all alternatives; set to 1024 by default
+
 const int maxFieldsCount = 1024;
 
-/**
-  * Structure to memorize the possible alternatives for a given field name.
-  */
-typedef struct {
-    /// field name, e.g. "title" or "volume"
-    QString fieldName;
-    /// number of alternatives as refered to by the pointer below
-    int alternativesCount;
-    /// pointer to a list of alternative values for this field
-    Value *alternatives;
-    /// selected alternative (0 .. alternativesCount-1)
-    int selectedAlternative;
-} AlternativesListItem;
 
-class AlternativesItemModel : public QAbstractItemModel, public QList<Entry*>
+
+
+class AlternativesItemModel : public QAbstractItemModel
 {
 private:
     /// marker to memorize in an index's internal id that it is a top-level index
     static const quint32 noParentInternalId;
 
     /// BibTeX file to operate on
-    File *file;
+    //File *file;
     /// parent widget, needed to get font from (for text in italics)
-    QWidget *p;
-    /// fixed-size list of alternative items;
-    /// number of elements in array determined by alternativesListCount
-    AlternativesListItem alternativesList[maxFieldsCount];
-    /// number of actual elements in the array above
-    int alternativesListCount;
+    QTreeView *p;
 
-    /**
-     * Update the internal representation of the duplicates in Entry items in this model.
-     */
-    void updateInternalModel() {
-        /// delete old array and reset everything
-        for (int i = 0; i < alternativesListCount; ++i)
-            delete[] alternativesList[i].alternatives;
-        alternativesListCount = 0;
-
-        /// go through each and every entry ...
-        for (QList<Entry*>::ConstIterator dupsIt = constBegin(); dupsIt != constEnd(); ++dupsIt) {
-            const Entry *entry = *dupsIt;
-
-            /// go through each and every field of this entry
-            for (Entry::ConstIterator fieldIt = entry->constBegin(); fieldIt != entry->constEnd(); ++fieldIt) {
-                /// store both field name and value for later reference
-                const QString fieldName = fieldIt.key().toLower();
-                const Value fieldValue = fieldIt.value();
-                const QString fieldValueText = PlainTextValue::text(fieldValue);
-
-                /// go through list of list of alternatives if there is already
-                /// a list of alternatives for this field name
-                int altListIndex = alternativesListCount - 1;
-                for (; altListIndex >= 0; --altListIndex)
-                    if (alternativesList[altListIndex].fieldName == fieldName)
-                        break;
-
-                if (altListIndex < 0) {
-                    /// no, there is no such list of alternatives
-                    /// initialize a new list of alternatives
-                    altListIndex = alternativesListCount;
-                    ++alternativesListCount;
-                    alternativesList[altListIndex].fieldName = fieldName;
-                    alternativesList[altListIndex].alternativesCount = 0;
-                    alternativesList[altListIndex].alternatives = new Value[count()];
-                    alternativesList[altListIndex].selectedAlternative = 0;
-                }
-
-                /// in the list of alternatives, search of a value identical
-                /// to the current (as of fieldIt) value (to avoid duplicates)
-                int valueIndex = alternativesList[altListIndex].alternativesCount - 1;
-                for (;valueIndex >= 0; --valueIndex)
-                    if (PlainTextValue::text(alternativesList[altListIndex].alternatives[valueIndex]) == fieldValueText)
-                        break;
-
-                if (valueIndex < 0) {
-                    /// no, this value is for this field unique so far
-                    /// initialize a new alternative and add it to the list of alternatives
-                    valueIndex = alternativesList[altListIndex].alternativesCount;
-                    ++alternativesList[altListIndex].alternativesCount;
-                    alternativesList[altListIndex].alternatives[valueIndex] = fieldValue;
-                }
-            }
-        }
-    }
+    EntryClique *currentClique;
 
 public:
-    AlternativesItemModel(File *bibtexFile, QWidget *parent)
-            : QAbstractItemModel(parent), file(bibtexFile), p(parent), alternativesListCount(0) {
+    AlternativesItemModel(/*File *bibtexFile,*/QTreeView *parent)
+            : QAbstractItemModel(parent), /*file(bibtexFile),*/ p(parent), currentClique(NULL) {
         // nothing
     }
 
-    virtual void append(Entry* newValue) {
-        /// when adding new Entry items to this list, updated internal model as well
-        QList<Entry*>::append(newValue);
-        updateInternalModel();
+    void setCurrentClique(EntryClique *currentClique) {
+        this->currentClique = currentClique;
     }
 
     QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const {
@@ -166,24 +93,21 @@ public:
     }
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const {
+        if (currentClique == NULL)
+            return 0;
+
         if (parent == QModelIndex()) {
             /// top-level index, check how many lists of lists of alternatives exist
-            return alternativesListCount;
-        } else if (parent.parent() == QModelIndex()) {
-            /// first, find the list of alternatives for this chosen field name (see parent)
-            QString fieldName = parent.data(FieldNameRole).toString();
-            if (!fieldName.isEmpty()) {
-                int index = alternativesListCount - 1;
-                for (;index >= 0; --index)
-                    if (alternativesList[index].fieldName == fieldName)
-                        break;
-                /// assume that the data is consistent and the field name will be found
-                Q_ASSERT(index >= 0);
+            //kDebug() << currentClique->dump();
+            return currentClique->fieldCount();
 
-                /// second, return number of alternatives for list of alternatives
-                /// plus one for an "else" option
-                return index < 0 ? 0 : alternativesList[index].alternativesCount + 1;
-            }
+        } else if (parent.parent() == QModelIndex()) {
+            /// first, find the map of alternatives for this chosen field name (see parent)
+            QString fieldName = parent.data(FieldNameRole).toString();
+            QList<Value> alt = currentClique->values(fieldName);
+            /// second, return number of alternatives for list of alternatives
+            /// plus one for an "else" option
+            return alt.count() + (fieldName.startsWith('^') ? 0 : 1);
         }
 
         return 0;
@@ -207,72 +131,98 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const {
         if (index.parent() == QModelIndex()) {
             /// top-level elements showing field names like "Title", "Authors", etc
+            const QString fieldName = currentClique->fieldList().at(index.row());
             switch (role) {
             case FieldNameRole:
                 /// plain-and-simple field name (all lower case)
-                return alternativesList[index.row()].fieldName;
+                return fieldName;
+            case Qt::ToolTipRole:
             case Qt::DisplayRole:
                 /// nicely formatted field names for visual representation
-                return BibTeXEntries::self()->format(alternativesList[index.row()].fieldName, KBibTeX::cUpperCamelCase);
+                if (fieldName == QLatin1String("^id"))
+                    return i18n("Identifier");
+                else if (fieldName == QLatin1String("^type"))
+                    return i18n("Type");
+                else
+                    return BibTeXEntries::self()->format(fieldName, KBibTeX::cUpperCamelCase);
+            case IsRadioRole:
+                /// this is not to be a radio widget
+                return QVariant::fromValue(false);
+            case Qt::FontRole:
+                if (fieldName.startsWith('^')) {
+                    QFont f = p->font();
+                    f.setItalic(true);
+                    return f;
+                }
             }
         } else if (index.parent().parent() == QModelIndex()) {
             /// second-level entries for alternatives
 
             /// start with determining which list of alternatives actually to use
             QString fieldName = index.parent().data(FieldNameRole).toString();
-            if (!fieldName.isEmpty()) {
-                int altIndex = alternativesListCount - 1;
-                for (;altIndex >= 0; --altIndex)
-                    if (alternativesList[altIndex].fieldName == fieldName)
-                        break;
-                /// assume that the data is consistent and the field name will be found
-                Q_ASSERT(altIndex >= 0);
+            QList<Value> values = currentClique->values(fieldName);
 
-                switch (role) {
-                case Qt::DisplayRole:
-                    if (index.row() < alternativesList[altIndex].alternativesCount)
-                        /// textual representation of the alternative's value
-                        return PlainTextValue::text(alternativesList[altIndex].alternatives[index.row()]);
-                    else
-                        /// add an "else" option
-                        return i18n("None of the above");
-                case Qt::FontRole:
-                    /// for the "else" option, make font italic
-                    if (index.row() >= alternativesList[altIndex].alternativesCount) {
-                        QFont f = p->font();
-                        f.setItalic(true);
-                        return f;
+            switch (role) {
+            case Qt::ToolTipRole:
+            case Qt::DisplayRole:
+                if (index.row() < values.count()) {
+                    QString text = PlainTextValue::text(values.at(index.row()));
+                    if (fieldName == QLatin1String("^type")) {
+                        BibTeXEntries *be = BibTeXEntries::self();
+                        text = be->format(text, KBibTeX::cUpperCamelCase);
                     }
-                case RadioSelectionRole:
-                    /// return selection status (true or false) for this alternative
-                    return QVariant::fromValue(alternativesList[altIndex].selectedAlternative == index.row());
+
+                    /// textual representation of the alternative's value
+                    return text;
+                } else
+                    /// add an "else" option
+                    return i18n("None of the above");
+            case Qt::FontRole:
+                /// for the "else" option, make font italic
+                if (index.row() >= values.count()) {
+                    QFont f = p->font();
+                    f.setItalic(true);
+                    return f;
                 }
+            case RadioSelectedRole: {
+                /// return selection status (true or false) for this alternative
+                Value chosen = currentClique->chosenValue(fieldName);
+                if (chosen.isEmpty())
+                    return QVariant::fromValue(index.row() >= values.count());
+                else if (index.row() < values.count()) {
+                    QString chosenPlainText = PlainTextValue::text(chosen);
+                    QString rowPlainText = PlainTextValue::text(values[index.row()]);
+                    return QVariant::fromValue(chosenPlainText == rowPlainText);
+                }
+                return QVariant::fromValue(false);
+            }
+            case IsRadioRole:
+                /// this is to be a radio widget
+                return QVariant::fromValue(true);
             }
         }
 
         return QVariant();
     }
 
-    bool setData(const QModelIndex & index, const QVariant & value, int role = RadioSelectionRole) {
-        if (index.parent().parent() == QModelIndex() && role == RadioSelectionRole && value.canConvert<bool>() && value.toBool() == true) {
+    bool setData(const QModelIndex & index, const QVariant & value, int role = RadioSelectedRole) {
+        if (index.parent().parent() == QModelIndex() && role == RadioSelectedRole && value.canConvert<bool>() && value.toBool() == true) {
             /// start with determining which list of alternatives actually to use
             QString fieldName = index.parent().data(FieldNameRole).toString();
-            if (!fieldName.isEmpty()) {
-                int altIndex = alternativesListCount - 1;
-                for (;altIndex >= 0; --altIndex)
-                    if (alternativesList[altIndex].fieldName == fieldName)
-                        break;
-                /// assume that the data is consistent and the field name will be found
-                Q_ASSERT(altIndex >= 0);
+            QList<Value> values = currentClique->values(fieldName);
 
-                /// store which alternative was selected
-                alternativesList[altIndex].selectedAlternative = index.row();
-
-                /// update view on neighbouring alternatives
-                emit dataChanged(index.sibling(0, 0), index.sibling(rowCount(index.parent()), 0));
-
-                return true;
+            /// store which alternative was selected
+            if (index.row() < values.count())
+                currentClique->setChosenValue(fieldName, values[index.row()]);
+            else {
+                Value v;
+                currentClique->setChosenValue(fieldName, v);
             }
+
+            /// update view on neighbouring alternatives
+            emit dataChanged(index.sibling(0, 0), index.sibling(rowCount(index.parent()), 0));
+
+            return true;
         }
 
         return false;
@@ -286,152 +236,58 @@ public:
 
 const quint32 AlternativesItemModel::noParentInternalId = 0xffffff;
 
-class RadioButtonItemDelegate : public QStyledItemDelegate
-{
-public:
-    RadioButtonItemDelegate(QObject *p)
-            : QStyledItemDelegate(p) {
-        // nothing
-    }
-
-    void paint(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const {
-        if (index.parent() != QModelIndex()) {
-            /// determine size and spacing of radio buttons in current style
-            int radioButtonWidth = QApplication::style()->pixelMetric(QStyle::PM_ExclusiveIndicatorWidth, &option);
-            int spacing = QApplication::style()->pixelMetric(QStyle::PM_RadioButtonLabelSpacing, &option);
-
-            /// draw default appearance (text, highlighting) shifted to the left
-            QStyleOptionViewItem myOption = option;
-            int left = myOption.rect.left();
-            myOption.rect.setLeft(left + spacing + radioButtonWidth);
-            QStyledItemDelegate::paint(painter, myOption, index);
-
-            /// draw radio button in the open space
-            myOption.rect.setLeft(left);
-            myOption.rect.setWidth(radioButtonWidth);
-            if (index.data(RadioSelectionRole).canConvert<bool>()) {
-                /// change radio button's visual appearance if selected or not
-                bool radioButtonSelected = index.data(RadioSelectionRole).value<bool>();
-                myOption.state |= radioButtonSelected ? QStyle::State_On : QStyle::State_Off;
-            }
-            QApplication::style()->drawPrimitive(QStyle::PE_IndicatorRadioButton, &myOption, painter);
-        } else
-            QStyledItemDelegate::paint(painter, option, index);
-    }
-
-    QSize sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index) const {
-        QSize s = QStyledItemDelegate::sizeHint(option, index);
-        if (index.parent() != QModelIndex()) {
-            /// determine size of radio buttons in current style
-            int radioButtonHeight = QApplication::style()->pixelMetric(QStyle::PM_ExclusiveIndicatorHeight, &option);
-            /// ensure that line is tall enough to draw radio button
-            s.setHeight(qMax(s.height(), radioButtonHeight));
-        }
-        return s;
-    }
-};
-
-
-class RadioButtonTreeView : public QTreeView
-{
-public:
-    RadioButtonTreeView(QWidget *parent)
-            : QTreeView(parent) {
-        // nothing
-    }
-
-protected:
-    void mouseReleaseEvent(QMouseEvent *event) {
-        QModelIndex index = indexAt(event->pos());
-        if (index != QModelIndex() && index.parent() != QModelIndex()) {
-            /// clicking on an alternative's item in tree view should select alternative
-            model()->setData(index, QVariant::fromValue(true), RadioSelectionRole);
-            event->accept();
-        }
-    }
-
-    void keyReleaseEvent(QKeyEvent *event) {
-        QModelIndex index = currentIndex();
-        if (index != QModelIndex() && index.parent() != QModelIndex() && event->key() == Qt::Key_Space) {
-            /// pressing space on an alternative's item in tree view should select alternative
-            model()->setData(index, QVariant::fromValue(true), RadioSelectionRole);
-            event->accept();
-        }
-    }
-};
-
-class FilterIdBibTeXFileModel : public QSortFilterProxyModel
-{
-private:
-    QStringList allowedIds;
-    BibTeXFileModel *internalModel;
-
-public:
-    FilterIdBibTeXFileModel(QObject *parent = NULL)
-            : QSortFilterProxyModel(parent), internalModel(NULL) {
-        // nothing
-    }
-
-    void setVisibleIds(const QStringList &newIdList) {
-        allowedIds = newIdList;
-        invalidateFilter();
-    }
-
-    void setSourceModel(QAbstractItemModel *model) {
-        QSortFilterProxyModel::setSourceModel(model);
-        internalModel = dynamic_cast<BibTeXFileModel*>(model);
-    }
-
-    bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const {
-        Q_UNUSED(source_parent)
-
-        if (internalModel != NULL) {
-            Entry *entry = dynamic_cast<Entry*>(internalModel->element(source_row));
-            if (entry != NULL)
-                return allowedIds.contains(entry->id());
-        }
-        return false;
-    }
-};
 
 class CheckableBibTeXFileModel : public BibTeXFileModel
 {
 private:
-    int *checkStatePerRow;
+    QList<EntryClique*> cl;
+    int currentClique;
+    QTreeView *tv;
 
 public:
-    CheckableBibTeXFileModel(QObject *parent = NULL)
-            : BibTeXFileModel(parent), checkStatePerRow(NULL) {
+    CheckableBibTeXFileModel(QList<EntryClique*> &cliqueList, QTreeView *treeView, QObject *parent = NULL)
+            : BibTeXFileModel(parent), cl(cliqueList), currentClique(0), tv(treeView) {
         // nothing
     }
 
-    ~CheckableBibTeXFileModel() {
-        if (checkStatePerRow != NULL) delete[] checkStatePerRow;
-    }
-
-    void setBibTeXFile(File *file) {
-        BibTeXFileModel::setBibTeXFile(file);
-
-        if (checkStatePerRow != NULL) delete[] checkStatePerRow;
-        checkStatePerRow = new int[file->count()];
+    void setCurrentClique(EntryClique *currentClique) {
+        this->currentClique = cl.indexOf(currentClique);
+        //kDebug() << "this->currentClique=" << this->currentClique;
     }
 
     virtual QVariant data(const QModelIndex &index, int role) const {
         if (role == Qt::CheckStateRole && index.column() == 1) {
-            // TODO
-            return checkStatePerRow[index.row()];
-        } else
-            return BibTeXFileModel::data(index, role);
+            Entry *entry = dynamic_cast<Entry*>(element(index.row()));
+            if (entry != NULL) {
+                QList<Entry*> entryList = cl[currentClique]->entryList();
+                if (entryList.contains(entry))
+                    return cl[currentClique]->isEntryChecked(entry) ? Qt::Checked : Qt::Unchecked;
+            }
+        }
+
+        return BibTeXFileModel::data(index, role);
     }
 
     virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) {
         bool ok;
         int checkState = value.toInt(&ok);
-        if (role == Qt::CheckStateRole && index.column() == 1 && ok) {
-            checkStatePerRow[index.row()] = checkState;
-            return true;
-        } else
-            return false;
+        if (ok && role == Qt::CheckStateRole && index.column() == 1) {
+            Entry *entry = dynamic_cast<Entry*>(element(index.row()));
+            if (entry != NULL) {
+                QList<Entry*> entryList = cl[currentClique]->entryList();
+                if (entryList.contains(entry)) {
+                    EntryClique *ec = cl[currentClique];
+                    ec->setEntryChecked(entry, checkState == Qt::Checked);
+                    cl[currentClique] = ec;
+                    //kDebug() << cl[currentClique]->dump();
+                    emit dataChanged(index, index);
+                    tv->reset();
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     virtual Qt::ItemFlags flags(const QModelIndex &index) const {
@@ -442,63 +298,148 @@ public:
     }
 };
 
-class MergeWidget : public QWidget
+
+class FilterIdBibTeXFileModel : public QSortFilterProxyModel
 {
 private:
-    File *file;
-    BibTeXEditor *editor;
-    RadioButtonTreeView *alternativesView;
-    AlternativesItemModel *alternativesItemModel;
-    CheckableBibTeXFileModel *model;
-    FilterIdBibTeXFileModel *filterModel;
-    QList<QList<Entry*> > cliques;
+    CheckableBibTeXFileModel *internalModel;
+    EntryClique* currentClique;
 
 public:
-    MergeWidget(File *file, QList<QList<Entry*> > cliques, QWidget *parent)
-            : QWidget(parent) {
-        this->cliques = cliques;
-        this->file = file;
+    FilterIdBibTeXFileModel(QObject *parent = NULL)
+            : QSortFilterProxyModel(parent), internalModel(NULL), currentClique(NULL) {
+        // nothing
+    }
 
-        setMinimumSize(fontMetrics().xHeight()*64, fontMetrics().xHeight()*32);
+    void setCurrentClique(EntryClique* currentClique) {
+        if (internalModel != NULL) internalModel->setCurrentClique(currentClique);
+        this->currentClique = currentClique;
+    }
 
-        QBoxLayout *layout = new QVBoxLayout(this);
+    void setSourceModel(QAbstractItemModel *model) {
+        QSortFilterProxyModel::setSourceModel(model);
+        internalModel = dynamic_cast<CheckableBibTeXFileModel*>(model);
+    }
 
-        QLabel *label = new QLabel(i18n("Select your duplicates"), this);
+    bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const {
+        Q_UNUSED(source_parent)
+
+        if (internalModel != NULL && currentClique != NULL) {
+            Entry *entry = dynamic_cast<Entry*>(internalModel->element(source_row));
+            if (entry != NULL) {
+                QList<Entry*> entryList = currentClique->entryList();
+                if (entryList.contains(entry)) return true;
+            }
+        }
+        return false;
+    }
+};
+
+
+class MergeWidget::MergeWidgetPrivate
+{
+private:
+    MergeWidget *p;
+
+public:
+    File *file;
+    BibTeXEditor *editor;
+    KPushButton *buttonNext, *buttonPrev;
+
+    CheckableBibTeXFileModel *model;
+    FilterIdBibTeXFileModel *filterModel;
+
+    RadioButtonTreeView *alternativesView;
+    AlternativesItemModel *alternativesItemModel;
+
+    int currentClique;
+    QList<EntryClique*> cl;
+
+    MergeWidgetPrivate(MergeWidget *parent, QList<EntryClique*> &cliqueList)
+            : p(parent), currentClique(0), cl(cliqueList) {
+        kDebug() << "clique count=" << cl.count();
+    }
+
+    void setupGUI() {
+        p->setMinimumSize(p->fontMetrics().xHeight()*128, p->fontMetrics().xHeight()*64);
+
+        QBoxLayout *layout = new QVBoxLayout(p);
+
+        QLabel *label = new QLabel(i18n("Select your duplicates"), p);
         layout->addWidget(label);
 
-        QSplitter *splitter = new QSplitter(Qt::Vertical, this);
+        QSplitter *splitter = new QSplitter(Qt::Vertical, p);
         layout->addWidget(splitter);
+
+
+        alternativesView = new RadioButtonTreeView(splitter);
+        alternativesView->setItemDelegate(new RadioButtonItemDelegate(alternativesView));
+
 
         editor = new BibTeXEditor(splitter);
         editor->setReadOnly(true);
-
-        model = new CheckableBibTeXFileModel(this);
+        model = new CheckableBibTeXFileModel(cl, alternativesView, p);
         model->setBibTeXFile(new File(*file));
-        filterModel = new FilterIdBibTeXFileModel(this);
+
+
+        QBoxLayout *containerLayout = new QHBoxLayout();
+        layout->addLayout(containerLayout);
+        buttonPrev = new KPushButton(KIcon("go-previous"), i18n("Previous"), p);
+        containerLayout->addWidget(buttonPrev, 1);
+        containerLayout->addStretch(10);
+        buttonNext = new KPushButton(KIcon("go-next"), i18n("Next"), p);
+        containerLayout->addWidget(buttonNext, 1);
+
+        filterModel = new FilterIdBibTeXFileModel(p);
         filterModel->setSourceModel(model);
+        alternativesItemModel = new AlternativesItemModel(alternativesView);
+
+        showCurrentClique();
+
         editor->setModel(filterModel);
-
-        alternativesView = new RadioButtonTreeView(splitter);
-        alternativesItemModel = new AlternativesItemModel(file, alternativesView);
         alternativesView->setModel(alternativesItemModel);
-        alternativesView->setItemDelegate(new RadioButtonItemDelegate(alternativesView));
 
-        switchClique(0);
+        connect(buttonPrev, SIGNAL(clicked()), p, SLOT(previousClique()));
+        connect(buttonNext, SIGNAL(clicked()), p, SLOT(nextClique()));
+
+        connect(editor, SIGNAL(doubleClicked(QModelIndex)), editor, SLOT(viewCurrentElement()));
     }
 
-    void switchClique(int i) {
-        alternativesItemModel->clear();
-        if (i >= 0 && i < cliques.size()) {
-            QList<Entry*> entryList = cliques[i];
-            QStringList idList;
-            for (QList<Entry*>::ConstIterator it = entryList.constBegin(); it != entryList.constEnd(); ++it) {
-                idList << (*it)->id();
-                alternativesItemModel->append(*it);
-            }
-            filterModel->setVisibleIds(idList);
-        }
+    void showCurrentClique() {
+        //kDebug() << "Current Clique = " << cl[currentClique]->dump();
+        EntryClique *ec = cl[currentClique];
+        filterModel->setCurrentClique(ec);
+        alternativesItemModel->setCurrentClique(ec);
+
+        buttonNext->setEnabled(currentClique >= 0 && currentClique < cl.count() - 1);
+        buttonPrev->setEnabled(currentClique > 0);
     }
+
 };
+
+MergeWidget::MergeWidget(File *file, QList<EntryClique*> &cliqueList, QWidget *parent)
+        : QWidget(parent), d(new MergeWidgetPrivate(this, cliqueList))
+{
+    d->file = file;
+    d->setupGUI();
+}
+
+void MergeWidget::previousClique()
+{
+    if (d->currentClique > 0) {
+        --d->currentClique;
+        d->showCurrentClique();
+    }
+}
+
+void MergeWidget::nextClique()
+{
+    if (d->currentClique >= 0 && d->currentClique < d->cl.count() - 1) {
+        ++d->currentClique;
+        d->showCurrentClique();
+    }
+}
+
 
 class FindDuplicatesUI::FindDuplicatesUIPrivate
 {
@@ -526,14 +467,19 @@ FindDuplicatesUI::FindDuplicatesUI(KParts::Part *part, BibTeXEditor *bibTeXEdito
 
 void FindDuplicatesUI::slotFindDuplicates()
 {
-    FindDuplicates fd;
-    QList<QList<Entry*> > cliques =  fd.findDuplicateEntries(d->editor->bibTeXModel()->bibTeXFile());
-
     KDialog dlg(d->part->widget());
+    FindDuplicates fd(&dlg);
+    QList<EntryClique*> cliques =  fd.findDuplicateEntries(d->editor->bibTeXModel()->bibTeXFile());
+
     MergeWidget mw(d->editor->bibTeXModel()->bibTeXFile(), cliques, &dlg);
     dlg.setMainWidget(&mw);
 
     if (dlg.exec() == QDialog::Accepted) {
         // TODO
+        MergeDuplicates md(&dlg);
+        File *file = d->editor->bibTeXModel()->bibTeXFile();
+        if (md.mergeDuplicateEntries(cliques, file)) {
+            d->editor->bibTeXModel()->setBibTeXFile(file);
+        }
     }
 }

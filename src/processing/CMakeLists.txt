@@ -18,6 +18,7 @@ kde4_add_library( kbibtexproc SHARED ${processing_LIB_SRCS} )
 target_link_libraries( kbibtexproc
 	${QT_QTCORE_LIBRARY}
 	${KDE4_KDECORE_LIBS}
+	${KDE4_KDEUI_LIBS}
 	kbibtexio
 )
 
