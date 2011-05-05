@@ -50,6 +50,7 @@ private:
 
 private slots:
     void widgetsChanged();
+    void textChanged();
 };
 
 #endif // KBIBTEX_GUI_FILTERBAR_H

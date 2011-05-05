@@ -25,6 +25,8 @@
 #include <KComboBox>
 #include <KLocale>
 #include <KLineEdit>
+#include <KConfigGroup>
+#include <KStandardDirs>
 
 #include "filterbar.h"
 #include "bibtexfields.h"
@@ -35,12 +37,17 @@ private:
     FilterBar *p;
 
 public:
+    KSharedConfigPtr config;
+    const QString configGroupName;
+
     KComboBox *comboBoxFilterText;
+    const int maxNumStoredFilterTexts;
     KComboBox *comboBoxCombination;
     KComboBox *comboBoxField;
 
     FilterBarPrivate(FilterBar *parent)
-            :   p(parent) {
+            : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))),
+            configGroupName(QLatin1String("Filter Bar")), maxNumStoredFilterTexts(12) {
         // nothing
     }
 
@@ -72,6 +79,47 @@ public:
                 break;
             }
     }
+
+    void addCompletionString(const QString &text) {
+        KConfigGroup configGroup(config, configGroupName);
+
+        /// Previous searches are stored as a string list, where each individual
+        /// string starts with 12 characters for the date and time when this
+        /// search was used. Starting from the 13th character (12th, if you
+        /// start counting from 0) the user's input is stored.
+        /// This approach has several advantages: It does not require a more
+        /// complex data structure, can easily read and written using
+        /// KConfigGroup's functions, and can be sorted lexicographically/
+        /// chronologically using QStringList's sort.
+        /// Disadvantage is that string fragments have to be managed manually.
+        QStringList completionListDate = configGroup.readEntry(QLatin1String("PreviousSearches"), QStringList());
+        for (QStringList::Iterator it = completionListDate.begin(); it != completionListDate.end();)
+            if ((*it).mid(12) == text)
+                it = completionListDate.erase(it);
+            else
+                ++it;
+        completionListDate << (QDateTime::currentDateTime().toString("yyyyMMddhhmm") + text);
+
+        /// after sorting, discard all but the maxNumStoredFilterTexts most
+        /// recent user-entered filter texts
+        completionListDate.sort();
+        while (completionListDate.count() > maxNumStoredFilterTexts)
+            completionListDate.removeFirst();
+
+        configGroup.writeEntry(QLatin1String("PreviousSearches"), completionListDate);
+        config->sync();
+
+        /// add user-entered filter text to combobox's drop-down list
+        if (!comboBoxFilterText->contains(text))
+            comboBoxFilterText->addItem(text);
+    }
+
+    void storeComboBoxStatus() {
+        KConfigGroup configGroup(config, configGroupName);
+        configGroup.writeEntry(QLatin1String("CurrentCombination"), comboBoxCombination->currentIndex());
+        configGroup.writeEntry(QLatin1String("CurrentField"), comboBoxField->currentIndex());
+        config->sync();
+    }
 };
 
 FilterBar::FilterBar(QWidget *parent)
@@ -94,7 +142,7 @@ FilterBar::FilterBar(QWidget *parent)
     d->comboBoxFilterText->setEditable(true);
     QFontMetrics metrics(d->comboBoxFilterText->font());
     d->comboBoxFilterText->setMinimumWidth(metrics.width(QLatin1String("AIWaiw"))*7);
-    KLineEdit *lineEdit = dynamic_cast<KLineEdit*>(d->comboBoxFilterText->lineEdit());
+    KLineEdit *lineEdit = static_cast<KLineEdit*>(d->comboBoxFilterText->lineEdit());
     lineEdit->setClearButtonShown(true);
 
     d->comboBoxCombination = new KComboBox(false, this);
@@ -115,9 +163,19 @@ FilterBar::FilterBar(QWidget *parent)
             d->comboBoxField->addItem((*it).label, (*it).upperCamelCase);
 
     connect(d->comboBoxFilterText->lineEdit(), SIGNAL(returnPressed()), this, SLOT(widgetsChanged()));
+    connect(d->comboBoxFilterText->lineEdit(), SIGNAL(returnPressed()), this, SLOT(textChanged()));
     connect(lineEdit, SIGNAL(clearButtonClicked()), this, SLOT(clearFilter()));
     connect(d->comboBoxCombination, SIGNAL(currentIndexChanged(int)), this, SLOT(widgetsChanged()));
     connect(d->comboBoxField, SIGNAL(currentIndexChanged(int)), this, SLOT(widgetsChanged()));
+
+    /// restore history on filter texts
+    /// see addCompletionString for more detailed explanation
+    KConfigGroup configGroup(d->config, QLatin1String("FilterBar"));
+    QStringList completionListDate = configGroup.readEntry(QLatin1String("PreviousSearches"), QStringList());
+    for (QStringList::Iterator it = completionListDate.begin(); it != completionListDate.end(); ++it)
+        d->comboBoxFilterText->addItem((*it).mid(12));
+    d->comboBoxCombination->setCurrentIndex(configGroup.readEntry("CurrentCombination", 0));
+    d->comboBoxField->setCurrentIndex(configGroup.readEntry("CurrentField", 0));
 }
 
 void FilterBar::clearFilter()
@@ -139,5 +197,11 @@ SortFilterBibTeXFileModel::FilterQuery FilterBar::filter()
 
 void FilterBar::widgetsChanged()
 {
+    d->storeComboBoxStatus();
     emit filterChanged(d->filter());
+}
+
+void FilterBar::textChanged()
+{
+    d->addCompletionString(d->comboBoxFilterText->lineEdit()->text());
 }
