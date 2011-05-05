@@ -52,7 +52,7 @@ private slots:
     void foundEntry(Entry *entry);
     void stoppedSearch(int resultCode);
     void tabSwitched(int newTab);
-    void itemCheckChanged();
+    void itemCheckChanged(QListWidgetItem*);
     void openHomepage();
     void enginesListCurrentChanged(QListWidgetItem*, QListWidgetItem*);
     void currentStackWidgetChanged(int);

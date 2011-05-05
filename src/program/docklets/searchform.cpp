@@ -36,6 +36,8 @@
 #include <KTemporaryFile>
 #include <KAction>
 #include <kparts/part.h>
+#include <KStandardDirs>
+#include <KConfigGroup>
 
 #include <websearchabstract.h>
 #include <websearchgeneral.h>
@@ -58,6 +60,7 @@
 
 const int HomepageRole = Qt::UserRole + 5;
 const int WidgetRole = Qt::UserRole + 6;
+const int NameRole = Qt::UserRole + 7;
 
 class SearchForm::SearchFormPrivate
 {
@@ -70,6 +73,9 @@ private:
     KAction *actionOpenHomepage;
 
 public:
+    KSharedConfigPtr config;
+    const QString configGroupName;
+
     MDIWidget *m;
     SearchResults *sr;
     QMap<QListWidgetItem*, WebSearchAbstract*> itemToWebSearch;
@@ -79,11 +85,8 @@ public:
     QTabWidget *tabWidget;
 
     SearchFormPrivate(MDIWidget *mdiWidget, SearchResults *searchResults, SearchForm *parent)
-            : p(parent), whichEnginesLabel(NULL), m(mdiWidget), sr(searchResults), runningSearches(0) {
-        // nothing
-    }
-
-    virtual ~SearchFormPrivate() {
+            : p(parent), whichEnginesLabel(NULL), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))),
+            configGroupName(QLatin1String("Search Engines Docklet")), m(mdiWidget), sr(searchResults), runningSearches(0) {
         // nothing
     }
 
@@ -126,7 +129,7 @@ public:
 
         enginesList = new QListWidget(listContainer);
         layout->addWidget(enginesList, 0, 0, 1, 1);
-        connect(enginesList, SIGNAL(itemChanged(QListWidgetItem*)), p, SLOT(itemCheckChanged()));
+        connect(enginesList, SIGNAL(itemChanged(QListWidgetItem*)), p, SLOT(itemCheckChanged(QListWidgetItem*)));
         connect(enginesList, SIGNAL(currentItemChanged(QListWidgetItem*, QListWidgetItem*)), p, SLOT(enginesListCurrentChanged(QListWidgetItem*, QListWidgetItem*)));
         enginesList->setSelectionMode(QAbstractItemView::NoSelection);
 
@@ -175,15 +178,18 @@ public:
         addEngine(new WebSearchIEEEXplore(p));
         addEngine(new WebSearchScienceDirect(p));
 
-        p->itemCheckChanged();
+        p->itemCheckChanged(NULL);
         updateGUI();
     }
 
     void addEngine(WebSearchAbstract *engine) {
+        KConfigGroup configGroup(config, configGroupName);
+
         QListWidgetItem *item = new QListWidgetItem(engine->label(), enginesList);
-        item->setCheckState(Qt::Checked);
+        item->setCheckState(configGroup.readEntry(engine->name(), false) ? Qt::Checked : Qt::Unchecked);
         item->setIcon(engine->icon());
         item->setData(HomepageRole, engine->homepage());
+        item->setData(NameRole, engine->name());
 
         WebSearchQueryFormAbstract *widget = engine->customWidget(queryTermsStack);
         item->setData(WidgetRole, QVariant::fromValue<WebSearchQueryFormAbstract*>(widget));
@@ -359,7 +365,7 @@ void SearchForm::tabSwitched(int newTab)
     d->updateGUI();
 }
 
-void SearchForm::itemCheckChanged()
+void SearchForm::itemCheckChanged(QListWidgetItem *item)
 {
     int numCheckedEngines = 0;
     for (QMap<QListWidgetItem*, WebSearchAbstract*>::ConstIterator it = d->itemToWebSearch.constBegin(); it != d->itemToWebSearch.constEnd(); ++it)
@@ -367,6 +373,13 @@ void SearchForm::itemCheckChanged()
             ++numCheckedEngines;
 
     d->searchButton->setEnabled(numCheckedEngines > 0);
+
+    if (item != NULL) {
+        KConfigGroup configGroup(d->config, d->configGroupName);
+        QString name = item->data(NameRole).toString();
+        configGroup.writeEntry(name, item->checkState() == Qt::Checked);
+        d->config->sync();
+    }
 }
 
 void SearchForm::openHomepage()
