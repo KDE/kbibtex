@@ -37,6 +37,12 @@ const int WebSearchAbstract::resultNoError = 0;
 const int WebSearchAbstract::resultCancelled = 0; /// may get redefined in the future!
 const int WebSearchAbstract::resultUnspecifiedError = 1;
 
+WebSearchAbstract::WebSearchAbstract(QWidget *parent)
+        : QObject(parent), m_name(QString::null)
+{
+    m_parent = parent;
+}
+
 KIcon WebSearchAbstract::icon() const
 {
     QString fileName = favIconUrl();
@@ -49,6 +55,13 @@ KIcon WebSearchAbstract::icon() const
     }
 
     return KIcon(fileName);
+}
+
+QString WebSearchAbstract::name()
+{
+    if (m_name.isNull())
+        m_name = label().replace(QRegExp("[^a-z0-9]", Qt::CaseInsensitive), QLatin1String(""));
+    return m_name;
 }
 
 void WebSearchAbstract::cancel()

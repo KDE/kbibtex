@@ -65,9 +65,7 @@ class KBIBTEXIO_EXPORT WebSearchAbstract : public QObject
     Q_OBJECT
 
 public:
-    WebSearchAbstract(QWidget *parent) {
-        m_parent = parent;
-    }
+    WebSearchAbstract(QWidget *parent);
 
     static const QString queryKeyFreeText;
     static const QString queryKeyTitle;
@@ -81,6 +79,7 @@ public:
     virtual void startSearch() = 0;
     virtual void startSearch(const QMap<QString, QString> &query, int numResults) = 0;
     virtual QString label() const = 0;
+    QString name();
     virtual KIcon icon() const;
     virtual WebSearchQueryFormAbstract* customWidget(QWidget *parent) = 0;
     virtual KUrl homepage() const = 0;
@@ -116,6 +115,9 @@ protected:
      * @see handleErrors(KJob*)
      */
     bool handleErrors(bool ok);
+
+private:
+    QString m_name;
 
 signals:
     void foundEntry(Entry*);

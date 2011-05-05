@@ -57,7 +57,11 @@ public:
             acmPortalBaseUrl(QLatin1String("http://portal.acm.org/")),
             acmPortalContinueUrl(QLatin1String("http://portal.acm.org/results.cfm?query=%4&querydisp=%4&source_query=&start=%1&srt=score+dsc&short=1&source_disp=&since_month=&since_year=&before_month=&before_year=&coll=DL&dl=GUIDE&termshow=matchall&range_query=&CFID=%2&CFTOKEN=%3")),
             regExpId("(\\?|&)id=(\\d+)\\.(\\d+)(&|$)"), regExpIdCFID("(\\?|&)CFID=(\\d+)(&|$)"), regExpIdCFTOKEN("(\\?|&)CFTOKEN=(\\d+)(&|$)") {
+        page->settings()->setAttribute(QWebSettings::PluginsEnabled, false);
+        page->settings()->setAttribute(QWebSettings::JavaEnabled, false);
         page->settings()->setAttribute(QWebSettings::JavascriptEnabled, false);
+        page->settings()->setAttribute(QWebSettings::AutoLoadImages, false);
+        page->settings()->setAttribute(QWebSettings::PrivateBrowsingEnabled, true);
     }
 
     void sanitizeBibTeXCode(QString &code) {

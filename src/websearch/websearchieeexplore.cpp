@@ -97,6 +97,17 @@ public:
         v << new PlainText(arnumber);
         entry->insert(QLatin1String("arnumber"), v);
     }
+
+    void sanitizeBibTeXCode(QString &code) {
+        const QRegExp htmlEncodedChar("&#(\\d+);");
+        while (htmlEncodedChar.indexIn(code) >= 0) {
+            bool ok = false;
+            QChar c(htmlEncodedChar.cap(1).toInt(&ok));
+            if (ok) {
+                code = code.replace(htmlEncodedChar.cap(0), c);
+            }
+        }
+    }
 };
 
 WebSearchIEEEXplore::WebSearchIEEEXplore(QWidget *parent)
@@ -208,6 +219,7 @@ void WebSearchIEEEXplore::doneFetchingBibliography(KJob *kJob)
         KIO::StoredTransferJob *transferJob = static_cast<KIO::StoredTransferJob *>(kJob);
 
         QString plainText = QString(transferJob->data()).replace("<br>", "");
+        d->sanitizeBibTeXCode(plainText);
 
         File *bibtexFile = d->fileImporter.fromString(plainText);
         Entry *entry = NULL;
