@@ -248,6 +248,7 @@ Entry *FileImporterBibTeX::readEntryElement(const QString& typeString)
 {
     BibTeXEntries *be = BibTeXEntries::self();
     BibTeXFields *bf = BibTeXFields::self();
+    EncoderLaTeX *encoder = EncoderLaTeX::currentEncoderLaTeX();
 
     Token token = nextToken();
     while (token != tBracketOpen) {
@@ -258,8 +259,11 @@ Entry *FileImporterBibTeX::readEntryElement(const QString& typeString)
         token = nextToken();
     }
 
-    QString key = readSimpleString(',');
-    Entry *entry = new Entry(be->format(typeString, m_keywordCasing), key);
+    QString id = readSimpleString(',');
+    /// try to avoid non-ascii characters in ids
+    encoder->convertToPlainAscii(id);
+
+    Entry *entry = new Entry(be->format(typeString, m_keywordCasing), id);
 
     token = nextToken();
     do {
@@ -267,20 +271,23 @@ Entry *FileImporterBibTeX::readEntryElement(const QString& typeString)
             break;
         else if (token != tComma) {
             if (m_currentChar.isLetter())
-                kWarning() << "Error in parsing entry '" << key << "' (near line " << m_lineNo << "): Comma symbol (,) expected but got letter " << m_currentChar << " (token " << tokenidToString(token) << ")";
+                kWarning() << "Error in parsing entry '" << id << "' (near line " << m_lineNo << "): Comma symbol (,) expected but got letter " << m_currentChar << " (token " << tokenidToString(token) << ")";
             else
-                kWarning() << "Error in parsing entry '" << key << "' (near line " << m_lineNo << "): Comma symbol (,) expected but got character 0x" << QString::number(m_currentChar.unicode(), 16) << " (token " << tokenidToString(token) << ")";
+                kWarning() << "Error in parsing entry '" << id << "' (near line " << m_lineNo << "): Comma symbol (,) expected but got character 0x" << QString::number(m_currentChar.unicode(), 16) << " (token " << tokenidToString(token) << ")";
             delete entry;
             return NULL;
         }
 
         QString keyName = bf->format(readSimpleString(), m_keywordCasing);
+        /// try to avoid non-ascii characters in keys
+        encoder->convertToPlainAscii(keyName);
+
         token = nextToken();
         if (keyName == QString::null || token == tBracketClose) {
             // entry is buggy, but we still accept it
             break;
         } else if (token != tAssign) {
-            kError() << "Error in parsing entry '" << key << "'' (near line " << m_lineNo << "): Assign symbol (=) expected after field name '" << keyName << "'";
+            kError() << "Error in parsing entry '" << id << "'' (near line " << m_lineNo << "): Assign symbol (=) expected after field name '" << keyName << "'";
             delete entry;
             return NULL;
         }

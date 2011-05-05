@@ -668,6 +668,21 @@ QString& EncoderLaTeX::decomposedUTF8toLaTeX(QString &text)
     return text;
 }
 
+QString& EncoderLaTeX::convertToPlainAscii(QString &text)
+{
+    for (int i = 0; i < modcharmappingdatalatexcount; ++i) {
+        QChar c = QChar(modcharmappingdatalatex[i].unicode);
+        if (text.indexOf(c) >= 0)
+            text = text.replace(c, QString(modcharmappingdatalatex[i].letter));
+    }
+    for (int i = 0; i < commandmappingdatalatexcount; ++i) {
+        QChar c = QChar(commandmappingdatalatex[i].unicode);
+        if (text.indexOf(c) >= 0)
+            text = text.replace(c, QString(commandmappingdatalatex[i].letters));
+    }
+
+    return text;
+}
 
 EncoderLaTeX* EncoderLaTeX::currentEncoderLaTeX()
 {
