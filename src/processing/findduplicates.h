@@ -71,7 +71,7 @@ private:
 class KBIBTEXIO_EXPORT FindDuplicates
 {
 public:
-    FindDuplicates(QWidget *parent, int sensitivity = 2500);
+    FindDuplicates(QWidget *parent, int sensitivity = 5000);
 
     QList<EntryClique*> findDuplicateEntries(File *file);
 

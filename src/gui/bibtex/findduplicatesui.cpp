@@ -413,7 +413,6 @@ public:
         editor->setReadOnly(true);
 
         alternativesView = new RadioButtonTreeView(splitter);
-        alternativesView->setItemDelegate(new RadioButtonItemDelegate(alternativesView));
 
         model = new CheckableBibTeXFileModel(cl, alternativesView, p);
         model->setBibTeXFile(new File(*file));

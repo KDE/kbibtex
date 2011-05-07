@@ -75,7 +75,7 @@ QSize RadioButtonItemDelegate::sizeHint(const QStyleOptionViewItem & option, con
 RadioButtonTreeView::RadioButtonTreeView(QWidget *parent)
         : QTreeView(parent)
 {
-    // nothing
+    setItemDelegate(new RadioButtonItemDelegate(this));
 }
 
 void RadioButtonTreeView::mouseReleaseEvent(QMouseEvent *event)
