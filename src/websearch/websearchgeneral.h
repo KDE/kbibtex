@@ -20,6 +20,8 @@
 #ifndef KBIBTEX_WEBSEARCH_GENERAL_H
 #define KBIBTEX_WEBSEARCH_GENERAL_H
 
+#include <KSharedConfig>
+
 #include "websearchabstract.h"
 
 class QSpinBox;
@@ -41,6 +43,11 @@ public:
 private:
     QMap<QString, KLineEdit*> queryFields;
     QSpinBox *numResultsField;
+    KSharedConfigPtr config;
+    const QString configGroupName;
+
+    void loadState();
+    void saveState();
 };
 
 #endif // KBIBTEX_WEBSEARCH_GENERAL_H

@@ -24,11 +24,13 @@
 
 #include <KLineEdit>
 #include <KLocale>
+#include <KConfigGroup>
 
 #include "websearchgeneral.h"
 
 WebSearchQueryFormGeneral::WebSearchQueryFormGeneral(QWidget *parent)
-        : WebSearchQueryFormAbstract(parent)
+        : WebSearchQueryFormAbstract(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))),
+        configGroupName(QLatin1String("Search Engines General"))
 {
     QGridLayout *layout = new QGridLayout(this);
     layout->setMargin(0);
@@ -80,6 +82,8 @@ WebSearchQueryFormGeneral::WebSearchQueryFormGeneral(QWidget *parent)
     label->setBuddy(numResultsField);
 
     layout->setRowStretch(5, 100);
+
+    loadState();
 }
 
 bool WebSearchQueryFormGeneral::readyToStart() const
@@ -100,10 +104,30 @@ QMap<QString, QString> WebSearchQueryFormGeneral::getQueryTerms()
             result.insert(it.key(), it.value()->text());
     }
 
+    saveState();
     return result;
 }
 
 int WebSearchQueryFormGeneral::getNumResults()
 {
     return numResultsField->value();
+}
+
+void WebSearchQueryFormGeneral::loadState()
+{
+    KConfigGroup configGroup(config, configGroupName);
+    for (QMap<QString, KLineEdit*>::ConstIterator it = queryFields.constBegin(); it != queryFields.constEnd(); ++it) {
+        it.value()->setText(configGroup.readEntry(it.key(), QString()));
+    }
+    numResultsField->setValue(configGroup.readEntry(QLatin1String("numResults"), 10));
+}
+
+void WebSearchQueryFormGeneral::saveState()
+{
+    KConfigGroup configGroup(config, configGroupName);
+    for (QMap<QString, KLineEdit*>::ConstIterator it = queryFields.constBegin(); it != queryFields.constEnd(); ++it) {
+        configGroup.writeEntry(it.key(), it.value()->text());
+    }
+    configGroup.writeEntry(QLatin1String("numResults"), numResultsField->value());
+    config->sync();
 }
