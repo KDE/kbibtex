@@ -37,6 +37,8 @@ class KBIBTEXIO_EXPORT EntryClique
 {
     friend class FindDuplicates;
 public:
+    enum ValueOperation { SetValue, AddValue, RemoveValue };
+
     int entryCount() const;
     QList<Entry*> entryList() const;
     bool isEntryChecked(Entry *entry) const;
@@ -46,7 +48,8 @@ public:
     QList<QString> fieldList() const;
     QList<Value> values(const QString &field) const;
     Value chosenValue(const QString &field) const;
-    void setChosenValue(const QString &field, Value &value);
+    QList<Value> chosenValues(const QString &field) const;
+    void setChosenValue(const QString &field, Value &value, ValueOperation valueOperation = SetValue);
 
     QString dump() const;
 
@@ -56,7 +59,7 @@ protected:
 private:
     QMap<Entry*, bool> checkedEntries;
     QMap<QString, QList<Value> > valueMap;
-    QMap<QString, Value> chosenValueMap;
+    QMap<QString, QList<Value> > chosenValueMap;
 
     void recalculateValueMap();
     void insertKeyValueToValueMap(const QString &fieldName, const Value &fieldValue, const QString &fieldValueText);

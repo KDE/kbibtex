@@ -53,7 +53,6 @@ const int maxFieldsCount = 1024;
 
 
 
-
 class AlternativesItemModel : public QAbstractItemModel
 {
 private:
@@ -98,7 +97,6 @@ public:
 
         if (parent == QModelIndex()) {
             /// top-level index, check how many lists of lists of alternatives exist
-            //kDebug() << currentClique->dump();
             return currentClique->fieldCount();
 
         } else if (parent.parent() == QModelIndex()) {
@@ -107,7 +105,7 @@ public:
             QList<Value> alt = currentClique->values(fieldName);
             /// second, return number of alternatives for list of alternatives
             /// plus one for an "else" option
-            return alt.count() + (fieldName.startsWith('^') ? 0 : 1);
+            return alt.count() + (fieldName.startsWith('^') || fieldName == Entry::ftKeywords || fieldName == Entry::ftUrl ? 0 : 1);
         }
 
         return 0;
@@ -131,7 +129,7 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const {
         if (index.parent() == QModelIndex()) {
             /// top-level elements showing field names like "Title", "Authors", etc
-            const QString fieldName = currentClique->fieldList().at(index.row());
+            const QString fieldName = currentClique->fieldList().at(index.row()).toLower();
             switch (role) {
             case FieldNameRole:
                 /// plain-and-simple field name (all lower case)
@@ -184,7 +182,23 @@ public:
                     f.setItalic(true);
                     return f;
                 }
+            case Qt::CheckStateRole: {
+                if (fieldName != Entry::ftKeywords && fieldName != Entry::ftUrl)
+                    return QVariant();
+
+                QList<Value> chosenValues = currentClique->chosenValues(fieldName);
+                QString text = PlainTextValue::text(values.at(index.row()));
+                foreach(Value value, chosenValues) {
+                    if (PlainTextValue::text(value) == text)
+                        return Qt::Checked;
+                }
+
+                return Qt::Unchecked;
+            }
             case RadioSelectedRole: {
+                if (fieldName == Entry::ftKeywords || fieldName == Entry::ftUrl)
+                    return QVariant::fromValue(false);
+
                 /// return selection status (true or false) for this alternative
                 Value chosen = currentClique->chosenValue(fieldName);
                 if (chosen.isEmpty())
@@ -198,7 +212,7 @@ public:
             }
             case IsRadioRole:
                 /// this is to be a radio widget
-                return QVariant::fromValue(true);
+                return QVariant::fromValue(fieldName != Entry::ftKeywords && fieldName != Entry::ftUrl);
             }
         }
 
@@ -206,23 +220,37 @@ public:
     }
 
     bool setData(const QModelIndex & index, const QVariant & value, int role = RadioSelectedRole) {
-        if (index.parent().parent() == QModelIndex() && role == RadioSelectedRole && value.canConvert<bool>() && value.toBool() == true) {
-            /// start with determining which list of alternatives actually to use
+        if (index.parent().parent() == QModelIndex()) {
             QString fieldName = index.parent().data(FieldNameRole).toString();
-            QList<Value> values = currentClique->values(fieldName);
+            if (role == RadioSelectedRole && value.canConvert<bool>() && value.toBool() == true) {
+                /// start with determining which list of alternatives actually to use
+                QList<Value> values = currentClique->values(fieldName);
 
-            /// store which alternative was selected
-            if (index.row() < values.count())
-                currentClique->setChosenValue(fieldName, values[index.row()]);
-            else {
-                Value v;
-                currentClique->setChosenValue(fieldName, v);
+                /// store which alternative was selected
+                if (index.row() < values.count())
+                    currentClique->setChosenValue(fieldName, values[index.row()]);
+                else {
+                    Value v;
+                    currentClique->setChosenValue(fieldName, v);
+                }
+
+                /// update view on neighbouring alternatives
+                emit dataChanged(index.sibling(0, 0), index.sibling(rowCount(index.parent()), 0));
+
+                return true;
+            } else if (role == Qt::CheckStateRole && (fieldName == Entry::ftKeywords || fieldName == Entry::ftUrl)) {
+                bool ok;
+                int checkState = value.toInt(&ok);
+                if (ok) {
+                    QList<Value> values = currentClique->values(fieldName);
+                    if (checkState == Qt::Checked)
+                        currentClique->setChosenValue(fieldName, values[index.row()], EntryClique::AddValue);
+                    else if (checkState == Qt::Unchecked)
+                        currentClique->setChosenValue(fieldName, values[index.row()], EntryClique::RemoveValue);
+
+                    return true;
+                }
             }
-
-            /// update view on neighbouring alternatives
-            emit dataChanged(index.sibling(0, 0), index.sibling(rowCount(index.parent()), 0));
-
-            return true;
         }
 
         return false;
@@ -231,6 +259,16 @@ public:
     bool hasChildren(const QModelIndex & parent = QModelIndex()) const {
         /// depth-two tree
         return parent == QModelIndex() || parent.parent() == QModelIndex();
+    }
+
+    virtual Qt::ItemFlags flags(const QModelIndex &index) const {
+        Qt::ItemFlags f = QAbstractItemModel::flags(index);
+        if (index.parent() != QModelIndex()) {
+            QString fieldName = index.parent().data(FieldNameRole).toString();
+            if (fieldName == Entry::ftKeywords || fieldName == Entry::ftUrl)
+                f |= Qt::ItemIsUserCheckable;
+        }
+        return f;
     }
 };
 
@@ -371,16 +409,14 @@ public:
         QSplitter *splitter = new QSplitter(Qt::Vertical, p);
         layout->addWidget(splitter);
 
+        editor = new BibTeXEditor(splitter);
+        editor->setReadOnly(true);
 
         alternativesView = new RadioButtonTreeView(splitter);
         alternativesView->setItemDelegate(new RadioButtonItemDelegate(alternativesView));
 
-
-        editor = new BibTeXEditor(splitter);
-        editor->setReadOnly(true);
         model = new CheckableBibTeXFileModel(cl, alternativesView, p);
         model->setBibTeXFile(new File(*file));
-
 
         QBoxLayout *containerLayout = new QHBoxLayout();
         layout->addLayout(containerLayout);

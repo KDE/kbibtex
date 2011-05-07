@@ -281,7 +281,13 @@ Value::Value()
 Value::Value(const Value& other)
         : QList<ValueItem*>()
 {
-    copyFrom(other);
+    clear();
+    mergeFrom(other);
+}
+
+void Value::merge(const Value& other)
+{
+    mergeFrom(other);
 }
 
 void Value::replace(const QString &before, const QString &after)
@@ -309,13 +315,13 @@ bool Value::contains(const ValueItem& item) const
 
 Value& Value::operator=(const Value & rhs)
 {
-    copyFrom(rhs);
+    clear();
+    mergeFrom(rhs);
     return *this;
 }
 
-void Value::copyFrom(const Value& other)
+void Value::mergeFrom(const Value& other)
 {
-    clear();
     for (QList<ValueItem*>::ConstIterator it = other.begin(); it != other.end(); ++it) {
         PlainText *plainText = dynamic_cast<PlainText*>(*it);
         if (plainText != NULL)

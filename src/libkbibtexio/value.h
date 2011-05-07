@@ -172,6 +172,8 @@ public:
     Value();
     Value(const Value& other);
 
+    void merge(const Value& other);
+
     void replace(const QString &before, const QString &after);
 
     /**
@@ -187,7 +189,7 @@ public:
     Value& operator=(const Value& rhs);
 
 private:
-    void copyFrom(const Value& other);
+    void mergeFrom(const Value& other);
 };
 
 class KBIBTEXIO_EXPORT PlainTextValue

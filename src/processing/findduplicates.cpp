@@ -68,12 +68,41 @@ QList<Value> EntryClique::values(const QString &field) const
 
 Value EntryClique::chosenValue(const QString &field) const
 {
+    Q_ASSERT(chosenValueMap[field].count() == 1);
+    return chosenValueMap[field].first();
+}
+
+QList<Value> EntryClique::chosenValues(const QString &field) const
+{
     return chosenValueMap[field];
 }
 
-void EntryClique::setChosenValue(const QString &field, Value &value)
+void EntryClique::setChosenValue(const QString &field, Value &value, ValueOperation valueOperation)
 {
-    chosenValueMap[field] = value;
+    switch (valueOperation) {
+    case SetValue: {
+        chosenValueMap[field].clear();
+        chosenValueMap[field] << value;
+        break;
+    }
+    case AddValue: {
+        QString text = PlainTextValue::text(value);
+        foreach(Value value, chosenValueMap[field])
+        if (PlainTextValue::text(value) == text)
+            return;
+        chosenValueMap[field] << value;
+        break;
+    }
+    case RemoveValue: {
+        QString text = PlainTextValue::text(value);
+        for (QList<Value>::Iterator it = chosenValueMap[field].begin(); it != chosenValueMap[field].end(); ++it)
+            if (PlainTextValue::text(*it) == text) {
+                chosenValueMap[field].erase(it);
+                return;
+            }
+        break;
+    }
+    }
 }
 
 QString EntryClique::dump() const
@@ -86,8 +115,11 @@ QString EntryClique::dump() const
     for (QMap<QString, QList<Value> >::ConstIterator vmit = valueMap.constBegin(); vmit != valueMap.constEnd(); ++vmit)
         result.append(QString("valueMap: %1 = %2\n").arg(vmit.key()).arg(vmit.value().count()));
 
-    for (QMap<QString, Value >::ConstIterator cvmit = chosenValueMap.constBegin(); cvmit != chosenValueMap.constEnd(); ++cvmit)
-        result.append(QString("chosenValueMap: %1 = %2\n").arg(cvmit.key()).arg(PlainTextValue::text(cvmit.value())));
+    for (QMap<QString, QList<Value> >::ConstIterator cvmit = chosenValueMap.constBegin(); cvmit != chosenValueMap.constEnd(); ++cvmit) {
+        result.append(QString("chosenValueMap: %1 =").arg(cvmit.key()));
+        for (QList<Value>::ConstIterator vit = cvmit.value().constBegin(); vit != cvmit.value().constEnd(); ++vit)
+            result.append(QString(" %1").arg(PlainTextValue::text(*vit)));
+    }
 
     result.append(QLatin1String("dump END\n"));
     return result;
@@ -124,8 +156,18 @@ void EntryClique::recalculateValueMap()
             /// store both field name and value for later reference
             const QString fieldName = fieldIt.key().toLower();
             const Value fieldValue = fieldIt.value();
-            const QString fieldValueText = PlainTextValue::text(fieldValue);
-            insertKeyValueToValueMap(fieldName, fieldValue, fieldValueText);
+
+            if (fieldName == Entry::ftKeywords || fieldName == Entry::ftUrl) {
+                foreach(ValueItem* vi, fieldValue) {
+                    const QString text = PlainTextValue::text(*vi);
+                    Value v;
+                    v << vi;
+                    insertKeyValueToValueMap(fieldName, v, text);
+                }
+            } else {
+                const QString fieldValueText = PlainTextValue::text(fieldValue);
+                insertKeyValueToValueMap(fieldName, fieldValue, fieldValueText);
+            }
         }
     }
 
@@ -161,7 +203,9 @@ void EntryClique::insertKeyValueToValueMap(const QString &fieldName, const Value
         QList<Value> alternatives = valueMap[fieldName];
         alternatives << fieldValue;
         valueMap.insert(fieldName, alternatives);
-        chosenValueMap.insert(fieldName, fieldValue);
+        QList<Value> chosen;
+        chosen << fieldValue;
+        chosenValueMap.insert(fieldName, chosen);
     }
 }
 
@@ -406,8 +450,12 @@ bool MergeDuplicates::mergeDuplicateEntries(const QList<EntryClique*> &entryCliq
                 mergedEntry->setId(PlainTextValue::text(entryClique->chosenValue(field)));
             else if (field == QLatin1String("^type"))
                 mergedEntry->setType(PlainTextValue::text(entryClique->chosenValue(field)));
-            else
-                mergedEntry->insert(field, entryClique->chosenValue(field));
+            else {
+                Value combined;
+                foreach(Value v, entryClique->chosenValues(field))
+                combined.merge(v);
+                mergedEntry->insert(field, combined);
+            }
         }
 
         foreach(Entry *entry, entryClique->entryList())
