@@ -62,7 +62,7 @@ void RadioButtonItemDelegate::paint(QPainter * painter, const QStyleOptionViewIt
 QSize RadioButtonItemDelegate::sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index) const
 {
     QSize s = QStyledItemDelegate::sizeHint(option, index);
-    if (index.parent() != QModelIndex()) {
+    if (index.data(IsRadioRole).value<bool>()) {
         /// determine size of radio buttons in current style
         int radioButtonHeight = QApplication::style()->pixelMetric(QStyle::PM_ExclusiveIndicatorHeight, &option);
         /// ensure that line is tall enough to draw radio button
@@ -81,7 +81,7 @@ RadioButtonTreeView::RadioButtonTreeView(QWidget *parent)
 void RadioButtonTreeView::mouseReleaseEvent(QMouseEvent *event)
 {
     QModelIndex index = indexAt(event->pos());
-    if (index != QModelIndex() && index.parent() != QModelIndex()) {
+    if (index.data(IsRadioRole).value<bool>()) {
         /// clicking on an alternative's item in tree view should select alternative
         switchRadioFlag(index);
         event->accept();
@@ -92,7 +92,7 @@ void RadioButtonTreeView::mouseReleaseEvent(QMouseEvent *event)
 void RadioButtonTreeView::keyReleaseEvent(QKeyEvent *event)
 {
     QModelIndex index = currentIndex();
-    if (index != QModelIndex() && index.parent() != QModelIndex() && event->key() == Qt::Key_Space) {
+    if (index.data(IsRadioRole).value<bool>() && event->key() == Qt::Key_Space) {
         /// pressing space on an alternative's item in tree view should select alternative
         switchRadioFlag(index);
         event->accept();
