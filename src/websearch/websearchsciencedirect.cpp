@@ -21,7 +21,6 @@
 #include <QWebPage>
 #include <QWebFrame>
 #include <QWebElement>
-#include <QFile>
 #include <QNetworkRequest>
 
 #include <KDebug>
@@ -39,6 +38,7 @@ private:
     WebSearchScienceDirect *p;
 
 public:
+    const int numPages;
     QList<QWebPage*> pages;
     QString joinedQueryString;
     int currentSearchPosition;
@@ -46,12 +46,11 @@ public:
     const QString scienceDirectBaseUrl;
     QStringList bibTeXUrls;
     int runningJobs;
-    const int numPages;
 
     WebSearchScienceDirectPrivate(WebSearchScienceDirect *parent)
             : p(parent),
-            scienceDirectBaseUrl(QLatin1String("http://www.sciencedirect.com/")),
-            numPages(8) {
+            numPages(8),
+            scienceDirectBaseUrl(QLatin1String("http://www.sciencedirect.com/")) {
         for (int i = 0; i < numPages; ++i) {
             QWebPage *page = new QWebPage(parent);
             page->settings()->setAttribute(QWebSettings::PluginsEnabled, false);

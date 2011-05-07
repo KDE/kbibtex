@@ -213,9 +213,6 @@ void WebSearchAcmPortal::doneFetchingBibTeX(KJob *kJob)
                     emit foundEntry(entry);
             }
             delete bibtexFile;
-        } else {
-            emit stoppedSearch(resultUnspecifiedError);
-            return;
         }
 
         if (! d->bibTeXUrls.isEmpty()) {
