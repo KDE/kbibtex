@@ -116,8 +116,14 @@ protected:
      */
     bool handleErrors(bool ok);
 
+    /**
+     * Encode a text to be HTTP URL save, e.g. replace '=' by '%3D'.
+     */
+    QString encodeURL(QString rawText);
+
 private:
     QString m_name;
+    static const char *httpUnsafeChars;
 
 signals:
     void foundEntry(Entry*);

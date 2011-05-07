@@ -37,6 +37,8 @@ const int WebSearchAbstract::resultNoError = 0;
 const int WebSearchAbstract::resultCancelled = 0; /// may get redefined in the future!
 const int WebSearchAbstract::resultUnspecifiedError = 1;
 
+const char* WebSearchAbstract::httpUnsafeChars = "%/=+$?& \0";
+
 WebSearchAbstract::WebSearchAbstract(QWidget *parent)
         : QObject(parent), m_name(QString::null)
 {
@@ -117,4 +119,14 @@ bool WebSearchAbstract::handleErrors(bool ok)
         return false;
     }
     return true;
+}
+
+QString WebSearchAbstract::encodeURL(QString rawText)
+{
+    const char *cur = httpUnsafeChars;
+    while (*cur != '\0') {
+        rawText = rawText.replace(QChar(*cur), '%' + QString::number(*cur, 16));
+        ++cur;
+    }
+    return rawText;
 }

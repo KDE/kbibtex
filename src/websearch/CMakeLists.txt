@@ -9,6 +9,7 @@ set( websearch_LIB_SRCS
 	websearchieeexplore.cpp
 	websearchpubmed.cpp
 	websearchacmportal.cpp
+	websearchspringerlink.cpp
 	websearchgeneral.cpp
 	cookiemanager.cpp
 )
