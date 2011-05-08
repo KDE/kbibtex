@@ -48,7 +48,6 @@ signals:
     void filterChanged(SortFilterBibTeXFileModel::FilterQuery);
 
 private slots:
-    void comboboxChanged();
     void listItemActivated(const QModelIndex &);
 
 private:

@@ -20,14 +20,16 @@
 
 #include <typeinfo>
 
-#include <KComboBox>
-
 #include <QTreeView>
 #include <QGridLayout>
 #include <QStringListModel>
 #include <QScrollBar>
 #include <QTimer>
 #include <QSortFilterProxyModel>
+
+#include <KComboBox>
+#include <KStandardDirs>
+#include <KConfigGroup>
 
 #include <bibtexfields.h>
 #include <entry.h>
@@ -41,6 +43,10 @@ private:
     ValueList *p;
 
 public:
+    KSharedConfigPtr config;
+    const QString configGroupName;
+    const QString configKeyName;
+
     BibTeXEditor *editor;
     QTreeView *treeviewFieldValues;
     QSortFilterProxyModel *sortingModel;
@@ -48,7 +54,8 @@ public:
     const int countWidth;
 
     ValueListPrivate(ValueList *parent)
-            : p(parent), sortingModel(NULL), countWidth(parent->fontMetrics().width(QLatin1String("Count888"))) {
+            : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName(QLatin1String("Value List Docklet")),
+            configKeyName(QLatin1String("FieldName")), sortingModel(NULL), countWidth(parent->fontMetrics().width(QLatin1String("Count888"))) {
         setupGUI();
         initialize();
     }
@@ -66,7 +73,7 @@ public:
 
         p->setEnabled(false);
 
-        connect(comboboxFieldNames, SIGNAL(activated(int)), p, SLOT(comboboxChanged()));
+        connect(comboboxFieldNames, SIGNAL(activated(int)), p, SLOT(update()));
         connect(treeviewFieldValues, SIGNAL(activated(const QModelIndex &)), p, SLOT(listItemActivated(const QModelIndex &)));
     }
 
@@ -80,10 +87,10 @@ public:
             if (fd.upperCamelCase.startsWith('^')) continue; /// skip "type" and "id"
             comboboxFieldNames->addItem(fd.label, fd.upperCamelCase);
         }
-    }
 
-    void comboboxChanged() {
-        update();
+        KConfigGroup configGroup(config, configGroupName);
+        QString fieldName = configGroup.readEntry(configKeyName, QString());
+        comboboxFieldNames->setCurrentItem(fieldName);
     }
 
     void update() {
@@ -101,6 +108,10 @@ public:
             model = sortingModel;
         }
         treeviewFieldValues->setModel(model);
+
+        KConfigGroup configGroup(config, configGroupName);
+        configGroup.writeEntry(configKeyName, text);
+        config->sync();
     }
 };
 
@@ -128,11 +139,6 @@ void ValueList::resizeEvent(QResizeEvent */*event*/)
     int widgetWidth = d->treeviewFieldValues->size().width() - d->treeviewFieldValues->verticalScrollBar()->size().width();
     d->treeviewFieldValues->setColumnWidth(0, widgetWidth - d->countWidth * 4 / 3);
     d->treeviewFieldValues->setColumnWidth(1, d->countWidth);
-}
-
-void ValueList::comboboxChanged()
-{
-    d->comboboxChanged();
 }
 
 void ValueList::listItemActivated(const QModelIndex &index)
