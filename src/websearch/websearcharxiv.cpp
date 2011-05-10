@@ -347,24 +347,30 @@ void WebSearchArXiv::jobDone(KJob *j)
         result = result.replace("xmlns=\"http://www.w3.org/2005/Atom\"", ""); // FIXME fix arxiv2bibtex.xsl to handle namespace
 
         /// use XSL transformation to get BibTeX document from XML result
-        QString bibTeXcode = d->xslt.transform(result);
+        QString bibTeXcode = d->xslt.transform(result).replace(QLatin1String("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"), QString());
 
         FileImporterBibTeX importer;
         File *bibtexFile = importer.fromString(bibTeXcode);
 
+        bool hasEntries = false;
         if (bibtexFile != NULL) {
-            bool hasEntry = false;
             for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
                 Entry *entry = dynamic_cast<Entry*>(*it);
                 if (entry != NULL) {
-                    d->sanitize(entry);
-                    hasEntry = true;
                     emit foundEntry(entry);
+                    hasEntries = true;
                 }
+
             }
-            emit stoppedSearch(hasEntry ? resultNoError : resultUnspecifiedError);
+
+            if (!hasEntries)
+                kDebug() << "No hits found in" << job->url().prettyUrl();
+            emit stoppedSearch(resultNoError);
+
             delete bibtexFile;
-        } else
+        } else {
+            kWarning() << "No valid BibTeX file results returned on request on" << job->url().prettyUrl();
             emit stoppedSearch(resultUnspecifiedError);
+        }
     }
 }
