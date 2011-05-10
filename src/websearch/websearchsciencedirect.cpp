@@ -277,7 +277,7 @@ void WebSearchScienceDirect::doneFetchingExportCitationPage(bool ok)
                     /// disable JavaScript support
                     queryString += QLatin1String("&JAVASCRIPT_ON=");
                 } else
-                    queryString += '&' + input.attribute(QLatin1String("name")) + '=' + input.attribute(QLatin1String("value"));
+                    queryString += '&' + encodeURL(input.attribute(QLatin1String("name"))) + '=' + encodeURL(input.attribute(QLatin1String("value")));
             }
 
             KUrl url(d->scienceDirectBaseUrl + form.attribute(QLatin1String("action")));
@@ -286,10 +286,10 @@ void WebSearchScienceDirect::doneFetchingExportCitationPage(bool ok)
             job->addMetaData(QLatin1String("referrer"), page->mainFrame()->baseUrl().toString());
             connect(job, SIGNAL(result(KJob *)), this, SLOT(doneFetchingBibTeX(KJob *)));
             ++d->runningJobs;
-        }
+        } else
+            kWarning() << "did not find Form on page" << page->mainFrame()->url().toString();
 
         if (!d->bibTeXUrls.isEmpty()) {
-            kWarning() << "did not find Form on page" << page->mainFrame()->url().toString();
             QString url = d->bibTeXUrls.first();
             d->bibTeXUrls.removeFirst();
             page->mainFrame()->load(url);
