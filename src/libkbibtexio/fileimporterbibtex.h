@@ -101,7 +101,7 @@ private:
     int m_textStreamLastPos;
     QChar m_currentChar;
     bool m_ignoreComments;
-    QString m_encoding;
+    QString m_encoding, m_newEncoding;
     KBibTeX::Casing m_keywordCasing;
 
     Comment *readCommentElement();
