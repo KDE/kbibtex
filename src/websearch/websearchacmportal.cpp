@@ -151,7 +151,8 @@ void WebSearchAcmPortal::doneFetchingStartPage(bool ok)
             KMessageBox::error(m_parent, i18n("Searching \"%1\" failed for unknown reason.", label()));
             emit stoppedSearch(resultUnspecifiedError);
         }
-    }
+    } else
+        kDebug() << "url was" << d->page->mainFrame()->url().toString();
 }
 
 void WebSearchAcmPortal::doneFetchingSearchPage(bool ok)
@@ -192,13 +193,14 @@ void WebSearchAcmPortal::doneFetchingSearchPage(bool ok)
             d->bibTeXUrls.removeFirst();
         } else
             emit stoppedSearch(resultNoError);
-    }
+    } else
+        kDebug() << "url was" << d->page->mainFrame()->url().toString();
 }
 
 void WebSearchAcmPortal::doneFetchingBibTeX(KJob *kJob)
 {
+    KIO::StoredTransferJob *job = static_cast<KIO::StoredTransferJob*>(kJob);
     if (handleErrors(kJob)) {
-        KIO::StoredTransferJob *job = static_cast<KIO::StoredTransferJob*>(kJob);
         QTextStream ts(job->data());
         QString bibTeXcode = ts.readAll();
 
@@ -221,5 +223,6 @@ void WebSearchAcmPortal::doneFetchingBibTeX(KJob *kJob)
             d->bibTeXUrls.removeFirst();
         } else
             emit stoppedSearch(resultNoError);
-    }
+    } else
+        kDebug() << "url was" << job->url();
 }
