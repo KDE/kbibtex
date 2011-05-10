@@ -99,12 +99,22 @@ public:
     }
 
     void sanitizeBibTeXCode(QString &code) {
-        const QRegExp htmlEncodedChar("&#(\\d+);");
-        while (htmlEncodedChar.indexIn(code) >= 0) {
+        const QRegExp htmlEncodedCharDec("&?#(\\d+);");
+        const QRegExp htmlEncodedCharHex("&?#x([0-9a-f]+);", Qt::CaseInsensitive);
+
+        while (htmlEncodedCharDec.indexIn(code) >= 0) {
             bool ok = false;
-            QChar c(htmlEncodedChar.cap(1).toInt(&ok));
+            QChar c(htmlEncodedCharDec.cap(1).toInt(&ok));
             if (ok) {
-                code = code.replace(htmlEncodedChar.cap(0), c);
+                code = code.replace(htmlEncodedCharDec.cap(0), c);
+            }
+        }
+
+        while (htmlEncodedCharHex.indexIn(code) >= 0) {
+            bool ok = false;
+            QChar c(htmlEncodedCharHex.cap(1).toInt(&ok, 16));
+            if (ok) {
+                code = code.replace(htmlEncodedCharHex.cap(0), c);
             }
         }
     }
@@ -236,7 +246,7 @@ void WebSearchIEEEXplore::doneFetchingBibliography(KJob *kJob)
         }
 
         if (entry == NULL) {
-            kWarning() << "Searching" << label() << "resulted in invalid BibTeX data:" << QString(transferJob->data());
+            kWarning() << "Searching" << label() << "(url:" << transferJob->url().prettyUrl() << ") resulted in invalid BibTeX data:" << QString(transferJob->data());
             d->cookieManager->enableCookieRestrictions();
             emit stoppedSearch(resultUnspecifiedError);
             return;
