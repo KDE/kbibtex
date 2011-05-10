@@ -24,6 +24,7 @@
 #include <QSpinBox>
 #include <QLayout>
 #include <QLabel>
+#include <QFormLayout>
 
 #include <KLocale>
 #include <KMessageBox>
@@ -64,83 +65,69 @@ static void dumpData(const QByteArray &byteArray, int index)
 class WebSearchGoogleScholar::WebSearchQueryFormGoogleScholar : public WebSearchQueryFormAbstract
 {
 public:
-    KLineEdit *lineEditAllWords, *lineEditAnyWord, *lineEditWithoutWords, *lineEditExactPhrase, *lineEditAuthor, *lineEditPublication, *lineEditYearStart, *lineEditYearEnd;
+    KLineEdit *lineEditAllWords, *lineEditAnyWord, *lineEditWithoutWords, *lineEditExactPhrase, *lineEditAuthor, *lineEditPublication;
     QSpinBox *numResultsField;
 
     WebSearchQueryFormGoogleScholar(QWidget *parent)
             : WebSearchQueryFormAbstract(parent) {
-        QGridLayout *layout = new QGridLayout(this);
+        QFormLayout *layout = new QFormLayout(this);
         layout->setMargin(0);
 
         QLabel *label = new QLabel(i18n("<qt><b>All</b> words:</qt>"), this);
-        layout->addWidget(label, 0, 0, 1, 1, Qt::AlignVCenter | Qt::AlignRight);
         lineEditAllWords = new KLineEdit(this);
-        layout->addWidget(lineEditAllWords, 0, 1, 1, 3);
+        layout->addRow(label, lineEditAllWords);
+        lineEditAllWords->setClearButtonShown(true);
         label->setBuddy(lineEditAllWords);
         connect(lineEditAllWords, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
 
         label = new QLabel(i18n("<qt><b>Any</b> words:</qt>"), this);
-        layout->addWidget(label, 1, 0, 1, 1, Qt::AlignVCenter | Qt::AlignRight);
         lineEditAnyWord = new KLineEdit(this);
-        layout->addWidget(lineEditAnyWord, 1, 1, 1, 3);
+        layout->addRow(label, lineEditAnyWord);
+        lineEditAnyWord->setClearButtonShown(true);
         label->setBuddy(lineEditAnyWord);
         connect(lineEditAnyWord, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
 
         label = new QLabel(i18n("<qt><b>Without</b> words:</qt>"), this);
-        layout->addWidget(label, 2, 0, 1, 1, Qt::AlignVCenter | Qt::AlignRight);
         lineEditWithoutWords = new KLineEdit(this);
-        layout->addWidget(lineEditWithoutWords, 2, 1, 1, 3);
+        layout->addRow(label, lineEditWithoutWords);
+        lineEditWithoutWords->setClearButtonShown(true);
         label->setBuddy(lineEditWithoutWords);
         connect(lineEditWithoutWords, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
 
         label = new QLabel(i18n("Exact phrase:"), this);
-        layout->addWidget(label, 3, 0, 1, 1, Qt::AlignVCenter | Qt::AlignRight);
         lineEditExactPhrase = new KLineEdit(this);
-        layout->addWidget(lineEditExactPhrase, 3, 1, 1, 3);
+        layout->addRow(label, lineEditExactPhrase);
+        lineEditExactPhrase->setClearButtonShown(true);
         label->setBuddy(lineEditExactPhrase);
         connect(lineEditExactPhrase, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
 
         label = new QLabel(i18n("Author:"), this);
-        layout->addWidget(label, 4, 0, 1, 1, Qt::AlignVCenter | Qt::AlignRight);
         lineEditAuthor = new KLineEdit(this);
-        layout->addWidget(lineEditAuthor, 4, 1, 1, 3);
+        layout->addRow(label, lineEditAuthor);
+        lineEditAuthor->setClearButtonShown(true);
         label->setBuddy(lineEditAuthor);
         connect(lineEditAuthor, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
 
         label = new QLabel(i18n("Publication:"), this);
-        layout->addWidget(label, 5, 0, 1, 1, Qt::AlignVCenter | Qt::AlignRight);
         lineEditPublication = new KLineEdit(this);
-        layout->addWidget(lineEditPublication, 5, 1, 1, 3);
+        layout->addRow(label, lineEditPublication);
+        lineEditPublication->setClearButtonShown(true);
         label->setBuddy(lineEditPublication);
         connect(lineEditPublication, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
 
-        label = new QLabel(i18n("Year:"), this);
-        layout->addWidget(label, 6, 0, 1, 1, Qt::AlignVCenter | Qt::AlignRight);
-        lineEditYearStart = new KLineEdit(this);
-        layout->addWidget(lineEditYearStart, 6, 1, 1, 1);
-        label->setBuddy(lineEditYearStart);
-        connect(lineEditYearStart, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
-        label = new QLabel(QChar(0x2013), this);
-        layout->addWidget(label, 6, 2, 1, 1);
-        lineEditYearEnd = new KLineEdit(this);
-        layout->addWidget(lineEditYearEnd, 6, 3, 1, 1);
-        connect(lineEditYearEnd, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
-
         label = new QLabel(i18n("Number of Results:"), this);
-        layout->addWidget(label, 7, 0, 1, 1);
         numResultsField = new QSpinBox(this);
+        layout->addRow(label, numResultsField);
         numResultsField->setMinimum(3);
         numResultsField->setMaximum(100);
         numResultsField->setValue(20);
-        layout->addWidget(numResultsField, 7, 1, 1, 3);
         label->setBuddy(numResultsField);
 
-        layout->setRowStretch(8, 100);
         lineEditAllWords->setFocus(Qt::TabFocusReason);
     }
 
     virtual bool readyToStart() const {
-        return !(lineEditAllWords->text().isEmpty() && lineEditAnyWord->text().isEmpty() && lineEditAuthor->text().isEmpty() && lineEditExactPhrase->text().isEmpty() && lineEditPublication->text().isEmpty() && lineEditWithoutWords->text().isEmpty() && lineEditYearEnd->text().isEmpty() && lineEditYearStart->text().isEmpty());
+        return !(lineEditAllWords->text().isEmpty() && lineEditAnyWord->text().isEmpty() && lineEditAuthor->text().isEmpty() && lineEditExactPhrase->text().isEmpty() && lineEditPublication->text().isEmpty() && lineEditWithoutWords->text().isEmpty());
     }
 };
 
@@ -253,22 +240,6 @@ public:
         return result;
     }
 
-    QString serializeFormParameters(QMap<QString, QString> &inputMap) {
-        QString result;
-        for (QMap<QString, QString>::ConstIterator it = inputMap.constBegin(); it != inputMap.constEnd(); ++it) {
-            if (!result.isEmpty())
-                result.append("&");
-            result.append(it.key()).append("=");
-
-            QString value = it.value();
-            /// replace some protected characters that would be invalid or ambiguous in an URL
-            value = value.replace(" ", "+").replace("%", "%25").replace("&", "%26").replace("=", "%3D").replace("?", "%3F");
-
-            result.append(value);
-        }
-        return result;
-    }
-
     void startSearch() {
         currentJob = NULL;
 
@@ -305,7 +276,6 @@ void WebSearchGoogleScholar::startSearch(const QMap<QString, QString> &query, in
     d->numResults = numResults;
     m_hasBeenCanceled = false;
 
-    // FIXME: Is there a need for percent encoding?
     d->queryString = query[queryKeyFreeText] + " " + query[queryKeyTitle];
     if (!query[queryKeyAuthor].isEmpty())
         d->queryString.append(" author:\"" + query[queryKeyAuthor] + "\"");
@@ -322,13 +292,14 @@ void WebSearchGoogleScholar::doneFetchingStartPage(KJob *kJob)
     if (handleErrors(kJob)) {
         KIO::StoredTransferJob *transferJob = static_cast<KIO::StoredTransferJob *>(kJob);
         dumpData(transferJob->data(), 0);
-        kDebug() << "Google host:" << transferJob->url().host();
 
         QMap<QString, QString> inputMap = d->formParameters(transferJob->data());
         inputMap["hl"] = "en";
 
-        QString url = d->configPageUrl;
-        url = url.arg(transferJob->url().host()).append(d->serializeFormParameters(inputMap));
+        KUrl url(d->configPageUrl.arg(transferJob->url().host()));
+        for (QMap<QString, QString>::ConstIterator it = inputMap.constBegin(); it != inputMap.constEnd(); ++it)
+            url.addQueryItem(it.key(), it.value());
+
         KIO::StoredTransferJob * newJob = KIO::storedGet(url, KIO::Reload);
         newJob->addMetaData("cookies", "auto");
         newJob->addMetaData("cache", "reload");
@@ -355,8 +326,11 @@ void WebSearchGoogleScholar::doneFetchingConfigPage(KJob *kJob)
         inputMap["scis"] = "yes";
         inputMap["scisf"] = "4";
         inputMap["num"] = QString::number(d->numResults);
-        QString url = d->setConfigPageUrl;
-        url = url.arg(transferJob->url().host()).append(d->serializeFormParameters(inputMap));
+
+        KUrl url(d->setConfigPageUrl.arg(transferJob->url().host()));
+        for (QMap<QString, QString>::ConstIterator it = inputMap.constBegin(); it != inputMap.constEnd(); ++it)
+            url.addQueryItem(it.key(), it.value());
+
         KIO::StoredTransferJob * newJob = KIO::storedGet(url, KIO::Reload);
         newJob->addMetaData("cookies", "auto");
         newJob->addMetaData("cache", "reload");
@@ -387,10 +361,11 @@ void WebSearchGoogleScholar::doneFetchingAdvSearchPage(KJob *kJob)
         inputMap["as_eq"] = d->form->lineEditWithoutWords->text();
         inputMap["as_sauthors"] = d->form->lineEditAuthor->text();
         inputMap["as_publication"] = d->form->lineEditPublication->text();
-        inputMap["as_ylo"] = d->form->lineEditYearStart->text();
-        inputMap["as_yhi"] = d->form->lineEditYearEnd->text();
-        QString url = d->queryPageUrl;
-        url = url.arg(transferJob->url().host()).append(d->serializeFormParameters(inputMap));
+
+        KUrl url(d->queryPageUrl.arg(transferJob->url().host()));
+        for (QMap<QString, QString>::ConstIterator it = inputMap.constBegin(); it != inputMap.constEnd(); ++it)
+            url.addQueryItem(it.key(), it.value());
+
         KIO::StoredTransferJob * newJob = KIO::storedGet(url, KIO::Reload);
         newJob->addMetaData("cookies", "auto");
         newJob->addMetaData("cache", "reload");
@@ -422,8 +397,11 @@ void WebSearchGoogleScholar::doneFetchingSetConfigPage(KJob *kJob)
             inputMap["num"] = QString::number(d->numResults);
             inputMap["q"] = d->queryString;
         }
-        QString url = d->goAdvanced ? d->advancedSearchPageUrl : d->queryPageUrl;
-        url = url.arg(transferJob->url().host()).append(d->serializeFormParameters(inputMap));
+
+        KUrl url(QString(d->goAdvanced ? d->advancedSearchPageUrl : d->queryPageUrl).arg(transferJob->url().host()));
+        for (QMap<QString, QString>::ConstIterator it = inputMap.constBegin(); it != inputMap.constEnd(); ++it)
+            url.addQueryItem(it.key(), it.value());
+
         KIO::StoredTransferJob * newJob = KIO::storedGet(url, KIO::Reload);
         newJob->addMetaData("cookies", "auto");
         newJob->addMetaData("cache", "reload");
