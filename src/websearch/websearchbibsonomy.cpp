@@ -134,7 +134,7 @@ KUrl WebSearchBibsonomy::buildQueryUrl()
     }
 
     // FIXME: Is there a need for percent encoding?
-    QString queryString = form->lineEditSearchTerm->text();
+    QString queryString = encodeURL(form->lineEditSearchTerm->text());
     // FIXME: Number of results doesn't seem to be supported by BibSonomy
     return KUrl("http://www.bibsonomy.org/bib/" + form->comboBoxSearchWhere->itemData(form->comboBoxSearchWhere->currentIndex()).toString() + "/" + queryString + QString("?.entriesPerPage=%1").arg(form->numResultsField->value()));
 }
@@ -158,10 +158,10 @@ KUrl WebSearchBibsonomy::buildQueryUrl(const QMap<QString, QString> &query, int 
     QStringList queryFragments;
     for (QMap<QString, QString>::ConstIterator it = query.constBegin(); it != query.constEnd(); ++it) {
         // FIXME: Is there a need for percent encoding?
-        queryFragments << it.value();
+        queryFragments << encodeURL(it.value());
     }
 
-    QString queryString = queryFragments.join("+");
+    QString queryString = queryFragments.join("%20");
     // FIXME: Number of results doesn't seem to be supported by BibSonomy
     url.append(searchType + "/" + queryString + QString("?.entriesPerPage=%1").arg(numResults));
 
@@ -188,16 +188,25 @@ void WebSearchBibsonomy::jobDone(KJob *job)
         FileImporterBibTeX importer;
         File *bibtexFile = importer.fromString(bibTeXcode);
 
+        bool hasEntries = false;
         if (bibtexFile != NULL) {
             for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
                 Entry *entry = dynamic_cast<Entry*>(*it);
-                if (entry != NULL)
+                if (entry != NULL) {
                     emit foundEntry(entry);
+                    hasEntries = true;
+                }
 
             }
-            emit stoppedSearch(bibtexFile->isEmpty() ? resultUnspecifiedError : resultNoError);
+
+            if (!hasEntries)
+                kDebug() << "No hits found in" << storedJob->url().prettyUrl();
+            emit stoppedSearch(resultNoError);
+
             delete bibtexFile;
-        } else
+        } else {
+            kWarning() << "No valid BibTeX file results returned on request on" << storedJob->url().prettyUrl();
             emit stoppedSearch(resultUnspecifiedError);
+        }
     }
 }
