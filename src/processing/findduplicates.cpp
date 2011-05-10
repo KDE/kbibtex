@@ -127,8 +127,7 @@ QString EntryClique::dump() const
 
 void EntryClique::addEntry(Entry* entry)
 {
-    checkedEntries.insert(entry, false);
-//    recalculateValueMap();
+    checkedEntries.insert(entry, true);
 }
 
 void EntryClique::recalculateValueMap()
@@ -406,6 +405,7 @@ QList<EntryClique*> FindDuplicates::findDuplicateEntries(File *file)
         else
             ++cit;
 
+    /*
     for (QList<EntryClique*>::Iterator cit = result.begin(); cit != result.end(); ++cit) {
         kDebug() << "BEGIN clique " << (*cit)->entryCount();
 
@@ -416,6 +416,7 @@ QList<EntryClique*> FindDuplicates::findDuplicateEntries(File *file)
 
         kDebug() << "END clique";
     }
+    */
 
     return result;
 }
@@ -444,7 +445,7 @@ MergeDuplicates::MergeDuplicates(QWidget *parent)
 bool MergeDuplicates::mergeDuplicateEntries(const QList<EntryClique*> &entryCliques, File *file)
 {
     foreach(EntryClique *entryClique, entryCliques) {
-        Entry *mergedEntry = new Entry(Entry::etArticle, "unset");
+        Entry *mergedEntry = new Entry(QString::null, QString::null);
         foreach(QString field, entryClique->fieldList()) {
             if (field == QLatin1String("^id"))
                 mergedEntry->setId(PlainTextValue::text(entryClique->chosenValue(field)));
@@ -452,18 +453,31 @@ bool MergeDuplicates::mergeDuplicateEntries(const QList<EntryClique*> &entryCliq
                 mergedEntry->setType(PlainTextValue::text(entryClique->chosenValue(field)));
             else {
                 Value combined;
-                foreach(Value v, entryClique->chosenValues(field))
-                combined.merge(v);
-                mergedEntry->insert(field, combined);
+                foreach(Value v, entryClique->chosenValues(field)) {
+                    combined.merge(v);
+                }
+                if (!combined.isEmpty())
+                    mergedEntry->insert(field, combined);
             }
         }
 
-        foreach(Entry *entry, entryClique->entryList())
-        if (entryClique->isEntryChecked(entry)) {
-            for (Entry::ConstIterator it = entry->constBegin(); it != entry->constEnd(); ++it)
-                if (!mergedEntry->contains(it.key()))
-                    mergedEntry->insert(it.key(), it.value());
-            file->removeOne(entry);
+        foreach(Entry *entry, entryClique->entryList()) {
+            /// if merging entries with identical ids, the merged entry will not yet have an id (is null)
+            if (mergedEntry->id().isEmpty())
+                mergedEntry->setId(entry->id());
+            /// if merging entries with identical types, the merged entry will not yet have an type (is null)
+            if (mergedEntry->type().isEmpty())
+                mergedEntry->setType(entry->type());
+
+            /// add all other fields not covered by user selection
+            /// those fields did only occur in one entry (no conflict)
+            /// may add a lot of bloat to merged entry
+            if (entryClique->isEntryChecked(entry)) {
+                for (Entry::ConstIterator it = entry->constBegin(); it != entry->constEnd(); ++it)
+                    if (!mergedEntry->contains(it.key()))
+                        mergedEntry->insert(it.key(), it.value());
+                file->removeOne(entry);
+            }
         }
 
         file->append(mergedEntry);
