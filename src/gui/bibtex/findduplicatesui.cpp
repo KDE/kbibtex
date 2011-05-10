@@ -39,6 +39,7 @@
 #include <KXMLGUIClient>
 #include <KStandardDirs>
 #include <kparts/part.h>
+#include <KMessageBox>
 
 #include <radiobuttontreeview.h>
 #include "bibtexeditor.h"
@@ -504,7 +505,17 @@ void FindDuplicatesUI::slotFindDuplicates()
 {
     KDialog dlg(d->part->widget());
     FindDuplicates fd(&dlg);
-    QList<EntryClique*> cliques =  fd.findDuplicateEntries(d->editor->bibTeXModel()->bibTeXFile());
+    File *file = d->editor->bibTeXModel()->bibTeXFile();
+
+    if (d->editor->selectedElements().count() > 1 && d->editor->selectedElements().count() < d->editor->model()->rowCount() && KMessageBox::questionYesNo(d->part->widget(), i18n("Multiple elements are selected. Do you want to search for duplicates only within the selection or in the whole document?"), i18n("Search only in selection?"), KGuiItem(i18n("Only in selection")), KGuiItem(i18n("Whole document"))) == KMessageBox::Yes) {
+        QModelIndexList mil = d->editor->selectionModel()->selectedRows();
+        file = new File();
+        for (QModelIndexList::ConstIterator it = mil.constBegin(); it != mil.constEnd(); ++it) {
+            file->append(d->editor->bibTeXModel()->element(d->editor->sortFilterProxyModel()->mapToSource(*it).row()));
+        }
+    }
+
+    QList<EntryClique*> cliques =  fd.findDuplicateEntries(file);
 
     MergeWidget mw(d->editor->bibTeXModel()->bibTeXFile(), cliques, &dlg);
     dlg.setMainWidget(&mw);
@@ -512,7 +523,7 @@ void FindDuplicatesUI::slotFindDuplicates()
     if (dlg.exec() == QDialog::Accepted) {
         // TODO
         MergeDuplicates md(&dlg);
-        File *file = d->editor->bibTeXModel()->bibTeXFile();
+        file = d->editor->bibTeXModel()->bibTeXFile();
         if (md.mergeDuplicateEntries(cliques, file)) {
             d->editor->bibTeXModel()->setBibTeXFile(file);
         }
