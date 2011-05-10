@@ -57,6 +57,11 @@ class UrlPreview::UrlPreviewPrivate
 {
 private:
     UrlPreview *p;
+
+    KSharedConfigPtr config;
+    const QString configGroupName;
+    const QString onlyLocalFilesCheckConfig;
+
     KComboBox *urlComboBox;
     KPushButton *externalViewerButton;
     QCheckBox *onlyLocalFilesCheckBox;
@@ -64,6 +69,7 @@ private:
     QLabel *message;
     QMap<int, KUrl> cbxEntryToUrl;
     QMutex addingUrlMutex;
+
     QString arXivPDFUrlStart;
     bool anyLocal;
 
@@ -79,8 +85,11 @@ public:
     KUrl baseUrl;
 
     UrlPreviewPrivate(UrlPreview *parent)
-            : p(parent), arXivPDFUrlStart("http://arxiv.org/pdf/"), entry(NULL) {
+            : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))),
+            configGroupName(QLatin1String("URL Preview")), onlyLocalFilesCheckConfig(QLatin1String("OnlyLocalFiles")),
+            arXivPDFUrlStart("http://arxiv.org/pdf/"), entry(NULL) {
         setupGUI();
+        loadState();
     }
 
     /**
@@ -266,6 +275,21 @@ public:
         QDockWidget *pp = static_cast<QDockWidget*>(p->parent());
         return pp != NULL && !pp->isHidden();
     }
+
+    void loadState() {
+        /*
+         KConfigGroup configGroup(config, configGroupName);
+         onlyLocalFilesCheckBox->setChecked(configGroup.readEntry(onlyLocalFilesCheckConfig, true));
+         */
+    }
+
+    void saveState() {
+        /*
+                KConfigGroup configGroup(config, configGroupName);
+                configGroup.writeEntry(onlyLocalFilesCheckConfig, onlyLocalFilesCheckBox->isChecked());
+                config->sync();
+                */
+    }
 };
 
 UrlPreview::UrlPreview(QDockWidget *parent)
@@ -292,6 +316,7 @@ void UrlPreview::setBibTeXUrl(const KUrl&url)
 
 void UrlPreview::onlyLocalFilesChanged()
 {
+    d->saveState();
     d->update();
 }
 
