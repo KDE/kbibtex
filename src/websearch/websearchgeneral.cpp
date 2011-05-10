@@ -18,7 +18,7 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include <QGridLayout>
+#include <QFormLayout>
 #include <QLabel>
 #include <QSpinBox>
 
@@ -32,56 +32,49 @@ WebSearchQueryFormGeneral::WebSearchQueryFormGeneral(QWidget *parent)
         : WebSearchQueryFormAbstract(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))),
         configGroupName(QLatin1String("Search Engines General"))
 {
-    QGridLayout *layout = new QGridLayout(this);
+    QFormLayout *layout = new QFormLayout(this);
     layout->setMargin(0);
 
     QLabel *label = new QLabel(i18n("Free text:"), this);
-    layout->addWidget(label, 0, 0, 1, 1);
     KLineEdit *lineEdit = new KLineEdit(this);
+    layout->addRow(label, lineEdit);
     lineEdit->setClearButtonShown(true);
     lineEdit->setFocus(Qt::TabFocusReason);
-    layout->addWidget(lineEdit, 0, 1, 1, 1);
     queryFields.insert(WebSearchAbstract::queryKeyFreeText, lineEdit);
     label->setBuddy(lineEdit);
     connect(lineEdit, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
 
     label = new QLabel(i18n("Title:"), this);
-    layout->addWidget(label, 1, 0, 1, 1);
     lineEdit = new KLineEdit(this);
+    layout->addRow(label, lineEdit);
     lineEdit->setClearButtonShown(true);
     queryFields.insert(WebSearchAbstract::queryKeyTitle, lineEdit);
-    layout->addWidget(lineEdit, 1, 1, 1, 1);
     label->setBuddy(lineEdit);
     connect(lineEdit, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
 
     label = new QLabel(i18n("Author:"), this);
-    layout->addWidget(label, 2, 0, 1, 1);
     lineEdit = new KLineEdit(this);
+    layout->addRow(label, lineEdit);
     lineEdit->setClearButtonShown(true);
     queryFields.insert(WebSearchAbstract::queryKeyAuthor, lineEdit);
-    layout->addWidget(lineEdit, 2, 1, 1, 1);
     label->setBuddy(lineEdit);
     connect(lineEdit, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
 
     label = new QLabel(i18n("Year:"), this);
-    layout->addWidget(label, 3, 0, 1, 1);
     lineEdit = new KLineEdit(this);
+    layout->addRow(label, lineEdit);
     lineEdit->setClearButtonShown(true);
     queryFields.insert(WebSearchAbstract::queryKeyYear, lineEdit);
-    layout->addWidget(lineEdit, 3, 1, 1, 1);
     label->setBuddy(lineEdit);
     connect(lineEdit, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
 
     label = new QLabel(i18n("Number of Results:"), this);
-    layout->addWidget(label, 4, 0, 1, 1);
     numResultsField = new QSpinBox(this);
+    layout->addRow(label, numResultsField);
     numResultsField->setMinimum(3);
     numResultsField->setMaximum(100);
     numResultsField->setValue(20);
-    layout->addWidget(numResultsField, 4, 1, 1, 1);
     label->setBuddy(numResultsField);
-
-    layout->setRowStretch(5, 100);
 
     loadState();
 }
