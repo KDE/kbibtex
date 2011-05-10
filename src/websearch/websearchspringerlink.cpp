@@ -22,13 +22,82 @@
 #include <QWebFrame>
 #include <QWebElement>
 #include <QFile>
+#include <QFormLayout>
+#include <QSpinBox>
+#include <QLabel>
 
 #include <KLocale>
 #include <KDebug>
 #include <kio/job.h>
+#include <KLineEdit>
 
 #include <fileimporterbibtex.h>
 #include "websearchspringerlink.h"
+
+/**
+ * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ */
+class WebSearchSpringerLink::WebSearchQueryFormSpringerLink : public WebSearchQueryFormAbstract
+{
+public:
+    KLineEdit *lineEditFreeText, *lineEditAuthorEditor, *lineEditPublication, *lineEditVolume, *lineEditIssue;
+    QSpinBox *numResultsField;
+
+    WebSearchQueryFormSpringerLink(QWidget *parent)
+            : WebSearchQueryFormAbstract(parent) {
+        QFormLayout *layout = new QFormLayout(this);
+        layout->setMargin(0);
+
+        lineEditFreeText = new KLineEdit(this);
+        lineEditFreeText->setClearButtonShown(true);
+        QLabel *label = new QLabel(i18n("Free Text:"), this);
+        label->setBuddy(lineEditFreeText);
+        layout->addRow(label, lineEditFreeText);
+        connect(lineEditFreeText, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
+
+        lineEditAuthorEditor = new KLineEdit(this);
+        lineEditAuthorEditor->setClearButtonShown(true);
+        label = new QLabel(i18n("Author or Editor:"), this);
+        label->setBuddy(lineEditAuthorEditor);
+        layout->addRow(label, lineEditAuthorEditor);
+        connect(lineEditAuthorEditor, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
+
+        lineEditPublication = new KLineEdit(this);
+        lineEditPublication->setClearButtonShown(true);
+        label = new QLabel(i18n("Publication:"), this);
+        label->setBuddy(lineEditPublication);
+        layout->addRow(label, lineEditPublication);
+        connect(lineEditPublication, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
+
+        lineEditVolume = new KLineEdit(this);
+        lineEditVolume->setClearButtonShown(true);
+        label = new QLabel(i18n("Volume:"), this);
+        label->setBuddy(lineEditVolume);
+        layout->addRow(label, lineEditVolume);
+        connect(lineEditVolume, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
+
+        lineEditIssue = new KLineEdit(this);
+        lineEditIssue->setClearButtonShown(true);
+        label = new QLabel(i18n("Issue:"), this);
+        label->setBuddy(lineEditIssue);
+        layout->addRow(label, lineEditIssue);
+        connect(lineEditIssue, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
+
+        numResultsField = new QSpinBox(this);
+        label = new QLabel(i18n("Number of Results:"), this);
+        label->setBuddy(numResultsField);
+        layout->addRow(label, numResultsField);
+        numResultsField->setMinimum(3);
+        numResultsField->setMaximum(100);
+        numResultsField->setValue(20);
+
+        lineEditFreeText->setFocus(Qt::TabFocusReason);
+    }
+
+    virtual bool readyToStart() const {
+        return !(lineEditFreeText->text().isEmpty() && lineEditAuthorEditor->text().isEmpty() && lineEditPublication->text().isEmpty() && lineEditVolume->text().isEmpty() && lineEditIssue->text().isEmpty());
+    }
+};
 
 class WebSearchSpringerLink::WebSearchSpringerLinkPrivate
 {
@@ -45,9 +114,10 @@ public:
     int runningJobs;
     int currentSearchPosition;
     QStringList articleUrls;
+    WebSearchQueryFormSpringerLink *form;
 
     WebSearchSpringerLinkPrivate(WebSearchSpringerLink *parent)
-            : p(parent), springerLinkBaseUrl(QLatin1String("http://www.springerlink.com")), springerLinkQueryUrl(QLatin1String("http://www.springerlink.com/content/")), numPages(8) {
+            : p(parent), springerLinkBaseUrl(QLatin1String("http://www.springerlink.com")), springerLinkQueryUrl(QLatin1String("http://www.springerlink.com/content/")), numPages(8), form(NULL) {
         for (int i = 0; i < numPages; ++i) {
             QWebPage *page = new QWebPage(parent);
             page->settings()->setAttribute(QWebSettings::PluginsEnabled, false);
@@ -67,16 +137,40 @@ public:
         }
     }
 
+    KUrl& buildQueryUrl(KUrl& url) {
+        Q_ASSERT(form != NULL);
+
+        QString queryString(form->lineEditFreeText->text());
+
+        QStringList authors = p->splitRespectingQuotationMarks(form->lineEditAuthorEditor->text());
+        foreach(QString author, authors) {
+            queryString += QString(QLatin1String(" ( au:(%1) OR ed:(%1) )")).arg(author);
+        }
+
+        if (!form->lineEditPublication->text().isEmpty())
+            queryString += QString(QLatin1String(" pub:(%1)")).arg(form->lineEditPublication->text());
+
+        if (!form->lineEditVolume->text().isEmpty())
+            queryString += QString(QLatin1String(" vol:(%1)")).arg(form->lineEditVolume->text());
+
+        if (!form->lineEditIssue->text().isEmpty())
+            queryString += QString(QLatin1String(" iss:(%1)")).arg(form->lineEditIssue->text());
+
+        queryString = queryString.trimmed();
+        url.addQueryItem(QLatin1String("k"), queryString);
+
+        return url;
+    }
+
     KUrl& buildQueryUrl(KUrl& url, const QMap<QString, QString> &query) {
         QString queryString = query[queryKeyFreeText] + ' ' + query[queryKeyTitle] + ' ' + query[queryKeyYear];
 
         QStringList authors = p->splitRespectingQuotationMarks(query[queryKeyAuthor]);
         foreach(QString author, authors) {
-            queryString += QString(QLatin1String("(au:(%1) OR ed:(%1))")).arg(author);
+            queryString += QString(QLatin1String(" ( au:(%1) OR ed:(%1) )")).arg(author);
         }
 
         queryString = queryString.trimmed();
-
         url.addQueryItem(QLatin1String("k"), queryString);
 
         return url;
@@ -101,8 +195,14 @@ void WebSearchSpringerLink::startSearch()
     d->runningJobs = 0;
     d->currentSearchPosition = 0;
     d->articleUrls.clear();
-    // TODO
-    emit stoppedSearch(resultNoError);
+
+    d->numExpectedResults = d->form->numResultsField->value();
+
+    ++d->runningJobs;
+    d->springerLinkSearchUrl = KUrl(d->springerLinkQueryUrl);
+    d->springerLinkSearchUrl = d->buildQueryUrl(d->springerLinkSearchUrl);
+    d->pages[0]->mainFrame()->load(d->springerLinkSearchUrl);
+    connect(d->pages[0], SIGNAL(loadFinished(bool)), this, SLOT(doneFetchingResultPage(bool)));
 }
 
 void WebSearchSpringerLink::startSearch(const QMap<QString, QString> &query, int numResults)
@@ -131,9 +231,11 @@ QString WebSearchSpringerLink::favIconUrl() const
     return QLatin1String("http://www.springerlink.com/images/favicon.ico");
 }
 
-WebSearchQueryFormAbstract* WebSearchSpringerLink::customWidget(QWidget *)
+WebSearchQueryFormAbstract* WebSearchSpringerLink::customWidget(QWidget *parent)
 {
-    return NULL;
+    if (d->form == NULL)
+        d->form = new WebSearchQueryFormSpringerLink(parent);
+    return d->form;
 }
 
 KUrl WebSearchSpringerLink::homepage() const

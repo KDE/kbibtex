@@ -53,6 +53,8 @@ private slots:
     void doneFetchingBibTeX(KJob * kJob);
 
 private:
+    class WebSearchQueryFormSpringerLink;
+
     class WebSearchSpringerLinkPrivate;
     WebSearchSpringerLinkPrivate *d;
 };
