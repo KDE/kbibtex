@@ -37,7 +37,7 @@ const int WebSearchAbstract::resultNoError = 0;
 const int WebSearchAbstract::resultCancelled = 0; /// may get redefined in the future!
 const int WebSearchAbstract::resultUnspecifiedError = 1;
 
-const char* WebSearchAbstract::httpUnsafeChars = "%/=+$?& \0";
+const char* WebSearchAbstract::httpUnsafeChars = "%:/=+$?& \0";
 
 WebSearchAbstract::WebSearchAbstract(QWidget *parent)
         : QObject(parent), m_name(QString::null)
