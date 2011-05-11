@@ -233,7 +233,7 @@ public:
             exporter->showExportDialog(p->widget(), model->bibTeXSourceModel()->bibTeXFile());
         }
         if (exporterBibTeX != NULL)
-            exporterBibTeX->setEncoding(model->bibTeXSourceModel()->bibTeXFile()->property(File::Url).toString());
+            exporterBibTeX->setEncoding(model->bibTeXSourceModel()->bibTeXFile()->property(File::Encoding).toString());
 
         qApp->setOverrideCursor(Qt::WaitCursor);
 
