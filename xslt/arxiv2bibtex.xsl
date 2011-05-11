@@ -1,7 +1,19 @@
 <xsl:stylesheet version = '1.0' xmlns:xsl='http://www.w3.org/1999/XSL/Transform' xmlns:arxiv="http://arxiv.org/schemas/atom">
+
+<!--
+  - This Extensible Stylesheet Language Transformation file translates XML files
+  - as provided by arXiv into BibTeX files.
+  -
+  - This file was written by Thomas Fischer <fischer@unix-ag.uni-kl.de>
+  - It is released under the GNU Public License version 2 or later.
+  -
+  - To run test this transformation file, run e.g.
+  - wget 'http://export.arxiv.org/api/query?search_query=all:gandalf+lechner' -O - | sed -e 's/xmlns="http:\/\/www.w3.org\/2005\/Atom"//' | xsltproc  arxiv2bibtex.xsl -
+  - Within KBibTeX, some post-processing on the resulting BibTeX file is done.
+  -->
+
 <xsl:output method="text" omit-xml-declaration="yes" indent="no" encoding="UTF-8"/>
 <xsl:strip-space elements="*"/>
-
 
 
 <!-- START HERE -->
