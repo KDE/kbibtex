@@ -123,7 +123,11 @@ QList<KUrl> FileInfo::entryUrls(const Entry *entry, const KUrl &bibTeXUrl)
     const QString baseDirectory = bibTeXUrl.isValid() ? bibTeXUrl.directory() : QString::null;
 
     for (Entry::ConstIterator it = entry->constBegin(); it != entry->constEnd(); ++it) {
-        Value v = *it;
+        /// skip abstracts, they contain sometimes strange text fragments
+        /// that are mistaken for URLs
+        if (it.key().toLower() == Entry::ftAbstract) continue;
+
+        Value v = it.value();
 
         for (Value::ConstIterator vit = v.constBegin(); vit != v.constEnd(); ++vit) {
             QString plainText = PlainTextValue::text(*(*vit), NULL);
