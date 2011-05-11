@@ -170,19 +170,16 @@ public:
             QString key = typeFlags.testFlag(KBibTeX::tfPerson) ? "author" : "title";
             FileImporterBibTeX importer;
             QString fakeBibTeXFile = QString("@article{dummy, %1=%2}").arg(key).arg(encodedText);
-            kDebug() << "fakeBibTeXFile=" << fakeBibTeXFile << endl;
 
             File *file = importer.fromString(fakeBibTeXFile);
-            if (file != NULL && !file->isEmpty()) {
-                Entry *entry = dynamic_cast< Entry*>(file->first());
-                if (entry != NULL) {
+            Entry *entry = NULL;
+            if (file != NULL) {
+                if (!file->isEmpty() && (entry = dynamic_cast< Entry*>(file->first())) != NULL)
                     value = entry->value(key);
-                    kDebug() << "value->count()=" << value.count() << "  " << entry->value(key).count();
-                } else
-                    kError() << "Cannot create value";
                 delete file;
-            } else
-                kWarning() << "Parsing " << fakeBibTeXFile << " did not result in valid file";
+            }
+            if (entry == NULL)
+                kWarning() << "Parsing " << fakeBibTeXFile << " did not result in valid entry";
             return !value.isEmpty();
         } else if (typeFlag == KBibTeX::tfVerbatim) {
             value.append(new VerbatimText(encodedText));
