@@ -73,20 +73,23 @@ public:
         FileImporterBibTeX importer;
         File *file = importer.fromString(text);
 
+        BibTeXFileModel *bibTeXModel = bibTeXEditor->bibTeXModel();
+        QSortFilterProxyModel *sfpModel = bibTeXEditor->sortFilterProxyModel();
+
         /// insert new elements one by one
-        int startRow = bibTeXEditor->model()->rowCount(); ///< memorize row where insertion started
+        int startRow = bibTeXModel->rowCount(); ///< memorize row where insertion started
         for (File::Iterator it = file->begin(); it != file->end(); ++it)
-            bibTeXEditor->bibTeXModel()->insertRow(*it, bibTeXEditor->model()->rowCount());
-        int endRow = bibTeXEditor->model()->rowCount() - 1; ///< memorize row where insertion ended
+            bibTeXModel->insertRow(*it, bibTeXEditor->model()->rowCount());
+        int endRow = bibTeXModel->rowCount() - 1; ///< memorize row where insertion ended
+
+        // FIXME selection of new elements will not work if list is sorted!
 
         /// select newly inserted elements
         QItemSelectionModel *ism = bibTeXEditor->selectionModel();
         ism->clear();
-        QAbstractItemModel *model = bibTeXEditor->model();
-        QItemSelection selection(model->index(startRow, 0), model->index(endRow, model->columnCount() - 1));
-        ism->select(selection, QItemSelectionModel::Select);
-        /// scroll and show newly inserted elements
-        bibTeXEditor->scrollTo(model->index(startRow, 0), QAbstractItemView::PositionAtTop);
+        /// highlight those rows in the editor which correspond to newly inserted elements
+        for (int i = startRow; i <= endRow;++i)
+            ism->select(sfpModel->mapFromSource(bibTeXModel->index(i, 0)), QItemSelectionModel::Rows | QItemSelectionModel::Select);
 
         /// clean up
         delete file;
