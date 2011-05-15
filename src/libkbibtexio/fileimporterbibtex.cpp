@@ -45,7 +45,7 @@ const QString extraAlphaNumChars = QString("?'`-_:.+/$\\\"&");
 const QRegExp htmlRegExp = QRegExp("</?(a|pre)[^>]*>", Qt::CaseInsensitive);
 
 FileImporterBibTeX::FileImporterBibTeX(const QString& encoding, bool ignoreComments, KBibTeX::Casing keywordCasing)
-        : FileImporter(), m_cancelFlag(false), m_lineNo(1), m_textStream(NULL), m_currentChar(' '), m_ignoreComments(ignoreComments), m_encoding(encoding), m_keywordCasing(keywordCasing)
+        : FileImporter(), m_cancelFlag(false), m_lineNo(1), m_textStream(NULL), m_currentChar(' '), m_ignoreComments(ignoreComments), m_encoding(encoding.toLower()), m_newEncoding(QString::null), m_keywordCasing(keywordCasing)
 {
     // nothing
 }
@@ -60,6 +60,7 @@ File* FileImporterBibTeX::load(QIODevice *iodevice)
 
     m_textStreamLastPos = 0;
     m_textStream = new QTextStream(iodevice);
+    m_newEncoding = m_encoding;
     m_textStream->setCodec(m_encoding == "latex" ? "UTF-8" : m_encoding.toAscii());
     QString rawText = "";
     while (!m_textStream->atEnd()) {
@@ -70,7 +71,7 @@ File* FileImporterBibTeX::load(QIODevice *iodevice)
     }
 
     File *result = new File();
-    result->setProperty(File::Encoding, m_textStream->codec()->name());
+    result->setProperty(m_newEncoding == "latex" ? "latex" : File::Encoding, m_textStream->codec()->name());
 
     delete m_textStream;
 
@@ -248,6 +249,7 @@ Entry *FileImporterBibTeX::readEntryElement(const QString& typeString)
 {
     BibTeXEntries *be = BibTeXEntries::self();
     BibTeXFields *bf = BibTeXFields::self();
+    EncoderLaTeX *encoder = EncoderLaTeX::currentEncoderLaTeX();
 
     Token token = nextToken();
     while (token != tBracketOpen) {
@@ -258,8 +260,11 @@ Entry *FileImporterBibTeX::readEntryElement(const QString& typeString)
         token = nextToken();
     }
 
-    QString key = readSimpleString(',');
-    Entry *entry = new Entry(be->format(typeString, m_keywordCasing), key);
+    QString id = readSimpleString(',');
+    /// try to avoid non-ascii characters in ids
+    encoder->convertToPlainAscii(id);
+
+    Entry *entry = new Entry(be->format(typeString, m_keywordCasing), id);
 
     token = nextToken();
     do {
@@ -267,20 +272,23 @@ Entry *FileImporterBibTeX::readEntryElement(const QString& typeString)
             break;
         else if (token != tComma) {
             if (m_currentChar.isLetter())
-                kWarning() << "Error in parsing entry '" << key << "' (near line " << m_lineNo << "): Comma symbol (,) expected but got letter " << m_currentChar << " (token " << tokenidToString(token) << ")";
+                kWarning() << "Error in parsing entry '" << id << "' (near line " << m_lineNo << "): Comma symbol (,) expected but got letter " << m_currentChar << " (token " << tokenidToString(token) << ")";
             else
-                kWarning() << "Error in parsing entry '" << key << "' (near line " << m_lineNo << "): Comma symbol (,) expected but got character 0x" << QString::number(m_currentChar.unicode(), 16) << " (token " << tokenidToString(token) << ")";
+                kWarning() << "Error in parsing entry '" << id << "' (near line " << m_lineNo << "): Comma symbol (,) expected but got character 0x" << QString::number(m_currentChar.unicode(), 16) << " (token " << tokenidToString(token) << ")";
             delete entry;
             return NULL;
         }
 
         QString keyName = bf->format(readSimpleString(), m_keywordCasing);
+        /// try to avoid non-ascii characters in keys
+        encoder->convertToPlainAscii(keyName);
+
         token = nextToken();
         if (keyName == QString::null || token == tBracketClose) {
             // entry is buggy, but we still accept it
             break;
         } else if (token != tAssign) {
-            kError() << "Error in parsing entry '" << key << "'' (near line " << m_lineNo << "): Assign symbol (=) expected after field name '" << keyName << "'";
+            kError() << "Error in parsing entry '" << id << "'' (near line " << m_lineNo << "): Assign symbol (=) expected after field name '" << keyName << "'";
             delete entry;
             return NULL;
         }
@@ -542,13 +550,9 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value& value, const QStr
             if (isStringKey)
                 value.append(new MacroKey(text));
             else {
-                const QRegExp doiListRegExp(";[ ]*|[ ]+", Qt::CaseInsensitive);
-                const QStringList dois = text.split(doiListRegExp, QString::SkipEmptyParts);
-                for (QStringList::ConstIterator it = dois.constBegin(); it != dois.constEnd(); ++it)
-                    if (KBibTeX::doiRegExp.indexIn(*it) >= 0)
-                        value.append(new VerbatimText(KBibTeX::doiRegExp.cap(0)));
-                    else
-                        value.append(new VerbatimText(*it));
+                int p = -5;
+                while ((p = KBibTeX::doiRegExp.indexIn(text, p + 5)) >= 0)
+                    value.append(new VerbatimText(KBibTeX::doiRegExp.cap(0)));
             }
         } else if (iKey == Entry::ftColor) {
             if (isStringKey)
@@ -589,18 +593,31 @@ void FileImporterBibTeX::unescapeLaTeXChars(QString &text)
 QList<Keyword*> FileImporterBibTeX::splitKeywords(const QString& text)
 {
     QList<Keyword*> result;
-    const QLatin1String sepText[] = {QLatin1String(";"), QLatin1String(",")};
-    const int max = sizeof(sepText) / sizeof(sepText[0]);
+    /// define a list of characters where keywords will be split along
+    /// finalize list with null character
+    char splitChars[] = ";,\0";
+    char *curSplitChar = splitChars;
 
-    for (int i = 0; i < max; ++i)
-        if (text.contains(sepText[i])) {
-            QRegExp sepRegExp("\\s*" + sepText[0] + "\\s*");
-            QStringList token = text.split(sepRegExp, QString::SkipEmptyParts);
-            for (QStringList::Iterator it = token.begin(); it != token.end(); ++it)
-                result.append(new Keyword(*it));
+    /// for each char in list ...
+    while (*curSplitChar != '\0') {
+        /// check if character is contained in text (should be cheap to test)
+        if (text.contains(*curSplitChar)) {
+            /// split text along a pattern like spaces-splitchar-spaces
+            QRegExp splitAlong(QString("\\s*%1\\s*").arg(*curSplitChar));
+            /// extract keywords
+            QStringList keywords = text.split(splitAlong, QString::SkipEmptyParts);
+            /// build QList of Keyword objects from keywords
+            foreach(QString keyword, keywords) {
+                result.append(new Keyword(keyword));
+            }
+            /// no more splits neccessary
             break;
         }
+        /// no success so far, test next splitting character
+        ++curSplitChar;
+    }
 
+    /// no split was performed, so whole text must be a single keyword
     if (result.isEmpty())
         result.append(new Keyword(text));
 
@@ -747,11 +764,10 @@ bool FileImporterBibTeX::evaluateParameterComments(QTextStream *textStream, cons
 {
     /** check if this file requests a special encoding */
     if (line.startsWith("@comment{x-kbibtex-encoding=") && line.endsWith("}")) {
-        QString newEncoding = line.mid(28, line.length() - 29);
-        qDebug() << "x-kbibtex-encoding=" << newEncoding << endl;
-        if (newEncoding == "latex") newEncoding = "UTF-8";
-        textStream->setCodec(newEncoding.toAscii());
-        kDebug() << "newEncoding=" << newEncoding << "   m_textStream->codec()=" << m_textStream->codec()->name();
+        m_newEncoding = line.mid(28, line.length() - 29).toLower();
+        kDebug() << "x-kbibtex-encoding=" << m_newEncoding;
+        textStream->setCodec(m_newEncoding == "latex" ? "UTF-8" : m_newEncoding.toAscii());
+        kDebug() <<  "m_textStream->codec()=" << m_textStream->codec()->name();
         return true;
     }
 
