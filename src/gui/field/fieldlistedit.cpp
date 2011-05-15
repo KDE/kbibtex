@@ -335,6 +335,7 @@ UrlListEdit::UrlListEdit(QWidget *parent)
     m_addLocalFile = new KPushButton(KIcon("document-new"), i18n("Add local file"), this);
     addButton(m_addLocalFile);
     connect(m_addLocalFile, SIGNAL(clicked()), this, SLOT(slotAddLocalFile()));
+    connect(m_addLocalFile, SIGNAL(clicked()), this, SIGNAL(modified()));
 }
 
 void UrlListEdit::slotAddLocalFile()
