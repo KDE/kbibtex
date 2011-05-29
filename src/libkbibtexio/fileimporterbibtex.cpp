@@ -297,19 +297,27 @@ Entry *FileImporterBibTeX::readEntryElement(const QString& typeString)
         if (keyName.toLower() == QLatin1String("issue"))
             keyName = QLatin1String("number"); // FIXME use constants here or even better code?
 
+        Value value;
+
         /** check for duplicate fields */
         if (entry->contains(keyName)) {
-            int i = 2;
-            QString appendix = QString::number(i);
-            while (entry->contains(keyName + appendix)) {
-                ++i;
-                appendix = QString::number(i);
+            if (keyName.toLower() == Entry::ftKeywords || keyName.toLower() == Entry::ftUrl) {
+                /// special handling of keywords: instead of using fallback names
+                /// like "keywords2", "keywords3", ..., append new keywords to
+                /// already existing keyword value
+                value = entry->value(keyName);
+            } else {
+                int i = 2;
+                QString appendix = QString::number(i);
+                while (entry->contains(keyName + appendix)) {
+                    ++i;
+                    appendix = QString::number(i);
+                }
+                kDebug() << "Entry already contains a key " << keyName << "' (near line " << m_lineNo << "), using " << (keyName + appendix);
+                keyName += appendix;
             }
-            kWarning() << "Entry already contains a key " << keyName << "' (near line " << m_lineNo << "), using " << (keyName + appendix);
-            keyName += appendix;
         }
 
-        Value value;
         token = readValue(value, keyName);
 
         entry->insert(keyName, value);
@@ -322,10 +330,8 @@ FileImporterBibTeX::Token FileImporterBibTeX::nextToken()
 {
     if (m_textStream->atEnd())
         return tEOF;
-    if (m_textStream->pos() == m_textStreamLastPos) {
-        kDebug() << "textStream had no progress since last call of nextToken, forcing to read one character";
+    if (m_textStream->pos() == m_textStreamLastPos)
         *m_textStream >> m_currentChar;
-    }
 
     Token curToken = tUnknown;
 
