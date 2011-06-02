@@ -20,11 +20,9 @@
 
 #include <QBuffer>
 #include <QLayout>
-#include <QWebPage>
-#include <QWebFrame>
-#include <QWebElement>
-#include <QWebElementCollection>
 #include <QNetworkRequest>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
 
 #include <KLocale>
 #include <KDebug>
@@ -43,8 +41,7 @@ private:
 
 public:
     QString joinedQueryString;
-    int numExpectedResults;
-    QWebPage *page;
+    int numExpectedResults, numFoundResults;
     const QString acmPortalBaseUrl;
     const QString acmPortalContinueUrl;
     int currentSearchPosition;
@@ -53,15 +50,11 @@ public:
     QRegExp regExpId, regExpIdCFID, regExpIdCFTOKEN;
 
     WebSearchAcmPortalPrivate(WebSearchAcmPortal *parent)
-            : p(parent), page(new QWebPage(parent)),
+            : p(parent), numExpectedResults(0), numFoundResults(0),
             acmPortalBaseUrl(QLatin1String("http://portal.acm.org/")),
             acmPortalContinueUrl(QLatin1String("http://portal.acm.org/results.cfm?query=%4&querydisp=%4&source_query=&start=%1&srt=score+dsc&short=1&source_disp=&since_month=&since_year=&before_month=&before_year=&coll=DL&dl=GUIDE&termshow=matchall&range_query=&CFID=%2&CFTOKEN=%3")),
             regExpId("(\\?|&)id=(\\d+)\\.(\\d+)(&|$)"), regExpIdCFID("(\\?|&)CFID=(\\d+)(&|$)"), regExpIdCFTOKEN("(\\?|&)CFTOKEN=(\\d+)(&|$)") {
-        page->settings()->setAttribute(QWebSettings::PluginsEnabled, false);
-        page->settings()->setAttribute(QWebSettings::JavaEnabled, false);
-        page->settings()->setAttribute(QWebSettings::JavascriptEnabled, false);
-        page->settings()->setAttribute(QWebSettings::AutoLoadImages, false);
-        page->settings()->setAttribute(QWebSettings::PrivateBrowsingEnabled, true);
+        // nothing
     }
 
     void sanitizeBibTeXCode(QString &code) {
@@ -84,12 +77,11 @@ WebSearchAcmPortal::WebSearchAcmPortal(QWidget *parent)
 
 void WebSearchAcmPortal::startSearch(const QMap<QString, QString> &query, int numResults)
 {
-    Q_UNUSED(numResults);
-
     m_hasBeenCanceled = false;
     d->joinedQueryString.clear();
     d->currentSearchPosition = 1;
     d->bibTeXUrls.clear();
+    d->numFoundResults = 0;
 
     for (QMap<QString, QString>::ConstIterator it = query.constBegin(); it != query.constEnd(); ++it) {
         // FIXME: Is there a need for percent encoding?
@@ -97,8 +89,9 @@ void WebSearchAcmPortal::startSearch(const QMap<QString, QString> &query, int nu
     }
     d->numExpectedResults = numResults;
 
-    d->page->mainFrame()->load(d->acmPortalBaseUrl);
-    connect(d->page, SIGNAL(loadFinished(bool)), this, SLOT(doneFetchingStartPage(bool)));
+    QNetworkReply *reply = networkAccessManager()->get(QNetworkRequest(d->acmPortalBaseUrl));
+    setNetworkReplyTimeout(reply);
+    connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingStartPage()));
 }
 
 void WebSearchAcmPortal::startSearch()
@@ -130,79 +123,72 @@ KUrl WebSearchAcmPortal::homepage() const
 void WebSearchAcmPortal::cancel()
 {
     WebSearchAbstract::cancel();
-    d->page->triggerAction(QWebPage::Stop);
+    // FIXME d->page->triggerAction(QWebPage::Stop);
 }
 
-void WebSearchAcmPortal::doneFetchingStartPage(bool ok)
+void WebSearchAcmPortal::doneFetchingStartPage()
 {
-    disconnect(d->page, SIGNAL(loadFinished(bool)), this, SLOT(doneFetchingStartPage(bool)));
+    QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
 
-    if (handleErrors(ok)) {
-        QWebElement form = d->page->mainFrame()->findFirstElement("form[name=\"qiksearch\"]");
-        if (!form.isNull()) {
-            QString action = form.attribute(QLatin1String("action"));
-            QString body = QString("Go=&query=%1").arg(d->joinedQueryString);
-
-            QNetworkRequest nr(d->acmPortalBaseUrl + action);
-            d->page->mainFrame()->load(nr, QNetworkAccessManager::PostOperation, body.toUtf8());
-            connect(d->page, SIGNAL(loadFinished(bool)), this, SLOT(doneFetchingSearchPage(bool)));
+    if (handleErrors(reply)) {
+        QString htmlSource = reply->readAll();
+        int p1, p2, p3;
+        if ((p1 = htmlSource.indexOf("<form name=\"qiksearch\"")) >= 0
+                && (p2 = htmlSource.indexOf("action=", p1)) >= 0
+                && (p3 = htmlSource.indexOf("\"", p2 + 8)) >= 0) {
+            QString action = decodeURL(htmlSource.mid(p2 + 8, p3 - p2 - 8));
+            KUrl url(d->acmPortalBaseUrl + action);
+            QString body = QString("Go=&query=%1").arg(d->joinedQueryString).trimmed();
+            QNetworkReply *newReply = networkAccessManager()->post(QNetworkRequest(url), body.toUtf8());
+            setNetworkReplyTimeout(newReply);
+            connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingSearchPage()));
         } else {
             kWarning() << "Search using" << label() << "failed.";
-            KMessageBox::error(m_parent, i18n("Searching \"%1\" failed for unknown reason.", label()));
+            KMessageBox::error(m_parent, i18n("Searching \"%1\" failed: Could not extract form from ACM's start page.", label()));
             emit stoppedSearch(resultUnspecifiedError);
         }
     } else
-        kDebug() << "url was" << d->page->mainFrame()->url().toString();
+        kDebug() << "url was" << reply->url().toString();
 }
 
-void WebSearchAcmPortal::doneFetchingSearchPage(bool ok)
+void WebSearchAcmPortal::doneFetchingSearchPage()
 {
-    disconnect(d->page, SIGNAL(loadFinished(bool)), this, SLOT(doneFetchingSearchPage(bool)));
+    QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
 
-    if (handleErrors(ok)) {
-        /// find the position where the search results begin using a CSS2 selector
-        QWebElementCollection collection = d->page->mainFrame()->findAllElements("table[style=\"padding: 5px; 5px; 5px; 5px;\"]");
-
-        foreach(QWebElement table, collection) {
-            /// find individual search results using a CSS2 selector
-            QWebElement titleElement = table.findFirst("td[colspan=\"3\"] > a");
-            if (!titleElement.isNull()) {
-                /// the title of each search hit contains a link
-                QString url = titleElement.attribute(QLatin1String("HREF"));
-/// extract information from this link
-                if (d->regExpId.indexIn(url) >= 0 && d->regExpIdCFID.indexIn(url) >= 0 && d->regExpIdCFTOKEN.indexIn(url) >= 0) {
-                    /// if information extraction was successful ...
-                    QString id = d->regExpId.cap(3), parentId = d->regExpId.cap(2);
-                    d->cfid = d->regExpIdCFID.cap(2);
-                    d->cftoken = d->regExpIdCFTOKEN.cap(2);
-                    /// ... build a new link pointing to the BibTeX file
-                    QString bibTeXUrl = QString(QLatin1String("http://portal.acm.org/downformats.cfm?id=%1&parent_id=%2&expformat=bibtex&CFID=%3&CFTOKEN=%4")).arg(id).arg(parentId).arg(d->cfid).arg(d->cftoken);
-                    d->bibTeXUrls << bibTeXUrl;
-                }
-            }
+    if (handleErrors(reply)) {
+        QString htmlSource = reply->readAll();
+        static QRegExp paramRegExp("<a [^>]+\\?id=([0-9]+)\\.([0-9]+).*CFID=([0-9]+).*CFTOKEN=([0-9]+)", Qt::CaseInsensitive);
+        int p1 = -1;
+        while ((p1 = htmlSource.indexOf(paramRegExp, p1 + 1)) >= 0) {
+            d->bibTeXUrls << d->acmPortalBaseUrl + QString("/downformats.cfm?id=%1&parent_id=%2&expformat=bibtex&CFID=%3&CFTOKEN=%4").arg(paramRegExp.cap(2)).arg(paramRegExp.cap(1)).arg(paramRegExp.cap(3)).arg(paramRegExp.cap(4));
         }
 
         if (d->currentSearchPosition + 20 < d->numExpectedResults) {
             d->currentSearchPosition += 20;
-            KUrl url(QString(d->acmPortalContinueUrl).arg(d->currentSearchPosition).arg(d->cfid).arg(d->cftoken).arg(d->joinedQueryString));
-            d->page->mainFrame()->load(url);
-            connect(d->page, SIGNAL(loadFinished(bool)), this, SLOT(doneFetchingSearchPage(bool)));
-        } else if (! d->bibTeXUrls.isEmpty()) {
-            KIO::TransferJob *job = KIO::storedGet(d->bibTeXUrls.first());
-            connect(job, SIGNAL(result(KJob *)), this, SLOT(doneFetchingBibTeX(KJob*)));
+            KUrl url(reply->url());
+            QMap<QString, QString> queryItems = url.queryItems();
+            queryItems["start"] = QString::number(d->currentSearchPosition);
+            kDebug() << "continue = " << url.pathOrUrl();
+            QNetworkReply *newReply = networkAccessManager()->get(QNetworkRequest(url));
+            setNetworkReplyTimeout(newReply);
+            connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingSearchPage()));
+        } else if (!d->bibTeXUrls.isEmpty()) {
+            QNetworkReply *newReply = networkAccessManager()->get(QNetworkRequest(d->bibTeXUrls.first()));
+            setNetworkReplyTimeout(newReply);
+            connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingBibTeX()));
             d->bibTeXUrls.removeFirst();
         } else
             emit stoppedSearch(resultNoError);
-    } else
-        kDebug() << "url was" << d->page->mainFrame()->url().toString();
+    }  else
+        kDebug() << "url was" << reply->url().toString();
 }
 
-void WebSearchAcmPortal::doneFetchingBibTeX(KJob *kJob)
+void WebSearchAcmPortal::doneFetchingBibTeX()
 {
-    KIO::StoredTransferJob *job = static_cast<KIO::StoredTransferJob*>(kJob);
-    if (handleErrors(kJob)) {
-        QTextStream ts(job->data());
-        QString bibTeXcode = ts.readAll();
+    QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
+
+    if (handleErrors(reply)) {
+        QString bibTeXcode = reply->readAll();
 
         FileImporterBibTeX importer;
         File *bibtexFile = importer.fromString(bibTeXcode);
@@ -211,18 +197,21 @@ void WebSearchAcmPortal::doneFetchingBibTeX(KJob *kJob)
         if (bibtexFile != NULL) {
             for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
                 Entry *entry = dynamic_cast<Entry*>(*it);
-                if (entry != NULL)
+                if (entry != NULL) {
                     emit foundEntry(entry);
+                    ++d->numFoundResults;
+                }
             }
             delete bibtexFile;
         }
 
-        if (! d->bibTeXUrls.isEmpty()) {
-            KIO::TransferJob *newJob = KIO::storedGet(d->bibTeXUrls.first());
-            connect(newJob, SIGNAL(result(KJob *)), this, SLOT(doneFetchingBibTeX(KJob*)));
+        if (!d->bibTeXUrls.isEmpty() && d->numFoundResults < d->numExpectedResults) {
+            QNetworkReply *newReply = networkAccessManager()->get(QNetworkRequest(d->bibTeXUrls.first()));
+            setNetworkReplyTimeout(newReply);
+            connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingBibTeX()));
             d->bibTeXUrls.removeFirst();
         } else
             emit stoppedSearch(resultNoError);
     } else
-        kDebug() << "url was" << job->url();
+        kDebug() << "url was" << reply->url().toString();
 }

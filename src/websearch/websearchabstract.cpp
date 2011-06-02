@@ -19,12 +19,16 @@
 ***************************************************************************/
 
 #include <QFileInfo>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QTimer>
 
 #include <KStandardDirs>
 #include <kio/netaccess.h>
 #include <KDebug>
 #include <KLocale>
 #include <KMessageBox>
+#include <KApplication>
 
 #include "websearchabstract.h"
 
@@ -121,6 +125,22 @@ bool WebSearchAbstract::handleErrors(bool ok)
     return true;
 }
 
+
+bool WebSearchAbstract::handleErrors(QNetworkReply *reply)
+{
+    if (m_hasBeenCanceled) {
+        kDebug() << "Searching" << label() << "got cancelled";
+        emit stoppedSearch(resultCancelled);
+        return false;
+    } else if (reply->error() != QNetworkReply::NoError) {
+        kWarning() << "Search using" << label() << "failed.";
+        KMessageBox::error(m_parent, reply->errorString().isEmpty() ? i18n("Searching \"%1\" failed for unknown reason.", label()) : i18n("Searching \"%1\" failed with error message:\n\n%2", label(), reply->errorString()));
+        emit stoppedSearch(resultUnspecifiedError);
+        return false;
+    }
+    return true;
+}
+
 QString WebSearchAbstract::encodeURL(QString rawText)
 {
     const char *cur = httpUnsafeChars;
@@ -130,3 +150,57 @@ QString WebSearchAbstract::encodeURL(QString rawText)
     }
     return rawText;
 }
+
+QString WebSearchAbstract::decodeURL(QString rawText)
+{
+    static QRegExp mimeRegExp("%([0-9A-Fa-f]{2})");
+    while (mimeRegExp.indexIn(rawText) >= 0) {
+        bool ok = false;
+        QChar c(mimeRegExp.cap(1).toInt(&ok, 16));
+        if (ok)
+            rawText = rawText.replace(mimeRegExp.cap(0), c);
+    }
+
+    rawText = rawText.replace("&amp;", "&");
+
+    return rawText;
+}
+
+QNetworkAccessManager *WebSearchAbstract::networkAccessManager()
+{
+    if (m_networkAccessManager == NULL)
+        m_networkAccessManager = new QNetworkAccessManager(KApplication::instance());
+
+    return m_networkAccessManager;
+}
+
+void WebSearchAbstract::setNetworkReplyTimeout(QNetworkReply *reply, int timeOutSec)
+{
+    QTimer *timer = new QTimer(reply);
+    connect(timer, SIGNAL(timeout()), this, SLOT(networkReplyTimeout()));
+    m_mapTimerToReply.insert(timer, reply);
+    timer->start(timeOutSec*1000);
+    connect(reply, SIGNAL(finished()), this, SLOT(networkReplyFinished()));
+}
+
+void WebSearchAbstract::networkReplyTimeout()
+{
+    QTimer *timer = static_cast<QTimer*>(sender());
+    QNetworkReply *reply = m_mapTimerToReply[timer];
+    if (reply != NULL) {
+        kDebug() << "Timout on reply to " << reply->url().toString();
+        reply->close();
+        m_mapTimerToReply.remove(timer);
+    }
+}
+void WebSearchAbstract::networkReplyFinished()
+{
+    QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
+    QTimer *timer = m_mapTimerToReply.key(reply, NULL);
+    if (timer != NULL) {
+        m_mapTimerToReply.remove(timer);
+        timer->stop();
+    }
+}
+
+QNetworkAccessManager *WebSearchAbstract::m_networkAccessManager = NULL;

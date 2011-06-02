@@ -58,9 +58,9 @@ protected:
     virtual QString favIconUrl() const;
 
 private slots:
-    void doneFetchingStartPage(bool);
-    void doneFetchingSearchPage(bool);
-    void doneFetchingBibTeX(KJob *);
+    void doneFetchingStartPage();
+    void doneFetchingSearchPage();
+    void doneFetchingBibTeX();
 
 private:
     class WebSearchAcmPortalPrivate;

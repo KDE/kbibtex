@@ -32,6 +32,9 @@
 
 #include <entry.h>
 
+class QNetworkAccessManager;
+class QNetworkReply;
+
 class KJob;
 
 /**
@@ -117,13 +120,37 @@ protected:
     bool handleErrors(bool ok);
 
     /**
+     * Will check for common problems with downloads via QNetworkReply. It will return true
+     * if there is no problem and you may process this job result. If there is a problem,
+     * this function will notify the user if necessary (KMessageBox), emit a
+     * "stoppedSearch" signal, and return false.
+     * @see handleErrors(KJob*)
+     */
+    bool handleErrors(QNetworkReply *reply);
+
+    /**
      * Encode a text to be HTTP URL save, e.g. replace '=' by '%3D'.
      */
     QString encodeURL(QString rawText);
 
+    QString decodeURL(QString rawText);
+
+    /**
+     * Get the unique application-wide QNetworkAccessManager
+     */
+    QNetworkAccessManager *networkAccessManager();
+
+    void setNetworkReplyTimeout(QNetworkReply *reply, int timeOutSec = 15);
+
 private:
     QString m_name;
     static const char *httpUnsafeChars;
+    static QNetworkAccessManager *m_networkAccessManager;
+    QMap<QTimer*, QNetworkReply*> m_mapTimerToReply;
+
+private slots:
+    void networkReplyTimeout();
+    void networkReplyFinished();
 
 signals:
     void foundEntry(Entry*);
