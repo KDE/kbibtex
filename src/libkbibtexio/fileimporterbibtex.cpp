@@ -18,6 +18,8 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
+#include <typeinfo>
+
 #include <QTextCodec>
 #include <QIODevice>
 #include <QRegExp>
@@ -92,8 +94,7 @@ File* FileImporterBibTeX::load(QIODevice *iodevice)
         Element * element = nextElement();
 
         if (element != NULL) {
-            Comment *comment = dynamic_cast<Comment*>(element);
-            if (!m_ignoreComments || comment == NULL)
+            if (!m_ignoreComments || typeid(*element) != typeid(Comment))
                 result->append(element);
             else
                 delete element;
