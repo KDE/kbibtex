@@ -108,7 +108,6 @@ public:
             return NULL;
         }
 
-        kDebug() << "using service " << newServicePtr->name() << "(name)  " << newServicePtr->library() << "(library)";
         part = newServicePtr->createInstance<KParts::ReadWritePart>(newWidgetParent, (QObject*)newWidgetParent);
         if (part == NULL) {
             /// creating a read-write part failed, so maybe it is read-only (like Okular's PDF viewer)?
@@ -302,7 +301,6 @@ KService::List OpenFileInfo::listOfServices()
 KService::Ptr OpenFileInfo::defaultService()
 {
     const QString mt = mimeType();
-    kDebug() << "Looking for service for mimetype " << mt;
     KService::Ptr result = KMimeTypeTrader::self()->preferredService(mt, QLatin1String("KParts/ReadWritePart"));
     if (result.isNull())
         result = KMimeTypeTrader::self()->preferredService(mt, QLatin1String("KParts/ReadOnlyPart"));
@@ -358,7 +356,7 @@ public:
     }
 
     void readConfig(OpenFileInfo::StatusFlag statusFlag, const QString& configGroupName, int maxNumFiles) {
-        KSharedConfig::Ptr config = KGlobal::config();
+        KSharedConfigPtr config = KSharedConfig::openConfig("kbibtexrc");
 
         KConfigGroup cg(config, configGroupName);
         for (int i = 0; i < maxNumFiles; ++i) {
@@ -375,7 +373,7 @@ public:
     }
 
     void writeConfig(OpenFileInfo::StatusFlag statusFlag, const QString& configGroupName, int maxNumFiles) {
-        KSharedConfig::Ptr config = KGlobal::config();
+        KSharedConfigPtr config = KSharedConfig::openConfig("kbibtexrc");
         KConfigGroup cg(config, configGroupName);
         QList<OpenFileInfo*> list = p->filteredItems(statusFlag);
 

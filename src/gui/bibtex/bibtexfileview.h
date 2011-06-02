@@ -36,7 +36,7 @@ class KBIBTEXGUI_EXPORT BibTeXFileView : public QTreeView
 {
     Q_OBJECT
 public:
-    BibTeXFileView(QWidget * parent = 0);
+    BibTeXFileView(QWidget *parent = 0);
     virtual ~BibTeXFileView();
 
     virtual void setModel(QAbstractItemModel * model);
@@ -46,10 +46,14 @@ public:
 protected:
     void resizeEvent(QResizeEvent *event);
 
+protected slots:
+    void columnResized(int column, int oldSize, int newSize);
+
 private:
     QSignalMapper *m_signalMapperBibTeXFields;
     BibTeXFileModel *m_bibTeXFileModel;
     QSortFilterProxyModel *m_sortFilterProxyModel;
+    void syncBibTeXFields();
 
 private slots:
     void headerActionToggled(QObject *action);

@@ -76,14 +76,7 @@ BibTeXFileView::BibTeXFileView(QWidget * parent)
 
 BibTeXFileView::~BibTeXFileView()
 {
-    BibTeXFields *bibtexFields = BibTeXFields::self();
-
-    for (int i = header()->count() - 1; i >= 0; --i) {
-        FieldDescription fd = bibtexFields->at(i);
-        fd.width = columnWidth(i);
-        bibtexFields->replace(i, fd);
-    }
-    bibtexFields->save();
+    // nothing
 }
 
 void BibTeXFileView::setModel(QAbstractItemModel * model)
@@ -127,6 +120,24 @@ void BibTeXFileView::resizeEvent(QResizeEvent */*event*/)
     }
 }
 
+void BibTeXFileView::columnResized(int column, int oldSize, int newSize)
+{
+    syncBibTeXFields();
+    QTreeView::columnResized(column, oldSize, newSize);
+}
+
+void BibTeXFileView::syncBibTeXFields()
+{
+    BibTeXFields *bibtexFields = BibTeXFields::self();
+
+    for (int i = header()->count() - 1; i >= 0; --i) {
+        FieldDescription fd = bibtexFields->at(i);
+        fd.width = columnWidth(i);
+        bibtexFields->replace(i, fd);
+    }
+    bibtexFields->save();
+}
+
 void BibTeXFileView::headerActionToggled(QObject *obj)
 {
     KAction *action = dynamic_cast<KAction*>(obj);
@@ -140,6 +151,8 @@ void BibTeXFileView::headerActionToggled(QObject *obj)
     fd.visible = action->isChecked();
     if (fd.width < 4) fd.width = width() / 10;
     bibtexFields->replace(col, fd);
+
+    syncBibTeXFields();
 
     resizeEvent(NULL);
 }

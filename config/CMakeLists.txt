@@ -1,1 +1,1 @@
-install( FILES fieldtypes.rc entrytypes.rc entrylayout.rc DESTINATION ${DATA_INSTALL_DIR}/kbibtex )
+install( FILES kbibtexrc DESTINATION ${CONFIG_INSTALL_DIR} )

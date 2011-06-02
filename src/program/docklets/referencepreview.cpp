@@ -25,6 +25,7 @@
 #include <QApplication>
 #include <QTextStream>
 #include <QDesktopServices>
+#include <QTimer>
 
 #include <KTemporaryFile>
 #include <KLocale>
@@ -51,6 +52,10 @@ private:
     ReferencePreview *p;
 
 public:
+    KSharedConfigPtr config;
+    const QString configGroupName;
+    const QString configKeyName;
+
     KPushButton *buttonOpen, *buttonSaveAsHTML;
     QString htmlText;
     QUrl baseUrl;
@@ -60,7 +65,8 @@ public:
     const File *file;
 
     ReferencePreviewPrivate(ReferencePreview *parent)
-            : p(parent), element(NULL) {
+            : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName(QLatin1String("Reference Preview Docklet")),
+            configKeyName(QLatin1String("Style")), element(NULL) {
         QGridLayout *gridLayout = new QGridLayout(p);
         gridLayout->setMargin(0);
         gridLayout->setColumnStretch(0, 1);
@@ -102,6 +108,7 @@ public:
         comboBox->addItem(i18n("standard (XML/XSLT)"));
         comboBox->addItem(i18n("fancy (XML/XSLT)"));
         connect(comboBox, SIGNAL(currentIndexChanged(int)), p, SLOT(renderHTML()));
+        connect(comboBox, SIGNAL(currentIndexChanged(int)), p, SLOT(saveConfig()));
     }
 
     bool saveHTML(const KUrl& url) {
@@ -135,6 +142,9 @@ ReferencePreview::ReferencePreview(QWidget *parent)
         : QWidget(parent), d(new ReferencePreviewPrivate(this))
 {
     setEnabled(false);
+
+    /// not really a good solution but avoids crashes
+    QTimer::singleShot(250, this, SLOT(initializationDone()));
 }
 
 void ReferencePreview::setHtml(const QString & html, const QUrl & baseUrl)
@@ -314,4 +324,18 @@ void ReferencePreview::saveAsHTML()
     KUrl url = KFileDialog::getSaveUrl(KUrl(), "text/html", this, i18n("Save as HTML"));
     if (url.isValid())
         d->saveHTML(url);
+}
+
+void ReferencePreview::saveConfig()
+{
+    KConfigGroup configGroup(d->config, d->configGroupName);
+    configGroup.writeEntry(d->configKeyName, d->comboBox->currentIndex());
+    d->config->sync();
+}
+
+void ReferencePreview::initializationDone()
+{
+    KConfigGroup configGroup(d->config, d->configGroupName);
+    int styleIndex = configGroup.readEntry(d->configKeyName, 0);
+    d->comboBox->setCurrentIndex(styleIndex);
 }

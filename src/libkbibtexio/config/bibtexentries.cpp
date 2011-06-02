@@ -18,67 +18,78 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include <KGlobal>
-#include <KStandardDirs>
 #include <KSharedConfig>
 #include <KConfigGroup>
-#include <KSharedPtr>
 #include <KDebug>
 
 #include <entry.h>
 #include "bibtexentries.h"
 
-static const int BibTeXEntriesMax = 256;
+static const int entryTypeMaxCount = 256;
 
 class BibTeXEntries::BibTeXEntriesPrivate
 {
 public:
     BibTeXEntries *p;
 
-    KConfig *systemDefaultsConfig;
-    KSharedConfigPtr userConfig;
+    KSharedConfigPtr config;
 
     static BibTeXEntries *singleton;
 
     BibTeXEntriesPrivate(BibTeXEntries *parent)
-            : p(parent) {
-        systemDefaultsConfig = new KConfig(KStandardDirs::locate("appdata", "entrytypes.rc"), KConfig::SimpleConfig);
-        userConfig = KSharedConfig::openConfig(KStandardDirs::locateLocal("appdata", "entrytypes.rc"), KConfig::SimpleConfig);
-    }
-
-    ~BibTeXEntriesPrivate() {
-        delete systemDefaultsConfig;
+            : p(parent), config(KSharedConfig::openConfig("kbibtexrc")) {
+        // nothing
     }
 
     void load() {
-// TODO
         p->clear();
 
-        // TODO: Dummy implementation
         EntryDescription ed;
 
-        for (int col = 1; col < BibTeXEntriesMax; ++col) {
-            QString groupName = QString("EntryType%1").arg(col);
-            KConfigGroup usercg(userConfig, groupName);
-            KConfigGroup systemcg(systemDefaultsConfig, groupName);
+        QString groupName = QLatin1String("EntryType");
+        KConfigGroup configGroup(config, groupName);
+        int typeCount = qMin(configGroup.readEntry("count", 0), entryTypeMaxCount);
 
-            ed.upperCamelCase = systemcg.readEntry("UpperCamelCase", "");
-            ed.upperCamelCase = usercg.readEntry("UpperCamelCase", ed.upperCamelCase);
+        for (int col = 1; col < typeCount; ++col) {
+            QString groupName = QString("EntryType%1").arg(col);
+            KConfigGroup configGroup(config, groupName);
+
+            ed.upperCamelCase = configGroup.readEntry("UpperCamelCase", "");
             if (ed.upperCamelCase.isEmpty()) continue;
-            ed.upperCamelCaseAlt = systemcg.readEntry("UpperCamelCaseAlt", "");
-            ed.upperCamelCaseAlt = usercg.readEntry("UpperCamelCaseAlt", ed.upperCamelCaseAlt);
-            ed.label = systemcg.readEntry("Label", ed.upperCamelCase);;
-            ed.label = usercg.readEntry("Label", ed.label);;
+            ed.upperCamelCaseAlt = configGroup.readEntry("UpperCamelCaseAlt", "");
+            ed.label = configGroup.readEntry("Label", ed.upperCamelCase);;
             p->append(ed);
         }
+
+        if (p->isEmpty()) kWarning() << "List of entry descriptions is empty";
     }
+
+    void save() {
+        int typeCount = 0;
+        foreach(EntryDescription ed, *p) {
+            ++typeCount;
+            QString groupName = QString("EntryType%1").arg(typeCount);
+            KConfigGroup configGroup(config, groupName);
+
+            configGroup.writeEntry("UpperCamelCase", ed.upperCamelCase);
+            configGroup.writeEntry("UpperCamelCaseAlt", ed.upperCamelCaseAlt);
+            configGroup.writeEntry("Label", ed.label);
+        }
+
+        QString groupName = QLatin1String("EntryType");
+        KConfigGroup configGroup(config, groupName);
+        configGroup.writeEntry("count", typeCount);
+
+        config->sync();
+    }
+
 };
 
 BibTeXEntries *BibTeXEntries::BibTeXEntriesPrivate::singleton = NULL;
 
 
 BibTeXEntries::BibTeXEntries()
-        : d(new BibTeXEntriesPrivate(this))
+        : QList<EntryDescription>(), d(new BibTeXEntriesPrivate(this))
 {
     d->load();
 }

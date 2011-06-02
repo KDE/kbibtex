@@ -18,8 +18,6 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include <KGlobal>
-#include <KStandardDirs>
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <KSharedPtr>
@@ -34,19 +32,13 @@ class BibTeXFields::BibTeXFieldsPrivate
 public:
     BibTeXFields *p;
 
-    KConfig *systemDefaultsConfig;
-    KSharedConfigPtr userConfig;
+    KSharedConfigPtr config;
 
     static BibTeXFields *singleton;
 
     BibTeXFieldsPrivate(BibTeXFields *parent)
-            : p(parent) {
-        systemDefaultsConfig = new KConfig(KStandardDirs::locate("appdata", "fieldtypes.rc"), KConfig::SimpleConfig);
-        userConfig = KSharedConfig::openConfig(KStandardDirs::locateLocal("appdata", "fieldtypes.rc"), KConfig::SimpleConfig);
-    }
-
-    ~BibTeXFieldsPrivate() {
-        delete systemDefaultsConfig;
+            : p(parent), config(KSharedConfig::openConfig("kbibtexrc")) {
+        // nothing
     }
 
     void load() {
@@ -54,47 +46,76 @@ public:
         FieldDescription fd;
 
         p->clear();
-        for (int col = 1; col < bibTeXFieldsMaxColumnCount; ++col) {
-            QString groupName = QString("Column%1").arg(col);
-            KConfigGroup usercg(userConfig, groupName);
-            KConfigGroup systemcg(systemDefaultsConfig, groupName);
 
-            fd.upperCamelCase = systemcg.readEntry("UpperCamelCase", "");
-            fd.upperCamelCase = usercg.readEntry("UpperCamelCase", fd.upperCamelCase);
+        QString groupName = QLatin1String("Column");
+        KConfigGroup configGroup(config, groupName);
+        int columnCount = qMin(configGroup.readEntry("count", 0), bibTeXFieldsMaxColumnCount);
+
+        for (int col = 1; col < columnCount; ++col) {
+            QString groupName = QString("Column%1").arg(col);
+            KConfigGroup configGroup(config, groupName);
+
+            fd.upperCamelCase = configGroup.readEntry("UpperCamelCase", "");
             if (fd.upperCamelCase.isEmpty()) continue;
 
-            fd.upperCamelCaseAlt = systemcg.readEntry("UpperCamelCaseAlt", "");
-            fd.upperCamelCaseAlt = usercg.readEntry("UpperCamelCaseAlt", fd.upperCamelCaseAlt);
+            fd.upperCamelCaseAlt = configGroup.readEntry("UpperCamelCaseAlt", "");
             if (fd.upperCamelCaseAlt.isEmpty()) fd.upperCamelCaseAlt = QString::null;
 
-            fd.label = systemcg.readEntry("Label", fd.upperCamelCase);
-            fd.label = usercg.readEntry("Label", fd.label);
+            fd.label = configGroup.readEntry("Label", fd.upperCamelCase);
 
-            fd.defaultWidth = systemcg.readEntry("DefaultWidth", sumWidth / col);
-            fd.defaultWidth = usercg.readEntry("DefaultWidth", fd.defaultWidth);
+            fd.defaultWidth = configGroup.readEntry("DefaultWidth", sumWidth / col);
 
-            fd.width = systemcg.readEntry("Width", fd.defaultWidth);
-            fd.width = usercg.readEntry("Width", fd.width);
+            fd.width = configGroup.readEntry("Width", fd.defaultWidth);
             sumWidth += fd.width;
 
-            fd.visible = systemcg.readEntry("Visible", true);
-            fd.visible = usercg.readEntry("Visible", fd.visible);
+            fd.visible = configGroup.readEntry("Visible", true);
 
-            QString typeFlags = systemcg.readEntry("TypeFlags", "Source");
-            typeFlags = usercg.readEntry("TypeFlags", typeFlags);
+            QString typeFlags = configGroup.readEntry("TypeFlags", "Source");
 
             fd.typeFlags = typeFlagsFromString(typeFlags);
             QString preferredTypeFlag = typeFlags.split(';').first();
             fd.preferredTypeFlag = typeFlagFromString(preferredTypeFlag);
             p->append(fd);
         }
+
+        if (p->isEmpty()) kWarning() << "List of field descriptions is empty";
+    }
+
+    void save() {
+        int columnCount = 0;
+        foreach(FieldDescription fd, *p) {
+            ++columnCount;
+            QString groupName = QString("Column%1").arg(columnCount);
+            KConfigGroup configGroup(config, groupName);
+
+            configGroup.writeEntry("Width", fd.width);
+            configGroup.writeEntry("Visible", fd.visible);
+            QString typeFlagsString = fd.typeFlags == fd.preferredTypeFlag ? "" : ";" + typeFlagsToString(fd.typeFlags);
+            typeFlagsString.prepend(typeFlagToString(fd.preferredTypeFlag));
+            configGroup.writeEntry("TypeFlags", typeFlagsString);
+        }
+
+        QString groupName = QLatin1String("Column");
+        KConfigGroup configGroup(config, groupName);
+        configGroup.writeEntry("count", columnCount);
+
+        config->sync();
+    }
+
+    void resetToDefaults() {
+        for (int col = 1; col < bibTeXFieldsMaxColumnCount; ++col) {
+            QString groupName = QString("Column%1").arg(col);
+            KConfigGroup configGroup(config, groupName);
+            configGroup.deleteGroup();
+        }
+        load();
     }
 };
 
 BibTeXFields *BibTeXFields::BibTeXFieldsPrivate::singleton = NULL;
 
 BibTeXFields::BibTeXFields()
-        : d(new BibTeXFieldsPrivate(this))
+        : QList<FieldDescription>(), d(new BibTeXFieldsPrivate(this))
 {
     d->load();
 }
@@ -113,31 +134,12 @@ BibTeXFields* BibTeXFields::self()
 
 void BibTeXFields::save()
 {
-    return; // FIXME avoid saving config for now ...
-    int col = 1;
-    for (Iterator it = begin(); it != end(); ++it, ++col) {
-        QString groupName = QString("Column%1").arg(col);
-        KConfigGroup usercg(d->userConfig, groupName);
-        FieldDescription &fd = *it;
-        usercg.writeEntry("Width", fd.width);
-        usercg.writeEntry("Visible", fd.visible);
-        QString typeFlagsString = fd.typeFlags == fd.preferredTypeFlag ? "" : ";" + typeFlagsToString(fd.typeFlags);
-        typeFlagsString.prepend(typeFlagToString(fd.preferredTypeFlag));
-        usercg.writeEntry("TypeFlags", typeFlagsString);
-    }
-
-    d->userConfig->sync();
+    d->save();
 }
 
 void BibTeXFields::resetToDefaults()
 {
-    for (int col = 1; col < bibTeXFieldsMaxColumnCount; ++col) {
-        QString groupName = QString("Column%1").arg(col);
-        KConfigGroup usercg(d->userConfig, groupName);
-        usercg.deleteGroup();
-    }
-
-    d->load();
+    d->resetToDefaults();
 }
 
 QString BibTeXFields::format(const QString& name, KBibTeX::Casing casing) const
