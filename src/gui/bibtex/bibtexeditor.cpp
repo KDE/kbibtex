@@ -146,6 +146,7 @@ void BibTeXEditor::editElement(Element *element)
 
     if (elementEditor.elementChanged()) {
         emit currentElementChanged(currentElement(), bibTeXModel()->bibTeXFile());
+        emit selectedElementsChanged();
         emit modified();
     }
 }
