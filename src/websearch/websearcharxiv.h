@@ -22,7 +22,6 @@
 
 #include <websearchabstract.h>
 
-class KJob;
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
@@ -53,7 +52,7 @@ private:
     WebSearchArXivPrivate *d;
 
 private slots:
-    void jobDone(KJob *job);
+    void downloadDone();
 };
 
 #endif // KBIBTEX_WEBSEARCH_ARXIV_H

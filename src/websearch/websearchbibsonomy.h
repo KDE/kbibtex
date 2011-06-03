@@ -28,11 +28,6 @@ class QSpinBox;
 class KComboBox;
 class KLineEdit;
 
-class KJob;
-namespace KIO
-{
-class StoredTransferJob;
-}
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
@@ -53,20 +48,16 @@ public:
 public slots:
     void cancel();
 
-private slots:
-    void jobDone(KJob *job);
-
 protected:
     virtual QString favIconUrl() const;
 
 private:
     class WebSearchQueryFormBibsonomy;
-    WebSearchQueryFormBibsonomy *form;
+    class WebSearchBibsonomyPrivate;
+    WebSearchBibsonomyPrivate *d;
 
-    KIO::StoredTransferJob *m_job;
-
-    KUrl buildQueryUrl();
-    KUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults);
+private slots:
+    void downloadDone();
 };
 
 #endif // KBIBTEX_WEBSEARCH_BIBSONOMY_H

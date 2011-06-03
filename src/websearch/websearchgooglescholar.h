@@ -20,15 +20,8 @@
 #ifndef KBIBTEX_WEBSEARCH_GOOGLESCHOLAR_H
 #define KBIBTEX_WEBSEARCH_GOOGLESCHOLAR_H
 
-#include <QByteArray>
-
 #include <websearchabstract.h>
 
-class KJob;
-namespace KIO
-{
-class Job;
-}
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
@@ -53,18 +46,13 @@ protected:
     virtual QString favIconUrl() const;
 
 private slots:
-    void doneFetchingStartPage(KJob *);
-    void doneFetchingConfigPage(KJob *);
-    void doneFetchingAdvSearchPage(KJob *);
-    void doneFetchingSetConfigPage(KJob *);
-    void doneFetchingQueryPage(KJob *);
-    void doneFetchingBibTeX(KJob *);
-    void permanentRedirection(KIO::Job *, const KUrl &, const KUrl &);
-    void redirection(KIO::Job *, const KUrl &);
+    void doneFetchingStartPage();
+    void doneFetchingConfigPage();
+    void doneFetchingSetConfigPage();
+    void doneFetchingQueryPage();
+    void doneFetchingBibTeX();
 
 private:
-    class WebSearchQueryFormGoogleScholar;
-    WebSearchQueryFormGoogleScholar *form;
     class WebSearchGoogleScholarPrivate;
     WebSearchGoogleScholarPrivate *d;
 };

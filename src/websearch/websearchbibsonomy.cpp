@@ -22,14 +22,13 @@
 #include <QLayout>
 #include <QSpinBox>
 #include <QLabel>
+#include <QNetworkReply>
 
 #include <KLocale>
 #include <KDebug>
 #include <KIcon>
 #include <KLineEdit>
 #include <KComboBox>
-#include <kio/job.h>
-#include <kio/jobclasses.h>
 #include <KMessageBox>
 
 #include <fileimporterbibtex.h>
@@ -83,8 +82,60 @@ public:
     }
 };
 
+class WebSearchBibsonomy::WebSearchBibsonomyPrivate
+{
+private:
+    WebSearchBibsonomy *p;
+
+public:
+    WebSearchQueryFormBibsonomy *form;
+
+    WebSearchBibsonomyPrivate(WebSearchBibsonomy *parent)
+            : p(parent), form(NULL) {
+        // nothing
+    }
+
+    KUrl buildQueryUrl() {
+        if (form == NULL) {
+            kWarning() << "Cannot build query url if no form is specified";
+            return KUrl();
+        }
+
+        QString queryString = p->encodeURL(form->lineEditSearchTerm->text());
+        // FIXME: Number of results doesn't seem to be supported by BibSonomy
+        return KUrl("http://www.bibsonomy.org/bib/" + form->comboBoxSearchWhere->itemData(form->comboBoxSearchWhere->currentIndex()).toString() + "/" + queryString + QString("?.entriesPerPage=%1").arg(form->numResultsField->value()));
+    }
+
+    KUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) {
+        QString url = QLatin1String("http://www.bibsonomy.org/bib/");
+
+        bool hasFreeText = !query[queryKeyFreeText].isEmpty();
+        bool hasTitle = !query[queryKeyTitle].isEmpty();
+        bool hasAuthor = !query[queryKeyAuthor].isEmpty();
+        bool hasYear = !query[queryKeyYear].isEmpty();
+
+        QString searchType = "search";
+        if (hasAuthor && !hasFreeText && !hasTitle && !hasYear) {
+            /// if only the author field is used, a special author search
+            /// on BibSonomy can be used
+            searchType = "author";
+        }
+
+        QStringList queryFragments;
+        for (QMap<QString, QString>::ConstIterator it = query.constBegin(); it != query.constEnd(); ++it) {
+            queryFragments << p->encodeURL(it.value());
+        }
+
+        QString queryString = queryFragments.join("%20");
+        // FIXME: Number of results doesn't seem to be supported by BibSonomy
+        url.append(searchType + "/" + queryString + QString("?.entriesPerPage=%1").arg(numResults));
+
+        return KUrl(url);
+    }
+};
+
 WebSearchBibsonomy::WebSearchBibsonomy(QWidget *parent)
-        : WebSearchAbstract(parent), form(NULL), m_job(NULL)
+        : WebSearchAbstract(parent), d(new WebSearchBibsonomyPrivate(this))
 {
     // nothing
 }
@@ -93,16 +144,16 @@ void WebSearchBibsonomy::startSearch(const QMap<QString, QString> &query, int nu
 {
     m_hasBeenCanceled = false;
 
-    m_job = KIO::storedGet(buildQueryUrl(query, numResults));
-    connect(m_job, SIGNAL(result(KJob *)), this, SLOT(jobDone(KJob*)));
+    QNetworkReply *reply = networkAccessManager()->get(QNetworkRequest(d->buildQueryUrl(query, numResults)));
+    connect(reply, SIGNAL(finished()), this, SLOT(downloadDone()));
 }
 
 void WebSearchBibsonomy::startSearch()
 {
     m_hasBeenCanceled = false;
 
-    m_job = KIO::storedGet(buildQueryUrl());
-    connect(m_job, SIGNAL(result(KJob *)), this, SLOT(jobDone(KJob*)));
+    QNetworkReply *reply = networkAccessManager()->get(QNetworkRequest(d->buildQueryUrl()));
+    connect(reply, SIGNAL(finished()), this, SLOT(downloadDone()));
 }
 
 QString WebSearchBibsonomy::label() const
@@ -117,8 +168,8 @@ QString WebSearchBibsonomy::favIconUrl() const
 
 WebSearchQueryFormAbstract* WebSearchBibsonomy::customWidget(QWidget *parent)
 {
-    form = new WebSearchBibsonomy::WebSearchQueryFormBibsonomy(parent);
-    return form;
+    d->form = new WebSearchBibsonomy::WebSearchQueryFormBibsonomy(parent);
+    return d->form;
 }
 
 KUrl WebSearchBibsonomy::homepage() const
@@ -126,64 +177,17 @@ KUrl WebSearchBibsonomy::homepage() const
     return KUrl("http://www.bibsonomy.org/");
 }
 
-KUrl WebSearchBibsonomy::buildQueryUrl()
-{
-    if (form == NULL) {
-        kWarning() << "Cannot build query url if no form is specified";
-        return KUrl();
-    }
-
-    // FIXME: Is there a need for percent encoding?
-    QString queryString = encodeURL(form->lineEditSearchTerm->text());
-    // FIXME: Number of results doesn't seem to be supported by BibSonomy
-    return KUrl("http://www.bibsonomy.org/bib/" + form->comboBoxSearchWhere->itemData(form->comboBoxSearchWhere->currentIndex()).toString() + "/" + queryString + QString("?.entriesPerPage=%1").arg(form->numResultsField->value()));
-}
-
-KUrl WebSearchBibsonomy::buildQueryUrl(const QMap<QString, QString> &query, int numResults)
-{
-    QString url = QLatin1String("http://www.bibsonomy.org/bib/");
-
-    bool hasFreeText = !query[queryKeyFreeText].isEmpty();
-    bool hasTitle = !query[queryKeyTitle].isEmpty();
-    bool hasAuthor = !query[queryKeyAuthor].isEmpty();
-    bool hasYear = !query[queryKeyYear].isEmpty();
-
-    QString searchType = "search";
-    if (hasAuthor && !hasFreeText && !hasTitle && !hasYear) {
-        /// if only the author field is used, a special author search
-        /// on BibSonomy can be used
-        searchType = "author";
-    }
-
-    QStringList queryFragments;
-    for (QMap<QString, QString>::ConstIterator it = query.constBegin(); it != query.constEnd(); ++it) {
-        // FIXME: Is there a need for percent encoding?
-        queryFragments << encodeURL(it.value());
-    }
-
-    QString queryString = queryFragments.join("%20");
-    // FIXME: Number of results doesn't seem to be supported by BibSonomy
-    url.append(searchType + "/" + queryString + QString("?.entriesPerPage=%1").arg(numResults));
-
-    return KUrl(url);
-}
-
 void WebSearchBibsonomy::cancel()
 {
     WebSearchAbstract::cancel();
-    if (m_job != NULL)
-        m_job->kill(KJob::EmitResult);
 }
 
-void WebSearchBibsonomy::jobDone(KJob *job)
+void WebSearchBibsonomy::downloadDone()
 {
-    Q_ASSERT(m_job == job);
-    m_job = NULL;
+    QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
 
-    if (handleErrors(job)) {
-        KIO::StoredTransferJob *storedJob = static_cast< KIO::StoredTransferJob *>(job);
-        QTextStream ts(storedJob->data());
-        QString bibTeXcode = ts.readAll();
+    if (handleErrors(reply)) {
+        QString bibTeXcode = reply->readAll();
 
         FileImporterBibTeX importer;
         File *bibtexFile = importer.fromString(bibTeXcode);
@@ -200,13 +204,14 @@ void WebSearchBibsonomy::jobDone(KJob *job)
             }
 
             if (!hasEntries)
-                kDebug() << "No hits found in" << storedJob->url().prettyUrl();
+                kDebug() << "No hits found in" << reply->url().toString();
             emit stoppedSearch(resultNoError);
 
             delete bibtexFile;
         } else {
-            kWarning() << "No valid BibTeX file results returned on request on" << storedJob->url().prettyUrl();
+            kWarning() << "No valid BibTeX file results returned on request on" << reply->url().toString();
             emit stoppedSearch(resultUnspecifiedError);
         }
-    }
+    } else
+        kDebug() << "url was" << reply->url().toString();
 }
