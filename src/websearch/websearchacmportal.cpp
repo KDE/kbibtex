@@ -43,17 +43,12 @@ public:
     QString joinedQueryString;
     int numExpectedResults, numFoundResults;
     const QString acmPortalBaseUrl;
-    const QString acmPortalContinueUrl;
     int currentSearchPosition;
     QStringList bibTeXUrls;
-    QString cfid, cftoken;
-    QRegExp regExpId, regExpIdCFID, regExpIdCFTOKEN;
 
     WebSearchAcmPortalPrivate(WebSearchAcmPortal *parent)
             : p(parent), numExpectedResults(0), numFoundResults(0),
-            acmPortalBaseUrl(QLatin1String("http://portal.acm.org/")),
-            acmPortalContinueUrl(QLatin1String("http://portal.acm.org/results.cfm?query=%4&querydisp=%4&source_query=&start=%1&srt=score+dsc&short=1&source_disp=&since_month=&since_year=&before_month=&before_year=&coll=DL&dl=GUIDE&termshow=matchall&range_query=&CFID=%2&CFTOKEN=%3")),
-            regExpId("(\\?|&)id=(\\d+)\\.(\\d+)(&|$)"), regExpIdCFID("(\\?|&)CFID=(\\d+)(&|$)"), regExpIdCFTOKEN("(\\?|&)CFTOKEN=(\\d+)(&|$)") {
+            acmPortalBaseUrl(QLatin1String("http://portal.acm.org/")) {
         // nothing
     }
 
