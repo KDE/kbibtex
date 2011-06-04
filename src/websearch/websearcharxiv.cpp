@@ -29,6 +29,7 @@
 #include <KDebug>
 #include <KStandardDirs>
 #include <KMessageBox>
+#include <KConfigGroup>
 
 #include "fileimporterbibtex.h"
 #include "websearcharxiv.h"
@@ -37,12 +38,21 @@
 
 class WebSearchArXiv::WebSearchQueryFormArXiv : public WebSearchQueryFormAbstract
 {
+private:
+    QString configGroupName;
+
+    void loadState() {
+        KConfigGroup configGroup(config, configGroupName);
+        lineEditFreeText->setText(configGroup.readEntry(QLatin1String("freeText"), QString()));
+        numResultsField->setValue(configGroup.readEntry(QLatin1String("numResults"), 10));
+    }
+
 public:
     KLineEdit *lineEditFreeText;
     QSpinBox *numResultsField;
 
     WebSearchQueryFormArXiv(QWidget *parent)
-            : WebSearchQueryFormAbstract(parent) {
+            : WebSearchQueryFormAbstract(parent), configGroupName(QLatin1String("Search Engine arXiv.org")) {
         QGridLayout *layout = new QGridLayout(this);
         layout->setMargin(0);
 
@@ -65,12 +75,20 @@ public:
         label->setBuddy(numResultsField);
 
         layout->setRowStretch(2, 100);
+
+        loadState();
     }
 
     bool readyToStart() const {
         return !lineEditFreeText->text().isEmpty();
     }
 
+    void saveState() {
+        KConfigGroup configGroup(config, configGroupName);
+        configGroup.writeEntry(QLatin1String("freeText"), lineEditFreeText->text());
+        configGroup.writeEntry(QLatin1String("numResults"), numResultsField->value());
+        config->sync();
+    }
 };
 
 class WebSearchArXiv::WebSearchArXivPrivate
@@ -117,14 +135,21 @@ WebSearchArXiv::WebSearchArXiv(QWidget *parent)
 void WebSearchArXiv::startSearch()
 {
     m_hasBeenCanceled = false;
-    QNetworkReply *reply = networkAccessManager()->get(QNetworkRequest(d->buildQueryUrl()));
+    QNetworkRequest request(d->buildQueryUrl());
+    setSuggestedHttpHeaders(request);
+    QNetworkReply *reply = networkAccessManager()->get(request);
+    setNetworkReplyTimeout(reply);
     connect(reply, SIGNAL(finished()), this, SLOT(downloadDone()));
+    d->form->saveState();
 }
 
 void WebSearchArXiv::startSearch(const QMap<QString, QString> &query, int numResults)
 {
     m_hasBeenCanceled = false;
-    QNetworkReply *reply = networkAccessManager()->get(QNetworkRequest(d->buildQueryUrl(query, numResults)));
+    QNetworkRequest request(d->buildQueryUrl(query, numResults));
+    setSuggestedHttpHeaders(request);
+    QNetworkReply *reply = networkAccessManager()->get(request);
+    setNetworkReplyTimeout(reply);
     connect(reply, SIGNAL(finished()), this, SLOT(downloadDone()));
 }
 

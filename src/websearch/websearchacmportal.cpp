@@ -84,7 +84,9 @@ void WebSearchAcmPortal::startSearch(const QMap<QString, QString> &query, int nu
     }
     d->numExpectedResults = numResults;
 
-    QNetworkReply *reply = networkAccessManager()->get(QNetworkRequest(d->acmPortalBaseUrl));
+    QNetworkRequest request(d->acmPortalBaseUrl);
+    setSuggestedHttpHeaders(request);
+    QNetworkReply *reply = networkAccessManager()->get(request);
     setNetworkReplyTimeout(reply);
     connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingStartPage()));
 }
@@ -134,7 +136,10 @@ void WebSearchAcmPortal::doneFetchingStartPage()
             QString action = decodeURL(htmlSource.mid(p2 + 8, p3 - p2 - 8));
             KUrl url(d->acmPortalBaseUrl + action);
             QString body = QString("Go=&query=%1").arg(d->joinedQueryString).trimmed();
-            QNetworkReply *newReply = networkAccessManager()->post(QNetworkRequest(url), body.toUtf8());
+
+            QNetworkRequest request(url);
+            setSuggestedHttpHeaders(request, reply);
+            QNetworkReply *newReply = networkAccessManager()->post(request, body.toUtf8());
             setNetworkReplyTimeout(newReply);
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingSearchPage()));
         } else {
@@ -163,12 +168,16 @@ void WebSearchAcmPortal::doneFetchingSearchPage()
             KUrl url(reply->url());
             QMap<QString, QString> queryItems = url.queryItems();
             queryItems["start"] = QString::number(d->currentSearchPosition);
-            kDebug() << "continue = " << url.pathOrUrl();
-            QNetworkReply *newReply = networkAccessManager()->get(QNetworkRequest(url));
+
+            QNetworkRequest request(url);
+            setSuggestedHttpHeaders(request, reply);
+            QNetworkReply *newReply = networkAccessManager()->get(request);
             setNetworkReplyTimeout(newReply);
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingSearchPage()));
         } else if (!d->bibTeXUrls.isEmpty()) {
-            QNetworkReply *newReply = networkAccessManager()->get(QNetworkRequest(d->bibTeXUrls.first()));
+            QNetworkRequest request(d->bibTeXUrls.first());
+            setSuggestedHttpHeaders(request, reply);
+            QNetworkReply *newReply = networkAccessManager()->get(request);
             setNetworkReplyTimeout(newReply);
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingBibTeX()));
             d->bibTeXUrls.removeFirst();
@@ -201,7 +210,9 @@ void WebSearchAcmPortal::doneFetchingBibTeX()
         }
 
         if (!d->bibTeXUrls.isEmpty() && d->numFoundResults < d->numExpectedResults) {
-            QNetworkReply *newReply = networkAccessManager()->get(QNetworkRequest(d->bibTeXUrls.first()));
+            QNetworkRequest request(d->bibTeXUrls.first());
+            setSuggestedHttpHeaders(request, reply);
+            QNetworkReply *newReply = networkAccessManager()->get(request);
             setNetworkReplyTimeout(newReply);
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingBibTeX()));
             d->bibTeXUrls.removeFirst();
