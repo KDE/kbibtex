@@ -23,12 +23,6 @@
 
 #include "websearchabstract.h"
 
-class KJob;
-namespace KIO
-{
-class Job;
-}
-
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
@@ -52,16 +46,12 @@ protected:
     virtual QString favIconUrl() const;
 
 private slots:
-    void doneFetchingStartPage(KJob *);
-    void doneFetchingSearchResults(KJob *);
-    void doneFetchingAbstract(KJob *);
-    void doneFetchingBibliography(KJob *);
-    void permanentRedirection(KIO::Job *, const KUrl &, const KUrl &);
-    void redirection(KIO::Job *, const KUrl &);
+    void doneFetchingStartPage();
+    void doneFetchingSearchResults();
+    void doneFetchingAbstract();
+    void doneFetchingBibliography();
 
 private:
-    class WebSearchQueryFormIEEEXplore;
-    WebSearchQueryFormIEEEXplore *form;
     class WebSearchIEEEXplorePrivate;
     WebSearchIEEEXplorePrivate *d;
 };

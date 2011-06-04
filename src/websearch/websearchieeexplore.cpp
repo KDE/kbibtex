@@ -18,36 +18,18 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include <QtDBus/QtDBus>
-#include <QtDBus/QDBusInterface>
-#include <QtDBus/QDBusReply>
+#include <QNetworkReply>
 #include <QTextStream>
 
 #include <KMessageBox>
 #include <KConfigGroup>
 #include <KDebug>
 #include <KLocale>
-#include <kio/job.h>
 #include <KStandardDirs>
 
 #include "websearchieeexplore.h"
 #include "xsltransform.h"
 #include "fileimporterbibtex.h"
-#include "cookiemanager.h"
-
-class WebSearchIEEEXplore::WebSearchQueryFormIEEEXplore : public WebSearchQueryFormAbstract
-{
-public:
-    WebSearchQueryFormIEEEXplore(QWidget *parent)
-            : WebSearchQueryFormAbstract(parent) {
-        // TODO
-    }
-
-    bool readyToStart() const {
-        // TODO
-        return false;
-    }
-};
 
 class WebSearchIEEEXplore::WebSearchIEEEXplorePrivate
 {
@@ -57,37 +39,18 @@ private:
     bool originalCookiesEnabled;
 
 public:
-    KIO::TransferJob *currentJob;
-    WebSearchQueryFormIEEEXplore *form;
-    KIO::StoredTransferJob *job;
     int numResults;
     QStringList queryFragments;
     QStringList arnumberList;
     QString startPageUrl, searchRequestUrl, fullAbstractUrl, citationUrl, citationPostData;
     FileImporterBibTeX fileImporter;
-    CookieManager *cookieManager;
 
     WebSearchIEEEXplorePrivate(WebSearchIEEEXplore *parent)
-            : p(parent), currentJob(NULL), form(NULL), job(NULL), cookieManager(CookieManager::singleton()) {
+            : p(parent) {
         startPageUrl = QLatin1String("http://ieeexplore.ieee.org/");
         searchRequestUrl = QLatin1String("http://ieeexplore.ieee.org/search/searchresult.jsp?newsearch=true&x=0&y=0&queryText=");
         fullAbstractUrl = QLatin1String("http://ieeexplore.ieee.org/search/srchabstract.jsp?tp=&arnumber=");
         citationUrl = QLatin1String("http://ieeexplore.ieee.org/xpl/downloadCitations?fromPageName=searchabstract&citations-format=citation-abstract&download-format=download-bibtex&x=61&y=24&recordIds=");
-    }
-
-    void startSearch() {
-        currentJob = NULL;
-
-        cookieManager->disableCookieRestrictions();
-        cookieManager->whitelistUrl("http://ieeexplore.ieee.org/");
-
-        KIO::TransferJob *job = KIO::get(startPageUrl, KIO::Reload);
-        job->addMetaData("cookies", "auto");
-        job->addMetaData("cache", "reload");
-        connect(job, SIGNAL(result(KJob *)), p, SLOT(doneFetchingStartPage(KJob*)));
-        connect(job, SIGNAL(redirection(KIO::Job*, KUrl)), p, SLOT(redirection(KIO::Job*, KUrl)));
-        connect(job, SIGNAL(permanentRedirection(KIO::Job*, KUrl, KUrl)), p, SLOT(permanentRedirection(KIO::Job*, KUrl, KUrl)));
-        currentJob = job;
     }
 
     void sanitize(Entry *entry, const QString &arnumber) {
@@ -129,7 +92,7 @@ WebSearchIEEEXplore::WebSearchIEEEXplore(QWidget *parent)
 void WebSearchIEEEXplore::startSearch()
 {
     m_hasBeenCanceled = false;
-    // TODO: No customized search widget
+    emit stoppedSearch(resultNoError);
 }
 
 void WebSearchIEEEXplore::startSearch(const QMap<QString, QString> &query, int numResults)
@@ -138,39 +101,39 @@ void WebSearchIEEEXplore::startSearch(const QMap<QString, QString> &query, int n
     d->numResults = numResults;
 
     d->queryFragments.clear();
-    for (QMap<QString, QString>::ConstIterator it = query.constBegin(); it != query.constEnd(); ++it) {
-        // FIXME: Is there a need for percent encoding?
-        d->queryFragments.append(splitRespectingQuotationMarks(it.value()));
+    for (QMap<QString, QString>::ConstIterator it = query.constBegin(); it != query.constEnd(); ++it)
+        foreach(QString queryFragment, splitRespectingQuotationMarks(it.value())) {
+        d->queryFragments.append(encodeURL(queryFragment));
     }
 
-    d->startSearch();
+    QNetworkRequest request(d->startPageUrl);
+    setSuggestedHttpHeaders(request);
+    QNetworkReply *reply = networkAccessManager()->get(request);
+    setNetworkReplyTimeout(reply);
+    connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingStartPage()));
 }
 
-void WebSearchIEEEXplore::doneFetchingStartPage(KJob *kJob)
+void WebSearchIEEEXplore::doneFetchingStartPage()
 {
-    Q_ASSERT(kJob == d->currentJob);
-    d->currentJob = NULL;
-    if (handleErrors(kJob)) {
+    QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
+
+    if (handleErrors(reply)) {
         QString url = d->searchRequestUrl + '"' + d->queryFragments.join("\"+AND+\"") + '"';
-        KIO::StoredTransferJob * newJob = KIO::storedGet(url, KIO::Reload);
-        newJob->addMetaData("cookies", "auto");
-        newJob->addMetaData("cache", "reload");
-        connect(newJob, SIGNAL(result(KJob *)), this, SLOT(doneFetchingSearchResults(KJob*)));
-        connect(newJob, SIGNAL(redirection(KIO::Job*, KUrl)), this, SLOT(redirection(KIO::Job*, KUrl)));
-        connect(newJob, SIGNAL(permanentRedirection(KIO::Job*, KUrl, KUrl)), this, SLOT(permanentRedirection(KIO::Job*, KUrl, KUrl)));
-        d->currentJob = newJob;
+        QNetworkRequest request(url);
+        setSuggestedHttpHeaders(request, reply);
+        QNetworkReply *newReply = networkAccessManager()->get(request);
+        setNetworkReplyTimeout(newReply);
+        connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingSearchResults()));
     } else
-        d->cookieManager->enableCookieRestrictions();
+        kDebug() << "url was" << reply->url().toString();
 }
 
-void WebSearchIEEEXplore::doneFetchingSearchResults(KJob *kJob)
+void WebSearchIEEEXplore::doneFetchingSearchResults()
 {
-    Q_ASSERT(kJob == d->currentJob);
-    d->currentJob = NULL;
-    if (handleErrors(kJob)) {
-        KIO::StoredTransferJob *transferJob = static_cast<KIO::StoredTransferJob *>(kJob);
+    QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
 
-        QString htmlText(transferJob->data());
+    if (handleErrors(reply)) {
+        QString htmlText(reply->readAll());
         QRegExp arnumberRegExp("arnumber=(\\d+)[^0-9]");
         d->arnumberList.clear();
         int p = -1;
@@ -183,52 +146,45 @@ void WebSearchIEEEXplore::doneFetchingSearchResults(KJob *kJob)
         }
 
         if (d->arnumberList.isEmpty()) {
-            d->cookieManager->enableCookieRestrictions();
             emit stoppedSearch(resultNoError);
             return;
         } else {
             QString url = d->fullAbstractUrl + d->arnumberList.first();
-            KIO::TransferJob * newJob = KIO::get(url, KIO::Reload);
+            QNetworkRequest request(url);
+            setSuggestedHttpHeaders(request, reply);
+            QNetworkReply *newReply = networkAccessManager()->get(request);
+            setNetworkReplyTimeout(newReply);
+            connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingAbstract()));
             d->arnumberList.removeFirst();
-            newJob->addMetaData("cookies", "auto");
-            newJob->addMetaData("cache", "reload");
-            connect(newJob, SIGNAL(result(KJob *)), this, SLOT(doneFetchingAbstract(KJob*)));
-            connect(newJob, SIGNAL(redirection(KIO::Job*, KUrl)), this, SLOT(redirection(KIO::Job*, KUrl)));
-            connect(newJob, SIGNAL(permanentRedirection(KIO::Job*, KUrl, KUrl)), this, SLOT(permanentRedirection(KIO::Job*, KUrl, KUrl)));
-            d->currentJob = newJob;
         }
     } else
-        d->cookieManager->enableCookieRestrictions();
+        kDebug() << "url was" << reply->url().toString();
 }
 
-void WebSearchIEEEXplore::doneFetchingAbstract(KJob *kJob)
+void WebSearchIEEEXplore::doneFetchingAbstract()
 {
-    Q_ASSERT(kJob == d->currentJob);
-    d->currentJob = NULL;
-    if (handleErrors(kJob)) {
-        KIO::TransferJob *transferJob = static_cast<KIO::TransferJob *>(kJob);
+    QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
 
-        QString arnumber = transferJob->url().queryItemValue(QLatin1String("arnumber"));
+    if (handleErrors(reply)) {
+        QString arnumber = reply->url().queryItemValue(QLatin1String("arnumber"));
         if (!arnumber.isEmpty()) {
             QString url = d->citationUrl + arnumber;
-            KIO::StoredTransferJob * newJob = KIO::storedGet(url, KIO::Reload);
-            newJob->addMetaData("cookies", "auto");
-            newJob->addMetaData("cache", "reload");
-            connect(newJob, SIGNAL(result(KJob *)), this, SLOT(doneFetchingBibliography(KJob*)));
-            d->currentJob = newJob;
+            QNetworkRequest request(url);
+            setSuggestedHttpHeaders(request, reply);
+            QNetworkReply *newReply = networkAccessManager()->get(request);
+            setNetworkReplyTimeout(newReply);
+            connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingBibliography()));
         }
     } else
-        d->cookieManager->enableCookieRestrictions();
+        kDebug() << "url was" << reply->url().toString();
 }
 
-void WebSearchIEEEXplore::doneFetchingBibliography(KJob *kJob)
+void WebSearchIEEEXplore::doneFetchingBibliography()
 {
-    Q_ASSERT(kJob == d->currentJob);
-    d->currentJob = NULL;
-    if (handleErrors(kJob)) {
-        KIO::StoredTransferJob *transferJob = static_cast<KIO::StoredTransferJob *>(kJob);
+    QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
 
-        QString plainText = QString(transferJob->data()).replace("<br>", "");
+    if (handleErrors(reply)) {
+        QString plainText = QString(reply->readAll()).replace("<br>", "");
         d->sanitizeBibTeXCode(plainText);
 
         File *bibtexFile = d->fileImporter.fromString(plainText);
@@ -237,7 +193,7 @@ void WebSearchIEEEXplore::doneFetchingBibliography(KJob *kJob)
             for (File::ConstIterator it = bibtexFile->constBegin(); entry == NULL && it != bibtexFile->constEnd(); ++it) {
                 entry = dynamic_cast<Entry*>(*it);
                 if (entry != NULL) {
-                    QString arnumber = transferJob->url().queryItemValue(QLatin1String("recordIds"));
+                    QString arnumber = reply->url().queryItemValue(QLatin1String("recordIds"));
                     d->sanitize(entry, arnumber);
                     emit foundEntry(entry);
                 }
@@ -246,8 +202,7 @@ void WebSearchIEEEXplore::doneFetchingBibliography(KJob *kJob)
         }
 
         if (entry == NULL) {
-            kWarning() << "Searching" << label() << "(url:" << transferJob->url().prettyUrl() << ") resulted in invalid BibTeX data:" << QString(transferJob->data());
-            d->cookieManager->enableCookieRestrictions();
+            kWarning() << "Searching" << label() << "(url:" << reply->url().toString() << ") resulted in invalid BibTeX data:" << QString(reply->readAll());
             emit stoppedSearch(resultUnspecifiedError);
             return;
         }
@@ -255,31 +210,16 @@ void WebSearchIEEEXplore::doneFetchingBibliography(KJob *kJob)
         if (!d->arnumberList.isEmpty()) {
             QString url = d->fullAbstractUrl + d->arnumberList.first();
             d->arnumberList.removeFirst();
-            KIO::TransferJob * newJob = KIO::get(url, KIO::Reload);
-            newJob->addMetaData("cookies", "auto");
-            newJob->addMetaData("cache", "reload");
-            connect(newJob, SIGNAL(result(KJob *)), this, SLOT(doneFetchingAbstract(KJob*)));
-            connect(newJob, SIGNAL(redirection(KIO::Job*, KUrl)), this, SLOT(redirection(KIO::Job*, KUrl)));
-            connect(newJob, SIGNAL(permanentRedirection(KIO::Job*, KUrl, KUrl)), this, SLOT(permanentRedirection(KIO::Job*, KUrl, KUrl)));
-            d->currentJob = newJob;
+            QNetworkRequest request(url);
+            setSuggestedHttpHeaders(request, reply);
+            QNetworkReply *newReply = networkAccessManager()->get(request);
+            setNetworkReplyTimeout(newReply);
+            connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingAbstract()));
         } else {
-            d->cookieManager->enableCookieRestrictions();
             emit stoppedSearch(resultNoError);
         }
     } else
-        d->cookieManager->enableCookieRestrictions();
-}
-
-void WebSearchIEEEXplore::permanentRedirection(KIO::Job *, const KUrl &, const KUrl &u)
-{
-    QString url = "http://" + u.host();
-    d->cookieManager->whitelistUrl(url);
-}
-
-void WebSearchIEEEXplore::redirection(KIO::Job *, const KUrl &u)
-{
-    QString url = "http://" + u.host();
-    d->cookieManager->whitelistUrl(url);
+        kDebug() << "url was" << reply->url().toString();
 }
 
 QString WebSearchIEEEXplore::label() const
@@ -292,11 +232,8 @@ QString WebSearchIEEEXplore::favIconUrl() const
     return QLatin1String("http://ieeexplore.ieee.org/favicon.ico");
 }
 
-WebSearchQueryFormAbstract* WebSearchIEEEXplore::customWidget(QWidget *parent)
+WebSearchQueryFormAbstract* WebSearchIEEEXplore::customWidget(QWidget *)
 {
-    Q_UNUSED(parent)
-    // TODO: No customized search widget
-    // return (d->form = new WebSearchIEEEXplore::WebSearchQueryFormIEEEXplore(parent));
     return NULL;
 }
 
@@ -308,6 +245,4 @@ KUrl WebSearchIEEEXplore::homepage() const
 void WebSearchIEEEXplore::cancel()
 {
     WebSearchAbstract::cancel();
-    if (d->job != NULL)
-        d->job->kill(KJob::EmitResult);
 }
