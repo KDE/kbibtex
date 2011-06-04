@@ -89,7 +89,6 @@ public:
             configGroupName(QLatin1String("URL Preview")), onlyLocalFilesCheckConfig(QLatin1String("OnlyLocalFiles")),
             arXivPDFUrlStart("http://arxiv.org/pdf/"), entry(NULL) {
         setupGUI();
-        loadState();
     }
 
     /**
@@ -127,6 +126,8 @@ public:
         message = new QLabel(i18n("No preview available"), p);
         message->setAlignment(Qt::AlignCenter);
         layout->addWidget(message, 1);
+
+        loadState();
 
         connect(externalViewerButton, SIGNAL(clicked()), p, SLOT(openExternally()));
         connect(urlComboBox, SIGNAL(activated(int)), stackedWidget, SLOT(setCurrentIndex(int)));
@@ -277,18 +278,14 @@ public:
     }
 
     void loadState() {
-        /*
-         KConfigGroup configGroup(config, configGroupName);
-         onlyLocalFilesCheckBox->setChecked(configGroup.readEntry(onlyLocalFilesCheckConfig, true));
-         */
+        KConfigGroup configGroup(config, configGroupName);
+        onlyLocalFilesCheckBox->setChecked(configGroup.readEntry(onlyLocalFilesCheckConfig, true));
     }
 
     void saveState() {
-        /*
-                KConfigGroup configGroup(config, configGroupName);
-                configGroup.writeEntry(onlyLocalFilesCheckConfig, onlyLocalFilesCheckBox->isChecked());
-                config->sync();
-                */
+        KConfigGroup configGroup(config, configGroupName);
+        configGroup.writeEntry(onlyLocalFilesCheckConfig, onlyLocalFilesCheckBox->isChecked());
+        config->sync();
     }
 };
 
