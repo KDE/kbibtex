@@ -380,20 +380,25 @@ void WebSearchSpringerLink::doneFetchingBibTeX()
         QString bibTeXcode = ts.readAll();
         d->sanitizeBibTeXCode(bibTeXcode);
 
+        kDebug() << "bibTeXcode =" << bibTeXcode;
+
         FileImporterBibTeX importer;
         File *bibtexFile = importer.fromString(bibTeXcode);
 
+        bool hasEntry = false;
         if (bibtexFile != NULL) {
             for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
                 Entry *entry = dynamic_cast<Entry*>(*it);
-                if (entry != NULL)
+                if (entry != NULL) {
+                    hasEntry = true;
                     emit foundEntry(entry);
+                }
             }
             delete bibtexFile;
         }
 
         if (d->runningJobs <= 0)
-            emit stoppedSearch(resultNoError);
+            emit stoppedSearch(hasEntry ? resultNoError : resultUnspecifiedError);
     }  else
         kDebug() << "url was" << reply->url().toString();
 }
