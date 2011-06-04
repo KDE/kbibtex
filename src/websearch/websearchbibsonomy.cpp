@@ -30,6 +30,7 @@
 #include <KLineEdit>
 #include <KComboBox>
 #include <KMessageBox>
+#include <KConfigGroup>
 
 #include <fileimporterbibtex.h>
 #include <file.h>
@@ -38,13 +39,23 @@
 
 class WebSearchBibsonomy::WebSearchQueryFormBibsonomy : public WebSearchQueryFormAbstract
 {
+private:
+    QString configGroupName;
+
+    void loadState() {
+        KConfigGroup configGroup(config, configGroupName);
+        comboBoxSearchWhere->setCurrentIndex(configGroup.readEntry(QLatin1String("searchWhere"), 0));
+        lineEditSearchTerm->setText(configGroup.readEntry(QLatin1String("searchTerm"), QString()));
+        numResultsField->setValue(configGroup.readEntry(QLatin1String("numResults"), 10));
+    }
+
 public:
     KComboBox *comboBoxSearchWhere;
     KLineEdit *lineEditSearchTerm;
     QSpinBox *numResultsField;
 
     WebSearchQueryFormBibsonomy(QWidget *widget)
-            : WebSearchQueryFormAbstract(widget) {
+            : WebSearchQueryFormAbstract(widget), configGroupName(QLatin1String("Search Engine Bibsonomy")) {
         QGridLayout *layout = new QGridLayout(this);
         layout->setMargin(0);
 
@@ -75,10 +86,20 @@ public:
 
         layout->setRowStretch(2, 100);
         lineEditSearchTerm->setFocus(Qt::TabFocusReason);
+
+        loadState();
     }
 
     virtual bool readyToStart() const {
         return !lineEditSearchTerm->text().isEmpty();
+    }
+
+    void saveState() {
+        KConfigGroup configGroup(config, configGroupName);
+        configGroup.writeEntry(QLatin1String("searchWhere"), comboBoxSearchWhere->currentIndex());
+        configGroup.writeEntry(QLatin1String("searchTerm"), lineEditSearchTerm->text());
+        configGroup.writeEntry(QLatin1String("numResults"), numResultsField->value());
+        config->sync();
     }
 };
 
@@ -144,7 +165,10 @@ void WebSearchBibsonomy::startSearch(const QMap<QString, QString> &query, int nu
 {
     m_hasBeenCanceled = false;
 
-    QNetworkReply *reply = networkAccessManager()->get(QNetworkRequest(d->buildQueryUrl(query, numResults)));
+    QNetworkRequest request(d->buildQueryUrl(query, numResults));
+    setSuggestedHttpHeaders(request);
+    QNetworkReply *reply = networkAccessManager()->get(request);
+    setNetworkReplyTimeout(reply);
     connect(reply, SIGNAL(finished()), this, SLOT(downloadDone()));
 }
 
@@ -152,8 +176,13 @@ void WebSearchBibsonomy::startSearch()
 {
     m_hasBeenCanceled = false;
 
-    QNetworkReply *reply = networkAccessManager()->get(QNetworkRequest(d->buildQueryUrl()));
+    QNetworkRequest request(d->buildQueryUrl());
+    setSuggestedHttpHeaders(request);
+    QNetworkReply *reply = networkAccessManager()->get(request);
+    setNetworkReplyTimeout(reply);
     connect(reply, SIGNAL(finished()), this, SLOT(downloadDone()));
+
+    d->form->saveState();
 }
 
 QString WebSearchBibsonomy::label() const

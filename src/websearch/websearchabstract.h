@@ -27,15 +27,30 @@
 #include <QString>
 #include <QWidget>
 #include <QMetaType>
+#include <QNetworkCookieJar>
 
 #include <KIcon>
+#include <KSharedConfig>
 
 #include <entry.h>
 
 class QNetworkAccessManager;
 class QNetworkReply;
+class QNetworkRequest;
 
-class KJob;
+
+class HTTPEquivCookieJar: public QNetworkCookieJar
+{
+    Q_OBJECT
+
+public:
+    HTTPEquivCookieJar(QNetworkAccessManager *parent);
+
+    void checkForHttpEqiuv(const QString &htmlCode, const QUrl &url);
+
+private:
+    QNetworkAccessManager *m_nam;
+};
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
@@ -46,13 +61,16 @@ class WebSearchQueryFormAbstract : public QWidget
 
 public:
     WebSearchQueryFormAbstract(QWidget *parent)
-            : QWidget(parent) {
+            : QWidget(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))) {
         // nothing
     }
 
     virtual bool readyToStart() const {
         return false;
     }
+
+protected:
+    KSharedConfigPtr config;
 
 signals:
     void returnPressed();
@@ -102,30 +120,12 @@ protected:
     QStringList splitRespectingQuotationMarks(const QString &text);
 
     /**
-     * Will check for common problems with jobs. It will return true if there is no
-     * problem and you may process this job result. If there is a problem, this function
-     * will notify the user if necessary (KMessageBox), emit a "stoppedSearch" signal,
-     * and return false.
-     * @see handleErrors(bool)
-     */
-    bool handleErrors(KJob *kJob);
-
-    /**
-     * Will check for common problems with downloads via QWebPage. It will return true
-     * if there is no problem and you may process this job result. If there is a problem,
-     * this function will notify the user if necessary (KMessageBox), emit a
-     * "stoppedSearch" signal, and return false.
-     * @see handleErrors(KJob*)
-     */
-    bool handleErrors(bool ok);
-
-    /**
-     * Will check for common problems with downloads via QNetworkReply. It will return true
-     * if there is no problem and you may process this job result. If there is a problem,
-     * this function will notify the user if necessary (KMessageBox), emit a
-     * "stoppedSearch" signal, and return false.
-     * @see handleErrors(KJob*)
-     */
+    * Will check for common problems with downloads via QNetworkReply. It will return true
+    * if there is no problem and you may process this job result. If there is a problem,
+    * this function will notify the user if necessary (KMessageBox), emit a
+    * "stoppedSearch" signal, and return false.
+    * @see handleErrors(KJob*)
+    */
     bool handleErrors(QNetworkReply *reply);
 
     /**
@@ -135,12 +135,16 @@ protected:
 
     QString decodeURL(QString rawText);
 
+    QMap<QString, QString> formParameters(const QString &htmlText, const QString &formTagBegin);
+
     /**
      * Get the unique application-wide QNetworkAccessManager
      */
     QNetworkAccessManager *networkAccessManager();
 
     void setNetworkReplyTimeout(QNetworkReply *reply, int timeOutSec = 15);
+
+    void setSuggestedHttpHeaders(QNetworkRequest &request, QNetworkReply *oldReply = NULL);
 
 private:
     QString m_name;

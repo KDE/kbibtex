@@ -41,7 +41,33 @@ const int WebSearchAbstract::resultNoError = 0;
 const int WebSearchAbstract::resultCancelled = 0; /// may get redefined in the future!
 const int WebSearchAbstract::resultUnspecifiedError = 1;
 
-const char* WebSearchAbstract::httpUnsafeChars = "%:/=+$?& \0";
+const char* WebSearchAbstract::httpUnsafeChars = "%:/=+$?&\0";
+
+
+HTTPEquivCookieJar::HTTPEquivCookieJar(QNetworkAccessManager *parent = NULL)
+        : QNetworkCookieJar(parent), m_nam(parent)
+{
+    // nothing
+}
+
+void HTTPEquivCookieJar::checkForHttpEqiuv(const QString &htmlCode, const QUrl &url)
+{
+    static QRegExp cookieContent("^([^\"=; ]+)=([^\"=; ]+).*\\bpath=([^\"=; ]+)", Qt::CaseInsensitive);
+    int p1 = -1;
+    if ((p1 = htmlCode.toLower().indexOf("http-equiv=\"set-cookie\"", 0, Qt::CaseInsensitive)) >= 5
+            && (p1 = htmlCode.lastIndexOf("<meta", p1, Qt::CaseInsensitive)) >= 0
+            && (p1 = htmlCode.indexOf("content=\"", p1, Qt::CaseInsensitive)) >= 0
+            && cookieContent.indexIn(htmlCode.mid(p1 + 9, 256)) >= 0) {
+        const QString key = cookieContent.cap(1);
+        const QString value = cookieContent.cap(2);
+        const QString path = cookieContent.cap(3);
+        QUrl cookieUrl = url;
+        //cookieUrl.setPath(path);
+        QList<QNetworkCookie> cookies = cookiesForUrl(cookieUrl);
+        cookies.append(QNetworkCookie(key.toAscii(), value.toAscii()));
+        setCookiesFromUrl(cookies, cookieUrl);
+    }
+}
 
 WebSearchAbstract::WebSearchAbstract(QWidget *parent)
         : QObject(parent), m_name(QString::null)
@@ -94,38 +120,6 @@ QStringList WebSearchAbstract::splitRespectingQuotationMarks(const QString &text
     return result;
 }
 
-bool WebSearchAbstract::handleErrors(KJob *kJob)
-{
-    if (m_hasBeenCanceled) {
-        kDebug() << "Searching" << label() << "got cancelled";
-        emit stoppedSearch(resultCancelled);
-        return false;
-    } else if (kJob->error() != KJob::NoError) {
-        KIO::SimpleJob *sJob = static_cast<KIO::SimpleJob*>(kJob);
-        kWarning() << "Search using" << label() << (sJob != NULL ? QLatin1String("for URL ") + sJob->url().pathOrUrl() : QLatin1String("")) << "failed:" << kJob->errorString();
-        KMessageBox::error(m_parent, kJob->errorString().isEmpty() ? i18n("Searching \"%1\" failed for unknown reason.", label()) : i18n("Searching \"%1\" failed with error message:\n\n%2", label(), kJob->errorString()));
-        emit stoppedSearch(resultUnspecifiedError);
-        return false;
-    }
-    return true;
-}
-
-bool WebSearchAbstract::handleErrors(bool ok)
-{
-    if (m_hasBeenCanceled) {
-        kDebug() << "Searching" << label() << "got cancelled";
-        emit stoppedSearch(resultCancelled);
-        return false;
-    } else if (!ok) {
-        kWarning() << "Search using" << label() << "failed.";
-        KMessageBox::error(m_parent, i18n("Searching \"%1\" failed for unknown reason.", label()));
-        emit stoppedSearch(resultUnspecifiedError);
-        return false;
-    }
-    return true;
-}
-
-
 bool WebSearchAbstract::handleErrors(QNetworkReply *reply)
 {
     if (m_hasBeenCanceled) {
@@ -148,6 +142,7 @@ QString WebSearchAbstract::encodeURL(QString rawText)
         rawText = rawText.replace(QChar(*cur), '%' + QString::number(*cur, 16));
         ++cur;
     }
+    rawText = rawText.replace(" ", "+");
     return rawText;
 }
 
@@ -160,16 +155,106 @@ QString WebSearchAbstract::decodeURL(QString rawText)
         if (ok)
             rawText = rawText.replace(mimeRegExp.cap(0), c);
     }
-
-    rawText = rawText.replace("&amp;", "&");
-
+    rawText = rawText.replace("&amp;", "&").replace("+", " ");
     return rawText;
+}
+
+QMap<QString, QString> WebSearchAbstract::formParameters(const QString &htmlText, const QString &formTagBegin)
+{
+    /// how to recognize HTML tags
+    static const QString formTagEnd = QLatin1String("</form>");
+    static const QString inputTagBegin = QLatin1String("<input");
+    static const QString selectTagBegin = QLatin1String("<select ");
+    static const QString selectTagEnd = QLatin1String("</select>");
+    static const QString optionTagBegin = QLatin1String("<option ");
+    /// regular expressions to test or retrieve attributes in HTML tags
+    QRegExp inputTypeRegExp("<input[^>]+\\btype=[\"]?([^\" >\n\t]+)");
+    QRegExp inputNameRegExp("<input[^>]+\\bname=[\"]?([^\" >\n\t]+)");
+    QRegExp inputValueRegExp("<input[^>]+\\bvalue=([^\"][^ >\n\t]*|\"[^\"]*\")");
+    QRegExp inputIsCheckedRegExp("<input[^>]* checked([> \t\n]|=[\"]?checked)");
+    QRegExp selectNameRegExp("<select[^>]+\\bname=[\"]?([^\" >\n\t]*)");
+    QRegExp optionValueRegExp("<option[^>]+\\bvalue=[\"]?([^\" >\n\t]+)");
+    QRegExp optionSelectedRegExp("<option[^>]* selected([> \t\n]|=[\"]?selected)");
+
+    /// initialize result map
+    QMap<QString, QString> result;
+
+    /// determined boundaries of (only) "form" tag
+    int startPos = htmlText.indexOf(formTagBegin);
+    int endPos = htmlText.indexOf(formTagEnd, startPos);
+
+    /// search for "input" tags within form
+    int p = htmlText.indexOf(inputTagBegin, startPos);
+    while (p > startPos && p < endPos) {
+        /// get "type", "name", and "value" attributes
+        QString inputType = htmlText.indexOf(inputTypeRegExp, p) == p ? inputTypeRegExp.cap(1).toLower() : QString::null;
+        QString inputName = htmlText.indexOf(inputNameRegExp, p) == p ? inputNameRegExp.cap(1) : QString::null;
+        QString inputValue = htmlText.indexOf(inputValueRegExp, p) ? inputValueRegExp.cap(1) : QString::null;
+        /// some values have quotation marks around, remove them
+        if (inputValue[0] == '"')
+            inputValue = inputValue.mid(1, inputValue.length() - 2);
+
+        if (!inputValue.isNull() && !inputName.isNull()) {
+            /// get value of input types
+            if (inputType == "hidden" || inputType == "text" || inputType == "submit")
+                result[inputName] = inputValue;
+            else if (inputType == "radio" || inputType == "checkbox") {
+                /// must be checked or selected
+                if (htmlText.indexOf(inputIsCheckedRegExp, p) == p) {
+                    result[inputName] = inputValue;
+                }
+            }
+        }
+        /// ignore input type "image"
+
+        p = htmlText.indexOf(inputTagBegin, p + 1);
+    }
+
+    /// search for "select" tags within form
+    p = htmlText.indexOf(selectTagBegin, startPos);
+    while (p > startPos && p < endPos) {
+        /// get "name" attribute from "select" tag
+        QString selectName = htmlText.indexOf(selectNameRegExp, p) == p ? selectNameRegExp.cap(1) : QString::null;
+
+        /// "select" tag contains one or several "option" tags, search all
+        int popt = htmlText.indexOf(optionTagBegin, p);
+        int endSelect = htmlText.indexOf(selectTagEnd, p);
+        while (popt > p && popt < endSelect) {
+            /// get "value" attribute from "option" tag
+            QString optionValue = htmlText.indexOf(optionValueRegExp, popt) == popt ? optionValueRegExp.cap(1) : QString::null;
+            if (!selectName.isNull() && !optionValue.isNull()) {
+                /// if this "option" tag is "selected", store value
+                if (htmlText.indexOf(optionSelectedRegExp, popt) == popt) {
+                    result[selectName] = optionValue;
+                }
+            }
+
+            popt = htmlText.indexOf(optionTagBegin, popt + 1);
+        }
+
+        p = htmlText.indexOf(selectTagBegin, p + 1);
+    }
+
+    return result;
+}
+
+void WebSearchAbstract::setSuggestedHttpHeaders(QNetworkRequest &request, QNetworkReply *oldReply)
+{
+    if (oldReply != NULL)
+        request.setRawHeader(QString("Referer").toAscii(), oldReply->url().toString().toAscii());
+    // request.setRawHeader(QString("User-Agent").toAscii(),QString("Opera/9.80 (X11; Linux i686; U; en) Presto/2.7.62 Version/11.01").toAscii());
+    request.setRawHeader(QString("User-Agent").toAscii(), QString("Links (2.3-pre1; NetBSD 5.0 i386; 96x36)").toAscii());
+    request.setRawHeader(QString("Accept").toAscii(), QString("text/*, */*;q=0.7").toAscii());
+    request.setRawHeader(QString("Accept-Charset").toAscii(), QString("utf-8, us-ascii, *;q=0.5").toAscii());
+    request.setRawHeader(QString("Accept-Language").toAscii(), QString("en-US, en;q=0.9").toAscii());
 }
 
 QNetworkAccessManager *WebSearchAbstract::networkAccessManager()
 {
-    if (m_networkAccessManager == NULL)
+    if (m_networkAccessManager == NULL) {
         m_networkAccessManager = new QNetworkAccessManager(KApplication::instance());
+        m_networkAccessManager->setCookieJar(new HTTPEquivCookieJar(m_networkAccessManager));
+    }
 
     return m_networkAccessManager;
 }

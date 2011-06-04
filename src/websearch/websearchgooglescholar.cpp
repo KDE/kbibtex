@@ -34,9 +34,7 @@
 
 #include <fileimporterbibtex.h>
 #include "websearchgooglescholar.h"
-#include "cookiemanager.h"
 
-FileImporterBibTeX importer;
 
 class WebSearchGoogleScholar::WebSearchGoogleScholarPrivate
 {
@@ -52,6 +50,7 @@ public:
     QString configPageUrl;
     QString setConfigPageUrl;
     QString queryPageUrl;
+    FileImporterBibTeX importer;
 
     WebSearchGoogleScholarPrivate(WebSearchGoogleScholar *parent)
             : p(parent) {
@@ -59,85 +58,6 @@ public:
         configPageUrl = QLatin1String("http://%1/scholar_preferences");
         setConfigPageUrl = QLatin1String("http://%1/scholar_setprefs");
         queryPageUrl = QLatin1String("http://%1/scholar");
-    }
-
-    QMap<QString, QString> formParameters(const QString &htmlText) {
-        /// how to recognize HTML tags
-        static const QString formTagBegin = QLatin1String("<form ");
-        static const QString formTagEnd = QLatin1String("</form>");
-        static const QString inputTagBegin = QLatin1String("<input");
-        static const QString selectTagBegin = QLatin1String("<select ");
-        static const QString selectTagEnd = QLatin1String("</select>");
-        static const QString optionTagBegin = QLatin1String("<option ");
-        /// regular expressions to test or retrieve attributes in HTML tags
-        QRegExp inputTypeRegExp("<input[^>]+\\btype=[\"]?([^\" >\n\t]+)");
-        QRegExp inputNameRegExp("<input[^>]+\\bname=[\"]?([^\" >\n\t]+)");
-        QRegExp inputValueRegExp("<input[^>]+\\bvalue=([^\"][^ >\n\t]*|\"[^\"]*\")");
-        QRegExp inputIsCheckedRegExp("<input[^>]* checked([> \t\n]|=[\"]?checked)");
-        QRegExp selectNameRegExp("<select[^>]+\\bname=[\"]?([^\" >\n\t]*)");
-        QRegExp optionValueRegExp("<option[^>]+\\bvalue=([^\"][^ >\n\t]*|\"[^\"]*\")");
-        QRegExp optionSelectedRegExp("<option[^>]* selected([> \t\n]|=[\"]?selected)");
-
-        /// initialize result map
-        QMap<QString, QString> result;
-
-        /// determined boundaries of (only) "form" tag
-        int startPos = htmlText.indexOf(formTagBegin);
-        int endPos = htmlText.indexOf(formTagEnd, startPos);
-
-        /// search for "input" tags within form
-        int p = htmlText.indexOf(inputTagBegin, startPos);
-        while (p > startPos && p < endPos) {
-            /// get "type", "name", and "value" attributes
-            QString inputType = htmlText.indexOf(inputTypeRegExp, p) == p ? inputTypeRegExp.cap(1) : QString::null;
-            QString inputName = htmlText.indexOf(inputNameRegExp, p) == p ? inputNameRegExp.cap(1) : QString::null;
-            QString inputValue = htmlText.indexOf(inputValueRegExp, p) ? inputValueRegExp.cap(1) : QString::null;
-            /// some values have quotation marks around, remove them
-            if (inputValue[0] == '"')
-                inputValue = inputValue.mid(1, inputValue.length() - 2);
-
-            if (!inputValue.isNull() && !inputName.isNull()) {
-                /// get value of input types
-                if (inputType == "hidden" || inputType == "text" || inputType == "submit")
-                    result[inputName] = inputValue;
-                else if (inputType == "radio" || inputType == "checkbox") {
-                    /// must be checked or selected
-                    if (htmlText.indexOf(inputIsCheckedRegExp, p) == p) {
-                        result[inputName] = inputValue;
-                    }
-                }
-            }
-            /// ignore input type "image"
-
-            p = htmlText.indexOf(inputTagBegin, p + 1);
-        }
-
-        /// search for "select" tags within form
-        p = htmlText.indexOf(selectTagBegin, startPos);
-        while (p > startPos && p < endPos) {
-            /// get "name" attribute from "select" tag
-            QString selectName = htmlText.indexOf(selectNameRegExp, p) == p ? selectNameRegExp.cap(1) : QString::null;
-
-            /// "select" tag contains one or several "option" tags, search all
-            int popt = htmlText.indexOf(optionTagBegin, p);
-            int endSelect = htmlText.indexOf(selectTagEnd, p);
-            while (popt > p && popt < endSelect) {
-                /// get "value" attribute from "option" tag
-                QString optionValue = htmlText.indexOf(optionValueRegExp, popt) == popt ? optionValueRegExp.cap(1) : QString::null;
-                if (!selectName.isNull() && !optionValue.isNull()) {
-                    /// if this "option" tag is "selected", store value
-                    if (htmlText.indexOf(optionSelectedRegExp, popt) == popt) {
-                        result[selectName] = optionValue;
-                    }
-                }
-
-                popt = htmlText.indexOf(optionTagBegin, popt + 1);
-            }
-
-            p = htmlText.indexOf(selectTagBegin, p + 1);
-        }
-
-        return result;
     }
 };
 
@@ -159,19 +79,25 @@ void WebSearchGoogleScholar::startSearch(const QMap<QString, QString> &query, in
     m_hasBeenCanceled = false;
 
     QStringList queryFragments;
-    foreach(QString queryFragment, splitRespectingQuotationMarks(query[queryKeyFreeText]))
-    queryFragments.append(encodeURL(queryFragment));
-    foreach(QString queryFragment, splitRespectingQuotationMarks(query[queryKeyTitle]))
-    queryFragments.append(encodeURL(queryFragment));
+    foreach(QString queryFragment, splitRespectingQuotationMarks(query[queryKeyFreeText])) {
+        queryFragments.append(encodeURL(queryFragment));
+    }
+    foreach(QString queryFragment, splitRespectingQuotationMarks(query[queryKeyTitle])) {
+        queryFragments.append(encodeURL(queryFragment));
+    }
     d->queryFreetext = queryFragments.join(" ");
     queryFragments.clear();
-    foreach(QString queryFragment, splitRespectingQuotationMarks(query[queryKeyAuthor]))
-    queryFragments.append(encodeURL(queryFragment));
+    foreach(QString queryFragment, splitRespectingQuotationMarks(query[queryKeyAuthor])) {
+        queryFragments.append(encodeURL(queryFragment));
+    }
     d->queryAuthor = queryFragments.join(" ");
     d->queryYear = encodeURL(query[queryKeyYear]);
 
     KUrl url(d->startPageUrl);
-    QNetworkReply *reply = networkAccessManager()->get(QNetworkRequest(url));
+    QNetworkRequest request(url);
+    setSuggestedHttpHeaders(request);
+    QNetworkReply *reply = networkAccessManager()->get(request);
+    setNetworkReplyTimeout(reply);
     connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingStartPage()));
 }
 
@@ -180,14 +106,17 @@ void WebSearchGoogleScholar::doneFetchingStartPage()
     QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
 
     if (handleErrors(reply)) {
-        QMap<QString, QString> inputMap = d->formParameters(reply->readAll());
+        QMap<QString, QString> inputMap = formParameters(reply->readAll(), "<form ");
         inputMap["hl"] = "en";
 
         KUrl url(d->configPageUrl.arg(reply->url().host()));
         for (QMap<QString, QString>::ConstIterator it = inputMap.constBegin(); it != inputMap.constEnd(); ++it)
             url.addQueryItem(it.key(), it.value());
 
-        QNetworkReply *newReply = networkAccessManager()->get(QNetworkRequest(url));
+        QNetworkRequest request(url);
+        setSuggestedHttpHeaders(request, reply);
+        QNetworkReply *newReply = networkAccessManager()->get(request);
+        setNetworkReplyTimeout(newReply);
         connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingConfigPage()));
     } else
         kDebug() << "url was" << reply->url().toString();
@@ -198,7 +127,7 @@ void WebSearchGoogleScholar::doneFetchingConfigPage()
     QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
 
     if (handleErrors(reply)) {
-        QMap<QString, QString> inputMap = d->formParameters(reply->readAll());
+        QMap<QString, QString> inputMap = formParameters(reply->readAll(), "<form ");
         inputMap["hl"] = "en";
         inputMap["scis"] = "yes";
         inputMap["scisf"] = "4";
@@ -208,7 +137,10 @@ void WebSearchGoogleScholar::doneFetchingConfigPage()
         for (QMap<QString, QString>::ConstIterator it = inputMap.constBegin(); it != inputMap.constEnd(); ++it)
             url.addQueryItem(it.key(), it.value());
 
-        QNetworkReply *newReply = networkAccessManager()->get(QNetworkRequest(url));
+        QNetworkRequest request(url);
+        setSuggestedHttpHeaders(request, reply);
+        QNetworkReply *newReply = networkAccessManager()->get(request);
+        setNetworkReplyTimeout(newReply);
         connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingSetConfigPage()));
     } else
         kDebug() << "url was" << reply->url().toString();
@@ -219,7 +151,7 @@ void WebSearchGoogleScholar::doneFetchingSetConfigPage()
     QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
 
     if (handleErrors(reply)) {
-        QMap<QString, QString> inputMap = d->formParameters(reply->readAll());
+        QMap<QString, QString> inputMap = formParameters(reply->readAll(), "<form ");
         QStringList dummyArguments = QStringList() << "as_epq" << "as_oq" << "as_eq" << "as_occt" << "as_publication" << "as_sdtf";
         foreach(QString dummyArgument, dummyArguments) {
             inputMap[dummyArgument] = "";
@@ -237,7 +169,10 @@ void WebSearchGoogleScholar::doneFetchingSetConfigPage()
 
         kDebug() << "url =" << url.prettyUrl();
 
-        QNetworkReply *newReply = networkAccessManager()->get(QNetworkRequest(url));
+        QNetworkRequest request(url);
+        setSuggestedHttpHeaders(request, reply);
+        QNetworkReply *newReply = networkAccessManager()->get(request);
+        setNetworkReplyTimeout(newReply);
         connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingQueryPage()));
     } else
         kDebug() << "url was" << reply->url().toString();
@@ -259,7 +194,10 @@ void WebSearchGoogleScholar::doneFetchingQueryPage()
         }
 
         if (!d->listBibTeXurls.isEmpty()) {
-            QNetworkReply *newReply = networkAccessManager()->get(QNetworkRequest(d->listBibTeXurls.first()));
+            QNetworkRequest request(d->listBibTeXurls.first());
+            setSuggestedHttpHeaders(request, reply);
+            QNetworkReply *newReply = networkAccessManager()->get(request);
+            setNetworkReplyTimeout(newReply);
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingBibTeX()));
             d->listBibTeXurls.removeFirst();
         } else
@@ -274,7 +212,7 @@ void WebSearchGoogleScholar::doneFetchingBibTeX()
 
     if (handleErrors(reply)) {
         QString rawText = reply->readAll();
-        File *bibtexFile = importer.fromString(rawText);
+        File *bibtexFile = d->importer.fromString(rawText);
 
         Entry *entry = NULL;
         if (bibtexFile != NULL) {
@@ -297,7 +235,10 @@ void WebSearchGoogleScholar::doneFetchingBibTeX()
         }
 
         if (!d->listBibTeXurls.isEmpty()) {
-            QNetworkReply *newReply = networkAccessManager()->get(QNetworkRequest(d->listBibTeXurls.first()));
+            QNetworkRequest request(d->listBibTeXurls.first());
+            setSuggestedHttpHeaders(request, reply);
+            QNetworkReply *newReply = networkAccessManager()->get(request);
+            setNetworkReplyTimeout(newReply);
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingBibTeX()));
             d->listBibTeXurls.removeFirst();
         } else {
