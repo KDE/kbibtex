@@ -11,7 +11,6 @@ set( websearch_LIB_SRCS
 	websearchacmportal.cpp
 	websearchspringerlink.cpp
 	websearchgeneral.cpp
-	cookiemanager.cpp
 )
 
 add_definitions( -DMAKE_WEBSEARCH_LIB )
