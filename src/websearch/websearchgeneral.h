@@ -43,7 +43,6 @@ public:
 private:
     QMap<QString, KLineEdit*> queryFields;
     QSpinBox *numResultsField;
-    KSharedConfigPtr config;
     const QString configGroupName;
 
     void loadState();

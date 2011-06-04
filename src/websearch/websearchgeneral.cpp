@@ -29,8 +29,8 @@
 #include "websearchgeneral.h"
 
 WebSearchQueryFormGeneral::WebSearchQueryFormGeneral(QWidget *parent)
-        : WebSearchQueryFormAbstract(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))),
-        configGroupName(QLatin1String("Search Engines General"))
+        : WebSearchQueryFormAbstract(parent),
+        configGroupName(QLatin1String("Search Engine General"))
 {
     QFormLayout *layout = new QFormLayout(this);
     layout->setMargin(0);
