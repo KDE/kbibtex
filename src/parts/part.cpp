@@ -20,14 +20,15 @@
 
 #include <QLabel>
 #include <QFile>
+#include <QFileInfo>
 #include <QApplication>
 #include <QLayout>
 #include <QKeyEvent>
 #include <QSignalMapper>
 #include <QDesktopServices>
 
+#include <KFileDialog>
 #include <KDebug>
-#include <KEncodingFileDialog>
 #include <KMessageBox>
 #include <KLocale>
 #include <KAction>
@@ -98,13 +99,10 @@ public:
         ending = ending.mid(p + 1);
 
         if (ending == "pdf") {
-            kDebug() << "Selecting FileImporterPDF" << endl;
             return new FileImporterPDF();
         } else if (ending == "ris") {
-            kDebug() << "Selecting FileImporterRIS" << endl;
             return new FileImporterRIS();
         } else {
-            kDebug() << "Selecting FileImporterBibTeX" << endl;
             return new FileImporterBibTeX("latex", false);
         }
     }
@@ -115,25 +113,18 @@ public:
         ending = ending.mid(p + 1);
 
         if (ending == "html") {
-            kDebug() << "Selecting FileExporterXSLT" << endl;
             return new FileExporterXSLT();
         } else if (ending == "xml") {
-            kDebug() << "Selecting FileExporterXML" << endl;
             return new FileExporterXML();
         } else if (ending == "ris") {
-            kDebug() << "Selecting FileExporterRIS" << endl;
             return new FileExporterRIS();
         } else if (ending == "pdf") {
-            kDebug() << "Selecting FileExporterPDF" << endl;
             return new FileExporterPDF();
         } else if (ending == "rtf") {
-            kDebug() << "Selecting FileExporterRTF" << endl;
             return new FileExporterRTF();
         } else if (ending == "html" || ending == "html") {
-            kDebug() << "Selecting FileExporterBibTeX2HTML" << endl;
             return new FileExporterBibTeX2HTML();
         } else {
-            kDebug() << "Selecting FileExporterBibTeX" << endl;
             return new FileExporterBibTeX();
         }
     }
@@ -279,7 +270,7 @@ public:
         if (!info.exists())
             return true;
 
-        return KMessageBox::Cancel != KMessageBox::warningContinueCancel(parent, i18n("A file named \"%1\" already exists. Are you sure you want to overwrite it?",  info.fileName()), i18n("Overwrite File?"), KStandardGuiItem::overwrite(), KStandardGuiItem::cancel(), QString(), KMessageBox::Notify | KMessageBox::Dangerous);
+        return KMessageBox::Cancel != KMessageBox::warningContinueCancel(parent, i18n("A file named \"%1\" already exists. Are you sure you want to overwrite it?", info.fileName()), i18n("Overwrite File?"), KStandardGuiItem::overwrite(), KStandardGuiItem::cancel(), QString(), KMessageBox::Notify | KMessageBox::Dangerous);
     }
 
     int updateViewDocumentMenu() {
@@ -292,8 +283,9 @@ public:
             if (!urlList.isEmpty()) {
                 for (QList<KUrl>::ConstIterator it = urlList.constBegin(); it != urlList.constEnd(); ++it) {
                     // FIXME: the signal mapper will fill up with mappings, as they are never removed
-                    KAction *action = new KAction((*it).pathOrUrl(), p); // TODO beautify (icon, url)
+                    KAction *action = new KAction(KIcon(KMimeType::iconNameForUrl(*it)), (*it).pathOrUrl(), p);
                     action->setData((*it).pathOrUrl());
+                    action->setToolTip((*it).prettyUrl());
                     connect(action, SIGNAL(triggered()), signalMapperViewDocument, SLOT(map()));
                     signalMapperViewDocument->setMapping(action, action);
                     viewDocumentMenu->addAction(action);
@@ -502,12 +494,9 @@ void KBibTeXPart::fitActionSettings()
 
 bool KBibTeXPart::openFile()
 {
-    kDebug() << "Opening file: " << url();
-
     setObjectName("KBibTeXPart::KBibTeXPart for " + url().pathOrUrl());
 
     FileImporter *importer = d->fileImporterFactory(url());
-
     importer->showImportDialog(widget());
 
     qApp->setOverrideCursor(Qt::WaitCursor);
@@ -519,11 +508,10 @@ bool KBibTeXPart::openFile()
     delete importer;
 
     if (bibtexFile == NULL) {
-        kWarning() << "Opening file failed: " << url();
+        kWarning() << "Opening file failed:" << url().pathOrUrl();
         qApp->restoreOverrideCursor();
         return false;
-    } else
-        kDebug() << "File contains " << bibtexFile->count() << " entries";
+    }
 
     bibtexFile->setProperty(File::Url, url());
 
@@ -609,4 +597,5 @@ void KBibTeXPart::updateActions()
     d->elementViewDocumentAction->setEnabled(!emptySelection && numDocumentsToView > 0);
     /// activate sub-menu only if there are at least two documents to view
     d->elementViewDocumentAction->setMenu(numDocumentsToView > 1 ? d->viewDocumentMenu : NULL);
+    d->elementViewDocumentAction->setToolTip(numDocumentsToView == 1 ? d->viewDocumentMenu->actions().first()->text() : QLatin1String(""));
 }
