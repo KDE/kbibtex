@@ -34,9 +34,9 @@ private:
     WebSearchScienceDirect *p;
 
 public:
-    QStringList queryFreetext, queryAuthor;
+    QString queryFreetext, queryAuthor;
     int currentSearchPosition;
-    int numExpectedResults;
+    int numExpectedResults, numFoundResults;
     const QString scienceDirectBaseUrl;
     QStringList bibTeXUrls;
     int runningJobs;
@@ -72,24 +72,13 @@ void WebSearchScienceDirect::startSearch()
 void WebSearchScienceDirect::startSearch(const QMap<QString, QString> &query, int numResults)
 {
     d->runningJobs = 0;
+    d->numFoundResults = 0;
     m_hasBeenCanceled = false;
     d->bibTeXUrls.clear();
     d->currentSearchPosition = 0;
 
-    d->queryFreetext.clear();
-    foreach(QString queryFragment, splitRespectingQuotationMarks(query[queryKeyFreeText])) {
-        d->queryFreetext.append(encodeURL(queryFragment));
-    }
-    foreach(QString queryFragment, splitRespectingQuotationMarks(query[queryKeyTitle])) {
-        d->queryFreetext.append(encodeURL(queryFragment));
-    }
-    foreach(QString queryFragment, splitRespectingQuotationMarks(query[queryKeyYear])) {
-        d->queryFreetext.append(encodeURL(queryFragment));
-    }
-    d->queryAuthor.clear();
-    foreach(QString queryFragment, splitRespectingQuotationMarks(query[queryKeyAuthor])) {
-        d->queryAuthor.append(encodeURL(queryFragment));
-    }
+    d->queryFreetext = query[queryKeyFreeText] + ' ' + query[queryKeyTitle] + ' ' + query[queryKeyYear];
+    d->queryAuthor = query[queryKeyAuthor];
     d->numExpectedResults = numResults;
 
     ++d->runningJobs;
@@ -131,27 +120,27 @@ void WebSearchScienceDirect::doneFetchingStartPage()
     Q_ASSERT(d->runningJobs == 0);
 
     QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
-
     if (handleErrors(reply)) {
         const QString htmlText = reply->readAll();
         static_cast<HTTPEquivCookieJar*>(networkAccessManager()->cookieJar())->checkForHttpEqiuv(htmlText, reply->url());
         KUrl url(d->scienceDirectBaseUrl + "science");
         QMap<QString, QString> inputMap = formParameters(htmlText, QLatin1String("<form name=\"qkSrch\""));
-        inputMap.remove("qs_all");
-        inputMap.remove("qs_author");
-        //inputMap.remove("resultsPerPage");
-        for (QMap<QString, QString>::ConstIterator it = inputMap.constBegin(); it != inputMap.constEnd(); ++it)
-            url.addEncodedQueryItem(it.key().toAscii(), QString(it.value()).replace(" ", "+").toAscii());
-        url.addEncodedQueryItem(QString("qs_all").toAscii(), d->queryFreetext.join("+").toAscii());
-        url.addEncodedQueryItem(QString("qs_author").toAscii(), d->queryAuthor.join("+").toAscii());
-        //url.addQueryItem(QString("resultsPerPage").toAscii(), QString::number(d->numExpectedResults).toAscii());
+        inputMap["qs_all"] = d->queryFreetext;
+        inputMap["qs_author"] = d->queryAuthor;
+        inputMap["resultsPerPage"] = QString::number(d->numExpectedResults);
+        inputMap["_ob"] = "QuickSearchURL";
+        inputMap["_method"] = "submitForm";
+
+        static const QStringList orderOfParameters = QString("_ob|_method|_acct|_origin|_zone|md5|qs_issue|qs_pages|qs_title|qs_vol|sdSearch|qs_all|qs_author|resultsPerPage=3").split("|");
+        foreach(QString key, orderOfParameters)
+        url.addQueryItem(key, inputMap[key]);
 
         ++d->runningJobs;
         QNetworkRequest request(url);
         setSuggestedHttpHeaders(request, reply);
         QNetworkReply *newReply = networkAccessManager()->get(request);
-        setNetworkReplyTimeout(newReply);
         connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingResultPage()));
+        setNetworkReplyTimeout(newReply);
     } else
         kDebug() << "url was" << reply->url().toString();
 }
@@ -162,19 +151,30 @@ void WebSearchScienceDirect::doneFetchingResultPage()
     Q_ASSERT(d->runningJobs == 0);
 
     QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
-
     if (handleErrors(reply)) {
-        const QString htmlText = reply->readAll();
-        static_cast<HTTPEquivCookieJar*>(networkAccessManager()->cookieJar())->checkForHttpEqiuv(htmlText, reply->url());
-        int p = -1;
-        while ((p = htmlText.indexOf("http://www.sciencedirect.com/science/article/pii/", p + 1)) >= 0) {
-            int p2 = htmlText.indexOf("\"", p + 1);
+        KUrl redirUrl = reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl();
+        if (!redirUrl.isEmpty()) {
             ++d->runningJobs;
-            QNetworkRequest request(htmlText.mid(p, p2 - p));
+            QNetworkRequest request(redirUrl);
             setSuggestedHttpHeaders(request, reply);
             QNetworkReply *newReply = networkAccessManager()->get(request);
+            connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingResultPage()));
             setNetworkReplyTimeout(newReply);
-            connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingAbstractPage()));
+        } else {
+            const QString htmlText = reply->readAll();
+            static_cast<HTTPEquivCookieJar*>(networkAccessManager()->cookieJar())->checkForHttpEqiuv(htmlText, reply->url());
+            int p = -1, p2;
+            while ((p = htmlText.indexOf("http://www.sciencedirect.com/science/article/pii/", p + 1)) >= 0 && (p2 = htmlText.indexOf("\"", p + 1)) >= 0)
+                if (d->numFoundResults < d->numExpectedResults) {
+                    ++d->numFoundResults;
+                    ++d->runningJobs;
+                    KUrl url(htmlText.mid(p, p2 - p));
+                    QNetworkRequest request(url);
+                    setSuggestedHttpHeaders(request, reply);
+                    QNetworkReply *newReply = networkAccessManager()->get(request);
+                    setNetworkReplyTimeout(newReply);
+                    connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingAbstractPage()));
+                }
         }
 
         if (d->runningJobs <= 0)
@@ -189,19 +189,28 @@ void WebSearchScienceDirect::doneFetchingAbstractPage()
     Q_ASSERT(d->runningJobs >= 0);
 
     QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
-
     if (handleErrors(reply)) {
-        const QString htmlText = reply->readAll();
-        static_cast<HTTPEquivCookieJar*>(networkAccessManager()->cookieJar())->checkForHttpEqiuv(htmlText, reply->url());
-        int p1, p2;
-        if ((p1 = htmlText.indexOf("/science?_ob=DownloadURL&")) >= 0 && (p2 = htmlText.indexOf("\"", p1 + 1)) >= 0) {
-            KUrl url("http://www.sciencedirect.com" + htmlText.mid(p1, p2 - p1));
+        KUrl redirUrl = reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl();
+        if (!redirUrl.isEmpty()) {
             ++d->runningJobs;
-            QNetworkRequest request(url);
+            QNetworkRequest request(redirUrl);
             setSuggestedHttpHeaders(request, reply);
             QNetworkReply *newReply = networkAccessManager()->get(request);
+            connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingAbstractPage()));
             setNetworkReplyTimeout(newReply);
-            connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingExportCitationPage()));
+        } else {
+            const QString htmlText = reply->readAll();
+            static_cast<HTTPEquivCookieJar*>(networkAccessManager()->cookieJar())->checkForHttpEqiuv(htmlText, reply->url());
+            int p1, p2;
+            if ((p1 = htmlText.indexOf("/science?_ob=DownloadURL&")) >= 0 && (p2 = htmlText.indexOf("\"", p1 + 1)) >= 0) {
+                KUrl url("http://www.sciencedirect.com" + htmlText.mid(p1, p2 - p1));
+                ++d->runningJobs;
+                QNetworkRequest request(url);
+                setSuggestedHttpHeaders(request, reply);
+                QNetworkReply *newReply = networkAccessManager()->get(request);
+                connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingExportCitationPage()));
+                setNetworkReplyTimeout(newReply);
+            }
         }
 
         if (d->runningJobs <= 0)
@@ -216,25 +225,37 @@ void WebSearchScienceDirect::doneFetchingExportCitationPage()
     Q_ASSERT(d->runningJobs >= 0);
 
     QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
-
     if (handleErrors(reply)) {
-        const QString htmlText = reply->readAll();
-        static_cast<HTTPEquivCookieJar*>(networkAccessManager()->cookieJar())->checkForHttpEqiuv(htmlText, reply->url());
-        QMap<QString, QString> inputMap = formParameters(htmlText, QLatin1String("<form name=\"exportCite\""));
-        inputMap.remove("format");
-        inputMap.remove("citation-type");
+        KUrl redirUrl = reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl();
+        if (!redirUrl.isEmpty()) {
+            ++d->runningJobs;
+            QNetworkRequest request(redirUrl);
+            setSuggestedHttpHeaders(request, reply);
+            QNetworkReply *newReply = networkAccessManager()->get(request);
+            connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingExportCitationPage()));
+            setNetworkReplyTimeout(newReply);
+        } else {
+            const QString htmlText = reply->readAll();
+            static_cast<HTTPEquivCookieJar*>(networkAccessManager()->cookieJar())->checkForHttpEqiuv(htmlText, reply->url());
+            QMap<QString, QString> inputMap = formParameters(htmlText, QLatin1String("<form name=\"exportCite\""));
+            inputMap["format"] = "cite-abs";
+            inputMap["citation-type"] = "BIBTEX";
+            inputMap["RETURN_URL"] = d->scienceDirectBaseUrl + "/science/home";
+            static const QStringList orderOfParameters = QString("_ob|_method|_acct|_userid|_docType|_ArticleListID|_uoikey|count|md5|JAVASCRIPT_ON|format|citation-type|Export|RETURN_URL").split("|");
 
-        QString body = "format=cite-abs&citation-type=BIBTEX";
-        for (QMap<QString, QString>::ConstIterator it = inputMap.constBegin(); it != inputMap.constEnd(); ++it) {
-            body += '&' + encodeURL(it.key()) + '=' + encodeURL(it.value());
+            QString body;
+            foreach(QString key, orderOfParameters) {
+                if (!body.isEmpty())body += '&';
+                body += encodeURL(key) + '=' + encodeURL(inputMap[key]);
+            }
+
+            ++d->runningJobs;
+            QNetworkRequest request(KUrl("http://www.sciencedirect.com/science"));
+            setSuggestedHttpHeaders(request, reply);
+            QNetworkReply *newReply = networkAccessManager()->post(request, body.toUtf8());
+            setNetworkReplyTimeout(newReply);
+            connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingBibTeX()));
         }
-
-        ++d->runningJobs;
-        QNetworkRequest request(KUrl("http://www.sciencedirect.com/science"));
-        setSuggestedHttpHeaders(request, reply);
-        QNetworkReply *newReply = networkAccessManager()->post(request, body.toUtf8());
-        setNetworkReplyTimeout(newReply);
-        connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingBibTeX()));
 
         if (d->runningJobs <= 0)
             emit stoppedSearch(resultNoError);
@@ -248,7 +269,6 @@ void WebSearchScienceDirect::doneFetchingBibTeX()
     Q_ASSERT(d->runningJobs >= 0);
 
     QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
-
     if (handleErrors(reply)) {
         QTextStream ts(reply->readAll());
         ts.setCodec("ISO 8859-1");
@@ -258,20 +278,20 @@ void WebSearchScienceDirect::doneFetchingBibTeX()
         FileImporterBibTeX importer;
         File *bibtexFile = importer.fromString(bibTeXcode);
 
+        bool hasEntry = false;
         if (bibtexFile != NULL) {
             for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
                 Entry *entry = dynamic_cast<Entry*>(*it);
-                if (entry != NULL)
+                if (entry != NULL) {
+                    hasEntry = true;
                     emit foundEntry(entry);
+                }
             }
             delete bibtexFile;
-        } else {
-            emit stoppedSearch(resultUnspecifiedError);
-            return;
         }
 
         if (d->runningJobs <= 0)
-            emit stoppedSearch(resultNoError);
+            emit stoppedSearch(hasEntry ? resultNoError : resultUnspecifiedError);
     } else
         kDebug() << "url was" << reply->url().toString();
 }

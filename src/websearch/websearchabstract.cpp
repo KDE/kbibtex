@@ -127,7 +127,7 @@ bool WebSearchAbstract::handleErrors(QNetworkReply *reply)
         emit stoppedSearch(resultCancelled);
         return false;
     } else if (reply->error() != QNetworkReply::NoError) {
-        kWarning() << "Search using" << label() << "failed.";
+        kWarning() << "Search using" << label() << "failed (HTTP code" << reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() << reply->attribute(QNetworkRequest::HttpReasonPhraseAttribute).toByteArray() << ")";
         KMessageBox::error(m_parent, reply->errorString().isEmpty() ? i18n("Searching \"%1\" failed for unknown reason.", label()) : i18n("Searching \"%1\" failed with error message:\n\n%2", label(), reply->errorString()));
         emit stoppedSearch(resultUnspecifiedError);
         return false;
@@ -168,12 +168,12 @@ QMap<QString, QString> WebSearchAbstract::formParameters(const QString &htmlText
     static const QString selectTagEnd = QLatin1String("</select>");
     static const QString optionTagBegin = QLatin1String("<option ");
     /// regular expressions to test or retrieve attributes in HTML tags
-    QRegExp inputTypeRegExp("<input[^>]+\\btype=[\"]?([^\" >\n\t]+)");
-    QRegExp inputNameRegExp("<input[^>]+\\bname=[\"]?([^\" >\n\t]+)");
-    QRegExp inputValueRegExp("<input[^>]+\\bvalue=([^\"][^ >\n\t]*|\"[^\"]*\")");
+    QRegExp inputTypeRegExp("<input[^>]+\\btype=[\"]?([^\" >\n\t]*)");
+    QRegExp inputNameRegExp("<input[^>]+\\bname=[\"]?([^\" >\n\t]*)");
+    QRegExp inputValueRegExp("<input[^>]+\\bvalue=[\"]?([^\" >\n\t]*)");
     QRegExp inputIsCheckedRegExp("<input[^>]* checked([> \t\n]|=[\"]?checked)");
     QRegExp selectNameRegExp("<select[^>]+\\bname=[\"]?([^\" >\n\t]*)");
-    QRegExp optionValueRegExp("<option[^>]+\\bvalue=[\"]?([^\" >\n\t]+)");
+    QRegExp optionValueRegExp("<option[^>]+\\bvalue=[\"]?([^\" >\n\t]*)");
     QRegExp optionSelectedRegExp("<option[^>]* selected([> \t\n]|=[\"]?selected)");
 
     /// initialize result map
@@ -187,14 +187,11 @@ QMap<QString, QString> WebSearchAbstract::formParameters(const QString &htmlText
     int p = htmlText.indexOf(inputTagBegin, startPos);
     while (p > startPos && p < endPos) {
         /// get "type", "name", and "value" attributes
-        QString inputType = htmlText.indexOf(inputTypeRegExp, p) == p ? inputTypeRegExp.cap(1).toLower() : QString::null;
-        QString inputName = htmlText.indexOf(inputNameRegExp, p) == p ? inputNameRegExp.cap(1) : QString::null;
-        QString inputValue = htmlText.indexOf(inputValueRegExp, p) ? inputValueRegExp.cap(1) : QString::null;
-        /// some values have quotation marks around, remove them
-        if (inputValue[0] == '"')
-            inputValue = inputValue.mid(1, inputValue.length() - 2);
+        QString inputType = htmlText.indexOf(inputTypeRegExp, p) == p ? inputTypeRegExp.cap(1).toLower() : QString();
+        QString inputName = htmlText.indexOf(inputNameRegExp, p) == p ? inputNameRegExp.cap(1) : QString();
+        QString inputValue = htmlText.indexOf(inputValueRegExp, p) ? inputValueRegExp.cap(1) : QString();
 
-        if (!inputValue.isNull() && !inputName.isNull()) {
+        if (!inputName.isEmpty()) {
             /// get value of input types
             if (inputType == "hidden" || inputType == "text" || inputType == "submit")
                 result[inputName] = inputValue;
@@ -245,7 +242,7 @@ void WebSearchAbstract::setSuggestedHttpHeaders(QNetworkRequest &request, QNetwo
     // request.setRawHeader(QString("User-Agent").toAscii(),QString("Opera/9.80 (X11; Linux i686; U; en) Presto/2.7.62 Version/11.01").toAscii());
     request.setRawHeader(QString("User-Agent").toAscii(), QString("Links (2.3-pre1; NetBSD 5.0 i386; 96x36)").toAscii());
     request.setRawHeader(QString("Accept").toAscii(), QString("text/*, */*;q=0.7").toAscii());
-    request.setRawHeader(QString("Accept-Charset").toAscii(), QString("utf-8, us-ascii, *;q=0.5").toAscii());
+    request.setRawHeader(QString("Accept-Charset").toAscii(), QString("utf-8, us-ascii, ISO-8859-1, ISO-8859-15, windows-1252").toAscii());
     request.setRawHeader(QString("Accept-Language").toAscii(), QString("en-US, en;q=0.9").toAscii());
 }
 
