@@ -25,7 +25,6 @@
 #include <QApplication>
 #include <QTextStream>
 #include <QDesktopServices>
-#include <QTimer>
 
 #include <KTemporaryFile>
 #include <KLocale>
@@ -89,12 +88,10 @@ public:
         buttonOpen = new KPushButton(KIcon("document-open"), i18n("Open"), p);
         buttonOpen->setToolTip(i18n("Open reference in web browser."));
         gridLayout->addWidget(buttonOpen, 2, 1, 1, 1);
-        connect(buttonOpen, SIGNAL(clicked()), p, SLOT(openAsHTML()));
 
         buttonSaveAsHTML = new KPushButton(KIcon("document-save"), i18n("Save as HTML"), p);
         buttonSaveAsHTML->setToolTip(i18n("Save reference as HTML fragment."));
         gridLayout->addWidget(buttonSaveAsHTML, 2, 2, 1, 1);
-        connect(buttonSaveAsHTML, SIGNAL(clicked()), p, SLOT(saveAsHTML()));
 
         comboBox->addItem(i18n("Source"));
         comboBox->addItem(i18n("abbrv (bibtex2html)"));
@@ -107,9 +104,7 @@ public:
         comboBox->addItem(i18n("unsrt (bibtex2html)"));
         comboBox->addItem(i18n("standard (XML/XSLT)"));
         comboBox->addItem(i18n("fancy (XML/XSLT)"));
-        connect(comboBox, SIGNAL(currentIndexChanged(int)), p, SLOT(renderHTML()));
-        connect(comboBox, SIGNAL(currentIndexChanged(int)), p, SLOT(saveConfig()));
-    }
+     }
 
     bool saveHTML(const KUrl& url) {
         KTemporaryFile file;
@@ -136,15 +131,29 @@ public:
         return false;
     }
 
-};
+    void loadState(){
+        KConfigGroup configGroup(config, configGroupName);
+        int styleIndex = configGroup.readEntry(configKeyName, 0);
+        comboBox->setCurrentIndex(styleIndex);
+     }
+
+    void saveState()
+    {
+        KConfigGroup configGroup(config, configGroupName);
+        configGroup.writeEntry(configKeyName, comboBox->currentIndex());
+        config->sync();
+    }};
 
 ReferencePreview::ReferencePreview(QWidget *parent)
         : QWidget(parent), d(new ReferencePreviewPrivate(this))
 {
     setEnabled(false);
 
-    /// not really a good solution but avoids crashes
-    QTimer::singleShot(250, this, SLOT(initializationDone()));
+    d->loadState();
+
+    connect(d->buttonOpen, SIGNAL(clicked()), this, SLOT(openAsHTML()));
+    connect(d->buttonSaveAsHTML, SIGNAL(clicked()), this, SLOT(saveAsHTML()));
+    connect(d->comboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(renderHTML()));
 }
 
 void ReferencePreview::setHtml(const QString & html, const QUrl & baseUrl)
@@ -307,6 +316,8 @@ void ReferencePreview::renderHTML()
 
     setHtml(text, d->baseUrl);
 
+    d->saveState();
+
     QApplication::restoreOverrideCursor();
 }
 
@@ -324,18 +335,4 @@ void ReferencePreview::saveAsHTML()
     KUrl url = KFileDialog::getSaveUrl(KUrl(), "text/html", this, i18n("Save as HTML"));
     if (url.isValid())
         d->saveHTML(url);
-}
-
-void ReferencePreview::saveConfig()
-{
-    KConfigGroup configGroup(d->config, d->configGroupName);
-    configGroup.writeEntry(d->configKeyName, d->comboBox->currentIndex());
-    d->config->sync();
-}
-
-void ReferencePreview::initializationDone()
-{
-    KConfigGroup configGroup(d->config, d->configGroupName);
-    int styleIndex = configGroup.readEntry(d->configKeyName, 0);
-    d->comboBox->setCurrentIndex(styleIndex);
 }
