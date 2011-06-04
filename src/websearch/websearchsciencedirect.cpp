@@ -18,14 +18,10 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include <QWebPage>
-#include <QWebFrame>
-#include <QWebElement>
-#include <QNetworkRequest>
+#include <QNetworkReply>
 
 #include <KDebug>
 #include <KLocale>
-#include <kio/job.h>
 
 #include <encoderlatex.h>
 #include "fileimporterbibtex.h"
@@ -38,9 +34,7 @@ private:
     WebSearchScienceDirect *p;
 
 public:
-    const int numPages;
-    QList<QWebPage*> pages;
-    QString joinedQueryString;
+    QStringList queryFreetext, queryAuthor;
     int currentSearchPosition;
     int numExpectedResults;
     const QString scienceDirectBaseUrl;
@@ -48,26 +42,8 @@ public:
     int runningJobs;
 
     WebSearchScienceDirectPrivate(WebSearchScienceDirect *parent)
-            : p(parent),
-            numPages(8),
-            scienceDirectBaseUrl(QLatin1String("http://www.sciencedirect.com/")) {
-        for (int i = 0; i < numPages; ++i) {
-            QWebPage *page = new QWebPage(parent);
-            page->settings()->setAttribute(QWebSettings::PluginsEnabled, false);
-            page->settings()->setAttribute(QWebSettings::JavaEnabled, false);
-            page->settings()->setAttribute(QWebSettings::JavascriptEnabled, false);
-            page->settings()->setAttribute(QWebSettings::AutoLoadImages, false);
-            page->settings()->setAttribute(QWebSettings::PrivateBrowsingEnabled, true);
-            pages << page;
-        }
-    }
-
-    ~WebSearchScienceDirectPrivate() {
-        while (!pages.isEmpty()) {
-            QWebPage *page = pages.first();
-            pages.removeFirst();
-            delete page;
-        }
+            : p(parent), scienceDirectBaseUrl(QLatin1String("http://www.sciencedirect.com/")) {
+        // nothing
     }
 
     void sanitizeBibTeXCode(QString &code) {
@@ -81,7 +57,7 @@ public:
 };
 
 WebSearchScienceDirect::WebSearchScienceDirect(QWidget *parent)
-        : WebSearchAbstract(parent), d(new WebSearchScienceDirect::WebSearchScienceDirectPrivate(this))
+        : WebSearchAbstract(parent), d(new WebSearchScienceDirectPrivate(this))
 {
     // nothing
 }
@@ -100,17 +76,28 @@ void WebSearchScienceDirect::startSearch(const QMap<QString, QString> &query, in
     d->bibTeXUrls.clear();
     d->currentSearchPosition = 0;
 
-    d->joinedQueryString.clear();
-    for (QMap<QString, QString>::ConstIterator it = query.constBegin(); it != query.constEnd(); ++it) {
-        // FIXME: Is there a need for percent encoding?
-        d->joinedQueryString.append(it.value() + ' ');
+    d->queryFreetext.clear();
+    foreach(QString queryFragment, splitRespectingQuotationMarks(query[queryKeyFreeText])) {
+        d->queryFreetext.append(encodeURL(queryFragment));
     }
-    d->joinedQueryString = d->joinedQueryString.trimmed();
+    foreach(QString queryFragment, splitRespectingQuotationMarks(query[queryKeyTitle])) {
+        d->queryFreetext.append(encodeURL(queryFragment));
+    }
+    foreach(QString queryFragment, splitRespectingQuotationMarks(query[queryKeyYear])) {
+        d->queryFreetext.append(encodeURL(queryFragment));
+    }
+    d->queryAuthor.clear();
+    foreach(QString queryFragment, splitRespectingQuotationMarks(query[queryKeyAuthor])) {
+        d->queryAuthor.append(encodeURL(queryFragment));
+    }
     d->numExpectedResults = numResults;
 
     ++d->runningJobs;
-    d->pages[0]->mainFrame()->load(d->scienceDirectBaseUrl);
-    connect(d->pages[0], SIGNAL(loadFinished(bool)), this, SLOT(doneFetchingStartPage(bool)));
+    QNetworkRequest request(d->scienceDirectBaseUrl);
+    setSuggestedHttpHeaders(request);
+    QNetworkReply *reply = networkAccessManager()->get(request);
+    setNetworkReplyTimeout(reply);
+    connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingStartPage()));
 }
 
 QString WebSearchScienceDirect::label() const
@@ -136,182 +123,134 @@ KUrl WebSearchScienceDirect::homepage() const
 void WebSearchScienceDirect::cancel()
 {
     WebSearchAbstract::cancel();
-    foreach(QWebPage *page, d->pages) {
-        page->triggerAction(QWebPage::Stop);
-    }
 }
 
-void WebSearchScienceDirect::doneFetchingStartPage(bool ok)
+void WebSearchScienceDirect::doneFetchingStartPage()
 {
     --d->runningJobs;
-    Q_ASSERT(d->runningJobs <= 0);
-    disconnect(d->pages[0], SIGNAL(loadFinished(bool)), this, SLOT(doneFetchingStartPage(bool)));
+    Q_ASSERT(d->runningJobs == 0);
 
-    if (handleErrors(ok)) {
-        QWebElement form = d->pages[0]->mainFrame()->findFirstElement(QLatin1String("form[name=\"qkSrch\"]"));
-        if (!form.isNull()) {
-            QWebElementCollection allInputs = form.findAll(QLatin1String("input"));
-            QString queryString;
-            foreach(QWebElement input, allInputs) {
-                if (!queryString.isEmpty()) queryString += '&';
-                if (input.attribute(QLatin1String("name")) == QLatin1String("qs_all"))
-                    queryString += QLatin1String("qs_all=") + d->joinedQueryString;
-                else
-                    queryString += input.attribute(QLatin1String("name")) + '=' + input.attribute(QLatin1String("value"));
-            }
+    QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
 
-            KUrl url(d->scienceDirectBaseUrl + form.attribute(QLatin1String("action")) + '?' + queryString);
-            d->pages[0]->mainFrame()->load(url);
-            connect(d->pages[0], SIGNAL(loadFinished(bool)), this, SLOT(doneFetchingResultPage(bool)));
-            ++d->runningJobs;
-        } else {
-            kWarning() << "Form is null on page" << d->pages[0]->mainFrame()->url().toString();
-            emit stoppedSearch(resultUnspecifiedError);
-        }
-    } else {
-        kWarning() << "handleError returned false";
-        cancel();
-    }
+    if (handleErrors(reply)) {
+        const QString htmlText = reply->readAll();
+        static_cast<HTTPEquivCookieJar*>(networkAccessManager()->cookieJar())->checkForHttpEqiuv(htmlText, reply->url());
+        KUrl url(d->scienceDirectBaseUrl + "science");
+        QMap<QString, QString> inputMap = formParameters(htmlText, QLatin1String("<form name=\"qkSrch\""));
+        inputMap.remove("qs_all");
+        inputMap.remove("qs_author");
+        //inputMap.remove("resultsPerPage");
+        for (QMap<QString, QString>::ConstIterator it = inputMap.constBegin(); it != inputMap.constEnd(); ++it)
+            url.addEncodedQueryItem(it.key().toAscii(), QString(it.value()).replace(" ", "+").toAscii());
+        url.addEncodedQueryItem(QString("qs_all").toAscii(), d->queryFreetext.join("+").toAscii());
+        url.addEncodedQueryItem(QString("qs_author").toAscii(), d->queryAuthor.join("+").toAscii());
+        //url.addQueryItem(QString("resultsPerPage").toAscii(), QString::number(d->numExpectedResults).toAscii());
+
+        ++d->runningJobs;
+        QNetworkRequest request(url);
+        setSuggestedHttpHeaders(request, reply);
+        QNetworkReply *newReply = networkAccessManager()->get(request);
+        setNetworkReplyTimeout(newReply);
+        connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingResultPage()));
+    } else
+        kDebug() << "url was" << reply->url().toString();
 }
 
-void WebSearchScienceDirect::doneFetchingResultPage(bool ok)
+void WebSearchScienceDirect::doneFetchingResultPage()
 {
     --d->runningJobs;
-    Q_ASSERT(d->runningJobs <= 0);
-    disconnect(d->pages[0], SIGNAL(loadFinished(bool)), this, SLOT(doneFetchingResultPage(bool)));
+    Q_ASSERT(d->runningJobs == 0);
 
-    if (handleErrors(ok)) {
-        QWebElementCollection links = d->pages[0]->mainFrame()->findAllElements(QLatin1String("div[id=\"searchResults\"] > div[id=\"bodyMainResults\"] > table > tbody > tr > td > a"));
-        foreach(QWebElement link, links) {
-            QString linkText = link.attribute(QLatin1String("href"));
-            d->bibTeXUrls << linkText;
-            if (d->bibTeXUrls.count() >= d->numExpectedResults)
-                break;
-        }
+    QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
 
-        d->currentSearchPosition += 25;
-        QWebElement form;
-        if (d->currentSearchPosition < d->numExpectedResults && !(form = d->pages[0]->mainFrame()->findFirstElement(QLatin1String("form[name=\"Tag\"]"))).isNull()) {
-            QWebElementCollection allInputs = form.findAll(QLatin1String("input[name!=\"prev\"]"));
-            QString queryString;
-            foreach(QWebElement input, allInputs) {
-                if (!queryString.isEmpty()) queryString += '&';
-                queryString += input.attribute(QLatin1String("name")) + '=' + input.attribute(QLatin1String("value"));
-            }
-
-            KUrl url(d->scienceDirectBaseUrl + form.attribute(QLatin1String("action")) + '?' + queryString);
-            d->pages[0]->mainFrame()->load(url);
-            connect(d->pages[0], SIGNAL(loadFinished(bool)), this, SLOT(doneFetchingResultPage(bool)));
+    if (handleErrors(reply)) {
+        const QString htmlText = reply->readAll();
+        static_cast<HTTPEquivCookieJar*>(networkAccessManager()->cookieJar())->checkForHttpEqiuv(htmlText, reply->url());
+        int p = -1;
+        while ((p = htmlText.indexOf("http://www.sciencedirect.com/science/article/pii/", p + 1)) >= 0) {
+            int p2 = htmlText.indexOf("\"", p + 1);
             ++d->runningJobs;
-        } else  {
-            foreach(QWebPage *page, d->pages) {
-                if (!d->bibTeXUrls.isEmpty()) {
-                    QString url = d->bibTeXUrls.first();
-                    d->bibTeXUrls.removeFirst();
-                    page->mainFrame()->load(url);
-                    connect(page, SIGNAL(loadFinished(bool)), this, SLOT(doneFetchingAbstractPage(bool)));
-                    ++d->runningJobs;
-                } else
-                    break;
-            }
+            QNetworkRequest request(htmlText.mid(p, p2 - p));
+            setSuggestedHttpHeaders(request, reply);
+            QNetworkReply *newReply = networkAccessManager()->get(request);
+            setNetworkReplyTimeout(newReply);
+            connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingAbstractPage()));
         }
 
         if (d->runningJobs <= 0)
             emit stoppedSearch(resultNoError);
-    } else {
-        kWarning() << "handleError returned false";
-        cancel();
-    }
+    } else
+        kDebug() << "url was" << reply->url().toString();
 }
 
-void WebSearchScienceDirect::doneFetchingAbstractPage(bool ok)
+void WebSearchScienceDirect::doneFetchingAbstractPage()
 {
     --d->runningJobs;
+    Q_ASSERT(d->runningJobs >= 0);
 
-    QWebPage *page = static_cast<QWebPage*>(sender());
-    disconnect(page, SIGNAL(loadFinished(bool)), this, SLOT(doneFetchingAbstractPage(bool)));
+    QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
 
-    if (handleErrors(ok)) {
-        QWebElement exportCitationLink = page->mainFrame()->findFirstElement(QLatin1String("a[title=\"Export Citation\"]"));
-        if (!exportCitationLink.isNull()) {
-            KUrl url(d->scienceDirectBaseUrl + exportCitationLink.attribute(QLatin1String("href")));
-            page->mainFrame()->load(url);
-            connect(page, SIGNAL(loadFinished(bool)), this, SLOT(doneFetchingExportCitationPage(bool)));
+    if (handleErrors(reply)) {
+        const QString htmlText = reply->readAll();
+        static_cast<HTTPEquivCookieJar*>(networkAccessManager()->cookieJar())->checkForHttpEqiuv(htmlText, reply->url());
+        int p1, p2;
+        if ((p1 = htmlText.indexOf("/science?_ob=DownloadURL&")) >= 0 && (p2 = htmlText.indexOf("\"", p1 + 1)) >= 0) {
+            KUrl url("http://www.sciencedirect.com" + htmlText.mid(p1, p2 - p1));
             ++d->runningJobs;
-        } else if (!d->bibTeXUrls.isEmpty()) {
-            kWarning() << "did not find \"Export Citation\" on page" << page->mainFrame()->url().toString();
-            QString url = d->bibTeXUrls.first();
-            d->bibTeXUrls.removeFirst();
-            page->mainFrame()->load(url);
-            connect(page, SIGNAL(loadFinished(bool)), this, SLOT(doneFetchingAbstractPage(bool)));
-            ++d->runningJobs;
+            QNetworkRequest request(url);
+            setSuggestedHttpHeaders(request, reply);
+            QNetworkReply *newReply = networkAccessManager()->get(request);
+            setNetworkReplyTimeout(newReply);
+            connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingExportCitationPage()));
         }
 
         if (d->runningJobs <= 0)
             emit stoppedSearch(resultNoError);
-    } else {
-        kWarning() << "handleError returned false";
-        cancel();
-    }
+    } else
+        kDebug() << "url was" << reply->url().toString();
 }
 
-void WebSearchScienceDirect::doneFetchingExportCitationPage(bool ok)
+void WebSearchScienceDirect::doneFetchingExportCitationPage()
 {
     --d->runningJobs;
+    Q_ASSERT(d->runningJobs >= 0);
 
-    QWebPage *page = static_cast<QWebPage*>(sender());
-    disconnect(page, SIGNAL(loadFinished(bool)), this, SLOT(doneFetchingExportCitationPage(bool)));
+    QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
 
-    QWebElement form;
-    if (handleErrors(ok)) {
-        QWebElement form = page->mainFrame()->findFirstElement(QLatin1String("form[name=\"exportCite\"]"));
-        if (!form.isNull()) {
-            QWebElementCollection allInputs = form.findAll(QLatin1String("input"));
-            QString queryString = QLatin1String("format=cite-abs&citation-type=BIBTEX");
-            foreach(QWebElement input, allInputs) {
-                if (input.attribute(QLatin1String("type")) == QLatin1String("radio")) {
-                    /// ignore radio buttons, will be set automatically
-                } else if (input.attribute(QLatin1String("name")) == QLatin1String("RETURN_URL")) {
-                    /// ignore strange input values
-                }  else if (input.attribute(QLatin1String("name")) == QLatin1String("JAVASCRIPT_ON")) {
-                    /// disable JavaScript support
-                    queryString += QLatin1String("&JAVASCRIPT_ON=");
-                } else
-                    queryString += '&' + encodeURL(input.attribute(QLatin1String("name"))) + '=' + encodeURL(input.attribute(QLatin1String("value")));
-            }
+    if (handleErrors(reply)) {
+        const QString htmlText = reply->readAll();
+        static_cast<HTTPEquivCookieJar*>(networkAccessManager()->cookieJar())->checkForHttpEqiuv(htmlText, reply->url());
+        QMap<QString, QString> inputMap = formParameters(htmlText, QLatin1String("<form name=\"exportCite\""));
+        inputMap.remove("format");
+        inputMap.remove("citation-type");
 
-            KUrl url(d->scienceDirectBaseUrl + form.attribute(QLatin1String("action")));
-            KIO::TransferJob *job = KIO::storedHttpPost(queryString.toUtf8(), url);
-            job->addMetaData(QLatin1String("content-type"), QLatin1String("application/x-www-form-urlencoded"));
-            job->addMetaData(QLatin1String("referrer"), page->mainFrame()->baseUrl().toString());
-            connect(job, SIGNAL(result(KJob *)), this, SLOT(doneFetchingBibTeX(KJob *)));
-            ++d->runningJobs;
-        } else
-            kWarning() << "did not find Form on page" << page->mainFrame()->url().toString();
-
-        if (!d->bibTeXUrls.isEmpty()) {
-            QString url = d->bibTeXUrls.first();
-            d->bibTeXUrls.removeFirst();
-            page->mainFrame()->load(url);
-            connect(page, SIGNAL(loadFinished(bool)), this, SLOT(doneFetchingAbstractPage(bool)));
-            ++d->runningJobs;
+        QString body = "format=cite-abs&citation-type=BIBTEX";
+        for (QMap<QString, QString>::ConstIterator it = inputMap.constBegin(); it != inputMap.constEnd(); ++it) {
+            body += '&' + encodeURL(it.key()) + '=' + encodeURL(it.value());
         }
+
+        ++d->runningJobs;
+        QNetworkRequest request(KUrl("http://www.sciencedirect.com/science"));
+        setSuggestedHttpHeaders(request, reply);
+        QNetworkReply *newReply = networkAccessManager()->post(request, body.toUtf8());
+        setNetworkReplyTimeout(newReply);
+        connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingBibTeX()));
 
         if (d->runningJobs <= 0)
             emit stoppedSearch(resultNoError);
-    }  else {
-        kWarning() << "handleError returned false";
-        cancel();
-    }
+    } else
+        kDebug() << "url was" << reply->url().toString();
 }
 
-void WebSearchScienceDirect::doneFetchingBibTeX(KJob * kJob)
+void WebSearchScienceDirect::doneFetchingBibTeX()
 {
     --d->runningJobs;
+    Q_ASSERT(d->runningJobs >= 0);
 
-    if (handleErrors(kJob)) {
-        KIO::StoredTransferJob *job = static_cast<KIO::StoredTransferJob*>(kJob);
-        QTextStream ts(job->data());
+    QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
+
+    if (handleErrors(reply)) {
+        QTextStream ts(reply->readAll());
         ts.setCodec("ISO 8859-1");
         QString bibTeXcode = ts.readAll();
         d->sanitizeBibTeXCode(bibTeXcode);
@@ -333,8 +272,6 @@ void WebSearchScienceDirect::doneFetchingBibTeX(KJob * kJob)
 
         if (d->runningJobs <= 0)
             emit stoppedSearch(resultNoError);
-    } else {
-        kWarning() << "handleError returned false";
-        cancel();
-    }
+    } else
+        kDebug() << "url was" << reply->url().toString();
 }

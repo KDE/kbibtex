@@ -23,8 +23,6 @@
 
 #include <websearchabstract.h>
 
-class KJob;
-
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
@@ -52,11 +50,11 @@ private:
     WebSearchScienceDirectPrivate *d;
 
 private slots:
-    void doneFetchingStartPage(bool);
-    void doneFetchingResultPage(bool);
-    void doneFetchingAbstractPage(bool);
-    void doneFetchingExportCitationPage(bool);
-    void doneFetchingBibTeX(KJob *);
+    void doneFetchingStartPage();
+    void doneFetchingResultPage();
+    void doneFetchingAbstractPage();
+    void doneFetchingExportCitationPage();
+    void doneFetchingBibTeX();
 };
 
 #endif // KBIBTEX_WEBSEARCH_SCIENCEDIRECT_H
