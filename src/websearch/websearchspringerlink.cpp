@@ -18,18 +18,20 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include <QWebPage>
-#include <QWebFrame>
-#include <QWebElement>
 #include <QFile>
 #include <QFormLayout>
 #include <QSpinBox>
 #include <QLabel>
+#include <QNetworkRequest>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QNetworkCookieJar>
+#include <QNetworkCookie>
 
 #include <KLocale>
 #include <KDebug>
-#include <kio/job.h>
 #include <KLineEdit>
+#include <KConfigGroup>
 
 #include <fileimporterbibtex.h>
 #include "websearchspringerlink.h"
@@ -39,12 +41,25 @@
  */
 class WebSearchSpringerLink::WebSearchQueryFormSpringerLink : public WebSearchQueryFormAbstract
 {
+private:
+    QString configGroupName;
+
+    void loadState() {
+        KConfigGroup configGroup(config, configGroupName);
+        lineEditFreeText->setText(configGroup.readEntry(QLatin1String("free"), QString()));
+        lineEditAuthorEditor->setText(configGroup.readEntry(QLatin1String("authorEditor"), QString()));
+        lineEditPublication->setText(configGroup.readEntry(QLatin1String("publication"), QString()));
+        lineEditVolume->setText(configGroup.readEntry(QLatin1String("volume"), QString()));
+        lineEditIssue->setText(configGroup.readEntry(QLatin1String("issue"), QString()));
+        numResultsField->setValue(configGroup.readEntry(QLatin1String("numResults"), 10));
+    }
+
 public:
     KLineEdit *lineEditFreeText, *lineEditAuthorEditor, *lineEditPublication, *lineEditVolume, *lineEditIssue;
     QSpinBox *numResultsField;
 
     WebSearchQueryFormSpringerLink(QWidget *parent)
-            : WebSearchQueryFormAbstract(parent) {
+            : WebSearchQueryFormAbstract(parent), configGroupName(QLatin1String("Search Engine SpringerLink")) {
         QFormLayout *layout = new QFormLayout(this);
         layout->setMargin(0);
 
@@ -92,10 +107,23 @@ public:
         numResultsField->setValue(20);
 
         lineEditFreeText->setFocus(Qt::TabFocusReason);
+
+        loadState();
     }
 
     virtual bool readyToStart() const {
         return !(lineEditFreeText->text().isEmpty() && lineEditAuthorEditor->text().isEmpty() && lineEditPublication->text().isEmpty() && lineEditVolume->text().isEmpty() && lineEditIssue->text().isEmpty());
+    }
+
+    void saveState() {
+        KConfigGroup configGroup(config, configGroupName);
+        configGroup.writeEntry(QLatin1String("free"), lineEditFreeText->text());
+        configGroup.writeEntry(QLatin1String("authorEditor"), lineEditAuthorEditor->text());
+        configGroup.writeEntry(QLatin1String("publication"), lineEditPublication->text());
+        configGroup.writeEntry(QLatin1String("volume"), lineEditVolume->text());
+        configGroup.writeEntry(QLatin1String("issue"), lineEditIssue->text());
+        configGroup.writeEntry(QLatin1String("numResults"), numResultsField->value());
+        config->sync();
     }
 };
 
@@ -108,38 +136,21 @@ public:
     const QString springerLinkBaseUrl;
     const QString springerLinkQueryUrl;
     KUrl springerLinkSearchUrl;
-    const int numPages;
-    QList<QWebPage*> pages;
-    int numExpectedResults;
+    int numExpectedResults, numFoundResults;
     int runningJobs;
     int currentSearchPosition;
     QStringList articleUrls;
     WebSearchQueryFormSpringerLink *form;
 
     WebSearchSpringerLinkPrivate(WebSearchSpringerLink *parent)
-            : p(parent), springerLinkBaseUrl(QLatin1String("http://www.springerlink.com")), springerLinkQueryUrl(QLatin1String("http://www.springerlink.com/content/")), numPages(8), form(NULL) {
-        for (int i = 0; i < numPages; ++i) {
-            QWebPage *page = new QWebPage(parent);
-            page->settings()->setAttribute(QWebSettings::PluginsEnabled, false);
-            page->settings()->setAttribute(QWebSettings::JavaEnabled, false);
-            page->settings()->setAttribute(QWebSettings::JavascriptEnabled, false);
-            page->settings()->setAttribute(QWebSettings::AutoLoadImages, false);
-            page->settings()->setAttribute(QWebSettings::PrivateBrowsingEnabled, true);
-            pages << page;
-        }
-    }
-
-    ~WebSearchSpringerLinkPrivate() {
-        while (!pages.isEmpty()) {
-            QWebPage *page = pages.first();
-            pages.removeFirst();
-            delete page;
-        }
+            : p(parent), springerLinkBaseUrl(QLatin1String("http://www.springerlink.com")), springerLinkQueryUrl(QLatin1String("http://www.springerlink.com/content/")), runningJobs(0), form(NULL) {
+        // nothing
     }
 
     KUrl& buildQueryUrl(KUrl& url) {
         Q_ASSERT(form != NULL);
 
+        // FIXME encode for URL
         QString queryString(form->lineEditFreeText->text());
 
         QStringList authors = p->splitRespectingQuotationMarks(form->lineEditAuthorEditor->text());
@@ -163,6 +174,7 @@ public:
     }
 
     KUrl& buildQueryUrl(KUrl& url, const QMap<QString, QString> &query) {
+        // FIXME encode for URL
         QString queryString = query[queryKeyFreeText] + ' ' + query[queryKeyTitle] + ' ' + query[queryKeyYear];
 
         QStringList authors = p->splitRespectingQuotationMarks(query[queryKeyAuthor]);
@@ -192,7 +204,7 @@ WebSearchSpringerLink::WebSearchSpringerLink(QWidget *parent)
 void WebSearchSpringerLink::startSearch()
 {
     m_hasBeenCanceled = false;
-    d->runningJobs = 0;
+    d->numFoundResults = 0;
     d->currentSearchPosition = 0;
     d->articleUrls.clear();
 
@@ -201,14 +213,25 @@ void WebSearchSpringerLink::startSearch()
     ++d->runningJobs;
     d->springerLinkSearchUrl = KUrl(d->springerLinkQueryUrl);
     d->springerLinkSearchUrl = d->buildQueryUrl(d->springerLinkSearchUrl);
-    d->pages[0]->mainFrame()->load(d->springerLinkSearchUrl);
-    connect(d->pages[0], SIGNAL(loadFinished(bool)), this, SLOT(doneFetchingResultPage(bool)));
+
+    QNetworkRequest request(d->springerLinkSearchUrl);
+    setSuggestedHttpHeaders(request);
+    QNetworkReply *reply = networkAccessManager()->get(request);
+    setNetworkReplyTimeout(reply);
+    connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingResultPage()));
+
+    kDebug() << "url =" << request.url();
+    foreach(QNetworkCookie cookie, networkAccessManager()->cookieJar()->cookiesForUrl(request.url())) {
+        kDebug() << "cookie " << cookie.name() << "=" << cookie.value();
+    }
+
+    d->form->saveState();
 }
 
 void WebSearchSpringerLink::startSearch(const QMap<QString, QString> &query, int numResults)
 {
     m_hasBeenCanceled = false;
-    d->runningJobs = 0;
+    d->numFoundResults = 0;
     d->currentSearchPosition = 0;
     d->articleUrls.clear();
 
@@ -217,8 +240,17 @@ void WebSearchSpringerLink::startSearch(const QMap<QString, QString> &query, int
     ++d->runningJobs;
     d->springerLinkSearchUrl = KUrl(d->springerLinkQueryUrl);
     d->springerLinkSearchUrl = d->buildQueryUrl(d->springerLinkSearchUrl, query);
-    d->pages[0]->mainFrame()->load(d->springerLinkSearchUrl);
-    connect(d->pages[0], SIGNAL(loadFinished(bool)), this, SLOT(doneFetchingResultPage(bool)));
+
+    QNetworkRequest request(d->springerLinkSearchUrl);
+    setSuggestedHttpHeaders(request);
+    QNetworkReply *reply = networkAccessManager()->get(request);
+    setNetworkReplyTimeout(reply);
+    connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingResultPage()));
+
+    kDebug() << "url =" << request.url();
+    foreach(QNetworkCookie cookie, networkAccessManager()->cookieJar()->cookiesForUrl(request.url())) {
+        kDebug() << "cookie " << cookie.name() << "=" << cookie.value();
+    }
 }
 
 QString WebSearchSpringerLink::label() const
@@ -246,108 +278,105 @@ KUrl WebSearchSpringerLink::homepage() const
 void WebSearchSpringerLink::cancel()
 {
     WebSearchAbstract::cancel();
-    foreach(QWebPage *page, d->pages) {
-        page->triggerAction(QWebPage::Stop);
-    }
 }
 
-void WebSearchSpringerLink::doneFetchingResultPage(bool ok)
+void WebSearchSpringerLink::doneFetchingResultPage()
 {
     --d->runningJobs;
     Q_ASSERT(d->runningJobs == 0);
 
-    QWebPage *page = d->pages[0];
-    disconnect(page, SIGNAL(loadFinished(bool)), this, SLOT(doneFetchingResultPage(bool)));
 
-    if (handleErrors(ok)) {
-        QWebElementCollection allArticleLinks = page->mainFrame()->findAllElements(QLatin1String("ul[id=\"PrimaryManifest\"] > li > p[class=\"title\"] > a"));
-        foreach(QWebElement articleLink, allArticleLinks) {
-            QString url(d->springerLinkBaseUrl + articleLink.attribute(QLatin1String("href")) + QLatin1String("export-citation/"));
-            d->articleUrls << url;
-            if (d->articleUrls.count() >= d->numExpectedResults)
-                break;
+    QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
+    kDebug() << "url =" << reply->url();
+    foreach(QNetworkCookie cookie, networkAccessManager()->cookieJar()->cookiesForUrl(reply->url())) {
+        kDebug() << "cookie " << cookie.name() << "=" << cookie.value();
+    }
+    if (handleErrors(reply)) {
+        QString htmlSource = reply->readAll();
+        int p1 = -1, p2;
+        while ((p1 = htmlSource.indexOf(" data-code=\"", p1 + 1)) >= 0 && (p2 = htmlSource.indexOf("\"", p1 + 14)) >= 0) {
+            QString datacode = htmlSource.mid(p1 + 12, p2 - p1 - 12).toLower();
+
+            if (datacode.length() > 8 && d->numFoundResults < d->numExpectedResults) {
+                ++d->numFoundResults;
+                ++d->runningJobs;
+                QString url = QString("http://www.springerlink.com/content/%1/export-citation/").arg(datacode);
+                QNetworkRequest request(url);
+                setSuggestedHttpHeaders(request);
+                QNetworkReply *reply = networkAccessManager()->get(request);
+                setNetworkReplyTimeout(reply);
+                connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingExportPage()));
+            }
         }
 
         d->currentSearchPosition += 10;
         if (d->numExpectedResults > d->currentSearchPosition) {
             KUrl url(d->springerLinkSearchUrl);
             url.addQueryItem(QLatin1String("o"), QString::number(d->currentSearchPosition));
-            page->mainFrame()->load(url);
-            connect(page, SIGNAL(loadFinished(bool)), this, SLOT(doneFetchingResultPage(bool)));
+            QNetworkRequest request(url);
+            setSuggestedHttpHeaders(request);
+            QNetworkReply *reply = networkAccessManager()->get(request);
+            setNetworkReplyTimeout(reply);
+            connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingResultPage()));
             ++d->runningJobs;
-        } else {
-            for (int i = 0; i < d->numPages; ++i) {
-                if (d->articleUrls.isEmpty()) break;
-
-                QString url = d->articleUrls.first();
-                d->articleUrls.removeFirst();
-                d->pages[i]->mainFrame()->load(url);
-                connect(d->pages[i], SIGNAL(loadFinished(bool)), this, SLOT(doneFetchingArticlePage(bool)));
-                ++d->runningJobs;
-            }
         }
 
         if (d->runningJobs <= 0)
             emit stoppedSearch(resultNoError);
-    } else {
-        kWarning() << "handleError returned false";
-        cancel();
-    }
+    } else
+        kDebug() << "url was" << reply->url().toString();
 }
 
 
-void WebSearchSpringerLink::doneFetchingArticlePage(bool ok)
+void WebSearchSpringerLink::doneFetchingExportPage()
 {
     --d->runningJobs;
+    Q_ASSERT(d->runningJobs >= 0);
 
-    QWebPage *page = static_cast<QWebPage*>(sender());
-    disconnect(page, SIGNAL(loadFinished(bool)), this, SLOT(doneFetchingArticlePage(bool)));
 
-    if (handleErrors(ok)) {
-        QWebElementCollection allInputs = page->mainFrame()->findAllElements(QLatin1String("form[name=\"aspnetForm\"] input"));
-        if (allInputs.count() < 1) kWarning() << "No input tags found";
+    QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
+    if (handleErrors(reply)) {
+        QMap<QString, QString> inputMap = formParameters(reply->readAll(), QLatin1String("<form name=\"aspnetForm\""));
+        inputMap.remove("ctl00$ContentPrimary$ctl00$ctl00$CitationManagerDropDownList");
+        inputMap.remove("citation-type");
+        inputMap.remove("ctl00$ctl19$goButton");
+        inputMap.remove("ctl00$ctl19$SearchControl$AdvancedGoButton");
+        inputMap.remove("ctl00$ctl19$SearchControl$AdvancedSearchButton");
+        inputMap.remove("ctl00$ctl19$SearchControl$SearchTipsButton");
+        inputMap.remove("ctl00$ctl19$SearchControl$BasicAuthorOrEditorTextBox");
+        inputMap.remove("ctl00$ctl19$SearchControl$BasicGoButton");
+        inputMap.remove("ctl00$ctl19$SearchControl$BasicIssueTextBox");
+        inputMap.remove("ctl00$ctl19$SearchControl$BasicPageTextBox");
+        inputMap.remove("ctl00$ctl19$SearchControl$BasicPublicationTextBox");
+        inputMap.remove("ctl00$ctl19$SearchControl$BasicSearchForTextBox");
+        inputMap.remove("ctl00$ctl19$SearchControl$BasicVolumeTextBox");
 
-        QString queryString = QLatin1String("ctl00%24ContentPrimary%24ctl00%24ctl00%24ExportCitationButton=Export+Citation&ctl00%24ContentPrimary%24ctl00%24ctl00%24CitationManagerDropDownList=BibTex&ctl00%24ContentPrimary%24ctl00%24ctl00%24Export=AbstractRadioButton");
-        foreach(QWebElement input, allInputs) {
-            if (input.attribute(QLatin1String("type")) == QLatin1String("submit")) {
-                /// ignore submit buttons, will be set automatically
-            } else if (input.attribute(QLatin1String("type")) == QLatin1String("radio")) {
-                /// ignore radio buttons, will be set automatically
-            } else if (input.attribute(QLatin1String("name")).contains(QLatin1String("SearchControl$Advanced"))) {
-                /// ignore submit buttons, will be set automatically
-            } else
-                queryString += '&' + encodeURL(input.attribute(QLatin1String("name"))) + '=' + encodeURL(input.attribute(QLatin1String("value")));
-        }
+        QString body = encodeURL("ctl00$ContentPrimary$ctl00$ctl00$CitationManagerDropDownList") + "=BibTex&" + encodeURL("ctl00$ContentPrimary$ctl00$ctl00$Export") + "=AbstractRadioButton";
+        for (QMap<QString, QString>::ConstIterator it = inputMap.constBegin(); it != inputMap.constEnd(); ++it)
+            body += '&' + encodeURL(it.key()) + '=' + encodeURL(it.value());
 
-        KUrl url(page->mainFrame()->url());
-        KIO::TransferJob *job = KIO::storedHttpPost(queryString.toUtf8(), url);
-        job->addMetaData(QLatin1String("content-type"), QLatin1String("application/x-www-form-urlencoded"));
-        job->addMetaData(QLatin1String("referrer"), page->mainFrame()->baseUrl().toString());
-        connect(job, SIGNAL(result(KJob *)), this, SLOT(doneFetchingBibTeX(KJob *)));
         ++d->runningJobs;
+        QNetworkRequest request(reply->url());
+        setSuggestedHttpHeaders(request, reply);
+        QNetworkReply *newReply = networkAccessManager()->post(request, body.toUtf8());
+        setNetworkReplyTimeout(newReply);
+        connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingBibTeX()));
 
-        if (!d->articleUrls.isEmpty()) {
-            QString url = d->articleUrls.first();
-            d->articleUrls.removeFirst();
-            page->mainFrame()->load(url);
-            connect(page, SIGNAL(loadFinished(bool)), this, SLOT(doneFetchingArticlePage(bool)));
-            ++d->runningJobs;
-        }
         if (d->runningJobs <= 0)
             emit stoppedSearch(resultNoError);
-    } else {
-        kWarning() << "handleError returned false";
-        cancel();
-    }
+    } else
+        kDebug() << "url was" << reply->url().toString();
 }
 
-void WebSearchSpringerLink::doneFetchingBibTeX(KJob * kJob)
+void WebSearchSpringerLink::doneFetchingBibTeX()
 {
     --d->runningJobs;
+    Q_ASSERT(d->runningJobs >= 0);
 
-    if (handleErrors(kJob)) {
-        KIO::StoredTransferJob *job = static_cast<KIO::StoredTransferJob*>(kJob);
-        QTextStream ts(job->data());
+    QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
+    if (handleErrors(reply)) {
+        QTextStream ts(reply->readAll());
+        ts.setCodec("ISO-8859-1");
         QString bibTeXcode = ts.readAll();
         d->sanitizeBibTeXCode(bibTeXcode);
 
@@ -365,8 +394,6 @@ void WebSearchSpringerLink::doneFetchingBibTeX(KJob * kJob)
 
         if (d->runningJobs <= 0)
             emit stoppedSearch(resultNoError);
-    } else {
-        kWarning() << "handleError returned false";
-        cancel();
-    }
+    }  else
+        kDebug() << "url was" << reply->url().toString();
 }

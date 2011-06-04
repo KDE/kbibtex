@@ -23,8 +23,6 @@
 
 #include "websearchabstract.h"
 
-class KJob;
-
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
@@ -48,12 +46,10 @@ protected:
     virtual QString favIconUrl() const;
 
 private slots:
-    void jobESearchDone(KJob *job);
-    void jobEFetchDone(KJob *job);
+    void eSearchDone();
+    void eFetchDone();
 
 private:
-    class WebSearchQueryFormPubMed;
-    WebSearchQueryFormPubMed *form;
     class WebSearchPubMedPrivate;
     WebSearchPubMedPrivate *d;
 };

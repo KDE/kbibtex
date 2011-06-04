@@ -23,7 +23,6 @@
 
 #include <websearchabstract.h>
 
-class KJob;
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
@@ -48,9 +47,9 @@ protected:
     virtual QString favIconUrl() const;
 
 private slots:
-    void doneFetchingResultPage(bool);
-    void doneFetchingArticlePage(bool);
-    void doneFetchingBibTeX(KJob * kJob);
+    void doneFetchingResultPage();
+    void doneFetchingExportPage();
+    void doneFetchingBibTeX();
 
 private:
     class WebSearchQueryFormSpringerLink;

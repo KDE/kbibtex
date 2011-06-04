@@ -19,30 +19,16 @@
 ***************************************************************************/
 
 #include <QTextStream>
+#include <QNetworkReply>
 
 #include <KDebug>
 #include <KLocale>
-#include <kio/job.h>
 #include <KStandardDirs>
 #include <KMessageBox>
 
 #include "websearchpubmed.h"
 #include "xsltransform.h"
 #include "fileimporterbibtex.h"
-
-class WebSearchPubMed::WebSearchQueryFormPubMed : public WebSearchQueryFormAbstract
-{
-public:
-    WebSearchQueryFormPubMed(QWidget *parent)
-            : WebSearchQueryFormAbstract(parent) {
-        // TODO
-    }
-
-    bool readyToStart() const {
-        // TODO
-        return false;
-    }
-};
 
 class WebSearchPubMed::WebSearchPubMedPrivate
 {
@@ -52,11 +38,9 @@ private:
 
 public:
     XSLTransform xslt;
-    WebSearchQueryFormPubMed *form;
-    KIO::StoredTransferJob *job;
 
     WebSearchPubMedPrivate(WebSearchPubMed *parent)
-            : p(parent), pubMedUrlPrefix(QLatin1String("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/")), xslt(KStandardDirs::locate("appdata", "pubmed2bibtex.xsl")), form(NULL), job(NULL) {
+            : p(parent), pubMedUrlPrefix(QLatin1String("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/")), xslt(KStandardDirs::locate("appdata", "pubmed2bibtex.xsl")) {
         // nothing
     }
 
@@ -110,14 +94,17 @@ WebSearchPubMed::WebSearchPubMed(QWidget *parent)
 void WebSearchPubMed::startSearch()
 {
     m_hasBeenCanceled = false;
-    // TODO: No customized search widget
+    emit stoppedSearch(resultNoError);
 }
 
 void WebSearchPubMed::startSearch(const QMap<QString, QString> &query, int numResults)
 {
     m_hasBeenCanceled = false;
-    d->job = KIO::storedGet(d->buildQueryUrl(query, numResults));
-    connect(d->job, SIGNAL(result(KJob *)), this, SLOT(jobESearchDone(KJob*)));
+    QNetworkRequest request(d->buildQueryUrl(query, numResults));
+    setSuggestedHttpHeaders(request);
+    QNetworkReply *reply = networkAccessManager()->get(request);
+    setNetworkReplyTimeout(reply);
+    connect(reply, SIGNAL(finished()), this, SLOT(eSearchDone()));
 }
 
 QString WebSearchPubMed::label() const
@@ -130,11 +117,8 @@ QString WebSearchPubMed::favIconUrl() const
     return QLatin1String("http://www.ncbi.nlm.nih.gov/favicon.ico");
 }
 
-WebSearchQueryFormAbstract* WebSearchPubMed::customWidget(QWidget *parent)
+WebSearchQueryFormAbstract* WebSearchPubMed::customWidget(QWidget *)
 {
-    Q_UNUSED(parent)
-    // TODO: No customized search widget
-    // return (d->form = new WebSearchArXiv::WebSearchQueryFormArXiv(parent));
     return NULL;
 }
 
@@ -146,19 +130,14 @@ KUrl WebSearchPubMed::homepage() const
 void WebSearchPubMed::cancel()
 {
     WebSearchAbstract::cancel();
-    if (d->job != NULL)
-        d->job->kill(KJob::EmitResult);
 }
 
-void WebSearchPubMed::jobESearchDone(KJob *j)
+void WebSearchPubMed::eSearchDone()
 {
-    Q_ASSERT(j == d->job);
-    d->job = NULL;
+    QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
 
-    if (handleErrors(j)) {
-        KIO::StoredTransferJob *job = static_cast<KIO::StoredTransferJob*>(j);
-        QTextStream ts(job->data());
-        QString result = ts.readAll();
+    if (handleErrors(reply)) {
+        QString result = reply->readAll();
 
         /// without parsing XML text correctly, just extract all PubMed ids
         QRegExp regExpId("<Id>(\\d+)</Id>", Qt::CaseInsensitive);
@@ -171,21 +150,22 @@ void WebSearchPubMed::jobESearchDone(KJob *j)
             emit stoppedSearch(resultUnspecifiedError);
         else {
             /// fetch full bibliographic details for found PubMed ids
-            d->job = KIO::storedGet(d->buildFetchIdUrl(idList));
-            connect(d->job, SIGNAL(result(KJob *)), this, SLOT(jobEFetchDone(KJob*)));
+            QNetworkRequest request(d->buildFetchIdUrl(idList));
+            setSuggestedHttpHeaders(request, reply);
+            QNetworkReply *newReply = networkAccessManager()->get(request);
+            setNetworkReplyTimeout(newReply);
+            connect(newReply, SIGNAL(finished()), this, SLOT(eFetchDone()));
         }
-    }
+    } else
+        kDebug() << "url was" << reply->url().toString();
 }
 
-void WebSearchPubMed::jobEFetchDone(KJob *j)
+void WebSearchPubMed::eFetchDone()
 {
-    Q_ASSERT(j == d->job);
-    d->job = NULL;
+    QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
 
-    if (handleErrors(j)) {
-        KIO::StoredTransferJob *job = static_cast<KIO::StoredTransferJob*>(j);
-        QTextStream ts(job->data());
-        QString input = ts.readAll();
+    if (handleErrors(reply)) {
+        QString input = reply->readAll();
 
         /// use XSL transformation to get BibTeX document from XML result
         QString bibTeXcode = d->xslt.transform(input);
@@ -206,5 +186,6 @@ void WebSearchPubMed::jobEFetchDone(KJob *j)
             delete bibtexFile;
         } else
             emit stoppedSearch(resultUnspecifiedError);
-    }
+    } else
+        kDebug() << "url was" << reply->url().toString();
 }
