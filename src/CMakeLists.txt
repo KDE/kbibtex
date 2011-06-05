@@ -10,7 +10,7 @@ IF(WIN32)
 	ADD_CUSTOM_TARGET(svnversion ALL
 		cmake -E echo "#ifndef VERSION_H" > "${CMAKE_BINARY_DIR}/version.h.tmp"
 		COMMAND cmake -E echo "#define VERSION_H" >> "${CMAKE_BINARY_DIR}/version.h.tmp"
-		COMMAND cmake -E echo_append "const char *versionNumber = \"SVN unknown\";" >>  "${CMAKE_BINARY_DIR}/version.h.tmp"
+		COMMAND cmake -E echo "const char *versionNumber = \"SVN unknown\";" >>  "${CMAKE_BINARY_DIR}/version.h.tmp"
 		COMMAND cmake -E echo "#endif // VERSION_H" >>  "${CMAKE_BINARY_DIR}/version.h.tmp"
 		COMMAND cmake -E copy_if_different "${CMAKE_BINARY_DIR}/version.h.tmp" "${CMAKE_BINARY_DIR}/version.h"
 		COMMAND cmake -E remove "${CMAKE_BINARY_DIR}/version.h.tmp"

@@ -103,8 +103,10 @@ QSortFilterProxyModel *BibTeXFileView::sortFilterProxyModel()
     return m_sortFilterProxyModel;
 }
 
-void BibTeXFileView::resizeEvent(QResizeEvent */*event*/)
+void BibTeXFileView::resizeEvent(QResizeEvent *event)
 {
+    Q_UNUSED(event)
+
     BibTeXFields *bibtexFields = BibTeXFields::self();
     int sum = 0;
     int widgetWidth = size().width() - verticalScrollBar()->size().width();
