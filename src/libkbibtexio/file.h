@@ -44,7 +44,8 @@ class KBIBTEXIO_EXPORT File : public QList<Element*>
 {
 public:
     /// used for property map
-    const static QString Url, Encoding;
+    const static QString Url;
+    const static QString Encoding;
 
     File();
     File(const File &other);

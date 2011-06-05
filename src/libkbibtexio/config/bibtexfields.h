@@ -39,6 +39,9 @@ typedef struct {
     bool visible;
 } FieldDescription;
 
+bool operator==(const FieldDescription &a, const FieldDescription &b) { return true; }
+uint qHash(const FieldDescription &a) { return qHash(a.upperCamelCase); }
+
 /**
 @author Thomas Fischer
 */
