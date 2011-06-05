@@ -47,6 +47,17 @@ include_directories(
 
 kde4_add_library( kbibtexio SHARED ${kbibtexio_LIB_SRCS} )
 
+IF(WIN32)
+target_link_libraries( kbibtexio
+	${QT_QTCORE_LIBRARY}
+	${KDE4_KDECORE_LIBS}
+	${KDE4_KIO_LIBS}
+	${LIBXML2_LIBRARIES}
+	${LIBXSLT_LIBRARIES}
+	${POPPLER_QT4_LIBRARIES}
+	iconv
+)
+ELSE(WIN32)
 target_link_libraries( kbibtexio
 	${QT_QTCORE_LIBRARY}
 	${KDE4_KDECORE_LIBS}
@@ -55,5 +66,6 @@ target_link_libraries( kbibtexio
 	${LIBXSLT_LIBRARIES}
 	${POPPLER_QT4_LIBRARIES}
 )
+ENDIF(WIN32)
 
 install(TARGETS kbibtexio RUNTIME DESTINATION bin LIBRARY DESTINATION ${LIB_INSTALL_DIR})

@@ -5,6 +5,19 @@ include( KDE4Defaults )
 MARK_AS_ADVANCED(SVNVERSION_EXECUTABLE)
 FIND_PROGRAM(SVNVERSION_EXECUTABLE svnversion)
 IF(SVNVERSION_EXECUTABLE)
+IF(WIN32)
+# single \" in an echo statement makes problems under Windows; don't know why
+	ADD_CUSTOM_TARGET(svnversion ALL
+		cmake -E echo "#ifndef VERSION_H" > "${CMAKE_BINARY_DIR}/version.h.tmp"
+		COMMAND cmake -E echo "#define VERSION_H" >> "${CMAKE_BINARY_DIR}/version.h.tmp"
+		COMMAND cmake -E echo_append "const char *versionNumber = \"SVN unknown\";" >>  "${CMAKE_BINARY_DIR}/version.h.tmp"
+		COMMAND cmake -E echo "#endif // VERSION_H" >>  "${CMAKE_BINARY_DIR}/version.h.tmp"
+		COMMAND cmake -E copy_if_different "${CMAKE_BINARY_DIR}/version.h.tmp" "${CMAKE_BINARY_DIR}/version.h"
+		COMMAND cmake -E remove "${CMAKE_BINARY_DIR}/version.h.tmp"
+		WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
+		COMMENT "Updating ${CMAKE_BINARY_DIR}/version.h..."
+		VERBATIM)
+ELSE(WIN32)
 	ADD_CUSTOM_TARGET(svnversion ALL
 		cmake -E echo "#ifndef VERSION_H" > "${CMAKE_BINARY_DIR}/version.h.tmp"
 		COMMAND cmake -E echo "#define VERSION_H" >> "${CMAKE_BINARY_DIR}/version.h.tmp"
@@ -17,6 +30,7 @@ IF(SVNVERSION_EXECUTABLE)
 		WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
 		COMMENT "Updating ${CMAKE_BINARY_DIR}/version.h..."
 		VERBATIM)
+ENDIF(WIN32)
 ELSE(SVNVERSION_EXECUTABLE)
 	ADD_CUSTOM_TARGET(svnversion ALL
 		cmake -E echo "#ifndef VERSION_H" > "${CMAKE_BINARY_DIR}/version.h.tmp"
