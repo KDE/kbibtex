@@ -37,6 +37,8 @@ class KBIBTEXIO_EXPORT EntryClique
 {
     friend class FindDuplicates;
 public:
+    EntryClique();
+
     enum ValueOperation { SetValue, AddValue, RemoveValue };
 
     int entryCount() const;

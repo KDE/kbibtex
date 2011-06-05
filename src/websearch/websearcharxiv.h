@@ -22,11 +22,10 @@
 
 #include <websearchabstract.h>
 
-
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
-class KBIBTEXIO_EXPORT WebSearchArXiv : public WebSearchAbstract
+class KBIBTEXWS_EXPORT WebSearchArXiv : public WebSearchAbstract
 {
     Q_OBJECT
 

@@ -31,8 +31,8 @@ typedef struct {
     QString label;
 } EntryDescription;
 
-bool operator==(const EntryDescription &a, const EntryDescription &b) { return true; }
-uint qHash(const EntryDescription &a) { return qHash(a.upperCamelCase); }
+bool operator==(const EntryDescription &a, const EntryDescription &b);
+uint qHash(const EntryDescription &a);
 
 /**
 @author Thomas Fischer

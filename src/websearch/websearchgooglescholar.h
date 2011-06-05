@@ -26,7 +26,7 @@
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
-class KBIBTEXIO_EXPORT WebSearchGoogleScholar : public WebSearchAbstract
+class KBIBTEXWS_EXPORT WebSearchGoogleScholar : public WebSearchAbstract
 {
     Q_OBJECT
 

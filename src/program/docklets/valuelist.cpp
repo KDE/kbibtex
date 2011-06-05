@@ -134,7 +134,7 @@ void ValueList::update()
 
 }
 
-void ValueList::resizeEvent(QResizeEvent */*event*/)
+void ValueList::resizeEvent(QResizeEvent *)
 {
     int widgetWidth = d->treeviewFieldValues->size().width() - d->treeviewFieldValues->verticalScrollBar()->size().width();
     d->treeviewFieldValues->setColumnWidth(0, widgetWidth - d->countWidth * 4 / 3);

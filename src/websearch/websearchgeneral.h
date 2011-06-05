@@ -28,7 +28,7 @@ class QSpinBox;
 
 class KLineEdit;
 
-class KBIBTEXIO_EXPORT WebSearchQueryFormGeneral : public WebSearchQueryFormAbstract
+class KBIBTEXWS_EXPORT WebSearchQueryFormGeneral : public WebSearchQueryFormAbstract
 {
     Q_OBJECT
 

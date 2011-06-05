@@ -50,6 +50,6 @@ target_link_libraries( kbibtexgui
     kbibtexproc
 )
 
-install(TARGETS kbibtexgui DESTINATION ${LIB_INSTALL_DIR})
+install(TARGETS kbibtexgui RUNTIME DESTINATION bin LIBRARY DESTINATION ${LIB_INSTALL_DIR})
 
 install( FILES bibtex/findduplicatesui.rc  DESTINATION ${DATA_INSTALL_DIR}/kbibtex )

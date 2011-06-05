@@ -30,6 +30,11 @@
 
 #define getText(entry, fieldname) PlainTextValue::text((entry)->value((fieldname)))
 
+EntryClique::EntryClique()
+{
+    // nothing
+}
+
 int EntryClique::entryCount() const
 {
     return checkedEntries.count();

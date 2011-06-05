@@ -59,7 +59,7 @@ private:
 };
 
 
-class KBIBTEXIO_EXPORT FindDuplicatesUI : public QObject
+class KBIBTEXGUI_EXPORT FindDuplicatesUI : public QObject
 {
     Q_OBJECT
 

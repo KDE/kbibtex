@@ -25,6 +25,15 @@
 
 #include "bibtexfields.h"
 
+bool operator==(const FieldDescription &a, const FieldDescription &b)
+{
+    return a.upperCamelCase == b.upperCamelCase;
+}
+uint qHash(const FieldDescription &a)
+{
+    return qHash(a.upperCamelCase);
+}
+
 static const int bibTeXFieldsMaxColumnCount = 256;
 
 class BibTeXFields::BibTeXFieldsPrivate

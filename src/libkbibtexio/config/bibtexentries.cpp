@@ -25,6 +25,15 @@
 #include <entry.h>
 #include "bibtexentries.h"
 
+bool operator==(const EntryDescription &a, const EntryDescription &b)
+{
+    return a.upperCamelCase == b.upperCamelCase;
+}
+uint qHash(const EntryDescription &a)
+{
+    return qHash(a.upperCamelCase);
+}
+
 static const int entryTypeMaxCount = 256;
 
 class BibTeXEntries::BibTeXEntriesPrivate

@@ -27,7 +27,7 @@
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
-class KBIBTEXIO_EXPORT WebSearchSpringerLink : public WebSearchAbstract
+class KBIBTEXWS_EXPORT WebSearchSpringerLink : public WebSearchAbstract
 {
     Q_OBJECT
 

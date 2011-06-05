@@ -20,7 +20,7 @@
 #ifndef KBIBTEX_WEBSEARCH_ABSTRACT_H
 #define KBIBTEX_WEBSEARCH_ABSTRACT_H
 
-#include "kbibtexio_export.h"
+#include "kbibtexws_export.h"
 
 #include <QObject>
 #include <QMap>
@@ -55,7 +55,7 @@ private:
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
-class WebSearchQueryFormAbstract : public QWidget
+class KBIBTEXWS_EXPORT WebSearchQueryFormAbstract : public QWidget
 {
     Q_OBJECT
 
@@ -81,7 +81,7 @@ Q_DECLARE_METATYPE(WebSearchQueryFormAbstract*)
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
-class KBIBTEXIO_EXPORT WebSearchAbstract : public QObject
+class KBIBTEXWS_EXPORT WebSearchAbstract : public QObject
 {
     Q_OBJECT
 

@@ -32,7 +32,7 @@ class KLineEdit;
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
-class KBIBTEXIO_EXPORT WebSearchBibsonomy : public WebSearchAbstract
+class KBIBTEXWS_EXPORT WebSearchBibsonomy : public WebSearchAbstract
 {
     Q_OBJECT
 

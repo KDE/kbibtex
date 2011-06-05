@@ -21,7 +21,7 @@
 #ifndef KBIBTEX_GUI_CLIPBOARD_H
 #define KBIBTEX_GUI_CLIPBOARD_H
 
-#include "kbibtexio_export.h"
+#include "kbibtexgui_export.h"
 
 #include <QObject>
 
@@ -32,7 +32,7 @@ class QDropEvent;
 
 class BibTeXEditor;
 
-class KBIBTEXIO_EXPORT Clipboard : public QObject
+class KBIBTEXGUI_EXPORT Clipboard : public QObject
 {
     Q_OBJECT
 
