@@ -57,7 +57,13 @@ IConvLaTeX::~IConvLaTeX()
 QByteArray IConvLaTeX::encode(const QString &input)
 {
     QByteArray inputByteArray = input.toUtf8();
+#ifdef Q_WS_WIN
+    /// iconv on Windows likes to have it as const char *
     const char *inputBuffer = inputByteArray.data();
+#else
+    /// iconv on Linux likes to have it as char *
+    char *inputBuffer = inputByteArray.data();
+#endif
     QByteArray outputByteArray(maxBufferSize, '\0');
     char *outputBuffer = outputByteArray.data();
     size_t inputBufferBytesLeft = inputByteArray.size();

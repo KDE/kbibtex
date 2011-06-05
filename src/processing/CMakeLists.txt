@@ -22,5 +22,4 @@ target_link_libraries( kbibtexproc
 	kbibtexio
 )
 
-install(TARGETS kbibtexproc DESTINATION ${LIB_INSTALL_DIR})
-
+install(TARGETS kbibtexproc RUNTIME DESTINATION bin LIBRARY DESTINATION ${LIB_INSTALL_DIR})

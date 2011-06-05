@@ -32,5 +32,5 @@ target_link_libraries( kbibtexws
 	kbibtexio
 )
 
-install(TARGETS kbibtexws DESTINATION ${LIB_INSTALL_DIR})
+install(TARGETS kbibtexws RUNTIME DESTINATION bin LIBRARY DESTINATION ${LIB_INSTALL_DIR})
 

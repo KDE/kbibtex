@@ -56,5 +56,4 @@ target_link_libraries( kbibtexio
 	${POPPLER_QT4_LIBRARIES}
 )
 
-install(TARGETS kbibtexio DESTINATION ${LIB_INSTALL_DIR})
-
+install(TARGETS kbibtexio RUNTIME DESTINATION bin LIBRARY DESTINATION ${LIB_INSTALL_DIR})
