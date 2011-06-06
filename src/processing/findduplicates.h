@@ -21,9 +21,12 @@
 #ifndef KBIBTEX_PROC_FINDDUPLICATES_H
 #define KBIBTEX_PROC_FINDDUPLICATES_H
 
+#include "kbibtexio_export.h"
+
+#include <QObject>
 #include <QMap>
 
-#include "kbibtexio_export.h"
+#include <value.h>
 
 class Entry;
 class File;
@@ -70,12 +73,17 @@ private:
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
-class KBIBTEXIO_EXPORT FindDuplicates
+class KBIBTEXIO_EXPORT FindDuplicates : public QObject
 {
+    Q_OBJECT
+
 public:
     FindDuplicates(QWidget *parent, int sensitivity = 5000);
 
-    QList<EntryClique*> findDuplicateEntries(File *file);
+    bool findDuplicateEntries(File *file, QList<EntryClique*> &entryCliqueList);
+
+private slots:
+    void gotCanceled();
 
 private:
     class FindDuplicatesPrivate;

@@ -52,16 +52,15 @@ const int FieldNameRole = Qt::UserRole + 101;
 
 const int maxFieldsCount = 1024;
 
-
-
+/**
+ * Model to hold alternative values as visualized in the RadioTreeView
+ */
 class AlternativesItemModel : public QAbstractItemModel
 {
 private:
     /// marker to memorize in an index's internal id that it is a top-level index
     static const quint32 noParentInternalId;
 
-    /// BibTeX file to operate on
-    //File *file;
     /// parent widget, needed to get font from (for text in italics)
     QTreeView *p;
 
@@ -99,7 +98,6 @@ public:
         if (parent == QModelIndex()) {
             /// top-level index, check how many lists of lists of alternatives exist
             return currentClique->fieldCount();
-
         } else if (parent.parent() == QModelIndex()) {
             /// first, find the map of alternatives for this chosen field name (see parent)
             QString fieldName = parent.data(FieldNameRole).toString();
@@ -112,8 +110,7 @@ public:
         return 0;
     }
 
-    int columnCount(const QModelIndex &parent = QModelIndex()) const {
-        Q_UNUSED(parent)
+    int columnCount(const QModelIndex &) const {
         /// only one column in use
         return 1;
     }
@@ -221,7 +218,7 @@ public:
     }
 
     bool setData(const QModelIndex & index, const QVariant & value, int role = RadioSelectedRole) {
-        if (index.parent().parent() == QModelIndex()) {
+        if (index.parent() != QModelIndex()) {
             QString fieldName = index.parent().data(FieldNameRole).toString();
             if (role == RadioSelectedRole && value.canConvert<bool>() && value.toBool() == true) {
                 /// start with determining which list of alternatives actually to use
@@ -291,12 +288,12 @@ public:
 
     void setCurrentClique(EntryClique *currentClique) {
         this->currentClique = cl.indexOf(currentClique);
-        //kDebug() << "this->currentClique=" << this->currentClique;
     }
 
     virtual QVariant data(const QModelIndex &index, int role) const {
         if (role == Qt::CheckStateRole && index.column() == 1) {
             Entry *entry = dynamic_cast<Entry*>(element(index.row()));
+            Q_ASSERT_X(entry != NULL, "CheckableBibTeXFileModel::data", "entry is NULL");
             if (entry != NULL) {
                 QList<Entry*> entryList = cl[currentClique]->entryList();
                 if (entryList.contains(entry))
@@ -310,6 +307,7 @@ public:
     virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) {
         bool ok;
         int checkState = value.toInt(&ok);
+        Q_ASSERT_X(ok, "CheckableBibTeXFileModel::setData", QString("Could not convert value " + value.toString()).toAscii());
         if (ok && role == Qt::CheckStateRole && index.column() == 1) {
             Entry *entry = dynamic_cast<Entry*>(element(index.row()));
             if (entry != NULL) {
@@ -318,7 +316,6 @@ public:
                     EntryClique *ec = cl[currentClique];
                     ec->setEntryChecked(entry, checkState == Qt::Checked);
                     cl[currentClique] = ec;
-                    //kDebug() << cl[currentClique]->dump();
                     emit dataChanged(index, index);
                     tv->reset();
                     return true;
@@ -351,8 +348,10 @@ public:
     }
 
     void setCurrentClique(EntryClique* currentClique) {
-        if (internalModel != NULL) internalModel->setCurrentClique(currentClique);
+        Q_ASSERT(internalModel != NULL);
+        internalModel->setCurrentClique(currentClique);
         this->currentClique = currentClique;
+        invalidateFilter();
     }
 
     void setSourceModel(QAbstractItemModel *model) {
@@ -396,11 +395,12 @@ public:
 
     MergeWidgetPrivate(MergeWidget *parent, QList<EntryClique*> &cliqueList)
             : p(parent), currentClique(0), cl(cliqueList) {
-        kDebug() << "clique count=" << cl.count();
+        // nothing
     }
 
     void setupGUI() {
-        p->setMinimumSize(p->fontMetrics().xHeight()*128, p->fontMetrics().xHeight()*64);
+        p->setMinimumSize(p->fontMetrics().xHeight()*96, p->fontMetrics().xHeight()*64);
+        p->setBaseSize(p->fontMetrics().xHeight()*128, p->fontMetrics().xHeight()*96);
 
         QBoxLayout *layout = new QVBoxLayout(p);
 
@@ -432,9 +432,6 @@ public:
 
         showCurrentClique();
 
-        editor->setModel(filterModel);
-        alternativesView->setModel(alternativesItemModel);
-
         connect(buttonPrev, SIGNAL(clicked()), p, SLOT(previousClique()));
         connect(buttonNext, SIGNAL(clicked()), p, SLOT(nextClique()));
 
@@ -442,10 +439,14 @@ public:
     }
 
     void showCurrentClique() {
-        //kDebug() << "Current Clique = " << cl[currentClique]->dump();
         EntryClique *ec = cl[currentClique];
         filterModel->setCurrentClique(ec);
         alternativesItemModel->setCurrentClique(ec);
+        editor->setModel(filterModel);
+        alternativesView->setModel(alternativesItemModel);
+        editor->reset();
+        alternativesView->reset();
+        alternativesView->expandAll();
 
         buttonNext->setEnabled(currentClique >= 0 && currentClique < cl.count() - 1);
         buttonPrev->setEnabled(currentClique > 0);
@@ -515,17 +516,23 @@ void FindDuplicatesUI::slotFindDuplicates()
         }
     }
 
-    QList<EntryClique*> cliques =  fd.findDuplicateEntries(file);
+    QList<EntryClique*> cliques;
+    bool gotCanceled = fd.findDuplicateEntries(file, cliques);
+    if (gotCanceled) return;
 
-    MergeWidget mw(d->editor->bibTeXModel()->bibTeXFile(), cliques, &dlg);
-    dlg.setMainWidget(&mw);
+    if (cliques.isEmpty()) {
+        KMessageBox::information(d->part->widget(), i18n("No duplicates have been found."), i18n("No duplicates found"));
+    } else {
+        MergeWidget mw(d->editor->bibTeXModel()->bibTeXFile(), cliques, &dlg);
+        dlg.setMainWidget(&mw);
 
-    if (dlg.exec() == QDialog::Accepted) {
-        // TODO
-        MergeDuplicates md(&dlg);
-        file = d->editor->bibTeXModel()->bibTeXFile();
-        if (md.mergeDuplicateEntries(cliques, file)) {
-            d->editor->bibTeXModel()->setBibTeXFile(file);
+        if (dlg.exec() == QDialog::Accepted) {
+            // TODO
+            MergeDuplicates md(&dlg);
+            file = d->editor->bibTeXModel()->bibTeXFile();
+            if (md.mergeDuplicateEntries(cliques, file)) {
+                d->editor->bibTeXModel()->setBibTeXFile(file);
+            }
         }
     }
 }
