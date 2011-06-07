@@ -134,7 +134,7 @@ KBibTeXMainWindow::KBibTeXMainWindow()
     d->dockReferencePreview->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
     showPanelsMenu->addAction(d->dockReferencePreview->toggleViewAction());
 
-    d->dockUrlPreview = new QDockWidget(i18n("Preview"), this);
+    d->dockUrlPreview = new QDockWidget(i18n("Document Preview"), this);
     d->dockUrlPreview->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
     addDockWidget(Qt::RightDockWidgetArea, d->dockUrlPreview);
     d->urlPreview = new UrlPreview(d->dockUrlPreview);
