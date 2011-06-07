@@ -133,7 +133,7 @@ QString EntryClique::dump() const
 
 void EntryClique::addEntry(Entry* entry)
 {
-    checkedEntries.insert(entry, true); /// remember to call recalculateValueMap later
+    checkedEntries.insert(entry, false); /// remember to call recalculateValueMap later
 }
 
 void EntryClique::recalculateValueMap()
@@ -182,7 +182,6 @@ void EntryClique::recalculateValueMap()
         valueMap.remove(fieldName);
         chosenValueMap.remove(fieldName);
     }
-    kDebug() << "valueMap fields: " << valueMap.keys().count() << valueMap.keys().first() << valueMap.keys().last();
 }
 
 void EntryClique::insertKeyValueToValueMap(const QString &fieldName, const Value &fieldValue, const QString &fieldValueText)
