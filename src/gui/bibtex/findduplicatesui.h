@@ -21,7 +21,7 @@
 #ifndef KBIBTEX_GUI_FINDDUPLICATES_H
 #define KBIBTEX_GUI_FINDDUPLICATES_H
 
-#include "kbibtexio_export.h"
+#include "kbibtexgui_export.h"
 
 #include <QObject>
 #include <QTreeView>
@@ -35,6 +35,7 @@ class KPushButton;
 
 class BibTeXEditor;
 class EntryClique;
+class File;
 
 class RadioButtonTreeView;
 class AlternativesItemModel;

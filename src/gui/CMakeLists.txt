@@ -46,6 +46,7 @@ target_link_libraries( kbibtexgui
     ${QT_QTGUI_LIBRARY}
     ${KDE4_KDEUI_LIBS}
     ${KDE4_KIO_LIBS}
+    ${KDE4_KTEXTEDITOR_LIBS}
     kbibtexio
     kbibtexproc
 )
