@@ -140,7 +140,6 @@ public:
 
         if (onlyLocalFilesCheckBox->isChecked() && !isLocal) return true; ///< ignore URL if only local files are allowed
 
-        addingUrlMutex.lock();
         if (isLocal) {
             /// create a drop-down list entry if file is a local file
             /// (based on patch by Luis Silva)
@@ -154,7 +153,6 @@ public:
             urlComboBox->addItem(urlInfo.icon, urlInfo.url.prettyUrl());
         }
         cbxEntryToUrl.insert(urlComboBox->count() - 1, urlInfo.url);
-        addingUrlMutex.unlock();
 
         KParts::ReadOnlyPart* part = NULL;
         KService::Ptr serivcePtr = KMimeTypeTrader::self()->preferredService(urlInfo.mimeType, "KParts/ReadOnlyPart");
@@ -165,7 +163,7 @@ public:
             part->openUrl(urlInfo.url);
         } else {
             QLabel *label = new QLabel(i18n("Cannot create preview for\n%1\n\nNo part available.", urlInfo.url.pathOrUrl()), stackedWidget);
-            message->setAlignment(Qt::AlignCenter);
+            label->setAlignment(Qt::AlignCenter);
             stackedWidget->addWidget(label);
         }
 
@@ -218,6 +216,7 @@ public:
         message->setText(i18n("No preview available"));
         message->show();
         stackedWidget->hide();
+        p->setEnabled(isVisible());
 
         p->setCursor(prevCursor);
     }
@@ -253,7 +252,7 @@ public:
             kDebug() << "Got mime type \"application/octet-stream\", falling back to text/html";
             result.icon = KIcon("text-html");
             result.mimeType = QLatin1String("text/html");
-        } else if (result.mimeType == QLatin1String("inode/directory") && result.url.protocol() == QLatin1String("http")) {
+        } else if (result.mimeType == QLatin1String("inode/directory") && (result.url.protocol() == QLatin1String("http") || result.url.protocol() == QLatin1String("https"))) {
             /// directory via http means normal webpage (not browsable directory)
             kDebug() << "Got mime type \"inode/directory\" via http, falling back to text/html";
             result.icon = KIcon("text-html");
