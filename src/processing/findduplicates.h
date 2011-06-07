@@ -73,7 +73,7 @@ private:
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
-class KBIBTEXIO_EXPORT FindDuplicates : public QObject
+class KBIBTEXPROC_EXPORT FindDuplicates : public QObject
 {
     Q_OBJECT
 
