@@ -195,6 +195,11 @@ void WebSearchIEEEXplore::doneFetchingBibliography()
                 if (entry != NULL) {
                     QString arnumber = reply->url().queryItemValue(QLatin1String("recordIds"));
                     d->sanitize(entry, arnumber);
+
+                    Value v;
+                    v.append(new VerbatimText(label()));
+                    entry->insert("x-fetchedfrom", v);
+
                     emit foundEntry(entry);
                 }
             }

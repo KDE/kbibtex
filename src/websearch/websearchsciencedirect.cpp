@@ -284,7 +284,12 @@ void WebSearchScienceDirect::doneFetchingBibTeX()
                 Entry *entry = dynamic_cast<Entry*>(*it);
                 if (entry != NULL) {
                     hasEntry = true;
-                    emit foundEntry(entry);
+                    if (entry != NULL) {
+                        Value v;
+                        v.append(new VerbatimText(label()));
+                        entry->insert("x-fetchedfrom", v);
+                        emit foundEntry(entry);
+                    }
                 }
             }
             delete bibtexFile;

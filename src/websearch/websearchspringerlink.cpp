@@ -285,7 +285,6 @@ void WebSearchSpringerLink::doneFetchingResultPage()
     --d->runningJobs;
     Q_ASSERT(d->runningJobs == 0);
 
-
     QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
     kDebug() << "url =" << reply->url();
     foreach(QNetworkCookie cookie, networkAccessManager()->cookieJar()->cookiesForUrl(reply->url())) {
@@ -391,7 +390,12 @@ void WebSearchSpringerLink::doneFetchingBibTeX()
                 Entry *entry = dynamic_cast<Entry*>(*it);
                 if (entry != NULL) {
                     hasEntry = true;
-                    emit foundEntry(entry);
+                    if (entry != NULL) {
+                        Value v;
+                        v.append(new VerbatimText(label()));
+                        entry->insert("x-fetchedfrom", v);
+                        emit foundEntry(entry);
+                    }
                 }
             }
             delete bibtexFile;
