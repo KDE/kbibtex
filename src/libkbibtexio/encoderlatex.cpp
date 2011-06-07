@@ -498,6 +498,7 @@ QString EncoderLaTeX::decode(const QString & text)
             ++it;
             (*cur).append('$').append(*it);
             it = intermediate.erase(it);
+            --it;
         } else
             ++it;
     }
@@ -592,6 +593,7 @@ QString EncoderLaTeX::encode(const QString & text)
             ++it;
             (*cur).append('$').append(*it);
             it = intermediate.erase(it);
+            --it;
         } else
             ++it;
     }
