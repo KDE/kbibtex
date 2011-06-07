@@ -34,7 +34,6 @@
 #include <KAction>
 #include <KDialog>
 #include <KActionCollection>
-#include <KDebug>
 #include <KLocale>
 #include <KXMLGUIClient>
 #include <KStandardDirs>
@@ -527,7 +526,6 @@ void FindDuplicatesUI::slotFindDuplicates()
         dlg.setMainWidget(&mw);
 
         if (dlg.exec() == QDialog::Accepted) {
-            // TODO
             MergeDuplicates md(&dlg);
             file = d->editor->bibTeXModel()->bibTeXFile();
             if (md.mergeDuplicateEntries(cliques, file)) {

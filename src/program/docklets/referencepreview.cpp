@@ -104,7 +104,7 @@ public:
         comboBox->addItem(i18n("unsrt (bibtex2html)"));
         comboBox->addItem(i18n("standard (XML/XSLT)"));
         comboBox->addItem(i18n("fancy (XML/XSLT)"));
-     }
+    }
 
     bool saveHTML(const KUrl& url) {
         KTemporaryFile file;
@@ -131,18 +131,18 @@ public:
         return false;
     }
 
-    void loadState(){
+    void loadState() {
         KConfigGroup configGroup(config, configGroupName);
         int styleIndex = configGroup.readEntry(configKeyName, 0);
         comboBox->setCurrentIndex(styleIndex);
-     }
+    }
 
-    void saveState()
-    {
+    void saveState() {
         KConfigGroup configGroup(config, configGroupName);
         configGroup.writeEntry(configKeyName, comboBox->currentIndex());
         config->sync();
-    }};
+    }
+};
 
 ReferencePreview::ReferencePreview(QWidget *parent)
         : QWidget(parent), d(new ReferencePreviewPrivate(this))

@@ -89,7 +89,7 @@ QString EncoderXML::decode(const QString &text)
     while ((p = result.indexOf("&#x", p + 1)) >= 0) {
         int p2 = result.indexOf(";", p + 1);
         if (p2 < 0) break;
-        bool ok = FALSE;
+        bool ok = false;
         int hex = result.mid(p + 3, p2 - p - 3).toInt(&ok, 16);
         if (ok && hex > 0)
             result.replace(result.mid(p, p2 - p + 1), QChar(hex));
@@ -102,7 +102,7 @@ QString EncoderXML::decode(const QString &text)
     while ((p = result.indexOf("&#", p + 1)) >= 0) {
         int p2 = result.indexOf(";", p + 1);
         if (p2 < 0) break;
-        bool ok = FALSE;
+        bool ok = false;
         int dec = result.mid(p + 2, p2 - p - 2).toInt(&ok, 10);
         if (ok && dec > 0)
             result.replace(result.mid(p, p2 - p + 1), QChar(dec));
