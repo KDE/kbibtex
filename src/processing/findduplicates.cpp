@@ -314,8 +314,8 @@ public:
      * @return distance between both sentences
      */
     double levenshteinDistance(const QString &s, const QString &t) {
-        const QRegExp nonWordRegExp("[^a-zA-Z']+");
-        if (s.isNull() || t.isNull()) return 1.0;
+        const QRegExp nonWordRegExp("[^a-z']+", Qt::CaseInsensitive);
+        if (s.isEmpty() || t.isEmpty()) return 1.0;
         return levenshteinDistance(s.split(nonWordRegExp, QString::SkipEmptyParts), t.split(nonWordRegExp, QString::SkipEmptyParts));
     }
 

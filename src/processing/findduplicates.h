@@ -21,7 +21,7 @@
 #ifndef KBIBTEX_PROC_FINDDUPLICATES_H
 #define KBIBTEX_PROC_FINDDUPLICATES_H
 
-#include "kbibtexio_export.h"
+#include "kbibtexproc_export.h"
 
 #include <QObject>
 #include <QMap>
@@ -31,12 +31,12 @@
 class Entry;
 class File;
 
-class KBIBTEXIO_EXPORT FindDuplicates;
+class KBIBTEXPROC_EXPORT FindDuplicates;
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
-class KBIBTEXIO_EXPORT EntryClique
+class KBIBTEXPROC_EXPORT EntryClique
 {
     friend class FindDuplicates;
 public:
@@ -93,7 +93,7 @@ private:
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
-class KBIBTEXIO_EXPORT MergeDuplicates
+class KBIBTEXPROC_EXPORT MergeDuplicates
 {
 public:
     MergeDuplicates(QWidget *parent);
