@@ -296,11 +296,11 @@ void WebSearchSpringerLink::doneFetchingResultPage()
     QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
     if (handleErrors(reply)) {
         QString htmlSource = reply->readAll();
-        int p1 = -1, p2;
-        while ((p1 = htmlSource.indexOf(" data-code=\"", p1 + 1)) >= 0 && (p2 = htmlSource.indexOf("\"", p1 + 14)) >= 0) {
-            QString datacode = htmlSource.mid(p1 + 12, p2 - p1 - 12).toLower();
+        int p1 = htmlSource.indexOf("div id=\"ContentPrimary"), p2;
+        while (p1 >= 0 && (p1 = htmlSource.indexOf("class=\"title\"><a href=\"/content/", p1 + 1)) >= 0 && (p2 = htmlSource.indexOf("\"", p1 + 26)) >= 0) {
+            QString datacode = htmlSource.mid(p1 + 32, p2 - p1 - 33).toLower();
 
-            if (datacode.length() > 8 && d->numFoundResults < d->numExpectedResults) {
+            if (d->numFoundResults < d->numExpectedResults) {
                 ++d->numFoundResults;
                 QString url = QString("http://www.springerlink.com/content/%1/export-citation/").arg(datacode);
                 d->queueExportPages.append(KUrl(url));
