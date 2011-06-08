@@ -511,10 +511,13 @@ void FindDuplicatesUI::slotFindDuplicates()
     KDialog dlg(d->part->widget());
     FindDuplicates fd(&dlg, sensitivity);
     File *file = d->editor->bibTeXModel()->bibTeXFile();
+    bool deleteFileLater = false;
 
-    if (d->editor->selectedElements().count() > 1 && d->editor->selectedElements().count() < d->editor->model()->rowCount() && KMessageBox::questionYesNo(d->part->widget(), i18n("Multiple elements are selected. Do you want to search for duplicates only within the selection or in the whole document?"), i18n("Search only in selection?"), KGuiItem(i18n("Only in selection")), KGuiItem(i18n("Whole document"))) == KMessageBox::Yes) {
+    int rowCount = d->editor->selectedElements().count() / d->editor->model()->columnCount();
+    if (rowCount > 1 && rowCount < d->editor->model()->rowCount() && KMessageBox::questionYesNo(d->part->widget(), i18n("Multiple elements are selected. Do you want to search for duplicates only within the selection or in the whole document?"), i18n("Search only in selection?"), KGuiItem(i18n("Only in selection")), KGuiItem(i18n("Whole document"))) == KMessageBox::Yes) {
         QModelIndexList mil = d->editor->selectionModel()->selectedRows();
         file = new File();
+        deleteFileLater = true;
         for (QModelIndexList::ConstIterator it = mil.constBegin(); it != mil.constEnd(); ++it) {
             file->append(d->editor->bibTeXModel()->element(d->editor->sortFilterProxyModel()->mapToSource(*it).row()));
         }
@@ -522,7 +525,10 @@ void FindDuplicatesUI::slotFindDuplicates()
 
     QList<EntryClique*> cliques;
     bool gotCanceled = fd.findDuplicateEntries(file, cliques);
-    if (gotCanceled) return;
+    if (gotCanceled) {
+        if (deleteFileLater) delete file;
+        return;
+    }
 
     if (cliques.isEmpty()) {
         KMessageBox::information(d->part->widget(), i18n("No duplicates have been found."), i18n("No duplicates found"));
@@ -538,4 +544,6 @@ void FindDuplicatesUI::slotFindDuplicates()
             }
         }
     }
+
+    if (deleteFileLater) delete file;
 }
