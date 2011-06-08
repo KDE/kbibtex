@@ -26,6 +26,7 @@
 #include <KLocale>
 #include <KConfigGroup>
 
+#include "entry.h"
 #include "websearchgeneral.h"
 
 WebSearchQueryFormGeneral::WebSearchQueryFormGeneral(QWidget *parent)
@@ -86,6 +87,14 @@ bool WebSearchQueryFormGeneral::readyToStart() const
             return true;
 
     return false;
+}
+
+void WebSearchQueryFormGeneral::copyFromEntry(const Entry &entry)
+{
+    queryFields[WebSearchAbstract::queryKeyFreeText]->setText("");
+    queryFields[WebSearchAbstract::queryKeyTitle]->setText(PlainTextValue::text(entry[Entry::ftTitle]));
+    queryFields[WebSearchAbstract::queryKeyAuthor]->setText(authorLastNames(entry).join(" "));
+    queryFields[WebSearchAbstract::queryKeyYear]->setText(PlainTextValue::text(entry[Entry::ftYear]));
 }
 
 QMap<QString, QString> WebSearchQueryFormGeneral::getQueryTerms()

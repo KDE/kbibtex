@@ -36,6 +36,7 @@ public:
     WebSearchQueryFormGeneral(QWidget *parent);
 
     bool readyToStart() const;
+    void copyFromEntry(const Entry&);
 
     QMap<QString, QString> getQueryTerms();
     int getNumResults();

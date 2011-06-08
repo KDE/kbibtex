@@ -294,6 +294,7 @@ void KBibTeXMainWindow::documentSwitched(BibTeXEditor *oldEditor, BibTeXEditor *
         disconnect(oldEditor, SIGNAL(currentElementChanged(Element*, const File *)), d->referencePreview, SLOT(setElement(Element*, const File *)));
         disconnect(oldEditor, SIGNAL(currentElementChanged(Element*, const File *)), d->elementForm, SLOT(setElement(Element*, const File *)));
         disconnect(oldEditor, SIGNAL(currentElementChanged(Element*, const File *)), d->urlPreview, SLOT(setElement(Element*, const File *)));
+        disconnect(oldEditor, SIGNAL(currentElementChanged(Element*, const File *)), d->searchForm, SLOT(setElement(Element*, const File *)));
         disconnect(oldEditor, SIGNAL(modified()), d->valueList, SLOT(update()));
         disconnect(d->elementForm, SIGNAL(elementModified()), newEditor, SLOT(externalModification()));
     }
@@ -301,6 +302,7 @@ void KBibTeXMainWindow::documentSwitched(BibTeXEditor *oldEditor, BibTeXEditor *
         connect(newEditor, SIGNAL(currentElementChanged(Element*, const File *)), d->referencePreview, SLOT(setElement(Element*, const File *)));
         connect(newEditor, SIGNAL(currentElementChanged(Element*, const File *)), d->elementForm, SLOT(setElement(Element*, const File *)));
         connect(newEditor, SIGNAL(currentElementChanged(Element*, const File *)), d->urlPreview, SLOT(setElement(Element*, const File *)));
+        connect(newEditor, SIGNAL(currentElementChanged(Element*, const File *)), d->searchForm, SLOT(setElement(Element*, const File *)));
         connect(newEditor, SIGNAL(modified()), d->valueList, SLOT(update()));
         connect(d->elementForm, SIGNAL(elementModified()), newEditor, SLOT(externalModification()));
     }

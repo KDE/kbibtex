@@ -25,8 +25,6 @@
 #include <QNetworkRequest>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
-#include <QNetworkCookieJar>
-#include <QNetworkCookie>
 
 #include <KLocale>
 #include <KDebug>
@@ -34,6 +32,7 @@
 #include <KConfigGroup>
 
 #include <fileimporterbibtex.h>
+#include <encoderlatex.h>
 #include "websearchspringerlink.h"
 
 /**
@@ -111,8 +110,16 @@ public:
         loadState();
     }
 
-    virtual bool readyToStart() const {
+    bool readyToStart() const {
         return !(lineEditFreeText->text().isEmpty() && lineEditAuthorEditor->text().isEmpty() && lineEditPublication->text().isEmpty() && lineEditVolume->text().isEmpty() && lineEditIssue->text().isEmpty());
+    }
+
+    void copyFromEntry(const Entry &entry) {
+        lineEditFreeText->setText(PlainTextValue::text(entry[Entry::ftTitle]));
+        lineEditAuthorEditor->setText(authorLastNames(entry).join(" "));
+        lineEditPublication->setText(QString(PlainTextValue::text(entry[Entry::ftJournal]) + " " + PlainTextValue::text(entry[Entry::ftBookTitle])).trimmed());
+        lineEditVolume->setText(PlainTextValue::text(entry[Entry::ftVolume]));
+        lineEditIssue->setText(PlainTextValue::text(entry[Entry::ftNumber]));
     }
 
     void saveState() {
@@ -141,6 +148,7 @@ public:
     int currentSearchPosition;
     QStringList articleUrls;
     WebSearchQueryFormSpringerLink *form;
+    int numSteps, curStep;
 
     WebSearchSpringerLinkPrivate(WebSearchSpringerLink *parent)
             : p(parent), springerLinkBaseUrl(QLatin1String("http://www.springerlink.com")), springerLinkQueryUrl(QLatin1String("http://www.springerlink.com/content/")), runningJobs(0), form(NULL) {
@@ -155,6 +163,7 @@ public:
 
         QStringList authors = p->splitRespectingQuotationMarks(form->lineEditAuthorEditor->text());
         foreach(QString author, authors) {
+            author = EncoderLaTeX::currentEncoderLaTeX()->convertToPlainAscii(author);
             queryString += QString(QLatin1String(" ( au:(%1) OR ed:(%1) )")).arg(author);
         }
 
@@ -179,6 +188,7 @@ public:
 
         QStringList authors = p->splitRespectingQuotationMarks(query[queryKeyAuthor]);
         foreach(QString author, authors) {
+            author = EncoderLaTeX::currentEncoderLaTeX()->convertToPlainAscii(author);
             queryString += QString(QLatin1String(" ( au:(%1) OR ed:(%1) )")).arg(author);
         }
 
@@ -207,8 +217,9 @@ void WebSearchSpringerLink::startSearch()
     d->numFoundResults = 0;
     d->currentSearchPosition = 0;
     d->articleUrls.clear();
-
     d->numExpectedResults = d->form->numResultsField->value();
+    d->curStep = 0;
+    d->numSteps = d->numExpectedResults * 2 + 1 + d->numExpectedResults / 10;
 
     ++d->runningJobs;
     d->springerLinkSearchUrl = KUrl(d->springerLinkQueryUrl);
@@ -220,6 +231,8 @@ void WebSearchSpringerLink::startSearch()
     setNetworkReplyTimeout(reply);
     connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingResultPage()));
 
+    emit progress(0, d->numSteps);
+
     d->form->saveState();
 }
 
@@ -229,8 +242,9 @@ void WebSearchSpringerLink::startSearch(const QMap<QString, QString> &query, int
     d->numFoundResults = 0;
     d->currentSearchPosition = 0;
     d->articleUrls.clear();
-
     d->numExpectedResults = numResults;
+    d->curStep = 0;
+    d->numSteps = d->numExpectedResults * 2 + 1 + d->numExpectedResults / 10;
 
     ++d->runningJobs;
     d->springerLinkSearchUrl = KUrl(d->springerLinkQueryUrl);
@@ -241,6 +255,8 @@ void WebSearchSpringerLink::startSearch(const QMap<QString, QString> &query, int
     QNetworkReply *reply = networkAccessManager()->get(request);
     setNetworkReplyTimeout(reply);
     connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingResultPage()));
+
+    emit progress(0, d->numSteps);
 }
 
 QString WebSearchSpringerLink::label() const
@@ -272,11 +288,13 @@ void WebSearchSpringerLink::cancel()
 
 void WebSearchSpringerLink::doneFetchingResultPage()
 {
+    emit progress(++d->curStep, d->numSteps);
+
     --d->runningJobs;
     Q_ASSERT(d->runningJobs == 0);
 
     QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
-    if (handleErrors(reply)) {
+     if (handleErrors(reply)) {
         QString htmlSource = reply->readAll();
         int p1 = -1, p2;
         while ((p1 = htmlSource.indexOf(" data-code=\"", p1 + 1)) >= 0 && (p2 = htmlSource.indexOf("\"", p1 + 14)) >= 0) {
@@ -306,8 +324,10 @@ void WebSearchSpringerLink::doneFetchingResultPage()
             ++d->runningJobs;
         }
 
-        if (d->runningJobs <= 0)
+        if (d->runningJobs <= 0) {
             emit stoppedSearch(resultNoError);
+            emit progress(d->numSteps, d->numSteps);
+        }
     } else
         kDebug() << "url was" << reply->url().toString();
 }
@@ -315,6 +335,8 @@ void WebSearchSpringerLink::doneFetchingResultPage()
 
 void WebSearchSpringerLink::doneFetchingExportPage()
 {
+    emit progress(++d->curStep, d->numSteps);
+
     --d->runningJobs;
     Q_ASSERT(d->runningJobs >= 0);
 
@@ -347,14 +369,18 @@ void WebSearchSpringerLink::doneFetchingExportPage()
         setNetworkReplyTimeout(newReply);
         connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingBibTeX()));
 
-        if (d->runningJobs <= 0)
+        if (d->runningJobs <= 0) {
             emit stoppedSearch(resultNoError);
+            emit progress(d->numSteps, d->numSteps);
+        }
     } else
         kDebug() << "url was" << reply->url().toString();
 }
 
 void WebSearchSpringerLink::doneFetchingBibTeX()
 {
+    emit progress(++d->curStep, d->numSteps);
+
     --d->runningJobs;
     Q_ASSERT(d->runningJobs >= 0);
 
@@ -385,8 +411,10 @@ void WebSearchSpringerLink::doneFetchingBibTeX()
             delete bibtexFile;
         }
 
-        if (d->runningJobs <= 0)
+        if (d->runningJobs <= 0) {
             emit stoppedSearch(hasEntry ? resultNoError : resultUnspecifiedError);
+            emit progress(d->numSteps, d->numSteps);
+        }
     }  else
         kDebug() << "url was" << reply->url().toString();
 }
