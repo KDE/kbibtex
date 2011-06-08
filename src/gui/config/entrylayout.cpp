@@ -112,7 +112,7 @@ void EntryLayout::load()
             continue;
 
         int fieldCount = qMin(configGroup.readEntry("count", 0), entryLayoutMaxFieldPerTabCount);
-        for (int field = 1; field < fieldCount; ++field) {
+        for (int field = 1; field <= fieldCount; ++field) {
             SingleFieldLayout sfl;
             sfl.bibtexLabel = configGroup.readEntry(QString("bibtexLabel%1").arg(field), "");
             sfl.uiLabel = configGroup.readEntry(QString("uiLabel%1").arg(field), "");
