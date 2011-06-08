@@ -85,12 +85,12 @@ void WebSearchGoogleScholar::startSearch(const QMap<QString, QString> &query, in
     foreach(QString queryFragment, splitRespectingQuotationMarks(query[queryKeyTitle])) {
         queryFragments.append(encodeURL(queryFragment));
     }
-    d->queryFreetext = queryFragments.join(" ");
+    d->queryFreetext = queryFragments.join("+");
     queryFragments.clear();
     foreach(QString queryFragment, splitRespectingQuotationMarks(query[queryKeyAuthor])) {
         queryFragments.append(encodeURL(queryFragment));
     }
-    d->queryAuthor = queryFragments.join(" ");
+    d->queryAuthor = queryFragments.join("+");
     d->queryYear = encodeURL(query[queryKeyYear]);
 
     KUrl url(d->startPageUrl);
@@ -166,8 +166,7 @@ void WebSearchGoogleScholar::doneFetchingSetConfigPage()
         url.addEncodedQueryItem(QString("as_sauthors").toAscii(), d->queryAuthor.toAscii());
         url.addEncodedQueryItem(QString("as_ylo").toAscii(), d->queryYear.toAscii());
         url.addEncodedQueryItem(QString("as_yhi").toAscii(), d->queryYear.toAscii());
-
-        kDebug() << "url =" << url.prettyUrl();
+        url.addQueryItem("btnG", "Search Scholar");
 
         QNetworkRequest request(url);
         setSuggestedHttpHeaders(request, reply);
