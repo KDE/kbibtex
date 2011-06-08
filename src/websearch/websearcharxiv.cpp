@@ -83,6 +83,10 @@ public:
         return !lineEditFreeText->text().isEmpty();
     }
 
+    void copyFromEntry(const Entry &entry) {
+        lineEditFreeText->setText(authorLastNames(entry).join(" ") + " " + PlainTextValue::text(entry[Entry::ftTitle]));
+    }
+
     void saveState() {
         KConfigGroup configGroup(config, configGroupName);
         configGroup.writeEntry(QLatin1String("freeText"), lineEditFreeText->text());
@@ -100,6 +104,7 @@ public:
     XSLTransform xslt;
     WebSearchQueryFormArXiv *form;
     const QString arXivQueryBaseUrl;
+    int numSteps, curStep;
 
     WebSearchArXivPrivate(WebSearchArXiv *parent)
             : p(parent), xslt(KStandardDirs::locate("appdata", "arxiv2bibtex.xsl")),
@@ -134,23 +139,34 @@ WebSearchArXiv::WebSearchArXiv(QWidget *parent)
 
 void WebSearchArXiv::startSearch()
 {
+    d->curStep = 0;
+    d->numSteps = 1;
     m_hasBeenCanceled = false;
+
     QNetworkRequest request(d->buildQueryUrl());
     setSuggestedHttpHeaders(request);
     QNetworkReply *reply = networkAccessManager()->get(request);
     setNetworkReplyTimeout(reply);
     connect(reply, SIGNAL(finished()), this, SLOT(downloadDone()));
+
+    emit progress(0, d->numSteps);
+
     d->form->saveState();
 }
 
 void WebSearchArXiv::startSearch(const QMap<QString, QString> &query, int numResults)
 {
+    d->curStep = 0;
+    d->numSteps = 1;
     m_hasBeenCanceled = false;
+
     QNetworkRequest request(d->buildQueryUrl(query, numResults));
     setSuggestedHttpHeaders(request);
     QNetworkReply *reply = networkAccessManager()->get(request);
     setNetworkReplyTimeout(reply);
     connect(reply, SIGNAL(finished()), this, SLOT(downloadDone()));
+
+    emit progress(0, d->numSteps);
 }
 
 QString WebSearchArXiv::label() const
@@ -180,6 +196,8 @@ void WebSearchArXiv::cancel()
 
 void WebSearchArXiv::downloadDone()
 {
+    emit progress(++d->curStep, d->numSteps);
+
     QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
 
     if (handleErrors(reply)) {
@@ -206,6 +224,7 @@ void WebSearchArXiv::downloadDone()
             if (!hasEntries)
                 kDebug() << "No hits found in" << reply->url().toString();
             emit stoppedSearch(resultNoError);
+            emit progress(d->numSteps, d->numSteps);
 
             delete bibtexFile;
         } else {

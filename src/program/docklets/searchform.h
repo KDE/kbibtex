@@ -41,6 +41,7 @@ signals:
 
 public slots:
     void updatedConfiguration();
+    void setElement(Element*, const File *);
 
 private:
     class SearchFormPrivate;
@@ -56,6 +57,8 @@ private slots:
     void openHomepage();
     void enginesListCurrentChanged(QListWidgetItem*, QListWidgetItem*);
     void currentStackWidgetChanged(int);
+    void copyFromEntry();
+    void updateProgress(int, int);
 };
 
 

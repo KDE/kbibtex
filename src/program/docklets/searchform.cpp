@@ -26,6 +26,9 @@
 #include <QSpinBox>
 #include <QDesktopServices>
 #include <QStackedWidget>
+#include <QProgressBar>
+#include <QTimer>
+#include <QSet>
 
 #include <KPushButton>
 #include <KLineEdit>
@@ -80,14 +83,18 @@ public:
     MDIWidget *m;
     SearchResults *sr;
     QMap<QListWidgetItem*, WebSearchAbstract*> itemToWebSearch;
-    int runningSearches;
+    QSet<WebSearchAbstract*> runningSearches;
     KPushButton *searchButton;
+    KPushButton *useEntryButton;
     WebSearchQueryFormGeneral *generalQueryTermsForm;
     QTabWidget *tabWidget;
+    Entry *currentEntry;
+    QProgressBar *progressBar;
+    QMap<WebSearchAbstract*, int> progressMap;
 
     SearchFormPrivate(MDIWidget *mdiWidget, SearchResults *searchResults, SearchForm *parent)
             : p(parent), whichEnginesLabel(NULL), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))),
-            configGroupName(QLatin1String("Search Engines Docklet")), m(mdiWidget), sr(searchResults), runningSearches(0) {
+            configGroupName(QLatin1String("Search Engines Docklet")), m(mdiWidget), sr(searchResults), currentEntry(NULL) {
         // nothing
     }
 
@@ -111,6 +118,16 @@ public:
         vLayout->addWidget(queryTermsStack);
         queryTermsStack->addWidget(createGeneralQueryTermsForm(queryTermsStack));
         connect(queryTermsStack, SIGNAL(currentChanged(int)), p, SLOT(currentStackWidgetChanged(int)));
+
+        vLayout->addSpacing(8);
+
+        QHBoxLayout *hLayout = new QHBoxLayout();
+        vLayout->addLayout(hLayout);
+        useEntryButton = new KPushButton(i18n("Use Entry"), parent);
+        hLayout->addWidget(useEntryButton);
+        useEntryButton->setEnabled(false);
+        connect(useEntryButton, SIGNAL(clicked()), p, SLOT(copyFromEntry()));
+        hLayout->addStretch(10);
 
         vLayout->addStretch(100);
 
@@ -160,6 +177,11 @@ public:
         QWidget *listContainer = createEnginesGUI(tabWidget);
         tabWidget->addTab(listContainer, KIcon("applications-engineering"), i18n("Engines"));
 
+        progressBar = new QProgressBar(p);
+        layout->addWidget(progressBar, 1, 0, 1, 1);
+        progressBar->setMaximum(1000);
+        progressBar->hide();
+
         searchButton = new KPushButton(KIcon("edit-find"), i18n("Search"), p);
         layout->addWidget(searchButton, 1, 1, 1, 1);
         connect(generalQueryTermsForm, SIGNAL(returnPressed()), searchButton, SIGNAL(clicked()));
@@ -201,6 +223,7 @@ public:
         itemToWebSearch.insert(item, engine);
         connect(engine, SIGNAL(foundEntry(Entry*)), p, SLOT(foundEntry(Entry*)));
         connect(engine, SIGNAL(stoppedSearch(int)), p, SLOT(stoppedSearch(int)));
+        connect(engine, SIGNAL(progress(int, int)), p, SLOT(updateProgress(int, int)));
     }
 
     void switchToSearch() {
@@ -211,9 +234,7 @@ public:
         searchButton->setText(i18n("Search"));
         searchButton->setIcon(KIcon("media-playback-start"));
         tabWidget->setEnabled(true);
-        sr->setEnabled(true);
         tabWidget->unsetCursor();
-        sr->unsetCursor();
     }
 
     void switchToCancel() {
@@ -224,9 +245,7 @@ public:
         searchButton->setText(i18n("Cancel"));
         searchButton->setIcon(KIcon("media-playback-stop"));
         tabWidget->setEnabled(false);
-        sr->setEnabled(false);
         tabWidget->setCursor(Qt::WaitCursor);
-        sr->setCursor(Qt::WaitCursor);
     }
 
     void switchToEngines() {
@@ -295,6 +314,12 @@ void SearchForm::updatedConfiguration()
     d->loadEngines();
 }
 
+void SearchForm::setElement(Element *element, const File *)
+{
+    d->currentEntry = dynamic_cast<Entry*>(element);
+    d->useEntryButton->setEnabled(d->currentEntry != NULL);
+}
+
 void SearchForm::switchToEngines()
 {
     d->switchToEngines();
@@ -308,8 +333,11 @@ void SearchForm::startSearch()
         return;
     }
 
-    d->runningSearches = 0;
+    d->runningSearches.clear();
     d->sr->clear();
+    d->progressBar->setValue(0);
+    d->progressMap.clear();
+    d->progressBar->show();
 
     if (currentForm == d->generalQueryTermsForm) {
         /// start search using the general-purpose form's values
@@ -319,9 +347,9 @@ void SearchForm::startSearch()
         for (QMap<QListWidgetItem*, WebSearchAbstract*>::ConstIterator it = d->itemToWebSearch.constBegin(); it != d->itemToWebSearch.constEnd(); ++it)
             if (it.key()->checkState() == Qt::Checked) {
                 it.value()->startSearch(queryTerms, numResults);
-                ++d->runningSearches;
+                d->runningSearches.insert(it.value());
             }
-        if (d->runningSearches <= 0) {
+        if (d->runningSearches.isEmpty()) {
             /// if no search engine has been checked (selected), something went wrong
             return;
         }
@@ -331,9 +359,9 @@ void SearchForm::startSearch()
         for (QMap<QListWidgetItem*, WebSearchAbstract*>::ConstIterator it = d->itemToWebSearch.constBegin(); it != d->itemToWebSearch.constEnd(); ++it)
             if (it.key()->checkState() == Qt::Checked) {
                 it.value()->startSearch();
-                ++d->runningSearches;
+                d->runningSearches.insert(it.value());
             }
-        if (d->runningSearches <= 0) {
+        if (d->runningSearches.isEmpty()) {
             /// if no search engine has been checked (selected), something went wrong
             return;
         }
@@ -350,14 +378,22 @@ void SearchForm::foundEntry(Entry*entry)
 void SearchForm::stoppedSearch(int resultCode)
 {
     WebSearchAbstract *engine = static_cast<WebSearchAbstract *>(sender());
-    --d->runningSearches;
+    if (d->runningSearches.remove(engine)) {
+        kDebug() << "Search from engine" << engine->label() << "stopped with code" << resultCode  << (resultCode == 0 ? "(OK)" : "(Error)");
+        if (d->runningSearches.isEmpty()) {
+            /// last search engine stopped
+            d->switchToSearch();
+            emit doneSearching();
 
-    kDebug() << "Search from engine" << engine->label() << "stopped with code" << resultCode  << (resultCode == 0 ? "(OK)," : "(Error),") << d->runningSearches << "engine(s) left";
-
-    if (d->runningSearches <= 0) {
-        /// last search engine stopped
-        d->switchToSearch();
-        emit doneSearching();
+            QTimer::singleShot(1000, d->progressBar, SLOT(hide()));
+        } else {
+            QStringList remainingEngines;
+            foreach(WebSearchAbstract *running, d->runningSearches) {
+                remainingEngines.append(running->label());
+            }
+            if (!remainingEngines.isEmpty())
+                kDebug() << "Remaining running engines:" << remainingEngines.join(", ");
+        }
     }
 }
 
@@ -397,4 +433,23 @@ void SearchForm::enginesListCurrentChanged(QListWidgetItem *current, QListWidget
 void SearchForm::currentStackWidgetChanged(int index)
 {
     d->currentStackWidgetChanged(index);
+}
+
+void SearchForm::copyFromEntry()
+{
+    Q_ASSERT(d->currentEntry != NULL);
+
+    d->currentQueryForm()->copyFromEntry(*(d->currentEntry));
+}
+
+void SearchForm::updateProgress(int cur, int total)
+{
+    WebSearchAbstract *ws = static_cast<WebSearchAbstract*>(sender());
+    d->progressMap[ws] = total > 0 ? cur * 1000 / total : 0;
+
+    int progress = 0, count = 0;
+    for (QMap<WebSearchAbstract*, int>::ConstIterator it = d->progressMap.constBegin(); it != d->progressMap.constEnd(); ++it, ++count)
+        progress += it.value();
+
+    d->progressBar->setValue(count >= 1 ? progress / count : 0);
 }

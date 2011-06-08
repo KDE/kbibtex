@@ -90,8 +90,13 @@ public:
         loadState();
     }
 
-    virtual bool readyToStart() const {
+    bool readyToStart() const {
         return !lineEditSearchTerm->text().isEmpty();
+    }
+
+    void copyFromEntry(const Entry &entry) {
+        comboBoxSearchWhere->setCurrentIndex(comboBoxSearchWhere->count() - 1);
+        lineEditSearchTerm->setText(authorLastNames(entry).join(" ") + " " + PlainTextValue::text(entry[Entry::ftTitle]));
     }
 
     void saveState() {
@@ -110,6 +115,7 @@ private:
 
 public:
     WebSearchQueryFormBibsonomy *form;
+    int numSteps, curStep;
 
     WebSearchBibsonomyPrivate(WebSearchBibsonomy *parent)
             : p(parent), form(NULL) {
@@ -164,23 +170,31 @@ WebSearchBibsonomy::WebSearchBibsonomy(QWidget *parent)
 void WebSearchBibsonomy::startSearch(const QMap<QString, QString> &query, int numResults)
 {
     m_hasBeenCanceled = false;
+    d->curStep = 0;
+    d->numSteps = 1;
 
     QNetworkRequest request(d->buildQueryUrl(query, numResults));
     setSuggestedHttpHeaders(request);
     QNetworkReply *reply = networkAccessManager()->get(request);
     setNetworkReplyTimeout(reply);
     connect(reply, SIGNAL(finished()), this, SLOT(downloadDone()));
+
+    emit progress(0, d->numSteps);
 }
 
 void WebSearchBibsonomy::startSearch()
 {
     m_hasBeenCanceled = false;
+    d->curStep = 0;
+    d->numSteps = 1;
 
     QNetworkRequest request(d->buildQueryUrl());
     setSuggestedHttpHeaders(request);
     QNetworkReply *reply = networkAccessManager()->get(request);
     setNetworkReplyTimeout(reply);
     connect(reply, SIGNAL(finished()), this, SLOT(downloadDone()));
+
+    emit progress(0, d->numSteps);
 
     d->form->saveState();
 }
@@ -213,10 +227,14 @@ void WebSearchBibsonomy::cancel()
 
 void WebSearchBibsonomy::downloadDone()
 {
+    emit progress(++d->curStep, d->numSteps);
+
     QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
 
     if (handleErrors(reply)) {
-        QString bibTeXcode = reply->readAll();
+        QTextStream ts(reply->readAll());
+        ts.setCodec("utf-8");
+        QString bibTeXcode = ts.readAll();
 
         FileImporterBibTeX importer;
         File *bibtexFile = importer.fromString(bibTeXcode);
@@ -238,6 +256,7 @@ void WebSearchBibsonomy::downloadDone()
             if (!hasEntries)
                 kDebug() << "No hits found in" << reply->url().toString();
             emit stoppedSearch(resultNoError);
+            emit progress(d->numSteps, d->numSteps);
 
             delete bibtexFile;
         } else {
