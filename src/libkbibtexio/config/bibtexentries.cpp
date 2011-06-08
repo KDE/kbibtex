@@ -59,7 +59,7 @@ public:
         KConfigGroup configGroup(config, groupName);
         int typeCount = qMin(configGroup.readEntry("count", 0), entryTypeMaxCount);
 
-        for (int col = 1; col < typeCount; ++col) {
+        for (int col = 1; col <= typeCount; ++col) {
             QString groupName = QString("EntryType%1").arg(col);
             KConfigGroup configGroup(config, groupName);
 

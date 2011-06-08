@@ -60,7 +60,7 @@ public:
         KConfigGroup configGroup(config, groupName);
         int columnCount = qMin(configGroup.readEntry("count", 0), bibTeXFieldsMaxColumnCount);
 
-        for (int col = 1; col < columnCount; ++col) {
+        for (int col = 1; col <= columnCount; ++col) {
             QString groupName = QString("Column%1").arg(col);
             KConfigGroup configGroup(config, groupName);
 
