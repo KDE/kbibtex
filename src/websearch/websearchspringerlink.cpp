@@ -142,16 +142,15 @@ private:
 public:
     const QString springerLinkBaseUrl;
     const QString springerLinkQueryUrl;
-    KUrl springerLinkSearchUrl;
     int numExpectedResults, numFoundResults;
-    int runningJobs;
     int currentSearchPosition;
-    QStringList articleUrls;
     WebSearchQueryFormSpringerLink *form;
     int numSteps, curStep;
+    QList<KUrl> queueResultPages, queueExportPages;
+    QMap<KUrl, QString> queueBibTeX;
 
     WebSearchSpringerLinkPrivate(WebSearchSpringerLink *parent)
-            : p(parent), springerLinkBaseUrl(QLatin1String("http://www.springerlink.com")), springerLinkQueryUrl(QLatin1String("http://www.springerlink.com/content/")), runningJobs(0), form(NULL) {
+            : p(parent), springerLinkBaseUrl(QLatin1String("http://www.springerlink.com")), springerLinkQueryUrl(QLatin1String("http://www.springerlink.com/content/")), form(NULL) {
         // nothing
     }
 
@@ -215,24 +214,25 @@ void WebSearchSpringerLink::startSearch()
 {
     m_hasBeenCanceled = false;
     d->numFoundResults = 0;
-    d->currentSearchPosition = 0;
-    d->articleUrls.clear();
+    d->queueResultPages.clear();
+    d->queueExportPages.clear();
+    d->queueBibTeX.clear();
     d->numExpectedResults = d->form->numResultsField->value();
     d->curStep = 0;
     d->numSteps = d->numExpectedResults * 2 + 1 + d->numExpectedResults / 10;
 
-    ++d->runningJobs;
-    d->springerLinkSearchUrl = KUrl(d->springerLinkQueryUrl);
-    d->springerLinkSearchUrl = d->buildQueryUrl(d->springerLinkSearchUrl);
+    KUrl springerLinkSearchUrl = KUrl(d->springerLinkQueryUrl);
+    springerLinkSearchUrl = d->buildQueryUrl(springerLinkSearchUrl);
 
-    QNetworkRequest request(d->springerLinkSearchUrl);
-    setSuggestedHttpHeaders(request);
-    QNetworkReply *reply = networkAccessManager()->get(request);
-    setNetworkReplyTimeout(reply);
-    connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingResultPage()));
+    d->queueResultPages.append(springerLinkSearchUrl);
+    for (int i = 10; i < d->numExpectedResults; i += 10) {
+        KUrl url = springerLinkSearchUrl;
+        url.addQueryItem(QLatin1String("o"), QString::number(i));
+        d->queueResultPages.append(url);
+    }
 
     emit progress(0, d->numSteps);
-
+    processNextQueuedUrl();
     d->form->saveState();
 }
 
@@ -241,22 +241,25 @@ void WebSearchSpringerLink::startSearch(const QMap<QString, QString> &query, int
     m_hasBeenCanceled = false;
     d->numFoundResults = 0;
     d->currentSearchPosition = 0;
-    d->articleUrls.clear();
+    d->queueResultPages.clear();
+    d->queueExportPages.clear();
+    d->queueBibTeX.clear();
     d->numExpectedResults = numResults;
     d->curStep = 0;
     d->numSteps = d->numExpectedResults * 2 + 1 + d->numExpectedResults / 10;
 
-    ++d->runningJobs;
-    d->springerLinkSearchUrl = KUrl(d->springerLinkQueryUrl);
-    d->springerLinkSearchUrl = d->buildQueryUrl(d->springerLinkSearchUrl, query);
+    KUrl springerLinkSearchUrl = KUrl(d->springerLinkQueryUrl);
+    springerLinkSearchUrl = d->buildQueryUrl(springerLinkSearchUrl, query);
 
-    QNetworkRequest request(d->springerLinkSearchUrl);
-    setSuggestedHttpHeaders(request);
-    QNetworkReply *reply = networkAccessManager()->get(request);
-    setNetworkReplyTimeout(reply);
-    connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingResultPage()));
+    d->queueResultPages.append(springerLinkSearchUrl);
+    for (int i = 10; i < numResults; i += 10) {
+        KUrl url = springerLinkSearchUrl;
+        url.addQueryItem(QLatin1String("o"), QString::number(i));
+        d->queueResultPages.append(url);
+    }
 
     emit progress(0, d->numSteps);
+    processNextQueuedUrl();
 }
 
 QString WebSearchSpringerLink::label() const
@@ -290,11 +293,8 @@ void WebSearchSpringerLink::doneFetchingResultPage()
 {
     emit progress(++d->curStep, d->numSteps);
 
-    --d->runningJobs;
-    Q_ASSERT(d->runningJobs == 0);
-
     QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
-     if (handleErrors(reply)) {
+    if (handleErrors(reply)) {
         QString htmlSource = reply->readAll();
         int p1 = -1, p2;
         while ((p1 = htmlSource.indexOf(" data-code=\"", p1 + 1)) >= 0 && (p2 = htmlSource.indexOf("\"", p1 + 14)) >= 0) {
@@ -302,32 +302,12 @@ void WebSearchSpringerLink::doneFetchingResultPage()
 
             if (datacode.length() > 8 && d->numFoundResults < d->numExpectedResults) {
                 ++d->numFoundResults;
-                ++d->runningJobs;
                 QString url = QString("http://www.springerlink.com/content/%1/export-citation/").arg(datacode);
-                QNetworkRequest request(url);
-                setSuggestedHttpHeaders(request);
-                QNetworkReply *reply = networkAccessManager()->get(request);
-                setNetworkReplyTimeout(reply);
-                connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingExportPage()));
+                d->queueExportPages.append(KUrl(url));
             }
         }
 
-        d->currentSearchPosition += 10;
-        if (d->numExpectedResults > d->currentSearchPosition) {
-            KUrl url(d->springerLinkSearchUrl);
-            url.addQueryItem(QLatin1String("o"), QString::number(d->currentSearchPosition));
-            QNetworkRequest request(url);
-            setSuggestedHttpHeaders(request);
-            QNetworkReply *reply = networkAccessManager()->get(request);
-            setNetworkReplyTimeout(reply);
-            connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingResultPage()));
-            ++d->runningJobs;
-        }
-
-        if (d->runningJobs <= 0) {
-            emit stoppedSearch(resultNoError);
-            emit progress(d->numSteps, d->numSteps);
-        }
+        processNextQueuedUrl();
     } else
         kDebug() << "url was" << reply->url().toString();
 }
@@ -336,10 +316,6 @@ void WebSearchSpringerLink::doneFetchingResultPage()
 void WebSearchSpringerLink::doneFetchingExportPage()
 {
     emit progress(++d->curStep, d->numSteps);
-
-    --d->runningJobs;
-    Q_ASSERT(d->runningJobs >= 0);
-
 
     QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
     if (handleErrors(reply)) {
@@ -362,17 +338,9 @@ void WebSearchSpringerLink::doneFetchingExportPage()
         for (QMap<QString, QString>::ConstIterator it = inputMap.constBegin(); it != inputMap.constEnd(); ++it)
             body += '&' + encodeURL(it.key()) + '=' + encodeURL(it.value());
 
-        ++d->runningJobs;
-        QNetworkRequest request(reply->url());
-        setSuggestedHttpHeaders(request, reply);
-        QNetworkReply *newReply = networkAccessManager()->post(request, body.toUtf8());
-        setNetworkReplyTimeout(newReply);
-        connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingBibTeX()));
+        d->queueBibTeX.insert(reply->url(), body);
 
-        if (d->runningJobs <= 0) {
-            emit stoppedSearch(resultNoError);
-            emit progress(d->numSteps, d->numSteps);
-        }
+        processNextQueuedUrl();
     } else
         kDebug() << "url was" << reply->url().toString();
 }
@@ -380,9 +348,6 @@ void WebSearchSpringerLink::doneFetchingExportPage()
 void WebSearchSpringerLink::doneFetchingBibTeX()
 {
     emit progress(++d->curStep, d->numSteps);
-
-    --d->runningJobs;
-    Q_ASSERT(d->runningJobs >= 0);
 
     QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
     if (handleErrors(reply)) {
@@ -411,10 +376,46 @@ void WebSearchSpringerLink::doneFetchingBibTeX()
             delete bibtexFile;
         }
 
-        if (d->runningJobs <= 0) {
-            emit stoppedSearch(hasEntry ? resultNoError : resultUnspecifiedError);
-            emit progress(d->numSteps, d->numSteps);
-        }
+        processNextQueuedUrl();
     }  else
         kDebug() << "url was" << reply->url().toString();
+}
+
+void WebSearchSpringerLink::processNextQueuedUrl()
+{
+    kDebug() << d->queueBibTeX.count() << d->queueExportPages.count() << d->queueResultPages.count();
+
+    if (!d->queueBibTeX.isEmpty()) {
+        QMap<KUrl, QString>::Iterator it = d->queueBibTeX.begin();
+        KUrl url(it.key());
+        QString body(it.value());
+        d->queueBibTeX.erase(it);
+
+        QNetworkRequest request(url);
+        setSuggestedHttpHeaders(request);
+        QNetworkReply *newReply = networkAccessManager()->post(request, body.toUtf8());
+        setNetworkReplyTimeout(newReply);
+        connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingBibTeX()));
+    } else if (!d->queueExportPages.isEmpty()) {
+        KUrl url = d->queueExportPages.first();
+        d->queueExportPages.removeFirst();
+
+        QNetworkRequest request(url);
+        setSuggestedHttpHeaders(request);
+        QNetworkReply *reply = networkAccessManager()->get(request);
+        setNetworkReplyTimeout(reply);
+        connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingExportPage()));
+    } else if (!d->queueResultPages.isEmpty()) {
+        KUrl url = d->queueResultPages.first();
+        d->queueResultPages.removeFirst();
+
+        QNetworkRequest request(url);
+        setSuggestedHttpHeaders(request);
+        QNetworkReply *reply = networkAccessManager()->get(request);
+        setNetworkReplyTimeout(reply);
+        connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingResultPage()));
+    } else {
+        emit stoppedSearch(resultNoError);
+        emit progress(d->numSteps, d->numSteps);
+    }
 }

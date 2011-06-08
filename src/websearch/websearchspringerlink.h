@@ -56,6 +56,8 @@ private:
 
     class WebSearchSpringerLinkPrivate;
     WebSearchSpringerLinkPrivate *d;
+
+    void processNextQueuedUrl();
 };
 
 #endif // KBIBTEX_WEBSEARCH_SPRINGERLINK_H
