@@ -65,12 +65,14 @@ public:
         // nothing
     }
 
-    virtual bool readyToStart() const {
-        return false;
-    }
+    virtual bool readyToStart() const = 0;
+
+    virtual void copyFromEntry(const Entry&) = 0;
 
 protected:
     KSharedConfigPtr config;
+
+    QStringList authorLastNames(const Entry &entry);
 
 signals:
     void returnPressed();
@@ -159,6 +161,7 @@ private slots:
 signals:
     void foundEntry(Entry*);
     void stoppedSearch(int);
+    void progress(int, int);
 };
 
 #endif // KBIBTEX_WEBSEARCH_ABSTRACT_H

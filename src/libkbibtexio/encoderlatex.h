@@ -40,7 +40,7 @@ public:
     QString encode(const QString &text);
     QString encode(const QString &text, const QChar &replace);
     QString& decomposedUTF8toLaTeX(QString &text);
-    QString& convertToPlainAscii(QString &text);
+    QString convertToPlainAscii(const QString &text) const;
 
     static EncoderLaTeX *currentEncoderLaTeX();
     static void deleteCurrentEncoderLaTeX();

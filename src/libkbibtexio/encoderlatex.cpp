@@ -670,20 +670,22 @@ QString& EncoderLaTeX::decomposedUTF8toLaTeX(QString &text)
     return text;
 }
 
-QString& EncoderLaTeX::convertToPlainAscii(QString &text)
+QString EncoderLaTeX::convertToPlainAscii(const QString &text) const
 {
+    QString internalText = text;
+
     for (int i = 0; i < modcharmappingdatalatexcount; ++i) {
         QChar c = QChar(modcharmappingdatalatex[i].unicode);
-        if (text.indexOf(c) >= 0)
-            text = text.replace(c, QString(modcharmappingdatalatex[i].letter));
+        if (internalText.indexOf(c) >= 0)
+            internalText = internalText.replace(c, QString(modcharmappingdatalatex[i].letter));
     }
     for (int i = 0; i < commandmappingdatalatexcount; ++i) {
         QChar c = QChar(commandmappingdatalatex[i].unicode);
-        if (text.indexOf(c) >= 0)
-            text = text.replace(c, QString(commandmappingdatalatex[i].letters));
+        if (internalText.indexOf(c) >= 0)
+            internalText = internalText.replace(c, QString(commandmappingdatalatex[i].letters));
     }
 
-    return text;
+    return internalText;
 }
 
 EncoderLaTeX* EncoderLaTeX::currentEncoderLaTeX()

@@ -30,6 +30,7 @@
 #include <KMessageBox>
 #include <KApplication>
 
+#include <encoderlatex.h>
 #include "websearchabstract.h"
 
 const QString WebSearchAbstract::queryKeyFreeText = QLatin1String("free");
@@ -67,6 +68,20 @@ void HTTPEquivCookieJar::checkForHttpEqiuv(const QString &htmlCode, const QUrl &
         cookies.append(QNetworkCookie(key.toAscii(), value.toAscii()));
         setCookiesFromUrl(cookies, cookieUrl);
     }
+}
+
+QStringList WebSearchQueryFormAbstract::authorLastNames(const Entry &entry)
+{
+    QStringList result;
+    EncoderLaTeX *encoder = EncoderLaTeX::currentEncoderLaTeX();
+
+    const Value v = entry[Entry::ftAuthor];
+    Person *p = NULL;
+    foreach(ValueItem *vi, v)
+    if ((p = dynamic_cast<Person*>(vi)) != NULL)
+        result.append(encoder->convertToPlainAscii(p->lastName()));
+
+    return result;
 }
 
 WebSearchAbstract::WebSearchAbstract(QWidget *parent)
@@ -127,6 +142,7 @@ bool WebSearchAbstract::handleErrors(QNetworkReply *reply)
         emit stoppedSearch(resultCancelled);
         return false;
     } else if (reply->error() != QNetworkReply::NoError) {
+        m_hasBeenCanceled = true;
         kWarning() << "Search using" << label() << "failed (HTTP code" << reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() << reply->attribute(QNetworkRequest::HttpReasonPhraseAttribute).toByteArray() << ")";
         KMessageBox::error(m_parent, reply->errorString().isEmpty() ? i18n("Searching \"%1\" failed for unknown reason.", label()) : i18n("Searching \"%1\" failed with error message:\n\n%2", label(), reply->errorString()));
         emit stoppedSearch(resultUnspecifiedError);
