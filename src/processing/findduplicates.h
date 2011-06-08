@@ -78,7 +78,7 @@ class KBIBTEXPROC_EXPORT FindDuplicates : public QObject
     Q_OBJECT
 
 public:
-    FindDuplicates(QWidget *parent, int sensitivity = 5000);
+    FindDuplicates(QWidget *parent, int sensitivity = 4000);
 
     bool findDuplicateEntries(File *file, QList<EntryClique*> &entryCliqueList);
 

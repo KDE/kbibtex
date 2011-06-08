@@ -111,26 +111,6 @@ void EntryClique::setChosenValue(const QString &field, Value &value, ValueOperat
     }
 }
 
-QString EntryClique::dump() const
-{
-    QString result(QLatin1String("dump START\n"));
-
-    for (QMap<Entry*, bool>::ConstIterator ceit = checkedEntries.constBegin(); ceit != checkedEntries.constEnd(); ++ceit)
-        result.append(QString("checkedEntries: %1 = %2\n").arg(ceit.key()->id()).arg(ceit.value() ? QLatin1String("TRUE") : QLatin1String("false")));
-
-    for (QMap<QString, QList<Value> >::ConstIterator vmit = valueMap.constBegin(); vmit != valueMap.constEnd(); ++vmit)
-        result.append(QString("valueMap: %1 = %2\n").arg(vmit.key()).arg(vmit.value().count()));
-
-    for (QMap<QString, QList<Value> >::ConstIterator cvmit = chosenValueMap.constBegin(); cvmit != chosenValueMap.constEnd(); ++cvmit) {
-        result.append(QString("chosenValueMap: %1 =").arg(cvmit.key()));
-        for (QList<Value>::ConstIterator vit = cvmit.value().constBegin(); vit != cvmit.value().constEnd(); ++vit)
-            result.append(QString(" %1").arg(PlainTextValue::text(*vit)));
-    }
-
-    result.append(QLatin1String("dump END\n"));
-    return result;
-}
-
 void EntryClique::addEntry(Entry* entry)
 {
     checkedEntries.insert(entry, false); /// remember to call recalculateValueMap later

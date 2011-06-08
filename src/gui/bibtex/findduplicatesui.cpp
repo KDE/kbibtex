@@ -39,6 +39,7 @@
 #include <KStandardDirs>
 #include <kparts/part.h>
 #include <KMessageBox>
+#include <KInputDialog>
 
 #include <radiobuttontreeview.h>
 #include "bibtexeditor.h"
@@ -503,8 +504,12 @@ FindDuplicatesUI::FindDuplicatesUI(KParts::Part *part, BibTeXEditor *bibTeXEdito
 
 void FindDuplicatesUI::slotFindDuplicates()
 {
+    bool ok = false;
+    int sensitivity = KInputDialog::getInteger(i18n("Sensitivity"), i18n("Enter a value for sensitivity.\n\nLow values (close to 0) require very similar entries for duplicate detection, larger values (close to 10000) are more likely to count entries as duplicates.\n\nPlease provide feedback to the developers if you have a suggestion for a better default value than 4000."), 4000, 0, 10000, 10, &ok, d->part->widget());
+    if (!ok) sensitivity = 4000;
+
     KDialog dlg(d->part->widget());
-    FindDuplicates fd(&dlg);
+    FindDuplicates fd(&dlg, sensitivity);
     File *file = d->editor->bibTeXModel()->bibTeXFile();
 
     if (d->editor->selectedElements().count() > 1 && d->editor->selectedElements().count() < d->editor->model()->rowCount() && KMessageBox::questionYesNo(d->part->widget(), i18n("Multiple elements are selected. Do you want to search for duplicates only within the selection or in the whole document?"), i18n("Search only in selection?"), KGuiItem(i18n("Only in selection")), KGuiItem(i18n("Whole document"))) == KMessageBox::Yes) {
