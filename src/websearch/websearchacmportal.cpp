@@ -46,6 +46,8 @@ public:
     int currentSearchPosition;
     QStringList bibTeXUrls;
 
+    int curStep, numSteps;
+
     WebSearchAcmPortalPrivate(WebSearchAcmPortal *parent)
             : p(parent), numExpectedResults(0), numFoundResults(0),
             acmPortalBaseUrl(QLatin1String("http://portal.acm.org/")) {
@@ -77,6 +79,8 @@ void WebSearchAcmPortal::startSearch(const QMap<QString, QString> &query, int nu
     d->currentSearchPosition = 1;
     d->bibTeXUrls.clear();
     d->numFoundResults = 0;
+    d->curStep = 0;
+    d->numSteps = numResults + 2;
 
     for (QMap<QString, QString>::ConstIterator it = query.constBegin(); it != query.constEnd(); ++it) {
         // FIXME: Is there a need for percent encoding?
@@ -89,6 +93,7 @@ void WebSearchAcmPortal::startSearch(const QMap<QString, QString> &query, int nu
     QNetworkReply *reply = networkAccessManager()->get(request);
     setNetworkReplyTimeout(reply);
     connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingStartPage()));
+    emit progress(0, d->numSteps);
 }
 
 void WebSearchAcmPortal::startSearch()
@@ -125,6 +130,8 @@ void WebSearchAcmPortal::cancel()
 
 void WebSearchAcmPortal::doneFetchingStartPage()
 {
+    emit progress(++d->curStep, d->numSteps);
+
     QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
 
     if (handleErrors(reply)) {
@@ -153,6 +160,8 @@ void WebSearchAcmPortal::doneFetchingStartPage()
 
 void WebSearchAcmPortal::doneFetchingSearchPage()
 {
+    emit progress(++d->curStep, d->numSteps);
+
     QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
 
     if (handleErrors(reply)) {
@@ -181,14 +190,18 @@ void WebSearchAcmPortal::doneFetchingSearchPage()
             setNetworkReplyTimeout(newReply);
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingBibTeX()));
             d->bibTeXUrls.removeFirst();
-        } else
+        } else {
             emit stoppedSearch(resultNoError);
+            emit progress(d->numSteps, d->numSteps);
+        }
     }  else
         kDebug() << "url was" << reply->url().toString();
 }
 
 void WebSearchAcmPortal::doneFetchingBibTeX()
 {
+    emit progress(++d->curStep, d->numSteps);
+
     QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
 
     if (handleErrors(reply)) {
@@ -216,8 +229,10 @@ void WebSearchAcmPortal::doneFetchingBibTeX()
             setNetworkReplyTimeout(newReply);
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingBibTeX()));
             d->bibTeXUrls.removeFirst();
-        } else
+        } else {
             emit stoppedSearch(resultNoError);
+            emit progress(d->numSteps, d->numSteps);
+        }
     } else
         kDebug() << "url was" << reply->url().toString();
 }

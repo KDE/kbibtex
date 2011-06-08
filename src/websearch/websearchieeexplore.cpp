@@ -44,6 +44,7 @@ public:
     QStringList arnumberList;
     QString startPageUrl, searchRequestUrl, fullAbstractUrl, citationUrl, citationPostData;
     FileImporterBibTeX fileImporter;
+    int numSteps, curStep;
 
     WebSearchIEEEXplorePrivate(WebSearchIEEEXplore *parent)
             : p(parent) {
@@ -99,6 +100,8 @@ void WebSearchIEEEXplore::startSearch(const QMap<QString, QString> &query, int n
 {
     m_hasBeenCanceled = false;
     d->numResults = numResults;
+    d->curStep = 0;
+    d->numSteps = numResults * 2 + 2;
 
     d->queryFragments.clear();
     for (QMap<QString, QString>::ConstIterator it = query.constBegin(); it != query.constEnd(); ++it)
@@ -111,10 +114,14 @@ void WebSearchIEEEXplore::startSearch(const QMap<QString, QString> &query, int n
     QNetworkReply *reply = networkAccessManager()->get(request);
     setNetworkReplyTimeout(reply);
     connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingStartPage()));
+
+    emit progress(0, d->numSteps);
 }
 
 void WebSearchIEEEXplore::doneFetchingStartPage()
 {
+    emit progress(++d->curStep, d->numSteps);
+
     QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
 
     if (handleErrors(reply)) {
@@ -130,6 +137,8 @@ void WebSearchIEEEXplore::doneFetchingStartPage()
 
 void WebSearchIEEEXplore::doneFetchingSearchResults()
 {
+    emit progress(++d->curStep, d->numSteps);
+
     QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
 
     if (handleErrors(reply)) {
@@ -147,6 +156,7 @@ void WebSearchIEEEXplore::doneFetchingSearchResults()
 
         if (d->arnumberList.isEmpty()) {
             emit stoppedSearch(resultNoError);
+            emit progress(d->numSteps, d->numSteps);
             return;
         } else {
             QString url = d->fullAbstractUrl + d->arnumberList.first();
@@ -163,6 +173,8 @@ void WebSearchIEEEXplore::doneFetchingSearchResults()
 
 void WebSearchIEEEXplore::doneFetchingAbstract()
 {
+    emit progress(++d->curStep, d->numSteps);
+
     QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
 
     if (handleErrors(reply)) {
@@ -181,6 +193,8 @@ void WebSearchIEEEXplore::doneFetchingAbstract()
 
 void WebSearchIEEEXplore::doneFetchingBibliography()
 {
+    emit progress(++d->curStep, d->numSteps);
+
     QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
 
     if (handleErrors(reply)) {
@@ -222,6 +236,7 @@ void WebSearchIEEEXplore::doneFetchingBibliography()
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingAbstract()));
         } else {
             emit stoppedSearch(resultNoError);
+            emit progress(d->numSteps, d->numSteps);
         }
     } else
         kDebug() << "url was" << reply->url().toString();

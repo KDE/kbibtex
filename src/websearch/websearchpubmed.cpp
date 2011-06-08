@@ -38,6 +38,7 @@ private:
 
 public:
     XSLTransform xslt;
+    int numSteps, curStep;
 
     WebSearchPubMedPrivate(WebSearchPubMed *parent)
             : p(parent), pubMedUrlPrefix(QLatin1String("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/")), xslt(KStandardDirs::locate("appdata", "pubmed2bibtex.xsl")) {
@@ -99,12 +100,16 @@ void WebSearchPubMed::startSearch()
 
 void WebSearchPubMed::startSearch(const QMap<QString, QString> &query, int numResults)
 {
+    d->curStep = 0;
+    d->numSteps = 2;
     m_hasBeenCanceled = false;
     QNetworkRequest request(d->buildQueryUrl(query, numResults));
     setSuggestedHttpHeaders(request);
     QNetworkReply *reply = networkAccessManager()->get(request);
     setNetworkReplyTimeout(reply);
     connect(reply, SIGNAL(finished()), this, SLOT(eSearchDone()));
+
+    emit progress(0, d->numSteps);
 }
 
 QString WebSearchPubMed::label() const
@@ -134,6 +139,8 @@ void WebSearchPubMed::cancel()
 
 void WebSearchPubMed::eSearchDone()
 {
+    emit progress(++d->curStep, d->numSteps);
+
     QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
 
     if (handleErrors(reply)) {
@@ -162,6 +169,8 @@ void WebSearchPubMed::eSearchDone()
 
 void WebSearchPubMed::eFetchDone()
 {
+    emit progress(++d->curStep, d->numSteps);
+
     QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
 
     if (handleErrors(reply)) {
@@ -183,6 +192,7 @@ void WebSearchPubMed::eFetchDone()
                 }
             }
             emit stoppedSearch(hasEntry ? resultNoError : resultUnspecifiedError);
+            emit progress(d->numSteps, d->numSteps);
             delete bibtexFile;
         } else
             emit stoppedSearch(resultUnspecifiedError);

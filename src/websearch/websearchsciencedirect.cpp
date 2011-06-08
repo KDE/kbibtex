@@ -40,6 +40,7 @@ public:
     const QString scienceDirectBaseUrl;
     QStringList bibTeXUrls;
     int runningJobs;
+    int numSteps, curStep;
 
     WebSearchScienceDirectPrivate(WebSearchScienceDirect *parent)
             : p(parent), scienceDirectBaseUrl(QLatin1String("http://www.sciencedirect.com/")) {
@@ -76,6 +77,8 @@ void WebSearchScienceDirect::startSearch(const QMap<QString, QString> &query, in
     m_hasBeenCanceled = false;
     d->bibTeXUrls.clear();
     d->currentSearchPosition = 0;
+    d->curStep = 0;
+    d->numSteps = 2 + 3 * numResults;
 
     d->queryFreetext = query[queryKeyFreeText] + ' ' + query[queryKeyTitle] + ' ' + query[queryKeyYear];
     d->queryAuthor = query[queryKeyAuthor];
@@ -87,6 +90,8 @@ void WebSearchScienceDirect::startSearch(const QMap<QString, QString> &query, in
     QNetworkReply *reply = networkAccessManager()->get(request);
     setNetworkReplyTimeout(reply);
     connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingStartPage()));
+
+    emit progress(0, d->numSteps);
 }
 
 QString WebSearchScienceDirect::label() const
@@ -116,6 +121,8 @@ void WebSearchScienceDirect::cancel()
 
 void WebSearchScienceDirect::doneFetchingStartPage()
 {
+    emit progress(++d->curStep, d->numSteps);
+
     --d->runningJobs;
     Q_ASSERT(d->runningJobs == 0);
 
@@ -161,6 +168,8 @@ void WebSearchScienceDirect::doneFetchingResultPage()
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingResultPage()));
             setNetworkReplyTimeout(newReply);
         } else {
+            emit progress(++d->curStep, d->numSteps);
+
             const QString htmlText = reply->readAll();
             static_cast<HTTPEquivCookieJar*>(networkAccessManager()->cookieJar())->checkForHttpEqiuv(htmlText, reply->url());
             int p = -1, p2;
@@ -177,8 +186,10 @@ void WebSearchScienceDirect::doneFetchingResultPage()
                 }
         }
 
-        if (d->runningJobs <= 0)
+        if (d->runningJobs <= 0) {
             emit stoppedSearch(resultNoError);
+            emit progress(d->numSteps, d->numSteps);
+        }
     } else
         kDebug() << "url was" << reply->url().toString();
 }
@@ -199,6 +210,8 @@ void WebSearchScienceDirect::doneFetchingAbstractPage()
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingAbstractPage()));
             setNetworkReplyTimeout(newReply);
         } else {
+            emit progress(++d->curStep, d->numSteps);
+
             const QString htmlText = reply->readAll();
             static_cast<HTTPEquivCookieJar*>(networkAccessManager()->cookieJar())->checkForHttpEqiuv(htmlText, reply->url());
             int p1, p2;
@@ -213,8 +226,10 @@ void WebSearchScienceDirect::doneFetchingAbstractPage()
             }
         }
 
-        if (d->runningJobs <= 0)
+        if (d->runningJobs <= 0) {
             emit stoppedSearch(resultNoError);
+            emit progress(d->numSteps, d->numSteps);
+        }
     } else
         kDebug() << "url was" << reply->url().toString();
 }
@@ -235,6 +250,8 @@ void WebSearchScienceDirect::doneFetchingExportCitationPage()
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingExportCitationPage()));
             setNetworkReplyTimeout(newReply);
         } else {
+            emit progress(++d->curStep, d->numSteps);
+
             const QString htmlText = reply->readAll();
             static_cast<HTTPEquivCookieJar*>(networkAccessManager()->cookieJar())->checkForHttpEqiuv(htmlText, reply->url());
             QMap<QString, QString> inputMap = formParameters(htmlText, QLatin1String("<form name=\"exportCite\""));
@@ -257,14 +274,18 @@ void WebSearchScienceDirect::doneFetchingExportCitationPage()
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingBibTeX()));
         }
 
-        if (d->runningJobs <= 0)
+        if (d->runningJobs <= 0) {
             emit stoppedSearch(resultNoError);
+            emit progress(d->numSteps, d->numSteps);
+        }
     } else
         kDebug() << "url was" << reply->url().toString();
 }
 
 void WebSearchScienceDirect::doneFetchingBibTeX()
 {
+    emit progress(++d->curStep, d->numSteps);
+
     --d->runningJobs;
     Q_ASSERT(d->runningJobs >= 0);
 
@@ -295,8 +316,10 @@ void WebSearchScienceDirect::doneFetchingBibTeX()
             delete bibtexFile;
         }
 
-        if (d->runningJobs <= 0)
+        if (d->runningJobs <= 0) {
             emit stoppedSearch(hasEntry ? resultNoError : resultUnspecifiedError);
+            emit progress(d->numSteps, d->numSteps);
+        }
     } else
         kDebug() << "url was" << reply->url().toString();
 }

@@ -51,6 +51,7 @@ public:
     QString setConfigPageUrl;
     QString queryPageUrl;
     FileImporterBibTeX importer;
+    int numSteps, curStep;
 
     WebSearchGoogleScholarPrivate(WebSearchGoogleScholar *parent)
             : p(parent) {
@@ -77,6 +78,8 @@ void WebSearchGoogleScholar::startSearch(const QMap<QString, QString> &query, in
 {
     d->numResults = numResults;
     m_hasBeenCanceled = false;
+    d->curStep = 0;
+    d->numSteps = numResults + 4;
 
     QStringList queryFragments;
     foreach(QString queryFragment, splitRespectingQuotationMarks(query[queryKeyFreeText])) {
@@ -99,10 +102,14 @@ void WebSearchGoogleScholar::startSearch(const QMap<QString, QString> &query, in
     QNetworkReply *reply = networkAccessManager()->get(request);
     setNetworkReplyTimeout(reply);
     connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingStartPage()));
+
+    emit progress(0, d->numSteps);
 }
 
 void WebSearchGoogleScholar::doneFetchingStartPage()
 {
+    emit progress(++d->curStep, d->numSteps);
+
     QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
 
     if (handleErrors(reply)) {
@@ -124,6 +131,8 @@ void WebSearchGoogleScholar::doneFetchingStartPage()
 
 void WebSearchGoogleScholar::doneFetchingConfigPage()
 {
+    emit progress(++d->curStep, d->numSteps);
+
     QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
 
     if (handleErrors(reply)) {
@@ -148,6 +157,8 @@ void WebSearchGoogleScholar::doneFetchingConfigPage()
 
 void WebSearchGoogleScholar::doneFetchingSetConfigPage()
 {
+    emit progress(++d->curStep, d->numSteps);
+
     QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
 
     if (handleErrors(reply)) {
@@ -179,6 +190,8 @@ void WebSearchGoogleScholar::doneFetchingSetConfigPage()
 
 void WebSearchGoogleScholar::doneFetchingQueryPage()
 {
+    emit progress(++d->curStep, d->numSteps);
+
     QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
 
     if (handleErrors(reply)) {
@@ -199,14 +212,18 @@ void WebSearchGoogleScholar::doneFetchingQueryPage()
             setNetworkReplyTimeout(newReply);
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingBibTeX()));
             d->listBibTeXurls.removeFirst();
-        } else
+        } else {
             emit stoppedSearch(resultNoError);
+            emit progress(d->numSteps, d->numSteps);
+        }
     } else
         kDebug() << "url was" << reply->url().toString();
 }
 
 void WebSearchGoogleScholar::doneFetchingBibTeX()
 {
+    emit progress(++d->curStep, d->numSteps);
+
     QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
 
     if (handleErrors(reply)) {
@@ -242,6 +259,7 @@ void WebSearchGoogleScholar::doneFetchingBibTeX()
             d->listBibTeXurls.removeFirst();
         } else {
             emit stoppedSearch(resultNoError);
+            emit progress(d->numSteps, d->numSteps);
         }
     } else
         kDebug() << "url was" << reply->url().toString();
