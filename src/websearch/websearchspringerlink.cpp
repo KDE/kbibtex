@@ -220,11 +220,6 @@ void WebSearchSpringerLink::startSearch()
     setNetworkReplyTimeout(reply);
     connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingResultPage()));
 
-    kDebug() << "url =" << request.url();
-    foreach(QNetworkCookie cookie, networkAccessManager()->cookieJar()->cookiesForUrl(request.url())) {
-        kDebug() << "cookie " << cookie.name() << "=" << cookie.value();
-    }
-
     d->form->saveState();
 }
 
@@ -246,11 +241,6 @@ void WebSearchSpringerLink::startSearch(const QMap<QString, QString> &query, int
     QNetworkReply *reply = networkAccessManager()->get(request);
     setNetworkReplyTimeout(reply);
     connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingResultPage()));
-
-    kDebug() << "url =" << request.url();
-    foreach(QNetworkCookie cookie, networkAccessManager()->cookieJar()->cookiesForUrl(request.url())) {
-        kDebug() << "cookie " << cookie.name() << "=" << cookie.value();
-    }
 }
 
 QString WebSearchSpringerLink::label() const
@@ -286,10 +276,6 @@ void WebSearchSpringerLink::doneFetchingResultPage()
     Q_ASSERT(d->runningJobs == 0);
 
     QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
-    kDebug() << "url =" << reply->url();
-    foreach(QNetworkCookie cookie, networkAccessManager()->cookieJar()->cookiesForUrl(reply->url())) {
-        kDebug() << "cookie " << cookie.name() << "=" << cookie.value();
-    }
     if (handleErrors(reply)) {
         QString htmlSource = reply->readAll();
         int p1 = -1, p2;
@@ -378,8 +364,6 @@ void WebSearchSpringerLink::doneFetchingBibTeX()
         ts.setCodec("ISO-8859-1");
         QString bibTeXcode = ts.readAll();
         d->sanitizeBibTeXCode(bibTeXcode);
-
-        kDebug() << "bibTeXcode =" << bibTeXcode;
 
         FileImporterBibTeX importer;
         File *bibtexFile = importer.fromString(bibTeXcode);
