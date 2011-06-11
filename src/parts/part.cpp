@@ -18,6 +18,8 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
+#include <typeinfo>
+
 #include <QLabel>
 #include <QFile>
 #include <QFileInfo>
@@ -48,6 +50,7 @@
 #include <fileimporterris.h>
 #include <fileexporterris.h>
 #include <fileimporterpdf.h>
+#include <fileexporterps.h>
 #include <fileexporterpdf.h>
 #include <fileexporterrtf.h>
 #include <fileexporterbibtex2html.h>
@@ -59,6 +62,7 @@
 #include <comment.h>
 #include <filterbar.h>
 #include <findduplicatesui.h>
+#include <preferences/settingsfileexporterbibtexwidget.h>
 
 #include <valuelistmodel.h>
 #include <clipboard.h>
@@ -103,7 +107,7 @@ public:
         } else if (ending == "ris") {
             return new FileImporterRIS();
         } else {
-            return new FileImporterBibTeX("latex", false);
+            return new FileImporterBibTeX(false);
         }
     }
 
@@ -120,6 +124,8 @@ public:
             return new FileExporterRIS();
         } else if (ending == "pdf") {
             return new FileExporterPDF();
+        } else if (ending == "ps") {
+            return new FileExporterPS();
         } else if (ending == "rtf") {
             return new FileExporterRTF();
         } else if (ending == "html" || ending == "html") {
@@ -193,6 +199,8 @@ public:
         QString supportedMimeTypes = QLatin1String("text/x-bibtex application/xml application/x-research-info-systems");
         if (!mustBeImportable && FileExporterToolchain::kpsewhich(QLatin1String("embedfile.sty")))
             supportedMimeTypes += QLatin1String(" application/pdf");
+        if (!mustBeImportable && FileExporterToolchain::which(QLatin1String("dvips")))
+            supportedMimeTypes += QLatin1String(" application/postscript");
         if (!mustBeImportable)
             supportedMimeTypes += QLatin1String(" text/html");
         if (!mustBeImportable && FileExporterToolchain::which(QLatin1String("latex2rtf")))
@@ -217,14 +225,20 @@ public:
         SortFilterBibTeXFileModel *model = dynamic_cast<SortFilterBibTeXFileModel *>(editor->model());
         Q_ASSERT(model != NULL);
         FileExporter *exporter = fileExporterFactory(url);
-        FileExporterBibTeX *exporterBibTeX = dynamic_cast<FileExporterBibTeX*>(exporter);
 
         if (isSaveAsOperation) {
             /// only show export dialog at SaveAs or SaveCopyAs operations
-            exporter->showExportDialog(p->widget(), model->bibTeXSourceModel()->bibTeXFile());
+
+            if (typeid(*exporter) == typeid(FileExporterBibTeX)) {
+                KDialog dlg(p->widget());
+                File *file = model->bibTeXSourceModel()->bibTeXFile();
+                SettingsFileExporterBibTeXWidget settingsWidget(file, &dlg);
+                dlg.setMainWidget(&settingsWidget);
+                dlg.setButtons(KDialog::Ok);
+                dlg.exec();
+                settingsWidget.saveProperties(file);
+            }
         }
-        if (exporterBibTeX != NULL)
-            exporterBibTeX->setEncoding(model->bibTeXSourceModel()->bibTeXFile()->property(File::Encoding).toString());
 
         qApp->setOverrideCursor(Qt::WaitCursor);
 
@@ -249,14 +263,6 @@ public:
         qApp->restoreOverrideCursor();
         if (!result)
             KMessageBox::error(p->widget(), i18n("Saving the bibliography to file \"%1\" failed.", url.pathOrUrl()), i18n("Saving bibliography failed"));
-        else {
-            File *file = model->bibTeXSourceModel()->bibTeXFile();
-            /// store new URL in BibTeX File object
-            file->setProperty(File::Url, url);
-            /// store encoding in BibTeX File object
-            if (exporterBibTeX != NULL)
-                file->setProperty(File::Encoding, exporterBibTeX->encoding());
-        }
 
         delete exporter;
         return result;
