@@ -106,12 +106,7 @@ bool FileExporterPDF::generatePDF(QIODevice* iodevice, QStringList *errorLog)
 {
     QStringList cmdLines = QStringList() << QLatin1String("pdflatex -halt-on-error bibtex-to-pdf.tex") << QLatin1String("bibtex bibtex-to-pdf") << QLatin1String("pdflatex -halt-on-error bibtex-to-pdf.tex") << QLatin1String("pdflatex -halt-on-error bibtex-to-pdf.tex");
 
-    if (writeLatexFile(m_laTeXFilename) && runProcesses(cmdLines, errorLog) && writeFileToIODevice(m_outputFilename, iodevice))
-        return true;
-    else {
-        kWarning() << "Generating PDF failed";
-        return false;
-    }
+    return writeLatexFile(m_laTeXFilename) && runProcesses(cmdLines, errorLog) && writeFileToIODevice(m_outputFilename, iodevice);
 }
 
 bool FileExporterPDF::writeLatexFile(const QString &filename)
@@ -124,7 +119,8 @@ bool FileExporterPDF::writeLatexFile(const QString &filename)
         ts << "\\documentclass{article}\n";
         ts << "\\usepackage[T1]{fontenc}\n";
         ts << "\\usepackage[utf8]{inputenc}\n";
-        ts << "\\usepackage[" << m_latexLanguage << "]{babel}\n";
+        if (kpsewhich("babel.sty"))
+            ts << "\\usepackage[" << m_latexLanguage << "]{babel}\n";
         if (kpsewhich("hyperref.sty"))
             ts << "\\usepackage[pdfproducer={KBibTeX: http://home.gna.org/kbibtex/},pdftex]{hyperref}\n";
         else if (kpsewhich("url.sty"))
@@ -151,9 +147,9 @@ bool FileExporterPDF::writeLatexFile(const QString &filename)
         ts << "\\bibliography{bibtex-to-pdf}\n";
         ts << "\\end{document}\n";
         latexFile.close();
-        return TRUE;
+        return true;
     } else
-        return FALSE;
+        return false;
 }
 
 void FileExporterPDF::fillEmbeddedFileList(const File* bibtexfile)

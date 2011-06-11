@@ -86,12 +86,9 @@ void FileExporterPS::setLaTeXBibliographyStyle(const QString& bibStyle)
 
 bool FileExporterPS::generatePS(QIODevice* iodevice, QStringList *errorLog)
 {
-    QStringList cmdLines = QStringList() << QLatin1String("latex -halt-on-error bibtex-to-ps.tex") << QLatin1String("bibtex bibtex-to-ps") << QLatin1String("latex -halt-on-error bibtex-to-ps.tex") << QLatin1String("latex -halt-on-error bibtex-to-ps.tex") << QLatin1String("dvips -o bibtex-to-ps.ps bibtex-to-ps.dvi");
+    QStringList cmdLines = QStringList() << QLatin1String("latex -halt-on-error bibtex-to-ps.tex") << QLatin1String("bibtex bibtex-to-ps") << QLatin1String("latex -halt-on-error bibtex-to-ps.tex") << QLatin1String("latex -halt-on-error bibtex-to-ps.tex") << QLatin1String("dvips -R2 -o bibtex-to-ps.ps bibtex-to-ps.dvi");
 
-    if (writeLatexFile(m_laTeXFilename) && runProcesses(cmdLines, errorLog) && writeFileToIODevice(m_outputFilename, iodevice))
-        return TRUE;
-    else
-        return FALSE;
+    return writeLatexFile(m_laTeXFilename) && runProcesses(cmdLines, errorLog) && beautifyPostscriptFile(m_outputFilename, "Exported Bibliography") && writeFileToIODevice(m_outputFilename, iodevice);
 }
 
 bool FileExporterPS::writeLatexFile(const QString &filename)
@@ -101,8 +98,7 @@ bool FileExporterPS::writeLatexFile(const QString &filename)
         QTextStream ts(&latexFile);
         ts.setCodec("UTF-8");
         ts << "\\documentclass{article}\n";
-        if (kpsewhich("t2aenc.dfu") &&  kpsewhich("t1enc.dfu"))
-            ts << "\\usepackage[T1,T2A]{fontenc}\n";
+        ts << "\\usepackage[T1]{fontenc}\n";
         ts << "\\usepackage[utf8]{inputenc}\n";
         if (kpsewhich("babel.sty"))
             ts << "\\usepackage[" << m_latexLanguage << "]{babel}\n";
@@ -116,8 +112,37 @@ bool FileExporterPS::writeLatexFile(const QString &filename)
         ts << "\\bibliography{bibtex-to-ps}\n";
         ts << "\\end{document}\n";
         latexFile.close();
-        return TRUE;
+        return true;
     } else
-        return FALSE;
+        return false;
+}
 
+bool FileExporterPS::beautifyPostscriptFile(const QString &filename, const QString &title)
+{
+    QFile postscriptFile(filename);
+    if (postscriptFile.open(QFile::ReadOnly)) {
+        QTextStream ts(&postscriptFile);
+        QStringList lines;
+        QString line;
+        int i = 0;
+        while (!(line = ts.readLine()).isNull()) {
+            if (i < 32 && line.startsWith("%%Title:"))
+                line = "%%Title: " + title;
+            else if (i < 32 && line.startsWith("%%Creator:"))
+                line += "; exported from within KBibTeX: http://home.gna.org/kbibtex/";
+            lines += line;
+            ++i;
+        }
+        postscriptFile.close();
+
+        if (postscriptFile.open(QFile::WriteOnly)) {
+            QTextStream ts(&postscriptFile);
+            foreach(QString line, lines) ts << line << endl;
+            postscriptFile.close();
+        } else
+            return false;
+    } else
+        return false;
+
+    return true;
 }

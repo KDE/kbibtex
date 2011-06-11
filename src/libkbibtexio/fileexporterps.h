@@ -48,6 +48,7 @@ private:
 
     bool generatePS(QIODevice* iodevice, QStringList *errorLog);
     bool writeLatexFile(const QString &filename);
+    bool beautifyPostscriptFile(const QString &filename, const QString &title);
 };
 
 
