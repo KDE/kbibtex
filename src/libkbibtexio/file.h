@@ -46,6 +46,10 @@ public:
     /// used for property map
     const static QString Url;
     const static QString Encoding;
+    const static QString StringDelimiter;
+    const static QString QuoteComment;
+    const static QString KeywordCasing;
+    const static QString ProtectCasing;
 
     File();
     File(const File &other);

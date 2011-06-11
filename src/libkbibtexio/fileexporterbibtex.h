@@ -42,29 +42,32 @@ class KBIBTEXIO_EXPORT FileExporterBibTeX : public FileExporter
 {
 public:
     enum UseLaTeXEncoding {leUTF8, leLaTeX};
-    enum QuoteComment {qcNone, qcCommand, qcPercentSign};
+    enum QuoteComment {qcNone = 0, qcCommand = 1, qcPercentSign = 2};
 
     FileExporterBibTeX();
     ~FileExporterBibTeX();
 
-    /**
-     * Set the encoding when saving a BibTeX file.
-     * Important: The File object's "Encoding" property has precendence over this setting.
-     */
-    void setEncoding(const QString& encoding);
-    QString encoding() const;
-    void setStringDelimiters(const QChar& stringOpenDelimiter, const QChar& stringCloseDelimiter);
-    void setKeywordCasing(KBibTeX::Casing keywordCasing);
-    void setQuoteComment(QuoteComment quoteComment);
-    void setProtectCasing(bool protectCasing);
-
     bool save(QIODevice* iodevice, const File* bibtexfile, QStringList *errorLog = NULL);
     bool save(QIODevice* iodevice, const Element* element, QStringList *errorLog = NULL);
 
-    virtual void showExportDialog(QWidget *parent, File *bibtexfile) const;
-
     static QString valueToBibTeX(const Value& value, const QString& fieldType = QString::null, UseLaTeXEncoding useLaTeXEncoding = leLaTeX);
     static QString elementToString(const Element* element);
+
+    static const QString keyEncoding;
+    static const QString defaultEncoding;
+
+    static const QString keyStringDelimiter;
+    static const QString defaultStringDelimiter;
+
+    static const QString keyQuoteComment;
+    static const FileExporterBibTeX::QuoteComment defaultQuoteComment;
+
+    static const QString keyKeywordCasing;
+    static const KBibTeX::Casing defaultKeywordCasing;
+
+    static const QString keyProtectCasing;
+    static const bool defaultProtectCasing;
+
 
 public slots:
     void cancel();
@@ -75,6 +78,11 @@ private:
 
     class FileExporterBibTeXPrivate;
     FileExporterBibTeXPrivate *d;
+
+    QString internalValueToBibTeX(const Value& value, const QString& fieldType = QString::null, UseLaTeXEncoding useLaTeXEncoding = leLaTeX);
+    void loadState();
+
+    static FileExporterBibTeX *staticFileExporterBibTeX;
 };
 
 #endif

@@ -17,6 +17,7 @@
 *   Free Software Foundation, Inc.,                                       *
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
+
 #include <typeinfo>
 
 #include <QTextCodec>
@@ -48,45 +49,18 @@
 
 #define encodercheck(encoder, text) ((encoder)?(encoder)->encode((text)):(text))
 
-class ExportWidget : public QWidget
-{
-public:
-    KComboBox *listOfEncodings;
-    static const QString defaultEncoding;
+const QString FileExporterBibTeX::keyEncoding = QLatin1String("encoding");
+const QString FileExporterBibTeX::defaultEncoding = QLatin1String("LaTeX");
+const QString FileExporterBibTeX::keyStringDelimiter = QLatin1String("stringDelimiter");
+const QString FileExporterBibTeX::defaultStringDelimiter = QLatin1String("\"\"");
+const QString FileExporterBibTeX::keyQuoteComment = QLatin1String("quoteComment");
+const FileExporterBibTeX::QuoteComment FileExporterBibTeX::defaultQuoteComment = FileExporterBibTeX::qcNone;
+const QString FileExporterBibTeX::keyKeywordCasing = QLatin1String("keywordCasing");
+const KBibTeX::Casing FileExporterBibTeX::defaultKeywordCasing = KBibTeX::cLowerCase;
+const QString FileExporterBibTeX::keyProtectCasing = QLatin1String("protectCasing");
+const bool FileExporterBibTeX::defaultProtectCasing = true;
 
-    ExportWidget(QWidget *parent)
-            : QWidget(parent) {
-        QFormLayout *layout = new QFormLayout(this);
-        setLayout(layout);
-        setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
-
-        listOfEncodings = new KComboBox(true, this);
-        layout->addRow(i18n("Encoding:"), listOfEncodings);
-
-        listOfEncodings->addItem(QLatin1String("LaTeX"));
-        listOfEncodings->insertSeparator(1);
-        listOfEncodings->addItems(IConvLaTeX::encodings());
-        setProposedEncoding(defaultEncoding);
-    }
-
-    void setProposedEncoding(const QString &proposedEncoding) {
-        QAbstractItemModel *model = listOfEncodings->model();
-        int row = 0;
-        QModelIndex index;
-        const QString lowerPE = proposedEncoding.toLower();
-        while ((index = model->index(row, 0, QModelIndex())) != QModelIndex()) {
-            QString line = model->data(index).toString();
-            if (line.toLower() == lowerPE) {
-                listOfEncodings->lineEdit()->setText(line);
-                listOfEncodings->setCurrentIndex(row);
-                break;
-            }
-            ++row;
-        }
-    }
-};
-
-const QString ExportWidget::defaultEncoding = QLatin1String("LaTeX");
+FileExporterBibTeX *FileExporterBibTeX::staticFileExporterBibTeX = NULL;
 
 class FileExporterBibTeX::FileExporterBibTeXPrivate
 {
@@ -102,14 +76,28 @@ public:
     bool protectCasing;
     bool cancelFlag;
     IConvLaTeX *iconvLaTeX;
+    KSharedConfigPtr config;
+    const QString configGroupName;
 
     FileExporterBibTeXPrivate(FileExporterBibTeX *parent)
-            : p(parent), stringOpenDelimiter(QChar('"')), stringCloseDelimiter(QChar('"')), keywordCasing(KBibTeX::cLowerCase), quoteComment(qcNone), encoding(QLatin1String("latex")), protectCasing(false), cancelFlag(false) {
-        iconvLaTeX = new IConvLaTeX(encoding == QLatin1String("latex") ? QLatin1String("us-ascii") : encoding);
+            : p(parent), cancelFlag(false),  config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName("FileExporterBibTeX") {
+        loadState();
     }
 
     ~FileExporterBibTeXPrivate() {
         delete iconvLaTeX;
+    }
+
+    void loadState() {
+        KConfigGroup configGroup(config, configGroupName);
+        encoding = configGroup.readEntry(p->keyEncoding, p->defaultEncoding);
+        iconvLaTeX = new IConvLaTeX(encoding == QLatin1String("latex") ? QLatin1String("us-ascii") : encoding);
+        QString stringDelimiter = configGroup.readEntry(p->keyStringDelimiter, p->defaultStringDelimiter);
+        stringOpenDelimiter = stringDelimiter[0];
+        stringCloseDelimiter = stringDelimiter[1];
+        keywordCasing = (KBibTeX::Casing)configGroup.readEntry(p->keyKeywordCasing, (int)p->defaultKeywordCasing);
+        quoteComment = (QuoteComment)configGroup.readEntry(p->keyQuoteComment, (int)p->defaultQuoteComment);
+        protectCasing = configGroup.readEntry(p->keyProtectCasing, p->defaultProtectCasing);
     }
 
     bool writeEntry(QIODevice* iodevice, const Entry& entry) {
@@ -124,9 +112,16 @@ public:
         for (Entry::ConstIterator it = entry.begin(); it != entry.end(); ++it) {
             const QString key = it.key();
             Value value = it.value();
+            if (value.isEmpty()) continue; ///< ignore empty key-value pairs
+
             QString text = valueToBibTeX(value, key, leUTF8);
-            if (text.isEmpty()) kWarning() << "Value for field " << key << " is empty" << endl;
-            if (protectCasing && dynamic_cast<PlainText*>(value.first()) != NULL && (key == Entry::ftTitle || key == Entry::ftBookTitle || key == Entry::ftSeries))
+            if (text.isEmpty()) {
+                /// ignore empty key-value pairs
+                kWarning() << "Value for field " << key << " is empty" << endl;
+                continue;
+            }
+
+            if (protectCasing && typeid(*value.first()) == typeid(PlainText) && (key == Entry::ftTitle || key == Entry::ftBookTitle || key == Entry::ftSeries))
                 addProtectiveCasing(text);
 
             iodevice->putChar(',');
@@ -233,7 +228,15 @@ public:
         if (addBrackets)
             text.insert(1, '{').insert(text.length(), '}');
     }
+
+    void applyEncoding(QString& encoding) {
+        encoding = encoding.isEmpty() ? QLatin1String("latex") : encoding.toLower();
+        delete iconvLaTeX;
+        iconvLaTeX = new IConvLaTeX(encoding == QLatin1String("latex") ?  QLatin1String("us-ascii") : encoding);
+    }
+
 };
+
 
 FileExporterBibTeX::FileExporterBibTeX()
         : FileExporter(), d(new FileExporterBibTeXPrivate(this))
@@ -244,42 +247,6 @@ FileExporterBibTeX::FileExporterBibTeX()
 FileExporterBibTeX::~FileExporterBibTeX()
 {
 // nothing
-}
-
-void FileExporterBibTeX::setEncoding(const QString& encoding)
-{
-    QString normalizedEncoding = encoding.isNull() ? QLatin1String("latex") : encoding.toLower();
-    if (normalizedEncoding != d->encoding) {
-        d->encoding = normalizedEncoding;
-        delete d->iconvLaTeX;
-        d->iconvLaTeX = new IConvLaTeX(d->encoding == QLatin1String("latex") ?  QLatin1String("us-ascii") : encoding);
-    }
-}
-
-QString FileExporterBibTeX::encoding() const
-{
-    return d->encoding;
-}
-
-void FileExporterBibTeX::setStringDelimiters(const QChar& stringOpenDelimiter, const QChar& stringCloseDelimiter)
-{
-    d->stringOpenDelimiter = stringOpenDelimiter;
-    d->stringCloseDelimiter = stringCloseDelimiter;
-}
-
-void FileExporterBibTeX::setKeywordCasing(KBibTeX::Casing keywordCasing)
-{
-    d->keywordCasing = keywordCasing;
-}
-
-void FileExporterBibTeX::setQuoteComment(QuoteComment quoteComment)
-{
-    d->quoteComment = quoteComment;
-}
-
-void FileExporterBibTeX::setProtectCasing(bool protectCasing)
-{
-    d->protectCasing = protectCasing;
 }
 
 bool FileExporterBibTeX::save(QIODevice* iodevice, const File* bibtexfile, QStringList * /*errorLog*/)
@@ -324,15 +291,24 @@ bool FileExporterBibTeX::save(QIODevice* iodevice, const File* bibtexfile, QStri
     int totalElements = (int) bibtexfile->count();
     int currentPos = 0;
 
-    QString effectiveEncoding = ExportWidget::defaultEncoding;
-    if (!d->encoding.isEmpty())
-        effectiveEncoding = d->encoding;
+    loadState();
     if (bibtexfile->hasProperty(File::Encoding))
-        effectiveEncoding = bibtexfile->property(File::Encoding).toString();
-    setEncoding(effectiveEncoding);
+        d->encoding = bibtexfile->property(File::Encoding).toString();
+    d->applyEncoding(d->encoding);
+    if (bibtexfile->hasProperty(File::StringDelimiter)) {
+        QString stringDelimiter = bibtexfile->property(File::StringDelimiter).toString();
+        d->stringOpenDelimiter = stringDelimiter[0];
+        d->stringCloseDelimiter = stringDelimiter[1];
+    }
+    if (bibtexfile->hasProperty(File::QuoteComment))
+        d->quoteComment = (QuoteComment)bibtexfile->property(File::QuoteComment).toInt();
+    if (bibtexfile->hasProperty(File::KeywordCasing))
+        d->keywordCasing = (KBibTeX::Casing)bibtexfile->property(File::KeywordCasing).toInt();
+    if (bibtexfile->hasProperty(File::ProtectCasing))
+        d->protectCasing = bibtexfile->property(File::ProtectCasing).toBool();
 
-    if (effectiveEncoding != QLatin1String("latex"))
-        parameterCommentsList << new Comment("x-kbibtex-encoding=" + effectiveEncoding, true);
+    if (d->encoding != QLatin1String("latex"))
+        parameterCommentsList << new Comment("x-kbibtex-encoding=" + d->encoding, true);
 
     /** before anything else, write parameter comments */
     for (QList<Comment*>::ConstIterator it = parameterCommentsList.begin(); it != parameterCommentsList.end() && result && !d->cancelFlag; it++) {
@@ -404,31 +380,16 @@ void FileExporterBibTeX::cancel()
     d->cancelFlag = true;
 }
 
-void FileExporterBibTeX::showExportDialog(QWidget *parent, File *bibtexfile) const
+QString FileExporterBibTeX::valueToBibTeX(const Value& value, const QString& key, UseLaTeXEncoding useLaTeXEncoding)
 {
-    Q_ASSERT(bibtexfile != NULL);
-
-    KDialog dialog(parent);
-    dialog.setButtons(KDialog::Ok);
-
-    /// default encoding is LaTeX
-    QString proposedEncoding = ExportWidget::defaultEncoding;
-    /// check encoding set to this exporter
-    if (!d->encoding.isEmpty())
-        proposedEncoding = d->encoding;
-    /// encoding as stored in the File has highest precendence
-    if (bibtexfile->hasProperty(File::Encoding))
-        proposedEncoding = bibtexfile->property(File::Encoding).toString();
-
-    ExportWidget exportWidget(&dialog);
-    exportWidget.setProposedEncoding(proposedEncoding);
-    dialog.setMainWidget(&exportWidget);
-
-    if (dialog.exec() == QDialog::Accepted)
-        bibtexfile->setProperty(File::Encoding, exportWidget.listOfEncodings->lineEdit()->text());
+    if (staticFileExporterBibTeX == NULL)
+        staticFileExporterBibTeX = new FileExporterBibTeX();
+    else
+        staticFileExporterBibTeX->loadState();
+    return staticFileExporterBibTeX->internalValueToBibTeX(value, key, useLaTeXEncoding);
 }
 
-QString FileExporterBibTeX::valueToBibTeX(const Value& value, const QString& key, UseLaTeXEncoding useLaTeXEncoding)
+QString FileExporterBibTeX::internalValueToBibTeX(const Value& value, const QString& key, UseLaTeXEncoding useLaTeXEncoding)
 {
     if (value.isEmpty())
         return "";
@@ -441,7 +402,7 @@ QString FileExporterBibTeX::valueToBibTeX(const Value& value, const QString& key
     for (QList<ValueItem*>::ConstIterator it = value.begin(); it != value.end(); ++it) {
         const MacroKey *macroKey = dynamic_cast<const MacroKey*>(*it);
         if (macroKey != NULL) {
-            if (isOpen) result.append('}');
+            if (isOpen) result.append(d->stringCloseDelimiter);
             isOpen = false;
             if (!result.isEmpty()) result.append(" # ");
             result.append(macroKey->text());
@@ -458,7 +419,7 @@ QString FileExporterBibTeX::valueToBibTeX(const Value& value, const QString& key
                     /// handle "et al." i.e. "and others"
                     result.append(" and ");
                 } else
-                    result.append("} # {");
+                    result.append(d->stringCloseDelimiter).append(" # ").append(d->stringOpenDelimiter);
                 isOpen = true;
                 result.append(encodercheck(encoder, escapeLaTeXChars(plainText->text())));
                 prev = plainText;
@@ -467,14 +428,14 @@ QString FileExporterBibTeX::valueToBibTeX(const Value& value, const QString& key
                 if (verbatimText != NULL) {
                     if (!isOpen) {
                         if (!result.isEmpty()) result.append(" # ");
-                        result.append('{');
+                        result.append(d->stringOpenDelimiter);
                     } else if (prev != NULL && typeid(*prev) == typeid(VerbatimText)) {
                         if (key.toLower().startsWith(Entry::ftUrl) || key.toLower().startsWith(Entry::ftLocalFile) || key.toLower().startsWith(Entry::ftDOI))
                             result.append("; ");
                         else
                             result.append(' ');
                     } else
-                        result.append("} # {");
+                        result.append(d->stringCloseDelimiter).append(" # ").append(d->stringOpenDelimiter);
                     isOpen = true;
                     result.append(verbatimText->text());
                     prev = verbatimText;
@@ -483,11 +444,11 @@ QString FileExporterBibTeX::valueToBibTeX(const Value& value, const QString& key
                     if (person != NULL) {
                         if (!isOpen) {
                             if (!result.isEmpty()) result.append(" # ");
-                            result.append('{');
+                            result.append(d->stringOpenDelimiter);
                         } else if (prev != NULL && typeid(*prev) == typeid(Person))
                             result.append(" and ");
                         else
-                            result.append("} # {");
+                            result.append(d->stringCloseDelimiter).append(" # ").append(d->stringOpenDelimiter);
                         isOpen = true;
 
                         QString thisName = "";
@@ -517,11 +478,11 @@ QString FileExporterBibTeX::valueToBibTeX(const Value& value, const QString& key
                         if (keyword != NULL) {
                             if (!isOpen) {
                                 if (!result.isEmpty()) result.append(" # ");
-                                result.append('{');
+                                result.append(d->stringOpenDelimiter);
                             } else if (prev != NULL && typeid(*prev) == typeid(Keyword))
                                 result.append("; ");
                             else
-                                result.append("} # {");
+                                result.append(d->stringCloseDelimiter).append(" # ").append(d->stringOpenDelimiter);
                             isOpen = true;
 
                             result.append(encodercheck(encoder, escapeLaTeXChars(keyword->text())));
@@ -534,7 +495,7 @@ QString FileExporterBibTeX::valueToBibTeX(const Value& value, const QString& key
         prev = *it;
     }
 
-    if (isOpen) result.append('}');
+    if (isOpen) result.append(d->stringCloseDelimiter);
     return result;
 }
 
@@ -583,4 +544,9 @@ bool FileExporterBibTeX::requiresPersonQuoting(const QString &text, bool isLastN
             return TRUE;
     }
     return false;
+}
+
+void FileExporterBibTeX::loadState()
+{
+    d->loadState();
 }

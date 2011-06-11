@@ -46,8 +46,8 @@
 const QString extraAlphaNumChars = QString("?'`-_:.+/$\\\"&");
 const QRegExp htmlRegExp = QRegExp("</?(a|pre)[^>]*>", Qt::CaseInsensitive);
 
-FileImporterBibTeX::FileImporterBibTeX(const QString& encoding, bool ignoreComments, KBibTeX::Casing keywordCasing)
-        : FileImporter(), m_cancelFlag(false), m_lineNo(1), m_textStream(NULL), m_currentChar(' '), m_ignoreComments(ignoreComments), m_encoding(encoding.toLower()), m_newEncoding(QString::null), m_keywordCasing(keywordCasing)
+FileImporterBibTeX::FileImporterBibTeX(bool ignoreComments, KBibTeX::Casing keywordCasing)
+        : FileImporter(), m_cancelFlag(false), m_lineNo(1), m_textStream(NULL), m_currentChar(' '), m_ignoreComments(ignoreComments), m_encoding(QString::null), m_keywordCasing(keywordCasing)
 {
     // nothing
 }
@@ -62,8 +62,7 @@ File* FileImporterBibTeX::load(QIODevice *iodevice)
 
     m_textStreamLastPos = 0;
     m_textStream = new QTextStream(iodevice);
-    m_newEncoding = m_encoding;
-    m_textStream->setCodec(m_encoding == "latex" ? "UTF-8" : m_encoding.toAscii());
+    m_textStream->setCodec("us-ascii"); ///< unless we learn something else, assume 7-bit US-ASCII
     QString rawText = "";
     while (!m_textStream->atEnd()) {
         QString line = m_textStream->readLine();
@@ -73,7 +72,8 @@ File* FileImporterBibTeX::load(QIODevice *iodevice)
     }
 
     File *result = new File();
-    result->setProperty(m_newEncoding == "latex" ? "latex" : File::Encoding, m_textStream->codec()->name());
+    if (!m_encoding.isEmpty())
+        result->setProperty(File::Encoding, m_textStream->codec()->name());
 
     delete m_textStream;
 
@@ -771,10 +771,10 @@ bool FileImporterBibTeX::evaluateParameterComments(QTextStream *textStream, cons
 {
     /** check if this file requests a special encoding */
     if (line.startsWith("@comment{x-kbibtex-encoding=") && line.endsWith("}")) {
-        m_newEncoding = line.mid(28, line.length() - 29).toLower();
-        kDebug() << "x-kbibtex-encoding=" << m_newEncoding;
-        textStream->setCodec(m_newEncoding == "latex" ? "UTF-8" : m_newEncoding.toAscii());
-        kDebug() <<  "m_textStream->codec()=" << m_textStream->codec()->name();
+        m_encoding = line.mid(28, line.length() - 29).toLower();
+        kDebug() << "x-kbibtex-encoding=" << m_encoding;
+        textStream->setCodec(m_encoding == "latex" ? "UTF-8" : m_encoding.toAscii());
+        m_encoding = textStream->codec()->name();
         return true;
     }
 

@@ -36,6 +36,7 @@
 #include <KMessageBox>
 #include <KMenu>
 
+#include "preferences/kbibtexpreferencesdialog.h"
 #include "mainwindow.h"
 #include "valuelist.h"
 #include "documentlist.h"
@@ -186,6 +187,7 @@ KBibTeXMainWindow::KBibTeXMainWindow()
     d->actionClose = actionCollection()->addAction(KStandardAction::Close, this, SLOT(closeDocument()));
     d->actionClose->setEnabled(false);
     actionCollection()->addAction(KStandardAction::Quit,  kapp, SLOT(quit()));
+    actionCollection()->addAction(KStandardAction::Preferences, this, SLOT(showPreferences()));
 
     documentListsChanged(OpenFileInfo::RecentlyUsed); /// force initialization of menu of recently used files
 
@@ -277,6 +279,12 @@ void KBibTeXMainWindow::closeDocument()
 {
     d->actionClose->setEnabled(false);
     d->openFileInfoManager->close(d->openFileInfoManager->currentFile());
+}
+
+void KBibTeXMainWindow::showPreferences()
+{
+    KBibTeXPreferencesDialog dlg(this);
+    dlg.exec();
 }
 
 void KBibTeXMainWindow::documentSwitched(BibTeXEditor *oldEditor, BibTeXEditor *newEditor)

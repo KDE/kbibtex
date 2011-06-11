@@ -54,7 +54,7 @@ public:
      *     Useful if you for example read from an HTML file,
      *     as all HTML content you be treated as comments otherwise.
      */
-    FileImporterBibTeX(const QString& encoding = "latex", bool ignoreComments = true, KBibTeX::Casing keywordCasing = KBibTeX::cLowerCase);
+    FileImporterBibTeX(bool ignoreComments = true, KBibTeX::Casing keywordCasing = KBibTeX::cLowerCase);
     ~FileImporterBibTeX();
 
     /**
@@ -101,7 +101,7 @@ private:
     int m_textStreamLastPos;
     QChar m_currentChar;
     bool m_ignoreComments;
-    QString m_encoding, m_newEncoding;
+    QString m_encoding;
     KBibTeX::Casing m_keywordCasing;
 
     Comment *readCommentElement();

@@ -26,11 +26,11 @@ namespace KBibTeX
 {
 
 enum Casing {
-    cLowerCase,
-    cInitialCapital,
-    cUpperCamelCase,
-    cLowerCamelCase,
-    cUpperCase
+    cLowerCase = 0,
+    cInitialCapital = 1,
+    cUpperCamelCase = 2,
+    cLowerCamelCase = 3,
+    cUpperCase = 4
 };
 
 enum FieldInputType {

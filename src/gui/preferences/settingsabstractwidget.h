@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2009 by Thomas Fischer                             *
+*   Copyright (C) 2004-2011 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -18,57 +18,27 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#ifndef KBIBTEX_PROGRAM_MAINWINDOW_H
-#define KBIBTEX_PROGRAM_MAINWINDOW_H
+#ifndef KBIBTEX_GUI_SETTINGSABSTRACTWIDGET_H
+#define KBIBTEX_GUI_SETTINGSABSTRACTWIDGET_H
 
-#include <kparts/mainwindow.h>
-#include <KConfigGroup>
+#include <kbibtexgui_export.h>
 
-#include "openfileinfo.h"
+#include <QWidget>
 
-class QTextEdit;
-class QDragEnterEvent;
-class QDropEvent;
-
-class ReferencePreview;
-class BibTeXEditor;
-
-class KBibTeXMainWindow : public KParts::MainWindow
+/**
+@author Thomas Fischer
+*/
+class KBIBTEXGUI_EXPORT SettingsAbstractWidget : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit KBibTeXMainWindow();
-    virtual ~KBibTeXMainWindow();
+    SettingsAbstractWidget(QWidget *parent);
 
 public slots:
-    void openDocument(const KUrl& url);
-
-protected: // KMainWindow API
-    virtual void saveProperties(KConfigGroup &configGroup);
-    virtual void readProperties(const KConfigGroup &configGroup);
-
-    void dragEnterEvent(QDragEnterEvent *event);
-    void dropEvent(QDropEvent *event);
-
-protected:
-    void setupControllers();
-
-protected slots:
-    void newDocument();
-    void openDocumentDialog();
-    void closeDocument();
-    void showPreferences();
-    void documentSwitched(BibTeXEditor*, BibTeXEditor*);
-
-private slots:
-    void showSearchResults();
-    void documentListsChanged(OpenFileInfo::StatusFlags statusFlags);
-    void openRecentFile();
-
-private:
-    class KBibTeXMainWindowPrivate;
-    KBibTeXMainWindowPrivate *d;
+    virtual void loadState() = 0;
+    virtual void saveState() = 0;
+    virtual void resetToDefaults() = 0;
 };
 
-#endif // KBIBTEX_PROGRAM_MAINWINDOW_H
+#endif // KBIBTEX_GUI_SETTINGSABSTRACTWIDGET_H

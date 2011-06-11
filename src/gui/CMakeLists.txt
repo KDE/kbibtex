@@ -31,6 +31,9 @@ set( kbibtexgui_LIB_SRCS
     widgets/filterbar.cpp
     widgets/radiobuttontreeview.cpp
     config/entrylayout.cpp
+    preferences/kbibtexpreferencesdialog.cpp
+    preferences/settingsfileexporterbibtexwidget.cpp
+    preferences/settingsabstractwidget.cpp
     valuelistmodel.cpp
 )
 

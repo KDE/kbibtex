@@ -34,6 +34,10 @@
 
 const QString File::Url = QLatin1String("Url");
 const QString File::Encoding = QLatin1String("Encoding");
+const QString File::StringDelimiter = QLatin1String("StringDelimiter");
+const QString File::QuoteComment = QLatin1String("QuoteComment");
+const QString File::KeywordCasing = QLatin1String("KeywordCasing");
+const QString File::ProtectCasing = QLatin1String("ProtectCasing");
 
 class File::FilePrivate
 {
@@ -44,7 +48,7 @@ public:
     QMap<QString, QVariant> properties;
 
     FilePrivate(File *parent)
-            : p(parent)        {
+            : p(parent) {
         // TODO
     }
 };
