@@ -24,9 +24,18 @@
 
 
 
-<!-- An entry is interpreted as a BibTeX @article -->
 <xsl:template match="entry">
-<xsl:text>@misc{</xsl:text><xsl:value-of select='substring(id,22,100)' />
+
+<!-- Test if entry is a journal article (@article), otherwise @misc -->
+<xsl:choose>
+<xsl:when test="arxiv:journal_ref">
+<xsl:text>@article</xsl:text>
+</xsl:when>
+<xsl:otherwise>
+<xsl:text>@misc</xsl:text>
+</xsl:otherwise>
+</xsl:choose>
+<xsl:text>{</xsl:text><xsl:value-of select='substring(id,22,100)' />
 
 <!-- process authors by merging all names with "and" -->
 <xsl:text>,
@@ -44,13 +53,24 @@
 <xsl:apply-templates select="arxiv:doi" />
 <xsl:apply-templates select="arxiv:journal_ref" />
 <xsl:text>,
-    comment = { published = </xsl:text>
+    archivePrefix = {arXiv},
+    eprint = {</xsl:text>
+<xsl:value-of select='substring(id,22,100)' />
+<xsl:text>},
+    primaryClass = {</xsl:text>
+<xsl:value-of select="arxiv:primary_category/@term" />
+<xsl:text>},
+    comment = {published = </xsl:text>
 <xsl:value-of select="published" />
+<xsl:if test="updated">
 <xsl:text>, updated = </xsl:text>
-<xsl:value-of select="published" />
+<xsl:value-of select="updated" />
+</xsl:if>
+<xsl:if test="arxiv:comment">
 <xsl:text>, </xsl:text>
 <xsl:value-of select="arxiv:comment" />
-<xsl:text> }
+</xsl:if>
+<xsl:text>}
 }
 
 </xsl:text>
@@ -94,7 +114,7 @@
 <!-- ignore for now -->
 </xsl:when>
 <xsl:otherwise>
-<!-- FIXME use counter to cover multiple URLs -->
+<!-- FIXME handle multiple URLs -->
 <xsl:text>,
     url = {</xsl:text><xsl:value-of select="@href" /><xsl:text>}</xsl:text>
 </xsl:otherwise>
