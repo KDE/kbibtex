@@ -412,7 +412,7 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value& value, const QStr
             if (plainText != NULL) {
                 if (!isOpen) {
                     if (!result.isEmpty()) result.append(" # ");
-                    result.append('{');
+                    result.append(d->stringOpenDelimiter);
                 } else if (prev != NULL && typeid(*prev) == typeid(PlainText))
                     result.append(' ');
                 else if (prev != NULL && typeid(*prev) == typeid(Person)) {
