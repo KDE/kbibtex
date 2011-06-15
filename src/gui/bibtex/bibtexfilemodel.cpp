@@ -254,7 +254,7 @@ QVariant BibTeXFileModel::data(const QModelIndex &index, int role) const
         return QVariant();
 
     /// for now, only display data (no editing or icons etc)
-    if (role != Qt::DisplayRole && role != Qt::ToolTipRole && role != Qt::DecorationRole)
+    if (role != Qt::DisplayRole && role != Qt::ToolTipRole && role != Qt::BackgroundRole)
         return QVariant();
 
     if (index.row() < m_bibtexFile->count() && index.column() < m_bibtexFields->count()) {
@@ -264,12 +264,15 @@ QVariant BibTeXFileModel::data(const QModelIndex &index, int role) const
         Entry* entry = dynamic_cast<Entry*>(element);
 
         /// if BibTeX entry has a "x-color" field, use that color to highlight row
-        if (role == Qt::DecorationRole) {
-            QString color;
-            if (index.column() != 0 || entry == NULL || (color = PlainTextValue::text(entry->value("x-color"), m_bibtexFile)) == "#000000" || color.isEmpty())
+        if (role == Qt::BackgroundRole) {
+            QString colorName;
+            if (entry == NULL || (colorName = PlainTextValue::text(entry->value("x-color"), m_bibtexFile)) == "#000000" || colorName.isEmpty())
                 return QVariant();
-            else
-                return QVariant(QColor(color));
+            else {
+                QColor color(colorName);
+                color.setAlphaF(0.75);
+                return QVariant(color);
+            }
         }
 
         if (entry != NULL) {
