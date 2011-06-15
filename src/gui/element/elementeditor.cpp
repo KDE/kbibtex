@@ -42,6 +42,8 @@
 #include "elementwidgets.h"
 #include "elementeditor.h"
 
+#define testNullDelete(a) {if ((a)!=NULL) delete (a); (a)=NULL;}
+
 class ElementEditor::ElementEditorPrivate
 {
 private:
@@ -62,6 +64,10 @@ public:
 
     ElementEditorPrivate(Element *m, const File *f, ElementEditor *parent)
             : element(m), file(f), p(parent), previousWidget(NULL), referenceWidget(NULL), sourceWidget(NULL), elementChanged(false), elementUnapplied(false) {
+        internalEntry = NULL;
+        internalMacro = NULL;
+        internalComment = NULL;
+        internalPreamble = NULL;
         createGUI();
     }
 
@@ -175,10 +181,11 @@ public:
             (*it)->setModified(false);
         }
 
-        internalEntry = NULL;
-        internalMacro = NULL;
-        internalComment = NULL;
-        internalPreamble = NULL;
+        testNullDelete(internalEntry);
+        testNullDelete(internalEntry);
+        testNullDelete(internalMacro);
+        testNullDelete(internalComment);
+        testNullDelete(internalPreamble);
         const Entry *e = dynamic_cast<const Entry*>(element);
         if (e != NULL) {
             internalEntry = new Entry(*e);
