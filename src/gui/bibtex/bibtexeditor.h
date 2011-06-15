@@ -25,6 +25,7 @@
 
 #include <kbibtexgui_export.h>
 
+#include <filterbar.h>
 #include <bibtexfileview.h>
 #include <element.h>
 
@@ -50,6 +51,8 @@ public:
 
     ValueListModel *valueListModel(const QString &field);
 
+    void setFilterBar(FilterBar *filterBar);
+
 signals:
     void selectedElementsChanged();
     void currentElementChanged(Element*, const File *);
@@ -69,6 +72,7 @@ public slots:
     void setSelectedElement(Element*);
     void selectionDelete();
     void externalModification();
+    void setFilterBarFilter(SortFilterBibTeXFileModel::FilterQuery);
 
 protected:
     bool m_isReadOnly;
@@ -87,6 +91,7 @@ protected slots:
 private:
     Element* m_current;
     QList<Element*> m_selection;
+    FilterBar *m_filterBar;
 };
 
 

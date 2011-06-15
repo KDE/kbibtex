@@ -44,9 +44,6 @@ public slots:
 protected slots:
     void resizeEvent(QResizeEvent *e = NULL);
 
-signals:
-    void filterChanged(SortFilterBibTeXFileModel::FilterQuery);
-
 private slots:
     void listItemActivated(const QModelIndex &);
 

@@ -153,5 +153,5 @@ void ValueList::listItemActivated(const QModelIndex &index)
     fq.combination = SortFilterBibTeXFileModel::EveryTerm;
     fq.field = fieldText;
 
-    emit filterChanged(fq);
+    d->editor->setFilterBarFilter(fq);
 }

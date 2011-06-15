@@ -87,7 +87,7 @@ private:
 };
 
 BibTeXEditor::BibTeXEditor(QWidget *parent)
-        : BibTeXFileView(parent), m_isReadOnly(false), m_current(NULL)
+        : BibTeXFileView(parent), m_isReadOnly(false), m_current(NULL), m_filterBar(NULL)
 {
     connect(this, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(itemActivated(QModelIndex)));
 }
@@ -257,6 +257,17 @@ ValueListModel *BibTeXEditor::valueListModel(const QString &field)
         return new ValueListModel(bibteXModel->bibTeXFile(), field, this);
 
     return NULL;
+}
+
+void BibTeXEditor::setFilterBar(FilterBar *filterBar)
+{
+    m_filterBar = filterBar;
+}
+
+void BibTeXEditor::setFilterBarFilter(SortFilterBibTeXFileModel::FilterQuery fq)
+{
+    if (m_filterBar != NULL)
+        m_filterBar->setFilter(fq);
 }
 
 void BibTeXEditor::mouseMoveEvent(QMouseEvent *event)

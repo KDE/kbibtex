@@ -352,6 +352,7 @@ void KBibTeXPart::setupActions(bool /*browserViewWanted FIXME*/)
     connect(saveCopyAsAction, SIGNAL(triggered()), this, SLOT(documentSaveCopyAs()));
 
     d->filterBar = new FilterBar(0);
+    d->editor->setFilterBar(d->filterBar);
     KAction *filterWidgetAction = new KAction(i18n("Filter"), this);
     actionCollection()->addAction("toolbar_filter_widget", filterWidgetAction);
     filterWidgetAction->setShortcut(Qt::CTRL + Qt::Key_F);
