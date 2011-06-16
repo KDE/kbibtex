@@ -26,6 +26,7 @@
 #include <bibtexfilemodel.h>
 
 static const int SortRole = Qt::UserRole + 113;
+static const int SearchTextRole = Qt::UserRole + 114;
 
 class ValueListModel : public QAbstractTableModel
 {

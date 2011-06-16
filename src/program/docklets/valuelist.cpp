@@ -143,7 +143,7 @@ void ValueList::resizeEvent(QResizeEvent *)
 
 void ValueList::listItemActivated(const QModelIndex &index)
 {
-    QString itemText = d->sortingModel->mapToSource(index).data(Qt::DisplayRole).toString();
+    QString itemText = d->sortingModel->mapToSource(index).data(SearchTextRole).toString();
     QVariant fieldVar = d->comboboxFieldNames->itemData(d->comboboxFieldNames->currentIndex());
     QString fieldText = fieldVar.toString();
     if (fieldText.isEmpty()) fieldText = d->comboboxFieldNames->currentText();

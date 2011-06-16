@@ -69,7 +69,9 @@ QVariant ValueListModel::data(const QModelIndex & index, int role) const
             return QVariant(buffer.replace(ignoredInSorting, ""));
         } else
             return QVariant(valueToCount[sortedValues[index.row()]]);
-    } else
+    } else if (role == SearchTextRole)
+        return QVariant(sortedValues[index.row()]);
+    else
         return QVariant();
 }
 
