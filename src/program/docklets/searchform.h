@@ -25,6 +25,7 @@
 
 class QListWidgetItem;
 
+class File;
 class Entry;
 class MDIWidget;
 class SearchResults;
