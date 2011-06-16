@@ -18,31 +18,33 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include <QAbstractItemModel>
+#ifndef KBIBTEX_GUI_SETTINGSGENERALWIDGET_H
+#define KBIBTEX_GUI_SETTINGSGENERALWIDGET_H
 
-#include <KComboBox>
+#include <kbibtexgui_export.h>
 
 #include "settingsabstractwidget.h"
 
-SettingsAbstractWidget::SettingsAbstractWidget(QWidget *parent)
-        : QWidget(parent)
+/**
+@author Thomas Fischer
+*/
+class KBIBTEXGUI_EXPORT SettingsGeneralWidget : public SettingsAbstractWidget
 {
-    // nothing
-}
+    Q_OBJECT
 
-void SettingsAbstractWidget::selectValue(KComboBox *comboBox, const QString &value)
-{
-    QAbstractItemModel *model = comboBox->model();
-    int row = 0;
-    QModelIndex index;
-    const QString lowerValue = value.toLower();
-    while ((index = model->index(row, 0, QModelIndex())) != QModelIndex()) {
-        QString line = model->data(index).toString();
-        if (line.toLower() == lowerValue) {
-            comboBox->setCurrentIndex(row);
-            break;
-        }
-        ++row;
-    }
-}
+public:
+    SettingsGeneralWidget(QWidget *parent);
+
+public slots:
+    void loadState();
+    void saveState();
+    void resetToDefaults();
+
+private:
+    class SettingsGeneralWidgetPrivate;
+    SettingsGeneralWidgetPrivate *d;
+};
+
+
+#endif // KBIBTEX_GUI_SETTINGSGENERALWIDGET_H
 

@@ -25,6 +25,8 @@
 
 #include <QWidget>
 
+class KComboBox;
+
 /**
 @author Thomas Fischer
 */
@@ -39,6 +41,9 @@ public slots:
     virtual void loadState() = 0;
     virtual void saveState() = 0;
     virtual void resetToDefaults() = 0;
+
+protected:
+    void selectValue(KComboBox *comboBox, const QString &value);
 };
 
 #endif // KBIBTEX_GUI_SETTINGSABSTRACTWIDGET_H

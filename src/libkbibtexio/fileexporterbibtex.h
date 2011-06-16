@@ -44,15 +44,6 @@ public:
     enum UseLaTeXEncoding {leUTF8, leLaTeX};
     enum QuoteComment {qcNone = 0, qcCommand = 1, qcPercentSign = 2};
 
-    FileExporterBibTeX();
-    ~FileExporterBibTeX();
-
-    bool save(QIODevice* iodevice, const File* bibtexfile, QStringList *errorLog = NULL);
-    bool save(QIODevice* iodevice, const Element* element, QStringList *errorLog = NULL);
-
-    static QString valueToBibTeX(const Value& value, const QString& fieldType = QString::null, UseLaTeXEncoding useLaTeXEncoding = leLaTeX);
-    static QString elementToString(const Element* element);
-
     static const QString keyEncoding;
     static const QString defaultEncoding;
 
@@ -68,12 +59,19 @@ public:
     static const QString keyProtectCasing;
     static const bool defaultProtectCasing;
 
+    FileExporterBibTeX();
+    ~FileExporterBibTeX();
+
+    bool save(QIODevice* iodevice, const File* bibtexfile, QStringList *errorLog = NULL);
+    bool save(QIODevice* iodevice, const Element* element, QStringList *errorLog = NULL);
+
+    static QString valueToBibTeX(const Value& value, const QString& fieldType = QString::null, UseLaTeXEncoding useLaTeXEncoding = leLaTeX);
+    static QString elementToString(const Element* element);
 
 public slots:
     void cancel();
 
 private:
-    static bool requiresPersonQuoting(const QString &text, bool isLastName);
     static QString escapeLaTeXChars(const QString &text);
 
     class FileExporterBibTeXPrivate;

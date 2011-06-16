@@ -74,13 +74,14 @@ public:
     QuoteComment quoteComment;
     QString encoding;
     bool protectCasing;
+    QString personNameFormatting;
     bool cancelFlag;
     IConvLaTeX *iconvLaTeX;
     KSharedConfigPtr config;
-    const QString configGroupName;
+    const QString configGroupName, configGroupNameGeneral;
 
     FileExporterBibTeXPrivate(FileExporterBibTeX *parent)
-            : p(parent), cancelFlag(false),  config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName("FileExporterBibTeX") {
+            : p(parent), cancelFlag(false), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName("FileExporterBibTeX"), configGroupNameGeneral("General") {
         loadState();
     }
 
@@ -98,6 +99,9 @@ public:
         keywordCasing = (KBibTeX::Casing)configGroup.readEntry(p->keyKeywordCasing, (int)p->defaultKeywordCasing);
         quoteComment = (QuoteComment)configGroup.readEntry(p->keyQuoteComment, (int)p->defaultQuoteComment);
         protectCasing = configGroup.readEntry(p->keyProtectCasing, p->defaultProtectCasing);
+
+        KConfigGroup configGroupGeneral(config, configGroupNameGeneral);
+        personNameFormatting = configGroupGeneral.readEntry(Person::keyPersonNameFormatting, Person::defaultPersonNameFormatting);
     }
 
     bool writeEntry(QIODevice* iodevice, const Entry& entry) {
@@ -235,6 +239,28 @@ public:
         iconvLaTeX = new IConvLaTeX(encoding == QLatin1String("latex") ?  QLatin1String("us-ascii") : encoding);
     }
 
+    bool requiresPersonQuoting(const QString &text, bool isLastName) {
+        if (isLastName && !text.contains(" "))
+            /** Last name contains NO spaces, no quoting necessary */
+            return false;
+        else if (!isLastName && !text.contains(" and "))
+            /** First name contains no " and " no quoting necessary */
+            return false;
+        else if (text[0] != '{' || text[text.length() - 1] != '}')
+            /** as either last name contains spaces or first name contains " and " and there is no protective quoting yet, there must be a protective quoting added */
+            return true;
+
+        int bracketCounter = 0;
+        for (int i = text.length() - 1; i >= 0; --i) {
+            if (text[i] == '{')
+                ++bracketCounter;
+            else if (text[i] == '}')
+                --bracketCounter;
+            if (bracketCounter == 0 && i > 0)
+                return true;
+        }
+        return false;
+    }
 };
 
 
@@ -451,25 +477,17 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value& value, const QStr
                             result.append(d->stringCloseDelimiter).append(" # ").append(d->stringOpenDelimiter);
                         isOpen = true;
 
-                        QString thisName = "";
-                        QString v = person->firstName();
-                        if (!v.isEmpty()) {
-                            bool requiresQuoting = requiresPersonQuoting(v, false);
-                            if (requiresQuoting) thisName.append("{");
-                            thisName.append(v);
-                            if (requiresQuoting) thisName.append("}");
-                            thisName.append(" ");
-                        }
+                        QString firstName = person->firstName();
+                        if (!firstName.isEmpty() && d->requiresPersonQuoting(firstName, false))
+                            firstName = firstName.prepend("{").append("}");
 
-                        v = person->lastName();
-                        if (!v.isEmpty()) {
-                            bool requiresQuoting = requiresPersonQuoting(v, false);
-                            if (requiresQuoting) thisName.append("{");
-                            thisName.append(v);
-                            if (requiresQuoting) thisName.append("}");
-                        }
+                        QString lastName = person->lastName();
+                        if (!lastName.isEmpty() && d->requiresPersonQuoting(lastName, true))
+                            lastName = lastName.prepend("{").append("}");
 
                         // TODO: Prefix and suffix
+
+                        QString thisName = Person::transcribePersonName(d->personNameFormatting, firstName, lastName);
 
                         result.append(encodercheck(encoder, escapeLaTeXChars(thisName)));
                         prev = person;
@@ -520,30 +538,6 @@ QString FileExporterBibTeX::escapeLaTeXChars(const QString &text)
     while ((p = regExpEscape.indexIn(result, p + 1)) != -1)
         result = result.left(p + 1) + '\\' + result.mid(p + 1);
     return result;
-}
-
-bool FileExporterBibTeX::requiresPersonQuoting(const QString &text, bool isLastName)
-{
-    if (isLastName && !text.contains(" "))
-        /** Last name contains NO spaces, no quoting necessary */
-        return FALSE;
-    else if (!isLastName && !text.contains(" and "))
-        /** First name contains no " and " no quoting necessary */
-        return FALSE;
-    else if (text[0] != '{' || text[text.length()-1] != '}')
-        /** as either last name contains spaces or first name contains " and " and there is no protective quoting yet, there must be a protective quoting added */
-        return TRUE;
-
-    int bracketCounter = 0;
-    for (int i = text.length() - 1; i >= 0; --i) {
-        if (text[i] == '{')
-            ++bracketCounter;
-        else if (text[i] == '}')
-            --bracketCounter;
-        if (bracketCounter == 0 && i > 0)
-            return TRUE;
-    }
-    return false;
 }
 
 void FileExporterBibTeX::loadState()

@@ -21,6 +21,8 @@
 #include <QStringList>
 
 #include <KDebug>
+#include <KSharedConfig>
+#include <KConfigGroup>
 
 #include <file.h>
 #include "value.h"
@@ -133,6 +135,41 @@ bool Person::operator==(const ValueItem &other) const
     } else
         return false;
 }
+
+QString Person::transcribePersonName(const Person *person, const QString &formatting)
+{
+    return transcribePersonName(formatting, person->firstName(), person->lastName(), person->prefix(), person->suffix());
+}
+
+QString Person::transcribePersonName(const QString &formatting, const QString& firstName, const QString& lastName, const QString& prefix, const QString& suffix)
+{
+    Q_UNUSED(prefix);
+    Q_UNUSED(suffix);
+
+    QString result = formatting;
+    int p1 = -1, p2 = -1, p3 = -1;
+    while ((p1 = result.indexOf('<')) >= 0 && (p2 = result.indexOf('>', p1 + 1)) >= 0 && (p3 = result.indexOf('%', p1)) >= 0 && p3 < p2) {
+        QString insert;
+        switch (result[p3+1].toAscii()) {
+        case 'f':
+            insert = firstName;
+            break;
+        case 'l':
+            insert = lastName;
+            break;
+        }
+
+        if (!insert.isEmpty())
+            insert = result.mid(p1 + 1, p3 - p1 - 1) + insert + result.mid(p3 + 2, p2 - p3 - 2);
+
+        result = result.left(p1) + insert + result.mid(p2 + 1);
+    }
+    return result;
+}
+
+const QString Person::keyPersonNameFormatting = QLatin1String("personNameFormatting");
+const QString Person::defaultPersonNameFormatting = QLatin1String("<%l><, %f>"); // "<%f ><%l>"
+
 
 const QRegExp MacroKey::validMacroKey = QRegExp("^[a-z][-.:/+_a-z0-9]*$|^[0-9]+$", Qt::CaseInsensitive);
 
@@ -352,6 +389,7 @@ void Value::mergeFrom(const Value& other)
 }
 
 QRegExp PlainTextValue::removeCurlyBrackets = QRegExp("(^|[^\\\\])[{}]");
+QString PlainTextValue::personNameFormatting = QString::null;
 
 QString PlainTextValue::text(const Value& value, const File* file, bool debug)
 {
@@ -399,7 +437,12 @@ QString PlainTextValue::text(const ValueItem& valueItem, ValueItemType &vit, con
         } else {
             const Person *person = dynamic_cast<const Person*>(&valueItem);
             if (person != NULL) {
-                result = person->firstName() + " " + person->lastName();
+                if (personNameFormatting.isNull()) {
+                    KSharedConfigPtr config(KSharedConfig::openConfig(QLatin1String("kbibtexrc")));
+                    KConfigGroup configGroup(config, "General");
+                    personNameFormatting = configGroup.readEntry(Person::keyPersonNameFormatting, Person::defaultPersonNameFormatting);
+                }
+                result = Person::transcribePersonName(person, personNameFormatting);
                 vit = VITPerson;
                 if (debug) result = "[:" + result + ":Person]";
             } else {

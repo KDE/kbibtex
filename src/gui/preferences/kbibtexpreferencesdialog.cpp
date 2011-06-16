@@ -23,6 +23,7 @@
 #include <KLocale>
 #include <KComboBox>
 
+#include "settingsgeneralwidget.h"
 #include "settingsfileexporterbibtexwidget.h"
 #include "kbibtexpreferencesdialog.h"
 
@@ -36,16 +37,21 @@ private:
 public:
     KBibTeXPreferencesDialogPrivate(KBibTeXPreferencesDialog *parent)
             : p(parent) {
-        // TODO
+        // nothing
     }
 
     void addPages() {
+        SettingsAbstractWidget *settingsWidget = new SettingsGeneralWidget(p);
+        settingWidgets.insert(settingsWidget);
+        KPageWidgetItem *page = p->addPage(settingsWidget, i18n("General"));
+        page->setIcon(KIcon("kbibtex"));
+
         KPageWidgetItem *pageSaving = p->addPage(new QWidget(), i18n("Saving"));
         pageSaving->setIcon(KIcon("document-save"));
 
-        SettingsAbstractWidget *settingsWidget = new SettingsFileExporterBibTeXWidget(p);
+        settingsWidget = new SettingsFileExporterBibTeXWidget(p);
         settingWidgets.insert(settingsWidget);
-        KPageWidgetItem *page = p->addSubPage(pageSaving, settingsWidget, i18n("BibTeX"));
+        page = p->addSubPage(pageSaving, settingsWidget, i18n("BibTeX"));
         page->setIcon(KIcon("text-x-bibtex"));
     }
 

@@ -79,6 +79,9 @@ protected:
 class KBIBTEXIO_EXPORT Person: public ValueItem
 {
 public:
+    static const QString keyPersonNameFormatting;
+    static const QString defaultPersonNameFormatting;
+
     /**
     * Create a representation for a person's name. In bibliographies, a person is either an author or an editor.
     * The four parameters cover all common parts of a name. Only first and last name are mandatory (each person should have those).
@@ -101,11 +104,15 @@ public:
     bool containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const;
     bool operator==(const ValueItem &other) const;
 
+    static QString transcribePersonName(const QString &formatting, const QString& firstName, const QString& lastName, const QString& prefix = QString::null, const QString& suffix = QString::null);
+    static QString transcribePersonName(const Person *person, const QString &formatting);
+
 private:
     QString m_firstName;
     QString m_lastName;
     QString m_prefix;
     QString m_suffix;
+
 };
 
 class KBIBTEXIO_EXPORT MacroKey: public ValueItem
@@ -201,6 +208,7 @@ public:
 private:
     enum ValueItemType { VITOther = 0, VITPerson, VITKeyword} lastItem;
     static QRegExp removeCurlyBrackets;
+    static QString personNameFormatting;
 
     static QString text(const ValueItem& valueItem, ValueItemType &vit, const File* file, bool debug);
 };
