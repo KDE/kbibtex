@@ -53,6 +53,7 @@
 #include <websearchspringerlink.h>
 #include <websearcharxiv.h>
 #include <fileexporterbibtex.h>
+#include <element.h>
 #include <file.h>
 #include <comment.h>
 #include <openfileinfo.h>
