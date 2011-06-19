@@ -129,7 +129,7 @@ QString BibTeXEntries::format(const QString& name, KBibTeX::Casing casing) const
         for (ConstIterator it = begin(); it != end(); ++it) {
             /// configuration file uses camel-case
             QString itName = (*it).upperCamelCase.toLower();
-            if (itName == iName && (*it).upperCamelCase == QString::null) {
+            if (itName == iName && !(*it).upperCamelCase.isEmpty()) {
                 iName = (*it).upperCamelCase;
                 break;
             }
@@ -143,7 +143,7 @@ QString BibTeXEntries::format(const QString& name, KBibTeX::Casing casing) const
         for (ConstIterator it = begin(); it != end(); ++it) {
             /// configuration file uses camel-case
             QString itName = (*it).upperCamelCase.toLower();
-            if (itName == iName && (*it).upperCamelCase == QString::null) {
+            if (itName == iName && !(*it).upperCamelCase.isEmpty()) {
                 iName = (*it).upperCamelCase;
                 break;
             }
