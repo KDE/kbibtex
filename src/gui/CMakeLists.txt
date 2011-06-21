@@ -34,6 +34,7 @@ set( kbibtexgui_LIB_SRCS
     preferences/kbibtexpreferencesdialog.cpp
     preferences/settingsgeneralwidget.cpp
     preferences/settingsfileexporterbibtexwidget.cpp
+    preferences/settingsfileexporterpdfpswidget.cpp
     preferences/settingsabstractwidget.cpp
     valuelistmodel.cpp
 )

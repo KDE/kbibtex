@@ -21,16 +21,27 @@
 #include <QStringList>
 #include <QTextStream>
 
+#include <KSharedConfig>
+#include <KConfigGroup>
+
 #include <element.h>
 #include <fileexporterbibtex.h>
 #include "fileexporterps.h"
 
 FileExporterPS::FileExporterPS()
-        : FileExporterToolchain(), m_latexLanguage("english"), m_latexBibStyle("plain")
+        : FileExporterToolchain()
 {
     m_laTeXFilename = tempDir.name() + QLatin1String("/bibtex-to-ps.tex");
     m_bibTeXFilename = tempDir.name() + QLatin1String("/bibtex-to-ps.bib");
     m_outputFilename = tempDir.name() + QLatin1String("/bibtex-to-ps.ps");
+
+    KSharedConfigPtr config = KSharedConfig::openConfig(QLatin1String("kbibtexrc"));
+    KConfigGroup configGroup(config, QLatin1String("FileExporterPDFPS"));
+    m_babelLanguage = configGroup.readEntry(keyBabelLanguage, defaultBabelLanguage);
+    m_bibliographyStyle = configGroup.readEntry(keyBibliographyStyle, defaultBibliographyStyle);
+
+    KConfigGroup configGroupGeneral(config, QLatin1String("General"));
+    m_paperSize = configGroupGeneral.readEntry(keyPaperSize, defaultPaperSize);
 }
 
 FileExporterPS::~FileExporterPS()
@@ -44,7 +55,8 @@ bool FileExporterPS::save(QIODevice* iodevice, const File* bibtexfile, QStringLi
 
     QFile output(m_bibTeXFilename);
     if (output.open(QIODevice::WriteOnly)) {
-        FileExporter * bibtexExporter = new FileExporterBibTeX();
+        FileExporterBibTeX * bibtexExporter = new FileExporterBibTeX();
+        bibtexExporter->setEncoding(QLatin1String("utf-8"));
         result = bibtexExporter->save(&output, bibtexfile, errorLog);
         output.close();
         delete bibtexExporter;
@@ -62,7 +74,8 @@ bool FileExporterPS::save(QIODevice* iodevice, const Element* element, QStringLi
 
     QFile output(m_bibTeXFilename);
     if (output.open(QIODevice::WriteOnly)) {
-        FileExporter * bibtexExporter = new FileExporterBibTeX();
+        FileExporterBibTeX * bibtexExporter = new FileExporterBibTeX();
+        bibtexExporter->setEncoding(QLatin1String("utf-8"));
         result = bibtexExporter->save(&output, element, errorLog);
         output.close();
         delete bibtexExporter;
@@ -72,16 +85,6 @@ bool FileExporterPS::save(QIODevice* iodevice, const Element* element, QStringLi
         result = generatePS(iodevice, errorLog);
 
     return result;
-}
-
-void FileExporterPS::setLaTeXLanguage(const QString& language)
-{
-    m_latexLanguage = language;
-}
-
-void FileExporterPS::setLaTeXBibliographyStyle(const QString& bibStyle)
-{
-    m_latexBibStyle = bibStyle;
 }
 
 bool FileExporterPS::generatePS(QIODevice* iodevice, QStringList *errorLog)
@@ -101,12 +104,14 @@ bool FileExporterPS::writeLatexFile(const QString &filename)
         ts << "\\usepackage[T1]{fontenc}\n";
         ts << "\\usepackage[utf8]{inputenc}\n";
         if (kpsewhich("babel.sty"))
-            ts << "\\usepackage[" << m_latexLanguage << "]{babel}\n";
+            ts << "\\usepackage[" << m_babelLanguage << "]{babel}\n";
         if (kpsewhich("url.sty"))
             ts << "\\usepackage{url}\n";
-        if (m_latexBibStyle.startsWith("apacite") && kpsewhich("apacite.sty"))
+        if (m_bibliographyStyle.startsWith("apacite") && kpsewhich("apacite.sty"))
             ts << "\\usepackage[bibnewpage]{apacite}\n";
-        ts << "\\bibliographystyle{" << m_latexBibStyle << "}\n";
+        if (kpsewhich("geometry.sty"))
+            ts << "\\usepackage[paper=" << m_paperSize << (m_paperSize.length() <= 2 ? "paper" : "") << "]{geometry}\n";
+        ts << "\\bibliographystyle{" << m_bibliographyStyle << "}\n";
         ts << "\\begin{document}\n";
         ts << "\\nocite{*}\n";
         ts << "\\bibliography{bibtex-to-ps}\n";

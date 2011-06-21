@@ -36,15 +36,13 @@ public:
     bool save(QIODevice* iodevice, const File* bibtexfile, QStringList *errorLog = NULL);
     bool save(QIODevice* iodevice, const Element* element, QStringList *errorLog = NULL);
 
-    void setLaTeXLanguage(const QString& language);
-    void setLaTeXBibliographyStyle(const QString& bibStyle);
-
 private:
     QString m_laTeXFilename;
     QString m_bibTeXFilename;
     QString m_outputFilename;
-    QString m_latexLanguage;
-    QString m_latexBibStyle;
+    QString m_babelLanguage;
+    QString m_paperSize;
+    QString m_bibliographyStyle;
 
     bool generatePS(QIODevice* iodevice, QStringList *errorLog);
     bool writeLatexFile(const QString &filename);

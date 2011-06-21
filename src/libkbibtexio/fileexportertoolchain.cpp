@@ -29,6 +29,11 @@
 
 static const QRegExp chompRegExp = QRegExp("[\\n\\r]+$");
 
+const QString FileExporterToolchain::keyBabelLanguage = QLatin1String("babelLanguage");
+const QString FileExporterToolchain::defaultBabelLanguage = QLatin1String("english");
+const QString FileExporterToolchain::keyBibliographyStyle = QLatin1String("bibliographyStyle");
+const QString FileExporterToolchain::defaultBibliographyStyle = QLatin1String("plain");
+
 FileExporterToolchain::FileExporterToolchain()
         : FileExporter(), m_errorLog(NULL)
 {

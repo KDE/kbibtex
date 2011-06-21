@@ -25,6 +25,7 @@
 
 #include "settingsgeneralwidget.h"
 #include "settingsfileexporterbibtexwidget.h"
+#include "settingsfileexporterpdfpswidget.h"
 #include "kbibtexpreferencesdialog.h"
 
 class KBibTeXPreferencesDialog::KBibTeXPreferencesDialogPrivate
@@ -53,6 +54,11 @@ public:
         settingWidgets.insert(settingsWidget);
         page = p->addSubPage(pageSaving, settingsWidget, i18n("BibTeX"));
         page->setIcon(KIcon("text-x-bibtex"));
+
+        settingsWidget = new SettingsFileExporterPDFPSWidget(p);
+        settingWidgets.insert(settingsWidget);
+        page = p->addSubPage(pageSaving, settingsWidget, i18n("PDF and Postscript"));
+        page->setIcon(KIcon("application-pdf"));
     }
 
     void saveState() {

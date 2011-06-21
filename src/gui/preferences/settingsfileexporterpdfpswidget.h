@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2006 by Thomas Fischer                             *
+*   Copyright (C) 2004-2011 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -17,53 +17,32 @@
 *   Free Software Foundation, Inc.,                                       *
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
-#ifndef BIBTEXFILEEXPORTERTOOLCHAIN_H
-#define BIBTEXFILEEXPORTERTOOLCHAIN_H
 
-#include <QProcess>
+#ifndef KBIBTEX_GUI_SETTINGSFILEEXPORTERPDFPSWIDGET_H
+#define KBIBTEX_GUI_SETTINGSFILEEXPORTERPDFPSWIDGET_H
 
-#include <KTempDir>
+#include <kbibtexgui_export.h>
 
-#include <fileexporter.h>
-
-class QString;
-class QStringList;
+#include "settingsabstractwidget.h"
 
 /**
 @author Thomas Fischer
 */
-class KBIBTEXIO_EXPORT FileExporterToolchain : public FileExporter
+class KBIBTEXGUI_EXPORT SettingsFileExporterPDFPSWidget : public SettingsAbstractWidget
 {
     Q_OBJECT
+
 public:
-    static const QString keyBabelLanguage;
-    static const QString defaultBabelLanguage;
-
-    static const QString keyBibliographyStyle;
-    static const QString defaultBibliographyStyle;
-
-    FileExporterToolchain();
-
-    static bool kpsewhich(const QString& filename);
-    static bool which(const QString& filename);
+    SettingsFileExporterPDFPSWidget(QWidget *parent);
 
 public slots:
-    void cancel();
-
-protected:
-    KTempDir tempDir;
-
-    bool runProcesses(const QStringList &progs, QStringList *errorLog = NULL);
-    bool runProcess(const QString &cmd, const QStringList &args, QStringList *errorLog = NULL);
-    bool writeFileToIODevice(const QString &filename, QIODevice *device);
+    void loadState();
+    void saveState();
+    void resetToDefaults();
 
 private:
-    QProcess *m_process;
-    QStringList *m_errorLog;
-
-private slots:
-    void slotReadProcessOutput();
-
+    class SettingsFileExporterPDFPSWidgetPrivate;
+    SettingsFileExporterPDFPSWidgetPrivate *d;
 };
 
-#endif
+#endif // KBIBTEX_GUI_SETTINGSFILEEXPORTERPDFPSWIDGET_H

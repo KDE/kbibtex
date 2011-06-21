@@ -24,6 +24,8 @@
 
 #include <KDebug>
 #include <KLocale>
+#include <KSharedConfig>
+#include <KConfigGroup>
 
 #include <element.h>
 #include <entry.h>
@@ -31,11 +33,19 @@
 #include "fileexporterpdf.h"
 
 FileExporterPDF::FileExporterPDF(bool embedFiles)
-        : FileExporterToolchain(), m_latexLanguage("english"), m_latexBibStyle("plain"), m_embedFiles(embedFiles)
+        : FileExporterToolchain(), m_embedFiles(embedFiles)
 {
     m_laTeXFilename = tempDir.name() + QLatin1String("/bibtex-to-pdf.tex");
     m_bibTeXFilename = tempDir.name() + QLatin1String("/bibtex-to-pdf.bib");
     m_outputFilename = tempDir.name() + QLatin1String("/bibtex-to-pdf.pdf");
+
+    KSharedConfigPtr config = KSharedConfig::openConfig(QLatin1String("kbibtexrc"));
+    KConfigGroup configGroup(config, QLatin1String("FileExporterPDFPS"));
+    m_babelLanguage = configGroup.readEntry(keyBabelLanguage, defaultBabelLanguage);
+    m_bibliographyStyle = configGroup.readEntry(keyBibliographyStyle, defaultBibliographyStyle);
+
+    KConfigGroup configGroupGeneral(config, QLatin1String("General"));
+    m_paperSize = configGroupGeneral.readEntry(keyPaperSize, defaultPaperSize);
 }
 
 FileExporterPDF::~FileExporterPDF()
@@ -54,7 +64,8 @@ bool FileExporterPDF::save(QIODevice* iodevice, const File* bibtexfile, QStringL
 
     QFile output(m_bibTeXFilename);
     if (output.open(QIODevice::WriteOnly)) {
-        FileExporter* bibtexExporter = new FileExporterBibTeX();
+        FileExporterBibTeX* bibtexExporter = new FileExporterBibTeX();
+        bibtexExporter->setEncoding(QLatin1String("utf-8"));
         result = bibtexExporter->save(&output, bibtexfile, errorLog);
         output.close();
         delete bibtexExporter;
@@ -75,7 +86,8 @@ bool FileExporterPDF::save(QIODevice* iodevice, const Element* element, QStringL
 
     QFile output(m_bibTeXFilename);
     if (output.open(QIODevice::WriteOnly)) {
-        FileExporter * bibtexExporter = new FileExporterBibTeX();
+        FileExporterBibTeX * bibtexExporter = new FileExporterBibTeX();
+        bibtexExporter->setEncoding(QLatin1String("utf-8"));
         result = bibtexExporter->save(&output, element, errorLog);
         output.close();
         delete bibtexExporter;
@@ -85,16 +97,6 @@ bool FileExporterPDF::save(QIODevice* iodevice, const Element* element, QStringL
         result = generatePDF(iodevice, errorLog);
 
     return result;
-}
-
-void FileExporterPDF::setLaTeXLanguage(const QString& language)
-{
-    m_latexLanguage = language;
-}
-
-void FileExporterPDF::setLaTeXBibliographyStyle(const QString& bibStyle)
-{
-    m_latexBibStyle = bibStyle;
 }
 
 void FileExporterPDF::setDocumentSearchPaths(const QStringList& searchPaths)
@@ -120,16 +122,18 @@ bool FileExporterPDF::writeLatexFile(const QString &filename)
         ts << "\\usepackage[T1]{fontenc}\n";
         ts << "\\usepackage[utf8]{inputenc}\n";
         if (kpsewhich("babel.sty"))
-            ts << "\\usepackage[" << m_latexLanguage << "]{babel}\n";
+            ts << "\\usepackage[" << m_babelLanguage << "]{babel}\n";
         if (kpsewhich("hyperref.sty"))
             ts << "\\usepackage[pdfproducer={KBibTeX: http://home.gna.org/kbibtex/},pdftex]{hyperref}\n";
         else if (kpsewhich("url.sty"))
             ts << "\\usepackage{url}\n";
-        if (m_latexBibStyle.startsWith("apacite") && kpsewhich("apacite.sty"))
+        if (m_bibliographyStyle.startsWith("apacite") && kpsewhich("apacite.sty"))
             ts << "\\usepackage[bibnewpage]{apacite}\n";
         if (kpsewhich("embedfile.sty"))
             ts << "\\usepackage{embedfile}\n";
-        ts << "\\bibliographystyle{" << m_latexBibStyle << "}\n";
+        if (kpsewhich("geometry.sty"))
+            ts << "\\usepackage[paper=" << m_paperSize << (m_paperSize.length() <= 2 ? "paper" : "") << "]{geometry}\n";
+        ts << "\\bibliographystyle{" << m_bibliographyStyle << "}\n";
         ts << "\\begin{document}\n";
 
         if (kpsewhich("embedfile.sty")) {
