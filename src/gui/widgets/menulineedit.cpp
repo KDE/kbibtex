@@ -117,7 +117,7 @@ public:
             m_singleLineEditText->setReadOnly(isReadOnly);
         else if (m_multiLineEditText == w)
             m_multiLineEditText->setReadOnly(isReadOnly);
-        else
+        else if (!w->property("isConst").isValid() && !w->property("isConst").toBool())
             w->setEnabled(!isReadOnly);
     }
 

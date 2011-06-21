@@ -69,6 +69,7 @@ public:
 
         buttonOpenUrl = new KPushButton(KIcon("document-open-remote"), "", parent);
         buttonOpenUrl->setVisible(false);
+        buttonOpenUrl->setProperty("isConst", true);
         parent->appendWidget(buttonOpenUrl);
         connect(buttonOpenUrl, SIGNAL(clicked()), parent, SLOT(slotOpenUrl()));
 
