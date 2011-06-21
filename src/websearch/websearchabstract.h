@@ -30,6 +30,7 @@
 #include <QNetworkCookieJar>
 
 #include <KIcon>
+#include <KUrl>
 #include <KSharedConfig>
 
 #include <entry.h>
