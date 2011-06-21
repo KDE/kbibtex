@@ -18,6 +18,9 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
+#include <cstdlib>
+#include <ctime>
+
 #include <QFileInfo>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
@@ -37,6 +40,24 @@ const QString WebSearchAbstract::queryKeyFreeText = QLatin1String("free");
 const QString WebSearchAbstract::queryKeyTitle = QLatin1String("title");
 const QString WebSearchAbstract::queryKeyAuthor = QLatin1String("author");
 const QString WebSearchAbstract::queryKeyYear = QLatin1String("year");
+
+/// various browser strings to "disguise" origin
+const QStringList WebSearchAbstract::m_userAgentList = QStringList()
+        << QLatin1String("Mozilla/5.0 (Linux; U; Android 2.3.3; en-us; HTC_DesireS_S510e Build/GRI40) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1")
+        << QLatin1String("Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.6; en-US; rv:1.9.2.3) Gecko/20100402 Prism/1.0b4")
+        << QLatin1String("Mozilla/5.0 (Windows; U; Win 9x 4.90; SG; rv:1.9.2.4) Gecko/20101104 Netscape/9.1.0285")
+        << QLatin1String("Mozilla/5.0 (compatible; Konqueror/4.5; FreeBSD) KHTML/4.5.4 (like Gecko)")
+        << QLatin1String("Mozilla/5.0 (compatible; Yahoo! Slurp China; http://misc.yahoo.com.cn/help.html)")
+        << QLatin1String("yacybot (x86 Windows XP 5.1; java 1.6.0_12; Europe/de) http://yacy.net/bot.html")
+        << QLatin1String("Nokia6230i/2.0 (03.25) Profile/MIDP-2.0 Configuration/CLDC-1.1")
+        << QLatin1String("Links (2.3-pre1; NetBSD 5.0 i386; 96x36)")
+        << QLatin1String("Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US) AppleWebKit/523.15 (KHTML, like Gecko, Safari/419.3) Arora/0.3 (Change: 287 c9dfb30)")
+        << QLatin1String("Mozilla/4.0 (compatible; Dillo 2.2)")
+        << QLatin1String("Emacs-W3/4.0pre.46 URL/p4.0pre.46 (i686-pc-linux; X11)")
+        << QLatin1String("Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.8.1.13) Gecko/20080208 Galeon/2.0.4 (2008.1) Firefox/2.0.0.13")
+        << QLatin1String("Lynx/2.8 (compatible; iCab 2.9.8; Macintosh; U; 68K)")
+        << QLatin1String("Mozilla/5.0 (Macintosh; U; Intel Mac OS X; en; rv:1.8.1.14) Gecko/20080409 Camino/1.6 (like Firefox/2.0.0.14)")
+        << QLatin1String("Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US) AppleWebKit/534.16 (KHTML, like Gecko) Chrome/10.0.648.133 Safari/534.16");
 
 const int WebSearchAbstract::resultNoError = 0;
 const int WebSearchAbstract::resultCancelled = 0; /// may get redefined in the future!
@@ -129,7 +150,7 @@ QStringList WebSearchAbstract::splitRespectingQuotationMarks(const QString &text
             while (p2 < max && text[p2] != '"')  ++p2;
         } else
             while (p2 < max && text[p2] != ' ') ++p2;
-        result << text.mid(p1, p2 - p1 + 1);
+        result << text.mid(p1, p2 - p1 + 1).simplified();
         p1 = p2 + 1;
     }
     return result;
@@ -211,10 +232,16 @@ QMap<QString, QString> WebSearchAbstract::formParameters(const QString &htmlText
             /// get value of input types
             if (inputType == "hidden" || inputType == "text" || inputType == "submit")
                 result[inputName] = inputValue;
-            else if (inputType == "radio" || inputType == "checkbox") {
-                /// must be checked or selected
+            else if (inputType == "radio") {
+                /// must be selected
                 if (htmlText.indexOf(inputIsCheckedRegExp, p) == p) {
                     result[inputName] = inputValue;
+                }
+            } else if (inputType == "radio") {
+                /// must be checked
+                if (htmlText.indexOf(inputIsCheckedRegExp, p) == p) {
+                    /// multiple checkbox values with the same name are possible
+                    result.insertMulti(inputName, inputValue);
                 }
             }
         }
@@ -255,8 +282,7 @@ void WebSearchAbstract::setSuggestedHttpHeaders(QNetworkRequest &request, QNetwo
 {
     if (oldReply != NULL)
         request.setRawHeader(QString("Referer").toAscii(), oldReply->url().toString().toAscii());
-    // request.setRawHeader(QString("User-Agent").toAscii(),QString("Opera/9.80 (X11; Linux i686; U; en) Presto/2.7.62 Version/11.01").toAscii());
-    request.setRawHeader(QString("User-Agent").toAscii(), QString("Links (2.3-pre1; NetBSD 5.0 i386; 96x36)").toAscii());
+    request.setRawHeader(QString("User-Agent").toAscii(), m_userAgent.toAscii());
     request.setRawHeader(QString("Accept").toAscii(), QString("text/*, */*;q=0.7").toAscii());
     request.setRawHeader(QString("Accept-Charset").toAscii(), QString("utf-8, us-ascii, ISO-8859-1, ISO-8859-15, windows-1252").toAscii());
     request.setRawHeader(QString("Accept-Language").toAscii(), QString("en-US, en;q=0.9").toAscii());
@@ -265,8 +291,10 @@ void WebSearchAbstract::setSuggestedHttpHeaders(QNetworkRequest &request, QNetwo
 QNetworkAccessManager *WebSearchAbstract::networkAccessManager()
 {
     if (m_networkAccessManager == NULL) {
+        srand(time(NULL));
         m_networkAccessManager = new QNetworkAccessManager(KApplication::instance());
         m_networkAccessManager->setCookieJar(new HTTPEquivCookieJar(m_networkAccessManager));
+        m_userAgent = m_userAgentList[rand()%m_userAgentList.length()];
     }
 
     return m_networkAccessManager;
