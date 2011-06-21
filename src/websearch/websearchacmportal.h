@@ -28,7 +28,6 @@ class QSpinBox;
 class KComboBox;
 class KLineEdit;
 
-
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */

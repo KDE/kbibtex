@@ -105,5 +105,4 @@ private:
     MergeDuplicatesPrivate *d;
 };
 
-
 #endif // KBIBTEX_PROC_FINDDUPLICATES_H
