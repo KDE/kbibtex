@@ -62,6 +62,7 @@
 #include <comment.h>
 #include <filterbar.h>
 #include <findduplicatesui.h>
+#include <lyx.h>
 #include <preferences/settingsfileexporterbibtexwidget.h>
 
 #include <valuelistmodel.h>
@@ -91,6 +92,7 @@ public:
     QMenu *viewDocumentMenu;
     QSignalMapper *signalMapperViewDocument;
     bool isSaveAsOperation;
+    LyX *lyx;
 
     KBibTeXPartPrivate(KBibTeXPart *parent)
             : p(parent), sortFilterProxyModel(NULL), signalMapperNewElement(new QSignalMapper(parent)), viewDocumentMenu(new QMenu(i18n("View Document"), parent->widget())), signalMapperViewDocument(new QSignalMapper(parent)), isSaveAsOperation(false) {
@@ -404,28 +406,32 @@ void KBibTeXPart::setupActions(bool /*browserViewWanted FIXME*/)
     actionCollection()->addAction(QLatin1String("edit_copy_references"),  d->editCopyReferencesAction);
     d->editPasteAction = actionCollection()->addAction(KStandardAction::Paste, clipboard, SLOT(paste()));
 
+    /// build context menu for central BibTeX file view
     d->editor->setContextMenuPolicy(Qt::ActionsContextMenu);
-    d->editor->insertAction(NULL, d->elementEditAction);
-    d->editor->insertAction(NULL, d->elementViewDocumentAction);
+    d->editor->addAction(d->elementEditAction);
+    d->editor->addAction(d->elementViewDocumentAction);
     QAction *separator = new QAction(this);
     separator->setSeparator(true);
-    d->editor->insertAction(NULL, separator);
-    d->editor->insertAction(NULL, d->editCutAction);
-    d->editor->insertAction(NULL, d->editCopyAction);
-    d->editor->insertAction(NULL, d->editCopyReferencesAction);
-    d->editor->insertAction(NULL, d->editPasteAction);
-    d->editor->insertAction(NULL, d->editDeleteAction);
+    d->editor->addAction(separator);
+    d->editor->addAction(d->editCutAction);
+    d->editor->addAction(d->editCopyAction);
+    d->editor->addAction(d->editCopyReferencesAction);
+    d->editor->addAction(d->editPasteAction);
+    d->editor->addAction(d->editDeleteAction);
 
     // TODO
+
+    setXMLFile(RCFileName);
+
+    new FindDuplicatesUI(this, d->editor);
+
+    d->lyx = new LyX(this, d->editor);
+    connect(d->editor, SIGNAL(selectedElementsChanged()), d->lyx, SLOT(updateActions()));
 
     connect(d->editor, SIGNAL(selectedElementsChanged()), this, SLOT(updateActions()));
     updateActions();
 
     fitActionSettings();
-
-    setXMLFile(RCFileName);
-
-    new FindDuplicatesUI(this, d->editor);
 }
 
 bool KBibTeXPart::saveFile()
@@ -605,4 +611,16 @@ void KBibTeXPart::updateActions()
     /// activate sub-menu only if there are at least two documents to view
     d->elementViewDocumentAction->setMenu(numDocumentsToView > 1 ? d->viewDocumentMenu : NULL);
     d->elementViewDocumentAction->setToolTip(numDocumentsToView == 1 ? d->viewDocumentMenu->actions().first()->text() : QLatin1String(""));
+
+    /// update list of references which can be sent to LyX
+    QStringList references;
+    if (d->editor->selectionModel() != NULL) {
+        QModelIndexList mil = d->editor->selectionModel()->selectedRows();
+        for (QModelIndexList::ConstIterator it = mil.constBegin(); it != mil.constEnd(); ++it) {
+            Entry *entry = dynamic_cast<Entry*>(d->editor->bibTeXModel()->element(d->editor->sortFilterProxyModel()->mapToSource(*it).row()));
+            if (entry != NULL)
+                references << entry->id();
+        }
+    }
+    d->lyx->setReferences(references);
 }

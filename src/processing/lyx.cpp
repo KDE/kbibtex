@@ -1,0 +1,126 @@
+/***************************************************************************
+*   Copyright (C) 2004-2011 by Thomas Fischer                             *
+*   fischer@unix-ag.uni-kl.de                                             *
+*                                                                         *
+*   This program is free software; you can redistribute it and/or modify  *
+*   it under the terms of the GNU General Public License as published by  *
+*   the Free Software Foundation; either version 2 of the License, or     *
+*   (at your option) any later version.                                   *
+*                                                                         *
+*   This program is distributed in the hope that it will be useful,       *
+*   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+*   GNU General Public License for more details.                          *
+*                                                                         *
+*   You should have received a copy of the GNU General Public License     *
+*   along with this program; if not, write to the                         *
+*   Free Software Foundation, Inc.,                                       *
+*   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+***************************************************************************/
+
+#include <QWidget>
+#include <QTreeView>
+#include <QDir>
+#include <QTextStream>
+#include <QFileInfo>
+
+#include <KAction>
+#include <KActionCollection>
+#include <KLocale>
+#include <KParts/ReadOnlyPart>
+#include <KMessageBox>
+
+#include "lyx.h"
+
+class LyX::LyXPrivate
+{
+private:
+    LyX *p;
+
+public:
+    QWidget *widget;
+    KAction *action;
+    QStringList references;
+
+    LyXPrivate(LyX *parent, QWidget *widget)
+            : p(parent), action(NULL) {
+        this->widget = widget;
+    }
+
+    QString findLyXServerPipeName() {
+        QString result = QString::null;
+
+        QFile lyxConfigFile(QDir::homePath() + QDir::separator() + ".lyx" + QDir::separator() + "preferences"); // FIXME does this work on Windows/Mac systems?
+        if (lyxConfigFile.open(QFile::ReadOnly)) {
+            QRegExp serverPipeRegExp("^\\\\serverpipe\\s+\"([^\"]+)\"");
+            QString line = QString::null;
+            while (!(line = lyxConfigFile.readLine()).isNull()) {
+                if (line.isEmpty() || line[0] == '#' || line.length() < 3) continue;
+                if (serverPipeRegExp.indexIn(line) >= 0) {
+                    result = serverPipeRegExp.cap(1) + ".in";
+                    break;
+                }
+            }
+            lyxConfigFile.close();
+        }
+
+        return result;
+    }
+};
+
+LyX::LyX(KParts::ReadOnlyPart *part, QWidget *widget)
+        : QObject(part), d(new LyX::LyXPrivate(this, widget))
+{
+    d->action = new KAction(KIcon("application-x-lyx"), i18n("Send Reference to LyX"), this);
+    part->actionCollection()->addAction(QLatin1String("sendtolyx"), d->action);
+    connect(d->action, SIGNAL(triggered()), this, SLOT(sendReferenceToLyX()));
+    // FIXME part->replaceXMLFile(KStandardDirs::locate("appdata", "findduplicatesui.rc"), KStandardDirs::locateLocal("appdata", "findduplicatesui.rc"), true);
+    widget->addAction(d->action);
+}
+
+void LyX::setReferences(const QStringList &references)
+{
+    d->references = references;
+}
+
+void LyX::updateActions()
+{
+    QTreeView *tv = dynamic_cast<QTreeView*>(d->widget);
+    d->action->setEnabled(tv != NULL && !tv->selectionModel()->selection().isEmpty());
+}
+
+void LyX::sendReferenceToLyX()
+{
+    static const QString defaultHintOnLyXProblems = i18n("\n\nCheck that LyX is running and configured to receive references (see \"LyX server pipe\" in LyX's settings).");
+
+    if (d->references.isEmpty()) {
+        KMessageBox::error(d->widget, i18n("No references to send to LyX."), i18n("Send Reference to LyX"));
+        return;
+    }
+
+    QString pipeName = d->findLyXServerPipeName();
+    if (pipeName.isEmpty()) {
+        KMessageBox::error(d->widget, i18n("No \"LyX server pipe\" has been configured in LyX.") + defaultHintOnLyXProblems, i18n("Send Reference to LyX"));
+        return;
+    }
+
+    QFileInfo fi(pipeName);
+    if (!fi.exists()) {
+        KMessageBox::error(d->widget, i18n("LyX server pipe \"%1\" does not exist.", pipeName) + defaultHintOnLyXProblems, i18n("Send Reference to LyX"));
+        return;
+    }
+
+    QFile pipe(pipeName);
+    if (!pipe.open(QFile::WriteOnly)) {
+        KMessageBox::error(d->widget, i18n("Could not open LyX server pipe \"%1\".", pipeName) + defaultHintOnLyXProblems, i18n("Send Reference to LyX"));
+        return;
+    }
+
+    QTextStream ts(&pipe);
+    QString msg = QString("LYXCMD:kbibtex:citation-insert:%1").arg(d->references.join(","));
+
+    ts << msg << endl;
+    ts.flush();
+
+    pipe.close();
+}

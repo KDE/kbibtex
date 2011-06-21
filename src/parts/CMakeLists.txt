@@ -5,6 +5,7 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/../gui/config
   ${CMAKE_CURRENT_SOURCE_DIR}/../gui/widgets
   ${CMAKE_CURRENT_SOURCE_DIR}/../gui/bibtex
+  ${CMAKE_CURRENT_SOURCE_DIR}/../processing/
 )
 
 # debug area for KBibTeX's IO library
@@ -20,9 +21,10 @@ set( kbibtexpart_SRCS
 kde4_add_plugin( kbibtexpart  ${kbibtexpart_SRCS})
 
 target_link_libraries( kbibtexpart
+	${KDE4_KPARTS_LIBS}
 	kbibtexio
 	kbibtexgui
-	${KDE4_KPARTS_LIBS}
+	kbibtexproc
 )
 
 install( TARGETS kbibtexpart  DESTINATION ${PLUGIN_INSTALL_DIR})
