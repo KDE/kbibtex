@@ -44,7 +44,7 @@
 
 #include "referencepreview.h"
 
-const QString notAvailableMessage = "<html><body style=\"font-family: '" + KGlobalSettings::generalFont().family() + "';\"><p style=\"font-size: " + QString::number(KGlobalSettings::generalFont().pointSize()) + "pt; font-style: italic; color: #333;\">" + i18n("No preview available") + "</p><p style=\"font-size: " + QString::number(KGlobalSettings::generalFont().pointSize() * .9) + "pt; color: #666;\">" + i18n("Reason:") + " %1</p></body></html>"; //FIXME: Font size seems to be too small
+const QString notAvailableMessage = "<html><head><meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" /></head><body style=\"font-family: '" + KGlobalSettings::generalFont().family() + "';\"><p style=\"font-size: " + QString::number(KGlobalSettings::generalFont().pointSize()) + "pt; font-style: italic; color: #333;\">" + i18n("No preview available") + "</p><p style=\"font-size: " + QString::number(KGlobalSettings::generalFont().pointSize() * .9) + "pt; color: #666;\">" + i18n("Reason:") + " %1</p></body></html>"; //FIXME: Font size seems to be too small
 class ReferencePreview::ReferencePreviewPrivate
 {
 private:
@@ -286,7 +286,7 @@ void ReferencePreview::renderHTML()
 
     if (d->comboBox->currentIndex() == 0) {
         /// source
-        text.prepend("<html><body><pre style=\"font-family: '" + KGlobalSettings::fixedFont().family() + "'; font-size: " + QString::number(KGlobalSettings::fixedFont().pointSize()) + "pt;\">"); //FIXME: Font size seems to be too small
+        text.prepend("<html><head><meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" /></head><body><pre style=\"font-family: '" + KGlobalSettings::fixedFont().family() + "'; font-size: " + QString::number(KGlobalSettings::fixedFont().pointSize()) + "pt;\">"); //FIXME: Font size seems to be too small
         text.append("</pre></body></html>");
     } else if (d->comboBox->currentIndex() < 9) {
         /// bibtex2html
@@ -302,11 +302,11 @@ void ReferencePreview::renderHTML()
         reAnchor.setMinimal(true);
         text.replace(reAnchor, "");
 
-        text.prepend("<html><body style=\"font-family: '" + font().family() + "'; font-size: " + QString::number(font().pointSize()) + "pt;\">");
+        text.prepend("<html><head><meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" /></head><body style=\"font-family: '" + font().family() + "'; font-size: " + QString::number(font().pointSize()) + "pt;\">");
         text.append("</body></html>");
     } else {
         /// XML/XSLT
-        text.prepend("<html><body style=\"font-family: '" + font().family() + "'; font-size: " + QString::number(font().pointSize()) + "pt;\">");
+        text.prepend("<html><head><meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" /></head><body style=\"font-family: '" + font().family() + "'; font-size: " + QString::number(font().pointSize()) + "pt;\">");
         text.append("</body></html>");
     }
 
