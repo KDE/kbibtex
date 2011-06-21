@@ -37,6 +37,9 @@ class KBIBTEXIO_EXPORT FileExporter : public QObject
     Q_OBJECT
 
 public:
+    static const QString keyPaperSize;
+    static const QString defaultPaperSize;
+
     FileExporter();
     ~FileExporter();
 

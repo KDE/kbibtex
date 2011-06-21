@@ -21,6 +21,7 @@
 #include <QFormLayout>
 #include <QCheckBox>
 #include <QLabel>
+#include <QAbstractItemModel>
 
 #include <KSharedConfig>
 #include <KConfigGroup>
@@ -35,6 +36,53 @@
 
 #define createDelimiterString(a, b) (QString("%1%2%3").arg(a).arg(QChar(8230)).arg(b))
 
+class ItalicTextItemModel : public QAbstractItemModel
+{
+private:
+    QList<QPair<QString, QString> > m_data;
+public:
+    ItalicTextItemModel(QObject *parent = 0)
+            : QAbstractItemModel(parent) {
+        // nothing
+    }
+
+    void addItem(const QString &a, const QString &b) {
+        m_data.append(QPair<QString, QString>(a, b));
+    }
+
+    QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const {
+        if (role == Qt::FontRole) {
+            QFont font;
+            if (m_data[index.row()].second.isEmpty())
+                font.setItalic(true);
+            return font;
+        } else if (role == Qt::DisplayRole) {
+            return m_data[index.row()].first;
+        } else if (role == Qt::UserRole) {
+            return m_data[index.row()].second;
+        }
+
+        return QVariant();
+    }
+
+    QModelIndex index(int row, int column, const QModelIndex&) const {
+        return createIndex(row, column);
+    }
+
+    QModelIndex parent(const QModelIndex &) const {
+        return QModelIndex();
+    }
+
+    int rowCount(const QModelIndex &) const {
+        return m_data.count();
+    }
+
+    int columnCount(const QModelIndex &) const {
+        return 1;
+    }
+};
+
+
 class SettingsFileExporterBibTeXWidget::SettingsFileExporterBibTeXWidgetPrivate
 {
 private:
@@ -45,6 +93,8 @@ private:
     KComboBox *comboBoxQuoteComment;
     KComboBox *comboBoxKeywordCasing;
     QCheckBox *checkBoxProtectCasing;
+    KComboBox *comboBoxPersonNameFormatting;
+    static const Person *dummyPerson;
 
     KSharedConfigPtr config;
     static const QString configGroupName;
@@ -122,6 +172,14 @@ public:
 
         checkBoxProtectCasing = new QCheckBox(i18n("Protect Titles"));
         layout->addRow(i18n("Protect Casing?"), checkBoxProtectCasing);
+
+        comboBoxPersonNameFormatting = new KComboBox(false, p);
+        layout->addRow(i18n("Person Names Formatting:"), comboBoxPersonNameFormatting);
+        ItalicTextItemModel *itim = new ItalicTextItemModel();
+        itim->addItem(i18n("Use global settings"), QString());
+        itim->addItem(Person::transcribePersonName(dummyPerson, QLatin1String("<%f ><%l>")), QString("<%f ><%l>"));
+        itim->addItem(Person::transcribePersonName(dummyPerson, QLatin1String("<%l><, %f>")), QString("<%l><, %f>"));
+        comboBoxPersonNameFormatting->setModel(itim);
     }
 
     void loadProperties(File *file) {
@@ -158,6 +216,7 @@ public:
 };
 
 const QString SettingsFileExporterBibTeXWidget::SettingsFileExporterBibTeXWidgetPrivate::configGroupName = QLatin1String("FileExporterBibTeX");
+const Person *SettingsFileExporterBibTeXWidget::SettingsFileExporterBibTeXWidgetPrivate::dummyPerson = new Person(i18n("John"), i18n("Doe"), i18n("J."), i18n("Jr."));
 
 
 SettingsFileExporterBibTeXWidget::SettingsFileExporterBibTeXWidget(QWidget *parent)

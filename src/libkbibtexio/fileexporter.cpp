@@ -19,6 +19,9 @@
 ***************************************************************************/
 #include "fileexporter.h"
 
+const QString FileExporter::keyPaperSize = QLatin1String("paperSize");
+const QString FileExporter::defaultPaperSize = QLatin1String("a4");
+
 FileExporter::FileExporter() : QObject()
 {
     // nothing

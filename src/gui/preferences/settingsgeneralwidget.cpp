@@ -26,6 +26,7 @@
 #include <KComboBox>
 
 #include <value.h>
+#include <fileexporter.h>
 #include "settingsgeneralwidget.h"
 
 class SettingsGeneralWidget::SettingsGeneralWidgetPrivate
@@ -35,6 +36,8 @@ private:
 
     KComboBox *comboBoxPersonNameFormatting;
     static const Person *dummyPerson;
+    KComboBox *comboBoxPaperSize;
+    QMap<QString, QString> paperSizeLabelToName;
     QString restartRequiredMsg;
 
     KSharedConfigPtr config;
@@ -44,27 +47,42 @@ public:
 
     SettingsGeneralWidgetPrivate(SettingsGeneralWidget *parent)
             : p(parent), restartRequiredMsg(i18n("Changing this option requires a restart to take effect.")), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))) {
-        // nothing
+        paperSizeLabelToName.insert(i18n("A4"), QLatin1String("a4"));
+        paperSizeLabelToName.insert(i18n("Letter"), QLatin1String("letter"));
+        paperSizeLabelToName.insert(i18n("Legal"), QLatin1String("legal"));
     }
 
     void loadState() {
         KConfigGroup configGroup(config, configGroupName);
         QString personNameFormatting = configGroup.readEntry(Person::keyPersonNameFormatting, Person::defaultPersonNameFormatting);
         p->selectValue(comboBoxPersonNameFormatting, Person::transcribePersonName(dummyPerson, personNameFormatting));
+        QString paperSizeName = configGroup.readEntry(FileExporter::keyPaperSize, FileExporter::defaultPaperSize);
+        p->selectValue(comboBoxPaperSize, paperSizeLabelToName[paperSizeName]);
     }
 
     void saveState() {
         KConfigGroup configGroup(config, configGroupName);
         configGroup.writeEntry(Person::keyPersonNameFormatting, comboBoxPersonNameFormatting->itemData(comboBoxPersonNameFormatting->currentIndex()));
+        QString paperSizeName = paperSizeLabelToName.key(comboBoxPaperSize->currentText());
+        configGroup.writeEntry(FileExporter::keyPaperSize, paperSizeName);
         config->sync();
     }
 
     void resetToDefaults() {
         p->selectValue(comboBoxPersonNameFormatting, Person::transcribePersonName(dummyPerson, Person::defaultPersonNameFormatting));
+        p->selectValue(comboBoxPaperSize, paperSizeLabelToName[FileExporter::defaultPaperSize]);
     }
 
     void setupGUI() {
         QFormLayout *layout = new QFormLayout(p);
+
+        comboBoxPaperSize = new KComboBox(false, p);
+        layout->addRow(i18n("Paper Size:"), comboBoxPaperSize);
+        QStringList paperSizeLabelToNameKeys = paperSizeLabelToName.keys();
+        paperSizeLabelToNameKeys.sort();
+        foreach(QString labelText, paperSizeLabelToNameKeys) {
+            comboBoxPaperSize->addItem(labelText, paperSizeLabelToName[labelText]);
+        }
 
         comboBoxPersonNameFormatting = new KComboBox(false, p);
         layout->addRow(i18n("Person Names Formatting:"), comboBoxPersonNameFormatting);
