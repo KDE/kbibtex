@@ -154,6 +154,8 @@ private:
     static const char *httpUnsafeChars;
     static QNetworkAccessManager *m_networkAccessManager;
     QMap<QTimer*, QNetworkReply*> m_mapTimerToReply;
+    static const QStringList m_userAgentList;
+    QString m_userAgent;
 
 private slots:
     void networkReplyTimeout();
