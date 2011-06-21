@@ -10,6 +10,7 @@ set( websearch_LIB_SRCS
 	websearchpubmed.cpp
 	websearchacmportal.cpp
 	websearchspringerlink.cpp
+	websearchjstor.cpp
 	websearchgeneral.cpp
 )
 

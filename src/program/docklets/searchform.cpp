@@ -52,6 +52,7 @@
 #include <websearchsciencedirect.h>
 #include <websearchspringerlink.h>
 #include <websearcharxiv.h>
+#include <websearchjstor.h>
 #include <fileexporterbibtex.h>
 #include <element.h>
 #include <file.h>
@@ -202,6 +203,7 @@ public:
         addEngine(new WebSearchIEEEXplore(p));
         addEngine(new WebSearchScienceDirect(p));
         addEngine(new WebSearchSpringerLink(p));
+        addEngine(new WebSearchJStor(p));
 
         p->itemCheckChanged(NULL);
         updateGUI();
