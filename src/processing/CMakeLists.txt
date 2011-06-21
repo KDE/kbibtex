@@ -2,6 +2,7 @@
 
 set( processing_LIB_SRCS
 	findduplicates.cpp
+	lyx.cpp
 )
 
 add_definitions( -DMAKE_PROCESSING_LIB )
