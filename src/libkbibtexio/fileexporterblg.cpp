@@ -48,7 +48,8 @@ bool FileExporterBLG::save(QIODevice*ioDevice, const File* bibtexfile, QStringLi
 
     QFile output(m_bibTeXFilename);
     if (output.open(QIODevice::WriteOnly)) {
-        FileExporter* bibtexExporter = new FileExporterBibTeX();
+        FileExporterBibTeX* bibtexExporter = new FileExporterBibTeX();
+        bibtexExporter->setEncoding(QLatin1String("utf-8"));
         result = bibtexExporter->save(&output, bibtexfile, errorLog);
         bibtexExporter->save(ioDevice, bibtexfile, NULL);
         output.close();
@@ -67,7 +68,8 @@ bool FileExporterBLG::save(QIODevice *ioDevice, const Element* element, QStringL
 
     QFile output(m_bibTeXFilename);
     if (output.open(QIODevice::WriteOnly)) {
-        FileExporter * bibtexExporter = new FileExporterBibTeX();
+        FileExporterBibTeX * bibtexExporter = new FileExporterBibTeX();
+        bibtexExporter->setEncoding(QLatin1String("utf-8"));
         result = bibtexExporter->save(&output, element, errorLog);
         bibtexExporter->save(ioDevice, element, NULL);
         output.close();
@@ -111,7 +113,8 @@ bool FileExporterBLG::writeLatexFile(const QString &filename)
         ts << "\\documentclass{article}\n";
         ts << "\\usepackage[T1]{fontenc}\n";
         ts << "\\usepackage[utf8]{inputenc}\n";
-        ts << "\\usepackage[" << m_latexLanguage << "]{babel}\n";
+        if (kpsewhich("babel.sty"))
+            ts << "\\usepackage[" << m_latexLanguage << "]{babel}\n";
         if (kpsewhich("hyperref.sty"))
             ts << "\\usepackage[pdfproducer={KBibTeX: http://home.gna.org/kbibtex/},pdftex]{hyperref}\n";
         else if (kpsewhich("url.sty"))

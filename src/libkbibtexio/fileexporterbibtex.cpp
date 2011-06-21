@@ -72,7 +72,7 @@ public:
     QChar stringCloseDelimiter;
     KBibTeX::Casing keywordCasing;
     QuoteComment quoteComment;
-    QString encoding;
+    QString encoding, forcedEncoding;
     bool protectCasing;
     QString personNameFormatting;
     bool cancelFlag;
@@ -81,7 +81,8 @@ public:
     const QString configGroupName, configGroupNameGeneral;
 
     FileExporterBibTeXPrivate(FileExporterBibTeX *parent)
-            : p(parent), cancelFlag(false), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName("FileExporterBibTeX"), configGroupNameGeneral("General") {
+            : p(parent), cancelFlag(false), iconvLaTeX(NULL), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName("FileExporterBibTeX"), configGroupNameGeneral("General") {
+        forcedEncoding = QString::null;
         loadState();
     }
 
@@ -92,7 +93,6 @@ public:
     void loadState() {
         KConfigGroup configGroup(config, configGroupName);
         encoding = configGroup.readEntry(p->keyEncoding, p->defaultEncoding);
-        iconvLaTeX = new IConvLaTeX(encoding == QLatin1String("latex") ? QLatin1String("us-ascii") : encoding);
         QString stringDelimiter = configGroup.readEntry(p->keyStringDelimiter, p->defaultStringDelimiter);
         stringOpenDelimiter = stringDelimiter[0];
         stringCloseDelimiter = stringDelimiter[1];
@@ -118,7 +118,7 @@ public:
             Value value = it.value();
             if (value.isEmpty()) continue; ///< ignore empty key-value pairs
 
-            QString text = valueToBibTeX(value, key, leUTF8);
+            QString text = p->internalValueToBibTeX(value, key, leUTF8);
             if (text.isEmpty()) {
                 /// ignore empty key-value pairs
                 kWarning() << "Value for field " << key << " is empty" << endl;
@@ -148,7 +148,7 @@ public:
     bool writeMacro(QIODevice* iodevice, const Macro& macro) {
         BibTeXEntries *be = BibTeXEntries::self();
 
-        QString text = valueToBibTeX(macro.value(), QString::null, leUTF8);
+        QString text = p->internalValueToBibTeX(macro.value(), QString::null, leUTF8);
         if (protectCasing)
             addProtectiveCasing(text);
 
@@ -204,7 +204,7 @@ public:
         iodevice->putChar('@');
         iodevice->write(be->format(QLatin1String("Preamble"), keywordCasing).toAscii().data());
         iodevice->putChar('{');
-        iodevice->write(iconvLaTeX->encode(valueToBibTeX(preamble.value(), QString::null, leUTF8)));
+        iodevice->write(iconvLaTeX->encode(p->internalValueToBibTeX(preamble.value(), QString::null, leUTF8)));
         iodevice->putChar('}');
         iodevice->putChar('\n');
         iodevice->putChar('\n');
@@ -246,6 +246,10 @@ public:
         else if (!isLastName && !text.contains(" and "))
             /** First name contains no " and " no quoting necessary */
             return false;
+        else if (isLastName && !text.isEmpty() && text[0].isLower())
+            /** Last name starts with lower-case character (von, van, de, ...) */
+            // FIXME does not work yet
+            return false;
         else if (text[0] != '{' || text[text.length() - 1] != '}')
             /** as either last name contains spaces or first name contains " and " and there is no protective quoting yet, there must be a protective quoting added */
             return true;
@@ -273,6 +277,11 @@ FileExporterBibTeX::FileExporterBibTeX()
 FileExporterBibTeX::~FileExporterBibTeX()
 {
 // nothing
+}
+
+void FileExporterBibTeX::setEncoding(const QString &encoding)
+{
+    d->forcedEncoding = encoding;
 }
 
 bool FileExporterBibTeX::save(QIODevice* iodevice, const File* bibtexfile, QStringList * /*errorLog*/)
@@ -320,6 +329,8 @@ bool FileExporterBibTeX::save(QIODevice* iodevice, const File* bibtexfile, QStri
     loadState();
     if (bibtexfile->hasProperty(File::Encoding))
         d->encoding = bibtexfile->property(File::Encoding).toString();
+    if (!d->forcedEncoding.isEmpty())
+        d->encoding = d->forcedEncoding;
     d->applyEncoding(d->encoding);
     if (bibtexfile->hasProperty(File::StringDelimiter)) {
         QString stringDelimiter = bibtexfile->property(File::StringDelimiter).toString();
@@ -379,6 +390,11 @@ bool FileExporterBibTeX::save(QIODevice* iodevice, const Element* element, QStri
 {
     bool result = false;
 
+    loadState();
+    if (!d->forcedEncoding.isEmpty())
+        d->encoding = d->forcedEncoding;
+    d->applyEncoding(d->encoding);
+
     const Entry *entry = dynamic_cast<const Entry*>(element);
     if (entry != NULL)
         result |= d->writeEntry(iodevice, *entry);
@@ -424,11 +440,13 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value& value, const QStr
 
     QString result = "";
     bool isOpen = false;
+    /// variable to memorize which closing delimiter to use
+    QChar stringCloseDelimiter = d->stringCloseDelimiter;
     const ValueItem* prev = NULL;
     for (QList<ValueItem*>::ConstIterator it = value.begin(); it != value.end(); ++it) {
         const MacroKey *macroKey = dynamic_cast<const MacroKey*>(*it);
         if (macroKey != NULL) {
-            if (isOpen) result.append(d->stringCloseDelimiter);
+            if (isOpen) result.append(stringCloseDelimiter);
             isOpen = false;
             if (!result.isEmpty()) result.append(" # ");
             result.append(macroKey->text());
@@ -436,47 +454,74 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value& value, const QStr
         } else {
             const PlainText *plainText = dynamic_cast<const PlainText*>(*it);
             if (plainText != NULL) {
+                QString textBody = encodercheck(encoder, escapeLaTeXChars(plainText->text()));
                 if (!isOpen) {
                     if (!result.isEmpty()) result.append(" # ");
-                    result.append(d->stringOpenDelimiter);
+                    if (textBody.contains("\"")) {
+                        /// fall back to {...} delimiters if text contains quotation marks
+                        result.append("{");
+                        stringCloseDelimiter = '}';
+                    } else {
+                        result.append(d->stringOpenDelimiter);
+                        stringCloseDelimiter = d->stringCloseDelimiter;
+                    }
                 } else if (prev != NULL && typeid(*prev) == typeid(PlainText))
                     result.append(' ');
                 else if (prev != NULL && typeid(*prev) == typeid(Person)) {
                     /// handle "et al." i.e. "and others"
                     result.append(" and ");
-                } else
-                    result.append(d->stringCloseDelimiter).append(" # ").append(d->stringOpenDelimiter);
+                } else {
+                    result.append(stringCloseDelimiter).append(" # ");
+
+                    if (textBody.contains("\"")) {
+                        /// fall back to {...} delimiters if text contains quotation marks
+                        result.append("{");
+                        stringCloseDelimiter = '}';
+                    } else {
+                        result.append(d->stringOpenDelimiter);
+                        stringCloseDelimiter = d->stringCloseDelimiter;
+                    }
+                }
                 isOpen = true;
-                result.append(encodercheck(encoder, escapeLaTeXChars(plainText->text())));
+                result.append(textBody);
                 prev = plainText;
             } else {
                 const VerbatimText *verbatimText = dynamic_cast<const VerbatimText*>(*it);
                 if (verbatimText != NULL) {
+                    QString textBody = verbatimText->text();
                     if (!isOpen) {
                         if (!result.isEmpty()) result.append(" # ");
-                        result.append(d->stringOpenDelimiter);
+                        if (textBody.contains("\"")) {
+                            /// fall back to {...} delimiters if text contains quotation marks
+                            result.append("{");
+                            stringCloseDelimiter = '}';
+                        } else {
+                            result.append(d->stringOpenDelimiter);
+                            stringCloseDelimiter = d->stringCloseDelimiter;
+                        }
                     } else if (prev != NULL && typeid(*prev) == typeid(VerbatimText)) {
                         if (key.toLower().startsWith(Entry::ftUrl) || key.toLower().startsWith(Entry::ftLocalFile) || key.toLower().startsWith(Entry::ftDOI))
                             result.append("; ");
                         else
                             result.append(' ');
-                    } else
-                        result.append(d->stringCloseDelimiter).append(" # ").append(d->stringOpenDelimiter);
+                    } else {
+                        result.append(stringCloseDelimiter).append(" # ");
+
+                        if (textBody.contains("\"")) {
+                            /// fall back to {...} delimiters if text contains quotation marks
+                            result.append("{");
+                            stringCloseDelimiter = '}';
+                        } else {
+                            result.append(d->stringOpenDelimiter);
+                            stringCloseDelimiter = d->stringCloseDelimiter;
+                        }
+                    }
                     isOpen = true;
-                    result.append(verbatimText->text());
+                    result.append(textBody);
                     prev = verbatimText;
                 } else {
                     const Person *person = dynamic_cast<const Person*>(*it);
                     if (person != NULL) {
-                        if (!isOpen) {
-                            if (!result.isEmpty()) result.append(" # ");
-                            result.append(d->stringOpenDelimiter);
-                        } else if (prev != NULL && typeid(*prev) == typeid(Person))
-                            result.append(" and ");
-                        else
-                            result.append(d->stringCloseDelimiter).append(" # ").append(d->stringOpenDelimiter);
-                        isOpen = true;
-
                         QString firstName = person->firstName();
                         if (!firstName.isEmpty() && d->requiresPersonQuoting(firstName, false))
                             firstName = firstName.prepend("{").append("}");
@@ -489,21 +534,65 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value& value, const QStr
 
                         QString thisName = Person::transcribePersonName(d->personNameFormatting, firstName, lastName);
 
+                        if (!isOpen) {
+                            if (!result.isEmpty()) result.append(" # ");
+                            if (thisName.contains("\"")) {
+                                /// fall back to {...} delimiters if text contains quotation marks
+                                result.append("{");
+                                stringCloseDelimiter = '}';
+                            } else {
+                                result.append(d->stringOpenDelimiter);
+                                stringCloseDelimiter = d->stringCloseDelimiter;
+                            }
+                        } else if (prev != NULL && typeid(*prev) == typeid(Person))
+                            result.append(" and ");
+                        else {
+                            result.append(stringCloseDelimiter).append(" # ");
+
+                            if (thisName.contains("\"")) {
+                                /// fall back to {...} delimiters if text contains quotation marks
+                                result.append("{");
+                                stringCloseDelimiter = '}';
+                            } else {
+                                result.append(d->stringOpenDelimiter);
+                                stringCloseDelimiter = d->stringCloseDelimiter;
+                            }
+                        }
+                        isOpen = true;
+
                         result.append(encodercheck(encoder, escapeLaTeXChars(thisName)));
                         prev = person;
                     } else {
                         const Keyword *keyword = dynamic_cast<const Keyword*>(*it);
                         if (keyword != NULL) {
+                            QString textBody = encodercheck(encoder, escapeLaTeXChars(keyword->text()));
                             if (!isOpen) {
                                 if (!result.isEmpty()) result.append(" # ");
-                                result.append(d->stringOpenDelimiter);
+                                if (textBody.contains("\"")) {
+                                    /// fall back to {...} delimiters if text contains quotation marks
+                                    result.append("{");
+                                    stringCloseDelimiter = '}';
+                                } else {
+                                    result.append(d->stringOpenDelimiter);
+                                    stringCloseDelimiter = d->stringCloseDelimiter;
+                                }
                             } else if (prev != NULL && typeid(*prev) == typeid(Keyword))
                                 result.append("; ");
-                            else
-                                result.append(d->stringCloseDelimiter).append(" # ").append(d->stringOpenDelimiter);
+                            else {
+                                result.append(stringCloseDelimiter).append(" # ");
+
+                                if (textBody.contains("\"")) {
+                                    /// fall back to {...} delimiters if text contains quotation marks
+                                    result.append("{");
+                                    stringCloseDelimiter = '}';
+                                } else {
+                                    result.append(d->stringOpenDelimiter);
+                                    stringCloseDelimiter = d->stringCloseDelimiter;
+                                }
+                            }
                             isOpen = true;
 
-                            result.append(encodercheck(encoder, escapeLaTeXChars(keyword->text())));
+                            result.append(textBody);
                             prev = keyword;
                         }
                     }
@@ -513,7 +602,7 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value& value, const QStr
         prev = *it;
     }
 
-    if (isOpen) result.append(d->stringCloseDelimiter);
+    if (isOpen) result.append(stringCloseDelimiter);
     return result;
 }
 

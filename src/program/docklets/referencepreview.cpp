@@ -204,9 +204,11 @@ void ReferencePreview::renderHTML()
     QStringList errorLog;
     FileExporter *exporter = NULL;
 
-    if (d->comboBox->currentIndex() == 0)
-        exporter = new FileExporterBibTeX();
-    else if (d->comboBox->currentIndex() < 9) {
+    if (d->comboBox->currentIndex() == 0) {
+        FileExporterBibTeX *exporterBibTeX = new FileExporterBibTeX();
+        exporterBibTeX->setEncoding(QLatin1String("utf-8"));
+        exporter = exporterBibTeX;
+    } else if (d->comboBox->currentIndex() < 9) {
         crossRefHandling = merge;
         FileExporterBibTeX2HTML *exporterHTML = new FileExporterBibTeX2HTML();
         switch (d->comboBox->currentIndex()) {
