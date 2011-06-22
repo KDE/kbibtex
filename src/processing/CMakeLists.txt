@@ -23,4 +23,6 @@ target_link_libraries( kbibtexproc
 	kbibtexio
 )
 
-install(TARGETS kbibtexproc RUNTIME DESTINATION bin LIBRARY DESTINATION ${LIB_INSTALL_DIR})
+install( TARGETS kbibtexproc RUNTIME DESTINATION bin LIBRARY DESTINATION ${LIB_INSTALL_DIR} )
+
+install( FILES lyx.rc  DESTINATION ${DATA_INSTALL_DIR}/kbibtex )

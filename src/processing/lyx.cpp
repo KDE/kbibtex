@@ -29,6 +29,7 @@
 #include <KLocale>
 #include <KParts/ReadOnlyPart>
 #include <KMessageBox>
+#include <KStandardDirs>
 
 #include "lyx.h"
 
@@ -38,11 +39,11 @@ private:
     LyX *p;
 
 public:
-    QWidget *widget;
+    QTreeView *widget;
     KAction *action;
     QStringList references;
 
-    LyXPrivate(LyX *parent, QWidget *widget)
+    LyXPrivate(LyX *parent, QTreeView *widget)
             : p(parent), action(NULL) {
         this->widget = widget;
     }
@@ -68,13 +69,14 @@ public:
     }
 };
 
-LyX::LyX(KParts::ReadOnlyPart *part, QWidget *widget)
+LyX::LyX(KParts::ReadOnlyPart *part, QTreeView *widget)
         : QObject(part), d(new LyX::LyXPrivate(this, widget))
 {
     d->action = new KAction(KIcon("application-x-lyx"), i18n("Send Reference to LyX"), this);
-    part->actionCollection()->addAction(QLatin1String("sendtolyx"), d->action);
+    part->actionCollection()->addAction("sendtolyx", d->action);
+    d->action->setEnabled(false);
     connect(d->action, SIGNAL(triggered()), this, SLOT(sendReferenceToLyX()));
-    // FIXME part->replaceXMLFile(KStandardDirs::locate("appdata", "findduplicatesui.rc"), KStandardDirs::locateLocal("appdata", "findduplicatesui.rc"), true);
+    part->replaceXMLFile(KStandardDirs::locate("appdata", "lyx.rc"), KStandardDirs::locateLocal("appdata", "lyx.rc"), true);
     widget->addAction(d->action);
 }
 
@@ -85,8 +87,7 @@ void LyX::setReferences(const QStringList &references)
 
 void LyX::updateActions()
 {
-    QTreeView *tv = dynamic_cast<QTreeView*>(d->widget);
-    d->action->setEnabled(tv != NULL && !tv->selectionModel()->selection().isEmpty());
+    d->action->setEnabled(d->widget != NULL && !d->widget->selectionModel()->selection().isEmpty());
 }
 
 void LyX::sendReferenceToLyX()

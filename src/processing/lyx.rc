@@ -1,0 +1,14 @@
+<!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
+<kpartgui name="kbibtexpart" version="1">
+<MenuBar>
+  <Menu name="element">
+    <Separator/>
+    <Action name="sendtolyx" />
+  </Menu>
+</MenuBar>
+
+<ToolBar name="mainToolBar">
+  <Separator/>
+  <Action name="sendtolyx" />
+</ToolBar>
+</kpartgui>

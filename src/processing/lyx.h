@@ -30,7 +30,7 @@ namespace KParts
 class ReadOnlyPart;
 }
 
-class QWidget;
+class QTreeView;
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
@@ -39,7 +39,7 @@ class KBIBTEXPROC_EXPORT LyX: public QObject
 {
     Q_OBJECT
 public:
-    LyX(KParts::ReadOnlyPart *part, QWidget *widget);
+    LyX(KParts::ReadOnlyPart *part, QTreeView *widget);
 
     void setReferences(const QStringList &references);
 

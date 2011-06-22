@@ -418,19 +418,21 @@ void KBibTeXPart::setupActions(bool /*browserViewWanted FIXME*/)
     d->editor->addAction(d->editCopyReferencesAction);
     d->editor->addAction(d->editPasteAction);
     d->editor->addAction(d->editDeleteAction);
+    separator = new QAction(this);
+    separator->setSeparator(true);
+    d->editor->addAction(separator);
 
     // TODO
+
+    connect(d->editor, SIGNAL(selectedElementsChanged()), this, SLOT(updateActions()));
 
     setXMLFile(RCFileName);
 
     new FindDuplicatesUI(this, d->editor);
-
     d->lyx = new LyX(this, d->editor);
     connect(d->editor, SIGNAL(selectedElementsChanged()), d->lyx, SLOT(updateActions()));
 
-    connect(d->editor, SIGNAL(selectedElementsChanged()), this, SLOT(updateActions()));
     updateActions();
-
     fitActionSettings();
 }
 
