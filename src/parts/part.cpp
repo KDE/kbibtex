@@ -313,7 +313,7 @@ KBibTeXPart::KBibTeXPart(QWidget *parentWidget, QObject *parent, bool browserVie
     setObjectName("KBibTeXPart::KBibTeXPart");
 
     // TODO Setup view
-    d->editor = new BibTeXEditor(parentWidget);
+    d->editor = new BibTeXEditor(QLatin1String("Main"), parentWidget);
     d->editor->setReadOnly(!isReadWrite());
     setWidget(d->editor);
 

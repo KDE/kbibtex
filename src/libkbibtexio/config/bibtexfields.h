@@ -28,16 +28,31 @@
 
 #include <kbibtexnamespace.h>
 
-typedef struct {
+struct FieldDescription {
     QString upperCamelCase;
     QString upperCamelCaseAlt;
     QString label;
     KBibTeX::TypeFlags typeFlags;
     KBibTeX::TypeFlag preferredTypeFlag;
-    int width;
+    QMap<QString, int> width;
     int defaultWidth;
-    bool visible;
-} FieldDescription;
+    QMap<QString, bool> visible;
+
+    FieldDescription()
+            : upperCamelCase(QString::null), upperCamelCaseAlt(QString::null), label(QString::null), defaultWidth(0) { /* nothing */ }
+
+    FieldDescription(const FieldDescription &other)
+            : upperCamelCase(other.upperCamelCase), upperCamelCaseAlt(other.upperCamelCaseAlt), label(other.label), typeFlags(other.typeFlags), preferredTypeFlag(other.preferredTypeFlag), defaultWidth(other.defaultWidth) {
+        foreach(const QString &key, other.width.keys()) width.insert(key, other.width[key]);
+        foreach(const QString &key, other.visible.keys()) visible.insert(key, other.visible[key]);
+    }
+
+    bool isNull() const {
+        return upperCamelCase.isNull() && label.isNull();
+    }
+
+    static const FieldDescription null;
+};
 
 bool operator==(const FieldDescription &a, const FieldDescription &b);
 uint qHash(const FieldDescription &a);
@@ -48,11 +63,9 @@ uint qHash(const FieldDescription &a);
 class KBIBTEXIO_EXPORT BibTeXFields : public QList<FieldDescription>
 {
 public:
-    virtual ~BibTeXFields();
-
     static BibTeXFields *self();
     void save();
-    void resetToDefaults();
+    void resetToDefaults(const QString &treeViewName);
 
     /**
      * Change the casing of a given field name to one of the predefine formats.
@@ -64,7 +77,7 @@ public:
     static QString typeFlagToString(KBibTeX::TypeFlag typeFlag);
     static QString typeFlagsToString(KBibTeX::TypeFlags typeFlags);
 
-    const FieldDescription* find(const QString &name) const;
+    const FieldDescription& find(const QString &name) const;
 
 protected:
     BibTeXFields();

@@ -27,6 +27,8 @@
 #include <QRegExp>
 #include <QStringList>
 
+#include <KSharedConfig>
+
 #include <kbibtexgui_export.h>
 
 #include <file.h>
@@ -50,10 +52,7 @@ public:
         QString field;
     };
 
-    SortFilterBibTeXFileModel(QObject * parent = 0)
-            : QSortFilterProxyModel(parent) {
-        m_internalModel = NULL;
-    };
+    SortFilterBibTeXFileModel(QObject * parent = 0);
 
     virtual void setSourceModel(QAbstractItemModel *model);
     BibTeXFileModel *bibTeXSourceModel();
@@ -67,8 +66,14 @@ protected:
 
 private:
     BibTeXFileModel *m_internalModel;
-    BibTeXFields *m_bibtexFields;
+    // REMOVE BibTeXFields *m_bibtexFields;
     SortFilterBibTeXFileModel::FilterQuery m_filterQuery;
+
+    KSharedConfigPtr config;
+    static const QString configGroupName;
+    bool m_showComments, m_showMacros;
+
+    void loadState();
 };
 
 
@@ -78,6 +83,11 @@ private:
 class KBIBTEXGUI_EXPORT BibTeXFileModel : public QAbstractTableModel
 {
 public:
+    static const QString keyShowComments;
+    static const bool defaultShowComments;
+    static const QString keyShowMacros;
+    static const bool defaultShowMacros;
+
     BibTeXFileModel(QObject * parent = 0);
     virtual ~BibTeXFileModel();
 
@@ -102,7 +112,7 @@ public:
 
 private:
     File *m_bibtexFile;
-    BibTeXFields *m_bibtexFields;
+    //REMOVE BibTeXFields *m_bibtexFields;
 
     static const QRegExp whiteSpace;
 };

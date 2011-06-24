@@ -157,10 +157,10 @@ FilterBar::FilterBar(QWidget *parent)
     d->comboBoxField->addItem(i18n("every field"), QVariant());
     d->comboBoxField->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 
-    BibTeXFields *bibTeXFiles = BibTeXFields::self();
-    for (BibTeXFields::Iterator it = bibTeXFiles->begin(); it != bibTeXFiles->end(); ++it)
-        if ((*it).upperCamelCaseAlt.isEmpty())
-            d->comboBoxField->addItem((*it).label, (*it).upperCamelCase);
+    foreach(const FieldDescription &fd,  *BibTeXFields::self()) {
+        if (fd.upperCamelCaseAlt.isEmpty())
+            d->comboBoxField->addItem(fd.label, fd.upperCamelCase);
+    }
 
     connect(d->comboBoxFilterText->lineEdit(), SIGNAL(returnPressed()), this, SLOT(widgetsChanged()));
     connect(d->comboBoxFilterText->lineEdit(), SIGNAL(returnPressed()), this, SLOT(textChanged()));

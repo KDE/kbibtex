@@ -86,8 +86,8 @@ private:
     }
 };
 
-BibTeXEditor::BibTeXEditor(QWidget *parent)
-        : BibTeXFileView(parent), m_isReadOnly(false), m_current(NULL), m_filterBar(NULL)
+BibTeXEditor::BibTeXEditor(const QString &name, QWidget *parent)
+        : BibTeXFileView(name, parent), m_isReadOnly(false), m_current(NULL), m_filterBar(NULL)
 {
     connect(this, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(itemActivated(QModelIndex)));
 }

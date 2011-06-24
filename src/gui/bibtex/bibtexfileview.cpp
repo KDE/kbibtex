@@ -30,8 +30,8 @@
 #include "bibtexfilemodel.h"
 #include "bibtexfileview.h"
 
-BibTeXFileView::BibTeXFileView(QWidget * parent)
-        : QTreeView(parent), m_signalMapperBibTeXFields(new QSignalMapper(this))
+BibTeXFileView::BibTeXFileView(const QString &name, QWidget * parent)
+        : QTreeView(parent), m_name(name), m_signalMapperBibTeXFields(new QSignalMapper(this))
 {
     /// general visual appearance and behaviour
     setSelectionMode(QAbstractItemView::ExtendedSelection);
@@ -43,23 +43,23 @@ BibTeXFileView::BibTeXFileView(QWidget * parent)
 
     /// header appearance and behaviour
     header()->setClickable(true);
+    header()->setMovable(false); ///< FIXME don't know how to restore moved columns
     header()->setSortIndicatorShown(true);
     header()->setSortIndicator(-1, Qt::AscendingOrder);
     connect(header(), SIGNAL(sortIndicatorChanged(int, Qt::SortOrder)), this, SLOT(sort(int, Qt::SortOrder)));
     header()->setContextMenuPolicy(Qt::ActionsContextMenu);
 
     /// build context menu for header to show/hide single columns
-    BibTeXFields *bibtexFields = BibTeXFields::self();
     int col = 0;
-    for (BibTeXFields::Iterator it = bibtexFields->begin(); it != bibtexFields->end(); ++it, ++col) {
-        QString label = (*it).label;
-        KAction *action = new KAction(label, header());
+    foreach(const FieldDescription &fd,  *BibTeXFields::self()) {
+        KAction *action = new KAction(fd.label, header());
         action->setData(col);
         action->setCheckable(true);
-        action->setChecked((*it).visible);
+        action->setChecked(fd.visible[m_name]);
         connect(action, SIGNAL(triggered()), m_signalMapperBibTeXFields, SLOT(map()));
         m_signalMapperBibTeXFields->setMapping(action, action);
         header()->addAction(action);
+        ++col;
     }
     connect(m_signalMapperBibTeXFields, SIGNAL(mapped(QObject*)), this, SLOT(headerActionToggled(QObject*)));
 
@@ -103,22 +103,22 @@ QSortFilterProxyModel *BibTeXFileView::sortFilterProxyModel()
     return m_sortFilterProxyModel;
 }
 
-void BibTeXFileView::resizeEvent(QResizeEvent *event)
+void BibTeXFileView::resizeEvent(QResizeEvent *)
 {
-    Q_UNUSED(event)
-
-    BibTeXFields *bibtexFields = BibTeXFields::self();
     int sum = 0;
-    int widgetWidth = size().width() - verticalScrollBar()->size().width();
+    int widgetWidth = size().width() - verticalScrollBar()->size().width() - 8;
 
-    for (BibTeXFields::Iterator it = bibtexFields->begin(); it != bibtexFields->end(); ++it)
-        if ((*it).visible)
-            sum += (*it).width;
+    foreach(const FieldDescription &fd, *BibTeXFields::self()) {
+        if (fd.visible[m_name])
+            sum += fd.width[m_name];
+    }
+    Q_ASSERT(sum > 0);
 
     int col = 0;
-    for (BibTeXFields::Iterator it = bibtexFields->begin(); it != bibtexFields->end(); ++it, ++col) {
-        setColumnWidth(col, (*it).width * widgetWidth / sum);
-        setColumnHidden(col, !((*it).visible));
+    foreach(const FieldDescription &fd, *BibTeXFields::self()) {
+        setColumnWidth(col, fd.width[m_name] * widgetWidth / sum);
+        setColumnHidden(col, !fd.visible[m_name]);
+        ++col;
     }
 }
 
@@ -130,12 +130,13 @@ void BibTeXFileView::columnResized(int column, int oldSize, int newSize)
 
 void BibTeXFileView::syncBibTeXFields()
 {
+    int i = 0;
     BibTeXFields *bibtexFields = BibTeXFields::self();
-
-    for (int i = header()->count() - 1; i >= 0; --i) {
-        FieldDescription fd = bibtexFields->at(i);
-        fd.width = columnWidth(i);
-        bibtexFields->replace(i, fd);
+    foreach(const FieldDescription &origFd, *bibtexFields) {
+        FieldDescription newFd(origFd);
+        newFd.width[m_name] = newFd.visible[m_name] ? columnWidth(i) : 0;
+        bibtexFields->replace(i, newFd);
+        ++i;
     }
     bibtexFields->save();
 }
@@ -149,19 +150,45 @@ void BibTeXFileView::headerActionToggled(QObject *obj)
     if (!ok) return;
 
     BibTeXFields *bibtexFields = BibTeXFields::self();
-    FieldDescription fd = bibtexFields->at(col);
-    fd.visible = action->isChecked();
-    if (fd.width < 4) fd.width = width() / 10;
+    FieldDescription fd(bibtexFields->at(col));
+    fd.visible[m_name] = action->isChecked();
+    bibtexFields->replace(col, fd); ///< replace already here to make sum calculation below work
+
+    /// accumulate column widths (needed below)
+    int sum = 0;
+    foreach(const FieldDescription &fd, *BibTeXFields::self()) {
+        if (fd.visible[m_name])
+            sum += fd.width[m_name];
+    }
+    if (sum == 0) {
+        /// no more columns left visible, therefore re-visibiling this column
+        action->setChecked(fd.visible[m_name] = true);
+        sum = 10;
+    }
+    if (fd.visible[m_name]) {
+        /// column just got visible, reset width
+        fd.width[m_name] = sum / 10;
+    }
+
     bibtexFields->replace(col, fd);
 
-    syncBibTeXFields();
-
     resizeEvent(NULL);
+    syncBibTeXFields();
 }
 
 void BibTeXFileView::headerResetToDefaults()
 {
-    BibTeXFields::self()->resetToDefaults();
+    BibTeXFields *bibtexFields = BibTeXFields::self();
+    bibtexFields->resetToDefaults(m_name);
+    foreach(QAction *action, header()->actions()) {
+        bool ok = false;
+        int col = (int)action->data().toInt(&ok);
+        if (ok) {
+            FieldDescription fd = bibtexFields->at(col);
+            action->setChecked(fd.visible[m_name]);
+        }
+    }
+
     resizeEvent(NULL);
 }
 

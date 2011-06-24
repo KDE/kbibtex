@@ -143,7 +143,7 @@ bool EntryConfiguredWidget::canEdit(const Element *element)
 void EntryConfiguredWidget::createGUI()
 {
     QGridLayout *gridLayout = new QGridLayout(this);
-    BibTeXFields *bf = BibTeXFields::self();
+    const BibTeXFields *bf = BibTeXFields::self();
 
     int mod = etl.singleFieldLayouts.size() / etl.columns;
     if (etl.singleFieldLayouts.size() % etl.columns > 0)
@@ -154,9 +154,9 @@ void EntryConfiguredWidget::createGUI()
         if (row == 0 && col > 1)
             gridLayout->setColumnMinimumWidth(col - 1, interColumnSpace);
 
-        const FieldDescription *fd = bf->find((*sflit).bibtexLabel);
-        KBibTeX::TypeFlags typeFlags = fd == NULL ? KBibTeX::tfSource : fd->typeFlags;
-        KBibTeX::TypeFlag preferredTypeFlag = fd == NULL ? KBibTeX::tfSource : fd->preferredTypeFlag;
+        const FieldDescription &fd = bf->find((*sflit).bibtexLabel);
+        KBibTeX::TypeFlags typeFlags = fd.isNull() ? KBibTeX::tfSource : fd.typeFlags;
+        KBibTeX::TypeFlag preferredTypeFlag = fd.isNull() ? KBibTeX::tfSource : fd.preferredTypeFlag;
         FieldInput *fieldInput = new FieldInput((*sflit).fieldInputLayout, preferredTypeFlag, typeFlags, this);
         bibtexKeyToWidget.insert((*sflit).bibtexLabel, fieldInput);
         connect(fieldInput, SIGNAL(modified()), this, SLOT(gotModified()));

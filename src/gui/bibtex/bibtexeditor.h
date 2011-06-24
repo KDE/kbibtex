@@ -38,7 +38,7 @@ class KBIBTEXGUI_EXPORT BibTeXEditor : public BibTeXFileView
 {
     Q_OBJECT
 public:
-    BibTeXEditor(QWidget *parent);
+    BibTeXEditor(const QString &name, QWidget *parent);
 
     virtual void setModel(QAbstractItemModel * model);
 

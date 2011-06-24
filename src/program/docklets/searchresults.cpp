@@ -50,7 +50,7 @@ public:
         layout->setColumnStretch(0, 1);
         layout->setColumnStretch(1, 0);
 
-        editor = new BibTeXEditor(parent);
+        editor = new BibTeXEditor(QLatin1String("SearchResults"), parent);
         editor->setReadOnly(true);
         editor->setFrameShadow(QFrame::Sunken);
         editor->setFrameShape(QFrame::StyledPanel);

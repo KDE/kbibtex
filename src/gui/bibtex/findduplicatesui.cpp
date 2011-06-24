@@ -67,8 +67,8 @@ private:
     EntryClique *currentClique;
 
 public:
-    AlternativesItemModel(/*File *bibtexFile,*/QTreeView *parent)
-            : QAbstractItemModel(parent), /*file(bibtexFile),*/ p(parent), currentClique(NULL) {
+    AlternativesItemModel(QTreeView *parent)
+            : QAbstractItemModel(parent), p(parent), currentClique(NULL) {
         // nothing
     }
 
@@ -410,7 +410,7 @@ public:
         QSplitter *splitter = new QSplitter(Qt::Vertical, p);
         layout->addWidget(splitter);
 
-        editor = new BibTeXEditor(splitter);
+        editor = new BibTeXEditor(QLatin1String("MergeWidget"), splitter);
         editor->setReadOnly(true);
 
         alternativesView = new RadioButtonTreeView(splitter);

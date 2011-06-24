@@ -18,12 +18,15 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
+#include <typeinfo>
+
 #include <QColor>
 #include <QFile>
 #include <QString>
 
 #include <KLocale>
 #include <KDebug>
+#include <KConfigGroup>
 
 #include <element.h>
 #include <entry.h>
@@ -36,11 +39,18 @@
 
 static const QRegExp curlyRegExp("[{}]+");
 
+const QString SortFilterBibTeXFileModel::configGroupName = QLatin1String("User Interface");
+
+SortFilterBibTeXFileModel::SortFilterBibTeXFileModel(QObject * parent)
+        : QSortFilterProxyModel(parent), m_internalModel(NULL), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc")))
+{
+    loadState();
+};
+
 void SortFilterBibTeXFileModel::setSourceModel(QAbstractItemModel *model)
 {
     QSortFilterProxyModel::setSourceModel(model);
     m_internalModel = dynamic_cast<BibTeXFileModel*>(model);
-    m_bibtexFields = BibTeXFields::self();
 }
 
 BibTeXFileModel *SortFilterBibTeXFileModel::bibTeXSourceModel()
@@ -58,19 +68,21 @@ void SortFilterBibTeXFileModel::updateFilter(SortFilterBibTeXFileModel::FilterQu
 bool SortFilterBibTeXFileModel::lessThan(const QModelIndex & left, const QModelIndex & right) const
 {
     int column = left.column();
-    if (column == right.column() && (m_bibtexFields->at(column).upperCamelCase == QLatin1String("Author") || m_bibtexFields->at(column).upperCamelCase == QLatin1String("Editor"))) {
+    BibTeXFields *bibtexFields = BibTeXFields::self();
+    const FieldDescription &fd = bibtexFields->at(column);
+    if (column == right.column() && (fd.upperCamelCase == QLatin1String("Author") || fd.upperCamelCase == QLatin1String("Editor"))) {
         /// special sorting for authors or editors: check all names, compare last and then first names
         Entry *entryA = dynamic_cast<Entry*>(m_internalModel->element(left.row()));
         Entry *entryB = dynamic_cast<Entry*>(m_internalModel->element(right.row()));
         if (entryA == NULL || entryB == NULL)
             return QSortFilterProxyModel::lessThan(left, right);
 
-        Value valueA = entryA->value(m_bibtexFields->at(column).upperCamelCase);
-        Value valueB = entryB->value(m_bibtexFields->at(column).upperCamelCase);
+        Value valueA = entryA->value(fd.upperCamelCase);
+        Value valueB = entryB->value(fd.upperCamelCase);
         if (valueA.isEmpty())
-            valueA = entryA->value(m_bibtexFields->at(column).upperCamelCaseAlt);
+            valueA = entryA->value(fd.upperCamelCaseAlt);
         if (valueB.isEmpty())
-            valueB = entryB->value(m_bibtexFields->at(column).upperCamelCaseAlt);
+            valueB = entryB->value(fd.upperCamelCaseAlt);
 
         if (valueA.isEmpty() || valueB.isEmpty())
             return QSortFilterProxyModel::lessThan(left, right);
@@ -104,10 +116,17 @@ bool SortFilterBibTeXFileModel::filterAcceptsRow(int source_row, const QModelInd
 {
     Q_UNUSED(source_parent)
 
-    if (m_filterQuery.terms.isEmpty()) return true; /// empty filter query
-
     Element *rowElement = m_internalModel->element(source_row);
     Q_ASSERT(rowElement != NULL);
+
+    /// check if showing comments is disabled
+    if (!m_showComments && typeid(*rowElement) == typeid(Comment))
+        return false;
+    /// check if showing macros is disabled
+    if (!m_showMacros && typeid(*rowElement) == typeid(Macro))
+        return false;
+
+    if (m_filterQuery.terms.isEmpty()) return true; /// empty filter query
 
     Entry *entry = dynamic_cast<Entry*>(rowElement);
     if (entry != NULL) {
@@ -185,15 +204,26 @@ bool SortFilterBibTeXFileModel::filterAcceptsRow(int source_row, const QModelInd
     return false;
 }
 
+void SortFilterBibTeXFileModel::loadState()
+{
+    KConfigGroup configGroup(config, configGroupName);
+    m_showComments = configGroup.readEntry(BibTeXFileModel::keyShowComments, BibTeXFileModel::defaultShowComments);
+    m_showMacros = configGroup.readEntry(BibTeXFileModel::keyShowMacros, BibTeXFileModel::defaultShowMacros);
+}
+
 
 
 const QRegExp BibTeXFileModel::whiteSpace = QRegExp("(\\s\\n\\r\\t)+");
+const QString BibTeXFileModel::keyShowComments = QLatin1String("showComments");
+const bool BibTeXFileModel::defaultShowComments = true;
+const QString BibTeXFileModel::keyShowMacros = QLatin1String("showMacros");
+const bool BibTeXFileModel::defaultShowMacros = true;
+
 
 BibTeXFileModel::BibTeXFileModel(QObject * parent)
         : QAbstractTableModel(parent), m_bibtexFile(NULL)
 {
-    m_bibtexFields = BibTeXFields::self();
-// TODO
+    // nothing
 }
 
 BibTeXFileModel::~BibTeXFileModel()
@@ -240,7 +270,7 @@ int BibTeXFileModel::rowCount(const QModelIndex & /*parent*/) const
 
 int BibTeXFileModel::columnCount(const QModelIndex & /*parent*/) const
 {
-    return m_bibtexFields->count();
+    return BibTeXFields::self()->count();
 }
 
 QVariant BibTeXFileModel::data(const QModelIndex &index, int role) const
@@ -257,9 +287,11 @@ QVariant BibTeXFileModel::data(const QModelIndex &index, int role) const
     if (role != Qt::DisplayRole && role != Qt::ToolTipRole && role != Qt::BackgroundRole)
         return QVariant();
 
-    if (index.row() < m_bibtexFile->count() && index.column() < m_bibtexFields->count()) {
-        QString raw = m_bibtexFields->at(index.column()).upperCamelCase;
-        QString rawAlt = m_bibtexFields->at(index.column()).upperCamelCaseAlt;
+    BibTeXFields *bibtexFields = BibTeXFields::self();
+    if (index.row() < m_bibtexFile->count() && index.column() < bibtexFields->count()) {
+        const FieldDescription &fd = bibtexFields->at(index.column());
+        QString raw = fd.upperCamelCase;
+        QString rawAlt = fd.upperCamelCaseAlt;
         Element* element = (*m_bibtexFile)[index.row()];
         Entry* entry = dynamic_cast<Entry*>(element);
 
@@ -344,10 +376,10 @@ QVariant BibTeXFileModel::data(const QModelIndex &index, int role) const
 
 QVariant BibTeXFileModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    if (role != Qt::DisplayRole || orientation != Qt::Horizontal || section < 0 || section >= m_bibtexFields->count())
+    const BibTeXFields *bibtexFields = BibTeXFields::self();
+    if (role != Qt::DisplayRole || orientation != Qt::Horizontal || section < 0 || section >= bibtexFields->count())
         return QVariant();
-
-    return m_bibtexFields->at(section).label;
+    return bibtexFields->at(section).label;
 }
 
 Qt::ItemFlags BibTeXFileModel::flags(const QModelIndex &index) const
