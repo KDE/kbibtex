@@ -33,8 +33,10 @@ set( kbibtexgui_LIB_SRCS
     config/entrylayout.cpp
     preferences/kbibtexpreferencesdialog.cpp
     preferences/settingsgeneralwidget.cpp
+    preferences/settingsuserinterfacewidget.cpp
     preferences/settingsfileexporterbibtexwidget.cpp
     preferences/settingsfileexporterpdfpswidget.cpp
+    preferences/settingsfileexporterwidget.cpp
     preferences/settingsabstractwidget.cpp
     valuelistmodel.cpp
 )
@@ -55,6 +57,6 @@ target_link_libraries( kbibtexgui
     kbibtexproc
 )
 
-install(TARGETS kbibtexgui RUNTIME DESTINATION bin LIBRARY DESTINATION ${LIB_INSTALL_DIR})
+install( TARGETS kbibtexgui RUNTIME DESTINATION bin LIBRARY DESTINATION ${LIB_INSTALL_DIR} )
 
 install( FILES bibtex/findduplicatesui.rc  DESTINATION ${DATA_INSTALL_DIR}/kbibtex )

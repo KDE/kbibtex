@@ -26,6 +26,8 @@
 #include "settingsgeneralwidget.h"
 #include "settingsfileexporterbibtexwidget.h"
 #include "settingsfileexporterpdfpswidget.h"
+#include "settingsfileexporterwidget.h"
+#include "settingsuserinterfacewidget.h"
 #include "kbibtexpreferencesdialog.h"
 
 class KBibTeXPreferencesDialog::KBibTeXPreferencesDialogPrivate
@@ -47,7 +49,13 @@ public:
         KPageWidgetItem *page = p->addPage(settingsWidget, i18n("General"));
         page->setIcon(KIcon("kbibtex"));
 
-        KPageWidgetItem *pageSaving = p->addPage(new QWidget(), i18n("Saving"));
+        settingsWidget = new SettingsUserInterfaceWidget(p);
+        settingWidgets.insert(settingsWidget);
+        page = p->addPage(settingsWidget, i18n("User Interface"));
+        page->setIcon(KIcon("user-identity"));
+
+        settingsWidget = new SettingsFileExporterWidget(p);
+        KPageWidgetItem *pageSaving = p->addPage(settingsWidget, i18n("Saving and Exporting"));
         pageSaving->setIcon(KIcon("document-save"));
 
         settingsWidget = new SettingsFileExporterBibTeXWidget(p);

@@ -25,76 +25,80 @@
 #include <KConfigGroup>
 #include <KComboBox>
 
-#include <value.h>
-#include "settingsgeneralwidget.h"
+#include <fileexporter.h>
+#include "settingsfileexporterwidget.h"
 
-class SettingsGeneralWidget::SettingsGeneralWidgetPrivate
+class SettingsFileExporterWidget::SettingsFileExporterWidgetPrivate
 {
 private:
-    SettingsGeneralWidget *p;
+    SettingsFileExporterWidget *p;
 
-    KComboBox *comboBoxPersonNameFormatting;
-    static const Person *dummyPerson;
-    QString restartRequiredMsg;
+    KComboBox *comboBoxPaperSize;
+    QMap<QString, QString> paperSizeLabelToName;
 
     KSharedConfigPtr config;
     static const QString configGroupName;
 
 public:
 
-    SettingsGeneralWidgetPrivate(SettingsGeneralWidget *parent)
-            : p(parent), restartRequiredMsg(i18n("Changing this option requires a restart to take effect.")), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))) {
-        // nothing
+    SettingsFileExporterWidgetPrivate(SettingsFileExporterWidget *parent)
+            : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))) {
+        paperSizeLabelToName.insert(i18n("A4"), QLatin1String("a4"));
+        paperSizeLabelToName.insert(i18n("Letter"), QLatin1String("letter"));
+        paperSizeLabelToName.insert(i18n("Legal"), QLatin1String("legal"));
     }
 
     void loadState() {
         KConfigGroup configGroup(config, configGroupName);
-        QString personNameFormatting = configGroup.readEntry(Person::keyPersonNameFormatting, Person::defaultPersonNameFormatting);
-        p->selectValue(comboBoxPersonNameFormatting, Person::transcribePersonName(dummyPerson, personNameFormatting));
+        QString paperSizeName = configGroup.readEntry(FileExporter::keyPaperSize, FileExporter::defaultPaperSize);
+        p->selectValue(comboBoxPaperSize, paperSizeLabelToName[paperSizeName]);
     }
 
     void saveState() {
         KConfigGroup configGroup(config, configGroupName);
-        configGroup.writeEntry(Person::keyPersonNameFormatting, comboBoxPersonNameFormatting->itemData(comboBoxPersonNameFormatting->currentIndex()));
+        QString paperSizeName = paperSizeLabelToName.key(comboBoxPaperSize->currentText());
+        configGroup.writeEntry(FileExporter::keyPaperSize, paperSizeName);
         config->sync();
     }
 
     void resetToDefaults() {
-        p->selectValue(comboBoxPersonNameFormatting, Person::transcribePersonName(dummyPerson, Person::defaultPersonNameFormatting));
+        p->selectValue(comboBoxPaperSize, paperSizeLabelToName[FileExporter::defaultPaperSize]);
     }
 
     void setupGUI() {
         QFormLayout *layout = new QFormLayout(p);
 
-        comboBoxPersonNameFormatting = new KComboBox(false, p);
-        layout->addRow(i18n("Person Names Formatting:"), comboBoxPersonNameFormatting);
-        comboBoxPersonNameFormatting->addItem(Person::transcribePersonName(dummyPerson, QLatin1String("<%f ><%l>")), QString("<%f ><%l>"));
-        comboBoxPersonNameFormatting->addItem(Person::transcribePersonName(dummyPerson, QLatin1String("<%l><, %f>")), QString("<%l><, %f>"));
-        comboBoxPersonNameFormatting->setToolTip(restartRequiredMsg);
+        comboBoxPaperSize = new KComboBox(false, p);
+        layout->addRow(i18n("Paper Size:"), comboBoxPaperSize);
+        QStringList paperSizeLabelToNameKeys = paperSizeLabelToName.keys();
+        paperSizeLabelToNameKeys.sort();
+        foreach(QString labelText, paperSizeLabelToNameKeys) {
+            comboBoxPaperSize->addItem(labelText, paperSizeLabelToName[labelText]);
+        }
     }
 };
 
-const QString SettingsGeneralWidget::SettingsGeneralWidgetPrivate::configGroupName = QLatin1String("General");
-const Person *SettingsGeneralWidget::SettingsGeneralWidgetPrivate::dummyPerson = new Person(i18n("John"), i18n("Doe"), i18n("J."), i18n("Jr."));
+const QString SettingsFileExporterWidget::SettingsFileExporterWidgetPrivate::configGroupName = QLatin1String("General");
 
-SettingsGeneralWidget::SettingsGeneralWidget(QWidget *parent)
-        : SettingsAbstractWidget(parent), d(new SettingsGeneralWidgetPrivate(this))
+
+SettingsFileExporterWidget::SettingsFileExporterWidget(QWidget *parent)
+        : SettingsAbstractWidget(parent), d(new SettingsFileExporterWidgetPrivate(this))
 {
     d->setupGUI();
     d->loadState();
 }
 
-void SettingsGeneralWidget::loadState()
+void SettingsFileExporterWidget::loadState()
 {
     d->loadState();
 }
 
-void SettingsGeneralWidget::saveState()
+void SettingsFileExporterWidget::saveState()
 {
     d->saveState();
 }
 
-void SettingsGeneralWidget::resetToDefaults()
+void SettingsFileExporterWidget::resetToDefaults()
 {
     d->resetToDefaults();
 }
