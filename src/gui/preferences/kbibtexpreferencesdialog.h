@@ -41,6 +41,7 @@ private:
 
 private slots:
     void apply();
+    void reset();
     void ok();
     void resetToDefaults();
     void gotChanged();

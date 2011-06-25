@@ -39,6 +39,9 @@ class KBIBTEXPROC_EXPORT LyX: public QObject
 {
     Q_OBJECT
 public:
+    static const QString keyLyXServerPipeName;
+    static const QString defaultLyXServerPipeName;
+
     LyX(KParts::ReadOnlyPart *part, QTreeView *widget);
 
     void setReferences(const QStringList &references);

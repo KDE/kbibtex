@@ -57,6 +57,7 @@ public:
         connect(settingsWidget, SIGNAL(changed()), p, SLOT(gotChanged()));
 
         settingsWidget = new SettingsFileExporterWidget(p);
+        settingWidgets.insert(settingsWidget);
         KPageWidgetItem *pageSaving = p->addPage(settingsWidget, i18n("Saving and Exporting"));
         pageSaving->setIcon(KIcon("document-save"));
         connect(settingsWidget, SIGNAL(changed()), p, SLOT(gotChanged()));
@@ -72,6 +73,12 @@ public:
         page = p->addSubPage(pageSaving, settingsWidget, i18n("PDF and Postscript"));
         page->setIcon(KIcon("application-pdf"));
         connect(settingsWidget, SIGNAL(changed()), p, SLOT(gotChanged()));
+    }
+
+    void loadState() {
+        foreach(SettingsAbstractWidget *settingsWidget, settingWidgets) {
+            settingsWidget->loadState();
+        }
     }
 
     void saveState() {
@@ -92,7 +99,7 @@ KBibTeXPreferencesDialog::KBibTeXPreferencesDialog(QWidget *parent, Qt::WFlags f
 {
     setFaceType(KPageDialog::Tree);
     setWindowTitle(i18n("Preferences"));
-    setButtons(Help | Default | Ok | Apply | Cancel);
+    setButtons(Default | Reset | Ok | Apply | Cancel);
     setDefaultButton(Ok);
     enableButtonApply(false);
     setModal(true);
@@ -101,6 +108,7 @@ KBibTeXPreferencesDialog::KBibTeXPreferencesDialog(QWidget *parent, Qt::WFlags f
     connect(this, SIGNAL(applyClicked()), this, SLOT(apply()));
     connect(this, SIGNAL(okClicked()), this, SLOT(ok()));
     connect(this, SIGNAL(defaultClicked()), this, SLOT(resetToDefaults()));
+    connect(this, SIGNAL(resetClicked()), this, SLOT(reset()));
 
     d->addPages();
 }
@@ -109,6 +117,12 @@ void KBibTeXPreferencesDialog::apply()
 {
     enableButtonApply(false);
     d->saveState();
+}
+
+void KBibTeXPreferencesDialog::reset()
+{
+    enableButtonApply(false);
+    d->loadState();
 }
 
 void KBibTeXPreferencesDialog::ok()

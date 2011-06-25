@@ -46,7 +46,7 @@ public slots:
     virtual void resetToDefaults() = 0;
 
 protected:
-    void selectValue(KComboBox *comboBox, const QString &value);
+    void selectValue(KComboBox *comboBox, const QString &value, int role = Qt::DisplayRole);
 };
 
 #endif // KBIBTEX_GUI_SETTINGSABSTRACTWIDGET_H

@@ -24,6 +24,8 @@
 #include <QTextStream>
 #include <QFileInfo>
 
+#include <KSharedConfig>
+#include <KConfigGroup>
 #include <KAction>
 #include <KActionCollection>
 #include <KLocale>
@@ -42,9 +44,11 @@ public:
     QTreeView *widget;
     KAction *action;
     QStringList references;
+    KSharedConfigPtr config;
+    const QString configGroupNameLyX;
 
     LyXPrivate(LyX *parent, QTreeView *widget)
-            : p(parent), action(NULL) {
+            : p(parent), action(NULL), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupNameLyX(QLatin1String("LyX")) {
         this->widget = widget;
     }
 
@@ -68,6 +72,9 @@ public:
         return result;
     }
 };
+
+const QString LyX::keyLyXServerPipeName = QLatin1String("LyXServerPipeName");
+const QString LyX::defaultLyXServerPipeName = QLatin1String("");
 
 LyX::LyX(KParts::ReadOnlyPart *part, QTreeView *widget)
         : QObject(part), d(new LyX::LyXPrivate(this, widget))
@@ -93,27 +100,29 @@ void LyX::updateActions()
 void LyX::sendReferenceToLyX()
 {
     static const QString defaultHintOnLyXProblems = i18n("\n\nCheck that LyX is running and configured to receive references (see \"LyX server pipe\" in LyX's settings).");
+    const QString msgBoxTitle = i18n("Send Reference to LyX");
 
     if (d->references.isEmpty()) {
-        KMessageBox::error(d->widget, i18n("No references to send to LyX."), i18n("Send Reference to LyX"));
+        KMessageBox::error(d->widget, i18n("No references to send to LyX."), msgBoxTitle);
         return;
     }
 
-    QString pipeName = d->findLyXServerPipeName();
+    KConfigGroup configGroup(d->config, d->configGroupNameLyX);
+    QString pipeName = configGroup.readEntry(LyX::keyLyXServerPipeName, LyX::defaultLyXServerPipeName);
     if (pipeName.isEmpty()) {
-        KMessageBox::error(d->widget, i18n("No \"LyX server pipe\" has been configured in LyX.") + defaultHintOnLyXProblems, i18n("Send Reference to LyX"));
+        KMessageBox::error(d->widget, i18n("No \"LyX server pipe\" has been configured in KBibTeX's settings."), msgBoxTitle);
         return;
     }
 
     QFileInfo fi(pipeName);
     if (!fi.exists()) {
-        KMessageBox::error(d->widget, i18n("LyX server pipe \"%1\" does not exist.", pipeName) + defaultHintOnLyXProblems, i18n("Send Reference to LyX"));
+        KMessageBox::error(d->widget, i18n("LyX server pipe \"%1\" does not exist.", pipeName) + defaultHintOnLyXProblems, msgBoxTitle);
         return;
     }
 
     QFile pipe(pipeName);
     if (!pipe.open(QFile::WriteOnly)) {
-        KMessageBox::error(d->widget, i18n("Could not open LyX server pipe \"%1\".", pipeName) + defaultHintOnLyXProblems, i18n("Send Reference to LyX"));
+        KMessageBox::error(d->widget, i18n("Could not open LyX server pipe \"%1\".", pipeName) + defaultHintOnLyXProblems, msgBoxTitle);
         return;
     }
 

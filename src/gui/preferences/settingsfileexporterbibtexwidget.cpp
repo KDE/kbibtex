@@ -40,6 +40,7 @@ class ItalicTextItemModel : public QAbstractItemModel
 {
 private:
     QList<QPair<QString, QString> > m_data;
+
 public:
     ItalicTextItemModel(QObject *parent = 0)
             : QAbstractItemModel(parent) {
@@ -51,6 +52,9 @@ public:
     }
 
     QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const {
+        if (index.row() < 0 || index.row() >= m_data.count())
+            return QVariant();
+
         if (role == Qt::FontRole) {
             QFont font;
             if (m_data[index.row()].second.isEmpty())
@@ -117,6 +121,8 @@ public:
         KBibTeX::Casing keywordCasing = (KBibTeX::Casing)configGroup.readEntry(FileExporterBibTeX::keyKeywordCasing, (int)FileExporterBibTeX::defaultKeywordCasing);
         comboBoxKeywordCasing->setCurrentIndex((int)keywordCasing);
         checkBoxProtectCasing->setChecked(configGroup.readEntry(FileExporterBibTeX::keyProtectCasing, FileExporterBibTeX::defaultProtectCasing));
+        QString personNameFormatting = configGroup.readEntry(Person::keyPersonNameFormatting, "");
+        p->selectValue(comboBoxPersonNameFormatting, personNameFormatting, Qt::UserRole);
     }
 
     void saveState() {
@@ -129,6 +135,7 @@ public:
         KBibTeX::Casing keywordCasing = (KBibTeX::Casing)comboBoxKeywordCasing->currentIndex();
         configGroup.writeEntry(FileExporterBibTeX::keyKeywordCasing, (int)keywordCasing);
         configGroup.writeEntry(FileExporterBibTeX::keyProtectCasing, checkBoxProtectCasing->isChecked());
+        configGroup.writeEntry(Person::keyPersonNameFormatting, comboBoxPersonNameFormatting->itemData(comboBoxPersonNameFormatting->currentIndex()));
 
         config->sync();
     }
@@ -139,6 +146,7 @@ public:
         comboBoxQuoteComment->setCurrentIndex((int)FileExporterBibTeX::defaultQuoteComment);
         comboBoxKeywordCasing->setCurrentIndex((int)FileExporterBibTeX::defaultKeywordCasing);
         checkBoxProtectCasing->setChecked(FileExporterBibTeX::defaultProtectCasing);
+        comboBoxPersonNameFormatting->setCurrentIndex(0);
     }
 
     void setupGUI() {
@@ -168,7 +176,7 @@ public:
         comboBoxKeywordCasing = new KComboBox(false, p);
         layout->addRow(i18n("Keyword Casing:"), comboBoxKeywordCasing);
         comboBoxKeywordCasing->addItem(i18n("lowercase"));
-        comboBoxKeywordCasing->addItem(i18n("Initial Capital"));
+        comboBoxKeywordCasing->addItem(i18n("Initial capital"));
         comboBoxKeywordCasing->addItem(i18n("UpperCamelCase"));
         comboBoxKeywordCasing->addItem(i18n("lowerCamelCase"));
         comboBoxKeywordCasing->addItem(i18n("UPPERCASE"));
@@ -181,7 +189,7 @@ public:
         comboBoxPersonNameFormatting = new KComboBox(false, p);
         layout->addRow(i18n("Person Names Formatting:"), comboBoxPersonNameFormatting);
         ItalicTextItemModel *itim = new ItalicTextItemModel();
-        itim->addItem(i18n("Use global settings"), QString());
+        itim->addItem(i18n("Use global settings"), QString(""));
         itim->addItem(Person::transcribePersonName(dummyPerson, QLatin1String("<%f ><%l>")), QString("<%f ><%l>"));
         itim->addItem(Person::transcribePersonName(dummyPerson, QLatin1String("<%l><, %f>")), QString("<%l><, %f>"));
         comboBoxPersonNameFormatting->setModel(itim);
