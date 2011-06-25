@@ -37,6 +37,9 @@ class KBIBTEXGUI_EXPORT SettingsAbstractWidget : public QWidget
 public:
     SettingsAbstractWidget(QWidget *parent);
 
+signals:
+    void changed();
+
 public slots:
     virtual void loadState() = 0;
     virtual void saveState() = 0;

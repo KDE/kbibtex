@@ -71,6 +71,7 @@ public:
         comboBoxPersonNameFormatting->addItem(Person::transcribePersonName(dummyPerson, QLatin1String("<%f ><%l>")), QString("<%f ><%l>"));
         comboBoxPersonNameFormatting->addItem(Person::transcribePersonName(dummyPerson, QLatin1String("<%l><, %f>")), QString("<%l><, %f>"));
         comboBoxPersonNameFormatting->setToolTip(restartRequiredMsg);
+        connect(comboBoxPersonNameFormatting, SIGNAL(currentIndexChanged(int)), p, SIGNAL(changed()));
     }
 };
 

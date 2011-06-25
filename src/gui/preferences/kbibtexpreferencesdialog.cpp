@@ -48,25 +48,30 @@ public:
         settingWidgets.insert(settingsWidget);
         KPageWidgetItem *page = p->addPage(settingsWidget, i18n("General"));
         page->setIcon(KIcon("kbibtex"));
+        connect(settingsWidget, SIGNAL(changed()), p, SLOT(gotChanged()));
 
         settingsWidget = new SettingsUserInterfaceWidget(p);
         settingWidgets.insert(settingsWidget);
         page = p->addPage(settingsWidget, i18n("User Interface"));
         page->setIcon(KIcon("user-identity"));
+        connect(settingsWidget, SIGNAL(changed()), p, SLOT(gotChanged()));
 
         settingsWidget = new SettingsFileExporterWidget(p);
         KPageWidgetItem *pageSaving = p->addPage(settingsWidget, i18n("Saving and Exporting"));
         pageSaving->setIcon(KIcon("document-save"));
+        connect(settingsWidget, SIGNAL(changed()), p, SLOT(gotChanged()));
 
         settingsWidget = new SettingsFileExporterBibTeXWidget(p);
         settingWidgets.insert(settingsWidget);
         page = p->addSubPage(pageSaving, settingsWidget, i18n("BibTeX"));
         page->setIcon(KIcon("text-x-bibtex"));
+        connect(settingsWidget, SIGNAL(changed()), p, SLOT(gotChanged()));
 
         settingsWidget = new SettingsFileExporterPDFPSWidget(p);
         settingWidgets.insert(settingsWidget);
         page = p->addSubPage(pageSaving, settingsWidget, i18n("PDF and Postscript"));
         page->setIcon(KIcon("application-pdf"));
+        connect(settingsWidget, SIGNAL(changed()), p, SLOT(gotChanged()));
     }
 
     void saveState() {
@@ -89,6 +94,7 @@ KBibTeXPreferencesDialog::KBibTeXPreferencesDialog(QWidget *parent, Qt::WFlags f
     setWindowTitle(i18n("Preferences"));
     setButtons(Help | Default | Ok | Apply | Cancel);
     setDefaultButton(Ok);
+    enableButtonApply(false);
     setModal(true);
     showButtonSeparator(true);
 
@@ -101,6 +107,7 @@ KBibTeXPreferencesDialog::KBibTeXPreferencesDialog(QWidget *parent, Qt::WFlags f
 
 void KBibTeXPreferencesDialog::apply()
 {
+    enableButtonApply(false);
     d->saveState();
 }
 
@@ -113,4 +120,9 @@ void KBibTeXPreferencesDialog::ok()
 void KBibTeXPreferencesDialog::resetToDefaults()
 {
     d->resetToDefaults();
+}
+
+void KBibTeXPreferencesDialog::gotChanged()
+{
+    enableButtonApply(true);
 }

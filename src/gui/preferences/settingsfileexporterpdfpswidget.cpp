@@ -75,12 +75,14 @@ public:
         comboBoxBabelLanguage->addItem(QLatin1String("english"));
         comboBoxBabelLanguage->addItem(QLatin1String("ngerman"));
         comboBoxBabelLanguage->addItem(QLatin1String("swedish"));
+        connect(comboBoxBabelLanguage->lineEdit(), SIGNAL(textChanged(QString)), p, SIGNAL(changed()));
 
         comboBoxBibliographyStyle = new KComboBox(true, p);
         layout->addRow(i18n("Bibliography style:"), comboBoxBibliographyStyle);
         comboBoxBibliographyStyle->addItem(QLatin1String("abbrv"));
         comboBoxBibliographyStyle->addItem(QLatin1String("alpha"));
         comboBoxBibliographyStyle->addItem(QLatin1String("plain"));
+        connect(comboBoxBibliographyStyle->lineEdit(), SIGNAL(textChanged(QString)), p, SIGNAL(changed()));
     }
 };
 

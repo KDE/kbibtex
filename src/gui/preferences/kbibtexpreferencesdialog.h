@@ -43,6 +43,7 @@ private slots:
     void apply();
     void ok();
     void resetToDefaults();
+    void gotChanged();
 };
 
 #endif // KBIBTEX_GUI_PREFERENCESDIALOG_H

@@ -149,18 +149,21 @@ public:
         comboBoxEncodings->addItem(QLatin1String("LaTeX"));
         comboBoxEncodings->insertSeparator(1);
         comboBoxEncodings->addItems(IConvLaTeX::encodings());
+        connect(comboBoxEncodings, SIGNAL(currentIndexChanged(int)), p, SIGNAL(changed()));
 
         comboBoxStringDelimiters = new KComboBox(false, p);
         layout->addRow(i18n("String Delimiters:"), comboBoxStringDelimiters);
         comboBoxStringDelimiters->addItem(createDelimiterString('"', '"'));
         comboBoxStringDelimiters->addItem(createDelimiterString('{', '}'));
         comboBoxStringDelimiters->addItem(createDelimiterString('(', ')'));
+        connect(comboBoxStringDelimiters, SIGNAL(currentIndexChanged(int)), p, SIGNAL(changed()));
 
         comboBoxQuoteComment = new KComboBox(false, p);
         layout->addRow(i18n("Comment Quoting:"), comboBoxQuoteComment);
         comboBoxQuoteComment->addItem(i18n("None"));
         comboBoxQuoteComment->addItem(i18n("@comment{%1}", QChar(8230)));
         comboBoxQuoteComment->addItem(i18n("%{%1}", QChar(8230)));
+        connect(comboBoxQuoteComment, SIGNAL(currentIndexChanged(int)), p, SIGNAL(changed()));
 
         comboBoxKeywordCasing = new KComboBox(false, p);
         layout->addRow(i18n("Keyword Casing:"), comboBoxKeywordCasing);
@@ -169,9 +172,11 @@ public:
         comboBoxKeywordCasing->addItem(i18n("UpperCamelCase"));
         comboBoxKeywordCasing->addItem(i18n("lowerCamelCase"));
         comboBoxKeywordCasing->addItem(i18n("UPPERCASE"));
+        connect(comboBoxKeywordCasing, SIGNAL(currentIndexChanged(int)), p, SIGNAL(changed()));
 
         checkBoxProtectCasing = new QCheckBox(i18n("Protect Titles"));
         layout->addRow(i18n("Protect Casing?"), checkBoxProtectCasing);
+        connect(checkBoxProtectCasing, SIGNAL(toggled(bool)), p, SIGNAL(changed()));
 
         comboBoxPersonNameFormatting = new KComboBox(false, p);
         layout->addRow(i18n("Person Names Formatting:"), comboBoxPersonNameFormatting);
@@ -180,6 +185,7 @@ public:
         itim->addItem(Person::transcribePersonName(dummyPerson, QLatin1String("<%f ><%l>")), QString("<%f ><%l>"));
         itim->addItem(Person::transcribePersonName(dummyPerson, QLatin1String("<%l><, %f>")), QString("<%l><, %f>"));
         comboBoxPersonNameFormatting->setModel(itim);
+        connect(comboBoxPersonNameFormatting, SIGNAL(currentIndexChanged(int)), p, SIGNAL(changed()));
     }
 
     void loadProperties(File *file) {

@@ -68,8 +68,10 @@ public:
 
         checkBoxShowComments = new QCheckBox(p);
         layout->addRow(i18n("Show Comments:"), checkBoxShowComments);
+        connect(checkBoxShowComments, SIGNAL(toggled(bool)), p, SIGNAL(changed()));
         checkBoxShowMacros = new QCheckBox(p);
         layout->addRow(i18n("Show Macros:"), checkBoxShowMacros);
+        connect(checkBoxShowMacros, SIGNAL(toggled(bool)), p, SIGNAL(changed()));
     }
 };
 
