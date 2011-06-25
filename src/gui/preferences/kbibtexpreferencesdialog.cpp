@@ -24,6 +24,7 @@
 #include <KComboBox>
 
 #include "settingsgeneralwidget.h"
+#include "settingsglobalkeywordswidget.h"
 #include "settingsfileexporterbibtexwidget.h"
 #include "settingsfileexporterpdfpswidget.h"
 #include "settingsfileexporterwidget.h"
@@ -46,8 +47,14 @@ public:
     void addPages() {
         SettingsAbstractWidget *settingsWidget = new SettingsGeneralWidget(p);
         settingWidgets.insert(settingsWidget);
-        KPageWidgetItem *page = p->addPage(settingsWidget, i18n("General"));
-        page->setIcon(KIcon("kbibtex"));
+        KPageWidgetItem *pageGlobal = p->addPage(settingsWidget, i18n("General"));
+        pageGlobal->setIcon(KIcon("kbibtex"));
+        connect(settingsWidget, SIGNAL(changed()), p, SLOT(gotChanged()));
+
+        settingsWidget = new SettingsGlobalKeywordsWidget(p);
+        settingWidgets.insert(settingsWidget);
+        KPageWidgetItem *page = p->addSubPage(pageGlobal, settingsWidget, i18n("Keywords"));
+        page->setIcon(KIcon("checkbox")); // TODO find better icon
         connect(settingsWidget, SIGNAL(changed()), p, SLOT(gotChanged()));
 
         settingsWidget = new SettingsUserInterfaceWidget(p);

@@ -126,6 +126,10 @@ public:
             fieldListEdit = new UrlListEdit(p);
             layout->addWidget(fieldListEdit);
             break;
+        case KBibTeX::KeywordList:
+            fieldListEdit = new KeywordListEdit(p);
+            layout->addWidget(fieldListEdit);
+            break;
         default:
             fieldLineEdit = new FieldLineEdit(preferredTypeFlag, typeFlags, false, p);
             layout->addWidget(fieldLineEdit);

@@ -102,4 +102,28 @@ private:
     KPushButton *m_addLocalFile;
 };
 
+
+/**
+@author Thomas Fischer
+*/
+class KeywordListEdit : public FieldListEdit
+{
+    Q_OBJECT
+
+public:
+    static const QString keyGlobalKeywordList;
+
+    KeywordListEdit(QWidget *parent = NULL);
+
+    virtual void setReadOnly(bool isReadOnly);
+
+private slots:
+    void slotAddKeyword();
+
+private:
+    KSharedConfigPtr m_config;
+    const QString m_configGroupName;
+    KPushButton *m_addKeyword;
+};
+
 #endif // KBIBTEX_GUI_FIELDLISTEDIT_H

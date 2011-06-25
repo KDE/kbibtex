@@ -41,7 +41,8 @@ enum FieldInputType {
     Month = 5,
     Color = 6,
     PersonList = 7,
-    UrlList = 8
+    UrlList = 8,
+    KeywordList = 9
 };
 
 enum TypeFlag {

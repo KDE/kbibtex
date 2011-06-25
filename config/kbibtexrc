@@ -132,7 +132,7 @@ fieldInputLayout4=MultiLine
 
 bibtexLabel5=keywords
 uiLabel5=Keywords
-fieldInputLayout5=List
+fieldInputLayout5=KeywordList
 
 bibtexLabel6=x-color
 uiLabel6=Color

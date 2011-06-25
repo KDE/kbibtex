@@ -161,7 +161,7 @@ void EntryConfiguredWidget::createGUI()
         bibtexKeyToWidget.insert((*sflit).bibtexLabel, fieldInput);
         connect(fieldInput, SIGNAL(modified()), this, SLOT(gotModified()));
 
-        bool isVerticallyMinimumExpaning = (*sflit).fieldInputLayout == KBibTeX::MultiLine || (*sflit).fieldInputLayout == KBibTeX::List || (*sflit).fieldInputLayout == KBibTeX::PersonList;
+        bool isVerticallyMinimumExpaning = (*sflit).fieldInputLayout == KBibTeX::MultiLine || (*sflit).fieldInputLayout == KBibTeX::List || (*sflit).fieldInputLayout == KBibTeX::PersonList || (*sflit).fieldInputLayout == KBibTeX::KeywordList;
 
         QLabel *label = new QLabel((*sflit).uiLabel + ":", this);
         label->setBuddy(fieldInput);

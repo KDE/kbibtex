@@ -33,6 +33,7 @@ set( kbibtexgui_LIB_SRCS
     config/entrylayout.cpp
     preferences/kbibtexpreferencesdialog.cpp
     preferences/settingsgeneralwidget.cpp
+    preferences/settingsglobalkeywordswidget.cpp
     preferences/settingsuserinterfacewidget.cpp
     preferences/settingsfileexporterbibtexwidget.cpp
     preferences/settingsfileexporterpdfpswidget.cpp

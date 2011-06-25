@@ -29,6 +29,7 @@
 #include <KLocale>
 #include <KPushButton>
 #include <KFileDialog>
+#include <KInputDialog>
 
 #include <file.h>
 #include <entry.h>
@@ -364,4 +365,39 @@ void UrlListEdit::setReadOnly(bool isReadOnly)
 {
     FieldListEdit::setReadOnly(isReadOnly);
     m_addLocalFile->setEnabled(!isReadOnly);
+}
+
+
+const QString KeywordListEdit::keyGlobalKeywordList = QLatin1String("globalKeywordList");
+
+KeywordListEdit::KeywordListEdit(QWidget *parent)
+        : FieldListEdit(KBibTeX::tfKeyword, KBibTeX::tfKeyword|KBibTeX::tfSource, parent), m_config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), m_configGroupName(QLatin1String("Global Keywords"))
+{
+    m_addKeyword = new KPushButton(KIcon("list-add"), i18n("Add Keyword"), this);
+    addButton(m_addKeyword);
+    connect(m_addKeyword, SIGNAL(clicked()), this, SLOT(slotAddKeyword()));
+    connect(m_addKeyword, SIGNAL(clicked()), this, SIGNAL(modified()));
+}
+
+void KeywordListEdit::slotAddKeyword()
+{
+    KConfigGroup configGroup(m_config, m_configGroupName);
+    QStringList keywordList = configGroup.readEntry(KeywordListEdit::keyGlobalKeywordList, QStringList());
+
+    bool ok = false;
+    QStringList newKeywordList = KInputDialog::getItemList(i18n("Keywords to Add"), i18n("Select keywords to add:"), keywordList, QStringList(), true, &ok, this);
+    if (ok) {
+        foreach(const QString &newKeywordText, newKeywordList) {
+            Value *value = new Value();
+            ValueItem *vi = new Keyword(newKeywordText);
+            value->append(vi);
+            lineAdd(value);
+        }
+    }
+}
+
+void KeywordListEdit::setReadOnly(bool isReadOnly)
+{
+    FieldListEdit::setReadOnly(isReadOnly);
+    m_addKeyword->setEnabled(!isReadOnly);
 }
