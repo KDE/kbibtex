@@ -64,6 +64,15 @@ public:
             }
         }
     }
+
+    void sanitizeEntry(Entry *entry) {
+        if (entry->contains(QLatin1String("issue"))) {
+            /// ACM's Digital Library uses "issue" instead of "number" -> fix that
+            Value v = entry->value(QLatin1String("issue"));
+            entry->remove(QLatin1String("issue"));
+            entry->insert(Entry::ftNumber, v);
+        }
+    }
 };
 
 WebSearchAcmPortal::WebSearchAcmPortal(QWidget *parent)
@@ -215,6 +224,7 @@ void WebSearchAcmPortal::doneFetchingBibTeX()
             for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
                 Entry *entry = dynamic_cast<Entry*>(*it);
                 if (entry != NULL) {
+                    d->sanitizeEntry(entry);
                     emit foundEntry(entry);
                     ++d->numFoundResults;
                 }
