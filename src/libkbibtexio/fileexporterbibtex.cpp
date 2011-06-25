@@ -99,15 +99,20 @@ public:
         keywordCasing = (KBibTeX::Casing)configGroup.readEntry(p->keyKeywordCasing, (int)p->defaultKeywordCasing);
         quoteComment = (QuoteComment)configGroup.readEntry(p->keyQuoteComment, (int)p->defaultQuoteComment);
         protectCasing = configGroup.readEntry(p->keyProtectCasing, p->defaultProtectCasing);
+        personNameFormatting = configGroup.readEntry(Person::keyPersonNameFormatting, "");
 
-        KConfigGroup configGroupGeneral(config, configGroupNameGeneral);
-        personNameFormatting = configGroupGeneral.readEntry(Person::keyPersonNameFormatting, Person::defaultPersonNameFormatting);
+        if (personNameFormatting.isEmpty()) {
+            /// no person name formatting is specified for BibTeX, fall back to general setting
+            KConfigGroup configGroupGeneral(config, configGroupNameGeneral);
+            personNameFormatting = configGroupGeneral.readEntry(Person::keyPersonNameFormatting, Person::defaultPersonNameFormatting);
+        }
     }
 
     bool writeEntry(QIODevice* iodevice, const Entry& entry) {
         BibTeXEntries *be = BibTeXEntries::self();
         BibTeXFields *bf = BibTeXFields::self();
 
+        /// write start of a entry (entry type and id) in plain ASCII
         iodevice->putChar('@');
         iodevice->write(be->format(entry.type(), keywordCasing).toAscii().data());
         iodevice->putChar('{');
