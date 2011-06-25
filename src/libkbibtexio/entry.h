@@ -90,6 +90,8 @@ public:
     static const QLatin1String ftTitle;
     /** Representation of the BibTeX field key "url" */
     static const QLatin1String ftUrl;
+    /** Representation of the BibLaTeX field key "urldate" */
+    static const QLatin1String ftUrlDate;
     /** Representation of the BibTeX field key "volume" */
     static const QLatin1String ftVolume;
     /** Representation of the BibTeX field key "year" */

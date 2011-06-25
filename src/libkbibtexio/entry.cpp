@@ -51,6 +51,7 @@ const QLatin1String Entry::ftSchool = QLatin1String("school");
 const QLatin1String Entry::ftSeries = QLatin1String("series");
 const QLatin1String Entry::ftTitle = QLatin1String("title");
 const QLatin1String Entry::ftUrl = QLatin1String("url");
+const QLatin1String Entry::ftUrlDate = QLatin1String("urldate");
 const QLatin1String Entry::ftVolume = QLatin1String("volume");
 const QLatin1String Entry::ftYear = QLatin1String("year");
 
