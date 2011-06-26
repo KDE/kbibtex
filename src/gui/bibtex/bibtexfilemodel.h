@@ -66,7 +66,6 @@ protected:
 
 private:
     BibTeXFileModel *m_internalModel;
-    // REMOVE BibTeXFields *m_bibtexFields;
     SortFilterBibTeXFileModel::FilterQuery m_filterQuery;
 
     KSharedConfigPtr config;

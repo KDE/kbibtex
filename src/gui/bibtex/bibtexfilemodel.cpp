@@ -68,15 +68,22 @@ void SortFilterBibTeXFileModel::updateFilter(SortFilterBibTeXFileModel::FilterQu
 bool SortFilterBibTeXFileModel::lessThan(const QModelIndex & left, const QModelIndex & right) const
 {
     int column = left.column();
+    Q_ASSERT(left.column() == right.column()); ///< assume that we only sort by column
+
     BibTeXFields *bibtexFields = BibTeXFields::self();
     const FieldDescription &fd = bibtexFields->at(column);
+
     if (column == right.column() && (fd.upperCamelCase == QLatin1String("Author") || fd.upperCamelCase == QLatin1String("Editor"))) {
-        /// special sorting for authors or editors: check all names, compare last and then first names
+        /// special sorting for authors or editors: check all names,
+        /// compare last and then first names
+
+        /// first, check if two entries (and not e.g. comments) are to be compared
         Entry *entryA = dynamic_cast<Entry*>(m_internalModel->element(left.row()));
         Entry *entryB = dynamic_cast<Entry*>(m_internalModel->element(right.row()));
         if (entryA == NULL || entryB == NULL)
             return QSortFilterProxyModel::lessThan(left, right);
 
+        /// retrieve values of both cells
         Value valueA = entryA->value(fd.upperCamelCase);
         Value valueB = entryB->value(fd.upperCamelCase);
         if (valueA.isEmpty())
@@ -84,20 +91,26 @@ bool SortFilterBibTeXFileModel::lessThan(const QModelIndex & left, const QModelI
         if (valueB.isEmpty())
             valueB = entryB->value(fd.upperCamelCaseAlt);
 
+        /// if either value is empty, use default implementation
         if (valueA.isEmpty() || valueB.isEmpty())
             return QSortFilterProxyModel::lessThan(left, right);
 
+        /// compare each person in both values
         for (Value::Iterator itA = valueA.begin(), itB = valueB.begin(); itA != valueA.end() &&  itB != valueB.end(); ++itA, ++itB) {
             Person *personA = dynamic_cast<Person *>(*itA);
             Person *personB = dynamic_cast<Person *>(*itB);
+            /// not a Person object in value? fall back to default implementation
             if (personA == NULL || personB == NULL) return QSortFilterProxyModel::lessThan(left, right);
 
+            /// get both values' next persons' last names for comparison
             QString nameA = personA->lastName().replace(curlyRegExp, "");
             QString nameB = personB->lastName().replace(curlyRegExp, "");
             int cmp = QString::compare(nameA, nameB, Qt::CaseInsensitive);
             if (cmp < 0) return true;
             if (cmp > 0) return false;
 
+            /// if last names were inconclusive ...
+            /// get both values' next persons' first names for comparison
             nameA = personA->firstName().replace(curlyRegExp, "");
             nameB = personB->firstName().replace(curlyRegExp, "");
             cmp = QString::compare(nameA, nameB, Qt::CaseInsensitive);
@@ -107,9 +120,14 @@ bool SortFilterBibTeXFileModel::lessThan(const QModelIndex & left, const QModelI
             // TODO Check for suffix and prefix?
         }
 
+        /// comparison by names did not work (was not conclusive)
+        /// fall back to default implementation
         return QSortFilterProxyModel::lessThan(left, right);
-    } else
+    } else {
+        /// everything else can be sorted by default implementation
+        /// (i.e. alphabetically or lexicographically)
         return QSortFilterProxyModel::lessThan(left, right);
+    }
 }
 
 bool SortFilterBibTeXFileModel::filterAcceptsRow(int source_row, const QModelIndex & source_parent) const
@@ -229,7 +247,6 @@ BibTeXFileModel::BibTeXFileModel(QObject * parent)
 BibTeXFileModel::~BibTeXFileModel()
 {
     if (m_bibtexFile != NULL) delete m_bibtexFile;
-// TODO
 }
 
 File *BibTeXFileModel::bibTeXFile()
@@ -240,17 +257,10 @@ File *BibTeXFileModel::bibTeXFile()
 
 void BibTeXFileModel::setBibTeXFile(File *bibtexFile)
 {
+    // FIXME delete old m_bibtexFile before overwriting it?
     m_bibtexFile = bibtexFile;
     reset(); // TODO necessary here?
 }
-
-/*
-QModelIndex BibTeXFileModel::index(int row, int column, const QModelIndex & parent) const
-{
-    Q_UNUSED(parent)
-    return createIndex(row, column, (void*)NULL); // parent == QModelIndex() ? createIndex(row, column, (void*)NULL) : QModelIndex();
-}
-*/
 
 QModelIndex BibTeXFileModel::parent(const QModelIndex & index) const
 {
