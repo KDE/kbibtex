@@ -371,7 +371,7 @@ void UrlListEdit::setReadOnly(bool isReadOnly)
 const QString KeywordListEdit::keyGlobalKeywordList = QLatin1String("globalKeywordList");
 
 KeywordListEdit::KeywordListEdit(QWidget *parent)
-        : FieldListEdit(KBibTeX::tfKeyword, KBibTeX::tfKeyword|KBibTeX::tfSource, parent), m_config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), m_configGroupName(QLatin1String("Global Keywords"))
+        : FieldListEdit(KBibTeX::tfKeyword, KBibTeX::tfKeyword | KBibTeX::tfSource, parent), m_config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), m_configGroupName(QLatin1String("Global Keywords"))
 {
     m_addKeyword = new KPushButton(KIcon("list-add"), i18n("Add Keyword"), this);
     addButton(m_addKeyword);

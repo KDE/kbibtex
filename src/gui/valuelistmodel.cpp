@@ -53,7 +53,7 @@ QVariant ValueListModel::data(const QModelIndex & index, int role) const
 {
     if (index.row() >= sortedValues.count() || index.column() >= 2)
         return QVariant();
-    if (role == Qt::DisplayRole) {
+    if (role == Qt::DisplayRole || role == Qt::ToolTipRole) {
         if (index.column() == 0)
             return QVariant(sortedValues[index.row()]);
         else

@@ -21,6 +21,7 @@
 #include <typeinfo>
 
 #include <QTreeView>
+#include <QHeaderView>
 #include <QGridLayout>
 #include <QStringListModel>
 #include <QScrollBar>
@@ -55,7 +56,7 @@ public:
 
     ValueListPrivate(ValueList *parent)
             : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName(QLatin1String("Value List Docklet")),
-            configKeyName(QLatin1String("FieldName")), sortingModel(NULL), countWidth(parent->fontMetrics().width(QLatin1String("Count888"))) {
+            configKeyName(QLatin1String("FieldName")), sortingModel(NULL), countWidth(parent->fontMetrics().width(i18n("Count"))) {
         setupGUI();
         initialize();
     }
@@ -107,6 +108,7 @@ public:
             model = sortingModel;
         }
         treeviewFieldValues->setModel(model);
+        treeviewFieldValues->header()->setResizeMode(QHeaderView::Fixed);
 
         KConfigGroup configGroup(config, configGroupName);
         configGroup.writeEntry(configKeyName, text);
@@ -135,8 +137,8 @@ void ValueList::update()
 
 void ValueList::resizeEvent(QResizeEvent *)
 {
-    int widgetWidth = d->treeviewFieldValues->size().width() - d->treeviewFieldValues->verticalScrollBar()->size().width();
-    d->treeviewFieldValues->setColumnWidth(0, widgetWidth - d->countWidth * 4 / 3);
+    int widgetWidth = d->treeviewFieldValues->size().width() - d->treeviewFieldValues->verticalScrollBar()->size().width() - 8;
+    d->treeviewFieldValues->setColumnWidth(0, widgetWidth - d->countWidth);
     d->treeviewFieldValues->setColumnWidth(1, d->countWidth);
 }
 
