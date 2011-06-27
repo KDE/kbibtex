@@ -22,31 +22,65 @@
 #define KBIBTEX_PROGRAM_VALUELISTMODEL_H
 
 #include <QAbstractTableModel>
+#include <QStyledItemDelegate>
 
 #include <bibtexfilemodel.h>
 
 static const int SortRole = Qt::UserRole + 113;
 static const int SearchTextRole = Qt::UserRole + 114;
 
+class KBIBTEXGUI_EXPORT ValueListDelegate : public QStyledItemDelegate
+{
+    Q_OBJECT
+
+private:
+    QString m_fieldName;
+
+public:
+    ValueListDelegate(QWidget *parent = NULL)
+            : QStyledItemDelegate(parent), m_fieldName(QString::null) {}
+
+    QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &, const QModelIndex &index) const;
+    void setEditorData(QWidget *editor, const QModelIndex &index) const;
+    void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
+    QSize sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index) const;
+
+    void setFieldName(const QString &fieldName) {
+        m_fieldName = fieldName;
+    }
+
+private slots:
+    void commitAndCloseEditor();
+};
+
 class ValueListModel : public QAbstractTableModel
 {
 private:
+    struct ValueLine {
+        QString text;
+        QString sortBy;
+        Value value;
+        int count;
+    };
+
     const File *file;
     const QString fName;
-    QStringList sortedValues;
-    QMap<QString, int> valueToCount;
+    QList<ValueLine> values;
 
 public:
     ValueListModel(const File *bibtexFile, const QString &fieldName, QObject *parent);
 
-    int rowCount(const QModelIndex & parent = QModelIndex()) const;
-    int columnCount(const QModelIndex & parent = QModelIndex()) const;
-    QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
-    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+    virtual int rowCount(const QModelIndex & parent = QModelIndex()) const;
+    virtual int columnCount(const QModelIndex & parent = QModelIndex()) const;
+    virtual QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
+    virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
+    virtual Qt::ItemFlags flags(const QModelIndex &index) const;
+    virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
 private:
     void updateValues();
     void insertValue(const Value &value);
+    int indexOf(const QString &text);
 };
 
 

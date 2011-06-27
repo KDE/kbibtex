@@ -32,6 +32,7 @@
 #include <KStandardDirs>
 #include <KConfigGroup>
 #include <KLocale>
+#include <KAction>
 
 #include <bibtexfields.h>
 #include <entry.h>
@@ -43,6 +44,7 @@ class ValueList::ValueListPrivate
 {
 private:
     ValueList *p;
+    ValueListDelegate *delegate;
 
 public:
     KSharedConfigPtr config;
@@ -70,8 +72,16 @@ public:
 
         treeviewFieldValues = new QTreeView(p);
         layout->addWidget(treeviewFieldValues, 1, 0, 1, 1);
-        treeviewFieldValues->setEditTriggers(QAbstractItemView::NoEditTriggers);
+        treeviewFieldValues->setEditTriggers(QAbstractItemView::EditKeyPressed);
         treeviewFieldValues->setSortingEnabled(true);
+        delegate = new ValueListDelegate(treeviewFieldValues);
+        treeviewFieldValues->setItemDelegate(delegate);
+
+        /// create context menu to start renaming
+        treeviewFieldValues->setContextMenuPolicy(Qt::ActionsContextMenu);
+        KAction *action = new KAction(KIcon("edit-rename"), i18n("Replace all occurrences"), p);
+        connect(action, SIGNAL(triggered()), p, SLOT(startItemRenaming()));
+        treeviewFieldValues->addAction(action);
 
         p->setEnabled(false);
 
@@ -99,6 +109,7 @@ public:
         QString text = var.toString();
         if (text.isEmpty()) text = comboboxFieldNames->currentText();
 
+        delegate->setFieldName(text);
         QAbstractItemModel *model = editor == NULL ? NULL : editor->valueListModel(text);
         if (model != NULL) {
             if (sortingModel != NULL) delete sortingModel;
@@ -133,7 +144,6 @@ void ValueList::update()
     d->update();
     setEnabled(d->editor != NULL);
     QTimer::singleShot(100, this, SLOT(resizeEvent()));
-
 }
 
 void ValueList::resizeEvent(QResizeEvent *)
@@ -156,4 +166,11 @@ void ValueList::listItemActivated(const QModelIndex &index)
     fq.field = fieldText;
 
     d->editor->setFilterBarFilter(fq);
+}
+
+void ValueList::startItemRenaming()
+{
+    int row = d->treeviewFieldValues->selectionModel()->selectedIndexes().first().row();
+    QModelIndex index = d->treeviewFieldValues->model()->index(row, 0);
+    d->treeviewFieldValues->edit(index);
 }
