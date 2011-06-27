@@ -159,6 +159,17 @@ public:
 
         return KUrl(url);
     }
+
+    void sanitizeEntry(Entry *entry) {
+        /// if entry contains a description field but no abstract,
+        /// rename description field to abstract
+        const QString ftDescription = QLatin1String("description");
+        if (!entry->contains(Entry::ftAbstract) && entry->contains(ftDescription)) {
+            Value v = entry->value(QLatin1String("description"));
+            entry->insert(Entry::ftAbstract, v);
+            entry->remove(ftDescription);
+        }
+    }
 };
 
 WebSearchBibsonomy::WebSearchBibsonomy(QWidget *parent)
@@ -247,6 +258,7 @@ void WebSearchBibsonomy::downloadDone()
                     Value v;
                     v.append(new VerbatimText(label()));
                     entry->insert("x-fetchedfrom", v);
+                    d->sanitizeEntry(entry);
                     emit foundEntry(entry);
                     hasEntries = true;
                 }
