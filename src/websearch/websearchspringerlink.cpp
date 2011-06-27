@@ -383,8 +383,6 @@ void WebSearchSpringerLink::doneFetchingBibTeX()
 
 void WebSearchSpringerLink::processNextQueuedUrl()
 {
-    kDebug() << d->queueBibTeX.count() << d->queueExportPages.count() << d->queueResultPages.count();
-
     if (!d->queueBibTeX.isEmpty()) {
         QMap<KUrl, QString>::Iterator it = d->queueBibTeX.begin();
         KUrl url(it.key());

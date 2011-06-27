@@ -153,6 +153,7 @@ public:
         QFormLayout *layout = new QFormLayout(p);
 
         comboBoxEncodings = new KComboBox(false, p);
+        comboBoxEncodings->setObjectName("comboBoxEncodings");
         layout->addRow(i18n("Encoding:"), comboBoxEncodings);
         comboBoxEncodings->addItem(QLatin1String("LaTeX"));
         comboBoxEncodings->insertSeparator(1);
@@ -160,6 +161,7 @@ public:
         connect(comboBoxEncodings, SIGNAL(currentIndexChanged(int)), p, SIGNAL(changed()));
 
         comboBoxStringDelimiters = new KComboBox(false, p);
+        comboBoxStringDelimiters->setObjectName("comboBoxStringDelimiters");
         layout->addRow(i18n("String Delimiters:"), comboBoxStringDelimiters);
         comboBoxStringDelimiters->addItem(createDelimiterString('"', '"'));
         comboBoxStringDelimiters->addItem(createDelimiterString('{', '}'));
@@ -187,6 +189,7 @@ public:
         connect(checkBoxProtectCasing, SIGNAL(toggled(bool)), p, SIGNAL(changed()));
 
         comboBoxPersonNameFormatting = new KComboBox(false, p);
+        comboBoxPersonNameFormatting->setObjectName("comboBoxPersonNameFormatting");
         layout->addRow(i18n("Person Names Formatting:"), comboBoxPersonNameFormatting);
         ItalicTextItemModel *itim = new ItalicTextItemModel();
         itim->addItem(i18n("Use global settings"), QString(""));

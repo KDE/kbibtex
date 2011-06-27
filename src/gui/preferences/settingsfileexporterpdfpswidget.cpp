@@ -71,6 +71,7 @@ public:
         QFormLayout *layout = new QFormLayout(p);
 
         comboBoxBabelLanguage = new KComboBox(true, p);
+        comboBoxBabelLanguage->setObjectName("comboBoxBabelLanguage");
         layout->addRow(i18n("Language for 'babel':"), comboBoxBabelLanguage);
         comboBoxBabelLanguage->addItem(QLatin1String("english"));
         comboBoxBabelLanguage->addItem(QLatin1String("ngerman"));
@@ -78,6 +79,7 @@ public:
         connect(comboBoxBabelLanguage->lineEdit(), SIGNAL(textChanged(QString)), p, SIGNAL(changed()));
 
         comboBoxBibliographyStyle = new KComboBox(true, p);
+        comboBoxBibliographyStyle->setObjectName("comboBoxBibliographyStyle");
         layout->addRow(i18n("Bibliography style:"), comboBoxBibliographyStyle);
         comboBoxBibliographyStyle->addItem(QLatin1String("abbrv"));
         comboBoxBibliographyStyle->addItem(QLatin1String("alpha"));

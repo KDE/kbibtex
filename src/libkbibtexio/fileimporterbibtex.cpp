@@ -115,7 +115,7 @@ File* FileImporterBibTeX::load(QIODevice *iodevice)
 
 bool FileImporterBibTeX::guessCanDecode(const QString & rawText)
 {
-    QString text = EncoderLaTeX::currentEncoderLaTeX() ->decode(rawText);
+    QString text = EncoderLaTeX::currentEncoderLaTeX()->decode(rawText);
     return text.indexOf(QRegExp("@\\w+\\{.+\\}")) >= 0;
 }
 

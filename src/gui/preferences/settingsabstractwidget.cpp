@@ -21,6 +21,7 @@
 #include <QAbstractItemModel>
 
 #include <KComboBox>
+#include <KDebug>
 
 #include "settingsabstractwidget.h"
 
@@ -32,6 +33,7 @@ SettingsAbstractWidget::SettingsAbstractWidget(QWidget *parent)
 
 void SettingsAbstractWidget::selectValue(KComboBox *comboBox, const QString &value, int role)
 {
+    bool foundLine = false;
     QAbstractItemModel *model = comboBox->model();
     int row = 0;
     QModelIndex index;
@@ -40,9 +42,13 @@ void SettingsAbstractWidget::selectValue(KComboBox *comboBox, const QString &val
         QString line = model->data(index, role).toString();
         if (line.toLower() == lowerValue) {
             comboBox->setCurrentIndex(row);
+            foundLine = true;
             break;
         }
         ++row;
     }
+
+    if (!foundLine)
+        kWarning() << "No line in combobox" << comboBox->objectName() << "matched" << value;
 }
 
