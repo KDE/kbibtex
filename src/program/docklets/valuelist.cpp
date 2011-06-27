@@ -31,6 +31,7 @@
 #include <KComboBox>
 #include <KStandardDirs>
 #include <KConfigGroup>
+#include <KLocale>
 
 #include <bibtexfields.h>
 #include <entry.h>
