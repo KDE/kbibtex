@@ -51,17 +51,32 @@ public:
         }
 
         const QString formattedDateKey = "jstor_formatteddate";
-        const QString formattedDate = PlainTextValue::text(entry->value(formattedDateKey)).toLower();
+        const QString formattedDate = PlainTextValue::text(entry->value(formattedDateKey));
+
+        /// first, try to guess month by inspecting the beginning
+        /// the jstor_formatteddate field
+        const QString formattedDateLower = formattedDate.toLower();
         int i;
         for (i = 0; i < 12; ++i)
-            if (formattedDate.startsWith(MonthsTriple[i])) break;
+            if (formattedDateLower.startsWith(MonthsTriple[i])) break;
         entry->remove(formattedDateKey);
-        if (i <= 12) {
+        if (i < 12) {
             Value v;
             v.append(new MacroKey(MonthsTriple[i]));
             entry->insert(Entry::ftMonth, v);
         }
+        /// guessing failed, therefore extract first part if it exists
+        else if ((i = formattedDate.indexOf(",")) >= 0) {
+            /// text may be a season ("Winter")
+            Value v;
+            v.append(new PlainText(formattedDate.left(i)));
+            entry->insert(Entry::ftMonth, v);
+        } else {
+            /// this case happens if the field only contains a year
+            kDebug() << "Cannot extract month/season from date" << formattedDate;
+        }
 
+        /// page field may start with "pp. ", remove that
         QString pages = PlainTextValue::text(entry->value(Entry::ftPages)).toLower();
         if (pages.startsWith("pp. ")) {
             pages = pages.mid(4);
@@ -225,7 +240,6 @@ void WebSearchJStor::doneFetchingSummaryPage()
         QTextStream ts(reply->readAll());
         ts.setCodec("utf-8");
         QString bibTeXcode = ts.readAll();
-        kDebug() << bibTeXcode;
 
         FileImporterBibTeX importer;
         File *bibtexFile = importer.fromString(bibTeXcode);
