@@ -25,6 +25,8 @@
 #include <QDir>
 #include <QRegExp>
 
+#include <KLocale>
+
 #include "fileexportertoolchain.h"
 
 static const QRegExp chompRegExp = QRegExp("[\\n\\r]+$");
@@ -42,7 +44,7 @@ FileExporterToolchain::FileExporterToolchain()
 
 bool FileExporterToolchain::runProcesses(const QStringList &progs, QStringList *errorLog)
 {
-    bool result = TRUE;
+    bool result = true;
     int i = 0;
 
     emit progress(0, progs.size());
@@ -68,30 +70,35 @@ bool FileExporterToolchain::runProcess(const QString &cmd,  const QStringList &a
     processEnvironment.insert("openout_any", "r");
     m_process->setProcessEnvironment(processEnvironment);
     m_process->setWorkingDirectory(tempDir.name());
+
     connect(m_process, SIGNAL(readyRead()), this, SLOT(slotReadProcessOutput()));
 
+    if (errorLog != NULL)
+        errorLog->append(i18n("Running process '%1' using working directory '%2'", (cmd + " " + args.join(" ")), m_process->workingDirectory()));
     m_process->start(cmd, args);
     m_errorLog = errorLog;
 
     if (m_process->waitForStarted(3000)) {
         if (m_process->waitForFinished(30000))
-            result = m_process->exitStatus() == QProcess::NormalExit;
+            result = m_process->exitStatus() == QProcess::NormalExit && m_process->exitCode() == 0;
         else
             result = false;
     } else
         result = false;
 
     if (!result)
-        errorLog->append(QString("Process '%1' failed.").arg(args.join(" ")));
+        errorLog->append(i18n("Process '%1' failed", (cmd + " " + args.join(" "))));
 
-    disconnect(m_process, SIGNAL(readyRead()), this, SLOT(slotReadProcessOutput()));
+    if (errorLog != NULL)
+        errorLog->append(i18n("Stopped process '%1' with exit code %2", (cmd + " " + args.join(" ")), m_process->exitCode()));
+
     delete(m_process);
     m_process = NULL;
 
     return result;
 }
 
-bool FileExporterToolchain::writeFileToIODevice(const QString &filename, QIODevice *device)
+bool FileExporterToolchain::writeFileToIODevice(const QString &filename, QIODevice *device, QStringList *errorLog)
 {
     QFile file(filename);
     if (file.open(QIODevice::ReadOnly)) {
@@ -106,9 +113,13 @@ bool FileExporterToolchain::writeFileToIODevice(const QString &filename, QIODevi
         file.close();
         delete[] buffer;
 
+        if (errorLog != NULL)
+            errorLog->append(i18n("Writing to file '%1'' succeeded", filename));
         return result;
     }
 
+    if (errorLog != NULL)
+        errorLog->append(i18n("Writing to file '%1'' failed", filename));
     return false;
 }
 

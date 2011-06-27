@@ -108,7 +108,7 @@ bool FileExporterPDF::generatePDF(QIODevice* iodevice, QStringList *errorLog)
 {
     QStringList cmdLines = QStringList() << QLatin1String("pdflatex -halt-on-error bibtex-to-pdf.tex") << QLatin1String("bibtex bibtex-to-pdf") << QLatin1String("pdflatex -halt-on-error bibtex-to-pdf.tex") << QLatin1String("pdflatex -halt-on-error bibtex-to-pdf.tex");
 
-    return writeLatexFile(m_laTeXFilename) && runProcesses(cmdLines, errorLog) && writeFileToIODevice(m_outputFilename, iodevice);
+    return writeLatexFile(m_laTeXFilename) && runProcesses(cmdLines, errorLog) && writeFileToIODevice(m_outputFilename, iodevice, errorLog);
 }
 
 bool FileExporterPDF::writeLatexFile(const QString &filename)
@@ -136,15 +136,15 @@ bool FileExporterPDF::writeLatexFile(const QString &filename)
         ts << "\\bibliographystyle{" << m_bibliographyStyle << "}\n";
         ts << "\\begin{document}\n";
 
-        if (kpsewhich("embedfile.sty")) {
+        if (m_embedFiles) {
             ts << "\\embedfile[desc={" << i18n("BibTeX file") << "}]{bibtex-to-pdf.bib}\n";
-            if (m_embedFiles)
-                for (QStringList::ConstIterator it = m_embeddedFileList.begin(); it != m_embeddedFileList.end(); ++it) {
-                    QStringList param = (*it).split("|");
-                    QFile file(param[1]);
-                    if (file.exists())
-                        ts << "\\embedfile[desc={" << param[0] << "}]{" << param[1] << "}\n";
-                }
+
+            for (QStringList::ConstIterator it = m_embeddedFileList.begin(); it != m_embeddedFileList.end(); ++it) {
+                QStringList param = (*it).split("|");
+                QFile file(param[1]);
+                if (file.exists())
+                    ts << "\\embedfile[desc={" << param[0] << "}]{" << param[1] << "}\n";
+            }
         }
 
         ts << "\\nocite{*}\n";

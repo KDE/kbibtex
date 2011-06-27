@@ -81,7 +81,7 @@ bool FileExporterRTF::generateRTF(QIODevice* iodevice, QStringList *errorLog)
 {
     QStringList cmdLines = QStringList() << QLatin1String("latex -halt-on-error bibtex-to-rtf.tex") << QLatin1String("bibtex bibtex-to-rtf") << QLatin1String("latex -halt-on-error bibtex-to-rtf.tex") << QLatin1String("latex2rtf bibtex-to-rtf.tex");
 
-    if (writeLatexFile(m_laTeXFilename) && runProcesses(cmdLines, errorLog) && writeFileToIODevice(m_outputFilename, iodevice))
+    if (writeLatexFile(m_laTeXFilename) && runProcesses(cmdLines, errorLog) && writeFileToIODevice(m_outputFilename, iodevice, errorLog))
         return TRUE;
     else
         return FALSE;

@@ -55,7 +55,7 @@ protected:
 
     bool runProcesses(const QStringList &progs, QStringList *errorLog = NULL);
     bool runProcess(const QString &cmd, const QStringList &args, QStringList *errorLog = NULL);
-    bool writeFileToIODevice(const QString &filename, QIODevice *device);
+    bool writeFileToIODevice(const QString &filename, QIODevice *device, QStringList *errorLog = NULL);
 
 private:
     QProcess *m_process;

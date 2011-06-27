@@ -91,7 +91,7 @@ bool FileExporterPS::generatePS(QIODevice* iodevice, QStringList *errorLog)
 {
     QStringList cmdLines = QStringList() << QLatin1String("latex -halt-on-error bibtex-to-ps.tex") << QLatin1String("bibtex bibtex-to-ps") << QLatin1String("latex -halt-on-error bibtex-to-ps.tex") << QLatin1String("latex -halt-on-error bibtex-to-ps.tex") << QLatin1String("dvips -R2 -o bibtex-to-ps.ps bibtex-to-ps.dvi");
 
-    return writeLatexFile(m_laTeXFilename) && runProcesses(cmdLines, errorLog) && beautifyPostscriptFile(m_outputFilename, "Exported Bibliography") && writeFileToIODevice(m_outputFilename, iodevice);
+    return writeLatexFile(m_laTeXFilename) && runProcesses(cmdLines, errorLog) && beautifyPostscriptFile(m_outputFilename, "Exported Bibliography") && writeFileToIODevice(m_outputFilename, iodevice, errorLog);
 }
 
 bool FileExporterPS::writeLatexFile(const QString &filename)

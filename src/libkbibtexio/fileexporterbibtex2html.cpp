@@ -59,7 +59,7 @@ public:
         args << "-debug"; /// verbose mode (to find incorrect BibTeX entries)
         args << bibTeXFilename;
 
-        bool result = p->runProcess("bibtex2html", args, errorLog) && p->writeFileToIODevice(outputFilename, iodevice);
+        bool result = p->runProcess("bibtex2html", args, errorLog) && p->writeFileToIODevice(outputFilename, iodevice, errorLog);
 
         return result;
     }
