@@ -58,14 +58,14 @@ public:
     void loadState() {
         KConfigGroup configGroup(config, configGroupNameGeneral);
         QString paperSizeName = configGroup.readEntry(FileExporter::keyPaperSize, FileExporter::defaultPaperSize);
-        p->selectValue(comboBoxPaperSize, paperSizeLabelToName[paperSizeName]);
+        p->selectValue(comboBoxPaperSize, paperSizeLabelToName.key(paperSizeName));
         configGroup = KConfigGroup(config, configGroupNameLyX);
         lineEditLyXServerPipeName->setText(configGroup.readEntry(LyX::keyLyXServerPipeName, LyX::defaultLyXServerPipeName));
     }
 
     void saveState() {
         KConfigGroup configGroup(config, configGroupNameGeneral);
-        QString paperSizeName = paperSizeLabelToName.key(comboBoxPaperSize->currentText());
+        QString paperSizeName = paperSizeLabelToName.value(comboBoxPaperSize->currentText(), FileExporter::defaultPaperSize);
         configGroup.writeEntry(FileExporter::keyPaperSize, paperSizeName);
         configGroup = KConfigGroup(config, configGroupNameLyX);
         configGroup.writeEntry(LyX::keyLyXServerPipeName, lineEditLyXServerPipeName->text());
@@ -81,6 +81,7 @@ public:
         QFormLayout *layout = new QFormLayout(p);
 
         comboBoxPaperSize = new KComboBox(false, p);
+        comboBoxPaperSize->setObjectName("comboBoxPaperSize");
         layout->addRow(i18n("Paper Size:"), comboBoxPaperSize);
         QStringList paperSizeLabelToNameKeys = paperSizeLabelToName.keys();
         paperSizeLabelToNameKeys.sort();
