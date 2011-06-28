@@ -24,12 +24,14 @@
 #include <QLayout>
 #include <QSignalMapper>
 #include <QCheckBox>
+#include <QSet>
 
 #include <KMessageBox>
 #include <KLocale>
 #include <KPushButton>
 #include <KFileDialog>
 #include <KInputDialog>
+#include <KDebug>
 
 #include <file.h>
 #include <entry.h>
@@ -381,11 +383,24 @@ KeywordListEdit::KeywordListEdit(QWidget *parent)
 
 void KeywordListEdit::slotAddKeyword()
 {
+    /// fetch stored, global keywords
     KConfigGroup configGroup(m_config, m_configGroupName);
-    QStringList keywordList = configGroup.readEntry(KeywordListEdit::keyGlobalKeywordList, QStringList());
+    QStringList keywords = configGroup.readEntry(KeywordListEdit::keyGlobalKeywordList, QStringList());
+
+    /// use a map for case-insensitive sorting of strings
+    /// (recommended by Qt's documentation)
+    QMap<QString, QString> forCaseInsensitiveSorting;
+    /// insert all stored, global keywords
+    foreach(const QString &keyword, keywords)
+    forCaseInsensitiveSorting.insert(keyword.toLower(), keyword);
+    /// insert all unique keywords used in this file
+    foreach(const QString &keyword, m_keywordsFromFile)
+    forCaseInsensitiveSorting.insert(keyword.toLower(), keyword);
+    /// re-create string list from map's values
+    keywords = forCaseInsensitiveSorting.values();
 
     bool ok = false;
-    QStringList newKeywordList = KInputDialog::getItemList(i18n("Keywords to Add"), i18n("Select keywords to add:"), keywordList, QStringList(), true, &ok, this);
+    QStringList newKeywordList = KInputDialog::getItemList(i18n("Keywords to Add"), i18n("Select keywords to add:"), keywords, QStringList(), true, &ok, this);
     if (ok) {
         foreach(const QString &newKeywordText, newKeywordList) {
             Value *value = new Value();
@@ -400,4 +415,14 @@ void KeywordListEdit::setReadOnly(bool isReadOnly)
 {
     FieldListEdit::setReadOnly(isReadOnly);
     m_addKeyword->setEnabled(!isReadOnly);
+}
+
+void KeywordListEdit::setFile(const File *file)
+{
+    if (file == NULL)
+        m_keywordsFromFile.clear();
+    else
+        m_keywordsFromFile = file->uniqueEntryValuesSet(Entry::ftKeywords);
+
+    FieldListEdit::setFile(file);
 }

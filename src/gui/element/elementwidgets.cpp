@@ -102,14 +102,15 @@ bool EntryConfiguredWidget::reset(const Element *element)
     if (entry == NULL) return false;
 
     /// clear all widgets
-    for (QMap<QString, FieldInput*>::Iterator it = bibtexKeyToWidget.begin(); it != bibtexKeyToWidget.end(); ++it)
+    for (QMap<QString, FieldInput*>::Iterator it = bibtexKeyToWidget.begin(); it != bibtexKeyToWidget.end(); ++it) {
         it.value()->clear();
+        it.value()->setFile(m_file);
+    }
 
     for (Entry::ConstIterator it = entry->constBegin(); it != entry->constEnd(); ++it) {
         const QString key = it.key().toLower();
         if (bibtexKeyToWidget.contains(key)) {
             FieldInput *fieldInput = bibtexKeyToWidget[key];
-            fieldInput->setFile(m_file);
             fieldInput->reset(it.value());
         }
     }

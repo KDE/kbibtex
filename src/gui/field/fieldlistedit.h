@@ -44,7 +44,7 @@ public:
 
     void clear();
     virtual void setReadOnly(bool isReadOnly);
-    void setFile(const File *file);
+    virtual void setFile(const File *file);
 
 signals:
     void modified();
@@ -116,6 +116,7 @@ public:
     KeywordListEdit(QWidget *parent = NULL);
 
     virtual void setReadOnly(bool isReadOnly);
+    virtual void setFile(const File *file);
 
 private slots:
     void slotAddKeyword();
@@ -124,6 +125,7 @@ private:
     KSharedConfigPtr m_config;
     const QString m_configGroupName;
     KPushButton *m_addKeyword;
+    QSet<QString> m_keywordsFromFile;
 };
 
 #endif // KBIBTEX_GUI_FIELDLISTEDIT_H

@@ -70,6 +70,22 @@ public:
      */
     QStringList allKeys() const;
 
+    /**
+     * Retrieves a set of all unique values (as text) for a specified
+     * field from all entries
+     * @param fieldName field name to scan, e.g. "volume"
+     * @return list of unique values
+     */
+    QSet<QString> uniqueEntryValuesSet(const QString &fieldName) const;
+
+    /**
+     * Retrieves a list of all unique values (as text) for a specified
+     * field from all entries
+     * @param fieldName field name to scan, e.g. "volume"
+     * @return list of unique values
+     */
+    QStringList uniqueEntryValuesList(const QString &fieldName) const;
+
     void setProperty(const QString &key, const QVariant &value);
     QVariant property(const QString &key) const;
     QVariant property(const QString &key, const QVariant &defaultValue) const;
