@@ -135,7 +135,7 @@ public:
             layout->addWidget(fieldLineEdit);
         }
 
-        enalbeModifiedSignal();
+        enableModifiedSignal();
     }
 
     QAction *colorAction(const QString&label, const QString &color) {
@@ -154,7 +154,7 @@ public:
             fieldLineEdit->setText("");
         else if (fieldListEdit != NULL)
             fieldListEdit->clear();
-        enalbeModifiedSignal();
+        enableModifiedSignal();
     }
 
     bool reset(const Value& value) {
@@ -178,7 +178,7 @@ public:
             result = true;
         }
 
-        enalbeModifiedSignal();
+        enableModifiedSignal();
         return result;
     }
 
@@ -214,7 +214,7 @@ public:
             fieldListEdit->setFile(file);
     }
 
-    void enalbeModifiedSignal() {
+    void enableModifiedSignal() {
         if (fieldLineEdit != NULL)
             connect(fieldLineEdit, SIGNAL(textChanged(QString)), p, SIGNAL(modified()));
         if (fieldListEdit != NULL)
