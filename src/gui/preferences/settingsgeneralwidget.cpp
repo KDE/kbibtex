@@ -68,15 +68,17 @@ public:
 
         comboBoxPersonNameFormatting = new KComboBox(false, p);
         layout->addRow(i18n("Person Names Formatting:"), comboBoxPersonNameFormatting);
-        comboBoxPersonNameFormatting->addItem(Person::transcribePersonName(dummyPerson, QLatin1String("<%f ><%l>")), QString("<%f ><%l>"));
-        comboBoxPersonNameFormatting->addItem(Person::transcribePersonName(dummyPerson, QLatin1String("<%l><, %f>")), QString("<%l><, %f>"));
+        const QStringList formattingOptions = QStringList() << QLatin1String("<%f ><%l><, %s>") << QLatin1String("<%l><, %f><, %s>");
+        foreach(const QString &formattingOption, formattingOptions) {
+            comboBoxPersonNameFormatting->addItem(Person::transcribePersonName(dummyPerson, formattingOption), formattingOption);
+        }
         comboBoxPersonNameFormatting->setToolTip(restartRequiredMsg);
         connect(comboBoxPersonNameFormatting, SIGNAL(currentIndexChanged(int)), p, SIGNAL(changed()));
     }
 };
 
 const QString SettingsGeneralWidget::SettingsGeneralWidgetPrivate::configGroupName = QLatin1String("General");
-const Person *SettingsGeneralWidget::SettingsGeneralWidgetPrivate::dummyPerson = new Person(i18n("John"), i18n("Doe"), i18n("J."), i18n("Jr."));
+const Person *SettingsGeneralWidget::SettingsGeneralWidgetPrivate::dummyPerson = new Person(i18n("John"), i18n("Doe"), i18n("Jr."));
 
 SettingsGeneralWidget::SettingsGeneralWidget(QWidget *parent)
         : SettingsAbstractWidget(parent), d(new SettingsGeneralWidgetPrivate(this))
