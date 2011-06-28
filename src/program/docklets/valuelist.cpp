@@ -76,6 +76,7 @@ public:
         treeviewFieldValues->setSortingEnabled(true);
         delegate = new ValueListDelegate(treeviewFieldValues);
         treeviewFieldValues->setItemDelegate(delegate);
+        treeviewFieldValues->setRootIsDecorated(false);
 
         /// create context menu to start renaming
         treeviewFieldValues->setContextMenuPolicy(Qt::ActionsContextMenu);

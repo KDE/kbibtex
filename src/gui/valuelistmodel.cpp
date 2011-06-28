@@ -28,6 +28,9 @@
 #include <QGridLayout>
 #include <QStringListModel>
 #include <QLineEdit>
+#include <QPainter>
+#include <QFrame>
+#include <QLayout>
 
 #include <fieldlineedit.h>
 #include <bibtexfields.h>
@@ -39,6 +42,7 @@ QWidget *ValueListDelegate::createEditor(QWidget *parent, const QStyleOptionView
     if (index.column() == 0) {
         const FieldDescription &fd = BibTeXFields::self()->find(m_fieldName);
         FieldLineEdit *fieldLineEdit = new FieldLineEdit(fd.preferredTypeFlag, fd.typeFlags, false, parent);
+        fieldLineEdit->setAutoFillBackground(true);
         return fieldLineEdit;
     } else
         return QStyledItemDelegate::createEditor(parent, sovi, index);
@@ -159,6 +163,8 @@ bool ValueListModel::setData(const QModelIndex & index, const QVariant &value, i
         int index = indexOf(origText);
         values[index].text = newText;
         values[index].value = newValue;
+        const Person *person = dynamic_cast<const Person*>(newValue.first());
+        values[index].sortBy = person == NULL ? QString::null : person->lastName() + QLatin1String(" ") + person->firstName();
         reset();
 
         return true;
