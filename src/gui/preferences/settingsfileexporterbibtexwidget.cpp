@@ -233,7 +233,7 @@ public:
 };
 
 const QString SettingsFileExporterBibTeXWidget::SettingsFileExporterBibTeXWidgetPrivate::configGroupName = QLatin1String("FileExporterBibTeX");
-const Person *SettingsFileExporterBibTeXWidget::SettingsFileExporterBibTeXWidgetPrivate::dummyPerson = new Person(i18n("John"), i18n("Doe"), i18n("J."), i18n("Jr."));
+const Person *SettingsFileExporterBibTeXWidget::SettingsFileExporterBibTeXWidgetPrivate::dummyPerson = new Person(i18n("John"), i18n("Doe"), i18n("Jr."));
 
 
 SettingsFileExporterBibTeXWidget::SettingsFileExporterBibTeXWidget(QWidget *parent)

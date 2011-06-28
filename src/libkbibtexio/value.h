@@ -85,32 +85,27 @@ public:
     /**
     * Create a representation for a person's name. In bibliographies, a person is either an author or an editor.
     * The four parameters cover all common parts of a name. Only first and last name are mandatory (each person should have those).
-    * Example: A name like "Dr. Wernher von Braun" would be split as follows: "Wernher" is assigned to @p firstName, "von Braun" to @p lastName, and "Dr." to @p prefix.
     @param firstName First name of a person. Example: "Peter"
     @param lastName Last name of a person. Example: "Smith"
-    @param prefix Prefix in front of a name. Example: "Dr."
     @param suffix Suffix after a name. Example: "jr."
     */
-    Person(const QString& firstName, const QString& lastName, const QString& prefix = QString::null, const QString& suffix = QString::null);
+    Person(const QString& firstName, const QString& lastName, const QString& suffix = QString::null);
     Person(const Person& other);
 
-    void setName(const QString& firstName, const QString& lastName, const QString& prefix = QString::null, const QString& suffix = QString::null);
     QString firstName() const;
     QString lastName() const;
-    QString prefix() const;
     QString suffix() const;
 
     void replace(const QString &before, const QString &after);
     bool containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const;
     bool operator==(const ValueItem &other) const;
 
-    static QString transcribePersonName(const QString &formatting, const QString& firstName, const QString& lastName, const QString& prefix = QString::null, const QString& suffix = QString::null);
+    static QString transcribePersonName(const QString &formatting, const QString& firstName, const QString& lastName, const QString& suffix = QString::null);
     static QString transcribePersonName(const Person *person, const QString &formatting);
 
 private:
     QString m_firstName;
     QString m_lastName;
-    QString m_prefix;
     QString m_suffix;
 
 };

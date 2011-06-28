@@ -220,8 +220,6 @@ QString FileExporterXML::valueToXML(const Value& value, const QString&)
             Person *p = dynamic_cast<Person*>(item);
             if (p != NULL) {
                 result.append("<person>");
-                if (!p->prefix().isEmpty())
-                    result.append("<prefix>" +  cleanXML(EncoderXML::currentEncoderXML() ->encode(p->lastName())) + "</prefix>");
                 if (!p->firstName().isEmpty())
                     result.append("<firstname>" +  cleanXML(EncoderXML::currentEncoderXML() ->encode(p->firstName())) + "</firstname>");
                 if (!p->lastName().isEmpty())

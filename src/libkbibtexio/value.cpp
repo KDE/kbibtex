@@ -70,24 +70,16 @@ bool Keyword::operator==(const ValueItem &other) const
 }
 
 
-Person::Person(const QString& firstName, const QString& lastName, const QString& prefix, const QString& suffix)
-        : m_firstName(firstName), m_lastName(lastName), m_prefix(prefix), m_suffix(suffix)
+Person::Person(const QString& firstName, const QString& lastName, const QString& suffix)
+        : m_firstName(firstName), m_lastName(lastName), m_suffix(suffix)
 {
     // nothing
 }
 
 Person::Person(const Person& other)
-        : m_firstName(other.firstName()), m_lastName(other.lastName()), m_prefix(other.prefix()), m_suffix(other.suffix())
+        : m_firstName(other.firstName()), m_lastName(other.lastName()), m_suffix(other.suffix())
 {
     // nothing
-}
-
-void Person::setName(const QString& firstName, const QString& lastName, const QString& prefix, const QString& suffix)
-{
-    m_firstName = firstName;
-    m_lastName = lastName;
-    m_prefix = prefix;
-    m_suffix = suffix;
 }
 
 QString Person::firstName() const
@@ -98,11 +90,6 @@ QString Person::firstName() const
 QString Person::lastName() const
 {
     return m_lastName;
-}
-
-QString Person::prefix() const
-{
-    return m_prefix;
 }
 
 QString Person::suffix() const
@@ -116,15 +103,13 @@ void Person::replace(const QString &before, const QString &after)
         m_firstName = after;
     if (m_lastName == before)
         m_lastName = after;
-    if (m_prefix == before)
-        m_prefix = after;
     if (m_suffix == before)
         m_suffix = after;
 }
 
 bool Person::containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive) const
 {
-    return m_firstName.contains(pattern, caseSensitive) || m_lastName.contains(pattern, caseSensitive) ||  m_prefix.contains(pattern, caseSensitive) ||  m_suffix.contains(pattern, caseSensitive) || QString("%1 %2|%2, %1").arg(m_firstName).arg(m_lastName).contains(pattern, caseSensitive);
+    return m_firstName.contains(pattern, caseSensitive) || m_lastName.contains(pattern, caseSensitive) || m_suffix.contains(pattern, caseSensitive) || QString("%1 %2|%2, %1").arg(m_firstName).arg(m_lastName).contains(pattern, caseSensitive);
 }
 
 bool Person::operator==(const ValueItem &other) const
@@ -138,14 +123,11 @@ bool Person::operator==(const ValueItem &other) const
 
 QString Person::transcribePersonName(const Person *person, const QString &formatting)
 {
-    return transcribePersonName(formatting, person->firstName(), person->lastName(), person->prefix(), person->suffix());
+    return transcribePersonName(formatting, person->firstName(), person->lastName(), person->suffix());
 }
 
-QString Person::transcribePersonName(const QString &formatting, const QString& firstName, const QString& lastName, const QString& prefix, const QString& suffix)
+QString Person::transcribePersonName(const QString &formatting, const QString& firstName, const QString& lastName, const QString& suffix)
 {
-    Q_UNUSED(prefix);
-    Q_UNUSED(suffix);
-
     QString result = formatting;
     int p1 = -1, p2 = -1, p3 = -1;
     while ((p1 = result.indexOf('<')) >= 0 && (p2 = result.indexOf('>', p1 + 1)) >= 0 && (p3 = result.indexOf('%', p1)) >= 0 && p3 < p2) {
@@ -156,6 +138,9 @@ QString Person::transcribePersonName(const QString &formatting, const QString& f
             break;
         case 'l':
             insert = lastName;
+            break;
+        case 's':
+            insert = suffix;
             break;
         }
 
