@@ -93,18 +93,43 @@ QStringList File::allKeys() const
 {
     QStringList result;
 
-    for (ConstIterator it = begin(); it != end(); ++it) {
-        const Entry* entry = dynamic_cast<const Entry*>(*it);
+    foreach(const Element *element, *this) {
+        const Entry* entry = dynamic_cast<const Entry*>(element);
         if (entry != NULL)
             result.append(entry->id());
         else {
-            const Macro* macro = dynamic_cast<const Macro*>(*it);
+            const Macro* macro = dynamic_cast<const Macro*>(element);
             if (macro != NULL)
                 result.append(macro->key());
         }
     }
 
     return result;
+}
+
+QSet<QString> File::uniqueEntryValuesSet(const QString &fieldName) const
+{
+    QSet<QString> valueSet;
+    const QString lcFieldName = fieldName.toLower();
+
+    foreach(const Element *element, *this) {
+        const Entry* entry = dynamic_cast<const Entry*>(element);
+        if (entry != NULL)
+            for (Entry::ConstIterator it = entry->constBegin(); it != entry->constEnd(); ++it)
+                if (it.key().toLower() == lcFieldName)
+                    foreach(const ValueItem *valueItem, it.value())
+                    valueSet.insert(PlainTextValue::text(*valueItem, this));
+    }
+
+    return valueSet;
+}
+
+QStringList File::uniqueEntryValuesList(const QString &fieldName) const
+{
+    QSet<QString> valueSet = uniqueEntryValuesSet(fieldName);
+    QStringList list = valueSet.toList();
+    list.sort();
+    return list;
 }
 
 void File::setProperty(const QString &key, const QVariant &value)
