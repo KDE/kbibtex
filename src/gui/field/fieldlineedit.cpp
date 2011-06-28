@@ -33,6 +33,9 @@
 #include <KLocale>
 #include <KUrl>
 #include <KPushButton>
+#include <KSharedConfig>
+#include <KConfigGroup>
+
 
 #include <fileinfo.h>
 #include <file.h>
@@ -54,6 +57,10 @@ private:
     QSignalMapper *menuTypesSignalMapper;
     KPushButton *buttonOpenUrl;
 
+    KSharedConfigPtr config;
+    const QString configGroupNameGeneral;
+    QString personNameFormatting;
+
 public:
     QMenu *menuTypes;
     KBibTeX::TypeFlag typeFlag;
@@ -61,7 +68,7 @@ public:
     const File *file;
 
     FieldLineEditPrivate(KBibTeX::TypeFlag ptf, KBibTeX::TypeFlags tf, FieldLineEdit *p)
-            : parent(p), preferredTypeFlag(ptf), typeFlags(tf), file(NULL) {
+            : parent(p), preferredTypeFlag(ptf), typeFlags(tf), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupNameGeneral(QLatin1String("General")), file(NULL) {
         menuTypes = new QMenu(i18n("Types"), parent);
         menuTypesSignalMapper = new QSignalMapper(parent);
         setupMenu();
@@ -78,6 +85,9 @@ public:
         Value value;
         typeFlag = determineTypeFlag(value, preferredTypeFlag, typeFlags);
         updateGUI(typeFlag);
+
+        KConfigGroup configGroup(config, configGroupNameGeneral);
+        personNameFormatting = configGroup.readEntry(Person::keyPersonNameFormatting, Person::defaultPersonNameFormatting);
     }
 
     bool reset(const Value& value) {
@@ -104,13 +114,7 @@ public:
                 } else {
                     const Person *person = dynamic_cast<const Person*>(first);
                     if (typeFlag == KBibTeX::tfPerson && person != NULL) {
-                        text = person->lastName();
-                        QString temp = person->firstName();
-                        if (!temp.isEmpty()) text.prepend(temp + " ");
-                        temp = person->suffix();
-                        if (!temp.isEmpty()) text.append(", " + temp);
-                        temp = person->prefix();
-                        if (!temp.isEmpty()) text.prepend(temp + " ");
+                        text = Person::transcribePersonName(person, personNameFormatting);
                         result = true;
                     } else {
                         const MacroKey *macroKey = dynamic_cast<const MacroKey*>(first);
@@ -407,7 +411,6 @@ void FieldLineEdit::setReadOnly(bool isReadOnly)
 void FieldLineEdit::slotTypeChanged(int newTypeFlagInt)
 {
     KBibTeX::TypeFlag newTypeFlag = (KBibTeX::TypeFlag)newTypeFlagInt;
-    kDebug() << "new type is " << BibTeXFields::typeFlagToString(newTypeFlag);
 
     Value value;
     d->apply(value);
