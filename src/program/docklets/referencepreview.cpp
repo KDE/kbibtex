@@ -1,22 +1,25 @@
 /***************************************************************************
-*   Copyright (C) 2004-2009 by Thomas Fischer                             *
-*   fischer@unix-ag.uni-kl.de                                             *
-*                                                                         *
-*   This program is free software; you can redistribute it and/or modify  *
-*   it under the terms of the GNU General Public License as published by  *
-*   the Free Software Foundation; either version 2 of the License, or     *
-*   (at your option) any later version.                                   *
-*                                                                         *
-*   This program is distributed in the hope that it will be useful,       *
-*   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
-*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
-*   GNU General Public License for more details.                          *
-*                                                                         *
-*   You should have received a copy of the GNU General Public License     *
-*   along with this program; if not, write to the                         *
-*   Free Software Foundation, Inc.,                                       *
-*   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
-***************************************************************************/
+ *   Copyright (C) 2004-2011 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *                              and contributors                           *
+ *                                                                         *
+ *   Contributions to this file were made by                               *
+ *   - Jurgen Spitzmuller <juergen@spitzmueller.org>                       *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
 
 #include <QFrame>
 #include <QBuffer>
@@ -92,18 +95,6 @@ public:
         buttonSaveAsHTML = new KPushButton(KIcon("document-save"), i18n("Save as HTML"), p);
         buttonSaveAsHTML->setToolTip(i18n("Save reference as HTML fragment."));
         gridLayout->addWidget(buttonSaveAsHTML, 2, 2, 1, 1);
-
-        comboBox->addItem(i18n("Source"));
-        comboBox->addItem(i18n("abbrv (bibtex2html)"));
-        comboBox->addItem(i18n("acm (bibtex2html)"));
-        comboBox->addItem(i18n("alpha (bibtex2html)"));
-        comboBox->addItem(i18n("apalike (bibtex2html)"));
-        comboBox->addItem(i18n("ieeetr (bibtex2html)"));
-        comboBox->addItem(i18n("plain (bibtex2html)"));
-        comboBox->addItem(i18n("siam (bibtex2html)"));
-        comboBox->addItem(i18n("unsrt (bibtex2html)"));
-        comboBox->addItem(i18n("standard (XML/XSLT)"));
-        comboBox->addItem(i18n("fancy (XML/XSLT)"));
     }
 
     bool saveHTML(const KUrl& url) {
@@ -132,14 +123,27 @@ public:
     }
 
     void loadState() {
+        comboBox->clear();
+
+        /// source view should always be included
+        comboBox->addItem(i18n("Source"), QStringList(QStringList() << "source" << "source"));
+
         KConfigGroup configGroup(config, configGroupName);
-        int styleIndex = configGroup.readEntry(configKeyName, 0);
+        QStringList previewStyles = configGroup.readEntry("PreviewStyles", QStringList());
+        foreach(const QString &entry, previewStyles) {
+            QStringList style = entry.split("|");
+            QString styleLabel = style.at(0);
+            style.removeFirst();
+            comboBox->addItem(styleLabel, style);
+        }
+        int styleIndex = comboBox->findData(configGroup.readEntry(configKeyName, QStringList()));
+        if (styleIndex < 0) styleIndex = 0;
         comboBox->setCurrentIndex(styleIndex);
     }
 
     void saveState() {
         KConfigGroup configGroup(config, configGroupName);
-        configGroup.writeEntry(configKeyName, comboBox->currentIndex());
+        configGroup.writeEntry(configKeyName, comboBox->itemData(comboBox->currentIndex()).toStringList());
         config->sync();
     }
 };
@@ -204,51 +208,24 @@ void ReferencePreview::renderHTML()
     QStringList errorLog;
     FileExporter *exporter = NULL;
 
-    if (d->comboBox->currentIndex() == 0) {
+    QStringList data = d->comboBox->itemData(d->comboBox->currentIndex()).toStringList();
+    QString type = data.at(1);
+    QString style = data.at(0);
+
+    if (type == "source") {
         FileExporterBibTeX *exporterBibTeX = new FileExporterBibTeX();
         exporterBibTeX->setEncoding(QLatin1String("utf-8"));
         exporter = exporterBibTeX;
-    } else if (d->comboBox->currentIndex() < 9) {
+    } else if (type == "bibtex2html") {
         crossRefHandling = merge;
         FileExporterBibTeX2HTML *exporterHTML = new FileExporterBibTeX2HTML();
-        switch (d->comboBox->currentIndex()) {
-        case 1: /// BibTeX2HTML (abbrv)
-            exporterHTML->setLaTeXBibliographyStyle(QLatin1String("abbrv"));
-            break;
-        case 2: /// BibTeX2HTML (acm)
-            exporterHTML->setLaTeXBibliographyStyle(QLatin1String("acm"));
-            break;
-        case 3: /// BibTeX2HTML (alpha)
-            exporterHTML->setLaTeXBibliographyStyle(QLatin1String("alpha"));
-            break;
-        case 4: /// BibTeX2HTML (apalike)
-            exporterHTML->setLaTeXBibliographyStyle(QLatin1String("apalike"));
-            break;
-        case 5: /// BibTeX2HTML (ieeetr)
-            exporterHTML->setLaTeXBibliographyStyle(QLatin1String("ieeetr"));
-            break;
-        case 6: /// BibTeX2HTML (plain)
-            exporterHTML->setLaTeXBibliographyStyle(QLatin1String("plain"));
-            break;
-        case 7: /// BibTeX2HTML (siam)
-            exporterHTML->setLaTeXBibliographyStyle(QLatin1String("siam"));
-            break;
-        case 8: /// BibTeX2HTML (unsrt)
-            exporterHTML->setLaTeXBibliographyStyle(QLatin1String("unsrt"));
-            break;
-        }
+        exporterHTML->setLaTeXBibliographyStyle(style);
         exporter = exporterHTML;
-    } else {
+    } else if (type == "xml") {
         crossRefHandling = merge;
         FileExporterXSLT *exporterXSLT = new FileExporterXSLT();
-        switch (d->comboBox->currentIndex()) {
-        case 9: /// XML/XSLT (standard)
-            exporterXSLT->setXSLTFilename(KStandardDirs::locate("appdata", "standard.xsl"));
-            break;
-        case 10: /// XML/XSLT (fancy)
-            exporterXSLT->setXSLTFilename(KStandardDirs::locate("appdata", "fancy.xsl"));
-            break;
-        }
+        QString filename = style + ".xsl";
+        exporterXSLT->setXSLTFilename(KStandardDirs::locate("appdata", filename));
         exporter = exporterXSLT;
     }
 
