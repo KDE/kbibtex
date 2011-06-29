@@ -21,6 +21,7 @@
 #define KBIBTEX_GUI_FIELDLISTEDIT_H
 
 #include <QWidget>
+#include <QSet>
 
 #include <kbibtexnamespace.h>
 #include <value.h>

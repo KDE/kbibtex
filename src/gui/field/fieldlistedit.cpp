@@ -24,14 +24,12 @@
 #include <QLayout>
 #include <QSignalMapper>
 #include <QCheckBox>
-#include <QSet>
 
 #include <KMessageBox>
 #include <KLocale>
 #include <KPushButton>
 #include <KFileDialog>
 #include <KInputDialog>
-#include <KDebug>
 
 #include <file.h>
 #include <entry.h>
@@ -375,7 +373,7 @@ const QString KeywordListEdit::keyGlobalKeywordList = QLatin1String("globalKeywo
 KeywordListEdit::KeywordListEdit(QWidget *parent)
         : FieldListEdit(KBibTeX::tfKeyword, KBibTeX::tfKeyword | KBibTeX::tfSource, parent), m_config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), m_configGroupName(QLatin1String("Global Keywords"))
 {
-    m_addKeyword = new KPushButton(KIcon("list-add"), i18n("Add Keyword"), this);
+    m_addKeyword = new KPushButton(KIcon("list-add"), i18n("Add Keywords"), this);
     addButton(m_addKeyword);
     connect(m_addKeyword, SIGNAL(clicked()), this, SLOT(slotAddKeyword()));
     connect(m_addKeyword, SIGNAL(clicked()), this, SIGNAL(modified()));
@@ -400,7 +398,7 @@ void KeywordListEdit::slotAddKeyword()
     keywords = forCaseInsensitiveSorting.values();
 
     bool ok = false;
-    QStringList newKeywordList = KInputDialog::getItemList(i18n("Keywords to Add"), i18n("Select keywords to add:"), keywords, QStringList(), true, &ok, this);
+    QStringList newKeywordList = KInputDialog::getItemList(i18n("Add Keywords"), i18n("Select keywords to add:"), keywords, QStringList(), true, &ok, this);
     if (ok) {
         foreach(const QString &newKeywordText, newKeywordList) {
             Value *value = new Value();
