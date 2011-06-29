@@ -832,6 +832,7 @@ bool SourceWidget::reset(const Element *element)
     disconnect(sourceEdit, SIGNAL(textChanged()), this, SLOT(gotModified()));
 
     FileExporterBibTeX exporter;
+    exporter.setEncoding(QLatin1String("utf-8"));
     QBuffer textBuffer;
     textBuffer.open(QIODevice::WriteOnly);
     bool result = exporter.save(&textBuffer, element, NULL);
