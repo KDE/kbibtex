@@ -42,6 +42,7 @@ public:
     void setReadOnly(bool isReadOnly);
 
     void setFile(const File *file);
+    void setCompletionItems(const QStringList &items);
 
 signals:
     void modified();

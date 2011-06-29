@@ -214,6 +214,13 @@ public:
             fieldListEdit->setFile(file);
     }
 
+    void setCompletionItems(const QStringList &items) {
+        if (fieldLineEdit != NULL)
+            fieldLineEdit->setCompletionItems(items);
+        if (fieldListEdit != NULL)
+            fieldListEdit->setCompletionItems(items);
+    }
+
     void enableModifiedSignal() {
         if (fieldLineEdit != NULL)
             connect(fieldLineEdit, SIGNAL(textChanged(QString)), p, SIGNAL(modified()));
@@ -273,6 +280,11 @@ void FieldInput::setReadOnly(bool isReadOnly)
 void FieldInput::setFile(const File *file)
 {
     d->setFile(file);
+}
+
+void FieldInput::setCompletionItems(const QStringList &items)
+{
+    d->setCompletionItems(items);
 }
 
 void FieldInput::setMonth(int month)

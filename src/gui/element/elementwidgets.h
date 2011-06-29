@@ -59,7 +59,7 @@ public:
     bool isModified() const;
     void setModified(bool);
 
-    void setFile(const File *file) {
+    virtual void setFile(const File *file) {
         m_file = file;
     }
 
@@ -97,6 +97,8 @@ public:
     void setReadOnly(bool isReadOnly);
     QString label();
     KIcon icon();
+
+    virtual void setFile(const File *file);
 
     static bool canEdit(const Element *element);
 };

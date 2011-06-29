@@ -248,6 +248,12 @@ void FieldListEdit::setFile(const File *file)
     d->file = file;
 }
 
+void FieldListEdit::setCompletionItems(const QStringList &items)
+{
+    for (QList<FieldLineEdit*>::Iterator it = d->lineEditList.begin(); it != d->lineEditList.end(); ++it)
+        (*it)->setCompletionItems(items);
+}
+
 void FieldListEdit::addButton(KPushButton *button)
 {
     d->addButton(button);

@@ -45,6 +45,7 @@
 #include <entry.h>
 #include <macro.h>
 #include <preamble.h>
+#include <fieldlineedit.h>
 #include "elementwidgets.h"
 
 static const unsigned int interColumnSpace = 16;
@@ -134,6 +135,16 @@ QString EntryConfiguredWidget::label()
 KIcon EntryConfiguredWidget::icon()
 {
     return KIcon(etl.iconName);
+}
+
+void EntryConfiguredWidget::setFile(const File *file)
+{
+    if (file != NULL)
+        for (QMap<QString, FieldInput*>::Iterator it = bibtexKeyToWidget.begin(); it != bibtexKeyToWidget.end(); ++it) {
+            it.value()->setCompletionItems(file->uniqueEntryValuesList(it.key()));
+        }
+
+    ElementWidget::setFile(file);
 }
 
 bool EntryConfiguredWidget::canEdit(const Element *element)

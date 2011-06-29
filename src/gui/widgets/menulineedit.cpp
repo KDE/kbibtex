@@ -80,9 +80,10 @@ public:
             appendWidget(m_singleLineEditText);
             hLayout->setStretchFactor(m_singleLineEditText, 100);
             m_singleLineEditText->setClearButtonShown(true);
-            connect(m_singleLineEditText, SIGNAL(textChanged(QString)), p, SIGNAL(textChanged(QString)));
             m_singleLineEditText->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
+            m_singleLineEditText->setCompletionMode(KGlobalSettings::CompletionPopupAuto);
             p->setFocusProxy(m_singleLineEditText);
+            connect(m_singleLineEditText, SIGNAL(textChanged(QString)), p, SIGNAL(textChanged(QString)));
         }
 
         p->setFocusPolicy(Qt::StrongFocus); // FIXME improve focus handling
@@ -208,6 +209,12 @@ bool MenuLineEdit::isModified() const
     if (d->m_multiLineEditText != NULL)
         return d->m_multiLineEditText->document()->isModified();
     return false;
+}
+
+void MenuLineEdit::setCompletionItems(const QStringList &items)
+{
+    if (d->m_singleLineEditText != NULL)
+        d->m_singleLineEditText->completionObject()->setItems(items);
 }
 
 void MenuLineEdit::focusInEvent(QFocusEvent *)

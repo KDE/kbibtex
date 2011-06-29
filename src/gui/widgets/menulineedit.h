@@ -50,6 +50,7 @@ public:
     void setInnerWidgetsTransparency(bool makeInnerWidgetsTransparent);
 
     bool isModified() const;
+    void setCompletionItems(const QStringList &items);
 
 protected:
     virtual void focusInEvent(QFocusEvent *event);
