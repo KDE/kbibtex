@@ -41,6 +41,8 @@
 #include <KMessageBox>
 #include <KInputDialog>
 
+#include <kdeversion.h>
+
 #include <radiobuttontreeview.h>
 #include "bibtexeditor.h"
 #include "bibtexfilemodel.h"
@@ -499,7 +501,9 @@ FindDuplicatesUI::FindDuplicatesUI(KParts::Part *part, BibTeXEditor *bibTeXEdito
     KAction *newAction = new KAction(KIcon("tab-duplicate"), i18n("Find Duplicates"), this);
     part->actionCollection()->addAction(QLatin1String("findduplicates"), newAction);
     connect(newAction, SIGNAL(triggered()), this, SLOT(slotFindDuplicates()));
+#if KDE_VERSION_MINOR >= 4
     part->replaceXMLFile(KStandardDirs::locate("appdata", "findduplicatesui.rc"), KStandardDirs::locateLocal("appdata", "findduplicatesui.rc"), true);
+#endif
 }
 
 void FindDuplicatesUI::slotFindDuplicates()

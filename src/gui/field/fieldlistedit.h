@@ -23,6 +23,8 @@
 #include <QWidget>
 #include <QSet>
 
+#include <KSharedConfig>
+
 #include <kbibtexnamespace.h>
 #include <value.h>
 

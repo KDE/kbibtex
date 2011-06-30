@@ -23,7 +23,11 @@
 
 #include <QFrame>
 #include <QBuffer>
+#ifdef HAVE_QTWEBKIT
 #include <QWebView>
+#else // HAVE_QTWEBKIT
+#include <QLabel>
+#endif // HAVE_QTWEBKIT
 #include <QLayout>
 #include <QApplication>
 #include <QTextStream>
@@ -61,7 +65,11 @@ public:
     KPushButton *buttonOpen, *buttonSaveAsHTML;
     QString htmlText;
     QUrl baseUrl;
+#ifdef HAVE_QTWEBKIT
     QWebView *webView;
+#else // HAVE_QTWEBKIT
+    QLabel *messageLabel;
+#endif // HAVE_QTWEBKIT
     KComboBox *comboBox;
     const Element* element;
     const File *file;
@@ -85,8 +93,15 @@ public:
 
         QVBoxLayout *layout = new QVBoxLayout(frame);
         layout->setMargin(0);
+#ifdef HAVE_QTWEBKIT
         webView = new QWebView(frame);
         layout->addWidget(webView);
+#else // HAVE_QTWEBKIT
+        messageLabel = new QLabel(i18n("No preview available due to missing QtWebKit support on your system."), frame);
+        messageLabel->setWordWrap(true);
+        messageLabel->setAlignment(Qt::AlignCenter);
+        layout->addWidget(messageLabel);
+#endif // HAVE_QTWEBKIT
 
         buttonOpen = new KPushButton(KIcon("document-open"), i18n("Open"), p);
         buttonOpen->setToolTip(i18n("Open reference in web browser."));
@@ -164,7 +179,9 @@ void ReferencePreview::setHtml(const QString & html, const QUrl & baseUrl)
 {
     d->htmlText = html;
     d->baseUrl = baseUrl;
+#ifdef HAVE_QTWEBKIT
     d->webView->setHtml(html, baseUrl);
+#endif // HAVE_QTWEBKIT
     d->buttonOpen->setEnabled(true);
     d->buttonSaveAsHTML->setEnabled(true);
 }
@@ -174,11 +191,15 @@ void ReferencePreview::setEnabled(bool enabled)
     if (enabled)
         setHtml(d->htmlText, d->baseUrl);
     else {
+#ifdef HAVE_QTWEBKIT
         d->webView->setHtml(notAvailableMessage.arg(i18n("Preview disabled")), d->baseUrl);
+#endif // HAVE_QTWEBKIT
         d->buttonOpen->setEnabled(false);
         d->buttonSaveAsHTML->setEnabled(false);
     }
+#ifdef HAVE_QTWEBKIT
     d->webView->setEnabled(enabled);
+#endif // HAVE_QTWEBKIT
     d->comboBox->setEnabled(enabled);
 }
 
@@ -197,7 +218,9 @@ void ReferencePreview::renderHTML()
          } crossRefHandling = ignore;
 
     if (d->element == NULL) {
+#ifdef HAVE_QTWEBKIT
         d->webView->setHtml(notAvailableMessage.arg(i18n("No element selected")), d->baseUrl);
+#endif // HAVE_QTWEBKIT
         d->buttonOpen->setEnabled(false);
         d->buttonSaveAsHTML->setEnabled(false);
         return;

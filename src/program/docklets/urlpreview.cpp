@@ -326,7 +326,11 @@ void UrlPreview::statFinished(KJob *kjob)
     KIO::StatJob *job = static_cast<KIO::StatJob*>(kjob);
     d->runningJobs.removeOne(job);
     if (!job->error()) {
+#if KDE_VERSION_MINOR >= 4
         const KUrl url = job->mostLocalUrl();
+#else // KDE_VERSION_MINOR
+        const KUrl url = job->url();
+#endif // KDE_VERSION_MINOR
         kDebug() << "stat succeeded for " << url.pathOrUrl();
         UrlPreviewPrivate::UrlInfo urlInfo = d->urlMetaInfo(url);
         d->addUrl(urlInfo);

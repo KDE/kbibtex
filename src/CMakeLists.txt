@@ -2,6 +2,16 @@ include( CheckIncludeFiles )
 
 include( KDE4Defaults )
 
+# check if QtWebKit is available, which seems to be not available
+# on e.g. RedHat Enterprise Linux 6 or Scientific Linux 6
+IF(QT_QTWEBKIT_FOUND)
+message(STATUS "Found QtWebKit, enabling WebKit support")
+add_definitions(-DHAVE_QTWEBKIT)
+ELSE(QT_QTWEBKIT_FOUND)
+message(STATUS "QtWebKit not found, disabling WebKit support")
+ENDIF(QT_QTWEBKIT_FOUND)
+
+
 MARK_AS_ADVANCED(SVNVERSION_EXECUTABLE)
 FIND_PROGRAM(SVNVERSION_EXECUTABLE svnversion)
 IF(SVNVERSION_EXECUTABLE)

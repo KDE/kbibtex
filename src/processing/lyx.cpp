@@ -33,6 +33,8 @@
 #include <KMessageBox>
 #include <KStandardDirs>
 
+#include <kdeversion.h>
+
 #include "lyx.h"
 
 class LyX::LyXPrivate
@@ -83,7 +85,9 @@ LyX::LyX(KParts::ReadOnlyPart *part, QTreeView *widget)
     part->actionCollection()->addAction("sendtolyx", d->action);
     d->action->setEnabled(false);
     connect(d->action, SIGNAL(triggered()), this, SLOT(sendReferenceToLyX()));
+#if KDE_VERSION_MINOR >= 4
     part->replaceXMLFile(KStandardDirs::locate("appdata", "lyx.rc"), KStandardDirs::locateLocal("appdata", "lyx.rc"), true);
+#endif
     widget->addAction(d->action);
 }
 
