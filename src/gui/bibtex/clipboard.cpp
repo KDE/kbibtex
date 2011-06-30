@@ -24,8 +24,6 @@
 #include <QMouseEvent>
 #include <QDrag>
 
-#include <KDebug>
-
 #include <bibtexeditor.h>
 #include <bibtexfilemodel.h>
 #include <fileimporterbibtex.h>
@@ -55,6 +53,7 @@ public:
         }
 
         FileExporterBibTeX exporter;
+        exporter.setEncoding(QLatin1String("latex"));
         QBuffer buffer(bibTeXEditor);
         buffer.open(QBuffer::WriteOnly);
         exporter.save(&buffer, file);
@@ -159,9 +158,7 @@ void Clipboard::editorMouseEvent(QMouseEvent *event)
         mimeData->setData("text/plain", data);
         drag->setMimeData(mimeData);
 
-        Qt::DropAction dropAction = drag->exec(Qt::CopyAction);
-        kDebug() << "dropAction = " << dropAction;
-        // Q_ASSERT_X(dropAction == Qt::CopyAction, "void Clipboard::editorMouseEvent(QMouseEvent *event)", "Drag'n'drop is not the expected copy operation");
+        drag->exec(Qt::CopyAction);
     }
 
     d->previousPosition = event->pos();

@@ -241,7 +241,7 @@ public:
     void applyEncoding(QString& encoding) {
         encoding = encoding.isEmpty() ? QLatin1String("latex") : encoding.toLower();
         delete iconvLaTeX;
-        iconvLaTeX = new IConvLaTeX(encoding == QLatin1String("latex") ? QLatin1String("utf-8") : encoding);
+        iconvLaTeX = new IConvLaTeX(encoding == QLatin1String("latex") ? QLatin1String("us-ascii") : encoding);
     }
 
     bool requiresPersonQuoting(const QString &text, bool isLastName) {
