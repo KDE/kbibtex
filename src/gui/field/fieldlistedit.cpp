@@ -57,6 +57,7 @@ public:
     QWidget *container;
     QScrollArea *scrollArea;
     bool m_isReadOnly;
+    QStringList completionItems;
 
     FieldListEditProtected(KBibTeX::TypeFlag ptf, KBibTeX::TypeFlags tf, FieldListEdit *parent)
             : p(parent), innerSpacing(4), preferredTypeFlag(ptf), typeFlags(tf), file(NULL), m_isReadOnly(false) {
@@ -250,6 +251,7 @@ void FieldListEdit::setFile(const File *file)
 
 void FieldListEdit::setCompletionItems(const QStringList &items)
 {
+    d->completionItems = items;
     for (QList<FieldLineEdit*>::Iterator it = d->lineEditList.begin(); it != d->lineEditList.end(); ++it)
         (*it)->setCompletionItems(items);
 }
@@ -262,6 +264,7 @@ void FieldListEdit::addButton(KPushButton *button)
 void FieldListEdit::lineAdd(Value *value)
 {
     FieldLineEdit *le = d->addFieldLineEdit();
+    le->setCompletionItems(d->completionItems);
     if (value != NULL)
         le->reset(*value);
 }
@@ -269,6 +272,7 @@ void FieldListEdit::lineAdd(Value *value)
 void FieldListEdit::lineAdd()
 {
     FieldLineEdit *newEdit = d->addFieldLineEdit();
+    newEdit->setCompletionItems(d->completionItems);
     QSize size(d->container->width(), d->recommendedHeight());
     d->container->resize(size);
     newEdit->setFocus(Qt::ShortcutFocusReason);
