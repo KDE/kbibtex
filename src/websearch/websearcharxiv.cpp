@@ -215,6 +215,9 @@ void WebSearchArXiv::downloadDone()
             for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
                 Entry *entry = dynamic_cast<Entry*>(*it);
                 if (entry != NULL) {
+                    Value v;
+                    v.append(new VerbatimText(label()));
+                    entry->insert("x-fetchedfrom", v);
                     emit foundEntry(entry);
                     hasEntries = true;
                 }

@@ -187,6 +187,10 @@ void WebSearchPubMed::eFetchDone()
             for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
                 Entry *entry = dynamic_cast<Entry*>(*it);
                 if (entry != NULL) {
+                    Value v;
+                    v.append(new VerbatimText(label()));
+                    entry->insert("x-fetchedfrom", v);
+
                     hasEntry = true;
                     emit foundEntry(entry);
                 }
