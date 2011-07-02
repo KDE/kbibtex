@@ -94,6 +94,7 @@ private:
     enum Token {
         tAt = 1, tBracketOpen = 2, tBracketClose = 3, tAlphaNumText = 4, tComma = 5, tAssign = 6, tDoublecross = 7, tEOF = 0xffff, tUnknown = -1
     };
+    enum CommaContainment { ccNoComma = 0, ccContainsComma = 1 };
 
     bool m_cancelFlag;
     unsigned int m_lineNo;
@@ -121,7 +122,7 @@ private:
     void unescapeLaTeXChars(QString &text);
 
     static void splitPersonList(const QString& name, QStringList &resultList);
-    static bool splitName(const QString& name, QStringList& segments);
+    static CommaContainment splitName(const QString& name, QStringList& segments);
 
     bool evaluateParameterComments(QTextStream *textStream, const QString &line);
     QString tokenidToString(Token token);

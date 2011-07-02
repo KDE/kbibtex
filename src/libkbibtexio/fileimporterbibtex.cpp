@@ -661,20 +661,20 @@ void FileImporterBibTeX::splitPersonList(const QString& text, QStringList &resul
 Person *FileImporterBibTeX::splitName(const QString& text)
 {
     QStringList segments;
-    bool containsComma = splitName(text, segments);
+    CommaContainment commaContainment = splitName(text, segments);
     QString firstName = "";
     QString lastName = "";
 
     if (segments.isEmpty())
         return NULL;
 
-    if (!containsComma) {
+    if (commaContainment == ccNoComma) {
         /** PubMed uses a special writing style for names, where the last name is followed by single capital letter,
           * each being the first letter of each first name
           * So, check how many single capital letters are at the end of the given segment list */
         int singleCapitalLettersCounter = 0;
         int p = segments.count() - 1;
-        while (segments[p].length() == 1 && segments[p].compare(segments[p].toUpper()) == 0) {
+        while (p >= 0 && segments[p].length() == 1 && segments[p][0].isUpper()) {
             --p;
             ++singleCapitalLettersCounter;
         }
@@ -729,10 +729,10 @@ Person *FileImporterBibTeX::splitName(const QString& text)
 }
 
 /** Splits a name into single words. If the name's text was reversed (Last, First), the result will be true and the comma will be added to segments. Otherwise the functions result will be false. This function respects protecting {...}. */
-bool FileImporterBibTeX::splitName(const QString& text, QStringList& segments)
+FileImporterBibTeX::CommaContainment FileImporterBibTeX::splitName(const QString& text, QStringList& segments)
 {
     int bracketCounter = 0;
-    bool result = FALSE;
+    CommaContainment result = ccNoComma;
     QString buffer = "";
 
     for (int pos = 0; pos < text.length(); ++pos) {
@@ -752,7 +752,7 @@ bool FileImporterBibTeX::splitName(const QString& text, QStringList& segments)
                 buffer = "";
             }
             segments.append(",");
-            result = TRUE;
+            result = ccContainsComma;
         } else
             buffer.append(text[pos]);
     }
