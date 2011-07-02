@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2010 by Thomas Fischer                             *
+*   Copyright (C) 2004-2011 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -18,39 +18,40 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
+#ifndef KBIBTEX_GUI_COLORLABELWIDGET_H
+#define KBIBTEX_GUI_COLORLABELWIDGET_H
+
+#include <KComboBox>
+
 #include <kbibtexgui_export.h>
 
-#include <QWidget>
-
 #include <value.h>
-#include <kbibtexnamespace.h>
 
 /**
 @author Thomas Fischer
 */
-class KBIBTEXGUI_EXPORT FieldInput : public QWidget
+class KBIBTEXGUI_EXPORT ColorLabelWidget : public KComboBox
 {
     Q_OBJECT
 
 public:
-    FieldInput(KBibTeX::FieldInputType fieldInputType, KBibTeX::TypeFlag preferredTypeFlag, KBibTeX::TypeFlags typeFlags, QWidget *parent = NULL);
+    ColorLabelWidget(QWidget *parent = NULL);
 
     bool reset(const Value& value);
     bool apply(Value& value) const;
+    void setReadOnly(bool);
 
-    void clear();
-    void setReadOnly(bool isReadOnly);
-
-    void setFile(const File *file);
-    void setCompletionItems(const QStringList &items);
+    static QPixmap createSolidIcon(const QColor &color);
 
 signals:
     void modified();
 
 private slots:
-    void setMonth(int month);
+    void slotActivated(int);
 
 private:
-    class FieldInputPrivate;
-    FieldInputPrivate *d;
+    class ColorLabelWidgetPrivate;
+    ColorLabelWidget::ColorLabelWidgetPrivate *d;
 };
+
+#endif // KBIBTEX_GUI_COLORLABELWIDGET_H

@@ -28,6 +28,7 @@
 #include "settingsfileexporterbibtexwidget.h"
 #include "settingsfileexporterpdfpswidget.h"
 #include "settingsfileexporterwidget.h"
+#include "settingscolorlabelwidget.h"
 #include "settingsuserinterfacewidget.h"
 #include "kbibtexpreferencesdialog.h"
 
@@ -55,6 +56,12 @@ public:
         settingWidgets.insert(settingsWidget);
         KPageWidgetItem *page = p->addSubPage(pageGlobal, settingsWidget, i18n("Keywords"));
         page->setIcon(KIcon("checkbox")); // TODO find better icon
+        connect(settingsWidget, SIGNAL(changed()), p, SLOT(gotChanged()));
+
+        settingsWidget = new SettingsColorLabelWidget(p);
+        settingWidgets.insert(settingsWidget);
+        page = p->addSubPage(pageGlobal, settingsWidget, i18n("Color & Labels"));
+        page->setIcon(KIcon("preferences-desktop-color"));
         connect(settingsWidget, SIGNAL(changed()), p, SLOT(gotChanged()));
 
         settingsWidget = new SettingsUserInterfaceWidget(p);

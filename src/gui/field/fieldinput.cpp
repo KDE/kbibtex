@@ -22,16 +22,14 @@
 #include <QMenu>
 #include <QDate>
 #include <QSignalMapper>
-#include <QPaintEngine>
-#include <Q3Painter>
 
 #include <KDebug>
 #include <KLocale>
 #include <KPushButton>
-#include <KColorButton>
 
 #include <fieldlineedit.h>
 #include <fieldlistedit.h>
+#include <colorlabelwidget.h>
 #include "fieldinput.h"
 
 class FieldInput::FieldInputPrivate
@@ -40,12 +38,7 @@ private:
     FieldInput *p;
     FieldLineEdit *fieldLineEdit;
     FieldListEdit *fieldListEdit;
-    KColorButton *colorButton;
-    KPushButton *predefColorButton;
-    KPushButton *resetColorButton;
-    QWidget *colorWidget;
-    QMenu *colorMenu;
-    QSignalMapper *colorSignalMapper;
+    ColorLabelWidget *colorWidget;
 
 public:
     KBibTeX::FieldInputType fieldInputType;
@@ -53,7 +46,7 @@ public:
     KBibTeX::TypeFlag preferredTypeFlag;
 
     FieldInputPrivate(FieldInput *parent)
-            : p(parent), fieldLineEdit(NULL), fieldListEdit(NULL), colorButton(NULL), colorWidget(NULL) {
+            : p(parent), fieldLineEdit(NULL), fieldListEdit(NULL), colorWidget(NULL) {
         // TODO
     }
 
@@ -88,34 +81,22 @@ public:
         }
         break;
         case KBibTeX::Color: {
-            colorWidget = new QWidget(p);
-            QBoxLayout *boxLayout = new QHBoxLayout(colorWidget);
-            boxLayout->setMargin(0);
-            predefColorButton = new KPushButton(KIcon("color-picker-white"), i18n("Predefined colors"), colorWidget);
-            boxLayout->addWidget(predefColorButton, 0);
-            colorButton = new KColorButton(colorWidget);
-            boxLayout->addWidget(colorButton, 0);
+            colorWidget = new ColorLabelWidget(p);
             layout->addWidget(colorWidget, 0);
-            resetColorButton = new KPushButton(KIcon("edit-clear-locationbar-rtl"), i18n("Reset"), colorWidget);
-            layout->addWidget(resetColorButton, 0, Qt::AlignLeft);
-            connect(resetColorButton, SIGNAL(clicked()), p, SLOT(resetColor()));
-
-            colorSignalMapper = new QSignalMapper(predefColorButton);
-            connect(colorSignalMapper, SIGNAL(mapped(QString)), p, SLOT(setColor(QString)));
-            colorMenu = new QMenu(predefColorButton);
-            predefColorButton->setMenu(colorMenu);
 
             // TODO: Make it configurable
 
-            QAction *action = colorAction(i18n("Important"), "#cc3300");
-            colorMenu->addAction(action);
-            colorSignalMapper->setMapping(action, "#cc3300");
-            connect(action, SIGNAL(triggered()), colorSignalMapper, SLOT(map()));
+            /*
+                        QAction *action = colorAction(i18n("Important"), "#cc3300");
+                        colorMenu->addAction(action);
+                        colorSignalMapper->setMapping(action, "#cc3300");
+                        connect(action, SIGNAL(triggered()), colorSignalMapper, SLOT(map()));
 
-            action = colorAction(i18n("Read"), "#009966");
-            colorMenu->addAction(action);
-            colorSignalMapper->setMapping(action, "#009966");
-            connect(action, SIGNAL(triggered()), colorSignalMapper, SLOT(map()));
+                        action = colorAction(i18n("Read"), "#009966");
+                        colorMenu->addAction(action);
+                        colorSignalMapper->setMapping(action, "#009966");
+                        connect(action, SIGNAL(triggered()), colorSignalMapper, SLOT(map()));
+                        */
         }
         break;
         case KBibTeX::PersonList:
@@ -138,8 +119,9 @@ public:
         enableModifiedSignal();
     }
 
+    /*
     QAction *colorAction(const QString&label, const QString &color) {
-        int h = predefColorButton->fontMetrics().height() - 4;
+        int h = predefcolorWidget->fontMetrics().height() - 4;
         QPixmap pm(h, h);
         QPainter painter(&pm);
         painter.setPen(QColor(color));
@@ -147,6 +129,7 @@ public:
         painter.drawRect(0, 0, h, h);
         return new QAction(KIcon(pm), label, p);
     }
+    */
 
     void clear() {
         disableModifiedSignal();
@@ -168,14 +151,16 @@ public:
         else if (fieldListEdit != NULL)
             result = fieldListEdit->reset(value);
         else if (colorWidget != NULL) {
-            disconnect(colorButton, SIGNAL(changed(QColor)), p, SIGNAL(modified()));
+            result = colorWidget->reset(value);
 
+            /*
             VerbatimText *verbatimText = NULL;
             if (value.count() == 1 && (verbatimText = dynamic_cast<VerbatimText*>(value.first())) != NULL)
-                colorButton->setColor(QColor(verbatimText->text()));
+                colorWidget->setColor(QColor(verbatimText->text()));
             else
                 p->resetColor();
             result = true;
+            */
         }
 
         enableModifiedSignal();
@@ -189,13 +174,16 @@ public:
         else if (fieldListEdit != NULL)
             result = fieldListEdit->apply(value);
         else if (colorWidget != NULL) {
+            result = colorWidget->apply(value);
+            /*
             value.clear();
-            const QString colorName = colorButton->color().name();
-            if (!(colorButton->color() == QColor(Qt::black)) && colorName != QLatin1String("#000000")) { // FIXME test looks redundant
+            const QString colorName = colorWidget->color().name();
+            if (!(colorWidget->color() == QColor(Qt::black)) && colorName != QLatin1String("#000000")) { // FIXME test looks redundant
                 VerbatimText *verbatimText = new VerbatimText(colorName);
                 value << verbatimText;
             }
             result = true;
+            */
         }
         return result;
     }
@@ -226,10 +214,8 @@ public:
             connect(fieldLineEdit, SIGNAL(textChanged(QString)), p, SIGNAL(modified()));
         if (fieldListEdit != NULL)
             connect(fieldListEdit, SIGNAL(modified()), p, SIGNAL(modified()));
-        if (colorButton != NULL) {
-            connect(resetColorButton, SIGNAL(clicked()), p, SIGNAL(modified()));
-            connect(colorButton, SIGNAL(changed(QColor)), p, SIGNAL(modified()));
-            connect(colorSignalMapper, SIGNAL(mapped(int)), p, SIGNAL(modified()));
+        if (colorWidget != NULL) {
+            connect(colorWidget, SIGNAL(modified()), p, SIGNAL(modified()));
         }
         // TODO
     }
@@ -239,10 +225,8 @@ public:
             disconnect(fieldLineEdit, SIGNAL(textChanged(QString)), p, SIGNAL(modified()));
         if (fieldListEdit != NULL)
             disconnect(fieldListEdit, SIGNAL(modified()), p, SIGNAL(modified()));
-        if (colorButton != NULL) {
-            disconnect(resetColorButton, SIGNAL(clicked()), p, SIGNAL(modified()));
-            disconnect(colorButton, SIGNAL(changed(QColor)), p, SIGNAL(modified()));
-            disconnect(colorSignalMapper, SIGNAL(mapped(int)), p, SIGNAL(modified()));
+        if (colorWidget != NULL) {
+            disconnect(colorWidget, SIGNAL(modified()), p, SIGNAL(modified()));
         }
         // TODO
     }
@@ -295,6 +279,7 @@ void FieldInput::setMonth(int month)
     reset(value);
 }
 
+/*
 void FieldInput::setColor(const QString&color)
 {
     VerbatimText *verbatimText = new VerbatimText(color);
@@ -302,7 +287,9 @@ void FieldInput::setColor(const QString&color)
     value.append(verbatimText);
     reset(value);
 }
+*/
 
+/*
 void FieldInput::resetColor()
 {
     VerbatimText *verbatimText = new VerbatimText(QLatin1String("#000000"));
@@ -310,3 +297,4 @@ void FieldInput::resetColor()
     value.append(verbatimText);
     reset(value);
 }
+*/

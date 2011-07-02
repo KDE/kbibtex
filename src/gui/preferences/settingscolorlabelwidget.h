@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2010 by Thomas Fischer                             *
+*   Copyright (C) 2004-2011 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -18,39 +18,56 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
+#ifndef KBIBTEX_GUI_SETTINGSCOLORLABELWIDGET_H
+#define KBIBTEX_GUI_SETTINGSCOLORLABELWIDGET_H
+
 #include <kbibtexgui_export.h>
 
-#include <QWidget>
+#include "settingsabstractwidget.h"
 
-#include <value.h>
-#include <kbibtexnamespace.h>
+class QTreeView;
 
 /**
 @author Thomas Fischer
 */
-class KBIBTEXGUI_EXPORT FieldInput : public QWidget
+class KBIBTEXGUI_EXPORT SettingsColorLabelWidget : public SettingsAbstractWidget
 {
     Q_OBJECT
 
 public:
-    FieldInput(KBibTeX::FieldInputType fieldInputType, KBibTeX::TypeFlag preferredTypeFlag, KBibTeX::TypeFlags typeFlags, QWidget *parent = NULL);
+    SettingsColorLabelWidget(QWidget *parent);
 
-    bool reset(const Value& value);
-    bool apply(Value& value) const;
-
-    void clear();
-    void setReadOnly(bool isReadOnly);
-
-    void setFile(const File *file);
-    void setCompletionItems(const QStringList &items);
-
-signals:
-    void modified();
+public slots:
+    void loadState();
+    void saveState();
+    void resetToDefaults();
 
 private slots:
-    void setMonth(int month);
+    void addColorDialog();
+    void removeColor();
+    void enableRemoveButton();
 
 private:
-    class FieldInputPrivate;
-    FieldInputPrivate *d;
+    class SettingsColorLabelWidgetPrivate;
+    SettingsColorLabelWidgetPrivate *d;
 };
+
+
+/**
+@author Thomas Fischer
+*/
+class KBIBTEXGUI_EXPORT ColorLabelContextMenu : public QObject
+{
+    Q_OBJECT
+
+public:
+    ColorLabelContextMenu(QTreeView *widget);
+
+private slots:
+    void colorActivated(const QString &colorString);
+
+private:
+    QTreeView *m_tv;
+};
+
+#endif // KBIBTEX_GUI_SETTINGSCOLORLABELWIDGET_H

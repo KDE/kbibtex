@@ -20,6 +20,7 @@ set( kbibtexgui_LIB_SRCS
     field/fieldinput.cpp
     field/fieldlineedit.cpp
     field/fieldlistedit.cpp
+    field/colorlabelwidget.cpp
     bibtex/bibtexeditor.cpp
     bibtex/findduplicatesui.cpp
     bibtex/clipboard.cpp
@@ -34,6 +35,7 @@ set( kbibtexgui_LIB_SRCS
     preferences/kbibtexpreferencesdialog.cpp
     preferences/settingsgeneralwidget.cpp
     preferences/settingsglobalkeywordswidget.cpp
+    preferences/settingscolorlabelwidget.cpp
     preferences/settingsuserinterfacewidget.cpp
     preferences/settingsfileexporterbibtexwidget.cpp
     preferences/settingsfileexporterpdfpswidget.cpp
