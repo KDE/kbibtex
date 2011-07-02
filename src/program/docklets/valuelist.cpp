@@ -77,11 +77,16 @@ public:
         delegate = new ValueListDelegate(treeviewFieldValues);
         treeviewFieldValues->setItemDelegate(delegate);
         treeviewFieldValues->setRootIsDecorated(false);
+        treeviewFieldValues->setSelectionMode(QTreeView::ExtendedSelection);
 
-        /// create context menu to start renaming
         treeviewFieldValues->setContextMenuPolicy(Qt::ActionsContextMenu);
+        /// create context menu item to start renaming
         KAction *action = new KAction(KIcon("edit-rename"), i18n("Replace all occurrences"), p);
         connect(action, SIGNAL(triggered()), p, SLOT(startItemRenaming()));
+        treeviewFieldValues->addAction(action);
+        /// create context menu item to search for multiple selections
+        action = new KAction(KIcon("edit-find"), i18n("Search for selected values"), p);
+        connect(action, SIGNAL(triggered()), p, SLOT(searchSelection()));
         treeviewFieldValues->addAction(action);
 
         p->setEnabled(false);
@@ -167,6 +172,26 @@ void ValueList::listItemActivated(const QModelIndex &index)
     fq.field = fieldText;
 
     d->editor->setFilterBarFilter(fq);
+}
+
+void ValueList::searchSelection()
+{
+    QVariant fieldVar = d->comboboxFieldNames->itemData(d->comboboxFieldNames->currentIndex());
+    QString fieldText = fieldVar.toString();
+    if (fieldText.isEmpty()) fieldText = d->comboboxFieldNames->currentText();
+
+    SortFilterBibTeXFileModel::FilterQuery fq;
+    fq.combination = SortFilterBibTeXFileModel::EveryTerm;
+    fq.field = fieldText;
+    foreach(const QModelIndex &index, d->treeviewFieldValues->selectionModel()->selectedIndexes()) {
+        if (index.column() == 0) {
+            QString itemText = index.data(SearchTextRole).toString();
+            fq.terms << itemText;
+        }
+    }
+
+    if (!fq.terms.isEmpty())
+        d->editor->setFilterBarFilter(fq);
 }
 
 void ValueList::startItemRenaming()

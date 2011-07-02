@@ -46,6 +46,7 @@ protected slots:
 
 private slots:
     void listItemActivated(const QModelIndex &);
+    void searchSelection();
     void startItemRenaming();
 
 private:
