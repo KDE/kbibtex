@@ -63,6 +63,7 @@
 #include <filterbar.h>
 #include <findduplicatesui.h>
 #include <lyx.h>
+#include <preferences/settingscolorlabelwidget.h>
 #include <preferences/settingsfileexporterbibtexwidget.h>
 
 #include <valuelistmodel.h>
@@ -431,6 +432,8 @@ void KBibTeXPart::setupActions(bool /*browserViewWanted FIXME*/)
     new FindDuplicatesUI(this, d->editor);
     d->lyx = new LyX(this, d->editor);
     connect(d->editor, SIGNAL(selectedElementsChanged()), d->lyx, SLOT(updateActions()));
+
+    new ColorLabelContextMenu(d->editor);
 
     updateActions();
     fitActionSettings();
