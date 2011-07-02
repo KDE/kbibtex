@@ -47,7 +47,6 @@ private slots:
     void removeKeyword();
     void enableRemoveButton();
 
-
 private:
     class SettingsGlobalKeywordsWidgetPrivate;
     SettingsGlobalKeywordsWidgetPrivate *d;

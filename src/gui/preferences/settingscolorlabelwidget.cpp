@@ -19,7 +19,6 @@
 ***************************************************************************/
 
 #include <QAbstractItemModel>
-#include <QTreeView>
 #include <QLayout>
 #include <QStyledItemDelegate>
 #include <QSignalMapper>
@@ -33,6 +32,7 @@
 #include <KLineEdit>
 #include <KActionMenu>
 
+#include <bibtexeditor.h>
 #include <colorlabelwidget.h>
 #include <bibtexfilemodel.h>
 #include "file.h"
@@ -84,155 +84,162 @@ public:
     }
 };
 
-class ColorLabelSettingsModel : public QAbstractItemModel
+
+ColorLabelSettingsModel::ColorLabelSettingsModel(QObject *parent)
+        : QAbstractItemModel(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc")))
 {
-private:
-    struct ColorLabelPair {
-        QColor color;
-        QString label;
-    };
+    loadState();
+}
 
-    QList<ColorLabelPair> colorLabelPairs;
+int ColorLabelSettingsModel::rowCount(const QModelIndex &parent) const
+{
+    return parent == QModelIndex() ? colorLabelPairs.count() : 0;
+}
 
-public:
+int ColorLabelSettingsModel::columnCount(const QModelIndex &parent) const
+{
+    return parent == QModelIndex() ? 2 : 0;
+}
 
-    KSharedConfigPtr config;
+QModelIndex ColorLabelSettingsModel::index(int row, int column, const QModelIndex &parent) const
+{
+    if (row >= 0 && row <= colorLabelPairs.count() - 1 && column >= 0 && column <= 1 && parent == QModelIndex())
+        return createIndex(row, column, row);
+    else return QModelIndex();
+}
 
-    ColorLabelSettingsModel(QObject *parent)
-            : QAbstractItemModel(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))) {
-        loadState();
-    }
+QModelIndex ColorLabelSettingsModel::parent(const QModelIndex &) const
+{
+    return QModelIndex();
+}
 
-    virtual int rowCount(const QModelIndex &parent) const {
-        return parent == QModelIndex() ? colorLabelPairs.count() : 0;
-    }
-
-    virtual int columnCount(const QModelIndex &parent) const {
-        return parent == QModelIndex() ? 2 : 0;
-    }
-
-    virtual QModelIndex index(int row, int column, const QModelIndex &parent) const {
-        if (row >= 0 && row <= colorLabelPairs.count() - 1 && column >= 0 && column <= 1 && parent == QModelIndex())
-            return createIndex(row, column, row);
-        else return QModelIndex();
-    }
-
-    virtual QModelIndex parent(const QModelIndex &) const {
-        return QModelIndex();
-    }
-
-    virtual QVariant data(const QModelIndex &index, int role) const {
-        if (index == QModelIndex() || index.row() < 0 || index.row() >= colorLabelPairs.count())
-            return QVariant();
-
-        if ((role == Qt::DisplayRole || role == Qt::EditRole) && index.column() == 1)
-            return colorLabelPairs[index.row()].label;
-        else if ((role == Qt::DecorationRole || role == Qt::EditRole) && index.column() == 0)
-            return colorLabelPairs[index.row()].color;
-
+QVariant ColorLabelSettingsModel::data(const QModelIndex &index, int role) const
+{
+    if (index == QModelIndex() || index.row() < 0 || index.row() >= colorLabelPairs.count())
         return QVariant();
-    }
 
-    virtual bool setData(const QModelIndex &index, const QVariant &value, int role) {
-        if (role == Qt::EditRole) {
-            if (index.column() == 0 && value.canConvert<QColor>()) {
-                QColor color = value.value<QColor>();
-                if (color != Qt::black) {
-                    colorLabelPairs[index.row()].color = color;
-                    return true;
-                }
-            } else if (index.column() == 1 && value.canConvert<QString>()) {
-                QString text = value.value<QString>();
-                if (!text.isEmpty()) {
-                    colorLabelPairs[index.row()].label = text;
-                    return true;
-                }
+    if ((role == Qt::DisplayRole || role == Qt::EditRole) && index.column() == 1)
+        return colorLabelPairs[index.row()].label;
+    else if ((role == Qt::DecorationRole || role == Qt::EditRole) && index.column() == 0)
+        return colorLabelPairs[index.row()].color;
+
+    return QVariant();
+}
+
+bool ColorLabelSettingsModel::setData(const QModelIndex &index, const QVariant &value, int role)
+{
+    if (role == Qt::EditRole) {
+        if (index.column() == 0 && value.canConvert<QColor>()) {
+            QColor color = value.value<QColor>();
+            if (color != Qt::black) {
+                colorLabelPairs[index.row()].color = color;
+                emit modified();
+                return true;
+            }
+        } else if (index.column() == 1 && value.canConvert<QString>()) {
+            QString text = value.value<QString>();
+            if (!text.isEmpty()) {
+                colorLabelPairs[index.row()].label = text;
+                emit modified();
+                return true;
             }
         }
-        return false;
     }
+    return false;
+}
 
-    virtual Qt::ItemFlags flags(const QModelIndex &index) const {
-        Qt::ItemFlags result = QAbstractItemModel::flags(index);
-        result |= Qt::ItemIsEditable;
-        return result;
+Qt::ItemFlags ColorLabelSettingsModel::flags(const QModelIndex &index) const
+{
+    Qt::ItemFlags result = QAbstractItemModel::flags(index);
+    result |= Qt::ItemIsEditable;
+    return result;
+}
+
+QVariant ColorLabelSettingsModel::headerData(int section, Qt::Orientation orientation, int role) const
+{
+    if (orientation != Qt::Horizontal || role != Qt::DisplayRole)
+        return QVariant();
+
+    switch (section) {
+    case 0:return i18n("Color");
+    case 1:return i18n("Label");
+    default: return QVariant();
     }
+}
 
-    virtual QVariant headerData(int section, Qt::Orientation orientation, int role) const {
-        if (orientation != Qt::Horizontal || role != Qt::DisplayRole)
-            return QVariant();
+void ColorLabelSettingsModel::loadState()
+{
+    KConfigGroup configGroup(config, Preferences::groupColor);
+    QStringList colorCodes = configGroup.readEntry(Preferences::keyColorCodes, Preferences::defaultColorCodes);
+    QStringList colorLabels = configGroup.readEntry(Preferences::keyColorLabels, Preferences::defaultcolorLabels);
 
-        switch (section) {
-        case 0:return i18n("Color");
-        case 1:return i18n("Label");
-        default: return QVariant();
-        }
-    }
-
-    void loadState() {
-        KConfigGroup configGroup(config, Preferences::groupColor);
-        QStringList colorCodes = configGroup.readEntry(Preferences::keyColorCodes, Preferences::defaultColorCodes);
-        QStringList colorLabels = configGroup.readEntry(Preferences::keyColorLabels, Preferences::defaultcolorLabels);
-
-        colorLabelPairs.clear();
-        for (QStringList::ConstIterator itc = colorCodes.constBegin(), itl = colorLabels.constBegin(); itc != colorCodes.constEnd() && itl != colorLabels.constEnd(); ++itc, ++itl) {
-            ColorLabelPair clp;
-            clp.color = QColor(*itc);
-            clp.label = *itl;
-            colorLabelPairs << clp;
-        }
-    }
-
-    void saveState() {
-        QStringList colorCodes, colorLabels;
-        foreach(const ColorLabelPair &clp, colorLabelPairs) {
-            colorCodes << clp.color.name();
-            colorLabels << clp.label;
-        }
-
-        KConfigGroup configGroup(config, Preferences::groupColor);
-        configGroup.writeEntry(Preferences::keyColorCodes, colorCodes);
-        configGroup.writeEntry(Preferences::keyColorLabels, colorLabels);
-        config->sync();
-    }
-
-    void resetToDefaults() {
-        colorLabelPairs.clear();
-        for (QStringList::ConstIterator itc = Preferences::defaultColorCodes.constBegin(), itl = Preferences::defaultcolorLabels.constBegin(); itc != Preferences::defaultColorCodes.constEnd() && itl != Preferences::defaultcolorLabels.constEnd(); ++itc, ++itl) {
-            ColorLabelPair clp;
-            clp.color = QColor(*itc);
-            clp.label = *itl;
-            colorLabelPairs << clp;
-        }
-    }
-
-    bool containsLabel(const QString &label) {
-        foreach(const ColorLabelPair &clp, colorLabelPairs) {
-            if (clp.label == label)
-                return true;
-        }
-        return false;
-    }
-
-    void addColorLabel(const QColor &color, const QString &label) {
+    colorLabelPairs.clear();
+    for (QStringList::ConstIterator itc = colorCodes.constBegin(), itl = colorLabels.constBegin(); itc != colorCodes.constEnd() && itl != colorLabels.constEnd(); ++itc, ++itl) {
         ColorLabelPair clp;
-        clp.color = color;
-        clp.label = label;
+        clp.color = QColor(*itc);
+        clp.label = *itl;
         colorLabelPairs << clp;
-        QModelIndex idxA = index(colorLabelPairs.count() - 1, 0, QModelIndex());
+    }
+}
+
+void ColorLabelSettingsModel::saveState()
+{
+    QStringList colorCodes, colorLabels;
+    foreach(const ColorLabelPair &clp, colorLabelPairs) {
+        colorCodes << clp.color.name();
+        colorLabels << clp.label;
+    }
+
+    KConfigGroup configGroup(config, Preferences::groupColor);
+    configGroup.writeEntry(Preferences::keyColorCodes, colorCodes);
+    configGroup.writeEntry(Preferences::keyColorLabels, colorLabels);
+    config->sync();
+}
+
+void ColorLabelSettingsModel::resetToDefaults()
+{
+    colorLabelPairs.clear();
+    for (QStringList::ConstIterator itc = Preferences::defaultColorCodes.constBegin(), itl = Preferences::defaultcolorLabels.constBegin(); itc != Preferences::defaultColorCodes.constEnd() && itl != Preferences::defaultcolorLabels.constEnd(); ++itc, ++itl) {
+        ColorLabelPair clp;
+        clp.color = QColor(*itc);
+        clp.label = *itl;
+        colorLabelPairs << clp;
+    }
+    emit modified();
+}
+
+bool ColorLabelSettingsModel::containsLabel(const QString &label)
+{
+    foreach(const ColorLabelPair &clp, colorLabelPairs) {
+        if (clp.label == label)
+            return true;
+    }
+    return false;
+}
+
+void ColorLabelSettingsModel::addColorLabel(const QColor &color, const QString &label)
+{
+    ColorLabelPair clp;
+    clp.color = color;
+    clp.label = label;
+    colorLabelPairs << clp;
+    QModelIndex idxA = index(colorLabelPairs.count() - 1, 0, QModelIndex());
+    QModelIndex idxB = index(colorLabelPairs.count() - 1, 1, QModelIndex());
+    emit dataChanged(idxA, idxB);
+    emit modified();
+}
+
+void ColorLabelSettingsModel::removeColorLabel(int row)
+{
+    if (row >= 0 && row < colorLabelPairs.count()) {
+        colorLabelPairs.removeAt(row);
+        QModelIndex idxA = index(row, 0, QModelIndex());
         QModelIndex idxB = index(colorLabelPairs.count() - 1, 1, QModelIndex());
         emit dataChanged(idxA, idxB);
+        emit modified();
     }
+}
 
-    void removeColorLabel(int row) {
-        if (row >= 0 && row < colorLabelPairs.count()) {
-            colorLabelPairs.removeAt(row);
-            QModelIndex idxA = index(row, 0, QModelIndex());
-            QModelIndex idxB = index(colorLabelPairs.count() - 1, 1, QModelIndex());
-            emit dataChanged(idxA, idxB);
-        }
-    }
-};
 
 class SettingsColorLabelWidget::SettingsColorLabelWidgetPrivate
 {
@@ -241,7 +248,6 @@ private:
     ColorLabelSettingsDelegate *delegate;
 
     KSharedConfigPtr config;
-
 
 public:
     ColorLabelSettingsModel *model;
@@ -276,6 +282,7 @@ public:
 
         model = new ColorLabelSettingsModel(view);
         view->setModel(model);
+        connect(model, SIGNAL(modified()), p, SIGNAL(changed()));
 
         delegate = new ColorLabelSettingsDelegate(view);
         view->setItemDelegate(delegate);
@@ -337,7 +344,7 @@ void SettingsColorLabelWidget::enableRemoveButton()
 }
 
 
-ColorLabelContextMenu::ColorLabelContextMenu(QTreeView *widget)
+ColorLabelContextMenu::ColorLabelContextMenu(BibTeXEditor *widget)
         : QObject(widget), m_tv(widget)
 {
     QSignalMapper *sm = new QSignalMapper(this);
@@ -376,6 +383,7 @@ void ColorLabelContextMenu::colorActivated(const QString &colorString)
     File *file = model->bibTeXFile();
     Q_ASSERT(file != NULL);
 
+    bool modifying = false;
     QModelIndexList list = m_tv->selectionModel()->selectedIndexes();
     foreach(const QModelIndex &index, list) {
         if (index.column() == 1) {
@@ -388,7 +396,11 @@ void ColorLabelContextMenu::colorActivated(const QString &colorString)
                     v.append(new VerbatimText(colorString));
                     entry->insert(Entry::ftColor, v);
                 }
+                modifying = true;
             }
         }
     }
+
+    if (modifying)
+        m_tv->externalModification();
 }

@@ -25,7 +25,48 @@
 
 #include "settingsabstractwidget.h"
 
-class QTreeView;
+class BibTeXEditor;
+
+/**
+@author Thomas Fischer
+*/
+class ColorLabelSettingsModel : public QAbstractItemModel
+{
+    Q_OBJECT
+
+public:
+    ColorLabelSettingsModel(QObject *parent);
+
+    virtual int rowCount(const QModelIndex &parent) const;
+    virtual int columnCount(const QModelIndex &parent) const;
+    virtual QModelIndex index(int row, int column, const QModelIndex &parent) const;
+    virtual QModelIndex parent(const QModelIndex &) const;
+    virtual QVariant data(const QModelIndex &index, int role) const;
+    virtual bool setData(const QModelIndex &index, const QVariant &value, int role);
+    virtual Qt::ItemFlags flags(const QModelIndex &index) const;
+    virtual QVariant headerData(int section, Qt::Orientation orientation, int role) const;
+
+    void loadState();
+    void saveState();
+    void resetToDefaults();
+
+    bool containsLabel(const QString &label);
+    void addColorLabel(const QColor &color, const QString &label);
+    void removeColorLabel(int row);
+
+signals:
+    void modified();
+
+private:
+    struct ColorLabelPair {
+        QColor color;
+        QString label;
+    };
+
+    QList<ColorLabelPair> colorLabelPairs;
+    KSharedConfigPtr config;
+
+};
 
 /**
 @author Thomas Fischer
@@ -61,13 +102,13 @@ class KBIBTEXGUI_EXPORT ColorLabelContextMenu : public QObject
     Q_OBJECT
 
 public:
-    ColorLabelContextMenu(QTreeView *widget);
+    ColorLabelContextMenu(BibTeXEditor *widget);
 
 private slots:
     void colorActivated(const QString &colorString);
 
 private:
-    QTreeView *m_tv;
+    BibTeXEditor *m_tv;
 };
 
 #endif // KBIBTEX_GUI_SETTINGSCOLORLABELWIDGET_H
