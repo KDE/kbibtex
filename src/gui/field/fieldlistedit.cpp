@@ -434,3 +434,24 @@ void KeywordListEdit::setFile(const File *file)
 
     FieldListEdit::setFile(file);
 }
+
+void KeywordListEdit::setCompletionItems(const QStringList &items)
+{
+    /// fetch stored, global keywords
+    KConfigGroup configGroup(m_config, m_configGroupName);
+    QStringList keywords = configGroup.readEntry(KeywordListEdit::keyGlobalKeywordList, QStringList());
+
+    /// use a map for case-insensitive sorting of strings
+    /// (recommended by Qt's documentation)
+    QMap<QString, QString> forCaseInsensitiveSorting;
+    /// insert all stored, global keywords
+    foreach(const QString &keyword, keywords)
+    forCaseInsensitiveSorting.insert(keyword.toLower(), keyword);
+    /// insert all unique keywords used in this file
+    foreach(const QString &keyword, items)
+    forCaseInsensitiveSorting.insert(keyword.toLower(), keyword);
+    /// re-create string list from map's values
+    keywords = forCaseInsensitiveSorting.values();
+
+    FieldListEdit::setCompletionItems(keywords);
+}
