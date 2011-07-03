@@ -66,6 +66,7 @@ private:
     const File *file;
     const QString fName;
     QList<ValueLine> values;
+    QMap<QString, QString> colorToLabel;
 
 public:
     ValueListModel(const File *bibtexFile, const QString &fieldName, QObject *parent);

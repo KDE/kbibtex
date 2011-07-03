@@ -34,6 +34,7 @@
 #include <comment.h>
 #include <preamble.h>
 #include <bibtexentries.h>
+#include <preferences.h>
 
 #include "bibtexfilemodel.h"
 
@@ -241,7 +242,14 @@ const bool BibTeXFileModel::defaultShowMacros = true;
 BibTeXFileModel::BibTeXFileModel(QObject * parent)
         : QAbstractTableModel(parent), m_bibtexFile(NULL)
 {
-    // nothing
+    /// load mapping from color value to label
+    KSharedConfigPtr config(KSharedConfig::openConfig(QLatin1String("kbibtexrc")));
+    KConfigGroup configGroup(config, Preferences::groupColor);
+    QStringList colorCodes = configGroup.readEntry(Preferences::keyColorCodes, Preferences::defaultColorCodes);
+    QStringList colorLabels = configGroup.readEntry(Preferences::keyColorLabels, Preferences::defaultcolorLabels);
+    for (QStringList::ConstIterator itc = colorCodes.constBegin(), itl = colorLabels.constBegin(); itc != colorCodes.constEnd() && itl != colorLabels.constEnd(); ++itc, ++itl) {
+        colorToLabel.insert(*itc, *itl);
+    }
 }
 
 BibTeXFileModel::~BibTeXFileModel()
@@ -329,6 +337,12 @@ QVariant BibTeXFileModel::data(const QModelIndex &index, int role) const
                     return QVariant(entry->type());
                 } else
                     return QVariant(label);
+            } else if (raw.toLower() == Entry::ftColor) {
+                QString text = PlainTextValue::text(entry->value(raw), m_bibtexFile);
+                if (text.isEmpty()) return QVariant();
+                QString colorText = colorToLabel[text];
+                if (colorText.isEmpty()) return QVariant(text);
+                return QVariant(colorText);
             } else {
                 if (entry->contains(raw)) {
                     QString text = PlainTextValue::text(entry->value(raw), m_bibtexFile);

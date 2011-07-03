@@ -111,7 +111,7 @@ public:
 
 private:
     File *m_bibtexFile;
-    //REMOVE BibTeXFields *m_bibtexFields;
+    QMap<QString, QString> colorToLabel;
 
     static const QRegExp whiteSpace;
 };

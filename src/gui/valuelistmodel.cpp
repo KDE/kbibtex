@@ -23,6 +23,8 @@
 #include <KComboBox>
 #include <KLocale>
 #include <KDebug>
+#include <KSharedConfig>
+#include <KConfigGroup>
 
 #include <QListView>
 #include <QGridLayout>
@@ -35,6 +37,7 @@
 #include <fieldlineedit.h>
 #include <bibtexfields.h>
 #include <entry.h>
+#include <preferences.h>
 #include "valuelistmodel.h"
 
 QWidget *ValueListDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &sovi, const QModelIndex &index) const
@@ -87,6 +90,15 @@ static QRegExp ignoredInSorting("[{}\\]+");
 ValueListModel::ValueListModel(const File *bibtexFile, const QString &fieldName, QObject *parent)
         : QAbstractTableModel(parent), file(bibtexFile), fName(fieldName.toLower())
 {
+    /// load mapping from color value to label
+    KSharedConfigPtr config(KSharedConfig::openConfig(QLatin1String("kbibtexrc")));
+    KConfigGroup configGroup(config, Preferences::groupColor);
+    QStringList colorCodes = configGroup.readEntry(Preferences::keyColorCodes, Preferences::defaultColorCodes);
+    QStringList colorLabels = configGroup.readEntry(Preferences::keyColorLabels, Preferences::defaultcolorLabels);
+    for (QStringList::ConstIterator itc = colorCodes.constBegin(), itl = colorLabels.constBegin(); itc != colorCodes.constEnd() && itl != colorLabels.constEnd(); ++itc, ++itl) {
+        colorToLabel.insert(*itc, *itl);
+    }
+
     updateValues();
 }
 
@@ -105,9 +117,16 @@ QVariant ValueListModel::data(const QModelIndex & index, int role) const
     if (index.row() >= values.count() || index.column() >= 2)
         return QVariant();
     if (role == Qt::DisplayRole || role == Qt::ToolTipRole) {
-        if (index.column() == 0)
-            return QVariant(values[index.row()].text);
-        else
+        if (index.column() == 0) {
+            if (fName == Entry::ftColor) {
+                QString text = values[index.row()].text;
+                if (text.isEmpty()) return QVariant();
+                QString colorText = colorToLabel[text];
+                if (colorText.isEmpty()) return QVariant(text);
+                return QVariant(colorText);
+            } else
+                return QVariant(values[index.row()].text);
+        } else
             return QVariant(values[index.row()].count);
     } else if (role == Qt::TextAlignmentRole) {
         if (index.column() == 0)
@@ -132,7 +151,12 @@ bool ValueListModel::setData(const QModelIndex & index, const QVariant &value, i
 {
     if (role == Qt::EditRole && index.column() == 0) {
         Value newValue = value.value<Value>(); /// nice names ... ;-)
-        const QString origText = data(index, Qt::DisplayRole).toString();
+        QString origText = data(index, Qt::DisplayRole).toString();
+        if (fName == Entry::ftColor) {
+            QString color = colorToLabel.key(origText);
+            if (!color.isEmpty()) origText = color;
+        }
+        int index = indexOf(origText); Q_ASSERT(index >= 0);
         const QString newText = PlainTextValue::text(newValue);
         kDebug() << "replacing" << origText << "with" << newText << "for field" << fName;
 
@@ -160,7 +184,6 @@ bool ValueListModel::setData(const QModelIndex & index, const QVariant &value, i
             }
         }
 
-        int index = indexOf(origText);
         values[index].text = newText;
         values[index].value = newValue;
         const Person *person = dynamic_cast<const Person*>(newValue.first());
@@ -237,11 +260,17 @@ void ValueListModel::insertValue(const Value &value)
 
 int ValueListModel::indexOf(const QString &text)
 {
+    QString color;
+    QString cmpText = text;
+    if (fName == Entry::ftColor && !(color = colorToLabel.key(text, QLatin1String(""))).isEmpty())
+        cmpText = color;
+    Q_ASSERT(!cmpText.isEmpty());
+
     int i = 0;
     /// this is really slow for large data sets: O(n^2)
     /// maybe use a hash table instead?
     foreach(const ValueLine &valueLine, values) {
-        if (valueLine.text == text)
+        if (valueLine.text == cmpText)
             return i;
         ++i;
     }
