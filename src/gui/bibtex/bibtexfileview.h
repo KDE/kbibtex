@@ -37,7 +37,6 @@ class KBIBTEXGUI_EXPORT BibTeXFileView : public QTreeView
     Q_OBJECT
 public:
     BibTeXFileView(const QString &name, QWidget *parent = 0);
-    virtual ~BibTeXFileView();
 
     virtual void setModel(QAbstractItemModel * model);
     BibTeXFileModel *bibTeXModel();

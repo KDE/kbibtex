@@ -94,6 +94,7 @@ public:
     QSignalMapper *signalMapperViewDocument;
     bool isSaveAsOperation;
     LyX *lyx;
+    ColorLabelContextMenu *colorLabelContextMenu;
 
     KBibTeXPartPrivate(KBibTeXPart *parent)
             : p(parent), sortFilterProxyModel(NULL), signalMapperNewElement(new QSignalMapper(parent)), viewDocumentMenu(new QMenu(i18n("View Document"), parent->widget())), signalMapperViewDocument(new QSignalMapper(parent)), isSaveAsOperation(false) {
@@ -433,7 +434,7 @@ void KBibTeXPart::setupActions(bool /*browserViewWanted FIXME*/)
     d->lyx = new LyX(this, d->editor);
     connect(d->editor, SIGNAL(selectedElementsChanged()), d->lyx, SLOT(updateActions()));
 
-    new ColorLabelContextMenu(d->editor);
+    d->colorLabelContextMenu = new ColorLabelContextMenu(d->editor);
 
     updateActions();
     fitActionSettings();
@@ -607,8 +608,8 @@ void KBibTeXPart::updateActions()
     d->elementEditAction->setEnabled(!emptySelection);
     d->editCopyAction->setEnabled(!emptySelection);
     d->editCopyReferencesAction->setEnabled(!emptySelection);
-    d->editCutAction->setEnabled(!emptySelection);
-    d->editDeleteAction->setEnabled(!emptySelection);
+    d->editCutAction->setEnabled(!emptySelection && isReadWrite());
+    d->editDeleteAction->setEnabled(!emptySelection && isReadWrite());
 
     int numDocumentsToView = d->updateViewDocumentMenu();
     /// enable menu item only if there is at least one document to view
@@ -628,4 +629,6 @@ void KBibTeXPart::updateActions()
         }
     }
     d->lyx->setReferences(references);
+
+    d->colorLabelContextMenu->setEnabled(isReadWrite());
 }

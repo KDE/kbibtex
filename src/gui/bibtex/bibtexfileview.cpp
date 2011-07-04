@@ -40,6 +40,7 @@ BibTeXFileView::BibTeXFileView(const QString &name, QWidget * parent)
     setFrameStyle(QFrame::NoFrame);
     setAlternatingRowColors(true);
     setAllColumnsShowFocus(true);
+    setRootIsDecorated(false);
 
     /// header appearance and behaviour
     header()->setClickable(true);
@@ -72,11 +73,6 @@ BibTeXFileView::BibTeXFileView(const QString &name, QWidget * parent)
     action = new KAction(i18n("Reset to defaults"), header());
     connect(action, SIGNAL(triggered()), this, SLOT(headerResetToDefaults()));
     header()->addAction(action);
-}
-
-BibTeXFileView::~BibTeXFileView()
-{
-    // nothing
 }
 
 void BibTeXFileView::setModel(QAbstractItemModel * model)

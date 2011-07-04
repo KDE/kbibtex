@@ -25,6 +25,8 @@
 
 #include "settingsabstractwidget.h"
 
+class KActionMenu;
+
 class BibTeXEditor;
 
 /**
@@ -104,11 +106,14 @@ class KBIBTEXGUI_EXPORT ColorLabelContextMenu : public QObject
 public:
     ColorLabelContextMenu(BibTeXEditor *widget);
 
+    void setEnabled(bool);
+
 private slots:
     void colorActivated(const QString &colorString);
 
 private:
     BibTeXEditor *m_tv;
+    KActionMenu *m_menu;
 };
 
 #endif // KBIBTEX_GUI_SETTINGSCOLORLABELWIDGET_H

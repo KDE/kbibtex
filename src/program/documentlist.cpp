@@ -366,7 +366,7 @@ public:
         p->addTab(listFavorites, KIcon("favorites"), i18n("Favorites"));
 
         dirOperator = new DirOperatorWidget(p);
-        p->addTab(dirOperator, i18n("Filesystem Browser"));
+        p->addTab(dirOperator,  KIcon("system-file-manager"), i18n("Filesystem Browser"));
         connect(dirOperator->dirOperator, SIGNAL(fileSelected(KFileItem)), p, SLOT(fileSelected(KFileItem)));
 
         /** set minimum width of widget depending on tab's text width */
