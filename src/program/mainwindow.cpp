@@ -255,7 +255,9 @@ void KBibTeXMainWindow::newDocument()
 
 void KBibTeXMainWindow::openDocumentDialog()
 {
-    QString startDir = QString();// QLatin1String(":open"); // FIXME: Does not work yet
+    OpenFileInfo *currFile = d->openFileInfoManager->currentFile();
+    KUrl currFileUrl = currFile == NULL ? KUrl() : currFile->url();
+    QString startDir = currFileUrl.isValid() ? KUrl(currFileUrl.url()).path() : QLatin1String(":open"); // FIXME: Does this work?
     OpenFileInfo *ofi = d->openFileInfoManager->currentFile();
     if (ofi != NULL) {
         KUrl url = ofi->url();
@@ -320,6 +322,7 @@ void KBibTeXMainWindow::documentSwitched(BibTeXEditor *oldEditor, BibTeXEditor *
     d->elementForm->setElement(NULL, NULL);
     d->urlPreview->setElement(NULL, NULL);
     d->valueList->setEditor(newEditor);
+    d->referencePreview->setEditor(newEditor);
 }
 
 void KBibTeXMainWindow::showSearchResults()
