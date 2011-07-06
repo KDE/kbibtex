@@ -27,8 +27,10 @@
 </xsl:template>
 
 <xsl:template match="person">
+<a style="text-decoration: none; color: black;"><xsl:attribute name="href"><xsl:text>kbibtex:filter:author=</xsl:text><xsl:value-of select="lastname"/></xsl:attribute>
 <xsl:value-of select="lastname"/><xsl:if test="string-length(firstname)>0"><xsl:text>, </xsl:text>
 <xsl:value-of select="firstname"/></xsl:if>
+</a>
 </xsl:template>
 
 <xsl:template match="authors">
@@ -54,26 +56,26 @@
 </xsl:template>
 
 <xsl:template match="title">
-<b><xsl:apply-templates /></b>
+<b><a style="text-decoration: none; color: black;"><xsl:attribute name="href"><xsl:text>kbibtex:filter:title=</xsl:text><xsl:value-of select="."/></xsl:attribute><xsl:value-of select="."/></a></b>
 </xsl:template>
 
 <xsl:template match="booktitle">
-<xsl:text>, </xsl:text><i><xsl:apply-templates /></i>
+<xsl:text>, </xsl:text><i><a style="text-decoration: none; color: black;"><xsl:attribute name="href"><xsl:text>kbibtex:filter:booktitle=</xsl:text><xsl:value-of select="."/></xsl:attribute><xsl:value-of select="."/></a></i>
 </xsl:template>
 
 <xsl:template match="school">
-<xsl:text>, </xsl:text><xsl:apply-templates />
+<xsl:text>, </xsl:text><a style="text-decoration: none; color: black;"><xsl:attribute name="href"><xsl:text>kbibtex:filter:school=</xsl:text><xsl:value-of select="."/></xsl:attribute><xsl:value-of select="."/></a>
 </xsl:template>
 
 <xsl:template match="journal">
 <xsl:text>, </xsl:text>
-<i><xsl:apply-templates /></i>
+<i><a style="text-decoration: none; color: black;"><xsl:attribute name="href"><xsl:text>kbibtex:filter:journal=</xsl:text><xsl:value-of select="."/></xsl:attribute><xsl:value-of select="."/></a></i>
 <xsl:if test="string-length(../volume)>0">
 <xsl:text> </xsl:text>
-<xsl:value-of select="../volume"/>
+<a style="text-decoration: none; color: black;"><xsl:attribute name="href"><xsl:text>kbibtex:filter:volume=</xsl:text><xsl:value-of select="../volume"/></xsl:attribute><xsl:value-of select="../volume"/></a>
 <xsl:if test="string-length(../number)>0">
 <xsl:text>(</xsl:text>
-<xsl:value-of select="../number"/>
+<a style="text-decoration: none; color: black;"><xsl:attribute name="href"><xsl:text>kbibtex:filter:number=</xsl:text><xsl:value-of select="../number"/></xsl:attribute><xsl:value-of select="../number"/></a>
 <xsl:text>)</xsl:text>
 </xsl:if>
 </xsl:if>
@@ -81,16 +83,16 @@
 
 <xsl:template match="institution">
 <xsl:text>, </xsl:text>
-<i><xsl:apply-templates /></i>
+<i><a style="text-decoration: none; color: black;"><xsl:attribute name="href"><xsl:text>kbibtex:filter:institution=</xsl:text><xsl:value-of select="."/></xsl:attribute><xsl:value-of select="."/></a></i>
 <xsl:if test="string-length(../number)>0">
 <xsl:text> No. </xsl:text>
-<xsl:value-of select="../number"/>
+<a style="text-decoration: none; color: black;"><xsl:attribute name="href"><xsl:text>kbibtex:filter:number=</xsl:text><xsl:value-of select="../number"/></xsl:attribute><xsl:value-of select="../number"/></a>
 </xsl:if>
 </xsl:template>
 
 <xsl:template match="publisher">
 <xsl:text>, </xsl:text>
-<xsl:apply-templates />
+<a style="text-decoration: none; color: black;"><xsl:attribute name="href"><xsl:text>kbibtex:filter:publisher=</xsl:text><xsl:value-of select="."/></xsl:attribute><xsl:value-of select="."/></a>
 </xsl:template>
 
 <xsl:template match="volume">
@@ -99,19 +101,19 @@
      which prints the volume, too.                     -->
 <xsl:text>, </xsl:text>
 <xsl:text>volume </xsl:text>
-<xsl:apply-templates />
+<a style="text-decoration: none; color: black;"><xsl:attribute name="href"><xsl:text>kbibtex:filter:volume=</xsl:text><xsl:value-of select="."/></xsl:attribute><xsl:value-of select="."/></a>
 </xsl:if>
 </xsl:template>
 
 <xsl:template match="edition">
 <xsl:text>, </xsl:text>
-<xsl:apply-templates />
-<xsl:text> edition</xsl:text>
+<a style="text-decoration: none; color: black;"><xsl:attribute name="href"><xsl:text>kbibtex:filter:edition=</xsl:text><xsl:value-of select="."/></xsl:attribute><xsl:value-of select="."/>
+<xsl:text> edition</xsl:text></a>
 </xsl:template>
 
 <xsl:template match="pages">
 <xsl:text>, </xsl:text>
-<xsl:apply-templates />
+<a style="text-decoration: none; color: black;"><xsl:attribute name="href"><xsl:text>kbibtex:filter:pages=</xsl:text><xsl:value-of select="."/></xsl:attribute><xsl:value-of select="."/></a>
 </xsl:template>
 
 <xsl:template match="year">
@@ -120,7 +122,7 @@
 <xsl:value-of select="../month"/>
 <xsl:text> </xsl:text>
 </xsl:if>
-<xsl:apply-templates />
+<a style="text-decoration: none; color: black;"><xsl:attribute name="href"><xsl:text>kbibtex:filter:year=</xsl:text><xsl:value-of select="."/></xsl:attribute><xsl:value-of select="."/></a>
 </xsl:template>
 
 <xsl:template match="note">
