@@ -145,7 +145,7 @@ void WebSearchAcmPortal::doneFetchingStartPage()
 
     if (handleErrors(reply)) {
         QString htmlSource = reply->readAll();
-        int p1, p2, p3;
+        int p1 = -1, p2 = -1, p3 = -1;
         if ((p1 = htmlSource.indexOf("<form name=\"qiksearch\"")) >= 0
                 && (p2 = htmlSource.indexOf("action=", p1)) >= 0
                 && (p3 = htmlSource.indexOf("\"", p2 + 8)) >= 0) {

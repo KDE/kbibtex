@@ -296,7 +296,7 @@ void WebSearchSpringerLink::doneFetchingResultPage()
     QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
     if (handleErrors(reply)) {
         QString htmlSource = reply->readAll();
-        int p1 = htmlSource.indexOf("div id=\"ContentPrimary"), p2;
+        int p1 = htmlSource.indexOf("div id=\"ContentPrimary"), p2 = -1;
         while (p1 >= 0 && (p1 = htmlSource.indexOf("class=\"title\"><a href=\"/content/", p1 + 1)) >= 0 && (p2 = htmlSource.indexOf("\"", p1 + 26)) >= 0) {
             QString datacode = htmlSource.mid(p1 + 32, p2 - p1 - 33).toLower();
 

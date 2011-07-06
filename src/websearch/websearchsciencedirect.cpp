@@ -172,7 +172,7 @@ void WebSearchScienceDirect::doneFetchingResultPage()
 
             const QString htmlText = reply->readAll();
             static_cast<HTTPEquivCookieJar*>(networkAccessManager()->cookieJar())->checkForHttpEqiuv(htmlText, reply->url());
-            int p = -1, p2;
+            int p = -1, p2 = -1;
             while ((p = htmlText.indexOf("http://www.sciencedirect.com/science/article/pii/", p + 1)) >= 0 && (p2 = htmlText.indexOf("\"", p + 1)) >= 0)
                 if (d->numFoundResults < d->numExpectedResults) {
                     ++d->numFoundResults;
@@ -214,7 +214,7 @@ void WebSearchScienceDirect::doneFetchingAbstractPage()
 
             const QString htmlText = reply->readAll();
             static_cast<HTTPEquivCookieJar*>(networkAccessManager()->cookieJar())->checkForHttpEqiuv(htmlText, reply->url());
-            int p1, p2;
+            int p1 = -1, p2 = -1;
             if ((p1 = htmlText.indexOf("/science?_ob=DownloadURL&")) >= 0 && (p2 = htmlText.indexOf("\"", p1 + 1)) >= 0) {
                 KUrl url("http://www.sciencedirect.com" + htmlText.mid(p1, p2 - p1));
                 ++d->runningJobs;
