@@ -48,6 +48,7 @@
 #include <element.h>
 #include <file.h>
 #include <entry.h>
+#include <bibtexeditor.h>
 
 #include "referencepreview.h"
 
@@ -73,10 +74,11 @@ public:
     KComboBox *comboBox;
     const Element* element;
     const File *file;
+    BibTeXEditor *editor;
 
     ReferencePreviewPrivate(ReferencePreview *parent)
             : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName(QLatin1String("Reference Preview Docklet")),
-            configKeyName(QLatin1String("Style")), element(NULL) {
+            configKeyName(QLatin1String("Style")), element(NULL), editor(NULL) {
         QGridLayout *gridLayout = new QGridLayout(p);
         gridLayout->setMargin(0);
         gridLayout->setColumnStretch(0, 1);
@@ -96,6 +98,8 @@ public:
 #ifdef HAVE_QTWEBKIT
         webView = new QWebView(frame);
         layout->addWidget(webView);
+        webView->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
+        connect(webView, SIGNAL(linkClicked(const QUrl &)), p, SLOT(linkClicked(const QUrl &)));
 #else // HAVE_QTWEBKIT
         messageLabel = new QLabel(i18n("No preview available due to missing QtWebKit support on your system."), frame);
         messageLabel->setWordWrap(true);
@@ -112,7 +116,7 @@ public:
         gridLayout->addWidget(buttonSaveAsHTML, 2, 2, 1, 1);
     }
 
-    bool saveHTML(const KUrl& url) {
+    bool saveHTML(const KUrl& url) const {
         KTemporaryFile file;
         file.setAutoRemove(true);
 
@@ -126,10 +130,10 @@ public:
         return result;
     }
 
-    bool saveHTML(KTemporaryFile &file) {
+    bool saveHTML(KTemporaryFile &file) const {
         if (file.open()) {
             QTextStream ts(&file);
-            ts << htmlText;
+            ts << QString(htmlText).replace(QRegExp("<a[^>]+href=\"kbibtex:[^>]+>([^<]+)</a>"), "\\1");
             file.close();
             return true;
         }
@@ -177,7 +181,7 @@ ReferencePreview::ReferencePreview(QWidget *parent)
 
 void ReferencePreview::setHtml(const QString & html, const QUrl & baseUrl)
 {
-    d->htmlText = html;
+    d->htmlText = QString(html).replace("<?xml version=\"1.0\" encoding=\"UTF-8\"?>", "");
     d->baseUrl = baseUrl;
 #ifdef HAVE_QTWEBKIT
     d->webView->setHtml(html, baseUrl);
@@ -337,4 +341,25 @@ void ReferencePreview::saveAsHTML()
     KUrl url = KFileDialog::getSaveUrl(KUrl(), "text/html", this, i18n("Save as HTML"));
     if (url.isValid())
         d->saveHTML(url);
+}
+
+void ReferencePreview::linkClicked(const QUrl& url)
+{
+    QString text = url.toString();
+    if (text.startsWith("kbibtex:filter:")) {
+        text = text.mid(15);
+        if (d->editor != NULL) {
+            int p = text.indexOf("=");
+            SortFilterBibTeXFileModel::FilterQuery fq;
+            fq.terms << text.mid(p + 1);
+            fq.combination = SortFilterBibTeXFileModel::EveryTerm;
+            fq.field = text.left(p);
+            d->editor->setFilterBarFilter(fq);
+        }
+    }
+}
+
+void ReferencePreview::setEditor(BibTeXEditor *editor)
+{
+    d->editor = editor;
 }

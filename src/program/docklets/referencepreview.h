@@ -26,6 +26,7 @@
 
 class Element;
 class File;
+class BibTeXEditor;
 
 class ReferencePreview : public QWidget
 {
@@ -35,6 +36,8 @@ public:
 
     void setHtml(const QString & html, const QUrl & baseUrl = QUrl());
     void setEnabled(bool);
+
+    void setEditor(BibTeXEditor *editor);
 
 public slots:
     void setElement(Element*, const File *);
@@ -47,6 +50,7 @@ private slots:
     void renderHTML();
     void openAsHTML();
     void saveAsHTML();
+    void linkClicked(const QUrl&);
 };
 
 
