@@ -21,6 +21,10 @@
 #ifndef KBIBTEX_GUI_SETTINGSCOLORLABELWIDGET_H
 #define KBIBTEX_GUI_SETTINGSCOLORLABELWIDGET_H
 
+#include <QAbstractItemModel>
+
+#include <KSharedConfig>
+
 #include <kbibtexgui_export.h>
 
 #include "settingsabstractwidget.h"
