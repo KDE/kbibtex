@@ -1,0 +1,38 @@
+INFO: This TODO list will most likely outdate very quickly
+
+Within the scope of a 0.4.x release, the following features
+and bugs are to be addressed:
+
+- Bug 17525: Feature from comment #3 is left to fix (re-
+  arranging columns).
+- Bug 17898: PubMed support: Issues with searching by author
+  name.
+- Bug 18273: Auto-completion: Waiting for approval from bug
+  reporter that issue is fixed.
+- Bug 18321: Stretching author field: Waiting for approval
+  from bug reporter that issue is fixed.
+
+Within the scope of a 0.5.x release, the following features
+and bugs are to be addressed:
+
+- Bug 16780: Grouping of elements in the main list view, i.e.
+  using a tree-like structure (this would be an alternative
+  to the current plain list).
+- Bug 17553: KPart integration: Requires research how XML
+  GUIs work in KDE.
+- Bug 17893: Z39.50 support: At least basic support should
+  be integrated.
+- Bug 18142: Library mode, where both bibliography and PDF
+  files are managed by KBibTeX.
+- Bug 18183: Increase number of search hits after initial
+  search is complete.
+- Bug 18287: Automatic ID suggestion based on user-defined
+  patterns.
+
+Within the scope of more future releases, the following
+features and bugs are to be addressed:
+
+- Bugs 17318, 18038: Zotero support, e.g. accessing the
+  bibliographic database or using its search capabilities.
+  Requires "research" how Zotero works and how it can be
+  "tapped".
