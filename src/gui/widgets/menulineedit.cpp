@@ -82,6 +82,7 @@ public:
             m_singleLineEditText->setClearButtonShown(true);
             m_singleLineEditText->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
             m_singleLineEditText->setCompletionMode(KGlobalSettings::CompletionPopupAuto);
+            m_singleLineEditText->completionObject()->setIgnoreCase(true);
             p->setFocusProxy(m_singleLineEditText);
             connect(m_singleLineEditText, SIGNAL(textChanged(QString)), p, SIGNAL(textChanged(QString)));
         }
