@@ -26,6 +26,7 @@
 #include <KDebug>
 #include <KMessageBox>
 #include <KGuiItem>
+#include <KConfigGroup>
 
 #include <elementeditor.h>
 #include <entry.h>
@@ -47,10 +48,16 @@ class ElementEditorDialog : public KDialog
 {
 private:
     ElementEditor *elementEditor;
+    static const QString configGroupNameWindowSize;
+    KConfigGroup configGroup;
+
 public:
     ElementEditorDialog(QWidget *parent)
             : KDialog(parent), elementEditor(NULL) {
-        // nothing
+        /// restore window size
+        KSharedConfigPtr config(KSharedConfig::openConfig(QLatin1String("kbibtexrc")));
+        configGroup = KConfigGroup(config, configGroupNameWindowSize);
+        restoreDialogSize(configGroup);
     }
 
     /**
@@ -79,12 +86,17 @@ protected Q_SLOTS:
 
 private:
     bool allowedToClose() {
+        /// save window size
+        saveDialogSize(configGroup);
+
         /// if there unapplied changes in the editor widget ...
         /// ... ask user for consent to discard changes ...
         /// only the allow to close this dialog
         return !elementEditor->elementUnapplied() || KMessageBox::warningContinueCancel(this, i18n("The current entry has been modified. Do you want do discard your changes?"), i18n("Discard changes?"), KGuiItem(i18n("Discard"), "edit-delete-shred"), KGuiItem(i18n("Continue Editing"), "edit-rename")) == KMessageBox::Continue;
     }
 };
+
+const QString ElementEditorDialog::configGroupNameWindowSize = QLatin1String("ElementEditorDialog");
 
 BibTeXEditor::BibTeXEditor(const QString &name, QWidget *parent)
         : BibTeXFileView(name, parent), m_isReadOnly(false), m_current(NULL), m_filterBar(NULL)

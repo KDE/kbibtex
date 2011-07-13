@@ -199,7 +199,7 @@ FieldListEdit::FieldListEdit(KBibTeX::TypeFlag preferredTypeFlag, KBibTeX::TypeF
         : QWidget(parent), d(new FieldListEditProtected(preferredTypeFlag, typeFlags, this))
 {
     setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
-    setMinimumSize(fontMetrics().averageCharWidth() * 40, fontMetrics().averageCharWidth() * 10);
+    setMinimumSize(fontMetrics().averageCharWidth() * 30, fontMetrics().averageCharWidth() * 10);
 }
 
 bool FieldListEdit::reset(const Value& value)
