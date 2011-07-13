@@ -231,8 +231,6 @@ void SortFilterBibTeXFileModel::loadState()
 }
 
 
-
-const QRegExp BibTeXFileModel::whiteSpace = QRegExp("(\\s\\n\\r\\t)+");
 const QString BibTeXFileModel::keyShowComments = QLatin1String("showComments");
 const bool BibTeXFileModel::defaultShowComments = true;
 const QString BibTeXFileModel::keyShowMacros = QLatin1String("showMacros");
@@ -345,12 +343,10 @@ QVariant BibTeXFileModel::data(const QModelIndex &index, int role) const
                 return QVariant(colorText);
             } else {
                 if (entry->contains(raw)) {
-                    QString text = PlainTextValue::text(entry->value(raw), m_bibtexFile);
-                    text = text.replace(whiteSpace, " ");
+                    const QString text = PlainTextValue::text(entry->value(raw), m_bibtexFile).simplified();
                     return QVariant(text);
                 } else if (!rawAlt.isNull() && entry->contains(rawAlt)) {
-                    QString text = PlainTextValue::text(entry->value(rawAlt), m_bibtexFile);
-                    text = text.replace(whiteSpace, " ");
+                    const QString text = PlainTextValue::text(entry->value(rawAlt), m_bibtexFile).simplified();
                     return QVariant(text);
                 } else
                     return QVariant();
@@ -363,8 +359,7 @@ QVariant BibTeXFileModel::data(const QModelIndex &index, int role) const
                 else if (raw == "^type")
                     return QVariant(i18n("Macro"));
                 else if (raw == "Title") {
-                    QString text = PlainTextValue::text(macro->value(), m_bibtexFile);
-                    text = text.replace(whiteSpace, " ");
+                    const QString text = PlainTextValue::text(macro->value(), m_bibtexFile).simplified();
                     return QVariant(text);
                 } else
                     return QVariant();
@@ -374,7 +369,7 @@ QVariant BibTeXFileModel::data(const QModelIndex &index, int role) const
                     if (raw == "^type")
                         return QVariant(i18n("Comment"));
                     else if (raw == Entry::ftTitle) {
-                        QString text = comment->text().replace(QRegExp("[\\s\\n\\r\\t]+"), " ");
+                        const QString text = comment->text().simplified();
                         return QVariant(text);
                     } else
                         return QVariant();
@@ -384,8 +379,7 @@ QVariant BibTeXFileModel::data(const QModelIndex &index, int role) const
                         if (raw == "^type")
                             return QVariant(i18n("Preamble"));
                         else if (raw == Entry::ftTitle) {
-                            QString text = PlainTextValue::text(preamble->value(), m_bibtexFile);
-                            text = text.replace(QRegExp("[\\s\\n\\r\\t]+"), " ");
+                            const QString text = PlainTextValue::text(preamble->value(), m_bibtexFile).simplified();
                             return QVariant(text);
                         } else
                             return QVariant();

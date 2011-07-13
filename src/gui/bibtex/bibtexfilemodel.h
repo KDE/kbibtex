@@ -112,8 +112,6 @@ public:
 private:
     File *m_bibtexFile;
     QMap<QString, QString> colorToLabel;
-
-    static const QRegExp whiteSpace;
 };
 
 
