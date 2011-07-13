@@ -250,6 +250,11 @@ void FieldListEdit::setFile(const File *file)
     d->file = file;
 }
 
+void FieldListEdit::setElement(const Element *element)
+{
+    Q_UNUSED(element)
+}
+
 void FieldListEdit::setCompletionItems(const QStringList &items)
 {
     d->completionItems = items;

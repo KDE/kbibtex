@@ -32,6 +32,8 @@ class QCheckBox;
 
 class KPushButton;
 
+class Element;
+
 /**
 @author Thomas Fischer
 */
@@ -48,6 +50,7 @@ public:
     void clear();
     virtual void setReadOnly(bool isReadOnly);
     virtual void setFile(const File *file);
+    virtual void setElement(const Element *element);
     virtual void setCompletionItems(const QStringList &items);
 
 signals:

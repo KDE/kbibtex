@@ -26,7 +26,10 @@
 #include <KDebug>
 #include <KLocale>
 #include <KPushButton>
+#include <KInputDialog>
 
+#include <file.h>
+#include <entry.h>
 #include <fieldlineedit.h>
 #include <fieldlistedit.h>
 #include <colorlabelwidget.h>
@@ -44,9 +47,11 @@ public:
     KBibTeX::FieldInputType fieldInputType;
     KBibTeX::TypeFlags typeFlags;
     KBibTeX::TypeFlag preferredTypeFlag;
+    const File *bibtexFile;
+    const Element *element;
 
     FieldInputPrivate(FieldInput *parent)
-            : p(parent), fieldLineEdit(NULL), fieldListEdit(NULL), colorWidget(NULL) {
+            : p(parent), fieldLineEdit(NULL), fieldListEdit(NULL), colorWidget(NULL), bibtexFile(NULL), element(NULL) {
         // TODO
     }
 
@@ -80,23 +85,18 @@ public:
             monthSelector->setMenu(monthMenu);
         }
         break;
+        case KBibTeX::CrossRef: {
+            fieldLineEdit = new FieldLineEdit(preferredTypeFlag, typeFlags, false, p);
+            layout->addWidget(fieldLineEdit);
+            KPushButton *referenceSelector = new KPushButton(KIcon("flag-gree"), ""); ///< find better icon
+            referenceSelector->setToolTip(i18n("Select an existing entry"));
+            fieldLineEdit->prependWidget(referenceSelector);
+            connect(referenceSelector, SIGNAL(clicked()), p, SLOT(selectCrossRef()));
+        }
+        break;
         case KBibTeX::Color: {
             colorWidget = new ColorLabelWidget(p);
             layout->addWidget(colorWidget, 0);
-
-            // TODO: Make it configurable
-
-            /*
-                        QAction *action = colorAction(i18n("Important"), "#cc3300");
-                        colorMenu->addAction(action);
-                        colorSignalMapper->setMapping(action, "#cc3300");
-                        connect(action, SIGNAL(triggered()), colorSignalMapper, SLOT(map()));
-
-                        action = colorAction(i18n("Read"), "#009966");
-                        colorMenu->addAction(action);
-                        colorSignalMapper->setMapping(action, "#009966");
-                        connect(action, SIGNAL(triggered()), colorSignalMapper, SLOT(map()));
-                        */
         }
         break;
         case KBibTeX::PersonList:
@@ -119,18 +119,6 @@ public:
         enableModifiedSignal();
     }
 
-    /*
-    QAction *colorAction(const QString&label, const QString &color) {
-        int h = predefcolorWidget->fontMetrics().height() - 4;
-        QPixmap pm(h, h);
-        QPainter painter(&pm);
-        painter.setPen(QColor(color));
-        painter.setBrush(QBrush(painter.pen().color()));
-        painter.drawRect(0, 0, h, h);
-        return new QAction(KIcon(pm), label, p);
-    }
-    */
-
     void clear() {
         disableModifiedSignal();
         if (fieldLineEdit != NULL)
@@ -152,15 +140,6 @@ public:
             result = fieldListEdit->reset(value);
         else if (colorWidget != NULL) {
             result = colorWidget->reset(value);
-
-            /*
-            VerbatimText *verbatimText = NULL;
-            if (value.count() == 1 && (verbatimText = dynamic_cast<VerbatimText*>(value.first())) != NULL)
-                colorWidget->setColor(QColor(verbatimText->text()));
-            else
-                p->resetColor();
-            result = true;
-            */
         }
 
         enableModifiedSignal();
@@ -175,15 +154,6 @@ public:
             result = fieldListEdit->apply(value);
         else if (colorWidget != NULL) {
             result = colorWidget->apply(value);
-            /*
-            value.clear();
-            const QString colorName = colorWidget->color().name();
-            if (!(colorWidget->color() == QColor(Qt::black)) && colorName != QLatin1String("#000000")) { // FIXME test looks redundant
-                VerbatimText *verbatimText = new VerbatimText(colorName);
-                value << verbatimText;
-            }
-            result = true;
-            */
         }
         return result;
     }
@@ -196,10 +166,19 @@ public:
     }
 
     void setFile(const File *file) {
+        bibtexFile = file;
         if (fieldLineEdit != NULL)
             fieldLineEdit->setFile(file);
         if (fieldListEdit != NULL)
             fieldListEdit->setFile(file);
+    }
+
+    void setElement(const Element *element) {
+        this->element = element;
+        if (fieldLineEdit != NULL)
+            fieldLineEdit->setElement(element);
+        if (fieldListEdit != NULL)
+            fieldListEdit->setElement(element);
     }
 
     void setCompletionItems(const QStringList &items) {
@@ -208,6 +187,31 @@ public:
         if (fieldListEdit != NULL)
             fieldListEdit->setCompletionItems(items);
     }
+
+    void selectCrossRef() {
+        Q_ASSERT(fieldLineEdit != NULL);
+        if (bibtexFile == NULL) return;
+
+        /// create a standard input dialog with a list of all keys (ids of entries)
+        bool ok = false;
+        QStringList list = bibtexFile->allKeys(File::etEntry);
+        list.sort();
+
+        /// remove own id
+        const Entry *entry = dynamic_cast<const Entry*>(element);
+        if (entry != NULL) list.removeOne(entry->id());
+
+        QString crossRef = KInputDialog::getItem(i18n("Select Cross Reference"), i18n("Select the cross reference to another entry:"), list, 0, false, &ok, p);
+
+        if (ok && !crossRef.isEmpty()) {
+            /// insert selected cross reference into edit widget
+            VerbatimText *verbatimText = new VerbatimText(crossRef);
+            Value value;
+            value.append(verbatimText);
+            reset(value);
+        }
+    }
+
 
     void enableModifiedSignal() {
         if (fieldLineEdit != NULL)
@@ -266,6 +270,11 @@ void FieldInput::setFile(const File *file)
     d->setFile(file);
 }
 
+void FieldInput::setElement(const Element *element)
+{
+    d->setElement(element);
+}
+
 void FieldInput::setCompletionItems(const QStringList &items)
 {
     d->setCompletionItems(items);
@@ -279,22 +288,7 @@ void FieldInput::setMonth(int month)
     reset(value);
 }
 
-/*
-void FieldInput::setColor(const QString&color)
+void FieldInput::selectCrossRef()
 {
-    VerbatimText *verbatimText = new VerbatimText(color);
-    Value value;
-    value.append(verbatimText);
-    reset(value);
+    d->selectCrossRef();
 }
-*/
-
-/*
-void FieldInput::resetColor()
-{
-    VerbatimText *verbatimText = new VerbatimText(QLatin1String("#000000"));
-    Value value;
-    value.append(verbatimText);
-    reset(value);
-}
-*/

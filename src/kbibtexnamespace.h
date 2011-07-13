@@ -42,7 +42,8 @@ enum FieldInputType {
     Color = 6,
     PersonList = 7,
     UrlList = 8,
-    KeywordList = 9
+    KeywordList = 9,
+    CrossRef = 10
 };
 
 enum TypeFlag {

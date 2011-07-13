@@ -43,6 +43,13 @@ class Element;
 class KBIBTEXIO_EXPORT File : public QList<Element*>
 {
 public:
+    /// enum and flags to differ between entries, macros etc
+    /// used for @see #allKeys() and @see #containsKey()
+    enum ElementType {
+        etEntry = 0x1, etMacro = 0x2, etAll = 0x3
+    };
+    Q_DECLARE_FLAGS(ElementTypes, ElementType)
+
     /// used for property map
     const static QString Url;
     const static QString Encoding;
@@ -61,14 +68,14 @@ public:
      * @see #allKeys() const
      * @return @c the object addressed by the key @c, NULL if no such file has been found
      */
-    const Element *containsKey(const QString &key) const;
+    const Element *containsKey(const QString &key, ElementTypes elementTypes = etAll) const;
 
     /**
      * Retrieves a list of all keys for example from macros or entries.
      * @see #const containsKey(const QString &) const
      * @return list of keys
      */
-    QStringList allKeys() const;
+    QStringList allKeys(ElementTypes elementTypes = etAll) const;
 
     /**
      * Retrieves a set of all unique values (as text) for a specified

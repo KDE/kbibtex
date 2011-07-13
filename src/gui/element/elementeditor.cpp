@@ -267,7 +267,7 @@ public:
             Value crossRefVal = entry.value(Entry::ftCrossRef);
             if (!crossRefVal.isEmpty() && file != NULL) {
                 crossRefStr = PlainTextValue::text(crossRefVal, file);
-                const Element *crossRefDest = file->containsKey(crossRefStr);
+                const Element *crossRefDest = file->containsKey(crossRefStr, File::etEntry);
                 if (crossRefDest != NULL && typeid(*crossRefDest) == typeid(Entry))
                     dummyFile << new Entry(*dynamic_cast<const Entry*>(crossRefDest));
                 else

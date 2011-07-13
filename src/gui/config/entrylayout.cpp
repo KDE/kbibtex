@@ -17,6 +17,7 @@
 *   Free Software Foundation, Inc.,                                       *
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
+
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <KGlobal>
@@ -51,6 +52,7 @@ public:
         case KBibTeX::Color : return QLatin1String("Color");
         case KBibTeX::PersonList : return QLatin1String("PersonList");
         case KBibTeX::KeywordList : return QLatin1String("KeywordList");
+        case KBibTeX::CrossRef : return QLatin1String("CrossRef");
         default: return QLatin1String("SingleLine");
         }
     }
@@ -70,6 +72,8 @@ public:
             return KBibTeX::PersonList;
         else if (text == QLatin1String("KeywordList"))
             return KBibTeX::KeywordList;
+        else if (text == QLatin1String("CrossRef"))
+            return KBibTeX::CrossRef;
         else
             return KBibTeX::SingleLine;
     }

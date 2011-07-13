@@ -107,7 +107,7 @@ fieldInputLayout17=SingleLine
 
 bibtexLabel18=crossref
 uiLabel18=Cross-Reference
-fieldInputLayout18=SingleLine
+fieldInputLayout18=CrossRef
 
 [EntryLayoutTab4]
 uiCaption=Misc

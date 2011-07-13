@@ -427,6 +427,11 @@ void FieldLineEdit::setFile(const File *file)
     d->file = file;
 }
 
+void FieldLineEdit::setElement(const Element *element)
+{
+    Q_UNUSED(element)
+}
+
 void FieldLineEdit::slotOpenUrl()
 {
     d->openUrl();

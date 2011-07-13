@@ -25,6 +25,8 @@
 #include <value.h>
 #include <kbibtexnamespace.h>
 
+class Element;
+
 /**
 @author Thomas Fischer
 */
@@ -42,6 +44,7 @@ public:
     void setReadOnly(bool isReadOnly);
 
     void setFile(const File *file);
+    void setElement(const Element *element);
     void setCompletionItems(const QStringList &items);
 
 signals:
@@ -49,6 +52,7 @@ signals:
 
 private slots:
     void setMonth(int month);
+    void selectCrossRef();
 
 private:
     class FieldInputPrivate;

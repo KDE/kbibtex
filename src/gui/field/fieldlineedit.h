@@ -31,6 +31,8 @@
 class QMenu;
 class QSignalMapper;
 
+class Element;
+
 /**
 @author Thomas Fischer
 */
@@ -46,6 +48,7 @@ public:
     virtual void setReadOnly(bool);
 
     void setFile(const File *file);
+    void setElement(const Element *element);
 
 private:
     bool m_incompleteRepresentation;

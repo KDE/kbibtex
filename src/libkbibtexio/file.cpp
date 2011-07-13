@@ -70,15 +70,15 @@ File::~File()
     // nothing
 }
 
-const Element *File::containsKey(const QString &key) const
+const Element *File::containsKey(const QString &key, ElementTypes elementTypes) const
 {
     for (ConstIterator it = begin(); it != end(); ++it) {
-        const Entry* entry = dynamic_cast<const Entry*>(*it);
+        const Entry* entry = elementTypes.testFlag(etEntry) ? dynamic_cast<const Entry*>(*it) : NULL;
         if (entry != NULL) {
             if (entry->id() == key)
                 return entry;
         } else {
-            const Macro* macro = dynamic_cast<const Macro*>(*it);
+            const Macro* macro = elementTypes.testFlag(etMacro) ? dynamic_cast<const Macro*>(*it) : NULL;
             if (macro != NULL) {
                 if (macro->key() == key)
                     return macro;
@@ -89,16 +89,16 @@ const Element *File::containsKey(const QString &key) const
     return NULL;
 }
 
-QStringList File::allKeys() const
+QStringList File::allKeys(ElementTypes elementTypes) const
 {
     QStringList result;
 
     foreach(const Element *element, *this) {
-        const Entry* entry = dynamic_cast<const Entry*>(element);
+        const Entry* entry = elementTypes.testFlag(etEntry) ? dynamic_cast<const Entry*>(element) : NULL;
         if (entry != NULL)
             result.append(entry->id());
         else {
-            const Macro* macro = dynamic_cast<const Macro*>(element);
+            const Macro* macro = elementTypes.testFlag(etMacro) ? dynamic_cast<const Macro*>(element) : NULL;
             if (macro != NULL)
                 result.append(macro->key());
         }

@@ -112,6 +112,7 @@ bool EntryConfiguredWidget::reset(const Element *element)
         const QString key = it.key().toLower();
         if (bibtexKeyToWidget.contains(key)) {
             FieldInput *fieldInput = bibtexKeyToWidget[key];
+            fieldInput->setElement(element);
             fieldInput->reset(it.value());
         }
     }
@@ -141,7 +142,15 @@ void EntryConfiguredWidget::setFile(const File *file)
 {
     if (file != NULL)
         for (QMap<QString, FieldInput*>::Iterator it = bibtexKeyToWidget.begin(); it != bibtexKeyToWidget.end(); ++it) {
-            it.value()->setCompletionItems(file->uniqueEntryValuesList(it.key()));
+            /// list of unique values for same field
+            QStringList list = file->uniqueEntryValuesList(it.key());
+            /// for crossref fields, add all entries' ids
+            if (it.key().toLower() == Entry::ftCrossRef)
+                list.append(file->allKeys(File::etEntry));
+            /// add macro keys
+            list.append(file->allKeys(File::etMacro));
+
+            it.value()->setCompletionItems(list);
         }
 
     ElementWidget::setFile(file);
@@ -418,6 +427,7 @@ bool FilesWidget::reset(const Element *element)
             for (Value::ConstIterator it = value.constBegin(); it != value.constEnd(); ++it)
                 combinedValue.append(*it);
         }
+    fileList->setElement(element);
     fileList->setFile(m_file);
     fileList->reset(combinedValue);
 
