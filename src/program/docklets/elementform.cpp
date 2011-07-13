@@ -81,11 +81,15 @@ public:
         }
 
         /// recreate and reset element editor
-        if (elementEditor != NULL)
+        int tabIndex = 0;
+        if (elementEditor != NULL) {
+            tabIndex = elementEditor->currentTab();
             delete elementEditor;
+        }
         elementEditor = element == NULL ? new ElementEditor(&emptyElement, file, p) : new ElementEditor(element, file, p);
         layout->addWidget(elementEditor, 0, 0, 1, 3);
         elementEditor->setEnabled(element != NULL);
+        elementEditor->setCurrentTab(tabIndex);
         elementEditor->layout()->setMargin(0);
         connect(elementEditor, SIGNAL(modified(bool)), p, SLOT(modified()));
 
