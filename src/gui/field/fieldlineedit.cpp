@@ -26,6 +26,8 @@
 #include <QFileInfo>
 #include <QDesktopServices>
 #include <QDir>
+#include <QDragEnterEvent>
+#include <QDropEvent>
 
 #include <KDebug>
 #include <KMessageBox>
@@ -35,7 +37,6 @@
 #include <KPushButton>
 #include <KSharedConfig>
 #include <KConfigGroup>
-
 
 #include <fileinfo.h>
 #include <file.h>
@@ -66,6 +67,7 @@ public:
     KBibTeX::TypeFlag typeFlag;
     KUrl urlToOpen;
     const File *file;
+    QString fieldKey;
 
     FieldLineEditPrivate(KBibTeX::TypeFlag ptf, KBibTeX::TypeFlags tf, FieldLineEdit *p)
             : parent(p), preferredTypeFlag(ptf), typeFlags(tf), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupNameGeneral(QLatin1String("General")), file(NULL) {
@@ -391,6 +393,8 @@ FieldLineEdit::FieldLineEdit(KBibTeX::TypeFlag preferredTypeFlag, KBibTeX::TypeF
     setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
     setObjectName(QLatin1String("FieldLineEdit"));
     setMenu(d->menuTypes);
+    setChildAcceptDrops(false);
+    setAcceptDrops(true);
 }
 
 bool FieldLineEdit::apply(Value& value) const
@@ -432,6 +436,11 @@ void FieldLineEdit::setElement(const Element *element)
     Q_UNUSED(element)
 }
 
+void FieldLineEdit::setFieldKey(const QString &fieldKey)
+{
+    d->fieldKey = fieldKey;
+}
+
 void FieldLineEdit::slotOpenUrl()
 {
     d->openUrl();
@@ -440,4 +449,30 @@ void FieldLineEdit::slotOpenUrl()
 void FieldLineEdit::slotTextChanged(const QString &text)
 {
     d->textChanged(text);
+}
+
+void FieldLineEdit::dragEnterEvent(QDragEnterEvent *event)
+{
+    if (event->mimeData()->hasFormat("text/plain") || event->mimeData()->hasFormat("text/x-bibtex"))
+        event->acceptProposedAction();
+}
+
+void FieldLineEdit::dropEvent(QDropEvent *event)
+{
+    const QString text = event->mimeData()->text();
+    if (text.isEmpty()) return;
+
+    if (!d->fieldKey.isEmpty() && text.startsWith("@")) {
+        FileImporterBibTeX importer;
+        File *file = importer.fromString(text);
+        const Entry *entry = (file != NULL && file->count() == 1) ? dynamic_cast<const Entry*>(file->first()) : NULL;
+        if (entry != NULL && entry->contains(d->fieldKey)) {
+            reset(entry->value(d->fieldKey));
+            emit textChanged(text);
+            return;
+        }
+    }
+
+    setText(text);
+    emit textChanged(text);
 }

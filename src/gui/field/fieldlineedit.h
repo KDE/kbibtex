@@ -49,6 +49,11 @@ public:
 
     void setFile(const File *file);
     void setElement(const Element *element);
+    void setFieldKey(const QString &fieldKey);
+
+protected:
+    void dragEnterEvent(QDragEnterEvent *event);
+    void dropEvent(QDropEvent *event);
 
 private:
     bool m_incompleteRepresentation;

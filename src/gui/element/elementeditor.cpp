@@ -432,6 +432,16 @@ bool ElementEditor::elementUnapplied()
     return d->elementUnapplied;
 }
 
+int ElementEditor::currentTab()
+{
+    return d->tab->currentIndex();
+}
+
+void ElementEditor::setCurrentTab(int tabIndex)
+{
+    d->tab->setCurrentIndex(tabIndex);
+}
+
 void ElementEditor::tabChanged()
 {
     d->switchTo(d->tab->currentWidget());

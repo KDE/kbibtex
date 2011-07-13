@@ -44,6 +44,7 @@ public:
     void setIcon(const KIcon & icon);
     void setFont(const QFont & font);
     void setButtonToolTip(const QString &);
+    void setChildAcceptDrops(bool acceptDrops);
 
     void prependWidget(QWidget *widget);
     void appendWidget(QWidget *widget);

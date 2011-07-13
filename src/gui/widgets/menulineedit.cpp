@@ -188,6 +188,14 @@ void MenuLineEdit::setButtonToolTip(const QString &text)
     d->m_pushButtonType->setToolTip(text);
 }
 
+void MenuLineEdit::setChildAcceptDrops(bool acceptDrops)
+{
+    if (d->m_singleLineEditText != NULL)
+        d->m_singleLineEditText->setAcceptDrops(acceptDrops);
+    if (d->m_multiLineEditText != NULL)
+        d->m_multiLineEditText->setAcceptDrops(acceptDrops);
+}
+
 void MenuLineEdit::prependWidget(QWidget *widget)
 {
     d->prependWidget(widget);

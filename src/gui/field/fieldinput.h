@@ -45,6 +45,7 @@ public:
 
     void setFile(const File *file);
     void setElement(const Element *element);
+    void setFieldKey(const QString &fieldKey);
     void setCompletionItems(const QStringList &items);
 
 signals:

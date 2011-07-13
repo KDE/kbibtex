@@ -181,6 +181,13 @@ public:
             fieldListEdit->setElement(element);
     }
 
+    void setFieldKey(const QString &fieldKey) {
+        if (fieldLineEdit != NULL)
+            fieldLineEdit->setFieldKey(fieldKey);
+        if (fieldListEdit != NULL)
+            fieldListEdit->setFieldKey(fieldKey);
+    }
+
     void setCompletionItems(const QStringList &items) {
         if (fieldLineEdit != NULL)
             fieldLineEdit->setCompletionItems(items);
@@ -273,6 +280,11 @@ void FieldInput::setFile(const File *file)
 void FieldInput::setElement(const Element *element)
 {
     d->setElement(element);
+}
+
+void FieldInput::setFieldKey(const QString &fieldKey)
+{
+    d->setFieldKey(fieldKey);
 }
 
 void FieldInput::setCompletionItems(const QStringList &items)

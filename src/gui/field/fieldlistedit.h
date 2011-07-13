@@ -29,6 +29,8 @@
 #include <value.h>
 
 class QCheckBox;
+class QDropEvent;
+class QDragEnterEvent;
 
 class KPushButton;
 
@@ -51,6 +53,7 @@ public:
     virtual void setReadOnly(bool isReadOnly);
     virtual void setFile(const File *file);
     virtual void setElement(const Element *element);
+    virtual void setFieldKey(const QString &fieldKey);
     virtual void setCompletionItems(const QStringList &items);
 
 signals:
@@ -59,6 +62,8 @@ signals:
 protected:
     void addButton(KPushButton *button);
     void lineAdd(Value *value);
+    void dragEnterEvent(QDragEnterEvent *event);
+    void dropEvent(QDropEvent *);
 
 private slots:
     void lineAdd();

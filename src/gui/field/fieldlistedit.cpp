@@ -24,6 +24,8 @@
 #include <QLayout>
 #include <QSignalMapper>
 #include <QCheckBox>
+#include <QDragEnterEvent>
+#include <QDropEvent>
 
 #include <KMessageBox>
 #include <KLocale>
@@ -31,6 +33,7 @@
 #include <KFileDialog>
 #include <KInputDialog>
 
+#include <fileinfo.h>
 #include <file.h>
 #include <entry.h>
 #include <fileimporterbibtex.h>
@@ -54,6 +57,7 @@ public:
     QBoxLayout *pushButtonContainerLayout;
     KPushButton *addLineButton;
     const File *file;
+    QString fieldKey;
     QWidget *container;
     QScrollArea *scrollArea;
     bool m_isReadOnly;
@@ -126,6 +130,7 @@ public:
     FieldLineEdit *addFieldLineEdit() {
         FieldLineEdit *le = new FieldLineEdit(preferredTypeFlag, typeFlags, false, container);
         le->setFile(file);
+        le->setAcceptDrops(false);
         le->setReadOnly(m_isReadOnly);
         le->setInnerWidgetsTransparency(true);
         layout->insertWidget(layout->count() - 2, le);
@@ -200,6 +205,7 @@ FieldListEdit::FieldListEdit(KBibTeX::TypeFlag preferredTypeFlag, KBibTeX::TypeF
 {
     setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
     setMinimumSize(fontMetrics().averageCharWidth() * 30, fontMetrics().averageCharWidth() * 10);
+    setAcceptDrops(true);
 }
 
 bool FieldListEdit::reset(const Value& value)
@@ -255,6 +261,11 @@ void FieldListEdit::setElement(const Element *element)
     Q_UNUSED(element)
 }
 
+void FieldListEdit::setFieldKey(const QString &fieldKey)
+{
+    d->fieldKey = fieldKey;
+}
+
 void FieldListEdit::setCompletionItems(const QStringList &items)
 {
     d->completionItems = items;
@@ -265,6 +276,47 @@ void FieldListEdit::setCompletionItems(const QStringList &items)
 void FieldListEdit::addButton(KPushButton *button)
 {
     d->addButton(button);
+}
+
+void FieldListEdit::dragEnterEvent(QDragEnterEvent *event)
+{
+    if (event->mimeData()->hasFormat("text/plain") || event->mimeData()->hasFormat("text/x-bibtex"))
+        event->acceptProposedAction();
+}
+
+void FieldListEdit::dropEvent(QDropEvent *event)
+{
+    const QString text = event->mimeData()->text();
+    if (text.isEmpty()) return;
+
+    if (!d->fieldKey.isEmpty() && text.startsWith("@")) {
+        FileImporterBibTeX importer;
+        File *file = importer.fromString(text);
+        const Entry *entry = (file != NULL && file->count() == 1) ? dynamic_cast<const Entry*>(file->first()) : NULL;
+
+        if (entry != NULL && d->fieldKey == QLatin1String("^external")) {
+            /// handle "external" list differently
+            QList<KUrl> urlList = FileInfo::entryUrls(entry, KUrl(file->property(File::Url).toString()));
+            Value v;
+            foreach(const KUrl &url, urlList) {
+                v.append(new VerbatimText(url.pathOrUrl()));
+            }
+            reset(v);
+            emit modified();
+            return;
+        } else if (entry != NULL && entry->contains(d->fieldKey)) {
+            /// case for "normal" lists like for authors, editors, ...
+            reset(entry->value(d->fieldKey));
+            emit modified();
+            return;
+        }
+    }
+
+    /// fall-back case: single filed line edit with text
+    d->removeAllFieldLineEdits();
+    FieldLineEdit *fle = d->addFieldLineEdit();
+    fle->setText(text);
+    emit modified();
 }
 
 void FieldListEdit::lineAdd(Value *value)
