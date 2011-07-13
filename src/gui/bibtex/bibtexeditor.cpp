@@ -23,7 +23,6 @@
 
 #include <KDialog>
 #include <KLocale>
-#include <KDebug>
 #include <KMessageBox>
 #include <KGuiItem>
 #include <KConfigGroup>
@@ -212,7 +211,6 @@ void BibTeXEditor::currentChanged(const QModelIndex & current, const QModelIndex
     QTreeView::currentChanged(current, previous); // FIXME necessary?
 
     m_current = bibTeXModel()->element(sortFilterProxyModel()->mapToSource(current).row());
-    emit currentElementChanged(m_current, bibTeXModel()->bibTeXFile());
 }
 
 void BibTeXEditor::selectionChanged(const QItemSelection & selected, const QItemSelection & deselected)
@@ -231,8 +229,14 @@ void BibTeXEditor::selectionChanged(const QItemSelection & selected, const QItem
         m_selection.removeOne(bibTeXModel()->element((*it).row()));
     }
 
-
     emit selectedElementsChanged();
+}
+
+void BibTeXEditor::mouseReleaseEvent(QMouseEvent *event)
+{
+    Q_UNUSED(event);
+    /// delay notification about change of current item to allow drag'n'drop to work
+    emit currentElementChanged(m_current, bibTeXModel()->bibTeXFile());
 }
 
 void BibTeXEditor::selectionDelete()
@@ -266,7 +270,7 @@ ValueListModel *BibTeXEditor::valueListModel(const QString &field)
 {
     BibTeXFileModel *bibteXModel = bibTeXModel();
     if (bibteXModel != NULL)
-        return new ValueListModel(bibteXModel->bibTeXFile(), field, this);
+        return new ValueListModel(false, bibteXModel->bibTeXFile(), field, this);
 
     return NULL;
 }

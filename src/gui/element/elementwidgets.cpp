@@ -33,7 +33,6 @@
 #include <KLocale>
 #include <KLineEdit>
 #include <KComboBox>
-#include <KDebug>
 
 #include <kbibtexnamespace.h>
 #include <bibtexentries.h>
@@ -113,6 +112,7 @@ bool EntryConfiguredWidget::reset(const Element *element)
         if (bibtexKeyToWidget.contains(key)) {
             FieldInput *fieldInput = bibtexKeyToWidget[key];
             fieldInput->setElement(element);
+            fieldInput->setFieldKey(key);
             fieldInput->reset(it.value());
         }
     }
@@ -340,6 +340,7 @@ FilesWidget::FilesWidget(QWidget *parent)
 {
     QVBoxLayout *layout = new QVBoxLayout(this);
     fileList = new FieldInput(KBibTeX::UrlList, KBibTeX::tfVerbatim, KBibTeX::tfVerbatim, this);
+    fileList->setFieldKey(QLatin1String("^external"));
     layout->addWidget(fileList);
     connect(fileList, SIGNAL(modified()), this, SLOT(gotModified()));
 }
