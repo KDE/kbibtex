@@ -50,10 +50,10 @@ public:
         layout->setColumnStretch(1, 0);
         layout->setColumnStretch(2, 0);
 
-        buttonApply = new KPushButton(KIcon("apply"), i18n("Apply"), p);
+        buttonApply = new KPushButton(KIcon("dialog-ok-apply"), i18n("Apply"), p);
         layout->addWidget(buttonApply, 1, 1, 1, 1);
 
-        buttonReset = new KPushButton(KIcon("reset"), i18n("Reset"), p);
+        buttonReset = new KPushButton(KIcon("edit-undo"), i18n("Reset"), p);
         layout->addWidget(buttonReset, 1, 2, 1, 1);
 
         loadElement(NULL, NULL);
