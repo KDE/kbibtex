@@ -42,12 +42,15 @@ public slots:
     void update();
 
 protected slots:
-    void resizeEvent(QResizeEvent *e = NULL);
+    void resizeEvent(QResizeEvent *e);
 
 private slots:
     void listItemActivated(const QModelIndex &);
     void searchSelection();
     void startItemRenaming();
+    void showCountColumnToggled();
+    void sortByCountToggled();
+    void issueResizeEvent();
 
 private:
     class ValueListPrivate;

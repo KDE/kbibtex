@@ -270,7 +270,7 @@ ValueListModel *BibTeXEditor::valueListModel(const QString &field)
 {
     BibTeXFileModel *bibteXModel = bibTeXModel();
     if (bibteXModel != NULL)
-        return new ValueListModel(false, bibteXModel->bibTeXFile(), field, this);
+        return new ValueListModel(bibteXModel->bibTeXFile(), field, this);
 
     return NULL;
 }

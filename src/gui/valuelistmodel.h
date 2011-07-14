@@ -22,6 +22,7 @@
 #define KBIBTEX_PROGRAM_VALUELISTMODEL_H
 
 #include <QAbstractTableModel>
+#include <QAbstractItemView>
 #include <QStyledItemDelegate>
 
 #include <bibtexfilemodel.h>
@@ -35,15 +36,18 @@ class KBIBTEXGUI_EXPORT ValueListDelegate : public QStyledItemDelegate
 
 private:
     QString m_fieldName;
+    QAbstractItemView *m_parent;
 
 public:
-    ValueListDelegate(QWidget *parent = NULL)
-            : QStyledItemDelegate(parent), m_fieldName(QString::null) {}
+    ValueListDelegate(QAbstractItemView *parent = NULL)
+            : QStyledItemDelegate(parent), m_fieldName(QString::null), m_parent(parent) {}
 
     QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &, const QModelIndex &index) const;
     void setEditorData(QWidget *editor, const QModelIndex &index) const;
     void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
     QSize sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index) const;
+    void initStyleOption(QStyleOptionViewItem *option, const QModelIndex &index) const;
+    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
 
     void setFieldName(const QString &fieldName) {
         m_fieldName = fieldName;
@@ -53,8 +57,11 @@ private slots:
     void commitAndCloseEditor();
 };
 
-class ValueListModel : public QAbstractTableModel
+class KBIBTEXGUI_EXPORT ValueListModel : public QAbstractTableModel
 {
+public:
+    enum SortBy { SortByText, SortByCount };
+
 private:
     struct ValueLine {
         QString text;
@@ -67,6 +74,8 @@ private:
     const QString fName;
     QList<ValueLine> values;
     QMap<QString, QString> colorToLabel;
+    bool showCountColumn;
+    SortBy sortBy;
 
 public:
     ValueListModel(const File *bibtexFile, const QString &fieldName, QObject *parent);
@@ -78,10 +87,14 @@ public:
     virtual Qt::ItemFlags flags(const QModelIndex &index) const;
     virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
+    void setShowCountColumn(bool showCountColumn);
+    void setSortBy(SortBy sortBy);
+
 private:
     void updateValues();
     void insertValue(const Value &value);
     int indexOf(const QString &text);
+    QString htmlize(const QString &text) const;
 };
 
 

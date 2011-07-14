@@ -25,7 +25,11 @@
 #include <KDebug>
 #include <KSharedConfig>
 #include <KConfigGroup>
+#include <KColorScheme>
 
+#include <QApplication>
+#include <QTextDocument>
+#include <QAbstractTextDocumentLayout>
 #include <QListView>
 #include <QGridLayout>
 #include <QStringListModel>
@@ -39,6 +43,8 @@
 #include <entry.h>
 #include <preferences.h>
 #include "valuelistmodel.h"
+
+const int CountRole = Qt::UserRole + 611;
 
 QWidget *ValueListDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &sovi, const QModelIndex &index) const
 {
@@ -85,10 +91,104 @@ void ValueListDelegate::commitAndCloseEditor()
     emit closeEditor(editor);
 }
 
+void ValueListDelegate::initStyleOption(QStyleOptionViewItem *option, const QModelIndex &index) const
+{
+    QStyleOptionViewItemV4 *noTextOption = qstyleoption_cast<QStyleOptionViewItemV4 *>(option);
+    QStyledItemDelegate::initStyleOption(noTextOption, index);
+    if (option->decorationPosition != QStyleOptionViewItem::Top) {
+        /// remove text from style (do not draw text)
+        noTextOption->text.clear();
+    }
+
+}
+
+void ValueListDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
+{
+    /// code heavily inspired by kdepimlibs-4.6.3/akonadi/collectionstatisticsdelegate.cpp
+
+    /// save painter's state, restored before leaving this function
+    painter->save();
+
+    /// first, paint the basic, but without the text. We remove the text
+    /// in initStyleOption(), which gets called by QStyledItemDelegate::paint().
+    QStyledItemDelegate::paint(painter, option, index);
+
+    /// now, we retrieve the correct style option by calling intiStyleOption from
+    /// the superclass.
+    QStyleOptionViewItemV4 option4 = option;
+    QStyledItemDelegate::initStyleOption(&option4, index);
+    QString field = option4.text;
+
+    /// now calculate the rectangle for the text
+    QStyle *s = m_parent->style();
+    const QWidget *widget = option4.widget;
+    const QRect textRect = s->subElementRect(QStyle::SE_ItemViewItemText, &option4, widget);
+
+    if (option.state & QStyle::State_Selected) {
+        /// selected lines are drawn with different color
+        painter->setPen(option.palette.highlightedText().color());
+    }
+
+    /// count will be empty unless only one column is shown
+    const QString count = index.column() == 0 && index.model()->columnCount() == 1 ? QString(QLatin1String(" (%1)")).arg(index.data(CountRole).toInt()) : QLatin1String("");
+
+    /// squeeze the folder text if it is to big and calculate the rectangles
+    /// where the folder text and the unread count will be drawn to
+    QFontMetrics fm(painter->fontMetrics());
+    int countWidth = fm.width(count);
+    int fieldWidth = fm.width(field);
+    if (countWidth + fieldWidth > textRect.width()) {
+        /// text plus count is too wide for column, cut text and insert "..."
+        field = fm.elidedText(field, Qt::ElideRight, textRect.width() - countWidth);
+        fieldWidth = fm.width(field);
+    }
+
+    /// determine rects to draw field
+    int top = textRect.top() + (textRect.height() - fm.height()) / 2;
+    QRect fieldRect = textRect;
+    QRect countRect = textRect;
+    fieldRect.setTop(top);
+    fieldRect.setHeight(fm.height());
+
+    if (index.column() == 0) {
+        /// left-align text
+        fieldRect.setLeft(fieldRect.left() + 4); ///< hm, indent necessary?
+        fieldRect.setRight(fieldRect.left() + fieldWidth);
+    } else {
+        /// right-align text
+        fieldRect.setRight(fieldRect.right() - 4); ///< hm, indent necessary?
+        fieldRect.setLeft(fieldRect.right() - fieldWidth); ///< hm, indent necessary?
+    }
+
+    /// draw field name
+    painter->drawText(fieldRect, Qt::AlignLeft, field);
+
+    if (!count.isEmpty()) {
+        /// determine rects to draw count
+        countRect.setTop(top);
+        countRect.setHeight(fm.height());
+        countRect.setLeft(fieldRect.right());
+
+        /// use bold font
+        QFont font = painter->font();
+        font.setBold(true);
+        painter->setFont(font);
+        /// determine color for count number
+        const QColor countColor = (option.state & QStyle::State_Selected) ? KColorScheme(QPalette::Active, KColorScheme::Selection).foreground(KColorScheme::LinkText).color() : KColorScheme(QPalette::Active, KColorScheme::View).foreground(KColorScheme::LinkText).color();
+        painter->setPen(countColor);
+
+        /// draw count
+        painter->drawText(countRect, Qt::AlignLeft, count);
+    }
+
+    /// restore painter's state
+    painter->restore();
+}
+
 static QRegExp ignoredInSorting("[{}\\]+");
 
 ValueListModel::ValueListModel(const File *bibtexFile, const QString &fieldName, QObject *parent)
-        : QAbstractTableModel(parent), file(bibtexFile), fName(fieldName.toLower())
+        : QAbstractTableModel(parent), file(bibtexFile), fName(fieldName.toLower()), showCountColumn(true), sortBy(SortByText)
 {
     /// load mapping from color value to label
     KSharedConfigPtr config(KSharedConfig::openConfig(QLatin1String("kbibtexrc")));
@@ -109,7 +209,7 @@ int ValueListModel::rowCount(const QModelIndex & parent) const
 
 int ValueListModel::columnCount(const QModelIndex & parent) const
 {
-    return parent == QModelIndex() ? 2 : 0;
+    return parent == QModelIndex() ? (showCountColumn ? 2 : 1) : 0;
 }
 
 QVariant ValueListModel::data(const QModelIndex & index, int role) const
@@ -128,13 +228,8 @@ QVariant ValueListModel::data(const QModelIndex & index, int role) const
                 return QVariant(values[index.row()].text);
         } else
             return QVariant(values[index.row()].count);
-    } else if (role == Qt::TextAlignmentRole) {
-        if (index.column() == 0)
-            return QVariant(Qt::AlignLeft);
-        else
-            return QVariant(Qt::AlignRight);
     } else if (role == SortRole) {
-        if (index.column() == 0) {
+        if ((showCountColumn && index.column() == 0) || (!showCountColumn && sortBy == SortByText)) {
             QString buffer = values[index.row()].sortBy.isNull() ? values[index.row()].text : values[index.row()].sortBy;
             return QVariant(buffer.replace(ignoredInSorting, ""));
         } else
@@ -143,6 +238,8 @@ QVariant ValueListModel::data(const QModelIndex & index, int role) const
         return QVariant(values[index.row()].text);
     else if (role == Qt::EditRole)
         return QVariant::fromValue(values[index.row()].value);
+    else if (role == CountRole)
+        return QVariant(values[index.row()].count);
     else
         return QVariant();
 }
@@ -208,10 +305,22 @@ QVariant ValueListModel::headerData(int section, Qt::Orientation orientation, in
 {
     if (section >= 2 || orientation != Qt::Horizontal || role != Qt::DisplayRole)
         return QVariant();
-    else if (section == 0)
+    else if ((section == 0 && columnCount() == 2) || (columnCount() == 1 && sortBy == SortByText))
         return QVariant(i18n("Value"));
     else
         return QVariant(i18n("Count"));
+}
+
+void ValueListModel::setShowCountColumn(bool showCountColumn)
+{
+    this->showCountColumn = showCountColumn;
+    reset();
+}
+
+void ValueListModel::setSortBy(SortBy sortBy)
+{
+    this->sortBy = sortBy;
+    reset();
 }
 
 void ValueListModel::updateValues()
@@ -227,6 +336,8 @@ void ValueListModel::updateValues()
                     insertValue(eit.value());
                     break;
                 }
+                if (eit.value().isEmpty())
+                    kWarning() << "value for key" << key << "in entry" << entry->id() << "is empty";
             }
         }
     }
@@ -236,8 +347,9 @@ void ValueListModel::insertValue(const Value &value)
 {
     foreach(ValueItem *item, value) {
         const QString text = PlainTextValue::text(*item, file);
-        int index = indexOf(text);
+        if (text.isEmpty()) continue; ///< skip empty values
 
+        int index = indexOf(text);
         if (index < 0) {
             /// previously unknown text
             ValueLine newValueLine;
@@ -264,7 +376,8 @@ int ValueListModel::indexOf(const QString &text)
     QString cmpText = text;
     if (fName == Entry::ftColor && !(color = colorToLabel.key(text, QLatin1String(""))).isEmpty())
         cmpText = color;
-    Q_ASSERT(!cmpText.isEmpty());
+    if (cmpText.isEmpty())
+        kWarning() << "Should never happen";
 
     int i = 0;
     /// this is really slow for large data sets: O(n^2)

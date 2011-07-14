@@ -33,6 +33,7 @@
 #include <KConfigGroup>
 #include <KLocale>
 #include <KAction>
+#include <KToggleAction>
 
 #include <bibtexfields.h>
 #include <entry.h>
@@ -49,17 +50,21 @@ private:
 public:
     KSharedConfigPtr config;
     const QString configGroupName;
-    const QString configKeyName;
+    const QString configKeyFieldName, configKeyShowCountColumn, configKeySortByCountAction;
 
     BibTeXEditor *editor;
     QTreeView *treeviewFieldValues;
+    ValueListModel *model;
     QSortFilterProxyModel *sortingModel;
     KComboBox *comboboxFieldNames;
     const int countWidth;
+    KToggleAction *showCountColumnAction;
+    KToggleAction *sortByCountAction;
 
     ValueListPrivate(ValueList *parent)
             : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName(QLatin1String("Value List Docklet")),
-            configKeyName(QLatin1String("FieldName")), sortingModel(NULL), countWidth(parent->fontMetrics().width(i18n("Count"))) {
+            configKeyFieldName(QLatin1String("FieldName")), configKeyShowCountColumn(QLatin1String("ShowCountColumn")),
+            configKeySortByCountAction(QLatin1String("SortByCountAction")), model(NULL), sortingModel(NULL), countWidth(8 + parent->fontMetrics().width(i18n("Count"))) {
         setupGUI();
         initialize();
     }
@@ -78,6 +83,7 @@ public:
         treeviewFieldValues->setItemDelegate(delegate);
         treeviewFieldValues->setRootIsDecorated(false);
         treeviewFieldValues->setSelectionMode(QTreeView::ExtendedSelection);
+        treeviewFieldValues->setAlternatingRowColors(true);
 
         treeviewFieldValues->setContextMenuPolicy(Qt::ActionsContextMenu);
         /// create context menu item to start renaming
@@ -93,6 +99,16 @@ public:
 
         connect(comboboxFieldNames, SIGNAL(activated(int)), p, SLOT(update()));
         connect(treeviewFieldValues, SIGNAL(activated(const QModelIndex &)), p, SLOT(listItemActivated(const QModelIndex &)));
+
+        /// add context menu to header
+        treeviewFieldValues->header()->setContextMenuPolicy(Qt::ActionsContextMenu);
+        showCountColumnAction = new KToggleAction(i18n("Show Count Column"), treeviewFieldValues->header());
+        connect(showCountColumnAction, SIGNAL(triggered()), p, SLOT(showCountColumnToggled()));
+        treeviewFieldValues->header()->addAction(showCountColumnAction);
+
+        sortByCountAction = new KToggleAction(i18n("Sort by Count"), treeviewFieldValues->header());
+        connect(sortByCountAction, SIGNAL(triggered()), p, SLOT(sortByCountToggled()));
+        treeviewFieldValues->header()->addAction(sortByCountAction);
     }
 
     void initialize() {
@@ -106,8 +122,11 @@ public:
         }
 
         KConfigGroup configGroup(config, configGroupName);
-        QString fieldName = configGroup.readEntry(configKeyName, QString());
+        QString fieldName = configGroup.readEntry(configKeyFieldName, QString());
         comboboxFieldNames->setCurrentItem(fieldName);
+        showCountColumnAction->setChecked(configGroup.readEntry(configKeyShowCountColumn, true));
+        sortByCountAction->setChecked(configGroup.readEntry(configKeySortByCountAction, false));
+        sortByCountAction->setEnabled(showCountColumnAction->isChecked());
     }
 
     void update() {
@@ -116,20 +135,24 @@ public:
         if (text.isEmpty()) text = comboboxFieldNames->currentText();
 
         delegate->setFieldName(text);
-        QAbstractItemModel *model = editor == NULL ? NULL : editor->valueListModel(text);
-        if (model != NULL) {
+        model = editor == NULL ? NULL : editor->valueListModel(text);
+        QAbstractItemModel *usedModel = model;
+        if (usedModel != NULL) {
+            model->setShowCountColumn(showCountColumnAction->isChecked());
+            model->setSortBy(sortByCountAction->isChecked() ? ValueListModel::SortByCount : ValueListModel::SortByText);
+
             if (sortingModel != NULL) delete sortingModel;
             sortingModel = new QSortFilterProxyModel(p);
             sortingModel->setSourceModel(model);
             sortingModel->sort(1, Qt::DescendingOrder);
             sortingModel->setSortRole(SortRole);
-            model = sortingModel;
+            usedModel = sortingModel;
         }
-        treeviewFieldValues->setModel(model);
+        treeviewFieldValues->setModel(usedModel);
         treeviewFieldValues->header()->setResizeMode(QHeaderView::Fixed);
 
         KConfigGroup configGroup(config, configGroupName);
-        configGroup.writeEntry(configKeyName, text);
+        configGroup.writeEntry(configKeyFieldName, text);
         config->sync();
     }
 };
@@ -149,7 +172,7 @@ void ValueList::update()
 {
     d->update();
     setEnabled(d->editor != NULL);
-    QTimer::singleShot(100, this, SLOT(resizeEvent()));
+    QTimer::singleShot(500, this, SLOT(issueResizeEvent()));
 }
 
 void ValueList::resizeEvent(QResizeEvent *)
@@ -199,4 +222,39 @@ void ValueList::startItemRenaming()
     int row = d->treeviewFieldValues->selectionModel()->selectedIndexes().first().row();
     QModelIndex index = d->treeviewFieldValues->model()->index(row, 0);
     d->treeviewFieldValues->edit(index);
+}
+
+void ValueList::showCountColumnToggled()
+{
+    KToggleAction *action = static_cast<KToggleAction *>(sender());
+    Q_ASSERT(action == d->showCountColumnAction);
+
+    if (d->model != NULL)
+        d->model->setShowCountColumn(action->isChecked());
+
+    d->sortByCountAction->setEnabled(!action->isChecked());
+    if (action->isChecked())
+        resizeEvent(NULL);
+
+    KConfigGroup configGroup(d->config, d->configGroupName);
+    configGroup.writeEntry(d->configKeySortByCountAction, action->isChecked());
+    d->config->sync();
+}
+
+void ValueList::sortByCountToggled()
+{
+    KToggleAction *action = static_cast<KToggleAction *>(sender());
+    Q_ASSERT(action == d->sortByCountAction);
+
+    if (d->model != NULL)
+        d->model->setSortBy(action->isChecked() ? ValueListModel::SortByCount : ValueListModel::SortByText);
+
+    KConfigGroup configGroup(d->config, d->configGroupName);
+    configGroup.writeEntry(d->configKeySortByCountAction, action->isChecked());
+    d->config->sync();
+}
+
+void ValueList::issueResizeEvent()
+{
+    resizeEvent(NULL);
 }
