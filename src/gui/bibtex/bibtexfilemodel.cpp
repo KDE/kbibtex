@@ -125,6 +125,17 @@ bool SortFilterBibTeXFileModel::lessThan(const QModelIndex & left, const QModelI
         /// fall back to default implementation
         return QSortFilterProxyModel::lessThan(left, right);
     } else {
+        /// if comparing two numbers, do not perform lexicographical sorting (i.e. 13 < 2),
+        /// but numerical sorting instead (i.e. 13 > 2)
+        const QString textLeft = left.data(Qt::DisplayRole).toString();
+        const QString textRight = right.data(Qt::DisplayRole).toString();
+        bool okLeft = false, okRight = false;
+        int numberLeft = textLeft.toInt(&okLeft);
+        int numberRight = textRight.toInt(&okRight);
+        if (okLeft && okRight)
+            return numberLeft < numberRight;
+
+
         /// everything else can be sorted by default implementation
         /// (i.e. alphabetically or lexicographically)
         return QSortFilterProxyModel::lessThan(left, right);
