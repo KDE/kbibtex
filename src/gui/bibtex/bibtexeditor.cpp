@@ -77,6 +77,10 @@ protected Q_SLOTS:
     /// Will be triggered when closing the dialog
     /// given a re-implementation of closeEvent as above
     virtual void slotButtonClicked(int button) {
+        /// save window size of Ok is clicked
+        if (button == KDialog::Ok)
+            saveDialogSize(configGroup);
+
         /// ignore button event if it is from the Cancel button
         /// and the user does not want to discard his/her changes
         if (button != KDialog::Cancel || allowedToClose())
