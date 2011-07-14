@@ -112,7 +112,6 @@ bool EntryConfiguredWidget::reset(const Element *element)
         if (bibtexKeyToWidget.contains(key)) {
             FieldInput *fieldInput = bibtexKeyToWidget[key];
             fieldInput->setElement(element);
-            fieldInput->setFieldKey(key);
             fieldInput->reset(it.value());
         }
     }
@@ -179,6 +178,7 @@ void EntryConfiguredWidget::createGUI()
         KBibTeX::TypeFlags typeFlags = fd.isNull() ? KBibTeX::tfSource : fd.typeFlags;
         KBibTeX::TypeFlag preferredTypeFlag = fd.isNull() ? KBibTeX::tfSource : fd.preferredTypeFlag;
         FieldInput *fieldInput = new FieldInput((*sflit).fieldInputLayout, preferredTypeFlag, typeFlags, this);
+        fieldInput->setFieldKey((*sflit).bibtexLabel);
         bibtexKeyToWidget.insert((*sflit).bibtexLabel, fieldInput);
         connect(fieldInput, SIGNAL(modified()), this, SLOT(gotModified()));
 

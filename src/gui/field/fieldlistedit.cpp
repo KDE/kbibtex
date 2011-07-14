@@ -312,7 +312,7 @@ void FieldListEdit::dropEvent(QDropEvent *event)
         }
     }
 
-    /// fall-back case: single filed line edit with text
+    /// fall-back case: single field line edit with text
     d->removeAllFieldLineEdits();
     FieldLineEdit *fle = d->addFieldLineEdit();
     fle->setText(text);

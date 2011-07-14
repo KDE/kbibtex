@@ -29,7 +29,6 @@
 #include <QDragEnterEvent>
 #include <QDropEvent>
 
-#include <KDebug>
 #include <KMessageBox>
 #include <KGlobalSettings>
 #include <KLocale>
@@ -462,17 +461,27 @@ void FieldLineEdit::dropEvent(QDropEvent *event)
     const QString text = event->mimeData()->text();
     if (text.isEmpty()) return;
 
+    kDebug() << "fieldKey" << d->fieldKey;
     if (!d->fieldKey.isEmpty() && text.startsWith("@")) {
         FileImporterBibTeX importer;
         File *file = importer.fromString(text);
         const Entry *entry = (file != NULL && file->count() == 1) ? dynamic_cast<const Entry*>(file->first()) : NULL;
-        if (entry != NULL && entry->contains(d->fieldKey)) {
+        if (entry != NULL && d->fieldKey == Entry::ftCrossRef) {
+            /// handle drop on crossref line differently (use dropped entry's id)
+            Value v;
+            v.append(new VerbatimText(entry->id()));
+            reset(v);
+            emit textChanged(entry->id());
+            return;
+        } else if (entry != NULL && entry->contains(d->fieldKey)) {
+            /// case for "normal" fields like for journal, pages, ...
             reset(entry->value(d->fieldKey));
             emit textChanged(text);
             return;
         }
     }
 
+    /// fall-back case: just copy whole text into edit widget
     setText(text);
     emit textChanged(text);
 }
