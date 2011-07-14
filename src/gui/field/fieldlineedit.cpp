@@ -29,6 +29,7 @@
 #include <QDragEnterEvent>
 #include <QDropEvent>
 
+#include <KDebug>
 #include <KMessageBox>
 #include <KGlobalSettings>
 #include <KLocale>
@@ -461,7 +462,6 @@ void FieldLineEdit::dropEvent(QDropEvent *event)
     const QString text = event->mimeData()->text();
     if (text.isEmpty()) return;
 
-    kDebug() << "fieldKey" << d->fieldKey;
     if (!d->fieldKey.isEmpty() && text.startsWith("@")) {
         FileImporterBibTeX importer;
         File *file = importer.fromString(text);
