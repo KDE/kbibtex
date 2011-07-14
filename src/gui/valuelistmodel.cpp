@@ -234,9 +234,15 @@ QVariant ValueListModel::data(const QModelIndex & index, int role) const
             return QVariant(buffer.replace(ignoredInSorting, ""));
         } else
             return QVariant(values[index.row()].count);
-    } else if (role == SearchTextRole)
-        return QVariant(values[index.row()].text);
-    else if (role == Qt::EditRole)
+    } else if (role == SearchTextRole) {
+        Person *person = NULL;
+        if ((fName == Entry::ftAuthor || fName == Entry::ftEditor) && (person = dynamic_cast<Person*>(values[index.row()].value.first())) != NULL) {
+            /// if current value is a person (author or editor),
+            /// do not search for full name but for last name only
+            return QVariant(person->lastName());
+        } else
+            return QVariant(values[index.row()].text);
+    } else if (role == Qt::EditRole)
         return QVariant::fromValue(values[index.row()].value);
     else if (role == CountRole)
         return QVariant(values[index.row()].count);
