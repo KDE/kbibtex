@@ -21,6 +21,7 @@
 #include <KCmdLineArgs>
 #include <KApplication>
 #include <KAboutData>
+#include <KMessageBox>
 
 #include "program.h"
 #include "mainwindow.h"
@@ -34,7 +35,7 @@ const char *bugTrackerHomepage = "https://gna.org/bugs/?group=kbibtex";
 
 int main(int argc, char *argv[])
 {
-    KAboutData aboutData("kbibtex", 0, ki18n("KBibTeX"), programVersion,
+    KAboutData aboutData("kbibtex", 0, ki18n("KBibTeX"), versionNumber,
                          ki18n(description), KAboutData::License_GPL_V2,
                          ki18n("Copyright 2004-2011 Thomas Fischer"), KLocalizedString(),
                          programHomepage, bugTrackerHomepage);
@@ -52,11 +53,15 @@ int main(int argc, char *argv[])
     KGlobal::locale()->insertCatalog("libkbibtexgui");
     KGlobal::locale()->insertCatalog("libkbibtexws");
 
-    // started by session management?
+    KService::Ptr service = KService::serviceByDesktopPath("kbibtexpart.desktop");
+    if (service.isNull())
+        KMessageBox::error(NULL, i18n("KBibTeX seems to be not installed completely. KBibTeX could not locate its own KPart.\n\nOnly limited functionality will be available."), i18n("Incomplete KBibTeX Installation"));
+
+    /// started by session management?
     if (programCore.isSessionRestored()) {
         RESTORE(KBibTeXMainWindow());
     } else {
-        // no session.. just start up normally
+        /// no session.. just start up normally
         KBibTeXMainWindow *mainWindow = new KBibTeXMainWindow();
 
         KCmdLineArgs *arguments = KCmdLineArgs::parsedArgs();
