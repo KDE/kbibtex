@@ -30,7 +30,6 @@
 
 #include <entrylayout.h>
 
-class QTextEdit;
 class QTreeWidget;
 class QTreeWidgetItem;
 
@@ -226,7 +225,8 @@ class SourceWidget : public ElementWidget
     Q_OBJECT
 
 private:
-    QTextEdit *sourceEdit;
+    class SourceWidgetTextEdit;
+    SourceWidgetTextEdit *sourceEdit;
     QString originalText;
 
     void createGUI();

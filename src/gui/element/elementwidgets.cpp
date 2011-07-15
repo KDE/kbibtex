@@ -27,6 +27,7 @@
 #include <QTreeWidget>
 #include <QFileInfo>
 #include <QDesktopServices>
+#include <QDropEvent>
 
 #include <KPushButton>
 #include <KGlobalSettings>
@@ -855,6 +856,26 @@ void PreambleWidget::createGUI()
 }
 
 
+class SourceWidget::SourceWidgetTextEdit : public QTextEdit
+{
+public:
+    SourceWidgetTextEdit(QWidget *parent)
+            : QTextEdit(parent) {
+        // nothing
+    }
+
+protected:
+    virtual void dropEvent(QDropEvent *event) {
+        FileImporterBibTeX importer;
+        FileExporterBibTeX exporter;
+        const File *file = importer.fromString(event->mimeData()->text());
+        if (file->count() == 1)
+            document()->setPlainText(exporter.toString(file->first()));
+        else
+            QTextEdit::dropEvent(event);
+    }
+};
+
 SourceWidget::SourceWidget(QWidget *parent)
         : ElementWidget(parent)
 {
@@ -952,7 +973,7 @@ void SourceWidget::createGUI()
     layout->setRowStretch(0, 1);
     layout->setRowStretch(1, 0);
 
-    sourceEdit = new QTextEdit(this);
+    sourceEdit = new SourceWidgetTextEdit(this);
     layout->addWidget(sourceEdit, 0, 0, 1, 3);
     sourceEdit->document()->setDefaultFont(KGlobalSettings::fixedFont());
     sourceEdit->setTabStopWidth(QFontMetrics(sourceEdit->font()).averageCharWidth() * 4);
