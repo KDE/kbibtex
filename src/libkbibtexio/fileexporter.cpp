@@ -19,6 +19,9 @@
 ***************************************************************************/
 #include "fileexporter.h"
 
+#include <QBuffer>
+#include <QTextStream>
+
 const QString FileExporter::keyPaperSize = QLatin1String("paperSize");
 const QString FileExporter::defaultPaperSize = QLatin1String("a4");
 
@@ -32,4 +35,32 @@ FileExporter::~FileExporter()
     // nothing
 }
 
-// #include "fileexporter.moc"
+QString FileExporter::toString(const Element* element)
+{
+    QBuffer buffer;
+    buffer.open(QBuffer::WriteOnly);
+    if (save(&buffer, element)) {
+        buffer.close();
+        if (buffer.open(QBuffer::ReadOnly)) {
+            QTextStream ts(&buffer);
+            return ts.readAll();
+        }
+    }
+
+    return QString::null;
+}
+
+QString FileExporter::toString(const File* bibtexfile)
+{
+    QBuffer buffer;
+    buffer.open(QBuffer::WriteOnly);
+    if (save(&buffer, bibtexfile)) {
+        buffer.close();
+        if (buffer.open(QBuffer::ReadOnly)) {
+            QTextStream ts(&buffer);
+            return ts.readAll();
+        }
+    }
+
+    return QString::null;
+}
