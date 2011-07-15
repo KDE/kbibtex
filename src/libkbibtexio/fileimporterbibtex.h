@@ -102,7 +102,6 @@ private:
     int m_textStreamLastPos;
     QChar m_currentChar;
     bool m_ignoreComments;
-    QString m_encoding;
     KBibTeX::Casing m_keywordCasing;
 
     Comment *readCommentElement();
@@ -124,7 +123,7 @@ private:
     static void splitPersonList(const QString& name, QStringList &resultList);
     static CommaContainment splitName(const QString& name, QStringList& segments);
 
-    bool evaluateParameterComments(QTextStream *textStream, const QString &line);
+    bool evaluateParameterComments(QTextStream *textStream, const QString &line, File *file);
     QString tokenidToString(Token token);
 };
 

@@ -321,7 +321,7 @@ bool FileExporterBibTeX::save(QIODevice* iodevice, const File* bibtexfile, QStri
                     Comment *comment = dynamic_cast<Comment*>(*it);
                     QString commentText = QString::null;
                     /** check if this file requests a special encoding */
-                    if (comment == NULL || !comment->text().startsWith("x-kbibtex-encoding="))
+                    if (comment == NULL || !comment->text().startsWith("x-kbibtex-"))
                         remainingList.append(*it);
                 }
             }
@@ -348,9 +348,12 @@ bool FileExporterBibTeX::save(QIODevice* iodevice, const File* bibtexfile, QStri
         d->keywordCasing = (KBibTeX::Casing)bibtexfile->property(File::KeywordCasing).toInt();
     if (bibtexfile->hasProperty(File::ProtectCasing))
         d->protectCasing = bibtexfile->property(File::ProtectCasing).toBool();
+    if (bibtexfile->hasProperty(File::NameFormatting))
+        d->personNameFormatting = bibtexfile->property(File::NameFormatting).toString();
 
     if (d->encoding != QLatin1String("latex"))
         parameterCommentsList << new Comment("x-kbibtex-encoding=" + d->encoding, true);
+    parameterCommentsList << new Comment("x-kbibtex-personnameformatting=" + d->personNameFormatting, true);
 
     /** before anything else, write parameter comments */
     for (QList<Comment*>::ConstIterator it = parameterCommentsList.begin(); it != parameterCommentsList.end() && result && !d->cancelFlag; it++) {

@@ -57,6 +57,7 @@ public:
     const static QString QuoteComment;
     const static QString KeywordCasing;
     const static QString ProtectCasing;
+    const static QString NameFormatting;
 
     File();
     File(const File &other);

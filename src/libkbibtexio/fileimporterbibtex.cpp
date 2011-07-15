@@ -47,7 +47,7 @@ const QString extraAlphaNumChars = QString("?'`-_:.+/$\\\"&");
 const QRegExp htmlRegExp = QRegExp("</?(a|pre)[^>]*>", Qt::CaseInsensitive);
 
 FileImporterBibTeX::FileImporterBibTeX(bool ignoreComments, KBibTeX::Casing keywordCasing)
-        : FileImporter(), m_cancelFlag(false), m_lineNo(1), m_textStream(NULL), m_currentChar(' '), m_ignoreComments(ignoreComments), m_encoding(QString::null), m_keywordCasing(keywordCasing)
+        : FileImporter(), m_cancelFlag(false), m_lineNo(1), m_textStream(NULL), m_currentChar(' '), m_ignoreComments(ignoreComments), m_keywordCasing(keywordCasing)
 {
     // nothing
 }
@@ -60,20 +60,18 @@ File* FileImporterBibTeX::load(QIODevice *iodevice)
 {
     m_cancelFlag = false;
 
+    File *result = new File();
+
     m_textStreamLastPos = 0;
     m_textStream = new QTextStream(iodevice);
     m_textStream->setCodec("us-ascii"); ///< unless we learn something else, assume 7-bit US-ASCII
     QString rawText = "";
     while (!m_textStream->atEnd()) {
         QString line = m_textStream->readLine();
-        bool skipline = evaluateParameterComments(m_textStream, line.toLower());
+        bool skipline = evaluateParameterComments(m_textStream, line.toLower(), result);
         if (!skipline)
             rawText.append(line).append("\n");
     }
-
-    File *result = new File();
-    if (!m_encoding.isEmpty())
-        result->setProperty(File::Encoding, m_textStream->codec()->name());
 
     delete m_textStream;
 
@@ -208,7 +206,7 @@ Macro *FileImporterBibTeX::readMacroElement()
     Macro *macro = new Macro(key);
     do {
         bool isStringKey = false;
-        QString text = readString(isStringKey).replace(QRegExp("\\s+"), " ");
+        QString text = readString(isStringKey).simplified();
         if (isStringKey)
             macro->value().append(new MacroKey(text));
         else
@@ -234,7 +232,7 @@ Preamble *FileImporterBibTeX::readPreambleElement()
     Preamble *preamble = new Preamble();
     do {
         bool isStringKey = FALSE;
-        QString text = readString(isStringKey).replace(QRegExp("\\s+"), " ");
+        QString text = readString(isStringKey).simplified();
         if (isStringKey)
             preamble->value().append(new MacroKey(text));
         else
@@ -498,12 +496,11 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value& value, const QStr
         /// for all entries except for abstracts ...
         if (iKey != Entry::ftAbstract) {
             /// ... remove redundant spaces including newlines
-            text = text.replace(QRegExp("\\s+"), " ");
+            text = text.simplified();
         }
         /// abstracts will keep their formatting (regarding line breaks)
         /// as requested by Thomas Jensch via mail (20 October 2010)
 
-        // FIXME: comparisons should be made case-insensitive
         if (iKey == Entry::ftAuthor || iKey == Entry::ftEditor) {
             if (isStringKey)
                 value.append(new MacroKey(text));
@@ -763,14 +760,18 @@ FileImporterBibTeX::CommaContainment FileImporterBibTeX::splitName(const QString
     return result;
 }
 
-bool FileImporterBibTeX::evaluateParameterComments(QTextStream *textStream, const QString &line)
+bool FileImporterBibTeX::evaluateParameterComments(QTextStream *textStream, const QString &line, File *file)
 {
     /** check if this file requests a special encoding */
     if (line.startsWith("@comment{x-kbibtex-encoding=") && line.endsWith("}")) {
-        m_encoding = line.mid(28, line.length() - 29).toLower();
-        kDebug() << "x-kbibtex-encoding=" << m_encoding;
-        textStream->setCodec(m_encoding == "latex" ? "UTF-8" : m_encoding.toAscii());
-        m_encoding = textStream->codec()->name();
+        QString encoding = line.mid(28, line.length() - 29).toLower();
+        textStream->setCodec(encoding == "latex" ? "UTF-8" : encoding.toAscii());
+        encoding = textStream->codec()->name();
+        file->setProperty(File::Encoding, encoding);
+        return true;
+    } else if (line.startsWith("@comment{x-kbibtex-personnameformatting=") && line.endsWith("}")) {
+        QString personNameFormatting = line.mid(40, line.length() - 41);
+        file->setProperty(File::NameFormatting, personNameFormatting);
         return true;
     }
 

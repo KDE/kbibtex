@@ -218,6 +218,8 @@ public:
         }
         if (file->hasProperty(File::ProtectCasing))
             checkBoxProtectCasing->setChecked(file->property(File::QuoteComment).toBool());
+        if (file->hasProperty(File::NameFormatting))
+            p->selectValue(comboBoxPersonNameFormatting, file->property(File::NameFormatting).toString(), Qt::UserRole);
     }
 
     void saveProperties(File *file) {
@@ -229,6 +231,7 @@ public:
         KBibTeX::Casing keywordCasing = (KBibTeX::Casing)comboBoxKeywordCasing->currentIndex();
         file->setProperty(File::KeywordCasing, (int)keywordCasing);
         file->setProperty(File::ProtectCasing, checkBoxProtectCasing->isChecked());
+        file->setProperty(File::NameFormatting, comboBoxPersonNameFormatting->itemData(comboBoxPersonNameFormatting->currentIndex()));
     }
 };
 

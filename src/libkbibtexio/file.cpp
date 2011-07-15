@@ -38,6 +38,7 @@ const QString File::StringDelimiter = QLatin1String("StringDelimiter");
 const QString File::QuoteComment = QLatin1String("QuoteComment");
 const QString File::KeywordCasing = QLatin1String("KeywordCasing");
 const QString File::ProtectCasing = QLatin1String("ProtectCasing");
+const QString File::NameFormatting = QLatin1String("NameFormatting");
 
 class File::FilePrivate
 {
