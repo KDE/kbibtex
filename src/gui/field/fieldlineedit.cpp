@@ -372,10 +372,10 @@ public:
     void updateURL(const QString &text) {
         QList<KUrl> urls;
         FileInfo::urlsInText(text, true, file != NULL && file->property(File::Url).value<KUrl>().isValid() ? file->property(File::Url).value<KUrl>().directory() : QString::null, urls);
-        if (urls.isEmpty())
-            urlToOpen = KUrl();
-        else
+        if (!urls.isEmpty() && urls.first().isValid())
             urlToOpen = urls.first();
+        else
+            urlToOpen = KUrl();
 
         /// set special "open URL" button visible if URL (or file or DOI) found
         buttonOpenUrl->setVisible(urlToOpen.isValid());
@@ -459,12 +459,13 @@ void FieldLineEdit::dragEnterEvent(QDragEnterEvent *event)
 
 void FieldLineEdit::dropEvent(QDropEvent *event)
 {
-    const QString text = event->mimeData()->text();
-    if (text.isEmpty()) return;
+    const QString clipboardText = event->mimeData()->text();
+    if (clipboardText.isEmpty()) return;
 
-    if (!d->fieldKey.isEmpty() && text.startsWith("@")) {
+    const File *file = NULL;
+    if (!d->fieldKey.isEmpty() && clipboardText.startsWith("@")) {
         FileImporterBibTeX importer;
-        File *file = importer.fromString(text);
+        file = importer.fromString(clipboardText);
         const Entry *entry = (file != NULL && file->count() == 1) ? dynamic_cast<const Entry*>(file->first()) : NULL;
         if (entry != NULL && d->fieldKey == Entry::ftCrossRef) {
             /// handle drop on crossref line differently (use dropped entry's id)
@@ -476,12 +477,14 @@ void FieldLineEdit::dropEvent(QDropEvent *event)
         } else if (entry != NULL && entry->contains(d->fieldKey)) {
             /// case for "normal" fields like for journal, pages, ...
             reset(entry->value(d->fieldKey));
-            emit textChanged(text);
+            emit textChanged(text());
             return;
         }
     }
 
-    /// fall-back case: just copy whole text into edit widget
-    setText(text);
-    emit textChanged(text);
+    if (file == NULL || file->count() == 0) {
+        /// fall-back case: just copy whole text into edit widget
+        setText(clipboardText);
+        emit textChanged(clipboardText);
+    }
 }

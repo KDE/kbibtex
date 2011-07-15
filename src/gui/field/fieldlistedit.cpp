@@ -286,12 +286,13 @@ void FieldListEdit::dragEnterEvent(QDragEnterEvent *event)
 
 void FieldListEdit::dropEvent(QDropEvent *event)
 {
-    const QString text = event->mimeData()->text();
-    if (text.isEmpty()) return;
+    const QString clipboardText = event->mimeData()->text();
+    if (clipboardText.isEmpty()) return;
 
-    if (!d->fieldKey.isEmpty() && text.startsWith("@")) {
+    const File *file = NULL;
+    if (!d->fieldKey.isEmpty() && clipboardText.startsWith("@")) {
         FileImporterBibTeX importer;
-        File *file = importer.fromString(text);
+        file = importer.fromString(clipboardText);
         const Entry *entry = (file != NULL && file->count() == 1) ? dynamic_cast<const Entry*>(file->first()) : NULL;
 
         if (entry != NULL && d->fieldKey == QLatin1String("^external")) {
@@ -312,11 +313,13 @@ void FieldListEdit::dropEvent(QDropEvent *event)
         }
     }
 
-    /// fall-back case: single field line edit with text
-    d->removeAllFieldLineEdits();
-    FieldLineEdit *fle = d->addFieldLineEdit();
-    fle->setText(text);
-    emit modified();
+    if (file == NULL || file->count() == 0) {
+        /// fall-back case: single field line edit with text
+        d->removeAllFieldLineEdits();
+        FieldLineEdit *fle = d->addFieldLineEdit();
+        fle->setText(clipboardText);
+        emit modified();
+    }
 }
 
 void FieldListEdit::lineAdd(Value *value)
