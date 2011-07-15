@@ -33,6 +33,8 @@
 #include <KLocale>
 #include <KLineEdit>
 #include <KComboBox>
+#include <KSharedConfig>
+#include <KConfigGroup>
 
 #include <kbibtexnamespace.h>
 #include <bibtexentries.h>
@@ -71,6 +73,10 @@ void ElementWidget::gotModified()
 {
     setModified(true);
 }
+
+const QString ElementWidget::keyElementWidgetLayout = QLatin1String("ElementWidgetLayout");
+const Qt::Orientation ElementWidget::defaultElementWidgetLayout = Qt::Horizontal;
+
 
 EntryConfiguredWidget::EntryConfiguredWidget(EntryTabLayout &entryTabLayout, QWidget *parent)
         : ElementWidget(parent), etl(entryTabLayout)
@@ -162,48 +168,77 @@ bool EntryConfiguredWidget::canEdit(const Element *element)
 
 void EntryConfiguredWidget::createGUI()
 {
+    /// retrieve information from settings if labels should be
+    /// above widgets or on the left side
+    KSharedConfigPtr config(KSharedConfig::openConfig(QLatin1String("kbibtexrc")));
+    const QString configGroupName(QLatin1String("User Interface"));
+    KConfigGroup configGroup(config, configGroupName);
+    Qt::Orientation layoutOrientation = (Qt::Orientation)configGroup.readEntry(keyElementWidgetLayout, (int)defaultElementWidgetLayout);
+
     QGridLayout *gridLayout = new QGridLayout(this);
     const BibTeXFields *bf = BibTeXFields::self();
 
+    /// determine how many rows a column should have
     int mod = etl.singleFieldLayouts.size() / etl.columns;
     if (etl.singleFieldLayouts.size() % etl.columns > 0)
         ++mod;
+    if (layoutOrientation == Qt::Vertical) mod *= 2;
 
     int row = 0, col = 0;
-    for (QList<SingleFieldLayout>::ConstIterator sflit = etl.singleFieldLayouts.constBegin(); sflit != etl.singleFieldLayouts.constEnd(); ++sflit) {
+    foreach(const SingleFieldLayout &sfl, etl.singleFieldLayouts) {
+        /// add extra space between "columns" of labels and widgets
         if (row == 0 && col > 1)
             gridLayout->setColumnMinimumWidth(col - 1, interColumnSpace);
 
-        const FieldDescription &fd = bf->find((*sflit).bibtexLabel);
+        /// create an editing widget for this field
+        const FieldDescription &fd = bf->find(sfl.bibtexLabel);
         KBibTeX::TypeFlags typeFlags = fd.isNull() ? KBibTeX::tfSource : fd.typeFlags;
         KBibTeX::TypeFlag preferredTypeFlag = fd.isNull() ? KBibTeX::tfSource : fd.preferredTypeFlag;
-        FieldInput *fieldInput = new FieldInput((*sflit).fieldInputLayout, preferredTypeFlag, typeFlags, this);
-        fieldInput->setFieldKey((*sflit).bibtexLabel);
-        bibtexKeyToWidget.insert((*sflit).bibtexLabel, fieldInput);
+        FieldInput *fieldInput = new FieldInput(sfl.fieldInputLayout, preferredTypeFlag, typeFlags, this);
+        fieldInput->setFieldKey(sfl.bibtexLabel);
+        bibtexKeyToWidget.insert(sfl.bibtexLabel, fieldInput);
         connect(fieldInput, SIGNAL(modified()), this, SLOT(gotModified()));
 
-        bool isVerticallyMinimumExpaning = (*sflit).fieldInputLayout == KBibTeX::MultiLine || (*sflit).fieldInputLayout == KBibTeX::List || (*sflit).fieldInputLayout == KBibTeX::PersonList || (*sflit).fieldInputLayout == KBibTeX::KeywordList;
-
-        QLabel *label = new QLabel((*sflit).uiLabel + ":", this);
+        /// create a label next to the editing widget
+        QLabel *label = new QLabel(QString("%1:").arg(sfl.uiLabel), this);
         label->setBuddy(fieldInput);
-        gridLayout->addWidget(label, row, col, 1, 1, (isVerticallyMinimumExpaning ? Qt::AlignTop : Qt::AlignVCenter) | Qt::AlignRight);
-        gridLayout->addWidget(fieldInput, row, col + 1, 1, 1);
 
+        /// position both label and editing widget according to set layout
+        bool isVerticallyMinimumExpaning = sfl.fieldInputLayout == KBibTeX::MultiLine || sfl.fieldInputLayout == KBibTeX::List || sfl.fieldInputLayout == KBibTeX::PersonList || sfl.fieldInputLayout == KBibTeX::KeywordList;
+        gridLayout->addWidget(label, row, col, 1, 1, (isVerticallyMinimumExpaning ? Qt::AlignTop : Qt::AlignVCenter) | (layoutOrientation == Qt::Horizontal ? Qt::AlignRight : Qt::AlignLeft));
+        if (layoutOrientation == Qt::Horizontal) ++col;
+        else ++row;
+        gridLayout->addWidget(fieldInput, row, col, 1, 1);
         gridLayout->setRowStretch(row, isVerticallyMinimumExpaning ? 1000 : 0);
 
+        /// move position counter
         ++row;
+        if (layoutOrientation == Qt::Horizontal) --col;
+
+        /// check if column is full
         if (row >= mod) {
-            gridLayout->setColumnStretch(col, 1);
-            gridLayout->setColumnStretch(col + 1, 1000);
+            /// set columns' stretch
+            if (layoutOrientation == Qt::Horizontal) {
+                gridLayout->setColumnStretch(col, 1);
+                gridLayout->setColumnStretch(col + 1, 1000);
+            } else
+                gridLayout->setColumnStretch(col, 1000);
+            /// update/reset position in layout
             row = 0;
-            col += 3;
+            col += layoutOrientation == Qt::Horizontal ? 3 : 2;
         }
     }
 
+    /// fill tab's bottom with space
     gridLayout->setRowStretch(mod, 1);
+
+    /// set last column's stretch
     if (row > 0) {
-        gridLayout->setColumnStretch(col, 1);
-        gridLayout->setColumnStretch(col + 1, 1000);
+        if (layoutOrientation == Qt::Horizontal) {
+            gridLayout->setColumnStretch(col, 1);
+            gridLayout->setColumnStretch(col + 1, 1000);
+        } else
+            gridLayout->setColumnStretch(col, 1000);
     }
 }
 
@@ -602,46 +637,55 @@ void OtherFieldsWidget::actionOpen()
 
 void OtherFieldsWidget::createGUI()
 {
+    /// retrieve information from settings if labels should be
+    /// above widgets or on the left side
+    KSharedConfigPtr config(KSharedConfig::openConfig(QLatin1String("kbibtexrc")));
+    const QString configGroupName(QLatin1String("User Interface"));
+    KConfigGroup configGroup(config, configGroupName);
+    Qt::Orientation layoutOrientation = (Qt::Orientation)configGroup.readEntry(keyElementWidgetLayout, (int)defaultElementWidgetLayout);
+
     QGridLayout *layout = new QGridLayout(this);
-    layout->setColumnStretch(0, 0);
-    layout->setColumnStretch(1, 1);
+    /// set row and column stretches based on chosen layout
+    layout->setColumnStretch(0, layoutOrientation == Qt::Horizontal ? 0 : 1);
+    layout->setColumnStretch(1, layoutOrientation == Qt::Horizontal ? 1 : 0);
     layout->setColumnStretch(2, 0);
     layout->setRowStretch(0, 0);
-    layout->setRowStretch(1, 1);
+    layout->setRowStretch(layoutOrientation == Qt::Horizontal ? 1 : 3, 1);
     layout->setRowStretch(2, 0);
-    layout->setRowStretch(3, 0);
-    layout->setRowStretch(4, 1);
+    layout->setRowStretch(layoutOrientation == Qt::Horizontal ? 3 : 6, 0);
+    layout->setRowStretch(layoutOrientation == Qt::Horizontal ? 4 : 7, 1);
 
     QLabel *label = new QLabel(i18n("Name:"), this);
-    layout->addWidget(label, 0, 0, 1, 1);
+    layout->addWidget(label, layoutOrientation == Qt::Horizontal ? 0 : 0,  layoutOrientation == Qt::Horizontal ? 0 : 0, 1, 1, (layoutOrientation == Qt::Horizontal ? Qt::AlignRight : Qt::AlignLeft));
+
     fieldName = new KLineEdit(this);
-    layout->addWidget(fieldName, 0, 1, 1, 1);
+    layout->addWidget(fieldName, layoutOrientation == Qt::Horizontal ? 0 : 1, layoutOrientation == Qt::Horizontal ? 1 : 0, 1, 1);
     label->setBuddy(fieldName);
 
     buttonAddApply = new KPushButton(KIcon("list-add"), i18n("Add"), this);
     buttonAddApply->setEnabled(false);
-    layout->addWidget(buttonAddApply, 0, 2, 1, 1);
+    layout->addWidget(buttonAddApply, layoutOrientation == Qt::Horizontal ? 0 : 1, layoutOrientation == Qt::Horizontal ? 2 : 1, 1, 1);
 
     label = new QLabel(i18n("Content:"), this);
-    layout->addWidget(label, 1, 0, 1, 1);
+    layout->addWidget(label, layoutOrientation == Qt::Horizontal ? 1 : 2, layoutOrientation == Qt::Horizontal ? 0 : 0, 1, 1, (layoutOrientation == Qt::Horizontal ? Qt::AlignRight : Qt::AlignLeft));
     fieldContent = new FieldInput(KBibTeX::MultiLine, KBibTeX::tfSource, KBibTeX::tfSource, this);
-    layout->addWidget(fieldContent, 1, 1, 1, 2);
+    layout->addWidget(fieldContent, layoutOrientation == Qt::Horizontal ? 1 : 3, layoutOrientation == Qt::Horizontal ? 1 : 0, 1, 2);
     label->setBuddy(fieldContent);
 
     label = new QLabel(i18n("List:"), this);
-    layout->addWidget(label, 2, 0, 3, 1);
+    layout->addWidget(label, layoutOrientation == Qt::Horizontal ? 2 : 4, layoutOrientation == Qt::Horizontal ? 0 : 0, 1, 1, (layoutOrientation == Qt::Horizontal ? Qt::AlignRight : Qt::AlignLeft));
+
     otherFieldsList = new QTreeWidget(this);
-    QStringList header;
-    header << i18n("Key") << i18n("Value");
-    otherFieldsList->setHeaderLabels(header);
-    layout->addWidget(otherFieldsList, 2, 1, 3, 1);
+    otherFieldsList->setHeaderLabels(QStringList() << i18n("Key") << i18n("Value"));
+    layout->addWidget(otherFieldsList, layoutOrientation == Qt::Horizontal ? 2 : 5, layoutOrientation == Qt::Horizontal ? 1 : 0, 3, 1);
     label->setBuddy(otherFieldsList);
+
     buttonDelete = new KPushButton(KIcon("list-remove"), i18n("Delete"), this);
     buttonDelete->setEnabled(false);
-    layout->addWidget(buttonDelete, 2, 2, 1, 1);
+    layout->addWidget(buttonDelete, layoutOrientation == Qt::Horizontal ? 2 : 5, layoutOrientation == Qt::Horizontal ? 2 : 1, 1, 1);
     buttonOpen = new KPushButton(KIcon("document-open"), i18n("Open"), this);
     buttonOpen->setEnabled(false);
-    layout->addWidget(buttonOpen, 3, 2, 1, 1);
+    layout->addWidget(buttonOpen, layoutOrientation == Qt::Horizontal ? 3 : 6, layoutOrientation == Qt::Horizontal ? 2 : 1, 1, 1);
 
     connect(otherFieldsList, SIGNAL(itemActivated(QTreeWidgetItem*, int)), this, SLOT(listElementExecuted(QTreeWidgetItem*, int)));
     connect(otherFieldsList, SIGNAL(currentItemChanged(QTreeWidgetItem*, QTreeWidgetItem*)), this, SLOT(listCurrentChanged(QTreeWidgetItem*, QTreeWidgetItem*)));
