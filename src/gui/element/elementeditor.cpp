@@ -231,9 +231,9 @@ public:
             Q_ASSERT(temp != NULL);
 
             previousWidget->apply(temp);
-            if (isSourceWidget) referenceWidget->apply(temp);
+            if (isSourceWidget && referenceWidget != NULL) referenceWidget->apply(temp);
             newWidget->reset(temp);
-            if (dynamic_cast<SourceWidget*>(previousWidget) != NULL)
+            if (referenceWidget != NULL && dynamic_cast<SourceWidget*>(previousWidget) != NULL)
                 referenceWidget->reset(temp);
         }
         previousWidget = newWidget;

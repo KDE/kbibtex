@@ -883,6 +883,13 @@ bool SourceWidget::apply(Element *element) const
             if (readMacro != NULL && macro != NULL) {
                 macro->operator =(*readMacro);
                 result = true;
+            } else {
+                Preamble *preamble = dynamic_cast<Preamble*>(element);
+                Preamble *readPreamble = dynamic_cast<Preamble*>(file->first());
+                if (readPreamble != NULL && preamble != NULL) {
+                    preamble->operator =(*readPreamble);
+                    result = true;
+                }
             }
         }
     }

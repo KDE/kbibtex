@@ -41,7 +41,14 @@ Preamble::Preamble(const Value& value)
 Preamble::Preamble(const Preamble& other)
         : Element(), d(new Preamble::PreamblePrivate)
 {
-    d->value = other.d->value;
+    operator=(other);
+}
+
+Preamble& Preamble::operator= (const Preamble & other)
+{
+    if (this != &other)
+        d->value = other.d->value;
+    return *this;
 }
 
 Value& Preamble::value()

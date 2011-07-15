@@ -36,6 +36,12 @@ public:
     Preamble(const Value& value = Value());
     Preamble(const Preamble& other);
 
+    /**
+     * Assignment operator, working similar to a copy constructor,
+     * but overwrites the current object's values.
+     */
+    Preamble& operator= (const Preamble& other);
+
     Value& value();
     const Value& value() const;
     void setValue(const Value& value);
