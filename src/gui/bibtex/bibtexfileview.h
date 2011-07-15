@@ -55,9 +55,14 @@ private:
     BibTeXFileModel *m_bibTeXFileModel;
     QSortFilterProxyModel *m_sortFilterProxyModel;
 
+    KSharedConfigPtr config;
+    const QString configGroupName;
+    const QString configHeaderState;
+
     void syncBibTeXFields();
 
 private slots:
+    void columnsChanged();
     void headerActionToggled(QObject *action);
     void headerResetToDefaults();
     void sort(int, Qt::SortOrder);

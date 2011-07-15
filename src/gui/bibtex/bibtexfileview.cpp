@@ -23,6 +23,7 @@
 #include <QScrollBar>
 
 #include <KAction>
+#include <KConfigGroup>
 #include <KLocale>
 #include <KDebug>
 
@@ -31,7 +32,8 @@
 #include "bibtexfileview.h"
 
 BibTeXFileView::BibTeXFileView(const QString &name, QWidget * parent)
-        : QTreeView(parent), m_name(name), m_signalMapperBibTeXFields(new QSignalMapper(this))
+        : QTreeView(parent), m_name(name), m_signalMapperBibTeXFields(new QSignalMapper(this)),
+        config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName(QLatin1String("BibTeXFileView")), configHeaderState(QLatin1String("HeaderState_%1"))
 {
     /// general visual appearance and behaviour
     setSelectionMode(QAbstractItemView::ExtendedSelection);
@@ -44,11 +46,18 @@ BibTeXFileView::BibTeXFileView(const QString &name, QWidget * parent)
 
     /// header appearance and behaviour
     header()->setClickable(true);
-    header()->setMovable(false); ///< FIXME don't know how to restore moved columns
     header()->setSortIndicatorShown(true);
     header()->setSortIndicator(-1, Qt::AscendingOrder);
     connect(header(), SIGNAL(sortIndicatorChanged(int, Qt::SortOrder)), this, SLOT(sort(int, Qt::SortOrder)));
+    connect(header(), SIGNAL(sectionMoved(int, int, int)), this, SLOT(columnsChanged()));
+    connect(header(), SIGNAL(sectionResized(int, int, int)), this, SLOT(columnsChanged())); ///< FIXME columns get resized later on
+    connect(header(), SIGNAL(sortIndicatorChanged(int, Qt::SortOrder)), this, SLOT(columnsChanged()));
     header()->setContextMenuPolicy(Qt::ActionsContextMenu);
+
+    /// restore header appearance
+    KConfigGroup configGroup(config, configGroupName);
+    QByteArray headerState = configGroup.readEntry(configHeaderState.arg(m_name), QByteArray());
+    header()->restoreState(headerState);
 
     /// build context menu for header to show/hide single columns
     int col = 0;
@@ -86,6 +95,11 @@ void BibTeXFileView::setModel(QAbstractItemModel * model)
         Q_ASSERT(m_sortFilterProxyModel != NULL);
         m_bibTeXFileModel = dynamic_cast<BibTeXFileModel*>(m_sortFilterProxyModel->sourceModel());
     }
+
+    /// sort according to session
+    if (header()->isSortIndicatorShown())
+        sort(header()->sortIndicatorSection(), header()->sortIndicatorOrder());
+
     Q_ASSERT(m_bibTeXFileModel != NULL);
 }
 
@@ -137,6 +151,14 @@ void BibTeXFileView::syncBibTeXFields()
     bibtexFields->save();
 }
 
+void BibTeXFileView::columnsChanged()
+{
+    QByteArray headerState = header()->saveState();
+    KConfigGroup configGroup(config, configGroupName);
+    configGroup.writeEntry(configHeaderState.arg(m_name), headerState);
+    config->sync();
+}
+
 void BibTeXFileView::headerActionToggled(QObject *obj)
 {
     KAction *action = dynamic_cast<KAction*>(obj);
@@ -184,6 +206,13 @@ void BibTeXFileView::headerResetToDefaults()
             action->setChecked(fd.visible[m_name]);
         }
     }
+
+    /// reset column ordering
+    // FIXME this does not work yet?
+    header()->restoreState(QByteArray());
+    KConfigGroup configGroup(config, configGroupName);
+    configGroup.deleteEntry(configHeaderState.arg(m_name));
+    config->sync();
 
     resizeEvent(NULL);
 }
