@@ -22,7 +22,7 @@
 #define KBIBTEX_PROGRAM_VALUELISTMODEL_H
 
 #include <QAbstractTableModel>
-#include <QAbstractItemView>
+#include <QTreeView>
 #include <QStyledItemDelegate>
 
 #include <bibtexfilemodel.h>
@@ -36,10 +36,10 @@ class KBIBTEXGUI_EXPORT ValueListDelegate : public QStyledItemDelegate
 
 private:
     QString m_fieldName;
-    QAbstractItemView *m_parent;
+    QTreeView *m_parent;
 
 public:
-    ValueListDelegate(QAbstractItemView *parent = NULL)
+    ValueListDelegate(QTreeView *parent = NULL)
             : QStyledItemDelegate(parent), m_fieldName(QString::null), m_parent(parent) {}
 
     QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &, const QModelIndex &index) const;

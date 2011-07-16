@@ -103,11 +103,11 @@ public:
 
         /// add context menu to header
         treeviewFieldValues->header()->setContextMenuPolicy(Qt::ActionsContextMenu);
-        showCountColumnAction = new KToggleAction(i18n("Show Count Column"), treeviewFieldValues->header());
+        showCountColumnAction = new KToggleAction(i18n("Show Count Column"), treeviewFieldValues);
         connect(showCountColumnAction, SIGNAL(triggered()), p, SLOT(showCountColumnToggled()));
         treeviewFieldValues->header()->addAction(showCountColumnAction);
 
-        sortByCountAction = new KToggleAction(i18n("Sort by Count"), treeviewFieldValues->header());
+        sortByCountAction = new KToggleAction(i18n("Sort by Count"), treeviewFieldValues);
         connect(sortByCountAction, SIGNAL(triggered()), p, SLOT(sortByCountToggled()));
         treeviewFieldValues->header()->addAction(sortByCountAction);
     }
@@ -235,31 +235,25 @@ void ValueList::startItemRenaming()
 
 void ValueList::showCountColumnToggled()
 {
-    KToggleAction *action = static_cast<KToggleAction *>(sender());
-    Q_ASSERT(action == d->showCountColumnAction);
-
     if (d->model != NULL)
-        d->model->setShowCountColumn(action->isChecked());
+        d->model->setShowCountColumn(d->showCountColumnAction->isChecked());
 
-    d->sortByCountAction->setEnabled(!action->isChecked());
-    if (action->isChecked())
-        resizeEvent(NULL);
+    d->sortByCountAction->setEnabled(!d->showCountColumnAction->isChecked());
 
     KConfigGroup configGroup(d->config, d->configGroupName);
-    configGroup.writeEntry(d->configKeySortByCountAction, action->isChecked());
+    configGroup.writeEntry(d->configKeyShowCountColumn, d->showCountColumnAction->isChecked());
     d->config->sync();
+
+    QTimer::singleShot(500, this, SLOT(issueResizeEvent()));
 }
 
 void ValueList::sortByCountToggled()
 {
-    KToggleAction *action = static_cast<KToggleAction *>(sender());
-    Q_ASSERT(action == d->sortByCountAction);
-
     if (d->model != NULL)
-        d->model->setSortBy(action->isChecked() ? ValueListModel::SortByCount : ValueListModel::SortByText);
+        d->model->setSortBy(d->sortByCountAction->isChecked() ? ValueListModel::SortByCount : ValueListModel::SortByText);
 
     KConfigGroup configGroup(d->config, d->configGroupName);
-    configGroup.writeEntry(d->configKeySortByCountAction, action->isChecked());
+    configGroup.writeEntry(d->configKeySortByCountAction, d->sortByCountAction->isChecked());
     d->config->sync();
 }
 
@@ -274,4 +268,6 @@ void ValueList::columnsChanged()
     KConfigGroup configGroup(d->config, d->configGroupName);
     configGroup.writeEntry(d->configKeyHeaderState, headerState);
     d->config->sync();
+
+    QTimer::singleShot(500, this, SLOT(issueResizeEvent()));
 }

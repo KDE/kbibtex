@@ -37,6 +37,7 @@
 #include <QPainter>
 #include <QFrame>
 #include <QLayout>
+#include <QHeaderView>
 
 #include <fieldlineedit.h>
 #include <bibtexfields.h>
@@ -150,7 +151,7 @@ void ValueListDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
     fieldRect.setTop(top);
     fieldRect.setHeight(fm.height());
 
-    if (index.column() == 0) {
+    if (m_parent->header()->visualIndex(index.column()) == 0) {
         /// left-align text
         fieldRect.setLeft(fieldRect.left() + 4); ///< hm, indent necessary?
         fieldRect.setRight(fieldRect.left() + fieldWidth);
