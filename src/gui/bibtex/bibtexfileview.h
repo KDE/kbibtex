@@ -58,6 +58,7 @@ private:
     KSharedConfigPtr config;
     const QString configGroupName;
     const QString configHeaderState;
+    QByteArray headerDefault;
 
     void syncBibTeXFields();
 

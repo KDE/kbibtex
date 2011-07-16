@@ -51,6 +51,7 @@ private slots:
     void showCountColumnToggled();
     void sortByCountToggled();
     void issueResizeEvent();
+    void columnsChanged();
 
 private:
     class ValueListPrivate;

@@ -57,6 +57,7 @@ BibTeXFileView::BibTeXFileView(const QString &name, QWidget * parent)
     /// restore header appearance
     KConfigGroup configGroup(config, configGroupName);
     QByteArray headerState = configGroup.readEntry(configHeaderState.arg(m_name), QByteArray());
+    headerDefault = header()->saveState();
     header()->restoreState(headerState);
 
     /// build context menu for header to show/hide single columns
@@ -208,8 +209,7 @@ void BibTeXFileView::headerResetToDefaults()
     }
 
     /// reset column ordering
-    // FIXME this does not work yet?
-    header()->restoreState(QByteArray());
+    header()->restoreState(headerDefault);
     KConfigGroup configGroup(config, configGroupName);
     configGroup.deleteEntry(configHeaderState.arg(m_name));
     config->sync();
