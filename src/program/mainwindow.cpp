@@ -257,7 +257,7 @@ void KBibTeXMainWindow::openDocumentDialog()
 {
     OpenFileInfo *currFile = d->openFileInfoManager->currentFile();
     KUrl currFileUrl = currFile == NULL ? KUrl() : currFile->url();
-    QString startDir = currFileUrl.isValid() ? KUrl(currFileUrl.url()).path() : QLatin1String(":open"); // FIXME: Does this work?
+    QString startDir = currFileUrl.isValid() ? KUrl(currFileUrl.url()).path() : QLatin1String("kfiledialog:///opensave");
     OpenFileInfo *ofi = d->openFileInfoManager->currentFile();
     if (ofi != NULL) {
         KUrl url = ofi->url();

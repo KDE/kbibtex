@@ -199,7 +199,7 @@ public:
     }
 
     KUrl getSaveFilename(bool mustBeImportable = true) {
-        QString startDir = p->url().isValid() ? p->url().path() : QLatin1String(":save"); // FIXME: Does this work?
+        QString startDir = p->url().isValid() ? p->url().path() : QLatin1String("kfiledialog:///opensave");
         QString supportedMimeTypes = QLatin1String("text/x-bibtex application/xml application/x-research-info-systems");
         if (!mustBeImportable && FileExporterToolchain::kpsewhich(QLatin1String("embedfile.sty")))
             supportedMimeTypes += QLatin1String(" application/pdf");
