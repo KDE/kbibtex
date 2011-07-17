@@ -3,9 +3,8 @@ INFO: This TODO list will most likely outdate very quickly
 Within the scope of a 0.4.x release, the following features
 and bugs are to be addressed:
 
-- Bug 17898: PubMed support: Issues with searching by author
-  name.
-- Bug 18344: Filtering by clicking on items in value list
+- Bug 17898: Waiting for approval from bug reporter that
+  issue is invalid.
 - Bug 17869: Waiting for approval from bug reporter that
   issue is fixed.
 
