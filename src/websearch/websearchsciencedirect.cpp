@@ -255,7 +255,7 @@ void WebSearchScienceDirect::doneFetchingExportCitationPage()
             const QString htmlText = reply->readAll();
             static_cast<HTTPEquivCookieJar*>(networkAccessManager()->cookieJar())->checkForHttpEqiuv(htmlText, reply->url());
             QMap<QString, QString> inputMap = formParameters(htmlText, QLatin1String("<form name=\"exportCite\""));
-            inputMap["format"] = "cite-abs";
+            inputMap["format"] = "cite";
             inputMap["citation-type"] = "BIBTEX";
             inputMap["RETURN_URL"] = d->scienceDirectBaseUrl + "/science/home";
             static const QStringList orderOfParameters = QString("_ob|_method|_acct|_userid|_docType|_ArticleListID|_uoikey|count|md5|JAVASCRIPT_ON|format|citation-type|Export|RETURN_URL").split("|");

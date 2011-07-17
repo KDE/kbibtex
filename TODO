@@ -3,18 +3,18 @@ INFO: This TODO list will most likely outdate very quickly
 Within the scope of a 0.4.x release, the following features
 and bugs are to be addressed:
 
-- Bug 17525: Feature from comment #3 is left to fix (re-
-  arranging columns).
 - Bug 17898: PubMed support: Issues with searching by author
   name.
-- Bug 18273: Auto-completion: Waiting for approval from bug
-  reporter that issue is fixed.
-- Bug 18321: Stretching author field: Waiting for approval
-  from bug reporter that issue is fixed.
+- Bug 18344: Filtering by clicking on items in value list
+- Bug 17869: Waiting for approval from bug reporter that
+  issue is fixed.
 
 Within the scope of a 0.5.x release, the following features
 and bugs are to be addressed:
 
+- Bug 17525 (comment #11): Reorganizing configuration files
+- Bug 18357: Reorganize configuration files to support both
+  bibtex and biblatex
 - Bug 16780: Grouping of elements in the main list view, i.e.
   using a tree-like structure (this would be an alternative
   to the current plain list).
