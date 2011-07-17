@@ -160,7 +160,6 @@ public:
         sortFilterProxyModel->setSourceModel(model);
         editor->setModel(sortFilterProxyModel);
         connect(filterBar, SIGNAL(filterChanged(SortFilterBibTeXFileModel::FilterQuery)), sortFilterProxyModel, SLOT(updateFilter(SortFilterBibTeXFileModel::FilterQuery)));
-        //connect(editor->valueListWidget(), SIGNAL(filterChanged(SortFilterBibTeXFileModel::FilterQuery)), filterBar, SLOT(setFilter(SortFilterBibTeXFileModel::FilterQuery))); //FIXME
     }
 
     void makeBackup(const KUrl &url) const {

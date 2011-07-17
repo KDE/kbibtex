@@ -27,6 +27,8 @@
 #include <file.h>
 #include "value.h"
 
+const QRegExp ValueItem::ignoredInSorting = QRegExp("[{}\\\\]+");
+
 Keyword::Keyword(const Keyword& other)
         : m_text(other.m_text)
 {
@@ -57,7 +59,8 @@ void Keyword::replace(const QString &before, const QString &after)
 
 bool Keyword::containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive) const
 {
-    return m_text.contains(pattern, caseSensitive);
+    const QString text = QString(m_text).replace(ignoredInSorting, "");
+    return text.contains(pattern, caseSensitive);
 }
 
 bool Keyword::operator==(const ValueItem &other) const
@@ -109,7 +112,11 @@ void Person::replace(const QString &before, const QString &after)
 
 bool Person::containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive) const
 {
-    return m_firstName.contains(pattern, caseSensitive) || m_lastName.contains(pattern, caseSensitive) || m_suffix.contains(pattern, caseSensitive) || QString("%1 %2|%2, %1").arg(m_firstName).arg(m_lastName).contains(pattern, caseSensitive);
+    const QString firstName = QString(m_firstName).replace(ignoredInSorting, "");
+    const QString lastName = QString(m_lastName).replace(ignoredInSorting, "");
+    const QString suffix = QString(m_suffix).replace(ignoredInSorting, "");
+
+    return firstName.contains(pattern, caseSensitive) || lastName.contains(pattern, caseSensitive) || suffix.contains(pattern, caseSensitive) || QString("%1 %2|%2, %1").arg(firstName).arg(lastName).contains(pattern, caseSensitive);
 }
 
 bool Person::operator==(const ValueItem &other) const
@@ -195,7 +202,8 @@ void MacroKey::replace(const QString &before, const QString &after)
 
 bool MacroKey::containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive) const
 {
-    return m_text.contains(pattern, caseSensitive);
+    const QString text = QString(m_text).replace(ignoredInSorting, "");
+    return text.contains(pattern, caseSensitive);
 }
 
 bool MacroKey::operator==(const ValueItem &other) const
@@ -238,7 +246,8 @@ void PlainText::replace(const QString &before, const QString &after)
 
 bool PlainText::containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive) const
 {
-    return m_text.contains(pattern, caseSensitive);
+    const QString text = QString(m_text).replace(ignoredInSorting, "");
+    return text.contains(pattern, caseSensitive);
 }
 
 bool PlainText::operator==(const ValueItem &other) const
@@ -281,7 +290,8 @@ void VerbatimText::replace(const QString &before, const QString &after)
 
 bool VerbatimText::containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive) const
 {
-    return m_text.contains(pattern, caseSensitive);
+    const QString text = QString(m_text).replace(ignoredInSorting, "");
+    return text.contains(pattern, caseSensitive);
 }
 
 bool VerbatimText::operator==(const ValueItem &other) const

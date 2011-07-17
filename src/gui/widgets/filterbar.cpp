@@ -53,9 +53,15 @@ public:
     }
 
     void clearFilter() {
+        comboBoxCombination->blockSignals(true);
+        comboBoxField->blockSignals(true);
+
         comboBoxFilterText->lineEdit()->setText("");
         comboBoxCombination->setCurrentIndex(0);
         comboBoxField->setCurrentIndex(0);
+
+        comboBoxCombination->blockSignals(false);
+        comboBoxField->blockSignals(false);
     }
 
     SortFilterBibTeXFileModel::FilterQuery filter() {
@@ -72,21 +78,21 @@ public:
     }
 
     void setFilter(SortFilterBibTeXFileModel::FilterQuery fq) {
-        bool found = false;
+        comboBoxCombination->blockSignals(true);
+        comboBoxField->blockSignals(true);
+
         comboBoxCombination->setCurrentIndex(fq.combination == SortFilterBibTeXFileModel::AnyTerm ? 0 : (fq.terms.count() < 2 ? 2 : 1));
         comboBoxFilterText->lineEdit()->setText(fq.terms.join(" "));
         for (int idx = 0; idx < comboBoxField->count(); ++idx) {
             const QString lower = fq.field.toLower();
             if (lower == comboBoxField->itemText(idx).toLower() || comboBoxField->itemData(idx, Qt::UserRole).toString().toLower() == lower) {
                 comboBoxField->setCurrentIndex(idx);
-                found = true;
                 break;
             }
         }
 
-        if (!found) {
-            kDebug() << "could not find field for text" << fq.field;
-        }
+        comboBoxCombination->blockSignals(false);
+        comboBoxField->blockSignals(false);
     }
 
     void addCompletionString(const QString &text) {

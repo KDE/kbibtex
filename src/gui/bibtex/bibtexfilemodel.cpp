@@ -25,7 +25,6 @@
 #include <QString>
 
 #include <KLocale>
-#include <KDebug>
 #include <KConfigGroup>
 
 #include <element.h>
@@ -171,7 +170,7 @@ bool SortFilterBibTeXFileModel::filterAcceptsRow(int source_row, const QModelInd
             if (m_filterQuery.field.isEmpty() || m_filterQuery.field == it.key().toLower()) {
                 int i = 0;
                 for (QStringList::ConstIterator itsl = m_filterQuery.terms.constBegin(); itsl != m_filterQuery.terms.constEnd(); ++itsl, ++i) {
-                    bool contains = it.value().containsPattern(*itsl);
+                    bool contains = (*itsl).isEmpty() ? true : it.value().containsPattern(*itsl);
                     any |= contains;
                     all[i] |= contains;
                 }

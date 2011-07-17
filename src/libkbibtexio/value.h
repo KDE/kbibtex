@@ -55,6 +55,11 @@ public:
       * @return TRUE if both instances are equal
       */
     virtual bool operator==(const ValueItem &other) const = 0;
+
+protected:
+    /// contains text fragments to be removed before performing a "contains pattern" operation
+    /// includes among other "{" and "}"
+    static const QRegExp ignoredInSorting;
 };
 
 class KBIBTEXIO_EXPORT Keyword: public ValueItem
