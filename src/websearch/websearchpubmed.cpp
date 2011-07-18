@@ -92,6 +92,11 @@ WebSearchPubMed::WebSearchPubMed(QWidget *parent)
     // nothing
 }
 
+WebSearchPubMed::~WebSearchPubMed()
+{
+    delete d;
+}
+
 void WebSearchPubMed::startSearch()
 {
     m_hasBeenCanceled = false;

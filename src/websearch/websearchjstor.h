@@ -31,6 +31,7 @@ class KBIBTEXWS_EXPORT WebSearchJStor : public WebSearchAbstract
 
 public:
     WebSearchJStor(QWidget *parent);
+    ~WebSearchJStor();
 
     virtual void startSearch();
     virtual void startSearch(const QMap<QString, QString> &query, int numResults);

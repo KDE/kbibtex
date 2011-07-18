@@ -63,6 +63,11 @@ WebSearchScienceDirect::WebSearchScienceDirect(QWidget *parent)
     // nothing
 }
 
+WebSearchScienceDirect::~WebSearchScienceDirect()
+{
+    delete d;
+}
+
 void WebSearchScienceDirect::startSearch()
 {
     d->runningJobs = 0;

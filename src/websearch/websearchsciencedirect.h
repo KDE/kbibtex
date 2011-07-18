@@ -32,6 +32,7 @@ class KBIBTEXWS_EXPORT WebSearchScienceDirect : public WebSearchAbstract
 
 public:
     WebSearchScienceDirect(QWidget *parent);
+    ~WebSearchScienceDirect();
 
     virtual void startSearch();
     virtual void startSearch(const QMap<QString, QString> &query, int numResults);

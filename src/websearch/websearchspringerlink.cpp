@@ -210,6 +210,11 @@ WebSearchSpringerLink::WebSearchSpringerLink(QWidget *parent)
     // nothing
 }
 
+WebSearchSpringerLink::~WebSearchSpringerLink()
+{
+    delete d;
+}
+
 void WebSearchSpringerLink::startSearch()
 {
     m_hasBeenCanceled = false;

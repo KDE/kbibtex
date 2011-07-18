@@ -406,9 +406,11 @@ bool FindDuplicates::findDuplicateEntries(File *file, QList<EntryClique*> &entry
 
     /// remove cliques with only one element (nothing to merge here) from the list of cliques
     for (QList<EntryClique*>::Iterator cit = entryCliqueList.begin(); cit != entryCliqueList.end();)
-        if ((*cit)->entryCount() < 2)
+        if ((*cit)->entryCount() < 2) {
+            EntryClique *ec = *cit;
             cit = entryCliqueList.erase(cit);
-        else {
+            delete ec;
+        } else {
             /// entries have been inserted as checked,
             /// therefore recalculate alternatives
             (*cit)->recalculateValueMap();

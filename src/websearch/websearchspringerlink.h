@@ -33,6 +33,7 @@ class KBIBTEXWS_EXPORT WebSearchSpringerLink : public WebSearchAbstract
 
 public:
     WebSearchSpringerLink(QWidget *parent);
+    ~WebSearchSpringerLink();
 
     virtual void startSearch();
     virtual void startSearch(const QMap<QString, QString> &query, int numResults);

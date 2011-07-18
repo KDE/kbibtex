@@ -38,6 +38,7 @@ class KBIBTEXWS_EXPORT WebSearchBibsonomy : public WebSearchAbstract
 
 public:
     WebSearchBibsonomy(QWidget *parent);
+    ~WebSearchBibsonomy();
 
     virtual void startSearch();
     virtual void startSearch(const QMap<QString, QString> &query, int numResults);

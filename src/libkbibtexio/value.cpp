@@ -317,6 +317,15 @@ Value::Value(const Value& other)
     mergeFrom(other);
 }
 
+Value::~Value()
+{
+    while (!isEmpty()) {
+        ValueItem *item = first();
+        removeFirst();
+        delete item;
+    }
+}
+
 void Value::merge(const Value& other)
 {
     mergeFrom(other);

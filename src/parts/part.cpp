@@ -101,6 +101,12 @@ public:
         connect(signalMapperViewDocument, SIGNAL(mapped(QObject*)), p, SLOT(elementViewDocumentMenu(QObject*)));
     }
 
+    ~KBibTeXPartPrivate() {
+        delete signalMapperNewElement;
+        delete viewDocumentMenu;
+        delete signalMapperViewDocument;
+    }
+
     FileImporter *fileImporterFactory(const KUrl& url) {
         QString ending = url.path().toLower();
         int p = ending.lastIndexOf(".");
@@ -335,7 +341,7 @@ KBibTeXPart::KBibTeXPart(QWidget *parentWidget, QObject *parent, bool browserVie
 
 KBibTeXPart::~KBibTeXPart()
 {
-    // nothing
+    delete d;
 }
 
 void KBibTeXPart::setModified(bool modified)

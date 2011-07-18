@@ -68,7 +68,11 @@ File::File(const File &other)
 
 File::~File()
 {
-    // nothing
+    while (!isEmpty()) {
+        Element *e = first();
+        removeFirst();
+        delete e;
+    }
 }
 
 const Element *File::containsKey(const QString &key, ElementTypes elementTypes) const

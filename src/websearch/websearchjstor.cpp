@@ -96,6 +96,11 @@ WebSearchJStor::WebSearchJStor(QWidget *parent)
     // nothing
 }
 
+WebSearchJStor::~WebSearchJStor()
+{
+    delete d;
+}
+
 void WebSearchJStor::startSearch(const QMap<QString, QString> &query, int numResults)
 {
     m_hasBeenCanceled = false;

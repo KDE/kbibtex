@@ -32,6 +32,7 @@ class KBIBTEXWS_EXPORT WebSearchIEEEXplore : public WebSearchAbstract
 
 public:
     WebSearchIEEEXplore(QWidget *parent);
+    ~WebSearchIEEEXplore();
 
     virtual void startSearch();
     virtual void startSearch(const QMap<QString, QString> &query, int numResults);

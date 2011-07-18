@@ -138,6 +138,11 @@ MenuLineEdit::MenuLineEdit(bool isMultiLine, QWidget *parent)
     d->setupUI();
 }
 
+MenuLineEdit::~MenuLineEdit()
+{
+    delete d;
+}
+
 void MenuLineEdit::setMenu(QMenu *menu)
 {
     d->m_pushButtonType->setMenu(menu);

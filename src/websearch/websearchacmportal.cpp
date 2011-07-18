@@ -81,6 +81,11 @@ WebSearchAcmPortal::WebSearchAcmPortal(QWidget *parent)
     // nothing
 }
 
+WebSearchAcmPortal::~WebSearchAcmPortal()
+{
+    delete d;
+}
+
 void WebSearchAcmPortal::startSearch(const QMap<QString, QString> &query, int numResults)
 {
     m_hasBeenCanceled = false;

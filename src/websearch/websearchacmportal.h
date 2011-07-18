@@ -37,6 +37,7 @@ class KBIBTEXWS_EXPORT WebSearchAcmPortal : public WebSearchAbstract
 
 public:
     WebSearchAcmPortal(QWidget *parent);
+    ~WebSearchAcmPortal();
 
     virtual void startSearch();
     virtual void startSearch(const QMap<QString, QString> &query, int numResults);

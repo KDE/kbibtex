@@ -549,6 +549,12 @@ void FindDuplicatesUI::slotFindDuplicates()
                 d->editor->bibTeXModel()->setBibTeXFile(file);
             }
         }
+
+        while (!cliques.isEmpty()) {
+            EntryClique *ec = cliques.first();
+            cliques.removeFirst();
+            delete ec;
+        }
     }
 
     if (deleteFileLater) delete file;

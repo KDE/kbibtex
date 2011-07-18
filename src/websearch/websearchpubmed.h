@@ -32,6 +32,7 @@ class KBIBTEXWS_EXPORT WebSearchPubMed : public WebSearchAbstract
 
 public:
     WebSearchPubMed(QWidget *parent);
+    ~WebSearchPubMed();
 
     virtual void startSearch();
     virtual void startSearch(const QMap<QString, QString> &query, int numResults);

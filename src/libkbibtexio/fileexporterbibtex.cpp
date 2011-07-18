@@ -281,7 +281,7 @@ FileExporterBibTeX::FileExporterBibTeX()
 
 FileExporterBibTeX::~FileExporterBibTeX()
 {
-// nothing
+    delete d;
 }
 
 void FileExporterBibTeX::setEncoding(const QString &encoding)

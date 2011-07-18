@@ -90,7 +90,7 @@ Entry::Entry(const Entry &other)
 
 Entry::~Entry()
 {
-    // nothing
+    clear();
 }
 
 Entry& Entry::operator= (const Entry & other)

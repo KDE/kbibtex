@@ -32,6 +32,7 @@ class KBIBTEXWS_EXPORT WebSearchGoogleScholar : public WebSearchAbstract
 
 public:
     WebSearchGoogleScholar(QWidget *parent);
+    ~WebSearchGoogleScholar();
 
     virtual void startSearch();
     virtual void startSearch(const QMap<QString, QString> &query, int numResults);

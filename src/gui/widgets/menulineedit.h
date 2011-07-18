@@ -36,6 +36,7 @@ class MenuLineEdit : public QFrame
 
 public:
     MenuLineEdit(bool isMultiLine, QWidget *parent);
+    ~MenuLineEdit();
 
     void setMenu(QMenu *menu);
     virtual void setReadOnly(bool);

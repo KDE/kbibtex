@@ -137,6 +137,11 @@ WebSearchArXiv::WebSearchArXiv(QWidget *parent)
     // nothing
 }
 
+WebSearchArXiv::~WebSearchArXiv()
+{
+    delete d;
+}
+
 void WebSearchArXiv::startSearch()
 {
     d->curStep = 0;

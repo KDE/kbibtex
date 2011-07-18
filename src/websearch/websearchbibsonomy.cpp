@@ -178,6 +178,11 @@ WebSearchBibsonomy::WebSearchBibsonomy(QWidget *parent)
     // nothing
 }
 
+WebSearchBibsonomy::~WebSearchBibsonomy()
+{
+    delete d;
+}
+
 void WebSearchBibsonomy::startSearch(const QMap<QString, QString> &query, int numResults)
 {
     m_hasBeenCanceled = false;

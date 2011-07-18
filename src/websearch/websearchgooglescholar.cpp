@@ -68,6 +68,11 @@ WebSearchGoogleScholar::WebSearchGoogleScholar(QWidget *parent)
     // nothing
 }
 
+WebSearchGoogleScholar::~WebSearchGoogleScholar()
+{
+    delete d;
+}
+
 void WebSearchGoogleScholar::startSearch()
 {
     m_hasBeenCanceled = false;

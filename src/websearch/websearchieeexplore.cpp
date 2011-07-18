@@ -90,6 +90,11 @@ WebSearchIEEEXplore::WebSearchIEEEXplore(QWidget *parent)
     // nothing
 }
 
+WebSearchIEEEXplore::~WebSearchIEEEXplore()
+{
+    delete d;
+}
+
 void WebSearchIEEEXplore::startSearch()
 {
     m_hasBeenCanceled = false;
