@@ -68,11 +68,13 @@ File::File(const File &other)
 
 File::~File()
 {
-    while (!isEmpty()) {
-        Element *e = first();
-        removeFirst();
-        delete e;
-    }
+    // FIXME: at some point elements have to be deleted
+    // maybe use QSharedPointer?
+    //while (!isEmpty()) {
+    //    Element *e = first();
+    //    removeFirst();
+    //    delete e;
+    //}
 }
 
 const Element *File::containsKey(const QString &key, ElementTypes elementTypes) const
