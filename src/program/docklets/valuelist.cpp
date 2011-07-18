@@ -72,6 +72,7 @@ public:
 
     void setupGUI() {
         QGridLayout *layout = new QGridLayout(p);
+        layout->setMargin(0);
 
         comboboxFieldNames = new KComboBox(true, p);
         layout->addWidget(comboboxFieldNames, 0, 0, 1, 1);

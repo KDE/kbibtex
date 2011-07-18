@@ -47,6 +47,7 @@ public:
     SearchResultsPrivate(MDIWidget *mdiWidget, SearchResults *parent)
             : p(parent), m(mdiWidget), currentFile(NULL) {
         QGridLayout *layout = new QGridLayout(parent);
+        layout->setMargin(0);
         layout->setColumnStretch(0, 1);
         layout->setColumnStretch(1, 0);
 
