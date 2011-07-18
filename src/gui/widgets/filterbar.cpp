@@ -21,13 +21,13 @@
 #include <QLayout>
 #include <QFontMetrics>
 #include <QLabel>
+#include <QTimer>
 
 #include <KComboBox>
 #include <KLocale>
 #include <KLineEdit>
 #include <KConfigGroup>
 #include <KStandardDirs>
-#include <KDebug>
 
 #include "filterbar.h"
 #include "bibtexfields.h"
@@ -45,11 +45,12 @@ public:
     const int maxNumStoredFilterTexts;
     KComboBox *comboBoxCombination;
     KComboBox *comboBoxField;
+    QTimer *filterUpdateTimer;
 
     FilterBarPrivate(FilterBar *parent)
             : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))),
-            configGroupName(QLatin1String("Filter Bar")), maxNumStoredFilterTexts(12) {
-        // nothing
+            configGroupName(QLatin1String("Filter Bar")), maxNumStoredFilterTexts(12), filterUpdateTimer(new QTimer(parent)) {
+        connect(filterUpdateTimer, SIGNAL(timeout()), p, SLOT(timerTriggered()));
     }
 
     void clearFilter() {
@@ -135,6 +136,11 @@ public:
         configGroup.writeEntry(QLatin1String("CurrentField"), comboBoxField->currentIndex());
         config->sync();
     }
+
+    void resetFilterUpdateTimer() {
+        filterUpdateTimer->stop();
+        filterUpdateTimer->start(500);
+    }
 };
 
 FilterBar::FilterBar(QWidget *parent)
@@ -177,11 +183,11 @@ FilterBar::FilterBar(QWidget *parent)
             d->comboBoxField->addItem(fd.label, fd.upperCamelCase);
     }
 
-    connect(d->comboBoxFilterText->lineEdit(), SIGNAL(returnPressed()), this, SLOT(widgetsChanged()));
-    connect(d->comboBoxFilterText->lineEdit(), SIGNAL(returnPressed()), this, SLOT(textChanged()));
+    connect(d->comboBoxFilterText->lineEdit(), SIGNAL(textChanged(QString)), this, SLOT(lineeditTextChanged()));
+    connect(d->comboBoxFilterText->lineEdit(), SIGNAL(returnPressed()), this, SLOT(lineeditReturnPressed()));
     connect(lineEdit, SIGNAL(clearButtonClicked()), this, SLOT(clearFilter()));
-    connect(d->comboBoxCombination, SIGNAL(currentIndexChanged(int)), this, SLOT(widgetsChanged()));
-    connect(d->comboBoxField, SIGNAL(currentIndexChanged(int)), this, SLOT(widgetsChanged()));
+    connect(d->comboBoxCombination, SIGNAL(currentIndexChanged(int)), this, SLOT(comboboxStatusChanged()));
+    connect(d->comboBoxField, SIGNAL(currentIndexChanged(int)), this, SLOT(comboboxStatusChanged()));
 
     /// restore history on filter texts
     /// see addCompletionString for more detailed explanation
@@ -210,13 +216,28 @@ SortFilterBibTeXFileModel::FilterQuery FilterBar::filter()
     return d->filter();
 }
 
-void FilterBar::widgetsChanged()
+void FilterBar::lineeditTextChanged()
 {
+    d->resetFilterUpdateTimer();
+}
+
+void FilterBar::comboboxStatusChanged()
+{
+    d->filterUpdateTimer->stop();
     d->storeComboBoxStatus();
     emit filterChanged(d->filter());
 }
 
-void FilterBar::textChanged()
+void FilterBar::lineeditReturnPressed()
 {
+    d->filterUpdateTimer->stop();
+    /// only store text in auto-completion if user pressed enter
     d->addCompletionString(d->comboBoxFilterText->lineEdit()->text());
+    emit filterChanged(d->filter());
+}
+
+void FilterBar::timerTriggered()
+{
+    /// timer used for a delayed filter update
+    emit filterChanged(d->filter());
 }

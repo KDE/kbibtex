@@ -49,8 +49,10 @@ private:
     FilterBarPrivate *d;
 
 private slots:
-    void widgetsChanged();
-    void textChanged();
+    void lineeditTextChanged();
+    void comboboxStatusChanged();
+    void lineeditReturnPressed();
+    void timerTriggered();
 };
 
 #endif // KBIBTEX_GUI_FILTERBAR_H
