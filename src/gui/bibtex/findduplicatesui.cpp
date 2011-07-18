@@ -39,7 +39,6 @@
 #include <KStandardDirs>
 #include <kparts/part.h>
 #include <KMessageBox>
-#include <KInputDialog>
 
 #include <kdeversion.h>
 
@@ -353,12 +352,13 @@ public:
         Q_ASSERT(internalModel != NULL);
         internalModel->setCurrentClique(currentClique);
         this->currentClique = currentClique;
-        invalidateFilter();
+        invalidate();
     }
 
     void setSourceModel(QAbstractItemModel *model) {
         QSortFilterProxyModel::setSourceModel(model);
         internalModel = dynamic_cast<CheckableBibTeXFileModel*>(model);
+        Q_ASSERT(internalModel != NULL);
     }
 
     bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const {
@@ -508,9 +508,11 @@ FindDuplicatesUI::FindDuplicatesUI(KParts::Part *part, BibTeXEditor *bibTeXEdito
 
 void FindDuplicatesUI::slotFindDuplicates()
 {
-    bool ok = false;
-    int sensitivity = KInputDialog::getInteger(i18n("Sensitivity"), i18n("Enter a value for sensitivity.\n\nLow values (close to 0) require very similar entries for duplicate detection, larger values (close to 10000) are more likely to count entries as duplicates.\n\nPlease provide feedback to the developers if you have a suggestion for a better default value than 4000."), 4000, 0, 10000, 10, &ok, d->part->widget());
-    if (!ok) sensitivity = 4000;
+    // FIXME move to settings
+    //bool ok = false;
+    //int sensitivity = KInputDialog::getInteger(i18n("Sensitivity"), i18n("Enter a value for sensitivity.\n\nLow values (close to 0) require very similar entries for duplicate detection, larger values (close to 10000) are more likely to count entries as duplicates.\n\nPlease provide feedback to the developers if you have a suggestion for a better default value than 4000."), 4000, 0, 10000, 10, &ok, d->part->widget());
+    //if (!ok) sensitivity = 4000;
+    int sensitivity = 4000;
 
     KDialog dlg(d->part->widget());
     FindDuplicates fd(&dlg, sensitivity);

@@ -107,11 +107,6 @@ BibTeXEditor::BibTeXEditor(const QString &name, QWidget *parent)
     connect(this, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(itemActivated(QModelIndex)));
 }
 
-void BibTeXEditor::setModel(QAbstractItemModel * model)
-{
-    BibTeXFileView::setModel(model);
-}
-
 void BibTeXEditor::viewCurrentElement()
 {
     viewElement(currentElement());
@@ -238,7 +233,7 @@ void BibTeXEditor::selectionChanged(const QItemSelection & selected, const QItem
 
 void BibTeXEditor::mouseReleaseEvent(QMouseEvent *event)
 {
-    Q_UNUSED(event);
+    QTreeView::mouseReleaseEvent(event);
     /// delay notification about change of current item to allow drag'n'drop to work
     emit currentElementChanged(m_current, bibTeXModel()->bibTeXFile());
 }

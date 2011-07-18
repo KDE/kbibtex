@@ -40,8 +40,6 @@ class KBIBTEXGUI_EXPORT BibTeXEditor : public BibTeXFileView
 public:
     BibTeXEditor(const QString &name, QWidget *parent);
 
-    virtual void setModel(QAbstractItemModel * model);
-
     const QList<Element*>& selectedElements() const;
     const Element* currentElement() const;
     Element* currentElement();
