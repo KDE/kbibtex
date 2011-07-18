@@ -360,10 +360,11 @@ void ValueListModel::insertValue(const Value &value)
             v.append(item);
             newValueLine.value = v;
 
-            /// memorize sorting criterium for persons, which is last name first
-            /// and complete name in lower case
+            /// memorize sorting criterium:
+            /// * for persons, use last name first
+            /// * in any case, use lower case
             const Person *person = dynamic_cast<const Person*>(item);
-            newValueLine.sortBy = person == NULL ? QString::null : person->lastName().toLower() + QLatin1String(" ") + person->firstName().toLower();
+            newValueLine.sortBy = person == NULL ? text.toLower() : person->lastName().toLower() + QLatin1String(" ") + person->firstName().toLower();
 
             values << newValueLine;
         } else {
