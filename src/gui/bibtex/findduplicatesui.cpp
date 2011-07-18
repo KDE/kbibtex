@@ -555,6 +555,8 @@ void FindDuplicatesUI::slotFindDuplicates()
             cliques.removeFirst();
             delete ec;
         }
+
+        d->editor->externalModification();
     }
 
     if (deleteFileLater) delete file;
