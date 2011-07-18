@@ -62,7 +62,7 @@ void SortFilterBibTeXFileModel::updateFilter(SortFilterBibTeXFileModel::FilterQu
 {
     m_filterQuery = filterQuery;
     m_filterQuery.field = filterQuery.field.toLower(); /// required for comparison in filter code
-    invalidateFilter();
+    invalidate();
 }
 
 bool SortFilterBibTeXFileModel::lessThan(const QModelIndex & left, const QModelIndex & right) const
