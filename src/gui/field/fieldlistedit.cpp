@@ -71,6 +71,12 @@ public:
         setupGUI();
     }
 
+    ~FieldListEditProtected() {
+        delete smRemove;
+        delete smGoUp;
+        delete smGoDown;
+    }
+
     void setupGUI() {
         QBoxLayout *outerLayout = new QVBoxLayout(p);
         outerLayout->setMargin(0);
@@ -206,6 +212,11 @@ FieldListEdit::FieldListEdit(KBibTeX::TypeFlag preferredTypeFlag, KBibTeX::TypeF
     setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
     setMinimumSize(fontMetrics().averageCharWidth() * 30, fontMetrics().averageCharWidth() * 10);
     setAcceptDrops(true);
+}
+
+FieldListEdit::~FieldListEdit()
+{
+    delete d;
 }
 
 bool FieldListEdit::reset(const Value& value)

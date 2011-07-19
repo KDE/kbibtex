@@ -45,6 +45,7 @@ class FieldListEdit : public QWidget
 
 public:
     FieldListEdit(KBibTeX::TypeFlag preferredTypeFlag, KBibTeX::TypeFlags typeFlags, QWidget *parent = NULL);
+    ~FieldListEdit();
 
     virtual bool reset(const Value& value);
     virtual bool apply(Value& value) const;

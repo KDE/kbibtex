@@ -42,6 +42,7 @@ class KBIBTEXGUI_EXPORT FieldLineEdit : public MenuLineEdit
 
 public:
     FieldLineEdit(KBibTeX::TypeFlag preferredTypeFlag, KBibTeX::TypeFlags typeFlags, bool isMultiLine = false, QWidget *parent = NULL);
+    ~FieldLineEdit();
 
     bool reset(const Value& value);
     bool apply(Value& value) const;

@@ -92,6 +92,12 @@ public:
         personNameFormatting = configGroup.readEntry(Person::keyPersonNameFormatting, Person::defaultPersonNameFormatting);
     }
 
+    ~FieldLineEditPrivate() {
+        delete menuTypes;
+        delete menuTypesSignalMapper;
+        delete buttonOpenUrl;
+    }
+
     bool reset(const Value& value) {
         bool result = false;
         QString text = "";
@@ -395,6 +401,11 @@ FieldLineEdit::FieldLineEdit(KBibTeX::TypeFlag preferredTypeFlag, KBibTeX::TypeF
     setMenu(d->menuTypes);
     setChildAcceptDrops(false);
     setAcceptDrops(true);
+}
+
+FieldLineEdit::~FieldLineEdit()
+{
+    delete d;
 }
 
 bool FieldLineEdit::apply(Value& value) const
