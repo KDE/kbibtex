@@ -52,7 +52,6 @@
 
 #include "referencepreview.h"
 
-const QString notAvailableMessage = "<html><head><meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" /></head><body style=\"font-family: '" + KGlobalSettings::generalFont().family() + "';\"><p style=\"font-size: " + QString::number(KGlobalSettings::generalFont().pointSize()) + "pt; font-style: italic; color: #333;\">" + i18n("No preview available") + "</p><p style=\"font-size: " + QString::number(KGlobalSettings::generalFont().pointSize() * .9) + "pt; color: #666;\">" + i18n("Reason:") + " %1</p></body></html>"; //FIXME: Font size seems to be too small
 class ReferencePreview::ReferencePreviewPrivate
 {
 private:
@@ -75,10 +74,11 @@ public:
     const Element* element;
     const File *file;
     BibTeXEditor *editor;
+    const QString notAvailableMessage;
 
     ReferencePreviewPrivate(ReferencePreview *parent)
             : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName(QLatin1String("Reference Preview Docklet")),
-            configKeyName(QLatin1String("Style")), element(NULL), editor(NULL) {
+            configKeyName(QLatin1String("Style")), element(NULL), editor(NULL), notAvailableMessage("<html><head><meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" /></head><body style=\"font-family: '" + KGlobalSettings::generalFont().family() + "';\"><p style=\"font-size: " + QString::number(KGlobalSettings::generalFont().pointSize()) + "pt; font-style: italic; color: #333;\">" + i18n("No preview available") + "</p><p style=\"font-size: " + QString::number(KGlobalSettings::generalFont().pointSize() * .9) + "pt; color: #666;\">" + i18n("Reason:") + " %1</p></body></html>") {
         QGridLayout *gridLayout = new QGridLayout(p);
         gridLayout->setMargin(0);
         gridLayout->setColumnStretch(0, 1);
@@ -196,7 +196,7 @@ void ReferencePreview::setEnabled(bool enabled)
         setHtml(d->htmlText, d->baseUrl);
     else {
 #ifdef HAVE_QTWEBKIT
-        d->webView->setHtml(notAvailableMessage.arg(i18n("Preview disabled")), d->baseUrl);
+        d->webView->setHtml(d->notAvailableMessage.arg(i18n("Preview disabled")), d->baseUrl);
 #endif // HAVE_QTWEBKIT
         d->buttonOpen->setEnabled(false);
         d->buttonSaveAsHTML->setEnabled(false);
@@ -223,7 +223,7 @@ void ReferencePreview::renderHTML()
 
     if (d->element == NULL) {
 #ifdef HAVE_QTWEBKIT
-        d->webView->setHtml(notAvailableMessage.arg(i18n("No element selected")), d->baseUrl);
+        d->webView->setHtml(d->notAvailableMessage.arg(i18n("No element selected")), d->baseUrl);
 #endif // HAVE_QTWEBKIT
         d->buttonOpen->setEnabled(false);
         d->buttonSaveAsHTML->setEnabled(false);
@@ -286,7 +286,7 @@ void ReferencePreview::renderHTML()
 
     if (text.isEmpty()) {
         /// something went wrong, no output ...
-        text = notAvailableMessage.arg(i18n("No HTML output generated"));
+        text = d->notAvailableMessage.arg(i18n("No HTML output generated"));
         kDebug() << errorLog.join("\n");
     }
 

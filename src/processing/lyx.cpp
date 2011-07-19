@@ -103,7 +103,7 @@ void LyX::updateActions()
 
 void LyX::sendReferenceToLyX()
 {
-    static const QString defaultHintOnLyXProblems = i18n("\n\nCheck that LyX is running and configured to receive references (see \"LyX server pipe\" in LyX's settings).");
+    const QString defaultHintOnLyXProblems = i18n("\n\nCheck that LyX is running and configured to receive references (see \"LyX server pipe\" in LyX's settings).");
     const QString msgBoxTitle = i18n("Send Reference to LyX");
 
     if (d->references.isEmpty()) {

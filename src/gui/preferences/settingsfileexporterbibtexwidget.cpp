@@ -98,15 +98,15 @@ private:
     KComboBox *comboBoxKeywordCasing;
     QCheckBox *checkBoxProtectCasing;
     KComboBox *comboBoxPersonNameFormatting;
-    static const Person *dummyPerson;
+    const Person dummyPerson;
 
     KSharedConfigPtr config;
-    static const QString configGroupName;
+    const QString configGroupName;
 
 public:
 
     SettingsFileExporterBibTeXWidgetPrivate(SettingsFileExporterBibTeXWidget *parent)
-            : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))) {
+            : p(parent), dummyPerson(Person(i18n("John"), i18n("Doe"), i18n("Jr."))), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName(QLatin1String("FileExporterBibTeX")) {
         // nothing
     }
 
@@ -193,8 +193,8 @@ public:
         layout->addRow(i18n("Person Names Formatting:"), comboBoxPersonNameFormatting);
         ItalicTextItemModel *itim = new ItalicTextItemModel();
         itim->addItem(i18n("Use global settings"), QString(""));
-        itim->addItem(Person::transcribePersonName(dummyPerson, QLatin1String("<%f ><%l>")), QString("<%f ><%l>"));
-        itim->addItem(Person::transcribePersonName(dummyPerson, QLatin1String("<%l><, %f>")), QString("<%l><, %f>"));
+        itim->addItem(Person::transcribePersonName(&dummyPerson, QLatin1String("<%f ><%l>")), QString("<%f ><%l>"));
+        itim->addItem(Person::transcribePersonName(&dummyPerson, QLatin1String("<%l><, %f>")), QString("<%l><, %f>"));
         comboBoxPersonNameFormatting->setModel(itim);
         connect(comboBoxPersonNameFormatting, SIGNAL(currentIndexChanged(int)), p, SIGNAL(changed()));
     }
@@ -234,9 +234,6 @@ public:
         file->setProperty(File::NameFormatting, comboBoxPersonNameFormatting->itemData(comboBoxPersonNameFormatting->currentIndex()));
     }
 };
-
-const QString SettingsFileExporterBibTeXWidget::SettingsFileExporterBibTeXWidgetPrivate::configGroupName = QLatin1String("FileExporterBibTeX");
-const Person *SettingsFileExporterBibTeXWidget::SettingsFileExporterBibTeXWidgetPrivate::dummyPerson = new Person(i18n("John"), i18n("Doe"), i18n("Jr."));
 
 
 SettingsFileExporterBibTeXWidget::SettingsFileExporterBibTeXWidget(QWidget *parent)

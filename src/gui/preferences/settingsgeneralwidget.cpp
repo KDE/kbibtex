@@ -34,23 +34,23 @@ private:
     SettingsGeneralWidget *p;
 
     KComboBox *comboBoxPersonNameFormatting;
-    static const Person *dummyPerson;
+    const Person dummyPerson;
     QString restartRequiredMsg;
 
     KSharedConfigPtr config;
-    static const QString configGroupName;
+    const QString configGroupName;
 
 public:
 
     SettingsGeneralWidgetPrivate(SettingsGeneralWidget *parent)
-            : p(parent), restartRequiredMsg(i18n("Changing this option requires a restart to take effect.")), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))) {
+            : p(parent), dummyPerson(Person(i18n("John"), i18n("Doe"), i18n("Jr."))), restartRequiredMsg(i18n("Changing this option requires a restart to take effect.")), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName(QLatin1String("General")) {
         // nothing
     }
 
     void loadState() {
         KConfigGroup configGroup(config, configGroupName);
         QString personNameFormatting = configGroup.readEntry(Person::keyPersonNameFormatting, Person::defaultPersonNameFormatting);
-        p->selectValue(comboBoxPersonNameFormatting, Person::transcribePersonName(dummyPerson, personNameFormatting));
+        p->selectValue(comboBoxPersonNameFormatting, Person::transcribePersonName(&dummyPerson, personNameFormatting));
     }
 
     void saveState() {
@@ -60,7 +60,7 @@ public:
     }
 
     void resetToDefaults() {
-        p->selectValue(comboBoxPersonNameFormatting, Person::transcribePersonName(dummyPerson, Person::defaultPersonNameFormatting));
+        p->selectValue(comboBoxPersonNameFormatting, Person::transcribePersonName(&dummyPerson, Person::defaultPersonNameFormatting));
     }
 
     void setupGUI() {
@@ -70,15 +70,13 @@ public:
         layout->addRow(i18n("Person Names Formatting:"), comboBoxPersonNameFormatting);
         const QStringList formattingOptions = QStringList() << QLatin1String("<%f ><%l><, %s>") << QLatin1String("<%l><, %f><, %s>");
         foreach(const QString &formattingOption, formattingOptions) {
-            comboBoxPersonNameFormatting->addItem(Person::transcribePersonName(dummyPerson, formattingOption), formattingOption);
+            comboBoxPersonNameFormatting->addItem(Person::transcribePersonName(&dummyPerson, formattingOption), formattingOption);
         }
         comboBoxPersonNameFormatting->setToolTip(restartRequiredMsg);
         connect(comboBoxPersonNameFormatting, SIGNAL(currentIndexChanged(int)), p, SIGNAL(changed()));
     }
 };
 
-const QString SettingsGeneralWidget::SettingsGeneralWidgetPrivate::configGroupName = QLatin1String("General");
-const Person *SettingsGeneralWidget::SettingsGeneralWidgetPrivate::dummyPerson = new Person(i18n("John"), i18n("Doe"), i18n("Jr."));
 
 SettingsGeneralWidget::SettingsGeneralWidget(QWidget *parent)
         : SettingsAbstractWidget(parent), d(new SettingsGeneralWidgetPrivate(this))
