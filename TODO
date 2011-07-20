@@ -27,6 +27,11 @@ and bugs are to be addressed:
   search is complete.
 - Bug 18287: Automatic ID suggestion based on user-defined
   patterns.
+- Use QSharedPointer for Element (and derived clases) objects
+  for better memory management.
+- Start adding translations
+- Profiling
+- Adding support for Biber's XML format
 
 Within the scope of more future releases, the following
 features and bugs are to be addressed:
