@@ -348,8 +348,12 @@ bool FileExporterBibTeX::save(QIODevice* iodevice, const File* bibtexfile, QStri
         d->keywordCasing = (KBibTeX::Casing)bibtexfile->property(File::KeywordCasing).toInt();
     if (bibtexfile->hasProperty(File::ProtectCasing))
         d->protectCasing = bibtexfile->property(File::ProtectCasing).toBool();
-    if (bibtexfile->hasProperty(File::NameFormatting))
-        d->personNameFormatting = bibtexfile->property(File::NameFormatting).toString();
+    if (bibtexfile->hasProperty(File::NameFormatting)) {
+        /// if the user set "use global default", this property is an empty string
+        /// in this case, keep default value
+        const QString buffer = bibtexfile->property(File::NameFormatting).toString();
+        d->personNameFormatting = buffer.isEmpty() ? d->personNameFormatting : buffer;
+    }
 
     if (d->encoding != QLatin1String("latex"))
         parameterCommentsList << new Comment("x-kbibtex-encoding=" + d->encoding, true);
