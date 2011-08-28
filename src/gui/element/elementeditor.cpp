@@ -20,7 +20,9 @@
 
 #include <typeinfo>
 
+#include <QCheckBox>
 #include <QTabWidget>
+#include <QLabel>
 #include <QLayout>
 #include <QBuffer>
 #include <QTextStream>
@@ -57,6 +59,7 @@ private:
     ElementEditor *p;
     ElementWidget *previousWidget, *referenceWidget, *sourceWidget;
     KPushButton *buttonCheckWithBibTeX;
+    QCheckBox *checkBoxForceEnableAllWidgets;
 
 public:
     QTabWidget *tab;
@@ -89,6 +92,12 @@ public:
 
         tab = new QTabWidget(p);
         layout->addWidget(tab, 1, 0, 1, 3);
+
+        checkBoxForceEnableAllWidgets = new QCheckBox(i18n("Enable all fields"), p);
+        checkBoxForceEnableAllWidgets->setChecked(true);
+        layout->addWidget(checkBoxForceEnableAllWidgets, 2, 0, 1, 2);
+        connect(checkBoxForceEnableAllWidgets, SIGNAL(toggled(bool)), p, SLOT(updateReqOptWidgets()));
+        connect(referenceWidget, SIGNAL(entryTypeChanged()), p, SLOT(updateReqOptWidgets()));
 
         buttonCheckWithBibTeX = new KPushButton(KIcon("tools-check-spelling"), i18n("Check with BibTeX"), p);
         layout->addWidget(buttonCheckWithBibTeX, 2, 2, 1, 1);
@@ -172,6 +181,9 @@ public:
         elementChanged = false;
         elementUnapplied = false;
         reset(element);
+
+        /// show checkbox to enable all fields only if editing an entry
+        checkBoxForceEnableAllWidgets->setVisible(internalEntry != NULL);
     }
 
     void reset(const Element *element) {
@@ -213,6 +225,21 @@ public:
     void setReadOnly(bool isReadOnly) {
         for (QList<ElementWidget*>::Iterator it = widgets.begin(); it != widgets.end(); ++it)
             (*it)->setReadOnly(isReadOnly);
+    }
+
+    void updateReqOptWidgets() {
+        /// this function is only relevant if editing an entry (and not e.g. a comment)
+        if (internalEntry == NULL) return; /// quick-and-dirty test if editing an entry
+
+        /// make a temporary snapshot of the current state
+        Entry tempEntry;
+        apply(&tempEntry);
+
+        /// update the enabled/disabled state of required and optional widgets/fields
+        bool forceEnable = checkBoxForceEnableAllWidgets->isChecked();
+        foreach(ElementWidget *elementWidget, widgets) {
+            elementWidget->enableReqOptWidgets(&tempEntry, forceEnable);
+        }
     }
 
     void switchTo(QWidget *newTab) {
@@ -457,4 +484,9 @@ void ElementEditor::childModified(bool m)
     if (m)
         d->elementUnapplied = true;
     emit modified(m);
+}
+
+void ElementEditor::updateReqOptWidgets()
+{
+    d->updateReqOptWidgets();
 }

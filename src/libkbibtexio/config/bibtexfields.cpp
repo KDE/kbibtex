@@ -89,6 +89,9 @@ public:
             fd.typeFlags = typeFlagsFromString(typeFlags);
             QString preferredTypeFlag = typeFlags.split(';').first();
             fd.preferredTypeFlag = typeFlagFromString(preferredTypeFlag);
+
+            fd.typeIndependent = configGroup.readEntry("TypeIndependent", false);
+
             p->append(fd);
         }
 
@@ -112,6 +115,7 @@ public:
             QString typeFlagsString = fd.typeFlags == fd.preferredTypeFlag ? "" : ";" + typeFlagsToString(fd.typeFlags);
             typeFlagsString.prepend(typeFlagToString(fd.preferredTypeFlag));
             configGroup.writeEntry("TypeFlags", typeFlagsString);
+            configGroup.writeEntry("TypeIndependent", fd.typeIndependent);
 
             if (treeViewNames.isEmpty())
                 treeViewNames.append(fd.width.keys());

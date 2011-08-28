@@ -29,6 +29,8 @@ typedef struct {
     QString upperCamelCase;
     QString upperCamelCaseAlt;
     QString label;
+    QStringList requiredItems;
+    QStringList optionalItems;
 } EntryDescription;
 
 bool operator==(const EntryDescription &a, const EntryDescription &b);

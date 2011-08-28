@@ -23,6 +23,7 @@
 
 #include <kbibtexgui_export.h>
 
+#include <QLabel>
 #include <QWidget>
 
 #include <KUrl>
@@ -56,6 +57,7 @@ public:
     virtual void setReadOnly(bool isReadOnly) {
         this->isReadOnly = isReadOnly;
     };
+    virtual void enableReqOptWidgets(const Element*, bool) = 0;
     virtual QString label() = 0;
     virtual KIcon icon() = 0;
     bool isModified() const;
@@ -89,6 +91,7 @@ class EntryConfiguredWidget : public ElementWidget
 private:
     EntryTabLayout &etl;
     QMap<QString, FieldInput*> bibtexKeyToWidget;
+    QMap<FieldInput*, QLabel*> buddyList;
     void createGUI();
 
 public:
@@ -97,6 +100,7 @@ public:
     bool apply(Element *element) const;
     bool reset(const Element *element);
     void setReadOnly(bool isReadOnly);
+    void enableReqOptWidgets(const Element *element, bool forceEnable);
     QString label();
     KIcon icon();
 
@@ -107,6 +111,8 @@ public:
 
 class ReferenceWidget : public ElementWidget
 {
+    Q_OBJECT
+
 private:
     KComboBox *entryType;
     KLineEdit *entryId;
@@ -118,10 +124,14 @@ public:
     bool apply(Element *element) const;
     bool reset(const Element *element);
     void setReadOnly(bool isReadOnly);
+    void enableReqOptWidgets(const Element*, bool) {};
     QString label();
     KIcon icon();
 
     static bool canEdit(const Element *element);
+
+signals:
+    void entryTypeChanged();
 };
 
 class FilesWidget : public ElementWidget
@@ -135,6 +145,7 @@ public:
     bool apply(Element *element) const;
     bool reset(const Element *element);
     void setReadOnly(bool isReadOnly);
+    void enableReqOptWidgets(const Element*, bool) {};
     QString label();
     KIcon icon();
 
@@ -168,6 +179,7 @@ public:
     bool apply(Element *element) const;
     bool reset(const Element *element);
     void setReadOnly(bool isReadOnly);
+    void enableReqOptWidgets(const Element*, bool) {};
     QString label();
     KIcon icon();
 
@@ -195,6 +207,7 @@ public:
     bool apply(Element *element) const;
     bool reset(const Element *element);
     void setReadOnly(bool isReadOnly);
+    void enableReqOptWidgets(const Element*, bool) {};
     QString label();
     KIcon icon();
 
@@ -214,6 +227,7 @@ public:
     bool apply(Element *element) const;
     bool reset(const Element *element);
     void setReadOnly(bool isReadOnly);
+    void enableReqOptWidgets(const Element*, bool) {};
     QString label();
     KIcon icon();
 
@@ -237,6 +251,7 @@ public:
     bool apply(Element *element) const;
     bool reset(const Element *element);
     void setReadOnly(bool isReadOnly);
+    void enableReqOptWidgets(const Element*, bool) {};
     QString label();
     KIcon icon();
 

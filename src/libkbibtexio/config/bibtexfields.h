@@ -37,12 +37,13 @@ struct FieldDescription {
     QMap<QString, int> width;
     int defaultWidth;
     QMap<QString, bool> visible;
+    bool typeIndependent;
 
     FieldDescription()
-            : upperCamelCase(QString::null), upperCamelCaseAlt(QString::null), label(QString::null), defaultWidth(0) { /* nothing */ }
+            : upperCamelCase(QString::null), upperCamelCaseAlt(QString::null), label(QString::null), defaultWidth(0), typeIndependent(false) { /* nothing */ }
 
     FieldDescription(const FieldDescription &other)
-            : upperCamelCase(other.upperCamelCase), upperCamelCaseAlt(other.upperCamelCaseAlt), label(other.label), typeFlags(other.typeFlags), preferredTypeFlag(other.preferredTypeFlag), defaultWidth(other.defaultWidth) {
+            : upperCamelCase(other.upperCamelCase), upperCamelCaseAlt(other.upperCamelCaseAlt), label(other.label), typeFlags(other.typeFlags), preferredTypeFlag(other.preferredTypeFlag), defaultWidth(other.defaultWidth), typeIndependent(other.typeIndependent) {
         foreach(const QString &key, other.width.keys()) width.insert(key, other.width[key]);
         foreach(const QString &key, other.visible.keys()) visible.insert(key, other.visible[key]);
     }

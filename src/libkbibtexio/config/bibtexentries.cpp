@@ -66,7 +66,9 @@ public:
             ed.upperCamelCase = configGroup.readEntry("UpperCamelCase", "");
             if (ed.upperCamelCase.isEmpty()) continue;
             ed.upperCamelCaseAlt = configGroup.readEntry("UpperCamelCaseAlt", "");
-            ed.label = configGroup.readEntry("Label", ed.upperCamelCase);;
+            ed.label = configGroup.readEntry("Label", ed.upperCamelCase);
+            ed.requiredItems = configGroup.readEntry("RequiredItems", QStringList());
+            ed.optionalItems = configGroup.readEntry("OptionalItems", QStringList());
             p->append(ed);
         }
 
@@ -83,6 +85,8 @@ public:
             configGroup.writeEntry("UpperCamelCase", ed.upperCamelCase);
             configGroup.writeEntry("UpperCamelCaseAlt", ed.upperCamelCaseAlt);
             configGroup.writeEntry("Label", ed.label);
+            configGroup.writeEntry("RequiredItems", ed.requiredItems);
+            configGroup.writeEntry("OptionalItems", ed.optionalItems);
         }
 
         QString groupName = QLatin1String("EntryType");

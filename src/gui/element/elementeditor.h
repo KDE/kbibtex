@@ -56,6 +56,7 @@ private slots:
     void tabChanged();
     void checkBibTeX();
     void childModified(bool);
+    void updateReqOptWidgets();
 
 private:
     class ElementEditorPrivate;

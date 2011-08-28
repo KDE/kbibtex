@@ -126,6 +126,43 @@ bool EntryConfiguredWidget::reset(const Element *element)
     return true;
 }
 
+void EntryConfiguredWidget::enableReqOptWidgets(const Element *element, bool forceEnable)
+{
+    const Entry *entry = dynamic_cast<const Entry*>(element);
+    if (entry == NULL) return;
+
+    QStringList visibleItems;
+    BibTeXEntries *be = BibTeXEntries::self();
+    const BibTeXFields *bf = BibTeXFields::self();
+    QString type = be->format(entry->type(), KBibTeX::cUpperCamelCase);
+    type = type.toLower();
+    for (BibTeXEntries::ConstIterator bit = be->constBegin(); bit != be->constEnd(); ++bit) {
+        if (type == bit->upperCamelCase.toLower() || type == bit->upperCamelCaseAlt.toLower()) {
+            /// this ugly conversion is necessary because we have a "^" (xor) and "|" (and/or)
+            /// syntax to differentiate required items (not used yet, but will be used
+            /// later if missing required items are marked).
+            QString visible = bit->requiredItems.join(",");
+            visible += "," + bit->optionalItems.join(",");
+            visible = visible.replace("|", ",").replace("^", ",");
+            visibleItems = visible.split(",");
+            break;
+        }
+    }
+    for (QMap<QString, FieldInput*>::Iterator it = bibtexKeyToWidget.begin(); it != bibtexKeyToWidget.end(); ++it) {
+        const QString key = it.key().toLower();
+        const FieldDescription &fd = bf->find(key);
+        bool typeIndependent = fd.isNull() ? false : fd.typeIndependent;
+        Value value;
+        it.value()->apply(value);
+        /// Hide non-required and non-optional type-dependent fields,
+        /// except if the field has content
+        bool isEnabled = forceEnable || typeIndependent || visibleItems.contains(key) || !value.isEmpty();
+        it.value()->setEnabled(isEnabled);
+        if (buddyList[it.value()])
+            buddyList[it.value()]->setEnabled(isEnabled);
+    }
+}
+
 void EntryConfiguredWidget::setReadOnly(bool isReadOnly)
 {
     ElementWidget::setReadOnly(isReadOnly);
@@ -203,6 +240,7 @@ void EntryConfiguredWidget::createGUI()
         /// create a label next to the editing widget
         QLabel *label = new QLabel(QString("%1:").arg(sfl.uiLabel), this);
         label->setBuddy(fieldInput);
+        buddyList.insert(fieldInput, label);
 
         /// position both label and editing widget according to set layout
         bool isVerticallyMinimumExpaning = sfl.fieldInputLayout == KBibTeX::MultiLine || sfl.fieldInputLayout == KBibTeX::List || sfl.fieldInputLayout == KBibTeX::PersonList || sfl.fieldInputLayout == KBibTeX::KeywordList;
@@ -368,6 +406,7 @@ void ReferenceWidget::createGUI()
 
     connect(entryType, SIGNAL(editTextChanged(QString)), this, SLOT(gotModified()));
     connect(entryId, SIGNAL(textChanged(QString)), this, SLOT(gotModified()));
+    connect(entryType, SIGNAL(editTextChanged(QString)), this, SIGNAL(entryTypeChanged()));
 }
 
 
