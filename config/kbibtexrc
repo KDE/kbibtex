@@ -144,54 +144,80 @@ count=13
 [EntryType1]
 UpperCamelCase=Article
 Label=Journal Article
+RequiredItems=author,title,journal,year
+OptionalItems=volume,number,pages,month,note
 
 [EntryType2]
 UpperCamelCase=InProceedings
 UpperCamelCaseAlt=Conference
 Label=Publication in Conference Proceedings
+RequiredItems=author,title,booktitle,year
+OptionalItems=editor,volume^number,series,pages,address,month,organization,publisher,note
 
 [EntryType3]
 UpperCamelCase=Proceedings
 Label=Conference or Workshop Proceedings
+RequiredItems=title,year
+OptionalItems=editor,volume^number,series,address,month,organization,publisher,note
 
 [EntryType4]
 UpperCamelCase=TechReport
 Label=Technical Report
+RequiredItems=author,title,institution,year
+OptionalItems=type,number,address,month,note
 
 [EntryType5]
 UpperCamelCase=Misc
 Label=Miscellaneous
+RequiredItems=
+OptionalItems=author,title,howpublished,month,year,note
 
 [EntryType6]
 UpperCamelCase=Book
 Label=Book
+RequiredItems=author^editor,title,publisher,year
+OptionalItems=volume^number,series,address,edition,month,note
 
 [EntryType7]
 UpperCamelCase=InBook
 Label=Part of a Book
+RequiredItems=author^editor,title,chapter|pages,publisher,year
+OptionalItems=volume^number,series,type,address,edition,month,note
 
 [EntryType8]
 UpperCamelCase=InCollection
 Label=Part of a Book with own Title
+RequiredItems=author,title,booktitle,publisher,year
+OptionalItems=editor,volume^number,series,type,chapter,pages,address,edition,month,note
 
 [EntryType9]
 UpperCamelCase=PhDThesis
 Label=PhD Thesis
+RequiredItems=author,title,school,year
+OptionalItems=type,address,month,note
 
 [EntryType10]
 UpperCamelCase=MastersThesis
 Label=Master's Thesis
+RequiredItems=author,title,school,year
+OptionalItems=type,address,month,note
 
 [EntryType11]
 UpperCamelCase=Unpublished
 Label=Unpublish Material
+RequiredItems=author,title,note
+OptionalItems=month,year
 
 [EntryType12]
 UpperCamelCase=Manual
 Label=Manual
+RequiredItems=title
+OptionalItems=author,organization,address,edition,month,year,note
 
 [EntryType13]
 UpperCamelCase=Booklet
+RequiredItems=title
+OptionalItems=author,howpublished,address,month,year,note
 
 [Column]
 count=36
@@ -200,11 +226,13 @@ count=36
 UpperCamelCase=^type
 Label=Type
 DefaultWidth=5
+TypeIndependent=true
 
 [Column2]
 UpperCamelCase=^id
 Label=Identifier
 DefaultWidth=6
+TypeIndependent=true
 
 [Column3]
 UpperCamelCase=Title
@@ -279,6 +307,7 @@ Label=ISSN
 DefaultWidth=2
 Visible=false
 TypeFlags=Text;Reference;Source
+TypeIndependent=true
 
 [Column14]
 UpperCamelCase=ISBN
@@ -286,6 +315,7 @@ Label=ISBN
 DefaultWidth=2
 Visible=false
 TypeFlags=Text;Reference;Source
+TypeIndependent=true
 
 [Column15]
 UpperCamelCase=ISBN
@@ -314,6 +344,7 @@ Label=Abstract
 DefaultWidth=7
 Visible=false
 TypeFlags=Text;Reference;Source
+TypeIndependent=true
 
 [Column19]
 UpperCamelCase=Pages
@@ -384,6 +415,7 @@ Label=Keywords
 DefaultWidth=3
 Visible=false
 TypeFlags=Keyword;Source
+TypeIndependent=true
 
 [Column29]
 UpperCamelCase=CrossRef
@@ -391,6 +423,7 @@ Label=Cross Reference
 DefaultWidth=3
 Visible=false
 TypeFlags=Verbatim
+TypeIndependent=true
 
 [Column30]
 UpperCamelCase=DOI
@@ -398,6 +431,7 @@ Label=DOI
 DefaultWidth=1
 Visible=false
 TypeFlags=Verbatim
+TypeIndependent=true
 
 [Column31]
 UpperCamelCase=URL
@@ -405,6 +439,7 @@ Label=URL
 DefaultWidth=3
 Visible=false
 TypeFlags=Verbatim
+TypeIndependent=true
 
 [Column32]
 UpperCamelCase=Address
@@ -433,6 +468,7 @@ Label=Key
 DefaultWidth=2
 Visible=false
 TypeFlags=Text;Reference;Source
+TypeIndependent=true
 
 [Column36]
 UpperCamelCase=X-Color
@@ -440,6 +476,7 @@ Label=Color
 DefaultWidth=2
 Visible=false
 TypeFlags=Verbatim;Source
+TypeIndependent=true
 
 [Reference Preview Docklet]
 PreviewStyles=abbrv (bibtex2html)|abbrv|bibtex2html,acm (bibtex2html)|acm|bibtex2html,alpha (bibtex2html)|alpha|bibtex2html,apalike (bibtex2html)|apalike|bibtex2html,ieeetr (bibtex2html)|ieeetr|bibtex2html,plain (bibtex2html)|plain|bibtex2html,siam (bibtex2html)|siam|bibtex2html,unsrt (bibtex2html)|unsrt|bibtex2html,standard (XML/XSLT)|standard|xml,fancy (XML/XSLT)|fancy|xml,abstract-only (XML/XSLT)|abstractonly|xml
