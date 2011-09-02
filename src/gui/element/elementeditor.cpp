@@ -32,6 +32,8 @@
 #include <KPushButton>
 #include <KMessageBox>
 #include <KLocale>
+#include <KSharedConfig>
+#include <KConfigGroup>
 #include <kio/netaccess.h>
 
 #include <entry.h>
@@ -60,18 +62,23 @@ private:
     ElementWidget *previousWidget, *referenceWidget, *sourceWidget;
     KPushButton *buttonCheckWithBibTeX;
     QCheckBox *checkBoxForceEnableAllWidgets;
+    KSharedConfigPtr config;
 
 public:
     QTabWidget *tab;
     bool elementChanged, elementUnapplied;
 
     ElementEditorPrivate(Element *m, const File *f, ElementEditor *parent)
-            : element(m), file(f), p(parent), previousWidget(NULL), referenceWidget(NULL), sourceWidget(NULL), elementChanged(false), elementUnapplied(false) {
+            : element(m), file(f), p(parent), previousWidget(NULL), referenceWidget(NULL), sourceWidget(NULL), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), elementChanged(false), elementUnapplied(false) {
         internalEntry = NULL;
         internalMacro = NULL;
         internalComment = NULL;
         internalPreamble = NULL;
         createGUI();
+
+        /// Disable widgets if necessary
+        if (!checkBoxForceEnableAllWidgets->isChecked())
+            updateReqOptWidgets();
     }
 
     void createGUI() {
@@ -93,8 +100,14 @@ public:
         tab = new QTabWidget(p);
         layout->addWidget(tab, 1, 0, 1, 3);
 
+        /// load configuration
+        const QString configGroupName = QLatin1String("User Interface");
+        const QString keyEnableAllWidgets = QLatin1String("EnableAllWidgets");
+        KConfigGroup configGroup(config, configGroupName);
+        const bool enableall = configGroup.readEntry(keyEnableAllWidgets, true);
+
         checkBoxForceEnableAllWidgets = new QCheckBox(i18n("Enable all fields"), p);
-        checkBoxForceEnableAllWidgets->setChecked(true);
+        checkBoxForceEnableAllWidgets->setChecked(enableall);
         layout->addWidget(checkBoxForceEnableAllWidgets, 2, 0, 1, 2);
         connect(checkBoxForceEnableAllWidgets, SIGNAL(toggled(bool)), p, SLOT(updateReqOptWidgets()));
         connect(referenceWidget, SIGNAL(entryTypeChanged()), p, SLOT(updateReqOptWidgets()));
@@ -240,6 +253,13 @@ public:
         foreach(ElementWidget *elementWidget, widgets) {
             elementWidget->enableReqOptWidgets(&tempEntry, forceEnable);
         }
+
+        /// save configuration
+        QString const configGroupName = QLatin1String("User Interface");
+        QString const keyEnableAllWidgets = QLatin1String("EnableAllWidgets");
+        KConfigGroup configGroup(config, configGroupName);
+        configGroup.writeEntry(keyEnableAllWidgets, checkBoxForceEnableAllWidgets->isChecked());
+        config->sync();
     }
 
     void switchTo(QWidget *newTab) {
