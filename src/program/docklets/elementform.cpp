@@ -20,9 +20,11 @@
 
 #include <QLayout>
 #include <QDockWidget>
+#include <QLabel>
 
 #include <KPushButton>
 #include <KLocale>
+#include <KIconLoader>
 
 #include <elementeditor.h>
 #include <mdiwidget.h>
@@ -42,6 +44,7 @@ public:
     ElementEditor *elementEditor;
     MDIWidget *mdiWidget;
     KPushButton *buttonApply, *buttonReset;
+    QWidget *widgetUnmodifiedChanges;
 
     ElementFormPrivate(ElementForm *parent)
             : p(parent), element(NULL), file(NULL), elementEditor(NULL) {
@@ -49,6 +52,18 @@ public:
         layout->setColumnStretch(0, 1);
         layout->setColumnStretch(1, 0);
         layout->setColumnStretch(2, 0);
+
+        widgetUnmodifiedChanges = new QWidget(p);
+        layout->addWidget(widgetUnmodifiedChanges, 1, 0, 1, 1);
+        QBoxLayout *layoutUnmodifiedChanges = new QHBoxLayout(widgetUnmodifiedChanges);
+        layoutUnmodifiedChanges->addStretch(100);
+        QLabel *label = new QLabel(widgetUnmodifiedChanges);
+        label->setAlignment(Qt::AlignCenter | Qt::AlignVCenter);
+        label->setPixmap(KIconLoader::global()->loadIcon("dialog-information", KIconLoader::Dialog, KIconLoader::SizeSmall));
+        layoutUnmodifiedChanges->addWidget(label);
+        label = new QLabel(i18n("There are unmodified changes. Please press either 'Apply' or 'Reset'."), widgetUnmodifiedChanges);
+        label->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+        layoutUnmodifiedChanges->addWidget(label);
 
         buttonApply = new KPushButton(KIcon("dialog-ok-apply"), i18n("Apply"), p);
         layout->addWidget(buttonApply, 1, 1, 1, 1);
@@ -59,8 +74,6 @@ public:
         loadElement(NULL, NULL);
 
         connect(buttonApply, SIGNAL(clicked()), p, SIGNAL(elementModified()));
-        connect(buttonApply, SIGNAL(clicked()), p, SLOT(modificationCleared()));
-        connect(buttonReset, SIGNAL(clicked()), p, SLOT(modificationCleared()));
     }
 
     void refreshElement() {
@@ -96,8 +109,9 @@ public:
         /// make apply and reset buttons aware of new element editor
         buttonApply->setEnabled(false);
         buttonReset->setEnabled(false);
-        connect(buttonApply, SIGNAL(clicked()), elementEditor, SLOT(apply()));
-        connect(buttonReset, SIGNAL(clicked()), elementEditor, SLOT(reset()));
+        widgetUnmodifiedChanges->setVisible(false);
+        connect(buttonApply, SIGNAL(clicked()), p, SLOT(apply()));
+        connect(buttonReset, SIGNAL(clicked()), p, SLOT(reset()));
     }
 
     bool isVisible() {
@@ -105,6 +119,20 @@ public:
         /// static cast is save as constructor requires parent to be QDockWidget
         QDockWidget *pp = static_cast<QDockWidget*>(p->parent());
         return pp != NULL && !pp->isHidden();
+    }
+
+    void apply() {
+        elementEditor->apply();
+        buttonApply->setEnabled(false);
+        buttonReset->setEnabled(false);
+        widgetUnmodifiedChanges->setVisible(false);
+    }
+
+    void reset() {
+        elementEditor->reset();
+        buttonApply->setEnabled(false);
+        buttonReset->setEnabled(false);
+        widgetUnmodifiedChanges->setVisible(false);
     }
 };
 
@@ -124,12 +152,17 @@ void ElementForm::modified()
 {
     d->buttonApply->setEnabled(true);
     d->buttonReset->setEnabled(true);
+    d->widgetUnmodifiedChanges->setVisible(true);
 }
 
-void ElementForm::modificationCleared()
+void ElementForm::apply()
 {
-    d->buttonApply->setEnabled(false);
-    d->buttonReset->setEnabled(false);
+    d->apply();
+}
+
+void ElementForm::reset()
+{
+    d->reset();
 }
 
 void ElementForm::visibilityChanged(bool)
