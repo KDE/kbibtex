@@ -53,6 +53,9 @@ public:
         layout->setColumnStretch(1, 0);
         layout->setColumnStretch(2, 0);
 
+        /// Create a special widget that shows a small icon and a text
+        /// stating that there are unsaved changes. It will be shown
+        /// simultaneously when the Apply and Reset buttons are enabled.
         widgetUnmodifiedChanges = new QWidget(p);
         layout->addWidget(widgetUnmodifiedChanges, 1, 0, 1, 1);
         QBoxLayout *layoutUnmodifiedChanges = new QHBoxLayout(widgetUnmodifiedChanges);
