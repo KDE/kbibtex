@@ -492,7 +492,7 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value& value, const QStr
 
     do {
         bool isStringKey = false;
-        QString text = readString(isStringKey).trimmed();
+        QString text = readString(isStringKey).simplified();
         /// for all entries except for abstracts ...
         if (iKey != Entry::ftAbstract) {
             /// ... remove redundant spaces including newlines
