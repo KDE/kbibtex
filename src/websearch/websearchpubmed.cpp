@@ -46,34 +46,48 @@ public:
     }
 
     KUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) {
-        QString url = pubMedUrlPrefix + QLatin1String("esearch.fcgi?db=pubmed&term=");
+        QString url = pubMedUrlPrefix + QLatin1String("esearch.fcgi?db=pubmed&tool=kbibtex&term=");
 
         /// append search terms
         QStringList queryFragments;
 
         /// add words from "free text" and "year" fields
         QStringList freeTextWords = p->splitRespectingQuotationMarks(query[queryKeyFreeText]);
-        for (QStringList::ConstIterator it = freeTextWords.constBegin(); it != freeTextWords.constEnd(); ++it)
-            queryFragments.append('"' + (*it) + '"');
+        for (QStringList::ConstIterator it = freeTextWords.constBegin(); it != freeTextWords.constEnd(); ++it) {
+            QString text = *it;
+            if (text[0] != '"' || text[text.length()-1] != '"') text = '"' + text + '"';
+            queryFragments.append(text + QLatin1String("[All Fields]"));
+        }
         QStringList yearWords = p->splitRespectingQuotationMarks(query[queryKeyYear]);
-        for (QStringList::ConstIterator it = yearWords.constBegin(); it != yearWords.constEnd(); ++it)
-            queryFragments.append('"' + (*it) + '"');
+        for (QStringList::ConstIterator it = yearWords.constBegin(); it != yearWords.constEnd(); ++it) {
+            QString text = *it;
+            if (text[0] != '"' || text[text.length()-1] != '"') text = '"' + text + '"';
+            queryFragments.append(text);
+        }
 
         /// add words from "title" field
         QStringList titleWords = p->splitRespectingQuotationMarks(query[queryKeyTitle]);
-        for (QStringList::ConstIterator it = titleWords.constBegin(); it != titleWords.constEnd(); ++it)
-            queryFragments.append('"' + (*it) + '"' + QLatin1String("[title]"));
+        for (QStringList::ConstIterator it = titleWords.constBegin(); it != titleWords.constEnd(); ++it) {
+            QString text = *it;
+            if (text[0] != '"' || text[text.length()-1] != '"') text = '"' + text + '"';
+            queryFragments.append(text + QLatin1String("[Title]"));
+        }
 
         /// add words from "author" field
         QStringList authorWords = p->splitRespectingQuotationMarks(query[queryKeyAuthor]);
-        for (QStringList::ConstIterator it = authorWords.constBegin(); it != authorWords.constEnd(); ++it)
-            queryFragments.append('"' + (*it) + '"' + QLatin1String("[author]"));
+        for (QStringList::ConstIterator it = authorWords.constBegin(); it != authorWords.constEnd(); ++it) {
+            QString text = *it;
+            if (text[0] != '"' || text[text.length()-1] != '"') text = '"' + text + '"';
+            queryFragments.append(text + QLatin1String("[Author]"));
+        }
 
         url.append(queryFragments.join("+AND+"));
+        url = url.replace("\"", "%22");
 
         /// set number of expected results
         url.append(QString("&retstart=0&retmax=%1&retmode=xml").arg(numResults));
 
+        kDebug() << "pubmed url =" << url;
         return KUrl(url);
     }
 
@@ -151,22 +165,29 @@ void WebSearchPubMed::eSearchDone()
     if (handleErrors(reply)) {
         QString result = reply->readAll();
 
-        /// without parsing XML text correctly, just extract all PubMed ids
-        QRegExp regExpId("<Id>(\\d+)</Id>", Qt::CaseInsensitive);
-        int p = -1;
-        QStringList idList;
-        while ((p = result.indexOf(regExpId, p + 1)) >= 0)
-            idList << regExpId.cap(1);
+        if (!result.contains(QLatin1String("<Count>0</Count>"))) {
+            /// without parsing XML text correctly, just extract all PubMed ids
+            QRegExp regExpId("<Id>(\\d+)</Id>", Qt::CaseInsensitive);
+            int p = -1;
+            QStringList idList;
+            while ((p = result.indexOf(regExpId, p + 1)) >= 0)
+                idList << regExpId.cap(1);
 
-        if (idList.isEmpty())
-            emit stoppedSearch(resultUnspecifiedError);
-        else {
-            /// fetch full bibliographic details for found PubMed ids
-            QNetworkRequest request(d->buildFetchIdUrl(idList));
-            setSuggestedHttpHeaders(request, reply);
-            QNetworkReply *newReply = networkAccessManager()->get(request);
-            setNetworkReplyTimeout(newReply);
-            connect(newReply, SIGNAL(finished()), this, SLOT(eFetchDone()));
+            if (idList.isEmpty()) {
+                kDebug() << "No ids here:" << squeeze_text(result.simplified(), 100);
+                emit stoppedSearch(resultUnspecifiedError);
+            } else {
+                /// fetch full bibliographic details for found PubMed ids
+                QNetworkRequest request(d->buildFetchIdUrl(idList));
+                setSuggestedHttpHeaders(request, reply);
+                QNetworkReply *newReply = networkAccessManager()->get(request);
+                setNetworkReplyTimeout(newReply);
+                connect(newReply, SIGNAL(finished()), this, SLOT(eFetchDone()));
+            }
+        } else {
+            /// search resulted in no hits (and PubMed told so)
+            emit stoppedSearch(resultNoError);
+            emit progress(d->numSteps, d->numSteps);
         }
     } else
         kDebug() << "url was" << reply->url().toString();
@@ -183,6 +204,9 @@ void WebSearchPubMed::eFetchDone()
 
         /// use XSL transformation to get BibTeX document from XML result
         QString bibTeXcode = d->xslt.transform(input);
+        /// remove XML header
+        if (bibTeXcode[0] == '<')
+            bibTeXcode = bibTeXcode.mid(bibTeXcode.indexOf(">") + 1);
 
         FileImporterBibTeX importer;
         File *bibtexFile = importer.fromString(bibTeXcode);
@@ -200,11 +224,15 @@ void WebSearchPubMed::eFetchDone()
                     emit foundEntry(entry);
                 }
             }
-            emit stoppedSearch(hasEntry ? resultNoError : resultUnspecifiedError);
+            if (!hasEntry)
+                kDebug() << "No BibTeX entry found here:" << squeeze_text(bibTeXcode, 100);
+            emit stoppedSearch(resultNoError);
             emit progress(d->numSteps, d->numSteps);
             delete bibtexFile;
-        } else
+        } else {
+            kDebug() << "Doesn't look like BibTeX file:" << squeeze_text(bibTeXcode, 100);
             emit stoppedSearch(resultUnspecifiedError);
+        }
     } else
         kDebug() << "url was" << reply->url().toString();
 }

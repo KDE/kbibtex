@@ -252,33 +252,40 @@ void WebSearchBibsonomy::downloadDone()
         ts.setCodec("utf-8");
         QString bibTeXcode = ts.readAll();
 
-        FileImporterBibTeX importer;
-        File *bibtexFile = importer.fromString(bibTeXcode);
+        if (!bibTeXcode.isEmpty()) {
+            FileImporterBibTeX importer;
+            File *bibtexFile = importer.fromString(bibTeXcode);
 
-        bool hasEntries = false;
-        if (bibtexFile != NULL) {
-            for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
-                Entry *entry = dynamic_cast<Entry*>(*it);
-                if (entry != NULL) {
-                    Value v;
-                    v.append(new VerbatimText(label()));
-                    entry->insert("x-fetchedfrom", v);
-                    d->sanitizeEntry(entry);
-                    emit foundEntry(entry);
-                    hasEntries = true;
+            bool hasEntries = false;
+            if (bibtexFile != NULL) {
+                for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
+                    Entry *entry = dynamic_cast<Entry*>(*it);
+                    if (entry != NULL) {
+                        Value v;
+                        v.append(new VerbatimText(label()));
+                        entry->insert("x-fetchedfrom", v);
+                        d->sanitizeEntry(entry);
+                        emit foundEntry(entry);
+                        hasEntries = true;
+                    }
+
                 }
 
-            }
+                if (!hasEntries)
+                    kDebug() << "No hits found in" << reply->url().toString();
+                emit stoppedSearch(resultNoError);
+                emit progress(d->numSteps, d->numSteps);
 
-            if (!hasEntries)
-                kDebug() << "No hits found in" << reply->url().toString();
+                delete bibtexFile;
+            } else {
+                kWarning() << "No valid BibTeX file results returned on request on" << reply->url().toString();
+                emit stoppedSearch(resultUnspecifiedError);
+            }
+        } else {
+            /// returned file is empty
+            kDebug() << "No hits found in" << reply->url().toString();
             emit stoppedSearch(resultNoError);
             emit progress(d->numSteps, d->numSteps);
-
-            delete bibtexFile;
-        } else {
-            kWarning() << "No valid BibTeX file results returned on request on" << reply->url().toString();
-            emit stoppedSearch(resultUnspecifiedError);
         }
     } else
         kDebug() << "url was" << reply->url().toString();
