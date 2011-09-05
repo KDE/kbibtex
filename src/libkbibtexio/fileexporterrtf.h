@@ -30,7 +30,7 @@ class QTextStream;
 class KBIBTEXIO_EXPORT FileExporterRTF : public FileExporterToolchain
 {
 public:
-    FileExporterRTF(const QString& latexBibStyle = "plain", const QString& latexLanguage = "english");
+    FileExporterRTF();
     ~FileExporterRTF();
 
     bool save(QIODevice* iodevice, const File* bibtexfile, QStringList *errorLog = NULL);
@@ -40,8 +40,9 @@ private:
     QString m_laTeXFilename;
     QString m_bibTeXFilename;
     QString m_outputFilename;
-    QString m_latexLanguage;
-    QString m_latexBibStyle;
+    QString m_babelLanguage;
+    QString m_bibliographyStyle;
+    QString m_paperSize;
 
     bool generateRTF(QIODevice* iodevice, QStringList *errorLog);
     bool writeLatexFile(const QString &filename);

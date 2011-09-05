@@ -21,16 +21,28 @@
 #include <QStringList>
 #include <QTextStream>
 
+#include <KSharedConfig>
+#include <KConfigGroup>
+
 #include <element.h>
 #include <fileexporterbibtex.h>
 #include "fileexporterrtf.h"
 
-FileExporterRTF::FileExporterRTF(const QString& latexBibStyle, const QString& latexLanguage)
-        : FileExporterToolchain(), m_latexLanguage(latexLanguage), m_latexBibStyle(latexBibStyle)
+FileExporterRTF::FileExporterRTF()
+        : FileExporterToolchain()
 {
     m_laTeXFilename = tempDir.name() + QLatin1String("/bibtex-to-rtf.tex");
     m_bibTeXFilename = tempDir.name() + QLatin1String("/bibtex-to-rtf.bib");
     m_outputFilename = tempDir.name() + QLatin1String("/bibtex-to-rtf.rtf");
+
+    KSharedConfigPtr config = KSharedConfig::openConfig(QLatin1String("kbibtexrc"));
+    KConfigGroup configGroup(config, QLatin1String("FileExporterPDFPS"));
+    m_babelLanguage = configGroup.readEntry(keyBabelLanguage, defaultBabelLanguage);
+    m_bibliographyStyle = configGroup.readEntry(keyBibliographyStyle, defaultBibliographyStyle);
+
+    KConfigGroup configGroupGeneral(config, QLatin1String("General"));
+    m_paperSize = configGroupGeneral.readEntry(keyPaperSize, defaultPaperSize);
+
 }
 
 FileExporterRTF::~FileExporterRTF()
@@ -45,7 +57,7 @@ bool FileExporterRTF::save(QIODevice* iodevice, const File* bibtexfile, QStringL
     QFile output(m_bibTeXFilename);
     if (output.open(QIODevice::WriteOnly)) {
         FileExporterBibTeX * bibtexExporter = new FileExporterBibTeX();
-        bibtexExporter->setEncoding(QLatin1String("utf-8"));
+        bibtexExporter->setEncoding(QLatin1String("latex"));
         result = bibtexExporter->save(&output, bibtexfile, errorLog);
         output.close();
         delete bibtexExporter;
@@ -64,7 +76,7 @@ bool FileExporterRTF::save(QIODevice* iodevice, const Element* element, QStringL
     QFile output(m_bibTeXFilename);
     if (output.open(QIODevice::WriteOnly)) {
         FileExporterBibTeX * bibtexExporter = new FileExporterBibTeX();
-        bibtexExporter->setEncoding(QLatin1String("utf-8"));
+        bibtexExporter->setEncoding(QLatin1String("latex"));
         result = bibtexExporter->save(&output, element, errorLog);
         output.close();
         delete bibtexExporter;
@@ -73,7 +85,6 @@ bool FileExporterRTF::save(QIODevice* iodevice, const Element* element, QStringL
     if (result)
         result = generateRTF(iodevice, errorLog);
 
-    // m_mutex.unlock(); // FIXME: required?
     return result;
 }
 
@@ -81,10 +92,7 @@ bool FileExporterRTF::generateRTF(QIODevice* iodevice, QStringList *errorLog)
 {
     QStringList cmdLines = QStringList() << QLatin1String("latex -halt-on-error bibtex-to-rtf.tex") << QLatin1String("bibtex bibtex-to-rtf") << QLatin1String("latex -halt-on-error bibtex-to-rtf.tex") << QLatin1String("latex2rtf bibtex-to-rtf.tex");
 
-    if (writeLatexFile(m_laTeXFilename) && runProcesses(cmdLines, errorLog) && writeFileToIODevice(m_outputFilename, iodevice, errorLog))
-        return TRUE;
-    else
-        return FALSE;
+    return writeLatexFile(m_laTeXFilename) && runProcesses(cmdLines, errorLog) && writeFileToIODevice(m_outputFilename, iodevice, errorLog);
 }
 
 bool FileExporterRTF::writeLatexFile(const QString &filename)
@@ -94,22 +102,24 @@ bool FileExporterRTF::writeLatexFile(const QString &filename)
         QTextStream ts(&latexFile);
         ts.setCodec("UTF-8");
         ts << "\\documentclass{article}\n";
-        if (kpsewhich("t2aenc.dfu") &&  kpsewhich("t1enc.dfu"))
-            ts << "\\usepackage[T1,T2A]{fontenc}\n";
+        ts << "\\usepackage[T1]{fontenc}\n";
         ts << "\\usepackage[utf8]{inputenc}\n";
         if (kpsewhich("babel.sty"))
-            ts << "\\usepackage[" << m_latexLanguage << "]{babel}\n";
+            ts << "\\usepackage[" << m_babelLanguage << "]{babel}\n";
         if (kpsewhich("url.sty"))
             ts << "\\usepackage{url}\n";
-        if (m_latexBibStyle.startsWith("apacite") && kpsewhich("apacite.sty"))
+        if (m_bibliographyStyle.startsWith("apacite") && kpsewhich("apacite.sty"))
             ts << "\\usepackage[bibnewpage]{apacite}\n";
-        ts << "\\bibliographystyle{" << m_latexBibStyle << "}\n";
+        if (kpsewhich("geometry.sty"))
+            ts << "\\usepackage[paper=" << m_paperSize << (m_paperSize.length() <= 2 ? "paper" : "") << "]{geometry}\n";
+        ts << "\\bibliographystyle{" << m_bibliographyStyle << "}\n";
         ts << "\\begin{document}\n";
         ts << "\\nocite{*}\n";
         ts << "\\bibliography{bibtex-to-rtf}\n";
         ts << "\\end{document}\n";
         latexFile.close();
-        return TRUE;
-    } else
-        return FALSE;
+        return true;
+    }
+
+    return false;
 }
