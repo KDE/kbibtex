@@ -154,6 +154,9 @@ void MDIWidget::slotCompleted(QObject *obj)
         kDebug() << "Url changed from " << oldUrl.pathOrUrl() << " to " << newUrl.pathOrUrl() << endl;
         OpenFileInfoManager::getOpenFileInfoManager()->changeUrl(ofi, newUrl);
 
+        /// completely opened or saved files should be marked as "recently used"
+        ofi->addFlags(OpenFileInfo::RecentlyUsed);
+
         emit setCaption(QString("%1 [%2]").arg(ofi->shortCaption()).arg(ofi->fullCaption()));
     }
 }
