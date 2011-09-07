@@ -348,8 +348,12 @@ bool FileExporterBibTeX::save(QIODevice* iodevice, const File* bibtexfile, QStri
         d->keywordCasing = (KBibTeX::Casing)bibtexfile->property(File::KeywordCasing).toInt();
     if (bibtexfile->hasProperty(File::ProtectCasing))
         d->protectCasing = bibtexfile->property(File::ProtectCasing).toBool();
-    if (bibtexfile->hasProperty(File::NameFormatting))
-        d->personNameFormatting = bibtexfile->property(File::NameFormatting).toString();
+    if (bibtexfile->hasProperty(File::NameFormatting)) {
+        /// if the user set "use global default", this property is an empty string
+        /// in this case, keep default value
+        const QString buffer = bibtexfile->property(File::NameFormatting).toString();
+        d->personNameFormatting = buffer.isEmpty() ? d->personNameFormatting : buffer;
+    }
 
     if (d->encoding != QLatin1String("latex"))
         parameterCommentsList << new Comment("x-kbibtex-encoding=" + d->encoding, true);
@@ -628,12 +632,43 @@ QString FileExporterBibTeX::elementToString(const Element* element)
 
 QString FileExporterBibTeX::escapeLaTeXChars(const QString &text)
 {
+    /// Regular expression to match dollar signs that are not escaped (i.e. not \$).
+    /// Store character in front of dollar sign in cap(1).
+    const QRegExp regExpMathSeparator = QRegExp(QLatin1String("(^|[^\\\\])\\$"));
+    /// Regular expression for characters to escape for LaTeX
+    const QRegExp regExpEscape("[^\\\\][&#_%]");
+    /// Status whether in math mode or not (as determined by dollar signs)
+    bool inMathMode = false;
+    /// Resulting text
     QString result = text;
 
-    const QRegExp regExpEscape("[^\\\\][&#_%]");
-    int p = -1;
-    while ((p = regExpEscape.indexIn(result, p + 1)) != -1)
-        result = result.left(p + 1) + '\\' + result.mid(p + 1);
+    int m1 = -1, m2 = -1;
+    /// For each dollar sign (= switch into or out of math mode) ...
+    while ((m1 = regExpMathSeparator.indexIn(result, m2 + 1)) >= 0) {
+        /// Compensate for character in front of dollar sign
+        int cl = regExpMathSeparator.cap(1).length();
+        m1 += cl;
+
+        if (!inMathMode) {
+            /// If not in math mode, make special characters LaTeX-safe
+            int p = m2;
+            while ((p = regExpEscape.indexIn(result, p + 1)) >= 0 && p < m1) {
+                result = result.left(p + 1) + '\\' + result.mid(p + 1);
+                ++m1;
+            }
+        }
+        /// Toggle math mode
+        inMathMode = !inMathMode;
+
+        m2 = m1;
+    }
+
+    if (m1 == -1 && !inMathMode) {
+        int p = m2;
+        while ((p = regExpEscape.indexIn(result, p + 1)) >= 0)
+            result = result.left(p + 1) + '\\' + result.mid(p + 1);
+    }
+
     return result;
 }
 
