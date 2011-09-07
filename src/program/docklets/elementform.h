@@ -49,7 +49,8 @@ private:
 
 private slots:
     void modified();
-    void modificationCleared();
+    void apply();
+    void reset();
     void visibilityChanged(bool);
 };
 
