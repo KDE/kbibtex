@@ -501,7 +501,7 @@ void KBibTeXPart::elementViewDocument()
     if (!d->viewDocumentMenu->actions().isEmpty()) {
         // TODO: Choose "best" URL instead of first (local file over remote, PDF over website, ...)
         QAction *action = d->viewDocumentMenu->actions().first();
-        QDesktopServices::openUrl(KUrl(action->text())); // TODO KDE way?
+        QDesktopServices::openUrl(KUrl(action->data().toString())); // TODO KDE way?
     }
 }
 
