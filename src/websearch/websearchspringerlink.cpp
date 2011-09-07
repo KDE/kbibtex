@@ -117,7 +117,7 @@ public:
     void copyFromEntry(const Entry &entry) {
         lineEditFreeText->setText(PlainTextValue::text(entry[Entry::ftTitle]));
         lineEditAuthorEditor->setText(authorLastNames(entry).join(" "));
-        lineEditPublication->setText(QString(PlainTextValue::text(entry[Entry::ftJournal]) + " " + PlainTextValue::text(entry[Entry::ftBookTitle])).trimmed());
+        lineEditPublication->setText(QString(PlainTextValue::text(entry[Entry::ftJournal]) + " " + PlainTextValue::text(entry[Entry::ftBookTitle])).simplified());
         lineEditVolume->setText(PlainTextValue::text(entry[Entry::ftVolume]));
         lineEditIssue->setText(PlainTextValue::text(entry[Entry::ftNumber]));
     }
@@ -175,7 +175,7 @@ public:
         if (!form->lineEditIssue->text().isEmpty())
             queryString += QString(QLatin1String(" iss:(%1)")).arg(form->lineEditIssue->text());
 
-        queryString = queryString.trimmed();
+        queryString = queryString.simplified();
         url.addQueryItem(QLatin1String("k"), queryString);
 
         return url;
@@ -191,7 +191,7 @@ public:
             queryString += QString(QLatin1String(" ( au:(%1) OR ed:(%1) )")).arg(author);
         }
 
-        queryString = queryString.trimmed();
+        queryString = queryString.simplified();
         url.addQueryItem(QLatin1String("k"), queryString);
 
         return url;

@@ -84,7 +84,7 @@ public:
 
         settingsWidget = new SettingsFileExporterPDFPSWidget(p);
         settingWidgets.insert(settingsWidget);
-        page = p->addSubPage(pageSaving, settingsWidget, i18n("PDF and Postscript"));
+        page = p->addSubPage(pageSaving, settingsWidget, i18n("PDF, Postscript, and RTF"));
         page->setIcon(KIcon("application-pdf"));
         connect(settingsWidget, SIGNAL(changed()), p, SLOT(gotChanged()));
     }

@@ -50,7 +50,7 @@ public:
 
     WebSearchAcmPortalPrivate(WebSearchAcmPortal *parent)
             : p(parent), numExpectedResults(0), numFoundResults(0),
-            acmPortalBaseUrl(QLatin1String("http://portal.acm.org/")) {
+            acmPortalBaseUrl(QLatin1String("http://dl.acm.org/")) {
         // nothing
     }
 
@@ -156,7 +156,7 @@ void WebSearchAcmPortal::doneFetchingStartPage()
                 && (p3 = htmlSource.indexOf("\"", p2 + 8)) >= 0) {
             QString action = decodeURL(htmlSource.mid(p2 + 8, p3 - p2 - 8));
             KUrl url(d->acmPortalBaseUrl + action);
-            QString body = QString("Go=&query=%1").arg(d->joinedQueryString).trimmed();
+            QString body = QString("Go=&query=%1").arg(d->joinedQueryString).simplified();
 
             QNetworkRequest request(url);
             setSuggestedHttpHeaders(request, reply);
