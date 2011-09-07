@@ -72,9 +72,9 @@ public:
                 }
 
                 key = line.left(2);
-                value = line.mid(6).trimmed();
+                value = line.mid(6).simplified();
             } else {
-                line = line.trimmed();
+                line = line.simplified();
                 if (line.length() > 1) {
                     /// multi-line field are joined to one long line
                     value += ' ' + line;
