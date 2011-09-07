@@ -71,4 +71,13 @@ static const QRegExp domainNameRegExp("[a-z0-9.-]+\\.((a[cdefgilmnoqrstuwxz]|aer
 
 }
 
+/**
+ * Poor man's variant of a text-squeezing function.
+ * Effect is similar as observed in KSqueezedTextLabel:
+ * If the text is longer as n characters, the middle part
+ * will be cut away and replaced by "..." to get a
+ * string of max n characters.
+ */
+#define squeeze_text(text, n) ((text).length()<=(n)?(text):(text).left((n)/2-1)+QLatin1String("...")+(text).right((n)/2-2))
+
 #endif // KBIBTEX_NAMESPACE_H
