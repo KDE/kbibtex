@@ -65,7 +65,7 @@ bool FileExporterPDF::save(QIODevice* iodevice, const File* bibtexfile, QStringL
     QFile output(m_bibTeXFilename);
     if (output.open(QIODevice::WriteOnly)) {
         FileExporterBibTeX* bibtexExporter = new FileExporterBibTeX();
-        bibtexExporter->setEncoding(QLatin1String("utf-8"));
+        bibtexExporter->setEncoding(QLatin1String("latex"));
         result = bibtexExporter->save(&output, bibtexfile, errorLog);
         output.close();
         delete bibtexExporter;
@@ -87,7 +87,7 @@ bool FileExporterPDF::save(QIODevice* iodevice, const Element* element, QStringL
     QFile output(m_bibTeXFilename);
     if (output.open(QIODevice::WriteOnly)) {
         FileExporterBibTeX * bibtexExporter = new FileExporterBibTeX();
-        bibtexExporter->setEncoding(QLatin1String("utf-8"));
+        bibtexExporter->setEncoding(QLatin1String("latex"));
         result = bibtexExporter->save(&output, element, errorLog);
         output.close();
         delete bibtexExporter;
