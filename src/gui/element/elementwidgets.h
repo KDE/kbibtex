@@ -57,7 +57,7 @@ public:
     virtual void setReadOnly(bool isReadOnly) {
         this->isReadOnly = isReadOnly;
     };
-    virtual void enableReqOptWidgets(const Element*, bool) = 0;
+    virtual void showReqOptWidgets(const Element*, bool) = 0;
     virtual QString label() = 0;
     virtual KIcon icon() = 0;
     bool isModified() const;
@@ -100,7 +100,7 @@ public:
     bool apply(Element *element) const;
     bool reset(const Element *element);
     void setReadOnly(bool isReadOnly);
-    void enableReqOptWidgets(const Element *element, bool forceEnable);
+    void showReqOptWidgets(const Element *element, bool forceEnable);
     QString label();
     KIcon icon();
 
@@ -124,7 +124,7 @@ public:
     bool apply(Element *element) const;
     bool reset(const Element *element);
     void setReadOnly(bool isReadOnly);
-    void enableReqOptWidgets(const Element*, bool) {};
+    void showReqOptWidgets(const Element*, bool) {};
     QString label();
     KIcon icon();
 
@@ -145,7 +145,7 @@ public:
     bool apply(Element *element) const;
     bool reset(const Element *element);
     void setReadOnly(bool isReadOnly);
-    void enableReqOptWidgets(const Element*, bool) {};
+    void showReqOptWidgets(const Element*, bool) {};
     QString label();
     KIcon icon();
 
@@ -179,7 +179,7 @@ public:
     bool apply(Element *element) const;
     bool reset(const Element *element);
     void setReadOnly(bool isReadOnly);
-    void enableReqOptWidgets(const Element*, bool) {};
+    void showReqOptWidgets(const Element*, bool) {};
     QString label();
     KIcon icon();
 
@@ -207,7 +207,7 @@ public:
     bool apply(Element *element) const;
     bool reset(const Element *element);
     void setReadOnly(bool isReadOnly);
-    void enableReqOptWidgets(const Element*, bool) {};
+    void showReqOptWidgets(const Element*, bool) {};
     QString label();
     KIcon icon();
 
@@ -227,7 +227,7 @@ public:
     bool apply(Element *element) const;
     bool reset(const Element *element);
     void setReadOnly(bool isReadOnly);
-    void enableReqOptWidgets(const Element*, bool) {};
+    void showReqOptWidgets(const Element*, bool) {};
     QString label();
     KIcon icon();
 
@@ -251,7 +251,7 @@ public:
     bool apply(Element *element) const;
     bool reset(const Element *element);
     void setReadOnly(bool isReadOnly);
-    void enableReqOptWidgets(const Element*, bool) {};
+    void showReqOptWidgets(const Element*, bool) {};
     QString label();
     KIcon icon();
 

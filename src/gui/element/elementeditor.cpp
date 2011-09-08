@@ -61,7 +61,7 @@ private:
     ElementEditor *p;
     ElementWidget *previousWidget, *referenceWidget, *sourceWidget;
     KPushButton *buttonCheckWithBibTeX;
-    QCheckBox *checkBoxForceEnableAllWidgets;
+    QCheckBox *checkBoxForceShowAllWidgets;
     KSharedConfigPtr config;
 
 public:
@@ -77,7 +77,7 @@ public:
         createGUI();
 
         /// Disable widgets if necessary
-        if (!checkBoxForceEnableAllWidgets->isChecked())
+        if (!checkBoxForceShowAllWidgets->isChecked())
             updateReqOptWidgets();
     }
 
@@ -104,12 +104,12 @@ public:
         const QString configGroupName = QLatin1String("User Interface");
         const QString keyEnableAllWidgets = QLatin1String("EnableAllWidgets");
         KConfigGroup configGroup(config, configGroupName);
-        const bool enableall = configGroup.readEntry(keyEnableAllWidgets, true);
+        const bool showAll = configGroup.readEntry(keyEnableAllWidgets, true);
 
-        checkBoxForceEnableAllWidgets = new QCheckBox(i18n("Enable all fields"), p);
-        checkBoxForceEnableAllWidgets->setChecked(enableall);
-        layout->addWidget(checkBoxForceEnableAllWidgets, 2, 0, 1, 2);
-        connect(checkBoxForceEnableAllWidgets, SIGNAL(toggled(bool)), p, SLOT(updateReqOptWidgets()));
+        checkBoxForceShowAllWidgets = new QCheckBox(i18n("Show all fields"), p);
+        checkBoxForceShowAllWidgets->setChecked(showAll);
+        layout->addWidget(checkBoxForceShowAllWidgets, 2, 0, 1, 2);
+        connect(checkBoxForceShowAllWidgets, SIGNAL(toggled(bool)), p, SLOT(updateReqOptWidgets()));
         connect(referenceWidget, SIGNAL(entryTypeChanged()), p, SLOT(updateReqOptWidgets()));
 
         buttonCheckWithBibTeX = new KPushButton(KIcon("tools-check-spelling"), i18n("Check with BibTeX"), p);
@@ -196,7 +196,7 @@ public:
         reset(element);
 
         /// show checkbox to enable all fields only if editing an entry
-        checkBoxForceEnableAllWidgets->setVisible(internalEntry != NULL);
+        checkBoxForceShowAllWidgets->setVisible(internalEntry != NULL);
     }
 
     void reset(const Element *element) {
@@ -249,16 +249,16 @@ public:
         apply(&tempEntry);
 
         /// update the enabled/disabled state of required and optional widgets/fields
-        bool forceEnable = checkBoxForceEnableAllWidgets->isChecked();
+        bool forceVisible = checkBoxForceShowAllWidgets->isChecked();
         foreach(ElementWidget *elementWidget, widgets) {
-            elementWidget->enableReqOptWidgets(&tempEntry, forceEnable);
+            elementWidget->showReqOptWidgets(&tempEntry, forceVisible);
         }
 
         /// save configuration
         QString const configGroupName = QLatin1String("User Interface");
         QString const keyEnableAllWidgets = QLatin1String("EnableAllWidgets");
         KConfigGroup configGroup(config, configGroupName);
-        configGroup.writeEntry(keyEnableAllWidgets, checkBoxForceEnableAllWidgets->isChecked());
+        configGroup.writeEntry(keyEnableAllWidgets, checkBoxForceShowAllWidgets->isChecked());
         config->sync();
     }
 

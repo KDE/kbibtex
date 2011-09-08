@@ -126,7 +126,7 @@ bool EntryConfiguredWidget::reset(const Element *element)
     return true;
 }
 
-void EntryConfiguredWidget::enableReqOptWidgets(const Element *element, bool forceEnable)
+void EntryConfiguredWidget::showReqOptWidgets(const Element *element, bool forceVisible)
 {
     const Entry *entry = dynamic_cast<const Entry*>(element);
     if (entry == NULL) return;
@@ -156,10 +156,10 @@ void EntryConfiguredWidget::enableReqOptWidgets(const Element *element, bool for
         it.value()->apply(value);
         /// Hide non-required and non-optional type-dependent fields,
         /// except if the field has content
-        bool isEnabled = forceEnable || typeIndependent || visibleItems.contains(key) || !value.isEmpty();
-        it.value()->setEnabled(isEnabled);
+        bool isVisible = forceVisible || typeIndependent || visibleItems.contains(key) || !value.isEmpty();
+        it.value()->setVisible(isVisible);
         if (buddyList[it.value()])
-            buddyList[it.value()]->setEnabled(isEnabled);
+            buddyList[it.value()]->setVisible(isVisible);
     }
 }
 
