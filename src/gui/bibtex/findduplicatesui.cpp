@@ -385,6 +385,8 @@ public:
     File *file;
     BibTeXEditor *editor;
     KPushButton *buttonNext, *buttonPrev;
+    QLabel *labelWhichClique;
+    static const char *whichCliqueText;
 
     CheckableBibTeXFileModel *model;
     FilterIdBibTeXFileModel *filterModel;
@@ -422,9 +424,11 @@ public:
 
         QBoxLayout *containerLayout = new QHBoxLayout();
         layout->addLayout(containerLayout);
+        containerLayout->addStretch(10);
+        labelWhichClique = new QLabel(p);
+        containerLayout->addWidget(labelWhichClique);
         buttonPrev = new KPushButton(KIcon("go-previous"), i18n("Previous"), p);
         containerLayout->addWidget(buttonPrev, 1);
-        containerLayout->addStretch(10);
         buttonNext = new KPushButton(KIcon("go-next"), i18n("Next"), p);
         containerLayout->addWidget(buttonNext, 1);
 
@@ -452,9 +456,12 @@ public:
 
         buttonNext->setEnabled(currentClique >= 0 && currentClique < cl.count() - 1);
         buttonPrev->setEnabled(currentClique > 0);
+        labelWhichClique->setText(i18n(whichCliqueText, currentClique + 1, cl.count()));
     }
 
 };
+
+const char* MergeWidget::MergeWidgetPrivate::whichCliqueText = "Showing clique %1 of %2.";
 
 MergeWidget::MergeWidget(File *file, QList<EntryClique*> &cliqueList, QWidget *parent)
         : QWidget(parent), d(new MergeWidgetPrivate(this, cliqueList))
