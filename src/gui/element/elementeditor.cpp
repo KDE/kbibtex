@@ -75,10 +75,6 @@ public:
         internalComment = NULL;
         internalPreamble = NULL;
         createGUI();
-
-        /// Disable widgets if necessary
-        if (!checkBoxForceShowAllWidgets->isChecked())
-            updateReqOptWidgets();
     }
 
     void createGUI() {
@@ -197,6 +193,9 @@ public:
 
         /// show checkbox to enable all fields only if editing an entry
         checkBoxForceShowAllWidgets->setVisible(internalEntry != NULL);
+        /// Disable widgets if necessary
+        if (!checkBoxForceShowAllWidgets->isChecked())
+            updateReqOptWidgets();
     }
 
     void reset(const Element *element) {
