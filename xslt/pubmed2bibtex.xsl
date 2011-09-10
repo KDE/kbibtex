@@ -87,6 +87,7 @@
 <xsl:text>,
     author = {</xsl:text>
 <xsl:apply-templates select="Author"/>
+<xsl:if test="@CompleteYN = 'N'"><xsl:text> and others</xsl:text></xsl:if>
 <xsl:text>}</xsl:text>
 </xsl:template>
 
