@@ -64,7 +64,7 @@ public:
         label->setAlignment(Qt::AlignCenter | Qt::AlignVCenter);
         label->setPixmap(KIconLoader::global()->loadIcon("dialog-information", KIconLoader::Dialog, KIconLoader::SizeSmall));
         layoutUnmodifiedChanges->addWidget(label);
-        label = new QLabel(i18n("There are unmodified changes. Please press either 'Apply' or 'Reset'."), widgetUnmodifiedChanges);
+        label = new QLabel(i18n("There are unsaved changes. Please press either 'Apply' or 'Reset'."), widgetUnmodifiedChanges);
         label->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
         layoutUnmodifiedChanges->addWidget(label);
 
