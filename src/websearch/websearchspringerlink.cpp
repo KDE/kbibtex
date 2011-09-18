@@ -50,12 +50,14 @@ private:
         lineEditPublication->setText(configGroup.readEntry(QLatin1String("publication"), QString()));
         lineEditVolume->setText(configGroup.readEntry(QLatin1String("volume"), QString()));
         lineEditIssue->setText(configGroup.readEntry(QLatin1String("issue"), QString()));
+        spinBoxYearBegin->setValue(configGroup.readEntry(QLatin1String("yearBegin"), 1970));
+        spinBoxYearEnd->setValue(configGroup.readEntry(QLatin1String("yearEnd"), 2015));
         numResultsField->setValue(configGroup.readEntry(QLatin1String("numResults"), 10));
     }
 
 public:
     KLineEdit *lineEditFreeText, *lineEditAuthorEditor, *lineEditPublication, *lineEditVolume, *lineEditIssue;
-    QSpinBox *numResultsField;
+    QSpinBox *numResultsField, *spinBoxYearBegin, *spinBoxYearEnd;
 
     WebSearchQueryFormSpringerLink(QWidget *parent)
             : WebSearchQueryFormAbstract(parent), configGroupName(QLatin1String("Search Engine SpringerLink")) {
@@ -96,6 +98,22 @@ public:
         label->setBuddy(lineEditIssue);
         layout->addRow(label, lineEditIssue);
         connect(lineEditIssue, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
+
+        spinBoxYearBegin = new QSpinBox(this);
+        label = new QLabel(i18n("Year (start):"), this);
+        label->setBuddy(spinBoxYearBegin);
+        layout->addRow(label, spinBoxYearBegin);
+        spinBoxYearBegin->setMinimum(1800);
+        spinBoxYearBegin->setMaximum(2030);
+        spinBoxYearBegin->setValue(1970);
+
+        spinBoxYearEnd = new QSpinBox(this);
+        label = new QLabel(i18n("Year (end):"), this);
+        label->setBuddy(spinBoxYearEnd);
+        layout->addRow(label, spinBoxYearEnd);
+        spinBoxYearEnd->setMinimum(1800);
+        spinBoxYearEnd->setMaximum(2030);
+        spinBoxYearEnd->setValue(2015);
 
         numResultsField = new QSpinBox(this);
         label = new QLabel(i18n("Number of Results:"), this);
@@ -175,6 +193,9 @@ public:
         if (!form->lineEditIssue->text().isEmpty())
             queryString += QString(QLatin1String(" iss:(%1)")).arg(form->lineEditIssue->text());
 
+        url.addQueryItem(QLatin1String("db"), QString::number(form->spinBoxYearBegin->value()) + QLatin1String("0101"));
+        url.addQueryItem(QLatin1String("de"), QString::number(form->spinBoxYearEnd->value()) + QLatin1String("1231"));
+
         queryString = queryString.simplified();
         url.addQueryItem(QLatin1String("k"), queryString);
 
@@ -183,12 +204,22 @@ public:
 
     KUrl& buildQueryUrl(KUrl& url, const QMap<QString, QString> &query) {
         // FIXME encode for URL
-        QString queryString = query[queryKeyFreeText] + ' ' + query[queryKeyTitle] + ' ' + query[queryKeyYear];
+        QString queryString = query[queryKeyFreeText] + ' ' + query[queryKeyTitle];
 
         QStringList authors = p->splitRespectingQuotationMarks(query[queryKeyAuthor]);
         foreach(QString author, authors) {
             author = EncoderLaTeX::currentEncoderLaTeX()->convertToPlainAscii(author);
             queryString += QString(QLatin1String(" ( au:(%1) OR ed:(%1) )")).arg(author);
+        }
+
+        QString year = query[queryKeyYear];
+        if (!year.isEmpty()) {
+            static const QRegExp yearRegExp("\\b(18|19|20)[0-9]{2}\\b");
+            if (yearRegExp.indexIn(year) >= 0) {
+                year = yearRegExp.cap(0);
+                url.addQueryItem(QLatin1String("db"), year + QLatin1String("0101"));
+                url.addQueryItem(QLatin1String("de"), year + QLatin1String("1231"));
+            }
         }
 
         queryString = queryString.simplified();

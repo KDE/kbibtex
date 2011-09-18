@@ -46,22 +46,25 @@ public:
     }
 
     KUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) {
+        /// used to auto-detect PMIDs (unique identifiers for documents) in free text search
+        const QRegExp pmidRegExp(QLatin1String("^[0-9]{6,}$"));
+
         QString url = pubMedUrlPrefix + QLatin1String("esearch.fcgi?db=pubmed&tool=kbibtex&term=");
 
         /// append search terms
         QStringList queryFragments;
 
-        /// add words from "free text" and "year" fields
+        /// add words from "free text" field, but auto-detect PMIDs
         QStringList freeTextWords = p->splitRespectingQuotationMarks(query[queryKeyFreeText]);
         for (QStringList::ConstIterator it = freeTextWords.constBegin(); it != freeTextWords.constEnd(); ++it) {
             QString text = *it;
-            if (text[0] != '"' || text[text.length()-1] != '"') text = '"' + text + '"';
-            queryFragments.append(text + QLatin1String("[All Fields]"));
+            queryFragments.append(text + (pmidRegExp.indexIn(text) >= 0 ? QLatin1String("") : QLatin1String("[All Fields]")));
         }
+
+        /// add words from "year" field
         QStringList yearWords = p->splitRespectingQuotationMarks(query[queryKeyYear]);
         for (QStringList::ConstIterator it = yearWords.constBegin(); it != yearWords.constEnd(); ++it) {
             QString text = *it;
-            if (text[0] != '"' || text[text.length()-1] != '"') text = '"' + text + '"';
             queryFragments.append(text);
         }
 
@@ -69,7 +72,6 @@ public:
         QStringList titleWords = p->splitRespectingQuotationMarks(query[queryKeyTitle]);
         for (QStringList::ConstIterator it = titleWords.constBegin(); it != titleWords.constEnd(); ++it) {
             QString text = *it;
-            if (text[0] != '"' || text[text.length()-1] != '"') text = '"' + text + '"';
             queryFragments.append(text + QLatin1String("[Title]"));
         }
 
@@ -77,7 +79,6 @@ public:
         QStringList authorWords = p->splitRespectingQuotationMarks(query[queryKeyAuthor]);
         for (QStringList::ConstIterator it = authorWords.constBegin(); it != authorWords.constEnd(); ++it) {
             QString text = *it;
-            if (text[0] != '"' || text[text.length()-1] != '"') text = '"' + text + '"';
             queryFragments.append(text + QLatin1String("[Author]"));
         }
 
@@ -200,7 +201,8 @@ void WebSearchPubMed::eFetchDone()
     QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
 
     if (handleErrors(reply)) {
-        QString input = reply->readAll();
+        /// ensure proper treatment of UTF-8 characters
+        QString input = QString::fromUtf8(reply->readAll().data());
 
         /// use XSL transformation to get BibTeX document from XML result
         QString bibTeXcode = d->xslt.transform(input);
