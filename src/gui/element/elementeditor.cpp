@@ -250,7 +250,7 @@ public:
         /// update the enabled/disabled state of required and optional widgets/fields
         bool forceVisible = checkBoxForceShowAllWidgets->isChecked();
         foreach(ElementWidget *elementWidget, widgets) {
-            elementWidget->showReqOptWidgets(&tempEntry, forceVisible);
+            elementWidget->showReqOptWidgets(forceVisible, tempEntry.type());
         }
 
         /// save configuration

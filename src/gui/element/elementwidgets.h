@@ -33,6 +33,7 @@
 
 class QTreeWidget;
 class QTreeWidgetItem;
+class QGridLayout;
 
 class KLineEdit;
 class KComboBox;
@@ -57,7 +58,7 @@ public:
     virtual void setReadOnly(bool isReadOnly) {
         this->isReadOnly = isReadOnly;
     };
-    virtual void showReqOptWidgets(const Element*, bool) = 0;
+    virtual void showReqOptWidgets(bool, const QString &) = 0;
     virtual QString label() = 0;
     virtual KIcon icon() = 0;
     bool isModified() const;
@@ -89,10 +90,20 @@ signals:
 class EntryConfiguredWidget : public ElementWidget
 {
 private:
+    typedef struct {
+        QLabel *label;
+        FieldInput *fieldInput;
+        bool isVerticallyMinimumExpaning;
+    } LabeledFieldInput;
+    LabeledFieldInput **listOfLabeledFieldInput;
+    int fieldInputCount, numCols;
+    QGridLayout *gridLayout;
+
     EntryTabLayout &etl;
     QMap<QString, FieldInput*> bibtexKeyToWidget;
-    QMap<FieldInput*, QLabel*> buddyList;
+
     void createGUI();
+    void layoutGUI(bool forceVisible, const QString &entryType = QString::null);
 
 public:
     EntryConfiguredWidget(EntryTabLayout &entryTabLayout, QWidget *parent);
@@ -100,7 +111,7 @@ public:
     bool apply(Element *element) const;
     bool reset(const Element *element);
     void setReadOnly(bool isReadOnly);
-    void showReqOptWidgets(const Element *element, bool forceEnable);
+    void showReqOptWidgets(bool forceVisible, const QString &entryType);
     QString label();
     KIcon icon();
 
@@ -124,7 +135,7 @@ public:
     bool apply(Element *element) const;
     bool reset(const Element *element);
     void setReadOnly(bool isReadOnly);
-    void showReqOptWidgets(const Element*, bool) {};
+    void showReqOptWidgets(bool, const QString &) {};
     QString label();
     KIcon icon();
 
@@ -145,7 +156,7 @@ public:
     bool apply(Element *element) const;
     bool reset(const Element *element);
     void setReadOnly(bool isReadOnly);
-    void showReqOptWidgets(const Element*, bool) {};
+    void showReqOptWidgets(bool, const QString &) {};
     QString label();
     KIcon icon();
 
@@ -179,7 +190,7 @@ public:
     bool apply(Element *element) const;
     bool reset(const Element *element);
     void setReadOnly(bool isReadOnly);
-    void showReqOptWidgets(const Element*, bool) {};
+    void showReqOptWidgets(bool, const QString &) {};
     QString label();
     KIcon icon();
 
@@ -207,7 +218,7 @@ public:
     bool apply(Element *element) const;
     bool reset(const Element *element);
     void setReadOnly(bool isReadOnly);
-    void showReqOptWidgets(const Element*, bool) {};
+    void showReqOptWidgets(bool, const QString &) {};
     QString label();
     KIcon icon();
 
@@ -227,7 +238,7 @@ public:
     bool apply(Element *element) const;
     bool reset(const Element *element);
     void setReadOnly(bool isReadOnly);
-    void showReqOptWidgets(const Element*, bool) {};
+    void showReqOptWidgets(bool, const QString &) {};
     QString label();
     KIcon icon();
 
@@ -251,7 +262,7 @@ public:
     bool apply(Element *element) const;
     bool reset(const Element *element);
     void setReadOnly(bool isReadOnly);
-    void showReqOptWidgets(const Element*, bool) {};
+    void showReqOptWidgets(bool, const QString &) {};
     QString label();
     KIcon icon();
 

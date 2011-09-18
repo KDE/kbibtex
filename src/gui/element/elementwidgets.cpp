@@ -82,6 +82,7 @@ const Qt::Orientation ElementWidget::defaultElementWidgetLayout = Qt::Horizontal
 EntryConfiguredWidget::EntryConfiguredWidget(EntryTabLayout &entryTabLayout, QWidget *parent)
         : ElementWidget(parent), etl(entryTabLayout)
 {
+    gridLayout = new QGridLayout(this);
     createGUI();
 }
 
@@ -126,41 +127,9 @@ bool EntryConfiguredWidget::reset(const Element *element)
     return true;
 }
 
-void EntryConfiguredWidget::showReqOptWidgets(const Element *element, bool forceVisible)
+void EntryConfiguredWidget::showReqOptWidgets(bool forceVisible, const QString &entryType)
 {
-    const Entry *entry = dynamic_cast<const Entry*>(element);
-    if (entry == NULL) return;
-
-    QStringList visibleItems;
-    BibTeXEntries *be = BibTeXEntries::self();
-    const BibTeXFields *bf = BibTeXFields::self();
-    QString type = be->format(entry->type(), KBibTeX::cUpperCamelCase);
-    type = type.toLower();
-    for (BibTeXEntries::ConstIterator bit = be->constBegin(); bit != be->constEnd(); ++bit) {
-        if (type == bit->upperCamelCase.toLower() || type == bit->upperCamelCaseAlt.toLower()) {
-            /// this ugly conversion is necessary because we have a "^" (xor) and "|" (and/or)
-            /// syntax to differentiate required items (not used yet, but will be used
-            /// later if missing required items are marked).
-            QString visible = bit->requiredItems.join(",");
-            visible += "," + bit->optionalItems.join(",");
-            visible = visible.replace("|", ",").replace("^", ",");
-            visibleItems = visible.split(",");
-            break;
-        }
-    }
-    for (QMap<QString, FieldInput*>::Iterator it = bibtexKeyToWidget.begin(); it != bibtexKeyToWidget.end(); ++it) {
-        const QString key = it.key().toLower();
-        const FieldDescription &fd = bf->find(key);
-        bool typeIndependent = fd.isNull() ? false : fd.typeIndependent;
-        Value value;
-        it.value()->apply(value);
-        /// Hide non-required and non-optional type-dependent fields,
-        /// except if the field has content
-        bool isVisible = forceVisible || typeIndependent || visibleItems.contains(key) || !value.isEmpty();
-        it.value()->setVisible(isVisible);
-        if (buddyList[it.value()])
-            buddyList[it.value()]->setVisible(isVisible);
-    }
+    layoutGUI(forceVisible, entryType);
 }
 
 void EntryConfiguredWidget::setReadOnly(bool isReadOnly)
@@ -206,81 +175,138 @@ bool EntryConfiguredWidget::canEdit(const Element *element)
 
 void EntryConfiguredWidget::createGUI()
 {
-    /// retrieve information from settings if labels should be
-    /// above widgets or on the left side
-    KSharedConfigPtr config(KSharedConfig::openConfig(QLatin1String("kbibtexrc")));
-    const QString configGroupName(QLatin1String("User Interface"));
-    KConfigGroup configGroup(config, configGroupName);
-    Qt::Orientation layoutOrientation = (Qt::Orientation)configGroup.readEntry(keyElementWidgetLayout, (int)defaultElementWidgetLayout);
-
-    QGridLayout *gridLayout = new QGridLayout(this);
     const BibTeXFields *bf = BibTeXFields::self();
 
-    /// determine how many rows a column should have
-    int mod = etl.singleFieldLayouts.size() / etl.columns;
-    if (etl.singleFieldLayouts.size() % etl.columns > 0)
-        ++mod;
-    if (layoutOrientation == Qt::Vertical) mod *= 2;
+    /// store information on number of widgets and columns in class variable
+    fieldInputCount = etl.singleFieldLayouts.size();
+    numCols = etl.columns;
+    /// initialize list of field input widgets plus labels
+    listOfLabeledFieldInput = new LabeledFieldInput*[fieldInputCount];
 
-    int row = 0, col = 0;
+    int i = 0;
     foreach(const SingleFieldLayout &sfl, etl.singleFieldLayouts) {
-        /// add extra space between "columns" of labels and widgets
-        if (row == 0 && col > 1)
-            gridLayout->setColumnMinimumWidth(col - 1, interColumnSpace);
+        LabeledFieldInput *labeledFieldInput = new LabeledFieldInput;
 
         /// create an editing widget for this field
         const FieldDescription &fd = bf->find(sfl.bibtexLabel);
         KBibTeX::TypeFlags typeFlags = fd.isNull() ? KBibTeX::tfSource : fd.typeFlags;
         KBibTeX::TypeFlag preferredTypeFlag = fd.isNull() ? KBibTeX::tfSource : fd.preferredTypeFlag;
-        FieldInput *fieldInput = new FieldInput(sfl.fieldInputLayout, preferredTypeFlag, typeFlags, this);
-        fieldInput->setFieldKey(sfl.bibtexLabel);
-        bibtexKeyToWidget.insert(sfl.bibtexLabel, fieldInput);
-        connect(fieldInput, SIGNAL(modified()), this, SLOT(gotModified()));
+        labeledFieldInput->fieldInput = new FieldInput(sfl.fieldInputLayout, preferredTypeFlag, typeFlags, this);
+        labeledFieldInput->fieldInput->setFieldKey(sfl.bibtexLabel);
+        bibtexKeyToWidget.insert(sfl.bibtexLabel, labeledFieldInput->fieldInput);
+        connect(labeledFieldInput->fieldInput, SIGNAL(modified()), this, SLOT(gotModified()));
+
+        /// memorize if field input should grow vertically (e.g. is a list)
+        labeledFieldInput->isVerticallyMinimumExpaning = sfl.fieldInputLayout == KBibTeX::MultiLine || sfl.fieldInputLayout == KBibTeX::List || sfl.fieldInputLayout == KBibTeX::PersonList || sfl.fieldInputLayout == KBibTeX::KeywordList;
 
         /// create a label next to the editing widget
-        QLabel *label = new QLabel(QString("%1:").arg(sfl.uiLabel), this);
-        label->setBuddy(fieldInput);
-        buddyList.insert(fieldInput, label);
+        labeledFieldInput->label = new QLabel(QString("%1:").arg(sfl.uiLabel), this);
+        labeledFieldInput->label->setBuddy(labeledFieldInput->fieldInput);
+        /// align label's text vertically to match field input
+        labeledFieldInput->label->setAlignment(labeledFieldInput->isVerticallyMinimumExpaning ? Qt::AlignTop : Qt::AlignVCenter);
 
-        /// position both label and editing widget according to set layout
-        bool isVerticallyMinimumExpaning = sfl.fieldInputLayout == KBibTeX::MultiLine || sfl.fieldInputLayout == KBibTeX::List || sfl.fieldInputLayout == KBibTeX::PersonList || sfl.fieldInputLayout == KBibTeX::KeywordList;
-        gridLayout->addWidget(label, row, col, 1, 1, (isVerticallyMinimumExpaning ? Qt::AlignTop : Qt::AlignVCenter) | (layoutOrientation == Qt::Horizontal ? Qt::AlignRight : Qt::AlignLeft));
-        if (layoutOrientation == Qt::Horizontal) ++col;
-        else ++row;
-        gridLayout->addWidget(fieldInput, row, col, 1, 1);
-        gridLayout->setRowStretch(row, isVerticallyMinimumExpaning ? 1000 : 0);
+        listOfLabeledFieldInput[i] = labeledFieldInput;
 
-        /// move position counter
-        ++row;
-        if (layoutOrientation == Qt::Horizontal) --col;
+        ++i;
+    }
 
-        /// check if column is full
-        if (row >= mod) {
-            /// set columns' stretch
-            if (layoutOrientation == Qt::Horizontal) {
-                gridLayout->setColumnStretch(col, 1);
-                gridLayout->setColumnStretch(col + 1, 1000);
-            } else
-                gridLayout->setColumnStretch(col, 1000);
-            /// update/reset position in layout
-            row = 0;
-            col += layoutOrientation == Qt::Horizontal ? 3 : 2;
+    layoutGUI(true);
+}
+
+void EntryConfiguredWidget::layoutGUI(bool forceVisible, const QString &entryType)
+{
+    const BibTeXFields *bf = BibTeXFields::self();
+
+    QStringList visibleItems;
+    if (!entryType.isEmpty()) {
+        BibTeXEntries *be = BibTeXEntries::self();
+        for (BibTeXEntries::ConstIterator bit = be->constBegin(); bit != be->constEnd(); ++bit) {
+            if (entryType == bit->upperCamelCase.toLower() || entryType == bit->upperCamelCaseAlt.toLower()) {
+                /// this ugly conversion is necessary because we have a "^" (xor) and "|" (and/or)
+                /// syntax to differentiate required items (not used yet, but will be used
+                /// later if missing required items are marked).
+                QString visible = bit->requiredItems.join(",");
+                visible += "," + bit->optionalItems.join(",");
+                visible = visible.replace("|", ",").replace("^", ",");
+                visibleItems = visible.split(",");
+                break;
+            }
         }
     }
 
-    /// fill tab's bottom with space
-    gridLayout->setRowStretch(mod, 1);
+    /// variables to keep track which and how many field inputs will be visible
+    int countVisible = 0;
+    bool *visible = new bool[fieldInputCount];
+    /// ... and if any field input is vertically expaning
+    /// (e.g. a list, important for layout)
+    bool anyoneVerticallyExpanding = false;
 
-    /// set last column's stretch
-    if (row > 0) {
-        if (layoutOrientation == Qt::Horizontal) {
-            gridLayout->setColumnStretch(col, 1);
-            gridLayout->setColumnStretch(col + 1, 1000);
-        } else
-            gridLayout->setColumnStretch(col, 1000);
+    for (int i = fieldInputCount - 1; i >= 0; --i) {
+        listOfLabeledFieldInput[i]->label->setVisible(false);
+        listOfLabeledFieldInput[i]->fieldInput->setVisible(false);
+        gridLayout->removeWidget(listOfLabeledFieldInput[i]->label);
+        gridLayout->removeWidget(listOfLabeledFieldInput[i]->fieldInput);
+
+        const QString key = bibtexKeyToWidget.key(listOfLabeledFieldInput[i]->fieldInput).toLower();
+        const FieldDescription &fd = bf->find(key);
+        bool typeIndependent = fd.isNull() ? false : fd.typeIndependent;
+        Value value;
+        listOfLabeledFieldInput[i]->fieldInput->apply(value);
+        /// Hide non-required and non-optional type-dependent fields,
+        /// except if the field has content
+        visible[i] = forceVisible || typeIndependent || !value.isEmpty() || visibleItems.contains(key);
+
+        if (visible[i]) {
+            ++countVisible;
+            anyoneVerticallyExpanding |= listOfLabeledFieldInput[i]->isVerticallyMinimumExpaning;
+        }
     }
-}
 
+    int numRows = countVisible / numCols;
+    if (countVisible % numCols > 0)
+        ++numRows;
+    gridLayout->setRowStretch(numRows, anyoneVerticallyExpanding ? 0 : 1000);
+
+    int col = 0, row = 0;
+    for (int i = 0; i < fieldInputCount; ++i)
+        if (visible[i]) {
+            /// add label and field input to new position in grid layout
+            gridLayout->addWidget(listOfLabeledFieldInput[i]->label, row, col*3);
+            gridLayout->addWidget(listOfLabeledFieldInput[i]->fieldInput, row, col*3 + 1);
+
+            /// set row stretch
+            gridLayout->setRowStretch(row, listOfLabeledFieldInput[i]->isVerticallyMinimumExpaning ? 1000 : 0);
+            /// set column stretch and spacing
+            gridLayout->setColumnStretch(col*3, 1);
+            gridLayout->setColumnStretch(col*3 + 1, 1000);
+            if (col > 0)
+                gridLayout->setColumnMinimumWidth(col*3 - 1, interColumnSpace);
+
+            /// count rows and columns correctly
+            ++row;
+            if (row >= numRows) {
+                row = 0;
+                ++col;
+            }
+
+            /// finally, set label and field input visible again
+            listOfLabeledFieldInput[i]->label->setVisible(true);
+            listOfLabeledFieldInput[i]->fieldInput->setVisible(true);
+        }
+
+    if (countVisible > 0) {
+        /// fix row stretch
+        for (int i = numRows + 1;i < 100;++i)
+            gridLayout->setRowStretch(i, 0);
+        /// hide unused columns
+        for (int i = (col + (row == 0 ? 0 : 1)) * 3 - 1;i < 100;++i) {
+            gridLayout->setColumnMinimumWidth(i, 0);
+            gridLayout->setColumnStretch(i, 0);
+        }
+    }
+
+    delete[] visible;
+}
 
 ReferenceWidget::ReferenceWidget(QWidget *parent)
         : ElementWidget(parent)
