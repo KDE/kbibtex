@@ -17,10 +17,10 @@
 *   Free Software Foundation, Inc.,                                       *
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
-#ifndef KBIBTEX_WEBSEARCH_ABSTRACT_H
-#define KBIBTEX_WEBSEARCH_ABSTRACT_H
+#ifndef KBIBTEX_ONLINESEARCH_ABSTRACT_H
+#define KBIBTEX_ONLINESEARCH_ABSTRACT_H
 
-#include "kbibtexws_export.h"
+#include "kbibtexos_export.h"
 
 #include <QObject>
 #include <QMap>
@@ -56,12 +56,12 @@ private:
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
-class KBIBTEXWS_EXPORT WebSearchQueryFormAbstract : public QWidget
+class KBIBTEXOS_EXPORT OnlineSearchQueryFormAbstract : public QWidget
 {
     Q_OBJECT
 
 public:
-    WebSearchQueryFormAbstract(QWidget *parent)
+    OnlineSearchQueryFormAbstract(QWidget *parent)
             : QWidget(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))) {
         // nothing
     }
@@ -79,17 +79,17 @@ signals:
     void returnPressed();
 };
 
-Q_DECLARE_METATYPE(WebSearchQueryFormAbstract*)
+Q_DECLARE_METATYPE(OnlineSearchQueryFormAbstract*)
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
-class KBIBTEXWS_EXPORT WebSearchAbstract : public QObject
+class KBIBTEXOS_EXPORT OnlineSearchAbstract : public QObject
 {
     Q_OBJECT
 
 public:
-    WebSearchAbstract(QWidget *parent);
+    OnlineSearchAbstract(QWidget *parent);
 
     static const QString queryKeyFreeText;
     static const QString queryKeyTitle;
@@ -105,7 +105,7 @@ public:
     virtual QString label() const = 0;
     QString name();
     virtual KIcon icon() const;
-    virtual WebSearchQueryFormAbstract* customWidget(QWidget *parent) = 0;
+    virtual OnlineSearchQueryFormAbstract* customWidget(QWidget *parent) = 0;
     virtual KUrl homepage() const = 0;
 
 public slots:
@@ -167,4 +167,4 @@ signals:
     void progress(int, int);
 };
 
-#endif // KBIBTEX_WEBSEARCH_ABSTRACT_H
+#endif // KBIBTEX_ONLINESEARCH_ABSTRACT_H

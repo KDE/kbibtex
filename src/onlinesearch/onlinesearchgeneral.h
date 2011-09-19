@@ -17,48 +17,37 @@
 *   Free Software Foundation, Inc.,                                       *
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
+#ifndef KBIBTEX_ONLINESEARCH_GENERAL_H
+#define KBIBTEX_ONLINESEARCH_GENERAL_H
 
-#ifndef KBIBTEX_WEBSEARCH_SPRINGERLINK_H
-#define KBIBTEX_WEBSEARCH_SPRINGERLINK_H
+#include <KSharedConfig>
 
-#include <websearchabstract.h>
+#include "onlinesearchabstract.h"
 
+class QSpinBox;
 
-/**
- * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
- */
-class KBIBTEXWS_EXPORT WebSearchSpringerLink : public WebSearchAbstract
+class KLineEdit;
+
+class KBIBTEXOS_EXPORT OnlineSearchQueryFormGeneral : public OnlineSearchQueryFormAbstract
 {
     Q_OBJECT
 
 public:
-    WebSearchSpringerLink(QWidget *parent);
-    ~WebSearchSpringerLink();
+    OnlineSearchQueryFormGeneral(QWidget *parent);
 
-    virtual void startSearch();
-    virtual void startSearch(const QMap<QString, QString> &query, int numResults);
-    virtual QString label() const;
-    virtual WebSearchQueryFormAbstract* customWidget(QWidget *parent);
-    virtual KUrl homepage() const;
+    bool readyToStart() const;
+    void copyFromEntry(const Entry&);
 
-public slots:
-    void cancel();
-
-protected:
-    virtual QString favIconUrl() const;
-
-private slots:
-    void doneFetchingResultPage();
-    void doneFetchingExportPage();
-    void doneFetchingBibTeX();
+    QMap<QString, QString> getQueryTerms();
+    int getNumResults();
 
 private:
-    class WebSearchQueryFormSpringerLink;
+    QMap<QString, KLineEdit*> queryFields;
+    QSpinBox *numResultsField;
+    const QString configGroupName;
 
-    class WebSearchSpringerLinkPrivate;
-    WebSearchSpringerLinkPrivate *d;
-
-    void processNextQueuedUrl();
+    void loadState();
+    void saveState();
 };
 
-#endif // KBIBTEX_WEBSEARCH_SPRINGERLINK_H
+#endif // KBIBTEX_ONLINESEARCH_GENERAL_H

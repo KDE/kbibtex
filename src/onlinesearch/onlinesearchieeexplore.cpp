@@ -27,14 +27,14 @@
 #include <KLocale>
 #include <KStandardDirs>
 
-#include "websearchieeexplore.h"
+#include "onlinesearchieeexplore.h"
 #include "xsltransform.h"
 #include "fileimporterbibtex.h"
 
-class WebSearchIEEEXplore::WebSearchIEEEXplorePrivate
+class OnlineSearchIEEEXplore::OnlineSearchIEEEXplorePrivate
 {
 private:
-    WebSearchIEEEXplore *p;
+    OnlineSearchIEEEXplore *p;
     QMap<QString, QString> originalCookiesSettings;
     bool originalCookiesEnabled;
 
@@ -46,7 +46,7 @@ public:
     FileImporterBibTeX fileImporter;
     int numSteps, curStep;
 
-    WebSearchIEEEXplorePrivate(WebSearchIEEEXplore *parent)
+    OnlineSearchIEEEXplorePrivate(OnlineSearchIEEEXplore *parent)
             : p(parent) {
         startPageUrl = QLatin1String("http://ieeexplore.ieee.org/");
         searchRequestUrl = QLatin1String("http://ieeexplore.ieee.org/search/searchresult.jsp?newsearch=true&x=0&y=0&queryText=");
@@ -84,24 +84,24 @@ public:
     }
 };
 
-WebSearchIEEEXplore::WebSearchIEEEXplore(QWidget *parent)
-        : WebSearchAbstract(parent), d(new WebSearchIEEEXplore::WebSearchIEEEXplorePrivate(this))
+OnlineSearchIEEEXplore::OnlineSearchIEEEXplore(QWidget *parent)
+        : OnlineSearchAbstract(parent), d(new OnlineSearchIEEEXplore::OnlineSearchIEEEXplorePrivate(this))
 {
     // nothing
 }
 
-WebSearchIEEEXplore::~WebSearchIEEEXplore()
+OnlineSearchIEEEXplore::~OnlineSearchIEEEXplore()
 {
     delete d;
 }
 
-void WebSearchIEEEXplore::startSearch()
+void OnlineSearchIEEEXplore::startSearch()
 {
     m_hasBeenCanceled = false;
     emit stoppedSearch(resultNoError);
 }
 
-void WebSearchIEEEXplore::startSearch(const QMap<QString, QString> &query, int numResults)
+void OnlineSearchIEEEXplore::startSearch(const QMap<QString, QString> &query, int numResults)
 {
     m_hasBeenCanceled = false;
     d->numResults = numResults;
@@ -123,7 +123,7 @@ void WebSearchIEEEXplore::startSearch(const QMap<QString, QString> &query, int n
     emit progress(0, d->numSteps);
 }
 
-void WebSearchIEEEXplore::doneFetchingStartPage()
+void OnlineSearchIEEEXplore::doneFetchingStartPage()
 {
     emit progress(++d->curStep, d->numSteps);
 
@@ -140,7 +140,7 @@ void WebSearchIEEEXplore::doneFetchingStartPage()
         kDebug() << "url was" << reply->url().toString();
 }
 
-void WebSearchIEEEXplore::doneFetchingSearchResults()
+void OnlineSearchIEEEXplore::doneFetchingSearchResults()
 {
     emit progress(++d->curStep, d->numSteps);
 
@@ -176,7 +176,7 @@ void WebSearchIEEEXplore::doneFetchingSearchResults()
         kDebug() << "url was" << reply->url().toString();
 }
 
-void WebSearchIEEEXplore::doneFetchingAbstract()
+void OnlineSearchIEEEXplore::doneFetchingAbstract()
 {
     emit progress(++d->curStep, d->numSteps);
 
@@ -196,7 +196,7 @@ void WebSearchIEEEXplore::doneFetchingAbstract()
         kDebug() << "url was" << reply->url().toString();
 }
 
-void WebSearchIEEEXplore::doneFetchingBibliography()
+void OnlineSearchIEEEXplore::doneFetchingBibliography()
 {
     emit progress(++d->curStep, d->numSteps);
 
@@ -247,27 +247,27 @@ void WebSearchIEEEXplore::doneFetchingBibliography()
         kDebug() << "url was" << reply->url().toString();
 }
 
-QString WebSearchIEEEXplore::label() const
+QString OnlineSearchIEEEXplore::label() const
 {
     return i18n("IEEEXplore");
 }
 
-QString WebSearchIEEEXplore::favIconUrl() const
+QString OnlineSearchIEEEXplore::favIconUrl() const
 {
     return QLatin1String("http://ieeexplore.ieee.org/favicon.ico");
 }
 
-WebSearchQueryFormAbstract* WebSearchIEEEXplore::customWidget(QWidget *)
+OnlineSearchQueryFormAbstract* OnlineSearchIEEEXplore::customWidget(QWidget *)
 {
     return NULL;
 }
 
-KUrl WebSearchIEEEXplore::homepage() const
+KUrl OnlineSearchIEEEXplore::homepage() const
 {
     return KUrl("http://ieeexplore.ieee.org/");
 }
 
-void WebSearchIEEEXplore::cancel()
+void OnlineSearchIEEEXplore::cancel()
 {
-    WebSearchAbstract::cancel();
+    OnlineSearchAbstract::cancel();
 }

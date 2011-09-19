@@ -33,12 +33,12 @@
 
 #include <fileimporterbibtex.h>
 #include <encoderlatex.h>
-#include "websearchspringerlink.h"
+#include "onlinesearchspringerlink.h"
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
-class WebSearchSpringerLink::WebSearchQueryFormSpringerLink : public WebSearchQueryFormAbstract
+class OnlineSearchSpringerLink::OnlineSearchQueryFormSpringerLink : public OnlineSearchQueryFormAbstract
 {
 private:
     QString configGroupName;
@@ -59,8 +59,8 @@ public:
     KLineEdit *lineEditFreeText, *lineEditAuthorEditor, *lineEditPublication, *lineEditVolume, *lineEditIssue;
     QSpinBox *numResultsField, *spinBoxYearBegin, *spinBoxYearEnd;
 
-    WebSearchQueryFormSpringerLink(QWidget *parent)
-            : WebSearchQueryFormAbstract(parent), configGroupName(QLatin1String("Search Engine SpringerLink")) {
+    OnlineSearchQueryFormSpringerLink(QWidget *parent)
+            : OnlineSearchQueryFormAbstract(parent), configGroupName(QLatin1String("Search Engine SpringerLink")) {
         QFormLayout *layout = new QFormLayout(this);
         layout->setMargin(0);
 
@@ -152,22 +152,22 @@ public:
     }
 };
 
-class WebSearchSpringerLink::WebSearchSpringerLinkPrivate
+class OnlineSearchSpringerLink::OnlineSearchSpringerLinkPrivate
 {
 private:
-    WebSearchSpringerLink *p;
+    OnlineSearchSpringerLink *p;
 
 public:
     const QString springerLinkBaseUrl;
     const QString springerLinkQueryUrl;
     int numExpectedResults, numFoundResults;
     int currentSearchPosition;
-    WebSearchQueryFormSpringerLink *form;
+    OnlineSearchQueryFormSpringerLink *form;
     int numSteps, curStep;
     QList<KUrl> queueResultPages, queueExportPages;
     QMap<KUrl, QString> queueBibTeX;
 
-    WebSearchSpringerLinkPrivate(WebSearchSpringerLink *parent)
+    OnlineSearchSpringerLinkPrivate(OnlineSearchSpringerLink *parent)
             : p(parent), springerLinkBaseUrl(QLatin1String("http://www.springerlink.com")), springerLinkQueryUrl(QLatin1String("http://www.springerlink.com/content/")), form(NULL) {
         // nothing
     }
@@ -235,18 +235,18 @@ public:
 };
 
 
-WebSearchSpringerLink::WebSearchSpringerLink(QWidget *parent)
-        : WebSearchAbstract(parent), d(new WebSearchSpringerLink::WebSearchSpringerLinkPrivate(this))
+OnlineSearchSpringerLink::OnlineSearchSpringerLink(QWidget *parent)
+        : OnlineSearchAbstract(parent), d(new OnlineSearchSpringerLink::OnlineSearchSpringerLinkPrivate(this))
 {
     // nothing
 }
 
-WebSearchSpringerLink::~WebSearchSpringerLink()
+OnlineSearchSpringerLink::~OnlineSearchSpringerLink()
 {
     delete d;
 }
 
-void WebSearchSpringerLink::startSearch()
+void OnlineSearchSpringerLink::startSearch()
 {
     m_hasBeenCanceled = false;
     d->numFoundResults = 0;
@@ -272,7 +272,7 @@ void WebSearchSpringerLink::startSearch()
     d->form->saveState();
 }
 
-void WebSearchSpringerLink::startSearch(const QMap<QString, QString> &query, int numResults)
+void OnlineSearchSpringerLink::startSearch(const QMap<QString, QString> &query, int numResults)
 {
     m_hasBeenCanceled = false;
     d->numFoundResults = 0;
@@ -298,34 +298,34 @@ void WebSearchSpringerLink::startSearch(const QMap<QString, QString> &query, int
     processNextQueuedUrl();
 }
 
-QString WebSearchSpringerLink::label() const
+QString OnlineSearchSpringerLink::label() const
 {
     return i18n("SpringerLink");
 }
 
-QString WebSearchSpringerLink::favIconUrl() const
+QString OnlineSearchSpringerLink::favIconUrl() const
 {
     return QLatin1String("http://www.springerlink.com/images/favicon.ico");
 }
 
-WebSearchQueryFormAbstract* WebSearchSpringerLink::customWidget(QWidget *parent)
+OnlineSearchQueryFormAbstract* OnlineSearchSpringerLink::customWidget(QWidget *parent)
 {
     if (d->form == NULL)
-        d->form = new WebSearchQueryFormSpringerLink(parent);
+        d->form = new OnlineSearchQueryFormSpringerLink(parent);
     return d->form;
 }
 
-KUrl WebSearchSpringerLink::homepage() const
+KUrl OnlineSearchSpringerLink::homepage() const
 {
     return KUrl("http://www.springerlink.com/");
 }
 
-void WebSearchSpringerLink::cancel()
+void OnlineSearchSpringerLink::cancel()
 {
-    WebSearchAbstract::cancel();
+    OnlineSearchAbstract::cancel();
 }
 
-void WebSearchSpringerLink::doneFetchingResultPage()
+void OnlineSearchSpringerLink::doneFetchingResultPage()
 {
     emit progress(++d->curStep, d->numSteps);
 
@@ -349,7 +349,7 @@ void WebSearchSpringerLink::doneFetchingResultPage()
 }
 
 
-void WebSearchSpringerLink::doneFetchingExportPage()
+void OnlineSearchSpringerLink::doneFetchingExportPage()
 {
     emit progress(++d->curStep, d->numSteps);
 
@@ -381,7 +381,7 @@ void WebSearchSpringerLink::doneFetchingExportPage()
         kDebug() << "url was" << reply->url().toString();
 }
 
-void WebSearchSpringerLink::doneFetchingBibTeX()
+void OnlineSearchSpringerLink::doneFetchingBibTeX()
 {
     emit progress(++d->curStep, d->numSteps);
 
@@ -417,7 +417,7 @@ void WebSearchSpringerLink::doneFetchingBibTeX()
         kDebug() << "url was" << reply->url().toString();
 }
 
-void WebSearchSpringerLink::processNextQueuedUrl()
+void OnlineSearchSpringerLink::processNextQueuedUrl()
 {
     if (!d->queueBibTeX.isEmpty()) {
         QMap<KUrl, QString>::Iterator it = d->queueBibTeX.begin();

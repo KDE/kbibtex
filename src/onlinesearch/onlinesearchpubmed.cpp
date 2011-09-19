@@ -26,21 +26,21 @@
 #include <KStandardDirs>
 #include <KMessageBox>
 
-#include "websearchpubmed.h"
+#include "onlinesearchpubmed.h"
 #include "xsltransform.h"
 #include "fileimporterbibtex.h"
 
-class WebSearchPubMed::WebSearchPubMedPrivate
+class OnlineSearchPubMed::OnlineSearchPubMedPrivate
 {
 private:
-    WebSearchPubMed *p;
+    OnlineSearchPubMed *p;
     const QString pubMedUrlPrefix;
 
 public:
     XSLTransform xslt;
     int numSteps, curStep;
 
-    WebSearchPubMedPrivate(WebSearchPubMed *parent)
+    OnlineSearchPubMedPrivate(OnlineSearchPubMed *parent)
             : p(parent), pubMedUrlPrefix(QLatin1String("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/")), xslt(KStandardDirs::locate("appdata", "pubmed2bibtex.xsl")) {
         // nothing
     }
@@ -101,24 +101,24 @@ public:
     }
 };
 
-WebSearchPubMed::WebSearchPubMed(QWidget *parent)
-        : WebSearchAbstract(parent), d(new WebSearchPubMed::WebSearchPubMedPrivate(this))
+OnlineSearchPubMed::OnlineSearchPubMed(QWidget *parent)
+        : OnlineSearchAbstract(parent), d(new OnlineSearchPubMed::OnlineSearchPubMedPrivate(this))
 {
     // nothing
 }
 
-WebSearchPubMed::~WebSearchPubMed()
+OnlineSearchPubMed::~OnlineSearchPubMed()
 {
     delete d;
 }
 
-void WebSearchPubMed::startSearch()
+void OnlineSearchPubMed::startSearch()
 {
     m_hasBeenCanceled = false;
     emit stoppedSearch(resultNoError);
 }
 
-void WebSearchPubMed::startSearch(const QMap<QString, QString> &query, int numResults)
+void OnlineSearchPubMed::startSearch(const QMap<QString, QString> &query, int numResults)
 {
     d->curStep = 0;
     d->numSteps = 2;
@@ -132,32 +132,32 @@ void WebSearchPubMed::startSearch(const QMap<QString, QString> &query, int numRe
     emit progress(0, d->numSteps);
 }
 
-QString WebSearchPubMed::label() const
+QString OnlineSearchPubMed::label() const
 {
     return i18n("PubMed");
 }
 
-QString WebSearchPubMed::favIconUrl() const
+QString OnlineSearchPubMed::favIconUrl() const
 {
     return QLatin1String("http://www.ncbi.nlm.nih.gov/favicon.ico");
 }
 
-WebSearchQueryFormAbstract* WebSearchPubMed::customWidget(QWidget *)
+OnlineSearchQueryFormAbstract* OnlineSearchPubMed::customWidget(QWidget *)
 {
     return NULL;
 }
 
-KUrl WebSearchPubMed::homepage() const
+KUrl OnlineSearchPubMed::homepage() const
 {
     return KUrl("http://www.pubmed.gov/");
 }
 
-void WebSearchPubMed::cancel()
+void OnlineSearchPubMed::cancel()
 {
-    WebSearchAbstract::cancel();
+    OnlineSearchAbstract::cancel();
 }
 
-void WebSearchPubMed::eSearchDone()
+void OnlineSearchPubMed::eSearchDone()
 {
     emit progress(++d->curStep, d->numSteps);
 
@@ -194,7 +194,7 @@ void WebSearchPubMed::eSearchDone()
         kDebug() << "url was" << reply->url().toString();
 }
 
-void WebSearchPubMed::eFetchDone()
+void OnlineSearchPubMed::eFetchDone()
 {
     emit progress(++d->curStep, d->numSteps);
 

@@ -18,26 +18,26 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#ifndef KBIBTEX_WEBSEARCH_SCIENCEDIRECT_H
-#define KBIBTEX_WEBSEARCH_SCIENCEDIRECT_H
+#ifndef KBIBTEX_ONLINESEARCH_PUBMED_H
+#define KBIBTEX_ONLINESEARCH_PUBMED_H
 
-#include <websearchabstract.h>
+#include "onlinesearchabstract.h"
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
-class KBIBTEXWS_EXPORT WebSearchScienceDirect : public WebSearchAbstract
+class KBIBTEXOS_EXPORT OnlineSearchPubMed : public OnlineSearchAbstract
 {
     Q_OBJECT
 
 public:
-    WebSearchScienceDirect(QWidget *parent);
-    ~WebSearchScienceDirect();
+    OnlineSearchPubMed(QWidget *parent);
+    ~OnlineSearchPubMed();
 
     virtual void startSearch();
     virtual void startSearch(const QMap<QString, QString> &query, int numResults);
     virtual QString label() const;
-    virtual WebSearchQueryFormAbstract* customWidget(QWidget *parent);
+    virtual OnlineSearchQueryFormAbstract* customWidget(QWidget *parent);
     virtual KUrl homepage() const;
 
 public slots:
@@ -46,16 +46,13 @@ public slots:
 protected:
     virtual QString favIconUrl() const;
 
-private:
-    class WebSearchScienceDirectPrivate;
-    WebSearchScienceDirectPrivate *d;
-
 private slots:
-    void doneFetchingStartPage();
-    void doneFetchingResultPage();
-    void doneFetchingAbstractPage();
-    void doneFetchingExportCitationPage();
-    void doneFetchingBibTeX();
+    void eSearchDone();
+    void eFetchDone();
+
+private:
+    class OnlineSearchPubMedPrivate;
+    OnlineSearchPubMedPrivate *d;
 };
 
-#endif // KBIBTEX_WEBSEARCH_SCIENCEDIRECT_H
+#endif // KBIBTEX_ONLINESEARCH_PUBMED_H

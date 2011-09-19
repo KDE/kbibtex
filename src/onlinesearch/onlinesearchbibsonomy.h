@@ -17,27 +17,33 @@
 *   Free Software Foundation, Inc.,                                       *
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
-#ifndef KBIBTEX_WEBSEARCH_GOOGLESCHOLAR_H
-#define KBIBTEX_WEBSEARCH_GOOGLESCHOLAR_H
+#ifndef KBIBTEX_ONLINESEARCH_BIBSONOMY_H
+#define KBIBTEX_ONLINESEARCH_BIBSONOMY_H
 
-#include <websearchabstract.h>
+#include <QByteArray>
+
+#include <onlinesearchabstract.h>
+
+class QSpinBox;
+class KComboBox;
+class KLineEdit;
 
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
-class KBIBTEXWS_EXPORT WebSearchGoogleScholar : public WebSearchAbstract
+class KBIBTEXOS_EXPORT OnlineSearchBibsonomy : public OnlineSearchAbstract
 {
     Q_OBJECT
 
 public:
-    WebSearchGoogleScholar(QWidget *parent);
-    ~WebSearchGoogleScholar();
+    OnlineSearchBibsonomy(QWidget *parent);
+    ~OnlineSearchBibsonomy();
 
     virtual void startSearch();
     virtual void startSearch(const QMap<QString, QString> &query, int numResults);
     virtual QString label() const;
-    virtual WebSearchQueryFormAbstract* customWidget(QWidget *parent);
+    virtual OnlineSearchQueryFormAbstract* customWidget(QWidget *parent);
     virtual KUrl homepage() const;
 
 public slots:
@@ -46,16 +52,13 @@ public slots:
 protected:
     virtual QString favIconUrl() const;
 
-private slots:
-    void doneFetchingStartPage();
-    void doneFetchingConfigPage();
-    void doneFetchingSetConfigPage();
-    void doneFetchingQueryPage();
-    void doneFetchingBibTeX();
-
 private:
-    class WebSearchGoogleScholarPrivate;
-    WebSearchGoogleScholarPrivate *d;
+    class OnlineSearchQueryFormBibsonomy;
+    class OnlineSearchBibsonomyPrivate;
+    OnlineSearchBibsonomyPrivate *d;
+
+private slots:
+    void downloadDone();
 };
 
-#endif // KBIBTEX_WEBSEARCH_GOOGLESCHOLAR_H
+#endif // KBIBTEX_ONLINESEARCH_BIBSONOMY_H

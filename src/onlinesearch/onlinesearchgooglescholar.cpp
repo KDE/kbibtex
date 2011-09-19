@@ -33,13 +33,13 @@
 #include <KIcon>
 
 #include <fileimporterbibtex.h>
-#include "websearchgooglescholar.h"
+#include "onlinesearchgooglescholar.h"
 
 
-class WebSearchGoogleScholar::WebSearchGoogleScholarPrivate
+class OnlineSearchGoogleScholar::OnlineSearchGoogleScholarPrivate
 {
 private:
-    WebSearchGoogleScholar *p;
+    OnlineSearchGoogleScholar *p;
 
 public:
     int numResults;
@@ -53,7 +53,7 @@ public:
     FileImporterBibTeX importer;
     int numSteps, curStep;
 
-    WebSearchGoogleScholarPrivate(WebSearchGoogleScholar *parent)
+    OnlineSearchGoogleScholarPrivate(OnlineSearchGoogleScholar *parent)
             : p(parent) {
         startPageUrl = QLatin1String("http://scholar.google.com/");
         configPageUrl = QLatin1String("http://%1/scholar_preferences");
@@ -62,24 +62,24 @@ public:
     }
 };
 
-WebSearchGoogleScholar::WebSearchGoogleScholar(QWidget *parent)
-        : WebSearchAbstract(parent), d(new WebSearchGoogleScholar::WebSearchGoogleScholarPrivate(this))
+OnlineSearchGoogleScholar::OnlineSearchGoogleScholar(QWidget *parent)
+        : OnlineSearchAbstract(parent), d(new OnlineSearchGoogleScholar::OnlineSearchGoogleScholarPrivate(this))
 {
     // nothing
 }
 
-WebSearchGoogleScholar::~WebSearchGoogleScholar()
+OnlineSearchGoogleScholar::~OnlineSearchGoogleScholar()
 {
     delete d;
 }
 
-void WebSearchGoogleScholar::startSearch()
+void OnlineSearchGoogleScholar::startSearch()
 {
     m_hasBeenCanceled = false;
     emit stoppedSearch(resultNoError);
 }
 
-void WebSearchGoogleScholar::startSearch(const QMap<QString, QString> &query, int numResults)
+void OnlineSearchGoogleScholar::startSearch(const QMap<QString, QString> &query, int numResults)
 {
     d->numResults = numResults;
     m_hasBeenCanceled = false;
@@ -111,7 +111,7 @@ void WebSearchGoogleScholar::startSearch(const QMap<QString, QString> &query, in
     emit progress(0, d->numSteps);
 }
 
-void WebSearchGoogleScholar::doneFetchingStartPage()
+void OnlineSearchGoogleScholar::doneFetchingStartPage()
 {
     emit progress(++d->curStep, d->numSteps);
 
@@ -134,7 +134,7 @@ void WebSearchGoogleScholar::doneFetchingStartPage()
         kDebug() << "url was" << reply->url().toString();
 }
 
-void WebSearchGoogleScholar::doneFetchingConfigPage()
+void OnlineSearchGoogleScholar::doneFetchingConfigPage()
 {
     emit progress(++d->curStep, d->numSteps);
 
@@ -160,7 +160,7 @@ void WebSearchGoogleScholar::doneFetchingConfigPage()
         kDebug() << "url was" << reply->url().toString();
 }
 
-void WebSearchGoogleScholar::doneFetchingSetConfigPage()
+void OnlineSearchGoogleScholar::doneFetchingSetConfigPage()
 {
     emit progress(++d->curStep, d->numSteps);
 
@@ -193,7 +193,7 @@ void WebSearchGoogleScholar::doneFetchingSetConfigPage()
         kDebug() << "url was" << reply->url().toString();
 }
 
-void WebSearchGoogleScholar::doneFetchingQueryPage()
+void OnlineSearchGoogleScholar::doneFetchingQueryPage()
 {
     emit progress(++d->curStep, d->numSteps);
 
@@ -225,7 +225,7 @@ void WebSearchGoogleScholar::doneFetchingQueryPage()
         kDebug() << "url was" << reply->url().toString();
 }
 
-void WebSearchGoogleScholar::doneFetchingBibTeX()
+void OnlineSearchGoogleScholar::doneFetchingBibTeX()
 {
     emit progress(++d->curStep, d->numSteps);
 
@@ -270,27 +270,27 @@ void WebSearchGoogleScholar::doneFetchingBibTeX()
         kDebug() << "url was" << reply->url().toString();
 }
 
-QString WebSearchGoogleScholar::label() const
+QString OnlineSearchGoogleScholar::label() const
 {
     return i18n("Google Scholar");
 }
 
-QString WebSearchGoogleScholar::favIconUrl() const
+QString OnlineSearchGoogleScholar::favIconUrl() const
 {
     return QLatin1String("http://scholar.google.com/favicon.ico");
 }
 
-WebSearchQueryFormAbstract* WebSearchGoogleScholar::customWidget(QWidget *)
+OnlineSearchQueryFormAbstract* OnlineSearchGoogleScholar::customWidget(QWidget *)
 {
     return NULL;
 }
 
-KUrl WebSearchGoogleScholar::homepage() const
+KUrl OnlineSearchGoogleScholar::homepage() const
 {
     return KUrl("http://scholar.google.com/");
 }
 
-void WebSearchGoogleScholar::cancel()
+void OnlineSearchGoogleScholar::cancel()
 {
-    WebSearchAbstract::cancel();
+    OnlineSearchAbstract::cancel();
 }

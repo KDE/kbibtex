@@ -17,27 +17,26 @@
 *   Free Software Foundation, Inc.,                                       *
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
+#ifndef KBIBTEX_ONLINESEARCH_ARXIV_H
+#define KBIBTEX_ONLINESEARCH_ARXIV_H
 
-#ifndef KBIBTEX_WEBSEARCH_IEEEXPLORE_H
-#define KBIBTEX_WEBSEARCH_IEEEXPLORE_H
-
-#include "websearchabstract.h"
+#include <onlinesearchabstract.h>
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
-class KBIBTEXWS_EXPORT WebSearchIEEEXplore : public WebSearchAbstract
+class KBIBTEXOS_EXPORT OnlineSearchArXiv : public OnlineSearchAbstract
 {
     Q_OBJECT
 
 public:
-    WebSearchIEEEXplore(QWidget *parent);
-    ~WebSearchIEEEXplore();
+    OnlineSearchArXiv(QWidget *parent);
+    ~OnlineSearchArXiv();
 
     virtual void startSearch();
     virtual void startSearch(const QMap<QString, QString> &query, int numResults);
     virtual QString label() const;
-    virtual WebSearchQueryFormAbstract* customWidget(QWidget *parent);
+    virtual OnlineSearchQueryFormAbstract* customWidget(QWidget *parent);
     virtual KUrl homepage() const;
 
 public slots:
@@ -46,15 +45,14 @@ public slots:
 protected:
     virtual QString favIconUrl() const;
 
-private slots:
-    void doneFetchingStartPage();
-    void doneFetchingSearchResults();
-    void doneFetchingAbstract();
-    void doneFetchingBibliography();
-
 private:
-    class WebSearchIEEEXplorePrivate;
-    WebSearchIEEEXplorePrivate *d;
+    class OnlineSearchQueryFormArXiv;
+    OnlineSearchQueryFormArXiv *form;
+    class OnlineSearchArXivPrivate;
+    OnlineSearchArXivPrivate *d;
+
+private slots:
+    void downloadDone();
 };
 
-#endif // KBIBTEX_WEBSEARCH_IEEEXPLORE_H
+#endif // KBIBTEX_ONLINESEARCH_ARXIV_H

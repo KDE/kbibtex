@@ -34,15 +34,15 @@
 #include <KApplication>
 
 #include <encoderlatex.h>
-#include "websearchabstract.h"
+#include "onlinesearchabstract.h"
 
-const QString WebSearchAbstract::queryKeyFreeText = QLatin1String("free");
-const QString WebSearchAbstract::queryKeyTitle = QLatin1String("title");
-const QString WebSearchAbstract::queryKeyAuthor = QLatin1String("author");
-const QString WebSearchAbstract::queryKeyYear = QLatin1String("year");
+const QString OnlineSearchAbstract::queryKeyFreeText = QLatin1String("free");
+const QString OnlineSearchAbstract::queryKeyTitle = QLatin1String("title");
+const QString OnlineSearchAbstract::queryKeyAuthor = QLatin1String("author");
+const QString OnlineSearchAbstract::queryKeyYear = QLatin1String("year");
 
 /// various browser strings to "disguise" origin
-const QStringList WebSearchAbstract::m_userAgentList = QStringList()
+const QStringList OnlineSearchAbstract::m_userAgentList = QStringList()
         << QLatin1String("Mozilla/5.0 (Linux; U; Android 2.3.3; en-us; HTC_DesireS_S510e Build/GRI40) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1")
         << QLatin1String("Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.6; en-US; rv:1.9.2.3) Gecko/20100402 Prism/1.0b4")
         << QLatin1String("Mozilla/5.0 (Windows; U; Win 9x 4.90; SG; rv:1.9.2.4) Gecko/20101104 Netscape/9.1.0285")
@@ -64,11 +64,11 @@ const QStringList WebSearchAbstract::m_userAgentList = QStringList()
         << QLatin1String("Mozilla/5.0 (SymbianOS/9.1; U; [en]; Series60/3.0 NokiaE60/4.06.0) AppleWebKit/413 (KHTML, like Gecko) Safari/413")
         << QLatin1String("Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US) AppleWebKit/534.16 (KHTML, like Gecko) Chrome/10.0.648.133 Safari/534.16");
 
-const int WebSearchAbstract::resultNoError = 0;
-const int WebSearchAbstract::resultCancelled = 0; /// may get redefined in the future!
-const int WebSearchAbstract::resultUnspecifiedError = 1;
+const int OnlineSearchAbstract::resultNoError = 0;
+const int OnlineSearchAbstract::resultCancelled = 0; /// may get redefined in the future!
+const int OnlineSearchAbstract::resultUnspecifiedError = 1;
 
-const char* WebSearchAbstract::httpUnsafeChars = "%:/=+$?&\0";
+const char* OnlineSearchAbstract::httpUnsafeChars = "%:/=+$?&\0";
 
 
 HTTPEquivCookieJar::HTTPEquivCookieJar(QNetworkAccessManager *parent = NULL)
@@ -96,7 +96,7 @@ void HTTPEquivCookieJar::checkForHttpEqiuv(const QString &htmlCode, const QUrl &
     }
 }
 
-QStringList WebSearchQueryFormAbstract::authorLastNames(const Entry &entry)
+QStringList OnlineSearchQueryFormAbstract::authorLastNames(const Entry &entry)
 {
     QStringList result;
     EncoderLaTeX *encoder = EncoderLaTeX::currentEncoderLaTeX();
@@ -110,13 +110,13 @@ QStringList WebSearchQueryFormAbstract::authorLastNames(const Entry &entry)
     return result;
 }
 
-WebSearchAbstract::WebSearchAbstract(QWidget *parent)
+OnlineSearchAbstract::OnlineSearchAbstract(QWidget *parent)
         : QObject(parent), m_name(QString::null)
 {
     m_parent = parent;
 }
 
-KIcon WebSearchAbstract::icon() const
+KIcon OnlineSearchAbstract::icon() const
 {
     QString fileName = favIconUrl();
     fileName = fileName.replace(QRegExp("[^-a-z0-9_]", Qt::CaseInsensitive), "");
@@ -130,19 +130,19 @@ KIcon WebSearchAbstract::icon() const
     return KIcon(fileName);
 }
 
-QString WebSearchAbstract::name()
+QString OnlineSearchAbstract::name()
 {
     if (m_name.isNull())
         m_name = label().replace(QRegExp("[^a-z0-9]", Qt::CaseInsensitive), QLatin1String(""));
     return m_name;
 }
 
-void WebSearchAbstract::cancel()
+void OnlineSearchAbstract::cancel()
 {
     m_hasBeenCanceled = true;
 }
 
-QStringList WebSearchAbstract::splitRespectingQuotationMarks(const QString &text)
+QStringList OnlineSearchAbstract::splitRespectingQuotationMarks(const QString &text)
 {
     int p1 = 0, p2, max = text.length();
     QStringList result;
@@ -161,7 +161,7 @@ QStringList WebSearchAbstract::splitRespectingQuotationMarks(const QString &text
     return result;
 }
 
-bool WebSearchAbstract::handleErrors(QNetworkReply *reply)
+bool OnlineSearchAbstract::handleErrors(QNetworkReply *reply)
 {
     if (m_hasBeenCanceled) {
         kDebug() << "Searching" << label() << "got cancelled";
@@ -177,7 +177,7 @@ bool WebSearchAbstract::handleErrors(QNetworkReply *reply)
     return true;
 }
 
-QString WebSearchAbstract::encodeURL(QString rawText)
+QString OnlineSearchAbstract::encodeURL(QString rawText)
 {
     const char *cur = httpUnsafeChars;
     while (*cur != '\0') {
@@ -188,7 +188,7 @@ QString WebSearchAbstract::encodeURL(QString rawText)
     return rawText;
 }
 
-QString WebSearchAbstract::decodeURL(QString rawText)
+QString OnlineSearchAbstract::decodeURL(QString rawText)
 {
     static QRegExp mimeRegExp("%([0-9A-Fa-f]{2})");
     while (mimeRegExp.indexIn(rawText) >= 0) {
@@ -201,7 +201,7 @@ QString WebSearchAbstract::decodeURL(QString rawText)
     return rawText;
 }
 
-QMap<QString, QString> WebSearchAbstract::formParameters(const QString &htmlText, const QString &formTagBegin)
+QMap<QString, QString> OnlineSearchAbstract::formParameters(const QString &htmlText, const QString &formTagBegin)
 {
     /// how to recognize HTML tags
     static const QString formTagEnd = QLatin1String("</form>");
@@ -283,7 +283,7 @@ QMap<QString, QString> WebSearchAbstract::formParameters(const QString &htmlText
     return result;
 }
 
-void WebSearchAbstract::setSuggestedHttpHeaders(QNetworkRequest &request, QNetworkReply *oldReply)
+void OnlineSearchAbstract::setSuggestedHttpHeaders(QNetworkRequest &request, QNetworkReply *oldReply)
 {
     if (oldReply != NULL)
         request.setRawHeader(QString("Referer").toAscii(), oldReply->url().toString().toAscii());
@@ -293,7 +293,7 @@ void WebSearchAbstract::setSuggestedHttpHeaders(QNetworkRequest &request, QNetwo
     request.setRawHeader(QString("Accept-Language").toAscii(), QString("en-US, en;q=0.9").toAscii());
 }
 
-QNetworkAccessManager *WebSearchAbstract::networkAccessManager()
+QNetworkAccessManager *OnlineSearchAbstract::networkAccessManager()
 {
     if (m_networkAccessManager == NULL) {
         srand(time(NULL));
@@ -305,7 +305,7 @@ QNetworkAccessManager *WebSearchAbstract::networkAccessManager()
     return m_networkAccessManager;
 }
 
-void WebSearchAbstract::setNetworkReplyTimeout(QNetworkReply *reply, int timeOutSec)
+void OnlineSearchAbstract::setNetworkReplyTimeout(QNetworkReply *reply, int timeOutSec)
 {
     QTimer *timer = new QTimer(reply);
     connect(timer, SIGNAL(timeout()), this, SLOT(networkReplyTimeout()));
@@ -314,7 +314,7 @@ void WebSearchAbstract::setNetworkReplyTimeout(QNetworkReply *reply, int timeOut
     connect(reply, SIGNAL(finished()), this, SLOT(networkReplyFinished()));
 }
 
-void WebSearchAbstract::networkReplyTimeout()
+void OnlineSearchAbstract::networkReplyTimeout()
 {
     QTimer *timer = static_cast<QTimer*>(sender());
     QNetworkReply *reply = m_mapTimerToReply[timer];
@@ -324,7 +324,7 @@ void WebSearchAbstract::networkReplyTimeout()
         m_mapTimerToReply.remove(timer);
     }
 }
-void WebSearchAbstract::networkReplyFinished()
+void OnlineSearchAbstract::networkReplyFinished()
 {
     QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
     QTimer *timer = m_mapTimerToReply.key(reply, NULL);
@@ -334,4 +334,4 @@ void WebSearchAbstract::networkReplyFinished()
     }
 }
 
-QNetworkAccessManager *WebSearchAbstract::m_networkAccessManager = NULL;
+QNetworkAccessManager *OnlineSearchAbstract::m_networkAccessManager = NULL;

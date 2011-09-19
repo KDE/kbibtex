@@ -42,17 +42,17 @@
 #include <KStandardDirs>
 #include <KConfigGroup>
 
-#include <websearchabstract.h>
-#include <websearchgeneral.h>
-#include <websearchbibsonomy.h>
-#include <websearchgooglescholar.h>
-#include <websearchpubmed.h>
-#include <websearchieeexplore.h>
-#include <websearchacmportal.h>
-#include <websearchsciencedirect.h>
-#include <websearchspringerlink.h>
-#include <websearcharxiv.h>
-#include <websearchjstor.h>
+#include <onlinesearchabstract.h>
+#include <onlinesearchgeneral.h>
+#include <onlinesearchbibsonomy.h>
+#include <onlinesearchgooglescholar.h>
+#include <onlinesearchpubmed.h>
+#include <onlinesearchieeexplore.h>
+#include <onlinesearchacmportal.h>
+#include <onlinesearchsciencedirect.h>
+#include <onlinesearchspringerlink.h>
+#include <onlinesearcharxiv.h>
+#include <onlinesearchjstor.h>
 #include <fileexporterbibtex.h>
 #include <element.h>
 #include <file.h>
@@ -84,15 +84,15 @@ public:
 
     MDIWidget *m;
     SearchResults *sr;
-    QMap<QListWidgetItem*, WebSearchAbstract*> itemToWebSearch;
-    QSet<WebSearchAbstract*> runningSearches;
+    QMap<QListWidgetItem*, OnlineSearchAbstract*> itemToOnlineSearch;
+    QSet<OnlineSearchAbstract*> runningSearches;
     KPushButton *searchButton;
     KPushButton *useEntryButton;
-    WebSearchQueryFormGeneral *generalQueryTermsForm;
+    OnlineSearchQueryFormGeneral *generalQueryTermsForm;
     QTabWidget *tabWidget;
     Entry *currentEntry;
     QProgressBar *progressBar;
-    QMap<WebSearchAbstract*, int> progressMap;
+    QMap<OnlineSearchAbstract*, int> progressMap;
 
     SearchFormPrivate(MDIWidget *mdiWidget, SearchResults *searchResults, SearchForm *parent)
             : p(parent), whichEnginesLabel(NULL), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))),
@@ -100,8 +100,8 @@ public:
         // nothing
     }
 
-    WebSearchQueryFormAbstract *currentQueryForm() {
-        return static_cast<WebSearchQueryFormAbstract*>(queryTermsStack->currentWidget());
+    OnlineSearchQueryFormAbstract *currentQueryForm() {
+        return static_cast<OnlineSearchQueryFormAbstract*>(queryTermsStack->currentWidget());
     }
 
     QWidget* createQueryTermsStack(QWidget *parent) {
@@ -137,7 +137,7 @@ public:
     }
 
     QWidget* createGeneralQueryTermsForm(QWidget *parent) {
-        generalQueryTermsForm = new WebSearchQueryFormGeneral(parent);
+        generalQueryTermsForm = new OnlineSearchQueryFormGeneral(parent);
         return generalQueryTermsForm;
     }
 
@@ -195,21 +195,21 @@ public:
     void loadEngines() {
         enginesList->clear();
 
-        addEngine(new WebSearchBibsonomy(p));
-        addEngine(new WebSearchGoogleScholar(p));
-        addEngine(new WebSearchAcmPortal(p));
-        addEngine(new WebSearchArXiv(p));
-        addEngine(new WebSearchPubMed(p));
-        addEngine(new WebSearchIEEEXplore(p));
-        addEngine(new WebSearchScienceDirect(p));
-        addEngine(new WebSearchSpringerLink(p));
-        addEngine(new WebSearchJStor(p));
+        addEngine(new OnlineSearchBibsonomy(p));
+        addEngine(new OnlineSearchGoogleScholar(p));
+        addEngine(new OnlineSearchAcmPortal(p));
+        addEngine(new OnlineSearchArXiv(p));
+        addEngine(new OnlineSearchPubMed(p));
+        addEngine(new OnlineSearchIEEEXplore(p));
+        addEngine(new OnlineSearchScienceDirect(p));
+        addEngine(new OnlineSearchSpringerLink(p));
+        addEngine(new OnlineSearchJStor(p));
 
         p->itemCheckChanged(NULL);
         updateGUI();
     }
 
-    void addEngine(WebSearchAbstract *engine) {
+    void addEngine(OnlineSearchAbstract *engine) {
         KConfigGroup configGroup(config, configGroupName);
 
         QListWidgetItem *item = new QListWidgetItem(engine->label(), enginesList);
@@ -218,19 +218,19 @@ public:
         item->setData(HomepageRole, engine->homepage());
         item->setData(NameRole, engine->name());
 
-        WebSearchQueryFormAbstract *widget = engine->customWidget(queryTermsStack);
-        item->setData(WidgetRole, QVariant::fromValue<WebSearchQueryFormAbstract*>(widget));
+        OnlineSearchQueryFormAbstract *widget = engine->customWidget(queryTermsStack);
+        item->setData(WidgetRole, QVariant::fromValue<OnlineSearchQueryFormAbstract*>(widget));
         if (widget != NULL)
             queryTermsStack->addWidget(widget);
 
-        itemToWebSearch.insert(item, engine);
+        itemToOnlineSearch.insert(item, engine);
         connect(engine, SIGNAL(foundEntry(Entry*)), p, SLOT(foundEntry(Entry*)));
         connect(engine, SIGNAL(stoppedSearch(int)), p, SLOT(stoppedSearch(int)));
         connect(engine, SIGNAL(progress(int, int)), p, SLOT(updateProgress(int, int)));
     }
 
     void switchToSearch() {
-        for (QMap<QListWidgetItem*, WebSearchAbstract*>::ConstIterator it = itemToWebSearch.constBegin(); it != itemToWebSearch.constEnd(); ++it)
+        for (QMap<QListWidgetItem*, OnlineSearchAbstract*>::ConstIterator it = itemToOnlineSearch.constBegin(); it != itemToOnlineSearch.constEnd(); ++it)
             disconnect(searchButton, SIGNAL(clicked()), it.value(), SLOT(cancel()));
 
         connect(searchButton, SIGNAL(clicked()), p, SLOT(startSearch()));
@@ -243,7 +243,7 @@ public:
     void switchToCancel() {
         disconnect(searchButton, SIGNAL(clicked()), p, SLOT(startSearch()));
 
-        for (QMap<QListWidgetItem*, WebSearchAbstract*>::ConstIterator it = itemToWebSearch.constBegin(); it != itemToWebSearch.constEnd(); ++it)
+        for (QMap<QListWidgetItem*, OnlineSearchAbstract*>::ConstIterator it = itemToOnlineSearch.constBegin(); it != itemToOnlineSearch.constEnd(); ++it)
             connect(searchButton, SIGNAL(clicked()), it.value(), SLOT(cancel()));
         searchButton->setText(i18n("Cancel"));
         searchButton->setIcon(KIcon("media-playback-stop"));
@@ -260,7 +260,7 @@ public:
 
         QStringList checkedEngines;
         QListWidgetItem *cursor = NULL;
-        for (QMap<QListWidgetItem*, WebSearchAbstract*>::ConstIterator it = itemToWebSearch.constBegin(); it != itemToWebSearch.constEnd(); ++it)
+        for (QMap<QListWidgetItem*, OnlineSearchAbstract*>::ConstIterator it = itemToOnlineSearch.constBegin(); it != itemToOnlineSearch.constEnd(); ++it)
             if (it.key()->checkState() == Qt::Checked) {
                 checkedEngines << it.key()->text();
                 cursor = it.key();
@@ -274,9 +274,9 @@ public:
         default: whichEnginesLabel->setText(i18n("Search engines <b>%1</b>, <b>%2</b>, and more are selected. <a href=\"changeEngine\">Change</a>", checkedEngines.first(), checkedEngines.at(1)));break;
         }
 
-        WebSearchQueryFormAbstract *currentQueryWidget = NULL;
+        OnlineSearchQueryFormAbstract *currentQueryWidget = NULL;
         if (checkedEngines.size() == 1)
-            currentQueryWidget = cursor->data(WidgetRole).value<WebSearchQueryFormAbstract*>();
+            currentQueryWidget = cursor->data(WidgetRole).value<OnlineSearchQueryFormAbstract*>();
         if (currentQueryWidget == NULL)
             currentQueryWidget = generalQueryTermsForm;
         queryTermsStack->setCurrentWidget(currentQueryWidget);
@@ -296,7 +296,7 @@ public:
 
     void currentStackWidgetChanged(int index) {
         for (int i = queryTermsStack->count() - 1; i >= 0; --i) {
-            WebSearchQueryFormAbstract *wsqfa = static_cast<WebSearchQueryFormAbstract*>(queryTermsStack->widget(i));
+            OnlineSearchQueryFormAbstract *wsqfa = static_cast<OnlineSearchQueryFormAbstract*>(queryTermsStack->widget(i));
             if (i == index)
                 connect(wsqfa, SIGNAL(returnPressed()), searchButton, SLOT(click()));
             else
@@ -330,7 +330,7 @@ void SearchForm::switchToEngines()
 
 void SearchForm::startSearch()
 {
-    WebSearchQueryFormAbstract *currentForm = d->currentQueryForm();
+    OnlineSearchQueryFormAbstract *currentForm = d->currentQueryForm();
     if (!currentForm->readyToStart()) {
         KMessageBox::sorry(this, i18n("Could not start searching the Internet:\nThe search terms are not complete or invalid."), i18n("Searching the Internet"));
         return;
@@ -347,7 +347,7 @@ void SearchForm::startSearch()
 
         QMap<QString, QString> queryTerms = d->generalQueryTermsForm->getQueryTerms();
         int numResults = d->generalQueryTermsForm->getNumResults();
-        for (QMap<QListWidgetItem*, WebSearchAbstract*>::ConstIterator it = d->itemToWebSearch.constBegin(); it != d->itemToWebSearch.constEnd(); ++it)
+        for (QMap<QListWidgetItem*, OnlineSearchAbstract*>::ConstIterator it = d->itemToOnlineSearch.constBegin(); it != d->itemToOnlineSearch.constEnd(); ++it)
             if (it.key()->checkState() == Qt::Checked) {
                 it.value()->startSearch(queryTerms, numResults);
                 d->runningSearches.insert(it.value());
@@ -359,7 +359,7 @@ void SearchForm::startSearch()
     } else {
         /// use the single selected search engine's specific form
 
-        for (QMap<QListWidgetItem*, WebSearchAbstract*>::ConstIterator it = d->itemToWebSearch.constBegin(); it != d->itemToWebSearch.constEnd(); ++it)
+        for (QMap<QListWidgetItem*, OnlineSearchAbstract*>::ConstIterator it = d->itemToOnlineSearch.constBegin(); it != d->itemToOnlineSearch.constEnd(); ++it)
             if (it.key()->checkState() == Qt::Checked) {
                 it.value()->startSearch();
                 d->runningSearches.insert(it.value());
@@ -380,7 +380,7 @@ void SearchForm::foundEntry(Entry*entry)
 
 void SearchForm::stoppedSearch(int resultCode)
 {
-    WebSearchAbstract *engine = static_cast<WebSearchAbstract *>(sender());
+    OnlineSearchAbstract *engine = static_cast<OnlineSearchAbstract *>(sender());
     if (d->runningSearches.remove(engine)) {
         kDebug() << "Search from engine" << engine->label() << "stopped with code" << resultCode  << (resultCode == 0 ? "(OK)" : "(Error)");
         if (d->runningSearches.isEmpty()) {
@@ -391,7 +391,7 @@ void SearchForm::stoppedSearch(int resultCode)
             QTimer::singleShot(1000, d->progressBar, SLOT(hide()));
         } else {
             QStringList remainingEngines;
-            foreach(WebSearchAbstract *running, d->runningSearches) {
+            foreach(OnlineSearchAbstract *running, d->runningSearches) {
                 remainingEngines.append(running->label());
             }
             if (!remainingEngines.isEmpty())
@@ -409,7 +409,7 @@ void SearchForm::tabSwitched(int newTab)
 void SearchForm::itemCheckChanged(QListWidgetItem *item)
 {
     int numCheckedEngines = 0;
-    for (QMap<QListWidgetItem*, WebSearchAbstract*>::ConstIterator it = d->itemToWebSearch.constBegin(); it != d->itemToWebSearch.constEnd(); ++it)
+    for (QMap<QListWidgetItem*, OnlineSearchAbstract*>::ConstIterator it = d->itemToOnlineSearch.constBegin(); it != d->itemToOnlineSearch.constEnd(); ++it)
         if (it.key()->checkState() == Qt::Checked)
             ++numCheckedEngines;
 
@@ -447,11 +447,11 @@ void SearchForm::copyFromEntry()
 
 void SearchForm::updateProgress(int cur, int total)
 {
-    WebSearchAbstract *ws = static_cast<WebSearchAbstract*>(sender());
+    OnlineSearchAbstract *ws = static_cast<OnlineSearchAbstract*>(sender());
     d->progressMap[ws] = total > 0 ? cur * 1000 / total : 0;
 
     int progress = 0, count = 0;
-    for (QMap<WebSearchAbstract*, int>::ConstIterator it = d->progressMap.constBegin(); it != d->progressMap.constEnd(); ++it, ++count)
+    for (QMap<OnlineSearchAbstract*, int>::ConstIterator it = d->progressMap.constBegin(); it != d->progressMap.constEnd(); ++it, ++count)
         progress += it.value();
 
     d->progressBar->setValue(count >= 1 ? progress / count : 0);

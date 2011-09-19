@@ -10,7 +10,7 @@ include_directories(
 	${CMAKE_CURRENT_SOURCE_DIR}/../gui/widgets
 	${CMAKE_CURRENT_SOURCE_DIR}/../libkbibtexio
 	${CMAKE_CURRENT_SOURCE_DIR}/../libkbibtexio/config
-	${CMAKE_CURRENT_SOURCE_DIR}/../websearch
+	${CMAKE_CURRENT_SOURCE_DIR}/../onlinesearch
 	${CMAKE_CURRENT_SOURCE_DIR}/../../../
 	${CMAKE_CURRENT_SOURCE_DIR}/../../
 	${CMAKE_CURRENT_SOURCE_DIR}/../
@@ -44,7 +44,7 @@ target_link_libraries( kbibtex${BINARY_POSTFIX}
   ${KDE4_KFILE_LIBS}
   kbibtexio
   kbibtexgui
-  kbibtexws
+  kbibtexos
 )
 
 install( TARGETS kbibtex${BINARY_POSTFIX}  ${INSTALL_TARGETS_DEFAULT_ARGS} )

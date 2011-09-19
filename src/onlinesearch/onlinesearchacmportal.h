@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2011 by Thomas Fischer                             *
+*   Copyright (C) 2004-2010 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -17,37 +17,48 @@
 *   Free Software Foundation, Inc.,                                       *
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
-#ifndef KBIBTEX_WEBSEARCH_GENERAL_H
-#define KBIBTEX_WEBSEARCH_GENERAL_H
+#ifndef KBIBTEX_ONLINESEARCH_ACMPORTAL_H
+#define KBIBTEX_ONLINESEARCH_ACMPORTAL_H
 
-#include <KSharedConfig>
+#include <QByteArray>
 
-#include "websearchabstract.h"
+#include <onlinesearchabstract.h>
 
 class QSpinBox;
-
+class KComboBox;
 class KLineEdit;
 
-class KBIBTEXWS_EXPORT WebSearchQueryFormGeneral : public WebSearchQueryFormAbstract
+/**
+ * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ */
+class KBIBTEXOS_EXPORT OnlineSearchAcmPortal : public OnlineSearchAbstract
 {
     Q_OBJECT
 
 public:
-    WebSearchQueryFormGeneral(QWidget *parent);
+    OnlineSearchAcmPortal(QWidget *parent);
+    ~OnlineSearchAcmPortal();
 
-    bool readyToStart() const;
-    void copyFromEntry(const Entry&);
+    virtual void startSearch();
+    virtual void startSearch(const QMap<QString, QString> &query, int numResults);
+    virtual QString label() const;
+    virtual OnlineSearchQueryFormAbstract* customWidget(QWidget *parent);
+    virtual KUrl homepage() const;
 
-    QMap<QString, QString> getQueryTerms();
-    int getNumResults();
+public slots:
+    void cancel();
+
+protected:
+    virtual QString favIconUrl() const;
+
+private slots:
+    void doneFetchingStartPage();
+    void doneFetchingSearchPage();
+    void doneFetchingBibTeX();
 
 private:
-    QMap<QString, KLineEdit*> queryFields;
-    QSpinBox *numResultsField;
-    const QString configGroupName;
-
-    void loadState();
-    void saveState();
+    class OnlineSearchAcmPortalPrivate;
+    OnlineSearchAcmPortalPrivate *d;
 };
 
-#endif // KBIBTEX_WEBSEARCH_GENERAL_H
+#endif // KBIBTEX_ONLINESEARCH_ACMPORTAL_H

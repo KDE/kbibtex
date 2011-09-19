@@ -32,11 +32,11 @@
 #include <KConfigGroup>
 
 #include "fileimporterbibtex.h"
-#include "websearcharxiv.h"
+#include "onlinesearcharxiv.h"
 #include "xsltransform.h"
 
 
-class WebSearchArXiv::WebSearchQueryFormArXiv : public WebSearchQueryFormAbstract
+class OnlineSearchArXiv::OnlineSearchQueryFormArXiv : public OnlineSearchQueryFormAbstract
 {
 private:
     QString configGroupName;
@@ -51,8 +51,8 @@ public:
     KLineEdit *lineEditFreeText;
     QSpinBox *numResultsField;
 
-    WebSearchQueryFormArXiv(QWidget *parent)
-            : WebSearchQueryFormAbstract(parent), configGroupName(QLatin1String("Search Engine arXiv.org")) {
+    OnlineSearchQueryFormArXiv(QWidget *parent)
+            : OnlineSearchQueryFormAbstract(parent), configGroupName(QLatin1String("Search Engine arXiv.org")) {
         QGridLayout *layout = new QGridLayout(this);
         layout->setMargin(0);
 
@@ -95,18 +95,18 @@ public:
     }
 };
 
-class WebSearchArXiv::WebSearchArXivPrivate
+class OnlineSearchArXiv::OnlineSearchArXivPrivate
 {
 private:
-    WebSearchArXiv *p;
+    OnlineSearchArXiv *p;
 
 public:
     XSLTransform xslt;
-    WebSearchQueryFormArXiv *form;
+    OnlineSearchQueryFormArXiv *form;
     const QString arXivQueryBaseUrl;
     int numSteps, curStep;
 
-    WebSearchArXivPrivate(WebSearchArXiv *parent)
+    OnlineSearchArXivPrivate(OnlineSearchArXiv *parent)
             : p(parent), xslt(KStandardDirs::locate("appdata", "arxiv2bibtex.xsl")),
             form(NULL), arXivQueryBaseUrl("http://export.arxiv.org/api/query?") {
         // nothing
@@ -131,18 +131,18 @@ public:
     }
 };
 
-WebSearchArXiv::WebSearchArXiv(QWidget *parent)
-        : WebSearchAbstract(parent), d(new WebSearchArXiv::WebSearchArXivPrivate(this))
+OnlineSearchArXiv::OnlineSearchArXiv(QWidget *parent)
+        : OnlineSearchAbstract(parent), d(new OnlineSearchArXiv::OnlineSearchArXivPrivate(this))
 {
     // nothing
 }
 
-WebSearchArXiv::~WebSearchArXiv()
+OnlineSearchArXiv::~OnlineSearchArXiv()
 {
     delete d;
 }
 
-void WebSearchArXiv::startSearch()
+void OnlineSearchArXiv::startSearch()
 {
     d->curStep = 0;
     d->numSteps = 1;
@@ -159,7 +159,7 @@ void WebSearchArXiv::startSearch()
     d->form->saveState();
 }
 
-void WebSearchArXiv::startSearch(const QMap<QString, QString> &query, int numResults)
+void OnlineSearchArXiv::startSearch(const QMap<QString, QString> &query, int numResults)
 {
     d->curStep = 0;
     d->numSteps = 1;
@@ -174,32 +174,32 @@ void WebSearchArXiv::startSearch(const QMap<QString, QString> &query, int numRes
     emit progress(0, d->numSteps);
 }
 
-QString WebSearchArXiv::label() const
+QString OnlineSearchArXiv::label() const
 {
     return i18n("arXiv.org");
 }
 
-QString WebSearchArXiv::favIconUrl() const
+QString OnlineSearchArXiv::favIconUrl() const
 {
     return QLatin1String("http://arxiv.org/favicon.ico");
 }
 
-WebSearchQueryFormAbstract* WebSearchArXiv::customWidget(QWidget *parent)
+OnlineSearchQueryFormAbstract* OnlineSearchArXiv::customWidget(QWidget *parent)
 {
-    return (d->form = new WebSearchArXiv::WebSearchQueryFormArXiv(parent));
+    return (d->form = new OnlineSearchArXiv::OnlineSearchQueryFormArXiv(parent));
 }
 
-KUrl WebSearchArXiv::homepage() const
+KUrl OnlineSearchArXiv::homepage() const
 {
     return KUrl("http://arxiv.org/");
 }
 
-void WebSearchArXiv::cancel()
+void OnlineSearchArXiv::cancel()
 {
-    WebSearchAbstract::cancel();
+    OnlineSearchAbstract::cancel();
 }
 
-void WebSearchArXiv::downloadDone()
+void OnlineSearchArXiv::downloadDone()
 {
     emit progress(++d->curStep, d->numSteps);
 

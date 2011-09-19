@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
 
     KGlobal::locale()->insertCatalog("libkbibtexio");
     KGlobal::locale()->insertCatalog("libkbibtexgui");
-    KGlobal::locale()->insertCatalog("libkbibtexws");
+    KGlobal::locale()->insertCatalog("libkbibtexos");
 
     KService::Ptr service = KService::serviceByDesktopPath("kbibtexpart.desktop");
     if (service.isNull())

@@ -74,7 +74,7 @@ include_directories(
 
 add_subdirectory( libkbibtexio )
 add_subdirectory( processing )
-add_subdirectory( websearch )
+add_subdirectory( onlinesearch )
 add_subdirectory( gui )
 add_subdirectory( program )
 add_subdirectory( parts )

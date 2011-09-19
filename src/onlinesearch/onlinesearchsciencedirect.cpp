@@ -25,13 +25,13 @@
 
 #include <encoderlatex.h>
 #include "fileimporterbibtex.h"
-#include "websearchsciencedirect.h"
+#include "onlinesearchsciencedirect.h"
 
 
-class WebSearchScienceDirect::WebSearchScienceDirectPrivate
+class OnlineSearchScienceDirect::OnlineSearchScienceDirectPrivate
 {
 private:
-    WebSearchScienceDirect *p;
+    OnlineSearchScienceDirect *p;
 
 public:
     QString queryFreetext, queryAuthor;
@@ -42,7 +42,7 @@ public:
     int runningJobs;
     int numSteps, curStep;
 
-    WebSearchScienceDirectPrivate(WebSearchScienceDirect *parent)
+    OnlineSearchScienceDirectPrivate(OnlineSearchScienceDirect *parent)
             : p(parent), scienceDirectBaseUrl(QLatin1String("http://www.sciencedirect.com/")) {
         // nothing
     }
@@ -57,25 +57,25 @@ public:
     }
 };
 
-WebSearchScienceDirect::WebSearchScienceDirect(QWidget *parent)
-        : WebSearchAbstract(parent), d(new WebSearchScienceDirectPrivate(this))
+OnlineSearchScienceDirect::OnlineSearchScienceDirect(QWidget *parent)
+        : OnlineSearchAbstract(parent), d(new OnlineSearchScienceDirectPrivate(this))
 {
     // nothing
 }
 
-WebSearchScienceDirect::~WebSearchScienceDirect()
+OnlineSearchScienceDirect::~OnlineSearchScienceDirect()
 {
     delete d;
 }
 
-void WebSearchScienceDirect::startSearch()
+void OnlineSearchScienceDirect::startSearch()
 {
     d->runningJobs = 0;
     m_hasBeenCanceled = false;
     emit stoppedSearch(resultNoError);
 }
 
-void WebSearchScienceDirect::startSearch(const QMap<QString, QString> &query, int numResults)
+void OnlineSearchScienceDirect::startSearch(const QMap<QString, QString> &query, int numResults)
 {
     d->runningJobs = 0;
     d->numFoundResults = 0;
@@ -99,32 +99,32 @@ void WebSearchScienceDirect::startSearch(const QMap<QString, QString> &query, in
     emit progress(0, d->numSteps);
 }
 
-QString WebSearchScienceDirect::label() const
+QString OnlineSearchScienceDirect::label() const
 {
     return i18n("ScienceDirect");
 }
 
-QString WebSearchScienceDirect::favIconUrl() const
+QString OnlineSearchScienceDirect::favIconUrl() const
 {
     return QLatin1String("http://www.sciencedirect.com/scidirimg/faviconSD.ico");
 }
 
-WebSearchQueryFormAbstract* WebSearchScienceDirect::customWidget(QWidget *)
+OnlineSearchQueryFormAbstract* OnlineSearchScienceDirect::customWidget(QWidget *)
 {
     return NULL;
 }
 
-KUrl WebSearchScienceDirect::homepage() const
+KUrl OnlineSearchScienceDirect::homepage() const
 {
     return KUrl("http://www.sciencedirect.com/");
 }
 
-void WebSearchScienceDirect::cancel()
+void OnlineSearchScienceDirect::cancel()
 {
-    WebSearchAbstract::cancel();
+    OnlineSearchAbstract::cancel();
 }
 
-void WebSearchScienceDirect::doneFetchingStartPage()
+void OnlineSearchScienceDirect::doneFetchingStartPage()
 {
     emit progress(++d->curStep, d->numSteps);
 
@@ -157,7 +157,7 @@ void WebSearchScienceDirect::doneFetchingStartPage()
         kDebug() << "url was" << reply->url().toString();
 }
 
-void WebSearchScienceDirect::doneFetchingResultPage()
+void OnlineSearchScienceDirect::doneFetchingResultPage()
 {
     --d->runningJobs;
     Q_ASSERT(d->runningJobs == 0);
@@ -199,7 +199,7 @@ void WebSearchScienceDirect::doneFetchingResultPage()
         kDebug() << "url was" << reply->url().toString();
 }
 
-void WebSearchScienceDirect::doneFetchingAbstractPage()
+void OnlineSearchScienceDirect::doneFetchingAbstractPage()
 {
     --d->runningJobs;
     Q_ASSERT(d->runningJobs >= 0);
@@ -239,7 +239,7 @@ void WebSearchScienceDirect::doneFetchingAbstractPage()
         kDebug() << "url was" << reply->url().toString();
 }
 
-void WebSearchScienceDirect::doneFetchingExportCitationPage()
+void OnlineSearchScienceDirect::doneFetchingExportCitationPage()
 {
     --d->runningJobs;
     Q_ASSERT(d->runningJobs >= 0);
@@ -287,7 +287,7 @@ void WebSearchScienceDirect::doneFetchingExportCitationPage()
         kDebug() << "url was" << reply->url().toString();
 }
 
-void WebSearchScienceDirect::doneFetchingBibTeX()
+void OnlineSearchScienceDirect::doneFetchingBibTeX()
 {
     emit progress(++d->curStep, d->numSteps);
 

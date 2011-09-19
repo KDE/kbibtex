@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2010 by Thomas Fischer                             *
+*   Copyright (C) 2004-2011 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -17,32 +17,27 @@
 *   Free Software Foundation, Inc.,                                       *
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
-#ifndef KBIBTEX_WEBSEARCH_ACMPORTAL_H
-#define KBIBTEX_WEBSEARCH_ACMPORTAL_H
 
-#include <QByteArray>
+#ifndef KBIBTEX_ONLINESEARCH_SCIENCEDIRECT_H
+#define KBIBTEX_ONLINESEARCH_SCIENCEDIRECT_H
 
-#include <websearchabstract.h>
-
-class QSpinBox;
-class KComboBox;
-class KLineEdit;
+#include <onlinesearchabstract.h>
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
-class KBIBTEXWS_EXPORT WebSearchAcmPortal : public WebSearchAbstract
+class KBIBTEXOS_EXPORT OnlineSearchScienceDirect : public OnlineSearchAbstract
 {
     Q_OBJECT
 
 public:
-    WebSearchAcmPortal(QWidget *parent);
-    ~WebSearchAcmPortal();
+    OnlineSearchScienceDirect(QWidget *parent);
+    ~OnlineSearchScienceDirect();
 
     virtual void startSearch();
     virtual void startSearch(const QMap<QString, QString> &query, int numResults);
     virtual QString label() const;
-    virtual WebSearchQueryFormAbstract* customWidget(QWidget *parent);
+    virtual OnlineSearchQueryFormAbstract* customWidget(QWidget *parent);
     virtual KUrl homepage() const;
 
 public slots:
@@ -51,14 +46,16 @@ public slots:
 protected:
     virtual QString favIconUrl() const;
 
+private:
+    class OnlineSearchScienceDirectPrivate;
+    OnlineSearchScienceDirectPrivate *d;
+
 private slots:
     void doneFetchingStartPage();
-    void doneFetchingSearchPage();
+    void doneFetchingResultPage();
+    void doneFetchingAbstractPage();
+    void doneFetchingExportCitationPage();
     void doneFetchingBibTeX();
-
-private:
-    class WebSearchAcmPortalPrivate;
-    WebSearchAcmPortalPrivate *d;
 };
 
-#endif // KBIBTEX_WEBSEARCH_ACMPORTAL_H
+#endif // KBIBTEX_ONLINESEARCH_SCIENCEDIRECT_H

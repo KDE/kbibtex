@@ -27,19 +27,19 @@
 
 #include "iocommon.h"
 #include "fileimporterbibtex.h"
-#include "websearchjstor.h"
+#include "onlinesearchjstor.h"
 
-class WebSearchJStor::WebSearchJStorPrivate
+class OnlineSearchJStor::OnlineSearchJStorPrivate
 {
 private:
-    WebSearchJStor *p;
+    OnlineSearchJStor *p;
 
 public:
     int numFoundResults, curStep, numSteps;
     static const QString jstorBaseUrl;
     KUrl queryUrl;
 
-    WebSearchJStorPrivate(WebSearchJStor *parent)
+    OnlineSearchJStorPrivate(OnlineSearchJStor *parent)
             : p(parent) {
         // nothing
     }
@@ -88,20 +88,20 @@ public:
     }
 };
 
-const QString WebSearchJStor::WebSearchJStorPrivate::jstorBaseUrl = QLatin1String("http://www.jstor.org/");
+const QString OnlineSearchJStor::OnlineSearchJStorPrivate::jstorBaseUrl = QLatin1String("http://www.jstor.org/");
 
-WebSearchJStor::WebSearchJStor(QWidget *parent)
-        : WebSearchAbstract(parent), d(new WebSearchJStorPrivate(this))
+OnlineSearchJStor::OnlineSearchJStor(QWidget *parent)
+        : OnlineSearchAbstract(parent), d(new OnlineSearchJStorPrivate(this))
 {
     // nothing
 }
 
-WebSearchJStor::~WebSearchJStor()
+OnlineSearchJStor::~OnlineSearchJStor()
 {
     delete d;
 }
 
-void WebSearchJStor::startSearch(const QMap<QString, QString> &query, int numResults)
+void OnlineSearchJStor::startSearch(const QMap<QString, QString> &query, int numResults)
 {
     m_hasBeenCanceled = false;
     d->curStep = 0;
@@ -151,38 +151,38 @@ void WebSearchJStor::startSearch(const QMap<QString, QString> &query, int numRes
     emit progress(d->curStep, d->numSteps);
 }
 
-void WebSearchJStor::startSearch()
+void OnlineSearchJStor::startSearch()
 {
     m_hasBeenCanceled = false;
     emit stoppedSearch(resultNoError);
 }
 
-QString WebSearchJStor::label() const
+QString OnlineSearchJStor::label() const
 {
     return i18n("JSTOR");
 }
 
-QString WebSearchJStor::favIconUrl() const
+QString OnlineSearchJStor::favIconUrl() const
 {
     return QLatin1String("http://www.jstor.org/favicon.ico");
 }
 
-WebSearchQueryFormAbstract* WebSearchJStor::customWidget(QWidget *)
+OnlineSearchQueryFormAbstract* OnlineSearchJStor::customWidget(QWidget *)
 {
     return NULL;
 }
 
-KUrl WebSearchJStor::homepage() const
+KUrl OnlineSearchJStor::homepage() const
 {
     return KUrl("http://www.jstor.org/");
 }
 
-void WebSearchJStor::cancel()
+void OnlineSearchJStor::cancel()
 {
-    WebSearchAbstract::cancel();
+    OnlineSearchAbstract::cancel();
 }
 
-void WebSearchJStor::doneFetchingStartPage()
+void OnlineSearchJStor::doneFetchingStartPage()
 {
     emit progress(++d->curStep, d->numSteps);
 
@@ -198,7 +198,7 @@ void WebSearchJStor::doneFetchingStartPage()
         kDebug() << "url was" << reply->url().toString();
 }
 
-void WebSearchJStor::doneFetchingResultPage()
+void OnlineSearchJStor::doneFetchingResultPage()
 {
     emit progress(++d->curStep, d->numSteps);
 
@@ -231,7 +231,7 @@ void WebSearchJStor::doneFetchingResultPage()
         kDebug() << "url was" << reply->url().toString();
 }
 
-void WebSearchJStor::doneFetchingSummaryPage()
+void OnlineSearchJStor::doneFetchingSummaryPage()
 {
     emit progress(++d->curStep, d->numSteps);
 

@@ -32,12 +32,12 @@
 #include <fileimporterbibtex.h>
 #include <file.h>
 #include <entry.h>
-#include "websearchacmportal.h"
+#include "onlinesearchacmportal.h"
 
-class WebSearchAcmPortal::WebSearchAcmPortalPrivate
+class OnlineSearchAcmPortal::OnlineSearchAcmPortalPrivate
 {
 private:
-    WebSearchAcmPortal *p;
+    OnlineSearchAcmPortal *p;
 
 public:
     QString joinedQueryString;
@@ -48,7 +48,7 @@ public:
 
     int curStep, numSteps;
 
-    WebSearchAcmPortalPrivate(WebSearchAcmPortal *parent)
+    OnlineSearchAcmPortalPrivate(OnlineSearchAcmPortal *parent)
             : p(parent), numExpectedResults(0), numFoundResults(0),
             acmPortalBaseUrl(QLatin1String("http://dl.acm.org/")) {
         // nothing
@@ -75,18 +75,18 @@ public:
     }
 };
 
-WebSearchAcmPortal::WebSearchAcmPortal(QWidget *parent)
-        : WebSearchAbstract(parent), d(new WebSearchAcmPortalPrivate(this))
+OnlineSearchAcmPortal::OnlineSearchAcmPortal(QWidget *parent)
+        : OnlineSearchAbstract(parent), d(new OnlineSearchAcmPortalPrivate(this))
 {
     // nothing
 }
 
-WebSearchAcmPortal::~WebSearchAcmPortal()
+OnlineSearchAcmPortal::~OnlineSearchAcmPortal()
 {
     delete d;
 }
 
-void WebSearchAcmPortal::startSearch(const QMap<QString, QString> &query, int numResults)
+void OnlineSearchAcmPortal::startSearch(const QMap<QString, QString> &query, int numResults)
 {
     m_hasBeenCanceled = false;
     d->joinedQueryString.clear();
@@ -110,39 +110,39 @@ void WebSearchAcmPortal::startSearch(const QMap<QString, QString> &query, int nu
     emit progress(0, d->numSteps);
 }
 
-void WebSearchAcmPortal::startSearch()
+void OnlineSearchAcmPortal::startSearch()
 {
     m_hasBeenCanceled = false;
     emit stoppedSearch(resultNoError);
 }
 
-QString WebSearchAcmPortal::label() const
+QString OnlineSearchAcmPortal::label() const
 {
     return i18n("ACM Digital Library");
 }
 
-QString WebSearchAcmPortal::favIconUrl() const
+QString OnlineSearchAcmPortal::favIconUrl() const
 {
     return QLatin1String("http://portal.acm.org/favicon.ico");
 }
 
-WebSearchQueryFormAbstract* WebSearchAcmPortal::customWidget(QWidget *)
+OnlineSearchQueryFormAbstract* OnlineSearchAcmPortal::customWidget(QWidget *)
 {
     return NULL;
 }
 
-KUrl WebSearchAcmPortal::homepage() const
+KUrl OnlineSearchAcmPortal::homepage() const
 {
     return KUrl("http://portal.acm.org/");
 }
 
-void WebSearchAcmPortal::cancel()
+void OnlineSearchAcmPortal::cancel()
 {
-    WebSearchAbstract::cancel();
+    OnlineSearchAbstract::cancel();
     // FIXME d->page->triggerAction(QWebPage::Stop);
 }
 
-void WebSearchAcmPortal::doneFetchingStartPage()
+void OnlineSearchAcmPortal::doneFetchingStartPage()
 {
     emit progress(++d->curStep, d->numSteps);
 
@@ -172,7 +172,7 @@ void WebSearchAcmPortal::doneFetchingStartPage()
         kDebug() << "url was" << reply->url().toString();
 }
 
-void WebSearchAcmPortal::doneFetchingSearchPage()
+void OnlineSearchAcmPortal::doneFetchingSearchPage()
 {
     emit progress(++d->curStep, d->numSteps);
 
@@ -212,7 +212,7 @@ void WebSearchAcmPortal::doneFetchingSearchPage()
         kDebug() << "url was" << reply->url().toString();
 }
 
-void WebSearchAcmPortal::doneFetchingBibTeX()
+void OnlineSearchAcmPortal::doneFetchingBibTeX()
 {
     emit progress(++d->curStep, d->numSteps);
 

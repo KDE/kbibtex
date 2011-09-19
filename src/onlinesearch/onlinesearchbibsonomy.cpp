@@ -35,9 +35,9 @@
 #include <fileimporterbibtex.h>
 #include <file.h>
 #include <entry.h>
-#include "websearchbibsonomy.h"
+#include "onlinesearchbibsonomy.h"
 
-class WebSearchBibsonomy::WebSearchQueryFormBibsonomy : public WebSearchQueryFormAbstract
+class OnlineSearchBibsonomy::OnlineSearchQueryFormBibsonomy : public OnlineSearchQueryFormAbstract
 {
 private:
     QString configGroupName;
@@ -54,8 +54,8 @@ public:
     KLineEdit *lineEditSearchTerm;
     QSpinBox *numResultsField;
 
-    WebSearchQueryFormBibsonomy(QWidget *widget)
-            : WebSearchQueryFormAbstract(widget), configGroupName(QLatin1String("Search Engine Bibsonomy")) {
+    OnlineSearchQueryFormBibsonomy(QWidget *widget)
+            : OnlineSearchQueryFormAbstract(widget), configGroupName(QLatin1String("Search Engine Bibsonomy")) {
         QGridLayout *layout = new QGridLayout(this);
         layout->setMargin(0);
 
@@ -108,16 +108,16 @@ public:
     }
 };
 
-class WebSearchBibsonomy::WebSearchBibsonomyPrivate
+class OnlineSearchBibsonomy::OnlineSearchBibsonomyPrivate
 {
 private:
-    WebSearchBibsonomy *p;
+    OnlineSearchBibsonomy *p;
 
 public:
-    WebSearchQueryFormBibsonomy *form;
+    OnlineSearchQueryFormBibsonomy *form;
     int numSteps, curStep;
 
-    WebSearchBibsonomyPrivate(WebSearchBibsonomy *parent)
+    OnlineSearchBibsonomyPrivate(OnlineSearchBibsonomy *parent)
             : p(parent), form(NULL) {
         // nothing
     }
@@ -172,18 +172,18 @@ public:
     }
 };
 
-WebSearchBibsonomy::WebSearchBibsonomy(QWidget *parent)
-        : WebSearchAbstract(parent), d(new WebSearchBibsonomyPrivate(this))
+OnlineSearchBibsonomy::OnlineSearchBibsonomy(QWidget *parent)
+        : OnlineSearchAbstract(parent), d(new OnlineSearchBibsonomyPrivate(this))
 {
     // nothing
 }
 
-WebSearchBibsonomy::~WebSearchBibsonomy()
+OnlineSearchBibsonomy::~OnlineSearchBibsonomy()
 {
     delete d;
 }
 
-void WebSearchBibsonomy::startSearch(const QMap<QString, QString> &query, int numResults)
+void OnlineSearchBibsonomy::startSearch(const QMap<QString, QString> &query, int numResults)
 {
     m_hasBeenCanceled = false;
     d->curStep = 0;
@@ -198,7 +198,7 @@ void WebSearchBibsonomy::startSearch(const QMap<QString, QString> &query, int nu
     emit progress(0, d->numSteps);
 }
 
-void WebSearchBibsonomy::startSearch()
+void OnlineSearchBibsonomy::startSearch()
 {
     m_hasBeenCanceled = false;
     d->curStep = 0;
@@ -215,33 +215,33 @@ void WebSearchBibsonomy::startSearch()
     d->form->saveState();
 }
 
-QString WebSearchBibsonomy::label() const
+QString OnlineSearchBibsonomy::label() const
 {
     return i18n("Bibsonomy");
 }
 
-QString WebSearchBibsonomy::favIconUrl() const
+QString OnlineSearchBibsonomy::favIconUrl() const
 {
     return QLatin1String("http://www.bibsonomy.org/resources/image/favicon.png");
 }
 
-WebSearchQueryFormAbstract* WebSearchBibsonomy::customWidget(QWidget *parent)
+OnlineSearchQueryFormAbstract* OnlineSearchBibsonomy::customWidget(QWidget *parent)
 {
-    d->form = new WebSearchBibsonomy::WebSearchQueryFormBibsonomy(parent);
+    d->form = new OnlineSearchBibsonomy::OnlineSearchQueryFormBibsonomy(parent);
     return d->form;
 }
 
-KUrl WebSearchBibsonomy::homepage() const
+KUrl OnlineSearchBibsonomy::homepage() const
 {
     return KUrl("http://www.bibsonomy.org/");
 }
 
-void WebSearchBibsonomy::cancel()
+void OnlineSearchBibsonomy::cancel()
 {
-    WebSearchAbstract::cancel();
+    OnlineSearchAbstract::cancel();
 }
 
-void WebSearchBibsonomy::downloadDone()
+void OnlineSearchBibsonomy::downloadDone()
 {
     emit progress(++d->curStep, d->numSteps);
 
