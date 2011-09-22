@@ -36,6 +36,7 @@
 #include <KConfigGroup>
 #include <kio/netaccess.h>
 
+#include <findpdf.h>
 #include <entry.h>
 #include <comment.h>
 #include <macro.h>
@@ -60,7 +61,7 @@ private:
     Comment *internalComment;
     ElementEditor *p;
     ElementWidget *previousWidget, *referenceWidget, *sourceWidget;
-    KPushButton *buttonCheckWithBibTeX;
+    KPushButton *buttonCheckWithBibTeX, *buttonFindPDF;
     QCheckBox *checkBoxForceShowAllWidgets;
     KSharedConfigPtr config;
 
@@ -111,6 +112,10 @@ public:
         buttonCheckWithBibTeX = new KPushButton(KIcon("tools-check-spelling"), i18n("Check with BibTeX"), p);
         layout->addWidget(buttonCheckWithBibTeX, 2, 2, 1, 1);
         connect(buttonCheckWithBibTeX, SIGNAL(clicked()), p, SLOT(checkBibTeX()));
+
+        buttonFindPDF = new KPushButton(i18n("Find PDF"), p);
+        layout->addWidget(buttonFindPDF, 2, 3, 1, 1);
+        connect(buttonFindPDF, SIGNAL(clicked()), p, SLOT(findPDF()));
 
         if (EntryConfiguredWidget::canEdit(element))
             for (EntryLayout::ConstIterator elit = el->constBegin(); elit != el->constEnd(); ++elit) {
@@ -496,6 +501,13 @@ void ElementEditor::tabChanged()
 void ElementEditor::checkBibTeX()
 {
     d->checkBibTeX();
+}
+
+void ElementEditor::findPDF(){
+    FindPDF *find=new FindPDF(this);
+    Entry tempEntry;
+    d->apply(&tempEntry);
+    find->search(tempEntry);
 }
 
 void ElementEditor::childModified(bool m)
