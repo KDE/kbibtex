@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2011 by Thomas Fischer                             *
+*   Copyright (C) 2004-2010 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -17,22 +17,21 @@
 *   Free Software Foundation, Inc.,                                       *
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
+#ifndef KBIBTEX_ONLINESEARCH_JSTOR_H
+#define KBIBTEX_ONLINESEARCH_JSTOR_H
 
-#ifndef KBIBTEX_ONLINESEARCH_PUBMED_H
-#define KBIBTEX_ONLINESEARCH_PUBMED_H
-
-#include "onlinesearchabstract.h"
+#include <onlinesearchabstract.h>
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
-class KBIBTEXOS_EXPORT OnlineSearchPubMed : public OnlineSearchAbstract
+class KBIBTEXNETWORKING_EXPORT OnlineSearchJStor : public OnlineSearchAbstract
 {
     Q_OBJECT
 
 public:
-    OnlineSearchPubMed(QWidget *parent);
-    ~OnlineSearchPubMed();
+    OnlineSearchJStor(QWidget *parent);
+    ~OnlineSearchJStor();
 
     virtual void startSearch();
     virtual void startSearch(const QMap<QString, QString> &query, int numResults);
@@ -47,12 +46,13 @@ protected:
     virtual QString favIconUrl() const;
 
 private slots:
-    void eSearchDone();
-    void eFetchDone();
+    void doneFetchingStartPage();
+    void doneFetchingResultPage();
+    void doneFetchingSummaryPage();
 
 private:
-    class OnlineSearchPubMedPrivate;
-    OnlineSearchPubMedPrivate *d;
+    class OnlineSearchJStorPrivate;
+    OnlineSearchJStorPrivate *d;
 };
 
-#endif // KBIBTEX_ONLINESEARCH_PUBMED_H
+#endif // KBIBTEX_ONLINESEARCH_JSTOR_H

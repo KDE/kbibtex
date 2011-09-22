@@ -20,14 +20,13 @@
 #ifndef KBIBTEX_ONLINESEARCH_ABSTRACT_H
 #define KBIBTEX_ONLINESEARCH_ABSTRACT_H
 
-#include "kbibtexos_export.h"
+#include <kbibtexnetworking_export.h>
 
 #include <QObject>
 #include <QMap>
 #include <QString>
 #include <QWidget>
 #include <QMetaType>
-#include <QNetworkCookieJar>
 
 #include <KIcon>
 #include <KUrl>
@@ -39,24 +38,10 @@ class QNetworkAccessManager;
 class QNetworkReply;
 class QNetworkRequest;
 
-
-class HTTPEquivCookieJar: public QNetworkCookieJar
-{
-    Q_OBJECT
-
-public:
-    HTTPEquivCookieJar(QNetworkAccessManager *parent);
-
-    void checkForHttpEqiuv(const QString &htmlCode, const QUrl &url);
-
-private:
-    QNetworkAccessManager *m_nam;
-};
-
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
-class KBIBTEXOS_EXPORT OnlineSearchQueryFormAbstract : public QWidget
+class KBIBTEXNETWORKING_EXPORT OnlineSearchQueryFormAbstract : public QWidget
 {
     Q_OBJECT
 
@@ -84,7 +69,7 @@ Q_DECLARE_METATYPE(OnlineSearchQueryFormAbstract*)
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
-class KBIBTEXOS_EXPORT OnlineSearchAbstract : public QObject
+class KBIBTEXNETWORKING_EXPORT OnlineSearchAbstract : public QObject
 {
     Q_OBJECT
 
@@ -154,8 +139,6 @@ private:
     static const char *httpUnsafeChars;
     static QNetworkAccessManager *m_networkAccessManager;
     QMap<QTimer*, QNetworkReply*> m_mapTimerToReply;
-    static const QStringList m_userAgentList;
-    QString m_userAgent;
 
 private slots:
     void networkReplyTimeout();

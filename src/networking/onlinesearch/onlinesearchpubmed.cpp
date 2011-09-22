@@ -26,6 +26,7 @@
 #include <KStandardDirs>
 #include <KMessageBox>
 
+#include <httpequivcookiejar.h>
 #include "onlinesearchpubmed.h"
 #include "xsltransform.h"
 #include "fileimporterbibtex.h"
@@ -125,7 +126,7 @@ void OnlineSearchPubMed::startSearch(const QMap<QString, QString> &query, int nu
     m_hasBeenCanceled = false;
     QNetworkRequest request(d->buildQueryUrl(query, numResults));
     setSuggestedHttpHeaders(request);
-    QNetworkReply *reply = networkAccessManager()->get(request);
+    QNetworkReply *reply = HTTPEquivCookieJar::networkAccessManager()->get(request);
     setNetworkReplyTimeout(reply);
     connect(reply, SIGNAL(finished()), this, SLOT(eSearchDone()));
 
@@ -181,7 +182,7 @@ void OnlineSearchPubMed::eSearchDone()
                 /// fetch full bibliographic details for found PubMed ids
                 QNetworkRequest request(d->buildFetchIdUrl(idList));
                 setSuggestedHttpHeaders(request, reply);
-                QNetworkReply *newReply = networkAccessManager()->get(request);
+                QNetworkReply *newReply = HTTPEquivCookieJar::networkAccessManager()->get(request);
                 setNetworkReplyTimeout(newReply);
                 connect(newReply, SIGNAL(finished()), this, SLOT(eFetchDone()));
             }

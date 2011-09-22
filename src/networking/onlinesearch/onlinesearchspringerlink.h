@@ -18,21 +18,22 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#ifndef KBIBTEX_ONLINESEARCH_SCIENCEDIRECT_H
-#define KBIBTEX_ONLINESEARCH_SCIENCEDIRECT_H
+#ifndef KBIBTEX_ONLINESEARCH_SPRINGERLINK_H
+#define KBIBTEX_ONLINESEARCH_SPRINGERLINK_H
 
 #include <onlinesearchabstract.h>
+
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
-class KBIBTEXOS_EXPORT OnlineSearchScienceDirect : public OnlineSearchAbstract
+class KBIBTEXNETWORKING_EXPORT OnlineSearchSpringerLink : public OnlineSearchAbstract
 {
     Q_OBJECT
 
 public:
-    OnlineSearchScienceDirect(QWidget *parent);
-    ~OnlineSearchScienceDirect();
+    OnlineSearchSpringerLink(QWidget *parent);
+    ~OnlineSearchSpringerLink();
 
     virtual void startSearch();
     virtual void startSearch(const QMap<QString, QString> &query, int numResults);
@@ -46,16 +47,18 @@ public slots:
 protected:
     virtual QString favIconUrl() const;
 
-private:
-    class OnlineSearchScienceDirectPrivate;
-    OnlineSearchScienceDirectPrivate *d;
-
 private slots:
-    void doneFetchingStartPage();
     void doneFetchingResultPage();
-    void doneFetchingAbstractPage();
-    void doneFetchingExportCitationPage();
+    void doneFetchingExportPage();
     void doneFetchingBibTeX();
+
+private:
+    class OnlineSearchQueryFormSpringerLink;
+
+    class OnlineSearchSpringerLinkPrivate;
+    OnlineSearchSpringerLinkPrivate *d;
+
+    void processNextQueuedUrl();
 };
 
-#endif // KBIBTEX_ONLINESEARCH_SCIENCEDIRECT_H
+#endif // KBIBTEX_ONLINESEARCH_SPRINGERLINK_H

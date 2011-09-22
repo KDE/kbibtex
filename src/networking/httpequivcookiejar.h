@@ -17,37 +17,29 @@
 *   Free Software Foundation, Inc.,                                       *
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
-#ifndef KBIBTEX_ONLINESEARCH_GENERAL_H
-#define KBIBTEX_ONLINESEARCH_GENERAL_H
 
-#include <KSharedConfig>
+#include <QNetworkCookieJar>
 
-#include "onlinesearchabstract.h"
+class QNetworkAccessManager;
 
-class QSpinBox;
-
-class KLineEdit;
-
-class KBIBTEXOS_EXPORT OnlineSearchQueryFormGeneral : public OnlineSearchQueryFormAbstract
+/**
+ * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ */
+class HTTPEquivCookieJar: public QNetworkCookieJar
 {
     Q_OBJECT
 
 public:
-    OnlineSearchQueryFormGeneral(QWidget *parent);
+    static QNetworkAccessManager *networkAccessManager();
+    static QString userAgent();
 
-    bool readyToStart() const;
-    void copyFromEntry(const Entry&);
+    void checkForHttpEqiuv(const QString &htmlCode, const QUrl &url);
 
-    QMap<QString, QString> getQueryTerms();
-    int getNumResults();
+protected:
+    HTTPEquivCookieJar(QObject *parent = NULL);
 
 private:
-    QMap<QString, KLineEdit*> queryFields;
-    QSpinBox *numResultsField;
-    const QString configGroupName;
-
-    void loadState();
-    void saveState();
+    static QNetworkAccessManager *m_networkAccessManager;
+    static const QStringList m_userAgentList;
+    static QString m_userAgent;
 };
-
-#endif // KBIBTEX_ONLINESEARCH_GENERAL_H

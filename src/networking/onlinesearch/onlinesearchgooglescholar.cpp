@@ -33,6 +33,7 @@
 #include <KIcon>
 
 #include <fileimporterbibtex.h>
+#include <httpequivcookiejar.h>
 #include "onlinesearchgooglescholar.h"
 
 
@@ -104,7 +105,7 @@ void OnlineSearchGoogleScholar::startSearch(const QMap<QString, QString> &query,
     KUrl url(d->startPageUrl);
     QNetworkRequest request(url);
     setSuggestedHttpHeaders(request);
-    QNetworkReply *reply = networkAccessManager()->get(request);
+    QNetworkReply *reply = HTTPEquivCookieJar::networkAccessManager()->get(request);
     setNetworkReplyTimeout(reply);
     connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingStartPage()));
 
@@ -127,7 +128,7 @@ void OnlineSearchGoogleScholar::doneFetchingStartPage()
 
         QNetworkRequest request(url);
         setSuggestedHttpHeaders(request, reply);
-        QNetworkReply *newReply = networkAccessManager()->get(request);
+        QNetworkReply *newReply = HTTPEquivCookieJar::networkAccessManager()->get(request);
         setNetworkReplyTimeout(newReply);
         connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingConfigPage()));
     } else
@@ -153,7 +154,7 @@ void OnlineSearchGoogleScholar::doneFetchingConfigPage()
 
         QNetworkRequest request(url);
         setSuggestedHttpHeaders(request, reply);
-        QNetworkReply *newReply = networkAccessManager()->get(request);
+        QNetworkReply *newReply = HTTPEquivCookieJar::networkAccessManager()->get(request);
         setNetworkReplyTimeout(newReply);
         connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingSetConfigPage()));
     } else
@@ -186,7 +187,7 @@ void OnlineSearchGoogleScholar::doneFetchingSetConfigPage()
 
         QNetworkRequest request(url);
         setSuggestedHttpHeaders(request, reply);
-        QNetworkReply *newReply = networkAccessManager()->get(request);
+        QNetworkReply *newReply = HTTPEquivCookieJar::networkAccessManager()->get(request);
         setNetworkReplyTimeout(newReply);
         connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingQueryPage()));
     } else
@@ -213,7 +214,7 @@ void OnlineSearchGoogleScholar::doneFetchingQueryPage()
         if (!d->listBibTeXurls.isEmpty()) {
             QNetworkRequest request(d->listBibTeXurls.first());
             setSuggestedHttpHeaders(request, reply);
-            QNetworkReply *newReply = networkAccessManager()->get(request);
+            QNetworkReply *newReply = HTTPEquivCookieJar::networkAccessManager()->get(request);
             setNetworkReplyTimeout(newReply);
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingBibTeX()));
             d->listBibTeXurls.removeFirst();
@@ -258,7 +259,7 @@ void OnlineSearchGoogleScholar::doneFetchingBibTeX()
         if (!d->listBibTeXurls.isEmpty()) {
             QNetworkRequest request(d->listBibTeXurls.first());
             setSuggestedHttpHeaders(request, reply);
-            QNetworkReply *newReply = networkAccessManager()->get(request);
+            QNetworkReply *newReply = HTTPEquivCookieJar::networkAccessManager()->get(request);
             setNetworkReplyTimeout(newReply);
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingBibTeX()));
             d->listBibTeXurls.removeFirst();

@@ -26,7 +26,7 @@
 #include <encoderlatex.h>
 #include "fileimporterbibtex.h"
 #include "onlinesearchsciencedirect.h"
-
+#include "httpequivcookiejar.h"
 
 class OnlineSearchScienceDirect::OnlineSearchScienceDirectPrivate
 {
@@ -92,7 +92,7 @@ void OnlineSearchScienceDirect::startSearch(const QMap<QString, QString> &query,
     ++d->runningJobs;
     QNetworkRequest request(d->scienceDirectBaseUrl);
     setSuggestedHttpHeaders(request);
-    QNetworkReply *reply = networkAccessManager()->get(request);
+    QNetworkReply *reply = HTTPEquivCookieJar::networkAccessManager()->get(request);
     setNetworkReplyTimeout(reply);
     connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingStartPage()));
 
@@ -134,7 +134,7 @@ void OnlineSearchScienceDirect::doneFetchingStartPage()
     QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
     if (handleErrors(reply)) {
         const QString htmlText = reply->readAll();
-        static_cast<HTTPEquivCookieJar*>(networkAccessManager()->cookieJar())->checkForHttpEqiuv(htmlText, reply->url());
+        static_cast<HTTPEquivCookieJar*>(HTTPEquivCookieJar::networkAccessManager()->cookieJar())->checkForHttpEqiuv(htmlText, reply->url());
         KUrl url(d->scienceDirectBaseUrl + "science");
         QMap<QString, QString> inputMap = formParameters(htmlText, QLatin1String("<form name=\"qkSrch\""));
         inputMap["qs_all"] = d->queryFreetext;
@@ -150,7 +150,7 @@ void OnlineSearchScienceDirect::doneFetchingStartPage()
         ++d->runningJobs;
         QNetworkRequest request(url);
         setSuggestedHttpHeaders(request, reply);
-        QNetworkReply *newReply = networkAccessManager()->get(request);
+        QNetworkReply *newReply = HTTPEquivCookieJar::networkAccessManager()->get(request);
         connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingResultPage()));
         setNetworkReplyTimeout(newReply);
     } else
@@ -169,14 +169,14 @@ void OnlineSearchScienceDirect::doneFetchingResultPage()
             ++d->runningJobs;
             QNetworkRequest request(redirUrl);
             setSuggestedHttpHeaders(request, reply);
-            QNetworkReply *newReply = networkAccessManager()->get(request);
+            QNetworkReply *newReply = HTTPEquivCookieJar::networkAccessManager()->get(request);
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingResultPage()));
             setNetworkReplyTimeout(newReply);
         } else {
             emit progress(++d->curStep, d->numSteps);
 
             const QString htmlText = reply->readAll();
-            static_cast<HTTPEquivCookieJar*>(networkAccessManager()->cookieJar())->checkForHttpEqiuv(htmlText, reply->url());
+            static_cast<HTTPEquivCookieJar*>(HTTPEquivCookieJar::networkAccessManager()->cookieJar())->checkForHttpEqiuv(htmlText, reply->url());
             int p = -1, p2 = -1;
             while ((p = htmlText.indexOf("http://www.sciencedirect.com/science/article/pii/", p + 1)) >= 0 && (p2 = htmlText.indexOf("\"", p + 1)) >= 0)
                 if (d->numFoundResults < d->numExpectedResults) {
@@ -185,7 +185,7 @@ void OnlineSearchScienceDirect::doneFetchingResultPage()
                     KUrl url(htmlText.mid(p, p2 - p));
                     QNetworkRequest request(url);
                     setSuggestedHttpHeaders(request, reply);
-                    QNetworkReply *newReply = networkAccessManager()->get(request);
+                    QNetworkReply *newReply = HTTPEquivCookieJar::networkAccessManager()->get(request);
                     setNetworkReplyTimeout(newReply);
                     connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingAbstractPage()));
                 }
@@ -211,21 +211,21 @@ void OnlineSearchScienceDirect::doneFetchingAbstractPage()
             ++d->runningJobs;
             QNetworkRequest request(redirUrl);
             setSuggestedHttpHeaders(request, reply);
-            QNetworkReply *newReply = networkAccessManager()->get(request);
+            QNetworkReply *newReply = HTTPEquivCookieJar::networkAccessManager()->get(request);
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingAbstractPage()));
             setNetworkReplyTimeout(newReply);
         } else {
             emit progress(++d->curStep, d->numSteps);
 
             const QString htmlText = reply->readAll();
-            static_cast<HTTPEquivCookieJar*>(networkAccessManager()->cookieJar())->checkForHttpEqiuv(htmlText, reply->url());
+            static_cast<HTTPEquivCookieJar*>(HTTPEquivCookieJar::networkAccessManager()->cookieJar())->checkForHttpEqiuv(htmlText, reply->url());
             int p1 = -1, p2 = -1;
             if ((p1 = htmlText.indexOf("/science?_ob=DownloadURL&")) >= 0 && (p2 = htmlText.indexOf("\"", p1 + 1)) >= 0) {
                 KUrl url("http://www.sciencedirect.com" + htmlText.mid(p1, p2 - p1));
                 ++d->runningJobs;
                 QNetworkRequest request(url);
                 setSuggestedHttpHeaders(request, reply);
-                QNetworkReply *newReply = networkAccessManager()->get(request);
+                QNetworkReply *newReply = HTTPEquivCookieJar::networkAccessManager()->get(request);
                 connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingExportCitationPage()));
                 setNetworkReplyTimeout(newReply);
             }
@@ -251,14 +251,14 @@ void OnlineSearchScienceDirect::doneFetchingExportCitationPage()
             ++d->runningJobs;
             QNetworkRequest request(redirUrl);
             setSuggestedHttpHeaders(request, reply);
-            QNetworkReply *newReply = networkAccessManager()->get(request);
+            QNetworkReply *newReply = HTTPEquivCookieJar::networkAccessManager()->get(request);
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingExportCitationPage()));
             setNetworkReplyTimeout(newReply);
         } else {
             emit progress(++d->curStep, d->numSteps);
 
             const QString htmlText = reply->readAll();
-            static_cast<HTTPEquivCookieJar*>(networkAccessManager()->cookieJar())->checkForHttpEqiuv(htmlText, reply->url());
+            static_cast<HTTPEquivCookieJar*>(HTTPEquivCookieJar::networkAccessManager()->cookieJar())->checkForHttpEqiuv(htmlText, reply->url());
             QMap<QString, QString> inputMap = formParameters(htmlText, QLatin1String("<form name=\"exportCite\""));
             inputMap["format"] = "cite";
             inputMap["citation-type"] = "BIBTEX";
@@ -274,7 +274,7 @@ void OnlineSearchScienceDirect::doneFetchingExportCitationPage()
             ++d->runningJobs;
             QNetworkRequest request(KUrl("http://www.sciencedirect.com/science"));
             setSuggestedHttpHeaders(request, reply);
-            QNetworkReply *newReply = networkAccessManager()->post(request, body.toUtf8());
+            QNetworkReply *newReply = HTTPEquivCookieJar::networkAccessManager()->post(request, body.toUtf8());
             setNetworkReplyTimeout(newReply);
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingBibTeX()));
         }

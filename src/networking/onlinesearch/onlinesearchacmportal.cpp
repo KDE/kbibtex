@@ -29,6 +29,7 @@
 #include <kio/job.h>
 #include <KMessageBox>
 
+#include <httpequivcookiejar.h>
 #include <fileimporterbibtex.h>
 #include <file.h>
 #include <entry.h>
@@ -104,7 +105,7 @@ void OnlineSearchAcmPortal::startSearch(const QMap<QString, QString> &query, int
 
     QNetworkRequest request(d->acmPortalBaseUrl);
     setSuggestedHttpHeaders(request);
-    QNetworkReply *reply = networkAccessManager()->get(request);
+    QNetworkReply *reply = HTTPEquivCookieJar::networkAccessManager()->get(request);
     setNetworkReplyTimeout(reply);
     connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingStartPage()));
     emit progress(0, d->numSteps);
@@ -160,7 +161,7 @@ void OnlineSearchAcmPortal::doneFetchingStartPage()
 
             QNetworkRequest request(url);
             setSuggestedHttpHeaders(request, reply);
-            QNetworkReply *newReply = networkAccessManager()->post(request, body.toUtf8());
+            QNetworkReply *newReply = HTTPEquivCookieJar::networkAccessManager()->post(request, body.toUtf8());
             setNetworkReplyTimeout(newReply);
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingSearchPage()));
         } else {
@@ -194,13 +195,13 @@ void OnlineSearchAcmPortal::doneFetchingSearchPage()
 
             QNetworkRequest request(url);
             setSuggestedHttpHeaders(request, reply);
-            QNetworkReply *newReply = networkAccessManager()->get(request);
+            QNetworkReply *newReply = HTTPEquivCookieJar::networkAccessManager()->get(request);
             setNetworkReplyTimeout(newReply);
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingSearchPage()));
         } else if (!d->bibTeXUrls.isEmpty()) {
             QNetworkRequest request(d->bibTeXUrls.first());
             setSuggestedHttpHeaders(request, reply);
-            QNetworkReply *newReply = networkAccessManager()->get(request);
+            QNetworkReply *newReply = HTTPEquivCookieJar::networkAccessManager()->get(request);
             setNetworkReplyTimeout(newReply);
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingBibTeX()));
             d->bibTeXUrls.removeFirst();
@@ -244,7 +245,7 @@ void OnlineSearchAcmPortal::doneFetchingBibTeX()
         if (!d->bibTeXUrls.isEmpty() && d->numFoundResults < d->numExpectedResults) {
             QNetworkRequest request(d->bibTeXUrls.first());
             setSuggestedHttpHeaders(request, reply);
-            QNetworkReply *newReply = networkAccessManager()->get(request);
+            QNetworkReply *newReply = HTTPEquivCookieJar::networkAccessManager()->get(request);
             setNetworkReplyTimeout(newReply);
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingBibTeX()));
             d->bibTeXUrls.removeFirst();

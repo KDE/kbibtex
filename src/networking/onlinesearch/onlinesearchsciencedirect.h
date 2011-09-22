@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2010 by Thomas Fischer                             *
+*   Copyright (C) 2004-2011 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -17,28 +17,22 @@
 *   Free Software Foundation, Inc.,                                       *
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
-#ifndef KBIBTEX_ONLINESEARCH_BIBSONOMY_H
-#define KBIBTEX_ONLINESEARCH_BIBSONOMY_H
 
-#include <QByteArray>
+#ifndef KBIBTEX_ONLINESEARCH_SCIENCEDIRECT_H
+#define KBIBTEX_ONLINESEARCH_SCIENCEDIRECT_H
 
 #include <onlinesearchabstract.h>
-
-class QSpinBox;
-class KComboBox;
-class KLineEdit;
-
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
-class KBIBTEXOS_EXPORT OnlineSearchBibsonomy : public OnlineSearchAbstract
+class KBIBTEXNETWORKING_EXPORT OnlineSearchScienceDirect : public OnlineSearchAbstract
 {
     Q_OBJECT
 
 public:
-    OnlineSearchBibsonomy(QWidget *parent);
-    ~OnlineSearchBibsonomy();
+    OnlineSearchScienceDirect(QWidget *parent);
+    ~OnlineSearchScienceDirect();
 
     virtual void startSearch();
     virtual void startSearch(const QMap<QString, QString> &query, int numResults);
@@ -53,12 +47,15 @@ protected:
     virtual QString favIconUrl() const;
 
 private:
-    class OnlineSearchQueryFormBibsonomy;
-    class OnlineSearchBibsonomyPrivate;
-    OnlineSearchBibsonomyPrivate *d;
+    class OnlineSearchScienceDirectPrivate;
+    OnlineSearchScienceDirectPrivate *d;
 
 private slots:
-    void downloadDone();
+    void doneFetchingStartPage();
+    void doneFetchingResultPage();
+    void doneFetchingAbstractPage();
+    void doneFetchingExportCitationPage();
+    void doneFetchingBibTeX();
 };
 
-#endif // KBIBTEX_ONLINESEARCH_BIBSONOMY_H
+#endif // KBIBTEX_ONLINESEARCH_SCIENCEDIRECT_H

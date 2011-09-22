@@ -11,6 +11,7 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/widgets
     ${CMAKE_CURRENT_SOURCE_DIR}/widgets
     ${CMAKE_CURRENT_SOURCE_DIR}/config
+    ${CMAKE_CURRENT_SOURCE_DIR}/../networking/
     ${CMAKE_CURRENT_SOURCE_DIR}/../processing/
     ${CMAKE_CURRENT_SOURCE_DIR}/../libkbibtexio/
     ${CMAKE_CURRENT_SOURCE_DIR}/../libkbibtexio/config
@@ -57,6 +58,7 @@ target_link_libraries( kbibtexgui
     ${KDE4_KDEUI_LIBS}
     ${KDE4_KIO_LIBS}
     kbibtexio
+    kbibtexnetworking
     kbibtexproc
 )
 

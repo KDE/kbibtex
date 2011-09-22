@@ -17,27 +17,22 @@
 *   Free Software Foundation, Inc.,                                       *
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
-#ifndef KBIBTEX_ONLINESEARCH_ACMPORTAL_H
-#define KBIBTEX_ONLINESEARCH_ACMPORTAL_H
-
-#include <QByteArray>
+#ifndef KBIBTEX_ONLINESEARCH_GOOGLESCHOLAR_H
+#define KBIBTEX_ONLINESEARCH_GOOGLESCHOLAR_H
 
 #include <onlinesearchabstract.h>
 
-class QSpinBox;
-class KComboBox;
-class KLineEdit;
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
-class KBIBTEXOS_EXPORT OnlineSearchAcmPortal : public OnlineSearchAbstract
+class KBIBTEXNETWORKING_EXPORT OnlineSearchGoogleScholar : public OnlineSearchAbstract
 {
     Q_OBJECT
 
 public:
-    OnlineSearchAcmPortal(QWidget *parent);
-    ~OnlineSearchAcmPortal();
+    OnlineSearchGoogleScholar(QWidget *parent);
+    ~OnlineSearchGoogleScholar();
 
     virtual void startSearch();
     virtual void startSearch(const QMap<QString, QString> &query, int numResults);
@@ -53,12 +48,14 @@ protected:
 
 private slots:
     void doneFetchingStartPage();
-    void doneFetchingSearchPage();
+    void doneFetchingConfigPage();
+    void doneFetchingSetConfigPage();
+    void doneFetchingQueryPage();
     void doneFetchingBibTeX();
 
 private:
-    class OnlineSearchAcmPortalPrivate;
-    OnlineSearchAcmPortalPrivate *d;
+    class OnlineSearchGoogleScholarPrivate;
+    OnlineSearchGoogleScholarPrivate *d;
 };
 
-#endif // KBIBTEX_ONLINESEARCH_ACMPORTAL_H
+#endif // KBIBTEX_ONLINESEARCH_GOOGLESCHOLAR_H

@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2011 by Thomas Fischer                             *
+*   Copyright (C) 2004-2010 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -17,22 +17,27 @@
 *   Free Software Foundation, Inc.,                                       *
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
+#ifndef KBIBTEX_ONLINESEARCH_ACMPORTAL_H
+#define KBIBTEX_ONLINESEARCH_ACMPORTAL_H
 
-#ifndef KBIBTEX_ONLINESEARCH_IEEEXPLORE_H
-#define KBIBTEX_ONLINESEARCH_IEEEXPLORE_H
+#include <QByteArray>
 
-#include "onlinesearchabstract.h"
+#include <onlinesearchabstract.h>
+
+class QSpinBox;
+class KComboBox;
+class KLineEdit;
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
-class KBIBTEXOS_EXPORT OnlineSearchIEEEXplore : public OnlineSearchAbstract
+class KBIBTEXNETWORKING_EXPORT OnlineSearchAcmPortal : public OnlineSearchAbstract
 {
     Q_OBJECT
 
 public:
-    OnlineSearchIEEEXplore(QWidget *parent);
-    ~OnlineSearchIEEEXplore();
+    OnlineSearchAcmPortal(QWidget *parent);
+    ~OnlineSearchAcmPortal();
 
     virtual void startSearch();
     virtual void startSearch(const QMap<QString, QString> &query, int numResults);
@@ -48,13 +53,12 @@ protected:
 
 private slots:
     void doneFetchingStartPage();
-    void doneFetchingSearchResults();
-    void doneFetchingAbstract();
-    void doneFetchingBibliography();
+    void doneFetchingSearchPage();
+    void doneFetchingBibTeX();
 
 private:
-    class OnlineSearchIEEEXplorePrivate;
-    OnlineSearchIEEEXplorePrivate *d;
+    class OnlineSearchAcmPortalPrivate;
+    OnlineSearchAcmPortalPrivate *d;
 };
 
-#endif // KBIBTEX_ONLINESEARCH_IEEEXPLORE_H
+#endif // KBIBTEX_ONLINESEARCH_ACMPORTAL_H

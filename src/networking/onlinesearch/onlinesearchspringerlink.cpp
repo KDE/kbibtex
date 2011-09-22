@@ -31,6 +31,7 @@
 #include <KLineEdit>
 #include <KConfigGroup>
 
+#include <httpequivcookiejar.h>
 #include <fileimporterbibtex.h>
 #include <encoderlatex.h>
 #include "onlinesearchspringerlink.h"
@@ -427,7 +428,7 @@ void OnlineSearchSpringerLink::processNextQueuedUrl()
 
         QNetworkRequest request(url);
         setSuggestedHttpHeaders(request);
-        QNetworkReply *newReply = networkAccessManager()->post(request, body.toUtf8());
+        QNetworkReply *newReply = HTTPEquivCookieJar::networkAccessManager()->post(request, body.toUtf8());
         setNetworkReplyTimeout(newReply);
         connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingBibTeX()));
     } else if (!d->queueExportPages.isEmpty()) {
@@ -436,7 +437,7 @@ void OnlineSearchSpringerLink::processNextQueuedUrl()
 
         QNetworkRequest request(url);
         setSuggestedHttpHeaders(request);
-        QNetworkReply *reply = networkAccessManager()->get(request);
+        QNetworkReply *reply = HTTPEquivCookieJar::networkAccessManager()->get(request);
         setNetworkReplyTimeout(reply);
         connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingExportPage()));
     } else if (!d->queueResultPages.isEmpty()) {
@@ -445,7 +446,7 @@ void OnlineSearchSpringerLink::processNextQueuedUrl()
 
         QNetworkRequest request(url);
         setSuggestedHttpHeaders(request);
-        QNetworkReply *reply = networkAccessManager()->get(request);
+        QNetworkReply *reply = HTTPEquivCookieJar::networkAccessManager()->get(request);
         setNetworkReplyTimeout(reply);
         connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingResultPage()));
     } else {

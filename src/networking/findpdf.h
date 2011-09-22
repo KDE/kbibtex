@@ -17,42 +17,51 @@
 *   Free Software Foundation, Inc.,                                       *
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
-#ifndef KBIBTEX_ONLINESEARCH_ARXIV_H
-#define KBIBTEX_ONLINESEARCH_ARXIV_H
 
-#include <onlinesearchabstract.h>
+#ifndef KBIBTEX_PROC_FINDPDF_H
+#define KBIBTEX_PROC_FINDPDF_H
+
+#include "kbibtexnetworking_export.h"
+
+#include <QObject>
+#include <QList>
+
+#include <entry.h>
+
+class QNetworkAccessManager;
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
-class KBIBTEXOS_EXPORT OnlineSearchArXiv : public OnlineSearchAbstract
+class KBIBTEXNETWORKING_EXPORT FindPDF : public QObject
 {
     Q_OBJECT
 
 public:
-    OnlineSearchArXiv(QWidget *parent);
-    ~OnlineSearchArXiv();
+    typedef struct {
+        QUrl url;
+        QString localFilename;
+        float relevance;
+    } ResultItem;
 
-    virtual void startSearch();
-    virtual void startSearch(const QMap<QString, QString> &query, int numResults);
-    virtual QString label() const;
-    virtual OnlineSearchQueryFormAbstract* customWidget(QWidget *parent);
-    virtual KUrl homepage() const;
+    FindPDF(QObject *parent = NULL);
 
-public slots:
-    void cancel();
+    bool search(const Entry &entry);
+    QList<ResultItem> results();
 
-protected:
-    virtual QString favIconUrl() const;
-
-private:
-    class OnlineSearchQueryFormArXiv;
-    OnlineSearchQueryFormArXiv *form;
-    class OnlineSearchArXivPrivate;
-    OnlineSearchArXivPrivate *d;
+signals:
+    void finished();
 
 private slots:
-    void downloadDone();
+    void downloadFinished();
+
+private:
+    int aliveCounter;
+    QList<ResultItem> m_result;
+    Entry m_currentEntry;
+
+    static int maxDepth;
+    static const char *depthProperty;
 };
 
-#endif // KBIBTEX_ONLINESEARCH_ARXIV_H
+#endif // KBIBTEX_PROC_FINDPDF_H

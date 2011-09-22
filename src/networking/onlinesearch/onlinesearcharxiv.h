@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2010 by Thomas Fischer                             *
+*   Copyright (C) 2004-2011 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -17,22 +17,21 @@
 *   Free Software Foundation, Inc.,                                       *
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
-#ifndef KBIBTEX_ONLINESEARCH_GOOGLESCHOLAR_H
-#define KBIBTEX_ONLINESEARCH_GOOGLESCHOLAR_H
+#ifndef KBIBTEX_ONLINESEARCH_ARXIV_H
+#define KBIBTEX_ONLINESEARCH_ARXIV_H
 
 #include <onlinesearchabstract.h>
-
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
-class KBIBTEXOS_EXPORT OnlineSearchGoogleScholar : public OnlineSearchAbstract
+class KBIBTEXNETWORKING_EXPORT OnlineSearchArXiv : public OnlineSearchAbstract
 {
     Q_OBJECT
 
 public:
-    OnlineSearchGoogleScholar(QWidget *parent);
-    ~OnlineSearchGoogleScholar();
+    OnlineSearchArXiv(QWidget *parent);
+    ~OnlineSearchArXiv();
 
     virtual void startSearch();
     virtual void startSearch(const QMap<QString, QString> &query, int numResults);
@@ -46,16 +45,14 @@ public slots:
 protected:
     virtual QString favIconUrl() const;
 
-private slots:
-    void doneFetchingStartPage();
-    void doneFetchingConfigPage();
-    void doneFetchingSetConfigPage();
-    void doneFetchingQueryPage();
-    void doneFetchingBibTeX();
-
 private:
-    class OnlineSearchGoogleScholarPrivate;
-    OnlineSearchGoogleScholarPrivate *d;
+    class OnlineSearchQueryFormArXiv;
+    OnlineSearchQueryFormArXiv *form;
+    class OnlineSearchArXivPrivate;
+    OnlineSearchArXivPrivate *d;
+
+private slots:
+    void downloadDone();
 };
 
-#endif // KBIBTEX_ONLINESEARCH_GOOGLESCHOLAR_H
+#endif // KBIBTEX_ONLINESEARCH_ARXIV_H

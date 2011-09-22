@@ -35,6 +35,7 @@
 #include <fileimporterbibtex.h>
 #include <file.h>
 #include <entry.h>
+#include <httpequivcookiejar.h>
 #include "onlinesearchbibsonomy.h"
 
 class OnlineSearchBibsonomy::OnlineSearchQueryFormBibsonomy : public OnlineSearchQueryFormAbstract
@@ -191,7 +192,7 @@ void OnlineSearchBibsonomy::startSearch(const QMap<QString, QString> &query, int
 
     QNetworkRequest request(d->buildQueryUrl(query, numResults));
     setSuggestedHttpHeaders(request);
-    QNetworkReply *reply = networkAccessManager()->get(request);
+    QNetworkReply *reply = HTTPEquivCookieJar::networkAccessManager()->get(request);
     setNetworkReplyTimeout(reply);
     connect(reply, SIGNAL(finished()), this, SLOT(downloadDone()));
 
@@ -206,7 +207,7 @@ void OnlineSearchBibsonomy::startSearch()
 
     QNetworkRequest request(d->buildQueryUrl());
     setSuggestedHttpHeaders(request);
-    QNetworkReply *reply = networkAccessManager()->get(request);
+    QNetworkReply *reply = HTTPEquivCookieJar::networkAccessManager()->get(request);
     setNetworkReplyTimeout(reply);
     connect(reply, SIGNAL(finished()), this, SLOT(downloadDone()));
 
