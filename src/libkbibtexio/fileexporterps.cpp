@@ -100,22 +100,24 @@ bool FileExporterPS::writeLatexFile(const QString &filename)
     if (latexFile.open(QIODevice::WriteOnly)) {
         QTextStream ts(&latexFile);
         ts.setCodec("UTF-8");
-        ts << "\\documentclass{article}\n";
-        ts << "\\usepackage[T1]{fontenc}\n";
-        ts << "\\usepackage[utf8]{inputenc}\n";
+        ts << "\\documentclass{article}" << endl;
+        ts << "\\usepackage[T1]{fontenc}" << endl;
+        ts << "\\usepackage[utf8]{inputenc}" << endl;
         if (kpsewhich("babel.sty"))
-            ts << "\\usepackage[" << m_babelLanguage << "]{babel}\n";
+            ts << "\\usepackage[" << m_babelLanguage << "]{babel}" << endl;
         if (kpsewhich("url.sty"))
-            ts << "\\usepackage{url}\n";
+            ts << "\\usepackage{url}" << endl;
         if (m_bibliographyStyle.startsWith("apacite") && kpsewhich("apacite.sty"))
-            ts << "\\usepackage[bibnewpage]{apacite}\n";
+            ts << "\\usepackage[bibnewpage]{apacite}" << endl;
+        if (m_bibliographyStyle == QLatin1String("dcu") && kpsewhich("harvard.sty") && kpsewhich("html.sty"))
+            ts << "\\usepackage{html}" << endl << "\\usepackage[dcucite]{harvard}" << endl << "\\renewcommand{\\harvardurl}{URL: \\url}" << endl;
         if (kpsewhich("geometry.sty"))
-            ts << "\\usepackage[paper=" << m_paperSize << (m_paperSize.length() <= 2 ? "paper" : "") << "]{geometry}\n";
-        ts << "\\bibliographystyle{" << m_bibliographyStyle << "}\n";
-        ts << "\\begin{document}\n";
-        ts << "\\nocite{*}\n";
-        ts << "\\bibliography{bibtex-to-ps}\n";
-        ts << "\\end{document}\n";
+            ts << "\\usepackage[paper=" << m_paperSize << (m_paperSize.length() <= 2 ? "paper" : "") << "]{geometry}" << endl;
+        ts << "\\bibliographystyle{" << m_bibliographyStyle << "}" << endl;
+        ts << "\\begin{document}" << endl;
+        ts << "\\nocite{*}" << endl;
+        ts << "\\bibliography{bibtex-to-ps}" << endl;
+        ts << "\\end{document}" << endl;
         latexFile.close();
         return true;
     } else
