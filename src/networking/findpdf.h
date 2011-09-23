@@ -61,7 +61,8 @@ private:
     Entry m_currentEntry;
 
     static int maxDepth;
-    static const char *depthProperty;
+    static const char *depthProperty, *originProperty;
+    static const QString originDOI, originURL;
 };
 
 #endif // KBIBTEX_PROC_FINDPDF_H
