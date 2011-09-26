@@ -1,1 +1,6 @@
-install( FILES kbibtexrc DESTINATION ${CONFIG_INSTALL_DIR} )
+install(
+    FILES
+    kbibtexrc
+    DESTINATION
+    ${CONFIG_INSTALL_DIR}
+)
