@@ -160,6 +160,8 @@ public:
         connect(goUp, SIGNAL(clicked()), smGoUp, SLOT(map()));
         smGoUp->setMapping(goUp, le);
 
+        connect(le, SIGNAL(textChanged(QString)), p, SIGNAL(modified()));
+
         return le;
     }
 
