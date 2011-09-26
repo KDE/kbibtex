@@ -24,6 +24,7 @@
 #include <QApplication>
 #include <QSignalMapper>
 #include <QLayout>
+#include <QListWidget>
 
 #include <KDebug>
 #include <KPushButton>
@@ -34,33 +35,47 @@
 #include <kio/netaccess.h>
 
 #include "mdiwidget.h"
-#include "openfileinfo.h"
+
+const int URLRole = Qt::UserRole + 235;
 
 class MDIWidget::MDIWidgetPrivate
 {
 private:
+    QListWidget *listWidgetLRU;
+
     void createWelcomeWidget() {
         welcomeWidget = new QWidget(p);
         QGridLayout *layout = new QGridLayout(welcomeWidget);
         layout->setRowStretch(0, 1);
         layout->setRowStretch(1, 0);
         layout->setRowStretch(2, 0);
-        layout->setRowStretch(3, 1);
+        layout->setRowStretch(3, 10);
+        layout->setRowStretch(4, 1);
         layout->setColumnStretch(0, 1);
-        layout->setColumnStretch(1, 0);
-        layout->setColumnStretch(2, 0);
-        layout->setColumnStretch(3, 1);
+        layout->setColumnStretch(1, 10);
+        layout->setColumnStretch(2, 1);
+        layout->setColumnStretch(3, 0);
+        layout->setColumnStretch(4, 1);
+        layout->setColumnStretch(5, 10);
+        layout->setColumnStretch(6, 1);
 
         QLabel *label = new QLabel(i18n("<qt>Welcome to <b>KBibTeX</b> for <b>KDE 4</b></qt>"), p);
-        layout->addWidget(label, 1, 1, 1, 2, Qt::AlignHCenter | Qt::AlignTop);
+        layout->addWidget(label, 1, 2, 1, 3, Qt::AlignHCenter | Qt::AlignTop);
 
         KPushButton *buttonNew = new KPushButton(KIcon("document-new"), i18n("New"), p);
-        layout->addWidget(buttonNew, 2, 1, 1, 1, Qt::AlignLeft | Qt::AlignBottom);
+        layout->addWidget(buttonNew, 2, 2, 1, 1, Qt::AlignLeft | Qt::AlignBottom);
         connect(buttonNew, SIGNAL(clicked()), p, SIGNAL(documentNew()));
 
         KPushButton *buttonOpen = new KPushButton(KIcon("document-open"), i18n("Open ..."), p);
-        layout->addWidget(buttonOpen, 2, 2, 1, 1, Qt::AlignRight | Qt::AlignBottom);
+        layout->addWidget(buttonOpen, 2, 4, 1, 1, Qt::AlignRight | Qt::AlignBottom);
         connect(buttonOpen, SIGNAL(clicked()), p, SIGNAL(documentOpen()));
+
+        listWidgetLRU = new QListWidget(p);
+        listWidgetLRU->setViewMode(QListWidget::IconMode);
+        listWidgetLRU->setMovement(QListWidget::Snap);
+        layout->addWidget(listWidgetLRU, 3, 1, 1, 5);
+        connect(listWidgetLRU, SIGNAL(itemDoubleClicked(QListWidgetItem*)), p, SLOT(slotOpenListWidgetItem(QListWidgetItem*)));
+        connect(listWidgetLRU, SIGNAL(itemEntered(QListWidgetItem*)), p, SLOT(slotOpenListWidgetItem(QListWidgetItem*)));
 
         p->addWidget(welcomeWidget);
     }
@@ -74,6 +89,7 @@ public:
     MDIWidgetPrivate(MDIWidget *parent)
             : p(parent), currentFile(NULL) {
         createWelcomeWidget();
+        updateLRU();
 
         connect(&signalMapperCompleted, SIGNAL(mapped(QObject*)), p, SLOT(slotCompleted(QObject*)));
     }
@@ -83,12 +99,25 @@ public:
         signalMapperCompleted.setMapping(part, openFileInfo);
         connect(part, SIGNAL(completed()), &signalMapperCompleted, SLOT(map()));
     }
+
+    void updateLRU() {
+        OpenFileInfoManager *ofim = OpenFileInfoManager::getOpenFileInfoManager();
+        QList<OpenFileInfo*> items = ofim->filteredItems(OpenFileInfo::RecentlyUsed);
+
+        listWidgetLRU->clear();
+        foreach(OpenFileInfo* item, items) {
+            QListWidgetItem *lwItem = new QListWidgetItem(KIcon(item->mimeType().replace("/", "-")),item->url().fileName());
+            lwItem->setData(URLRole, item->url());
+            lwItem->setData(Qt::ToolTipRole, item->url().pathOrUrl());
+            listWidgetLRU->addItem(lwItem);
+        }
+    }
 };
 
 MDIWidget::MDIWidget(QWidget *parent)
         : QStackedWidget(parent), d(new MDIWidgetPrivate(this))
 {
-    // nothing
+    connect(OpenFileInfoManager::getOpenFileInfoManager(), SIGNAL(flagsChanged(OpenFileInfo::StatusFlags)), this, SLOT(slotStatusFlagsChanged(OpenFileInfo::StatusFlags)));
 }
 
 void MDIWidget::setFile(OpenFileInfo *openFileInfo, KService::Ptr servicePtr)
@@ -100,7 +129,6 @@ void MDIWidget::setFile(OpenFileInfo *openFileInfo, KService::Ptr servicePtr)
     QWidget *widget = d->welcomeWidget;
     if (part != NULL) {
         widget = part->widget();
-        //widget->setParent(this); // FIXME: necessary?
     } else if (openFileInfo != NULL) {
         KMessageBox::error(this, i18n("No part available for file '%1'.", openFileInfo->url().fileName()), i18n("No part available"));
         OpenFileInfoManager::getOpenFileInfoManager()->close(openFileInfo);
@@ -159,4 +187,17 @@ void MDIWidget::slotCompleted(QObject *obj)
 
         emit setCaption(QString("%1 [%2]").arg(ofi->shortCaption()).arg(ofi->fullCaption()));
     }
+}
+
+void MDIWidget::slotStatusFlagsChanged(OpenFileInfo::StatusFlags statusFlags)
+{
+    if (statusFlags.testFlag(OpenFileInfo::RecentlyUsed))
+        d->updateLRU();
+}
+
+void MDIWidget::slotOpenListWidgetItem(QListWidgetItem *lwi)
+{
+    KUrl url = lwi->data(URLRole).value<KUrl>();
+    if (url.isValid())
+        emit documentOpenURL(url);
 }

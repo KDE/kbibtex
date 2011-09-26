@@ -26,6 +26,7 @@
 #include <KUrl>
 #include <KService>
 
+#include "openfileinfo.h"
 #include <bibtexeditor.h>
 
 namespace KParts
@@ -34,6 +35,7 @@ class Part;
 }
 
 class OpenFileInfo;
+class QListWidgetItem;
 
 class MDIWidget : public QStackedWidget
 {
@@ -56,6 +58,7 @@ signals:
     void activePartChanged(KParts::Part *);
     void documentNew();
     void documentOpen();
+    void documentOpenURL(KUrl);
 
 private:
     class MDIWidgetPrivate;
@@ -63,6 +66,8 @@ private:
 
 private slots:
     void slotCompleted(QObject *);
+    void slotStatusFlagsChanged(OpenFileInfo::StatusFlags);
+    void slotOpenListWidgetItem(QListWidgetItem *);
 };
 
 #endif // KBIBTEX_PROGRAM_MDIWIDGET_H
