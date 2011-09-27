@@ -113,13 +113,14 @@ void FindPDF::downloadFinished()
                     QTextStream ts(data);
                     const QString text = ts.readAll();
 
-                    kDebug() << text.left(1024);
+                    kDebug() << "HTML : " << text.left(256);
 
                     bool gotLink = false;
                     for (int i = 0;!gotLink && i < 5; ++i) {
                         if (anchorRegExp[i].indexIn(text) >= 0) {
                             QUrl url = QUrl::fromEncoded(anchorRegExp[i].cap(1).toAscii());
                             url = reply->url().resolved(url);
+                            kDebug() << "starting download: " << url.toString();
                             QNetworkReply *reply = HTTPEquivCookieJar::networkAccessManager()->get(QNetworkRequest(url));
                             reply->setProperty(depthProperty, QVariant::fromValue<int>(depth - 1));
                             reply->setProperty(originProperty, origin);
@@ -134,10 +135,20 @@ void FindPDF::downloadFinished()
 
                 kDebug() << "PDF title:" << doc->info("Title") << endl << "Text: " << doc->page(0)->text(QRect()).left(1024);
 
-                ResultItem result;
-                result.localFilename = QString::null; // TODO Save temporarily as file
-                result.url = reply->url();
-                result.relevance = origin == QLatin1String("doi") ? 1.0 : 0.5;
+                QUrl url = reply->url();
+                bool containsUrl = false;
+                foreach(const ResultItem &ri, m_result) {
+                    containsUrl |= ri.url == url;
+                    if (containsUrl) break;
+                }
+
+                if (!containsUrl) {
+                    ResultItem result;
+                    result.localFilename = QString::null; // TODO Save temporarily as file
+                    result.url = url;
+                    result.relevance = origin == QLatin1String("doi") ? 1.0 : 0.5;
+                    m_result << result;
+                }
             } else if (redirUrl.isValid()) {
                 QNetworkReply *reply = HTTPEquivCookieJar::networkAccessManager()->get(QNetworkRequest(redirUrl));
                 reply->setProperty(depthProperty, QVariant::fromValue<int>(depth - 1));
