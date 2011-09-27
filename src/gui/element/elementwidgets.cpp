@@ -36,6 +36,7 @@
 #include <KComboBox>
 #include <KSharedConfig>
 #include <KConfigGroup>
+#include <KDebug>
 
 #include <kbibtexnamespace.h>
 #include <bibtexentries.h>
@@ -218,10 +219,11 @@ void EntryConfiguredWidget::layoutGUI(bool forceVisible, const QString &entryTyp
     const BibTeXFields *bf = BibTeXFields::self();
 
     QStringList visibleItems;
-    if (!entryType.isEmpty()) {
+    if (!forceVisible && !entryType.isEmpty()) {
+        const QString entryTypeLc = entryType.toLower();
         BibTeXEntries *be = BibTeXEntries::self();
         for (BibTeXEntries::ConstIterator bit = be->constBegin(); bit != be->constEnd(); ++bit) {
-            if (entryType == bit->upperCamelCase.toLower() || entryType == bit->upperCamelCaseAlt.toLower()) {
+            if (entryTypeLc == bit->upperCamelCase.toLower() || entryTypeLc == bit->upperCamelCaseAlt.toLower()) {
                 /// this ugly conversion is necessary because we have a "^" (xor) and "|" (and/or)
                 /// syntax to differentiate required items (not used yet, but will be used
                 /// later if missing required items are marked).
@@ -232,7 +234,8 @@ void EntryConfiguredWidget::layoutGUI(bool forceVisible, const QString &entryTyp
                 break;
             }
         }
-    }
+    } else if (!forceVisible)
+        kDebug() << "EntryType should not be empty if visibility is not enforced";
 
     /// variables to keep track which and how many field inputs will be visible
     int countVisible = 0;
