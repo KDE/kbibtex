@@ -24,7 +24,9 @@
 #include <QApplication>
 #include <QSignalMapper>
 #include <QLayout>
-#include <QListWidget>
+#include <QTreeView>
+#include <QAbstractItemModel>
+#include <QSortFilterProxyModel>
 
 #include <KDebug>
 #include <KPushButton>
@@ -37,11 +39,73 @@
 #include "mdiwidget.h"
 
 const int URLRole = Qt::UserRole + 235;
+const int SortRole = Qt::UserRole + 236;
+
+class LRUItemModel : public QAbstractItemModel
+{
+private:
+    OpenFileInfoManager *ofim;
+public:
+    LRUItemModel(QObject *parent = NULL)
+            : QAbstractItemModel(parent), ofim(OpenFileInfoManager::getOpenFileInfoManager()) {
+        // nothing
+    }
+
+    int columnCount(const QModelIndex &) const {
+        return 2;
+    }
+
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const {
+        QList<OpenFileInfo*> ofiList = ofim->filteredItems(OpenFileInfo::RecentlyUsed);
+        if (index.row() < ofiList.count()) {
+            OpenFileInfo *ofiItem = ofiList[index.row()];
+            if (index.column() == 0) {
+                if (role == Qt::DisplayRole || role == SortRole)
+                    return ofiItem->url().fileName();
+                else if (role == Qt::DecorationRole)
+                    return KIcon(ofiItem->mimeType().replace("/", "-"));
+                else if (role == Qt::ToolTipRole)
+                    return ofiItem->url().pathOrUrl();
+            } else if (index.column() == 1) {
+                if (role == Qt::DisplayRole || role == Qt::ToolTipRole)
+                    return ofiItem->lastAccess().toString(Qt::TextDate);
+                else if (role == SortRole)
+                    return ofiItem->lastAccess().toTime_t();
+            }
+            if (role == URLRole)
+                return ofiItem->url();
+        }
+
+        return QVariant();
+    }
+
+    QVariant headerData(int section, Qt::Orientation , int role = Qt::DisplayRole) const {
+        if (role != Qt::DisplayRole || section >= 2)return QVariant();
+        else if (section == 0) return i18n("Filename");
+        else return i18n("Date/time of last use");
+    }
+
+    QModelIndex index(int row, int column, const QModelIndex &) const {
+        return createIndex(row, column, row);
+    }
+
+    QModelIndex parent(const QModelIndex &) const {
+        return QModelIndex();
+    }
+
+    int rowCount(const QModelIndex & parent = QModelIndex()) const {
+        if (parent == QModelIndex())
+            return ofim->filteredItems(OpenFileInfo::RecentlyUsed).count();
+        else
+            return 0;
+    }
+};
 
 class MDIWidget::MDIWidgetPrivate
 {
 private:
-    QListWidget *listWidgetLRU;
+    QTreeView *listLRU;
+    LRUItemModel *modelLRU;
 
     void createWelcomeWidget() {
         welcomeWidget = new QWidget(p);
@@ -49,8 +113,9 @@ private:
         layout->setRowStretch(0, 1);
         layout->setRowStretch(1, 0);
         layout->setRowStretch(2, 0);
-        layout->setRowStretch(3, 10);
-        layout->setRowStretch(4, 1);
+        layout->setRowStretch(3, 0);
+        layout->setRowStretch(4, 10);
+        layout->setRowStretch(5, 1);
         layout->setColumnStretch(0, 1);
         layout->setColumnStretch(1, 10);
         layout->setColumnStretch(2, 1);
@@ -70,12 +135,14 @@ private:
         layout->addWidget(buttonOpen, 2, 4, 1, 1, Qt::AlignRight | Qt::AlignBottom);
         connect(buttonOpen, SIGNAL(clicked()), p, SIGNAL(documentOpen()));
 
-        listWidgetLRU = new QListWidget(p);
-        listWidgetLRU->setViewMode(QListWidget::IconMode);
-        listWidgetLRU->setMovement(QListWidget::Snap);
-        layout->addWidget(listWidgetLRU, 3, 1, 1, 5);
-        connect(listWidgetLRU, SIGNAL(itemDoubleClicked(QListWidgetItem*)), p, SLOT(slotOpenListWidgetItem(QListWidgetItem*)));
-        connect(listWidgetLRU, SIGNAL(itemEntered(QListWidgetItem*)), p, SLOT(slotOpenListWidgetItem(QListWidgetItem*)));
+        label = new QLabel(i18n("List of recently used files:"), p);
+        layout->addWidget(label, 3, 1, 1, 5, Qt::AlignLeft | Qt::AlignBottom);
+        listLRU = new QTreeView(p);
+        listLRU->setRootIsDecorated(false);
+        listLRU->setSortingEnabled(true);
+        layout->addWidget(listLRU, 4, 1, 1, 5);
+        connect(listLRU, SIGNAL(activated(QModelIndex)), p, SLOT(slotOpenLRU(QModelIndex)));
+        label->setBuddy(listLRU);
 
         p->addWidget(welcomeWidget);
     }
@@ -89,6 +156,12 @@ public:
     MDIWidgetPrivate(MDIWidget *parent)
             : p(parent), currentFile(NULL) {
         createWelcomeWidget();
+
+        modelLRU = new LRUItemModel(listLRU);
+        QSortFilterProxyModel *sfpm = new QSortFilterProxyModel(listLRU);
+        sfpm->setSourceModel(modelLRU);
+        sfpm->setSortRole(SortRole);
+        listLRU->setModel(sfpm);
         updateLRU();
 
         connect(&signalMapperCompleted, SIGNAL(mapped(QObject*)), p, SLOT(slotCompleted(QObject*)));
@@ -101,16 +174,8 @@ public:
     }
 
     void updateLRU() {
-        OpenFileInfoManager *ofim = OpenFileInfoManager::getOpenFileInfoManager();
-        QList<OpenFileInfo*> items = ofim->filteredItems(OpenFileInfo::RecentlyUsed);
 
-        listWidgetLRU->clear();
-        foreach(OpenFileInfo* item, items) {
-            QListWidgetItem *lwItem = new QListWidgetItem(KIcon(item->mimeType().replace("/", "-")),item->url().fileName());
-            lwItem->setData(URLRole, item->url());
-            lwItem->setData(Qt::ToolTipRole, item->url().pathOrUrl());
-            listWidgetLRU->addItem(lwItem);
-        }
+        listLRU->reset();
     }
 };
 
@@ -195,9 +260,9 @@ void MDIWidget::slotStatusFlagsChanged(OpenFileInfo::StatusFlags statusFlags)
         d->updateLRU();
 }
 
-void MDIWidget::slotOpenListWidgetItem(QListWidgetItem *lwi)
+void MDIWidget::slotOpenLRU(const QModelIndex&index)
 {
-    KUrl url = lwi->data(URLRole).value<KUrl>();
+    KUrl url = index.data(URLRole).value<KUrl>();
     if (url.isValid())
         emit documentOpenURL(url);
 }

@@ -22,6 +22,7 @@
 #define KBIBTEX_PROGRAM_MDIWIDGET_H
 
 #include <QStackedWidget>
+#include <QModelIndex>
 
 #include <KUrl>
 #include <KService>
@@ -35,7 +36,6 @@ class Part;
 }
 
 class OpenFileInfo;
-class QListWidgetItem;
 
 class MDIWidget : public QStackedWidget
 {
@@ -67,7 +67,7 @@ private:
 private slots:
     void slotCompleted(QObject *);
     void slotStatusFlagsChanged(OpenFileInfo::StatusFlags);
-    void slotOpenListWidgetItem(QListWidgetItem *);
+    void slotOpenLRU(const QModelIndex&);
 };
 
 #endif // KBIBTEX_PROGRAM_MDIWIDGET_H
