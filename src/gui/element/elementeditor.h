@@ -55,7 +55,6 @@ public slots:
 private slots:
     void tabChanged();
     void checkBibTeX();
-    void findPDF();
     void childModified(bool);
     void updateReqOptWidgets();
 

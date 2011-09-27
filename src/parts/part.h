@@ -69,6 +69,7 @@ protected slots:
     bool documentSaveCopyAs();
     void elementViewDocument();
     void elementViewDocumentMenu(QObject *);
+    void elementFindPDF();
 
 private slots:
     void newElementTriggered(int event);

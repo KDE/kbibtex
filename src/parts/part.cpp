@@ -65,7 +65,7 @@
 #include <lyx.h>
 #include <preferences/settingscolorlabelwidget.h>
 #include <preferences/settingsfileexporterbibtexwidget.h>
-
+#include <element/findpdfui.h>
 #include <valuelistmodel.h>
 #include <clipboard.h>
 #include "part.h"
@@ -89,7 +89,7 @@ public:
     SortFilterBibTeXFileModel *sortFilterProxyModel;
     FilterBar *filterBar;
     QSignalMapper *signalMapperNewElement;
-    KAction *editCutAction, *editDeleteAction, *editCopyAction, *editPasteAction, *editCopyReferencesAction, *elementEditAction, *elementViewDocumentAction, *fileSaveAction;
+    KAction *editCutAction, *editDeleteAction, *editCopyAction, *editPasteAction, *editCopyReferencesAction, *elementEditAction, *elementViewDocumentAction, *fileSaveAction, *elementFindPDFAction;
     QMenu *viewDocumentMenu;
     QSignalMapper *signalMapperViewDocument;
     bool isSaveAsOperation;
@@ -396,6 +396,10 @@ void KBibTeXPart::setupActions(bool /*browserViewWanted FIXME*/)
     actionCollection()->addAction(QLatin1String("element_viewdocument"),  d->elementViewDocumentAction);
     connect(d->elementViewDocumentAction, SIGNAL(triggered()), this, SLOT(elementViewDocument()));
 
+    d->elementFindPDFAction = new KAction(KIcon("application-pdf"), i18n("Find PDF ..."), this);
+    actionCollection()->addAction(QLatin1String("element_findpdf"),  d->elementFindPDFAction);
+    connect(d->elementFindPDFAction, SIGNAL(triggered()), this, SLOT(elementFindPDF()));
+
     Clipboard *clipboard = new Clipboard(d->editor);
 
     d->editCopyReferencesAction = new KAction(KIcon("edit-copy"), i18n("Copy References"), this);
@@ -417,6 +421,7 @@ void KBibTeXPart::setupActions(bool /*browserViewWanted FIXME*/)
     d->editor->setContextMenuPolicy(Qt::ActionsContextMenu);
     d->editor->addAction(d->elementEditAction);
     d->editor->addAction(d->elementViewDocumentAction);
+    d->editor->addAction(d->elementFindPDFAction);
     QAction *separator = new QAction(this);
     separator->setSeparator(true);
     d->editor->addAction(separator);
@@ -509,6 +514,16 @@ void KBibTeXPart::elementViewDocumentMenu(QObject *obj)
 {
     QString text = static_cast<QAction*>(obj)->data().toString(); ///< only a KAction will be passed along
     QDesktopServices::openUrl(KUrl(text)); // TODO KDE way?
+}
+
+void KBibTeXPart::elementFindPDF()
+{
+    QModelIndexList mil = d->editor->selectionModel()->selectedRows();
+    if (mil.count() == 1) {
+        Entry *entry = dynamic_cast<Entry*>(d->editor->bibTeXModel()->element(d->editor->sortFilterProxyModel()->mapToSource(*mil.constBegin()).row()));
+        if (entry != NULL)
+            FindPDFUI::interactiveFindPDF(*entry, widget());
+    }
 }
 
 void KBibTeXPart::fitActionSettings()

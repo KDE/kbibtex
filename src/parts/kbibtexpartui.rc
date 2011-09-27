@@ -18,6 +18,8 @@
     <Separator/>
     <Action name="element_edit" />
     <Action name="element_viewdocument" />
+    <Separator/>
+    <Action name="element_findpdf" />
   </Menu>
 </MenuBar>
 
