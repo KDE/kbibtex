@@ -425,24 +425,30 @@ UrlListEdit::UrlListEdit(QWidget *parent)
 
 void UrlListEdit::slotAddLocalFile()
 {
-    KUrl fileUrl(d->file != NULL ? d->file->property(File::Url, QVariant()).value<KUrl>() : KUrl());
+    QUrl fileUrl(d->file != NULL ? d->file->property(File::Url, QVariant()).toUrl() : QUrl());
     QFileInfo fileUrlInfo = fileUrl.isEmpty() ? QFileInfo() : QFileInfo(fileUrl.path());
 
     QString filename = KFileDialog::getOpenFileName(KUrl(fileUrlInfo.absolutePath()), QString(), this, i18n("Add Local File"));
     if (!filename.isEmpty()) {
-        QFileInfo filenameInfo(filename);
-        if (!fileUrl.isEmpty() && (filenameInfo.absolutePath() == fileUrlInfo.absolutePath() || filenameInfo.absolutePath().startsWith(fileUrlInfo.absolutePath() + QDir::separator()))) {
-            QString relativePath = filenameInfo.absolutePath().mid(fileUrlInfo.absolutePath().length() + 1);
-            QString relativeFilename = relativePath + (relativePath.isEmpty() ? QLatin1String("") : QString(QDir::separator())) + filenameInfo.fileName();
-            if (KMessageBox::questionYesNo(this, i18n("<qt><p>Use a path relative to the bibliography file?</p><p>The relative path would be<br/><tt>%1</tt></p>", relativeFilename), i18n("Relative Path"), KGuiItem(i18n("Relative Path")), KGuiItem(i18n("Absolute Path"))) == KMessageBox::Yes)
-                filename = relativeFilename;
-        }
-
+        filename = askRelativeOrStaticFilename(this, filename, fileUrl);
         Value *value = new Value();
         ValueItem *vi = new VerbatimText(filename);
         value->append(vi);
         lineAdd(value);
     }
+}
+
+QString& UrlListEdit::askRelativeOrStaticFilename(QWidget *parent, QString &filename, const QUrl &baseUrl)
+{
+    QFileInfo baseUrlInfo = baseUrl.isEmpty() ? QFileInfo() : QFileInfo(baseUrl.path());
+    QFileInfo filenameInfo(filename);
+    if (!baseUrl.isEmpty() && (filenameInfo.absolutePath() == baseUrlInfo.absolutePath() || filenameInfo.absolutePath().startsWith(baseUrlInfo.absolutePath() + QDir::separator()))) {
+        QString relativePath = filenameInfo.absolutePath().mid(baseUrlInfo.absolutePath().length() + 1);
+        QString relativeFilename = relativePath + (relativePath.isEmpty() ? QLatin1String("") : QString(QDir::separator())) + filenameInfo.fileName();
+        if (KMessageBox::questionYesNo(parent, i18n("<qt><p>Use a path relative to the bibliography file?</p><p>The relative path would be<br/><tt>%1</tt></p>", relativeFilename), i18n("Relative Path"), KGuiItem(i18n("Relative Path")), KGuiItem(i18n("Absolute Path"))) == KMessageBox::Yes)
+            filename = relativeFilename;
+    }
+    return filename;
 }
 
 void UrlListEdit::setReadOnly(bool isReadOnly)

@@ -108,6 +108,8 @@ public:
 
     virtual void setReadOnly(bool isReadOnly);
 
+    static QString& askRelativeOrStaticFilename(QWidget *parent, QString &filename, const QUrl &baseUrl);
+
 private slots:
     void slotAddLocalFile();
 
