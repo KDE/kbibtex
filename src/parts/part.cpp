@@ -294,7 +294,7 @@ public:
 
         const Entry *entry = dynamic_cast<const Entry*>(editor->currentElement());
         if (entry != NULL) {
-            QList<KUrl> urlList = FileInfo::entryUrls(entry, editor->bibTeXModel()->bibTeXFile()->property(File::Url).value<KUrl>());
+            QList<KUrl> urlList = FileInfo::entryUrls(entry, editor->bibTeXModel()->bibTeXFile()->property(File::Url).toUrl());
             if (!urlList.isEmpty()) {
                 for (QList<KUrl>::ConstIterator it = urlList.constBegin(); it != urlList.constEnd(); ++it) {
                     // FIXME: the signal mapper will fill up with mappings, as they are never removed
@@ -521,8 +521,9 @@ void KBibTeXPart::elementFindPDF()
     QModelIndexList mil = d->editor->selectionModel()->selectedRows();
     if (mil.count() == 1) {
         Entry *entry = dynamic_cast<Entry*>(d->editor->bibTeXModel()->element(d->editor->sortFilterProxyModel()->mapToSource(*mil.constBegin()).row()));
+        File *file = d->editor->bibTeXModel()->bibTeXFile();
         if (entry != NULL)
-            FindPDFUI::interactiveFindPDF(*entry, widget());
+            FindPDFUI::interactiveFindPDF(*entry, *file, widget());
     }
 }
 
@@ -552,7 +553,7 @@ bool KBibTeXPart::openFile()
         return false;
     }
 
-    bibtexFile->setProperty(File::Url, url());
+    bibtexFile->setProperty(File::Url, QUrl(url()));
 
     d->model->setBibTeXFile(bibtexFile);
     d->editor->setModel(d->model);

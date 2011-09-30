@@ -25,10 +25,13 @@
 
 #include <QObject>
 #include <QList>
+#include <QSet>
+#include <QUrl>
 
 #include <entry.h>
 
 class QNetworkAccessManager;
+class KTemporaryFile;
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
@@ -38,10 +41,13 @@ class KBIBTEXNETWORKING_EXPORT FindPDF : public QObject
     Q_OBJECT
 
 public:
+    enum DownloadMode {NoDownload = 0, Download, URLonly};
+
     typedef struct {
         QUrl url;
-        QString localFilename;
+        KTemporaryFile *tempFilename;
         float relevance;
+        DownloadMode downloadMode;
     } ResultItem;
 
     FindPDF(QObject *parent = NULL);
@@ -59,6 +65,7 @@ private:
     int aliveCounter;
     QList<ResultItem> m_result;
     Entry m_currentEntry;
+    QSet<QUrl> m_knownUrls;
 
     static int maxDepth;
     static const char *depthProperty, *originProperty;

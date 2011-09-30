@@ -27,13 +27,14 @@
 
 #include <KApplication>
 #include <KDebug>
+#include <KTemporaryFile>
 
 #include <kbibtexnamespace.h>
 #include <httpequivcookiejar.h>
 #include <value.h>
 #include "findpdf.h"
 
-int FindPDF::maxDepth = 7;
+int FindPDF::maxDepth = 10;
 const char *FindPDF::depthProperty = "depth";
 const char *FindPDF::originProperty = "origin";
 
@@ -47,6 +48,7 @@ bool FindPDF::search(const Entry &entry)
 {
     if (aliveCounter > 0) return false;
 
+    m_knownUrls.clear();
     m_result.clear();
     m_currentEntry = entry;
 
@@ -55,17 +57,25 @@ bool FindPDF::search(const Entry &entry)
         if (entry.contains(field)) {
             const QString doi = PlainTextValue::text(entry.value(field));
             if (KBibTeX::urlRegExp.indexIn(doi) >= 0) {
-                QNetworkReply *reply = HTTPEquivCookieJar::networkAccessManager()->get(QNetworkRequest(QUrl(KBibTeX::urlRegExp.cap(0))));
-                reply->setProperty(depthProperty, QVariant::fromValue<int>(maxDepth));
-                reply->setProperty(originProperty, field);
-                connect(reply, SIGNAL(finished()), this, SLOT(downloadFinished()));
-                ++aliveCounter;
+                QUrl url(KBibTeX::urlRegExp.cap(0));
+                if (!m_knownUrls.contains(url)) {
+                    m_knownUrls.insert(url);
+                    QNetworkReply *reply = HTTPEquivCookieJar::networkAccessManager()->get(QNetworkRequest(url));
+                    reply->setProperty(depthProperty, QVariant::fromValue<int>(maxDepth));
+                    reply->setProperty(originProperty, field);
+                    connect(reply, SIGNAL(finished()), this, SLOT(downloadFinished()));
+                    ++aliveCounter;
+                }
             } else if (KBibTeX::doiRegExp.indexIn(doi) >= 0) {
-                QNetworkReply *reply = HTTPEquivCookieJar::networkAccessManager()->get(QNetworkRequest(QUrl(QLatin1String("http://dx.doi.org/") + KBibTeX::doiRegExp.cap(0))));
-                reply->setProperty(depthProperty, QVariant::fromValue<int>(maxDepth));
-                reply->setProperty(originProperty, field);
-                connect(reply, SIGNAL(finished()), this, SLOT(downloadFinished()));
-                ++aliveCounter;
+                QUrl url(QUrl(QLatin1String("http://dx.doi.org/") + KBibTeX::doiRegExp.cap(0)));
+                if (!m_knownUrls.contains(url)) {
+                    m_knownUrls.insert(url);
+                    QNetworkReply *reply = HTTPEquivCookieJar::networkAccessManager()->get(QNetworkRequest(url));
+                    reply->setProperty(depthProperty, QVariant::fromValue<int>(maxDepth));
+                    reply->setProperty(originProperty, field);
+                    connect(reply, SIGNAL(finished()), this, SLOT(downloadFinished()));
+                    ++aliveCounter;
+                }
             }
         }
     }
@@ -120,13 +130,16 @@ void FindPDF::downloadFinished()
                         if (anchorRegExp[i].indexIn(text) >= 0) {
                             QUrl url = QUrl::fromEncoded(anchorRegExp[i].cap(1).toAscii());
                             url = reply->url().resolved(url);
-                            kDebug() << "starting download: " << url.toString();
-                            QNetworkReply *reply = HTTPEquivCookieJar::networkAccessManager()->get(QNetworkRequest(url));
-                            reply->setProperty(depthProperty, QVariant::fromValue<int>(depth - 1));
-                            reply->setProperty(originProperty, origin);
-                            connect(reply, SIGNAL(finished()), this, SLOT(downloadFinished()));
-                            ++aliveCounter;
-                            gotLink = true;
+                            if (!m_knownUrls.contains(url)) {
+                                m_knownUrls.insert(url);
+                                kDebug() << "starting download: " << url.toString();
+                                QNetworkReply *reply = HTTPEquivCookieJar::networkAccessManager()->get(QNetworkRequest(url));
+                                reply->setProperty(depthProperty, QVariant::fromValue<int>(depth - 1));
+                                reply->setProperty(originProperty, origin);
+                                connect(reply, SIGNAL(finished()), this, SLOT(downloadFinished()));
+                                ++aliveCounter;
+                                gotLink = true;
+                            }
                         }
                     }
                 }
@@ -136,6 +149,8 @@ void FindPDF::downloadFinished()
                 kDebug() << "PDF title:" << doc->info("Title") << endl << "Text: " << doc->page(0)->text(QRect()).left(1024);
 
                 QUrl url = reply->url();
+
+                /// search for duplicate URLs
                 bool containsUrl = false;
                 foreach(const ResultItem &ri, m_result) {
                     containsUrl |= ri.url == url;
@@ -143,17 +158,31 @@ void FindPDF::downloadFinished()
                 }
 
                 if (!containsUrl) {
+
                     ResultItem result;
-                    result.localFilename = QString::null; // TODO Save temporarily as file
+                    result.tempFilename = new KTemporaryFile();
+                    result.tempFilename->setAutoRemove(true);
+                    result.tempFilename->setSuffix(QLatin1String(".pdf"));
+                    if (result.tempFilename->open()) {
+                        result.tempFilename->write(data);
+                        result.tempFilename->close();
+                    } else {
+                        delete    result.tempFilename;
+                        result.tempFilename = NULL;
+                    }
                     result.url = url;
+                    result.downloadMode = NoDownload;
                     result.relevance = origin == QLatin1String("doi") ? 1.0 : 0.5;
                     m_result << result;
                 }
             } else if (redirUrl.isValid()) {
-                QNetworkReply *reply = HTTPEquivCookieJar::networkAccessManager()->get(QNetworkRequest(redirUrl));
-                reply->setProperty(depthProperty, QVariant::fromValue<int>(depth - 1));
-                connect(reply, SIGNAL(finished()), this, SLOT(downloadFinished()));
-                ++aliveCounter;
+                if (!m_knownUrls.contains(redirUrl)) {
+                    m_knownUrls.insert(redirUrl);
+                    QNetworkReply *reply = HTTPEquivCookieJar::networkAccessManager()->get(QNetworkRequest(redirUrl));
+                    reply->setProperty(depthProperty, QVariant::fromValue<int>(depth - 1));
+                    connect(reply, SIGNAL(finished()), this, SLOT(downloadFinished()));
+                    ++aliveCounter;
+                }
             } else {
                 QString redirUrlStr = reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toString();
 
@@ -166,6 +195,7 @@ void FindPDF::downloadFinished()
     } else
         kDebug() << "max depth reached";
 
-    if (aliveCounter == 0)
+    if (aliveCounter == 0) {
         emit finished();
+    }
 }
