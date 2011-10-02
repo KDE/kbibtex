@@ -468,6 +468,7 @@ bool MergeDuplicates::mergeDuplicateEntries(const QList<EntryClique*> &entryCliq
             }
         }
 
+        bool actuallyMerged = false;
         foreach(Entry *entry, entryClique->entryList()) {
             /// if merging entries with identical ids, the merged entry will not yet have an id (is null)
             if (mergedEntry->id().isEmpty())
@@ -480,6 +481,7 @@ bool MergeDuplicates::mergeDuplicateEntries(const QList<EntryClique*> &entryCliq
             /// those fields did only occur in one entry (no conflict)
             /// may add a lot of bloat to merged entry
             if (entryClique->isEntryChecked(entry)) {
+                actuallyMerged = true;
                 for (Entry::ConstIterator it = entry->constBegin(); it != entry->constEnd(); ++it)
                     if (!mergedEntry->contains(it.key()))
                         mergedEntry->insert(it.key(), it.value());
@@ -487,7 +489,10 @@ bool MergeDuplicates::mergeDuplicateEntries(const QList<EntryClique*> &entryCliq
             }
         }
 
-        file->append(mergedEntry);
+        if (actuallyMerged)
+            file->append(mergedEntry);
+        else
+            delete mergedEntry;
     }
 
     return true;
