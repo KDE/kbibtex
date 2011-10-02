@@ -537,7 +537,7 @@ bool KBibTeXPart::openFile()
         return false;
     }
 
-    bibtexFile->setProperty(File::Url, url());
+    bibtexFile->setProperty(File::Url, QUrl(url()));
 
     d->model->setBibTeXFile(bibtexFile);
     d->editor->setModel(d->model);
