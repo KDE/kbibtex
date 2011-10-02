@@ -84,6 +84,7 @@ public:
         comboBoxBibliographyStyle->addItem(QLatin1String("abbrv"));
         comboBoxBibliographyStyle->addItem(QLatin1String("alpha"));
         comboBoxBibliographyStyle->addItem(QLatin1String("plain"));
+        comboBoxBibliographyStyle->addItem(QLatin1String("dcu"));
         connect(comboBoxBibliographyStyle->lineEdit(), SIGNAL(textChanged(QString)), p, SIGNAL(changed()));
     }
 };
