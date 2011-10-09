@@ -1,0 +1,21 @@
+ChangeLog
+
+Diff 0.3 to 0.4
+
+- Support for Windows (compiles out of the box)
+- Configuration file system refactored
+- Adding more online search engines: SpringerLink, PubMed, ACM Digital Library, JSTOR, IEEE Xplorer, Science Direct
+- Improving all other online search engines: Google Scholar, arXiv, BibSonomy
+- "List of Values" refactored, allows to search for items
+- Introducing preferences dialog to manage various settings
+- Improved support for drag'n'drop throughout the program
+- Improving tagging elements with color
+- Introducing global keyword list to select from
+- Editing widgets get "history" to select from
+- Widget for cross references allows to select from existing elements
+- Introducing duplicate finding and merging code and user interface
+- Improvements in usability of filter line edit
+- File view can resize and order columns, settings get stored
+- Improving file importer and exporter filters
+- BibTeX references can be sent to LyX via a pipe
+- Numerous bug fixes
