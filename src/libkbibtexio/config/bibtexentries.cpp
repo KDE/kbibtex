@@ -20,6 +20,7 @@
 
 #include <KSharedConfig>
 #include <KConfigGroup>
+#include <KStandardDirs>
 #include <KDebug>
 
 #include <entry.h>
@@ -41,13 +42,16 @@ class BibTeXEntries::BibTeXEntriesPrivate
 public:
     BibTeXEntries *p;
 
-    KSharedConfigPtr config;
+    KSharedConfigPtr layoutConfig;
 
     static BibTeXEntries *singleton;
 
     BibTeXEntriesPrivate(BibTeXEntries *parent)
-            : p(parent), config(KSharedConfig::openConfig("kbibtexrc")) {
-        // nothing
+            : p(parent) {
+        KSharedConfigPtr config(KSharedConfig::openConfig("kbibtexrc"));
+        KConfigGroup configGroup(config, QString("User Interface"));
+        const QString stylefile = configGroup.readEntry("CurrentStyle", "bibtex").append(".kbstyle");
+        layoutConfig = KSharedConfig::openConfig(stylefile, KConfig::FullConfig, "appdata");
     }
 
     void load() {
@@ -56,12 +60,12 @@ public:
         EntryDescription ed;
 
         QString groupName = QLatin1String("EntryType");
-        KConfigGroup configGroup(config, groupName);
+        KConfigGroup configGroup(layoutConfig, groupName);
         int typeCount = qMin(configGroup.readEntry("count", 0), entryTypeMaxCount);
 
         for (int col = 1; col <= typeCount; ++col) {
             QString groupName = QString("EntryType%1").arg(col);
-            KConfigGroup configGroup(config, groupName);
+            KConfigGroup configGroup(layoutConfig, groupName);
 
             ed.upperCamelCase = configGroup.readEntry("UpperCamelCase", "");
             if (ed.upperCamelCase.isEmpty()) continue;
@@ -80,7 +84,7 @@ public:
         foreach(EntryDescription ed, *p) {
             ++typeCount;
             QString groupName = QString("EntryType%1").arg(typeCount);
-            KConfigGroup configGroup(config, groupName);
+            KConfigGroup configGroup(layoutConfig, groupName);
 
             configGroup.writeEntry("UpperCamelCase", ed.upperCamelCase);
             configGroup.writeEntry("UpperCamelCaseAlt", ed.upperCamelCaseAlt);
@@ -90,10 +94,10 @@ public:
         }
 
         QString groupName = QLatin1String("EntryType");
-        KConfigGroup configGroup(config, groupName);
+        KConfigGroup configGroup(layoutConfig, groupName);
         configGroup.writeEntry("count", typeCount);
 
-        config->sync();
+        layoutConfig->sync();
     }
 
 };

@@ -34,13 +34,16 @@ class EntryLayout::EntryLayoutPrivate
 public:
     EntryLayout *p;
 
-    KSharedConfigPtr config;
+    KSharedConfigPtr layoutConfig;
 
     static EntryLayout *singleton;
 
     EntryLayoutPrivate(EntryLayout *parent)
-            : p(parent), config(KSharedConfig::openConfig("kbibtexrc")) {
-        // nothing
+            : p(parent) {
+        KSharedConfigPtr config(KSharedConfig::openConfig("kbibtexrc"));
+        KConfigGroup configGroup(config, QString("User Interface"));
+        const QString stylefile = configGroup.readEntry("CurrentStyle", "bibtex").append(".kbstyle");
+        layoutConfig = KSharedConfig::openConfig(stylefile, KConfig::FullConfig, "appdata");
     }
 
     static QString convert(KBibTeX::FieldInputType fil) {
@@ -104,12 +107,12 @@ void EntryLayout::load()
     clear();
 
     QString groupName = QLatin1String("EntryLayoutTab");
-    KConfigGroup configGroup(d->config, groupName);
+    KConfigGroup configGroup(d->layoutConfig, groupName);
     int tabCount = qMin(configGroup.readEntry("count", 0), entryLayoutMaxTabCount);
 
     for (int tab = 1; tab <= tabCount; ++tab) {
         QString groupName = QString("EntryLayoutTab%1").arg(tab);
-        KConfigGroup configGroup(d->config, groupName);
+        KConfigGroup configGroup(d->layoutConfig, groupName);
 
         EntryTabLayout etl;
         etl.uiCaption = configGroup.readEntry("uiCaption", "");
@@ -141,7 +144,7 @@ void EntryLayout::save()
     foreach(EntryTabLayout etl, *this) {
         ++tabCount;
         QString groupName = QString("EntryLayoutTab%1").arg(tabCount);
-        KConfigGroup configGroup(d->config, groupName);
+        KConfigGroup configGroup(d->layoutConfig, groupName);
 
         configGroup.writeEntry("uiCaption", etl.uiCaption);
         configGroup.writeEntry("iconName", etl.iconName);
@@ -158,21 +161,21 @@ void EntryLayout::save()
     }
 
     QString groupName = QLatin1String("EntryLayoutTab");
-    KConfigGroup configGroup(d->config, groupName);
+    KConfigGroup configGroup(d->layoutConfig, groupName);
     configGroup.writeEntry("count", tabCount);
 
-    d->config->sync();
+    d->layoutConfig->sync();
 }
 
 void EntryLayout::resetToDefaults()
 {
     QString groupName = QLatin1String("EntryLayoutTab");
-    KConfigGroup configGroup(d->config, groupName);
+    KConfigGroup configGroup(d->layoutConfig, groupName);
     configGroup.deleteGroup();
 
     for (int tab = 1; tab < entryLayoutMaxTabCount; ++tab) {
         QString groupName = QString("EntryLayoutTab%1").arg(tab);
-        KConfigGroup configGroup(d->config, groupName);
+        KConfigGroup configGroup(d->layoutConfig, groupName);
         configGroup.deleteGroup();
     }
 

@@ -21,6 +21,7 @@
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <KSharedPtr>
+#include <KStandardDirs>
 #include <KDebug>
 
 #include "bibtexfields.h"
@@ -43,20 +44,23 @@ class BibTeXFields::BibTeXFieldsPrivate
 public:
     BibTeXFields *p;
 
-    KSharedConfigPtr config;
+    KSharedConfigPtr layoutConfig;
 
     static BibTeXFields *singleton;
 
     BibTeXFieldsPrivate(BibTeXFields *parent)
-            : p(parent), config(KSharedConfig::openConfig("kbibtexrc")) {
-        // nothing
+            : p(parent) {
+        KSharedConfigPtr config(KSharedConfig::openConfig("kbibtexrc"));
+        KConfigGroup configGroup(config, QString("User Interface"));
+        const QString stylefile = configGroup.readEntry("CurrentStyle", "bibtex").append(".kbstyle");
+        layoutConfig = KSharedConfig::openConfig(stylefile, KConfig::FullConfig, "appdata");
     }
 
     void load() {
         p->clear();
 
         QString groupName = QLatin1String("Column");
-        KConfigGroup configGroup(config, groupName);
+        KConfigGroup configGroup(layoutConfig, groupName);
         int columnCount = qMin(configGroup.readEntry("count", 0), bibTeXFieldsMaxColumnCount);
         const QStringList defaultTreeViewNames = QStringList() << QLatin1String("SearchResults") << QLatin1String("Main") << QLatin1String("MergeWidget");
         QStringList treeViewNames = configGroup.readEntry("treeViewNames", defaultTreeViewNames);
@@ -65,7 +69,7 @@ public:
             FieldDescription fd;
 
             QString groupName = QString("Column%1").arg(col);
-            KConfigGroup configGroup(config, groupName);
+            KConfigGroup configGroup(layoutConfig, groupName);
 
             fd.upperCamelCase = configGroup.readEntry("UpperCamelCase", "");
             if (fd.upperCamelCase.isEmpty())
@@ -106,7 +110,7 @@ public:
         foreach(const FieldDescription &fd, *p) {
             ++columnCount;
             QString groupName = QString("Column%1").arg(columnCount);
-            KConfigGroup configGroup(config, groupName);
+            KConfigGroup configGroup(layoutConfig, groupName);
 
             foreach(const QString &treeViewName, fd.width.keys()) {
                 configGroup.writeEntry("Width_" + treeViewName, fd.width[treeViewName]);
@@ -122,17 +126,17 @@ public:
         }
 
         QString groupName = QLatin1String("Column");
-        KConfigGroup configGroup(config, groupName);
+        KConfigGroup configGroup(layoutConfig, groupName);
         configGroup.writeEntry("count", columnCount);
         configGroup.writeEntry("treeViewNames", treeViewNames);
 
-        config->sync();
+        layoutConfig->sync();
     }
 
     void resetToDefaults(const QString &treeViewName) {
         for (int col = 1; col < bibTeXFieldsMaxColumnCount; ++col) {
             QString groupName = QString("Column%1").arg(col);
-            KConfigGroup configGroup(config, groupName);
+            KConfigGroup configGroup(layoutConfig, groupName);
             configGroup.deleteEntry("Width_" + treeViewName);
             configGroup.deleteEntry("Visible_" + treeViewName);
         }

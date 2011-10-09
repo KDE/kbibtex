@@ -22,6 +22,7 @@
 #include <QCheckBox>
 #include <QBoxLayout>
 
+#include <KComboBox>
 #include <KLocale>
 #include <KSharedConfig>
 #include <KConfigGroup>
@@ -37,7 +38,7 @@ private:
 
     QCheckBox *checkBoxShowComments;
     QCheckBox *checkBoxShowMacros;
-    QCheckBox *checkBoxLabelsAboveWidget;
+    KComboBox *comboBoxBibliographySystem;
 
     KSharedConfigPtr config;
     static const QString configGroupName;
@@ -51,21 +52,30 @@ public:
         KConfigGroup configGroup(config, configGroupName);
         checkBoxShowComments->setChecked(configGroup.readEntry(BibTeXFileModel::keyShowComments, BibTeXFileModel::defaultShowComments));
         checkBoxShowMacros->setChecked(configGroup.readEntry(BibTeXFileModel::keyShowMacros, BibTeXFileModel::defaultShowMacros));
-        checkBoxLabelsAboveWidget->setChecked((Qt::Orientation)(configGroup.readEntry(ElementWidget::keyElementWidgetLayout, (int)ElementWidget::defaultElementWidgetLayout)) == Qt::Vertical);
+        const QStringList styles = configGroup.readEntry("BibTeXStyles", QStringList());
+        foreach(QString style, styles) {
+            QStringList item = style.split("|");
+            QString itemLabel = item.at(0);
+            item.removeFirst();
+            comboBoxBibliographySystem->addItem(itemLabel, item);
+        }
+        int styleIndex = comboBoxBibliographySystem->findData(configGroup.readEntry("CurrentStyle", QString()));
+        if (styleIndex < 0) styleIndex = 0;
+        comboBoxBibliographySystem->setCurrentIndex(styleIndex);
     }
 
     void saveState() {
         KConfigGroup configGroup(config, configGroupName);
         configGroup.writeEntry(BibTeXFileModel::keyShowComments, checkBoxShowComments->isChecked());
         configGroup.writeEntry(BibTeXFileModel::keyShowMacros, checkBoxShowMacros->isChecked());
-        configGroup.writeEntry(ElementWidget::keyElementWidgetLayout, (int)(checkBoxLabelsAboveWidget->isChecked() ? Qt::Vertical : Qt::Horizontal));
+        configGroup.writeEntry("CurrentStyle", comboBoxBibliographySystem->itemData(comboBoxBibliographySystem->currentIndex()).toString());
         config->sync();
     }
 
     void resetToDefaults() {
         checkBoxShowComments->setChecked(BibTeXFileModel::defaultShowComments);
         checkBoxShowMacros->setChecked(BibTeXFileModel::defaultShowMacros);
-        checkBoxLabelsAboveWidget->setChecked(ElementWidget::defaultElementWidgetLayout == Qt::Vertical);
+        comboBoxBibliographySystem->setCurrentIndex(0);
     }
 
     void setupGUI() {
@@ -77,9 +87,10 @@ public:
         checkBoxShowMacros = new QCheckBox(p);
         layout->addRow(i18n("Show Macros:"), checkBoxShowMacros);
         connect(checkBoxShowMacros, SIGNAL(toggled(bool)), p, SIGNAL(changed()));
-        checkBoxLabelsAboveWidget = new QCheckBox(i18n("Labels above edit widgets"), p);
-        layout->addRow(i18n("Entry Editor:"), checkBoxLabelsAboveWidget);
-        connect(checkBoxLabelsAboveWidget, SIGNAL(toggled(bool)), p, SIGNAL(changed()));
+        comboBoxBibliographySystem = new KComboBox(p);
+        comboBoxBibliographySystem->setObjectName("comboBoxBibtexStyle");
+        layout->addRow(i18n("Bibliography System:"), comboBoxBibliographySystem);
+        connect(comboBoxBibliographySystem, SIGNAL(currentIndexChanged(int)), p, SIGNAL(changed()));
     }
 };
 
