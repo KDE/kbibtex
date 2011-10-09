@@ -71,6 +71,7 @@ class KBIBTEXGUI_EXPORT FindPDFUI : public QWidget
 
 public:
     FindPDFUI(Entry &entry, QWidget *parent);
+    ~FindPDFUI();
 
     static void interactiveFindPDF(Entry &entry, const File &bibtexFile, QWidget *parent);
     void apply(Entry &entry, const File &bibtexFile);

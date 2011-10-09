@@ -46,13 +46,15 @@
 
 class PDFListModel;
 
-const int posLabel = 0;
-const int posViewButton = 1;
-const int posRadioNoDownload = 2;
-const int posRadioDownload = 3;
-const int posRadioURLonly = 4;
+const int posLabelUrl = 0;
+const int posLabelPreview = 1;
+const int posViewButton = 2;
+const int posRadioNoDownload = 3;
+const int posRadioDownload = 4;
+const int posRadioURLonly = 5;
 
 const int URLRole = Qt::UserRole + 1234;
+const int TextualPreviewRole = Qt::UserRole + 1237;
 const int TempFileNameRole = Qt::UserRole + 1236;
 const int DownloadModeRole = Qt::UserRole + 1235;
 
@@ -63,7 +65,6 @@ PDFItemDelegate::PDFItemDelegate(QListView *itemView, QObject *parent)
     // nothing
 }
 
-/// paint the item at index with all its attributes shown
 void PDFItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     QStyle *style = QApplication::style();
@@ -77,44 +78,58 @@ void PDFItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &optio
         painter->setPen(QPen(option.palette.text().color()));
     }
 
+    /// draw icon based on mime-type
     QPixmap icon = index.data(Qt::DecorationRole).value<QPixmap>();
     if (!icon.isNull()) {
         int margin = option.fontMetrics.height() / 3;
-        painter->drawPixmap(margin, margin, KIconLoader::SizeMedium, KIconLoader::SizeMedium, icon);
+        painter->drawPixmap(margin, margin + option.rect.top(), KIconLoader::SizeMedium, KIconLoader::SizeMedium, icon);
     }
 
     painter->restore();
 }
 
-/// get the list of widgets
 QList<QWidget*> PDFItemDelegate::createItemWidgets() const
 {
     QList<QWidget*> list;
 
+    /// first, the label with shows the found PDF file's origin (URL)
     KSqueezedTextLabel *label = new KSqueezedTextLabel();
     label->setBackgroundRole(QPalette::NoRole);
     label->setAlignment(Qt::AlignTop | Qt::AlignLeft);
     list << label;
-    Q_ASSERT(list.count() == posLabel + 1);
+    Q_ASSERT(list.count() == posLabelUrl + 1);
 
+    /// a label with shows either the PDF's title or a text snipplet
+    QLabel *previewLabel = new QLabel();
+    previewLabel->setBackgroundRole(QPalette::NoRole);
+    previewLabel->setAlignment(Qt::AlignTop | Qt::AlignLeft);
+    list << previewLabel;
+    Q_ASSERT(list.count() == posLabelPreview + 1);
+
+    /// add a push button to view the PDF file
     KPushButton *pushButton = new KPushButton(KIcon("application-pdf"), i18n("View"));
     list << pushButton;
     connect(pushButton, SIGNAL(clicked()), this, SLOT(slotViewPDF()));
     Q_ASSERT(list.count() == posViewButton + 1);
 
+    /// a button group to choose what to do with this particular PDF file
     QButtonGroup *bg = new QButtonGroup();
+
+    /// button group's first choice: ignore file (discard it)
     QRadioButton *radioButton = new QRadioButton(i18n("Ignore"));
     bg->addButton(radioButton);
     list << radioButton;
     connect(radioButton, SIGNAL(toggled(bool)), this, SLOT(slotRadioNoDownloadToggled(bool)));
     Q_ASSERT(list.count() == posRadioNoDownload + 1);
 
+    /// download this file and store it locally, user will be asked for "Save As"
     radioButton = new QRadioButton(i18n("Download"));
     bg->addButton(radioButton);
     list << radioButton;
     connect(radioButton, SIGNAL(toggled(bool)), this, SLOT(slotRadioDownloadToggled(bool)));
     Q_ASSERT(list.count() == posRadioDownload + 1);
 
+    /// paste URL into BibTeX entry, no local copy is stored
     radioButton = new QRadioButton(i18n("Keep URL"));
     bg->addButton(radioButton);
     list << radioButton;
@@ -135,29 +150,42 @@ void PDFItemDelegate::updateItemWidgets(const QList<QWidget*> widgets, const QSt
         return;
     }
 
+    /// determine some variables used for layout
     int margin = option.fontMetrics.height() / 3;
     int buttonHeight = option.fontMetrics.height() * 2;
-    int buttonWidth = option.fontMetrics.height() * 8;
+    int buttonWidth = option.fontMetrics.width(i18n("Download")) * 3 / 2;
+    int labelWidth = option.rect.width() - 3 * margin - KIconLoader::SizeMedium;
+    int labelHeight = (option.rect.height() - 4 * margin - buttonHeight) / 2;
 
-    /// setup label
-    KSqueezedTextLabel *label = qobject_cast<KSqueezedTextLabel*>(widgets[0]);
+    /// setup label which will show the PDF file's URL
+    KSqueezedTextLabel *label = qobject_cast<KSqueezedTextLabel*>(widgets[posLabelUrl]);
     if (label != NULL) {
         label->setText(index.data(Qt::DisplayRole).toString());
         label->move(margin*2 + KIconLoader::SizeMedium, margin);
-        label->resize(option.rect.width() - 3*margin - KIconLoader::SizeMedium, option.rect.height() - 3*margin - buttonHeight);
+        label->resize(labelWidth, labelHeight);
+    }
+
+    /// setup label which will show the PDF's title or textual beginning
+    QLabel *previewLabel = qobject_cast<QLabel*>(widgets[posLabelPreview]);
+    if (previewLabel != NULL) {
+        previewLabel->setText(index.data(TextualPreviewRole).toString());
+        previewLabel->setToolTip(QLatin1String("<qt>") + previewLabel->text() + QLatin1String("</qt>"));
+        previewLabel->move(margin*2 + KIconLoader::SizeMedium, margin*2 + labelHeight);
+        previewLabel->resize(labelWidth, buttonHeight);
     }
 
     /// setup the view button
-    KPushButton *viewButton = qobject_cast<KPushButton*>(widgets.at(posViewButton));
+    KPushButton *viewButton = qobject_cast<KPushButton*>(widgets[posViewButton]);
     if (viewButton != NULL) {
-        viewButton->move(margin*2 + KIconLoader::SizeMedium, option.rect.bottom() - margin - buttonHeight);
+        viewButton->move(margin*2 + KIconLoader::SizeMedium, option.rect.height() - margin - buttonHeight);
         viewButton->resize(buttonWidth, buttonHeight);
     }
 
+    /// setup each of the three radio buttons
     for (int i = 0; i < 3; ++i) {
-        QRadioButton *radioButton = qobject_cast<QRadioButton*>(widgets.at(posRadioNoDownload + i));
+        QRadioButton *radioButton = qobject_cast<QRadioButton*>(widgets[posRadioNoDownload + i]);
         if (radioButton != NULL) {
-            radioButton->move(option.rect.width() - margin - (3 - i)*(buttonWidth + margin), option.rect.bottom() - margin - buttonHeight);
+            radioButton->move(option.rect.width() - margin - (3 - i) * (buttonWidth + margin), option.rect.height() - margin - buttonHeight);
             radioButton->resize(buttonWidth, buttonHeight);
             bool ok = false;
             radioButton->setChecked(i + FindPDF::NoDownload == index.data(DownloadModeRole).toInt(&ok) && ok);
@@ -167,12 +195,17 @@ void PDFItemDelegate::updateItemWidgets(const QList<QWidget*> widgets, const QSt
 
 QSize PDFItemDelegate::sizeHint(const QStyleOptionViewItem & option, const QModelIndex &) const
 {
+    /// set a size that is suiteable
     QSize size;
-    size.setWidth(option.fontMetrics.height() * 14);
-    size.setHeight(qMax(option.fontMetrics.height() * 4, (int)KIconLoader::SizeMedium));
+    size.setWidth(option.fontMetrics.width(i18n("Download")) * 6);
+    size.setHeight(qMax(option.fontMetrics.height() * 5, (int)KIconLoader::SizeMedium));
     return size;
 }
 
+/**
+ * Method is called when the "View PDF" button of a list item is clicked.
+ * Opens the associated URL or its local copy using the system's default viewer.
+ */
 void PDFItemDelegate::slotViewPDF()
 {
     QModelIndex index = focusedIndex();
@@ -188,6 +221,9 @@ void PDFItemDelegate::slotViewPDF()
     }
 }
 
+/**
+ * Updated the model when the user selects the radio button for ignoring a PDF file.
+ */
 void PDFItemDelegate::slotRadioNoDownloadToggled(bool checked)
 {
     QModelIndex index = focusedIndex();
@@ -197,6 +233,9 @@ void PDFItemDelegate::slotRadioNoDownloadToggled(bool checked)
     }
 }
 
+/**
+ * Updated the model when the user selects the radio button for downloading a PDF file.
+ */
 void PDFItemDelegate::slotRadioDownloadToggled(bool checked)
 {
     QModelIndex index = focusedIndex();
@@ -206,6 +245,9 @@ void PDFItemDelegate::slotRadioDownloadToggled(bool checked)
     }
 }
 
+/**
+ * Updated the model when the user selects the radio button for keeping a PDF file's URL.
+ */
 void PDFItemDelegate::slotRadioURLonlyToggled(bool checked)
 {
     QModelIndex index = focusedIndex();
@@ -223,6 +265,7 @@ PDFListModel::PDFListModel(QList<FindPDF::ResultItem> &resultList, QObject *pare
 
 int PDFListModel::rowCount(const QModelIndex & parent) const
 {
+    /// row cout depends on number of found PDF references
     int count = parent == QModelIndex() ? m_resultList.count() : 0;
     return count;
 }
@@ -234,6 +277,8 @@ QVariant PDFListModel::data(const QModelIndex &index, int role) const
             return m_resultList[index.row()].url.toString();
         else if (role == URLRole)
             return  m_resultList[index.row()].url;
+        else if (role == TextualPreviewRole)
+            return  m_resultList[index.row()].textPreview;
         else if (role == TempFileNameRole) {
             if (m_resultList[index.row()].tempFilename != NULL)
                 return m_resultList[index.row()].tempFilename->fileName();
@@ -242,8 +287,10 @@ QVariant PDFListModel::data(const QModelIndex &index, int role) const
         } else if (role == DownloadModeRole)
             return m_resultList[index.row()].downloadMode;
         else if (role == Qt::DecorationRole) {
-            KMimeType::Ptr mimetypePtr = KMimeType::findByUrl(m_resultList[index.row()].url);
-            return KIcon(mimetypePtr->iconName() == QLatin1String("application/octet-stream") ? QLatin1String("application/pdf") : mimetypePtr->iconName()).pixmap(KIconLoader::SizeMedium, KIconLoader::SizeMedium);
+            /// make an educated guess on the icon, based on URL or path
+            QString iconName = KMimeType::findByUrl(m_resultList[index.row()].url)->iconName();
+            iconName = iconName == QLatin1String("application-octet-stream") ? KMimeType::findByPath(m_resultList[index.row()].url.path())->iconName() : iconName;
+            return KIcon(iconName).pixmap(KIconLoader::SizeMedium, KIconLoader::SizeMedium);
         } else
             return QVariant();
     }
@@ -286,6 +333,14 @@ FindPDFUI::FindPDFUI(Entry &entry, QWidget *parent)
 
     connect(m_findpdf, SIGNAL(finished()), this, SLOT(searchFinished()));
     m_findpdf->search(entry);
+}
+
+FindPDFUI::~FindPDFUI()
+{
+    for (QList<FindPDF::ResultItem>::Iterator it = m_resultList.begin(); it != m_resultList.end();) {
+        delete it->tempFilename;
+        it = m_resultList.erase(it);
+    }
 }
 
 void FindPDFUI::interactiveFindPDF(Entry &entry, const File &bibtexFile, QWidget *parent)

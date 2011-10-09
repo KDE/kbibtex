@@ -31,6 +31,7 @@
 #include <entry.h>
 
 class QNetworkAccessManager;
+class QNetworkReply;
 class KTemporaryFile;
 
 /**
@@ -45,6 +46,7 @@ public:
 
     typedef struct {
         QUrl url;
+        QString textPreview;
         KTemporaryFile *tempFilename;
         float relevance;
         DownloadMode downloadMode;
@@ -67,9 +69,12 @@ private:
     Entry m_currentEntry;
     QSet<QUrl> m_knownUrls;
 
-    static int maxDepth;
-    static const char *depthProperty, *originProperty;
-    static const QString originDOI, originURL;
+    bool queueUrl(const QUrl &url, const QString &term, const QString &origin, int depth);
+    void processGeneralHTML(QNetworkReply *reply, const QString &text);
+    void processGoogleResult(QNetworkReply *reply, const QString &text);
+    void processSpringerLink(QNetworkReply *reply, const QString &text);
+    void processCiteSeerX(QNetworkReply *reply, const QString &text);
+    void processPDF(QNetworkReply *reply, const QByteArray &data);
 };
 
 #endif // KBIBTEX_PROC_FINDPDF_H
