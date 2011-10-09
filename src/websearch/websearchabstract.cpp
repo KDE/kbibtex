@@ -237,7 +237,7 @@ QMap<QString, QString> WebSearchAbstract::formParameters(const QString &htmlText
                 if (htmlText.indexOf(inputIsCheckedRegExp, p) == p) {
                     result[inputName] = inputValue;
                 }
-            } else if (inputType == "radio") {
+            } else if (inputType == "checkbox") {
                 /// must be checked
                 if (htmlText.indexOf(inputIsCheckedRegExp, p) == p) {
                     /// multiple checkbox values with the same name are possible
