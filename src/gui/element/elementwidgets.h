@@ -49,9 +49,6 @@ class ElementWidget : public QWidget
     Q_OBJECT
 
 public:
-    static const QString keyElementWidgetLayout;
-    static const Qt::Orientation defaultElementWidgetLayout;
-
     ElementWidget(QWidget *parent);
     virtual bool apply(Element *element) const = 0;
     virtual bool reset(const Element *element) = 0;

@@ -76,9 +76,6 @@ void ElementWidget::gotModified()
     setModified(true);
 }
 
-const QString ElementWidget::keyElementWidgetLayout = QLatin1String("ElementWidgetLayout");
-const Qt::Orientation ElementWidget::defaultElementWidgetLayout = Qt::Horizontal;
-
 
 EntryConfiguredWidget::EntryConfiguredWidget(EntryTabLayout &entryTabLayout, QWidget *parent)
         : ElementWidget(parent), etl(entryTabLayout)
@@ -711,50 +708,49 @@ void OtherFieldsWidget::createGUI()
     KSharedConfigPtr config(KSharedConfig::openConfig(QLatin1String("kbibtexrc")));
     const QString configGroupName(QLatin1String("User Interface"));
     KConfigGroup configGroup(config, configGroupName);
-    Qt::Orientation layoutOrientation = (Qt::Orientation)configGroup.readEntry(keyElementWidgetLayout, (int)defaultElementWidgetLayout);
 
     QGridLayout *layout = new QGridLayout(this);
     /// set row and column stretches based on chosen layout
-    layout->setColumnStretch(0, layoutOrientation == Qt::Horizontal ? 0 : 1);
-    layout->setColumnStretch(1, layoutOrientation == Qt::Horizontal ? 1 : 0);
+    layout->setColumnStretch(0, 0);
+    layout->setColumnStretch(1, 1);
     layout->setColumnStretch(2, 0);
     layout->setRowStretch(0, 0);
-    layout->setRowStretch(layoutOrientation == Qt::Horizontal ? 1 : 3, 1);
+    layout->setRowStretch(1, 1);
     layout->setRowStretch(2, 0);
-    layout->setRowStretch(layoutOrientation == Qt::Horizontal ? 3 : 6, 0);
-    layout->setRowStretch(layoutOrientation == Qt::Horizontal ? 4 : 7, 1);
+    layout->setRowStretch(3, 0);
+    layout->setRowStretch(4, 1);
 
     QLabel *label = new QLabel(i18n("Name:"), this);
-    layout->addWidget(label, layoutOrientation == Qt::Horizontal ? 0 : 0,  layoutOrientation == Qt::Horizontal ? 0 : 0, 1, 1, (layoutOrientation == Qt::Horizontal ? Qt::AlignRight : Qt::AlignLeft));
+    layout->addWidget(label, 0, 0, 1, Qt::AlignRight);
 
     fieldName = new KLineEdit(this);
-    layout->addWidget(fieldName, layoutOrientation == Qt::Horizontal ? 0 : 1, layoutOrientation == Qt::Horizontal ? 1 : 0, 1, 1);
+    layout->addWidget(fieldName, 0, 1, 1, 1);
     label->setBuddy(fieldName);
 
     buttonAddApply = new KPushButton(KIcon("list-add"), i18n("Add"), this);
     buttonAddApply->setEnabled(false);
-    layout->addWidget(buttonAddApply, layoutOrientation == Qt::Horizontal ? 0 : 1, layoutOrientation == Qt::Horizontal ? 2 : 1, 1, 1);
+    layout->addWidget(buttonAddApply, 0, 2, 1, 1);
 
     label = new QLabel(i18n("Content:"), this);
-    layout->addWidget(label, layoutOrientation == Qt::Horizontal ? 1 : 2, layoutOrientation == Qt::Horizontal ? 0 : 0, 1, 1, (layoutOrientation == Qt::Horizontal ? Qt::AlignRight : Qt::AlignLeft));
+    layout->addWidget(label, 1, 0, 1, 1, Qt::AlignRight);
     fieldContent = new FieldInput(KBibTeX::MultiLine, KBibTeX::tfSource, KBibTeX::tfSource, this);
-    layout->addWidget(fieldContent, layoutOrientation == Qt::Horizontal ? 1 : 3, layoutOrientation == Qt::Horizontal ? 1 : 0, 1, 2);
+    layout->addWidget(fieldContent, 1, 1, 1, 2);
     label->setBuddy(fieldContent);
 
     label = new QLabel(i18n("List:"), this);
-    layout->addWidget(label, layoutOrientation == Qt::Horizontal ? 2 : 4, layoutOrientation == Qt::Horizontal ? 0 : 0, 1, 1, (layoutOrientation == Qt::Horizontal ? Qt::AlignRight : Qt::AlignLeft));
+    layout->addWidget(label, 2,  0, 1, 1,  Qt::AlignRight);
 
     otherFieldsList = new QTreeWidget(this);
     otherFieldsList->setHeaderLabels(QStringList() << i18n("Key") << i18n("Value"));
-    layout->addWidget(otherFieldsList, layoutOrientation == Qt::Horizontal ? 2 : 5, layoutOrientation == Qt::Horizontal ? 1 : 0, 3, 1);
+    layout->addWidget(otherFieldsList, 2, 1, 3, 1);
     label->setBuddy(otherFieldsList);
 
     buttonDelete = new KPushButton(KIcon("list-remove"), i18n("Delete"), this);
     buttonDelete->setEnabled(false);
-    layout->addWidget(buttonDelete, layoutOrientation == Qt::Horizontal ? 2 : 5, layoutOrientation == Qt::Horizontal ? 2 : 1, 1, 1);
+    layout->addWidget(buttonDelete,  2, 2, 1, 1);
     buttonOpen = new KPushButton(KIcon("document-open"), i18n("Open"), this);
     buttonOpen->setEnabled(false);
-    layout->addWidget(buttonOpen, layoutOrientation == Qt::Horizontal ? 3 : 6, layoutOrientation == Qt::Horizontal ? 2 : 1, 1, 1);
+    layout->addWidget(buttonOpen, 3, 2, 1, 1);
 
     connect(otherFieldsList, SIGNAL(itemActivated(QTreeWidgetItem*, int)), this, SLOT(listElementExecuted(QTreeWidgetItem*, int)));
     connect(otherFieldsList, SIGNAL(currentItemChanged(QTreeWidgetItem*, QTreeWidgetItem*)), this, SLOT(listCurrentChanged(QTreeWidgetItem*, QTreeWidgetItem*)));
