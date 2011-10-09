@@ -18,6 +18,7 @@ set(
     onlinesearch/onlinesearchacmportal.cpp
     onlinesearch/onlinesearchspringerlink.cpp
     onlinesearch/onlinesearchjstor.cpp
+    onlinesearch/onlinesearchmathscinet.cpp
     onlinesearch/onlinesearchgeneral.cpp
     findpdf.cpp
     httpequivcookiejar.cpp

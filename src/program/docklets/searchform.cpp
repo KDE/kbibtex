@@ -53,6 +53,7 @@
 #include <onlinesearchspringerlink.h>
 #include <onlinesearcharxiv.h>
 #include <onlinesearchjstor.h>
+#include <onlinesearchmathscinet.h>
 #include <fileexporterbibtex.h>
 #include <element.h>
 #include <file.h>
@@ -204,6 +205,7 @@ public:
         addEngine(new OnlineSearchScienceDirect(p));
         addEngine(new OnlineSearchSpringerLink(p));
         addEngine(new OnlineSearchJStor(p));
+        addEngine(new OnlineSearchMathSciNet(p));
 
         p->itemCheckChanged(NULL);
         updateGUI();
