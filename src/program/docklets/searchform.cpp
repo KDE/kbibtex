@@ -196,16 +196,16 @@ public:
     void loadEngines() {
         enginesList->clear();
 
-        addEngine(new OnlineSearchBibsonomy(p));
-        addEngine(new OnlineSearchGoogleScholar(p));
         addEngine(new OnlineSearchAcmPortal(p));
         addEngine(new OnlineSearchArXiv(p));
-        addEngine(new OnlineSearchPubMed(p));
+        addEngine(new OnlineSearchBibsonomy(p));
+        addEngine(new OnlineSearchGoogleScholar(p));
         addEngine(new OnlineSearchIEEEXplore(p));
-        addEngine(new OnlineSearchScienceDirect(p));
-        addEngine(new OnlineSearchSpringerLink(p));
         addEngine(new OnlineSearchJStor(p));
         addEngine(new OnlineSearchMathSciNet(p));
+        addEngine(new OnlineSearchPubMed(p));
+        addEngine(new OnlineSearchScienceDirect(p));
+        addEngine(new OnlineSearchSpringerLink(p));
 
         p->itemCheckChanged(NULL);
         updateGUI();

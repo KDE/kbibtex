@@ -26,6 +26,7 @@
 #include <KLocale>
 #include <KDebug>
 
+#include <fileimporterbibtex.h>
 #include <kbibtexnamespace.h>
 #include "onlinesearchmathscinet.h"
 #include "httpequivcookiejar.h"
@@ -45,6 +46,16 @@ public:
     OnlineSearchMathSciNetPrivate(OnlineSearchMathSciNet *parent)
             : p(parent) {
         // nothing
+    }
+
+    void sanitizeEntry(Entry *entry) {
+        const QString ftFJournal = QLatin1String("fjournal");
+        if (entry->contains(ftFJournal)) {
+            Value v = entry->value(ftFJournal);
+            entry->remove(Entry::ftJournal);
+            entry->remove(ftFJournal);
+            entry->insert(Entry::ftJournal, v);
+        }
     }
 };
 
@@ -198,12 +209,18 @@ void OnlineSearchMathSciNet::doneFetchingResultPage()
             ++count;
         }
 
-/// issue request for bibtex code
-        QNetworkRequest request(url);
-        setSuggestedHttpHeaders(request, reply);
-        QNetworkReply *newReply = HTTPEquivCookieJar::networkAccessManager()->get(request);
-        setNetworkReplyTimeout(newReply);
-        connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingBibTeXcode()));
+        if (count > 0) {
+            /// issue request for bibtex code
+            QNetworkRequest request(url);
+            setSuggestedHttpHeaders(request, reply);
+            QNetworkReply *newReply = HTTPEquivCookieJar::networkAccessManager()->get(request);
+            setNetworkReplyTimeout(newReply);
+            connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingBibTeXcode()));
+        } else {
+            /// nothing found
+            emit progress(3, 3);
+            emit stoppedSearch(resultNoError);
+        }
     } else
         kDebug() << "url was" << reply->url().toString();
 }
@@ -215,10 +232,35 @@ void OnlineSearchMathSciNet::doneFetchingBibTeXcode()
     emit progress(3, 3);
 
     if (handleErrors(reply)) {
-        QString bibtexCode(reply->readAll());
+        QString htmlCode(reply->readAll());
+        QString bibtexCode;
+        int p1 = -1, p2 = -1;
+        while ((p1 = htmlCode.indexOf(QLatin1String("<pre>"), p2 + 1)) >= 0 && (p2 = htmlCode.indexOf(QLatin1String("</pre>"), p1 + 1)) >= 0) {
+            bibtexCode += htmlCode.mid(p1 + 5, p2 - p1 - 5) + QChar('\n');
+        }
 
-        kDebug() << squeeze_text(bibtexCode, 128);
-        emit stoppedSearch(resultNoError);
+        FileImporterBibTeX importer;
+        File *bibtexFile = importer.fromString(bibtexCode);
+
+        bool hasEntry = false;
+        if (bibtexFile != NULL) {
+            for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
+                Entry *entry = dynamic_cast<Entry*>(*it);
+                if (entry != NULL) {
+                    hasEntry = true;
+                    if (entry != NULL) {
+                        Value v;
+                        v.append(new VerbatimText(label()));
+                        entry->insert("x-fetchedfrom", v);
+                        d->sanitizeEntry(entry);
+                        emit foundEntry(entry);
+                    }
+                }
+            }
+            delete bibtexFile;
+        }
+
+        emit stoppedSearch(hasEntry ? resultNoError : resultUnspecifiedError);
     } else
         kDebug() << "url was" << reply->url().toString();
 }
