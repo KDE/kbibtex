@@ -17,8 +17,12 @@
 *   Free Software Foundation, Inc.,                                       *
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
+
+#include <QStringList>
 #include <QRegExp>
 #include <QList>
+
+#include <KDebug>
 
 #include "encoderxml.h"
 
@@ -36,6 +40,8 @@ charmappingdataxml[] = {
     {"&gt;", 0x003E, "&gt;"}
 };
 static const int charmappingdataxmlcount = sizeof(charmappingdataxml) / sizeof(charmappingdataxml[ 0 ]) ;
+
+static const QStringList backslashSymbols = QStringList() << QLatin1String("\\&") << QLatin1String("\\%") << QLatin1String("\\_");
 
 /**
  * Private class to store internal variables that should not be visible
@@ -80,7 +86,7 @@ QString EncoderXML::decode(const QString &text)
     QString result = text;
 
     for (QList<EncoderXMLPrivate::CharMappingItem>::ConstIterator it = d->charMapping.begin(); it != d->charMapping.end(); ++it)
-        result.replace((*it).regExp, (*it).unicode);
+        result.replace((*it).unicode, (*it).latex);
 
     /**
       * Find and replace all characters written as hexadecimal number
@@ -108,6 +114,18 @@ QString EncoderXML::decode(const QString &text)
             result.replace(result.mid(p, p2 - p + 1), QChar(dec));
     }
 
+    /// Replace special symbols with backslash-encoded variant (& --> \&)
+    foreach(const QString &backslashSymbol, backslashSymbols) {
+        int p = -1;
+        while ((p = result.indexOf(backslashSymbol[1], p + 1)) >= 0) {
+            if (p == 0 || result[p-1] != QChar('\\')) {
+                /// replace only symbols which have no backslash on their right
+                result = result.left(p) + QChar('\\') + result.mid(p);
+                ++p;
+            }
+        }
+    }
+
     return result;
 }
 
@@ -116,7 +134,12 @@ QString EncoderXML::encode(const QString &text)
     QString result = text;
 
     for (QList<EncoderXMLPrivate::CharMappingItem>::ConstIterator it = d->charMapping.begin(); it != d->charMapping.end(); ++it)
-        result.replace((*it).unicode, (*it).latex);
+        result.replace((*it).regExp, (*it).unicode);
+
+    /// Replace backlash-encoded symbols with plain text (\& --> &)
+    foreach(const QString &backslashSymbol, backslashSymbols) {
+        result.replace(backslashSymbol, backslashSymbol[1]);
+    }
 
     return result;
 }
