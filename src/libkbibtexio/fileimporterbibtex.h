@@ -112,10 +112,10 @@ private:
     Element *nextElement();
     Token nextToken();
     QString readString(bool &isStringKey);
-    QString readSimpleString(QChar until = '\0');
+    QString readSimpleString(QChar until = QChar('\0'));
     QString readQuotedString();
     QString readLine();
-    QString readBracketString(const QChar openingBracket);
+    QString readBracketString(const QChar &openingBracket);
     Token readValue(Value& value, const QString& fieldType);
 
     void unescapeLaTeXChars(QString &text);

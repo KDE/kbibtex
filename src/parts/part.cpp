@@ -97,11 +97,12 @@ public:
     ColorLabelContextMenu *colorLabelContextMenu;
 
     KBibTeXPartPrivate(KBibTeXPart *parent)
-            : p(parent), sortFilterProxyModel(NULL), signalMapperNewElement(new QSignalMapper(parent)), viewDocumentMenu(new QMenu(i18n("View Document"), parent->widget())), signalMapperViewDocument(new QSignalMapper(parent)), isSaveAsOperation(false) {
+            : p(parent), model(NULL), sortFilterProxyModel(NULL), signalMapperNewElement(new QSignalMapper(parent)), viewDocumentMenu(new QMenu(i18n("View Document"), parent->widget())), signalMapperViewDocument(new QSignalMapper(parent)), isSaveAsOperation(false) {
         connect(signalMapperViewDocument, SIGNAL(mapped(QObject*)), p, SLOT(elementViewDocumentMenu(QObject*)));
     }
 
     ~KBibTeXPartPrivate() {
+        delete model;
         delete signalMapperNewElement;
         delete viewDocumentMenu;
         delete signalMapperViewDocument;
