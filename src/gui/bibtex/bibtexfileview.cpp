@@ -157,7 +157,7 @@ void BibTeXFileView::columnsChanged()
     QByteArray headerState = header()->saveState();
     KConfigGroup configGroup(config, configGroupName);
     configGroup.writeEntry(configHeaderState.arg(m_name), headerState);
-    config->sync();
+    config->sync(); // TODO profiling shows that this sync is expensive. Delay sync?
 }
 
 void BibTeXFileView::headerActionToggled(QObject *obj)

@@ -365,12 +365,12 @@ class EncoderLaTeX::EncoderLaTeXPrivate
 {
 public:
     struct CombinedMappingItem {
-        QRegExp regExp;
+        QRegExp *regExp;
         QString latex;
     };
 
     struct CharMappingItem {
-        QRegExp regExp;
+        QRegExp *regExp;
         QString unicode;
         QString latex;
     };
@@ -378,10 +378,24 @@ public:
     QList<CombinedMappingItem> combinedMapping;
     QList<CharMappingItem> charMapping;
 
+    ~EncoderLaTeXPrivate() {
+        /// release memory allocated for regular expression engine
+        while (!combinedMapping.isEmpty()) {
+            CombinedMappingItem &item = combinedMapping.first();
+            delete item.regExp;
+            combinedMapping.removeFirst();
+        }
+        while (!charMapping.isEmpty()) {
+            CharMappingItem &item = charMapping.first();
+            delete item.regExp;
+            charMapping.removeFirst();
+        }
+    }
+
     void buildCombinedMapping() {
         for (int i = 0; i < decompositionscount; i++) {
             CombinedMappingItem item;
-            item.regExp = QRegExp("(.)" + QString(QChar(decompositions[i].unicode)));
+            item.regExp = new QRegExp("(.)" + QString(QChar(decompositions[i].unicode)));
             item.latex = decompositions[i].latexCommand;
             combinedMapping.append(item);
         }
@@ -391,7 +405,7 @@ public:
         /** encoding and decoding for digraphs such as -- or ?` */
         for (int i = 0; i < charmappingdatalatexcount; i++) {
             CharMappingItem charMappingItem;
-            charMappingItem.regExp = QRegExp(charmappingdatalatex[ i ].regexp);
+            charMappingItem.regExp = new QRegExp(charmappingdatalatex[ i ].regexp);
             charMappingItem.unicode = QChar(charmappingdatalatex[ i ].unicode);
             charMappingItem.latex = QString(charmappingdatalatex[ i ].latex);
             charMapping.append(charMappingItem);
@@ -402,9 +416,9 @@ public:
             /** different types of writing such as {\AA} or \AA{} possible */
             for (int j = 0; j < expansionscmdcount; ++j) {
                 CharMappingItem charMappingItem;
-                charMappingItem.regExp = QRegExp(QString(expansionsCmd[j]).arg(commandmappingdatalatex[i].letters));
+                charMappingItem.regExp = new QRegExp(QString(expansionsCmd[j]).arg(commandmappingdatalatex[i].letters));
                 charMappingItem.unicode = QChar(commandmappingdatalatex[i].unicode);
-                if (charMappingItem.regExp.numCaptures() > 0)
+                if (charMappingItem.regExp->numCaptures() > 0)
                     charMappingItem.unicode += QString("\\1");
                 charMappingItem.latex = QString("{\\%1}").arg(commandmappingdatalatex[i].letters);
                 charMapping.append(charMappingItem);
@@ -421,7 +435,7 @@ public:
             if (!modifierRegExp.at(modifierRegExp.length() - 1).isLetter())
                 for (int j = 0; j < expansionsmod2count; ++j) {
                     CharMappingItem charMappingItem;
-                    charMappingItem.regExp = QRegExp(QString(expansionsMod2[j]).arg(modifierRegExp).arg(modcharmappingdatalatex[i].letter));
+                    charMappingItem.regExp = new QRegExp(QString(expansionsMod2[j]).arg(modifierRegExp).arg(modcharmappingdatalatex[i].letter));
                     charMappingItem.unicode = QChar(modcharmappingdatalatex[i].unicode);
                     charMappingItem.latex = QString("{%1%2}").arg(modifier).arg(modcharmappingdatalatex[i].letter);
                     charMapping.append(charMappingItem);
@@ -430,7 +444,7 @@ public:
             /** second batch of replacement rules, where a separator is required between modifier and character (e.g. \v{g}) */
             for (int j = 0; j < expansionsmod1count; ++j) {
                 CharMappingItem charMappingItem;
-                charMappingItem.regExp = QRegExp(QString(expansionsMod1[j]).arg(modifierRegExp).arg(modcharmappingdatalatex[i].letter));
+                charMappingItem.regExp = new QRegExp(QString(expansionsMod1[j]).arg(modifierRegExp).arg(modcharmappingdatalatex[i].letter));
                 charMappingItem.unicode = QChar(modcharmappingdatalatex[i].unicode);
                 charMappingItem.latex = QString("%1{%2}").arg(modifier).arg(modcharmappingdatalatex[i].letter);
                 charMapping.append(charMappingItem);
@@ -448,7 +462,7 @@ EncoderLaTeX::EncoderLaTeX()
 
 EncoderLaTeX::~EncoderLaTeX()
 {
-    // nothing
+    delete d;
 }
 
 QString EncoderLaTeX::decode(const QString & text)
@@ -519,7 +533,7 @@ QString EncoderLaTeX::decode(const QString & text)
     }
 
     for (QList<EncoderLaTeXPrivate::CharMappingItem>::ConstIterator cmit = d->charMapping.begin(); cmit != d->charMapping.end(); ++cmit)
-        result.replace((*cmit).regExp, (*cmit).unicode);
+        result.replace(*((*cmit).regExp), (*cmit).unicode);
     QStringList transformed = result.split(splitMarker, QString::SkipEmptyParts);
 
     result = "";
@@ -659,11 +673,11 @@ QString EncoderLaTeX::encode(const QString &text, const QChar &replace)
 QString& EncoderLaTeX::decomposedUTF8toLaTeX(QString &text)
 {
     for (QList<EncoderLaTeXPrivate::CombinedMappingItem>::Iterator it = d->combinedMapping.begin(); it != d->combinedMapping.end(); ++it) {
-        int i = (*it).regExp.indexIn(text);
+        int i = (*it).regExp->indexIn(text);
         while (i >= 0) {
-            QString a = (*it).regExp.cap(1);
+            QString a = (*it).regExp->cap(1);
             text = text.left(i) + "\\" + (*it).latex + "{" + a + "}" + text.mid(i + 2);
-            i = (*it).regExp.indexIn(text, i + 1);
+            i = (*it).regExp->indexIn(text, i + 1);
         }
     }
 
