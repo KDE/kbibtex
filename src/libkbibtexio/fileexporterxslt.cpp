@@ -17,9 +17,11 @@
 *   Free Software Foundation, Inc.,                                       *
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
+
 #include <QRegExp>
 #include <QStringList>
 #include <QBuffer>
+#include <QFile>
 
 #include <KDebug>
 #include <KStandardDirs>
@@ -38,7 +40,7 @@
 FileExporterXSLT::FileExporterXSLT(const QString& xsltFilename)
         : FileExporter()
 {
-    if (xsltFilename.isNull())
+    if (xsltFilename.isEmpty() || !QFile(xsltFilename).exists())
         setXSLTFilename(KStandardDirs::locate("appdata", "standard.xsl"));
     else
         setXSLTFilename(xsltFilename);

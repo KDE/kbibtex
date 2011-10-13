@@ -22,8 +22,6 @@
 #include <QRegExp>
 #include <QList>
 
-#include <KDebug>
-
 #include "encoderxml.h"
 
 EncoderXML *encoderXML = NULL;
