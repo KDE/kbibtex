@@ -140,8 +140,8 @@ void ValueListDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
     int fieldWidth = fm.width(field);
     if (countWidth + fieldWidth > textRect.width()) {
         /// text plus count is too wide for column, cut text and insert "..."
-        field = fm.elidedText(field, Qt::ElideRight, textRect.width() - countWidth);
-        fieldWidth = fm.width(field);
+        field = fm.elidedText(field, Qt::ElideRight, textRect.width() - countWidth - 8);
+        fieldWidth = textRect.width() - countWidth - 12;
     }
 
     /// determine rects to draw field
