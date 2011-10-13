@@ -20,6 +20,8 @@
 
 #include <typeinfo>
 
+#include <QApplication>
+#include <QClipboard>
 #include <QScrollArea>
 #include <QLayout>
 #include <QSignalMapper>
@@ -463,13 +465,19 @@ const QString KeywordListEdit::keyGlobalKeywordList = QLatin1String("globalKeywo
 KeywordListEdit::KeywordListEdit(QWidget *parent)
         : FieldListEdit(KBibTeX::tfKeyword, KBibTeX::tfKeyword | KBibTeX::tfSource, parent), m_config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), m_configGroupName(QLatin1String("Global Keywords"))
 {
-    m_addKeyword = new KPushButton(KIcon("list-add"), i18n("Add Keywords"), this);
-    addButton(m_addKeyword);
-    connect(m_addKeyword, SIGNAL(clicked()), this, SLOT(slotAddKeyword()));
-    connect(m_addKeyword, SIGNAL(clicked()), this, SIGNAL(modified()));
+    m_buttonAddKeywordsFromList = new KPushButton(KIcon("list-add"), i18n("Add Keywords from List"), this);
+    m_buttonAddKeywordsFromList->setToolTip(i18n("Add keywords as selected from a pre-defined list of keywords"));
+    addButton(m_buttonAddKeywordsFromList);
+    connect(m_buttonAddKeywordsFromList, SIGNAL(clicked()), this, SLOT(slotAddKeywordsFromList()));
+    connect(m_buttonAddKeywordsFromList, SIGNAL(clicked()), this, SIGNAL(modified()));
+    m_buttonAddKeywordsFromClipboard = new KPushButton(KIcon("edit-paste"), i18n("Add Keywords from Clipboard"), this);
+    m_buttonAddKeywordsFromClipboard->setToolTip(i18n("Add a punctuation-separated list of keywords from clipboard"));
+    addButton(m_buttonAddKeywordsFromClipboard);
+    connect(m_buttonAddKeywordsFromClipboard, SIGNAL(clicked()), this, SLOT(slotAddKeywordsFromClipboard()));
+    connect(m_buttonAddKeywordsFromClipboard, SIGNAL(clicked()), this, SIGNAL(modified()));
 }
 
-void KeywordListEdit::slotAddKeyword()
+void KeywordListEdit::slotAddKeywordsFromList()
 {
     /// fetch stored, global keywords
     KConfigGroup configGroup(m_config, m_configGroupName);
@@ -499,10 +507,26 @@ void KeywordListEdit::slotAddKeyword()
     }
 }
 
+void KeywordListEdit::slotAddKeywordsFromClipboard()
+{
+    QClipboard *clipboard = QApplication::clipboard();
+    QString text = clipboard->text(QClipboard::Clipboard);
+    if (text.isEmpty())
+        text = clipboard->text(QClipboard::Selection);
+    if (!text.isEmpty()) {
+        QList<Keyword*> keywordList = FileImporterBibTeX::splitKeywords(text);
+        foreach(Keyword *keyword, keywordList) {
+            Value *value = new Value();
+            value->append(keyword);
+            lineAdd(value);
+        }
+    }
+}
+
 void KeywordListEdit::setReadOnly(bool isReadOnly)
 {
     FieldListEdit::setReadOnly(isReadOnly);
-    m_addKeyword->setEnabled(!isReadOnly);
+    m_buttonAddKeywordsFromList->setEnabled(!isReadOnly);
 }
 
 void KeywordListEdit::setFile(const File *file)

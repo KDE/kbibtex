@@ -135,12 +135,13 @@ public:
     virtual void setCompletionItems(const QStringList &items);
 
 private slots:
-    void slotAddKeyword();
+    void slotAddKeywordsFromList();
+    void slotAddKeywordsFromClipboard();
 
 private:
     KSharedConfigPtr m_config;
     const QString m_configGroupName;
-    KPushButton *m_addKeyword;
+    KPushButton *m_buttonAddKeywordsFromList, *m_buttonAddKeywordsFromClipboard;
     QSet<QString> m_keywordsFromFile;
 };
 
