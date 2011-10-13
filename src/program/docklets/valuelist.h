@@ -50,7 +50,7 @@ private slots:
     void startItemRenaming();
     void showCountColumnToggled();
     void sortByCountToggled();
-    void issueResizeEvent();
+    void delayedResize();
     void columnsChanged();
 
 private:

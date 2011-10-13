@@ -133,7 +133,6 @@ public:
         QByteArray headerState = configGroup.readEntry(configKeyHeaderState, QByteArray());
         treeviewFieldValues->header()->restoreState(headerState);
 
-        connect(treeviewFieldValues->header(), SIGNAL(sectionResized(int, int, int)), p, SLOT(columnsChanged()));
         connect(treeviewFieldValues->header(), SIGNAL(sortIndicatorChanged(int, Qt::SortOrder)), p, SLOT(columnsChanged()));
     }
 
@@ -171,19 +170,20 @@ public:
 ValueList::ValueList(QWidget *parent)
         : QWidget(parent), d(new ValueListPrivate(this))
 {
+    QTimer::singleShot(500, this, SLOT(delayedResize()));
 }
 
 void ValueList::setEditor(BibTeXEditor *editor)
 {
     d->editor = editor;
     update();
+    resizeEvent(NULL);
 }
 
 void ValueList::update()
 {
     d->update();
     setEnabled(d->editor != NULL);
-    QTimer::singleShot(500, this, SLOT(issueResizeEvent()));
 }
 
 void ValueList::resizeEvent(QResizeEvent *)
@@ -239,14 +239,14 @@ void ValueList::showCountColumnToggled()
 {
     if (d->model != NULL)
         d->model->setShowCountColumn(d->showCountColumnAction->isChecked());
+    if (d->showCountColumnAction->isChecked())
+        resizeEvent(NULL);
 
     d->sortByCountAction->setEnabled(!d->showCountColumnAction->isChecked());
 
     KConfigGroup configGroup(d->config, d->configGroupName);
     configGroup.writeEntry(d->configKeyShowCountColumn, d->showCountColumnAction->isChecked());
     d->config->sync();
-
-    QTimer::singleShot(500, this, SLOT(issueResizeEvent()));
 }
 
 void ValueList::sortByCountToggled()
@@ -259,7 +259,7 @@ void ValueList::sortByCountToggled()
     d->config->sync();
 }
 
-void ValueList::issueResizeEvent()
+void ValueList::delayedResize()
 {
     resizeEvent(NULL);
 }
@@ -271,5 +271,5 @@ void ValueList::columnsChanged()
     configGroup.writeEntry(d->configKeyHeaderState, headerState);
     d->config->sync();
 
-    QTimer::singleShot(500, this, SLOT(issueResizeEvent()));
+    resizeEvent(NULL);
 }
