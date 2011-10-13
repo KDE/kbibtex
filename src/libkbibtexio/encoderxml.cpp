@@ -51,7 +51,7 @@ public:
     struct CharMappingItem {
         QRegExp regExp;
         QChar unicode;
-        QString latex;
+        QString xml;
     };
 
     QList<CharMappingItem> charMapping;
@@ -61,7 +61,7 @@ public:
             CharMappingItem charMappingItem;
             charMappingItem.regExp = QRegExp(charmappingdataxml[ i ].regexp);
             charMappingItem.unicode = QChar(charmappingdataxml[ i ].unicode);
-            charMappingItem.latex = QString(charmappingdataxml[ i ].latex);
+            charMappingItem.xml = QString(charmappingdataxml[ i ].latex);
             charMapping.append(charMappingItem);
         }
     }
@@ -84,11 +84,11 @@ QString EncoderXML::decode(const QString &text)
     QString result = text;
 
     for (QList<EncoderXMLPrivate::CharMappingItem>::ConstIterator it = d->charMapping.begin(); it != d->charMapping.end(); ++it)
-        result.replace((*it).unicode, (*it).latex);
+        result.replace((*it).regExp, (*it).unicode);
 
     /**
-      * Find and replace all characters written as hexadecimal number
-      */
+     * Find and replace all characters written as hexadecimal number
+     */
     int p = -1;
     while ((p = result.indexOf("&#x", p + 1)) >= 0) {
         int p2 = result.indexOf(";", p + 1);
@@ -132,7 +132,7 @@ QString EncoderXML::encode(const QString &text)
     QString result = text;
 
     for (QList<EncoderXMLPrivate::CharMappingItem>::ConstIterator it = d->charMapping.begin(); it != d->charMapping.end(); ++it)
-        result.replace((*it).regExp, (*it).unicode);
+        result.replace((*it).unicode, (*it).xml);
 
     /// Replace backlash-encoded symbols with plain text (\& --> &)
     foreach(const QString &backslashSymbol, backslashSymbols) {
