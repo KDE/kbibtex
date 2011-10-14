@@ -115,7 +115,7 @@ private:
     QString readSimpleString(QChar until = QChar('\0'));
     QString readQuotedString();
     QString readLine();
-    QString readBracketString(const QChar &openingBracket);
+    QString readBracketString(const QChar openingBracket); ///< do not use reference on QChar here!
     Token readValue(Value& value, const QString& fieldType);
 
     void unescapeLaTeXChars(QString &text);
