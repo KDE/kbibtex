@@ -458,7 +458,7 @@ QString FileImporterBibTeX::readLine()
     return result;
 }
 
-QString FileImporterBibTeX::readBracketString(const QChar openingBracket)
+QString FileImporterBibTeX::readBracketString(const QChar openingBracket) ///< do not use reference on QChar here!
 {
     QString result;
     QChar closingBracket = '}';

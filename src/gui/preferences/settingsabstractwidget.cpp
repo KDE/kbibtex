@@ -38,7 +38,7 @@ void SettingsAbstractWidget::selectValue(KComboBox *comboBox, const QString &val
     int row = 0;
     QModelIndex index;
     const QString lowerValue = value.toLower();
-    while ((index = model->index(row, 0, QModelIndex())) != QModelIndex()) {
+    while (row < model->rowCount() && (index = model->index(row, 0, QModelIndex())) != QModelIndex()) {
         QString line = model->data(index, role).toString();
         if (line.toLower() == lowerValue) {
             comboBox->setCurrentIndex(row);
