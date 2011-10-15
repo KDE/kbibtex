@@ -39,63 +39,68 @@ private:
 
 public:
     MDIWidget *m;
-    BibTeXEditor *currentFile;
+    File *file;
     KPushButton *buttonImport;
-    BibTeXEditor *editor;
+    BibTeXEditor *resultList, *mainEditor;
     KAction *actionViewCurrent, *actionImportSelected, *actionCopySelected;
 
     SearchResultsPrivate(MDIWidget *mdiWidget, SearchResults *parent)
-            : p(parent), m(mdiWidget), currentFile(NULL) {
+            : p(parent), m(mdiWidget), file(new File()) {
         QGridLayout *layout = new QGridLayout(parent);
         layout->setMargin(0);
         layout->setColumnStretch(0, 1);
         layout->setColumnStretch(1, 0);
 
-        editor = new BibTeXEditor(QLatin1String("SearchResults"), parent);
-        editor->setReadOnly(true);
-        editor->setFrameShadow(QFrame::Sunken);
-        editor->setFrameShape(QFrame::StyledPanel);
-        editor->setContextMenuPolicy(Qt::ActionsContextMenu);
-        layout->addWidget(editor, 0, 0, 1, 2);
+        resultList = new BibTeXEditor(QLatin1String("SearchResults"), parent);
+        resultList->setReadOnly(true);
+        resultList->setFrameShadow(QFrame::Sunken);
+        resultList->setFrameShape(QFrame::StyledPanel);
+        resultList->setContextMenuPolicy(Qt::ActionsContextMenu);
+        layout->addWidget(resultList, 0, 0, 1, 2);
 
-        clipboard = new Clipboard(editor);
+        clipboard = new Clipboard(resultList);
 
         buttonImport = new KPushButton(KIcon("svn-update"), i18n("Import"), parent);
         layout->addWidget(buttonImport, 1, 1, 1, 1);
         buttonImport->setEnabled(false);
 
         SortFilterBibTeXFileModel *model = new SortFilterBibTeXFileModel(parent);
-        model->setSourceModel(new BibTeXFileModel(parent));
-        editor->setModel(model);
+        BibTeXFileModel *bibTeXModel = new BibTeXFileModel(parent);
+        bibTeXModel->setBibTeXFile(file);
+        model->setSourceModel(bibTeXModel);
+        resultList->setModel(model);
 
         actionViewCurrent = new KAction(KIcon("document-preview"), i18n("View Element"), parent);
-        editor->addAction(actionViewCurrent);
+        resultList->addAction(actionViewCurrent);
         actionViewCurrent->setEnabled(false);
-        connect(actionViewCurrent, SIGNAL(triggered()), editor, SLOT(viewCurrentElement()));
+        connect(actionViewCurrent, SIGNAL(triggered()), resultList, SLOT(viewCurrentElement()));
 
         actionImportSelected = new KAction(KIcon("svn-update"), i18n("Import"), parent);
-        editor->addAction(actionImportSelected);
+        resultList->addAction(actionImportSelected);
         actionImportSelected->setEnabled(false);
         connect(actionImportSelected, SIGNAL(triggered()), parent, SLOT(importSelected()));
 
         actionCopySelected = new KAction(KIcon("edit-copy"), i18n("Copy"), parent);
-        editor->addAction(actionCopySelected);
+        resultList->addAction(actionCopySelected);
         actionCopySelected->setEnabled(false);
         connect(actionCopySelected, SIGNAL(triggered()), clipboard, SLOT(copy()));
 
-        connect(editor, SIGNAL(doubleClicked(QModelIndex)), editor, SLOT(viewCurrentElement()));
-        connect(editor, SIGNAL(selectedElementsChanged()), parent, SLOT(updateGUI()));
+        connect(resultList, SIGNAL(doubleClicked(QModelIndex)), resultList, SLOT(viewCurrentElement()));
+        connect(resultList, SIGNAL(selectedElementsChanged()), parent, SLOT(updateGUI()));
         connect(buttonImport, SIGNAL(clicked()), parent, SLOT(importSelected()));
     }
 
-    void clear() {
-        File *file = editor->bibTeXModel()->bibTeXFile();
+    ~SearchResultsPrivate() {
         delete file;
-        editor->bibTeXModel()->setBibTeXFile(new File());
+    }
+
+    void clear() {
+        file->clear();
+        resultList->reset();
     }
 
     bool insertElement(Element *element) {
-        BibTeXFileModel *model = editor->bibTeXModel();
+        BibTeXFileModel *model = resultList->bibTeXModel();
         return model->insertRow(element,  model->rowCount());
     }
 
@@ -105,6 +110,11 @@ SearchResults::SearchResults(MDIWidget *mdiWidget, QWidget *parent)
         : QWidget(parent), d(new SearchResultsPrivate(mdiWidget, this))
 {
     // nothing
+}
+
+SearchResults::~SearchResults()
+{
+    delete d;
 }
 
 void SearchResults::clear()
@@ -120,27 +130,27 @@ bool SearchResults::insertElement(Element *element)
 void SearchResults::documentSwitched(BibTeXEditor *oldEditor, BibTeXEditor *newEditor)
 {
     Q_UNUSED(oldEditor);
-    d->currentFile = newEditor;
+    d->mainEditor = newEditor;
     updateGUI();
 }
 
 void SearchResults::updateGUI()
 {
-    d->buttonImport->setEnabled(d->currentFile != NULL && !d->editor->selectedElements().isEmpty());
+    d->buttonImport->setEnabled(d->mainEditor != NULL && !d->resultList->selectedElements().isEmpty());
     d->actionImportSelected->setEnabled(d->buttonImport->isEnabled());
-    d->actionCopySelected->setEnabled(!d->editor->selectedElements().isEmpty());
-    d->actionViewCurrent->setEnabled(d->editor->currentElement() != NULL);
+    d->actionCopySelected->setEnabled(!d->resultList->selectedElements().isEmpty());
+    d->actionViewCurrent->setEnabled(d->resultList->currentElement() != NULL);
 }
 
 void SearchResults::importSelected()
 {
-    Q_ASSERT(d->currentFile != NULL);
+    Q_ASSERT(d->mainEditor != NULL);
 
-    BibTeXFileModel *targetModel = d->currentFile->bibTeXModel();
-    BibTeXFileModel *sourceModel = d->editor->bibTeXModel();
-    QList<QModelIndex> selList = d->editor->selectionModel()->selectedRows();
+    BibTeXFileModel *targetModel = d->mainEditor->bibTeXModel();
+    BibTeXFileModel *sourceModel = d->resultList->bibTeXModel();
+    QList<QModelIndex> selList = d->resultList->selectionModel()->selectedRows();
     for (QList<QModelIndex>::ConstIterator it = selList.constBegin(); it != selList.constEnd(); ++it) {
-        int row = d->editor->sortFilterProxyModel()->mapToSource(*it).row();
+        int row = d->resultList->sortFilterProxyModel()->mapToSource(*it).row();
         Element *element = sourceModel->element(row);
         targetModel->insertRow(element, targetModel->rowCount());
     }

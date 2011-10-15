@@ -34,6 +34,7 @@ class SearchResults : public QWidget
 
 public:
     SearchResults(MDIWidget *mdiWidget, QWidget *parent);
+    ~SearchResults();
 
     void clear();
     bool insertElement(Element *element);

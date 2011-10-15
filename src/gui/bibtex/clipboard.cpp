@@ -71,6 +71,9 @@ public:
         QString text = ts.readAll();
         buffer.close();
 
+        /// clean up
+        delete file;
+
         return text;
     }
 

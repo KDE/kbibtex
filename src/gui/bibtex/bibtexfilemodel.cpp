@@ -260,22 +260,17 @@ BibTeXFileModel::BibTeXFileModel(QObject * parent)
     }
 }
 
-BibTeXFileModel::~BibTeXFileModel()
-{
-    if (m_bibtexFile != NULL) delete m_bibtexFile;
-}
 
 File *BibTeXFileModel::bibTeXFile()
 {
-    if (m_bibtexFile == NULL) m_bibtexFile = new File();
     return m_bibtexFile;
 }
 
 void BibTeXFileModel::setBibTeXFile(File *bibtexFile)
 {
-    // FIXME delete old m_bibtexFile before overwriting it?
+    bool doReset = m_bibtexFile != bibtexFile;
     m_bibtexFile = bibtexFile;
-    reset(); // TODO necessary here?
+    if (doReset) reset(); // TODO necessary here?
 }
 
 QModelIndex BibTeXFileModel::parent(const QModelIndex & index) const
@@ -418,7 +413,7 @@ Qt::ItemFlags BibTeXFileModel::flags(const QModelIndex &index) const
 
 bool BibTeXFileModel::removeRow(int row, const QModelIndex & parent)
 {
-    if (row < 0 || row >= rowCount() || row >= m_bibtexFile->count())
+    if (row < 0 || m_bibtexFile == NULL || row >= rowCount() || row >= m_bibtexFile->count())
         return false;
     if (parent != QModelIndex())
         return false;
@@ -432,6 +427,8 @@ bool BibTeXFileModel::removeRow(int row, const QModelIndex & parent)
 
 bool BibTeXFileModel::removeRowList(const QList<int> &rows)
 {
+    if (m_bibtexFile == NULL) return false;
+
     QList<int> internalRows = rows;
     qSort(internalRows.begin(), internalRows.end(), qGreater<int>());
 
@@ -448,9 +445,7 @@ bool BibTeXFileModel::removeRowList(const QList<int> &rows)
 
 bool BibTeXFileModel::insertRow(Element *element, int row, const QModelIndex & parent)
 {
-    if (row < 0 || row > rowCount())
-        return false;
-    if (parent != QModelIndex())
+    if (m_bibtexFile == NULL || row < 0 || row > rowCount() || parent != QModelIndex())
         return false;
 
     m_bibtexFile->insert(row, element);
@@ -469,5 +464,6 @@ Element* BibTeXFileModel::element(int row) const
 
 int BibTeXFileModel::row(Element *element) const
 {
+    if (m_bibtexFile == NULL) return -1;
     return m_bibtexFile->indexOf(element);
 }

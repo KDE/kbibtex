@@ -52,7 +52,7 @@ public:
         QString field;
     };
 
-    SortFilterBibTeXFileModel(QObject * parent = 0);
+    SortFilterBibTeXFileModel(QObject *parent = 0);
 
     virtual void setSourceModel(QAbstractItemModel *model);
     BibTeXFileModel *bibTeXSourceModel();
@@ -88,7 +88,6 @@ public:
     static const bool defaultShowMacros;
 
     BibTeXFileModel(QObject * parent = 0);
-    virtual ~BibTeXFileModel();
 
     File *bibTeXFile();
     virtual void setBibTeXFile(File *bibtexFile);

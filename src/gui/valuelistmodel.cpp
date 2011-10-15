@@ -247,6 +247,8 @@ QVariant ValueListModel::data(const QModelIndex & index, int role) const
 
 bool ValueListModel::setData(const QModelIndex & index, const QVariant &value, int role)
 {
+    Q_ASSERT_X(file != NULL, "ValueListModel::setData", "You cannot set data if there is no BibTeX file associated with this value list.");
+
     if (role == Qt::EditRole && index.column() == 0) {
         Value newValue = value.value<Value>(); /// nice names ... ;-)
         QString origText = data(index, Qt::DisplayRole).toString();
@@ -327,6 +329,7 @@ void ValueListModel::setSortBy(SortBy sortBy)
 void ValueListModel::updateValues()
 {
     values.clear();
+    if (file == NULL) return;
 
     for (File::ConstIterator fit = file->constBegin(); fit != file->constEnd(); ++fit) {
         const Entry *entry = dynamic_cast<const Entry*>(*fit);

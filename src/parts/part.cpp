@@ -84,6 +84,7 @@ private:
     KBibTeXPart *p;
 
 public:
+    File *bibTeXFile;
     BibTeXEditor *editor;
     BibTeXFileModel *model;
     SortFilterBibTeXFileModel *sortFilterProxyModel;
@@ -97,11 +98,12 @@ public:
     ColorLabelContextMenu *colorLabelContextMenu;
 
     KBibTeXPartPrivate(KBibTeXPart *parent)
-            : p(parent), model(NULL), sortFilterProxyModel(NULL), signalMapperNewElement(new QSignalMapper(parent)), viewDocumentMenu(new QMenu(i18n("View Document"), parent->widget())), signalMapperViewDocument(new QSignalMapper(parent)), isSaveAsOperation(false) {
+            : p(parent), bibTeXFile(NULL), model(NULL), sortFilterProxyModel(NULL), signalMapperNewElement(new QSignalMapper(parent)), viewDocumentMenu(new QMenu(i18n("View Document"), parent->widget())), signalMapperViewDocument(new QSignalMapper(parent)), isSaveAsOperation(false) {
         connect(signalMapperViewDocument, SIGNAL(mapped(QObject*)), p, SLOT(elementViewDocumentMenu(QObject*)));
     }
 
     ~KBibTeXPartPrivate() {
+        delete bibTeXFile;
         delete model;
         delete signalMapperNewElement;
         delete viewDocumentMenu;
@@ -147,7 +149,6 @@ public:
     }
 
     QString findUnusedId() {
-        File *bibTeXFile = model->bibTeXFile();
         int i = 1;
         while (true) {
             QString result = i18n("New%1", i);
@@ -159,8 +160,9 @@ public:
     }
 
     void initializeNew() {
+        bibTeXFile = new File();
         model = new BibTeXFileModel();
-        model->setBibTeXFile(new File());
+        model->setBibTeXFile(bibTeXFile);
 
         if (sortFilterProxyModel != NULL) delete sortFilterProxyModel;
         sortFilterProxyModel = new SortFilterBibTeXFileModel(p);
@@ -241,12 +243,11 @@ public:
 
             if (typeid(*exporter) == typeid(FileExporterBibTeX)) {
                 KDialog dlg(p->widget());
-                File *file = model->bibTeXSourceModel()->bibTeXFile();
-                SettingsFileExporterBibTeXWidget settingsWidget(file, &dlg);
+                SettingsFileExporterBibTeXWidget settingsWidget(bibTeXFile, &dlg);
                 dlg.setMainWidget(&settingsWidget);
                 dlg.setButtons(KDialog::Ok);
                 dlg.exec();
-                settingsWidget.saveProperties(file);
+                settingsWidget.saveProperties(bibTeXFile);
             }
         }
 
@@ -522,9 +523,8 @@ void KBibTeXPart::elementFindPDF()
     QModelIndexList mil = d->editor->selectionModel()->selectedRows();
     if (mil.count() == 1) {
         Entry *entry = dynamic_cast<Entry*>(d->editor->bibTeXModel()->element(d->editor->sortFilterProxyModel()->mapToSource(*mil.constBegin()).row()));
-        File *file = d->editor->bibTeXModel()->bibTeXFile();
         if (entry != NULL)
-            FindPDFUI::interactiveFindPDF(*entry, *file, widget());
+            FindPDFUI::interactiveFindPDF(*entry, *d->bibTeXFile, widget());
     }
 }
 
@@ -544,19 +544,20 @@ bool KBibTeXPart::openFile()
 
     QFile inputfile(localFilePath());
     inputfile.open(QIODevice::ReadOnly);
-    File *bibtexFile = importer->load(&inputfile);
+    if (d->bibTeXFile != NULL) delete d->bibTeXFile;
+    d->bibTeXFile = importer->load(&inputfile);
     inputfile.close();
     delete importer;
 
-    if (bibtexFile == NULL) {
+    if (d->bibTeXFile == NULL) {
         kWarning() << "Opening file failed:" << url().pathOrUrl();
         qApp->restoreOverrideCursor();
         return false;
     }
 
-    bibtexFile->setProperty(File::Url, QUrl(url()));
+    d->bibTeXFile->setProperty(File::Url, QUrl(url()));
 
-    d->model->setBibTeXFile(bibtexFile);
+    d->model->setBibTeXFile(d->bibTeXFile);
     d->editor->setModel(d->model);
     if (d->sortFilterProxyModel != NULL) delete d->sortFilterProxyModel;
     d->sortFilterProxyModel = new SortFilterBibTeXFileModel(this);

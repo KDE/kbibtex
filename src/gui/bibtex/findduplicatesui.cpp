@@ -397,9 +397,9 @@ public:
     int currentClique;
     QList<EntryClique*> cl;
 
-    MergeWidgetPrivate(MergeWidget *parent, QList<EntryClique*> &cliqueList)
-            : p(parent), currentClique(0), cl(cliqueList) {
-        // nothing
+    MergeWidgetPrivate(MergeWidget *parent, File *bibTeXFile, QList<EntryClique*> &cliqueList)
+            : p(parent), file(bibTeXFile), currentClique(0), cl(cliqueList) {
+        setupGUI();
     }
 
     void setupGUI() {
@@ -420,7 +420,7 @@ public:
         alternativesView = new RadioButtonTreeView(splitter);
 
         model = new CheckableBibTeXFileModel(cl, alternativesView, p);
-        model->setBibTeXFile(new File(*file));
+        model->setBibTeXFile(file);
 
         QBoxLayout *containerLayout = new QHBoxLayout();
         layout->addLayout(containerLayout);
@@ -464,10 +464,9 @@ public:
 const char* MergeWidget::MergeWidgetPrivate::whichCliqueText = "Showing clique %1 of %2.";
 
 MergeWidget::MergeWidget(File *file, QList<EntryClique*> &cliqueList, QWidget *parent)
-        : QWidget(parent), d(new MergeWidgetPrivate(this, cliqueList))
+        : QWidget(parent), d(new MergeWidgetPrivate(this, file, cliqueList))
 {
-    d->file = file;
-    d->setupGUI();
+    // nothing
 }
 
 void MergeWidget::previousClique()
