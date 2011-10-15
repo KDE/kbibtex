@@ -37,6 +37,9 @@ class KBIBTEXGUI_EXPORT Clipboard : public QObject
     Q_OBJECT
 
 public:
+    static const QString keyCopyReferenceCommand;
+    static const QString defaultCopyReferenceCommand;
+
     Clipboard(BibTeXEditor *bibTeXEditor);
 
 public slots:

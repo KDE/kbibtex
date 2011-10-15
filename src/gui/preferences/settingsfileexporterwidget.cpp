@@ -30,6 +30,7 @@
 
 #include <fileexporter.h>
 #include <lyx.h>
+#include <clipboard.h>
 #include "settingsfileexporterwidget.h"
 
 class SettingsFileExporterWidget::SettingsFileExporterWidgetPrivate
@@ -40,11 +41,13 @@ private:
     KComboBox *comboBoxPaperSize;
     QMap<QString, QString> paperSizeLabelToName;
 
+    KComboBox *comboBoxCopyReferenceCmd;
+    static const QString citeCmdToLabel;
+
     KSharedConfigPtr config;
     const QString configGroupNameGeneral, configGroupNameLyX;
 
 public:
-
     KLineEdit *lineEditLyXServerPipeName;
 
     SettingsFileExporterWidgetPrivate(SettingsFileExporterWidget *parent)
@@ -57,16 +60,24 @@ public:
 
     void loadState() {
         KConfigGroup configGroup(config, configGroupNameGeneral);
-        QString paperSizeName = configGroup.readEntry(FileExporter::keyPaperSize, FileExporter::defaultPaperSize);
+        const QString paperSizeName = configGroup.readEntry(FileExporter::keyPaperSize, FileExporter::defaultPaperSize);
         p->selectValue(comboBoxPaperSize, paperSizeLabelToName.key(paperSizeName));
+
+        const QString copyReferenceCommand = configGroup.readEntry(Clipboard::keyCopyReferenceCommand, Clipboard::defaultCopyReferenceCommand);
+        p->selectValue(comboBoxCopyReferenceCmd, copyReferenceCommand.isEmpty() ? QString("") : copyReferenceCommand, Qt::UserRole);
+
         configGroup = KConfigGroup(config, configGroupNameLyX);
         lineEditLyXServerPipeName->setText(configGroup.readEntry(LyX::keyLyXServerPipeName, LyX::defaultLyXServerPipeName));
     }
 
     void saveState() {
         KConfigGroup configGroup(config, configGroupNameGeneral);
-        QString paperSizeName = paperSizeLabelToName.value(comboBoxPaperSize->currentText(), FileExporter::defaultPaperSize);
+        const QString paperSizeName = paperSizeLabelToName.value(comboBoxPaperSize->currentText(), FileExporter::defaultPaperSize);
         configGroup.writeEntry(FileExporter::keyPaperSize, paperSizeName);
+
+        const QString copyReferenceCommand = comboBoxCopyReferenceCmd->itemData(comboBoxCopyReferenceCmd->currentIndex()).toString();
+        configGroup.writeEntry(Clipboard::keyCopyReferenceCommand, copyReferenceCommand);
+
         configGroup = KConfigGroup(config, configGroupNameLyX);
         configGroup.writeEntry(LyX::keyLyXServerPipeName, lineEditLyXServerPipeName->text());
         config->sync();
@@ -74,6 +85,7 @@ public:
 
     void resetToDefaults() {
         p->selectValue(comboBoxPaperSize, paperSizeLabelToName[FileExporter::defaultPaperSize]);
+        p->selectValue(comboBoxCopyReferenceCmd, QString(""), Qt::UserRole);
         lineEditLyXServerPipeName->setText(LyX::defaultLyXServerPipeName);
     }
 
@@ -90,6 +102,18 @@ public:
         }
         connect(comboBoxPaperSize, SIGNAL(currentIndexChanged(int)), p, SIGNAL(changed()));
 
+        comboBoxCopyReferenceCmd = new KComboBox(false, p);
+        comboBoxCopyReferenceCmd->setObjectName("comboBoxCopyReferenceCmd");
+        layout->addRow(i18n("Command for \"Copy Reference\":"), comboBoxCopyReferenceCmd);
+        ItalicTextItemModel *itim = new ItalicTextItemModel();
+        itim->addItem(i18n("No command"), QString(""));
+        const QStringList citeCommands = QStringList() << QLatin1String("cite") << QLatin1String("citealt") << QLatin1String("citeauthor") << QLatin1String("citeauthor*") << QLatin1String("citeyear") << QLatin1String("citeyearpar") << QLatin1String("shortcite") << QLatin1String("citet") << QLatin1String("citet*") << QLatin1String("citep") << QLatin1String("citep*"); // TODO more
+        foreach(const QString &citeCommand, citeCommands) {
+            itim->addItem(citeCmdToLabel.arg(citeCommand), citeCommand);
+        }
+        comboBoxCopyReferenceCmd->setModel(itim);
+        connect(comboBoxCopyReferenceCmd, SIGNAL(currentIndexChanged(int)), p, SIGNAL(changed()));
+
         QBoxLayout *boxLayout = new QHBoxLayout();
         boxLayout->setMargin(0);
         lineEditLyXServerPipeName = new KLineEdit(p);
@@ -103,6 +127,7 @@ public:
     }
 };
 
+const QString SettingsFileExporterWidget::SettingsFileExporterWidgetPrivate::citeCmdToLabel = QLatin1String("\\%1{") + QChar(0x2026) + QChar('}');
 
 SettingsFileExporterWidget::SettingsFileExporterWidget(QWidget *parent)
         : SettingsAbstractWidget(parent), d(new SettingsFileExporterWidgetPrivate(this))
