@@ -24,12 +24,17 @@
 #include <QMouseEvent>
 #include <QDrag>
 
+#include <KConfigGroup>
+
 #include <bibtexeditor.h>
 #include <bibtexfilemodel.h>
 #include <fileimporterbibtex.h>
 #include <fileexporterbibtex.h>
 #include <file.h>
 #include "clipboard.h"
+
+const QString Clipboard::keyCopyReferenceCommand = QLatin1String("copyReferenceCommand");
+const QString Clipboard::defaultCopyReferenceCommand = QLatin1String("");
 
 class Clipboard::ClipboardPrivate
 {
@@ -39,9 +44,11 @@ private:
 public:
     BibTeXEditor *bibTeXEditor;
     QPoint previousPosition;
+    KSharedConfigPtr config;
+    const QString configGroupName;
 
     ClipboardPrivate(BibTeXEditor *be, Clipboard *p)
-            : parent(p), bibTeXEditor(be) {
+            : parent(p), bibTeXEditor(be), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName(QLatin1String("General")) {
         // TODO
     }
 
@@ -132,7 +139,14 @@ void Clipboard::copyReferences()
 
     if (!references.isEmpty()) {
         QClipboard *clipboard = QApplication::clipboard();
-        clipboard->setText(references.join(","));
+        QString text = references.join(",");
+
+        KConfigGroup configGroup(d->config, d->configGroupName);
+        const QString copyReferenceCommand = configGroup.readEntry(keyCopyReferenceCommand, defaultCopyReferenceCommand);
+        if (!copyReferenceCommand.isEmpty())
+            text = QString(QLatin1String("\\%1{%2}")).arg(copyReferenceCommand).arg(text);
+
+        clipboard->setText(text);
     }
 }
 

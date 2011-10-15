@@ -36,56 +36,6 @@
 
 #define createDelimiterString(a, b) (QString("%1%2%3").arg(a).arg(QChar(8230)).arg(b))
 
-class ItalicTextItemModel : public QAbstractItemModel
-{
-private:
-    QList<QPair<QString, QString> > m_data;
-
-public:
-    ItalicTextItemModel(QObject *parent = 0)
-            : QAbstractItemModel(parent) {
-        // nothing
-    }
-
-    void addItem(const QString &a, const QString &b) {
-        m_data.append(QPair<QString, QString>(a, b));
-    }
-
-    QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const {
-        if (index.row() < 0 || index.row() >= m_data.count())
-            return QVariant();
-
-        if (role == Qt::FontRole) {
-            QFont font;
-            if (m_data[index.row()].second.isEmpty())
-                font.setItalic(true);
-            return font;
-        } else if (role == Qt::DisplayRole) {
-            return m_data[index.row()].first;
-        } else if (role == Qt::UserRole) {
-            return m_data[index.row()].second;
-        }
-
-        return QVariant();
-    }
-
-    QModelIndex index(int row, int column, const QModelIndex&) const {
-        return createIndex(row, column);
-    }
-
-    QModelIndex parent(const QModelIndex &) const {
-        return QModelIndex();
-    }
-
-    int rowCount(const QModelIndex &) const {
-        return m_data.count();
-    }
-
-    int columnCount(const QModelIndex &) const {
-        return 1;
-    }
-};
-
 
 class SettingsFileExporterBibTeXWidget::SettingsFileExporterBibTeXWidgetPrivate
 {
