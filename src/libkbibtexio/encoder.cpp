@@ -17,4 +17,16 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+
 #include "encoder.h"
+
+QString Encoder::decode(const QString & text) const
+{
+    return text;
+}
+
+QString Encoder::encode(const QString & text) const
+{
+    return text;
+};
+

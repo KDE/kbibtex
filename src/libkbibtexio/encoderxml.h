@@ -37,8 +37,8 @@ public:
     EncoderXML();
     ~EncoderXML();
 
-    QString decode(const QString &text);
-    QString encode(const QString &text);
+    QString decode(const QString &text) const;
+    QString encode(const QString &text) const;
 
     static EncoderXML *currentEncoderXML();
 

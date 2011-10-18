@@ -465,7 +465,7 @@ EncoderLaTeX::~EncoderLaTeX()
     delete d;
 }
 
-QString EncoderLaTeX::decode(const QString & text)
+QString EncoderLaTeX::decode(const QString & text) const
 {
     const QString splitMarker = "|KBIBTEX|";
 
@@ -562,7 +562,7 @@ QString EncoderLaTeX::decode(const QString & text)
     return result.replace(startStopMarker, "");
 }
 
-QString EncoderLaTeX::encode(const QString & text)
+QString EncoderLaTeX::encode(const QString & text) const
 {
     const QString splitMarker = "|KBIBTEX|";
 
@@ -661,16 +661,7 @@ QString EncoderLaTeX::encode(const QString & text)
     return result.replace(startStopMarker, "");
 }
 
-QString EncoderLaTeX::encode(const QString &text, const QChar &replace)
-{
-    QString result = text;
-    for (QList<EncoderLaTeXPrivate::CharMappingItem>::ConstIterator it = d->charMapping.begin(); it != d->charMapping.end(); ++it)
-        if ((*it).unicode == replace)
-            result.replace((*it).unicode, (*it).latex);
-    return result;
-}
-
-QString& EncoderLaTeX::decomposedUTF8toLaTeX(QString &text)
+QString& EncoderLaTeX::decomposedUTF8toLaTeX(QString &text) const
 {
     for (QList<EncoderLaTeXPrivate::CombinedMappingItem>::Iterator it = d->combinedMapping.begin(); it != d->combinedMapping.end(); ++it) {
         int i = (*it).regExp->indexIn(text);
@@ -702,18 +693,10 @@ QString EncoderLaTeX::convertToPlainAscii(const QString &text) const
     return internalText;
 }
 
-EncoderLaTeX* EncoderLaTeX::currentEncoderLaTeX()
+EncoderLaTeX* EncoderLaTeX::instance()
 {
     if (encoderLaTeX == NULL)
         encoderLaTeX = new EncoderLaTeX();
 
     return encoderLaTeX;
-}
-
-void EncoderLaTeX::deleteCurrentEncoderLaTeX()
-{
-    if (encoderLaTeX != NULL) {
-        delete encoderLaTeX;
-        encoderLaTeX = NULL;
-    }
 }

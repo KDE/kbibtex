@@ -36,18 +36,17 @@ public:
     EncoderLaTeX();
     ~EncoderLaTeX();
 
-    QString decode(const QString &text);
-    QString encode(const QString &text);
-    QString encode(const QString &text, const QChar &replace);
-    QString& decomposedUTF8toLaTeX(QString &text);
+    QString decode(const QString &text) const;
+    QString encode(const QString &text) const;
     QString convertToPlainAscii(const QString &text) const;
 
-    static EncoderLaTeX *currentEncoderLaTeX();
-    static void deleteCurrentEncoderLaTeX();
+    static EncoderLaTeX* instance();
 
 private:
     class EncoderLaTeXPrivate;
     EncoderLaTeXPrivate * const d;
+
+    QString& decomposedUTF8toLaTeX(QString &text) const;
 };
 
 #endif // ENCODERLATEX_H

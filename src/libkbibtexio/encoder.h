@@ -38,18 +38,14 @@ public:
      * @param text text in external textual representation
      * @return text in internal (UTF-8) representation
      */
-    virtual QString decode(const QString & text) {
-        return text;
-    };
+    virtual QString decode(const QString & text) const;
 
     /**
      * Encode from internal (UTF-8) representation to external textual representation.
      * @param text in internal (UTF-8) representation
      * @return text text in external textual representation
      */
-    virtual QString encode(const QString & text) {
-        return text;
-    };
+    virtual QString encode(const QString & text) const;
 };
 
 #endif

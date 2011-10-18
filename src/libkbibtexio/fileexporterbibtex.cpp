@@ -448,7 +448,7 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value& value, const QStr
     if (value.isEmpty())
         return "";
 
-    EncoderLaTeX *encoder = useLaTeXEncoding == leLaTeX ? EncoderLaTeX::currentEncoderLaTeX() : NULL;
+    EncoderLaTeX *encoder = useLaTeXEncoding == leLaTeX ? EncoderLaTeX::instance() : NULL;
 
     QString result = "";
     bool isOpen = false;

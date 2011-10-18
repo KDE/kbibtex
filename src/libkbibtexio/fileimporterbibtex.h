@@ -118,8 +118,6 @@ private:
     QString readBracketString(const QChar openingBracket); ///< do not use reference on QChar here!
     Token readValue(Value& value, const QString& fieldType);
 
-    void unescapeLaTeXChars(QString &text);
-
     static void splitPersonList(const QString& name, QStringList &resultList);
     static CommaContainment splitName(const QString& name, QStringList& segments);
 

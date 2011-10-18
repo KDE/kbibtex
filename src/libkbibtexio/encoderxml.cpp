@@ -79,7 +79,7 @@ EncoderXML::~EncoderXML()
     // nothing
 }
 
-QString EncoderXML::decode(const QString &text)
+QString EncoderXML::decode(const QString &text) const
 {
     QString result = text;
 
@@ -127,7 +127,7 @@ QString EncoderXML::decode(const QString &text)
     return result;
 }
 
-QString EncoderXML::encode(const QString &text)
+QString EncoderXML::encode(const QString &text) const
 {
     QString result = text;
 

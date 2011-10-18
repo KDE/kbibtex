@@ -68,7 +68,7 @@ QByteArray IConvLaTeX::encode(const QString &input)
     char *outputBuffer = outputByteArray.data();
     size_t inputBufferBytesLeft = inputByteArray.size();
     size_t ouputBufferBytesLeft = maxBufferSize;
-    Encoder *laTeXEncoder = EncoderLaTeX::currentEncoderLaTeX();
+    Encoder *laTeXEncoder = EncoderLaTeX::instance();
 
     while (iconv(d->iconvHandle, &inputBuffer, &inputBufferBytesLeft, &outputBuffer, &ouputBufferBytesLeft) == (size_t)(-1) && inputBufferBytesLeft > 0) {
         /// split text into character where iconv stopped and remaining text

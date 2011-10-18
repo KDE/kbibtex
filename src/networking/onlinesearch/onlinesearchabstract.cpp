@@ -47,7 +47,7 @@ const char* OnlineSearchAbstract::httpUnsafeChars = "%:/=+$?&\0";
 QStringList OnlineSearchQueryFormAbstract::authorLastNames(const Entry &entry)
 {
     QStringList result;
-    EncoderLaTeX *encoder = EncoderLaTeX::currentEncoderLaTeX();
+    EncoderLaTeX *encoder = EncoderLaTeX::instance();
 
     const Value v = entry[Entry::ftAuthor];
     Person *p = NULL;

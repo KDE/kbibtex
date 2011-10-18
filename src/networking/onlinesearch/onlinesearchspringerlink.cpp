@@ -181,7 +181,7 @@ public:
 
         QStringList authors = p->splitRespectingQuotationMarks(form->lineEditAuthorEditor->text());
         foreach(QString author, authors) {
-            author = EncoderLaTeX::currentEncoderLaTeX()->convertToPlainAscii(author);
+            author = EncoderLaTeX::instance()->convertToPlainAscii(author);
             queryString += QString(QLatin1String(" ( au:(%1) OR ed:(%1) )")).arg(author);
         }
 
@@ -209,7 +209,7 @@ public:
 
         QStringList authors = p->splitRespectingQuotationMarks(query[queryKeyAuthor]);
         foreach(QString author, authors) {
-            author = EncoderLaTeX::currentEncoderLaTeX()->convertToPlainAscii(author);
+            author = EncoderLaTeX::instance()->convertToPlainAscii(author);
             queryString += QString(QLatin1String(" ( au:(%1) OR ed:(%1) )")).arg(author);
         }
 

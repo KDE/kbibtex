@@ -158,7 +158,7 @@ public:
         value.clear();
         const QString text = parent->text();
 
-        EncoderLaTeX *encoder = EncoderLaTeX::currentEncoderLaTeX();
+        EncoderLaTeX *encoder = EncoderLaTeX::instance();
         const QString encodedText = encoder->decode(text);
         if (encodedText != text)
             parent->setText(encodedText);
@@ -306,7 +306,7 @@ public:
         if (destType == KBibTeX::tfSource) return true; /// simple case
 
         bool result = true;
-        EncoderLaTeX *enc = EncoderLaTeX::currentEncoderLaTeX();
+        EncoderLaTeX *enc = EncoderLaTeX::instance();
         QString rawText = QString::null;
         const ValueItem *first = value.first();
 

@@ -78,9 +78,7 @@ File* FileImporterBibTeX::load(QIODevice *iodevice)
     /** Remove HTML code from the input source */
     rawText = rawText.replace(htmlRegExp, "");
 
-    rawText = EncoderLaTeX::currentEncoderLaTeX() ->decode(rawText);
-
-    unescapeLaTeXChars(rawText);
+    // rawText = EncoderLaTeX::instance()->decode(rawText);
 
     m_textStreamLastPos = 0;
     m_textStream = new QTextStream(&rawText, QIODevice::ReadOnly);
@@ -113,13 +111,13 @@ File* FileImporterBibTeX::load(QIODevice *iodevice)
 
 bool FileImporterBibTeX::guessCanDecode(const QString & rawText)
 {
-    QString text = EncoderLaTeX::currentEncoderLaTeX()->decode(rawText);
+    QString text = EncoderLaTeX::instance()->decode(rawText);
     return text.indexOf(QRegExp("@\\w+\\{.+\\}")) >= 0;
 }
 
 void FileImporterBibTeX::cancel()
 {
-    m_cancelFlag = TRUE;
+    m_cancelFlag = true;
 }
 
 Element *FileImporterBibTeX::nextElement()
@@ -161,19 +159,19 @@ Comment *FileImporterBibTeX::readCommentElement()
         *m_textStream >> m_currentChar;
     }
 
-    return new Comment(readBracketString(m_currentChar));
+    return new Comment(EncoderLaTeX::instance()->decode(readBracketString(m_currentChar)));
 }
 
 Comment *FileImporterBibTeX::readPlainCommentElement()
 {
-    QString result = readLine();
+    QString result = EncoderLaTeX::instance()->decode(readLine());
     if (m_currentChar == '\n') ++m_lineNo;
     *m_textStream >> m_currentChar;
     while (!m_textStream->atEnd() && m_currentChar != '@' && !m_currentChar.isSpace()) {
         result.append('\n').append(m_currentChar);
         if (m_currentChar == '\n') ++m_lineNo;
         *m_textStream >> m_currentChar;
-        result.append(readLine());
+        result.append(EncoderLaTeX::instance()->decode(readLine()));
         if (m_currentChar == '\n') ++m_lineNo;
         *m_textStream >> m_currentChar;
     }
@@ -206,7 +204,7 @@ Macro *FileImporterBibTeX::readMacroElement()
     Macro *macro = new Macro(key);
     do {
         bool isStringKey = false;
-        QString text = readString(isStringKey).simplified();
+        QString text = EncoderLaTeX::instance()->decode(readString(isStringKey).simplified());
         if (isStringKey)
             macro->value().append(new MacroKey(text));
         else
@@ -231,8 +229,8 @@ Preamble *FileImporterBibTeX::readPreambleElement()
 
     Preamble *preamble = new Preamble();
     do {
-        bool isStringKey = FALSE;
-        QString text = readString(isStringKey).simplified();
+        bool isStringKey = false;
+        QString text = EncoderLaTeX::instance()->decode(readString(isStringKey).simplified());
         if (isStringKey)
             preamble->value().append(new MacroKey(text));
         else
@@ -248,7 +246,7 @@ Entry *FileImporterBibTeX::readEntryElement(const QString& typeString)
 {
     BibTeXEntries *be = BibTeXEntries::self();
     BibTeXFields *bf = BibTeXFields::self();
-    EncoderLaTeX *encoder = EncoderLaTeX::currentEncoderLaTeX();
+    EncoderLaTeX *encoder = EncoderLaTeX::instance();
 
     Token token = nextToken();
     while (token != tBracketOpen) {
@@ -261,7 +259,7 @@ Entry *FileImporterBibTeX::readEntryElement(const QString& typeString)
 
     QString id = readSimpleString(',');
     /// try to avoid non-ascii characters in ids
-    encoder->convertToPlainAscii(id);
+    id = encoder->convertToPlainAscii(id);
 
     Entry *entry = new Entry(be->format(typeString, m_keywordCasing), id);
 
@@ -280,7 +278,7 @@ Entry *FileImporterBibTeX::readEntryElement(const QString& typeString)
 
         QString keyName = bf->format(readSimpleString(), m_keywordCasing);
         /// try to avoid non-ascii characters in keys
-        encoder->convertToPlainAscii(keyName);
+        keyName = encoder->convertToPlainAscii(keyName);
 
         token = nextToken();
         if (keyName == QString::null || token == tBracketClose) {
@@ -378,7 +376,7 @@ QString FileImporterBibTeX::readString(bool &isStringKey)
         *m_textStream >> m_currentChar;
     }
 
-    isStringKey = FALSE;
+    isStringKey = false;
     switch (m_currentChar.toAscii()) {
     case '{':
     case '(':
@@ -386,7 +384,7 @@ QString FileImporterBibTeX::readString(bool &isStringKey)
     case '"':
         return readQuotedString();
     default:
-        isStringKey = TRUE;
+        isStringKey = true;
         return readSimpleString();
     }
 }
@@ -488,11 +486,11 @@ QString FileImporterBibTeX::readBracketString(const QChar openingBracket) ///< d
 FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value& value, const QString& key)
 {
     Token token = tUnknown;
-    QString iKey = key.toLower();
+    const QString iKey = key.toLower();
 
     do {
         bool isStringKey = false;
-        QString text = readString(isStringKey).simplified();
+        QString text = EncoderLaTeX::instance()->decode(readString(isStringKey).simplified());
         /// for all entries except for abstracts ...
         if (iKey != Entry::ftAbstract) {
             /// ... remove redundant spaces including newlines
@@ -583,11 +581,6 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value& value, const QStr
     } while (token == tDoublecross);
 
     return token;
-}
-
-void FileImporterBibTeX::unescapeLaTeXChars(QString &text)
-{
-    text.replace("\\&", "&");
 }
 
 QList<Keyword*> FileImporterBibTeX::splitKeywords(const QString& text)
