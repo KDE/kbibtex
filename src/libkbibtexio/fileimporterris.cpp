@@ -17,6 +17,8 @@
 *   Free Software Foundation, Inc.,                                       *
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
+
+#include <QVector>
 #include <QTextStream>
 #include <QRegExp>
 #include <QCoreApplication>
@@ -46,7 +48,7 @@ public:
         QString value;
     }
     RISitem;
-    typedef QLinkedList<RISitem> RISitemList;
+    typedef QVector<RISitem> RISitemList;
 
     FileImporterRISPrivate(FileImporterRIS *parent)
             : p(parent), referenceCounter(0), cancelFlag(false) {

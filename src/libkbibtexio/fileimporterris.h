@@ -20,8 +20,6 @@
 #ifndef KBIBTEX_IO_FILEIMPORTERRIS_H
 #define KBIBTEX_IO_FILEIMPORTERRIS_H
 
-#include <QLinkedList>
-
 #include <fileimporter.h>
 #include <entry.h>
 

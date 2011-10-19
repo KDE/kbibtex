@@ -18,7 +18,6 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include <QByteArray>
 #include <QString>
 
 #include <KDebug>
@@ -374,7 +373,7 @@ EncoderLaTeX::EncoderLaTeX()
             int pos = encoderLaTeXEscapedCharacters[i].letter - 'A';
             lookupTable[j]->unicode[pos] = encoderLaTeXEscapedCharacters[i].unicode;
         } else
-            qWarning() << "Cannot handle letter " << encoderLaTeXEscapedCharacters[i].letter;
+            kWarning() << "Cannot handle letter " << encoderLaTeXEscapedCharacters[i].letter;
     }
 }
 
@@ -651,12 +650,13 @@ QString EncoderLaTeX::encode(const QString &input) const
             }
 
             if (!found)
-                qWarning() << "Don't know how to encode Unicode char" << QString("0x%1").arg(c.unicode(), 0, 16);
+                kWarning() << "Don't know how to encode Unicode char" << QString("0x%1").arg(c.unicode(), 0, 16);
         } else {
             /// Current character is normal ASCII
 
             /// Still, some characters have special meaning
             /// in TeX and have to be preceeded with a backslash
+            // TODO do not encode symbols inside \url{...}
             bool found = false;
             for (int k = 0; k < encoderLaTeXProtectedSymbolsLen; ++k)
                 if (encoderLaTeXProtectedSymbols[k] == c) {
@@ -724,7 +724,7 @@ QString EncoderLaTeX::convertToPlainAscii(const QString &input) const
             }
 
             if (!found)
-                qWarning() << "Don't know how to encode Unicode char" << QString("0x%1").arg(c.unicode(), 0, 16);
+                kWarning() << "Don't know how to encode Unicode char" << QString("0x%1").arg(c.unicode(), 0, 16);
         } else {
             /// Current character is normal ASCII
 
