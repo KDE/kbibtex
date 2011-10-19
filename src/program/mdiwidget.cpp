@@ -18,7 +18,7 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include <QList>
+#include <QVector>
 #include <QPair>
 #include <QLabel>
 #include <QApplication>
@@ -112,6 +112,7 @@ class MDIWidget::MDIWidgetPrivate
 private:
     QTreeView *listLRU;
     LRUItemModel *modelLRU;
+    QVector<QWidget*> welcomeWidgets;
 
     void createWelcomeWidget() {
         welcomeWidget = new QWidget(p);
@@ -130,18 +131,18 @@ private:
         layout->setColumnStretch(5, 10);
         layout->setColumnStretch(6, 1);
 
-        QLabel *label = new QLabel(i18n("<qt>Welcome to <b>KBibTeX</b> for <b>KDE 4</b></qt>"), p);
+        QLabel *label = new QLabel(i18n("<qt>Welcome to <b>KBibTeX</b> for <b>KDE 4</b></qt>"), welcomeWidget);
         layout->addWidget(label, 1, 2, 1, 3, Qt::AlignHCenter | Qt::AlignTop);
 
-        KPushButton *buttonNew = new KPushButton(KIcon("document-new"), i18n("New"), p);
+        KPushButton *buttonNew = new KPushButton(KIcon("document-new"), i18n("New"), welcomeWidget);
         layout->addWidget(buttonNew, 2, 2, 1, 1, Qt::AlignLeft | Qt::AlignBottom);
         connect(buttonNew, SIGNAL(clicked()), p, SIGNAL(documentNew()));
 
-        KPushButton *buttonOpen = new KPushButton(KIcon("document-open"), i18n("Open ..."), p);
+        KPushButton *buttonOpen = new KPushButton(KIcon("document-open"), i18n("Open ..."), welcomeWidget);
         layout->addWidget(buttonOpen, 2, 4, 1, 1, Qt::AlignRight | Qt::AlignBottom);
         connect(buttonOpen, SIGNAL(clicked()), p, SIGNAL(documentOpen()));
 
-        label = new QLabel(i18n("List of recently used files:"), p);
+        label = new QLabel(i18n("List of recently used files:"), welcomeWidget);
         layout->addWidget(label, 3, 1, 1, 5, Qt::AlignLeft | Qt::AlignBottom);
         listLRU = new QTreeView(p);
         listLRU->setRootIsDecorated(false);
@@ -174,6 +175,10 @@ public:
         connect(&signalMapperCompleted, SIGNAL(mapped(QObject*)), p, SLOT(slotCompleted(QObject*)));
     }
 
+    ~MDIWidgetPrivate() {
+        delete welcomeWidget;
+    }
+
     void addToMapper(OpenFileInfo *openFileInfo) {
         KParts::ReadOnlyPart *part = openFileInfo->part(p);
         signalMapperCompleted.setMapping(part, openFileInfo);
@@ -190,6 +195,11 @@ MDIWidget::MDIWidget(QWidget *parent)
         : QStackedWidget(parent), d(new MDIWidgetPrivate(this))
 {
     connect(OpenFileInfoManager::getOpenFileInfoManager(), SIGNAL(flagsChanged(OpenFileInfo::StatusFlags)), this, SLOT(slotStatusFlagsChanged(OpenFileInfo::StatusFlags)));
+}
+
+MDIWidget::~MDIWidget()
+{
+    delete d;
 }
 
 void MDIWidget::setFile(OpenFileInfo *openFileInfo, KService::Ptr servicePtr)

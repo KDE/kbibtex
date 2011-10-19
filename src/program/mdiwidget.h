@@ -43,6 +43,7 @@ class MDIWidget : public QStackedWidget
 
 public:
     MDIWidget(QWidget *parent);
+    ~MDIWidget();
 
     BibTeXEditor *editor();
     OpenFileInfo *currentFile();
