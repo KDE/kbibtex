@@ -107,6 +107,8 @@ public:
     Element* element(int row) const;
     int row(Element *element) const;
 
+    void reset();
+
 private:
     File *m_bibtexFile;
     QMap<QString, QString> colorToLabel;

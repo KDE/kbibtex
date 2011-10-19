@@ -467,3 +467,8 @@ int BibTeXFileModel::row(Element *element) const
     if (m_bibtexFile == NULL) return -1;
     return m_bibtexFile->indexOf(element);
 }
+
+void BibTeXFileModel::reset()
+{
+    QAbstractTableModel::reset();
+}

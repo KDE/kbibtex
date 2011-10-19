@@ -523,8 +523,10 @@ void FindDuplicatesUI::slotFindDuplicates()
     KDialog dlg(d->part->widget());
     FindDuplicates fd(&dlg, sensitivity);
     File *file = d->editor->bibTeXModel()->bibTeXFile();
-    bool deleteFileLater = false;
+    // bool deleteFileLater = false; // FIXME "selection" mode does not work reliably
 
+    // FIXME "selection" mode does not work reliably
+    /*
     int rowCount = d->editor->selectedElements().count() / d->editor->model()->columnCount();
     if (rowCount > 1 && rowCount < d->editor->model()->rowCount() && KMessageBox::questionYesNo(d->part->widget(), i18n("Multiple elements are selected. Do you want to search for duplicates only within the selection or in the whole document?"), i18n("Search only in selection?"), KGuiItem(i18n("Only in selection")), KGuiItem(i18n("Whole document"))) == KMessageBox::Yes) {
         QModelIndexList mil = d->editor->selectionModel()->selectedRows();
@@ -534,11 +536,12 @@ void FindDuplicatesUI::slotFindDuplicates()
             file->append(d->editor->bibTeXModel()->element(d->editor->sortFilterProxyModel()->mapToSource(*it).row()));
         }
     }
+    */
 
     QList<EntryClique*> cliques;
     bool gotCanceled = fd.findDuplicateEntries(file, cliques);
     if (gotCanceled) {
-        if (deleteFileLater) delete file;
+        // if (deleteFileLater) delete file; // FIXME "selection" mode does not work reliably
         return;
     }
 
@@ -550,9 +553,8 @@ void FindDuplicatesUI::slotFindDuplicates()
 
         if (dlg.exec() == QDialog::Accepted) {
             MergeDuplicates md(&dlg);
-            file = d->editor->bibTeXModel()->bibTeXFile();
             if (md.mergeDuplicateEntries(cliques, file)) {
-                d->editor->bibTeXModel()->setBibTeXFile(file);
+                d->editor->bibTeXModel()->reset();
             }
         }
 
@@ -565,5 +567,5 @@ void FindDuplicatesUI::slotFindDuplicates()
         d->editor->externalModification();
     }
 
-    if (deleteFileLater) delete file;
+    // if (deleteFileLater) delete file; // FIXME "selection" mode does not work reliably
 }
