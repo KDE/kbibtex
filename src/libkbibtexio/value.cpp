@@ -394,7 +394,6 @@ void Value::mergeFrom(const Value& other)
     }
 }
 
-QRegExp PlainTextValue::removeCurlyBrackets = QRegExp("(^|[^\\\\])[{}]");
 QString PlainTextValue::personNameFormatting = QString::null;
 
 QString PlainTextValue::text(const Value& value, const File* file, bool debug)
@@ -468,13 +467,25 @@ QString PlainTextValue::text(const ValueItem& valueItem, ValueItemType &vit, con
         }
     }
 
-    /// remove curly brackets, except for those with a preceeding backslash
-    int i = 0;
-    while ((i = result.indexOf(removeCurlyBrackets, i)) >= 0) {
-        result = result.replace(removeCurlyBrackets.cap(0), removeCurlyBrackets.cap(1));
+    /// clean up result string
+    const int len = result.length();
+    int j = 0;
+    static const QChar cbo = QChar('{'), cbc = QChar('}'), bs = QChar('\\'), mns = QChar('-');
+    for (int i = 0; i < len; ++i) {
+        if ((result[i] == cbo || result[i] == cbc) && (i < 1 || result[i-1] != bs)) {
+            /// hop over curly brackets
+        } else if (i < len - 1 && result[i] == bs && result[i+1] == mns) {
+            /// hop over hyphenation commands
+            ++i;
+        } else {
+            if (i > j) {
+                /// move individual characters forward in result string
+                result[j] = result[i];
+            }
+            ++j;
+        }
     }
-    /// remove hyphenation commands
-    result = result.replace(QLatin1String("\\-"), QLatin1String(""));
+    result.resize(j);
 
     if (debug) result = "[:" + result + ":Debug]";
     return result;

@@ -208,7 +208,6 @@ public:
 
 private:
     enum ValueItemType { VITOther = 0, VITPerson, VITKeyword} lastItem;
-    static QRegExp removeCurlyBrackets;
     static QString personNameFormatting;
 
     static QString text(const ValueItem& valueItem, ValueItemType &vit, const File* file, bool debug);
