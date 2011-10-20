@@ -199,6 +199,8 @@ class FindDuplicates::FindDuplicatesPrivate
 private:
     FindDuplicates *p;
     const int maxDistance;
+    int **d;
+    static const int dsize;
 
 public:
     bool gotCanceled;
@@ -207,26 +209,31 @@ public:
 
     FindDuplicatesPrivate(FindDuplicates *parent, int sens, QWidget *w)
             : p(parent), maxDistance(10000), gotCanceled(false), sensitivity(sens), widget(w) {
-        // nothing
+        d = new int*[dsize];
+        for (int i = 0; i < dsize; ++i)
+            d[i] = new int[dsize];
+    }
+
+    ~FindDuplicatesPrivate() {
+        for (int i = 0; i < dsize; ++i) delete[] d[i];
+        delete [] d;
     }
 
     /**
       * Determine the Levenshtein distance between two words.
       * See also http://en.wikipedia.org/wiki/Levenshtein_distance
-      * @param s first word
-      * @param t second word
+      * @param s first word, all chars already in lower case
+      * @param t second word, all chars already in lower case
       * @return distance between both words
       */
     double levenshteinDistanceWord(const QString &s, const QString &t) {
-        QString mys = s.toLower(), myt = t.toLower();
-        int m = s.length(), n = t.length();
+        int m = qMin(s.length(), dsize - 1), n = qMin(t.length(), dsize - 1);
         if (m < 1 && n < 1) return 0.0;
         if (m < 1 || n < 1) return 1.0;
 
-        int **d = new int*[m+1];
-        for (int i = 0; i <= m; ++i) {
-            d[i] = new int[n+1]; d[i][0] = i;
-        }
+        for (int i = 0; i <= m; ++i)
+            d[i][0] = i;
+
         for (int i = 0; i <= n; ++i) d[0][i] = i;
 
         for (int i = 1; i <= m;++i)
@@ -234,13 +241,11 @@ public:
                 d[i][j] = d[i-1][j] + 1;
                 int c = d[i][j-1] + 1;
                 if (c < d[i][j]) d[i][j] = c;
-                c = d[i-1][j-1] + (mys[i-1] == myt[j-1] ? 0 : 1);
+                c = d[i-1][j-1] + (s[i-1] == t[j-1] ? 0 : 1);
                 if (c < d[i][j]) d[i][j] = c;
             }
 
         double result = d[m][n];
-        for (int i = 0; i <= m; ++i) delete[] d[i];
-        delete [] d;
 
         result = result / (double)qMax(m, n);
         result *= result;
@@ -295,7 +300,7 @@ public:
     double levenshteinDistance(const QString &s, const QString &t) {
         const QRegExp nonWordRegExp("[^a-z']+", Qt::CaseInsensitive);
         if (s.isEmpty() || t.isEmpty()) return 1.0;
-        return levenshteinDistance(s.split(nonWordRegExp, QString::SkipEmptyParts), t.split(nonWordRegExp, QString::SkipEmptyParts));
+        return levenshteinDistance(s.toLower().split(nonWordRegExp, QString::SkipEmptyParts), t.toLower().split(nonWordRegExp, QString::SkipEmptyParts));
     }
 
     /**
@@ -314,11 +319,18 @@ public:
 
 };
 
+const int FindDuplicates::FindDuplicatesPrivate::dsize = 32;
+
 
 FindDuplicates::FindDuplicates(QWidget *parent, int sensitivity)
         : d(new FindDuplicatesPrivate(this, sensitivity, parent))
 {
     // nothing
+}
+
+FindDuplicates::~FindDuplicates()
+{
+    delete d;
 }
 
 bool FindDuplicates::findDuplicateEntries(File *file, QList<EntryClique*> &entryCliqueList)
@@ -451,6 +463,8 @@ MergeDuplicates::MergeDuplicates(QWidget *parent)
 
 bool MergeDuplicates::mergeDuplicateEntries(const QList<EntryClique*> &entryCliques, File *file)
 {
+    bool didMerge = false;
+
     foreach(EntryClique *entryClique, entryCliques) {
         Entry *mergedEntry = new Entry(QString::null, QString::null);
         foreach(QString field, entryClique->fieldList()) {
@@ -493,7 +507,8 @@ bool MergeDuplicates::mergeDuplicateEntries(const QList<EntryClique*> &entryCliq
             file->append(mergedEntry);
         else
             delete mergedEntry;
+        didMerge |= actuallyMerged;
     }
 
-    return true;
+    return didMerge;
 }
