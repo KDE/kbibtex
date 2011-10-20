@@ -55,9 +55,11 @@ public:
         layout->setColumnStretch(2, 1);
 
         KPushButton *buttonUp = new KPushButton(KIcon("go-up"), "", this);
+        buttonUp->setToolTip(i18n("One level up"));
         layout->addWidget(buttonUp, 0, 0, 1, 1);
 
         KPushButton *buttonHome = new KPushButton(KIcon("user-home"), "", this);
+        buttonHome->setToolTip(i18n("Go to Home folder"));
         layout->addWidget(buttonHome, 0, 1, 1, 1);
 
         dirOperator = new KDirOperator(KUrl("file:" + QDir::homePath()), this);
