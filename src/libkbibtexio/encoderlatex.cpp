@@ -240,7 +240,8 @@ encoderLaTeXEscapedCharacters[] = {
     {'v', 'A', QChar(0x01CD)},
     {'v', 'a', QChar(0x01CE)},
     {'v', 'G', QChar(0x01E6)},
-    {'v', 'g', QChar(0x01E7)}
+    {'v', 'g', QChar(0x01E7)},
+    {'r', 'q', QChar(0x2019)} ///< tricky: this is \rq
 };
 static const int encoderLaTeXEscapedCharactersLen = sizeof(encoderLaTeXEscapedCharacters) / sizeof(encoderLaTeXEscapedCharacters[0]);
 
@@ -293,7 +294,7 @@ encoderLaTeXCharacterCommands[] = {
     {QLatin1String("glqq"), QChar(0x201E)},
     {QLatin1String("frqq"), QChar(0x00BB)},
     {QLatin1String("flqq"), QChar(0x00AB)},
-    {QLatin1String("rq"), QChar(0x2019)},
+    {QLatin1String("rq"), QChar(0x2019)}, ///< tricky one: 'r' is a valid modifier
     {QLatin1String("lq"), QChar(0x2018)}
 };
 static const int encoderLaTeXCharacterCommandsLen = sizeof(encoderLaTeXCharacterCommands) / sizeof(encoderLaTeXCharacterCommands[0]);
