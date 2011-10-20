@@ -555,6 +555,7 @@ void FindDuplicatesUI::slotFindDuplicates()
             MergeDuplicates md(&dlg);
             if (md.mergeDuplicateEntries(cliques, file)) {
                 d->editor->bibTeXModel()->reset();
+                d->editor->externalModification();
             }
         }
 
@@ -563,8 +564,6 @@ void FindDuplicatesUI::slotFindDuplicates()
             cliques.removeFirst();
             delete ec;
         }
-
-        d->editor->externalModification();
     }
 
     // if (deleteFileLater) delete file; // FIXME "selection" mode does not work reliably
