@@ -64,6 +64,8 @@ private slots:
     void downloadFinished();
 
 private:
+    static int fileCounter;
+
     int aliveCounter;
     QList<ResultItem> m_result;
     Entry m_currentEntry;
