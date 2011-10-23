@@ -284,18 +284,19 @@ encoderLaTeXCharacterCommands[] = {
     {QLatin1String("aa"), QChar(0x00E5)},
     {QLatin1String("ae"), QChar(0x00E6)},
     {QLatin1String("o"), QChar(0x00F8)},
+    {QLatin1String("i"), QChar(0x0131)},
+    {QLatin1String("L"), QChar(0x0141)},
+    {QLatin1String("l"), QChar(0x0142)},
     {QLatin1String("OE"), QChar(0x0152)},
     {QLatin1String("oe"), QChar(0x0153)},
     {QLatin1String("ldots"), QChar(0x2026)}, /** \ldots must be before \l */
-    {QLatin1String("L"), QChar(0x0141)},
-    {QLatin1String("l"), QChar(0x0142)},
     {QLatin1String("grqq"), QChar(0x201C)},
     {QLatin1String("rqq"), QChar(0x201D)},
     {QLatin1String("glqq"), QChar(0x201E)},
     {QLatin1String("frqq"), QChar(0x00BB)},
     {QLatin1String("flqq"), QChar(0x00AB)},
     {QLatin1String("rq"), QChar(0x2019)}, ///< tricky one: 'r' is a valid modifier
-    {QLatin1String("lq"), QChar(0x2018)}
+    {QLatin1String("lq"), QChar(0x2018)},
 };
 static const int encoderLaTeXCharacterCommandsLen = sizeof(encoderLaTeXCharacterCommands) / sizeof(encoderLaTeXCharacterCommands[0]);
 
@@ -330,15 +331,23 @@ static const int encoderLaTeXProtectedTextOnlySymbolsLen = sizeof(encoderLaTeXPr
 static const struct EncoderLaTeXSymbolSequence {
     const char *latex;
     QChar unicode;
+    bool useUnicode;
 } encoderLaTeXSymbolSequences[] = {
-    {"!`", QChar(0x00A1)},
-    {"\"<", QChar(0x00AB)},
-    {"\">", QChar(0x00BB)},
-    {"?`", QChar(0x00BF)},
-    {"---", QChar(0x2014)},
-    {"--", QChar(0x2013)},
-    {"``", QChar(0x201C)},
-    {"''", QChar(0x201D)}
+    {"!`", QChar(0x00A1), true},
+    {"\"<", QChar(0x00AB), true},
+    {"\">", QChar(0x00BB), true},
+    {"?`", QChar(0x00BF), true},
+    {"---", QChar(0x2014), true},
+    {"--", QChar(0x2013), true},
+    {"``", QChar(0x201C), true},
+    {"''", QChar(0x201D), true},
+    {"ff", QChar(0xFB00), false},
+    {"fi", QChar(0xFB01), false},
+    {"fl", QChar(0xFB02), false},
+    {"ffi", QChar(0xFB03), false},
+    {"ffl", QChar(0xFB04), false},
+    {"ft", QChar(0xFB05), false},
+    {"st", QChar(0xFB06), false}
 };
 static const int encoderLaTeXSymbolSequencesLen = sizeof(encoderLaTeXSymbolSequences) / sizeof(encoderLaTeXSymbolSequences[0]);
 
@@ -521,10 +530,10 @@ QString EncoderLaTeX::decode(const QString &input) const
                             }
 
                             foundCommand = true;
+                            i = nextPosAfterAlpha - 1;
                             break;
                         }
                     }
-                    i = nextPosAfterAlpha - 1;
 
                     if (!foundCommand) {
                         /// No command found? Just copy input char to output
@@ -573,7 +582,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                 /// First, check if read input character matches beginning of symbol sequence
                 /// and input buffer as enough characters left to potentially contain
                 /// symbol sequence
-                if (encoderLaTeXSymbolSequences[l].latex[0] == c && i <= len - (int)qstrlen(encoderLaTeXSymbolSequences[l].latex)) {
+                if (encoderLaTeXSymbolSequences[l].useUnicode && encoderLaTeXSymbolSequences[l].latex[0] == c && i <= len - (int)qstrlen(encoderLaTeXSymbolSequences[l].latex)) {
                     /// Now actually check if symbol sequence is in input buffer
                     isSymbolSequence = true;
                     for (int p = 1; isSymbolSequence && p < (int)qstrlen(encoderLaTeXSymbolSequences[l].latex); ++p)
@@ -644,14 +653,16 @@ QString EncoderLaTeX::encode(const QString &input) const
                 /// escaped characters with modifiers like \"a
                 for (int k = 0; k < encoderLaTeXEscapedCharactersLen; ++k)
                     if (encoderLaTeXEscapedCharacters[k].unicode == c) {
-                        output.append(QString("{\\%1%2}").arg(encoderLaTeXEscapedCharacters[k].modifier).arg(encoderLaTeXEscapedCharacters[k].letter));
+                        output.append(QString("\\%1{%2}").arg(encoderLaTeXEscapedCharacters[k].modifier).arg(encoderLaTeXEscapedCharacters[k].letter));
                         found = true;
                         break;
                     }
             }
 
-            if (!found)
+            if (!found) {
                 kWarning() << "Don't know how to encode Unicode char" << QString("0x%1").arg(c.unicode(), 0, 16);
+                output.append(c);
+            }
         } else {
             /// Current character is normal ASCII
 
@@ -724,8 +735,10 @@ QString EncoderLaTeX::convertToPlainAscii(const QString &input) const
                     }
             }
 
-            if (!found)
-                kWarning() << "Don't know how to encode Unicode char" << QString("0x%1").arg(c.unicode(), 0, 16);
+            if (!found) {
+                kDebug() << "Don't know how to convert to plain ASCII this Unicode char: " << QString("0x%1").arg(c.unicode(), 0, 16);
+                output.append(c);
+            }
         } else {
             /// Current character is normal ASCII
 
