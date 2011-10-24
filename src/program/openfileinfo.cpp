@@ -317,7 +317,8 @@ class OpenFileInfoManager::OpenFileInfoManagerPrivate
 private:
     static const QString configGroupNameRecentlyUsed;
     static const QString configGroupNameFavorites;
-    static const int maxNumRecentlyUsedFiles, maxNumFavoriteFiles;
+    static const QString configGroupNameOpen;
+    static const int maxNumRecentlyUsedFiles, maxNumFavoriteFiles, maxNumOpenFiles;
 
 public:
     OpenFileInfoManager *p;
@@ -345,6 +346,20 @@ public:
         return left->lastAccess() > right->lastAccess(); /// reverse sorting!
     }
 
+    void restorePreviouslyOpenedFiles() {
+        KSharedConfigPtr config = KSharedConfig::openConfig("kbibtexrc");
+
+        KConfigGroup cg(config, configGroupNameOpen);
+        for (int i = 0; i < maxNumOpenFiles; ++i) {
+            KUrl fileUrl = KUrl(cg.readEntry(QString("%1-%2").arg(OpenFileInfo::OpenFileInfoPrivate::keyURL).arg(i), ""));
+            if (!fileUrl.isValid()) break;
+            OpenFileInfo *ofi = p->contains(fileUrl);
+            if (ofi == NULL)
+                ofi = p->open(fileUrl);
+            p->setCurrentFile(ofi);
+        }
+    }
+
     void readConfig() {
         readConfig(OpenFileInfo::RecentlyUsed, configGroupNameRecentlyUsed, maxNumRecentlyUsedFiles);
         readConfig(OpenFileInfo::Favorite, configGroupNameFavorites, maxNumFavoriteFiles);
@@ -353,6 +368,7 @@ public:
     void writeConfig() {
         writeConfig(OpenFileInfo::RecentlyUsed, configGroupNameRecentlyUsed, maxNumRecentlyUsedFiles);
         writeConfig(OpenFileInfo::Favorite, configGroupNameFavorites, maxNumFavoriteFiles);
+        writeConfig(OpenFileInfo::Open, configGroupNameOpen, maxNumOpenFiles);
     }
 
     void readConfig(OpenFileInfo::StatusFlag statusFlag, const QString& configGroupName, int maxNumFiles) {
@@ -384,14 +400,20 @@ public:
             cg.writeEntry(QString("%1-%2").arg(OpenFileInfo::OpenFileInfoPrivate::keyURL).arg(i), ofi->url().pathOrUrl());
             cg.writeEntry(QString("%1-%2").arg(OpenFileInfo::OpenFileInfoPrivate::keyLastAccess).arg(i), ofi->lastAccess().toString(OpenFileInfo::OpenFileInfoPrivate::dateTimeFormat));
         }
+        for (;i < maxNumFiles;++i) {
+            cg.deleteEntry(QString("%1-%2").arg(OpenFileInfo::OpenFileInfoPrivate::keyURL).arg(i));
+            cg.deleteEntry(QString("%1-%2").arg(OpenFileInfo::OpenFileInfoPrivate::keyLastAccess).arg(i));
+        }
         config->sync();
     }
 };
 
 const QString OpenFileInfoManager::OpenFileInfoManagerPrivate::configGroupNameRecentlyUsed = QLatin1String("DocumentList-RecentlyUsed");
 const QString OpenFileInfoManager::OpenFileInfoManagerPrivate::configGroupNameFavorites = QLatin1String("DocumentList-Favorites");
+const QString OpenFileInfoManager::OpenFileInfoManagerPrivate::configGroupNameOpen = QLatin1String("DocumentList-Open");
 const int OpenFileInfoManager::OpenFileInfoManagerPrivate::maxNumFavoriteFiles = 256;
 const int OpenFileInfoManager::OpenFileInfoManagerPrivate::maxNumRecentlyUsedFiles = 8;
+const int OpenFileInfoManager::OpenFileInfoManagerPrivate::maxNumOpenFiles = 16;
 
 OpenFileInfoManager *OpenFileInfoManager::singletonOpenFileInfoManager = NULL;
 
@@ -406,6 +428,7 @@ OpenFileInfoManager::OpenFileInfoManager()
         : d(new OpenFileInfoManagerPrivate(this))
 {
     d->readConfig();
+    QTimer::singleShot(500, this, SLOT(restorePreviouslyOpenedFiles()));
 }
 
 OpenFileInfoManager::~OpenFileInfoManager()
@@ -562,4 +585,9 @@ void OpenFileInfoManager::deferredListsChanged()
     statusFlags |= OpenFileInfo::RecentlyUsed;
     statusFlags |= OpenFileInfo::Favorite;
     emit flagsChanged(statusFlags);
+}
+
+void OpenFileInfoManager::restorePreviouslyOpenedFiles()
+{
+    d->restorePreviouslyOpenedFiles();
 }

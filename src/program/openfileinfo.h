@@ -127,6 +127,7 @@ private:
 
 private slots:
     void deferredListsChanged();
+    void restorePreviouslyOpenedFiles();
 };
 
 #endif // KBIBTEX_PROGRAM_OPENFILEINFO_H
