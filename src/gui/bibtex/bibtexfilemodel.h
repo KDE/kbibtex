@@ -29,11 +29,11 @@
 
 #include <KSharedConfig>
 
-#include <kbibtexgui_export.h>
+#include "kbibtexgui_export.h"
 
-#include <file.h>
-#include <entry.h>
-#include <bibtexfields.h>
+#include "file.h"
+#include "entry.h"
+#include "bibtexfields.h"
 
 class BibTeXFileModel;
 

@@ -20,7 +20,7 @@
 #ifndef KBIBTEX_GUI_MENULINEEDIT_H
 #define KBIBTEX_GUI_MENULINEEDIT_H
 
-#include <kbibtexgui_export.h>
+#include "kbibtexgui_export.h"
 
 #include <QFrame>
 

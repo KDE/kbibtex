@@ -26,7 +26,7 @@
 
 #include <KUrl>
 
-#include <element.h>
+#include "element.h"
 
 #include "kbibtexio_export.h"
 

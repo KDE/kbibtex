@@ -22,7 +22,7 @@
 
 #include <QObject>
 
-#include <file.h>
+#include "file.h"
 
 class QIODevice;
 

@@ -508,7 +508,7 @@ FindDuplicatesUI::FindDuplicatesUI(KParts::Part *part, BibTeXEditor *bibTeXEdito
     part->actionCollection()->addAction(QLatin1String("findduplicates"), newAction);
     connect(newAction, SIGNAL(triggered()), this, SLOT(slotFindDuplicates()));
 #if KDE_VERSION_MINOR >= 4
-    part->replaceXMLFile(KStandardDirs::locate("appdata", "findduplicatesui.rc"), KStandardDirs::locateLocal("appdata", "findduplicatesui.rc"), true);
+    part->replaceXMLFile(KStandardDirs::locate("data", "kbibtexfindduplicatesui.rc"), KStandardDirs::locateLocal("appdata", "findduplicatesui.rc"), true);
 #endif
 }
 

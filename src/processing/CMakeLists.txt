@@ -6,6 +6,13 @@ set(
     lyx.cpp
 )
 
+set(
+    processing_HDRS
+    findduplicates.h
+    lyx.h
+    kbibtexproc_export.h
+)
+
 add_definitions(
     -DMAKE_PROCESSING_LIB
 )
@@ -33,6 +40,15 @@ target_link_libraries(
     kbibtexio
 )
 
+set_target_properties(
+    kbibtexproc
+    PROPERTIES
+    VERSION
+    ${LIB_VERSION}
+    SOVERSION
+    ${LIB_SOVERSION}
+)
+
 install(
     TARGETS
     kbibtexproc
@@ -49,4 +65,13 @@ install(
     lyx.rc
     DESTINATION
     ${DATA_INSTALL_DIR}/kbibtex
+)
+
+install(
+    FILES
+    ${processing_HDRS}
+    DESTINATION
+    ${INCLUDE_INSTALL_DIR}/kbibtex
+    COMPONENT
+    Devel
 )

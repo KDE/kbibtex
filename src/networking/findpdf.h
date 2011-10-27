@@ -28,7 +28,7 @@
 #include <QSet>
 #include <QUrl>
 
-#include <entry.h>
+#include "entry.h"
 
 class QNetworkAccessManager;
 class QNetworkReply;

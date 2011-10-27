@@ -22,7 +22,7 @@
 
 #include <QByteArray>
 
-#include <onlinesearchabstract.h>
+#include "onlinesearchabstract.h"
 
 class QSpinBox;
 class KComboBox;

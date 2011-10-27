@@ -24,6 +24,24 @@ set(
     httpequivcookiejar.cpp
 )
 
+set(
+    kbibtexnetworking_HDRS
+    onlinesearch/onlinesearchgeneral.h
+    onlinesearch/onlinesearchsciencedirect.h
+    onlinesearch/onlinesearchabstract.h
+    onlinesearch/onlinesearchacmportal.h
+    onlinesearch/onlinesearchbibsonomy.h
+    onlinesearch/onlinesearchgooglescholar.h
+    onlinesearch/onlinesearchspringerlink.h
+    onlinesearch/onlinesearchjstor.h
+    onlinesearch/onlinesearchieeexplore.h
+    onlinesearch/onlinesearcharxiv.h
+    onlinesearch/onlinesearchpubmed.h
+    onlinesearch/onlinesearchmathscinet.h
+    kbibtexnetworking_export.h
+    findpdf.h
+)
+
 add_definitions(
     -DMAKE_NETWORKING_LIB
 )
@@ -53,6 +71,15 @@ target_link_libraries(
     kbibtexio
 )
 
+set_target_properties(
+    kbibtexnetworking
+    PROPERTIES
+    VERSION
+    ${LIB_VERSION}
+    SOVERSION
+    ${LIB_SOVERSION}
+)
+
 install(
     TARGETS
     kbibtexnetworking
@@ -64,3 +91,11 @@ install(
     ${LIB_INSTALL_DIR}
 )
 
+install(
+    FILES
+    ${kbibtexnetworking_HDRS}
+    DESTINATION
+    ${INCLUDE_INSTALL_DIR}/kbibtex
+    COMPONENT
+    Devel
+)

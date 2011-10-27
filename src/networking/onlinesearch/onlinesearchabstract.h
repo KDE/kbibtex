@@ -20,7 +20,7 @@
 #ifndef KBIBTEX_ONLINESEARCH_ABSTRACT_H
 #define KBIBTEX_ONLINESEARCH_ABSTRACT_H
 
-#include <kbibtexnetworking_export.h>
+#include "kbibtexnetworking_export.h"
 
 #include <QObject>
 #include <QMap>
@@ -32,7 +32,7 @@
 #include <KUrl>
 #include <KSharedConfig>
 
-#include <entry.h>
+#include "entry.h"
 
 class QNetworkAccessManager;
 class QNetworkReply;

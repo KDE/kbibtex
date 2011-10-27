@@ -21,7 +21,7 @@
 #ifndef KBIBTEX_GUI_DIALOGS_ELEMENTSWIDGETS_H
 #define KBIBTEX_GUI_DIALOGS_ELEMENTSWIDGETS_H
 
-#include <kbibtexgui_export.h>
+#include "kbibtexgui_export.h"
 
 #include <QLabel>
 #include <QWidget>
@@ -29,7 +29,7 @@
 #include <KUrl>
 #include <KIcon>
 
-#include <entrylayout.h>
+#include "entrylayout.h"
 
 class QTreeWidget;
 class QTreeWidgetItem;

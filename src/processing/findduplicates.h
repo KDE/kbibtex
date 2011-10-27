@@ -26,7 +26,7 @@
 #include <QObject>
 #include <QMap>
 
-#include <value.h>
+#include "value.h"
 
 class Entry;
 class File;

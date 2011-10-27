@@ -25,8 +25,8 @@
 
 #include <bibutils/bibutils.h>
 
-#include <fileimporter.h>
-#include <fileimporterbibtex.h>
+#include "fileimporter.h"
+#include "fileimporterbibtex.h"
 
 /**
  @author Thomas Fischer <fischer@unix-ag.uni-kl.de>

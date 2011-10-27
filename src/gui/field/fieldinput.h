@@ -18,12 +18,12 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include <kbibtexgui_export.h>
+#include "kbibtexgui_export.h"
 
 #include <QWidget>
 
-#include <value.h>
-#include <kbibtexnamespace.h>
+#include "value.h"
+#include "kbibtexnamespace.h"
 
 class Element;
 

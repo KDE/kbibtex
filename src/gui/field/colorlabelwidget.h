@@ -23,9 +23,9 @@
 
 #include <KComboBox>
 
-#include <kbibtexgui_export.h>
+#include "kbibtexgui_export.h"
 
-#include <value.h>
+#include "value.h"
 
 /**
 @author Thomas Fischer

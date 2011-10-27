@@ -25,8 +25,8 @@
 
 #include <KSharedConfig>
 
-#include <kbibtexnamespace.h>
-#include <value.h>
+#include "kbibtexnamespace.h"
+#include "value.h"
 
 class QCheckBox;
 class QDropEvent;

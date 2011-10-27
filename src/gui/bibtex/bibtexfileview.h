@@ -24,7 +24,7 @@
 
 #include <KSharedConfig>
 
-#include <kbibtexgui_export.h>
+#include "kbibtexgui_export.h"
 
 class QSignalMapper;
 

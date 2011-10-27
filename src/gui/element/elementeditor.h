@@ -21,7 +21,7 @@
 #ifndef KBIBTEX_GUI_DIALOGS_ELEMENTSEDITOR_H
 #define KBIBTEX_GUI_DIALOGS_ELEMENTSEDITOR_H
 
-#include <kbibtexgui_export.h>
+#include "kbibtexgui_export.h"
 
 #include <QWidget>
 

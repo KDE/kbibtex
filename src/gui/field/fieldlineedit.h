@@ -20,13 +20,13 @@
 #ifndef KBIBTEX_GUI_FIELDLINEEDIT_H
 #define KBIBTEX_GUI_FIELDLINEEDIT_H
 
-#include <kbibtexgui_export.h>
+#include "kbibtexgui_export.h"
 
 #include <KIcon>
 
-#include <value.h>
-#include <menulineedit.h>
-#include <kbibtexnamespace.h>
+#include "value.h"
+#include "menulineedit.h"
+#include "kbibtexnamespace.h"
 
 class QMenu;
 class QSignalMapper;

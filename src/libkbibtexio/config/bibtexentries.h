@@ -23,7 +23,7 @@
 
 #include "kbibtexio_export.h"
 
-#include <kbibtexnamespace.h>
+#include "kbibtexnamespace.h"
 
 typedef struct {
     QString upperCamelCase;

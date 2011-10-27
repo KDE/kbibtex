@@ -34,6 +34,38 @@ set(
     config/bibtexentries.cpp
 )
 
+set(
+    kbibtexio_HDRS
+    comment.h
+    element.h
+    encoder.h
+    encoderlatex.h
+    entry.h
+    fileexporterbibtex2html.h
+    fileexporterbibtex.h
+    fileexporterblg.h
+    fileexporter.h
+    fileexporterpdf.h
+    fileexporterps.h
+    fileexporterris.h
+    fileexporterrtf.h
+    fileexportertoolchain.h
+    fileexporterxml.h
+    fileexporterxslt.h
+    file.h
+    fileimporterbibtex.h
+    fileimporter.h
+    fileimporterpdf.h
+    fileimporterris.h
+    fileinfo.h
+    iconvlatex.h
+    kbibtexio_export.h
+    macro.h
+    preamble.h
+    value.h
+    xsltransform.h
+)
+
 add_definitions(
     -DMAKE_KBIBTEXIO_LIB
 )
@@ -85,6 +117,15 @@ endif(
     WIN32
 )
 
+set_target_properties(
+    kbibtexio
+    PROPERTIES
+    VERSION
+    ${LIB_VERSION}
+    SOVERSION
+    ${LIB_SOVERSION}
+)
+
 install(
     TARGETS
     kbibtexio
@@ -94,4 +135,13 @@ install(
     LIBRARY
     DESTINATION
     ${LIB_INSTALL_DIR}
+)
+
+install(
+    FILES
+    ${kbibtexio_HDRS}
+    DESTINATION
+    ${INCLUDE_INSTALL_DIR}/kbibtex
+    COMPONENT
+    Devel
 )

@@ -49,6 +49,32 @@ set(
     valuelistmodel.cpp
 )
 
+set(
+    kbibtexgui_HDRS
+    field/fieldinput.h
+    field/colorlabelwidget.h
+    field/fieldlineedit.h
+    widgets/filterbar.h
+    preferences/settingsuserinterfacewidget.h
+    preferences/kbibtexpreferencesdialog.h
+    preferences/settingsglobalkeywordswidget.h
+    preferences/settingsfileexporterwidget.h
+    preferences/settingsgeneralwidget.h
+    preferences/settingsabstractwidget.h
+    preferences/settingscolorlabelwidget.h
+    preferences/settingsfileexporterbibtexwidget.h
+    preferences/settingsfileexporterpdfpswidget.h
+    valuelistmodel.h
+    kbibtexgui_export.h
+    bibtex/findduplicatesui.h
+    bibtex/bibtexfileview.h
+    bibtex/clipboard.h
+    bibtex/bibtexfilemodel.h
+    bibtex/bibtexeditor.h
+    element/findpdfui.h
+    element/elementeditor.h
+)
+
 add_definitions(
     -DMAKE_KBIBTEXGUI_LIB
 )
@@ -91,4 +117,13 @@ install(
     bibtex/findduplicatesui.rc
     DESTINATION
     ${DATA_INSTALL_DIR}/kbibtex
+)
+
+install(
+    FILES
+    ${kbibtexgui_HDRS}
+    DESTINATION
+    ${INCLUDE_INSTALL_DIR}/kbibtex
+    COMPONENT
+    Devel
 )

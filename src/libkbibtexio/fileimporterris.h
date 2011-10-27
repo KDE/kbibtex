@@ -20,8 +20,8 @@
 #ifndef KBIBTEX_IO_FILEIMPORTERRIS_H
 #define KBIBTEX_IO_FILEIMPORTERRIS_H
 
-#include <fileimporter.h>
-#include <entry.h>
+#include "fileimporter.h"
+#include "entry.h"
 
 /**
  @author Thomas Fischer <fischer@unix-ag.uni-kl.de>

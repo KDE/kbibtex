@@ -21,8 +21,8 @@
 #ifndef KBIBTEX_IO_MACRO_H
 #define KBIBTEX_IO_MACRO_H
 
-#include <element.h>
-#include <value.h>
+#include "element.h"
+#include "value.h"
 
 class QString;
 

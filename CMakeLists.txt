@@ -7,6 +7,16 @@ cmake_minimum_required(
     2.6
 )
 
+# Version number for the exported headers / libs
+set(
+    LIB_VERSION
+    "0.5.0"
+)
+set(
+    LIB_SOVERSION
+    "5"
+)
+
 set(
     MANDIR
     "share/man"

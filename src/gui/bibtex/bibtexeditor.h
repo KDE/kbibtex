@@ -23,11 +23,11 @@
 
 #include <QWidget>
 
-#include <kbibtexgui_export.h>
+#include "kbibtexgui_export.h"
 
-#include <filterbar.h>
-#include <bibtexfileview.h>
-#include <element.h>
+#include "filterbar.h"
+#include "bibtexfileview.h"
+#include "element.h"
 
 class ValueListModel;
 

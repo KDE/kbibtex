@@ -21,7 +21,7 @@
 #ifndef KBIBTEX_ONLINESEARCH_SPRINGERLINK_H
 #define KBIBTEX_ONLINESEARCH_SPRINGERLINK_H
 
-#include <onlinesearchabstract.h>
+#include "onlinesearchabstract.h"
 
 
 /**

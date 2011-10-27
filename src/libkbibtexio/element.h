@@ -20,7 +20,7 @@
 #ifndef BIBTEXELEMENT_H
 #define BIBTEXELEMENT_H
 
-#include <file.h>
+#include "file.h"
 
 #include "kbibtexio_export.h"
 

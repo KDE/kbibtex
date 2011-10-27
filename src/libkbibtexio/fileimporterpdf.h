@@ -20,7 +20,7 @@
 #ifndef KBIBTEX_IO_FILEIMPORTERPDF_H
 #define KBIBTEX_IO_FILEIMPORTERPDF_H
 
-#include <fileimporter.h>
+#include "fileimporter.h"
 
 #include "kbibtexio_export.h"
 

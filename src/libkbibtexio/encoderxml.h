@@ -20,7 +20,7 @@
 #ifndef KBIBTEX_IO_ENCODERXML_H
 #define KBIBTEX_IO_ENCODERXML_H
 
-#include <encoder.h>
+#include "encoder.h"
 
 class QString;
 class QRegExp;

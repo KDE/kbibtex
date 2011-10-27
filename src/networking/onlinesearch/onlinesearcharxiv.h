@@ -20,7 +20,7 @@
 #ifndef KBIBTEX_ONLINESEARCH_ARXIV_H
 #define KBIBTEX_ONLINESEARCH_ARXIV_H
 
-#include <onlinesearchabstract.h>
+#include "onlinesearchabstract.h"
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>

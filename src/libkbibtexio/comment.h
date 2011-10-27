@@ -20,7 +20,7 @@
 #ifndef KBIBTEX_IO_COMMENT_H
 #define KBIBTEX_IO_COMMENT_H
 
-#include <element.h>
+#include "element.h"
 
 /**
  * This class represents a comment in a BibTeX file. In BibTeX files,

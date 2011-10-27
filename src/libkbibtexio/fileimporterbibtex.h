@@ -24,8 +24,8 @@
 
 #include <QTextStream>
 
-#include <kbibtexnamespace.h>
-#include <fileimporter.h>
+#include "kbibtexnamespace.h"
+#include "fileimporter.h"
 
 class Element;
 class Comment;

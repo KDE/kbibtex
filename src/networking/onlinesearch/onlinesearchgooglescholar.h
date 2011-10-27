@@ -20,7 +20,7 @@
 #ifndef KBIBTEX_ONLINESEARCH_GOOGLESCHOLAR_H
 #define KBIBTEX_ONLINESEARCH_GOOGLESCHOLAR_H
 
-#include <onlinesearchabstract.h>
+#include "onlinesearchabstract.h"
 
 
 /**

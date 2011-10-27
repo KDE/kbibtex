@@ -21,14 +21,14 @@
 #ifndef KBIBTEX_GUI_FINDPDFUI_H
 #define KBIBTEX_GUI_FINDPDFUI_H
 
-#include <kbibtexgui_export.h>
+#include "kbibtexgui_export.h"
 
 #include <QWidget>
 
 #include <KWidgetItemDelegate>
 
-#include <entry.h>
-#include <networking/findpdf.h>
+#include "entry.h"
+#include "networking/findpdf.h"
 
 class QListView;
 

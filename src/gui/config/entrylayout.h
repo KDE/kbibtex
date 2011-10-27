@@ -23,7 +23,7 @@
 #include <QString>
 #include <QList>
 
-#include <kbibtexnamespace.h>
+#include "kbibtexnamespace.h"
 
 typedef struct {
     QString uiLabel;

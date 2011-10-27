@@ -21,7 +21,7 @@
 #ifndef KBIBTEX_ONLINESEARCH_SCIENCEDIRECT_H
 #define KBIBTEX_ONLINESEARCH_SCIENCEDIRECT_H
 
-#include <onlinesearchabstract.h>
+#include "onlinesearchabstract.h"
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
