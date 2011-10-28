@@ -252,7 +252,7 @@ void ReferencePreview::renderHTML()
         crossRefHandling = merge;
         FileExporterXSLT *exporterXSLT = new FileExporterXSLT();
         QString filename = style + ".xsl";
-        exporterXSLT->setXSLTFilename(KStandardDirs::locate("appdata", filename));
+        exporterXSLT->setXSLTFilename(KStandardDirs::locate("data", QLatin1String("kbibtex/") + filename));
         exporter = exporterXSLT;
     }
 

@@ -86,7 +86,7 @@ LyX::LyX(KParts::ReadOnlyPart *part, QTreeView *widget)
     d->action->setEnabled(false);
     connect(d->action, SIGNAL(triggered()), this, SLOT(sendReferenceToLyX()));
 #if KDE_VERSION_MINOR >= 4
-    part->replaceXMLFile(KStandardDirs::locate("appdata", "lyx.rc"), KStandardDirs::locateLocal("appdata", "lyx.rc"), true);
+    part->replaceXMLFile(KStandardDirs::locate("data", "kbibtex/lyx.rc"), KStandardDirs::locateLocal("data", "kbibtex/lyx.rc"), true);
 #endif
     widget->addAction(d->action);
 }

@@ -108,7 +108,7 @@ public:
     int numSteps, curStep;
 
     OnlineSearchArXivPrivate(OnlineSearchArXiv *parent)
-            : p(parent), xslt(KStandardDirs::locate("data", "kbibtexarxiv2bibtex.xsl")),
+            : p(parent), xslt(KStandardDirs::locate("data", "kbibtex/arxiv2bibtex.xsl")),
             form(NULL), arXivQueryBaseUrl("http://export.arxiv.org/api/query?") {
         // nothing
     }
