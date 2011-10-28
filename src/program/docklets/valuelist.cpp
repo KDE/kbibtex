@@ -114,6 +114,13 @@ public:
         treeviewFieldValues->header()->addAction(sortByCountAction);
     }
 
+    void setComboboxFieldNamesCurrentItem(const QString &text) {
+        int index = comboboxFieldNames->findText(text, Qt::MatchExactly);
+        if (index < 0) index = comboboxFieldNames->findText(text, Qt::MatchStartsWith);
+        if (index < 0) index = comboboxFieldNames->findText(text, Qt::MatchContains);
+        if (index >= 0) comboboxFieldNames->setCurrentIndex(index);
+    }
+
     void initialize() {
         const BibTeXFields *bibtexFields = BibTeXFields::self();
 
@@ -125,8 +132,8 @@ public:
         }
 
         KConfigGroup configGroup(config, configGroupName);
-        QString fieldName = configGroup.readEntry(configKeyFieldName, QString());
-        comboboxFieldNames->setCurrentItem(fieldName);
+        QString fieldName = configGroup.readEntry(configKeyFieldName, QString(Entry::ftAuthor));
+        setComboboxFieldNamesCurrentItem(fieldName);
         showCountColumnAction->setChecked(configGroup.readEntry(configKeyShowCountColumn, true));
         sortByCountAction->setChecked(configGroup.readEntry(configKeySortByCountAction, false));
         sortByCountAction->setEnabled(showCountColumnAction->isChecked());
