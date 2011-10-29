@@ -30,7 +30,7 @@ namespace KParts
 class ReadOnlyPart;
 }
 
-class QTreeView;
+class QWidget;
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
@@ -39,15 +39,11 @@ class KBIBTEXPROC_EXPORT LyX: public QObject
 {
     Q_OBJECT
 public:
-    static const QString keyLyXServerPipeName;
-    static const QString defaultLyXServerPipeName;
+    static QString findLyXPipe();
 
-    LyX(KParts::ReadOnlyPart *part, QTreeView *widget);
+    LyX(KParts::ReadOnlyPart *part, QWidget *widget);
 
     void setReferences(const QStringList &references);
-
-public slots:
-    void updateActions();
 
 private slots:
     void sendReferenceToLyX();

@@ -18,8 +18,9 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
+#include <sys/stat.h>
+
 #include <QWidget>
-#include <QTreeView>
 #include <QDir>
 #include <QTextStream>
 #include <QFileInfo>
@@ -32,6 +33,7 @@
 #include <KParts/ReadOnlyPart>
 #include <KMessageBox>
 #include <KStandardDirs>
+#include <KDebug>
 
 #include <kdeversion.h>
 
@@ -43,42 +45,19 @@ private:
     LyX *p;
 
 public:
-    QTreeView *widget;
+    QWidget *widget;
     KAction *action;
     QStringList references;
     KSharedConfigPtr config;
     const QString configGroupNameLyX;
 
-    LyXPrivate(LyX *parent, QTreeView *widget)
+    LyXPrivate(LyX *parent, QWidget *widget)
             : p(parent), action(NULL), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupNameLyX(QLatin1String("LyX")) {
         this->widget = widget;
     }
-
-    QString findLyXServerPipeName() {
-        QString result = QString::null;
-
-        QFile lyxConfigFile(QDir::homePath() + QDir::separator() + ".lyx" + QDir::separator() + "preferences"); // FIXME does this work on Windows/Mac systems?
-        if (lyxConfigFile.open(QFile::ReadOnly)) {
-            QRegExp serverPipeRegExp("^\\\\serverpipe\\s+\"([^\"]+)\"");
-            QString line = QString::null;
-            while (!(line = lyxConfigFile.readLine()).isNull()) {
-                if (line.isEmpty() || line[0] == '#' || line.length() < 3) continue;
-                if (serverPipeRegExp.indexIn(line) >= 0) {
-                    result = serverPipeRegExp.cap(1) + ".in";
-                    break;
-                }
-            }
-            lyxConfigFile.close();
-        }
-
-        return result;
-    }
 };
 
-const QString LyX::keyLyXServerPipeName = QLatin1String("LyXServerPipeName");
-const QString LyX::defaultLyXServerPipeName = QLatin1String("");
-
-LyX::LyX(KParts::ReadOnlyPart *part, QTreeView *widget)
+LyX::LyX(KParts::ReadOnlyPart *part, QWidget *widget)
         : QObject(part), d(new LyX::LyXPrivate(this, widget))
 {
     d->action = new KAction(KIcon("application-x-lyx"), i18n("Send Reference to LyX"), this);
@@ -94,33 +73,23 @@ LyX::LyX(KParts::ReadOnlyPart *part, QTreeView *widget)
 void LyX::setReferences(const QStringList &references)
 {
     d->references = references;
-}
-
-void LyX::updateActions()
-{
-    d->action->setEnabled(d->widget != NULL && !d->widget->selectionModel()->selection().isEmpty());
+    d->action->setEnabled(d->widget != NULL && !d->references.isEmpty());
 }
 
 void LyX::sendReferenceToLyX()
 {
-    const QString defaultHintOnLyXProblems = i18n("\n\nCheck that LyX is running and configured to receive references (see \"LyX server pipe\" in LyX's settings).");
+    const QString defaultHintOnLyXProblems = i18n("\n\nCheck that LyX or Kile are running and configured to receive references.");
     const QString msgBoxTitle = i18n("Send Reference to LyX");
+    /// LyX pipe name has to determined always fresh in case LyX or Kile exited
+    const QString pipeName = findLyXPipe();
+
+    if (pipeName.isEmpty()) {
+        KMessageBox::error(d->widget, i18n("No \"LyX server pipe\" was detected.") + defaultHintOnLyXProblems, msgBoxTitle);
+        return;
+    }
 
     if (d->references.isEmpty()) {
         KMessageBox::error(d->widget, i18n("No references to send to LyX."), msgBoxTitle);
-        return;
-    }
-
-    KConfigGroup configGroup(d->config, d->configGroupNameLyX);
-    QString pipeName = configGroup.readEntry(LyX::keyLyXServerPipeName, LyX::defaultLyXServerPipeName);
-    if (pipeName.isEmpty()) {
-        KMessageBox::error(d->widget, i18n("No \"LyX server pipe\" has been configured in KBibTeX's settings."), msgBoxTitle);
-        return;
-    }
-
-    QFileInfo fi(pipeName);
-    if (!fi.exists()) {
-        KMessageBox::error(d->widget, i18n("LyX server pipe \"%1\" does not exist.", pipeName) + defaultHintOnLyXProblems, msgBoxTitle);
         return;
     }
 
@@ -137,4 +106,33 @@ void LyX::sendReferenceToLyX()
     ts.flush();
 
     pipe.close();
+}
+
+QString LyX::findLyXPipe()
+{
+    // FIXME: This is most likely Unix/Linux specific. Works on Windows?
+
+    struct stat fileInfo;
+    const QStringList nameFilter = QStringList() << QLatin1String("*lyxpipe*in*");
+
+    /// Start with scanning the user's home directory for pipes
+    QDir home = QDir::home();
+    QStringList files = home.entryList(nameFilter, QDir::AllEntries | QDir::Hidden | QDir::Writable, QDir::Unsorted);
+    foreach(const QString &filename, files) {
+        if (stat(filename.toAscii(), &fileInfo) == 0 && S_ISFIFO(fileInfo.st_mode))
+            return home.absolutePath() + QDir::separator() + filename;
+    }
+
+    /// No hit yet? Search LyX's configuration directory
+    if (home.cd(QLatin1String(""))) {
+        /// Same search again here
+        files = home.entryList(nameFilter, QDir::AllEntries | QDir::Hidden | QDir::Writable, QDir::Unsorted);
+        foreach(const QString &filename, files) {
+            if (stat(filename.toAscii(), &fileInfo) == 0 && S_ISFIFO(fileInfo.st_mode))
+                return home.absolutePath() + QDir::separator() + filename;
+        }
+    }
+
+    /// Obviously, nothing has been found, so return a Null string
+    return QString::null;
 }

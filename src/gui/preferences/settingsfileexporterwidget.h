@@ -43,9 +43,6 @@ public slots:
 private:
     class SettingsFileExporterWidgetPrivate;
     SettingsFileExporterWidgetPrivate *d;
-
-private slots:
-    void selectPipeName();
 };
 
 

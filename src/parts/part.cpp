@@ -444,7 +444,6 @@ void KBibTeXPart::setupActions(bool /*browserViewWanted FIXME*/)
 
     new FindDuplicatesUI(this, d->editor);
     d->lyx = new LyX(this, d->editor);
-    connect(d->editor, SIGNAL(selectedElementsChanged()), d->lyx, SLOT(updateActions()));
 
     d->colorLabelContextMenu = new ColorLabelContextMenu(d->editor);
 

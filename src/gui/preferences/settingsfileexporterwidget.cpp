@@ -29,7 +29,6 @@
 #include <KFileDialog>
 
 #include <fileexporter.h>
-#include <lyx.h>
 #include <clipboard.h>
 #include "settingsfileexporterwidget.h"
 
@@ -45,14 +44,12 @@ private:
     static const QString citeCmdToLabel;
 
     KSharedConfigPtr config;
-    const QString configGroupNameGeneral, configGroupNameLyX;
+    const QString configGroupNameGeneral;
 
 public:
-    KLineEdit *lineEditLyXServerPipeName;
-
     SettingsFileExporterWidgetPrivate(SettingsFileExporterWidget *parent)
             : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))),
-            configGroupNameGeneral(QLatin1String("General")), configGroupNameLyX(QLatin1String("LyX")) {
+            configGroupNameGeneral(QLatin1String("General")) {
         paperSizeLabelToName.insert(i18n("A4"), QLatin1String("a4"));
         paperSizeLabelToName.insert(i18n("Letter"), QLatin1String("letter"));
         paperSizeLabelToName.insert(i18n("Legal"), QLatin1String("legal"));
@@ -65,9 +62,6 @@ public:
 
         const QString copyReferenceCommand = configGroup.readEntry(Clipboard::keyCopyReferenceCommand, Clipboard::defaultCopyReferenceCommand);
         p->selectValue(comboBoxCopyReferenceCmd, copyReferenceCommand.isEmpty() ? QString("") : copyReferenceCommand, Qt::UserRole);
-
-        configGroup = KConfigGroup(config, configGroupNameLyX);
-        lineEditLyXServerPipeName->setText(configGroup.readEntry(LyX::keyLyXServerPipeName, LyX::defaultLyXServerPipeName));
     }
 
     void saveState() {
@@ -78,15 +72,12 @@ public:
         const QString copyReferenceCommand = comboBoxCopyReferenceCmd->itemData(comboBoxCopyReferenceCmd->currentIndex()).toString();
         configGroup.writeEntry(Clipboard::keyCopyReferenceCommand, copyReferenceCommand);
 
-        configGroup = KConfigGroup(config, configGroupNameLyX);
-        configGroup.writeEntry(LyX::keyLyXServerPipeName, lineEditLyXServerPipeName->text());
         config->sync();
     }
 
     void resetToDefaults() {
         p->selectValue(comboBoxPaperSize, paperSizeLabelToName[FileExporter::defaultPaperSize]);
         p->selectValue(comboBoxCopyReferenceCmd, QString(""), Qt::UserRole);
-        lineEditLyXServerPipeName->setText(LyX::defaultLyXServerPipeName);
     }
 
     void setupGUI() {
@@ -113,17 +104,6 @@ public:
         }
         comboBoxCopyReferenceCmd->setModel(itim);
         connect(comboBoxCopyReferenceCmd, SIGNAL(currentIndexChanged(int)), p, SIGNAL(changed()));
-
-        QBoxLayout *boxLayout = new QHBoxLayout();
-        boxLayout->setMargin(0);
-        lineEditLyXServerPipeName = new KLineEdit(p);
-        lineEditLyXServerPipeName->setReadOnly(true);
-        boxLayout->addWidget(lineEditLyXServerPipeName);
-        KPushButton *buttonBrowseForPipeName = new KPushButton(KIcon("network-connect"), "", p);
-        boxLayout->addWidget(buttonBrowseForPipeName);
-        layout->addRow(i18n("LyX Server Pipe"), boxLayout);
-        connect(buttonBrowseForPipeName, SIGNAL(clicked()), p, SLOT(selectPipeName()));
-        connect(lineEditLyXServerPipeName, SIGNAL(textChanged(QString)), p, SIGNAL(changed()));
     }
 };
 
@@ -149,11 +129,4 @@ void SettingsFileExporterWidget::saveState()
 void SettingsFileExporterWidget::resetToDefaults()
 {
     d->resetToDefaults();
-}
-
-void SettingsFileExporterWidget::selectPipeName()
-{
-    QString pipeName = KFileDialog::getOpenFileName(QDir::homePath(), QLatin1String("inode/fifo"), this, i18n("Select LyX Server Pipe"));
-    if (!pipeName.isEmpty())
-        d->lineEditLyXServerPipeName->setText(pipeName);
 }
