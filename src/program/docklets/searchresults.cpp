@@ -144,4 +144,7 @@ void SearchResults::importSelected()
         Element *element = sourceModel->element(row);
         targetModel->insertRow(element, targetModel->rowCount());
     }
+
+    if (!selList.isEmpty())
+        d->mainEditor->externalModification();
 }
