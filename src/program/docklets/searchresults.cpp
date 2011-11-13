@@ -146,5 +146,5 @@ void SearchResults::importSelected()
     }
 
     if (!selList.isEmpty())
-        d->mainEditor->externalModification();
+        d->currentFile->externalModification();
 }
