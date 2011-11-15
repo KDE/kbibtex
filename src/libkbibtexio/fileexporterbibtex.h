@@ -22,7 +22,7 @@
 
 #include <QTextStream>
 
-#include <kbibtexnamespace.h>
+#include "kbibtexnamespace.h"
 #include "element.h"
 #include "fileexporter.h"
 #include "value.h"

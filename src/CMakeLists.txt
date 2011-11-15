@@ -275,3 +275,11 @@ add_subdirectory(
     parts
 )
 
+install(
+    FILES
+    kbibtexnamespace.h
+    DESTINATION
+    ${INCLUDE_INSTALL_DIR}/kbibtex
+    COMPONENT
+    Devel
+)

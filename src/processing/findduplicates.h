@@ -83,6 +83,10 @@ public:
 
     bool findDuplicateEntries(File *file, QList<EntryClique*> &entryCliqueList);
 
+signals:
+    void maximumProgress(int maxProgress);
+    void currentProgress(int progress);
+
 private slots:
     void gotCanceled();
 

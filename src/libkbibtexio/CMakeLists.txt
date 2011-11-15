@@ -64,6 +64,8 @@ set(
     preamble.h
     value.h
     xsltransform.h
+    config/bibtexfields.h
+    config/bibtexentries.h
 )
 
 add_definitions(
