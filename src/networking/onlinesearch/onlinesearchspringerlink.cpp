@@ -31,7 +31,7 @@
 #include <KLineEdit>
 #include <KConfigGroup>
 
-#include <httpequivcookiejar.h>
+#include <internalnetworkaccessmanager.h>
 #include <fileimporterbibtex.h>
 #include <encoderlatex.h>
 #include "onlinesearchspringerlink.h"
@@ -389,7 +389,6 @@ void OnlineSearchSpringerLink::doneFetchingBibTeX()
     QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
     if (handleErrors(reply)) {
         QTextStream ts(reply->readAll());
-        ts.setCodec("ISO-8859-1");
         QString bibTeXcode = ts.readAll();
         d->sanitizeBibTeXCode(bibTeXcode);
 
@@ -427,17 +426,15 @@ void OnlineSearchSpringerLink::processNextQueuedUrl()
         d->queueBibTeX.erase(it);
 
         QNetworkRequest request(url);
-        setSuggestedHttpHeaders(request);
-        QNetworkReply *newReply = HTTPEquivCookieJar::networkAccessManager()->post(request, body.toUtf8());
-        setNetworkReplyTimeout(newReply);
-        connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingBibTeX()));
+        QNetworkReply *reply = InternalNetworkAccessManager::self()->post(request, body.toUtf8());
+        setNetworkReplyTimeout(reply);
+        connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingBibTeX()));
     } else if (!d->queueExportPages.isEmpty()) {
         KUrl url = d->queueExportPages.first();
         d->queueExportPages.removeFirst();
 
         QNetworkRequest request(url);
-        setSuggestedHttpHeaders(request);
-        QNetworkReply *reply = HTTPEquivCookieJar::networkAccessManager()->get(request);
+        QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
         setNetworkReplyTimeout(reply);
         connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingExportPage()));
     } else if (!d->queueResultPages.isEmpty()) {
@@ -445,8 +442,7 @@ void OnlineSearchSpringerLink::processNextQueuedUrl()
         d->queueResultPages.removeFirst();
 
         QNetworkRequest request(url);
-        setSuggestedHttpHeaders(request);
-        QNetworkReply *reply = HTTPEquivCookieJar::networkAccessManager()->get(request);
+        QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
         setNetworkReplyTimeout(reply);
         connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingResultPage()));
     } else {

@@ -33,7 +33,7 @@
 
 #include "fileimporterbibtex.h"
 #include "onlinesearcharxiv.h"
-#include <httpequivcookiejar.h>
+#include <internalnetworkaccessmanager.h>
 #include "xsltransform.h"
 
 
@@ -150,8 +150,7 @@ void OnlineSearchArXiv::startSearch()
     m_hasBeenCanceled = false;
 
     QNetworkRequest request(d->buildQueryUrl());
-    setSuggestedHttpHeaders(request);
-    QNetworkReply *reply = HTTPEquivCookieJar::networkAccessManager()->get(request);
+    QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
     setNetworkReplyTimeout(reply);
     connect(reply, SIGNAL(finished()), this, SLOT(downloadDone()));
 
@@ -167,8 +166,7 @@ void OnlineSearchArXiv::startSearch(const QMap<QString, QString> &query, int num
     m_hasBeenCanceled = false;
 
     QNetworkRequest request(d->buildQueryUrl(query, numResults));
-    setSuggestedHttpHeaders(request);
-    QNetworkReply *reply = HTTPEquivCookieJar::networkAccessManager()->get(request);
+    QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
     setNetworkReplyTimeout(reply);
     connect(reply, SIGNAL(finished()), this, SLOT(downloadDone()));
 

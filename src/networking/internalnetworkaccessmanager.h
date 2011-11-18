@@ -18,65 +18,41 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#ifndef KBIBTEX_NETWORKING_FINDPDF_H
-#define KBIBTEX_NETWORKING_FINDPDF_H
+#ifndef KBIBTEX_NETWORKING_INTERNALNAM_H
+#define KBIBTEX_NETWORKING_INTERNALNAM_H
 
 #include "kbibtexnetworking_export.h"
 
-#include <QObject>
-#include <QList>
-#include <QSet>
 #include <QUrl>
-
-#include "entry.h"
 
 class QNetworkAccessManager;
 class QNetworkReply;
-class KTemporaryFile;
+
+class HTTPEquivCookieJar;
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
-class KBIBTEXNETWORKING_EXPORT FindPDF : public QObject
+class KBIBTEXNETWORKING_EXPORT InternalNetworkAccessManager : public QNetworkAccessManager
 {
-    Q_OBJECT
-
 public:
-    enum DownloadMode {NoDownload = 0, Download, URLonly};
+    static InternalNetworkAccessManager *self();
+    QNetworkReply *get(QNetworkRequest &request, const QUrl &oldUrl);
+    QNetworkReply *get(QNetworkRequest &request, const QNetworkReply *oldReply = NULL);
 
-    typedef struct {
-        QUrl url;
-        QString textPreview;
-        KTemporaryFile *tempFilename;
-        float relevance;
-        DownloadMode downloadMode;
-    } ResultItem;
+    void mergeHtmlHeadCookies(const QString &htmlCode, const QUrl &url);
 
-    FindPDF(QObject *parent = NULL);
-
-    bool search(const Entry &entry);
-    QList<ResultItem> results();
-
-signals:
-    void finished();
-
-private slots:
-    void downloadFinished();
+protected:
+    InternalNetworkAccessManager(QObject *parent = NULL);
+    class HTTPEquivCookieJar;
+    HTTPEquivCookieJar *cookieJar;
 
 private:
-    static int fileCounter;
+    static InternalNetworkAccessManager *instance;
+    static QString userAgentString;
 
-    int aliveCounter;
-    QList<ResultItem> m_result;
-    Entry m_currentEntry;
-    QSet<QUrl> m_knownUrls;
+    static QString userAgent();
 
-    bool queueUrl(const QUrl &url, const QString &term, const QString &origin, int depth);
-    void processGeneralHTML(QNetworkReply *reply, const QString &text);
-    void processGoogleResult(QNetworkReply *reply, const QString &text);
-    void processSpringerLink(QNetworkReply *reply, const QString &text);
-    void processCiteSeerX(QNetworkReply *reply, const QString &text);
-    void processPDF(QNetworkReply *reply, const QByteArray &data);
 };
 
-#endif // KBIBTEX_NETWORKING_FINDPDF_H
+#endif // KBIBTEX_NETWORKING_INTERNALNAM_H

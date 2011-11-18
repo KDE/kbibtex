@@ -132,8 +132,6 @@ protected:
 
     void setNetworkReplyTimeout(QNetworkReply *reply, int timeOutSec = 15);
 
-    void setSuggestedHttpHeaders(QNetworkRequest &request, QNetworkReply *oldReply = NULL);
-
 private:
     QString m_name;
     static const char *httpUnsafeChars;

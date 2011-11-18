@@ -30,7 +30,7 @@
 #include <KTemporaryFile>
 
 #include <kbibtexnamespace.h>
-#include <httpequivcookiejar.h>
+#include <internalnetworkaccessmanager.h>
 #include <value.h>
 #include "findpdf.h"
 
@@ -118,7 +118,8 @@ bool FindPDF::queueUrl(const QUrl &url, const QString &term, const QString &orig
     if (!m_knownUrls.contains(url) && depth > 0) {
         kDebug() << "Starting download for" << url.toString() << "(" << origin << ")";
         m_knownUrls.insert(url);
-        QNetworkReply *reply = HTTPEquivCookieJar::networkAccessManager()->get(QNetworkRequest(url));
+        QNetworkRequest request = QNetworkRequest(url);
+        QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
         reply->setProperty(depthProperty, QVariant::fromValue<int>(depth));
         reply->setProperty(termProperty, term);
         reply->setProperty(originProperty, origin);

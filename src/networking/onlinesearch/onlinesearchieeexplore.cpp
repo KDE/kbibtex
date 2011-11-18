@@ -27,7 +27,7 @@
 #include <KLocale>
 #include <KStandardDirs>
 
-#include <httpequivcookiejar.h>
+#include <internalnetworkaccessmanager.h>
 #include "onlinesearchieeexplore.h"
 #include "xsltransform.h"
 #include "fileimporterbibtex.h"
@@ -116,8 +116,7 @@ void OnlineSearchIEEEXplore::startSearch(const QMap<QString, QString> &query, in
     }
 
     QNetworkRequest request(d->startPageUrl);
-    setSuggestedHttpHeaders(request);
-    QNetworkReply *reply = HTTPEquivCookieJar::networkAccessManager()->get(request);
+    QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
     setNetworkReplyTimeout(reply);
     connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingStartPage()));
 
@@ -133,8 +132,7 @@ void OnlineSearchIEEEXplore::doneFetchingStartPage()
     if (handleErrors(reply)) {
         QString url = d->searchRequestUrl + '"' + d->queryFragments.join("\"+AND+\"") + '"';
         QNetworkRequest request(url);
-        setSuggestedHttpHeaders(request, reply);
-        QNetworkReply *newReply = HTTPEquivCookieJar::networkAccessManager()->get(request);
+        QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
         setNetworkReplyTimeout(newReply);
         connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingSearchResults()));
     } else
@@ -167,8 +165,7 @@ void OnlineSearchIEEEXplore::doneFetchingSearchResults()
         } else {
             QString url = d->fullAbstractUrl + d->arnumberList.first();
             QNetworkRequest request(url);
-            setSuggestedHttpHeaders(request, reply);
-            QNetworkReply *newReply = HTTPEquivCookieJar::networkAccessManager()->get(request);
+            QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
             setNetworkReplyTimeout(newReply);
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingAbstract()));
             d->arnumberList.removeFirst();
@@ -188,8 +185,7 @@ void OnlineSearchIEEEXplore::doneFetchingAbstract()
         if (!arnumber.isEmpty()) {
             QString url = d->citationUrl + arnumber;
             QNetworkRequest request(url);
-            setSuggestedHttpHeaders(request, reply);
-            QNetworkReply *newReply = HTTPEquivCookieJar::networkAccessManager()->get(request);
+            QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
             setNetworkReplyTimeout(newReply);
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingBibliography()));
         }
@@ -236,8 +232,7 @@ void OnlineSearchIEEEXplore::doneFetchingBibliography()
             QString url = d->fullAbstractUrl + d->arnumberList.first();
             d->arnumberList.removeFirst();
             QNetworkRequest request(url);
-            setSuggestedHttpHeaders(request, reply);
-            QNetworkReply *newReply = HTTPEquivCookieJar::networkAccessManager()->get(request);
+            QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
             setNetworkReplyTimeout(newReply);
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingAbstract()));
         } else {

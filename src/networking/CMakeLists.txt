@@ -21,7 +21,7 @@ set(
     onlinesearch/onlinesearchmathscinet.cpp
     onlinesearch/onlinesearchgeneral.cpp
     findpdf.cpp
-    httpequivcookiejar.cpp
+    internalnetworkaccessmanager.cpp
 )
 
 set(
@@ -40,6 +40,7 @@ set(
     onlinesearch/onlinesearchmathscinet.h
     kbibtexnetworking_export.h
     findpdf.h
+    internalnetworkaccessmanager.h
 )
 
 add_definitions(

@@ -29,7 +29,7 @@
 #include <KMessageBox>
 
 #include <encoderlatex.h>
-#include <httpequivcookiejar.h>
+#include <internalnetworkaccessmanager.h>
 #include "onlinesearchabstract.h"
 
 const QString OnlineSearchAbstract::queryKeyFreeText = QLatin1String("free");
@@ -229,16 +229,6 @@ QMap<QString, QString> OnlineSearchAbstract::formParameters(const QString &htmlT
     }
 
     return result;
-}
-
-void OnlineSearchAbstract::setSuggestedHttpHeaders(QNetworkRequest &request, QNetworkReply *oldReply)
-{
-    if (oldReply != NULL)
-        request.setRawHeader(QString("Referer").toAscii(), oldReply->url().toString().toAscii());
-    request.setRawHeader(QString("User-Agent").toAscii(), HTTPEquivCookieJar::userAgent().toAscii());
-    request.setRawHeader(QString("Accept").toAscii(), QString("text/*, */*;q=0.7").toAscii());
-    request.setRawHeader(QString("Accept-Charset").toAscii(), QString("utf-8, us-ascii, ISO-8859-1, ISO-8859-15, windows-1252").toAscii());
-    request.setRawHeader(QString("Accept-Language").toAscii(), QString("en-US, en;q=0.9").toAscii());
 }
 
 

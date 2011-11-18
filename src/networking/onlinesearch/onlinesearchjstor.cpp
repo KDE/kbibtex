@@ -24,7 +24,7 @@
 #include <KLocale>
 #include <KDebug>
 
-#include <httpequivcookiejar.h>
+#include <internalnetworkaccessmanager.h>
 #include "iocommon.h"
 #include "fileimporterbibtex.h"
 #include "onlinesearchjstor.h"
@@ -144,8 +144,7 @@ void OnlineSearchJStor::startSearch(const QMap<QString, QString> &query, int num
     kDebug() << "queryUrl=" << d->queryUrl.pathOrUrl();
 
     QNetworkRequest request(d->jstorBaseUrl);
-    setSuggestedHttpHeaders(request);
-    QNetworkReply *reply = HTTPEquivCookieJar::networkAccessManager()->get(request);
+    QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
     setNetworkReplyTimeout(reply);
     connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingStartPage()));
     emit progress(d->curStep, d->numSteps);
@@ -190,8 +189,7 @@ void OnlineSearchJStor::doneFetchingStartPage()
 
     if (handleErrors(reply)) {
         QNetworkRequest request(d->queryUrl);
-        setSuggestedHttpHeaders(request);
-        QNetworkReply *reply = HTTPEquivCookieJar::networkAccessManager()->get(request);
+        QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
         setNetworkReplyTimeout(reply);
         connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingResultPage()));
     } else
@@ -223,8 +221,7 @@ void OnlineSearchJStor::doneFetchingResultPage()
         body.append("selectUnselect=");
 
         QNetworkRequest request(d->jstorBaseUrl + "action/downloadCitation?format=bibtex&include=abs");
-        setSuggestedHttpHeaders(request, reply);
-        QNetworkReply *newReply = HTTPEquivCookieJar::networkAccessManager()->post(request, body.join("&").toUtf8());
+        QNetworkReply *newReply = InternalNetworkAccessManager::self()->post(request, body.join("&").toUtf8());
         setNetworkReplyTimeout(newReply);
         connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingSummaryPage()));
     } else

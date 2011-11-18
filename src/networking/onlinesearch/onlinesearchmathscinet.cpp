@@ -29,7 +29,7 @@
 #include <fileimporterbibtex.h>
 #include <kbibtexnamespace.h>
 #include "onlinesearchmathscinet.h"
-#include "httpequivcookiejar.h"
+#include <internalnetworkaccessmanager.h>
 
 class OnlineSearchMathSciNet::OnlineSearchMathSciNetPrivate
 {
@@ -113,10 +113,9 @@ void OnlineSearchMathSciNet::startSearch(const QMap<QString, QString> &query, in
 
     /// issue request for start page
     QNetworkRequest request(d->queryFormUrl);
-    setSuggestedHttpHeaders(request, NULL);
-    QNetworkReply *newReply = HTTPEquivCookieJar::networkAccessManager()->get(request);
-    setNetworkReplyTimeout(newReply);
-    connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingQueryForm()));
+    QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
+    setNetworkReplyTimeout(reply);
+    connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingQueryForm()));
 }
 
 void OnlineSearchMathSciNet::startSearch()
@@ -175,8 +174,7 @@ void OnlineSearchMathSciNet::doneFetchingQueryForm()
 
         /// issue request for result page
         QNetworkRequest request(url);
-        setSuggestedHttpHeaders(request, reply);
-        QNetworkReply *newReply = HTTPEquivCookieJar::networkAccessManager()->get(request);
+        QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
         setNetworkReplyTimeout(newReply);
         connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingResultPage()));
     } else
@@ -212,8 +210,7 @@ void OnlineSearchMathSciNet::doneFetchingResultPage()
         if (count > 0) {
             /// issue request for bibtex code
             QNetworkRequest request(url);
-            setSuggestedHttpHeaders(request, reply);
-            QNetworkReply *newReply = HTTPEquivCookieJar::networkAccessManager()->get(request);
+            QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
             setNetworkReplyTimeout(newReply);
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingBibTeXcode()));
         } else {

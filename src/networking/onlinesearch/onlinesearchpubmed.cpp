@@ -26,10 +26,10 @@
 #include <KStandardDirs>
 #include <KMessageBox>
 
-#include <httpequivcookiejar.h>
-#include "onlinesearchpubmed.h"
+#include <internalnetworkaccessmanager.h>
 #include "xsltransform.h"
 #include "fileimporterbibtex.h"
+#include "onlinesearchpubmed.h"
 
 class OnlineSearchPubMed::OnlineSearchPubMedPrivate
 {
@@ -125,8 +125,7 @@ void OnlineSearchPubMed::startSearch(const QMap<QString, QString> &query, int nu
     d->numSteps = 2;
     m_hasBeenCanceled = false;
     QNetworkRequest request(d->buildQueryUrl(query, numResults));
-    setSuggestedHttpHeaders(request);
-    QNetworkReply *reply = HTTPEquivCookieJar::networkAccessManager()->get(request);
+    QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
     setNetworkReplyTimeout(reply);
     connect(reply, SIGNAL(finished()), this, SLOT(eSearchDone()));
 
@@ -181,8 +180,7 @@ void OnlineSearchPubMed::eSearchDone()
             } else {
                 /// fetch full bibliographic details for found PubMed ids
                 QNetworkRequest request(d->buildFetchIdUrl(idList));
-                setSuggestedHttpHeaders(request, reply);
-                QNetworkReply *newReply = HTTPEquivCookieJar::networkAccessManager()->get(request);
+                QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
                 setNetworkReplyTimeout(newReply);
                 connect(newReply, SIGNAL(finished()), this, SLOT(eFetchDone()));
             }
