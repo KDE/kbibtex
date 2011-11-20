@@ -42,7 +42,7 @@ class AlternativesItemModel;
 class CheckableBibTeXFileModel;
 class FilterIdBibTeXFileModel;
 
-class MergeWidget : public QWidget
+class KBIBTEXGUI_EXPORT MergeWidget : public QWidget
 {
     Q_OBJECT
 
