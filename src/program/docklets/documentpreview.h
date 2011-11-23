@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2010 by Thomas Fischer                             *
+*   Copyright (C) 2004-2011 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -18,8 +18,8 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#ifndef KBIBTEX_PROGRAM_URLPREVIEW_H
-#define KBIBTEX_PROGRAM_URLPREVIEW_H
+#ifndef KBIBTEX_PROGRAM_DOCUMENTPREVIEW_H
+#define KBIBTEX_PROGRAM_DOCUMENTPREVIEW_H
 
 #include <QWidget>
 
@@ -36,19 +36,19 @@ class Job;
 class Element;
 class File;
 
-class UrlPreview : public QWidget
+class DocumentPreview : public QWidget
 {
     Q_OBJECT
 public:
-    UrlPreview(QDockWidget *parent);
+    DocumentPreview(QDockWidget *parent);
 
 public slots:
     void setElement(Element*, const File *);
     void setBibTeXUrl(const KUrl&);
 
 private:
-    class UrlPreviewPrivate;
-    UrlPreviewPrivate *d;
+    class DocumentPreviewPrivate;
+    DocumentPreviewPrivate *d;
 
     QString mimeType(const KUrl &url);
 
@@ -56,7 +56,9 @@ private slots:
     void openExternally();
     void onlyLocalFilesChanged();
     void visibilityChanged(bool);
+    void comboBoxChanged(int);
     void statFinished(KJob*);
+    void loadingFinished();
 };
 
-#endif // KBIBTEX_PROGRAM_URLPREVIEW_H
+#endif // KBIBTEX_PROGRAM_DOCUMENTPREVIEW_H

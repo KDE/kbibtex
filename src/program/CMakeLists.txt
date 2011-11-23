@@ -26,7 +26,7 @@ set(
     documentlist.cpp
     mdiwidget.cpp
     docklets/referencepreview.cpp
-    docklets/urlpreview.cpp
+    docklets/documentpreview.cpp
     docklets/valuelist.cpp
     docklets/searchform.cpp
     docklets/searchresults.cpp
