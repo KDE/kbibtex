@@ -71,7 +71,6 @@ private:
 
     KComboBox *urlComboBox;
     KPushButton *externalViewerButton;
-    QCheckBox *onlyLocalFilesCheckBox;
     QStackedWidget *stackedWidget;
     QLabel *message;
     QMap<int, struct UrlInfo> cbxEntryToUrlInfo;
@@ -85,6 +84,7 @@ private:
     int swpMessage, swpOkular, swpHTML;
 
 public:
+    QCheckBox *onlyLocalFilesCheckBox;
     QList<KIO::StatJob*> runningJobs;
     const Entry* entry;
     KUrl baseUrl;
@@ -136,7 +136,9 @@ public:
         /// default widget if no preview is available
         message = new QLabel(i18n("No preview available"), stackedWidget);
         message->setAlignment(Qt::AlignCenter);
+        message->setWordWrap(true);
         swpMessage = stackedWidget->addWidget(message);
+        connect(message, SIGNAL(linkActivated(QString)), p, SLOT(linkActivated(QString)));
 
         /// add parts to stackedWidget
         okularPart = locatePart(QLatin1String("okularPoppler.desktop"), stackedWidget);
@@ -216,7 +218,10 @@ public:
                 connect(job, SIGNAL(result(KJob*)), p, SLOT(statFinished(KJob*)));
             }
             if (urlList.isEmpty()) {
-                showMessage(i18n("No file to show"));
+                showMessage(i18n("No documents to show."));
+                p->setCursor(Qt::ArrowCursor);
+            } else if (runningJobs.isEmpty()) {
+                showMessage(i18n("<qt>No documents to show.<br/><a href=\"disableonlylocalfiles\">Disable the restriction</a> to local files to see remote documents.</qt>"));
                 p->setCursor(Qt::ArrowCursor);
             }
         }
@@ -241,7 +246,7 @@ public:
     }
 
     bool showUrl(const struct UrlInfo &urlInfo) {
-        static const QStringList okularMimetypes = QStringList() << QLatin1String("application/x-pdf") << QLatin1String("application/pdf") << QLatin1String("application/x-gzpdf") << QLatin1String("application/x-bzpdf") << QLatin1String("application/x-wwf");
+        static const QStringList okularMimetypes = QStringList() << QLatin1String("application/x-pdf") << QLatin1String("application/pdf") << QLatin1String("application/x-gzpdf") << QLatin1String("application/x-bzpdf") << QLatin1String("application/x-wwf") << QLatin1String("image/vnd.djvu") << QLatin1String("application/postscript") << QLatin1String("image/x-eps") << QLatin1String("application/x-gzpostscript") << QLatin1String("application/x-bzpostscript") << QLatin1String("image/x-gzeps") << QLatin1String("image/x-bzeps");
         static const QStringList htmlMimetypes = QStringList() << QLatin1String("text/html") << QLatin1String("application/xml") << QLatin1String("application/xhtml+xml");
 
         stackedWidget->widget(swpHTML)->setEnabled(false);
@@ -260,7 +265,7 @@ public:
             htmlPart->openUrl(urlInfo.url);
             return true;
         } else
-            showMessage(i18n("<qt>Don't know how to show mimetype <tt>%1</tt>.</qt>").arg(urlInfo.mimeType));
+            showMessage(i18n("<qt>Don't know how to show mimetype '%1'.</qt>", urlInfo.mimeType));
 
         return false;
     }
@@ -402,4 +407,10 @@ void DocumentPreview::loadingFinished()
 {
     setCursor(Qt::ArrowCursor);
     d->showPart(dynamic_cast<KParts::ReadOnlyPart*>(sender()));
+}
+
+void DocumentPreview::linkActivated(const QString &link)
+{
+    if (link == QLatin1String("disableonlylocalfiles"))
+        d->onlyLocalFilesCheckBox->setChecked(false);
 }

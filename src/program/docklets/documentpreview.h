@@ -59,6 +59,7 @@ private slots:
     void comboBoxChanged(int);
     void statFinished(KJob*);
     void loadingFinished();
+    void linkActivated(const QString &link);
 };
 
 #endif // KBIBTEX_PROGRAM_DOCUMENTPREVIEW_H
