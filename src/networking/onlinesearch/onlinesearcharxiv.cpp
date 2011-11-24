@@ -130,6 +130,275 @@ public:
             queryFragments.append(p->encodeURL(queryFragment));
         return KUrl(QString("%1search_query=all:\"%3\"&start=0&max_results=%2").arg(arXivQueryBaseUrl).arg(numResults).arg(queryFragments.join("\"+AND+all:\"")));
     }
+
+    void interpreteJournal(Entry &entry) {
+        static const QRegExp
+        /**
+         * Examples:
+         *   Journal of Inefficient Algorithms 5 (2003) 35-39
+         *   Astrophys.J. 578 (2002) L103-L106
+         *   New J. Phys. 10 (2008) 033023
+         *   Physics Letters A 297 (2002) 4-8
+         *   Appl.Phys. B75 (2002) 655-665
+         *   JHEP 0611 (2006) 045
+         * Captures:
+         *   1: journal title
+         *   2: volume
+         *   3: year
+         *   4: page start
+         *   6: page end
+         */
+        journalRef1("^([a-z. ]+[a-z.])\\s*(\\d+)\\s+\\((\\d{4})\\)\\s+([0-9A-Z]+)(-([0-9A-Z]+))?$", Qt::CaseInsensitive),
+
+        /**
+         * Examples:
+         *  Journal of Inefficient Algorithms, Vol. 93, No. 2 (2009), pp. 42-51
+         *  International Journal of Quantum Information, Vol. 1, No. 4 (2003) 427-441
+         *  Stud. Hist. Phil. Mod. Phys., Vol 33 no 3 (2003), pp. 441-468
+         * Captures:
+         *   1: journal title
+         *   2: volume
+         *   3: number
+         *   4: year
+         *   5: page start
+         *   7: page end
+         */
+        journalRef2("^([a-zA-Z. ]+[a-zA-Z.]),\\s+Vol\\.?\\s+(\\d+)[,]?\\s+No\\.?\\s+(\\d+)\\s+\\((\\d{4})\\)[,]?\\s+(pp\\.\\s+)?(\\d+)(-(\\d+))?$", Qt::CaseInsensitive),
+
+        /**
+         * Examples:
+         *   Journal of Inefficient Algorithms, volume 4, number 1, pp. 12-21, 2008
+         *   Scientometrics, volume 69, number 3, pp. 669-687, 2006
+         * Captures:
+         *   1: journal title
+         *   2: volume
+         *   3: number
+         *   4: page start
+         *   6: page end
+         *   7: year
+         */
+        journalRef3("^([a-zA-Z. ]+),\\s+volume\\s+(\\d+),\\s+number\\s+(\\d+),\\s+pp\\.\\s+(\\d+)(-(\\d+))?,\\s+(\\d{4})$", Qt::CaseInsensitive),
+
+        /**
+         * Examples:
+         *  Journal of Inefficient Algorithms 4(1): 101-122, 2010
+         *  JHEP0809:131,2008
+         *  Phys.Rev.D78:013004,2008
+         *  Lect.NotesPhys.690:107-127,2006
+         *  Europhys. Letters 70:1-7 (2005)
+         *  Journal of Conflict Resolution 51(1): 58 - 88 (2007)
+         *  Journal of Artificial Intelligence Research (JAIR), 9:247-293
+         * Captures:
+         *   1: journal title
+         *   2: volume
+         *   4: number
+         *   5: page start
+         *   7: page end
+         *   9 or 10: year
+         */
+        journalRef4("^([a-z. ()]+)[,]?\\s*(\\d+)(\\((\\d+)\\))?:\\s*(\\d+)(\\s*-\\s*(\\d+))?(,\\s*(\\d{4})|\\s+\\((\\d{4})\\))?$", Qt::CaseInsensitive),
+
+        /**
+         * Examples:
+         *  Journal of Inefficient Algorithms vol. 31, 4 2000
+         *  Phys. Rev. A 71, 032339 (2005)
+         *  Phys. Rev. Lett. 91, 027901 (2003)
+         *  Phys. Rev. A 78, 013620 (2008)
+         *  Phys. Rev. E 62, 1842 (2000)
+         *  Rev. Mod. Phys. 79, 555 (2007)
+         *  J. Math. Phys. 49, 032105 (2008)
+         *  New J. Phys. 8, 58 (2006)
+         *  Phys. Rev. Lett. 91, 217905 (2003).
+         *  Physical Review B vol. 66, 161320(R) (2002)
+         * Captures:
+         *   1: journal title
+         *   3: volume
+         *   4: page start
+         *   6: year
+         */
+        journalRef5("^([a-zA-Z. ]+)\\s+(vol\\.\\s+)?(\\d+),\\s+(\\d+)(\\([A-Z]+\\))?\\s+\\((\\d{4})\\)[.]?$", Qt::CaseInsensitive),
+
+        /**
+         * Examples:
+         *  Journal of Inefficient Algorithms, 11(2) (1999) 42-55
+         *  Learned Publishing, 20(1) (January 2007) 16-22
+         * Captures:
+         *   1: journal title
+         *   2: volume
+         *   3: number
+         *   4: year
+         *   5: page start
+         *   7: page end
+         */
+        journalRef6("^([a-zA-Z. ]+),\\s+(\\d+)\\((\\d+)\\)\\s+(\\(([A-Za-z]+\\s+)?(\\d{4})\\))?\\s+(\\d+)(-(\\d+))?$", Qt::CaseInsensitive),
+        generalJour("^([a-zA-Z. ]+)", Qt::CaseInsensitive), generalYear("\\b((18|19|20)\\d{2})\\b"), generalPages("\\b([1-9]\\d{0,2})\\s*[-]+\\s*([1-9]\\d{0,2})\\b");
+        QString journalText = PlainTextValue::text(entry.value(Entry::ftJournal));
+
+        /// nothing to do on empty journal text
+        if (journalText.isEmpty()) return;
+        else entry.remove(Entry::ftJournal);
+
+        kDebug() << "journalText =" << journalText;
+
+        if (journalRef1.indexIn(journalText, Qt::CaseInsensitive) >= 0) {
+            /**
+             * Captures:
+             *   1: journal title
+             *   2: volume
+             *   3: year
+             *   4: page start
+             *   6: page end
+             */
+            QString text;
+            if (!(text = journalRef1.cap(1)).isEmpty()) {
+                Value v;
+                v.append(new PlainText(text));
+                entry.insert(Entry::ftJournal, v);
+            }
+            if (!(text = journalRef1.cap(2)).isEmpty()) {
+                Value v;
+                v.append(new PlainText(text));
+                entry.insert(Entry::ftVolume, v);
+            }
+            if (!(text = journalRef1.cap(3)).isEmpty()) {
+                Value v;
+                v.append(new PlainText(text));
+                entry.insert(Entry::ftYear, v);
+            }
+            if (!(text = journalRef1.cap(4)).isEmpty()) {
+                const QString endPage = journalRef1.cap(6);
+                if (endPage.isEmpty()) {
+                    Value v;
+                    v.append(new PlainText(text));
+                    entry.insert(Entry::ftPages, v);
+                } else {
+                    Value v;
+                    v.append(new PlainText(QString("%1--%2").arg(text).arg(endPage)));
+                    entry.insert(Entry::ftPages, v);
+                }
+            }
+        } else if (journalRef2.indexIn(journalText, Qt::CaseInsensitive) >= 0) {
+            /**
+             * Captures:
+             *   1: journal title
+             *   2: volume
+             *   3: number
+             *   4: year
+             *   5: page start
+             *   7: page end
+             */
+            QString text;
+            if (!(text = journalRef2.cap(1)).isEmpty()) {
+                Value v;
+                v.append(new PlainText(text));
+                entry.insert(Entry::ftJournal, v);
+            }
+            if (!(text = journalRef2.cap(2)).isEmpty()) {
+                Value v;
+                v.append(new PlainText(text));
+                entry.insert(Entry::ftVolume, v);
+            }
+            if (!(text = journalRef2.cap(3)).isEmpty()) {
+                Value v;
+                v.append(new PlainText(text));
+                entry.insert(Entry::ftNumber, v);
+            }
+            if (!(text = journalRef2.cap(4)).isEmpty()) {
+                Value v;
+                v.append(new PlainText(text));
+                entry.insert(Entry::ftYear, v);
+            }
+            if (!(text = journalRef2.cap(5)).isEmpty()) {
+                const QString endPage = journalRef2.cap(7);
+                if (endPage.isEmpty()) {
+                    Value v;
+                    v.append(new PlainText(text));
+                    entry.insert(Entry::ftPages, v);
+                } else {
+                    Value v;
+                    v.append(new PlainText(QString("%1%3%2").arg(text).arg(endPage).arg(QChar(0x2013))));
+                    entry.insert(Entry::ftPages, v);
+                }
+            }
+        } else if (journalRef3.indexIn(journalText, Qt::CaseInsensitive) >= 0) {
+            /**
+             * Captures:
+             *   1: journal title
+             *   2: volume
+             *   4: number
+             *   5: page start
+             *   7: page end
+             *   9 or 10: year
+             */
+            QString text;
+            if (!(text = journalRef3.cap(1)).isEmpty()) {
+                Value v;
+                v.append(new PlainText(text));
+                entry.insert(Entry::ftJournal, v);
+            }
+            if (!(text = journalRef3.cap(2)).isEmpty()) {
+                Value v;
+                v.append(new PlainText(text));
+                entry.insert(Entry::ftVolume, v);
+            }
+            if (!(text = journalRef3.cap(4)).isEmpty()) {
+                Value v;
+                v.append(new PlainText(text));
+                entry.insert(Entry::ftNumber, v);
+            }
+            if (!(text = journalRef3.cap(9)).isEmpty()) {
+                Value v;
+                v.append(new PlainText(text));
+                entry.insert(Entry::ftYear, v);
+                if (!(text = journalRef3.cap(10)).isEmpty()) {
+                    Value v;
+                    v.append(new PlainText(text));
+                    entry.insert(Entry::ftYear, v);
+                }
+                if (!(text = journalRef2.cap(5)).isEmpty()) {
+                    const QString endPage = journalRef2.cap(7);
+                    if (endPage.isEmpty()) {
+                        Value v;
+                        v.append(new PlainText(text));
+                        entry.insert(Entry::ftPages, v);
+                    } else {
+                        Value v;
+                        v.append(new PlainText(QString("%1%3%2").arg(text).arg(endPage).arg(QChar(0x2013))));
+                        entry.insert(Entry::ftPages, v);
+                    }
+                }
+            }
+        } else if (journalRef4.indexIn(journalText, Qt::CaseInsensitive) >= 0) {
+            /**
+             * Captures:
+             *   1: journal title
+             *   3: volume
+             *   4: page start
+             *   6: year
+             */
+            QString text;
+            if (!(text = journalRef4.cap(1)).isEmpty()) {
+                Value v;
+                v.append(new PlainText(text));
+                entry.insert(Entry::ftJournal, v);
+            }
+            if (!(text = journalRef4.cap(3)).isEmpty()) {
+                Value v;
+                v.append(new PlainText(text));
+                entry.insert(Entry::ftVolume, v);
+            }
+            if (!(text = journalRef4.cap(4)).isEmpty()) {
+                Value v;
+                v.append(new PlainText(text));
+                entry.insert(Entry::ftPages, v);
+            }
+            if (!(text = journalRef4.cap(6)).isEmpty()) {
+                Value v;
+                v.append(new PlainText(text));
+                entry.insert(Entry::ftYear, v);
+            }
+        }
+    }
 };
 
 OnlineSearchArXiv::OnlineSearchArXiv(QWidget *parent)
@@ -219,6 +488,7 @@ void OnlineSearchArXiv::downloadDone()
             for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
                 Entry *entry = dynamic_cast<Entry*>(*it);
                 if (entry != NULL) {
+                    d->interpreteJournal(*entry);
                     Value v;
                     v.append(new VerbatimText(label()));
                     entry->insert("x-fetchedfrom", v);
