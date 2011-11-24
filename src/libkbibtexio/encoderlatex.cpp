@@ -300,24 +300,11 @@ encoderLaTeXCharacterCommands[] = {
 };
 static const int encoderLaTeXCharacterCommandsLen = sizeof(encoderLaTeXCharacterCommands) / sizeof(encoderLaTeXCharacterCommands[0]);
 
+const char EncoderLaTeX::encoderLaTeXProtectedSymbols[] = {'#', '&', '%'};
+const int EncoderLaTeX::encoderLaTeXProtectedSymbolsLen = sizeof(EncoderLaTeX::encoderLaTeXProtectedSymbols) / sizeof(EncoderLaTeX::encoderLaTeXProtectedSymbols[0]);
 
-/**
- * This data structure keeps individual characters that have
- * a special purpose in LaTeX and therefore needs to be escaped
- * both in text and in math mode by prefixing with a backlash.
- */
-static const char encoderLaTeXProtectedSymbols[] = {'#', '&'};
-static const int encoderLaTeXProtectedSymbolsLen = sizeof(encoderLaTeXProtectedSymbols) / sizeof(encoderLaTeXProtectedSymbols[0]);
-
-
-/**
- * This data structure keeps individual characters that have
- * a special purpose in LaTeX in text mode and therefore needs
- * to be escaped by prefixing with a backlash. In math mode,
- * those have a different purpose and may not be escaped there.
- */
-static const char encoderLaTeXProtectedTextOnlySymbols[] = {'_'};
-static const int encoderLaTeXProtectedTextOnlySymbolsLen = sizeof(encoderLaTeXProtectedTextOnlySymbols) / sizeof(encoderLaTeXProtectedTextOnlySymbols[0]);
+const char EncoderLaTeX::encoderLaTeXProtectedTextOnlySymbols[] = {'_'};
+const int EncoderLaTeX::encoderLaTeXProtectedTextOnlySymbolsLen = sizeof(encoderLaTeXProtectedTextOnlySymbols) / sizeof(encoderLaTeXProtectedTextOnlySymbols[0]);
 
 
 /**
@@ -405,6 +392,14 @@ QString EncoderLaTeX::decode(const QString &input) const
 
     /// Go through input char by char
     for (int i = 0; i < len; ++i) {
+        /**
+         * Repeatedly check if input data contains a verbatim command
+         * like \url{...}, copy it to output, and update i to point
+         * to the next character after the verbatim command.
+         */
+        while (testAndCopyVerbatimCommands(input, i, output));
+        if (i >= len) break;
+
         /// Fetch current input char
         const QChar &c = input[i];
 
@@ -611,6 +606,31 @@ QString EncoderLaTeX::decode(const QString &input) const
     return output;
 }
 
+bool EncoderLaTeX::testAndCopyVerbatimCommands(const QString &input, int &pos, QString &output) const
+{
+    int copyBytesCount = 0;
+    int openedClosedCurlyBrackets = 0;
+
+    /// check for \url
+    if (pos < input.length() - 6 && input[pos] == '\\' && input[pos+1] == 'u' && input[pos+2] == 'r' && input[pos+3] == 'l' && input[pos+4] == '{') {
+        copyBytesCount = 5;
+        openedClosedCurlyBrackets = 1;
+    }
+
+    if (copyBytesCount > 0) {
+        while (openedClosedCurlyBrackets > 0 && pos + copyBytesCount < input.length()) {
+            ++copyBytesCount;
+            if (input[pos+copyBytesCount] == '{' && input[pos+copyBytesCount-1] != '\\') ++openedClosedCurlyBrackets;
+            else if (input[pos+copyBytesCount] == '}' && input[pos+copyBytesCount-1] != '\\') --openedClosedCurlyBrackets;
+        }
+
+        output.append(input.mid(pos, copyBytesCount));
+        pos += copyBytesCount;
+    }
+
+    return copyBytesCount > 0;
+}
+
 QString EncoderLaTeX::encode(const QString &input) const
 {
     int len = input.length();
@@ -621,6 +641,14 @@ QString EncoderLaTeX::encode(const QString &input) const
 
     /// Go through input char by char
     for (int i = 0; i < len; ++i) {
+        /**
+         * Repeatedly check if input data contains a verbatim command
+         * like \url{...}, copy it to output, and update i to point
+         * to the next character after the verbatim command.
+         */
+        while (testAndCopyVerbatimCommands(input, i, output));
+        if (i >= len) break;
+
         const QChar c = input[i];
 
         if (c.unicode() > 127) {
@@ -668,7 +696,6 @@ QString EncoderLaTeX::encode(const QString &input) const
 
             /// Still, some characters have special meaning
             /// in TeX and have to be preceeded with a backslash
-            // TODO do not encode symbols inside \url{...}
             bool found = false;
             for (int k = 0; k < encoderLaTeXProtectedSymbolsLen; ++k)
                 if (encoderLaTeXProtectedSymbols[k] == c) {

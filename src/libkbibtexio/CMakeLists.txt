@@ -8,6 +8,7 @@ set(
     encoder.cpp
     encoderlatex.cpp
     encoderxml.cpp
+    encoderutf8.cpp
     entry.cpp
     file.cpp
     fileinfo.cpp
@@ -40,6 +41,8 @@ set(
     element.h
     encoder.h
     encoderlatex.h
+    encoderxml.h
+    encoderutf8.h
     entry.h
     fileexporterbibtex2html.h
     fileexporterbibtex.h

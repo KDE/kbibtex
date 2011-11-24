@@ -34,13 +34,40 @@
 class KBIBTEXIO_EXPORT EncoderLaTeX: public Encoder
 {
 public:
-    QString decode(const QString &text) const;
-    QString encode(const QString &text) const;
-//   QString encode(const QString &text, const QChar &replace);
-    // QString& decomposedUTF8toLaTeX(QString &text);
+    virtual QString decode(const QString &text) const;
+    virtual QString encode(const QString &text) const;
     QString convertToPlainAscii(const QString &input) const;
 
     static EncoderLaTeX* instance();
+
+protected:
+    EncoderLaTeX();
+    ~EncoderLaTeX();
+
+    /**
+     * This data structure keeps individual characters that have
+     * a special purpose in LaTeX and therefore needs to be escaped
+     * both in text and in math mode by prefixing with a backlash.
+     */
+    static const char encoderLaTeXProtectedSymbols[];
+    static const int encoderLaTeXProtectedSymbolsLen;
+
+    /**
+     * This data structure keeps individual characters that have
+     * a special purpose in LaTeX in text mode and therefore needs
+     * to be escaped by prefixing with a backlash. In math mode,
+     * those have a different purpose and may not be escaped there.
+     */
+    static const char encoderLaTeXProtectedTextOnlySymbols[];
+    static const int encoderLaTeXProtectedTextOnlySymbolsLen;
+
+    /**
+     * Check if input data contains a verbatim command like \url{...},
+     * copy it to output, and update the position to point to the next
+     * character after the verbatim command.
+     * @return 'true' if a verbatim command has been copied, otherwise 'false'.
+     */
+    bool testAndCopyVerbatimCommands(const QString &input, int &pos, QString &output) const;
 
 private:
     /**
@@ -52,15 +79,13 @@ private:
     int modifierInLookupTable(const QChar &c) const;
 
     /**
-     * Return a byte array that represents the part of
-     * the base byte array starting from startFrom containing
+     * Return a string that represents the part of
+     * the base string starting from startFrom containing
      * only alpha characters (a-z,A-Z).
      * Return value may be an empty byte array.
      */
     QString readAlphaCharacters(const QString &base, int startFrom) const;
 
-    EncoderLaTeX();
-    ~EncoderLaTeX();
     static EncoderLaTeX *self;
 };
 

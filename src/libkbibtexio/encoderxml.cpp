@@ -22,6 +22,8 @@
 #include <QRegExp>
 #include <QList>
 
+#include "kbibtexio_export.h"
+
 #include "encoderxml.h"
 
 EncoderXML *encoderXML = NULL;

@@ -74,8 +74,6 @@ public slots:
     void cancel();
 
 private:
-    static QString escapeLaTeXChars(const QString &text);
-
     class FileExporterBibTeXPrivate;
     FileExporterBibTeXPrivate *d;
 

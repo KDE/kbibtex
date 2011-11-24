@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2010 by Thomas Fischer                             *
+*   Copyright (C) 2004-2011 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -17,34 +17,33 @@
 *   Free Software Foundation, Inc.,                                       *
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
-#ifndef KBIBTEX_IO_ENCODERXML_H
-#define KBIBTEX_IO_ENCODERXML_H
+#ifndef KBIBTEX_IO_ENCODERUTF8_H
+#define KBIBTEX_IO_ENCODERUTF8_H
 
-#include "encoder.h"
+#include "kbibtexio_export.h"
+
+#include "encoderlatex.h"
 
 class QString;
 class QRegExp;
 
 /**
  * Base class for that convert between different textual representations
- * for non-ASCII characters, specialized for XML.
+ * for non-ASCII characters, specialized for UTF-8.
  * Example for a character to convert is &auml;.
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
-class KBIBTEXIO_EXPORT EncoderXML : public Encoder
+class KBIBTEXIO_EXPORT EncoderUTF8 : public EncoderLaTeX
 {
 public:
-    EncoderXML();
-    ~EncoderXML();
+    virtual QString encode(const QString &text) const;
 
-    QString decode(const QString &text) const;
-    QString encode(const QString &text) const;
-
-    static EncoderXML *currentEncoderXML();
+    static EncoderUTF8* instance();
 
 private:
-    class EncoderXMLPrivate;
-    EncoderXMLPrivate * const d;
+    EncoderUTF8();
+    ~EncoderUTF8();
+    static EncoderUTF8 *self;
 };
 
-#endif // KBIBTEX_IO_ENCODERXML_H
+#endif // KBIBTEX_IO_ENCODERUTF8_H

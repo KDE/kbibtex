@@ -41,6 +41,7 @@
 #include <value.h>
 #include <comment.h>
 #include <encoderlatex.h>
+#include <encoderutf8.h>
 #include <bibtexentries.h>
 #include <bibtexfields.h>
 #include <iconvlatex.h>
@@ -130,6 +131,7 @@ public:
                 continue;
             }
 
+            // FIXME hack!
             if (protectCasing && typeid(*value.first()) == typeid(PlainText) && (key == Entry::ftTitle || key == Entry::ftBookTitle || key == Entry::ftSeries))
                 addProtectiveCasing(text);
 
@@ -448,7 +450,7 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value& value, const QStr
     if (value.isEmpty())
         return "";
 
-    EncoderLaTeX *encoder = useLaTeXEncoding == leLaTeX ? EncoderLaTeX::instance() : NULL;
+    EncoderLaTeX *encoder = useLaTeXEncoding == leLaTeX ? EncoderLaTeX::instance() : (useLaTeXEncoding == leUTF8 ? EncoderUTF8::instance() : NULL);
 
     QString result = "";
     bool isOpen = false;
@@ -466,7 +468,7 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value& value, const QStr
         } else {
             const PlainText *plainText = dynamic_cast<const PlainText*>(*it);
             if (plainText != NULL) {
-                QString textBody = encodercheck(encoder, escapeLaTeXChars(plainText->text()));
+                QString textBody = encodercheck(encoder, plainText->text());
                 if (!isOpen) {
                     if (!result.isEmpty()) result.append(" # ");
                     if (textBody.contains("\"")) {
@@ -544,7 +546,7 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value& value, const QStr
 
                         // TODO: Prefix and suffix
 
-                        QString thisName = Person::transcribePersonName(d->personNameFormatting, firstName, lastName);
+                        QString thisName = encodercheck(encoder, Person::transcribePersonName(d->personNameFormatting, firstName, lastName));
 
                         if (!isOpen) {
                             if (!result.isEmpty()) result.append(" # ");
@@ -572,12 +574,12 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value& value, const QStr
                         }
                         isOpen = true;
 
-                        result.append(encodercheck(encoder, escapeLaTeXChars(thisName)));
+                        result.append(encodercheck(encoder, thisName));
                         prev = person;
                     } else {
                         const Keyword *keyword = dynamic_cast<const Keyword*>(*it);
                         if (keyword != NULL) {
-                            QString textBody = encodercheck(encoder, escapeLaTeXChars(keyword->text()));
+                            QString textBody = encodercheck(encoder, keyword->text());
                             if (!isOpen) {
                                 if (!result.isEmpty()) result.append(" # ");
                                 if (textBody.contains("\"")) {
@@ -628,48 +630,6 @@ QString FileExporterBibTeX::elementToString(const Element* element)
             result << QString("%1 = {%2}").arg(it.key()).arg(valueToBibTeX(it.value()));
     }
     return result.join("; ");
-}
-
-QString FileExporterBibTeX::escapeLaTeXChars(const QString &text)
-{
-    /// Regular expression to match dollar signs that are not escaped (i.e. not \$).
-    /// Store character in front of dollar sign in cap(1).
-    const QRegExp regExpMathSeparator = QRegExp(QLatin1String("(^|[^\\\\])\\$"));
-    /// Regular expression for characters to escape for LaTeX
-    const QRegExp regExpEscape("[^\\\\][&#_%]");
-    /// Status whether in math mode or not (as determined by dollar signs)
-    bool inMathMode = false;
-    /// Resulting text
-    QString result = text;
-
-    int m1 = -1, m2 = -1;
-    /// For each dollar sign (= switch into or out of math mode) ...
-    while ((m1 = regExpMathSeparator.indexIn(result, m2 + 1)) >= 0) {
-        /// Compensate for character in front of dollar sign
-        int cl = regExpMathSeparator.cap(1).length();
-        m1 += cl;
-
-        if (!inMathMode) {
-            /// If not in math mode, make special characters LaTeX-safe
-            int p = m2;
-            while ((p = regExpEscape.indexIn(result, p + 1)) >= 0 && p < m1) {
-                result = result.left(p + 1) + '\\' + result.mid(p + 1);
-                ++m1;
-            }
-        }
-        /// Toggle math mode
-        inMathMode = !inMathMode;
-
-        m2 = m1;
-    }
-
-    if (m1 == -1 && !inMathMode) {
-        int p = m2;
-        while ((p = regExpEscape.indexIn(result, p + 1)) >= 0)
-            result = result.left(p + 1) + '\\' + result.mid(p + 1);
-    }
-
-    return result;
 }
 
 void FileExporterBibTeX::loadState()
