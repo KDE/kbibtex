@@ -59,6 +59,7 @@ public:
 
 signals:
     void finished();
+    void progress(int visitedPages, int foundDocuments);
 
 private slots:
     void downloadFinished();

@@ -55,6 +55,8 @@ bool FindPDF::search(const Entry &entry)
     m_result.clear();
     m_currentEntry = entry;
 
+    emit progress(0, 0);
+
     /// generate a string which contains the title's beginning
     QString titleBeginning;
     if (entry.contains(Entry::ftTitle)) {
@@ -140,6 +142,8 @@ void FindPDF::downloadFinished()
     static const char *htmlHead1 = "<html", *htmlHead2 = "<HTML";
     static const char *pdfHead = "%PDF-";
 
+    emit progress(m_knownUrls.count(), m_result.count());
+
     --aliveCounter;
     QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
     const QString term = reply->property(termProperty).toString();
@@ -222,7 +226,6 @@ void FindPDF::processGeneralHTML(QNetworkReply *reply, const QString &text)
 
     bool gotLink = false;
     for (int i = 0; !gotLink && i < 4; ++i) {
-        kDebug() << "Testing reg exp" << anchorRegExp[i].pattern();
         if (anchorRegExp[i].indexIn(text) >= 0) {
             QUrl url = QUrl::fromEncoded(anchorRegExp[i].cap(1).toAscii());
             queueUrl(reply->url().resolved(url), term, origin, depth - 1);
@@ -330,6 +333,8 @@ void FindPDF::processPDF(QNetworkReply *reply, const QByteArray &data)
         result.downloadMode = NoDownload;
         result.relevance = origin == QLatin1String("doi") ? 1.0 : (origin == QLatin1String("eprint") ? 0.75 : 0.5);
         m_result << result;
+
+        emit progress(m_knownUrls.count(), m_result.count());
     }
 }
 

@@ -130,7 +130,7 @@ QList<QWidget*> PDFItemDelegate::createItemWidgets() const
     Q_ASSERT(list.count() == posRadioDownload + 1);
 
     /// paste URL into BibTeX entry, no local copy is stored
-    radioButton = new QRadioButton(i18n("Keep URL"));
+    radioButton = new QRadioButton(i18n("Use URL only"));
     bg->addButton(radioButton);
     list << radioButton;
     connect(radioButton, SIGNAL(toggled(bool)), this, SLOT(slotRadioURLonlyToggled(bool)));
@@ -171,7 +171,7 @@ void PDFItemDelegate::updateItemWidgets(const QList<QWidget*> widgets, const QSt
         previewLabel->setText(index.data(TextualPreviewRole).toString());
         previewLabel->setToolTip(QLatin1String("<qt>") + previewLabel->text() + QLatin1String("</qt>"));
         previewLabel->move(margin*2 + KIconLoader::SizeMedium, margin*2 + labelHeight);
-        previewLabel->resize(labelWidth, buttonHeight);
+        previewLabel->resize(labelWidth, labelHeight);
     }
 
     /// setup the view button
@@ -198,7 +198,7 @@ QSize PDFItemDelegate::sizeHint(const QStyleOptionViewItem & option, const QMode
     /// set a size that is suiteable
     QSize size;
     size.setWidth(option.fontMetrics.width(i18n("Download")) * 6);
-    size.setHeight(qMax(option.fontMetrics.height() * 5, (int)KIconLoader::SizeMedium));
+    size.setHeight(qMax(option.fontMetrics.height() * 6, (int)KIconLoader::SizeMedium));
     return size;
 }
 
@@ -331,7 +331,11 @@ FindPDFUI::FindPDFUI(Entry &entry, QWidget *parent)
 {
     createGUI();
 
+    m_labelMessage->show();
+    m_labelMessage->setText(i18n("Starting to search ..."));
+
     connect(m_findpdf, SIGNAL(finished()), this, SLOT(searchFinished()));
+    connect(m_findpdf, SIGNAL(progress(int, int)), this, SLOT(searchProgress(int, int)));
     m_findpdf->search(entry);
 }
 
@@ -424,23 +428,41 @@ void FindPDFUI::createGUI()
 {
     QGridLayout *layout = new QGridLayout(this);
 
+    const int minWidth = fontMetrics().height() * 40;
+    const int minHeight = fontMetrics().height() * 20;
+    setMinimumSize(minWidth, minHeight);
+
     m_listViewResult = new QListView(this);
-    layout->addWidget(m_listViewResult, 0, 0, 1, 1);
+    layout->addWidget(m_listViewResult, 0, 0);
     m_listViewResult->setEnabled(false);
-    m_listViewResult->setMinimumSize(fontMetrics().height()*40, fontMetrics().height()*20);
+    m_listViewResult->hide();
+
+    m_labelMessage = new QLabel(this);
+    layout->addWidget(m_labelMessage, 1, 0);
+    m_labelMessage->setMinimumSize(minWidth, minHeight);
+    m_labelMessage->setAlignment(Qt::AlignVCenter | Qt::AlignCenter);
 
     static_cast<QWidget*>(parent())->setCursor(Qt::WaitCursor);
 }
 
 void FindPDFUI::searchFinished()
 {
+    m_labelMessage->hide();
+    m_listViewResult->show();
+
     m_resultList = m_findpdf->results();
     m_listViewResult->setModel(new PDFListModel(m_resultList, m_listViewResult));
     m_listViewResult->setItemDelegate(new PDFItemDelegate(m_listViewResult, m_listViewResult));
     m_listViewResult->setEnabled(true);
     m_listViewResult->reset();
-    kDebug() << "row count= " << m_listViewResult->model()->rowCount(QModelIndex());
 
     static_cast<QWidget*>(parent())->unsetCursor();
     emit resultAvailable(true);
+}
+
+void FindPDFUI::searchProgress(int visitedPages, int foundDocuments)
+{
+    m_listViewResult->hide();
+    m_labelMessage->show();
+    m_labelMessage->setText(i18n("Searching ...\nNumber of visited pages: %1\nNumber of found documents: %2", visitedPages, foundDocuments));
 }

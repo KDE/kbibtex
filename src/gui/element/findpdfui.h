@@ -81,6 +81,7 @@ signals:
 
 private:
     QListView *m_listViewResult;
+    QLabel *m_labelMessage;
     QList<FindPDF::ResultItem> m_resultList;
     FindPDF *m_findpdf;
 
@@ -88,6 +89,7 @@ private:
 
 private slots:
     void searchFinished();
+    void searchProgress(int visitedPages, int foundDocuments);
 };
 
 
