@@ -28,7 +28,7 @@
 #include <KWidgetItemDelegate>
 
 #include "entry.h"
-#include "networking/findpdf.h"
+#include "findpdf.h"
 
 class QListView;
 

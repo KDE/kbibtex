@@ -252,6 +252,7 @@ add_definitions(
 include_directories(
     ${PROJECT_SOURCE_DIR}/src
     ${CMAKE_SOURCE_DIR}
+    ${CMAKE_SOURCE_DIR}/src/networking
     ${CMAKE_BINARY_DIR}
     ${KDE4_INCLUDES}
 )
