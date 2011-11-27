@@ -29,6 +29,7 @@
 #include <QButtonGroup>
 #include <QRadioButton>
 #include <QDesktopServices>
+#include <QLabel>
 
 #include <KDialog>
 #include <KLocale>
