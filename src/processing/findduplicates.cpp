@@ -29,8 +29,6 @@
 #include "entry.h"
 #include "findduplicates.h"
 
-#define getText(entry, fieldname) PlainTextValue::text((entry)->value((fieldname)))
-
 EntryClique::EntryClique()
 {
     // nothing
@@ -198,7 +196,7 @@ class FindDuplicates::FindDuplicatesPrivate
 {
 private:
     FindDuplicates *p;
-    const int maxDistance;
+    const unsigned int maxDistance;
     int **d;
     static const int dsize;
 
@@ -307,12 +305,48 @@ public:
      * Distance between two BibTeX entries, scaled by maxDistance.
      */
     int entryDistance(Entry *entryA, Entry *entryB) {
-        double titleValue = levenshteinDistance(getText(entryA, Entry::ftTitle), getText(entryB, Entry::ftTitle));
-        double authorValue = levenshteinDistance(getText(entryA, Entry::ftAuthor), getText(entryB, Entry::ftAuthor));
-        bool ok1 = false, ok2 = false;
-        double yearValue = QString(getText(entryA, Entry::ftYear)).toInt(&ok1) - QString(getText(entryB, Entry::ftYear)).toInt(&ok2);
-        yearValue = ok1 && ok2 ? qMin(1.0, yearValue * yearValue / 100.0) : 100.0;
-        int distance = (unsigned int)(maxDistance * (titleValue * 0.6 + authorValue * 0.3 + yearValue * 0.1));
+        /// "distance" to be used if no value for a field is given
+        const double neutralDistance = 0.05;
+
+        /**
+         * Get both entries' titles. If both are empty, use a "neutral
+         * distance" otherwise compute levenshtein distance (0.0 .. 1.0).
+         */
+        const QString titleA = PlainTextValue::text(entryA->value(Entry::ftTitle));
+        const QString titleB = PlainTextValue::text(entryB->value(Entry::ftTitle));
+        double titleDistance = titleA.isEmpty() && titleB.isEmpty() ? neutralDistance : levenshteinDistance(titleA, titleB);
+
+        /**
+         * Get both entries' author names. If both are empty, use a
+         * "neutral distance" otherwise compute levenshtein distance
+         * (0.0 .. 1.0).
+         */
+        const QString authorA = PlainTextValue::text(entryA->value(Entry::ftAuthor));
+        const QString authorB = PlainTextValue::text(entryB->value(Entry::ftAuthor));
+        double authorDistance = authorA.isEmpty() && authorB.isEmpty() ? neutralDistance : levenshteinDistance(authorA, authorB);
+
+        /**
+         * Get both entries' years. If both are empty, use a
+         * "neutral distance" otherwise compute distance as follows:
+         * take square of difference between both years, but impose
+         * a maximum of 100. Divide value by 100.0 to get a distance
+         * value of 0.0 .. 1.0.
+         */
+        const QString yearA = PlainTextValue::text(entryA->value(Entry::ftYear));
+        const QString yearB = PlainTextValue::text(entryB->value(Entry::ftYear));
+        bool yearAok = false, yearBok = false;
+        int yearAint = yearA.toInt(&yearAok);
+        int yearBint = yearB.toInt(&yearBok);
+        double yearDistance = yearAok && yearBok ? qMin((yearBint - yearAint) * (yearBint - yearAint), 100) / 100.0 : neutralDistance;
+
+        /**
+         * Compute total distance by taking individual distances for
+         * author, title, and year. Weight each individual distance as
+         * follows: title => 60%, author => 30%, year => 10%
+         * Scale distance by maximum distance and round to int; result
+         * will be in range 0 .. maxDistance.
+         */
+        int distance = (unsigned int)(maxDistance * (titleDistance * 0.6 + authorDistance * 0.3 + yearDistance * 0.1) + 0.5);
 
         return distance;
     }
