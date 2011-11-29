@@ -48,7 +48,7 @@ bool FileExporterToolchain::runProcesses(const QStringList &progs, QStringList *
     int i = 0;
 
     emit progress(0, progs.size());
-    for (QStringList::ConstIterator it = progs.begin(); result && it != progs.end(); it++) {
+    for (QStringList::ConstIterator it = progs.constBegin(); result && it != progs.constEnd(); it++) {
         QCoreApplication::instance()->processEvents();
         QStringList args = (*it).split(' ');
         QString cmd = args.first();

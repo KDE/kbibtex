@@ -391,7 +391,7 @@ bool PersonListEdit::reset(const Value& value)
     if (!internal.isEmpty() && typeid(PlainText) == typeid(*internal.last())) {
         PlainText *pt = static_cast<PlainText*>(internal.last());
         if (pt->text() == QLatin1String("others")) {
-            internal.removeLast();
+            internal.erase(internal.end() - 1);
             m_checkBoxOthers->setCheckState(Qt::Checked);
         }
     }

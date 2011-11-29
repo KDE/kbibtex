@@ -322,7 +322,7 @@ public:
 
             /// include all macro definitions, in case they are referenced
             if (file != NULL)
-                for (File::ConstIterator it = file->begin(); it != file->end(); ++it)
+                for (File::ConstIterator it = file->constBegin(); it != file->constEnd(); ++it)
                     if (typeid(**it) == typeid(Macro))
                         dummyFile << *it;
 

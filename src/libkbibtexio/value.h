@@ -20,7 +20,7 @@
 #ifndef BIBTEXVALUE_H
 #define BIBTEXVALUE_H
 
-#include <QList>
+#include <QVector>
 #include <QRegExp>
 #include <QVariant>
 
@@ -32,10 +32,10 @@ class File;
   * Generic class of an information element in a @see Value object.
   * In BibTeX, ValueItems are concatenated by "#".
   */
-class ValueItem
+class KBIBTEXIO_EXPORT ValueItem
 {
 public:
-    virtual ~ValueItem() { /* nothing */ };
+    virtual ~ValueItem();
 
     virtual void replace(const QString &before, const QString &after) = 0;
 
@@ -173,7 +173,7 @@ protected:
  * A Value object is built from a list of @see ValueItem objects.
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
-class KBIBTEXIO_EXPORT Value: public QList<ValueItem*>
+class KBIBTEXIO_EXPORT Value: public QVector<ValueItem*>
 {
 public:
     Value();

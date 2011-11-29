@@ -54,7 +54,7 @@ bool FileExporterRIS::save(QIODevice* iodevice, const File* bibtexfile, QStringL
     m_cancelFlag = false;
     QTextStream stream(iodevice);
 
-    for (File::ConstIterator it = bibtexfile->begin(); it != bibtexfile->end() && result && !m_cancelFlag; it++) {
+    for (File::ConstIterator it = bibtexfile->constBegin(); it != bibtexfile->constEnd() && result && !m_cancelFlag; it++) {
         const Entry *entry = dynamic_cast<const Entry*>(*it);
         if (entry != NULL) {
 //                 FIXME Entry *myEntry = bibtexfile->completeReferencedFieldsConst( entry );
@@ -95,7 +95,7 @@ bool FileExporterRIS::writeEntry(QTextStream &stream, const Entry* entry, const 
     QString year = "";
     QString month = "";
 
-    for (Entry::ConstIterator it = entry->begin(); result && it != entry->end(); it++) {
+    for (Entry::ConstIterator it = entry->constBegin(); result && it != entry->constEnd(); it++) {
         const QString key = it.key();
         const Value value = it.value();
         QString plainText = PlainTextValue::text(value, bibtexfile);
@@ -103,7 +103,7 @@ bool FileExporterRIS::writeEntry(QTextStream &stream, const Entry* entry, const 
         if (key.startsWith("RISfield_"))
             result &= writeKeyValue(stream, key.right(2), plainText);
         else if (key == Entry::ftAuthor) {
-            for (QList<ValueItem*>::ConstIterator it = value.begin(); result && it != value.end(); ++it) {
+            for (Value::ConstIterator it = value.constBegin(); result && it != value.constEnd(); ++it) {
                 Person *person = dynamic_cast<Person*>(*it);
                 if (person != NULL)
                     result &= writeKeyValue(stream, "AU", PlainTextValue::text(**it, bibtexfile));
@@ -111,7 +111,7 @@ bool FileExporterRIS::writeEntry(QTextStream &stream, const Entry* entry, const 
                     kWarning() << "Cannot write value " << PlainTextValue::text(**it, bibtexfile) << " for field AU (author), not supported by RIS format" << endl;
             }
         } else if (key.toLower() == Entry::ftEditor) {
-            for (QList<ValueItem*>::ConstIterator it = value.begin(); result && it != value.end(); ++it) {
+            for (Value::ConstIterator it = value.constBegin(); result && it != value.constEnd(); ++it) {
                 Person *person = dynamic_cast<Person*>(*it);
                 if (person != NULL)
                     result &= writeKeyValue(stream, "ED", PlainTextValue::text(**it, bibtexfile));

@@ -60,7 +60,7 @@ bool FileExporterXML::save(QIODevice* iodevice, const File* bibtexfile, QStringL
     stream << "<!-- http://home.gna.org/kbibtex/ -->" << endl;
     stream << "<bibliography>" << endl;
 
-    for (File::ConstIterator it = bibtexfile->begin(); it != bibtexfile->end() && result && !m_cancelFlag; ++it)
+    for (File::ConstIterator it = bibtexfile->constBegin(); it != bibtexfile->constEnd() && result && !m_cancelFlag; ++it)
         write(stream, *it, bibtexfile);
 
     stream << "</bibliography>" << endl;
@@ -118,7 +118,7 @@ bool FileExporterXML::write(QTextStream& stream, const Element* element, const F
 bool FileExporterXML::writeEntry(QTextStream &stream, const Entry* entry)
 {
     stream << " <entry id=\"" << EncoderXML::currentEncoderXML() ->encode(entry->id()) << "\" type=\"" << entry->type().toLower() << "\">" << endl;
-    for (Entry::ConstIterator it = entry->begin(); it != entry->end(); ++it) {
+    for (Entry::ConstIterator it = entry->constBegin(); it != entry->constEnd(); ++it) {
         const QString key = it.key().toLower();
         const Value value = it.value();
 
@@ -128,7 +128,7 @@ bool FileExporterXML::writeEntry(QTextStream &stream, const Entry* entry)
             if (!value.isEmpty() && typeid(PlainText) == typeid(*internal.last())) {
                 PlainText *pt = static_cast<PlainText*>(internal.last());
                 if (pt->text() == QLatin1String("others")) {
-                    internal.removeLast();
+                    internal.erase(internal.end() - 1);
                     stream << " etal=\"true\"";
                 }
             }
@@ -147,7 +147,7 @@ bool FileExporterXML::writeEntry(QTextStream &stream, const Entry* entry)
             int month = -1;
             QString tag = "";
             QString content = "";
-            for (QList<ValueItem*>::ConstIterator it = value.begin(); it != value.end(); ++it) {
+            for (Value::ConstIterator it = value.constBegin(); it != value.constEnd(); ++it) {
                 MacroKey*  macro = dynamic_cast<MacroKey*>(*it);
                 if (macro != NULL)
                     for (int i = 0; i < 12; i++) {
@@ -206,7 +206,7 @@ QString FileExporterXML::valueToXML(const Value& value, const QString&)
     QString result;
     bool isFirst = true;
 
-    for (QList<ValueItem*>::ConstIterator it = value.begin(); it != value.end(); ++it) {
+    for (Value::ConstIterator it = value.constBegin(); it != value.constEnd(); ++it) {
         if (!isFirst)
             result.append(' ');
         isFirst = false;

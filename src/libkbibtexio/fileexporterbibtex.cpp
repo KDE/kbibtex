@@ -119,7 +119,7 @@ public:
         iodevice->putChar('{');
         iodevice->write(iconvLaTeX->encode(entry.id()));
 
-        for (Entry::ConstIterator it = entry.begin(); it != entry.end(); ++it) {
+        for (Entry::ConstIterator it = entry.constBegin(); it != entry.constEnd(); ++it) {
             const QString key = it.key();
             Value value = it.value();
             if (value.isEmpty()) continue; ///< ignore empty key-value pairs
@@ -307,7 +307,7 @@ bool FileExporterBibTeX::save(QIODevice* iodevice, const File* bibtexfile, QStri
     QList<Entry*> crossRefingEntryList;
     QList<Element*> remainingList;
 
-    for (File::ConstIterator it = bibtexfile->begin(); it != bibtexfile->end() && result && !d->cancelFlag; it++) {
+    for (File::ConstIterator it = bibtexfile->constBegin(); it != bibtexfile->constEnd() && result && !d->cancelFlag; it++) {
         Preamble *preamble = dynamic_cast<Preamble*>(*it);
         if (preamble != NULL)
             preambleList.append(preamble);
@@ -362,30 +362,30 @@ bool FileExporterBibTeX::save(QIODevice* iodevice, const File* bibtexfile, QStri
     parameterCommentsList << new Comment("x-kbibtex-personnameformatting=" + d->personNameFormatting, true);
 
     /** before anything else, write parameter comments */
-    for (QList<Comment*>::ConstIterator it = parameterCommentsList.begin(); it != parameterCommentsList.end() && result && !d->cancelFlag; it++) {
+    for (QList<Comment*>::ConstIterator it = parameterCommentsList.constBegin(); it != parameterCommentsList.constEnd() && result && !d->cancelFlag; it++) {
         result &= d->writeComment(iodevice, **it);
         emit progress(++currentPos, totalElements);
     }
 
     /** first, write preambles and strings (macros) at the beginning */
-    for (QList<Preamble*>::ConstIterator it = preambleList.begin(); it != preambleList.end() && result && !d->cancelFlag; it++) {
+    for (QList<Preamble*>::ConstIterator it = preambleList.constBegin(); it != preambleList.constEnd() && result && !d->cancelFlag; it++) {
         result &= d->writePreamble(iodevice, **it);
         emit progress(++currentPos, totalElements);
     }
 
-    for (QList<Macro*>::ConstIterator it = macroList.begin(); it != macroList.end() && result && !d->cancelFlag; it++) {
+    for (QList<Macro*>::ConstIterator it = macroList.constBegin(); it != macroList.constEnd() && result && !d->cancelFlag; it++) {
         result &= d->writeMacro(iodevice, **it);
         emit progress(++currentPos, totalElements);
     }
 
     /** second, write cross-referencing elements */
-    for (QList<Entry*>::ConstIterator it = crossRefingEntryList.begin(); it != crossRefingEntryList.end() && result && !d->cancelFlag; it++) {
+    for (QList<Entry*>::ConstIterator it = crossRefingEntryList.constBegin(); it != crossRefingEntryList.constEnd() && result && !d->cancelFlag; it++) {
         result &= d->writeEntry(iodevice, **it);
         emit progress(++currentPos, totalElements);
     }
 
     /** third, write remaining elements */
-    for (QList<Element*>::ConstIterator it = remainingList.begin(); it != remainingList.end() && result && !d->cancelFlag; it++) {
+    for (QList<Element*>::ConstIterator it = remainingList.constBegin(); it != remainingList.constEnd() && result && !d->cancelFlag; it++) {
         Entry *entry = dynamic_cast<Entry*>(*it);
         if (entry != NULL)
             result &= d->writeEntry(iodevice, *entry);
@@ -457,7 +457,7 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value& value, const QStr
     /// variable to memorize which closing delimiter to use
     QChar stringCloseDelimiter = d->stringCloseDelimiter;
     const ValueItem* prev = NULL;
-    for (QList<ValueItem*>::ConstIterator it = value.begin(); it != value.end(); ++it) {
+    for (Value::ConstIterator it = value.constBegin(); it != value.constEnd(); ++it) {
         const MacroKey *macroKey = dynamic_cast<const MacroKey*>(*it);
         if (macroKey != NULL) {
             if (isOpen) result.append(stringCloseDelimiter);
@@ -626,7 +626,7 @@ QString FileExporterBibTeX::elementToString(const Element* element)
     const Entry *entry = dynamic_cast< const Entry *>(element);
     if (entry != NULL) {
         result << QString("ID = %1").arg(entry->id());
-        for (QMap<QString, Value>::ConstIterator it = entry->begin(); it != entry->end(); ++it)
+        for (QMap<QString, Value>::ConstIterator it = entry->constBegin(); it != entry->constEnd(); ++it)
             result << QString("%1 = {%2}").arg(it.key()).arg(valueToBibTeX(it.value()));
     }
     return result.join("; ");

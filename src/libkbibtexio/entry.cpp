@@ -98,7 +98,7 @@ Entry& Entry::operator= (const Entry & other)
         d->type = other.type();
         d->id = other.id();
         clear();
-        for (QMap<QString, Value>::ConstIterator it = other.begin(); it != other.end(); ++it)
+        for (Entry::ConstIterator it = other.constBegin(); it != other.constEnd(); ++it)
             insert(it.key(), it.value());
     }
     return *this;

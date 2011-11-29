@@ -20,7 +20,6 @@
 #include <QString>
 #include <QStringList>
 
-#include <KDebug>
 #include <KSharedConfig>
 #include <KConfigGroup>
 
@@ -28,6 +27,11 @@
 #include "value.h"
 
 const QRegExp ValueItem::ignoredInSorting = QRegExp("[{}\\\\]+");
+
+ValueItem::~ValueItem()
+{
+    kDebug() << "deleting";
+}
 
 Keyword::Keyword(const Keyword& other)
         : m_text(other.m_text)
@@ -305,13 +309,13 @@ bool VerbatimText::operator==(const ValueItem &other) const
 
 
 Value::Value()
-        : QList<ValueItem*>()
+        : QVector<ValueItem*>()
 {
     // nothing
 }
 
 Value::Value(const Value& other)
-        : QList<ValueItem*>()
+        : QVector<ValueItem*>()
 {
     clear();
     mergeFrom(other);
@@ -321,11 +325,11 @@ Value::~Value()
 {
     // FIXME: at some point elements have to be deleted
     // maybe use QSharedPointer?
-    //while (!isEmpty()) {
-    //    ValueItem *item = first();
-    //    removeFirst();
-    //    delete item;
-    //}
+    while (!isEmpty()) {
+        ValueItem *item = first();
+        erase(begin());
+        delete item;
+    }
 }
 
 void Value::merge(const Value& other)
@@ -335,14 +339,14 @@ void Value::merge(const Value& other)
 
 void Value::replace(const QString &before, const QString &after)
 {
-    for (QList<ValueItem*>::Iterator it = begin(); it != end(); ++it)
+    for (Value::Iterator it = begin(); it != end(); ++it)
         (*it)->replace(before, after);
 }
 
 bool Value::containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive) const
 {
     bool result = false;
-    for (QList<ValueItem*>::ConstIterator it = begin(); !result && it != end(); ++it) {
+    for (Value::ConstIterator it = constBegin(); !result && it != constEnd(); ++it) {
         result |= (*it)->containsPattern(pattern, caseSensitive);
     }
     return result;
@@ -350,7 +354,7 @@ bool Value::containsPattern(const QString &pattern, Qt::CaseSensitivity caseSens
 
 bool Value::contains(const ValueItem& item) const
 {
-    for (QList<ValueItem*>::ConstIterator it = begin(); it != end(); ++it)
+    for (Value::ConstIterator it = constBegin(); it != constEnd(); ++it)
         if ((*it)->operator==(item))
             return true;
     return false;
@@ -365,7 +369,7 @@ Value& Value::operator=(const Value & rhs)
 
 void Value::mergeFrom(const Value& other)
 {
-    for (QList<ValueItem*>::ConstIterator it = other.begin(); it != other.end(); ++it) {
+    for (QVector<ValueItem*>::ConstIterator it = other.constBegin(); it != other.constEnd(); ++it) {
         PlainText *plainText = dynamic_cast<PlainText*>(*it);
         if (plainText != NULL)
             append(new PlainText(*plainText));
@@ -402,7 +406,7 @@ QString PlainTextValue::text(const Value& value, const File* file, bool debug)
     ValueItemType lastVit = VITOther;
 
     QString result = "";
-    for (QList<ValueItem*>::ConstIterator it = value.begin(); it != value.end(); ++it) {
+    for (QVector<ValueItem*>::ConstIterator it = value.constBegin(); it != value.constEnd(); ++it) {
         QString nextText = text(**it, vit, file, debug);
         if (!nextText.isNull()) {
             if (lastVit == VITPerson && vit == VITPerson)

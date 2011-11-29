@@ -141,7 +141,7 @@ bool FileExporterPDF::writeLatexFile(const QString &filename)
         if (m_embedFiles) {
             ts << "\\embedfile[desc={" << i18n("BibTeX file") << "}]{bibtex-to-pdf.bib}" << endl;
 
-            for (QStringList::ConstIterator it = m_embeddedFileList.begin(); it != m_embeddedFileList.end(); ++it) {
+            for (QStringList::ConstIterator it = m_embeddedFileList.constBegin(); it != m_embeddedFileList.constEnd(); ++it) {
                 QStringList param = (*it).split("|");
                 QFile file(param[1]);
                 if (file.exists())
@@ -160,7 +160,7 @@ bool FileExporterPDF::writeLatexFile(const QString &filename)
 
 void FileExporterPDF::fillEmbeddedFileList(const File* bibtexfile)
 {
-    for (File::ConstIterator it = bibtexfile->begin(); it != bibtexfile->end(); ++it)
+    for (File::ConstIterator it = bibtexfile->constBegin(); it != bibtexfile->constEnd(); ++it)
         fillEmbeddedFileList(*it);
 }
 

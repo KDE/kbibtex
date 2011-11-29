@@ -85,7 +85,7 @@ QString EncoderXML::decode(const QString &text) const
 {
     QString result = text;
 
-    for (QList<EncoderXMLPrivate::CharMappingItem>::ConstIterator it = d->charMapping.begin(); it != d->charMapping.end(); ++it)
+    for (QList<EncoderXMLPrivate::CharMappingItem>::ConstIterator it = d->charMapping.constBegin(); it != d->charMapping.constEnd(); ++it)
         result.replace((*it).regExp, (*it).unicode);
 
     /**
@@ -133,7 +133,7 @@ QString EncoderXML::encode(const QString &text) const
 {
     QString result = text;
 
-    for (QList<EncoderXMLPrivate::CharMappingItem>::ConstIterator it = d->charMapping.begin(); it != d->charMapping.end(); ++it)
+    for (QList<EncoderXMLPrivate::CharMappingItem>::ConstIterator it = d->charMapping.constBegin(); it != d->charMapping.constEnd(); ++it)
         result.replace((*it).unicode, (*it).xml);
 
     /// Replace backlash-encoded symbols with plain text (\& --> &)
