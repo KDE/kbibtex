@@ -20,6 +20,7 @@
 #include <QString>
 #include <QStringList>
 
+#include <KDebug>
 #include <KSharedConfig>
 #include <KConfigGroup>
 
@@ -30,7 +31,7 @@ const QRegExp ValueItem::ignoredInSorting = QRegExp("[{}\\\\]+");
 
 ValueItem::~ValueItem()
 {
-    kDebug() << "deleting";
+    // nothing
 }
 
 Keyword::Keyword(const Keyword& other)
@@ -390,7 +391,7 @@ void Value::mergeFrom(const Value& other)
                         if (verbatimText != NULL)
                             append(new VerbatimText(*verbatimText));
                         else
-                            kError() << "cannot copy from unknown data type" << endl;
+                            kError() << "cannot copy from unknown data type";
                     }
                 }
             }
