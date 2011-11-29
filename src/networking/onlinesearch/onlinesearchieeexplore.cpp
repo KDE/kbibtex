@@ -130,11 +130,22 @@ void OnlineSearchIEEEXplore::doneFetchingStartPage()
     QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
 
     if (handleErrors(reply)) {
-        QString url = d->searchRequestUrl + '"' + d->queryFragments.join("\"+AND+\"") + '"';
-        QNetworkRequest request(url);
-        QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
-        setNetworkReplyTimeout(newReply);
-        connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingSearchResults()));
+        if (reply->attribute(QNetworkRequest::RedirectionTargetAttribute).isValid()) {
+            /// redirection to another url
+            QUrl redirUrl = reply->url().resolved(reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl());
+            ++d->numSteps;
+
+            QNetworkRequest request(redirUrl);
+            QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
+            setNetworkReplyTimeout(reply);
+            connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingStartPage()));
+        } else {
+            QString url = d->searchRequestUrl + '"' + d->queryFragments.join("\"+AND+\"") + '"';
+            QNetworkRequest request(url);
+            QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
+            setNetworkReplyTimeout(newReply);
+            connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingSearchResults()));
+        }
     } else
         kDebug() << "url was" << reply->url().toString();
 }
@@ -146,8 +157,8 @@ void OnlineSearchIEEEXplore::doneFetchingSearchResults()
     QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
 
     if (handleErrors(reply)) {
-        QString htmlText(reply->readAll());
-        QRegExp arnumberRegExp("arnumber=(\\d+)[^0-9]");
+        const QString htmlText(reply->readAll());
+        static const QRegExp arnumberRegExp("arnumber=(\\d+)[^0-9]");
         d->arnumberList.clear();
         int p = -1;
         while ((p = arnumberRegExp.indexIn(htmlText, p + 1)) >= 0) {

@@ -122,6 +122,21 @@ bool OnlineSearchAbstract::handleErrors(QNetworkReply *reply)
         emit stoppedSearch(resultUnspecifiedError);
         return false;
     }
+
+    /**
+     * Check the reply for various problems that might point to
+     * more severe issues. Remember: those are only indicators
+     * to problems which have to be handled elsewhere (therefore,
+     * returning 'true' is totally ok here).
+     */
+    QStringList issues;
+    if (reply->attribute(QNetworkRequest::RedirectionTargetAttribute).isValid())
+        issues << QString("Redirection to '%1'").arg(reply->url().resolved(reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl()).toString());
+    if (reply->size() == 0)
+        issues << QLatin1String("No data returned");
+    if (!issues.isEmpty())
+        kWarning() << "Search using" << label() << " on url" << reply->url().toString() << "returned the following issues:" << issues.join(QLatin1String("; "));
+
     return true;
 }
 
