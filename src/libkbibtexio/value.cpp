@@ -326,11 +326,11 @@ Value::~Value()
 {
     // FIXME: at some point elements have to be deleted
     // maybe use QSharedPointer?
-    while (!isEmpty()) {
-        ValueItem *item = first();
-        erase(begin());
-        delete item;
-    }
+    // while (!isEmpty()) {
+    //     ValueItem *item = first();
+    //     erase(begin());
+    //     delete item;
+    // }
 }
 
 void Value::merge(const Value& other)
