@@ -1,6 +1,4 @@
-#!/usr/bin/env xdg-open
 [Desktop Entry]
-Encoding=UTF-8
 Name=KBibTeX
 Name[de]=KBibTeX
 Comment=KDE-based editor for bibliographic files
@@ -14,5 +12,5 @@ Terminal=false
 X-KDE-StartupNotify=true
 # TODO X-DBUS-StartupType=Multi
 # TODO X-DBUS-ServiceName=org.kde.kbibtex
-Categories=Qt;KDE;Office;Database;Science;Literature;
+Categories=Qt;KDE;Office;Database;Science;Literature;Education;
 MimeType=text/x-bibtex;application/x-research-info-systems;
