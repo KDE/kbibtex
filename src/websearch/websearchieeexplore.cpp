@@ -130,12 +130,24 @@ void WebSearchIEEEXplore::doneFetchingStartPage()
     QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
 
     if (handleErrors(reply)) {
-        QString url = d->searchRequestUrl + '"' + d->queryFragments.join("\"+AND+\"") + '"';
-        QNetworkRequest request(url);
-        setSuggestedHttpHeaders(request, reply);
-        QNetworkReply *newReply = networkAccessManager()->get(request);
-        setNetworkReplyTimeout(newReply);
-        connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingSearchResults()));
+        if (reply->attribute(QNetworkRequest::RedirectionTargetAttribute).isValid()) {
+            /// redirection to another url
+            QUrl redirUrl = reply->url().resolved(reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl());
+            ++d->numSteps;
+
+            QNetworkRequest request(redirUrl);
+            setSuggestedHttpHeaders(request, reply);
+            QNetworkReply *newReply = networkAccessManager()->get(request);
+            setNetworkReplyTimeout(newReply);
+            connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingStartPage()));
+        } else {
+            QString url = d->searchRequestUrl + '"' + d->queryFragments.join("\"+AND+\"") + '"';
+            QNetworkRequest request(url);
+            setSuggestedHttpHeaders(request, reply);
+            QNetworkReply *newReply = networkAccessManager()->get(request);
+            setNetworkReplyTimeout(newReply);
+            connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingSearchResults()));
+        }
     } else
         kDebug() << "url was" << reply->url().toString();
 }
