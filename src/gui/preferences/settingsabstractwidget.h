@@ -24,6 +24,7 @@
 #include <kbibtexgui_export.h>
 
 #include <QWidget>
+#include <QAbstractItemModel>
 
 class KComboBox;
 
