@@ -73,6 +73,18 @@ public:
             entry->remove(QLatin1String("issue"));
             entry->insert(Entry::ftNumber, v);
         }
+        if (entry->contains(QLatin1String(Entry::ftMonth))) {
+            /// ACM's Digital Library uses strings like "September" for months -> fix that
+            const QString monthStr = PlainTextValue::text(entry->value(QLatin1String(Entry::ftMonth)));
+            entry->remove(QLatin1String(Entry::ftMonth));
+
+            /// This assumes that month strings can be converted to three-letter abbreviation
+            /// by taking the first three letters and converting them to lower case.
+            /// Example: "September" -> sep
+            Value v;
+            v.append(new MacroKey(monthStr.left(3).toLower()));
+            entry->insert(Entry::ftMonth, v);
+        }
     }
 };
 
