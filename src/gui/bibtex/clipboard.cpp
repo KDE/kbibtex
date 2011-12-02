@@ -91,14 +91,22 @@ public:
             bibTeXModel->insertRow(*it, bibTeXEditor->model()->rowCount());
         int endRow = bibTeXModel->rowCount() - 1; ///< memorize row where insertion ended
 
-        // FIXME selection of new elements will not work if list is sorted!
-
         /// select newly inserted elements
         QItemSelectionModel *ism = bibTeXEditor->selectionModel();
         ism->clear();
+        /// keep track of the insert element which is most upwards in the list when inserted
+        QModelIndex minRowTargetModelIndex;
         /// highlight those rows in the editor which correspond to newly inserted elements
-        for (int i = startRow; i <= endRow;++i)
-            ism->select(sfpModel->mapFromSource(bibTeXModel->index(i, 0)), QItemSelectionModel::Rows | QItemSelectionModel::Select);
+        for (int i = startRow; i <= endRow;++i) {
+            QModelIndex targetModelIndex = sfpModel->mapFromSource(bibTeXModel->index(i, 0));
+            ism->select(targetModelIndex, QItemSelectionModel::Rows | QItemSelectionModel::Select);
+
+            /// update the most upward inserted element
+            if (!minRowTargetModelIndex.isValid() || minRowTargetModelIndex.row() > targetModelIndex.row())
+                minRowTargetModelIndex = targetModelIndex;
+        }
+        /// scroll tree view to show top-most inserted element
+        bibTeXEditor->scrollTo(minRowTargetModelIndex, QAbstractItemView::PositionAtTop);
 
         /// clean up
         delete file;
