@@ -145,7 +145,7 @@ void OnlineSearchJStor::startSearch(const QMap<QString, QString> &query, int num
 
     QNetworkRequest request(d->jstorBaseUrl);
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
-    setNetworkReplyTimeout(reply);
+    setNetworkReplyTimeout(reply, 30);
     connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingStartPage()));
     emit progress(d->curStep, d->numSteps);
 }
@@ -190,7 +190,7 @@ void OnlineSearchJStor::doneFetchingStartPage()
     if (handleErrors(reply)) {
         QNetworkRequest request(d->queryUrl);
         QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
-        setNetworkReplyTimeout(reply);
+        setNetworkReplyTimeout(reply, 30);
         connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingResultPage()));
     } else
         kDebug() << "url was" << reply->url().toString();
@@ -222,7 +222,7 @@ void OnlineSearchJStor::doneFetchingResultPage()
 
         QNetworkRequest request(d->jstorBaseUrl + "action/downloadCitation?format=bibtex&include=abs");
         QNetworkReply *newReply = InternalNetworkAccessManager::self()->post(request, body.join("&").toUtf8());
-        setNetworkReplyTimeout(newReply);
+        setNetworkReplyTimeout(newReply, 30);
         connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingSummaryPage()));
     } else
         kDebug() << "url was" << reply->url().toString();
