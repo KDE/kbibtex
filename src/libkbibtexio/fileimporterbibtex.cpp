@@ -24,12 +24,11 @@
 #include <QIODevice>
 #include <QRegExp>
 #include <QCoreApplication>
-#include <QRegExp>
 #include <QStringList>
 
 #include <KDebug>
 
-#include <fileinfo.h>
+//#include <fileinfo.h>
 #include <file.h>
 #include <comment.h>
 #include <macro.h>
@@ -78,8 +77,6 @@ File* FileImporterBibTeX::load(QIODevice *iodevice)
     /** Remove HTML code from the input source */
     rawText = rawText.replace(htmlRegExp, "");
 
-    // rawText = EncoderLaTeX::instance()->decode(rawText);
-
     m_textStreamLastPos = 0;
     m_textStream = new QTextStream(&rawText, QIODevice::ReadOnly);
     m_textStream->setCodec("UTF-8");
@@ -111,8 +108,9 @@ File* FileImporterBibTeX::load(QIODevice *iodevice)
 
 bool FileImporterBibTeX::guessCanDecode(const QString & rawText)
 {
+    static const QRegExp bibtexLikeText("@\\w+\\{.+\\}");
     QString text = EncoderLaTeX::instance()->decode(rawText);
-    return text.indexOf(QRegExp("@\\w+\\{.+\\}")) >= 0;
+    return text.indexOf(bibtexLikeText) >= 0;
 }
 
 void FileImporterBibTeX::cancel()
@@ -206,9 +204,9 @@ Macro *FileImporterBibTeX::readMacroElement()
         bool isStringKey = false;
         QString text = EncoderLaTeX::instance()->decode(readString(isStringKey).simplified());
         if (isStringKey)
-            macro->value().append(new MacroKey(text));
+            macro->value().append(QSharedPointer<MacroKey>(new MacroKey(text)));
         else
-            macro->value().append(new PlainText(text));
+            macro->value().append(QSharedPointer<PlainText>(new PlainText(text)));
 
         token = nextToken();
     } while (token == tDoublecross);
@@ -232,9 +230,9 @@ Preamble *FileImporterBibTeX::readPreambleElement()
         bool isStringKey = false;
         QString text = EncoderLaTeX::instance()->decode(readString(isStringKey).simplified());
         if (isStringKey)
-            preamble->value().append(new MacroKey(text));
+            preamble->value().append(QSharedPointer<MacroKey>(new MacroKey(text)));
         else
-            preamble->value().append(new PlainText(text));
+            preamble->value().append(QSharedPointer<PlainText>(new PlainText(text)));
 
         token = nextToken();
     } while (token == tDoublecross);
@@ -501,7 +499,7 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value& value, const QStr
 
         if (iKey == Entry::ftAuthor || iKey == Entry::ftEditor) {
             if (isStringKey)
-                value.append(new MacroKey(text));
+                value.append(QSharedPointer<MacroKey>(new MacroKey(text)));
             else {
                 QStringList persons;
 
@@ -516,65 +514,75 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value& value, const QStr
                 for (QStringList::ConstIterator pit = persons.constBegin(); pit != persons.constEnd(); ++pit) {
                     Person *person = splitName(*pit);
                     if (person != NULL)
-                        value.append(person);
+                        value.append(QSharedPointer<Person>(person));
                 }
 
                 if (hasOthers)
-                    value.append(new PlainText(QLatin1String("others")));
+                    value.append(QSharedPointer<PlainText>(new PlainText(QLatin1String("others"))));
             }
         } else if (iKey == Entry::ftPages) {
-            text.replace(QRegExp("\\s*--?\\s*"), QChar(0x2013));
+            static const QRegExp rangeInAscii("\\s*--?\\s*");
+            text.replace(rangeInAscii, QChar(0x2013));
             if (isStringKey)
-                value.append(new MacroKey(text));
+                value.append(QSharedPointer<MacroKey>(new MacroKey(text)));
             else
-                value.append(new PlainText(text));
+                value.append(QSharedPointer<PlainText>(new PlainText(text)));
         } else if ((iKey.startsWith(Entry::ftUrl) && !iKey.startsWith(Entry::ftUrlDate)) || iKey.startsWith(Entry::ftLocalFile) || iKey.compare(QLatin1String("ee"), Qt::CaseInsensitive) == 0 || iKey.compare(QLatin1String("biburl"), Qt::CaseInsensitive) == 0) {
             if (isStringKey)
-                value.append(new MacroKey(text));
+                value.append(QSharedPointer<MacroKey>(new MacroKey(text)));
             else {
+                /*
                 QList<KUrl> urls;
                 FileInfo::urlsInText(text, false, QString::null, urls);
                 for (QList<KUrl>::ConstIterator it = urls.constBegin(); it != urls.constEnd(); ++it)
                     value.append(new VerbatimText((*it).pathOrUrl()));
+                */
+                /// assumption: in fields like Url or LocalFile, file names are separated by ; or ,
+                static const QRegExp semicolonSpace = QRegExp("[;]\\s*");
+                QStringList fileList = text.split(semicolonSpace, QString::SkipEmptyParts);
+                foreach(const QString &filename, fileList) {
+                    value.append(QSharedPointer<VerbatimText>(new VerbatimText(filename)));
+                }
             }
         } else if (iKey == Entry::ftMonth) {
             if (isStringKey) {
-                if (QRegExp("^[a-z]{3}", Qt::CaseInsensitive).indexIn(text) == 0)
+                static const QRegExp monthThreeChars("^[a-z]{3}", Qt::CaseInsensitive);
+                if (monthThreeChars.indexIn(text) == 0)
                     text = text.left(3).toLower();
-                value.append(new MacroKey(text));
+                value.append(QSharedPointer<MacroKey>(new MacroKey(text)));
             } else
-                value.append(new PlainText(text));
+                value.append(QSharedPointer<PlainText>(new PlainText(text)));
         } else if (iKey.startsWith(Entry::ftDOI)) {
             if (isStringKey)
-                value.append(new MacroKey(text));
+                value.append(QSharedPointer<MacroKey>(new MacroKey(text)));
             else {
                 int p = -5;
                 while ((p = KBibTeX::doiRegExp.indexIn(text, p + 5)) >= 0)
-                    value.append(new VerbatimText(KBibTeX::doiRegExp.cap(0)));
+                    value.append(QSharedPointer<VerbatimText>(new VerbatimText(KBibTeX::doiRegExp.cap(0))));
             }
         } else if (iKey == Entry::ftColor) {
             if (isStringKey)
-                value.append(new MacroKey(text));
+                value.append(QSharedPointer<MacroKey>(new MacroKey(text)));
             else
-                value.append(new VerbatimText(text));
+                value.append(QSharedPointer<VerbatimText>(new VerbatimText(text)));
         } else if (iKey == Entry::ftCrossRef) {
             if (isStringKey)
-                value.append(new MacroKey(text));
+                value.append(QSharedPointer<MacroKey>(new MacroKey(text)));
             else
-                value.append(new VerbatimText(text));
+                value.append(QSharedPointer<VerbatimText>(new VerbatimText(text)));
         } else if (iKey == Entry::ftKeywords) {
             if (isStringKey)
-                value.append(new MacroKey(text));
+                value.append(QSharedPointer<MacroKey>(new MacroKey(text)));
             else {
                 QList<Keyword*> keywords = splitKeywords(text);
                 for (QList<Keyword*>::Iterator it = keywords.begin(); it != keywords.end(); ++it)
-                    value.append(*it);
+                    value.append(QSharedPointer<Keyword>(*it));
             }
         } else {
             if (isStringKey)
-                value.append(new MacroKey(text));
+                value.append(QSharedPointer<MacroKey>(new MacroKey(text)));
             else
-                value.append(new PlainText(text));
+                value.append(QSharedPointer<PlainText>(new PlainText(text)));
         }
 
         token = nextToken();
@@ -596,7 +604,7 @@ QList<Keyword*> FileImporterBibTeX::splitKeywords(const QString& text)
         /// check if character is contained in text (should be cheap to test)
         if (text.contains(*curSplitChar)) {
             /// split text along a pattern like spaces-splitchar-spaces
-            QRegExp splitAlong(QString("\\s*%1\\s*").arg(*curSplitChar));
+            static const QRegExp splitAlong(QString("\\s*%1\\s*").arg(*curSplitChar));
             /// extract keywords
             QStringList keywords = text.split(splitAlong, QString::SkipEmptyParts);
             /// build QList of Keyword objects from keywords

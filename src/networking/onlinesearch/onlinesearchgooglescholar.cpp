@@ -199,7 +199,7 @@ void OnlineSearchGoogleScholar::doneFetchingQueryPage()
     if (handleErrors(reply)) {
         QString htmlText = reply->readAll();
 
-        QRegExp linkToBib("/scholar.bib\\?[^\" >]+");
+        static const QRegExp linkToBib("/scholar.bib\\?[^\" >]+");
         int pos = 0;
         d->listBibTeXurls.clear();
         while ((pos = linkToBib.indexIn(htmlText, pos)) != -1) {
@@ -237,7 +237,7 @@ void OnlineSearchGoogleScholar::doneFetchingBibTeX()
                 entry = dynamic_cast<Entry*>(*it);
                 if (entry != NULL) {
                     Value v;
-                    v.append(new VerbatimText(label()));
+                    v.append(QSharedPointer<VerbatimText>(new VerbatimText(label())));
                     entry->insert("x-fetchedfrom", v);
                     emit foundEntry(entry);
                 }

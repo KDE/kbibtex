@@ -50,9 +50,9 @@ QStringList OnlineSearchQueryFormAbstract::authorLastNames(const Entry &entry)
     EncoderLaTeX *encoder = EncoderLaTeX::instance();
 
     const Value v = entry[Entry::ftAuthor];
-    Person *p = NULL;
-    foreach(ValueItem *vi, v)
-    if ((p = dynamic_cast<Person*>(vi)) != NULL)
+    QSharedPointer<Person> p;
+    foreach(QSharedPointer<ValueItem> vi, v)
+    if (!(p = vi.dynamicCast<Person>()).isNull())
         result.append(encoder->convertToPlainAscii(p->lastName()));
 
     return result;
@@ -66,8 +66,9 @@ OnlineSearchAbstract::OnlineSearchAbstract(QWidget *parent)
 
 KIcon OnlineSearchAbstract::icon() const
 {
+    static const QRegExp invalidChars("[^-a-z0-9_]", Qt::CaseInsensitive);
     QString fileName = favIconUrl();
-    fileName = fileName.replace(QRegExp("[^-a-z0-9_]", Qt::CaseInsensitive), "");
+    fileName = fileName.replace(invalidChars, "");
     fileName.prepend(KStandardDirs::locateLocal("cache", "favicons/"));
 
     if (!QFileInfo(fileName).exists()) {
@@ -80,8 +81,9 @@ KIcon OnlineSearchAbstract::icon() const
 
 QString OnlineSearchAbstract::name()
 {
+    static const QRegExp invalidChars("[^-a-z0-9]", Qt::CaseInsensitive);
     if (m_name.isNull())
-        m_name = label().replace(QRegExp("[^a-z0-9]", Qt::CaseInsensitive), QLatin1String(""));
+        m_name = label().replace(invalidChars, QLatin1String(""));
     return m_name;
 }
 
@@ -153,7 +155,7 @@ QString OnlineSearchAbstract::encodeURL(QString rawText)
 
 QString OnlineSearchAbstract::decodeURL(QString rawText)
 {
-    static QRegExp mimeRegExp("%([0-9A-Fa-f]{2})");
+    static const QRegExp mimeRegExp("%([0-9A-Fa-f]{2})");
     while (mimeRegExp.indexIn(rawText) >= 0) {
         bool ok = false;
         QChar c(mimeRegExp.cap(1).toInt(&ok, 16));
@@ -173,13 +175,13 @@ QMap<QString, QString> OnlineSearchAbstract::formParameters(const QString &htmlT
     static const QString selectTagEnd = QLatin1String("</select>");
     static const QString optionTagBegin = QLatin1String("<option ");
     /// regular expressions to test or retrieve attributes in HTML tags
-    QRegExp inputTypeRegExp("<input[^>]+\\btype=[\"]?([^\" >\n\t]*)");
-    QRegExp inputNameRegExp("<input[^>]+\\bname=[\"]?([^\" >\n\t]*)");
-    QRegExp inputValueRegExp("<input[^>]+\\bvalue=[\"]?([^\" >\n\t]*)");
-    QRegExp inputIsCheckedRegExp("<input[^>]* checked([> \t\n]|=[\"]?checked)");
-    QRegExp selectNameRegExp("<select[^>]+\\bname=[\"]?([^\" >\n\t]*)");
-    QRegExp optionValueRegExp("<option[^>]+\\bvalue=[\"]?([^\" >\n\t]*)");
-    QRegExp optionSelectedRegExp("<option[^>]* selected([> \t\n]|=[\"]?selected)");
+    static const QRegExp inputTypeRegExp("<input[^>]+\\btype=[\"]?([^\" >\n\t]*)");
+    static const QRegExp inputNameRegExp("<input[^>]+\\bname=[\"]?([^\" >\n\t]*)");
+    static const QRegExp inputValueRegExp("<input[^>]+\\bvalue=[\"]?([^\" >\n\t]*)");
+    static const QRegExp inputIsCheckedRegExp("<input[^>]* checked([> \t\n]|=[\"]?checked)");
+    static const QRegExp selectNameRegExp("<select[^>]+\\bname=[\"]?([^\" >\n\t]*)");
+    static const QRegExp optionValueRegExp("<option[^>]+\\bvalue=[\"]?([^\" >\n\t]*)");
+    static const QRegExp optionSelectedRegExp("<option[^>]* selected([> \t\n]|=[\"]?selected)");
 
     /// initialize result map
     QMap<QString, QString> result;

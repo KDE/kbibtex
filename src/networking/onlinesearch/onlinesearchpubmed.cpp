@@ -48,7 +48,7 @@ public:
 
     KUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) {
         /// used to auto-detect PMIDs (unique identifiers for documents) in free text search
-        const QRegExp pmidRegExp(QLatin1String("^[0-9]{6,}$"));
+        static const QRegExp pmidRegExp(QLatin1String("^[0-9]{6,}$"));
 
         QString url = pubMedUrlPrefix + QLatin1String("esearch.fcgi?db=pubmed&tool=kbibtex&term=");
 
@@ -168,7 +168,7 @@ void OnlineSearchPubMed::eSearchDone()
 
         if (!result.contains(QLatin1String("<Count>0</Count>"))) {
             /// without parsing XML text correctly, just extract all PubMed ids
-            QRegExp regExpId("<Id>(\\d+)</Id>", Qt::CaseInsensitive);
+            static const QRegExp regExpId("<Id>(\\d+)</Id>", Qt::CaseInsensitive);
             int p = -1;
             QStringList idList;
             while ((p = result.indexOf(regExpId, p + 1)) >= 0)
@@ -218,7 +218,7 @@ void OnlineSearchPubMed::eFetchDone()
                 Entry *entry = dynamic_cast<Entry*>(*it);
                 if (entry != NULL) {
                     Value v;
-                    v.append(new VerbatimText(label()));
+                    v.append(QSharedPointer<VerbatimText>(new VerbatimText(label())));
                     entry->insert("x-fetchedfrom", v);
 
                     hasEntry = true;
