@@ -125,11 +125,11 @@ public:
             } else if ((*it).key == "AU" || (*it).key == "A1") {
                 Person *person = splitName((*it).value);
                 if (person != NULL)
-                    appendValue(entry, Entry::ftAuthor, person);
+                    appendValue(entry, Entry::ftAuthor, QSharedPointer<Person>(person));
             } else if ((*it).key == "ED" || (*it).key == "A2") {
                 Person *person = splitName((*it).value);
                 if (person != NULL)
-                    appendValue(entry, Entry::ftEditor, person);
+                    appendValue(entry, Entry::ftEditor, QSharedPointer<Person>(person));
             } else if ((*it).key == "ID") {
                 entry->setId((*it).value);
             } else if ((*it).key == "Y1" || (*it).key == "PY") {
@@ -138,9 +138,9 @@ public:
                 if (date.isEmpty())
                     date = (*it).value;
             } else if ((*it).key == "AB" || (*it).key == "N2") {
-                appendValue(entry, Entry::ftAbstract, new PlainText((*it).value));
+                appendValue(entry, Entry::ftAbstract, QSharedPointer<PlainText>(new PlainText((*it).value)));
             } else if ((*it).key == "N1") {
-                appendValue(entry, Entry::ftNote, new PlainText((*it).value));
+                appendValue(entry, Entry::ftNote, QSharedPointer<PlainText>(new PlainText((*it).value)));
             } else if ((*it).key == "KW") {
                 QString text = (*it).value;
                 QRegExp splitRegExp;
@@ -153,48 +153,48 @@ public:
                 QStringList newKeywords = text.split(splitRegExp, QString::SkipEmptyParts);
                 for (QStringList::Iterator it = newKeywords.begin(); it != newKeywords.end();
                         ++it)
-                    appendValue(entry, Entry::ftKeywords, new Keyword(*it));
+                    appendValue(entry, Entry::ftKeywords, QSharedPointer<Keyword>(new Keyword(*it)));
             } else if ((*it).key == "TI" || (*it).key == "T1") {
-                appendValue(entry, Entry::ftTitle, new PlainText((*it).value));
+                appendValue(entry, Entry::ftTitle, QSharedPointer<PlainText>(new PlainText((*it).value)));
             } else if ((*it).key == "T3") {
-                appendValue(entry, Entry::ftSeries, new PlainText((*it).value));
+                appendValue(entry, Entry::ftSeries, QSharedPointer<PlainText>(new PlainText((*it).value)));
             } else if ((*it).key == "JO" || (*it).key == "J1" || (*it).key == "J2") {
                 if (journalName.isEmpty())
                     journalName = (*it).value;
             } else if ((*it).key == "JF" || (*it).key == "JA") {
                 journalName = (*it).value;
             } else if ((*it).key == "VL") {
-                appendValue(entry, Entry::ftVolume, new PlainText((*it).value));
+                appendValue(entry, Entry::ftVolume, QSharedPointer<PlainText>(new PlainText((*it).value)));
             } else if ((*it).key == "CP") {
-                appendValue(entry, Entry::ftChapter, new PlainText((*it).value));
+                appendValue(entry, Entry::ftChapter, QSharedPointer<PlainText>(new PlainText((*it).value)));
             } else if ((*it).key == "IS") {
-                appendValue(entry, Entry::ftNumber, new PlainText((*it).value));
+                appendValue(entry, Entry::ftNumber, QSharedPointer<PlainText>(new PlainText((*it).value)));
             } else if ((*it).key == "PB") {
-                appendValue(entry, Entry::ftPublisher, new PlainText((*it).value));
+                appendValue(entry, Entry::ftPublisher, QSharedPointer<PlainText>(new PlainText((*it).value)));
             } else if ((*it).key == "SN") {
                 const QString fieldName = entryType == Entry::etBook || entryType == Entry::etInBook ? Entry::ftISBN : Entry::ftISSN;
-                appendValue(entry, fieldName, new PlainText((*it).value));
+                appendValue(entry, fieldName, QSharedPointer<PlainText>(new PlainText((*it).value)));
             } else if ((*it).key == "CY") {
-                appendValue(entry, Entry::ftLocation, new PlainText((*it).value));
+                appendValue(entry, Entry::ftLocation, QSharedPointer<PlainText>(new PlainText((*it).value)));
             }  else if ((*it).key == "AD") {
-                appendValue(entry, Entry::ftAddress, new PlainText((*it).value));
+                appendValue(entry, Entry::ftAddress, QSharedPointer<PlainText>(new PlainText((*it).value)));
             } else if ((*it).key == "L1" || (*it).key == "L2" || (*it).key == "L3" || (*it).key == "UR") {
                 const QString fieldName = KBibTeX::doiRegExp.indexIn((*it).value) >= 0 ? Entry::ftDOI : Entry::ftUrl;
-                appendValue(entry, fieldName, new PlainText((*it).value));
+                appendValue(entry, fieldName, QSharedPointer<PlainText>(new PlainText((*it).value)));
             } else if ((*it).key == "SP") {
                 startPage = (*it).value;
             } else if ((*it).key == "EP") {
                 endPage = (*it).value;
             } else {
                 const QString fieldName = QString("RISfield_%1_%2").arg(fieldCounter++).arg((*it).key.left(2));
-                appendValue(entry, fieldName, new PlainText((*it).value));
+                appendValue(entry, fieldName, QSharedPointer<PlainText>(new PlainText((*it).value)));
             }
         }
 
         if (!journalName.isEmpty()) {
             const QString fieldName = entryType == Entry::etInBook || entryType == Entry::etInProceedings ? Entry::ftBookTitle : Entry::ftJournal;
             Value value = entry->value(fieldName);
-            value.append(new PlainText(journalName));
+            value.append(QSharedPointer<PlainText>(new PlainText(journalName)));
             entry->insert(fieldName, value);
         }
 
@@ -208,7 +208,7 @@ public:
                 page = startPage + QChar(0x2013) + endPage;
 
             Value value;
-            value.append(new PlainText(page));
+            value.append(QSharedPointer<PlainText>(new PlainText(page)));
             entry->insert(Entry::ftPages, value);
         }
 
@@ -218,7 +218,7 @@ public:
             int year = dateFragments[0].toInt(&ok);
             if (ok && year > 1000 && year < 3000) {
                 Value value = entry->value(Entry::ftYear);
-                value.append(new PlainText(QString::number(year)));
+                value.append(QSharedPointer<PlainText>(new PlainText(QString::number(year))));
                 entry->insert(Entry::ftYear, value);
             } else
                 kDebug() << "invalid year: " << year;
@@ -228,7 +228,7 @@ public:
             int month = dateFragments[1].toInt(&ok);
             if (ok && month > 0 && month < 13) {
                 Value value = entry->value(Entry::ftMonth);
-                value.append(new PlainText(KBibTeX::MonthsTriple[month-1]));
+                value.append(QSharedPointer<MacroKey>(new MacroKey(KBibTeX::MonthsTriple[month-1])));
                 entry->insert(Entry::ftMonth, value);
             } else
                 kDebug() << "invalid month: " << month;

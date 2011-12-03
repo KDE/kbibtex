@@ -247,7 +247,7 @@ void OnlineSearchMathSciNet::doneFetchingBibTeXcode()
                     hasEntry = true;
                     if (entry != NULL) {
                         Value v;
-                        v.append(new VerbatimText(label()));
+                        v.append(QSharedPointer<VerbatimText>(new VerbatimText(label())));
                         entry->insert("x-fetchedfrom", v);
                         d->sanitizeEntry(entry);
                         emit foundEntry(entry);

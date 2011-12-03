@@ -398,7 +398,7 @@ void ColorLabelContextMenu::colorActivated(const QString &colorString)
                 entry->remove(Entry::ftColor);
                 if (colorString != QLatin1String("#000000")) {
                     Value v;
-                    v.append(new VerbatimText(colorString));
+                    v.append(QSharedPointer<VerbatimText>(new VerbatimText(colorString)));
                     entry->insert(Entry::ftColor, v);
                 }
                 modifying = true;

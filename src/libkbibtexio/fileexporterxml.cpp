@@ -126,7 +126,7 @@ bool FileExporterXML::writeEntry(QTextStream &stream, const Entry* entry)
             Value internal = value;
             stream << "  <" << key << "s";
             if (!value.isEmpty() && typeid(PlainText) == typeid(*internal.last())) {
-                PlainText *pt = static_cast<PlainText*>(internal.last());
+                QSharedPointer<const PlainText> pt = internal.last().staticCast<const PlainText>();
                 if (pt->text() == QLatin1String("others")) {
                     internal.erase(internal.end() - 1);
                     stream << " etal=\"true\"";
@@ -148,8 +148,8 @@ bool FileExporterXML::writeEntry(QTextStream &stream, const Entry* entry)
             QString tag = "";
             QString content = "";
             for (Value::ConstIterator it = value.constBegin(); it != value.constEnd(); ++it) {
-                MacroKey*  macro = dynamic_cast<MacroKey*>(*it);
-                if (macro != NULL)
+                QSharedPointer<const MacroKey> macro = (*it).dynamicCast<const MacroKey>();
+                if (!macro.isNull())
                     for (int i = 0; i < 12; i++) {
                         if (QString::compare(macro->text(), MonthsTriple[ i ]) == 0) {
                             if (month < 1) {
@@ -211,14 +211,14 @@ QString FileExporterXML::valueToXML(const Value& value, const QString&)
             result.append(' ');
         isFirst = false;
 
-        ValueItem *item = *it;
+        QSharedPointer<const ValueItem> item = *it;
 
-        PlainText *plainText = dynamic_cast<PlainText*>(item);
-        if (plainText != NULL)
+        QSharedPointer<const PlainText> plainText = (*it).dynamicCast<const PlainText>();
+        if (!plainText.isNull())
             result.append("<text>" +  cleanXML(EncoderXML::currentEncoderXML() ->encode(PlainTextValue::text(*item))) + "</text>");
         else {
-            Person *p = dynamic_cast<Person*>(item);
-            if (p != NULL) {
+            QSharedPointer<const Person> p = (*it).dynamicCast<const Person>();
+            if (!p.isNull()) {
                 result.append("<person>");
                 if (!p->firstName().isEmpty())
                     result.append("<firstname>" +  cleanXML(EncoderXML::currentEncoderXML() ->encode(p->firstName())) + "</firstname>");

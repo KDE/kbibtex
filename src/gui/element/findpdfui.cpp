@@ -383,7 +383,7 @@ void FindPDFUI::apply(Entry &entry, const File &bibtexFile)
                 alreadyContained |= it.key().toLower().startsWith(Entry::ftUrl) && PlainTextValue::text(it.value()) == url.toString();
             if (!alreadyContained) {
                 Value value;
-                value.append(new VerbatimText(url.toString()));
+                value.append(QSharedPointer<VerbatimText>(new VerbatimText(url.toString())));
                 if (!entry.contains(Entry::ftUrl))
                     entry.insert(Entry::ftUrl, value);
                 else
@@ -408,7 +408,7 @@ void FindPDFUI::apply(Entry &entry, const File &bibtexFile)
                     alreadyContained |= (it.key().toLower().startsWith(Entry::ftLocalFile) || it.key().toLower().startsWith(Entry::ftUrl)) && PlainTextValue::text(it.value()) == url.toString();
                 if (!alreadyContained) {
                     Value value;
-                    value.append(new VerbatimText(localFilename));
+                    value.append(QSharedPointer<VerbatimText>(new VerbatimText(localFilename)));
                     if (!entry.contains(Entry::ftLocalFile))
                         entry.insert(Entry::ftLocalFile, value);
                     else

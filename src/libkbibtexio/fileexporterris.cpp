@@ -104,16 +104,16 @@ bool FileExporterRIS::writeEntry(QTextStream &stream, const Entry* entry, const 
             result &= writeKeyValue(stream, key.right(2), plainText);
         else if (key == Entry::ftAuthor) {
             for (Value::ConstIterator it = value.constBegin(); result && it != value.constEnd(); ++it) {
-                Person *person = dynamic_cast<Person*>(*it);
-                if (person != NULL)
+                QSharedPointer<const Person> person = (*it).dynamicCast<const Person>();
+                if (!person.isNull())
                     result &= writeKeyValue(stream, "AU", PlainTextValue::text(**it, bibtexfile));
                 else
                     kWarning() << "Cannot write value " << PlainTextValue::text(**it, bibtexfile) << " for field AU (author), not supported by RIS format" << endl;
             }
         } else if (key.toLower() == Entry::ftEditor) {
             for (Value::ConstIterator it = value.constBegin(); result && it != value.constEnd(); ++it) {
-                Person *person = dynamic_cast<Person*>(*it);
-                if (person != NULL)
+                QSharedPointer<const Person> person = (*it).dynamicCast<const Person>();
+                if (!person.isNull())
                     result &= writeKeyValue(stream, "ED", PlainTextValue::text(**it, bibtexfile));
                 else
                     kWarning() << "Cannot write value " << PlainTextValue::text(**it, bibtexfile) << " for field ED (editor), not supported by RIS format" << endl;

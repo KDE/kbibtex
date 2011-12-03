@@ -113,30 +113,30 @@ public:
             } else {
                 /// except for the source view type flag, type flag views do not support composed values,
                 /// therefore only the first value will be shown
-                const ValueItem *first = value.first();
+                const QSharedPointer<ValueItem> first = value.first();
 
-                const PlainText *plainText = dynamic_cast<const PlainText*>(first);
-                if (typeFlag == KBibTeX::tfPlainText && plainText != NULL) {
+                const QSharedPointer<PlainText> plainText = first.dynamicCast<PlainText>();
+                if (typeFlag == KBibTeX::tfPlainText && !plainText.isNull()) {
                     text = plainText->text();
                     result = true;
                 } else {
-                    const Person *person = dynamic_cast<const Person*>(first);
-                    if (typeFlag == KBibTeX::tfPerson && person != NULL) {
-                        text = Person::transcribePersonName(person, personNameFormatting);
+                    const QSharedPointer<Person> person = first.dynamicCast<Person>();
+                    if (typeFlag == KBibTeX::tfPerson && !person.isNull()) {
+                        text = Person::transcribePersonName(person.data(), personNameFormatting);
                         result = true;
                     } else {
-                        const MacroKey *macroKey = dynamic_cast<const MacroKey*>(first);
-                        if (typeFlag == KBibTeX::tfReference && macroKey != NULL) {
+                        const QSharedPointer<MacroKey> macroKey = first.dynamicCast<MacroKey>();
+                        if (typeFlag == KBibTeX::tfReference && !macroKey.isNull()) {
                             text = macroKey->text();
                             result = true;
                         } else {
-                            const Keyword *keyword = dynamic_cast<const Keyword*>(first);
-                            if (typeFlag == KBibTeX::tfKeyword && keyword != NULL) {
+                            const QSharedPointer<Keyword> keyword = first.dynamicCast<Keyword>();
+                            if (typeFlag == KBibTeX::tfKeyword && !keyword.isNull()) {
                                 text = keyword->text();
                                 result = true;
                             } else {
-                                const VerbatimText *verbatimText = dynamic_cast<const VerbatimText*>(first);
-                                if (typeFlag == KBibTeX::tfVerbatim && verbatimText != NULL) {
+                                const QSharedPointer<VerbatimText> verbatimText = first.dynamicCast<VerbatimText>();
+                                if (typeFlag == KBibTeX::tfVerbatim && !verbatimText.isNull()) {
                                     text = verbatimText->text();
                                     result = true;
                                 } else
@@ -166,18 +166,18 @@ public:
         if (encodedText.isEmpty())
             return true;
         else if (typeFlag == KBibTeX::tfPlainText) {
-            value.append(new PlainText(encodedText));
+            value.append(QSharedPointer<PlainText>(new PlainText(encodedText)));
             return true;
         } else if (typeFlag == KBibTeX::tfReference && !encodedText.contains(QRegExp("[^-_:/a-zA-Z0-9]"))) {
-            value.append(new MacroKey(encodedText));
+            value.append(QSharedPointer<MacroKey>(new MacroKey(encodedText)));
             return true;
         } else if (typeFlag == KBibTeX::tfPerson) {
-            value.append(FileImporterBibTeX::splitName(encodedText));
+            value.append(QSharedPointer<Person>(FileImporterBibTeX::splitName(encodedText)));
             return true;
         } else if (typeFlag == KBibTeX::tfKeyword) {
             QList<Keyword*> keywords = FileImporterBibTeX::splitKeywords(encodedText);
             for (QList<Keyword*>::Iterator it = keywords.begin(); it != keywords.end(); ++it)
-                value.append(*it);
+                value.append(QSharedPointer<Keyword>(*it));
             return true;
         } else if (typeFlag == KBibTeX::tfSource) {
             QString key = typeFlags.testFlag(KBibTeX::tfPerson) ? "author" : "title";
@@ -195,7 +195,7 @@ public:
                 kWarning() << "Parsing " << fakeBibTeXFile << " did not result in valid entry";
             return !value.isEmpty();
         } else if (typeFlag == KBibTeX::tfVerbatim) {
-            value.append(new VerbatimText(encodedText));
+            value.append(QSharedPointer<VerbatimText>(new VerbatimText(encodedText)));
             return true;
         }
 
@@ -308,26 +308,26 @@ public:
         bool result = true;
         EncoderLaTeX *enc = EncoderLaTeX::instance();
         QString rawText = QString::null;
-        const ValueItem *first = value.first();
+        const QSharedPointer<ValueItem> first = value.first();
 
-        const PlainText *plainText = dynamic_cast<const PlainText*>(first);
-        if (plainText != NULL)
+        const QSharedPointer<PlainText> plainText = first.dynamicCast<PlainText>();
+        if (!plainText.isNull())
             rawText = enc->encode(plainText->text());
         else {
-            const VerbatimText *verbatimText = dynamic_cast<const VerbatimText*>(first);
-            if (verbatimText != NULL)
+            const QSharedPointer<VerbatimText> verbatimText = first.dynamicCast<VerbatimText>();
+            if (!verbatimText.isNull())
                 rawText = verbatimText->text();
             else {
-                const MacroKey *macroKey = dynamic_cast<const MacroKey*>(first);
-                if (macroKey != NULL)
+                const QSharedPointer<MacroKey> macroKey = first.dynamicCast<MacroKey>();
+                if (!macroKey.isNull())
                     rawText = macroKey->text();
                 else {
-                    const Person *person = dynamic_cast<const Person*>(first);
-                    if (person != NULL)
+                    const QSharedPointer<Person> person = first.dynamicCast<Person>();
+                    if (!person.isNull())
                         rawText = enc->encode(QString("%1 %2").arg(person->firstName()).arg(person->lastName())); // FIXME proper name conversion
                     else {
-                        const Keyword *keyword = dynamic_cast<const Keyword*>(first);
-                        if (keyword != NULL)
+                        const QSharedPointer<Keyword> keyword = first.dynamicCast<Keyword>();
+                        if (!keyword.isNull())
                             rawText = enc->encode(keyword->text());
                         else {
                             // TODO case missed?
@@ -341,21 +341,21 @@ public:
         switch (destType) {
         case KBibTeX::tfPlainText:
             value.clear();
-            value.append(new PlainText(enc->decode(rawText)));
+            value.append(QSharedPointer<PlainText>(new PlainText(enc->decode(rawText))));
             break;
         case KBibTeX::tfVerbatim:
             value.clear();
-            value.append(new VerbatimText(rawText));
+            value.append(QSharedPointer<VerbatimText>(new VerbatimText(rawText)));
             break;
         case KBibTeX::tfPerson:
             value.clear();
-            value.append(FileImporterBibTeX::splitName(enc->decode(rawText)));
+            value.append(QSharedPointer<Person>(FileImporterBibTeX::splitName(enc->decode(rawText))));
             break;
         case KBibTeX::tfReference: {
             MacroKey *macroKey = new MacroKey(rawText);
             if (macroKey->isValid()) {
                 value.clear();
-                value.append(macroKey);
+                value.append(QSharedPointer<MacroKey>(macroKey));
             } else {
                 delete macroKey;
                 result = false;
@@ -364,7 +364,7 @@ public:
         break;
         case KBibTeX::tfKeyword:
             value.clear();
-            value.append(new Keyword(enc->decode(rawText)));
+            value.append(QSharedPointer<Keyword>(new Keyword(enc->decode(rawText))));
             break;
         default: {
             // TODO
@@ -481,7 +481,7 @@ void FieldLineEdit::dropEvent(QDropEvent *event)
         if (entry != NULL && d->fieldKey == Entry::ftCrossRef) {
             /// handle drop on crossref line differently (use dropped entry's id)
             Value v;
-            v.append(new VerbatimText(entry->id()));
+            v.append(QSharedPointer<VerbatimText>(new VerbatimText(entry->id())));
             reset(v);
             emit textChanged(entry->id());
             return;

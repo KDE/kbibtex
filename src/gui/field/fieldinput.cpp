@@ -212,9 +212,8 @@ public:
 
         if (ok && !crossRef.isEmpty()) {
             /// insert selected cross reference into edit widget
-            VerbatimText *verbatimText = new VerbatimText(crossRef);
             Value value;
-            value.append(verbatimText);
+            value.append(QSharedPointer<VerbatimText>(new VerbatimText(crossRef)));
             reset(value);
         }
     }
@@ -294,9 +293,8 @@ void FieldInput::setCompletionItems(const QStringList &items)
 
 void FieldInput::setMonth(int month)
 {
-    MacroKey *macro = new MacroKey(KBibTeX::MonthsTriple[month-1]);
     Value value;
-    value.append(macro);
+    value.append(QSharedPointer<MacroKey>(new MacroKey(KBibTeX::MonthsTriple[month-1])));
     reset(value);
 }
 

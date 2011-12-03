@@ -286,8 +286,8 @@ bool ValueListModel::setData(const QModelIndex & index, const QVariant &value, i
 
         values[index].text = newText;
         values[index].value = newValue;
-        const Person *person = dynamic_cast<const Person*>(newValue.first());
-        values[index].sortBy = person == NULL ? QString::null : person->lastName() + QLatin1String(" ") + person->firstName();
+        const QSharedPointer<Person> person = newValue.first().dynamicCast<Person>();
+        values[index].sortBy = person.isNull() ? QString::null : person->lastName() + QLatin1String(" ") + person->firstName();
         reset();
 
         return true;
@@ -349,7 +349,7 @@ void ValueListModel::updateValues()
 
 void ValueListModel::insertValue(const Value &value)
 {
-    foreach(ValueItem *item, value) {
+    foreach(QSharedPointer<ValueItem> item, value) {
         const QString text = PlainTextValue::text(*item, file);
         if (text.isEmpty()) continue; ///< skip empty values
 
@@ -359,15 +359,13 @@ void ValueListModel::insertValue(const Value &value)
             ValueLine newValueLine;
             newValueLine.text = text;
             newValueLine.count = 1;
-            Value v;
-            v.append(item);
-            newValueLine.value = v;
+            newValueLine.value.append(item);
 
             /// memorize sorting criterium:
             /// * for persons, use last name first
             /// * in any case, use lower case
-            const Person *person = dynamic_cast<const Person*>(item);
-            newValueLine.sortBy = person == NULL ? text.toLower() : person->lastName().toLower() + QLatin1String(" ") + person->firstName().toLower();
+            const QSharedPointer<Person> person = item.dynamicCast<Person>();
+            newValueLine.sortBy = person.isNull() ? text.toLower() : person->lastName().toLower() + QLatin1String(" ") + person->firstName().toLower();
 
             values << newValueLine;
         } else {

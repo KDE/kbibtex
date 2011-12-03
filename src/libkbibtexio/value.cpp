@@ -310,13 +310,13 @@ bool VerbatimText::operator==(const ValueItem &other) const
 
 
 Value::Value()
-        : QVector<ValueItem*>()
+        : QVector<QSharedPointer<ValueItem> >()
 {
     // nothing
 }
 
 Value::Value(const Value& other)
-        : QVector<ValueItem*>()
+        : QVector<QSharedPointer<ValueItem> >()
 {
     clear();
     mergeFrom(other);
@@ -324,13 +324,7 @@ Value::Value(const Value& other)
 
 Value::~Value()
 {
-    // FIXME: at some point elements have to be deleted
-    // maybe use QSharedPointer?
-    // while (!isEmpty()) {
-    //     ValueItem *item = first();
-    //     erase(begin());
-    //     delete item;
-    // }
+    // nothing
 }
 
 void Value::merge(const Value& other)
@@ -370,33 +364,8 @@ Value& Value::operator=(const Value & rhs)
 
 void Value::mergeFrom(const Value& other)
 {
-    for (QVector<ValueItem*>::ConstIterator it = other.constBegin(); it != other.constEnd(); ++it) {
-        PlainText *plainText = dynamic_cast<PlainText*>(*it);
-        if (plainText != NULL)
-            append(new PlainText(*plainText));
-        else {
-            Person *person = dynamic_cast<Person*>(*it);
-            if (person != NULL)
-                append(new Person(*person));
-            else {
-                Keyword *keyword = dynamic_cast<Keyword*>(*it);
-                if (keyword != NULL)
-                    append(new Keyword(*keyword));
-                else {
-                    MacroKey *macroKey = dynamic_cast<MacroKey*>(*it);
-                    if (macroKey != NULL)
-                        append(new MacroKey(*macroKey));
-                    else {
-                        VerbatimText *verbatimText = dynamic_cast<VerbatimText*>(*it);
-                        if (verbatimText != NULL)
-                            append(new VerbatimText(*verbatimText));
-                        else
-                            kError() << "cannot copy from unknown data type";
-                    }
-                }
-            }
-        }
-    }
+    for (Value::ConstIterator it = other.constBegin(); it != other.constEnd(); ++it)
+        append(*it);
 }
 
 QString PlainTextValue::personNameFormatting = QString::null;
@@ -407,7 +376,7 @@ QString PlainTextValue::text(const Value& value, const File* file, bool debug)
     ValueItemType lastVit = VITOther;
 
     QString result = "";
-    for (QVector<ValueItem*>::ConstIterator it = value.constBegin(); it != value.constEnd(); ++it) {
+    for (Value::ConstIterator it = value.constBegin(); it != value.constEnd(); ++it) {
         QString nextText = text(**it, vit, file, debug);
         if (!nextText.isNull()) {
             if (lastVit == VITPerson && vit == VITPerson)

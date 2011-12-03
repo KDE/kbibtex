@@ -124,8 +124,9 @@ QSet<QString> File::uniqueEntryValuesSet(const QString &fieldName) const
         if (entry != NULL)
             for (Entry::ConstIterator it = entry->constBegin(); it != entry->constEnd(); ++it)
                 if (it.key().toLower() == lcFieldName)
-                    foreach(const ValueItem *valueItem, it.value())
+                    foreach(const QSharedPointer<ValueItem> &valueItem, it.value()) {
                     valueSet.insert(PlainTextValue::text(*valueItem, this));
+                }
     }
 
     return valueSet;

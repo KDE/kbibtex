@@ -403,7 +403,7 @@ void OnlineSearchSpringerLink::doneFetchingBibTeX()
                     hasEntry = true;
                     if (entry != NULL) {
                         Value v;
-                        v.append(new VerbatimText(label()));
+                        v.append(QSharedPointer<VerbatimText>(new VerbatimText(label())));
                         entry->insert("x-fetchedfrom", v);
                         emit foundEntry(entry);
                     }

@@ -23,6 +23,7 @@
 #include <QVector>
 #include <QRegExp>
 #include <QVariant>
+#include <QSharedPointer>
 
 #include "kbibtexio_export.h"
 
@@ -173,7 +174,7 @@ protected:
  * A Value object is built from a list of @see ValueItem objects.
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
-class KBIBTEXIO_EXPORT Value: public QVector<ValueItem*>
+class KBIBTEXIO_EXPORT Value: public QVector<QSharedPointer<ValueItem> >
 {
 public:
     Value();

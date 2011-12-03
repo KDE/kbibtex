@@ -126,12 +126,12 @@ void EntryClique::recalculateValueMap()
 
         /// cover entry type
         Value v;
-        v.append(new VerbatimText(entry->type()));
+        v.append(QSharedPointer<VerbatimText>(new VerbatimText(entry->type())));
         insertKeyValueToValueMap(QLatin1String("^type"), v, entry->type());
 
         /// cover entry id
         v.clear();
-        v.append(new VerbatimText(entry->id()));
+        v.append(QSharedPointer<VerbatimText>(new VerbatimText(entry->id())));
         insertKeyValueToValueMap(QLatin1String("^id"), v, entry->id());
 
         /// go through each and every field of this entry
@@ -141,7 +141,7 @@ void EntryClique::recalculateValueMap()
             const Value fieldValue = fieldIt.value();
 
             if (fieldName == Entry::ftKeywords || fieldName == Entry::ftUrl) {
-                foreach(ValueItem* vi, fieldValue) {
+                foreach(QSharedPointer<ValueItem> vi, fieldValue) {
                     const QString text = PlainTextValue::text(*vi);
                     Value v;
                     v << vi;

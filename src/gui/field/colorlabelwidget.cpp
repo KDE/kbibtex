@@ -140,8 +140,8 @@ ColorLabelWidget::ColorLabelWidget(QWidget *parent)
 bool ColorLabelWidget::reset(const Value& value)
 {
     int i = 0;
-    VerbatimText *verbatimText = NULL;
-    if (value.count() == 1 && (verbatimText = dynamic_cast<VerbatimText*>(value.first())) != NULL) {
+    QSharedPointer<VerbatimText> verbatimText;
+    if (value.count() == 1 && !(verbatimText = value.first().dynamicCast<VerbatimText>()).isNull()) {
         const QColor color = QColor(verbatimText->text());
         for (; i < d->model->rowCount(); ++i)
             if (d->model->data(d->model->index(i, 0, QModelIndex()), ColorRole).value<QColor>() == color)
@@ -161,10 +161,8 @@ bool ColorLabelWidget::apply(Value& value) const
 {
     QColor color = d->model->data(d->model->index(currentIndex(), 0, QModelIndex()), ColorRole).value<QColor>();
     value.clear();
-    if (color != Qt::black) {
-        VerbatimText *verbatimText = new VerbatimText(color.name());
-        value << verbatimText;
-    }
+    if (color != Qt::black)
+        value.append(QSharedPointer<VerbatimText>(new VerbatimText(color.name())));
     return true;
 }
 

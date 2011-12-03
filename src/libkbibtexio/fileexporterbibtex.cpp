@@ -456,18 +456,18 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value& value, const QStr
     bool isOpen = false;
     /// variable to memorize which closing delimiter to use
     QChar stringCloseDelimiter = d->stringCloseDelimiter;
-    const ValueItem* prev = NULL;
+    QSharedPointer<const ValueItem> prev;
     for (Value::ConstIterator it = value.constBegin(); it != value.constEnd(); ++it) {
-        const MacroKey *macroKey = dynamic_cast<const MacroKey*>(*it);
-        if (macroKey != NULL) {
+        QSharedPointer<const MacroKey> macroKey = (*it).dynamicCast<const MacroKey>();
+        if (!macroKey.isNull()) {
             if (isOpen) result.append(stringCloseDelimiter);
             isOpen = false;
             if (!result.isEmpty()) result.append(" # ");
             result.append(macroKey->text());
             prev = macroKey;
         } else {
-            const PlainText *plainText = dynamic_cast<const PlainText*>(*it);
-            if (plainText != NULL) {
+            QSharedPointer<const PlainText> plainText = (*it).dynamicCast<const PlainText>();
+            if (!plainText.isNull()) {
                 QString textBody = encodercheck(encoder, plainText->text());
                 if (!isOpen) {
                     if (!result.isEmpty()) result.append(" # ");
@@ -500,8 +500,8 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value& value, const QStr
                 result.append(textBody);
                 prev = plainText;
             } else {
-                const VerbatimText *verbatimText = dynamic_cast<const VerbatimText*>(*it);
-                if (verbatimText != NULL) {
+                QSharedPointer<const VerbatimText> verbatimText = (*it).dynamicCast<const VerbatimText>();
+                if (!verbatimText.isNull()) {
                     QString textBody = verbatimText->text();
                     if (!isOpen) {
                         if (!result.isEmpty()) result.append(" # ");
@@ -534,8 +534,8 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value& value, const QStr
                     result.append(textBody);
                     prev = verbatimText;
                 } else {
-                    const Person *person = dynamic_cast<const Person*>(*it);
-                    if (person != NULL) {
+                    QSharedPointer<const Person> person = (*it).dynamicCast<const Person>();
+                    if (!person.isNull()) {
                         QString firstName = person->firstName();
                         if (!firstName.isEmpty() && d->requiresPersonQuoting(firstName, false))
                             firstName = firstName.prepend("{").append("}");
@@ -577,8 +577,8 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value& value, const QStr
                         result.append(encodercheck(encoder, thisName));
                         prev = person;
                     } else {
-                        const Keyword *keyword = dynamic_cast<const Keyword*>(*it);
-                        if (keyword != NULL) {
+                        QSharedPointer<const Keyword> keyword = (*it).dynamicCast<const Keyword>();
+                        if (!keyword.isNull()) {
                             QString textBody = encodercheck(encoder, keyword->text());
                             if (!isOpen) {
                                 if (!result.isEmpty()) result.append(" # ");

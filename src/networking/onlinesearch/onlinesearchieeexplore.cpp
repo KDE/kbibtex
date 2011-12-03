@@ -59,7 +59,7 @@ public:
         entry->setId(QLatin1String("ieee") + arnumber);
 
         Value v;
-        v << new PlainText(arnumber);
+        v.append(QSharedPointer<PlainText>(new PlainText(arnumber)));
         entry->insert(QLatin1String("arnumber"), v);
     }
 
@@ -224,7 +224,7 @@ void OnlineSearchIEEEXplore::doneFetchingBibliography()
                     d->sanitize(entry, arnumber);
 
                     Value v;
-                    v.append(new VerbatimText(label()));
+                    v.append(QSharedPointer<VerbatimText>(new VerbatimText(label())));
                     entry->insert("x-fetchedfrom", v);
 
                     emit foundEntry(entry);

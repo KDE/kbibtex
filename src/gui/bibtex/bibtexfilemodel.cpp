@@ -97,10 +97,10 @@ bool SortFilterBibTeXFileModel::lessThan(const QModelIndex & left, const QModelI
 
         /// compare each person in both values
         for (Value::Iterator itA = valueA.begin(), itB = valueB.begin(); itA != valueA.end() &&  itB != valueB.end(); ++itA, ++itB) {
-            Person *personA = dynamic_cast<Person *>(*itA);
-            Person *personB = dynamic_cast<Person *>(*itB);
+            QSharedPointer<Person>  personA = (*itA).dynamicCast<Person>();
+            QSharedPointer<Person>  personB = (*itB).dynamicCast<Person>();
             /// not a Person object in value? fall back to default implementation
-            if (personA == NULL || personB == NULL) return QSortFilterProxyModel::lessThan(left, right);
+            if (personA.isNull() || personB.isNull()) return QSortFilterProxyModel::lessThan(left, right);
 
             /// get both values' next persons' last names for comparison
             QString nameA = personA->lastName().replace(curlyRegExp, "");

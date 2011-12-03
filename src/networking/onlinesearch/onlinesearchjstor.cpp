@@ -62,14 +62,14 @@ public:
         entry->remove(formattedDateKey);
         if (i < 12) {
             Value v;
-            v.append(new MacroKey(MonthsTriple[i]));
+            v.append(QSharedPointer<MacroKey>(new MacroKey(MonthsTriple[i])));
             entry->insert(Entry::ftMonth, v);
         }
         /// guessing failed, therefore extract first part if it exists
         else if ((i = formattedDate.indexOf(",")) >= 0) {
             /// text may be a season ("Winter")
             Value v;
-            v.append(new PlainText(formattedDate.left(i)));
+            v.append(QSharedPointer<PlainText>(new PlainText(formattedDate.left(i))));
             entry->insert(Entry::ftMonth, v);
         } else {
             /// this case happens if the field only contains a year
@@ -82,7 +82,7 @@ public:
             pages = pages.mid(4);
             entry->remove(Entry::ftPages);
             Value v;
-            v.append(new PlainText(pages));
+            v.append(QSharedPointer<PlainText>(new PlainText(pages)));
             entry->insert(Entry::ftPages, v);
         }
     }
@@ -247,7 +247,7 @@ void OnlineSearchJStor::doneFetchingSummaryPage()
                 Entry *entry = dynamic_cast<Entry*>(*it);
                 if (entry != NULL) {
                     Value v;
-                    v.append(new VerbatimText(label()));
+                    v.append(QSharedPointer<VerbatimText>(new VerbatimText(label())));
                     entry->insert("x-fetchedfrom", v);
 
                     d->sanitizeEntry(entry);

@@ -70,9 +70,11 @@ private:
         int count;
     };
 
+    typedef QVector<ValueLine> ValueLineList;
+
     const File *file;
     const QString fName;
-    QList<ValueLine> values;
+    ValueLineList values;
     QMap<QString, QString> colorToLabel;
     bool showCountColumn;
     SortBy sortBy;

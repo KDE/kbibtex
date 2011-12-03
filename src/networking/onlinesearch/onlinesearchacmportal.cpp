@@ -82,7 +82,7 @@ public:
             /// by taking the first three letters and converting them to lower case.
             /// Example: "September" -> sep
             Value v;
-            v.append(new MacroKey(monthStr.left(3).toLower()));
+            v.append(QSharedPointer<MacroKey>(new MacroKey(monthStr.left(3).toLower())));
             entry->insert(Entry::ftMonth, v);
         }
     }
@@ -239,7 +239,7 @@ void OnlineSearchAcmPortal::doneFetchingBibTeX()
                 Entry *entry = dynamic_cast<Entry*>(*it);
                 if (entry != NULL) {
                     Value v;
-                    v.append(new VerbatimText(label()));
+                    v.append(QSharedPointer<VerbatimText>(new VerbatimText(label())));
                     entry->insert("x-fetchedfrom", v);
 
                     d->sanitizeEntry(entry);

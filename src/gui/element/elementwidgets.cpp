@@ -466,8 +466,8 @@ bool FilesWidget::apply(Element *element) const
     Value urlValue, doiValue, localFileValue;
 
     for (Value::ConstIterator it = combinedValue.constBegin(); it != combinedValue.constEnd(); ++it) {
-        const VerbatimText *verbatimText = dynamic_cast<const VerbatimText *>(*it);
-        if (verbatimText != NULL) {
+        const QSharedPointer<VerbatimText> verbatimText = (*it).dynamicCast<VerbatimText>();
+        if (!verbatimText.isNull()) {
             QString text = verbatimText->text();
             if (KBibTeX::urlRegExp.indexIn(text) > -1) {
                 /// add full URL
@@ -476,7 +476,7 @@ bool FilesWidget::apply(Element *element) const
                 if (urlValue.contains(*newVT))
                     delete newVT;
                 else
-                    urlValue.append(newVT);
+                    urlValue.append(QSharedPointer<VerbatimText>(newVT));
             } else if (KBibTeX::doiRegExp.indexIn(text) > -1) {
                 /// add DOI
                 VerbatimText *newVT = new VerbatimText(KBibTeX::doiRegExp.cap(0));
@@ -484,7 +484,7 @@ bool FilesWidget::apply(Element *element) const
                 if (doiValue.contains(*newVT))
                     delete newVT;
                 else
-                    doiValue.append(newVT);
+                    doiValue.append(QSharedPointer<VerbatimText>(newVT));
             } else {
                 /// add anything else (e.g. local file)
                 VerbatimText *newVT = new VerbatimText(*verbatimText);
@@ -492,7 +492,7 @@ bool FilesWidget::apply(Element *element) const
                 if (localFileValue.contains(*newVT))
                     delete newVT;
                 else
-                    localFileValue.append(newVT);
+                    localFileValue.append(QSharedPointer<VerbatimText>(newVT));
             }
         }
     }
