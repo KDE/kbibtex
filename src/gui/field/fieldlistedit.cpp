@@ -315,7 +315,7 @@ void FieldListEdit::dropEvent(QDropEvent *event)
             QList<KUrl> urlList = FileInfo::entryUrls(entry, KUrl(file->property(File::Url).toString()));
             Value v;
             foreach(const KUrl &url, urlList) {
-                v.append(new VerbatimText(url.pathOrUrl()));
+                v.append(QSharedPointer<VerbatimText>(new VerbatimText(url.pathOrUrl())));
             }
             reset(v);
             emit modified();
@@ -389,7 +389,7 @@ bool PersonListEdit::reset(const Value& value)
 
     m_checkBoxOthers->setCheckState(Qt::Unchecked);
     if (!internal.isEmpty() && typeid(PlainText) == typeid(*internal.last())) {
-        PlainText *pt = static_cast<PlainText*>(internal.last());
+        QSharedPointer<PlainText> pt = internal.last().staticCast<PlainText>();
         if (pt->text() == QLatin1String("others")) {
             internal.erase(internal.end() - 1);
             m_checkBoxOthers->setCheckState(Qt::Checked);
@@ -404,7 +404,7 @@ bool PersonListEdit::apply(Value& value) const
     bool result = FieldListEdit::apply(value);
 
     if (result && m_checkBoxOthers->checkState() == Qt::Checked)
-        value.append(new PlainText(QLatin1String("others")));
+        value.append(QSharedPointer<PlainText>(new PlainText(QLatin1String("others"))));
 
     return result;
 }
@@ -434,8 +434,7 @@ void UrlListEdit::slotAddLocalFile()
     if (!filename.isEmpty()) {
         filename = askRelativeOrStaticFilename(this, filename, fileUrl);
         Value *value = new Value();
-        ValueItem *vi = new VerbatimText(filename);
-        value->append(vi);
+        value->append(QSharedPointer<VerbatimText>(new VerbatimText(filename)));
         lineAdd(value);
     }
 }
@@ -500,8 +499,7 @@ void KeywordListEdit::slotAddKeywordsFromList()
     if (ok) {
         foreach(const QString &newKeywordText, newKeywordList) {
             Value *value = new Value();
-            ValueItem *vi = new Keyword(newKeywordText);
-            value->append(vi);
+            value->append(QSharedPointer<Keyword>(new Keyword(newKeywordText)));
             lineAdd(value);
         }
     }
@@ -517,7 +515,7 @@ void KeywordListEdit::slotAddKeywordsFromClipboard()
         QList<Keyword*> keywordList = FileImporterBibTeX::splitKeywords(text);
         foreach(Keyword *keyword, keywordList) {
             Value *value = new Value();
-            value->append(keyword);
+            value->append(QSharedPointer<Keyword>(keyword));
             lineAdd(value);
         }
     }
