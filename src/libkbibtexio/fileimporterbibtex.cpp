@@ -28,7 +28,6 @@
 
 #include <KDebug>
 
-//#include <fileinfo.h>
 #include <file.h>
 #include <comment.h>
 #include <macro.h>
