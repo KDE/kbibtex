@@ -47,6 +47,7 @@ public:
 
     BibTeXEditor *editor();
     OpenFileInfo *currentFile();
+    OpenFileInfoManager *getOpenFileInfoManager();
 
 signals:
     void setCaption(const QString &);

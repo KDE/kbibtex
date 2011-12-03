@@ -70,7 +70,6 @@ public:
     SearchForm *searchForm;
     SearchResults *searchResults;
     ElementForm *elementForm;
-    OpenFileInfoManager *openFileInfoManager;
     KMenu *actionMenuRecentFilesMenu;
 
     KBibTeXMainWindowPrivate(KBibTeXMainWindow *parent)
@@ -82,8 +81,6 @@ public:
 KBibTeXMainWindow::KBibTeXMainWindow()
         : KParts::MainWindow(), d(new KBibTeXMainWindowPrivate(this))
 {
-    d->openFileInfoManager = OpenFileInfoManager::getOpenFileInfoManager();
-
     setObjectName(QLatin1String("KBibTeXShell"));
 
     /*
@@ -102,8 +99,8 @@ KBibTeXMainWindow::KBibTeXMainWindow()
     connect(d->mdiWidget, SIGNAL(documentNew()), this, SLOT(newDocument()));
     connect(d->mdiWidget, SIGNAL(documentOpen()), this, SLOT(openDocumentDialog()));
     connect(d->mdiWidget, SIGNAL(documentOpenURL(KUrl)), this, SLOT(openDocument(KUrl)));
-    connect(d->openFileInfoManager, SIGNAL(currentChanged(OpenFileInfo*, KService::Ptr)), d->mdiWidget, SLOT(setFile(OpenFileInfo*, KService::Ptr)));
-    connect(d->openFileInfoManager, SIGNAL(flagsChanged(OpenFileInfo::StatusFlags)), this, SLOT(documentListsChanged(OpenFileInfo::StatusFlags)));
+    connect(d->mdiWidget->getOpenFileInfoManager(), SIGNAL(currentChanged(OpenFileInfo*, KService::Ptr)), d->mdiWidget, SLOT(setFile(OpenFileInfo*, KService::Ptr)));
+    connect(d->mdiWidget->getOpenFileInfoManager(), SIGNAL(flagsChanged(OpenFileInfo::StatusFlags)), this, SLOT(documentListsChanged(OpenFileInfo::StatusFlags)));
     connect(d->mdiWidget, SIGNAL(setCaption(QString)), this, SLOT(setCaption(QString)));
 
     KActionMenu *showPanelsAction = new KActionMenu(i18n("Show Panels"), this);
@@ -130,7 +127,7 @@ KBibTeXMainWindow::KBibTeXMainWindow()
     d->dockDocumentList = new QDockWidget(i18n("List of Documents"), this);
     d->dockDocumentList->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
     addDockWidget(Qt::LeftDockWidgetArea, d->dockDocumentList);
-    d->listDocumentList = new DocumentList(OpenFileInfoManager::getOpenFileInfoManager(), d->dockDocumentList);
+    d->listDocumentList = new DocumentList(d->mdiWidget->getOpenFileInfoManager(), d->dockDocumentList);
     d->dockDocumentList->setWidget(d->listDocumentList);
     d->dockDocumentList->setObjectName("dockDocumentList");
     d->dockDocumentList->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
@@ -218,11 +215,6 @@ KBibTeXMainWindow::KBibTeXMainWindow()
     setAcceptDrops(true);
 }
 
-KBibTeXMainWindow::~KBibTeXMainWindow()
-{
-    delete d->openFileInfoManager;
-}
-
 void KBibTeXMainWindow::setupControllers()
 {
     // TODO
@@ -261,9 +253,9 @@ void KBibTeXMainWindow::dropEvent(QDropEvent *event)
 void KBibTeXMainWindow::newDocument()
 {
     const QString mimeType = OpenFileInfo::mimetypeBibTeX;
-    OpenFileInfo *openFileInfo = d->openFileInfoManager->createNew(mimeType);
+    OpenFileInfo *openFileInfo = d->mdiWidget->getOpenFileInfoManager()->createNew(mimeType);
     if (openFileInfo) {
-        d->openFileInfoManager->setCurrentFile(openFileInfo);
+        d->mdiWidget->getOpenFileInfoManager()->setCurrentFile(openFileInfo);
         openFileInfo->setFlags(OpenFileInfo::Open);
     } else
         KMessageBox::error(this, i18n("Creating a new document of mime type \"%1\" failed as no editor component could be instanticated.", mimeType), i18n("Creating document failed"));
@@ -271,10 +263,10 @@ void KBibTeXMainWindow::newDocument()
 
 void KBibTeXMainWindow::openDocumentDialog()
 {
-    OpenFileInfo *currFile = d->openFileInfoManager->currentFile();
+    OpenFileInfo *currFile = d->mdiWidget->getOpenFileInfoManager()->currentFile();
     KUrl currFileUrl = currFile == NULL ? KUrl() : currFile->url();
     QString startDir = currFileUrl.isValid() ? KUrl(currFileUrl.url()).path() : QLatin1String("kfiledialog:///opensave");
-    OpenFileInfo *ofi = d->openFileInfoManager->currentFile();
+    OpenFileInfo *ofi = d->mdiWidget->getOpenFileInfoManager()->currentFile();
     if (ofi != NULL) {
         KUrl url = ofi->url();
         if (url.isValid()) startDir = url.path();
@@ -289,14 +281,14 @@ void KBibTeXMainWindow::openDocumentDialog()
 
 void KBibTeXMainWindow::openDocument(const KUrl& url)
 {
-    OpenFileInfo *openFileInfo = d->openFileInfoManager->open(url);
-    d->openFileInfoManager->setCurrentFile(openFileInfo);
+    OpenFileInfo *openFileInfo = d->mdiWidget->getOpenFileInfoManager()->open(url);
+    d->mdiWidget->getOpenFileInfoManager()->setCurrentFile(openFileInfo);
 }
 
 void KBibTeXMainWindow::closeDocument()
 {
     d->actionClose->setEnabled(false);
-    d->openFileInfoManager->close(d->openFileInfoManager->currentFile());
+    d->mdiWidget->getOpenFileInfoManager()->close(d->mdiWidget->getOpenFileInfoManager()->currentFile());
 }
 
 void KBibTeXMainWindow::showPreferences()
@@ -307,7 +299,7 @@ void KBibTeXMainWindow::showPreferences()
 
 void KBibTeXMainWindow::documentSwitched(BibTeXEditor *oldEditor, BibTeXEditor *newEditor)
 {
-    OpenFileInfo *openFileInfo = OpenFileInfoManager::getOpenFileInfoManager()->currentFile();
+    OpenFileInfo *openFileInfo = d->mdiWidget->currentFile();
     bool validFile = openFileInfo != NULL;
     d->actionClose->setEnabled(validFile);
 
@@ -349,7 +341,7 @@ void KBibTeXMainWindow::showSearchResults()
 void KBibTeXMainWindow::documentListsChanged(OpenFileInfo::StatusFlags statusFlags)
 {
     if (statusFlags.testFlag(OpenFileInfo::RecentlyUsed)) {
-        QList<OpenFileInfo*> list = d->openFileInfoManager->filteredItems(OpenFileInfo::RecentlyUsed);
+        OpenFileInfoManager::OpenFileInfoList list = d->mdiWidget->getOpenFileInfoManager()->filteredItems(OpenFileInfo::RecentlyUsed);
         d->actionMenuRecentFilesMenu->clear();
         foreach(OpenFileInfo* cur, list) {
             KAction *action = new KAction(QString("%1 [%2]").arg(cur->shortCaption()).arg(cur->fullCaption()), this);

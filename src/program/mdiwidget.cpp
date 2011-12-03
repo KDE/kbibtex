@@ -47,8 +47,8 @@ class LRUItemModel : public QAbstractItemModel
 private:
     OpenFileInfoManager *ofim;
 public:
-    LRUItemModel(QObject *parent = NULL)
-            : QAbstractItemModel(parent), ofim(OpenFileInfoManager::getOpenFileInfoManager()) {
+    LRUItemModel(OpenFileInfoManager *openFileInfoManager, QObject *parent = NULL)
+            : QAbstractItemModel(parent), ofim(openFileInfoManager) {
         // nothing
     }
 
@@ -57,7 +57,7 @@ public:
     }
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const {
-        QList<OpenFileInfo*> ofiList = ofim->filteredItems(OpenFileInfo::RecentlyUsed);
+        OpenFileInfoManager::OpenFileInfoList ofiList = ofim->filteredItems(OpenFileInfo::RecentlyUsed);
         if (index.row() < ofiList.count()) {
             OpenFileInfo *ofiItem = ofiList[index.row()];
             if (index.column() == 0) {
@@ -157,15 +157,16 @@ private:
 
 public:
     MDIWidget *p;
+    OpenFileInfoManager *ofim;
     OpenFileInfo *currentFile;
     QWidget *welcomeWidget;
     QSignalMapper signalMapperCompleted;
 
     MDIWidgetPrivate(MDIWidget *parent)
-            : p(parent), currentFile(NULL) {
+            : p(parent), ofim(new OpenFileInfoManager), currentFile(NULL) {
         createWelcomeWidget();
 
-        modelLRU = new LRUItemModel(listLRU);
+        modelLRU = new LRUItemModel(ofim, listLRU);
         QSortFilterProxyModel *sfpm = new QSortFilterProxyModel(listLRU);
         sfpm->setSourceModel(modelLRU);
         sfpm->setSortRole(SortRole);
@@ -176,6 +177,7 @@ public:
     }
 
     ~MDIWidgetPrivate() {
+        delete ofim;
         delete welcomeWidget;
     }
 
@@ -194,7 +196,7 @@ public:
 MDIWidget::MDIWidget(QWidget *parent)
         : QStackedWidget(parent), d(new MDIWidgetPrivate(this))
 {
-    connect(OpenFileInfoManager::getOpenFileInfoManager(), SIGNAL(flagsChanged(OpenFileInfo::StatusFlags)), this, SLOT(slotStatusFlagsChanged(OpenFileInfo::StatusFlags)));
+    connect(d->ofim, SIGNAL(flagsChanged(OpenFileInfo::StatusFlags)), this, SLOT(slotStatusFlagsChanged(OpenFileInfo::StatusFlags)));
 }
 
 MDIWidget::~MDIWidget()
@@ -213,7 +215,7 @@ void MDIWidget::setFile(OpenFileInfo *openFileInfo, KService::Ptr servicePtr)
         widget = part->widget();
     } else if (openFileInfo != NULL) {
         KMessageBox::error(this, i18n("No part available for file '%1'.", openFileInfo->url().fileName()), i18n("No part available"));
-        OpenFileInfoManager::getOpenFileInfoManager()->close(openFileInfo);
+        d->ofim->close(openFileInfo);
         return;
     }
 
@@ -245,13 +247,18 @@ void MDIWidget::setFile(OpenFileInfo *openFileInfo, KService::Ptr servicePtr)
 
 BibTeXEditor *MDIWidget::editor()
 {
-    OpenFileInfo *ofi = OpenFileInfoManager::getOpenFileInfoManager()->currentFile();
+    OpenFileInfo *ofi = d->ofim->currentFile();
     return dynamic_cast<BibTeXEditor*>(ofi->part(this)->widget());
 }
 
 OpenFileInfo *MDIWidget::currentFile()
 {
     return d->currentFile;
+}
+
+OpenFileInfoManager *MDIWidget::getOpenFileInfoManager()
+{
+    return d->ofim;
 }
 
 void MDIWidget::slotCompleted(QObject *obj)
@@ -262,7 +269,7 @@ void MDIWidget::slotCompleted(QObject *obj)
 
     if (!oldUrl.equals(newUrl)) {
         kDebug() << "Url changed from " << oldUrl.pathOrUrl() << " to " << newUrl.pathOrUrl() << endl;
-        OpenFileInfoManager::getOpenFileInfoManager()->changeUrl(ofi, newUrl);
+        d->ofim->changeUrl(ofi, newUrl);
 
         /// completely opened or saved files should be marked as "recently used"
         ofi->addFlags(OpenFileInfo::RecentlyUsed);

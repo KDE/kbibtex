@@ -323,7 +323,7 @@ private:
 public:
     OpenFileInfoManager *p;
 
-    QList<OpenFileInfo*> openFileInfoList;
+    OpenFileInfoManager::OpenFileInfoList openFileInfoList;
     OpenFileInfo *currentFileInfo;
 
     OpenFileInfoManagerPrivate(OpenFileInfoManager *parent)
@@ -332,7 +332,8 @@ public:
     }
 
     ~OpenFileInfoManagerPrivate() {
-        for (QList<OpenFileInfo*>::Iterator it = openFileInfoList.begin(); it != openFileInfoList.end(); ++it) {
+        kDebug() << "Destroying internal data";
+        for (OpenFileInfoManager::OpenFileInfoList::Iterator it = openFileInfoList.begin(); it != openFileInfoList.end(); ++it) {
             OpenFileInfo *ofi = *it;
             delete ofi;
         }
@@ -391,10 +392,10 @@ public:
     void writeConfig(OpenFileInfo::StatusFlag statusFlag, const QString& configGroupName, int maxNumFiles) {
         KSharedConfigPtr config = KSharedConfig::openConfig("kbibtexrc");
         KConfigGroup cg(config, configGroupName);
-        QList<OpenFileInfo*> list = p->filteredItems(statusFlag);
+        OpenFileInfoManager::OpenFileInfoList list = p->filteredItems(statusFlag);
 
         int i = 0;
-        for (QList<OpenFileInfo*>::Iterator it = list.begin(); i < maxNumFiles && it != list.end(); ++it, ++i) {
+        for (OpenFileInfoManager::OpenFileInfoList::ConstIterator it = list.constBegin(); i < maxNumFiles && it != list.constEnd(); ++it, ++i) {
             OpenFileInfo *ofi = *it;
 
             cg.writeEntry(QString("%1-%2").arg(OpenFileInfo::OpenFileInfoPrivate::keyURL).arg(i), ofi->url().pathOrUrl());
@@ -415,14 +416,6 @@ const int OpenFileInfoManager::OpenFileInfoManagerPrivate::maxNumFavoriteFiles =
 const int OpenFileInfoManager::OpenFileInfoManagerPrivate::maxNumRecentlyUsedFiles = 8;
 const int OpenFileInfoManager::OpenFileInfoManagerPrivate::maxNumOpenFiles = 16;
 
-OpenFileInfoManager *OpenFileInfoManager::singletonOpenFileInfoManager = NULL;
-
-OpenFileInfoManager* OpenFileInfoManager::getOpenFileInfoManager()
-{
-    if (singletonOpenFileInfoManager == NULL)
-        singletonOpenFileInfoManager = new OpenFileInfoManager();
-    return singletonOpenFileInfoManager;
-}
 
 OpenFileInfoManager::OpenFileInfoManager()
         : d(new OpenFileInfoManagerPrivate(this))
@@ -465,7 +458,7 @@ OpenFileInfo *OpenFileInfoManager::contains(const KUrl&url) const
 {
     if (!url.isValid()) return NULL; /// can only be unnamed file
 
-    for (QList<OpenFileInfo*>::Iterator it = d->openFileInfoList.begin(); it != d->openFileInfoList.end(); ++it) {
+    for (OpenFileInfoList::ConstIterator it = d->openFileInfoList.constBegin(); it != d->openFileInfoList.constEnd(); ++it) {
         OpenFileInfo *ofi = *it;
         if (ofi->url().equals(url))
             return ofi;
@@ -499,7 +492,7 @@ bool OpenFileInfoManager::changeUrl(OpenFileInfo *openFileInfo, const KUrl & url
             openFileInfo->setFlags(openFileInfo->flags() | OpenFileInfo::Favorite);
 
         /// remove the old entry with the same url has it will be replaced by the new one
-        d->openFileInfoList.removeOne(previouslyContained);
+        d->openFileInfoList.remove(d->openFileInfoList.indexOf(previouslyContained));
         previouslyContained->deleteLater();
         OpenFileInfo::StatusFlags statusFlags = OpenFileInfo::Open;
         statusFlags |= OpenFileInfo::RecentlyUsed;
@@ -522,7 +515,7 @@ bool OpenFileInfoManager::close(OpenFileInfo *openFileInfo)
 
     /// remove flag "open" from file to be closed and determine which file to show instead
     OpenFileInfo *nextCurrent = (d->currentFileInfo == openFileInfo) ? NULL : d->currentFileInfo;
-    for (QList<OpenFileInfo*>::Iterator it = d->openFileInfoList.begin(); it != d->openFileInfoList.end(); ++it) {
+    for (OpenFileInfoList::Iterator it = d->openFileInfoList.begin(); it != d->openFileInfoList.end(); ++it) {
         OpenFileInfo *ofi = *it;
         if (!isClosing && ofi == openFileInfo && openFileInfo->close()) {
             isClosing = true;
@@ -559,11 +552,11 @@ void OpenFileInfoManager::setCurrentFile(OpenFileInfo *openFileInfo, KService::P
         emit currentChanged(openFileInfo, servicePtr);
 }
 
-QList<OpenFileInfo*> OpenFileInfoManager::filteredItems(OpenFileInfo::StatusFlags required, OpenFileInfo::StatusFlags forbidden)
+OpenFileInfoManager::OpenFileInfoList OpenFileInfoManager::filteredItems(OpenFileInfo::StatusFlags required, OpenFileInfo::StatusFlags forbidden)
 {
-    QList<OpenFileInfo*> result;
+    OpenFileInfoList result;
 
-    for (QList<OpenFileInfo*>::Iterator it = d->openFileInfoList.begin(); it != d->openFileInfoList.end(); ++it) {
+    for (OpenFileInfoList::Iterator it = d->openFileInfoList.begin(); it != d->openFileInfoList.end(); ++it) {
         OpenFileInfo *ofi = *it;
         if ((ofi->flags() & required) == required && (ofi->flags() & forbidden) == 0)
             result << ofi;

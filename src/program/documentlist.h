@@ -37,8 +37,11 @@ class OpenFileInfoManager;
 
 class DocumentListDelegate : public QStyledItemDelegate
 {
+private:
+    OpenFileInfoManager *ofim;
+
 public:
-    DocumentListDelegate(QObject * parent = NULL);
+    DocumentListDelegate(OpenFileInfoManager *openFileInfoManager, QObject *parent = NULL);
 
     void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
     QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
@@ -68,7 +71,7 @@ class DocumentListView : public QListView
     Q_OBJECT
 
 public:
-    DocumentListView(OpenFileInfo::StatusFlag statusFlag, QWidget *parent);
+    DocumentListView(OpenFileInfoManager *openFileInfoManager, OpenFileInfo::StatusFlag statusFlag, QWidget *parent);
 
 private slots:
     void addToFavorites();

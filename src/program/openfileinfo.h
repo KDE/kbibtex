@@ -98,9 +98,10 @@ class OpenFileInfoManager: public QObject
     Q_OBJECT
 
 public:
-    ~OpenFileInfoManager();
+    typedef QVector<OpenFileInfo*> OpenFileInfoList;
 
-    static OpenFileInfoManager* getOpenFileInfoManager();
+    OpenFileInfoManager();
+    ~OpenFileInfoManager();
 
     OpenFileInfo *createNew(const QString& mimeType = OpenFileInfo::mimetypeBibTeX);
     OpenFileInfo *open(const KUrl& url);
@@ -109,7 +110,7 @@ public:
     bool changeUrl(OpenFileInfo *openFileInfo, const KUrl & url);
     bool close(OpenFileInfo *openFileInfo);
     void setCurrentFile(OpenFileInfo *openFileInfo, KService::Ptr servicePtr = KService::Ptr());
-    QList<OpenFileInfo*> filteredItems(OpenFileInfo::StatusFlags required, OpenFileInfo::StatusFlags forbidden = 0);
+    OpenFileInfoList filteredItems(OpenFileInfo::StatusFlags required, OpenFileInfo::StatusFlags forbidden = 0);
 
     friend class OpenFileInfo;
 
@@ -118,10 +119,6 @@ signals:
     void flagsChanged(OpenFileInfo::StatusFlags statusFlags);
 
 private:
-    OpenFileInfoManager();
-
-    static OpenFileInfoManager *singletonOpenFileInfoManager;
-
     class OpenFileInfoManagerPrivate;
     OpenFileInfoManagerPrivate *d;
 
