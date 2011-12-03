@@ -51,9 +51,10 @@ int main(int argc, char *argv[])
 
     KGlobal::locale()->insertCatalog("libkbibtexio");
     KGlobal::locale()->insertCatalog("libkbibtexgui");
-    KGlobal::locale()->insertCatalog("libkbibtexos");
+    KGlobal::locale()->insertCatalog("libkbibtexnetworking");
+    KGlobal::locale()->insertCatalog("libkbibtexproc");
 
-    KService::Ptr service = KService::serviceByDesktopPath("kbibtexpart.desktop");
+    KService::Ptr service = KService::serviceByStorageId("kbibtexpart.desktop");
     if (service.isNull())
         KMessageBox::error(NULL, i18n("KBibTeX seems to be not installed completely. KBibTeX could not locate its own KPart.\n\nOnly limited functionality will be available."), i18n("Incomplete KBibTeX Installation"));
 
