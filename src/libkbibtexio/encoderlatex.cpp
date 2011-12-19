@@ -108,8 +108,8 @@ encoderLaTeXEscapedCharacters[] = {
     {'\'', 'y', QChar(0x00FD)},
     /** 0x00FE */
     /** 0x00FF */
-    /** 0x0100 */
-    /** 0x0101 */
+    {'=', 'A', QChar(0x0100)},
+    {'=', 'a', QChar(0x0101)},
     {'u', 'A', QChar(0x0102)},
     {'u', 'a', QChar(0x0103)},
     /** 0x0104 */
@@ -126,8 +126,8 @@ encoderLaTeXEscapedCharacters[] = {
     /** 0x010F */
     /** 0x0110 */
     /** 0x0111 */
-    /** 0x0112 */
-    /** 0x0113 */
+    {'=', 'E', QChar(0x0112)},
+    {'=', 'e', QChar(0x0113)},
     /** 0x0114 */
     /** 0x0115 */
     /** 0x0116 */
@@ -150,8 +150,8 @@ encoderLaTeXEscapedCharacters[] = {
     /** 0x0127 */
     /** 0x0128 */
     /** 0x0129 */
-    /** 0x012A */
-    /** 0x012B */
+    {'=', 'I', QChar(0x012A)},
+    {'=', 'i', QChar(0x012B)},
     {'u', 'I', QChar(0x012C)},
     {'u', 'i', QChar(0x012D)},
     /** 0x012E */
@@ -184,8 +184,8 @@ encoderLaTeXEscapedCharacters[] = {
     /** 0x0149 */
     /** 0x014A */
     /** 0x014B */
-    /** 0x014C */
-    /** 0x014D */
+    {'=', 'O', QChar(0x014C)},
+    {'=', 'o', QChar(0x014D)},
     {'u', 'O', QChar(0x014E)},
     {'u', 'o', QChar(0x014F)},
     {'H', 'O', QChar(0x0150)},
@@ -214,8 +214,8 @@ encoderLaTeXEscapedCharacters[] = {
     /** 0x0167 */
     /** 0x0168 */
     /** 0x0169 */
-    /** 0x016A */
-    /** 0x016B */
+    {'=', 'U', QChar(0x016A)},
+    {'=', 'u', QChar(0x016B)},
     {'u', 'U', QChar(0x016C)},
     {'u', 'u', QChar(0x016D)},
     {'r', 'U', QChar(0x016E)},
@@ -237,6 +237,8 @@ encoderLaTeXEscapedCharacters[] = {
     {'v', 'z', QChar(0x017E)},
     /** 0x017F */
     /** 0x0180 */
+    {'=', 'Y', QChar(0x0232)},
+    {'=', 'y', QChar(0x0233)},
     {'v', 'A', QChar(0x01CD)},
     {'v', 'a', QChar(0x01CE)},
     {'v', 'G', QChar(0x01E6)},
@@ -385,9 +387,8 @@ EncoderLaTeX::~EncoderLaTeX()
 QString EncoderLaTeX::decode(const QString &input) const
 {
     int len = input.length();
-    int s = len * 9 / 8;
     QString output;
-    output.reserve(s);
+    output.reserve(len);
     bool inMathMode = false;
 
     /// Go through input char by char
@@ -468,7 +469,17 @@ QString EncoderLaTeX::decode(const QString &input) const
             /// For example an quotation mark as used in \"a
             int lookupTablePos = modifierInLookupTable(input[i+1]);
 
-            if (lookupTablePos >= 0 && i <= len - 3 && input[i+2] >= 'A' && input[i+2] <= 'z' && (i == len - 3 || input[i+3] == '}' ||  input[i+3] == '{' || input[i+3] == ' ' || input[i+3] == '\t' || input[i+3] == '\\' || input[i+3] == '\r' || input[i+3] == '\n')) {
+            if (lookupTablePos >= 0 && i <= len - 3 && input[i+2] >= 'A' && input[i+2] <= 'z' && (i == len - 3 || input[i+1] == '"' || input[i+1] == '\'' || input[i+1] == '`' || input[i+1] == '=')) { // TODO more special cases?
+                /// We found a special modifier which is followed by
+                /// a letter followed by a command delimiter such
+                /// as a whitespace, so we are looking at something
+                /// like \"u inside Kr\"uger
+                /// Use lookup table to see what Unicode char this
+                /// represents
+                output.append(lookupTable[lookupTablePos]->unicode[input[i+2].toAscii() - 'A']);
+                /// Step over those additional characters
+                i += 2;
+            } else if (lookupTablePos >= 0 && i <= len - 3 && input[i+2] >= 'A' && input[i+2] <= 'z' && (i == len - 3 || input[i+3] == '}' ||  input[i+3] == '{' || input[i+3] == ' ' || input[i+3] == '\t' || input[i+3] == '\\' || input[i+3] == '\r' || input[i+3] == '\n')) {
                 /// We found a modifier which is followed by
                 /// a letter followed by a command delimiter such
                 /// as a whitespace, so we are looking at something
@@ -634,9 +645,8 @@ bool EncoderLaTeX::testAndCopyVerbatimCommands(const QString &input, int &pos, Q
 QString EncoderLaTeX::encode(const QString &input) const
 {
     int len = input.length();
-    int s = len * 9 / 8;
     QString output;
-    output.reserve(s);
+    output.reserve(len);
     bool inMathMode = false;
 
     /// Go through input char by char
