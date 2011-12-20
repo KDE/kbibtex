@@ -423,6 +423,16 @@ QString EncoderLaTeX::decode(const QString &input) const
                     output.append(lookupTable[lookupTablePos]->unicode[input[i+3].toAscii() - 'A']);
                     /// Step over those additional characters
                     i += 4;
+                } else if (lookupTablePos >= 0 && input[i+3] == '\\' && input[i+4] >= 'A' && input[i+4] <= 'z' && input[i+5] == '}') {
+                    /// This is the case for {\'\i} or alike.
+                    if (input[i+2] == '`' && input[i+4] == 'i') {
+                        output.append(QChar(0x00EC));
+                        i += 5;
+                    } else if (input[i+2] == '\'' && input[i+4] == 'i') {
+                        output.append(QChar(0x00ED));
+                        i += 5;
+                    } else
+                        kWarning() << "Cannot interprete BACKSLASH" << input[i+2] << "BACKSLASH" << input[i+4];
                 } else if (lookupTablePos >= 0 && input[i+3] == '{' && input[i+4] >= 'A' && input[i+4] <= 'z' && input[i+5] == '}' && input[i+6] == '}') {
                     /// If we found a modifier which is followed by
                     /// an opening curly bracket followed by a letter
@@ -433,6 +443,16 @@ QString EncoderLaTeX::decode(const QString &input) const
                     output.append(lookupTable[lookupTablePos]->unicode[input[i+4].toAscii() - 'A']);
                     /// Step over those additional characters
                     i += 6;
+                } else if (lookupTablePos >= 0 && input[i+3] == '{' && input[i+4] == '\\' && input[i+5] >= 'A' && input[i+5] <= 'z' && input[i+6] == '}' && input[i+7] == '}') {
+                    /// This is the case for {\'{\i}} or alike.
+                    if (input[i+2] == '`' && input[i+5] == 'i') {
+                        output.append(QChar(0x00EC));
+                        i += 7;
+                    } else if (input[i+2] == '\'' && input[i+5] == 'i') {
+                        output.append(QChar(0x00ED));
+                        i += 7;
+                    } else
+                        kWarning() << "Cannot interprete BACKSLASH" << input[i+2] << "BACKSLASH {" << input[i+5] << "}";
                 } else {
                     /// Now, the case of something like {\AA} is left
                     /// to check for
@@ -442,13 +462,20 @@ QString EncoderLaTeX::decode(const QString &input) const
                         /// We are dealing actually with a string like {\AA}
                         /// Check which command it is,
                         /// insert corresponding Unicode character
-                        for (int ci = 0; ci < encoderLaTeXCharacterCommandsLen; ++ci) {
+                        bool foundCommand = false;
+                        for (int ci = 0; !foundCommand && ci < encoderLaTeXCharacterCommandsLen; ++ci) {
                             if (encoderLaTeXCharacterCommands[ci].letters == alpha) {
                                 output.append(encoderLaTeXCharacterCommands[ci].unicode);
-                                break;
+                                foundCommand = true;
                             }
                         }
-                        i = nextPosAfterAlpha;
+                        if (foundCommand)
+                            i = nextPosAfterAlpha;
+                        else {
+                            /// Dealing with a string line {\noopsort}
+                            /// (see BibTeX documentation where this gets explained)
+                            output.append(c);
+                        }
                     } else {
                         /// Nothing special, copy input char to output
                         output.append(c);
@@ -510,6 +537,26 @@ QString EncoderLaTeX::decode(const QString &input) const
                 output.append(lookupTable[lookupTablePos]->unicode[input[i+3].toAscii() - 'A']);
                 /// Step over those additional characters
                 i += 4;
+            } else if (lookupTablePos >= 0 && input[i+2] == '\\' && input[i+3] >= 'A' && input[i+3] <= 'z') {
+                /// This is the case for \'\i or alike.
+                if (input[i+1] == '`' && input[i+3] == 'i') {
+                    output.append(QChar(0x00EC));
+                    i += 3;
+                } else if (input[i+1] == '\'' && input[i+3] == 'i') {
+                    output.append(QChar(0x00ED));
+                    i += 3;
+                } else
+                    kWarning() << "Cannot interprete BACKSLASH" << input[i+1] << "BACKSLASH" << input[i+3];
+            } else if (lookupTablePos >= 0 && input[i+2] == '{' && input[i+3] == '\\' && input[i+4] >= 'A' && input[i+4] <= 'z' && input[i+5] == '}') {
+                /// This is the case for \'{\i} or alike.
+                if (input[i+1] == '`' && input[i+4] == 'i') {
+                    output.append(QChar(0x00EC));
+                    i += 5;
+                } else if (input[i+1] == '\'' && input[i+4] == 'i') {
+                    output.append(QChar(0x00ED));
+                    i += 5;
+                } else
+                    kWarning() << "Cannot interprete BACKSLASH" << input[i+1] << "BACKSLASH {" << input[i+4] << "}";
             } else if (i < len - 1) {
                 /// Now, the case of something like \AA is left
                 /// to check for
@@ -598,6 +645,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                         /// and hop over sequence in input buffer
                         output.append(encoderLaTeXSymbolSequences[l].unicode);
                         i += qstrlen(encoderLaTeXSymbolSequences[l].latex) - 1;
+                        break;
                     }
                 }
 
