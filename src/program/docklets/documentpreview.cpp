@@ -30,6 +30,9 @@
 #include <QStackedWidget>
 #include <QDockWidget>
 #include <QMutex>
+#ifdef HAVE_QTWEBKIT
+#include <QWebView>
+#endif // HAVE_QTWEBKIT
 
 #include <KLocale>
 #include <KComboBox>
@@ -80,7 +83,11 @@ private:
     bool anyLocal;
 
     KParts::ReadOnlyPart *okularPart;
+#ifdef HAVE_QTWEBKIT
+    QWebView *htmlWidget;
+#else // HAVE_QTWEBKIT
     KParts::ReadOnlyPart *htmlPart;
+#endif // HAVE_QTWEBKIT
     int swpMessage, swpOkular, swpHTML;
 
 public:
@@ -142,9 +149,17 @@ public:
 
         /// add parts to stackedWidget
         okularPart = locatePart(QLatin1String("okularPoppler.desktop"), stackedWidget);
-        htmlPart = locatePart(QLatin1String("khtml.desktop"), stackedWidget);
         swpOkular = stackedWidget->addWidget(okularPart->widget());
+#ifdef HAVE_QTWEBKIT
+        kDebug() << "using WebKit";
+        htmlWidget = new QWebView(stackedWidget);
+        swpHTML = stackedWidget->addWidget(htmlWidget);
+        connect(htmlWidget, SIGNAL(loadFinished(bool)), p, SLOT(loadingFinished()));
+#else // HAVE_QTWEBKIT
+        kDebug() << "using KHTML";
+        htmlPart = locatePart(QLatin1String("khtml.desktop"), stackedWidget);
         swpHTML = stackedWidget->addWidget(htmlPart->widget());
+#endif // HAVE_QTWEBKIT
 
         loadState();
 
@@ -190,7 +205,11 @@ public:
 
         /// reset and clear all controls
         okularPart->closeUrl();
+#ifdef HAVE_QTWEBKIT
+        htmlWidget->stop();
+#else // HAVE_QTWEBKIT
         htmlPart->closeUrl();
+#endif // HAVE_QTWEBKIT
         urlComboBox->setEnabled(false);
         urlComboBox->clear();
         cbxEntryToUrlInfo.clear();
@@ -234,13 +253,19 @@ public:
         stackedWidget->widget(swpHTML)->setEnabled(false);
     }
 
-    void showPart(const KParts::ReadOnlyPart *part) {
+    void showPart(const KParts::ReadOnlyPart *part, QWidget *widget) {
         if (part == okularPart) {
             stackedWidget->setCurrentIndex(swpOkular);
             stackedWidget->widget(swpOkular)->setEnabled(true);
+#ifdef HAVE_QTWEBKIT
+        } else if (widget == htmlWidget) {
+            stackedWidget->setCurrentIndex(swpHTML);
+            stackedWidget->widget(swpHTML)->setEnabled(true);
+#else // HAVE_QTWEBKIT
         } else if (part == htmlPart) {
             stackedWidget->setCurrentIndex(swpHTML);
             stackedWidget->widget(swpHTML)->setEnabled(true);
+#endif // HAVE_QTWEBKIT
         } else
             showMessage(i18n("Cannot show requested part"));
     }
@@ -252,7 +277,11 @@ public:
         stackedWidget->widget(swpHTML)->setEnabled(false);
         stackedWidget->widget(swpOkular)->setEnabled(false);
         okularPart->closeUrl();
+#ifdef HAVE_QTWEBKIT
+        htmlWidget->stop();
+#else // HAVE_QTWEBKIT
         htmlPart->closeUrl();
+#endif // HAVE_QTWEBKIT
 
         if (okularMimetypes.contains(urlInfo.mimeType)) {
             p->setCursor(Qt::BusyCursor);
@@ -262,7 +291,11 @@ public:
         } else if (htmlMimetypes.contains(urlInfo.mimeType)) {
             p->setCursor(Qt::BusyCursor);
             showMessage(i18n("Loading ..."));
+#ifdef HAVE_QTWEBKIT
+            htmlWidget->load(urlInfo.url);
+#else // HAVE_QTWEBKIT
             htmlPart->openUrl(urlInfo.url);
+#endif // HAVE_QTWEBKIT
             return true;
         } else
             showMessage(i18n("<qt>Don't know how to show mimetype '%1'.</qt>", urlInfo.mimeType));
@@ -281,7 +314,6 @@ public:
 
         if (!url.isLocalFile() && url.fileName().isEmpty()) {
             /// URLs not pointing to a specific file should be opened with a web browser component
-            kDebug() << "Not pointing to file, falling back to text/html for url " << url.pathOrUrl();
             result.icon = KIcon("text-html");
             result.mimeType = QLatin1String("text/html");
             return result;
@@ -290,7 +322,6 @@ public:
         int accuracy = 0;
         KMimeType::Ptr mimeTypePtr = KMimeType::findByUrl(url, 0, url.isLocalFile(), true, &accuracy);
         if (accuracy < 50) {
-            kDebug() << "discarding mime type " << mimeTypePtr->name() << ", trying filename ";
             mimeTypePtr = KMimeType::findByPath(url.fileName(), 0, true, &accuracy);
         }
         result.mimeType = mimeTypePtr->name();
@@ -298,12 +329,10 @@ public:
 
         if (result.mimeType == QLatin1String("application/octet-stream")) {
             /// application/octet-stream is a fall-back if KDE did not know better
-            kDebug() << "Got mime type \"application/octet-stream\", falling back to text/html";
             result.icon = KIcon("text-html");
             result.mimeType = QLatin1String("text/html");
         } else if (result.mimeType == QLatin1String("inode/directory") && (result.url.protocol() == QLatin1String("http") || result.url.protocol() == QLatin1String("https"))) {
             /// directory via http means normal webpage (not browsable directory)
-            kDebug() << "Got mime type \"inode/directory\" via http, falling back to text/html";
             result.icon = KIcon("text-html");
             result.mimeType = QLatin1String("text/html");
         }
@@ -406,7 +435,7 @@ void DocumentPreview::statFinished(KJob *kjob)
 void DocumentPreview::loadingFinished()
 {
     setCursor(Qt::ArrowCursor);
-    d->showPart(dynamic_cast<KParts::ReadOnlyPart*>(sender()));
+    d->showPart(dynamic_cast<KParts::ReadOnlyPart*>(sender()), dynamic_cast<QWidget*>(sender()));
 }
 
 void DocumentPreview::linkActivated(const QString &link)
