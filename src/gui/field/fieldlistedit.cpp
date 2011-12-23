@@ -388,8 +388,8 @@ bool PersonListEdit::reset(const Value& value)
     Value internal = value;
 
     m_checkBoxOthers->setCheckState(Qt::Unchecked);
-    if (!internal.isEmpty() && typeid(PlainText) == typeid(*internal.last())) {
-        QSharedPointer<PlainText> pt = internal.last().staticCast<PlainText>();
+    QSharedPointer<PlainText> pt;
+    if (!internal.isEmpty() && !(pt = internal.last().dynamicCast<PlainText>()).isNull()) {
         if (pt->text() == QLatin1String("others")) {
             internal.erase(internal.end() - 1);
             m_checkBoxOthers->setCheckState(Qt::Checked);

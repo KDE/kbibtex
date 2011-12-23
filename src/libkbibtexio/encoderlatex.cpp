@@ -574,7 +574,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                             /// Now, after this command, a whitespace may follow
                             /// which has to get "eaten" as it acts as a command
                             /// delimiter
-                            if (input[nextPosAfterAlpha] == ' ' || input[nextPosAfterAlpha] == '\r' || input[nextPosAfterAlpha] == '\n')
+                            if (nextPosAfterAlpha < input.length() && (input[nextPosAfterAlpha] == ' ' || input[nextPosAfterAlpha] == '\r' || input[nextPosAfterAlpha] == '\n'))
                                 ++nextPosAfterAlpha;
                             else {
                                 /// If no whitespace follows, still
