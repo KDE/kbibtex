@@ -23,6 +23,7 @@
 #include "kbibtexio_export.h"
 
 #include <QTextStream>
+#include <QSharedPointer>
 
 #include "kbibtexnamespace.h"
 #include "fileimporter.h"
@@ -85,7 +86,7 @@ public:
      * @return A Person object containing the name
      * @see Person
      */
-    static Person *splitName(const QString& name);
+    static QSharedPointer<Person> personFromString(const QString &name);
 
 public slots:
     void cancel();
@@ -118,8 +119,21 @@ private:
     QString readBracketString(const QChar openingBracket); ///< do not use reference on QChar here!
     Token readValue(Value& value, const QString& fieldType);
 
+    static QSharedPointer<Person> personFromString(const QString &name, CommaContainment *comma);
+    static QSharedPointer<Person> personFromTokenList(const QStringList &tokens, CommaContainment *comma = NULL);
+    void parsePersonList(const QString& text, Value &value, CommaContainment *comma = NULL);
     static void splitPersonList(const QString& name, QStringList &resultList);
-    static CommaContainment splitName(const QString& name, QStringList& segments);
+
+    /**
+     * Split a string into white-space separated chunks,
+     * but keep parts intact which are protected by {...}.
+     * Example: "aa bb ccc    {dd ee    ff}"
+     * will be split into "aa", "bb", "ccc", "{dd ee    ff}"
+     *
+     * @param text input string to be split
+     * @param segments list where chunks will be added to
+     */
+    static void contextSensitiveSplit(const QString& text, QStringList& segments);
 
     bool evaluateParameterComments(QTextStream *textStream, const QString &line, File *file);
     QString tokenidToString(Token token);

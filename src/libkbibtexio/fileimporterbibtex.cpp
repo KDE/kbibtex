@@ -138,6 +138,9 @@ Element *FileImporterBibTeX::nextElement()
             kWarning() << "ElementType is empty";
             return NULL;
         }
+    } else if (token == tUnknown && m_currentChar == QChar('%')) {
+        /// do not complain about LaTeX-like comments, just eat them
+        return readPlainCommentElement();
     } else if (token == tUnknown) {
         kDebug() << "Unknown token \"" << m_currentChar << "(" << m_currentChar.unicode() << ")" << "\" near line " << m_lineNo << ", treating as comment";
         return readPlainCommentElement();
@@ -227,7 +230,9 @@ Preamble *FileImporterBibTeX::readPreambleElement()
     Preamble *preamble = new Preamble();
     do {
         bool isStringKey = false;
-        QString text = EncoderLaTeX::instance()->decode(readString(isStringKey).simplified());
+        /// Remember: strings from preamble do not get encoded,
+        /// may contain raw LaTeX commands and code
+        QString text = readString(isStringKey).simplified();
         if (isStringKey)
             preamble->value().append(QSharedPointer<MacroKey>(new MacroKey(text)));
         else
@@ -292,9 +297,14 @@ Entry *FileImporterBibTeX::readEntryElement(const QString& typeString)
         /** check for duplicate fields */
         if (entry->contains(keyName)) {
             if (keyName.toLower() == Entry::ftKeywords || keyName.toLower() == Entry::ftUrl) {
-                /// special handling of keywords: instead of using fallback names
+                /// Special handling of keywords and URLs: instead of using fallback names
                 /// like "keywords2", "keywords3", ..., append new keywords to
                 /// already existing keyword value
+                value = entry->value(keyName);
+            } else if (keyName.toLower() == Entry::ftAuthor|| keyName.toLower() == Entry::ftEditor){
+                /// Special handling of authors and editors: instead of using fallback names
+                /// like "author2", "author3", ..., append new authors to
+                /// already existing author value
                 value = entry->value(keyName);
             } else {
                 int i = 2;
@@ -499,26 +509,8 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value& value, const QStr
         if (iKey == Entry::ftAuthor || iKey == Entry::ftEditor) {
             if (isStringKey)
                 value.append(QSharedPointer<MacroKey>(new MacroKey(text)));
-            else {
-                QStringList persons;
-
-                /// handle "et al." i.e. "and others"
-                bool hasOthers = false;
-                if (text.endsWith(QLatin1String("and others"))) {
-                    hasOthers = true;
-                    text = text.left(text.length() - 10);
-                }
-
-                splitPersonList(text, persons);
-                for (QStringList::ConstIterator pit = persons.constBegin(); pit != persons.constEnd(); ++pit) {
-                    Person *person = splitName(*pit);
-                    if (person != NULL)
-                        value.append(QSharedPointer<Person>(person));
-                }
-
-                if (hasOthers)
-                    value.append(QSharedPointer<PlainText>(new PlainText(QLatin1String("others"))));
-            }
+            else
+                parsePersonList(text, value);
         } else if (iKey == Entry::ftPages) {
             static const QRegExp rangeInAscii("\\s*--?\\s*");
             text.replace(rangeInAscii, QChar(0x2013));
@@ -530,13 +522,7 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value& value, const QStr
             if (isStringKey)
                 value.append(QSharedPointer<MacroKey>(new MacroKey(text)));
             else {
-                /*
-                QList<KUrl> urls;
-                FileInfo::urlsInText(text, false, QString::null, urls);
-                for (QList<KUrl>::ConstIterator it = urls.constBegin(); it != urls.constEnd(); ++it)
-                    value.append(new VerbatimText((*it).pathOrUrl()));
-                */
-                /// assumption: in fields like Url or LocalFile, file names are separated by ; or ,
+                /// Assumption: in fields like Url or LocalFile, file names are separated by ; or ,
                 static const QRegExp semicolonSpace = QRegExp("[;]\\s*");
                 QStringList fileList = text.split(semicolonSpace, QString::SkipEmptyParts);
                 foreach(const QString &filename, fileList) {
@@ -655,116 +641,177 @@ void FileImporterBibTeX::splitPersonList(const QString& text, QStringList &resul
         resultList.append(wordList.join(" "));
 }
 
-Person *FileImporterBibTeX::splitName(const QString& text)
+void FileImporterBibTeX::parsePersonList(const QString& text, Value &value, CommaContainment *comma)
 {
-    QStringList segments;
-    CommaContainment commaContainment = splitName(text, segments);
-    QString firstName = "";
-    QString lastName = "";
+    static QStringList tokens;
+    contextSensitiveSplit(text, tokens);
 
-    if (segments.isEmpty())
-        return NULL;
-
-    if (commaContainment == ccNoComma) {
-        /** PubMed uses a special writing style for names, where the last name is followed by single capital letter,
-          * each being the first letter of each first name
-          * So, check how many single capital letters are at the end of the given segment list */
-        int singleCapitalLettersCounter = 0;
-        int p = segments.count() - 1;
-        while (p >= 0 && segments[p].length() == 1 && segments[p][0].isUpper()) {
-            --p;
-            ++singleCapitalLettersCounter;
-        }
-
-        if (singleCapitalLettersCounter > 0) {
-            /** this is a special case for names from PubMed, which are formatted like "Fischer T"
-              * all segment values until the first single letter segment are last name parts */
-            for (int i = 0; i < p; ++i)
-                lastName.append(segments[i]).append(" ");
-            lastName.append(segments[p]);
-            /** single letter segments are first name parts */
-            for (int i = p + 1; i < segments.count() - 1; ++i)
-                firstName.append(segments[i]).append(" ");
-            firstName.append(segments[segments.count() - 1]);
-        } else {
-            int from = segments.count() - 1;
-            lastName = segments[from];
-            /** check for lower case parts of the last name such as "van", "von", "de", ... */
-            while (from > 0) {
-                if (segments[from - 1].compare(segments[from - 1].toLower()) != 0)
-                    break;
-                --from;
-                lastName.prepend(" ");
-                lastName.prepend(segments[from]);
-            }
-
-            if (from > 0) {
-                /** there are segments left for the first name */
-                firstName = *segments.begin();
-                for (QStringList::Iterator it = ++segments.begin(); from > 1; ++it, --from) {
-                    firstName.append(" ");
-                    firstName.append(*it);
-                }
-            }
-        }
-    } else {
-        bool inLastName = TRUE;
-        for (int i = 0; i < segments.count(); ++i) {
-            if (segments[i] == ",")
-                inLastName = FALSE;
-            else if (inLastName) {
-                if (!lastName.isEmpty()) lastName.append(" ");
-                lastName.append(segments[i]);
-            } else {
-                if (!firstName.isEmpty()) firstName.append(" ");
-                firstName.append(segments[i]);
-            }
+    int nameStart = 0;
+    for (int i = 0; i < tokens.count(); ++i) {
+        if (tokens[i] == QLatin1String("and")) {
+            value.append(personFromTokenList(tokens.mid(nameStart, i - nameStart), comma));
+            nameStart = i + 1;
+        } else if (tokens[i] == QLatin1String("others")) {
+            value.append(QSharedPointer<PlainText>(new PlainText(QLatin1String("others"))));
+            nameStart = tokens.count() + 1;
         }
     }
 
-    return new Person(firstName, lastName);
+    if (nameStart < tokens.count())
+        value.append(personFromTokenList(tokens.mid(nameStart), comma));
 }
 
-/** Splits a name into single words. If the name's text was reversed (Last, First), the result will be true and the comma will be added to segments. Otherwise the functions result will be false. This function respects protecting {...}. */
-FileImporterBibTeX::CommaContainment FileImporterBibTeX::splitName(const QString& text, QStringList& segments)
+QSharedPointer<Person> FileImporterBibTeX::personFromString(const QString &name)
 {
-    int bracketCounter = 0;
-    CommaContainment result = ccNoComma;
-    QString buffer = "";
+    return personFromString(name, NULL);
+}
 
-    for (int pos = 0; pos < text.length(); ++pos) {
+QSharedPointer<Person> FileImporterBibTeX::personFromString(const QString &name, CommaContainment *comma)
+{
+    static QStringList tokens;
+    contextSensitiveSplit(name, tokens);
+    kDebug() << "Found token:" << tokens.join("__");
+    return personFromTokenList(tokens, comma);
+}
+
+QSharedPointer<Person> FileImporterBibTeX::personFromTokenList(const QStringList &tokens, CommaContainment *comma)
+{
+    if (comma != NULL) *comma = ccNoComma;
+
+    /// Simple case: provided list of tokens is empty, return invalid Person
+    if (tokens.isEmpty())
+        return QSharedPointer<Person>();
+
+    /**
+     * Sequence of tokens may contain somewhere a comma, like
+     * "Tuckwell," "Peter". In this case, fill two string lists:
+     * one with tokens before the comma, one with tokens after the
+     * comma (excluding the comma itself). Example:
+     * partA = ( "Tuckwell" );  partB = ( "Peter" )
+     * If a comma was found, boolean variable gotComma is set.
+     */
+    QStringList partA, partB;
+    bool gotComma = false;
+    foreach(const QString &token, tokens) {
+        /// Position where comma was found, or -1 if no comma in token
+        int p = -1;
+        if (!gotComma) {
+            /// Only check if token contains comma
+            /// if no comma was found before
+            int bracketCounter = 0;
+            for (int i = 0; i < token.length(); ++i) {
+                /// Consider opening curly brackets
+                if (token[i] == QChar('{')) ++bracketCounter;
+                /// Consider closing curly brackets
+                else if (token[i] == QChar('}')) --bracketCounter;
+                /// Only if outside any open curly bracket environments
+                /// consider comma characters
+                else if (bracketCounter == 0 && token[i] == QChar(',')) {
+                    /// Memorize comma's position and break from loop
+                    p = i;
+                    break;
+                } else if (bracketCounter < 0)
+                    /// Should never happen: more closing brackets than opening ones
+                    kWarning() << "Opening and closing brackets do not match!";
+            }
+        }
+
+        if (p >= 0) {
+            gotComma = true;
+            if (p > 0)partA.append(token.left(p));
+            if (p < token.length() - 1) partB.append(token.mid(p + 1));
+        } else if (gotComma)
+            partB.append(token);
+        else
+            partA.append(token);
+    }
+    if (gotComma) {
+        if (comma != NULL) *comma = ccContainsComma;
+        return QSharedPointer<Person>(new Person(partB.join(QChar(' ')), partA.join(QChar(' '))));
+    }
+
+    /**
+     * PubMed uses a special writing style for names, where the
+     * last name is followed by single capital letters, each being
+     * the first letter of each first name. Example: Tuckwell P H
+     * So, check how many single capital letters are at the end of
+     * the given token list
+     */
+    partA.clear(); partB.clear();
+    bool singleCapitalLetters = true;
+    QStringList::ConstIterator it = tokens.constEnd();
+    while (it != tokens.constBegin()) {
+        --it;
+        if (singleCapitalLetters && it->length() == 1 && it->at(0).isUpper())
+            partB.prepend(*it);
+        else {
+            singleCapitalLetters = false;
+            partA.prepend(*it);
+        }
+    }
+    if (!partB.isEmpty()) {
+        /// Name was actually given in PubMed format
+        return QSharedPointer<Person>(new Person(partB.join(QChar(' ')), partA.join(QChar(' '))));
+    }
+
+    /**
+     * Normally, the last upper case token in a name is the last name
+     * (last names consisting of multiple space-separated parts *have*
+     * to be protected by {...}), but some languages have fill words
+     * in lower caps beloning to the last name as well (example: "van").
+     */
+    partA.clear(); partB.clear();
+    it = tokens.constEnd();
+    while (it != tokens.constBegin()) {
+        --it;
+        if (partB.isEmpty() || it->at(0).isLower())
+            partB.prepend(*it);
+        else
+            partA.prepend(*it);
+    }
+    if (!partB.isEmpty()) {
+        /// Name was actually like "Peter Ole van der Tuckwell",
+        /// split into "Peter Ole" and "van der Tuckwell"
+        return QSharedPointer<Person>(new Person(partA.join(QChar(' ')), partB.join(QChar(' '))));
+    }
+
+    kWarning() << "Don't know how to handle name" << tokens.join(QChar(' '));
+    return QSharedPointer<Person>();
+}
+
+void FileImporterBibTeX::contextSensitiveSplit(const QString& text, QStringList& segments)
+{
+    int bracketCounter = 0; ///< keep track of opening and closing brackets: {...}
+    QString buffer;
+    int len = text.length();
+    segments.clear(); ///< empty list for results before proceeding
+
+    for (int pos = 0; pos < len; ++pos) {
         if (text[pos] == '{')
             ++bracketCounter;
         else if (text[pos] == '}')
             --bracketCounter;
 
-        if (text[pos] == ' ' && bracketCounter == 0) {
+        if (text[pos].isSpace() && bracketCounter == 0) {
             if (!buffer.isEmpty()) {
                 segments.append(buffer);
-                buffer = "";
+                buffer.clear();
             }
-        } else if (text[pos] == ',' && bracketCounter == 0) {
-            if (!buffer.isEmpty()) {
-                segments.append(buffer);
-                buffer = "";
-            }
-            segments.append(",");
-            result = ccContainsComma;
         } else
             buffer.append(text[pos]);
     }
 
     if (!buffer.isEmpty())
         segments.append(buffer);
-
-    return result;
 }
 
 bool FileImporterBibTeX::evaluateParameterComments(QTextStream *textStream, const QString &line, File *file)
 {
+    /// Assertion: variable "line" is all lower-case
+
     /** check if this file requests a special encoding */
     if (line.startsWith("@comment{x-kbibtex-encoding=") && line.endsWith("}")) {
-        QString encoding = line.mid(28, line.length() - 29).toLower();
+        QString encoding = line.mid(28, line.length() - 29);
         textStream->setCodec(encoding == "latex" ? "UTF-8" : encoding.toAscii());
         encoding = textStream->codec()->name();
         file->setProperty(File::Encoding, encoding);
@@ -772,6 +819,14 @@ bool FileImporterBibTeX::evaluateParameterComments(QTextStream *textStream, cons
     } else if (line.startsWith("@comment{x-kbibtex-personnameformatting=") && line.endsWith("}")) {
         QString personNameFormatting = line.mid(40, line.length() - 41);
         file->setProperty(File::NameFormatting, personNameFormatting);
+        return true;
+    } else if (line.startsWith(QLatin1String("% encoding:"))) {
+        /// Interprete JabRef's encoding information
+        QString encoding = line.mid(12);
+        kDebug() << "Using JabRef's encoding:" << encoding;
+        textStream->setCodec(encoding.toAscii());
+        encoding = textStream->codec()->name();
+        file->setProperty(File::Encoding, encoding);
         return true;
     }
 
