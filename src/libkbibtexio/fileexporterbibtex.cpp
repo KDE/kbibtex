@@ -211,7 +211,9 @@ public:
         iodevice->putChar('@');
         iodevice->write(be->format(QLatin1String("Preamble"), keywordCasing).toAscii().data());
         iodevice->putChar('{');
-        iodevice->write(iconvLaTeX->encode(p->internalValueToBibTeX(preamble.value(), QString::null, leUTF8)));
+        /// Remember: strings from preamble do not get encoded,
+        /// may contain raw LaTeX commands and code
+        iodevice->write(iconvLaTeX->encode(p->internalValueToBibTeX(preamble.value(), QString::null, leRaw)));
         iodevice->putChar('}');
         iodevice->putChar('\n');
         iodevice->putChar('\n');
@@ -247,9 +249,12 @@ public:
     }
 
     bool requiresPersonQuoting(const QString &text, bool isLastName) {
-        if (isLastName && !text.contains(" "))
+        if (isLastName && !text.contains(QChar(' ')))
             /** Last name contains NO spaces, no quoting necessary */
             return false;
+        else if (!isLastName && text.contains(QChar('-')))
+            /** First name contains a hyphen */
+            return true;
         else if (!isLastName && !text.contains(" and "))
             /** First name contains no " and " no quoting necessary */
             return false;

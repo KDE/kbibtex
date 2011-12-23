@@ -41,7 +41,7 @@ class IConvLaTeX;
 class KBIBTEXIO_EXPORT FileExporterBibTeX : public FileExporter
 {
 public:
-    enum UseLaTeXEncoding {leUTF8, leLaTeX};
+    enum UseLaTeXEncoding {leUTF8, leLaTeX, leRaw};
     enum QuoteComment {qcNone = 0, qcCommand = 1, qcPercentSign = 2};
 
     static const QString keyEncoding;
