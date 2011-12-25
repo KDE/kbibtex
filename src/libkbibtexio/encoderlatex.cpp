@@ -65,7 +65,7 @@ encoderLaTeXEscapedCharacters[] = {
     {'`', 'O', QChar(0x00D2)},
     {'\'', 'O', QChar(0x00D3)},
     {'^', 'O', QChar(0x00D4)},
-    /** 0x00D5 */
+    {'~', 'O', QChar(0x00D5)},
     {'"', 'O', QChar(0x00D6)},
     /** 0x00D7 */
     /** 0x00D8: see EncoderLaTeXCharacterCommand */
@@ -97,23 +97,23 @@ encoderLaTeXEscapedCharacters[] = {
     {'`', 'o', QChar(0x00F2)},
     {'\'', 'o', QChar(0x00F3)},
     {'^', 'o', QChar(0x00F4)},
-    /** 0x00F5 */
+    {'~', 'o', QChar(0x00F5)},
     {'"', 'o', QChar(0x00F6)},
-    /** 0x00F7 */
+    /** 0x00F7 Division Sign */
     /** 0x00F8: see EncoderLaTeXCharacterCommand */
     {'`', 'u', QChar(0x00F9)},
     {'\'', 'u', QChar(0x00FA)},
     {'^', 'u', QChar(0x00FB)},
     {'"', 'u', QChar(0x00FC)},
     {'\'', 'y', QChar(0x00FD)},
-    /** 0x00FE */
-    /** 0x00FF */
+    /** 0x00FE Thorn */
+    /** 0x00FF Umlaut-y*/
     {'=', 'A', QChar(0x0100)},
     {'=', 'a', QChar(0x0101)},
     {'u', 'A', QChar(0x0102)},
     {'u', 'a', QChar(0x0103)},
-    /** 0x0104 */
-    /** 0x0105 */
+    {'c', 'A', QChar(0x0104)},
+    {'c', 'a', QChar(0x0105)},
     {'\'', 'C', QChar(0x0106)},
     {'\'', 'c', QChar(0x0107)},
     /** 0x0108 */
@@ -148,8 +148,8 @@ encoderLaTeXEscapedCharacters[] = {
     /** 0x0125 */
     /** 0x0126 */
     /** 0x0127 */
-    /** 0x0128 */
-    /** 0x0129 */
+    {'~', 'I', QChar(0x0128)},
+    {'~', 'i', QChar(0x0129)},
     {'=', 'I', QChar(0x012A)},
     {'=', 'i', QChar(0x012B)},
     {'u', 'I', QChar(0x012C)},
@@ -212,8 +212,8 @@ encoderLaTeXEscapedCharacters[] = {
     /** 0x0165 */
     /** 0x0166 */
     /** 0x0167 */
-    /** 0x0168 */
-    /** 0x0169 */
+    {'~', 'U', QChar(0x0168)},
+    {'~', 'u', QChar(0x0169)},
     {'=', 'U', QChar(0x016A)},
     {'=', 'u', QChar(0x016B)},
     {'u', 'U', QChar(0x016C)},
@@ -362,6 +362,11 @@ EncoderLaTeX::EncoderLaTeX()
             /// therefore initialize memory structure, i.e. row in lookupTable
             lookupTable[lookupTableCount] = new EncoderLaTeXEscapedCharacterLookupTableRow;
             lookupTable[lookupTableCount]->modifier = encoderLaTeXEscapedCharacters[i].modifier;
+            for (int k = 0; k < lookupTableNumCharacters; ++k) {
+                /// If no special character is known for a letter+modifier
+                /// combination, fall back using the ASCII character only
+                lookupTable[lookupTableCount]->unicode[k] = QChar('A' + k);
+            }
             j = lookupTableCount;
             ++lookupTableCount;
         }
