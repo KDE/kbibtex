@@ -25,11 +25,14 @@
 #include <QRegExp>
 
 #include <KDebug>
+#include <KSharedConfig>
+#include <KConfigGroup>
 
 #include <file.h>
 #include <entry.h>
 #include <element.h>
 #include <macro.h>
+#include <fileexporterbibtex.h>
 #include <comment.h>
 
 const QString File::Url = QLatin1String("Url");
@@ -45,13 +48,28 @@ class File::FilePrivate
 private:
     File *p;
 
+    KSharedConfigPtr config;
+    const QString configGroupName;
+
+    void loadConfiguration() {
+        /// Load and set configuration as stored in settings
+        KConfigGroup configGroup(config, configGroupName);
+        properties.insert(File::Encoding, configGroup.readEntry(FileExporterBibTeX::keyEncoding, FileExporterBibTeX::defaultEncoding));
+        properties.insert(File::StringDelimiter, configGroup.readEntry(FileExporterBibTeX::keyStringDelimiter, FileExporterBibTeX::defaultStringDelimiter));
+        properties.insert(File::QuoteComment, (FileExporterBibTeX::QuoteComment)configGroup.readEntry(FileExporterBibTeX::keyQuoteComment, (int)FileExporterBibTeX::defaultQuoteComment));
+        properties.insert(File::KeywordCasing, (KBibTeX::Casing)configGroup.readEntry(FileExporterBibTeX::keyKeywordCasing, (int)FileExporterBibTeX::defaultKeywordCasing));
+        properties.insert(File::NameFormatting,  configGroup.readEntry(Person::keyPersonNameFormatting, ""));
+        properties.insert(File::ProtectCasing, configGroup.readEntry(FileExporterBibTeX::keyProtectCasing, FileExporterBibTeX::defaultProtectCasing));
+    }
+
 public:
     QMap<QString, QVariant> properties;
 
     FilePrivate(File *parent)
-            : p(parent) {
-        // TODO
+            : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName(QLatin1String("FileExporterBibTeX")) {
+        loadConfiguration();
     }
+
 };
 
 File::File()

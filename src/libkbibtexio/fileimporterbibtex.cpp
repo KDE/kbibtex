@@ -38,6 +38,7 @@
 #include <value.h>
 #include <bibtexentries.h>
 #include <bibtexfields.h>
+#include <fileexporterbibtex.h>
 
 #include "fileimporterbibtex.h"
 
@@ -59,6 +60,15 @@ File* FileImporterBibTeX::load(QIODevice *iodevice)
     m_cancelFlag = false;
 
     File *result = new File();
+    /// Used to determine if file prefers quotation marks over
+    /// curly brackets or the other way around
+    m_statistics.countCurlyBrackets = 0;
+    m_statistics.countQuotationMarks = 0;
+    m_statistics.countFirstNameFirst = 0;
+    m_statistics.countLastNameFirst = 0;
+    m_statistics.countNoCommentQuote = 0;
+    m_statistics.countCommentPercent = 0;
+    m_statistics.countCommentCommand = 0;
 
     m_textStreamLastPos = 0;
     m_textStream = new QTextStream(iodevice);
@@ -102,6 +112,20 @@ File* FileImporterBibTeX::load(QIODevice *iodevice)
 
     delete m_textStream;
 
+    /// Set the file's preferences for string delimiters
+    /// deduced from statistics built while parsing the file
+    result->setProperty(File::StringDelimiter, m_statistics.countQuotationMarks > m_statistics.countCurlyBrackets ? QLatin1String("\"\"") : QLatin1String("{}"));
+    /// Set the file's preferences for name formatting
+    result->setProperty(File::NameFormatting, m_statistics.countFirstNameFirst > m_statistics.countLastNameFirst ? QLatin1String("<%f ><%l>< %s>") : QLatin1String("<%l><, %s>,< %f>"));
+    /// Set the file's preferences for quoting of comments
+    if (m_statistics.countNoCommentQuote > m_statistics.countCommentCommand && m_statistics.countNoCommentQuote > m_statistics.countCommentPercent)
+        result->setProperty(File::QuoteComment, (int)FileExporterBibTeX::qcNone);
+    else if (m_statistics.countCommentCommand > m_statistics.countNoCommentQuote && m_statistics.countCommentCommand > m_statistics.countCommentPercent)
+        result->setProperty(File::QuoteComment, (int)FileExporterBibTeX::qcCommand);
+    else
+        result->setProperty(File::QuoteComment, (int)FileExporterBibTeX::qcPercentSign);
+    // TODO gather more statistics for keyword casing etc.
+
     return result;
 }
 
@@ -123,9 +147,10 @@ Element *FileImporterBibTeX::nextElement()
 
     if (token == tAt) {
         QString elementType = readSimpleString();
-        if (elementType.toLower() == "comment")
+        if (elementType.toLower() == "comment") {
+            ++m_statistics.countCommentCommand;
             return readCommentElement();
-        else if (elementType.toLower() == "string")
+        } else if (elementType.toLower() == "string")
             return readMacroElement();
         else if (elementType.toLower() == "preamble")
             return readPreambleElement();
@@ -140,9 +165,11 @@ Element *FileImporterBibTeX::nextElement()
         }
     } else if (token == tUnknown && m_currentChar == QChar('%')) {
         /// do not complain about LaTeX-like comments, just eat them
+        ++m_statistics.countCommentPercent;
         return readPlainCommentElement();
     } else if (token == tUnknown) {
         kDebug() << "Unknown token \"" << m_currentChar << "(" << m_currentChar.unicode() << ")" << "\" near line " << m_lineNo << ", treating as comment";
+        ++m_statistics.countNoCommentQuote;
         return readPlainCommentElement();
     }
 
@@ -301,7 +328,7 @@ Entry *FileImporterBibTeX::readEntryElement(const QString& typeString)
                 /// like "keywords2", "keywords3", ..., append new keywords to
                 /// already existing keyword value
                 value = entry->value(keyName);
-            } else if (keyName.toLower() == Entry::ftAuthor|| keyName.toLower() == Entry::ftEditor){
+            } else if (keyName.toLower() == Entry::ftAuthor || keyName.toLower() == Entry::ftEditor) {
                 /// Special handling of authors and editors: instead of using fallback names
                 /// like "author2", "author3", ..., append new authors to
                 /// already existing author value
@@ -386,10 +413,14 @@ QString FileImporterBibTeX::readString(bool &isStringKey)
     isStringKey = false;
     switch (m_currentChar.toAscii()) {
     case '{':
-    case '(':
+    case '(': {
+        ++m_statistics.countCurlyBrackets;
         return readBracketString(m_currentChar);
-    case '"':
+    }
+    case '"': {
+        ++m_statistics.countQuotationMarks;
         return readQuotedString();
+    }
     default:
         isStringKey = true;
         return readSimpleString();
@@ -509,8 +540,16 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value& value, const QStr
         if (iKey == Entry::ftAuthor || iKey == Entry::ftEditor) {
             if (isStringKey)
                 value.append(QSharedPointer<MacroKey>(new MacroKey(text)));
-            else
-                parsePersonList(text, value);
+            else {
+                CommaContainment comma;
+                parsePersonList(text, value, &comma);
+
+                /// Update statistics on name formatting
+                if (comma == ccContainsComma)
+                    ++m_statistics.countLastNameFirst;
+                else
+                    ++m_statistics.countFirstNameFirst;
+            }
         } else if (iKey == Entry::ftPages) {
             static const QRegExp rangeInAscii("\\s*--?\\s*");
             text.replace(rangeInAscii, QChar(0x2013));
@@ -610,37 +649,6 @@ QList<Keyword*> FileImporterBibTeX::splitKeywords(const QString& text)
     return result;
 }
 
-void FileImporterBibTeX::splitPersonList(const QString& text, QStringList &resultList)
-{
-    QStringList wordList;
-    QString word;
-    int bracketCounter = 0;
-    resultList.clear();
-
-    for (int pos = 0; pos < text.length(); ++pos) {
-        if (text[pos] == '{')
-            ++bracketCounter;
-        else if (text[pos] == '}')
-            --bracketCounter;
-
-        if (text[pos] == ' ' || text[pos] == '\t' || text[pos] == '\n' || text[pos] == '\r') {
-            if (word == "and" && bracketCounter == 0) {
-                resultList.append(wordList.join(" "));
-                wordList.clear();
-            } else if (!word.isEmpty())
-                wordList.append(word);
-
-            word = "";
-        } else
-            word.append(text[pos]);
-    }
-
-    if (!word.isEmpty())
-        wordList.append(word);
-    if (!wordList.isEmpty())
-        resultList.append(wordList.join(" "));
-}
-
 void FileImporterBibTeX::parsePersonList(const QString& text, Value &value, CommaContainment *comma)
 {
     static QStringList tokens;
@@ -670,7 +678,6 @@ QSharedPointer<Person> FileImporterBibTeX::personFromString(const QString &name,
 {
     static QStringList tokens;
     contextSensitiveSplit(name, tokens);
-    kDebug() << "Found token:" << tokens.join("__");
     return personFromTokenList(tokens, comma);
 }
 
@@ -687,15 +694,15 @@ QSharedPointer<Person> FileImporterBibTeX::personFromTokenList(const QStringList
      * "Tuckwell," "Peter". In this case, fill two string lists:
      * one with tokens before the comma, one with tokens after the
      * comma (excluding the comma itself). Example:
-     * partA = ( "Tuckwell" );  partB = ( "Peter" )
+     * partA = ( "Tuckwell" );  partB = ( "Peter" );  partC = ( "Jr." )
      * If a comma was found, boolean variable gotComma is set.
      */
-    QStringList partA, partB;
-    bool gotComma = false;
+    QStringList partA, partB, partC;
+    int commaCount = 0;
     foreach(const QString &token, tokens) {
         /// Position where comma was found, or -1 if no comma in token
         int p = -1;
-        if (!gotComma) {
+        if (commaCount < 2) {
             /// Only check if token contains comma
             /// if no comma was found before
             int bracketCounter = 0;
@@ -717,17 +724,24 @@ QSharedPointer<Person> FileImporterBibTeX::personFromTokenList(const QStringList
         }
 
         if (p >= 0) {
-            gotComma = true;
-            if (p > 0)partA.append(token.left(p));
-            if (p < token.length() - 1) partB.append(token.mid(p + 1));
-        } else if (gotComma)
-            partB.append(token);
-        else
+            if (commaCount == 0) {
+                if (p > 0) partA.append(token.left(p));
+                if (p < token.length() - 1) partB.append(token.mid(p + 1));
+            } else if (commaCount == 1) {
+                if (p > 0) partB.append(token.left(p));
+                if (p < token.length() - 1) partC.append(token.mid(p + 1));
+            }
+            ++commaCount;
+        } else if (commaCount == 0)
             partA.append(token);
+        else if (commaCount == 1)
+            partB.append(token);
+        else if (commaCount == 2)
+            partC.append(token);
     }
-    if (gotComma) {
+    if (commaCount > 0) {
         if (comma != NULL) *comma = ccContainsComma;
-        return QSharedPointer<Person>(new Person(partB.join(QChar(' ')), partA.join(QChar(' '))));
+        return QSharedPointer<Person>(new Person(partC.isEmpty() ? partB.join(QChar(' ')) : partC.join(QChar(' ')), partA.join(QChar(' ')), partC.isEmpty() ? QString::null : partB.join(QChar(' '))));
     }
 
     /**
@@ -759,12 +773,17 @@ QSharedPointer<Person> FileImporterBibTeX::personFromTokenList(const QStringList
      * (last names consisting of multiple space-separated parts *have*
      * to be protected by {...}), but some languages have fill words
      * in lower caps beloning to the last name as well (example: "van").
+     * Exception: Special keywords such as "Jr." can be appended to the
+     * name, not counted as part of the last name
      */
-    partA.clear(); partB.clear();
+    partA.clear(); partB.clear(); partC.clear();
     it = tokens.constEnd();
     while (it != tokens.constBegin()) {
         --it;
-        if (partB.isEmpty() || it->at(0).isLower())
+        if (partB.isEmpty() && (it->toLower().startsWith(QLatin1String("jr")) || it->toLower().startsWith(QLatin1String("sr")) || it->toLower().startsWith(QLatin1String("iii"))))
+            /// handle name suffices like "Jr" or "III."
+            partC.prepend(*it);
+        else if (partB.isEmpty() || it->at(0).isLower())
             partB.prepend(*it);
         else
             partA.prepend(*it);
@@ -772,7 +791,7 @@ QSharedPointer<Person> FileImporterBibTeX::personFromTokenList(const QStringList
     if (!partB.isEmpty()) {
         /// Name was actually like "Peter Ole van der Tuckwell",
         /// split into "Peter Ole" and "van der Tuckwell"
-        return QSharedPointer<Person>(new Person(partA.join(QChar(' ')), partB.join(QChar(' '))));
+        return QSharedPointer<Person>(new Person(partA.join(QChar(' ')), partB.join(QChar(' ')), partC.isEmpty() ? QString::null : partC.join(QChar(' '))));
     }
 
     kWarning() << "Don't know how to handle name" << tokens.join(QChar(' '));

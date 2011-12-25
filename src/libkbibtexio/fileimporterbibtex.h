@@ -97,6 +97,12 @@ private:
     };
     enum CommaContainment { ccNoComma = 0, ccContainsComma = 1 };
 
+    struct {
+        int countCurlyBrackets, countQuotationMarks;
+        int countFirstNameFirst, countLastNameFirst;
+        int countNoCommentQuote, countCommentPercent, countCommentCommand;
+    } m_statistics;
+
     bool m_cancelFlag;
     unsigned int m_lineNo;
     QTextStream *m_textStream;
@@ -122,7 +128,6 @@ private:
     static QSharedPointer<Person> personFromString(const QString &name, CommaContainment *comma);
     static QSharedPointer<Person> personFromTokenList(const QStringList &tokens, CommaContainment *comma = NULL);
     void parsePersonList(const QString& text, Value &value, CommaContainment *comma = NULL);
-    static void splitPersonList(const QString& name, QStringList &resultList);
 
     /**
      * Split a string into white-space separated chunks,
