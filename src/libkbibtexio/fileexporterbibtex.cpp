@@ -83,8 +83,7 @@ public:
 
     FileExporterBibTeXPrivate(FileExporterBibTeX *parent)
             : p(parent), cancelFlag(false), iconvLaTeX(NULL), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName("FileExporterBibTeX"), configGroupNameGeneral("General") {
-        forcedEncoding = QString::null;
-        loadState();
+        // nothing
     }
 
     ~FileExporterBibTeXPrivate() {
@@ -410,8 +409,6 @@ bool FileExporterBibTeX::save(QIODevice* iodevice, const Element* element, QStri
     bool result = false;
 
     loadState();
-    if (!d->forcedEncoding.isEmpty())
-        d->encoding = d->forcedEncoding;
     d->applyEncoding(d->encoding);
 
     const Entry *entry = dynamic_cast<const Entry*>(element);
@@ -549,9 +546,9 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value& value, const QStr
                         if (!lastName.isEmpty() && d->requiresPersonQuoting(lastName, true))
                             lastName = lastName.prepend("{").append("}");
 
-                        // TODO: Prefix and suffix
+                        QString suffix = person->suffix();
 
-                        QString thisName = encodercheck(encoder, Person::transcribePersonName(d->personNameFormatting, firstName, lastName));
+                        QString thisName = encodercheck(encoder, Person::transcribePersonName(d->personNameFormatting, firstName, lastName, suffix));
 
                         if (!isOpen) {
                             if (!result.isEmpty()) result.append(" # ");

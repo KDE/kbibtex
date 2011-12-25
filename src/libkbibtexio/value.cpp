@@ -165,7 +165,7 @@ QString Person::transcribePersonName(const QString &formatting, const QString& f
 }
 
 const QString Person::keyPersonNameFormatting = QLatin1String("personNameFormatting");
-const QString Person::defaultPersonNameFormatting = QLatin1String("<%l><, %f>"); // "<%f ><%l>"
+const QString Person::defaultPersonNameFormatting = QLatin1String("<%l><, %s><, %f>"); // "<%f ><%l>< %s>"
 
 
 const QRegExp MacroKey::validMacroKey = QRegExp("^[a-z][-.:/+_a-z0-9]*$|^[0-9]+$", Qt::CaseInsensitive);
@@ -324,7 +324,7 @@ Value::Value(const Value& other)
 
 Value::~Value()
 {
-    // nothing
+    clear();
 }
 
 void Value::merge(const Value& other)
