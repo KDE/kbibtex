@@ -89,8 +89,10 @@ public:
     static const QString defaultPersonNameFormatting;
 
     /**
-    * Create a representation for a person's name. In bibliographies, a person is either an author or an editor.
-    * The four parameters cover all common parts of a name. Only first and last name are mandatory (each person should have those).
+    * Create a representation for a person's name. In bibliographies,
+    * a person is either an author or an editor. The four parameters
+    * cover all common parts of a name. Only first and last name are
+    * mandatory (each person should have those).
     @param firstName First name of a person. Example: "Peter"
     @param lastName Last name of a person. Example: "Smith"
     @param suffix Suffix after a name. Example: "jr."
@@ -179,7 +181,7 @@ class KBIBTEXIO_EXPORT Value: public QVector<QSharedPointer<ValueItem> >
 public:
     Value();
     Value(const Value& other);
-    ~Value();
+    virtual ~Value();
 
     void merge(const Value& other);
 
