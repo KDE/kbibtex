@@ -254,7 +254,7 @@ void OnlineSearchAbstract::setNetworkReplyTimeout(QNetworkReply *reply, int time
     QTimer *timer = new QTimer(reply);
     connect(timer, SIGNAL(timeout()), this, SLOT(networkReplyTimeout()));
     m_mapTimerToReply.insert(timer, reply);
-    timer->start(timeOutSec*1000);
+    timer->start(timeOutSec * 1000);
     connect(reply, SIGNAL(finished()), this, SLOT(networkReplyFinished()));
 }
 

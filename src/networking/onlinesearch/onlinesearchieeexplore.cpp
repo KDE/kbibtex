@@ -117,7 +117,7 @@ void OnlineSearchIEEEXplore::startSearch(const QMap<QString, QString> &query, in
 
     QNetworkRequest request(d->startPageUrl);
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
-    setNetworkReplyTimeout(reply, 30);
+    setNetworkReplyTimeout(reply);
     connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingStartPage()));
 
     emit progress(0, d->numSteps);
@@ -137,13 +137,13 @@ void OnlineSearchIEEEXplore::doneFetchingStartPage()
 
             QNetworkRequest request(redirUrl);
             QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
-            setNetworkReplyTimeout(reply, 30);
+            setNetworkReplyTimeout(reply);
             connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingStartPage()));
         } else {
             QString url = d->searchRequestUrl + '"' + d->queryFragments.join("\"+AND+\"") + '"';
             QNetworkRequest request(url);
             QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
-            setNetworkReplyTimeout(newReply, 30);
+            setNetworkReplyTimeout(newReply);
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingSearchResults()));
         }
     } else
@@ -177,7 +177,7 @@ void OnlineSearchIEEEXplore::doneFetchingSearchResults()
             QString url = d->fullAbstractUrl + d->arnumberList.first();
             QNetworkRequest request(url);
             QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
-            setNetworkReplyTimeout(newReply, 30);
+            setNetworkReplyTimeout(newReply);
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingAbstract()));
             d->arnumberList.removeFirst();
         }
@@ -197,7 +197,7 @@ void OnlineSearchIEEEXplore::doneFetchingAbstract()
             QString url = d->citationUrl + arnumber;
             QNetworkRequest request(url);
             QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
-            setNetworkReplyTimeout(newReply, 30);
+            setNetworkReplyTimeout(newReply);
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingBibliography()));
         }
     } else
@@ -244,7 +244,7 @@ void OnlineSearchIEEEXplore::doneFetchingBibliography()
             d->arnumberList.removeFirst();
             QNetworkRequest request(url);
             QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
-            setNetworkReplyTimeout(newReply, 30);
+            setNetworkReplyTimeout(newReply);
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingAbstract()));
         } else {
             emit stoppedSearch(resultNoError);

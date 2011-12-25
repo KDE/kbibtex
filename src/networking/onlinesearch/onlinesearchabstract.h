@@ -130,7 +130,7 @@ protected:
      */
     QNetworkAccessManager *networkAccessManager();
 
-    void setNetworkReplyTimeout(QNetworkReply *reply, int timeOutSec = 15);
+    void setNetworkReplyTimeout(QNetworkReply *reply, int timeOutSec = 30);
 
 private:
     QString m_name;
