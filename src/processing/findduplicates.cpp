@@ -20,6 +20,8 @@
 
 #include <typeinfo>
 
+#include <QLinkedList>
+
 #include <KDebug>
 #include <KProgressDialog>
 #include <KLocale>
@@ -568,4 +570,112 @@ bool MergeDuplicates::mergeDuplicateEntries(const QList<EntryClique*> &entryCliq
     }
 
     return didMerge;
+}
+
+bool MergeDuplicates::mergeDuplicateEntriesAuto(const QList<EntryClique*> &entryCliques, File *file, const QString &sortCriteriumField, MergePriority mergePriority)
+{
+    /**
+     * Same procedure for each clique ...
+     */
+    foreach(EntryClique *entryClique, entryCliques) {
+        /// Create a new entry which will eventually replace the clique's Entrys
+        Entry *mergedEntry = new Entry(QString::null, QString::null);
+
+        /// Sort entries in clique according into sortedEntries
+        /// according to values in field sortCriteriumField and
+        /// mergePriority.
+        QLinkedList<Entry*> sortedEntries;
+        foreach(Entry *entry, entryClique->entryList()) {
+            if (sortedEntries.isEmpty())
+                /// Just started sorting, append first entry
+                sortedEntries.append(entry);
+            else {
+                /// Get string, number and date based on current,
+                /// unsorted Entry
+                const QString a = PlainTextValue::text(entry->value(sortCriteriumField), file);
+                const int ai = a.toInt();
+                const QDate aDate = QDate::fromString(a, Qt::ISODate);
+
+                QLinkedList<Entry*>::Iterator it;
+                for (it = sortedEntries.begin(); it != sortedEntries.end(); ++it) {
+                    /// Get string, number and date based on iterator's
+                    /// current Entry in sortedEntries list
+                    const QString b = PlainTextValue::text((*it)->value(sortCriteriumField), file);
+                    const int bi = b.toInt();
+                    const QDate bDate = QDate::fromString(b, Qt::ISODate);
+
+                    /// Compare a and b based on merge priority
+                    if (mergePriority == ISODateEarlier) {
+                        if (aDate > bDate) {
+                            sortedEntries.insert(it, entry);
+                            break;
+                        }
+                    } else if (mergePriority == ISODateLater) {
+                        if (aDate <= bDate) {
+                            sortedEntries.insert(it, entry);
+                            break;
+                        }
+                    } else if (mergePriority == NumericHigher) {
+                        if (ai > bi) {
+                            sortedEntries.insert(it, entry);
+                            break;
+                        }
+                    } else if (mergePriority == NumericLower) {
+                        if (ai <= bi) {
+                            sortedEntries.insert(it, entry);
+                            break;
+                        }
+                    } else if (mergePriority == LexicallyEarlier) {
+                        if (a.compare(b, Qt::CaseSensitive) < 0) {
+                            sortedEntries.insert(it, entry);
+                            break;
+                        }
+                    } else if (mergePriority == LexicallyLater) {
+                        if (a.compare(b, Qt::CaseSensitive) >= 0) {
+                            sortedEntries.insert(it, entry);
+                            break;
+                        }
+                    } else if (mergePriority == LexicallyEarlierCaseInsensitive) {
+                        if (a.compare(b, Qt::CaseInsensitive) < 0) {
+                            sortedEntries.insert(it, entry);
+                            break;
+                        }
+                    } else if (mergePriority == LexicallyLaterCaseInsensitive) {
+                        if (a.compare(b, Qt::CaseInsensitive) >= 0) {
+                            sortedEntries.insert(it, entry);
+                            break;
+                        }
+                    }
+                }
+
+                if (it == sortedEntries.end()) {
+                    /// Not inserted at all...
+                    /// Do not forget it, just append it;
+                    /// will get lowest priority in merging process
+                    sortedEntries.append(entry);
+                }
+            }
+        }
+
+        /// Copy ID and type from first Entry in sorted list (highest priority)
+        mergedEntry->setId(sortedEntries.first()->id());
+        mergedEntry->setType(sortedEntries.first()->type());
+
+        /// Fill new entry by copying values from clique's Entries.
+        /// Sorting ensures that Entries matching sorting criteries
+        /// get higher priority
+        foreach(Entry *entry, sortedEntries) {
+            for (Entry::ConstIterator it = entry->constBegin(); it != entry->constEnd(); ++it)
+                if (!mergedEntry->contains(it.key()))
+                    mergedEntry->insert(it.key(), it.value());
+
+            /// Removed harvested Entries
+            file->removeOne(entry);
+        }
+
+        /// Insert merged Entries
+        file->append(mergedEntry);
+    }
+
+    return true;
 }

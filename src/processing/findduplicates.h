@@ -101,9 +101,20 @@ private:
 class KBIBTEXPROC_EXPORT MergeDuplicates
 {
 public:
+    enum MergePriority { None = 0, ISODateEarlier = 1, ISODateLater = 2, NumericHigher = 3, NumericLower = 4, LexicallyEarlier = 5, LexicallyLater = 6, LexicallyEarlierCaseInsensitive = 7, LexicallyLaterCaseInsensitive = 8 };
+
     MergeDuplicates(QWidget *parent);
 
     bool mergeDuplicateEntries(const QList<EntryClique*> &entryCliques, File *file);
+
+    /**
+     * Goes through the list of Entry cliques and automatically merge
+     * those cliques, i.e. remove all Entries in a clique and replace
+     * it by a single new Entry. This new Entry will contain values
+     * from the clique, but values will be selected from Entries as
+     * chosen by the sorting criterium field and the merge priority.
+     */
+    bool mergeDuplicateEntriesAuto(const QList<EntryClique*> &entryCliques, File *file, const QString &sortCriteriumField, MergePriority mergePriority);
 
 private:
     class MergeDuplicatesPrivate;
