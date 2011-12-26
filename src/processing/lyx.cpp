@@ -117,16 +117,16 @@ QString LyX::findLyXPipe()
 
     /// Start with scanning the user's home directory for pipes
     QDir home = QDir::home();
-    QStringList files = home.entryList(nameFilter, QDir::AllEntries | QDir::Hidden | QDir::Writable, QDir::Unsorted);
+    QStringList files = home.entryList(nameFilter, QDir::Hidden | QDir::System | QDir::Writable, QDir::Unsorted);
     foreach(const QString &filename, files) {
         if (stat(filename.toAscii(), &fileInfo) == 0 && S_ISFIFO(fileInfo.st_mode))
             return home.absolutePath() + QDir::separator() + filename;
     }
 
     /// No hit yet? Search LyX's configuration directory
-    if (home.cd(QLatin1String(""))) {
+    if (home.cd(QLatin1String(".lyx"))) {
         /// Same search again here
-        files = home.entryList(nameFilter, QDir::AllEntries | QDir::Hidden | QDir::Writable, QDir::Unsorted);
+        files = home.entryList(nameFilter, QDir::Hidden | QDir::System | QDir::Writable, QDir::Unsorted);
         foreach(const QString &filename, files) {
             if (stat(filename.toAscii(), &fileInfo) == 0 && S_ISFIFO(fileInfo.st_mode))
                 return home.absolutePath() + QDir::separator() + filename;
