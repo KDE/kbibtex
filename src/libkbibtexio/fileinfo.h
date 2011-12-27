@@ -35,6 +35,8 @@ public:
     static void urlsInText(const QString &text, bool testExistance, const QString &baseDirectory, QList<KUrl> &addTo);
     static QList<KUrl> entryUrls(const Entry *entry, const KUrl &bibTeXUrl = KUrl());
 
+    static QString doiUrlPrefix();
+
 protected:
     FileInfo();
 };

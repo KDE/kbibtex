@@ -32,6 +32,7 @@
 #include <kbibtexnamespace.h>
 #include <internalnetworkaccessmanager.h>
 #include <value.h>
+#include <fileinfo.h>
 #include "findpdf.h"
 
 int FindPDF::fileCounter = 0;
@@ -76,11 +77,11 @@ bool FindPDF::search(const Entry &entry)
             const QString fieldText = PlainTextValue::text(entry.value(field));
             int p = -1;
             while ((p = KBibTeX::doiRegExp.indexIn(fieldText, p + 1)) >= 0)
-                queueUrl(QUrl(QLatin1String("http://dx.doi.org/") + KBibTeX::doiRegExp.cap(0)), fieldText, field, maxDepth);
+                queueUrl(QUrl(FileInfo::doiUrlPrefix() + KBibTeX::doiRegExp.cap(0)), fieldText, Entry::ftDOI, maxDepth);
 
             p = -1;
             while ((p = KBibTeX::urlRegExp.indexIn(fieldText, p + 1)) >= 0)
-                queueUrl(QUrl(KBibTeX::urlRegExp.cap(0)), titleBeginning, field, maxDepth);
+                queueUrl(QUrl(KBibTeX::urlRegExp.cap(0)), titleBeginning, Entry::ftUrl, maxDepth);
         }
     }
 
@@ -331,7 +332,7 @@ void FindPDF::processPDF(QNetworkReply *reply, const QByteArray &data)
         for (int i = 0; i < doc->numPages() && result.textPreview.length() < maxTextLen; ++i)
             result.textPreview += QChar(' ') + doc->page(i)->text(QRect()).simplified().left(maxTextLen);
         result.downloadMode = NoDownload;
-        result.relevance = origin == QLatin1String("doi") ? 1.0 : (origin == QLatin1String("eprint") ? 0.75 : 0.5);
+        result.relevance = origin == Entry::ftDOI ? 1.0 : (origin == QLatin1String("eprint") ? 0.75 : 0.5);
         m_result << result;
 
         emit progress(m_knownUrls.count(), m_result.count());

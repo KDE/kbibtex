@@ -21,6 +21,8 @@
 #include <QFileInfo>
 #include <QDir>
 
+#include <KSharedConfig>
+#include <KConfigGroup>
 
 #include <kbibtexnamespace.h>
 #include <entry.h>
@@ -80,7 +82,7 @@ void FileInfo::urlsInText(const QString &text, bool testExistance, const QString
         pos = 0;
         while ((pos = KBibTeX::doiRegExp.indexIn(internalText, pos)) != -1) {
             QString match = KBibTeX::doiRegExp.cap(0);
-            KUrl url(KBibTeX::doiUrlPrefix + match.replace("\\", ""));
+            KUrl url(doiUrlPrefix() + match.replace("\\", ""));
             if (url.isValid() && !result.contains(url))
                 result << url;
             /// remove match from internal text to avoid duplicates
@@ -162,4 +164,13 @@ QList<KUrl> FileInfo::entryUrls(const Entry *entry, const KUrl &bibTeXUrl)
     }
 
     return result;
+}
+
+QString FileInfo::doiUrlPrefix()
+{
+    KSharedConfigPtr config(KSharedConfig::openConfig(QLatin1String("kbibtexrc")));
+    static const QString configGroupNameNetworking(QLatin1String("Networking"));
+    static const QString keyDOIUrlPrefix(QLatin1String("DOIUrlPrefix"));
+    KConfigGroup configGroup(config, configGroupNameNetworking);
+    return configGroup.readEntry(keyDOIUrlPrefix, KBibTeX::doiUrlPrefix);
 }
