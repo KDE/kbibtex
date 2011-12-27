@@ -25,8 +25,6 @@
 #include <QTextStream>
 #include <QFileInfo>
 
-#include <KSharedConfig>
-#include <KConfigGroup>
 #include <KAction>
 #include <KActionCollection>
 #include <KLocale>
@@ -48,11 +46,9 @@ public:
     QWidget *widget;
     KAction *action;
     QStringList references;
-    KSharedConfigPtr config;
-    const QString configGroupNameLyX;
 
     LyXPrivate(LyX *parent, QWidget *widget)
-            : p(parent), action(NULL), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupNameLyX(QLatin1String("LyX")) {
+            : p(parent), action(NULL) {
         this->widget = widget;
     }
 };
