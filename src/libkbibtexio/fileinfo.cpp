@@ -18,11 +18,15 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
+#include <poppler/qt4/poppler-qt4.h>
+
 #include <QFileInfo>
 #include <QDir>
+#include <QTextStream>
 
 #include <KSharedConfig>
 #include <KConfigGroup>
+#include <KStandardDirs>
 
 #include <kbibtexnamespace.h>
 #include <entry.h>
@@ -164,6 +168,50 @@ QList<KUrl> FileInfo::entryUrls(const Entry *entry, const KUrl &bibTeXUrl)
     }
 
     return result;
+}
+
+QString FileInfo::pdfToText(const QString& pdfFilename)
+{
+    /// Build filename for text file where PDF file's plain text is cached
+    static const QRegExp invalidChars("[^-a-z0-9_]", Qt::CaseInsensitive);
+    QString textFilename = QString(pdfFilename).replace(invalidChars, "").append(QLatin1String(".txt")).prepend(KStandardDirs::locateLocal("cache", "pdftotext/"));
+
+    /// Initialize return value
+    QString text = QString::null;
+
+    /// First, check if there is a cache text file
+    if (QFileInfo(textFilename).exists()) {
+        /// Load text from cache file
+        QFile f(textFilename);
+        if (f.open(QFile::ReadOnly)) {
+            QTextStream ts(&f);
+            text = ts.readAll();
+            f.close();
+        }
+    }
+
+    /// Either no cache text file existed or could not load text from it
+    if (text.isNull()) {
+        /// Load PDF file through Poppler
+        Poppler::Document *doc = Poppler::Document::load(pdfFilename);
+        if (doc != NULL) {
+            /// Build text by appending each page's text
+            text = QLatin1String("");
+            for (int i = 0; i < doc->numPages(); ++i)
+                text.append(doc->page(i)->text(QRect())).append(QLatin1String("\n\n"));
+            delete doc;
+
+            /// Save text in cache file
+            QFile f(textFilename);
+            if (f.open(QFile::WriteOnly)) {
+                QTextStream ts(&f);
+                ts << text;
+                f.close();
+            }
+        }
+    }
+
+    return text;
 }
 
 QString FileInfo::doiUrlPrefix()

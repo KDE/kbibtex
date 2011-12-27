@@ -211,6 +211,7 @@ void ValueList::listItemActivated(const QModelIndex &index)
     fq.terms << itemText;
     fq.combination = SortFilterBibTeXFileModel::EveryTerm;
     fq.field = fieldText;
+    fq.searchPDFfiles = false;
 
     d->editor->setFilterBarFilter(fq);
 }
@@ -230,6 +231,7 @@ void ValueList::searchSelection()
             fq.terms << itemText;
         }
     }
+    fq.searchPDFfiles = false;
 
     if (!fq.terms.isEmpty())
         d->editor->setFilterBarFilter(fq);

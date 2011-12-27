@@ -355,6 +355,7 @@ void ReferencePreview::linkClicked(const QUrl& url)
             fq.combination = SortFilterBibTeXFileModel::EveryTerm;
             fq.field = text.left(p);
             d->editor->setFilterBarFilter(fq);
+            fq.searchPDFfiles = false;
         }
     }
 }

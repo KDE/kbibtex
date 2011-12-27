@@ -35,6 +35,15 @@ public:
     static void urlsInText(const QString &text, bool testExistance, const QString &baseDirectory, QList<KUrl> &addTo);
     static QList<KUrl> entryUrls(const Entry *entry, const KUrl &bibTeXUrl = KUrl());
 
+    /**
+     * Load the given PDF file and return the contained plain text.
+     * Makes use of Poppler to load and parse the file. All text
+     * will be cached and loaded from cache if possible.
+     * @param pdfFilename PDF file to load and extract text from
+     * @return extracted plain text, either directly from PDF file or from cache OR QString::null if there was an error
+     */
+    static QString pdfToText(const QString& pdfFilename);
+
     static QString doiUrlPrefix();
 
 protected:

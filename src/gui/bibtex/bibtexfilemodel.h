@@ -50,12 +50,13 @@ public:
         QStringList terms;
         FilterCombination combination;
         QString field;
+        bool searchPDFfiles;
     };
 
     SortFilterBibTeXFileModel(QObject *parent = 0);
 
     virtual void setSourceModel(QAbstractItemModel *model);
-    BibTeXFileModel *bibTeXSourceModel();
+    BibTeXFileModel *bibTeXSourceModel() const;
 
 public slots:
     void updateFilter(SortFilterBibTeXFileModel::FilterQuery);

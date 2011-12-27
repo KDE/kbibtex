@@ -27,6 +27,7 @@
 #include <KLocale>
 #include <KConfigGroup>
 
+#include <fileinfo.h>
 #include <element.h>
 #include <entry.h>
 #include <macro.h>
@@ -53,7 +54,7 @@ void SortFilterBibTeXFileModel::setSourceModel(QAbstractItemModel *model)
     m_internalModel = dynamic_cast<BibTeXFileModel*>(model);
 }
 
-BibTeXFileModel *SortFilterBibTeXFileModel::bibTeXSourceModel()
+BibTeXFileModel *SortFilterBibTeXFileModel::bibTeXSourceModel() const
 {
     return m_internalModel;
 }
@@ -175,6 +176,20 @@ bool SortFilterBibTeXFileModel::filterAcceptsRow(int source_row, const QModelInd
                     all[i] |= contains;
                 }
             }
+
+        /// Test associated PDF files
+        if (m_filterQuery.searchPDFfiles && m_filterQuery.field.isEmpty()) ///< not filtering for any specific field
+            foreach(const KUrl &url, FileInfo::entryUrls(entry, bibTeXSourceModel()->bibTeXFile()->property(File::Url, KUrl()).toUrl())) {
+            if (url.isLocalFile() && url.fileName().endsWith(QLatin1String(".pdf"))) {
+                const QString text = FileInfo::pdfToText(url.pathOrUrl());
+                int i = 0;
+                for (QStringList::ConstIterator itsl = m_filterQuery.terms.constBegin(); itsl != m_filterQuery.terms.constEnd(); ++itsl, ++i) {
+                    bool contains = (*itsl).isEmpty() ? true : text.contains(*itsl, Qt::CaseInsensitive);
+                    any |= contains;
+                    all[i] |= contains;
+                }
+            }
+        }
 
         int i = 0;
         if (m_filterQuery.field.isEmpty())

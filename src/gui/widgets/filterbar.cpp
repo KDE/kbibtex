@@ -22,12 +22,14 @@
 #include <QFontMetrics>
 #include <QLabel>
 #include <QTimer>
+#include <QCheckBox>
 
 #include <KComboBox>
 #include <KLocale>
 #include <KLineEdit>
 #include <KConfigGroup>
 #include <KStandardDirs>
+#include <KIcon>
 
 #include "filterbar.h"
 #include "bibtexfields.h"
@@ -45,6 +47,7 @@ public:
     const int maxNumStoredFilterTexts;
     KComboBox *comboBoxCombination;
     KComboBox *comboBoxField;
+    QCheckBox *checkboxSearchPDFfiles;
     QTimer *filterUpdateTimer;
 
     FilterBarPrivate(FilterBar *parent)
@@ -63,6 +66,8 @@ public:
 
         comboBoxCombination->blockSignals(false);
         comboBoxField->blockSignals(false);
+
+        checkboxSearchPDFfiles->setChecked(false);
     }
 
     SortFilterBibTeXFileModel::FilterQuery filter() {
@@ -74,6 +79,7 @@ public:
         else /// any or every word
             result.terms = comboBoxFilterText->lineEdit()->text().split(QRegExp(QLatin1String("\\s+")), QString::SkipEmptyParts);
         result.field = comboBoxField->currentIndex() == 0 ? QString::null : comboBoxField->itemData(comboBoxField->currentIndex(), Qt::UserRole).toString();
+        result.searchPDFfiles = checkboxSearchPDFfiles->isChecked();
 
         return result;
     }
@@ -91,6 +97,7 @@ public:
                 break;
             }
         }
+        checkboxSearchPDFfiles->setChecked(fq.searchPDFfiles);
 
         comboBoxCombination->blockSignals(false);
         comboBoxField->blockSignals(false);
@@ -134,6 +141,7 @@ public:
         KConfigGroup configGroup(config, configGroupName);
         configGroup.writeEntry(QLatin1String("CurrentCombination"), comboBoxCombination->currentIndex());
         configGroup.writeEntry(QLatin1String("CurrentField"), comboBoxField->currentIndex());
+        configGroup.writeEntry(QLatin1String("SearchPDFFiles"), checkboxSearchPDFfiles->isChecked());
         config->sync();
     }
 
@@ -183,11 +191,16 @@ FilterBar::FilterBar(QWidget *parent)
             d->comboBoxField->addItem(fd.label, fd.upperCamelCase);
     }
 
+    d->checkboxSearchPDFfiles = new QCheckBox(this);
+    d->checkboxSearchPDFfiles->setIcon(KIcon("application-pdf"));
+    layout->addWidget(d->checkboxSearchPDFfiles, 1, 4);
+
     connect(d->comboBoxFilterText->lineEdit(), SIGNAL(textChanged(QString)), this, SLOT(lineeditTextChanged()));
     connect(d->comboBoxFilterText->lineEdit(), SIGNAL(returnPressed()), this, SLOT(lineeditReturnPressed()));
     connect(lineEdit, SIGNAL(clearButtonClicked()), this, SLOT(clearFilter()));
     connect(d->comboBoxCombination, SIGNAL(currentIndexChanged(int)), this, SLOT(comboboxStatusChanged()));
     connect(d->comboBoxField, SIGNAL(currentIndexChanged(int)), this, SLOT(comboboxStatusChanged()));
+    connect(d->checkboxSearchPDFfiles, SIGNAL(toggled(bool)), this, SLOT(comboboxStatusChanged()));
 
     /// restore history on filter texts
     /// see addCompletionString for more detailed explanation
