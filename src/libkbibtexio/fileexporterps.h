@@ -20,7 +20,7 @@
 #ifndef BIBTEXFILEEXPORTERPS_H
 #define BIBTEXFILEEXPORTERPS_H
 
-#include <fileexportertoolchain.h>
+#include "fileexportertoolchain.h"
 
 class QStringList;
 

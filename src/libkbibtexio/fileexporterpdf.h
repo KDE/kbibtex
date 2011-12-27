@@ -22,7 +22,7 @@
 
 #include <QStringList>
 
-#include <fileexportertoolchain.h>
+#include "fileexportertoolchain.h"
 
 /**
 @author Thomas Fischer

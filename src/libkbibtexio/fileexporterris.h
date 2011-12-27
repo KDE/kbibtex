@@ -22,7 +22,11 @@
 
 #include <QTextStream>
 
-#include <fileexporter.h>
+#include "fileexporter.h"
+
+class Element;
+class File;
+class Entry;
 
 class KBIBTEXIO_EXPORT FileExporterRIS : public FileExporter
 {

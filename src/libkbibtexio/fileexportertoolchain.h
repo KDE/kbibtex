@@ -24,7 +24,7 @@
 
 #include <KTempDir>
 
-#include <fileexporter.h>
+#include "fileexporter.h"
 
 class QString;
 class QStringList;

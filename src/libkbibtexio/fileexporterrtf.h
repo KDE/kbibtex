@@ -20,7 +20,7 @@
 #ifndef BIBTEXFILEEXPORTERRTF_H
 #define BIBTEXFILEEXPORTERRTF_H
 
-#include <fileexportertoolchain.h>
+#include "fileexportertoolchain.h"
 
 class QTextStream;
 

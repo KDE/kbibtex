@@ -24,7 +24,6 @@
 #include <QStringList>
 
 #include <file.h>
-#include <element.h>
 #include <entry.h>
 #include <encoderxml.h>
 #include <macro.h>

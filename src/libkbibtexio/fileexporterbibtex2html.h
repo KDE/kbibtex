@@ -20,7 +20,7 @@
 #ifndef KBIBTEX_IO_FILEEXPORTERBIBTEX2HTML_H
 #define KBIBTEX_IO_FILEEXPORTERBIBTEX2HTML_H
 
-#include <fileexportertoolchain.h>
+#include "fileexportertoolchain.h"
 
 /**
 @author Thomas Fischer
