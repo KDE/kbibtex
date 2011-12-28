@@ -65,6 +65,7 @@
 #include <lyx.h>
 #include <preferences/settingscolorlabelwidget.h>
 #include <preferences/settingsfileexporterbibtexwidget.h>
+#include <preferences/settingsfileexporterpdfpswidget.h>
 #include <element/findpdfui.h>
 #include <valuelistmodel.h>
 #include <clipboard.h>
@@ -209,7 +210,7 @@ public:
     KUrl getSaveFilename(bool mustBeImportable = true) {
         QString startDir = p->url().isValid() ? p->url().path() : QLatin1String("kfiledialog:///opensave");
         QString supportedMimeTypes = QLatin1String("text/x-bibtex application/xml application/x-research-info-systems");
-        if (!mustBeImportable && FileExporterToolchain::kpsewhich(QLatin1String("embedfile.sty")))
+        if (!mustBeImportable && FileExporterToolchain::which(QLatin1String("pdflatex")))
             supportedMimeTypes += QLatin1String(" application/pdf");
         if (!mustBeImportable && FileExporterToolchain::which(QLatin1String("dvips")))
             supportedMimeTypes += QLatin1String(" application/postscript");
@@ -240,14 +241,31 @@ public:
 
         if (isSaveAsOperation) {
             /// only show export dialog at SaveAs or SaveCopyAs operations
+            FileExporterToolchain *fet = NULL;
 
             if (typeid(*exporter) == typeid(FileExporterBibTeX)) {
                 KDialog dlg(p->widget());
                 SettingsFileExporterBibTeXWidget settingsWidget(bibTeXFile, &dlg);
                 dlg.setMainWidget(&settingsWidget);
-                dlg.setButtons(KDialog::Ok);
+                dlg.setButtons(KDialog::Default | KDialog::Reset | KDialog::User1 | KDialog::Ok);
+                dlg.setButtonGuiItem(KDialog::User1, KGuiItem(i18n("Save as Default"), KIcon("edit-redo") /** matches reset button's icon */, i18n("Save this configuration as default for future Save As operations.")));
+                connect(&dlg, SIGNAL(user1Clicked()), &settingsWidget, SLOT(saveState()));
+                connect(&dlg, SIGNAL(resetClicked()), &settingsWidget, SLOT(loadState()));
+                connect(&dlg, SIGNAL(defaultClicked()), &settingsWidget, SLOT(resetToDefaults()));
                 dlg.exec();
                 settingsWidget.saveProperties(bibTeXFile);
+            } else if ((fet = dynamic_cast<FileExporterToolchain*>(exporter)) != NULL) {
+                KDialog dlg(p->widget());
+                SettingsFileExporterPDFPSWidget settingsWidget(&dlg);
+                dlg.setMainWidget(&settingsWidget);
+                dlg.setButtons(KDialog::Default | KDialog::Reset | KDialog::User1 | KDialog::Ok);
+                dlg.setButtonGuiItem(KDialog::User1, KGuiItem(i18n("Save as Default"), KIcon("edit-redo") /** matches reset button's icon */, i18n("Save this configuration as default for future Save As operations.")));
+                connect(&dlg, SIGNAL(user1Clicked()), &settingsWidget, SLOT(saveState()));
+                connect(&dlg, SIGNAL(resetClicked()), &settingsWidget, SLOT(loadState()));
+                connect(&dlg, SIGNAL(defaultClicked()), &settingsWidget, SLOT(resetToDefaults()));
+                dlg.exec();
+                settingsWidget.saveState();
+                fet->reloadConfig();
             }
         }
 
