@@ -68,7 +68,7 @@ public:
 
         comboBoxPersonNameFormatting = new KComboBox(false, p);
         layout->addRow(i18n("Person Names Formatting:"), comboBoxPersonNameFormatting);
-        const QStringList formattingOptions = QStringList() << QLatin1String("<%f ><%l><, %s>") << QLatin1String("<%l><, %f><, %s>");
+        const QStringList formattingOptions = QStringList() << QLatin1String("<%f ><%l>< %s>") << QLatin1String("<%l><, %s><, %f>");
         foreach(const QString &formattingOption, formattingOptions) {
             comboBoxPersonNameFormatting->addItem(Person::transcribePersonName(&dummyPerson, formattingOption), formattingOption);
         }

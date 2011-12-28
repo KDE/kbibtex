@@ -363,7 +363,7 @@ bool FileExporterBibTeX::save(QIODevice* iodevice, const File* bibtexfile, QStri
 
     if (d->encoding != QLatin1String("latex"))
         parameterCommentsList << new Comment("x-kbibtex-encoding=" + d->encoding, true);
-    parameterCommentsList << new Comment("x-kbibtex-personnameformatting=" + d->personNameFormatting, true);
+    /// Formatting of person names is now automatically detected in BibTeX Importer module
 
     /** before anything else, write parameter comments */
     for (QList<Comment*>::ConstIterator it = parameterCommentsList.constBegin(); it != parameterCommentsList.constEnd() && result && !d->cancelFlag; it++) {
@@ -548,7 +548,11 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value& value, const QStr
 
                         QString suffix = person->suffix();
 
-                        QString thisName = encodercheck(encoder, Person::transcribePersonName(d->personNameFormatting, firstName, lastName, suffix));
+                        /// Fall back and enforce comma-based name formatting
+                        /// if name contains a suffix like "Jr."
+                        /// Otherwise name could not be parsed again reliable
+                        const QString pnf = suffix.isEmpty() ? d->personNameFormatting : QLatin1String("<%l><, %s><, %f>");
+                        QString thisName = encodercheck(encoder, Person::transcribePersonName(pnf, firstName, lastName, suffix));
 
                         if (!isOpen) {
                             if (!result.isEmpty()) result.append(" # ");
