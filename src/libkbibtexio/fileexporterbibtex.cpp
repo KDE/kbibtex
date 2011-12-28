@@ -53,7 +53,7 @@
 const QString FileExporterBibTeX::keyEncoding = QLatin1String("encoding");
 const QString FileExporterBibTeX::defaultEncoding = QLatin1String("LaTeX");
 const QString FileExporterBibTeX::keyStringDelimiter = QLatin1String("stringDelimiter");
-const QString FileExporterBibTeX::defaultStringDelimiter = QLatin1String("\"\"");
+const QString FileExporterBibTeX::defaultStringDelimiter = QLatin1String("{}");
 const QString FileExporterBibTeX::keyQuoteComment = QLatin1String("quoteComment");
 const FileExporterBibTeX::QuoteComment FileExporterBibTeX::defaultQuoteComment = FileExporterBibTeX::qcNone;
 const QString FileExporterBibTeX::keyKeywordCasing = QLatin1String("keywordCasing");
@@ -111,12 +111,13 @@ public:
     bool writeEntry(QIODevice* iodevice, const Entry& entry) {
         BibTeXEntries *be = BibTeXEntries::self();
         BibTeXFields *bf = BibTeXFields::self();
+        EncoderLaTeX *laTeXEncoder = EncoderLaTeX::instance();
 
         /// write start of a entry (entry type and id) in plain ASCII
         iodevice->putChar('@');
         iodevice->write(be->format(entry.type(), keywordCasing).toAscii().data());
         iodevice->putChar('{');
-        iodevice->write(iconvLaTeX->encode(entry.id()));
+        iodevice->write(laTeXEncoder->convertToPlainAscii(entry.id()).toAscii());
 
         for (Entry::ConstIterator it = entry.constBegin(); it != entry.constEnd(); ++it) {
             const QString key = it.key();
@@ -137,11 +138,11 @@ public:
             iodevice->putChar(',');
             iodevice->putChar('\n');
             iodevice->putChar('\t');
-            iodevice->write(iconvLaTeX->encode(bf->format(key, keywordCasing)));
+            iodevice->write(laTeXEncoder->convertToPlainAscii(bf->format(key, keywordCasing)).toAscii());
             iodevice->putChar(' ');
             iodevice->putChar('=');
             iodevice->putChar(' ');
-            iodevice->write(iconvLaTeX->encode(text));
+            iodevice->write(iconvLaTeX->encode(text, key.toLower() == Entry::ftAuthor));
         }
         iodevice->putChar('\n');
         iodevice->putChar('}');
@@ -282,7 +283,7 @@ public:
 FileExporterBibTeX::FileExporterBibTeX()
         : FileExporter(), d(new FileExporterBibTeXPrivate(this))
 {
-// nothing
+    // nothing
 }
 
 FileExporterBibTeX::~FileExporterBibTeX()
