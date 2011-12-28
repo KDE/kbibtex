@@ -24,12 +24,11 @@
 #include <QFile>
 #include <QDir>
 #include <QRegExp>
+#include <QTextStream>
 
 #include <KLocale>
 
 #include "fileexportertoolchain.h"
-
-static const QRegExp chompRegExp = QRegExp("[\\n\\r]+$");
 
 const QString FileExporterToolchain::keyBabelLanguage = QLatin1String("babelLanguage");
 const QString FileExporterToolchain::defaultBabelLanguage = QLatin1String("english");
@@ -71,7 +70,10 @@ bool FileExporterToolchain::runProcess(const QString &cmd,  const QStringList &a
     m_process->setProcessEnvironment(processEnvironment);
     m_process->setWorkingDirectory(tempDir.name());
 
-    connect(m_process, SIGNAL(readyRead()), this, SLOT(slotReadProcessOutput()));
+    if (m_errorLog != NULL) {
+        connect(m_process, SIGNAL(readyReadStandardOutput()), this, SLOT(slotReadProcessStandardOutput()));
+        connect(m_process, SIGNAL(readyReadStandardError()), this, SLOT(slotReadProcessErrorOutput()));
+    }
 
     if (errorLog != NULL)
         errorLog->append(i18n("Running process '%1' using working directory '%2'", (cmd + " " + args.join(" ")), m_process->workingDirectory()));
@@ -132,21 +134,23 @@ void FileExporterToolchain::cancel()
     }
 }
 
-void FileExporterToolchain::slotReadProcessOutput()
+void FileExporterToolchain::slotReadProcessStandardOutput()
 {
     if (m_process) {
-        m_process->setReadChannel(QProcess::StandardOutput);
-        while (m_process->canReadLine()) {
-            QString line = m_process->readLine();
-            if (m_errorLog != NULL)
-                m_errorLog->append(line.replace(chompRegExp, ""));
-        }
-        m_process->setReadChannel(QProcess::StandardError);
-        while (m_process->canReadLine()) {
-            QString line = m_process->readLine();
-            if (m_errorLog != NULL)
-                m_errorLog->append(line.replace(chompRegExp, ""));
-        }
+        QTextStream ts(m_process->readAllStandardOutput());
+        QString line;
+        while (!(line = ts.readLine()).isNull())
+            m_errorLog->append(line);
+    }
+}
+
+void FileExporterToolchain::slotReadProcessErrorOutput()
+{
+    if (m_process) {
+        QTextStream ts(m_process->readAllStandardError());
+        QString line;
+        while (!(line = ts.readLine()).isNull())
+            m_errorLog->append(line);
     }
 }
 

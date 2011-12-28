@@ -44,6 +44,8 @@ public:
 
     FileExporterToolchain();
 
+    virtual void reloadConfig() = 0;
+
     static bool kpsewhich(const QString& filename);
     static bool which(const QString& filename);
 
@@ -62,7 +64,8 @@ private:
     QStringList *m_errorLog;
 
 private slots:
-    void slotReadProcessOutput();
+    void slotReadProcessStandardOutput();
+    void slotReadProcessErrorOutput();
 
 };
 
