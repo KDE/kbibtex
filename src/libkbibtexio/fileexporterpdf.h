@@ -33,6 +33,8 @@ public:
     FileExporterPDF(bool embedFiles = false);
     ~FileExporterPDF();
 
+    void reloadConfig();
+
     bool save(QIODevice* iodevice, const File* bibtexfile, QStringList *errorLog = NULL);
     bool save(QIODevice* iodevice, const Element* element, QStringList *errorLog = NULL);
 

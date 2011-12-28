@@ -25,7 +25,6 @@
 
 #include "settingsgeneralwidget.h"
 #include "settingsglobalkeywordswidget.h"
-#include "settingsfileexporterbibtexwidget.h"
 #include "settingsfileexporterpdfpswidget.h"
 #include "settingsfileexporterwidget.h"
 #include "settingscolorlabelwidget.h"
@@ -74,18 +73,6 @@ public:
         settingWidgets.insert(settingsWidget);
         KPageWidgetItem *pageSaving = p->addPage(settingsWidget, i18n("Saving and Exporting"));
         pageSaving->setIcon(KIcon("document-save"));
-        connect(settingsWidget, SIGNAL(changed()), p, SLOT(gotChanged()));
-
-        settingsWidget = new SettingsFileExporterBibTeXWidget(p);
-        settingWidgets.insert(settingsWidget);
-        page = p->addSubPage(pageSaving, settingsWidget, i18n("BibTeX"));
-        page->setIcon(KIcon("text-x-bibtex"));
-        connect(settingsWidget, SIGNAL(changed()), p, SLOT(gotChanged()));
-
-        settingsWidget = new SettingsFileExporterPDFPSWidget(p);
-        settingWidgets.insert(settingsWidget);
-        page = p->addSubPage(pageSaving, settingsWidget, i18n("PDF, Postscript, and RTF"));
-        page->setIcon(KIcon("application-pdf"));
         connect(settingsWidget, SIGNAL(changed()), p, SLOT(gotChanged()));
     }
 

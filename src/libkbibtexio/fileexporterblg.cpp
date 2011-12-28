@@ -42,6 +42,11 @@ FileExporterBLG::~FileExporterBLG()
     // nothing
 }
 
+void FileExporterBLG::reloadConfig()
+{
+    // nothing
+}
+
 bool FileExporterBLG::save(QIODevice*ioDevice, const File* bibtexfile, QStringList *errorLog)
 {
     bool result = false;

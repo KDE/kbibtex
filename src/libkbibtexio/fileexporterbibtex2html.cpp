@@ -101,6 +101,11 @@ FileExporterBibTeX2HTML::~FileExporterBibTeX2HTML()
     // nothing
 }
 
+void FileExporterBibTeX2HTML::reloadConfig()
+{
+    // nothing
+}
+
 bool FileExporterBibTeX2HTML::save(QIODevice* iodevice, const File* bibtexfile, QStringList *errorLog)
 {
     bool result = false;

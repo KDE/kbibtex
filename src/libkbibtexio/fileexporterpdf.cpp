@@ -39,6 +39,16 @@ FileExporterPDF::FileExporterPDF(bool embedFiles)
     m_bibTeXFilename = tempDir.name() + QLatin1String("/bibtex-to-pdf.bib");
     m_outputFilename = tempDir.name() + QLatin1String("/bibtex-to-pdf.pdf");
 
+    reloadConfig();
+}
+
+FileExporterPDF::~FileExporterPDF()
+{
+    // nothing
+}
+
+void FileExporterPDF::reloadConfig()
+{
     KSharedConfigPtr config = KSharedConfig::openConfig(QLatin1String("kbibtexrc"));
     KConfigGroup configGroup(config, QLatin1String("FileExporterPDFPS"));
     m_babelLanguage = configGroup.readEntry(keyBabelLanguage, defaultBabelLanguage);
@@ -46,11 +56,6 @@ FileExporterPDF::FileExporterPDF(bool embedFiles)
 
     KConfigGroup configGroupGeneral(config, QLatin1String("General"));
     m_paperSize = configGroupGeneral.readEntry(keyPaperSize, defaultPaperSize);
-}
-
-FileExporterPDF::~FileExporterPDF()
-{
-    // nothing
 }
 
 bool FileExporterPDF::save(QIODevice* iodevice, const File* bibtexfile, QStringList *errorLog)

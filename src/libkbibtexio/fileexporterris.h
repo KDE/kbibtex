@@ -32,7 +32,6 @@ class KBIBTEXIO_EXPORT FileExporterRIS : public FileExporter
 {
 public:
     FileExporterRIS();
-
     ~FileExporterRIS();
 
     bool save(QIODevice* iodevice, const Element* element, QStringList* errorLog = NULL);

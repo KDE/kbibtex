@@ -34,20 +34,29 @@ class SettingsFileExporterPDFPSWidget::SettingsFileExporterPDFPSWidgetPrivate
 private:
     SettingsFileExporterPDFPSWidget *p;
 
+    KComboBox *comboBoxPaperSize;
+    QMap<QString, QString> paperSizeLabelToName;
+
     KComboBox *comboBoxBabelLanguage;
     KComboBox *comboBoxBibliographyStyle;
 
     KSharedConfigPtr config;
-    static const QString configGroupName;
+    const QString configGroupName, configGroupNameGeneral ;
 
 public:
 
     SettingsFileExporterPDFPSWidgetPrivate(SettingsFileExporterPDFPSWidget *parent)
-            : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))) {
-        // nothing
+            : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName(QLatin1String("FileExporterPDFPS")), configGroupNameGeneral(QLatin1String("General")) {
+        paperSizeLabelToName.insert(i18n("A4"), QLatin1String("a4"));
+        paperSizeLabelToName.insert(i18n("Letter"), QLatin1String("letter"));
+        paperSizeLabelToName.insert(i18n("Legal"), QLatin1String("legal"));
     }
 
     void loadState() {
+        KConfigGroup configGroupGeneral(config, configGroupNameGeneral);
+        const QString paperSizeName = configGroupGeneral.readEntry(FileExporter::keyPaperSize, FileExporter::defaultPaperSize);
+        p->selectValue(comboBoxPaperSize, paperSizeLabelToName.key(paperSizeName));
+
         KConfigGroup configGroup(config, configGroupName);
         QString babelLanguage = configGroup.readEntry(FileExporterToolchain::keyBabelLanguage, FileExporterToolchain::defaultBabelLanguage);
         p->selectValue(comboBoxBabelLanguage, babelLanguage);
@@ -56,6 +65,10 @@ public:
     }
 
     void saveState() {
+        KConfigGroup configGroupGeneral(config, configGroupNameGeneral);
+        const QString paperSizeName = paperSizeLabelToName.value(comboBoxPaperSize->currentText(), FileExporter::defaultPaperSize);
+        configGroupGeneral.writeEntry(FileExporter::keyPaperSize, paperSizeName);
+
         KConfigGroup configGroup(config, configGroupName);
         configGroup.writeEntry(FileExporterToolchain::keyBabelLanguage, comboBoxBabelLanguage->lineEdit()->text());
         configGroup.writeEntry(FileExporterToolchain::keyBibliographyStyle, comboBoxBibliographyStyle->lineEdit()->text());
@@ -63,12 +76,23 @@ public:
     }
 
     void resetToDefaults() {
+        p->selectValue(comboBoxPaperSize, paperSizeLabelToName[FileExporter::defaultPaperSize]);
         p->selectValue(comboBoxBabelLanguage, FileExporterToolchain::defaultBabelLanguage);
         p->selectValue(comboBoxBibliographyStyle, FileExporterToolchain::defaultBibliographyStyle);
     }
 
     void setupGUI() {
         QFormLayout *layout = new QFormLayout(p);
+
+        comboBoxPaperSize = new KComboBox(false, p);
+        comboBoxPaperSize->setObjectName("comboBoxPaperSize");
+        layout->addRow(i18n("Paper Size:"), comboBoxPaperSize);
+        QStringList paperSizeLabelToNameKeys = paperSizeLabelToName.keys();
+        paperSizeLabelToNameKeys.sort();
+        foreach(QString labelText, paperSizeLabelToNameKeys) {
+            comboBoxPaperSize->addItem(labelText, paperSizeLabelToName[labelText]);
+        }
+        connect(comboBoxPaperSize, SIGNAL(currentIndexChanged(int)), p, SIGNAL(changed()));
 
         comboBoxBabelLanguage = new KComboBox(true, p);
         comboBoxBabelLanguage->setObjectName("comboBoxBabelLanguage");
@@ -88,8 +112,6 @@ public:
         connect(comboBoxBibliographyStyle->lineEdit(), SIGNAL(textChanged(QString)), p, SIGNAL(changed()));
     }
 };
-
-const QString SettingsFileExporterPDFPSWidget::SettingsFileExporterPDFPSWidgetPrivate::configGroupName = QLatin1String("FileExporterPDFPS");
 
 SettingsFileExporterPDFPSWidget::SettingsFileExporterPDFPSWidget(QWidget *parent)
         : SettingsAbstractWidget(parent), d(new SettingsFileExporterPDFPSWidgetPrivate(this))

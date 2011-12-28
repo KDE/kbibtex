@@ -35,6 +35,16 @@ FileExporterRTF::FileExporterRTF()
     m_bibTeXFilename = tempDir.name() + QLatin1String("/bibtex-to-rtf.bib");
     m_outputFilename = tempDir.name() + QLatin1String("/bibtex-to-rtf.rtf");
 
+    reloadConfig();
+}
+
+FileExporterRTF::~FileExporterRTF()
+{
+    // nothing
+}
+
+void FileExporterRTF::reloadConfig()
+{
     KSharedConfigPtr config = KSharedConfig::openConfig(QLatin1String("kbibtexrc"));
     KConfigGroup configGroup(config, QLatin1String("FileExporterPDFPS"));
     m_babelLanguage = configGroup.readEntry(keyBabelLanguage, defaultBabelLanguage);
@@ -42,12 +52,6 @@ FileExporterRTF::FileExporterRTF()
 
     KConfigGroup configGroupGeneral(config, QLatin1String("General"));
     m_paperSize = configGroupGeneral.readEntry(keyPaperSize, defaultPaperSize);
-
-}
-
-FileExporterRTF::~FileExporterRTF()
-{
-    // nothing
 }
 
 bool FileExporterRTF::save(QIODevice* iodevice, const File* bibtexfile, QStringList *errorLog)

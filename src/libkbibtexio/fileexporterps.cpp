@@ -35,6 +35,16 @@ FileExporterPS::FileExporterPS()
     m_bibTeXFilename = tempDir.name() + QLatin1String("/bibtex-to-ps.bib");
     m_outputFilename = tempDir.name() + QLatin1String("/bibtex-to-ps.ps");
 
+    reloadConfig();
+}
+
+FileExporterPS::~FileExporterPS()
+{
+    // nothing
+}
+
+void FileExporterPS::reloadConfig()
+{
     KSharedConfigPtr config = KSharedConfig::openConfig(QLatin1String("kbibtexrc"));
     KConfigGroup configGroup(config, QLatin1String("FileExporterPDFPS"));
     m_babelLanguage = configGroup.readEntry(keyBabelLanguage, defaultBabelLanguage);
@@ -42,11 +52,6 @@ FileExporterPS::FileExporterPS()
 
     KConfigGroup configGroupGeneral(config, QLatin1String("General"));
     m_paperSize = configGroupGeneral.readEntry(keyPaperSize, defaultPaperSize);
-}
-
-FileExporterPS::~FileExporterPS()
-{
-    // nothing
 }
 
 bool FileExporterPS::save(QIODevice* iodevice, const File* bibtexfile, QStringList *errorLog)
