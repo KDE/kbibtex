@@ -28,7 +28,6 @@
 #include <QAction>
 #include <QButtonGroup>
 #include <QRadioButton>
-#include <QDesktopServices>
 #include <QLabel>
 
 #include <KDialog>
@@ -38,6 +37,7 @@
 #include <KMenu>
 #include <KPushButton>
 #include <KMimeType>
+#include <KRun>
 #include <KTemporaryFile>
 #include <KFileDialog>
 #include <KIO/NetAccess>
@@ -215,9 +215,22 @@ void PDFItemDelegate::slotViewPDF()
         QString tempfileName = index.data(TempFileNameRole).toString();
         QUrl url = index.data(URLRole).toUrl();
         if (!tempfileName.isEmpty()) {
-            QDesktopServices::openUrl(QUrl::fromLocalFile(tempfileName));
+            /// Guess mime type for url to open
+            KUrl tempUrl(tempfileName);
+            KMimeType::Ptr mimeType = KMimeType::findByPath(url.path());
+            QString mimeTypeName = mimeType->name();
+            if (mimeTypeName == QLatin1String("application/octet-stream"))
+                mimeTypeName = QLatin1String("text/html");
+            /// Ask KDE subsystem to open url in viewer matching mime type
+            KRun::runUrl(tempUrl, mimeTypeName, NULL, false, false);
         } else if (url.isValid()) {
-            QDesktopServices::openUrl(url);
+            /// Guess mime type for url to open
+            KMimeType::Ptr mimeType = KMimeType::findByPath(url.path());
+            QString mimeTypeName = mimeType->name();
+            if (mimeTypeName == QLatin1String("application/octet-stream"))
+                mimeTypeName = QLatin1String("text/html");
+            /// Ask KDE subsystem to open url in viewer matching mime type
+            KRun::runUrl(url, mimeTypeName, NULL, false, false);
         }
     }
 }

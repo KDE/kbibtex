@@ -27,7 +27,6 @@
 #include <QLayout>
 #include <QKeyEvent>
 #include <QSignalMapper>
-#include <QDesktopServices>
 
 #include <KFileDialog>
 #include <KDebug>
@@ -41,7 +40,9 @@
 #include <KToggleAction>
 #include <KMenu>
 #include <KTemporaryFile>
-#include <kio/netaccess.h>
+#include <KIO/NetAccess>
+#include <KRun>
+#include <KMimeType>
 
 #include <file.h>
 #include <fileinfo.h>
@@ -525,14 +526,30 @@ void KBibTeXPart::elementViewDocument()
     if (!d->viewDocumentMenu->actions().isEmpty()) {
         // TODO: Choose "best" URL instead of first (local file over remote, PDF over website, ...)
         QAction *action = d->viewDocumentMenu->actions().first();
-        QDesktopServices::openUrl(KUrl(action->data().toString())); // TODO KDE way?
+
+        /// Guess mime type for url to open
+        KUrl url(action->data().toString());
+        KMimeType::Ptr mimeType = KMimeType::findByPath(url.path());
+        QString mimeTypeName = mimeType->name();
+        if (mimeTypeName == QLatin1String("application/octet-stream"))
+            mimeTypeName = QLatin1String("text/html");
+        /// Ask KDE subsystem to open url in viewer matching mime type
+        KRun::runUrl(url, mimeTypeName, widget(), false, false);
     }
 }
 
 void KBibTeXPart::elementViewDocumentMenu(QObject *obj)
 {
     QString text = static_cast<QAction*>(obj)->data().toString(); ///< only a KAction will be passed along
-    QDesktopServices::openUrl(KUrl(text)); // TODO KDE way?
+
+    /// Guess mime type for url to open
+    KUrl url(text);
+    KMimeType::Ptr mimeType = KMimeType::findByPath(url.path());
+    QString mimeTypeName = mimeType->name();
+    if (mimeTypeName == QLatin1String("application/octet-stream"))
+        mimeTypeName = QLatin1String("text/html");
+    /// Ask KDE subsystem to open url in viewer matching mime type
+    KRun::runUrl(url, mimeTypeName, widget(), false, false);
 }
 
 void KBibTeXPart::elementFindPDF()

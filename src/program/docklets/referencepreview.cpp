@@ -31,7 +31,6 @@
 #include <QLayout>
 #include <QApplication>
 #include <QTextStream>
-#include <QDesktopServices>
 
 #include <KTemporaryFile>
 #include <KLocale>
@@ -40,7 +39,9 @@
 #include <KPushButton>
 #include <KFileDialog>
 #include <KDebug>
-#include <kio/netaccess.h>
+#include <KMimeType>
+#include <KRun>
+#include <KIO/NetAccess>
 
 #include <fileexporterbibtex.h>
 #include <fileexporterbibtex2html.h>
@@ -333,7 +334,15 @@ void ReferencePreview::openAsHTML()
     file.setSuffix(".html");
     file.setAutoRemove(false); /// let file stay alive for browser
     d->saveHTML(file);
-    QDesktopServices::openUrl(KUrl(file.fileName()));
+
+    /// Guess mime type for url to open
+    KUrl url(file.fileName());
+    KMimeType::Ptr mimeType = KMimeType::findByPath(url.path());
+    QString mimeTypeName = mimeType->name();
+    if (mimeTypeName == QLatin1String("application/octet-stream"))
+        mimeTypeName = QLatin1String("text/html");
+    /// Ask KDE subsystem to open url in viewer matching mime type
+    KRun::runUrl(url, mimeTypeName, this, false, false);
 }
 
 void ReferencePreview::saveAsHTML()

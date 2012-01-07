@@ -25,7 +25,6 @@
 #include <QLabel>
 #include <QMap>
 #include <QFileInfo>
-#include <QDesktopServices>
 #include <QCheckBox>
 #include <QStackedWidget>
 #include <QDockWidget>
@@ -37,6 +36,7 @@
 #include <KLocale>
 #include <KComboBox>
 #include <KIcon>
+#include <KRun>
 #include <KMimeType>
 #include <KMimeTypeTrader>
 #include <KService>
@@ -305,7 +305,13 @@ public:
 
     void openExternally() {
         KUrl url(cbxEntryToUrlInfo[urlComboBox->currentIndex()].url);
-        QDesktopServices::openUrl(url); // TODO KDE way?
+        /// Guess mime type for url to open
+        KMimeType::Ptr mimeType = KMimeType::findByPath(url.path());
+        QString mimeTypeName = mimeType->name();
+        if (mimeTypeName == QLatin1String("application/octet-stream"))
+            mimeTypeName = QLatin1String("text/html");
+        /// Ask KDE subsystem to open url in viewer matching mime type
+        KRun::runUrl(url, mimeTypeName, p, false, false);
     }
 
     UrlInfo urlMetaInfo(const KUrl &url) {

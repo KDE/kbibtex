@@ -26,7 +26,6 @@
 #include <QLabel>
 #include <QTreeWidget>
 #include <QFileInfo>
-#include <QDesktopServices>
 #include <QDropEvent>
 
 #include <KPushButton>
@@ -37,6 +36,8 @@
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <KDebug>
+#include <KMimeType>
+#include <KRun>
 
 #include <kbibtexnamespace.h>
 #include <bibtexentries.h>
@@ -697,8 +698,15 @@ void OtherFieldsWidget::actionDelete()
 
 void OtherFieldsWidget::actionOpen()
 {
-    if (currentUrl.isValid())
-        QDesktopServices::openUrl(currentUrl); // TODO KDE way?
+    if (currentUrl.isValid()) {
+        /// Guess mime type for url to open
+        KMimeType::Ptr mimeType = KMimeType::findByPath(currentUrl.path());
+        QString mimeTypeName = mimeType->name();
+        if (mimeTypeName == QLatin1String("application/octet-stream"))
+            mimeTypeName = QLatin1String("text/html");
+        /// Ask KDE subsystem to open url in viewer matching mime type
+        KRun::runUrl(currentUrl, mimeTypeName, this, false, false);
+    }
 }
 
 void OtherFieldsWidget::createGUI()
