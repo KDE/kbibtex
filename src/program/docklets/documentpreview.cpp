@@ -22,9 +22,9 @@
 
 #include <QList>
 #include <QLayout>
-#include <QLabel>
 #include <QMap>
 #include <QFileInfo>
+#include <QResizeEvent>
 #include <QCheckBox>
 #include <QStackedWidget>
 #include <QDockWidget>
@@ -56,6 +56,37 @@
 #include <fileinfo.h>
 #include "documentpreview.h"
 
+ImageLabel::ImageLabel(const QString &text, QWidget *parent, Qt::WindowFlags f)
+        : QLabel(text, parent, f)
+{
+    // nothing
+}
+
+void ImageLabel::setPixmap(const QPixmap &pixmap)
+{
+    m_pixmap = pixmap;
+    if (!m_pixmap.isNull()) {
+        setCursor(Qt::WaitCursor);
+        QPixmap scaledPixmap = m_pixmap.width() <= width() && m_pixmap.height() <= height() ? m_pixmap : pixmap.scaled(width(), height(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        QLabel::setPixmap(scaledPixmap);
+        setMinimumSize(100, 100);
+        unsetCursor();
+    } else
+        QLabel::setPixmap(m_pixmap);
+}
+
+void ImageLabel::resizeEvent(QResizeEvent *event)
+{
+    QLabel::resizeEvent(event);
+    if (!m_pixmap.isNull()) {
+        setCursor(Qt::WaitCursor);
+        QPixmap scaledPixmap = m_pixmap.width() <= event->size().width() && m_pixmap.height() <= event->size().height() ? m_pixmap : m_pixmap.scaled(event->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        QLabel::setPixmap(scaledPixmap);
+        setMinimumSize(100, 100);
+        unsetCursor();
+    }
+}
+
 class DocumentPreview::DocumentPreviewPrivate
 {
 public:
@@ -75,7 +106,7 @@ private:
     KComboBox *urlComboBox;
     KPushButton *externalViewerButton;
     QStackedWidget *stackedWidget;
-    QLabel *message;
+    ImageLabel *message;
     QMap<int, struct UrlInfo> cbxEntryToUrlInfo;
     QMutex addingUrlMutex;
 
@@ -141,7 +172,7 @@ public:
         layout->addWidget(stackedWidget, 1);
 
         /// default widget if no preview is available
-        message = new QLabel(i18n("No preview available"), stackedWidget);
+        message = new ImageLabel(i18n("No preview available"), stackedWidget);
         message->setAlignment(Qt::AlignCenter);
         message->setWordWrap(true);
         swpMessage = stackedWidget->addWidget(message);
@@ -248,6 +279,7 @@ public:
 
     void showMessage(const QString &msgText) {
         stackedWidget->setCurrentIndex(swpMessage);
+        message->setPixmap(QPixmap());
         message->setText(msgText);
         stackedWidget->widget(swpOkular)->setEnabled(false);
         stackedWidget->widget(swpHTML)->setEnabled(false);
@@ -266,6 +298,8 @@ public:
             stackedWidget->setCurrentIndex(swpHTML);
             stackedWidget->widget(swpHTML)->setEnabled(true);
 #endif // HAVE_QTWEBKIT
+        } else if (widget == message) {
+            stackedWidget->setCurrentIndex(swpMessage);
         } else
             showMessage(i18n("Cannot show requested part"));
     }
@@ -273,6 +307,7 @@ public:
     bool showUrl(const struct UrlInfo &urlInfo) {
         static const QStringList okularMimetypes = QStringList() << QLatin1String("application/x-pdf") << QLatin1String("application/pdf") << QLatin1String("application/x-gzpdf") << QLatin1String("application/x-bzpdf") << QLatin1String("application/x-wwf") << QLatin1String("image/vnd.djvu") << QLatin1String("application/postscript") << QLatin1String("image/x-eps") << QLatin1String("application/x-gzpostscript") << QLatin1String("application/x-bzpostscript") << QLatin1String("image/x-gzeps") << QLatin1String("image/x-bzeps");
         static const QStringList htmlMimetypes = QStringList() << QLatin1String("text/html") << QLatin1String("application/xml") << QLatin1String("application/xhtml+xml");
+        static const QStringList imageMimetypes = QStringList() << QLatin1String("image/jpeg") << QLatin1String("image/png") << QLatin1String("image/gif") << QLatin1String("image/tiff");
 
         stackedWidget->widget(swpHTML)->setEnabled(false);
         stackedWidget->widget(swpOkular)->setEnabled(false);
@@ -296,6 +331,12 @@ public:
 #else // HAVE_QTWEBKIT
             htmlPart->openUrl(urlInfo.url);
 #endif // HAVE_QTWEBKIT
+            return true;
+        } else if (imageMimetypes.contains(urlInfo.mimeType)) {
+            p->setCursor(Qt::BusyCursor);
+            message->setPixmap(QPixmap(urlInfo.url.pathOrUrl()));
+            showPart(NULL, message);
+            p->unsetCursor();
             return true;
         } else
             showMessage(i18n("<qt>Don't know how to show mimetype '%1'.</qt>", urlInfo.mimeType));

@@ -22,10 +22,13 @@
 #define KBIBTEX_PROGRAM_DOCUMENTPREVIEW_H
 
 #include <QWidget>
+#include <QLabel>
+#include <QPixmap>
 
 #include <KUrl>
 
 class QDockWidget;
+class QResizeEvent;
 
 class KJob;
 namespace KIO
@@ -35,6 +38,19 @@ class Job;
 
 class Element;
 class File;
+
+class ImageLabel : public QLabel
+{
+public:
+    ImageLabel(const QString &text, QWidget *parent = NULL, Qt::WindowFlags f = 0);
+    void setPixmap(const QPixmap &pixmap);
+
+protected:
+    void resizeEvent(QResizeEvent *event);
+
+private:
+    QPixmap m_pixmap;
+};
 
 class DocumentPreview : public QWidget
 {
