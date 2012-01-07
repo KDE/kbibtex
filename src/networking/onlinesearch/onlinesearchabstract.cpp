@@ -21,6 +21,7 @@
 #include <QFileInfo>
 #include <QNetworkReply>
 #include <QTimer>
+#include <QListWidgetItem>
 
 #include <KStandardDirs>
 #include <kio/netaccess.h>
@@ -64,7 +65,7 @@ OnlineSearchAbstract::OnlineSearchAbstract(QWidget *parent)
     m_parent = parent;
 }
 
-KIcon OnlineSearchAbstract::icon() const
+KIcon OnlineSearchAbstract::icon(QListWidgetItem *listWidgetItem)
 {
     static const QRegExp invalidChars("[^-a-z0-9_]", Qt::CaseInsensitive);
     QString fileName = favIconUrl();
@@ -72,8 +73,13 @@ KIcon OnlineSearchAbstract::icon() const
     fileName.prepend(KStandardDirs::locateLocal("cache", "favicons/"));
 
     if (!QFileInfo(fileName).exists()) {
-        if (!KIO::NetAccess::file_copy(KUrl(favIconUrl()), KUrl(fileName), NULL))
-            return KIcon();
+        QNetworkRequest request(favIconUrl());
+        QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
+        reply->setObjectName(fileName);
+        if (listWidgetItem != NULL)
+            m_iconReplyToListWidgetItem.insert(reply, listWidgetItem);
+        connect(reply, SIGNAL(finished()), this, SLOT(iconDownloadFinished()));
+        return KIcon(QLatin1String("applications-internet"));
     }
 
     return KIcon(fileName);
@@ -278,4 +284,20 @@ void OnlineSearchAbstract::networkReplyFinished()
     }
 }
 
-QNetworkAccessManager *OnlineSearchAbstract::m_networkAccessManager = NULL;
+void OnlineSearchAbstract::iconDownloadFinished()
+{
+    QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
+
+    if (reply->error() == QNetworkReply::NoError) {
+        const QString filename = reply->objectName();
+        QFile iconFile(filename);
+        if (iconFile.open(QFile::WriteOnly)) {
+            iconFile.write(reply->readAll());
+            iconFile.close();
+
+            QListWidgetItem *listWidgetItem = m_iconReplyToListWidgetItem.value(reply, NULL);
+            if (listWidgetItem != NULL)
+                listWidgetItem->setIcon(KIcon(filename));
+        }
+    }
+}

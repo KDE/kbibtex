@@ -34,9 +34,9 @@
 
 #include "entry.h"
 
-class QNetworkAccessManager;
 class QNetworkReply;
 class QNetworkRequest;
+class QListWidgetItem;
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
@@ -89,7 +89,7 @@ public:
     virtual void startSearch(const QMap<QString, QString> &query, int numResults) = 0;
     virtual QString label() const = 0;
     QString name();
-    virtual KIcon icon() const;
+    virtual KIcon icon(QListWidgetItem *listWidgetItem = NULL);
     virtual OnlineSearchQueryFormAbstract* customWidget(QWidget *parent) = 0;
     virtual KUrl homepage() const = 0;
 
@@ -125,22 +125,18 @@ protected:
 
     QMap<QString, QString> formParameters(const QString &htmlText, const QString &formTagBegin);
 
-    /**
-     * Get the unique application-wide QNetworkAccessManager
-     */
-    QNetworkAccessManager *networkAccessManager();
-
     void setNetworkReplyTimeout(QNetworkReply *reply, int timeOutSec = 30);
 
 private:
     QString m_name;
     static const char *httpUnsafeChars;
-    static QNetworkAccessManager *m_networkAccessManager;
     QMap<QTimer*, QNetworkReply*> m_mapTimerToReply;
+    QMap<QNetworkReply*, QListWidgetItem*> m_iconReplyToListWidgetItem;
 
 private slots:
     void networkReplyTimeout();
     void networkReplyFinished();
+    void iconDownloadFinished();
 
 signals:
     void foundEntry(Entry*);

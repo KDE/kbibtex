@@ -217,7 +217,7 @@ public:
 
         QListWidgetItem *item = new QListWidgetItem(engine->label(), enginesList);
         item->setCheckState(configGroup.readEntry(engine->name(), false) ? Qt::Checked : Qt::Unchecked);
-        item->setIcon(engine->icon());
+        item->setIcon(engine->icon(item));
         item->setData(HomepageRole, engine->homepage());
         item->setData(NameRole, engine->name());
 
