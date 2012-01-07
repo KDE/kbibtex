@@ -56,20 +56,6 @@ public:
         connect(filterUpdateTimer, SIGNAL(timeout()), p, SLOT(timerTriggered()));
     }
 
-    void clearFilter() {
-        comboBoxCombination->blockSignals(true);
-        comboBoxField->blockSignals(true);
-
-        comboBoxFilterText->lineEdit()->setText("");
-        comboBoxCombination->setCurrentIndex(0);
-        comboBoxField->setCurrentIndex(0);
-
-        comboBoxCombination->blockSignals(false);
-        comboBoxField->blockSignals(false);
-
-        checkboxSearchPDFfiles->setChecked(false);
-    }
-
     SortFilterBibTeXFileModel::FilterQuery filter() {
         SortFilterBibTeXFileModel::FilterQuery result;
         result.combination = comboBoxCombination->currentIndex() == 0 ? SortFilterBibTeXFileModel::AnyTerm : SortFilterBibTeXFileModel::EveryTerm;
@@ -197,7 +183,6 @@ FilterBar::FilterBar(QWidget *parent)
 
     connect(d->comboBoxFilterText->lineEdit(), SIGNAL(textChanged(QString)), this, SLOT(lineeditTextChanged()));
     connect(d->comboBoxFilterText->lineEdit(), SIGNAL(returnPressed()), this, SLOT(lineeditReturnPressed()));
-    connect(lineEdit, SIGNAL(clearButtonClicked()), this, SLOT(clearFilter()));
     connect(d->comboBoxCombination, SIGNAL(currentIndexChanged(int)), this, SLOT(comboboxStatusChanged()));
     connect(d->comboBoxField, SIGNAL(currentIndexChanged(int)), this, SLOT(comboboxStatusChanged()));
     connect(d->checkboxSearchPDFfiles, SIGNAL(toggled(bool)), this, SLOT(comboboxStatusChanged()));
@@ -211,12 +196,6 @@ FilterBar::FilterBar(QWidget *parent)
     d->comboBoxFilterText->lineEdit()->setText(QLatin1String(""));
     d->comboBoxCombination->setCurrentIndex(configGroup.readEntry("CurrentCombination", 0));
     d->comboBoxField->setCurrentIndex(configGroup.readEntry("CurrentField", 0));
-}
-
-void FilterBar::clearFilter()
-{
-    d->clearFilter();
-    emit filterChanged(d->filter());
 }
 
 void FilterBar::setFilter(SortFilterBibTeXFileModel::FilterQuery fq)

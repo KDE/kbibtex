@@ -38,7 +38,6 @@ public:
     SortFilterBibTeXFileModel::FilterQuery filter();
 
 public slots:
-    void clearFilter();
     void setFilter(SortFilterBibTeXFileModel::FilterQuery);
 
 signals:
