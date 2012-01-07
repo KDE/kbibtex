@@ -204,10 +204,12 @@ FilterBar::FilterBar(QWidget *parent)
 
     /// restore history on filter texts
     /// see addCompletionString for more detailed explanation
-    KConfigGroup configGroup(d->config, QLatin1String("FilterBar"));
+    KConfigGroup configGroup(d->config, d->configGroupName);
     QStringList completionListDate = configGroup.readEntry(QLatin1String("PreviousSearches"), QStringList());
+    kDebug() << "Previous Searches:" << completionListDate.join(", ");
     for (QStringList::Iterator it = completionListDate.begin(); it != completionListDate.end(); ++it)
         d->comboBoxFilterText->addItem((*it).mid(12));
+    d->comboBoxFilterText->lineEdit()->setText(QLatin1String(""));
     d->comboBoxCombination->setCurrentIndex(configGroup.readEntry("CurrentCombination", 0));
     d->comboBoxField->setCurrentIndex(configGroup.readEntry("CurrentField", 0));
 }
