@@ -206,7 +206,6 @@ FilterBar::FilterBar(QWidget *parent)
     /// see addCompletionString for more detailed explanation
     KConfigGroup configGroup(d->config, d->configGroupName);
     QStringList completionListDate = configGroup.readEntry(QLatin1String("PreviousSearches"), QStringList());
-    kDebug() << "Previous Searches:" << completionListDate.join(", ");
     for (QStringList::Iterator it = completionListDate.begin(); it != completionListDate.end(); ++it)
         d->comboBoxFilterText->addItem((*it).mid(12));
     d->comboBoxFilterText->lineEdit()->setText(QLatin1String(""));
