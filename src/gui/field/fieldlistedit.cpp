@@ -28,12 +28,15 @@
 #include <QCheckBox>
 #include <QDragEnterEvent>
 #include <QDropEvent>
+#include <QUrl>
+#include <QTimer>
 
 #include <KMessageBox>
 #include <KLocale>
 #include <KPushButton>
 #include <KFileDialog>
 #include <KInputDialog>
+#include <KIO/NetAccess>
 
 #include <fileinfo.h>
 #include <file.h>
@@ -229,7 +232,7 @@ bool FieldListEdit::reset(const Value& value)
     for (Value::ConstIterator it = value.constBegin(); it != value.constEnd(); ++it) {
         Value v;
         v.append(*it);
-        FieldLineEdit *fieldLineEdit = d->addFieldLineEdit();
+        FieldLineEdit *fieldLineEdit = addFieldLineEdit();
         fieldLineEdit->setFile(d->file);
         fieldLineEdit->reset(v);
     }
@@ -288,6 +291,11 @@ void FieldListEdit::setCompletionItems(const QStringList &items)
         (*it)->setCompletionItems(items);
 }
 
+FieldLineEdit* FieldListEdit::addFieldLineEdit()
+{
+    return d->addFieldLineEdit();
+}
+
 void FieldListEdit::addButton(KPushButton *button)
 {
     d->addButton(button);
@@ -331,7 +339,7 @@ void FieldListEdit::dropEvent(QDropEvent *event)
     if (file == NULL || file->count() == 0) {
         /// fall-back case: single field line edit with text
         d->removeAllFieldLineEdits();
-        FieldLineEdit *fle = d->addFieldLineEdit();
+        FieldLineEdit *fle = addFieldLineEdit();
         fle->setText(clipboardText);
         emit modified();
     }
@@ -339,7 +347,7 @@ void FieldListEdit::dropEvent(QDropEvent *event)
 
 void FieldListEdit::lineAdd(Value *value)
 {
-    FieldLineEdit *le = d->addFieldLineEdit();
+    FieldLineEdit *le = addFieldLineEdit();
     le->setCompletionItems(d->completionItems);
     if (value != NULL)
         le->reset(*value);
@@ -347,7 +355,7 @@ void FieldListEdit::lineAdd(Value *value)
 
 void FieldListEdit::lineAdd()
 {
-    FieldLineEdit *newEdit = d->addFieldLineEdit();
+    FieldLineEdit *newEdit = addFieldLineEdit();
     newEdit->setCompletionItems(d->completionItems);
     QSize size(d->container->width(), d->recommendedHeight());
     d->container->resize(size);
@@ -439,6 +447,70 @@ void UrlListEdit::slotAddLocalFile()
     }
 }
 
+void UrlListEdit::slotSaveLocally()
+{
+    /// Assume the KPushButton "Save locally" was the sender of this signal
+    KPushButton *buttonSaveLocally = static_cast<KPushButton*>(sender());
+    /// Determine associated FieldLineEdit widget
+    FieldLineEdit *fieldLineEdit = m_saveLocallyButtonToFieldLineEdit[buttonSaveLocally];
+    /// Build Url from line edit's content
+    KUrl url(fieldLineEdit->text());
+
+    /// Only proceed if Url is valid and points to a remote location
+    if (url.isValid() && !urlIsLocal(url)) {
+        /// Get filename from url (without any path/directory part)
+        QString filename = url.fileName();
+        /// Build QFileInfo from current BibTeX file if available
+        QFileInfo bibFileinfo = d->file != NULL ? QFileInfo(d->file->property(File::Url).toUrl().path()) : QFileInfo();
+        /// Build proposal to a local filename for remote file
+        filename = bibFileinfo.isFile() ? bibFileinfo.absolutePath() + QDir::separator() + filename : filename;
+        /// Ask user for actual local filename to save remote file to
+        filename = KFileDialog::getSaveFileName(filename, QLatin1String("application/pdf application/postscript"), this, i18n("Save file locally"));
+        /// Check if user entered a valid filename ...
+        if (!filename.isEmpty()) {
+            /// Ask user if reference to local file should be
+            /// relative or absolute in relation to the BibTeX file
+            QString absoluteFilename = filename;
+            if (bibFileinfo.isFile())
+                filename = askRelativeOrStaticFilename(this, filename, d->file->property(File::Url).toUrl());
+
+            /// Download remote file and save it locally
+            // FIXME: KIO::NetAccess::download is blocking
+            setEnabled(false);
+            setCursor(Qt::WaitCursor);
+            if (KIO::NetAccess::download(url, absoluteFilename, this)) {
+                /// Download succeeded, add reference to local file to this BibTeX entry
+                Value *value = new Value();
+                value->append(QSharedPointer<VerbatimText>(new VerbatimText(filename)));
+                lineAdd(value);
+            }
+            setEnabled(true);
+            unsetCursor();
+        }
+    }
+}
+
+void UrlListEdit::textChanged(const QString &newText)
+{
+    /// Assume a FieldLineEdit was the sender of this signal
+    FieldLineEdit *fieldLineEdit = dynamic_cast<FieldLineEdit*>(sender());
+    if (fieldLineEdit == NULL) return; ///< should never happen!
+    /// Determine associated KPushButton "Save locally"
+    KPushButton *buttonSaveLocally = m_saveLocallyButtonToFieldLineEdit.key(fieldLineEdit, NULL);
+    /// Just ensure the button is valid
+    if (buttonSaveLocally != NULL) {
+        buttonSaveLocally->dumpObjectInfo();
+        /// Create Url from new text to make some tests on it
+        KUrl url(newText);
+        /// Enable button only if Url is valid and points to a remote
+        /// PDF or PostScript file
+        // TODO more file types?
+        bool canBeSaved = url.isValid() && (newText.endsWith(QLatin1String(".pdf")) || newText.endsWith(QLatin1String(".ps"))) && !urlIsLocal(url);
+        buttonSaveLocally->setEnabled(canBeSaved);
+        buttonSaveLocally->setToolTip(canBeSaved ? i18n("Save file \"%1\" locally", url.pathOrUrl()) : QLatin1String(""));
+    }
+}
+
 QString& UrlListEdit::askRelativeOrStaticFilename(QWidget *parent, QString &filename, const QUrl &baseUrl)
 {
     QFileInfo baseUrlInfo = baseUrl.isEmpty() ? QFileInfo() : QFileInfo(baseUrl.path());
@@ -450,6 +522,33 @@ QString& UrlListEdit::askRelativeOrStaticFilename(QWidget *parent, QString &file
             filename = relativeFilename;
     }
     return filename;
+}
+
+bool UrlListEdit::urlIsLocal(const QUrl& url)
+{
+    const QString scheme = url.scheme();
+    /// Test various schemes such as "http", "https", "ftp", ...
+    return !scheme.startsWith(QLatin1String("http")) && !scheme.startsWith(QLatin1String("ftp")) && !scheme.startsWith(QLatin1String("webdav")) && scheme != QLatin1String("smb");
+}
+
+FieldLineEdit* UrlListEdit::addFieldLineEdit()
+{
+    /// Call original implementation to get an instance of a FieldLineEdit
+    FieldLineEdit *fieldLineEdit = FieldListEdit::addFieldLineEdit();
+
+    /// Create a new "save locally" button
+    KPushButton *buttonSaveLocally = new KPushButton(KIcon("document-save"), QLatin1String(""), fieldLineEdit);
+    buttonSaveLocally->setEnabled(false);
+    /// Append button to new FieldLineEdit
+    fieldLineEdit->appendWidget(buttonSaveLocally);
+    /// Memorize to which FieldLineEdit this button belongs to
+    m_saveLocallyButtonToFieldLineEdit.insert(buttonSaveLocally, fieldLineEdit);
+    /// Connect signals to react on button events
+    /// or changes in the FieldLineEdit's text
+    connect(buttonSaveLocally, SIGNAL(clicked()), this, SLOT(slotSaveLocally()));
+    connect(fieldLineEdit, SIGNAL(textChanged(QString)), this, SLOT(textChanged(QString)));
+
+    return fieldLineEdit;
 }
 
 void UrlListEdit::setReadOnly(bool isReadOnly)

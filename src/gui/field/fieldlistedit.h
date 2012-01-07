@@ -22,6 +22,7 @@
 
 #include <QWidget>
 #include <QSet>
+#include <QQueue>
 
 #include <KSharedConfig>
 
@@ -35,6 +36,7 @@ class QDragEnterEvent;
 class KPushButton;
 
 class Element;
+class FieldLineEdit;
 
 /**
 @author Thomas Fischer
@@ -61,6 +63,9 @@ signals:
     void modified();
 
 protected:
+    /// Add a new field line edit to this list
+    /// Allows to get overwritten by descentants of this class
+    virtual FieldLineEdit* addFieldLineEdit();
     void addButton(KPushButton *button);
     void lineAdd(Value *value);
     void dragEnterEvent(QDragEnterEvent *event);
@@ -110,11 +115,22 @@ public:
 
     static QString& askRelativeOrStaticFilename(QWidget *parent, QString &filename, const QUrl &baseUrl);
 
+    /// Own function as KUrl's isLocalFile is not reliable
+    static bool urlIsLocal(const QUrl& url);
+
+protected:
+    virtual FieldLineEdit* addFieldLineEdit();
+
 private slots:
     void slotAddLocalFile();
+    /// Slot for events where the "save locally" button is triggered
+    void slotSaveLocally();
+    /// Catch events where the line edit's text change
+    void textChanged(const QString &);
 
 private:
     KPushButton *m_addLocalFile;
+    QMap<KPushButton*, FieldLineEdit*> m_saveLocallyButtonToFieldLineEdit;
 };
 
 
