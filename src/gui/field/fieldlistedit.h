@@ -71,6 +71,8 @@ protected:
     void dragEnterEvent(QDragEnterEvent *event);
     void dropEvent(QDropEvent *);
 
+    const Element *m_element;
+
 private slots:
     void lineAdd();
     void lineRemove(QWidget * widget);
@@ -122,14 +124,15 @@ protected:
     virtual FieldLineEdit* addFieldLineEdit();
 
 private slots:
-    void slotAddLocalFile();
+    void slotAddReferenceToFile();
+    void slotCopyFile();
     /// Slot for events where the "save locally" button is triggered
     void slotSaveLocally();
     /// Catch events where the line edit's text change
     void textChanged(const QString &);
 
 private:
-    KPushButton *m_addLocalFile;
+    KPushButton *m_addReferenceToFile, *m_copyFile;
     QMap<KPushButton*, FieldLineEdit*> m_saveLocallyButtonToFieldLineEdit;
 };
 

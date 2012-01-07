@@ -276,7 +276,7 @@ void FieldListEdit::setFile(const File *file)
 
 void FieldListEdit::setElement(const Element *element)
 {
-    Q_UNUSED(element)
+    m_element = element;
 }
 
 void FieldListEdit::setFieldKey(const QString &fieldKey)
@@ -427,23 +427,79 @@ void PersonListEdit::setReadOnly(bool isReadOnly)
 UrlListEdit::UrlListEdit(QWidget *parent)
         : FieldListEdit(KBibTeX::tfVerbatim, KBibTeX::tfVerbatim, parent)
 {
-    m_addLocalFile = new KPushButton(KIcon("document-new"), i18n("Add local file"), this);
-    addButton(m_addLocalFile);
-    connect(m_addLocalFile, SIGNAL(clicked()), this, SLOT(slotAddLocalFile()));
-    connect(m_addLocalFile, SIGNAL(clicked()), this, SIGNAL(modified()));
+    /// Button to add a reference (i.e. only the filename or URL) to an entry
+    m_addReferenceToFile = new KPushButton(KIcon("emblem-symbolic-link"), i18n("Add reference to file ..."), this);
+    addButton(m_addReferenceToFile);
+    connect(m_addReferenceToFile, SIGNAL(clicked()), this, SLOT(slotAddReferenceToFile()));
+    connect(m_addReferenceToFile, SIGNAL(clicked()), this, SIGNAL(modified()));
+
+    /// Button to copy a file near the BibTeX file (e.g. same folder) and then
+    /// add the copy's relative filename to the entry
+    m_copyFile = new KPushButton(KIcon("document-save-all"), i18n("Insert file ..."), this);
+    addButton(m_copyFile);
+    connect(m_copyFile, SIGNAL(clicked()), this, SLOT(slotCopyFile()));
+    connect(m_copyFile, SIGNAL(clicked()), this, SIGNAL(modified()));
 }
 
-void UrlListEdit::slotAddLocalFile()
-{
-    QUrl fileUrl(d->file != NULL ? d->file->property(File::Url, QVariant()).toUrl() : QUrl());
-    QFileInfo fileUrlInfo = fileUrl.isEmpty() ? QFileInfo() : QFileInfo(fileUrl.path());
+void UrlListEdit::slotAddReferenceToFile()
+ {
+    QUrl bibtexUrl(d->file != NULL ? d->file->property(File::Url, QVariant()).toUrl() : QUrl());
+    QFileInfo bibtexUrlInfo = bibtexUrl.isEmpty() ? QFileInfo() : QFileInfo(bibtexUrl.path());
 
-    QString filename = KFileDialog::getOpenFileName(KUrl(fileUrlInfo.absolutePath()), QString(), this, i18n("Add Local File"));
+    QString filename = KFileDialog::getOpenFileName(KUrl(bibtexUrlInfo.absolutePath()), QString(), this, i18n("Select File"));
     if (!filename.isEmpty()) {
-        filename = askRelativeOrStaticFilename(this, filename, fileUrl);
+        filename = askRelativeOrStaticFilename(this, filename, bibtexUrl);
         Value *value = new Value();
         value->append(QSharedPointer<VerbatimText>(new VerbatimText(filename)));
         lineAdd(value);
+    }
+}
+
+void UrlListEdit::slotCopyFile()
+{
+    QUrl bibtexUrl(d->file != NULL ? d->file->property(File::Url, QVariant()).toUrl() : QUrl());
+    if (!bibtexUrl.isValid() || bibtexUrl.isEmpty()) {
+        KMessageBox::information(this, i18n("The current BibTeX document has to be saved first before associating other files with this document."));
+        return;
+    }
+    /// Gather information on BibTeX file's URL
+    QFileInfo bibtexUrlInfo = QFileInfo(bibtexUrl.path());
+
+    /// Ask user which file to associate with the BibTeX document
+    // TODO allow a similar operation by drag-and-drop of e.g. PDF files
+    const QString sourceFilename = KFileDialog::getOpenFileName(KUrl(), QString(), this, i18n("Select Source File"));
+    if (!sourceFilename.isEmpty()) {
+        /// Build a proposal for the new filename relative to the BibTeX document
+        // TODO make this more configurable, e.g. via templates
+        const Entry *entry = dynamic_cast<const Entry*>(m_element);
+        const QString entryKey = entry != NULL ? entry->id() : QLatin1String("");
+        int p = sourceFilename.lastIndexOf(QLatin1Char('.'));
+        const QString extension = p > 0 && !entryKey.isEmpty() ? sourceFilename.mid(p) : QString();
+        QString destinationFilename = bibtexUrlInfo.absolutePath() + QDir::separator() + entryKey + extension;
+
+        /// Ask user for confirmation on the new filename
+        destinationFilename = KFileDialog::getSaveFileName(KUrl(destinationFilename), QString(), this, i18n("Select Destination"));
+        if (!destinationFilename.isEmpty()) {
+            /// Memorize the absolute filename for the copy operation further below
+            const QString absoluteDestinationFilename = destinationFilename;
+
+            /// Determine the relative filename (relative to the BibTeX file)
+            QFileInfo destinationFilenameInfo(destinationFilename);
+            if (destinationFilenameInfo.absolutePath() == bibtexUrlInfo.absolutePath() || destinationFilenameInfo.absolutePath().startsWith(bibtexUrlInfo.absolutePath() + QDir::separator())) {
+                QString relativePath = destinationFilenameInfo.absolutePath().mid(bibtexUrlInfo.absolutePath().length() + 1);
+                destinationFilename = relativePath + (relativePath.isEmpty() ? QLatin1String("") : QString(QDir::separator())) + destinationFilenameInfo.fileName();
+            }
+
+            /// If file with same destination filename exists, delete it
+            KIO::NetAccess::del(KUrl(absoluteDestinationFilename), this);
+            /// Copy associated document to destination using the absolute filename
+            if (KIO::NetAccess::file_copy(KUrl(sourceFilename), KUrl(absoluteDestinationFilename), this)) {
+                /// Only if copy operation succeeded, add reference to copied file into BibTeX entry
+                Value *value = new Value();
+                value->append(QSharedPointer<VerbatimText>(new VerbatimText(destinationFilename)));
+                lineAdd(value);
+            }
+        }
     }
 }
 
@@ -518,7 +574,7 @@ QString& UrlListEdit::askRelativeOrStaticFilename(QWidget *parent, QString &file
     if (!baseUrl.isEmpty() && (filenameInfo.absolutePath() == baseUrlInfo.absolutePath() || filenameInfo.absolutePath().startsWith(baseUrlInfo.absolutePath() + QDir::separator()))) {
         QString relativePath = filenameInfo.absolutePath().mid(baseUrlInfo.absolutePath().length() + 1);
         QString relativeFilename = relativePath + (relativePath.isEmpty() ? QLatin1String("") : QString(QDir::separator())) + filenameInfo.fileName();
-        if (KMessageBox::questionYesNo(parent, i18n("<qt><p>Use a path relative to the bibliography file?</p><p>The relative path would be<br/><tt>%1</tt></p>", relativeFilename), i18n("Relative Path"), KGuiItem(i18n("Relative Path")), KGuiItem(i18n("Absolute Path"))) == KMessageBox::Yes)
+        if (KMessageBox::questionYesNo(parent, i18n("<qt><p>Use a filename relative to the bibliography file?</p><p>The relative path would be<br/><tt>%1</tt></p>", relativeFilename), i18n("Relative Path"), KGuiItem(i18n("Relative Path")), KGuiItem(i18n("Absolute Path"))) == KMessageBox::Yes)
             filename = relativeFilename;
     }
     return filename;
@@ -554,7 +610,7 @@ FieldLineEdit* UrlListEdit::addFieldLineEdit()
 void UrlListEdit::setReadOnly(bool isReadOnly)
 {
     FieldListEdit::setReadOnly(isReadOnly);
-    m_addLocalFile->setEnabled(!isReadOnly);
+    m_addReferenceToFile->setEnabled(!isReadOnly);
 }
 
 
