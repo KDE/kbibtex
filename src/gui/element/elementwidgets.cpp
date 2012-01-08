@@ -27,6 +27,7 @@
 #include <QTreeWidget>
 #include <QFileInfo>
 #include <QDropEvent>
+#include <QMenu>
 
 #include <KPushButton>
 #include <KGlobalSettings>
@@ -39,6 +40,7 @@
 #include <KMimeType>
 #include <KRun>
 
+#include "idsuggestions.h"
 #include <kbibtexnamespace.h>
 #include <bibtexentries.h>
 #include <bibtexfields.h>
@@ -54,6 +56,7 @@
 
 static const unsigned int interColumnSpace = 16;
 static const QStringList keyStart = QStringList() << Entry::ftUrl << QLatin1String("postscript") << Entry::ftLocalFile << Entry::ftDOI << QLatin1String("ee") << QLatin1String("biburl");
+static const char *PropertyIdSuggestion = "PropertyIdSuggestion";
 
 ElementWidget::ElementWidget(QWidget *parent): QWidget(parent), isReadOnly(false), m_isModified(false)
 {
@@ -310,7 +313,7 @@ void EntryConfiguredWidget::layoutGUI(bool forceVisible, const QString &entryTyp
 }
 
 ReferenceWidget::ReferenceWidget(QWidget *parent)
-        : ElementWidget(parent)
+        : ElementWidget(parent), m_applyElement(NULL)
 {
     createGUI();
 }
@@ -351,11 +354,12 @@ bool ReferenceWidget::reset(const Element *element)
     disconnect(entryId, SIGNAL(textChanged(QString)), this, SLOT(gotModified()));
 
     bool result = false;
-    const Entry *entry = dynamic_cast<const Entry*>(element);
-    if (entry != NULL) {
+    m_entry = dynamic_cast<const Entry*>(element);
+    if (m_entry != NULL) {
         entryType->setEnabled(true);
+        buttonSuggestId->setEnabled(true);
         BibTeXEntries *be = BibTeXEntries::self();
-        QString type = be->format(entry->type(), KBibTeX::cUpperCamelCase);
+        QString type = be->format(m_entry->type(), KBibTeX::cUpperCamelCase);
         entryType->setCurrentIndex(-1);
         entryType->lineEdit()->setText(type);
         type = type.toLower();
@@ -365,11 +369,12 @@ bool ReferenceWidget::reset(const Element *element)
                 entryType->setCurrentIndex(index);
                 break;
             }
-        entryId->setText(entry->id());
+        entryId->setText(m_entry->id());
         result = true;
     } else {
         entryType->setEnabled(false);
-        const   Macro *macro = dynamic_cast<const Macro*>(element);
+        buttonSuggestId->setEnabled(false);
+        const Macro *macro = dynamic_cast<const Macro*>(element);
         if (macro != NULL) {
             entryType->lineEdit()->setText(i18n("Macro"));
             entryId->setText(macro->key());
@@ -431,11 +436,42 @@ void ReferenceWidget::createGUI()
     for (BibTeXEntries::ConstIterator it = be->constBegin(); it != be->constEnd(); ++it)
         entryType->addItem(it->label, it->upperCamelCase);
 
+    buttonSuggestId = new KPushButton(KIcon("favorites"), QLatin1String(""), this);
+    buttonSuggestId->setToolTip(i18n("Use a suggested id for this entry"));
+    layout->addWidget(buttonSuggestId);
+    QMenu *suggestionsMenu = new QMenu(buttonSuggestId);
+    buttonSuggestId->setMenu(suggestionsMenu);
+
     connect(entryType, SIGNAL(editTextChanged(QString)), this, SLOT(gotModified()));
     connect(entryId, SIGNAL(textChanged(QString)), this, SLOT(gotModified()));
     connect(entryType, SIGNAL(editTextChanged(QString)), this, SIGNAL(entryTypeChanged()));
+    connect(suggestionsMenu, SIGNAL(aboutToShow()), this, SLOT(prepareSuggestionsMenu()));
 }
 
+void ReferenceWidget::prepareSuggestionsMenu()
+{
+    Entry internalEntry;
+    m_applyElement->apply(&internalEntry);
+
+    static const IdSuggestions *idSuggestions = new IdSuggestions();
+    QMenu *suggestionsMenu = buttonSuggestId->menu();
+    suggestionsMenu->clear();
+    foreach(const QString &suggestion, idSuggestions->formatIdList(internalEntry)) {
+        QAction *suggestionAction = new QAction(suggestion, suggestionsMenu);
+        suggestionsMenu->addAction(suggestionAction);
+        connect(suggestionAction, SIGNAL(triggered()), this, SLOT(insertSuggestionFromAction()));
+        suggestionAction->setProperty(PropertyIdSuggestion, suggestion);
+    }
+}
+
+void ReferenceWidget::insertSuggestionFromAction()
+{
+    QAction *action = dynamic_cast<QAction*>(sender());
+    if (action != NULL) {
+        const QString suggestion = action->property(PropertyIdSuggestion).toString();
+        entryId->setText(suggestion);
+    }
+}
 
 FilesWidget::FilesWidget(QWidget *parent)
         : ElementWidget(parent)

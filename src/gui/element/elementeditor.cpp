@@ -48,7 +48,7 @@
 
 #define testNullDelete(a) {if ((a)!=NULL) delete (a); (a)=NULL;}
 
-class ElementEditor::ElementEditorPrivate
+class ElementEditor::ElementEditorPrivate : public ElementEditor::ApplyElementInterface
 {
 private:
     QList<ElementWidget*> widgets;
@@ -59,7 +59,9 @@ private:
     Preamble *internalPreamble;
     Comment *internalComment;
     ElementEditor *p;
-    ElementWidget *previousWidget, *referenceWidget, *sourceWidget;
+    ElementWidget *previousWidget;
+    ReferenceWidget *referenceWidget;
+    ElementWidget *sourceWidget;
     KPushButton *buttonCheckWithBibTeX;
     QCheckBox *checkBoxForceShowAllWidgets;
     KSharedConfigPtr config;
@@ -87,6 +89,7 @@ public:
 
         if (ReferenceWidget::canEdit(element)) {
             referenceWidget = new ReferenceWidget(p);
+            referenceWidget->setApplyElementInterface(this);
             connect(referenceWidget, SIGNAL(modified(bool)), p, SLOT(childModified(bool)));
             layout->addWidget(referenceWidget, 0, 0, 1, 3);
             widgets << referenceWidget;
@@ -176,7 +179,7 @@ public:
         apply(element);
     }
 
-    void apply(Element *element) {
+    virtual void apply(Element *element) {
         if (referenceWidget != NULL)
             referenceWidget->apply(element);
         ElementWidget *currentElementWidget = dynamic_cast<ElementWidget*>(tab->currentWidget());

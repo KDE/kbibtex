@@ -29,6 +29,7 @@
 #include <KUrl>
 #include <KIcon>
 
+#include "elementeditor.h"
 #include "entrylayout.h"
 
 class QTreeWidget;
@@ -124,6 +125,9 @@ class ReferenceWidget : public ElementWidget
 private:
     KComboBox *entryType;
     KLineEdit *entryId;
+    KPushButton *buttonSuggestId;
+    const Entry *m_entry;
+
     void createGUI();
 
 public:
@@ -133,10 +137,21 @@ public:
     bool reset(const Element *element);
     void setReadOnly(bool isReadOnly);
     void showReqOptWidgets(bool, const QString &) {};
+    void setApplyElementInterface(ElementEditor::ApplyElementInterface *applyElement) {
+        m_applyElement = applyElement;
+    }
+
     QString label();
     KIcon icon();
 
     static bool canEdit(const Element *element);
+
+private:
+    ElementEditor::ApplyElementInterface *m_applyElement;
+
+private slots:
+    void prepareSuggestionsMenu();
+    void insertSuggestionFromAction();
 
 signals:
     void entryTypeChanged();

@@ -35,6 +35,13 @@ class KBIBTEXGUI_EXPORT ElementEditor : public QWidget
 {
     Q_OBJECT
 public:
+    class ApplyElementInterface
+    {
+    public:
+        virtual ~ApplyElementInterface() { /** nothing */ };
+        virtual void apply(Element *) { /** nothing */ };
+    };
+
     ElementEditor(const Element *element, const File *file, QWidget *parent);
     ElementEditor(Element *element, const File *file, QWidget *parent);
 
