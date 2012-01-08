@@ -42,8 +42,8 @@ public:
             : p(parent) {
         KSharedConfigPtr config(KSharedConfig::openConfig("kbibtexrc"));
         KConfigGroup configGroup(config, QString("User Interface"));
-        const QString stylefile = configGroup.readEntry("CurrentStyle", "bibtex").append(".kbstyle");
-        layoutConfig = KSharedConfig::openConfig(stylefile, KConfig::FullConfig, "appdata");
+        const QString stylefile = configGroup.readEntry("CurrentStyle", "bibtex").append(".kbstyle").prepend("kbibtex/");
+        layoutConfig = KSharedConfig::openConfig(stylefile, KConfig::FullConfig, "data");
     }
 
     static QString convert(KBibTeX::FieldInputType fil) {
