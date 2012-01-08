@@ -3,12 +3,14 @@
 set(
     processing_LIB_SRCS
     findduplicates.cpp
+    idsuggestions.cpp
     lyx.cpp
 )
 
 set(
     processing_HDRS
     findduplicates.h
+    idsuggestions.h
     lyx.h
     kbibtexproc_export.h
 )

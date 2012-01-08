@@ -22,6 +22,8 @@
 
 #include <KLocale>
 #include <KComboBox>
+#include <KMessageBox>
+#include <KGuiItem>
 
 #include "settingsgeneralwidget.h"
 #include "settingsglobalkeywordswidget.h"
@@ -29,6 +31,7 @@
 #include "settingsfileexporterwidget.h"
 #include "settingscolorlabelwidget.h"
 #include "settingsuserinterfacewidget.h"
+#include "settingsidsuggestionswidget.h"
 #include "kbibtexpreferencesdialog.h"
 
 class KBibTeXPreferencesDialog::KBibTeXPreferencesDialogPrivate
@@ -63,6 +66,12 @@ public:
         page->setIcon(KIcon("preferences-desktop-color"));
         connect(settingsWidget, SIGNAL(changed()), p, SLOT(gotChanged()));
 
+        settingsWidget = new SettingsIdSuggestionsWidget(p);
+        settingWidgets.insert(settingsWidget);
+        page = p->addSubPage(pageGlobal, settingsWidget, i18n("Id Suggestions"));
+        page->setIcon(KIcon("view-filter"));
+        connect(settingsWidget, SIGNAL(changed()), p, SLOT(gotChanged()));
+
         settingsWidget = new SettingsUserInterfaceWidget(p);
         settingWidgets.insert(settingsWidget);
         page = p->addPage(settingsWidget, i18n("User Interface"));
@@ -89,8 +98,18 @@ public:
     }
 
     void resetToDefaults() {
-        foreach(SettingsAbstractWidget *settingsWidget, settingWidgets) {
-            settingsWidget->resetToDefaults();
+        switch (KMessageBox::warningYesNoCancel(p, i18n("This will reset the settings to factory defaults. Should this affect only the current page or all settings?"), i18n("Reset to Defaults"), KGuiItem(i18n("All settings"), QLatin1String("edit-undo")), KGuiItem(i18n("Only current page"), QLatin1String("document-revert")))) {
+        case KMessageBox::Yes:
+            foreach(SettingsAbstractWidget *settingsWidget, settingWidgets) {
+                settingsWidget->resetToDefaults();
+            }
+            break;
+        case KMessageBox::No: {
+            SettingsAbstractWidget *widget = dynamic_cast<SettingsAbstractWidget*>(p->currentPage()->widget());
+            if (widget != NULL)
+                widget->resetToDefaults();
+        }
+        break;
         }
     }
 };

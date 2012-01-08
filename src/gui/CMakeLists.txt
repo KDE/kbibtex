@@ -46,6 +46,7 @@ set(
     preferences/settingsfileexporterpdfpswidget.cpp
     preferences/settingsfileexporterwidget.cpp
     preferences/settingsabstractwidget.cpp
+    preferences/settingsidsuggestionswidget.cpp
     valuelistmodel.cpp
 )
 
@@ -64,6 +65,7 @@ set(
     preferences/settingscolorlabelwidget.h
     preferences/settingsfileexporterbibtexwidget.h
     preferences/settingsfileexporterpdfpswidget.h
+    preferences/settingsidsuggestionswidget.h
     valuelistmodel.h
     kbibtexgui_export.h
     bibtex/findduplicatesui.h

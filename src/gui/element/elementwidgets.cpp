@@ -436,7 +436,7 @@ void ReferenceWidget::createGUI()
     for (BibTeXEntries::ConstIterator it = be->constBegin(); it != be->constEnd(); ++it)
         entryType->addItem(it->label, it->upperCamelCase);
 
-    buttonSuggestId = new KPushButton(KIcon("favorites"), QLatin1String(""), this);
+    buttonSuggestId = new KPushButton(KIcon("view-filter"), QLatin1String(""), this);
     buttonSuggestId->setToolTip(i18n("Use a suggested id for this entry"));
     layout->addWidget(buttonSuggestId);
     QMenu *suggestionsMenu = new QMenu(buttonSuggestId);
