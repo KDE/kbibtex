@@ -82,7 +82,7 @@ bool FileExporterPDF::save(QIODevice* iodevice, const File* bibtexfile, QStringL
     return result;
 }
 
-bool FileExporterPDF::save(QIODevice* iodevice, const Element* element, QStringList *errorLog)
+bool FileExporterPDF::save(QIODevice* iodevice, const QSharedPointer<const Element> element, QStringList *errorLog)
 {
     bool result = false;
     m_embeddedFileList.clear();
@@ -169,7 +169,7 @@ void FileExporterPDF::fillEmbeddedFileList(const File* bibtexfile)
         fillEmbeddedFileList(*it);
 }
 
-void FileExporterPDF::fillEmbeddedFileList(const Element* /*element*/)
+void FileExporterPDF::fillEmbeddedFileList(const QSharedPointer<const Element> /*element*/)
 {
     /* FIXME
     const Entry *entry = dynamic_cast<const Entry*>(element);

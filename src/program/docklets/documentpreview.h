@@ -59,7 +59,7 @@ public:
     DocumentPreview(QDockWidget *parent);
 
 public slots:
-    void setElement(Element*, const File *);
+    void setElement(QSharedPointer<Element>, const File *);
     void setBibTeXUrl(const KUrl&);
 
 private:

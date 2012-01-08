@@ -186,13 +186,13 @@ public:
             QString fakeBibTeXFile = QString("@article{dummy, %1=%2}").arg(key).arg(encodedText);
 
             File *file = importer.fromString(fakeBibTeXFile);
-            Entry *entry = NULL;
+            QSharedPointer<Entry> entry;
             if (file != NULL) {
-                if (!file->isEmpty() && (entry = dynamic_cast< Entry*>(file->first())) != NULL)
+                if (!file->isEmpty() && !(entry = (file->first().dynamicCast<Entry>())).isNull())
                     value = entry->value(key);
                 delete file;
             }
-            if (entry == NULL)
+            if (entry.isNull())
                 kWarning() << "Parsing " << fakeBibTeXFile << " did not result in valid entry";
             return !value.isEmpty();
         } else if (typeFlag == KBibTeX::tfVerbatim) {
@@ -485,15 +485,15 @@ void FieldLineEdit::dropEvent(QDropEvent *event)
     if (!d->fieldKey.isEmpty() && clipboardText.startsWith("@")) {
         FileImporterBibTeX importer;
         file = importer.fromString(clipboardText);
-        const Entry *entry = (file != NULL && file->count() == 1) ? dynamic_cast<const Entry*>(file->first()) : NULL;
-        if (entry != NULL && d->fieldKey == Entry::ftCrossRef) {
+        const QSharedPointer<Entry> entry = (file != NULL && file->count() == 1) ? file->first().dynamicCast<Entry>() : QSharedPointer<Entry>();
+        if (!entry.isNull() && d->fieldKey == Entry::ftCrossRef) {
             /// handle drop on crossref line differently (use dropped entry's id)
             Value v;
             v.append(QSharedPointer<VerbatimText>(new VerbatimText(entry->id())));
             reset(v);
             emit textChanged(entry->id());
             return;
-        } else if (entry != NULL && entry->contains(d->fieldKey)) {
+        } else if (!entry.isNull() && entry->contains(d->fieldKey)) {
             /// case for "normal" fields like for journal, pages, ...
             reset(entry->value(d->fieldKey));
             emit textChanged(text());

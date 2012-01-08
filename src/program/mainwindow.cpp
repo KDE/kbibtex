@@ -94,14 +94,6 @@ KBibTeXMainWindow::KBibTeXMainWindow()
 
     d->mdiWidget = new MDIWidget(this);
     setCentralWidget(d->mdiWidget);
-    connect(d->mdiWidget, SIGNAL(documentSwitch(BibTeXEditor *, BibTeXEditor *)), this, SLOT(documentSwitched(BibTeXEditor *, BibTeXEditor *)));
-    connect(d->mdiWidget, SIGNAL(activePartChanged(KParts::Part*)), this, SLOT(createGUI(KParts::Part*)));
-    connect(d->mdiWidget, SIGNAL(documentNew()), this, SLOT(newDocument()));
-    connect(d->mdiWidget, SIGNAL(documentOpen()), this, SLOT(openDocumentDialog()));
-    connect(d->mdiWidget, SIGNAL(documentOpenURL(KUrl)), this, SLOT(openDocument(KUrl)));
-    connect(d->mdiWidget->getOpenFileInfoManager(), SIGNAL(currentChanged(OpenFileInfo*, KService::Ptr)), d->mdiWidget, SLOT(setFile(OpenFileInfo*, KService::Ptr)));
-    connect(d->mdiWidget->getOpenFileInfoManager(), SIGNAL(flagsChanged(OpenFileInfo::StatusFlags)), this, SLOT(documentListsChanged(OpenFileInfo::StatusFlags)));
-    connect(d->mdiWidget, SIGNAL(setCaption(QString)), this, SLOT(setCaption(QString)));
 
     KActionMenu *showPanelsAction = new KActionMenu(i18n("Show Panels"), this);
     actionCollection()->addAction("settings_shown_panels", showPanelsAction);
@@ -201,6 +193,15 @@ KBibTeXMainWindow::KBibTeXMainWindow()
     d->actionClose->setEnabled(false);
     actionCollection()->addAction(KStandardAction::Quit,  kapp, SLOT(quit()));
     actionCollection()->addAction(KStandardAction::Preferences, this, SLOT(showPreferences()));
+
+    connect(d->mdiWidget, SIGNAL(documentSwitch(BibTeXEditor *, BibTeXEditor *)), this, SLOT(documentSwitched(BibTeXEditor *, BibTeXEditor *)));
+    connect(d->mdiWidget, SIGNAL(activePartChanged(KParts::Part*)), this, SLOT(createGUI(KParts::Part*)));
+    connect(d->mdiWidget, SIGNAL(documentNew()), this, SLOT(newDocument()));
+    connect(d->mdiWidget, SIGNAL(documentOpen()), this, SLOT(openDocumentDialog()));
+    connect(d->mdiWidget, SIGNAL(documentOpenURL(KUrl)), this, SLOT(openDocument(KUrl)));
+    connect(d->mdiWidget->getOpenFileInfoManager(), SIGNAL(currentChanged(OpenFileInfo*, KService::Ptr)), d->mdiWidget, SLOT(setFile(OpenFileInfo*, KService::Ptr)));
+    connect(d->mdiWidget->getOpenFileInfoManager(), SIGNAL(flagsChanged(OpenFileInfo::StatusFlags)), this, SLOT(documentListsChanged(OpenFileInfo::StatusFlags)));
+    connect(d->mdiWidget, SIGNAL(setCaption(QString)), this, SLOT(setCaption(QString)));
 
     documentListsChanged(OpenFileInfo::RecentlyUsed); /// force initialization of menu of recently used files
 
@@ -317,18 +318,18 @@ void KBibTeXMainWindow::documentSwitched(BibTeXEditor *oldEditor, BibTeXEditor *
         disconnect(d->elementForm, SIGNAL(elementModified()), newEditor, SLOT(externalModification()));
     }
     if (newEditor != NULL) {
-        connect(newEditor, SIGNAL(currentElementChanged(Element*, const File *)), d->referencePreview, SLOT(setElement(Element*, const File *)));
-        connect(newEditor, SIGNAL(currentElementChanged(Element*, const File *)), d->elementForm, SLOT(setElement(Element*, const File *)));
-        connect(newEditor, SIGNAL(currentElementChanged(Element*, const File *)), d->documentPreview, SLOT(setElement(Element*, const File *)));
-        connect(newEditor, SIGNAL(currentElementChanged(Element*, const File *)), d->searchForm, SLOT(setElement(Element*, const File *)));
+        connect(newEditor, SIGNAL(currentElementChanged(QSharedPointer<Element>, const File *)), d->referencePreview, SLOT(setElement(QSharedPointer<Element>, const File *)));
+        connect(newEditor, SIGNAL(currentElementChanged(QSharedPointer<Element>, const File *)), d->elementForm, SLOT(setElement(QSharedPointer<Element>, const File *)));
+        connect(newEditor, SIGNAL(currentElementChanged(QSharedPointer<Element>, const File *)), d->documentPreview, SLOT(setElement(QSharedPointer<Element>, const File *)));
+        connect(newEditor, SIGNAL(currentElementChanged(QSharedPointer<Element>, const File *)), d->searchForm, SLOT(setElement(QSharedPointer<Element>, const File *)));
         connect(newEditor, SIGNAL(modified()), d->valueList, SLOT(update()));
         connect(d->elementForm, SIGNAL(elementModified()), newEditor, SLOT(externalModification()));
     }
 
     d->documentPreview->setBibTeXUrl(validFile ? openFileInfo->url() : KUrl());
-    d->referencePreview->setElement(NULL, NULL);
-    d->elementForm->setElement(NULL, NULL);
-    d->documentPreview->setElement(NULL, NULL);
+    d->referencePreview->setElement(QSharedPointer<Element>(), NULL);
+    d->elementForm->setElement(QSharedPointer<Element>(), NULL);
+    d->documentPreview->setElement(QSharedPointer<Element>(), NULL);
     d->valueList->setEditor(newEditor);
     d->referencePreview->setEditor(newEditor);
 }

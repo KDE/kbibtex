@@ -73,7 +73,7 @@ bool FileExporterPS::save(QIODevice* iodevice, const File* bibtexfile, QStringLi
     return result;
 }
 
-bool FileExporterPS::save(QIODevice* iodevice, const Element* element, QStringList *errorLog)
+bool FileExporterPS::save(QIODevice* iodevice, const QSharedPointer<const Element> element, QStringList *errorLog)
 {
     bool result = false;
 

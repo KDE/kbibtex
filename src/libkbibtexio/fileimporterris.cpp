@@ -261,9 +261,9 @@ File* FileImporterRIS::load(QIODevice *iodevice)
     while (!d->cancelFlag && !textStream.atEnd()) {
         emit progress(textStream.pos(), iodevice->size());
         QCoreApplication::instance()->processEvents();
-        Element * element = d->nextElement(textStream);
+        Element *element = d->nextElement(textStream);
         if (element != NULL)
-            result->append(element);
+            result->append(QSharedPointer<Element>(element));
         QCoreApplication::instance()->processEvents();
     }
     emit progress(100, 100);

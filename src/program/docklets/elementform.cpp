@@ -36,8 +36,8 @@ class ElementForm::ElementFormPrivate
 private:
     ElementForm *p;
     QGridLayout *layout;
-    Entry emptyElement;
-    Element *element;
+    QSharedPointer<Element> emptyElement;
+    QSharedPointer<Element> element;
     const File *file;
 
 public:
@@ -74,7 +74,8 @@ public:
         buttonReset = new KPushButton(KIcon("edit-undo"), i18n("Reset"), p);
         layout->addWidget(buttonReset, 1, 2, 1, 1);
 
-        loadElement(NULL, NULL);
+        emptyElement = QSharedPointer<Element>(new Entry());
+        loadElement(QSharedPointer<Element>(), NULL);
 
         connect(buttonApply, SIGNAL(clicked()), p, SIGNAL(elementModified()));
     }
@@ -83,7 +84,7 @@ public:
         loadElement(element, file);
     }
 
-    void loadElement(Element *element, const File *file) {
+    void loadElement(QSharedPointer<Element> element, const File *file) {
         /// store both element and file for later refresh
         this->element = element;
         this->file = file;
@@ -102,9 +103,11 @@ public:
             tabIndex = elementEditor->currentTab();
             delete elementEditor;
         }
-        elementEditor = element == NULL ? new ElementEditor(&emptyElement, file, p) : new ElementEditor(element, file, p);
+        // FIXME why do we need emptyElement?
+        elementEditor = element.isNull() ? new ElementEditor(emptyElement, file, p) :
+                        new ElementEditor(element, file, p);
         layout->addWidget(elementEditor, 0, 0, 1, 3);
-        elementEditor->setEnabled(element != NULL);
+        elementEditor->setEnabled(!element.isNull());
         elementEditor->setCurrentTab(tabIndex);
         elementEditor->layout()->setMargin(0);
         connect(elementEditor, SIGNAL(modified(bool)), p, SLOT(modified()));
@@ -146,7 +149,7 @@ ElementForm::ElementForm(MDIWidget *mdiWidget, QDockWidget *parent)
     d->mdiWidget = mdiWidget;
 }
 
-void ElementForm::setElement(Element* element, const File *file)
+void ElementForm::setElement(QSharedPointer<Element> element, const File *file)
 {
     d->loadElement(element, file);
 }

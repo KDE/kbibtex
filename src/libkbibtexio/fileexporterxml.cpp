@@ -60,7 +60,7 @@ bool FileExporterXML::save(QIODevice* iodevice, const File* bibtexfile, QStringL
     stream << "<bibliography>" << endl;
 
     for (File::ConstIterator it = bibtexfile->constBegin(); it != bibtexfile->constEnd() && result && !m_cancelFlag; ++it)
-        write(stream, *it, bibtexfile);
+        write(stream, (*it).data(), bibtexfile);
 
     stream << "</bibliography>" << endl;
 
@@ -68,7 +68,7 @@ bool FileExporterXML::save(QIODevice* iodevice, const File* bibtexfile, QStringL
     return result && !m_cancelFlag;
 }
 
-bool FileExporterXML::save(QIODevice* iodevice, const Element* element, QStringList * /*errorLog*/)
+bool FileExporterXML::save(QIODevice* iodevice, const QSharedPointer<const Element> element, QStringList * /*errorLog*/)
 {
     QTextStream stream(iodevice);
     stream.setCodec("UTF-8");
@@ -76,7 +76,7 @@ bool FileExporterXML::save(QIODevice* iodevice, const Element* element, QStringL
     stream << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << endl;
     stream << "<!-- XML document written by KBibTeXIO as part of KBibTeX/KDE4 -->" << endl;
     stream << "<!-- http://home.gna.org/kbibtex/ -->" << endl;
-    return write(stream, element);
+    return write(stream, element.data());
 }
 
 void FileExporterXML::cancel()

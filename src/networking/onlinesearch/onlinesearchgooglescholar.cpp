@@ -231,21 +231,22 @@ void OnlineSearchGoogleScholar::doneFetchingBibTeX()
         QString rawText = reply->readAll();
         File *bibtexFile = d->importer.fromString(rawText);
 
-        Entry *entry = NULL;
+        bool hasEntry = false;
         if (bibtexFile != NULL) {
-            for (File::ConstIterator it = bibtexFile->constBegin(); entry == NULL && it != bibtexFile->constEnd(); ++it) {
-                entry = dynamic_cast<Entry*>(*it);
-                if (entry != NULL) {
+            for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
+                QSharedPointer<Entry> entry = (*it).dynamicCast<Entry>();
+                if (!entry.isNull()) {
                     Value v;
                     v.append(QSharedPointer<VerbatimText>(new VerbatimText(label())));
                     entry->insert("x-fetchedfrom", v);
                     emit foundEntry(entry);
+                    hasEntry = true;
                 }
             }
             delete bibtexFile;
         }
 
-        if (entry == NULL) {
+        if (!hasEntry) {
             kWarning() << "Searching" << label() << "resulted in invalid BibTeX data:" << QString(reply->readAll());
             emit stoppedSearch(resultUnspecifiedError);
             return;

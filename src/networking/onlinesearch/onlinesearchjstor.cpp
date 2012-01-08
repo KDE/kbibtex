@@ -44,7 +44,7 @@ public:
         // nothing
     }
 
-    void sanitizeEntry(Entry *entry) {
+    void sanitizeEntry(QSharedPointer<Entry> entry) {
         QString url = PlainTextValue::text(entry->value(Entry::ftUrl));
         if (url.startsWith("http://www.jstor.org/stable/")) {
             entry->setId("jstor" + url.mid(28));
@@ -250,8 +250,8 @@ void OnlineSearchJStor::doneFetchingSummaryPage()
 
         if (bibtexFile != NULL) {
             for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
-                Entry *entry = dynamic_cast<Entry*>(*it);
-                if (entry != NULL) {
+                QSharedPointer<Entry> entry = (*it).dynamicCast<Entry>();
+                if (!entry.isNull()) {
                     Value v;
                     v.append(QSharedPointer<VerbatimText>(new VerbatimText(label())));
                     entry->insert("x-fetchedfrom", v);

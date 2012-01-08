@@ -48,7 +48,7 @@ public:
         // nothing
     }
 
-    void sanitizeEntry(Entry *entry) {
+    void sanitizeEntry(QSharedPointer<Entry> entry) {
         const QString ftFJournal = QLatin1String("fjournal");
         if (entry->contains(ftFJournal)) {
             Value v = entry->value(ftFJournal);
@@ -242,16 +242,14 @@ void OnlineSearchMathSciNet::doneFetchingBibTeXcode()
         bool hasEntry = false;
         if (bibtexFile != NULL) {
             for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
-                Entry *entry = dynamic_cast<Entry*>(*it);
-                if (entry != NULL) {
+                QSharedPointer<Entry> entry = (*it).dynamicCast<Entry>();
+                if (!entry.isNull()) {
                     hasEntry = true;
-                    if (entry != NULL) {
-                        Value v;
-                        v.append(QSharedPointer<VerbatimText>(new VerbatimText(label())));
-                        entry->insert("x-fetchedfrom", v);
-                        d->sanitizeEntry(entry);
-                        emit foundEntry(entry);
-                    }
+                    Value v;
+                    v.append(QSharedPointer<VerbatimText>(new VerbatimText(label())));
+                    entry->insert("x-fetchedfrom", v);
+                    d->sanitizeEntry(entry);
+                    emit foundEntry(entry);
                 }
             }
             delete bibtexFile;

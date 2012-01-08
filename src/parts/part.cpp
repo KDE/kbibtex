@@ -313,9 +313,9 @@ public:
         viewDocumentMenu->clear();
         int result = 0;
 
-        const Entry *entry = dynamic_cast<const Entry*>(editor->currentElement());
-        if (entry != NULL) {
-            QList<KUrl> urlList = FileInfo::entryUrls(entry, editor->bibTeXModel()->bibTeXFile()->property(File::Url).toUrl());
+        QSharedPointer<const Entry> entry = editor->currentElement().dynamicCast<const Entry>();
+        if (!entry.isNull()) {
+            QList<KUrl> urlList = FileInfo::entryUrls(entry.data(), editor->bibTeXModel()->bibTeXFile()->property(File::Url).toUrl());
             if (!urlList.isEmpty()) {
                 for (QList<KUrl>::ConstIterator it = urlList.constBegin(); it != urlList.constEnd(); ++it) {
                     // FIXME: the signal mapper will fill up with mappings, as they are never removed
@@ -345,7 +345,7 @@ KBibTeXPart::KBibTeXPart(QWidget *parentWidget, QObject *parent, bool browserVie
     d->editor->setReadOnly(!isReadWrite());
     setWidget(d->editor);
 
-    connect(d->editor, SIGNAL(elementExecuted(Element*)), d->editor, SLOT(editElement(Element*)));
+    connect(d->editor, SIGNAL(elementExecuted(QSharedPointer<Element>)), d->editor, SLOT(editElement(QSharedPointer<Element>)));
     connect(d->editor, SIGNAL(modified()), this, SLOT(setModified()));
 
     setupActions(browserViewWanted);
@@ -556,8 +556,8 @@ void KBibTeXPart::elementFindPDF()
 {
     QModelIndexList mil = d->editor->selectionModel()->selectedRows();
     if (mil.count() == 1) {
-        Entry *entry = dynamic_cast<Entry*>(d->editor->bibTeXModel()->element(d->editor->sortFilterProxyModel()->mapToSource(*mil.constBegin()).row()));
-        if (entry != NULL)
+        QSharedPointer<Entry> entry = d->editor->bibTeXModel()->element(d->editor->sortFilterProxyModel()->mapToSource(*mil.constBegin()).row()).dynamicCast<Entry>();
+        if (!entry.isNull())
             FindPDFUI::interactiveFindPDF(*entry, *d->bibTeXFile, widget());
     }
 }
@@ -625,7 +625,7 @@ void KBibTeXPart::newElementTriggered(int event)
 
 void KBibTeXPart::newEntryTriggered()
 {
-    Entry *newEntry = new Entry(QLatin1String("Article"), d->findUnusedId());
+    QSharedPointer<Entry> newEntry = QSharedPointer<Entry>(new Entry(QLatin1String("Article"), d->findUnusedId()));
     d->model->insertRow(newEntry, d->model->rowCount());
     d->editor->setSelectedElement(newEntry);
     d->editor->editElement(newEntry);
@@ -634,7 +634,7 @@ void KBibTeXPart::newEntryTriggered()
 
 void KBibTeXPart::newMacroTriggered()
 {
-    Macro *newMacro = new Macro(d->findUnusedId());
+    QSharedPointer<Macro> newMacro = QSharedPointer<Macro>(new Macro(d->findUnusedId()));
     d->model->insertRow(newMacro, d->model->rowCount());
     d->editor->setSelectedElement(newMacro);
     d->editor->editElement(newMacro);
@@ -643,7 +643,7 @@ void KBibTeXPart::newMacroTriggered()
 
 void KBibTeXPart::newPreambleTriggered()
 {
-    Preamble *newPreamble = new Preamble();
+    QSharedPointer<Preamble> newPreamble = QSharedPointer<Preamble>(new Preamble());
     d->model->insertRow(newPreamble, d->model->rowCount());
     d->editor->setSelectedElement(newPreamble);
     d->editor->editElement(newPreamble);
@@ -652,7 +652,7 @@ void KBibTeXPart::newPreambleTriggered()
 
 void KBibTeXPart::newCommentTriggered()
 {
-    Comment *newComment = new Comment();
+    QSharedPointer<Comment> newComment = QSharedPointer<Comment>(new Comment());
     d->model->insertRow(newComment, d->model->rowCount());
     d->editor->setSelectedElement(newComment);
     d->editor->editElement(newComment);
@@ -680,8 +680,8 @@ void KBibTeXPart::updateActions()
     if (d->editor->selectionModel() != NULL) {
         QModelIndexList mil = d->editor->selectionModel()->selectedRows();
         for (QModelIndexList::ConstIterator it = mil.constBegin(); it != mil.constEnd(); ++it) {
-            Entry *entry = dynamic_cast<Entry*>(d->editor->bibTeXModel()->element(d->editor->sortFilterProxyModel()->mapToSource(*it).row()));
-            if (entry != NULL)
+            QSharedPointer<Entry> entry = d->editor->bibTeXModel()->element(d->editor->sortFilterProxyModel()->mapToSource(*it).row()).dynamicCast<Entry>();
+            if (!entry.isNull())
                 references << entry->id();
         }
     }

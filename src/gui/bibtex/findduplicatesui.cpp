@@ -293,12 +293,12 @@ public:
 
     virtual QVariant data(const QModelIndex &index, int role) const {
         if (role == Qt::CheckStateRole && index.column() == 1) {
-            Entry *entry = dynamic_cast<Entry*>(element(index.row()));
-            Q_ASSERT_X(entry != NULL, "CheckableBibTeXFileModel::data", "entry is NULL");
-            if (entry != NULL) {
-                QList<Entry*> entryList = cl[currentClique]->entryList();
-                if (entryList.contains(entry))
-                    return cl[currentClique]->isEntryChecked(entry) ? Qt::Checked : Qt::Unchecked;
+            QSharedPointer<Entry> entry = element(index.row()).dynamicCast<Entry>();
+            Q_ASSERT_X(!entry.isNull(), "CheckableBibTeXFileModel::data", "entry is NULL");
+            if (!entry.isNull()) {
+                QList<QSharedPointer<Entry> > entryList = cl[currentClique]->entryList();
+                if (entryList.contains(QSharedPointer<Entry>(entry))) // TODO does this work?
+                    return cl[currentClique]->isEntryChecked(QSharedPointer<Entry>(entry)) ? Qt::Checked : Qt::Unchecked;
             }
         }
 
@@ -310,12 +310,12 @@ public:
         int checkState = value.toInt(&ok);
         Q_ASSERT_X(ok, "CheckableBibTeXFileModel::setData", QString("Could not convert value " + value.toString()).toAscii());
         if (ok && role == Qt::CheckStateRole && index.column() == 1) {
-            Entry *entry = dynamic_cast<Entry*>(element(index.row()));
-            if (entry != NULL) {
-                QList<Entry*> entryList = cl[currentClique]->entryList();
-                if (entryList.contains(entry)) {
+            QSharedPointer<Entry> entry = element(index.row()).dynamicCast<Entry>();
+            if (!entry.isNull()) {
+                QList<QSharedPointer<Entry> > entryList = cl[currentClique]->entryList();
+                if (entryList.contains(QSharedPointer<Entry>(entry))) { // TODO does this work?
                     EntryClique *ec = cl[currentClique];
-                    ec->setEntryChecked(entry, checkState == Qt::Checked);
+                    ec->setEntryChecked(QSharedPointer<Entry>(entry), checkState == Qt::Checked);
                     cl[currentClique] = ec;
                     emit dataChanged(index, index);
                     tv->reset();
@@ -365,10 +365,10 @@ public:
         Q_UNUSED(source_parent)
 
         if (internalModel != NULL && currentClique != NULL) {
-            Entry *entry = dynamic_cast<Entry*>(internalModel->element(source_row));
-            if (entry != NULL) {
-                QList<Entry*> entryList = currentClique->entryList();
-                if (entryList.contains(entry)) return true;
+            QSharedPointer<Entry> entry = internalModel->element(source_row).dynamicCast<Entry>();
+            if (!entry.isNull()) {
+                QList<QSharedPointer<Entry> > entryList = currentClique->entryList();
+                if (entryList.contains(QSharedPointer<Entry>(entry))) return true; // TODO does this work?
             }
         }
         return false;

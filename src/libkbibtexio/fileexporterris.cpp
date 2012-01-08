@@ -36,14 +36,14 @@ FileExporterRIS::~FileExporterRIS()
     // nothing
 }
 
-bool FileExporterRIS::save(QIODevice* iodevice, const Element* element, QStringList* /*errorLog*/)
+bool FileExporterRIS::save(QIODevice* iodevice, const QSharedPointer<const Element> element, QStringList* /*errorLog*/)
 {
     bool result = false;
     QTextStream stream(iodevice);
 
-    const Entry *entry = dynamic_cast<const Entry*>(element);
-    if (entry != NULL)
-        result = writeEntry(stream, entry);
+    const QSharedPointer<const Entry> entry = element.dynamicCast<const Entry>();
+    if (!entry.isNull())
+        result = writeEntry(stream, entry.data());
 
     return result && !m_cancelFlag;
 }
@@ -55,12 +55,12 @@ bool FileExporterRIS::save(QIODevice* iodevice, const File* bibtexfile, QStringL
     QTextStream stream(iodevice);
 
     for (File::ConstIterator it = bibtexfile->constBegin(); it != bibtexfile->constEnd() && result && !m_cancelFlag; it++) {
-        const Entry *entry = dynamic_cast<const Entry*>(*it);
-        if (entry != NULL) {
+        const QSharedPointer<Entry> entry = (*it).dynamicCast<Entry>();
+        if (!entry.isNull()) {
 //                 FIXME Entry *myEntry = bibtexfile->completeReferencedFieldsConst( entry );
-            Entry *myEntry = new Entry(*entry);
-            result &= writeEntry(stream, myEntry);
-            delete myEntry;
+            //Entry *myEntry = new Entry(*entry);
+            result &= writeEntry(stream, entry.data());
+            //delete myEntry;
         }
     }
 

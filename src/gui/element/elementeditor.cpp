@@ -46,18 +46,16 @@
 #include "elementwidgets.h"
 #include "elementeditor.h"
 
-#define testNullDelete(a) {if ((a)!=NULL) delete (a); (a)=NULL;}
-
 class ElementEditor::ElementEditorPrivate : public ElementEditor::ApplyElementInterface
 {
 private:
     QList<ElementWidget*> widgets;
-    Element *element;
+    QSharedPointer<Element> element;
     const File *file;
-    Entry *internalEntry;
-    Macro *internalMacro;
-    Preamble *internalPreamble;
-    Comment *internalComment;
+    QSharedPointer<Entry> internalEntry;
+    QSharedPointer<Macro> internalMacro;
+    QSharedPointer<Preamble> internalPreamble;
+    QSharedPointer<Comment> internalComment;
     ElementEditor *p;
     ElementWidget *previousWidget;
     ReferenceWidget *referenceWidget;
@@ -70,12 +68,8 @@ public:
     QTabWidget *tab;
     bool elementChanged, elementUnapplied;
 
-    ElementEditorPrivate(Element *m, const File *f, ElementEditor *parent)
+    ElementEditorPrivate(QSharedPointer<Element> m, const File *f, ElementEditor *parent)
             : element(m), file(f), p(parent), previousWidget(NULL), referenceWidget(NULL), sourceWidget(NULL), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), elementChanged(false), elementUnapplied(false) {
-        internalEntry = NULL;
-        internalMacro = NULL;
-        internalComment = NULL;
-        internalPreamble = NULL;
         createGUI();
     }
 
@@ -87,7 +81,7 @@ public:
         layout->setColumnStretch(0, 1);
         layout->setColumnStretch(1, 0);
 
-        if (ReferenceWidget::canEdit(element)) {
+        if (ReferenceWidget::canEdit(element.data())) {
             referenceWidget = new ReferenceWidget(p);
             referenceWidget->setApplyElementInterface(this);
             connect(referenceWidget, SIGNAL(modified(bool)), p, SLOT(childModified(bool)));
@@ -115,7 +109,7 @@ public:
         layout->addWidget(buttonCheckWithBibTeX, 2, 2, 1, 1);
         connect(buttonCheckWithBibTeX, SIGNAL(clicked()), p, SLOT(checkBibTeX()));
 
-        if (EntryConfiguredWidget::canEdit(element))
+        if (EntryConfiguredWidget::canEdit(element.data()))
             for (EntryLayout::ConstIterator elit = el->constBegin(); elit != el->constEnd(); ++elit) {
                 EntryTabLayout etl = *elit;
                 ElementWidget *widget = new EntryConfiguredWidget(etl, tab);
@@ -124,28 +118,28 @@ public:
                 widgets << widget;
             }
 
-        if (PreambleWidget::canEdit(element)) {
+        if (PreambleWidget::canEdit(element.data())) {
             ElementWidget *widget = new PreambleWidget(tab);
             connect(widget, SIGNAL(modified(bool)), p, SLOT(childModified(bool)));
             tab->addTab(widget, widget->icon(), widget->label());
             widgets << widget;
         }
 
-        if (MacroWidget::canEdit(element)) {
+        if (MacroWidget::canEdit(element.data())) {
             ElementWidget *widget = new MacroWidget(tab);
             connect(widget, SIGNAL(modified(bool)), p, SLOT(childModified(bool)));
             tab->addTab(widget, widget->icon(), widget->label());
             widgets << widget;
         }
 
-        if (FilesWidget::canEdit(element)) {
+        if (FilesWidget::canEdit(element.data())) {
             ElementWidget *widget = new FilesWidget(tab);
             connect(widget, SIGNAL(modified(bool)), p, SLOT(childModified(bool)));
             tab->addTab(widget, widget->icon(), widget->label());
             widgets << widget;
         }
 
-        if (OtherFieldsWidget::canEdit(element)) {
+        if (OtherFieldsWidget::canEdit(element.data())) {
             QStringList blacklistedFields;
             /// blacklist fields covered by EntryConfiguredWidget
             for (EntryLayout::ConstIterator elit = el->constBegin(); elit != el->constEnd(); ++elit)
@@ -163,7 +157,7 @@ public:
             widgets << widget;
         }
 
-        if (SourceWidget::canEdit(element)) {
+        if (SourceWidget::canEdit(element.data())) {
             sourceWidget = new SourceWidget(tab);
             connect(sourceWidget, SIGNAL(modified(bool)), p, SLOT(childModified(bool)));
             tab->addTab(sourceWidget, sourceWidget->icon(), sourceWidget->label());
@@ -179,7 +173,7 @@ public:
         apply(element);
     }
 
-    virtual void apply(Element *element) {
+    virtual void apply(QSharedPointer<Element> element) {
         if (referenceWidget != NULL)
             referenceWidget->apply(element);
         ElementWidget *currentElementWidget = dynamic_cast<ElementWidget*>(tab->currentWidget());
@@ -195,41 +189,40 @@ public:
         reset(element);
 
         /// show checkbox to enable all fields only if editing an entry
-        checkBoxForceShowAllWidgets->setVisible(internalEntry != NULL);
+        checkBoxForceShowAllWidgets->setVisible(!internalEntry.isNull());
         /// Disable widgets if necessary
         if (!checkBoxForceShowAllWidgets->isChecked())
             updateReqOptWidgets();
     }
 
-    void reset(const Element *element) {
+    void reset(QSharedPointer<const Element> element) {
         for (QList<ElementWidget*>::Iterator it = widgets.begin(); it != widgets.end(); ++it) {
             (*it)->setFile(file);
             (*it)->reset(element);
             (*it)->setModified(false);
         }
 
-        testNullDelete(internalEntry);
-        testNullDelete(internalEntry);
-        testNullDelete(internalMacro);
-        testNullDelete(internalComment);
-        testNullDelete(internalPreamble);
-        const Entry *e = dynamic_cast<const Entry*>(element);
-        if (e != NULL) {
-            internalEntry = new Entry(*e);
-        } else {
-            const Macro *m = dynamic_cast<const Macro*>(element);
-            if (m != NULL)
-                internalMacro = new Macro(*m);
+        internalEntry = QSharedPointer<Entry>();
+        internalMacro = QSharedPointer<Macro>();
+        internalComment = QSharedPointer<Comment>();
+        internalPreamble = QSharedPointer<Preamble>();
+        QSharedPointer<const Entry> e = element.dynamicCast<const Entry>();
+        if (!e.isNull())
+            internalEntry = QSharedPointer<Entry>(new Entry(*e.data()));
+        else {
+            QSharedPointer<const Macro> m = element.dynamicCast<const Macro>();
+            if (!m.isNull())
+                internalMacro = QSharedPointer<Macro>(new Macro(*m.data()));
             else {
-                const Comment *c = dynamic_cast<const Comment*>(element);
-                if (c != NULL)
-                    internalComment = new Comment(*c);
+                QSharedPointer<const Comment> c = element.dynamicCast<const Comment>();
+                if (!c.isNull())
+                    internalComment = QSharedPointer<Comment>(new Comment(*c.data()));
                 else {
-                    const Preamble *p = dynamic_cast<const Preamble*>(element);
-                    if (p != NULL)
-                        internalPreamble = new Preamble(*p);
+                    QSharedPointer<const Preamble> p = element.dynamicCast<const Preamble>();
+                    if (!p.isNull())
+                        internalPreamble = QSharedPointer<Preamble>(new Preamble(*p.data()));
                     else
-                        Q_ASSERT_X(element == NULL, "ElementEditor::ElementEditorPrivate::reset(const Element *element)", "element is not NULL but could not be cast on a valid Element sub-class");
+                        Q_ASSERT_X(element.isNull(), "ElementEditor::ElementEditorPrivate::reset(const Element *element)", "element is not NULL but could not be cast on a valid Element sub-class");
                 }
             }
         }
@@ -244,16 +237,16 @@ public:
 
     void updateReqOptWidgets() {
         /// this function is only relevant if editing an entry (and not e.g. a comment)
-        if (internalEntry == NULL) return; /// quick-and-dirty test if editing an entry
+        if (internalEntry.isNull()) return; /// quick-and-dirty test if editing an entry
 
         /// make a temporary snapshot of the current state
-        Entry tempEntry;
-        apply(&tempEntry);
+        QSharedPointer<Entry> tempEntry = QSharedPointer<Entry>(new Entry());
+        apply(tempEntry);
 
         /// update the enabled/disabled state of required and optional widgets/fields
         bool forceVisible = checkBoxForceShowAllWidgets->isChecked();
         foreach(ElementWidget *elementWidget, widgets) {
-            elementWidget->showReqOptWidgets(forceVisible, tempEntry.type());
+            elementWidget->showReqOptWidgets(forceVisible, tempEntry->type());
         }
 
         /// save configuration
@@ -268,14 +261,14 @@ public:
         bool isSourceWidget = newTab == sourceWidget;
         ElementWidget *newWidget = dynamic_cast<ElementWidget*>(newTab);
         if (previousWidget != NULL && newWidget != NULL) {
-            Element *temp = NULL;
-            if (internalEntry != NULL)
+            QSharedPointer<Element> temp;
+            if (!internalEntry.isNull())
                 temp = internalEntry;
-            else if (internalMacro != NULL)
+            else if (!internalMacro.isNull())
                 temp = internalMacro;
-            else if (internalComment != NULL)
+            else if (!internalComment.isNull())
                 temp = internalComment;
-            else if (internalPreamble != NULL)
+            else if (!internalPreamble.isNull())
                 temp = internalPreamble;
             Q_ASSERT(temp != NULL);
 
@@ -307,18 +300,18 @@ public:
             File dummyFile;
 
             /// create temporary entry to work with
-            Entry entry(*internalEntry);
-            apply(&entry);
-            dummyFile << &entry;
+            QSharedPointer<Entry> entry = QSharedPointer<Entry>(new Entry(*internalEntry.data()));
+            apply(entry);
+            dummyFile << entry;
 
             /// fetch and inser crossref'ed entry
             QString crossRefStr = QString::null;
-            Value crossRefVal = entry.value(Entry::ftCrossRef);
+            Value crossRefVal = entry->value(Entry::ftCrossRef);
             if (!crossRefVal.isEmpty() && file != NULL) {
                 crossRefStr = PlainTextValue::text(crossRefVal, file);
-                const Element *crossRefDest = file->containsKey(crossRefStr, File::etEntry);
-                if (crossRefDest != NULL && typeid(*crossRefDest) == typeid(Entry))
-                    dummyFile << new Entry(*dynamic_cast<const Entry*>(crossRefDest));
+                QSharedPointer<Entry> crossRefDest = file->containsKey(crossRefStr, File::etEntry).dynamicCast<Entry>();
+                if (!crossRefDest.isNull())
+                    dummyFile << crossRefDest;
                 else
                     crossRefStr = QString::null; /// memorize crossref'ing failed
             }
@@ -346,14 +339,14 @@ public:
             }
 
             /// define variables how to parse BibTeX's ouput
-            const QString warningStart = QLatin1String("Warning--");
-            const QRegExp warningEmptyField("empty (\\w+) in ");
-            const QRegExp warningEmptyField2("empty (\\w+) or (\\w+) in ");
-            const QRegExp warningThereIsBut("there's a (\\w+) but no (\\w+) in");
-            const QRegExp warningCantUseBoth("can't use both (\\w+) and (\\w+) fields");
-            const QRegExp warningSort2("to sort, need (\\w+) or (\\w+) in ");
-            const QRegExp warningSort3("to sort, need (\\w+), (\\w+), or (\\w+) in ");
-            const QRegExp errorLine("---line (\\d+)");
+            static const QString warningStart = QLatin1String("Warning--");
+            static const QRegExp warningEmptyField("empty (\\w+) in ");
+            static const QRegExp warningEmptyField2("empty (\\w+) or (\\w+) in ");
+            static const QRegExp warningThereIsBut("there's a (\\w+) but no (\\w+) in");
+            static const QRegExp warningCantUseBoth("can't use both (\\w+) and (\\w+) fields");
+            static const QRegExp warningSort2("to sort, need (\\w+) or (\\w+) in ");
+            static const QRegExp warningSort3("to sort, need (\\w+), (\\w+), or (\\w+) in ");
+            static const QRegExp errorLine("---line (\\d+)");
 
             /// go line-by-line through BibTeX output and collect warnings/errors
             QStringList warnings;
@@ -417,39 +410,39 @@ public:
 
 };
 
-ElementEditor::ElementEditor(Element *element, const File *file, QWidget *parent)
+ElementEditor::ElementEditor(QSharedPointer<Element> element, const File *file, QWidget *parent)
         : QWidget(parent), d(new ElementEditorPrivate(element, file, this))
 {
     connect(d->tab, SIGNAL(currentChanged(int)), this, SLOT(tabChanged()));
     d->reset();
 }
 
-ElementEditor::ElementEditor(const Element *element, const File *file, QWidget *parent)
+ElementEditor::ElementEditor(QSharedPointer<const Element> element, const File *file, QWidget *parent)
         : QWidget(parent)
 {
-    Element *m = NULL;
-    const Entry *entry = dynamic_cast<const Entry*>(element);
-    if (entry != NULL)
-        m = new Entry(*entry);
+    QSharedPointer<Element> clone;
+    QSharedPointer<const Entry> entry = element.dynamicCast<const Entry>();
+    if (!entry.isNull())
+        clone = QSharedPointer<Entry>(new Entry(*entry.data()));
     else {
-        const Macro *macro = dynamic_cast<const Macro*>(element);
-        if (macro != NULL)
-            m = new Macro(*macro);
+        QSharedPointer<const Macro> macro = element.dynamicCast<const Macro>();
+        if (!macro.isNull())
+            clone = QSharedPointer<Macro>(new Macro(*macro.data()));
         else {
-            const Preamble *preamble = dynamic_cast<const Preamble*>(element);
-            if (preamble != NULL)
-                m = new Preamble(*preamble);
+            QSharedPointer<const Preamble> preamble = element.dynamicCast<const Preamble>();
+            if (!preamble.isNull())
+                clone = QSharedPointer<Preamble>(new Preamble(*preamble.data()));
             else {
-                const Comment *comment = dynamic_cast<const Comment*>(element);
-                if (comment != NULL)
-                    m = new Comment(*comment);
+                QSharedPointer<const Comment> comment = element.dynamicCast<const Comment>();
+                if (!comment.isNull())
+                    clone = QSharedPointer<Comment>(new Comment(*comment.data()));
                 else
                     Q_ASSERT_X(element == NULL, "ElementEditor::ElementEditor(const Element *element, QWidget *parent)", "element is not NULL but could not be cast on a valid Element sub-class");
             }
         }
     }
 
-    d = new ElementEditorPrivate(m, file, this);
+    d = new ElementEditorPrivate(clone, file, this);
     setReadOnly(true);
 }
 

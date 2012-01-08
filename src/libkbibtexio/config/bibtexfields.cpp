@@ -62,7 +62,7 @@ public:
         QString groupName = QLatin1String("Column");
         KConfigGroup configGroup(layoutConfig, groupName);
         int columnCount = qMin(configGroup.readEntry("count", 0), bibTeXFieldsMaxColumnCount);
-        const QStringList defaultTreeViewNames = QStringList() << QLatin1String("SearchResults") << QLatin1String("Main") << QLatin1String("MergeWidget");
+        const QStringList defaultTreeViewNames = QStringList() << QLatin1String("SearchResults") << QLatin1String("Main") << QLatin1String("MergeWidget") << QLatin1String("Zotero");
         QStringList treeViewNames = configGroup.readEntry("treeViewNames", defaultTreeViewNames);
 
         for (int col = 1; col <= columnCount; ++col) {

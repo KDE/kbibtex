@@ -36,7 +36,7 @@ public:
     void reloadConfig();
 
     bool save(QIODevice* iodevice, const File* bibtexfile, QStringList *errorLog = NULL);
-    bool save(QIODevice* iodevice, const Element* element, QStringList *errorLog = NULL);
+    bool save(QIODevice* iodevice, const QSharedPointer<const Element> element, QStringList *errorLog = NULL);
 
     void setLaTeXLanguage(const QString& language);
     void setLaTeXBibliographyStyle(const QString& bibStyle);

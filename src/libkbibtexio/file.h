@@ -23,6 +23,7 @@
 
 #include <QList>
 #include <QStringList>
+#include <QSharedPointer>
 
 #include <KUrl>
 
@@ -40,7 +41,7 @@ class Element;
  * @see Element
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
-class KBIBTEXIO_EXPORT File : public QList<Element*>
+class KBIBTEXIO_EXPORT File : public QList<QSharedPointer<Element> >
 {
 public:
     /// enum and flags to differ between entries, macros etc
@@ -61,7 +62,6 @@ public:
 
     File();
     File(const File &other);
-    virtual ~File();
 
     /**
      * Check if a given key (e.g. a key for a macro or an id for an entry)
@@ -69,7 +69,7 @@ public:
      * @see #allKeys() const
      * @return @c the object addressed by the key @c, NULL if no such file has been found
      */
-    const Element *containsKey(const QString &key, ElementTypes elementTypes = etAll) const;
+    const QSharedPointer<Element> containsKey(const QString &key, ElementTypes elementTypes = etAll) const;
 
     /**
      * Retrieves a list of all keys for example from macros or entries.

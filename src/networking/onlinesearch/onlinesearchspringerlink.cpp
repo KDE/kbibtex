@@ -398,15 +398,13 @@ void OnlineSearchSpringerLink::doneFetchingBibTeX()
         bool hasEntry = false;
         if (bibtexFile != NULL) {
             for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
-                Entry *entry = dynamic_cast<Entry*>(*it);
-                if (entry != NULL) {
+                QSharedPointer<Entry> entry = (*it).dynamicCast<Entry>();
+                if (!entry.isNull()) {
                     hasEntry = true;
-                    if (entry != NULL) {
-                        Value v;
-                        v.append(QSharedPointer<VerbatimText>(new VerbatimText(label())));
-                        entry->insert("x-fetchedfrom", v);
-                        emit foundEntry(entry);
-                    }
+                    Value v;
+                    v.append(QSharedPointer<VerbatimText>(new VerbatimText(label())));
+                    entry->insert("x-fetchedfrom", v);
+                    emit foundEntry(entry);
                 }
             }
             delete bibtexFile;

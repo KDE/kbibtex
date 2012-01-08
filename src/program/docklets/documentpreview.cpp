@@ -124,7 +124,7 @@ private:
 public:
     QCheckBox *onlyLocalFilesCheckBox;
     QList<KIO::StatJob*> runningJobs;
-    const Entry* entry;
+    QSharedPointer<const Entry> entry;
     KUrl baseUrl;
 
     KParts::ReadOnlyPart *locatePart(const QString &desktopFile, QWidget *parentWidget) {
@@ -257,7 +257,7 @@ public:
 
         /// do not load external reference if widget is hidden
         if (isVisible()) {
-            QList<KUrl> urlList = FileInfo::entryUrls(entry, baseUrl);
+            QList<KUrl> urlList = FileInfo::entryUrls(entry.data(), baseUrl);
             for (QList<KUrl>::ConstIterator it = urlList.constBegin(); it != urlList.constEnd(); ++it) {
                 bool isLocal = (*it).isLocalFile();
                 if (onlyLocalFilesCheckBox->isChecked() && !isLocal) continue;
@@ -427,9 +427,9 @@ DocumentPreview::DocumentPreview(QDockWidget *parent)
     connect(parent, SIGNAL(visibilityChanged(bool)), this, SLOT(visibilityChanged(bool)));
 }
 
-void DocumentPreview::setElement(Element* element, const File *)
+void DocumentPreview::setElement(QSharedPointer<Element> element, const File *)
 {
-    d->entry = dynamic_cast<const Entry*>(element);
+    d->entry = element.dynamicCast<const Entry>();
     d->update();
 }
 

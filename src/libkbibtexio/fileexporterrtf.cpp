@@ -73,7 +73,7 @@ bool FileExporterRTF::save(QIODevice* iodevice, const File* bibtexfile, QStringL
     return result;
 }
 
-bool FileExporterRTF::save(QIODevice* iodevice, const Element* element, QStringList *errorLog)
+bool FileExporterRTF::save(QIODevice* iodevice, const QSharedPointer<const Element> element, QStringList *errorLog)
 {
     bool result = false;
 

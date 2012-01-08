@@ -32,8 +32,9 @@ class KBIBTEXIO_EXPORT Element
 {
 public:
     Element();
-    virtual ~Element();
+    virtual ~Element() { /* nothing */ };
 
+private:
     int uniqueId;
 };
 

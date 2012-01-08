@@ -40,7 +40,7 @@ public:
     void setEditor(BibTeXEditor *editor);
 
 public slots:
-    void setElement(Element*, const File *);
+    void setElement(QSharedPointer<Element>, const File *);
 
 private:
     class ReferencePreviewPrivate;

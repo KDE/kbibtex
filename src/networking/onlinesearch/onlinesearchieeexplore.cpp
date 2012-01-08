@@ -55,7 +55,7 @@ public:
         citationUrl = QLatin1String("http://ieeexplore.ieee.org/xpl/downloadCitations?fromPageName=searchabstract&citations-format=citation-abstract&download-format=download-bibtex&x=61&y=24&recordIds=");
     }
 
-    void sanitize(Entry *entry, const QString &arnumber) {
+    void sanitize(QSharedPointer<Entry> entry, const QString &arnumber) {
         entry->setId(QLatin1String("ieee") + arnumber);
 
         Value v;
@@ -214,12 +214,12 @@ void OnlineSearchIEEEXplore::doneFetchingBibliography()
         QString plainText = QString(reply->readAll()).replace("<br>", "");
         d->sanitizeBibTeXCode(plainText);
 
+        bool hasEntry = false;
         File *bibtexFile = d->fileImporter.fromString(plainText);
-        Entry *entry = NULL;
         if (bibtexFile != NULL) {
-            for (File::ConstIterator it = bibtexFile->constBegin(); entry == NULL && it != bibtexFile->constEnd(); ++it) {
-                entry = dynamic_cast<Entry*>(*it);
-                if (entry != NULL) {
+            for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
+                QSharedPointer<Entry> entry = (*it).dynamicCast<Entry>();
+                if (!entry.isNull()) {
                     QString arnumber = reply->url().queryItemValue(QLatin1String("recordIds"));
                     d->sanitize(entry, arnumber);
 
@@ -228,12 +228,13 @@ void OnlineSearchIEEEXplore::doneFetchingBibliography()
                     entry->insert("x-fetchedfrom", v);
 
                     emit foundEntry(entry);
+                    hasEntry = true;
                 }
             }
             delete bibtexFile;
         }
 
-        if (entry == NULL) {
+        if (!hasEntry) {
             kWarning() << "Searching" << label() << "(url:" << reply->url().toString() << ") resulted in invalid BibTeX data:" << QString(reply->readAll());
             emit stoppedSearch(resultUnspecifiedError);
             return;

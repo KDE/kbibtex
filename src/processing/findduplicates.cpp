@@ -41,17 +41,17 @@ int EntryClique::entryCount() const
     return checkedEntries.count();
 }
 
-QList<Entry*> EntryClique::entryList() const
+QList<QSharedPointer<Entry> > EntryClique::entryList() const
 {
     return checkedEntries.keys();
 }
 
-bool EntryClique::isEntryChecked(Entry *entry) const
+bool EntryClique::isEntryChecked(QSharedPointer<Entry> entry) const
 {
     return checkedEntries[entry];
 }
 
-void EntryClique::setEntryChecked(Entry *entry, bool isChecked)
+void EntryClique::setEntryChecked(QSharedPointer<Entry> entry, bool isChecked)
 {
     checkedEntries[entry] = isChecked;
     recalculateValueMap();
@@ -111,7 +111,7 @@ void EntryClique::setChosenValue(const QString &field, Value &value, ValueOperat
     }
 }
 
-void EntryClique::addEntry(Entry* entry)
+void EntryClique::addEntry(QSharedPointer<Entry> entry)
 {
     checkedEntries.insert(entry, false); /// remember to call recalculateValueMap later
 }
@@ -122,8 +122,8 @@ void EntryClique::recalculateValueMap()
     chosenValueMap.clear();
 
     /// go through each and every entry ...
-    const QList<Entry*> el = entryList();
-    foreach(Entry *entry, el)
+    const QList<QSharedPointer<Entry> > el = entryList();
+    foreach(QSharedPointer<Entry> entry, el)
     if (isEntryChecked(entry)) {
 
         /// cover entry type
@@ -385,10 +385,10 @@ bool FindDuplicates::findDuplicateEntries(File *file, QList<EntryClique*> &entry
     d->gotCanceled = false;
 
     /// assemble list of entries only (ignoring comments, macros, ...)
-    QList<Entry*> listOfEntries;
+    QList<QSharedPointer<Entry> > listOfEntries;
     for (File::ConstIterator it = file->constBegin(); it != file->constEnd(); ++it) {
-        Entry *e = dynamic_cast<Entry*>(*it);
-        if (e != NULL && !e->isEmpty())
+        QSharedPointer<Entry> e = (*it).dynamicCast<Entry>();
+        if (!e.isNull() && !e->isEmpty())
             listOfEntries << e;
     }
 
@@ -414,7 +414,7 @@ bool FindDuplicates::findDuplicateEntries(File *file, QList<EntryClique*> &entry
     emit maximumProgress(maxProgress);
 
     /// go through all entries ...
-    for (QList<Entry*>::ConstIterator eit = listOfEntries.constBegin(); eit != listOfEntries.constEnd(); ++eit) {
+    for (QList<QSharedPointer<Entry> >::ConstIterator eit = listOfEntries.constBegin(); eit != listOfEntries.constEnd(); ++eit) {
         if (d->widget != NULL) {
             KApplication::instance()->processEvents();
         }
@@ -435,7 +435,7 @@ bool FindDuplicates::findDuplicateEntries(File *file, QList<EntryClique*> &entry
         /// go through all existing cliques
         for (QList<EntryClique*>::Iterator cit = entryCliqueList.begin(); cit != entryCliqueList.end(); ++cit) {
             /// check distance between current entry and clique's first entry
-            if (d->entryDistance(*eit, (*cit)->entryList().first()) < d->sensitivity) {
+            if (d->entryDistance((*eit).data(), (*cit)->entryList().first().data()) < d->sensitivity) {
                 /// if distance is below sensitivity, add current entry to clique
                 foundClique = true;
                 (*cit)->addEntry(*eit);
@@ -542,7 +542,7 @@ bool MergeDuplicates::mergeDuplicateEntries(const QList<EntryClique*> &entryCliq
         }
 
         bool actuallyMerged = false;
-        foreach(Entry *entry, entryClique->entryList()) {
+        foreach(QSharedPointer<Entry> entry, entryClique->entryList()) {
             /// if merging entries with identical ids, the merged entry will not yet have an id (is null)
             if (mergedEntry->id().isEmpty())
                 mergedEntry->setId(entry->id());
@@ -558,12 +558,12 @@ bool MergeDuplicates::mergeDuplicateEntries(const QList<EntryClique*> &entryCliq
                 for (Entry::ConstIterator it = entry->constBegin(); it != entry->constEnd(); ++it)
                     if (!mergedEntry->contains(it.key()))
                         mergedEntry->insert(it.key(), it.value());
-                file->removeOne(entry);
+                file->removeOne(QSharedPointer<Entry>(entry)); // TODO does this work?
             }
         }
 
         if (actuallyMerged)
-            file->append(mergedEntry);
+            file->append(QSharedPointer<Entry>(mergedEntry));
         else
             delete mergedEntry;
         didMerge |= actuallyMerged;
@@ -584,8 +584,8 @@ bool MergeDuplicates::mergeDuplicateEntriesAuto(const QList<EntryClique*> &entry
         /// Sort entries in clique according into sortedEntries
         /// according to values in field sortCriteriumField and
         /// mergePriority.
-        QLinkedList<Entry*> sortedEntries;
-        foreach(Entry *entry, entryClique->entryList()) {
+        QLinkedList<QSharedPointer<Entry> > sortedEntries;
+        foreach(QSharedPointer<Entry> entry, entryClique->entryList()) {
             if (sortedEntries.isEmpty())
                 /// Just started sorting, append first entry
                 sortedEntries.append(entry);
@@ -596,7 +596,7 @@ bool MergeDuplicates::mergeDuplicateEntriesAuto(const QList<EntryClique*> &entry
                 const int ai = a.toInt();
                 const QDate aDate = QDate::fromString(a, Qt::ISODate);
 
-                QLinkedList<Entry*>::Iterator it;
+                QLinkedList<QSharedPointer<Entry> >::Iterator it;
                 for (it = sortedEntries.begin(); it != sortedEntries.end(); ++it) {
                     /// Get string, number and date based on iterator's
                     /// current Entry in sortedEntries list
@@ -664,17 +664,18 @@ bool MergeDuplicates::mergeDuplicateEntriesAuto(const QList<EntryClique*> &entry
         /// Fill new entry by copying values from clique's Entries.
         /// Sorting ensures that Entries matching sorting criteries
         /// get higher priority
-        foreach(Entry *entry, sortedEntries) {
+        foreach(QSharedPointer<Entry> entry, sortedEntries) {
             for (Entry::ConstIterator it = entry->constBegin(); it != entry->constEnd(); ++it)
                 if (!mergedEntry->contains(it.key()))
                     mergedEntry->insert(it.key(), it.value());
 
             /// Removed harvested Entries
-            file->removeOne(entry);
+            // TODO does this still work?
+            file->removeOne(QSharedPointer<Entry>(entry));
         }
 
         /// Insert merged Entries
-        file->append(mergedEntry);
+        file->append(QSharedPointer<Entry>(mergedEntry));
     }
 
     return true;

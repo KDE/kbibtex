@@ -88,12 +88,12 @@ EntryConfiguredWidget::EntryConfiguredWidget(EntryTabLayout &entryTabLayout, QWi
     createGUI();
 }
 
-bool EntryConfiguredWidget::apply(Element *element) const
+bool EntryConfiguredWidget::apply(QSharedPointer<Element> element) const
 {
     if (isReadOnly) return false; /// never save data if in read-only mode
 
-    Entry *entry = dynamic_cast<Entry*>(element);
-    if (entry == NULL) return false;
+    QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
+    if (entry.isNull()) return false;
 
     for (QMap<QString, FieldInput*>::ConstIterator it = bibtexKeyToWidget.constBegin(); it != bibtexKeyToWidget.constEnd(); ++it) {
         Value value;
@@ -106,10 +106,10 @@ bool EntryConfiguredWidget::apply(Element *element) const
     return true;
 }
 
-bool EntryConfiguredWidget::reset(const Element *element)
+bool EntryConfiguredWidget::reset(QSharedPointer<const Element> element)
 {
-    const Entry *entry = dynamic_cast<const Entry*>(element);
-    if (entry == NULL) return false;
+    QSharedPointer<const Entry> entry = element.dynamicCast<const Entry>();
+    if (entry.isNull()) return false;
 
     /// clear all widgets
     for (QMap<QString, FieldInput*>::Iterator it = bibtexKeyToWidget.begin(); it != bibtexKeyToWidget.end(); ++it) {
@@ -121,7 +121,7 @@ bool EntryConfiguredWidget::reset(const Element *element)
         const QString key = it.key().toLower();
         if (bibtexKeyToWidget.contains(key)) {
             FieldInput *fieldInput = bibtexKeyToWidget[key];
-            fieldInput->setElement(element);
+            fieldInput->setElement(element.data());
             fieldInput->reset(it.value());
         }
     }
@@ -318,13 +318,13 @@ ReferenceWidget::ReferenceWidget(QWidget *parent)
     createGUI();
 }
 
-bool ReferenceWidget::apply(Element *element) const
+bool ReferenceWidget::apply(QSharedPointer<Element> element) const
 {
     if (isReadOnly) return false; /// never save data if in read-only mode
 
     bool result = false;
-    Entry *entry = dynamic_cast<Entry*>(element);
-    if (entry != NULL) {
+    QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
+    if (!entry.isNull()) {
         BibTeXEntries *be = BibTeXEntries::self();
         QString type = QString::null;
         if (entryType->currentIndex() < 0 || entryType->lineEdit()->isModified())
@@ -336,8 +336,8 @@ bool ReferenceWidget::apply(Element *element) const
         entry->setId(entryId->text());
         result = true;
     } else {
-        Macro *macro = dynamic_cast<Macro*>(element);
-        if (macro != NULL) {
+        QSharedPointer<Macro> macro = element.dynamicCast<Macro>();
+        if (!macro.isNull()) {
             macro->setKey(entryId->text());
             result = true;
         }
@@ -346,7 +346,7 @@ bool ReferenceWidget::apply(Element *element) const
     return result;
 }
 
-bool ReferenceWidget::reset(const Element *element)
+bool ReferenceWidget::reset(QSharedPointer<const Element> element)
 {
     /// if signals are not deactivated, the "modified" signal would be emitted when
     /// resetting the widgets' values
@@ -354,12 +354,12 @@ bool ReferenceWidget::reset(const Element *element)
     disconnect(entryId, SIGNAL(textChanged(QString)), this, SLOT(gotModified()));
 
     bool result = false;
-    m_entry = dynamic_cast<const Entry*>(element);
-    if (m_entry != NULL) {
+    QSharedPointer<const Entry> entry = element.dynamicCast<const Entry>();
+    if (!entry.isNull()) {
         entryType->setEnabled(true);
         buttonSuggestId->setEnabled(true);
         BibTeXEntries *be = BibTeXEntries::self();
-        QString type = be->format(m_entry->type(), KBibTeX::cUpperCamelCase);
+        QString type = be->format(entry->type(), KBibTeX::cUpperCamelCase);
         entryType->setCurrentIndex(-1);
         entryType->lineEdit()->setText(type);
         type = type.toLower();
@@ -369,13 +369,13 @@ bool ReferenceWidget::reset(const Element *element)
                 entryType->setCurrentIndex(index);
                 break;
             }
-        entryId->setText(m_entry->id());
+        entryId->setText(entry->id());
         result = true;
     } else {
         entryType->setEnabled(false);
         buttonSuggestId->setEnabled(false);
-        const Macro *macro = dynamic_cast<const Macro*>(element);
-        if (macro != NULL) {
+        QSharedPointer<const Macro> macro = element.dynamicCast<const Macro>();
+        if (!macro.isNull()) {
             entryType->lineEdit()->setText(i18n("Macro"));
             entryId->setText(macro->key());
             result = true;
@@ -450,13 +450,13 @@ void ReferenceWidget::createGUI()
 
 void ReferenceWidget::prepareSuggestionsMenu()
 {
-    Entry internalEntry;
-    m_applyElement->apply(&internalEntry);
+    QSharedPointer<Entry> internalEntry(new Entry());
+    m_applyElement->apply(internalEntry);
 
     static const IdSuggestions *idSuggestions = new IdSuggestions();
     QMenu *suggestionsMenu = buttonSuggestId->menu();
     suggestionsMenu->clear();
-    foreach(const QString &suggestion, idSuggestions->formatIdList(internalEntry)) {
+    foreach(const QString &suggestion, idSuggestions->formatIdList(*internalEntry.data())) {
         QAction *suggestionAction = new QAction(suggestion, suggestionsMenu);
         suggestionsMenu->addAction(suggestionAction);
         connect(suggestionAction, SIGNAL(triggered()), this, SLOT(insertSuggestionFromAction()));
@@ -483,12 +483,12 @@ FilesWidget::FilesWidget(QWidget *parent)
     connect(fileList, SIGNAL(modified()), this, SLOT(gotModified()));
 }
 
-bool FilesWidget::apply(Element *element) const
+bool FilesWidget::apply(QSharedPointer<Element> element) const
 {
     if (isReadOnly) return false; /// never save data if in read-only mode
 
-    Entry* entry = dynamic_cast<Entry*>(element);
-    if (entry == NULL) return false;
+    QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
+    if (entry.isNull()) return false;
 
     for (QStringList::ConstIterator it = keyStart.constBegin(); it != keyStart.constEnd(); ++it)
         for (int i = 1; i < 32; ++i) {  /// FIXME replace number by constant
@@ -552,10 +552,10 @@ bool FilesWidget::apply(Element *element) const
     return true;
 }
 
-bool FilesWidget::reset(const Element *element)
+bool FilesWidget::reset(QSharedPointer<const Element> element)
 {
-    const Entry* entry = dynamic_cast<const Entry*>(element);
-    if (entry == NULL) return false;
+    QSharedPointer<const Entry> entry = element.dynamicCast<const Entry>();
+    if (entry.isNull()) return false;
 
     Value combinedValue;
     for (QStringList::ConstIterator it = keyStart.constBegin(); it != keyStart.constEnd(); ++it)
@@ -566,7 +566,7 @@ bool FilesWidget::reset(const Element *element)
             for (Value::ConstIterator it = value.constBegin(); it != value.constEnd(); ++it)
                 combinedValue.append(*it);
         }
-    fileList->setElement(element);
+    fileList->setElement(element.data());
     fileList->setFile(m_file);
     fileList->reset(combinedValue);
 
@@ -598,21 +598,16 @@ bool FilesWidget::canEdit(const Element *element)
 OtherFieldsWidget::OtherFieldsWidget(const QStringList &blacklistedFields, QWidget *parent)
         : ElementWidget(parent), blackListed(blacklistedFields)
 {
-    internalEntry = new Entry();
+    internalEntry = QSharedPointer<Entry>(new Entry());
     createGUI();
 }
 
-OtherFieldsWidget::~OtherFieldsWidget()
-{
-    delete internalEntry;
-}
-
-bool OtherFieldsWidget::apply(Element *element) const
+bool OtherFieldsWidget::apply(QSharedPointer<Element> element) const
 {
     if (isReadOnly) return false; /// never save data if in read-only mode
 
-    Entry* entry = dynamic_cast<Entry*>(element);
-    if (entry == NULL) return false;
+    QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
+    if (entry.isNull()) return false;
 
     for (QStringList::ConstIterator it = deletedKeys.constBegin(); it != deletedKeys.constEnd(); ++it)
         entry->remove(*it);
@@ -624,12 +619,12 @@ bool OtherFieldsWidget::apply(Element *element) const
     return true;
 }
 
-bool OtherFieldsWidget::reset(const Element *element)
+bool OtherFieldsWidget::reset(QSharedPointer<const Element> element)
 {
-    const Entry* entry = dynamic_cast<const Entry*>(element);
-    if (entry == NULL) return false;
+    QSharedPointer<const Entry> entry = element.dynamicCast<const Entry>();
+    if (entry.isNull()) return false;
 
-    internalEntry->operator =(*entry);
+    internalEntry = QSharedPointer<Entry>(new Entry(*entry.data()));
     deletedKeys.clear(); // FIXME clearing list may be premature here...
     modifiedKeys.clear(); // FIXME clearing list may be premature here...
     updateList();
@@ -842,12 +837,12 @@ MacroWidget::MacroWidget(QWidget *parent)
     createGUI();
 }
 
-bool MacroWidget::apply(Element *element) const
+bool MacroWidget::apply(QSharedPointer<Element> element) const
 {
     if (isReadOnly) return false; /// never save data if in read-only mode
 
-    Macro* macro = dynamic_cast<Macro*>(element);
-    if (macro == NULL) return false;
+    QSharedPointer<Macro> macro = element.dynamicCast<Macro>();
+    if (macro.isNull()) return false;
 
     Value value;
     bool result = fieldInputValue->apply(value);
@@ -856,10 +851,10 @@ bool MacroWidget::apply(Element *element) const
     return result;
 }
 
-bool MacroWidget::reset(const Element *element)
+bool MacroWidget::reset(QSharedPointer<const Element> element)
 {
-    const Macro* macro = dynamic_cast<const Macro*>(element);
-    if (macro == NULL) return false;
+    QSharedPointer<const Macro> macro = element.dynamicCast<const Macro>();
+    if (macro.isNull()) return false;
 
     return fieldInputValue->reset(macro->value());
 }
@@ -906,12 +901,12 @@ PreambleWidget::PreambleWidget(QWidget *parent)
     createGUI();
 }
 
-bool PreambleWidget::apply(Element *element) const
+bool PreambleWidget::apply(QSharedPointer<Element> element) const
 {
     if (isReadOnly) return false; /// never save data if in read-only mode
 
-    Preamble* preamble = dynamic_cast<Preamble*>(element);
-    if (preamble == NULL) return false;
+    QSharedPointer<Preamble> preamble = element.dynamicCast<Preamble>();
+    if (preamble.isNull()) return false;
 
     Value value;
     bool result = fieldInputValue->apply(value);
@@ -920,10 +915,10 @@ bool PreambleWidget::apply(Element *element) const
     return result;
 }
 
-bool PreambleWidget::reset(const Element *element)
+bool PreambleWidget::reset(QSharedPointer<const Element> element)
 {
-    const Preamble* preamble = dynamic_cast<const Preamble*>(element);
-    if (preamble == NULL) return false;
+    QSharedPointer<const Preamble> preamble = element.dynamicCast<const Preamble>();
+    if (preamble.isNull()) return false;
 
     return fieldInputValue->reset(preamble->value());
 }
@@ -990,7 +985,7 @@ SourceWidget::SourceWidget(QWidget *parent)
     createGUI();
 }
 
-bool SourceWidget::apply(Element *element) const
+bool SourceWidget::apply(QSharedPointer<Element> element) const
 {
     if (isReadOnly) return false; /// never save data if in read-only mode
 
@@ -1001,22 +996,22 @@ bool SourceWidget::apply(Element *element) const
 
     bool result = false;
     if (file->count() == 1) {
-        Entry *entry = dynamic_cast<Entry*>(element);
-        Entry *readEntry = dynamic_cast<Entry*>(file->first());
-        if (readEntry != NULL && entry != NULL) {
-            entry->operator =(*readEntry);
+        QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
+        QSharedPointer<Entry> readEntry = file->first().dynamicCast<Entry>();
+        if (!readEntry.isNull() && !entry.isNull()) {
+            entry = readEntry;
             result = true;
         } else {
-            Macro *macro = dynamic_cast<Macro*>(element);
-            Macro *readMacro = dynamic_cast<Macro*>(file->first());
-            if (readMacro != NULL && macro != NULL) {
-                macro->operator =(*readMacro);
+            QSharedPointer<Macro> macro = element.dynamicCast<Macro>();
+            QSharedPointer<Macro> readMacro = file->first().dynamicCast<Macro>();
+            if (!readMacro.isNull() && !macro.isNull()) {
+                macro = readMacro;
                 result = true;
             } else {
-                Preamble *preamble = dynamic_cast<Preamble*>(element);
-                Preamble *readPreamble = dynamic_cast<Preamble*>(file->first());
-                if (readPreamble != NULL && preamble != NULL) {
-                    preamble->operator =(*readPreamble);
+                QSharedPointer<Preamble> preamble = element.dynamicCast<Preamble>();
+                QSharedPointer<Preamble> readPreamble = file->first().dynamicCast<Preamble>();
+                if (!readPreamble.isNull() && !preamble.isNull()) {
+                    preamble = readPreamble;
                     result = true;
                 }
             }
@@ -1027,7 +1022,7 @@ bool SourceWidget::apply(Element *element) const
     return result;
 }
 
-bool SourceWidget::reset(const Element *element)
+bool SourceWidget::reset(QSharedPointer<const Element> element)
 {
     /// if signals are not deactivated, the "modified" signal would be emitted when
     /// resetting the widget's value

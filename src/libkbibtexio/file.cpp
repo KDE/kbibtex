@@ -73,58 +73,47 @@ public:
 };
 
 File::File()
-        : QList<Element*>(), d(new FilePrivate(this))
+        : QList<QSharedPointer<Element> >(), d(new FilePrivate(this))
 {
     // nothing
 }
 
 File::File(const File &other)
-        : QList<Element*>(other), d(new FilePrivate(this))
+        : QList<QSharedPointer<Element> >(other), d(new FilePrivate(this))
 {
     // nothing
 }
 
-File::~File()
+const QSharedPointer<Element> File::containsKey(const QString &key, ElementTypes elementTypes) const
 {
-    // FIXME: at some point elements have to be deleted
-    // maybe use QSharedPointer?
-    //while (!isEmpty()) {
-    //    Element *e = first();
-    //    removeFirst();
-    //    delete e;
-    //}
-}
-
-const Element *File::containsKey(const QString &key, ElementTypes elementTypes) const
-{
-    for (ConstIterator it = begin(); it != end(); ++it) {
-        const Entry* entry = elementTypes.testFlag(etEntry) ? dynamic_cast<const Entry*>(*it) : NULL;
-        if (entry != NULL) {
+    foreach(const QSharedPointer<Element> element, *this) {
+        const QSharedPointer<Entry> entry = elementTypes.testFlag(etEntry) ? element.dynamicCast<Entry>() : QSharedPointer<Entry>();
+        if (!entry.isNull()) {
             if (entry->id() == key)
                 return entry;
         } else {
-            const Macro* macro = elementTypes.testFlag(etMacro) ? dynamic_cast<const Macro*>(*it) : NULL;
-            if (macro != NULL) {
+            const QSharedPointer<Macro> macro = elementTypes.testFlag(etMacro) ? element.dynamicCast<Macro>() : QSharedPointer<Macro>();
+            if (!macro.isNull()) {
                 if (macro->key() == key)
                     return macro;
             }
         }
     }
 
-    return NULL;
+    return QSharedPointer<Element>();
 }
 
 QStringList File::allKeys(ElementTypes elementTypes) const
 {
     QStringList result;
 
-    foreach(const Element *element, *this) {
-        const Entry* entry = elementTypes.testFlag(etEntry) ? dynamic_cast<const Entry*>(element) : NULL;
-        if (entry != NULL)
+    foreach(const QSharedPointer<Element> element, *this) {
+        const QSharedPointer<Entry> entry = elementTypes.testFlag(etEntry) ? element.dynamicCast<Entry>() : QSharedPointer<Entry>();
+        if (!entry.isNull())
             result.append(entry->id());
         else {
-            const Macro* macro = elementTypes.testFlag(etMacro) ? dynamic_cast<const Macro*>(element) : NULL;
-            if (macro != NULL)
+            const QSharedPointer<Macro> macro = elementTypes.testFlag(etMacro) ? element.dynamicCast<Macro>() : QSharedPointer<Macro>();
+            if (!macro.isNull())
                 result.append(macro->key());
         }
     }
@@ -137,9 +126,9 @@ QSet<QString> File::uniqueEntryValuesSet(const QString &fieldName) const
     QSet<QString> valueSet;
     const QString lcFieldName = fieldName.toLower();
 
-    foreach(const Element *element, *this) {
-        const Entry* entry = dynamic_cast<const Entry*>(element);
-        if (entry != NULL)
+    foreach(const QSharedPointer<Element> element, *this) {
+        const QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
+        if (!entry.isNull())
             for (Entry::ConstIterator it = entry->constBegin(); it != entry->constEnd(); ++it)
                 if (it.key().toLower() == lcFieldName)
                     foreach(const QSharedPointer<ValueItem> &valueItem, it.value()) {

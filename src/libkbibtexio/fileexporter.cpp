@@ -35,7 +35,7 @@ FileExporter::~FileExporter()
     // nothing
 }
 
-QString FileExporter::toString(const Element* element)
+QString FileExporter::toString(const QSharedPointer<const Element> element)
 {
     QBuffer buffer;
     buffer.open(QBuffer::WriteOnly);

@@ -39,11 +39,11 @@ public:
     {
     public:
         virtual ~ApplyElementInterface() { /** nothing */ };
-        virtual void apply(Element *) { /** nothing */ };
+        virtual void apply(QSharedPointer<Element>) { /** nothing */ };
     };
 
-    ElementEditor(const Element *element, const File *file, QWidget *parent);
-    ElementEditor(Element *element, const File *file, QWidget *parent);
+    ElementEditor(QSharedPointer<const Element> element, const File *file, QWidget *parent);
+    ElementEditor(QSharedPointer<Element> element, const File *file, QWidget *parent);
 
     void setReadOnly(bool isReadOnly = true);
     bool elementChanged();

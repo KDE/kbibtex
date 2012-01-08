@@ -38,7 +38,7 @@ public:
     ElementForm(MDIWidget *mdiWidget, QDockWidget *parent);
 
 public slots:
-    void setElement(Element*, const File *);
+    void setElement(QSharedPointer<Element>, const File *);
 
 signals:
     void elementModified();

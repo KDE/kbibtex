@@ -43,11 +43,11 @@ public:
     FileExporter();
     ~FileExporter();
 
-    QString toString(const Element* element);
+    QString toString(const QSharedPointer<const Element> element);
     QString toString(const File* bibtexfile);
 
     virtual bool save(QIODevice *iodevice, const File* bibtexfile, QStringList *errorLog = NULL) = 0;
-    virtual bool save(QIODevice *iodevice, const Element* element, QStringList *errorLog = NULL) = 0;
+    virtual bool save(QIODevice *iodevice, const QSharedPointer<const Element> element, QStringList *errorLog = NULL) = 0;
 
 signals:
     void progress(int current, int total);

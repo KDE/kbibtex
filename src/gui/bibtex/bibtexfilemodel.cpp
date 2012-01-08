@@ -79,9 +79,9 @@ bool SortFilterBibTeXFileModel::lessThan(const QModelIndex & left, const QModelI
         /// compare last and then first names
 
         /// first, check if two entries (and not e.g. comments) are to be compared
-        Entry *entryA = dynamic_cast<Entry*>(m_internalModel->element(left.row()));
-        Entry *entryB = dynamic_cast<Entry*>(m_internalModel->element(right.row()));
-        if (entryA == NULL || entryB == NULL)
+        QSharedPointer<Entry> entryA = m_internalModel->element(left.row()).dynamicCast<Entry>();
+        QSharedPointer<Entry> entryB = m_internalModel->element(right.row()).dynamicCast<Entry>();
+        if (entryA.isNull() || entryB.isNull())
             return QSortFilterProxyModel::lessThan(left, right);
 
         /// retrieve values of both cells
@@ -146,8 +146,8 @@ bool SortFilterBibTeXFileModel::filterAcceptsRow(int source_row, const QModelInd
 {
     Q_UNUSED(source_parent)
 
-    Element *rowElement = m_internalModel->element(source_row);
-    Q_ASSERT(rowElement != NULL);
+    QSharedPointer<Element> rowElement = m_internalModel->element(source_row);
+    Q_ASSERT(!rowElement.isNull());
 
     /// check if showing comments is disabled
     if (!m_showComments && typeid(*rowElement) == typeid(Comment))
@@ -158,8 +158,8 @@ bool SortFilterBibTeXFileModel::filterAcceptsRow(int source_row, const QModelInd
 
     if (m_filterQuery.terms.isEmpty()) return true; /// empty filter query
 
-    Entry *entry = dynamic_cast<Entry*>(rowElement);
-    if (entry != NULL) {
+    QSharedPointer<Entry> entry = rowElement.dynamicCast<Entry>();
+    if (!entry.isNull()) {
         /// if current row contains an Entry ...
 
         bool any = false;
@@ -190,7 +190,7 @@ bool SortFilterBibTeXFileModel::filterAcceptsRow(int source_row, const QModelInd
 
         /// Test associated PDF files
         if (m_filterQuery.searchPDFfiles && m_filterQuery.field.isEmpty()) ///< not filtering for any specific field
-            foreach(const KUrl &url, FileInfo::entryUrls(entry, bibTeXSourceModel()->bibTeXFile()->property(File::Url, KUrl()).toUrl())) {
+            foreach(const KUrl &url, FileInfo::entryUrls(entry.data(), bibTeXSourceModel()->bibTeXFile()->property(File::Url, KUrl()).toUrl())) {
             if (url.isLocalFile() && url.fileName().endsWith(QLatin1String(".pdf"))) {
                 const QString text = FileInfo::pdfToText(url.pathOrUrl());
                 int i = 0;
@@ -219,8 +219,8 @@ bool SortFilterBibTeXFileModel::filterAcceptsRow(int source_row, const QModelInd
         else
             return every;
     } else {
-        Macro *macro = dynamic_cast<Macro*>(rowElement);
-        if (macro != NULL) {
+        QSharedPointer<Macro> macro = rowElement.dynamicCast<Macro>();
+        if (!macro.isNull()) {
             bool all = true;
             for (QStringList::ConstIterator itsl = m_filterQuery.terms.constBegin(); itsl != m_filterQuery.terms.constEnd(); ++itsl) {
                 bool contains = macro->value().containsPattern(*itsl) || macro->key().contains(*itsl, Qt::CaseInsensitive);
@@ -230,8 +230,8 @@ bool SortFilterBibTeXFileModel::filterAcceptsRow(int source_row, const QModelInd
             }
             return all;
         } else {
-            Comment *comment = dynamic_cast<Comment*>(rowElement);
-            if (comment != NULL) {
+            QSharedPointer<Comment> comment = rowElement.dynamicCast<Comment>();
+            if (!comment.isNull()) {
                 bool all = true;
                 for (QStringList::ConstIterator itsl = m_filterQuery.terms.constBegin(); itsl != m_filterQuery.terms.constEnd(); ++itsl) {
                     bool contains = comment->text().contains(*itsl, Qt::CaseInsensitive);
@@ -241,8 +241,8 @@ bool SortFilterBibTeXFileModel::filterAcceptsRow(int source_row, const QModelInd
                 }
                 return all;
             } else {
-                Preamble *preamble = dynamic_cast<Preamble*>(rowElement);
-                if (preamble != NULL) {
+                QSharedPointer<Preamble> preamble = rowElement.dynamicCast<Preamble>();
+                if (!preamble.isNull()) {
                     bool all = true;
                     for (QStringList::ConstIterator itsl = m_filterQuery.terms.constBegin(); itsl != m_filterQuery.terms.constEnd(); ++itsl) {
                         bool contains = preamble->value().containsPattern(*itsl);
@@ -339,13 +339,13 @@ QVariant BibTeXFileModel::data(const QModelIndex &index, int role) const
         const FieldDescription &fd = bibtexFields->at(index.column());
         QString raw = fd.upperCamelCase;
         QString rawAlt = fd.upperCamelCaseAlt;
-        Element* element = (*m_bibtexFile)[index.row()];
-        Entry* entry = dynamic_cast<Entry*>(element);
+        QSharedPointer<Element> element = (*m_bibtexFile)[index.row()];
+        QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
 
         /// if BibTeX entry has a "x-color" field, use that color to highlight row
         if (role == Qt::BackgroundRole) {
             QString colorName;
-            if (entry == NULL || (colorName = PlainTextValue::text(entry->value("x-color"), m_bibtexFile)) == "#000000" || colorName.isEmpty())
+            if (entry.isNull() || (colorName = PlainTextValue::text(entry->value("x-color"), m_bibtexFile)) == "#000000" || colorName.isEmpty())
                 return QVariant();
             else {
                 QColor color(colorName);
@@ -354,7 +354,7 @@ QVariant BibTeXFileModel::data(const QModelIndex &index, int role) const
             }
         }
 
-        if (entry != NULL) {
+        if (!entry.isNull()) {
             if (raw == "^id") // FIXME: Use constant here?
                 return QVariant(entry->id());
             else if (raw == "^type") { // FIXME: Use constant here?
@@ -383,8 +383,8 @@ QVariant BibTeXFileModel::data(const QModelIndex &index, int role) const
                     return QVariant();
             }
         } else {
-            Macro* macro = dynamic_cast<Macro*>(element);
-            if (macro != NULL) {
+            QSharedPointer<Macro> macro = element.dynamicCast<Macro>();
+            if (!macro.isNull()) {
                 if (raw == "^id")
                     return QVariant(macro->key());
                 else if (raw == "^type")
@@ -395,8 +395,8 @@ QVariant BibTeXFileModel::data(const QModelIndex &index, int role) const
                 } else
                     return QVariant();
             } else {
-                Comment* comment = dynamic_cast<Comment*>(element);
-                if (comment != NULL) {
+                QSharedPointer<Comment> comment = element.dynamicCast<Comment>();
+                if (!comment.isNull()) {
                     if (raw == "^type")
                         return QVariant(i18n("Comment"));
                     else if (raw == Entry::ftTitle) {
@@ -405,8 +405,8 @@ QVariant BibTeXFileModel::data(const QModelIndex &index, int role) const
                     } else
                         return QVariant();
                 } else {
-                    Preamble* preamble = dynamic_cast<Preamble*>(element);
-                    if (preamble != NULL) {
+                    QSharedPointer<Preamble> preamble = element.dynamicCast<Preamble>();
+                    if (!preamble.isNull()) {
                         if (raw == "^type")
                             return QVariant(i18n("Preamble"));
                         else if (raw == Entry::ftTitle) {
@@ -469,7 +469,7 @@ bool BibTeXFileModel::removeRowList(const QList<int> &rows)
     return true;
 }
 
-bool BibTeXFileModel::insertRow(Element *element, int row, const QModelIndex & parent)
+bool BibTeXFileModel::insertRow(QSharedPointer<Element> element, int row, const QModelIndex & parent)
 {
     if (m_bibtexFile == NULL || row < 0 || row > rowCount() || parent != QModelIndex())
         return false;
@@ -481,14 +481,14 @@ bool BibTeXFileModel::insertRow(Element *element, int row, const QModelIndex & p
     return true;
 }
 
-Element* BibTeXFileModel::element(int row) const
+QSharedPointer<Element> BibTeXFileModel::element(int row) const
 {
-    if (m_bibtexFile == NULL || row < 0 || row >= m_bibtexFile->count()) return NULL;
+    if (m_bibtexFile == NULL || row < 0 || row >= m_bibtexFile->count()) return QSharedPointer<Element>();
 
     return (*m_bibtexFile)[row];
 }
 
-int BibTeXFileModel::row(Element *element) const
+int BibTeXFileModel::row(QSharedPointer<Element> element) const
 {
     if (m_bibtexFile == NULL) return -1;
     return m_bibtexFile->indexOf(element);

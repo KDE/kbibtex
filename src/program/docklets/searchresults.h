@@ -37,7 +37,7 @@ public:
     ~SearchResults();
 
     void clear();
-    bool insertElement(Element *element);
+    bool insertElement(QSharedPointer<Element> element);
 
 public slots:
     void documentSwitched(BibTeXEditor*, BibTeXEditor*);

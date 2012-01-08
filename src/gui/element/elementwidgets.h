@@ -51,8 +51,8 @@ class ElementWidget : public QWidget
 
 public:
     ElementWidget(QWidget *parent);
-    virtual bool apply(Element *element) const = 0;
-    virtual bool reset(const Element *element) = 0;
+    virtual bool apply(QSharedPointer<Element> element) const = 0;
+    virtual bool reset(QSharedPointer<const Element> element) = 0;
     virtual void setReadOnly(bool isReadOnly) {
         this->isReadOnly = isReadOnly;
     };
@@ -106,8 +106,8 @@ private:
 public:
     EntryConfiguredWidget(EntryTabLayout &entryTabLayout, QWidget *parent);
 
-    bool apply(Element *element) const;
-    bool reset(const Element *element);
+    bool apply(QSharedPointer<Element> element) const;
+    bool reset(QSharedPointer<const Element> element);
     void setReadOnly(bool isReadOnly);
     void showReqOptWidgets(bool forceVisible, const QString &entryType);
     QString label();
@@ -126,15 +126,14 @@ private:
     KComboBox *entryType;
     KLineEdit *entryId;
     KPushButton *buttonSuggestId;
-    const Entry *m_entry;
 
     void createGUI();
 
 public:
     ReferenceWidget(QWidget *parent);
 
-    bool apply(Element *element) const;
-    bool reset(const Element *element);
+    bool apply(QSharedPointer<Element> element) const;
+    bool reset(QSharedPointer<const Element> element);
     void setReadOnly(bool isReadOnly);
     void showReqOptWidgets(bool, const QString &) {};
     void setApplyElementInterface(ElementEditor::ApplyElementInterface *applyElement) {
@@ -165,8 +164,8 @@ private:
 public:
     FilesWidget(QWidget *parent);
 
-    bool apply(Element *element) const;
-    bool reset(const Element *element);
+    bool apply(QSharedPointer<Element> element) const;
+    bool reset(QSharedPointer<const Element> element);
     void setReadOnly(bool isReadOnly);
     void showReqOptWidgets(bool, const QString &) {};
     QString label();
@@ -188,7 +187,7 @@ private:
     KPushButton *buttonAddApply;
     KUrl currentUrl;
     const QStringList blackListed;
-    Entry *internalEntry;
+    QSharedPointer<Entry> internalEntry;
     QStringList deletedKeys, modifiedKeys;
     bool m_isReadOnly;
 
@@ -197,10 +196,9 @@ private:
 
 public:
     OtherFieldsWidget(const QStringList &blacklistedFields, QWidget *parent);
-    ~OtherFieldsWidget();
 
-    bool apply(Element *element) const;
-    bool reset(const Element *element);
+    bool apply(QSharedPointer<Element> element) const;
+    bool reset(QSharedPointer<const Element> element);
     void setReadOnly(bool isReadOnly);
     void showReqOptWidgets(bool, const QString &) {};
     QString label();
@@ -227,8 +225,8 @@ private:
 public:
     MacroWidget(QWidget *parent);
 
-    bool apply(Element *element) const;
-    bool reset(const Element *element);
+    bool apply(QSharedPointer<Element> element) const;
+    bool reset(QSharedPointer<const Element> element);
     void setReadOnly(bool isReadOnly);
     void showReqOptWidgets(bool, const QString &) {};
     QString label();
@@ -247,8 +245,8 @@ private:
 public:
     PreambleWidget(QWidget *parent);
 
-    bool apply(Element *element) const;
-    bool reset(const Element *element);
+    bool apply(QSharedPointer<Element> element) const;
+    bool reset(QSharedPointer<const Element> element);
     void setReadOnly(bool isReadOnly);
     void showReqOptWidgets(bool, const QString &) {};
     QString label();
@@ -271,8 +269,8 @@ private:
 public:
     SourceWidget(QWidget *parent);
 
-    bool apply(Element *element) const;
-    bool reset(const Element *element);
+    bool apply(QSharedPointer<Element> element) const;
+    bool reset(QSharedPointer<const Element> element);
     void setReadOnly(bool isReadOnly);
     void showReqOptWidgets(bool, const QString &) {};
     QString label();

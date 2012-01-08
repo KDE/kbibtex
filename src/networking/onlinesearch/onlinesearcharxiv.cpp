@@ -636,8 +636,8 @@ void OnlineSearchArXiv::downloadDone()
         bool hasEntries = false;
         if (bibtexFile != NULL) {
             for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
-                Entry *entry = dynamic_cast<Entry*>(*it);
-                if (entry != NULL) {
+                QSharedPointer<Entry> entry = (*it).dynamicCast<Entry>();
+                if (!entry.isNull()) {
                     d->interpreteJournal(*entry);
                     Value v;
                     v.append(QSharedPointer<VerbatimText>(new VerbatimText(label())));

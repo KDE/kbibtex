@@ -97,7 +97,7 @@ File* FileImporterBibTeX::load(QIODevice *iodevice)
 
         if (element != NULL) {
             if (!m_ignoreComments || typeid(*element) != typeid(Comment))
-                result->append(element);
+                result->append(QSharedPointer<Element>(element));
             else
                 delete element;
         }

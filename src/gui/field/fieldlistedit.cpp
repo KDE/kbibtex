@@ -316,11 +316,11 @@ void FieldListEdit::dropEvent(QDropEvent *event)
     if (!d->fieldKey.isEmpty() && clipboardText.startsWith("@")) {
         FileImporterBibTeX importer;
         file = importer.fromString(clipboardText);
-        const Entry *entry = (file != NULL && file->count() == 1) ? dynamic_cast<const Entry*>(file->first()) : NULL;
+        const QSharedPointer<Entry> entry = (file != NULL && file->count() == 1) ? file->first().dynamicCast<Entry>() : QSharedPointer<Entry>();
 
-        if (entry != NULL && d->fieldKey == QLatin1String("^external")) {
+        if (!entry.isNull() && d->fieldKey == QLatin1String("^external")) {
             /// handle "external" list differently
-            QList<KUrl> urlList = FileInfo::entryUrls(entry, KUrl(file->property(File::Url).toString()));
+            QList<KUrl> urlList = FileInfo::entryUrls(entry.data(), KUrl(file->property(File::Url).toString()));
             Value v;
             foreach(const KUrl &url, urlList) {
                 v.append(QSharedPointer<VerbatimText>(new VerbatimText(url.pathOrUrl())));
@@ -328,7 +328,7 @@ void FieldListEdit::dropEvent(QDropEvent *event)
             reset(v);
             emit modified();
             return;
-        } else if (entry != NULL && entry->contains(d->fieldKey)) {
+        } else if (!entry.isNull() && entry->contains(d->fieldKey)) {
             /// case for "normal" lists like for authors, editors, ...
             reset(entry->value(d->fieldKey));
             emit modified();
@@ -442,7 +442,7 @@ UrlListEdit::UrlListEdit(QWidget *parent)
 }
 
 void UrlListEdit::slotAddReferenceToFile()
- {
+{
     QUrl bibtexUrl(d->file != NULL ? d->file->property(File::Url, QVariant()).toUrl() : QUrl());
     QFileInfo bibtexUrlInfo = bibtexUrl.isEmpty() ? QFileInfo() : QFileInfo(bibtexUrl.path());
 
@@ -508,7 +508,7 @@ void UrlListEdit::slotSaveLocally()
     /// Assume the KPushButton "Save locally" was the sender of this signal
     KPushButton *buttonSaveLocally = static_cast<KPushButton*>(sender());
     /// Determine associated FieldLineEdit widget
-    FieldLineEdit *fieldLineEdit = m_saveLocallyButtonToFieldLineEdit[buttonSaveLocally];
+    FieldLineEdit *fieldLineEdit = m_saveLocallyButtonToFieldLineEdit.value(buttonSaveLocally, NULL);
     /// Build Url from line edit's content
     KUrl url(fieldLineEdit->text());
 
@@ -555,13 +555,13 @@ void UrlListEdit::textChanged(const QString &newText)
     KPushButton *buttonSaveLocally = m_saveLocallyButtonToFieldLineEdit.key(fieldLineEdit, NULL);
     /// Just ensure the button is valid
     if (buttonSaveLocally != NULL) {
-        buttonSaveLocally->dumpObjectInfo();
         /// Create Url from new text to make some tests on it
         KUrl url(newText);
         /// Enable button only if Url is valid and points to a remote
         /// PDF or PostScript file
         // TODO more file types?
         bool canBeSaved = url.isValid() && (newText.endsWith(QLatin1String(".pdf")) || newText.endsWith(QLatin1String(".ps"))) && !urlIsLocal(url);
+        // FIXME random crashes here???
         buttonSaveLocally->setEnabled(canBeSaved);
         buttonSaveLocally->setToolTip(canBeSaved ? i18n("Save file \"%1\" locally", url.pathOrUrl()) : QLatin1String(""));
     }
@@ -597,12 +597,12 @@ FieldLineEdit* UrlListEdit::addFieldLineEdit()
     buttonSaveLocally->setEnabled(false);
     /// Append button to new FieldLineEdit
     fieldLineEdit->appendWidget(buttonSaveLocally);
-    /// Memorize to which FieldLineEdit this button belongs to
-    m_saveLocallyButtonToFieldLineEdit.insert(buttonSaveLocally, fieldLineEdit);
     /// Connect signals to react on button events
     /// or changes in the FieldLineEdit's text
     connect(buttonSaveLocally, SIGNAL(clicked()), this, SLOT(slotSaveLocally()));
     connect(fieldLineEdit, SIGNAL(textChanged(QString)), this, SLOT(textChanged(QString)));
+    /// Memorize to which FieldLineEdit this button belongs to
+    m_saveLocallyButtonToFieldLineEdit.insert(buttonSaveLocally, fieldLineEdit);
 
     return fieldLineEdit;
 }

@@ -43,7 +43,7 @@ signals:
 
 public slots:
     void updatedConfiguration();
-    void setElement(Element*, const File *);
+    void setElement(QSharedPointer<Element>, const File *);
 
 private:
     class SearchFormPrivate;
@@ -52,7 +52,7 @@ private:
 private slots:
     void switchToEngines();
     void startSearch();
-    void foundEntry(Entry *entry);
+    void foundEntry(QSharedPointer<Entry> entry);
     void stoppedSearch(int resultCode);
     void tabSwitched(int newTab);
     void itemCheckChanged(QListWidgetItem*);

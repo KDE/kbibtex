@@ -66,7 +66,7 @@ public:
         }
     }
 
-    void sanitizeEntry(Entry *entry) {
+    void sanitizeEntry(QSharedPointer<Entry> entry) {
         if (entry->contains(QLatin1String("issue"))) {
             /// ACM's Digital Library uses "issue" instead of "number" -> fix that
             Value v = entry->value(QLatin1String("issue"));
@@ -236,8 +236,8 @@ void OnlineSearchAcmPortal::doneFetchingBibTeX()
 
         if (bibtexFile != NULL) {
             for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
-                Entry *entry = dynamic_cast<Entry*>(*it);
-                if (entry != NULL) {
+                QSharedPointer<Entry> entry = (*it).dynamicCast<Entry>();
+                if (!entry.isNull()) {
                     Value v;
                     v.append(QSharedPointer<VerbatimText>(new VerbatimText(label())));
                     entry->insert("x-fetchedfrom", v);

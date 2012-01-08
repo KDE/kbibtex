@@ -139,7 +139,7 @@ private slots:
     void iconDownloadFinished();
 
 signals:
-    void foundEntry(Entry*);
+    void foundEntry(QSharedPointer<Entry>);
     void stoppedSearch(int);
     void progress(int, int);
 };

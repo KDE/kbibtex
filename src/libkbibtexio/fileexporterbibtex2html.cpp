@@ -125,7 +125,7 @@ bool FileExporterBibTeX2HTML::save(QIODevice* iodevice, const File* bibtexfile, 
     return result;
 }
 
-bool FileExporterBibTeX2HTML::save(QIODevice* iodevice, const Element* element, QStringList *errorLog)
+bool FileExporterBibTeX2HTML::save(QIODevice* iodevice, const QSharedPointer<const Element> element, QStringList *errorLog)
 {
     bool result = false;
 

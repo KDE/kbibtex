@@ -392,9 +392,8 @@ void ColorLabelContextMenu::colorActivated(const QString &colorString)
     QModelIndexList list = m_tv->selectionModel()->selectedIndexes();
     foreach(const QModelIndex &index, list) {
         if (index.column() == 1) {
-            Element *element = file->at(index.row());
-            Entry *entry = dynamic_cast<Entry*>(element);
-            if (entry != NULL) {
+            QSharedPointer<Entry> entry = file->at(index.row()).dynamicCast<Entry>();
+            if (!entry.isNull()) {
                 entry->remove(Entry::ftColor);
                 if (colorString != QLatin1String("#000000")) {
                     Value v;

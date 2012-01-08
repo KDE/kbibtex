@@ -112,10 +112,8 @@ void BibTeXEditor::viewCurrentElement()
     viewElement(currentElement());
 }
 
-void BibTeXEditor::viewElement(const Element *element)
+void BibTeXEditor::viewElement(const QSharedPointer<Element> element)
 {
-    Q_ASSERT_X(element->uniqueId % 1000 == 42, "void BibTeXEditor::editElement(Element *element)", "Invalid Element passed as argument");
-
     KDialog dialog(this);
     ElementEditor elementEditor(element, bibTeXModel()->bibTeXFile(), &dialog);
     elementEditor.setReadOnly(true);
@@ -131,7 +129,7 @@ void BibTeXEditor::editCurrentElement()
     editElement(currentElement());
 }
 
-void BibTeXEditor::editElement(Element *element)
+void BibTeXEditor::editElement(QSharedPointer<Element> element)
 {
     if (isReadOnly()) {
         /// read-only forbids editing elements, calling viewElement instead
@@ -161,18 +159,18 @@ void BibTeXEditor::editElement(Element *element)
     }
 }
 
-const QList<Element*>& BibTeXEditor::selectedElements() const
+const QList<QSharedPointer<Element> >& BibTeXEditor::selectedElements() const
 {
     return m_selection;
 }
 
-void BibTeXEditor::setSelectedElements(QList<Element*> &list)
+void BibTeXEditor::setSelectedElements(QList<QSharedPointer<Element> > &list)
 {
     m_selection = list;
 
     QItemSelectionModel *selModel = selectionModel();
     selModel->clear();
-    for (QList<Element*>::ConstIterator it = list.constBegin(); it != list.constEnd(); ++it) {
+    for (QList<QSharedPointer<Element> >::ConstIterator it = list.constBegin(); it != list.constEnd(); ++it) {
         int row = bibTeXModel()->row(*it);
         for (int col = model()->columnCount(QModelIndex()) - 1; col >= 0; --col) {
             QModelIndex idx = model()->index(row, col);
@@ -181,7 +179,7 @@ void BibTeXEditor::setSelectedElements(QList<Element*> &list)
     }
 }
 
-void BibTeXEditor::setSelectedElement(Element* element)
+void BibTeXEditor::setSelectedElement(QSharedPointer<Element> element)
 {
     m_selection.clear();
     m_selection << element;
@@ -195,12 +193,12 @@ void BibTeXEditor::setSelectedElement(Element* element)
     }
 }
 
-const Element* BibTeXEditor::currentElement() const
+const QSharedPointer<Element> BibTeXEditor::currentElement() const
 {
     return m_current;
 }
 
-Element* BibTeXEditor::currentElement()
+QSharedPointer<Element> BibTeXEditor::currentElement()
 {
     return m_current;
 }

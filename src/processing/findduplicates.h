@@ -45,9 +45,9 @@ public:
     enum ValueOperation { SetValue, AddValue, RemoveValue };
 
     int entryCount() const;
-    QList<Entry*> entryList() const;
-    bool isEntryChecked(Entry *entry) const;
-    void setEntryChecked(Entry *entry, bool isChecked);
+    QList<QSharedPointer<Entry> > entryList() const;
+    bool isEntryChecked(QSharedPointer<Entry> entry) const;
+    void setEntryChecked(QSharedPointer<Entry> entry, bool isChecked);
 
     int fieldCount() const;
     QList<QString> fieldList() const;
@@ -59,10 +59,10 @@ public:
     QString dump() const;
 
 protected:
-    void addEntry(Entry* entry);
+    void addEntry(QSharedPointer<Entry> entry);
 
 private:
-    QMap<Entry*, bool> checkedEntries;
+    QMap<QSharedPointer<Entry>, bool> checkedEntries;
     QMap<QString, QList<Value> > valueMap;
     QMap<QString, QList<Value> > chosenValueMap;
 

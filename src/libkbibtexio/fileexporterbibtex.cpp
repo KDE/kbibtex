@@ -306,29 +306,29 @@ bool FileExporterBibTeX::save(QIODevice* iodevice, const File* bibtexfile, QStri
       * in the correct order.
       */
 
-    QList<Comment*> parameterCommentsList;
-    QList<Preamble*> preambleList;
-    QList<Macro*> macroList;
-    QList<Entry*> crossRefingEntryList;
-    QList<Element*> remainingList;
+    QList<QSharedPointer<const Comment> > parameterCommentsList;
+    QList<QSharedPointer<const Preamble> > preambleList;
+    QList<QSharedPointer<const Macro> > macroList;
+    QList<QSharedPointer<const Entry> > crossRefingEntryList;
+    QList<QSharedPointer<const Element> > remainingList;
 
     for (File::ConstIterator it = bibtexfile->constBegin(); it != bibtexfile->constEnd() && result && !d->cancelFlag; it++) {
-        Preamble *preamble = dynamic_cast<Preamble*>(*it);
-        if (preamble != NULL)
+        QSharedPointer<const Preamble> preamble = (*it).dynamicCast<Preamble>();
+        if (!preamble.isNull())
             preambleList.append(preamble);
         else {
-            Macro *macro = dynamic_cast<Macro*>(*it);
-            if (macro != NULL)
+            QSharedPointer<const Macro> macro = (*it).dynamicCast<const Macro>();
+            if (!macro.isNull())
                 macroList.append(macro);
             else {
-                Entry *entry = dynamic_cast<Entry*>(*it);
-                if ((entry != NULL) && entry->contains(Entry::ftCrossRef))
+                QSharedPointer<const Entry> entry = (*it).dynamicCast<const Entry>();
+                if (!entry.isNull() && entry->contains(Entry::ftCrossRef))
                     crossRefingEntryList.append(entry);
                 else {
-                    Comment *comment = dynamic_cast<Comment*>(*it);
+                    QSharedPointer<const Comment> comment = (*it).dynamicCast<const Comment>();
                     QString commentText = QString::null;
                     /** check if this file requests a special encoding */
-                    if (comment == NULL || !comment->text().startsWith("x-kbibtex-"))
+                    if (!comment.isNull() && !comment->text().startsWith("x-kbibtex-"))
                         remainingList.append(*it);
                 }
             }
@@ -363,40 +363,40 @@ bool FileExporterBibTeX::save(QIODevice* iodevice, const File* bibtexfile, QStri
     }
 
     if (d->encoding != QLatin1String("latex"))
-        parameterCommentsList << new Comment("x-kbibtex-encoding=" + d->encoding, true);
+        parameterCommentsList << QSharedPointer<const Comment>(new Comment("x-kbibtex-encoding=" + d->encoding, true));
     /// Formatting of person names is now automatically detected in BibTeX Importer module
 
     /** before anything else, write parameter comments */
-    for (QList<Comment*>::ConstIterator it = parameterCommentsList.constBegin(); it != parameterCommentsList.constEnd() && result && !d->cancelFlag; it++) {
+    for (QList<QSharedPointer<const Comment> >::ConstIterator it = parameterCommentsList.constBegin(); it != parameterCommentsList.constEnd() && result && !d->cancelFlag; it++) {
         result &= d->writeComment(iodevice, **it);
         emit progress(++currentPos, totalElements);
     }
 
     /** first, write preambles and strings (macros) at the beginning */
-    for (QList<Preamble*>::ConstIterator it = preambleList.constBegin(); it != preambleList.constEnd() && result && !d->cancelFlag; it++) {
+    for (QList<QSharedPointer<const Preamble> >::ConstIterator it = preambleList.constBegin(); it != preambleList.constEnd() && result && !d->cancelFlag; it++) {
         result &= d->writePreamble(iodevice, **it);
         emit progress(++currentPos, totalElements);
     }
 
-    for (QList<Macro*>::ConstIterator it = macroList.constBegin(); it != macroList.constEnd() && result && !d->cancelFlag; it++) {
+    for (QList<QSharedPointer<const Macro> >::ConstIterator it = macroList.constBegin(); it != macroList.constEnd() && result && !d->cancelFlag; it++) {
         result &= d->writeMacro(iodevice, **it);
         emit progress(++currentPos, totalElements);
     }
 
     /** second, write cross-referencing elements */
-    for (QList<Entry*>::ConstIterator it = crossRefingEntryList.constBegin(); it != crossRefingEntryList.constEnd() && result && !d->cancelFlag; it++) {
+    for (QList<QSharedPointer<const Entry> >::ConstIterator it = crossRefingEntryList.constBegin(); it != crossRefingEntryList.constEnd() && result && !d->cancelFlag; it++) {
         result &= d->writeEntry(iodevice, **it);
         emit progress(++currentPos, totalElements);
     }
 
     /** third, write remaining elements */
-    for (QList<Element*>::ConstIterator it = remainingList.constBegin(); it != remainingList.constEnd() && result && !d->cancelFlag; it++) {
-        Entry *entry = dynamic_cast<Entry*>(*it);
-        if (entry != NULL)
+    for (QList<QSharedPointer<const Element> >::ConstIterator it = remainingList.constBegin(); it != remainingList.constEnd() && result && !d->cancelFlag; it++) {
+        QSharedPointer<const Entry> entry = (*it).dynamicCast<const Entry>();
+        if (!entry.isNull())
             result &= d->writeEntry(iodevice, *entry);
         else {
-            Comment *comment = dynamic_cast<Comment*>(*it);
-            if (comment != NULL)
+            QSharedPointer<const Comment> comment = (*it).dynamicCast<const Comment>();
+            if (!comment.isNull())
                 result &= d->writeComment(iodevice, *comment);
         }
         emit progress(++currentPos, totalElements);
@@ -405,27 +405,27 @@ bool FileExporterBibTeX::save(QIODevice* iodevice, const File* bibtexfile, QStri
     return result && !d->cancelFlag;
 }
 
-bool FileExporterBibTeX::save(QIODevice* iodevice, const Element* element, QStringList * /*errorLog*/)
+bool FileExporterBibTeX::save(QIODevice* iodevice, const QSharedPointer<const Element> element, QStringList * /*errorLog*/)
 {
     bool result = false;
 
     loadState();
     d->applyEncoding(d->encoding);
 
-    const Entry *entry = dynamic_cast<const Entry*>(element);
-    if (entry != NULL)
+    const QSharedPointer<const Entry> entry = element.dynamicCast<const Entry>();
+    if (!entry.isNull())
         result |= d->writeEntry(iodevice, *entry);
     else {
-        const Macro *macro = dynamic_cast<const Macro*>(element);
-        if (macro != NULL)
+        const QSharedPointer<const Macro> macro = element.dynamicCast<const Macro>();
+        if (!macro.isNull())
             result |= d->writeMacro(iodevice, *macro);
         else {
-            const Comment *comment = dynamic_cast<const Comment*>(element);
-            if (comment != NULL)
+            const QSharedPointer<const Comment> comment = element.dynamicCast<const Comment>();
+            if (!comment.isNull())
                 result |= d->writeComment(iodevice, *comment);
             else {
-                const Preamble *preamble = dynamic_cast<const Preamble*>(element);
-                if (preamble != NULL)
+                const QSharedPointer<const Preamble> preamble = element.dynamicCast<const Preamble>();
+                if (!preamble.isNull())
                     result |= d->writePreamble(iodevice, *preamble);
             }
         }
@@ -630,7 +630,7 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value& value, const QStr
 QString FileExporterBibTeX::elementToString(const Element* element)
 {
     QStringList result;
-    const Entry *entry = dynamic_cast< const Entry *>(element);
+    const Entry *entry = dynamic_cast<const Entry *>(element);
     if (entry != NULL) {
         result << QString("ID = %1").arg(entry->id());
         for (QMap<QString, Value>::ConstIterator it = entry->constBegin(); it != entry->constEnd(); ++it)

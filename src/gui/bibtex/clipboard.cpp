@@ -56,7 +56,7 @@ public:
         QModelIndexList mil = bibTeXEditor->selectionModel()->selectedRows();
         File *file = new File();
         for (QModelIndexList::ConstIterator it = mil.constBegin(); it != mil.constEnd(); ++it) {
-            file->append(bibTeXEditor->bibTeXModel()->element(bibTeXEditor->sortFilterProxyModel()->mapToSource(*it).row()));
+            file->append(QSharedPointer<Element>(bibTeXEditor->bibTeXModel()->element(bibTeXEditor->sortFilterProxyModel()->mapToSource(*it).row())));
         }
 
         FileExporterBibTeX exporter;
@@ -143,8 +143,8 @@ void Clipboard::copyReferences()
     QStringList references;
     QModelIndexList mil = d->bibTeXEditor->selectionModel()->selectedRows();
     for (QModelIndexList::ConstIterator it = mil.constBegin(); it != mil.constEnd(); ++it) {
-        Entry *entry = dynamic_cast<Entry*>(d->bibTeXEditor->bibTeXModel()->element(d->bibTeXEditor->sortFilterProxyModel()->mapToSource(*it).row()));
-        if (entry != NULL)
+        QSharedPointer<Entry> entry = d->bibTeXEditor->bibTeXModel()->element(d->bibTeXEditor->sortFilterProxyModel()->mapToSource(*it).row()).dynamicCast<Entry>();
+        if (!entry.isNull())
             references << entry->id();
     }
 

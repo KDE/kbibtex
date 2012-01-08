@@ -99,7 +99,7 @@ public:
         resultList->reset();
     }
 
-    bool insertElement(Element *element) {
+    bool insertElement(QSharedPointer<Element> element) {
         BibTeXFileModel *model = resultList->bibTeXModel();
         return model->insertRow(element,  model->rowCount());
     }
@@ -122,7 +122,7 @@ void SearchResults::clear()
     d->clear();
 }
 
-bool SearchResults::insertElement(Element *element)
+bool SearchResults::insertElement(QSharedPointer<Element> element)
 {
     return d->insertElement(element);
 }
@@ -151,7 +151,7 @@ void SearchResults::importSelected()
     QList<QModelIndex> selList = d->resultList->selectionModel()->selectedRows();
     for (QList<QModelIndex>::ConstIterator it = selList.constBegin(); it != selList.constEnd(); ++it) {
         int row = d->resultList->sortFilterProxyModel()->mapToSource(*it).row();
-        Element *element = sourceModel->element(row);
+        QSharedPointer<Element> element = sourceModel->element(row);
         targetModel->insertRow(element, targetModel->rowCount());
     }
 

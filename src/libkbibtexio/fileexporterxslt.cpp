@@ -78,7 +78,7 @@ bool FileExporterXSLT::save(QIODevice* iodevice, const File* bibtexfile, QString
     return false;
 }
 
-bool FileExporterXSLT::save(QIODevice* iodevice, const Element* element, QStringList *errorLog)
+bool FileExporterXSLT::save(QIODevice* iodevice, const QSharedPointer<const Element> element, QStringList *errorLog)
 {
     m_cancelFlag = false;
     XSLTransform xsltransformer(m_xsltFilename);

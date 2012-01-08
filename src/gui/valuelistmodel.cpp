@@ -260,9 +260,9 @@ bool ValueListModel::setData(const QModelIndex & index, const QVariant &value, i
         const QString newText = PlainTextValue::text(newValue);
         kDebug() << "replacing" << origText << "with" << newText << "for field" << fName;
 
-        foreach(Element *element, *file) {
-            Entry *entry = dynamic_cast< Entry*>(element);
-            if (entry != NULL) {
+        foreach(QSharedPointer<Element> element, *file) {
+            QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
+            if (!entry.isNull()) {
                 for (Entry::Iterator eit = entry->begin(); eit != entry->end(); ++eit) {
                     QString key = eit.key().toLower();
                     if (key == fName) {
@@ -332,8 +332,8 @@ void ValueListModel::updateValues()
     if (file == NULL) return;
 
     for (File::ConstIterator fit = file->constBegin(); fit != file->constEnd(); ++fit) {
-        const Entry *entry = dynamic_cast<const Entry*>(*fit);
-        if (entry != NULL) {
+        QSharedPointer<const Entry> entry = (*fit).dynamicCast<const Entry>();
+        if (!entry.isNull()) {
             for (Entry::ConstIterator eit = entry->constBegin(); eit != entry->constEnd(); ++eit) {
                 QString key = eit.key().toLower();
                 if (key == fName) {

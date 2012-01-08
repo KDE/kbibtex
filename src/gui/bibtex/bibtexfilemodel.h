@@ -103,10 +103,10 @@ public:
 
     virtual bool removeRow(int row, const QModelIndex & parent = QModelIndex());
     bool removeRowList(const QList<int> &rows);
-    bool insertRow(Element *element, int row, const QModelIndex & parent = QModelIndex());
+    bool insertRow(QSharedPointer<Element> element, int row, const QModelIndex & parent = QModelIndex());
 
-    Element* element(int row) const;
-    int row(Element *element) const;
+    QSharedPointer<Element> element(int row) const;
+    int row(QSharedPointer<Element> element) const;
 
     void reset();
 

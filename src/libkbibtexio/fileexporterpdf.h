@@ -36,7 +36,7 @@ public:
     void reloadConfig();
 
     bool save(QIODevice* iodevice, const File* bibtexfile, QStringList *errorLog = NULL);
-    bool save(QIODevice* iodevice, const Element* element, QStringList *errorLog = NULL);
+    bool save(QIODevice* iodevice, const QSharedPointer<const Element> element, QStringList *errorLog = NULL);
 
     void setDocumentSearchPaths(const QStringList& searchPaths);
 
@@ -54,7 +54,7 @@ private:
     bool generatePDF(QIODevice* iodevice, QStringList *errorLog);
     bool writeLatexFile(const QString &filename);
     void fillEmbeddedFileList(const File* bibtexfile);
-    void fillEmbeddedFileList(const Element* element);
+    void fillEmbeddedFileList(const QSharedPointer<const Element> element);
 };
 
 #endif

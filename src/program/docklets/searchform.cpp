@@ -92,7 +92,7 @@ public:
     KPushButton *useEntryButton;
     OnlineSearchQueryFormGeneral *generalQueryTermsForm;
     QTabWidget *tabWidget;
-    Entry *currentEntry;
+    QSharedPointer<const Entry> currentEntry;
     QProgressBar *progressBar;
     QMap<OnlineSearchAbstract*, int> progressMap;
 
@@ -227,7 +227,7 @@ public:
             queryTermsStack->addWidget(widget);
 
         itemToOnlineSearch.insert(item, engine);
-        connect(engine, SIGNAL(foundEntry(Entry*)), p, SLOT(foundEntry(Entry*)));
+        connect(engine, SIGNAL(foundEntry(QSharedPointer<Entry>)), p, SLOT(foundEntry(QSharedPointer<Entry>)));
         connect(engine, SIGNAL(stoppedSearch(int)), p, SLOT(stoppedSearch(int)));
         connect(engine, SIGNAL(progress(int, int)), p, SLOT(updateProgress(int, int)));
     }
@@ -326,10 +326,10 @@ void SearchForm::updatedConfiguration()
     d->loadEngines();
 }
 
-void SearchForm::setElement(Element *element, const File *)
+void SearchForm::setElement(QSharedPointer<Element> element, const File *)
 {
-    d->currentEntry = dynamic_cast<Entry*>(element);
-    d->useEntryButton->setEnabled(d->currentEntry != NULL);
+    d->currentEntry = element.dynamicCast<const Entry>();
+    d->useEntryButton->setEnabled(!d->currentEntry.isNull());
 }
 
 void SearchForm::switchToEngines()
@@ -382,7 +382,7 @@ void SearchForm::startSearch()
     d->switchToCancel();
 }
 
-void SearchForm::foundEntry(Entry*entry)
+void SearchForm::foundEntry(QSharedPointer<Entry> entry)
 {
     d->sr->insertElement(entry);
 }
@@ -449,7 +449,7 @@ void SearchForm::currentStackWidgetChanged(int index)
 
 void SearchForm::copyFromEntry()
 {
-    Q_ASSERT(d->currentEntry != NULL);
+    Q_ASSERT(!d->currentEntry.isNull());
 
     d->currentQueryForm()->copyFromEntry(*(d->currentEntry));
 }

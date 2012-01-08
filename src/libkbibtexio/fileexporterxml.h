@@ -40,7 +40,7 @@ public:
     ~FileExporterXML();
 
     bool save(QIODevice* iodevice, const File* bibtexfile, QStringList *errorLog = NULL);
-    bool save(QIODevice* iodevice, const Element* element, QStringList *errorLog = NULL);
+    bool save(QIODevice* iodevice, const QSharedPointer<const Element> element, QStringList *errorLog = NULL);
 
     static QString valueToXML(const Value& value, const QString& fieldType = QString::null);
 

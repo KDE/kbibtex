@@ -40,9 +40,9 @@ class KBIBTEXGUI_EXPORT BibTeXEditor : public BibTeXFileView
 public:
     BibTeXEditor(const QString &name, QWidget *parent);
 
-    const QList<Element*>& selectedElements() const;
-    const Element* currentElement() const;
-    Element* currentElement();
+    const QList<QSharedPointer<Element> >& selectedElements() const;
+    const QSharedPointer<Element> currentElement() const;
+    QSharedPointer<Element> currentElement();
 
     void setReadOnly(bool isReadOnly = true);
     bool isReadOnly() const;
@@ -53,8 +53,8 @@ public:
 
 signals:
     void selectedElementsChanged();
-    void currentElementChanged(Element*, const File *);
-    void elementExecuted(Element*);
+    void currentElementChanged(QSharedPointer<Element>, const File *);
+    void elementExecuted(QSharedPointer<Element>);
     void editorMouseEvent(QMouseEvent *);
     void editorDragEnterEvent(QDragEnterEvent *);
     void editorDragMoveEvent(QDragMoveEvent *);
@@ -63,11 +63,11 @@ signals:
 
 public slots:
     void viewCurrentElement();
-    void viewElement(const Element*);
+    void viewElement(const QSharedPointer<Element>);
     void editCurrentElement();
-    void editElement(Element*);
-    void setSelectedElements(QList<Element*>&);
-    void setSelectedElement(Element*);
+    void editElement(QSharedPointer<Element>);
+    void setSelectedElements(QList<QSharedPointer<Element> >&);
+    void setSelectedElement(QSharedPointer<Element>);
     void selectionDelete();
     void externalModification();
     void setFilterBarFilter(SortFilterBibTeXFileModel::FilterQuery);
@@ -88,8 +88,8 @@ protected slots:
     void itemActivated(const QModelIndex & index);
 
 private:
-    Element* m_current;
-    QList<Element*> m_selection;
+    QSharedPointer<Element> m_current;
+    QList<QSharedPointer<Element> > m_selection;
     FilterBar *m_filterBar;
 };
 

@@ -38,19 +38,17 @@ private:
     QStringList m_formatStringList;
     IdSuggestions *m_idSuggestions;
     static const QString exampleBibTeXEntryString;
-    static const Entry *exampleBibTeXEntry;
+    static QSharedPointer<const Entry> exampleBibTeXEntry;
 
 public:
     IdSuggestionsModel(QObject *parent = NULL)
             : QAbstractListModel(parent) {
         m_idSuggestions = new IdSuggestions();
 
-        if (exampleBibTeXEntry == NULL) {
+        if (exampleBibTeXEntry.isNull()) {
             static FileImporterBibTeX fileImporterBibTeX;
             File *file = fileImporterBibTeX.fromString(exampleBibTeXEntryString);
-            exampleBibTeXEntry = dynamic_cast<const Entry*>(file->first());
-            if (exampleBibTeXEntry != NULL)
-                exampleBibTeXEntry = new Entry(*exampleBibTeXEntry);
+            exampleBibTeXEntry = file->first().dynamicCast<const Entry>();
             delete file;
         }
     }
@@ -130,7 +128,7 @@ public:
 };
 
 const QString IdSuggestionsModel::exampleBibTeXEntryString = QLatin1String("@Article{ dijkstra1983terminationdetect,\nauthor = {Edsger W. Dijkstra and W. H. J. Feijen and A. J. M. {van Gasteren}},\ntitle = {{Derivation of a Termination Detection Algorithm for Distributed Computations}},\njournal = {Information Processing Letters},\nvolume = 16,\nnumber = 5,\npages = {217--219},\nmonth = jun,\nyear = 1983\n}");
-const Entry* IdSuggestionsModel::exampleBibTeXEntry = NULL;
+QSharedPointer<const Entry> IdSuggestionsModel::exampleBibTeXEntry;
 
 class SettingsIdSuggestionsWidget::SettingsIdSuggestionsWidgetPrivate
 {
