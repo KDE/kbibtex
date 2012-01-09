@@ -41,6 +41,7 @@ public:
     static const QString defaultCopyReferenceCommand;
 
     Clipboard(BibTeXEditor *bibTeXEditor);
+    ~Clipboard();
 
 public slots:
     void cut();
