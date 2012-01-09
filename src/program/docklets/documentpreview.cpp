@@ -427,6 +427,11 @@ DocumentPreview::DocumentPreview(QDockWidget *parent)
     connect(parent, SIGNAL(visibilityChanged(bool)), this, SLOT(visibilityChanged(bool)));
 }
 
+DocumentPreview::~DocumentPreview()
+{
+    delete d;
+}
+
 void DocumentPreview::setElement(QSharedPointer<Element> element, const File *)
 {
     d->entry = element.dynamicCast<const Entry>();

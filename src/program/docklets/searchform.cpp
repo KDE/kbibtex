@@ -321,6 +321,11 @@ SearchForm::SearchForm(MDIWidget *mdiWidget, SearchResults *searchResults, QWidg
     d->switchToSearch();
 }
 
+SearchForm::~SearchForm()
+{
+    delete d;
+}
+
 void SearchForm::updatedConfiguration()
 {
     d->loadEngines();

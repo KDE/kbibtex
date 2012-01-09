@@ -180,6 +180,11 @@ ReferencePreview::ReferencePreview(QWidget *parent)
     setEnabled(false);
 }
 
+ReferencePreview::~ReferencePreview()
+{
+    delete d;
+}
+
 void ReferencePreview::setHtml(const QString & html, const QUrl & baseUrl)
 {
     d->htmlText = QString(html).replace("<?xml version=\"1.0\" encoding=\"UTF-8\"?>", "");

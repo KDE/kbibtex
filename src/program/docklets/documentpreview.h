@@ -57,6 +57,7 @@ class DocumentPreview : public QWidget
     Q_OBJECT
 public:
     DocumentPreview(QDockWidget *parent);
+    ~DocumentPreview();
 
 public slots:
     void setElement(QSharedPointer<Element>, const File *);

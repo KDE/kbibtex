@@ -36,6 +36,7 @@ class ElementForm : public QWidget
 
 public:
     ElementForm(MDIWidget *mdiWidget, QDockWidget *parent);
+    ~ElementForm();
 
 public slots:
     void setElement(QSharedPointer<Element>, const File *);

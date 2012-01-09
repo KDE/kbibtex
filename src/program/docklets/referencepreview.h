@@ -33,6 +33,7 @@ class ReferencePreview : public QWidget
     Q_OBJECT
 public:
     ReferencePreview(QWidget *parent);
+    ~ReferencePreview();
 
     void setHtml(const QString & html, const QUrl & baseUrl = QUrl());
     void setEnabled(bool);

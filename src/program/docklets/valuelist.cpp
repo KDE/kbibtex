@@ -180,6 +180,11 @@ ValueList::ValueList(QWidget *parent)
     QTimer::singleShot(500, this, SLOT(delayedResize()));
 }
 
+ValueList::~ValueList()
+{
+    delete d;
+}
+
 void ValueList::setEditor(BibTeXEditor *editor)
 {
     d->editor = editor;

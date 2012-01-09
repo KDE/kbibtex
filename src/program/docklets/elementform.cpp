@@ -149,6 +149,11 @@ ElementForm::ElementForm(MDIWidget *mdiWidget, QDockWidget *parent)
     d->mdiWidget = mdiWidget;
 }
 
+ElementForm::~ElementForm()
+{
+    delete d;
+}
+
 void ElementForm::setElement(QSharedPointer<Element> element, const File *file)
 {
     d->loadElement(element, file);
