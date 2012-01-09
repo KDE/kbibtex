@@ -104,6 +104,11 @@ SettingsUserInterfaceWidget::SettingsUserInterfaceWidget(QWidget *parent)
     d->loadState();
 }
 
+SettingsUserInterfaceWidget::~SettingsUserInterfaceWidget()
+{
+    delete d;
+}
+
 void SettingsUserInterfaceWidget::loadState()
 {
     d->loadState();

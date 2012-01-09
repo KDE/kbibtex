@@ -37,6 +37,7 @@ public:
     static const QString configGroupName;
 
     IdSuggestions();
+    ~IdSuggestions();
 
     QString formatId(const Entry &entry, const QString &formatStr) const;
     QString defaultformatId(const Entry &entry) const;

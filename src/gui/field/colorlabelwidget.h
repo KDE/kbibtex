@@ -36,6 +36,7 @@ class KBIBTEXGUI_EXPORT ColorLabelWidget : public KComboBox
 
 public:
     ColorLabelWidget(QWidget *parent = NULL);
+    ~ColorLabelWidget();
 
     bool reset(const Value& value);
     bool apply(Value& value) const;

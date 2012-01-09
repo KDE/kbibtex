@@ -198,6 +198,11 @@ FilterBar::FilterBar(QWidget *parent)
     d->comboBoxField->setCurrentIndex(configGroup.readEntry("CurrentField", 0));
 }
 
+FilterBar::~FilterBar()
+{
+    delete d;
+}
+
 void FilterBar::setFilter(SortFilterBibTeXFileModel::FilterQuery fq)
 {
     d->setFilter(fq);

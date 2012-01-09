@@ -66,6 +66,11 @@ LyX::LyX(KParts::ReadOnlyPart *part, QWidget *widget)
     widget->addAction(d->action);
 }
 
+LyX::~LyX()
+{
+    delete d;
+}
+
 void LyX::setReferences(const QStringList &references)
 {
     d->references = references;

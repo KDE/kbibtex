@@ -34,6 +34,7 @@ class KBIBTEXGUI_EXPORT SettingsUserInterfaceWidget : public SettingsAbstractWid
 
 public:
     SettingsUserInterfaceWidget(QWidget *parent);
+    ~SettingsUserInterfaceWidget();
 
 public slots:
     void loadState();

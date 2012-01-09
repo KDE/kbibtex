@@ -34,6 +34,7 @@ class KBIBTEXGUI_EXPORT SettingsFileExporterPDFPSWidget : public SettingsAbstrac
 
 public:
     SettingsFileExporterPDFPSWidget(QWidget *parent);
+    ~SettingsFileExporterPDFPSWidget();
 
 public slots:
     void loadState();

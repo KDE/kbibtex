@@ -446,6 +446,11 @@ ElementEditor::ElementEditor(QSharedPointer<const Element> element, const File *
     setReadOnly(true);
 }
 
+ElementEditor::~ElementEditor()
+{
+    delete d;
+}
+
 void ElementEditor::apply()
 {
     d->apply();

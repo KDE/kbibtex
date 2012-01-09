@@ -44,6 +44,7 @@ public:
 
     ElementEditor(QSharedPointer<const Element> element, const File *file, QWidget *parent);
     ElementEditor(QSharedPointer<Element> element, const File *file, QWidget *parent);
+    ~ElementEditor();
 
     void setReadOnly(bool isReadOnly = true);
     bool elementChanged();

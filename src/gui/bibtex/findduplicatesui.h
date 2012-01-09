@@ -48,6 +48,8 @@ class KBIBTEXGUI_EXPORT MergeWidget : public QWidget
 
 public:
     MergeWidget(File *file, QList<EntryClique*> &cliques, QWidget *parent);
+    ~MergeWidget();
+
     void showCurrentClique();
 
 private slots:
@@ -66,7 +68,7 @@ class KBIBTEXGUI_EXPORT FindDuplicatesUI : public QObject
 
 public:
     FindDuplicatesUI(KParts::Part *part, BibTeXEditor *bibTeXEditor);
-    // TODO
+    ~FindDuplicatesUI();
 
 private slots:
     void slotFindDuplicates();

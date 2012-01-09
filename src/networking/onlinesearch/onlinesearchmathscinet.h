@@ -32,6 +32,7 @@ class KBIBTEXNETWORKING_EXPORT OnlineSearchMathSciNet : public OnlineSearchAbstr
 
 public:
     OnlineSearchMathSciNet(QWidget *parent);
+    ~OnlineSearchMathSciNet();
 
     virtual void startSearch();
     virtual void startSearch(const QMap<QString, QString> &query, int numResults);

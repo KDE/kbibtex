@@ -332,7 +332,6 @@ public:
     }
 
     ~OpenFileInfoManagerPrivate() {
-        kDebug() << "Destroying internal data";
         for (OpenFileInfoManager::OpenFileInfoList::Iterator it = openFileInfoList.begin(); it != openFileInfoList.end(); ++it) {
             OpenFileInfo *ofi = *it;
             delete ofi;

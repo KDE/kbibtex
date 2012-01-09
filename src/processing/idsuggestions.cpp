@@ -204,6 +204,11 @@ IdSuggestions::IdSuggestions()
     // nothing
 }
 
+IdSuggestions::~IdSuggestions()
+{
+    delete d;
+}
+
 QString IdSuggestions::formatId(const Entry &entry, const QString &formatStr) const
 {
     QString id;

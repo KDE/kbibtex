@@ -85,6 +85,11 @@ SettingsGeneralWidget::SettingsGeneralWidget(QWidget *parent)
     d->loadState();
 }
 
+SettingsGeneralWidget::~SettingsGeneralWidget()
+{
+    delete d;
+}
+
 void SettingsGeneralWidget::loadState()
 {
     d->loadState();

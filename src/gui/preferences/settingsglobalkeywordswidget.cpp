@@ -93,6 +93,11 @@ SettingsGlobalKeywordsWidget::SettingsGlobalKeywordsWidget(QWidget *parent)
     d->loadState();
 }
 
+SettingsGlobalKeywordsWidget::~SettingsGlobalKeywordsWidget()
+{
+    delete d;
+}
+
 void SettingsGlobalKeywordsWidget::loadState()
 {
     d->loadState();

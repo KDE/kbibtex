@@ -667,6 +667,7 @@ QString EncoderLaTeX::decode(const QString &input) const
         }
     }
 
+    output.squeeze();
     return output;
 }
 
@@ -786,15 +787,15 @@ QString EncoderLaTeX::encode(const QString &input) const
         }
     }
 
+    output.squeeze();
     return output;
 }
 
 QString EncoderLaTeX::convertToPlainAscii(const QString &input) const
 {
     int len = input.length();
-    int s = len * 9 / 8;
     QString output;
-    output.reserve(s);
+    output.reserve(len);
 
     /// Go through input char by char
     for (int i = 0; i < len; ++i) {
@@ -837,6 +838,7 @@ QString EncoderLaTeX::convertToPlainAscii(const QString &input) const
         }
     }
 
+    output.squeeze();
     return output;
 }
 

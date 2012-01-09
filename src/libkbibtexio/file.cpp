@@ -84,6 +84,11 @@ File::File(const File &other)
     // nothing
 }
 
+File::~File()
+{
+    delete d;
+}
+
 const QSharedPointer<Element> File::containsKey(const QString &key, ElementTypes elementTypes) const
 {
     foreach(const QSharedPointer<Element> element, *this) {

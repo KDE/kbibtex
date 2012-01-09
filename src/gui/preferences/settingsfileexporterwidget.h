@@ -34,6 +34,7 @@ class KBIBTEXGUI_EXPORT SettingsFileExporterWidget : public SettingsAbstractWidg
 
 public:
     SettingsFileExporterWidget(QWidget *parent);
+    ~SettingsFileExporterWidget();
 
 public slots:
     void loadState();

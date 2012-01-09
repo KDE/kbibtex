@@ -68,6 +68,11 @@ OnlineSearchMathSciNet::OnlineSearchMathSciNet(QWidget *parent)
     // nothing
 }
 
+OnlineSearchMathSciNet::~OnlineSearchMathSciNet()
+{
+    delete d;
+}
+
 void OnlineSearchMathSciNet::startSearch(const QMap<QString, QString> &query, int numResults)
 {
     m_hasBeenCanceled = false;

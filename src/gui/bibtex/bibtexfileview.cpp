@@ -55,6 +55,7 @@ BibTeXFileView::BibTeXFileView(const QString &name, QWidget * parent)
     header()->setContextMenuPolicy(Qt::ActionsContextMenu);
 
     /// restore header appearance
+    // FIXME this code conflicts with code in resizeEvent(..)
     KConfigGroup configGroup(config, configGroupName);
     QByteArray headerState = configGroup.readEntry(configHeaderState.arg(m_name), QByteArray());
     headerDefault = header()->saveState();
@@ -116,6 +117,7 @@ QSortFilterProxyModel *BibTeXFileView::sortFilterProxyModel()
 
 void BibTeXFileView::resizeEvent(QResizeEvent *)
 {
+    // FIXME this code conflicts with stored/restored headerState and columnsChanged()
     int sum = 0;
     int widgetWidth = size().width() - verticalScrollBar()->size().width() - 8;
 
@@ -154,6 +156,7 @@ void BibTeXFileView::syncBibTeXFields()
 
 void BibTeXFileView::columnsChanged()
 {
+    // FIXME this code conflicts with code in resizeEvent(..)
     QByteArray headerState = header()->saveState();
     KConfigGroup configGroup(config, configGroupName);
     configGroup.writeEntry(configHeaderState.arg(m_name), headerState);

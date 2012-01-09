@@ -49,7 +49,7 @@ Comment::Comment(const Comment& other)
 
 Comment::~Comment()
 {
-    // nothing
+    delete d;
 }
 
 QString Comment::text() const

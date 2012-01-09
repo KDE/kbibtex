@@ -77,6 +77,9 @@ File* FileImporterBibTeX::load(QIODevice *iodevice)
     while (!m_textStream->atEnd()) {
         QString line = m_textStream->readLine();
         bool skipline = evaluateParameterComments(m_textStream, line.toLower(), result);
+        if (line.startsWith(QLatin1String("<?xml")) && line.endsWith("?>"))
+            /// Hop over XML declarations
+            skipline = true;
         if (!skipline)
             rawText.append(line).append("\n");
     }

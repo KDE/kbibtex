@@ -97,6 +97,7 @@ public:
     QSignalMapper *signalMapperViewDocument;
     bool isSaveAsOperation;
     LyX *lyx;
+    FindDuplicatesUI *findDuplicatesUI;
     ColorLabelContextMenu *colorLabelContextMenu;
 
     KBibTeXPartPrivate(KBibTeXPart *parent)
@@ -362,6 +363,7 @@ KBibTeXPart::KBibTeXPart(QWidget *parentWidget, QObject *parent, bool browserVie
 
 KBibTeXPart::~KBibTeXPart()
 {
+    delete d->findDuplicatesUI;
     delete d;
 }
 
@@ -461,7 +463,7 @@ void KBibTeXPart::setupActions(bool /*browserViewWanted FIXME*/)
 
     setXMLFile(RCFileName);
 
-    new FindDuplicatesUI(this, d->editor);
+    d->findDuplicatesUI = new FindDuplicatesUI(this, d->editor);
     d->lyx = new LyX(this, d->editor);
 
     d->colorLabelContextMenu = new ColorLabelContextMenu(d->editor);

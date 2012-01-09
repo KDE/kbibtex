@@ -33,7 +33,6 @@
 
 #include "file.h"
 #include "entry.h"
-#include "bibtexfields.h"
 
 class BibTeXFileModel;
 

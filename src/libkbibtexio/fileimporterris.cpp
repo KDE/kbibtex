@@ -248,7 +248,7 @@ FileImporterRIS::FileImporterRIS()
 
 FileImporterRIS::~FileImporterRIS()
 {
-// nothing
+    delete d;
 }
 
 File* FileImporterRIS::load(QIODevice *iodevice)

@@ -94,6 +94,11 @@ SettingsFileExporterWidget::SettingsFileExporterWidget(QWidget *parent)
     d->loadState();
 }
 
+SettingsFileExporterWidget::~SettingsFileExporterWidget()
+{
+    delete d;
+}
+
 void SettingsFileExporterWidget::loadState()
 {
     d->loadState();

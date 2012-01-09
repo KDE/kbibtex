@@ -133,6 +133,11 @@ KBibTeXPreferencesDialog::KBibTeXPreferencesDialog(QWidget *parent, Qt::WFlags f
     d->addPages();
 }
 
+KBibTeXPreferencesDialog::~KBibTeXPreferencesDialog()
+{
+    delete d;
+}
+
 void KBibTeXPreferencesDialog::apply()
 {
     enableButtonApply(false);

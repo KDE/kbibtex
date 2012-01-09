@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2011 by Thomas Fischer                             *
+*   Copyright (C) 2004-2012 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -18,8 +18,8 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#ifndef KBIBTEX_GUI_SETTINGSGENERALWIDGET_H
-#define KBIBTEX_GUI_SETTINGSGENERALWIDGET_H
+#ifndef KBIBTEX_GUI_SETTINGSZOTEROWIDGET_H
+#define KBIBTEX_GUI_SETTINGSZOTEROWIDGET_H
 
 #include <kbibtexgui_export.h>
 
@@ -28,24 +28,26 @@
 /**
 @author Thomas Fischer
 */
-class KBIBTEXGUI_EXPORT SettingsGeneralWidget : public SettingsAbstractWidget
+class KBIBTEXGUI_EXPORT SettingsZoteroWidget : public SettingsAbstractWidget
 {
     Q_OBJECT
 
 public:
-    SettingsGeneralWidget(QWidget *parent);
-    ~SettingsGeneralWidget();
+    SettingsZoteroWidget(QWidget *parent);
 
 public slots:
     void loadState();
     void saveState();
     void resetToDefaults();
 
+private slots:
+    void slotTestZoteroSettings();
+    void slotTestResultsFinished();
+
 private:
-    class SettingsGeneralWidgetPrivate;
-    SettingsGeneralWidgetPrivate *d;
+    class SettingsZoteroWidgetPrivate;
+    SettingsZoteroWidgetPrivate *d;
 };
 
 
-#endif // KBIBTEX_GUI_SETTINGSGENERALWIDGET_H
-
+#endif // KBIBTEX_GUI_SETTINGSZOTEROWIDGET_H

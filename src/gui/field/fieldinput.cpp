@@ -251,6 +251,11 @@ FieldInput::FieldInput(KBibTeX::FieldInputType fieldInputType, KBibTeX::TypeFlag
     d->createGUI();
 }
 
+FieldInput::~FieldInput()
+{
+    delete d;
+}
+
 void FieldInput::clear()
 {
     d->clear();

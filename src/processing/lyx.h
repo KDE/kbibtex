@@ -42,6 +42,7 @@ public:
     static QString findLyXPipe();
 
     LyX(KParts::ReadOnlyPart *part, QWidget *widget);
+    ~LyX();
 
     void setReferences(const QStringList &references);
 

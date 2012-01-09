@@ -469,6 +469,11 @@ MergeWidget::MergeWidget(File *file, QList<EntryClique*> &cliqueList, QWidget *p
     // nothing
 }
 
+MergeWidget::~MergeWidget()
+{
+    delete d;
+}
+
 void MergeWidget::previousClique()
 {
     if (d->currentClique > 0) {
@@ -510,6 +515,11 @@ FindDuplicatesUI::FindDuplicatesUI(KParts::Part *part, BibTeXEditor *bibTeXEdito
 #if KDE_VERSION_MINOR >= 4
     part->replaceXMLFile(KStandardDirs::locate("data", "kbibtex/findduplicatesui.rc"), KStandardDirs::locateLocal("data", "kbibtex/findduplicatesui.rc"), true);
 #endif
+}
+
+FindDuplicatesUI::~FindDuplicatesUI()
+{
+    delete d;
 }
 
 void FindDuplicatesUI::slotFindDuplicates()

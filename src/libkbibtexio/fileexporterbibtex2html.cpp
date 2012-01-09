@@ -98,7 +98,7 @@ FileExporterBibTeX2HTML::FileExporterBibTeX2HTML()
 
 FileExporterBibTeX2HTML::~FileExporterBibTeX2HTML()
 {
-    // nothing
+    delete d;
 }
 
 void FileExporterBibTeX2HTML::reloadConfig()

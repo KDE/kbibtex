@@ -36,6 +36,7 @@ class KBIBTEXGUI_EXPORT SettingsGlobalKeywordsWidget : public SettingsAbstractWi
 
 public:
     SettingsGlobalKeywordsWidget(QWidget *parent);
+    ~SettingsGlobalKeywordsWidget();
 
 public slots:
     void loadState();

@@ -83,6 +83,7 @@ class KBIBTEXGUI_EXPORT SettingsColorLabelWidget : public SettingsAbstractWidget
 
 public:
     SettingsColorLabelWidget(QWidget *parent);
+    ~SettingsColorLabelWidget();
 
 public slots:
     void loadState();

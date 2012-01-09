@@ -201,6 +201,11 @@ SettingsFileExporterBibTeXWidget::SettingsFileExporterBibTeXWidget(File *file, Q
     d->loadProperties(file);
 }
 
+SettingsFileExporterBibTeXWidget::~SettingsFileExporterBibTeXWidget()
+{
+    delete d;
+}
+
 void SettingsFileExporterBibTeXWidget::loadState()
 {
     d->loadState();

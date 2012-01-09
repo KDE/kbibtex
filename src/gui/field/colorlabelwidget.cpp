@@ -137,6 +137,11 @@ ColorLabelWidget::ColorLabelWidget(QWidget *parent)
     connect(this, SIGNAL(activated(int)), this, SLOT(slotActivated(int)));
 }
 
+ColorLabelWidget::~ColorLabelWidget()
+{
+    delete d;
+}
+
 bool ColorLabelWidget::reset(const Value& value)
 {
     int i = 0;

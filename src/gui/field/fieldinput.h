@@ -36,6 +36,7 @@ class KBIBTEXGUI_EXPORT FieldInput : public QWidget
 
 public:
     FieldInput(KBibTeX::FieldInputType fieldInputType, KBibTeX::TypeFlag preferredTypeFlag, KBibTeX::TypeFlags typeFlags, QWidget *parent = NULL);
+    ~FieldInput();
 
     bool reset(const Value& value);
     bool apply(Value& value) const;

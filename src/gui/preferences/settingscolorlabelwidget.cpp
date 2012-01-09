@@ -305,6 +305,11 @@ SettingsColorLabelWidget::SettingsColorLabelWidget(QWidget *parent)
     d->setupGUI();
 }
 
+SettingsColorLabelWidget::~SettingsColorLabelWidget()
+{
+    delete d;
+}
+
 void SettingsColorLabelWidget::loadState()
 {
     d->loadState();

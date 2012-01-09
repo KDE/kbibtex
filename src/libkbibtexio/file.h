@@ -62,6 +62,7 @@ public:
 
     File();
     File(const File &other);
+    ~File();
 
     /**
      * Check if a given key (e.g. a key for a macro or an id for an entry)

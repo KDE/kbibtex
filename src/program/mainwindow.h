@@ -39,6 +39,7 @@ class KBibTeXMainWindow : public KParts::MainWindow
 
 public:
     explicit KBibTeXMainWindow();
+    virtual ~KBibTeXMainWindow();
 
 public slots:
     void openDocument(const KUrl& url);
