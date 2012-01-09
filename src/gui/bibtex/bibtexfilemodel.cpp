@@ -35,7 +35,7 @@
 #include <preamble.h>
 #include <bibtexentries.h>
 #include <preferences.h>
-
+#include "bibtexfields.h"
 #include "bibtexfilemodel.h"
 
 static const QRegExp curlyRegExp("[{}]+");
