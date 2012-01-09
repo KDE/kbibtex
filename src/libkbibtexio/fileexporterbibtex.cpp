@@ -326,9 +326,8 @@ bool FileExporterBibTeX::save(QIODevice* iodevice, const File* bibtexfile, QStri
                     crossRefingEntryList.append(entry);
                 else {
                     QSharedPointer<const Comment> comment = (*it).dynamicCast<const Comment>();
-                    QString commentText = QString::null;
                     /** check if this file requests a special encoding */
-                    if (!comment.isNull() && !comment->text().startsWith("x-kbibtex-"))
+                    if (comment.isNull() || !comment->text().startsWith("x-kbibtex-"))
                         remainingList.append(*it);
                 }
             }
