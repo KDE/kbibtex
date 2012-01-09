@@ -30,7 +30,7 @@
 #include <KPushButton>
 
 #include "internalnetworkaccessmanager.h"
-#include "zotero/readapimodel.h"
+#include "zotero/readapi.h"
 #include "settingszoterowidget.h"
 
 class SettingsZoteroWidget::SettingsZoteroWidgetPrivate

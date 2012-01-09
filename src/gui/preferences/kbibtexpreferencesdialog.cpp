@@ -19,9 +19,13 @@
 ***************************************************************************/
 
 #include <QSet>
+#include <QFileInfo>
 
 #include <KLocale>
 #include <KComboBox>
+#include <KStandardDirs>
+#include <KIO/NetAccess>
+#include <KDebug>
 #include <KMessageBox>
 #include <KGuiItem>
 
@@ -31,6 +35,7 @@
 #include "settingsfileexporterwidget.h"
 #include "settingscolorlabelwidget.h"
 #include "settingsuserinterfacewidget.h"
+#include "settingszoterowidget.h"
 #include "settingsidsuggestionswidget.h"
 #include "kbibtexpreferencesdialog.h"
 
@@ -83,6 +88,12 @@ public:
         KPageWidgetItem *pageSaving = p->addPage(settingsWidget, i18n("Saving and Exporting"));
         pageSaving->setIcon(KIcon("document-save"));
         connect(settingsWidget, SIGNAL(changed()), p, SLOT(gotChanged()));
+
+        settingsWidget = new SettingsZoteroWidget(p);
+        settingWidgets.insert(settingsWidget);
+        page = p->addPage(settingsWidget, i18n("Zotero"));
+        page->setIcon(iconFromFavicon(QLatin1String("http://www.zotero.org/favicon.ico")));
+        connect(settingsWidget, SIGNAL(changed()), p, SLOT(gotChanged()));
     }
 
     void loadState() {
@@ -111,6 +122,21 @@ public:
         }
         break;
         }
+    }
+
+    KIcon iconFromFavicon(const QString &url) {
+        static const QRegExp invalidChars("[^-a-z0-9_]", Qt::CaseInsensitive);
+        QString fileName = url;
+        fileName = fileName.replace(invalidChars, "");
+        fileName.prepend(KStandardDirs::locateLocal("cache", "favicons/")).append(".png");
+
+        if (!QFileInfo(fileName).exists()) {
+            if (!KIO::NetAccess::file_copy(KUrl(url), KUrl(fileName), NULL))
+                return KIcon();
+        }
+
+        kDebug() << "icon fileName" << fileName;
+        return KIcon(fileName);
     }
 };
 
