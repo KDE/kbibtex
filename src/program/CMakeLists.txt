@@ -31,6 +31,7 @@ set(
     docklets/searchform.cpp
     docklets/searchresults.cpp
     docklets/elementform.cpp
+    docklets/zotero.cpp
     openfileinfo.cpp
 )
 
