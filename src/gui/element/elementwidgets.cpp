@@ -999,19 +999,19 @@ bool SourceWidget::apply(QSharedPointer<Element> element) const
         QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
         QSharedPointer<Entry> readEntry = file->first().dynamicCast<Entry>();
         if (!readEntry.isNull() && !entry.isNull()) {
-            entry = readEntry;
+            entry->operator =(*readEntry.data()); //entry = readEntry;
             result = true;
         } else {
             QSharedPointer<Macro> macro = element.dynamicCast<Macro>();
             QSharedPointer<Macro> readMacro = file->first().dynamicCast<Macro>();
             if (!readMacro.isNull() && !macro.isNull()) {
-                macro = readMacro;
+                macro->operator =(*readMacro.data());
                 result = true;
             } else {
                 QSharedPointer<Preamble> preamble = element.dynamicCast<Preamble>();
                 QSharedPointer<Preamble> readPreamble = file->first().dynamicCast<Preamble>();
                 if (!readPreamble.isNull() && !preamble.isNull()) {
-                    preamble = readPreamble;
+                    preamble->operator =(*readPreamble.data());
                     result = true;
                 }
             }
