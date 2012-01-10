@@ -176,18 +176,18 @@ QMap<QString, QString> OnlineSearchAbstract::formParameters(const QString &htmlT
 {
     /// how to recognize HTML tags
     static const QString formTagEnd = QLatin1String("</form>");
-    static const QString inputTagBegin = QLatin1String("<input");
+    static const QString inputTagBegin = QLatin1String("<input ");
     static const QString selectTagBegin = QLatin1String("<select ");
     static const QString selectTagEnd = QLatin1String("</select>");
     static const QString optionTagBegin = QLatin1String("<option ");
     /// regular expressions to test or retrieve attributes in HTML tags
-    static const QRegExp inputTypeRegExp("<input[^>]+\\btype=[\"]?([^\" >\n\t]*)");
-    static const QRegExp inputNameRegExp("<input[^>]+\\bname=[\"]?([^\" >\n\t]*)");
-    static const QRegExp inputValueRegExp("<input[^>]+\\bvalue=[\"]?([^\" >\n\t]*)");
-    static const QRegExp inputIsCheckedRegExp("<input[^>]* checked([> \t\n]|=[\"]?checked)");
-    static const QRegExp selectNameRegExp("<select[^>]+\\bname=[\"]?([^\" >\n\t]*)");
-    static const QRegExp optionValueRegExp("<option[^>]+\\bvalue=[\"]?([^\" >\n\t]*)");
-    static const QRegExp optionSelectedRegExp("<option[^>]* selected([> \t\n]|=[\"]?selected)");
+    static const QRegExp inputTypeRegExp("<input[^>]+\\btype=[\"]?([^\" >\n\t]*)", Qt::CaseInsensitive);
+    static const QRegExp inputNameRegExp("<input[^>]+\\bname=[\"]?([^\" >\n\t]*)", Qt::CaseInsensitive);
+    static const QRegExp inputValueRegExp("<input[^>]+\\bvalue=[\"]?([^\" >\n\t]*)", Qt::CaseInsensitive);
+    static const QRegExp inputIsCheckedRegExp("<input[^>]+\\bchecked([> \t\n]|=[\"]?checked)", Qt::CaseInsensitive);
+    static const QRegExp selectNameRegExp("<select[^>]+\\bname=[\"]?([^\" >\n\t]*)", Qt::CaseInsensitive);
+    static const QRegExp optionValueRegExp("<option[^>]+\\bvalue=[\"]?([^\" >\n\t]*)", Qt::CaseInsensitive);
+    static const QRegExp optionSelectedRegExp("<option[^>]* selected([> \t\n]|=[\"]?selected)", Qt::CaseInsensitive);
 
     /// initialize result map
     QMap<QString, QString> result;
@@ -200,9 +200,9 @@ QMap<QString, QString> OnlineSearchAbstract::formParameters(const QString &htmlT
     int p = htmlText.indexOf(inputTagBegin, startPos);
     while (p > startPos && p < endPos) {
         /// get "type", "name", and "value" attributes
-        QString inputType = htmlText.indexOf(inputTypeRegExp, p) == p ? inputTypeRegExp.cap(1).toLower() : QString();
-        QString inputName = htmlText.indexOf(inputNameRegExp, p) == p ? inputNameRegExp.cap(1) : QString();
-        QString inputValue = htmlText.indexOf(inputValueRegExp, p) ? inputValueRegExp.cap(1) : QString();
+        QString inputType = inputTypeRegExp.indexIn(htmlText, p) == p ? inputTypeRegExp.cap(1).toLower() : QString();
+        QString inputName = inputNameRegExp.indexIn(htmlText, p) == p ? inputNameRegExp.cap(1) : QString();
+        QString inputValue = inputValueRegExp.indexIn(htmlText, p) ? inputValueRegExp.cap(1) : QString();
 
         if (!inputName.isEmpty()) {
             /// get value of input types
@@ -230,14 +230,14 @@ QMap<QString, QString> OnlineSearchAbstract::formParameters(const QString &htmlT
     p = htmlText.indexOf(selectTagBegin, startPos);
     while (p > startPos && p < endPos) {
         /// get "name" attribute from "select" tag
-        QString selectName = htmlText.indexOf(selectNameRegExp, p) == p ? selectNameRegExp.cap(1) : QString::null;
+        QString selectName = selectNameRegExp.indexIn(htmlText, p) == p ? selectNameRegExp.cap(1) : QString::null;
 
         /// "select" tag contains one or several "option" tags, search all
         int popt = htmlText.indexOf(optionTagBegin, p);
         int endSelect = htmlText.indexOf(selectTagEnd, p);
         while (popt > p && popt < endSelect) {
             /// get "value" attribute from "option" tag
-            QString optionValue = htmlText.indexOf(optionValueRegExp, popt) == popt ? optionValueRegExp.cap(1) : QString::null;
+            QString optionValue = optionValueRegExp.indexIn(htmlText, popt) == popt ? optionValueRegExp.cap(1) : QString::null;
             if (!selectName.isNull() && !optionValue.isNull()) {
                 /// if this "option" tag is "selected", store value
                 if (htmlText.indexOf(optionSelectedRegExp, popt) == popt) {

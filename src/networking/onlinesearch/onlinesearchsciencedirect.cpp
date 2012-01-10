@@ -137,15 +137,17 @@ void OnlineSearchScienceDirect::doneFetchingStartPage()
 
         KUrl url(d->scienceDirectBaseUrl + "science");
         QMap<QString, QString> inputMap = formParameters(htmlText, QLatin1String("<form name=\"qkSrch\""));
-        inputMap["qs_all"] = d->queryFreetext;
-        inputMap["qs_author"] = d->queryAuthor;
+        inputMap["qs_all"] = d->queryFreetext.trimmed();
+        inputMap["qs_author"] = d->queryAuthor.trimmed();
         inputMap["resultsPerPage"] = QString::number(d->numExpectedResults);
         inputMap["_ob"] = "QuickSearchURL";
         inputMap["_method"] = "submitForm";
 
-        static const QStringList orderOfParameters = QString("_ob|_method|_acct|_origin|_zone|md5|qs_issue|qs_pages|qs_title|qs_vol|sdSearch|qs_all|qs_author|resultsPerPage=3").split("|");
-        foreach(QString key, orderOfParameters)
-        url.addQueryItem(key, inputMap[key]);
+        static const QStringList orderOfParameters = QString("_ob|_method|_acct|_origin|_zone|md5|_eidkey|qs_issue|qs_pages|qs_title|qs_vol|sdSearch|qs_all|qs_author|resultsPerPage=3").split("|");
+        foreach(const QString &key, orderOfParameters) {
+            if (!inputMap.contains(key)) continue;
+            url.addQueryItem(key, inputMap[key]);
+        }
 
         ++d->runningJobs;
         QNetworkRequest request(url);
@@ -260,16 +262,17 @@ void OnlineSearchScienceDirect::doneFetchingExportCitationPage()
             inputMap["format"] = "cite";
             inputMap["citation-type"] = "BIBTEX";
             inputMap["RETURN_URL"] = d->scienceDirectBaseUrl + "/science/home";
-            static const QStringList orderOfParameters = QString("_ob|_method|_acct|_userid|_docType|_ArticleListID|_uoikey|count|md5|JAVASCRIPT_ON|format|citation-type|Export|RETURN_URL").split("|");
+            static const QStringList orderOfParameters = QString("_ob|_method|_acct|_userid|_docType|_eidkey|_ArticleListID|_uoikey|count|md5|JAVASCRIPT_ON|format|citation-type|Export|RETURN_URL").split("|");
 
             QString body;
-            foreach(QString key, orderOfParameters) {
-                if (!body.isEmpty())body += '&';
+            foreach(const QString &key, orderOfParameters) {
+                if (!inputMap.contains(key)) continue;
+                if (!body.isEmpty()) body += '&';
                 body += encodeURL(key) + '=' + encodeURL(inputMap[key]);
             }
 
             ++d->runningJobs;
-            QNetworkRequest request(KUrl("http://www.sciencedirect.com/science"));
+            QNetworkRequest request(KUrl(d->scienceDirectBaseUrl + "/science"));
             QNetworkReply *newReply = InternalNetworkAccessManager::self()->post(request, body.toUtf8());
             setNetworkReplyTimeout(newReply);
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingBibTeX()));
