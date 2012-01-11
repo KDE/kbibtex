@@ -19,6 +19,7 @@
 ***************************************************************************/
 
 #include <QFormLayout>
+#include <QCheckBox>
 
 #include <KLocale>
 #include <KSharedConfig>
@@ -30,6 +31,7 @@
 
 #include <fileexporter.h>
 #include <clipboard.h>
+#include "lyx.h"
 #include "settingsfileexporterwidget.h"
 
 class SettingsFileExporterWidget::SettingsFileExporterWidgetPrivate
@@ -39,6 +41,9 @@ private:
 
     KComboBox *comboBoxCopyReferenceCmd;
     static const QString citeCmdToLabel;
+
+    QCheckBox *checkboxUseAutomaticLyXPipeDetection;
+    KLineEdit *lineeditLyXPipePath;
 
     KSharedConfigPtr config;
     const QString configGroupNameGeneral;
@@ -54,6 +59,10 @@ public:
         KConfigGroup configGroup(config, configGroupNameGeneral);
         const QString copyReferenceCommand = configGroup.readEntry(Clipboard::keyCopyReferenceCommand, Clipboard::defaultCopyReferenceCommand);
         p->selectValue(comboBoxCopyReferenceCmd, copyReferenceCommand.isEmpty() ? QString("") : copyReferenceCommand, Qt::UserRole);
+
+        KConfigGroup configGroupLyX(config, LyX::configGroupName);
+        checkboxUseAutomaticLyXPipeDetection->setChecked(configGroupLyX.readEntry(LyX::keyUseAutomaticLyXPipeDetection, LyX::defaultUseAutomaticLyXPipeDetection));
+        lineeditLyXPipePath->setText(configGroupLyX.readEntry(LyX::keyLyXPipePath, LyX::defaultLyXPipePath));
     }
 
     void saveState() {
@@ -61,11 +70,17 @@ public:
         const QString copyReferenceCommand = comboBoxCopyReferenceCmd->itemData(comboBoxCopyReferenceCmd->currentIndex()).toString();
         configGroup.writeEntry(Clipboard::keyCopyReferenceCommand, copyReferenceCommand);
 
+        KConfigGroup configGroupLyX(config, LyX::configGroupName);
+        configGroupLyX.writeEntry(LyX::keyUseAutomaticLyXPipeDetection, checkboxUseAutomaticLyXPipeDetection->isChecked());
+        configGroupLyX.writeEntry(LyX::keyLyXPipePath, lineeditLyXPipePath->text());
+
         config->sync();
     }
 
     void resetToDefaults() {
         p->selectValue(comboBoxCopyReferenceCmd, QString(""), Qt::UserRole);
+        checkboxUseAutomaticLyXPipeDetection->setChecked(LyX::defaultUseAutomaticLyXPipeDetection);
+        lineeditLyXPipePath->setText(LyX::defaultLyXPipePath);
     }
 
     void setupGUI() {
@@ -82,6 +97,14 @@ public:
         }
         comboBoxCopyReferenceCmd->setModel(itim);
         connect(comboBoxCopyReferenceCmd, SIGNAL(currentIndexChanged(int)), p, SIGNAL(changed()));
+
+        checkboxUseAutomaticLyXPipeDetection = new QCheckBox(QLatin1String(""), p);
+        layout->addRow(i18n("Prefer to detect LyX pipe automatically:"), checkboxUseAutomaticLyXPipeDetection);
+        connect(checkboxUseAutomaticLyXPipeDetection, SIGNAL(toggled(bool)), p, SIGNAL(changed()));
+
+        lineeditLyXPipePath = new KLineEdit(p);
+        layout->addRow(i18n("Manually specified LyX pipe:"), lineeditLyXPipePath);
+        connect(lineeditLyXPipePath, SIGNAL(textEdited(QString)), p, SIGNAL(changed()));
     }
 };
 
