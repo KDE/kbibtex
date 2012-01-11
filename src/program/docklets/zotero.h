@@ -22,6 +22,7 @@
 #define KBIBTEX_PROGRAM_ZOTERO_H
 
 #include <QWidget>
+#include <QModelIndex>
 
 class BibTeXEditor;
 
