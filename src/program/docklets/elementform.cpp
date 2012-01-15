@@ -47,7 +47,7 @@ public:
     QWidget *widgetUnmodifiedChanges;
 
     ElementFormPrivate(ElementForm *parent)
-            : p(parent), element(NULL), file(NULL), elementEditor(NULL) {
+            : p(parent), file(NULL), elementEditor(NULL) {
         layout = new QGridLayout(p);
         layout->setColumnStretch(0, 1);
         layout->setColumnStretch(1, 0);
