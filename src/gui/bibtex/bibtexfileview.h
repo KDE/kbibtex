@@ -22,11 +22,7 @@
 
 #include <QTreeView>
 
-#include <KSharedConfig>
-
 #include "kbibtexgui_export.h"
-
-class QSignalMapper;
 
 class BibTeXFileModel;
 class QSortFilterProxyModel;
@@ -39,34 +35,24 @@ class KBIBTEXGUI_EXPORT BibTeXFileView : public QTreeView
     Q_OBJECT
 public:
     BibTeXFileView(const QString &name, QWidget *parent = 0);
+    ~BibTeXFileView();
 
-    virtual void setModel(QAbstractItemModel * model);
+    virtual void setModel(QAbstractItemModel *model);
     BibTeXFileModel *bibTeXModel();
     QSortFilterProxyModel *sortFilterProxyModel();
 
 protected:
-    const QString m_name;
-
     void resizeEvent(QResizeEvent *event);
 
 protected slots:
     void columnResized(int column, int oldSize, int newSize);
 
 private:
-    QSignalMapper *m_signalMapperBibTeXFields;
-    BibTeXFileModel *m_bibTeXFileModel;
-    QSortFilterProxyModel *m_sortFilterProxyModel;
-
-    KSharedConfigPtr config;
-    const QString configGroupName;
-    const QString configHeaderState;
-    QByteArray headerDefault;
-
-    void syncBibTeXFields();
+    class BibTeXFileViewPrivate;
+    BibTeXFileViewPrivate *d;
 
 private slots:
-    void columnsChanged();
-    void headerActionToggled(QObject *action);
+    void headerActionToggled();
     void headerResetToDefaults();
     void sort(int, Qt::SortOrder);
 };
