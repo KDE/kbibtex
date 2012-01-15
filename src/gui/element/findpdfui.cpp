@@ -153,8 +153,9 @@ void PDFItemDelegate::updateItemWidgets(const QList<QWidget*> widgets, const QSt
 
     /// determine some variables used for layout
     int margin = option.fontMetrics.height() / 3;
-    int buttonHeight = option.fontMetrics.height() * 2;
-    int buttonWidth = option.fontMetrics.width(i18n("Download")) * 3 / 2;
+    int buttonHeight = option.fontMetrics.height() * 7 / 4;
+    int maxTextWidth = qMax(qMax(option.fontMetrics.width(i18n("Use URL only")), option.fontMetrics.width(i18n("Ignore"))), qMax(option.fontMetrics.width(i18n("Download")), option.fontMetrics.width(i18n("View"))));
+    int buttonWidth = maxTextWidth * 3 / 2;
     int labelWidth = option.rect.width() - 3 * margin - KIconLoader::SizeMedium;
     int labelHeight = (option.rect.height() - 4 * margin - buttonHeight) / 2;
 
