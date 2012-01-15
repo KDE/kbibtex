@@ -105,10 +105,9 @@ public:
         comboBoxBibliographyStyle = new KComboBox(true, p);
         comboBoxBibliographyStyle->setObjectName("comboBoxBibliographyStyle");
         layout->addRow(i18n("Bibliography style:"), comboBoxBibliographyStyle);
-        comboBoxBibliographyStyle->addItem(QLatin1String("abbrv"));
-        comboBoxBibliographyStyle->addItem(QLatin1String("alpha"));
-        comboBoxBibliographyStyle->addItem(QLatin1String("plain"));
-        comboBoxBibliographyStyle->addItem(QLatin1String("dcu"));
+        foreach(const QString &style, QStringList() << QLatin1String("abbrv") << QLatin1String("alpha") << QLatin1String("plain") << QLatin1String("agsm") << QLatin1String("dcu") << QLatin1String("jmr") << QLatin1String("jphysicsB") << QLatin1String("kluwer") << QLatin1String("nederlands")) {
+            comboBoxBibliographyStyle->addItem(style);
+        }
         connect(comboBoxBibliographyStyle->lineEdit(), SIGNAL(textChanged(QString)), p, SIGNAL(changed()));
     }
 };
