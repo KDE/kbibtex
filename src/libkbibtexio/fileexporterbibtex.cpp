@@ -348,6 +348,9 @@ bool FileExporterBibTeX::save(QIODevice* iodevice, const File* bibtexfile, QStri
         d->stringOpenDelimiter = stringDelimiter[0];
         d->stringCloseDelimiter = stringDelimiter[1];
     }
+    // FIXME due to bug in LaTeXEncoder, enforce {...} for now
+    d->stringOpenDelimiter = QChar('{');
+    d->stringCloseDelimiter = QChar('}');
     if (bibtexfile->hasProperty(File::QuoteComment))
         d->quoteComment = (QuoteComment)bibtexfile->property(File::QuoteComment).toInt();
     if (bibtexfile->hasProperty(File::KeywordCasing))
