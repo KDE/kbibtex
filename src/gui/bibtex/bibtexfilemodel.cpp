@@ -72,9 +72,9 @@ bool SortFilterBibTeXFileModel::lessThan(const QModelIndex & left, const QModelI
     Q_ASSERT(left.column() == right.column()); ///< assume that we only sort by column
 
     BibTeXFields *bibtexFields = BibTeXFields::self();
-    const FieldDescription &fd = bibtexFields->at(column);
+    const FieldDescription *fd = bibtexFields->at(column);
 
-    if (column == right.column() && (fd.upperCamelCase == QLatin1String("Author") || fd.upperCamelCase == QLatin1String("Editor"))) {
+    if (column == right.column() && (fd->upperCamelCase == QLatin1String("Author") || fd->upperCamelCase == QLatin1String("Editor"))) {
         /// special sorting for authors or editors: check all names,
         /// compare last and then first names
 
@@ -85,12 +85,12 @@ bool SortFilterBibTeXFileModel::lessThan(const QModelIndex & left, const QModelI
             return QSortFilterProxyModel::lessThan(left, right);
 
         /// retrieve values of both cells
-        Value valueA = entryA->value(fd.upperCamelCase);
-        Value valueB = entryB->value(fd.upperCamelCase);
+        Value valueA = entryA->value(fd->upperCamelCase);
+        Value valueB = entryB->value(fd->upperCamelCase);
         if (valueA.isEmpty())
-            valueA = entryA->value(fd.upperCamelCaseAlt);
+            valueA = entryA->value(fd->upperCamelCaseAlt);
         if (valueB.isEmpty())
-            valueB = entryB->value(fd.upperCamelCaseAlt);
+            valueB = entryB->value(fd->upperCamelCaseAlt);
 
         /// if either value is empty, use default implementation
         if (valueA.isEmpty() || valueB.isEmpty())
@@ -336,9 +336,9 @@ QVariant BibTeXFileModel::data(const QModelIndex &index, int role) const
 
     BibTeXFields *bibtexFields = BibTeXFields::self();
     if (index.row() < m_bibtexFile->count() && index.column() < bibtexFields->count()) {
-        const FieldDescription &fd = bibtexFields->at(index.column());
-        QString raw = fd.upperCamelCase;
-        QString rawAlt = fd.upperCamelCaseAlt;
+        const FieldDescription *fd = bibtexFields->at(index.column());
+        QString raw = fd->upperCamelCase;
+        QString rawAlt = fd->upperCamelCaseAlt;
         QSharedPointer<Element> element = (*m_bibtexFile)[index.row()];
         QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
 
@@ -428,7 +428,7 @@ QVariant BibTeXFileModel::headerData(int section, Qt::Orientation orientation, i
     const BibTeXFields *bibtexFields = BibTeXFields::self();
     if (role != Qt::DisplayRole || orientation != Qt::Horizontal || section < 0 || section >= bibtexFields->count())
         return QVariant();
-    return bibtexFields->at(section).label;
+    return bibtexFields->at(section)->label;
 }
 
 Qt::ItemFlags BibTeXFileModel::flags(const QModelIndex &index) const

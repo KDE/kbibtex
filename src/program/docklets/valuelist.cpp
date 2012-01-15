@@ -125,10 +125,10 @@ public:
         const BibTeXFields *bibtexFields = BibTeXFields::self();
 
         comboboxFieldNames->clear();
-        foreach(const FieldDescription &fd, *bibtexFields) {
-            if (!fd.upperCamelCaseAlt.isEmpty()) continue; /// keep only "single" fields and not combined ones like "Author or Editor"
-            if (fd.upperCamelCase.startsWith('^')) continue; /// skip "type" and "id"
-            comboboxFieldNames->addItem(fd.label, fd.upperCamelCase);
+        foreach(const FieldDescription *fd, *bibtexFields) {
+            if (!fd->upperCamelCaseAlt.isEmpty()) continue; /// keep only "single" fields and not combined ones like "Author or Editor"
+            if (fd->upperCamelCase.startsWith('^')) continue; /// skip "type" and "id"
+            comboboxFieldNames->addItem(fd->label, fd->upperCamelCase);
         }
 
         KConfigGroup configGroup(config, configGroupName);

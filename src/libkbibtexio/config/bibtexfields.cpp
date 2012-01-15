@@ -65,35 +65,35 @@ public:
         const QStringList treeViewNames = QStringList() << QLatin1String("SearchResults") << QLatin1String("Main") << QLatin1String("MergeWidget") << QLatin1String("Zotero");
 
         for (int col = 1; col <= columnCount; ++col) {
-            FieldDescription fd;
+            FieldDescription *fd = new FieldDescription();
 
             QString groupName = QString("Column%1").arg(col);
             KConfigGroup configGroup(layoutConfig, groupName);
 
-            fd.upperCamelCase = configGroup.readEntry("UpperCamelCase", "");
-            if (fd.upperCamelCase.isEmpty())
+            fd->upperCamelCase = configGroup.readEntry("UpperCamelCase", "");
+            if (fd->upperCamelCase.isEmpty())
                 continue;
 
-            fd.upperCamelCaseAlt = configGroup.readEntry("UpperCamelCaseAlt", "");
-            if (fd.upperCamelCaseAlt.isEmpty()) fd.upperCamelCaseAlt = QString::null;
+            fd->upperCamelCaseAlt = configGroup.readEntry("UpperCamelCaseAlt", "");
+            if (fd->upperCamelCaseAlt.isEmpty()) fd->upperCamelCaseAlt = QString::null;
 
-            fd.label = configGroup.readEntry("Label", fd.upperCamelCase);
+            fd->label = configGroup.readEntry("Label", fd->upperCamelCase);
 
-            fd.defaultWidth = configGroup.readEntry("DefaultWidth", 10);
-            bool defaultVisible = configGroup.readEntry("Visible", true);
+            fd->defaultWidth = configGroup.readEntry("DefaultWidth", 10);
+            fd->defaultVisible = configGroup.readEntry("Visible", true);
 
             foreach(const QString &treeViewName, treeViewNames) {
-                fd.width.insert(treeViewName, configGroup.readEntry("Width_" + treeViewName, fd.defaultWidth));
-                fd.visible.insert(treeViewName, configGroup.readEntry("Visible_" + treeViewName, defaultVisible));
+                fd->width.insert(treeViewName, configGroup.readEntry("Width_" + treeViewName, fd->defaultWidth));
+                fd->visible.insert(treeViewName, configGroup.readEntry("Visible_" + treeViewName,  fd->defaultVisible));
             }
 
             QString typeFlags = configGroup.readEntry("TypeFlags", "Source");
 
-            fd.typeFlags = typeFlagsFromString(typeFlags);
+            fd->typeFlags = typeFlagsFromString(typeFlags);
             QString preferredTypeFlag = typeFlags.split(';').first();
-            fd.preferredTypeFlag = typeFlagFromString(preferredTypeFlag);
+            fd->preferredTypeFlag = typeFlagFromString(preferredTypeFlag);
 
-            fd.typeIndependent = configGroup.readEntry("TypeIndependent", false);
+            fd->typeIndependent = configGroup.readEntry("TypeIndependent", false);
 
             p->append(fd);
         }
@@ -106,22 +106,22 @@ public:
 
         QStringList treeViewNames;
         int columnCount = 0;
-        foreach(const FieldDescription &fd, *p) {
+        foreach(const FieldDescription *fd, *p) {
             ++columnCount;
             QString groupName = QString("Column%1").arg(columnCount);
             KConfigGroup configGroup(layoutConfig, groupName);
 
-            foreach(const QString &treeViewName, fd.width.keys()) {
-                configGroup.writeEntry("Width_" + treeViewName, fd.width[treeViewName]);
-                configGroup.writeEntry("Visible_" + treeViewName, fd.visible[treeViewName]);
+            foreach(const QString &treeViewName, fd->width.keys()) {
+                configGroup.writeEntry("Width_" + treeViewName, fd->width[treeViewName]);
+                configGroup.writeEntry("Visible_" + treeViewName, fd->visible[treeViewName]);
             }
-            QString typeFlagsString = fd.typeFlags == fd.preferredTypeFlag ? "" : ";" + typeFlagsToString(fd.typeFlags);
-            typeFlagsString.prepend(typeFlagToString(fd.preferredTypeFlag));
+            QString typeFlagsString = fd->typeFlags == fd->preferredTypeFlag ? "" : ";" + typeFlagsToString(fd->typeFlags);
+            typeFlagsString.prepend(typeFlagToString(fd->preferredTypeFlag));
             configGroup.writeEntry("TypeFlags", typeFlagsString);
-            configGroup.writeEntry("TypeIndependent", fd.typeIndependent);
+            configGroup.writeEntry("TypeIndependent", fd->typeIndependent);
 
             if (treeViewNames.isEmpty())
-                treeViewNames.append(fd.width.keys());
+                treeViewNames.append(fd->width.keys());
         }
 
         QString groupName = QLatin1String("Column");
@@ -146,7 +146,7 @@ public:
 BibTeXFields *BibTeXFields::BibTeXFieldsPrivate::singleton = NULL;
 
 BibTeXFields::BibTeXFields()
-        : QList<FieldDescription>(), d(new BibTeXFieldsPrivate(this))
+        : QList<FieldDescription*>(), d(new BibTeXFieldsPrivate(this))
 {
     d->load();
 }
@@ -179,11 +179,11 @@ QString BibTeXFields::format(const QString& name, KBibTeX::Casing casing) const
         iName[0] = iName[0].toUpper();
         return iName;
     case KBibTeX::cLowerCamelCase: {
-        for (ConstIterator it = constBegin(); it != constEnd(); ++it) {
+        foreach(const FieldDescription *fd, *this) {
             /// configuration file uses camel-case
-            QString itName = (*it).upperCamelCase.toLower();
-            if (itName == iName && (*it).upperCamelCaseAlt == QString::null) {
-                iName = (*it).upperCamelCase;
+            QString itName = fd->upperCamelCase.toLower();
+            if (itName == iName && fd->upperCamelCaseAlt == QString::null) {
+                iName = fd->upperCamelCase;
                 break;
             }
         }
@@ -193,11 +193,11 @@ QString BibTeXFields::format(const QString& name, KBibTeX::Casing casing) const
         return iName;
     }
     case KBibTeX::cUpperCamelCase: {
-        for (ConstIterator it = constBegin(); it != constEnd(); ++it) {
+        foreach(const FieldDescription *fd, *this) {
             /// configuration file uses camel-case
-            QString itName = (*it).upperCamelCase.toLower();
-            if (itName == iName && (*it).upperCamelCaseAlt == QString::null) {
-                iName = (*it).upperCamelCase;
+            QString itName = fd->upperCamelCase.toLower();
+            if (itName == iName && fd->upperCamelCaseAlt == QString::null) {
+                iName = fd->upperCamelCase;
                 break;
             }
         }
@@ -210,14 +210,14 @@ QString BibTeXFields::format(const QString& name, KBibTeX::Casing casing) const
     return name;
 }
 
-const FieldDescription& BibTeXFields::find(const QString &name) const
+const FieldDescription* BibTeXFields::find(const QString &name) const
 {
     const QString iName = name.toLower();
-    for (ConstIterator it = constBegin(); it != constEnd(); ++it) {
-        if ((*it).upperCamelCase.toLower() == iName && (*it).upperCamelCaseAlt.isEmpty())
-            return *it;
+    foreach(const FieldDescription *fd, *this) {
+        if (fd->upperCamelCase.toLower() == iName && fd->upperCamelCaseAlt.isEmpty())
+            return fd;
     }
-    return FieldDescription::null;
+    return NULL;
 }
 
 KBibTeX::TypeFlag BibTeXFields::typeFlagFromString(const QString &typeFlagString)

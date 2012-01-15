@@ -37,6 +37,7 @@ struct FieldDescription {
     QMap<QString, int> width;
     int defaultWidth;
     QMap<QString, bool> visible;
+    bool defaultVisible;
     bool typeIndependent;
 
     FieldDescription()
@@ -61,10 +62,11 @@ uint qHash(const FieldDescription &a);
 /**
 @author Thomas Fischer
 */
-class KBIBTEXIO_EXPORT BibTeXFields : public QList<FieldDescription>
+class KBIBTEXIO_EXPORT BibTeXFields : public QList<FieldDescription*>
 {
 public:
     static BibTeXFields *self();
+
     void save();
     void resetToDefaults(const QString &treeViewName);
 
@@ -78,7 +80,7 @@ public:
     static QString typeFlagToString(KBibTeX::TypeFlag typeFlag);
     static QString typeFlagsToString(KBibTeX::TypeFlags typeFlags);
 
-    const FieldDescription& find(const QString &name) const;
+    const FieldDescription* find(const QString &name) const;
 
 protected:
     BibTeXFields();

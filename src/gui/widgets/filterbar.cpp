@@ -172,9 +172,9 @@ FilterBar::FilterBar(QWidget *parent)
     d->comboBoxField->addItem(i18n("every field"), QVariant());
     d->comboBoxField->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 
-    foreach(const FieldDescription &fd,  *BibTeXFields::self()) {
-        if (fd.upperCamelCaseAlt.isEmpty())
-            d->comboBoxField->addItem(fd.label, fd.upperCamelCase);
+    foreach(const FieldDescription *fd,  *BibTeXFields::self()) {
+        if (fd->upperCamelCaseAlt.isEmpty())
+            d->comboBoxField->addItem(fd->label, fd->upperCamelCase);
     }
 
     d->checkboxSearchPDFfiles = new QCheckBox(this);
