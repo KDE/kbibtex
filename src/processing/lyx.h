@@ -39,7 +39,8 @@ class KBIBTEXPROC_EXPORT LyX: public QObject
 {
     Q_OBJECT
 public:
-    static const QString keyUseAutomaticLyXPipeDetection, keyLyXPipePath;
+    static const QString keyUseAutomaticLyXPipeDetection;
+    static const QString keyLyXPipePath;
     static const bool defaultUseAutomaticLyXPipeDetection;
     static const QString defaultLyXPipePath;
     static const QString configGroupName;

@@ -31,7 +31,8 @@
 class KBIBTEXPROC_EXPORT IdSuggestions
 {
 public:
-    static const QString keyFormatStringList, keyDefaultFormatString;
+    static const QString keyFormatStringList;
+    static const QString keyDefaultFormatString;
     static const QStringList defaultFormatStringList;
     static const QString defaultDefaultFormatString;
     static const QString configGroupName;
