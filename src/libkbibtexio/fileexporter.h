@@ -40,6 +40,9 @@ public:
     static const QString keyPaperSize;
     static const QString defaultPaperSize;
 
+    static const QString keyFont;
+    static const QString defaultFont;
+
     FileExporter();
     ~FileExporter();
 

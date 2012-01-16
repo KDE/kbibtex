@@ -24,6 +24,8 @@
 
 const QString FileExporter::keyPaperSize = QLatin1String("paperSize");
 const QString FileExporter::defaultPaperSize = QLatin1String("a4");
+const QString FileExporter::keyFont = QLatin1String("Font");
+const QString FileExporter::defaultFont = QLatin1String("");
 
 FileExporter::FileExporter() : QObject()
 {

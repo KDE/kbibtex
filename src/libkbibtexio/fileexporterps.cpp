@@ -52,6 +52,7 @@ void FileExporterPS::reloadConfig()
 
     KConfigGroup configGroupGeneral(config, QLatin1String("General"));
     m_paperSize = configGroupGeneral.readEntry(keyPaperSize, defaultPaperSize);
+    m_font = configGroupGeneral.readEntry(keyFont, defaultFont);
 }
 
 bool FileExporterPS::save(QIODevice* iodevice, const File* bibtexfile, QStringList *errorLog)
@@ -118,6 +119,8 @@ bool FileExporterPS::writeLatexFile(const QString &filename)
             ts << "\\usepackage{html}" << endl << "\\usepackage[dcucite]{harvard}" << endl << "\\renewcommand{\\harvardurl}{URL: \\url}" << endl;
         if (kpsewhich("geometry.sty"))
             ts << "\\usepackage[paper=" << m_paperSize << (m_paperSize.length() <= 2 ? "paper" : "") << "]{geometry}" << endl;
+        if (!m_font.isEmpty() && kpsewhich(m_font + QLatin1String(".sty")))
+            ts << "\\usepackage{" << m_font << "}" << endl;
         ts << "\\bibliographystyle{" << m_bibliographyStyle << "}" << endl;
         ts << "\\begin{document}" << endl;
         ts << "\\nocite{*}" << endl;

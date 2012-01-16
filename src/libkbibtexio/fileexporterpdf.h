@@ -46,6 +46,7 @@ private:
     QString m_outputFilename;
     QString m_babelLanguage;
     QString m_paperSize;
+    QString m_font;
     QString m_bibliographyStyle;
     bool m_embedFiles;
     QStringList m_embeddedFileList;
