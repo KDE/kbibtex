@@ -1,30 +1,12 @@
 install(
     FILES
     fancy.xsl
-    DESTINATION
-    ${DATA_INSTALL_DIR}/kbibtex
-)
-install(
-    FILES
     standard.xsl
-    DESTINATION
-    ${DATA_INSTALL_DIR}/kbibtex
-)
-install(
-    FILES
     abstractonly.xsl
-    DESTINATION
-    ${DATA_INSTALL_DIR}/kbibtex
-)
-install(
-    FILES
     arxiv2bibtex.xsl
-    DESTINATION
-    ${DATA_INSTALL_DIR}/kbibtex
-)
-install(
-    FILES
     pubmed2bibtex.xsl
+    pam2bibtex.xsl
+    zoteroitems2bibtex.xsl
     DESTINATION
     ${DATA_INSTALL_DIR}/kbibtex
 )
