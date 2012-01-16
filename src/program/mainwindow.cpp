@@ -328,10 +328,10 @@ void KBibTeXMainWindow::documentSwitched(BibTeXEditor *oldEditor, BibTeXEditor *
     d->elementForm->setEnabled(newEditor != NULL);
     d->documentPreview->setEnabled(newEditor != NULL);
     if (oldEditor != NULL) {
-        disconnect(oldEditor, SIGNAL(currentElementChanged(Element*, const File *)), d->referencePreview, SLOT(setElement(Element*, const File *)));
-        disconnect(oldEditor, SIGNAL(currentElementChanged(Element*, const File *)), d->elementForm, SLOT(setElement(Element*, const File *)));
-        disconnect(oldEditor, SIGNAL(currentElementChanged(Element*, const File *)), d->documentPreview, SLOT(setElement(Element*, const File *)));
-        disconnect(oldEditor, SIGNAL(currentElementChanged(Element*, const File *)), d->searchForm, SLOT(setElement(Element*, const File *)));
+        disconnect(oldEditor, SIGNAL(currentElementChanged(QSharedPointer<Element>, const File *)), d->referencePreview, SLOT(setElement(QSharedPointer<Element>, const File *)));
+        disconnect(oldEditor, SIGNAL(currentElementChanged(QSharedPointer<Element>, const File *)), d->elementForm, SLOT(setElement(QSharedPointer<Element>, const File *)));
+        disconnect(oldEditor, SIGNAL(currentElementChanged(QSharedPointer<Element>, const File *)), d->documentPreview, SLOT(setElement(QSharedPointer<Element>, const File *)));
+        disconnect(oldEditor, SIGNAL(currentElementChanged(QSharedPointer<Element>, const File *)), d->searchForm, SLOT(setElement(QSharedPointer<Element>, const File *)));
         disconnect(oldEditor, SIGNAL(modified()), d->valueList, SLOT(update()));
         disconnect(d->elementForm, SIGNAL(elementModified()), newEditor, SLOT(externalModification()));
     }
