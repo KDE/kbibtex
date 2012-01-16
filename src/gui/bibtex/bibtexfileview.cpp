@@ -82,6 +82,11 @@ public:
             p->setColumnWidth(col, storedColumnWidths[col]);
             ++col;
         }
+
+        QByteArray headerState = p->header()->saveState();
+        KConfigGroup configGroup(config, configGroupName);
+        configGroup.writeEntry(configHeaderState.arg(name), headerState);
+        config->sync();
     }
 
     void storeColumns() {
@@ -114,6 +119,11 @@ public:
             p->setColumnHidden(col, !storedColumnVisible[col]);
             p->setColumnWidth(col, storedColumnWidths[col]);
         }
+
+        QByteArray headerState = p->header()->saveState();
+        KConfigGroup configGroup(config, configGroupName);
+        configGroup.writeEntry(configHeaderState.arg(name), headerState);
+        config->sync();
     }
 
     void setColumnVisible(int column, bool isVisible) {
