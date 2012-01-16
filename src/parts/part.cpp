@@ -615,7 +615,6 @@ void KBibTeXPart::newElementTriggered(int event)
     case smComment:
         newCommentTriggered();
         break;
-        break;
     case smMacro:
         newMacroTriggered();
         break;

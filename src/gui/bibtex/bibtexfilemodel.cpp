@@ -456,9 +456,9 @@ bool BibTeXFileModel::removeRowList(const QList<int> &rows)
     if (m_bibtexFile == NULL) return false;
 
     QList<int> internalRows = rows;
-    qSort(internalRows.begin(), internalRows.end(), qLess<int>());
+    qSort(internalRows.begin(), internalRows.end(), qGreater<int>());
 
-    beginRemoveRows(QModelIndex(), internalRows.first(), internalRows.last());
+    beginRemoveRows(QModelIndex(), internalRows.last(), internalRows.first());
     foreach(int row, internalRows) {
         if (row < 0 || row >= rowCount() || row >= m_bibtexFile->count())
             return false;

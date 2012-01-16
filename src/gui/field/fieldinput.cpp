@@ -74,6 +74,7 @@ public:
             KPushButton *monthSelector = new KPushButton(KIcon("view-calendar-month"), "");
             monthSelector->setToolTip(i18n("Select a predefined month"));
             fieldLineEdit->prependWidget(monthSelector);
+            connect(monthSelector, SIGNAL(clicked()), p, SIGNAL(modified()));
 
             QSignalMapper *sm = new QSignalMapper(monthSelector);
             connect(sm, SIGNAL(mapped(int)), p, SLOT(setMonth(int)));
@@ -92,6 +93,7 @@ public:
             referenceSelector->setToolTip(i18n("Select an existing entry"));
             fieldLineEdit->prependWidget(referenceSelector);
             connect(referenceSelector, SIGNAL(clicked()), p, SLOT(selectCrossRef()));
+            connect(referenceSelector, SIGNAL(clicked()), p, SIGNAL(modified()));
         }
         break;
         case KBibTeX::Color: {
