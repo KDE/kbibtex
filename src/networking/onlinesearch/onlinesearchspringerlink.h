@@ -48,17 +48,13 @@ protected:
     virtual QString favIconUrl() const;
 
 private slots:
-    void doneFetchingResultPage();
-    void doneFetchingExportPage();
-    void doneFetchingBibTeX();
+    void doneFetchingPAM();
 
 private:
     class OnlineSearchQueryFormSpringerLink;
 
     class OnlineSearchSpringerLinkPrivate;
     OnlineSearchSpringerLinkPrivate *d;
-
-    void processNextQueuedUrl();
 };
 
 #endif // KBIBTEX_ONLINESEARCH_SPRINGERLINK_H

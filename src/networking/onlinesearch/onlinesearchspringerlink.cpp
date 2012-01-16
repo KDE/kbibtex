@@ -30,10 +30,12 @@
 #include <KDebug>
 #include <KLineEdit>
 #include <KConfigGroup>
+#include <KStandardDirs>
 
 #include <internalnetworkaccessmanager.h>
-#include <fileimporterbibtex.h>
-#include <encoderlatex.h>
+#include "encoderlatex.h"
+#include "fileimporterbibtex.h"
+#include "xsltransform.h"
 #include "onlinesearchspringerlink.h"
 
 /**
@@ -47,18 +49,16 @@ private:
     void loadState() {
         KConfigGroup configGroup(config, configGroupName);
         lineEditFreeText->setText(configGroup.readEntry(QLatin1String("free"), QString()));
+        lineEditTitle->setText(configGroup.readEntry(QLatin1String("title"), QString()));
+        lineEditBookTitle->setText(configGroup.readEntry(QLatin1String("bookTitle"), QString()));
         lineEditAuthorEditor->setText(configGroup.readEntry(QLatin1String("authorEditor"), QString()));
-        lineEditPublication->setText(configGroup.readEntry(QLatin1String("publication"), QString()));
-        lineEditVolume->setText(configGroup.readEntry(QLatin1String("volume"), QString()));
-        lineEditIssue->setText(configGroup.readEntry(QLatin1String("issue"), QString()));
-        spinBoxYearBegin->setValue(configGroup.readEntry(QLatin1String("yearBegin"), 1970));
-        spinBoxYearEnd->setValue(configGroup.readEntry(QLatin1String("yearEnd"), 2015));
+        lineEditYear->setText(configGroup.readEntry(QLatin1String("year"), QString()));
         numResultsField->setValue(configGroup.readEntry(QLatin1String("numResults"), 10));
     }
 
 public:
-    KLineEdit *lineEditFreeText, *lineEditAuthorEditor, *lineEditPublication, *lineEditVolume, *lineEditIssue;
-    QSpinBox *numResultsField, *spinBoxYearBegin, *spinBoxYearEnd;
+    KLineEdit *lineEditFreeText, *lineEditTitle, *lineEditBookTitle, *lineEditAuthorEditor, *lineEditYear;
+    QSpinBox *numResultsField;
 
     OnlineSearchQueryFormSpringerLink(QWidget *parent)
             : OnlineSearchQueryFormAbstract(parent), configGroupName(QLatin1String("Search Engine SpringerLink")) {
@@ -72,6 +72,20 @@ public:
         layout->addRow(label, lineEditFreeText);
         connect(lineEditFreeText, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
 
+        lineEditTitle = new KLineEdit(this);
+        lineEditTitle->setClearButtonShown(true);
+        label = new QLabel(i18n("Title:"), this);
+        label->setBuddy(lineEditTitle);
+        layout->addRow(label, lineEditTitle);
+        connect(lineEditTitle, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
+
+        lineEditBookTitle = new KLineEdit(this);
+        lineEditBookTitle->setClearButtonShown(true);
+        label = new QLabel(i18n("Book/Journal title:"), this);
+        label->setBuddy(lineEditBookTitle);
+        layout->addRow(label, lineEditBookTitle);
+        connect(lineEditBookTitle, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
+
         lineEditAuthorEditor = new KLineEdit(this);
         lineEditAuthorEditor->setClearButtonShown(true);
         label = new QLabel(i18n("Author or Editor:"), this);
@@ -79,42 +93,12 @@ public:
         layout->addRow(label, lineEditAuthorEditor);
         connect(lineEditAuthorEditor, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
 
-        lineEditPublication = new KLineEdit(this);
-        lineEditPublication->setClearButtonShown(true);
-        label = new QLabel(i18n("Publication:"), this);
-        label->setBuddy(lineEditPublication);
-        layout->addRow(label, lineEditPublication);
-        connect(lineEditPublication, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
-
-        lineEditVolume = new KLineEdit(this);
-        lineEditVolume->setClearButtonShown(true);
-        label = new QLabel(i18n("Volume:"), this);
-        label->setBuddy(lineEditVolume);
-        layout->addRow(label, lineEditVolume);
-        connect(lineEditVolume, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
-
-        lineEditIssue = new KLineEdit(this);
-        lineEditIssue->setClearButtonShown(true);
-        label = new QLabel(i18n("Issue:"), this);
-        label->setBuddy(lineEditIssue);
-        layout->addRow(label, lineEditIssue);
-        connect(lineEditIssue, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
-
-        spinBoxYearBegin = new QSpinBox(this);
-        label = new QLabel(i18n("Year (start):"), this);
-        label->setBuddy(spinBoxYearBegin);
-        layout->addRow(label, spinBoxYearBegin);
-        spinBoxYearBegin->setMinimum(1800);
-        spinBoxYearBegin->setMaximum(2030);
-        spinBoxYearBegin->setValue(1970);
-
-        spinBoxYearEnd = new QSpinBox(this);
-        label = new QLabel(i18n("Year (end):"), this);
-        label->setBuddy(spinBoxYearEnd);
-        layout->addRow(label, spinBoxYearEnd);
-        spinBoxYearEnd->setMinimum(1800);
-        spinBoxYearEnd->setMaximum(2030);
-        spinBoxYearEnd->setValue(2015);
+        lineEditYear = new KLineEdit(this);
+        lineEditYear->setClearButtonShown(true);
+        label = new QLabel(i18n("Year:"), this);
+        label->setBuddy(lineEditYear);
+        layout->addRow(label, lineEditYear);
+        connect(lineEditYear, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
 
         numResultsField = new QSpinBox(this);
         label = new QLabel(i18n("Number of Results:"), this);
@@ -122,7 +106,6 @@ public:
         layout->addRow(label, numResultsField);
         numResultsField->setMinimum(3);
         numResultsField->setMaximum(100);
-        numResultsField->setValue(20);
 
         lineEditFreeText->setFocus(Qt::TabFocusReason);
 
@@ -130,24 +113,25 @@ public:
     }
 
     bool readyToStart() const {
-        return !(lineEditFreeText->text().isEmpty() && lineEditAuthorEditor->text().isEmpty() && lineEditPublication->text().isEmpty() && lineEditVolume->text().isEmpty() && lineEditIssue->text().isEmpty());
+        return !(lineEditFreeText->text().isEmpty() && lineEditTitle->text().isEmpty() && lineEditBookTitle->text().isEmpty() && lineEditAuthorEditor->text().isEmpty());
     }
 
     void copyFromEntry(const Entry &entry) {
-        lineEditFreeText->setText(PlainTextValue::text(entry[Entry::ftTitle]));
+        lineEditTitle->setText(PlainTextValue::text(entry[Entry::ftTitle]));
+        QString bookTitle = PlainTextValue::text(entry[Entry::ftBookTitle]);
+        if (bookTitle.isEmpty())
+            bookTitle = PlainTextValue::text(entry[Entry::ftJournal]);
+        lineEditBookTitle->setText(bookTitle);
         lineEditAuthorEditor->setText(authorLastNames(entry).join(" "));
-        lineEditPublication->setText(QString(PlainTextValue::text(entry[Entry::ftJournal]) + " " + PlainTextValue::text(entry[Entry::ftBookTitle])).simplified());
-        lineEditVolume->setText(PlainTextValue::text(entry[Entry::ftVolume]));
-        lineEditIssue->setText(PlainTextValue::text(entry[Entry::ftNumber]));
     }
 
     void saveState() {
         KConfigGroup configGroup(config, configGroupName);
         configGroup.writeEntry(QLatin1String("free"), lineEditFreeText->text());
+        configGroup.writeEntry(QLatin1String("title"), lineEditTitle->text());
+        configGroup.writeEntry(QLatin1String("bookTitle"), lineEditBookTitle->text());
         configGroup.writeEntry(QLatin1String("authorEditor"), lineEditAuthorEditor->text());
-        configGroup.writeEntry(QLatin1String("publication"), lineEditPublication->text());
-        configGroup.writeEntry(QLatin1String("volume"), lineEditVolume->text());
-        configGroup.writeEntry(QLatin1String("issue"), lineEditIssue->text());
+        configGroup.writeEntry(QLatin1String("year"), lineEditYear->text());
         configGroup.writeEntry(QLatin1String("numResults"), numResultsField->value());
         config->sync();
     }
@@ -159,58 +143,60 @@ private:
     OnlineSearchSpringerLink *p;
 
 public:
-    const QString springerLinkBaseUrl;
-    const QString springerLinkQueryUrl;
-    int numExpectedResults, numFoundResults;
-    int currentSearchPosition;
+    const QString springerMetadataKey;
+    XSLTransform xslt;
     OnlineSearchQueryFormSpringerLink *form;
-    int numSteps, curStep;
-    QList<KUrl> queueResultPages, queueExportPages;
-    QMap<KUrl, QString> queueBibTeX;
 
     OnlineSearchSpringerLinkPrivate(OnlineSearchSpringerLink *parent)
-            : p(parent), springerLinkBaseUrl(QLatin1String("http://www.springerlink.com")), springerLinkQueryUrl(QLatin1String("http://www.springerlink.com/content/")), form(NULL) {
+            : p(parent), springerMetadataKey(QLatin1String("7pphfmtb9rtwt3dw3e4hm7av")), xslt(KStandardDirs::locate("data", "kbibtex/pam2bibtex.xsl")), form(NULL) {
         // nothing
     }
 
-    KUrl& buildQueryUrl(KUrl& url) {
-        Q_ASSERT(form != NULL);
+    KUrl buildQueryUrl() {
+        if (form == NULL) return KUrl();
 
-        // FIXME encode for URL
-        QString queryString(form->lineEditFreeText->text());
+        KUrl queryUrl = KUrl(QString("http://api.springer.com/metadata/pam/?api_key=").append(springerMetadataKey));
 
-        QStringList authors = p->splitRespectingQuotationMarks(form->lineEditAuthorEditor->text());
-        foreach(QString author, authors) {
-            author = EncoderLaTeX::instance()->convertToPlainAscii(author);
-            queryString += QString(QLatin1String(" ( au:(%1) OR ed:(%1) )")).arg(author);
+        QString queryString = form->lineEditFreeText->text();
+
+        QStringList titleChunks = p->splitRespectingQuotationMarks(form->lineEditTitle->text());
+        foreach(const QString &titleChunk, titleChunks) {
+            queryString += QString(QLatin1String(" title:%1")).arg(EncoderLaTeX::instance()->convertToPlainAscii(titleChunk));
         }
 
-        if (!form->lineEditPublication->text().isEmpty())
-            queryString += QString(QLatin1String(" pub:(%1)")).arg(form->lineEditPublication->text());
+        titleChunks = p->splitRespectingQuotationMarks(form->lineEditBookTitle->text());
+        foreach(const QString &titleChunk, titleChunks) {
+            queryString += QString(QLatin1String(" ( journal:%1 OR book:%1 )")).arg(EncoderLaTeX::instance()->convertToPlainAscii(titleChunk));
+        }
 
-        if (!form->lineEditVolume->text().isEmpty())
-            queryString += QString(QLatin1String(" vol:(%1)")).arg(form->lineEditVolume->text());
+        QStringList authors = p->splitRespectingQuotationMarks(form->lineEditAuthorEditor->text());
+        foreach(const QString &author, authors) {
+            queryString += QString(QLatin1String(" name:%1")).arg(EncoderLaTeX::instance()->convertToPlainAscii(author));
+        }
 
-        if (!form->lineEditIssue->text().isEmpty())
-            queryString += QString(QLatin1String(" iss:(%1)")).arg(form->lineEditIssue->text());
-
-        url.addQueryItem(QLatin1String("db"), QString::number(form->spinBoxYearBegin->value()) + QLatin1String("0101"));
-        url.addQueryItem(QLatin1String("de"), QString::number(form->spinBoxYearEnd->value()) + QLatin1String("1231"));
+        const QString year = form->lineEditYear->text();
+        if (!year.isEmpty())
+            queryString += QString(QLatin1String(" year:%1")).arg(year);
 
         queryString = queryString.simplified();
-        url.addQueryItem(QLatin1String("k"), queryString);
+        queryUrl.addQueryItem(QLatin1String("q"), queryString);
 
-        return url;
+        return queryUrl;
     }
 
-    KUrl& buildQueryUrl(KUrl& url, const QMap<QString, QString> &query) {
-        // FIXME encode for URL
+    KUrl buildQueryUrl(const QMap<QString, QString> &query) {
+        KUrl queryUrl = KUrl(QString("http://api.springer.com/metadata/pam/?api_key=").append(springerMetadataKey));
+
         QString queryString = query[queryKeyFreeText] + ' ' + query[queryKeyTitle];
 
+        QStringList titleChunks = p->splitRespectingQuotationMarks(query[queryKeyTitle]);
+        foreach(const QString &titleChunk, titleChunks) {
+            queryString += QString(QLatin1String(" title:%1")).arg(EncoderLaTeX::instance()->convertToPlainAscii(titleChunk));
+        }
+
         QStringList authors = p->splitRespectingQuotationMarks(query[queryKeyAuthor]);
-        foreach(QString author, authors) {
-            author = EncoderLaTeX::instance()->convertToPlainAscii(author);
-            queryString += QString(QLatin1String(" ( au:(%1) OR ed:(%1) )")).arg(author);
+        foreach(const QString &author, authors) {
+            queryString += QString(QLatin1String(" name:%1")).arg(EncoderLaTeX::instance()->convertToPlainAscii(author));
         }
 
         QString year = query[queryKeyYear];
@@ -218,20 +204,14 @@ public:
             static const QRegExp yearRegExp("\\b(18|19|20)[0-9]{2}\\b");
             if (yearRegExp.indexIn(year) >= 0) {
                 year = yearRegExp.cap(0);
-                url.addQueryItem(QLatin1String("db"), year + QLatin1String("0101"));
-                url.addQueryItem(QLatin1String("de"), year + QLatin1String("1231"));
+                queryString += QString(QLatin1String(" year:%1")).arg(year);
             }
         }
 
         queryString = queryString.simplified();
-        url.addQueryItem(QLatin1String("k"), queryString);
+        queryUrl.addQueryItem(QLatin1String("q"), queryString);
 
-        return url;
-    }
-
-    void sanitizeBibTeXCode(QString &code) {
-        /// DOI is "hidden" in a "note" field, rename field to "DOI"
-        code = code.replace(QLatin1String("note = {10."), QLatin1String("doi = {10."));
+        return queryUrl;
     }
 };
 
@@ -250,53 +230,30 @@ OnlineSearchSpringerLink::~OnlineSearchSpringerLink()
 void OnlineSearchSpringerLink::startSearch()
 {
     m_hasBeenCanceled = false;
-    d->numFoundResults = 0;
-    d->queueResultPages.clear();
-    d->queueExportPages.clear();
-    d->queueBibTeX.clear();
-    d->numExpectedResults = d->form->numResultsField->value();
-    d->curStep = 0;
-    d->numSteps = d->numExpectedResults * 2 + 1 + d->numExpectedResults / 10;
 
-    KUrl springerLinkSearchUrl = KUrl(d->springerLinkQueryUrl);
-    springerLinkSearchUrl = d->buildQueryUrl(springerLinkSearchUrl);
+    KUrl springerLinkSearchUrl = d->buildQueryUrl();
 
-    d->queueResultPages.append(springerLinkSearchUrl);
-    for (int i = 10; i < d->numExpectedResults; i += 10) {
-        KUrl url = springerLinkSearchUrl;
-        url.addQueryItem(QLatin1String("o"), QString::number(i));
-        d->queueResultPages.append(url);
-    }
-
-    emit progress(0, d->numSteps);
-    processNextQueuedUrl();
-    d->form->saveState();
+    kDebug() << "springerLinkSearchUrl=" << springerLinkSearchUrl.pathOrUrl();
+    emit progress(0, 1);
+    QNetworkRequest request(springerLinkSearchUrl);
+    QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
+    setNetworkReplyTimeout(reply);
+    connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingPAM()));
 }
 
 void OnlineSearchSpringerLink::startSearch(const QMap<QString, QString> &query, int numResults)
 {
     m_hasBeenCanceled = false;
-    d->numFoundResults = 0;
-    d->currentSearchPosition = 0;
-    d->queueResultPages.clear();
-    d->queueExportPages.clear();
-    d->queueBibTeX.clear();
-    d->numExpectedResults = numResults;
-    d->curStep = 0;
-    d->numSteps = d->numExpectedResults * 2 + 1 + d->numExpectedResults / 10;
 
-    KUrl springerLinkSearchUrl = KUrl(d->springerLinkQueryUrl);
-    springerLinkSearchUrl = d->buildQueryUrl(springerLinkSearchUrl, query);
+    KUrl springerLinkSearchUrl = d->buildQueryUrl(query);
+    springerLinkSearchUrl.addQueryItem(QLatin1String("p"), QString::number(numResults));
 
-    d->queueResultPages.append(springerLinkSearchUrl);
-    for (int i = 10; i < numResults; i += 10) {
-        KUrl url = springerLinkSearchUrl;
-        url.addQueryItem(QLatin1String("o"), QString::number(i));
-        d->queueResultPages.append(url);
-    }
-
-    emit progress(0, d->numSteps);
-    processNextQueuedUrl();
+    kDebug() << "springerLinkSearchUrl=" << springerLinkSearchUrl.pathOrUrl();
+    emit progress(0, 1);
+    QNetworkRequest request(springerLinkSearchUrl);
+    QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
+    setNetworkReplyTimeout(reply);
+    connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingPAM()));
 }
 
 QString OnlineSearchSpringerLink::label() const
@@ -326,125 +283,44 @@ void OnlineSearchSpringerLink::cancel()
     OnlineSearchAbstract::cancel();
 }
 
-void OnlineSearchSpringerLink::doneFetchingResultPage()
+void OnlineSearchSpringerLink::doneFetchingPAM()
 {
-    emit progress(++d->curStep, d->numSteps);
-
-    QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
-    if (handleErrors(reply)) {
-        QString htmlSource = reply->readAll();
-        int p1 = htmlSource.indexOf("div id=\"ContentPrimary"), p2 = -1;
-        while (p1 >= 0 && (p1 = htmlSource.indexOf("class=\"title\"><a href=\"/content/", p1 + 1)) >= 0 && (p2 = htmlSource.indexOf("\"", p1 + 26)) >= 0) {
-            QString datacode = htmlSource.mid(p1 + 32, p2 - p1 - 33).toLower();
-
-            if (d->numFoundResults < d->numExpectedResults) {
-                ++d->numFoundResults;
-                QString url = QString("http://www.springerlink.com/content/%1/export-citation/").arg(datacode);
-                d->queueExportPages.append(KUrl(url));
-            }
-        }
-
-        processNextQueuedUrl();
-    } else
-        kDebug() << "url was" << reply->url().toString();
-}
-
-
-void OnlineSearchSpringerLink::doneFetchingExportPage()
-{
-    emit progress(++d->curStep, d->numSteps);
-
-    QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
-    if (handleErrors(reply)) {
-        QMap<QString, QString> inputMap = formParameters(reply->readAll(), QLatin1String("<form name=\"aspnetForm\""));
-        inputMap.remove("ctl00$ContentPrimary$ctl00$ctl00$CitationManagerDropDownList");
-        inputMap.remove("citation-type");
-        inputMap.remove("ctl00$ctl19$goButton");
-        inputMap.remove("ctl00$ctl19$SearchControl$AdvancedGoButton");
-        inputMap.remove("ctl00$ctl19$SearchControl$AdvancedSearchButton");
-        inputMap.remove("ctl00$ctl19$SearchControl$SearchTipsButton");
-        inputMap.remove("ctl00$ctl19$SearchControl$BasicAuthorOrEditorTextBox");
-        inputMap.remove("ctl00$ctl19$SearchControl$BasicGoButton");
-        inputMap.remove("ctl00$ctl19$SearchControl$BasicIssueTextBox");
-        inputMap.remove("ctl00$ctl19$SearchControl$BasicPageTextBox");
-        inputMap.remove("ctl00$ctl19$SearchControl$BasicPublicationTextBox");
-        inputMap.remove("ctl00$ctl19$SearchControl$BasicSearchForTextBox");
-        inputMap.remove("ctl00$ctl19$SearchControl$BasicVolumeTextBox");
-
-        QString body = encodeURL("ctl00$ContentPrimary$ctl00$ctl00$CitationManagerDropDownList") + "=BibTex&" + encodeURL("ctl00$ContentPrimary$ctl00$ctl00$Export") + "=AbstractRadioButton";
-        for (QMap<QString, QString>::ConstIterator it = inputMap.constBegin(); it != inputMap.constEnd(); ++it)
-            body += '&' + encodeURL(it.key()) + '=' + encodeURL(it.value());
-
-        d->queueBibTeX.insert(reply->url(), body);
-
-        processNextQueuedUrl();
-    } else
-        kDebug() << "url was" << reply->url().toString();
-}
-
-void OnlineSearchSpringerLink::doneFetchingBibTeX()
-{
-    emit progress(++d->curStep, d->numSteps);
-
     QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
     if (handleErrors(reply)) {
         QTextStream ts(reply->readAll());
-        QString bibTeXcode = ts.readAll();
-        d->sanitizeBibTeXCode(bibTeXcode);
+        const QString xmlSource = ts.readAll();
+
+        QString bibTeXcode = d->xslt.transform(xmlSource);
+        bibTeXcode = bibTeXcode.replace(QLatin1String("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"), QString());
 
         FileImporterBibTeX importer;
         File *bibtexFile = importer.fromString(bibTeXcode);
 
-        bool hasEntry = false;
+        bool hasEntries = false;
         if (bibtexFile != NULL) {
-            for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
-                QSharedPointer<Entry> entry = (*it).dynamicCast<Entry>();
+            foreach(const QSharedPointer<Element> &element, *bibtexFile) {
+                QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
                 if (!entry.isNull()) {
-                    hasEntry = true;
                     Value v;
                     v.append(QSharedPointer<VerbatimText>(new VerbatimText(label())));
                     entry->insert("x-fetchedfrom", v);
                     emit foundEntry(entry);
+                    hasEntries = true;
                 }
-            }
-            delete bibtexFile;
-        }
 
-        processNextQueuedUrl();
-    }  else
+            }
+
+            if (!hasEntries)
+                kDebug() << "No hits found in" << reply->url().toString();
+            emit stoppedSearch(resultNoError);
+            emit progress(1, 1);
+
+            delete bibtexFile;
+        } else {
+            kWarning() << "No valid BibTeX file results returned on request on" << reply->url().toString();
+            emit stoppedSearch(resultUnspecifiedError);
+        }
+    } else
         kDebug() << "url was" << reply->url().toString();
 }
 
-void OnlineSearchSpringerLink::processNextQueuedUrl()
-{
-    if (!d->queueBibTeX.isEmpty()) {
-        QMap<KUrl, QString>::Iterator it = d->queueBibTeX.begin();
-        KUrl url(it.key());
-        QString body(it.value());
-        d->queueBibTeX.erase(it);
-
-        QNetworkRequest request(url);
-        QNetworkReply *reply = InternalNetworkAccessManager::self()->post(request, body.toUtf8());
-        setNetworkReplyTimeout(reply);
-        connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingBibTeX()));
-    } else if (!d->queueExportPages.isEmpty()) {
-        KUrl url = d->queueExportPages.first();
-        d->queueExportPages.removeFirst();
-
-        QNetworkRequest request(url);
-        QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
-        setNetworkReplyTimeout(reply);
-        connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingExportPage()));
-    } else if (!d->queueResultPages.isEmpty()) {
-        KUrl url = d->queueResultPages.first();
-        d->queueResultPages.removeFirst();
-
-        QNetworkRequest request(url);
-        QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
-        setNetworkReplyTimeout(reply);
-        connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingResultPage()));
-    } else {
-        emit stoppedSearch(resultNoError);
-        emit progress(d->numSteps, d->numSteps);
-    }
-}

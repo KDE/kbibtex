@@ -172,6 +172,10 @@
 <xsl:text>,
     pages = {</xsl:text>
 <xsl:value-of select="prism:startingPage" />
+<xsl:if test="prism:endingPage">
+<xsl:text>--</xsl:text>
+<xsl:value-of select="prism:endingPage" />
+</xsl:if>
 <xsl:text>}</xsl:text>
 </xsl:if>
 
