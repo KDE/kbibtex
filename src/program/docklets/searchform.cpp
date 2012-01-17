@@ -55,6 +55,7 @@
 #include <onlinesearcharxiv.h>
 #include <onlinesearchjstor.h>
 #include <onlinesearchmathscinet.h>
+#include <onlinesearchingentaconnect.h>
 #include <fileexporterbibtex.h>
 #include <element.h>
 #include <file.h>
@@ -202,6 +203,7 @@ public:
         addEngine(new OnlineSearchBibsonomy(p));
         addEngine(new OnlineSearchGoogleScholar(p));
         addEngine(new OnlineSearchIEEEXplore(p));
+        addEngine(new OnlineSearchIngentaConnect(p));
         addEngine(new OnlineSearchJStor(p));
         addEngine(new OnlineSearchMathSciNet(p));
         addEngine(new OnlineSearchPubMed(p));
