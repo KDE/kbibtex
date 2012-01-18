@@ -19,7 +19,6 @@
 ***************************************************************************/
 
 #include <QBuffer>
-#include <QLayout>
 #include <QLabel>
 #include <QNetworkReply>
 #include <QFormLayout>

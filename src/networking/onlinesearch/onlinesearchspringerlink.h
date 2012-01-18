@@ -26,6 +26,8 @@
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *
+ * See also: http://dev.springer.com/
  */
 class KBIBTEXNETWORKING_EXPORT OnlineSearchSpringerLink : public OnlineSearchAbstract
 {

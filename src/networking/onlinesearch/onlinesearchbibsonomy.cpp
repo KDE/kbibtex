@@ -226,7 +226,8 @@ QString OnlineSearchBibsonomy::favIconUrl() const
 
 OnlineSearchQueryFormAbstract* OnlineSearchBibsonomy::customWidget(QWidget *parent)
 {
-    d->form = new OnlineSearchBibsonomy::OnlineSearchQueryFormBibsonomy(parent);
+    if (d->form == NULL)
+        d->form = new OnlineSearchBibsonomy::OnlineSearchQueryFormBibsonomy(parent);
     return d->form;
 }
 
