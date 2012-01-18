@@ -412,6 +412,8 @@ bool FileExporterBibTeX::save(QIODevice* iodevice, const QSharedPointer<const El
     bool result = false;
 
     loadState();
+    if (!d->forcedEncoding.isEmpty())
+        d->encoding = d->forcedEncoding;
     d->applyEncoding(d->encoding);
 
     const QSharedPointer<const Entry> entry = element.dynamicCast<const Entry>();
