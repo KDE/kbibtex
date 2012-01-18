@@ -48,7 +48,8 @@ const QRegExp htmlRegExp = QRegExp("</?(a|pre|p|br|span|i|b|italic)\\b[^>]*>", Q
 FileImporterBibTeX::FileImporterBibTeX(bool ignoreComments, KBibTeX::Casing keywordCasing)
         : FileImporter(), m_cancelFlag(false), m_lineNo(1), m_currentLine(), m_textStream(NULL), m_currentChar(' '), m_ignoreComments(ignoreComments), m_keywordCasing(keywordCasing)
 {
-    // nothing
+    m_keysForPersonDetection.append(Entry::ftAuthor);
+    m_keysForPersonDetection.append(Entry::ftEditor);
 }
 
 FileImporterBibTeX::~FileImporterBibTeX()
@@ -352,7 +353,7 @@ Entry *FileImporterBibTeX::readEntryElement(const QString& typeString)
                 /// like "keywords2", "keywords3", ..., append new keywords to
                 /// already existing keyword value
                 value = entry->value(keyName);
-            } else if (keyName.toLower() == Entry::ftAuthor || keyName.toLower() == Entry::ftEditor) {
+            } else if (m_keysForPersonDetection.contains(keyName.toLower())) {
                 /// Special handling of authors and editors: instead of using fallback names
                 /// like "author2", "author3", ..., append new authors to
                 /// already existing author value
@@ -627,7 +628,7 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value& value, const QStr
         /// abstracts will keep their formatting (regarding line breaks)
         /// as requested by Thomas Jensch via mail (20 October 2010)
 
-        if (iKey == Entry::ftAuthor || iKey == Entry::ftEditor) {
+        if (m_keysForPersonDetection.contains(iKey)) {
             if (isStringKey)
                 value.append(QSharedPointer<MacroKey>(new MacroKey(text)));
             else {
@@ -769,6 +770,11 @@ QSharedPointer<Person> FileImporterBibTeX::personFromString(const QString &name,
     static QStringList tokens;
     contextSensitiveSplit(name, tokens);
     return personFromTokenList(tokens, comma);
+}
+
+void FileImporterBibTeX::setKeysForPersonDetection(const QStringList &keylist)
+{
+    m_keysForPersonDetection.append(keylist);
 }
 
 QSharedPointer<Person> FileImporterBibTeX::personFromTokenList(const QStringList &tokens, CommaContainment *comma)
