@@ -91,7 +91,7 @@ encoderLaTeXEscapedCharacters[] = {
     {'`', 'i', QChar(0x00EC)},
     {'\'', 'i', QChar(0x00ED)},
     {'^', 'i', QChar(0x00EE)},
-    /** 0x00EF */
+    {'"', 'i', QChar(0x00EF)},
     /** 0x00F0 */
     {'~', 'n', QChar(0x00F1)},
     {'`', 'o', QChar(0x00F2)},
@@ -436,6 +436,12 @@ QString EncoderLaTeX::decode(const QString &input) const
                     } else if (input[i+2] == '\'' && input[i+4] == 'i') {
                         output.append(QChar(0x00ED));
                         i += 5;
+                    } else if (input[i+2] == '^' && input[i+4] == 'i') {
+                        output.append(QChar(0x00EE));
+                        i += 5;
+                    } else if (input[i+2] == '"' && input[i+4] == 'i') {
+                        output.append(QChar(0x00EF));
+                        i += 5;
                     } else
                         kWarning() << "Cannot interprete BACKSLASH" << input[i+2] << "BACKSLASH" << input[i+4];
                 } else if (lookupTablePos >= 0 && input[i+3] == '{' && input[i+4] >= 'A' && input[i+4] <= 'z' && input[i+5] == '}' && input[i+6] == '}') {
@@ -455,6 +461,12 @@ QString EncoderLaTeX::decode(const QString &input) const
                         i += 7;
                     } else if (input[i+2] == '\'' && input[i+5] == 'i') {
                         output.append(QChar(0x00ED));
+                        i += 7;
+                    } else if (input[i+2] == '^' && input[i+5] == 'i') {
+                        output.append(QChar(0x00EE));
+                        i += 7;
+                    } else if (input[i+2] == '"' && input[i+5] == 'i') {
+                        output.append(QChar(0x00EF));
                         i += 7;
                     } else
                         kWarning() << "Cannot interprete BACKSLASH" << input[i+2] << "BACKSLASH {" << input[i+5] << "}";
@@ -550,6 +562,12 @@ QString EncoderLaTeX::decode(const QString &input) const
                 } else if (input[i+1] == '\'' && input[i+3] == 'i') {
                     output.append(QChar(0x00ED));
                     i += 3;
+                } else if (input[i+1] == '^' && input[i+3] == 'i') {
+                    output.append(QChar(0x00EE));
+                    i += 3;
+                } else if (input[i+1] == '"' && input[i+3] == 'i') {
+                    output.append(QChar(0x00EF));
+                    i += 3;
                 } else
                     kWarning() << "Cannot interprete BACKSLASH" << input[i+1] << "BACKSLASH" << input[i+3];
             } else if (lookupTablePos >= 0 && input[i+2] == '{' && input[i+3] == '\\' && input[i+4] >= 'A' && input[i+4] <= 'z' && input[i+5] == '}') {
@@ -559,6 +577,12 @@ QString EncoderLaTeX::decode(const QString &input) const
                     i += 5;
                 } else if (input[i+1] == '\'' && input[i+4] == 'i') {
                     output.append(QChar(0x00ED));
+                    i += 5;
+                } else if (input[i+1] == '^' && input[i+4] == 'i') {
+                    output.append(QChar(0x00EE));
+                    i += 5;
+                } else if (input[i+1] == '"' && input[i+4] == 'i') {
+                    output.append(QChar(0x00EF));
                     i += 5;
                 } else
                     kWarning() << "Cannot interprete BACKSLASH" << input[i+1] << "BACKSLASH {" << input[i+4] << "}";
@@ -717,17 +741,28 @@ QString EncoderLaTeX::encode(const QString &input) const
 
         if (c.unicode() > 127) {
             /// If current char is outside ASCII boundaries ...
-
-            /// ... test if there is a symbol sequence like ---
-            /// to encode it
             bool found = false;
-            for (int k = 0; k < encoderLaTeXSymbolSequencesLen; ++k)
-                if (encoderLaTeXSymbolSequences[k].unicode == c) {
-                    for (int l = 0; l < (int)qstrlen(encoderLaTeXSymbolSequences[k].latex); ++l)
-                        output.append(encoderLaTeXSymbolSequences[k].latex[l]);
-                    found = true;
-                    break;
-                }
+
+            /// Handle special cases of i without a dot (\i)
+            switch (c.unicode()) {
+            case 0x00EC: output.append("\\`{\\i}"); found = true; break;
+            case 0x00ED: output.append("\\'{\\i}"); found = true; break;
+            case 0x00EE: output.append("\\^{\\i}"); found = true; break;
+            case 0x00EF: output.append("\\\"{\\i}"); found = true; break;
+            }
+            // FIXME what about \j?
+
+            if (!found) {
+                /// ... test if there is a symbol sequence like ---
+                /// to encode it
+                for (int k = 0; k < encoderLaTeXSymbolSequencesLen; ++k)
+                    if (encoderLaTeXSymbolSequences[k].unicode == c) {
+                        for (int l = 0; l < (int)qstrlen(encoderLaTeXSymbolSequences[k].latex); ++l)
+                            output.append(encoderLaTeXSymbolSequences[k].latex[l]);
+                        found = true;
+                        break;
+                    }
+            }
 
             if (!found) {
                 /// Ok, no symbol sequence. Let's test character
