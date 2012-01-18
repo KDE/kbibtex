@@ -456,7 +456,15 @@ void ReferenceWidget::prepareSuggestionsMenu()
     static const IdSuggestions *idSuggestions = new IdSuggestions();
     QMenu *suggestionsMenu = buttonSuggestId->menu();
     suggestionsMenu->clear();
-    foreach(const QString &suggestion, idSuggestions->formatIdList(*internalEntry.data())) {
+    foreach(QString suggestion, idSuggestions->formatIdList(*internalEntry.data())) {
+        /// Test for duplicate ids, use fallback ids with numeric suffix
+        if (m_file != NULL && m_file->containsKey(suggestion)) {
+            int suffix = 2;
+            const QString suggestionBase = suggestion;
+            while (m_file->containsKey(suggestion = suggestionBase + QChar('_') + QString::number(suffix)))
+                ++suffix;
+        }
+
         QAction *suggestionAction = new QAction(suggestion, suggestionsMenu);
         suggestionsMenu->addAction(suggestionAction);
         connect(suggestionAction, SIGNAL(triggered()), this, SLOT(insertSuggestionFromAction()));
