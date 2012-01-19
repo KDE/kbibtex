@@ -266,6 +266,11 @@ DocumentListView::DocumentListView(OpenFileInfoManager *openFileInfoManager, Ope
     currentChanged(QModelIndex(), QModelIndex());
 }
 
+DocumentListView::~DocumentListView()
+{
+    delete d;
+}
+
 void DocumentListView::addToFavorites()
 {
     QModelIndex modelIndex = currentIndex();

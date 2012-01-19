@@ -74,6 +74,7 @@ class DocumentListView : public QListView
 
 public:
     DocumentListView(OpenFileInfoManager *openFileInfoManager, OpenFileInfo::StatusFlag statusFlag, QWidget *parent);
+    ~DocumentListView();
 
 private slots:
     void addToFavorites();

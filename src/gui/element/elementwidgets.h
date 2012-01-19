@@ -105,6 +105,7 @@ private:
 
 public:
     EntryConfiguredWidget(EntryTabLayout &entryTabLayout, QWidget *parent);
+    ~EntryConfiguredWidget();
 
     bool apply(QSharedPointer<Element> element) const;
     bool reset(QSharedPointer<const Element> element);

@@ -88,6 +88,11 @@ EntryConfiguredWidget::EntryConfiguredWidget(EntryTabLayout &entryTabLayout, QWi
     createGUI();
 }
 
+EntryConfiguredWidget::~EntryConfiguredWidget()
+{
+    delete[] listOfLabeledFieldInput;
+}
+
 bool EntryConfiguredWidget::apply(QSharedPointer<Element> element) const
 {
     if (isReadOnly) return false; /// never save data if in read-only mode
@@ -442,9 +447,9 @@ void ReferenceWidget::createGUI()
     QMenu *suggestionsMenu = new QMenu(buttonSuggestId);
     buttonSuggestId->setMenu(suggestionsMenu);
 
-    connect(entryType, SIGNAL(editTextChanged(QString)), this, SLOT(gotModified()));
-    connect(entryId, SIGNAL(textChanged(QString)), this, SLOT(gotModified()));
-    connect(entryType, SIGNAL(editTextChanged(QString)), this, SIGNAL(entryTypeChanged()));
+    connect(entryType->lineEdit(), SIGNAL(textEdited(QString)), this, SLOT(gotModified()));
+    connect(entryId, SIGNAL(textEdited(QString)), this, SLOT(gotModified()));
+    connect(entryType->lineEdit(), SIGNAL(textEdited(QString)), this, SIGNAL(entryTypeChanged()));
     connect(suggestionsMenu, SIGNAL(aboutToShow()), this, SLOT(prepareSuggestionsMenu()));
 }
 
@@ -802,7 +807,7 @@ void OtherFieldsWidget::createGUI()
     connect(otherFieldsList, SIGNAL(itemActivated(QTreeWidgetItem*, int)), this, SLOT(listElementExecuted(QTreeWidgetItem*, int)));
     connect(otherFieldsList, SIGNAL(currentItemChanged(QTreeWidgetItem*, QTreeWidgetItem*)), this, SLOT(listCurrentChanged(QTreeWidgetItem*, QTreeWidgetItem*)));
     connect(otherFieldsList, SIGNAL(itemSelectionChanged()), this, SLOT(updateGUI()));
-    connect(fieldName, SIGNAL(textChanged(QString)), this, SLOT(updateGUI()));
+    connect(fieldName, SIGNAL(textEdited(QString)), this, SLOT(updateGUI()));
     connect(buttonAddApply, SIGNAL(clicked()), this, SLOT(actionAddApply()));
     connect(buttonDelete, SIGNAL(clicked()), this, SLOT(actionDelete()));
     connect(buttonOpen, SIGNAL(clicked()), this, SLOT(actionOpen()));
