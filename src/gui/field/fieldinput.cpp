@@ -154,9 +154,8 @@ public:
             result = fieldLineEdit->apply(value);
         else if (fieldListEdit != NULL)
             result = fieldListEdit->apply(value);
-        else if (colorWidget != NULL) {
+        else if (colorWidget != NULL)
             result = colorWidget->apply(value);
-        }
         return result;
     }
 
@@ -165,6 +164,8 @@ public:
             fieldLineEdit->setReadOnly(isReadOnly);
         else if (fieldListEdit != NULL)
             fieldListEdit->setReadOnly(isReadOnly);
+        else if (colorWidget != NULL)
+            colorWidget->setReadOnly(isReadOnly);
     }
 
     void setFile(const File *file) {

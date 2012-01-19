@@ -611,6 +611,7 @@ void UrlListEdit::setReadOnly(bool isReadOnly)
 {
     FieldListEdit::setReadOnly(isReadOnly);
     m_addReferenceToFile->setEnabled(!isReadOnly);
+    m_copyFile->setEnabled(!isReadOnly);
 }
 
 
@@ -680,6 +681,7 @@ void KeywordListEdit::setReadOnly(bool isReadOnly)
 {
     FieldListEdit::setReadOnly(isReadOnly);
     m_buttonAddKeywordsFromList->setEnabled(!isReadOnly);
+    m_buttonAddKeywordsFromClipboard->setEnabled(!isReadOnly);
 }
 
 void KeywordListEdit::setFile(const File *file)
