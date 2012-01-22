@@ -196,8 +196,8 @@ void EntryConfiguredWidget::createGUI()
 
         /// create an editing widget for this field
         const FieldDescription *fd = bf->find(sfl.bibtexLabel);
-        KBibTeX::TypeFlags typeFlags = fd->isNull() ? KBibTeX::tfSource : fd->typeFlags;
-        KBibTeX::TypeFlag preferredTypeFlag = fd->isNull() ? KBibTeX::tfSource : fd->preferredTypeFlag;
+        KBibTeX::TypeFlags typeFlags = fd == NULL ? KBibTeX::tfSource : fd->typeFlags;
+        KBibTeX::TypeFlag preferredTypeFlag = fd == NULL ? KBibTeX::tfSource : fd->preferredTypeFlag;
         labeledFieldInput->fieldInput = new FieldInput(sfl.fieldInputLayout, preferredTypeFlag, typeFlags, this);
         labeledFieldInput->fieldInput->setFieldKey(sfl.bibtexLabel);
         bibtexKeyToWidget.insert(sfl.bibtexLabel, labeledFieldInput->fieldInput);
@@ -258,7 +258,7 @@ void EntryConfiguredWidget::layoutGUI(bool forceVisible, const QString &entryTyp
 
         const QString key = bibtexKeyToWidget.key(listOfLabeledFieldInput[i]->fieldInput).toLower();
         const FieldDescription *fd = bf->find(key);
-        bool typeIndependent = fd->isNull() ? false : fd->typeIndependent;
+        bool typeIndependent = fd == NULL ? false : fd->typeIndependent;
         Value value;
         listOfLabeledFieldInput[i]->fieldInput->apply(value);
         /// Hide non-required and non-optional type-dependent fields,
