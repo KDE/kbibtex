@@ -21,6 +21,8 @@
 #include <libxslt/transform.h>
 #include <libxslt/xsltutils.h>
 
+#include <QFileInfo>
+
 #include <KDebug>
 
 #include "xsltransform.h"
@@ -37,6 +39,16 @@ public:
 XSLTransform::XSLTransform(const QString& xsltFilename)
         : d(new XSLTransformPrivate)
 {
+    d->xsltStylesheet = NULL;
+
+    if (xsltFilename.isEmpty()) {
+        kError() << "No XSLT file specified";
+        return;
+    } else if (!QFileInfo(xsltFilename).exists()) {
+        kError() << "XSLT file does not exist:" << xsltFilename;
+        return;
+    }
+
     /// create an internal representation of the XSL file using libxslt
     d->xsltStylesheet = xsltParseStylesheetFile((const xmlChar*) xsltFilename.toAscii().data());
     if (d->xsltStylesheet == NULL)
@@ -45,18 +57,20 @@ XSLTransform::XSLTransform(const QString& xsltFilename)
 
 XSLTransform::~XSLTransform()
 {
-    /// clean up memory
-    xsltFreeStylesheet(d->xsltStylesheet);
+    /// Clean up memory
+    if (d->xsltStylesheet != NULL) {
+        xsltFreeStylesheet(d->xsltStylesheet);
+    }
     delete d;
 }
 
 QString XSLTransform::transform(const QString& xmlText) const
 {
-    QString result = QString::null;
+    QString result;
     QByteArray xmlCText = xmlText.toUtf8();
     xmlDocPtr document = xmlParseMemory(xmlCText, xmlCText.length());
     if (document) {
-        if (d->xsltStylesheet) {
+        if (d->xsltStylesheet != NULL) {
             xmlDocPtr resultDocument = xsltApplyStylesheet(d->xsltStylesheet, document, NULL);
             if (resultDocument) {
                 /// Save the result into the QString
