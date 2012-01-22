@@ -45,6 +45,7 @@ protected:
     void resizeEvent(QResizeEvent *event);
 
 protected slots:
+    void columnMoved();
     void columnResized(int column, int oldSize, int newSize);
 
 private:
