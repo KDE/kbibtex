@@ -286,6 +286,7 @@ void ReferencePreview::renderHTML()
 
     buffer.open(QBuffer::ReadOnly);
     QTextStream ts(&buffer);
+    ts.setCodec("utf-8");
     QString text = ts.readAll();
     buffer.close();
 

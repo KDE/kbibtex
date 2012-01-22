@@ -1049,6 +1049,7 @@ bool SourceWidget::reset(QSharedPointer<const Element> element)
     textBuffer.close();
     textBuffer.open(QIODevice::ReadOnly);
     QTextStream ts(&textBuffer);
+    ts.setCodec("utf-8");
     originalText = ts.readAll();
     sourceEdit->document()->setPlainText(originalText);
 
