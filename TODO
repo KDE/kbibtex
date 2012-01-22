@@ -1,42 +1,50 @@
 INFO: This TODO list will most likely outdate very quickly
 
-Within the scope of a 0.4.x release, the following features
-and bugs are to be addressed:
 
-- Bug 17898: Waiting for approval from bug reporter that
-  issue is invalid.
-- Bug 17869: Waiting for approval from bug reporter that
-  issue is fixed.
+Within the scope of a 0.4.1 release, the following features
+and bugs are to be addressed (ordered by importance):
+
+- Bug 19202: Backport bug fixes from trunk to 0.4 branch.
 
 Within the scope of a 0.5.x release, the following features
-and bugs are to be addressed:
+and bugs are to be addressed (ordered by importance):
 
-- Bug 17525 (comment #11): Reorganizing configuration files
-- Bug 18357: Reorganize configuration files to support both
-  bibtex and biblatex
-- Bug 16780: Grouping of elements in the main list view, i.e.
-  using a tree-like structure (this would be an alternative
-  to the current plain list).
+- Bug 19183: Seems to be a user configuration problem.
+  Nothing new here, close?
+- Bug 18604: Netbook-friendlyness: Nothing new here, close?
+- Bug 17525: Mostly done, some issues persist.
+- Bug 19306: Filenames in "localfile" and "url" get messed up
+  if they contain spaces or other strange characters
+- Bug 18245: Encoding in preview.
+- Bug 18246: Fix remaining GUI issues regarding LyX pipe.
+- Bug 19263: Some search engines combine search terms using
+  and AND operations, others use OR (or undefined).
 - Bug 17553: KPart integration: Requires research how XML
   GUIs work in KDE.
+- Adding support for MODS XML format
 - Bug 17893: Z39.50 support: At least basic support should
   be integrated.
-- Bug 18142: Library mode, where both bibliography and PDF
-  files are managed by KBibTeX.
-- Bug 18183: Increase number of search hits after initial
-  search is complete.
-- Bug 18287: Automatic ID suggestion based on user-defined
-  patterns.
-- Use QSharedPointer for Element (and derived clases) objects
-  for better memory management.
-- Start adding translations
-- Profiling
-- Adding support for Biber's XML format
+- Start adding translations: Test translation infrastructure,
+  provide an initial translation for at least one language
+  to test it
 
 Within the scope of more future releases, the following
 features and bugs are to be addressed:
 
 - Bugs 17318, 18038: Zotero support, e.g. accessing the
   bibliographic database or using its search capabilities.
-  Requires "research" how Zotero works and how it can be
-  "tapped".
+  Jorg Ehrichs is working on some code as part of the
+  Conquirere project; this code may be used here.
+- Bug 18142: Library mode, where both bibliography and PDF
+  files are managed by KBibTeX.
+- Bug 18183: Increase number of search hits after initial
+  search is complete. Should be added before more search
+  engines are added
+- Bug 18287, 19197: Automatic ID suggestion based on
+  user-defined patterns (already work in progress).
+- Bug 18662: BibLaTeX support needs to be refined and tested.
+
+
+
+
+
