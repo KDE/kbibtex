@@ -30,6 +30,7 @@
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <KStandardDirs>
+#include <KMessageBox>
 
 #include "xsltransform.h"
 #include "fileimporterbibtex.h"
@@ -56,21 +57,21 @@ void ZoteroReadAPI::scanLibrary()
 {
     m_runningNetworkConn = 0;
     bibTeXfile.clear();
-    emit busy(true);
 
     KSharedConfigPtr config = KSharedConfig::openConfig(QLatin1String("kbibtexrc"));
     KConfigGroup configGroup(config, configGroupNameZotero);
 
     m_userId = configGroup.readEntry(keyUserID, defaultUserID);
     m_privateKey = configGroup.readEntry(keyPrivateKey, defaultPrivateKey);
-    if (m_userId.isEmpty() || m_privateKey.isEmpty()) {
-        kWarning() << "Cannot sync without proper userId or private key";
+    if (m_userId.isEmpty()) {
+        KMessageBox::information(NULL, i18n("Cannot sync without proper userId.\n\nConfigure Zotero synchronizations in the settings first."), i18n("Zotero"));
         return;
     }
 
     QString url = zoteroApiUrlPrefix + QString("/users/%1/collections?format=atom").arg(m_userId);
     if (!m_privateKey.isEmpty()) url.append("&key=").append(m_privateKey);
 
+    emit busy(true);
     cleanTables();
     fetchCollections(QUrl(url));
 }

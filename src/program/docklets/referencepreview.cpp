@@ -340,14 +340,9 @@ void ReferencePreview::openAsHTML()
     file.setAutoRemove(false); /// let file stay alive for browser
     d->saveHTML(file);
 
-    /// Guess mime type for url to open
-    KUrl url(file.fileName());
-    KMimeType::Ptr mimeType = KMimeType::findByPath(url.path());
-    QString mimeTypeName = mimeType->name();
-    if (mimeTypeName == QLatin1String("application/octet-stream"))
-        mimeTypeName = QLatin1String("text/html");
     /// Ask KDE subsystem to open url in viewer matching mime type
-    KRun::runUrl(url, mimeTypeName, this, false, false);
+    KUrl url(file.fileName());
+    KRun::runUrl(url, QLatin1String("text/html"), this, false, false);
 }
 
 void ReferencePreview::saveAsHTML()

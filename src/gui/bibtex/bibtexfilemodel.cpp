@@ -167,7 +167,7 @@ bool SortFilterBibTeXFileModel::filterAcceptsRow(int source_row, const QModelInd
         for (int i = m_filterQuery.terms.count() - 1; i >= 0; --i)
             all[i] = false;
 
-        if (m_filterQuery.field == QLatin1String("^id")) {
+        if (m_filterQuery.field.isEmpty() || m_filterQuery.field == QLatin1String("^id")) {
             /// Check entry's id
             const QString id = entry->id();
             int i = 0;
