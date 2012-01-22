@@ -179,6 +179,7 @@ FilterBar::FilterBar(QWidget *parent)
 
     d->checkboxSearchPDFfiles = new QCheckBox(this);
     d->checkboxSearchPDFfiles->setIcon(KIcon("application-pdf"));
+    d->checkboxSearchPDFfiles->setToolTip(i18n("Include PDF files in full-text search"));
     layout->addWidget(d->checkboxSearchPDFfiles, 1, 4);
 
     connect(d->comboBoxFilterText->lineEdit(), SIGNAL(textChanged(QString)), this, SLOT(lineeditTextChanged()));
@@ -221,6 +222,7 @@ void FilterBar::lineeditTextChanged()
 
 void FilterBar::comboboxStatusChanged()
 {
+    d->checkboxSearchPDFfiles->setEnabled(d->comboBoxField->currentIndex()==0);
     d->filterUpdateTimer->stop();
     d->storeComboBoxStatus();
     emit filterChanged(d->filter());
