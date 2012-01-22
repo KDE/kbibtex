@@ -25,6 +25,7 @@
 #include <KConfigGroup>
 #include <KLocale>
 #include <KSharedConfig>
+#include <KDebug>
 
 #include <bibtexfields.h>
 #include "bibtexfilemodel.h"
@@ -68,6 +69,9 @@ public:
         int widgetWidth = p->size().width() - p->verticalScrollBar()->size().width() - 8;
         if (widgetWidth < 8) return; ///< widget is too narrow or not yet initialized
 
+        disconnect(p->header(), SIGNAL(sectionResized(int, int, int)), p, SLOT(columnResized(int, int, int)));
+        disconnect(p->header(), SIGNAL(sectionMoved(int, int, int)), p, SLOT(columnMoved()));
+
         int sum = 0;
         foreach(const FieldDescription *fd, *BibTeXFields::self()) {
             if (fd->defaultVisible)
@@ -83,10 +87,19 @@ public:
             ++col;
         }
 
+        for (int i = 0; i < storedColumnCount; ++i) {
+            int j = p->header()->visualIndex(i);
+            if (i != j)
+                p->header()->moveSection(j, i);
+        }
+
         QByteArray headerState = p->header()->saveState();
         KConfigGroup configGroup(config, configGroupName);
         configGroup.writeEntry(configHeaderState.arg(name), headerState);
         config->sync();
+
+        connect(p->header(), SIGNAL(sectionMoved(int, int, int)), p, SLOT(columnMoved()));
+        connect(p->header(), SIGNAL(sectionResized(int, int, int)), p, SLOT(columnResized(int, int, int)));
     }
 
     void storeColumns() {
@@ -104,6 +117,9 @@ public:
     void restoreColumns() {
         int widgetWidth = p->size().width() - p->verticalScrollBar()->size().width() - 8;
         if (widgetWidth < 8) return; ///< widget is too narrow or not yet initialized
+
+        disconnect(p->header(), SIGNAL(sectionMoved(int, int, int)), p, SLOT(columnMoved()));
+        disconnect(p->header(), SIGNAL(sectionResized(int, int, int)), p, SLOT(columnResized(int, int, int)));
 
         int sum = 0;
         int col = 0;
@@ -124,15 +140,24 @@ public:
         KConfigGroup configGroup(config, configGroupName);
         configGroup.writeEntry(configHeaderState.arg(name), headerState);
         config->sync();
+
+        connect(p->header(), SIGNAL(sectionMoved(int, int, int)), p, SLOT(columnMoved()));
+        connect(p->header(), SIGNAL(sectionResized(int, int, int)), p, SLOT(columnResized(int, int, int)));
     }
 
     void setColumnVisible(int column, bool isVisible) {
+        disconnect(p->header(), SIGNAL(sectionMoved(int, int, int)), p, SLOT(columnMoved()));
+        disconnect(p->header(), SIGNAL(sectionResized(int, int, int)), p, SLOT(columnResized(int, int, int)));
+
         int widgetWidth = p->size().width() - p->verticalScrollBar()->size().width() - 8;
         widgetWidth = qMax(widgetWidth, 500);
 
         storedColumnVisible[column] = isVisible;
         if (isVisible)
             storedColumnWidths[column] = widgetWidth / 8;
+
+        connect(p->header(), SIGNAL(sectionMoved(int, int, int)), p, SLOT(columnMoved()));
+        connect(p->header(), SIGNAL(sectionResized(int, int, int)), p, SLOT(columnResized(int, int, int)));
     }
 
     bool isColumnVisible(int column) const {
@@ -168,6 +193,9 @@ BibTeXFileView::BibTeXFileView(const QString &name, QWidget * parent)
         header()->restoreState(headerState);
         d->storeColumns();
     }
+
+    connect(header(), SIGNAL(sectionMoved(int, int, int)), this, SLOT(columnMoved()));
+    connect(header(), SIGNAL(sectionResized(int, int, int)), this, SLOT(columnResized(int, int, int)));
 
     /// build context menu for header to show/hide single columns
     int col = 0;
@@ -230,6 +258,12 @@ void BibTeXFileView::resizeEvent(QResizeEvent *event)
 {
     d->restoreColumns();
     QTreeView::resizeEvent(event);
+}
+
+void BibTeXFileView::columnMoved()
+{
+    d->storeColumns();
+    QTreeView::columnMoved();
 }
 
 void BibTeXFileView::columnResized(int column, int oldSize, int newSize)
