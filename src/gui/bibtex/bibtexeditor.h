@@ -77,7 +77,6 @@ protected:
 
     void currentChanged(const QModelIndex & current, const QModelIndex & previous);
     void selectionChanged(const QItemSelection & selected, const QItemSelection & deselected);
-    void mouseReleaseEvent(QMouseEvent *event);
 
     void mouseMoveEvent(QMouseEvent *event);
     void dragEnterEvent(QDragEnterEvent *event);
