@@ -154,6 +154,11 @@ DocumentListModel::DocumentListModel(OpenFileInfo::StatusFlag statusFlag, OpenFi
     connect(openFileInfoManager, SIGNAL(flagsChanged(OpenFileInfo::StatusFlags)), this, SLOT(listsChanged(OpenFileInfo::StatusFlags)));
 }
 
+DocumentListModel::~DocumentListModel()
+{
+    delete d;
+}
+
 int DocumentListModel::rowCount(const QModelIndex &parent) const
 {
     if (parent != QModelIndex()) return 0;
@@ -258,6 +263,11 @@ DocumentListView::DocumentListView(OpenFileInfo::StatusFlag statusFlag, QWidget 
     connect(this, SIGNAL(activated(QModelIndex)), this, SLOT(openFile()));
 
     currentChanged(QModelIndex(), QModelIndex());
+}
+
+DocumentListView::~DocumentListView()
+{
+    delete d;
 }
 
 void DocumentListView::addToFavorites()

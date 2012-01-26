@@ -22,10 +22,9 @@
 
 #include <QList>
 #include <QLayout>
-#include <QLabel>
 #include <QMap>
 #include <QFileInfo>
-#include <QDesktopServices>
+#include <QResizeEvent>
 #include <QCheckBox>
 #include <QStackedWidget>
 #include <QDockWidget>
@@ -34,6 +33,7 @@
 #include <KLocale>
 #include <KComboBox>
 #include <KIcon>
+#include <KRun>
 #include <KMimeType>
 #include <KMimeTypeTrader>
 #include <KService>
@@ -53,26 +53,39 @@
 #include <fileinfo.h>
 #include "urlpreview.h"
 
+ImageLabel::ImageLabel(const QString &text, QWidget *parent, Qt::WindowFlags f)
+        : QLabel(text, parent, f)
+{
+    // nothing
+}
+
+void ImageLabel::setPixmap(const QPixmap &pixmap)
+{
+    m_pixmap = pixmap;
+    if (!m_pixmap.isNull()) {
+        setCursor(Qt::WaitCursor);
+        QPixmap scaledPixmap = m_pixmap.width() <= width() && m_pixmap.height() <= height() ? m_pixmap : pixmap.scaled(width(), height(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        QLabel::setPixmap(scaledPixmap);
+        setMinimumSize(100, 100);
+        unsetCursor();
+    } else
+        QLabel::setPixmap(m_pixmap);
+}
+
+void ImageLabel::resizeEvent(QResizeEvent *event)
+{
+    QLabel::resizeEvent(event);
+    if (!m_pixmap.isNull()) {
+        setCursor(Qt::WaitCursor);
+        QPixmap scaledPixmap = m_pixmap.width() <= event->size().width() && m_pixmap.height() <= event->size().height() ? m_pixmap : m_pixmap.scaled(event->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        QLabel::setPixmap(scaledPixmap);
+        setMinimumSize(100, 100);
+        unsetCursor();
+    }
+}
+
 class UrlPreview::UrlPreviewPrivate
 {
-private:
-    UrlPreview *p;
-
-    KSharedConfigPtr config;
-    const QString configGroupName;
-    const QString onlyLocalFilesCheckConfig;
-
-    KComboBox *urlComboBox;
-    KPushButton *externalViewerButton;
-    QCheckBox *onlyLocalFilesCheckBox;
-    QStackedWidget *stackedWidget;
-    QLabel *message;
-    QMap<int, KUrl> cbxEntryToUrl;
-    QMutex addingUrlMutex;
-
-    QString arXivPDFUrlStart;
-    bool anyLocal;
-
 public:
     struct UrlInfo {
         KUrl url;
@@ -80,14 +93,45 @@ public:
         KIcon icon;
     };
 
+private:
+    UrlPreview *p;
+
+    KSharedConfigPtr config;
+    static const QString configGroupName;
+    static const QString onlyLocalFilesCheckConfig;
+
+    KComboBox *urlComboBox;
+    KPushButton *externalViewerButton;
+    QStackedWidget *stackedWidget;
+    ImageLabel *message;
+    QMap<int, struct UrlInfo> cbxEntryToUrlInfo;
+    QMutex addingUrlMutex;
+
+    static const QString arXivPDFUrlStart;
+    bool anyLocal;
+
+    KParts::ReadOnlyPart *okularPart;
+    KParts::ReadOnlyPart *htmlPart;
+    int swpMessage, swpOkular, swpHTML;
+
+public:
+    QCheckBox *onlyLocalFilesCheckBox;
     QList<KIO::StatJob*> runningJobs;
-    const Entry* entry;
+    const Entry *entry;
     KUrl baseUrl;
 
+    KParts::ReadOnlyPart *locatePart(const QString &desktopFile, QWidget *parentWidget) {
+        KService::Ptr service = KService::serviceByDesktopPath(desktopFile);
+        if (!service.isNull()) {
+            KParts::ReadOnlyPart *part = service->createInstance<KParts::ReadOnlyPart>(parentWidget, p);
+            connect(part, SIGNAL(completed()), p, SLOT(loadingFinished()));
+            return part;
+        } else
+            return NULL;
+    }
+
     UrlPreviewPrivate(UrlPreview *parent)
-            : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))),
-            configGroupName(QLatin1String("URL Preview")), onlyLocalFilesCheckConfig(QLatin1String("OnlyLocalFiles")),
-            arXivPDFUrlStart("http://arxiv.org/pdf/"), entry(NULL) {
+            : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), entry(NULL) {
         setupGUI();
     }
 
@@ -115,22 +159,28 @@ public:
         onlyLocalFilesCheckBox = new QCheckBox(i18n("Only local files"), p);
         layout->addWidget(onlyLocalFilesCheckBox, 0);
 
-        /// main part of the widget: A stacked widget to hold
-        /// one KPart widget per URL in above combo box
+        /// main part of the widget
 
         stackedWidget = new QStackedWidget(p);
         layout->addWidget(stackedWidget, 1);
-        stackedWidget->hide();
 
         /// default widget if no preview is available
-        message = new QLabel(i18n("No preview available"), p);
+        message = new ImageLabel(i18n("No preview available"), stackedWidget);
         message->setAlignment(Qt::AlignCenter);
-        layout->addWidget(message, 1);
+        message->setWordWrap(true);
+        swpMessage = stackedWidget->addWidget(message);
+        connect(message, SIGNAL(linkActivated(QString)), p, SLOT(linkActivated(QString)));
+
+        /// add parts to stackedWidget
+        okularPart = locatePart(QLatin1String("okularPoppler.desktop"), stackedWidget);
+        swpOkular = stackedWidget->addWidget(okularPart->widget());
+        htmlPart = locatePart(QLatin1String("khtml.desktop"), stackedWidget);
+        swpHTML = stackedWidget->addWidget(htmlPart->widget());
 
         loadState();
 
         connect(externalViewerButton, SIGNAL(clicked()), p, SLOT(openExternally()));
-        connect(urlComboBox, SIGNAL(activated(int)), stackedWidget, SLOT(setCurrentIndex(int)));
+        connect(urlComboBox, SIGNAL(activated(int)), p, SLOT(comboBoxChanged(int)));
         connect(onlyLocalFilesCheckBox, SIGNAL(toggled(bool)), p, SLOT(onlyLocalFilesChanged()));
     }
 
@@ -152,49 +202,36 @@ public:
             /// create a drop-down list entry if file is a remote file
             urlComboBox->addItem(urlInfo.icon, urlInfo.url.prettyUrl());
         }
-        cbxEntryToUrl.insert(urlComboBox->count() - 1, urlInfo.url);
-
-        KParts::ReadOnlyPart* part = NULL;
-        KService::Ptr serivcePtr = KMimeTypeTrader::self()->preferredService(urlInfo.mimeType, "KParts/ReadOnlyPart");
-        if (!serivcePtr.isNull())
-            part = serivcePtr->createInstance<KParts::ReadOnlyPart>((QWidget*)p, (QObject*)p);
-        if (part != NULL) {
-            stackedWidget->addWidget(part->widget());
-            part->openUrl(urlInfo.url);
-        } else {
-            QLabel *label = new QLabel(i18n("Cannot create preview for\n%1\n\nNo part available.", urlInfo.url.pathOrUrl()), stackedWidget);
-            label->setAlignment(Qt::AlignCenter);
-            stackedWidget->addWidget(label);
-        }
-
         urlComboBox->setEnabled(true);
+        cbxEntryToUrlInfo.insert(urlComboBox->count() - 1, urlInfo);
+
         externalViewerButton->setEnabled(true);
-        if (isLocal || ///< local files always preferred over URLs
+        if (urlComboBox->count() == 1 || ///< first entry in combobox
+                isLocal || ///< local files always preferred over URLs
                 /// prefer arXiv summary URLs over other URLs
                 (!anyLocal && urlInfo.url.host().contains("arxiv.org/abs"))) {
-            urlComboBox->setCurrentIndex(urlComboBox->count() - 1);
-            stackedWidget->setCurrentIndex(urlComboBox->count() - 1);
+            showUrl(urlInfo);
         }
-        message->hide();
-        stackedWidget->show();
 
         return true;
     }
 
     void update() {
-        QCursor prevCursor = p->cursor();
         p->setCursor(Qt::WaitCursor);
+
+        /// reset and clear all controls
+        okularPart->closeUrl();
+        htmlPart->closeUrl();
+        urlComboBox->setEnabled(false);
+        urlComboBox->clear();
+        cbxEntryToUrlInfo.clear();
+        externalViewerButton->setEnabled(false);
+        showMessage(i18n("Refreshing ..."));
 
         /// cancel/kill all running jobs
         for (QList<KIO::StatJob*>::ConstIterator it = runningJobs.constBegin(); it != runningJobs.constEnd(); ++it)
             (*it)->kill();
         runningJobs.clear();
-        /// remove all shown widgets/parts
-        urlComboBox->clear();
-        while (stackedWidget->count() > 0)
-            stackedWidget->removeWidget(stackedWidget->currentWidget());
-        urlComboBox->setEnabled(false);
-        externalViewerButton->setEnabled(false);
 
         /// clear flag that memorizes if any local file was referenced
         anyLocal = false;
@@ -211,19 +248,78 @@ public:
                 job->ui()->setWindow(p);
                 connect(job, SIGNAL(result(KJob*)), p, SLOT(statFinished(KJob*)));
             }
+            if (urlList.isEmpty()) {
+                showMessage(i18n("No documents to show."));
+                p->setCursor(Qt::ArrowCursor);
+            } else if (runningJobs.isEmpty()) {
+                showMessage(i18n("<qt>No documents to show.<br/><a href=\"disableonlylocalfiles\">Disable the restriction</a> to local files to see remote documents.</qt>"));
+                p->setCursor(Qt::ArrowCursor);
+            }
         }
+    }
 
-        message->setText(i18n("No preview available"));
-        message->show();
-        stackedWidget->hide();
-        p->setEnabled(isVisible());
+    void showMessage(const QString &msgText) {
+        stackedWidget->setCurrentIndex(swpMessage);
+        message->setPixmap(QPixmap());
+        message->setText(msgText);
+        stackedWidget->widget(swpOkular)->setEnabled(false);
+        stackedWidget->widget(swpHTML)->setEnabled(false);
+    }
 
-        p->setCursor(prevCursor);
+    void showPart(const KParts::ReadOnlyPart *part, QWidget *widget) {
+        if (part == okularPart) {
+            stackedWidget->setCurrentIndex(swpOkular);
+            stackedWidget->widget(swpOkular)->setEnabled(true);
+        } else if (part == htmlPart) {
+            stackedWidget->setCurrentIndex(swpHTML);
+            stackedWidget->widget(swpHTML)->setEnabled(true);
+        } else if (widget == message) {
+            stackedWidget->setCurrentIndex(swpMessage);
+        } else
+            showMessage(i18n("Cannot show requested part"));
+    }
+
+    bool showUrl(const struct UrlInfo &urlInfo) {
+        static const QStringList okularMimetypes = QStringList() << QLatin1String("application/x-pdf") << QLatin1String("application/pdf") << QLatin1String("application/x-gzpdf") << QLatin1String("application/x-bzpdf") << QLatin1String("application/x-wwf") << QLatin1String("image/vnd.djvu") << QLatin1String("application/postscript") << QLatin1String("image/x-eps") << QLatin1String("application/x-gzpostscript") << QLatin1String("application/x-bzpostscript") << QLatin1String("image/x-gzeps") << QLatin1String("image/x-bzeps");
+        static const QStringList htmlMimetypes = QStringList() << QLatin1String("text/html") << QLatin1String("application/xml") << QLatin1String("application/xhtml+xml");
+        static const QStringList imageMimetypes = QStringList() << QLatin1String("image/jpeg") << QLatin1String("image/png") << QLatin1String("image/gif") << QLatin1String("image/tiff");
+
+        stackedWidget->widget(swpHTML)->setEnabled(false);
+        stackedWidget->widget(swpOkular)->setEnabled(false);
+        okularPart->closeUrl();
+        htmlPart->closeUrl();
+
+        if (okularMimetypes.contains(urlInfo.mimeType)) {
+            p->setCursor(Qt::BusyCursor);
+            showMessage(i18n("Loading ..."));
+            okularPart->openUrl(urlInfo.url);
+            return true;
+        } else if (htmlMimetypes.contains(urlInfo.mimeType)) {
+            p->setCursor(Qt::BusyCursor);
+            showMessage(i18n("Loading ..."));
+            htmlPart->openUrl(urlInfo.url);
+            return true;
+        } else if (imageMimetypes.contains(urlInfo.mimeType)) {
+            p->setCursor(Qt::BusyCursor);
+            message->setPixmap(QPixmap(urlInfo.url.pathOrUrl()));
+            showPart(NULL, message);
+            p->unsetCursor();
+            return true;
+        } else
+            showMessage(i18n("<qt>Don't know how to show mimetype '%1'.</qt>", urlInfo.mimeType));
+
+        return false;
     }
 
     void openExternally() {
-        KUrl url(cbxEntryToUrl[urlComboBox->currentIndex()]);
-        QDesktopServices::openUrl(url); // TODO KDE way?
+        KUrl url(cbxEntryToUrlInfo[urlComboBox->currentIndex()].url);
+        /// Guess mime type for url to open
+        KMimeType::Ptr mimeType = KMimeType::findByPath(url.path());
+        QString mimeTypeName = mimeType->name();
+        if (mimeTypeName == QLatin1String("application/octet-stream"))
+            mimeTypeName = QLatin1String("text/html");
+        /// Ask KDE subsystem to open url in viewer matching mime type
+        KRun::runUrl(url, mimeTypeName, p, false, false);
     }
 
     UrlInfo urlMetaInfo(const KUrl &url) {
@@ -232,7 +328,6 @@ public:
 
         if (!url.isLocalFile() && url.fileName().isEmpty()) {
             /// URLs not pointing to a specific file should be opened with a web browser component
-            kDebug() << "Not pointing to file, falling back to text/html for url " << url.pathOrUrl();
             result.icon = KIcon("text-html");
             result.mimeType = QLatin1String("text/html");
             return result;
@@ -241,7 +336,6 @@ public:
         int accuracy = 0;
         KMimeType::Ptr mimeTypePtr = KMimeType::findByUrl(url, 0, url.isLocalFile(), true, &accuracy);
         if (accuracy < 50) {
-            kDebug() << "discarding mime type " << mimeTypePtr->name() << ", trying filename ";
             mimeTypePtr = KMimeType::findByPath(url.fileName(), 0, true, &accuracy);
         }
         result.mimeType = mimeTypePtr->name();
@@ -249,12 +343,10 @@ public:
 
         if (result.mimeType == QLatin1String("application/octet-stream")) {
             /// application/octet-stream is a fall-back if KDE did not know better
-            kDebug() << "Got mime type \"application/octet-stream\", falling back to text/html";
             result.icon = KIcon("text-html");
             result.mimeType = QLatin1String("text/html");
         } else if (result.mimeType == QLatin1String("inode/directory") && (result.url.protocol() == QLatin1String("http") || result.url.protocol() == QLatin1String("https"))) {
             /// directory via http means normal webpage (not browsable directory)
-            kDebug() << "Got mime type \"inode/directory\" via http, falling back to text/html";
             result.icon = KIcon("text-html");
             result.mimeType = QLatin1String("text/html");
         }
@@ -267,6 +359,10 @@ public:
 
         kDebug() << "For url " << result.url.pathOrUrl() << " selected mime type " << result.mimeType;
         return result;
+    }
+
+    void comboBoxChanged(int index) {
+        showUrl(cbxEntryToUrlInfo[index]);
     }
 
     bool isVisible() {
@@ -288,10 +384,19 @@ public:
     }
 };
 
+const QString UrlPreview::UrlPreviewPrivate::arXivPDFUrlStart = QLatin1String("http://arxiv.org/pdf/");
+const QString UrlPreview::UrlPreviewPrivate::configGroupName = QLatin1String("URL Preview");
+const QString UrlPreview::UrlPreviewPrivate::onlyLocalFilesCheckConfig = QLatin1String("OnlyLocalFiles");
+
 UrlPreview::UrlPreview(QDockWidget *parent)
         : QWidget(parent), d(new UrlPreviewPrivate(this))
 {
     connect(parent, SIGNAL(visibilityChanged(bool)), this, SLOT(visibilityChanged(bool)));
+}
+
+UrlPreview::~UrlPreview()
+{
+    delete d;
 }
 
 void UrlPreview::setElement(Element* element, const File *)
@@ -321,6 +426,11 @@ void UrlPreview::visibilityChanged(bool)
     d->update();
 }
 
+void UrlPreview::comboBoxChanged(int index)
+{
+    d->comboBoxChanged(index);
+}
+
 void UrlPreview::statFinished(KJob *kjob)
 {
     KIO::StatJob *job = static_cast<KIO::StatJob*>(kjob);
@@ -333,7 +443,22 @@ void UrlPreview::statFinished(KJob *kjob)
 #endif // KDE_VERSION_MINOR
         kDebug() << "stat succeeded for " << url.pathOrUrl();
         UrlPreviewPrivate::UrlInfo urlInfo = d->urlMetaInfo(url);
+        setCursor(d->runningJobs.isEmpty() ? Qt::ArrowCursor : Qt::BusyCursor);
         d->addUrl(urlInfo);
-    } else
+    } else {
         kDebug() << job->errorString();
+        setCursor(d->runningJobs.isEmpty() ? Qt::ArrowCursor : Qt::BusyCursor);
+    }
+}
+
+void UrlPreview::loadingFinished()
+{
+    setCursor(Qt::ArrowCursor);
+    d->showPart(dynamic_cast<KParts::ReadOnlyPart*>(sender()), dynamic_cast<QWidget*>(sender()));
+}
+
+void UrlPreview::linkActivated(const QString &link)
+{
+    if (link == QLatin1String("disableonlylocalfiles"))
+        d->onlyLocalFilesCheckBox->setChecked(false);
 }

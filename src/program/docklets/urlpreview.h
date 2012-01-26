@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2010 by Thomas Fischer                             *
+*   Copyright (C) 2004-2011 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -22,10 +22,13 @@
 #define KBIBTEX_PROGRAM_URLPREVIEW_H
 
 #include <QWidget>
+#include <QLabel>
+#include <QPixmap>
 
 #include <KUrl>
 
 class QDockWidget;
+class QResizeEvent;
 
 class KJob;
 namespace KIO
@@ -36,11 +39,25 @@ class Job;
 class Element;
 class File;
 
+class ImageLabel : public QLabel
+{
+public:
+    ImageLabel(const QString &text, QWidget *parent = NULL, Qt::WindowFlags f = 0);
+    void setPixmap(const QPixmap &pixmap);
+
+protected:
+    void resizeEvent(QResizeEvent *event);
+
+private:
+    QPixmap m_pixmap;
+};
+
 class UrlPreview : public QWidget
 {
     Q_OBJECT
 public:
     UrlPreview(QDockWidget *parent);
+    ~UrlPreview();
 
 public slots:
     void setElement(Element*, const File *);
@@ -56,7 +73,10 @@ private slots:
     void openExternally();
     void onlyLocalFilesChanged();
     void visibilityChanged(bool);
+    void comboBoxChanged(int);
     void statFinished(KJob*);
+    void loadingFinished();
+    void linkActivated(const QString &link);
 };
 
 #endif // KBIBTEX_PROGRAM_URLPREVIEW_H

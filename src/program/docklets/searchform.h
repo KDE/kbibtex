@@ -37,6 +37,7 @@ class SearchForm : public QWidget
 
 public:
     SearchForm(MDIWidget *mdiWidget, SearchResults *searchResults, QWidget *parent);
+    ~SearchForm();
 
 signals:
     void doneSearching();

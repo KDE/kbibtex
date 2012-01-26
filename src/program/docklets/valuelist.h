@@ -35,6 +35,7 @@ class ValueList : public QWidget
 
 public:
     ValueList(QWidget *parent);
+    ~ValueList();
 
     void setEditor(BibTeXEditor *editor);
 

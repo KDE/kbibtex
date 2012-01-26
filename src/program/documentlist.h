@@ -38,11 +38,10 @@ class OpenFileInfoManager;
 class DocumentListDelegate : public QStyledItemDelegate
 {
 public:
-    DocumentListDelegate(QObject * parent = NULL);
+    DocumentListDelegate(QObject *parent = NULL);
 
     void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
     QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
-
 };
 
 class DocumentListModel : public QAbstractListModel
@@ -51,6 +50,8 @@ class DocumentListModel : public QAbstractListModel
 
 public:
     DocumentListModel(OpenFileInfo::StatusFlag statusFlag, OpenFileInfoManager *openFileInfoManager, QObject *parent = NULL);
+    ~DocumentListModel();
+
     int rowCount(const QModelIndex & parent = QModelIndex()) const;
     QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
@@ -69,6 +70,7 @@ class DocumentListView : public QListView
 
 public:
     DocumentListView(OpenFileInfo::StatusFlag statusFlag, QWidget *parent);
+    ~DocumentListView();
 
 private slots:
     void addToFavorites();

@@ -31,7 +31,6 @@
 #include <QLayout>
 #include <QApplication>
 #include <QTextStream>
-#include <QDesktopServices>
 
 #include <KTemporaryFile>
 #include <KLocale>
@@ -40,7 +39,9 @@
 #include <KPushButton>
 #include <KFileDialog>
 #include <KDebug>
-#include <kio/netaccess.h>
+#include <KMimeType>
+#include <KRun>
+#include <KIO/NetAccess>
 
 #include <fileexporterbibtex.h>
 #include <fileexporterbibtex2html.h>
@@ -179,6 +180,11 @@ ReferencePreview::ReferencePreview(QWidget *parent)
     connect(d->comboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(renderHTML()));
 }
 
+ReferencePreview::~ReferencePreview()
+{
+    delete d;
+}
+
 void ReferencePreview::setHtml(const QString & html, const QUrl & baseUrl)
 {
     d->htmlText = QString(html).replace("<?xml version=\"1.0\" encoding=\"UTF-8\"?>", "");
@@ -281,6 +287,7 @@ void ReferencePreview::renderHTML()
 
     buffer.open(QBuffer::ReadOnly);
     QTextStream ts(&buffer);
+    ts.setCodec("utf-8");
     QString text = ts.readAll();
     buffer.close();
 
@@ -333,7 +340,10 @@ void ReferencePreview::openAsHTML()
     file.setSuffix(".html");
     file.setAutoRemove(false); /// let file stay alive for browser
     d->saveHTML(file);
-    QDesktopServices::openUrl(KUrl(file.fileName()));
+
+    /// Ask KDE subsystem to open url in viewer matching mime type
+    KUrl url(file.fileName());
+    KRun::runUrl(url, QLatin1String("text/html"), this, false, false);
 }
 
 void ReferencePreview::saveAsHTML()

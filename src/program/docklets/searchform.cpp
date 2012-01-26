@@ -24,7 +24,6 @@
 #include <QLabel>
 #include <QListWidget>
 #include <QSpinBox>
-#include <QDesktopServices>
 #include <QStackedWidget>
 #include <QProgressBar>
 #include <QTimer>
@@ -35,6 +34,8 @@
 #include <KLocale>
 #include <KIcon>
 #include <KDebug>
+#include <KRun>
+#include <KMimeType>
 #include <KMessageBox>
 #include <KTemporaryFile>
 #include <KAction>
@@ -286,7 +287,13 @@ public:
         QListWidgetItem *item = enginesList->currentItem();
         if (item != NULL) {
             KUrl url = item->data(HomepageRole).value<KUrl>();
-            QDesktopServices::openUrl(url); // TODO KDE way?
+            /// Guess mime type for url to open
+            KMimeType::Ptr mimeType = KMimeType::findByPath(url.path());
+            QString mimeTypeName = mimeType->name();
+            if (mimeTypeName == QLatin1String("application/octet-stream"))
+                mimeTypeName = QLatin1String("text/html");
+            /// Ask KDE subsystem to open url in viewer matching mime type
+            KRun::runUrl(url, mimeTypeName, p, false, false);
         }
     }
 
@@ -310,6 +317,11 @@ SearchForm::SearchForm(MDIWidget *mdiWidget, SearchResults *searchResults, QWidg
 {
     d->createGUI();
     d->switchToSearch();
+}
+
+SearchForm::~SearchForm()
+{
+    delete d;
 }
 
 void SearchForm::updatedConfiguration()
