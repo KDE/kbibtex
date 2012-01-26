@@ -423,9 +423,9 @@ bool BibTeXFileModel::removeRow(int row, const QModelIndex & parent)
     if (parent != QModelIndex())
         return false;
 
+    beginRemoveRows(QModelIndex(), row, row);
     m_bibtexFile->removeAt(row);
-
-    reset();
+    endRemoveRows();
 
     return true;
 }
@@ -435,13 +435,13 @@ bool BibTeXFileModel::removeRowList(const QList<int> &rows)
     QList<int> internalRows = rows;
     qSort(internalRows.begin(), internalRows.end(), qGreater<int>());
 
+    beginRemoveRows(QModelIndex(), internalRows.last(), internalRows.first());
     foreach(int row, internalRows) {
         if (row < 0 || row >= rowCount() || row >= m_bibtexFile->count())
             return false;
         m_bibtexFile->removeAt(row);
     }
-
-    reset();
+    endRemoveRows();
 
     return true;
 }
@@ -453,9 +453,9 @@ bool BibTeXFileModel::insertRow(Element *element, int row, const QModelIndex & p
     if (parent != QModelIndex())
         return false;
 
+    beginRemoveRows(QModelIndex(), row, row);
     m_bibtexFile->insert(row, element);
-
-    reset();
+    endRemoveRows();
 
     return true;
 }

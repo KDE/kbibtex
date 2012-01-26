@@ -37,6 +37,7 @@ class KBIBTEXGUI_EXPORT SettingsFileExporterBibTeXWidget : public SettingsAbstra
 public:
     SettingsFileExporterBibTeXWidget(QWidget *parent);
     SettingsFileExporterBibTeXWidget(File *file, QWidget *parent);
+    ~SettingsFileExporterBibTeXWidget();
 
     void saveProperties(File *file);
 

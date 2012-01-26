@@ -37,6 +37,7 @@ class KBIBTEXGUI_EXPORT ElementEditor : public QWidget
 public:
     ElementEditor(const Element *element, const File *file, QWidget *parent);
     ElementEditor(Element *element, const File *file, QWidget *parent);
+    ~ElementEditor();
 
     void setReadOnly(bool isReadOnly = true);
     bool elementChanged();

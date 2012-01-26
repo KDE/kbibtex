@@ -111,7 +111,12 @@ Clipboard::Clipboard(BibTeXEditor *bibTeXEditor)
     connect(bibTeXEditor, SIGNAL(editorDragEnterEvent(QDragEnterEvent*)), this, SLOT(editorDragEnterEvent(QDragEnterEvent*)));
     connect(bibTeXEditor, SIGNAL(editorDragMoveEvent(QDragMoveEvent*)), this, SLOT(editorDragMoveEvent(QDragMoveEvent*)));
     connect(bibTeXEditor, SIGNAL(editorDropEvent(QDropEvent*)), this, SLOT(editorDropEvent(QDropEvent*)));
-    bibTeXEditor->setAcceptDrops(true);
+    bibTeXEditor->setAcceptDrops(!bibTeXEditor->isReadOnly());
+}
+
+Clipboard::~Clipboard()
+{
+    delete d;
 }
 
 void Clipboard::cut()
@@ -180,13 +185,13 @@ void Clipboard::editorMouseEvent(QMouseEvent *event)
 
 void Clipboard::editorDragEnterEvent(QDragEnterEvent *event)
 {
-    if (event->mimeData()->hasText())
+    if (event->mimeData()->hasText() && !d->bibTeXEditor->isReadOnly())
         event->acceptProposedAction();
 }
 
 void Clipboard::editorDragMoveEvent(QDragMoveEvent *event)
 {
-    if (event->mimeData()->hasText())
+    if (event->mimeData()->hasText() && !d->bibTeXEditor->isReadOnly())
         event->acceptProposedAction();
 }
 
@@ -194,7 +199,7 @@ void Clipboard::editorDropEvent(QDropEvent *event)
 {
     QString text = event->mimeData()->text();
 
-    if (!text.isEmpty()) {
+    if (!text.isEmpty() && !d->bibTeXEditor->isReadOnly()) {
         d->insertText(text);
         d->bibTeXEditor->externalModification();
     }

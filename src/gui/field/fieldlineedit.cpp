@@ -24,11 +24,12 @@
 #include <QSignalMapper>
 #include <QBuffer>
 #include <QFileInfo>
-#include <QDesktopServices>
 #include <QDir>
 #include <QDragEnterEvent>
 #include <QDropEvent>
 
+#include <KMimeType>
+#include <KRun>
 #include <KDebug>
 #include <KMessageBox>
 #include <KGlobalSettings>
@@ -297,8 +298,15 @@ public:
     }
 
     void openUrl() {
-        if (urlToOpen.isValid())
-            QDesktopServices::openUrl(urlToOpen); // TODO KDE way?
+        if (urlToOpen.isValid()) {
+            /// Guess mime type for url to open
+            KMimeType::Ptr mimeType = KMimeType::findByPath(urlToOpen.path());
+            QString mimeTypeName = mimeType->name();
+            if (mimeTypeName == QLatin1String("application/octet-stream"))
+                mimeTypeName = QLatin1String("text/html");
+            /// Ask KDE subsystem to open url in viewer matching mime type
+            KRun::runUrl(urlToOpen, mimeTypeName, parent, false, false);
+        }
     }
 
     bool convertValueType(Value &value, KBibTeX::TypeFlag destType) {

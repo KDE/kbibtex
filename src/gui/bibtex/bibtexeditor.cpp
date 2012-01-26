@@ -210,6 +210,7 @@ void BibTeXEditor::currentChanged(const QModelIndex & current, const QModelIndex
     QTreeView::currentChanged(current, previous); // FIXME necessary?
 
     m_current = bibTeXModel()->element(sortFilterProxyModel()->mapToSource(current).row());
+    emit currentElementChanged(m_current, bibTeXModel()->bibTeXFile());
 }
 
 void BibTeXEditor::selectionChanged(const QItemSelection & selected, const QItemSelection & deselected)
@@ -229,13 +230,6 @@ void BibTeXEditor::selectionChanged(const QItemSelection & selected, const QItem
     }
 
     emit selectedElementsChanged();
-}
-
-void BibTeXEditor::mouseReleaseEvent(QMouseEvent *event)
-{
-    QTreeView::mouseReleaseEvent(event);
-    /// delay notification about change of current item to allow drag'n'drop to work
-    emit currentElementChanged(m_current, bibTeXModel()->bibTeXFile());
 }
 
 void BibTeXEditor::selectionDelete()

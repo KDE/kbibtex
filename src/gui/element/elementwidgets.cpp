@@ -26,7 +26,6 @@
 #include <QLabel>
 #include <QTreeWidget>
 #include <QFileInfo>
-#include <QDesktopServices>
 #include <QDropEvent>
 
 #include <KPushButton>
@@ -36,6 +35,8 @@
 #include <KComboBox>
 #include <KSharedConfig>
 #include <KConfigGroup>
+#include <KMimeType>
+#include <KRun>
 
 #include <kbibtexnamespace.h>
 #include <bibtexentries.h>
@@ -632,8 +633,15 @@ void OtherFieldsWidget::actionDelete()
 
 void OtherFieldsWidget::actionOpen()
 {
-    if (currentUrl.isValid())
-        QDesktopServices::openUrl(currentUrl); // TODO KDE way?
+    if (currentUrl.isValid()) {
+        ///Guess mime type for url to open
+        KMimeType::Ptr mimeType = KMimeType::findByPath(currentUrl.path());
+        QString mimeTypeName = mimeType->name();
+        if (mimeTypeName == QLatin1String("application/octet-stream"))
+            mimeTypeName = QLatin1String("text/html");
+        /// Ask KDE subsystem to open url in viewer matching mime type
+        KRun::runUrl(currentUrl, mimeTypeName, this, false, false);
+    }
 }
 
 void OtherFieldsWidget::createGUI()
@@ -691,7 +699,7 @@ void OtherFieldsWidget::createGUI()
     connect(otherFieldsList, SIGNAL(itemActivated(QTreeWidgetItem*, int)), this, SLOT(listElementExecuted(QTreeWidgetItem*, int)));
     connect(otherFieldsList, SIGNAL(currentItemChanged(QTreeWidgetItem*, QTreeWidgetItem*)), this, SLOT(listCurrentChanged(QTreeWidgetItem*, QTreeWidgetItem*)));
     connect(otherFieldsList, SIGNAL(itemSelectionChanged()), this, SLOT(updateGUI()));
-    connect(fieldName, SIGNAL(textChanged(QString)), this, SLOT(updateGUI()));
+    connect(fieldName, SIGNAL(textEdited(QString)), this, SLOT(updateGUI()));
     connect(buttonAddApply, SIGNAL(clicked()), this, SLOT(actionAddApply()));
     connect(buttonDelete, SIGNAL(clicked()), this, SLOT(actionDelete()));
     connect(buttonOpen, SIGNAL(clicked()), this, SLOT(actionOpen()));
@@ -724,7 +732,7 @@ void OtherFieldsWidget::updateGUI()
     else {
         buttonAddApply->setEnabled(!isReadOnly);
         buttonAddApply->setText(internalEntry->contains(key) ? i18n("Apply") : i18n("Add"));
-        buttonAddApply->setIcon(internalEntry->contains(key) ? KIcon("edit") : KIcon("add"));
+        buttonAddApply->setIcon(internalEntry->contains(key) ? KIcon("edit") : KIcon("list-add"));
     }
 }
 
@@ -933,6 +941,7 @@ bool SourceWidget::reset(const Element *element)
     textBuffer.close();
     textBuffer.open(QIODevice::ReadOnly);
     QTextStream ts(&textBuffer);
+    ts.setCodec("utf-8");
     originalText = ts.readAll();
     sourceEdit->document()->setPlainText(originalText);
 

@@ -404,6 +404,11 @@ ElementEditor::ElementEditor(const Element *element, const File *file, QWidget *
     setReadOnly(true);
 }
 
+ElementEditor::~ElementEditor()
+{
+    delete d;
+}
+
 void ElementEditor::apply()
 {
     d->apply();

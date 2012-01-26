@@ -143,8 +143,8 @@ public:
         layout->addRow(i18n("Person Names Formatting:"), comboBoxPersonNameFormatting);
         ItalicTextItemModel *itim = new ItalicTextItemModel();
         itim->addItem(i18n("Use global settings"), QString(""));
-        itim->addItem(Person::transcribePersonName(&dummyPerson, QLatin1String("<%f ><%l>")), QString("<%f ><%l>"));
-        itim->addItem(Person::transcribePersonName(&dummyPerson, QLatin1String("<%l><, %f>")), QString("<%l><, %f>"));
+        itim->addItem(Person::transcribePersonName(&dummyPerson, QLatin1String("<%f ><%l>< %s>")), QString("<%f ><%l>< %s>"));
+        itim->addItem(Person::transcribePersonName(&dummyPerson, QLatin1String("<%l><, %s>,< %f>")), QString("<%l><, %s><, %f>"));
         comboBoxPersonNameFormatting->setModel(itim);
         connect(comboBoxPersonNameFormatting, SIGNAL(currentIndexChanged(int)), p, SIGNAL(changed()));
     }
@@ -199,6 +199,11 @@ SettingsFileExporterBibTeXWidget::SettingsFileExporterBibTeXWidget(File *file, Q
     d->setupGUI();
     d->loadState();
     d->loadProperties(file);
+}
+
+SettingsFileExporterBibTeXWidget::~SettingsFileExporterBibTeXWidget()
+{
+    delete d;
 }
 
 void SettingsFileExporterBibTeXWidget::loadState()

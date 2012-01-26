@@ -98,6 +98,11 @@ SettingsFileExporterPDFPSWidget::SettingsFileExporterPDFPSWidget(QWidget *parent
     d->loadState();
 }
 
+SettingsFileExporterPDFPSWidget::~SettingsFileExporterPDFPSWidget()
+{
+    delete d;
+}
+
 void SettingsFileExporterPDFPSWidget::loadState()
 {
     d->loadState();
