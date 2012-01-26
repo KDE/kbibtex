@@ -44,6 +44,11 @@ Preamble::Preamble(const Preamble& other)
     operator=(other);
 }
 
+Preamble::~Preamble()
+{
+    delete d;
+}
+
 Preamble& Preamble::operator= (const Preamble & other)
 {
     if (this != &other)

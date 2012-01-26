@@ -76,7 +76,7 @@ EncoderXML::EncoderXML()
 
 EncoderXML::~EncoderXML()
 {
-    // nothing
+    delete d;
 }
 
 QString EncoderXML::decode(const QString &text)

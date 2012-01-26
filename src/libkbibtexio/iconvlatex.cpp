@@ -52,6 +52,7 @@ IConvLaTeX::IConvLaTeX(const QString &destEncoding)
 IConvLaTeX::~IConvLaTeX()
 {
     iconv_close(d->iconvHandle);
+    delete d;
 }
 
 QByteArray IConvLaTeX::encode(const QString &input)

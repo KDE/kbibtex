@@ -35,6 +35,7 @@ class KBIBTEXIO_EXPORT Preamble : public Element
 public:
     Preamble(const Value& value = Value());
     Preamble(const Preamble& other);
+    ~Preamble();
 
     /**
      * Assignment operator, working similar to a copy constructor,

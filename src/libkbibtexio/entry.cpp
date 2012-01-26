@@ -91,6 +91,7 @@ Entry::Entry(const Entry &other)
 Entry::~Entry()
 {
     clear();
+    delete d;
 }
 
 Entry& Entry::operator= (const Entry & other)

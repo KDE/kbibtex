@@ -52,7 +52,7 @@
 const QString FileExporterBibTeX::keyEncoding = QLatin1String("encoding");
 const QString FileExporterBibTeX::defaultEncoding = QLatin1String("LaTeX");
 const QString FileExporterBibTeX::keyStringDelimiter = QLatin1String("stringDelimiter");
-const QString FileExporterBibTeX::defaultStringDelimiter = QLatin1String("\"\"");
+const QString FileExporterBibTeX::defaultStringDelimiter = QLatin1String("{}");
 const QString FileExporterBibTeX::keyQuoteComment = QLatin1String("quoteComment");
 const FileExporterBibTeX::QuoteComment FileExporterBibTeX::defaultQuoteComment = FileExporterBibTeX::qcNone;
 const QString FileExporterBibTeX::keyKeywordCasing = QLatin1String("keywordCasing");

@@ -50,7 +50,7 @@ Macro::Macro(const Macro& other)
 
 Macro::~Macro()
 {
-    // nothing
+    delete d;
 }
 
 Macro& Macro::operator= (const Macro & other)

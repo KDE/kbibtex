@@ -178,7 +178,7 @@ class KBIBTEXIO_EXPORT Value: public QList<ValueItem*>
 public:
     Value();
     Value(const Value& other);
-    ~Value();
+    virtual ~Value();
 
     void merge(const Value& other);
 

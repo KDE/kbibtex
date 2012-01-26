@@ -98,6 +98,7 @@ private:
 
     bool m_cancelFlag;
     unsigned int m_lineNo;
+    QString m_prevLine, m_currentLine;
     QTextStream *m_textStream;
     int m_textStreamLastPos;
     QChar m_currentChar;

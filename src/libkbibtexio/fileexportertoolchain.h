@@ -62,7 +62,8 @@ private:
     QStringList *m_errorLog;
 
 private slots:
-    void slotReadProcessOutput();
+    void slotReadProcessStandardOutput();
+    void slotReadProcessErrorOutput();
 
 };
 
