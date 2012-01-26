@@ -209,24 +209,29 @@ void WebSearchJStor::doneFetchingResultPage()
         QMap<QString, QString> formData = formParameters(htmlText, "<form action=\"/action/doAdvancedResults\"");
         formData.remove("doi");
 
-        QStringList body;
-        foreach(const QString& key, formData.keys()) {
-            foreach(const QString& value, formData.values(key)) {
-                body.append(encodeURL(key) + '=' + encodeURL(value));
+        if (formData.size() > 0) {
+            QStringList body;
+            foreach(const QString& key, formData.keys()) {
+                foreach(const QString& value, formData.values(key)) {
+                    body.append(encodeURL(key) + '=' + encodeURL(value));
+                }
             }
-        }
 
-        int p1 = htmlText.indexOf("<form action=\"/action/doAdvancedResults\""), p2 = -1;
-        while ((p1 = htmlText.indexOf("<input type=\"checkbox\" name=\"doi\" value=\"", p1 + 1)) >= 0 && (p2 = htmlText.indexOf("\"", p1 + 42)) >= 0) {
-            body.append("doi=" + encodeURL(htmlText.mid(p1 + 41, p2 - p1 - 41)));
-        }
-        body.append("selectUnselect=");
+            int p1 = htmlText.indexOf("<form action=\"/action/doAdvancedResults\""), p2 = -1;
+            while ((p1 = htmlText.indexOf("<input type=\"checkbox\" name=\"doi\" value=\"", p1 + 1)) >= 0 && (p2 = htmlText.indexOf("\"", p1 + 42)) >= 0) {
+                body.append("doi=" + encodeURL(htmlText.mid(p1 + 41, p2 - p1 - 41)));
+            }
+            body.append("selectUnselect=");
 
-        QNetworkRequest request(d->jstorBaseUrl + "action/downloadCitation?format=bibtex&include=abs");
-        setSuggestedHttpHeaders(request, reply);
-        QNetworkReply *newReply = networkAccessManager()->post(request, body.join("&").toUtf8());
-        setNetworkReplyTimeout(newReply);
-        connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingSummaryPage()));
+            QNetworkRequest request(d->jstorBaseUrl + "action/downloadCitation?format=bibtex&include=abs");
+            QNetworkReply *newReply = networkAccessManager()->post(request, body.join("&").toUtf8());
+            setNetworkReplyTimeout(newReply);
+            connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingSummaryPage()));
+        } else {
+            /// no results found
+            emit progress(d->numSteps, d->numSteps);
+            emit stoppedSearch(resultNoError);
+        }
     } else
         kDebug() << "url was" << reply->url().toString();
 }

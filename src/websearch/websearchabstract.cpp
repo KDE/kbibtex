@@ -127,8 +127,9 @@ KIcon WebSearchAbstract::icon() const
 
 QString WebSearchAbstract::name()
 {
+    static const QRegExp invalidChars("[^-a-z0-9]", Qt::CaseInsensitive);
     if (m_name.isNull())
-        m_name = label().replace(QRegExp("[^a-z0-9]", Qt::CaseInsensitive), QLatin1String(""));
+        m_name = label().replace(invalidChars, QLatin1String(""));
     return m_name;
 }
 
@@ -185,7 +186,7 @@ QString WebSearchAbstract::encodeURL(QString rawText)
 
 QString WebSearchAbstract::decodeURL(QString rawText)
 {
-    static QRegExp mimeRegExp("%([0-9A-Fa-f]{2})");
+    static const QRegExp mimeRegExp("%([0-9A-Fa-f]{2})");
     while (mimeRegExp.indexIn(rawText) >= 0) {
         bool ok = false;
         QChar c(mimeRegExp.cap(1).toInt(&ok, 16));
@@ -200,18 +201,18 @@ QMap<QString, QString> WebSearchAbstract::formParameters(const QString &htmlText
 {
     /// how to recognize HTML tags
     static const QString formTagEnd = QLatin1String("</form>");
-    static const QString inputTagBegin = QLatin1String("<input");
+    static const QString inputTagBegin = QLatin1String("<input ");
     static const QString selectTagBegin = QLatin1String("<select ");
     static const QString selectTagEnd = QLatin1String("</select>");
     static const QString optionTagBegin = QLatin1String("<option ");
     /// regular expressions to test or retrieve attributes in HTML tags
-    QRegExp inputTypeRegExp("<input[^>]+\\btype=[\"]?([^\" >\n\t]*)");
-    QRegExp inputNameRegExp("<input[^>]+\\bname=[\"]?([^\" >\n\t]*)");
-    QRegExp inputValueRegExp("<input[^>]+\\bvalue=[\"]?([^\" >\n\t]*)");
-    QRegExp inputIsCheckedRegExp("<input[^>]* checked([> \t\n]|=[\"]?checked)");
-    QRegExp selectNameRegExp("<select[^>]+\\bname=[\"]?([^\" >\n\t]*)");
-    QRegExp optionValueRegExp("<option[^>]+\\bvalue=[\"]?([^\" >\n\t]*)");
-    QRegExp optionSelectedRegExp("<option[^>]* selected([> \t\n]|=[\"]?selected)");
+    static const QRegExp inputTypeRegExp("<input[^>]+\\btype=[\"]?([^\" >\n\t]*)", Qt::CaseInsensitive);
+    static const QRegExp inputNameRegExp("<input[^>]+\\bname=[\"]?([^\" >\n\t]*)", Qt::CaseInsensitive);
+    static const QRegExp inputValueRegExp("<input[^>]+\\bvalue=[\"]?([^\" >\n\t]*)", Qt::CaseInsensitive);
+    static const QRegExp inputIsCheckedRegExp("<input[^>]+\\bchecked([> \t\n]|=[\"]?checked)", Qt::CaseInsensitive);
+    static const QRegExp selectNameRegExp("<select[^>]+\\bname=[\"]?([^\" >\n\t]*)", Qt::CaseInsensitive);
+    static const QRegExp optionValueRegExp("<option[^>]+\\bvalue=[\"]?([^\" >\n\t]*)", Qt::CaseInsensitive);
+    static const QRegExp optionSelectedRegExp("<option[^>]* selected([> \t\n]|=[\"]?selected)", Qt::CaseInsensitive);
 
     /// initialize result map
     QMap<QString, QString> result;
@@ -224,9 +225,9 @@ QMap<QString, QString> WebSearchAbstract::formParameters(const QString &htmlText
     int p = htmlText.indexOf(inputTagBegin, startPos);
     while (p > startPos && p < endPos) {
         /// get "type", "name", and "value" attributes
-        QString inputType = htmlText.indexOf(inputTypeRegExp, p) == p ? inputTypeRegExp.cap(1).toLower() : QString();
-        QString inputName = htmlText.indexOf(inputNameRegExp, p) == p ? inputNameRegExp.cap(1) : QString();
-        QString inputValue = htmlText.indexOf(inputValueRegExp, p) ? inputValueRegExp.cap(1) : QString();
+        QString inputType = inputTypeRegExp.indexIn(htmlText, p) == p ? inputTypeRegExp.cap(1).toLower() : QString();
+        QString inputName = inputNameRegExp.indexIn(htmlText, p) == p ? inputNameRegExp.cap(1) : QString();
+        QString inputValue = inputValueRegExp.indexIn(htmlText, p) ? inputValueRegExp.cap(1) : QString();
 
         if (!inputName.isEmpty()) {
             /// get value of input types
@@ -254,14 +255,14 @@ QMap<QString, QString> WebSearchAbstract::formParameters(const QString &htmlText
     p = htmlText.indexOf(selectTagBegin, startPos);
     while (p > startPos && p < endPos) {
         /// get "name" attribute from "select" tag
-        QString selectName = htmlText.indexOf(selectNameRegExp, p) == p ? selectNameRegExp.cap(1) : QString::null;
+        QString selectName = selectNameRegExp.indexIn(htmlText, p) == p ? selectNameRegExp.cap(1) : QString::null;
 
         /// "select" tag contains one or several "option" tags, search all
         int popt = htmlText.indexOf(optionTagBegin, p);
         int endSelect = htmlText.indexOf(selectTagEnd, p);
         while (popt > p && popt < endSelect) {
             /// get "value" attribute from "option" tag
-            QString optionValue = htmlText.indexOf(optionValueRegExp, popt) == popt ? optionValueRegExp.cap(1) : QString::null;
+            QString optionValue = optionValueRegExp.indexIn(htmlText, popt) == popt ? optionValueRegExp.cap(1) : QString::null;
             if (!selectName.isNull() && !optionValue.isNull()) {
                 /// if this "option" tag is "selected", store value
                 if (htmlText.indexOf(optionSelectedRegExp, popt) == popt) {
@@ -305,7 +306,7 @@ void WebSearchAbstract::setNetworkReplyTimeout(QNetworkReply *reply, int timeOut
     QTimer *timer = new QTimer(reply);
     connect(timer, SIGNAL(timeout()), this, SLOT(networkReplyTimeout()));
     m_mapTimerToReply.insert(timer, reply);
-    timer->start(timeOutSec*1000);
+    timer->start(timeOutSec * 1000);
     connect(reply, SIGNAL(finished()), this, SLOT(networkReplyFinished()));
 }
 

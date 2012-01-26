@@ -202,7 +202,7 @@ void WebSearchGoogleScholar::doneFetchingQueryPage()
     if (handleErrors(reply)) {
         QString htmlText = reply->readAll();
 
-        QRegExp linkToBib("/scholar.bib\\?[^\" >]+");
+        static const QRegExp linkToBib("/scholar.bib\\?[^\" >]+");
         int pos = 0;
         d->listBibTeXurls.clear();
         while ((pos = linkToBib.indexIn(htmlText, pos)) != -1) {
@@ -235,21 +235,22 @@ void WebSearchGoogleScholar::doneFetchingBibTeX()
         QString rawText = reply->readAll();
         File *bibtexFile = d->importer.fromString(rawText);
 
-        Entry *entry = NULL;
+        bool hasEntry = false;
         if (bibtexFile != NULL) {
-            for (File::ConstIterator it = bibtexFile->constBegin(); entry == NULL && it != bibtexFile->constEnd(); ++it) {
-                entry = dynamic_cast<Entry*>(*it);
+            for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
+                Entry *entry = dynamic_cast<Entry*>(*it);
                 if (entry != NULL) {
                     Value v;
                     v.append(new VerbatimText(label()));
                     entry->insert("x-fetchedfrom", v);
                     emit foundEntry(entry);
+                    hasEntry = true;
                 }
             }
             delete bibtexFile;
         }
 
-        if (entry == NULL) {
+        if (!hasEntry) {
             kWarning() << "Searching" << label() << "resulted in invalid BibTeX data:" << QString(reply->readAll());
             emit stoppedSearch(resultUnspecifiedError);
             return;

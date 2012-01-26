@@ -47,7 +47,7 @@ public:
 
     KUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) {
         /// used to auto-detect PMIDs (unique identifiers for documents) in free text search
-        const QRegExp pmidRegExp(QLatin1String("^[0-9]{6,}$"));
+        static const QRegExp pmidRegExp(QLatin1String("^[0-9]{6,}$"));
 
         QString url = pubMedUrlPrefix + QLatin1String("esearch.fcgi?db=pubmed&tool=kbibtex&term=");
 
@@ -168,11 +168,18 @@ void WebSearchPubMed::eSearchDone()
 
         if (!result.contains(QLatin1String("<Count>0</Count>"))) {
             /// without parsing XML text correctly, just extract all PubMed ids
-            QRegExp regExpId("<Id>(\\d+)</Id>", Qt::CaseInsensitive);
-            int p = -1;
             QStringList idList;
-            while ((p = result.indexOf(regExpId, p + 1)) >= 0)
-                idList << regExpId.cap(1);
+            int p1, p2;
+            /// All IDs are within <IdList>...</IdList>
+            if ((p1 = result.indexOf(QLatin1String("<IdList>"))) > 0 && (p2 = result.indexOf(QLatin1String("</IdList>"), p1)) > 0) {
+                int p3, p4 = p1;
+                /// Search for each <Id>...</Id>
+                while ((p3 = result.indexOf(QLatin1String("<Id>"), p4)) > 0 && (p4 = result.indexOf(QLatin1String("</Id>"), p3)) > 0 && p4 < p2) {
+                    /// Extract ID and add it to list
+                    const QString id = result.mid(p3 + 4, p4 - p3 - 4);
+                    idList << id;
+                }
+            }
 
             if (idList.isEmpty()) {
                 kDebug() << "No ids here:" << squeeze_text(result.simplified(), 100);

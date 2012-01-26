@@ -26,6 +26,8 @@
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *
+ * See also: http://dev.springer.com/
  */
 class KBIBTEXWS_EXPORT WebSearchSpringerLink : public WebSearchAbstract
 {
@@ -48,17 +50,13 @@ protected:
     virtual QString favIconUrl() const;
 
 private slots:
-    void doneFetchingResultPage();
-    void doneFetchingExportPage();
-    void doneFetchingBibTeX();
+    void doneFetchingPAM();
 
 private:
     class WebSearchQueryFormSpringerLink;
 
     class WebSearchSpringerLinkPrivate;
     WebSearchSpringerLinkPrivate *d;
-
-    void processNextQueuedUrl();
 };
 
 #endif // KBIBTEX_WEBSEARCH_SPRINGERLINK_H
