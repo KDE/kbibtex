@@ -25,7 +25,6 @@
 #include <KConfig>
 #include <KConfigGroup>
 #include <KDebug>
-#include <KMimeType>
 #include <KMimeTypeTrader>
 #include <KUrl>
 #include <KMessageBox>
@@ -35,6 +34,25 @@
 #include "openfileinfo.h"
 
 const QString OpenFileInfo::mimetypeBibTeX = QLatin1String("text/x-bibtex");
+const QString OpenFileInfo::mimetypeRIS = QLatin1String("application/x-research-info-systems");
+
+KMimeType::Ptr OpenFileInfo::mimeTypeForUrl(const KUrl &url)
+{
+    static const KMimeType::Ptr mimetypeBibTeXPtr(KMimeType::mimeType(mimetypeBibTeX));
+    static const QString mimetypeBibTeXExt = mimetypeBibTeXPtr->mainExtension().mid(1);
+    static const KMimeType::Ptr mimetypeRISPtr(KMimeType::mimeType(mimetypeRIS));
+    static const QString mimetypeRISExt = mimetypeRISPtr->mainExtension().mid(1);
+
+    const QString extension = KMimeType::extractKnownExtension(url.fileName()).toLower();
+
+    if (extension == mimetypeBibTeXExt)
+        return mimetypeBibTeXPtr;
+    else if (extension == mimetypeRISExt)
+        return mimetypeRISPtr;
+    // TODO other extensions
+    else
+        return KMimeType::findByUrl(url);
+}
 
 class OpenFileInfo::OpenFileInfoPrivate
 {
@@ -154,7 +172,7 @@ const QString OpenFileInfo::OpenFileInfoPrivate::keyLastAccess = QLatin1String("
 const QString OpenFileInfo::OpenFileInfoPrivate::keyURL = QLatin1String("URL");
 
 OpenFileInfo::OpenFileInfo(OpenFileInfoManager *openFileInfoManager, const KUrl &url)
-        : d(new OpenFileInfoPrivate(openFileInfoManager, url, KMimeType::findByUrl(url)->name(), this))
+        : d(new OpenFileInfoPrivate(openFileInfoManager, url, mimeTypeForUrl(url)->name(), this))
 {
     // nothing
 }
@@ -174,7 +192,7 @@ void OpenFileInfo::setUrl(const KUrl& url)
 {
     Q_ASSERT(url.isValid());
     d->url = url;
-    d->mimeType = KMimeType::findByUrl(url)->name();
+    d->mimeType = mimeTypeForUrl(url)->name();
     addFlags(OpenFileInfo::HasName);
 }
 
