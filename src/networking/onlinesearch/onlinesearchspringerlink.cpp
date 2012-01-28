@@ -239,6 +239,8 @@ void OnlineSearchSpringerLink::startSearch()
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
     setNetworkReplyTimeout(reply);
     connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingPAM()));
+
+    if (d->form != NULL) d->form->saveState();
 }
 
 void OnlineSearchSpringerLink::startSearch(const QMap<QString, QString> &query, int numResults)
