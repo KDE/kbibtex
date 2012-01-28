@@ -96,12 +96,12 @@ public:
 
     void clear() {
         file->clear();
-        resultList->reset();
+        resultList->bibTeXModel()->reset();
     }
 
     bool insertElement(QSharedPointer<Element> element) {
         BibTeXFileModel *model = resultList->bibTeXModel();
-        return model->insertRow(element,  model->rowCount());
+        return model->insertRow(element, model->rowCount());
     }
 
 };
