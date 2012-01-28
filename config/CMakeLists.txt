@@ -1,10 +1,10 @@
-install (
+install(
     FILES
     kbibtexrc
     DESTINATION
     ${CONFIG_INSTALL_DIR}
 )
-install (
+install(
     FILES
     bibtex.kbstyle
     biblatex.kbstyle

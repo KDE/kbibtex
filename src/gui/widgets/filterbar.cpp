@@ -222,7 +222,7 @@ void FilterBar::lineeditTextChanged()
 
 void FilterBar::comboboxStatusChanged()
 {
-    d->checkboxSearchPDFfiles->setEnabled(d->comboBoxField->currentIndex()==0);
+    d->checkboxSearchPDFfiles->setEnabled(d->comboBoxField->currentIndex() == 0);
     d->filterUpdateTimer->stop();
     d->storeComboBoxStatus();
     emit filterChanged(d->filter());

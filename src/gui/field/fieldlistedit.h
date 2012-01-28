@@ -22,7 +22,6 @@
 
 #include <QWidget>
 #include <QSet>
-#include <QQueue>
 
 #include <KSharedConfig>
 
