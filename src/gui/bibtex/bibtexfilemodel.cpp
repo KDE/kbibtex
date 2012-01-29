@@ -453,9 +453,9 @@ bool BibTeXFileModel::insertRow(Element *element, int row, const QModelIndex & p
     if (parent != QModelIndex())
         return false;
 
-    beginRemoveRows(QModelIndex(), row, row);
+    beginInsertRows(QModelIndex(), row, row);
     m_bibtexFile->insert(row, element);
-    endRemoveRows();
+    endInsertRows();
 
     return true;
 }
