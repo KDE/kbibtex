@@ -568,7 +568,8 @@ void UrlListEdit::textChanged(QWidget *widget)
     /// Create URL from new text to make some tests on it
     /// Only remote URLs are of interest, therefore no tests
     /// on local file or relative paths
-    KUrl url(fieldLineEdit->text());
+    const QString newText = fieldLineEdit->text();
+    KUrl url(newText);
 
     /// Enable button only if Url is valid and points to a remote
     /// PDF or PostScript file
