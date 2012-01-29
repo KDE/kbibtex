@@ -310,7 +310,7 @@ void FieldListEdit::dropEvent(QDropEvent *event)
 
         if (entry != NULL && d->fieldKey == QLatin1String("^external")) {
             /// handle "external" list differently
-            QList<KUrl> urlList = FileInfo::entryUrls(entry, KUrl(file->property(File::Url).toString()));
+            QList<KUrl> urlList = FileInfo::entryUrls(entry, KUrl(file->property(File::Url).toUrl()));
             Value v;
             foreach(const KUrl &url, urlList) {
                 v.append(new VerbatimText(url.pathOrUrl()));
@@ -425,7 +425,7 @@ UrlListEdit::UrlListEdit(QWidget *parent)
 
 void UrlListEdit::slotAddLocalFile()
 {
-    KUrl fileUrl(d->file != NULL ? d->file->property(File::Url, QVariant()).value<KUrl>() : KUrl());
+    KUrl fileUrl(d->file != NULL ? d->file->property(File::Url, QUrl()).toUrl() : KUrl());
     QFileInfo fileUrlInfo = fileUrl.isEmpty() ? QFileInfo() : QFileInfo(fileUrl.path());
 
     QString filename = KFileDialog::getOpenFileName(KUrl(fileUrlInfo.absolutePath()), QString(), this, i18n("Add Local File"));

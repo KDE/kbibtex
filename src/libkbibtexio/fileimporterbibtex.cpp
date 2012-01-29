@@ -587,9 +587,9 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value& value, const QStr
 
     do {
         bool isStringKey = false;
-        QString text = readString(isStringKey).simplified();
-        /// for all entries except for abstracts ...
-        if (iKey != Entry::ftAbstract) {
+        QString text = readString(isStringKey);
+        /// for all entries except for abstracts and URLs/filenames ...
+        if (iKey != Entry::ftAbstract && !(iKey.startsWith(Entry::ftUrl) && !iKey.startsWith(Entry::ftUrlDate)) && !iKey.startsWith(Entry::ftLocalFile)) {
             /// ... remove redundant spaces including newlines
             text = text.simplified();
         }

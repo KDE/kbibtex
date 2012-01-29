@@ -296,7 +296,7 @@ public:
 
         const Entry *entry = dynamic_cast<const Entry*>(editor->currentElement());
         if (entry != NULL) {
-            QList<KUrl> urlList = FileInfo::entryUrls(entry, editor->bibTeXModel()->bibTeXFile()->property(File::Url).value<KUrl>());
+            QList<KUrl> urlList = FileInfo::entryUrls(entry, editor->bibTeXModel()->bibTeXFile()->property(File::Url).toUrl());
             if (!urlList.isEmpty()) {
                 for (QList<KUrl>::ConstIterator it = urlList.constBegin(); it != urlList.constEnd(); ++it) {
                     // FIXME: the signal mapper will fill up with mappings, as they are never removed
