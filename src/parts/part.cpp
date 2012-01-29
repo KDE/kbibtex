@@ -318,7 +318,7 @@ public:
 
         QSharedPointer<const Entry> entry = editor->currentElement().dynamicCast<const Entry>();
         if (!entry.isNull()) {
-            QList<KUrl> urlList = FileInfo::entryUrls(entry.data(), editor->bibTeXModel()->bibTeXFile()->property(File::Url).toUrl());
+            QList<KUrl> urlList = FileInfo::entryUrls(entry.data(), editor->bibTeXModel()->bibTeXFile()->property(File::Url).toUrl(), FileInfo::TestExistanceYes);
             if (!urlList.isEmpty()) {
                 for (QList<KUrl>::ConstIterator it = urlList.constBegin(); it != urlList.constEnd(); ++it) {
                     // FIXME: the signal mapper will fill up with mappings, as they are never removed

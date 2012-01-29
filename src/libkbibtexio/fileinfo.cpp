@@ -32,7 +32,6 @@
 #include <entry.h>
 #include "fileinfo.h"
 
-static const QRegExp regExpFileExtension = QRegExp("\\.[a-z0-9]{1,4}", Qt::CaseInsensitive);
 static const QRegExp regExpEscapedChars = QRegExp("\\\\+([&_~])");
 static const QStringList documentFileExtensions = QStringList() << ".pdf" << ".ps";
 
@@ -41,7 +40,7 @@ FileInfo::FileInfo()
     // TODO
 }
 
-void FileInfo::urlsInText(const QString &text, bool testExistance, const QString &baseDirectory, QList<KUrl> &result)
+void FileInfo::urlsInText(const QString &text, TestExistance testExistance, const QString &baseDirectory, QList<KUrl> &result)
 {
     if (text.isEmpty())
         return;
@@ -50,10 +49,10 @@ void FileInfo::urlsInText(const QString &text, bool testExistance, const QString
     for (QStringList::ConstIterator filesIt = fileList.constBegin(); filesIt != fileList.constEnd(); ++filesIt) {
         QString internalText = *filesIt;
 
-        if (testExistance) {
+        if (testExistance == TestExistanceYes) {
             QFileInfo fileInfo(internalText);
             KUrl url = KUrl(fileInfo.filePath());
-            if (fileInfo.exists() && fileInfo.isFile() && !result.contains(url)) {
+            if (fileInfo.exists() && fileInfo.isFile() && url.isValid() && !result.contains(url)) {
                 /// text points to existing file (most likely with absolute path)
                 result << url;
                 /// stop searching for urls or filenames in current internal text
@@ -62,7 +61,7 @@ void FileInfo::urlsInText(const QString &text, bool testExistance, const QString
                 const QString fullFilename = baseDirectory + QDir::separator() + internalText;
                 fileInfo = QFileInfo(fullFilename);
                 url = KUrl(fileInfo.filePath());
-                if (fileInfo.exists() && fileInfo.isFile() && !result.contains(url)) {
+                if (fileInfo.exists() && fileInfo.isFile() && url.isValid() && !result.contains(url)) {
                     /// text points to existing file in base directory
                     result << url;
                     /// stop searching for urls or filenames in current internal text
@@ -74,9 +73,9 @@ void FileInfo::urlsInText(const QString &text, bool testExistance, const QString
         /// extract URL from current field
         int pos = 0;
         while ((pos = KBibTeX::urlRegExp.indexIn(internalText, pos)) != -1) {
-            QString match = KBibTeX::urlRegExp.cap(0);
+            const QString match = KBibTeX::urlRegExp.cap(0);
             KUrl url(match);
-            if (url.isValid() && (!testExistance || !url.isLocalFile() || QFileInfo(url.path()).exists()) && !result.contains(url))
+            if (url.isValid() && (testExistance == TestExistanceNo || !url.isLocalFile() || QFileInfo(url.path()).exists()) && !result.contains(url))
                 result << url;
             /// remove match from internal text to avoid duplicates
             internalText = internalText.left(pos) + internalText.mid(pos + match.length());
@@ -101,8 +100,7 @@ void FileInfo::urlsInText(const QString &text, bool testExistance, const QString
             QString match = internalText.mid(pos, pos2 - pos);
             KUrl url("http://" + match);
             if (url.isValid() && !result.contains(url))
-                if (!result.contains(url))
-                    result << url;
+                result << url;
             /// remove match from internal text to avoid duplicates
             internalText = internalText.left(pos) + internalText.mid(pos + match.length());
         }
@@ -112,7 +110,7 @@ void FileInfo::urlsInText(const QString &text, bool testExistance, const QString
         while ((pos = KBibTeX::fileRegExp.indexIn(internalText, pos)) != -1) {
             QString match = KBibTeX::fileRegExp.cap(0);
             KUrl url(match);
-            if (url.isValid() && (!testExistance || !url.isLocalFile() || QFileInfo(url.pathOrUrl()).exists()) && !result.contains(url))
+            if (url.isValid() && (testExistance == TestExistanceNo || !url.isLocalFile() || QFileInfo(url.pathOrUrl()).exists()) && !result.contains(url))
                 result << url;
             /// remove match from internal text to avoid duplicates
             internalText = internalText.left(pos) + internalText.mid(pos + match.length());
@@ -120,7 +118,7 @@ void FileInfo::urlsInText(const QString &text, bool testExistance, const QString
     }
 }
 
-QList<KUrl> FileInfo::entryUrls(const Entry *entry, const KUrl &bibTeXUrl)
+QList<KUrl> FileInfo::entryUrls(const Entry *entry, const KUrl &bibTeXUrl, TestExistance testExistance)
 {
     QList<KUrl> result;
     if (entry == NULL || entry->isEmpty())
@@ -142,7 +140,7 @@ QList<KUrl> FileInfo::entryUrls(const Entry *entry, const KUrl &bibTeXUrl)
             while ((pos = regExpEscapedChars.indexIn(plainText, pos + 1)) != -1)
                 plainText = plainText.replace(regExpEscapedChars.cap(0), regExpEscapedChars.cap(1));
 
-            urlsInText(plainText, true, baseDirectory, result);
+            urlsInText(plainText, testExistance, baseDirectory, result);
         }
     }
 

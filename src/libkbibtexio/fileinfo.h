@@ -32,8 +32,35 @@ class Entry;
 class KBIBTEXIO_EXPORT FileInfo
 {
 public:
-    static void urlsInText(const QString &text, bool testExistance, const QString &baseDirectory, QList<KUrl> &addTo);
-    static QList<KUrl> entryUrls(const Entry *entry, const KUrl &bibTeXUrl = KUrl());
+    enum TestExistance {TestExistanceYes, TestExistanceNo};
+
+    /**
+     * Find all file or URL references in the given text. Found filenames or
+     * URLs are appended to the addTo list (duplicates are avoided).
+     * Different test may get performed depending of the test for existance
+     * of a potential file should be checked or not checked or if this matter
+     * is undecided/irrelevant (recommended default case). For the test of
+     * existance, baseDirectory is used to resolve relative paths.
+     * @param text text to scan for filenames or URLs
+     * @param testExistance shall be tested for file existance?
+     * @param baseDirectory base directory for tests on relative path names
+     * @param addTo add found URLs/filenames to this list
+     */
+    static void urlsInText(const QString &text, TestExistance testExistance, const QString &baseDirectory, QList<KUrl> &addTo);
+
+    /**
+     * Find all file or URL references in the given entry. Found filenames or
+     * URLs are appended to the addTo list (duplicates are avoided).
+     * Different test may get performed depending of the test for existance
+     * of a potential file should be checked or not checked or if this matter
+     * is undecided/irrelevant (recommended default case). For the test of
+     * existance, bibTeXUrl is used to resolve relative paths.
+     * @param entry entry to scan for filenames or URLs
+     * @param bibTeXUrl base directory/URL for tests on relative path names
+     * @param testExistance shall be tested for file existance?
+     * @return list of found URLs/filenames (duplicates are avoided)
+     */
+    static QList<KUrl> entryUrls(const Entry *entry, const KUrl &bibTeXUrl, TestExistance testExistance);
 
     /**
      * Load the given PDF file and return the contained plain text.
