@@ -31,6 +31,7 @@
 class QCheckBox;
 class QDropEvent;
 class QDragEnterEvent;
+class QSignalMapper;
 
 class KPushButton;
 
@@ -111,6 +112,7 @@ class UrlListEdit : public FieldListEdit
 
 public:
     UrlListEdit(QWidget *parent = NULL);
+    ~UrlListEdit();
 
     virtual void setReadOnly(bool isReadOnly);
 
@@ -126,13 +128,14 @@ private slots:
     void slotAddReferenceToFile();
     void slotCopyFile();
     /// Slot for events where the "save locally" button is triggered
-    void slotSaveLocally();
+    void slotSaveLocally(QWidget *widget);
     /// Catch events where the line edit's text change
-    void textChanged(const QString &);
+    void textChanged(QWidget *widget);
 
 private:
     KPushButton *m_addReferenceToFile, *m_copyFile;
-    QMap<KPushButton*, FieldLineEdit*> m_saveLocallyButtonToFieldLineEdit;
+    QSignalMapper *m_signalMapperSaveLocallyButtonClicked;
+    QSignalMapper *m_signalMapperFieldLineEditTextChanged;
 };
 
 

@@ -427,6 +427,11 @@ void PersonListEdit::setReadOnly(bool isReadOnly)
 UrlListEdit::UrlListEdit(QWidget *parent)
         : FieldListEdit(KBibTeX::tfVerbatim, KBibTeX::tfVerbatim, parent)
 {
+    m_signalMapperSaveLocallyButtonClicked = new QSignalMapper(this);
+    connect(m_signalMapperSaveLocallyButtonClicked, SIGNAL(mapped(QWidget*)), this, SLOT(slotSaveLocally(QWidget*)));
+    m_signalMapperFieldLineEditTextChanged = new QSignalMapper(this);
+    connect(m_signalMapperFieldLineEditTextChanged, SIGNAL(mapped(QWidget*)), this, SLOT(textChanged(QWidget*)));
+
     /// Button to add a reference (i.e. only the filename or URL) to an entry
     m_addReferenceToFile = new KPushButton(KIcon("emblem-symbolic-link"), i18n("Add reference to file ..."), this);
     addButton(m_addReferenceToFile);
@@ -439,6 +444,12 @@ UrlListEdit::UrlListEdit(QWidget *parent)
     addButton(m_copyFile);
     connect(m_copyFile, SIGNAL(clicked()), this, SLOT(slotCopyFile()));
     connect(m_copyFile, SIGNAL(clicked()), this, SIGNAL(modified()));
+}
+
+UrlListEdit::~UrlListEdit()
+{
+    delete m_signalMapperSaveLocallyButtonClicked;
+    delete m_signalMapperFieldLineEditTextChanged;
 }
 
 void UrlListEdit::slotAddReferenceToFile()
@@ -503,14 +514,12 @@ void UrlListEdit::slotCopyFile()
     }
 }
 
-void UrlListEdit::slotSaveLocally()
+void UrlListEdit::slotSaveLocally(QWidget *widget)
 {
-    /// Assume the KPushButton "Save locally" was the sender of this signal
-    KPushButton *buttonSaveLocally = static_cast<KPushButton*>(sender());
-    /// Determine associated FieldLineEdit widget
-    FieldLineEdit *fieldLineEdit = m_saveLocallyButtonToFieldLineEdit.value(buttonSaveLocally, NULL);
+    /// Determine FieldLineEdit widget
+    FieldLineEdit *fieldLineEdit = dynamic_cast<FieldLineEdit*>(widget);
     /// Build Url from line edit's content
-    KUrl url(fieldLineEdit->text());
+    const KUrl url(fieldLineEdit->text());
 
     /// Only proceed if Url is valid and points to a remote location
     if (url.isValid() && !urlIsLocal(url)) {
@@ -546,25 +555,27 @@ void UrlListEdit::slotSaveLocally()
     }
 }
 
-void UrlListEdit::textChanged(const QString &newText)
+void UrlListEdit::textChanged(QWidget *widget)
 {
-    /// Assume a FieldLineEdit was the sender of this signal
-    FieldLineEdit *fieldLineEdit = dynamic_cast<FieldLineEdit*>(sender());
-    if (fieldLineEdit == NULL) return; ///< should never happen!
     /// Determine associated KPushButton "Save locally"
-    KPushButton *buttonSaveLocally = m_saveLocallyButtonToFieldLineEdit.key(fieldLineEdit, NULL);
-    /// Just ensure the button is valid
-    if (buttonSaveLocally != NULL) {
-        /// Create Url from new text to make some tests on it
-        KUrl url(newText);
-        /// Enable button only if Url is valid and points to a remote
-        /// PDF or PostScript file
-        // TODO more file types?
-        bool canBeSaved = url.isValid() && (newText.endsWith(QLatin1String(".pdf")) || newText.endsWith(QLatin1String(".ps"))) && !urlIsLocal(url);
-        // FIXME random crashes here???
-        buttonSaveLocally->setEnabled(canBeSaved);
-        buttonSaveLocally->setToolTip(canBeSaved ? i18n("Save file \"%1\" locally", url.pathOrUrl()) : QLatin1String(""));
-    }
+    KPushButton *buttonSaveLocally = dynamic_cast<KPushButton*>(widget);
+    if (buttonSaveLocally == NULL) return; ///< should never happen!
+
+    /// Assume a FieldLineEdit was the sender of this signal
+    FieldLineEdit *fieldLineEdit = dynamic_cast<FieldLineEdit*>(m_signalMapperFieldLineEditTextChanged->mapping(widget));
+    if (fieldLineEdit == NULL) return; ///< should never happen!
+
+    /// Create URL from new text to make some tests on it
+    /// Only remote URLs are of interest, therefore no tests
+    /// on local file or relative paths
+    KUrl url(fieldLineEdit->text());
+
+    /// Enable button only if Url is valid and points to a remote
+    /// PDF or PostScript file
+    // TODO more file types?
+    bool canBeSaved = url.isValid() && !urlIsLocal(url) && (newText.endsWith(QLatin1String(".pdf")) || newText.endsWith(QLatin1String(".ps"))) && !urlIsLocal(url);
+    buttonSaveLocally->setEnabled(canBeSaved);
+    buttonSaveLocally->setToolTip(canBeSaved ? i18n("Save file \"%1\" locally", url.pathOrUrl()) : QLatin1String(""));
 }
 
 QString& UrlListEdit::askRelativeOrStaticFilename(QWidget *parent, QString &filename, const QUrl &baseUrl)
@@ -599,10 +610,10 @@ FieldLineEdit* UrlListEdit::addFieldLineEdit()
     fieldLineEdit->appendWidget(buttonSaveLocally);
     /// Connect signals to react on button events
     /// or changes in the FieldLineEdit's text
-    connect(buttonSaveLocally, SIGNAL(clicked()), this, SLOT(slotSaveLocally()));
-    connect(fieldLineEdit, SIGNAL(textChanged(QString)), this, SLOT(textChanged(QString)));
-    /// Memorize to which FieldLineEdit this button belongs to
-    m_saveLocallyButtonToFieldLineEdit.insert(buttonSaveLocally, fieldLineEdit);
+    m_signalMapperSaveLocallyButtonClicked->setMapping(buttonSaveLocally, fieldLineEdit);
+    m_signalMapperFieldLineEditTextChanged->setMapping(fieldLineEdit, buttonSaveLocally);
+    connect(buttonSaveLocally, SIGNAL(clicked()), m_signalMapperSaveLocallyButtonClicked, SLOT(map()));
+    connect(fieldLineEdit, SIGNAL(textChanged(QString)), m_signalMapperFieldLineEditTextChanged, SLOT(map()));
 
     return fieldLineEdit;
 }
