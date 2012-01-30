@@ -453,6 +453,49 @@ bool BibTeXFileModel::insertRow(Element *element, int row, const QModelIndex & p
     if (parent != QModelIndex())
         return false;
 
+    /// Check for duplicate ids or keys when inserting a new element
+    /// First, check entries
+    Entry *entry = dynamic_cast<Entry*>(element);
+    if (entry != NULL) {
+        /// Fetch current entry's id
+        const QString id = entry->id();
+        if (m_bibtexFile->containsKey(id) != NULL) {
+            /// Same entry id used for an existing entry or macro
+            int overflow = 2;
+            static const QString pattern = QLatin1String("%1_%2");
+            /// Test alternative ids with increasing "overflow" counter:
+            /// id_2, id_3, id_4 ,...
+            QString newId = pattern.arg(id).arg(overflow);
+            while (m_bibtexFile->containsKey(newId) != NULL) {
+                ++overflow;
+                newId = pattern.arg(id).arg(overflow);
+            }
+            /// Guaranteed to find an alternative, apply it to entry
+            entry->setId(newId);
+        }
+    } else {
+        /// Next, check macros
+        Macro *macro = dynamic_cast<Macro*>(element);
+        if (macro != NULL) {
+            /// Fetch current macro's key
+            const QString key = macro->key();
+            if (m_bibtexFile->containsKey(key) != NULL) {
+                /// Same entry key used for an existing entry or macro
+                int overflow = 2;
+                static const QString pattern = QLatin1String("%1_%2");
+                /// Test alternative keys with increasing "overflow" counter:
+                /// key_2, key_3, key_4 ,...
+                QString newKey = pattern.arg(key).arg(overflow);
+                while (m_bibtexFile->containsKey(newKey) != NULL) {
+                    ++overflow;
+                    newKey = pattern.arg(key).arg(overflow);
+                }
+                /// Guaranteed to find an alternative, apply it to macro
+                macro->setKey(newKey);
+            }
+        }
+    }
+
     beginInsertRows(QModelIndex(), row, row);
     m_bibtexFile->insert(row, element);
     endInsertRows();
