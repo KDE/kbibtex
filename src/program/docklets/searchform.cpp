@@ -237,7 +237,8 @@ public:
         connect(searchButton, SIGNAL(clicked()), p, SLOT(startSearch()));
         searchButton->setText(i18n("Search"));
         searchButton->setIcon(KIcon("media-playback-start"));
-        tabWidget->setEnabled(true);
+        for (int i = tabWidget->count() - 1; i >= 0; --i)
+            tabWidget->widget(i)->setEnabled(true);
         tabWidget->unsetCursor();
     }
 
@@ -248,7 +249,8 @@ public:
             connect(searchButton, SIGNAL(clicked()), it.value(), SLOT(cancel()));
         searchButton->setText(i18n("Cancel"));
         searchButton->setIcon(KIcon("media-playback-stop"));
-        tabWidget->setEnabled(false);
+        for (int i = tabWidget->count() - 1; i >= 0; --i)
+            tabWidget->widget(i)->setEnabled(false);
         tabWidget->setCursor(Qt::WaitCursor);
     }
 
