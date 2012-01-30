@@ -474,6 +474,49 @@ bool BibTeXFileModel::insertRow(QSharedPointer<Element> element, int row, const 
     if (m_bibtexFile == NULL || row < 0 || row > rowCount() || parent != QModelIndex())
         return false;
 
+    /// Check for duplicate ids or keys when inserting a new element
+    /// First, check entries
+    QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
+    if (!entry.isNull()) {
+        /// Fetch current entry's id
+        const QString id = entry->id();
+        if (!m_bibtexFile->containsKey(id).isNull()) {
+            /// Same entry id used for an existing entry or macro
+            int overflow = 2;
+            static const QString pattern = QLatin1String("%1_%2");
+            /// Test alternative ids with increasing "overflow" counter:
+            /// id_2, id_3, id_4 ,...
+            QString newId = pattern.arg(id).arg(overflow);
+            while (!m_bibtexFile->containsKey(newId).isNull()) {
+                ++overflow;
+                newId = pattern.arg(id).arg(overflow);
+            }
+            /// Guaranteed to find an alternative, apply it to entry
+            entry->setId(newId);
+        }
+    } else {
+        /// Next, check macros
+        QSharedPointer<Macro> macro = element.dynamicCast<Macro>();
+        if (!macro.isNull()) {
+            /// Fetch current macro's key
+            const QString key = macro->key();
+            if (!m_bibtexFile->containsKey(key).isNull()) {
+                /// Same entry key used for an existing entry or macro
+                int overflow = 2;
+                static const QString pattern = QLatin1String("%1_%2");
+                /// Test alternative keys with increasing "overflow" counter:
+                /// key_2, key_3, key_4 ,...
+                QString newKey = pattern.arg(key).arg(overflow);
+                while (!m_bibtexFile->containsKey(newKey).isNull()) {
+                    ++overflow;
+                    newKey = pattern.arg(key).arg(overflow);
+                }
+                /// Guaranteed to find an alternative, apply it to macro
+                macro->setKey(newKey);
+            }
+        }
+    }
+
     beginInsertRows(QModelIndex(), row, row);
     m_bibtexFile->insert(row, element);
     endInsertRows();
