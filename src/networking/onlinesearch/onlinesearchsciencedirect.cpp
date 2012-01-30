@@ -142,8 +142,9 @@ void OnlineSearchScienceDirect::doneFetchingStartPage()
         inputMap["resultsPerPage"] = QString::number(d->numExpectedResults);
         inputMap["_ob"] = "QuickSearchURL";
         inputMap["_method"] = "submitForm";
+        inputMap["sdSearch"] = "Search";
 
-        static const QStringList orderOfParameters = QString("_ob|_method|_acct|_origin|_zone|md5|_eidkey|qs_issue|qs_pages|qs_title|qs_vol|sdSearch|qs_all|qs_author|resultsPerPage=3").split("|");
+        static const QStringList orderOfParameters = QString("_ob|_method|_acct|_origin|_zone|md5|_eidkey|qs_issue|qs_pages|qs_title|qs_vol|sdSearch|qs_all|qs_author|resultsPerPage").split("|");
         foreach(const QString &key, orderOfParameters) {
             if (!inputMap.contains(key)) continue;
             url.addQueryItem(key, inputMap[key]);
@@ -296,7 +297,6 @@ void OnlineSearchScienceDirect::doneFetchingBibTeX()
     QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
     if (handleErrors(reply)) {
         QTextStream ts(reply->readAll());
-        ts.setCodec("ISO 8859-1");
         QString bibTeXcode = ts.readAll();
         d->sanitizeBibTeXCode(bibTeXcode);
 
@@ -309,12 +309,10 @@ void OnlineSearchScienceDirect::doneFetchingBibTeX()
                 QSharedPointer<Entry> entry = (*it).dynamicCast<Entry>();
                 if (!entry.isNull()) {
                     hasEntry = true;
-                    if (!entry.isNull()) {
-                        Value v;
-                        v.append(QSharedPointer<VerbatimText>(new VerbatimText(label())));
-                        entry->insert("x-fetchedfrom", v);
-                        emit foundEntry(entry);
-                    }
+                    Value v;
+                    v.append(QSharedPointer<VerbatimText>(new VerbatimText(label())));
+                    entry->insert("x-fetchedfrom", v);
+                    emit foundEntry(entry);
                 }
             }
             delete bibtexFile;
