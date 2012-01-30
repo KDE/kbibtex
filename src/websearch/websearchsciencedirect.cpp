@@ -27,7 +27,6 @@
 #include "fileimporterbibtex.h"
 #include "websearchsciencedirect.h"
 
-
 class WebSearchScienceDirect::WebSearchScienceDirectPrivate
 {
 private:
@@ -135,7 +134,7 @@ void WebSearchScienceDirect::doneFetchingStartPage()
     if (handleErrors(reply)) {
         const QString htmlText = reply->readAll();
         static_cast<HTTPEquivCookieJar*>(networkAccessManager()->cookieJar())->checkForHttpEqiuv(htmlText, reply->url());
-        KUrl url(d->scienceDirectBaseUrl + "science");
+        KUrl url(d->scienceDirectBaseUrl + "/science");
         QMap<QString, QString> inputMap = formParameters(htmlText, QLatin1String("<form name=\"qkSrch\""));
         inputMap["qs_all"] = d->queryFreetext.trimmed();
         inputMap["qs_author"] = d->queryAuthor.trimmed();
@@ -275,7 +274,7 @@ void WebSearchScienceDirect::doneFetchingExportCitationPage()
             }
 
             ++d->runningJobs;
-            QNetworkRequest request(KUrl(d->scienceDirectBaseUrl + "science"));
+            QNetworkRequest request(KUrl(d->scienceDirectBaseUrl + "/science"));
             setSuggestedHttpHeaders(request, reply);
             QNetworkReply *newReply = networkAccessManager()->post(request, body.toUtf8());
             setNetworkReplyTimeout(newReply);
@@ -300,7 +299,6 @@ void WebSearchScienceDirect::doneFetchingBibTeX()
     QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
     if (handleErrors(reply)) {
         QTextStream ts(reply->readAll());
-        ts.setCodec("ISO 8859-1");
         QString bibTeXcode = ts.readAll();
         d->sanitizeBibTeXCode(bibTeXcode);
 
@@ -313,12 +311,10 @@ void WebSearchScienceDirect::doneFetchingBibTeX()
                 Entry *entry = dynamic_cast<Entry*>(*it);
                 if (entry != NULL) {
                     hasEntry = true;
-                    if (entry != NULL) {
-                        Value v;
-                        v.append(new VerbatimText(label()));
-                        entry->insert("x-fetchedfrom", v);
-                        emit foundEntry(entry);
-                    }
+                    Value v;
+                    v.append(new VerbatimText(label()));
+                    entry->insert("x-fetchedfrom", v);
+                    emit foundEntry(entry);
                 }
             }
             delete bibtexFile;
