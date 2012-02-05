@@ -70,6 +70,7 @@ protected slots:
     void elementViewDocument();
     void elementViewDocumentMenu(QObject *);
     void elementFindPDF();
+    void applyDefaultFormatString();
 
 private slots:
     void newElementTriggered(int event);

@@ -26,7 +26,6 @@
 #include <KSharedConfigPtr>
 #include <KPushButton>
 #include <KInputDialog>
-#include <KDebug>
 #include <KColorButton>
 #include <KColorDialog>
 #include <KLineEdit>
@@ -377,6 +376,11 @@ ColorLabelContextMenu::ColorLabelContextMenu(BibTeXEditor *widget)
     m_menu->addAction(action);
     sm->setMapping(action, QLatin1String("#000000"));
     connect(action, SIGNAL(triggered()), sm, SLOT(map()));
+}
+
+KActionMenu *ColorLabelContextMenu::menuAction()
+{
+    return m_menu;
 }
 
 void ColorLabelContextMenu::setEnabled(bool enabled)

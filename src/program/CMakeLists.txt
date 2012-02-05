@@ -14,6 +14,7 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/../libkbibtexio/config
     ${CMAKE_CURRENT_SOURCE_DIR}/../networking
     ${CMAKE_CURRENT_SOURCE_DIR}/../networking/onlinesearch
+    ${CMAKE_CURRENT_SOURCE_DIR}/../processing
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../
     ${CMAKE_CURRENT_SOURCE_DIR}/../../
     ${CMAKE_CURRENT_SOURCE_DIR}/../

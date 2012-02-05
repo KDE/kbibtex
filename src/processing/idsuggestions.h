@@ -41,7 +41,20 @@ public:
     ~IdSuggestions();
 
     QString formatId(const Entry &entry, const QString &formatStr) const;
-    QString defaultformatId(const Entry &entry) const;
+    QString defaultFormatId(const Entry &entry) const;
+
+    /**
+      * Apply the default formatting string to the entry.
+      * If no default formatting string is set, the entry
+      * will stay untouched and the function return false.
+      * If the formatting string is set, the entry's id
+      * will be changed accordingly and the function returns true.
+      *
+      * @param entry entry where the id has to be set
+      * @return true if the id was set, false otherwise
+      */
+    bool applyDefaultFormatId(Entry &entry) const;
+
     QStringList formatIdList(const Entry &entry) const;
 
     QStringList formatStrToHuman(const QString &formatStr) const;

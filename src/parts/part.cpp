@@ -70,6 +70,7 @@
 #include <element/findpdfui.h>
 #include <valuelistmodel.h>
 #include <clipboard.h>
+#include <idsuggestions.h>
 #include "part.h"
 #include "partfactory.h"
 // #include "browserextension.h" // FIXME
@@ -92,7 +93,7 @@ public:
     SortFilterBibTeXFileModel *sortFilterProxyModel;
     FilterBar *filterBar;
     QSignalMapper *signalMapperNewElement;
-    KAction *editCutAction, *editDeleteAction, *editCopyAction, *editPasteAction, *editCopyReferencesAction, *elementEditAction, *elementViewDocumentAction, *fileSaveAction, *elementFindPDFAction;
+    KAction *editCutAction, *editDeleteAction, *editCopyAction, *editPasteAction, *editCopyReferencesAction, *elementEditAction, *elementViewDocumentAction, *fileSaveAction, *elementFindPDFAction, *entryApplyDefaultFormatString;
     QMenu *viewDocumentMenu;
     QSignalMapper *signalMapperViewDocument;
     bool isSaveAsOperation;
@@ -425,6 +426,10 @@ void KBibTeXPart::setupActions(bool /*browserViewWanted FIXME*/)
     actionCollection()->addAction(QLatin1String("element_findpdf"),  d->elementFindPDFAction);
     connect(d->elementFindPDFAction, SIGNAL(triggered()), this, SLOT(elementFindPDF()));
 
+    d->entryApplyDefaultFormatString = new KAction(KIcon("favorites"), i18n("Format entry ids"), this);
+    actionCollection()->addAction(QLatin1String("entry_applydefaultformatstring"), d->entryApplyDefaultFormatString);
+    connect(d->entryApplyDefaultFormatString, SIGNAL(triggered()), this, SLOT(applyDefaultFormatString()));
+
     Clipboard *clipboard = new Clipboard(d->editor);
 
     d->editCopyReferencesAction = new KAction(KIcon("edit-copy"), i18n("Copy References"), this);
@@ -446,7 +451,6 @@ void KBibTeXPart::setupActions(bool /*browserViewWanted FIXME*/)
     d->editor->setContextMenuPolicy(Qt::ActionsContextMenu);
     d->editor->addAction(d->elementEditAction);
     d->editor->addAction(d->elementViewDocumentAction);
-    d->editor->addAction(d->elementFindPDFAction);
     QAction *separator = new QAction(this);
     separator->setSeparator(true);
     d->editor->addAction(separator);
@@ -463,12 +467,16 @@ void KBibTeXPart::setupActions(bool /*browserViewWanted FIXME*/)
 
     connect(d->editor, SIGNAL(selectedElementsChanged()), this, SLOT(updateActions()));
 
-    setXMLFile(RCFileName);
+    d->editor->addAction(d->elementFindPDFAction);
+    d->editor->addAction(d->entryApplyDefaultFormatString);
 
     d->findDuplicatesUI = new FindDuplicatesUI(this, d->editor);
     d->lyx = new LyX(this, d->editor);
 
     d->colorLabelContextMenu = new ColorLabelContextMenu(d->editor);
+    actionCollection()->addAction(QLatin1String("entry_colorlabel"), d->colorLabelContextMenu->menuAction());
+
+    setXMLFile(RCFileName);
 
     updateActions();
     fitActionSettings();
@@ -564,6 +572,23 @@ void KBibTeXPart::elementFindPDF()
         if (!entry.isNull())
             FindPDFUI::interactiveFindPDF(*entry, *d->bibTeXFile, widget());
     }
+}
+
+void KBibTeXPart::applyDefaultFormatString()
+{
+    QModelIndexList mil = d->editor->selectionModel()->selectedRows();
+    foreach(const QModelIndex &index, mil) {
+        QSharedPointer<Entry> entry = d->editor->bibTeXModel()->element(d->editor->sortFilterProxyModel()->mapToSource(index).row()).dynamicCast<Entry>();
+        if (!entry.isNull()) {
+            static IdSuggestions idSuggestions;
+            bool success = idSuggestions.applyDefaultFormatId(*entry.data());
+            if (!success) {
+                KMessageBox::information(widget(), i18n("Cannot apply default formatting for entry ids: No default format specified."));
+                break;
+            }
+        }
+    }
+
 }
 
 void KBibTeXPart::fitActionSettings()
@@ -670,6 +695,9 @@ void KBibTeXPart::updateActions()
     d->editCopyReferencesAction->setEnabled(!emptySelection);
     d->editCutAction->setEnabled(!emptySelection && isReadWrite());
     d->editDeleteAction->setEnabled(!emptySelection && isReadWrite());
+    d->elementFindPDFAction->setEnabled(!emptySelection && isReadWrite());
+    d->entryApplyDefaultFormatString->setEnabled(!emptySelection && isReadWrite());
+    d->colorLabelContextMenu->menuAction()->setEnabled(!emptySelection && isReadWrite());
 
     int numDocumentsToView = d->updateViewDocumentMenu();
     /// enable menu item only if there is at least one document to view

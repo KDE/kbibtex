@@ -29,6 +29,7 @@
 #include <clipboard.h>
 #include <bibtexeditor.h>
 #include <bibtexfilemodel.h>
+#include <idsuggestions.h>
 #include "searchresults.h"
 
 class SearchResults::SearchResultsPrivate
@@ -100,7 +101,15 @@ public:
     }
 
     bool insertElement(QSharedPointer<Element> element) {
+        static IdSuggestions idSuggestions;
         BibTeXFileModel *model = resultList->bibTeXModel();
+
+        /// If the user had configured a default formatting string
+        /// for entry ids, apply this formatting strings here
+        QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
+        if (!entry.isNull())
+            idSuggestions.applyDefaultFormatId(*entry.data());
+
         return model->insertRow(element, model->rowCount());
     }
 

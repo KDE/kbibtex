@@ -100,7 +100,6 @@ private:
     SettingsColorLabelWidgetPrivate *d;
 };
 
-
 /**
 @author Thomas Fischer
 */
@@ -111,6 +110,7 @@ class KBIBTEXGUI_EXPORT ColorLabelContextMenu : public QObject
 public:
     ColorLabelContextMenu(BibTeXEditor *widget);
 
+    KActionMenu *menuAction();
     void setEnabled(bool);
 
 private slots:

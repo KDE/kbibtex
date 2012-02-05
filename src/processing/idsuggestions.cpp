@@ -193,7 +193,7 @@ public:
 };
 
 const QString IdSuggestions::keyDefaultFormatString = QLatin1String("DefaultFormatString");
-const QString IdSuggestions::defaultDefaultFormatString = QLatin1String("al|Y|T3");
+const QString IdSuggestions::defaultDefaultFormatString = QString::null;
 const QString IdSuggestions::keyFormatStringList = QLatin1String("FormatStringList");
 const QStringList IdSuggestions::defaultFormatStringList = QStringList() << QLatin1String("A") << QLatin1String("A2|y") << QLatin1String("A3|y") << QLatin1String("A4|y|\":|T5") << QLatin1String("al|\":|T") << QLatin1String("al|y") << QLatin1String("al|Y") << QLatin1String("Al\"-|\"-|y") << QLatin1String("Al\"+|Y") << QLatin1String("al|y|T") << QLatin1String("al|Y|T3") << QLatin1String("al|Y|T3l") << QLatin1String("a|\":|Y|\":|T1") << QLatin1String("a|y") << QLatin1String("A|\":|Y");
 const QString IdSuggestions::configGroupName = QLatin1String("IdSuggestions");
@@ -220,9 +220,19 @@ QString IdSuggestions::formatId(const Entry &entry, const QString &formatStr) co
     return id;
 }
 
-QString IdSuggestions::defaultformatId(const Entry &entry) const
+QString IdSuggestions::defaultFormatId(const Entry &entry) const
 {
     return formatId(entry, d->defaultFormatString());
+}
+
+bool IdSuggestions::applyDefaultFormatId(Entry &entry) const
+{
+    const QString dfs = d->defaultFormatString();
+    if (!dfs.isEmpty()) {
+        entry.setId(defaultFormatId(entry));
+        return true;
+    } else
+        return false;
 }
 
 QStringList IdSuggestions::formatIdList(const Entry &entry) const

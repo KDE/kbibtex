@@ -25,17 +25,21 @@
 #include <KConfigGroup>
 #include <KPushButton>
 #include <KLocale>
+#include <KGlobalSettings>
+#include <KColorScheme>
 
 #include "fileimporterbibtex.h"
 #include "idsuggestions.h"
 #include "settingsidsuggestionswidget.h"
 
 const int FormatStringRole = Qt::UserRole + 7811;
+const int IsDefaultFormatStringRole = Qt::UserRole + 7812;
 
 class IdSuggestionsModel : public QAbstractListModel
 {
 private:
     QStringList m_formatStringList;
+    int m_defaultFormatStringRow;
     IdSuggestions *m_idSuggestions;
     static const QString exampleBibTeXEntryString;
     static QSharedPointer<const Entry> exampleBibTeXEntry;
@@ -44,6 +48,7 @@ public:
     IdSuggestionsModel(QObject *parent = NULL)
             : QAbstractListModel(parent) {
         m_idSuggestions = new IdSuggestions();
+        m_defaultFormatStringRow = -1;
 
         if (exampleBibTeXEntry.isNull()) {
             static FileImporterBibTeX fileImporterBibTeX;
@@ -57,13 +62,21 @@ public:
         delete m_idSuggestions;
     }
 
-    void setFormatStringList(const QStringList &formatStringList) {
+    void setFormatStringList(const QStringList &formatStringList, const QString &defaultString = QString::null) {
         m_formatStringList = formatStringList;
+        m_defaultFormatStringRow = m_formatStringList.indexOf(defaultString);
         reset();
     }
 
     QStringList formatStringList() const {
-        return m_formatStringList;
+        return this->m_formatStringList;
+    }
+
+    QString defaultFormatString() const {
+        if (m_defaultFormatStringRow >= 0 && m_defaultFormatStringRow < m_formatStringList.length())
+            return m_formatStringList[m_defaultFormatStringRow];
+        else
+            return QString::null;
     }
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const {
@@ -78,19 +91,49 @@ public:
             return QVariant();
 
         switch (role) {
+        case Qt::FontRole: {
+            QFont defaultFont = KGlobalSettings::generalFont();
+            if (index.row() == m_defaultFormatStringRow)
+                defaultFont.setBold(true);
+            return defaultFont;
+        }
         case Qt::DecorationRole:
-            return KIcon("view-filter");
+            if (index.row() == m_defaultFormatStringRow)
+                return KIcon("favorites");
+            else
+                return KIcon("view-filter");
         case Qt::ToolTipRole:
             return i18n("<qt>Structure:<ul><li>%1</li></ul>Example: %2</qt>", m_idSuggestions->formatStrToHuman(m_formatStringList[index.row()]).join(QLatin1String("</li><li>")), m_idSuggestions->formatId(*exampleBibTeXEntry, m_formatStringList[index.row()]));
         case Qt::DisplayRole:
             return m_idSuggestions->formatId(*exampleBibTeXEntry, m_formatStringList[index.row()]);
         case FormatStringRole:
             return m_formatStringList[index.row()];
+        case IsDefaultFormatStringRole:
+            return index.row() == m_defaultFormatStringRow;
         default:
             return QVariant();
         }
 
         return QVariant();
+    }
+
+    bool setData(const QModelIndex &idx, const QVariant &value, int role) {
+        if (idx.row() < 0 || idx.row() >= m_formatStringList.count() || role != IsDefaultFormatStringRole || !value.canConvert<bool>())
+            return false;
+
+        if (value.toBool()) {
+            if (idx.row() != m_defaultFormatStringRow) {
+                QModelIndex oldDefaultIndex = index(m_defaultFormatStringRow, 0);
+                m_defaultFormatStringRow = idx.row();
+                dataChanged(oldDefaultIndex, oldDefaultIndex);
+                dataChanged(idx, idx);
+            }
+        } else {
+            m_defaultFormatStringRow = -1;
+            dataChanged(idx, idx);
+        }
+
+        return true;
     }
 
     QVariant headerData(int section, Qt::Orientation, int role = Qt::DisplayRole) const {
@@ -141,7 +184,7 @@ private:
 public:
     QTreeView *treeViewSuggestions;
     IdSuggestionsModel *idSuggestionsModel;
-    KPushButton *buttonNewSuggestion, *buttonEditSuggestion, *buttonDeleteSuggestion, *buttonSuggestionUp, *buttonSuggestionDown;
+    KPushButton *buttonNewSuggestion, *buttonEditSuggestion, *buttonDeleteSuggestion, *buttonSuggestionUp, *buttonSuggestionDown, *buttonToggleDefaultString;
 
     SettingsIdSuggestionsWidgetPrivate(SettingsIdSuggestionsWidget *parent)
             : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroup(config, IdSuggestions::configGroupName) {
@@ -149,11 +192,12 @@ public:
     }
 
     void loadState() {
-        idSuggestionsModel->setFormatStringList(configGroup.readEntry(IdSuggestions::keyFormatStringList, IdSuggestions::defaultFormatStringList));
+        idSuggestionsModel->setFormatStringList(configGroup.readEntry(IdSuggestions::keyFormatStringList, IdSuggestions::defaultFormatStringList), configGroup.readEntry(IdSuggestions::keyDefaultFormatString, IdSuggestions::defaultDefaultFormatString));
     }
 
     void saveState() {
         configGroup.writeEntry(IdSuggestions::keyFormatStringList, idSuggestionsModel->formatStringList());
+        configGroup.writeEntry(IdSuggestions::keyDefaultFormatString, idSuggestionsModel->defaultFormatString());
         config->sync();
     }
 
@@ -165,11 +209,12 @@ public:
         QGridLayout *layout = new QGridLayout(p);
 
         treeViewSuggestions = new QTreeView(p);
-        layout->addWidget(treeViewSuggestions, 0, 0, 7, 1);
+        layout->addWidget(treeViewSuggestions, 0, 0, 8, 1);
         idSuggestionsModel = new IdSuggestionsModel(treeViewSuggestions);
         treeViewSuggestions->setModel(idSuggestionsModel);
         treeViewSuggestions->setRootIsDecorated(false);
         connect(treeViewSuggestions->selectionModel(), SIGNAL(currentChanged(QModelIndex, QModelIndex)), p, SLOT(itemChanged(QModelIndex)));
+        treeViewSuggestions->setMinimumSize(treeViewSuggestions->fontMetrics().width(QChar('W')) * 25, treeViewSuggestions->fontMetrics().height() * 15);
 
         buttonNewSuggestion = new KPushButton(KIcon("list-add"), i18n("Add..."), p);
         layout->addWidget(buttonNewSuggestion, 0, 1, 1, 1);
@@ -192,8 +237,12 @@ public:
         buttonSuggestionDown = new KPushButton(KIcon("go-down"), i18n("Down"), p);
         layout->addWidget(buttonSuggestionDown, 4, 1, 1, 1);
 
+        buttonToggleDefaultString = new KPushButton(KIcon("favorites"), i18n("Toggle Default"), p);
+        layout->addWidget(buttonToggleDefaultString, 5, 1, 1, 1);
+
         connect(buttonSuggestionUp, SIGNAL(clicked()), p, SLOT(buttonClicked()));
         connect(buttonSuggestionDown, SIGNAL(clicked()), p, SLOT(buttonClicked()));
+        connect(buttonToggleDefaultString, SIGNAL(clicked()), p, SLOT(toggleDefault()));
     }
 };
 
@@ -258,4 +307,13 @@ void SettingsIdSuggestionsWidget::itemChanged(const QModelIndex &index)
 //d->buttonDeleteSuggestion->setEnabled(enableChange);
     d->buttonSuggestionUp->setEnabled(enableChange && index.row() > 0);
     d->buttonSuggestionDown->setEnabled(enableChange && index.row() < d->idSuggestionsModel->rowCount() - 1);
+
+    d->buttonToggleDefaultString->setEnabled(enableChange);
+}
+
+void SettingsIdSuggestionsWidget::toggleDefault()
+{
+    QModelIndex curIndex = d->treeViewSuggestions->currentIndex();
+    bool current = d->treeViewSuggestions->model()->data(curIndex, IsDefaultFormatStringRole).toBool();
+    d->treeViewSuggestions->model()->setData(curIndex, !current, IsDefaultFormatStringRole);
 }

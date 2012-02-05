@@ -20,6 +20,8 @@
     <Action name="element_viewdocument" />
     <Separator/>
     <Action name="element_findpdf" />
+    <Action name="entry_applydefaultformatstring" />
+    <Action name="entry_colorlabel" />
   </Menu>
 </MenuBar>
 
