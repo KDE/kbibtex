@@ -28,6 +28,7 @@
 #include <KLineEdit>
 #include <KPushButton>
 #include <KFileDialog>
+#include <KUrlRequester>
 
 #include <fileexporter.h>
 #include <clipboard.h>
@@ -42,13 +43,14 @@ private:
     KComboBox *comboBoxCopyReferenceCmd;
     static const QString citeCmdToLabel;
 
-    QCheckBox *checkboxUseAutomaticLyXPipeDetection;
-    KLineEdit *lineeditLyXPipePath;
-
     KSharedConfigPtr config;
     const QString configGroupNameGeneral;
 
 public:
+    QCheckBox *checkboxUseAutomaticLyXPipeDetection;
+    KUrlRequester *lineeditLyXPipePath;
+    QString lastUserInput;
+
     SettingsFileExporterWidgetPrivate(SettingsFileExporterWidget *parent)
             : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))),
             configGroupNameGeneral(QLatin1String("General")) {
@@ -62,7 +64,8 @@ public:
 
         KConfigGroup configGroupLyX(config, LyX::configGroupName);
         checkboxUseAutomaticLyXPipeDetection->setChecked(configGroupLyX.readEntry(LyX::keyUseAutomaticLyXPipeDetection, LyX::defaultUseAutomaticLyXPipeDetection));
-        lineeditLyXPipePath->setText(configGroupLyX.readEntry(LyX::keyLyXPipePath, LyX::defaultLyXPipePath));
+        lastUserInput = configGroupLyX.readEntry(LyX::keyLyXPipePath, LyX::defaultLyXPipePath);
+        p->automaticLyXDetectionToggled(checkboxUseAutomaticLyXPipeDetection->isChecked());
     }
 
     void saveState() {
@@ -72,7 +75,7 @@ public:
 
         KConfigGroup configGroupLyX(config, LyX::configGroupName);
         configGroupLyX.writeEntry(LyX::keyUseAutomaticLyXPipeDetection, checkboxUseAutomaticLyXPipeDetection->isChecked());
-        configGroupLyX.writeEntry(LyX::keyLyXPipePath, lineeditLyXPipePath->text());
+        configGroupLyX.writeEntry(LyX::keyLyXPipePath, checkboxUseAutomaticLyXPipeDetection->isChecked() ? lastUserInput : lineeditLyXPipePath->text());
 
         config->sync();
     }
@@ -80,7 +83,9 @@ public:
     void resetToDefaults() {
         p->selectValue(comboBoxCopyReferenceCmd, QString(""), Qt::UserRole);
         checkboxUseAutomaticLyXPipeDetection->setChecked(LyX::defaultUseAutomaticLyXPipeDetection);
-        lineeditLyXPipePath->setText(LyX::defaultLyXPipePath);
+        QString pipe = LyX::guessLyXPipeLocation();
+        if (pipe.isEmpty()) pipe = LyX::defaultLyXPipePath;
+        lineeditLyXPipePath->setText(pipe);
     }
 
     void setupGUI() {
@@ -99,12 +104,15 @@ public:
         connect(comboBoxCopyReferenceCmd, SIGNAL(currentIndexChanged(int)), p, SIGNAL(changed()));
 
         checkboxUseAutomaticLyXPipeDetection = new QCheckBox(QLatin1String(""), p);
-        layout->addRow(i18n("Prefer to detect LyX pipe automatically:"), checkboxUseAutomaticLyXPipeDetection);
+        layout->addRow(i18n("Detect LyX pipe automatically:"), checkboxUseAutomaticLyXPipeDetection);
         connect(checkboxUseAutomaticLyXPipeDetection, SIGNAL(toggled(bool)), p, SIGNAL(changed()));
+        connect(checkboxUseAutomaticLyXPipeDetection, SIGNAL(toggled(bool)), p, SLOT(automaticLyXDetectionToggled(bool)));
 
-        lineeditLyXPipePath = new KLineEdit(p);
+        lineeditLyXPipePath = new KUrlRequester(p);
         layout->addRow(i18n("Manually specified LyX pipe:"), lineeditLyXPipePath);
         connect(lineeditLyXPipePath, SIGNAL(textEdited(QString)), p, SIGNAL(changed()));
+        lineeditLyXPipePath->setMinimumWidth(lineeditLyXPipePath->fontMetrics().width(QChar('W')) * 20);
+        lineeditLyXPipePath->setFilter(QLatin1String("inode/fifo"));
     }
 };
 
@@ -135,4 +143,14 @@ void SettingsFileExporterWidget::saveState()
 void SettingsFileExporterWidget::resetToDefaults()
 {
     d->resetToDefaults();
+}
+
+void SettingsFileExporterWidget::automaticLyXDetectionToggled(bool isChecked)
+{
+    d->lineeditLyXPipePath->setEnabled(!isChecked);
+    if (isChecked) {
+        d->lastUserInput = d->lineeditLyXPipePath->text();
+        d->lineeditLyXPipePath->setText(LyX::guessLyXPipeLocation());
+    } else
+        d->lineeditLyXPipePath->setText(d->lastUserInput);
 }

@@ -57,10 +57,8 @@ public:
         this->widget = widget;
     }
 
-    QString findLyXPipe() {
+    QString locateConfiguredLyXPipe() {
         QString result = QString::null;
-        struct stat fileInfo;
-        const QStringList nameFilter = QStringList() << QLatin1String("*lyxpipe*in*");
 
         /// First, check if automatic detection is disabled.
         /// In this case, read the LyX pipe's path from configuration
@@ -71,32 +69,8 @@ public:
         /// either automatic detection is enabled or the path in
         /// the configuration is empty/invalid. Proceed with
         /// automatic detection in this case.
-        if (result.isEmpty()) {
-            /// Start with scanning the user's home directory for pipes
-            QDir home = QDir::home();
-            QStringList files = home.entryList(nameFilter, QDir::Hidden | QDir::System | QDir::Writable, QDir::Unsorted);
-            foreach(const QString &filename, files) {
-                if (stat(filename.toAscii(), &fileInfo) == 0 && S_ISFIFO(fileInfo.st_mode)) {
-                    result = home.absolutePath() + QDir::separator() + filename;
-                    break;
-                }
-            }
-        }
-
-        /// No hit yet? Search LyX's configuration directory
-        if (result.isEmpty()) {
-            QDir home = QDir::home();
-            if (home.cd(QLatin1String(".lyx"))) {
-                /// Same search again here
-                QStringList files = home.entryList(nameFilter, QDir::Hidden | QDir::System | QDir::Writable, QDir::Unsorted);
-                foreach(const QString &filename, files) {
-                    if (stat(filename.toAscii(), &fileInfo) == 0 && S_ISFIFO(fileInfo.st_mode)) {
-                        result = home.absolutePath() + QDir::separator() + filename;
-                        break;
-                    }
-                }
-            }
-        }
+        if (result.isEmpty())
+            result = LyX::guessLyXPipeLocation();
 
         /// Finally, even if automatic detection was preferred by the user,
         /// still check configuration for a path if automatic detection failed
@@ -149,7 +123,7 @@ void LyX::sendReferenceToLyX()
     const QString defaultHintOnLyXProblems = i18n("\n\nCheck that LyX or Kile are running and configured to receive references.");
     const QString msgBoxTitle = i18n("Send Reference to LyX");
     /// LyX pipe name has to determined always fresh in case LyX or Kile exited
-    const QString pipeName = d->findLyXPipe();
+    const QString pipeName = d->locateConfiguredLyXPipe();
 
     if (pipeName.isEmpty()) {
         KMessageBox::error(d->widget, i18n("No \"LyX server pipe\" was detected.") + defaultHintOnLyXProblems, msgBoxTitle);
@@ -174,4 +148,38 @@ void LyX::sendReferenceToLyX()
     ts.flush();
 
     pipe.close();
+}
+
+QString LyX::guessLyXPipeLocation()
+{
+    struct stat fileInfo;
+    const QStringList nameFilter = QStringList() << QLatin1String("*lyxpipe*in*");
+    QString result = QString::null;
+
+    /// Start with scanning the user's home directory for pipes
+    QDir home = QDir::home();
+    QStringList files = home.entryList(nameFilter, QDir::Hidden | QDir::System | QDir::Writable, QDir::Unsorted);
+    foreach(const QString &filename, files) {
+        if (stat(filename.toAscii(), &fileInfo) == 0 && S_ISFIFO(fileInfo.st_mode)) {
+            result = home.absolutePath() + QDir::separator() + filename;
+            break;
+        }
+    }
+
+    /// No hit yet? Search LyX's configuration directory
+    if (result.isEmpty()) {
+        QDir home = QDir::home();
+        if (home.cd(QLatin1String(".lyx"))) {
+            /// Same search again here
+            QStringList files = home.entryList(nameFilter, QDir::Hidden | QDir::System | QDir::Writable, QDir::Unsorted);
+            foreach(const QString &filename, files) {
+                if (stat(filename.toAscii(), &fileInfo) == 0 && S_ISFIFO(fileInfo.st_mode)) {
+                    result = home.absolutePath() + QDir::separator() + filename;
+                    break;
+                }
+            }
+        }
+    }
+
+    return result;
 }

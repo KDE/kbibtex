@@ -50,6 +50,8 @@ public:
 
     void setReferences(const QStringList &references);
 
+    static QString guessLyXPipeLocation();
+
 private slots:
     void sendReferenceToLyX();
 

@@ -40,6 +40,7 @@ public slots:
     void loadState();
     void saveState();
     void resetToDefaults();
+    void automaticLyXDetectionToggled(bool);
 
 private:
     class SettingsFileExporterWidgetPrivate;
