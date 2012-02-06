@@ -65,7 +65,7 @@ public slots:
     void viewCurrentElement();
     void viewElement(const QSharedPointer<Element>);
     void editCurrentElement();
-    void editElement(QSharedPointer<Element>);
+    bool editElement(QSharedPointer<Element>);
     void setSelectedElements(QList<QSharedPointer<Element> >&);
     void setSelectedElement(QSharedPointer<Element>);
     void selectionDelete();

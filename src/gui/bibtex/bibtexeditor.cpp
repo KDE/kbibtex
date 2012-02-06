@@ -129,12 +129,12 @@ void BibTeXEditor::editCurrentElement()
     editElement(currentElement());
 }
 
-void BibTeXEditor::editElement(QSharedPointer<Element> element)
+bool BibTeXEditor::editElement(QSharedPointer<Element> element)
 {
     if (isReadOnly()) {
         /// read-only forbids editing elements, calling viewElement instead
         viewElement(element);
-        return;
+        return false;
     }
 
     ElementEditorDialog dialog(this);
@@ -152,11 +152,13 @@ void BibTeXEditor::editElement(QSharedPointer<Element> element)
 
     dialog.exec();
 
-    if (elementEditor.elementChanged()) {
+    bool changed = elementEditor.elementChanged();
+    if (changed) {
         emit currentElementChanged(currentElement(), bibTeXModel()->bibTeXFile());
         emit selectedElementsChanged();
         emit modified();
     }
+    return changed;
 }
 
 const QList<QSharedPointer<Element> >& BibTeXEditor::selectedElements() const
