@@ -58,6 +58,7 @@ target_link_libraries(
     ${KDE4_KPARTS_LIBS}
     ${KDE4_KFILE_LIBS}
     kbibtexio
+    kbibtexproc
     kbibtexgui
     kbibtexnetworking
 )
