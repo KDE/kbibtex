@@ -470,13 +470,13 @@ void KBibTeXPart::setupActions(bool /*browserViewWanted FIXME*/)
     d->editor->addAction(d->elementFindPDFAction);
     d->editor->addAction(d->entryApplyDefaultFormatString);
 
-    d->findDuplicatesUI = new FindDuplicatesUI(this, d->editor);
-    d->lyx = new LyX(this, d->editor);
-
     d->colorLabelContextMenu = new ColorLabelContextMenu(d->editor);
     actionCollection()->addAction(QLatin1String("entry_colorlabel"), d->colorLabelContextMenu->menuAction());
 
     setXMLFile(RCFileName);
+
+    d->findDuplicatesUI = new FindDuplicatesUI(this, d->editor);
+    d->lyx = new LyX(this, d->editor);
 
     updateActions();
     fitActionSettings();
