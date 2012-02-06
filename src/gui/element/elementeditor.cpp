@@ -103,7 +103,8 @@ public:
         checkBoxForceShowAllWidgets->setChecked(showAll);
         layout->addWidget(checkBoxForceShowAllWidgets, 2, 0, 1, 2);
         connect(checkBoxForceShowAllWidgets, SIGNAL(toggled(bool)), p, SLOT(updateReqOptWidgets()));
-        connect(referenceWidget, SIGNAL(entryTypeChanged()), p, SLOT(updateReqOptWidgets()));
+        if (referenceWidget != NULL)
+            connect(referenceWidget, SIGNAL(entryTypeChanged()), p, SLOT(updateReqOptWidgets()));
 
         buttonCheckWithBibTeX = new KPushButton(KIcon("tools-check-spelling"), i18n("Check with BibTeX"), p);
         layout->addWidget(buttonCheckWithBibTeX, 2, 2, 1, 1);
