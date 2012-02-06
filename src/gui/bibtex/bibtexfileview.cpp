@@ -103,8 +103,12 @@ public:
     }
 
     void storeColumns() {
+        static const int colMinWidth = p->fontMetrics().width(QChar('W')) * 2;
         for (int col = storedColumnCount - 1; col >= 0; --col) {
-            storedColumnWidths[col] = p->columnWidth(col);
+            int colWidth = p->columnWidth(col);
+            if (colWidth < colMinWidth)
+                p->setColumnWidth(col, colWidth = colMinWidth);
+            storedColumnWidths[col] = colWidth;
             storedColumnVisible[col] = !p->isColumnHidden(col);
         }
 
@@ -262,14 +266,14 @@ void BibTeXFileView::resizeEvent(QResizeEvent *event)
 
 void BibTeXFileView::columnMoved()
 {
-    d->storeColumns();
     QTreeView::columnMoved();
+    d->storeColumns();
 }
 
 void BibTeXFileView::columnResized(int column, int oldSize, int newSize)
 {
-    d->storeColumns();
     QTreeView::columnResized(column, oldSize, newSize);
+    d->storeColumns();
 }
 
 void BibTeXFileView::headerActionToggled()
