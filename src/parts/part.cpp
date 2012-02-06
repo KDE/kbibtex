@@ -656,8 +656,13 @@ void KBibTeXPart::newEntryTriggered()
     QSharedPointer<Entry> newEntry = QSharedPointer<Entry>(new Entry(QLatin1String("Article"), d->findUnusedId()));
     d->model->insertRow(newEntry, d->model->rowCount());
     d->editor->setSelectedElement(newEntry);
-    d->editor->editElement(newEntry);
-    d->editor->scrollToBottom();
+    if (d->editor->editElement(newEntry))
+        d->editor->scrollToBottom(); // FIXME always correct behaviour?
+    else {
+        /// Editing this new element was cancelled,
+        /// therefore remove it again
+        d->model->removeRow(d->model->rowCount() - 1);
+    }
 }
 
 void KBibTeXPart::newMacroTriggered()
@@ -665,8 +670,13 @@ void KBibTeXPart::newMacroTriggered()
     QSharedPointer<Macro> newMacro = QSharedPointer<Macro>(new Macro(d->findUnusedId()));
     d->model->insertRow(newMacro, d->model->rowCount());
     d->editor->setSelectedElement(newMacro);
-    d->editor->editElement(newMacro);
-    d->editor->scrollToBottom();
+    if (d->editor->editElement(newMacro))
+        d->editor->scrollToBottom(); // FIXME always correct behaviour?
+    else {
+        /// Editing this new element was cancelled,
+        /// therefore remove it again
+        d->model->removeRow(d->model->rowCount() - 1);
+    }
 }
 
 void KBibTeXPart::newPreambleTriggered()
@@ -674,8 +684,13 @@ void KBibTeXPart::newPreambleTriggered()
     QSharedPointer<Preamble> newPreamble = QSharedPointer<Preamble>(new Preamble());
     d->model->insertRow(newPreamble, d->model->rowCount());
     d->editor->setSelectedElement(newPreamble);
-    d->editor->editElement(newPreamble);
-    d->editor->scrollToBottom();
+    if (d->editor->editElement(newPreamble))
+        d->editor->scrollToBottom(); // FIXME always correct behaviour?
+    else {
+        /// Editing this new element was cancelled,
+        /// therefore remove it again
+        d->model->removeRow(d->model->rowCount() - 1);
+    }
 }
 
 void KBibTeXPart::newCommentTriggered()
@@ -683,8 +698,13 @@ void KBibTeXPart::newCommentTriggered()
     QSharedPointer<Comment> newComment = QSharedPointer<Comment>(new Comment());
     d->model->insertRow(newComment, d->model->rowCount());
     d->editor->setSelectedElement(newComment);
-    d->editor->editElement(newComment);
-    d->editor->scrollToBottom();
+    if (d->editor->editElement(newComment))
+        d->editor->scrollToBottom(); // FIXME always correct behaviour?
+    else {
+        /// Editing this new element was cancelled,
+        /// therefore remove it again
+        d->model->removeRow(d->model->rowCount() - 1);
+    }
 }
 
 void KBibTeXPart::updateActions()
