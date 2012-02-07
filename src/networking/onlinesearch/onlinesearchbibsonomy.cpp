@@ -155,8 +155,7 @@ public:
         }
 
         QString queryString = queryFragments.join("%20");
-        // FIXME: Number of results doesn't seem to be supported by BibSonomy
-        url.append(searchType + "/" + queryString + QString("?.entriesPerPage=%1").arg(numResults));
+        url.append(searchType + "/" + queryString + QString("?items=%1").arg(numResults));
 
         return KUrl(url);
     }

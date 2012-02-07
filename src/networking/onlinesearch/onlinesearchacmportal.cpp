@@ -151,7 +151,6 @@ KUrl OnlineSearchAcmPortal::homepage() const
 void OnlineSearchAcmPortal::cancel()
 {
     OnlineSearchAbstract::cancel();
-    // FIXME d->page->triggerAction(QWebPage::Stop);
 }
 
 void OnlineSearchAcmPortal::doneFetchingStartPage()

@@ -83,6 +83,7 @@ public:
             queryFragments.append(text + QLatin1String("[Author]"));
         }
 
+        /// Join all search terms with an AND operation
         url.append(queryFragments.join("+AND+"));
         url = url.replace("\"", "%22");
 

@@ -118,7 +118,7 @@ public:
 
         foreach(QString queryFragment, p->splitRespectingQuotationMarks(form->lineEditFreeText->text()))
         queryFragments.append(p->encodeURL(queryFragment));
-        return KUrl(QString("%1search_query=all:\"%3\"&start=0&max_results=%2").arg(arXivQueryBaseUrl).arg(form->numResultsField->value()).arg(queryFragments.join("\"+AND+all:\"")));
+        return KUrl(QString("%1search_query=all:\"%3\"&start=0&max_results=%2").arg(arXivQueryBaseUrl).arg(form->numResultsField->value()).arg(queryFragments.join("\"+AND+all:\""))); ///< join search terms with an AND operation
     }
 
     KUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) {
@@ -127,7 +127,7 @@ public:
         for (QMap<QString, QString>::ConstIterator it = query.constBegin(); it != query.constEnd(); ++it)
             foreach(QString queryFragment, p->splitRespectingQuotationMarks(it.value()))
             queryFragments.append(p->encodeURL(queryFragment));
-        return KUrl(QString("%1search_query=all:\"%3\"&start=0&max_results=%2").arg(arXivQueryBaseUrl).arg(numResults).arg(queryFragments.join("\"+AND+all:\"")));
+        return KUrl(QString("%1search_query=all:\"%3\"&start=0&max_results=%2").arg(arXivQueryBaseUrl).arg(numResults).arg(queryFragments.join("\"+AND+all:\""))); ///< join search terms with an AND operation
     }
 
     void interpreteJournal(Entry &entry) {

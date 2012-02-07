@@ -175,7 +175,7 @@ void OnlineSearchMathSciNet::doneFetchingQueryForm()
         for (QMap<QString, QString>::ConstIterator it = formParams.constBegin(); it != formParams.constEnd();++it)
             url.addQueryItem(it.key(), it.value());
         for (int i = 1; i <= d->queryParameters.count();++i)
-            url.addQueryItem(QString(QLatin1String("co%1")).arg(i), QLatin1String("AND"));
+            url.addQueryItem(QString(QLatin1String("co%1")).arg(i), QLatin1String("AND")); ///< join search terms with an AND operation
 
         /// issue request for result page
         QNetworkRequest request(url);

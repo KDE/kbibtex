@@ -183,7 +183,7 @@ public:
         QStringList chunks = p->splitRespectingQuotationMarks(form->lineEditFullText->text());
         foreach(const QString &chunk, chunks) {
             if (index > 1)
-                queryUrl.addQueryItem(QString("operator%1").arg(index), QLatin1String("AND"));
+                queryUrl.addQueryItem(QString("operator%1").arg(index), QLatin1String("AND")); ///< join search terms with an AND operation
             queryUrl.addQueryItem(QString("option%1").arg(index), QLatin1String("fulltext"));
             queryUrl.addQueryItem(QString("value%1").arg(index), chunk);
             ++index;
