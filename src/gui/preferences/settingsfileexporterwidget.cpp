@@ -110,7 +110,7 @@ public:
 
         lineeditLyXPipePath = new KUrlRequester(p);
         layout->addRow(i18n("Manually specified LyX pipe:"), lineeditLyXPipePath);
-        connect(lineeditLyXPipePath, SIGNAL(textEdited(QString)), p, SIGNAL(changed()));
+        connect(lineeditLyXPipePath->lineEdit(), SIGNAL(textEdited(QString)), p, SIGNAL(changed()));
         lineeditLyXPipePath->setMinimumWidth(lineeditLyXPipePath->fontMetrics().width(QChar('W')) * 20);
         lineeditLyXPipePath->setFilter(QLatin1String("inode/fifo"));
     }
