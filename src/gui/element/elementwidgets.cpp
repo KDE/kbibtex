@@ -450,6 +450,7 @@ void ReferenceWidget::createGUI()
     connect(entryType->lineEdit(), SIGNAL(textEdited(QString)), this, SLOT(gotModified()));
     connect(entryId, SIGNAL(textEdited(QString)), this, SLOT(gotModified()));
     connect(entryType->lineEdit(), SIGNAL(textEdited(QString)), this, SIGNAL(entryTypeChanged()));
+    connect(entryType, SIGNAL(currentIndexChanged(int)), this, SIGNAL(entryTypeChanged()));
     connect(suggestionsMenu, SIGNAL(aboutToShow()), this, SLOT(prepareSuggestionsMenu()));
 }
 
