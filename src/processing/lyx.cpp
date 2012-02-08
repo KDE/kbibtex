@@ -160,8 +160,9 @@ QString LyX::guessLyXPipeLocation()
     QDir home = QDir::home();
     QStringList files = home.entryList(nameFilter, QDir::Hidden | QDir::System | QDir::Writable, QDir::Unsorted);
     foreach(const QString &filename, files) {
-        if (stat(filename.toAscii(), &fileInfo) == 0 && S_ISFIFO(fileInfo.st_mode)) {
-            result = home.absolutePath() + QDir::separator() + filename;
+        QString const absoluteFilename = home.absolutePath() + QDir::separator() + filename;
+        if (stat(absoluteFilename.toAscii(), &fileInfo) == 0 && S_ISFIFO(fileInfo.st_mode)) {
+            result = absoluteFilename;
             break;
         }
     }
@@ -173,8 +174,9 @@ QString LyX::guessLyXPipeLocation()
             /// Same search again here
             QStringList files = home.entryList(nameFilter, QDir::Hidden | QDir::System | QDir::Writable, QDir::Unsorted);
             foreach(const QString &filename, files) {
-                if (stat(filename.toAscii(), &fileInfo) == 0 && S_ISFIFO(fileInfo.st_mode)) {
-                    result = home.absolutePath() + QDir::separator() + filename;
+                QString const absoluteFilename = home.absolutePath() + QDir::separator() + filename;
+                if (stat(absoluteFilename.toAscii(), &fileInfo) == 0 && S_ISFIFO(fileInfo.st_mode)) {
+                    result = absoluteFilename;
                     break;
                 }
             }
