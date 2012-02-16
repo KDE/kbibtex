@@ -24,6 +24,7 @@
 #include <QRegExp>
 #include <QNetworkAccessManager>
 #include <QNetworkCookieJar>
+#include <QNetworkProxy>
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QtGlobal>
@@ -31,6 +32,7 @@
 
 #include <KUrl>
 #include <KApplication>
+#include <KProtocolManager>
 
 #include "internalnetworkaccessmanager.h"
 
@@ -115,6 +117,20 @@ InternalNetworkAccessManager *InternalNetworkAccessManager::self()
 
 QNetworkReply *InternalNetworkAccessManager::get(QNetworkRequest &request, const QUrl &oldUrl)
 {
+    /// Query the KDE subsystem if a proxy has to be used
+    /// for the host of a given URL
+    QString proxyHostName = KProtocolManager::proxyForUrl(request.url());
+    if (!proxyHostName.isEmpty() && proxyHostName != QLatin1String("DIRECT")) {
+        /// Extract both hostname and port number for proxy
+        proxyHostName = proxyHostName.mid(proxyHostName.indexOf(QLatin1String("://")) + 3);
+        const QStringList proxyComponents = proxyHostName.split(QChar(':'));
+        /// Set proxy to Qt's NetworkAccessManager
+        setProxy(QNetworkProxy(QNetworkProxy::HttpProxy, proxyComponents[0], proxyComponents[1].toInt()));
+    } else {
+        /// No proxy to be used, clear previous settings
+        setProxy(QNetworkProxy());
+    }
+
     request.setRawHeader(QString("Accept").toAscii(), QString("text/*, */*;q=0.7").toAscii());
     request.setRawHeader(QString("Accept-Charset").toAscii(), QString("utf-8, us-ascii, ISO-8859-1, ISO-8859-15, windows-1252").toAscii());
     request.setRawHeader(QString("Accept-Language").toAscii(), QString("en-US, en;q=0.9").toAscii());
