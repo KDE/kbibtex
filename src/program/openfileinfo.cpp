@@ -27,7 +27,6 @@
 #include <KDebug>
 #include <KMimeTypeTrader>
 #include <KUrl>
-#include <KMessageBox>
 #include <kparts/part.h>
 
 #include <fileimporterpdf.h>
@@ -542,7 +541,11 @@ bool OpenFileInfoManager::close(OpenFileInfo *openFileInfo)
         } else if (nextCurrent == NULL && ofi->flags().testFlag(OpenFileInfo::Open))
             nextCurrent = ofi;
     }
-    setCurrentFile(nextCurrent);
+
+    /// If the current document is to be closed,
+    /// switch over to the next available one
+    if (isClosing)
+        setCurrentFile(nextCurrent);
 
     return isClosing;
 }

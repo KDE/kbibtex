@@ -306,7 +306,6 @@ void KBibTeXMainWindow::openDocument(const KUrl& url)
 
 void KBibTeXMainWindow::closeDocument()
 {
-    d->actionClose->setEnabled(false);
     d->mdiWidget->getOpenFileInfoManager()->close(d->mdiWidget->getOpenFileInfoManager()->currentFile());
 }
 

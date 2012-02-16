@@ -78,6 +78,14 @@ public:
     KUrl url() const;
     bool isModified() const;
     bool save();
+
+    /**
+     * Close the current file. The user may interrupt the closing
+     * if the file is modified and he/she presses "Cancel" when asked
+     * to close the modified file.
+     *
+     * @return returns true if the closing was successful, otherwise false
+     */
     bool close();
 
     StatusFlags flags() const;
