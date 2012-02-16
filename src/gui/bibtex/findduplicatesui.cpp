@@ -532,11 +532,14 @@ void FindDuplicatesUI::slotFindDuplicates()
 
     KDialog dlg(d->part->widget());
     FindDuplicates fd(&dlg, sensitivity);
+    /// File to be used to find duplicate in,
+    /// may be only a subset of the original one if selection is used (see below)
     File *file = d->editor->bibTeXModel()->bibTeXFile();
-    // bool deleteFileLater = false; // FIXME "selection" mode does not work reliably
+    /// Full file, used to remove merged elements from
+    /// Stays the same even when merging is restricted to selected elements
+    File *originalFile = file;
+    bool deleteFileLater = false;
 
-    // FIXME "selection" mode does not work reliably
-    /*
     int rowCount = d->editor->selectedElements().count() / d->editor->model()->columnCount();
     if (rowCount > 1 && rowCount < d->editor->model()->rowCount() && KMessageBox::questionYesNo(d->part->widget(), i18n("Multiple elements are selected. Do you want to search for duplicates only within the selection or in the whole document?"), i18n("Search only in selection?"), KGuiItem(i18n("Only in selection")), KGuiItem(i18n("Whole document"))) == KMessageBox::Yes) {
         QModelIndexList mil = d->editor->selectionModel()->selectedRows();
@@ -546,12 +549,11 @@ void FindDuplicatesUI::slotFindDuplicates()
             file->append(d->editor->bibTeXModel()->element(d->editor->sortFilterProxyModel()->mapToSource(*it).row()));
         }
     }
-    */
 
     QList<EntryClique*> cliques;
     bool gotCanceled = fd.findDuplicateEntries(file, cliques);
     if (gotCanceled) {
-        // if (deleteFileLater) delete file; // FIXME "selection" mode does not work reliably
+        if (deleteFileLater) delete file;
         return;
     }
 
@@ -563,7 +565,7 @@ void FindDuplicatesUI::slotFindDuplicates()
 
         if (dlg.exec() == QDialog::Accepted) {
             MergeDuplicates md(&dlg);
-            if (md.mergeDuplicateEntries(cliques, file)) {
+            if (md.mergeDuplicateEntries(cliques, originalFile)) {
                 d->editor->bibTeXModel()->reset();
                 d->editor->externalModification();
             }
@@ -576,5 +578,5 @@ void FindDuplicatesUI::slotFindDuplicates()
         }
     }
 
-    // if (deleteFileLater) delete file; // FIXME "selection" mode does not work reliably
+    if (deleteFileLater) delete file;
 }
