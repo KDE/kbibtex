@@ -252,9 +252,6 @@ public:
         if (isLastName && !text.contains(QChar(' ')))
             /** Last name contains NO spaces, no quoting necessary */
             return false;
-        else if (!isLastName && text.contains(QChar('-')))
-            /** First name contains a hyphen */
-            return true;
         else if (!isLastName && !text.contains(" and "))
             /** First name contains no " and " no quoting necessary */
             return false;
