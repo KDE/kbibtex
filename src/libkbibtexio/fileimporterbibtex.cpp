@@ -711,17 +711,18 @@ QList<Keyword*> FileImporterBibTeX::splitKeywords(const QString& text)
     QList<Keyword*> result;
     /// define a list of characters where keywords will be split along
     /// finalize list with null character
-    char splitChars[] = ";,\0";
+    static char splitChars[] = ";,\0";
+    static const QRegExp splitAlong[] = {QRegExp(QString("\\s*%1\\s*").arg(splitChars[0])), QRegExp(QString("\\s*%1\\s*").arg(splitChars[1])), QRegExp()};
     char *curSplitChar = splitChars;
+    int index = 0;
 
     /// for each char in list ...
     while (*curSplitChar != '\0') {
         /// check if character is contained in text (should be cheap to test)
         if (text.contains(*curSplitChar)) {
             /// split text along a pattern like spaces-splitchar-spaces
-            static const QRegExp splitAlong(QString("\\s*%1\\s*").arg(*curSplitChar));
             /// extract keywords
-            QStringList keywords = text.split(splitAlong, QString::SkipEmptyParts);
+            QStringList keywords = text.split(splitAlong[index], QString::SkipEmptyParts);
             /// build QList of Keyword objects from keywords
             foreach(QString keyword, keywords) {
                 result.append(new Keyword(keyword));
@@ -731,6 +732,7 @@ QList<Keyword*> FileImporterBibTeX::splitKeywords(const QString& text)
         }
         /// no success so far, test next splitting character
         ++curSplitChar;
+        ++index;
     }
 
     /// no split was performed, so whole text must be a single keyword
@@ -738,6 +740,11 @@ QList<Keyword*> FileImporterBibTeX::splitKeywords(const QString& text)
         result.append(new Keyword(text));
 
     return result;
+}
+
+void FileImporterBibTeX::parsePersonList(const QString& text, Value &value)
+{
+    parsePersonList(text, value, NULL);
 }
 
 void FileImporterBibTeX::parsePersonList(const QString& text, Value &value, CommaContainment *comma)
