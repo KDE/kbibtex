@@ -32,6 +32,20 @@ static const int IsRadioRole = Qt::UserRole + 103;
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ */
+class RadioButtonItemDelegate : public QStyledItemDelegate
+{
+public:
+    RadioButtonItemDelegate(QObject *p);
+
+    void paint(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const;
+
+    virtual QSize sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index) const;
+};
+
+
+/**
+ * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *
  * This class is a refinement of QTreeView, as it adds support
  * for radio buttons for elements in the view.

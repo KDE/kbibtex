@@ -23,7 +23,6 @@
 #include <QBoxLayout>
 #include <QLabel>
 #include <QSortFilterProxyModel>
-#include <QStyledItemDelegate>
 #include <QStyle>
 #include <QRadioButton>
 #include <QMouseEvent>
@@ -39,17 +38,21 @@
 #include <KStandardDirs>
 #include <kparts/part.h>
 #include <KMessageBox>
+#include <KDebug>
+#include <KLineEdit>
 
 #include <kdeversion.h>
 
 #include <radiobuttontreeview.h>
 #include "bibtexeditor.h"
+#include "fileimporterbibtex.h"
 #include "bibtexfilemodel.h"
 #include "findduplicatesui.h"
 #include "findduplicates.h"
 #include "bibtexentries.h"
 
 const int FieldNameRole = Qt::UserRole + 101;
+const int UserInputRole = Qt::UserRole + 103;
 
 const int maxFieldsCount = 1024;
 
@@ -68,9 +71,19 @@ private:
     EntryClique *currentClique;
 
 public:
+    enum SelectionType {SelectionTypeNone, SelectionTypeRadio, SelectionTypeCheck};
+
     AlternativesItemModel(QTreeView *parent)
             : QAbstractItemModel(parent), p(parent), currentClique(NULL) {
         // nothing
+    }
+
+    static SelectionType selectionType(const QString &fieldName) {
+        if (fieldName.isEmpty())
+            return SelectionTypeNone;
+        if (fieldName == Entry::ftKeywords || fieldName == Entry::ftUrl)
+            return SelectionTypeCheck;
+        return SelectionTypeCheck;
     }
 
     void setCurrentClique(EntryClique *currentClique) {
@@ -160,6 +173,7 @@ public:
             QList<Value> values = currentClique->values(fieldName);
 
             switch (role) {
+            case Qt::EditRole:
             case Qt::ToolTipRole:
             case Qt::DisplayRole:
                 if (index.row() < values.count()) {
@@ -182,7 +196,7 @@ public:
                     return f;
                 }
             case Qt::CheckStateRole: {
-                if (fieldName != Entry::ftKeywords && fieldName != Entry::ftUrl)
+                if (selectionType(fieldName) != SelectionTypeCheck)
                     return QVariant();
 
                 QList<Value> chosenValues = currentClique->chosenValues(fieldName);
@@ -195,7 +209,7 @@ public:
                 return Qt::Unchecked;
             }
             case RadioSelectedRole: {
-                if (fieldName == Entry::ftKeywords || fieldName == Entry::ftUrl)
+                if (selectionType(fieldName) != SelectionTypeRadio)
                     return QVariant::fromValue(false);
 
                 /// return selection status (true or false) for this alternative
@@ -211,7 +225,7 @@ public:
             }
             case IsRadioRole:
                 /// this is to be a radio widget
-                return QVariant::fromValue(fieldName != Entry::ftKeywords && fieldName != Entry::ftUrl);
+                return QVariant::fromValue(selectionType(fieldName) == SelectionTypeRadio);
             }
         }
 
@@ -220,10 +234,14 @@ public:
 
     bool setData(const QModelIndex & index, const QVariant & value, int role = RadioSelectedRole) {
         if (index.parent() != QModelIndex()) {
-            QString fieldName = index.parent().data(FieldNameRole).toString();
-            if (role == RadioSelectedRole && value.canConvert<bool>() && value.toBool() == true) {
+            bool isInt;
+            int checkState = value.toInt(&isInt);
+
+            const QString fieldName = index.parent().data(FieldNameRole).toString();
+            QList<Value>& values = currentClique->values(fieldName);
+
+            if (role == RadioSelectedRole && value.canConvert<bool>() && value.toBool() == true && selectionType(fieldName) == SelectionTypeRadio) {
                 /// start with determining which list of alternatives actually to use
-                QList<Value> values = currentClique->values(fieldName);
 
                 /// store which alternative was selected
                 if (index.row() < values.count())
@@ -237,18 +255,61 @@ public:
                 emit dataChanged(index.sibling(0, 0), index.sibling(rowCount(index.parent()), 0));
 
                 return true;
-            } else if (role == Qt::CheckStateRole && (fieldName == Entry::ftKeywords || fieldName == Entry::ftUrl)) {
-                bool ok;
-                int checkState = value.toInt(&ok);
-                if (ok) {
-                    QList<Value> values = currentClique->values(fieldName);
-                    if (checkState == Qt::Checked)
-                        currentClique->setChosenValue(fieldName, values[index.row()], EntryClique::AddValue);
-                    else if (checkState == Qt::Unchecked)
-                        currentClique->setChosenValue(fieldName, values[index.row()], EntryClique::RemoveValue);
+            } else if (role == Qt::CheckStateRole && isInt && selectionType(fieldName) == SelectionTypeCheck) {
+                if (checkState == Qt::Checked)
+                    currentClique->setChosenValue(fieldName, values[index.row()], EntryClique::AddValue);
+                else if (checkState == Qt::Unchecked)
+                    currentClique->setChosenValue(fieldName, values[index.row()], EntryClique::RemoveValue);
+                else
+                    return false; ///< tertium non datur
 
-                    return true;
+                emit dataChanged(index, index);
+
+                return true;
+            } else if (role == UserInputRole) {
+                const QString text = value.toString();
+                if (text.isEmpty()) return false;
+                const Value old = values.at(index.row());
+                if (old.isEmpty()) return false;
+
+                Value v;
+
+                QSharedPointer<PlainText> pt = old.first().dynamicCast<PlainText>();
+                if (!pt.isNull())
+                    v.append(QSharedPointer<PlainText>(new PlainText(text)));
+                else {
+                    QSharedPointer<VerbatimText> vt = old.first().dynamicCast<VerbatimText>();
+                    if (!vt.isNull())
+                        v.append(QSharedPointer<VerbatimText>(new VerbatimText(text)));
+                    else {
+                        QSharedPointer<MacroKey> mk = old.first().dynamicCast<MacroKey>();
+                        if (!mk.isNull())
+                            v.append(QSharedPointer<MacroKey>(new MacroKey(text)));
+                        else {
+                            QSharedPointer<Person> ps = old.first().dynamicCast<Person>();
+                            if (!ps.isNull())
+                                FileImporterBibTeX::parsePersonList(text, v);
+                            else {
+                                QSharedPointer<Keyword> kw = old.first().dynamicCast<Keyword>();
+                                if (!kw.isNull()) {
+                                    QList<Keyword*> keywordList = FileImporterBibTeX::splitKeywords(text);
+                                    for (QList<Keyword*>::ConstIterator it = keywordList.constBegin(); it != keywordList.constEnd(); ++it)
+                                        v.append(QSharedPointer<Keyword>(*it));
+                                } else {
+                                    kDebug() << "Not know how to set this text:" << text;
+                                }
+                            }
+                        }
+                    }
                 }
+
+                if (!v.isEmpty()) {
+                    values.removeAt(index.row());
+                    values.insert(index.row(), v);
+                    emit dataChanged(index, index);
+                    return true;
+                } else
+                    return false;
             }
         }
 
@@ -264,14 +325,78 @@ public:
         Qt::ItemFlags f = QAbstractItemModel::flags(index);
         if (index.parent() != QModelIndex()) {
             QString fieldName = index.parent().data(FieldNameRole).toString();
-            if (fieldName == Entry::ftKeywords || fieldName == Entry::ftUrl)
+            if (selectionType(fieldName) == SelectionTypeCheck)
                 f |= Qt::ItemIsUserCheckable;
+
+            QList<Value> values = currentClique->values(fieldName);
+            if (index.row() < values.count())
+                f |= Qt::ItemIsEditable;
         }
         return f;
     }
 };
 
 const quint32 AlternativesItemModel::noParentInternalId = 0xffffff;
+
+
+/**
+ * Specialization of RadioButtonItemDelegate which allows to edit
+ * values in a AlternativesItemModel.
+ */
+class AlternativesItemDelegate: public RadioButtonItemDelegate
+{
+public:
+    AlternativesItemDelegate(QObject *p)
+            : RadioButtonItemDelegate(p) {
+        // nothing
+    }
+
+    QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &, const QModelIndex &index) const {
+        if (index.parent() != QModelIndex()) {
+            /// Only second-level indices in the model can be edited
+            /// (those are the actual values).
+            /// Use a plain, border-less KLineEdit.
+            KLineEdit *lineEdit = new KLineEdit(parent);
+            lineEdit->setStyleSheet(QLatin1String("border: none;"));
+            return lineEdit;
+        }
+        return NULL;
+    }
+
+    virtual void setEditorData(QWidget *editor, const QModelIndex &index) const {
+        if (KLineEdit *lineEdit = qobject_cast<KLineEdit*>(editor)) {
+            /// Set line edit's default value to string fetched from model
+            lineEdit->setText(index.data(Qt::EditRole).toString());
+        }
+    }
+
+    virtual void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const {
+        if (KLineEdit *lineEdit = qobject_cast<KLineEdit*>(editor)) {
+            /// Set user-entered text to model (and underlying value)
+            model->setData(index, lineEdit->text(), UserInputRole);
+
+            /// Ensure that the edited value is checked if it is
+            /// a checkbox-checkable value, or gets a "dot" in its
+            /// radio button if it is radio-checkable.
+            const QString fieldName = index.parent().data(FieldNameRole).toString();
+            if (AlternativesItemModel::selectionType(fieldName) == AlternativesItemModel::SelectionTypeCheck)
+                model->setData(index, Qt::Checked, Qt::CheckStateRole);
+            else if (AlternativesItemModel::selectionType(fieldName) == AlternativesItemModel::SelectionTypeRadio)
+                model->setData(index, true, RadioSelectedRole);
+        }
+    }
+
+    virtual void updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &) const {
+        QRect rect = option.rect;
+
+        // TODO better placement of editing widget?
+        //int radioButtonWidth = QApplication::style()->pixelMetric(QStyle::PM_ExclusiveIndicatorWidth, &option);
+        //int spacing = QApplication::style()->pixelMetric(QStyle::PM_RadioButtonLabelSpacing, &option);
+        //rect.setLeft(rect.left() +spacing*3/2 + radioButtonWidth);
+
+        editor->setGeometry(rect);
+    }
+};
 
 
 class CheckableBibTeXFileModel : public BibTeXFileModel
@@ -393,6 +518,7 @@ public:
 
     RadioButtonTreeView *alternativesView;
     AlternativesItemModel *alternativesItemModel;
+    AlternativesItemDelegate *alternativesItemDelegate;
 
     int currentClique;
     QList<EntryClique*> cl;
@@ -435,6 +561,7 @@ public:
         filterModel = new FilterIdBibTeXFileModel(p);
         filterModel->setSourceModel(model);
         alternativesItemModel = new AlternativesItemModel(alternativesView);
+        alternativesItemDelegate = new AlternativesItemDelegate(alternativesView);
 
         showCurrentClique();
 
@@ -450,6 +577,7 @@ public:
         alternativesItemModel->setCurrentClique(ec);
         editor->setModel(filterModel);
         alternativesView->setModel(alternativesItemModel);
+        alternativesView->setItemDelegate(alternativesItemDelegate);
         editor->reset();
         alternativesView->reset();
         alternativesView->expandAll();

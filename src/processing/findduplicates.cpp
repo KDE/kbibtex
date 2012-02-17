@@ -72,6 +72,11 @@ QList<Value> EntryClique::values(const QString &field) const
     return valueMap[field];
 }
 
+QList<Value>& EntryClique::values(const QString &field)
+{
+    return valueMap[field];
+}
+
 Value EntryClique::chosenValue(const QString &field) const
 {
     Q_ASSERT(chosenValueMap[field].count() == 1);

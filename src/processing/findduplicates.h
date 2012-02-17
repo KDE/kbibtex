@@ -52,6 +52,7 @@ public:
     int fieldCount() const;
     QList<QString> fieldList() const;
     QList<Value> values(const QString &field) const;
+    QList<Value>& values(const QString &field);
     Value chosenValue(const QString &field) const;
     QList<Value> chosenValues(const QString &field) const;
     void setChosenValue(const QString &field, Value &value, ValueOperation valueOperation = SetValue);
