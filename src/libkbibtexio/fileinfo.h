@@ -26,13 +26,32 @@
 #include <QList>
 
 #include <KUrl>
+#include <KMimeType>
 
 class Entry;
 
 class KBIBTEXIO_EXPORT FileInfo
 {
 public:
+    static const QString mimetypeBibTeX;
+    static const QString mimetypeRIS;
+
     enum TestExistance {TestExistanceYes, TestExistanceNo};
+
+    /**
+     * Finds a KMimeType with the given url.
+     * Tries to guess a file's mime type by its extension first,
+     * but falls back to KMimeType's findByUrl if that does not work.
+     * Background: If a HTTP or WebDAV server claims that a .bib file
+     * is of mime type application/octet-stream, KMimeType::findByUrl
+     * will keep that assessment instead of inspecting the file
+     * extension.
+     *
+     * @see KMimeType::findByUrl
+     * @param url Url to analyze
+     * @return Guessed mime type
+     */
+    static KMimeType::Ptr mimeTypeForUrl(const KUrl &url);
 
     /**
      * Find all file or URL references in the given text. Found filenames or

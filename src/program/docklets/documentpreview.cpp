@@ -347,7 +347,7 @@ public:
     void openExternally() {
         KUrl url(cbxEntryToUrlInfo[urlComboBox->currentIndex()].url);
         /// Guess mime type for url to open
-        KMimeType::Ptr mimeType = KMimeType::findByPath(url.path());
+        KMimeType::Ptr mimeType = FileInfo::mimeTypeForUrl(url);
         QString mimeTypeName = mimeType->name();
         if (mimeTypeName == QLatin1String("application/octet-stream"))
             mimeTypeName = QLatin1String("text/html");

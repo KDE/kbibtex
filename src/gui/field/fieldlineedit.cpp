@@ -300,7 +300,7 @@ public:
     void openUrl() {
         if (urlToOpen.isValid()) {
             /// Guess mime type for url to open
-            KMimeType::Ptr mimeType = KMimeType::findByPath(urlToOpen.path());
+            KMimeType::Ptr mimeType = FileInfo::mimeTypeForUrl(urlToOpen);
             QString mimeTypeName = mimeType->name();
             if (mimeTypeName == QLatin1String("application/octet-stream"))
                 mimeTypeName = QLatin1String("text/html");

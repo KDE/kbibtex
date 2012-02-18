@@ -28,7 +28,8 @@
 
 #include <KService>
 #include <KUrl>
-#include <KMimeType>
+
+#include "fileinfo.h"
 
 namespace KParts
 {
@@ -42,24 +43,6 @@ class OpenFileInfo : public QObject
     Q_OBJECT
 
 public:
-    static const QString mimetypeBibTeX;
-    static const QString mimetypeRIS;
-
-    /**
-     * Finds a KMimeType with the given url.
-     * Tries to guess a file's mime type by its extension first,
-     * but falls back to KMimeType's findByUrl if that does not work.
-     * Background: If a HTTP or WebDAV server claims that a .bib file
-     * is of mime type application/octet-stream, KMimeType::findByUrl
-     * will keep that assessment instead of inspecting the file
-     * extension.
-     *
-     * @see KMimeType::findByUrl
-     * @param url Url to analyze
-     * @return Guessed mime type
-     */
-    static KMimeType::Ptr mimeTypeForUrl(const KUrl &url);
-
     enum StatusFlag {
         Open = 0x1,
         RecentlyUsed = 0x2,
@@ -107,7 +90,7 @@ signals:
 
 protected:
     OpenFileInfo(OpenFileInfoManager *openFileInfoManager, const KUrl &url);
-    OpenFileInfo(OpenFileInfoManager *openFileInfoManager, const QString &mimeType = OpenFileInfo::mimetypeBibTeX);
+    OpenFileInfo(OpenFileInfoManager *openFileInfoManager, const QString &mimeType = FileInfo::mimetypeBibTeX);
     void setUrl(const KUrl& url);
 
 private:
@@ -128,7 +111,7 @@ public:
     OpenFileInfoManager();
     ~OpenFileInfoManager();
 
-    OpenFileInfo *createNew(const QString& mimeType = OpenFileInfo::mimetypeBibTeX);
+    OpenFileInfo *createNew(const QString& mimeType = FileInfo::mimetypeBibTeX);
     OpenFileInfo *open(const KUrl& url);
     OpenFileInfo *contains(const KUrl& url) const;
     OpenFileInfo *currentFile() const;

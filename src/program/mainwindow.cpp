@@ -271,7 +271,7 @@ void KBibTeXMainWindow::dropEvent(QDropEvent *event)
 
 void KBibTeXMainWindow::newDocument()
 {
-    const QString mimeType = OpenFileInfo::mimetypeBibTeX;
+    const QString mimeType = FileInfo::mimetypeBibTeX;
     OpenFileInfo *openFileInfo = d->mdiWidget->getOpenFileInfoManager()->createNew(mimeType);
     if (openFileInfo) {
         d->mdiWidget->getOpenFileInfoManager()->setCurrentFile(openFileInfo);

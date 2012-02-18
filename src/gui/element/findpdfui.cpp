@@ -44,6 +44,7 @@
 
 #include <fieldlistedit.h>
 #include "findpdfui.h"
+#include "fileinfo.h"
 
 class PDFListModel;
 
@@ -218,7 +219,7 @@ void PDFItemDelegate::slotViewPDF()
         if (!tempfileName.isEmpty()) {
             /// Guess mime type for url to open
             KUrl tempUrl(tempfileName);
-            KMimeType::Ptr mimeType = KMimeType::findByPath(url.path());
+            KMimeType::Ptr mimeType = FileInfo::mimeTypeForUrl(tempUrl);
             QString mimeTypeName = mimeType->name();
             if (mimeTypeName == QLatin1String("application/octet-stream"))
                 mimeTypeName = QLatin1String("text/html");
@@ -226,7 +227,7 @@ void PDFItemDelegate::slotViewPDF()
             KRun::runUrl(tempUrl, mimeTypeName, NULL, false, false);
         } else if (url.isValid()) {
             /// Guess mime type for url to open
-            KMimeType::Ptr mimeType = KMimeType::findByPath(url.path());
+            KMimeType::Ptr mimeType = FileInfo::mimeTypeForUrl(url);
             QString mimeTypeName = mimeType->name();
             if (mimeTypeName == QLatin1String("application/octet-stream"))
                 mimeTypeName = QLatin1String("text/html");
@@ -303,8 +304,8 @@ QVariant PDFListModel::data(const QModelIndex &index, int role) const
             return m_resultList[index.row()].downloadMode;
         else if (role == Qt::DecorationRole) {
             /// make an educated guess on the icon, based on URL or path
-            QString iconName = KMimeType::findByUrl(m_resultList[index.row()].url)->iconName();
-            iconName = iconName == QLatin1String("application-octet-stream") ? KMimeType::findByPath(m_resultList[index.row()].url.path())->iconName() : iconName;
+            QString iconName = FileInfo::mimeTypeForUrl(m_resultList[index.row()].url)->iconName();
+            iconName = iconName == QLatin1String("application-octet-stream") ? FileInfo::mimeTypeForUrl(m_resultList[index.row()].url)->iconName() : iconName;
             return KIcon(iconName).pixmap(KIconLoader::SizeMedium, KIconLoader::SizeMedium);
         } else
             return QVariant();

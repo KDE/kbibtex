@@ -41,6 +41,7 @@
 #include <KRun>
 
 #include "idsuggestions.h"
+#include "fileinfo.h"
 #include <kbibtexnamespace.h>
 #include <bibtexentries.h>
 #include <bibtexfields.h>
@@ -745,7 +746,7 @@ void OtherFieldsWidget::actionOpen()
 {
     if (currentUrl.isValid()) {
         /// Guess mime type for url to open
-        KMimeType::Ptr mimeType = KMimeType::findByPath(currentUrl.path());
+        KMimeType::Ptr mimeType = FileInfo::mimeTypeForUrl(currentUrl);
         QString mimeTypeName = mimeType->name();
         if (mimeTypeName == QLatin1String("application/octet-stream"))
             mimeTypeName = QLatin1String("text/html");

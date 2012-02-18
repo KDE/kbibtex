@@ -32,27 +32,6 @@
 #include <fileimporterpdf.h>
 #include "openfileinfo.h"
 
-const QString OpenFileInfo::mimetypeBibTeX = QLatin1String("text/x-bibtex");
-const QString OpenFileInfo::mimetypeRIS = QLatin1String("application/x-research-info-systems");
-
-KMimeType::Ptr OpenFileInfo::mimeTypeForUrl(const KUrl &url)
-{
-    static const KMimeType::Ptr mimetypeBibTeXPtr(KMimeType::mimeType(mimetypeBibTeX));
-    static const QString mimetypeBibTeXExt = mimetypeBibTeXPtr->mainExtension().mid(1);
-    static const KMimeType::Ptr mimetypeRISPtr(KMimeType::mimeType(mimetypeRIS));
-    static const QString mimetypeRISExt = mimetypeRISPtr->mainExtension().mid(1);
-
-    const QString extension = KMimeType::extractKnownExtension(url.fileName()).toLower();
-
-    if (extension == mimetypeBibTeXExt)
-        return mimetypeBibTeXPtr;
-    else if (extension == mimetypeRISExt)
-        return mimetypeRISPtr;
-    // TODO other extensions
-    else
-        return KMimeType::findByUrl(url);
-}
-
 class OpenFileInfo::OpenFileInfoPrivate
 {
 private:
@@ -171,7 +150,7 @@ const QString OpenFileInfo::OpenFileInfoPrivate::keyLastAccess = QLatin1String("
 const QString OpenFileInfo::OpenFileInfoPrivate::keyURL = QLatin1String("URL");
 
 OpenFileInfo::OpenFileInfo(OpenFileInfoManager *openFileInfoManager, const KUrl &url)
-        : d(new OpenFileInfoPrivate(openFileInfoManager, url, mimeTypeForUrl(url)->name(), this))
+        : d(new OpenFileInfoPrivate(openFileInfoManager, url, FileInfo::mimeTypeForUrl(url)->name(), this))
 {
     // nothing
 }
@@ -191,7 +170,7 @@ void OpenFileInfo::setUrl(const KUrl& url)
 {
     Q_ASSERT(url.isValid());
     d->url = url;
-    d->mimeType = mimeTypeForUrl(url)->name();
+    d->mimeType = FileInfo::mimeTypeForUrl(url)->name();
     addFlags(OpenFileInfo::HasName);
 }
 

@@ -42,6 +42,27 @@ FileInfo::FileInfo()
     // TODO
 }
 
+const QString FileInfo::mimetypeBibTeX = QLatin1String("text/x-bibtex");
+const QString FileInfo::mimetypeRIS = QLatin1String("application/x-research-info-systems");
+
+KMimeType::Ptr FileInfo::mimeTypeForUrl(const KUrl &url)
+{
+    static const KMimeType::Ptr mimetypeBibTeXPtr(KMimeType::mimeType(mimetypeBibTeX));
+    static const QString mimetypeBibTeXExt = mimetypeBibTeXPtr->mainExtension().mid(1);
+    static const KMimeType::Ptr mimetypeRISPtr(KMimeType::mimeType(mimetypeRIS));
+    static const QString mimetypeRISExt = mimetypeRISPtr->mainExtension().mid(1);
+
+    const QString extension = KMimeType::extractKnownExtension(url.fileName()).toLower();
+
+    if (extension == mimetypeBibTeXExt)
+        return mimetypeBibTeXPtr;
+    else if (extension == mimetypeRISExt)
+        return mimetypeRISPtr;
+    // TODO other extensions
+    else
+        return KMimeType::findByUrl(url);
+}
+
 void FileInfo::urlsInText(const QString &text, TestExistance testExistance, const QString &baseDirectory, QList<KUrl> &result)
 {
     if (text.isEmpty())
