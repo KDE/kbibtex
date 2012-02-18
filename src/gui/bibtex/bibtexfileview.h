@@ -42,6 +42,7 @@ public:
     QSortFilterProxyModel *sortFilterProxyModel();
 
 protected:
+    void keyReleaseEvent(QKeyEvent *event);
     void resizeEvent(QResizeEvent *event);
 
 protected slots:

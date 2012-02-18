@@ -20,12 +20,12 @@
 
 #include <QHeaderView>
 #include <QScrollBar>
+#include <QKeyEvent>
 
 #include <KAction>
 #include <KConfigGroup>
 #include <KLocale>
 #include <KSharedConfig>
-#include <KDebug>
 
 #include <bibtexfields.h>
 #include "bibtexfilemodel.h"
@@ -256,6 +256,15 @@ BibTeXFileModel *BibTeXFileView::bibTeXModel()
 QSortFilterProxyModel *BibTeXFileView::sortFilterProxyModel()
 {
     return d->sortFilterProxyModel;
+}
+
+void BibTeXFileView::keyReleaseEvent(QKeyEvent *event)
+{
+    if ((event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter) && event->modifiers() == Qt::NoModifier) {
+        emit doubleClicked(currentIndex());
+        event->accept();
+    }
+    QTreeView::keyReleaseEvent(event);
 }
 
 void BibTeXFileView::resizeEvent(QResizeEvent *event)
