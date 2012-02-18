@@ -113,6 +113,7 @@ public:
         connect(lineeditLyXPipePath->lineEdit(), SIGNAL(textEdited(QString)), p, SIGNAL(changed()));
         lineeditLyXPipePath->setMinimumWidth(lineeditLyXPipePath->fontMetrics().width(QChar('W')) * 20);
         lineeditLyXPipePath->setFilter(QLatin1String("inode/fifo"));
+        lineeditLyXPipePath->setMode(KFile::ExistingOnly | KFile::LocalOnly);
     }
 };
 

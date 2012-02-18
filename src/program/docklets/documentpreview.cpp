@@ -390,7 +390,6 @@ public:
             result.mimeType = QLatin1String("application/pdf");
         }
 
-        kDebug() << "For url " << result.url.pathOrUrl() << " selected mime type " << result.mimeType;
         return result;
     }
 
@@ -474,7 +473,6 @@ void DocumentPreview::statFinished(KJob *kjob)
 #else // KDE_VERSION_MINOR
         const KUrl url = job->url();
 #endif // KDE_VERSION_MINOR
-        kDebug() << "stat succeeded for " << url.pathOrUrl();
         DocumentPreviewPrivate::UrlInfo urlInfo = d->urlMetaInfo(url);
         setCursor(d->runningJobs.isEmpty() ? Qt::ArrowCursor : Qt::BusyCursor);
         d->addUrl(urlInfo);

@@ -84,6 +84,7 @@ public:
         actionCopySelected = new KAction(KIcon("edit-copy"), i18n("Copy"), parent);
         resultList->addAction(actionCopySelected);
         actionCopySelected->setEnabled(false);
+        actionCopySelected->setShortcut(Qt::CTRL + Qt::Key_C);
         connect(actionCopySelected, SIGNAL(triggered()), clipboard, SLOT(copy()));
 
         connect(resultList, SIGNAL(doubleClicked(QModelIndex)), resultList, SLOT(viewCurrentElement()));

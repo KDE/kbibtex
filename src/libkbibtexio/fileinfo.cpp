@@ -33,7 +33,9 @@
 #include "fileinfo.h"
 
 static const QRegExp regExpEscapedChars = QRegExp("\\\\+([&_~])");
-static const QStringList documentFileExtensions = QStringList() << ".pdf" << ".ps";
+
+/// File types supported by "document preview"
+static const QStringList documentFileExtensions = QStringList() << ".pdf" << ".pdf.gz" << ".pdf.bz2" << ".ps" << ".ps.gz" << ".ps.bz2" << ".eps" << ".eps.gz" << ".eps.bz2" << ".html" << ".xhtml" << ".htm" << ".dvi" << ".djvu" << ".wwf" << ".jpeg" << ".jpg" << ".png" << ".gif" << ".tif" << ".tiff";
 
 FileInfo::FileInfo()
 {
