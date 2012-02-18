@@ -179,6 +179,7 @@ KBibTeXMainWindow::KBibTeXMainWindow()
     d->dockDocumentPreview->setObjectName("dockDocumentPreview");
     d->dockDocumentPreview->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
     showPanelsMenu->addAction(d->dockDocumentPreview->toggleViewAction());
+    d->dockDocumentPreview->toggleViewAction()->setShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_D);
 
     d->dockZotero = new QDockWidget(i18n("Zotero"), this);
     d->dockZotero->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
