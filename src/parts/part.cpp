@@ -535,13 +535,30 @@ bool KBibTeXPart::documentSaveCopyAs()
 
 void KBibTeXPart::elementViewDocument()
 {
-    if (!d->viewDocumentMenu->actions().isEmpty()) {
-        // TODO: Choose "best" URL instead of first (local file over remote, PDF over website, ...)
-        QAction *action = d->viewDocumentMenu->actions().first();
+    KUrl url;
 
+    QList<QAction*> actionList = d->viewDocumentMenu->actions();
+    /// Go through all actions (i.e. document URLs) for this element
+    for (QList<QAction*>::ConstIterator it = actionList.constBegin(); it != actionList.constEnd(); ++it) {
+        /// Make URL from action's data ...
+        KUrl tmpUrl = KUrl((*it)->data().toString());
+        /// ... but skip this action if the URL is invalid
+        if (!tmpUrl.isValid()) continue;
+        if (tmpUrl.isLocalFile()) {
+            /// If action's URL points to local file,
+            /// keep it and stop search for document
+            url = tmpUrl;
+            break;
+        } else if (!url.isValid())
+            /// First valid URL found, keep it
+            /// URL is not local, so it may get overwritten by another URL
+            url = tmpUrl;
+    }
+
+    /// Open selected URL
+    if (url.isValid()) {
         /// Guess mime type for url to open
-        KUrl url(action->data().toString());
-        KMimeType::Ptr mimeType = KMimeType::findByPath(url.path());
+        KMimeType::Ptr mimeType = FileInfo::mimeTypeForUrl(url);
         QString mimeTypeName = mimeType->name();
         if (mimeTypeName == QLatin1String("application/octet-stream"))
             mimeTypeName = QLatin1String("text/html");
