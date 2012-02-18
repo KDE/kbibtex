@@ -40,6 +40,7 @@ endif(
 )
 
 mark_as_advanced(
+    force
     SVNVERSION_EXECUTABLE
 )
 find_program(
@@ -49,200 +50,81 @@ find_program(
 if(
     SVNVERSION_EXECUTABLE
 )
-    if(
-        WIN32
+    message(
+        STATUS
+        "Extracting SVN version, please wait..."
     )
-        # single \" in an echo statement makes problems under Windows; don't know why
-        add_custom_target(
-            svnversion
-            ALL
-            cmake
-            -E
-            echo
-            "#ifndef VERSION_H"
-            >
-            "${CMAKE_BINARY_DIR}/version.h.tmp"
-            COMMAND
-            cmake
-            -E
-            echo
-            "#define VERSION_H"
-            >>
-            "${CMAKE_BINARY_DIR}/version.h.tmp"
-            COMMAND
-            cmake
-            -E
-            echo
-            "const char *versionNumber = \" SVN unknown\";"
-            >>
-            "${CMAKE_BINARY_DIR}/version.h.tmp"
-            COMMAND
-            cmake
-            -E
-            echo
-            "#endif // VERSION_H"
-            >>
-            "${CMAKE_BINARY_DIR}/version.h.tmp"
-            COMMAND
-            cmake
-            -E
-            copy_if_different
-            "${CMAKE_BINARY_DIR}/version.h.tmp"
-            "${CMAKE_BINARY_DIR}/version.h"
-            COMMAND
-            cmake
-            -E
-            remove
-            "${CMAKE_BINARY_DIR}/version.h.tmp"
-            WORKING_DIRECTORY
-            "${CMAKE_BINARY_DIR}"
-            COMMENT
-            "Updating ${CMAKE_BINARY_DIR}/version.h..."
-            VERBATIM
-        )
-    else(
-        WIN32
-    )
-        add_custom_target(
-            svnversion
-            ALL
-            cmake
-            -E
-            echo
-            "#ifndef VERSION_H"
-            >
-            "${CMAKE_BINARY_DIR}/version.h.tmp"
-            COMMAND
-            cmake
-            -E
-            echo
-            "#define VERSION_H"
-            >>
-            "${CMAKE_BINARY_DIR}/version.h.tmp"
-            COMMAND
-            cmake
-            -E
-            echo_append
-            "const char *versionNumber = \" SVN r"
-            >>
-            "${CMAKE_BINARY_DIR}/version.h.tmp"
-            COMMAND
-            svnversion
-            -n
-            ${CMAKE_CURRENT_SOURCE_DIR}
-            >>
-            "${CMAKE_BINARY_DIR}/version.h.tmp"
-            COMMAND
-            cmake
-            -E
-            echo
-            "\" ;"
-            >>
-            "${CMAKE_BINARY_DIR}/version.h.tmp"
-            COMMAND
-            cmake
-            -E
-            echo
-            "#endif // VERSION_H"
-            >>
-            "${CMAKE_BINARY_DIR}/version.h.tmp"
-            COMMAND
-            cmake
-            -E
-            copy_if_different
-            "${CMAKE_BINARY_DIR}/version.h.tmp"
-            "${CMAKE_BINARY_DIR}/version.h"
-            COMMAND
-            cmake
-            -E
-            remove
-            "${CMAKE_BINARY_DIR}/version.h.tmp"
-            WORKING_DIRECTORY
-            "${CMAKE_BINARY_DIR}"
-            COMMENT
-            "Updating ${CMAKE_BINARY_DIR}/version.h..."
-            VERBATIM
-        )
-    endif(
-        WIN32
-    )
-else(
-    SVNVERSION_EXECUTABLE
-)
-    add_custom_target(
-        svnversion
-        ALL
-        cmake
-        -E
-        echo
-        "#ifndef VERSION_H"
-        >
-        "${CMAKE_BINARY_DIR}/version.h.tmp"
+    execute_process(
         COMMAND
-        cmake
-        -E
-        echo
-        "#define VERSION_H"
-        >>
-        "${CMAKE_BINARY_DIR}/version.h.tmp"
-        COMMAND
-        cmake
-        -E
-        echo
-        "const char *versionNumber = \" 0.3 \";"
-        >>
-        "${CMAKE_BINARY_DIR}/version.h.tmp"
-        COMMAND
-        cmake
-        -E
-        echo
-        "#endif // VERSION_H"
-        >>
-        "${CMAKE_BINARY_DIR}/version.h.tmp"
-        COMMAND
-        cmake
-        -E
-        copy_if_different
-        "${CMAKE_BINARY_DIR}/version.h.tmp"
-        "${CMAKE_BINARY_DIR}/version.h"
-        COMMAND
-        cmake
-        -E
-        remove
-        "${CMAKE_BINARY_DIR}/version.h.tmp"
-        WORKING_DIRECTORY
-        "${CMAKE_BINARY_DIR}"
-        COMMENT
-        "Updating ${CMAKE_BINARY_DIR}/version.h..."
-        VERBATIM
+        ${SVNVERSION_EXECUTABLE}
+        -n
+        ${CMAKE_SOURCE_DIR}
+        OUTPUT_VARIABLE
+        SVNVERSION_RESULT
+OUTPUT_STRIP_TRAILING_WHITESPACE
     )
 endif(
     SVNVERSION_EXECUTABLE
 )
 
 if(
-    NOT
-    SVNVERSION
-    OR
-    SVNVERSION
-    STREQUAL
-    exported
+    SVNVERSION_RESULT
+    MATCHES
+    "exported"
 )
+    message(
+        STATUS
+        "Not an SVN version"
+    )
+    add_custom_target(
+        clean_version_h_in_builddir
+        ALL
+        cmake
+        -E
+        remove
+        "${CMAKE_BINARY_DIR}/src/version.h"
+        WORKING_DIRECTORY
+        "${CMAKE_BINARY_DIR}"
+        COMMENT
+        "Removing ${CMAKE_BINARY_DIR}/src/version.h..."
+    )
 else(
-    SVNVERSION
+    SVNVERSION_RESULT
+    MATCHES
+    "exported"
 )
-    add_definitions(
-        -DSVNREVISION="
-        \(SVN
-        r""${SVNVERSION}""\)"
+    message(
+        STATUS
+        "SVN version is "
+        ${SVNVERSION_RESULT}
+    )
+    add_custom_target(
+        set_version_h_in_builddir
+        ALL
+        cmake -E echo "#ifndef VERSION_H" > "${CMAKE_BINARY_DIR}/src/version.h.tmp"
+        COMMAND
+        cmake -E echo "#define VERSION_H" >> "${CMAKE_BINARY_DIR}/src/version.h.tmp"
+        COMMAND
+        cmake -E echo "const char *versionNumber = \"SVN r${SVNVERSION_RESULT}\";" >> "${CMAKE_BINARY_DIR}/src/version.h.tmp"
+        COMMAND
+        cmake -E echo "#endif // VERSION_H" >> ${CMAKE_BINARY_DIR}/src/version.h.tmp
+        COMMAND
+        cmake -E copy "${CMAKE_BINARY_DIR}/src/version.h.tmp" "${CMAKE_BINARY_DIR}/src/version.h"
+        COMMAND
+        cmake
+        -E
+        remove
+        "${CMAKE_BINARY_DIR}/src/version.h.tmp"
+        WORKING_DIRECTORY
+        "${CMAKE_BINARY_DIR}/src"
+        COMMENT
+        "Updating ${CMAKE_BINARY_DIR}/src/version.h..."
+        VERBATIM
     )
 endif(
-    NOT
-    SVNVERSION
-    OR
-    SVNVERSION
-    STREQUAL
-    exported
+    SVNVERSION_RESULT
+    MATCHES
+    "exported"
 )
 
 add_definitions(
