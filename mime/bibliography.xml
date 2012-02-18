@@ -18,6 +18,18 @@
             <match type="string" offset="0" value="TY  -"/>
         </magic>
     </mime-type>
+    <mime-type type="application/x-isi-export-format">
+        <sub-class-of type="text/plain"/>
+        <comment>ISI bibliography file</comment>
+        <comment xml:lang="de">ISI-Bibliografiedatei</comment>
+        <comment xml:lang="en_GB">ISI bibliography file</comment>
+        <acronym>ISI</acronym>
+        <expanded-acronym>Information Sciences Institute</expanded-acronym>
+        <glob pattern="*.isi"/>
+        <magic priority="90">
+            <match type="string" offset="0" value="FN ISI Export Format"/>
+        </magic>
+    </mime-type>
     <mime-type type="application/x-endnote-refer">
         <sub-class-of type="text/plain"/>
         <alias type="text/x-endnote-refer"/>
