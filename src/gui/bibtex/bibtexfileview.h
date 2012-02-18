@@ -43,7 +43,6 @@ public:
 
 protected:
     void keyReleaseEvent(QKeyEvent *event);
-    void resizeEvent(QResizeEvent *event);
 
 protected slots:
     void columnMoved();
@@ -56,6 +55,7 @@ private:
 private slots:
     void headerActionToggled();
     void headerResetToDefaults();
+    void headerAdjustColumnWidths();
     void sort(int, Qt::SortOrder);
 };
 

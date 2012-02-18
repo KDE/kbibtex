@@ -36,8 +36,6 @@ class BibTeXFileView::BibTeXFileViewPrivate
 private:
     BibTeXFileView *p;
     const int storedColumnCount;
-    int *storedColumnWidths;
-    bool *storedColumnVisible;
 
 public:
     QString name;
@@ -50,23 +48,12 @@ public:
 
     BibTeXFileViewPrivate(const QString &n, BibTeXFileView *parent)
             : p(parent), storedColumnCount(BibTeXFields::self()->count()), name(n), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName(QLatin1String("BibTeXFileView")), configHeaderState(QLatin1String("HeaderState_%1")) {
-        storedColumnWidths = new int[storedColumnCount];
-        storedColumnVisible = new bool[storedColumnCount];
-        int col = 0;
-        foreach(const FieldDescription *fd, *BibTeXFields::self()) {
-            storedColumnVisible[col] = fd->defaultVisible;
-            storedColumnWidths[col] = fd->defaultWidth;
-            ++col;
-        }
+        // nothing
     }
 
-    ~BibTeXFileViewPrivate() {
-        delete[] storedColumnWidths;
-        delete[] storedColumnVisible;
-    }
 
     void resetColumnsToDefault() {
-        int widgetWidth = p->size().width() - p->verticalScrollBar()->size().width() - 8;
+        int widgetWidth = p->viewport()->size().width();
         if (widgetWidth < 8) return; ///< widget is too narrow or not yet initialized
 
         disconnect(p->header(), SIGNAL(sectionResized(int, int, int)), p, SLOT(columnResized(int, int, int)));
@@ -80,10 +67,15 @@ public:
 
         int col = 0;
         foreach(const FieldDescription *fd, *BibTeXFields::self()) {
-            storedColumnWidths[col] = (fd->defaultWidth * widgetWidth / sum);
-            storedColumnVisible[col] = fd->defaultVisible;
-            p->setColumnHidden(col, !storedColumnVisible[col]);
-            p->setColumnWidth(col, storedColumnWidths[col]);
+            foreach(QAction *action, p->header()->actions()) {
+                bool ok = false;
+                int ac = (int)action->data().toInt(&ok);
+                if (ok && ac == col)
+                    action->setChecked(fd->defaultVisible);
+            }
+
+            p->setColumnHidden(col, !fd->defaultVisible);
+            p->setColumnWidth(col, fd->defaultWidth * widgetWidth / sum);
             ++col;
         }
 
@@ -103,47 +95,41 @@ public:
     }
 
     void storeColumns() {
-        static const int colMinWidth = p->fontMetrics().width(QChar('W')) * 2;
-        for (int col = storedColumnCount - 1; col >= 0; --col) {
-            int colWidth = p->columnWidth(col);
-            if (colWidth < colMinWidth)
-                p->setColumnWidth(col, colWidth = colMinWidth);
-            storedColumnWidths[col] = colWidth;
-            storedColumnVisible[col] = !p->isColumnHidden(col);
-        }
-
         QByteArray headerState = p->header()->saveState();
         KConfigGroup configGroup(config, configGroupName);
         configGroup.writeEntry(configHeaderState.arg(name), headerState);
         config->sync();
     }
 
-    void restoreColumns() {
-        int widgetWidth = p->size().width() - p->verticalScrollBar()->size().width() - 8;
+    void adjustColumns() {
+        int widgetWidth = p->viewport()->size().width();
         if (widgetWidth < 8) return; ///< widget is too narrow or not yet initialized
 
         disconnect(p->header(), SIGNAL(sectionMoved(int, int, int)), p, SLOT(columnMoved()));
         disconnect(p->header(), SIGNAL(sectionResized(int, int, int)), p, SLOT(columnResized(int, int, int)));
 
+        const int columnCount = p->header()->count();
+        int *columnWidths = new int[columnCount];
         int sum = 0;
         int col = 0;
         foreach(const FieldDescription *fd, *BibTeXFields::self()) {
-            storedColumnWidths[col] = qMax(storedColumnWidths[col], fd->defaultWidth);
-            if (storedColumnVisible[col])
-                sum += storedColumnWidths[col];
+            columnWidths[col] = qMax(p->columnWidth(col), fd->defaultWidth);
+            if (!p->isColumnHidden(col))
+                sum += columnWidths[col];
             ++col;
         }
 
         for (int col = storedColumnCount - 1; col >= 0; --col) {
-            storedColumnWidths[col] = storedColumnWidths[col] * widgetWidth / sum;
-            p->setColumnHidden(col, !storedColumnVisible[col]);
-            p->setColumnWidth(col, storedColumnWidths[col]);
+            p->setColumnWidth(col, columnWidths[col] * widgetWidth / sum);
         }
+        p->columnResized(0, 0, 0); ///< QTreeView seems to be lazy on updating itself, force updated
 
         QByteArray headerState = p->header()->saveState();
         KConfigGroup configGroup(config, configGroupName);
         configGroup.writeEntry(configHeaderState.arg(name), headerState);
         config->sync();
+
+        delete[] columnWidths;
 
         connect(p->header(), SIGNAL(sectionMoved(int, int, int)), p, SLOT(columnMoved()));
         connect(p->header(), SIGNAL(sectionResized(int, int, int)), p, SLOT(columnResized(int, int, int)));
@@ -153,19 +139,15 @@ public:
         disconnect(p->header(), SIGNAL(sectionMoved(int, int, int)), p, SLOT(columnMoved()));
         disconnect(p->header(), SIGNAL(sectionResized(int, int, int)), p, SLOT(columnResized(int, int, int)));
 
-        int widgetWidth = p->size().width() - p->verticalScrollBar()->size().width() - 8;
-        widgetWidth = qMax(widgetWidth, 500);
-
-        storedColumnVisible[column] = isVisible;
-        if (isVisible)
-            storedColumnWidths[column] = widgetWidth / 8;
+        if (isVisible) {
+            static const int colMinWidth = p->fontMetrics().width(QChar('W')) * 5;
+            int widgetWidth = p->viewport()->size().width();
+            p->setColumnWidth(column, qMax(widgetWidth / 10, colMinWidth));
+        }
+        p->setColumnHidden(column, !isVisible);
 
         connect(p->header(), SIGNAL(sectionMoved(int, int, int)), p, SLOT(columnMoved()));
         connect(p->header(), SIGNAL(sectionResized(int, int, int)), p, SLOT(columnResized(int, int, int)));
-    }
-
-    bool isColumnVisible(int column) const {
-        return storedColumnVisible[column];
     }
 };
 
@@ -197,6 +179,7 @@ BibTeXFileView::BibTeXFileView(const QString &name, QWidget * parent)
         header()->restoreState(headerState);
         d->storeColumns();
     }
+    header()->setStretchLastSection(false);
 
     connect(header(), SIGNAL(sectionMoved(int, int, int)), this, SLOT(columnMoved()));
     connect(header(), SIGNAL(sectionResized(int, int, int)), this, SLOT(columnResized(int, int, int)));
@@ -207,7 +190,7 @@ BibTeXFileView::BibTeXFileView(const QString &name, QWidget * parent)
         KAction *action = new KAction(fd->label, header());
         action->setData(col);
         action->setCheckable(true);
-        action->setChecked(d->isColumnVisible(col));
+        action->setChecked(!isColumnHidden(col));
         connect(action, SIGNAL(triggered()), this, SLOT(headerActionToggled()));
         header()->addAction(action);
         ++col;
@@ -216,6 +199,11 @@ BibTeXFileView::BibTeXFileView(const QString &name, QWidget * parent)
     /// add separator to header's context menu
     KAction *action = new KAction(header());
     action->setSeparator(true);
+    header()->addAction(action);
+
+    /// adjust column widths
+    action = new KAction(i18n("Adjust Column Widths"), header());
+    connect(action, SIGNAL(triggered()), this, SLOT(headerAdjustColumnWidths()));
     header()->addAction(action);
 
     /// add action to reset to defaults (regarding column visibility) to header's context menu
@@ -267,12 +255,6 @@ void BibTeXFileView::keyReleaseEvent(QKeyEvent *event)
     QTreeView::keyReleaseEvent(event);
 }
 
-void BibTeXFileView::resizeEvent(QResizeEvent *event)
-{
-    d->restoreColumns();
-    QTreeView::resizeEvent(event);
-}
-
 void BibTeXFileView::columnMoved()
 {
     QTreeView::columnMoved();
@@ -294,7 +276,12 @@ void BibTeXFileView::headerActionToggled()
 
     d->storeColumns();
     d->setColumnVisible(col, action->isChecked());
-    d->restoreColumns();
+    d->adjustColumns();
+}
+
+void BibTeXFileView::headerAdjustColumnWidths()
+{
+    d->adjustColumns();
 }
 
 void BibTeXFileView::headerResetToDefaults()
