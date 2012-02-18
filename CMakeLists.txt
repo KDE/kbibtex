@@ -14,7 +14,7 @@ set(
 )
 set(
     LIB_SOVERSION
-    "5"
+    "1"
 )
 
 set(
