@@ -85,6 +85,8 @@ public:
                 p->header()->moveSection(j, i);
         }
 
+        p->columnResized(0, 0, 0); ///< QTreeView seems to be lazy on updating itself, force updated
+
         QByteArray headerState = p->header()->saveState();
         KConfigGroup configGroup(config, configGroupName);
         configGroup.writeEntry(configHeaderState.arg(name), headerState);
