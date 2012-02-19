@@ -24,6 +24,10 @@
 
 #include "encoderlatex.h"
 
+/**
+ * General documentation on this topic:
+ *   http://www.tex.ac.uk/CTAN/macros/latex/doc/encguide.pdf
+ */
 
 EncoderLaTeX *EncoderLaTeX::self = NULL;
 
@@ -60,7 +64,7 @@ encoderLaTeXEscapedCharacters[] = {
     {'\'', 'I', QChar(0x00CD)},
     {'^', 'I', QChar(0x00CE)},
     {'"', 'I', QChar(0x00CF)},
-    /** 0x00D0 */
+    /** 0x00D0: see EncoderLaTeXCharacterCommand */
     {'~', 'N', QChar(0x00D1)},
     {'`', 'O', QChar(0x00D2)},
     {'\'', 'O', QChar(0x00D3)},
@@ -249,6 +253,39 @@ static const int encoderLaTeXEscapedCharactersLen = sizeof(encoderLaTeXEscapedCh
 
 
 /**
+ * This structure contains information on the usage of dotless i
+ * and dotless j in combination with accent-like modifiers.
+ * Combinations such as \"{\i} are translated to an Unicode character
+ * and back. The structure is a table with three columns: (1) the
+ * modified (in the example before the quotation mark) (2) the ASCII
+ * character (in the example before the 'a') (3) the Unicode
+ * character described by a hexcode.
+ */
+// TODO other cases of \i and \j?
+// TODO capital cases like \I and \J?
+static const struct DotlessIJCharacter {
+    const char modifier;
+    const char letter;
+    QChar unicode;
+}
+dotlessIJCharacters[] = {
+    {'`', 'i', QChar(0x00EC)},
+    {'\'', 'i', QChar(0x00ED)},
+    {'^', 'i', QChar(0x00EE)},
+    {'"', 'i', QChar(0x00EF)},
+    {'~', 'i', QChar(0x0129)},
+    {'=', 'i', QChar(0x012B)},
+    {'u', 'i', QChar(0x012D)},
+    {'k', 'i', QChar(0x012F)},
+    {'^', 'j', QChar(0x0135)},
+    {'v', 'i', QChar(0x01D0)},
+    {'v', 'j', QChar(0x01F0)},
+    {'t', 'i', QChar(0x020B)}
+};
+static const int dotlessIJCharactersLen = sizeof(dotlessIJCharacters) / sizeof(dotlessIJCharacters[0]);
+
+
+/**
  * This lookup allows to quickly find hits in the
  * EncoderLaTeXEscapedCharacter table. This data structure here
  * consists of a number of rows. Each row consists of a
@@ -281,16 +318,24 @@ static const struct EncoderLaTeXCharacterCommand {
 encoderLaTeXCharacterCommands[] = {
     {QLatin1String("AA"), QChar(0x00C5)},
     {QLatin1String("AE"), QChar(0x00C6)},
+    {QLatin1String("DH"), QChar(0x00D0)},
+    {QLatin1String("DJ"), QChar(0x00D0)},
     {QLatin1String("O"), QChar(0x00D8)},
+    {QLatin1String("TH"), QChar(0x00DE)},
     {QLatin1String("ss"), QChar(0x00DF)},
     {QLatin1String("aa"), QChar(0x00E5)},
     {QLatin1String("ae"), QChar(0x00E6)},
+    {QLatin1String("dh"), QChar(0x00F0)},
     {QLatin1String("o"), QChar(0x00F8)},
+    {QLatin1String("th"), QChar(0x00FE)},
     {QLatin1String("i"), QChar(0x0131)},
+    {QLatin1String("NG"), QChar(0x014A)},
+    {QLatin1String("ng"), QChar(0x014B)},
     {QLatin1String("L"), QChar(0x0141)},
     {QLatin1String("l"), QChar(0x0142)},
     {QLatin1String("OE"), QChar(0x0152)},
     {QLatin1String("oe"), QChar(0x0153)},
+    {QLatin1String("j"), QChar(0x0237)},
     {QLatin1String("ldots"), QChar(0x2026)}, /** \ldots must be before \l */
     {QLatin1String("grqq"), QChar(0x201C)},
     {QLatin1String("rqq"), QChar(0x201D)},
@@ -430,19 +475,14 @@ QString EncoderLaTeX::decode(const QString &input) const
                     i += 4;
                 } else if (lookupTablePos >= 0 && input[i+3] == '\\' && input[i+4] >= 'A' && input[i+4] <= 'z' && input[i+5] == '}') {
                     /// This is the case for {\'\i} or alike.
-                    if (input[i+2] == '`' && input[i+4] == 'i') {
-                        output.append(QChar(0x00EC));
-                        i += 5;
-                    } else if (input[i+2] == '\'' && input[i+4] == 'i') {
-                        output.append(QChar(0x00ED));
-                        i += 5;
-                    } else if (input[i+2] == '^' && input[i+4] == 'i') {
-                        output.append(QChar(0x00EE));
-                        i += 5;
-                    } else if (input[i+2] == '"' && input[i+4] == 'i') {
-                        output.append(QChar(0x00EF));
-                        i += 5;
-                    } else
+                    bool found = false;
+                    for (int k = 0; !found && k < dotlessIJCharactersLen; ++k)
+                        if (dotlessIJCharacters[k].letter == input[i+4] && dotlessIJCharacters[k].modifier == input[i+2]) {
+                            output.append(dotlessIJCharacters[k].unicode);
+                            i += 5;
+                            found = true;
+                        }
+                    if (!found)
                         kWarning() << "Cannot interprete BACKSLASH" << input[i+2] << "BACKSLASH" << input[i+4];
                 } else if (lookupTablePos >= 0 && input[i+3] == '{' && input[i+4] >= 'A' && input[i+4] <= 'z' && input[i+5] == '}' && input[i+6] == '}') {
                     /// If we found a modifier which is followed by
@@ -456,19 +496,14 @@ QString EncoderLaTeX::decode(const QString &input) const
                     i += 6;
                 } else if (lookupTablePos >= 0 && input[i+3] == '{' && input[i+4] == '\\' && input[i+5] >= 'A' && input[i+5] <= 'z' && input[i+6] == '}' && input[i+7] == '}') {
                     /// This is the case for {\'{\i}} or alike.
-                    if (input[i+2] == '`' && input[i+5] == 'i') {
-                        output.append(QChar(0x00EC));
-                        i += 7;
-                    } else if (input[i+2] == '\'' && input[i+5] == 'i') {
-                        output.append(QChar(0x00ED));
-                        i += 7;
-                    } else if (input[i+2] == '^' && input[i+5] == 'i') {
-                        output.append(QChar(0x00EE));
-                        i += 7;
-                    } else if (input[i+2] == '"' && input[i+5] == 'i') {
-                        output.append(QChar(0x00EF));
-                        i += 7;
-                    } else
+                    bool found = false;
+                    for (int k = 0; !found && k < dotlessIJCharactersLen; ++k)
+                        if (dotlessIJCharacters[k].letter == input[i+5] && dotlessIJCharacters[k].modifier == input[i+2]) {
+                            output.append(dotlessIJCharacters[k].unicode);
+                            i += 7;
+                            found = true;
+                        }
+                    if (!found)
                         kWarning() << "Cannot interprete BACKSLASH" << input[i+2] << "BACKSLASH {" << input[i+5] << "}";
                 } else {
                     /// Now, the case of something like {\AA} is left
@@ -556,35 +591,25 @@ QString EncoderLaTeX::decode(const QString &input) const
                 i += 4;
             } else if (lookupTablePos >= 0 && input[i+2] == '\\' && input[i+3] >= 'A' && input[i+3] <= 'z') {
                 /// This is the case for \'\i or alike.
-                if (input[i+1] == '`' && input[i+3] == 'i') {
-                    output.append(QChar(0x00EC));
-                    i += 3;
-                } else if (input[i+1] == '\'' && input[i+3] == 'i') {
-                    output.append(QChar(0x00ED));
-                    i += 3;
-                } else if (input[i+1] == '^' && input[i+3] == 'i') {
-                    output.append(QChar(0x00EE));
-                    i += 3;
-                } else if (input[i+1] == '"' && input[i+3] == 'i') {
-                    output.append(QChar(0x00EF));
-                    i += 3;
-                } else
+                bool found = false;
+                for (int k = 0; !found && k < dotlessIJCharactersLen; ++k)
+                    if (dotlessIJCharacters[k].letter == input[i+3] && dotlessIJCharacters[k].modifier == input[i+1]) {
+                        output.append(dotlessIJCharacters[k].unicode);
+                        i += 3;
+                        found = true;
+                    }
+                if (!found)
                     kWarning() << "Cannot interprete BACKSLASH" << input[i+1] << "BACKSLASH" << input[i+3];
             } else if (lookupTablePos >= 0 && input[i+2] == '{' && input[i+3] == '\\' && input[i+4] >= 'A' && input[i+4] <= 'z' && input[i+5] == '}') {
                 /// This is the case for \'{\i} or alike.
-                if (input[i+1] == '`' && input[i+4] == 'i') {
-                    output.append(QChar(0x00EC));
-                    i += 5;
-                } else if (input[i+1] == '\'' && input[i+4] == 'i') {
-                    output.append(QChar(0x00ED));
-                    i += 5;
-                } else if (input[i+1] == '^' && input[i+4] == 'i') {
-                    output.append(QChar(0x00EE));
-                    i += 5;
-                } else if (input[i+1] == '"' && input[i+4] == 'i') {
-                    output.append(QChar(0x00EF));
-                    i += 5;
-                } else
+                bool found = false;
+                for (int k = 0; !found && k < dotlessIJCharactersLen; ++k)
+                    if (dotlessIJCharacters[k].letter == input[i+4] && dotlessIJCharacters[k].modifier == input[i+1]) {
+                        output.append(dotlessIJCharacters[k].unicode);
+                        i += 5;
+                        found = true;
+                    }
+                if (!found)
                     kWarning() << "Cannot interprete BACKSLASH" << input[i+1] << "BACKSLASH {" << input[i+4] << "}";
             } else if (i < len - 1) {
                 /// Now, the case of something like \AA is left
@@ -744,13 +769,11 @@ QString EncoderLaTeX::encode(const QString &input) const
             bool found = false;
 
             /// Handle special cases of i without a dot (\i)
-            switch (c.unicode()) {
-            case 0x00EC: output.append("\\`{\\i}"); found = true; break;
-            case 0x00ED: output.append("\\'{\\i}"); found = true; break;
-            case 0x00EE: output.append("\\^{\\i}"); found = true; break;
-            case 0x00EF: output.append("\\\"{\\i}"); found = true; break;
-            }
-            // FIXME what about \j?
+            for (int k = 0; !found && k < dotlessIJCharactersLen; ++k)
+                if (c.unicode() == dotlessIJCharacters[k].unicode) {
+                    output.append(QString("\\%1{\\%2}").arg(dotlessIJCharacters[k].modifier).arg(dotlessIJCharacters[k].letter));
+                    found = true;
+                }
 
             if (!found) {
                 /// ... test if there is a symbol sequence like ---
@@ -842,6 +865,15 @@ QString EncoderLaTeX::convertToPlainAscii(const QString &input) const
             /// ... test if there is a symbol sequence like ---
             /// to encode it
             bool found = false;
+
+            /// Let's test character commands like \'\i
+            for (int k = 0; k < dotlessIJCharactersLen; ++k)
+                if (dotlessIJCharacters[k].unicode == c) {
+                    output.append(dotlessIJCharacters[k].letter);
+                    found = true;
+                    break;
+                }
+
             /// Let's test character commands like \ss
             for (int k = 0; k < encoderLaTeXCharacterCommandsLen; ++k)
                 if (encoderLaTeXCharacterCommands[k].unicode == c) {
