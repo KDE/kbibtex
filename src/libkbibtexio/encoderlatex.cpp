@@ -258,7 +258,7 @@ static const int encoderLaTeXEscapedCharactersLen = sizeof(encoderLaTeXEscapedCh
  * Combinations such as \"{\i} are translated to an Unicode character
  * and back. The structure is a table with three columns: (1) the
  * modified (in the example before the quotation mark) (2) the ASCII
- * character (in the example before the 'a') (3) the Unicode
+ * character (in the example before the 'i') (3) the Unicode
  * character described by a hexcode.
  */
 // TODO other cases of \i and \j?
