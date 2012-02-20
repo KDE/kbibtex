@@ -39,113 +39,139 @@ endif(
     QT_QTWEBKIT_FOUND
 )
 
-mark_as_advanced(
-    force
-    SVNVERSION_EXECUTABLE
-)
-find_program(
-    SVNVERSION_EXECUTABLE
-    svnversion
-)
 if(
-    SVNVERSION_EXECUTABLE
+    "$ENV{SVN_REV}"
+    GREATER
+    0
 )
     message(
         STATUS
-        "Extracting SVN version, please wait..."
+        "SVN version fetched from environment"
     )
-    execute_process(
-        COMMAND
-        ${SVNVERSION_EXECUTABLE}
-        -n
-        ${CMAKE_SOURCE_DIR}
-        OUTPUT_VARIABLE
-        SVNVERSION_RESULT
-        OUTPUT_STRIP_TRAILING_WHITESPACE
-    )
-
-    if(
-        SVNVERSION_RESULT
-        MATCHES
-        "exported"
-    )
-        message(
-            STATUS
-            "Not an SVN version, assuming non-developer release"
-        )
-        add_custom_target(
-            clean_version_h_in_builddir
-            ALL
-            cmake
-            -E
-            remove
-            "${CMAKE_BINARY_DIR}/src/version.h"
-            WORKING_DIRECTORY
-            "${CMAKE_BINARY_DIR}"
-            COMMENT
-            "Removing ${CMAKE_BINARY_DIR}/src/version.h..."
-        )
-    else(
-        SVNVERSION_RESULT
-        MATCHES
-        "exported"
-    )
-        message(
-            STATUS
-            "SVN version is "
-            ${SVNVERSION_RESULT}
-        )
-        add_custom_target(
-            set_version_h_in_builddir
-            ALL
-            cmake -E echo "#ifndef VERSION_H" > "${CMAKE_BINARY_DIR}/src/version.h.tmp"
-            COMMAND
-            cmake -E echo "#define VERSION_H" >> "${CMAKE_BINARY_DIR}/src/version.h.tmp"
-            COMMAND
-            cmake -E echo "const char *versionNumber = \"SVN r${SVNVERSION_RESULT}\";" >> "${CMAKE_BINARY_DIR}/src/version.h.tmp"
-            COMMAND
-            cmake -E echo "#endif // VERSION_H" >> ${CMAKE_BINARY_DIR}/src/version.h.tmp
-            COMMAND
-            cmake -E copy "${CMAKE_BINARY_DIR}/src/version.h.tmp" "${CMAKE_BINARY_DIR}/src/version.h"
-            COMMAND
-            cmake
-            -E
-            remove
-            "${CMAKE_BINARY_DIR}/src/version.h.tmp"
-            WORKING_DIRECTORY
-            "${CMAKE_BINARY_DIR}/src"
-            COMMENT
-            "Updating ${CMAKE_BINARY_DIR}/src/version.h..."
-            VERBATIM
-        )
-    endif(
-        SVNVERSION_RESULT
-        MATCHES
-        "exported"
+    set(
+        SVN_REVISION
+        $ENV{SVN_REV}
     )
 else(
-    SVNVERSION_EXECUTABLE
+    "$ENV{SVN_REV}"
+    GREATER
+    0
 )
-    message(
-        STATUS
-        "No Subversion installed, assuming non-developer release"
+    mark_as_advanced(
+        force
+        SVNVERSION_EXECUTABLE
     )
-    add_custom_target(
-        clean_version_h_in_builddir
-        ALL
-        cmake
-        -E
-        remove
-        "${CMAKE_BINARY_DIR}/src/version.h"
-        WORKING_DIRECTORY
-        "${CMAKE_BINARY_DIR}"
-        COMMENT
-        "Removing ${CMAKE_BINARY_DIR}/src/version.h..."
+    find_program(
+        SVNVERSION_EXECUTABLE
+        svnversion
+    )
+    if(
+        SVNVERSION_EXECUTABLE
+    )
+        message(
+            STATUS
+            "Extracting SVN version, please wait..."
+        )
+        execute_process(
+            COMMAND
+            ${SVNVERSION_EXECUTABLE}
+            -n
+            ${CMAKE_SOURCE_DIR}
+            OUTPUT_VARIABLE
+            SVN_REVISION
+            OUTPUT_STRIP_TRAILING_WHITESPACE
+        )
+
+        if(
+            SVN_REVISION
+            MATCHES
+            "exported"
+        )
+            message(
+                STATUS
+                "Not an SVN version, assuming non-developer release"
+            )
+            set(
+                SVN_REVISION
+                "unknown"
+            )
+        endif(
+            SVN_REVISION
+            MATCHES
+            "exported"
+        )
+    else(
+        SVNVERSION_EXECUTABLE
+    )
+        message(
+            STATUS
+            "No Subversion installed, assuming non-developer release"
+        )
+        set(
+            SVN_REVISION
+            "unknown"
+        )
+    endif(
+        SVNVERSION_EXECUTABLE
     )
 endif(
-    SVNVERSION_EXECUTABLE
+    "$ENV{SVN_REV}"
+    GREATER
+    0
 )
 
+message(
+    STATUS
+    "SVN version is "
+    ${SVN_REVISION}
+)
+add_custom_target(
+    set_version_h_in_builddir
+    ALL
+    cmake
+    -E
+    echo
+    "#ifndef VERSION_H"
+    >
+    "${CMAKE_BINARY_DIR}/src/version.h.tmp"
+    COMMAND
+    cmake
+    -E
+    echo
+    "#define VERSION_H"
+    >>
+    "${CMAKE_BINARY_DIR}/src/version.h.tmp"
+    COMMAND
+    cmake
+    -E
+    echo
+    "const char *versionNumber = \"SVN r${SVN_REVISION}\";"
+    >>
+    "${CMAKE_BINARY_DIR}/src/version.h.tmp"
+    COMMAND
+    cmake
+    -E
+    echo
+    "#endif // VERSION_H"
+    >>
+    ${CMAKE_BINARY_DIR}/src/version.h.tmp
+    COMMAND
+    cmake
+    -E
+    copy
+    "${CMAKE_BINARY_DIR}/src/version.h.tmp"
+    "${CMAKE_BINARY_DIR}/src/version.h"
+    COMMAND
+    cmake
+    -E
+    remove
+    "${CMAKE_BINARY_DIR}/src/version.h.tmp"
+    WORKING_DIRECTORY
+    "${CMAKE_SOURCE_DIR}"
+    COMMENT
+    "Updating ${CMAKE_BINARY_DIR}/src/version.h..."
+    VERBATIM
+)
 
 add_definitions(
     ${QT_DEFINITIONS}
