@@ -61,20 +61,74 @@ if(
         ${CMAKE_SOURCE_DIR}
         OUTPUT_VARIABLE
         SVNVERSION_RESULT
-OUTPUT_STRIP_TRAILING_WHITESPACE
+        OUTPUT_STRIP_TRAILING_WHITESPACE
     )
-endif(
-    SVNVERSION_EXECUTABLE
-)
 
-if(
-    SVNVERSION_RESULT
-    MATCHES
-    "exported"
+    if(
+        SVNVERSION_RESULT
+        MATCHES
+        "exported"
+    )
+        message(
+            STATUS
+            "Not an SVN version, assuming non-developer release"
+        )
+        add_custom_target(
+            clean_version_h_in_builddir
+            ALL
+            cmake
+            -E
+            remove
+            "${CMAKE_BINARY_DIR}/src/version.h"
+            WORKING_DIRECTORY
+            "${CMAKE_BINARY_DIR}"
+            COMMENT
+            "Removing ${CMAKE_BINARY_DIR}/src/version.h..."
+        )
+    else(
+        SVNVERSION_RESULT
+        MATCHES
+        "exported"
+    )
+        message(
+            STATUS
+            "SVN version is "
+            ${SVNVERSION_RESULT}
+        )
+        add_custom_target(
+            set_version_h_in_builddir
+            ALL
+            cmake -E echo "#ifndef VERSION_H" > "${CMAKE_BINARY_DIR}/src/version.h.tmp"
+            COMMAND
+            cmake -E echo "#define VERSION_H" >> "${CMAKE_BINARY_DIR}/src/version.h.tmp"
+            COMMAND
+            cmake -E echo "const char *versionNumber = \"SVN r${SVNVERSION_RESULT}\";" >> "${CMAKE_BINARY_DIR}/src/version.h.tmp"
+            COMMAND
+            cmake -E echo "#endif // VERSION_H" >> ${CMAKE_BINARY_DIR}/src/version.h.tmp
+            COMMAND
+            cmake -E copy "${CMAKE_BINARY_DIR}/src/version.h.tmp" "${CMAKE_BINARY_DIR}/src/version.h"
+            COMMAND
+            cmake
+            -E
+            remove
+            "${CMAKE_BINARY_DIR}/src/version.h.tmp"
+            WORKING_DIRECTORY
+            "${CMAKE_BINARY_DIR}/src"
+            COMMENT
+            "Updating ${CMAKE_BINARY_DIR}/src/version.h..."
+            VERBATIM
+        )
+    endif(
+        SVNVERSION_RESULT
+        MATCHES
+        "exported"
+    )
+else(
+    SVNVERSION_EXECUTABLE
 )
     message(
         STATUS
-        "Not an SVN version"
+        "No Subversion installed, assuming non-developer release"
     )
     add_custom_target(
         clean_version_h_in_builddir
@@ -88,44 +142,10 @@ if(
         COMMENT
         "Removing ${CMAKE_BINARY_DIR}/src/version.h..."
     )
-else(
-    SVNVERSION_RESULT
-    MATCHES
-    "exported"
-)
-    message(
-        STATUS
-        "SVN version is "
-        ${SVNVERSION_RESULT}
-    )
-    add_custom_target(
-        set_version_h_in_builddir
-        ALL
-        cmake -E echo "#ifndef VERSION_H" > "${CMAKE_BINARY_DIR}/src/version.h.tmp"
-        COMMAND
-        cmake -E echo "#define VERSION_H" >> "${CMAKE_BINARY_DIR}/src/version.h.tmp"
-        COMMAND
-        cmake -E echo "const char *versionNumber = \"SVN r${SVNVERSION_RESULT}\";" >> "${CMAKE_BINARY_DIR}/src/version.h.tmp"
-        COMMAND
-        cmake -E echo "#endif // VERSION_H" >> ${CMAKE_BINARY_DIR}/src/version.h.tmp
-        COMMAND
-        cmake -E copy "${CMAKE_BINARY_DIR}/src/version.h.tmp" "${CMAKE_BINARY_DIR}/src/version.h"
-        COMMAND
-        cmake
-        -E
-        remove
-        "${CMAKE_BINARY_DIR}/src/version.h.tmp"
-        WORKING_DIRECTORY
-        "${CMAKE_BINARY_DIR}/src"
-        COMMENT
-        "Updating ${CMAKE_BINARY_DIR}/src/version.h..."
-        VERBATIM
-    )
 endif(
-    SVNVERSION_RESULT
-    MATCHES
-    "exported"
+    SVNVERSION_EXECUTABLE
 )
+
 
 add_definitions(
     ${QT_DEFINITIONS}
