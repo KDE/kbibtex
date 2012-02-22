@@ -84,7 +84,7 @@ public:
             m_singleLineEditText->setCompletionMode(KGlobalSettings::CompletionPopupAuto);
             m_singleLineEditText->completionObject()->setIgnoreCase(true);
             p->setFocusProxy(m_singleLineEditText);
-            connect(m_singleLineEditText, SIGNAL(textChanged(QString)), p, SIGNAL(textChanged(QString)));
+            connect(m_singleLineEditText, SIGNAL(textEdited(QString)), p, SIGNAL(textChanged(QString)));
         }
 
         p->setFocusPolicy(Qt::StrongFocus); // FIXME improve focus handling

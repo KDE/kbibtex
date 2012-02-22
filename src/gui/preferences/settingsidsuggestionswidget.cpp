@@ -240,6 +240,8 @@ public:
         buttonToggleDefaultString = new KPushButton(KIcon("favorites"), i18n("Toggle Default"), p);
         layout->addWidget(buttonToggleDefaultString, 5, 1, 1, 1);
 
+        p->itemChanged(QModelIndex());
+
         connect(buttonSuggestionUp, SIGNAL(clicked()), p, SLOT(buttonClicked()));
         connect(buttonSuggestionDown, SIGNAL(clicked()), p, SLOT(buttonClicked()));
         connect(buttonToggleDefaultString, SIGNAL(clicked()), p, SLOT(toggleDefault()));

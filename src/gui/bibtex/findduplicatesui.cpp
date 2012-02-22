@@ -83,7 +83,7 @@ public:
             return SelectionTypeNone;
         if (fieldName == Entry::ftKeywords || fieldName == Entry::ftUrl)
             return SelectionTypeCheck;
-        return SelectionTypeCheck;
+        return SelectionTypeRadio;
     }
 
     void setCurrentClique(EntryClique *currentClique) {
