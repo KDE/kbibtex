@@ -42,7 +42,7 @@ public:
     QSortFilterProxyModel *sortFilterProxyModel();
 
 protected:
-    void keyReleaseEvent(QKeyEvent *event);
+    virtual void keyPressEvent(QKeyEvent *event);
 
 protected slots:
     void columnMoved();

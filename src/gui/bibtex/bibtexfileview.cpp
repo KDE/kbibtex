@@ -248,13 +248,13 @@ QSortFilterProxyModel *BibTeXFileView::sortFilterProxyModel()
     return d->sortFilterProxyModel;
 }
 
-void BibTeXFileView::keyReleaseEvent(QKeyEvent *event)
+void BibTeXFileView::keyPressEvent(QKeyEvent *event)
 {
-    if ((event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter) && event->modifiers() == Qt::NoModifier) {
+    if ((event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter) && event->modifiers() == Qt::NoModifier && currentIndex() != QModelIndex()) {
         emit doubleClicked(currentIndex());
         event->accept();
     }
-    QTreeView::keyReleaseEvent(event);
+    QTreeView::keyPressEvent(event);
 }
 
 void BibTeXFileView::columnMoved()
