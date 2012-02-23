@@ -251,7 +251,7 @@ public:
 
         for (QMap<QListWidgetItem*, OnlineSearchAbstract*>::ConstIterator it = itemToOnlineSearch.constBegin(); it != itemToOnlineSearch.constEnd(); ++it)
             connect(searchButton, SIGNAL(clicked()), it.value(), SLOT(cancel()));
-        searchButton->setText(i18n("Cancel"));
+        searchButton->setText(i18n("Stop"));
         searchButton->setIcon(KIcon("media-playback-stop"));
         for (int i = tabWidget->count() - 1; i >= 0; --i)
             tabWidget->widget(i)->setEnabled(false);
