@@ -94,7 +94,7 @@ public:
     FilterBar *filterBar;
     QSignalMapper *signalMapperNewElement;
     KAction *editCutAction, *editDeleteAction, *editCopyAction, *editPasteAction, *editCopyReferencesAction, *elementEditAction, *elementViewDocumentAction, *fileSaveAction, *elementFindPDFAction, *entryApplyDefaultFormatString;
-    QMenu *viewDocumentMenu;
+    KMenu *viewDocumentMenu;
     QSignalMapper *signalMapperViewDocument;
     bool isSaveAsOperation;
     LyX *lyx;
@@ -102,7 +102,7 @@ public:
     ColorLabelContextMenu *colorLabelContextMenu;
 
     KBibTeXPartPrivate(KBibTeXPart *parent)
-            : p(parent), bibTeXFile(NULL), model(NULL), sortFilterProxyModel(NULL), signalMapperNewElement(new QSignalMapper(parent)), viewDocumentMenu(new QMenu(i18n("View Document"), parent->widget())), signalMapperViewDocument(new QSignalMapper(parent)), isSaveAsOperation(false) {
+            : p(parent), bibTeXFile(NULL), model(NULL), sortFilterProxyModel(NULL), signalMapperNewElement(new QSignalMapper(parent)), viewDocumentMenu(new KMenu(i18n("View Document"), parent->widget())), signalMapperViewDocument(new QSignalMapper(parent)), isSaveAsOperation(false) {
         connect(signalMapperViewDocument, SIGNAL(mapped(QObject*)), p, SLOT(elementViewDocumentMenu(QObject*)));
     }
 
@@ -321,7 +321,29 @@ public:
         if (!entry.isNull()) {
             QList<KUrl> urlList = FileInfo::entryUrls(entry.data(), editor->bibTeXModel()->bibTeXFile()->property(File::Url).toUrl(), FileInfo::TestExistanceYes);
             if (!urlList.isEmpty()) {
+                /// First iteration: local references only
+                KAction *firstAction = NULL;
                 for (QList<KUrl>::ConstIterator it = urlList.constBegin(); it != urlList.constEnd(); ++it) {
+                    if (!(*it).isLocalFile()) continue;
+
+                    // FIXME: the signal mapper will fill up with mappings, as they are never removed
+                    QFileInfo fi((*it).pathOrUrl());
+                    const QString label = QString("%1 [%2]").arg(fi.fileName()).arg(fi.absolutePath());
+                    KAction *action = new KAction(KIcon(KMimeType::iconNameForUrl(*it)), label, p);
+                    action->setData((*it).pathOrUrl());
+                    action->setToolTip((*it).prettyUrl());
+                    connect(action, SIGNAL(triggered()), signalMapperViewDocument, SLOT(map()));
+                    signalMapperViewDocument->setMapping(action, action);
+                    viewDocumentMenu->addAction(action);
+                    if (firstAction == NULL) firstAction = action;
+                }
+                if (firstAction != NULL)
+                    viewDocumentMenu->addTitle(i18n("Local Files"), firstAction);
+
+                firstAction = NULL;
+                for (QList<KUrl>::ConstIterator it = urlList.constBegin(); it != urlList.constEnd(); ++it) {
+                    if ((*it).isLocalFile()) continue;
+
                     // FIXME: the signal mapper will fill up with mappings, as they are never removed
                     KAction *action = new KAction(KIcon(KMimeType::iconNameForUrl(*it)), (*it).pathOrUrl(), p);
                     action->setData((*it).pathOrUrl());
@@ -329,7 +351,11 @@ public:
                     connect(action, SIGNAL(triggered()), signalMapperViewDocument, SLOT(map()));
                     signalMapperViewDocument->setMapping(action, action);
                     viewDocumentMenu->addAction(action);
+                    if (firstAction == NULL) firstAction = action;
                 }
+                if (firstAction != NULL)
+                    viewDocumentMenu->addTitle(i18n("Remote Files"), firstAction);
+
                 result = urlList.count();
             }
         }
@@ -466,6 +492,7 @@ void KBibTeXPart::setupActions(bool /*browserViewWanted FIXME*/)
     // TODO
 
     connect(d->editor, SIGNAL(selectedElementsChanged()), this, SLOT(updateActions()));
+    connect(d->editor, SIGNAL(currentElementChanged(QSharedPointer<Element>, const File*)), this, SLOT(updateActions()));
 
     d->editor->addAction(d->elementFindPDFAction);
     d->editor->addAction(d->entryApplyDefaultFormatString);
