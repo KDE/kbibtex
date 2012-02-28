@@ -74,6 +74,8 @@ File* FileImporterBibTeX::load(QIODevice *iodevice)
     m_textStreamLastPos = 0;
     m_textStream = new QTextStream(iodevice);
     m_textStream->setCodec("us-ascii"); ///< unless we learn something else, assume 7-bit US-ASCII
+    result->setProperty(File::Encoding, QLatin1String("latex"));
+
     QString rawText = "";
     while (!m_textStream->atEnd()) {
         QString line = m_textStream->readLine();
@@ -934,9 +936,8 @@ bool FileImporterBibTeX::evaluateParameterComments(QTextStream *textStream, cons
     /** check if this file requests a special encoding */
     if (line.startsWith("@comment{x-kbibtex-encoding=") && line.endsWith("}")) {
         QString encoding = line.mid(28, line.length() - 29);
-        textStream->setCodec(encoding == "latex" ? "UTF-8" : encoding.toAscii());
-        encoding = textStream->codec()->name();
-        file->setProperty(File::Encoding, encoding);
+        textStream->setCodec(encoding == "latex" ? "utf-8" : encoding.toAscii());
+        file->setProperty(File::Encoding, encoding == "latex" ? encoding : textStream->codec()->name());
         return true;
     } else if (line.startsWith("@comment{x-kbibtex-personnameformatting=") && line.endsWith("}")) {
         QString personNameFormatting = line.mid(40, line.length() - 41);
