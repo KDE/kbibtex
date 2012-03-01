@@ -35,6 +35,7 @@
 #include <KMessageBox>
 #include <KMenu>
 
+#include "kbibtexnamespace.h"
 #include "preferences/kbibtexpreferencesdialog.h"
 #include "mainwindow.h"
 #include "valuelist.h"
@@ -364,7 +365,12 @@ void KBibTeXMainWindow::documentListsChanged(OpenFileInfo::StatusFlags statusFla
         OpenFileInfoManager::OpenFileInfoList list = d->mdiWidget->getOpenFileInfoManager()->filteredItems(OpenFileInfo::RecentlyUsed);
         d->actionMenuRecentFilesMenu->clear();
         foreach(OpenFileInfo* cur, list) {
-            KAction *action = new KAction(QString("%1 [%2]").arg(cur->shortCaption()).arg(cur->fullCaption()), this);
+            /// Fixing bug 19511: too long filenames make menu too large,
+            /// therefore squeeze text if it is longer than squeezeLen.
+            const int squeezeLen = 256;
+            const QString squeezedShortCap = squeeze_text(cur->shortCaption(), squeezeLen);
+            const QString squeezedFullCap = squeeze_text(cur->fullCaption(), squeezeLen);
+            KAction *action = new KAction(QString("%1 [%2]").arg(squeezedShortCap).arg(squeezedFullCap), this);
             action->setData(cur->url());
             action->setIcon(KIcon(cur->mimeType().replace("/", "-")));
             d->actionMenuRecentFilesMenu->addAction(action);
