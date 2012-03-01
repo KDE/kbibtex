@@ -31,20 +31,49 @@ class Entry;
 class MDIWidget;
 class SearchResults;
 
+/**
+ * Widget for a dock widget where users can select search engines and
+ * enter search queries (title, author, number of hits, ...)
+ *
+ * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ */
 class SearchForm : public QWidget
 {
     Q_OBJECT
 
 public:
-    SearchForm(MDIWidget *mdiWidget, SearchResults *searchResults, QWidget *parent);
+    /**
+     * Create a new search form, which has to know where to store results
+     * and which (dock) widget is its parent.
+     * @param searchResults SearchResults object where to send results to
+     * @param parent parent widget for this widget
+     */
+    SearchForm(SearchResults *searchResults, QWidget *parent);
     ~SearchForm();
 
 signals:
+    /**
+     * This signal gets emitted once the last of possibly several parallel
+     * online searches is done.
+     */
     void doneSearching();
 
 public slots:
+    /**
+     * Notify this widget about changes in the configuration settings,
+     * e.g. to update its list of search engines.
+     */
     void updatedConfiguration();
-    void setElement(QSharedPointer<Element>, const File *);
+
+    /**
+     * Notify this widget about a new current element selected in the
+     * main list view. Allows the widget to put use in the "Use Entry"
+     * button, i.e. copy title, author, etc from the entry to the search
+     * form.
+     * @param element BibTeX element, which will be cast to an Entry internally
+     * @param file BibTeX file where entry belongs to
+     */
+    void setElement(QSharedPointer<Element> element, const File *file);
 
 private:
     class SearchFormPrivate;
@@ -59,7 +88,6 @@ private slots:
     void itemCheckChanged(QListWidgetItem*);
     void openHomepage();
     void enginesListCurrentChanged(QListWidgetItem*, QListWidgetItem*);
-    void currentStackWidgetChanged(int);
     void copyFromEntry();
     void updateProgress(int, int);
 };

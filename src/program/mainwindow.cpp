@@ -153,7 +153,7 @@ KBibTeXMainWindow::KBibTeXMainWindow()
     d->dockSearchForm = new QDockWidget(i18n("Online Search"), this);
     d->dockSearchForm->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
     addDockWidget(Qt::LeftDockWidgetArea, d->dockSearchForm);
-    d->searchForm = new SearchForm(d->mdiWidget, d->searchResults, d->dockSearchForm);
+    d->searchForm = new SearchForm(d->searchResults, d->dockSearchForm);
     connect(d->searchForm, SIGNAL(doneSearching()), this, SLOT(showSearchResults()));
     d->dockSearchForm->setWidget(d->searchForm);
     d->dockSearchForm->setObjectName("dockSearchFrom");

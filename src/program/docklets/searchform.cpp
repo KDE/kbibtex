@@ -28,6 +28,7 @@
 #include <QProgressBar>
 #include <QTimer>
 #include <QSet>
+#include <QScrollArea>
 
 #include <KPushButton>
 #include <KLineEdit>
@@ -63,7 +64,6 @@
 #include <openfileinfo.h>
 #include <bibtexeditor.h>
 #include <bibtexfilemodel.h>
-#include <mdiwidget.h>
 #include <searchresults.h>
 #include "searchform.h"
 
@@ -85,7 +85,6 @@ public:
     KSharedConfigPtr config;
     const QString configGroupName;
 
-    MDIWidget *m;
     SearchResults *sr;
     QMap<QListWidgetItem*, OnlineSearchAbstract*> itemToOnlineSearch;
     QSet<OnlineSearchAbstract*> runningSearches;
@@ -96,15 +95,28 @@ public:
     QSharedPointer<const Entry> currentEntry;
     QProgressBar *progressBar;
     QMap<OnlineSearchAbstract*, int> progressMap;
+    QMap<OnlineSearchQueryFormAbstract*, QScrollArea*> formToScrollArea;
 
-    SearchFormPrivate(MDIWidget *mdiWidget, SearchResults *searchResults, SearchForm *parent)
+    SearchFormPrivate(SearchResults *searchResults, SearchForm *parent)
             : p(parent), whichEnginesLabel(NULL), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))),
-            configGroupName(QLatin1String("Search Engines Docklet")), m(mdiWidget), sr(searchResults), currentEntry(NULL) {
+            configGroupName(QLatin1String("Search Engines Docklet")), sr(searchResults), searchButton(NULL), currentEntry(NULL) {
         // nothing
     }
 
     OnlineSearchQueryFormAbstract *currentQueryForm() {
         return static_cast<OnlineSearchQueryFormAbstract*>(queryTermsStack->currentWidget());
+    }
+
+    QScrollArea *wrapInScrollArea(OnlineSearchQueryFormAbstract *form, QWidget *parent) {
+        QScrollArea *scrollArea = new QScrollArea(parent);
+        form->setParent(scrollArea);
+        scrollArea->setWidget(form);
+        scrollArea->setWidgetResizable(true);
+        scrollArea->setFrameShape(QFrame::NoFrame);
+        scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+        scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+        formToScrollArea.insert(form, scrollArea);
+        return scrollArea;
     }
 
     QWidget* createQueryTermsStack(QWidget *parent) {
@@ -119,10 +131,12 @@ public:
 
         vLayout->addSpacing(8);
 
-        queryTermsStack = new QStackedWidget(parent);
+        queryTermsStack = new QStackedWidget(container);
         vLayout->addWidget(queryTermsStack);
-        queryTermsStack->addWidget(createGeneralQueryTermsForm(queryTermsStack));
-        connect(queryTermsStack, SIGNAL(currentChanged(int)), p, SLOT(currentStackWidgetChanged(int)));
+        vLayout->setStretchFactor(queryTermsStack, 100);
+
+        QScrollArea *scrollArea = wrapInScrollArea(createGeneralQueryTermsForm(queryTermsStack), queryTermsStack);
+        queryTermsStack->addWidget(scrollArea);
 
         vLayout->addSpacing(8);
 
@@ -134,12 +148,10 @@ public:
         connect(useEntryButton, SIGNAL(clicked()), p, SLOT(copyFromEntry()));
         hLayout->addStretch(10);
 
-        vLayout->addStretch(100);
-
         return container;
     }
 
-    QWidget* createGeneralQueryTermsForm(QWidget *parent) {
+    OnlineSearchQueryFormAbstract* createGeneralQueryTermsForm(QWidget *parent = NULL) {
         generalQueryTermsForm = new OnlineSearchQueryFormGeneral(parent);
         return generalQueryTermsForm;
     }
@@ -189,7 +201,7 @@ public:
 
         searchButton = new KPushButton(KIcon("edit-find"), i18n("Search"), p);
         layout->addWidget(searchButton, 1, 1, 1, 1);
-        connect(generalQueryTermsForm, SIGNAL(returnPressed()), searchButton, SIGNAL(clicked()));
+        connect(generalQueryTermsForm, SIGNAL(returnPressed()), searchButton, SLOT(click()));
 
         loadEngines();
         updateGUI();
@@ -225,8 +237,11 @@ public:
 
         OnlineSearchQueryFormAbstract *widget = engine->customWidget(queryTermsStack);
         item->setData(WidgetRole, QVariant::fromValue<OnlineSearchQueryFormAbstract*>(widget));
-        if (widget != NULL)
-            queryTermsStack->addWidget(widget);
+        if (widget != NULL) {
+            connect(widget, SIGNAL(returnPressed()), searchButton, SLOT(click()));
+            QScrollArea *scrollArea = wrapInScrollArea(widget, queryTermsStack);
+            queryTermsStack->addWidget(scrollArea);
+        }
 
         itemToOnlineSearch.insert(item, engine);
         connect(engine, SIGNAL(foundEntry(QSharedPointer<Entry>)), p, SLOT(foundEntry(QSharedPointer<Entry>)));
@@ -286,7 +301,9 @@ public:
             currentQueryWidget = cursor->data(WidgetRole).value<OnlineSearchQueryFormAbstract*>();
         if (currentQueryWidget == NULL)
             currentQueryWidget = generalQueryTermsForm;
-        queryTermsStack->setCurrentWidget(currentQueryWidget);
+        QScrollArea *area = formToScrollArea.value(currentQueryWidget, NULL);
+        if (area != NULL)
+            queryTermsStack->setCurrentWidget(area);
     }
 
     void openHomepage() {
@@ -306,20 +323,10 @@ public:
     void enginesListCurrentChanged(QListWidgetItem *current) {
         actionOpenHomepage->setEnabled(current != NULL);
     }
-
-    void currentStackWidgetChanged(int index) {
-        for (int i = queryTermsStack->count() - 1; i >= 0; --i) {
-            OnlineSearchQueryFormAbstract *wsqfa = static_cast<OnlineSearchQueryFormAbstract*>(queryTermsStack->widget(i));
-            if (i == index)
-                connect(wsqfa, SIGNAL(returnPressed()), searchButton, SLOT(click()));
-            else
-                disconnect(wsqfa, SIGNAL(returnPressed()), searchButton, SLOT(click()));
-        }
-    }
 };
 
-SearchForm::SearchForm(MDIWidget *mdiWidget, SearchResults *searchResults, QWidget *parent)
-        : QWidget(parent), d(new SearchFormPrivate(mdiWidget, searchResults, this))
+SearchForm::SearchForm(SearchResults *searchResults, QWidget *parent)
+        : QWidget(parent), d(new SearchFormPrivate(searchResults, this))
 {
     d->createGUI();
     d->switchToSearch();
@@ -449,11 +456,6 @@ void SearchForm::openHomepage()
 void SearchForm::enginesListCurrentChanged(QListWidgetItem *current, QListWidgetItem *)
 {
     d->enginesListCurrentChanged(current);
-}
-
-void SearchForm::currentStackWidgetChanged(int index)
-{
-    d->currentStackWidgetChanged(index);
 }
 
 void SearchForm::copyFromEntry()
