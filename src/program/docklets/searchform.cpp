@@ -104,7 +104,8 @@ public:
     }
 
     OnlineSearchQueryFormAbstract *currentQueryForm() {
-        return static_cast<OnlineSearchQueryFormAbstract*>(queryTermsStack->currentWidget());
+        QScrollArea *area = dynamic_cast<QScrollArea*>(queryTermsStack->currentWidget());
+        return formToScrollArea.key(area, NULL);
     }
 
     QScrollArea *wrapInScrollArea(OnlineSearchQueryFormAbstract *form, QWidget *parent) {
