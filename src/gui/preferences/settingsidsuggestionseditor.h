@@ -60,6 +60,10 @@ public:
 
 private slots:
     void updatePreview();
+    void moveUpToken(QWidget*);
+    void moveDownToken(QWidget*);
+    void removeToken(QWidget*);
+    void addToken(int);
 
 private:
     class IdSuggestionsEditWidgetPrivate;

@@ -25,14 +25,16 @@
 #include <QGroupBox>
 #include <QSpinBox>
 #include <QCheckBox>
+#include <QSignalMapper>
 
 #include <KLineEdit>
 #include <KComboBox>
 #include <KLocale>
 #include <KPushButton>
-#include <KDebug>
+#include <KAction>
 
 #include "settingsidsuggestionseditor.h"
+#include <QMenu>
 
 class TokenWidget : public QGroupBox
 {
@@ -64,7 +66,6 @@ public:
     }
 
     virtual QString toString() const = 0;
-    // TODO
 };
 
 class AuthorWidget : public TokenWidget
@@ -258,12 +259,15 @@ class IdSuggestionsEditWidget::IdSuggestionsEditWidgetPrivate
 private:
     IdSuggestionsEditWidget *p;
 public:
+    enum TokenType {ttTitle = 0, ttAuthor = 1, ttYear = 2, ttText = 3};
+
     QWidget *container;
     QBoxLayout *containerLayout;
     QList<TokenWidget*> widgetList;
     QLabel *labelPreview;
     KPushButton *buttonAddToken;
     const Entry *previewEntry;
+    QSignalMapper *signalMapperRemove, *signalMapperMoveUp, *signalMapperMoveDown, *signalMapperAddMenu;
 
     IdSuggestionsEditWidgetPrivate(const Entry *pe, IdSuggestionsEditWidget *parent)
             : p(parent), previewEntry(pe) {
@@ -277,9 +281,20 @@ public:
         layout->addWidget(labelPreview, 0, 0, 1, 1);
         layout->setColumnStretch(0, 100);
 
-        buttonAddToken = new KPushButton(i18n("Add"), p);
+        buttonAddToken = new KPushButton(KIcon("list-add"), i18n("Add"), p);
         layout->addWidget(buttonAddToken, 0, 1, 1, 1);
         layout->setColumnStretch(1, 1);
+        QMenu *menuAddToken = new QMenu(buttonAddToken);
+        signalMapperAddMenu = new QSignalMapper(p);
+        buttonAddToken->setMenu(menuAddToken);
+        QAction *action = menuAddToken->addAction(i18n("Title"), signalMapperAddMenu, SLOT(map()));
+        signalMapperAddMenu->setMapping(action, ttTitle);
+        action = menuAddToken->addAction(i18n("Author"), signalMapperAddMenu, SLOT(map()));
+        signalMapperAddMenu->setMapping(action, ttAuthor);
+        action = menuAddToken->addAction(i18n("Year"), signalMapperAddMenu, SLOT(map()));
+        signalMapperAddMenu->setMapping(action, ttYear);
+        action = menuAddToken->addAction(i18n("Text"), signalMapperAddMenu, SLOT(map()));
+        signalMapperAddMenu->setMapping(action, ttText);
 
         QScrollArea *area = new QScrollArea(p);
         layout->addWidget(area, 1, 0, 1, 2);
@@ -291,6 +306,68 @@ public:
         area->setWidgetResizable(true);
         containerLayout = new QVBoxLayout(container);
         area->setMinimumSize(384, 256);
+
+        signalMapperMoveUp = new QSignalMapper(p);
+        connect(signalMapperMoveUp, SIGNAL(mapped(QWidget*)), p, SLOT(moveUpToken(QWidget*)));
+        signalMapperMoveDown = new QSignalMapper(p);
+        connect(signalMapperMoveDown, SIGNAL(mapped(QWidget*)), p, SLOT(moveDownToken(QWidget*)));
+        signalMapperRemove = new QSignalMapper(p);
+        connect(signalMapperRemove, SIGNAL(mapped(QWidget*)), p, SLOT(removeToken(QWidget*)));
+
+        connect(signalMapperAddMenu, SIGNAL(mapped(int)), p, SLOT(addToken(int)));
+    }
+
+    void addManagementButtons(TokenWidget *tokenWidget) {
+        if (tokenWidget != NULL) {
+            KPushButton *buttonUp = new KPushButton(KIcon("go-up"), QLatin1String(""), tokenWidget);
+            KPushButton *buttonDown = new KPushButton(KIcon("go-down"), QLatin1String(""), tokenWidget);
+            KPushButton *buttonRemove = new KPushButton(KIcon("list-remove"), QLatin1String(""), tokenWidget);
+            tokenWidget->addButtons(buttonUp, buttonDown, buttonRemove);
+            connect(buttonUp, SIGNAL(clicked(bool)), signalMapperMoveUp, SLOT(map()));
+            signalMapperMoveUp->setMapping(buttonUp, tokenWidget);
+            connect(buttonDown, SIGNAL(clicked(bool)), signalMapperMoveDown, SLOT(map()));
+            signalMapperMoveDown->setMapping(buttonDown, tokenWidget);
+            connect(buttonRemove, SIGNAL(clicked(bool)), signalMapperRemove, SLOT(map()));
+            signalMapperRemove->setMapping(buttonRemove, tokenWidget);
+        }
+    }
+
+    void add(TokenType tokenType) {
+        TokenWidget *tokenWidget = NULL;
+        switch (tokenType) {
+        case ttTitle: {
+            struct IdSuggestions::IdSuggestionTokenInfo info;
+            info.inBetween = QString();
+            info.len = -1;
+            info.toLower = info.toUpper = false;
+            tokenWidget = new TitleWidget(info, true, p, container);
+            widgetList << tokenWidget;
+            containerLayout->addWidget(tokenWidget, 1);
+
+        }
+        break;
+        case ttAuthor: {
+            struct IdSuggestions::IdSuggestionTokenInfo info;
+            info.inBetween = QString();
+            info.len = -1;
+            info.toLower = info.toUpper = false;
+            tokenWidget = new AuthorWidget(info, aAll, p, container);
+            widgetList << tokenWidget;
+            containerLayout->addWidget(tokenWidget, 1);
+        }
+        break;
+        case ttYear:
+            tokenWidget = new YearWidget(4, p, container);
+            widgetList << tokenWidget;
+            containerLayout->addWidget(tokenWidget, 1);
+            break;
+        case ttText:
+            tokenWidget = new TextWidget(QString(), p, container);
+            widgetList << tokenWidget;
+            containerLayout->addWidget(tokenWidget, 1);
+        }
+
+        addManagementButtons(tokenWidget);
     }
 
     void reset(const QString &formatString) {
@@ -326,12 +403,7 @@ public:
                 containerLayout->addWidget(tokenWidget, 1);
             }
 
-            if (tokenWidget != NULL) {
-                KPushButton *buttonUp = new KPushButton(KIcon("go-up"), QLatin1String(""), tokenWidget);
-                KPushButton *buttonDown = new KPushButton(KIcon("go-down"), QLatin1String(""), tokenWidget);
-                KPushButton *buttonRemove = new KPushButton(KIcon("edit-delete"), QLatin1String(""), tokenWidget);
-                tokenWidget->addButtons(buttonUp, buttonDown, buttonRemove);
-            }
+            addManagementButtons(tokenWidget);
         }
 
         p->updatePreview();
@@ -374,6 +446,43 @@ void IdSuggestionsEditWidget::updatePreview()
     const QString formatString = d->apply();
     d->labelPreview->setText(formatId(*d->previewEntry, formatString));
     d->labelPreview->setToolTip(i18n("<qt>Structure:<ul><li>%1</li></ul>Example: %2</qt>", formatStrToHuman(formatString).join(QLatin1String("</li><li>")), formatId(*d->previewEntry, formatString)));
+}
+
+void IdSuggestionsEditWidget::moveUpToken(QWidget *widget)
+{
+    TokenWidget *tokenWidget = static_cast<TokenWidget*>(widget);
+    int curPos = d->widgetList.indexOf(tokenWidget);
+    if (curPos > 0) {
+        d->widgetList.removeAt(curPos);
+        d->containerLayout->removeWidget(tokenWidget);
+        d->widgetList.insert(curPos - 1, tokenWidget);
+        d->containerLayout->insertWidget(curPos - 1, tokenWidget, 1);
+    }
+}
+
+void IdSuggestionsEditWidget::moveDownToken(QWidget *widget)
+{
+    TokenWidget *tokenWidget = static_cast<TokenWidget*>(widget);
+    int curPos = d->widgetList.indexOf(tokenWidget);
+    if (curPos < d->widgetList.size() - 1) {
+        d->widgetList.removeAt(curPos);
+        d->containerLayout->removeWidget(tokenWidget);
+        d->widgetList.insert(curPos + 1, tokenWidget);
+        d->containerLayout->insertWidget(curPos + 1, tokenWidget, 1);
+    }
+}
+
+void IdSuggestionsEditWidget::removeToken(QWidget *widget)
+{
+    TokenWidget *tokenWidget = static_cast<TokenWidget*>(widget);
+    d->widgetList.removeOne(tokenWidget);
+    d->containerLayout->removeWidget(tokenWidget);
+    tokenWidget->deleteLater();
+}
+
+void IdSuggestionsEditWidget::addToken(int cmd)
+{
+    d->add((IdSuggestionsEditWidgetPrivate::TokenType)cmd);
 }
 
 IdSuggestionsEditDialog::IdSuggestionsEditDialog(QWidget* parent, Qt::WFlags flags)

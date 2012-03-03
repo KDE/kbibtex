@@ -26,7 +26,7 @@
 #include <KPushButton>
 #include <KLocale>
 #include <KGlobalSettings>
-#include <KColorScheme>
+#include <KMessageBox>
 
 #include "fileimporterbibtex.h"
 #include "idsuggestions.h"
@@ -142,7 +142,6 @@ public:
 
             return true;
         } else if (role == FormatStringRole && value.canConvert<QString>()) {
-            // FIXME doesn't work yet
             m_formatStringList[idx.row()] = value.toString();
             dataChanged(idx, idx);
             return true;
@@ -163,11 +162,12 @@ public:
         if (row < 1 || row >= m_formatStringList.count())
             return false;
 
+        beginMoveColumns(index.parent(), row, row, index.parent(), row - 1);
         const QString formatString = m_formatStringList[row];
         m_formatStringList.removeAt(row);
         m_formatStringList.insert(row - 1, formatString);
+        endMoveRows();
 
-        reset();
         return true;
     }
 
@@ -176,11 +176,24 @@ public:
         if (row < 0 || row >= m_formatStringList.count() - 1)
             return false;
 
+        beginMoveColumns(index.parent(), row + 1, row + 1, index.parent(), row);
         const QString formatString = m_formatStringList[row];
         m_formatStringList.removeAt(row);
         m_formatStringList.insert(row + 1, formatString);
+        endMoveRows();
 
-        reset();
+        return true;
+    }
+
+    bool remove(const QModelIndex &index) {
+        int row = index.row();
+        if (row < 0 || row >= m_formatStringList.count())
+            return false;
+
+        beginRemoveRows(index.parent(), row, row);
+        m_formatStringList.removeAt(row);
+        endRemoveRows();
+
         return true;
     }
 };
@@ -241,8 +254,6 @@ public:
 
         buttonDeleteSuggestion = new KPushButton(KIcon("list-remove"), i18n("Delete"), p);
         layout->addWidget(buttonDeleteSuggestion, 2, 1, 1, 1);
-        // TODO no functionality yet, disable button
-        buttonDeleteSuggestion->setEnabled(false);
 
         buttonSuggestionUp = new KPushButton(KIcon("go-up"), i18n("Up"), p);
         layout->addWidget(buttonSuggestionUp, 3, 1, 1, 1);
@@ -256,6 +267,7 @@ public:
         p->itemChanged(QModelIndex());
 
         connect(buttonEditSuggestion, SIGNAL(clicked()), p, SLOT(buttonClicked()));
+        connect(buttonDeleteSuggestion, SIGNAL(clicked()), p, SLOT(buttonClicked()));
         connect(buttonSuggestionUp, SIGNAL(clicked()), p, SLOT(buttonClicked()));
         connect(buttonSuggestionDown, SIGNAL(clicked()), p, SLOT(buttonClicked()));
         connect(buttonToggleDefaultString, SIGNAL(clicked()), p, SLOT(toggleDefault()));
@@ -302,11 +314,17 @@ void SettingsIdSuggestionsWidget::buttonClicked()
         QString suggestion;
         if (currIndex != QModelIndex() && !(suggestion = currIndex.data(FormatStringRole).toString()).isEmpty()) {
             const QString newSuggestion = IdSuggestionsEditDialog::editSuggestion(d->idSuggestionsModel->previewEntry().data(), suggestion, this);
-            if (newSuggestion != suggestion)
-                d->treeViewSuggestions->model()->setData(currIndex, suggestion, FormatStringRole);
+            if (newSuggestion.isEmpty()) {
+                if (KMessageBox::questionYesNo(this, i18n("All token have been removed from this suggestion. Remove suggestion itself or restore original suggestion?"), i18n("Remove suggestion?"), KGuiItem(i18n("Remove suggestion"), KIcon("list-remove")), KGuiItem(i18n("Revert changes"), KIcon("edit-undo"))) == KMessageBox::Yes && d->idSuggestionsModel->remove(selectedIndex)) {
+                    emit changed();
+                }
+            } else if (newSuggestion != suggestion)
+                d->treeViewSuggestions->model()->setData(currIndex, newSuggestion, FormatStringRole);
         }
     } else if (button == d->buttonDeleteSuggestion) {
-        // TODO
+        if (d->idSuggestionsModel->remove(selectedIndex)) {
+            emit changed();
+        }
     } else if (button == d->buttonSuggestionUp) {
         if (d->idSuggestionsModel->moveUp(selectedIndex)) {
             d->treeViewSuggestions->selectionModel()->setCurrentIndex(selectedIndex.sibling(selectedIndex.row() - 1, 0), QItemSelectionModel::ClearAndSelect);
@@ -324,8 +342,7 @@ void SettingsIdSuggestionsWidget::itemChanged(const QModelIndex &index)
 {
     bool enableChange = index != QModelIndex();
     d->buttonEditSuggestion->setEnabled(enableChange);
-// TODO no functionality yet, disable button
-//d->buttonDeleteSuggestion->setEnabled(enableChange);
+    d->buttonDeleteSuggestion->setEnabled(enableChange);
     d->buttonSuggestionUp->setEnabled(enableChange && index.row() > 0);
     d->buttonSuggestionDown->setEnabled(enableChange && index.row() < d->idSuggestionsModel->rowCount() - 1);
 
