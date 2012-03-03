@@ -31,6 +31,15 @@
 class KBIBTEXPROC_EXPORT IdSuggestions
 {
 public:
+    enum Authors {aAll, aOnlyFirst, aNotFirst};
+
+    struct IdSuggestionTokenInfo {
+        unsigned int len;
+        bool toLower;
+        bool toUpper;
+        QString inBetween;
+    };
+
     static const QString keyFormatStringList;
     static const QString keyDefaultFormatString;
     static const QStringList defaultFormatStringList;
@@ -42,6 +51,7 @@ public:
 
     QString formatId(const Entry &entry, const QString &formatStr) const;
     QString defaultFormatId(const Entry &entry) const;
+    bool hasDefaultFormat() const;
 
     /**
       * Apply the default formatting string to the entry.
@@ -58,6 +68,10 @@ public:
     QStringList formatIdList(const Entry &entry) const;
 
     QStringList formatStrToHuman(const QString &formatStr) const;
+
+protected:
+
+    struct IdSuggestionTokenInfo evalToken(const QString &token) const;
 
 private:
     class IdSuggestionsPrivate;

@@ -18,37 +18,52 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#ifndef KBIBTEX_GUI_SETTINGSIDSUGGESTIONSWIDGET_H
-#define KBIBTEX_GUI_SETTINGSIDSUGGESTIONSWIDGET_H
+#ifndef KBIBTEX_GUI_SETTINGSIDSUGGESTIONSEDITOR_H
+#define KBIBTEX_GUI_SETTINGSIDSUGGESTIONSEDITOR_H
 
-#include <kbibtexgui_export.h>
+#include "kbibtexgui_export.h"
 
-#include "settingsabstractwidget.h"
+#include <QWidget>
+#include <QLayout>
+
+#include <KDialog>
+
+#include "idsuggestions.h"
+#include "entry.h"
+
 
 /**
-@author Thomas Fischer
-*/
-class KBIBTEXGUI_EXPORT SettingsIdSuggestionsWidget : public SettingsAbstractWidget
+ * @author Thomas Fischer
+ */
+class KBIBTEXGUI_EXPORT IdSuggestionsEditDialog : public KDialog
 {
     Q_OBJECT
+
 public:
-    SettingsIdSuggestionsWidget(QWidget *parent);
-    ~SettingsIdSuggestionsWidget();
+    virtual ~IdSuggestionsEditDialog();
 
-public slots:
-    void loadState();
-    void saveState();
-    void resetToDefaults();
-
-private slots:
-    void buttonClicked();
-    void itemChanged(const QModelIndex &index);
-    void toggleDefault();
-
-private:
-    class SettingsIdSuggestionsWidgetPrivate;
-    SettingsIdSuggestionsWidgetPrivate *d;
+    static QString editSuggestion(const Entry *previewEntry, const QString &suggestion, QWidget* parent);
+protected:
+    explicit IdSuggestionsEditDialog(QWidget* parent = 0, Qt::WFlags flags = 0);
 };
 
+class IdSuggestionsEditWidget : public QWidget, public IdSuggestions
+{
+    Q_OBJECT
 
-#endif // KBIBTEX_GUI_SETTINGSIDSUGGESTIONSWIDGET_H
+public:
+    explicit IdSuggestionsEditWidget(const Entry *previewEntry, QWidget* parent = 0, Qt::WindowFlags f = 0);
+    virtual ~IdSuggestionsEditWidget();
+
+    void setFormatString(const QString &formatString);
+    QString formatString() const;
+
+private slots:
+    void updatePreview();
+
+private:
+    class IdSuggestionsEditWidgetPrivate;
+    IdSuggestionsEditWidgetPrivate *d;
+};
+
+#endif // KBIBTEX_GUI_SETTINGSIDSUGGESTIONSEDITOR_H

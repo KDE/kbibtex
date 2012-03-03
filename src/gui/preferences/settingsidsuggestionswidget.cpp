@@ -31,6 +31,7 @@
 #include "fileimporterbibtex.h"
 #include "idsuggestions.h"
 #include "settingsidsuggestionswidget.h"
+#include "settingsidsuggestionseditor.h"
 
 const int FormatStringRole = Qt::UserRole + 7811;
 const int IsDefaultFormatStringRole = Qt::UserRole + 7812;
@@ -60,6 +61,10 @@ public:
 
     ~IdSuggestionsModel() {
         delete m_idSuggestions;
+    }
+
+    QSharedPointer<const Entry> previewEntry() {
+        return exampleBibTeXEntry;
     }
 
     void setFormatStringList(const QStringList &formatStringList, const QString &defaultString = QString::null) {
@@ -106,6 +111,7 @@ public:
             return i18n("<qt>Structure:<ul><li>%1</li></ul>Example: %2</qt>", m_idSuggestions->formatStrToHuman(m_formatStringList[index.row()]).join(QLatin1String("</li><li>")), m_idSuggestions->formatId(*exampleBibTeXEntry, m_formatStringList[index.row()]));
         case Qt::DisplayRole:
             return m_idSuggestions->formatId(*exampleBibTeXEntry, m_formatStringList[index.row()]);
+        case Qt::UserRole:
         case FormatStringRole:
             return m_formatStringList[index.row()];
         case IsDefaultFormatStringRole:
@@ -118,22 +124,31 @@ public:
     }
 
     bool setData(const QModelIndex &idx, const QVariant &value, int role) {
-        if (idx.row() < 0 || idx.row() >= m_formatStringList.count() || role != IsDefaultFormatStringRole || !value.canConvert<bool>())
+        if (idx.row() < 0 || idx.row() >= m_formatStringList.count())
             return false;
 
-        if (value.toBool()) {
-            if (idx.row() != m_defaultFormatStringRow) {
-                QModelIndex oldDefaultIndex = index(m_defaultFormatStringRow, 0);
-                m_defaultFormatStringRow = idx.row();
-                dataChanged(oldDefaultIndex, oldDefaultIndex);
+        if (role == IsDefaultFormatStringRole && value.canConvert<bool>()) {
+            if (value.toBool()) {
+                if (idx.row() != m_defaultFormatStringRow) {
+                    QModelIndex oldDefaultIndex = index(m_defaultFormatStringRow, 0);
+                    m_defaultFormatStringRow = idx.row();
+                    dataChanged(oldDefaultIndex, oldDefaultIndex);
+                    dataChanged(idx, idx);
+                }
+            } else {
+                m_defaultFormatStringRow = -1;
                 dataChanged(idx, idx);
             }
-        } else {
-            m_defaultFormatStringRow = -1;
+
+            return true;
+        } else if (role == FormatStringRole && value.canConvert<QString>()) {
+            // FIXME doesn't work yet
+            m_formatStringList[idx.row()] = value.toString();
             dataChanged(idx, idx);
+            return true;
         }
 
-        return true;
+        return false;
     }
 
     QVariant headerData(int section, Qt::Orientation, int role = Qt::DisplayRole) const {
@@ -223,8 +238,6 @@ public:
 
         buttonEditSuggestion = new KPushButton(KIcon("document-edit"), i18n("Edit..."), p);
         layout->addWidget(buttonEditSuggestion, 1, 1, 1, 1);
-        // TODO no functionality yet, disable button
-        buttonEditSuggestion->setEnabled(false);
 
         buttonDeleteSuggestion = new KPushButton(KIcon("list-remove"), i18n("Delete"), p);
         layout->addWidget(buttonDeleteSuggestion, 2, 1, 1, 1);
@@ -242,6 +255,7 @@ public:
 
         p->itemChanged(QModelIndex());
 
+        connect(buttonEditSuggestion, SIGNAL(clicked()), p, SLOT(buttonClicked()));
         connect(buttonSuggestionUp, SIGNAL(clicked()), p, SLOT(buttonClicked()));
         connect(buttonSuggestionDown, SIGNAL(clicked()), p, SLOT(buttonClicked()));
         connect(buttonToggleDefaultString, SIGNAL(clicked()), p, SLOT(toggleDefault()));
@@ -284,7 +298,13 @@ void SettingsIdSuggestionsWidget::buttonClicked()
     if (button == d->buttonNewSuggestion) {
         // TODO
     } else if (button == d->buttonEditSuggestion) {
-        // TODO
+        QModelIndex currIndex = d->treeViewSuggestions->currentIndex();
+        QString suggestion;
+        if (currIndex != QModelIndex() && !(suggestion = currIndex.data(FormatStringRole).toString()).isEmpty()) {
+            const QString newSuggestion = IdSuggestionsEditDialog::editSuggestion(d->idSuggestionsModel->previewEntry().data(), suggestion, this);
+            if (newSuggestion != suggestion)
+                d->treeViewSuggestions->model()->setData(currIndex, suggestion, FormatStringRole);
+        }
     } else if (button == d->buttonDeleteSuggestion) {
         // TODO
     } else if (button == d->buttonSuggestionUp) {
@@ -303,8 +323,7 @@ void SettingsIdSuggestionsWidget::buttonClicked()
 void SettingsIdSuggestionsWidget::itemChanged(const QModelIndex &index)
 {
     bool enableChange = index != QModelIndex();
-// TODO no functionality yet, disable button
-//d->buttonEditSuggestion->setEnabled(enableChange);
+    d->buttonEditSuggestion->setEnabled(enableChange);
 // TODO no functionality yet, disable button
 //d->buttonDeleteSuggestion->setEnabled(enableChange);
     d->buttonSuggestionUp->setEnabled(enableChange && index.row() > 0);

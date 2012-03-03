@@ -33,14 +33,6 @@ private:
     const KConfigGroup group;
 
 public:
-    enum Authors {aAll, aOnlyFirst, aNotFirst};
-
-    struct IdSuggestionTokenInfo {
-        unsigned int len;
-        bool toLower;
-        bool toUpper;
-        QString inBetween;
-    };
 
     IdSuggestionsPrivate(IdSuggestions *parent)
             : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), group(config, IdSuggestions::configGroupName) {
@@ -51,35 +43,6 @@ public:
         static const QRegExp unwantedChars = QRegExp("[^-_:/=+a-zA-Z0-9]+");
         return EncoderLaTeX::instance()->convertToPlainAscii(input).replace(unwantedChars, QLatin1String(""));
     }
-
-    struct IdSuggestionTokenInfo evalToken(const QString &token) const {
-            int pos = 0;
-            struct IdSuggestionTokenInfo result;
-            result.len = 0x00ffffff;
-            result.toLower = false;
-            result.toUpper = false;
-            result.inBetween = QString::null;
-
-            if (token.length() > pos) {
-                int dv = token[pos].digitValue();
-                if (dv > -1) {
-                    result.len = dv;
-                    ++pos;
-                }
-            }
-
-            if (token.length() > pos) {
-                result.toLower = token[pos] == 'l';
-                result.toUpper = token[pos] == 'u';
-                if (result.toUpper || result.toLower)
-                    ++pos;
-            }
-
-            if (token.length() > pos + 1 && token[pos] == '"')
-                result.inBetween = token.mid(pos + 1);
-
-            return result;
-        }
 
     QStringList authorsLastName(const Entry &entry) const {
         Value value;
@@ -110,7 +73,7 @@ public:
     }
 
     QString translateTitleToken(const Entry &entry, const QString& token, bool removeSmallWords) const {
-        struct IdSuggestionTokenInfo tti = evalToken(token);
+        struct IdSuggestionTokenInfo tti = p->evalToken(token);
         const QStringList smallWords = QStringList() << QLatin1String("and") << QLatin1String("on") << QLatin1String("in") << QLatin1String("the") << QLatin1String("of") << QLatin1String("at") << QLatin1String("a") << QLatin1String("an") << QLatin1String("with") << QLatin1String("for") << QLatin1String("from");
 
         QString result;
@@ -137,7 +100,7 @@ public:
     }
 
     QString translateAuthorsToken(const Entry &entry, const QString &token, Authors selectAuthors) const {
-        struct IdSuggestionTokenInfo ati = evalToken(token);
+        struct IdSuggestionTokenInfo ati = p->evalToken(token);
         QString result;
         bool first = true, firstInserted = true;
         QStringList authors = authorsLastName(entry);
@@ -225,6 +188,11 @@ QString IdSuggestions::defaultFormatId(const Entry &entry) const
     return formatId(entry, d->defaultFormatString());
 }
 
+bool IdSuggestions::hasDefaultFormat() const
+{
+    return !d->defaultFormatString().isEmpty();
+}
+
 bool IdSuggestions::applyDefaultFormatId(Entry &entry) const
 {
     const QString dfs = d->defaultFormatString();
@@ -252,7 +220,7 @@ QStringList IdSuggestions::formatStrToHuman(const QString &formatStr) const
     foreach(const QString &token, tokenList) {
         QString text;
         if (token[0] == 'a' || token[0] == 'A' || token[0] == 'z') {
-            struct IdSuggestions::IdSuggestionsPrivate::IdSuggestionTokenInfo info = d->evalToken(token.mid(1));
+            struct IdSuggestionTokenInfo info = evalToken(token.mid(1));
             if (token[0] == 'a') text.append(i18n("First author only"));
             else if (token[0] == 'z') text.append(i18n("All but first author"));
             else text.append(i18n("All authors"));
@@ -265,7 +233,7 @@ QStringList IdSuggestions::formatStrToHuman(const QString &formatStr) const
         } else if (token[0] == 'y') text.append(i18n("Year (2 digits)"));
         else if (token[0] == 'Y') text.append(i18n("Year (4 digits)"));
         else if (token[0] == 't' || token[0] == 'T') {
-            struct IdSuggestions::IdSuggestionsPrivate::IdSuggestionTokenInfo info = d->evalToken(token.mid(1));
+            struct IdSuggestionTokenInfo info = evalToken(token.mid(1));
             text.append(i18n("Title"));
             int n = info.len;
             if (info.len < 0x00ffffff) text.append(i18np(", but only first letter of each word", ", but only first %1 letters of each word", n));
@@ -281,3 +249,33 @@ QStringList IdSuggestions::formatStrToHuman(const QString &formatStr) const
 
     return result;
 }
+
+struct IdSuggestions::IdSuggestionTokenInfo IdSuggestions::evalToken(const QString &token) const {
+        int pos = 0;
+        struct IdSuggestionTokenInfo result;
+        result.len = 0x00ffffff;
+        result.toLower = false;
+        result.toUpper = false;
+        result.inBetween = QString::null;
+
+        if (token.length() > pos) {
+            int dv = token[pos].digitValue();
+            if (dv > -1) {
+                result.len = dv;
+                ++pos;
+            }
+        }
+
+        if (token.length() > pos) {
+            result.toLower = token[pos] == 'l';
+            result.toUpper = token[pos] == 'u';
+            if (result.toUpper || result.toLower)
+                ++pos;
+        }
+
+        if (token.length() > pos + 1 && token[pos] == '"')
+            result.inBetween = token.mid(pos + 1);
+
+        return result;
+    }
+
