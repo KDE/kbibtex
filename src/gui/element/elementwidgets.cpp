@@ -319,9 +319,14 @@ void EntryConfiguredWidget::layoutGUI(bool forceVisible, const QString &entryTyp
 }
 
 ReferenceWidget::ReferenceWidget(QWidget *parent)
-        : ElementWidget(parent), m_applyElement(NULL)
+        : ElementWidget(parent), m_applyElement(NULL), m_idSuggestions(new IdSuggestions())
 {
     createGUI();
+}
+
+ReferenceWidget::~ReferenceWidget()
+{
+    delete m_idSuggestions;
 }
 
 bool ReferenceWidget::apply(QSharedPointer<Element> element) const
@@ -363,7 +368,13 @@ bool ReferenceWidget::reset(QSharedPointer<const Element> element)
     QSharedPointer<const Entry> entry = element.dynamicCast<const Entry>();
     if (!entry.isNull()) {
         entryType->setEnabled(true);
-        buttonSuggestId->setEnabled(true);
+        /// Enable suggest-id button only if automatic id settings is deactivated
+        const bool hasDefaultFormat = m_idSuggestions->hasDefaultFormat();
+        buttonSuggestId->setEnabled(!hasDefaultFormat);
+        entryId->setReadOnly(entryType->lineEdit()->isReadOnly() || hasDefaultFormat);
+        entryId->setToolTip(hasDefaultFormat ? i18n("Using id based on default suggestion as configured") : QString());
+        otherFieldsGotModified();
+
         BibTeXEntries *be = BibTeXEntries::self();
         QString type = be->format(entry->type(), KBibTeX::cUpperCamelCase);
         entryType->setCurrentIndex(-1);
@@ -380,6 +391,9 @@ bool ReferenceWidget::reset(QSharedPointer<const Element> element)
     } else {
         entryType->setEnabled(false);
         buttonSuggestId->setEnabled(false);
+        entryId->setReadOnly(entryType->lineEdit()->isReadOnly());
+        entryId->setToolTip(QString());
+
         QSharedPointer<const Macro> macro = element.dynamicCast<const Macro>();
         if (!macro.isNull()) {
             entryType->lineEdit()->setText(i18n("Macro"));
@@ -398,8 +412,13 @@ void ReferenceWidget::setReadOnly(bool isReadOnly)
 {
     ElementWidget::setReadOnly(isReadOnly);
 
+    /// Two factor may determine if a widget is read-only or disabled:
+    /// (1) the whole dialog is set read-only, e.g. if a read-only entry is viewed
+    /// (2) automatic Id setting is activated, in which case the user should not be
+    ///     allowed to edit the id manually
     entryId->setReadOnly(isReadOnly);
-    entryType->lineEdit()->setReadOnly(isReadOnly);
+    entryType->lineEdit()->setReadOnly(isReadOnly || m_idSuggestions->hasDefaultFormat());
+    buttonSuggestId->setEnabled(!isReadOnly && !m_idSuggestions->hasDefaultFormat());
 }
 
 QString ReferenceWidget::label()
@@ -442,8 +461,9 @@ void ReferenceWidget::createGUI()
     for (BibTeXEntries::ConstIterator it = be->constBegin(); it != be->constEnd(); ++it)
         entryType->addItem(it->label, it->upperCamelCase);
 
+    /// Button with a menu listing a set of preconfigured id suggestions
     buttonSuggestId = new KPushButton(KIcon("view-filter"), QLatin1String(""), this);
-    buttonSuggestId->setToolTip(i18n("Use a suggested id for this entry"));
+    buttonSuggestId->setToolTip(i18n("Select a suggested id for this entry"));
     layout->addWidget(buttonSuggestId);
     QMenu *suggestionsMenu = new QMenu(buttonSuggestId);
     buttonSuggestId->setMenu(suggestionsMenu);
@@ -455,15 +475,45 @@ void ReferenceWidget::createGUI()
     connect(suggestionsMenu, SIGNAL(aboutToShow()), this, SLOT(prepareSuggestionsMenu()));
 }
 
-void ReferenceWidget::prepareSuggestionsMenu()
+void ReferenceWidget::otherFieldsGotModified()
 {
+    /// If automatic Id setting is disabled, don't do anything
+    if (!m_idSuggestions->hasDefaultFormat()) return;
+
+    /// Collect information on the current entry as it is edited
     QSharedPointer<Entry> internalEntry(new Entry());
     m_applyElement->apply(internalEntry);
 
-    static const IdSuggestions *idSuggestions = new IdSuggestions();
+    /// Generate default suggestion
+    QString defaultIdSuggestion = m_idSuggestions->defaultFormatId(*internalEntry.data());
+    if (!defaultIdSuggestion.isEmpty()) {
+        /// Test for duplicate ids, use fallback ids with numeric suffix
+        if (m_file != NULL && m_file->containsKey(defaultIdSuggestion)) {
+            int suffix = 2;
+            const QString suggestionBase = defaultIdSuggestion;
+            while (m_file->containsKey(defaultIdSuggestion = suggestionBase + QChar('_') + QString::number(suffix)))
+                ++suffix;
+        }
+    }
+
+    entryId->setText(defaultIdSuggestion);
+}
+
+void ReferenceWidget::prepareSuggestionsMenu()
+{
+    /// If automatic Id setting is enabled, don't do anything
+    if (m_idSuggestions->hasDefaultFormat()) return;
+
     QMenu *suggestionsMenu = buttonSuggestId->menu();
     suggestionsMenu->clear();
-    foreach(QString suggestion, idSuggestions->formatIdList(*internalEntry.data())) {
+
+    QSharedPointer<Entry> internalEntry(new Entry());
+    m_applyElement->apply(internalEntry);
+
+    /// Keep track of shown suggestions to avoid duplicates
+    QSet<QString> knownIdSuggestion;
+
+    foreach(QString suggestion, m_idSuggestions->formatIdList(*internalEntry.data())) {
         /// Test for duplicate ids, use fallback ids with numeric suffix
         if (m_file != NULL && m_file->containsKey(suggestion)) {
             int suffix = 2;
@@ -472,9 +522,19 @@ void ReferenceWidget::prepareSuggestionsMenu()
                 ++suffix;
         }
 
+        /// Keep track of shown suggestions to avoid duplicates
+        if (knownIdSuggestion.contains(suggestion)) continue;
+        else knownIdSuggestion.insert(suggestion);
+
+        /// Create action for suggestion, use icon depending if default or not
         QAction *suggestionAction = new QAction(suggestion, suggestionsMenu);
+        suggestionAction->setIcon(KIcon("view-filter"));
+
+        /// Mesh action into GUI
         suggestionsMenu->addAction(suggestionAction);
         connect(suggestionAction, SIGNAL(triggered()), this, SLOT(insertSuggestionFromAction()));
+
+        /// Remember suggestion string for time when action gets triggered
         suggestionAction->setProperty(PropertyIdSuggestion, suggestion);
     }
 }

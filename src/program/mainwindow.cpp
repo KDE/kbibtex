@@ -311,6 +311,11 @@ void KBibTeXMainWindow::closeDocument()
     d->mdiWidget->getOpenFileInfoManager()->close(d->mdiWidget->getOpenFileInfoManager()->currentFile());
 }
 
+void KBibTeXMainWindow::closeEvent(QCloseEvent* event)
+{
+    KMainWindow::closeEvent(event);
+}
+
 void KBibTeXMainWindow::showPreferences()
 {
     KBibTeXPreferencesDialog dlg(this);

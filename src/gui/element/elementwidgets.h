@@ -44,6 +44,7 @@ class File;
 class Entry;
 class Element;
 class FieldInput;
+class IdSuggestions;
 
 class ElementWidget : public QWidget
 {
@@ -124,14 +125,18 @@ class ReferenceWidget : public ElementWidget
     Q_OBJECT
 
 private:
+    ElementEditor::ApplyElementInterface *m_applyElement;
     KComboBox *entryType;
     KLineEdit *entryId;
+
+    IdSuggestions *m_idSuggestions;
     KPushButton *buttonSuggestId;
 
     void createGUI();
 
 public:
     ReferenceWidget(QWidget *parent);
+    virtual ~ReferenceWidget();
 
     bool apply(QSharedPointer<Element> element) const;
     bool reset(QSharedPointer<const Element> element);
@@ -146,8 +151,8 @@ public:
 
     static bool canEdit(const Element *element);
 
-private:
-    ElementEditor::ApplyElementInterface *m_applyElement;
+public slots:
+    void otherFieldsGotModified();
 
 private slots:
     void prepareSuggestionsMenu();

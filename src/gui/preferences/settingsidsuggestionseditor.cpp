@@ -265,9 +265,10 @@ public:
     QBoxLayout *containerLayout;
     QList<TokenWidget*> widgetList;
     QLabel *labelPreview;
-    KPushButton *buttonAddToken;
+    KPushButton *buttonAddTokenAtTop, *buttonAddTokenAtBottom;
     const Entry *previewEntry;
-    QSignalMapper *signalMapperRemove, *signalMapperMoveUp, *signalMapperMoveDown, *signalMapperAddMenu;
+    QSignalMapper *signalMapperRemove, *signalMapperMoveUp, *signalMapperMoveDown;
+    QScrollArea *area;
 
     IdSuggestionsEditWidgetPrivate(const Entry *pe, IdSuggestionsEditWidget *parent)
             : p(parent), previewEntry(pe) {
@@ -281,23 +282,8 @@ public:
         layout->addWidget(labelPreview, 0, 0, 1, 1);
         layout->setColumnStretch(0, 100);
 
-        buttonAddToken = new KPushButton(KIcon("list-add"), i18n("Add"), p);
-        layout->addWidget(buttonAddToken, 0, 1, 1, 1);
-        layout->setColumnStretch(1, 1);
-        QMenu *menuAddToken = new QMenu(buttonAddToken);
-        signalMapperAddMenu = new QSignalMapper(p);
-        buttonAddToken->setMenu(menuAddToken);
-        QAction *action = menuAddToken->addAction(i18n("Title"), signalMapperAddMenu, SLOT(map()));
-        signalMapperAddMenu->setMapping(action, ttTitle);
-        action = menuAddToken->addAction(i18n("Author"), signalMapperAddMenu, SLOT(map()));
-        signalMapperAddMenu->setMapping(action, ttAuthor);
-        action = menuAddToken->addAction(i18n("Year"), signalMapperAddMenu, SLOT(map()));
-        signalMapperAddMenu->setMapping(action, ttYear);
-        action = menuAddToken->addAction(i18n("Text"), signalMapperAddMenu, SLOT(map()));
-        signalMapperAddMenu->setMapping(action, ttText);
-
-        QScrollArea *area = new QScrollArea(p);
-        layout->addWidget(area, 1, 0, 1, 2);
+        area = new QScrollArea(p);
+        layout->addWidget(area, 1, 0, 1, 1);
         area->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
         area->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 
@@ -307,6 +293,38 @@ public:
         containerLayout = new QVBoxLayout(container);
         area->setMinimumSize(384, 256);
 
+        buttonAddTokenAtTop = new KPushButton(KIcon("list-add"), i18n("Add at top"), container);
+        containerLayout->addWidget(buttonAddTokenAtTop, 0);
+
+        buttonAddTokenAtBottom = new KPushButton(KIcon("list-add"), i18n("Add at bottom"), container);
+        containerLayout->addWidget(buttonAddTokenAtBottom, 0);
+
+        QMenu *menuAddToken = new QMenu(p);
+        QSignalMapper *signalMapperAddMenu = new QSignalMapper(p);
+        buttonAddTokenAtTop->setMenu(menuAddToken);
+        QAction *action = menuAddToken->addAction(i18n("Title"), signalMapperAddMenu, SLOT(map()));
+        signalMapperAddMenu->setMapping(action, -ttTitle);
+        action = menuAddToken->addAction(i18n("Author"), signalMapperAddMenu, SLOT(map()));
+        signalMapperAddMenu->setMapping(action, -ttAuthor);
+        action = menuAddToken->addAction(i18n("Year"), signalMapperAddMenu, SLOT(map()));
+        signalMapperAddMenu->setMapping(action, -ttYear);
+        action = menuAddToken->addAction(i18n("Text"), signalMapperAddMenu, SLOT(map()));
+        signalMapperAddMenu->setMapping(action, -ttText);
+        connect(signalMapperAddMenu, SIGNAL(mapped(int)), p, SLOT(addToken(int)));
+
+        menuAddToken = new QMenu(p);
+        signalMapperAddMenu = new QSignalMapper(p);
+        buttonAddTokenAtBottom->setMenu(menuAddToken);
+        action = menuAddToken->addAction(i18n("Title"), signalMapperAddMenu, SLOT(map()));
+        signalMapperAddMenu->setMapping(action, ttTitle);
+        action = menuAddToken->addAction(i18n("Author"), signalMapperAddMenu, SLOT(map()));
+        signalMapperAddMenu->setMapping(action, ttAuthor);
+        action = menuAddToken->addAction(i18n("Year"), signalMapperAddMenu, SLOT(map()));
+        signalMapperAddMenu->setMapping(action, ttYear);
+        action = menuAddToken->addAction(i18n("Text"), signalMapperAddMenu, SLOT(map()));
+        signalMapperAddMenu->setMapping(action, ttText);
+        connect(signalMapperAddMenu, SIGNAL(mapped(int)), p, SLOT(addToken(int)));
+
         signalMapperMoveUp = new QSignalMapper(p);
         connect(signalMapperMoveUp, SIGNAL(mapped(QWidget*)), p, SLOT(moveUpToken(QWidget*)));
         signalMapperMoveDown = new QSignalMapper(p);
@@ -314,7 +332,6 @@ public:
         signalMapperRemove = new QSignalMapper(p);
         connect(signalMapperRemove, SIGNAL(mapped(QWidget*)), p, SLOT(removeToken(QWidget*)));
 
-        connect(signalMapperAddMenu, SIGNAL(mapped(int)), p, SLOT(addToken(int)));
     }
 
     void addManagementButtons(TokenWidget *tokenWidget) {
@@ -332,7 +349,8 @@ public:
         }
     }
 
-    void add(TokenType tokenType) {
+    void add(TokenType tokenType, bool atTop) {
+        const int pos = atTop ? 1 : containerLayout->count() - 1;
         TokenWidget *tokenWidget = NULL;
         switch (tokenType) {
         case ttTitle: {
@@ -342,8 +360,7 @@ public:
             info.toLower = info.toUpper = false;
             tokenWidget = new TitleWidget(info, true, p, container);
             widgetList << tokenWidget;
-            containerLayout->addWidget(tokenWidget, 1);
-
+            containerLayout->insertWidget(pos, tokenWidget, 1);
         }
         break;
         case ttAuthor: {
@@ -353,18 +370,18 @@ public:
             info.toLower = info.toUpper = false;
             tokenWidget = new AuthorWidget(info, aAll, p, container);
             widgetList << tokenWidget;
-            containerLayout->addWidget(tokenWidget, 1);
+            containerLayout->insertWidget(pos, tokenWidget, 1);
         }
         break;
         case ttYear:
             tokenWidget = new YearWidget(4, p, container);
             widgetList << tokenWidget;
-            containerLayout->addWidget(tokenWidget, 1);
+            containerLayout->insertWidget(pos, tokenWidget, 1);
             break;
         case ttText:
             tokenWidget = new TextWidget(QString(), p, container);
             widgetList << tokenWidget;
-            containerLayout->addWidget(tokenWidget, 1);
+            containerLayout->insertWidget(pos, tokenWidget, 1);
         }
 
         addManagementButtons(tokenWidget);
@@ -374,7 +391,7 @@ public:
         while (!widgetList.isEmpty())
             delete widgetList.takeFirst();
 
-        QStringList tokenList = formatString.split(QLatin1Char('|'));
+        QStringList tokenList = formatString.split(QLatin1Char('|'), QString::SkipEmptyParts);
         foreach(const QString &token, tokenList) {
             TokenWidget *tokenWidget = NULL;
 
@@ -383,24 +400,24 @@ public:
                 struct IdSuggestions::IdSuggestionTokenInfo info = p->evalToken(token.mid(1));
                 tokenWidget = new AuthorWidget(info, author, p, container);
                 widgetList << tokenWidget;
-                containerLayout->addWidget(tokenWidget, 1);
+                containerLayout->insertWidget(containerLayout->count() - 1, tokenWidget, 1);
             } else if (token[0] == 'y') {
                 tokenWidget = new YearWidget(2, p, container);
                 widgetList << tokenWidget;
-                containerLayout->addWidget(tokenWidget, 1);
+                containerLayout->insertWidget(containerLayout->count() - 1, tokenWidget, 1);
             } else if (token[0] == 'Y') {
                 tokenWidget = new YearWidget(4, p, container);
                 widgetList << tokenWidget;
-                containerLayout->addWidget(tokenWidget, 1);
+                containerLayout->insertWidget(containerLayout->count() - 1, tokenWidget, 1);
             } else if (token[0] == 't' || token[0] == 'T') {
                 struct IdSuggestions::IdSuggestionTokenInfo info = p->evalToken(token.mid(1));
                 tokenWidget = new TitleWidget(info, token[0] == 'T', p, container);
                 widgetList << tokenWidget;
-                containerLayout->addWidget(tokenWidget, 1);
+                containerLayout->insertWidget(containerLayout->count() - 1, tokenWidget, 1);
             } else if (token[0] == '"') {
                 tokenWidget = new TextWidget(token.mid(1), p, container);
                 widgetList << tokenWidget;
-                containerLayout->addWidget(tokenWidget, 1);
+                containerLayout->insertWidget(containerLayout->count() - 1, tokenWidget, 1);
             }
 
             addManagementButtons(tokenWidget);
@@ -454,9 +471,10 @@ void IdSuggestionsEditWidget::moveUpToken(QWidget *widget)
     int curPos = d->widgetList.indexOf(tokenWidget);
     if (curPos > 0) {
         d->widgetList.removeAt(curPos);
+        const int layoutPos = d->containerLayout->indexOf(tokenWidget);
         d->containerLayout->removeWidget(tokenWidget);
         d->widgetList.insert(curPos - 1, tokenWidget);
-        d->containerLayout->insertWidget(curPos - 1, tokenWidget, 1);
+        d->containerLayout->insertWidget(layoutPos - 1, tokenWidget, 1);
     }
 }
 
@@ -466,9 +484,10 @@ void IdSuggestionsEditWidget::moveDownToken(QWidget *widget)
     int curPos = d->widgetList.indexOf(tokenWidget);
     if (curPos < d->widgetList.size() - 1) {
         d->widgetList.removeAt(curPos);
+        const int layoutPos = d->containerLayout->indexOf(tokenWidget);
         d->containerLayout->removeWidget(tokenWidget);
         d->widgetList.insert(curPos + 1, tokenWidget);
-        d->containerLayout->insertWidget(curPos + 1, tokenWidget, 1);
+        d->containerLayout->insertWidget(layoutPos + 1, tokenWidget, 1);
     }
 }
 
@@ -482,7 +501,13 @@ void IdSuggestionsEditWidget::removeToken(QWidget *widget)
 
 void IdSuggestionsEditWidget::addToken(int cmd)
 {
-    d->add((IdSuggestionsEditWidgetPrivate::TokenType)cmd);
+    if (cmd < 0) {
+        d->add((IdSuggestionsEditWidgetPrivate::TokenType)(-cmd), true);
+        d->area->ensureWidgetVisible(d->buttonAddTokenAtTop); // FIXME does not work as intended
+    } else {
+        d->add((IdSuggestionsEditWidgetPrivate::TokenType)cmd, false);
+        d->area->ensureWidgetVisible(d->buttonAddTokenAtBottom); // FIXME does not work as intended
+    }
 }
 
 IdSuggestionsEditDialog::IdSuggestionsEditDialog(QWidget* parent, Qt::WFlags flags)

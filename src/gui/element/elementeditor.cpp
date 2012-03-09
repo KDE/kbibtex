@@ -28,6 +28,7 @@
 #include <QTextStream>
 #include <QApplication>
 #include <QFileInfo>
+#include <QSharedPointer>
 
 #include <KPushButton>
 #include <KMessageBox>
@@ -35,6 +36,7 @@
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <kio/netaccess.h>
+#include <KDebug>
 
 #include <entry.h>
 #include <comment.h>
@@ -103,6 +105,7 @@ public:
         checkBoxForceShowAllWidgets->setChecked(showAll);
         layout->addWidget(checkBoxForceShowAllWidgets, 2, 0, 1, 2);
         connect(checkBoxForceShowAllWidgets, SIGNAL(toggled(bool)), p, SLOT(updateReqOptWidgets()));
+        /// Notify widget which contains entry id to update if automatic id setting is activated
         if (referenceWidget != NULL)
             connect(referenceWidget, SIGNAL(entryTypeChanged()), p, SLOT(updateReqOptWidgets()));
 
@@ -117,6 +120,10 @@ public:
                 connect(widget, SIGNAL(modified(bool)), p, SLOT(childModified(bool)));
                 tab->addTab(widget, widget->icon(), widget->label());
                 widgets << widget;
+
+                /// Notify widget which contains entry id to update if automatic id setting is activated
+                if (referenceWidget != NULL)
+                    connect(widget, SIGNAL(modified(bool)), referenceWidget, SLOT(otherFieldsGotModified()));
             }
 
         if (PreambleWidget::canEdit(element.data())) {
@@ -124,6 +131,10 @@ public:
             connect(widget, SIGNAL(modified(bool)), p, SLOT(childModified(bool)));
             tab->addTab(widget, widget->icon(), widget->label());
             widgets << widget;
+
+            /// Notify widget which contains entry id to update if automatic id setting is activated
+            if (referenceWidget != NULL)
+                connect(widget, SIGNAL(modified(bool)), referenceWidget, SLOT(otherFieldsGotModified()));
         }
 
         if (MacroWidget::canEdit(element.data())) {
@@ -131,6 +142,10 @@ public:
             connect(widget, SIGNAL(modified(bool)), p, SLOT(childModified(bool)));
             tab->addTab(widget, widget->icon(), widget->label());
             widgets << widget;
+
+            /// Notify widget which contains entry id to update if automatic id setting is activated
+            if (referenceWidget != NULL)
+                connect(widget, SIGNAL(modified(bool)), referenceWidget, SLOT(otherFieldsGotModified()));
         }
 
         if (FilesWidget::canEdit(element.data())) {
@@ -138,6 +153,10 @@ public:
             connect(widget, SIGNAL(modified(bool)), p, SLOT(childModified(bool)));
             tab->addTab(widget, widget->icon(), widget->label());
             widgets << widget;
+
+            /// Notify widget which contains entry id to update if automatic id setting is activated
+            if (referenceWidget != NULL)
+                connect(widget, SIGNAL(modified(bool)), referenceWidget, SLOT(otherFieldsGotModified()));
         }
 
         if (OtherFieldsWidget::canEdit(element.data())) {
@@ -156,6 +175,10 @@ public:
             connect(widget, SIGNAL(modified(bool)), p, SLOT(childModified(bool)));
             tab->addTab(widget, widget->icon(), widget->label());
             widgets << widget;
+
+            /// Notify widget which contains entry id to update if automatic id setting is activated
+            if (referenceWidget != NULL)
+                connect(widget, SIGNAL(modified(bool)), referenceWidget, SLOT(otherFieldsGotModified()));
         }
 
         if (SourceWidget::canEdit(element.data())) {
@@ -275,6 +298,18 @@ public:
 
             previousWidget->apply(temp);
             if (isSourceWidget && referenceWidget != NULL) referenceWidget->apply(temp);
+
+            Value v = internalEntry->value(Entry::ftAuthor);
+            if (v.size() > 0) {
+                QSharedPointer<ValueItem> vi = v.first();
+                QSharedPointer<Person> pt = vi.dynamicCast<Person>();
+                if (!pt.isNull())
+                    kDebug() << "author=" << pt->lastName();
+                else
+                    kDebug() << "no person author?" << PlainTextValue::text(*vi.data());
+            } else
+                kDebug() << "no author?";
+
             newWidget->reset(temp);
             if (referenceWidget != NULL && dynamic_cast<SourceWidget*>(previousWidget) != NULL)
                 referenceWidget->reset(temp);
