@@ -271,7 +271,7 @@ public:
                 temp = internalComment;
             else if (!internalPreamble.isNull())
                 temp = internalPreamble;
-            Q_ASSERT(temp != NULL);
+            Q_ASSERT(!temp.isNull());
 
             previousWidget->apply(temp);
             if (isSourceWidget && referenceWidget != NULL) referenceWidget->apply(temp);
