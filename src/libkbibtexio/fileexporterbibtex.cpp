@@ -310,7 +310,7 @@ bool FileExporterBibTeX::save(QIODevice* iodevice, const File* bibtexfile, QStri
     QList<QSharedPointer<const Element> > remainingList;
 
     for (File::ConstIterator it = bibtexfile->constBegin(); it != bibtexfile->constEnd() && result && !d->cancelFlag; it++) {
-        QSharedPointer<const Preamble> preamble = (*it).dynamicCast<Preamble>();
+        QSharedPointer<const Preamble> preamble = (*it).dynamicCast<const Preamble>();
         if (!preamble.isNull())
             preambleList.append(preamble);
         else {
@@ -483,9 +483,9 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value& value, const QStr
                         result.append(d->stringOpenDelimiter);
                         stringCloseDelimiter = d->stringCloseDelimiter;
                     }
-                } else if (prev != NULL && typeid(*prev) == typeid(PlainText))
+                } else if (!prev.dynamicCast<const PlainText>().isNull())
                     result.append(' ');
-                else if (prev != NULL && typeid(*prev) == typeid(Person)) {
+                else if (!prev.dynamicCast<const Person>().isNull()) {
                     /// handle "et al." i.e. "and others"
                     result.append(" and ");
                 } else {
@@ -517,7 +517,7 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value& value, const QStr
                             result.append(d->stringOpenDelimiter);
                             stringCloseDelimiter = d->stringCloseDelimiter;
                         }
-                    } else if (prev != NULL && typeid(*prev) == typeid(VerbatimText)) {
+                    } else if (!prev.dynamicCast<const VerbatimText>().isNull()) {
                         if (key.toLower().startsWith(Entry::ftUrl) || key.toLower().startsWith(Entry::ftLocalFile) || key.toLower().startsWith(Entry::ftDOI))
                             result.append("; ");
                         else
@@ -566,7 +566,7 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value& value, const QStr
                                 result.append(d->stringOpenDelimiter);
                                 stringCloseDelimiter = d->stringCloseDelimiter;
                             }
-                        } else if (prev != NULL && typeid(*prev) == typeid(Person))
+                        } else if (!prev.dynamicCast<const Person>().isNull())
                             result.append(" and ");
                         else {
                             result.append(stringCloseDelimiter).append(" # ");
@@ -582,7 +582,7 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value& value, const QStr
                         }
                         isOpen = true;
 
-                        result.append(encodercheck(encoder, thisName));
+                        result.append(thisName);
                         prev = person;
                     } else {
                         QSharedPointer<const Keyword> keyword = (*it).dynamicCast<const Keyword>();
@@ -598,7 +598,7 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value& value, const QStr
                                     result.append(d->stringOpenDelimiter);
                                     stringCloseDelimiter = d->stringCloseDelimiter;
                                 }
-                            } else if (prev != NULL && typeid(*prev) == typeid(Keyword))
+                            } else if (!prev.dynamicCast<const Keyword>().isNull())
                                 result.append("; ");
                             else {
                                 result.append(stringCloseDelimiter).append(" # ");
