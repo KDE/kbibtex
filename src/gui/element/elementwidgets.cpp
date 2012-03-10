@@ -442,8 +442,9 @@ void ReferenceWidget::createGUI()
     for (BibTeXEntries::ConstIterator it = be->constBegin(); it != be->constEnd(); ++it)
         entryType->addItem(it->label, it->upperCamelCase);
 
+    /// Button with a menu listing a set of preconfigured id suggestions
     buttonSuggestId = new KPushButton(KIcon("view-filter"), QLatin1String(""), this);
-    buttonSuggestId->setToolTip(i18n("Use a suggested id for this entry"));
+    buttonSuggestId->setToolTip(i18n("Select a suggested id for this entry"));
     layout->addWidget(buttonSuggestId);
     QMenu *suggestionsMenu = new QMenu(buttonSuggestId);
     buttonSuggestId->setMenu(suggestionsMenu);
@@ -457,12 +458,17 @@ void ReferenceWidget::createGUI()
 
 void ReferenceWidget::prepareSuggestionsMenu()
 {
+    /// Collect information on the current entry as it is edited
     QSharedPointer<Entry> internalEntry(new Entry());
     m_applyElement->apply(internalEntry);
 
     static const IdSuggestions *idSuggestions = new IdSuggestions();
     QMenu *suggestionsMenu = buttonSuggestId->menu();
     suggestionsMenu->clear();
+
+    /// Keep track of shown suggestions to avoid duplicates
+    QSet<QString> knownIdSuggestion;
+
     foreach(QString suggestion, idSuggestions->formatIdList(*internalEntry.data())) {
         /// Test for duplicate ids, use fallback ids with numeric suffix
         if (m_file != NULL && m_file->containsKey(suggestion)) {
@@ -472,9 +478,18 @@ void ReferenceWidget::prepareSuggestionsMenu()
                 ++suffix;
         }
 
+        /// Keep track of shown suggestions to avoid duplicates
+        if (knownIdSuggestion.contains(suggestion)) continue;
+        else knownIdSuggestion.insert(suggestion);
+
+        /// Create action for suggestion, use icon depending if default or not
         QAction *suggestionAction = new QAction(suggestion, suggestionsMenu);
+        suggestionAction->setIcon(KIcon("view-filter"));
+
+        /// Mesh action into GUI
         suggestionsMenu->addAction(suggestionAction);
         connect(suggestionAction, SIGNAL(triggered()), this, SLOT(insertSuggestionFromAction()));
+        /// Remember suggestion string for time when action gets triggered
         suggestionAction->setProperty(PropertyIdSuggestion, suggestion);
     }
 }
