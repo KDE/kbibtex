@@ -75,7 +75,6 @@ public:
             connect(m_multiLineEditText, SIGNAL(textChanged()), p, SLOT(slotTextChanged()));
             m_multiLineEditText->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
             p->setFocusProxy(m_multiLineEditText);
-            m_multiLineEditText->setAcceptRichText(false);
         } else {
             m_singleLineEditText = new KLineEdit(p);
             appendWidget(m_singleLineEditText);

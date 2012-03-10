@@ -483,9 +483,9 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value& value, const QStr
                         result.append(d->stringOpenDelimiter);
                         stringCloseDelimiter = d->stringCloseDelimiter;
                     }
-                } else if (prev != NULL && typeid(*(prev.data())) == typeid(PlainText))
+                } else if (prev != NULL && typeid(*prev) == typeid(PlainText))
                     result.append(' ');
-                else if (prev != NULL && typeid(*(prev.data())) == typeid(Person)) {
+                else if (prev != NULL && typeid(*prev) == typeid(Person)) {
                     /// handle "et al." i.e. "and others"
                     result.append(" and ");
                 } else {
@@ -517,7 +517,7 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value& value, const QStr
                             result.append(d->stringOpenDelimiter);
                             stringCloseDelimiter = d->stringCloseDelimiter;
                         }
-                    } else if (prev != NULL && typeid(*(prev.data())) == typeid(VerbatimText)) {
+                    } else if (prev != NULL && typeid(*prev) == typeid(VerbatimText)) {
                         if (key.toLower().startsWith(Entry::ftUrl) || key.toLower().startsWith(Entry::ftLocalFile) || key.toLower().startsWith(Entry::ftDOI))
                             result.append("; ");
                         else
@@ -566,7 +566,7 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value& value, const QStr
                                 result.append(d->stringOpenDelimiter);
                                 stringCloseDelimiter = d->stringCloseDelimiter;
                             }
-                        } else if (prev != NULL && typeid(*(prev.data())) == typeid(Person))
+                        } else if (prev != NULL && typeid(*prev) == typeid(Person))
                             result.append(" and ");
                         else {
                             result.append(stringCloseDelimiter).append(" # ");
@@ -582,7 +582,7 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value& value, const QStr
                         }
                         isOpen = true;
 
-                        result.append(thisName);
+                        result.append(encodercheck(encoder, thisName));
                         prev = person;
                     } else {
                         QSharedPointer<const Keyword> keyword = (*it).dynamicCast<const Keyword>();
@@ -598,7 +598,7 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value& value, const QStr
                                     result.append(d->stringOpenDelimiter);
                                     stringCloseDelimiter = d->stringCloseDelimiter;
                                 }
-                            } else if (prev != NULL && typeid(*(prev.data())) == typeid(Keyword))
+                            } else if (prev != NULL && typeid(*prev) == typeid(Keyword))
                                 result.append("; ");
                             else {
                                 result.append(stringCloseDelimiter).append(" # ");

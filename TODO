@@ -16,7 +16,6 @@ and bugs are to be addressed (ordered by importance):
 - Bug 19306: Filenames in "localfile" and "url" get messed up
   if they contain spaces or other strange characters
 - Bug 18245: Encoding in preview.
-- Bug 18246: Fix remaining GUI issues regarding LyX pipe.
 - Bug 19263: Some search engines combine search terms using
   and AND operations, others use OR (or undefined).
 - Bug 17553: KPart integration: Requires research how XML

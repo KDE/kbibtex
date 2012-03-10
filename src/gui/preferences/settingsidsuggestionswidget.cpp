@@ -246,6 +246,8 @@ public:
 
         buttonNewSuggestion = new KPushButton(KIcon("list-add"), i18n("Add..."), p);
         layout->addWidget(buttonNewSuggestion, 0, 1, 1, 1);
+        // TODO no functionality yet, disable button
+        buttonNewSuggestion->setEnabled(false);
 
         buttonEditSuggestion = new KPushButton(KIcon("document-edit"), i18n("Edit..."), p);
         layout->addWidget(buttonEditSuggestion, 1, 1, 1, 1);
@@ -264,7 +266,6 @@ public:
 
         p->itemChanged(QModelIndex());
 
-        connect(buttonNewSuggestion, SIGNAL(clicked()), p, SLOT(buttonClicked()));
         connect(buttonEditSuggestion, SIGNAL(clicked()), p, SLOT(buttonClicked()));
         connect(buttonDeleteSuggestion, SIGNAL(clicked()), p, SLOT(buttonClicked()));
         connect(buttonSuggestionUp, SIGNAL(clicked()), p, SLOT(buttonClicked()));
@@ -307,12 +308,7 @@ void SettingsIdSuggestionsWidget::buttonClicked()
     QModelIndex selectedIndex = d->treeViewSuggestions->selectionModel()->currentIndex();
 
     if (button == d->buttonNewSuggestion) {
-        const QString newSuggestion = IdSuggestionsEditDialog::editSuggestion(d->idSuggestionsModel->previewEntry().data(), QLatin1String(""), this);
-        const int row = d->treeViewSuggestions->model()->rowCount(QModelIndex());
-        if (!newSuggestion.isEmpty() && d->treeViewSuggestions->model()->insertRow(row, QModelIndex())) {
-            QModelIndex index = d->treeViewSuggestions->model()->index(row, 0, QModelIndex());
-            d->treeViewSuggestions->model()->setData(index, newSuggestion, FormatStringRole);
-        }
+        // TODO
     } else if (button == d->buttonEditSuggestion) {
         QModelIndex currIndex = d->treeViewSuggestions->currentIndex();
         QString suggestion;
