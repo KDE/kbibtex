@@ -79,7 +79,7 @@ public:
         QString result;
         bool first = true;
         static const QRegExp sequenceOfSpaces(QLatin1String("\\s+"));
-        QStringList titleWords = PlainTextValue::text(entry.value(Entry::ftTitle)).split(sequenceOfSpaces);
+        QStringList titleWords = PlainTextValue::text(entry.value(Entry::ftTitle)).split(sequenceOfSpaces, QString::SkipEmptyParts);
         for (QStringList::ConstIterator it = titleWords.begin(); it != titleWords.end(); ++it) {
             if (first)
                 first = false;
@@ -175,7 +175,7 @@ IdSuggestions::~IdSuggestions()
 QString IdSuggestions::formatId(const Entry &entry, const QString &formatStr) const
 {
     QString id;
-    QStringList tokenList = formatStr.split(QLatin1Char('|'));
+    QStringList tokenList = formatStr.split(QLatin1Char('|'), QString::SkipEmptyParts);
     foreach(const QString &token, tokenList) {
         id.append(d->translateToken(entry, token));
     }
@@ -216,7 +216,7 @@ QStringList IdSuggestions::formatIdList(const Entry &entry) const
 QStringList IdSuggestions::formatStrToHuman(const QString &formatStr) const
 {
     QStringList result;
-    QStringList tokenList = formatStr.split(QLatin1Char('|'));
+    QStringList tokenList = formatStr.split(QLatin1Char('|'), QString::SkipEmptyParts);
     foreach(const QString &token, tokenList) {
         QString text;
         if (token[0] == 'a' || token[0] == 'A' || token[0] == 'z') {
