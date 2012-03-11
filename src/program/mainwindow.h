@@ -29,6 +29,7 @@
 class QTextEdit;
 class QDragEnterEvent;
 class QDropEvent;
+class QCloseEvent;
 
 class ReferencePreview;
 class BibTeXEditor;
@@ -50,6 +51,7 @@ protected: // KMainWindow API
 
     void dragEnterEvent(QDragEnterEvent *event);
     void dropEvent(QDropEvent *event);
+    void closeEvent(QCloseEvent *event);
 
 protected:
     void setupControllers();
@@ -65,6 +67,7 @@ private slots:
     void showSearchResults();
     void documentListsChanged(OpenFileInfo::StatusFlags statusFlags);
     void openRecentFile();
+    void queryCloseAll();
 
 private:
     class KBibTeXMainWindowPrivate;

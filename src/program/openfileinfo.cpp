@@ -515,11 +515,12 @@ bool OpenFileInfoManager::close(OpenFileInfo *openFileInfo)
 
     /// remove flag "open" from file to be closed and determine which file to show instead
     OpenFileInfo *nextCurrent = (d->currentFileInfo == openFileInfo) ? NULL : d->currentFileInfo;
-    for (OpenFileInfoList::Iterator it = d->openFileInfoList.begin(); it != d->openFileInfoList.end(); ++it) {
-        OpenFileInfo *ofi = *it;
+    foreach(OpenFileInfo *ofi, d->openFileInfoList) {
         if (!isClosing && ofi == openFileInfo && openFileInfo->close()) {
             isClosing = true;
+            /// Mark file as closed (i.e. not open)
             openFileInfo->removeFlags(OpenFileInfo::Open);
+            /// If file has a filename, remember as recently used
             if (openFileInfo->flags().testFlag(OpenFileInfo::HasName))
                 openFileInfo->addFlags(OpenFileInfo::RecentlyUsed);
         } else if (nextCurrent == NULL && ofi->flags().testFlag(OpenFileInfo::Open))
@@ -530,6 +531,49 @@ bool OpenFileInfoManager::close(OpenFileInfo *openFileInfo)
     /// switch over to the next available one
     if (isClosing)
         setCurrentFile(nextCurrent);
+
+    return isClosing;
+}
+
+bool OpenFileInfoManager::queryCloseAll()
+{
+    /// Assume that all closing operations succeed
+    bool isClosing = true;
+    /// For keeping track of files that get closed here
+    OpenFileInfoList restoreLaterList;
+
+    /// For each file known ...
+    foreach(OpenFileInfo *openFileInfo, d->openFileInfoList) {
+        /// Check only open file (ignore recently used, favorites, ...)
+        if (openFileInfo->flags().testFlag(OpenFileInfo::Open)) {
+            if (openFileInfo->close()) {
+                /// If file could be closed without user canceling the operation ...
+                /// Mark file as closed (i.e. not open)
+                openFileInfo->removeFlags(OpenFileInfo::Open);
+                /// If file has a filename, remember as recently used
+                if (openFileInfo->flags().testFlag(OpenFileInfo::HasName))
+                    openFileInfo->addFlags(OpenFileInfo::RecentlyUsed);
+                /// Remember file as to be marked as open later
+                restoreLaterList.append(openFileInfo);
+            } else {
+                /// User chose to cancel closing operation,
+                /// stop everything here
+                isClosing = false;
+                break;
+            }
+        }
+    }
+
+    if (isClosing) {
+        /// Closing operation was not cancelled, therefore mark
+        /// all files that were open before as open now.
+        /// This makes the files to be reopened when KBibTeX is
+        /// restarted again (assuming that this function was
+        /// called when KBibTeX is exiting).
+        foreach(OpenFileInfo *openFileInfo, restoreLaterList) {
+            openFileInfo->addFlags(OpenFileInfo::Open);
+        }
+    }
 
     return isClosing;
 }

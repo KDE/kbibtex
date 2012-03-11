@@ -117,6 +117,25 @@ public:
     OpenFileInfo *currentFile() const;
     bool changeUrl(OpenFileInfo *openFileInfo, const KUrl & url);
     bool close(OpenFileInfo *openFileInfo);
+
+    /**
+     * Try to close all open files. If a file is modified, the user will be asked
+     * if the file shall be saved first. Depending on the KPart, the user may opt
+     * to cancel the closing operation for any modified file.
+     * If the user chooses to cancel, this function quits the closing process and
+     * returns false. Files closed so far stay closed, the remaining open files stay
+     * open.
+     * If the user does not interrupt this function (e.g. no file was modified or
+     * the user confirmed to save or to discard changes), all files get closed.
+     * However, all files that were open before will be marked as opened
+     * again. This could render the user interface inconsistent (therefore this
+     * function should be called only when exiting KBibTeX), but it allows to
+     * easily reopen in the next session all files that were open at the time
+     * this function was called in this session.
+     * @return true if all files could be closed successfully, else false.
+     */
+    bool queryCloseAll();
+
     void setCurrentFile(OpenFileInfo *openFileInfo, KService::Ptr servicePtr = KService::Ptr());
     OpenFileInfoList filteredItems(OpenFileInfo::StatusFlags required, OpenFileInfo::StatusFlags forbidden = 0);
 

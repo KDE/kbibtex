@@ -206,7 +206,7 @@ KBibTeXMainWindow::KBibTeXMainWindow()
     actionCollection()->addAction(KStandardAction::Open, this, SLOT(openDocumentDialog()));
     d->actionClose = actionCollection()->addAction(KStandardAction::Close, this, SLOT(closeDocument()));
     d->actionClose->setEnabled(false);
-    actionCollection()->addAction(KStandardAction::Quit,  kapp, SLOT(quit()));
+    actionCollection()->addAction(KStandardAction::Quit, this, SLOT(queryCloseAll()));
     actionCollection()->addAction(KStandardAction::Preferences, this, SLOT(showPreferences()));
 
     connect(d->mdiWidget, SIGNAL(documentSwitch(BibTeXEditor *, BibTeXEditor *)), this, SLOT(documentSwitched(BibTeXEditor *, BibTeXEditor *)));
@@ -311,6 +311,16 @@ void KBibTeXMainWindow::closeDocument()
     d->mdiWidget->getOpenFileInfoManager()->close(d->mdiWidget->getOpenFileInfoManager()->currentFile());
 }
 
+void KBibTeXMainWindow::closeEvent(QCloseEvent* event)
+{
+    KMainWindow::closeEvent(event);
+
+    if (d->mdiWidget->getOpenFileInfoManager()->queryCloseAll())
+        event->accept();
+    else
+        event->ignore();
+}
+
 void KBibTeXMainWindow::showPreferences()
 {
     KBibTeXPreferencesDialog dlg(this);
@@ -384,4 +394,10 @@ void KBibTeXMainWindow::openRecentFile()
     KAction *action = static_cast<KAction*>(sender());
     KUrl url = action->data().value<KUrl>();
     openDocument(url);
+}
+
+void KBibTeXMainWindow::queryCloseAll()
+{
+    if (d->mdiWidget->getOpenFileInfoManager()->queryCloseAll())
+        kapp->quit();
 }
