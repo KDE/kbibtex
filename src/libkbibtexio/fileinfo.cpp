@@ -68,9 +68,23 @@ void FileInfo::urlsInText(const QString &text, TestExistance testExistance, cons
     if (text.isEmpty())
         return;
 
-    QStringList fileList = text.split(KBibTeX::fileListSeparatorRegExp, QString::SkipEmptyParts);
+    /// DOI identifiers have to extracted first as KBibTeX::fileListSeparatorRegExp
+    /// contains characters that can be part of a DOI (e.g. ';') and thus could split
+    /// a DOI in between.
+    QString internalText = text;
+    int pos = 0;
+    while ((pos = KBibTeX::doiRegExp.indexIn(internalText, pos)) != -1) {
+        QString match = KBibTeX::doiRegExp.cap(0);
+        KUrl url(doiUrlPrefix() + match.replace("\\", ""));
+        if (url.isValid() && !result.contains(url))
+            result << url;
+        /// remove match from internal text to avoid duplicates
+        internalText = internalText.left(pos) + internalText.mid(pos + match.length());
+    }
+
+    const QStringList fileList = internalText.split(KBibTeX::fileListSeparatorRegExp, QString::SkipEmptyParts);
     for (QStringList::ConstIterator filesIt = fileList.constBegin(); filesIt != fileList.constEnd(); ++filesIt) {
-        QString internalText = *filesIt;
+        internalText = *filesIt;
 
         if (testExistance == TestExistanceYes) {
             QFileInfo fileInfo(internalText);
@@ -94,22 +108,11 @@ void FileInfo::urlsInText(const QString &text, TestExistance testExistance, cons
         }
 
         /// extract URL from current field
-        int pos = 0;
+        pos = 0;
         while ((pos = KBibTeX::urlRegExp.indexIn(internalText, pos)) != -1) {
             const QString match = KBibTeX::urlRegExp.cap(0);
             KUrl url(match);
             if (url.isValid() && (testExistance == TestExistanceNo || !url.isLocalFile() || QFileInfo(url.path()).exists()) && !result.contains(url))
-                result << url;
-            /// remove match from internal text to avoid duplicates
-            internalText = internalText.left(pos) + internalText.mid(pos + match.length());
-        }
-
-        /// extract DOI from current field
-        pos = 0;
-        while ((pos = KBibTeX::doiRegExp.indexIn(internalText, pos)) != -1) {
-            QString match = KBibTeX::doiRegExp.cap(0);
-            KUrl url(doiUrlPrefix() + match.replace("\\", ""));
-            if (url.isValid() && !result.contains(url))
                 result << url;
             /// remove match from internal text to avoid duplicates
             internalText = internalText.left(pos) + internalText.mid(pos + match.length());
