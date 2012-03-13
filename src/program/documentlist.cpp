@@ -189,6 +189,10 @@ QVariant DocumentListModel::data(const QModelIndex &index, int role) const
             overlays << "folder-open";
         else
             overlays << "";
+        if (openFileInfo->isModified())
+            overlays << "document-save";
+        else
+            overlays << "";
         return KIcon(iconName, NULL, overlays);
     }
     case Qt::ToolTipRole: return openFileInfo->fullCaption();
