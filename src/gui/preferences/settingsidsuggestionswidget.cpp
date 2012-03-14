@@ -166,6 +166,7 @@ public:
         const QString formatString = m_formatStringList[row];
         m_formatStringList.removeAt(row);
         m_formatStringList.insert(row - 1, formatString);
+        if (m_defaultFormatStringRow == row) --m_defaultFormatStringRow; ///< update default id suggestion
         endMoveRows();
 
         return true;
@@ -180,6 +181,7 @@ public:
         const QString formatString = m_formatStringList[row];
         m_formatStringList.removeAt(row);
         m_formatStringList.insert(row + 1, formatString);
+        if (m_defaultFormatStringRow == row) ++m_defaultFormatStringRow; ///< update default id suggestion
         endMoveRows();
 
         return true;
@@ -192,6 +194,7 @@ public:
 
         beginRemoveRows(index.parent(), row, row);
         m_formatStringList.removeAt(row);
+        if (m_defaultFormatStringRow == row) m_defaultFormatStringRow = -1; ///< update default id suggestion
         endRemoveRows();
 
         return true;
