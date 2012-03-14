@@ -100,6 +100,7 @@ public:
     LyX *lyx;
     FindDuplicatesUI *findDuplicatesUI;
     ColorLabelContextMenu *colorLabelContextMenu;
+    KAction *colorLabelContextMenuAction;
 
     KBibTeXPartPrivate(KBibTeXPart *parent)
             : p(parent), bibTeXFile(NULL), model(NULL), sortFilterProxyModel(NULL), signalMapperNewElement(new QSignalMapper(parent)), viewDocumentMenu(new KMenu(i18n("View Document"), parent->widget())), signalMapperViewDocument(new QSignalMapper(parent)), isSaveAsOperation(false) {
@@ -498,7 +499,7 @@ void KBibTeXPart::setupActions(bool /*browserViewWanted FIXME*/)
     d->editor->addAction(d->entryApplyDefaultFormatString);
 
     d->colorLabelContextMenu = new ColorLabelContextMenu(d->editor);
-    actionCollection()->addAction(QLatin1String("entry_colorlabel"), d->colorLabelContextMenu->menuAction());
+    d->colorLabelContextMenuAction=actionCollection()->addAction(QLatin1String("entry_colorlabel"), d->colorLabelContextMenu->menuAction());
 
     setXMLFile(RCFileName);
 
@@ -762,6 +763,7 @@ void KBibTeXPart::updateActions()
     d->elementFindPDFAction->setEnabled(!emptySelection && isReadWrite());
     d->entryApplyDefaultFormatString->setEnabled(!emptySelection && isReadWrite());
     d->colorLabelContextMenu->menuAction()->setEnabled(!emptySelection && isReadWrite());
+    d->colorLabelContextMenuAction->setEnabled(!emptySelection && isReadWrite());
 
     int numDocumentsToView = d->updateViewDocumentMenu();
     /// enable menu item only if there is at least one document to view
@@ -781,6 +783,4 @@ void KBibTeXPart::updateActions()
         }
     }
     d->lyx->setReferences(references);
-
-    d->colorLabelContextMenu->setEnabled(isReadWrite());
 }

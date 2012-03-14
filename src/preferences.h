@@ -30,9 +30,9 @@ namespace Preferences
 {
 static const QString groupColor = QLatin1String("Color Labels");
 static const QString keyColorCodes = QLatin1String("colorCodes");
-static const QStringList defaultColorCodes = QStringList() << QLatin1String("#cc3300") << QLatin1String("#0033ff") << QLatin1String("#009966");
+static const QStringList defaultColorCodes = QStringList() << QLatin1String("#cc3300") << QLatin1String("#0033ff") << QLatin1String("#009966") << QLatin1String("#f0d000");
 static const QString keyColorLabels = QLatin1String("colorLabels");
-static const QStringList defaultcolorLabels = QStringList() << I18N_NOOP("Important") << I18N_NOOP("Unread") << I18N_NOOP("Read");
+static const QStringList defaultcolorLabels = QStringList() << I18N_NOOP("Important") << I18N_NOOP("Unread") << I18N_NOOP("Read") << I18N_NOOP("Watch");
 }
 
 #endif // KBIBTEX_PREFERENCES_H
