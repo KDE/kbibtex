@@ -724,9 +724,9 @@ QList<Keyword*> FileImporterBibTeX::splitKeywords(const QString& text)
         if (text.contains(*curSplitChar)) {
             /// split text along a pattern like spaces-splitchar-spaces
             /// extract keywords
-            QStringList keywords = text.split(splitAlong[index], QString::SkipEmptyParts);
+            const QStringList keywords = text.split(splitAlong[index], QString::SkipEmptyParts);
             /// build QList of Keyword objects from keywords
-            foreach(QString keyword, keywords) {
+            foreach(const QString &keyword, keywords) {
                 result.append(new Keyword(keyword));
             }
             /// no more splits neccessary

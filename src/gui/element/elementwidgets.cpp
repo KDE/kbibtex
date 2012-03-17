@@ -396,7 +396,6 @@ bool ReferenceWidget::reset(QSharedPointer<const Element> element)
 
 void ReferenceWidget::setReadOnly(bool isReadOnly)
 {
-    kDebug() << "isReadOnly=" << isReadOnly;
     ElementWidget::setReadOnly(isReadOnly);
 
     entryId->setReadOnly(isReadOnly);
