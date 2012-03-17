@@ -125,8 +125,9 @@ bool OnlineSearchAbstract::handleErrors(QNetworkReply *reply)
         return false;
     } else if (reply->error() != QNetworkReply::NoError) {
         m_hasBeenCanceled = true;
-        kWarning() << "Search using" << label() << "failed (HTTP code" << reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() << reply->attribute(QNetworkRequest::HttpReasonPhraseAttribute).toByteArray() << ")";
-        KMessageBox::error(m_parent, reply->errorString().isEmpty() ? i18n("Searching \"%1\" failed for unknown reason.", label()) : i18n("Searching \"%1\" failed with error message:\n\n%2", label(), reply->errorString()));
+        const QString errorString = reply->errorString();
+        kWarning() << "Search using" << label() << "failed (error code" << reply->error() << "(" << errorString << "), HTTP code" << reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() << reply->attribute(QNetworkRequest::HttpReasonPhraseAttribute).toByteArray() << ")";
+        KMessageBox::error(m_parent, errorString.isEmpty() ? i18n("Searching \"%1\" failed for unknown reason.", label()) : i18n("Searching \"%1\" failed with error message:\n\n%2", label(), errorString));
         emit stoppedSearch(resultUnspecifiedError);
         return false;
     }
