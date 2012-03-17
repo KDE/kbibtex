@@ -289,7 +289,7 @@ bool ReferenceWidget::reset(const Element *element)
     bool result = false;
     const Entry *entry = dynamic_cast<const Entry*>(element);
     if (entry != NULL) {
-        entryType->setEnabled(true);
+        entryType->setEnabled(!isReadOnly);
         BibTeXEntries *be = BibTeXEntries::self();
         QString type = be->format(entry->type(), KBibTeX::cUpperCamelCase);
         entryType->setCurrentIndex(-1);
@@ -324,7 +324,7 @@ void ReferenceWidget::setReadOnly(bool isReadOnly)
     ElementWidget::setReadOnly(isReadOnly);
 
     entryId->setReadOnly(isReadOnly);
-    entryType->lineEdit()->setReadOnly(isReadOnly);
+    entryType->setEnabled(!isReadOnly);
 }
 
 QString ReferenceWidget::label()
