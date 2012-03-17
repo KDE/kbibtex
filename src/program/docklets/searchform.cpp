@@ -99,7 +99,7 @@ public:
 
     SearchFormPrivate(SearchResults *searchResults, SearchForm *parent)
             : p(parent), whichEnginesLabel(NULL), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))),
-            configGroupName(QLatin1String("Search Engines Docklet")), sr(searchResults), searchButton(NULL), currentEntry(NULL) {
+            configGroupName(QLatin1String("Search Engines Docklet")), sr(searchResults), searchButton(NULL), useEntryButton(NULL), currentEntry(NULL) {
         // nothing
     }
 
@@ -127,27 +127,17 @@ public:
         whichEnginesLabel = new QLabel(container);
         whichEnginesLabel->setWordWrap(true);
         vLayout->addWidget(whichEnginesLabel);
-        vLayout->setStretch(0, 10);
+        vLayout->setStretchFactor(whichEnginesLabel, 0);
         connect(whichEnginesLabel, SIGNAL(linkActivated(QString)), p, SLOT(switchToEngines()));
 
         vLayout->addSpacing(8);
 
         queryTermsStack = new QStackedWidget(container);
         vLayout->addWidget(queryTermsStack);
-        vLayout->setStretchFactor(queryTermsStack, 100);
+        vLayout->setStretchFactor(queryTermsStack, 5);
 
         QScrollArea *scrollArea = wrapInScrollArea(createGeneralQueryTermsForm(queryTermsStack), queryTermsStack);
         queryTermsStack->addWidget(scrollArea);
-
-        vLayout->addSpacing(8);
-
-        QHBoxLayout *hLayout = new QHBoxLayout();
-        vLayout->addLayout(hLayout);
-        useEntryButton = new KPushButton(i18n("Use Entry"), parent);
-        hLayout->addWidget(useEntryButton);
-        useEntryButton->setEnabled(false);
-        connect(useEntryButton, SIGNAL(clicked()), p, SLOT(copyFromEntry()));
-        hLayout->addStretch(10);
 
         return container;
     }
@@ -182,11 +172,13 @@ public:
         layout->setMargin(0);
         layout->setRowStretch(0, 1);
         layout->setRowStretch(1, 0);
-        layout->setColumnStretch(0, 1);
-        layout->setColumnStretch(1, 0);
+        layout->setColumnStretch(0, 0);
+        layout->setColumnStretch(1, 1);
+        layout->setColumnStretch(2, 0);
 
         tabWidget = new QTabWidget(p);
-        layout->addWidget(tabWidget, 0, 0, 1, 2);
+        tabWidget->setDocumentMode(true);
+        layout->addWidget(tabWidget, 0, 0, 1, 3);
         connect(tabWidget, SIGNAL(currentChanged(int)), p, SLOT(tabSwitched(int)));
 
         QWidget *widget = createQueryTermsStack(tabWidget);
@@ -195,13 +187,18 @@ public:
         QWidget *listContainer = createEnginesGUI(tabWidget);
         tabWidget->addTab(listContainer, KIcon("applications-engineering"), i18n("Engines"));
 
+        useEntryButton = new KPushButton(KIcon("go-up"), i18n("Use Entry"), p);
+        layout->addWidget(useEntryButton, 1, 0, 1, 1);
+        useEntryButton->setEnabled(false);
+        connect(useEntryButton, SIGNAL(clicked()), p, SLOT(copyFromEntry()));
+
         progressBar = new QProgressBar(p);
-        layout->addWidget(progressBar, 1, 0, 1, 1);
+        layout->addWidget(progressBar, 1, 1, 1, 1);
         progressBar->setMaximum(1000);
         progressBar->hide();
 
         searchButton = new KPushButton(KIcon("edit-find"), i18n("Search"), p);
-        layout->addWidget(searchButton, 1, 1, 1, 1);
+        layout->addWidget(searchButton, 1, 2, 1, 1);
         connect(generalQueryTermsForm, SIGNAL(returnPressed()), searchButton, SLOT(click()));
 
         loadEngines();
@@ -290,11 +287,11 @@ public:
             }
 
         switch (checkedEngines.size()) {
-        case 0: whichEnginesLabel->setText(i18n("No search engine selected. <a href=\"changeEngine\">Change</a>"));break;
-        case 1: whichEnginesLabel->setText(i18n("Search engine <b>%1</b> is selected. <a href=\"changeEngine\">Change</a>", checkedEngines.first()));break;
-        case 2: whichEnginesLabel->setText(i18n("Search engines <b>%1</b> and <b>%2</b> are selected. <a href=\"changeEngine\">Change</a>", checkedEngines.first(), checkedEngines.at(1)));break;
-        case 3: whichEnginesLabel->setText(i18n("Search engines <b>%1</b>, <b>%2</b>, and <b>%3</b> are selected. <a href=\"changeEngine\">Change</a>", checkedEngines.first(), checkedEngines.at(1), checkedEngines.at(2)));break;
-        default: whichEnginesLabel->setText(i18n("Search engines <b>%1</b>, <b>%2</b>, and more are selected. <a href=\"changeEngine\">Change</a>", checkedEngines.first(), checkedEngines.at(1)));break;
+        case 0: whichEnginesLabel->setText(i18n("No search engine selected (<a href=\"changeEngine\">change</a>).")); break;
+        case 1: whichEnginesLabel->setText(i18n("Search engine <b>%1</b> is selected (<a href=\"changeEngine\">change</a>).", checkedEngines.first())); break;
+        case 2: whichEnginesLabel->setText(i18n("Search engines <b>%1</b> and <b>%2</b> are selected (<a href=\"changeEngine\">change</a>).", checkedEngines.first(), checkedEngines.at(1))); break;
+        case 3: whichEnginesLabel->setText(i18n("Search engines <b>%1</b>, <b>%2</b>, and <b>%3</b> are selected (<a href=\"changeEngine\">change</a>).", checkedEngines.first(), checkedEngines.at(1), checkedEngines.at(2))); break;
+        default: whichEnginesLabel->setText(i18n("Search engines <b>%1</b>, <b>%2</b>, and more are selected (<a href=\"changeEngine\">change</a>).", checkedEngines.first(), checkedEngines.at(1))); break;
         }
 
         OnlineSearchQueryFormAbstract *currentQueryWidget = NULL;
@@ -305,6 +302,9 @@ public:
         QScrollArea *area = formToScrollArea.value(currentQueryWidget, NULL);
         if (area != NULL)
             queryTermsStack->setCurrentWidget(area);
+
+        if (useEntryButton != NULL)
+            useEntryButton->setEnabled(!currentEntry.isNull() && tabWidget->currentIndex() == 0);
     }
 
     void openHomepage() {
@@ -346,7 +346,7 @@ void SearchForm::updatedConfiguration()
 void SearchForm::setElement(QSharedPointer<Element> element, const File *)
 {
     d->currentEntry = element.dynamicCast<const Entry>();
-    d->useEntryButton->setEnabled(!d->currentEntry.isNull());
+    d->useEntryButton->setEnabled(!d->currentEntry.isNull() && d->tabWidget->currentIndex() == 0);
 }
 
 void SearchForm::switchToEngines()
@@ -366,6 +366,7 @@ void SearchForm::startSearch()
     d->sr->clear();
     d->progressBar->setValue(0);
     d->progressMap.clear();
+    d->useEntryButton->hide();
     d->progressBar->show();
 
     if (currentForm == d->generalQueryTermsForm) {
@@ -415,6 +416,7 @@ void SearchForm::stoppedSearch(int resultCode)
             emit doneSearching();
 
             QTimer::singleShot(1000, d->progressBar, SLOT(hide()));
+            QTimer::singleShot(1100, d->useEntryButton, SLOT(show()));
         } else {
             QStringList remainingEngines;
             foreach(OnlineSearchAbstract *running, d->runningSearches) {
