@@ -76,11 +76,13 @@ public:
         actionImportSelected = new KAction(KIcon("svn-update"), i18n("Import"), parent);
         editor->addAction(actionImportSelected);
         actionImportSelected->setEnabled(false);
+        actionImportSelected->setShortcut(Qt::CTRL + Qt::Key_I);
         connect(actionImportSelected, SIGNAL(triggered()), parent, SLOT(importSelected()));
 
         actionCopySelected = new KAction(KIcon("edit-copy"), i18n("Copy"), parent);
         editor->addAction(actionCopySelected);
         actionCopySelected->setEnabled(false);
+        actionCopySelected->setShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_C);
         connect(actionCopySelected, SIGNAL(triggered()), clipboard, SLOT(copy()));
 
         connect(editor, SIGNAL(doubleClicked(QModelIndex)), editor, SLOT(viewCurrentElement()));
