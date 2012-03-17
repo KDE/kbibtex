@@ -284,7 +284,7 @@ bool ReferenceWidget::reset(const Element *element)
     /// if signals are not deactivated, the "modified" signal would be emitted when
     /// resetting the widgets' values
     disconnect(entryType, SIGNAL(editTextChanged(QString)), this, SLOT(gotModified()));
-    disconnect(entryId, SIGNAL(textChanged(QString)), this, SLOT(gotModified()));
+    disconnect(entryId, SIGNAL(textEdited(QString)), this, SLOT(gotModified()));
 
     bool result = false;
     const Entry *entry = dynamic_cast<const Entry*>(element);
@@ -314,7 +314,7 @@ bool ReferenceWidget::reset(const Element *element)
     }
 
     connect(entryType, SIGNAL(editTextChanged(QString)), this, SLOT(gotModified()));
-    connect(entryId, SIGNAL(textChanged(QString)), this, SLOT(gotModified()));
+    connect(entryId, SIGNAL(textEdited(QString)), this, SLOT(gotModified()));
 
     return result;
 }
@@ -368,7 +368,7 @@ void ReferenceWidget::createGUI()
         entryType->addItem(it->label, it->upperCamelCase);
 
     connect(entryType, SIGNAL(editTextChanged(QString)), this, SLOT(gotModified()));
-    connect(entryId, SIGNAL(textChanged(QString)), this, SLOT(gotModified()));
+    connect(entryId, SIGNAL(textEdited(QString)), this, SLOT(gotModified()));
 }
 
 
