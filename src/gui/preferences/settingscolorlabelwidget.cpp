@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2011 by Thomas Fischer                             *
+*   Copyright (C) 2004-2012 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -26,7 +26,6 @@
 #include <KSharedConfigPtr>
 #include <KPushButton>
 #include <KInputDialog>
-#include <KDebug>
 #include <KColorButton>
 #include <KColorDialog>
 #include <KLineEdit>
@@ -79,7 +78,7 @@ public:
     QSize sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index) const {
         QSize hint = QStyledItemDelegate::sizeHint(option, index);
         QFontMetrics fm = QFontMetrics(QFont());
-        hint.setHeight(qMax(hint.height(), fm.xHeight()*6));
+        hint.setHeight(qMax(hint.height(), fm.xHeight() * 4));
         return hint;
     }
 };
@@ -219,23 +218,22 @@ bool ColorLabelSettingsModel::containsLabel(const QString &label)
 
 void ColorLabelSettingsModel::addColorLabel(const QColor &color, const QString &label)
 {
-    ColorLabelPair clp;
+    const int newRow = colorLabelPairs.size();
+    beginInsertRows(QModelIndex(), newRow, newRow);    ColorLabelPair clp;
     clp.color = color;
     clp.label = label;
     colorLabelPairs << clp;
-    QModelIndex idxA = index(colorLabelPairs.count() - 1, 0, QModelIndex());
-    QModelIndex idxB = index(colorLabelPairs.count() - 1, 1, QModelIndex());
-    emit dataChanged(idxA, idxB);
+    endInsertRows();
+
     emit modified();
 }
 
 void ColorLabelSettingsModel::removeColorLabel(int row)
 {
     if (row >= 0 && row < colorLabelPairs.count()) {
+        beginRemoveRows(QModelIndex(), row, row);
         colorLabelPairs.removeAt(row);
-        QModelIndex idxA = index(row, 0, QModelIndex());
-        QModelIndex idxB = index(colorLabelPairs.count() - 1, 1, QModelIndex());
-        emit dataChanged(idxA, idxB);
+        endRemoveRows();
         emit modified();
     }
 }
@@ -332,7 +330,7 @@ void SettingsColorLabelWidget::addColorDialog()
     if (ok && !d->model->containsLabel(newLabel)) {
         QColor color = Qt::red;
         if (KColorDialog::getColor(color, this) == KColorDialog::Accepted && color != Qt::black)
-            d->model->addColorLabel(Qt::red, newLabel);
+            d->model->addColorLabel(color, newLabel);
     }
 }
 
@@ -396,8 +394,9 @@ void ColorLabelContextMenu::colorActivated(const QString &colorString)
     bool modifying = false;
     QModelIndexList list = m_tv->selectionModel()->selectedIndexes();
     foreach(const QModelIndex &index, list) {
-        if (index.column() == 1) {
-            Element *element = file->at(index.row());
+        const QModelIndex mappedIndex = sfbfm->mapToSource(index);
+        if (mappedIndex.column() == 1) {
+            Element *element = file->at(mappedIndex.row());
             Entry *entry = dynamic_cast<Entry*>(element);
             if (entry != NULL) {
                 entry->remove(Entry::ftColor);
