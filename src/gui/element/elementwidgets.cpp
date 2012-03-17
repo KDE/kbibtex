@@ -362,8 +362,8 @@ bool ReferenceWidget::reset(QSharedPointer<const Element> element)
     bool result = false;
     QSharedPointer<const Entry> entry = element.dynamicCast<const Entry>();
     if (!entry.isNull()) {
-        entryType->setEnabled(true);
-        buttonSuggestId->setEnabled(true);
+        entryType->setEnabled(!isReadOnly);
+        buttonSuggestId->setEnabled(!isReadOnly);
         BibTeXEntries *be = BibTeXEntries::self();
         QString type = be->format(entry->type(), KBibTeX::cUpperCamelCase);
         entryType->setCurrentIndex(-1);
@@ -396,10 +396,11 @@ bool ReferenceWidget::reset(QSharedPointer<const Element> element)
 
 void ReferenceWidget::setReadOnly(bool isReadOnly)
 {
+    kDebug() << "isReadOnly=" << isReadOnly;
     ElementWidget::setReadOnly(isReadOnly);
 
     entryId->setReadOnly(isReadOnly);
-    entryType->lineEdit()->setReadOnly(isReadOnly);
+    entryType->setEnabled(!isReadOnly);
 }
 
 QString ReferenceWidget::label()
