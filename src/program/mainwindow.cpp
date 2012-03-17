@@ -119,7 +119,7 @@ KBibTeXMainWindow::KBibTeXMainWindow()
     d->dockDocumentList = new QDockWidget(i18n("List of Documents"), this);
     d->dockDocumentList->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
     addDockWidget(Qt::LeftDockWidgetArea, d->dockDocumentList);
-    d->listDocumentList = new DocumentList(OpenFileInfoManager::getOpenFileInfoManager(), d->dockDocumentList);
+    d->listDocumentList = new DocumentList(d->openFileInfoManager, d->dockDocumentList);
     d->dockDocumentList->setWidget(d->listDocumentList);
     d->dockDocumentList->setObjectName("dockDocumentList");
     d->dockDocumentList->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
@@ -134,6 +134,7 @@ KBibTeXMainWindow::KBibTeXMainWindow()
     d->dockReferencePreview->setObjectName("dockReferencePreview");
     d->dockReferencePreview->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
     showPanelsMenu->addAction(d->dockReferencePreview->toggleViewAction());
+    d->dockReferencePreview->toggleViewAction()->setShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_D);
 
     d->dockUrlPreview = new QDockWidget(i18n("Document Preview"), this);
     d->dockUrlPreview->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
@@ -186,7 +187,7 @@ KBibTeXMainWindow::KBibTeXMainWindow()
     actionCollection()->addAction(KStandardAction::Open, this, SLOT(openDocumentDialog()));
     d->actionClose = actionCollection()->addAction(KStandardAction::Close, this, SLOT(closeDocument()));
     d->actionClose->setEnabled(false);
-    actionCollection()->addAction(KStandardAction::Quit,  kapp, SLOT(quit()));
+    actionCollection()->addAction(KStandardAction::Quit, this, SLOT(queryCloseAll()));
     actionCollection()->addAction(KStandardAction::Preferences, this, SLOT(showPreferences()));
 
     documentListsChanged(OpenFileInfo::RecentlyUsed); /// force initialization of menu of recently used files
@@ -279,8 +280,17 @@ void KBibTeXMainWindow::openDocument(const KUrl& url)
 
 void KBibTeXMainWindow::closeDocument()
 {
-    d->actionClose->setEnabled(false);
     d->openFileInfoManager->close(d->openFileInfoManager->currentFile());
+}
+
+void KBibTeXMainWindow::closeEvent(QCloseEvent* event)
+{
+    KMainWindow::closeEvent(event);
+
+    if (d->openFileInfoManager->queryCloseAll())
+        event->accept();
+    else
+        event->ignore();
 }
 
 void KBibTeXMainWindow::showPreferences()
@@ -291,7 +301,7 @@ void KBibTeXMainWindow::showPreferences()
 
 void KBibTeXMainWindow::documentSwitched(BibTeXEditor *oldEditor, BibTeXEditor *newEditor)
 {
-    OpenFileInfo *openFileInfo = OpenFileInfoManager::getOpenFileInfoManager()->currentFile();
+    OpenFileInfo *openFileInfo = d->openFileInfoManager->currentFile();
     bool validFile = openFileInfo != NULL;
     d->actionClose->setEnabled(validFile);
 
@@ -336,7 +346,12 @@ void KBibTeXMainWindow::documentListsChanged(OpenFileInfo::StatusFlags statusFla
         QList<OpenFileInfo*> list = d->openFileInfoManager->filteredItems(OpenFileInfo::RecentlyUsed);
         d->actionMenuRecentFilesMenu->clear();
         foreach(OpenFileInfo* cur, list) {
-            KAction *action = new KAction(QString("%1 [%2]").arg(cur->shortCaption()).arg(cur->fullCaption()), this);
+            /// Fixing bug 19511: too long filenames make menu too large,
+            /// therefore squeeze text if it is longer than squeezeLen.
+            const int squeezeLen = 256;
+            const QString squeezedShortCap = squeeze_text(cur->shortCaption(), squeezeLen);
+            const QString squeezedFullCap = squeeze_text(cur->fullCaption(), squeezeLen);
+            KAction *action = new KAction(QString("%1 [%2]").arg(squeezedShortCap).arg(squeezedFullCap), this);
             action->setData(cur->url());
             action->setIcon(KIcon(cur->mimeType().replace("/", "-")));
             d->actionMenuRecentFilesMenu->addAction(action);
@@ -350,4 +365,10 @@ void KBibTeXMainWindow::openRecentFile()
     KAction *action = static_cast<KAction*>(sender());
     KUrl url = action->data().value<KUrl>();
     openDocument(url);
+}
+
+void KBibTeXMainWindow::queryCloseAll()
+{
+    if (d->openFileInfoManager->queryCloseAll())
+        kapp->quit();
 }
