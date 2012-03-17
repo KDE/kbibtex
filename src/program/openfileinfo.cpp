@@ -21,6 +21,7 @@
 #include <QString>
 #include <QLatin1String>
 #include <QTimer>
+#include <QFileInfo>
 
 #include <KConfig>
 #include <KConfigGroup>
@@ -380,6 +381,10 @@ public:
         for (int i = 0; i < maxNumFiles; ++i) {
             KUrl fileUrl = KUrl(cg.readEntry(QString("%1-%2").arg(OpenFileInfo::OpenFileInfoPrivate::keyURL).arg(i), ""));
             if (!fileUrl.isValid()) break;
+
+            /// For local files, test if they exist; ignore local files that do not exist
+            if (fileUrl.isLocalFile() && !QFileInfo(fileUrl.pathOrUrl()).exists()) continue;
+
             OpenFileInfo *ofi = p->contains(fileUrl);
             if (ofi == NULL) {
                 ofi = p->open(fileUrl);
@@ -527,7 +532,11 @@ bool OpenFileInfoManager::close(OpenFileInfo *openFileInfo)
         } else if (nextCurrent == NULL && ofi->flags().testFlag(OpenFileInfo::Open))
             nextCurrent = ofi;
     }
-    setCurrentFile(nextCurrent);
+
+    /// If the current document is to be closed,
+    /// switch over to the next available one
+    if (isClosing)
+        setCurrentFile(nextCurrent);
 
     return isClosing;
 }
