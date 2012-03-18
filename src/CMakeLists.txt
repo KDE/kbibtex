@@ -39,132 +39,20 @@ endif(
     QT_QTWEBKIT_FOUND
 )
 
-if ( DEFINED ENV{SVN_REV} )
-    message(
-        STATUS
-        "SVN version fetched from environment"
-    )
-    set(
-        SVN_REVISION
-        $ENV{SVN_REV}
-    )
-else( DEFINED ENV{SVN_REV} )
-    mark_as_advanced(
-        force
-        SVNVERSION_EXECUTABLE
-    )
-    find_program(
-        SVNVERSION_EXECUTABLE
-        svnversion
-    )
-    if(
-        SVNVERSION_EXECUTABLE
-    )
-        message(
-            STATUS
-            "Extracting SVN version, please wait..."
-        )
-        execute_process(
-            COMMAND
-            ${SVNVERSION_EXECUTABLE}
-            -n
-            ${CMAKE_SOURCE_DIR}
-            OUTPUT_VARIABLE
-            SVN_REVISION
-            OUTPUT_STRIP_TRAILING_WHITESPACE
-        )
+# a custom target that is always built
+add_custom_target(set_version_h_in_builddir ALL
+    DEPENDS ${CMAKE_BINARY_DIR}/src/version.h)
 
-        if(
-            SVN_REVISION
-            MATCHES
-            "exported"
-        )
-            message(
-                STATUS
-                "Not an SVN version, assuming non-developer release"
-                "\nEnforce SVN revision number by setting environment variable SVN_REV"
-            )
-            set(
-                SVN_REVISION
-                "unknown"
-            )
-        endif(
-            SVN_REVISION
-            MATCHES
-            "exported"
-        )
-    else(
-        SVNVERSION_EXECUTABLE
-    )
-        message(
-            STATUS
-            "No Subversion installed, assuming non-developer release"
-            "\nEnforce SVN revision number by setting environment variable SVN_REV"
-        )
-        set(
-            SVN_REVISION
-            "unknown"
-        )
-    endif(
-        SVNVERSION_EXECUTABLE
-    )
-endif( DEFINED ENV{SVN_REV} )
+# creates src/version.h using cmake script
+add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/src/version.h
+    COMMAND ${CMAKE_COMMAND} -DSOURCE_DIR=${CMAKE_SOURCE_DIR}
+      -DBINARY_DIR=${CMAKE_BINARY_DIR} -P ${CMAKE_SOURCE_DIR}/src/getsvn.cmake)
 
-message(
-    STATUS
-    "SVN version is "
-    ${SVN_REVISION}
-)
-add_custom_target(
-    set_version_h_in_builddir
-    ALL
-    ${CMAKE_COMMAND}
-    -E
-    echo
-    "#ifndef VERSION_H"
-    >
-    "${CMAKE_BINARY_DIR}/src/version.h.tmp"
-    COMMAND
-    ${CMAKE_COMMAND}
-    -E
-    echo
-    "#define VERSION_H"
-    >>
-    "${CMAKE_BINARY_DIR}/src/version.h.tmp"
-    COMMAND
-    ${CMAKE_COMMAND}
-    -E
-    echo
-    "const char *versionNumber = \"SVN r${SVN_REVISION}\";"
-    >>
-    "${CMAKE_BINARY_DIR}/src/version.h.tmp"
-    COMMAND
-    ${CMAKE_COMMAND}
-    -E
-    echo
-    "#endif // VERSION_H"
-    >>
-    ${CMAKE_BINARY_DIR}/src/version.h.tmp
-    COMMAND
-    ${CMAKE_COMMAND}
-    -E
-    copy_if_different
-    "${CMAKE_BINARY_DIR}/src/version.h.tmp"
-    "${CMAKE_BINARY_DIR}/src/version.h"
-    COMMAND
-    ${CMAKE_COMMAND}
-    -E
-    remove
-    "${CMAKE_BINARY_DIR}/src/version.h.tmp"
-    WORKING_DIRECTORY
-    "${CMAKE_SOURCE_DIR}"
-    COMMENT
-    "Updating ${CMAKE_BINARY_DIR}/src/version.h..."
-    VERBATIM
-)
+# src/version.h is a generated file
 set_source_files_properties(${CMAKE_BINARY_DIR}/src/version.h
     PROPERTIES GENERATED TRUE
     HEADER_FILE_ONLY TRUE)
+
 
 
 add_definitions(
