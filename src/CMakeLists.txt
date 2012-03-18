@@ -131,47 +131,66 @@ add_custom_target(
     cmake
     -E
     echo
+    "${CMAKE_BINARY_DIR}/src/version.h"
+    COMMAND
+    ${CMAKE_COMMAND}
+    -E
+    echo
     "#ifndef VERSION_H"
     >
     "${CMAKE_BINARY_DIR}/src/version.h.tmp"
     COMMAND
-    cmake
+    ${CMAKE_COMMAND}
     -E
     echo
     "#define VERSION_H"
     >>
     "${CMAKE_BINARY_DIR}/src/version.h.tmp"
     COMMAND
-    cmake
+    ${CMAKE_COMMAND}
     -E
     echo
     "const char *versionNumber = \"SVN r${SVN_REVISION}\";"
     >>
     "${CMAKE_BINARY_DIR}/src/version.h.tmp"
     COMMAND
-    cmake
+    ${CMAKE_COMMAND}
     -E
     echo
     "#endif // VERSION_H"
     >>
     ${CMAKE_BINARY_DIR}/src/version.h.tmp
     COMMAND
-    cmake
+    ${CMAKE_COMMAND}
     -E
-    copy
+    copy_if_different
     "${CMAKE_BINARY_DIR}/src/version.h.tmp"
     "${CMAKE_BINARY_DIR}/src/version.h"
     COMMAND
-    cmake
+    ${CMAKE_COMMAND}
     -E
     remove
     "${CMAKE_BINARY_DIR}/src/version.h.tmp"
+    COMMAND
+    ${CMAKE_COMMAND}
+    -E
+    echo
+    "${CMAKE_BINARY_DIR}/src/version.h"
+    COMMAND
+    ${CMAKE_COMMAND}
+    -E
+    md5sum
+    "${CMAKE_BINARY_DIR}/src/version.h"
     WORKING_DIRECTORY
     "${CMAKE_SOURCE_DIR}"
     COMMENT
     "Updating ${CMAKE_BINARY_DIR}/src/version.h..."
     VERBATIM
 )
+set_source_files_properties(${CMAKE_BINARY_DIR}/src/version.h
+    PROPERTIES GENERATED TRUE
+    HEADER_FILE_ONLY TRUE)
+
 
 add_definitions(
     ${QT_DEFINITIONS}

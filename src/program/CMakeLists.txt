@@ -51,6 +51,9 @@ kde4_add_executable(
     ${kbibtex_SRCS}
 )
 
+add_dependencies(kbibtex${BINARY_POSTFIX} set_version_h_in_builddir)
+
+
 target_link_libraries(
     kbibtex${BINARY_POSTFIX}
     ${QT_QTWEBKIT_LIBRARIES}
