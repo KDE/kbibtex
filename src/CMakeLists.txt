@@ -39,11 +39,7 @@ endif(
     QT_QTWEBKIT_FOUND
 )
 
-if(
-    "$ENV{SVN_REV}"
-    GREATER
-    0
-)
+if ( DEFINED ENV{SVN_REV} )
     message(
         STATUS
         "SVN version fetched from environment"
@@ -52,11 +48,7 @@ if(
         SVN_REVISION
         $ENV{SVN_REV}
     )
-else(
-    "$ENV{SVN_REV}"
-    GREATER
-    0
-)
+else( DEFINED ENV{SVN_REV} )
     mark_as_advanced(
         force
         SVNVERSION_EXECUTABLE
@@ -90,6 +82,7 @@ else(
             message(
                 STATUS
                 "Not an SVN version, assuming non-developer release"
+                "\nEnforce SVN revision number by setting environment variable SVN_REV"
             )
             set(
                 SVN_REVISION
@@ -106,6 +99,7 @@ else(
         message(
             STATUS
             "No Subversion installed, assuming non-developer release"
+            "\nEnforce SVN revision number by setting environment variable SVN_REV"
         )
         set(
             SVN_REVISION
@@ -114,11 +108,7 @@ else(
     endif(
         SVNVERSION_EXECUTABLE
     )
-endif(
-    "$ENV{SVN_REV}"
-    GREATER
-    0
-)
+endif( DEFINED ENV{SVN_REV} )
 
 message(
     STATUS
@@ -128,11 +118,6 @@ message(
 add_custom_target(
     set_version_h_in_builddir
     ALL
-    cmake
-    -E
-    echo
-    "${CMAKE_BINARY_DIR}/src/version.h"
-    COMMAND
     ${CMAKE_COMMAND}
     -E
     echo
@@ -171,16 +156,6 @@ add_custom_target(
     -E
     remove
     "${CMAKE_BINARY_DIR}/src/version.h.tmp"
-    COMMAND
-    ${CMAKE_COMMAND}
-    -E
-    echo
-    "${CMAKE_BINARY_DIR}/src/version.h"
-    COMMAND
-    ${CMAKE_COMMAND}
-    -E
-    md5sum
-    "${CMAKE_BINARY_DIR}/src/version.h"
     WORKING_DIRECTORY
     "${CMAKE_SOURCE_DIR}"
     COMMENT
