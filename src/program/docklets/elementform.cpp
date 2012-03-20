@@ -25,6 +25,7 @@
 #include <KPushButton>
 #include <KLocale>
 #include <KIconLoader>
+#include <KMessageBox>
 
 #include <elementeditor.h>
 #include <mdiwidget.h>
@@ -37,7 +38,6 @@ private:
     ElementForm *p;
     QGridLayout *layout;
     QSharedPointer<Element> emptyElement;
-    QSharedPointer<Element> element;
     const File *file;
 
 public:
@@ -45,9 +45,11 @@ public:
     MDIWidget *mdiWidget;
     KPushButton *buttonApply, *buttonReset;
     QWidget *widgetUnmodifiedChanges;
+    bool gotModified;
+    QSharedPointer<Element> element;
 
     ElementFormPrivate(ElementForm *parent)
-            : p(parent), file(NULL), elementEditor(NULL) {
+            : p(parent), file(NULL), elementEditor(NULL), gotModified(false) {
         layout = new QGridLayout(p);
         layout->setColumnStretch(0, 1);
         layout->setColumnStretch(1, 0);
@@ -116,6 +118,7 @@ public:
         buttonApply->setEnabled(false);
         buttonReset->setEnabled(false);
         widgetUnmodifiedChanges->setVisible(false);
+        gotModified = false;
         connect(buttonApply, SIGNAL(clicked()), p, SLOT(apply()));
         connect(buttonReset, SIGNAL(clicked()), p, SLOT(reset()));
     }
@@ -131,6 +134,7 @@ public:
         elementEditor->apply();
         buttonApply->setEnabled(false);
         buttonReset->setEnabled(false);
+        gotModified = false;
         widgetUnmodifiedChanges->setVisible(false);
     }
 
@@ -138,6 +142,7 @@ public:
         elementEditor->reset();
         buttonApply->setEnabled(false);
         buttonReset->setEnabled(false);
+        gotModified = false;
         widgetUnmodifiedChanges->setVisible(false);
     }
 };
@@ -156,7 +161,18 @@ ElementForm::~ElementForm()
 
 void ElementForm::setElement(QSharedPointer<Element> element, const File *file)
 {
-    d->loadElement(element, file);
+    /// Test if previous element (1) got modified, (2) the new element isn't
+    /// the same as the new one, and (3) the user confirms to apply those
+    /// changes rather than to discard them -> apply changes in previous element.
+    /// FIXME If the previous element got delete from the file and therefore a different
+    /// element gets set, changes will be still applied to the element to-be-deleted.
+    if (d->gotModified && element != d->element && KMessageBox::questionYesNo(this, i18n("The current element got modified.\nApply or discard changes?"), i18n("Element modified"), KGuiItem(i18n("Apply changes"), KIcon("dialog-ok-apply")), KGuiItem(i18n("Discard changes"), KIcon("edit-undo"))) == KMessageBox::Yes) {
+        d->apply();
+    }
+    if (element != d->element) {
+        /// Ignore loading the same element again
+        d->loadElement(element, file);
+    }
 }
 
 void ElementForm::modified()
@@ -164,6 +180,7 @@ void ElementForm::modified()
     d->buttonApply->setEnabled(true);
     d->buttonReset->setEnabled(true);
     d->widgetUnmodifiedChanges->setVisible(true);
+    d->gotModified = true;
 }
 
 void ElementForm::apply()
