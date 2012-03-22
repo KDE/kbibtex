@@ -49,10 +49,11 @@ private:
     ElementFormPrivate *d;
 
 private slots:
-    void modified();
+    void modified(bool);
     void apply();
     void reset();
     void visibilityChanged(bool);
+    void autoApplyToggled(bool);
 };
 
 #endif // KBIBTEX_PROGRAM_ELEMENTFORM_H

@@ -21,11 +21,13 @@
 #include <QLayout>
 #include <QDockWidget>
 #include <QLabel>
+#include <QCheckBox>
 
 #include <KPushButton>
 #include <KLocale>
 #include <KIconLoader>
 #include <KMessageBox>
+#include <KConfigGroup>
 
 #include <elementeditor.h>
 #include <mdiwidget.h>
@@ -43,25 +45,40 @@ private:
 public:
     ElementEditor *elementEditor;
     MDIWidget *mdiWidget;
+    QCheckBox *checkBoxAutoApply;
     KPushButton *buttonApply, *buttonReset;
     QWidget *widgetUnmodifiedChanges;
     bool gotModified;
     QSharedPointer<Element> element;
 
+    KSharedConfigPtr config;
+    /// Group name in configuration file for all settings for this form
+    static const QString configGroupName;
+    /// Key to store/retrieve setting whether changes in form should be automatically applied to element or not
+    static const QString configKeyAutoApply;
+
     ElementFormPrivate(ElementForm *parent)
-            : p(parent), file(NULL), elementEditor(NULL), gotModified(false) {
+            : p(parent), file(NULL), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), elementEditor(NULL), gotModified(false) {
+        KConfigGroup configGroup(config, configGroupName);
+
         layout = new QGridLayout(p);
-        layout->setColumnStretch(0, 1);
+        layout->setColumnStretch(0, 10);
         layout->setColumnStretch(1, 0);
         layout->setColumnStretch(2, 0);
+        layout->setColumnStretch(3, 0);
+
+        /// Checkbox enabling/disabling setting to automatically apply changes in form to element
+        checkBoxAutoApply = new QCheckBox(i18n("Automatically apply changes"), p);
+        checkBoxAutoApply->setChecked(configGroup.readEntry(configKeyAutoApply, false));
+        layout->addWidget(checkBoxAutoApply, 1, 0, 1, 1);
 
         /// Create a special widget that shows a small icon and a text
         /// stating that there are unsaved changes. It will be shown
         /// simultaneously when the Apply and Reset buttons are enabled.
         widgetUnmodifiedChanges = new QWidget(p);
-        layout->addWidget(widgetUnmodifiedChanges, 1, 0, 1, 1);
+        layout->addWidget(widgetUnmodifiedChanges, 1, 1, 1, 1);
         QBoxLayout *layoutUnmodifiedChanges = new QHBoxLayout(widgetUnmodifiedChanges);
-        layoutUnmodifiedChanges->addStretch(100);
+        layoutUnmodifiedChanges->addSpacing(32);
         QLabel *label = new QLabel(widgetUnmodifiedChanges);
         label->setAlignment(Qt::AlignCenter | Qt::AlignVCenter);
         label->setPixmap(KIconLoader::global()->loadIcon("dialog-information", KIconLoader::Dialog, KIconLoader::SizeSmall));
@@ -71,15 +88,16 @@ public:
         layoutUnmodifiedChanges->addWidget(label);
 
         buttonApply = new KPushButton(KIcon("dialog-ok-apply"), i18n("Apply"), p);
-        layout->addWidget(buttonApply, 1, 1, 1, 1);
+        layout->addWidget(buttonApply, 1, 2, 1, 1);
 
         buttonReset = new KPushButton(KIcon("edit-undo"), i18n("Reset"), p);
-        layout->addWidget(buttonReset, 1, 2, 1, 1);
+        layout->addWidget(buttonReset, 1, 3, 1, 1);
 
         emptyElement = QSharedPointer<Element>(new Entry());
         loadElement(QSharedPointer<Element>(), NULL);
 
         connect(buttonApply, SIGNAL(clicked()), p, SIGNAL(elementModified()));
+        connect(checkBoxAutoApply, SIGNAL(toggled(bool)), p, SLOT(autoApplyToggled(bool)));
     }
 
     void refreshElement() {
@@ -108,11 +126,11 @@ public:
         // FIXME why do we need emptyElement?
         elementEditor = element.isNull() ? new ElementEditor(emptyElement, file, p) :
                         new ElementEditor(element, file, p);
-        layout->addWidget(elementEditor, 0, 0, 1, 3);
+        layout->addWidget(elementEditor, 0, 0, 1, 4);
         elementEditor->setEnabled(!element.isNull());
         elementEditor->setCurrentTab(tabIndex);
         elementEditor->layout()->setMargin(0);
-        connect(elementEditor, SIGNAL(modified(bool)), p, SLOT(modified()));
+        connect(elementEditor, SIGNAL(modified(bool)), p, SLOT(modified(bool)));
 
         /// make apply and reset buttons aware of new element editor
         buttonApply->setEnabled(false);
@@ -147,6 +165,9 @@ public:
     }
 };
 
+const QString ElementForm::ElementFormPrivate::configGroupName = QLatin1String("ElementForm");
+const QString ElementForm::ElementFormPrivate::configKeyAutoApply = QLatin1String("AutoApply");
+
 ElementForm::ElementForm(MDIWidget *mdiWidget, QDockWidget *parent)
         : QWidget(parent), d(new ElementFormPrivate(this))
 {
@@ -175,12 +196,28 @@ void ElementForm::setElement(QSharedPointer<Element> element, const File *file)
     }
 }
 
-void ElementForm::modified()
+/**
+ * Fetch the modified signal from the editing widget.
+ * @param gotModified true if widget was modified by user, false if modified status was reset by e.g. apply operation
+ */
+void ElementForm::modified(bool gotModified)
 {
-    d->buttonApply->setEnabled(true);
-    d->buttonReset->setEnabled(true);
-    d->widgetUnmodifiedChanges->setVisible(true);
-    d->gotModified = true;
+    /// Only interest in modifications, not resets of modified status
+    if (!gotModified) return;
+
+    if (d->checkBoxAutoApply->isChecked()) {
+        /// User wants to automatically apply changes, so do it
+        apply();
+        /// Notify rest of program (esp. main list) about changes
+        emit elementModified();
+    } else {
+        /// No automatic apply, therefore enable buttons where user can
+        /// apply or reset changes, plus show warning label about unsaved changes
+        d->buttonApply->setEnabled(true);
+        d->buttonReset->setEnabled(true);
+        d->widgetUnmodifiedChanges->setVisible(true);
+        d->gotModified = true;
+    }
 }
 
 void ElementForm::apply()
@@ -196,4 +233,31 @@ void ElementForm::reset()
 void ElementForm::visibilityChanged(bool)
 {
     d->refreshElement();
+}
+
+/**
+ * React on toggles of checkbox for auto-apply.
+ * @param isChecked true if checkbox got checked, false if checkbox got unchecked
+ */
+void ElementForm::autoApplyToggled(bool isChecked)
+{
+    if (isChecked) {
+        /// Got toggled to check state
+        if (!d->element.isNull()) {
+            /// Working on a real element, so apply changes
+            apply();
+            emit elementModified();
+        } else {
+            /// The following settings would happen when calling apply(),
+            /// but as no valid element is edited, perform settings here instead
+            d->buttonApply->setEnabled(false);
+            d->buttonReset->setEnabled(false);
+            d->widgetUnmodifiedChanges->setVisible(false);
+            d->gotModified = false;
+        }
+    }
+
+    /// Save changed status of checkbox in configuration settings
+    KConfigGroup configGroup(d->config, ElementFormPrivate::configGroupName);
+    configGroup.writeEntry(ElementFormPrivate::configKeyAutoApply, d->checkBoxAutoApply->isChecked());
 }
