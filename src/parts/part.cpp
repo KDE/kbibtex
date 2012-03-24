@@ -193,7 +193,7 @@ public:
             }
         }
 
-        if (copySucceeded) {
+        if (copySucceeded && (numberOfBackups > 0)) {
             /// copy e.g. test.bib into test.bib~
             KUrl b(url);
             b.setFileName(url.fileName() + QLatin1String("~"));
