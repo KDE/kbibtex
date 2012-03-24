@@ -37,6 +37,7 @@
 #include <kparts/part.h>
 #include <kio/netaccess.h>
 
+#include "kbibtexnamespace.h"
 #include "mdiwidget.h"
 
 const int URLRole = Qt::UserRole + 235;
@@ -66,7 +67,7 @@ public:
                 else if (role == Qt::DecorationRole)
                     return KIcon(ofiItem->mimeType().replace("/", "-"));
                 else if (role == Qt::ToolTipRole)
-                    return ofiItem->url().pathOrUrl();
+                    return squeeze_text(ofiItem->url().pathOrUrl(), 64);
             } else if (index.column() == 1) {
                 if (role == Qt::DisplayRole || role == Qt::ToolTipRole)
                     return ofiItem->lastAccess().toString(Qt::TextDate);
@@ -238,7 +239,7 @@ void MDIWidget::setFile(OpenFileInfo *openFileInfo, KService::Ptr servicePtr)
     if (openFileInfo != NULL) {
         KUrl url = openFileInfo->url();
         if (url.isValid())
-            emit setCaption(QString("%1 [%2]").arg(openFileInfo->shortCaption()).arg(openFileInfo->fullCaption()));
+            emit setCaption(QString("%1 [%2]").arg(openFileInfo->shortCaption()).arg(squeeze_text(openFileInfo->fullCaption(), 64)));
         else
             emit setCaption(openFileInfo->shortCaption());
     } else
@@ -274,7 +275,7 @@ void MDIWidget::slotCompleted(QObject *obj)
         /// completely opened or saved files should be marked as "recently used"
         ofi->addFlags(OpenFileInfo::RecentlyUsed);
 
-        emit setCaption(QString("%1 [%2]").arg(ofi->shortCaption()).arg(ofi->fullCaption()));
+        emit setCaption(QString("%1 [%2]").arg(ofi->shortCaption()).arg(squeeze_text(ofi->fullCaption(), 64)));
     }
 }
 

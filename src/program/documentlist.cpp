@@ -39,6 +39,7 @@
 #include <KService>
 #include <KMessageBox>
 
+#include "kbibtexnamespace.h"
 #include "documentlist.h"
 
 class DirOperatorWidget : public QWidget
@@ -195,7 +196,7 @@ QVariant DocumentListModel::data(const QModelIndex &index, int role) const
             overlays << "";
         return KIcon(iconName, NULL, overlays);
     }
-    case Qt::ToolTipRole: return openFileInfo->fullCaption();
+    case Qt::ToolTipRole: return squeeze_text(openFileInfo->fullCaption(), 64);
     case Qt::UserRole: return qVariantFromValue(openFileInfo);
     default: return QVariant();
     }

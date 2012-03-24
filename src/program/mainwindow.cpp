@@ -377,7 +377,7 @@ void KBibTeXMainWindow::documentListsChanged(OpenFileInfo::StatusFlags statusFla
         foreach(OpenFileInfo* cur, list) {
             /// Fixing bug 19511: too long filenames make menu too large,
             /// therefore squeeze text if it is longer than squeezeLen.
-            const int squeezeLen = 256;
+            const int squeezeLen = 64;
             const QString squeezedShortCap = squeeze_text(cur->shortCaption(), squeezeLen);
             const QString squeezedFullCap = squeeze_text(cur->fullCaption(), squeezeLen);
             KAction *action = new KAction(QString("%1 [%2]").arg(squeezedShortCap).arg(squeezedFullCap), this);
