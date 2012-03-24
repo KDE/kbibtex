@@ -42,6 +42,9 @@ public slots:
     void resetToDefaults();
     void automaticLyXDetectionToggled(bool);
 
+private slots:
+    void updateGUI();
+
 private:
     class SettingsFileExporterWidgetPrivate;
     SettingsFileExporterWidgetPrivate *d;

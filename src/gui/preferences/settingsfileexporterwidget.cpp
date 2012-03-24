@@ -20,6 +20,7 @@
 
 #include <QFormLayout>
 #include <QCheckBox>
+#include <QSpinBox>
 
 #include <KLocale>
 #include <KSharedConfig>
@@ -32,6 +33,7 @@
 
 #include <fileexporter.h>
 #include <clipboard.h>
+#include "preferences.h"
 #include "lyx.h"
 #include "settingsfileexporterwidget.h"
 
@@ -44,23 +46,28 @@ private:
     static const QString citeCmdToLabel;
 
     KSharedConfigPtr config;
-    const QString configGroupNameGeneral;
 
 public:
     QCheckBox *checkboxUseAutomaticLyXPipeDetection;
+    KComboBox *comboBoxBackupScope;
+    QSpinBox *spinboxNumberOfBackups;
+
     KUrlRequester *lineeditLyXPipePath;
     QString lastUserInput;
 
     SettingsFileExporterWidgetPrivate(SettingsFileExporterWidget *parent)
-            : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))),
-            configGroupNameGeneral(QLatin1String("General")) {
+            : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))) {
         // nothing
     }
 
     void loadState() {
-        KConfigGroup configGroup(config, configGroupNameGeneral);
+        KConfigGroup configGroup(config, Preferences::groupGeneral);
         const QString copyReferenceCommand = configGroup.readEntry(Clipboard::keyCopyReferenceCommand, Clipboard::defaultCopyReferenceCommand);
         p->selectValue(comboBoxCopyReferenceCmd, copyReferenceCommand.isEmpty() ? QString("") : copyReferenceCommand, Qt::UserRole);
+
+        const int index = qMax(0, comboBoxBackupScope->findData(configGroup.readEntry(Preferences::keyBackupScope, (int)Preferences::defaultBackupScope)));
+        comboBoxBackupScope->setCurrentIndex(index);
+        spinboxNumberOfBackups->setValue(qMax(0, qMin(spinboxNumberOfBackups->maximum(), configGroup.readEntry(Preferences::keyNumberOfBackups, Preferences::defaultNumberOfBackups))));
 
         KConfigGroup configGroupLyX(config, LyX::configGroupName);
         checkboxUseAutomaticLyXPipeDetection->setChecked(configGroupLyX.readEntry(LyX::keyUseAutomaticLyXPipeDetection, LyX::defaultUseAutomaticLyXPipeDetection));
@@ -69,9 +76,12 @@ public:
     }
 
     void saveState() {
-        KConfigGroup configGroup(config, configGroupNameGeneral);
+        KConfigGroup configGroup(config, Preferences::groupGeneral);
         const QString copyReferenceCommand = comboBoxCopyReferenceCmd->itemData(comboBoxCopyReferenceCmd->currentIndex()).toString();
         configGroup.writeEntry(Clipboard::keyCopyReferenceCommand, copyReferenceCommand);
+
+        configGroup.writeEntry(Preferences::keyBackupScope, comboBoxBackupScope->itemData(comboBoxBackupScope->currentIndex()).toInt());
+        configGroup.writeEntry(Preferences::keyNumberOfBackups, spinboxNumberOfBackups->value());
 
         KConfigGroup configGroupLyX(config, LyX::configGroupName);
         configGroupLyX.writeEntry(LyX::keyUseAutomaticLyXPipeDetection, checkboxUseAutomaticLyXPipeDetection->isChecked());
@@ -82,6 +92,11 @@ public:
 
     void resetToDefaults() {
         p->selectValue(comboBoxCopyReferenceCmd, QString(""), Qt::UserRole);
+
+        const int index = qMax(0, comboBoxBackupScope->findData(Preferences::defaultBackupScope));
+        comboBoxBackupScope->setCurrentIndex(index);
+        spinboxNumberOfBackups->setValue(qMax(0, qMin(spinboxNumberOfBackups->maximum(), Preferences::defaultNumberOfBackups)));
+
         checkboxUseAutomaticLyXPipeDetection->setChecked(LyX::defaultUseAutomaticLyXPipeDetection);
         QString pipe = LyX::guessLyXPipeLocation();
         if (pipe.isEmpty()) pipe = LyX::defaultLyXPipePath;
@@ -114,7 +129,23 @@ public:
         lineeditLyXPipePath->setMinimumWidth(lineeditLyXPipePath->fontMetrics().width(QChar('W')) * 20);
         lineeditLyXPipePath->setFilter(QLatin1String("inode/fifo"));
         lineeditLyXPipePath->setMode(KFile::ExistingOnly | KFile::LocalOnly);
+
+        comboBoxBackupScope = new KComboBox(false, p);
+        comboBoxBackupScope->addItem(i18n("No backups"), Preferences::NoBackup);
+        comboBoxBackupScope->addItem(i18n("Local files only"), Preferences::LocalOnly);
+        comboBoxBackupScope->addItem(i18n("Both local and remote files"), Preferences::BothLocalAndRemote);
+        layout->addRow(i18n("Backups when saving:"), comboBoxBackupScope);
+        connect(comboBoxBackupScope, SIGNAL(currentIndexChanged(int)), p, SIGNAL(changed()));
+
+        spinboxNumberOfBackups = new QSpinBox(p);
+        spinboxNumberOfBackups->setMinimum(1);
+        spinboxNumberOfBackups->setMaximum(16);
+        layout->addRow(i18n("Number of Backups:"), spinboxNumberOfBackups);
+        connect(spinboxNumberOfBackups, SIGNAL(valueChanged(int)), p, SIGNAL(changed()));
+
+        connect(comboBoxBackupScope, SIGNAL(currentIndexChanged(int)), p, SLOT(updateGUI()));
     }
+    void configGroup(QString arg1, Preferences::BackupScope arg2);
 };
 
 const QString SettingsFileExporterWidget::SettingsFileExporterWidgetPrivate::citeCmdToLabel = QLatin1String("\\%1{") + QChar(0x2026) + QChar('}');
@@ -154,4 +185,9 @@ void SettingsFileExporterWidget::automaticLyXDetectionToggled(bool isChecked)
         d->lineeditLyXPipePath->setText(LyX::guessLyXPipeLocation());
     } else
         d->lineeditLyXPipePath->setText(d->lastUserInput);
+}
+
+void SettingsFileExporterWidget::updateGUI()
+{
+    d->spinboxNumberOfBackups->setEnabled(d->comboBoxBackupScope->itemData(d->comboBoxBackupScope->currentIndex()).toInt() != (int)Preferences::NoBackup);
 }

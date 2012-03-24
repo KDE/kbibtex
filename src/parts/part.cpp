@@ -64,6 +64,7 @@
 #include <filterbar.h>
 #include <findduplicatesui.h>
 #include <lyx.h>
+#include <preferences.h>
 #include <preferences/settingscolorlabelwidget.h>
 #include <preferences/settingsfileexporterbibtexwidget.h>
 #include <preferences/settingsfileexporterpdfpswidget.h>
@@ -85,6 +86,7 @@ class KBibTeXPart::KBibTeXPartPrivate
 {
 private:
     KBibTeXPart *p;
+    KSharedConfigPtr config;
 
 public:
     File *bibTeXFile;
@@ -103,7 +105,7 @@ public:
     KAction *colorLabelContextMenuAction;
 
     KBibTeXPartPrivate(KBibTeXPart *parent)
-            : p(parent), bibTeXFile(NULL), model(NULL), sortFilterProxyModel(NULL), signalMapperNewElement(new QSignalMapper(parent)), viewDocumentMenu(new KMenu(i18n("View Document"), parent->widget())), signalMapperViewDocument(new QSignalMapper(parent)), isSaveAsOperation(false) {
+            : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), bibTeXFile(NULL), model(NULL), sortFilterProxyModel(NULL), signalMapperNewElement(new QSignalMapper(parent)), viewDocumentMenu(new KMenu(i18n("View Document"), parent->widget())), signalMapperViewDocument(new QSignalMapper(parent)), isSaveAsOperation(false) {
         connect(signalMapperViewDocument, SIGNAL(mapped(QObject*)), p, SLOT(elementViewDocumentMenu(QObject*)));
     }
 
@@ -177,14 +179,22 @@ public:
     }
 
     void makeBackup(const KUrl &url) const {
-        // FIXME: this will make backups on remote storage, too.
-        //     is this an expected behaviour?
-
-        /// do not make backup copies if file does not exist yet
+        /// Do not make backup copies if file does not exist yet
         if (!KIO::NetAccess::exists(url, KIO::NetAccess::DestinationSide, p->widget()))
             return;
 
-        const int numberOfBackups = 5; // TODO make this a configuration option
+        /// Fetch settings from configuration
+        KConfigGroup configGroup(config, Preferences::groupGeneral);
+        const Preferences::BackupScope backupScope = (Preferences::BackupScope)configGroup.readEntry(Preferences::keyBackupScope, (int)Preferences::defaultBackupScope);
+        const int numberOfBackups = configGroup.readEntry(Preferences::keyNumberOfBackups, Preferences::defaultNumberOfBackups);
+
+        /// Stop right here if no backup is requested
+        if (backupScope == Preferences::NoBackup)
+            return;
+
+        /// For non-local files, proceed only if backups to remote storage is allowed
+        if (!url.isLocalFile() && backupScope != Preferences::BothLocalAndRemote)
+            return;
 
         bool copySucceeded = true;
         /// copy e.g. test.bib~ to test.bib~2 and test.bib~3 to test.bib~4 etc.

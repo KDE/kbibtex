@@ -28,11 +28,19 @@
 
 namespace Preferences
 {
+enum BackupScope { NoBackup, LocalOnly, BothLocalAndRemote };
+
 static const QString groupColor = QLatin1String("Color Labels");
 static const QString keyColorCodes = QLatin1String("colorCodes");
 static const QStringList defaultColorCodes = QStringList() << QLatin1String("#cc3300") << QLatin1String("#0033ff") << QLatin1String("#009966") << QLatin1String("#f0d000");
 static const QString keyColorLabels = QLatin1String("colorLabels");
 static const QStringList defaultcolorLabels = QStringList() << I18N_NOOP("Important") << I18N_NOOP("Unread") << I18N_NOOP("Read") << I18N_NOOP("Watch");
+
+static const QString groupGeneral=QLatin1String("General");
+static const QString keyBackupScope = QLatin1String("backupScope");
+static const BackupScope defaultBackupScope = LocalOnly;
+static const QString keyNumberOfBackups = QLatin1String("numberOfBackups");
+static const int defaultNumberOfBackups = 5;
 }
 
 #endif // KBIBTEX_PREFERENCES_H
