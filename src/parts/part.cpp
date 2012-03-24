@@ -199,7 +199,7 @@ public:
             }
         }
 
-        if (copySucceeded) {
+        if (copySucceeded && (numberOfBackups > 0)) {
             /// copy e.g. test.bib into test.bib~
             KUrl b(url);
             b.setFileName(url.fileName() + QLatin1String("~"));
@@ -499,7 +499,7 @@ void KBibTeXPart::setupActions(bool /*browserViewWanted FIXME*/)
     d->editor->addAction(d->entryApplyDefaultFormatString);
 
     d->colorLabelContextMenu = new ColorLabelContextMenu(d->editor);
-    d->colorLabelContextMenuAction=actionCollection()->addAction(QLatin1String("entry_colorlabel"), d->colorLabelContextMenu->menuAction());
+    d->colorLabelContextMenuAction = actionCollection()->addAction(QLatin1String("entry_colorlabel"), d->colorLabelContextMenu->menuAction());
 
     setXMLFile(RCFileName);
 
