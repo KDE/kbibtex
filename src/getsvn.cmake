@@ -1,8 +1,10 @@
 # Inspired by:
 # http://stackoverflow.com/questions/3780667/use-cmake-to-get-build-time-svn-revision
 
-
-if ( DEFINED ENV{SVN_REV} )
+if(
+    DEFINED
+    ENV{SVN_REV}
+)
     message(
         STATUS
         "SVN version fetched from environment"
@@ -11,9 +13,16 @@ if ( DEFINED ENV{SVN_REV} )
         SVN_REVISION
         $ENV{SVN_REV}
     )
-endif ( DEFINED ENV{SVN_REV} )
+endif(
+    DEFINED
+    ENV{SVN_REV}
+)
 
-if( NOT DEFINED SVN_REVISION)
+if(
+    NOT
+    DEFINED
+    SVN_REVISION
+)
     find_program(
         SVNVERSION_EXECUTABLE
         svnversion
@@ -67,13 +76,33 @@ if( NOT DEFINED SVN_REVISION)
     endif(
         SVNVERSION_EXECUTABLE
     )
-endif( NOT DEFINED SVN_REVISION )
+endif(
+    NOT
+    DEFINED
+    SVN_REVISION
+)
 
 # write a file with the SVNVERSION define
-file(WRITE "${BINARY_DIR}/src/version.h.tmp" "#ifndef VERSION_H\n")
-file(APPEND "${BINARY_DIR}/src/version.h.tmp" "#define VERSION_H\n")
-file(APPEND "${BINARY_DIR}/src/version.h.tmp" "const char *versionNumber = \"SVN revision ${SVN_REVISION}\";\n")
-file(APPEND "${BINARY_DIR}/src/version.h.tmp" "#endif // VERSION_H\n")
+file(
+    WRITE
+    "${BINARY_DIR}/src/version.h.tmp"
+    "#ifndef VERSION_H\n"
+)
+file(
+    APPEND
+    "${BINARY_DIR}/src/version.h.tmp"
+    "#define VERSION_H\n"
+)
+file(
+    APPEND
+    "${BINARY_DIR}/src/version.h.tmp"
+    "const char *versionNumber = \"SVN revision ${SVN_REVISION}\";\n"
+)
+file(
+    APPEND
+    "${BINARY_DIR}/src/version.h.tmp"
+    "#endif // VERSION_H\n"
+)
 
 message(
     STATUS
@@ -81,25 +110,34 @@ message(
     ${SVN_REVISION}
 )
 
-IF(EXISTS "${BINARY_DIR}/src/version.h.tmp")
-execute_process(
-    COMMAND
-    ${CMAKE_COMMAND}
-    -E
-    copy_if_different
+if(
+    EXISTS
     "${BINARY_DIR}/src/version.h.tmp"
-    "${BINARY_DIR}/src/version.h"
-    COMMAND
-    ${CMAKE_COMMAND}
-    -E
-    remove
+)
+    execute_process(
+        COMMAND
+        ${CMAKE_COMMAND}
+        -E
+        copy_if_different
+        "${BINARY_DIR}/src/version.h.tmp"
+        "${BINARY_DIR}/src/version.h"
+        COMMAND
+        ${CMAKE_COMMAND}
+        -E
+        remove
+        "${BINARY_DIR}/src/version.h.tmp"
+        WORKING_DIRECTORY
+        "${CMAKE_SOURCE_DIR}"
+    )
+else(
+    EXISTS
     "${BINARY_DIR}/src/version.h.tmp"
-    WORKING_DIRECTORY
-    "${CMAKE_SOURCE_DIR}"
 )
-else(EXISTS "${BINARY_DIR}/src/version.h.tmp")
-message(
-    STATUS
-    "${BINARY_DIR}/src/version.h.tmp does not exist"
+    message(
+        STATUS
+        "${BINARY_DIR}/src/version.h.tmp does not exist"
+    )
+endif(
+    EXISTS
+    "${BINARY_DIR}/src/version.h.tmp"
 )
-endIF(EXISTS "${BINARY_DIR}/src/version.h.tmp")
