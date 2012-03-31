@@ -78,10 +78,10 @@ void ValueListDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
     }
 }
 
-QSize ValueListDelegate::sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index) const
+QSize ValueListDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     QSize size = QStyledItemDelegate::sizeHint(option, index);
-    size.setHeight(qMax(size.height(), option.fontMetrics.height()*3 / 2)); // TODO calculate height better
+    size.setHeight(qMax(size.height(), option.fontMetrics.height() * 3 / 2));   // TODO calculate height better
     return size;
 }
 
@@ -203,17 +203,17 @@ ValueListModel::ValueListModel(const File *bibtexFile, const QString &fieldName,
     updateValues();
 }
 
-int ValueListModel::rowCount(const QModelIndex & parent) const
+int ValueListModel::rowCount(const QModelIndex &parent) const
 {
     return parent == QModelIndex() ? values.count() : 0;
 }
 
-int ValueListModel::columnCount(const QModelIndex & parent) const
+int ValueListModel::columnCount(const QModelIndex &parent) const
 {
     return parent == QModelIndex() ? (showCountColumn ? 2 : 1) : 0;
 }
 
-QVariant ValueListModel::data(const QModelIndex & index, int role) const
+QVariant ValueListModel::data(const QModelIndex &index, int role) const
 {
     if (index.row() >= values.count() || index.column() >= 2)
         return QVariant();
@@ -245,36 +245,92 @@ QVariant ValueListModel::data(const QModelIndex & index, int role) const
         return QVariant();
 }
 
-bool ValueListModel::setData(const QModelIndex & index, const QVariant &value, int role)
+bool ValueListModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     Q_ASSERT_X(file != NULL, "ValueListModel::setData", "You cannot set data if there is no BibTeX file associated with this value list.");
 
+    /// Continue only if in edit role and first column is to be changed
     if (role == Qt::EditRole && index.column() == 0) {
-        Value newValue = value.value<Value>(); /// nice names ... ;-)
+        /// Fetch the string as it was shown before the editing started
         QString origText = data(index, Qt::DisplayRole).toString();
+        /// Special treatment for colors
         if (fName == Entry::ftColor) {
+            /// for colors, convert color (RGB) to the associated label
             QString color = colorToLabel.key(origText);
             if (!color.isEmpty()) origText = color;
         }
-        int index = indexOf(origText); Q_ASSERT(index >= 0);
-        const QString newText = PlainTextValue::text(newValue);
-        kDebug() << "replacing" << origText << "with" << newText << "for field" << fName;
+        /// Memorize the current row
+        const int row = index.row();
 
+        /// Retrieve the Value object containing the user-entered data
+        Value newValue = value.value<Value>(); /// nice variable names ... ;-)
+        /// Fetch the string representing the new, user-entered value
+        const QString newText = PlainTextValue::text(newValue);
+
+        if (newText == origText) {
+            kDebug() << "Skipping to replace value with itself";
+            return false;
+        }
+
+        /**
+         * Update current entry's values
+         */
+
+        /// Go through all elements in the current file
         foreach(QSharedPointer<Element> element, *file) {
             QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
+            /// Process only Entry objects
             if (!entry.isNull()) {
+                /// Go through every key-value pair in entry (author, title, ...)
                 for (Entry::Iterator eit = entry->begin(); eit != entry->end(); ++eit) {
-                    QString key = eit.key().toLower();
+                    /// Fetch key-value pair's key
+                    const QString key = eit.key().toLower();
+                    /// Process only key-value pairs that are filtered for (e.g. only keywords)
                     if (key == fName) {
+                        /// Fetch the key-value pair's value's textual representation
                         const QString valueFullText = PlainTextValue::text(eit.value());
-                        if (valueFullText == origText)
+                        if (valueFullText == origText) {
+                            /// If the key-value pair's value's textual representation is the same
+                            /// as the shown string which will be replaced, replace the key-value pair
+                            /// in the entry with a new key-value pair containing the new value.
+                            /// This test is usually true for keys like title, year, or edition.
                             entry->insert(key, newValue);
-                        else {
-                            for (Value::Iterator vit = eit.value().begin(); vit != eit.value().end(); ++vit) {
-                                const QString valueItemText = PlainTextValue::text(*(*vit));
+                        } else {
+                            /// The test above failed, but the replacement may have to be applied to
+                            /// a ValueItem inside the value.
+                            /// Possible keys for such a case include author, editor, or keywords.
+
+                            /// Keep track of unique ValueItems (as determined by their textual
+                            /// representation)
+                            QSet<QString> uniqueValueItemTexts;
+
+                            /// Process each ValueItem inside this Value
+                            for (Value::Iterator vit = eit.value().begin(); vit != eit.value().end();) {
+                                /// Similar procedure as for full values above:
+                                /// If a ValueItem's textual representation is the same
+                                /// as the shown string which will be replaced, replace the
+                                /// ValueItem in this Value with a new Value containing the new string.
+                                const QString valueItemText = PlainTextValue::text(* (*vit));
                                 if (valueItemText == origText) {
+                                    /// Erase old ValueItem from this Value
                                     vit = eit.value().erase(vit);
-                                    vit = eit.value().insert(vit, newValue.first());
+                                    /// Insert new ValueItem (replacement text) only if
+                                    /// it is unique to this Value (did not occurred before)
+                                    if (!uniqueValueItemTexts.contains(newText)) {
+                                        uniqueValueItemTexts.insert(newText);
+                                        vit = eit.value().insert(vit, newValue.first());
+                                        ++vit;
+                                    }
+                                } else if (uniqueValueItemTexts.contains(valueItemText)) {
+                                    /// Due to a replace operation above, an old ValueItem's text
+                                    /// matches a text which was inserted as a "newValue".
+                                    /// Therefore, remove the old ValueItem to avoid duplicates
+                                    vit = eit.value().erase(vit);
+                                } else {
+                                    /// Neither a replacement, nor a duplicate. Keep this
+                                    /// ValueItem (memorize as unique) and continue.
+                                    uniqueValueItemTexts.insert(valueItemText);
+                                    ++vit;
                                 }
                             }
                         }
@@ -284,12 +340,48 @@ bool ValueListModel::setData(const QModelIndex & index, const QVariant &value, i
             }
         }
 
-        values[index].text = newText;
-        values[index].value = newValue;
-        const QSharedPointer<Person> person = newValue.first().dynamicCast<Person>();
-        values[index].sortBy = person.isNull() ? QString::null : person->lastName() + QLatin1String(" ") + person->firstName();
-        reset();
+        /**
+         * Update GUI (data for this model)
+         */
 
+        /// Test if user-entered text exists already in model's data
+        /// newTextAlreadyInListIndex will be row of duplicate or
+        /// -1 if new text is unique
+        int newTextAlreadyInListIndex = -1;
+        for (int r = values.count() - 1; newTextAlreadyInListIndex < 0 && r >= 0; --r) {
+            if (row != r && values[r].text == newText)
+                newTextAlreadyInListIndex = r;
+        }
+
+        if (newTextAlreadyInListIndex < 0) {
+            /// User-entered text is unique, so simply replace
+            /// old text with new text
+            values[row].text = newText;
+            values[row].value = newValue;
+            const QSharedPointer<Person> person = newValue.first().dynamicCast<Person>();
+            values[row].sortBy = person.isNull() ? QString::null : person->lastName() + QLatin1String(" ") + person->firstName();
+        } else {
+            /// The user-entered text existed before
+
+            const int lastRow = values.count() - 1;
+            if (row != lastRow) {
+                /// Unless duplicate is last one in list,
+                /// overwrite edited row with last row's value
+                values[row].text = values[lastRow].text;
+                values[row].value = values[lastRow].value;
+                values[row].sortBy = values[lastRow].sortBy;
+            }
+
+            /// Remove last row, which is no longer used
+            beginRemoveRows(QModelIndex(), lastRow, lastRow);
+            values.remove(lastRow);
+            endRemoveRows();
+        }
+
+        /// Notify Qt about data changed
+        emit dataChanged(index, index);
+
+        /// Return true as replace operation was successful
         return true;
     }
     return false;
