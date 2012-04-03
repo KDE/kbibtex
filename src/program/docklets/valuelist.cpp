@@ -92,6 +92,10 @@ public:
         KAction *action = new KAction(KIcon("edit-rename"), i18n("Replace all occurrences"), p);
         connect(action, SIGNAL(triggered()), p, SLOT(startItemRenaming()));
         treeviewFieldValues->addAction(action);
+        /// create context menu item to delete value
+        action = new KAction(KIcon("edit-table-delete-row"), i18n("Delete all occurrences"), p);
+        connect(action, SIGNAL(triggered()), p, SLOT(deleteAllOccurrences()));
+        treeviewFieldValues->addAction(action);
         /// create context menu item to search for multiple selections
         action = new KAction(KIcon("edit-find"), i18n("Search for selected values"), p);
         connect(action, SIGNAL(triggered()), p, SLOT(searchSelection()));
@@ -244,9 +248,26 @@ void ValueList::searchSelection()
 
 void ValueList::startItemRenaming()
 {
-    int row = d->treeviewFieldValues->selectionModel()->selectedIndexes().first().row();
-    QModelIndex index = d->treeviewFieldValues->model()->index(row, 0);
-    d->treeviewFieldValues->edit(index);
+    /// Get current index from sorted model
+    QModelIndex sortedIndex = d->treeviewFieldValues->currentIndex();
+    /// Get "real" index from original model, but resort to sibling in first column
+    QModelIndex realIndex = d->sortingModel->mapToSource(sortedIndex).sibling(realIndex.row(), 0);
+    /// Make the tree view start and editing delegate on the index
+    d->treeviewFieldValues->edit(realIndex);
+}
+
+void ValueList::deleteAllOccurrences()
+{
+    /// Get current index from sorted model
+    QModelIndex sortedIndex = d->treeviewFieldValues->currentIndex();
+    /// Get "real" index from original model, but resort to sibling in first column
+    QModelIndex realIndex = d->sortingModel->mapToSource(sortedIndex);
+    realIndex = realIndex.sibling(realIndex.row(), 0);
+
+    /// Remove current index from data model
+    d->model->removeValue(realIndex);
+    /// Notify main editor about change it its data
+    d->editor->externalModification();
 }
 
 void ValueList::showCountColumnToggled()
