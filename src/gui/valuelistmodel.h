@@ -88,6 +88,7 @@ public:
     virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
     virtual Qt::ItemFlags flags(const QModelIndex &index) const;
     virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+    void removeValue(const QModelIndex &index);
 
     void setShowCountColumn(bool showCountColumn);
     void setSortBy(SortBy sortBy);
@@ -97,6 +98,11 @@ private:
     void insertValue(const Value &value);
     int indexOf(const QString &text);
     QString htmlize(const QString &text) const;
+
+    bool searchAndReplaceValueInEntries(const QModelIndex &index, const Value &newValue);
+    bool searchAndReplaceValueInModel(const QModelIndex &index, const Value &newValue);
+    void removeValueFromEntries(const QModelIndex &index);
+    void removeValueFromModel(const QModelIndex &index);
 };
 
 
