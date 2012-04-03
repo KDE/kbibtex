@@ -17,10 +17,11 @@
 *   Free Software Foundation, Inc.,                                       *
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
+
+#include <QSet>
 #include <QString>
 #include <QStringList>
 
-#include <KDebug>
 #include <KSharedConfig>
 #include <KConfigGroup>
 
@@ -56,9 +57,11 @@ QString Keyword::text() const
     return m_text;
 }
 
-void Keyword::replace(const QString &before, const QString &after)
+void Keyword::replace(const QString &before, const QString &after, ValueItem::ReplaceMode replaceMode)
 {
-    if (m_text == before)
+    if (replaceMode == ValueItem::AnySubstring)
+        m_text = m_text.replace(before, after);
+    else if (replaceMode == ValueItem::CompleteMatch && m_text == before)
         m_text = after;
 }
 
@@ -105,14 +108,20 @@ QString Person::suffix() const
     return m_suffix;
 }
 
-void Person::replace(const QString &before, const QString &after)
+void Person::replace(const QString &before, const QString &after, ValueItem::ReplaceMode replaceMode)
 {
-    if (m_firstName == before)
-        m_firstName = after;
-    if (m_lastName == before)
-        m_lastName = after;
-    if (m_suffix == before)
-        m_suffix = after;
+    if (replaceMode == ValueItem::AnySubstring) {
+        m_firstName = m_firstName.replace(before, after);
+        m_lastName = m_lastName.replace(before, after);
+        m_suffix = m_suffix.replace(before, after);
+    } else if (replaceMode == ValueItem::CompleteMatch) {
+        if (m_firstName == before)
+            m_firstName = after;
+        if (m_lastName == before)
+            m_lastName = after;
+        if (m_suffix == before)
+            m_suffix = after;
+    }
 }
 
 bool Person::containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive) const
@@ -144,7 +153,7 @@ QString Person::transcribePersonName(const QString &formatting, const QString& f
     int p1 = -1, p2 = -1, p3 = -1;
     while ((p1 = result.indexOf('<')) >= 0 && (p2 = result.indexOf('>', p1 + 1)) >= 0 && (p3 = result.indexOf('%', p1)) >= 0 && p3 < p2) {
         QString insert;
-        switch (result[p3+1].toAscii()) {
+        switch (result[p3 + 1].toAscii()) {
         case 'f':
             insert = firstName;
             break;
@@ -199,9 +208,11 @@ bool MacroKey::isValid()
     return idx > -1 && validMacroKey.cap(0) == t;
 }
 
-void MacroKey::replace(const QString &before, const QString &after)
+void MacroKey::replace(const QString &before, const QString &after, ValueItem::ReplaceMode replaceMode)
 {
-    if (m_text == before)
+    if (replaceMode == ValueItem::AnySubstring)
+        m_text = m_text.replace(before, after);
+    else if (replaceMode == ValueItem::CompleteMatch && m_text == before)
         m_text = after;
 }
 
@@ -243,9 +254,11 @@ QString PlainText::text() const
     return m_text;
 }
 
-void PlainText::replace(const QString &before, const QString &after)
+void PlainText::replace(const QString &before, const QString &after, ValueItem::ReplaceMode replaceMode)
 {
-    if (m_text == before)
+    if (replaceMode == ValueItem::AnySubstring)
+        m_text = m_text.replace(before, after);
+    else if (replaceMode == ValueItem::CompleteMatch && m_text == before)
         m_text = after;
 }
 
@@ -287,9 +300,11 @@ QString VerbatimText::text() const
     return m_text;
 }
 
-void VerbatimText::replace(const QString &before, const QString &after)
+void VerbatimText::replace(const QString &before, const QString &after, ValueItem::ReplaceMode replaceMode)
 {
-    if (m_text == before)
+    if (replaceMode == ValueItem::AnySubstring)
+        m_text = m_text.replace(before, after);
+    else if (replaceMode == ValueItem::CompleteMatch && m_text == before)
         m_text = after;
 }
 
@@ -332,10 +347,73 @@ void Value::merge(const Value& other)
     mergeFrom(other);
 }
 
-void Value::replace(const QString &before, const QString &after)
+void Value::replace(const QString &before, const QString &after, ValueItem::ReplaceMode replaceMode)
 {
-    for (Value::Iterator it = begin(); it != end(); ++it)
-        (*it)->replace(before, after);
+    const QString valueText = PlainTextValue::text(*this);
+
+    QSet<QSharedPointer<ValueItem> > unique;
+    /// Delegate the replace operation to each individual ValueItem
+    /// contained in this Value object
+    for (Value::Iterator it = begin(); it != end();) {
+        (*it)->replace(before, after, replaceMode);
+
+        bool containedInUnique = false;
+        for (QSet<QSharedPointer<ValueItem> >::ConstIterator uit = unique.constBegin(); !containedInUnique && uit != unique.constEnd(); ++uit) {
+            containedInUnique = *(*uit).data() == *(*it).data();
+        }
+
+        if (containedInUnique)
+            it = erase(it);
+        else {
+            unique.insert(*it);
+            ++it;
+        }
+    }
+
+    QSet<QString> uniqueValueItemTexts;
+    for (int i = count() - 1; i >= 0; --i) {
+        at(i)->replace(before, after, replaceMode);
+        const QString valueItemText = PlainTextValue::text(*at(i).data());
+        if (uniqueValueItemTexts.contains(valueItemText)) {
+            /// Due to a replace/delete operation above, an old ValueItem's text
+            /// matches the replaced text.
+            /// Therefore, remove the replaced text to avoid duplicates
+            remove(i);
+            ++i; /// compensate for for-loop's --i
+        } else
+            uniqueValueItemTexts.insert(valueItemText);
+    }
+}
+
+void Value::replace(const QString &before, const QSharedPointer<ValueItem> &after)
+{
+    const QString valueText = PlainTextValue::text(*this);
+    if (valueText == before) {
+        clear();
+        append(after);
+    } else {
+        QSet<QString> uniqueValueItemTexts;
+        for (int i = count() - 1; i >= 0; --i) {
+            QString valueItemText = PlainTextValue::text(*at(i).data());
+            if (valueItemText == before) {
+                /// Perform replacement operation
+                QVector::replace(i, after);
+                valueItemText = PlainTextValue::text(*after.data());
+                //  uniqueValueItemTexts.insert(PlainTextValue::text(*after.data()));
+            }
+
+            if (uniqueValueItemTexts.contains(valueItemText)) {
+                /// Due to a previous replace operation, an existingValueItem's
+                /// text matches a text which was inserted as an "after" ValueItem.
+                /// Therefore, remove the old ValueItem to avoid duplicates.
+                remove(i);
+            } else {
+                /// Neither a replacement, nor a duplicate. Keep this
+                /// ValueItem (memorize as unique) and continue.
+                uniqueValueItemTexts.insert(valueItemText);
+            }
+        }
+    }
 }
 
 bool Value::containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive) const
@@ -446,9 +524,9 @@ QString PlainTextValue::text(const ValueItem& valueItem, ValueItemType &vit, con
     int j = 0;
     static const QChar cbo = QChar('{'), cbc = QChar('}'), bs = QChar('\\'), mns = QChar('-');
     for (int i = 0; i < len; ++i) {
-        if ((result[i] == cbo || result[i] == cbc) && (i < 1 || result[i-1] != bs)) {
+        if ((result[i] == cbo || result[i] == cbc) && (i < 1 || result[i - 1] != bs)) {
             /// hop over curly brackets
-        } else if (i < len - 1 && result[i] == bs && result[i+1] == mns) {
+        } else if (i < len - 1 && result[i] == bs && result[i + 1] == mns) {
             /// hop over hyphenation commands
             ++i;
         } else {

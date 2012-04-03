@@ -36,9 +36,11 @@ class File;
 class KBIBTEXIO_EXPORT ValueItem
 {
 public:
+    enum ReplaceMode {CompleteMatch, AnySubstring};
+
     virtual ~ValueItem();
 
-    virtual void replace(const QString &before, const QString &after) = 0;
+    virtual void replace(const QString &before, const QString &after, ValueItem::ReplaceMode replaceMode) = 0;
 
     /**
       * Check if this object contains text pattern @p pattern.
@@ -66,15 +68,13 @@ protected:
 class KBIBTEXIO_EXPORT Keyword: public ValueItem
 {
 public:
-    ~Keyword() { /* nothing */ };
-
     Keyword(const Keyword& other);
     Keyword(const QString& text);
 
     void setText(const QString& text);
     QString text() const;
 
-    void replace(const QString &before, const QString &after);
+    void replace(const QString &before, const QString &after, ValueItem::ReplaceMode replaceMode);
     bool containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const;
     bool operator==(const ValueItem &other) const;
 
@@ -104,7 +104,7 @@ public:
     QString lastName() const;
     QString suffix() const;
 
-    void replace(const QString &before, const QString &after);
+    void replace(const QString &before, const QString &after, ValueItem::ReplaceMode replaceMode);
     bool containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const;
     bool operator==(const ValueItem &other) const;
 
@@ -128,7 +128,7 @@ public:
     QString text() const;
     bool isValid();
 
-    void replace(const QString &before, const QString &after);
+    void replace(const QString &before, const QString &after, ValueItem::ReplaceMode replaceMode);
     bool containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const;
     bool operator==(const ValueItem &other) const;
 
@@ -146,7 +146,7 @@ public:
     void setText(const QString& text);
     QString text() const;
 
-    void replace(const QString &before, const QString &after);
+    void replace(const QString &before, const QString &after, ValueItem::ReplaceMode replaceMode);
     bool containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const;
     bool operator==(const ValueItem &other) const;
 
@@ -163,7 +163,7 @@ public:
     void setText(const QString& text);
     QString text() const;
 
-    void replace(const QString &before, const QString &after);
+    void replace(const QString &before, const QString &after, ValueItem::ReplaceMode replaceMode);
     bool containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const;
     bool operator==(const ValueItem &other) const;
 
@@ -185,7 +185,8 @@ public:
 
     void merge(const Value& other);
 
-    void replace(const QString &before, const QString &after);
+    void replace(const QString &before, const QString &after, ValueItem::ReplaceMode replaceMode);
+    void replace(const QString &before, const QSharedPointer<ValueItem> &after);
 
     /**
       * Check if this value contains text pattern @p pattern.
