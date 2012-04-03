@@ -58,7 +58,7 @@ public:
     static const QString configKeyAutoApply;
 
     ElementFormPrivate(ElementForm *parent)
-            : p(parent), file(NULL), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), elementEditor(NULL), gotModified(false) {
+            : p(parent), file(NULL), elementEditor(NULL), gotModified(false), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))) {
         KConfigGroup configGroup(config, configGroupName);
 
         layout = new QGridLayout(p);

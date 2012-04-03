@@ -18,9 +18,10 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include <kcomponentdata.h>
+#include <KComponentData>
 #include <KAboutData>
-#include <klocale.h>
+#include <KLocale>
+#include <KDebug>
 
 #include "part.h"
 #include "partfactory.h"
@@ -40,7 +41,7 @@ static KAboutData* _aboutData = 0;
 KBibTeXPartFactory::KBibTeXPartFactory()
         : KParts::Factory()
 {
-    // nothing
+    kDebug() << "Creating KBibTeXPart version" << versionNumber;
 }
 
 

@@ -262,8 +262,12 @@ bool BibTeXEditor::isReadOnly() const
 ValueListModel *BibTeXEditor::valueListModel(const QString &field)
 {
     BibTeXFileModel *bibteXModel = bibTeXModel();
-    if (bibteXModel != NULL)
-        return new ValueListModel(bibteXModel->bibTeXFile(), field, this);
+    if (bibteXModel != NULL) {
+        ValueListModel *result = new ValueListModel(bibteXModel->bibTeXFile(), field, this);
+        /// Keep track of external changes through modifications in this ValueListModel instance
+        connect(result, SIGNAL(dataChanged(QModelIndex, QModelIndex)), this, SLOT(externalModification()));
+        return result;
+    }
 
     return NULL;
 }

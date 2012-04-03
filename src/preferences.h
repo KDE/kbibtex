@@ -36,7 +36,7 @@ static const QStringList defaultColorCodes = QStringList() << QLatin1String("#cc
 static const QString keyColorLabels = QLatin1String("colorLabels");
 static const QStringList defaultcolorLabels = QStringList() << I18N_NOOP("Important") << I18N_NOOP("Unread") << I18N_NOOP("Read") << I18N_NOOP("Watch");
 
-static const QString groupGeneral=QLatin1String("General");
+static const QString groupGeneral = QLatin1String("General");
 static const QString keyBackupScope = QLatin1String("backupScope");
 static const BackupScope defaultBackupScope = LocalOnly;
 static const QString keyNumberOfBackups = QLatin1String("numberOfBackups");
