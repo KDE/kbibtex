@@ -418,13 +418,16 @@ public:
                     }
                 }
             }
+
         } else if (journalRef4.indexIn(journalText, Qt::CaseInsensitive) >= 0) {
             /**
              * Captures:
              *   1: journal title
-             *   3: volume
-             *   4: page start
-             *   6: year
+             *   2: volume
+             *   4: number
+             *   5: page start
+             *   7: page end
+             *   9 or 10: year
              */
             kDebug() << "journalRef4 triggers";
 
@@ -434,22 +437,28 @@ public:
                 v.append(QSharedPointer<PlainText>(new PlainText(text)));
                 entry.insert(Entry::ftJournal, v);
             }
-            if (!(text = journalRef4.cap(3)).isEmpty()) {
+            if (!(text = journalRef4.cap(2)).isEmpty()) {
                 Value v;
                 v.append(QSharedPointer<PlainText>(new PlainText(text)));
                 entry.insert(Entry::ftVolume, v);
             }
-            if (!(text = journalRef4.cap(4)).isEmpty()) {
-                Value v;
-                v.append(QSharedPointer<PlainText>(new PlainText(text)));
-                entry.insert(Entry::ftPages, v);
+            if (!(text = journalRef4.cap(5)).isEmpty()) {
+                const QString endPage = journalRef4.cap(7);
+                if (endPage.isEmpty()) {
+                    Value v;
+                    v.append(QSharedPointer<PlainText>(new PlainText(text)));
+                    entry.insert(Entry::ftPages, v);
+                } else {
+                    Value v;
+                    v.append(QSharedPointer<PlainText>(new PlainText(text.append(QChar(0x2013)).append(endPage))));
+                    entry.insert(Entry::ftPages, v);
+                }
             }
-            if (!(text = journalRef4.cap(6)).isEmpty()) {
+            if (!(text = journalRef4.cap(9)).isEmpty()) {
                 Value v;
                 v.append(QSharedPointer<PlainText>(new PlainText(text)));
                 entry.insert(Entry::ftYear, v);
             }
-
 
         } else if (journalRef5.indexIn(journalText, Qt::CaseInsensitive) >= 0) {
             /** Captures:
@@ -481,6 +490,7 @@ public:
                 v.append(QSharedPointer<PlainText>(new PlainText(text)));
                 entry.insert(Entry::ftYear, v);
             }
+
         } else if (journalRef6.indexIn(journalText, Qt::CaseInsensitive) >= 0) {
             /** Captures:
               *   1: journal title
@@ -624,7 +634,9 @@ void OnlineSearchArXiv::downloadDone()
     QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
 
     if (handleErrors(reply)) {
-        QString result = reply->readAll();
+        QTextStream ts(reply->readAll());
+        ts.setCodec("utf-8");
+        QString result = ts.readAll();
         result = result.replace("xmlns=\"http://www.w3.org/2005/Atom\"", ""); // FIXME fix arxiv2bibtex.xsl to handle namespace
 
         /// use XSL transformation to get BibTeX document from XML result
