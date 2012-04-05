@@ -45,29 +45,18 @@ add_definitions(
     -DKDE_DEFAULT_DEBUG_AREA=101014
 )
 
-kde4_add_app_icon(
-    kbibtex_SRCS
-    "${CMAKE_CURRENT_SOURCE_DIR}/../../icons/hi*-app-kbibtex.png"
-)
-
-# a custom target that is always built
-add_custom_target(
-    set_version_h_in_builddir
-    ALL
-    DEPENDS
-    svn_header
-)
-
 # creates src/version.h using cmake script
 add_custom_command(
     OUTPUT
-    svn_header
+    ${CMAKE_BINARY_DIR}/src/version.h
     COMMAND
     ${CMAKE_COMMAND}
     -DSOURCE_DIR=${CMAKE_SOURCE_DIR}
     -DBINARY_DIR=${CMAKE_BINARY_DIR}
     -P
     ${CMAKE_SOURCE_DIR}/src/getsvn.cmake
+    COMMENT
+    "Determine SVN version"
 )
 
 # src/version.h is a generated file
@@ -80,19 +69,16 @@ set_source_files_properties(
     TRUE
 )
 
-# make sure that program.cpp gets recompiled if SVN version changes
-add_file_dependencies(
-    program.cpp
-    ${CMAKE_BINARY_DIR}/src/version.h
+kde4_add_app_icon(
+    kbibtex_SRCS
+    "${CMAKE_CURRENT_SOURCE_DIR}/../../icons/hi*-app-kbibtex.png"
 )
 
 kde4_add_executable(
     kbibtex${BINARY_POSTFIX}
     ${kbibtex_SRCS}
+    ${CMAKE_BINARY_DIR}/src/version.h
 )
-
-# add_dependencies(kbibtex${BINARY_POSTFIX} set_version_h_in_builddir)
-# add_dependencies(kbibtex${BINARY_POSTFIX} ${CMAKE_BINARY_DIR}/src/version.h)
 
 target_link_libraries(
     kbibtex${BINARY_POSTFIX}
