@@ -35,7 +35,6 @@
 #include "settingsfileexporterwidget.h"
 #include "settingscolorlabelwidget.h"
 #include "settingsuserinterfacewidget.h"
-#include "settingszoterowidget.h"
 #include "settingsidsuggestionswidget.h"
 #include "kbibtexpreferencesdialog.h"
 
@@ -88,13 +87,7 @@ public:
         KPageWidgetItem *pageSaving = p->addPage(settingsWidget, i18n("Saving and Exporting"));
         pageSaving->setIcon(KIcon("document-save"));
         connect(settingsWidget, SIGNAL(changed()), p, SLOT(gotChanged()));
-
-        settingsWidget = new SettingsZoteroWidget(p);
-        settingWidgets.insert(settingsWidget);
-        page = p->addPage(settingsWidget, i18n("Zotero"));
-        page->setIcon(iconFromFavicon(QLatin1String("http://www.zotero.org/favicon.ico")));
-        connect(settingsWidget, SIGNAL(changed()), p, SLOT(gotChanged()));
-    }
+   }
 
     void loadState() {
         foreach(SettingsAbstractWidget *settingsWidget, settingWidgets) {

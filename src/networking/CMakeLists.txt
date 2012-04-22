@@ -23,7 +23,6 @@ set(
     onlinesearch/onlinesearchgeneral.cpp
     findpdf.cpp
     internalnetworkaccessmanager.cpp
-    zotero/readapi.cpp
 )
 
 set(
@@ -44,7 +43,6 @@ set(
     kbibtexnetworking_export.h
     findpdf.h
     internalnetworkaccessmanager.h
-    zotero/readapi.h
 )
 
 add_definitions(

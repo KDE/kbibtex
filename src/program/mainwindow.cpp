@@ -47,7 +47,6 @@
 #include "searchresults.h"
 #include "elementform.h"
 #include "bibtexeditor.h"
-#include "zotero.h"
 #include "documentlist.h"
 
 class KBibTeXMainWindow::KBibTeXMainWindowPrivate
@@ -64,7 +63,6 @@ public:
     QDockWidget *dockSearchForm;
     QDockWidget *dockSearchResults;
     QDockWidget *dockElementForm;
-    QDockWidget *dockZotero;
     DocumentList *listDocumentList;
     MDIWidget *mdiWidget;
     ReferencePreview *referencePreview;
@@ -73,7 +71,6 @@ public:
     SearchForm *searchForm;
     SearchResults *searchResults;
     ElementForm *elementForm;
-    Zotero *zotero;
     KMenu *actionMenuRecentFilesMenu;
 
     KBibTeXMainWindowPrivate(KBibTeXMainWindow *parent)
@@ -181,16 +178,6 @@ KBibTeXMainWindow::KBibTeXMainWindow()
     d->dockDocumentPreview->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
     showPanelsMenu->addAction(d->dockDocumentPreview->toggleViewAction());
     d->dockDocumentPreview->toggleViewAction()->setShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_D);
-
-    d->dockZotero = new QDockWidget(i18n("Zotero"), this);
-    d->dockZotero->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-    addDockWidget(Qt::RightDockWidgetArea, d->dockZotero);
-    d->dockZotero->hide();
-    d->zotero = new Zotero(d->dockZotero);
-    d->dockZotero->setWidget(d->zotero);
-    d->dockZotero->setObjectName("dockZotero");
-    d->dockZotero->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
-    showPanelsMenu->addAction(d->dockZotero->toggleViewAction());
 
     d->dockElementForm = new QDockWidget(i18n("Element Editor"), this);
     d->dockElementForm->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
@@ -361,7 +348,6 @@ void KBibTeXMainWindow::documentSwitched(BibTeXEditor *oldEditor, BibTeXEditor *
     d->documentPreview->setElement(QSharedPointer<Element>(), NULL);
     d->valueList->setEditor(newEditor);
     d->referencePreview->setEditor(newEditor);
-    d->zotero->setEditor(newEditor);
 }
 
 void KBibTeXMainWindow::showSearchResults()

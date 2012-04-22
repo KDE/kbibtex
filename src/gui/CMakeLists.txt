@@ -48,7 +48,6 @@ set(
     preferences/settingsabstractwidget.cpp
     preferences/settingsidsuggestionswidget.cpp
     preferences/settingsidsuggestionseditor.cpp
-    preferences/settingszoterowidget.cpp
     valuelistmodel.cpp
 )
 
@@ -69,7 +68,6 @@ set(
     preferences/settingsfileexporterpdfpswidget.h
     preferences/settingsidsuggestionswidget.h
     preferences/settingsidsuggestionseditor.h
-    preferences/settingszoterowidget.h
     valuelistmodel.h
     kbibtexgui_export.h
     bibtex/findduplicatesui.h
