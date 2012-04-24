@@ -85,7 +85,7 @@ public:
 EntryLayout *EntryLayout::EntryLayoutPrivate::singleton = NULL;
 
 EntryLayout::EntryLayout()
-        : d(new EntryLayoutPrivate(this))
+        : QVector<QSharedPointer<EntryTabLayout> >(), d(new EntryLayoutPrivate(this))
 {
     load();
 }
@@ -114,11 +114,11 @@ void EntryLayout::load()
         QString groupName = QString("EntryLayoutTab%1").arg(tab);
         KConfigGroup configGroup(d->layoutConfig, groupName);
 
-        EntryTabLayout etl;
-        etl.uiCaption = configGroup.readEntry("uiCaption", "");
-        etl.iconName = configGroup.readEntry("iconName", "entry");
-        etl.columns = configGroup.readEntry("columns", 1);
-        if (etl.uiCaption.isEmpty())
+        QSharedPointer<EntryTabLayout> etl = QSharedPointer<EntryTabLayout>(new EntryTabLayout);
+        etl->uiCaption = configGroup.readEntry("uiCaption", "");
+        etl->iconName = configGroup.readEntry("iconName", "entry");
+        etl->columns = configGroup.readEntry("columns", 1);
+        if (etl->uiCaption.isEmpty())
             continue;
 
         int fieldCount = qMin(configGroup.readEntry("count", 0), entryLayoutMaxFieldPerTabCount);
@@ -130,7 +130,7 @@ void EntryLayout::load()
             if (sfl.bibtexLabel.isEmpty() || sfl.uiLabel.isEmpty())
                 continue;
 
-            etl.singleFieldLayouts.append(sfl);
+            etl->singleFieldLayouts.append(sfl);
         }
         append(etl);
     }
@@ -141,17 +141,17 @@ void EntryLayout::load()
 void EntryLayout::save()
 {
     int tabCount = 0;
-    foreach(EntryTabLayout etl, *this) {
+    foreach(QSharedPointer<EntryTabLayout> etl, *this) {
         ++tabCount;
         QString groupName = QString("EntryLayoutTab%1").arg(tabCount);
         KConfigGroup configGroup(d->layoutConfig, groupName);
 
-        configGroup.writeEntry("uiCaption", etl.uiCaption);
-        configGroup.writeEntry("iconName", etl.iconName);
-        configGroup.writeEntry("columns", etl.columns);
+        configGroup.writeEntry("uiCaption", etl->uiCaption);
+        configGroup.writeEntry("iconName", etl->iconName);
+        configGroup.writeEntry("columns", etl->columns);
 
         int fieldCount = 0;
-        foreach(SingleFieldLayout sfl, etl.singleFieldLayouts) {
+        foreach(SingleFieldLayout sfl, etl->singleFieldLayouts) {
             ++fieldCount;
             configGroup.writeEntry(QString("bibtexLabel%1").arg(fieldCount), sfl.bibtexLabel);
             configGroup.writeEntry(QString("uiLabel%1").arg(fieldCount), sfl.uiLabel);

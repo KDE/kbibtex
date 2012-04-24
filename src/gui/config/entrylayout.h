@@ -21,7 +21,8 @@
 #define KBIBTEX_GUI_ENTRYLAYOUT_H
 
 #include <QString>
-#include <QList>
+#include <QVector>
+#include <QSharedPointer>
 
 #include "kbibtexnamespace.h"
 
@@ -41,7 +42,7 @@ typedef struct {
 /**
 @author Thomas Fischer
 */
-class EntryLayout : public QList<EntryTabLayout>
+class EntryLayout : public QVector<QSharedPointer<EntryTabLayout> >
 {
 public:
     virtual ~EntryLayout();
