@@ -45,11 +45,13 @@
 #include <fileexporterblg.h>
 #include "elementwidgets.h"
 #include "elementeditor.h"
+#include "checkbibtex.h"
 
 class ElementEditor::ElementEditorPrivate : public ElementEditor::ApplyElementInterface
 {
 private:
-    QList<ElementWidget*> widgets;
+    typedef QVector<ElementWidget*> WidgetList;
+    WidgetList widgets;
     QSharedPointer<Element> element;
     const File *file;
     QSharedPointer<Entry> internalEntry;
@@ -68,104 +70,129 @@ public:
     QTabWidget *tab;
     bool elementChanged, elementUnapplied;
 
-    ElementEditorPrivate(QSharedPointer<Element> m, const File *f, ElementEditor *parent)
-            : element(m), file(f), p(parent), previousWidget(NULL), referenceWidget(NULL), sourceWidget(NULL), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), elementChanged(false), elementUnapplied(false) {
+    ElementEditorPrivate(ElementEditor *parent)
+        : file(NULL), p(parent), previousWidget(NULL), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), elementChanged(false), elementUnapplied(false) {
         createGUI();
     }
 
-    void createGUI() {
-        widgets.clear();
+    void setElement(QSharedPointer<Element> element, const File *file) {
+        this->element = element;
+        this->file = file;
+        updateTabVisibility();
+    }
+
+    void addTabWidgets() {
         EntryLayout *el = EntryLayout::self();
+        for (EntryLayout::ConstIterator elit = el->constBegin(); elit != el->constEnd(); ++elit) {
+            QSharedPointer<EntryTabLayout> etl = *elit;
+            ElementWidget *widget = new EntryConfiguredWidget(etl, tab);
+            connect(widget, SIGNAL(modified(bool)), p, SLOT(childModified(bool)));
+            widgets << widget;
+            int index = tab->addTab(widget, widget->icon(), widget->label());
+            tab->setTabEnabled(index, false);
+        }
 
-        QGridLayout *layout = new QGridLayout(p);
-        layout->setColumnStretch(0, 1);
-        layout->setColumnStretch(1, 0);
+        ElementWidget *widget = new PreambleWidget(tab);
+        connect(widget, SIGNAL(modified(bool)), p, SLOT(childModified(bool)));
+        widgets << widget;
+        int index = tab->addTab(widget, widget->icon(), widget->label());
+        tab->setTabEnabled(index, false);
 
-        if (ReferenceWidget::canEdit(element.data())) {
-            referenceWidget = new ReferenceWidget(p);
-            referenceWidget->setApplyElementInterface(this);
-            connect(referenceWidget, SIGNAL(modified(bool)), p, SLOT(childModified(bool)));
-            layout->addWidget(referenceWidget, 0, 0, 1, 3);
-            widgets << referenceWidget;
-        } else
-            referenceWidget = NULL;
+        widget = new MacroWidget(tab);
+        connect(widget, SIGNAL(modified(bool)), p, SLOT(childModified(bool)));
+        widgets << widget;
+        index = tab->addTab(widget, widget->icon(), widget->label());
+        tab->setTabEnabled(index, false);
 
-        tab = new QTabWidget(p);
-        layout->addWidget(tab, 1, 0, 1, 3);
+        widget = new FilesWidget(tab);
+        connect(widget, SIGNAL(modified(bool)), p, SLOT(childModified(bool)));
+        widgets << widget;
+        index = tab->addTab(widget, widget->icon(), widget->label());
+        tab->setTabEnabled(index, false);
 
+        QStringList blacklistedFields;
+
+        /// blacklist fields covered by EntryConfiguredWidget
+        for (EntryLayout::ConstIterator elit = el->constBegin(); elit != el->constEnd(); ++elit)
+            for (QList<SingleFieldLayout>::ConstIterator sflit = (*elit)->singleFieldLayouts.constBegin(); sflit != (*elit)->singleFieldLayouts.constEnd(); ++sflit)
+                blacklistedFields << (*sflit).bibtexLabel;
+
+        /// blacklist fields covered by FilesWidget
+        blacklistedFields << QString(Entry::ftUrl) << QString(Entry::ftLocalFile) << QString(Entry::ftDOI) << QLatin1String("ee") << QLatin1String("biburl") << QLatin1String("postscript");
+        for (int i = 2; i < 256; ++i) // FIXME replace number by constant
+            blacklistedFields << QString(Entry::ftUrl) + QString::number(i) << QString(Entry::ftLocalFile) + QString::number(i) <<  QString(Entry::ftDOI) + QString::number(i) << QLatin1String("ee") + QString::number(i) << QLatin1String("postscript") + QString::number(i);
+
+        widget = new OtherFieldsWidget(blacklistedFields, tab);
+        connect(widget, SIGNAL(modified(bool)), p, SLOT(childModified(bool)));
+        widgets << widget;
+        index = tab->addTab(widget, widget->icon(), widget->label());
+        tab->setTabEnabled(index, false);
+
+        sourceWidget = new SourceWidget(tab);
+        connect(sourceWidget, SIGNAL(modified(bool)), p, SLOT(childModified(bool)));
+        widgets << sourceWidget;
+        index = tab->addTab(sourceWidget, sourceWidget->icon(), sourceWidget->label());
+        tab->setTabEnabled(index, false);
+    }
+
+    void createGUI() {
         /// load configuration
         const QString configGroupName = QLatin1String("User Interface");
         const QString keyEnableAllWidgets = QLatin1String("EnableAllWidgets");
         KConfigGroup configGroup(config, configGroupName);
         const bool showAll = configGroup.readEntry(keyEnableAllWidgets, true);
 
+        widgets.clear();
+
+        QBoxLayout *vLayout = new QVBoxLayout(p);
+
+        referenceWidget = new ReferenceWidget(p);
+        referenceWidget->setApplyElementInterface(this);
+        connect(referenceWidget, SIGNAL(modified(bool)), p, SLOT(childModified(bool)));
+        connect(referenceWidget, SIGNAL(entryTypeChanged()), p, SLOT(updateReqOptWidgets()));
+        vLayout->addWidget(referenceWidget, 0);
+        widgets << referenceWidget;
+
+        tab = new QTabWidget(p);
+        vLayout->addWidget(tab, 10);
+
+        QBoxLayout *hLayout = new QHBoxLayout();
+        vLayout->addLayout(hLayout, 0);
+
         checkBoxForceShowAllWidgets = new QCheckBox(i18n("Show all fields"), p);
         checkBoxForceShowAllWidgets->setChecked(showAll);
-        layout->addWidget(checkBoxForceShowAllWidgets, 2, 0, 1, 2);
+        hLayout->addWidget(checkBoxForceShowAllWidgets, 0);
         connect(checkBoxForceShowAllWidgets, SIGNAL(toggled(bool)), p, SLOT(updateReqOptWidgets()));
-        if (referenceWidget != NULL)
-            connect(referenceWidget, SIGNAL(entryTypeChanged()), p, SLOT(updateReqOptWidgets()));
+
+        hLayout->addStretch(10);
 
         buttonCheckWithBibTeX = new KPushButton(KIcon("tools-check-spelling"), i18n("Check with BibTeX"), p);
-        layout->addWidget(buttonCheckWithBibTeX, 2, 2, 1, 1);
+        hLayout->addWidget(buttonCheckWithBibTeX, 0);
         connect(buttonCheckWithBibTeX, SIGNAL(clicked()), p, SLOT(checkBibTeX()));
 
-        if (EntryConfiguredWidget::canEdit(element.data()))
-            for (EntryLayout::ConstIterator elit = el->constBegin(); elit != el->constEnd(); ++elit) {
-                EntryTabLayout etl = *elit;
-                ElementWidget *widget = new EntryConfiguredWidget(etl, tab);
-                connect(widget, SIGNAL(modified(bool)), p, SLOT(childModified(bool)));
-                tab->addTab(widget, widget->icon(), widget->label());
-                widgets << widget;
-            }
+        addTabWidgets();
 
-        if (PreambleWidget::canEdit(element.data())) {
-            ElementWidget *widget = new PreambleWidget(tab);
-            connect(widget, SIGNAL(modified(bool)), p, SLOT(childModified(bool)));
-            tab->addTab(widget, widget->icon(), widget->label());
-            widgets << widget;
-        }
-
-        if (MacroWidget::canEdit(element.data())) {
-            ElementWidget *widget = new MacroWidget(tab);
-            connect(widget, SIGNAL(modified(bool)), p, SLOT(childModified(bool)));
-            tab->addTab(widget, widget->icon(), widget->label());
-            widgets << widget;
-        }
-
-        if (FilesWidget::canEdit(element.data())) {
-            ElementWidget *widget = new FilesWidget(tab);
-            connect(widget, SIGNAL(modified(bool)), p, SLOT(childModified(bool)));
-            tab->addTab(widget, widget->icon(), widget->label());
-            widgets << widget;
-        }
-
-        if (OtherFieldsWidget::canEdit(element.data())) {
-            QStringList blacklistedFields;
-            /// blacklist fields covered by EntryConfiguredWidget
-            for (EntryLayout::ConstIterator elit = el->constBegin(); elit != el->constEnd(); ++elit)
-                for (QList<SingleFieldLayout>::ConstIterator sflit = (*elit).singleFieldLayouts.constBegin(); sflit != (*elit).singleFieldLayouts.constEnd();++sflit)
-                    blacklistedFields << (*sflit).bibtexLabel;
-
-            /// blacklist fields covered by FilesWidget
-            blacklistedFields << QString(Entry::ftUrl) << QString(Entry::ftLocalFile) << QString(Entry::ftDOI) << QLatin1String("ee") << QLatin1String("biburl") << QLatin1String("postscript");
-            for (int i = 2; i < 256; ++i) // FIXME replace number by constant
-                blacklistedFields << QString(Entry::ftUrl) + QString::number(i) << QString(Entry::ftLocalFile) + QString::number(i) <<  QString(Entry::ftDOI) + QString::number(i) << QLatin1String("ee") + QString::number(i) << QLatin1String("postscript") + QString::number(i);
-
-            ElementWidget *widget = new OtherFieldsWidget(blacklistedFields, tab);
-            connect(widget, SIGNAL(modified(bool)), p, SLOT(childModified(bool)));
-            tab->addTab(widget, widget->icon(), widget->label());
-            widgets << widget;
-        }
-
-        if (SourceWidget::canEdit(element.data())) {
-            sourceWidget = new SourceWidget(tab);
-            connect(sourceWidget, SIGNAL(modified(bool)), p, SLOT(childModified(bool)));
-            tab->addTab(sourceWidget, sourceWidget->icon(), sourceWidget->label());
-            widgets << sourceWidget;
-        }
-
+        tab->setCurrentIndex(0);
         previousWidget = dynamic_cast<ElementWidget*>(tab->widget(0));
+    }
+
+    void updateTabVisibility() {
+        if (element.isNull()) {
+            p->setEnabled(false);
+        } else {
+            p->setEnabled(true);
+
+            for (WidgetList::ConstIterator it = widgets.constBegin(); it != widgets.constEnd(); ++it) {
+                ElementWidget *widget = *it;
+                const int index = tab->indexOf(widget);
+                const bool canEdit = widget->canEdit(element.data());
+
+                if (index >= 0)
+                    tab->setTabEnabled(index, canEdit);
+                else
+                    widget->setVisible(canEdit);
+            }
+        }
     }
 
     void apply() {
@@ -174,11 +201,12 @@ public:
         apply(element);
     }
 
-    virtual void apply(QSharedPointer<Element> element) {
+    void apply(QSharedPointer<Element> element) {
         if (referenceWidget != NULL)
             referenceWidget->apply(element);
         ElementWidget *currentElementWidget = dynamic_cast<ElementWidget*>(tab->currentWidget());
-        for (QList<ElementWidget*>::ConstIterator it = widgets.constBegin(); it != widgets.constEnd(); ++it)
+        Q_ASSERT_X(currentElementWidget != NULL || tab->currentWidget() == NULL, "ElementEditor::ElementEditorPrivate::apply", "Could not cast currentWidget to ElementWidget");
+        for (WidgetList::ConstIterator it = widgets.constBegin(); it != widgets.constEnd(); ++it)
             if ((*it) != currentElementWidget && (*it) != sourceWidget)
                 (*it)->apply(element);
         currentElementWidget->apply(element);
@@ -197,7 +225,7 @@ public:
     }
 
     void reset(QSharedPointer<const Element> element) {
-        for (QList<ElementWidget*>::Iterator it = widgets.begin(); it != widgets.end(); ++it) {
+        for (WidgetList::Iterator it = widgets.begin(); it != widgets.end(); ++it) {
             (*it)->setFile(file);
             (*it)->reset(element);
             (*it)->setModified(false);
@@ -228,11 +256,11 @@ public:
             }
         }
 
-        buttonCheckWithBibTeX->setVisible(typeid(*element) == typeid(Entry));
+        buttonCheckWithBibTeX->setEnabled(!internalEntry.isNull());
     }
 
     void setReadOnly(bool isReadOnly) {
-        for (QList<ElementWidget*>::Iterator it = widgets.begin(); it != widgets.end(); ++it)
+        for (WidgetList::Iterator it = widgets.begin(); it != widgets.end(); ++it)
             (*it)->setReadOnly(isReadOnly);
     }
 
@@ -246,7 +274,7 @@ public:
 
         /// update the enabled/disabled state of required and optional widgets/fields
         bool forceVisible = checkBoxForceShowAllWidgets->isChecked();
-        foreach(ElementWidget *elementWidget, widgets) {
+        foreach(ElementWidget * elementWidget, widgets) {
             elementWidget->showReqOptWidgets(forceVisible, tempEntry->type());
         }
 
@@ -281,7 +309,7 @@ public:
         }
         previousWidget = newWidget;
 
-        for (QList<ElementWidget*>::Iterator it = widgets.begin();it != widgets.end();++it)
+        for (WidgetList::Iterator it = widgets.begin(); it != widgets.end(); ++it)
             (*it)->setEnabled(!isSourceWidget || *it == newTab);
     }
 
@@ -290,136 +318,67 @@ public:
       * Show warnings and errors in message box.
       */
     void checkBibTeX() {
-        if (typeid(*element) == typeid(Entry)) {
-            /// only entries are supported, no macros, preambles, ...
-
-            /// disable GUI under process
-            p->setEnabled(false);
-            QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
-
-            /// use a dummy BibTeX file to collect all elements necessary for check
-            File dummyFile;
-
-            /// create temporary entry to work with
-            QSharedPointer<Entry> entry = QSharedPointer<Entry>(new Entry(*internalEntry.data()));
-            apply(entry);
-            dummyFile << entry;
-
-            /// fetch and inser crossref'ed entry
-            QString crossRefStr = QString::null;
-            Value crossRefVal = entry->value(Entry::ftCrossRef);
-            if (!crossRefVal.isEmpty() && file != NULL) {
-                crossRefStr = PlainTextValue::text(crossRefVal, file);
-                QSharedPointer<Entry> crossRefDest = file->containsKey(crossRefStr, File::etEntry).dynamicCast<Entry>();
-                if (!crossRefDest.isNull())
-                    dummyFile << crossRefDest;
-                else
-                    crossRefStr = QString::null; /// memorize crossref'ing failed
-            }
-
-            /// include all macro definitions, in case they are referenced
-            if (file != NULL)
-                for (File::ConstIterator it = file->constBegin(); it != file->constEnd(); ++it)
-                    if (typeid(**it) == typeid(Macro))
-                        dummyFile << *it;
-
-            /// run special exporter to get BibTeX's ouput
-            QStringList bibtexOuput;
-            QByteArray ba;
-            QBuffer buffer(&ba);
-            buffer.open(QIODevice::WriteOnly);
-            FileExporterBLG exporter;
-            bool result = exporter.save(&buffer, &dummyFile, &bibtexOuput);
-            buffer.close();
-
-            if (!result) {
-                QApplication::restoreOverrideCursor();
-                KMessageBox::errorList(p, i18n("Running BibTeX failed.\n\nSee the following output to trace the error."), bibtexOuput);
-                p->setEnabled(true);
-                return;
-            }
-
-            /// define variables how to parse BibTeX's ouput
-            static const QString warningStart = QLatin1String("Warning--");
-            static const QRegExp warningEmptyField("empty (\\w+) in ");
-            static const QRegExp warningEmptyField2("empty (\\w+) or (\\w+) in ");
-            static const QRegExp warningThereIsBut("there's a (\\w+) but no (\\w+) in");
-            static const QRegExp warningCantUseBoth("can't use both (\\w+) and (\\w+) fields");
-            static const QRegExp warningSort2("to sort, need (\\w+) or (\\w+) in ");
-            static const QRegExp warningSort3("to sort, need (\\w+), (\\w+), or (\\w+) in ");
-            static const QRegExp errorLine("---line (\\d+)");
-
-            /// go line-by-line through BibTeX output and collect warnings/errors
-            QStringList warnings;
-            QString errorPlainText;
-            for (QStringList::ConstIterator it = bibtexOuput.constBegin(); it != bibtexOuput.constEnd();++it) {
-                QString line = *it;
-
-                if (errorLine.indexIn(line) > -1) {
-                    buffer.open(QIODevice::ReadOnly);
-                    QTextStream ts(&buffer);
-                    for (int i = errorLine.cap(1).toInt();i > 1;--i) {
-                        errorPlainText = ts.readLine();
-                        buffer.close();
-                    }
-                } else if (line.startsWith(QLatin1String("Warning--"))) {
-                    /// is a warning ...
-
-                    if (warningEmptyField.indexIn(line) > -1) {
-                        /// empty/missing field
-                        warnings << i18n("Field <b>%1</b> is empty", warningEmptyField.cap(1));
-                    } else if (warningEmptyField2.indexIn(line) > -1) {
-                        /// two empty/missing fields
-                        warnings << i18n("Field <b>%1</b> and <b>%2</b> is empty, need at least one", warningEmptyField2.cap(1), warningEmptyField2.cap(2));
-                    } else if (warningThereIsBut.indexIn(line) > -1) {
-                        /// there is a field which exists but another does not exist
-                        warnings << i18n("Field <b>%1</b> exists, but <b>%2</b> does not exist", warningThereIsBut.cap(1), warningThereIsBut.cap(2));
-                    } else if (warningCantUseBoth.indexIn(line) > -1) {
-                        /// there are two conflicting fields, only one may be used
-                        warnings << i18n("Fields <b>%1</b> and <b>%2</b> cannot be used at the same time", warningCantUseBoth.cap(1), warningCantUseBoth.cap(2));
-                    } else if (warningSort2.indexIn(line) > -1) {
-                        /// one out of two fields missing for sorting
-                        warnings << i18n("Fields <b>%1</b> or <b>%2</b> are required to sort entry", warningSort2.cap(1), warningSort2.cap(2));
-                    } else if (warningSort3.indexIn(line) > -1) {
-                        /// one out of three fields missing for sorting
-                        warnings << i18n("Fields <b>%1</b>, <b>%2</b>, <b>%3</b> are required to sort entry", warningSort3.cap(1), warningSort3.cap(2), warningSort3.cap(3));
-                    } else {
-                        /// generic/unknown warning
-                        line = line.mid(warningStart.length());
-                        warnings << i18n("Unknown warning: %1", line);
-                    }
-                }
-            }
-
-            QApplication::restoreOverrideCursor();
-            if (!errorPlainText.isEmpty())
-                KMessageBox::information(p, i18n("<qt><p>The following error was found:</p><pre>%1</pre>", errorPlainText));
-            else if (!warnings.isEmpty())
-                KMessageBox::information(p, i18n("<qt><p>The following warnings were found:</p><ul><li>%1</li></ul>", warnings.join("</li><li>")));
-            else
-                KMessageBox::information(p, i18n("No warnings or errors were found.%1", crossRefStr.isNull() ? QLatin1String("") : i18n("\n\nSome fields missing in this entry where taken from the crossref'ed entry \"%1\".", crossRefStr)));
-
-            p->setEnabled(true);
-        }
-
+        /// disable GUI under process
+        p->setEnabled(false);
+        QSharedPointer<Entry> entry = QSharedPointer<Entry>(new Entry());
+        apply(entry);
+        CheckBibTeX::checkBibTeX(entry, file, p);
+        p->setEnabled(true);
     }
 
     void setModified(bool newIsModified) {
-        for (QList<ElementWidget*>::Iterator it = widgets.begin(); it != widgets.end(); ++it)
+        for (WidgetList::Iterator it = widgets.begin(); it != widgets.end(); ++it)
             (*it)->setModified(newIsModified);
     }
 
 };
 
-ElementEditor::ElementEditor(QSharedPointer<Element> element, const File *file, QWidget *parent)
-        : QWidget(parent), d(new ElementEditorPrivate(element, file, this))
+ElementEditor::ElementEditor(QWidget *parent)
+        : QWidget(parent), d(new ElementEditorPrivate(this))
 {
     connect(d->tab, SIGNAL(currentChanged(int)), this, SLOT(tabChanged()));
-    d->reset();
+}
+
+ElementEditor::ElementEditor(QSharedPointer<Element> element, const File *file, QWidget *parent)
+        : QWidget(parent), d(new ElementEditorPrivate(this))
+{
+    setElement(element, file);
+    connect(d->tab, SIGNAL(currentChanged(int)), this, SLOT(tabChanged()));
 }
 
 ElementEditor::ElementEditor(QSharedPointer<const Element> element, const File *file, QWidget *parent)
-        : QWidget(parent)
+        : QWidget(parent), d(new ElementEditorPrivate(this))
+{
+    setElement(element, file);
+    setReadOnly(true);
+}
+
+ElementEditor::~ElementEditor()
+{
+    delete d;
+}
+
+void ElementEditor::apply()
+{
+    d->apply();
+    d->setModified(false);
+    emit modified(false);
+}
+
+void ElementEditor::reset()
+{
+    d->reset();
+    emit modified(false);
+}
+
+void ElementEditor::setElement(QSharedPointer<Element> element, const File *file)
+{
+    d->setElement(element, file);
+    d->reset();
+    emit modified(false);
+}
+
+void ElementEditor::setElement(QSharedPointer<const Element> element, const File *file)
 {
     QSharedPointer<Element> clone;
     QSharedPointer<const Entry> entry = element.dynamicCast<const Entry>();
@@ -443,26 +402,8 @@ ElementEditor::ElementEditor(QSharedPointer<const Element> element, const File *
         }
     }
 
-    d = new ElementEditorPrivate(clone, file, this);
-    setReadOnly(true);
-}
-
-ElementEditor::~ElementEditor()
-{
-    delete d;
-}
-
-void ElementEditor::apply()
-{
-    d->apply();
-    d->setModified(false);
-    emit modified(false);
-}
-
-void ElementEditor::reset()
-{
+    d->setElement(clone, file);
     d->reset();
-    emit modified(false);
 }
 
 void ElementEditor::setReadOnly(bool isReadOnly)
@@ -478,16 +419,6 @@ bool ElementEditor::elementChanged()
 bool ElementEditor::elementUnapplied()
 {
     return d->elementUnapplied;
-}
-
-int ElementEditor::currentTab()
-{
-    return d->tab->currentIndex();
-}
-
-void ElementEditor::setCurrentTab(int tabIndex)
-{
-    d->tab->setCurrentIndex(tabIndex);
 }
 
 void ElementEditor::tabChanged()

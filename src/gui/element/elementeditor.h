@@ -38,20 +38,24 @@ public:
     class ApplyElementInterface
     {
     public:
-        virtual ~ApplyElementInterface() { /** nothing */ };
-        virtual void apply(QSharedPointer<Element>) { /** nothing */ };
+        virtual ~ApplyElementInterface() {
+            /** nothing */
+        }
+        virtual void apply(QSharedPointer<Element>) {
+            /** nothing */
+        }
     };
 
+    ElementEditor(QWidget *parent);
     ElementEditor(QSharedPointer<const Element> element, const File *file, QWidget *parent);
     ElementEditor(QSharedPointer<Element> element, const File *file, QWidget *parent);
     ~ElementEditor();
 
+    void setElement(QSharedPointer<Element> element, const File *file);
+    void setElement(QSharedPointer<const Element> element, const File *file);
     void setReadOnly(bool isReadOnly = true);
     bool elementChanged();
     bool elementUnapplied();
-
-    int currentTab();
-    void setCurrentTab(int tabIndex);
 
 signals:
     void modified(bool);
