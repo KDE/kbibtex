@@ -108,7 +108,7 @@ public:
         }
     }
 
-    bool writeEntry(QIODevice* iodevice, const Entry& entry) {
+    bool writeEntry(QIODevice *iodevice, const Entry &entry) {
         BibTeXEntries *be = BibTeXEntries::self();
         BibTeXFields *bf = BibTeXFields::self();
         EncoderLaTeX *laTeXEncoder = EncoderLaTeX::instance();
@@ -152,7 +152,7 @@ public:
         return true;
     }
 
-    bool writeMacro(QIODevice* iodevice, const Macro& macro) {
+    bool writeMacro(QIODevice *iodevice, const Macro &macro) {
         BibTeXEntries *be = BibTeXEntries::self();
 
         QString text = p->internalValueToBibTeX(macro.value(), QString::null, leUTF8);
@@ -174,7 +174,7 @@ public:
         return true;
     }
 
-    bool writeComment(QIODevice* iodevice, const Comment& comment) {
+    bool writeComment(QIODevice *iodevice, const Comment &comment) {
         BibTeXEntries *be = BibTeXEntries::self();
 
         QString text = comment.text() ;
@@ -205,7 +205,7 @@ public:
         return true;
     }
 
-    bool writePreamble(QIODevice* iodevice, const Preamble& preamble) {
+    bool writePreamble(QIODevice *iodevice, const Preamble &preamble) {
         BibTeXEntries *be = BibTeXEntries::self();
 
         iodevice->putChar('@');
@@ -222,7 +222,7 @@ public:
     }
 
     void addProtectiveCasing(QString &text) {
-        if ((text[0] != '"' || text[text.length()-1] != '"') && (text[0] != '{' || text[text.length()-1] != '}')) {
+        if ((text[0] != '"' || text[text.length() - 1] != '"') && (text[0] != '{' || text[text.length() - 1] != '}')) {
             /** nothing to protect, as this is no text string */
             return;
         }
@@ -242,7 +242,7 @@ public:
             text.insert(1, '{').insert(text.length(), '}');
     }
 
-    void applyEncoding(QString& encoding) {
+    void applyEncoding(QString &encoding) {
         encoding = encoding.isEmpty() ? QLatin1String("latex") : encoding.toLower();
         delete iconvLaTeX;
         iconvLaTeX = new IConvLaTeX(encoding == QLatin1String("latex") ? QLatin1String("us-ascii") : encoding);
@@ -293,7 +293,7 @@ void FileExporterBibTeX::setEncoding(const QString &encoding)
     d->forcedEncoding = encoding;
 }
 
-bool FileExporterBibTeX::save(QIODevice* iodevice, const File* bibtexfile, QStringList * /*errorLog*/)
+bool FileExporterBibTeX::save(QIODevice *iodevice, const File *bibtexfile, QStringList * /*errorLog*/)
 {
     bool result = true;
 
@@ -404,7 +404,7 @@ bool FileExporterBibTeX::save(QIODevice* iodevice, const File* bibtexfile, QStri
     return result && !d->cancelFlag;
 }
 
-bool FileExporterBibTeX::save(QIODevice* iodevice, const QSharedPointer<const Element> element, QStringList * /*errorLog*/)
+bool FileExporterBibTeX::save(QIODevice *iodevice, const QSharedPointer<const Element> element, QStringList * /*errorLog*/)
 {
     bool result = false;
 
@@ -440,7 +440,7 @@ void FileExporterBibTeX::cancel()
     d->cancelFlag = true;
 }
 
-QString FileExporterBibTeX::valueToBibTeX(const Value& value, const QString& key, UseLaTeXEncoding useLaTeXEncoding)
+QString FileExporterBibTeX::valueToBibTeX(const Value &value, const QString &key, UseLaTeXEncoding useLaTeXEncoding)
 {
     if (staticFileExporterBibTeX == NULL)
         staticFileExporterBibTeX = new FileExporterBibTeX();
@@ -449,7 +449,7 @@ QString FileExporterBibTeX::valueToBibTeX(const Value& value, const QString& key
     return staticFileExporterBibTeX->internalValueToBibTeX(value, key, useLaTeXEncoding);
 }
 
-QString FileExporterBibTeX::internalValueToBibTeX(const Value& value, const QString& key, UseLaTeXEncoding useLaTeXEncoding)
+QString FileExporterBibTeX::internalValueToBibTeX(const Value &value, const QString &key, UseLaTeXEncoding useLaTeXEncoding)
 {
     if (value.isEmpty())
         return "";
@@ -628,7 +628,7 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value& value, const QStr
     return result;
 }
 
-QString FileExporterBibTeX::elementToString(const Element* element)
+QString FileExporterBibTeX::elementToString(const Element *element)
 {
     QStringList result;
     const Entry *entry = dynamic_cast<const Entry *>(element);

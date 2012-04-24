@@ -36,7 +36,7 @@ FileExporterRIS::~FileExporterRIS()
     // nothing
 }
 
-bool FileExporterRIS::save(QIODevice* iodevice, const QSharedPointer<const Element> element, QStringList* /*errorLog*/)
+bool FileExporterRIS::save(QIODevice *iodevice, const QSharedPointer<const Element> element, QStringList * /*errorLog*/)
 {
     bool result = false;
     QTextStream stream(iodevice);
@@ -48,7 +48,7 @@ bool FileExporterRIS::save(QIODevice* iodevice, const QSharedPointer<const Eleme
     return result && !m_cancelFlag;
 }
 
-bool FileExporterRIS::save(QIODevice* iodevice, const File* bibtexfile, QStringList* /*errorLog*/)
+bool FileExporterRIS::save(QIODevice *iodevice, const File *bibtexfile, QStringList * /*errorLog*/)
 {
     bool result = true;
     m_cancelFlag = false;
@@ -72,7 +72,7 @@ void FileExporterRIS::cancel()
     m_cancelFlag = true;
 }
 
-bool FileExporterRIS::writeEntry(QTextStream &stream, const Entry* entry, const File* bibtexfile)
+bool FileExporterRIS::writeEntry(QTextStream &stream, const Entry *entry, const File *bibtexfile)
 {
     bool result = true;
     QString type = entry->type();
@@ -170,7 +170,7 @@ bool FileExporterRIS::writeEntry(QTextStream &stream, const Entry* entry, const 
     return result;
 }
 
-bool FileExporterRIS::writeKeyValue(QTextStream &stream, const QString& key, const QString& value)
+bool FileExporterRIS::writeKeyValue(QTextStream &stream, const QString &key, const QString &value)
 {
     stream << key << "  - ";
     if (!value.isEmpty())

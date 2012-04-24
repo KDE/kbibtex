@@ -107,7 +107,7 @@ bool FileExporterToolchain::writeFileToIODevice(const QString &filename, QIODevi
         bool result = true;
         qint64 buffersize = 0x10000;
         qint64 amount = 0;
-        char* buffer = new char[ buffersize ];
+        char *buffer = new char[ buffersize ];
         do {
             result = ((amount = file.read(buffer, buffersize)) > -1) && (device->write(buffer, amount) > -1);
         } while (result && amount > 0);
@@ -154,7 +154,7 @@ void FileExporterToolchain::slotReadProcessErrorOutput()
     }
 }
 
-bool FileExporterToolchain::kpsewhich(const QString& filename)
+bool FileExporterToolchain::kpsewhich(const QString &filename)
 {
     bool result = false;
 
@@ -174,7 +174,7 @@ bool FileExporterToolchain::kpsewhich(const QString& filename)
     return result;
 }
 
-bool FileExporterToolchain::which(const QString& filename)
+bool FileExporterToolchain::which(const QString &filename)
 {
     QStringList paths = QString(getenv("PATH")).split(QLatin1String(":")); // FIXME: Most likely not portable?
     for (QStringList::Iterator it = paths.begin(); it != paths.end(); ++it) {

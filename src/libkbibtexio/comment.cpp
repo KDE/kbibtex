@@ -33,14 +33,14 @@ public:
     bool useCommand;
 };
 
-Comment::Comment(const QString& text, bool useCommand)
+Comment::Comment(const QString &text, bool useCommand)
         : Element(), d(new Comment::CommentPrivate)
 {
     d->text = text;
     d->useCommand = useCommand;
 }
 
-Comment::Comment(const Comment& other)
+Comment::Comment(const Comment &other)
         : Element(), d(new Comment::CommentPrivate)
 {
     d->text = other.d->text;

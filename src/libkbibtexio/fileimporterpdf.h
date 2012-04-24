@@ -35,8 +35,8 @@ public:
     FileImporterPDF();
     ~FileImporterPDF();
 
-    File* load(QIODevice *iodevice);
-    static bool guessCanDecode(const QString & text);
+    File *load(QIODevice *iodevice);
+    static bool guessCanDecode(const QString &text);
 
     static bool containsBibTeXData(const KUrl &url);
 

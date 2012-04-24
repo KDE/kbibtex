@@ -61,7 +61,7 @@ public:
 
 public slots:
     void setElement(QSharedPointer<Element>, const File *);
-    void setBibTeXUrl(const KUrl&);
+    void setBibTeXUrl(const KUrl &);
 
 private:
     class DocumentPreviewPrivate;
@@ -74,7 +74,7 @@ private slots:
     void onlyLocalFilesChanged();
     void visibilityChanged(bool);
     void comboBoxChanged(int);
-    void statFinished(KJob*);
+    void statFinished(KJob *);
     void loadingFinished();
     void linkActivated(const QString &link);
 };

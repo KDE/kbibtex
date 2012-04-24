@@ -120,7 +120,7 @@ public:
      * Both type and id can be set and retrieved later.
      * @param type type of this entry
      */
-    Entry(const QString& type = QString::null, const QString &id = QString::null);
+    Entry(const QString &type = QString::null, const QString &id = QString::null);
 
     /**
      * Copy constructor cloning another entry object.
@@ -134,16 +134,16 @@ public:
      * Assignment operator, working similar to a copy constructor,
      * but overwrites the current object's values.
      */
-    Entry& operator= (const Entry& other);
+    Entry &operator= (const Entry &other);
 
-    Value& operator[](const QString& key);
-    const Value operator[](const QString& key) const;
+    Value &operator[](const QString &key);
+    const Value operator[](const QString &key) const;
 
     /**
      * Set the type of this entry. Common values are "article" or "book".
      * @param type type of this entry
      */
-    void setType(const QString& type);
+    void setType(const QString &type);
 
     /**
      * Retrieve the type of this entry. Common values are "article" or "book".
@@ -156,7 +156,7 @@ public:
      * entry using the "ref" command.
      * @param id id of this entry
      */
-    void setId(const QString& id);
+    void setId(const QString &id);
 
     /**
      * Retrieve the id of this entry. In LaTeX, this id is used to refer to a BibTeX
@@ -173,9 +173,9 @@ public:
      * @param key field name to search for
      * @return found value or Value() if nothing found
      */
-    const Value value(const QString& key) const;
+    const Value value(const QString &key) const;
 
-    int remove(const QString& key);
+    int remove(const QString &key);
 
     /**
      * Re-implementation of QMap's contains function, but performing a case-insensitive
@@ -185,13 +185,13 @@ public:
      * @param key field name to search for
      * @return true if value with key found, else false
      */
-    bool contains(const QString& key) const;
+    bool contains(const QString &key) const;
 
-    static Entry* resolveCrossref(const Entry &original, const File *bibTeXfile);
+    static Entry *resolveCrossref(const Entry &original, const File *bibTeXfile);
 
 private:
     class EntryPrivate;
-    EntryPrivate * const d;
+    EntryPrivate *const d;
 };
 
 #endif // BIBTEXBIBTEXENTRY_H

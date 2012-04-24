@@ -54,13 +54,13 @@ void FileExporterRTF::reloadConfig()
     m_paperSize = configGroupGeneral.readEntry(keyPaperSize, defaultPaperSize);
 }
 
-bool FileExporterRTF::save(QIODevice* iodevice, const File* bibtexfile, QStringList *errorLog)
+bool FileExporterRTF::save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog)
 {
     bool result = false;
 
     QFile output(m_bibTeXFilename);
     if (output.open(QIODevice::WriteOnly)) {
-        FileExporterBibTeX * bibtexExporter = new FileExporterBibTeX();
+        FileExporterBibTeX *bibtexExporter = new FileExporterBibTeX();
         bibtexExporter->setEncoding(QLatin1String("latex"));
         result = bibtexExporter->save(&output, bibtexfile, errorLog);
         output.close();
@@ -73,13 +73,13 @@ bool FileExporterRTF::save(QIODevice* iodevice, const File* bibtexfile, QStringL
     return result;
 }
 
-bool FileExporterRTF::save(QIODevice* iodevice, const QSharedPointer<const Element> element, QStringList *errorLog)
+bool FileExporterRTF::save(QIODevice *iodevice, const QSharedPointer<const Element> element, QStringList *errorLog)
 {
     bool result = false;
 
     QFile output(m_bibTeXFilename);
     if (output.open(QIODevice::WriteOnly)) {
-        FileExporterBibTeX * bibtexExporter = new FileExporterBibTeX();
+        FileExporterBibTeX *bibtexExporter = new FileExporterBibTeX();
         bibtexExporter->setEncoding(QLatin1String("latex"));
         result = bibtexExporter->save(&output, element, errorLog);
         output.close();
@@ -92,7 +92,7 @@ bool FileExporterRTF::save(QIODevice* iodevice, const QSharedPointer<const Eleme
     return result;
 }
 
-bool FileExporterRTF::generateRTF(QIODevice* iodevice, QStringList *errorLog)
+bool FileExporterRTF::generateRTF(QIODevice *iodevice, QStringList *errorLog)
 {
     QStringList cmdLines = QStringList() << QLatin1String("latex -halt-on-error bibtex-to-rtf.tex") << QLatin1String("bibtex bibtex-to-rtf") << QLatin1String("latex -halt-on-error bibtex-to-rtf.tex") << QString(QLatin1String("latex2rtf -i %1 bibtex-to-rtf.tex")).arg(m_babelLanguage);
 

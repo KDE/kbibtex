@@ -55,13 +55,13 @@ void FileExporterPS::reloadConfig()
     m_font = configGroupGeneral.readEntry(keyFont, defaultFont);
 }
 
-bool FileExporterPS::save(QIODevice* iodevice, const File* bibtexfile, QStringList *errorLog)
+bool FileExporterPS::save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog)
 {
     bool result = false;
 
     QFile output(m_bibTeXFilename);
     if (output.open(QIODevice::WriteOnly)) {
-        FileExporterBibTeX * bibtexExporter = new FileExporterBibTeX();
+        FileExporterBibTeX *bibtexExporter = new FileExporterBibTeX();
         bibtexExporter->setEncoding(QLatin1String("latex"));
         result = bibtexExporter->save(&output, bibtexfile, errorLog);
         output.close();
@@ -74,13 +74,13 @@ bool FileExporterPS::save(QIODevice* iodevice, const File* bibtexfile, QStringLi
     return result;
 }
 
-bool FileExporterPS::save(QIODevice* iodevice, const QSharedPointer<const Element> element, QStringList *errorLog)
+bool FileExporterPS::save(QIODevice *iodevice, const QSharedPointer<const Element> element, QStringList *errorLog)
 {
     bool result = false;
 
     QFile output(m_bibTeXFilename);
     if (output.open(QIODevice::WriteOnly)) {
-        FileExporterBibTeX * bibtexExporter = new FileExporterBibTeX();
+        FileExporterBibTeX *bibtexExporter = new FileExporterBibTeX();
         bibtexExporter->setEncoding(QLatin1String("latex"));
         result = bibtexExporter->save(&output, element, errorLog);
         output.close();
@@ -93,7 +93,7 @@ bool FileExporterPS::save(QIODevice* iodevice, const QSharedPointer<const Elemen
     return result;
 }
 
-bool FileExporterPS::generatePS(QIODevice* iodevice, QStringList *errorLog)
+bool FileExporterPS::generatePS(QIODevice *iodevice, QStringList *errorLog)
 {
     QStringList cmdLines = QStringList() << QLatin1String("latex -halt-on-error bibtex-to-ps.tex") << QLatin1String("bibtex bibtex-to-ps") << QLatin1String("latex -halt-on-error bibtex-to-ps.tex") << QLatin1String("latex -halt-on-error bibtex-to-ps.tex") << QLatin1String("dvips -R2 -o bibtex-to-ps.ps bibtex-to-ps.dvi");
 

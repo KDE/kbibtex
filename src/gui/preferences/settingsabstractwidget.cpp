@@ -36,7 +36,7 @@ void ItalicTextItemModel::addItem(const QString &a, const QString &b)
     m_data.append(QPair<QString, QString>(a, b));
 }
 
-QVariant ItalicTextItemModel::data(const QModelIndex & index, int role) const
+QVariant ItalicTextItemModel::data(const QModelIndex &index, int role) const
 {
     if (index.row() < 0 || index.row() >= m_data.count())
         return QVariant();
@@ -55,7 +55,7 @@ QVariant ItalicTextItemModel::data(const QModelIndex & index, int role) const
     return QVariant();
 }
 
-QModelIndex ItalicTextItemModel::index(int row, int column, const QModelIndex&) const
+QModelIndex ItalicTextItemModel::index(int row, int column, const QModelIndex &) const
 {
     return createIndex(row, column);
 }

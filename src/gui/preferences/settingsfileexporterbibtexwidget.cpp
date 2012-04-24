@@ -79,7 +79,7 @@ public:
         KConfigGroup configGroup(config, configGroupName);
         configGroup.writeEntry(FileExporterBibTeX::keyEncoding, comboBoxEncodings->currentText());
         QString stringDelimiter = comboBoxStringDelimiters->currentText();
-        configGroup.writeEntry(FileExporterBibTeX::keyStringDelimiter, QString(stringDelimiter[0]) + stringDelimiter[stringDelimiter.length()-1]);
+        configGroup.writeEntry(FileExporterBibTeX::keyStringDelimiter, QString(stringDelimiter[0]) + stringDelimiter[stringDelimiter.length() - 1]);
         FileExporterBibTeX::QuoteComment quoteComment = (FileExporterBibTeX::QuoteComment)comboBoxQuoteComment->currentIndex();
         configGroup.writeEntry(FileExporterBibTeX::keyQuoteComment, (int)quoteComment);
         KBibTeX::Casing keywordCasing = (KBibTeX::Casing)comboBoxKeywordCasing->currentIndex();
@@ -175,7 +175,7 @@ public:
     void saveProperties(File *file) {
         file->setProperty(File::Encoding, comboBoxEncodings->currentText());
         QString stringDelimiter = comboBoxStringDelimiters->currentText();
-        file->setProperty(File::StringDelimiter, QString(stringDelimiter[0]) + stringDelimiter[stringDelimiter.length()-1]);
+        file->setProperty(File::StringDelimiter, QString(stringDelimiter[0]) + stringDelimiter[stringDelimiter.length() - 1]);
         FileExporterBibTeX::QuoteComment quoteComment = (FileExporterBibTeX::QuoteComment)comboBoxQuoteComment->currentIndex();
         file->setProperty(File::QuoteComment, (int)quoteComment);
         KBibTeX::Casing keywordCasing = (KBibTeX::Casing)comboBoxKeywordCasing->currentIndex();

@@ -55,27 +55,27 @@ public:
 
     void setEditorData(QWidget *editor, const QModelIndex &index) const {
         if (index.column() == 0) {
-            KColorButton *colorButton = qobject_cast<KColorButton*>(editor);
+            KColorButton *colorButton = qobject_cast<KColorButton *>(editor);
             colorButton->setColor(index.model()->data(index, Qt::EditRole).value<QColor>());
         } else {
-            KLineEdit *lineEdit = qobject_cast<KLineEdit*>(editor);
+            KLineEdit *lineEdit = qobject_cast<KLineEdit *>(editor);
             lineEdit->setText(index.model()->data(index, Qt::EditRole).toString());
         }
     }
 
     void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const {
         if (index.column() == 0) {
-            KColorButton *colorButton = qobject_cast<KColorButton*>(editor);
+            KColorButton *colorButton = qobject_cast<KColorButton *>(editor);
             if (colorButton->color() != Qt::black)
                 model->setData(index, colorButton->color(), Qt::EditRole);
         } else {
-            KLineEdit *lineEdit = qobject_cast<KLineEdit*>(editor);
+            KLineEdit *lineEdit = qobject_cast<KLineEdit *>(editor);
             if (!lineEdit->text().isEmpty())
                 model->setData(index, lineEdit->text(), Qt::EditRole);
         }
     }
 
-    QSize sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index) const {
+    QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const {
         QSize hint = QStyledItemDelegate::sizeHint(option, index);
         QFontMetrics fm = QFontMetrics(QFont());
         hint.setHeight(qMax(hint.height(), fm.xHeight() * 4));
@@ -160,8 +160,8 @@ QVariant ColorLabelSettingsModel::headerData(int section, Qt::Orientation orient
         return QVariant();
 
     switch (section) {
-    case 0:return i18n("Color");
-    case 1:return i18n("Label");
+    case 0: return i18n("Color");
+    case 1: return i18n("Label");
     default: return QVariant();
     }
 }
@@ -390,7 +390,7 @@ void ColorLabelContextMenu::setEnabled(bool enabled)
 
 void ColorLabelContextMenu::colorActivated(const QString &colorString)
 {
-    SortFilterBibTeXFileModel *sfbfm = dynamic_cast<SortFilterBibTeXFileModel*>(m_tv->model());
+    SortFilterBibTeXFileModel *sfbfm = dynamic_cast<SortFilterBibTeXFileModel *>(m_tv->model());
     Q_ASSERT(sfbfm != NULL);
     BibTeXFileModel *model = sfbfm->bibTeXSourceModel();
     Q_ASSERT(model != NULL);

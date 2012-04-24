@@ -228,7 +228,7 @@ public:
             int month = dateFragments[1].toInt(&ok);
             if (ok && month > 0 && month < 13) {
                 Value value = entry->value(Entry::ftMonth);
-                value.append(QSharedPointer<MacroKey>(new MacroKey(KBibTeX::MonthsTriple[month-1])));
+                value.append(QSharedPointer<MacroKey>(new MacroKey(KBibTeX::MonthsTriple[month - 1])));
                 entry->insert(Entry::ftMonth, value);
             } else
                 kDebug() << "invalid month: " << month;
@@ -251,7 +251,7 @@ FileImporterRIS::~FileImporterRIS()
     delete d;
 }
 
-File* FileImporterRIS::load(QIODevice *iodevice)
+File *FileImporterRIS::load(QIODevice *iodevice)
 {
     d->cancelFlag = false;
     d->referenceCounter = 0;
@@ -276,7 +276,7 @@ File* FileImporterRIS::load(QIODevice *iodevice)
     return result;
 }
 
-bool FileImporterRIS::guessCanDecode(const QString & text)
+bool FileImporterRIS::guessCanDecode(const QString &text)
 {
     return text.indexOf("TY  - ") >= 0;
 }

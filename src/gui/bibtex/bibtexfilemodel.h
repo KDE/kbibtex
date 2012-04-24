@@ -61,8 +61,8 @@ public slots:
     void updateFilter(SortFilterBibTeXFileModel::FilterQuery);
 
 protected:
-    virtual bool lessThan(const QModelIndex & left, const QModelIndex & right) const;
-    virtual bool filterAcceptsRow(int source_row, const QModelIndex & source_parent) const;
+    virtual bool lessThan(const QModelIndex &left, const QModelIndex &right) const;
+    virtual bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const;
 
 private:
     BibTeXFileModel *m_internalModel;
@@ -87,22 +87,22 @@ public:
     static const QString keyShowMacros;
     static const bool defaultShowMacros;
 
-    BibTeXFileModel(QObject * parent = 0);
+    BibTeXFileModel(QObject *parent = 0);
 
     File *bibTeXFile();
     virtual void setBibTeXFile(File *bibtexFile);
 
-    virtual QModelIndex parent(const QModelIndex & index) const;
-    virtual bool hasChildren(const QModelIndex & parent = QModelIndex()) const;
-    virtual int rowCount(const QModelIndex & parent = QModelIndex()) const;
-    virtual int columnCount(const QModelIndex & parent = QModelIndex()) const;
+    virtual QModelIndex parent(const QModelIndex &index) const;
+    virtual bool hasChildren(const QModelIndex &parent = QModelIndex()) const;
+    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
+    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
     virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
     virtual Qt::ItemFlags flags(const QModelIndex &index) const;
 
-    virtual bool removeRow(int row, const QModelIndex & parent = QModelIndex());
+    virtual bool removeRow(int row, const QModelIndex &parent = QModelIndex());
     bool removeRowList(const QList<int> &rows);
-    bool insertRow(QSharedPointer<Element> element, int row, const QModelIndex & parent = QModelIndex());
+    bool insertRow(QSharedPointer<Element> element, int row, const QModelIndex &parent = QModelIndex());
 
     QSharedPointer<Element> element(int row) const;
     int row(QSharedPointer<Element> element) const;

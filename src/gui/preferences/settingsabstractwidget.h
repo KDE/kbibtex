@@ -34,8 +34,8 @@ public:
     ItalicTextItemModel(QObject *parent = NULL);
 
     void addItem(const QString &a, const QString &b);
-    QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
-    QModelIndex index(int row, int column, const QModelIndex&) const;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+    QModelIndex index(int row, int column, const QModelIndex &) const;
     QModelIndex parent(const QModelIndex &) const;
     int rowCount(const QModelIndex &) const;
     int columnCount(const QModelIndex &) const;

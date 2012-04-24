@@ -41,12 +41,14 @@ struct FieldDescription {
     bool typeIndependent;
 
     FieldDescription()
-            : upperCamelCase(QString::null), upperCamelCaseAlt(QString::null), label(QString::null), defaultWidth(0), typeIndependent(false) { /* nothing */ }
+            : upperCamelCase(QString::null), upperCamelCaseAlt(QString::null), label(QString::null), defaultWidth(0), typeIndependent(false) {
+        /* nothing */
+    }
 
     FieldDescription(const FieldDescription &other)
             : upperCamelCase(other.upperCamelCase), upperCamelCaseAlt(other.upperCamelCaseAlt), label(other.label), typeFlags(other.typeFlags), preferredTypeFlag(other.preferredTypeFlag), defaultWidth(other.defaultWidth), typeIndependent(other.typeIndependent) {
-        foreach(const QString &key, other.width.keys()) width.insert(key, other.width[key]);
-        foreach(const QString &key, other.visible.keys()) visible.insert(key, other.visible[key]);
+        foreach(const QString & key, other.width.keys()) width.insert(key, other.width[key]);
+        foreach(const QString & key, other.visible.keys()) visible.insert(key, other.visible[key]);
     }
 
     bool isNull() const {
@@ -62,7 +64,7 @@ uint qHash(const FieldDescription &a);
 /**
 @author Thomas Fischer
 */
-class KBIBTEXIO_EXPORT BibTeXFields : public QList<FieldDescription*>
+class KBIBTEXIO_EXPORT BibTeXFields : public QList<FieldDescription *>
 {
 public:
     static BibTeXFields *self();
@@ -73,14 +75,14 @@ public:
     /**
      * Change the casing of a given field name to one of the predefine formats.
      */
-    QString format(const QString& name, KBibTeX::Casing casing) const;
+    QString format(const QString &name, KBibTeX::Casing casing) const;
 
     static KBibTeX::TypeFlag typeFlagFromString(const QString &typeFlagString);
     static KBibTeX::TypeFlags typeFlagsFromString(const QString &typeFlagsString);
     static QString typeFlagToString(KBibTeX::TypeFlag typeFlag);
     static QString typeFlagsToString(KBibTeX::TypeFlags typeFlags);
 
-    const FieldDescription* find(const QString &name) const;
+    const FieldDescription *find(const QString &name) const;
 
 protected:
     BibTeXFields();

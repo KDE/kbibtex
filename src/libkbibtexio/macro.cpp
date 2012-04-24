@@ -34,14 +34,14 @@ public:
     Value value;
 };
 
-Macro::Macro(const QString& key, const Value& value)
+Macro::Macro(const QString &key, const Value &value)
         : Element(), d(new Macro::MacroPrivate)
 {
     d->key = key;
     d->value = value;
 }
 
-Macro::Macro(const Macro& other)
+Macro::Macro(const Macro &other)
         : Element(), d(new Macro::MacroPrivate)
 {
     d->key = other.d->key;
@@ -53,7 +53,7 @@ Macro::~Macro()
     delete d;
 }
 
-Macro& Macro::operator= (const Macro & other)
+Macro &Macro::operator= (const Macro &other)
 {
     if (this != &other) {
         d->key = other.key();
@@ -72,17 +72,17 @@ QString Macro::key() const
     return d->key;
 }
 
-Value& Macro::value()
+Value &Macro::value()
 {
     return d->value;
 }
 
-const Value& Macro::value() const
+const Value &Macro::value() const
 {
     return d->value;
 }
 
-void Macro::setValue(const Value& value)
+void Macro::setValue(const Value &value)
 {
     d->value = value;
 }

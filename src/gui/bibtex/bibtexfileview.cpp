@@ -153,7 +153,7 @@ public:
     }
 };
 
-BibTeXFileView::BibTeXFileView(const QString &name, QWidget * parent)
+BibTeXFileView::BibTeXFileView(const QString &name, QWidget *parent)
         : QTreeView(parent), d(new BibTeXFileViewPrivate(name, this))
 {
     /// general visual appearance and behaviour
@@ -188,7 +188,7 @@ BibTeXFileView::BibTeXFileView(const QString &name, QWidget * parent)
 
     /// build context menu for header to show/hide single columns
     int col = 0;
-    foreach(const FieldDescription *fd,  *BibTeXFields::self()) {
+    foreach(const FieldDescription *fd, *BibTeXFields::self()) {
         KAction *action = new KAction(fd->label, header());
         action->setData(col);
         action->setCheckable(true);
@@ -224,11 +224,11 @@ void BibTeXFileView::setModel(QAbstractItemModel *model)
     QTreeView::setModel(model);
 
     d->sortFilterProxyModel = NULL;
-    d->bibTeXFileModel = dynamic_cast<BibTeXFileModel*>(model);
+    d->bibTeXFileModel = dynamic_cast<BibTeXFileModel *>(model);
     if (d->bibTeXFileModel == NULL) {
-        d->sortFilterProxyModel = dynamic_cast<QSortFilterProxyModel*>(model);
+        d->sortFilterProxyModel = dynamic_cast<QSortFilterProxyModel *>(model);
         Q_ASSERT(d->sortFilterProxyModel != NULL);
-        d->bibTeXFileModel = dynamic_cast<BibTeXFileModel*>(d->sortFilterProxyModel->sourceModel());
+        d->bibTeXFileModel = dynamic_cast<BibTeXFileModel *>(d->sortFilterProxyModel->sourceModel());
     }
 
     /// sort according to session
@@ -271,7 +271,7 @@ void BibTeXFileView::columnResized(int column, int oldSize, int newSize)
 
 void BibTeXFileView::headerActionToggled()
 {
-    KAction *action = static_cast<KAction*>(sender());
+    KAction *action = static_cast<KAction *>(sender());
     bool ok = false;
     int col = (int)action->data().toInt(&ok);
     if (!ok) return;
@@ -293,7 +293,7 @@ void BibTeXFileView::headerResetToDefaults()
 
 void BibTeXFileView::sort(int t, Qt::SortOrder s)
 {
-    SortFilterBibTeXFileModel *sortedModel = dynamic_cast<SortFilterBibTeXFileModel*>(model());
+    SortFilterBibTeXFileModel *sortedModel = dynamic_cast<SortFilterBibTeXFileModel *>(model());
     if (sortedModel != NULL)
         sortedModel->sort(t, s);
 }

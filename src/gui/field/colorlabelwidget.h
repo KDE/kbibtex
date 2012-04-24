@@ -38,8 +38,8 @@ public:
     ColorLabelWidget(QWidget *parent = NULL);
     ~ColorLabelWidget();
 
-    bool reset(const Value& value);
-    bool apply(Value& value) const;
+    bool reset(const Value &value);
+    bool apply(Value &value) const;
     void setReadOnly(bool);
 
     static QPixmap createSolidIcon(const QColor &color);

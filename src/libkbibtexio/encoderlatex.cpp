@@ -457,54 +457,54 @@ QString EncoderLaTeX::decode(const QString &input) const
         if (c == '{') {
             /// First case: An opening curly bracket,
             /// which is harmless (see else case), unless ...
-            if (i < len - 3 && input[i+1] == '\\') {
+            if (i < len - 3 && input[i + 1] == '\\') {
                 /// ... it continues with a backslash
 
                 /// Next, check if there follows a modifier after the backslash
                 /// For example an quotation mark as used in {\"a}
-                int lookupTablePos = modifierInLookupTable(input[i+2]);
+                int lookupTablePos = modifierInLookupTable(input[i + 2]);
 
-                if (lookupTablePos >= 0 && input[i+3] >= 'A' && input[i+3] <= 'z' && input[i+4] == '}') {
+                if (lookupTablePos >= 0 && input[i + 3] >= 'A' && input[i + 3] <= 'z' && input[i + 4] == '}') {
                     /// If we found a modifier which is followed by
                     /// a letter followed by a closing curly bracket,
                     /// we are looking at something like {\"A}
                     /// Use lookup table to see what Unicode char this
                     /// represents
-                    output.append(lookupTable[lookupTablePos]->unicode[input[i+3].toAscii() - 'A']);
+                    output.append(lookupTable[lookupTablePos]->unicode[input[i + 3].toAscii() - 'A']);
                     /// Step over those additional characters
                     i += 4;
-                } else if (lookupTablePos >= 0 && input[i+3] == '\\' && input[i+4] >= 'A' && input[i+4] <= 'z' && input[i+5] == '}') {
+                } else if (lookupTablePos >= 0 && input[i + 3] == '\\' && input[i + 4] >= 'A' && input[i + 4] <= 'z' && input[i + 5] == '}') {
                     /// This is the case for {\'\i} or alike.
                     bool found = false;
                     for (int k = 0; !found && k < dotlessIJCharactersLen; ++k)
-                        if (dotlessIJCharacters[k].letter == input[i+4] && dotlessIJCharacters[k].modifier == input[i+2]) {
+                        if (dotlessIJCharacters[k].letter == input[i + 4] && dotlessIJCharacters[k].modifier == input[i + 2]) {
                             output.append(dotlessIJCharacters[k].unicode);
                             i += 5;
                             found = true;
                         }
                     if (!found)
-                        kWarning() << "Cannot interprete BACKSLASH" << input[i+2] << "BACKSLASH" << input[i+4];
-                } else if (lookupTablePos >= 0 && input[i+3] == '{' && input[i+4] >= 'A' && input[i+4] <= 'z' && input[i+5] == '}' && input[i+6] == '}') {
+                        kWarning() << "Cannot interprete BACKSLASH" << input[i + 2] << "BACKSLASH" << input[i + 4];
+                } else if (lookupTablePos >= 0 && input[i + 3] == '{' && input[i + 4] >= 'A' && input[i + 4] <= 'z' && input[i + 5] == '}' && input[i + 6] == '}') {
                     /// If we found a modifier which is followed by
                     /// an opening curly bracket followed by a letter
                     /// followed by two closing curly brackets,
                     /// we are looking at something like {\"{A}}
                     /// Use lookup table to see what Unicode char this
                     /// represents
-                    output.append(lookupTable[lookupTablePos]->unicode[input[i+4].toAscii() - 'A']);
+                    output.append(lookupTable[lookupTablePos]->unicode[input[i + 4].toAscii() - 'A']);
                     /// Step over those additional characters
                     i += 6;
-                } else if (lookupTablePos >= 0 && input[i+3] == '{' && input[i+4] == '\\' && input[i+5] >= 'A' && input[i+5] <= 'z' && input[i+6] == '}' && input[i+7] == '}') {
+                } else if (lookupTablePos >= 0 && input[i + 3] == '{' && input[i + 4] == '\\' && input[i + 5] >= 'A' && input[i + 5] <= 'z' && input[i + 6] == '}' && input[i + 7] == '}') {
                     /// This is the case for {\'{\i}} or alike.
                     bool found = false;
                     for (int k = 0; !found && k < dotlessIJCharactersLen; ++k)
-                        if (dotlessIJCharacters[k].letter == input[i+5] && dotlessIJCharacters[k].modifier == input[i+2]) {
+                        if (dotlessIJCharacters[k].letter == input[i + 5] && dotlessIJCharacters[k].modifier == input[i + 2]) {
                             output.append(dotlessIJCharacters[k].unicode);
                             i += 7;
                             found = true;
                         }
                     if (!found)
-                        kWarning() << "Cannot interprete BACKSLASH" << input[i+2] << "BACKSLASH {" << input[i+5] << "}";
+                        kWarning() << "Cannot interprete BACKSLASH" << input[i + 2] << "BACKSLASH {" << input[i + 5] << "}";
                 } else {
                     /// Now, the case of something like {\AA} is left
                     /// to check for
@@ -546,71 +546,71 @@ QString EncoderLaTeX::decode(const QString &input) const
 
             /// Check if there follows a modifier after the backslash
             /// For example an quotation mark as used in \"a
-            int lookupTablePos = modifierInLookupTable(input[i+1]);
+            int lookupTablePos = modifierInLookupTable(input[i + 1]);
 
-            if (lookupTablePos >= 0 && i <= len - 3 && input[i+2] >= 'A' && input[i+2] <= 'z' && (i == len - 3 || input[i+1] == '"' || input[i+1] == '\'' || input[i+1] == '`' || input[i+1] == '=')) { // TODO more special cases?
+            if (lookupTablePos >= 0 && i <= len - 3 && input[i + 2] >= 'A' && input[i + 2] <= 'z' && (i == len - 3 || input[i + 1] == '"' || input[i + 1] == '\'' || input[i + 1] == '`' || input[i + 1] == '=')) { // TODO more special cases?
                 /// We found a special modifier which is followed by
                 /// a letter followed by a command delimiter such
                 /// as a whitespace, so we are looking at something
                 /// like \"u inside Kr\"uger
                 /// Use lookup table to see what Unicode char this
                 /// represents
-                output.append(lookupTable[lookupTablePos]->unicode[input[i+2].toAscii() - 'A']);
+                output.append(lookupTable[lookupTablePos]->unicode[input[i + 2].toAscii() - 'A']);
                 /// Step over those additional characters
                 i += 2;
-            } else if (lookupTablePos >= 0 && i <= len - 3 && input[i+2] >= 'A' && input[i+2] <= 'z' && (i == len - 3 || input[i+3] == '}' ||  input[i+3] == '{' || input[i+3] == ' ' || input[i+3] == '\t' || input[i+3] == '\\' || input[i+3] == '\r' || input[i+3] == '\n')) {
+            } else if (lookupTablePos >= 0 && i <= len - 3 && input[i + 2] >= 'A' && input[i + 2] <= 'z' && (i == len - 3 || input[i + 3] == '}' ||  input[i + 3] == '{' || input[i + 3] == ' ' || input[i + 3] == '\t' || input[i + 3] == '\\' || input[i + 3] == '\r' || input[i + 3] == '\n')) {
                 /// We found a modifier which is followed by
                 /// a letter followed by a command delimiter such
                 /// as a whitespace, so we are looking at something
                 /// like \"u
                 /// Use lookup table to see what Unicode char this
                 /// represents
-                output.append(lookupTable[lookupTablePos]->unicode[input[i+2].toAscii() - 'A']);
+                output.append(lookupTable[lookupTablePos]->unicode[input[i + 2].toAscii() - 'A']);
                 /// Step over those additional characters
                 i += 2;
 
                 /// Now, after this command, a whitespace may follow
                 /// which has to get "eaten" as it acts as a command
                 /// delimiter
-                if (input[i+1] == ' ' || input[i+1] == '\r' || input[i+1] == '\n')
+                if (input[i + 1] == ' ' || input[i + 1] == '\r' || input[i + 1] == '\n')
                     ++i;
                 else {
                     /// If no whitespace follows, still
                     /// check for extra curly brackets
                     checkForExtraCurlyAtEnd = true;
                 }
-            } else if (lookupTablePos >= 0 && i < len - 4 && input[i+2] == '{' && input[i+3] >= 'A' && input[i+3] <= 'z' && input[i+4] == '}') {
+            } else if (lookupTablePos >= 0 && i < len - 4 && input[i + 2] == '{' && input[i + 3] >= 'A' && input[i + 3] <= 'z' && input[i + 4] == '}') {
                 /// We found a modifier which is followed by an opening
                 /// curly bracket followed a letter followed by a closing
                 /// curly bracket, so we are looking at something
                 /// like \"{u}
                 /// Use lookup table to see what Unicode char this
                 /// represents
-                output.append(lookupTable[lookupTablePos]->unicode[input[i+3].toAscii() - 'A']);
+                output.append(lookupTable[lookupTablePos]->unicode[input[i + 3].toAscii() - 'A']);
                 /// Step over those additional characters
                 i += 4;
-            } else if (lookupTablePos >= 0 && input[i+2] == '\\' && input[i+3] >= 'A' && input[i+3] <= 'z') {
+            } else if (lookupTablePos >= 0 && input[i + 2] == '\\' && input[i + 3] >= 'A' && input[i + 3] <= 'z') {
                 /// This is the case for \'\i or alike.
                 bool found = false;
                 for (int k = 0; !found && k < dotlessIJCharactersLen; ++k)
-                    if (dotlessIJCharacters[k].letter == input[i+3] && dotlessIJCharacters[k].modifier == input[i+1]) {
+                    if (dotlessIJCharacters[k].letter == input[i + 3] && dotlessIJCharacters[k].modifier == input[i + 1]) {
                         output.append(dotlessIJCharacters[k].unicode);
                         i += 3;
                         found = true;
                     }
                 if (!found)
-                    kWarning() << "Cannot interprete BACKSLASH" << input[i+1] << "BACKSLASH" << input[i+3];
-            } else if (lookupTablePos >= 0 && input[i+2] == '{' && input[i+3] == '\\' && input[i+4] >= 'A' && input[i+4] <= 'z' && input[i+5] == '}') {
+                    kWarning() << "Cannot interprete BACKSLASH" << input[i + 1] << "BACKSLASH" << input[i + 3];
+            } else if (lookupTablePos >= 0 && input[i + 2] == '{' && input[i + 3] == '\\' && input[i + 4] >= 'A' && input[i + 4] <= 'z' && input[i + 5] == '}') {
                 /// This is the case for \'{\i} or alike.
                 bool found = false;
                 for (int k = 0; !found && k < dotlessIJCharactersLen; ++k)
-                    if (dotlessIJCharacters[k].letter == input[i+4] && dotlessIJCharacters[k].modifier == input[i+1]) {
+                    if (dotlessIJCharacters[k].letter == input[i + 4] && dotlessIJCharacters[k].modifier == input[i + 1]) {
                         output.append(dotlessIJCharacters[k].unicode);
                         i += 5;
                         found = true;
                     }
                 if (!found)
-                    kWarning() << "Cannot interprete BACKSLASH" << input[i+1] << "BACKSLASH {" << input[i+4] << "}";
+                    kWarning() << "Cannot interprete BACKSLASH" << input[i + 1] << "BACKSLASH {" << input[i + 4] << "}";
             } else if (i < len - 1) {
                 /// Now, the case of something like \AA is left
                 /// to check for
@@ -651,14 +651,14 @@ QString EncoderLaTeX::decode(const QString &input) const
                     /// Check which command it is
                     bool foundCommand = false;
                     for (int k = 0; k < encoderLaTeXProtectedSymbolsLen; ++k)
-                        if (encoderLaTeXProtectedSymbols[k] == input[i+1]) {
+                        if (encoderLaTeXProtectedSymbols[k] == input[i + 1]) {
                             output.append(encoderLaTeXProtectedSymbols[k]);
                             foundCommand = true;
                         }
 
                     if (!foundCommand && !inMathMode)
                         for (int k = 0; k < encoderLaTeXProtectedTextOnlySymbolsLen; ++k)
-                            if (encoderLaTeXProtectedTextOnlySymbols[k] == input[i+1]) {
+                            if (encoderLaTeXProtectedTextOnlySymbols[k] == input[i + 1]) {
                                 output.append(encoderLaTeXProtectedTextOnlySymbols[k]);
                                 foundCommand = true;
                             }
@@ -679,7 +679,7 @@ QString EncoderLaTeX::decode(const QString &input) const
 
             /// Finally, check if there may be extra curly brackets
             /// like {} and hop over them
-            if (checkForExtraCurlyAtEnd && i < len - 2 && input[i+1] == '{' && input[i+2] == '}') i += 2;
+            if (checkForExtraCurlyAtEnd && i < len - 2 && input[i + 1] == '{' && input[i + 2] == '}') i += 2;
         } else {
             /// So far, no opening curly bracket and no backslash
             /// May still be a symbol sequence like ---
@@ -693,7 +693,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                     /// Now actually check if symbol sequence is in input buffer
                     isSymbolSequence = true;
                     for (int p = 1; isSymbolSequence && p < (int)qstrlen(encoderLaTeXSymbolSequences[l].latex); ++p)
-                        isSymbolSequence &= encoderLaTeXSymbolSequences[l].latex[p] == input[i+p];
+                        isSymbolSequence &= encoderLaTeXSymbolSequences[l].latex[p] == input[i + p];
                     if (isSymbolSequence) {
                         /// Ok, found sequence: insert Unicode character in output
                         /// and hop over sequence in input buffer
@@ -710,7 +710,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                 /// Still, check if input character is a dollar sign
                 /// without a preceeding backslash, means toggling between
                 /// text mode and math mode
-                if (c == '$' && (i == 0 || input[i-1] != '\\'))
+                if (c == '$' && (i == 0 || input[i - 1] != '\\'))
                     inMathMode = !inMathMode;
             }
         }
@@ -726,7 +726,7 @@ bool EncoderLaTeX::testAndCopyVerbatimCommands(const QString &input, int &pos, Q
     int openedClosedCurlyBrackets = 0;
 
     /// check for \url
-    if (pos < input.length() - 6 && input[pos] == '\\' && input[pos+1] == 'u' && input[pos+2] == 'r' && input[pos+3] == 'l' && input[pos+4] == '{') {
+    if (pos < input.length() - 6 && input[pos] == '\\' && input[pos + 1] == 'u' && input[pos + 2] == 'r' && input[pos + 3] == 'l' && input[pos + 4] == '{') {
         copyBytesCount = 5;
         openedClosedCurlyBrackets = 1;
     }
@@ -734,8 +734,8 @@ bool EncoderLaTeX::testAndCopyVerbatimCommands(const QString &input, int &pos, Q
     if (copyBytesCount > 0) {
         while (openedClosedCurlyBrackets > 0 && pos + copyBytesCount < input.length()) {
             ++copyBytesCount;
-            if (input[pos+copyBytesCount] == '{' && input[pos+copyBytesCount-1] != '\\') ++openedClosedCurlyBrackets;
-            else if (input[pos+copyBytesCount] == '}' && input[pos+copyBytesCount-1] != '\\') --openedClosedCurlyBrackets;
+            if (input[pos + copyBytesCount] == '{' && input[pos + copyBytesCount - 1] != '\\') ++openedClosedCurlyBrackets;
+            else if (input[pos + copyBytesCount] == '}' && input[pos + copyBytesCount - 1] != '\\') --openedClosedCurlyBrackets;
         }
 
         output.append(input.mid(pos, copyBytesCount));
@@ -840,7 +840,7 @@ QString EncoderLaTeX::encode(const QString &input) const
             /// Finally, check if input character is a dollar sign
             /// without a preceeding backslash, means toggling between
             /// text mode and math mode
-            if (c == '$' && (i == 0 || input[i-1] != QChar('\\')))
+            if (c == '$' && (i == 0 || input[i - 1] != QChar('\\')))
                 inMathMode = !inMathMode;
         }
     }
@@ -926,7 +926,7 @@ QString EncoderLaTeX::readAlphaCharacters(const QString &base, int startFrom) co
     return base.mid(startFrom);
 }
 
-EncoderLaTeX* EncoderLaTeX::instance()
+EncoderLaTeX *EncoderLaTeX::instance()
 {
     if (self == NULL)
         self = new EncoderLaTeX();

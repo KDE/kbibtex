@@ -33,7 +33,7 @@ RadioButtonItemDelegate::RadioButtonItemDelegate(QObject *p)
     // nothing
 }
 
-void RadioButtonItemDelegate::paint(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const
+void RadioButtonItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     if (index.data(IsRadioRole).canConvert<bool>() && index.data(IsRadioRole).value<bool>()) {
         /// determine size and spacing of radio buttons in current style
@@ -43,7 +43,7 @@ void RadioButtonItemDelegate::paint(QPainter * painter, const QStyleOptionViewIt
         /// draw default appearance (text, highlighting) shifted to the left
         QStyleOptionViewItem myOption = option;
         int left = myOption.rect.left();
-        myOption.rect.setLeft(left + spacing*3 / 2 + radioButtonWidth);
+        myOption.rect.setLeft(left + spacing * 3 / 2 + radioButtonWidth);
         QStyledItemDelegate::paint(painter, myOption, index);
 
         /// draw radio button in the open space
@@ -59,7 +59,7 @@ void RadioButtonItemDelegate::paint(QPainter * painter, const QStyleOptionViewIt
         QStyledItemDelegate::paint(painter, option, index);
 }
 
-QSize RadioButtonItemDelegate::sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index) const
+QSize RadioButtonItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     QSize s = QStyledItemDelegate::sizeHint(option, index);
     if (index.data(IsRadioRole).value<bool>()) {

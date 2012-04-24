@@ -40,7 +40,7 @@ class KBIBTEXGUI_EXPORT BibTeXEditor : public BibTeXFileView
 public:
     BibTeXEditor(const QString &name, QWidget *parent);
 
-    const QList<QSharedPointer<Element> >& selectedElements() const;
+    const QList<QSharedPointer<Element> > &selectedElements() const;
     const QSharedPointer<Element> currentElement() const;
     QSharedPointer<Element> currentElement();
 
@@ -66,7 +66,7 @@ public slots:
     void viewElement(const QSharedPointer<Element>);
     void editCurrentElement();
     bool editElement(QSharedPointer<Element>);
-    void setSelectedElements(QList<QSharedPointer<Element> >&);
+    void setSelectedElements(QList<QSharedPointer<Element> > &);
     void setSelectedElement(QSharedPointer<Element>);
     void selectionDelete();
     void externalModification();
@@ -75,8 +75,8 @@ public slots:
 protected:
     bool m_isReadOnly;
 
-    void currentChanged(const QModelIndex & current, const QModelIndex & previous);
-    void selectionChanged(const QItemSelection & selected, const QItemSelection & deselected);
+    void currentChanged(const QModelIndex &current, const QModelIndex &previous);
+    void selectionChanged(const QItemSelection &selected, const QItemSelection &deselected);
 
     void mouseMoveEvent(QMouseEvent *event);
     void dragEnterEvent(QDragEnterEvent *event);
@@ -84,7 +84,7 @@ protected:
     void dropEvent(QDropEvent *event);
 
 protected slots:
-    void itemActivated(const QModelIndex & index);
+    void itemActivated(const QModelIndex &index);
 
 private:
     QSharedPointer<Element> m_current;

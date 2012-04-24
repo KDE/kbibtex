@@ -35,19 +35,19 @@ ValueItem::~ValueItem()
     // nothing
 }
 
-Keyword::Keyword(const Keyword& other)
+Keyword::Keyword(const Keyword &other)
         : m_text(other.m_text)
 {
     // nothing
 }
 
-Keyword::Keyword(const QString& text)
+Keyword::Keyword(const QString &text)
         : m_text(text)
 {
     // nothing
 }
 
-void Keyword::setText(const QString& text)
+void Keyword::setText(const QString &text)
 {
     m_text = text;
 }
@@ -73,7 +73,7 @@ bool Keyword::containsPattern(const QString &pattern, Qt::CaseSensitivity caseSe
 
 bool Keyword::operator==(const ValueItem &other) const
 {
-    const Keyword *otherKeyword = dynamic_cast<const Keyword*>(&other);
+    const Keyword *otherKeyword = dynamic_cast<const Keyword *>(&other);
     if (otherKeyword != NULL) {
         return otherKeyword->text() == text();
     } else
@@ -81,13 +81,13 @@ bool Keyword::operator==(const ValueItem &other) const
 }
 
 
-Person::Person(const QString& firstName, const QString& lastName, const QString& suffix)
+Person::Person(const QString &firstName, const QString &lastName, const QString &suffix)
         : m_firstName(firstName), m_lastName(lastName), m_suffix(suffix)
 {
     // nothing
 }
 
-Person::Person(const Person& other)
+Person::Person(const Person &other)
         : m_firstName(other.firstName()), m_lastName(other.lastName()), m_suffix(other.suffix())
 {
     // nothing
@@ -135,7 +135,7 @@ bool Person::containsPattern(const QString &pattern, Qt::CaseSensitivity caseSen
 
 bool Person::operator==(const ValueItem &other) const
 {
-    const Person *otherPerson = dynamic_cast<const Person*>(&other);
+    const Person *otherPerson = dynamic_cast<const Person *>(&other);
     if (otherPerson != NULL) {
         return otherPerson->firstName() == firstName() && otherPerson->lastName() == lastName();
     } else
@@ -147,7 +147,7 @@ QString Person::transcribePersonName(const Person *person, const QString &format
     return transcribePersonName(formatting, person->firstName(), person->lastName(), person->suffix());
 }
 
-QString Person::transcribePersonName(const QString &formatting, const QString& firstName, const QString& lastName, const QString& suffix)
+QString Person::transcribePersonName(const QString &formatting, const QString &firstName, const QString &lastName, const QString &suffix)
 {
     QString result = formatting;
     int p1 = -1, p2 = -1, p3 = -1;
@@ -179,19 +179,19 @@ const QString Person::defaultPersonNameFormatting = QLatin1String("<%l><, %s><, 
 
 const QRegExp MacroKey::validMacroKey = QRegExp("^[a-z][-.:/+_a-z0-9]*$|^[0-9]+$", Qt::CaseInsensitive);
 
-MacroKey::MacroKey(const MacroKey& other)
+MacroKey::MacroKey(const MacroKey &other)
         : m_text(other.m_text)
 {
     // nothing
 }
 
-MacroKey::MacroKey(const QString& text)
+MacroKey::MacroKey(const QString &text)
         : m_text(text)
 {
     // nothing
 }
 
-void MacroKey::setText(const QString& text)
+void MacroKey::setText(const QString &text)
 {
     m_text = text;
 }
@@ -224,7 +224,7 @@ bool MacroKey::containsPattern(const QString &pattern, Qt::CaseSensitivity caseS
 
 bool MacroKey::operator==(const ValueItem &other) const
 {
-    const MacroKey *otherMacroKey = dynamic_cast<const MacroKey*>(&other);
+    const MacroKey *otherMacroKey = dynamic_cast<const MacroKey *>(&other);
     if (otherMacroKey != NULL) {
         return otherMacroKey->text() == text();
     } else
@@ -232,19 +232,19 @@ bool MacroKey::operator==(const ValueItem &other) const
 }
 
 
-PlainText::PlainText(const PlainText& other)
+PlainText::PlainText(const PlainText &other)
         : m_text(other.text())
 {
     // nothing
 }
 
-PlainText::PlainText(const QString& text)
+PlainText::PlainText(const QString &text)
         : m_text(text)
 {
     // nothing
 }
 
-void PlainText::setText(const QString& text)
+void PlainText::setText(const QString &text)
 {
     m_text = text;
 }
@@ -270,7 +270,7 @@ bool PlainText::containsPattern(const QString &pattern, Qt::CaseSensitivity case
 
 bool PlainText::operator==(const ValueItem &other) const
 {
-    const PlainText *otherPlainText = dynamic_cast<const PlainText*>(&other);
+    const PlainText *otherPlainText = dynamic_cast<const PlainText *>(&other);
     if (otherPlainText != NULL) {
         return otherPlainText->text() == text();
     } else
@@ -278,19 +278,19 @@ bool PlainText::operator==(const ValueItem &other) const
 }
 
 
-VerbatimText::VerbatimText(const VerbatimText& other)
+VerbatimText::VerbatimText(const VerbatimText &other)
         : m_text(other.text())
 {
     // nothing
 }
 
-VerbatimText::VerbatimText(const QString& text)
+VerbatimText::VerbatimText(const QString &text)
         : m_text(text)
 {
     // nothing
 }
 
-void VerbatimText::setText(const QString& text)
+void VerbatimText::setText(const QString &text)
 {
     m_text = text;
 }
@@ -316,7 +316,7 @@ bool VerbatimText::containsPattern(const QString &pattern, Qt::CaseSensitivity c
 
 bool VerbatimText::operator==(const ValueItem &other) const
 {
-    const VerbatimText *otherVerbatimText = dynamic_cast<const VerbatimText*>(&other);
+    const VerbatimText *otherVerbatimText = dynamic_cast<const VerbatimText *>(&other);
     if (otherVerbatimText != NULL) {
         return otherVerbatimText->text() == text();
     } else
@@ -330,7 +330,7 @@ Value::Value()
     // nothing
 }
 
-Value::Value(const Value& other)
+Value::Value(const Value &other)
         : QVector<QSharedPointer<ValueItem> >()
 {
     clear();
@@ -342,7 +342,7 @@ Value::~Value()
     clear();
 }
 
-void Value::merge(const Value& other)
+void Value::merge(const Value &other)
 {
     mergeFrom(other);
 }
@@ -425,7 +425,7 @@ bool Value::containsPattern(const QString &pattern, Qt::CaseSensitivity caseSens
     return result;
 }
 
-bool Value::contains(const ValueItem& item) const
+bool Value::contains(const ValueItem &item) const
 {
     for (Value::ConstIterator it = constBegin(); it != constEnd(); ++it)
         if ((*it)->operator==(item))
@@ -433,14 +433,14 @@ bool Value::contains(const ValueItem& item) const
     return false;
 }
 
-Value& Value::operator=(const Value & rhs)
+Value &Value::operator=(const Value &rhs)
 {
     clear();
     mergeFrom(rhs);
     return *this;
 }
 
-void Value::mergeFrom(const Value& other)
+void Value::mergeFrom(const Value &other)
 {
     for (Value::ConstIterator it = other.constBegin(); it != other.constEnd(); ++it)
         append(*it);
@@ -448,7 +448,7 @@ void Value::mergeFrom(const Value& other)
 
 QString PlainTextValue::personNameFormatting = QString::null;
 
-QString PlainTextValue::text(const Value& value, const File* file, bool debug)
+QString PlainTextValue::text(const Value &value, const File *file, bool debug)
 {
     ValueItemType vit = VITOther;
     ValueItemType lastVit = VITOther;
@@ -471,28 +471,28 @@ QString PlainTextValue::text(const Value& value, const File* file, bool debug)
     return result;
 }
 
-QString PlainTextValue::text(const ValueItem& valueItem, const File* file, bool debug)
+QString PlainTextValue::text(const ValueItem &valueItem, const File *file, bool debug)
 {
     ValueItemType vit;
     return text(valueItem, vit, file, debug);
 }
 
-QString PlainTextValue::text(const ValueItem& valueItem, ValueItemType &vit, const File* /*file*/, bool debug)
+QString PlainTextValue::text(const ValueItem &valueItem, ValueItemType &vit, const File * /*file*/, bool debug)
 {
     QString result = QString::null;
     vit = VITOther;
 
-    const PlainText *plainText = dynamic_cast<const PlainText*>(&valueItem);
+    const PlainText *plainText = dynamic_cast<const PlainText *>(&valueItem);
     if (plainText != NULL) {
         result = plainText->text();
         if (debug) result = "[:" + result + ":PlainText]";
     } else {
-        const MacroKey *macroKey = dynamic_cast<const MacroKey*>(&valueItem);
+        const MacroKey *macroKey = dynamic_cast<const MacroKey *>(&valueItem);
         if (macroKey != NULL) {
             result = macroKey->text(); // TODO Use File to resolve key to full text
             if (debug) result = "[:" + result + ":MacroKey]";
         } else {
-            const Person *person = dynamic_cast<const Person*>(&valueItem);
+            const Person *person = dynamic_cast<const Person *>(&valueItem);
             if (person != NULL) {
                 if (personNameFormatting.isNull()) {
                     KSharedConfigPtr config(KSharedConfig::openConfig(QLatin1String("kbibtexrc")));
@@ -503,13 +503,13 @@ QString PlainTextValue::text(const ValueItem& valueItem, ValueItemType &vit, con
                 vit = VITPerson;
                 if (debug) result = "[:" + result + ":Person]";
             } else {
-                const Keyword *keyword = dynamic_cast<const Keyword*>(&valueItem);
+                const Keyword *keyword = dynamic_cast<const Keyword *>(&valueItem);
                 if (keyword != NULL) {
                     result = keyword->text();
                     vit = VITKeyword;
                     if (debug) result = "[:" + result + ":Keyword]";
                 } else {
-                    const VerbatimText *verbatimText = dynamic_cast<const VerbatimText*>(&valueItem);
+                    const VerbatimText *verbatimText = dynamic_cast<const VerbatimText *>(&valueItem);
                     if (verbatimText != NULL) {
                         result = verbatimText->text();
                         if (debug) result = "[:" + result + ":VerbatimText]";

@@ -64,11 +64,11 @@ public:
      * @param iodevice opened QIODevice instance ready to read from
      * @return @c valid File object with elements, @c NULL if reading failed for some reason
      */
-    File* load(QIODevice *iodevice);
+    File *load(QIODevice *iodevice);
 
     /** TODO
      */
-    static bool guessCanDecode(const QString & text);
+    static bool guessCanDecode(const QString &text);
 
     /**
      * Split a list of keyword separated by ";" or "," into single Keyword objects.
@@ -76,7 +76,7 @@ public:
      * @return A Person object containing the name
      * @see Person
      */
-    static QList<Keyword*> splitKeywords(const QString& text);
+    static QList<Keyword *> splitKeywords(const QString &text);
 
     /**
      * Split a person's name into its parts and construct a Person object from them.
@@ -88,7 +88,7 @@ public:
      */
     static QSharedPointer<Person> personFromString(const QString &name);
 
-    static void parsePersonList(const QString& text, Value &value);
+    static void parsePersonList(const QString &text, Value &value);
 
 
     /**
@@ -129,7 +129,7 @@ private:
     Comment *readPlainCommentElement();
     Macro *readMacroElement();
     Preamble *readPreambleElement();
-    Entry *readEntryElement(const QString& typeString);
+    Entry *readEntryElement(const QString &typeString);
     Element *nextElement();
     Token nextToken();
     QString readString(bool &isStringKey);
@@ -137,11 +137,11 @@ private:
     QString readQuotedString();
     QString readLine();
     QString readBracketString(const QChar openingBracket); ///< do not use reference on QChar here!
-    Token readValue(Value& value, const QString& fieldType);
+    Token readValue(Value &value, const QString &fieldType);
 
     static QSharedPointer<Person> personFromString(const QString &name, CommaContainment *comma);
     static QSharedPointer<Person> personFromTokenList(const QStringList &tokens, CommaContainment *comma = NULL);
-    static void parsePersonList(const QString& text, Value &value, CommaContainment *comma);
+    static void parsePersonList(const QString &text, Value &value, CommaContainment *comma);
 
     /**
      * Split a string into white-space separated chunks,
@@ -152,7 +152,7 @@ private:
      * @param text input string to be split
      * @param segments list where chunks will be added to
      */
-    static void contextSensitiveSplit(const QString& text, QStringList& segments);
+    static void contextSensitiveSplit(const QString &text, QStringList &segments);
 
     bool evaluateParameterComments(QTextStream *textStream, const QString &line, File *file);
     QString tokenidToString(Token token);

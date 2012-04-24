@@ -85,9 +85,9 @@ private slots:
     void foundEntry(QSharedPointer<Entry> entry);
     void stoppedSearch(int resultCode);
     void tabSwitched(int newTab);
-    void itemCheckChanged(QListWidgetItem*);
+    void itemCheckChanged(QListWidgetItem *);
     void openHomepage();
-    void enginesListCurrentChanged(QListWidgetItem*, QListWidgetItem*);
+    void enginesListCurrentChanged(QListWidgetItem *, QListWidgetItem *);
     void copyFromEntry();
     void updateProgress(int, int);
 };

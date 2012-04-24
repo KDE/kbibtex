@@ -41,7 +41,7 @@ public:
         bibStyle = QLatin1String("plain");
     }
 
-    bool generateHTML(QIODevice* iodevice, QStringList *errorLog) {
+    bool generateHTML(QIODevice *iodevice, QStringList *errorLog) {
         if (!checkBSTexists(iodevice)) return false;
         if (!checkBibTeX2HTMLexists(iodevice)) return false;
 
@@ -64,7 +64,7 @@ public:
         return result;
     }
 
-    bool checkBibTeX2HTMLexists(QIODevice* iodevice) {
+    bool checkBibTeX2HTMLexists(QIODevice *iodevice) {
         if (p->which("bibtex2html"))
             return true;
 
@@ -77,7 +77,7 @@ public:
     }
 
 
-    bool checkBSTexists(QIODevice* iodevice) {
+    bool checkBSTexists(QIODevice *iodevice) {
         if (p->kpsewhich(bibStyle + ".bst"))
             return true;
 
@@ -106,13 +106,13 @@ void FileExporterBibTeX2HTML::reloadConfig()
     // nothing
 }
 
-bool FileExporterBibTeX2HTML::save(QIODevice* iodevice, const File* bibtexfile, QStringList *errorLog)
+bool FileExporterBibTeX2HTML::save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog)
 {
     bool result = false;
 
     QFile output(d->bibTeXFilename);
     if (output.open(QIODevice::WriteOnly)) {
-        FileExporterBibTeX * bibtexExporter = new FileExporterBibTeX();
+        FileExporterBibTeX *bibtexExporter = new FileExporterBibTeX();
         bibtexExporter->setEncoding(QLatin1String("latex"));
         result = bibtexExporter->save(&output, bibtexfile, errorLog);
         output.close();
@@ -125,13 +125,13 @@ bool FileExporterBibTeX2HTML::save(QIODevice* iodevice, const File* bibtexfile, 
     return result;
 }
 
-bool FileExporterBibTeX2HTML::save(QIODevice* iodevice, const QSharedPointer<const Element> element, QStringList *errorLog)
+bool FileExporterBibTeX2HTML::save(QIODevice *iodevice, const QSharedPointer<const Element> element, QStringList *errorLog)
 {
     bool result = false;
 
     QFile output(d->bibTeXFilename);
     if (output.open(QIODevice::WriteOnly)) {
-        FileExporterBibTeX * bibtexExporter = new FileExporterBibTeX();
+        FileExporterBibTeX *bibtexExporter = new FileExporterBibTeX();
         bibtexExporter->setEncoding(QLatin1String("latex"));
         result = bibtexExporter->save(&output, element, errorLog);
         output.close();
@@ -144,7 +144,7 @@ bool FileExporterBibTeX2HTML::save(QIODevice* iodevice, const QSharedPointer<con
     return result;
 }
 
-void FileExporterBibTeX2HTML::setLaTeXBibliographyStyle(const QString& bibStyle)
+void FileExporterBibTeX2HTML::setLaTeXBibliographyStyle(const QString &bibStyle)
 {
     d->bibStyle = bibStyle;
 }

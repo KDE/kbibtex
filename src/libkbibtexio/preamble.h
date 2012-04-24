@@ -33,25 +33,25 @@ class KBIBTEXIO_EXPORT Preamble : public Element
     Q_PROPERTY(Value value READ value WRITE setValue)
 
 public:
-    Preamble(const Value& value = Value());
-    Preamble(const Preamble& other);
+    Preamble(const Value &value = Value());
+    Preamble(const Preamble &other);
     ~Preamble();
 
     /**
      * Assignment operator, working similar to a copy constructor,
      * but overwrites the current object's values.
      */
-    Preamble& operator= (const Preamble& other);
+    Preamble &operator= (const Preamble &other);
 
-    Value& value();
-    const Value& value() const;
-    void setValue(const Value& value);
+    Value &value();
+    const Value &value() const;
+    void setValue(const Value &value);
 
     // bool containsPattern(const QString& pattern, Field::FieldType fieldType = Field::ftUnknown, FilterType filterType = Element::ftExact, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const; // FIXME: Rewrite filtering code
 
 private:
     class PreamblePrivate;
-    PreamblePrivate * const d;
+    PreamblePrivate *const d;
 };
 
 #endif // KBIBTEX_IO_PREAMBLE_H

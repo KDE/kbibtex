@@ -44,8 +44,8 @@ public:
     FieldLineEdit(KBibTeX::TypeFlag preferredTypeFlag, KBibTeX::TypeFlags typeFlags, bool isMultiLine = false, QWidget *parent = NULL);
     ~FieldLineEdit();
 
-    bool reset(const Value& value);
-    bool apply(Value& value) const;
+    bool reset(const Value &value);
+    bool apply(Value &value) const;
     virtual void setReadOnly(bool);
 
     void setFile(const File *file);
@@ -71,7 +71,7 @@ private:
 
 private slots:
     void slotTypeChanged(int);
-    void slotTextChanged(const QString&);
+    void slotTextChanged(const QString &);
     void slotOpenUrl();
 };
 

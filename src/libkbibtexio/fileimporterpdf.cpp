@@ -39,10 +39,10 @@ FileImporterPDF::~FileImporterPDF()
     delete m_bibTeXimporter;
 }
 
-File* FileImporterPDF::load(QIODevice *iodevice)
+File *FileImporterPDF::load(QIODevice *iodevice)
 {
     m_cancelFlag = false;
-    File* result = NULL;
+    File *result = NULL;
     QByteArray buffer = iodevice->readAll();
 
     Poppler::Document *doc = Poppler::Document::loadFromData(buffer);

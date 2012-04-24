@@ -32,13 +32,13 @@ public:
     Value value;
 };
 
-Preamble::Preamble(const Value& value)
+Preamble::Preamble(const Value &value)
         : Element(), d(new Preamble::PreamblePrivate)
 {
     d->value = value;
 }
 
-Preamble::Preamble(const Preamble& other)
+Preamble::Preamble(const Preamble &other)
         : Element(), d(new Preamble::PreamblePrivate)
 {
     operator=(other);
@@ -49,24 +49,24 @@ Preamble::~Preamble()
     delete d;
 }
 
-Preamble& Preamble::operator= (const Preamble & other)
+Preamble &Preamble::operator= (const Preamble &other)
 {
     if (this != &other)
         d->value = other.d->value;
     return *this;
 }
 
-Value& Preamble::value()
+Value &Preamble::value()
 {
     return d->value;
 }
 
-const Value& Preamble::value() const
+const Value &Preamble::value() const
 {
     return d->value;
 }
 
-void Preamble::setValue(const Value& value)
+void Preamble::setValue(const Value &value)
 {
     d->value = value;
 

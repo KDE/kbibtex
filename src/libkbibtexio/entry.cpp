@@ -74,7 +74,7 @@ public:
     QString id;
 };
 
-Entry::Entry(const QString& type, const QString& id)
+Entry::Entry(const QString &type, const QString &id)
         : Element(), QMap<QString, Value>(), d(new Entry::EntryPrivate)
 {
     d->type = type;
@@ -93,7 +93,7 @@ Entry::~Entry()
     delete d;
 }
 
-Entry& Entry::operator= (const Entry & other)
+Entry &Entry::operator= (const Entry &other)
 {
     if (this != &other) {
         d->type = other.type();
@@ -105,7 +105,7 @@ Entry& Entry::operator= (const Entry & other)
     return *this;
 }
 
-Value& Entry::operator[](const QString& key)
+Value &Entry::operator[](const QString &key)
 {
     const QString lcKey = key.toLower();
     for (Entry::ConstIterator it = constBegin(); it != constEnd(); ++it)
@@ -115,7 +115,7 @@ Value& Entry::operator[](const QString& key)
     return QMap<QString, Value>::operator[](key);
 }
 
-const  Value Entry::operator[](const QString& key) const
+const  Value Entry::operator[](const QString &key) const
 {
     const QString lcKey = key.toLower();
     for (Entry::ConstIterator it = constBegin(); it != constEnd(); ++it)
@@ -126,7 +126,7 @@ const  Value Entry::operator[](const QString& key) const
 }
 
 
-void Entry::setType(const QString& type)
+void Entry::setType(const QString &type)
 {
     d->type = type;
 }
@@ -136,7 +136,7 @@ QString Entry::type() const
     return d->type;
 }
 
-void Entry::setId(const QString& id)
+void Entry::setId(const QString &id)
 {
     d->id = id;
 }
@@ -146,7 +146,7 @@ QString Entry::id() const
     return d->id;
 }
 
-const Value Entry::value(const QString& key) const
+const Value Entry::value(const QString &key) const
 {
     const QString lcKey = key.toLower();
     for (Entry::ConstIterator it = constBegin(); it != constEnd(); ++it)
@@ -156,7 +156,7 @@ const Value Entry::value(const QString& key) const
     return QMap<QString, Value>::value(key);
 }
 
-int Entry::remove(const QString& key)
+int Entry::remove(const QString &key)
 {
     const QString lcKey = key.toLower();
     for (Entry::ConstIterator it = constBegin(); it != constEnd(); ++it)
@@ -166,7 +166,7 @@ int Entry::remove(const QString& key)
     return QMap<QString, Value>::remove(key);
 }
 
-bool Entry::contains(const QString& key) const
+bool Entry::contains(const QString &key) const
 {
     const QString lcKey = key.toLower();
     for (Entry::ConstIterator it = constBegin(); it != constEnd(); ++it)
@@ -176,7 +176,7 @@ bool Entry::contains(const QString& key) const
     return false;
 }
 
-Entry* Entry::resolveCrossref(const Entry &original, const File *bibTeXfile)
+Entry *Entry::resolveCrossref(const Entry &original, const File *bibTeXfile)
 {
     Entry *result = new Entry(original);
 

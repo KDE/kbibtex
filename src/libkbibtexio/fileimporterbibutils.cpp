@@ -45,7 +45,7 @@ FileImporterBibUtils::~FileImporterBibUtils()
     delete m_bibTeXImporter;
 }
 
-File* FileImporterBibUtils::load(QIODevice *iodevice)
+File *FileImporterBibUtils::load(QIODevice *iodevice)
 {
     if (!iodevice->isReadable()) {
         qDebug("iodevice is not readable");
@@ -131,7 +131,7 @@ File* FileImporterBibUtils::load(QIODevice *iodevice)
     return result;
 }
 
-bool FileImporterBibUtils::guessCanDecode(const QString & text)
+bool FileImporterBibUtils::guessCanDecode(const QString &text)
 {
     return guessInputFormat(text) != ifUndefined;
 }
@@ -162,7 +162,7 @@ QString FileImporterBibUtils::createTempDir()
 
     if (devrandom->open(QIODevice::ReadOnly)) {
         quint32 randomNumber;
-        if (devrandom->read((char*) & randomNumber, sizeof(randomNumber)) > 0) {
+        if (devrandom->read((char *) & randomNumber, sizeof(randomNumber)) > 0) {
             randomNumber |= 0x10000000;
             result = QString("/tmp/bibtex-%1").arg(randomNumber, sizeof(randomNumber) * 2, 16);
             if (!QDir().mkdir(result))
@@ -176,7 +176,7 @@ QString FileImporterBibUtils::createTempDir()
     return result;
 }
 
-void FileImporterBibUtils::deleteTempDir(const QString& directory)
+void FileImporterBibUtils::deleteTempDir(const QString &directory)
 {
     QDir dir = QDir(directory);
     QStringList subDirs = dir.entryList(QDir::Dirs);

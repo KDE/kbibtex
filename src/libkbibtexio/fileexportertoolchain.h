@@ -46,8 +46,8 @@ public:
 
     virtual void reloadConfig() = 0;
 
-    static bool kpsewhich(const QString& filename);
-    static bool which(const QString& filename);
+    static bool kpsewhich(const QString &filename);
+    static bool which(const QString &filename);
 
 public slots:
     void cancel();

@@ -38,7 +38,7 @@ public:
      * Create a new instance of a transformer.
      * @param xsltFilename file name of the XSL file
      */
-    XSLTransform(const QString& xsltFilename);
+    XSLTransform(const QString &xsltFilename);
     ~XSLTransform();
 
     /**
@@ -47,7 +47,7 @@ public:
      * @param xmlText XML document to transform
      * @return transformed document
      */
-    QString transform(const QString& xmlText) const;
+    QString transform(const QString &xmlText) const;
 
 private:
     class XSLTransformPrivate;

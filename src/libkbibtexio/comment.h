@@ -46,7 +46,7 @@ public:
      * Copy constructor cloning another comment object.
      * @param other comment object to clone
      */
-    Comment(const Comment& other);
+    Comment(const Comment &other);
 
     virtual ~Comment();
 
@@ -76,7 +76,7 @@ public:
 
 private:
     class CommentPrivate;
-    CommentPrivate * const d;
+    CommentPrivate *const d;
 };
 
 #endif // KBIBTEX_IO_COMMENT_H

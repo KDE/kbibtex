@@ -79,7 +79,7 @@ public:
 
     ReferencePreviewPrivate(ReferencePreview *parent)
             : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName(QLatin1String("Reference Preview Docklet")),
-            configKeyName(QLatin1String("Style")), editor(NULL), notAvailableMessage("<html><head><meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" /></head><body style=\"font-family: '" + KGlobalSettings::generalFont().family() + "';\"><p style=\"font-size: " + QString::number(KGlobalSettings::generalFont().pointSize()) + "pt; font-style: italic; color: #333;\">" + i18n("No preview available") + "</p><p style=\"font-size: " + QString::number(KGlobalSettings::generalFont().pointSize() * .9) + "pt; color: #666;\">" + i18n("Reason:") + " %1</p></body></html>") {
+          configKeyName(QLatin1String("Style")), editor(NULL), notAvailableMessage("<html><head><meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" /></head><body style=\"font-family: '" + KGlobalSettings::generalFont().family() + "';\"><p style=\"font-size: " + QString::number(KGlobalSettings::generalFont().pointSize()) + "pt; font-style: italic; color: #333;\">" + i18n("No preview available") + "</p><p style=\"font-size: " + QString::number(KGlobalSettings::generalFont().pointSize() * .9) + "pt; color: #666;\">" + i18n("Reason:") + " %1</p></body></html>") {
         QGridLayout *gridLayout = new QGridLayout(p);
         gridLayout->setMargin(0);
         gridLayout->setColumnStretch(0, 1);
@@ -117,7 +117,7 @@ public:
         gridLayout->addWidget(buttonSaveAsHTML, 2, 2, 1, 1);
     }
 
-    bool saveHTML(const KUrl& url) const {
+    bool saveHTML(const KUrl &url) const {
         KTemporaryFile file;
         file.setAutoRemove(true);
 
@@ -185,7 +185,7 @@ ReferencePreview::~ReferencePreview()
     delete d;
 }
 
-void ReferencePreview::setHtml(const QString & html, const QUrl & baseUrl)
+void ReferencePreview::setHtml(const QString &html, const QUrl &baseUrl)
 {
     d->htmlText = QString(html).replace("<?xml version=\"1.0\" encoding=\"UTF-8\"?>", "");
     d->baseUrl = baseUrl;
@@ -352,7 +352,7 @@ void ReferencePreview::saveAsHTML()
         d->saveHTML(url);
 }
 
-void ReferencePreview::linkClicked(const QUrl& url)
+void ReferencePreview::linkClicked(const QUrl &url)
 {
     QString text = url.toString();
     if (text.startsWith("kbibtex:filter:")) {

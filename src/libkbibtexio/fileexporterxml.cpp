@@ -46,7 +46,7 @@ FileExporterXML::~FileExporterXML()
     // nothing
 }
 
-bool FileExporterXML::save(QIODevice* iodevice, const File* bibtexfile, QStringList * /*errorLog*/)
+bool FileExporterXML::save(QIODevice *iodevice, const File *bibtexfile, QStringList * /*errorLog*/)
 {
     // m_mutex.lock(); // FIXME: required?
     bool result = true;
@@ -68,7 +68,7 @@ bool FileExporterXML::save(QIODevice* iodevice, const File* bibtexfile, QStringL
     return result && !m_cancelFlag;
 }
 
-bool FileExporterXML::save(QIODevice* iodevice, const QSharedPointer<const Element> element, QStringList * /*errorLog*/)
+bool FileExporterXML::save(QIODevice *iodevice, const QSharedPointer<const Element> element, QStringList * /*errorLog*/)
 {
     QTextStream stream(iodevice);
     stream.setCodec("UTF-8");
@@ -84,11 +84,11 @@ void FileExporterXML::cancel()
     m_cancelFlag = true;
 }
 
-bool FileExporterXML::write(QTextStream& stream, const Element* element, const File* bibtexfile)
+bool FileExporterXML::write(QTextStream &stream, const Element *element, const File *bibtexfile)
 {
     bool result = FALSE;
 
-    const Entry *entry = dynamic_cast<const Entry*>(element);
+    const Entry *entry = dynamic_cast<const Entry *>(element);
     if (entry != NULL) {
         if (bibtexfile != NULL) {
 // FIXME                entry = bibtexfile->completeReferencedFieldsConst( entry );
@@ -98,11 +98,11 @@ bool FileExporterXML::write(QTextStream& stream, const Element* element, const F
         if (bibtexfile != NULL)
             delete entry;
     } else {
-        const Macro * macro = dynamic_cast<const Macro*>(element);
+        const Macro *macro = dynamic_cast<const Macro *>(element);
         if (macro != NULL)
             result |= writeMacro(stream, macro);
         else {
-            const Comment * comment = dynamic_cast<const Comment*>(element);
+            const Comment *comment = dynamic_cast<const Comment *>(element);
             if (comment != NULL)
                 result |= writeComment(stream, comment);
             else {
@@ -114,7 +114,7 @@ bool FileExporterXML::write(QTextStream& stream, const Element* element, const F
     return result;
 }
 
-bool FileExporterXML::writeEntry(QTextStream &stream, const Entry* entry)
+bool FileExporterXML::writeEntry(QTextStream &stream, const Entry *entry)
 {
     stream << " <entry id=\"" << EncoderXML::currentEncoderXML() ->encode(entry->id()) << "\" type=\"" << entry->type().toLower() << "\">" << endl;
     for (Entry::ConstIterator it = entry->constBegin(); it != entry->constEnd(); ++it) {
@@ -182,7 +182,7 @@ bool FileExporterXML::writeEntry(QTextStream &stream, const Entry* entry)
     return true;
 }
 
-bool FileExporterXML::writeMacro(QTextStream &stream, const Macro* macro)
+bool FileExporterXML::writeMacro(QTextStream &stream, const Macro *macro)
 {
     stream << " <string key=\"" << macro->key() << "\">";
     stream << valueToXML(macro->value());
@@ -191,7 +191,7 @@ bool FileExporterXML::writeMacro(QTextStream &stream, const Macro* macro)
     return true;
 }
 
-bool FileExporterXML::writeComment(QTextStream &stream, const Comment* comment)
+bool FileExporterXML::writeComment(QTextStream &stream, const Comment *comment)
 {
     stream << " <comment>" ;
     stream << EncoderXML::currentEncoderXML() ->encode(comment->text());
@@ -200,7 +200,7 @@ bool FileExporterXML::writeComment(QTextStream &stream, const Comment* comment)
     return true;
 }
 
-QString FileExporterXML::valueToXML(const Value& value, const QString&)
+QString FileExporterXML::valueToXML(const Value &value, const QString &)
 {
     QString result;
     bool isFirst = true;

@@ -43,7 +43,7 @@ public:
      * @param key macro's key
      * @param value macro's value
      */
-    Macro(const QString& key = QString::null, const Value& value = Value());
+    Macro(const QString &key = QString::null, const Value &value = Value());
 
     /**
      * Copy constructor cloning another macro object.
@@ -57,7 +57,7 @@ public:
      * Assignment operator, working similar to a copy constructor,
      * but overwrites the current object's values.
      */
-    Macro& operator= (const Macro& other);
+    Macro &operator= (const Macro &other);
 
     /**
      * Set the key of this macro.
@@ -75,23 +75,23 @@ public:
      * Retrieve the key of this macro. Returns a reference which may not be modified.
      * @return key of this comment
      */
-    const Value& value() const;
+    const Value &value() const;
 
     /**
      * Retrieve the key of this macro. Returns a reference which may be modified.
      * @return key of this comment
      */
-    Value& value();
+    Value &value();
 
     /**
      * Set the value of this macro.
      * @param value new value of this macro
      */
-    void setValue(const Value& value);
+    void setValue(const Value &value);
 
 private:
     class MacroPrivate;
-    MacroPrivate * const d;
+    MacroPrivate *const d;
 };
 
 

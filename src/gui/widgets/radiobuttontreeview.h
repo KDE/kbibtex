@@ -38,9 +38,9 @@ class RadioButtonItemDelegate : public QStyledItemDelegate
 public:
     RadioButtonItemDelegate(QObject *p);
 
-    void paint(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const;
+    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
 
-    virtual QSize sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index) const;
+    virtual QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
 };
 
 

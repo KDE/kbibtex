@@ -56,8 +56,8 @@ public:
     DocumentListModel(OpenFileInfo::StatusFlag statusFlag, OpenFileInfoManager *openFileInfoManager, QObject *parent = NULL);
     ~DocumentListModel();
 
-    int rowCount(const QModelIndex & parent = QModelIndex()) const;
-    QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
 private:
@@ -101,7 +101,7 @@ public:
     DocumentList(OpenFileInfoManager *openFileInfoManager, QWidget *parent = NULL);
 
 signals:
-    void openFile(const KUrl& url);
+    void openFile(const KUrl &url);
 
 private slots:
     void fileSelected(const KFileItem &item);

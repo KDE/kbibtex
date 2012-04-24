@@ -101,7 +101,7 @@ bool EntryConfiguredWidget::apply(QSharedPointer<Element> element) const
     QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
     if (entry.isNull()) return false;
 
-    for (QMap<QString, FieldInput*>::ConstIterator it = bibtexKeyToWidget.constBegin(); it != bibtexKeyToWidget.constEnd(); ++it) {
+    for (QMap<QString, FieldInput *>::ConstIterator it = bibtexKeyToWidget.constBegin(); it != bibtexKeyToWidget.constEnd(); ++it) {
         Value value;
         it.value()->apply(value);
         entry->remove(it.key());
@@ -118,7 +118,7 @@ bool EntryConfiguredWidget::reset(QSharedPointer<const Element> element)
     if (entry.isNull()) return false;
 
     /// clear all widgets
-    for (QMap<QString, FieldInput*>::Iterator it = bibtexKeyToWidget.begin(); it != bibtexKeyToWidget.end(); ++it) {
+    for (QMap<QString, FieldInput *>::Iterator it = bibtexKeyToWidget.begin(); it != bibtexKeyToWidget.end(); ++it) {
         it.value()->clear();
         it.value()->setFile(m_file);
     }
@@ -144,7 +144,7 @@ void EntryConfiguredWidget::setReadOnly(bool isReadOnly)
 {
     ElementWidget::setReadOnly(isReadOnly);
 
-    for (QMap<QString, FieldInput*>::Iterator it = bibtexKeyToWidget.begin(); it != bibtexKeyToWidget.end(); ++it)
+    for (QMap<QString, FieldInput *>::Iterator it = bibtexKeyToWidget.begin(); it != bibtexKeyToWidget.end(); ++it)
         it.value()->setReadOnly(isReadOnly);
 }
 
@@ -161,7 +161,7 @@ KIcon EntryConfiguredWidget::icon()
 void EntryConfiguredWidget::setFile(const File *file)
 {
     if (file != NULL)
-        for (QMap<QString, FieldInput*>::Iterator it = bibtexKeyToWidget.begin(); it != bibtexKeyToWidget.end(); ++it) {
+        for (QMap<QString, FieldInput *>::Iterator it = bibtexKeyToWidget.begin(); it != bibtexKeyToWidget.end(); ++it) {
             /// list of unique values for same field
             QStringList list = file->uniqueEntryValuesList(it.key());
             /// for crossref fields, add all entries' ids
@@ -192,7 +192,7 @@ void EntryConfiguredWidget::createGUI()
     listOfLabeledFieldInput = new LabeledFieldInput*[fieldInputCount];
 
     int i = 0;
-    foreach(const SingleFieldLayout & sfl, etl->singleFieldLayouts) {
+    foreach(const SingleFieldLayout &sfl, etl->singleFieldLayouts) {
         LabeledFieldInput *labeledFieldInput = new LabeledFieldInput;
 
         /// create an editing widget for this field
@@ -496,7 +496,7 @@ void ReferenceWidget::prepareSuggestionsMenu()
 
 void ReferenceWidget::insertSuggestionFromAction()
 {
-    QAction *action = dynamic_cast<QAction*>(sender());
+    QAction *action = dynamic_cast<QAction *>(sender());
     if (action != NULL) {
         const QString suggestion = action->property(PropertyIdSuggestion).toString();
         entryId->setText(suggestion);
@@ -821,8 +821,8 @@ void OtherFieldsWidget::createGUI()
     buttonOpen->setEnabled(false);
     layout->addWidget(buttonOpen, 3, 2, 1, 1);
 
-    connect(otherFieldsList, SIGNAL(itemActivated(QTreeWidgetItem*, int)), this, SLOT(listElementExecuted(QTreeWidgetItem*, int)));
-    connect(otherFieldsList, SIGNAL(currentItemChanged(QTreeWidgetItem*, QTreeWidgetItem*)), this, SLOT(listCurrentChanged(QTreeWidgetItem*, QTreeWidgetItem*)));
+    connect(otherFieldsList, SIGNAL(itemActivated(QTreeWidgetItem *, int)), this, SLOT(listElementExecuted(QTreeWidgetItem *, int)));
+    connect(otherFieldsList, SIGNAL(currentItemChanged(QTreeWidgetItem *, QTreeWidgetItem *)), this, SLOT(listCurrentChanged(QTreeWidgetItem *, QTreeWidgetItem *)));
     connect(otherFieldsList, SIGNAL(itemSelectionChanged()), this, SLOT(updateGUI()));
     connect(fieldName, SIGNAL(textEdited(QString)), this, SLOT(updateGUI()));
     connect(buttonAddApply, SIGNAL(clicked()), this, SLOT(actionAddApply()));

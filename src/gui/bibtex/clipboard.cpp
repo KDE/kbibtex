@@ -96,7 +96,7 @@ public:
         /// keep track of the insert element which is most upwards in the list when inserted
         QModelIndex minRowTargetModelIndex;
         /// highlight those rows in the editor which correspond to newly inserted elements
-        for (int i = startRow; i <= endRow;++i) {
+        for (int i = startRow; i <= endRow; ++i) {
             QModelIndex targetModelIndex = sfpModel->mapFromSource(bibTeXModel->index(i, 0));
             ism->select(targetModelIndex, QItemSelectionModel::Rows | QItemSelectionModel::Select);
 
@@ -117,10 +117,10 @@ public:
 Clipboard::Clipboard(BibTeXEditor *bibTeXEditor)
         : QObject(bibTeXEditor), d(new ClipboardPrivate(bibTeXEditor, this))
 {
-    connect(bibTeXEditor, SIGNAL(editorMouseEvent(QMouseEvent*)), this, SLOT(editorMouseEvent(QMouseEvent*)));
-    connect(bibTeXEditor, SIGNAL(editorDragEnterEvent(QDragEnterEvent*)), this, SLOT(editorDragEnterEvent(QDragEnterEvent*)));
-    connect(bibTeXEditor, SIGNAL(editorDragMoveEvent(QDragMoveEvent*)), this, SLOT(editorDragMoveEvent(QDragMoveEvent*)));
-    connect(bibTeXEditor, SIGNAL(editorDropEvent(QDropEvent*)), this, SLOT(editorDropEvent(QDropEvent*)));
+    connect(bibTeXEditor, SIGNAL(editorMouseEvent(QMouseEvent *)), this, SLOT(editorMouseEvent(QMouseEvent *)));
+    connect(bibTeXEditor, SIGNAL(editorDragEnterEvent(QDragEnterEvent *)), this, SLOT(editorDragEnterEvent(QDragEnterEvent *)));
+    connect(bibTeXEditor, SIGNAL(editorDragMoveEvent(QDragMoveEvent *)), this, SLOT(editorDragMoveEvent(QDragMoveEvent *)));
+    connect(bibTeXEditor, SIGNAL(editorDropEvent(QDropEvent *)), this, SLOT(editorDropEvent(QDropEvent *)));
     bibTeXEditor->setAcceptDrops(!bibTeXEditor->isReadOnly());
 }
 

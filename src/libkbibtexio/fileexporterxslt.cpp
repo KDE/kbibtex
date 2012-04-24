@@ -37,7 +37,7 @@
 #include "fileexporterxslt.h"
 #include "xsltransform.h"
 
-FileExporterXSLT::FileExporterXSLT(const QString& xsltFilename)
+FileExporterXSLT::FileExporterXSLT(const QString &xsltFilename)
         : FileExporter()
 {
     if (xsltFilename.isEmpty() || !QFile(xsltFilename).exists())
@@ -52,7 +52,7 @@ FileExporterXSLT::~FileExporterXSLT()
     // nothing
 }
 
-bool FileExporterXSLT::save(QIODevice* iodevice, const File* bibtexfile, QStringList *errorLog)
+bool FileExporterXSLT::save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog)
 {
     m_cancelFlag = false;
     XSLTransform xsltransformer(m_xsltFilename);
@@ -78,7 +78,7 @@ bool FileExporterXSLT::save(QIODevice* iodevice, const File* bibtexfile, QString
     return false;
 }
 
-bool FileExporterXSLT::save(QIODevice* iodevice, const QSharedPointer<const Element> element, QStringList *errorLog)
+bool FileExporterXSLT::save(QIODevice *iodevice, const QSharedPointer<const Element> element, QStringList *errorLog)
 {
     m_cancelFlag = false;
     XSLTransform xsltransformer(m_xsltFilename);
@@ -105,7 +105,7 @@ bool FileExporterXSLT::save(QIODevice* iodevice, const QSharedPointer<const Elem
     return false;
 }
 
-void FileExporterXSLT::setXSLTFilename(const QString& xsltFilename)
+void FileExporterXSLT::setXSLTFilename(const QString &xsltFilename)
 {
     m_xsltFilename = xsltFilename;
 }

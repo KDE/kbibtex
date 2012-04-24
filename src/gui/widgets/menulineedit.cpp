@@ -45,15 +45,15 @@ public:
 
     MenuLineEditPrivate(bool isMultiLine, MenuLineEdit *parent)
             : p(parent), m_isReadOnly(false),
-            // FIXME much here is hard-coded. do it better?
-            transparentStyleSheet(
-                QLatin1String("QTextEdit { border-style: none; background-color: transparent; }")
-                + QLatin1String("KLineEdit { border-style: none; background-color: transparent; }")
-                + QLatin1String("KPushButton { border-style: none; background-color: transparent; padding: 0px; margin-left: 2px; margin-right:2px; text-align: left; }")
-            ), normalStyleSheet(
-                QLatin1String("KPushButton { padding:4px; margin:0px;  text-align: left; }")
-                + QLatin1String("QPushButton::menu-indicator {subcontrol-position: right center; subcontrol-origin: content;}")
-            ), makeInnerWidgetsTransparent(false), m_singleLineEditText(NULL), m_multiLineEditText(NULL) {
+          // FIXME much here is hard-coded. do it better?
+          transparentStyleSheet(
+              QLatin1String("QTextEdit { border-style: none; background-color: transparent; }")
+              + QLatin1String("KLineEdit { border-style: none; background-color: transparent; }")
+              + QLatin1String("KPushButton { border-style: none; background-color: transparent; padding: 0px; margin-left: 2px; margin-right:2px; text-align: left; }")
+          ), normalStyleSheet(
+              QLatin1String("KPushButton { padding:4px; margin:0px;  text-align: left; }")
+              + QLatin1String("QPushButton::menu-indicator {subcontrol-position: right center; subcontrol-origin: content;}")
+          ), makeInnerWidgetsTransparent(false), m_singleLineEditText(NULL), m_multiLineEditText(NULL) {
         this->isMultiLine = isMultiLine;
     }
 
@@ -176,12 +176,12 @@ void MenuLineEdit::setText(const QString &text)
     }
 }
 
-void MenuLineEdit::setIcon(const KIcon & icon)
+void MenuLineEdit::setIcon(const KIcon &icon)
 {
     d->m_pushButtonType->setIcon(icon);
 }
 
-void MenuLineEdit::setFont(const QFont & font)
+void MenuLineEdit::setFont(const QFont &font)
 {
     if (d->m_singleLineEditText != NULL)
         d->m_singleLineEditText->setFont(font);

@@ -53,7 +53,7 @@ public:
 
     ~OpenFileInfo();
 
-    KParts::ReadOnlyPart* part(QWidget *parent, KService::Ptr servicePtr = KService::Ptr());
+    KParts::ReadOnlyPart *part(QWidget *parent, KService::Ptr servicePtr = KService::Ptr());
 
     QString shortCaption() const;
     QString fullCaption() const;
@@ -77,7 +77,7 @@ public:
     void removeFlags(StatusFlags statusFlags);
 
     QDateTime lastAccess() const;
-    void setLastAccess(const QDateTime& dateTime = QDateTime::currentDateTime());
+    void setLastAccess(const QDateTime &dateTime = QDateTime::currentDateTime());
 
     KService::List listOfServices();
     KService::Ptr defaultService();
@@ -91,14 +91,14 @@ signals:
 protected:
     OpenFileInfo(OpenFileInfoManager *openFileInfoManager, const KUrl &url);
     OpenFileInfo(OpenFileInfoManager *openFileInfoManager, const QString &mimeType = FileInfo::mimetypeBibTeX);
-    void setUrl(const KUrl& url);
+    void setUrl(const KUrl &url);
 
 private:
     class OpenFileInfoPrivate;
     OpenFileInfoPrivate *d;
 };
 
-Q_DECLARE_METATYPE(OpenFileInfo*);
+Q_DECLARE_METATYPE(OpenFileInfo *);
 
 
 class OpenFileInfoManager: public QObject
@@ -106,16 +106,16 @@ class OpenFileInfoManager: public QObject
     Q_OBJECT
 
 public:
-    typedef QVector<OpenFileInfo*> OpenFileInfoList;
+    typedef QVector<OpenFileInfo *> OpenFileInfoList;
 
     OpenFileInfoManager();
     ~OpenFileInfoManager();
 
-    OpenFileInfo *createNew(const QString& mimeType = FileInfo::mimetypeBibTeX);
-    OpenFileInfo *open(const KUrl& url);
-    OpenFileInfo *contains(const KUrl& url) const;
+    OpenFileInfo *createNew(const QString &mimeType = FileInfo::mimetypeBibTeX);
+    OpenFileInfo *open(const KUrl &url);
+    OpenFileInfo *contains(const KUrl &url) const;
     OpenFileInfo *currentFile() const;
-    bool changeUrl(OpenFileInfo *openFileInfo, const KUrl & url);
+    bool changeUrl(OpenFileInfo *openFileInfo, const KUrl &url);
     bool close(OpenFileInfo *openFileInfo);
 
     /**

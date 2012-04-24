@@ -116,14 +116,14 @@ BibTeXEntries::~BibTeXEntries()
     delete d;
 }
 
-BibTeXEntries* BibTeXEntries::self()
+BibTeXEntries *BibTeXEntries::self()
 {
     if (BibTeXEntriesPrivate::singleton == NULL)
         BibTeXEntriesPrivate::singleton = new BibTeXEntries();
     return BibTeXEntriesPrivate::singleton;
 }
 
-QString BibTeXEntries::format(const QString& name, KBibTeX::Casing casing) const
+QString BibTeXEntries::format(const QString &name, KBibTeX::Casing casing) const
 {
     QString iName = name.toLower();
 
@@ -165,7 +165,7 @@ QString BibTeXEntries::format(const QString& name, KBibTeX::Casing casing) const
     return name;
 }
 
-QString BibTeXEntries::label(const QString& name) const
+QString BibTeXEntries::label(const QString &name) const
 {
     const QString iName = name.toLower();
 

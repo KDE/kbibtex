@@ -46,15 +46,15 @@ private:
 public:
     PDFItemDelegate(QListView *itemView, QObject *parent);
 
-    virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex & index) const;
+    virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
 
     /// get the list of widgets
-    virtual QList<QWidget*> createItemWidgets() const;
+    virtual QList<QWidget *> createItemWidgets() const;
 
     /// update the widgets
-    virtual void updateItemWidgets(const QList<QWidget*> widgets, const QStyleOptionViewItem &option, const QPersistentModelIndex &index) const;
+    virtual void updateItemWidgets(const QList<QWidget *> widgets, const QStyleOptionViewItem &option, const QPersistentModelIndex &index) const;
 
-    virtual QSize sizeHint(const QStyleOptionViewItem & option, const QModelIndex &) const;
+    virtual QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &) const;
 
 private slots:
     void slotViewPDF();
@@ -101,9 +101,9 @@ class PDFListModel : public QAbstractListModel
 public:
     PDFListModel(QList<FindPDF::ResultItem> &resultList, QObject *parent = NULL);
 
-    int rowCount(const QModelIndex & parent = QModelIndex()) const;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-    bool setData(const QModelIndex & index, const QVariant & value, int role = Qt::EditRole);
+    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
 private:

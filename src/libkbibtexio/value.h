@@ -68,10 +68,10 @@ protected:
 class KBIBTEXIO_EXPORT Keyword: public ValueItem
 {
 public:
-    Keyword(const Keyword& other);
-    Keyword(const QString& text);
+    Keyword(const Keyword &other);
+    Keyword(const QString &text);
 
-    void setText(const QString& text);
+    void setText(const QString &text);
     QString text() const;
 
     void replace(const QString &before, const QString &after, ValueItem::ReplaceMode replaceMode);
@@ -97,8 +97,8 @@ public:
     @param lastName Last name of a person. Example: "Smith"
     @param suffix Suffix after a name. Example: "jr."
     */
-    Person(const QString& firstName, const QString& lastName, const QString& suffix = QString::null);
-    Person(const Person& other);
+    Person(const QString &firstName, const QString &lastName, const QString &suffix = QString::null);
+    Person(const Person &other);
 
     QString firstName() const;
     QString lastName() const;
@@ -108,7 +108,7 @@ public:
     bool containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const;
     bool operator==(const ValueItem &other) const;
 
-    static QString transcribePersonName(const QString &formatting, const QString& firstName, const QString& lastName, const QString& suffix = QString::null);
+    static QString transcribePersonName(const QString &formatting, const QString &firstName, const QString &lastName, const QString &suffix = QString::null);
     static QString transcribePersonName(const Person *person, const QString &formatting);
 
 private:
@@ -121,10 +121,10 @@ private:
 class KBIBTEXIO_EXPORT MacroKey: public ValueItem
 {
 public:
-    MacroKey(const MacroKey& other);
-    MacroKey(const QString& text);
+    MacroKey(const MacroKey &other);
+    MacroKey(const QString &text);
 
-    void setText(const QString& text);
+    void setText(const QString &text);
     QString text() const;
     bool isValid();
 
@@ -140,10 +140,10 @@ protected:
 class KBIBTEXIO_EXPORT PlainText: public ValueItem
 {
 public:
-    PlainText(const PlainText& other);
-    PlainText(const QString& text);
+    PlainText(const PlainText &other);
+    PlainText(const QString &text);
 
-    void setText(const QString& text);
+    void setText(const QString &text);
     QString text() const;
 
     void replace(const QString &before, const QString &after, ValueItem::ReplaceMode replaceMode);
@@ -157,10 +157,10 @@ protected:
 class KBIBTEXIO_EXPORT VerbatimText: public ValueItem
 {
 public:
-    VerbatimText(const VerbatimText& other);
-    VerbatimText(const QString& text);
+    VerbatimText(const VerbatimText &other);
+    VerbatimText(const QString &text);
 
-    void setText(const QString& text);
+    void setText(const QString &text);
     QString text() const;
 
     void replace(const QString &before, const QString &after, ValueItem::ReplaceMode replaceMode);
@@ -180,10 +180,10 @@ class KBIBTEXIO_EXPORT Value: public QVector<QSharedPointer<ValueItem> >
 {
 public:
     Value();
-    Value(const Value& other);
+    Value(const Value &other);
     virtual ~Value();
 
-    void merge(const Value& other);
+    void merge(const Value &other);
 
     void replace(const QString &before, const QString &after, ValueItem::ReplaceMode replaceMode);
     void replace(const QString &before, const QSharedPointer<ValueItem> &after);
@@ -196,25 +196,25 @@ public:
       */
     bool containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const;
 
-    bool contains(const ValueItem& item) const;
+    bool contains(const ValueItem &item) const;
 
-    Value& operator=(const Value& rhs);
+    Value &operator=(const Value &rhs);
 
 private:
-    void mergeFrom(const Value& other);
+    void mergeFrom(const Value &other);
 };
 
 class KBIBTEXIO_EXPORT PlainTextValue
 {
 public:
-    static QString text(const Value& value, const File* file = NULL, bool debug = false);
-    static QString text(const ValueItem& valueItem, const File* file = NULL, bool debug = false);
+    static QString text(const Value &value, const File *file = NULL, bool debug = false);
+    static QString text(const ValueItem &valueItem, const File *file = NULL, bool debug = false);
 
 private:
     enum ValueItemType { VITOther = 0, VITPerson, VITKeyword} lastItem;
     static QString personNameFormatting;
 
-    static QString text(const ValueItem& valueItem, ValueItemType &vit, const File* file, bool debug);
+    static QString text(const ValueItem &valueItem, ValueItemType &vit, const File *file, bool debug);
 };
 
 Q_DECLARE_METATYPE(Value);

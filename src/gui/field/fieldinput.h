@@ -38,8 +38,8 @@ public:
     FieldInput(KBibTeX::FieldInputType fieldInputType, KBibTeX::TypeFlag preferredTypeFlag, KBibTeX::TypeFlags typeFlags, QWidget *parent = NULL);
     ~FieldInput();
 
-    bool reset(const Value& value);
-    bool apply(Value& value) const;
+    bool reset(const Value &value);
+    bool apply(Value &value) const;
 
     void clear();
     void setReadOnly(bool isReadOnly);

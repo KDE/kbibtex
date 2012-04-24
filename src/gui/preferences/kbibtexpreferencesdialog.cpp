@@ -43,7 +43,7 @@ class KBibTeXPreferencesDialog::KBibTeXPreferencesDialogPrivate
 private:
     KBibTeXPreferencesDialog *p;
     KComboBox *listOfEncodings;
-    QSet<SettingsAbstractWidget*> settingWidgets;
+    QSet<SettingsAbstractWidget *> settingWidgets;
 
 public:
     KBibTeXPreferencesDialogPrivate(KBibTeXPreferencesDialog *parent)
@@ -87,7 +87,7 @@ public:
         KPageWidgetItem *pageSaving = p->addPage(settingsWidget, i18n("Saving and Exporting"));
         pageSaving->setIcon(KIcon("document-save"));
         connect(settingsWidget, SIGNAL(changed()), p, SLOT(gotChanged()));
-   }
+    }
 
     void loadState() {
         foreach(SettingsAbstractWidget *settingsWidget, settingWidgets) {
@@ -109,7 +109,7 @@ public:
             }
             break;
         case KMessageBox::No: {
-            SettingsAbstractWidget *widget = dynamic_cast<SettingsAbstractWidget*>(p->currentPage()->widget());
+            SettingsAbstractWidget *widget = dynamic_cast<SettingsAbstractWidget *>(p->currentPage()->widget());
             if (widget != NULL)
                 widget->resetToDefaults();
         }

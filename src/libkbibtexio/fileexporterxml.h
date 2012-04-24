@@ -39,10 +39,10 @@ public:
     FileExporterXML();
     ~FileExporterXML();
 
-    bool save(QIODevice* iodevice, const File* bibtexfile, QStringList *errorLog = NULL);
-    bool save(QIODevice* iodevice, const QSharedPointer<const Element> element, QStringList *errorLog = NULL);
+    bool save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog = NULL);
+    bool save(QIODevice *iodevice, const QSharedPointer<const Element> element, QStringList *errorLog = NULL);
 
-    static QString valueToXML(const Value& value, const QString& fieldType = QString::null);
+    static QString valueToXML(const Value &value, const QString &fieldType = QString::null);
 
 public slots:
     void cancel();
@@ -50,10 +50,10 @@ public slots:
 private:
     bool m_cancelFlag;
 
-    bool write(QTextStream&stream, const Element* element, const File* bibtexfile = NULL);
-    bool writeEntry(QTextStream &stream, const Entry* entry);
-    bool writeMacro(QTextStream &stream, const Macro* macro);
-    bool writeComment(QTextStream &stream, const Comment* comment);
+    bool write(QTextStream &stream, const Element *element, const File *bibtexfile = NULL);
+    bool writeEntry(QTextStream &stream, const Entry *entry);
+    bool writeMacro(QTextStream &stream, const Macro *macro);
+    bool writeComment(QTextStream &stream, const Comment *comment);
 
     static QString cleanXML(const QString &text);
 };

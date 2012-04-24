@@ -52,7 +52,7 @@ public:
 
     FilterBarPrivate(FilterBar *parent)
             : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))),
-            configGroupName(QLatin1String("Filter Bar")), maxNumStoredFilterTexts(12), filterUpdateTimer(new QTimer(parent)) {
+          configGroupName(QLatin1String("Filter Bar")), maxNumStoredFilterTexts(12), filterUpdateTimer(new QTimer(parent)) {
         connect(filterUpdateTimer, SIGNAL(timeout()), p, SLOT(timerTriggered()));
     }
 
@@ -156,8 +156,8 @@ FilterBar::FilterBar(QWidget *parent)
     d->comboBoxFilterText->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Preferred);
     d->comboBoxFilterText->setEditable(true);
     QFontMetrics metrics(d->comboBoxFilterText->font());
-    d->comboBoxFilterText->setMinimumWidth(metrics.width(QLatin1String("AIWaiw"))*7);
-    KLineEdit *lineEdit = static_cast<KLineEdit*>(d->comboBoxFilterText->lineEdit());
+    d->comboBoxFilterText->setMinimumWidth(metrics.width(QLatin1String("AIWaiw")) * 7);
+    KLineEdit *lineEdit = static_cast<KLineEdit *>(d->comboBoxFilterText->lineEdit());
     lineEdit->setClearButtonShown(true);
 
     d->comboBoxCombination = new KComboBox(false, this);
@@ -172,7 +172,7 @@ FilterBar::FilterBar(QWidget *parent)
     d->comboBoxField->addItem(i18n("every field"), QVariant());
     d->comboBoxField->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 
-    foreach(const FieldDescription *fd,  *BibTeXFields::self()) {
+    foreach(const FieldDescription *fd, *BibTeXFields::self()) {
         if (fd->upperCamelCaseAlt.isEmpty())
             d->comboBoxField->addItem(fd->label, fd->upperCamelCase);
     }

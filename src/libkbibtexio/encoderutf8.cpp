@@ -80,14 +80,14 @@ QString EncoderUTF8::encode(const QString &input) const
         /// Finally, check if input character is a dollar sign
         /// without a preceeding backslash, means toggling between
         /// text mode and math mode
-        if (c == '$' && (i == 0 || input[i-1] != QChar('\\')))
+        if (c == '$' && (i == 0 || input[i - 1] != QChar('\\')))
             inMathMode = !inMathMode;
     }
 
     return output;
 }
 
-EncoderUTF8* EncoderUTF8::instance()
+EncoderUTF8 *EncoderUTF8::instance()
 {
     if (self == NULL)
         self = new EncoderUTF8();

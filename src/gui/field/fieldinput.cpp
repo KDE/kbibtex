@@ -130,7 +130,7 @@ public:
         enableModifiedSignal();
     }
 
-    bool reset(const Value& value) {
+    bool reset(const Value &value) {
         /// if signals are not deactivated, the "modified" signal would be emitted when
         /// resetting the widget's value
         disableModifiedSignal();
@@ -148,7 +148,7 @@ public:
         return result;
     }
 
-    bool apply(Value& value) const {
+    bool apply(Value &value) const {
         bool result = false;
         if (fieldLineEdit != NULL)
             result = fieldLineEdit->apply(value);
@@ -208,7 +208,7 @@ public:
         list.sort();
 
         /// remove own id
-        const Entry *entry = dynamic_cast<const Entry*>(element);
+        const Entry *entry = dynamic_cast<const Entry *>(element);
         if (entry != NULL) list.removeOne(entry->id());
 
         QString crossRef = KInputDialog::getItem(i18n("Select Cross Reference"), i18n("Select the cross reference to another entry:"), list, 0, false, &ok, p);
@@ -264,12 +264,12 @@ void FieldInput::clear()
     d->clear();
 }
 
-bool FieldInput::reset(const Value& value)
+bool FieldInput::reset(const Value &value)
 {
     return d->reset(value);
 }
 
-bool FieldInput::apply(Value& value) const
+bool FieldInput::apply(Value &value) const
 {
     return d->apply(value);
 }
@@ -302,7 +302,7 @@ void FieldInput::setCompletionItems(const QStringList &items)
 void FieldInput::setMonth(int month)
 {
     Value value;
-    value.append(QSharedPointer<MacroKey>(new MacroKey(KBibTeX::MonthsTriple[month-1])));
+    value.append(QSharedPointer<MacroKey>(new MacroKey(KBibTeX::MonthsTriple[month - 1])));
     reset(value);
 }
 

@@ -42,8 +42,8 @@ public:
     virtual void setReadOnly(bool);
     QString text() const;
     void setText(const QString &);
-    void setIcon(const KIcon & icon);
-    void setFont(const QFont & font);
+    void setIcon(const KIcon &icon);
+    void setFont(const QFont &font);
     void setButtonToolTip(const QString &);
     void setChildAcceptDrops(bool acceptDrops);
 
@@ -65,7 +65,7 @@ private slots:
 
 private:
     class MenuLineEditPrivate;
-    MenuLineEditPrivate * const d;
+    MenuLineEditPrivate *const d;
 };
 
 

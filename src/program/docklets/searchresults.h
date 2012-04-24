@@ -40,7 +40,7 @@ public:
     bool insertElement(QSharedPointer<Element> element);
 
 public slots:
-    void documentSwitched(BibTeXEditor*, BibTeXEditor*);
+    void documentSwitched(BibTeXEditor *, BibTeXEditor *);
 
 private:
     class SearchResultsPrivate;

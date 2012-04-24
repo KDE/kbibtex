@@ -95,7 +95,7 @@ private:
     QGridLayout *gridLayout;
 
     QSharedPointer<EntryTabLayout> etl;
-    QMap<QString, FieldInput*> bibtexKeyToWidget;
+    QMap<QString, FieldInput *> bibtexKeyToWidget;
 
     void createGUI();
     void layoutGUI(bool forceVisible, const QString &entryType = QString::null);

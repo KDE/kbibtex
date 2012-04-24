@@ -86,25 +86,25 @@ public:
     const QString configGroupName;
 
     SearchResults *sr;
-    QMap<QListWidgetItem*, OnlineSearchAbstract*> itemToOnlineSearch;
-    QSet<OnlineSearchAbstract*> runningSearches;
+    QMap<QListWidgetItem *, OnlineSearchAbstract *> itemToOnlineSearch;
+    QSet<OnlineSearchAbstract *> runningSearches;
     KPushButton *searchButton;
     KPushButton *useEntryButton;
     OnlineSearchQueryFormGeneral *generalQueryTermsForm;
     QTabWidget *tabWidget;
     QSharedPointer<const Entry> currentEntry;
     QProgressBar *progressBar;
-    QMap<OnlineSearchAbstract*, int> progressMap;
-    QMap<OnlineSearchQueryFormAbstract*, QScrollArea*> formToScrollArea;
+    QMap<OnlineSearchAbstract *, int> progressMap;
+    QMap<OnlineSearchQueryFormAbstract *, QScrollArea *> formToScrollArea;
 
     SearchFormPrivate(SearchResults *searchResults, SearchForm *parent)
             : p(parent), whichEnginesLabel(NULL), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))),
-            configGroupName(QLatin1String("Search Engines Docklet")), sr(searchResults), searchButton(NULL), useEntryButton(NULL), currentEntry(NULL) {
+          configGroupName(QLatin1String("Search Engines Docklet")), sr(searchResults), searchButton(NULL), useEntryButton(NULL), currentEntry(NULL) {
         // nothing
     }
 
     OnlineSearchQueryFormAbstract *currentQueryForm() {
-        QScrollArea *area = dynamic_cast<QScrollArea*>(queryTermsStack->currentWidget());
+        QScrollArea *area = dynamic_cast<QScrollArea *>(queryTermsStack->currentWidget());
         return formToScrollArea.key(area, NULL);
     }
 
@@ -120,7 +120,7 @@ public:
         return scrollArea;
     }
 
-    QWidget* createQueryTermsStack(QWidget *parent) {
+    QWidget *createQueryTermsStack(QWidget *parent) {
         QWidget *container = new QWidget(parent);
         QVBoxLayout *vLayout = new QVBoxLayout(container);
 
@@ -142,12 +142,12 @@ public:
         return container;
     }
 
-    OnlineSearchQueryFormAbstract* createGeneralQueryTermsForm(QWidget *parent = NULL) {
+    OnlineSearchQueryFormAbstract *createGeneralQueryTermsForm(QWidget *parent = NULL) {
         generalQueryTermsForm = new OnlineSearchQueryFormGeneral(parent);
         return generalQueryTermsForm;
     }
 
-    QWidget* createEnginesGUI(QWidget *parent) {
+    QWidget *createEnginesGUI(QWidget *parent) {
         listContainer = new QWidget(parent);
         QGridLayout *layout = new QGridLayout(listContainer);
         layout->setRowStretch(0, 1);
@@ -155,8 +155,8 @@ public:
 
         enginesList = new QListWidget(listContainer);
         layout->addWidget(enginesList, 0, 0, 1, 1);
-        connect(enginesList, SIGNAL(itemChanged(QListWidgetItem*)), p, SLOT(itemCheckChanged(QListWidgetItem*)));
-        connect(enginesList, SIGNAL(currentItemChanged(QListWidgetItem*, QListWidgetItem*)), p, SLOT(enginesListCurrentChanged(QListWidgetItem*, QListWidgetItem*)));
+        connect(enginesList, SIGNAL(itemChanged(QListWidgetItem *)), p, SLOT(itemCheckChanged(QListWidgetItem *)));
+        connect(enginesList, SIGNAL(currentItemChanged(QListWidgetItem *, QListWidgetItem *)), p, SLOT(enginesListCurrentChanged(QListWidgetItem *, QListWidgetItem *)));
         enginesList->setSelectionMode(QAbstractItemView::NoSelection);
 
         actionOpenHomepage = new KAction(KIcon("internet-web-browser"), i18n("Go to Homepage"), p);
@@ -234,7 +234,7 @@ public:
         item->setData(NameRole, engine->name());
 
         OnlineSearchQueryFormAbstract *widget = engine->customWidget(queryTermsStack);
-        item->setData(WidgetRole, QVariant::fromValue<OnlineSearchQueryFormAbstract*>(widget));
+        item->setData(WidgetRole, QVariant::fromValue<OnlineSearchQueryFormAbstract *>(widget));
         if (widget != NULL) {
             connect(widget, SIGNAL(returnPressed()), searchButton, SLOT(click()));
             QScrollArea *scrollArea = wrapInScrollArea(widget, queryTermsStack);
@@ -248,7 +248,7 @@ public:
     }
 
     void switchToSearch() {
-        for (QMap<QListWidgetItem*, OnlineSearchAbstract*>::ConstIterator it = itemToOnlineSearch.constBegin(); it != itemToOnlineSearch.constEnd(); ++it)
+        for (QMap<QListWidgetItem *, OnlineSearchAbstract *>::ConstIterator it = itemToOnlineSearch.constBegin(); it != itemToOnlineSearch.constEnd(); ++it)
             disconnect(searchButton, SIGNAL(clicked()), it.value(), SLOT(cancel()));
 
         connect(searchButton, SIGNAL(clicked()), p, SLOT(startSearch()));
@@ -262,7 +262,7 @@ public:
     void switchToCancel() {
         disconnect(searchButton, SIGNAL(clicked()), p, SLOT(startSearch()));
 
-        for (QMap<QListWidgetItem*, OnlineSearchAbstract*>::ConstIterator it = itemToOnlineSearch.constBegin(); it != itemToOnlineSearch.constEnd(); ++it)
+        for (QMap<QListWidgetItem *, OnlineSearchAbstract *>::ConstIterator it = itemToOnlineSearch.constBegin(); it != itemToOnlineSearch.constEnd(); ++it)
             connect(searchButton, SIGNAL(clicked()), it.value(), SLOT(cancel()));
         searchButton->setText(i18n("Stop"));
         searchButton->setIcon(KIcon("media-playback-stop"));
@@ -280,7 +280,7 @@ public:
 
         QStringList checkedEngines;
         QListWidgetItem *cursor = NULL;
-        for (QMap<QListWidgetItem*, OnlineSearchAbstract*>::ConstIterator it = itemToOnlineSearch.constBegin(); it != itemToOnlineSearch.constEnd(); ++it)
+        for (QMap<QListWidgetItem *, OnlineSearchAbstract *>::ConstIterator it = itemToOnlineSearch.constBegin(); it != itemToOnlineSearch.constEnd(); ++it)
             if (it.key()->checkState() == Qt::Checked) {
                 checkedEngines << it.key()->text();
                 cursor = it.key();
@@ -296,7 +296,7 @@ public:
 
         OnlineSearchQueryFormAbstract *currentQueryWidget = NULL;
         if (checkedEngines.size() == 1)
-            currentQueryWidget = cursor->data(WidgetRole).value<OnlineSearchQueryFormAbstract*>();
+            currentQueryWidget = cursor->data(WidgetRole).value<OnlineSearchQueryFormAbstract *>();
         if (currentQueryWidget == NULL)
             currentQueryWidget = generalQueryTermsForm;
         QScrollArea *area = formToScrollArea.value(currentQueryWidget, NULL);
@@ -374,7 +374,7 @@ void SearchForm::startSearch()
 
         QMap<QString, QString> queryTerms = d->generalQueryTermsForm->getQueryTerms();
         int numResults = d->generalQueryTermsForm->getNumResults();
-        for (QMap<QListWidgetItem*, OnlineSearchAbstract*>::ConstIterator it = d->itemToOnlineSearch.constBegin(); it != d->itemToOnlineSearch.constEnd(); ++it)
+        for (QMap<QListWidgetItem *, OnlineSearchAbstract *>::ConstIterator it = d->itemToOnlineSearch.constBegin(); it != d->itemToOnlineSearch.constEnd(); ++it)
             if (it.key()->checkState() == Qt::Checked) {
                 it.value()->startSearch(queryTerms, numResults);
                 d->runningSearches.insert(it.value());
@@ -386,7 +386,7 @@ void SearchForm::startSearch()
     } else {
         /// use the single selected search engine's specific form
 
-        for (QMap<QListWidgetItem*, OnlineSearchAbstract*>::ConstIterator it = d->itemToOnlineSearch.constBegin(); it != d->itemToOnlineSearch.constEnd(); ++it)
+        for (QMap<QListWidgetItem *, OnlineSearchAbstract *>::ConstIterator it = d->itemToOnlineSearch.constBegin(); it != d->itemToOnlineSearch.constEnd(); ++it)
             if (it.key()->checkState() == Qt::Checked) {
                 it.value()->startSearch();
                 d->runningSearches.insert(it.value());
@@ -437,7 +437,7 @@ void SearchForm::tabSwitched(int newTab)
 void SearchForm::itemCheckChanged(QListWidgetItem *item)
 {
     int numCheckedEngines = 0;
-    for (QMap<QListWidgetItem*, OnlineSearchAbstract*>::ConstIterator it = d->itemToOnlineSearch.constBegin(); it != d->itemToOnlineSearch.constEnd(); ++it)
+    for (QMap<QListWidgetItem *, OnlineSearchAbstract *>::ConstIterator it = d->itemToOnlineSearch.constBegin(); it != d->itemToOnlineSearch.constEnd(); ++it)
         if (it.key()->checkState() == Qt::Checked)
             ++numCheckedEngines;
 
@@ -470,11 +470,11 @@ void SearchForm::copyFromEntry()
 
 void SearchForm::updateProgress(int cur, int total)
 {
-    OnlineSearchAbstract *ws = static_cast<OnlineSearchAbstract*>(sender());
+    OnlineSearchAbstract *ws = static_cast<OnlineSearchAbstract *>(sender());
     d->progressMap[ws] = total > 0 ? cur * 1000 / total : 0;
 
     int progress = 0, count = 0;
-    for (QMap<OnlineSearchAbstract*, int>::ConstIterator it = d->progressMap.constBegin(); it != d->progressMap.constEnd(); ++it, ++count)
+    for (QMap<OnlineSearchAbstract *, int>::ConstIterator it = d->progressMap.constBegin(); it != d->progressMap.constEnd(); ++it, ++count)
         progress += it.value();
 
     d->progressBar->setValue(count >= 1 ? progress / count : 0);

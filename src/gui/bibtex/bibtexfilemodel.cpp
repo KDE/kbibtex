@@ -42,7 +42,7 @@ static const QRegExp curlyRegExp("[{}]+");
 
 const QString SortFilterBibTeXFileModel::configGroupName = QLatin1String("User Interface");
 
-SortFilterBibTeXFileModel::SortFilterBibTeXFileModel(QObject * parent)
+SortFilterBibTeXFileModel::SortFilterBibTeXFileModel(QObject *parent)
         : QSortFilterProxyModel(parent), m_internalModel(NULL), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc")))
 {
     loadState();
@@ -51,7 +51,7 @@ SortFilterBibTeXFileModel::SortFilterBibTeXFileModel(QObject * parent)
 void SortFilterBibTeXFileModel::setSourceModel(QAbstractItemModel *model)
 {
     QSortFilterProxyModel::setSourceModel(model);
-    m_internalModel = dynamic_cast<BibTeXFileModel*>(model);
+    m_internalModel = dynamic_cast<BibTeXFileModel *>(model);
 }
 
 BibTeXFileModel *SortFilterBibTeXFileModel::bibTeXSourceModel() const
@@ -66,7 +66,7 @@ void SortFilterBibTeXFileModel::updateFilter(SortFilterBibTeXFileModel::FilterQu
     invalidate();
 }
 
-bool SortFilterBibTeXFileModel::lessThan(const QModelIndex & left, const QModelIndex & right) const
+bool SortFilterBibTeXFileModel::lessThan(const QModelIndex &left, const QModelIndex &right) const
 {
     int column = left.column();
     Q_ASSERT(left.column() == right.column()); ///< assume that we only sort by column
@@ -142,7 +142,7 @@ bool SortFilterBibTeXFileModel::lessThan(const QModelIndex & left, const QModelI
     }
 }
 
-bool SortFilterBibTeXFileModel::filterAcceptsRow(int source_row, const QModelIndex & source_parent) const
+bool SortFilterBibTeXFileModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const
 {
     Q_UNUSED(source_parent)
 
@@ -273,7 +273,7 @@ const QString BibTeXFileModel::keyShowMacros = QLatin1String("showMacros");
 const bool BibTeXFileModel::defaultShowMacros = true;
 
 
-BibTeXFileModel::BibTeXFileModel(QObject * parent)
+BibTeXFileModel::BibTeXFileModel(QObject *parent)
         : QAbstractTableModel(parent), m_bibtexFile(NULL)
 {
     /// load mapping from color value to label
@@ -299,13 +299,13 @@ void BibTeXFileModel::setBibTeXFile(File *bibtexFile)
     if (doReset) reset(); // TODO necessary here?
 }
 
-QModelIndex BibTeXFileModel::parent(const QModelIndex & index) const
+QModelIndex BibTeXFileModel::parent(const QModelIndex &index) const
 {
     Q_UNUSED(index)
     return QModelIndex();
 }
 
-bool BibTeXFileModel::hasChildren(const QModelIndex & parent) const
+bool BibTeXFileModel::hasChildren(const QModelIndex &parent) const
 {
     return parent == QModelIndex();
 }
@@ -437,7 +437,7 @@ Qt::ItemFlags BibTeXFileModel::flags(const QModelIndex &index) const
     return Qt::ItemIsEnabled | Qt::ItemIsSelectable; // FIXME: What about drag'n'drop?
 }
 
-bool BibTeXFileModel::removeRow(int row, const QModelIndex & parent)
+bool BibTeXFileModel::removeRow(int row, const QModelIndex &parent)
 {
     if (row < 0 || m_bibtexFile == NULL || row >= rowCount() || row >= m_bibtexFile->count())
         return false;
@@ -469,7 +469,7 @@ bool BibTeXFileModel::removeRowList(const QList<int> &rows)
     return true;
 }
 
-bool BibTeXFileModel::insertRow(QSharedPointer<Element> element, int row, const QModelIndex & parent)
+bool BibTeXFileModel::insertRow(QSharedPointer<Element> element, int row, const QModelIndex &parent)
 {
     if (m_bibtexFile == NULL || row < 0 || row > rowCount() || parent != QModelIndex())
         return false;

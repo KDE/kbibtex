@@ -36,7 +36,7 @@ public:
     xsltStylesheetPtr xsltStylesheet;
 };
 
-XSLTransform::XSLTransform(const QString& xsltFilename)
+XSLTransform::XSLTransform(const QString &xsltFilename)
         : d(new XSLTransformPrivate)
 {
     d->xsltStylesheet = NULL;
@@ -50,7 +50,7 @@ XSLTransform::XSLTransform(const QString& xsltFilename)
     }
 
     /// create an internal representation of the XSL file using libxslt
-    d->xsltStylesheet = xsltParseStylesheetFile((const xmlChar*) xsltFilename.toAscii().data());
+    d->xsltStylesheet = xsltParseStylesheetFile((const xmlChar *) xsltFilename.toAscii().data());
     if (d->xsltStylesheet == NULL)
         kError() << "Could not load XSLT file " << xsltFilename;
 }
@@ -64,7 +64,7 @@ XSLTransform::~XSLTransform()
     delete d;
 }
 
-QString XSLTransform::transform(const QString& xmlText) const
+QString XSLTransform::transform(const QString &xmlText) const
 {
     QString result;
     QByteArray xmlCText = xmlText.toUtf8();
@@ -74,7 +74,7 @@ QString XSLTransform::transform(const QString& xmlText) const
             xmlDocPtr resultDocument = xsltApplyStylesheet(d->xsltStylesheet, document, NULL);
             if (resultDocument) {
                 /// Save the result into the QString
-                xmlChar * mem;
+                xmlChar *mem;
                 int size;
                 xmlDocDumpMemoryEnc(resultDocument, &mem, &size, "UTF-8");
                 result = QString::fromUtf8(QByteArray((char *)(mem), size + 1));

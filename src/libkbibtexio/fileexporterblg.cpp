@@ -47,13 +47,13 @@ void FileExporterBLG::reloadConfig()
     // nothing
 }
 
-bool FileExporterBLG::save(QIODevice*ioDevice, const File* bibtexfile, QStringList *errorLog)
+bool FileExporterBLG::save(QIODevice *ioDevice, const File *bibtexfile, QStringList *errorLog)
 {
     bool result = false;
 
     QFile output(m_bibTeXFilename);
     if (output.open(QIODevice::WriteOnly)) {
-        FileExporterBibTeX* bibtexExporter = new FileExporterBibTeX();
+        FileExporterBibTeX *bibtexExporter = new FileExporterBibTeX();
         bibtexExporter->setEncoding(QLatin1String("utf-8"));
         result = bibtexExporter->save(&output, bibtexfile, errorLog);
         bibtexExporter->save(ioDevice, bibtexfile, NULL);
@@ -73,7 +73,7 @@ bool FileExporterBLG::save(QIODevice *ioDevice, const QSharedPointer<const Eleme
 
     QFile output(m_bibTeXFilename);
     if (output.open(QIODevice::WriteOnly)) {
-        FileExporterBibTeX * bibtexExporter = new FileExporterBibTeX();
+        FileExporterBibTeX *bibtexExporter = new FileExporterBibTeX();
         bibtexExporter->setEncoding(QLatin1String("utf-8"));
         result = bibtexExporter->save(&output, element, errorLog);
         bibtexExporter->save(ioDevice, element, NULL);
@@ -87,12 +87,12 @@ bool FileExporterBLG::save(QIODevice *ioDevice, const QSharedPointer<const Eleme
     return result;
 }
 
-void FileExporterBLG::setLaTeXLanguage(const QString& language)
+void FileExporterBLG::setLaTeXLanguage(const QString &language)
 {
     m_latexLanguage = language;
 }
 
-void FileExporterBLG::setLaTeXBibliographyStyle(const QString& bibStyle)
+void FileExporterBLG::setLaTeXBibliographyStyle(const QString &bibStyle)
 {
     m_latexBibStyle = bibStyle;
 }

@@ -57,7 +57,7 @@ private:
     KBibTeX::TypeFlags typeFlags;
 
 public:
-    QList<FieldLineEdit*> lineEditList;
+    QList<FieldLineEdit *> lineEditList;
     QWidget *pushButtonContainer;
     QBoxLayout *pushButtonContainerLayout;
     KPushButton *addLineButton;
@@ -109,12 +109,12 @@ public:
 
         layout->addStretch(100);
 
-        connect(smRemove, SIGNAL(mapped(QWidget*)), p, SLOT(lineRemove(QWidget*)));
-        connect(smRemove, SIGNAL(mapped(QWidget*)), p, SIGNAL(modified()));
-        connect(smGoDown, SIGNAL(mapped(QWidget*)), p, SLOT(lineGoDown(QWidget*)));
-        connect(smGoDown, SIGNAL(mapped(QWidget*)), p, SIGNAL(modified()));
-        connect(smGoUp, SIGNAL(mapped(QWidget*)), p, SLOT(lineGoUp(QWidget*)));
-        connect(smGoDown, SIGNAL(mapped(QWidget*)), p, SIGNAL(modified()));
+        connect(smRemove, SIGNAL(mapped(QWidget *)), p, SLOT(lineRemove(QWidget *)));
+        connect(smRemove, SIGNAL(mapped(QWidget *)), p, SIGNAL(modified()));
+        connect(smGoDown, SIGNAL(mapped(QWidget *)), p, SLOT(lineGoDown(QWidget *)));
+        connect(smGoDown, SIGNAL(mapped(QWidget *)), p, SIGNAL(modified()));
+        connect(smGoUp, SIGNAL(mapped(QWidget *)), p, SLOT(lineGoUp(QWidget *)));
+        connect(smGoDown, SIGNAL(mapped(QWidget *)), p, SIGNAL(modified()));
 
         scrollArea->setBackgroundRole(QPalette::Base);
         scrollArea->ensureWidgetVisible(container);
@@ -129,7 +129,7 @@ public:
     int recommendedHeight() {
         int heightHint = 0;
 
-        for (QList<FieldLineEdit*>::ConstIterator it = lineEditList.constBegin();it != lineEditList.constEnd(); ++it)
+        for (QList<FieldLineEdit *>::ConstIterator it = lineEditList.constBegin(); it != lineEditList.constEnd(); ++it)
             heightHint += (*it)->sizeHint().height();
 
         heightHint += lineEditList.count() * innerSpacing;
@@ -226,7 +226,7 @@ FieldListEdit::~FieldListEdit()
     delete d;
 }
 
-bool FieldListEdit::reset(const Value& value)
+bool FieldListEdit::reset(const Value &value)
 {
     d->removeAllFieldLineEdits();
     for (Value::ConstIterator it = value.constBegin(); it != value.constEnd(); ++it) {
@@ -242,11 +242,11 @@ bool FieldListEdit::reset(const Value& value)
     return true;
 }
 
-bool FieldListEdit::apply(Value& value) const
+bool FieldListEdit::apply(Value &value) const
 {
     value.clear();
 
-    for (QList<FieldLineEdit*>::ConstIterator it = d->lineEditList.constBegin(); it != d->lineEditList.constEnd(); ++it) {
+    for (QList<FieldLineEdit *>::ConstIterator it = d->lineEditList.constBegin(); it != d->lineEditList.constEnd(); ++it) {
         Value v;
         (*it)->apply(v);
         for (Value::ConstIterator itv = v.constBegin(); itv != v.constEnd(); ++itv)
@@ -264,7 +264,7 @@ void FieldListEdit::clear()
 void FieldListEdit::setReadOnly(bool isReadOnly)
 {
     d->m_isReadOnly = isReadOnly;
-    for (QList<FieldLineEdit*>::ConstIterator it = d->lineEditList.constBegin(); it != d->lineEditList.constEnd(); ++it)
+    for (QList<FieldLineEdit *>::ConstIterator it = d->lineEditList.constBegin(); it != d->lineEditList.constEnd(); ++it)
         (*it)->setReadOnly(isReadOnly);
     d->addLineButton->setEnabled(!isReadOnly);
 }
@@ -287,11 +287,11 @@ void FieldListEdit::setFieldKey(const QString &fieldKey)
 void FieldListEdit::setCompletionItems(const QStringList &items)
 {
     d->completionItems = items;
-    for (QList<FieldLineEdit*>::Iterator it = d->lineEditList.begin(); it != d->lineEditList.end(); ++it)
+    for (QList<FieldLineEdit *>::Iterator it = d->lineEditList.begin(); it != d->lineEditList.end(); ++it)
         (*it)->setCompletionItems(items);
 }
 
-FieldLineEdit* FieldListEdit::addFieldLineEdit()
+FieldLineEdit *FieldListEdit::addFieldLineEdit()
 {
     return d->addFieldLineEdit();
 }
@@ -362,23 +362,23 @@ void FieldListEdit::lineAdd()
     newEdit->setFocus(Qt::ShortcutFocusReason);
 }
 
-void FieldListEdit::lineRemove(QWidget * widget)
+void FieldListEdit::lineRemove(QWidget *widget)
 {
-    FieldLineEdit *fieldLineEdit = static_cast<FieldLineEdit*>(widget);
+    FieldLineEdit *fieldLineEdit = static_cast<FieldLineEdit *>(widget);
     d->removeFieldLineEdit(fieldLineEdit);
     QSize size(d->container->width(), d->recommendedHeight());
     d->container->resize(size);
 }
 
-void FieldListEdit::lineGoDown(QWidget * widget)
+void FieldListEdit::lineGoDown(QWidget *widget)
 {
-    FieldLineEdit *fieldLineEdit = static_cast<FieldLineEdit*>(widget);
+    FieldLineEdit *fieldLineEdit = static_cast<FieldLineEdit *>(widget);
     d->goDownFieldLineEdit(fieldLineEdit);
 }
 
-void FieldListEdit::lineGoUp(QWidget * widget)
+void FieldListEdit::lineGoUp(QWidget *widget)
 {
-    FieldLineEdit *fieldLineEdit = static_cast<FieldLineEdit*>(widget);
+    FieldLineEdit *fieldLineEdit = static_cast<FieldLineEdit *>(widget);
     d->goUpFieldLineEdit(fieldLineEdit);
 
 }
@@ -391,7 +391,7 @@ PersonListEdit::PersonListEdit(KBibTeX::TypeFlag preferredTypeFlag, KBibTeX::Typ
     boxLayout->addWidget(m_checkBoxOthers);
 }
 
-bool PersonListEdit::reset(const Value& value)
+bool PersonListEdit::reset(const Value &value)
 {
     Value internal = value;
 
@@ -407,7 +407,7 @@ bool PersonListEdit::reset(const Value& value)
     return FieldListEdit::reset(internal);
 }
 
-bool PersonListEdit::apply(Value& value) const
+bool PersonListEdit::apply(Value &value) const
 {
     bool result = FieldListEdit::apply(value);
 
@@ -428,9 +428,9 @@ UrlListEdit::UrlListEdit(QWidget *parent)
         : FieldListEdit(KBibTeX::tfVerbatim, KBibTeX::tfVerbatim, parent)
 {
     m_signalMapperSaveLocallyButtonClicked = new QSignalMapper(this);
-    connect(m_signalMapperSaveLocallyButtonClicked, SIGNAL(mapped(QWidget*)), this, SLOT(slotSaveLocally(QWidget*)));
+    connect(m_signalMapperSaveLocallyButtonClicked, SIGNAL(mapped(QWidget *)), this, SLOT(slotSaveLocally(QWidget *)));
     m_signalMapperFieldLineEditTextChanged = new QSignalMapper(this);
-    connect(m_signalMapperFieldLineEditTextChanged, SIGNAL(mapped(QWidget*)), this, SLOT(textChanged(QWidget*)));
+    connect(m_signalMapperFieldLineEditTextChanged, SIGNAL(mapped(QWidget *)), this, SLOT(textChanged(QWidget *)));
 
     /// Button to add a reference (i.e. only the filename or URL) to an entry
     m_addReferenceToFile = new KPushButton(KIcon("emblem-symbolic-link"), i18n("Add reference to file ..."), this);
@@ -482,7 +482,7 @@ void UrlListEdit::slotCopyFile()
     if (!sourceFilename.isEmpty()) {
         /// Build a proposal for the new filename relative to the BibTeX document
         // TODO make this more configurable, e.g. via templates
-        const Entry *entry = dynamic_cast<const Entry*>(m_element);
+        const Entry *entry = dynamic_cast<const Entry *>(m_element);
         const QString entryKey = entry != NULL ? entry->id() : QLatin1String("");
         int p = sourceFilename.lastIndexOf(QLatin1Char('.'));
         const QString extension = p > 0 && !entryKey.isEmpty() ? sourceFilename.mid(p) : QString();
@@ -517,7 +517,7 @@ void UrlListEdit::slotCopyFile()
 void UrlListEdit::slotSaveLocally(QWidget *widget)
 {
     /// Determine FieldLineEdit widget
-    FieldLineEdit *fieldLineEdit = dynamic_cast<FieldLineEdit*>(widget);
+    FieldLineEdit *fieldLineEdit = dynamic_cast<FieldLineEdit *>(widget);
     /// Build Url from line edit's content
     const KUrl url(fieldLineEdit->text());
 
@@ -558,11 +558,11 @@ void UrlListEdit::slotSaveLocally(QWidget *widget)
 void UrlListEdit::textChanged(QWidget *widget)
 {
     /// Determine associated KPushButton "Save locally"
-    KPushButton *buttonSaveLocally = dynamic_cast<KPushButton*>(widget);
+    KPushButton *buttonSaveLocally = dynamic_cast<KPushButton *>(widget);
     if (buttonSaveLocally == NULL) return; ///< should never happen!
 
     /// Assume a FieldLineEdit was the sender of this signal
-    FieldLineEdit *fieldLineEdit = dynamic_cast<FieldLineEdit*>(m_signalMapperFieldLineEditTextChanged->mapping(widget));
+    FieldLineEdit *fieldLineEdit = dynamic_cast<FieldLineEdit *>(m_signalMapperFieldLineEditTextChanged->mapping(widget));
     if (fieldLineEdit == NULL) return; ///< should never happen!
 
     /// Create URL from new text to make some tests on it
@@ -579,7 +579,7 @@ void UrlListEdit::textChanged(QWidget *widget)
     buttonSaveLocally->setToolTip(canBeSaved ? i18n("Save file \"%1\" locally", url.pathOrUrl()) : QLatin1String(""));
 }
 
-QString& UrlListEdit::askRelativeOrStaticFilename(QWidget *parent, QString &filename, const QUrl &baseUrl)
+QString &UrlListEdit::askRelativeOrStaticFilename(QWidget *parent, QString &filename, const QUrl &baseUrl)
 {
     QFileInfo baseUrlInfo = baseUrl.isEmpty() ? QFileInfo() : QFileInfo(baseUrl.path());
     QFileInfo filenameInfo(filename);
@@ -592,14 +592,14 @@ QString& UrlListEdit::askRelativeOrStaticFilename(QWidget *parent, QString &file
     return filename;
 }
 
-bool UrlListEdit::urlIsLocal(const QUrl& url)
+bool UrlListEdit::urlIsLocal(const QUrl &url)
 {
     const QString scheme = url.scheme();
     /// Test various schemes such as "http", "https", "ftp", ...
     return !scheme.startsWith(QLatin1String("http")) && !scheme.startsWith(QLatin1String("ftp")) && !scheme.startsWith(QLatin1String("webdav")) && scheme != QLatin1String("smb");
 }
 
-FieldLineEdit* UrlListEdit::addFieldLineEdit()
+FieldLineEdit *UrlListEdit::addFieldLineEdit()
 {
     /// Call original implementation to get an instance of a FieldLineEdit
     FieldLineEdit *fieldLineEdit = FieldListEdit::addFieldLineEdit();
@@ -680,7 +680,7 @@ void KeywordListEdit::slotAddKeywordsFromClipboard()
     if (text.isEmpty())
         text = clipboard->text(QClipboard::Selection);
     if (!text.isEmpty()) {
-        QList<Keyword*> keywordList = FileImporterBibTeX::splitKeywords(text);
+        QList<Keyword *> keywordList = FileImporterBibTeX::splitKeywords(text);
         foreach(Keyword *keyword, keywordList) {
             Value *value = new Value();
             value->append(QSharedPointer<Keyword>(keyword));

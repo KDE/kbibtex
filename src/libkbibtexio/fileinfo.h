@@ -88,7 +88,7 @@ public:
      * @param pdfFilename PDF file to load and extract text from
      * @return extracted plain text, either directly from PDF file or from cache OR QString::null if there was an error
      */
-    static QString pdfToText(const QString& pdfFilename);
+    static QString pdfToText(const QString &pdfFilename);
 
     static QString doiUrlPrefix();
 

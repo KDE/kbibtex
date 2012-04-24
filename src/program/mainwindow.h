@@ -43,7 +43,7 @@ public:
     virtual ~KBibTeXMainWindow();
 
 public slots:
-    void openDocument(const KUrl& url);
+    void openDocument(const KUrl &url);
 
 protected: // KMainWindow API
     virtual void saveProperties(KConfigGroup &configGroup);
@@ -61,7 +61,7 @@ protected slots:
     void openDocumentDialog();
     void closeDocument();
     void showPreferences();
-    void documentSwitched(BibTeXEditor*, BibTeXEditor*);
+    void documentSwitched(BibTeXEditor *, BibTeXEditor *);
 
 private slots:
     void showSearchResults();

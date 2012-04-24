@@ -31,21 +31,23 @@
 class Encoder
 {
 public:
-    virtual ~Encoder() { /* nothing */};
+    virtual ~Encoder() {
+        /* nothing */
+    };
 
     /**
      * Decode from external textual representation to internal (UTF-8) representation.
      * @param text text in external textual representation
      * @return text in internal (UTF-8) representation
      */
-    virtual QString decode(const QString & text) const;
+    virtual QString decode(const QString &text) const;
 
     /**
      * Encode from internal (UTF-8) representation to external textual representation.
      * @param text in internal (UTF-8) representation
      * @return text text in external textual representation
      */
-    virtual QString encode(const QString & text) const;
+    virtual QString encode(const QString &text) const;
 };
 
 #endif

@@ -90,9 +90,9 @@ void PDFItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &optio
     painter->restore();
 }
 
-QList<QWidget*> PDFItemDelegate::createItemWidgets() const
+QList<QWidget *> PDFItemDelegate::createItemWidgets() const
 {
-    QList<QWidget*> list;
+    QList<QWidget *> list;
 
     /// first, the label with shows the found PDF file's origin (URL)
     KSqueezedTextLabel *label = new KSqueezedTextLabel();
@@ -142,11 +142,11 @@ QList<QWidget*> PDFItemDelegate::createItemWidgets() const
 }
 
 /// update the widgets
-void PDFItemDelegate::updateItemWidgets(const QList<QWidget*> widgets, const QStyleOptionViewItem &option, const QPersistentModelIndex &index) const
+void PDFItemDelegate::updateItemWidgets(const QList<QWidget *> widgets, const QStyleOptionViewItem &option, const QPersistentModelIndex &index) const
 {
     if (!index.isValid()) return;
 
-    const PDFListModel *model = qobject_cast<const PDFListModel*>(index.model());
+    const PDFListModel *model = qobject_cast<const PDFListModel *>(index.model());
     if (model == NULL) {
         kDebug() << "WARNING - INVALID MODEL!";
         return;
@@ -161,32 +161,32 @@ void PDFItemDelegate::updateItemWidgets(const QList<QWidget*> widgets, const QSt
     int labelHeight = (option.rect.height() - 4 * margin - buttonHeight) / 2;
 
     /// setup label which will show the PDF file's URL
-    KSqueezedTextLabel *label = qobject_cast<KSqueezedTextLabel*>(widgets[posLabelUrl]);
+    KSqueezedTextLabel *label = qobject_cast<KSqueezedTextLabel *>(widgets[posLabelUrl]);
     if (label != NULL) {
         label->setText(index.data(Qt::DisplayRole).toString());
-        label->move(margin*2 + KIconLoader::SizeMedium, margin);
+        label->move(margin * 2 + KIconLoader::SizeMedium, margin);
         label->resize(labelWidth, labelHeight);
     }
 
     /// setup label which will show the PDF's title or textual beginning
-    QLabel *previewLabel = qobject_cast<QLabel*>(widgets[posLabelPreview]);
+    QLabel *previewLabel = qobject_cast<QLabel *>(widgets[posLabelPreview]);
     if (previewLabel != NULL) {
         previewLabel->setText(index.data(TextualPreviewRole).toString());
         previewLabel->setToolTip(QLatin1String("<qt>") + previewLabel->text() + QLatin1String("</qt>"));
-        previewLabel->move(margin*2 + KIconLoader::SizeMedium, margin*2 + labelHeight);
+        previewLabel->move(margin * 2 + KIconLoader::SizeMedium, margin * 2 + labelHeight);
         previewLabel->resize(labelWidth, labelHeight);
     }
 
     /// setup the view button
-    KPushButton *viewButton = qobject_cast<KPushButton*>(widgets[posViewButton]);
+    KPushButton *viewButton = qobject_cast<KPushButton *>(widgets[posViewButton]);
     if (viewButton != NULL) {
-        viewButton->move(margin*2 + KIconLoader::SizeMedium, option.rect.height() - margin - buttonHeight);
+        viewButton->move(margin * 2 + KIconLoader::SizeMedium, option.rect.height() - margin - buttonHeight);
         viewButton->resize(buttonWidth, buttonHeight);
     }
 
     /// setup each of the three radio buttons
     for (int i = 0; i < 3; ++i) {
-        QRadioButton *radioButton = qobject_cast<QRadioButton*>(widgets[posRadioNoDownload + i]);
+        QRadioButton *radioButton = qobject_cast<QRadioButton *>(widgets[posRadioNoDownload + i]);
         if (radioButton != NULL) {
             radioButton->move(option.rect.width() - margin - (3 - i) * (buttonWidth + margin), option.rect.height() - margin - buttonHeight);
             radioButton->resize(buttonWidth, buttonHeight);
@@ -196,7 +196,7 @@ void PDFItemDelegate::updateItemWidgets(const QList<QWidget*> widgets, const QSt
     }
 }
 
-QSize PDFItemDelegate::sizeHint(const QStyleOptionViewItem & option, const QModelIndex &) const
+QSize PDFItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &) const
 {
     /// set a size that is suiteable
     QSize size;
@@ -279,7 +279,7 @@ PDFListModel::PDFListModel(QList<FindPDF::ResultItem> &resultList, QObject *pare
     // nothing
 }
 
-int PDFListModel::rowCount(const QModelIndex & parent) const
+int PDFListModel::rowCount(const QModelIndex &parent) const
 {
     /// row cout depends on number of found PDF references
     int count = parent == QModelIndex() ? m_resultList.count() : 0;
@@ -313,7 +313,7 @@ QVariant PDFListModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-bool PDFListModel::setData(const QModelIndex & index, const QVariant & value, int role)
+bool PDFListModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     if (index != QModelIndex() && index.row() < m_resultList.count() && role == DownloadModeRole) {
         bool ok = false;
@@ -394,7 +394,7 @@ void FindPDFUI::apply(Entry &entry, const File &bibtexFile)
 
         if (downloadMode == FindPDF::URLonly && url.isValid()) {
             bool alreadyContained = false;
-            for (QMap<QString, Value>::ConstIterator it = entry.constBegin(); !alreadyContained && it != entry.constEnd();++it)
+            for (QMap<QString, Value>::ConstIterator it = entry.constBegin(); !alreadyContained && it != entry.constEnd(); ++it)
                 alreadyContained |= it.key().toLower().startsWith(Entry::ftUrl) && PlainTextValue::text(it.value()) == url.toString();
             if (!alreadyContained) {
                 Value value;
@@ -419,7 +419,7 @@ void FindPDFUI::apply(Entry &entry, const File &bibtexFile)
                 KIO::NetAccess::file_copy(KUrl::fromLocalFile(tempfileName), KUrl::fromLocalFile(localFilename), this);
 
                 bool alreadyContained = false;
-                for (QMap<QString, Value>::ConstIterator it = entry.constBegin(); !alreadyContained && it != entry.constEnd();++it)
+                for (QMap<QString, Value>::ConstIterator it = entry.constBegin(); !alreadyContained && it != entry.constEnd(); ++it)
                     alreadyContained |= (it.key().toLower().startsWith(Entry::ftLocalFile) || it.key().toLower().startsWith(Entry::ftUrl)) && PlainTextValue::text(it.value()) == url.toString();
                 if (!alreadyContained) {
                     Value value;
@@ -458,7 +458,7 @@ void FindPDFUI::createGUI()
     m_labelMessage->setMinimumSize(minWidth, minHeight);
     m_labelMessage->setAlignment(Qt::AlignVCenter | Qt::AlignCenter);
 
-    static_cast<QWidget*>(parent())->setCursor(Qt::WaitCursor);
+    static_cast<QWidget *>(parent())->setCursor(Qt::WaitCursor);
 }
 
 void FindPDFUI::searchFinished()
@@ -472,7 +472,7 @@ void FindPDFUI::searchFinished()
     m_listViewResult->setEnabled(true);
     m_listViewResult->reset();
 
-    static_cast<QWidget*>(parent())->unsetCursor();
+    static_cast<QWidget *>(parent())->unsetCursor();
     emit resultAvailable(true);
 }
 

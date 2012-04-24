@@ -63,9 +63,9 @@ public:
 
     ValueListPrivate(ValueList *parent)
             : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName(QLatin1String("Value List Docklet")),
-            configKeyFieldName(QLatin1String("FieldName")), configKeyShowCountColumn(QLatin1String("ShowCountColumn")),
-            configKeySortByCountAction(QLatin1String("SortByCountAction")), configKeyHeaderState(QLatin1String("HeaderState")),
-            model(NULL), sortingModel(NULL), countWidth(8 + parent->fontMetrics().width(i18n("Count"))) {
+          configKeyFieldName(QLatin1String("FieldName")), configKeyShowCountColumn(QLatin1String("ShowCountColumn")),
+          configKeySortByCountAction(QLatin1String("SortByCountAction")), configKeyHeaderState(QLatin1String("HeaderState")),
+          model(NULL), sortingModel(NULL), countWidth(8 + parent->fontMetrics().width(i18n("Count"))) {
         setupGUI();
         initialize();
     }
@@ -105,7 +105,7 @@ public:
 
         connect(comboboxFieldNames, SIGNAL(activated(int)), p, SLOT(update()));
         connect(treeviewFieldValues, SIGNAL(activated(const QModelIndex &)), p, SLOT(listItemActivated(const QModelIndex &)));
-        connect(delegate, SIGNAL(closeEditor(QWidget*)), treeviewFieldValues, SLOT(reset()));
+        connect(delegate, SIGNAL(closeEditor(QWidget *)), treeviewFieldValues, SLOT(reset()));
 
         /// add context menu to header
         treeviewFieldValues->header()->setContextMenuPolicy(Qt::ActionsContextMenu);

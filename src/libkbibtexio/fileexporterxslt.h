@@ -36,13 +36,13 @@ class Comment;
 class KBIBTEXIO_EXPORT FileExporterXSLT : public FileExporter
 {
 public:
-    FileExporterXSLT(const QString& xsltFilename = QString::null);
+    FileExporterXSLT(const QString &xsltFilename = QString::null);
     ~FileExporterXSLT();
 
-    bool save(QIODevice* iodevice, const File* bibtexfile, QStringList *errorLog = NULL);
-    bool save(QIODevice* iodevice, const QSharedPointer<const Element> element, QStringList *errorLog = NULL);
+    bool save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog = NULL);
+    bool save(QIODevice *iodevice, const QSharedPointer<const Element> element, QStringList *errorLog = NULL);
 
-    void setXSLTFilename(const QString& xsltFilename);
+    void setXSLTFilename(const QString &xsltFilename);
 
 public slots:
     void cancel();

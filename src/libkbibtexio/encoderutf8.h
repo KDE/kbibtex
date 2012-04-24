@@ -38,7 +38,7 @@ class KBIBTEXIO_EXPORT EncoderUTF8 : public EncoderLaTeX
 public:
     virtual QString encode(const QString &text) const;
 
-    static EncoderUTF8* instance();
+    static EncoderUTF8 *instance();
 
 private:
     EncoderUTF8();

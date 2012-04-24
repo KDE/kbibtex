@@ -146,12 +146,12 @@ public:
 BibTeXFields *BibTeXFields::BibTeXFieldsPrivate::singleton = NULL;
 
 BibTeXFields::BibTeXFields()
-        : QList<FieldDescription*>(), d(new BibTeXFieldsPrivate(this))
+        : QList<FieldDescription *>(), d(new BibTeXFieldsPrivate(this))
 {
     d->load();
 }
 
-BibTeXFields* BibTeXFields::self()
+BibTeXFields *BibTeXFields::self()
 {
     if (BibTeXFieldsPrivate::singleton == NULL)
         BibTeXFieldsPrivate::singleton = new BibTeXFields();
@@ -168,7 +168,7 @@ void BibTeXFields::resetToDefaults(const QString &treeViewName)
     d->resetToDefaults(treeViewName);
 }
 
-QString BibTeXFields::format(const QString& name, KBibTeX::Casing casing) const
+QString BibTeXFields::format(const QString &name, KBibTeX::Casing casing) const
 {
     QString iName = name.toLower();
 
@@ -210,7 +210,7 @@ QString BibTeXFields::format(const QString& name, KBibTeX::Casing casing) const
     return name;
 }
 
-const FieldDescription* BibTeXFields::find(const QString &name) const
+const FieldDescription *BibTeXFields::find(const QString &name) const
 {
     const QString iName = name.toLower();
     foreach(const FieldDescription *fd, *this) {

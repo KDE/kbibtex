@@ -99,7 +99,7 @@ public:
         delete buttonOpenUrl;
     }
 
-    bool reset(const Value& value) {
+    bool reset(const Value &value) {
         bool result = false;
         QString text = "";
         typeFlag = determineTypeFlag(value, typeFlag, typeFlags);
@@ -155,7 +155,7 @@ public:
         return result;
     }
 
-    bool apply(Value& value) const {
+    bool apply(Value &value) const {
         value.clear();
         const QString text = parent->text();
 
@@ -176,8 +176,8 @@ public:
             value.append(FileImporterBibTeX::personFromString(encodedText));
             return true;
         } else if (typeFlag == KBibTeX::tfKeyword) {
-            QList<Keyword*> keywords = FileImporterBibTeX::splitKeywords(encodedText);
-            for (QList<Keyword*>::Iterator it = keywords.begin(); it != keywords.end(); ++it)
+            QList<Keyword *> keywords = FileImporterBibTeX::splitKeywords(encodedText);
+            for (QList<Keyword *>::Iterator it = keywords.begin(); it != keywords.end(); ++it)
                 value.append(QSharedPointer<Keyword>(*it));
             return true;
         } else if (typeFlag == KBibTeX::tfSource) {
@@ -416,12 +416,12 @@ FieldLineEdit::~FieldLineEdit()
     delete d;
 }
 
-bool FieldLineEdit::apply(Value& value) const
+bool FieldLineEdit::apply(Value &value) const
 {
     return d->apply(value);
 }
 
-bool FieldLineEdit::reset(const Value& value)
+bool FieldLineEdit::reset(const Value &value)
 {
     return d->reset(value);
 }

@@ -93,7 +93,7 @@ void DocumentListDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
         painter->setPen(QPen(option.palette.text().color()));
     }
 
-    OpenFileInfo *ofi = qvariant_cast<OpenFileInfo*>(index.data(Qt::UserRole));
+    OpenFileInfo *ofi = qvariant_cast<OpenFileInfo *>(index.data(Qt::UserRole));
 
     if (ofim->currentFile() == ofi) {
         /// for the currently open file, use a bold font to write file name
@@ -110,9 +110,9 @@ void DocumentListDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
     textRect = option.rect;
     textRect.setLeft(textRect.left() + height + 4);
     textRect.setTop(textRect.top() + height / 2);
-    textRect.setHeight(height*3 / 8);
+    textRect.setHeight(height * 3 / 8);
     QFont font = painter->font();
-    font.setPointSize(font.pointSize()*7 / 8);
+    font.setPointSize(font.pointSize() * 7 / 8);
     painter->setFont(font);
     painter->drawText(textRect, Qt::AlignLeft | Qt::AlignVCenter, ofi->fullCaption());
 
@@ -126,7 +126,7 @@ void DocumentListDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
 QSize DocumentListDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     QSize size = QStyledItemDelegate::sizeHint(option, index);
-    size.setHeight(size.height()*9 / 4);
+    size.setHeight(size.height() * 9 / 4);
     return size;
 }
 
@@ -227,7 +227,7 @@ public:
     KAction *actionAddToFav, *actionRemFromFav;
     KAction *actionCloseFile, *actionOpenFile;
     KActionMenu *actionOpenMenu;
-    QList<KAction*> openMenuActions;
+    QList<KAction *> openMenuActions;
     KService::List openMenuServices;
     QSignalMapper openMenuSignalMapper;
 
@@ -280,7 +280,7 @@ void DocumentListView::addToFavorites()
 {
     QModelIndex modelIndex = currentIndex();
     if (modelIndex != QModelIndex()) {
-        OpenFileInfo *ofi = qvariant_cast<OpenFileInfo*>(modelIndex.data(Qt::UserRole));
+        OpenFileInfo *ofi = qvariant_cast<OpenFileInfo *>(modelIndex.data(Qt::UserRole));
         ofi->addFlags(OpenFileInfo::Favorite);
     }
 }
@@ -289,7 +289,7 @@ void DocumentListView::removeFromFavorites()
 {
     QModelIndex modelIndex = currentIndex();
     if (modelIndex != QModelIndex()) {
-        OpenFileInfo *ofi = qvariant_cast<OpenFileInfo*>(modelIndex.data(Qt::UserRole));
+        OpenFileInfo *ofi = qvariant_cast<OpenFileInfo *>(modelIndex.data(Qt::UserRole));
         ofi->removeFlags(OpenFileInfo::Favorite);
     }
 }
@@ -298,7 +298,7 @@ void DocumentListView::openFile()
 {
     QModelIndex modelIndex = currentIndex();
     if (modelIndex != QModelIndex()) {
-        OpenFileInfo *ofi = qvariant_cast<OpenFileInfo*>(modelIndex.data(Qt::UserRole));
+        OpenFileInfo *ofi = qvariant_cast<OpenFileInfo *>(modelIndex.data(Qt::UserRole));
         d->ofim->setCurrentFile(ofi);
     }
 }
@@ -307,7 +307,7 @@ void DocumentListView::openFileWithService(int i)
 {
     QModelIndex modelIndex = currentIndex();
     if (modelIndex != QModelIndex()) {
-        OpenFileInfo *ofi = qvariant_cast<OpenFileInfo*>(modelIndex.data(Qt::UserRole));
+        OpenFileInfo *ofi = qvariant_cast<OpenFileInfo *>(modelIndex.data(Qt::UserRole));
         if (!ofi->isModified() || (KMessageBox::questionYesNo(this, i18n("The current document document has to be saved before switching the viewer/editor component."), i18n("Save before switching?"), KGuiItem(i18n("Save document"), KIcon("document-save")), KGuiItem(i18n("Do not switch"), KIcon("dialog-cancel"))) == KMessageBox::Yes && ofi->save()))
             d->ofim->setCurrentFile(ofi, d->openMenuServices[i]);
     }
@@ -317,7 +317,7 @@ void DocumentListView::closeFile()
 {
     QModelIndex modelIndex = currentIndex();
     if (modelIndex != QModelIndex()) {
-        OpenFileInfo *ofi = qvariant_cast<OpenFileInfo*>(modelIndex.data(Qt::UserRole));
+        OpenFileInfo *ofi = qvariant_cast<OpenFileInfo *>(modelIndex.data(Qt::UserRole));
         d->ofim->close(ofi);
     }
 }
@@ -325,7 +325,7 @@ void DocumentListView::closeFile()
 void DocumentListView::currentChanged(const QModelIndex &current, const QModelIndex &)
 {
     bool hasCurrent = current != QModelIndex();
-    OpenFileInfo* ofi = hasCurrent ? qvariant_cast<OpenFileInfo*>(current.data(Qt::UserRole)) : NULL;
+    OpenFileInfo *ofi = hasCurrent ? qvariant_cast<OpenFileInfo *>(current.data(Qt::UserRole)) : NULL;
     bool isOpen = hasCurrent ? ofi->flags().testFlag(OpenFileInfo::Open) : false;
     bool isFavorite = hasCurrent ? ofi->flags().testFlag(OpenFileInfo::Favorite) : false;
     bool hasName = hasCurrent ? ofi->flags().testFlag(OpenFileInfo::HasName) : false;
@@ -345,7 +345,7 @@ void DocumentListView::currentChanged(const QModelIndex &current, const QModelIn
     if (ofi != NULL) {
         d->openMenuServices = ofi->listOfServices();
         int i = 0;
-        foreach(KService::Ptr servicePtr,  d->openMenuServices) {
+        foreach(KService::Ptr servicePtr, d->openMenuServices) {
             KAction *menuItem = new KAction(KIcon(servicePtr->icon()), servicePtr->name(), this);
             d->actionOpenMenu->addAction(menuItem);
             d->openMenuActions << menuItem;
@@ -390,7 +390,7 @@ public:
 
         /** set minimum width of widget depending on tab's text width */
         QFontMetrics fm(p->font());
-        p->setMinimumWidth(fm.width(p->tabText(0))*(p->count() + 1));
+        p->setMinimumWidth(fm.width(p->tabText(0)) * (p->count() + 1));
     }
 };
 

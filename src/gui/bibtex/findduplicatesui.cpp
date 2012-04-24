@@ -232,13 +232,13 @@ public:
         return QVariant();
     }
 
-    bool setData(const QModelIndex & index, const QVariant & value, int role = RadioSelectedRole) {
+    bool setData(const QModelIndex &index, const QVariant &value, int role = RadioSelectedRole) {
         if (index.parent() != QModelIndex()) {
             bool isInt;
             int checkState = value.toInt(&isInt);
 
             const QString fieldName = index.parent().data(FieldNameRole).toString();
-            QList<Value>& values = currentClique->values(fieldName);
+            QList<Value> &values = currentClique->values(fieldName);
 
             if (role == RadioSelectedRole && value.canConvert<bool>() && value.toBool() == true && selectionType(fieldName) == SelectionTypeRadio) {
                 /// start with determining which list of alternatives actually to use
@@ -292,8 +292,8 @@ public:
                             else {
                                 QSharedPointer<Keyword> kw = old.first().dynamicCast<Keyword>();
                                 if (!kw.isNull()) {
-                                    QList<Keyword*> keywordList = FileImporterBibTeX::splitKeywords(text);
-                                    for (QList<Keyword*>::ConstIterator it = keywordList.constBegin(); it != keywordList.constEnd(); ++it)
+                                    QList<Keyword *> keywordList = FileImporterBibTeX::splitKeywords(text);
+                                    for (QList<Keyword *>::ConstIterator it = keywordList.constBegin(); it != keywordList.constEnd(); ++it)
                                         v.append(QSharedPointer<Keyword>(*it));
                                 } else {
                                     kDebug() << "Not know how to set this text:" << text;
@@ -316,7 +316,7 @@ public:
         return false;
     }
 
-    bool hasChildren(const QModelIndex & parent = QModelIndex()) const {
+    bool hasChildren(const QModelIndex &parent = QModelIndex()) const {
         /// depth-two tree
         return parent == QModelIndex() || parent.parent() == QModelIndex();
     }
@@ -364,14 +364,14 @@ public:
     }
 
     virtual void setEditorData(QWidget *editor, const QModelIndex &index) const {
-        if (KLineEdit *lineEdit = qobject_cast<KLineEdit*>(editor)) {
+        if (KLineEdit *lineEdit = qobject_cast<KLineEdit *>(editor)) {
             /// Set line edit's default value to string fetched from model
             lineEdit->setText(index.data(Qt::EditRole).toString());
         }
     }
 
     virtual void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const {
-        if (KLineEdit *lineEdit = qobject_cast<KLineEdit*>(editor)) {
+        if (KLineEdit *lineEdit = qobject_cast<KLineEdit *>(editor)) {
             /// Set user-entered text to model (and underlying value)
             model->setData(index, lineEdit->text(), UserInputRole);
 
@@ -402,12 +402,12 @@ public:
 class CheckableBibTeXFileModel : public BibTeXFileModel
 {
 private:
-    QList<EntryClique*> cl;
+    QList<EntryClique *> cl;
     int currentClique;
     QTreeView *tv;
 
 public:
-    CheckableBibTeXFileModel(QList<EntryClique*> &cliqueList, QTreeView *treeView, QObject *parent = NULL)
+    CheckableBibTeXFileModel(QList<EntryClique *> &cliqueList, QTreeView *treeView, QObject *parent = NULL)
             : BibTeXFileModel(parent), cl(cliqueList), currentClique(0), tv(treeView) {
         // nothing
     }
@@ -465,7 +465,7 @@ class FilterIdBibTeXFileModel : public QSortFilterProxyModel
 {
 private:
     CheckableBibTeXFileModel *internalModel;
-    EntryClique* currentClique;
+    EntryClique *currentClique;
 
 public:
     FilterIdBibTeXFileModel(QObject *parent = NULL)
@@ -473,7 +473,7 @@ public:
         // nothing
     }
 
-    void setCurrentClique(EntryClique* currentClique) {
+    void setCurrentClique(EntryClique *currentClique) {
         Q_ASSERT(internalModel != NULL);
         internalModel->setCurrentClique(currentClique);
         this->currentClique = currentClique;
@@ -482,7 +482,7 @@ public:
 
     void setSourceModel(QAbstractItemModel *model) {
         QSortFilterProxyModel::setSourceModel(model);
-        internalModel = dynamic_cast<CheckableBibTeXFileModel*>(model);
+        internalModel = dynamic_cast<CheckableBibTeXFileModel *>(model);
         Q_ASSERT(internalModel != NULL);
     }
 
@@ -521,16 +521,16 @@ public:
     AlternativesItemDelegate *alternativesItemDelegate;
 
     int currentClique;
-    QList<EntryClique*> cl;
+    QList<EntryClique *> cl;
 
-    MergeWidgetPrivate(MergeWidget *parent, File *bibTeXFile, QList<EntryClique*> &cliqueList)
+    MergeWidgetPrivate(MergeWidget *parent, File *bibTeXFile, QList<EntryClique *> &cliqueList)
             : p(parent), file(bibTeXFile), currentClique(0), cl(cliqueList) {
         setupGUI();
     }
 
     void setupGUI() {
-        p->setMinimumSize(p->fontMetrics().xHeight()*96, p->fontMetrics().xHeight()*64);
-        p->setBaseSize(p->fontMetrics().xHeight()*128, p->fontMetrics().xHeight()*96);
+        p->setMinimumSize(p->fontMetrics().xHeight() * 96, p->fontMetrics().xHeight() * 64);
+        p->setBaseSize(p->fontMetrics().xHeight() * 128, p->fontMetrics().xHeight() * 96);
 
         QBoxLayout *layout = new QVBoxLayout(p);
 
@@ -589,9 +589,9 @@ public:
 
 };
 
-const char* MergeWidget::MergeWidgetPrivate::whichCliqueText = "Showing clique %1 of %2.";
+const char *MergeWidget::MergeWidgetPrivate::whichCliqueText = "Showing clique %1 of %2.";
 
-MergeWidget::MergeWidget(File *file, QList<EntryClique*> &cliqueList, QWidget *parent)
+MergeWidget::MergeWidget(File *file, QList<EntryClique *> &cliqueList, QWidget *parent)
         : QWidget(parent), d(new MergeWidgetPrivate(this, file, cliqueList))
 {
     // nothing
@@ -678,7 +678,7 @@ void FindDuplicatesUI::slotFindDuplicates()
         }
     }
 
-    QList<EntryClique*> cliques;
+    QList<EntryClique *> cliques;
     bool gotCanceled = fd.findDuplicateEntries(file, cliques);
     if (gotCanceled) {
         if (deleteFileLater) delete file;

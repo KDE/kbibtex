@@ -52,7 +52,7 @@ QString FileExporter::toString(const QSharedPointer<const Element> element)
     return QString::null;
 }
 
-QString FileExporter::toString(const File* bibtexfile)
+QString FileExporter::toString(const File *bibtexfile)
 {
     QBuffer buffer;
     buffer.open(QBuffer::WriteOnly);

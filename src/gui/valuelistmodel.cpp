@@ -61,7 +61,7 @@ QWidget *ValueListDelegate::createEditor(QWidget *parent, const QStyleOptionView
 void ValueListDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const
 {
     if (index.column() == 0) {
-        FieldLineEdit *fieldLineEdit = qobject_cast<FieldLineEdit*>(editor);
+        FieldLineEdit *fieldLineEdit = qobject_cast<FieldLineEdit *>(editor);
         if (fieldLineEdit != NULL)
             fieldLineEdit->reset(index.model()->data(index, Qt::EditRole).value<Value>());
     }
@@ -69,7 +69,7 @@ void ValueListDelegate::setEditorData(QWidget *editor, const QModelIndex &index)
 
 void ValueListDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
 {
-    FieldLineEdit *fieldLineEdit = qobject_cast<FieldLineEdit*>(editor);
+    FieldLineEdit *fieldLineEdit = qobject_cast<FieldLineEdit *>(editor);
     if (fieldLineEdit != NULL) {
         Value v;
         fieldLineEdit->apply(v);

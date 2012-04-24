@@ -44,7 +44,7 @@ public:
 
 private:
     class EncoderXMLPrivate;
-    EncoderXMLPrivate * const d;
+    EncoderXMLPrivate *const d;
 };
 
 #endif // KBIBTEX_IO_ENCODERXML_H

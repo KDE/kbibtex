@@ -49,8 +49,8 @@ public:
     FieldListEdit(KBibTeX::TypeFlag preferredTypeFlag, KBibTeX::TypeFlags typeFlags, QWidget *parent = NULL);
     ~FieldListEdit();
 
-    virtual bool reset(const Value& value);
-    virtual bool apply(Value& value) const;
+    virtual bool reset(const Value &value);
+    virtual bool apply(Value &value) const;
 
     void clear();
     virtual void setReadOnly(bool isReadOnly);
@@ -65,7 +65,7 @@ signals:
 protected:
     /// Add a new field line edit to this list
     /// Allows to get overwritten by descentants of this class
-    virtual FieldLineEdit* addFieldLineEdit();
+    virtual FieldLineEdit *addFieldLineEdit();
     void addButton(KPushButton *button);
     void lineAdd(Value *value);
     void dragEnterEvent(QDragEnterEvent *event);
@@ -75,9 +75,9 @@ protected:
 
 private slots:
     void lineAdd();
-    void lineRemove(QWidget * widget);
-    void lineGoDown(QWidget * widget);
-    void lineGoUp(QWidget * widget);
+    void lineRemove(QWidget *widget);
+    void lineGoDown(QWidget *widget);
+    void lineGoUp(QWidget *widget);
 
 protected:
     class FieldListEditProtected;
@@ -93,8 +93,8 @@ class PersonListEdit : public FieldListEdit
 public:
     PersonListEdit(KBibTeX::TypeFlag preferredTypeFlag, KBibTeX::TypeFlags typeFlags, QWidget *parent = NULL);
 
-    virtual bool reset(const Value& value);
-    virtual bool apply(Value& value) const;
+    virtual bool reset(const Value &value);
+    virtual bool apply(Value &value) const;
 
     virtual void setReadOnly(bool isReadOnly);
 
@@ -116,13 +116,13 @@ public:
 
     virtual void setReadOnly(bool isReadOnly);
 
-    static QString& askRelativeOrStaticFilename(QWidget *parent, QString &filename, const QUrl &baseUrl);
+    static QString &askRelativeOrStaticFilename(QWidget *parent, QString &filename, const QUrl &baseUrl);
 
     /// Own function as KUrl's isLocalFile is not reliable
-    static bool urlIsLocal(const QUrl& url);
+    static bool urlIsLocal(const QUrl &url);
 
 protected:
-    virtual FieldLineEdit* addFieldLineEdit();
+    virtual FieldLineEdit *addFieldLineEdit();
 
 private slots:
     void slotAddReferenceToFile();

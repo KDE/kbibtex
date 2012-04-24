@@ -36,7 +36,7 @@ FileImporter::~FileImporter()
     // nothing
 }
 
-File* FileImporter::fromString(const QString& text)
+File *FileImporter::fromString(const QString &text)
 {
     if (text.isNull() || text.isEmpty())
         return NULL;
@@ -55,7 +55,7 @@ File* FileImporter::fromString(const QString& text)
     return result;
 }
 
-Person* FileImporter::splitName(const QString& name)
+Person *FileImporter::splitName(const QString &name)
 {
     // FIXME: This is a rather ugly code
     QStringList segments = name.split(QRegExp("[ ,]+"));

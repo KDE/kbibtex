@@ -194,7 +194,7 @@ QList<KUrl> FileInfo::entryUrls(const Entry *entry, const KUrl &bibTeXUrl, TestE
     return result;
 }
 
-QString FileInfo::pdfToText(const QString& pdfFilename)
+QString FileInfo::pdfToText(const QString &pdfFilename)
 {
     /// Build filename for text file where PDF file's plain text is cached
     static const QRegExp invalidChars("[^-a-z0-9_]", Qt::CaseInsensitive);

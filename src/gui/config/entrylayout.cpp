@@ -95,7 +95,7 @@ EntryLayout::~EntryLayout()
     delete d;
 }
 
-EntryLayout* EntryLayout::self()
+EntryLayout *EntryLayout::self()
 {
     if (EntryLayoutPrivate::singleton == NULL)
         EntryLayoutPrivate::singleton  = new EntryLayout();

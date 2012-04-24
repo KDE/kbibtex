@@ -39,8 +39,8 @@ public:
     FileImporter();
     ~FileImporter();
 
-    File* fromString(const QString& text);
-    virtual File* load(QIODevice *iodevice) = 0;
+    File *fromString(const QString &text);
+    virtual File *load(QIODevice *iodevice) = 0;
 
     /**
       * When importing data, show a dialog where the user may select options on the
@@ -73,7 +73,7 @@ public:
       * @return A Person object containing the name
       * @see Person
       */
-    static Person* splitName(const QString& name);
+    static Person *splitName(const QString &name);
 
 signals:
     void parseError(int errorId);

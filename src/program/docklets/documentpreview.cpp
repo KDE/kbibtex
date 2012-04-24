@@ -123,7 +123,7 @@ private:
 
 public:
     QCheckBox *onlyLocalFilesCheckBox;
-    QList<KIO::StatJob*> runningJobs;
+    QList<KIO::StatJob *> runningJobs;
     QSharedPointer<const Entry> entry;
     KUrl baseUrl;
 
@@ -248,7 +248,7 @@ public:
         showMessage(i18n("Refreshing ..."));
 
         /// cancel/kill all running jobs
-        for (QList<KIO::StatJob*>::ConstIterator it = runningJobs.constBegin(); it != runningJobs.constEnd(); ++it)
+        for (QList<KIO::StatJob *>::ConstIterator it = runningJobs.constBegin(); it != runningJobs.constEnd(); ++it)
             (*it)->kill();
         runningJobs.clear();
 
@@ -265,7 +265,7 @@ public:
                 KIO::StatJob *job = KIO::stat(*it, KIO::StatJob::SourceSide, 3, KIO::HideProgressInfo);
                 runningJobs << job;
                 job->ui()->setWindow(p);
-                connect(job, SIGNAL(result(KJob*)), p, SLOT(statFinished(KJob*)));
+                connect(job, SIGNAL(result(KJob *)), p, SLOT(statFinished(KJob *)));
             }
             if (urlList.isEmpty()) {
                 showMessage(i18n("No documents to show."));
@@ -400,7 +400,7 @@ public:
     bool isVisible() {
         /// get dock where this widget is inside
         /// static cast is save as constructor requires parent to be QDockWidget
-        QDockWidget *pp = static_cast<QDockWidget*>(p->parent());
+        QDockWidget *pp = static_cast<QDockWidget *>(p->parent());
         return pp != NULL && !pp->isHidden();
     }
 
@@ -442,7 +442,7 @@ void DocumentPreview::openExternally()
     d->openExternally();
 }
 
-void DocumentPreview::setBibTeXUrl(const KUrl&url)
+void DocumentPreview::setBibTeXUrl(const KUrl &url)
 {
     d->baseUrl = url;
 }
@@ -465,7 +465,7 @@ void DocumentPreview::comboBoxChanged(int index)
 
 void DocumentPreview::statFinished(KJob *kjob)
 {
-    KIO::StatJob *job = static_cast<KIO::StatJob*>(kjob);
+    KIO::StatJob *job = static_cast<KIO::StatJob *>(kjob);
     d->runningJobs.removeOne(job);
     if (!job->error()) {
 #if KDE_VERSION_MINOR >= 4
@@ -485,7 +485,7 @@ void DocumentPreview::statFinished(KJob *kjob)
 void DocumentPreview::loadingFinished()
 {
     setCursor(Qt::ArrowCursor);
-    d->showPart(dynamic_cast<KParts::ReadOnlyPart*>(sender()), dynamic_cast<QWidget*>(sender()));
+    d->showPart(dynamic_cast<KParts::ReadOnlyPart *>(sender()), dynamic_cast<QWidget *>(sender()));
 }
 
 void DocumentPreview::linkActivated(const QString &link)

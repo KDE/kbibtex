@@ -118,7 +118,7 @@ QString EncoderXML::decode(const QString &text) const
     foreach(const QString &backslashSymbol, backslashSymbols) {
         int p = -1;
         while ((p = result.indexOf(backslashSymbol[1], p + 1)) >= 0) {
-            if (p == 0 || result[p-1] != QChar('\\')) {
+            if (p == 0 || result[p - 1] != QChar('\\')) {
                 /// replace only symbols which have no backslash on their right
                 result = result.left(p) + QChar('\\') + result.mid(p);
                 ++p;

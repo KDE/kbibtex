@@ -47,7 +47,7 @@ class KBIBTEXGUI_EXPORT MergeWidget : public QWidget
     Q_OBJECT
 
 public:
-    MergeWidget(File *file, QList<EntryClique*> &cliques, QWidget *parent);
+    MergeWidget(File *file, QList<EntryClique *> &cliques, QWidget *parent);
     ~MergeWidget();
 
     void showCurrentClique();

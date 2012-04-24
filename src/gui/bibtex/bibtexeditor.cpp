@@ -161,7 +161,7 @@ bool BibTeXEditor::editElement(QSharedPointer<Element> element)
     return changed;
 }
 
-const QList<QSharedPointer<Element> >& BibTeXEditor::selectedElements() const
+const QList<QSharedPointer<Element> > &BibTeXEditor::selectedElements() const
 {
     return m_selection;
 }
@@ -213,7 +213,7 @@ void BibTeXEditor::currentChanged(const QModelIndex &current, const QModelIndex 
     emit currentElementChanged(m_current, bibTeXModel()->bibTeXFile());
 }
 
-void BibTeXEditor::selectionChanged(const QItemSelection & selected, const QItemSelection & deselected)
+void BibTeXEditor::selectionChanged(const QItemSelection &selected, const QItemSelection &deselected)
 {
     QTreeView::selectionChanged(selected, deselected);
 
@@ -304,7 +304,7 @@ void BibTeXEditor::dragMoveEvent(QDragMoveEvent *event)
     emit editorDragMoveEvent(event);
 }
 
-void BibTeXEditor::itemActivated(const QModelIndex & index)
+void BibTeXEditor::itemActivated(const QModelIndex &index)
 {
     emit elementExecuted(bibTeXModel()->element(sortFilterProxyModel()->mapToSource(index).row()));
 }

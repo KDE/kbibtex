@@ -59,7 +59,7 @@ void FileExporterPDF::reloadConfig()
     m_font = configGroupGeneral.readEntry(keyFont, defaultFont);
 }
 
-bool FileExporterPDF::save(QIODevice* iodevice, const File* bibtexfile, QStringList *errorLog)
+bool FileExporterPDF::save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog)
 {
     bool result = false;
     m_embeddedFileList.clear();
@@ -70,7 +70,7 @@ bool FileExporterPDF::save(QIODevice* iodevice, const File* bibtexfile, QStringL
 
     QFile output(m_bibTeXFilename);
     if (output.open(QIODevice::WriteOnly)) {
-        FileExporterBibTeX* bibtexExporter = new FileExporterBibTeX();
+        FileExporterBibTeX *bibtexExporter = new FileExporterBibTeX();
         bibtexExporter->setEncoding(QLatin1String("latex"));
         result = bibtexExporter->save(&output, bibtexfile, errorLog);
         output.close();
@@ -83,7 +83,7 @@ bool FileExporterPDF::save(QIODevice* iodevice, const File* bibtexfile, QStringL
     return result;
 }
 
-bool FileExporterPDF::save(QIODevice* iodevice, const QSharedPointer<const Element> element, QStringList *errorLog)
+bool FileExporterPDF::save(QIODevice *iodevice, const QSharedPointer<const Element> element, QStringList *errorLog)
 {
     bool result = false;
     m_embeddedFileList.clear();
@@ -92,7 +92,7 @@ bool FileExporterPDF::save(QIODevice* iodevice, const QSharedPointer<const Eleme
 
     QFile output(m_bibTeXFilename);
     if (output.open(QIODevice::WriteOnly)) {
-        FileExporterBibTeX * bibtexExporter = new FileExporterBibTeX();
+        FileExporterBibTeX *bibtexExporter = new FileExporterBibTeX();
         bibtexExporter->setEncoding(QLatin1String("latex"));
         result = bibtexExporter->save(&output, element, errorLog);
         output.close();
@@ -105,12 +105,12 @@ bool FileExporterPDF::save(QIODevice* iodevice, const QSharedPointer<const Eleme
     return result;
 }
 
-void FileExporterPDF::setDocumentSearchPaths(const QStringList& searchPaths)
+void FileExporterPDF::setDocumentSearchPaths(const QStringList &searchPaths)
 {
     m_searchPaths = searchPaths;
 }
 
-bool FileExporterPDF::generatePDF(QIODevice* iodevice, QStringList *errorLog)
+bool FileExporterPDF::generatePDF(QIODevice *iodevice, QStringList *errorLog)
 {
     QStringList cmdLines = QStringList() << QLatin1String("pdflatex -halt-on-error bibtex-to-pdf.tex") << QLatin1String("bibtex bibtex-to-pdf") << QLatin1String("pdflatex -halt-on-error bibtex-to-pdf.tex") << QLatin1String("pdflatex -halt-on-error bibtex-to-pdf.tex");
 
@@ -166,7 +166,7 @@ bool FileExporterPDF::writeLatexFile(const QString &filename)
         return false;
 }
 
-void FileExporterPDF::fillEmbeddedFileList(const File* bibtexfile)
+void FileExporterPDF::fillEmbeddedFileList(const File *bibtexfile)
 {
     for (File::ConstIterator it = bibtexfile->constBegin(); it != bibtexfile->constEnd(); ++it)
         fillEmbeddedFileList(*it);

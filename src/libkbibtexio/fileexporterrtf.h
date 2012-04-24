@@ -35,8 +35,8 @@ public:
 
     void reloadConfig();
 
-    bool save(QIODevice* iodevice, const File* bibtexfile, QStringList *errorLog = NULL);
-    bool save(QIODevice* iodevice, const QSharedPointer<const Element> element, QStringList *errorLog = NULL);
+    bool save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog = NULL);
+    bool save(QIODevice *iodevice, const QSharedPointer<const Element> element, QStringList *errorLog = NULL);
 
 private:
     QString m_laTeXFilename;
@@ -46,7 +46,7 @@ private:
     QString m_bibliographyStyle;
     QString m_paperSize;
 
-    bool generateRTF(QIODevice* iodevice, QStringList *errorLog);
+    bool generateRTF(QIODevice *iodevice, QStringList *errorLog);
     bool writeLatexFile(const QString &filename);
 };
 

@@ -263,7 +263,7 @@ public:
 
     QWidget *container;
     QBoxLayout *containerLayout;
-    QList<TokenWidget*> widgetList;
+    QList<TokenWidget *> widgetList;
     QLabel *labelPreview;
     KPushButton *buttonAddTokenAtTop, *buttonAddTokenAtBottom;
     const Entry *previewEntry;
@@ -326,11 +326,11 @@ public:
         connect(signalMapperAddMenu, SIGNAL(mapped(int)), p, SLOT(addToken(int)));
 
         signalMapperMoveUp = new QSignalMapper(p);
-        connect(signalMapperMoveUp, SIGNAL(mapped(QWidget*)), p, SLOT(moveUpToken(QWidget*)));
+        connect(signalMapperMoveUp, SIGNAL(mapped(QWidget *)), p, SLOT(moveUpToken(QWidget *)));
         signalMapperMoveDown = new QSignalMapper(p);
-        connect(signalMapperMoveDown, SIGNAL(mapped(QWidget*)), p, SLOT(moveDownToken(QWidget*)));
+        connect(signalMapperMoveDown, SIGNAL(mapped(QWidget *)), p, SLOT(moveDownToken(QWidget *)));
         signalMapperRemove = new QSignalMapper(p);
-        connect(signalMapperRemove, SIGNAL(mapped(QWidget*)), p, SLOT(removeToken(QWidget*)));
+        connect(signalMapperRemove, SIGNAL(mapped(QWidget *)), p, SLOT(removeToken(QWidget *)));
 
     }
 
@@ -437,7 +437,7 @@ public:
     }
 };
 
-IdSuggestionsEditWidget::IdSuggestionsEditWidget(const Entry *previewEntry, QWidget* parent, Qt::WindowFlags f)
+IdSuggestionsEditWidget::IdSuggestionsEditWidget(const Entry *previewEntry, QWidget *parent, Qt::WindowFlags f)
         : QWidget(parent, f), IdSuggestions(), d(new IdSuggestionsEditWidgetPrivate(previewEntry, this))
 {
     d->setupGUI();
@@ -448,7 +448,7 @@ IdSuggestionsEditWidget::~IdSuggestionsEditWidget()
 // TODO
 }
 
-void IdSuggestionsEditWidget::setFormatString(const QString& formatString)
+void IdSuggestionsEditWidget::setFormatString(const QString &formatString)
 {
     d->reset(formatString);
 }
@@ -467,7 +467,7 @@ void IdSuggestionsEditWidget::updatePreview()
 
 void IdSuggestionsEditWidget::moveUpToken(QWidget *widget)
 {
-    TokenWidget *tokenWidget = static_cast<TokenWidget*>(widget);
+    TokenWidget *tokenWidget = static_cast<TokenWidget *>(widget);
     int curPos = d->widgetList.indexOf(tokenWidget);
     if (curPos > 0) {
         d->widgetList.removeAt(curPos);
@@ -480,7 +480,7 @@ void IdSuggestionsEditWidget::moveUpToken(QWidget *widget)
 
 void IdSuggestionsEditWidget::moveDownToken(QWidget *widget)
 {
-    TokenWidget *tokenWidget = static_cast<TokenWidget*>(widget);
+    TokenWidget *tokenWidget = static_cast<TokenWidget *>(widget);
     int curPos = d->widgetList.indexOf(tokenWidget);
     if (curPos < d->widgetList.size() - 1) {
         d->widgetList.removeAt(curPos);
@@ -493,7 +493,7 @@ void IdSuggestionsEditWidget::moveDownToken(QWidget *widget)
 
 void IdSuggestionsEditWidget::removeToken(QWidget *widget)
 {
-    TokenWidget *tokenWidget = static_cast<TokenWidget*>(widget);
+    TokenWidget *tokenWidget = static_cast<TokenWidget *>(widget);
     d->widgetList.removeOne(tokenWidget);
     d->containerLayout->removeWidget(tokenWidget);
     tokenWidget->deleteLater();
@@ -510,7 +510,7 @@ void IdSuggestionsEditWidget::addToken(int cmd)
     }
 }
 
-IdSuggestionsEditDialog::IdSuggestionsEditDialog(QWidget* parent, Qt::WFlags flags)
+IdSuggestionsEditDialog::IdSuggestionsEditDialog(QWidget *parent, Qt::WFlags flags)
         : KDialog(parent, flags)
 {
     setCaption(i18n("Edit Id Suggestion"));
@@ -522,7 +522,7 @@ IdSuggestionsEditDialog::~IdSuggestionsEditDialog()
     // TODO
 }
 
-QString IdSuggestionsEditDialog::editSuggestion(const Entry *previewEntry, const QString& suggestion, QWidget* parent)
+QString IdSuggestionsEditDialog::editSuggestion(const Entry *previewEntry, const QString &suggestion, QWidget *parent)
 {
     IdSuggestionsEditDialog dlg(parent);
     IdSuggestionsEditWidget widget(previewEntry, &dlg);

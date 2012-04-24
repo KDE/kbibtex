@@ -59,7 +59,7 @@ public:
         }
     }
 
-    QModelIndex index(int row, int column, const QModelIndex&) const {
+    QModelIndex index(int row, int column, const QModelIndex &) const {
         return createIndex(row, column);
     }
 
@@ -82,7 +82,7 @@ public:
             else if (index.row() == rowCount() - 1)
                 return userColor;
             else
-                return colorLabelPairs[index.row()-1].color;
+                return colorLabelPairs[index.row() - 1].color;
         } else if (role == Qt::FontRole && (index.row() == 0 || index.row() == rowCount() - 1)) {
             QFont font;
             font.setItalic(true);
@@ -96,7 +96,7 @@ public:
             else if (index.row() == rowCount() - 1)
                 return i18n("User-defined color");
             else
-                return colorLabelPairs[index.row()-1].label;
+                return colorLabelPairs[index.row() - 1].label;
         else
             return QVariant();
     }
@@ -142,7 +142,7 @@ ColorLabelWidget::~ColorLabelWidget()
     delete d;
 }
 
-bool ColorLabelWidget::reset(const Value& value)
+bool ColorLabelWidget::reset(const Value &value)
 {
     int i = 0;
     QSharedPointer<VerbatimText> verbatimText;
@@ -162,7 +162,7 @@ bool ColorLabelWidget::reset(const Value& value)
     return true;
 }
 
-bool ColorLabelWidget::apply(Value& value) const
+bool ColorLabelWidget::apply(Value &value) const
 {
     QColor color = d->model->data(d->model->index(currentIndex(), 0, QModelIndex()), ColorRole).value<QColor>();
     value.clear();

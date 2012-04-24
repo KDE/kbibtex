@@ -20,12 +20,12 @@
 
 #include "encoder.h"
 
-QString Encoder::decode(const QString & text) const
+QString Encoder::decode(const QString &text) const
 {
     return text;
 }
 
-QString Encoder::encode(const QString & text) const
+QString Encoder::encode(const QString &text) const
 {
     return text;
 };

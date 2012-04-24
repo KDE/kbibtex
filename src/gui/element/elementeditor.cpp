@@ -50,7 +50,7 @@
 class ElementEditor::ElementEditorPrivate : public ElementEditor::ApplyElementInterface
 {
 private:
-    typedef QVector<ElementWidget*> WidgetList;
+    typedef QVector<ElementWidget *> WidgetList;
     WidgetList widgets;
     QSharedPointer<Element> element;
     const File *file;
@@ -71,7 +71,7 @@ public:
     bool elementChanged, elementUnapplied;
 
     ElementEditorPrivate(ElementEditor *parent)
-        : file(NULL), p(parent), previousWidget(NULL), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), elementChanged(false), elementUnapplied(false) {
+            : file(NULL), p(parent), previousWidget(NULL), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), elementChanged(false), elementUnapplied(false) {
         createGUI();
     }
 
@@ -173,7 +173,7 @@ public:
         addTabWidgets();
 
         tab->setCurrentIndex(0);
-        previousWidget = dynamic_cast<ElementWidget*>(tab->widget(0));
+        previousWidget = dynamic_cast<ElementWidget *>(tab->widget(0));
     }
 
     void updateTabVisibility() {
@@ -204,7 +204,7 @@ public:
     void apply(QSharedPointer<Element> element) {
         if (referenceWidget != NULL)
             referenceWidget->apply(element);
-        ElementWidget *currentElementWidget = dynamic_cast<ElementWidget*>(tab->currentWidget());
+        ElementWidget *currentElementWidget = dynamic_cast<ElementWidget *>(tab->currentWidget());
         Q_ASSERT_X(currentElementWidget != NULL || tab->currentWidget() == NULL, "ElementEditor::ElementEditorPrivate::apply", "Could not cast currentWidget to ElementWidget");
         for (WidgetList::ConstIterator it = widgets.constBegin(); it != widgets.constEnd(); ++it)
             if ((*it) != currentElementWidget && (*it) != sourceWidget)
@@ -274,7 +274,7 @@ public:
 
         /// update the enabled/disabled state of required and optional widgets/fields
         bool forceVisible = checkBoxForceShowAllWidgets->isChecked();
-        foreach(ElementWidget * elementWidget, widgets) {
+        foreach(ElementWidget *elementWidget, widgets) {
             elementWidget->showReqOptWidgets(forceVisible, tempEntry->type());
         }
 
@@ -288,7 +288,7 @@ public:
 
     void switchTo(QWidget *newTab) {
         bool isSourceWidget = newTab == sourceWidget;
-        ElementWidget *newWidget = dynamic_cast<ElementWidget*>(newTab);
+        ElementWidget *newWidget = dynamic_cast<ElementWidget *>(newTab);
         if (previousWidget != NULL && newWidget != NULL) {
             QSharedPointer<Element> temp;
             if (!internalEntry.isNull())
@@ -304,7 +304,7 @@ public:
             previousWidget->apply(temp);
             if (isSourceWidget && referenceWidget != NULL) referenceWidget->apply(temp);
             newWidget->reset(temp);
-            if (referenceWidget != NULL && dynamic_cast<SourceWidget*>(previousWidget) != NULL)
+            if (referenceWidget != NULL && dynamic_cast<SourceWidget *>(previousWidget) != NULL)
                 referenceWidget->reset(temp);
         }
         previousWidget = newWidget;

@@ -32,8 +32,8 @@ public:
     FileImporterRIS();
     ~FileImporterRIS();
 
-    File* load(QIODevice *iodevice);
-    static bool guessCanDecode(const QString & text);
+    File *load(QIODevice *iodevice);
+    static bool guessCanDecode(const QString &text);
 
 public slots:
     void cancel();

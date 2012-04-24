@@ -42,9 +42,9 @@ class KBIBTEXGUI_EXPORT IdSuggestionsEditDialog : public KDialog
 public:
     virtual ~IdSuggestionsEditDialog();
 
-    static QString editSuggestion(const Entry *previewEntry, const QString &suggestion, QWidget* parent);
+    static QString editSuggestion(const Entry *previewEntry, const QString &suggestion, QWidget *parent);
 protected:
-    explicit IdSuggestionsEditDialog(QWidget* parent = 0, Qt::WFlags flags = 0);
+    explicit IdSuggestionsEditDialog(QWidget *parent = 0, Qt::WFlags flags = 0);
 };
 
 class IdSuggestionsEditWidget : public QWidget, public IdSuggestions
@@ -52,7 +52,7 @@ class IdSuggestionsEditWidget : public QWidget, public IdSuggestions
     Q_OBJECT
 
 public:
-    explicit IdSuggestionsEditWidget(const Entry *previewEntry, QWidget* parent = 0, Qt::WindowFlags f = 0);
+    explicit IdSuggestionsEditWidget(const Entry *previewEntry, QWidget *parent = 0, Qt::WindowFlags f = 0);
     virtual ~IdSuggestionsEditWidget();
 
     void setFormatString(const QString &formatString);
@@ -60,9 +60,9 @@ public:
 
 private slots:
     void updatePreview();
-    void moveUpToken(QWidget*);
-    void moveDownToken(QWidget*);
-    void removeToken(QWidget*);
+    void moveUpToken(QWidget *);
+    void moveDownToken(QWidget *);
+    void removeToken(QWidget *);
     void addToken(int);
 
 private:

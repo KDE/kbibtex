@@ -39,8 +39,8 @@ public:
     FileImporterBibUtils(InputFormat inputFormat);
     ~FileImporterBibUtils();
 
-    File* load(QIODevice *iodevice);
-    static bool guessCanDecode(const QString & text);
+    File *load(QIODevice *iodevice);
+    static bool guessCanDecode(const QString &text);
     static InputFormat guessInputFormat(const QString &text);
 
 public slots:
@@ -53,7 +53,7 @@ private:
     FileImporterBibTeX *m_bibTeXImporter;
 
     QString createTempDir();
-    void deleteTempDir(const QString& directory);
+    void deleteTempDir(const QString &directory);
 
 };
 

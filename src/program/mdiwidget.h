@@ -69,7 +69,7 @@ private:
 private slots:
     void slotCompleted(QObject *);
     void slotStatusFlagsChanged(OpenFileInfo::StatusFlags);
-    void slotOpenLRU(const QModelIndex&);
+    void slotOpenLRU(const QModelIndex &);
 };
 
 #endif // KBIBTEX_PROGRAM_MDIWIDGET_H

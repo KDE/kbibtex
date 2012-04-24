@@ -56,7 +56,7 @@ FileImporterBibTeX::~FileImporterBibTeX()
 {
 }
 
-File* FileImporterBibTeX::load(QIODevice *iodevice)
+File *FileImporterBibTeX::load(QIODevice *iodevice)
 {
     m_cancelFlag = false;
 
@@ -100,7 +100,7 @@ File* FileImporterBibTeX::load(QIODevice *iodevice)
 
     while (!m_cancelFlag && !m_textStream->atEnd()) {
         emit progress(m_textStream->pos(), rawText.length());
-        Element * element = nextElement();
+        Element *element = nextElement();
 
         if (element != NULL) {
             if (!m_ignoreComments || typeid(*element) != typeid(Comment))
@@ -136,7 +136,7 @@ File* FileImporterBibTeX::load(QIODevice *iodevice)
     return result;
 }
 
-bool FileImporterBibTeX::guessCanDecode(const QString & rawText)
+bool FileImporterBibTeX::guessCanDecode(const QString &rawText)
 {
     static const QRegExp bibtexLikeText("@\\w+\\{.+\\}");
     QString text = EncoderLaTeX::instance()->decode(rawText);
@@ -298,7 +298,7 @@ Preamble *FileImporterBibTeX::readPreambleElement()
     return preamble;
 }
 
-Entry *FileImporterBibTeX::readEntryElement(const QString& typeString)
+Entry *FileImporterBibTeX::readEntryElement(const QString &typeString)
 {
     BibTeXEntries *be = BibTeXEntries::self();
     BibTeXFields *bf = BibTeXFields::self();
@@ -501,11 +501,10 @@ QString FileImporterBibTeX::readSimpleString(QChar until)
                 result.append(m_currentChar);
             else
                 break;
-        } else
-            if (m_currentChar.isLetterOrNumber() || extraAlphaNumChars.contains(m_currentChar))
-                result.append(m_currentChar);
-            else
-                break;
+        } else if (m_currentChar.isLetterOrNumber() || extraAlphaNumChars.contains(m_currentChar))
+            result.append(m_currentChar);
+        else
+            break;
         if (m_currentChar == '\n') {
             ++m_lineNo;
             m_prevLine = m_currentLine;
@@ -614,7 +613,7 @@ QString FileImporterBibTeX::readBracketString(const QChar openingBracket) ///< d
     return result;
 }
 
-FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value& value, const QString& key)
+FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value &value, const QString &key)
 {
     Token token = tUnknown;
     const QString iKey = key.toLower();
@@ -691,8 +690,8 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value& value, const QStr
             if (isStringKey)
                 value.append(QSharedPointer<MacroKey>(new MacroKey(text)));
             else {
-                QList<Keyword*> keywords = splitKeywords(text);
-                for (QList<Keyword*>::Iterator it = keywords.begin(); it != keywords.end(); ++it)
+                QList<Keyword *> keywords = splitKeywords(text);
+                for (QList<Keyword *>::Iterator it = keywords.begin(); it != keywords.end(); ++it)
                     value.append(QSharedPointer<Keyword>(*it));
             }
         } else {
@@ -708,9 +707,9 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value& value, const QStr
     return token;
 }
 
-QList<Keyword*> FileImporterBibTeX::splitKeywords(const QString& text)
+QList<Keyword *> FileImporterBibTeX::splitKeywords(const QString &text)
 {
-    QList<Keyword*> result;
+    QList<Keyword *> result;
     /// define a list of characters where keywords will be split along
     /// finalize list with null character
     static char splitChars[] = ";,\0";
@@ -744,12 +743,12 @@ QList<Keyword*> FileImporterBibTeX::splitKeywords(const QString& text)
     return result;
 }
 
-void FileImporterBibTeX::parsePersonList(const QString& text, Value &value)
+void FileImporterBibTeX::parsePersonList(const QString &text, Value &value)
 {
     parsePersonList(text, value, NULL);
 }
 
-void FileImporterBibTeX::parsePersonList(const QString& text, Value &value, CommaContainment *comma)
+void FileImporterBibTeX::parsePersonList(const QString &text, Value &value, CommaContainment *comma)
 {
     static QStringList tokens;
     contextSensitiveSplit(text, tokens);
@@ -903,7 +902,7 @@ QSharedPointer<Person> FileImporterBibTeX::personFromTokenList(const QStringList
     return QSharedPointer<Person>();
 }
 
-void FileImporterBibTeX::contextSensitiveSplit(const QString& text, QStringList& segments)
+void FileImporterBibTeX::contextSensitiveSplit(const QString &text, QStringList &segments)
 {
     int bracketCounter = 0; ///< keep track of opening and closing brackets: {...}
     QString buffer;

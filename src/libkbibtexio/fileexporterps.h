@@ -35,8 +35,8 @@ public:
 
     void reloadConfig();
 
-    bool save(QIODevice* iodevice, const File* bibtexfile, QStringList *errorLog = NULL);
-    bool save(QIODevice* iodevice, const QSharedPointer<const Element> element, QStringList *errorLog = NULL);
+    bool save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog = NULL);
+    bool save(QIODevice *iodevice, const QSharedPointer<const Element> element, QStringList *errorLog = NULL);
 
 private:
     QString m_laTeXFilename;
@@ -47,7 +47,7 @@ private:
     QString m_font;
     QString m_bibliographyStyle;
 
-    bool generatePS(QIODevice* iodevice, QStringList *errorLog);
+    bool generatePS(QIODevice *iodevice, QStringList *errorLog);
     bool writeLatexFile(const QString &filename);
     bool beautifyPostscriptFile(const QString &filename, const QString &title);
 };
