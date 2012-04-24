@@ -55,7 +55,7 @@ public:
     virtual bool reset(QSharedPointer<const Element> element) = 0;
     virtual void setReadOnly(bool isReadOnly) {
         this->isReadOnly = isReadOnly;
-    };
+    }
     virtual void showReqOptWidgets(bool, const QString &) = 0;
     virtual QString label() = 0;
     virtual KIcon icon() = 0;
@@ -66,10 +66,7 @@ public:
         m_file = file;
     }
 
-    static bool canEdit(const Element *element) {
-        Q_UNUSED(element)
-        return false;
-    };
+    virtual bool canEdit(const Element *) = 0;
 
 protected:
     bool isReadOnly;
@@ -97,14 +94,14 @@ private:
     int fieldInputCount, numCols;
     QGridLayout *gridLayout;
 
-    EntryTabLayout &etl;
+    QSharedPointer<EntryTabLayout> etl;
     QMap<QString, FieldInput*> bibtexKeyToWidget;
 
     void createGUI();
     void layoutGUI(bool forceVisible, const QString &entryType = QString::null);
 
 public:
-    EntryConfiguredWidget(EntryTabLayout &entryTabLayout, QWidget *parent);
+    EntryConfiguredWidget(QSharedPointer<EntryTabLayout> &entryTabLayout, QWidget *parent);
     ~EntryConfiguredWidget();
 
     bool apply(QSharedPointer<Element> element) const;
@@ -116,7 +113,7 @@ public:
 
     virtual void setFile(const File *file);
 
-    static bool canEdit(const Element *element);
+    bool canEdit(const Element *element);
 };
 
 class ReferenceWidget : public ElementWidget
@@ -144,7 +141,7 @@ public:
     QString label();
     KIcon icon();
 
-    static bool canEdit(const Element *element);
+    bool canEdit(const Element *element);
 
 private:
     ElementEditor::ApplyElementInterface *m_applyElement;
@@ -172,7 +169,7 @@ public:
     QString label();
     KIcon icon();
 
-    static bool canEdit(const Element *element);
+    bool canEdit(const Element *element);
 };
 
 class OtherFieldsWidget : public ElementWidget
@@ -205,7 +202,7 @@ public:
     QString label();
     KIcon icon();
 
-    static bool canEdit(const Element *element);
+    bool canEdit(const Element *element);
 
 private slots:
     void listElementExecuted(QTreeWidgetItem *item, int column);
@@ -233,7 +230,7 @@ public:
     QString label();
     KIcon icon();
 
-    static bool canEdit(const Element *element);
+    bool canEdit(const Element *element);
 };
 
 class PreambleWidget : public ElementWidget
@@ -253,7 +250,7 @@ public:
     QString label();
     KIcon icon();
 
-    static bool canEdit(const Element *element);
+    bool canEdit(const Element *element);
 };
 
 class SourceWidget : public ElementWidget
@@ -277,7 +274,7 @@ public:
     QString label();
     KIcon icon();
 
-    static bool canEdit(const Element *element);
+    bool canEdit(const Element *element);
 
 private slots:
     void reset();

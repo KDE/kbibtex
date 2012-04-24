@@ -82,7 +82,7 @@ void ElementWidget::gotModified()
 }
 
 
-EntryConfiguredWidget::EntryConfiguredWidget(EntryTabLayout &entryTabLayout, QWidget *parent)
+EntryConfiguredWidget::EntryConfiguredWidget(QSharedPointer<EntryTabLayout> &entryTabLayout, QWidget *parent)
         : ElementWidget(parent), etl(entryTabLayout)
 {
     gridLayout = new QGridLayout(this);
@@ -150,12 +150,12 @@ void EntryConfiguredWidget::setReadOnly(bool isReadOnly)
 
 QString EntryConfiguredWidget::label()
 {
-    return etl.uiCaption;
+    return etl->uiCaption;
 }
 
 KIcon EntryConfiguredWidget::icon()
 {
-    return KIcon(etl.iconName);
+    return KIcon(etl->iconName);
 }
 
 void EntryConfiguredWidget::setFile(const File *file)
@@ -186,13 +186,13 @@ void EntryConfiguredWidget::createGUI()
     const BibTeXFields *bf = BibTeXFields::self();
 
     /// store information on number of widgets and columns in class variable
-    fieldInputCount = etl.singleFieldLayouts.size();
-    numCols = etl.columns;
+    fieldInputCount = etl->singleFieldLayouts.size();
+    numCols = etl->columns;
     /// initialize list of field input widgets plus labels
     listOfLabeledFieldInput = new LabeledFieldInput*[fieldInputCount];
 
     int i = 0;
-    foreach(const SingleFieldLayout &sfl, etl.singleFieldLayouts) {
+    foreach(const SingleFieldLayout & sfl, etl->singleFieldLayouts) {
         LabeledFieldInput *labeledFieldInput = new LabeledFieldInput;
 
         /// create an editing widget for this field
@@ -281,16 +281,16 @@ void EntryConfiguredWidget::layoutGUI(bool forceVisible, const QString &entryTyp
     for (int i = 0; i < fieldInputCount; ++i)
         if (visible[i]) {
             /// add label and field input to new position in grid layout
-            gridLayout->addWidget(listOfLabeledFieldInput[i]->label, row, col*3);
-            gridLayout->addWidget(listOfLabeledFieldInput[i]->fieldInput, row, col*3 + 1);
+            gridLayout->addWidget(listOfLabeledFieldInput[i]->label, row, col * 3);
+            gridLayout->addWidget(listOfLabeledFieldInput[i]->fieldInput, row, col * 3 + 1);
 
             /// set row stretch
             gridLayout->setRowStretch(row, listOfLabeledFieldInput[i]->isVerticallyMinimumExpaning ? 1000 : 0);
             /// set column stretch and spacing
-            gridLayout->setColumnStretch(col*3, 1);
-            gridLayout->setColumnStretch(col*3 + 1, 1000);
+            gridLayout->setColumnStretch(col * 3, 1);
+            gridLayout->setColumnStretch(col * 3 + 1, 1000);
             if (col > 0)
-                gridLayout->setColumnMinimumWidth(col*3 - 1, interColumnSpace);
+                gridLayout->setColumnMinimumWidth(col * 3 - 1, interColumnSpace);
 
             /// count rows and columns correctly
             ++row;
@@ -301,15 +301,15 @@ void EntryConfiguredWidget::layoutGUI(bool forceVisible, const QString &entryTyp
 
             /// finally, set label and field input visible again
             listOfLabeledFieldInput[i]->label->setVisible(true);
-            listOfLabeledFieldInput[i]->fieldInput->setVisible(true);
+            listOfLabeledFieldInput[i]->fieldInput->setVisible(true); // FIXME expensive!
         }
 
     if (countVisible > 0) {
         /// fix row stretch
-        for (int i = numRows + 1;i < 100;++i)
+        for (int i = numRows + 1; i < 100; ++i)
             gridLayout->setRowStretch(i, 0);
         /// hide unused columns
-        for (int i = (col + (row == 0 ? 0 : 1)) * 3 - 1;i < 100;++i) {
+        for (int i = (col + (row == 0 ? 0 : 1)) * 3 - 1; i < 100; ++i) {
             gridLayout->setColumnMinimumWidth(i, 0);
             gridLayout->setColumnStretch(i, 0);
         }
