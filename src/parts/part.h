@@ -82,7 +82,7 @@ private slots:
 
 private:
     class KBibTeXPartPrivate;
-    KBibTeXPartPrivate * const d;
+    KBibTeXPartPrivate *const d;
 };
 
 #endif // KBIBTEX_PART_PART_H

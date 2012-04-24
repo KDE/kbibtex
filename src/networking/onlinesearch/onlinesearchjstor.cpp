@@ -117,21 +117,21 @@ void OnlineSearchJStor::startSearch(const QMap<QString, QString> &query, int num
     d->queryUrl.addQueryItem("hp", QString::number(numResults)); /// hits per page
     int queryNumber = 0;
     QStringList elements = splitRespectingQuotationMarks(query[queryKeyTitle]);
-    foreach(const QString& element, elements) {
+    foreach(const QString &element, elements) {
         if (queryNumber > 0) d->queryUrl.addQueryItem(QString("c%1").arg(queryNumber), "AND"); ///< join search terms with an AND operation
         d->queryUrl.addQueryItem(QString("f%1").arg(queryNumber), "ti");
         d->queryUrl.addQueryItem(QString("q%1").arg(queryNumber), element);
         ++queryNumber;
     }
     elements = splitRespectingQuotationMarks(query[queryKeyAuthor]);
-    foreach(const QString& element, elements) {
+    foreach(const QString &element, elements) {
         if (queryNumber > 0) d->queryUrl.addQueryItem(QString("c%1").arg(queryNumber), "AND"); ///< join search terms with an AND operation
         d->queryUrl.addQueryItem(QString("f%1").arg(queryNumber), "au");
         d->queryUrl.addQueryItem(QString("q%1").arg(queryNumber), element);
         ++queryNumber;
     }
     elements = splitRespectingQuotationMarks(query[queryKeyFreeText]);
-    foreach(const QString& element, elements) {
+    foreach(const QString &element, elements) {
         if (queryNumber > 0) d->queryUrl.addQueryItem(QString("c%1").arg(queryNumber), "AND"); ///< join search terms with an AND operation
         d->queryUrl.addQueryItem(QString("f%1").arg(queryNumber), "all");
         d->queryUrl.addQueryItem(QString("q%1").arg(queryNumber), element);
@@ -166,7 +166,7 @@ QString OnlineSearchJStor::favIconUrl() const
     return QLatin1String("http://www.jstor.org/favicon.ico");
 }
 
-OnlineSearchQueryFormAbstract* OnlineSearchJStor::customWidget(QWidget *)
+OnlineSearchQueryFormAbstract *OnlineSearchJStor::customWidget(QWidget *)
 {
     return NULL;
 }
@@ -185,7 +185,7 @@ void OnlineSearchJStor::doneFetchingStartPage()
 {
     emit progress(++d->curStep, d->numSteps);
 
-    QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
+    QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
     if (handleErrors(reply)) {
         QNetworkRequest request(d->queryUrl);
@@ -200,7 +200,7 @@ void OnlineSearchJStor::doneFetchingResultPage()
 {
     emit progress(++d->curStep, d->numSteps);
 
-    QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
+    QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
     if (handleErrors(reply)) {
         QString htmlText = reply->readAll();
@@ -209,8 +209,8 @@ void OnlineSearchJStor::doneFetchingResultPage()
 
         if (formData.size() > 0) {
             QStringList body;
-            foreach(const QString& key, formData.keys()) {
-                foreach(const QString& value, formData.values(key)) {
+            foreach(const QString &key, formData.keys()) {
+                foreach(const QString &value, formData.values(key)) {
                     body.append(encodeURL(key) + '=' + encodeURL(value));
                 }
             }
@@ -238,7 +238,7 @@ void OnlineSearchJStor::doneFetchingSummaryPage()
 {
     emit progress(++d->curStep, d->numSteps);
 
-    QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
+    QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
     if (handleErrors(reply)) {
         QTextStream ts(reply->readAll());

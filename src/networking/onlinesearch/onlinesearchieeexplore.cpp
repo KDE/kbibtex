@@ -127,7 +127,7 @@ void OnlineSearchIEEEXplore::doneFetchingStartPage()
 {
     emit progress(++d->curStep, d->numSteps);
 
-    QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
+    QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
     if (handleErrors(reply)) {
         if (reply->attribute(QNetworkRequest::RedirectionTargetAttribute).isValid()) {
@@ -154,7 +154,7 @@ void OnlineSearchIEEEXplore::doneFetchingSearchResults()
 {
     emit progress(++d->curStep, d->numSteps);
 
-    QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
+    QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
     if (handleErrors(reply)) {
         const QString htmlText(reply->readAll());
@@ -189,7 +189,7 @@ void OnlineSearchIEEEXplore::doneFetchingAbstract()
 {
     emit progress(++d->curStep, d->numSteps);
 
-    QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
+    QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
     if (handleErrors(reply)) {
         QString arnumber = reply->url().queryItemValue(QLatin1String("arnumber"));
@@ -208,7 +208,7 @@ void OnlineSearchIEEEXplore::doneFetchingBibliography()
 {
     emit progress(++d->curStep, d->numSteps);
 
-    QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
+    QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
     if (handleErrors(reply)) {
         QString plainText = QString(reply->readAll()).replace("<br>", "");
@@ -265,7 +265,7 @@ QString OnlineSearchIEEEXplore::favIconUrl() const
     return QLatin1String("http://ieeexplore.ieee.org/favicon.ico");
 }
 
-OnlineSearchQueryFormAbstract* OnlineSearchIEEEXplore::customWidget(QWidget *)
+OnlineSearchQueryFormAbstract *OnlineSearchIEEEXplore::customWidget(QWidget *)
 {
     return NULL;
 }

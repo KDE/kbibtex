@@ -51,7 +51,7 @@ public:
 
     OnlineSearchAcmPortalPrivate(OnlineSearchAcmPortal *parent)
             : p(parent), numExpectedResults(0), numFoundResults(0),
-            acmPortalBaseUrl(QLatin1String("http://dl.acm.org/")) {
+          acmPortalBaseUrl(QLatin1String("http://dl.acm.org/")) {
         // nothing
     }
 
@@ -138,7 +138,7 @@ QString OnlineSearchAcmPortal::favIconUrl() const
     return QLatin1String("http://portal.acm.org/favicon.ico");
 }
 
-OnlineSearchQueryFormAbstract* OnlineSearchAcmPortal::customWidget(QWidget *)
+OnlineSearchQueryFormAbstract *OnlineSearchAcmPortal::customWidget(QWidget *)
 {
     return NULL;
 }
@@ -157,7 +157,7 @@ void OnlineSearchAcmPortal::doneFetchingStartPage()
 {
     emit progress(++d->curStep, d->numSteps);
 
-    QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
+    QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
     if (handleErrors(reply)) {
         QString htmlSource = reply->readAll();
@@ -186,7 +186,7 @@ void OnlineSearchAcmPortal::doneFetchingSearchPage()
 {
     emit progress(++d->curStep, d->numSteps);
 
-    QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
+    QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
     if (handleErrors(reply)) {
         QString htmlSource = reply->readAll();
@@ -224,7 +224,7 @@ void OnlineSearchAcmPortal::doneFetchingBibTeX()
 {
     emit progress(++d->curStep, d->numSteps);
 
-    QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
+    QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
     if (handleErrors(reply)) {
         QString bibTeXcode = reply->readAll();

@@ -42,7 +42,7 @@ const int OnlineSearchAbstract::resultNoError = 0;
 const int OnlineSearchAbstract::resultCancelled = 0; /// may get redefined in the future!
 const int OnlineSearchAbstract::resultUnspecifiedError = 1;
 
-const char* OnlineSearchAbstract::httpUnsafeChars = "%:/=+$?&\0";
+const char *OnlineSearchAbstract::httpUnsafeChars = "%:/=+$?&\0";
 
 
 QStringList OnlineSearchQueryFormAbstract::authorLastNames(const Entry &entry)
@@ -267,7 +267,7 @@ void OnlineSearchAbstract::setNetworkReplyTimeout(QNetworkReply *reply, int time
 
 void OnlineSearchAbstract::networkReplyTimeout()
 {
-    QTimer *timer = static_cast<QTimer*>(sender());
+    QTimer *timer = static_cast<QTimer *>(sender());
     QNetworkReply *reply = m_mapTimerToReply[timer];
     if (reply != NULL) {
         kDebug() << "Timout on reply to " << reply->url().toString();
@@ -277,7 +277,7 @@ void OnlineSearchAbstract::networkReplyTimeout()
 }
 void OnlineSearchAbstract::networkReplyFinished()
 {
-    QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
+    QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
     QTimer *timer = m_mapTimerToReply.key(reply, NULL);
     if (timer != NULL) {
         m_mapTimerToReply.remove(timer);
@@ -287,7 +287,7 @@ void OnlineSearchAbstract::networkReplyFinished()
 
 void OnlineSearchAbstract::iconDownloadFinished()
 {
-    QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
+    QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
     if (reply->error() == QNetworkReply::NoError) {
         const QString filename = reply->objectName();

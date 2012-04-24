@@ -36,13 +36,13 @@ public:
     OnlineSearchQueryFormGeneral(QWidget *parent);
 
     bool readyToStart() const;
-    void copyFromEntry(const Entry&);
+    void copyFromEntry(const Entry &);
 
     QMap<QString, QString> getQueryTerms();
     int getNumResults();
 
 private:
-    QMap<QString, KLineEdit*> queryFields;
+    QMap<QString, KLineEdit *> queryFields;
     QSpinBox *numResultsField;
     const QString configGroupName;
 

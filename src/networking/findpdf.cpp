@@ -64,7 +64,7 @@ bool FindPDF::search(const Entry &entry)
         QStringList titleChunks = PlainTextValue::text(entry.value(Entry::ftTitle)).split(QChar(' '), QString::SkipEmptyParts);
         if (!titleChunks.isEmpty()) {
             titleBeginning = titleChunks[0];
-            for (int i = 1; i < titleChunks.count() && titleBeginning.length() < 32;++i)
+            for (int i = 1; i < titleChunks.count() && titleBeginning.length() < 32; ++i)
                 titleBeginning += QChar(' ') + titleChunks[i];
         }
     }
@@ -146,7 +146,7 @@ void FindPDF::downloadFinished()
     emit progress(m_knownUrls.count(), m_result.count());
 
     --aliveCounter;
-    QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
+    QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
     const QString term = reply->property(termProperty).toString();
     const QString origin = reply->property(originProperty).toString();
     bool depthOk = false;

@@ -108,7 +108,7 @@ QString OnlineSearchScienceDirect::favIconUrl() const
     return QLatin1String("http://www.sciencedirect.com/scidirimg/faviconSD.ico");
 }
 
-OnlineSearchQueryFormAbstract* OnlineSearchScienceDirect::customWidget(QWidget *)
+OnlineSearchQueryFormAbstract *OnlineSearchScienceDirect::customWidget(QWidget *)
 {
     return NULL;
 }
@@ -130,7 +130,7 @@ void OnlineSearchScienceDirect::doneFetchingStartPage()
     --d->runningJobs;
     Q_ASSERT(d->runningJobs == 0);
 
-    QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
+    QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
     if (handleErrors(reply)) {
         const QString htmlText = reply->readAll();
         InternalNetworkAccessManager::self()->mergeHtmlHeadCookies(htmlText, reply->url());
@@ -164,7 +164,7 @@ void OnlineSearchScienceDirect::doneFetchingResultPage()
     --d->runningJobs;
     Q_ASSERT(d->runningJobs == 0);
 
-    QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
+    QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
     if (handleErrors(reply)) {
         KUrl redirUrl = reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl();
         if (!redirUrl.isEmpty()) {
@@ -205,7 +205,7 @@ void OnlineSearchScienceDirect::doneFetchingAbstractPage()
     --d->runningJobs;
     Q_ASSERT(d->runningJobs >= 0);
 
-    QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
+    QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
     if (handleErrors(reply)) {
         KUrl redirUrl = reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl();
         if (!redirUrl.isEmpty()) {
@@ -244,7 +244,7 @@ void OnlineSearchScienceDirect::doneFetchingExportCitationPage()
     --d->runningJobs;
     Q_ASSERT(d->runningJobs >= 0);
 
-    QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
+    QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
     if (handleErrors(reply)) {
         KUrl redirUrl = reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl();
         if (!redirUrl.isEmpty()) {
@@ -294,7 +294,7 @@ void OnlineSearchScienceDirect::doneFetchingBibTeX()
     --d->runningJobs;
     Q_ASSERT(d->runningJobs >= 0);
 
-    QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
+    QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
     if (handleErrors(reply)) {
         QTextStream ts(reply->readAll());
         QString bibTeXcode = ts.readAll();

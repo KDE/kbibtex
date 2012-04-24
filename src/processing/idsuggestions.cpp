@@ -39,7 +39,7 @@ public:
         // nothing
     }
 
-    QString normalizeText(const QString& input) const {
+    QString normalizeText(const QString &input) const {
         static const QRegExp unwantedChars = QRegExp("[^-_:/=+a-zA-Z0-9]+");
         return EncoderLaTeX::instance()->convertToPlainAscii(input).replace(unwantedChars, QLatin1String(""));
     }
@@ -72,7 +72,7 @@ public:
         return ok ? result : -1;
     }
 
-    QString translateTitleToken(const Entry &entry, const QString& token, bool removeSmallWords) const {
+    QString translateTitleToken(const Entry &entry, const QString &token, bool removeSmallWords) const {
         struct IdSuggestionTokenInfo tti = p->evalToken(token);
         const QStringList smallWords = QStringList() << QLatin1String("and") << QLatin1String("on") << QLatin1String("in") << QLatin1String("the") << QLatin1String("of") << QLatin1String("at") << QLatin1String("a") << QLatin1String("an") << QLatin1String("with") << QLatin1String("for") << QLatin1String("from");
 
@@ -251,31 +251,31 @@ QStringList IdSuggestions::formatStrToHuman(const QString &formatStr) const
 }
 
 struct IdSuggestions::IdSuggestionTokenInfo IdSuggestions::evalToken(const QString &token) const {
-        int pos = 0;
-        struct IdSuggestionTokenInfo result;
-        result.len = 0x00ffffff;
-        result.toLower = false;
-        result.toUpper = false;
-        result.inBetween = QString::null;
+    int pos = 0;
+    struct IdSuggestionTokenInfo result;
+    result.len = 0x00ffffff;
+    result.toLower = false;
+    result.toUpper = false;
+    result.inBetween = QString::null;
 
-        if (token.length() > pos) {
-            int dv = token[pos].digitValue();
-            if (dv > -1) {
-                result.len = dv;
-                ++pos;
-            }
+    if (token.length() > pos) {
+        int dv = token[pos].digitValue();
+        if (dv > -1) {
+            result.len = dv;
+            ++pos;
         }
-
-        if (token.length() > pos) {
-            result.toLower = token[pos] == 'l';
-            result.toUpper = token[pos] == 'u';
-            if (result.toUpper || result.toLower)
-                ++pos;
-        }
-
-        if (token.length() > pos + 1 && token[pos] == '"')
-            result.inBetween = token.mid(pos + 1);
-
-        return result;
     }
+
+    if (token.length() > pos) {
+        result.toLower = token[pos] == 'l';
+        result.toUpper = token[pos] == 'u';
+        if (result.toUpper || result.toLower)
+            ++pos;
+    }
+
+    if (token.length() > pos + 1 && token[pos] == '"')
+        result.inBetween = token.mid(pos + 1);
+
+    return result;
+}
 

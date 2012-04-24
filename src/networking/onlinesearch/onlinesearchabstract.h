@@ -53,7 +53,7 @@ public:
 
     virtual bool readyToStart() const = 0;
 
-    virtual void copyFromEntry(const Entry&) = 0;
+    virtual void copyFromEntry(const Entry &) = 0;
 
 protected:
     KSharedConfigPtr config;
@@ -64,7 +64,7 @@ signals:
     void returnPressed();
 };
 
-Q_DECLARE_METATYPE(OnlineSearchQueryFormAbstract*)
+Q_DECLARE_METATYPE(OnlineSearchQueryFormAbstract *)
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
@@ -90,7 +90,7 @@ public:
     virtual QString label() const = 0;
     QString name();
     virtual KIcon icon(QListWidgetItem *listWidgetItem = NULL);
-    virtual OnlineSearchQueryFormAbstract* customWidget(QWidget *parent) = 0;
+    virtual OnlineSearchQueryFormAbstract *customWidget(QWidget *parent) = 0;
     virtual KUrl homepage() const = 0;
 
 public slots:
@@ -130,8 +130,8 @@ protected:
 private:
     QString m_name;
     static const char *httpUnsafeChars;
-    QMap<QTimer*, QNetworkReply*> m_mapTimerToReply;
-    QMap<QNetworkReply*, QListWidgetItem*> m_iconReplyToListWidgetItem;
+    QMap<QTimer *, QNetworkReply *> m_mapTimerToReply;
+    QMap<QNetworkReply *, QListWidgetItem *> m_iconReplyToListWidgetItem;
 
 private slots:
     void networkReplyTimeout();

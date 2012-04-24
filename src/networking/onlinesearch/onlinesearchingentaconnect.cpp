@@ -351,7 +351,7 @@ QString OnlineSearchIngentaConnect::favIconUrl() const
     return QLatin1String("http://www.ingentaconnect.com/favicon.ico");
 }
 
-OnlineSearchQueryFormAbstract* OnlineSearchIngentaConnect::customWidget(QWidget *parent)
+OnlineSearchQueryFormAbstract *OnlineSearchIngentaConnect::customWidget(QWidget *parent)
 {
     if (d->form == NULL)
         d->form = new OnlineSearchIngentaConnect::OnlineSearchQueryFormIngentaConnect(parent);
@@ -372,7 +372,7 @@ void OnlineSearchIngentaConnect::downloadDone()
 {
     emit progress(1, 1);
 
-    QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
+    QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
     if (handleErrors(reply)) {
         QTextStream ts(reply->readAll());

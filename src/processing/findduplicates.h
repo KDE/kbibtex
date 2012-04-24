@@ -52,7 +52,7 @@ public:
     int fieldCount() const;
     QList<QString> fieldList() const;
     QList<Value> values(const QString &field) const;
-    QList<Value>& values(const QString &field);
+    QList<Value> &values(const QString &field);
     Value chosenValue(const QString &field) const;
     QList<Value> chosenValues(const QString &field) const;
     void setChosenValue(const QString &field, Value &value, ValueOperation valueOperation = SetValue);
@@ -82,7 +82,7 @@ public:
     FindDuplicates(QWidget *parent, int sensitivity = 4000);
     ~FindDuplicates();
 
-    bool findDuplicateEntries(File *file, QList<EntryClique*> &entryCliqueList);
+    bool findDuplicateEntries(File *file, QList<EntryClique *> &entryCliqueList);
 
 signals:
     void maximumProgress(int maxProgress);
@@ -106,7 +106,7 @@ public:
 
     MergeDuplicates(QWidget *parent);
 
-    bool mergeDuplicateEntries(const QList<EntryClique*> &entryCliques, File *file);
+    bool mergeDuplicateEntries(const QList<EntryClique *> &entryCliques, File *file);
 
     /**
      * Goes through the list of Entry cliques and automatically merge
@@ -115,7 +115,7 @@ public:
      * from the clique, but values will be selected from Entries as
      * chosen by the sorting criterium field and the merge priority.
      */
-    bool mergeDuplicateEntriesAuto(const QList<EntryClique*> &entryCliques, File *file, const QString &sortCriteriumField, MergePriority mergePriority);
+    bool mergeDuplicateEntriesAuto(const QList<EntryClique *> &entryCliques, File *file, const QString &sortCriteriumField, MergePriority mergePriority);
 
 private:
     class MergeDuplicatesPrivate;

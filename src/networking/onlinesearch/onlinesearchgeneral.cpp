@@ -31,7 +31,7 @@
 
 OnlineSearchQueryFormGeneral::OnlineSearchQueryFormGeneral(QWidget *parent)
         : OnlineSearchQueryFormAbstract(parent),
-        configGroupName(QLatin1String("Search Engine General"))
+      configGroupName(QLatin1String("Search Engine General"))
 {
     QFormLayout *layout = new QFormLayout(this);
     layout->setMargin(0);
@@ -82,7 +82,7 @@ OnlineSearchQueryFormGeneral::OnlineSearchQueryFormGeneral(QWidget *parent)
 
 bool OnlineSearchQueryFormGeneral::readyToStart() const
 {
-    for (QMap<QString, KLineEdit*>::ConstIterator it = queryFields.constBegin(); it != queryFields.constEnd(); ++it)
+    for (QMap<QString, KLineEdit *>::ConstIterator it = queryFields.constBegin(); it != queryFields.constEnd(); ++it)
         if (!it.value()->text().isEmpty())
             return true;
 
@@ -101,7 +101,7 @@ QMap<QString, QString> OnlineSearchQueryFormGeneral::getQueryTerms()
 {
     QMap<QString, QString> result;
 
-    for (QMap<QString, KLineEdit*>::ConstIterator it = queryFields.constBegin(); it != queryFields.constEnd(); ++it) {
+    for (QMap<QString, KLineEdit *>::ConstIterator it = queryFields.constBegin(); it != queryFields.constEnd(); ++it) {
         if (!it.value()->text().isEmpty())
             result.insert(it.key(), it.value()->text());
     }
@@ -118,7 +118,7 @@ int OnlineSearchQueryFormGeneral::getNumResults()
 void OnlineSearchQueryFormGeneral::loadState()
 {
     KConfigGroup configGroup(config, configGroupName);
-    for (QMap<QString, KLineEdit*>::ConstIterator it = queryFields.constBegin(); it != queryFields.constEnd(); ++it) {
+    for (QMap<QString, KLineEdit *>::ConstIterator it = queryFields.constBegin(); it != queryFields.constEnd(); ++it) {
         it.value()->setText(configGroup.readEntry(it.key(), QString()));
     }
     numResultsField->setValue(configGroup.readEntry(QLatin1String("numResults"), 10));
@@ -127,7 +127,7 @@ void OnlineSearchQueryFormGeneral::loadState()
 void OnlineSearchQueryFormGeneral::saveState()
 {
     KConfigGroup configGroup(config, configGroupName);
-    for (QMap<QString, KLineEdit*>::ConstIterator it = queryFields.constBegin(); it != queryFields.constEnd(); ++it) {
+    for (QMap<QString, KLineEdit *>::ConstIterator it = queryFields.constBegin(); it != queryFields.constEnd(); ++it) {
         configGroup.writeEntry(it.key(), it.value()->text());
     }
     configGroup.writeEntry(QLatin1String("numResults"), numResultsField->value());

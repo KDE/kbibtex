@@ -100,7 +100,7 @@ public:
         return QModelIndex();
     }
 
-    int rowCount(const QModelIndex & parent = QModelIndex()) const {
+    int rowCount(const QModelIndex &parent = QModelIndex()) const {
         if (parent == QModelIndex())
             return ofim->filteredItems(OpenFileInfo::RecentlyUsed).count();
         else
@@ -113,7 +113,7 @@ class MDIWidget::MDIWidgetPrivate
 private:
     QTreeView *listLRU;
     LRUItemModel *modelLRU;
-    QVector<QWidget*> welcomeWidgets;
+    QVector<QWidget *> welcomeWidgets;
 
     void createWelcomeWidget() {
         welcomeWidget = new QWidget(p);
@@ -174,7 +174,7 @@ public:
         listLRU->setModel(sfpm);
         updateLRU();
 
-        connect(&signalMapperCompleted, SIGNAL(mapped(QObject*)), p, SLOT(slotCompleted(QObject*)));
+        connect(&signalMapperCompleted, SIGNAL(mapped(QObject *)), p, SLOT(slotCompleted(QObject *)));
     }
 
     ~MDIWidgetPrivate() {
@@ -210,7 +210,7 @@ void MDIWidget::setFile(OpenFileInfo *openFileInfo, KService::Ptr servicePtr)
     BibTeXEditor *oldEditor = NULL;
     bool hasChanged = true;
 
-    KParts::Part* part = openFileInfo == NULL ? NULL : openFileInfo->part(this, servicePtr);
+    KParts::Part *part = openFileInfo == NULL ? NULL : openFileInfo->part(this, servicePtr);
     QWidget *widget = d->welcomeWidget;
     if (part != NULL) {
         widget = part->widget();
@@ -249,7 +249,7 @@ void MDIWidget::setFile(OpenFileInfo *openFileInfo, KService::Ptr servicePtr)
 BibTeXEditor *MDIWidget::editor()
 {
     OpenFileInfo *ofi = d->ofim->currentFile();
-    return dynamic_cast<BibTeXEditor*>(ofi->part(this)->widget());
+    return dynamic_cast<BibTeXEditor *>(ofi->part(this)->widget());
 }
 
 OpenFileInfo *MDIWidget::currentFile()
@@ -264,7 +264,7 @@ OpenFileInfoManager *MDIWidget::getOpenFileInfoManager()
 
 void MDIWidget::slotCompleted(QObject *obj)
 {
-    OpenFileInfo *ofi = static_cast<OpenFileInfo*>(obj);
+    OpenFileInfo *ofi = static_cast<OpenFileInfo *>(obj);
     KUrl oldUrl = ofi->url();
     KUrl newUrl = ofi->part(this)->url();
 
@@ -285,7 +285,7 @@ void MDIWidget::slotStatusFlagsChanged(OpenFileInfo::StatusFlags statusFlags)
         d->updateLRU();
 }
 
-void MDIWidget::slotOpenLRU(const QModelIndex&index)
+void MDIWidget::slotOpenLRU(const QModelIndex &index)
 {
     KUrl url = index.data(URLRole).toUrl();
     if (url.isValid())

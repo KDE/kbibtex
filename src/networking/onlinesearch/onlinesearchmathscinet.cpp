@@ -140,7 +140,7 @@ QString OnlineSearchMathSciNet::favIconUrl() const
     return QLatin1String("http://www.ams.org/favicon.ico");
 }
 
-OnlineSearchQueryFormAbstract* OnlineSearchMathSciNet::customWidget(QWidget *)
+OnlineSearchQueryFormAbstract *OnlineSearchMathSciNet::customWidget(QWidget *)
 {
     return NULL;
 }
@@ -157,7 +157,7 @@ void OnlineSearchMathSciNet::cancel()
 
 void OnlineSearchMathSciNet::doneFetchingQueryForm()
 {
-    QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
+    QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
     emit progress(1, 3);
 
@@ -167,14 +167,14 @@ void OnlineSearchMathSciNet::doneFetchingQueryForm()
         /// extract form's parameters ...
         QMap<QString, QString> formParams;
         /// ... and overwrite them with the query's parameters
-        for (QMap<QString, QString>::ConstIterator it = d->queryParameters.constBegin(); it != d->queryParameters.constEnd();++it)
+        for (QMap<QString, QString>::ConstIterator it = d->queryParameters.constBegin(); it != d->queryParameters.constEnd(); ++it)
             formParams.insert(it.key(), it.value());
 
         /// build url by appending parameters
         KUrl url(d->queryUrlStem);
-        for (QMap<QString, QString>::ConstIterator it = formParams.constBegin(); it != formParams.constEnd();++it)
+        for (QMap<QString, QString>::ConstIterator it = formParams.constBegin(); it != formParams.constEnd(); ++it)
             url.addQueryItem(it.key(), it.value());
-        for (int i = 1; i <= d->queryParameters.count();++i)
+        for (int i = 1; i <= d->queryParameters.count(); ++i)
             url.addQueryItem(QString(QLatin1String("co%1")).arg(i), QLatin1String("AND")); ///< join search terms with an AND operation
 
         /// issue request for result page
@@ -188,7 +188,7 @@ void OnlineSearchMathSciNet::doneFetchingQueryForm()
 
 void OnlineSearchMathSciNet::doneFetchingResultPage()
 {
-    QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
+    QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
     emit progress(2, 3);
 
@@ -229,7 +229,7 @@ void OnlineSearchMathSciNet::doneFetchingResultPage()
 
 void OnlineSearchMathSciNet::doneFetchingBibTeXcode()
 {
-    QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
+    QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
     emit progress(3, 3);
 

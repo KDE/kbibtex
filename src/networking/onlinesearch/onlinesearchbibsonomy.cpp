@@ -223,7 +223,7 @@ QString OnlineSearchBibsonomy::favIconUrl() const
     return QLatin1String("http://www.bibsonomy.org/resources/image/favicon.png");
 }
 
-OnlineSearchQueryFormAbstract* OnlineSearchBibsonomy::customWidget(QWidget *parent)
+OnlineSearchQueryFormAbstract *OnlineSearchBibsonomy::customWidget(QWidget *parent)
 {
     if (d->form == NULL)
         d->form = new OnlineSearchBibsonomy::OnlineSearchQueryFormBibsonomy(parent);
@@ -244,7 +244,7 @@ void OnlineSearchBibsonomy::downloadDone()
 {
     emit progress(++d->curStep, d->numSteps);
 
-    QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
+    QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
     if (handleErrors(reply)) {
         QTextStream ts(reply->readAll());

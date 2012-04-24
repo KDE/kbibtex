@@ -268,7 +268,7 @@ QString OnlineSearchSpringerLink::favIconUrl() const
     return QLatin1String("http://www.springerlink.com/images/favicon.ico");
 }
 
-OnlineSearchQueryFormAbstract* OnlineSearchSpringerLink::customWidget(QWidget *parent)
+OnlineSearchQueryFormAbstract *OnlineSearchSpringerLink::customWidget(QWidget *parent)
 {
     if (d->form == NULL)
         d->form = new OnlineSearchQueryFormSpringerLink(parent);
@@ -287,7 +287,7 @@ void OnlineSearchSpringerLink::cancel()
 
 void OnlineSearchSpringerLink::doneFetchingPAM()
 {
-    QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
+    QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
     if (handleErrors(reply)) {
         QTextStream ts(reply->readAll());
         const QString xmlSource = ts.readAll();

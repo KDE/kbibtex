@@ -115,7 +115,7 @@ void OnlineSearchGoogleScholar::doneFetchingStartPage()
 {
     emit progress(++d->curStep, d->numSteps);
 
-    QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
+    QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
     if (handleErrors(reply)) {
         QMap<QString, QString> inputMap = formParameters(reply->readAll(), "<form ");
@@ -137,7 +137,7 @@ void OnlineSearchGoogleScholar::doneFetchingConfigPage()
 {
     emit progress(++d->curStep, d->numSteps);
 
-    QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
+    QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
     if (handleErrors(reply)) {
         QMap<QString, QString> inputMap = formParameters(reply->readAll(), "<form ");
@@ -162,7 +162,7 @@ void OnlineSearchGoogleScholar::doneFetchingSetConfigPage()
 {
     emit progress(++d->curStep, d->numSteps);
 
-    QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
+    QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
     if (handleErrors(reply)) {
         QMap<QString, QString> inputMap = formParameters(reply->readAll(), "<form ");
@@ -194,7 +194,7 @@ void OnlineSearchGoogleScholar::doneFetchingQueryPage()
 {
     emit progress(++d->curStep, d->numSteps);
 
-    QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
+    QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
     if (handleErrors(reply)) {
         QString htmlText = reply->readAll();
@@ -225,7 +225,7 @@ void OnlineSearchGoogleScholar::doneFetchingBibTeX()
 {
     emit progress(++d->curStep, d->numSteps);
 
-    QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
+    QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
     if (handleErrors(reply)) {
         QString rawText = reply->readAll();
@@ -276,7 +276,7 @@ QString OnlineSearchGoogleScholar::favIconUrl() const
     return QLatin1String("http://scholar.google.com/favicon.ico");
 }
 
-OnlineSearchQueryFormAbstract* OnlineSearchGoogleScholar::customWidget(QWidget *)
+OnlineSearchQueryFormAbstract *OnlineSearchGoogleScholar::customWidget(QWidget *)
 {
     return NULL;
 }

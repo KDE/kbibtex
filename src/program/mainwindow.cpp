@@ -124,7 +124,7 @@ KBibTeXMainWindow::KBibTeXMainWindow()
     d->dockDocumentList->setWidget(d->listDocumentList);
     d->dockDocumentList->setObjectName("dockDocumentList");
     d->dockDocumentList->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
-    connect(d->listDocumentList, SIGNAL(openFile(const KUrl&)), this, SLOT(openDocument(const KUrl&)));
+    connect(d->listDocumentList, SIGNAL(openFile(const KUrl &)), this, SLOT(openDocument(const KUrl &)));
     showPanelsMenu->addAction(d->dockDocumentList->toggleViewAction());
 
     d->dockValueList = new QDockWidget(i18n("List of Values"), this);
@@ -197,11 +197,11 @@ KBibTeXMainWindow::KBibTeXMainWindow()
     actionCollection()->addAction(KStandardAction::Preferences, this, SLOT(showPreferences()));
 
     connect(d->mdiWidget, SIGNAL(documentSwitch(BibTeXEditor *, BibTeXEditor *)), this, SLOT(documentSwitched(BibTeXEditor *, BibTeXEditor *)));
-    connect(d->mdiWidget, SIGNAL(activePartChanged(KParts::Part*)), this, SLOT(createGUI(KParts::Part*)));
+    connect(d->mdiWidget, SIGNAL(activePartChanged(KParts::Part *)), this, SLOT(createGUI(KParts::Part *)));
     connect(d->mdiWidget, SIGNAL(documentNew()), this, SLOT(newDocument()));
     connect(d->mdiWidget, SIGNAL(documentOpen()), this, SLOT(openDocumentDialog()));
     connect(d->mdiWidget, SIGNAL(documentOpenURL(KUrl)), this, SLOT(openDocument(KUrl)));
-    connect(d->mdiWidget->getOpenFileInfoManager(), SIGNAL(currentChanged(OpenFileInfo*, KService::Ptr)), d->mdiWidget, SLOT(setFile(OpenFileInfo*, KService::Ptr)));
+    connect(d->mdiWidget->getOpenFileInfoManager(), SIGNAL(currentChanged(OpenFileInfo *, KService::Ptr)), d->mdiWidget, SLOT(setFile(OpenFileInfo *, KService::Ptr)));
     connect(d->mdiWidget->getOpenFileInfoManager(), SIGNAL(flagsChanged(OpenFileInfo::StatusFlags)), this, SLOT(documentListsChanged(OpenFileInfo::StatusFlags)));
     connect(d->mdiWidget, SIGNAL(setCaption(QString)), this, SLOT(setCaption(QString)));
 
@@ -287,7 +287,7 @@ void KBibTeXMainWindow::openDocumentDialog()
     }
 }
 
-void KBibTeXMainWindow::openDocument(const KUrl& url)
+void KBibTeXMainWindow::openDocument(const KUrl &url)
 {
     OpenFileInfo *openFileInfo = d->mdiWidget->getOpenFileInfoManager()->open(url);
     d->mdiWidget->getOpenFileInfoManager()->setCurrentFile(openFileInfo);
@@ -298,7 +298,7 @@ void KBibTeXMainWindow::closeDocument()
     d->mdiWidget->getOpenFileInfoManager()->close(d->mdiWidget->getOpenFileInfoManager()->currentFile());
 }
 
-void KBibTeXMainWindow::closeEvent(QCloseEvent* event)
+void KBibTeXMainWindow::closeEvent(QCloseEvent *event)
 {
     KMainWindow::closeEvent(event);
 
@@ -360,7 +360,7 @@ void KBibTeXMainWindow::documentListsChanged(OpenFileInfo::StatusFlags statusFla
     if (statusFlags.testFlag(OpenFileInfo::RecentlyUsed)) {
         OpenFileInfoManager::OpenFileInfoList list = d->mdiWidget->getOpenFileInfoManager()->filteredItems(OpenFileInfo::RecentlyUsed);
         d->actionMenuRecentFilesMenu->clear();
-        foreach(OpenFileInfo* cur, list) {
+        foreach(OpenFileInfo *cur, list) {
             /// Fixing bug 19511: too long filenames make menu too large,
             /// therefore squeeze text if it is longer than squeezeLen.
             const int squeezeLen = 64;
@@ -377,7 +377,7 @@ void KBibTeXMainWindow::documentListsChanged(OpenFileInfo::StatusFlags statusFla
 
 void KBibTeXMainWindow::openRecentFile()
 {
-    KAction *action = static_cast<KAction*>(sender());
+    KAction *action = static_cast<KAction *>(sender());
     KUrl url = action->data().value<KUrl>();
     openDocument(url);
 }

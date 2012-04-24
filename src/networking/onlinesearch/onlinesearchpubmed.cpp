@@ -143,7 +143,7 @@ QString OnlineSearchPubMed::favIconUrl() const
     return QLatin1String("http://www.ncbi.nlm.nih.gov/favicon.ico");
 }
 
-OnlineSearchQueryFormAbstract* OnlineSearchPubMed::customWidget(QWidget *)
+OnlineSearchQueryFormAbstract *OnlineSearchPubMed::customWidget(QWidget *)
 {
     return NULL;
 }
@@ -162,7 +162,7 @@ void OnlineSearchPubMed::eSearchDone()
 {
     emit progress(++d->curStep, d->numSteps);
 
-    QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
+    QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
     if (handleErrors(reply)) {
         QString result = reply->readAll();
@@ -205,7 +205,7 @@ void OnlineSearchPubMed::eFetchDone()
 {
     emit progress(++d->curStep, d->numSteps);
 
-    QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
+    QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
     if (handleErrors(reply)) {
         /// ensure proper treatment of UTF-8 characters

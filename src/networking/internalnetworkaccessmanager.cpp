@@ -150,7 +150,7 @@ QString InternalNetworkAccessManager::userAgent()
 {
     if (userAgentString.isEmpty()) {
         qsrand(time(NULL));
-        userAgentString = userAgentList[qrand()%userAgentList.length()];
+        userAgentString = userAgentList[qrand() % userAgentList.length()];
     }
     return userAgentString;
 }

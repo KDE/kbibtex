@@ -106,7 +106,7 @@ public:
 
     KBibTeXPartPrivate(KBibTeXPart *parent)
             : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), bibTeXFile(NULL), model(NULL), sortFilterProxyModel(NULL), signalMapperNewElement(new QSignalMapper(parent)), viewDocumentMenu(new KMenu(i18n("View Document"), parent->widget())), signalMapperViewDocument(new QSignalMapper(parent)), isSaveAsOperation(false) {
-        connect(signalMapperViewDocument, SIGNAL(mapped(QObject*)), p, SLOT(elementViewDocumentMenu(QObject*)));
+        connect(signalMapperViewDocument, SIGNAL(mapped(QObject *)), p, SLOT(elementViewDocumentMenu(QObject *)));
     }
 
     ~KBibTeXPartPrivate() {
@@ -117,7 +117,7 @@ public:
         delete signalMapperViewDocument;
     }
 
-    FileImporter *fileImporterFactory(const KUrl& url) {
+    FileImporter *fileImporterFactory(const KUrl &url) {
         QString ending = url.path().toLower();
         int p = ending.lastIndexOf(".");
         ending = ending.mid(p + 1);
@@ -131,7 +131,7 @@ public:
         }
     }
 
-    FileExporter *fileExporterFactory(const KUrl& url) {
+    FileExporter *fileExporterFactory(const KUrl &url) {
         QString ending = url.path().toLower();
         int p = ending.lastIndexOf(".");
         ending = ending.mid(p + 1);
@@ -269,7 +269,7 @@ public:
                 connect(&dlg, SIGNAL(defaultClicked()), &settingsWidget, SLOT(resetToDefaults()));
                 dlg.exec();
                 settingsWidget.saveProperties(bibTeXFile);
-            } else if ((fet = dynamic_cast<FileExporterToolchain*>(exporter)) != NULL) {
+            } else if ((fet = dynamic_cast<FileExporterToolchain *>(exporter)) != NULL) {
                 KDialog dlg(p->widget());
                 SettingsFileExporterPDFPSWidget settingsWidget(&dlg);
                 dlg.setMainWidget(&settingsWidget);
@@ -503,7 +503,7 @@ void KBibTeXPart::setupActions(bool /*browserViewWanted FIXME*/)
     // TODO
 
     connect(d->editor, SIGNAL(selectedElementsChanged()), this, SLOT(updateActions()));
-    connect(d->editor, SIGNAL(currentElementChanged(QSharedPointer<Element>, const File*)), this, SLOT(updateActions()));
+    connect(d->editor, SIGNAL(currentElementChanged(QSharedPointer<Element>, const File *)), this, SLOT(updateActions()));
 
     d->editor->addAction(d->elementFindPDFAction);
     d->editor->addAction(d->entryApplyDefaultFormatString);
@@ -575,9 +575,9 @@ void KBibTeXPart::elementViewDocument()
 {
     KUrl url;
 
-    QList<QAction*> actionList = d->viewDocumentMenu->actions();
+    QList<QAction *> actionList = d->viewDocumentMenu->actions();
     /// Go through all actions (i.e. document URLs) for this element
-    for (QList<QAction*>::ConstIterator it = actionList.constBegin(); it != actionList.constEnd(); ++it) {
+    for (QList<QAction *>::ConstIterator it = actionList.constBegin(); it != actionList.constEnd(); ++it) {
         /// Make URL from action's data ...
         KUrl tmpUrl = KUrl((*it)->data().toString());
         /// ... but skip this action if the URL is invalid
@@ -607,7 +607,7 @@ void KBibTeXPart::elementViewDocument()
 
 void KBibTeXPart::elementViewDocumentMenu(QObject *obj)
 {
-    QString text = static_cast<QAction*>(obj)->data().toString(); ///< only a KAction will be passed along
+    QString text = static_cast<QAction *>(obj)->data().toString(); ///< only a KAction will be passed along
 
     /// Guess mime type for url to open
     KUrl url(text);

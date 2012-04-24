@@ -34,7 +34,7 @@ public:
     virtual ~KBibTeXPartFactory();
 
 public:
-    virtual KParts::Part* createPartObject(QWidget *parentWidget, QObject *parent, const char *classname, const QStringList &args);
+    virtual KParts::Part *createPartObject(QWidget *parentWidget, QObject *parent, const char *classname, const QStringList &args);
 
 public:
     static const KComponentData &componentData();

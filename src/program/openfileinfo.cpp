@@ -46,7 +46,7 @@ public:
 
     OpenFileInfo *p;
 
-    KParts::ReadOnlyPart* part;
+    KParts::ReadOnlyPart *part;
     KService::Ptr internalServicePtr;
     QWidget *internalWidgetParent;
     QDateTime lastAccessDateTime;
@@ -56,7 +56,7 @@ public:
     KUrl url;
 
     OpenFileInfoPrivate(OpenFileInfoManager *openFileInfoManager, const KUrl &url, const QString &mimeType, OpenFileInfo *p)
-            :  m_counter(-1), p(p), part(NULL), internalServicePtr(KService::Ptr()), internalWidgetParent(NULL), flags(0) {
+        :  m_counter(-1), p(p), part(NULL), internalServicePtr(KService::Ptr()), internalWidgetParent(NULL), flags(0) {
         this->openFileInfoManager = openFileInfoManager;
         this->url = url;
         this->mimeType = mimeType;
@@ -64,14 +64,14 @@ public:
 
     ~OpenFileInfoPrivate() {
         if (part != NULL) {
-            KParts::ReadWritePart *rwp = dynamic_cast<KParts::ReadWritePart*>(part);
+            KParts::ReadWritePart *rwp = dynamic_cast<KParts::ReadWritePart *>(part);
             if (rwp != NULL)
                 rwp->closeUrl(true);
             delete part;
         }
     }
 
-    KParts::ReadOnlyPart* createPart(QWidget *newWidgetParent, KService::Ptr newServicePtr = KService::Ptr()) {
+    KParts::ReadOnlyPart *createPart(QWidget *newWidgetParent, KService::Ptr newServicePtr = KService::Ptr()) {
         if (!p->flags().testFlag(OpenFileInfo::Open)) {
             kWarning() << "Cannot create part for a file which is not open";
             return NULL;
@@ -84,7 +84,7 @@ public:
             Q_ASSERT(part != NULL);
             return part;
         } else if (part != NULL) {
-            KParts::ReadWritePart *rwp = dynamic_cast<KParts::ReadWritePart*>(part);
+            KParts::ReadWritePart *rwp = dynamic_cast<KParts::ReadWritePart *>(part);
             if (rwp != NULL)
                 rwp->closeUrl(true);
             part->deleteLater();
@@ -105,10 +105,10 @@ public:
             return NULL;
         }
 
-        part = newServicePtr->createInstance<KParts::ReadWritePart>(newWidgetParent, (QObject*)newWidgetParent);
+        part = newServicePtr->createInstance<KParts::ReadWritePart>(newWidgetParent, (QObject *)newWidgetParent);
         if (part == NULL) {
             /// creating a read-write part failed, so maybe it is read-only (like Okular's PDF viewer)?
-            part = newServicePtr->createInstance<KParts::ReadOnlyPart>(newWidgetParent, (QObject*)newWidgetParent);
+            part = newServicePtr->createInstance<KParts::ReadOnlyPart>(newWidgetParent, (QObject *)newWidgetParent);
         }
         if (part == NULL) {
             /// still cannot create part, must be error
@@ -167,7 +167,7 @@ OpenFileInfo::~OpenFileInfo()
     delete d;
 }
 
-void OpenFileInfo::setUrl(const KUrl& url)
+void OpenFileInfo::setUrl(const KUrl &url)
 {
     Q_ASSERT(url.isValid());
     d->url = url;
@@ -182,7 +182,7 @@ KUrl OpenFileInfo::url() const
 
 bool OpenFileInfo::isModified() const
 {
-    KParts::ReadWritePart *rwPart = dynamic_cast< KParts::ReadWritePart*>(d->part);
+    KParts::ReadWritePart *rwPart = dynamic_cast< KParts::ReadWritePart *>(d->part);
     if (rwPart == NULL)
         return false;
     else
@@ -191,7 +191,7 @@ bool OpenFileInfo::isModified() const
 
 bool OpenFileInfo::save()
 {
-    KParts::ReadWritePart *rwPart = dynamic_cast< KParts::ReadWritePart*>(d->part);
+    KParts::ReadWritePart *rwPart = dynamic_cast< KParts::ReadWritePart *>(d->part);
     if (rwPart == NULL)
         return true;
     else
@@ -205,7 +205,7 @@ bool OpenFileInfo::close()
         return true;
     }
 
-    KParts::ReadWritePart *rwp = dynamic_cast<KParts::ReadWritePart*>(d->part);
+    KParts::ReadWritePart *rwp = dynamic_cast<KParts::ReadWritePart *>(d->part);
     if (rwp == NULL || rwp->closeUrl(true)) {
         d->part->deleteLater();
         d->part = NULL;
@@ -236,7 +236,7 @@ QString OpenFileInfo::fullCaption() const
         return shortCaption();
 }
 
-KParts::ReadOnlyPart* OpenFileInfo::part(QWidget *parent, KService::Ptr servicePtr)
+KParts::ReadOnlyPart *OpenFileInfo::part(QWidget *parent, KService::Ptr servicePtr)
 {
     return d->createPart(parent, servicePtr);
 }
@@ -281,7 +281,7 @@ QDateTime OpenFileInfo::lastAccess() const
     return d->lastAccessDateTime;
 }
 
-void OpenFileInfo::setLastAccess(const QDateTime& dateTime)
+void OpenFileInfo::setLastAccess(const QDateTime &dateTime)
 {
     d->lastAccessDateTime = dateTime;
     emit flagsChanged(OpenFileInfo::RecentlyUsed);
@@ -368,7 +368,7 @@ public:
         writeConfig(OpenFileInfo::Open, configGroupNameOpen, maxNumOpenFiles);
     }
 
-    void readConfig(OpenFileInfo::StatusFlag statusFlag, const QString& configGroupName, int maxNumFiles) {
+    void readConfig(OpenFileInfo::StatusFlag statusFlag, const QString &configGroupName, int maxNumFiles) {
         KSharedConfigPtr config = KSharedConfig::openConfig("kbibtexrc");
 
         KConfigGroup cg(config, configGroupName);
@@ -389,7 +389,7 @@ public:
         }
     }
 
-    void writeConfig(OpenFileInfo::StatusFlag statusFlag, const QString& configGroupName, int maxNumFiles) {
+    void writeConfig(OpenFileInfo::StatusFlag statusFlag, const QString &configGroupName, int maxNumFiles) {
         KSharedConfigPtr config = KSharedConfig::openConfig("kbibtexrc");
         KConfigGroup cg(config, configGroupName);
         OpenFileInfoManager::OpenFileInfoList list = p->filteredItems(statusFlag);
@@ -401,7 +401,7 @@ public:
             cg.writeEntry(QString("%1-%2").arg(OpenFileInfo::OpenFileInfoPrivate::keyURL).arg(i), ofi->url().pathOrUrl());
             cg.writeEntry(QString("%1-%2").arg(OpenFileInfo::OpenFileInfoPrivate::keyLastAccess).arg(i), ofi->lastAccess().toString(OpenFileInfo::OpenFileInfoPrivate::dateTimeFormat));
         }
-        for (;i < maxNumFiles;++i) {
+        for (; i < maxNumFiles; ++i) {
             cg.deleteEntry(QString("%1-%2").arg(OpenFileInfo::OpenFileInfoPrivate::keyURL).arg(i));
             cg.deleteEntry(QString("%1-%2").arg(OpenFileInfo::OpenFileInfoPrivate::keyLastAccess).arg(i));
         }
@@ -430,7 +430,7 @@ OpenFileInfoManager::~OpenFileInfoManager()
     delete d;
 }
 
-OpenFileInfo *OpenFileInfoManager::createNew(const QString& mimeType)
+OpenFileInfo *OpenFileInfoManager::createNew(const QString &mimeType)
 {
     OpenFileInfo *result = new OpenFileInfo(this, mimeType);
     connect(result, SIGNAL(flagsChanged(OpenFileInfo::StatusFlags)), this, SIGNAL(flagsChanged(OpenFileInfo::StatusFlags)));
@@ -439,7 +439,7 @@ OpenFileInfo *OpenFileInfoManager::createNew(const QString& mimeType)
     return result;
 }
 
-OpenFileInfo *OpenFileInfoManager::open(const KUrl & url)
+OpenFileInfo *OpenFileInfoManager::open(const KUrl &url)
 {
     Q_ASSERT(url.isValid());
 
@@ -454,7 +454,7 @@ OpenFileInfo *OpenFileInfoManager::open(const KUrl & url)
     return result;
 }
 
-OpenFileInfo *OpenFileInfoManager::contains(const KUrl&url) const
+OpenFileInfo *OpenFileInfoManager::contains(const KUrl &url) const
 {
     if (!url.isValid()) return NULL; /// can only be unnamed file
 
@@ -466,7 +466,7 @@ OpenFileInfo *OpenFileInfoManager::contains(const KUrl&url) const
     return NULL;
 }
 
-bool OpenFileInfoManager::changeUrl(OpenFileInfo *openFileInfo, const KUrl & url)
+bool OpenFileInfoManager::changeUrl(OpenFileInfo *openFileInfo, const KUrl &url)
 {
     OpenFileInfo *previouslyContained = contains(url);
 

@@ -35,7 +35,7 @@ static const char *programHomepage = I18N_NOOP("http://home.gna.org/kbibtex/");
 static const char *bugTrackerHomepage = "https://gna.org/bugs/?group=kbibtex";
 
 static KComponentData *_componentData = 0;
-static KAboutData* _aboutData = 0;
+static KAboutData *_aboutData = 0;
 
 
 KBibTeXPartFactory::KBibTeXPartFactory()
@@ -53,13 +53,13 @@ KBibTeXPartFactory::~KBibTeXPartFactory()
     _componentData = 0;
 }
 
-KParts::Part* KBibTeXPartFactory::createPartObject(QWidget *parentWidget, QObject *parent, const char *cn, const QStringList &/*args*/)
+KParts::Part *KBibTeXPartFactory::createPartObject(QWidget *parentWidget, QObject *parent, const char *cn, const QStringList &/*args*/)
 {
     const QByteArray classname(cn);
     const bool browserViewWanted = (classname == "Browser/View");   // FIXME Editor?
     bool readOnlyWanted = (browserViewWanted || (classname == "KParts::ReadOnlyPart"));
 
-    KBibTeXPart* part = new KBibTeXPart(parentWidget, parent, browserViewWanted);
+    KBibTeXPart *part = new KBibTeXPart(parentWidget, parent, browserViewWanted);
     part->setReadWrite(!readOnlyWanted);
 
     return part;
