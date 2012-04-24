@@ -5,6 +5,7 @@ set(
     findduplicates.cpp
     idsuggestions.cpp
     lyx.cpp
+    checkbibtex.cpp
 )
 
 set(
@@ -12,6 +13,7 @@ set(
     findduplicates.h
     idsuggestions.h
     lyx.h
+    checkbibtex.h
     kbibtexproc_export.h
 )
 
