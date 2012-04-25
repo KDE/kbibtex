@@ -39,7 +39,6 @@ class ElementForm::ElementFormPrivate
 private:
     ElementForm *p;
     QGridLayout *layout;
-    QSharedPointer<Element> emptyElement;
     const File *file;
 
 public:
@@ -58,7 +57,7 @@ public:
     static const QString configKeyAutoApply;
 
     ElementFormPrivate(ElementForm *parent)
-            : p(parent), file(NULL), elementEditor(NULL), gotModified(false), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))) {
+            : p(parent), file(NULL), gotModified(false), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))) {
         KConfigGroup configGroup(config, configGroupName);
 
         layout = new QGridLayout(p);
@@ -66,6 +65,12 @@ public:
         layout->setColumnStretch(1, 0);
         layout->setColumnStretch(2, 0);
         layout->setColumnStretch(3, 0);
+
+        elementEditor = new ElementEditor(p);
+        layout->addWidget(elementEditor, 0, 0, 1, 4);
+        elementEditor->setEnabled(false);
+        elementEditor->layout()->setMargin(0);
+        connect(elementEditor, SIGNAL(modified(bool)), p, SLOT(modified(bool)));
 
         /// Checkbox enabling/disabling setting to automatically apply changes in form to element
         checkBoxAutoApply = new QCheckBox(i18n("Automatically apply changes"), p);
@@ -93,9 +98,6 @@ public:
         buttonReset = new KPushButton(KIcon("edit-undo"), i18n("Reset"), p);
         layout->addWidget(buttonReset, 1, 3, 1, 1);
 
-        emptyElement = QSharedPointer<Element>(new Entry());
-        loadElement(QSharedPointer<Element>(), NULL);
-
         connect(buttonApply, SIGNAL(clicked()), p, SIGNAL(elementModified()));
         connect(checkBoxAutoApply, SIGNAL(toggled(bool)), p, SLOT(autoApplyToggled(bool)));
     }
@@ -117,20 +119,8 @@ public:
             return;
         }
 
-        /// recreate and reset element editor
-        int tabIndex = 0;
-        if (elementEditor != NULL) {
-            tabIndex = elementEditor->currentTab();
-            delete elementEditor;
-        }
-        // FIXME why do we need emptyElement?
-        elementEditor = element.isNull() ? new ElementEditor(emptyElement, file, p) :
-                        new ElementEditor(element, file, p);
-        layout->addWidget(elementEditor, 0, 0, 1, 4);
+        elementEditor->setElement(element, file);
         elementEditor->setEnabled(!element.isNull());
-        elementEditor->setCurrentTab(tabIndex);
-        elementEditor->layout()->setMargin(0);
-        connect(elementEditor, SIGNAL(modified(bool)), p, SLOT(modified(bool)));
 
         /// make apply and reset buttons aware of new element editor
         buttonApply->setEnabled(false);
@@ -144,7 +134,7 @@ public:
     bool isVisible() {
         /// get dock where this widget is inside
         /// static cast is save as constructor requires parent to be QDockWidget
-        QDockWidget *pp = static_cast<QDockWidget*>(p->parent());
+        QDockWidget *pp = static_cast<QDockWidget *>(p->parent());
         return pp != NULL && !pp->isHidden();
     }
 
