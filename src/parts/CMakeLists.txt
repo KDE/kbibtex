@@ -21,22 +21,21 @@ set(
 )
 
 # creates src/version.h using cmake script
-add_custom_command(
-    OUTPUT
-    ${CMAKE_BINARY_DIR}/src/version.h
+add_custom_target(
+    SVNrevisionForPart
     COMMAND
     ${CMAKE_COMMAND}
-    -DSOURCE_DIR=${CMAKE_SOURCE_DIR}
-    -DBINARY_DIR=${CMAKE_BINARY_DIR}
+    -DSOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR}
+    -DBINARY_DIR=${CMAKE_CURRENT_BINARY_DIR}
     -P
     ${CMAKE_SOURCE_DIR}/src/getsvn.cmake
     COMMENT
     "Determine SVN version"
 )
 
-# src/version.h is a generated file
+# version.h is a generated file
 set_source_files_properties(
-    ${CMAKE_BINARY_DIR}/src/version.h
+    ${CMAKE_CURRENT_BINARY_DIR}/version.h
     PROPERTIES
     GENERATED
     TRUE
@@ -47,7 +46,7 @@ set_source_files_properties(
 kde4_add_plugin(
     kbibtexpart
     ${kbibtexpart_SRCS}
-    ${CMAKE_BINARY_DIR}/src/version.h
+    ${CMAKE_CURRENT_BINARY_DIR}/version.h
 )
 
 target_link_libraries(
@@ -56,6 +55,11 @@ target_link_libraries(
     kbibtexio
     kbibtexgui
     kbibtexproc
+)
+
+add_dependencies(
+    kbibtexpart
+    SVNrevisionForPart
 )
 
 install(
