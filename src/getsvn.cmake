@@ -7,7 +7,7 @@ if(
 )
     message(
         STATUS
-        "SVN version fetched from environment"
+        "SVN version was set outside through environment variable SVN_REV"
     )
     set(
         SVN_REVISION
@@ -127,7 +127,7 @@ if(
         remove
         "${BINARY_DIR}/src/version.h.tmp"
         WORKING_DIRECTORY
-        "${CMAKE_SOURCE_DIR}"
+        "${SOURCE_DIR}"
     )
 else(
     EXISTS
