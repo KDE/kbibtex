@@ -606,6 +606,7 @@ FieldLineEdit *UrlListEdit::addFieldLineEdit()
 
     /// Create a new "save locally" button
     KPushButton *buttonSaveLocally = new KPushButton(KIcon("document-save"), QLatin1String(""), fieldLineEdit);
+    buttonSaveLocally->setToolTip(i18n("Save file locally"));
     buttonSaveLocally->setEnabled(false);
     /// Append button to new FieldLineEdit
     fieldLineEdit->appendWidget(buttonSaveLocally);
