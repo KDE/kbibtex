@@ -112,7 +112,7 @@ void FileInfo::urlsInText(const QString &text, TestExistance testExistance, cons
         while ((pos = KBibTeX::urlRegExp.indexIn(internalText, pos)) != -1) {
             const QString match = KBibTeX::urlRegExp.cap(0);
             KUrl url(match);
-            if (url.isValid() && (testExistance == TestExistanceNo || !url.isLocalFile() || QFileInfo(url.path()).exists()) && !result.contains(url))
+            if (url.isValid() && (testExistance == TestExistanceNo || !url.isLocalFile() || QFileInfo(url.toLocalFile()).exists()) && !result.contains(url))
                 result << url;
             /// remove match from internal text to avoid duplicates
             internalText = internalText.left(pos) + internalText.mid(pos + match.length());
@@ -136,7 +136,7 @@ void FileInfo::urlsInText(const QString &text, TestExistance testExistance, cons
         while ((pos = KBibTeX::fileRegExp.indexIn(internalText, pos)) != -1) {
             QString match = KBibTeX::fileRegExp.cap(0);
             KUrl url(match);
-            if (url.isValid() && (testExistance == TestExistanceNo || !url.isLocalFile() || QFileInfo(url.pathOrUrl()).exists()) && !result.contains(url))
+            if (url.isValid() && (testExistance == TestExistanceNo || !url.isLocalFile() || QFileInfo(url.toLocalFile()).exists()) && !result.contains(url))
                 result << url;
             /// remove match from internal text to avoid duplicates
             internalText = internalText.left(pos) + internalText.mid(pos + match.length());
@@ -175,7 +175,8 @@ QList<KUrl> FileInfo::entryUrls(const Entry *entry, const KUrl &bibTeXUrl, TestE
         /// a PDF file exists which filename is based on the entry's id
         for (QStringList::ConstIterator extensionIt = documentFileExtensions.constBegin(); extensionIt != documentFileExtensions.constEnd(); ++extensionIt) {
             KUrl url(baseDirectory + QDir::separator() + entry->id() + *extensionIt);
-            if (QFileInfo(url.path()).exists() && !result.contains(url))
+            url.setProtocol(QLatin1String("file"));
+            if (QFileInfo(url.toLocalFile()).exists() && !result.contains(url))
                 result << url;
         }
 
@@ -186,7 +187,8 @@ QList<KUrl> FileInfo::entryUrls(const Entry *entry, const KUrl &bibTeXUrl, TestE
         QString directory = baseDirectory + QDir::separator() + basename;
         for (QStringList::ConstIterator extensionIt = documentFileExtensions.constBegin(); extensionIt != documentFileExtensions.constEnd(); ++extensionIt) {
             KUrl url(directory + QDir::separator() + entry->id() + *extensionIt);
-            if (QFileInfo(url.path()).exists() && !result.contains(url))
+            url.setProtocol(QLatin1String("file"));
+            if (QFileInfo(url.toLocalFile()).exists() && !result.contains(url))
                 result << url;
         }
     }
