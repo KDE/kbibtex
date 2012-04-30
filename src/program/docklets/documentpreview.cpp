@@ -49,7 +49,11 @@
 #include <kio/job.h>
 #include <kio/jobuidelegate.h>
 #include <KTemporaryFile>
+#include <KMenuBar>
+#include <KToolBar>
+#include <KActionCollection>
 
+#include <kbibtexnamespace.h>
 #include <element.h>
 #include <entry.h>
 #include <file.h>
@@ -103,7 +107,6 @@ private:
     static const QString configGroupName;
     static const QString onlyLocalFilesCheckConfig;
 
-    KComboBox *urlComboBox;
     KPushButton *externalViewerButton;
     QStackedWidget *stackedWidget;
     ImageLabel *message;
@@ -113,6 +116,8 @@ private:
     static const QString arXivPDFUrlStart;
     bool anyLocal;
 
+    KMenuBar *menuBar;
+    KToolBar *toolBar;
     KParts::ReadOnlyPart *okularPart;
 #ifdef HAVE_QTWEBKIT
     QWebView *htmlWidget;
@@ -122,10 +127,12 @@ private:
     int swpMessage, swpOkular, swpHTML;
 
 public:
+    KComboBox *urlComboBox;
     QCheckBox *onlyLocalFilesCheckBox;
     QList<KIO::StatJob *> runningJobs;
     QSharedPointer<const Entry> entry;
     KUrl baseUrl;
+    bool anyRemote;
 
     KParts::ReadOnlyPart *locatePart(const QString &desktopFile, QWidget *parentWidget) {
         KService::Ptr service = KService::serviceByDesktopPath(desktopFile);
@@ -166,6 +173,17 @@ public:
         onlyLocalFilesCheckBox = new QCheckBox(i18n("Only local files"), p);
         layout->addWidget(onlyLocalFilesCheckBox, 0);
 
+        menuBar = new KMenuBar(p);
+        menuBar->setBackgroundRole(QPalette::Window);
+        menuBar->setVisible(false);
+        layout->addWidget(menuBar, 0);
+
+        toolBar = new KToolBar(p);
+        toolBar->setToolButtonStyle(Qt::ToolButtonIconOnly);
+        toolBar->setBackgroundRole(QPalette::Window);
+        toolBar->setVisible(false);
+        layout->addWidget(toolBar, 0);
+
         /// main part of the widget
 
         stackedWidget = new QStackedWidget(p);
@@ -200,7 +218,7 @@ public:
     }
 
     bool addUrl(const struct UrlInfo &urlInfo) {
-        bool isLocal = urlInfo.url.isLocalFile();
+        bool isLocal = KBibTeX::isLocalOrRelative(urlInfo.url);
         anyLocal |= isLocal;
 
         if (onlyLocalFilesCheckBox->isChecked() && !isLocal) return true; ///< ignore URL if only local files are allowed
@@ -254,12 +272,16 @@ public:
 
         /// clear flag that memorizes if any local file was referenced
         anyLocal = false;
+        anyRemote = false;
 
         /// do not load external reference if widget is hidden
         if (isVisible()) {
             QList<KUrl> urlList = FileInfo::entryUrls(entry.data(), baseUrl, FileInfo::TestExistanceYes);
+
             for (QList<KUrl>::ConstIterator it = urlList.constBegin(); it != urlList.constEnd(); ++it) {
-                bool isLocal = (*it).isLocalFile();
+                bool isLocal = KBibTeX::isLocalOrRelative(*it);
+                kDebug() << "testing " << (*it).prettyUrl() << isLocal;
+                anyRemote |= !isLocal;
                 if (onlyLocalFilesCheckBox->isChecked() && !isLocal) continue;
 
                 KIO::StatJob *job = KIO::stat(*it, KIO::StatJob::SourceSide, 3, KIO::HideProgressInfo);
@@ -268,13 +290,20 @@ public:
                 connect(job, SIGNAL(result(KJob *)), p, SLOT(statFinished(KJob *)));
             }
             if (urlList.isEmpty()) {
+                /// Case no URLs associated with this entry.
+                /// For-loop above was never executed.
                 showMessage(i18n("No documents to show."));
                 p->setCursor(Qt::ArrowCursor);
             } else if (runningJobs.isEmpty()) {
+                /// Case no stat jobs are running. As there were URLs (tested in
+                /// previous condition), this implies that the there were remote
+                /// references that were ignored by executing "continue" above.
+                /// Give user hint that by enabling remote files, more can be shown.
                 showMessage(i18n("<qt>No documents to show.<br/><a href=\"disableonlylocalfiles\">Disable the restriction</a> to local files to see remote documents.</qt>"));
                 p->setCursor(Qt::ArrowCursor);
             }
-        }
+        } else
+            p->setCursor(Qt::ArrowCursor);
     }
 
     void showMessage(const QString &msgText) {
@@ -283,12 +312,83 @@ public:
         message->setText(msgText);
         stackedWidget->widget(swpOkular)->setEnabled(false);
         stackedWidget->widget(swpHTML)->setEnabled(false);
+        menuBar->setVisible(false);
+        toolBar->setVisible(true);
+        menuBar->clear();
+        toolBar->clear();
     }
 
+
+    void setupToolMenuBarForPart(const KParts::ReadOnlyPart *part) {
+        /*
+        KAction *printAction = KStandardAction::print(part, SLOT(slotPrint()), part->actionCollection());
+        printAction->setEnabled(false);
+        connect(part, SIGNAL(enablePrintAction(bool)), printAction, SLOT(setEnabled(bool)));
+        */
+
+        QDomDocument doc = part->domDocument();
+        QDomElement docElem = doc.documentElement();
+
+        QDomNodeList toolbarNodes = docElem.elementsByTagName("ToolBar");
+        for (int i = 0; i < toolbarNodes.count(); ++i) {
+            QDomNodeList toolbarItems = toolbarNodes.at(i).childNodes();
+            for (int j = 0; j < toolbarItems.count(); ++j) {
+                QDomNode toolbarItem = toolbarItems.at(j);
+                if (toolbarItem.nodeName() == QLatin1String("Action")) {
+                    QString actionName = toolbarItem.attributes().namedItem(QLatin1String("name")).nodeValue();
+                    toolBar->addAction(part->actionCollection()->action(actionName));
+                } else if (toolbarItem.nodeName() == QLatin1String("Separator")) {
+                    toolBar->addSeparator();
+                }
+            }
+        }
+
+
+        QDomNodeList menubarNodes = docElem.elementsByTagName("MenuBar");
+        for (int i = 0; i < menubarNodes.count(); ++i) {
+            QDomNodeList menubarNode = menubarNodes.at(i).childNodes();
+            for (int j = 0; j < menubarNode.count(); ++j) {
+                QDomNode menubarItem = menubarNode.at(j);
+                if (menubarItem.nodeName() == QLatin1String("Menu")) {
+                    QDomNodeList menuNode = menubarItem.childNodes();
+                    QString text;
+                    for (int k = 0; k < menuNode.count(); ++k) {
+                        QDomNode menuItem = menuNode.at(k);
+                        if (menuItem.nodeName() == QLatin1String("text")) {
+                            text = menuItem.firstChild().toText().data();
+                            break;
+                        }
+                    }
+                    QMenu *menu = menuBar->addMenu(text);
+
+                    for (int k = 0; k < menuNode.count(); ++k) {
+                        QDomNode menuItem = menuNode.at(k);
+                        if (menuItem.nodeName() == QLatin1String("Action")) {
+                            QString actionName = menuItem.attributes().namedItem(QLatin1String("name")).nodeValue();
+                            menu->addAction(part->actionCollection()->action(actionName));
+                        } else if (menuItem.nodeName() == QLatin1String("Separator")) {
+                            menu->addSeparator();
+                        }
+                    }
+                }
+            }
+        }
+
+        menuBar->setVisible(true);
+        toolBar->setVisible(true);
+    }
+
+
     void showPart(const KParts::ReadOnlyPart *part, QWidget *widget) {
+        menuBar->setVisible(false);
+        toolBar->setVisible(false);
+        menuBar->clear();
+        toolBar->clear();
+
         if (part == okularPart) {
             stackedWidget->setCurrentIndex(swpOkular);
             stackedWidget->widget(swpOkular)->setEnabled(true);
+            setupToolMenuBarForPart(okularPart);
 #ifdef HAVE_QTWEBKIT
         } else if (widget == htmlWidget) {
             stackedWidget->setCurrentIndex(swpHTML);
@@ -297,6 +397,7 @@ public:
         } else if (part == htmlPart) {
             stackedWidget->setCurrentIndex(swpHTML);
             stackedWidget->widget(swpHTML)->setEnabled(true);
+            setupToolMenuBarForPart(htmlPart);
 #endif // HAVE_QTWEBKIT
         } else if (widget == message) {
             stackedWidget->setCurrentIndex(swpMessage);
@@ -359,7 +460,7 @@ public:
         UrlInfo result;
         result.url = url;
 
-        if (!url.isLocalFile() && url.fileName().isEmpty()) {
+        if (!KBibTeX::isLocalOrRelative(url) && url.fileName().isEmpty()) {
             /// URLs not pointing to a specific file should be opened with a web browser component
             result.icon = KIcon("text-html");
             result.mimeType = QLatin1String("text/html");
@@ -367,7 +468,7 @@ public:
         }
 
         int accuracy = 0;
-        KMimeType::Ptr mimeTypePtr = KMimeType::findByUrl(url, 0, url.isLocalFile(), true, &accuracy);
+        KMimeType::Ptr mimeTypePtr = KMimeType::findByUrl(url, 0, KBibTeX::isLocalOrRelative(url), true, &accuracy);
         if (accuracy < 50) {
             mimeTypePtr = KMimeType::findByPath(url.fileName(), 0, true, &accuracy);
         }
@@ -477,8 +578,24 @@ void DocumentPreview::statFinished(KJob *kjob)
         setCursor(d->runningJobs.isEmpty() ? Qt::ArrowCursor : Qt::BusyCursor);
         d->addUrl(urlInfo);
     } else {
-        kDebug() << job->errorString();
-        setCursor(d->runningJobs.isEmpty() ? Qt::ArrowCursor : Qt::BusyCursor);
+        kDebug() << job->error() << job->errorString();
+    }
+
+    if (d->runningJobs.isEmpty()) {
+        /// If this was the last background stat job ...
+        setCursor(Qt::ArrowCursor);
+
+        if (d->urlComboBox->count() < 1) {
+            /// In case that no valid references were found by the stat jobs ...
+            if (d->anyRemote && d->onlyLocalFilesCheckBox->isChecked()) {
+                /// There are some remote URLs to probe,
+                /// but user was only looking for local files
+                d->showMessage(i18n("<qt>No documents to show.<br/><a href=\"disableonlylocalfiles\">Disable the restriction</a> to local files to see remote documents.</qt>"));
+            } else {
+                /// No stat job at all succeeded. Show message to user.
+                d->showMessage(i18n("No documents to show.\nSome URLs or files could not be retrieved."));
+            }
+        }
     }
 }
 
