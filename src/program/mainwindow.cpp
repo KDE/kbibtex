@@ -331,7 +331,7 @@ void KBibTeXMainWindow::documentSwitched(BibTeXEditor *oldEditor, BibTeXEditor *
         disconnect(oldEditor, SIGNAL(currentElementChanged(QSharedPointer<Element>, const File *)), d->documentPreview, SLOT(setElement(QSharedPointer<Element>, const File *)));
         disconnect(oldEditor, SIGNAL(currentElementChanged(QSharedPointer<Element>, const File *)), d->searchForm, SLOT(setElement(QSharedPointer<Element>, const File *)));
         disconnect(oldEditor, SIGNAL(modified()), d->valueList, SLOT(update()));
-        disconnect(d->elementForm, SIGNAL(elementModified()), newEditor, SLOT(externalModification()));
+        disconnect(d->elementForm, SIGNAL(elementModified()), oldEditor, SLOT(externalModification()));
     }
     if (newEditor != NULL) {
         connect(newEditor, SIGNAL(currentElementChanged(QSharedPointer<Element>, const File *)), d->referencePreview, SLOT(setElement(QSharedPointer<Element>, const File *)));
