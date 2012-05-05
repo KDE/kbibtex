@@ -25,6 +25,7 @@
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QTimer>
+#include <QNetworkProxy>
 
 #include <KStandardDirs>
 #include <kio/netaccess.h>
@@ -32,6 +33,7 @@
 #include <KLocale>
 #include <KMessageBox>
 #include <KApplication>
+#include <KProtocolManager>
 
 #include <encoderlatex.h>
 #include "websearchabstract.h"
@@ -281,6 +283,20 @@ QMap<QString, QString> WebSearchAbstract::formParameters(const QString &htmlText
 
 void WebSearchAbstract::setSuggestedHttpHeaders(QNetworkRequest &request, QNetworkReply *oldReply)
 {
+    /// Query the KDE subsystem if a proxy has to be used
+    /// for the host of a given URL
+    QString proxyHostName = KProtocolManager::proxyForUrl(request.url());
+    if (!proxyHostName.isEmpty() && proxyHostName != QLatin1String("DIRECT")) {
+        /// Extract both hostname and port number for proxy
+        proxyHostName = proxyHostName.mid(proxyHostName.indexOf(QLatin1String("://")) + 3);
+        const QStringList proxyComponents = proxyHostName.split(QChar(':'));
+        /// Set proxy to Qt's NetworkAccessManager
+        m_networkAccessManager->setProxy(QNetworkProxy(QNetworkProxy::HttpProxy, proxyComponents[0], proxyComponents[1].toInt()));
+    } else {
+        /// No proxy to be used, clear previous settings
+        m_networkAccessManager->setProxy(QNetworkProxy());
+    }
+
     if (oldReply != NULL)
         request.setRawHeader(QString("Referer").toAscii(), oldReply->url().toString().toAscii());
     request.setRawHeader(QString("User-Agent").toAscii(), m_userAgent.toAscii());
