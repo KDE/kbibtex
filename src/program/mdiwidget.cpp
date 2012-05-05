@@ -158,6 +158,6 @@ void MDIWidget::slotCompleted(QObject *obj)
         /// completely opened or saved files should be marked as "recently used"
         ofi->addFlags(OpenFileInfo::RecentlyUsed);
 
-        emit setCaption(QString("%1 [%2]").arg(ofi->shortCaption()).arg(squeeze_text(ofi->fullCaption())));
+        emit setCaption(QString("%1 [%2]").arg(ofi->shortCaption()).arg(squeeze_text(ofi->fullCaption(), 64)));
     }
 }

@@ -630,6 +630,7 @@ void KBibTeXPart::updateActions()
     d->editCopyAction->setEnabled(!emptySelection);
     d->editCopyReferencesAction->setEnabled(!emptySelection);
     d->editCutAction->setEnabled(!emptySelection && isReadWrite());
+    d->editPasteAction->setEnabled(isReadWrite());
     d->editDeleteAction->setEnabled(!emptySelection && isReadWrite());
 
     int numDocumentsToView = d->updateViewDocumentMenu();

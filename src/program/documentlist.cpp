@@ -194,6 +194,10 @@ QVariant DocumentListModel::data(const QModelIndex &index, int role) const
             overlays << "document-save";
         else
             overlays << "";
+        if (openFileInfo->isModified())
+            overlays << "document-save";
+        else
+            overlays << "";
         return KIcon(iconName, NULL, overlays);
     }
     case Qt::ToolTipRole: return squeeze_text(openFileInfo->fullCaption(), 64);
