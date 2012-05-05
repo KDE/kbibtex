@@ -130,7 +130,7 @@ public:
 
         QString queryString = p->encodeURL(form->lineEditSearchTerm->text());
         // FIXME: Number of results doesn't seem to be supported by BibSonomy
-        return KUrl("http://www.bibsonomy.org/bib/" + form->comboBoxSearchWhere->itemData(form->comboBoxSearchWhere->currentIndex()).toString() + "/" + queryString + QString("?.entriesPerPage=%1").arg(form->numResultsField->value()));
+        return KUrl("http://www.bibsonomy.org/bib/" + form->comboBoxSearchWhere->itemData(form->comboBoxSearchWhere->currentIndex()).toString() + "/" + queryString + QString("?items=%1").arg(form->numResultsField->value()));
     }
 
     KUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) {
@@ -155,7 +155,7 @@ public:
 
         QString queryString = queryFragments.join("%20");
         // FIXME: Number of results doesn't seem to be supported by BibSonomy
-        url.append(searchType + "/" + queryString + QString("?.entriesPerPage=%1").arg(numResults));
+        url.append(searchType + "/" + queryString + QString("?items=%1").arg(numResults));
 
         return KUrl(url);
     }
