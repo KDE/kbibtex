@@ -140,7 +140,7 @@ public:
         setComboboxFieldNamesCurrentItem(fieldName);
         showCountColumnAction->setChecked(configGroup.readEntry(configKeyShowCountColumn, true));
         sortByCountAction->setChecked(configGroup.readEntry(configKeySortByCountAction, false));
-        sortByCountAction->setEnabled(showCountColumnAction->isChecked());
+        sortByCountAction->setEnabled(!showCountColumnAction->isChecked());
         QByteArray headerState = configGroup.readEntry(configKeyHeaderState, QByteArray());
         treeviewFieldValues->header()->restoreState(headerState);
 
@@ -250,10 +250,8 @@ void ValueList::startItemRenaming()
 {
     /// Get current index from sorted model
     QModelIndex sortedIndex = d->treeviewFieldValues->currentIndex();
-    /// Get "real" index from original model, but resort to sibling in first column
-    QModelIndex realIndex = d->sortingModel->mapToSource(sortedIndex).sibling(realIndex.row(), 0);
     /// Make the tree view start and editing delegate on the index
-    d->treeviewFieldValues->edit(realIndex);
+    d->treeviewFieldValues->edit(sortedIndex);
 }
 
 void ValueList::deleteAllOccurrences()

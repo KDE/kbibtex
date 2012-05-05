@@ -230,11 +230,20 @@ QVariant ValueListModel::data(const QModelIndex &index, int role) const
         } else
             return QVariant(values[index.row()].count);
     } else if (role == SortRole) {
-        if ((showCountColumn && index.column() == 0) || (!showCountColumn && sortBy == SortByText)) {
-            QString buffer = values[index.row()].sortBy.isNull() ? values[index.row()].text : values[index.row()].sortBy;
-            return QVariant(buffer.replace(ignoredInSorting, ""));
-        } else
-            return QVariant(values[index.row()].count);
+        QString buffer = values[index.row()].sortBy.isNull() ? values[index.row()].text : values[index.row()].sortBy;
+        buffer = buffer.replace(ignoredInSorting, "").toLower();
+
+        if ((showCountColumn && index.column() == 1) || (!showCountColumn && sortBy == SortByCount)) {
+            /// Sort by string consisting of a zero-padded count and the lower-case text,
+            /// for example "0000000051keyword"
+            /// Used if (a) two columns are shown (showCountColumn is true) and column 1
+            /// (the count column) is to be sorted or (b) if only one column is shown
+            /// (showCountColumn is false) and this single column is to be sorted by count.
+            return QString(QLatin1String("%1%2")).arg(values[index.row()].count, 10, 10, QLatin1Char('0')).arg(buffer);
+        } else {
+            /// Otherwise use lower-case text for sorting
+            return QVariant(buffer);
+        }
     } else if (role == SearchTextRole) {
         return QVariant(values[index.row()].text);
     } else if (role == Qt::EditRole)
