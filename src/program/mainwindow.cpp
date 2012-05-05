@@ -316,7 +316,7 @@ void KBibTeXMainWindow::documentSwitched(BibTeXEditor *oldEditor, BibTeXEditor *
         disconnect(oldEditor, SIGNAL(currentElementChanged(Element*, const File *)), d->urlPreview, SLOT(setElement(Element*, const File *)));
         disconnect(oldEditor, SIGNAL(currentElementChanged(Element*, const File *)), d->searchForm, SLOT(setElement(Element*, const File *)));
         disconnect(oldEditor, SIGNAL(modified()), d->valueList, SLOT(update()));
-        disconnect(d->elementForm, SIGNAL(elementModified()), newEditor, SLOT(externalModification()));
+        disconnect(d->elementForm, SIGNAL(elementModified()), oldEditor, SLOT(externalModification()));
     }
     if (newEditor != NULL) {
         connect(newEditor, SIGNAL(currentElementChanged(Element*, const File *)), d->referencePreview, SLOT(setElement(Element*, const File *)));

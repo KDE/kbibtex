@@ -136,7 +136,7 @@ public:
         setComboboxFieldNamesCurrentItem(fieldName);
         showCountColumnAction->setChecked(configGroup.readEntry(configKeyShowCountColumn, true));
         sortByCountAction->setChecked(configGroup.readEntry(configKeySortByCountAction, false));
-        sortByCountAction->setEnabled(showCountColumnAction->isChecked());
+        sortByCountAction->setEnabled(!showCountColumnAction->isChecked());
         QByteArray headerState = configGroup.readEntry(configKeyHeaderState, QByteArray());
         treeviewFieldValues->header()->restoreState(headerState);
 
