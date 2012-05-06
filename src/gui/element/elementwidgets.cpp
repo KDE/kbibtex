@@ -468,8 +468,11 @@ void ReferenceWidget::prepareSuggestionsMenu()
 
     /// Keep track of shown suggestions to avoid duplicates
     QSet<QString> knownIdSuggestion;
+    QString defaultSuggestion = idSuggestions->defaultFormatId(*internalEntry.data());
 
     foreach(QString suggestion, idSuggestions->formatIdList(*internalEntry.data())) {
+        bool isDefault = suggestion == defaultSuggestion;
+
         /// Test for duplicate ids, use fallback ids with numeric suffix
         if (m_file != NULL && m_file->containsKey(suggestion)) {
             int suffix = 2;
@@ -484,7 +487,7 @@ void ReferenceWidget::prepareSuggestionsMenu()
 
         /// Create action for suggestion, use icon depending if default or not
         QAction *suggestionAction = new QAction(suggestion, suggestionsMenu);
-        suggestionAction->setIcon(KIcon("view-filter"));
+        suggestionAction->setIcon(KIcon(isDefault ? "favorites" : "view-filter"));
 
         /// Mesh action into GUI
         suggestionsMenu->addAction(suggestionAction);
