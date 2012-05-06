@@ -66,7 +66,7 @@ fi
 numericreleaseversion=$(getnumericreleaseversion $releaseversion)
 archivename="kbibtex-${releaseversion}.tar.bz2"
 
-read -p "Continue to create tar ball \"${archivename}\"? [yN] " answer || exit 10
+read -p "Continue to create tar ball \"${outputdir}/${archivename}\"? [yN] " answer || exit 10
 test "$answer" = "y" -o "$answer" = "Y" || exit 11
 
 echo "Preparing to create archive $archivename ..."
@@ -85,6 +85,7 @@ if [ ${releaseversion} != "svn" ] ; then
 fi
 
 echo "Compressing source code into archive"
+mkdir -p "${outputdir}"
 tar -jcf "${outputdir}/${archivename}" --exclude .svn --exclude testset kbibtex-${releaseversion} || exit 6
 
 popd
