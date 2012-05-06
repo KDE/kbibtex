@@ -1,39 +1,30 @@
 INFO: This TODO list will most likely outdate very quickly
 
-
-Within the scope of a 0.4.1 release, the following features
-and bugs are to be addressed (ordered by importance):
-
-- Bug 19202: Backport bug fixes from trunk to 0.4 branch.
-
 Within the scope of a 0.5.x release, the following features
-and bugs are to be addressed (ordered by importance):
+and bugs are to be addressed:
 
-- Bug 19183: Seems to be a user configuration problem.
-  Nothing new here, close?
-- Bug 18604: Netbook-friendlyness: Nothing new here, close?
-- Bug 17525: Mostly done, some issues persist.
-- Bug 19306: Filenames in "localfile" and "url" get messed up
-  if they contain spaces or other strange characters
-- Bug 18245: Encoding in preview.
-- Bug 19263: Some search engines combine search terms using
-  and AND operations, others use OR (or undefined).
-- Bug 17553: KPart integration: Requires research how XML
-  GUIs work in KDE.
-- Adding support for MODS XML format
-- Bug 17893: Z39.50 support: At least basic support should
-  be integrated.
-- Start adding translations: Test translation infrastructure,
-  provide an initial translation for at least one language
-  to test it
+- Bug 19362: When adding new entry, CPU usage goes up
+- Bug 19484: KBibTeX uses a lot of CPU time
+- Bug 19422: Poke KDE developers to fix KDE bug 294954
+- Bug 19575: rendering when switching files not smooth
+  (some work done, but not ready/successful yet)
+- Bug 19586, 19593: Waiting for confirmation that it is fixed
 
 Within the scope of more future releases, the following
 features and bugs are to be addressed:
 
+- Adding support for MODS XML format
+- Bug 17893: Z39.50 support: At least basic support should
+  be integrated.
+- Bug 19644: Start adding translations: Test translation
+  infrastructure, provide an initial translation for at least
+  one language to test it
 - Bugs 17318, 18038: Zotero support, e.g. accessing the
   bibliographic database or using its search capabilities.
   Jorg Ehrichs is working on some code as part of the
   Conquirere project; this code may be used here.
+- Bug 18038: There is something called BrowserInterface.
+  Look into that
 - Bug 18142: Library mode, where both bibliography and PDF
   files are managed by KBibTeX.
 - Bug 18183: Increase number of search hits after initial
@@ -42,8 +33,9 @@ features and bugs are to be addressed:
 - Bug 18287, 19197: Automatic ID suggestion based on
   user-defined patterns (already work in progress).
 - Bug 18662: BibLaTeX support needs to be refined and tested.
-
-
-
+- Bug 19516: Add spell-checking support
+- Bug 19634: Make configuration setting handling more consistent
+  across GUI
+- Bug 19657: Add support for isbndb
 
 
