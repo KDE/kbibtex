@@ -283,6 +283,8 @@ QMap<QString, QString> WebSearchAbstract::formParameters(const QString &htmlText
 
 void WebSearchAbstract::setSuggestedHttpHeaders(QNetworkRequest &request, QNetworkReply *oldReply)
 {
+    m_networkAccessManager = networkAccessManager();
+
     /// Query the KDE subsystem if a proxy has to be used
     /// for the host of a given URL
     QString proxyHostName = KProtocolManager::proxyForUrl(request.url());
