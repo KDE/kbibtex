@@ -20,33 +20,9 @@ set(
     partfactory.cpp
 )
 
-# creates src/version.h using cmake script
-add_custom_target(
-    SVNrevisionForPart
-    COMMAND
-    ${CMAKE_COMMAND}
-    -DSOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR}
-    -DBINARY_DIR=${CMAKE_CURRENT_BINARY_DIR}
-    -P
-    ${CMAKE_SOURCE_DIR}/src/getsvn.cmake
-    COMMENT
-    "Determine SVN version"
-)
-
-# version.h is a generated file
-set_source_files_properties(
-    ${CMAKE_CURRENT_BINARY_DIR}/version.h
-    PROPERTIES
-    GENERATED
-    TRUE
-    HEADER_FILE_ONLY
-    TRUE
-)
-
 kde4_add_plugin(
     kbibtexpart
     ${kbibtexpart_SRCS}
-    ${CMAKE_CURRENT_BINARY_DIR}/version.h
 )
 
 target_link_libraries(
@@ -55,11 +31,6 @@ target_link_libraries(
     kbibtexio
     kbibtexgui
     kbibtexproc
-)
-
-add_dependencies(
-    kbibtexpart
-    SVNrevisionForPart
 )
 
 install(

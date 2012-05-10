@@ -25,7 +25,8 @@
 
 #include "program.h"
 #include "mainwindow.h"
-#include "version.h"
+//#include "version.h"
+const char *versionNumber = "some SVN revision";
 
 const char *description = I18N_NOOP("A BibTeX editor for KDE");
 const char *programHomepage = I18N_NOOP("http://home.gna.org/kbibtex/");
