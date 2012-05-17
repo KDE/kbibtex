@@ -25,9 +25,8 @@
 
 #include "program.h"
 #include "mainwindow.h"
-#include "version.h"
 
-const char *programVersion = versionNumber;
+const char *versionNumber = "0.4.1rc2";
 const char *description = I18N_NOOP("A BibTeX editor for KDE");
 const char *programHomepage = I18N_NOOP("http://home.gna.org/kbibtex/");
 const char *bugTrackerHomepage = "https://gna.org/bugs/?group=kbibtex";
