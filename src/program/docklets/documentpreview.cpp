@@ -374,6 +374,27 @@ public:
             }
         }
 
+        QDomNodeList actionPropertiesList = docElem.elementsByTagName("ActionProperties");
+        for (int i = 0; i < actionPropertiesList.count(); ++i) {
+            QDomNodeList actionProperties = actionPropertiesList.at(i).childNodes();
+            for (int j = 0; j < actionProperties.count(); ++j) {
+                QDomNode actionNode = actionProperties.at(j);
+                if (actionNode.nodeName() == QLatin1String("Action")) {
+                    kDebug() << actionNode.attributes().namedItem("name").isNull() << actionNode.attributes().namedItem("name").isAttr();
+
+                    const QString actionName = actionNode.attributes().namedItem("name").toAttr().nodeValue();
+                    const QString actionShortcut = actionNode.attributes().namedItem("shortcut").toAttr().value();
+                    kDebug() << actionName << actionShortcut;
+                    QAction *action = part->actionCollection()->action(actionName);
+                    if (action != NULL) {
+                        kDebug() << "setting shortcut" << actionShortcut << "to action" << actionName;
+                        action->setShortcut(QKeySequence(actionShortcut));
+                    } else
+                        kDebug() << "Could not locate an action with name " << actionName << "for shortcut" << actionShortcut;
+                }
+            }
+        }
+
         menuBar->setVisible(true);
         toolBar->setVisible(true);
     }
