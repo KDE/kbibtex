@@ -57,7 +57,7 @@ public:
     OnlineSearchGoogleScholarPrivate(OnlineSearchGoogleScholar *parent)
             : p(parent) {
         startPageUrl = QLatin1String("http://scholar.google.com/");
-        configPageUrl = QLatin1String("http://%1/scholar_preferences");
+        configPageUrl = QLatin1String("http://%1/scholar_settings");
         setConfigPageUrl = QLatin1String("http://%1/scholar_setprefs");
         queryPageUrl = QLatin1String("http://%1/scholar");
     }
@@ -117,20 +117,21 @@ void OnlineSearchGoogleScholar::doneFetchingStartPage()
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
-    if (handleErrors(reply)) {
+    QUrl newUrl;
+    if (handleErrors(reply, newUrl)) {
         QMap<QString, QString> inputMap = formParameters(reply->readAll(), "<form ");
         inputMap["hl"] = "en";
 
-        KUrl url(d->configPageUrl.arg(reply->url().host()));
+        KUrl url(d->configPageUrl.arg(newUrl.host()));
         for (QMap<QString, QString>::ConstIterator it = inputMap.constBegin(); it != inputMap.constEnd(); ++it)
             url.addQueryItem(it.key(), it.value());
 
         QNetworkRequest request(url);
-        QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
+        QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, newUrl);
         setNetworkReplyTimeout(newReply);
         connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingConfigPage()));
     } else
-        kDebug() << "url was" << reply->url().toString();
+        kDebug() << "url was" << newUrl.toString();
 }
 
 void OnlineSearchGoogleScholar::doneFetchingConfigPage()

@@ -119,6 +119,13 @@ QStringList OnlineSearchAbstract::splitRespectingQuotationMarks(const QString &t
 
 bool OnlineSearchAbstract::handleErrors(QNetworkReply *reply)
 {
+    QUrl url;
+    return handleErrors(reply, url);
+}
+
+bool OnlineSearchAbstract::handleErrors(QNetworkReply *reply, QUrl &newUrl)
+{
+    newUrl = reply->url();
     if (m_hasBeenCanceled) {
         kDebug() << "Searching" << label() << "got cancelled";
         emit stoppedSearch(resultCancelled);
@@ -139,8 +146,10 @@ bool OnlineSearchAbstract::handleErrors(QNetworkReply *reply)
      * returning 'true' is totally ok here).
      */
     QStringList issues;
-    if (reply->attribute(QNetworkRequest::RedirectionTargetAttribute).isValid())
-        issues << QString("Redirection to '%1'").arg(reply->url().resolved(reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl()).toString());
+    if (reply->attribute(QNetworkRequest::RedirectionTargetAttribute).isValid()) {
+        newUrl = reply->url().resolved(reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl());
+        issues << QString("Redirection to '%1'").arg(newUrl.toString());
+    }
     if (reply->size() == 0)
         issues << QLatin1String("No data returned");
     if (!issues.isEmpty())

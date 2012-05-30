@@ -117,6 +117,16 @@ protected:
     bool handleErrors(QNetworkReply *reply);
 
     /**
+    * Will check for common problems with downloads via QNetworkReply. It will return true
+    * if there is no problem and you may process this job result. If there is a problem,
+    * this function will notify the user if necessary (KMessageBox), emit a
+    * "stoppedSearch" signal, and return false.
+    * @see handleErrors(KJob*)
+    * @param newUrl will be set to the new URL if reply contains a redirection, otherwise reply's original URL
+    */
+    bool handleErrors(QNetworkReply *reply, QUrl &newUrl);
+
+    /**
      * Encode a text to be HTTP URL save, e.g. replace '=' by '%3D'.
      */
     QString encodeURL(QString rawText);
