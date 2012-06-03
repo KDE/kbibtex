@@ -130,31 +130,45 @@ void OnlineSearchScienceDirect::doneFetchingStartPage()
     --d->runningJobs;
     Q_ASSERT(d->runningJobs == 0);
 
+    QUrl redirUrl;
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
-    if (handleErrors(reply)) {
+    if (handleErrors(reply, redirUrl)) {
         const QString htmlText = reply->readAll();
-        InternalNetworkAccessManager::self()->mergeHtmlHeadCookies(htmlText, reply->url());
 
-        KUrl url(d->scienceDirectBaseUrl + "science");
-        QMap<QString, QString> inputMap = formParameters(htmlText, QLatin1String("<form name=\"qkSrch\""));
-        inputMap["qs_all"] = d->queryFreetext.trimmed();
-        inputMap["qs_author"] = d->queryAuthor.trimmed();
-        inputMap["resultsPerPage"] = QString::number(d->numExpectedResults);
-        inputMap["_ob"] = "QuickSearchURL";
-        inputMap["_method"] = "submitForm";
-        inputMap["sdSearch"] = "Search";
+        if (redirUrl.isValid()) {
+            ++d->numSteps;
+            ++d->runningJobs;
 
-        static const QStringList orderOfParameters = QString("_ob|_method|_acct|_origin|_zone|md5|_eidkey|qs_issue|qs_pages|qs_title|qs_vol|sdSearch|qs_all|qs_author|resultsPerPage").split("|");
-        foreach(const QString &key, orderOfParameters) {
-            if (!inputMap.contains(key)) continue;
-            url.addQueryItem(key, inputMap[key]);
+            /// redirection to another url
+            QNetworkRequest request(redirUrl);
+            kDebug() << "following redirect to " << request.url().toString();
+            QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply->url());
+            setNetworkReplyTimeout(newReply);
+            connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingStartPage()));
+        } else {
+            InternalNetworkAccessManager::self()->mergeHtmlHeadCookies(htmlText, reply->url());
+
+            KUrl url(d->scienceDirectBaseUrl + "science");
+            QMap<QString, QString> inputMap = formParameters(htmlText, QLatin1String("<form name=\"qkSrch\""));
+            inputMap["qs_all"] = d->queryFreetext.trimmed();
+            inputMap["qs_author"] = d->queryAuthor.trimmed();
+            inputMap["resultsPerPage"] = QString::number(d->numExpectedResults);
+            inputMap["_ob"] = "QuickSearchURL";
+            inputMap["_method"] = "submitForm";
+            inputMap["sdSearch"] = "Search";
+
+            static const QStringList orderOfParameters = QString("_ob|_method|_acct|_origin|_zone|md5|_eidkey|qs_issue|qs_pages|qs_title|qs_vol|sdSearch|qs_all|qs_author|resultsPerPage").split("|");
+            foreach(const QString &key, orderOfParameters) {
+                if (!inputMap.contains(key)) continue;
+                url.addQueryItem(key, inputMap[key]);
+            }
+
+            ++d->runningJobs;
+            QNetworkRequest request(url);
+            QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
+            connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingResultPage()));
+            setNetworkReplyTimeout(newReply);
         }
-
-        ++d->runningJobs;
-        QNetworkRequest request(url);
-        QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
-        connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingResultPage()));
-        setNetworkReplyTimeout(newReply);
     } else
         kDebug() << "url was" << reply->url().toString();
 }
