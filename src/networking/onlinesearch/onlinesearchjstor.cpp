@@ -187,11 +187,23 @@ void OnlineSearchJStor::doneFetchingStartPage()
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
-    if (handleErrors(reply)) {
-        QNetworkRequest request(d->queryUrl);
-        QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
-        setNetworkReplyTimeout(reply);
-        connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingResultPage()));
+    QUrl redirUrl;
+    if (handleErrors(reply, redirUrl)) {
+        if (redirUrl.isValid()) {
+            ++d->numSteps;
+
+            /// redirection to another url
+            QNetworkRequest request(redirUrl);
+            kDebug() << "following redirect to " << request.url().toString();
+            QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply->url());
+            setNetworkReplyTimeout(newReply);
+            connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingStartPage()));
+        } else {
+            QNetworkRequest request(d->queryUrl);
+            QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
+            setNetworkReplyTimeout(reply);
+            connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingResultPage()));
+        }
     } else
         kDebug() << "url was" << reply->url().toString();
 }
@@ -222,6 +234,7 @@ void OnlineSearchJStor::doneFetchingResultPage()
             body.append("selectUnselect=");
 
             QNetworkRequest request(d->jstorBaseUrl + "action/downloadCitation?format=bibtex&include=abs");
+            request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
             QNetworkReply *newReply = InternalNetworkAccessManager::self()->post(request, body.join("&").toUtf8());
             setNetworkReplyTimeout(newReply);
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingSummaryPage()));
