@@ -127,6 +127,8 @@ public:
             fieldLineEdit->setText("");
         else if (fieldListEdit != NULL)
             fieldListEdit->clear();
+        else if (colorWidget != NULL)
+            colorWidget->clear();
         enableModifiedSignal();
     }
 

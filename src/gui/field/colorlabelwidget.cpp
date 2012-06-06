@@ -134,7 +134,7 @@ ColorLabelWidget::ColorLabelWidget(QWidget *parent)
 {
     d->model = new ColorLabelComboBoxModel(this);
     setModel(d->model);
-    connect(this, SIGNAL(activated(int)), this, SLOT(slotActivated(int)));
+    connect(this, SIGNAL(currentIndexChanged(int)), this, SLOT(slotCurrentIndexChanged(int)));
 }
 
 ColorLabelWidget::~ColorLabelWidget()
@@ -142,11 +142,16 @@ ColorLabelWidget::~ColorLabelWidget()
     delete d;
 }
 
+void ColorLabelWidget::clear()
+{
+    setCurrentIndex(0);
+}
+
 bool ColorLabelWidget::reset(const Value &value)
 {
-    int i = 0;
     QSharedPointer<VerbatimText> verbatimText;
     if (value.count() == 1 && !(verbatimText = value.first().dynamicCast<VerbatimText>()).isNull()) {
+        int i = 0;
         const QColor color = QColor(verbatimText->text());
         for (; i < d->model->rowCount(); ++i)
             if (d->model->data(d->model->index(i, 0, QModelIndex()), ColorRole).value<QColor>() == color)
@@ -156,8 +161,9 @@ bool ColorLabelWidget::reset(const Value &value)
             d->model->userColor = color;
             i = d->model->rowCount() - 1;
         }
-    }
-    setCurrentIndex(i);
+        setCurrentIndex(i);
+    } else
+        setCurrentIndex(0);
 
     return true;
 }
@@ -168,6 +174,8 @@ bool ColorLabelWidget::apply(Value &value) const
     value.clear();
     if (color != Qt::black)
         value.append(QSharedPointer<VerbatimText>(new VerbatimText(color.name())));
+    else
+        value.clear();
     return true;
 }
 
@@ -176,7 +184,7 @@ void ColorLabelWidget::setReadOnly(bool isReadOnly)
     setEnabled(!isReadOnly);
 }
 
-void ColorLabelWidget::slotActivated(int index)
+void ColorLabelWidget::slotCurrentIndexChanged(int index)
 {
     if (index == count() - 1) {
         QColor dialogColor = d->model->userColor;
