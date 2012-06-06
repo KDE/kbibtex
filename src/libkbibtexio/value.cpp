@@ -26,6 +26,7 @@
 #include <KConfigGroup>
 
 #include <file.h>
+#include <preferences.h>
 #include "value.h"
 
 const QRegExp ValueItem::ignoredInSorting = QRegExp("[{}\\\\]+");
@@ -278,6 +279,9 @@ bool PlainText::operator==(const ValueItem &other) const
 }
 
 
+bool VerbatimText::colorLabelPairsInitialized = false;
+QList<VerbatimText::ColorLabelPair> VerbatimText::colorLabelPairs = QList<VerbatimText::ColorLabelPair>();
+
 VerbatimText::VerbatimText(const VerbatimText &other)
         : m_text(other.text())
 {
@@ -311,7 +315,37 @@ void VerbatimText::replace(const QString &before, const QString &after, ValueIte
 bool VerbatimText::containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive) const
 {
     const QString text = QString(m_text).replace(ignoredInSorting, "");
-    return text.contains(pattern, caseSensitive);
+
+    /// Initialize map of labels to color (hex string) only once
+    // FIXME if user changes colors/labels later, it will not be updated here
+    if (!colorLabelPairsInitialized) {
+        colorLabelPairsInitialized = true;
+
+        /// Read data from config file
+        KSharedConfigPtr config(KSharedConfig::openConfig(QLatin1String("kbibtexrc")));
+        KConfigGroup configGroup(config, Preferences::groupColor);
+        QStringList colorCodes = configGroup.readEntry(Preferences::keyColorCodes, Preferences::defaultColorCodes);
+        QStringList colorLabels = configGroup.readEntry(Preferences::keyColorLabels, Preferences::defaultcolorLabels);
+
+        /// Translate data from config file into internal mapping
+        for (QStringList::ConstIterator itc = colorCodes.constBegin(), itl = colorLabels.constBegin(); itc != colorCodes.constEnd() && itl != colorLabels.constEnd(); ++itc, ++itl) {
+            ColorLabelPair clp;
+            clp.hexColor = *itc;
+            clp.label = *itl;
+            colorLabelPairs << clp;
+        }
+    }
+
+    bool contained = text.contains(pattern, caseSensitive);
+    if (!contained) {
+        /// Only if simple text match failed, check color labels
+        /// For a match, the user's pattern has to be the start of the color label
+        /// and this verbatim text has to contain the color as hex string
+        for (QList<ColorLabelPair>::ConstIterator it = colorLabelPairs.constBegin(); !contained && it != colorLabelPairs.constEnd(); ++it)
+            contained = it->label.startsWith(pattern, Qt::CaseInsensitive) && text.compare(it->hexColor, Qt::CaseInsensitive) == 0;
+    }
+
+    return contained;
 }
 
 bool VerbatimText::operator==(const ValueItem &other) const
