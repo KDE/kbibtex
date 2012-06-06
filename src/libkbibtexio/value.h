@@ -169,6 +169,15 @@ public:
 
 protected:
     QString m_text;
+
+private:
+    struct ColorLabelPair {
+        QString hexColor;
+        QString label;
+    };
+
+    static QList<ColorLabelPair> colorLabelPairs;
+    static bool colorLabelPairsInitialized;
 };
 
 /**
