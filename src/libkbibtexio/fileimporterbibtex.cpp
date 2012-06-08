@@ -754,18 +754,34 @@ void FileImporterBibTeX::parsePersonList(const QString &text, Value &value)
 
 void FileImporterBibTeX::parsePersonList(const QString &text, Value &value, CommaContainment *comma)
 {
+    static const QString tokenAnd = QLatin1String("and");
+    static const QString tokenOthers = QLatin1String("others");
     static QStringList tokens;
     contextSensitiveSplit(text, tokens);
 
     int nameStart = 0;
+    QString prevToken = QString::null;
+    bool encounteredName = false;
     for (int i = 0; i < tokens.count(); ++i) {
-        if (tokens[i] == QLatin1String("and")) {
-            value.append(personFromTokenList(tokens.mid(nameStart, i - nameStart), comma));
+        if (tokens[i] == tokenAnd) {
+            if (prevToken == tokenAnd)
+                kDebug() << "Two subsequent" << tokenAnd << "found in person list";
+            else if (!encounteredName)
+                kDebug() << "Found" << tokenAnd << "but no name before it";
+            else
+                value.append(personFromTokenList(tokens.mid(nameStart, i - nameStart), comma));
             nameStart = i + 1;
-        } else if (tokens[i] == QLatin1String("others")) {
-            value.append(QSharedPointer<PlainText>(new PlainText(QLatin1String("others"))));
+            encounteredName = false;
+        } else if (tokens[i] == tokenOthers) {
+            if (i < tokens.count() - 1)
+                kDebug() << "Special word" << tokenOthers << "found before last position in person name";
+            else
+                value.append(QSharedPointer<PlainText>(new PlainText(QLatin1String("others"))));
             nameStart = tokens.count() + 1;
-        }
+            encounteredName = false;
+        } else
+            encounteredName = true;
+        prevToken = tokens[i];
     }
 
     if (nameStart < tokens.count())
