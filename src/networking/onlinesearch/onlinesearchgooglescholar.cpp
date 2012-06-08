@@ -117,21 +117,24 @@ void OnlineSearchGoogleScholar::doneFetchingStartPage()
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
-    QUrl newUrl;
-    if (handleErrors(reply, newUrl)) {
+    QUrl newDomainUrl;
+    if (handleErrors(reply, newDomainUrl)) {
+        if (!newDomainUrl.isValid())
+            newDomainUrl = reply->url();
+
         QMap<QString, QString> inputMap = formParameters(reply->readAll(), "<form ");
         inputMap["hl"] = "en";
 
-        KUrl url(d->configPageUrl.arg(newUrl.host()));
+        KUrl url(d->configPageUrl.arg(newDomainUrl.host()));
         for (QMap<QString, QString>::ConstIterator it = inputMap.constBegin(); it != inputMap.constEnd(); ++it)
             url.addQueryItem(it.key(), it.value());
 
         QNetworkRequest request(url);
-        QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, newUrl);
+        QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply->url());
         setNetworkReplyTimeout(newReply);
         connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingConfigPage()));
     } else
-        kDebug() << "url was" << newUrl.toString();
+        kDebug() << "url was" << reply->url().toString();
 }
 
 void OnlineSearchGoogleScholar::doneFetchingConfigPage()
