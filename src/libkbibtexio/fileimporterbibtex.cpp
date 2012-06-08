@@ -175,7 +175,7 @@ Element *FileImporterBibTeX::nextElement()
         ++m_statistics.countCommentPercent;
         return readPlainCommentElement();
     } else if (token == tUnknown) {
-        kDebug() << "Unknown token \"" << m_currentChar << "(" << m_currentChar.unicode() << ")" << "\" near line " << m_lineNo << "(" << m_prevLine << endl << m_currentLine << ")" << ", treating as comment";
+        kDebug() << "Unknown token \"" << m_currentChar << "(" << QString("0x%1").arg(m_currentChar.unicode(), 4, 16, QLatin1Char('0')) << ")" << "\" near line " << m_lineNo << "(" << m_prevLine << endl << m_currentLine << ")" << ", treating as comment";
         ++m_statistics.countNoCommentQuote;
         return readPlainCommentElement();
     }
@@ -315,7 +315,11 @@ Entry *FileImporterBibTeX::readEntryElement(const QString &typeString)
 
     QString id = readSimpleString(QChar(','));
     /// try to avoid non-ascii characters in ids
-    id = encoder->convertToPlainAscii(id);
+    if (!EncoderLaTeX::containsOnlyAscii(id)) {
+        const QString newId = encoder->convertToPlainAscii(id);
+        kWarning() << "Entry id" << id << "contains non-ASCII characters, converted to" << newId;
+        id = newId;
+    }
 
     Entry *entry = new Entry(be->format(typeString, m_keywordCasing), id);
 
@@ -327,7 +331,7 @@ Entry *FileImporterBibTeX::readEntryElement(const QString &typeString)
             if (m_currentChar.isLetter())
                 kWarning() << "Error in parsing entry" << id << "(near line" << m_lineNo << ":" << m_prevLine << endl << m_currentLine << "): Comma symbol (,) expected but got letter" << m_currentChar << "(token" << tokenidToString(token) << ")";
             else
-                kWarning() << "Error in parsing entry" << id << "(near line" << m_lineNo << ":" << m_prevLine << endl << m_currentLine << "): Comma symbol (,) expected but got character 0x" << QString::number(m_currentChar.unicode(), 16) << "(token" << tokenidToString(token) << ")";
+                kWarning() << "Error in parsing entry" << id << "(near line" << m_lineNo << ":" << m_prevLine << endl << m_currentLine << "): Comma symbol (,) expected but got character" << QString("0x%1").arg(m_currentChar.unicode(), 4, 16, QLatin1Char('0')) << "(token" << tokenidToString(token) << ")";
             delete entry;
             return NULL;
         }
