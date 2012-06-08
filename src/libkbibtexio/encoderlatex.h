@@ -37,6 +37,7 @@ public:
     virtual QString decode(const QString &text) const;
     virtual QString encode(const QString &text) const;
     QString convertToPlainAscii(const QString &input) const;
+    static bool containsOnlyAscii(const QString &text);
 
     static EncoderLaTeX *instance();
 

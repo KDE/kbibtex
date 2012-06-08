@@ -314,36 +314,38 @@ static struct EncoderLaTeXEscapedCharacterLookupTableRow {
 static const struct EncoderLaTeXCharacterCommand {
     QString letters;
     QChar unicode;
+    bool meaningfulCommandName;
 }
 encoderLaTeXCharacterCommands[] = {
-    {QLatin1String("AA"), QChar(0x00C5)},
-    {QLatin1String("AE"), QChar(0x00C6)},
-    {QLatin1String("DH"), QChar(0x00D0)},
-    {QLatin1String("DJ"), QChar(0x00D0)},
-    {QLatin1String("O"), QChar(0x00D8)},
-    {QLatin1String("TH"), QChar(0x00DE)},
-    {QLatin1String("ss"), QChar(0x00DF)},
-    {QLatin1String("aa"), QChar(0x00E5)},
-    {QLatin1String("ae"), QChar(0x00E6)},
-    {QLatin1String("dh"), QChar(0x00F0)},
-    {QLatin1String("o"), QChar(0x00F8)},
-    {QLatin1String("th"), QChar(0x00FE)},
-    {QLatin1String("i"), QChar(0x0131)},
-    {QLatin1String("NG"), QChar(0x014A)},
-    {QLatin1String("ng"), QChar(0x014B)},
-    {QLatin1String("L"), QChar(0x0141)},
-    {QLatin1String("l"), QChar(0x0142)},
-    {QLatin1String("OE"), QChar(0x0152)},
-    {QLatin1String("oe"), QChar(0x0153)},
-    {QLatin1String("j"), QChar(0x0237)},
-    {QLatin1String("ldots"), QChar(0x2026)}, /** \ldots must be before \l */
-    {QLatin1String("grqq"), QChar(0x201C)},
-    {QLatin1String("rqq"), QChar(0x201D)},
-    {QLatin1String("glqq"), QChar(0x201E)},
-    {QLatin1String("frqq"), QChar(0x00BB)},
-    {QLatin1String("flqq"), QChar(0x00AB)},
-    {QLatin1String("rq"), QChar(0x2019)}, ///< tricky one: 'r' is a valid modifier
-    {QLatin1String("lq"), QChar(0x2018)},
+    {QLatin1String("textperiodcentered"), QChar(0x00B7), false},
+    {QLatin1String("AA"), QChar(0x00C5), true},
+    {QLatin1String("AE"), QChar(0x00C6), true},
+    {QLatin1String("DH"), QChar(0x00D0), true},
+    {QLatin1String("DJ"), QChar(0x00D0), true},
+    {QLatin1String("O"), QChar(0x00D8), true},
+    {QLatin1String("TH"), QChar(0x00DE), true},
+    {QLatin1String("ss"), QChar(0x00DF), true},
+    {QLatin1String("aa"), QChar(0x00E5), true},
+    {QLatin1String("ae"), QChar(0x00E6), true},
+    {QLatin1String("dh"), QChar(0x00F0), true},
+    {QLatin1String("o"), QChar(0x00F8), true},
+    {QLatin1String("th"), QChar(0x00FE), true},
+    {QLatin1String("i"), QChar(0x0131), true},
+    {QLatin1String("NG"), QChar(0x014A), true},
+    {QLatin1String("ng"), QChar(0x014B), true},
+    {QLatin1String("L"), QChar(0x0141), true},
+    {QLatin1String("l"), QChar(0x0142), true},
+    {QLatin1String("OE"), QChar(0x0152), true},
+    {QLatin1String("oe"), QChar(0x0153), true},
+    {QLatin1String("j"), QChar(0x0237), true},
+    {QLatin1String("ldots"), QChar(0x2026), false}, /** \ldots must be before \l */
+    {QLatin1String("grqq"), QChar(0x201C), false},
+    {QLatin1String("rqq"), QChar(0x201D), false},
+    {QLatin1String("glqq"), QChar(0x201E), false},
+    {QLatin1String("frqq"), QChar(0x00BB), false},
+    {QLatin1String("flqq"), QChar(0x00AB), false},
+    {QLatin1String("rq"), QChar(0x2019), false}, ///< tricky one: 'r' is a valid modifier
+    {QLatin1String("lq"), QChar(0x2018), false},
 };
 static const int encoderLaTeXCharacterCommandsLen = sizeof(encoderLaTeXCharacterCommands) / sizeof(encoderLaTeXCharacterCommands[0]);
 
@@ -810,7 +812,7 @@ QString EncoderLaTeX::encode(const QString &input) const
             }
 
             if (!found) {
-                kWarning() << "Don't know how to encode Unicode char" << QString("0x%1").arg(c.unicode(), 0, 16);
+                kWarning() << "Don't know how to encode Unicode char" << QString("0x%1").arg(c.unicode(), 4, 16, QLatin1Char('0'));
                 output.append(c);
             }
         } else {
@@ -876,7 +878,7 @@ QString EncoderLaTeX::convertToPlainAscii(const QString &input) const
 
             /// Let's test character commands like \ss
             for (int k = 0; k < encoderLaTeXCharacterCommandsLen; ++k)
-                if (encoderLaTeXCharacterCommands[k].unicode == c) {
+                if (encoderLaTeXCharacterCommands[k].meaningfulCommandName && encoderLaTeXCharacterCommands[k].unicode == c) {
                     output.append(encoderLaTeXCharacterCommands[k].letters);
                     found = true;
                     break;
@@ -894,8 +896,8 @@ QString EncoderLaTeX::convertToPlainAscii(const QString &input) const
             }
 
             if (!found) {
-                kDebug() << "Don't know how to convert to plain ASCII this Unicode char: " << QString("0x%1").arg(c.unicode(), 0, 16);
-                output.append(c);
+                kDebug() << "Don't know how to convert to plain ASCII this Unicode char: " << QString("0x%1").arg(c.unicode(), 4, 16, QLatin1Char('0'));
+                output.append(QLatin1Char('X'));
             }
         } else {
             /// Current character is normal ASCII
@@ -907,6 +909,13 @@ QString EncoderLaTeX::convertToPlainAscii(const QString &input) const
 
     output.squeeze();
     return output;
+}
+
+bool EncoderLaTeX::containsOnlyAscii(const QString &text)
+{
+    for (QString::ConstIterator it = text.constBegin(); it != text.constEnd(); ++it)
+        if (it->unicode() > 127) return false;
+    return true;
 }
 
 int EncoderLaTeX::modifierInLookupTable(const QChar &c) const
