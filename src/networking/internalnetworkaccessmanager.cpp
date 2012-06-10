@@ -78,6 +78,18 @@ const QStringList userAgentList = QStringList()
                                   << QLatin1String("Links (2.3-pre1; NetBSD 5.0 i386; 96x36)")
                                   << QLatin1String("Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US) AppleWebKit/523.15 (KHTML, like Gecko, Safari/419.3) Arora/0.3 (Change: 287 c9dfb30)")
                                   << QLatin1String("Mozilla/4.0 (compatible; Dillo 2.2)")
+                                  << QLatin1String("Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/532.0 (KHTML, like Gecko) Chrome/4.0.201.1 Safari/532.0")
+                                  << QLatin1String("Mozilla/5.0 (X11; Linux i686) AppleWebKit/535.1 (KHTML, like Gecko) Ubuntu/10.04 Chromium/14.0.813.0 Chrome/14.0.813.0 Safari/535.1")
+                                  << QLatin1String("Mozilla/5.0 (X11; U; Linux; de-DE) AppleWebKit/527+ (KHTML, like Gecko, Safari/419.3) Arora/0.8.0")
+                                  << QLatin1String("Mozilla/5.0 (X11; U; Linux i686; pt-PT; rv:1.9.2.3) Gecko/20100402 Iceweasel/3.6.3 (like Firefox/3.6.3) GTB7.0")
+                                  << QLatin1String("Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.0.1) Gecko/20020919")
+                                  << QLatin1String("Lynx/2.8.8dev.3 libwww-FM/2.14 SSL-MM/1.4.1")
+                                  << QLatin1String("Opera/9.80 (X11; Linux i686; U; ru) Presto/2.8.131 Version/11.11")
+                                  << QLatin1String("Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; .NET CLR 1.1.4322; InfoPath.1; .NET CLR 2.0.50727) Sleipnir/2.8.4")
+                                  << QLatin1String("Mozilla/5.0 (X11; Linux i686; rv:2.2a1pre) Gecko/20110327 SeaMonkey/2.2a1pre")
+                                  << QLatin1String("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_3) AppleWebKit/534.55.3 (KHTML, like Gecko) Version/5.1.3 Safari/534.53.10")
+                                  << QLatin1String("Mozilla/6.0 (X11; U; Linux x86_64; en-US; rv:2.9.0.3) Gecko/2009022510 FreeBSD/ Sunrise/4.0.1/like Safari")
+                                  << QLatin1String("Mozilla/5.0 (Linux; U; Tizen/1.0 like Android; en-us; AppleWebKit/534.46 (KHTML, like Gecko) Tizen Browser/1.0 Mobile")
                                   << QLatin1String("Emacs-W3/4.0pre.46 URL/p4.0pre.46 (i686-pc-linux; X11)")
                                   << QLatin1String("Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.8.1.13) Gecko/20080208 Galeon/2.0.4 (2008.1) Firefox/2.0.0.13")
                                   << QLatin1String("Lynx/2.8 (compatible; iCab 2.9.8; Macintosh; U; 68K)")
@@ -132,7 +144,7 @@ QNetworkReply *InternalNetworkAccessManager::get(QNetworkRequest &request, const
     }
 
     request.setRawHeader(QString("Accept").toAscii(), QString("text/*, */*;q=0.7").toAscii());
-    request.setRawHeader(QString("Accept-Charset").toAscii(), QString("utf-8, us-ascii, ISO-8859-1, ISO-8859-15, windows-1252").toAscii());
+    request.setRawHeader(QString("Accept-Charset").toAscii(), QString("utf-8, us-ascii, ISO-8859-1;q=0.7, ISO-8859-15;q=0.7, windows-1252;q=0.3").toAscii());
     request.setRawHeader(QString("Accept-Language").toAscii(), QString("en-US, en;q=0.9").toAscii());
     request.setRawHeader("User-Agent", userAgent().toAscii());
     if (oldUrl.isValid())
