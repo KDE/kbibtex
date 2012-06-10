@@ -47,8 +47,6 @@ public:
     };
 
     ElementEditor(QWidget *parent);
-    ElementEditor(QSharedPointer<const Element> element, const File *file, QWidget *parent);
-    ElementEditor(QSharedPointer<Element> element, const File *file, QWidget *parent);
     ~ElementEditor();
 
     void setElement(QSharedPointer<Element> element, const File *file);

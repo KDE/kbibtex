@@ -30,6 +30,8 @@
 #include "element.h"
 
 class ValueListModel;
+class ElementEditor;
+class ElementEditorDialog;
 
 /**
 @author Thomas Fischer
@@ -87,9 +89,16 @@ protected slots:
     void itemActivated(const QModelIndex &index);
 
 private:
+    enum DialogType { DialogTypeView, DialogTypeEdit };
+
     QSharedPointer<Element> m_current;
     QList<QSharedPointer<Element> > m_selection;
     FilterBar *m_filterBar;
+
+    ElementEditorDialog *m_elementEditorDialog;
+    ElementEditor *m_elementEditor;
+
+    void prepareEditorDialog(DialogType dialogType);
 };
 
 

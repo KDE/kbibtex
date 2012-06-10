@@ -26,6 +26,7 @@
 #include <KMessageBox>
 #include <KGuiItem>
 #include <KConfigGroup>
+#include <KDebug>
 
 #include <elementeditor.h>
 #include <entry.h>
@@ -64,6 +65,7 @@ public:
      */
     void setElementEditor(ElementEditor *elementEditor) {
         this->elementEditor = elementEditor;
+        setMainWidget(elementEditor);
     }
 
 protected:
@@ -102,7 +104,7 @@ private:
 const QString ElementEditorDialog::configGroupNameWindowSize = QLatin1String("ElementEditorDialog");
 
 BibTeXEditor::BibTeXEditor(const QString &name, QWidget *parent)
-        : BibTeXFileView(name, parent), m_isReadOnly(false), m_current(NULL), m_filterBar(NULL)
+        : BibTeXFileView(name, parent), m_isReadOnly(false), m_current(NULL), m_filterBar(NULL), m_elementEditorDialog(NULL), m_elementEditor(NULL)
 {
     connect(this, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(itemActivated(QModelIndex)));
 }
@@ -114,14 +116,10 @@ void BibTeXEditor::viewCurrentElement()
 
 void BibTeXEditor::viewElement(const QSharedPointer<Element> element)
 {
-    KDialog dialog(this);
-    ElementEditor elementEditor(element, bibTeXModel()->bibTeXFile(), &dialog);
-    elementEditor.setReadOnly(true);
-    dialog.setCaption(i18n("View Element"));
-    dialog.setMainWidget(&elementEditor);
-    dialog.setButtons(KDialog::Close);
-    elementEditor.reset();
-    dialog.exec();
+    prepareEditorDialog(DialogTypeView);
+    m_elementEditor->setElement(element, bibTeXModel()->bibTeXFile());
+
+    m_elementEditorDialog->exec();
 }
 
 void BibTeXEditor::editCurrentElement()
@@ -131,34 +129,21 @@ void BibTeXEditor::editCurrentElement()
 
 bool BibTeXEditor::editElement(QSharedPointer<Element> element)
 {
-    if (isReadOnly()) {
-        /// read-only forbids editing elements, calling viewElement instead
-        viewElement(element);
+    prepareEditorDialog(DialogTypeEdit);
+    m_elementEditor->setElement(element, bibTeXModel()->bibTeXFile());
+
+    m_elementEditorDialog->exec();
+
+    if (!isReadOnly()) {
+        bool changed = m_elementEditor->elementChanged();
+        if (changed) {
+            emit currentElementChanged(currentElement(), bibTeXModel()->bibTeXFile());
+            emit selectedElementsChanged();
+            emit modified();
+        }
+        return changed;
+    } else
         return false;
-    }
-
-    ElementEditorDialog dialog(this);
-    ElementEditor elementEditor(element, bibTeXModel()->bibTeXFile(), &dialog);
-    dialog.setElementEditor(&elementEditor);
-    dialog.setCaption(i18n("Edit Element"));
-    dialog.setMainWidget(&elementEditor);
-    dialog.setButtons(KDialog::Ok | KDialog::Apply | KDialog::Cancel | KDialog::Reset);
-    dialog.enableButton(KDialog::Apply, false);
-
-    connect(&elementEditor, SIGNAL(modified(bool)), &dialog, SLOT(enableButtonApply(bool)));
-    connect(&dialog, SIGNAL(applyClicked()), &elementEditor, SLOT(apply()));
-    connect(&dialog, SIGNAL(okClicked()), &elementEditor, SLOT(apply()));
-    connect(&dialog, SIGNAL(resetClicked()), &elementEditor, SLOT(reset()));
-
-    dialog.exec();
-
-    bool changed = elementEditor.elementChanged();
-    if (changed) {
-        emit currentElementChanged(currentElement(), bibTeXModel()->bibTeXFile());
-        emit selectedElementsChanged();
-        emit modified();
-    }
-    return changed;
 }
 
 const QList<QSharedPointer<Element> > &BibTeXEditor::selectedElements() const
@@ -307,4 +292,47 @@ void BibTeXEditor::dragMoveEvent(QDragMoveEvent *event)
 void BibTeXEditor::itemActivated(const QModelIndex &index)
 {
     emit elementExecuted(bibTeXModel()->element(sortFilterProxyModel()->mapToSource(index).row()));
+}
+
+void BibTeXEditor::prepareEditorDialog(DialogType dialogType)
+{
+    if (dialogType != DialogTypeView && isReadOnly()) {
+        kWarning() << "In read-only mode, you may only view elements, not edit them";
+        dialogType = DialogTypeView;
+    }
+
+    /// Create both the dialog window and the editing widget only once
+    if (m_elementEditorDialog == NULL)
+        m_elementEditorDialog = new ElementEditorDialog(this);
+    if (m_elementEditor == NULL) {
+        m_elementEditor = new ElementEditor(m_elementEditorDialog);
+        m_elementEditorDialog->setElementEditor(m_elementEditor);
+    }
+
+    /// Disconnect all signals that could modify current element
+    /// (safety precaution for read-only mode, signals will be
+    /// re-established for edit mode further below)
+    disconnect(m_elementEditor, SIGNAL(modified(bool)), m_elementEditorDialog, SLOT(enableButtonApply(bool)));
+    disconnect(m_elementEditorDialog, SIGNAL(applyClicked()), m_elementEditor, SLOT(apply()));
+    disconnect(m_elementEditorDialog, SIGNAL(okClicked()), m_elementEditor, SLOT(apply()));
+    disconnect(m_elementEditorDialog, SIGNAL(resetClicked()), m_elementEditor, SLOT(reset()));
+
+    if (dialogType == DialogTypeView) {
+        /// View mode, as use in read-only situations
+        m_elementEditor->setReadOnly(true);
+        m_elementEditorDialog->setCaption(i18n("View Element"));
+        m_elementEditorDialog->setButtons(KDialog::Close);
+    } else if (dialogType == DialogTypeEdit) {
+        /// Edit mode, used in normal operations
+        m_elementEditor->setReadOnly(false);
+        m_elementEditorDialog->setCaption(i18n("Edit Element"));
+        m_elementEditorDialog->setButtons(KDialog::Ok | KDialog::Apply | KDialog::Cancel | KDialog::Reset);
+        m_elementEditorDialog->enableButton(KDialog::Apply, false);
+
+        /// Establish signal-slot connections for modification/editing events
+        connect(m_elementEditor, SIGNAL(modified(bool)), m_elementEditorDialog, SLOT(enableButtonApply(bool)));
+        connect(m_elementEditorDialog, SIGNAL(applyClicked()), m_elementEditor, SLOT(apply()));
+        connect(m_elementEditorDialog, SIGNAL(okClicked()), m_elementEditor, SLOT(apply()));
+        connect(m_elementEditorDialog, SIGNAL(resetClicked()), m_elementEditor, SLOT(reset()));
+    }
 }

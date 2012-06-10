@@ -339,20 +339,6 @@ ElementEditor::ElementEditor(QWidget *parent)
     connect(d->tab, SIGNAL(currentChanged(int)), this, SLOT(tabChanged()));
 }
 
-ElementEditor::ElementEditor(QSharedPointer<Element> element, const File *file, QWidget *parent)
-        : QWidget(parent), d(new ElementEditorPrivate(this))
-{
-    setElement(element, file);
-    connect(d->tab, SIGNAL(currentChanged(int)), this, SLOT(tabChanged()));
-}
-
-ElementEditor::ElementEditor(QSharedPointer<const Element> element, const File *file, QWidget *parent)
-        : QWidget(parent), d(new ElementEditorPrivate(this))
-{
-    setElement(element, file);
-    setReadOnly(true);
-}
-
 ElementEditor::~ElementEditor()
 {
     delete d;
