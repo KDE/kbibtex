@@ -137,6 +137,8 @@ protected:
 
     void setNetworkReplyTimeout(QNetworkReply *reply, int timeOutSec = 30);
 
+    void dumpToFile(const QString &filename, const QString &text);
+
 private:
     QString m_name;
     static const char *httpUnsafeChars;

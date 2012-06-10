@@ -31,6 +31,7 @@
 
 #include <encoderlatex.h>
 #include <internalnetworkaccessmanager.h>
+#include "kbibtexnamespace.h"
 #include "onlinesearchabstract.h"
 
 const QString OnlineSearchAbstract::queryKeyFreeText = QLatin1String("free");
@@ -125,7 +126,7 @@ bool OnlineSearchAbstract::handleErrors(QNetworkReply *reply)
 
 bool OnlineSearchAbstract::handleErrors(QNetworkReply *reply, QUrl &newUrl)
 {
-    newUrl = reply->url();
+    newUrl = QUrl();
     if (m_hasBeenCanceled) {
         kDebug() << "Searching" << label() << "got cancelled";
         emit stoppedSearch(resultCancelled);
@@ -133,7 +134,7 @@ bool OnlineSearchAbstract::handleErrors(QNetworkReply *reply, QUrl &newUrl)
     } else if (reply->error() != QNetworkReply::NoError) {
         m_hasBeenCanceled = true;
         const QString errorString = reply->errorString();
-        kWarning() << "Search using" << label() << "failed (error code" << reply->error() << "(" << errorString << "), HTTP code" << reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() << reply->attribute(QNetworkRequest::HttpReasonPhraseAttribute).toByteArray() << ")";
+        kWarning() << "Search using" << label() << "failed (error code" << reply->error() << "(" << errorString << "), HTTP code" << reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() << ":" << reply->attribute(QNetworkRequest::HttpReasonPhraseAttribute).toByteArray() << ")";
         KMessageBox::error(m_parent, errorString.isEmpty() ? i18n("Searching \"%1\" failed for unknown reason.", label()) : i18n("Searching \"%1\" failed with error message:\n\n%2", label(), errorString));
         emit stoppedSearch(resultUnspecifiedError);
         return false;
@@ -153,7 +154,7 @@ bool OnlineSearchAbstract::handleErrors(QNetworkReply *reply, QUrl &newUrl)
     if (reply->size() == 0)
         issues << QLatin1String("No data returned");
     if (!issues.isEmpty())
-        kWarning() << "Search using" << label() << " on url" << reply->url().toString() << "returned the following issues:" << issues.join(QLatin1String("; "));
+        kWarning() << "Search using" << label() << "on url" << reply->url().toString() << "returned the following issues:" << issues.join(QLatin1String("; "));
 
     return true;
 }
@@ -205,6 +206,10 @@ QMap<QString, QString> OnlineSearchAbstract::formParameters(const QString &htmlT
     /// determined boundaries of (only) "form" tag
     int startPos = htmlText.indexOf(formTagBegin);
     int endPos = htmlText.indexOf(formTagEnd, startPos);
+    if (startPos < 0 || endPos < 0) {
+        kWarning() << "Could not locate form" << formTagBegin << "in text";
+        return result;
+    }
 
     /// search for "input" tags within form
     int p = htmlText.indexOf(inputTagBegin, startPos);
@@ -309,5 +314,18 @@ void OnlineSearchAbstract::iconDownloadFinished()
             if (listWidgetItem != NULL)
                 listWidgetItem->setIcon(KIcon(filename));
         }
+    }
+}
+
+void OnlineSearchAbstract::dumpToFile(const QString &filename, const QString &text)
+{
+    const QString usedFilename = KStandardDirs::locateLocal("tmp", filename, true);
+
+    QFile f(usedFilename);
+    if (f.open(QFile::WriteOnly)) {
+        kDebug() << "Dumping text" << squeezeText(text, 96) << "to" << usedFilename;
+        QTextStream ts(&f);
+        ts << text;
+        f.close();
     }
 }
