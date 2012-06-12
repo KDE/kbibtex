@@ -21,3 +21,4 @@ done
 echo "Processing \"CMakeLists.txt\" files"
 export CMAKEPP=$(which cmakepp)
 test -x "${CMAKEPP}" && find -name CMakeLists.txt -exec ${CMAKEPP} --sob 0 --overwrite '{}' ';'
+
