@@ -38,6 +38,7 @@ public:
     ColorLabelWidget(QWidget *parent = NULL);
     ~ColorLabelWidget();
 
+    void clear();
     bool reset(const Value& value);
     bool apply(Value& value) const;
     void setReadOnly(bool);
@@ -48,7 +49,7 @@ signals:
     void modified();
 
 private slots:
-    void slotActivated(int);
+    void slotCurrentIndexChanged(int);
 
 private:
     class ColorLabelWidgetPrivate;
