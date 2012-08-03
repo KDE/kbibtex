@@ -141,7 +141,6 @@ void OnlineSearchGoogleScholar::doneFetchingConfigPage()
 
     if (handleErrors(reply)) {
         QMap<QString, QString> inputMap = formParameters(reply->readAll(), "<form ");
-        if (inputMap.isEmpty()) kDebug() << "Something went wrong";
         inputMap["hl"] = "en";
         inputMap["scis"] = "yes";
         inputMap["scisf"] = "4";
