@@ -18,7 +18,3 @@ find src -type f -name '*.cpp' -o -name '*.h' | xargs svn status | while read st
 	fi
 done
 
-echo "Processing \"CMakeLists.txt\" files"
-export CMAKEPP=$(which cmakepp)
-test -x "${CMAKEPP}" && find -name CMakeLists.txt -exec ${CMAKEPP} --sob 0 --overwrite '{}' ';'
-
