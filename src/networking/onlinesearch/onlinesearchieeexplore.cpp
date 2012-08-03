@@ -100,7 +100,7 @@ OnlineSearchIEEEXplore::~OnlineSearchIEEEXplore()
 void OnlineSearchIEEEXplore::startSearch()
 {
     m_hasBeenCanceled = false;
-    emit stoppedSearch(resultNoError);
+    delayedStoppedSearch(resultNoError);
 }
 
 void OnlineSearchIEEEXplore::startSearch(const QMap<QString, QString> &query, int numResults)

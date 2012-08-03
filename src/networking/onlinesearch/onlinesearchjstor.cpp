@@ -152,7 +152,7 @@ void OnlineSearchJStor::startSearch(const QMap<QString, QString> &query, int num
 void OnlineSearchJStor::startSearch()
 {
     m_hasBeenCanceled = false;
-    emit stoppedSearch(resultNoError);
+    delayedStoppedSearch(resultNoError);
 }
 
 QString OnlineSearchJStor::label() const

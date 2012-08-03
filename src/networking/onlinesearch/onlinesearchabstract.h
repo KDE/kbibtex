@@ -139,16 +139,25 @@ protected:
 
     void dumpToFile(const QString &filename, const QString &text);
 
+    /**
+     * Delay sending of stop signal by a few milliseconds.
+     * Necessary if search stops (is cancelled) already in one
+     * of the startSearch functions.
+     */
+    void delayedStoppedSearch(int returnCode);
+
 private:
     QString m_name;
     static const char *httpUnsafeChars;
     QMap<QTimer *, QNetworkReply *> m_mapTimerToReply;
     QMap<QNetworkReply *, QListWidgetItem *> m_iconReplyToListWidgetItem;
+    int m_delayedStoppedSearchReturnCode;
 
 private slots:
     void networkReplyTimeout();
     void networkReplyFinished();
     void iconDownloadFinished();
+    void delayedStoppedSearchTimer();
 
 signals:
     void foundEntry(QSharedPointer<Entry>);

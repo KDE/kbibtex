@@ -127,7 +127,7 @@ void OnlineSearchMathSciNet::startSearch()
 {
     d->queryParameters.clear();
     m_hasBeenCanceled = false;
-    emit stoppedSearch(resultNoError);
+    delayedStoppedSearch(resultNoError);
 }
 
 QString OnlineSearchMathSciNet::label() const

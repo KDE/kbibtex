@@ -125,7 +125,7 @@ void OnlineSearchAcmPortal::startSearch(const QMap<QString, QString> &query, int
 void OnlineSearchAcmPortal::startSearch()
 {
     m_hasBeenCanceled = false;
-    emit stoppedSearch(resultNoError);
+    delayedStoppedSearch(resultNoError);
 }
 
 QString OnlineSearchAcmPortal::label() const

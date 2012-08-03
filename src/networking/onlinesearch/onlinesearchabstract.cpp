@@ -325,3 +325,15 @@ void OnlineSearchAbstract::dumpToFile(const QString &filename, const QString &te
         f.close();
     }
 }
+
+void OnlineSearchAbstract::delayedStoppedSearch(int returnCode)
+{
+    m_delayedStoppedSearchReturnCode = returnCode;
+    QTimer::singleShot(500, this, SLOT(delayedStoppedSearchTimer()));
+}
+
+void OnlineSearchAbstract::delayedStoppedSearchTimer()
+{
+    emit progress(1, 1);
+    emit stoppedSearch(m_delayedStoppedSearchReturnCode);
+}
