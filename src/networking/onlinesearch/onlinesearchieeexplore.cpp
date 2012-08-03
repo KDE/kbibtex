@@ -26,6 +26,7 @@
 #include <KDebug>
 #include <KLocale>
 #include <KStandardDirs>
+#include <KUrl>
 
 #include <internalnetworkaccessmanager.h>
 #include "onlinesearchieeexplore.h"
@@ -50,7 +51,7 @@ public:
     OnlineSearchIEEEXplorePrivate(OnlineSearchIEEEXplore *parent)
             : p(parent) {
         startPageUrl = QLatin1String("http://ieeexplore.ieee.org/");
-        searchRequestUrl = QLatin1String("http://ieeexplore.ieee.org/search/searchresult.jsp?newsearch=true&x=0&y=0&queryText=");
+        searchRequestUrl = QLatin1String("http://ieeexplore.ieee.org/search/searchresult.jsp");
         fullAbstractUrl = QLatin1String("http://ieeexplore.ieee.org/search/srchabstract.jsp?tp=&arnumber=");
         citationUrl = QLatin1String("http://ieeexplore.ieee.org/xpl/downloadCitations?fromPageName=searchabstract&citations-format=citation-abstract&download-format=download-bibtex&x=61&y=24&recordIds=");
     }
@@ -129,10 +130,10 @@ void OnlineSearchIEEEXplore::doneFetchingStartPage()
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
-    if (handleErrors(reply)) {
-        if (reply->attribute(QNetworkRequest::RedirectionTargetAttribute).isValid()) {
+    QUrl redirUrl;
+    if (handleErrors(reply, redirUrl)) {
+        if (redirUrl.isValid()) {
             /// redirection to another url
-            QUrl redirUrl = reply->url().resolved(reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl());
             ++d->numSteps;
 
             QNetworkRequest request(redirUrl);
@@ -140,7 +141,13 @@ void OnlineSearchIEEEXplore::doneFetchingStartPage()
             setNetworkReplyTimeout(reply);
             connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingStartPage()));
         } else {
-            QString url = d->searchRequestUrl + '"' + d->queryFragments.join("\"+AND+\"") + '"';
+            const QString htmlText(reply->readAll());
+            KUrl url(d->searchRequestUrl);
+            QMap<QString, QString> form = formParameters(htmlText, QLatin1String("<form id=\"search_form\""));
+            form[QLatin1String("queryText")] = d->queryFragments.join("\"+AND+\"");
+            for (QMap<QString, QString>::ConstIterator it = form.constBegin(); it != form.constEnd(); ++it)
+                url.addQueryItem(it.key(), it.value());
+
             QNetworkRequest request(url);
             QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
             setNetworkReplyTimeout(newReply);
@@ -191,14 +198,38 @@ void OnlineSearchIEEEXplore::doneFetchingAbstract()
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
-    if (handleErrors(reply)) {
-        QString arnumber = reply->url().queryItemValue(QLatin1String("arnumber"));
-        if (!arnumber.isEmpty()) {
-            QString url = d->citationUrl + arnumber;
-            QNetworkRequest request(url);
-            QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
-            setNetworkReplyTimeout(newReply);
-            connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingBibliography()));
+    QUrl redirUrl;
+    if (handleErrors(reply, redirUrl)) {
+        if (redirUrl.isValid()) {
+            /// redirection to another url
+            ++d->numSteps;
+
+            QNetworkRequest request(redirUrl);
+            QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
+            setNetworkReplyTimeout(reply);
+            connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingAbstract()));
+        } else {
+            const QString plainText = QString(reply->readAll());
+            /// The following test may fail in the future,
+            /// but it allows to check if login is required
+            /// to fetch citation information.
+            /// Login is not supported.
+            if (plainText.contains(QLatin1String("mwMemberSignIn.jsp')\" title=\"Sign In\" class=\"signIn\">"))) {
+                kDebug() << "Authentication (e.g. university IP address) required to use IEEExplore";
+                emit stoppedSearch(resultUnspecifiedError);
+            } else {
+                QString arnumber = reply->url().queryItemValue(QLatin1String("arnumber"));
+                if (!arnumber.isEmpty()) {
+                    QString url = d->citationUrl + arnumber;
+                    QNetworkRequest request(url);
+                    QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
+                    setNetworkReplyTimeout(newReply);
+                    connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingBibliography()));
+                } else {
+                    kDebug() << "Could not locate arnumber";
+                    emit stoppedSearch(resultUnspecifiedError);
+                }
+            }
         }
     } else
         kDebug() << "url was" << reply->url().toString();
