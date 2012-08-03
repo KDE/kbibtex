@@ -287,6 +287,7 @@ void OnlineSearchScienceDirect::doneFetchingExportCitationPage()
 
             ++d->runningJobs;
             QNetworkRequest request(KUrl(d->scienceDirectBaseUrl + "/science"));
+            request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
             QNetworkReply *newReply = InternalNetworkAccessManager::self()->post(request, body.toUtf8());
             setNetworkReplyTimeout(newReply);
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingBibTeX()));

@@ -170,6 +170,7 @@ void OnlineSearchAcmPortal::doneFetchingStartPage()
             QString body = QString("Go=&query=%1").arg(d->joinedQueryString).simplified();
 
             QNetworkRequest request(url);
+            request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
             QNetworkReply *newReply = InternalNetworkAccessManager::self()->post(request, body.toUtf8());
             setNetworkReplyTimeout(newReply);
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingSearchPage()));
