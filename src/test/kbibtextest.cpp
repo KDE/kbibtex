@@ -1,7 +1,6 @@
 #include <KApplication>
 #include <KIcon>
 
-#include <QLayout>
 #include <QProgressBar>
 #include <QListWidget>
 #include <QTimer>
@@ -24,19 +23,19 @@ const QString iconERROR = QLatin1String("dialog-cancel");
 const QString iconINFO = QLatin1String("dialog-information");
 
 KBibTeXTest::KBibTeXTest(QWidget *parent)
-    : KDialog(parent)
+        : KDialog(parent), m_running(false)
 {
     setPlainCaption(QLatin1String("KBibTeX Test Suite"));
     setButtons(KDialog::Close);
 
-    QLayout *layout = new QVBoxLayout(this);
     m_messageList = new QListWidget(this);
-    layout->addWidget(m_messageList);
-    m_messageList->setMinimumSize(768, 512);
+    const int fontSize = m_messageList->fontMetrics().width(QLatin1Char('a'));
+    m_messageList->setMinimumSize(fontSize * 96, fontSize * 48);
     setMainWidget(m_messageList);
 
-    kapp->quitOnLastWindowClosed();
+    connect(this, SIGNAL(closeClicked()), this, SLOT(aboutToQuit()));
 
+    m_running = true;
     QTimer::singleShot(500, this, SLOT(startTests()));
 }
 
@@ -47,6 +46,12 @@ void KBibTeXTest::addMessage(const QString &message, const QString &icon)
     m_messageList->scrollToBottom();
 }
 
+void KBibTeXTest::aboutToQuit()
+{
+    m_running = false;
+    QTimer::singleShot(500, kapp, SLOT(quit()));
+}
+
 void KBibTeXTest::startTests()
 {
     startOnlineSearchTests();
@@ -54,30 +59,40 @@ void KBibTeXTest::startTests()
 
 void KBibTeXTest::startOnlineSearchTests()
 {
-    m_onlineSearchList << new OnlineSearchAcmPortal(this) << new OnlineSearchArXiv(this) << new OnlineSearchBibsonomy(this) << new OnlineSearchGoogleScholar(this) << new OnlineSearchIEEEXplore(this) << new OnlineSearchIngentaConnect(this) << new OnlineSearchJStor(this) << new OnlineSearchPubMed(this) << new OnlineSearchScienceDirect(this) << new OnlineSearchSpringerLink(this);
+    m_onlineSearchList << new OnlineSearchAcmPortal(this);
+    m_onlineSearchList << new OnlineSearchArXiv(this);
+    m_onlineSearchList << new OnlineSearchBibsonomy(this);
+    m_onlineSearchList << new OnlineSearchGoogleScholar(this);
+    m_onlineSearchList << new OnlineSearchIEEEXplore(this);
+    m_onlineSearchList << new OnlineSearchIngentaConnect(this);
+    m_onlineSearchList << new OnlineSearchJStor(this);
+    m_onlineSearchList << new OnlineSearchPubMed(this);
+    m_onlineSearchList << new OnlineSearchScienceDirect(this);
+    m_onlineSearchList << new OnlineSearchSpringerLink(this);
 
-    if (!m_onlineSearchList.isEmpty()) {
-        m_currentOnlineSearch = m_onlineSearchList.first();
-        m_onlineSearchList.removeFirst();
-        addMessage(QString(QLatin1String("Searching \"%1\"")).arg(m_currentOnlineSearch->label()), iconINFO);
-
-        QMap<QString, QString> query;
-        query.insert(OnlineSearchAbstract::queryKeyAuthor, QLatin1String("smith"));
-        connect(m_currentOnlineSearch, SIGNAL(stoppedSearch(int)), this, SLOT(onlineSearchStoppedSearch(int)));
-        m_currentOnlineSearch->startSearch(query, 3);
-    } else
-        addMessage(QLatin1String("Done testing"), iconINFO);
+    processNextSearch();
 }
 
 void KBibTeXTest::onlineSearchStoppedSearch(int searchResult)
 {
     if (searchResult == OnlineSearchAbstract::resultNoError) {
-        addMessage(QString(QLatin1String("No error searching \"%1\"")).arg(m_currentOnlineSearch->label()), iconOK);
+        addMessage(QString(QLatin1String("No error searching \"%1\", found %2 entries")).arg(m_currentOnlineSearch->label()).arg(m_currentOnlineSearchNumFoundEntries), iconOK);
     } else {
         addMessage(QString(QLatin1String("Error searching \"%1\"")).arg(m_currentOnlineSearch->label()), iconERROR);
     }
 
-    if (!m_onlineSearchList.isEmpty()) {
+    processNextSearch();
+}
+
+void KBibTeXTest::onlineSearchFoundEntry()
+{
+    ++m_currentOnlineSearchNumFoundEntries;
+}
+
+void KBibTeXTest::processNextSearch()
+{
+    if (m_running && !m_onlineSearchList.isEmpty()) {
+        m_currentOnlineSearchNumFoundEntries = 0;
         m_currentOnlineSearch = m_onlineSearchList.first();
         m_onlineSearchList.removeFirst();
         addMessage(QString(QLatin1String("Searching \"%1\"")).arg(m_currentOnlineSearch->label()), iconINFO);
@@ -85,6 +100,7 @@ void KBibTeXTest::onlineSearchStoppedSearch(int searchResult)
         QMap<QString, QString> query;
         query.insert(OnlineSearchAbstract::queryKeyAuthor, QLatin1String("smith"));
         connect(m_currentOnlineSearch, SIGNAL(stoppedSearch(int)), this, SLOT(onlineSearchStoppedSearch(int)));
+        connect(m_currentOnlineSearch, SIGNAL(foundEntry(QSharedPointer<Entry>)), this, SLOT(onlineSearchFoundEntry()));
         m_currentOnlineSearch->startSearch(query, 3);
     } else
         addMessage(QLatin1String("Done testing"), iconINFO);

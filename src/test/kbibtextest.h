@@ -15,15 +15,20 @@ public:
     KBibTeXTest(QWidget *parent = NULL);
 
 private slots:
+    void aboutToQuit();
     void startTests();
     void onlineSearchStoppedSearch(int);
+    void onlineSearchFoundEntry();
 
 private:
+    bool m_running;
     QListWidget *m_messageList;
 
     QList<OnlineSearchAbstract *> m_onlineSearchList;
     OnlineSearchAbstract *m_currentOnlineSearch;
+    int m_currentOnlineSearchNumFoundEntries;
 
     void addMessage(const QString &message, const QString &icon = QString::null);
     void startOnlineSearchTests();
+    void processNextSearch();
 };
