@@ -60,6 +60,8 @@ public:
     static const QLatin1String ftDOI;
     /** Representation of the BibTeX field key "editor" */
     static const QLatin1String ftEditor;
+    /** Representation of the BibTeX field key "file" */
+    static const QLatin1String ftFile;
     /** Representation of the BibTeX field key "issn" */
     static const QLatin1String ftISSN;
     /** Representation of the BibTeX field key "isbn" */

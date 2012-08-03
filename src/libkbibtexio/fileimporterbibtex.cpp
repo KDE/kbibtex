@@ -626,7 +626,7 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value &value, const QStr
         bool isStringKey = false;
         QString text = EncoderLaTeX::instance()->decode(readString(isStringKey));
         /// for all entries except for abstracts ...
-        if (iKey != Entry::ftAbstract && !(iKey.startsWith(Entry::ftUrl) && !iKey.startsWith(Entry::ftUrlDate)) && !iKey.startsWith(Entry::ftLocalFile)) {
+        if (iKey != Entry::ftAbstract && !(iKey.startsWith(Entry::ftUrl) && !iKey.startsWith(Entry::ftUrlDate)) && !iKey.startsWith(Entry::ftLocalFile) && !iKey.startsWith(Entry::ftFile)) {
             /// ... remove redundant spaces including newlines
             text = text.simplified();
         }
@@ -663,6 +663,23 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value &value, const QStr
                 foreach(const QString &filename, fileList) {
                     value.append(QSharedPointer<VerbatimText>(new VerbatimText(filename)));
                 }
+            }
+        } else if (iKey.startsWith(Entry::ftFile)) {
+            if (isStringKey)
+                value.append(QSharedPointer<MacroKey>(new MacroKey(text)));
+            else {
+                /// Assumption: this field was written by Mendeley, which uses
+                /// a very strange format for file names:
+                ///  :C$\backslash$:/Users/BarisEvrim/Documents/Mendeley Desktop/GeversPAMI10.pdf:pdf
+                ///  ::
+                ///  :Users/Fred/Library/Application Support/Mendeley Desktop/Downloaded/Hasselman et al. - 2011 - (Still) Growing Up What should we be a realist about in the cognitive and behavioural sciences Abstract.pdf:pdf
+                if (KBibTeX::mendeleyFileRegExp.indexIn(text) >= 0)    {
+                    const QString backslashLaTeX = QLatin1String("$\\backslash$");
+                    QString filename = KBibTeX::mendeleyFileRegExp.cap(1);
+                    filename = filename.replace(backslashLaTeX, QString::null);
+                    value.append(QSharedPointer<VerbatimText>(new VerbatimText(filename)));
+                } else
+                    value.append(QSharedPointer<VerbatimText>(new VerbatimText(text)));
             }
         } else if (iKey == Entry::ftMonth) {
             if (isStringKey) {

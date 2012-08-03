@@ -35,6 +35,7 @@ const QLatin1String Entry::ftComment = QLatin1String("comment");
 const QLatin1String Entry::ftCrossRef = QLatin1String("crossref");
 const QLatin1String Entry::ftDOI = QLatin1String("doi");
 const QLatin1String Entry::ftEditor = QLatin1String("editor");
+const QLatin1String Entry::ftFile = QLatin1String("file");
 const QLatin1String Entry::ftISSN = QLatin1String("issn");
 const QLatin1String Entry::ftISBN = QLatin1String("isbn");
 const QLatin1String Entry::ftJournal = QLatin1String("journal");
