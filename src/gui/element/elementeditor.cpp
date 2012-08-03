@@ -177,22 +177,29 @@ public:
     }
 
     void updateTabVisibility() {
+        disconnect(tab, SIGNAL(currentChanged(int)), p, SLOT(tabChanged()));
         if (element.isNull()) {
             p->setEnabled(false);
         } else {
             p->setEnabled(true);
+            int firstEnabledTab = 1024;
 
             for (WidgetList::ConstIterator it = widgets.constBegin(); it != widgets.constEnd(); ++it) {
                 ElementWidget *widget = *it;
                 const int index = tab->indexOf(widget);
                 const bool canEdit = widget->canEdit(element.data());
 
-                if (index >= 0)
+                if (index >= 0) {
                     tab->setTabEnabled(index, canEdit);
-                else
+                    if (canEdit && index < firstEnabledTab)
+                        firstEnabledTab = index;
+                } else
                     widget->setVisible(canEdit);
             }
+            if (firstEnabledTab < 1024)
+                tab->setCurrentIndex(firstEnabledTab);
         }
+        connect(tab, SIGNAL(currentChanged(int)), p, SLOT(tabChanged()));
     }
 
     void apply() {
@@ -251,7 +258,7 @@ public:
                     if (!p.isNull())
                         internalPreamble = QSharedPointer<Preamble>(new Preamble(*p.data()));
                     else
-                        Q_ASSERT_X(element.isNull(), "ElementEditor::ElementEditorPrivate::reset(const Element *element)", "element is not NULL but could not be cast on a valid Element sub-class");
+                        Q_ASSERT_X(element.isNull(), "ElementEditor::ElementEditorPrivate::reset(QSharedPointer<const Element> element)", "element is not NULL but could not be cast on a valid Element sub-class");
                 }
             }
         }
