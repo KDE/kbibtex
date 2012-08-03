@@ -233,7 +233,6 @@ void OnlineSearchSpringerLink::startSearch()
 
     KUrl springerLinkSearchUrl = d->buildQueryUrl();
 
-    kDebug() << "springerLinkSearchUrl=" << springerLinkSearchUrl.pathOrUrl();
     emit progress(0, 1);
     QNetworkRequest request(springerLinkSearchUrl);
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
@@ -250,7 +249,6 @@ void OnlineSearchSpringerLink::startSearch(const QMap<QString, QString> &query, 
     KUrl springerLinkSearchUrl = d->buildQueryUrl(query);
     springerLinkSearchUrl.addQueryItem(QLatin1String("p"), QString::number(numResults));
 
-    kDebug() << "springerLinkSearchUrl=" << springerLinkSearchUrl.pathOrUrl();
     emit progress(0, 1);
     QNetworkRequest request(springerLinkSearchUrl);
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);

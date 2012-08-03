@@ -141,7 +141,6 @@ void OnlineSearchScienceDirect::doneFetchingStartPage()
 
             /// redirection to another url
             QNetworkRequest request(redirUrl);
-            kDebug() << "following redirect to " << request.url().toString();
             QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply->url());
             setNetworkReplyTimeout(newReply);
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingStartPage()));

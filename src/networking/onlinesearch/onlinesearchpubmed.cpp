@@ -90,7 +90,6 @@ public:
         /// set number of expected results
         url.append(QString("&retstart=0&retmax=%1&retmode=xml").arg(numResults));
 
-        kDebug() << "pubmed url =" << url;
         return KUrl(url);
     }
 

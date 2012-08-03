@@ -146,15 +146,11 @@ bool OnlineSearchAbstract::handleErrors(QNetworkReply *reply, QUrl &newUrl)
      * to problems which have to be handled elsewhere (therefore,
      * returning 'true' is totally ok here).
      */
-    QStringList issues;
     if (reply->attribute(QNetworkRequest::RedirectionTargetAttribute).isValid()) {
         newUrl = reply->url().resolved(reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl());
-        issues << QString("Redirection to '%1'").arg(newUrl.toString());
-    }
-    if (reply->size() == 0)
-        issues << QLatin1String("No data returned");
-    if (!issues.isEmpty())
-        kWarning() << "Search using" << label() << "on url" << reply->url().toString() << "returned the following issues:" << issues.join(QLatin1String("; "));
+        kDebug() << "Redirection from" << reply->url().toString() << "to"        << newUrl.toString();
+    } else if (reply->size() == 0)
+        kWarning() << "Search using" << label() << "on url" << reply->url().toString() << "returned no data";
 
     return true;
 }

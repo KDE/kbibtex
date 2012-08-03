@@ -141,7 +141,6 @@ void OnlineSearchJStor::startSearch(const QMap<QString, QString> &query, int num
         d->queryUrl.addQueryItem("sd", query[queryKeyYear]);
         d->queryUrl.addQueryItem("ed", query[queryKeyYear]);
     }
-    kDebug() << "queryUrl=" << d->queryUrl.pathOrUrl();
 
     QNetworkRequest request(d->jstorBaseUrl);
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
@@ -194,7 +193,6 @@ void OnlineSearchJStor::doneFetchingStartPage()
 
             /// redirection to another url
             QNetworkRequest request(redirUrl);
-            kDebug() << "following redirect to " << request.url().toString();
             QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply->url());
             setNetworkReplyTimeout(newReply);
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingStartPage()));
