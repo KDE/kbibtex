@@ -149,6 +149,9 @@ void ColorLabelWidget::clear()
 
 bool ColorLabelWidget::reset(const Value &value)
 {
+    /// Avoid triggering signal when current index is set by the program
+    disconnect(this, SIGNAL(currentIndexChanged(int)), this, SLOT(slotCurrentIndexChanged(int)));
+
     QSharedPointer<VerbatimText> verbatimText;
     if (value.count() == 1 && !(verbatimText = value.first().dynamicCast<VerbatimText>()).isNull()) {
         int i = 0;
@@ -164,6 +167,9 @@ bool ColorLabelWidget::reset(const Value &value)
         setCurrentIndex(i);
     } else
         setCurrentIndex(0);
+
+    /// Re-enable triggering signal after setting current index
+    connect(this, SIGNAL(currentIndexChanged(int)), this, SLOT(slotCurrentIndexChanged(int)));
 
     return true;
 }
