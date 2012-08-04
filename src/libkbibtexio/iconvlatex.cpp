@@ -27,8 +27,6 @@
 
 QStringList IConvLaTeX::encodingList;
 
-static const int maxBufferSize = 16384;
-
 class IConvLaTeX::IConvLaTeXPrivate
 {
 private:
@@ -57,7 +55,11 @@ IConvLaTeX::~IConvLaTeX()
 
 QByteArray IConvLaTeX::encode(const QString &input, bool beExtraCautious)
 {
+    /// Get an UTF-8 representation of the input string
     QByteArray inputByteArray = input.toUtf8();
+    /// Limit the size of the output buffer
+    /// by making an educated guess of its maximum size
+    size_t maxOutputByteArraySize = inputByteArray.size() * 4 + 1024;
 #ifdef Q_WS_WIN
     /// iconv on Windows likes to have it as const char *
     const char *inputBuffer = inputByteArray.data();
@@ -65,10 +67,10 @@ QByteArray IConvLaTeX::encode(const QString &input, bool beExtraCautious)
     /// iconv on Linux likes to have it as char *
     char *inputBuffer = inputByteArray.data();
 #endif
-    QByteArray outputByteArray(maxBufferSize, '\0');
+    QByteArray outputByteArray(maxOutputByteArraySize, '\0');
     char *outputBuffer = outputByteArray.data();
     size_t inputBufferBytesLeft = inputByteArray.size();
-    size_t ouputBufferBytesLeft = maxBufferSize;
+    size_t ouputBufferBytesLeft = maxOutputByteArraySize;
     Encoder *laTeXEncoder = EncoderLaTeX::instance();
 
     while (iconv(d->iconvHandle, &inputBuffer, &inputBufferBytesLeft, &outputBuffer, &ouputBufferBytesLeft) == (size_t)(-1) && inputBufferBytesLeft > 0) {
@@ -92,7 +94,7 @@ QByteArray IConvLaTeX::encode(const QString &input, bool beExtraCautious)
     }
 
     /// cut away unused space
-    outputByteArray.resize(maxBufferSize - ouputBufferBytesLeft);
+    outputByteArray.resize(maxOutputByteArraySize - ouputBufferBytesLeft);
 
     return outputByteArray;
 }
