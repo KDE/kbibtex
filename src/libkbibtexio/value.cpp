@@ -342,7 +342,7 @@ bool VerbatimText::containsPattern(const QString &pattern, Qt::CaseSensitivity c
         /// For a match, the user's pattern has to be the start of the color label
         /// and this verbatim text has to contain the color as hex string
         for (QList<ColorLabelPair>::ConstIterator it = colorLabelPairs.constBegin(); !contained && it != colorLabelPairs.constEnd(); ++it)
-            contained = it->label.startsWith(pattern, Qt::CaseInsensitive) && text.compare(it->hexColor, Qt::CaseInsensitive) == 0;
+            contained = text.compare(it->hexColor, Qt::CaseInsensitive) == 0 && it->label.contains(pattern, Qt::CaseInsensitive);
     }
 
     return contained;
