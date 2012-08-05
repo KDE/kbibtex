@@ -66,6 +66,7 @@ void KBibTeXTest::startOnlineSearchTests()
     m_onlineSearchList << new OnlineSearchIEEEXplore(this);
     m_onlineSearchList << new OnlineSearchIngentaConnect(this);
     m_onlineSearchList << new OnlineSearchJStor(this);
+    m_onlineSearchList << new OnlineSearchMathSciNet(this);
     m_onlineSearchList << new OnlineSearchPubMed(this);
     m_onlineSearchList << new OnlineSearchScienceDirect(this);
     m_onlineSearchList << new OnlineSearchSpringerLink(this);
