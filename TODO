@@ -21,14 +21,22 @@ addressed:
 Within the scope of a 0.5.x release, the following features
 and bugs are to be addressed:
 
-- Bug 19362: When adding new entry, CPU usage goes up
-- Bug 19484: KBibTeX uses a lot of CPU time
-- Bug 19422: Poke KDE developers to fix KDE bug 294954
-- Bug 19575: rendering when switching files not smooth
-  (some work done, but not ready/successful yet)
+- Bug 19750: Filter bar looks into every field including
+  localfile. Needs more information.
 - Bug 19586, 19593: Waiting for confirmation that it is fixed
+- Bug 19634: Make configuration setting handling more consistent
+  across GUI (solution would be developed in trunk and backported
+  to 0.5 branch)
+- Bug 19575: rendering when switching files not smooth
+  (solution would be developed in trunk and backported to 0.5 branch)
+- Bug 19362: When adding new entry, CPU usage goes up (solution
+  would be developed in trunk and backported to 0.5 branch)
+- Bug 19484: KBibTeX uses a lot of CPU time (solution would be
+  developed in trunk and backported to 0.5 branch)
+- Bug 19422: Poke KDE developers to fix KDE bug 294954 (solution
+  would be developed in trunk and backported to 0.5 branch)
 
-Within the scope of more future releases, the following
+Within the scope of more future releases (0.6.x), the following
 features and bugs are to be addressed:
 
 - Bug 19969: Please document the SVN ID used in release
@@ -37,30 +45,31 @@ features and bugs are to be addressed:
 - Bug 19863: slow "author list generator"?
   Due to generation of user interface. May need considerable
   redesign in the future.
-
-- Adding support for MODS XML format
-- Bug 17893: Z39.50 support: At least basic support should
-  be integrated.
+- Bug 19657: Add support for isbndb
 - Bug 19644: Start adding translations: Test translation
   infrastructure, provide an initial translation for at least
   one language to test it
+- Bug 19634: Make configuration setting handling more consistent
+  across GUI
+- Bug 19575: rendering when switching files not smooth
+- Bug 19516: Add spell-checking support
+- Bug 19484: KBibTeX uses a lot of CPU time
+- Bug 19362: When adding new entry, CPU usage goes up
+- Bug 19422: Poke KDE developers to fix KDE bug 294954
+- Bug 18662: BibLaTeX support needs to be refined and tested.
+- Bug 18287, 19197: Automatic ID suggestion based on
+  user-defined patterns (already work in progress).
+- Bug 18183: Increase number of search hits after initial
+  search is complete. Should be added before more search
+  engines are added
+- Bug 18142: Library mode, where both bibliography and PDF
+  files are managed by KBibTeX.
 - Bugs 17318, 18038: Zotero support, e.g. accessing the
   bibliographic database or using its search capabilities.
   Jorg Ehrichs is working on some code as part of the
   Conquirere project; this code may be used here.
+- Adding support for MODS XML format
+- Bug 17893: Z39.50 support: At least basic support should
+  be integrated.
 - Bug 18038: There is something called BrowserInterface.
   Look into that
-- Bug 18142: Library mode, where both bibliography and PDF
-  files are managed by KBibTeX.
-- Bug 18183: Increase number of search hits after initial
-  search is complete. Should be added before more search
-  engines are added
-- Bug 18287, 19197: Automatic ID suggestion based on
-  user-defined patterns (already work in progress).
-- Bug 18662: BibLaTeX support needs to be refined and tested.
-- Bug 19516: Add spell-checking support
-- Bug 19634: Make configuration setting handling more consistent
-  across GUI
-- Bug 19657: Add support for isbndb
-
-
