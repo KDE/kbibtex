@@ -41,7 +41,7 @@ public:
     int numSteps, curStep;
 
     WebSearchPubMedPrivate(WebSearchPubMed *parent)
-            : p(parent), pubMedUrlPrefix(QLatin1String("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/")), xslt(KStandardDirs::locate("appdata", "pubmed2bibtex.xsl")) {
+            : p(parent), pubMedUrlPrefix(QLatin1String("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/")), xslt(KStandardDirs::locate("data", "kbibtex/pubmed2bibtex.xsl")) {
         // nothing
     }
 
