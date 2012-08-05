@@ -133,27 +133,45 @@ void WebSearchScienceDirect::doneFetchingStartPage()
     QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
     if (handleErrors(reply)) {
         const QString htmlText = reply->readAll();
-        static_cast<HTTPEquivCookieJar*>(networkAccessManager()->cookieJar())->checkForHttpEqiuv(htmlText, reply->url());
-        KUrl url(d->scienceDirectBaseUrl + "/science");
-        QMap<QString, QString> inputMap = formParameters(htmlText, QLatin1String("<form name=\"qkSrch\""));
-        inputMap["qs_all"] = d->queryFreetext.trimmed();
-        inputMap["qs_author"] = d->queryAuthor.trimmed();
-        inputMap["resultsPerPage"] = QString::number(d->numExpectedResults);
-        inputMap["_ob"] = "QuickSearchURL";
-        inputMap["_method"] = "submitForm";
+        QUrl redirUrl;
+        if (reply->attribute(QNetworkRequest::RedirectionTargetAttribute).isValid())
+            redirUrl = reply->url().resolved(reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl());
 
-        static const QStringList orderOfParameters = QString("_ob|_method|_acct|_userid|_docType|_eidkey|_ArticleListID|_uoikey|count|md5|JAVASCRIPT_ON|format|citation-type|Export|RETURN_URL").split("|");
-        foreach(const QString &key, orderOfParameters) {
-            if (!inputMap.contains(key)) continue;
-            url.addQueryItem(key, inputMap[key]);
+        if (redirUrl.isValid()) {
+            ++d->numSteps;
+            ++d->runningJobs;
+
+            /// redirection to another url
+            QNetworkRequest request(redirUrl);
+            setSuggestedHttpHeaders(request);
+            QNetworkReply *newReply = networkAccessManager()->get(request);
+
+            setNetworkReplyTimeout(newReply);
+            connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingStartPage()));
+        } else {
+            static_cast<HTTPEquivCookieJar*>(networkAccessManager()->cookieJar())->checkForHttpEqiuv(htmlText, reply->url());
+            KUrl url(d->scienceDirectBaseUrl + "science");
+            QMap<QString, QString> inputMap = formParameters(htmlText, QLatin1String("<form name=\"qkSrch\""));
+            inputMap["qs_all"] = d->queryFreetext.trimmed();
+            inputMap["qs_author"] = d->queryAuthor.trimmed();
+            inputMap["resultsPerPage"] = QString::number(d->numExpectedResults);
+            inputMap["_ob"] = "QuickSearchURL";
+            inputMap["_method"] = "submitForm";
+            inputMap["sdSearch"] = "Search";
+
+            static const QStringList orderOfParameters = QString("_ob|_method|_acct|_origin|_zone|md5|_eidkey|qs_issue|qs_pages|qs_title|qs_vol|sdSearch|qs_all|qs_author|resultsPerPage").split("|");
+            foreach(const QString &key, orderOfParameters) {
+                if (!inputMap.contains(key)) continue;
+                url.addQueryItem(key, inputMap[key]);
+            }
+
+            ++d->runningJobs;
+            QNetworkRequest request(url);
+            setSuggestedHttpHeaders(request, reply);
+            QNetworkReply *newReply = networkAccessManager()->get(request);
+            connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingResultPage()));
+            setNetworkReplyTimeout(newReply);
         }
-
-        ++d->runningJobs;
-        QNetworkRequest request(url);
-        setSuggestedHttpHeaders(request, reply);
-        QNetworkReply *newReply = networkAccessManager()->get(request);
-        connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingResultPage()));
-        setNetworkReplyTimeout(newReply);
     } else
         kDebug() << "url was" << reply->url().toString();
 }
@@ -165,8 +183,11 @@ void WebSearchScienceDirect::doneFetchingResultPage()
 
     QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
     if (handleErrors(reply)) {
-        KUrl redirUrl = reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl();
-        if (!redirUrl.isEmpty()) {
+        QUrl redirUrl;
+        if (reply->attribute(QNetworkRequest::RedirectionTargetAttribute).isValid())
+            redirUrl = reply->url().resolved(reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl());
+
+        if (redirUrl.isValid()) {
             ++d->runningJobs;
             QNetworkRequest request(redirUrl);
             setSuggestedHttpHeaders(request, reply);
