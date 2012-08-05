@@ -31,4 +31,5 @@ add_subdirectory( websearch )
 add_subdirectory( gui )
 add_subdirectory( program )
 add_subdirectory( parts )
+add_subdirectory( test )
 
