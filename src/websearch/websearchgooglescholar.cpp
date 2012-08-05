@@ -56,9 +56,16 @@ public:
     WebSearchGoogleScholarPrivate(WebSearchGoogleScholar *parent)
             : p(parent) {
         startPageUrl = QLatin1String("http://scholar.google.com/");
-        configPageUrl = QLatin1String("http://%1/scholar_preferences");
+        configPageUrl = QLatin1String("http://%1/scholar_settings");
         setConfigPageUrl = QLatin1String("http://%1/scholar_setprefs");
         queryPageUrl = QLatin1String("http://%1/scholar");
+    }
+
+    inline QUrl catchRedirection(QNetworkReply *reply) {
+        if (reply->attribute(QNetworkRequest::RedirectionTargetAttribute).isValid())
+            return reply->url().resolved(reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl());
+        else
+            return reply->url();
     }
 };
 
@@ -118,12 +125,9 @@ void WebSearchGoogleScholar::doneFetchingStartPage()
     QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
 
     if (handleErrors(reply)) {
-        QMap<QString, QString> inputMap = formParameters(reply->readAll(), "<form ");
-        inputMap["hl"] = "en";
-
-        KUrl url(d->configPageUrl.arg(reply->url().host()));
-        for (QMap<QString, QString>::ConstIterator it = inputMap.constBegin(); it != inputMap.constEnd(); ++it)
-            url.addQueryItem(it.key(), it.value());
+        QUrl replyUrl = d->catchRedirection(reply);
+        KUrl url(d->configPageUrl.arg(replyUrl.host()));
+        url.addQueryItem("hl", "en");
 
         QNetworkRequest request(url);
         setSuggestedHttpHeaders(request, reply);
@@ -141,13 +145,15 @@ void WebSearchGoogleScholar::doneFetchingConfigPage()
     QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
 
     if (handleErrors(reply)) {
+        QUrl replyUrl = d->catchRedirection(reply);
+
         QMap<QString, QString> inputMap = formParameters(reply->readAll(), "<form ");
         inputMap["hl"] = "en";
         inputMap["scis"] = "yes";
         inputMap["scisf"] = "4";
         inputMap["num"] = QString::number(d->numResults);
 
-        KUrl url(d->setConfigPageUrl.arg(reply->url().host()));
+        KUrl url(d->setConfigPageUrl.arg(replyUrl.host()));
         for (QMap<QString, QString>::ConstIterator it = inputMap.constBegin(); it != inputMap.constEnd(); ++it)
             url.addQueryItem(it.key(), it.value());
 
@@ -167,21 +173,13 @@ void WebSearchGoogleScholar::doneFetchingSetConfigPage()
     QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
 
     if (handleErrors(reply)) {
-        QMap<QString, QString> inputMap = formParameters(reply->readAll(), "<form ");
-        QStringList dummyArguments = QStringList() << "as_epq" << "as_oq" << "as_eq" << "as_occt" << "as_publication" << "as_sdtf";
-        foreach(QString dummyArgument, dummyArguments) {
-            inputMap[dummyArgument] = "";
-        }
-        inputMap["hl"] = "en";
-        inputMap["num"] = QString::number(d->numResults);
-
         KUrl url(QString(d->queryPageUrl).arg(reply->url().host()));
-        for (QMap<QString, QString>::ConstIterator it = inputMap.constBegin(); it != inputMap.constEnd(); ++it)
-            url.addQueryItem(it.key(), it.value());
         url.addEncodedQueryItem(QString("as_q").toAscii(), d->queryFreetext.toAscii());
         url.addEncodedQueryItem(QString("as_sauthors").toAscii(), d->queryAuthor.toAscii());
         url.addEncodedQueryItem(QString("as_ylo").toAscii(), d->queryYear.toAscii());
         url.addEncodedQueryItem(QString("as_yhi").toAscii(), d->queryYear.toAscii());
+        url.addQueryItem("num", QString::number(d->numResults));
+        url.addQueryItem("hl", "en");
         url.addQueryItem("btnG", "Search Scholar");
 
         QNetworkRequest request(url);
