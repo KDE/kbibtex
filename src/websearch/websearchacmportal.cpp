@@ -172,6 +172,7 @@ void WebSearchAcmPortal::doneFetchingStartPage()
 
             QNetworkRequest request(url);
             setSuggestedHttpHeaders(request, reply);
+            request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
             QNetworkReply *newReply = networkAccessManager()->post(request, body.toUtf8());
             setNetworkReplyTimeout(newReply);
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingSearchPage()));

@@ -224,6 +224,7 @@ void WebSearchJStor::doneFetchingResultPage()
             body.append("selectUnselect=");
 
             QNetworkRequest request(d->jstorBaseUrl + "action/downloadCitation?format=bibtex&include=abs");
+            request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
             QNetworkReply *newReply = networkAccessManager()->post(request, body.join("&").toUtf8());
             setNetworkReplyTimeout(newReply);
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingSummaryPage()));
