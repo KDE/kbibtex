@@ -22,12 +22,15 @@
 #include <QNetworkReply>
 #include <QTimer>
 #include <QListWidgetItem>
+#include <QtDBus/QDBusConnection>
+#include <QtDBus/QDBusConnectionInterface>
 
 #include <KStandardDirs>
 #include <kio/netaccess.h>
 #include <KDebug>
 #include <KLocale>
 #include <KMessageBox>
+#include <KPassivePopup>
 
 #include <encoderlatex.h>
 #include <internalnetworkaccessmanager.h>
@@ -42,6 +45,8 @@ const QString OnlineSearchAbstract::queryKeyYear = QLatin1String("year");
 const int OnlineSearchAbstract::resultNoError = 0;
 const int OnlineSearchAbstract::resultCancelled = 0; /// may get redefined in the future!
 const int OnlineSearchAbstract::resultUnspecifiedError = 1;
+const int OnlineSearchAbstract::resultAuthorizationRequired = 2;
+const int OnlineSearchAbstract::resultNetworkError = 3;
 
 const char *OnlineSearchAbstract::httpUnsafeChars = "%:/=+$?&\0";
 
@@ -135,8 +140,15 @@ bool OnlineSearchAbstract::handleErrors(QNetworkReply *reply, QUrl &newUrl)
         m_hasBeenCanceled = true;
         const QString errorString = reply->errorString();
         kWarning() << "Search using" << label() << "failed (error code" << reply->error() << "(" << errorString << "), HTTP code" << reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() << ":" << reply->attribute(QNetworkRequest::HttpReasonPhraseAttribute).toByteArray() << ")";
-        KMessageBox::error(m_parent, errorString.isEmpty() ? i18n("Searching \"%1\" failed for unknown reason.", label()) : i18n("Searching \"%1\" failed with error message:\n\n%2", label(), errorString));
-        emit stoppedSearch(resultUnspecifiedError);
+        sendVisualNotification(errorString.isEmpty() ? i18n("Searching \"%1\" failed for unknown reason.", label()) : i18n("Searching \"%1\" failed with error message:\n\n%2", label(), errorString), label(), "kbibtex", 7 * 1000);
+
+        int resultCode = resultUnspecifiedError;
+        if (reply->error() == QNetworkReply::AuthenticationRequiredError || reply->error() == QNetworkReply::ProxyAuthenticationRequiredError)
+            resultCode = resultAuthorizationRequired;
+        else if (reply->error() == QNetworkReply::HostNotFoundError || reply->error() == QNetworkReply::TimeoutError)
+            resultCode = resultNetworkError;
+        emit stoppedSearch(resultCode);
+
         return false;
     }
 
@@ -148,11 +160,53 @@ bool OnlineSearchAbstract::handleErrors(QNetworkReply *reply, QUrl &newUrl)
      */
     if (reply->attribute(QNetworkRequest::RedirectionTargetAttribute).isValid()) {
         newUrl = reply->url().resolved(reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl());
-        kDebug() << "Redirection from" << reply->url().toString() << "to"        << newUrl.toString();
+        kDebug() << "Redirection from" << reply->url().toString() << "to" << newUrl.toString();
     } else if (reply->size() == 0)
         kWarning() << "Search using" << label() << "on url" << reply->url().toString() << "returned no data";
 
     return true;
+}
+
+/**
+ * Display a passive notification popup using the D-Bus interface.
+ * Copied from KDialog with modifications.
+ */
+void OnlineSearchAbstract::sendVisualNotification(const QString &text, const QString &title, const QString &icon, int timeout)
+{
+    static const QString dbusServiceName = QLatin1String("org.freedesktop.Notifications");
+    static const QString dbusInterfaceName = QLatin1String("org.freedesktop.Notifications");
+    static const QString dbusPath = QLatin1String("/org/freedesktop/Notifications");
+
+    // check if service already exists on plugin instantiation
+    QDBusConnectionInterface *interface = QDBusConnection::sessionBus().interface();
+    if (interface == NULL || !interface->isServiceRegistered(dbusServiceName)) {
+        //kDebug() << dbusServiceName << "D-Bus service not registered";
+        return;
+    }
+
+    if (timeout <= 0)
+        timeout = 10 * 1000;
+
+    QDBusMessage m = QDBusMessage::createMethodCall(dbusServiceName, dbusPath, dbusInterfaceName, "Notify");
+    QList<QVariant> args = QList<QVariant>() << QLatin1String("kdialog") << 0U << icon << title << text << QStringList() << QVariantMap() << timeout;
+    m.setArguments(args);
+
+    QDBusMessage replyMsg = QDBusConnection::sessionBus().call(m);
+    if (replyMsg.type() == QDBusMessage::ReplyMessage) {
+        if (!replyMsg.arguments().isEmpty()) {
+            return;
+        }
+        // Not displaying any error messages as this is optional for kdialog
+        // and KPassivePopup is a perfectly valid fallback.
+        //else {
+        //  kDebug() << "Error: received reply with no arguments.";
+        //}
+    } else if (replyMsg.type() == QDBusMessage::ErrorMessage) {
+        //kDebug() << "Error: failed to send D-Bus message";
+        //kDebug() << replyMsg;
+    } else {
+        //kDebug() << "Unexpected reply type";
+    }
 }
 
 QString OnlineSearchAbstract::encodeURL(QString rawText)

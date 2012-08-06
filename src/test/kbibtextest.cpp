@@ -18,9 +18,11 @@
 #include <onlinesearchspringerlink.h>
 #include "kbibtextest.h"
 
-const QString iconOK = QLatin1String("dialog-ok-apply");
-const QString iconERROR = QLatin1String("dialog-cancel");
-const QString iconINFO = QLatin1String("dialog-information");
+KIcon iconOK(QLatin1String("dialog-ok-apply"));
+KIcon iconERROR(QLatin1String("dialog-cancel"));
+KIcon iconINFO(QLatin1String("dialog-information"));
+KIcon iconAUTH(QLatin1String("dialog-password"), NULL, QStringList() << QLatin1String("dialog-cancel"));
+KIcon iconNETWORK(QLatin1String("network-wired"), NULL, QStringList() << QLatin1String("dialog-cancel"));
 
 KBibTeXTest::KBibTeXTest(QWidget *parent)
         : KDialog(parent), m_running(false)
@@ -39,9 +41,9 @@ KBibTeXTest::KBibTeXTest(QWidget *parent)
     QTimer::singleShot(500, this, SLOT(startTests()));
 }
 
-void KBibTeXTest::addMessage(const QString &message, const QString &icon)
+void KBibTeXTest::addMessage(const QString &message, const KIcon &icon)
 {
-    QListWidgetItem *item = icon.isEmpty() ? new QListWidgetItem(message) : new QListWidgetItem(KIcon(icon), message);
+    QListWidgetItem *item = icon.isNull() ? new QListWidgetItem(message) : new QListWidgetItem(icon, message);
     m_messageList->addItem(item);
     m_messageList->scrollToBottom();
 }
@@ -78,6 +80,10 @@ void KBibTeXTest::onlineSearchStoppedSearch(int searchResult)
 {
     if (searchResult == OnlineSearchAbstract::resultNoError) {
         addMessage(QString(QLatin1String("No error searching \"%1\", found %2 entries")).arg(m_currentOnlineSearch->label()).arg(m_currentOnlineSearchNumFoundEntries), iconOK);
+    } else if (searchResult == OnlineSearchAbstract::resultAuthorizationRequired) {
+        addMessage(QString(QLatin1String("Authorization required for \"%1\"")).arg(m_currentOnlineSearch->label()), iconAUTH);
+    } else if (searchResult == OnlineSearchAbstract::resultNetworkError) {
+        addMessage(QString(QLatin1String("Network error for \"%1\"")).arg(m_currentOnlineSearch->label()), iconNETWORK);
     } else {
         addMessage(QString(QLatin1String("Error searching \"%1\"")).arg(m_currentOnlineSearch->label()), iconERROR);
     }

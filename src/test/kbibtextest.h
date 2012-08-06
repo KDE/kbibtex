@@ -28,7 +28,7 @@ private:
     OnlineSearchAbstract *m_currentOnlineSearch;
     int m_currentOnlineSearchNumFoundEntries;
 
-    void addMessage(const QString &message, const QString &icon = QString::null);
+    void addMessage(const QString &message, const KIcon &icon = KIcon());
     void startOnlineSearchTests();
     void processNextSearch();
 };

@@ -216,7 +216,7 @@ void OnlineSearchIEEEXplore::doneFetchingAbstract()
             /// Login is not supported.
             if (plainText.contains(QLatin1String("mwMemberSignIn.jsp')\" title=\"Sign In\" class=\"signIn\">"))) {
                 kDebug() << "Authentication (e.g. university IP address) required to use IEEExplore";
-                emit stoppedSearch(resultUnspecifiedError);
+                emit stoppedSearch(resultAuthorizationRequired);
             } else {
                 QString arnumber = reply->url().queryItemValue(QLatin1String("arnumber"));
                 if (!arnumber.isEmpty()) {

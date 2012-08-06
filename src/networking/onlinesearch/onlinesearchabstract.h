@@ -84,6 +84,8 @@ public:
     static const int resultCancelled;
     static const int resultNoError;
     static const int resultUnspecifiedError;
+    static const int resultAuthorizationRequired;
+    static const int resultNetworkError;
 
     virtual void startSearch() = 0;
     virtual void startSearch(const QMap<QString, QString> &query, int numResults) = 0;
@@ -152,6 +154,8 @@ private:
     QMap<QTimer *, QNetworkReply *> m_mapTimerToReply;
     QMap<QNetworkReply *, QListWidgetItem *> m_iconReplyToListWidgetItem;
     int m_delayedStoppedSearchReturnCode;
+
+    void sendVisualNotification(const QString &text, const QString &title, const QString &icon, int timeout);
 
 private slots:
     void networkReplyTimeout();
