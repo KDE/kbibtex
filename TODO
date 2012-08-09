@@ -23,7 +23,6 @@ and bugs are to be addressed:
 
 - Bug 19750: Filter bar looks into every field including
   localfile. Needs more information.
-- Bug 19586, 19593: Waiting for confirmation that it is fixed
 - Bug 19634: Make configuration setting handling more consistent
   across GUI (solution would be developed in trunk and backported
   to 0.5 branch)
@@ -73,3 +72,4 @@ features and bugs are to be addressed:
   be integrated.
 - Bug 18038: There is something called BrowserInterface.
   Look into that
+- Bug 20042: Create your own custom fields like in KDE3 version

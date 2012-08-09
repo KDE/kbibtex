@@ -1,5 +1,10 @@
 #!/bin/sh
 
+# Usage examples
+#  ./create-release.sh tags/0.4 0.4 /tmp/
+#  ./create-release.sh trunk head .
+#  ./create-release.sh branches/0.4 0.4.9999 ~/public_html/
+
 svnsource=$1
 releaseversion=$2
 outputdir=$3
@@ -27,12 +32,15 @@ function getnumericreleaseversion() {
 		if [ $namepart = "alpha1" ] ; then numericreleaseversion="${numericreleaseversion}.80"
 		elif [ $namepart = "alpha2" ] ; then numericreleaseversion="${numericreleaseversion}.81"
 		elif [ $namepart = "alpha3" ] ; then numericreleaseversion="${numericreleaseversion}.82"
+		elif [ $namepart = "alpha4" ] ; then numericreleaseversion="${numericreleaseversion}.83"
 		elif [ $namepart = "beta1" ] ; then numericreleaseversion="${numericreleaseversion}.90"
 		elif [ $namepart = "beta2" ] ; then numericreleaseversion="${numericreleaseversion}.91"
 		elif [ $namepart = "beta3" ] ; then numericreleaseversion="${numericreleaseversion}.92"
+		elif [ $namepart = "beta4" ] ; then numericreleaseversion="${numericreleaseversion}.93"
 		elif [ $namepart = "rc1" ] ; then numericreleaseversion="${numericreleaseversion}.95"
 		elif [ $namepart = "rc2" ] ; then numericreleaseversion="${numericreleaseversion}.96"
 		elif [ $namepart = "rc3" ] ; then numericreleaseversion="${numericreleaseversion}.97"
+		elif [ $namepart = "rc4" ] ; then numericreleaseversion="${numericreleaseversion}.98"
 		else numericreleaseversion="${numericreleaseversion}.50" ; fi
 	fi
 
@@ -76,6 +84,10 @@ pushd "${tempdir}" >/dev/null || exit 2
 
 echo "Fetching sources from SVN: svn://svn.gna.org/svn/kbibtex/${svnsource}"
 svn co -q svn://svn.gna.org/svn/kbibtex/${svnsource} kbibtex-${releaseversion} || exit 4
+
+# Dump SVN information into a file
+svn info kbibtex-${releaseversion} | grep -v -E '^Revision: ' >kbibtex-${releaseversion}/svn-info.txt
+svn info kbibtex-${releaseversion} | awk '/^Last Changed Rev:/ {print $NF}' >kbibtex-${releaseversion}/svn-revision.txt
 
 if [ ${releaseversion} != "svn" ] ; then
 	echo "Changing version number in source to ${releaseversion}"
