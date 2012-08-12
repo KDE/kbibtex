@@ -20,6 +20,8 @@
 
 #include <QTextStream>
 #include <QNetworkReply>
+#include <QDateTime>
+#include <QTimer>
 
 #include <KDebug>
 #include <KLocale>
@@ -29,6 +31,10 @@
 #include "websearchpubmed.h"
 #include "xsltransform.h"
 #include "fileimporterbibtex.h"
+
+const int WebSearchPubMed::maxNumResults = 25;
+const qint64 WebSearchPubMed::queryChokeTimeout = 10 * 1000; /// 10 seconds
+qint64 WebSearchPubMed::lastQueryEpoch = 0;
 
 class WebSearchPubMed::WebSearchPubMedPrivate
 {
@@ -123,6 +129,16 @@ void WebSearchPubMed::startSearch(const QMap<QString, QString> &query, int numRe
     d->curStep = 0;
     d->numSteps = 2;
     m_hasBeenCanceled = false;
+
+    /// enforcing limit on number of results
+    numResults = qMin(maxNumResults, numResults);
+    /// enforcing choke on number of searchs per time
+    if (QDateTime::currentMSecsSinceEpoch() - lastQueryEpoch < queryChokeTimeout) {
+        kDebug() << "Too many search queries per time; choke enforces pause of" << (queryChokeTimeout / 1000) << "seconds between queries";
+        emit stoppedSearch(resultNoError);
+        return;
+    }
+
     QNetworkRequest request(d->buildQueryUrl(query, numResults));
     setSuggestedHttpHeaders(request);
     QNetworkReply *reply = networkAccessManager()->get(request);
@@ -160,6 +176,7 @@ void WebSearchPubMed::cancel()
 void WebSearchPubMed::eSearchDone()
 {
     emit progress(++d->curStep, d->numSteps);
+    lastQueryEpoch = QDateTime::currentMSecsSinceEpoch();
 
     QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
 
@@ -204,6 +221,7 @@ void WebSearchPubMed::eSearchDone()
 void WebSearchPubMed::eFetchDone()
 {
     emit progress(++d->curStep, d->numSteps);
+    lastQueryEpoch = QDateTime::currentMSecsSinceEpoch();
 
     QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
 

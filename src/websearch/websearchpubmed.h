@@ -40,6 +40,9 @@ public:
     virtual WebSearchQueryFormAbstract* customWidget(QWidget *parent);
     virtual KUrl homepage() const;
 
+    static const int maxNumResults;
+    static const qint64 queryChokeTimeout;
+
 public slots:
     void cancel();
 
@@ -53,6 +56,8 @@ private slots:
 private:
     class WebSearchPubMedPrivate;
     WebSearchPubMedPrivate *d;
+
+    static qint64 lastQueryEpoch;
 };
 
 #endif // KBIBTEX_WEBSEARCH_PUBMED_H
