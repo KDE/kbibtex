@@ -96,6 +96,13 @@ if [ ${releaseversion} != "svn" ] ; then
 	sed -i -e 's/LIB_VERSION "[^"]*"/LIB_VERSION "'${numericreleaseversion}'"/' kbibtex-${releaseversion}/CMakeLists.txt
 fi
 
+# Remove test code
+if [[ -d kbibtex-${releaseversion}/src/test ]] ; then
+	# multiline search-and-replace for test directory's "add_subdirectory" statement
+	sed -i -e '1h;1!H;${;g;s/add_subdirectory\s*(\s*test\s*)//;p;}' kbibtex-${releaseversion}/src/CMakeLists.txt
+	rm -rf kbibtex-${releaseversion}/src/test
+fi
+
 echo "Compressing source code into archive"
 mkdir -p "${outputdir}"
 tar -jcf "${outputdir}/${archivename}" --exclude .svn --exclude testset kbibtex-${releaseversion} || exit 6
