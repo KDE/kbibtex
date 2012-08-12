@@ -154,7 +154,7 @@ void WebSearchJStor::startSearch(const QMap<QString, QString> &query, int numRes
 void WebSearchJStor::startSearch()
 {
     m_hasBeenCanceled = false;
-    emit stoppedSearch(resultNoError);
+    delayedStoppedSearch(resultNoError);
 }
 
 QString WebSearchJStor::label() const

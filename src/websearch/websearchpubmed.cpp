@@ -121,7 +121,7 @@ WebSearchPubMed::~WebSearchPubMed()
 void WebSearchPubMed::startSearch()
 {
     m_hasBeenCanceled = false;
-    emit stoppedSearch(resultNoError);
+    delayedStoppedSearch(resultNoError);
 }
 
 void WebSearchPubMed::startSearch(const QMap<QString, QString> &query, int numResults)
@@ -135,7 +135,7 @@ void WebSearchPubMed::startSearch(const QMap<QString, QString> &query, int numRe
     /// enforcing choke on number of searchs per time
     if (QDateTime::currentMSecsSinceEpoch() - lastQueryEpoch < queryChokeTimeout) {
         kDebug() << "Too many search queries per time; choke enforces pause of" << (queryChokeTimeout / 1000) << "seconds between queries";
-        emit stoppedSearch(resultNoError);
+        delayedStoppedSearch(resultNoError);
         return;
     }
 

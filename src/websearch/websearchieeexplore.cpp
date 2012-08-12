@@ -98,7 +98,7 @@ WebSearchIEEEXplore::~WebSearchIEEEXplore()
 void WebSearchIEEEXplore::startSearch()
 {
     m_hasBeenCanceled = false;
-    emit stoppedSearch(resultNoError);
+    delayedStoppedSearch(resultNoError);
 }
 
 void WebSearchIEEEXplore::startSearch(const QMap<QString, QString> &query, int numResults)

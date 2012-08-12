@@ -83,7 +83,7 @@ WebSearchGoogleScholar::~WebSearchGoogleScholar()
 void WebSearchGoogleScholar::startSearch()
 {
     m_hasBeenCanceled = false;
-    emit stoppedSearch(resultNoError);
+    delayedStoppedSearch(resultNoError);
 }
 
 void WebSearchGoogleScholar::startSearch(const QMap<QString, QString> &query, int numResults)

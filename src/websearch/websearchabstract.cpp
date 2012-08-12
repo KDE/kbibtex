@@ -338,6 +338,7 @@ void WebSearchAbstract::networkReplyTimeout()
         m_mapTimerToReply.remove(timer);
     }
 }
+
 void WebSearchAbstract::networkReplyFinished()
 {
     QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
@@ -349,3 +350,15 @@ void WebSearchAbstract::networkReplyFinished()
 }
 
 QNetworkAccessManager *WebSearchAbstract::m_networkAccessManager = NULL;
+
+void WebSearchAbstract::delayedStoppedSearch(int returnCode)
+{
+    m_delayedStoppedSearchReturnCode = returnCode;
+    QTimer::singleShot(500, this, SLOT(delayedStoppedSearchTimer()));
+}
+
+void WebSearchAbstract::delayedStoppedSearchTimer()
+{
+    emit progress(1, 1);
+    emit stoppedSearch(m_delayedStoppedSearchReturnCode);
+}

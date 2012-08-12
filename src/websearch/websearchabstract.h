@@ -149,6 +149,13 @@ protected:
 
     void setSuggestedHttpHeaders(QNetworkRequest &request, QNetworkReply *oldReply = NULL);
 
+    /**
+     * Delay sending of stop signal by a few milliseconds.
+     * Necessary if search stops (is cancelled) already in one
+     * of the startSearch functions.
+     */
+    void delayedStoppedSearch(int returnCode);
+
 private:
     QString m_name;
     static const char *httpUnsafeChars;
@@ -156,10 +163,12 @@ private:
     QMap<QTimer*, QNetworkReply*> m_mapTimerToReply;
     static const QStringList m_userAgentList;
     QString m_userAgent;
+    int m_delayedStoppedSearchReturnCode;
 
 private slots:
     void networkReplyTimeout();
     void networkReplyFinished();
+    void delayedStoppedSearchTimer();
 
 signals:
     void foundEntry(Entry*);

@@ -71,7 +71,7 @@ void WebSearchScienceDirect::startSearch()
 {
     d->runningJobs = 0;
     m_hasBeenCanceled = false;
-    emit stoppedSearch(resultNoError);
+    delayedStoppedSearch(resultNoError);
 }
 
 void WebSearchScienceDirect::startSearch(const QMap<QString, QString> &query, int numResults)
