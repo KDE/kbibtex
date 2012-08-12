@@ -1,5 +1,29 @@
 ChangeLog
 
+Diff 0.4 to 0.4.1
+
+- SpringerLink search: GUI changes, using api.springer.com for search
+- PubMed: Limiting search requests per time
+- ACM Portal: Retrieving "month", fixing HTTP header
+- Google Scholar: Updates to compensate for changes in Google's web layout
+- Science Direct: Updates to compensate for changes in Science Direct's web layout
+- arXiv: Trying to extract bibliographic information from journal strings
+- BibSonomy: Specifying number of hits to find
+- Minor changes in IEEExplore search; non-functional due to Qt bug?
+- Web search uses KDE's proxy settings
+- Using KDE subsystem to open external files (e.g. PDF files)
+- Adding preview for images (in addition to PDF or HTML files); handling references to arXiv
+- Squeezing long file names in user interface
+- Handling quit actions more gracefully
+- Improving interface to external programs such as pdflatex
+- More robust XSL transformations
+- BibTeX import: guessing encoding information left by JabRef, more informative debug output, improved handling of multiple fields with same name
+- Fixing sorting in value list
+- Fixes in setting color tag to entries
+- Fixes in name formatting
+- Keeping user interface read-only for read-only use cases
+- Numerous bug fixes, closing memory leaks, speed improvements
+
 Diff 0.3 to 0.4
 
 - Support for Windows (compiles out of the box)
