@@ -772,7 +772,7 @@ Person *FileImporterBibTeX::splitName(const QString& text)
           * So, check how many single capital letters are at the end of the given segment list */
         int singleCapitalLettersCounter = 0;
         int p = segments.count() - 1;
-        while (p >= 0 && segments[p].length() == 1 && segments[p][0].isUpper()) {
+        while (p > 0 && segments[p].length() == 1 && segments[p][0].isUpper()) {
             --p;
             ++singleCapitalLettersCounter;
         }
