@@ -71,7 +71,7 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
     m_statistics.countCommentPercent = 0;
     m_statistics.countCommentCommand = 0;
 
-    m_textStreamLastPos = 0;
+    m_nextDuePos = 0;
     m_textStream = new QTextStream(iodevice);
     m_textStream->setCodec("us-ascii"); ///< unless we learn something else, assume 7-bit US-ASCII
     result->setProperty(File::Encoding, QLatin1String("latex"));
@@ -92,7 +92,7 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
     /** Remove HTML code from the input source */
     rawText = rawText.replace(htmlRegExp, "");
 
-    m_textStreamLastPos = 0;
+    m_nextDuePos = 0;
     m_textStream = new QTextStream(&rawText, QIODevice::ReadOnly);
     m_textStream->setCodec("UTF-8");
     m_lineNo = 1;
@@ -388,7 +388,7 @@ FileImporterBibTeX::Token FileImporterBibTeX::nextToken()
 {
     if (m_textStream->atEnd())
         return tEOF;
-    if (m_textStream->pos() == m_textStreamLastPos)
+    if (m_textStream->pos() == m_nextDuePos)
         *m_textStream >> m_currentChar;
 
     Token curToken = tUnknown;
@@ -429,6 +429,8 @@ FileImporterBibTeX::Token FileImporterBibTeX::nextToken()
             curToken = tEOF;
     }
 
+    m_nextDuePos = m_textStream->pos();
+
     if (curToken != tUnknown && curToken != tEOF) {
         if (m_currentChar == '\n') {
             ++m_lineNo;
@@ -439,7 +441,6 @@ FileImporterBibTeX::Token FileImporterBibTeX::nextToken()
         *m_textStream >> m_currentChar;
     }
 
-    m_textStreamLastPos = m_textStream->pos();
     return curToken;
 }
 

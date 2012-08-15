@@ -119,7 +119,7 @@ private:
     unsigned int m_lineNo;
     QString m_prevLine, m_currentLine;
     QTextStream *m_textStream;
-    int m_textStreamLastPos;
+    int m_nextDuePos;
     QChar m_currentChar;
     bool m_ignoreComments;
     KBibTeX::Casing m_keywordCasing;
