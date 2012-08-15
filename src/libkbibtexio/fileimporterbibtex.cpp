@@ -395,6 +395,8 @@ FileImporterBibTeX::Token FileImporterBibTeX::nextToken()
             curToken = tEOF;
     }
 
+    m_textStreamLastPos = m_textStream->pos();
+
     if (curToken != tUnknown && curToken != tEOF) {
         if (m_currentChar == '\n') {
             ++m_lineNo;
@@ -405,7 +407,6 @@ FileImporterBibTeX::Token FileImporterBibTeX::nextToken()
         *m_textStream >> m_currentChar;
     }
 
-    m_textStreamLastPos = m_textStream->pos();
     return curToken;
 }
 
