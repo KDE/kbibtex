@@ -135,7 +135,7 @@ QString OnlineSearchAcmPortal::label() const
 
 QString OnlineSearchAcmPortal::favIconUrl() const
 {
-    return QLatin1String("http://portal.acm.org/favicon.ico");
+    return QLatin1String("http://dl.acm.org/favicon.ico");
 }
 
 OnlineSearchQueryFormAbstract *OnlineSearchAcmPortal::customWidget(QWidget *)
@@ -145,7 +145,7 @@ OnlineSearchQueryFormAbstract *OnlineSearchAcmPortal::customWidget(QWidget *)
 
 KUrl OnlineSearchAcmPortal::homepage() const
 {
-    return KUrl("http://portal.acm.org/");
+    return KUrl("http://dl.acm.org/");
 }
 
 void OnlineSearchAcmPortal::cancel()
