@@ -6,6 +6,10 @@ include(
     AddFileDependencies
 )
 
+add_definitions(
+    -DTESTSET_DIRECTORY='\"${CMAKE_SOURCE_DIR}/testset/\"'
+)
+
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/docklets
