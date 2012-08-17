@@ -90,6 +90,8 @@ protected:
 */
 class PersonListEdit : public FieldListEdit
 {
+    Q_OBJECT
+
 public:
     PersonListEdit(KBibTeX::TypeFlag preferredTypeFlag, KBibTeX::TypeFlags typeFlags, QWidget *parent = NULL);
 
@@ -98,8 +100,12 @@ public:
 
     virtual void setReadOnly(bool isReadOnly);
 
+private slots:
+    void slotAddNamesFromClipboard();
+
 private:
     QCheckBox *m_checkBoxOthers;
+    KPushButton *m_buttonAddNamesFromClipboard;
 };
 
 

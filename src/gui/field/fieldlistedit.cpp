@@ -389,6 +389,12 @@ PersonListEdit::PersonListEdit(KBibTeX::TypeFlag preferredTypeFlag, KBibTeX::Typ
     m_checkBoxOthers = new QCheckBox(i18n("... and others (et al.)"), this);
     QBoxLayout *boxLayout = static_cast<QBoxLayout *>(layout());
     boxLayout->addWidget(m_checkBoxOthers);
+
+    m_buttonAddNamesFromClipboard = new KPushButton(KIcon("edit-paste"), i18n("Add Names from Clipboard"), this);
+    m_buttonAddNamesFromClipboard->setToolTip(i18n("Add a list of names from clipboard"));
+    addButton(m_buttonAddNamesFromClipboard);
+    connect(m_buttonAddNamesFromClipboard, SIGNAL(clicked()), this, SLOT(slotAddNamesFromClipboard()));
+    connect(m_buttonAddNamesFromClipboard, SIGNAL(clicked()), this, SIGNAL(modified()));
 }
 
 bool PersonListEdit::reset(const Value &value)
@@ -421,6 +427,22 @@ void PersonListEdit::setReadOnly(bool isReadOnly)
 {
     FieldListEdit::setReadOnly(isReadOnly);
     m_checkBoxOthers->setEnabled(!isReadOnly);
+}
+
+void PersonListEdit::slotAddNamesFromClipboard()
+{
+    QClipboard *clipboard = QApplication::clipboard();
+    QString text = clipboard->text(QClipboard::Clipboard);
+    if (text.isEmpty())
+        text = clipboard->text(QClipboard::Selection);
+    if (!text.isEmpty()) {
+        QList<QSharedPointer<Person> > personList = FileImporterBibTeX::splitNames(text);
+        foreach(QSharedPointer<Person> person, personList) {
+            Value *value = new Value();
+            value->append(person);
+            lineAdd(value);
+        }
+    }
 }
 
 
