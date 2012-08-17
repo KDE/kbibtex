@@ -72,11 +72,21 @@ public:
 
     /**
      * Split a list of keyword separated by ";" or "," into single Keyword objects.
-     * @param name The persons name
-     * @return A Person object containing the name
-     * @see Person
+     * @param text Text containing the keyword list
+     * @return A list of Keyword object containing the keywords
+      * @see Keyword
      */
     static QList<Keyword *> splitKeywords(const QString &text);
+
+    /**
+     * Split a list of names into single Person objects.
+     * Examples: "Smith, John, Fulkerson, Ford, and Johnson, Tim"
+     * or "John Smith and Tim Johnson"
+     * @param text Text containing the persons' names
+     * @return A list of Person object containing the names
+     * @see Person
+     */
+    static QList<QSharedPointer<Person> > splitNames(const QString &text);
 
     /**
      * Split a person's name into its parts and construct a Person object from them.

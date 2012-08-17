@@ -765,6 +765,59 @@ QList<Keyword *> FileImporterBibTeX::splitKeywords(const QString &text)
     return result;
 }
 
+QList<QSharedPointer<Person> > FileImporterBibTeX::splitNames(const QString &text)
+{
+    /// Case: Smith, John and Johnson, Tim
+    /// Case: Smith, John and Fulkerson, Ford and Johnson, Tim
+    /// Case: Smith, John, Fulkerson, Ford, and Johnson, Tim
+    /// Case: John Smith and Tim Johnson
+    /// Case: John Smith and Ford Fulkerson and Tim Johnson
+    /// Case: Smith, John, Johnson, Tim
+    /// Case: Smith, John, Fulkerson, Ford, Johnson, Tim
+    /// Case: John Smith, Tim Johnson
+    /// Case: John Smith, Tim Johnson, Ford Fulkerson
+
+    QList<QSharedPointer<Person> > result;
+    QString internalText = text;
+
+    /// Remove invalid characters such as daggers for footnotes
+    static const QList<QChar> invalidChars = QList<QChar>() << QChar(0x2020) << QChar(0x2021);
+    for (QList<QChar>::ConstIterator it = invalidChars.constBegin(); it != invalidChars.constEnd(); ++it)
+        internalText = internalText.replace(*it, QString::null);
+    /// Remove numbers to footnotes
+    static const QRegExp numberFootnoteRegExp(QLatin1String("(\\w)\\d+\\b"));
+    internalText = internalText.replace(numberFootnoteRegExp, QLatin1String("\\1"));
+
+    /// Split input string into tokens which are either name components (first or last name)
+    /// or full names (composed of first and last name), depending on the input string's structure
+    static const QRegExp split(QLatin1String("\\s*([,]|[,]?\\band\\b|\\n|\\s{4,})\\s*"));
+    QStringList authorTokenList = internalText.split(split, QString::SkipEmptyParts);
+
+    bool containsSpace = false;
+    for (QStringList::ConstIterator it = authorTokenList.constBegin(); !containsSpace && it != authorTokenList.constEnd(); ++it)
+        containsSpace = (*it).contains(QChar(' '));
+
+    if (containsSpace) {
+        /// Tokens look like "John Smith"
+        for (QStringList::ConstIterator it = authorTokenList.constBegin(); it != authorTokenList.constEnd(); ++it)
+            result.append(personFromString(*it));
+    } else {
+        /// Tokens look like "Smith" or "John"
+        /// Assumption: two consecutive tokens form a name
+        for (QStringList::ConstIterator it = authorTokenList.constBegin(); it != authorTokenList.constEnd(); ++it) {
+            QString lastname = *it;
+            ++it;
+            if (it != authorTokenList.constEnd()) {
+                lastname += QLatin1String(", ") + (*it);
+                result.append(personFromString(lastname));
+            } else
+                break;
+        }
+    }
+
+    return result;
+}
+
 void FileImporterBibTeX::parsePersonList(const QString &text, Value &value)
 {
     parsePersonList(text, value, NULL);
