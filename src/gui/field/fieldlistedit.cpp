@@ -703,10 +703,10 @@ void KeywordListEdit::slotAddKeywordsFromClipboard()
     if (text.isEmpty())
         text = clipboard->text(QClipboard::Selection);
     if (!text.isEmpty()) {
-        QList<Keyword *> keywordList = FileImporterBibTeX::splitKeywords(text);
-        foreach(Keyword *keyword, keywordList) {
+        QList<QSharedPointer<Keyword> > keywords = FileImporterBibTeX::splitKeywords(text);
+        for (QList<QSharedPointer<Keyword> >::ConstIterator it = keywords.constBegin(); it != keywords.constEnd(); ++it) {
             Value *value = new Value();
-            value->append(QSharedPointer<Keyword>(keyword));
+            value->append(*it);
             lineAdd(value);
         }
     }

@@ -76,7 +76,7 @@ public:
      * @return A list of Keyword object containing the keywords
       * @see Keyword
      */
-    static QList<Keyword *> splitKeywords(const QString &text);
+    static QList<QSharedPointer<Keyword> > splitKeywords(const QString &text);
 
     /**
      * Split a list of names into single Person objects.

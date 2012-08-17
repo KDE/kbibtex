@@ -292,9 +292,9 @@ public:
                             else {
                                 QSharedPointer<Keyword> kw = old.first().dynamicCast<Keyword>();
                                 if (!kw.isNull()) {
-                                    QList<Keyword *> keywordList = FileImporterBibTeX::splitKeywords(text);
-                                    for (QList<Keyword *>::ConstIterator it = keywordList.constBegin(); it != keywordList.constEnd(); ++it)
-                                        v.append(QSharedPointer<Keyword>(*it));
+                                    QList<QSharedPointer<Keyword> > keywordList = FileImporterBibTeX::splitKeywords(text);
+                                    for (QList<QSharedPointer<Keyword> >::ConstIterator it = keywordList.constBegin(); it != keywordList.constEnd(); ++it)
+                                        v.append(*it);
                                 } else {
                                     kDebug() << "Not know how to set this text:" << text;
                                 }

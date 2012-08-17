@@ -712,9 +712,9 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value &value, const QStr
             if (isStringKey)
                 value.append(QSharedPointer<MacroKey>(new MacroKey(text)));
             else {
-                QList<Keyword *> keywords = splitKeywords(text);
-                for (QList<Keyword *>::Iterator it = keywords.begin(); it != keywords.end(); ++it)
-                    value.append(QSharedPointer<Keyword>(*it));
+                QList<QSharedPointer<Keyword> > keywords = splitKeywords(text);
+                for (QList<QSharedPointer<Keyword> >::ConstIterator it = keywords.constBegin(); it != keywords.constEnd(); ++it)
+                    value.append(*it);
             }
         } else {
             if (isStringKey)
@@ -729,9 +729,9 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value &value, const QStr
     return token;
 }
 
-QList<Keyword *> FileImporterBibTeX::splitKeywords(const QString &text)
+QList<QSharedPointer<Keyword> > FileImporterBibTeX::splitKeywords(const QString &text)
 {
-    QList<Keyword *> result;
+    QList<QSharedPointer<Keyword> > result;
     /// define a list of characters where keywords will be split along
     /// finalize list with null character
     static char splitChars[] = ";,\0";
@@ -748,7 +748,7 @@ QList<Keyword *> FileImporterBibTeX::splitKeywords(const QString &text)
             const QStringList keywords = text.split(splitAlong[index], QString::SkipEmptyParts);
             /// build QList of Keyword objects from keywords
             foreach(const QString &keyword, keywords) {
-                result.append(new Keyword(keyword));
+                result.append(QSharedPointer<Keyword>(new Keyword(keyword)));
             }
             /// no more splits neccessary
             break;
@@ -760,7 +760,7 @@ QList<Keyword *> FileImporterBibTeX::splitKeywords(const QString &text)
 
     /// no split was performed, so whole text must be a single keyword
     if (result.isEmpty())
-        result.append(new Keyword(text));
+        result.append(QSharedPointer<Keyword>(new Keyword(text)));
 
     return result;
 }
