@@ -449,25 +449,16 @@ QString FileImporterBibTeX::readSimpleString(QChar until)
         m_textStream->skipWhiteSpace();
         *m_textStream >> m_currentChar;
     }
-    /*
-        if (m_currentChar.isLetterOrNumber() || extraAlphaNumChars.contains(m_currentChar)) {
-            result.append(m_currentChar);
-            if (m_currentChar == '\n') {
-                ++m_lineNo;
-                m_prevLine = m_currentLine;
-                m_currentLine = QLatin1String("");
-            } else
-                m_currentLine.append(m_currentChar);
-
-            *m_textStream >> m_currentChar;
-        }
-    */
     while (!m_textStream->atEnd()) {
         if (until != '\0') {
-            if (m_currentChar != until)
-                result.append(m_currentChar);
-            else
+            /// Variable "until" has user-defined value
+            if (m_currentChar == QChar('\n') || m_currentChar == QChar('\r') || m_currentChar == until) {
+                /// Force break on line-breaks or if the "until" char has been read
                 break;
+            } else {
+                /// Append read character to final result
+                result.append(m_currentChar);
+            }
         } else
             if (m_currentChar.isLetterOrNumber() || extraAlphaNumChars.contains(m_currentChar))
                 result.append(m_currentChar);
