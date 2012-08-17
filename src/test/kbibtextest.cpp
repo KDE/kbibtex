@@ -4,6 +4,7 @@
 #include <KListWidget>
 #include <KTemporaryFile>
 #include <KAction>
+#include <KDebug>
 
 #include <QProgressBar>
 #include <QTimer>
@@ -163,11 +164,12 @@ void KBibTeXTest::startTestFileTests()
     kapp->processEvents();
 
     QList<TestFile *> testFiles = QList<TestFile *>() << createTestFile(QLatin1String("bib/bug19489.bib"), 1, 1, QLatin1String("bart:04:1242"), QLatin1String("Ralph"), QLatin1String("a926264c17545bf6eb9a953a8e3f0970"));
+    testFiles << createTestFile(QLatin1String("bib/names-with-braces.bib"), 1, 1, QLatin1String("names1"), QLatin1String("LastName3A LastName3B"), QLatin1String("e0cf18bc193f545e576d128106deafbb"));
     testFiles << createTestFile(QLatin1String("bib/duplicates.bib"), 23, 23, QLatin1String("books/aw/Sedgewick88"), QLatin1String("Sedgewick"), QLatin1String("f743ccb08afda3514a7122710e6590ba"));
-    testFiles << createTestFile(QLatin1String("bib/minix.bib"), 163, 123, QLatin1String("Jesshope:2006:ACS"), QLatin1String("Egan"), QLatin1String("2867b2e189a2bb31040dbcbfc2ed4d2a"));
-    testFiles << createTestFile(QLatin1String("bib/bug19484-refs.bib"), 641, 641, QLatin1String("Bagnara-etal-2002"), QLatin1String("Hill"), QLatin1String("543e64717e89790c2285659e1a042a41"));
-    testFiles << createTestFile(QLatin1String("bib/bug19362-file15701-database.bib"), 911, 911, QLatin1String("New1"), QLatin1String("Sunder"), QLatin1String("2d2a6d706ad803aa46931ed0d4cce8d1"));
-    testFiles << createTestFile(QLatin1String("bib/digiplay.bib"), 3074, 3074, QLatin1String("1180"), QLatin1String("Huizinga"), QLatin1String("be43803a3825a10ab4d1ec4f57c2f1e5"));
+    testFiles << createTestFile(QLatin1String("bib/minix.bib"), 163, 123, QLatin1String("Jesshope:2006:ACS"), QLatin1String("Egan"), QLatin1String("c45e76eb809ba4c811f40452215bce04"));
+    testFiles << createTestFile(QLatin1String("bib/bug19484-refs.bib"), 641, 641, QLatin1String("Bagnara-etal-2002"), QLatin1String("Hill"), QLatin1String("a6737870e88b13fd2a6dff00b583cc5b"));
+    testFiles << createTestFile(QLatin1String("bib/bug19362-file15701-database.bib"), 911, 911, QLatin1String("New1"), QLatin1String("Sunder"), QLatin1String("eb93fa136f4b114c3a6fc4a821b4117c"));
+    testFiles << createTestFile(QLatin1String("bib/digiplay.bib"), 3074, 3074, QLatin1String("1180"), QLatin1String("Huizinga"), QLatin1String("2daf695fccb01f4b4cfbe967db62b0a8"));
 
     m_running = true;
     for (QList<TestFile *>::ConstIterator it = testFiles.constBegin(); it != testFiles.constEnd(); ++it) {
@@ -260,15 +262,13 @@ File *KBibTeXTest::loadFile(const QString &absoluteFilename, TestFile *currentTe
                     lastEntryLastAuthorLastName = QString::null;
             }
 
-            if (!lastEntryLastAuthorLastName.isEmpty() && !lastEntryLastAuthorLastName.contains(QChar(' ')))
+            if (!lastEntryLastAuthorLastName.isEmpty()) {
+                if (lastEntryLastAuthorLastName[0] == QChar('{') && lastEntryLastAuthorLastName[lastEntryLastAuthorLastName.length() - 1] == QChar('}'))
+                    lastEntryLastAuthorLastName = lastEntryLastAuthorLastName.mid(1, lastEntryLastAuthorLastName.length() - 2);
                 lastAuthorsList << lastEntryLastAuthorLastName;
+            }
         }
     }
-
-    QCryptographicHash hash(QCryptographicHash::Md4);
-    lastAuthorsList.sort();
-    for (QStringList::ConstIterator it = lastAuthorsList.constBegin(); it != lastAuthorsList.constEnd(); ++it)
-        hash.addData((*it).toUtf8());
 
     if (countElements != currentTestFile->numElements) {
         addMessage(QString(QLatin1String("File \"%1\" is supposed to have %2 elements, but only %3 were counted")).arg(QFileInfo(absoluteFilename).fileName()).arg(currentTestFile->numElements).arg(countElements), iconERROR);
@@ -290,13 +290,22 @@ File *KBibTeXTest::loadFile(const QString &absoluteFilename, TestFile *currentTe
         delete importer;
         delete bibTeXFile;
         return NULL;
-    } else if (hash.result() != currentTestFile->md4sum) {
-        addMessage(QString(QLatin1String("A hash sum over all last authors in file \"%1\" did not match the expected hash sum (%2)")).arg(QFileInfo(absoluteFilename).fileName()).arg(hash.result().toHex().data()), iconERROR);
-        delete importer;
-        delete bibTeXFile;
-        return NULL;
-    } else
-        addMessage(QString(QLatin1String("File \"%1\" was imported correctly")).arg(QFileInfo(absoluteFilename).fileName()), iconOK);
+    } else {
+        /// Delay cryptographic hash computation until no other test has failed
+        QCryptographicHash hash(QCryptographicHash::Md4);
+        lastAuthorsList.sort();
+        for (QStringList::ConstIterator it = lastAuthorsList.constBegin(); it != lastAuthorsList.constEnd(); ++it)
+            hash.addData((*it).toUtf8());
+
+        if (hash.result() != currentTestFile->md4sum) {
+            kDebug() << hash.result().toHex().data() << "for" << absoluteFilename << "based on" << currentTestFile->filename;
+            addMessage(QString(QLatin1String("A hash sum over all last authors in file \"%1\" did not match the expected hash sum (%2)")).arg(QFileInfo(absoluteFilename).fileName()).arg(hash.result().toHex().data()), iconERROR);
+            delete importer;
+            delete bibTeXFile;
+            return NULL;
+        } else
+            addMessage(QString(QLatin1String("File \"%1\" was imported correctly")).arg(QFileInfo(absoluteFilename).fileName()), iconOK);
+    }
 
     delete importer;
 
