@@ -193,8 +193,11 @@ public:
                     tab->setTabEnabled(index, canEdit);
                     if (canEdit && index < firstEnabledTab)
                         firstEnabledTab = index;
-                } else
+                } else {
+                    /// Reference widget
                     widget->setVisible(canEdit);
+                    widget->setEnabled(canEdit);
+                }
             }
             if (firstEnabledTab < 1024)
                 tab->setCurrentIndex(firstEnabledTab);
