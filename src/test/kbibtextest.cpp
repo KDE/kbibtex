@@ -2,7 +2,7 @@
 #include <KIcon>
 #include <KPushButton>
 #include <KListWidget>
-#include <KTemporaryFile>
+#include <KStandardDirs>
 #include <KAction>
 #include <KDebug>
 
@@ -82,6 +82,7 @@ KBibTeXTest::KBibTeXTest(QWidget *parent)
 void KBibTeXTest::addMessage(const QString &message, const KIcon &icon)
 {
     QListWidgetItem *item = icon.isNull() ? new QListWidgetItem(message) : new QListWidgetItem(icon, message);
+    item->setToolTip(item->text());
     m_testWidget->messageList->addItem(item);
     m_testWidget->messageList->scrollToBottom();
     kapp->processEvents();
@@ -184,7 +185,7 @@ void KBibTeXTest::startTestFileTests()
         File *file = loadFile(absoluteFilename, currentTestFile);
         if (file == NULL)
             continue;
-        QString tempFileName = saveFile(file, currentTestFile);
+        const QString tempFileName = saveFile(file, currentTestFile);
         if (tempFileName.isEmpty())
             continue;
         File *file2 = loadFile(tempFileName, currentTestFile);
@@ -314,19 +315,18 @@ File *KBibTeXTest::loadFile(const QString &absoluteFilename, TestFile *currentTe
 
 QString KBibTeXTest::saveFile(File *file, TestFile *currentTestFile)
 {
-    KTemporaryFile tempFile;
-    tempFile.setAutoRemove(false);
+    const QString tempFilename = KStandardDirs::locateLocal("tmp", QFileInfo(currentTestFile->filename).fileName());
 
     FileExporter *exporter = NULL;
     if (currentTestFile->filename.endsWith(QLatin1String(".bib"))) {
         exporter = new FileExporterBibTeX();
-        tempFile.setSuffix(QLatin1String(".bib"));
     } else {
-        addMessage(QString(QLatin1String("Don't know format of \"%1\"")).arg(QFileInfo(tempFile.fileName()).fileName()), iconERROR);
+        addMessage(QString(QLatin1String("Don't know format of \"%1\"")).arg(tempFilename), iconERROR);
         return NULL;
     }
 
-    if (tempFile.open()) {
+    QFile tempFile(tempFilename);
+    if (tempFile.open(QFile::WriteOnly)) {
         bool result = exporter->save(&tempFile, file);
         tempFile.close();
         if (!result)    {
@@ -340,8 +340,8 @@ QString KBibTeXTest::saveFile(File *file, TestFile *currentTestFile)
         return QString::null;
     }
 
-    addMessage(QString(QLatin1String("File \"%1\" was exported to \"%2\"")).arg(QFileInfo(currentTestFile->filename).fileName()).arg(QFileInfo(tempFile.fileName()).fileName()), iconOK);
-    return tempFile.fileName();
+    addMessage(QString(QLatin1String("File \"%1\" was exported to \"%2\"")).arg(QFileInfo(currentTestFile->filename).fileName()).arg(tempFilename), iconOK);
+    return tempFilename;
 }
 
 KBibTeXTest::TestFile *KBibTeXTest::createTestFile(const QString &filename, int numElements, int numEntries, const QString &lastEntryId, const QString &lastEntryLastAuthorLastName, const QString &md4sumHex)
