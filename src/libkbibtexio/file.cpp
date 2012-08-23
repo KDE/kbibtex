@@ -183,7 +183,7 @@ void File::setProperty(const QString &key, const QVariant &value)
 
 QVariant File::property(const QString &key) const
 {
-    return d->properties.value(key);
+    return d->properties.contains(key) ? d->properties.value(key) : QVariant();
 }
 
 QVariant File::property(const QString &key, const QVariant &defaultValue) const
