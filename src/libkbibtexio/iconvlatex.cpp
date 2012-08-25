@@ -53,7 +53,7 @@ IConvLaTeX::~IConvLaTeX()
     delete d;
 }
 
-QByteArray IConvLaTeX::encode(const QString &input, bool beExtraCautious)
+QByteArray IConvLaTeX::encode(const QString &input)
 {
     /// Get an UTF-8 representation of the input string
     QByteArray inputByteArray = input.toUtf8();
@@ -85,8 +85,7 @@ QByteArray IConvLaTeX::encode(const QString &input, bool beExtraCautious)
         inputBufferBytesLeft = inputByteArray.size();
 
         /// encode problematic character in LaTeX encoding and append to output buffer
-        QString encodedProblem = laTeXEncoder->encode(problematicChar);
-        encodedProblem = QString(beExtraCautious && encodedProblem[0] != QChar('{') ? QLatin1String("{%1}") : QLatin1String("%1")).arg(laTeXEncoder->encode(problematicChar));
+        const QString encodedProblem = laTeXEncoder->encode(problematicChar);
         QByteArray encodedProblemByteArray = encodedProblem.toUtf8();
         qstrncpy(outputBuffer, encodedProblemByteArray.data(), ouputBufferBytesLeft);
         ouputBufferBytesLeft -= encodedProblemByteArray.size();

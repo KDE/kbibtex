@@ -142,7 +142,7 @@ public:
             iodevice->putChar(' ');
             iodevice->putChar('=');
             iodevice->putChar(' ');
-            iodevice->write(iconvLaTeX->encode(text, key.toLower() == Entry::ftAuthor));
+            iodevice->write(iconvLaTeX->encode(text));
         }
         iodevice->putChar('\n');
         iodevice->putChar('}');

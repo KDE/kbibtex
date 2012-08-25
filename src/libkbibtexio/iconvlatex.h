@@ -42,7 +42,7 @@ public:
     IConvLaTeX(const QString &destEncoding);
     ~IConvLaTeX();
 
-    QByteArray encode(const QString &input, bool beExtraCautious = false);
+    QByteArray encode(const QString &input);
 
     static const QStringList encodings();
 
