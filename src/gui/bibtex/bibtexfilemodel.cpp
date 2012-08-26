@@ -178,6 +178,20 @@ bool SortFilterBibTeXFileModel::filterAcceptsRow(int source_row, const QModelInd
             }
         }
 
+        if (m_filterQuery.field.isEmpty() || m_filterQuery.field == QLatin1String("^type")) {
+            /// Check entry's type
+            const QString type = entry->type();
+            /// Check type's description ("Journal Article")
+            const QString label = BibTeXEntries::self()->label(type);
+            // TODO test for internationlized variants like "Artikel" or "bok" as well?
+            int i = 0;
+            for (QStringList::ConstIterator itsl = m_filterQuery.terms.constBegin(); itsl != m_filterQuery.terms.constEnd(); ++itsl, ++i) {
+                bool contains = (*itsl).isEmpty() ? true : type.contains(*itsl, Qt::CaseInsensitive) || label.contains(*itsl, Qt::CaseInsensitive);
+                any |= contains;
+                all[i] |= contains;
+            }
+        }
+
         for (Entry::ConstIterator it = entry->constBegin(); it != entry->constEnd(); ++it)
             if (m_filterQuery.field.isEmpty() || m_filterQuery.field == it.key().toLower()) {
                 int i = 0;
