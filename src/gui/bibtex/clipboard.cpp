@@ -25,6 +25,7 @@
 #include <QDrag>
 
 #include <KConfigGroup>
+#include <KDebug>
 
 #include <bibtexeditor.h>
 #include <bibtexfilemodel.h>
@@ -76,41 +77,89 @@ public:
         return text;
     }
 
-    bool insertText(const QString &text) {
+    bool insertText(const QString &text, QSharedPointer<Element> element = QSharedPointer<Element>()) {
+        /// First assumption: user dropped a piece of BibTeX code,
         /// use BibTeX importer to generate representation from plain text
         FileImporterBibTeX importer;
         File *file = importer.fromString(text);
 
-        BibTeXFileModel *bibTeXModel = bibTeXEditor->bibTeXModel();
-        QSortFilterProxyModel *sfpModel = bibTeXEditor->sortFilterProxyModel();
+        if (!file->isEmpty()) {
+            BibTeXFileModel *bibTeXModel = bibTeXEditor->bibTeXModel();
+            QSortFilterProxyModel *sfpModel = bibTeXEditor->sortFilterProxyModel();
 
-        /// insert new elements one by one
-        int startRow = bibTeXModel->rowCount(); ///< memorize row where insertion started
-        for (File::Iterator it = file->begin(); it != file->end(); ++it)
-            bibTeXModel->insertRow(*it, bibTeXEditor->model()->rowCount());
-        int endRow = bibTeXModel->rowCount() - 1; ///< memorize row where insertion ended
+            /// insert new elements one by one
+            int startRow = bibTeXModel->rowCount(); ///< memorize row where insertion started
+            for (File::Iterator it = file->begin(); it != file->end(); ++it)
+                bibTeXModel->insertRow(*it, bibTeXEditor->model()->rowCount());
+            int endRow = bibTeXModel->rowCount() - 1; ///< memorize row where insertion ended
 
-        /// select newly inserted elements
-        QItemSelectionModel *ism = bibTeXEditor->selectionModel();
-        ism->clear();
-        /// keep track of the insert element which is most upwards in the list when inserted
-        QModelIndex minRowTargetModelIndex;
-        /// highlight those rows in the editor which correspond to newly inserted elements
-        for (int i = startRow; i <= endRow; ++i) {
-            QModelIndex targetModelIndex = sfpModel->mapFromSource(bibTeXModel->index(i, 0));
-            ism->select(targetModelIndex, QItemSelectionModel::Rows | QItemSelectionModel::Select);
+            /// select newly inserted elements
+            QItemSelectionModel *ism = bibTeXEditor->selectionModel();
+            ism->clear();
+            /// keep track of the insert element which is most upwards in the list when inserted
+            QModelIndex minRowTargetModelIndex;
+            /// highlight those rows in the editor which correspond to newly inserted elements
+            for (int i = startRow; i <= endRow; ++i) {
+                QModelIndex targetModelIndex = sfpModel->mapFromSource(bibTeXModel->index(i, 0));
+                ism->select(targetModelIndex, QItemSelectionModel::Rows | QItemSelectionModel::Select);
 
-            /// update the most upward inserted element
-            if (!minRowTargetModelIndex.isValid() || minRowTargetModelIndex.row() > targetModelIndex.row())
-                minRowTargetModelIndex = targetModelIndex;
-        }
-        /// scroll tree view to show top-most inserted element
-        bibTeXEditor->scrollTo(minRowTargetModelIndex, QAbstractItemView::PositionAtTop);
+                /// update the most upward inserted element
+                if (!minRowTargetModelIndex.isValid() || minRowTargetModelIndex.row() > targetModelIndex.row())
+                    minRowTargetModelIndex = targetModelIndex;
+            }
+            /// scroll tree view to show top-most inserted element
+            bibTeXEditor->scrollTo(minRowTargetModelIndex, QAbstractItemView::PositionAtTop);
 
-        /// clean up
-        delete file;
-        /// return true if at least one element was inserted
-        return startRow <= endRow;
+            /// clean up
+            delete file;
+            /// return true if at least one element was inserted
+            return startRow <= endRow;
+        } else if (!element.isNull()) {
+            /// Regular text seems to have been dropped on a specific element
+
+            QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
+            if (!entry.isNull()) {
+                kDebug() << "Adding in entry" << entry->id();
+
+                /// Check if text looks like an URL
+                KUrl url(text);
+                if (url.isValid()) {
+                    /// Try to resolve relative URLs
+                    QUrl fileUrl = bibTeXEditor->bibTeXModel()->bibTeXFile()->property(File::Url, QUrl()).toUrl();
+                    if (url.isRelative() && fileUrl.isValid()) url = fileUrl.resolved(url);
+
+                    // FIXME this code is redundant to findpdfui.cpp
+                    bool alreadyContained = false;
+                    const QString urlText = url.pathOrUrl();
+                    kDebug() << "Adding url" << urlText;
+                    for (QMap<QString, Value>::ConstIterator it = entry->constBegin(); !alreadyContained && it != entry->constEnd(); ++it) {
+                        const QString key = it.key().toLower();
+                        // FIXME this will terribly break if URLs in an entry's URL field are separated with semicolons
+                        alreadyContained |= (key.startsWith(Entry::ftUrl) || key.startsWith(Entry::ftLocalFile)) && PlainTextValue::text(it.value()) == urlText;
+                    }
+                    if (!alreadyContained) {
+                        Value value;
+                        value.append(QSharedPointer<VerbatimText>(new VerbatimText(urlText)));
+                        const QString field = url.isLocalFile() ? Entry::ftLocalFile : Entry::ftUrl;
+                        kDebug() << "Adding to field" << field;
+                        if (!entry->contains(field))
+                            entry->insert(field, value);
+                        else
+                            for (int i = 2; i < 256; ++i) {
+                                const QString keyName = QString("%1%2").arg(field).arg(i);
+                                if (!entry->contains(keyName)) {
+                                    entry->insert(keyName, value);
+                                    break;
+                                }
+                            }
+                    }
+                    return true;
+                }
+            }
+        } else
+            kDebug() << "Don't know what to do with " << text;
+
+        return false;
     }
 };
 
@@ -168,7 +217,7 @@ void Clipboard::copyReferences()
 void Clipboard::paste()
 {
     QClipboard *clipboard = QApplication::clipboard();
-    d->insertText(clipboard->text());
+    d->insertText(clipboard->text(), d->bibTeXEditor->currentElement());
     d->bibTeXEditor->externalModification();
 }
 
@@ -210,7 +259,17 @@ void Clipboard::editorDropEvent(QDropEvent *event)
     QString text = event->mimeData()->text();
 
     if (!text.isEmpty() && !d->bibTeXEditor->isReadOnly()) {
-        d->insertText(text);
+        QSharedPointer<Element> element;
+        /// Locate element drop was performed on (if dropped, and not some copy&paste)
+        QModelIndex dropIndex = d->bibTeXEditor->indexAt(event->pos());
+        if (dropIndex.isValid())
+            element = d->bibTeXEditor->elementAt(dropIndex);
+        if (element.isNull()) {
+            /// Still invalid element? Use current one
+            element = d->bibTeXEditor->currentElement();
+        }
+
+        d->insertText(text, element);
         d->bibTeXEditor->externalModification();
     }
 }
