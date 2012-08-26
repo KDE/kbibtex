@@ -329,7 +329,9 @@ Entry *FileImporterBibTeX::readEntryElement(const QString &typeString)
             break;
         else if (token != tComma) {
             if (m_currentChar.isLetter())
-                kWarning() << "Error in parsing entry" << id << "(near line" << m_lineNo << ":" << m_prevLine << endl << m_currentLine << "): Comma symbol (,) expected but got letter" << m_currentChar << "(token" << tokenidToString(token) << ")";
+                kWarning() << "Error in parsing entry" << id << "(near line" << m_lineNo << ":" << m_prevLine << endl << m_currentLine << "): Comma symbol (,) expected but got character" << m_currentChar << "(token" << tokenidToString(token) << ")";
+            else if (m_currentChar.isPrint())
+                kWarning() << "Error in parsing entry" << id << "(near line" << m_lineNo << ":" << m_prevLine << endl << m_currentLine << "): Comma symbol (,) expected but got character" << m_currentChar << "(" << QString("0x%1").arg(m_currentChar.unicode(), 4, 16, QLatin1Char('0')) << ", token" << tokenidToString(token) << ")";
             else
                 kWarning() << "Error in parsing entry" << id << "(near line" << m_lineNo << ":" << m_prevLine << endl << m_currentLine << "): Comma symbol (,) expected but got character" << QString("0x%1").arg(m_currentChar.unicode(), 4, 16, QLatin1Char('0')) << "(token" << tokenidToString(token) << ")";
             delete entry;
