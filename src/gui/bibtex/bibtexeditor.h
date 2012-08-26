@@ -45,6 +45,7 @@ public:
     const QList<QSharedPointer<Element> > &selectedElements() const;
     const QSharedPointer<Element> currentElement() const;
     QSharedPointer<Element> currentElement();
+    QSharedPointer<Element> elementAt(const QModelIndex &index);
 
     void setReadOnly(bool isReadOnly = true);
     bool isReadOnly() const;

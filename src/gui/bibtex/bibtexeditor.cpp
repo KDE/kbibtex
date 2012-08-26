@@ -190,6 +190,11 @@ QSharedPointer<Element> BibTeXEditor::currentElement()
     return m_current;
 }
 
+QSharedPointer<Element> BibTeXEditor::elementAt(const QModelIndex &index)
+{
+    return bibTeXModel()->element(sortFilterProxyModel()->mapToSource(index).row());
+}
+
 void BibTeXEditor::currentChanged(const QModelIndex &current, const QModelIndex &previous)
 {
     QTreeView::currentChanged(current, previous); // FIXME necessary?
