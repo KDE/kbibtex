@@ -33,6 +33,7 @@
 
 #include "filterbar.h"
 #include "bibtexfields.h"
+#include "delayedexecutiontimer.h"
 
 class FilterBar::FilterBarPrivate
 {
@@ -48,12 +49,17 @@ public:
     KComboBox *comboBoxCombination;
     KComboBox *comboBoxField;
     QCheckBox *checkboxSearchPDFfiles;
-    QTimer *filterUpdateTimer;
+    DelayedExecutionTimer *delayedTimer;
 
     FilterBarPrivate(FilterBar *parent)
             : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))),
-          configGroupName(QLatin1String("Filter Bar")), maxNumStoredFilterTexts(12), filterUpdateTimer(new QTimer(parent)) {
-        connect(filterUpdateTimer, SIGNAL(timeout()), p, SLOT(timerTriggered()));
+          configGroupName(QLatin1String("Filter Bar")), maxNumStoredFilterTexts(12) {
+        delayedTimer = new DelayedExecutionTimer(p);
+        connect(delayedTimer, SIGNAL(triggered()), p, SLOT(publishFilter()));
+    }
+
+    ~FilterBarPrivate() {
+        delete delayedTimer;
     }
 
     SortFilterBibTeXFileModel::FilterQuery filter() {
@@ -130,11 +136,6 @@ public:
         configGroup.writeEntry(QLatin1String("SearchPDFFiles"), checkboxSearchPDFfiles->isChecked());
         config->sync();
     }
-
-    void resetFilterUpdateTimer() {
-        filterUpdateTimer->stop();
-        filterUpdateTimer->start(500);
-    }
 };
 
 FilterBar::FilterBar(QWidget *parent)
@@ -182,11 +183,14 @@ FilterBar::FilterBar(QWidget *parent)
     d->checkboxSearchPDFfiles->setToolTip(i18n("Include PDF files in full-text search"));
     layout->addWidget(d->checkboxSearchPDFfiles, 1, 4);
 
-    connect(d->comboBoxFilterText->lineEdit(), SIGNAL(textChanged(QString)), this, SLOT(lineeditTextChanged()));
-    connect(d->comboBoxFilterText->lineEdit(), SIGNAL(returnPressed()), this, SLOT(lineeditReturnPressed()));
+    connect(d->comboBoxFilterText->lineEdit(), SIGNAL(textChanged(QString)), d->delayedTimer, SLOT(trigger()));
+    connect(d->comboBoxFilterText->lineEdit(), SIGNAL(returnPressed()), this, SLOT(userPressedEnter()));
     connect(d->comboBoxCombination, SIGNAL(currentIndexChanged(int)), this, SLOT(comboboxStatusChanged()));
     connect(d->comboBoxField, SIGNAL(currentIndexChanged(int)), this, SLOT(comboboxStatusChanged()));
     connect(d->checkboxSearchPDFfiles, SIGNAL(toggled(bool)), this, SLOT(comboboxStatusChanged()));
+    connect(d->comboBoxCombination, SIGNAL(currentIndexChanged(int)), d->delayedTimer, SLOT(trigger()));
+    connect(d->comboBoxField, SIGNAL(currentIndexChanged(int)), d->delayedTimer, SLOT(trigger()));
+    connect(d->checkboxSearchPDFfiles, SIGNAL(toggled(bool)), d->delayedTimer, SLOT(trigger()));
 
     /// restore history on filter texts
     /// see addCompletionString for more detailed explanation
@@ -215,29 +219,21 @@ SortFilterBibTeXFileModel::FilterQuery FilterBar::filter()
     return d->filter();
 }
 
-void FilterBar::lineeditTextChanged()
-{
-    d->resetFilterUpdateTimer();
-}
-
 void FilterBar::comboboxStatusChanged()
 {
     d->checkboxSearchPDFfiles->setEnabled(d->comboBoxField->currentIndex() == 0);
-    d->filterUpdateTimer->stop();
     d->storeComboBoxStatus();
-    emit filterChanged(d->filter());
 }
 
-void FilterBar::lineeditReturnPressed()
+void FilterBar::userPressedEnter()
 {
-    d->filterUpdateTimer->stop();
     /// only store text in auto-completion if user pressed enter
     d->addCompletionString(d->comboBoxFilterText->lineEdit()->text());
-    emit filterChanged(d->filter());
+
+    publishFilter();
 }
 
-void FilterBar::timerTriggered()
+void FilterBar::publishFilter()
 {
-    /// timer used for a delayed filter update
     emit filterChanged(d->filter());
 }

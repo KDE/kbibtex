@@ -49,6 +49,7 @@ set(
     preferences/settingsidsuggestionswidget.cpp
     preferences/settingsidsuggestionseditor.cpp
     valuelistmodel.cpp
+    delayedexecutiontimer.cpp
 )
 
 set(
@@ -69,6 +70,7 @@ set(
     preferences/settingsidsuggestionswidget.h
     preferences/settingsidsuggestionseditor.h
     valuelistmodel.h
+    delayedexecutiontimer.h
     kbibtexgui_export.h
     bibtex/findduplicatesui.h
     bibtex/bibtexfileview.h

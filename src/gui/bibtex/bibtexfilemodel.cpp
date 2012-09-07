@@ -158,119 +158,117 @@ bool SortFilterBibTeXFileModel::filterAcceptsRow(int source_row, const QModelInd
 
     if (m_filterQuery.terms.isEmpty()) return true; /// empty filter query
 
+    bool *eachTerm = new bool[m_filterQuery.terms.count()];
+    for (int i = m_filterQuery.terms.count() - 1; i >= 0; --i)
+        eachTerm[i] = false;
+
     QSharedPointer<Entry> entry = rowElement.dynamicCast<Entry>();
     if (!entry.isNull()) {
         /// if current row contains an Entry ...
-
-        bool any = false;
-        bool *all = new bool[m_filterQuery.terms.count()];
-        for (int i = m_filterQuery.terms.count() - 1; i >= 0; --i)
-            all[i] = false;
 
         if (m_filterQuery.field.isEmpty() || m_filterQuery.field == QLatin1String("^id")) {
             /// Check entry's id
             const QString id = entry->id();
             int i = 0;
             for (QStringList::ConstIterator itsl = m_filterQuery.terms.constBegin(); itsl != m_filterQuery.terms.constEnd(); ++itsl, ++i) {
-                bool contains = (*itsl).isEmpty() ? true : id.contains(*itsl, Qt::CaseInsensitive);
-                any |= contains;
-                all[i] |= contains;
+                eachTerm[i] |= (*itsl).isEmpty() ? true : id.contains(*itsl, Qt::CaseInsensitive);
             }
-        }
 
-        if (m_filterQuery.field.isEmpty() || m_filterQuery.field == QLatin1String("^type")) {
-            /// Check entry's type
-            const QString type = entry->type();
-            /// Check type's description ("Journal Article")
-            const QString label = BibTeXEntries::self()->label(type);
-            // TODO test for internationlized variants like "Artikel" or "bok" as well?
-            int i = 0;
-            for (QStringList::ConstIterator itsl = m_filterQuery.terms.constBegin(); itsl != m_filterQuery.terms.constEnd(); ++itsl, ++i) {
-                bool contains = (*itsl).isEmpty() ? true : type.contains(*itsl, Qt::CaseInsensitive) || label.contains(*itsl, Qt::CaseInsensitive);
-                any |= contains;
-                all[i] |= contains;
-            }
-        }
-
-        for (Entry::ConstIterator it = entry->constBegin(); it != entry->constEnd(); ++it)
-            if (m_filterQuery.field.isEmpty() || m_filterQuery.field == it.key().toLower()) {
+            if (m_filterQuery.field.isEmpty() || m_filterQuery.field == QLatin1String("^type")) {
+                /// Check entry's type
+                const QString type = entry->type();
+                /// Check type's description ("Journal Article")
+                const QString label = BibTeXEntries::self()->label(type);
+                // TODO test for internationlized variants like "Artikel" or "bok" as well?
                 int i = 0;
-                for (QStringList::ConstIterator itsl = m_filterQuery.terms.constBegin(); itsl != m_filterQuery.terms.constEnd(); ++itsl, ++i) {
-                    bool contains = (*itsl).isEmpty() ? true : it.value().containsPattern(*itsl);
-                    any |= contains;
-                    all[i] |= contains;
+                for (QStringList::ConstIterator itsl = m_filterQuery.terms.constBegin(); itsl != m_filterQuery.terms.constEnd(); ++itsl, ++i)
+                    eachTerm[i] |= (*itsl).isEmpty() ? true : type.startsWith(*itsl, Qt::CaseInsensitive) || label.startsWith(*itsl, Qt::CaseInsensitive);
+            }
+
+            for (Entry::ConstIterator it = entry->constBegin(); it != entry->constEnd(); ++it)
+                if (m_filterQuery.field.isEmpty() || m_filterQuery.field == it.key().toLower()) {
+                    int i = 0;
+                    for (QStringList::ConstIterator itsl = m_filterQuery.terms.constBegin(); itsl != m_filterQuery.terms.constEnd(); ++itsl, ++i)
+                        eachTerm[i] |= (*itsl).isEmpty() ? true : it.value().containsPattern(*itsl);
                 }
-            }
 
-        /// Test associated PDF files
-        if (m_filterQuery.searchPDFfiles && m_filterQuery.field.isEmpty()) ///< not filtering for any specific field
-            foreach(const KUrl &url, FileInfo::entryUrls(entry.data(), bibTeXSourceModel()->bibTeXFile()->property(File::Url, KUrl()).toUrl(), FileInfo::TestExistanceYes)) {
-            if (url.isLocalFile() && url.fileName().endsWith(QLatin1String(".pdf"))) {
-                const QString text = FileInfo::pdfToText(url.pathOrUrl());
-                int i = 0;
-                for (QStringList::ConstIterator itsl = m_filterQuery.terms.constBegin(); itsl != m_filterQuery.terms.constEnd(); ++itsl, ++i) {
-                    bool contains = (*itsl).isEmpty() ? true : text.contains(*itsl, Qt::CaseInsensitive);
-                    any |= contains;
-                    all[i] |= contains;
+            /// Test associated PDF files
+            if (m_filterQuery.searchPDFfiles && m_filterQuery.field.isEmpty()) ///< not filtering for any specific field
+                foreach(const KUrl &url, FileInfo::entryUrls(entry.data(), bibTeXSourceModel()->bibTeXFile()->property(File::Url, KUrl()).toUrl(), FileInfo::TestExistanceYes)) {
+                if (url.isLocalFile() && url.fileName().endsWith(QLatin1String(".pdf"))) {
+                    const QString text = FileInfo::pdfToText(url.pathOrUrl());
+                    int i = 0;
+                    for (QStringList::ConstIterator itsl = m_filterQuery.terms.constBegin(); itsl != m_filterQuery.terms.constEnd(); ++itsl, ++i)
+                        eachTerm[i] |= (*itsl).isEmpty() ? true : text.contains(*itsl, Qt::CaseInsensitive);
                 }
             }
         }
 
         int i = 0;
         if (m_filterQuery.field.isEmpty())
-            for (QStringList::ConstIterator itsl = m_filterQuery.terms.constBegin(); itsl != m_filterQuery.terms.constEnd(); ++itsl, ++i) {
-                bool contains = entry->id().contains(*itsl);
-                any |= contains;
-                all[i] |= contains;
-            }
-
-        bool every = true;
-        for (i = m_filterQuery.terms.count() - 1; i >= 0; --i) every &= all[i];
-        delete[] all;
-
-        if (m_filterQuery.combination == SortFilterBibTeXFileModel::AnyTerm)
-            return any;
-        else
-            return every;
+            for (QStringList::ConstIterator itsl = m_filterQuery.terms.constBegin(); itsl != m_filterQuery.terms.constEnd(); ++itsl, ++i)
+                eachTerm[i] |= (*itsl).isEmpty() ? true : entry->id().contains(*itsl, Qt::CaseInsensitive);
     } else {
         QSharedPointer<Macro> macro = rowElement.dynamicCast<Macro>();
         if (!macro.isNull()) {
-            bool all = true;
-            for (QStringList::ConstIterator itsl = m_filterQuery.terms.constBegin(); itsl != m_filterQuery.terms.constEnd(); ++itsl) {
-                bool contains = macro->value().containsPattern(*itsl) || macro->key().contains(*itsl, Qt::CaseInsensitive);
-                if (m_filterQuery.combination == SortFilterBibTeXFileModel::AnyTerm && contains)
-                    return true;
-                all &= contains;
+            if (m_filterQuery.field.isEmpty()) {
+                int i = 0;
+                for (QStringList::ConstIterator itsl = m_filterQuery.terms.constBegin(); itsl != m_filterQuery.terms.constEnd(); ++itsl, ++i)
+                    eachTerm[i] |= macro->value().containsPattern(*itsl, Qt::CaseInsensitive) || macro->key().contains(*itsl, Qt::CaseInsensitive);
             }
-            return all;
+
+            if (m_filterQuery.field.isEmpty() || m_filterQuery.field == QLatin1String("^type")) {
+                static const QString label = QLatin1String("macro");
+                int i = 0;
+                for (QStringList::ConstIterator itsl = m_filterQuery.terms.constBegin(); itsl != m_filterQuery.terms.constEnd(); ++itsl, ++i)
+                    eachTerm[i] |= label.startsWith(*itsl, Qt::CaseInsensitive);
+            }
         } else {
             QSharedPointer<Comment> comment = rowElement.dynamicCast<Comment>();
             if (!comment.isNull()) {
-                bool all = true;
-                for (QStringList::ConstIterator itsl = m_filterQuery.terms.constBegin(); itsl != m_filterQuery.terms.constEnd(); ++itsl) {
-                    bool contains = comment->text().contains(*itsl, Qt::CaseInsensitive);
-                    if (m_filterQuery.combination == SortFilterBibTeXFileModel::AnyTerm && contains)
-                        return true;
-                    all &= contains;
+                if (m_filterQuery.field.isEmpty()) {
+                    int i = 0;
+                    for (QStringList::ConstIterator itsl = m_filterQuery.terms.constBegin(); itsl != m_filterQuery.terms.constEnd(); ++itsl, ++i)
+                        eachTerm[i] |= (*itsl).isEmpty() ? true : comment->text().contains(*itsl, Qt::CaseInsensitive);
                 }
-                return all;
+
+                if (m_filterQuery.field.isEmpty() || m_filterQuery.field == QLatin1String("^type")) {
+                    static const QString label = QLatin1String("comment");
+                    int i = 0;
+                    for (QStringList::ConstIterator itsl = m_filterQuery.terms.constBegin(); itsl != m_filterQuery.terms.constEnd(); ++itsl, ++i)
+                        eachTerm[i] |= label.startsWith(*itsl, Qt::CaseInsensitive);
+                }
             } else {
                 QSharedPointer<Preamble> preamble = rowElement.dynamicCast<Preamble>();
                 if (!preamble.isNull()) {
-                    bool all = true;
-                    for (QStringList::ConstIterator itsl = m_filterQuery.terms.constBegin(); itsl != m_filterQuery.terms.constEnd(); ++itsl) {
-                        bool contains = preamble->value().containsPattern(*itsl);
-                        if (m_filterQuery.combination == SortFilterBibTeXFileModel::AnyTerm && contains)
-                            return true;
-                        all &= contains;
+                    if (m_filterQuery.field.isEmpty()) {
+                        int i = 0;
+                        for (QStringList::ConstIterator itsl = m_filterQuery.terms.constBegin(); itsl != m_filterQuery.terms.constEnd(); ++itsl, ++i)
+                            eachTerm[i] |= preamble->value().containsPattern(*itsl, Qt::CaseInsensitive);
                     }
-                    return all;
+
+                    if (m_filterQuery.field.isEmpty() || m_filterQuery.field == QLatin1String("^type")) {
+                        static const QString label = QLatin1String("preamble");
+                        int i = 0;
+                        for (QStringList::ConstIterator itsl = m_filterQuery.terms.constBegin(); itsl != m_filterQuery.terms.constEnd(); ++itsl, ++i)
+                            eachTerm[i] |= label.startsWith(*itsl, Qt::CaseInsensitive);
+                    }
                 }
             }
         }
     }
 
-    return false;
+    bool every = true, any = false;
+    for (int i = m_filterQuery.terms.count() - 1; i >= 0; --i) {
+        every &= eachTerm[i];
+        any |= eachTerm[i];
+    }
+    delete[] eachTerm;
+
+    if (m_filterQuery.combination == SortFilterBibTeXFileModel::AnyTerm)
+        return any;
+    else
+        return every;
 }
 
 void SortFilterBibTeXFileModel::loadState()
