@@ -304,6 +304,57 @@ static struct EncoderLaTeXEscapedCharacterLookupTableRow {
 
 
 /**
+ * This data structure keeps track of greek letters, which
+ * have to be treated differently in text and math mode.
+ * The greek alpha character would be \alpha in math mode,
+ * but \textalpha in text mode (requiring package textgreek).
+ */
+static const struct GreekLetterCommand {
+    QString written;
+    QChar unicode;
+}
+greekLetterCommand[] = {
+    {QLatin1String("Omega"), QChar(0x038F)}, // FIXME tonos
+    {QLatin1String("Delta"), QChar(0x0394)},
+    {QLatin1String("Omega"), QChar(0x03A9)},
+    {QLatin1String("iota"), QChar(0x03AF)}, // FIXME tonos
+    {QLatin1String("alpha"), QChar(0x03B1)},
+    {QLatin1String("theta"), QChar(0x03B8)},
+    {QLatin1String("iota"), QChar(0x03B9)},
+    {QLatin1String("pi"), QChar(0x03C0)},
+    {QLatin1String("sigma"), QChar(0x03C3)},
+    {QLatin1String("phi"), QChar(0x03C6)},
+};
+static const int greekLetterCommandLen = sizeof(greekLetterCommand) / sizeof(greekLetterCommand[0]);
+
+
+/**
+ * This data structure keeps track of math commands, which
+ * have to be treated differently in text and math mode.
+ * The math command like "subset of" could be used directly
+ * in math mode, but must be enclosed in \ensuremath{...}
+ * in text mode.
+ */
+static const struct MathCommand {
+    QString written;
+    QChar unicode;
+}
+mathCommand[] = {
+    {QLatin1String("ell"), QChar(0x2113)},
+    {QLatin1String("rightarrow"), QChar(0x2192)},
+    {QLatin1String("forall"), QChar(0x2200)},
+    {QLatin1String("exists"), QChar(0x2203)},
+    {QLatin1String("in"), QChar(0x2208)},
+    {QLatin1String("ni"), QChar(0x220B)},
+    {QLatin1String("asterisk"), QChar(0x2217)},
+    {QLatin1String("infty"), QChar(0x221E)},
+    {QLatin1String("subset"), QChar(0x2282)},
+    {QLatin1String("top"), QChar(0x22A4)},
+};
+static const int mathCommandLen = sizeof(mathCommand) / sizeof(mathCommand[0]);
+
+
+/**
  * This data structure holds commands representing a single
  * character. For example, it maps \AA to A with a ring (Nordic
  * letter) and back. The structure is a table with two columns:
@@ -317,6 +368,9 @@ static const struct EncoderLaTeXCharacterCommand {
     bool meaningfulCommandName;
 }
 encoderLaTeXCharacterCommands[] = {
+    {QLatin1String("pounds"), QChar(0x00A3), false},
+    {QLatin1String("S"), QChar(0x00A7), true},
+    {QLatin1String("copyright"), QChar(0x00A9), false},
     {QLatin1String("textperiodcentered"), QChar(0x00B7), false},
     {QLatin1String("AA"), QChar(0x00C5), true},
     {QLatin1String("AE"), QChar(0x00C6), true},
@@ -523,6 +577,30 @@ QString EncoderLaTeX::decode(const QString &input) const
                                 foundCommand = true;
                             }
                         }
+
+                        /// Check if a greek letter has been read,
+                        /// like \alpha or \textalpha
+                        /// (automatically skipped if command was found above)
+                        /*for (int k = 0; !foundCommand && k < greekLetterCommandLen; ++k) {
+                            const QString textForm = QLatin1String("text") + greekLetterCommand[k].written;
+                            if (greekLetterCommand[k].written == alpha || textForm == alpha) {
+                                output.append(greekLetterCommand[k].unicode);
+                                foundCommand = true;
+                            }
+                        }*/
+
+                        /// Check if a math command has been read,
+                        /// like \subset
+                        /// (automatically skipped if command was found above)
+                        // FIXME a math command could be inside \ensuremath, which is not tested here
+                        // may lead to increasing numbers of nested \ensuremath commands
+                        for (int k = 0; !foundCommand && k < mathCommandLen; ++k) {
+                            if (mathCommand[k].written == alpha) {
+                                output.append(mathCommand[k].unicode);
+                                foundCommand = true;
+                            }
+                        }
+
                         if (foundCommand)
                             i = nextPosAfterAlpha;
                         else {
@@ -623,28 +701,37 @@ QString EncoderLaTeX::decode(const QString &input) const
                     /// Check which command it is,
                     /// insert corresponding Unicode character
                     bool foundCommand = false;
-                    for (int ci = 0; ci < encoderLaTeXCharacterCommandsLen; ++ci) {
+                    for (int ci = 0; !foundCommand && ci < encoderLaTeXCharacterCommandsLen; ++ci) {
                         if (encoderLaTeXCharacterCommands[ci].letters == alpha) {
                             output.append(encoderLaTeXCharacterCommands[ci].unicode);
-
-                            /// Now, after this command, a whitespace may follow
-                            /// which has to get "eaten" as it acts as a command
-                            /// delimiter
-                            if (nextPosAfterAlpha < input.length() && (input[nextPosAfterAlpha] == ' ' || input[nextPosAfterAlpha] == '\r' || input[nextPosAfterAlpha] == '\n'))
-                                ++nextPosAfterAlpha;
-                            else {
-                                /// If no whitespace follows, still
-                                /// check for extra curly brackets
-                                checkForExtraCurlyAtEnd = true;
-                            }
-
                             foundCommand = true;
-                            i = nextPosAfterAlpha - 1;
-                            break;
                         }
                     }
 
-                    if (!foundCommand) {
+                    /// Check if a greek letter has been read,
+                    /// like \alpha or \textalpha
+                    /// (automatically skipped if command was found above)
+                    /*for (int k = 0; !foundCommand && k < greekLetterCommandLen; ++k) {
+                        const QString textForm = QLatin1String("text") + greekLetterCommand[k].written;
+                        if (greekLetterCommand[k].written == alpha || textForm == alpha) {
+                            output.append(greekLetterCommand[k].unicode);
+                            foundCommand = true;
+                        }
+                    }*/
+
+                    if (foundCommand) {
+                        /// Now, after a command, a whitespace may follow
+                        /// which has to get "eaten" as it acts as a command
+                        /// delimiter
+                        if (nextPosAfterAlpha < input.length() && (input[nextPosAfterAlpha] == ' ' || input[nextPosAfterAlpha] == '\r' || input[nextPosAfterAlpha] == '\n'))
+                            ++nextPosAfterAlpha;
+                        else {
+                            /// If no whitespace follows, still
+                            /// check for extra curly brackets
+                            checkForExtraCurlyAtEnd = true;
+                        }
+                        i = nextPosAfterAlpha - 1;
+                    } else {
                         /// No command found? Just copy input char to output
                         output.append(c);
                     }
@@ -806,6 +893,32 @@ QString EncoderLaTeX::encode(const QString &input) const
                 for (int k = 0; k < encoderLaTeXEscapedCharactersLen; ++k)
                     if (encoderLaTeXEscapedCharacters[k].unicode == c) {
                         output.append(QString("\\%1{%2}").arg(encoderLaTeXEscapedCharacters[k].modifier).arg(encoderLaTeXEscapedCharacters[k].letter));
+                        found = true;
+                        break;
+                    }
+            }
+
+            if (!found) {
+                /// Ok, test for greek letters
+                /*for (int k = 0; k < greekLetterCommandLen; ++k)
+                    if (greekLetterCommand[k].unicode == c) {
+                        if (inMathMode)
+                            output.append(QString("\\%1{}").arg(greekLetterCommand[k].written));
+                        else
+                            output.append(QString("\\text%1{}").arg(greekLetterCommand[k].written));
+                        found = true;
+                        break;
+                    }*/
+            }
+
+            if (!found) {
+                /// Ok, test for math commands
+                for (int k = 0; k < mathCommandLen; ++k)
+                    if (mathCommand[k].unicode == c) {
+                        if (inMathMode)
+                            output.append(QString("\\%1{}").arg(mathCommand[k].written));
+                        else
+                            output.append(QString("\\ensuremath{\\%1}").arg(mathCommand[k].written));
                         found = true;
                         break;
                     }
