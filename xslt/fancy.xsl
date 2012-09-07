@@ -75,7 +75,7 @@
 -->
 
 <xsl:template match="journal">
-<span style="font-style:italic;"><a style="text-decoration: none; color: white;"><xsl:attribute name="href"><xsl:text>kbibtex:filter:journal=</xsl:text><xsl:value-of select="."/></xsl:attribute><xsl:value-of select="."/></a></span>
+<a style="text-decoration: none; color: white; font-style:italic;"><xsl:attribute name="href"><xsl:text>kbibtex:filter:journal=</xsl:text><xsl:value-of select="."/></xsl:attribute><xsl:value-of select="."/></a>
 <xsl:if test="string-length(../volume)>0">
 <xsl:text> </xsl:text>
 <a style="text-decoration: none; color: white;"><xsl:attribute name="href"><xsl:text>kbibtex:filter:volume=</xsl:text><xsl:value-of select="../volume"/></xsl:attribute><xsl:value-of select="../volume"/></a>
@@ -113,7 +113,8 @@
 </xsl:template>
 
 <xsl:template match="note">
-<xsl:text>, </xsl:text><xsl:apply-templates />
+<xsl:text>, </xsl:text>
+<a style="text-decoration: none; color: white;"><xsl:attribute name="href"><xsl:text>kbibtex:filter:note=</xsl:text><xsl:value-of select="."/></xsl:attribute><xsl:value-of select="."/></a>
 </xsl:template>
 
 <xsl:template match="month">
@@ -139,6 +140,7 @@
 <xsl:apply-templates select="year" />
 <xsl:apply-templates select="pages" />
 </xsl:if>
+<xsl:apply-templates select="note" />
 </div>
 </xsl:if>
 <xsl:if test="string-length(abstract)>0">
