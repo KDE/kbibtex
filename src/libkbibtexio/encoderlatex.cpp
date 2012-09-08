@@ -304,31 +304,6 @@ static struct EncoderLaTeXEscapedCharacterLookupTableRow {
 
 
 /**
- * This data structure keeps track of greek letters, which
- * have to be treated differently in text and math mode.
- * The greek alpha character would be \alpha in math mode,
- * but \textalpha in text mode (requiring package textgreek).
- */
-static const struct GreekLetterCommand {
-    QString written;
-    QChar unicode;
-}
-greekLetterCommand[] = {
-    {QLatin1String("Omega"), QChar(0x038F)}, // FIXME tonos
-    {QLatin1String("Delta"), QChar(0x0394)},
-    {QLatin1String("Omega"), QChar(0x03A9)},
-    {QLatin1String("iota"), QChar(0x03AF)}, // FIXME tonos
-    {QLatin1String("alpha"), QChar(0x03B1)},
-    {QLatin1String("theta"), QChar(0x03B8)},
-    {QLatin1String("iota"), QChar(0x03B9)},
-    {QLatin1String("pi"), QChar(0x03C0)},
-    {QLatin1String("sigma"), QChar(0x03C3)},
-    {QLatin1String("phi"), QChar(0x03C6)},
-};
-static const int greekLetterCommandLen = sizeof(greekLetterCommand) / sizeof(greekLetterCommand[0]);
-
-
-/**
  * This data structure keeps track of math commands, which
  * have to be treated differently in text and math mode.
  * The math command like "subset of" could be used directly
@@ -578,17 +553,6 @@ QString EncoderLaTeX::decode(const QString &input) const
                             }
                         }
 
-                        /// Check if a greek letter has been read,
-                        /// like \alpha or \textalpha
-                        /// (automatically skipped if command was found above)
-                        /*for (int k = 0; !foundCommand && k < greekLetterCommandLen; ++k) {
-                            const QString textForm = QLatin1String("text") + greekLetterCommand[k].written;
-                            if (greekLetterCommand[k].written == alpha || textForm == alpha) {
-                                output.append(greekLetterCommand[k].unicode);
-                                foundCommand = true;
-                            }
-                        }*/
-
                         /// Check if a math command has been read,
                         /// like \subset
                         /// (automatically skipped if command was found above)
@@ -707,17 +671,6 @@ QString EncoderLaTeX::decode(const QString &input) const
                             foundCommand = true;
                         }
                     }
-
-                    /// Check if a greek letter has been read,
-                    /// like \alpha or \textalpha
-                    /// (automatically skipped if command was found above)
-                    /*for (int k = 0; !foundCommand && k < greekLetterCommandLen; ++k) {
-                        const QString textForm = QLatin1String("text") + greekLetterCommand[k].written;
-                        if (greekLetterCommand[k].written == alpha || textForm == alpha) {
-                            output.append(greekLetterCommand[k].unicode);
-                            foundCommand = true;
-                        }
-                    }*/
 
                     if (foundCommand) {
                         /// Now, after a command, a whitespace may follow
@@ -896,19 +849,6 @@ QString EncoderLaTeX::encode(const QString &input) const
                         found = true;
                         break;
                     }
-            }
-
-            if (!found) {
-                /// Ok, test for greek letters
-                /*for (int k = 0; k < greekLetterCommandLen; ++k)
-                    if (greekLetterCommand[k].unicode == c) {
-                        if (inMathMode)
-                            output.append(QString("\\%1{}").arg(greekLetterCommand[k].written));
-                        else
-                            output.append(QString("\\text%1{}").arg(greekLetterCommand[k].written));
-                        found = true;
-                        break;
-                    }*/
             }
 
             if (!found) {
