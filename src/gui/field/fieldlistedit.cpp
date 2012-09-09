@@ -590,13 +590,14 @@ void UrlListEdit::textChanged(QWidget *widget)
     /// Create URL from new text to make some tests on it
     /// Only remote URLs are of interest, therefore no tests
     /// on local file or relative paths
-    const QString newText = fieldLineEdit->text();
+    QString newText = fieldLineEdit->text();
     KUrl url(newText);
+    newText = newText.toLower();
 
     /// Enable button only if Url is valid and points to a remote
-    /// PDF or PostScript file
+    /// DjVu, PDF, or PostScript file
     // TODO more file types?
-    bool canBeSaved = url.isValid() && !urlIsLocal(url) && (newText.endsWith(QLatin1String(".pdf")) || newText.endsWith(QLatin1String(".ps"))) && !urlIsLocal(url);
+    bool canBeSaved = url.isValid() && !urlIsLocal(url) && (newText.endsWith(QLatin1String(".djvu")) || newText.endsWith(QLatin1String(".pdf")) || newText.endsWith(QLatin1String(".ps"))) && !urlIsLocal(url);
     buttonSaveLocally->setEnabled(canBeSaved);
     buttonSaveLocally->setToolTip(canBeSaved ? i18n("Save file \"%1\" locally", url.pathOrUrl()) : QLatin1String(""));
 }
