@@ -170,37 +170,36 @@ bool SortFilterBibTeXFileModel::filterAcceptsRow(int source_row, const QModelInd
             /// Check entry's id
             const QString id = entry->id();
             int i = 0;
-            for (QStringList::ConstIterator itsl = m_filterQuery.terms.constBegin(); itsl != m_filterQuery.terms.constEnd(); ++itsl, ++i) {
+            for (QStringList::ConstIterator itsl = m_filterQuery.terms.constBegin(); itsl != m_filterQuery.terms.constEnd(); ++itsl, ++i)
                 eachTerm[i] |= (*itsl).isEmpty() ? true : id.contains(*itsl, Qt::CaseInsensitive);
-            }
+        }
 
-            if (m_filterQuery.field.isEmpty() || m_filterQuery.field == QLatin1String("^type")) {
-                /// Check entry's type
-                const QString type = entry->type();
-                /// Check type's description ("Journal Article")
-                const QString label = BibTeXEntries::self()->label(type);
-                // TODO test for internationlized variants like "Artikel" or "bok" as well?
+        if (m_filterQuery.field.isEmpty() || m_filterQuery.field == QLatin1String("^type")) {
+            /// Check entry's type
+            const QString type = entry->type();
+            /// Check type's description ("Journal Article")
+            const QString label = BibTeXEntries::self()->label(type);
+            // TODO test for internationlized variants like "Artikel" or "bok" as well?
+            int i = 0;
+            for (QStringList::ConstIterator itsl = m_filterQuery.terms.constBegin(); itsl != m_filterQuery.terms.constEnd(); ++itsl, ++i)
+                eachTerm[i] |= (*itsl).isEmpty() ? true : type.startsWith(*itsl, Qt::CaseInsensitive) || label.startsWith(*itsl, Qt::CaseInsensitive);
+        }
+
+        for (Entry::ConstIterator it = entry->constBegin(); it != entry->constEnd(); ++it)
+            if (m_filterQuery.field.isEmpty() || m_filterQuery.field == it.key().toLower()) {
                 int i = 0;
                 for (QStringList::ConstIterator itsl = m_filterQuery.terms.constBegin(); itsl != m_filterQuery.terms.constEnd(); ++itsl, ++i)
-                    eachTerm[i] |= (*itsl).isEmpty() ? true : type.startsWith(*itsl, Qt::CaseInsensitive) || label.startsWith(*itsl, Qt::CaseInsensitive);
+                    eachTerm[i] |= (*itsl).isEmpty() ? true : it.value().containsPattern(*itsl);
             }
 
-            for (Entry::ConstIterator it = entry->constBegin(); it != entry->constEnd(); ++it)
-                if (m_filterQuery.field.isEmpty() || m_filterQuery.field == it.key().toLower()) {
-                    int i = 0;
-                    for (QStringList::ConstIterator itsl = m_filterQuery.terms.constBegin(); itsl != m_filterQuery.terms.constEnd(); ++itsl, ++i)
-                        eachTerm[i] |= (*itsl).isEmpty() ? true : it.value().containsPattern(*itsl);
-                }
-
-            /// Test associated PDF files
-            if (m_filterQuery.searchPDFfiles && m_filterQuery.field.isEmpty()) ///< not filtering for any specific field
-                foreach(const KUrl &url, FileInfo::entryUrls(entry.data(), bibTeXSourceModel()->bibTeXFile()->property(File::Url, KUrl()).toUrl(), FileInfo::TestExistanceYes)) {
-                if (url.isLocalFile() && url.fileName().endsWith(QLatin1String(".pdf"))) {
-                    const QString text = FileInfo::pdfToText(url.pathOrUrl());
-                    int i = 0;
-                    for (QStringList::ConstIterator itsl = m_filterQuery.terms.constBegin(); itsl != m_filterQuery.terms.constEnd(); ++itsl, ++i)
-                        eachTerm[i] |= (*itsl).isEmpty() ? true : text.contains(*itsl, Qt::CaseInsensitive);
-                }
+        /// Test associated PDF files
+        if (m_filterQuery.searchPDFfiles && m_filterQuery.field.isEmpty()) ///< not filtering for any specific field
+            foreach(const KUrl &url, FileInfo::entryUrls(entry.data(), bibTeXSourceModel()->bibTeXFile()->property(File::Url, KUrl()).toUrl(), FileInfo::TestExistanceYes)) {
+            if (url.isLocalFile() && url.fileName().endsWith(QLatin1String(".pdf"))) {
+                const QString text = FileInfo::pdfToText(url.pathOrUrl());
+                int i = 0;
+                for (QStringList::ConstIterator itsl = m_filterQuery.terms.constBegin(); itsl != m_filterQuery.terms.constEnd(); ++itsl, ++i)
+                    eachTerm[i] |= (*itsl).isEmpty() ? true : text.contains(*itsl, Qt::CaseInsensitive);
             }
         }
 
