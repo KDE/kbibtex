@@ -395,6 +395,7 @@ void FindPDFUI::apply(Entry &entry, const File &bibtexFile)
         if (downloadMode == FindPDF::URLonly && url.isValid()) {
             bool alreadyContained = false;
             for (QMap<QString, Value>::ConstIterator it = entry.constBegin(); !alreadyContained && it != entry.constEnd(); ++it)
+                // FIXME this will terribly break if URLs in an entry's URL field are separated with semicolons
                 alreadyContained |= it.key().toLower().startsWith(Entry::ftUrl) && PlainTextValue::text(it.value()) == url.toString();
             if (!alreadyContained) {
                 Value value;
