@@ -11,16 +11,6 @@ class KBibTeXTest : public KDialog
     Q_OBJECT
 
 public:
-    KBibTeXTest(QWidget *parent = NULL);
-
-private slots:
-    void aboutToQuit();
-    void startOnlineSearchTests();
-    void startTestFileTests();
-    void onlineSearchStoppedSearch(int);
-    void onlineSearchFoundEntry();
-
-private:
     typedef struct {
         QString filename;
         int numElements, numEntries;
@@ -28,16 +18,30 @@ private:
         QByteArray md4sum;
     } TestFile;
 
+    KBibTeXTest(QWidget *parent = NULL);
+
+    QList<TestFile *> testFiles;
+
+private slots:
+    void aboutToQuit();
+    void startOnlineSearchTests();
+    void startAllTestFileTests();
+    void startTestFileTest(int);
+    void onlineSearchStoppedSearch(int);
+    void onlineSearchFoundEntry();
+
+private:
     bool m_running;
     TestWidget *m_testWidget;
 
     QList<OnlineSearchAbstract *> m_onlineSearchList;
-    OnlineSearchAbstract *m_currentOnlineSearch;
+    QList<OnlineSearchAbstract *>::ConstIterator m_currentOnlineSearch;
     int m_currentOnlineSearchNumFoundEntries;
 
     void addMessage(const QString &message, const KIcon &icon = KIcon());
 
     void processNextSearch();
+    void processFileTest(TestFile *testFile);
 
     File *loadFile(const QString &absoluteFilename, TestFile *currentTestFile);
     QString saveFile(File *file, TestFile *currentTestFile);

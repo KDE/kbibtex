@@ -12,6 +12,7 @@
 #include <QFileInfo>
 #include <QMenu>
 #include <QCryptographicHash>
+#include <QSignalMapper>
 
 #include <onlinesearchacmportal.h>
 #include <onlinesearcharxiv.h>
@@ -39,35 +40,77 @@ int filenameCounter = 0;
 
 class TestWidget : public QWidget
 {
+private:
+    KBibTeXTest *m_parent;
+
 public:
     KListWidget *messageList;
     KPushButton *buttonStartTest;
-    KAction *actionStartOnlineSearchTests, *actionStartTestFileTests;
+    KAction *actionStartOnlineSearchTests, *actionStartAllTestFileTests;
 
     TestWidget(KBibTeXTest *parent)
-            : QWidget(parent) {
-        actionStartOnlineSearchTests = new KAction(QLatin1String("Online Search"), parent);
-        connect(actionStartOnlineSearchTests, SIGNAL(triggered()), parent, SLOT(startOnlineSearchTests()));
-        actionStartTestFileTests = new KAction(QLatin1String("File Import/Export"), parent);
-        connect(actionStartTestFileTests, SIGNAL(triggered()), parent, SLOT(startTestFileTests()));
-
+            : QWidget(parent), m_parent(parent) {
         QGridLayout *layout = new QGridLayout(this);
 
         buttonStartTest = new KPushButton(KIcon("application-x-executable"), QLatin1String("Start Tests"), this);
         layout->addWidget(buttonStartTest, 0, 0, 1, 1);
-        QMenu *menu = new QMenu(buttonStartTest);
-        menu->addAction(actionStartOnlineSearchTests);
-        menu->addAction(actionStartTestFileTests);
-        buttonStartTest->setMenu(menu);
 
         messageList = new KListWidget(this);
         layout->addWidget(messageList, 1, 0, 4, 4);
     }
+
+    void setupMenus() {
+        QMenu *menu = new QMenu(buttonStartTest);
+        buttonStartTest->setMenu(menu);
+
+        /// ** Online Search **
+        actionStartOnlineSearchTests = new KAction(QLatin1String("Online Search"), m_parent);
+        connect(actionStartOnlineSearchTests, SIGNAL(triggered()), m_parent, SLOT(startOnlineSearchTests()));
+        menu->addAction(actionStartOnlineSearchTests);
+
+        /// ** File Import/Export **
+        actionStartAllTestFileTests = new KAction(QLatin1String("All Tests"), m_parent);
+        connect(actionStartAllTestFileTests, SIGNAL(triggered()), m_parent, SLOT(startAllTestFileTests()));
+
+        QMenu *subMenu = menu->addMenu("File Import/Export");
+        subMenu->addAction(actionStartAllTestFileTests);
+
+        subMenu->addSeparator();
+        QSignalMapper *fileTestsSignalMapper = new QSignalMapper(subMenu);
+        connect(fileTestsSignalMapper, SIGNAL(mapped(int)), m_parent, SLOT(startTestFileTest(int)));
+        int id = 0;
+        for (QList<KBibTeXTest::TestFile *>::ConstIterator it = m_parent->testFiles.constBegin(); it != m_parent->testFiles.constEnd(); ++it, ++id) {
+            KBibTeXTest::TestFile *testFile = *it;
+            const QString label = QFileInfo(testFile->filename).fileName();
+            QAction *action = subMenu->addAction(label, fileTestsSignalMapper, SLOT(map()));
+            fileTestsSignalMapper->setMapping(action, id);
+        }
+    }
 };
 
 KBibTeXTest::KBibTeXTest(QWidget *parent)
-        : KDialog(parent), m_running(false), m_currentOnlineSearch(NULL)
+        : KDialog(parent), m_running(false)
 {
+    testFiles << createTestFile(QLatin1String("bib/bug19489.bib"), 1, 1, QLatin1String("bart:04:1242"), QLatin1String("Ralph"), QLatin1String("a926264c17545bf6eb9a953a8e3f0970"));
+    testFiles << createTestFile(QLatin1String("bib/names-with-braces.bib"), 1, 1, QLatin1String("names1"), QLatin1String("{{{{{LastName3A LastName3B}}}}}"), QLatin1String("c4a6575e606ac513b79d1b8e18bca02e"));
+    testFiles << createTestFile(QLatin1String("bib/duplicates.bib"), 23, 23, QLatin1String("books/aw/Sedgewick88"), QLatin1String("Sedgewick"), QLatin1String("f743ccb08afda3514a7122710e6590ba"));
+    testFiles << createTestFile(QLatin1String("bib/minix.bib"), 163, 123, QLatin1String("Jesshope:2006:ACS"), QLatin1String("Egan"), QLatin1String("c45e76eb809ba4c811f40452215bce04"));
+    testFiles << createTestFile(QLatin1String("bib/bug19484-refs.bib"), 641, 641, QLatin1String("Bagnara-etal-2002"), QLatin1String("Hill"), QLatin1String("a6737870e88b13fd2a6dff00b583cc5b"));
+    testFiles << createTestFile(QLatin1String("bib/bug19362-file15701-database.bib"), 911, 911, QLatin1String("New1"), QLatin1String("Sunder"), QLatin1String("eb93fa136f4b114c3a6fc4a821b4117c"));
+    testFiles << createTestFile(QLatin1String("bib/digiplay.bib"), 3074, 3074, QLatin1String("1180"), QLatin1String("Huizinga"), QLatin1String("2daf695fccb01f4b4cfbe967db62b0a8"));
+    m_onlineSearchList << new OnlineSearchAcmPortal(this);
+    m_onlineSearchList << new OnlineSearchArXiv(this);
+    m_onlineSearchList << new OnlineSearchBibsonomy(this);
+    m_onlineSearchList << new OnlineSearchGoogleScholar(this);
+    m_onlineSearchList << new OnlineSearchIEEEXplore(this);
+    m_onlineSearchList << new OnlineSearchIngentaConnect(this);
+    m_onlineSearchList << new OnlineSearchJStor(this);
+    m_onlineSearchList << new OnlineSearchMathSciNet(this);
+    m_onlineSearchList << new OnlineSearchPubMed(this);
+    m_onlineSearchList << new OnlineSearchScienceDirect(this);
+    m_onlineSearchList << new OnlineSearchSpringerLink(this);
+    m_currentOnlineSearch = m_onlineSearchList.constBegin();
+
     setPlainCaption(QLatin1String("KBibTeX Test Suite"));
     setButtons(KDialog::Close);
 
@@ -75,6 +118,7 @@ KBibTeXTest::KBibTeXTest(QWidget *parent)
     const int fontSize = m_testWidget->fontMetrics().width(QLatin1Char('a'));
     m_testWidget->setMinimumSize(fontSize * 96, fontSize * 48);
     setMainWidget(m_testWidget);
+    m_testWidget->setupMenus();
 
     connect(this, SIGNAL(closeClicked()), this, SLOT(aboutToQuit()));
 }
@@ -100,34 +144,21 @@ void KBibTeXTest::startOnlineSearchTests()
     m_testWidget->buttonStartTest->setEnabled(false);
     m_testWidget->messageList->clear();
     kapp->processEvents();
-
-    m_onlineSearchList.clear();
-    m_onlineSearchList << new OnlineSearchAcmPortal(this);
-    m_onlineSearchList << new OnlineSearchArXiv(this);
-    m_onlineSearchList << new OnlineSearchBibsonomy(this);
-    m_onlineSearchList << new OnlineSearchGoogleScholar(this);
-    m_onlineSearchList << new OnlineSearchIEEEXplore(this);
-    m_onlineSearchList << new OnlineSearchIngentaConnect(this);
-    m_onlineSearchList << new OnlineSearchJStor(this);
-    m_onlineSearchList << new OnlineSearchMathSciNet(this);
-    m_onlineSearchList << new OnlineSearchPubMed(this);
-    m_onlineSearchList << new OnlineSearchScienceDirect(this);
-    m_onlineSearchList << new OnlineSearchSpringerLink(this);
-
     processNextSearch();
 }
 
 void KBibTeXTest::onlineSearchStoppedSearch(int searchResult)
 {
     if (searchResult == OnlineSearchAbstract::resultNoError) {
-        addMessage(QString(QLatin1String("No error searching \"%1\", found %2 entries")).arg(m_currentOnlineSearch->label()).arg(m_currentOnlineSearchNumFoundEntries), iconOK);
+        addMessage(QString(QLatin1String("No error searching \"%1\", found %2 entries")).arg((*m_currentOnlineSearch)->label()).arg(m_currentOnlineSearchNumFoundEntries), iconOK);
     } else if (searchResult == OnlineSearchAbstract::resultAuthorizationRequired) {
-        addMessage(QString(QLatin1String("Authorization required for \"%1\"")).arg(m_currentOnlineSearch->label()), iconAUTH);
+        addMessage(QString(QLatin1String("Authorization required for \"%1\"")).arg((*m_currentOnlineSearch)->label()), iconAUTH);
     } else if (searchResult == OnlineSearchAbstract::resultNetworkError) {
-        addMessage(QString(QLatin1String("Network error for \"%1\"")).arg(m_currentOnlineSearch->label()), iconNETWORK);
+        addMessage(QString(QLatin1String("Network error for \"%1\"")).arg((*m_currentOnlineSearch)->label()), iconNETWORK);
     } else {
-        addMessage(QString(QLatin1String("Error searching \"%1\"")).arg(m_currentOnlineSearch->label()), iconERROR);
+        addMessage(QString(QLatin1String("Error searching \"%1\"")).arg((*m_currentOnlineSearch)->label()), iconERROR);
     }
+    m_currentOnlineSearch++;
 
     processNextSearch();
 }
@@ -139,17 +170,15 @@ void KBibTeXTest::onlineSearchFoundEntry()
 
 void KBibTeXTest::processNextSearch()
 {
-    if (m_running && !m_onlineSearchList.isEmpty()) {
+    if (m_running && m_currentOnlineSearch != m_onlineSearchList.constEnd()) {
         m_currentOnlineSearchNumFoundEntries = 0;
-        m_currentOnlineSearch = m_onlineSearchList.first();
-        m_onlineSearchList.removeFirst();
-        addMessage(QString(QLatin1String("Searching \"%1\"")).arg(m_currentOnlineSearch->label()), iconINFO);
+        addMessage(QString(QLatin1String("Searching \"%1\"")).arg((*m_currentOnlineSearch)->label()), iconINFO);
 
         QMap<QString, QString> query;
         query.insert(OnlineSearchAbstract::queryKeyAuthor, QLatin1String("smith"));
-        connect(m_currentOnlineSearch, SIGNAL(stoppedSearch(int)), this, SLOT(onlineSearchStoppedSearch(int)));
-        connect(m_currentOnlineSearch, SIGNAL(foundEntry(QSharedPointer<Entry>)), this, SLOT(onlineSearchFoundEntry()));
-        m_currentOnlineSearch->startSearch(query, 3);
+        connect((*m_currentOnlineSearch), SIGNAL(stoppedSearch(int)), this, SLOT(onlineSearchStoppedSearch(int)));
+        connect((*m_currentOnlineSearch), SIGNAL(foundEntry(QSharedPointer<Entry>)), this, SLOT(onlineSearchFoundEntry()));
+        (*m_currentOnlineSearch)->startSearch(query, 3);
     } else {
         addMessage(QLatin1String("Done testing"), iconINFO);
         m_testWidget->buttonStartTest->setEnabled(true);
@@ -157,50 +186,63 @@ void KBibTeXTest::processNextSearch()
     }
 }
 
-void KBibTeXTest::startTestFileTests()
+void KBibTeXTest::startAllTestFileTests()
 {
     m_running = true;
     m_testWidget->buttonStartTest->setEnabled(false);
     m_testWidget->messageList->clear();
     kapp->processEvents();
 
-    QList<TestFile *> testFiles = QList<TestFile *>() << createTestFile(QLatin1String("bib/bug19489.bib"), 1, 1, QLatin1String("bart:04:1242"), QLatin1String("Ralph"), QLatin1String("a926264c17545bf6eb9a953a8e3f0970"));
-    testFiles << createTestFile(QLatin1String("bib/names-with-braces.bib"), 1, 1, QLatin1String("names1"), QLatin1String("LastName3A LastName3B"), QLatin1String("e0cf18bc193f545e576d128106deafbb"));
-    testFiles << createTestFile(QLatin1String("bib/duplicates.bib"), 23, 23, QLatin1String("books/aw/Sedgewick88"), QLatin1String("Sedgewick"), QLatin1String("f743ccb08afda3514a7122710e6590ba"));
-    testFiles << createTestFile(QLatin1String("bib/minix.bib"), 163, 123, QLatin1String("Jesshope:2006:ACS"), QLatin1String("Egan"), QLatin1String("c45e76eb809ba4c811f40452215bce04"));
-    testFiles << createTestFile(QLatin1String("bib/bug19484-refs.bib"), 641, 641, QLatin1String("Bagnara-etal-2002"), QLatin1String("Hill"), QLatin1String("a6737870e88b13fd2a6dff00b583cc5b"));
-    testFiles << createTestFile(QLatin1String("bib/bug19362-file15701-database.bib"), 911, 911, QLatin1String("New1"), QLatin1String("Sunder"), QLatin1String("eb93fa136f4b114c3a6fc4a821b4117c"));
-    testFiles << createTestFile(QLatin1String("bib/digiplay.bib"), 3074, 3074, QLatin1String("1180"), QLatin1String("Huizinga"), QLatin1String("2daf695fccb01f4b4cfbe967db62b0a8"));
-
-    m_running = true;
     for (QList<TestFile *>::ConstIterator it = testFiles.constBegin(); it != testFiles.constEnd(); ++it) {
-        TestFile *currentTestFile = *it;
-
-        const QString absoluteFilename = QLatin1String(TESTSET_DIRECTORY) + currentTestFile->filename;
-        if (!QFileInfo(absoluteFilename).exists()) {
-            addMessage(QString(QLatin1String("File \"%1\" does not exist")).arg(absoluteFilename), iconERROR);
-            continue;
-        }
-
-        File *file = loadFile(absoluteFilename, currentTestFile);
-        if (file == NULL)
-            continue;
-        const QString tempFileName = saveFile(file, currentTestFile);
-        if (tempFileName.isEmpty())
-            continue;
-        File *file2 = loadFile(tempFileName, currentTestFile);
-        if (file2 == NULL) {
-            delete file;
-            continue;
-        }
-
-        delete file;
-        delete file2;
+        processFileTest(*it);
     }
 
     addMessage(QLatin1String("Done testing"), iconINFO);
     m_testWidget->buttonStartTest->setEnabled(true);
     m_running = false;
+}
+
+void KBibTeXTest::startTestFileTest(int index)
+{
+    m_running = true;
+    m_testWidget->buttonStartTest->setEnabled(false);
+    m_testWidget->messageList->clear();
+    kapp->processEvents();
+
+    TestFile *testFile = testFiles[index];
+    processFileTest(testFile);
+
+    addMessage(QLatin1String("Done testing"), iconINFO);
+    m_testWidget->buttonStartTest->setEnabled(true);
+    m_running = false;
+}
+
+void KBibTeXTest::processFileTest(TestFile *testFile)
+{
+    kapp->processEvents();
+
+    const QString absoluteFilename = QLatin1String(TESTSET_DIRECTORY) + testFile->filename;
+    if (!QFileInfo(absoluteFilename).exists()) {
+        addMessage(QString(QLatin1String("File \"%1\" does not exist")).arg(absoluteFilename), iconERROR);
+        return;
+    }
+
+    File *file = loadFile(absoluteFilename, testFile);
+    if (file == NULL)
+        return;
+    const QString tempFileName = saveFile(file, testFile);
+    if (tempFileName.isEmpty()) {
+        delete file;
+        return;
+    }
+    File *file2 = loadFile(tempFileName, testFile);
+    if (file2 == NULL) {
+        delete file;
+        return;
+    }
+
+    delete file;
+    delete file2;
 }
 
 File *KBibTeXTest::loadFile(const QString &absoluteFilename, TestFile *currentTestFile)
@@ -273,11 +315,17 @@ File *KBibTeXTest::loadFile(const QString &absoluteFilename, TestFile *currentTe
 
     if (countElements != currentTestFile->numElements) {
         addMessage(QString(QLatin1String("File \"%1\" is supposed to have %2 elements, but only %3 were counted")).arg(QFileInfo(absoluteFilename).fileName()).arg(currentTestFile->numElements).arg(countElements), iconERROR);
+        QSharedPointer<Entry> entry = bibTeXFile->at(bibTeXFile->count() - 1).dynamicCast<Entry>();
+        if (!entry.isNull())
+            kDebug() << "Last entry had id" << entry->id();
         delete importer;
         delete bibTeXFile;
         return NULL;
     } else if (countEntries != currentTestFile->numEntries) {
         addMessage(QString(QLatin1String("File \"%1\" is supposed to have %2 entries, but only %3 were counted")).arg(QFileInfo(absoluteFilename).fileName()).arg(currentTestFile->numEntries).arg(countEntries), iconERROR);
+        QSharedPointer<Entry> entry = bibTeXFile->at(bibTeXFile->count() - 1).dynamicCast<Entry>();
+        if (!entry.isNull())
+            kDebug() << "Last entry had id" << entry->id();
         delete importer;
         delete bibTeXFile;
         return NULL;
@@ -298,14 +346,27 @@ File *KBibTeXTest::loadFile(const QString &absoluteFilename, TestFile *currentTe
         for (QStringList::ConstIterator it = lastAuthorsList.constBegin(); it != lastAuthorsList.constEnd(); ++it)
             hash.addData((*it).toUtf8());
 
+        const QString authorListFilename = KStandardDirs::locateLocal("tmp", QFileInfo(currentTestFile->filename).baseName()) + QString(QLatin1String("_authors_%1.txt")).arg(++filenameCounter);
+        QFile authorListFile(authorListFilename);
+        if (authorListFile.open(QFile::WriteOnly)) {
+            QTextStream ts(&authorListFile);
+            for (QStringList::ConstIterator it = lastAuthorsList.constBegin(); it != lastAuthorsList.constEnd(); ++it)
+                ts << *it << endl;
+            authorListFile.close();
+            kDebug() << "Saved list of authors in" << authorListFilename;
+        } else
+            kDebug() << "Failed to write list of authors to" << authorListFilename;
+
+
         if (hash.result() != currentTestFile->md4sum) {
             kDebug() << hash.result().toHex().data() << "for" << absoluteFilename << "based on" << currentTestFile->filename;
             addMessage(QString(QLatin1String("A hash sum over all last authors in file \"%1\" did not match the expected hash sum (%2)")).arg(QFileInfo(absoluteFilename).fileName()).arg(hash.result().toHex().data()), iconERROR);
             delete importer;
             delete bibTeXFile;
             return NULL;
-        } else
+        } else {
             addMessage(QString(QLatin1String("File \"%1\" was imported correctly")).arg(QFileInfo(absoluteFilename).fileName()), iconOK);
+        }
     }
 
     delete importer;
