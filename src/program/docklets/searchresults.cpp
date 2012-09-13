@@ -112,7 +112,11 @@ public:
         if (!entry.isNull())
             idSuggestions.applyDefaultFormatId(*entry.data());
 
-        return model->insertRow(element, model->rowCount());
+        bool result= model->insertRow(element, model->rowCount());
+        if (result)
+            resultList->sortFilterProxyModel()->invalidate();
+
+        return result;
     }
 
 };
