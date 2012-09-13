@@ -23,7 +23,6 @@
 #include <QLabel>
 #include <QFormLayout>
 #include <QNetworkReply>
-#include <QNetworkCookieJar>
 
 #include <KLocale>
 #include <KMessageBox>
@@ -170,6 +169,7 @@ void OnlineSearchGoogleScholar::doneFetchingSetConfigPage()
         url.addEncodedQueryItem(QString("as_sauthors").toAscii(), d->queryAuthor.toAscii());
         url.addEncodedQueryItem(QString("as_ylo").toAscii(), d->queryYear.toAscii());
         url.addEncodedQueryItem(QString("as_yhi").toAscii(), d->queryYear.toAscii());
+        url.addEncodedQueryItem(QString("as_vis").toAscii(), "1"); ///< include citations
         url.addQueryItem("num", QString::number(d->numResults));
         url.addQueryItem("btnG", "Search Scholar");
 
@@ -189,6 +189,8 @@ void OnlineSearchGoogleScholar::doneFetchingQueryPage()
 
     if (handleErrors(reply)) {
         QString htmlText = reply->readAll();
+
+        dumpToFile("googlescholar.html", htmlText);
 
         static const QRegExp linkToBib("/scholar.bib\\?[^\" >]+");
         int pos = 0;

@@ -88,6 +88,8 @@ public:
             ElementWidget *widget = new EntryConfiguredWidget(etl, tab);
             connect(widget, SIGNAL(modified(bool)), p, SLOT(childModified(bool)));
             widgets << widget;
+            if (previousWidget == NULL)
+                previousWidget = widget; ///< memorize the first tab
             int index = tab->addTab(widget, widget->icon(), widget->label());
             tab->setTabEnabled(index, false);
         }
@@ -171,9 +173,6 @@ public:
         connect(buttonCheckWithBibTeX, SIGNAL(clicked()), p, SLOT(checkBibTeX()));
 
         addTabWidgets();
-
-        tab->setCurrentIndex(0);
-        previousWidget = dynamic_cast<ElementWidget *>(tab->widget(0));
     }
 
     void updateTabVisibility() {
