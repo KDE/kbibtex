@@ -182,7 +182,7 @@ bool SortFilterBibTeXFileModel::filterAcceptsRow(int source_row, const QModelInd
             // TODO test for internationlized variants like "Artikel" or "bok" as well?
             int i = 0;
             for (QStringList::ConstIterator itsl = m_filterQuery.terms.constBegin(); itsl != m_filterQuery.terms.constEnd(); ++itsl, ++i)
-                eachTerm[i] |= (*itsl).isEmpty() ? true : type.startsWith(*itsl, Qt::CaseInsensitive) || label.startsWith(*itsl, Qt::CaseInsensitive);
+                eachTerm[i] |= (*itsl).isEmpty() ? true : type.contains(*itsl, Qt::CaseInsensitive) || label.contains(*itsl, Qt::CaseInsensitive);
         }
 
         for (Entry::ConstIterator it = entry->constBegin(); it != entry->constEnd(); ++it)
@@ -220,7 +220,7 @@ bool SortFilterBibTeXFileModel::filterAcceptsRow(int source_row, const QModelInd
                 static const QString label = QLatin1String("macro");
                 int i = 0;
                 for (QStringList::ConstIterator itsl = m_filterQuery.terms.constBegin(); itsl != m_filterQuery.terms.constEnd(); ++itsl, ++i)
-                    eachTerm[i] |= label.startsWith(*itsl, Qt::CaseInsensitive);
+                    eachTerm[i] = eachTerm[i] || label.contains(*itsl, Qt::CaseInsensitive);
             }
         } else {
             QSharedPointer<Comment> comment = rowElement.dynamicCast<Comment>();
@@ -235,7 +235,7 @@ bool SortFilterBibTeXFileModel::filterAcceptsRow(int source_row, const QModelInd
                     static const QString label = QLatin1String("comment");
                     int i = 0;
                     for (QStringList::ConstIterator itsl = m_filterQuery.terms.constBegin(); itsl != m_filterQuery.terms.constEnd(); ++itsl, ++i)
-                        eachTerm[i] |= label.startsWith(*itsl, Qt::CaseInsensitive);
+                        eachTerm[i] = eachTerm[i] || label.contains(*itsl, Qt::CaseInsensitive);
                 }
             } else {
                 QSharedPointer<Preamble> preamble = rowElement.dynamicCast<Preamble>();
@@ -250,7 +250,7 @@ bool SortFilterBibTeXFileModel::filterAcceptsRow(int source_row, const QModelInd
                         static const QString label = QLatin1String("preamble");
                         int i = 0;
                         for (QStringList::ConstIterator itsl = m_filterQuery.terms.constBegin(); itsl != m_filterQuery.terms.constEnd(); ++itsl, ++i)
-                            eachTerm[i] |= label.startsWith(*itsl, Qt::CaseInsensitive);
+                            eachTerm[i] = eachTerm[i] || label.contains(*itsl, Qt::CaseInsensitive);
                     }
                 }
             }
