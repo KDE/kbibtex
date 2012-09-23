@@ -60,7 +60,7 @@
 </xsl:template>
 
 <xsl:template match="title">
-<a style="text-decoration: none; color: black;"><xsl:attribute name="href"><xsl:text>kbibtex:filter:title=</xsl:text><xsl:value-of select="."/></xsl:attribute><xsl:value-of select="."/></a>
+<a style="text-decoration: none; color: #000;"><xsl:attribute name="href"><xsl:text>kbibtex:filter:title=</xsl:text><xsl:value-of select="."/></xsl:attribute><xsl:value-of select="."/></a>
 </xsl:template>
 
 <xsl:template match="booktitle">
