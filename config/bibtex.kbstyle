@@ -84,7 +84,7 @@ count=36
 
 [Column1]
 UpperCamelCase=^type
-Label=Type
+Label=Element Type
 DefaultWidth=5
 TypeIndependent=true
 
