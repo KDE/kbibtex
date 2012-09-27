@@ -41,7 +41,7 @@ int EntryClique::entryCount() const
     return checkedEntries.count();
 }
 
-QList<Entry*> EntryClique::entryList() const
+QList<Entry *> EntryClique::entryList() const
 {
     return checkedEntries.keys();
 }
@@ -111,7 +111,7 @@ void EntryClique::setChosenValue(const QString &field, Value &value, ValueOperat
     }
 }
 
-void EntryClique::addEntry(Entry* entry)
+void EntryClique::addEntry(Entry *entry)
 {
     checkedEntries.insert(entry, false); /// remember to call recalculateValueMap later
 }
@@ -122,7 +122,7 @@ void EntryClique::recalculateValueMap()
     chosenValueMap.clear();
 
     /// go through each and every entry ...
-    const QList<Entry*> el = entryList();
+    const QList<Entry *> el = entryList();
     foreach(Entry *entry, el)
     if (isEntryChecked(entry)) {
 
@@ -143,7 +143,7 @@ void EntryClique::recalculateValueMap()
             const Value fieldValue = fieldIt.value();
 
             if (fieldName == Entry::ftKeywords || fieldName == Entry::ftUrl) {
-                foreach(ValueItem* vi, fieldValue) {
+                foreach(ValueItem *vi, fieldValue) {
                     const QString text = PlainTextValue::text(*vi);
                     Value v;
                     v << vi;
@@ -236,12 +236,12 @@ public:
 
         for (int i = 0; i <= n; ++i) d[0][i] = i;
 
-        for (int i = 1; i <= m;++i)
-            for (int j = 1; j <= n;++j) {
-                d[i][j] = d[i-1][j] + 1;
-                int c = d[i][j-1] + 1;
+        for (int i = 1; i <= m; ++i)
+            for (int j = 1; j <= n; ++j) {
+                d[i][j] = d[i - 1][j] + 1;
+                int c = d[i][j - 1] + 1;
                 if (c < d[i][j]) d[i][j] = c;
-                c = d[i-1][j-1] + (s[i-1] == t[j-1] ? 0 : 1);
+                c = d[i - 1][j - 1] + (s[i - 1] == t[j - 1] ? 0 : 1);
                 if (c < d[i][j]) d[i][j] = c;
             }
 
@@ -264,18 +264,18 @@ public:
         if (m < 1 && n < 1) return 0.0;
         if (m < 1 || n < 1) return 1.0;
 
-        double **d = new double*[m+1];
+        double **d = new double*[m + 1];
         for (int i = 0; i <= m; ++i) {
-            d[i] = new double[n+1]; d[i][0] = i;
+            d[i] = new double[n + 1]; d[i][0] = i;
         }
         for (int i = 0; i <= n; ++i) d[0][i] = i;
 
-        for (int i = 1; i <= m;++i)
-            for (int j = 1; j <= n;++j) {
-                d[i][j] = d[i-1][j] + 1;
-                double c = d[i][j-1] + 1;
+        for (int i = 1; i <= m; ++i)
+            for (int j = 1; j <= n; ++j) {
+                d[i][j] = d[i - 1][j] + 1;
+                double c = d[i][j - 1] + 1;
                 if (c < d[i][j]) d[i][j] = c;
-                c = d[i-1][j-1] + levenshteinDistanceWord(s[i-1], t[j-1]);
+                c = d[i - 1][j - 1] + levenshteinDistanceWord(s[i - 1], t[j - 1]);
                 if (c < d[i][j]) d[i][j] = c;
             }
 
@@ -333,13 +333,13 @@ FindDuplicates::~FindDuplicates()
     delete d;
 }
 
-bool FindDuplicates::findDuplicateEntries(File *file, QList<EntryClique*> &entryCliqueList)
+bool FindDuplicates::findDuplicateEntries(File *file, QList<EntryClique *> &entryCliqueList)
 {
     KApplication::setOverrideCursor(Qt::WaitCursor);
     KProgressDialog *progressDlg = new KProgressDialog(d->widget, i18n("Finding Duplicates"));
     progressDlg->setModal(true);
     progressDlg->setLabelText(i18n("Searching ..."));
-    progressDlg->setMinimumWidth(d->widget->fontMetrics().averageCharWidth()*48);
+    progressDlg->setMinimumWidth(d->widget->fontMetrics().averageCharWidth() * 48);
     progressDlg->setAllowCancel(true);
     connect(progressDlg, SIGNAL(cancelClicked()), this, SLOT(gotCanceled()));
 
@@ -347,9 +347,9 @@ bool FindDuplicates::findDuplicateEntries(File *file, QList<EntryClique*> &entry
     d->gotCanceled = false;
 
     /// assemble list of entries only (ignoring comments, macros, ...)
-    QList<Entry*> listOfEntries;
+    QList<Entry *> listOfEntries;
     for (File::ConstIterator it = file->constBegin(); it != file->constEnd(); ++it) {
-        Entry *e = dynamic_cast<Entry*>(*it);
+        Entry *e = dynamic_cast<Entry *>(*it);
         if (e != NULL && !e->isEmpty())
             listOfEntries << e;
     }
@@ -370,7 +370,7 @@ bool FindDuplicates::findDuplicateEntries(File *file, QList<EntryClique*> &entry
     progressDlg->setLabelText(i18n("Searching ..."));
 
     /// go through all entries ...
-    for (QList<Entry*>::ConstIterator eit = listOfEntries.constBegin(); eit != listOfEntries.constEnd(); ++eit) {
+    for (QList<Entry *>::ConstIterator eit = listOfEntries.constBegin(); eit != listOfEntries.constEnd(); ++eit) {
         KApplication::instance()->processEvents();
         if (d->gotCanceled) {
             entryCliqueList.clear();
@@ -384,7 +384,7 @@ bool FindDuplicates::findDuplicateEntries(File *file, QList<EntryClique*> &entry
         bool foundClique = false;
 
         /// go through all existing cliques
-        for (QList<EntryClique*>::Iterator cit = entryCliqueList.begin(); cit != entryCliqueList.end(); ++cit) {
+        for (QList<EntryClique *>::Iterator cit = entryCliqueList.begin(); cit != entryCliqueList.end(); ++cit) {
             /// check distance between current entry and clique's first entry
             if (d->entryDistance(*eit, (*cit)->entryList().first()) < d->sensitivity) {
                 /// if distance is below sensitivity, add current entry to clique
@@ -417,7 +417,7 @@ bool FindDuplicates::findDuplicateEntries(File *file, QList<EntryClique*> &entry
     progressDlg->close();
 
     /// remove cliques with only one element (nothing to merge here) from the list of cliques
-    for (QList<EntryClique*>::Iterator cit = entryCliqueList.begin(); cit != entryCliqueList.end();)
+    for (QList<EntryClique *>::Iterator cit = entryCliqueList.begin(); cit != entryCliqueList.end();)
         if ((*cit)->entryCount() < 2) {
             EntryClique *ec = *cit;
             cit = entryCliqueList.erase(cit);
@@ -461,13 +461,18 @@ MergeDuplicates::MergeDuplicates(QWidget *parent)
     // TODO
 }
 
-bool MergeDuplicates::mergeDuplicateEntries(const QList<EntryClique*> &entryCliques, File *file)
+bool MergeDuplicates::mergeDuplicateEntries(const QList<EntryClique *> &entryCliques, File *file)
 {
     bool didMerge = false;
 
     foreach(EntryClique *entryClique, entryCliques) {
+        /// Avoid adding fields 20 lines below
+        /// which have been remove (not added) 10 lines below
+        QSet<QString> coveredFields;
+
         Entry *mergedEntry = new Entry(QString::null, QString::null);
-        foreach(QString field, entryClique->fieldList()) {
+        foreach(const QString &field, entryClique->fieldList()) {
+            coveredFields << field;
             if (field == QLatin1String("^id"))
                 mergedEntry->setId(PlainTextValue::text(entryClique->chosenValue(field)));
             else if (field == QLatin1String("^type"))
@@ -497,8 +502,10 @@ bool MergeDuplicates::mergeDuplicateEntries(const QList<EntryClique*> &entryCliq
             if (entryClique->isEntryChecked(entry)) {
                 actuallyMerged = true;
                 for (Entry::ConstIterator it = entry->constBegin(); it != entry->constEnd(); ++it)
-                    if (!mergedEntry->contains(it.key()))
+                    if (!mergedEntry->contains(it.key()) && !coveredFields.contains(it.key())) {
                         mergedEntry->insert(it.key(), it.value());
+                        coveredFields << it.key();
+                    }
                 file->removeOne(entry);
             }
         }
