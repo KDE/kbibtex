@@ -99,7 +99,7 @@ public:
         delete buttonOpenUrl;
     }
 
-    bool reset(const Value& value) {
+    bool reset(const Value &value) {
         bool result = false;
         QString text = "";
         typeFlag = determineTypeFlag(value, typeFlag, typeFlags);
@@ -116,27 +116,27 @@ public:
                 /// therefore only the first value will be shown
                 const ValueItem *first = value.first();
 
-                const PlainText *plainText = dynamic_cast<const PlainText*>(first);
+                const PlainText *plainText = dynamic_cast<const PlainText *>(first);
                 if (typeFlag == KBibTeX::tfPlainText && plainText != NULL) {
                     text = plainText->text();
                     result = true;
                 } else {
-                    const Person *person = dynamic_cast<const Person*>(first);
+                    const Person *person = dynamic_cast<const Person *>(first);
                     if (typeFlag == KBibTeX::tfPerson && person != NULL) {
                         text = Person::transcribePersonName(person, personNameFormatting);
                         result = true;
                     } else {
-                        const MacroKey *macroKey = dynamic_cast<const MacroKey*>(first);
+                        const MacroKey *macroKey = dynamic_cast<const MacroKey *>(first);
                         if (typeFlag == KBibTeX::tfReference && macroKey != NULL) {
                             text = macroKey->text();
                             result = true;
                         } else {
-                            const Keyword *keyword = dynamic_cast<const Keyword*>(first);
+                            const Keyword *keyword = dynamic_cast<const Keyword *>(first);
                             if (typeFlag == KBibTeX::tfKeyword && keyword != NULL) {
                                 text = keyword->text();
                                 result = true;
                             } else {
-                                const VerbatimText *verbatimText = dynamic_cast<const VerbatimText*>(first);
+                                const VerbatimText *verbatimText = dynamic_cast<const VerbatimText *>(first);
                                 if (typeFlag == KBibTeX::tfVerbatim && verbatimText != NULL) {
                                     text = verbatimText->text();
                                     result = true;
@@ -155,9 +155,9 @@ public:
         return result;
     }
 
-    bool apply(Value& value) const {
+    bool apply(Value &value) const {
         value.clear();
-        const QString text = parent->text();
+        const QString text = parent->text().trimmed();
 
         EncoderLaTeX *encoder = EncoderLaTeX::currentEncoderLaTeX();
         const QString encodedText = encoder->decode(text);
@@ -176,8 +176,8 @@ public:
             value.append(FileImporterBibTeX::splitName(encodedText));
             return true;
         } else if (typeFlag == KBibTeX::tfKeyword) {
-            QList<Keyword*> keywords = FileImporterBibTeX::splitKeywords(encodedText);
-            for (QList<Keyword*>::Iterator it = keywords.begin(); it != keywords.end(); ++it)
+            QList<Keyword *> keywords = FileImporterBibTeX::splitKeywords(encodedText);
+            for (QList<Keyword *>::Iterator it = keywords.begin(); it != keywords.end(); ++it)
                 value.append(*it);
             return true;
         } else if (typeFlag == KBibTeX::tfSource) {
@@ -188,7 +188,7 @@ public:
             File *file = importer.fromString(fakeBibTeXFile);
             Entry *entry = NULL;
             if (file != NULL) {
-                if (!file->isEmpty() && (entry = dynamic_cast< Entry*>(file->first())) != NULL)
+                if (!file->isEmpty() && (entry = dynamic_cast< Entry *>(file->first())) != NULL)
                     value = entry->value(key);
                 delete file;
             }
@@ -318,23 +318,23 @@ public:
         QString rawText = QString::null;
         const ValueItem *first = value.first();
 
-        const PlainText *plainText = dynamic_cast<const PlainText*>(first);
+        const PlainText *plainText = dynamic_cast<const PlainText *>(first);
         if (plainText != NULL)
             rawText = enc->encode(plainText->text());
         else {
-            const VerbatimText *verbatimText = dynamic_cast<const VerbatimText*>(first);
+            const VerbatimText *verbatimText = dynamic_cast<const VerbatimText *>(first);
             if (verbatimText != NULL)
                 rawText = verbatimText->text();
             else {
-                const MacroKey *macroKey = dynamic_cast<const MacroKey*>(first);
+                const MacroKey *macroKey = dynamic_cast<const MacroKey *>(first);
                 if (macroKey != NULL)
                     rawText = macroKey->text();
                 else {
-                    const Person *person = dynamic_cast<const Person*>(first);
+                    const Person *person = dynamic_cast<const Person *>(first);
                     if (person != NULL)
                         rawText = enc->encode(QString("%1 %2").arg(person->firstName()).arg(person->lastName())); // FIXME proper name conversion
                     else {
-                        const Keyword *keyword = dynamic_cast<const Keyword*>(first);
+                        const Keyword *keyword = dynamic_cast<const Keyword *>(first);
                         if (keyword != NULL)
                             rawText = enc->encode(keyword->text());
                         else {
@@ -416,12 +416,12 @@ FieldLineEdit::~FieldLineEdit()
     delete d;
 }
 
-bool FieldLineEdit::apply(Value& value) const
+bool FieldLineEdit::apply(Value &value) const
 {
     return d->apply(value);
 }
 
-bool FieldLineEdit::reset(const Value& value)
+bool FieldLineEdit::reset(const Value &value)
 {
     return d->reset(value);
 }
@@ -485,7 +485,7 @@ void FieldLineEdit::dropEvent(QDropEvent *event)
     if (!d->fieldKey.isEmpty() && clipboardText.startsWith("@")) {
         FileImporterBibTeX importer;
         file = importer.fromString(clipboardText);
-        const Entry *entry = (file != NULL && file->count() == 1) ? dynamic_cast<const Entry*>(file->first()) : NULL;
+        const Entry *entry = (file != NULL && file->count() == 1) ? dynamic_cast<const Entry *>(file->first()) : NULL;
         if (entry != NULL && d->fieldKey == Entry::ftCrossRef) {
             /// handle drop on crossref line differently (use dropped entry's id)
             Value v;

@@ -218,7 +218,7 @@ public:
         return QVariant();
     }
 
-    bool setData(const QModelIndex & index, const QVariant & value, int role = RadioSelectedRole) {
+    bool setData(const QModelIndex &index, const QVariant &value, int role = RadioSelectedRole) {
         if (index.parent() != QModelIndex()) {
             QString fieldName = index.parent().data(FieldNameRole).toString();
             if (role == RadioSelectedRole && value.canConvert<bool>() && value.toBool() == true) {
@@ -255,7 +255,7 @@ public:
         return false;
     }
 
-    bool hasChildren(const QModelIndex & parent = QModelIndex()) const {
+    bool hasChildren(const QModelIndex &parent = QModelIndex()) const {
         /// depth-two tree
         return parent == QModelIndex() || parent.parent() == QModelIndex();
     }
@@ -277,12 +277,12 @@ const quint32 AlternativesItemModel::noParentInternalId = 0xffffff;
 class CheckableBibTeXFileModel : public BibTeXFileModel
 {
 private:
-    QList<EntryClique*> cl;
+    QList<EntryClique *> cl;
     int currentClique;
     QTreeView *tv;
 
 public:
-    CheckableBibTeXFileModel(QList<EntryClique*> &cliqueList, QTreeView *treeView, QObject *parent = NULL)
+    CheckableBibTeXFileModel(QList<EntryClique *> &cliqueList, QTreeView *treeView, QObject *parent = NULL)
             : BibTeXFileModel(parent), cl(cliqueList), currentClique(0), tv(treeView) {
         // nothing
     }
@@ -293,10 +293,10 @@ public:
 
     virtual QVariant data(const QModelIndex &index, int role) const {
         if (role == Qt::CheckStateRole && index.column() == 1) {
-            Entry *entry = dynamic_cast<Entry*>(element(index.row()));
+            Entry *entry = dynamic_cast<Entry *>(element(index.row()));
             Q_ASSERT_X(entry != NULL, "CheckableBibTeXFileModel::data", "entry is NULL");
             if (entry != NULL) {
-                QList<Entry*> entryList = cl[currentClique]->entryList();
+                QList<Entry *> entryList = cl[currentClique]->entryList();
                 if (entryList.contains(entry))
                     return cl[currentClique]->isEntryChecked(entry) ? Qt::Checked : Qt::Unchecked;
             }
@@ -310,15 +310,16 @@ public:
         int checkState = value.toInt(&ok);
         Q_ASSERT_X(ok, "CheckableBibTeXFileModel::setData", QString("Could not convert value " + value.toString()).toAscii());
         if (ok && role == Qt::CheckStateRole && index.column() == 1) {
-            Entry *entry = dynamic_cast<Entry*>(element(index.row()));
+            Entry *entry = dynamic_cast<Entry *>(element(index.row()));
             if (entry != NULL) {
-                QList<Entry*> entryList = cl[currentClique]->entryList();
+                QList<Entry *> entryList = cl[currentClique]->entryList();
                 if (entryList.contains(entry)) {
                     EntryClique *ec = cl[currentClique];
                     ec->setEntryChecked(entry, checkState == Qt::Checked);
                     cl[currentClique] = ec;
                     emit dataChanged(index, index);
                     tv->reset();
+                    tv->expandAll();
                     return true;
                 }
             }
@@ -340,7 +341,7 @@ class FilterIdBibTeXFileModel : public QSortFilterProxyModel
 {
 private:
     CheckableBibTeXFileModel *internalModel;
-    EntryClique* currentClique;
+    EntryClique *currentClique;
 
 public:
     FilterIdBibTeXFileModel(QObject *parent = NULL)
@@ -348,7 +349,7 @@ public:
         // nothing
     }
 
-    void setCurrentClique(EntryClique* currentClique) {
+    void setCurrentClique(EntryClique *currentClique) {
         Q_ASSERT(internalModel != NULL);
         internalModel->setCurrentClique(currentClique);
         this->currentClique = currentClique;
@@ -357,7 +358,7 @@ public:
 
     void setSourceModel(QAbstractItemModel *model) {
         QSortFilterProxyModel::setSourceModel(model);
-        internalModel = dynamic_cast<CheckableBibTeXFileModel*>(model);
+        internalModel = dynamic_cast<CheckableBibTeXFileModel *>(model);
         Q_ASSERT(internalModel != NULL);
     }
 
@@ -365,9 +366,9 @@ public:
         Q_UNUSED(source_parent)
 
         if (internalModel != NULL && currentClique != NULL) {
-            Entry *entry = dynamic_cast<Entry*>(internalModel->element(source_row));
+            Entry *entry = dynamic_cast<Entry *>(internalModel->element(source_row));
             if (entry != NULL) {
-                QList<Entry*> entryList = currentClique->entryList();
+                QList<Entry *> entryList = currentClique->entryList();
                 if (entryList.contains(entry)) return true;
             }
         }
@@ -395,16 +396,16 @@ public:
     AlternativesItemModel *alternativesItemModel;
 
     int currentClique;
-    QList<EntryClique*> cl;
+    QList<EntryClique *> cl;
 
-    MergeWidgetPrivate(MergeWidget *parent, QList<EntryClique*> &cliqueList)
+    MergeWidgetPrivate(MergeWidget *parent, QList<EntryClique *> &cliqueList)
             : p(parent), currentClique(0), cl(cliqueList) {
         // nothing
     }
 
     void setupGUI() {
-        p->setMinimumSize(p->fontMetrics().xHeight()*96, p->fontMetrics().xHeight()*64);
-        p->setBaseSize(p->fontMetrics().xHeight()*128, p->fontMetrics().xHeight()*96);
+        p->setMinimumSize(p->fontMetrics().xHeight() * 96, p->fontMetrics().xHeight() * 64);
+        p->setBaseSize(p->fontMetrics().xHeight() * 128, p->fontMetrics().xHeight() * 96);
 
         QBoxLayout *layout = new QVBoxLayout(p);
 
@@ -461,9 +462,9 @@ public:
 
 };
 
-const char* MergeWidget::MergeWidgetPrivate::whichCliqueText = "Showing clique %1 of %2.";
+const char *MergeWidget::MergeWidgetPrivate::whichCliqueText = "Showing clique %1 of %2.";
 
-MergeWidget::MergeWidget(File *file, QList<EntryClique*> &cliqueList, QWidget *parent)
+MergeWidget::MergeWidget(File *file, QList<EntryClique *> &cliqueList, QWidget *parent)
         : QWidget(parent), d(new MergeWidgetPrivate(this, cliqueList))
 {
     d->file = file;
@@ -546,7 +547,7 @@ void FindDuplicatesUI::slotFindDuplicates()
         }
     }
 
-    QList<EntryClique*> cliques;
+    QList<EntryClique *> cliques;
     bool gotCanceled = fd.findDuplicateEntries(file, cliques);
     if (gotCanceled) {
         if (deleteFileLater) delete file;
