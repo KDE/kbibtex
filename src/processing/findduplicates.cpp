@@ -530,8 +530,13 @@ bool MergeDuplicates::mergeDuplicateEntries(const QList<EntryClique *> &entryCli
     bool didMerge = false;
 
     foreach(EntryClique *entryClique, entryCliques) {
+        /// Avoid adding fields 20 lines below
+        /// which have been remove (not added) 10 lines below
+        QSet<QString> coveredFields;
+
         Entry *mergedEntry = new Entry(QString::null, QString::null);
-        foreach(QString field, entryClique->fieldList()) {
+        foreach(const QString &field, entryClique->fieldList()) {
+            coveredFields << field;
             if (field == QLatin1String("^id"))
                 mergedEntry->setId(PlainTextValue::text(entryClique->chosenValue(field)));
             else if (field == QLatin1String("^type"))
@@ -547,7 +552,7 @@ bool MergeDuplicates::mergeDuplicateEntries(const QList<EntryClique *> &entryCli
         }
 
         bool actuallyMerged = false;
-        foreach(QSharedPointer<Entry> entry, entryClique->entryList()) {
+        foreach(const QSharedPointer<Entry> &entry, entryClique->entryList()) {
             /// if merging entries with identical ids, the merged entry will not yet have an id (is null)
             if (mergedEntry->id().isEmpty())
                 mergedEntry->setId(entry->id());
@@ -561,9 +566,11 @@ bool MergeDuplicates::mergeDuplicateEntries(const QList<EntryClique *> &entryCli
             if (entryClique->isEntryChecked(entry)) {
                 actuallyMerged = true;
                 for (Entry::ConstIterator it = entry->constBegin(); it != entry->constEnd(); ++it)
-                    if (!mergedEntry->contains(it.key()))
+                    if (!mergedEntry->contains(it.key()) && !coveredFields.contains(it.key())) {
                         mergedEntry->insert(it.key(), it.value());
-                file->removeOne(QSharedPointer<Entry>(entry)); // TODO does this work?
+                        coveredFields << it.key();
+                    }
+                file->removeOne(QSharedPointer<Entry>(entry));
             }
         }
 
