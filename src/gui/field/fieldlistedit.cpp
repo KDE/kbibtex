@@ -391,7 +391,7 @@ PersonListEdit::PersonListEdit(KBibTeX::TypeFlag preferredTypeFlag, KBibTeX::Typ
     QBoxLayout *boxLayout = static_cast<QBoxLayout *>(layout());
     boxLayout->addWidget(m_checkBoxOthers);
 
-    m_buttonAddNamesFromClipboard = new KPushButton(KIcon("edit-paste"), i18n("Add Names from Clipboard"), this);
+    m_buttonAddNamesFromClipboard = new KPushButton(KIcon("edit-paste"), i18n("Add from Clipboard"), this);
     m_buttonAddNamesFromClipboard->setToolTip(i18n("Add a list of names from clipboard"));
     addButton(m_buttonAddNamesFromClipboard);
     connect(m_buttonAddNamesFromClipboard, SIGNAL(clicked()), this, SLOT(slotAddNamesFromClipboard()));
@@ -553,7 +553,7 @@ void UrlListEdit::slotSaveLocally(QWidget *widget)
         /// Build proposal to a local filename for remote file
         filename = bibFileinfo.isFile() ? bibFileinfo.absolutePath() + QDir::separator() + filename : filename;
         /// Ask user for actual local filename to save remote file to
-        filename = KFileDialog::getSaveFileName(filename, QLatin1String("application/pdf application/postscript"), this, i18n("Save file locally"));
+        filename = KFileDialog::getSaveFileName(filename, QLatin1String("application/pdf application/postscript image/vnd.djvu"), this, i18n("Save file locally"));
         /// Check if user entered a valid filename ...
         if (!filename.isEmpty()) {
             /// Ask user if reference to local file should be

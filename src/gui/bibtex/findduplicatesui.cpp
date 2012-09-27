@@ -444,6 +444,7 @@ public:
                     cl[currentClique] = ec;
                     emit dataChanged(index, index);
                     tv->reset();
+                    tv->expandAll();
                     return true;
                 }
             }

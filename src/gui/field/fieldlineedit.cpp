@@ -157,7 +157,7 @@ public:
 
     bool apply(Value &value) const {
         value.clear();
-        const QString text = parent->text();
+        const QString text = parent->text().trimmed();
 
         EncoderLaTeX *encoder = EncoderLaTeX::instance();
         const QString encodedText = encoder->decode(text);
