@@ -79,7 +79,7 @@ test "$answer" = "y" -o "$answer" = "Y" || exit 11
 
 echo "Preparing to create archive $archivename ..."
 
-echo -n "Switching to temporary directory "
+echo "Switching to temporary directory"
 pushd "${tempdir}" >/dev/null || exit 2
 
 echo "Fetching sources from SVN: svn://svn.gna.org/svn/kbibtex/${svnsource}"
@@ -91,9 +91,9 @@ svn info kbibtex-${releaseversion} | awk '/^Last Changed Rev:/ {print $NF}' >kbi
 
 if [ ${releaseversion} != "svn" ] ; then
 	echo "Changing version number in source to ${releaseversion}"
-	sed -i -e 's/\bversionNumber\b/"'${releaseversion}'"/g' kbibtex-${releaseversion}/src/parts/partfactory.cpp kbibtex-${releaseversion}/src/program/program.cpp || exit 5
+	sed -i -e 's/\(versionNumber\s*=\s*"\)[^"]*"/\1'${releaseversion}'"/g' kbibtex-${releaseversion}/src/parts/partfactory.cpp kbibtex-${releaseversion}/src/program/program.cpp || exit 5
 
-	sed -i -e 's/LIB_VERSION "[^"]*"/LIB_VERSION "'${numericreleaseversion}'"/' kbibtex-${releaseversion}/CMakeLists.txt
+	sed -i -e 's/LIB_VERSION \s*"[^"]*"/LIB_VERSION "'${numericreleaseversion}'"/' kbibtex-${releaseversion}/CMakeLists.txt
 fi
 
 # Remove test code
@@ -124,3 +124,4 @@ echo "Done"
 echo
 ls -l "${outputdir}/${archivename}"*
 
+rm -rf ${tempdir}

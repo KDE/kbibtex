@@ -9,12 +9,10 @@ cmake_minimum_required(
 
 # Version number for the exported headers / libs
 set(
-    LIB_VERSION
-    "0.5.0"
+    LIB_VERSION "0.5.0"
 )
 set(
-    LIB_SOVERSION
-    "1"
+    LIB_SOVERSION "1"
 )
 
 set(
