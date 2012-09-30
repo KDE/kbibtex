@@ -581,7 +581,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                 /// Nothing special, copy input char to output
                 output.append(c);
             }
-        } else if (c == '\\') {
+        } else if (c == '\\' && i < len - 1) {
             /// Second case: A backslash as in \"o
 
             /// Sometimes such command are closed with just {},
