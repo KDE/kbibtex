@@ -20,7 +20,9 @@ set(
     onlinesearch/onlinesearchjstor.cpp
     onlinesearch/onlinesearchmathscinet.cpp
     onlinesearch/onlinesearchingentaconnect.cpp
+    onlinesearch/onlinesearchsimplebibtexdownload.cpp
     onlinesearch/onlinesearchgeneral.cpp
+    onlinesearch/onlinesearchsoanasaads.cpp
     findpdf.cpp
     internalnetworkaccessmanager.cpp
 )
@@ -39,6 +41,8 @@ set(
     onlinesearch/onlinesearcharxiv.h
     onlinesearch/onlinesearchpubmed.h
     onlinesearch/onlinesearchingentaconnect.h
+    onlinesearch/onlinesearchsimplebibtexdownload.h
+    onlinesearch/onlinesearchsoanasaads.h
     onlinesearch/onlinesearchmathscinet.h
     kbibtexnetworking_export.h
     findpdf.h
