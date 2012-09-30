@@ -571,23 +571,25 @@ QString FileImporterBibTeX::readLine()
 
 QString FileImporterBibTeX::readBracketString(const QChar openingBracket) ///< do not use reference on QChar here!
 {
+    static const QChar backslash = QChar('\\');
     QString result;
-    QChar closingBracket = '}';
-    if (openingBracket == '(')
-        closingBracket = ')';
+    QChar closingBracket = QChar('}');
+    if (openingBracket == QChar('('))
+        closingBracket = QChar(')');
     int counter = 1;
-    if (m_currentChar == '\n') {
+    if (m_currentChar == QChar('\n')) {
         ++m_lineNo;
         m_prevLine = m_currentLine;
         m_currentLine = QLatin1String("");
     } else
         m_currentLine.append(m_currentChar);
 
+    QChar previousChar = m_currentChar;
     *m_textStream >> m_currentChar;
     while (!m_textStream->atEnd()) {
-        if (m_currentChar == openingBracket)
+        if (m_currentChar == openingBracket && previousChar != backslash)
             counter++;
-        else if (m_currentChar == closingBracket)
+        else if (m_currentChar == closingBracket && previousChar != backslash)
             counter--;
 
         if (counter == 0)
@@ -600,6 +602,8 @@ QString FileImporterBibTeX::readBracketString(const QChar openingBracket) ///< d
             m_currentLine = QLatin1String("");
         } else
             m_currentLine.append(m_currentChar);
+
+        previousChar = m_currentChar;
         *m_textStream >> m_currentChar;
     }
     if (m_currentChar == '\n') {
