@@ -28,40 +28,10 @@
 #include "internalnetworkaccessmanager.h"
 #include "onlinesearchsimplebibtexdownload.h"
 
-class OnlineSearchSimpleBibTeXDownload::OnlineSearchSimpleBibTeXDownloadPrivate
-{
-private:
-    OnlineSearchSimpleBibTeXDownload *p;
-
-public:
-    int numSteps, curStep;
-
-    OnlineSearchSimpleBibTeXDownloadPrivate(OnlineSearchSimpleBibTeXDownload *parent)
-            : p(parent) {
-        // nothing
-    }
-
-    void sanitizeEntry(QSharedPointer<Entry> entry) {
-        /// if entry contains a description field but no abstract,
-        /// rename description field to abstract
-        const QString ftDescription = QLatin1String("description");
-        if (!entry->contains(Entry::ftAbstract) && entry->contains(ftDescription)) {
-            Value v = entry->value(QLatin1String("description"));
-            entry->insert(Entry::ftAbstract, v);
-            entry->remove(ftDescription);
-        }
-    }
-};
-
 OnlineSearchSimpleBibTeXDownload::OnlineSearchSimpleBibTeXDownload(QWidget *parent)
-        : OnlineSearchAbstract(parent), d(new OnlineSearchSimpleBibTeXDownloadPrivate(this))
+        : OnlineSearchAbstract(parent)
 {
     // nothing
-}
-
-OnlineSearchSimpleBibTeXDownload::~OnlineSearchSimpleBibTeXDownload()
-{
-    delete d;
 }
 
 void OnlineSearchSimpleBibTeXDownload::startSearch()
@@ -73,16 +43,14 @@ void OnlineSearchSimpleBibTeXDownload::startSearch()
 void OnlineSearchSimpleBibTeXDownload::startSearch(const QMap<QString, QString> &query, int numResults)
 {
     m_hasBeenCanceled = false;
-    d->curStep = 0;
-    d->numSteps = 1;
 
     QNetworkRequest request(buildQueryUrl(query, numResults));
-    kDebug()<<"request url="<<request.url().toString();
+    kDebug() << "request url=" << request.url().toString();
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
     setNetworkReplyTimeout(reply);
     connect(reply, SIGNAL(finished()), this, SLOT(downloadDone()));
 
-    emit progress(0, d->numSteps);
+    emit progress(0, 2);
 }
 
 void OnlineSearchSimpleBibTeXDownload::cancel()
@@ -92,7 +60,7 @@ void OnlineSearchSimpleBibTeXDownload::cancel()
 
 void OnlineSearchSimpleBibTeXDownload::downloadDone()
 {
-    emit progress(++d->curStep, d->numSteps);
+    emit progress(1, 2);
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
@@ -113,7 +81,6 @@ void OnlineSearchSimpleBibTeXDownload::downloadDone()
                         Value v;
                         v.append(QSharedPointer<VerbatimText>(new VerbatimText(label())));
                         entry->insert("x-fetchedfrom", v);
-                        d->sanitizeEntry(entry);
                         emit foundEntry(entry);
                         hasEntries = true;
                     }
@@ -123,7 +90,6 @@ void OnlineSearchSimpleBibTeXDownload::downloadDone()
                 if (!hasEntries)
                     kDebug() << "No hits found in" << reply->url().toString();
                 emit stoppedSearch(resultNoError);
-                emit progress(d->numSteps, d->numSteps);
 
                 delete bibtexFile;
             } else {
@@ -134,8 +100,9 @@ void OnlineSearchSimpleBibTeXDownload::downloadDone()
             /// returned file is empty
             kDebug() << "No hits found in" << reply->url().toString();
             emit stoppedSearch(resultNoError);
-            emit progress(d->numSteps, d->numSteps);
         }
     } else
         kDebug() << "url was" << reply->url().toString();
+
+    emit progress(2, 2);
 }

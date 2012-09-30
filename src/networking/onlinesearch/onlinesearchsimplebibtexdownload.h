@@ -31,20 +31,15 @@ class KBIBTEXNETWORKING_EXPORT OnlineSearchSimpleBibTeXDownload : public OnlineS
 
 public:
     OnlineSearchSimpleBibTeXDownload(QWidget *parent);
-    ~OnlineSearchSimpleBibTeXDownload();
 
     virtual void startSearch();
     virtual void startSearch(const QMap<QString, QString> &query, int numResults);
 
 protected:
-    virtual KUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) =0;
+    virtual KUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) = 0;
 
 public slots:
     void cancel();
-
-private:
-    class OnlineSearchSimpleBibTeXDownloadPrivate;
-    OnlineSearchSimpleBibTeXDownloadPrivate *d;
 
 private slots:
     void downloadDone();
