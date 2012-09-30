@@ -20,8 +20,6 @@
 #ifndef KBIBTEX_ONLINESEARCH_BIBSONOMY_H
 #define KBIBTEX_ONLINESEARCH_BIBSONOMY_H
 
-#include <QByteArray>
-
 #include "onlinesearchabstract.h"
 
 class QSpinBox;
