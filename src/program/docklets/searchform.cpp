@@ -58,6 +58,7 @@
 #include <onlinesearchmathscinet.h>
 #include <onlinesearchingentaconnect.h>
 #include <onlinesearchsoanasaads.h>
+#include <onlinesearchisbndb.h>
 #include <fileexporterbibtex.h>
 #include <element.h>
 #include <file.h>
@@ -221,6 +222,7 @@ public:
         addEngine(new OnlineSearchScienceDirect(p));
         addEngine(new OnlineSearchSpringerLink(p));
         addEngine(new OnlineSearchSOANASAADS(p));
+        addEngine(new OnlineSearchIsbnDB(p));
 
         p->itemCheckChanged(NULL);
         updateGUI();
