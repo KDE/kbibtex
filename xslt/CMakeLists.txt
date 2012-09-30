@@ -6,7 +6,7 @@ install(
     arxiv2bibtex.xsl
     pubmed2bibtex.xsl
     pam2bibtex.xsl
-    zoteroitems2bibtex.xsl
+    isbndb2bibtex.xsl
     DESTINATION
     ${DATA_INSTALL_DIR}/kbibtex
 )
