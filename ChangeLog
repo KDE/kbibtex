@@ -2,11 +2,13 @@ ChangeLog
 
 Diff 0.4 to 0.4.1
 
+- Web searches: Improved support for user-triggered cancelling
 - SpringerLink search: GUI changes, using api.springer.com for search
 - PubMed: Limiting search requests per time
 - ACM Portal: Retrieving "month", fixing HTTP header
-- Google Scholar: Updates to compensate for changes in Google's web layout
-- Science Direct: Updates to compensate for changes in Science Direct's web layout
+- JSTOR: fixing HTTP header
+- Google Scholar: Updates to compensate for changes in Google's web layout; handling redirects
+- Science Direct: Updates to compensate for changes in Science Direct's web layout; handling redirects
 - arXiv: Trying to extract bibliographic information from journal strings
 - BibSonomy: Specifying number of hits to find
 - Minor changes in IEEExplore search; non-functional due to Qt bug?
@@ -18,11 +20,13 @@ Diff 0.4 to 0.4.1
 - Improving interface to external programs such as pdflatex
 - More robust XSL transformations
 - BibTeX import: guessing encoding information left by JabRef, more informative debug output, improved handling of multiple fields with same name
+- Reference preview: supporting dark color schemes
 - Fixing sorting in value list
 - Fixes in setting color tag to entries
 - Fixes in name formatting
 - Keeping user interface read-only for read-only use cases
 - Numerous bug fixes, closing memory leaks, speed improvements
+- Fixes in duplicate merging code: remove fields user doesn't want to keep
 
 Diff 0.3 to 0.4
 
