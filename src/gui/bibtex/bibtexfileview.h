@@ -22,6 +22,8 @@
 
 #include <QTreeView>
 
+#include <KSharedConfig>
+
 #include <kbibtexgui_export.h>
 
 class QSignalMapper;
