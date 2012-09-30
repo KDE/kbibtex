@@ -21,6 +21,7 @@
 #define KBIBTEX_NAMESPACE_H
 
 #include <QVariant>
+#include <QRegExp>
 
 #include <KUrl>
 
