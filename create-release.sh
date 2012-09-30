@@ -100,8 +100,7 @@ fi
 if [[ -d kbibtex-${releaseversion}/src/test ]] ; then
 	# multiline search-and-replace for test directory's "add_subdirectory" statement
 	echo "Removing test code from build system"
-	grep -v -E -i 'add_subdir.*\btest\b' <kbibtex-${releaseversion}/src/CMakeLists.txt >${tempdir}/.CMakeLists.txt && \
-	    cp -p ${tempdir}/.CMakeLists.txt kbibtex-${releaseversion}/src/CMakeLists.txt
+	sed -n -i -e '1h;1!H;${;g;s/add_subdirectory\s*(\s*test\s*)//g; p;}' kbibtex-${releaseversion}/src/CMakeLists.txt
 	rm -rf kbibtex-${releaseversion}/src/test
 fi
 
