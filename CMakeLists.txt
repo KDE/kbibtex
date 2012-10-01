@@ -109,3 +109,6 @@ add_subdirectory(
 add_subdirectory(
     mime
 )
+add_subdirectory(
+    translations
+)
