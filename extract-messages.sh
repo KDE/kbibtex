@@ -41,6 +41,8 @@ cd ${TEMPDIR}
 xgettext --from-code=UTF-8 -C -kde -ci18n -ki18n:1 -ki18nc:1c,2 -ki18np:1,2 -ki18ncp:1c,2,3 -ktr2i18n:1 -kI18N_NOOP:1 -kI18N_NOOP2:1c,2 -kaliasLocale -kki18n:1 -kki18nc:1c,2 -kki18np:1,2 -kki18ncp:1c,2,3 --msgid-bugs-address="${BUGADDR}" --files-from=${TEMPDIR}/infiles.list -D ${BASEDIR} -D ${TEMPDIR} -o ${TRANSLATIONSDIR}/${PROJECT}.pot || { echo "error while calling xgettext. aborting."; exit 1; }
 echo "Done extracting messages"
 
+sed -i -e 's!'"${TEMPDIR}"'!!g;s!/rc.cpp!rc.cpp!g;s!i18n: file: \S*/kbibtex/!i18n: file: kbibtex/!g;s!#: \S*/kbibtex/!#: kbibtex/!g' ${TRANSLATIONSDIR}/${PROJECT}.pot
+
 cd ${BASEDIR}
 echo "Merging translations"
 for cat in ${TRANSLATIONSDIR}/*.po ; do
@@ -48,7 +50,7 @@ for cat in ${TRANSLATIONSDIR}/*.po ; do
   tempcat=${TEMPDIR}/$(basename "$cat")
   msgmerge -o ${tempcat} $cat ${TRANSLATIONSDIR}/${PROJECT}.pot && mv ${tempcat} $cat
   # remove/rewrite temporary filenames
-  sed -i -e 's!'"${TEMPDIR}"'!!g;s!/rc.cpp!rc.cpp!g' $cat
+  sed -i -e 's!'"${TEMPDIR}"'!!g;s!/rc.cpp!rc.cpp!g;s!i18n: file: \S*/kbibtex/!i18n: file: kbibtex/!g;s!#: \S*/kbibtex/!#: kbibtex/!g' $cat
 done
 echo "Done merging translations"
 
