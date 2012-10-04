@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KBibTeX 0.5\n"
 "Report-Msgid-Bugs-To: https://gna.org/bugs/?group=kbibtex\n"
-"POT-Creation-Date: 2012-10-01 16:05+0200\n"
+"POT-Creation-Date: 2012-10-04 16:16+0200\n"
 "PO-Revision-Date: 2012-10-01 16:11+0200\n"
 "Last-Translator:  <fischer@unix-ag.uni-kl.de>\n"
 "Language-Team: Swedish\n"
@@ -1741,12 +1741,12 @@ msgstr ""
 msgid "KBibTeX Test"
 msgstr ""
 
-#: /tmp/tmp.npeZKnKbqF/rc.cpp:1
+#: rc.cpp:1
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
 msgstr ""
 
-#: /tmp/tmp.npeZKnKbqF/rc.cpp:2
+#: rc.cpp:2
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr ""
@@ -1755,24 +1755,24 @@ msgstr ""
 #. i18n: ectx: Menu (file)
 #. i18n: file: /home/fish/playground/kbibtex/src/program/kbibtexui.rc:4
 #. i18n: ectx: Menu (file)
-#: /tmp/tmp.npeZKnKbqF/rc.cpp:5 /tmp/tmp.npeZKnKbqF/rc.cpp:17
+#: rc.cpp:5 rc.cpp:17
 msgid "&File"
 msgstr ""
 
 #. i18n: file: /home/fish/playground/kbibtex/src/parts/kbibtexpartui.rc:9
 #. i18n: ectx: Menu (edit)
-#: /tmp/tmp.npeZKnKbqF/rc.cpp:8
+#: rc.cpp:8
 msgid "&Edit"
 msgstr ""
 
 #. i18n: file: /home/fish/playground/kbibtex/src/parts/kbibtexpartui.rc:16
 #. i18n: ectx: Menu (element)
-#: /tmp/tmp.npeZKnKbqF/rc.cpp:11
+#: rc.cpp:11
 msgid "&Element"
 msgstr ""
 
 #. i18n: file: /home/fish/playground/kbibtex/src/parts/kbibtexpartui.rc:28
 #. i18n: ectx: ToolBar (mainToolBar)
-#: /tmp/tmp.npeZKnKbqF/rc.cpp:14
+#: rc.cpp:14
 msgid "Main Toolbar"
 msgstr ""
