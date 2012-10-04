@@ -175,7 +175,7 @@ Element *FileImporterBibTeX::nextElement()
         ++m_statistics.countCommentPercent;
         return readPlainCommentElement();
     } else if (token == tUnknown) {
-        kDebug() << "Unknown token \"" << m_currentChar << "(" << QString("0x%1").arg(m_currentChar.unicode(), 4, 16, QLatin1Char('0')) << ")" << "\" near line " << m_lineNo << "(" << m_prevLine << endl << m_currentLine << ")" << ", treating as comment";
+        kDebug() << "Unknown token '" << m_currentChar << "(" << QString("0x%1").arg(m_currentChar.unicode(), 4, 16, QLatin1Char('0')) << ")" << "' near line " << m_lineNo << "(" << m_prevLine << endl << m_currentLine << ")" << ", treating as comment";
         ++m_statistics.countNoCommentQuote;
         return readPlainCommentElement();
     }

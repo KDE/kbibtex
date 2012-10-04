@@ -126,7 +126,7 @@ void LyX::sendReferenceToLyX()
     const QString pipeName = d->locateConfiguredLyXPipe();
 
     if (pipeName.isEmpty()) {
-        KMessageBox::error(d->widget, i18n("No \"LyX server pipe\" was detected.") + defaultHintOnLyXProblems, msgBoxTitle);
+        KMessageBox::error(d->widget, i18n("No 'LyX server pipe' was detected.") + defaultHintOnLyXProblems, msgBoxTitle);
         return;
     }
 
@@ -137,7 +137,7 @@ void LyX::sendReferenceToLyX()
 
     QFile pipe(pipeName);
     if (!QFileInfo(pipeName).exists() || !pipe.open(QFile::WriteOnly)) {
-        KMessageBox::error(d->widget, i18n("Could not open LyX server pipe \"%1\".", pipeName) + defaultHintOnLyXProblems, msgBoxTitle);
+        KMessageBox::error(d->widget, i18n("Could not open LyX server pipe '%1'.", pipeName) + defaultHintOnLyXProblems, msgBoxTitle);
         return;
     }
 

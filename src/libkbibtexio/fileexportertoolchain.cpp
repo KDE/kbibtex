@@ -116,12 +116,12 @@ bool FileExporterToolchain::writeFileToIODevice(const QString &filename, QIODevi
         delete[] buffer;
 
         if (errorLog != NULL)
-            errorLog->append(i18n("Writing to file '%1'' succeeded", filename));
+            errorLog->append(i18n("Writing to file '%1' succeeded", filename));
         return result;
     }
 
     if (errorLog != NULL)
-        errorLog->append(i18n("Writing to file '%1'' failed", filename));
+        errorLog->append(i18n("Writing to file '%1' failed", filename));
     return false;
 }
 

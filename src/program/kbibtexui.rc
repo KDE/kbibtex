@@ -1,7 +1,7 @@
 <!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
 <kpartgui name="KBibTeX" version="1">
 <MenuBar>
-  <Menu name="file" noMerge="1"><text>&amp;File</text>
+  <Menu name="file" noMerge="1"><text>File</text>
 
     <Action name="file_new" />
     <Action name="file_open" />

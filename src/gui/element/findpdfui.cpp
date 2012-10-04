@@ -413,7 +413,7 @@ void FindPDFUI::apply(Entry &entry, const File &bibtexFile)
             }
         } else if (downloadMode == FindPDF::Download && !tempfileName.isEmpty()) {
             KUrl startUrl = bibtexFile.property(File::Url, QUrl()).toUrl();
-            QString localFilename = KFileDialog::getSaveFileName(KUrl::fromLocalFile(startUrl.directory()), QLatin1String("application/pdf"), this, i18n("Save URL \"%1\"", url.toString()));
+            QString localFilename = KFileDialog::getSaveFileName(KUrl::fromLocalFile(startUrl.directory()), QLatin1String("application/pdf"), this, i18n("Save URL '%1'", url.toString()));
             localFilename = UrlListEdit::askRelativeOrStaticFilename(this, localFilename, startUrl);
 
             if (!localFilename.isEmpty()) {

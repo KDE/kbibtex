@@ -150,13 +150,13 @@ void KBibTeXTest::startOnlineSearchTests()
 void KBibTeXTest::onlineSearchStoppedSearch(int searchResult)
 {
     if (searchResult == OnlineSearchAbstract::resultNoError) {
-        addMessage(QString(QLatin1String("No error searching \"%1\", found %2 entries")).arg((*m_currentOnlineSearch)->label()).arg(m_currentOnlineSearchNumFoundEntries), iconOK);
+        addMessage(QString(QLatin1String("No error searching '%1', found %2 entries")).arg((*m_currentOnlineSearch)->label()).arg(m_currentOnlineSearchNumFoundEntries), iconOK);
     } else if (searchResult == OnlineSearchAbstract::resultAuthorizationRequired) {
-        addMessage(QString(QLatin1String("Authorization required for \"%1\"")).arg((*m_currentOnlineSearch)->label()), iconAUTH);
+        addMessage(QString(QLatin1String("Authorization required for '%1'")).arg((*m_currentOnlineSearch)->label()), iconAUTH);
     } else if (searchResult == OnlineSearchAbstract::resultNetworkError) {
-        addMessage(QString(QLatin1String("Network error for \"%1\"")).arg((*m_currentOnlineSearch)->label()), iconNETWORK);
+        addMessage(QString(QLatin1String("Network error for '%1'")).arg((*m_currentOnlineSearch)->label()), iconNETWORK);
     } else {
-        addMessage(QString(QLatin1String("Error searching \"%1\"")).arg((*m_currentOnlineSearch)->label()), iconERROR);
+        addMessage(QString(QLatin1String("Error searching '%1'")).arg((*m_currentOnlineSearch)->label()), iconERROR);
     }
     m_currentOnlineSearch++;
 
@@ -172,7 +172,7 @@ void KBibTeXTest::processNextSearch()
 {
     if (m_running && m_currentOnlineSearch != m_onlineSearchList.constEnd()) {
         m_currentOnlineSearchNumFoundEntries = 0;
-        addMessage(QString(QLatin1String("Searching \"%1\"")).arg((*m_currentOnlineSearch)->label()), iconINFO);
+        addMessage(QString(QLatin1String("Searching '%1'")).arg((*m_currentOnlineSearch)->label()), iconINFO);
 
         QMap<QString, QString> query;
         query.insert(OnlineSearchAbstract::queryKeyAuthor, QLatin1String("smith"));
@@ -223,7 +223,7 @@ void KBibTeXTest::processFileTest(TestFile *testFile)
 
     const QString absoluteFilename = QLatin1String(TESTSET_DIRECTORY) + testFile->filename;
     if (!QFileInfo(absoluteFilename).exists()) {
-        addMessage(QString(QLatin1String("File \"%1\" does not exist")).arg(absoluteFilename), iconERROR);
+        addMessage(QString(QLatin1String("File '%1' does not exist")).arg(absoluteFilename), iconERROR);
         return;
     }
 
@@ -251,24 +251,24 @@ File *KBibTeXTest::loadFile(const QString &absoluteFilename, TestFile *currentTe
     if (currentTestFile->filename.endsWith(QLatin1String(".bib")))
         importer = new FileImporterBibTeX(false);
     else {
-        addMessage(QString(QLatin1String("Don't know format of \"%1\"")).arg(QFileInfo(absoluteFilename).fileName()), iconERROR);
+        addMessage(QString(QLatin1String("Don't know format of '%1'")).arg(QFileInfo(absoluteFilename).fileName()), iconERROR);
         return NULL;
     }
 
-    addMessage(QString(QLatin1String("Loading file \"%1\"")).arg(QFileInfo(absoluteFilename).fileName()), iconINFO);
+    addMessage(QString(QLatin1String("Loading file '%1'")).arg(QFileInfo(absoluteFilename).fileName()), iconINFO);
     QFile file(absoluteFilename);
     File *bibTeXFile = NULL;
     if (file.open(QFile::ReadOnly)) {
         bibTeXFile = importer->load(&file);
         file.close();
     } else {
-        addMessage(QString(QLatin1String("Cannot open file \"%1\"")).arg(absoluteFilename), iconERROR);
+        addMessage(QString(QLatin1String("Cannot open file '%1'")).arg(absoluteFilename), iconERROR);
         delete importer;
         return NULL;
     }
 
     if (bibTeXFile == NULL || bibTeXFile->isEmpty()) {
-        addMessage(QString(QLatin1String("File \"%1\" seems to be empty")).arg(QFileInfo(absoluteFilename).fileName()), iconERROR);
+        addMessage(QString(QLatin1String("File '%1' seems to be empty")).arg(QFileInfo(absoluteFilename).fileName()), iconERROR);
         delete importer;
         if (bibTeXFile != NULL) delete bibTeXFile;
         return NULL;
@@ -314,7 +314,7 @@ File *KBibTeXTest::loadFile(const QString &absoluteFilename, TestFile *currentTe
     }
 
     if (countElements != currentTestFile->numElements) {
-        addMessage(QString(QLatin1String("File \"%1\" is supposed to have %2 elements, but only %3 were counted")).arg(QFileInfo(absoluteFilename).fileName()).arg(currentTestFile->numElements).arg(countElements), iconERROR);
+        addMessage(QString(QLatin1String("File '%1' is supposed to have %2 elements, but only %3 were counted")).arg(QFileInfo(absoluteFilename).fileName()).arg(currentTestFile->numElements).arg(countElements), iconERROR);
         QSharedPointer<Entry> entry = bibTeXFile->at(bibTeXFile->count() - 1).dynamicCast<Entry>();
         if (!entry.isNull())
             kDebug() << "Last entry had id" << entry->id();
@@ -322,7 +322,7 @@ File *KBibTeXTest::loadFile(const QString &absoluteFilename, TestFile *currentTe
         delete bibTeXFile;
         return NULL;
     } else if (countEntries != currentTestFile->numEntries) {
-        addMessage(QString(QLatin1String("File \"%1\" is supposed to have %2 entries, but only %3 were counted")).arg(QFileInfo(absoluteFilename).fileName()).arg(currentTestFile->numEntries).arg(countEntries), iconERROR);
+        addMessage(QString(QLatin1String("File '%1' is supposed to have %2 entries, but only %3 were counted")).arg(QFileInfo(absoluteFilename).fileName()).arg(currentTestFile->numEntries).arg(countEntries), iconERROR);
         QSharedPointer<Entry> entry = bibTeXFile->at(bibTeXFile->count() - 1).dynamicCast<Entry>();
         if (!entry.isNull())
             kDebug() << "Last entry had id" << entry->id();
@@ -330,12 +330,12 @@ File *KBibTeXTest::loadFile(const QString &absoluteFilename, TestFile *currentTe
         delete bibTeXFile;
         return NULL;
     } else if (lastEntryId != currentTestFile->lastEntryId) {
-        addMessage(QString(QLatin1String("File \"%1\" is supposed to have \"%2\" as last entry id, but \"%3\" was found instead")).arg(QFileInfo(absoluteFilename).fileName()).arg(currentTestFile->lastEntryId).arg(lastEntryId), iconERROR);
+        addMessage(QString(QLatin1String("File '%1' is supposed to have '%2' as last entry id, but '%3' was found instead")).arg(QFileInfo(absoluteFilename).fileName()).arg(currentTestFile->lastEntryId).arg(lastEntryId), iconERROR);
         delete importer;
         delete bibTeXFile;
         return NULL;
     } else if (lastEntryLastAuthorLastName != currentTestFile->lastEntryLastAuthorLastName) {
-        addMessage(QString(QLatin1String("File \"%1\" is supposed to have \"%2\" as last entry's last author, but \"%3\" was found instead")).arg(QFileInfo(absoluteFilename).fileName()).arg(currentTestFile->lastEntryLastAuthorLastName).arg(lastEntryLastAuthorLastName), iconERROR);
+        addMessage(QString(QLatin1String("File '%1' is supposed to have '%2' as last entry's last author, but '%3' was found instead")).arg(QFileInfo(absoluteFilename).fileName()).arg(currentTestFile->lastEntryLastAuthorLastName).arg(lastEntryLastAuthorLastName), iconERROR);
         delete importer;
         delete bibTeXFile;
         return NULL;
@@ -360,12 +360,12 @@ File *KBibTeXTest::loadFile(const QString &absoluteFilename, TestFile *currentTe
 
         if (hash.result() != currentTestFile->md4sum) {
             kDebug() << hash.result().toHex().data() << "for" << absoluteFilename << "based on" << currentTestFile->filename;
-            addMessage(QString(QLatin1String("A hash sum over all last authors in file \"%1\" did not match the expected hash sum (%2)")).arg(QFileInfo(absoluteFilename).fileName()).arg(hash.result().toHex().data()), iconERROR);
+            addMessage(QString(QLatin1String("A hash sum over all last authors in file '%1' did not match the expected hash sum (%2)")).arg(QFileInfo(absoluteFilename).fileName()).arg(hash.result().toHex().data()), iconERROR);
             delete importer;
             delete bibTeXFile;
             return NULL;
         } else {
-            addMessage(QString(QLatin1String("File \"%1\" was imported correctly")).arg(QFileInfo(absoluteFilename).fileName()), iconOK);
+            addMessage(QString(QLatin1String("File '%1' was imported correctly")).arg(QFileInfo(absoluteFilename).fileName()), iconOK);
         }
     }
 
@@ -382,7 +382,7 @@ QString KBibTeXTest::saveFile(File *file, TestFile *currentTestFile)
     if (currentTestFile->filename.endsWith(QLatin1String(".bib"))) {
         exporter = new FileExporterBibTeX();
     } else {
-        addMessage(QString(QLatin1String("Don't know format of \"%1\"")).arg(tempFilename), iconERROR);
+        addMessage(QString(QLatin1String("Don't know format of '%1'")).arg(tempFilename), iconERROR);
         return NULL;
     }
 
@@ -391,17 +391,17 @@ QString KBibTeXTest::saveFile(File *file, TestFile *currentTestFile)
         bool result = exporter->save(&tempFile, file);
         tempFile.close();
         if (!result)    {
-            addMessage(QString(QLatin1String("Could save to temporary file \"%1\"")).arg(QFileInfo(tempFile.fileName()).fileName()), iconERROR);
+            addMessage(QString(QLatin1String("Could save to temporary file '%1'")).arg(QFileInfo(tempFile.fileName()).fileName()), iconERROR);
             delete exporter;
             return QString::null;
         }
     } else {
-        addMessage(QString(QLatin1String("Could not open temporary file \"%1\"")).arg(QFileInfo(tempFile.fileName()).fileName()), iconERROR);
+        addMessage(QString(QLatin1String("Could not open temporary file '%1'")).arg(QFileInfo(tempFile.fileName()).fileName()), iconERROR);
         delete exporter;
         return QString::null;
     }
 
-    addMessage(QString(QLatin1String("File \"%1\" was exported to \"%2\"")).arg(QFileInfo(currentTestFile->filename).fileName()).arg(tempFilename), iconOK);
+    addMessage(QString(QLatin1String("File '%1' was exported to '%2'")).arg(QFileInfo(currentTestFile->filename).fileName()).arg(tempFilename), iconOK);
     return tempFilename;
 }
 
