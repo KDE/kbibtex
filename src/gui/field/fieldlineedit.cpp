@@ -72,7 +72,7 @@ public:
 
     FieldLineEditPrivate(KBibTeX::TypeFlag ptf, KBibTeX::TypeFlags tf, FieldLineEdit *p)
             : parent(p), preferredTypeFlag(ptf), typeFlags(tf), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupNameGeneral(QLatin1String("General")), file(NULL) {
-        menuTypes = new QMenu(i18n("Types"), parent);
+        menuTypes = new QMenu(i18nc("Value types like Source, Verbatim, Person, PlainText, ...", "Types"), parent);
         menuTypesSignalMapper = new QSignalMapper(parent);
         setupMenu();
         connect(menuTypesSignalMapper, SIGNAL(mapped(int)), parent, SLOT(slotTypeChanged(int)));

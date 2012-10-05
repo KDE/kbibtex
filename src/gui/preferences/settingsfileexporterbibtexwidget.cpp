@@ -120,18 +120,18 @@ public:
 
         comboBoxQuoteComment = new KComboBox(false, p);
         layout->addRow(i18n("Comment Quoting:"), comboBoxQuoteComment);
-        comboBoxQuoteComment->addItem(i18n("None"));
-        comboBoxQuoteComment->addItem(i18n("@comment{%1}", QChar(8230)));
-        comboBoxQuoteComment->addItem(i18n("%{%1}", QChar(8230)));
+        comboBoxQuoteComment->addItem(i18nc("Comment Quoting", "None"));
+        comboBoxQuoteComment->addItem(i18nc("Comment Quoting", "@comment{%1}", QChar(8230)));
+        comboBoxQuoteComment->addItem(i18nc("Comment Quoting", "%{%1}", QChar(8230)));
         connect(comboBoxQuoteComment, SIGNAL(currentIndexChanged(int)), p, SIGNAL(changed()));
 
         comboBoxKeywordCasing = new KComboBox(false, p);
         layout->addRow(i18n("Keyword Casing:"), comboBoxKeywordCasing);
-        comboBoxKeywordCasing->addItem(i18n("lowercase"));
-        comboBoxKeywordCasing->addItem(i18n("Initial capital"));
-        comboBoxKeywordCasing->addItem(i18n("UpperCamelCase"));
-        comboBoxKeywordCasing->addItem(i18n("lowerCamelCase"));
-        comboBoxKeywordCasing->addItem(i18n("UPPERCASE"));
+        comboBoxKeywordCasing->addItem(i18nc("Keyword Casing", "lowercase"));
+        comboBoxKeywordCasing->addItem(i18nc("Keyword Casing", "Initial capital"));
+        comboBoxKeywordCasing->addItem(i18nc("Keyword Casing", "UpperCamelCase"));
+        comboBoxKeywordCasing->addItem(i18nc("Keyword Casing", "lowerCamelCase"));
+        comboBoxKeywordCasing->addItem(i18nc("Keyword Casing", "UPPERCASE"));
         connect(comboBoxKeywordCasing, SIGNAL(currentIndexChanged(int)), p, SIGNAL(changed()));
 
         checkBoxProtectCasing = new QCheckBox(i18n("Protect Titles"));

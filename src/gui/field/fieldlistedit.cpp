@@ -501,7 +501,7 @@ void UrlListEdit::slotCopyFile()
 
     /// Ask user which file to associate with the BibTeX document
     // TODO allow a similar operation by drag-and-drop of e.g. PDF files
-    const QString sourceFilename = KFileDialog::getOpenFileName(KUrl(), QString(), this, i18n("Select Source File"));
+    const QString sourceFilename = KFileDialog::getOpenFileName(KUrl(), QString(), this, i18nc("When copying a file to a position relative to the bibliography file", "Select Source File"));
     if (!sourceFilename.isEmpty()) {
         /// Build a proposal for the new filename relative to the BibTeX document
         // TODO make this more configurable, e.g. via templates
@@ -512,7 +512,7 @@ void UrlListEdit::slotCopyFile()
         QString destinationFilename = bibtexUrlInfo.absolutePath() + QDir::separator() + entryKey + extension;
 
         /// Ask user for confirmation on the new filename
-        destinationFilename = KFileDialog::getSaveFileName(KUrl(destinationFilename), QString(), this, i18n("Select Destination"));
+        destinationFilename = KFileDialog::getSaveFileName(KUrl(destinationFilename), QString(), this, i18nc("When copying a file to a position relative to the bibliography file", "Select Destination"));
         if (!destinationFilename.isEmpty()) {
             /// Memorize the absolute filename for the copy operation further below
             const QString absoluteDestinationFilename = destinationFilename;
