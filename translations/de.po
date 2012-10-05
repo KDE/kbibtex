@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KBibTeX 0.5\n"
 "Report-Msgid-Bugs-To: https://gna.org/bugs/?group=kbibtex\n"
-"POT-Creation-Date: 2012-10-04 16:16+0200\n"
-"PO-Revision-Date: 2012-10-04 21:46+0200\n"
+"POT-Creation-Date: 2012-10-05 20:19+0200\n"
+"PO-Revision-Date: 2012-10-05 20:20+0200\n"
 "Last-Translator: Thomas Fischer <fischer@unix-ag.uni-kl.de>\n"
 "Language-Team: German <kde-i18n-doc@kde.org>\n"
 "Language: de\n"
@@ -42,8 +42,7 @@ msgstr "Bearbeiten fortsetzen"
 msgid "View Element"
 msgstr "Element betrachten"
 
-#: kbibtex/src/gui/bibtex/bibtexeditor.cpp:333
-#: kbibtex/src/parts/part.cpp:462
+#: kbibtex/src/gui/bibtex/bibtexeditor.cpp:333 kbibtex/src/parts/part.cpp:462
 msgid "Edit Element"
 msgstr "Element bearbeiten"
 
@@ -91,14 +90,12 @@ msgid "Select your duplicates"
 msgstr "Duplikate auswählen"
 
 #: kbibtex/src/gui/bibtex/findduplicatesui.cpp:557
-#, fuzzy
 msgid "Previous"
-msgstr "Vorheriges"
+msgstr "Vorherige Clique"
 
 #: kbibtex/src/gui/bibtex/findduplicatesui.cpp:559
-#, fuzzy
 msgid "Next"
-msgstr "Nächster"
+msgstr "Nächste Clique"
 
 #: kbibtex/src/gui/bibtex/findduplicatesui.cpp:641
 msgid "Find Duplicates"
@@ -175,7 +172,6 @@ msgid "Content:"
 msgstr "Inhalt:"
 
 #: kbibtex/src/gui/element/elementwidgets.cpp:812
-#, fuzzy
 msgid "List:"
 msgstr "Liste:"
 
@@ -252,7 +248,7 @@ msgid "Find PDF"
 msgstr "PDF finden"
 
 #: kbibtex/src/gui/element/findpdfui.cpp:416
-msgid "Save URL \"%1\""
+msgid "Save URL '%1'"
 msgstr "URL \"%1\" speichern"
 
 #: kbibtex/src/gui/element/findpdfui.cpp:484
@@ -295,9 +291,9 @@ msgid "Select the cross reference to another entry:"
 msgstr "Querverweis zu einem anderen Eintrag auswählen:"
 
 #: kbibtex/src/gui/field/fieldlineedit.cpp:75
-#, fuzzy
+msgctxt "Value types like Source, Verbatim, Person, PlainText, ..."
 msgid "Types"
-msgstr "Typen"
+msgstr "Types"
 
 #: kbibtex/src/gui/field/fieldlineedit.cpp:246
 #: kbibtex/src/gui/field/fieldlineedit.cpp:287
@@ -330,14 +326,14 @@ msgid "Verbatim Text"
 msgstr "Unverändert"
 
 #: kbibtex/src/gui/field/fieldlineedit.cpp:396
-msgid "Open \"%1\""
+msgid "Open '%1'"
 msgstr "\"%1\" öffnen"
 
 #: kbibtex/src/gui/field/fieldlineedit.cpp:445
 msgid ""
-"The current text cannot be used as value of type \"%1\".\n"
+"The current text cannot be used as value of type '%1'.\n"
 "\n"
-"Switching back to type \"%2\"."
+"Switching back to type '%2'."
 msgstr ""
 "Der aktuelle Text kann nicht als Wert für den Typ \"%1\" verwendet werden.\n"
 "\n"
@@ -388,12 +384,12 @@ msgstr ""
 "Dokument hierher verknüpft werden können."
 
 #: kbibtex/src/gui/field/fieldlistedit.cpp:504
-#, fuzzy
+msgctxt "When copying a file to a position relative to the bibliography file"
 msgid "Select Source File"
-msgstr "Ursprungsdatei auswählen"
+msgstr "Select Source File"
 
 #: kbibtex/src/gui/field/fieldlistedit.cpp:515
-#, fuzzy
+msgctxt "When copying a file to a position relative to the bibliography file"
 msgid "Select Destination"
 msgstr "Ziel auswählen"
 
@@ -403,7 +399,7 @@ msgid "Save file locally"
 msgstr "Datei lokal speichern"
 
 #: kbibtex/src/gui/field/fieldlistedit.cpp:603
-msgid "Save file \"%1\" locally"
+msgid "Save file '%1' locally"
 msgstr "Datei \"%1\" lokal speichern"
 
 #: kbibtex/src/gui/field/fieldlistedit.cpp:613
@@ -411,8 +407,9 @@ msgid ""
 "<qt><p>Use a filename relative to the bibliography file?</p><p>The relative "
 "path would be<br/><tt style=\"font-family: %2;\">%1</tt></p>"
 msgstr ""
-"<qt><p>Soll ein Dateiname relative zur Bibliografiedatei verwendet werden?</p>"
-"<p>Der relative Dateiname wäre<br/><tt style=\"font-family: %2;\">%1</tt></p>"
+"<qt><p>Soll ein Dateiname relative zur Bibliografiedatei verwendet werden?</"
+"p><p>Der relative Dateiname wäre<br/><tt style=\"font-family: %2;\">%1</tt></"
+"p>"
 
 #: kbibtex/src/gui/field/fieldlistedit.cpp:613
 msgid "Relative Path"
@@ -554,15 +551,17 @@ msgid "Comment Quoting:"
 msgstr "Kommentareinfassung"
 
 #: kbibtex/src/gui/preferences/settingsfileexporterbibtexwidget.cpp:123
-#, fuzzy
+msgctxt "Comment Quoting"
 msgid "None"
 msgstr "Keine"
 
 #: kbibtex/src/gui/preferences/settingsfileexporterbibtexwidget.cpp:124
+msgctxt "Comment Quoting"
 msgid "@comment{%1}"
 msgstr "@comment{%1}"
 
 #: kbibtex/src/gui/preferences/settingsfileexporterbibtexwidget.cpp:125
+msgctxt "Comment Quoting"
 msgid "%{%1}"
 msgstr "%{%1}"
 
@@ -571,22 +570,27 @@ msgid "Keyword Casing:"
 msgstr "Schlüsselwortschreibweise:"
 
 #: kbibtex/src/gui/preferences/settingsfileexporterbibtexwidget.cpp:130
+msgctxt "Keyword Casing"
 msgid "lowercase"
 msgstr "kleinbuchstaben"
 
 #: kbibtex/src/gui/preferences/settingsfileexporterbibtexwidget.cpp:131
+msgctxt "Keyword Casing"
 msgid "Initial capital"
 msgstr "Anfangsbuchstabe groß"
 
 #: kbibtex/src/gui/preferences/settingsfileexporterbibtexwidget.cpp:132
+msgctxt "Keyword Casing"
 msgid "UpperCamelCase"
 msgstr "KamelHöcker"
 
 #: kbibtex/src/gui/preferences/settingsfileexporterbibtexwidget.cpp:133
+msgctxt "Keyword Casing"
 msgid "lowerCamelCase"
-msgstr "kamelHöckerKlein"
+msgstr "kamelHöckerKleinerAnfang"
 
 #: kbibtex/src/gui/preferences/settingsfileexporterbibtexwidget.cpp:134
+msgctxt "Keyword Casing"
 msgid "UPPERCASE"
 msgstr "GROSSBUCHSTABEN"
 
@@ -632,7 +636,7 @@ msgid "Bibliography style:"
 msgstr "Bibliografiestil:"
 
 #: kbibtex/src/gui/preferences/settingsfileexporterwidget.cpp:111
-msgid "Command for \"Copy Reference\":"
+msgid "Command for 'Copy Reference':"
 msgstr "Befehl für \"Referenz kopieren\""
 
 #: kbibtex/src/gui/preferences/settingsfileexporterwidget.cpp:113
@@ -822,8 +826,8 @@ msgid ""
 "All token have been removed from this suggestion. Remove suggestion itself "
 "or restore original suggestion?"
 msgstr ""
-"Alle Teile wurden aus diesem Vorschlag entfernt. Damit den gesamten Vorschlag "
-"entfernen oder den Ursprungsvorschlag wiederherstellen?"
+"Alle Teile wurden aus diesem Vorschlag entfernt. Damit den gesamten "
+"Vorschlag entfernen oder den Ursprungsvorschlag wiederherstellen?"
 
 #: kbibtex/src/gui/preferences/settingsidsuggestionswidget.cpp:325
 msgid "Remove suggestion?"
@@ -903,20 +907,20 @@ msgid "Stopped process '%1' with exit code %2"
 msgstr "Prozess \"%1\" mit Fehlernummer %2 beendet"
 
 #: kbibtex/src/libkbibtexio/fileexportertoolchain.cpp:119
-msgid "Writing to file '%1'' succeeded"
+msgid "Writing to file '%1' succeeded"
 msgstr "Schreiben in Datei \"%1\" war erfolgreich"
 
 #: kbibtex/src/libkbibtexio/fileexportertoolchain.cpp:124
-msgid "Writing to file '%1'' failed"
+msgid "Writing to file '%1' failed"
 msgstr "Schreiben in Datei \"%1\" ist fehlgeschlagen"
 
 #: kbibtex/src/networking/onlinesearch/onlinesearchabstract.cpp:143
-msgid "Searching \"%1\" failed for unknown reason."
+msgid "Searching '%1' failed for unknown reason."
 msgstr "Suchen in \"%1\" aus unbekanntem Grund fehlgeschlagen."
 
 #: kbibtex/src/networking/onlinesearch/onlinesearchabstract.cpp:143
 msgid ""
-"Searching \"%1\" failed with error message:\n"
+"Searching '%1' failed with error message:\n"
 "\n"
 "%2"
 msgstr ""
@@ -929,7 +933,7 @@ msgid "ACM Digital Library"
 msgstr "ACM Digital Library"
 
 #: kbibtex/src/networking/onlinesearch/onlinesearchacmportal.cpp:179
-msgid "Searching \"%1\" failed: Could not extract form from ACM's start page."
+msgid "Searching '%1' failed: Could not extract form from ACM's start page."
 msgstr ""
 "Suchen in \"%1\" aus fehlgeschlagen:\n"
 "\n"
@@ -1072,8 +1076,7 @@ msgstr "Autor oder Editor:"
 msgid "SpringerLink"
 msgstr "SpringerLink"
 
-#: kbibtex/src/parts/part.cpp:108
-#: kbibtex/src/parts/part.cpp:466
+#: kbibtex/src/parts/part.cpp:108 kbibtex/src/parts/part.cpp:466
 msgid "View Document"
 msgstr "Dokument betrachten"
 
@@ -1084,8 +1087,8 @@ msgstr "Neu%1"
 #: kbibtex/src/parts/part.cpp:221
 msgid "<qt>Could not create backup copies of document<br/><b>%1</b>.</qt>"
 msgstr ""
-"<qt>Anlegen einer Sicherheitskopie fehlgeschlagen für Dokument<br/><b>%1</b>"
-".</qt>"
+"<qt>Anlegen einer Sicherheitskopie fehlgeschlagen für Dokument<br/><b>%1</b>."
+"</qt>"
 
 #: kbibtex/src/parts/part.cpp:221
 msgid "Backup copies"
@@ -1095,13 +1098,11 @@ msgstr "Sicherheitskopien"
 msgid "BibTeX File Settings"
 msgstr "Einstellungen für BibTeX-Dateien"
 
-#: kbibtex/src/parts/part.cpp:275
-#: kbibtex/src/parts/part.cpp:287
+#: kbibtex/src/parts/part.cpp:275 kbibtex/src/parts/part.cpp:287
 msgid "Save as Default"
 msgstr "Als Standard speichern"
 
-#: kbibtex/src/parts/part.cpp:275
-#: kbibtex/src/parts/part.cpp:287
+#: kbibtex/src/parts/part.cpp:275 kbibtex/src/parts/part.cpp:287
 msgid "Save this configuration as default for future Save As operations."
 msgstr ""
 "Diese Einstellungen für zukünftige \"Speichern unter\"-Aufrufe speichern."
@@ -1112,7 +1113,7 @@ msgstr "Einstellungen für PDF/PostScript"
 
 #: kbibtex/src/parts/part.cpp:305
 msgid ""
-"Saving the bibliography to file \"%1\" failed.\n"
+"Saving the bibliography to file '%1' failed.\n"
 "\n"
 "The following output was generated by the export filter:"
 msgstr ""
@@ -1120,18 +1121,17 @@ msgstr ""
 "\n"
 "Die folgende Ausgabe wurde von dem Exportfilter erstellt:"
 
-#: kbibtex/src/parts/part.cpp:305
-#: kbibtex/src/parts/part.cpp:319
+#: kbibtex/src/parts/part.cpp:305 kbibtex/src/parts/part.cpp:319
 msgid "Saving bibliography failed"
 msgstr "Speichern der Bibliografie fehlgeschlagen"
 
 #: kbibtex/src/parts/part.cpp:319
-msgid "Saving the bibliography to file \"%1\" failed."
+msgid "Saving the bibliography to file '%1' failed."
 msgstr "Speichern der Bibliografie in Datei \"%1\" fehlgeschlagen."
 
 #: kbibtex/src/parts/part.cpp:333
 msgid ""
-"A file named \"%1\" already exists. Are you sure you want to overwrite it?"
+"A file named '%1' already exists. Are you sure you want to overwrite it?"
 msgstr ""
 "Eine Datei mit dem Namen \"%1\" existiert bereits. Soll diese Datei "
 "überschrieben werden?"
@@ -1190,7 +1190,7 @@ msgstr "Referenzen kopieren"
 
 #: kbibtex/src/parts/part.cpp:543
 msgid ""
-"The document could not be saved, as it was not possible to write to %1.\n"
+"The document could not be saved, as it was not possible to write to '%1'.\n"
 "\n"
 "Check that you have write access to this file or that enough disk space is "
 "available."
@@ -1205,8 +1205,8 @@ msgstr ""
 msgid ""
 "Cannot apply default formatting for entry ids: No default format specified."
 msgstr ""
-"Standardformatierung kann nicht auf Eintragskennungen angewandt werden: Keine "
-"Standardformatierung eingestellt."
+"Standardformatierung kann nicht auf Eintragskennungen angewandt werden: "
+"Keine Standardformatierung eingestellt."
 
 #: kbibtex/src/parts/partfactory.cpp:32
 msgid "KBibTeXPart"
@@ -1216,41 +1216,36 @@ msgstr "KBibTeXPart"
 msgid "BibTeX Editor Component"
 msgstr "BibTeX-Editor-Komponente"
 
-#: kbibtex/src/parts/partfactory.cpp:35
-#: kbibtex/src/program/program.cpp:32
+#: kbibtex/src/parts/partfactory.cpp:35 kbibtex/src/program/program.cpp:32
 #: kbibtex/src/test/main.cpp:8
 msgid "http://home.gna.org/kbibtex/"
 msgstr "http://home.gna.org/kbibtex/"
 
-#: kbibtex/src/parts/partfactory.cpp:76
-#: kbibtex/src/program/program.cpp:42
+#: kbibtex/src/parts/partfactory.cpp:76 kbibtex/src/program/program.cpp:42
 #: kbibtex/src/test/main.cpp:17
 msgid "Thomas Fischer"
 msgstr "Thomas Fischer"
 
-#: kbibtex/src/parts/partfactory.cpp:76
-#: kbibtex/src/program/program.cpp:42
+#: kbibtex/src/parts/partfactory.cpp:76 kbibtex/src/program/program.cpp:42
 #: kbibtex/src/test/main.cpp:17
 msgid "Maintainer"
 msgstr "Hauptentwickler"
 
-#: kbibtex/src/parts/partfactory.cpp:77
-#: kbibtex/src/program/program.cpp:43
+#: kbibtex/src/parts/partfactory.cpp:77 kbibtex/src/program/program.cpp:43
 #: kbibtex/src/test/main.cpp:18
 msgid "Please use https://gna.org/bugs/?group=kbibtex to report bugs.\n"
 msgstr ""
 "Bitte https://gna.org/bugs/?group=kbibtex zum Berichten von Fehlern "
 "verwenden.\n"
 
-#: kbibtex/src/parts/partfactory.cpp:77
-#: kbibtex/src/program/program.cpp:43
+#: kbibtex/src/parts/partfactory.cpp:77 kbibtex/src/program/program.cpp:43
 #: kbibtex/src/test/main.cpp:18
 msgid ""
 "Please use <a href=\"https://gna.org/bugs/?group=kbibtex\">https://gna.org/"
 "bugs/?group=kbibtex</a> to report bugs.\n"
 msgstr ""
-"Bitte <a href=\"https://gna.org/bugs/?group=kbibtex\">"
-"https://gna.org/bugs/?group=kbibtex</a> zum Berichten von Fehlern verwenden.\n"
+"Bitte <a href=\"https://gna.org/bugs/?group=kbibtex\">https://gna.org/bugs/?"
+"group=kbibtex</a> zum Berichten von Fehlern verwenden.\n"
 
 #: kbibtex/src/preferences.h:37
 msgid "Important"
@@ -1283,7 +1278,7 @@ msgid "Field <b>%1</b> is empty"
 msgstr "Feld <b>%1</b> is leer"
 
 #: kbibtex/src/processing/checkbibtex.cpp:123
-msgid "Field <b>%1</b> and <b>%2</b> is empty, need at least one"
+msgid "Fields <b>%1</b> and <b>%2</b> are empty, but at least one is required"
 msgstr ""
 "Felder <b>%1</b> und <b>%2</B> sind leer, aber eines von beiden wird benötigt"
 
@@ -1310,11 +1305,11 @@ msgid "Unknown warning: %1"
 msgstr "Unbekannte Warnung: %1"
 
 #: kbibtex/src/processing/checkbibtex.cpp:148
-msgid "<qt><p>The following error was found:</p><pre>%1</pre>"
+msgid "<qt><p>The following error was found:</p><pre>%1</pre></qt>"
 msgstr "<qt><p>Der folgende Fehler trat auf:</p><pre>%1</pre></qt>"
 
 #: kbibtex/src/processing/checkbibtex.cpp:150
-msgid "<qt><p>The following warnings were found:</p><ul><li>%1</li></ul>"
+msgid "<qt><p>The following warnings were found:</p><ul><li>%1</li></ul></qt>"
 msgstr ""
 "<qt><p>Die folgenden Warnungen traten auf:</p><ul><li>%1</li></ul></qt>"
 
@@ -1323,7 +1318,7 @@ msgid ""
 "\n"
 "\n"
 "Some fields missing in this entry where taken from the crossref'ed entry "
-"\"%1\"."
+"'%1'."
 msgstr ""
 "\n"
 "\n"
@@ -1355,7 +1350,7 @@ msgstr "Alle außer erstem Autor"
 msgid ", but only first letter of each last name"
 msgid_plural ", but only first %1 letters of each last name"
 msgstr[0] ", aber nur der erste Buchstabe von jedem letzten Namen"
-msgstr[1] ""
+msgstr[1] ", aber nur die ersten %1 Buchstaben von jedem letzten Namen"
 
 #: kbibtex/src/processing/idsuggestions.cpp:230
 #: kbibtex/src/processing/idsuggestions.cpp:240
@@ -1384,7 +1379,7 @@ msgstr "Jahr (4 Ziffern)"
 msgid ", but only first letter of each word"
 msgid_plural ", but only first %1 letters of each word"
 msgstr[0] ", aber nur der erste Buchstabe aus jedem Wort"
-msgstr[1] ""
+msgstr[1] ", aber nur die ersten %1 Buchstaben aus jedem Wort"
 
 #: kbibtex/src/processing/idsuggestions.cpp:243
 msgid ", small words removed"
@@ -1414,7 +1409,7 @@ msgid "Send Reference to LyX"
 msgstr "Referenz an LyX senden"
 
 #: kbibtex/src/processing/lyx.cpp:129
-msgid "No \"LyX server pipe\" was detected."
+msgid "No 'LyX server pipe' was detected."
 msgstr "Keine \"LyX-Server-Pipe\" gefunden."
 
 #: kbibtex/src/processing/lyx.cpp:134
@@ -1422,7 +1417,7 @@ msgid "No references to send to LyX."
 msgstr "Keine Referenzen zum Senden an LyX gefunden."
 
 #: kbibtex/src/processing/lyx.cpp:140
-msgid "Could not open LyX server pipe \"%1\"."
+msgid "Could not open LyX server pipe '%1'."
 msgstr "LyX-Server-Pipe \"%1\" konnte nicht geöffnet werden."
 
 #: kbibtex/src/program/docklets/documentpreview.cpp:170
@@ -1452,9 +1447,9 @@ msgid ""
 "<qt>No documents to show.<br/><a href=\"disableonlylocalfiles\">Disable the "
 "restriction</a> to local files to see remote documents.</qt>"
 msgstr ""
-"<qt>Keine Dokumente zum Zeigen.<br/>Um entfernte Datei zu sehen, <a "
-"href=\"disableonlylocalfiles\">Einschränkung aufheben</a>, daß nur lokale "
-"Dateien angezeigt werden.</qt>"
+"<qt>Keine Dokumente zum Zeigen.<br/>Um entfernte Datei zu sehen, <a href="
+"\"disableonlylocalfiles\">Einschränkung aufheben</a>, daß nur lokale Dateien "
+"angezeigt werden.</qt>"
 
 #: kbibtex/src/program/docklets/documentpreview.cpp:426
 msgid "Cannot show requested part"
@@ -1468,16 +1463,16 @@ msgstr "Öffnen ..."
 #: kbibtex/src/program/docklets/documentpreview.cpp:464
 msgid "<qt>Don't know how to show mimetype '%1'.</qt>"
 msgstr ""
-"<qt>Keine Information verfügbar, wie Mime-Typ \"%1\" dargestellt werden "
-"soll.</qt>"
+"<qt>Keine Information verfügbar, wie Mime-Typ \"%1\" dargestellt werden soll."
+"</qt>"
 
 #: kbibtex/src/program/docklets/documentpreview.cpp:617
 msgid ""
 "No documents to show.\n"
 "Some URLs or files could not be retrieved."
 msgstr ""
-"Keine Dokumente zum Zeigen verfügbar.\\ "
-"Einige URLs konnten nicht geladen werden."
+"Keine Dokumente zum Zeigen verfügbar.\\ Einige URLs konnten nicht geladen "
+"werden."
 
 #: kbibtex/src/program/docklets/elementform.cpp:76
 msgid "Automatically apply changes"
@@ -1520,7 +1515,8 @@ msgstr "Grund:"
 #: kbibtex/src/program/docklets/referencepreview.cpp:107
 msgid "No preview available due to missing QtWebKit support on your system."
 msgstr ""
-"Keine Vorschau verfügbar, weil QtWebKit-Unterstützung fehlt auf diesem System."
+"Keine Vorschau verfügbar, weil QtWebKit-Unterstützung fehlt auf diesem "
+"System."
 
 #: kbibtex/src/program/docklets/referencepreview.cpp:114
 msgid "Open reference in web browser."
@@ -1587,24 +1583,24 @@ msgid ""
 "Search engines <b>%1</b> and <b>%2</b> are selected (<a href=\"changeEngine"
 "\">change</a>)."
 msgstr ""
-"Suchmaschinen <b>%1</b> und <b>%2</b> ausgewählt (<a href=\"changeEngine\">"
-"ändern</a>)."
+"Suchmaschinen <b>%1</b> und <b>%2</b> ausgewählt (<a href=\"changeEngine"
+"\">ändern</a>)."
 
 #: kbibtex/src/program/docklets/searchform.cpp:297
 msgid ""
 "Search engines <b>%1</b>, <b>%2</b>, and <b>%3</b> are selected (<a href="
 "\"changeEngine\">change</a>)."
 msgstr ""
-"Suchmaschinen <b>%1</b>, <b>%2</b> und <b>%3</b> ausgewählt (<a "
-"href\"changeEngine\">ändern</a>)."
+"Suchmaschinen <b>%1</b>, <b>%2</b> und <b>%3</b> ausgewählt (<a href"
+"\"changeEngine\">ändern</a>)."
 
 #: kbibtex/src/program/docklets/searchform.cpp:298
 msgid ""
 "Search engines <b>%1</b>, <b>%2</b>, and more are selected (<a href="
 "\"changeEngine\">change</a>)."
 msgstr ""
-"Suchmaschinen <b>%1</b>, <b>%2</b> und andere ausgewählt (<a "
-"href\"changeEngine\">ändern</a>)."
+"Suchmaschinen <b>%1</b>, <b>%2</b> und andere ausgewählt (<a href"
+"\"changeEngine\">ändern</a>)."
 
 #: kbibtex/src/program/docklets/searchform.cpp:365
 msgid ""
@@ -1680,8 +1676,8 @@ msgid ""
 "The current document document has to be saved before switching the viewer/"
 "editor component."
 msgstr ""
-"Das aktuelle Dokument muss gespeichert werden, bevor die "
-"Ansichts-/Bearbeitungskomponente gewechselt werden kann."
+"Das aktuelle Dokument muss gespeichert werden, bevor die Ansichts-/"
+"Bearbeitungskomponente gewechselt werden kann."
 
 #: kbibtex/src/program/documentlist.cpp:311
 msgid "Save before switching?"
@@ -1708,9 +1704,8 @@ msgid "Favorites"
 msgstr "Favoriten"
 
 #: kbibtex/src/program/documentlist.cpp:388
-#, fuzzy
 msgid "Filesystem Browser"
-msgstr "Dateisystem"
+msgstr "Dateisystembetrachter"
 
 #: kbibtex/src/program/mainwindow.cpp:99
 msgid "Show Panels"
@@ -1750,8 +1745,8 @@ msgstr "Element-Editor"
 
 #: kbibtex/src/program/mainwindow.cpp:269
 msgid ""
-"Creating a new document of mime type \"%1\" failed as no editor component "
-"could be instanticated."
+"Creating a new document of mime type '%1' failed as no editor component "
+"could be instantiated."
 msgstr ""
 "Ein neues Dokument mit dem Mime-Typ \"%1\" konnte nicht erzeugt werden, da "
 "keine Bearbeitungskomponente geschaffen werden konnte."
@@ -1764,8 +1759,7 @@ msgstr "Dokumenterzeugung fehlgeschlagen"
 msgid "%1 - KBibTeX"
 msgstr "%1 - KBibTeX"
 
-#: kbibtex/src/program/mainwindow.cpp:323
-#: kbibtex/src/program/program.cpp:38
+#: kbibtex/src/program/mainwindow.cpp:323 kbibtex/src/program/program.cpp:38
 msgid "KBibTeX"
 msgstr "KBibTeX"
 
@@ -1805,13 +1799,11 @@ msgstr "Keine Komponente vorhanden"
 msgid "Unnamed-%1"
 msgstr "Unbenannt-%1"
 
-#: kbibtex/src/program/program.cpp:31
-#: kbibtex/src/test/main.cpp:7
+#: kbibtex/src/program/program.cpp:31 kbibtex/src/test/main.cpp:7
 msgid "A BibTeX editor for KDE"
 msgstr "Ein BibTeX-Editor für KDE"
 
-#: kbibtex/src/program/program.cpp:40
-#: kbibtex/src/test/main.cpp:15
+#: kbibtex/src/program/program.cpp:40 kbibtex/src/test/main.cpp:15
 msgid "Copyright 2004-2012 Thomas Fischer"
 msgstr "Copyright 2004-2012 Thomas Fischer"
 
@@ -1826,8 +1818,8 @@ msgid ""
 "\n"
 "Only limited functionality will be available."
 msgstr ""
-"KBibTeX wurde anscheinend nicht vollständig installiert. KBibTeX konnte seine "
-"eigene Komponente nicht finden.\n"
+"KBibTeX wurde anscheinend nicht vollständig installiert. KBibTeX konnte "
+"seine eigene Komponente nicht finden.\n"
 "\n"
 "Nur begrenzte Funktionalität wird verfügbar sein."
 
@@ -1849,10 +1841,29 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "fischer@unix-ag.uni-kl.de"
 
+#. i18n: file: kbibtex/src/parts/kbibtexpartui.rc:4
+#. i18n: ectx: Menu (file)
+#. i18n: file: kbibtex/src/program/kbibtexui.rc:4
+#. i18n: ectx: Menu (file)
+#: rc.cpp:5 rc.cpp:17
+msgid "File"
+msgstr "Datei"
+
+#. i18n: file: kbibtex/src/parts/kbibtexpartui.rc:9
+#. i18n: ectx: Menu (edit)
+#: rc.cpp:8
+msgid "Edit"
+msgstr "Bearbeiten"
+
+#. i18n: file: kbibtex/src/parts/kbibtexpartui.rc:16
+#. i18n: ectx: Menu (element)
+#: rc.cpp:11
+msgid "Element"
+msgstr "Element"
+
 #. i18n: file: kbibtex/src/parts/kbibtexpartui.rc:28
 #. i18n: ectx: ToolBar (mainToolBar)
 #: rc.cpp:14
 msgid "Main Toolbar"
-msgstr ""
-
+msgstr "Hauptwerkzeugleiste"
 

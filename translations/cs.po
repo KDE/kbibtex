@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KBibTeX 0.5\n"
 "Report-Msgid-Bugs-To: https://gna.org/bugs/?group=kbibtex\n"
-"POT-Creation-Date: 2012-10-01 16:05+0200\n"
+"POT-Creation-Date: 2012-10-05 20:19+0200\n"
 "PO-Revision-Date: 2012-10-04 15:57+0200\n"
 "Last-Translator: Pavel Fric <pavelfric@seznam.cz>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
@@ -44,8 +44,7 @@ msgstr "Pokračovat v úpravách"
 msgid "View Element"
 msgstr "Prohlížet prvek"
 
-#: kbibtex/src/gui/bibtex/bibtexeditor.cpp:333
-#: kbibtex/src/parts/part.cpp:462
+#: kbibtex/src/gui/bibtex/bibtexeditor.cpp:333 kbibtex/src/parts/part.cpp:462
 msgid "Edit Element"
 msgstr "Upravit prvek"
 
@@ -110,8 +109,7 @@ msgid ""
 "within the selection or in the whole document?"
 msgstr ""
 "Je vybráno více prvků. Chcete duplikáty hledat jen v rámci výběru, nebo v "
-"celém "
-"dokumentu?"
+"celém dokumentu?"
 
 #: kbibtex/src/gui/bibtex/findduplicatesui.cpp:673
 msgid "Search only in selection?"
@@ -252,12 +250,11 @@ msgid "Find PDF"
 msgstr "Najít PDF"
 
 #: kbibtex/src/gui/element/findpdfui.cpp:416
-#, qt-format
-msgid "Save URL \"%1\""
+#, fuzzy
+msgid "Save URL '%1'"
 msgstr "Uložit adresu (URL) \"%1\""
 
 #: kbibtex/src/gui/element/findpdfui.cpp:484
-#, qt-format
 msgid ""
 "Searching ...\n"
 "Number of visited pages: %1\n"
@@ -297,6 +294,8 @@ msgid "Select the cross reference to another entry:"
 msgstr "Vybrat křížový odkaz na jiný záznam:"
 
 #: kbibtex/src/gui/field/fieldlineedit.cpp:75
+#, fuzzy
+msgctxt "Value types like Source, Verbatim, Person, PlainText, ..."
 msgid "Types"
 msgstr "Typy"
 
@@ -331,16 +330,16 @@ msgid "Verbatim Text"
 msgstr "Podrobný text"
 
 #: kbibtex/src/gui/field/fieldlineedit.cpp:396
-#, qt-format
-msgid "Open \"%1\""
+#, fuzzy
+msgid "Open '%1'"
 msgstr "Otevřít \"%1\""
 
 #: kbibtex/src/gui/field/fieldlineedit.cpp:445
-#, qt-format
+#, fuzzy
 msgid ""
-"The current text cannot be used as value of type \"%1\".\n"
+"The current text cannot be used as value of type '%1'.\n"
 "\n"
-"Switching back to type \"%2\"."
+"Switching back to type '%2'."
 msgstr ""
 "Nynější text nelze použít jako hodnotu typu \"%1\".\n"
 "\n"
@@ -391,10 +390,14 @@ msgstr ""
 "dokumentu musí smazat."
 
 #: kbibtex/src/gui/field/fieldlistedit.cpp:504
+#, fuzzy
+msgctxt "When copying a file to a position relative to the bibliography file"
 msgid "Select Source File"
 msgstr "Vybrat zdrojový soubor"
 
 #: kbibtex/src/gui/field/fieldlistedit.cpp:515
+#, fuzzy
+msgctxt "When copying a file to a position relative to the bibliography file"
 msgid "Select Destination"
 msgstr "Vybrat cíl"
 
@@ -404,19 +407,17 @@ msgid "Save file locally"
 msgstr "Uložit soubor místně"
 
 #: kbibtex/src/gui/field/fieldlistedit.cpp:603
-#, qt-format
-msgid "Save file \"%1\" locally"
+#, fuzzy
+msgid "Save file '%1' locally"
 msgstr "Uložit soubor \"%1\" místně"
 
 #: kbibtex/src/gui/field/fieldlistedit.cpp:613
-#, qt-format
 msgid ""
 "<qt><p>Use a filename relative to the bibliography file?</p><p>The relative "
 "path would be<br/><tt style=\"font-family: %2;\">%1</tt></p>"
 msgstr ""
-"<qt><p>Použít název souboru relativní k bibliografickému souboru?</p><p>"
-"Relativní "
-"cesta by byla<br/><tt style=\"font-family: %2;\">%1</tt></p>"
+"<qt><p>Použít název souboru relativní k bibliografickému souboru?</"
+"p><p>Relativní cesta by byla<br/><tt style=\"font-family: %2;\">%1</tt></p>"
 
 #: kbibtex/src/gui/field/fieldlistedit.cpp:613
 msgid "Relative Path"
@@ -557,16 +558,20 @@ msgid "Comment Quoting:"
 msgstr "Uvození poznámky:"
 
 #: kbibtex/src/gui/preferences/settingsfileexporterbibtexwidget.cpp:123
+#, fuzzy
+msgctxt "Comment Quoting"
 msgid "None"
 msgstr "Žádný"
 
 #: kbibtex/src/gui/preferences/settingsfileexporterbibtexwidget.cpp:124
-#, qt-format
+#, fuzzy
+msgctxt "Comment Quoting"
 msgid "@comment{%1}"
 msgstr "@comment{%1}"
 
 #: kbibtex/src/gui/preferences/settingsfileexporterbibtexwidget.cpp:125
-#, qt-format
+#, fuzzy
+msgctxt "Comment Quoting"
 msgid "%{%1}"
 msgstr "%{%1}"
 
@@ -575,22 +580,32 @@ msgid "Keyword Casing:"
 msgstr "Velikost písmen klíčového slova:"
 
 #: kbibtex/src/gui/preferences/settingsfileexporterbibtexwidget.cpp:130
+#, fuzzy
+msgctxt "Keyword Casing"
 msgid "lowercase"
 msgstr "Malá písmena"
 
 #: kbibtex/src/gui/preferences/settingsfileexporterbibtexwidget.cpp:131
+#, fuzzy
+msgctxt "Keyword Casing"
 msgid "Initial capital"
 msgstr "První písmeno velké"
 
 #: kbibtex/src/gui/preferences/settingsfileexporterbibtexwidget.cpp:132
+#, fuzzy
+msgctxt "Keyword Casing"
 msgid "UpperCamelCase"
 msgstr "VelbloudHrb"
 
 #: kbibtex/src/gui/preferences/settingsfileexporterbibtexwidget.cpp:133
+#, fuzzy
+msgctxt "Keyword Casing"
 msgid "lowerCamelCase"
 msgstr "velbloudHrbMalý"
 
 #: kbibtex/src/gui/preferences/settingsfileexporterbibtexwidget.cpp:134
+#, fuzzy
+msgctxt "Keyword Casing"
 msgid "UPPERCASE"
 msgstr "VELKÁ PÍSMENA"
 
@@ -636,7 +651,8 @@ msgid "Bibliography style:"
 msgstr "Styl bibliografie:"
 
 #: kbibtex/src/gui/preferences/settingsfileexporterwidget.cpp:111
-msgid "Command for \"Copy Reference\":"
+#, fuzzy
+msgid "Command for 'Copy Reference':"
 msgstr "Příkaz pro Kopírovat odkaz:"
 
 #: kbibtex/src/gui/preferences/settingsfileexporterwidget.cpp:113
@@ -794,7 +810,6 @@ msgstr "Autor"
 
 #: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:465
 #: kbibtex/src/gui/preferences/settingsidsuggestionswidget.cpp:111
-#, qt-format
 msgid "<qt>Structure:<ul><li>%1</li></ul>Example: %2</qt>"
 msgstr "<qt>Stavba:<ul><li>%1</li></ul>Příklad: %2</qt>"
 
@@ -888,7 +903,6 @@ msgid "The program <strong>bibtex2html</strong> is not available."
 msgstr "Program <strong>bibtex2html</strong> není dostupný."
 
 #: kbibtex/src/libkbibtexio/fileexporterbibtex2html.cpp:86
-#, qt-format
 msgid "The BibTeX style <strong>%1</strong> is not available."
 msgstr "Styl BibTeX <strong>%1</strong> není dostupný."
 
@@ -897,39 +911,36 @@ msgid "BibTeX file"
 msgstr "Soubor BibTeX"
 
 #: kbibtex/src/libkbibtexio/fileexportertoolchain.cpp:79
-#, qt-format
 msgid "Running process '%1' using working directory '%2'"
 msgstr "Spouští se proces '%1' za použití pracovního adresáře '%2'"
 
 #: kbibtex/src/libkbibtexio/fileexportertoolchain.cpp:92
-#, qt-format
 msgid "Process '%1' failed"
 msgstr "Proces '%1' se nepodařil"
 
 #: kbibtex/src/libkbibtexio/fileexportertoolchain.cpp:95
-#, qt-format
 msgid "Stopped process '%1' with exit code %2"
 msgstr "Proces '%1' zastaven s kódem pro ukončení %2"
 
 #: kbibtex/src/libkbibtexio/fileexportertoolchain.cpp:119
-#, qt-format
-msgid "Writing to file '%1'' succeeded"
+#, fuzzy
+msgid "Writing to file '%1' succeeded"
 msgstr "Zápis do souboru '%1'' se podařil"
 
 #: kbibtex/src/libkbibtexio/fileexportertoolchain.cpp:124
-#, qt-format
-msgid "Writing to file '%1'' failed"
+#, fuzzy
+msgid "Writing to file '%1' failed"
 msgstr "Zápis do souboru '%1'' se nezdařil"
 
 #: kbibtex/src/networking/onlinesearch/onlinesearchabstract.cpp:143
-#, qt-format
-msgid "Searching \"%1\" failed for unknown reason."
+#, fuzzy
+msgid "Searching '%1' failed for unknown reason."
 msgstr "Hledání \"%1\" neuspělo z neznámého důvodu."
 
 #: kbibtex/src/networking/onlinesearch/onlinesearchabstract.cpp:143
-#, qt-format
+#, fuzzy
 msgid ""
-"Searching \"%1\" failed with error message:\n"
+"Searching '%1' failed with error message:\n"
 "\n"
 "%2"
 msgstr ""
@@ -942,8 +953,8 @@ msgid "ACM Digital Library"
 msgstr "Digitální knihovna ACM"
 
 #: kbibtex/src/networking/onlinesearch/onlinesearchacmportal.cpp:179
-#, qt-format
-msgid "Searching \"%1\" failed: Could not extract form from ACM's start page."
+#, fuzzy
+msgid "Searching '%1' failed: Could not extract form from ACM's start page."
 msgstr ""
 "Hledání \"%1\" neuspělo: Nepodařilo se vytáhnout formulář ze zahajovací "
 "stránky ACM."
@@ -1085,18 +1096,15 @@ msgstr "Autor nebo vydavatel:"
 msgid "SpringerLink"
 msgstr "SpringerLink"
 
-#: kbibtex/src/parts/part.cpp:108
-#: kbibtex/src/parts/part.cpp:466
+#: kbibtex/src/parts/part.cpp:108 kbibtex/src/parts/part.cpp:466
 msgid "View Document"
 msgstr "Zobrazit dokument"
 
 #: kbibtex/src/parts/part.cpp:161
-#, qt-format
 msgid "New%1"
 msgstr "Nový%1"
 
 #: kbibtex/src/parts/part.cpp:221
-#, qt-format
 msgid "<qt>Could not create backup copies of document<br/><b>%1</b>.</qt>"
 msgstr "<qt>Nepodařilo se vytvořit záložní kopie dokumentu<br/><b>%1</b>.</qt>"
 
@@ -1108,13 +1116,11 @@ msgstr "Záložní kopie"
 msgid "BibTeX File Settings"
 msgstr "Nastavení pro soubory BibTeX"
 
-#: kbibtex/src/parts/part.cpp:275
-#: kbibtex/src/parts/part.cpp:287
+#: kbibtex/src/parts/part.cpp:275 kbibtex/src/parts/part.cpp:287
 msgid "Save as Default"
 msgstr "Uložit jako výchozí"
 
-#: kbibtex/src/parts/part.cpp:275
-#: kbibtex/src/parts/part.cpp:287
+#: kbibtex/src/parts/part.cpp:275 kbibtex/src/parts/part.cpp:287
 msgid "Save this configuration as default for future Save As operations."
 msgstr "Uložit toto nastavení jako výchozí pro budoucí operace Uložit jako."
 
@@ -1123,9 +1129,9 @@ msgid "PDF/PostScript File Settings"
 msgstr "Nastavení pro soubory PDF/PostScript"
 
 #: kbibtex/src/parts/part.cpp:305
-#, qt-format
+#, fuzzy
 msgid ""
-"Saving the bibliography to file \"%1\" failed.\n"
+"Saving the bibliography to file '%1' failed.\n"
 "\n"
 "The following output was generated by the export filter:"
 msgstr ""
@@ -1133,20 +1139,19 @@ msgstr ""
 "\n"
 "Následující výstup byl vytvořen vyváděcím filtrem:"
 
-#: kbibtex/src/parts/part.cpp:305
-#: kbibtex/src/parts/part.cpp:319
+#: kbibtex/src/parts/part.cpp:305 kbibtex/src/parts/part.cpp:319
 msgid "Saving bibliography failed"
 msgstr "Uložení bibliografie se nezdařilo"
 
 #: kbibtex/src/parts/part.cpp:319
-#, qt-format
-msgid "Saving the bibliography to file \"%1\" failed."
+#, fuzzy
+msgid "Saving the bibliography to file '%1' failed."
 msgstr "Uložení bibliografie do souboru \"%1\" se nezdařilo."
 
 #: kbibtex/src/parts/part.cpp:333
-#, qt-format
+#, fuzzy
 msgid ""
-"A file named \"%1\" already exists. Are you sure you want to overwrite it?"
+"A file named '%1' already exists. Are you sure you want to overwrite it?"
 msgstr "Soubor s názvem \"%1\" již existuje. Opravdu jej přejete přepsat?"
 
 #: kbibtex/src/parts/part.cpp:333
@@ -1202,9 +1207,9 @@ msgid "Copy References"
 msgstr "Kopírovat odkazy"
 
 #: kbibtex/src/parts/part.cpp:543
-#, qt-format
+#, fuzzy
 msgid ""
-"The document could not be saved, as it was not possible to write to %1.\n"
+"The document could not be saved, as it was not possible to write to '%1'.\n"
 "\n"
 "Check that you have write access to this file or that enough disk space is "
 "available."
@@ -1229,43 +1234,35 @@ msgstr "KBibTeXPart"
 msgid "BibTeX Editor Component"
 msgstr "Součástka editoru BibTeX"
 
-#: kbibtex/src/parts/partfactory.cpp:35
-#: kbibtex/src/program/program.cpp:32
+#: kbibtex/src/parts/partfactory.cpp:35 kbibtex/src/program/program.cpp:32
 #: kbibtex/src/test/main.cpp:8
 msgid "http://home.gna.org/kbibtex/"
 msgstr "http://home.gna.org/kbibtex/"
 
-#: kbibtex/src/parts/partfactory.cpp:76
-#: kbibtex/src/program/program.cpp:42
+#: kbibtex/src/parts/partfactory.cpp:76 kbibtex/src/program/program.cpp:42
 #: kbibtex/src/test/main.cpp:17
 msgid "Thomas Fischer"
 msgstr "Thomas Fischer"
 
-#: kbibtex/src/parts/partfactory.cpp:76
-#: kbibtex/src/program/program.cpp:42
+#: kbibtex/src/parts/partfactory.cpp:76 kbibtex/src/program/program.cpp:42
 #: kbibtex/src/test/main.cpp:17
 msgid "Maintainer"
 msgstr "Správce"
 
-#: kbibtex/src/parts/partfactory.cpp:77
-#: kbibtex/src/program/program.cpp:43
+#: kbibtex/src/parts/partfactory.cpp:77 kbibtex/src/program/program.cpp:43
 #: kbibtex/src/test/main.cpp:18
 msgid "Please use https://gna.org/bugs/?group=kbibtex to report bugs.\n"
 msgstr ""
 "Použijte, prosím, https://gna.org/bugs/?group=kbibtex na hlášení chyb.\n"
 
-#: kbibtex/src/parts/partfactory.cpp:77
-#: kbibtex/src/program/program.cpp:43
+#: kbibtex/src/parts/partfactory.cpp:77 kbibtex/src/program/program.cpp:43
 #: kbibtex/src/test/main.cpp:18
 msgid ""
-"Please use <a "
-"href=\"https://gna.org/bugs/?group=kbibtex\">"
-"https://gna.org/bugs/?group=kbibtex</a> "
-"to report bugs.\n"
+"Please use <a href=\"https://gna.org/bugs/?group=kbibtex\">https://gna.org/"
+"bugs/?group=kbibtex</a> to report bugs.\n"
 msgstr ""
-"Použijte, prosím, <a "
-"href=\"https://gna.org/bugs/?group=kbibtex\">"
-"https://gna.org/bugs/?group=kbibtex</a> na hlášení chyb.\n"
+"Použijte, prosím, <a href=\"https://gna.org/bugs/?group=kbibtex\">https://"
+"gna.org/bugs/?group=kbibtex</a> na hlášení chyb.\n"
 
 #: kbibtex/src/preferences.h:37
 msgid "Important"
@@ -1291,72 +1288,63 @@ msgid ""
 msgstr ""
 "Spuštění BibTeX se nezdařilo.\n"
 "\n"
-"Podívejte se na následující výstup, abyste "
-"zjistili chybu."
+"Podívejte se na následující výstup, abyste zjistili chybu."
 
 #: kbibtex/src/processing/checkbibtex.cpp:120
-#, qt-format
 msgid "Field <b>%1</b> is empty"
 msgstr "Pole <b>%1</b> je prázdné"
 
 #: kbibtex/src/processing/checkbibtex.cpp:123
-#, qt-format
-msgid "Field <b>%1</b> and <b>%2</b> is empty, need at least one"
+#, fuzzy
+msgid "Fields <b>%1</b> and <b>%2</b> are empty, but at least one is required"
 msgstr ""
 "Pole <b>%1</b> a <b>%2</b> jsou prázdná. Je potřeba alespoň jedno z nich"
 
 #: kbibtex/src/processing/checkbibtex.cpp:126
-#, qt-format
 msgid "Field <b>%1</b> exists, but <b>%2</b> does not exist"
 msgstr "Pole <b>%1</b> je, ale <b>%2</b> není"
 
 #: kbibtex/src/processing/checkbibtex.cpp:129
-#, qt-format
 msgid "Fields <b>%1</b> and <b>%2</b> cannot be used at the same time"
 msgstr "Pole <b>%1</b> a <b>%2</b> nelze použít ve stejnou dobu"
 
 #: kbibtex/src/processing/checkbibtex.cpp:132
-#, qt-format
 msgid "Fields <b>%1</b> or <b>%2</b> are required to sort entry"
 msgstr "Pole <b>%1</b> nebo <b>%2</b> jsou vyžadována kvůli třídění zaznamu"
 
 #: kbibtex/src/processing/checkbibtex.cpp:135
-#, qt-format
 msgid "Fields <b>%1</b>, <b>%2</b>, <b>%3</b> are required to sort entry"
 msgstr ""
 "Pole <b>%1</b>, <b>%2</b>, <b>%3</b> jsou vyžadována kvůli třídění zaznamu"
 
 #: kbibtex/src/processing/checkbibtex.cpp:139
-#, qt-format
 msgid "Unknown warning: %1"
 msgstr "Neznámé varování: %1"
 
 #: kbibtex/src/processing/checkbibtex.cpp:148
-#, qt-format
-msgid "<qt><p>The following error was found:</p><pre>%1</pre>"
+#, fuzzy
+msgid "<qt><p>The following error was found:</p><pre>%1</pre></qt>"
 msgstr "<qt><p>Byla nalezena následující chyba:</p><pre>%1</pre>"
 
 #: kbibtex/src/processing/checkbibtex.cpp:150
-#, qt-format
-msgid "<qt><p>The following warnings were found:</p><ul><li>%1</li></ul>"
+#, fuzzy
+msgid "<qt><p>The following warnings were found:</p><ul><li>%1</li></ul></qt>"
 msgstr "<qt><p>Byla nalezena následující varování:</p><ul><li>%1</li></ul>"
 
 #: kbibtex/src/processing/checkbibtex.cpp:153
-#, qt-format
+#, fuzzy
 msgid ""
 "\n"
 "\n"
 "Some fields missing in this entry where taken from the crossref'ed entry "
-"\"%1\"."
+"'%1'."
 msgstr ""
 "\n"
 "\n"
 "Některá pole, která v tomto záznamu chyběla, byla vzata z křížově "
-"odkazovaného záznamu "
-"\"%1\"."
+"odkazovaného záznamu \"%1\"."
 
 #: kbibtex/src/processing/checkbibtex.cpp:153
-#, qt-format
 msgid "No warnings or errors were found.%1"
 msgstr "Nebyly nalezeny žádná varování nebo chyby. %1"
 
@@ -1396,7 +1384,6 @@ msgstr ", v malých písmenech"
 
 #: kbibtex/src/processing/idsuggestions.cpp:232
 #: kbibtex/src/processing/idsuggestions.cpp:242
-#, qt-format
 msgid ", with '%1' in between"
 msgstr ", s '%1' mezi tím"
 
@@ -1420,7 +1407,6 @@ msgid ", small words removed"
 msgstr ", malá slova odstraněna"
 
 #: kbibtex/src/processing/idsuggestions.cpp:244
-#, qt-format
 msgid "Text: '%1'"
 msgstr "Text: '%1'"
 
@@ -1443,7 +1429,8 @@ msgid "Send Reference to LyX"
 msgstr "Poslat odkaz LyXu"
 
 #: kbibtex/src/processing/lyx.cpp:129
-msgid "No \"LyX server pipe\" was detected."
+#, fuzzy
+msgid "No 'LyX server pipe' was detected."
 msgstr "Nebyl zjištěn žádný \"přenos dat serveru LyX\"."
 
 #: kbibtex/src/processing/lyx.cpp:134
@@ -1451,8 +1438,8 @@ msgid "No references to send to LyX."
 msgstr "Žádné odkazy k odeslání LyXu."
 
 #: kbibtex/src/processing/lyx.cpp:140
-#, qt-format
-msgid "Could not open LyX server pipe \"%1\"."
+#, fuzzy
+msgid "Could not open LyX server pipe '%1'."
 msgstr "Nepodařilo se otevřít přenos dat serveru LyX \"%1\"."
 
 #: kbibtex/src/program/docklets/documentpreview.cpp:170
@@ -1495,7 +1482,6 @@ msgid "Loading ..."
 msgstr "Nahrává se..."
 
 #: kbibtex/src/program/docklets/documentpreview.cpp:464
-#, qt-format
 msgid "<qt>Don't know how to show mimetype '%1'.</qt>"
 msgstr "<qt>Neví se, jak ukázat mimetype '%1'.</qt>"
 
@@ -1605,38 +1591,34 @@ msgid "No search engine selected (<a href=\"changeEngine\">change</a>)."
 msgstr "Nevybrán žádný vyhledávací stroj (<a href=\"changeEngine\">změna</a>)."
 
 #: kbibtex/src/program/docklets/searchform.cpp:295
-#, qt-format
 msgid ""
 "Search engine <b>%1</b> is selected (<a href=\"changeEngine\">change</a>)."
 msgstr ""
 "Je vybrán vyhledávací stroj <b>%1</b> (<a href=\"changeEngine\">změna</a>)."
 
 #: kbibtex/src/program/docklets/searchform.cpp:296
-#, qt-format
 msgid ""
-"Search engines <b>%1</b> and <b>%2</b> are selected (<a "
-"href=\"changeEngine\">change</a>)."
+"Search engines <b>%1</b> and <b>%2</b> are selected (<a href=\"changeEngine"
+"\">change</a>)."
 msgstr ""
-"Jsou vybrány vyhledávací stroje <b>%1</b> a <b>%2</b> (<a "
-"href=\"changeEngine\">změna</a>)."
+"Jsou vybrány vyhledávací stroje <b>%1</b> a <b>%2</b> (<a href=\"changeEngine"
+"\">změna</a>)."
 
 #: kbibtex/src/program/docklets/searchform.cpp:297
-#, qt-format
 msgid ""
-"Search engines <b>%1</b>, <b>%2</b>, and <b>%3</b> are selected (<a "
-"href=\"changeEngine\">change</a>)."
+"Search engines <b>%1</b>, <b>%2</b>, and <b>%3</b> are selected (<a href="
+"\"changeEngine\">change</a>)."
 msgstr ""
-"Jsou vybrány vyhledávací stroje <b>%1</b>, <b>%2</b>, a <b>%3</b> (<a "
-"href=\"changeEngine\">změna</a>)."
+"Jsou vybrány vyhledávací stroje <b>%1</b>, <b>%2</b>, a <b>%3</b> (<a href="
+"\"changeEngine\">změna</a>)."
 
 #: kbibtex/src/program/docklets/searchform.cpp:298
-#, qt-format
 msgid ""
-"Search engines <b>%1</b>, <b>%2</b>, and more are selected (<a "
-"href=\"changeEngine\">change</a>)."
+"Search engines <b>%1</b>, <b>%2</b>, and more are selected (<a href="
+"\"changeEngine\">change</a>)."
 msgstr ""
-"Jsou vybrány vyhledávací stroje <b>%1</b>, <b>%2</b>, a další (<a "
-"href=\"changeEngine\">změna</a>)."
+"Jsou vybrány vyhledávací stroje <b>%1</b>, <b>%2</b>, a další (<a href="
+"\"changeEngine\">změna</a>)."
 
 #: kbibtex/src/program/docklets/searchform.cpp:365
 msgid ""
@@ -1709,11 +1691,10 @@ msgstr "Přidat do oblíbených"
 
 #: kbibtex/src/program/documentlist.cpp:311
 msgid ""
-"The current document document has to be saved before switching the "
-"viewer/editor component."
+"The current document document has to be saved before switching the viewer/"
+"editor component."
 msgstr ""
-"Nynější dokument se musí před přepnutím součástky prohlížeče/editoru "
-"uložit."
+"Nynější dokument se musí před přepnutím součástky prohlížeče/editoru uložit."
 
 #: kbibtex/src/program/documentlist.cpp:311
 msgid "Save before switching?"
@@ -1780,26 +1761,23 @@ msgid "Element Editor"
 msgstr "Editor prvku"
 
 #: kbibtex/src/program/mainwindow.cpp:269
-#, qt-format
+#, fuzzy
 msgid ""
-"Creating a new document of mime type \"%1\" failed as no editor component "
-"could be instanticated."
+"Creating a new document of mime type '%1' failed as no editor component "
+"could be instantiated."
 msgstr ""
 "Vytvoření nového dokumentu MIME typu \"%1\" se nezdařilo, protože se "
-"nepodařilo "
-"najít žádnou součástku editoru."
+"nepodařilo najít žádnou součástku editoru."
 
 #: kbibtex/src/program/mainwindow.cpp:269
 msgid "Creating document failed"
 msgstr "Vytvoření dokumentu se nezdařilo"
 
 #: kbibtex/src/program/mainwindow.cpp:323
-#, qt-format
 msgid "%1 - KBibTeX"
 msgstr "%1 - KBibTeX"
 
-#: kbibtex/src/program/mainwindow.cpp:323
-#: kbibtex/src/program/program.cpp:38
+#: kbibtex/src/program/mainwindow.cpp:323 kbibtex/src/program/program.cpp:38
 msgid "KBibTeX"
 msgstr "KBibTeX"
 
@@ -1828,7 +1806,6 @@ msgid "List of recently used files:"
 msgstr "Seznam nedávno použitých souborů:"
 
 #: kbibtex/src/program/mdiwidget.cpp:218
-#, qt-format
 msgid "No part available for file '%1'."
 msgstr "Není dostupná žádná část pro soubor '%1'."
 
@@ -1837,17 +1814,14 @@ msgid "No part available"
 msgstr "Není dostupná žádná část"
 
 #: kbibtex/src/program/openfileinfo.cpp:228
-#, qt-format
 msgid "Unnamed-%1"
 msgstr "Bez názvu-%1"
 
-#: kbibtex/src/program/program.cpp:31
-#: kbibtex/src/test/main.cpp:7
+#: kbibtex/src/program/program.cpp:31 kbibtex/src/test/main.cpp:7
 msgid "A BibTeX editor for KDE"
 msgstr "Editor BibTeX pro KDE"
 
-#: kbibtex/src/program/program.cpp:40
-#: kbibtex/src/test/main.cpp:15
+#: kbibtex/src/program/program.cpp:40 kbibtex/src/test/main.cpp:15
 msgid "Copyright 2004-2012 Thomas Fischer"
 msgstr "Autorské právo 2004-2012 Thomas Fischer"
 
@@ -1875,12 +1849,12 @@ msgstr "Neúplná instalace KBibTeX"
 msgid "KBibTeX Test"
 msgstr "Zkouška KBibTeX"
 
-#: /tmp/tmp.npeZKnKbqFrc.cpp:1
+#: rc.cpp:1
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
 msgstr "Pavel Fric"
 
-#: /tmp/tmp.npeZKnKbqFrc.cpp:2
+#: rc.cpp:2
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "fripohled.blogspot.com"
@@ -1889,26 +1863,27 @@ msgstr "fripohled.blogspot.com"
 #. i18n: ectx: Menu (file)
 #. i18n: file: kbibtex/src/program/kbibtexui.rc:4
 #. i18n: ectx: Menu (file)
-#: /tmp/tmp.npeZKnKbqFrc.cpp:5 /tmp/tmp.npeZKnKbqFrc.cpp:17
-msgid "&File"
+#: rc.cpp:5 rc.cpp:17
+#, fuzzy
+msgid "File"
 msgstr "&Soubor"
 
 #. i18n: file: kbibtex/src/parts/kbibtexpartui.rc:9
 #. i18n: ectx: Menu (edit)
-#: /tmp/tmp.npeZKnKbqFrc.cpp:8
-msgid "&Edit"
+#: rc.cpp:8
+#, fuzzy
+msgid "Edit"
 msgstr "Úp&ravy"
 
 #. i18n: file: kbibtex/src/parts/kbibtexpartui.rc:16
 #. i18n: ectx: Menu (element)
-#: /tmp/tmp.npeZKnKbqFrc.cpp:11
-msgid "&Element"
+#: rc.cpp:11
+#, fuzzy
+msgid "Element"
 msgstr "&Prvek"
 
 #. i18n: file: kbibtex/src/parts/kbibtexpartui.rc:28
 #. i18n: ectx: ToolBar (mainToolBar)
-#: /tmp/tmp.npeZKnKbqFrc.cpp:14
+#: rc.cpp:14
 msgid "Main Toolbar"
 msgstr "Hlavní nástrojový pruh"
-
-
