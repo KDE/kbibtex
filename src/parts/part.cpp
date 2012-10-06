@@ -217,7 +217,16 @@ public:
         if (!mustBeImportable && FileExporterToolchain::which(QLatin1String("latex2rtf")))
             supportedMimeTypes += QLatin1String(" application/rtf");
 
-        return KFileDialog::getSaveUrl(startDir, supportedMimeTypes, p->widget());
+        KFileDialog saveDlg(startDir, supportedMimeTypes, p->widget());
+        /// Setting list of mime types for the second time,
+        /// essentially calling this function only to set the "default mime type" parameter
+        saveDlg.setMimeFilter(supportedMimeTypes.split(QChar(' '), QString::SkipEmptyParts), QLatin1String("text/x-bibtex"));
+        /// Setting the dialog into "Saving" mode make the "add extension" checkbox available
+        saveDlg.setOperationMode(KFileDialog::Saving);
+        if (saveDlg.exec() != QDialog::Accepted)
+            /// User cancelled saving operation, return invalid filename/URL
+            return KUrl();
+        return saveDlg.selectedUrl();
     }
 
     bool saveFile(const KUrl &url) {
