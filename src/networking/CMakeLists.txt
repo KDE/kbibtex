@@ -61,6 +61,7 @@ add_definitions(
 )
 
 include_directories(
+    ${LIBXML2_INCLUDE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/../libkbibtexio
 )
 

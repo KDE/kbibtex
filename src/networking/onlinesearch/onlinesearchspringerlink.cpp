@@ -144,12 +144,16 @@ private:
 
 public:
     const QString springerMetadataKey;
-    XSLTransform xslt;
+    XSLTransform *xslt;
     OnlineSearchQueryFormSpringerLink *form;
 
     OnlineSearchSpringerLinkPrivate(OnlineSearchSpringerLink *parent)
-            : p(parent), springerMetadataKey(QLatin1String("7pphfmtb9rtwt3dw3e4hm7av")), xslt(KStandardDirs::locate("data", "kbibtex/pam2bibtex.xsl")), form(NULL) {
-        // nothing
+            : p(parent), springerMetadataKey(QLatin1String("7pphfmtb9rtwt3dw3e4hm7av")), form(NULL) {
+        xslt = XSLTransform::createXSLTransform(KStandardDirs::locate("data", "kbibtex/pam2bibtex.xsl"));
+    }
+
+    ~OnlineSearchSpringerLinkPrivate() {
+        delete xslt;
     }
 
     KUrl buildQueryUrl() {
@@ -290,7 +294,7 @@ void OnlineSearchSpringerLink::doneFetchingPAM()
         QTextStream ts(reply->readAll());
         const QString xmlSource = ts.readAll();
 
-        QString bibTeXcode = d->xslt.transform(xmlSource);
+        QString bibTeXcode = d->xslt->transform(xmlSource);
         bibTeXcode = bibTeXcode.replace(QLatin1String("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"), QString());
 
         FileImporterBibTeX importer;
