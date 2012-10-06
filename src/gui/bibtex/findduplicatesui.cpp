@@ -554,9 +554,9 @@ public:
         containerLayout->addStretch(10);
         labelWhichClique = new QLabel(p);
         containerLayout->addWidget(labelWhichClique);
-        buttonPrev = new KPushButton(KIcon("go-previous"), i18n("Previous"), p);
+        buttonPrev = new KPushButton(KIcon("go-previous"), i18n("Previous Clique"), p);
         containerLayout->addWidget(buttonPrev, 1);
-        buttonNext = new KPushButton(KIcon("go-next"), i18n("Next"), p);
+        buttonNext = new KPushButton(KIcon("go-next"), i18n("Next Clique"), p);
         containerLayout->addWidget(buttonNext, 1);
 
         filterModel = new FilterIdBibTeXFileModel(p);
