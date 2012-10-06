@@ -40,44 +40,48 @@ private:
     QString cachedPersonId;
 
 public:
-    XSLTransform xslt;
+    XSLTransform *xslt;
 
     OnlineSearchIsbnDBPrivate(OnlineSearchIsbnDB *parent)
-            : p(parent), xslt(KStandardDirs::locate("data", "kbibtex/isbndb2bibtex.xsl")) {
-        // nothing
+            : p(parent), xslt() {
+        xslt = XSLTransform::createXSLTransform(KStandardDirs::locate("data", "kbibtex/isbndb2bibtex.xsl"));
+    }
+
+    ~OnlineSearchIsbnDBPrivate() {
+        delete xslt;
     }
 
     KUrl buildBooksUrl(const QMap<QString, QString> &query, int numResults) {
         Q_UNUSED(numResults)
 
         KUrl queryUrl(booksUrl);
-        queryUrl.addQueryItem(QLatin1String("access_key"),accessKey);
-        queryUrl.addQueryItem(QLatin1String("results"),QLatin1String("details,texts"));
+        queryUrl.addQueryItem(QLatin1String("access_key"), accessKey);
+        queryUrl.addQueryItem(QLatin1String("results"), QLatin1String("details,texts"));
 
         QString index1, value1;
-                if (query[queryKeyFreeText].isEmpty()&&query[queryKeyAuthor].isEmpty()&&!query[queryKeyTitle].isEmpty()){
-                    /// only searching for title
-                    index1=QLatin1String("title");
-                    value1=query[queryKeyTitle];
-                }else if (!cachedPersonId.isEmpty()&&query[queryKeyFreeText].isEmpty()&&!query[queryKeyAuthor].isEmpty()&&query[queryKeyTitle].isEmpty()){
-                    /// only searching for author
-                    index1=QLatin1String("person_id");
-                    value1=cachedPersonId;
-                 }else{
-                    /// multiple different values given
-                    index1=QLatin1String("full");
-                    value1=query[queryKeyFreeText]+QChar(' ')+query[queryKeyAuthor]+QChar(' ')+query[queryKeyTitle];
-                }
-                queryUrl.addQueryItem(QLatin1String("index1"),index1);
-                queryUrl.addQueryItem(QLatin1String("value1"),value1);
+        if (query[queryKeyFreeText].isEmpty() && query[queryKeyAuthor].isEmpty() && !query[queryKeyTitle].isEmpty()) {
+            /// only searching for title
+            index1 = QLatin1String("title");
+            value1 = query[queryKeyTitle];
+        } else if (!cachedPersonId.isEmpty() && query[queryKeyFreeText].isEmpty() && !query[queryKeyAuthor].isEmpty() && query[queryKeyTitle].isEmpty()) {
+            /// only searching for author
+            index1 = QLatin1String("person_id");
+            value1 = cachedPersonId;
+        } else {
+            /// multiple different values given
+            index1 = QLatin1String("full");
+            value1 = query[queryKeyFreeText] + QChar(' ') + query[queryKeyAuthor] + QChar(' ') + query[queryKeyTitle];
+        }
+        queryUrl.addQueryItem(QLatin1String("index1"), index1);
+        queryUrl.addQueryItem(QLatin1String("value1"), value1);
 
         return queryUrl;
     }
 };
 
-const QString OnlineSearchIsbnDB::OnlineSearchIsbnDBPrivate::accessKey=QLatin1String("NBTD24WJ");
-const QString OnlineSearchIsbnDB::OnlineSearchIsbnDBPrivate::booksUrl=QLatin1String("http://isbndb.com/api/books.xml");
-const QString OnlineSearchIsbnDB::OnlineSearchIsbnDBPrivate::authorsUrl=QLatin1String("http://isbndb.com/api/authors.xml");
+const QString OnlineSearchIsbnDB::OnlineSearchIsbnDBPrivate::accessKey = QLatin1String("NBTD24WJ");
+const QString OnlineSearchIsbnDB::OnlineSearchIsbnDBPrivate::booksUrl = QLatin1String("http://isbndb.com/api/books.xml");
+const QString OnlineSearchIsbnDB::OnlineSearchIsbnDBPrivate::authorsUrl = QLatin1String("http://isbndb.com/api/authors.xml");
 
 OnlineSearchIsbnDB::OnlineSearchIsbnDB(QWidget *parent)
         : OnlineSearchAbstract(parent), d(new OnlineSearchIsbnDBPrivate(this))
@@ -145,12 +149,12 @@ void OnlineSearchIsbnDB::downloadDone()
         ts.setCodec("utf-8");
         QString xmlCode = ts.readAll();
 
-        dumpToFile("xml.xml",xmlCode);
+        dumpToFile("xml.xml", xmlCode);
 
         /// use XSL transformation to get BibTeX document from XML result
-        QString bibtexCode = d->xslt.transform(xmlCode).replace(QLatin1String("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"), QString());
+        QString bibtexCode = d->xslt->transform(xmlCode).replace(QLatin1String("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"), QString());
 
-        dumpToFile("bib.bib",bibtexCode);
+        dumpToFile("bib.bib", bibtexCode);
 
         FileImporterBibTeX importer;
         File *bibtexFile = importer.fromString(bibtexCode);
