@@ -47,6 +47,12 @@ function getnumericreleaseversion() {
 	echo "$numericreleaseversion"
 }
 
+if [[ "$1" = "-h" || "$1" = "--help" ]] ; then
+	echo "Usage: $0 <SVN-subdirectory> <release-versionnumber> <output-directory>" >&2
+	echo "Example: $0 tags/0.4 0.4 /tmp/" >&2
+	exit 0
+fi
+
 if [ -z "${svnsource}" ] ; then
 	svnsource="trunk"
 	echo "No SVN source as first parameter specified"
