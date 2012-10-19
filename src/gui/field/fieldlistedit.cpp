@@ -388,6 +388,7 @@ PersonListEdit::PersonListEdit(KBibTeX::TypeFlag preferredTypeFlag, KBibTeX::Typ
         : FieldListEdit(preferredTypeFlag, typeFlags, parent)
 {
     m_checkBoxOthers = new QCheckBox(i18n("... and others (et al.)"), this);
+    connect(m_checkBoxOthers, SIGNAL(toggled(bool)), this, SIGNAL(modified()));
     QBoxLayout *boxLayout = static_cast<QBoxLayout *>(layout());
     boxLayout->addWidget(m_checkBoxOthers);
 
