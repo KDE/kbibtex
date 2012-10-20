@@ -748,7 +748,7 @@ void OtherFieldsWidget::actionDelete()
 {
     if (isReadOnly) return; /// never modify anything if in read-only mode
 
-    Q_ASSERT(otherFieldsList->currentItem() != NULL);
+    Q_ASSERT_X(otherFieldsList->currentItem() != NULL, "OtherFieldsWidget::actionDelete", "otherFieldsList->currentItem() is NULL");
     QString key = otherFieldsList->currentItem()->text(0);
     if (!deletedKeys.contains(key)) deletedKeys << key;
 

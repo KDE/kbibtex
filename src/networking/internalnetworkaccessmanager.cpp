@@ -113,7 +113,7 @@ InternalNetworkAccessManager::InternalNetworkAccessManager(QObject *parent)
 
 void InternalNetworkAccessManager::mergeHtmlHeadCookies(const QString &htmlCode, const QUrl &url)
 {
-    Q_ASSERT(cookieJar != NULL);
+    Q_ASSERT_X(cookieJar != NULL, "void InternalNetworkAccessManager::mergeHtmlHeadCookies(const QString &htmlCode, const QUrl &url)", "cookieJar is invalid");
     cookieJar->mergeHtmlHeadCookies(htmlCode, url);
     setCookieJar(cookieJar);
 }

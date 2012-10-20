@@ -259,7 +259,7 @@ public:
 
         /// export bibliography data into temporary file
         SortFilterBibTeXFileModel *model = dynamic_cast<SortFilterBibTeXFileModel *>(editor->model());
-        Q_ASSERT(model != NULL);
+        Q_ASSERT_X(model != NULL, "bool KBibTeXPart::KBibTeXPartPrivate:saveFile(const KUrl &url)", "SortFilterBibTeXFileModel *model from editor->model() is invalid");
         FileExporter *exporter = fileExporterFactory(url);
 
         if (isSaveAsOperation) {

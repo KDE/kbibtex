@@ -467,7 +467,7 @@ void SearchForm::enginesListCurrentChanged(QListWidgetItem *current, QListWidget
 
 void SearchForm::copyFromEntry()
 {
-    Q_ASSERT(!d->currentEntry.isNull());
+    Q_ASSERT_X(!d->currentEntry.isNull(), "SearchForm::copyFromEntry", "d->currentEntry is NULL");
 
     d->currentQueryForm()->copyFromEntry(*(d->currentEntry));
 }

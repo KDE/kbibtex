@@ -475,7 +475,7 @@ public:
     }
 
     void setCurrentClique(EntryClique *currentClique) {
-        Q_ASSERT(internalModel != NULL);
+        Q_ASSERT_X(internalModel != NULL, "FilterIdBibTeXFileModel::setCurrentClique(EntryClique *currentClique)", "internalModel is NULL");
         internalModel->setCurrentClique(currentClique);
         this->currentClique = currentClique;
         invalidate();
@@ -484,7 +484,7 @@ public:
     void setSourceModel(QAbstractItemModel *model) {
         QSortFilterProxyModel::setSourceModel(model);
         internalModel = dynamic_cast<CheckableBibTeXFileModel *>(model);
-        Q_ASSERT(internalModel != NULL);
+        Q_ASSERT_X(internalModel != NULL, "FilterIdBibTeXFileModel::setSourceModel(QAbstractItemModel *model)", "internalModel is NULL");
     }
 
     bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const {

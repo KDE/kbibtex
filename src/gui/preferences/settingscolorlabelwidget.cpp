@@ -391,11 +391,11 @@ void ColorLabelContextMenu::setEnabled(bool enabled)
 void ColorLabelContextMenu::colorActivated(const QString &colorString)
 {
     SortFilterBibTeXFileModel *sfbfm = dynamic_cast<SortFilterBibTeXFileModel *>(m_tv->model());
-    Q_ASSERT(sfbfm != NULL);
+    Q_ASSERT_X(sfbfm != NULL, "ColorLabelContextMenu::colorActivated(const QString &colorString)", "SortFilterBibTeXFileModel *sfbfm is NULL");
     BibTeXFileModel *model = sfbfm->bibTeXSourceModel();
-    Q_ASSERT(model != NULL);
+    Q_ASSERT_X(model != NULL, "ColorLabelContextMenu::colorActivated(const QString &colorString)", "BibTeXFileModel *model is NULL");
     File *file = model->bibTeXFile();
-    Q_ASSERT(file != NULL);
+    Q_ASSERT_X(file != NULL, "ColorLabelContextMenu::colorActivated(const QString &colorString)", "File *file is NULL");
 
     bool modifying = false;
     QModelIndexList list = m_tv->selectionModel()->selectedIndexes();

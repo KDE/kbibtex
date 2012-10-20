@@ -69,7 +69,7 @@ void SortFilterBibTeXFileModel::updateFilter(SortFilterBibTeXFileModel::FilterQu
 bool SortFilterBibTeXFileModel::lessThan(const QModelIndex &left, const QModelIndex &right) const
 {
     int column = left.column();
-    Q_ASSERT(left.column() == right.column()); ///< assume that we only sort by column
+    Q_ASSERT_X(left.column() == right.column(), "bool SortFilterBibTeXFileModel::lessThan(const QModelIndex &left, const QModelIndex &right) const", "Not comparing items in same column"); ///< assume that we only sort by column
 
     BibTeXFields *bibtexFields = BibTeXFields::self();
     const FieldDescription *fd = bibtexFields->at(column);
@@ -147,7 +147,7 @@ bool SortFilterBibTeXFileModel::filterAcceptsRow(int source_row, const QModelInd
     Q_UNUSED(source_parent)
 
     QSharedPointer<Element> rowElement = m_internalModel->element(source_row);
-    Q_ASSERT(!rowElement.isNull());
+    Q_ASSERT_X(!rowElement.isNull(), "bool SortFilterBibTeXFileModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const", "rowElement is NULL");
 
     /// check if showing comments is disabled
     if (!m_showComments && typeid(*rowElement) == typeid(Comment))

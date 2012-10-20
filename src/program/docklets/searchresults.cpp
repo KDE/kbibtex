@@ -112,7 +112,7 @@ public:
         if (!entry.isNull())
             idSuggestions.applyDefaultFormatId(*entry.data());
 
-        bool result= model->insertRow(element, model->rowCount());
+        bool result = model->insertRow(element, model->rowCount());
         if (result)
             resultList->sortFilterProxyModel()->invalidate();
 
@@ -159,7 +159,7 @@ void SearchResults::updateGUI()
 
 void SearchResults::importSelected()
 {
-    Q_ASSERT(d->mainEditor != NULL);
+    Q_ASSERT_X(d->mainEditor != NULL, "SearchResults::importSelected", "d->mainEditor is NULL");
 
     BibTeXFileModel *targetModel = d->mainEditor->bibTeXModel();
     BibTeXFileModel *sourceModel = d->resultList->bibTeXModel();

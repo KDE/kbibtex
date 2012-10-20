@@ -227,7 +227,7 @@ void BibTeXFileView::setModel(QAbstractItemModel *model)
     d->bibTeXFileModel = dynamic_cast<BibTeXFileModel *>(model);
     if (d->bibTeXFileModel == NULL) {
         d->sortFilterProxyModel = dynamic_cast<QSortFilterProxyModel *>(model);
-        Q_ASSERT(d->sortFilterProxyModel != NULL);
+        Q_ASSERT_X(d->sortFilterProxyModel != NULL, "BibTeXFileView::setModel(QAbstractItemModel *model)", "d->sortFilterProxyModel is NULL");
         d->bibTeXFileModel = dynamic_cast<BibTeXFileModel *>(d->sortFilterProxyModel->sourceModel());
     }
 
@@ -235,7 +235,7 @@ void BibTeXFileView::setModel(QAbstractItemModel *model)
     if (header()->isSortIndicatorShown())
         sort(header()->sortIndicatorSection(), header()->sortIndicatorOrder());
 
-    Q_ASSERT(d->bibTeXFileModel != NULL);
+    Q_ASSERT_X(d->bibTeXFileModel != NULL, "BibTeXFileView::setModel(QAbstractItemModel *model)", "d->bibTeXFileModel is NULL");
 }
 
 BibTeXFileModel *BibTeXFileView::bibTeXModel()

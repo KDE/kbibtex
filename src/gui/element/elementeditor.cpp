@@ -308,7 +308,7 @@ public:
                 temp = internalComment;
             else if (!internalPreamble.isNull())
                 temp = internalPreamble;
-            Q_ASSERT(!temp.isNull());
+            Q_ASSERT_X(!temp.isNull(), "void ElementEditor::ElementEditorPrivate::switchTo(QWidget *newTab)", "temp is NULL");
 
             previousWidget->apply(temp);
             if (isSourceWidget && referenceWidget != NULL) referenceWidget->apply(temp);

@@ -242,6 +242,6 @@ void MenuLineEdit::focusInEvent(QFocusEvent *)
 
 void MenuLineEdit::slotTextChanged()
 {
-    Q_ASSERT(d->m_multiLineEditText != NULL);
+    Q_ASSERT_X(d->m_multiLineEditText != NULL, "MenuLineEdit::slotTextChanged", "d->m_multiLineEditText is NULL");
     emit textChanged(d->m_multiLineEditText->toPlainText());
 }
