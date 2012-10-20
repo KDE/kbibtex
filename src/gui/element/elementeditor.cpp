@@ -29,6 +29,7 @@
 #include <QApplication>
 #include <QFileInfo>
 
+#include <KDebug>
 #include <KPushButton>
 #include <KMessageBox>
 #include <KLocale>
@@ -46,6 +47,7 @@
 #include "elementwidgets.h"
 #include "elementeditor.h"
 #include "checkbibtex.h"
+#include "hidingtabwidget.h"
 
 class ElementEditor::ElementEditorPrivate : public ElementEditor::ApplyElementInterface
 {
@@ -67,7 +69,7 @@ private:
     KSharedConfigPtr config;
 
 public:
-    QTabWidget *tab;
+    HidingTabWidget *tab;
     bool elementChanged, elementUnapplied;
 
     ElementEditorPrivate(ElementEditor *parent)
@@ -91,26 +93,26 @@ public:
             if (previousWidget == NULL)
                 previousWidget = widget; ///< memorize the first tab
             int index = tab->addTab(widget, widget->icon(), widget->label());
-            tab->setTabEnabled(index, false);
+            tab->hideTab(index);
         }
 
         ElementWidget *widget = new PreambleWidget(tab);
         connect(widget, SIGNAL(modified(bool)), p, SLOT(childModified(bool)));
         widgets << widget;
         int index = tab->addTab(widget, widget->icon(), widget->label());
-        tab->setTabEnabled(index, false);
+        tab->hideTab(index);
 
         widget = new MacroWidget(tab);
         connect(widget, SIGNAL(modified(bool)), p, SLOT(childModified(bool)));
         widgets << widget;
         index = tab->addTab(widget, widget->icon(), widget->label());
-        tab->setTabEnabled(index, false);
+        tab->hideTab(index);
 
         widget = new FilesWidget(tab);
         connect(widget, SIGNAL(modified(bool)), p, SLOT(childModified(bool)));
         widgets << widget;
         index = tab->addTab(widget, widget->icon(), widget->label());
-        tab->setTabEnabled(index, false);
+        tab->hideTab(index);
 
         QStringList blacklistedFields;
 
@@ -128,13 +130,13 @@ public:
         connect(widget, SIGNAL(modified(bool)), p, SLOT(childModified(bool)));
         widgets << widget;
         index = tab->addTab(widget, widget->icon(), widget->label());
-        tab->setTabEnabled(index, false);
+        tab->hideTab(index);
 
         sourceWidget = new SourceWidget(tab);
         connect(sourceWidget, SIGNAL(modified(bool)), p, SLOT(childModified(bool)));
         widgets << sourceWidget;
         index = tab->addTab(sourceWidget, sourceWidget->icon(), sourceWidget->label());
-        tab->setTabEnabled(index, false);
+        tab->hideTab(index);
     }
 
     void createGUI() {
@@ -155,7 +157,7 @@ public:
         vLayout->addWidget(referenceWidget, 0);
         widgets << referenceWidget;
 
-        tab = new QTabWidget(p);
+        tab = new HidingTabWidget(p);
         vLayout->addWidget(tab, 10);
 
         QBoxLayout *hLayout = new QHBoxLayout();
@@ -188,14 +190,15 @@ public:
                 const int index = tab->indexOf(widget);
                 const bool canEdit = widget->canEdit(element.data());
 
-                if (index >= 0) {
-                    tab->setTabEnabled(index, canEdit);
-                    if (canEdit && index < firstEnabledTab)
-                        firstEnabledTab = index;
-                } else {
+                if (widget == referenceWidget) {
                     /// Reference widget
                     widget->setVisible(canEdit);
                     widget->setEnabled(canEdit);
+                } else {
+                    if (canEdit) tab->showTab(widget);
+                    else if (index >= 0) tab->hideTab(index);
+                    if (canEdit && index >= 0 && index < firstEnabledTab)
+                        firstEnabledTab = index;
                 }
             }
             if (firstEnabledTab < 1024)
@@ -214,11 +217,12 @@ public:
         if (referenceWidget != NULL)
             referenceWidget->apply(element);
         ElementWidget *currentElementWidget = dynamic_cast<ElementWidget *>(tab->currentWidget());
-        Q_ASSERT_X(currentElementWidget != NULL || tab->currentWidget() == NULL, "ElementEditor::ElementEditorPrivate::apply", "Could not cast currentWidget to ElementWidget");
+        //Q_ASSERT_X(currentElementWidget != NULL || tab->currentWidget() == NULL, "ElementEditor::ElementEditorPrivate::apply", "Could not cast currentWidget to ElementWidget");
         for (WidgetList::ConstIterator it = widgets.constBegin(); it != widgets.constEnd(); ++it)
             if ((*it) != currentElementWidget && (*it) != sourceWidget)
                 (*it)->apply(element);
-        currentElementWidget->apply(element);
+        if (currentElementWidget != NULL)
+            currentElementWidget->apply(element);
     }
 
     void reset() {

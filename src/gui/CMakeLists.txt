@@ -36,6 +36,7 @@ set(
     widgets/menulineedit.cpp
     widgets/filterbar.cpp
     widgets/radiobuttontreeview.cpp
+    widgets/hidingtabwidget.cpp
     config/entrylayout.cpp
     preferences/kbibtexpreferencesdialog.cpp
     preferences/settingsgeneralwidget.cpp
