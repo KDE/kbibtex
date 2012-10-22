@@ -43,13 +43,13 @@
 
 #include <kdeversion.h>
 
-#include <radiobuttontreeview.h>
-#include "bibtexeditor.h"
 #include "fileimporterbibtex.h"
+#include "bibtexentries.h"
+#include "radiobuttontreeview.h"
+#include "bibtexeditor.h"
 #include "bibtexfilemodel.h"
 #include "findduplicatesui.h"
 #include "findduplicates.h"
-#include "bibtexentries.h"
 
 const int FieldNameRole = Qt::UserRole + 101;
 const int UserInputRole = Qt::UserRole + 103;

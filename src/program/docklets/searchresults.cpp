@@ -25,11 +25,11 @@
 #include <KDebug>
 #include <KAction>
 
-#include <file.h>
-#include <clipboard.h>
-#include <bibtexeditor.h>
-#include <bibtexfilemodel.h>
-#include <idsuggestions.h>
+#include "file.h"
+#include "clipboard.h"
+#include "bibtexeditor.h"
+#include "bibtexfilemodel.h"
+#include "idsuggestions.h"
 #include "searchresults.h"
 
 class SearchResults::SearchResultsPrivate

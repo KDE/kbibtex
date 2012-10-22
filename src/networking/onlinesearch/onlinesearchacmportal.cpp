@@ -29,10 +29,10 @@
 #include <kio/job.h>
 #include <KMessageBox>
 
-#include <internalnetworkaccessmanager.h>
-#include <fileimporterbibtex.h>
-#include <file.h>
-#include <entry.h>
+#include "file.h"
+#include "entry.h"
+#include "fileimporterbibtex.h"
+#include "internalnetworkaccessmanager.h"
 #include "onlinesearchacmportal.h"
 
 class OnlineSearchAcmPortal::OnlineSearchAcmPortalPrivate

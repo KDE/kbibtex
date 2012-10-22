@@ -25,9 +25,9 @@
 #include <onlinesearchpubmed.h>
 #include <onlinesearchsciencedirect.h>
 #include <onlinesearchspringerlink.h>
-#include <fileimporterbibtex.h>
-#include <fileexporterbibtex.h>
-#include <file.h>
+#include "fileimporterbibtex.h"
+#include "fileexporterbibtex.h"
+#include "file.h"
 #include "kbibtextest.h"
 
 KIcon iconOK(QLatin1String("dialog-ok-apply"));

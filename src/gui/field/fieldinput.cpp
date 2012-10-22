@@ -28,8 +28,8 @@
 #include <KPushButton>
 #include <KInputDialog>
 
-#include <file.h>
-#include <entry.h>
+#include "file.h"
+#include "entry.h"
 #include <fieldlineedit.h>
 #include <fieldlistedit.h>
 #include <colorlabelwidget.h>

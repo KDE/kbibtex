@@ -29,9 +29,9 @@
 #include <KMessageBox>
 #include <KConfigGroup>
 
-#include <elementeditor.h>
-#include <mdiwidget.h>
-#include <entry.h>
+#include "entry.h"
+#include "elementeditor.h"
+#include "mdiwidget.h"
 #include "elementform.h"
 
 class ElementForm::ElementFormPrivate

@@ -28,10 +28,10 @@
 #include <KStandardDirs>
 #include <KUrl>
 
-#include <internalnetworkaccessmanager.h>
-#include "onlinesearchieeexplore.h"
+#include "internalnetworkaccessmanager.h"
 #include "xsltransform.h"
 #include "fileimporterbibtex.h"
+#include "onlinesearchieeexplore.h"
 
 class OnlineSearchIEEEXplore::OnlineSearchIEEEXplorePrivate
 {

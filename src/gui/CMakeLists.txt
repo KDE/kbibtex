@@ -5,18 +5,18 @@ include(
 )
 
 include_directories(
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}/bibtex
-    ${CMAKE_CURRENT_SOURCE_DIR}/dialogs
-    ${CMAKE_CURRENT_SOURCE_DIR}/element
-    ${CMAKE_CURRENT_SOURCE_DIR}/field
-    ${CMAKE_CURRENT_SOURCE_DIR}/widgets
-    ${CMAKE_CURRENT_SOURCE_DIR}/widgets
-    ${CMAKE_CURRENT_SOURCE_DIR}/config
-    ${CMAKE_CURRENT_SOURCE_DIR}/../networking/
-    ${CMAKE_CURRENT_SOURCE_DIR}/../processing/
-    ${CMAKE_CURRENT_SOURCE_DIR}/../libkbibtexio/
-    ${CMAKE_CURRENT_SOURCE_DIR}/../libkbibtexio/config
+    ${CMAKE_SOURCE_DIR}/src/data
+    ${CMAKE_SOURCE_DIR}/src/io
+    ${CMAKE_SOURCE_DIR}/src/io/config
+    ${CMAKE_SOURCE_DIR}/src/networking
+    ${CMAKE_SOURCE_DIR}/src/processing
+    ${CMAKE_SOURCE_DIR}/src/gui
+    ${CMAKE_SOURCE_DIR}/src/gui/bibtex
+    ${CMAKE_SOURCE_DIR}/src/gui/dialogs
+    ${CMAKE_SOURCE_DIR}/src/gui/element
+    ${CMAKE_SOURCE_DIR}/src/gui/field
+    ${CMAKE_SOURCE_DIR}/src/gui/widgets
+    ${CMAKE_SOURCE_DIR}/src/gui/config
 )
 
 set(
@@ -103,6 +103,7 @@ target_link_libraries(
     ${QT_QTGUI_LIBRARY}
     ${KDE4_KDEUI_LIBS}
     ${KDE4_KIO_LIBS}
+    kbibtexdata
     kbibtexio
     kbibtexnetworking
     kbibtexproc

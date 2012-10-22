@@ -24,7 +24,7 @@
 #include <KLocale>
 #include <KDebug>
 
-#include <internalnetworkaccessmanager.h>
+#include "internalnetworkaccessmanager.h"
 #include "iocommon.h"
 #include "fileimporterbibtex.h"
 #include "onlinesearchjstor.h"

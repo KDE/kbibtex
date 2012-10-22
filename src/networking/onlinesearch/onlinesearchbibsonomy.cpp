@@ -32,10 +32,10 @@
 #include <KMessageBox>
 #include <KConfigGroup>
 
-#include <fileimporterbibtex.h>
-#include <file.h>
-#include <entry.h>
-#include <internalnetworkaccessmanager.h>
+#include "fileimporterbibtex.h"
+#include "file.h"
+#include "entry.h"
+#include "internalnetworkaccessmanager.h"
 #include "onlinesearchbibsonomy.h"
 
 class OnlineSearchBibsonomy::OnlineSearchQueryFormBibsonomy : public OnlineSearchQueryFormAbstract

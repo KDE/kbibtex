@@ -39,11 +39,11 @@
 #include <KIO/NetAccess>
 #include <KGlobalSettings>
 
-#include <fileinfo.h>
-#include <file.h>
-#include <entry.h>
-#include <fileimporterbibtex.h>
-#include <fileexporterbibtex.h>
+#include "fileinfo.h"
+#include "file.h"
+#include "entry.h"
+#include "fileimporterbibtex.h"
+#include "fileexporterbibtex.h"
 #include <fieldlineedit.h>
 #include "fieldlistedit.h"
 

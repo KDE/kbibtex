@@ -31,8 +31,8 @@
 #include <KFileDialog>
 #include <KUrlRequester>
 
-#include <fileexporter.h>
-#include <clipboard.h>
+#include "fileexporter.h"
+#include "clipboard.h"
 #include "preferences.h"
 #include "lyx.h"
 #include "settingsfileexporterwidget.h"

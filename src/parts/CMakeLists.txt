@@ -1,11 +1,12 @@
 include_directories(
-    ${CMAKE_CURRENT_SOURCE_DIR}/../libkbibtexio
-    ${CMAKE_CURRENT_SOURCE_DIR}/../libkbibtexio/config
-    ${CMAKE_CURRENT_SOURCE_DIR}/../gui
-    ${CMAKE_CURRENT_SOURCE_DIR}/../gui/config
-    ${CMAKE_CURRENT_SOURCE_DIR}/../gui/widgets
-    ${CMAKE_CURRENT_SOURCE_DIR}/../gui/bibtex
-    ${CMAKE_CURRENT_SOURCE_DIR}/../processing/
+    ${CMAKE_SOURCE_DIR}/src/data
+    ${CMAKE_SOURCE_DIR}/src/io
+    ${CMAKE_SOURCE_DIR}/src/gui
+    ${CMAKE_SOURCE_DIR}/src/gui/config
+    ${CMAKE_SOURCE_DIR}/src/gui/widgets
+    ${CMAKE_SOURCE_DIR}/src/gui/bibtex
+    ${CMAKE_SOURCE_DIR}/src/processing
+    ${CMAKE_SOURCE_DIR}/src/networking
 )
 
 # debug area for KBibTeX's IO library
@@ -28,6 +29,7 @@ kde4_add_plugin(
 target_link_libraries(
     kbibtexpart
     ${KDE4_KPARTS_LIBS}
+    kbibtexdata
     kbibtexio
     kbibtexgui
     kbibtexproc

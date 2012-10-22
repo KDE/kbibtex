@@ -40,8 +40,8 @@
 #include <QHeaderView>
 
 #include <fieldlineedit.h>
-#include <bibtexfields.h>
-#include <entry.h>
+#include "bibtexfields.h"
+#include "entry.h"
 #include <preferences.h>
 #include "valuelistmodel.h"
 

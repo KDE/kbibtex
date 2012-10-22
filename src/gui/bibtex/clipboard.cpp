@@ -27,11 +27,11 @@
 #include <KConfigGroup>
 #include <KDebug>
 
-#include <bibtexeditor.h>
-#include <bibtexfilemodel.h>
-#include <fileimporterbibtex.h>
-#include <fileexporterbibtex.h>
-#include <file.h>
+#include "bibtexeditor.h"
+#include "bibtexfilemodel.h"
+#include "fileimporterbibtex.h"
+#include "fileexporterbibtex.h"
+#include "file.h"
 #include "clipboard.h"
 
 const QString Clipboard::keyCopyReferenceCommand = QLatin1String("copyReferenceCommand");

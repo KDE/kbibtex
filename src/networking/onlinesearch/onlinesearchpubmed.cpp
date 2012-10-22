@@ -28,9 +28,9 @@
 #include <KStandardDirs>
 #include <KMessageBox>
 
-#include <internalnetworkaccessmanager.h>
 #include "xsltransform.h"
 #include "fileimporterbibtex.h"
+#include "internalnetworkaccessmanager.h"
 #include "onlinesearchpubmed.h"
 
 const int OnlineSearchPubMed::maxNumResults = 25;

@@ -31,11 +31,11 @@
 #include <KLineEdit>
 #include <KActionMenu>
 
-#include <bibtexeditor.h>
-#include <colorlabelwidget.h>
-#include <bibtexfilemodel.h>
 #include "file.h"
-#include <preferences.h>
+#include "bibtexeditor.h"
+#include "colorlabelwidget.h"
+#include "bibtexfilemodel.h"
+#include "preferences.h"
 #include "settingscolorlabelwidget.h"
 
 class ColorLabelSettingsDelegate : public QStyledItemDelegate

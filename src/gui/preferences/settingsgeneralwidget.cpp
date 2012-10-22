@@ -25,7 +25,7 @@
 #include <KConfigGroup>
 #include <KComboBox>
 
-#include <value.h>
+#include "value.h"
 #include "settingsgeneralwidget.h"
 
 class SettingsGeneralWidget::SettingsGeneralWidgetPrivate

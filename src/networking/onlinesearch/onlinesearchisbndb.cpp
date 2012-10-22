@@ -26,9 +26,9 @@
 #include <KDebug>
 
 #include "fileimporterbibtex.h"
+#include "xsltransform.h"
 #include "internalnetworkaccessmanager.h"
 #include "onlinesearchisbndb.h"
-#include "xsltransform.h"
 
 class OnlineSearchIsbnDB::OnlineSearchIsbnDBPrivate
 {

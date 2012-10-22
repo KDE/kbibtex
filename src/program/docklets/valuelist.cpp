@@ -35,10 +35,10 @@
 #include <KAction>
 #include <KToggleAction>
 
-#include <bibtexfields.h>
-#include <entry.h>
-#include <bibtexeditor.h>
-#include <valuelistmodel.h>
+#include "bibtexfields.h"
+#include "entry.h"
+#include "bibtexeditor.h"
+#include "valuelistmodel.h"
 #include "valuelist.h"
 
 class ValueList::ValueListPrivate

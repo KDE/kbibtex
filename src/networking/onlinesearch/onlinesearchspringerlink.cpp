@@ -32,7 +32,7 @@
 #include <KConfigGroup>
 #include <KStandardDirs>
 
-#include <internalnetworkaccessmanager.h>
+#include "internalnetworkaccessmanager.h"
 #include "encoderlatex.h"
 #include "fileimporterbibtex.h"
 #include "xsltransform.h"

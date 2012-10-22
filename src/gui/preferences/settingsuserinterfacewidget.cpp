@@ -27,7 +27,7 @@
 #include <KSharedConfig>
 #include <KConfigGroup>
 
-#include <elementwidgets.h>
+#include "elementwidgets.h"
 #include "bibtexfilemodel.h"
 #include "settingsuserinterfacewidget.h"
 

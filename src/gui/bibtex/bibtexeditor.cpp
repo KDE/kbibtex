@@ -28,11 +28,11 @@
 #include <KConfigGroup>
 #include <KDebug>
 
-#include <elementeditor.h>
-#include <entry.h>
-#include <macro.h>
-#include <bibtexfilemodel.h>
-#include <fileexporterbibtex.h>
+#include "elementeditor.h"
+#include "entry.h"
+#include "macro.h"
+#include "bibtexfilemodel.h"
+#include "fileexporterbibtex.h"
 #include "valuelistmodel.h"
 #include "bibtexeditor.h"
 

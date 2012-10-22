@@ -44,14 +44,13 @@
 #include <KRun>
 #include <KIO/NetAccess>
 
-#include <fileexporterbibtex.h>
-#include <fileexporterbibtex2html.h>
-#include <fileexporterxslt.h>
-#include <element.h>
-#include <file.h>
-#include <entry.h>
-#include <bibtexeditor.h>
-
+#include "fileexporterbibtex.h"
+#include "fileexporterbibtex2html.h"
+#include "fileexporterxslt.h"
+#include "element.h"
+#include "file.h"
+#include "entry.h"
+#include "bibtexeditor.h"
 #include "referencepreview.h"
 
 class ReferencePreview::ReferencePreviewPrivate

@@ -43,15 +43,15 @@
 #include "idsuggestions.h"
 #include "fileinfo.h"
 #include <kbibtexnamespace.h>
-#include <bibtexentries.h>
-#include <bibtexfields.h>
-#include <fileimporterbibtex.h>
-#include <fileexporterbibtex.h>
-#include <file.h>
+#include "bibtexentries.h"
+#include "bibtexfields.h"
+#include "fileimporterbibtex.h"
+#include "fileexporterbibtex.h"
+#include "file.h"
 #include <fieldinput.h>
-#include <entry.h>
-#include <macro.h>
-#include <preamble.h>
+#include "entry.h"
+#include "macro.h"
+#include "preamble.h"
 #include <fieldlineedit.h>
 #include "elementwidgets.h"
 

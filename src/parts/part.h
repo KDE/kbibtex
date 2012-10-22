@@ -23,7 +23,7 @@
 
 #include <kparts/part.h>
 
-#include <bibtexeditor.h>
+#include "bibtexeditor.h"
 
 class KBibTeXPart : public KParts::ReadWritePart
 {

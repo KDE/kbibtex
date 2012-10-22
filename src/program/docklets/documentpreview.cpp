@@ -53,11 +53,11 @@
 #include <KToolBar>
 #include <KActionCollection>
 
-#include <kbibtexnamespace.h>
-#include <element.h>
-#include <entry.h>
-#include <file.h>
-#include <fileinfo.h>
+#include "kbibtexnamespace.h"
+#include "element.h"
+#include "entry.h"
+#include "file.h"
+#include "fileinfo.h"
 #include "documentpreview.h"
 
 ImageLabel::ImageLabel(const QString &text, QWidget *parent, Qt::WindowFlags f)

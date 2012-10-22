@@ -44,16 +44,15 @@ add_definitions(
     ${KDE4_DEFINITIONS}
 )
 include_directories(
-    ${CMAKE_BINARY_DIR}
-    ${CMAKE_BINARY_DIR}/src
-    ${CMAKE_SOURCE_DIR}
     ${CMAKE_SOURCE_DIR}/src
-    ${CMAKE_SOURCE_DIR}/src/networking
     ${KDE4_INCLUDES}
 )
 
 add_subdirectory(
-    libkbibtexio
+    data
+)
+add_subdirectory(
+    io
 )
 add_subdirectory(
     processing

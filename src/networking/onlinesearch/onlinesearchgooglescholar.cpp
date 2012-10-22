@@ -31,8 +31,8 @@
 #include <KLineEdit>
 #include <KIcon>
 
-#include <fileimporterbibtex.h>
-#include <internalnetworkaccessmanager.h>
+#include "fileimporterbibtex.h"
+#include "internalnetworkaccessmanager.h"
 #include "onlinesearchgooglescholar.h"
 
 

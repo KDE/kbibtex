@@ -27,7 +27,7 @@
 #include <KSharedConfig>
 #include <KConfigGroup>
 
-#include <preferences.h>
+#include "preferences.h"
 #include "colorlabelwidget.h"
 
 const int ColorRole = Qt::UserRole + 521;

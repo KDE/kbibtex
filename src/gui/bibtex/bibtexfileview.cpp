@@ -27,7 +27,7 @@
 #include <KLocale>
 #include <KSharedConfig>
 
-#include <bibtexfields.h>
+#include "bibtexfields.h"
 #include "bibtexfilemodel.h"
 #include "bibtexfileview.h"
 

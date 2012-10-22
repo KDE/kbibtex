@@ -29,10 +29,10 @@
 #include <KDebug>
 #include <KTemporaryFile>
 
-#include <kbibtexnamespace.h>
-#include <internalnetworkaccessmanager.h>
-#include <value.h>
-#include <fileinfo.h>
+#include "kbibtexnamespace.h"
+#include "internalnetworkaccessmanager.h"
+#include "value.h"
+#include "fileinfo.h"
 #include "findpdf.h"
 
 int FindPDF::fileCounter = 0;

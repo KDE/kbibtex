@@ -11,21 +11,16 @@ add_definitions(
 )
 
 include_directories(
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}/docklets
-    ${CMAKE_CURRENT_SOURCE_DIR}/../gui
-    ${CMAKE_CURRENT_SOURCE_DIR}/../gui/config
-    ${CMAKE_CURRENT_SOURCE_DIR}/../gui/bibtex
-    ${CMAKE_CURRENT_SOURCE_DIR}/../gui/element
-    ${CMAKE_CURRENT_SOURCE_DIR}/../gui/widgets
-    ${CMAKE_CURRENT_SOURCE_DIR}/../libkbibtexio
-    ${CMAKE_CURRENT_SOURCE_DIR}/../libkbibtexio/config
-    ${CMAKE_CURRENT_SOURCE_DIR}/../networking
-    ${CMAKE_CURRENT_SOURCE_DIR}/../networking/onlinesearch
-    ${CMAKE_CURRENT_SOURCE_DIR}/../processing
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../../
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../
-    ${CMAKE_CURRENT_SOURCE_DIR}/../
+    ${CMAKE_SOURCE_DIR}/src/data
+    ${CMAKE_SOURCE_DIR}/src/io
+    ${CMAKE_SOURCE_DIR}/src/gui
+    ${CMAKE_SOURCE_DIR}/src/gui/config
+    ${CMAKE_SOURCE_DIR}/src/gui/bibtex
+    ${CMAKE_SOURCE_DIR}/src/gui/element
+    ${CMAKE_SOURCE_DIR}/src/gui/widgets
+    ${CMAKE_SOURCE_DIR}/src/networking
+    ${CMAKE_SOURCE_DIR}/src/networking/onlinesearch
+    ${CMAKE_SOURCE_DIR}/src/processing
 )
 
 set(
@@ -45,6 +40,7 @@ target_link_libraries(
     ${KDE4_KIO_LIBS}
     ${KDE4_KPARTS_LIBS}
     ${KDE4_KFILE_LIBS}
+    kbibtexdata
     kbibtexio
     kbibtexproc
     kbibtexgui

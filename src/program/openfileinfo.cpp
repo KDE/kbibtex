@@ -30,7 +30,7 @@
 #include <KUrl>
 #include <kparts/part.h>
 
-#include <fileimporterpdf.h>
+#include "fileimporterpdf.h"
 #include "openfileinfo.h"
 
 class OpenFileInfo::OpenFileInfoPrivate

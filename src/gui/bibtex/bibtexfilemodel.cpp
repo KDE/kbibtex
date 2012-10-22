@@ -27,15 +27,15 @@
 #include <KLocale>
 #include <KConfigGroup>
 
-#include <fileinfo.h>
-#include <element.h>
-#include <entry.h>
-#include <macro.h>
-#include <comment.h>
-#include <preamble.h>
-#include <bibtexentries.h>
-#include <preferences.h>
+#include "element.h"
+#include "entry.h"
+#include "macro.h"
+#include "comment.h"
+#include "preamble.h"
+#include "bibtexentries.h"
 #include "bibtexfields.h"
+#include "fileinfo.h"
+#include "preferences.h"
 #include "bibtexfilemodel.h"
 
 static const QRegExp curlyRegExp("[{}]+");

@@ -42,9 +42,9 @@
 #include <KFileDialog>
 #include <KIO/NetAccess>
 
-#include <fieldlistedit.h>
-#include "findpdfui.h"
 #include "fileinfo.h"
+#include "fieldlistedit.h"
+#include "findpdfui.h"
 
 class PDFListModel;
 

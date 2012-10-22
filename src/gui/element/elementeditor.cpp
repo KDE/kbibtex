@@ -37,13 +37,13 @@
 #include <KConfigGroup>
 #include <kio/netaccess.h>
 
-#include <entry.h>
-#include <comment.h>
-#include <macro.h>
-#include <preamble.h>
-#include <element.h>
-#include <file.h>
-#include <fileexporterblg.h>
+#include "entry.h"
+#include "comment.h"
+#include "macro.h"
+#include "preamble.h"
+#include "element.h"
+#include "file.h"
+#include "fileexporterblg.h"
 #include "elementwidgets.h"
 #include "elementeditor.h"
 #include "checkbibtex.h"

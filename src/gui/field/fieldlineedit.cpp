@@ -39,14 +39,14 @@
 #include <KSharedConfig>
 #include <KConfigGroup>
 
-#include <fileinfo.h>
-#include <file.h>
-#include <entry.h>
-#include <value.h>
-#include <fileimporterbibtex.h>
-#include <fileexporterbibtex.h>
-#include <bibtexfields.h>
-#include <encoderlatex.h>
+#include "fileinfo.h"
+#include "file.h"
+#include "entry.h"
+#include "value.h"
+#include "fileimporterbibtex.h"
+#include "fileexporterbibtex.h"
+#include "bibtexfields.h"
+#include "encoderlatex.h"
 #include "fieldlineedit.h"
 
 class FieldLineEdit::FieldLineEditPrivate

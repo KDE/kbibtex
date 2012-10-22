@@ -32,9 +32,9 @@
 #include <KConfigGroup>
 
 #include "fileimporterbibtex.h"
-#include "onlinesearcharxiv.h"
-#include <internalnetworkaccessmanager.h>
 #include "xsltransform.h"
+#include "onlinesearcharxiv.h"
+#include "internalnetworkaccessmanager.h"
 
 
 class OnlineSearchArXiv::OnlineSearchQueryFormArXiv : public OnlineSearchQueryFormAbstract

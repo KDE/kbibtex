@@ -1,9 +1,11 @@
 # OnlineSearch library
 
 include_directories(
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}/onlinesearch
+    ${CMAKE_SOURCE_DIR}/src/data
+    ${CMAKE_SOURCE_DIR}/src/io
+    ${CMAKE_SOURCE_DIR}/src/networking/onlinesearch
     ${POPPLER_QT4_INCLUDE_DIR}
+    ${LIBXML2_INCLUDE_DIR}
 )
 
 set(
@@ -60,11 +62,6 @@ add_definitions(
     -DKDE_DEFAULT_DEBUG_AREA=101025
 )
 
-include_directories(
-    ${LIBXML2_INCLUDE_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}/../libkbibtexio
-)
-
 kde4_add_library(
     kbibtexnetworking
     SHARED
@@ -78,6 +75,7 @@ target_link_libraries(
     ${KDE4_KDECORE_LIBS}
     ${KDE4_KIO_LIBS}
     ${POPPLER_QT4_LIBRARIES}
+    kbibtexdata
     kbibtexio
 )
 

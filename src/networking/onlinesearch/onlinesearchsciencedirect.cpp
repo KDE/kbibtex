@@ -23,10 +23,10 @@
 #include <KDebug>
 #include <KLocale>
 
-#include <encoderlatex.h>
+#include "encoderlatex.h"
 #include "fileimporterbibtex.h"
 #include "onlinesearchsciencedirect.h"
-#include <internalnetworkaccessmanager.h>
+#include "internalnetworkaccessmanager.h"
 
 class OnlineSearchScienceDirect::OnlineSearchScienceDirectPrivate
 {

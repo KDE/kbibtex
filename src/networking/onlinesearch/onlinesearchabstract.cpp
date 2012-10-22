@@ -32,8 +32,8 @@
 #include <KMessageBox>
 #include <KPassivePopup>
 
-#include <encoderlatex.h>
-#include <internalnetworkaccessmanager.h>
+#include "encoderlatex.h"
+#include "internalnetworkaccessmanager.h"
 #include "kbibtexnamespace.h"
 #include "onlinesearchabstract.h"
 

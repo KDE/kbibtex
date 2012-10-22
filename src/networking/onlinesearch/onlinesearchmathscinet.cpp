@@ -26,10 +26,10 @@
 #include <KLocale>
 #include <KDebug>
 
-#include <fileimporterbibtex.h>
-#include <kbibtexnamespace.h>
+#include "fileimporterbibtex.h"
+#include "kbibtexnamespace.h"
+#include "internalnetworkaccessmanager.h"
 #include "onlinesearchmathscinet.h"
-#include <internalnetworkaccessmanager.h>
 
 class OnlineSearchMathSciNet::OnlineSearchMathSciNetPrivate
 {

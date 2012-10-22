@@ -30,10 +30,10 @@
 #include <KLineEdit>
 #include <KConfigGroup>
 
-#include <fileimporterbibtex.h>
-#include <file.h>
-#include <entry.h>
-#include <internalnetworkaccessmanager.h>
+#include "file.h"
+#include "entry.h"
+#include "fileimporterbibtex.h"
+#include "internalnetworkaccessmanager.h"
 #include "onlinesearchingentaconnect.h"
 
 class OnlineSearchIngentaConnect::OnlineSearchQueryFormIngentaConnect : public OnlineSearchQueryFormAbstract
