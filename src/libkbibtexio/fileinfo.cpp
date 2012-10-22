@@ -48,9 +48,9 @@ const QString FileInfo::mimetypeRIS = QLatin1String("application/x-research-info
 KMimeType::Ptr FileInfo::mimeTypeForUrl(const KUrl &url)
 {
     static const KMimeType::Ptr mimetypeBibTeXPtr(KMimeType::mimeType(mimetypeBibTeX));
-    static const QString mimetypeBibTeXExt = mimetypeBibTeXPtr->mainExtension().mid(1);
+    static const QString mimetypeBibTeXExt = mimetypeBibTeXPtr.isNull() ? QString::null : mimetypeBibTeXPtr->mainExtension().mid(1);
     static const KMimeType::Ptr mimetypeRISPtr(KMimeType::mimeType(mimetypeRIS));
-    static const QString mimetypeRISExt = mimetypeRISPtr->mainExtension().mid(1);
+    static const QString mimetypeRISExt = mimetypeRISPtr.isNull() ? QString::null : mimetypeRISPtr->mainExtension().mid(1);
 
     const QString extension = KMimeType::extractKnownExtension(url.fileName()).toLower();
 
