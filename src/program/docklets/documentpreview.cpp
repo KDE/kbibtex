@@ -128,7 +128,7 @@ private:
 
 public:
     KComboBox *urlComboBox;
-    QCheckBox *onlyLocalFilesCheckBox;
+    KPushButton *onlyLocalFilesButton;
     QList<KIO::StatJob *> runningJobs;
     QSharedPointer<const Entry> entry;
     KUrl baseUrl;
@@ -167,11 +167,20 @@ public:
         urlComboBox = new KComboBox(false, p);
         innerLayout->addWidget(urlComboBox, 1);
 
-        externalViewerButton = new KPushButton(KIcon("document-open"), i18n("Open..."), p);
+        externalViewerButton = new KPushButton(KIcon("document-open"), QString::null, p);
+        externalViewerButton->setToolTip(i18n("Open in external program"));
         innerLayout->addWidget(externalViewerButton, 0);
+        QSizePolicy sp = externalViewerButton->sizePolicy();
+        sp.setVerticalPolicy(QSizePolicy::MinimumExpanding);
+        externalViewerButton->setSizePolicy(sp);
 
-        onlyLocalFilesCheckBox = new QCheckBox(i18n("Only local files"), p);
-        layout->addWidget(onlyLocalFilesCheckBox, 0);
+        onlyLocalFilesButton = new KPushButton(KIcon("applications-internet"), QString::null, p);
+        onlyLocalFilesButton->setToolTip(i18n("Toggle between local files only and all documents including remote ones"));
+        innerLayout->addWidget(onlyLocalFilesButton, 0);
+        onlyLocalFilesButton->setCheckable(true);
+        sp = onlyLocalFilesButton->sizePolicy();
+        sp.setVerticalPolicy(QSizePolicy::MinimumExpanding);
+        onlyLocalFilesButton->setSizePolicy(sp);
 
         menuBar = new KMenuBar(p);
         menuBar->setBackgroundRole(QPalette::Window);
@@ -214,14 +223,14 @@ public:
 
         connect(externalViewerButton, SIGNAL(clicked()), p, SLOT(openExternally()));
         connect(urlComboBox, SIGNAL(activated(int)), p, SLOT(comboBoxChanged(int)));
-        connect(onlyLocalFilesCheckBox, SIGNAL(toggled(bool)), p, SLOT(onlyLocalFilesChanged()));
+        connect(onlyLocalFilesButton, SIGNAL(toggled(bool)), p, SLOT(onlyLocalFilesChanged()));
     }
 
     bool addUrl(const struct UrlInfo &urlInfo) {
         bool isLocal = KBibTeX::isLocalOrRelative(urlInfo.url);
         anyLocal |= isLocal;
 
-        if (onlyLocalFilesCheckBox->isChecked() && !isLocal) return true; ///< ignore URL if only local files are allowed
+        if (!onlyLocalFilesButton->isChecked() && !isLocal) return true; ///< ignore URL if only local files are allowed
 
         if (isLocal) {
             /// create a drop-down list entry if file is a local file
@@ -282,7 +291,7 @@ public:
                 bool isLocal = KBibTeX::isLocalOrRelative(*it);
                 kDebug() << "testing " << (*it).prettyUrl() << isLocal;
                 anyRemote |= !isLocal;
-                if (onlyLocalFilesCheckBox->isChecked() && !isLocal) continue;
+                if (!onlyLocalFilesButton->isChecked() && !isLocal) continue;
 
                 KIO::StatJob *job = KIO::stat(*it, KIO::StatJob::SourceSide, 3, KIO::HideProgressInfo);
                 runningJobs << job;
@@ -528,12 +537,12 @@ public:
 
     void loadState() {
         KConfigGroup configGroup(config, configGroupName);
-        onlyLocalFilesCheckBox->setChecked(configGroup.readEntry(onlyLocalFilesCheckConfig, true));
+        onlyLocalFilesButton->setChecked(!configGroup.readEntry(onlyLocalFilesCheckConfig, true));
     }
 
     void saveState() {
         KConfigGroup configGroup(config, configGroupName);
-        configGroup.writeEntry(onlyLocalFilesCheckConfig, onlyLocalFilesCheckBox->isChecked());
+        configGroup.writeEntry(onlyLocalFilesCheckConfig, !onlyLocalFilesButton->isChecked());
         config->sync();
     }
 };
@@ -608,7 +617,7 @@ void DocumentPreview::statFinished(KJob *kjob)
 
         if (d->urlComboBox->count() < 1) {
             /// In case that no valid references were found by the stat jobs ...
-            if (d->anyRemote && d->onlyLocalFilesCheckBox->isChecked()) {
+            if (d->anyRemote && !d->onlyLocalFilesButton->isChecked()) {
                 /// There are some remote URLs to probe,
                 /// but user was only looking for local files
                 d->showMessage(i18n("<qt>No documents to show.<br/><a href=\"disableonlylocalfiles\">Disable the restriction</a> to local files to see remote documents.</qt>"));
@@ -629,5 +638,5 @@ void DocumentPreview::loadingFinished()
 void DocumentPreview::linkActivated(const QString &link)
 {
     if (link == QLatin1String("disableonlylocalfiles"))
-        d->onlyLocalFilesCheckBox->setChecked(false);
+        d->onlyLocalFilesButton->setChecked(true);
 }
