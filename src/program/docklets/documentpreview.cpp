@@ -164,23 +164,24 @@ public:
 
         QHBoxLayout *innerLayout = new QHBoxLayout();
         layout->addLayout(innerLayout, 0);
+
+        onlyLocalFilesButton = new KPushButton(KIcon("applications-internet"), QString::null, p);
+        onlyLocalFilesButton->setToolTip(i18n("Toggle between local files only and all documents including remote ones"));
+        innerLayout->addWidget(onlyLocalFilesButton, 0);
+        onlyLocalFilesButton->setCheckable(true);
+        QSizePolicy sp = onlyLocalFilesButton->sizePolicy();
+        sp.setVerticalPolicy(QSizePolicy::MinimumExpanding);
+        onlyLocalFilesButton->setSizePolicy(sp);
+
         urlComboBox = new KComboBox(false, p);
         innerLayout->addWidget(urlComboBox, 1);
 
         externalViewerButton = new KPushButton(KIcon("document-open"), QString::null, p);
         externalViewerButton->setToolTip(i18n("Open in external program"));
         innerLayout->addWidget(externalViewerButton, 0);
-        QSizePolicy sp = externalViewerButton->sizePolicy();
+        sp = externalViewerButton->sizePolicy();
         sp.setVerticalPolicy(QSizePolicy::MinimumExpanding);
         externalViewerButton->setSizePolicy(sp);
-
-        onlyLocalFilesButton = new KPushButton(KIcon("applications-internet"), QString::null, p);
-        onlyLocalFilesButton->setToolTip(i18n("Toggle between local files only and all documents including remote ones"));
-        innerLayout->addWidget(onlyLocalFilesButton, 0);
-        onlyLocalFilesButton->setCheckable(true);
-        sp = onlyLocalFilesButton->sizePolicy();
-        sp.setVerticalPolicy(QSizePolicy::MinimumExpanding);
-        onlyLocalFilesButton->setSizePolicy(sp);
 
         menuBar = new KMenuBar(p);
         menuBar->setBackgroundRole(QPalette::Window);
