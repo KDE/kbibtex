@@ -46,15 +46,12 @@ KUrl OnlineSearchInpireHep::homepage() const
 
 QString OnlineSearchInpireHep::favIconUrl() const
 {
-    return QLatin1String("inspirehep.net/favicon.ico");
+    return QLatin1String("http://inspirehep.net/favicon.ico");
 }
 
 KUrl OnlineSearchInpireHep::buildQueryUrl(const QMap<QString, QString> &query, int numResults)
 {
-    static const QString typedSearch = QLatin1String("%1 %2");
-
-    // TODO
-    /// http://adsabs.harvard.edu/cgi-bin/basic_connect?qsearch=Hansen&version=1&data_type=BIBTEXPLUS&type=FILE&sort=NDATE&nr_to_return=5
+    static const QString typedSearch = QLatin1String("%1 %2"); ///< no quotation marks for search term?
 
     /// append search terms
     QStringList queryFragments;
