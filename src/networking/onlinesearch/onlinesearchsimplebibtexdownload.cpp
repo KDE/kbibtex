@@ -69,6 +69,26 @@ void OnlineSearchSimpleBibTeXDownload::downloadDone()
         ts.setCodec("utf-8");
         QString bibTeXcode = ts.readAll();
 
+        if (bibTeXcode.contains(QLatin1String("<html")) || bibTeXcode.contains(QLatin1String("<HTML"))) {
+            /// Replace all linebreak-like characters, in case they occur inside the BibTeX code
+            static const QRegExp htmlLinebreakRegExp(QLatin1String("<[/]?(br|p)[^>]*[/]?>"));
+            bibTeXcode = bibTeXcode.replace(htmlLinebreakRegExp, QLatin1String(""));
+
+            /// Find first BibTeX entry in HTML code, clip away all HTML code before that
+            static const QRegExp elementTypeRegExp(QLatin1String("[@]\\S+\\{"));
+            int p1 = -1;
+            /// hop over JavaScript's "@import" statements
+            while ((p1 = bibTeXcode.indexOf(elementTypeRegExp, p1 + 1)) >= 0 && elementTypeRegExp.cap(0) == QLatin1String("@import{"));
+            if (p1 > 1)
+                bibTeXcode = bibTeXcode.mid(p1);
+
+            /// Find HTML code after BibTeX code, clip that away, too
+            static const QRegExp htmlContinuationRegExp(QLatin1String("<[/]?\\S+"));
+            p1 = bibTeXcode.indexOf(htmlContinuationRegExp);
+            if (p1 > 1)
+                bibTeXcode = bibTeXcode.left(p1 - 1);
+        }
+
         if (!bibTeXcode.isEmpty()) {
             FileImporterBibTeX importer;
             File *bibtexFile = importer.fromString(bibTeXcode);
@@ -78,6 +98,9 @@ void OnlineSearchSimpleBibTeXDownload::downloadDone()
                 for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
                     QSharedPointer<Entry> entry = (*it).dynamicCast<Entry>();
                     if (!entry.isNull()) {
+                        /// Sometimes, there is no identifier, so set a random one
+                        if (entry->id().isEmpty())
+                            entry->setId(QString(QLatin1String("entry-%1")).arg(QString::number(qrand(), 36)));
                         Value v;
                         v.append(QSharedPointer<VerbatimText>(new VerbatimText(label())));
                         entry->insert("x-fetchedfrom", v);
