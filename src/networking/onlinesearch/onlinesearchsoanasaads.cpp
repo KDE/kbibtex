@@ -46,7 +46,7 @@ KUrl OnlineSearchSOANASAADS::homepage() const
 
 QString OnlineSearchSOANASAADS::favIconUrl() const
 {
-    return QLatin1String("http://adswww.harvard.edu/favicon.ico");
+    return QLatin1String("http://adsabs.harvard.edu/favicon.ico");
 }
 
 KUrl OnlineSearchSOANASAADS::buildQueryUrl(const QMap<QString, QString> &query, int numResults)
@@ -68,7 +68,7 @@ KUrl OnlineSearchSOANASAADS::buildQueryUrl(const QMap<QString, QString> &query, 
     /// add words from "year" field
     QStringList yearWords = splitRespectingQuotationMarks(query[queryKeyYear]);
     for (QStringList::ConstIterator it = yearWords.constBegin(); it != yearWords.constEnd(); ++it)
-        queryFragments.append(globalSearch.arg(*it));
+        queryFragments.append(*it); ///< no quotation marks around years
 
     /// add words from "title" field
     QStringList titleWords = splitRespectingQuotationMarks(query[queryKeyTitle]);
