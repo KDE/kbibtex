@@ -239,7 +239,6 @@ void ReferencePreview::renderHTML()
 
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
-    QStringList errorLog;
     FileExporter *exporter = NULL;
 
     QStringList data = d->comboBox->itemData(d->comboBox->currentIndex()).toStringList();
@@ -266,6 +265,8 @@ void ReferencePreview::renderHTML()
     QBuffer buffer(this);
     buffer.open(QBuffer::WriteOnly);
 
+    bool exporterResult = false;
+    QStringList errorLog;
     QSharedPointer<const Entry> entry = d->element.dynamicCast<const Entry>();
     if (crossRefHandling == add && !entry.isNull()) {
         QString crossRef = PlainTextValue::text(entry->value(QLatin1String("crossref")), d->file);
@@ -274,14 +275,14 @@ void ReferencePreview::renderHTML()
             File file;
             file.append(QSharedPointer<Entry>(new Entry(*entry)));
             file.append(QSharedPointer<Entry>(new Entry(*crossRefEntry)));
-            exporter->save(&buffer, &file, &errorLog);
+            exporterResult = exporter->save(&buffer, &file, &errorLog);
         } else
-            exporter->save(&buffer, d->element, &errorLog);
+            exporterResult = exporter->save(&buffer, d->element, &errorLog);
     } else if (crossRefHandling == merge && !entry.isNull()) {
         QSharedPointer<Entry> merged = QSharedPointer<Entry>(Entry::resolveCrossref(*entry, d->file));
-        exporter->save(&buffer, merged, &errorLog);
+        exporterResult = exporter->save(&buffer, merged, &errorLog);
     } else
-        exporter->save(&buffer, d->element, &errorLog);
+        exporterResult = exporter->save(&buffer, d->element, &errorLog);
     buffer.close();
     delete exporter;
 
@@ -291,7 +292,7 @@ void ReferencePreview::renderHTML()
     QString text = ts.readAll();
     buffer.close();
 
-    if (text.isEmpty()) {
+    if (!exporterResult || text.isEmpty()) {
         /// something went wrong, no output ...
         text = d->notAvailableMessage.arg(i18n("No HTML output generated"));
         kDebug() << errorLog.join("\n");
