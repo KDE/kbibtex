@@ -59,7 +59,7 @@ bool FileExporterToolchain::runProcesses(const QStringList &progs, QStringList *
     return result;
 }
 
-bool FileExporterToolchain::runProcess(const QString &cmd,  const QStringList &args, QStringList *errorLog)
+bool FileExporterToolchain::runProcess(const QString &cmd, const QStringList &args, QStringList *errorLog)
 {
     bool result = false;
 
@@ -67,6 +67,7 @@ bool FileExporterToolchain::runProcess(const QString &cmd,  const QStringList &a
     QProcessEnvironment processEnvironment = QProcessEnvironment::systemEnvironment();
     /// avoid some paranoid security settings in BibTeX
     processEnvironment.insert("openout_any", "r");
+    processEnvironment.insert("TMPDIR", tempDir.name());
     m_process->setProcessEnvironment(processEnvironment);
     m_process->setWorkingDirectory(tempDir.name());
 
@@ -91,8 +92,17 @@ bool FileExporterToolchain::runProcess(const QString &cmd,  const QStringList &a
     if (!result)
         errorLog->append(i18n("Process '%1' failed", (cmd + " " + args.join(" "))));
 
-    if (errorLog != NULL)
+    if (errorLog != NULL) {
+        QTextStream tsStdOut(m_process->readAllStandardOutput());
+        QString line;
+        while (!(line = tsStdOut.readLine()).isNull())
+            m_errorLog->append(line);
+        QTextStream tsStdErr(m_process->readAllStandardError());
+        while (!(line = tsStdErr.readLine()).isNull())
+            m_errorLog->append(line);
+
         errorLog->append(i18n("Stopped process '%1' with exit code %2", (cmd + " " + args.join(" ")), m_process->exitCode()));
+    }
 
     delete(m_process);
     m_process = NULL;
