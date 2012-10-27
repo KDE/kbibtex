@@ -21,6 +21,7 @@ set(
     onlinesearch/onlinesearchspringerlink.cpp
     onlinesearch/onlinesearchjstor.cpp
     onlinesearch/onlinesearchmathscinet.cpp
+    onlinesearch/onlinesearchinspirehep.cpp
     onlinesearch/onlinesearchingentaconnect.cpp
     onlinesearch/onlinesearchsimplebibtexdownload.cpp
     onlinesearch/onlinesearchgeneral.cpp
@@ -47,6 +48,7 @@ set(
     onlinesearch/onlinesearchsimplebibtexdownload.h
     onlinesearch/onlinesearchsoanasaads.h
     onlinesearch/onlinesearchmathscinet.h
+    onlinesearch/onlinesearchinspirehep.h
     onlinesearch/onlinesearchisbndb.h
     kbibtexnetworking_export.h
     findpdf.h
