@@ -65,9 +65,11 @@ bool FileExporterToolchain::runProcess(const QString &cmd, const QStringList &ar
 
     m_process = new QProcess();
     QProcessEnvironment processEnvironment = QProcessEnvironment::systemEnvironment();
-    /// avoid some paranoid security settings in BibTeX
+    /// Avoid some paranoid security settings in BibTeX
     processEnvironment.insert("openout_any", "r");
+    /// Make applications use working directory as temporary directory
     processEnvironment.insert("TMPDIR", tempDir.name());
+    processEnvironment.insert("TEMPDIR", tempDir.name());
     m_process->setProcessEnvironment(processEnvironment);
     m_process->setWorkingDirectory(tempDir.name());
 
