@@ -44,6 +44,12 @@ BibTeXFileView::BibTeXFileView(const QString &name, QWidget * parent)
     setAllColumnsShowFocus(true);
     setRootIsDecorated(false);
 
+    /// restore header appearance
+    KConfigGroup configGroup(config, configGroupName);
+    QByteArray headerState = configGroup.readEntry(configHeaderState.arg(m_name), QByteArray());
+    headerDefault = header()->saveState();
+    header()->restoreState(headerState);
+
     /// header appearance and behaviour
     header()->setClickable(true);
     header()->setSortIndicatorShown(true);
@@ -53,12 +59,6 @@ BibTeXFileView::BibTeXFileView(const QString &name, QWidget * parent)
     connect(header(), SIGNAL(sectionResized(int, int, int)), this, SLOT(columnsChanged())); ///< FIXME columns get resized later on
     connect(header(), SIGNAL(sortIndicatorChanged(int, Qt::SortOrder)), this, SLOT(columnsChanged()));
     header()->setContextMenuPolicy(Qt::ActionsContextMenu);
-
-    /// restore header appearance
-    KConfigGroup configGroup(config, configGroupName);
-    QByteArray headerState = configGroup.readEntry(configHeaderState.arg(m_name), QByteArray());
-    headerDefault = header()->saveState();
-    header()->restoreState(headerState);
 
     /// build context menu for header to show/hide single columns
     int col = 0;
