@@ -165,13 +165,6 @@ BibTeXFileView::BibTeXFileView(const QString &name, QWidget *parent)
     setAllColumnsShowFocus(true);
     setRootIsDecorated(false);
 
-    /// header appearance and behaviour
-    header()->setClickable(true);
-    header()->setSortIndicatorShown(true);
-    header()->setSortIndicator(-1, Qt::AscendingOrder);
-    connect(header(), SIGNAL(sortIndicatorChanged(int, Qt::SortOrder)), this, SLOT(sort(int, Qt::SortOrder)));
-    header()->setContextMenuPolicy(Qt::ActionsContextMenu);
-
     /// restore header appearance
     KConfigGroup configGroup(d->config, d->configGroupName);
     QByteArray headerState = configGroup.readEntry(d->configHeaderState.arg(d->name), QByteArray());
@@ -182,6 +175,13 @@ BibTeXFileView::BibTeXFileView(const QString &name, QWidget *parent)
         d->storeColumns();
     }
     header()->setStretchLastSection(false);
+
+    /// header appearance and behaviour
+    header()->setClickable(true);
+    header()->setSortIndicatorShown(true);
+    header()->setSortIndicator(-1, Qt::AscendingOrder);
+    connect(header(), SIGNAL(sortIndicatorChanged(int, Qt::SortOrder)), this, SLOT(sort(int, Qt::SortOrder)));
+    header()->setContextMenuPolicy(Qt::ActionsContextMenu);
 
     connect(header(), SIGNAL(sectionMoved(int, int, int)), this, SLOT(columnMoved()));
     connect(header(), SIGNAL(sectionResized(int, int, int)), this, SLOT(columnResized(int, int, int)));
