@@ -327,6 +327,10 @@ void ReferencePreview::renderHTML()
     /// beautify text
     text.replace("``", "&ldquo;");
     text.replace("''", "&rdquo;");
+    static const QRegExp openingSingleQuotationRegExp(QLatin1String("(^|[> ,.;:!?])`(\\S)"));
+    static const QRegExp closingSingleQuotationRegExp(QLatin1String("(\\S)'([ ,.;:!?<]|$)"));
+    text.replace(openingSingleQuotationRegExp, "\\1&lsquo;\\2");
+    text.replace(closingSingleQuotationRegExp, "\\1&rsquo;\\2");
 
     /// adopt current color scheme
     text.replace(QLatin1String("color: black;"), QString(QLatin1String("color: %1;")).arg(d->textColor.name()));
