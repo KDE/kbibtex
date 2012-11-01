@@ -46,6 +46,8 @@ class Keyword;
 class KBIBTEXIO_EXPORT FileImporterBibTeX : public FileImporter
 {
 public:
+    static const char *defaultCodecName;
+
     /**
      * Creates an importer class to read a BibTeX file.
      * @param encoding the file's encoding.

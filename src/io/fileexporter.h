@@ -48,8 +48,8 @@ public:
     FileExporter();
     ~FileExporter();
 
-    QString toString(const QSharedPointer<const Element> element);
-    QString toString(const File *bibtexfile);
+    QString toString(const QSharedPointer<const Element> element, QStringList *errorLog = NULL);
+    QString toString(const File *bibtexfile, QStringList *errorLog = NULL);
 
     virtual bool save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog = NULL) = 0;
     virtual bool save(QIODevice *iodevice, const QSharedPointer<const Element> element, QStringList *errorLog = NULL) = 0;

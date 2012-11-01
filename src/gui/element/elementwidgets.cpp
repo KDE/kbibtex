@@ -1020,9 +1020,9 @@ SourceWidget::SourceWidget(QWidget *parent)
 
 bool SourceWidget::apply(QSharedPointer<Element> element) const
 {
-    if (isReadOnly) return false; /// never save data if in read-only mode
+    if (isReadOnly) return false; ///< never save data if in read-only mode
 
-    QString text = sourceEdit->document()->toPlainText();
+    const QString text = sourceEdit->document()->toPlainText();
     FileImporterBibTeX importer;
     File *file = importer.fromString(text);
     if (file == NULL) return false;
@@ -1046,10 +1046,12 @@ bool SourceWidget::apply(QSharedPointer<Element> element) const
                 if (!readPreamble.isNull() && !preamble.isNull()) {
                     preamble->operator =(*readPreamble.data());
                     result = true;
-                }
+                } else
+                    kWarning() << "Do not know how to apply source code";
             }
         }
-    }
+    } else
+        kDebug() << "Expected exactly 1 BibTeX element in source code, but found" << file->count() << "instead";
 
     delete file;
     return result;
@@ -1063,19 +1065,15 @@ bool SourceWidget::reset(QSharedPointer<const Element> element)
 
     FileExporterBibTeX exporter;
     exporter.setEncoding(QLatin1String("utf-8"));
-    QBuffer textBuffer;
-    textBuffer.open(QIODevice::WriteOnly);
-    bool result = exporter.save(&textBuffer, element, NULL);
-    textBuffer.close();
-    textBuffer.open(QIODevice::ReadOnly);
-    QTextStream ts(&textBuffer);
-    ts.setCodec("utf-8");
-    originalText = ts.readAll();
-    sourceEdit->document()->setPlainText(originalText);
+    const QString exportedText = exporter.toString(element);
+    if (!exportedText.isNull()) {
+        originalText = exportedText;
+        sourceEdit->document()->setPlainText(originalText);
+    }
 
     connect(sourceEdit, SIGNAL(textChanged()), this, SLOT(gotModified()));
 
-    return result;
+    return !exportedText.isNull();
 }
 
 void SourceWidget::setReadOnly(bool isReadOnly)

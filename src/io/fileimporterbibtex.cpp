@@ -45,6 +45,8 @@
 const QString extraAlphaNumChars = QString("?'`-_:.+/$\\\"&");
 const QRegExp htmlRegExp = QRegExp("</?(a|pre|p|br|span|i|b|italic)\\b[^>]*>", Qt::CaseInsensitive);
 
+const char *FileImporterBibTeX::defaultCodecName = "utf-8";
+
 FileImporterBibTeX::FileImporterBibTeX(bool ignoreComments, KBibTeX::Casing keywordCasing)
         : FileImporter(), m_cancelFlag(false), m_lineNo(1), m_currentLine(), m_textStream(NULL), m_currentChar(' '), m_ignoreComments(ignoreComments), m_keywordCasing(keywordCasing)
 {
@@ -73,13 +75,14 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
 
     m_nextDuePos = 0;
     m_textStream = new QTextStream(iodevice);
-    m_textStream->setCodec("us-ascii"); ///< unless we learn something else, assume 7-bit US-ASCII
+    m_textStream->setCodec(defaultCodecName); ///< unless we learn something else, assume default codec
     result->setProperty(File::Encoding, QLatin1String("latex"));
 
     QString rawText = "";
     while (!m_textStream->atEnd()) {
         QString line = m_textStream->readLine();
         bool skipline = evaluateParameterComments(m_textStream, line.toLower(), result);
+        // FIXME XML data should be removed somewhere else? onlinesearch ...
         if (line.startsWith(QLatin1String("<?xml")) && line.endsWith("?>"))
             /// Hop over XML declarations
             skipline = true;
@@ -90,11 +93,13 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
     delete m_textStream;
 
     /** Remove HTML code from the input source */
+    // FIXME HTML data should be removed somewhere else? onlinesearch ...
     rawText = rawText.replace(htmlRegExp, "");
 
     m_nextDuePos = 0;
+    // TODO really necessary to pipe data through several QTextStreams?
     m_textStream = new QTextStream(&rawText, QIODevice::ReadOnly);
-    m_textStream->setCodec("UTF-8");
+    m_textStream->setCodec(defaultCodecName);
     m_lineNo = 1;
     m_prevLine = m_currentLine = QString();
 
@@ -1032,10 +1037,12 @@ bool FileImporterBibTeX::evaluateParameterComments(QTextStream *textStream, cons
     /** check if this file requests a special encoding */
     if (line.startsWith("@comment{x-kbibtex-encoding=") && line.endsWith("}")) {
         QString encoding = line.mid(28, line.length() - 29);
-        textStream->setCodec(encoding == "latex" ? "utf-8" : encoding.toAscii());
+        textStream->setCodec(encoding == "latex" ? defaultCodecName : encoding.toAscii().data());
         file->setProperty(File::Encoding, encoding == "latex" ? encoding : textStream->codec()->name());
         return true;
     } else if (line.startsWith("@comment{x-kbibtex-personnameformatting=") && line.endsWith("}")) {
+        // TODO usage of x-kbibtex-personnameformatting is deprecated,
+        // as automatic detection is in place
         QString personNameFormatting = line.mid(40, line.length() - 41);
         file->setProperty(File::NameFormatting, personNameFormatting);
         return true;
