@@ -429,6 +429,7 @@ void PersonListEdit::setReadOnly(bool isReadOnly)
 {
     FieldListEdit::setReadOnly(isReadOnly);
     m_checkBoxOthers->setEnabled(!isReadOnly);
+    m_buttonAddNamesFromClipboard->setEnabled(!isReadOnly);
 }
 
 void PersonListEdit::slotAddNamesFromClipboard()
