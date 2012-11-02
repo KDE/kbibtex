@@ -128,7 +128,8 @@ void OnlineSearchScienceDirect::doneFetchingStartPage()
     emit progress(++d->curStep, d->numSteps);
 
     --d->runningJobs;
-    Q_ASSERT_X(d->runningJobs == 0, "OnlineSearchScienceDirect::doneFetchingStartPage", "Some jobs are running (d->runningJobs!=0)");
+    if (d->runningJobs != 0)
+        kWarning() << "In OnlineSearchScienceDirect::doneFetchingStartPage: Some jobs are running (" << d->runningJobs << "!= 0 )";
 
     QUrl redirUrl;
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
@@ -175,7 +176,8 @@ void OnlineSearchScienceDirect::doneFetchingStartPage()
 void OnlineSearchScienceDirect::doneFetchingResultPage()
 {
     --d->runningJobs;
-    Q_ASSERT_X(d->runningJobs == 0, "OnlineSearchScienceDirect::doneFetchingResultPage", "Some jobs are running (d->runningJobs!=0)");
+    if (d->runningJobs != 0)
+        kWarning() << "In OnlineSearchScienceDirect::doneFetchingResultPage: Some jobs are running (" << d->runningJobs << "!= 0 )";
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
     if (handleErrors(reply)) {
@@ -216,7 +218,8 @@ void OnlineSearchScienceDirect::doneFetchingResultPage()
 void OnlineSearchScienceDirect::doneFetchingAbstractPage()
 {
     --d->runningJobs;
-    Q_ASSERT_X(d->runningJobs == 0, "OnlineSearchScienceDirect::doneFetchingAbstractPage", "Some jobs are running (d->runningJobs!=0)");
+    if (d->runningJobs < 0)
+        kWarning() << "In OnlineSearchScienceDirect::doneFetchingAbstractPage: Counting jobs failed (" << d->runningJobs << "< 0 )";
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
     if (handleErrors(reply)) {
@@ -255,7 +258,8 @@ void OnlineSearchScienceDirect::doneFetchingAbstractPage()
 void OnlineSearchScienceDirect::doneFetchingExportCitationPage()
 {
     --d->runningJobs;
-    Q_ASSERT_X(d->runningJobs == 0, "OnlineSearchScienceDirect::doneFetchingExportCitationPage", "Some jobs are running (d->runningJobs!=0)");
+    if (d->runningJobs < 0)
+        kWarning() << "In OnlineSearchScienceDirect::doneFetchingAbstractPage: Counting jobs failed (" << d->runningJobs << "< 0 )";
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
     if (handleErrors(reply)) {
@@ -306,7 +310,8 @@ void OnlineSearchScienceDirect::doneFetchingBibTeX()
     emit progress(++d->curStep, d->numSteps);
 
     --d->runningJobs;
-    Q_ASSERT_X(d->runningJobs == 0, "OnlineSearchScienceDirect::doneFetchingBibTeX", "Some jobs are running (d->runningJobs!=0)");
+    if (d->runningJobs < 0)
+        kWarning() << "In OnlineSearchScienceDirect::doneFetchingAbstractPage: Counting jobs failed (" << d->runningJobs << "< 0 )";
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
     if (handleErrors(reply)) {
