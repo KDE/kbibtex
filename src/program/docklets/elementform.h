@@ -40,6 +40,7 @@ public:
 
 public slots:
     void setElement(QSharedPointer<Element>, const File *);
+    void refreshElement();
 
 signals:
     void elementModified();

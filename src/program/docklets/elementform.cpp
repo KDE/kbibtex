@@ -186,6 +186,11 @@ void ElementForm::setElement(QSharedPointer<Element> element, const File *file)
     }
 }
 
+void ElementForm::refreshElement()
+{
+    d->refreshElement();
+}
+
 /**
  * Fetch the modified signal from the editing widget.
  * @param gotModified true if widget was modified by user, false if modified status was reset by e.g. apply operation
