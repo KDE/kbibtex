@@ -1,6 +1,4 @@
-#!/usr/bin/env xdg-open
 [Desktop Entry]
-Encoding=UTF-8
 Name=KBibTeX
 Name[de]=KBibTeX
 Comment=KDE-based editor for bibliographic files
