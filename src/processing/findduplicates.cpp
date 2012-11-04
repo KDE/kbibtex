@@ -570,6 +570,7 @@ bool MergeDuplicates::mergeDuplicateEntries(const QList<EntryClique *> &entryCli
                         mergedEntry->insert(it.key(), it.value());
                         coveredFields << it.key();
                     }
+                // TODO needs to be rewritten if File shall be based on QVector instead of QList
                 file->removeOne(QSharedPointer<Entry>(entry));
             }
         }
@@ -682,7 +683,7 @@ bool MergeDuplicates::mergeDuplicateEntriesAuto(const QList<EntryClique *> &entr
                     mergedEntry->insert(it.key(), it.value());
 
             /// Removed harvested Entries
-            // TODO does this still work?
+            // TODO needs to be rewritten if File shall be based on QVector instead of QList
             file->removeOne(QSharedPointer<Entry>(entry));
         }
 
