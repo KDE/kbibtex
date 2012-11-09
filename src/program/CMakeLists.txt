@@ -27,6 +27,7 @@ set(
     mainwindow.cpp
     documentlist.cpp
     mdiwidget.cpp
+    docklets/statistics.cpp
     docklets/referencepreview.cpp
     docklets/documentpreview.cpp
     docklets/valuelist.cpp

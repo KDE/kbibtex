@@ -39,6 +39,7 @@
 #include "preferences/kbibtexpreferencesdialog.h"
 #include "mainwindow.h"
 #include "valuelist.h"
+#include "statistics.h"
 #include "documentlist.h"
 #include "mdiwidget.h"
 #include "referencepreview.h"
@@ -60,6 +61,7 @@ public:
     QDockWidget *dockReferencePreview;
     QDockWidget *dockDocumentPreview;
     QDockWidget *dockValueList;
+    QDockWidget *dockStatistics;
     QDockWidget *dockSearchForm;
     QDockWidget *dockSearchResults;
     QDockWidget *dockElementForm;
@@ -68,6 +70,7 @@ public:
     ReferencePreview *referencePreview;
     DocumentPreview *documentPreview;
     ValueList *valueList;
+    Statistics *statistics;
     SearchForm *searchForm;
     SearchResults *searchResults;
     ElementForm *elementForm;
@@ -110,6 +113,7 @@ KBibTeXMainWindow::KBibTeXMainWindow()
      * Docklets (a.k.a. panels) will be added by default to the following
      * positions unless otherwise configured by the user.
      * - "List of Values" on the left
+     * - "Statistics" on the left
      * - "List of Documents" on the left in the same tab
      * - "Online Search" on the left in a new tab
      * - "Reference Preview" on the left in the same tab
@@ -136,6 +140,16 @@ KBibTeXMainWindow::KBibTeXMainWindow()
     d->dockValueList->setObjectName("dockValueList");
     d->dockValueList->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
     showPanelsMenu->addAction(d->dockValueList->toggleViewAction());
+
+    d->dockStatistics = new QDockWidget(i18n("Statistics"), this);
+    d->dockStatistics->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+    addDockWidget(Qt::LeftDockWidgetArea, d->dockStatistics);
+    tabifyDockWidget(d->dockDocumentList, d->dockStatistics);
+    d->statistics = new Statistics(d->dockStatistics);
+    d->dockStatistics->setWidget(d->statistics);
+    d->dockStatistics->setObjectName("dockStatistics");
+    d->dockStatistics->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
+    showPanelsMenu->addAction(d->dockStatistics->toggleViewAction());
 
     d->dockSearchResults = new QDockWidget(i18n("Search Results"), this);
     d->dockSearchResults->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
@@ -331,6 +345,7 @@ void KBibTeXMainWindow::documentSwitched(BibTeXEditor *oldEditor, BibTeXEditor *
         disconnect(oldEditor, SIGNAL(currentElementChanged(QSharedPointer<Element>, const File *)), d->documentPreview, SLOT(setElement(QSharedPointer<Element>, const File *)));
         disconnect(oldEditor, SIGNAL(currentElementChanged(QSharedPointer<Element>, const File *)), d->searchForm, SLOT(setElement(QSharedPointer<Element>, const File *)));
         disconnect(oldEditor, SIGNAL(modified()), d->valueList, SLOT(update()));
+        disconnect(oldEditor, SIGNAL(modified()), d->statistics, SLOT(update()));
         // FIXME disconnect(oldEditor, SIGNAL(modified()), d->elementForm, SLOT(refreshElement()));
         disconnect(d->elementForm, SIGNAL(elementModified()), oldEditor, SLOT(externalModification()));
     }
@@ -340,6 +355,7 @@ void KBibTeXMainWindow::documentSwitched(BibTeXEditor *oldEditor, BibTeXEditor *
         connect(newEditor, SIGNAL(currentElementChanged(QSharedPointer<Element>, const File *)), d->documentPreview, SLOT(setElement(QSharedPointer<Element>, const File *)));
         connect(newEditor, SIGNAL(currentElementChanged(QSharedPointer<Element>, const File *)), d->searchForm, SLOT(setElement(QSharedPointer<Element>, const File *)));
         connect(newEditor, SIGNAL(modified()), d->valueList, SLOT(update()));
+        connect(newEditor, SIGNAL(modified()), d->statistics, SLOT(update()));
         // FIXME connect(newEditor, SIGNAL(modified()), d->elementForm, SLOT(refreshElement()));
         connect(d->elementForm, SIGNAL(elementModified()), newEditor, SLOT(externalModification()));
     }
@@ -349,6 +365,7 @@ void KBibTeXMainWindow::documentSwitched(BibTeXEditor *oldEditor, BibTeXEditor *
     d->elementForm->setElement(QSharedPointer<Element>(), NULL);
     d->documentPreview->setElement(QSharedPointer<Element>(), NULL);
     d->valueList->setEditor(newEditor);
+    d->statistics->setFile(newEditor != NULL && newEditor->bibTeXModel() != NULL ? newEditor->bibTeXModel()->bibTeXFile() : NULL);
     d->referencePreview->setEditor(newEditor);
 }
 
