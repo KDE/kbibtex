@@ -1,4 +1,5 @@
 include_directories(
+    ${CMAKE_SOURCE_DIR}/src/config
     ${CMAKE_SOURCE_DIR}/src/data
     ${CMAKE_SOURCE_DIR}/src/io
     ${CMAKE_SOURCE_DIR}/src/gui
@@ -29,6 +30,7 @@ kde4_add_plugin(
 target_link_libraries(
     kbibtexpart
     ${KDE4_KPARTS_LIBS}
+    kbibtexconfig
     kbibtexdata
     kbibtexio
     kbibtexgui

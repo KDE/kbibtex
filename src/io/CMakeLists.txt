@@ -73,6 +73,7 @@ include_directories(
     ${LIBXML2_INCLUDE_DIR}
     ${LIBXSLT_INCLUDE_DIR}
     ${POPPLER_QT4_INCLUDE_DIR}
+    ${CMAKE_SOURCE_DIR}/src/config
     ${CMAKE_SOURCE_DIR}/src/data
     ${CMAKE_CURRENT_SOURCE_DIR}/config
 )
@@ -88,7 +89,6 @@ if(
 )
     target_link_libraries(
         kbibtexio
-        kbibtexdata
         ${QT_QTCORE_LIBRARY}
         ${KDE4_KDECORE_LIBS}
         ${KDE4_KIO_LIBS}
@@ -96,19 +96,22 @@ if(
         ${LIBXSLT_LIBRARIES}
         ${POPPLER_QT4_LIBRARIES}
         iconv
+        kbibtexconfig
+        kbibtexdata
     )
 else(
     WIN32
 )
     target_link_libraries(
         kbibtexio
-        kbibtexdata
         ${QT_QTCORE_LIBRARY}
         ${KDE4_KDECORE_LIBS}
         ${KDE4_KIO_LIBS}
         ${LIBXML2_LIBRARIES}
         ${LIBXSLT_LIBRARIES}
         ${POPPLER_QT4_LIBRARIES}
+        kbibtexconfig
+        kbibtexdata
     )
 endif(
     WIN32

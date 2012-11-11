@@ -36,6 +36,9 @@ public:
     KBibTeXPreferencesDialog(QWidget *parent, Qt::WFlags flags = 0);
     ~KBibTeXPreferencesDialog();
 
+protected:
+    virtual void hideEvent(QHideEvent *e);
+
 private:
     class KBibTeXPreferencesDialogPrivate;
     KBibTeXPreferencesDialogPrivate *d;

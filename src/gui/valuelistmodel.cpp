@@ -191,16 +191,9 @@ static QRegExp ignoredInSorting("[{}\\\\]+");
 ValueListModel::ValueListModel(const File *bibtexFile, const QString &fieldName, QObject *parent)
         : QAbstractTableModel(parent), file(bibtexFile), fName(fieldName.toLower()), showCountColumn(true), sortBy(SortByText)
 {
-    /// load mapping from color value to label
-    KSharedConfigPtr config(KSharedConfig::openConfig(QLatin1String("kbibtexrc")));
-    KConfigGroup configGroup(config, Preferences::groupColor);
-    QStringList colorCodes = configGroup.readEntry(Preferences::keyColorCodes, Preferences::defaultColorCodes);
-    QStringList colorLabels = configGroup.readEntry(Preferences::keyColorLabels, Preferences::defaultcolorLabels);
-    for (QStringList::ConstIterator itc = colorCodes.constBegin(), itl = colorLabels.constBegin(); itc != colorCodes.constEnd() && itl != colorLabels.constEnd(); ++itc, ++itl) {
-        colorToLabel.insert(*itc, *itl);
-    }
-
+    readConfiguration();
     updateValues();
+    NotificationHub::registerNotificationListener(this, NotificationHub::EventConfigurationChanged);
 }
 
 int ValueListModel::rowCount(const QModelIndex &parent) const
@@ -324,6 +317,27 @@ void ValueListModel::setSortBy(SortBy sortBy)
 {
     this->sortBy = sortBy;
     reset();
+}
+
+void ValueListModel::notificationEvent(int eventId)
+{
+    if (eventId == NotificationHub::EventConfigurationChanged) {
+        readConfiguration();
+        reset();
+    }
+}
+
+void ValueListModel::readConfiguration()
+{
+    /// load mapping from color value to label
+    KSharedConfigPtr config(KSharedConfig::openConfig(QLatin1String("kbibtexrc")));
+    KConfigGroup configGroup(config, Preferences::groupColor);
+    QStringList colorCodes = configGroup.readEntry(Preferences::keyColorCodes, Preferences::defaultColorCodes);
+    QStringList colorLabels = configGroup.readEntry(Preferences::keyColorLabels, Preferences::defaultcolorLabels);
+    colorToLabel.clear();
+    for (QStringList::ConstIterator itc = colorCodes.constBegin(), itl = colorLabels.constBegin(); itc != colorCodes.constEnd() && itl != colorLabels.constEnd(); ++itc, ++itl) {
+        colorToLabel.insert(*itc, *itl);
+    }
 }
 
 void ValueListModel::updateValues()

@@ -27,6 +27,8 @@
 
 #include "kbibtexdata_export.h"
 
+#include "notificationhub.h"
+
 class File;
 
 /**
@@ -213,17 +215,24 @@ private:
     void mergeFrom(const Value &other);
 };
 
-class KBIBTEXDATA_EXPORT PlainTextValue
+class KBIBTEXDATA_EXPORT PlainTextValue: private NotificationListener
 {
 public:
     static QString text(const Value &value, const File *file = NULL, bool debug = false);
     static QString text(const ValueItem &valueItem, const File *file = NULL, bool debug = false);
 
+    void notificationEvent(int eventId);
+
 private:
     enum ValueItemType { VITOther = 0, VITPerson, VITKeyword} lastItem;
+
+    PlainTextValue();
+    void readConfiguration();
+    static PlainTextValue *notificationListener;
     static QString personNameFormatting;
 
     static QString text(const ValueItem &valueItem, ValueItemType &vit, const File *file, bool debug);
+
 };
 
 Q_DECLARE_METATYPE(Value);

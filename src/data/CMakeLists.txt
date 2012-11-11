@@ -37,6 +37,7 @@ include_directories(
     ${LIBXSLT_INCLUDE_DIR}
     ${POPPLER_QT4_INCLUDE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/config
+    ${CMAKE_SOURCE_DIR}/src/config
 )
 
 kde4_add_library(
@@ -57,6 +58,7 @@ if(
         ${LIBXSLT_LIBRARIES}
         ${POPPLER_QT4_LIBRARIES}
         iconv
+        kbibtexconfig
     )
 else(
     WIN32
@@ -69,6 +71,7 @@ else(
         ${LIBXML2_LIBRARIES}
         ${LIBXSLT_LIBRARIES}
         ${POPPLER_QT4_LIBRARIES}
+        kbibtexconfig
     )
 endif(
     WIN32

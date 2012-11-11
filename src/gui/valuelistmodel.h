@@ -25,6 +25,7 @@
 #include <QTreeView>
 #include <QStyledItemDelegate>
 
+#include "notificationhub.h"
 #include "bibtexfilemodel.h"
 
 static const int SortRole = Qt::UserRole + 113;
@@ -57,7 +58,7 @@ private slots:
     void commitAndCloseEditor();
 };
 
-class KBIBTEXGUI_EXPORT ValueListModel : public QAbstractTableModel
+class KBIBTEXGUI_EXPORT ValueListModel : public QAbstractTableModel, private NotificationListener
 {
 public:
     enum SortBy { SortByText, SortByCount };
@@ -93,7 +94,10 @@ public:
     void setShowCountColumn(bool showCountColumn);
     void setSortBy(SortBy sortBy);
 
+    void notificationEvent(int eventId);
+
 private:
+    void readConfiguration();
     void updateValues();
     void insertValue(const Value &value);
     int indexOf(const QString &text);

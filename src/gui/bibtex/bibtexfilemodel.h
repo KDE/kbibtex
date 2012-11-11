@@ -31,6 +31,7 @@
 
 #include "kbibtexgui_export.h"
 
+#include "notificationhub.h"
 #include "file.h"
 #include "entry.h"
 
@@ -79,7 +80,7 @@ private:
 /**
 @author Thomas Fischer
 */
-class KBIBTEXGUI_EXPORT BibTeXFileModel : public QAbstractTableModel
+class KBIBTEXGUI_EXPORT BibTeXFileModel : public QAbstractTableModel, private NotificationListener
 {
 public:
     static const QString keyShowComments;
@@ -109,9 +110,13 @@ public:
 
     void reset();
 
+    void notificationEvent(int eventId);
+
 private:
     File *m_bibtexFile;
     QMap<QString, QString> colorToLabel;
+
+    void readConfiguration();
 };
 
 

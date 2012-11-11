@@ -30,6 +30,7 @@
 #include <KColorDialog>
 #include <KLineEdit>
 #include <KActionMenu>
+#include <KMenu>
 
 #include "file.h"
 #include "bibtexeditor.h"
@@ -351,31 +352,15 @@ void SettingsColorLabelWidget::enableRemoveButton()
 ColorLabelContextMenu::ColorLabelContextMenu(BibTeXEditor *widget)
         : QObject(widget), m_tv(widget)
 {
-    QSignalMapper *sm = new QSignalMapper(this);
-    connect(sm, SIGNAL(mapped(QString)), this, SLOT(colorActivated(QString)));
+    m_sm = new QSignalMapper(this);
+    connect(m_sm, SIGNAL(mapped(QString)), this, SLOT(colorActivated(QString)));
 
     m_menu = new KActionMenu(KIcon("preferences-desktop-color"), i18n("Color"), widget);
     widget->addAction(m_menu);
 
-    KSharedConfigPtr config(KSharedConfig::openConfig(QLatin1String("kbibtexrc")));
-    KConfigGroup configGroup(config, Preferences::groupColor);
-    QStringList colorCodes = configGroup.readEntry(Preferences::keyColorCodes, Preferences::defaultColorCodes);
-    QStringList colorLabels = configGroup.readEntry(Preferences::keyColorLabels, Preferences::defaultcolorLabels);
-    for (QStringList::ConstIterator itc = colorCodes.constBegin(), itl = colorLabels.constBegin(); itc != colorCodes.constEnd() && itl != colorLabels.constEnd(); ++itc, ++itl) {
-        KAction *action = new KAction(KIcon(ColorLabelWidget::createSolidIcon(*itc)), *itl, m_menu);
-        m_menu->addAction(action);
-        sm->setMapping(action, *itc);
-        connect(action, SIGNAL(triggered()), sm, SLOT(map()));
-    }
+    NotificationHub::registerNotificationListener(this, NotificationHub::EventConfigurationChanged);
 
-    KAction *action = new KAction(m_menu);
-    action->setSeparator(true);
-    m_menu->addAction(action);
-
-    action = new KAction(i18n("No color"), m_menu);
-    m_menu->addAction(action);
-    sm->setMapping(action, QLatin1String("#000000"));
-    connect(action, SIGNAL(triggered()), sm, SLOT(map()));
+    rebuildMenu();
 }
 
 KActionMenu *ColorLabelContextMenu::menuAction()
@@ -386,6 +371,12 @@ KActionMenu *ColorLabelContextMenu::menuAction()
 void ColorLabelContextMenu::setEnabled(bool enabled)
 {
     m_menu->setEnabled(enabled);
+}
+
+void ColorLabelContextMenu::notificationEvent(int eventId)
+{
+    if (eventId == NotificationHub::EventConfigurationChanged)
+        rebuildMenu();
 }
 
 void ColorLabelContextMenu::colorActivated(const QString &colorString)
@@ -417,4 +408,29 @@ void ColorLabelContextMenu::colorActivated(const QString &colorString)
 
     if (modifying)
         m_tv->externalModification();
+}
+
+void ColorLabelContextMenu::rebuildMenu()
+{
+    m_menu->menu()->clear();
+
+    KSharedConfigPtr config(KSharedConfig::openConfig(QLatin1String("kbibtexrc")));
+    KConfigGroup configGroup(config, Preferences::groupColor);
+    QStringList colorCodes = configGroup.readEntry(Preferences::keyColorCodes, Preferences::defaultColorCodes);
+    QStringList colorLabels = configGroup.readEntry(Preferences::keyColorLabels, Preferences::defaultcolorLabels);
+    for (QStringList::ConstIterator itc = colorCodes.constBegin(), itl = colorLabels.constBegin(); itc != colorCodes.constEnd() && itl != colorLabels.constEnd(); ++itc, ++itl) {
+        KAction *action = new KAction(KIcon(ColorLabelWidget::createSolidIcon(*itc)), *itl, m_menu);
+        m_menu->addAction(action);
+        m_sm->setMapping(action, *itc);
+        connect(action, SIGNAL(triggered()), m_sm, SLOT(map()));
+    }
+
+    KAction *action = new KAction(m_menu);
+    action->setSeparator(true);
+    m_menu->addAction(action);
+
+    action = new KAction(i18n("No color"), m_menu);
+    m_menu->addAction(action);
+    m_sm->setMapping(action, QLatin1String("#000000"));
+    connect(action, SIGNAL(triggered()), m_sm, SLOT(map()));
 }

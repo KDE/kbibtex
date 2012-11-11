@@ -27,12 +27,13 @@
 #include <KSharedConfig>
 #include <KConfigGroup>
 
+#include "notificationhub.h"
 #include "preferences.h"
 #include "colorlabelwidget.h"
 
 const int ColorRole = Qt::UserRole + 521;
 
-class ColorLabelComboBoxModel : public QAbstractItemModel
+class ColorLabelComboBoxModel : public QAbstractItemModel, private NotificationListener
 {
 public:
     struct ColorLabelPair {
@@ -47,10 +48,21 @@ public:
 
     ColorLabelComboBoxModel(QObject *p = NULL)
             : QAbstractItemModel(p), userColor(Qt::black), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))) {
+        readConfiguration();
+        NotificationHub::registerNotificationListener(this, NotificationHub::EventConfigurationChanged);
+    }
+
+    void notificationEvent(int eventId) {
+        if (eventId == NotificationHub::EventConfigurationChanged)
+            readConfiguration();
+    }
+
+    void readConfiguration() {
         KConfigGroup configGroup(config, Preferences::groupColor);
         QStringList colorCodes = configGroup.readEntry(Preferences::keyColorCodes, Preferences::defaultColorCodes);
         QStringList colorLabels = configGroup.readEntry(Preferences::keyColorLabels, Preferences::defaultcolorLabels);
 
+        colorLabelPairs.clear();
         for (QStringList::ConstIterator itc = colorCodes.constBegin(), itl = colorLabels.constBegin(); itc != colorCodes.constEnd() && itl != colorLabels.constEnd(); ++itc, ++itl) {
             ColorLabelPair clp;
             clp.color = QColor(*itc);

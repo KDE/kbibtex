@@ -287,16 +287,41 @@ const bool BibTeXFileModel::defaultShowMacros = true;
 BibTeXFileModel::BibTeXFileModel(QObject *parent)
         : QAbstractTableModel(parent), m_bibtexFile(NULL)
 {
+    NotificationHub::registerNotificationListener(this, NotificationHub::EventConfigurationChanged);
+    readConfiguration();
+}
+
+void BibTeXFileModel::notificationEvent(int eventId)
+{
+    if (eventId == NotificationHub::EventConfigurationChanged) {
+        readConfiguration();
+        int column = 0;
+        foreach(const FieldDescription *fd, *BibTeXFields::self()) {
+            /// Colors may have changed
+            bool columnChanged = fd->upperCamelCase.toLower() == Entry::ftColor;
+            /// Person name formatting may has changed
+            columnChanged |= fd->upperCamelCase.toLower() == Entry::ftAuthor || fd->upperCamelCase.toLower() == Entry::ftEditor;
+            columnChanged |= fd->upperCamelCaseAlt.toLower() == Entry::ftAuthor || fd->upperCamelCaseAlt.toLower() == Entry::ftEditor;
+            /// Changes necessary for this colum? Publish update
+            if (columnChanged)
+                emit dataChanged(index(0, column), index(rowCount() - 1, column));
+            ++column;
+        }
+    }
+}
+
+void BibTeXFileModel::readConfiguration()
+{
     /// load mapping from color value to label
     KSharedConfigPtr config(KSharedConfig::openConfig(QLatin1String("kbibtexrc")));
     KConfigGroup configGroup(config, Preferences::groupColor);
     QStringList colorCodes = configGroup.readEntry(Preferences::keyColorCodes, Preferences::defaultColorCodes);
     QStringList colorLabels = configGroup.readEntry(Preferences::keyColorLabels, Preferences::defaultcolorLabels);
+    colorToLabel.clear();
     for (QStringList::ConstIterator itc = colorCodes.constBegin(), itl = colorLabels.constBegin(); itc != colorCodes.constEnd() && itl != colorLabels.constEnd(); ++itc, ++itl) {
         colorToLabel.insert(*itc, *itl);
     }
 }
-
 
 File *BibTeXFileModel::bibTeXFile()
 {

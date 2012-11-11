@@ -5,6 +5,7 @@ include(
 )
 
 include_directories(
+    ${CMAKE_SOURCE_DIR}/src/config
     ${CMAKE_SOURCE_DIR}/src/data
     ${CMAKE_SOURCE_DIR}/src/io
     ${CMAKE_SOURCE_DIR}/src/io/config
@@ -103,6 +104,7 @@ target_link_libraries(
     ${QT_QTGUI_LIBRARY}
     ${KDE4_KDEUI_LIBS}
     ${KDE4_KIO_LIBS}
+    kbibtexconfig
     kbibtexdata
     kbibtexio
     kbibtexnetworking

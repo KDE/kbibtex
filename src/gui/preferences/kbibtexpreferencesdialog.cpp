@@ -29,6 +29,7 @@
 #include <KMessageBox>
 #include <KGuiItem>
 
+#include "notificationhub.h"
 #include "settingsgeneralwidget.h"
 #include "settingsglobalkeywordswidget.h"
 #include "settingsfileexporterpdfpswidget.h"
@@ -46,9 +47,11 @@ private:
     QSet<SettingsAbstractWidget *> settingWidgets;
 
 public:
+    bool notifyOfChanges;
+
     KBibTeXPreferencesDialogPrivate(KBibTeXPreferencesDialog *parent)
             : p(parent) {
-        // nothing
+        notifyOfChanges = false;
     }
 
     void addPages() {
@@ -157,10 +160,17 @@ KBibTeXPreferencesDialog::~KBibTeXPreferencesDialog()
     delete d;
 }
 
+void KBibTeXPreferencesDialog::hideEvent(QHideEvent *)
+{
+    if (d->notifyOfChanges)
+        NotificationHub::publishEvent(NotificationHub::EventConfigurationChanged);
+}
+
 void KBibTeXPreferencesDialog::apply()
 {
     enableButtonApply(false);
     d->saveState();
+    d->notifyOfChanges = true;
 }
 
 void KBibTeXPreferencesDialog::reset()
@@ -171,6 +181,7 @@ void KBibTeXPreferencesDialog::reset()
 
 void KBibTeXPreferencesDialog::ok()
 {
+    d->notifyOfChanges = true;
     apply();
     accept();
 }

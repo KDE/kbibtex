@@ -1,6 +1,7 @@
 # OnlineSearch library
 
 include_directories(
+    ${CMAKE_SOURCE_DIR}/src/config
     ${CMAKE_SOURCE_DIR}/src/data
     ${CMAKE_SOURCE_DIR}/src/io
     ${CMAKE_SOURCE_DIR}/src/networking/onlinesearch
@@ -77,6 +78,7 @@ target_link_libraries(
     ${KDE4_KDECORE_LIBS}
     ${KDE4_KIO_LIBS}
     ${POPPLER_QT4_LIBRARIES}
+    kbibtexconfig
     kbibtexdata
     kbibtexio
 )

@@ -480,8 +480,6 @@ void Value::mergeFrom(const Value &other)
         append(*it);
 }
 
-QString PlainTextValue::personNameFormatting = QString::null;
-
 QString PlainTextValue::text(const Value &value, const File *file, bool debug)
 {
     ValueItemType vit = VITOther;
@@ -516,6 +514,9 @@ QString PlainTextValue::text(const ValueItem &valueItem, ValueItemType &vit, con
     QString result = QString::null;
     vit = VITOther;
 
+    if (notificationListener == NULL)
+        notificationListener = new PlainTextValue();
+
     const PlainText *plainText = dynamic_cast<const PlainText *>(&valueItem);
     if (plainText != NULL) {
         result = plainText->text();
@@ -528,11 +529,6 @@ QString PlainTextValue::text(const ValueItem &valueItem, ValueItemType &vit, con
         } else {
             const Person *person = dynamic_cast<const Person *>(&valueItem);
             if (person != NULL) {
-                if (personNameFormatting.isNull()) {
-                    KSharedConfigPtr config(KSharedConfig::openConfig(QLatin1String("kbibtexrc")));
-                    KConfigGroup configGroup(config, "General");
-                    personNameFormatting = configGroup.readEntry(Person::keyPersonNameFormatting, Person::defaultPersonNameFormatting);
-                }
                 result = Person::transcribePersonName(person, personNameFormatting);
                 vit = VITPerson;
                 if (debug) result = "[:" + result + ":Person]";
@@ -576,3 +572,25 @@ QString PlainTextValue::text(const ValueItem &valueItem, ValueItemType &vit, con
     if (debug) result = "[:" + result + ":Debug]";
     return result;
 }
+
+PlainTextValue::PlainTextValue()
+{
+    NotificationHub::registerNotificationListener(this, NotificationHub::EventConfigurationChanged);
+    readConfiguration();
+}
+
+void PlainTextValue::notificationEvent(int eventId)
+{
+    if (eventId == NotificationHub::EventConfigurationChanged)
+        readConfiguration();
+}
+
+void PlainTextValue::readConfiguration()
+{
+    KSharedConfigPtr config(KSharedConfig::openConfig(QLatin1String("kbibtexrc")));
+    KConfigGroup configGroup(config, "General");
+    personNameFormatting = configGroup.readEntry(Person::keyPersonNameFormatting, Person::defaultPersonNameFormatting);
+}
+
+QString PlainTextValue::personNameFormatting = QString::null;
+PlainTextValue *PlainTextValue::notificationListener = NULL;

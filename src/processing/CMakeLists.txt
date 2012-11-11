@@ -1,6 +1,7 @@
 # Processing library
 
 include_directories(
+    ${CMAKE_SOURCE_DIR}/src/config
     ${CMAKE_SOURCE_DIR}/src/data
     ${CMAKE_SOURCE_DIR}/src/io
 )
@@ -42,6 +43,7 @@ target_link_libraries(
     ${QT_QTCORE_LIBRARY}
     ${KDE4_KDECORE_LIBS}
     ${KDE4_KDEUI_LIBS}
+    kbibtexconfig
     kbibtexdata
     kbibtexio
 )

@@ -49,6 +49,9 @@ include_directories(
 )
 
 add_subdirectory(
+    config
+)
+add_subdirectory(
     data
 )
 add_subdirectory(

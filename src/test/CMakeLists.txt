@@ -11,6 +11,7 @@ add_definitions(
 )
 
 include_directories(
+    ${CMAKE_SOURCE_DIR}/src/config
     ${CMAKE_SOURCE_DIR}/src/data
     ${CMAKE_SOURCE_DIR}/src/io
     ${CMAKE_SOURCE_DIR}/src/gui
@@ -40,6 +41,7 @@ target_link_libraries(
     ${KDE4_KIO_LIBS}
     ${KDE4_KPARTS_LIBS}
     ${KDE4_KFILE_LIBS}
+    kbibtexconfig
     kbibtexdata
     kbibtexio
     kbibtexproc

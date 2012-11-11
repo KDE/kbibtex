@@ -28,6 +28,9 @@
 #include <kbibtexgui_export.h>
 
 #include "settingsabstractwidget.h"
+#include "notificationhub.h"
+
+class QSignalMapper;
 
 class KActionMenu;
 
@@ -103,7 +106,7 @@ private:
 /**
 @author Thomas Fischer
 */
-class KBIBTEXGUI_EXPORT ColorLabelContextMenu : public QObject
+class KBIBTEXGUI_EXPORT ColorLabelContextMenu : public QObject, private NotificationListener
 {
     Q_OBJECT
 
@@ -113,12 +116,17 @@ public:
     KActionMenu *menuAction();
     void setEnabled(bool);
 
+    void notificationEvent(int eventId);
+
 private slots:
     void colorActivated(const QString &colorString);
 
 private:
     BibTeXEditor *m_tv;
     KActionMenu *m_menu;
+    QSignalMapper *m_sm;
+
+    void rebuildMenu();
 };
 
 #endif // KBIBTEX_GUI_SETTINGSCOLORLABELWIDGET_H
