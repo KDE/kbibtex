@@ -297,7 +297,7 @@ public:
         /// rename description field to abstract
         const QString ftDescription = QLatin1String("description");
         if (!entry->contains(Entry::ftAbstract) && entry->contains(ftDescription)) {
-            Value v = entry->value(QLatin1String("description"));
+            Value v = entry->value(ftDescription);
             entry->insert(Entry::ftAbstract, v);
             entry->remove(ftDescription);
         }
