@@ -47,10 +47,7 @@ protected:
     virtual QString favIconUrl() const;
 
 private slots:
-    void doneFetchingStartPage();
-    void doneFetchingSearchResults();
-    void doneFetchingAbstract();
-    void doneFetchingBibliography();
+    void doneFetchingXML();
 
 private:
     class WebSearchIEEEXplorePrivate;

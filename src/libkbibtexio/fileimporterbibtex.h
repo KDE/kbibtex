@@ -87,6 +87,8 @@ public:
      */
     static Person *splitName(const QString& name);
 
+    static void splitPersonList(const QString& name, QStringList &resultList);
+
 public slots:
     void cancel();
 
@@ -121,7 +123,6 @@ private:
 
     void unescapeLaTeXChars(QString &text);
 
-    static void splitPersonList(const QString& name, QStringList &resultList);
     static CommaContainment splitName(const QString& name, QStringList& segments);
 
     bool evaluateParameterComments(QTextStream *textStream, const QString &line, File *file);

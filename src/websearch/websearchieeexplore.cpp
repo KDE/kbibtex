@@ -35,51 +35,74 @@ class WebSearchIEEEXplore::WebSearchIEEEXplorePrivate
 {
 private:
     WebSearchIEEEXplore *p;
-    QMap<QString, QString> originalCookiesSettings;
-    bool originalCookiesEnabled;
 
 public:
-    int numResults;
-    QStringList queryFragments;
-    QStringList arnumberList;
-    QString startPageUrl, searchRequestUrl, fullAbstractUrl, citationUrl, citationPostData;
-    FileImporterBibTeX fileImporter;
+    const QString gatewayUrl;
+    XSLTransform xslt;
     int numSteps, curStep;
 
     WebSearchIEEEXplorePrivate(WebSearchIEEEXplore *parent)
-            : p(parent) {
-        startPageUrl = QLatin1String("http://ieeexplore.ieee.org/");
-        searchRequestUrl = QLatin1String("http://ieeexplore.ieee.org/search/searchresult.jsp?newsearch=true&x=0&y=0&queryText=");
-        fullAbstractUrl = QLatin1String("http://ieeexplore.ieee.org/search/srchabstract.jsp?tp=&arnumber=");
-        citationUrl = QLatin1String("http://ieeexplore.ieee.org/xpl/downloadCitations?fromPageName=searchabstract&citations-format=citation-abstract&download-format=download-bibtex&x=61&y=24&recordIds=");
+            : p(parent), gatewayUrl(QLatin1String("http://ieeexplore.ieee.org/gateway/ipsSearch.jsp")), xslt(KStandardDirs::locate("data", "kbibtex/ieeexplore2bibtex.xsl")) {
+        // nothing
     }
 
-    void sanitize(Entry *entry, const QString &arnumber) {
-        entry->setId(QLatin1String("ieee") + arnumber);
+    KUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) {
+        KUrl queryUrl = KUrl(gatewayUrl);
 
-        Value v;
-        v << new PlainText(arnumber);
-        entry->insert(QLatin1String("arnumber"), v);
-    }
+        QStringList queryText;
 
-    void sanitizeBibTeXCode(QString &code) {
-        const QRegExp htmlEncodedCharDec("&?#(\\d+);");
-        const QRegExp htmlEncodedCharHex("&?#x([0-9a-f]+);", Qt::CaseInsensitive);
-
-        while (htmlEncodedCharDec.indexIn(code) >= 0) {
-            bool ok = false;
-            QChar c(htmlEncodedCharDec.cap(1).toInt(&ok));
-            if (ok) {
-                code = code.replace(htmlEncodedCharDec.cap(0), c);
-            }
+        /// Free text
+        QStringList freeTextFragments = p->splitRespectingQuotationMarks(query[queryKeyAuthor]);
+        foreach(const QString &freeTextFragment, freeTextFragments) {
+            queryText << QString(QLatin1String("\"%1\"")).arg(freeTextFragment);
         }
 
-        while (htmlEncodedCharHex.indexIn(code) >= 0) {
-            bool ok = false;
-            QChar c(htmlEncodedCharHex.cap(1).toInt(&ok, 16));
-            if (ok) {
-                code = code.replace(htmlEncodedCharHex.cap(0), c);
+        /// Title
+        if (!query[queryKeyTitle].isEmpty())
+            queryText << QString(QLatin1String("\"Document Title\":\"%1\"")).arg(query[queryKeyTitle]);
+
+        /// Author
+        QStringList authors = p->splitRespectingQuotationMarks(query[queryKeyAuthor]);
+        foreach(const QString &author, authors) {
+            queryText << QString(QLatin1String("Author:\"%1\"")).arg(author);
+        }
+
+        /// Year
+        if (!query[queryKeyYear].isEmpty())
+            queryText << QString(QLatin1String("\"Publication Year\":\"%1\"")).arg(query[queryKeyYear]);
+
+        queryUrl.addQueryItem(QLatin1String("queryText"), queryText.join(QLatin1String(" AND ")));
+        queryUrl.addQueryItem(QLatin1String("sortfield"), QLatin1String("py"));
+        queryUrl.addQueryItem(QLatin1String("sortorder"), QLatin1String("desc"));
+        queryUrl.addQueryItem(QLatin1String("hc"), QString::number(numResults));
+        queryUrl.addQueryItem(QLatin1String("rs"), QLatin1String("1"));
+
+        kDebug() << "buildQueryUrl=" << queryUrl.pathOrUrl();
+
+        return queryUrl;
+    }
+
+    void sanitize(Entry *entry) {
+        /// XSL file cannot yet replace semicolon-separate author list
+        /// by "and"-separated author list, so do it manually
+        const QString ftXAuthor = QLatin1String("x-author");
+        if (!entry->contains(Entry::ftAuthor) && entry->contains(ftXAuthor)) {
+            const Value xAuthorValue = entry->value(ftXAuthor);
+            Value authorValue;
+            for (Value::ConstIterator it = xAuthorValue.constBegin(); it != xAuthorValue.constEnd(); ++it) {
+                PlainText *pt = dynamic_cast<PlainText *>(*it);
+                if (pt != NULL) {
+                    QStringList names;
+                    FileImporterBibTeX::splitPersonList(pt->text(), names);
+                    for (QStringList::ConstIterator nit = names.constBegin(); nit != names.constEnd(); ++nit) {
+                        Person *person = FileImporterBibTeX::splitName(*nit);
+                        authorValue << person;
+                    }
+                }
             }
+
+            entry->insert(Entry::ftAuthor, authorValue);
+            entry->remove(ftXAuthor);
         }
     }
 };
@@ -104,30 +127,23 @@ void WebSearchIEEEXplore::startSearch()
 void WebSearchIEEEXplore::startSearch(const QMap<QString, QString> &query, int numResults)
 {
     m_hasBeenCanceled = false;
-    d->numResults = numResults;
     d->curStep = 0;
-    d->numSteps = numResults * 2 + 2;
+    d->numSteps = 2;
 
-    d->queryFragments.clear();
-    for (QMap<QString, QString>::ConstIterator it = query.constBegin(); it != query.constEnd(); ++it)
-        foreach(QString queryFragment, splitRespectingQuotationMarks(it.value())) {
-        d->queryFragments.append(encodeURL(queryFragment));
-    }
-
-    QNetworkRequest request(d->startPageUrl);
-    setSuggestedHttpHeaders(request);
+    QNetworkRequest request(d->buildQueryUrl(query, numResults));
     QNetworkReply *reply = networkAccessManager()->get(request);
     setNetworkReplyTimeout(reply);
-    connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingStartPage()));
+    connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingXML()));
 
-    emit progress(0, d->numSteps);
+    emit progress(d->curStep, d->numSteps);
 }
 
-void WebSearchIEEEXplore::doneFetchingStartPage()
+void WebSearchIEEEXplore::doneFetchingXML()
 {
-    emit progress(++d->curStep, d->numSteps);
+    ++d->curStep;
+    emit progress(d->curStep, d->numSteps);
 
-    QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
+    QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
     if (handleErrors(reply)) {
         if (reply->attribute(QNetworkRequest::RedirectionTargetAttribute).isValid()) {
@@ -139,121 +155,43 @@ void WebSearchIEEEXplore::doneFetchingStartPage()
             setSuggestedHttpHeaders(request, reply);
             QNetworkReply *newReply = networkAccessManager()->get(request);
             setNetworkReplyTimeout(newReply);
-            connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingStartPage()));
+            connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingXML()));
         } else {
-            QString url = d->searchRequestUrl + '"' + d->queryFragments.join("\"+AND+\"") + '"';
-            QNetworkRequest request(url);
-            setSuggestedHttpHeaders(request, reply);
-            QNetworkReply *newReply = networkAccessManager()->get(request);
-            setNetworkReplyTimeout(newReply);
-            connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingSearchResults()));
-        }
-    } else
-        kDebug() << "url was" << reply->url().toString();
-}
+            QTextStream ts(reply->readAll());
+            ts.setCodec("utf-8");
+            const QString xmlCode = ts.readAll();
 
-void WebSearchIEEEXplore::doneFetchingSearchResults()
-{
-    emit progress(++d->curStep, d->numSteps);
+            /// use XSL transformation to get BibTeX document from XML result
+            const QString bibTeXcode = d->xslt.transform(xmlCode);
 
-    QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
+            FileImporterBibTeX importer;
+            File *bibtexFile = importer.fromString(bibTeXcode);
 
-    if (handleErrors(reply)) {
-        QString htmlText(reply->readAll());
-        QRegExp arnumberRegExp("arnumber=(\\d+)[^0-9]");
-        d->arnumberList.clear();
-        int p = -1;
-        while ((p = arnumberRegExp.indexIn(htmlText, p + 1)) >= 0) {
-            QString arnumber = arnumberRegExp.cap(1);
-            if (!d->arnumberList.contains(arnumber))
-                d->arnumberList << arnumber;
-            if (d->arnumberList.count() >= d->numResults)
-                break;
-        }
+            bool hasEntries = false;
+            if (bibtexFile != NULL) {
+                for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
+                    Entry *entry = dynamic_cast<Entry *>(*it);
+                    if (entry != NULL) {
+                        Value v;
+                        v.append(new VerbatimText(label()));
+                        entry->insert("x-fetchedfrom", v);
+                        d->sanitize(entry);
+                        emit foundEntry(entry);
+                        hasEntries = true;
+                    }
 
-        if (d->arnumberList.isEmpty()) {
-            emit stoppedSearch(resultNoError);
-            emit progress(d->numSteps, d->numSteps);
-            return;
-        } else {
-            QString url = d->fullAbstractUrl + d->arnumberList.first();
-            QNetworkRequest request(url);
-            setSuggestedHttpHeaders(request, reply);
-            QNetworkReply *newReply = networkAccessManager()->get(request);
-            setNetworkReplyTimeout(newReply);
-            connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingAbstract()));
-            d->arnumberList.removeFirst();
-        }
-    } else
-        kDebug() << "url was" << reply->url().toString();
-}
-
-void WebSearchIEEEXplore::doneFetchingAbstract()
-{
-    emit progress(++d->curStep, d->numSteps);
-
-    QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
-
-    if (handleErrors(reply)) {
-        QString arnumber = reply->url().queryItemValue(QLatin1String("arnumber"));
-        if (!arnumber.isEmpty()) {
-            QString url = d->citationUrl + arnumber;
-            QNetworkRequest request(url);
-            setSuggestedHttpHeaders(request, reply);
-            QNetworkReply *newReply = networkAccessManager()->get(request);
-            setNetworkReplyTimeout(newReply);
-            connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingBibliography()));
-        }
-    } else
-        kDebug() << "url was" << reply->url().toString();
-}
-
-void WebSearchIEEEXplore::doneFetchingBibliography()
-{
-    emit progress(++d->curStep, d->numSteps);
-
-    QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
-
-    if (handleErrors(reply)) {
-        QString plainText = QString(reply->readAll()).replace("<br>", "");
-        d->sanitizeBibTeXCode(plainText);
-
-        File *bibtexFile = d->fileImporter.fromString(plainText);
-        Entry *entry = NULL;
-        if (bibtexFile != NULL) {
-            for (File::ConstIterator it = bibtexFile->constBegin(); entry == NULL && it != bibtexFile->constEnd(); ++it) {
-                entry = dynamic_cast<Entry*>(*it);
-                if (entry != NULL) {
-                    QString arnumber = reply->url().queryItemValue(QLatin1String("recordIds"));
-                    d->sanitize(entry, arnumber);
-
-                    Value v;
-                    v.append(new VerbatimText(label()));
-                    entry->insert("x-fetchedfrom", v);
-
-                    emit foundEntry(entry);
                 }
+
+                if (!hasEntries)
+                    kDebug() << "No hits found in" << reply->url().toString();
+                emit stoppedSearch(resultNoError);
+                emit progress(d->numSteps, d->numSteps);
+
+                delete bibtexFile;
+            } else {
+                kWarning() << "No valid BibTeX file results returned on request on" << reply->url().toString();
+                emit stoppedSearch(resultUnspecifiedError);
             }
-            delete bibtexFile;
-        }
-
-        if (entry == NULL) {
-            kWarning() << "Searching" << label() << "(url:" << reply->url().toString() << ") resulted in invalid BibTeX data:" << QString(reply->readAll());
-            emit stoppedSearch(resultUnspecifiedError);
-            return;
-        }
-
-        if (!d->arnumberList.isEmpty()) {
-            QString url = d->fullAbstractUrl + d->arnumberList.first();
-            d->arnumberList.removeFirst();
-            QNetworkRequest request(url);
-            setSuggestedHttpHeaders(request, reply);
-            QNetworkReply *newReply = networkAccessManager()->get(request);
-            setNetworkReplyTimeout(newReply);
-            connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingAbstract()));
-        } else {
-            emit stoppedSearch(resultNoError);
-            emit progress(d->numSteps, d->numSteps);
         }
     } else
         kDebug() << "url was" << reply->url().toString();
@@ -269,7 +207,7 @@ QString WebSearchIEEEXplore::favIconUrl() const
     return QLatin1String("http://ieeexplore.ieee.org/favicon.ico");
 }
 
-WebSearchQueryFormAbstract* WebSearchIEEEXplore::customWidget(QWidget *)
+WebSearchQueryFormAbstract *WebSearchIEEEXplore::customWidget(QWidget *)
 {
     return NULL;
 }
