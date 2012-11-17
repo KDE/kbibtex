@@ -35,6 +35,7 @@ set(
     docklets/searchform.cpp
     docklets/searchresults.cpp
     docklets/elementform.cpp
+    docklets/filesettings.cpp
     openfileinfo.cpp
 )
 

@@ -49,6 +49,7 @@
 #include "elementform.h"
 #include "bibtexeditor.h"
 #include "documentlist.h"
+#include "filesettings.h"
 
 class KBibTeXMainWindow::KBibTeXMainWindowPrivate
 {
@@ -65,10 +66,12 @@ public:
     QDockWidget *dockSearchForm;
     QDockWidget *dockSearchResults;
     QDockWidget *dockElementForm;
+    QDockWidget *dockFileSettings;
     DocumentList *listDocumentList;
     MDIWidget *mdiWidget;
     ReferencePreview *referencePreview;
     DocumentPreview *documentPreview;
+    FileSettings *fileSettings;
     ValueList *valueList;
     Statistics *statistics;
     SearchForm *searchForm;
@@ -203,6 +206,16 @@ KBibTeXMainWindow::KBibTeXMainWindow()
     d->dockElementForm->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
     showPanelsMenu->addAction(d->dockElementForm->toggleViewAction());
 
+    d->dockFileSettings = new QDockWidget(i18n("File Settings"), this);
+    d->dockFileSettings->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+    addDockWidget(Qt::LeftDockWidgetArea, d->dockFileSettings);
+    tabifyDockWidget(d->dockFileSettings, d->dockSearchForm);
+    d->fileSettings = new FileSettings(d->dockFileSettings);
+    d->dockFileSettings->setWidget(d->fileSettings);
+    d->dockFileSettings->setObjectName("dockFileSettings");
+    d->dockFileSettings->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
+    showPanelsMenu->addAction(d->dockFileSettings->toggleViewAction());
+
     actionCollection()->addAction(KStandardAction::New, this, SLOT(newDocument()));
     actionCollection()->addAction(KStandardAction::Open, this, SLOT(openDocumentDialog()));
     d->actionClose = actionCollection()->addAction(KStandardAction::Close, this, SLOT(closeDocument()));
@@ -336,6 +349,7 @@ void KBibTeXMainWindow::documentSwitched(BibTeXEditor *oldEditor, BibTeXEditor *
 
     setCaption(validFile ? i18n("%1 - KBibTeX", openFileInfo->shortCaption()) : i18n("KBibTeX"));
 
+    d->fileSettings->setEnabled(newEditor != NULL);
     d->referencePreview->setEnabled(newEditor != NULL);
     d->elementForm->setEnabled(newEditor != NULL);
     d->documentPreview->setEnabled(newEditor != NULL);
@@ -365,6 +379,7 @@ void KBibTeXMainWindow::documentSwitched(BibTeXEditor *oldEditor, BibTeXEditor *
     d->elementForm->setElement(QSharedPointer<Element>(), NULL);
     d->documentPreview->setElement(QSharedPointer<Element>(), NULL);
     d->valueList->setEditor(newEditor);
+    d->fileSettings->setEditor(newEditor);
     d->statistics->setFile(newEditor != NULL && newEditor->bibTeXModel() != NULL ? newEditor->bibTeXModel()->bibTeXFile() : NULL);
     d->referencePreview->setEditor(newEditor);
 }
