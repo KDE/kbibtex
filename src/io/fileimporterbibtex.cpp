@@ -132,7 +132,7 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
     /// Set the file's preferences for name formatting
     result->setProperty(File::NameFormatting, m_statistics.countFirstNameFirst > m_statistics.countLastNameFirst ? QLatin1String("<%f ><%l>< %s>") : QLatin1String("<%l><, %s><, %f>")); // FIXME those string should be defined somewhere globally
     /// Set the file's preferences for title protected
-    result->setProperty(File::ProtectCasing, m_statistics.countProtectedTitle> m_statistics.countUnprotectedTitle);
+    result->setProperty(File::ProtectCasing, m_statistics.countProtectedTitle > m_statistics.countUnprotectedTitle);
     /// Set the file's preferences for quoting of comments
     if (m_statistics.countNoCommentQuote > m_statistics.countCommentCommand && m_statistics.countNoCommentQuote > m_statistics.countCommentPercent)
         result->setProperty(File::QuoteComment, (int)Preferences::qcNone);
@@ -141,9 +141,6 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
     else
         result->setProperty(File::QuoteComment, (int)Preferences::qcPercentSign);
     // TODO gather more statistics for keyword casing etc.
-
-    kDebug()<<"countProtectedTitle"<<m_statistics.countProtectedTitle;
-    kDebug()<<"countUnprotectedTitle"<<m_statistics.countUnprotectedTitle;
 
     return result;
 }
@@ -657,12 +654,12 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value &value, const QStr
                 else
                     ++m_statistics.countFirstNameFirst;
             }
-        } else if (iKey == Entry::ftTitle || iKey==Entry::ftBookTitle) {
-            if (text[0]==QChar('{')&& text[text.length()-1]==QChar('}'))
+        } else if (iKey == Entry::ftTitle || iKey == Entry::ftBookTitle) {
+            if (text[0] == QChar('{') && text[text.length() - 1] == QChar('}'))
                 ++m_statistics.countProtectedTitle;
             else
                 ++m_statistics.countUnprotectedTitle;
-         } else if (iKey == Entry::ftPages) {
+        } else if (iKey == Entry::ftPages) {
             static const QRegExp rangeInAscii("\\s*--?\\s*");
             text.replace(rangeInAscii, QChar(0x2013));
             if (isStringKey)
@@ -758,6 +755,7 @@ QList<QSharedPointer<Keyword> > FileImporterBibTeX::splitKeywords(const QString 
     static char splitChars[] = ";,\0";
     static const QRegExp splitAlong[] = {QRegExp(QString("\\s*%1\\s*").arg(splitChars[0])), QRegExp(QString("\\s*%1\\s*").arg(splitChars[1])), QRegExp()};
     char *curSplitChar = splitChars;
+    static const QRegExp unneccessarySpacing(QLatin1String("[ \n\r\t]+"));
     int index = 0;
 
     /// for each char in list ...
@@ -766,7 +764,7 @@ QList<QSharedPointer<Keyword> > FileImporterBibTeX::splitKeywords(const QString 
         if (text.contains(*curSplitChar)) {
             /// split text along a pattern like spaces-splitchar-spaces
             /// extract keywords
-            const QStringList keywords = text.split(splitAlong[index], QString::SkipEmptyParts);
+            const QStringList keywords = text.split(splitAlong[index], QString::SkipEmptyParts).replaceInStrings(unneccessarySpacing, QChar(' '));
             /// build QList of Keyword objects from keywords
             foreach(const QString &keyword, keywords) {
                 result.append(QSharedPointer<Keyword>(new Keyword(keyword)));
@@ -813,7 +811,7 @@ QList<QSharedPointer<Person> > FileImporterBibTeX::splitNames(const QString &tex
 
     /// Split input string into tokens which are either name components (first or last name)
     /// or full names (composed of first and last name), depending on the input string's structure
-    static const QRegExp split(QLatin1String("\\s*([,]+|[,]*\\band\\b|[;]|\\n|\\s{4,})\\s*"));
+    static const QRegExp split(QLatin1String("\\s*([,]+|[,]*\\band\\b|[;]|&|\\n|\\s{4,})\\s*"));
     QStringList authorTokenList = internalText.split(split, QString::SkipEmptyParts);
 
     bool containsSpace = true;
