@@ -39,6 +39,9 @@ public:
     SettingsFileExporterBibTeXWidget(File *file, QWidget *parent);
     ~SettingsFileExporterBibTeXWidget();
 
+    virtual QString label() const;
+    virtual KIcon icon() const;
+
     void saveProperties(File *file);
 
 public slots:

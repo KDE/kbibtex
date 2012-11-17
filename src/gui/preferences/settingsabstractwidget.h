@@ -26,34 +26,23 @@
 #include <QAbstractItemModel>
 #include <QWidget>
 
+#include <KIcon>
+
 class KComboBox;
 
-class ItalicTextItemModel : public QAbstractItemModel
-{
-public:
-    ItalicTextItemModel(QObject *parent = NULL);
-
-    void addItem(const QString &a, const QString &b);
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-    QModelIndex index(int row, int column, const QModelIndex &) const;
-    QModelIndex parent(const QModelIndex &) const;
-    int rowCount(const QModelIndex &) const;
-    int columnCount(const QModelIndex &) const;
-
-private:
-    QList<QPair<QString, QString> > m_data;
-};
-
-
 /**
-@author Thomas Fischer
-*/
+ * @author Thomas Fischer
+ */
 class KBIBTEXGUI_EXPORT SettingsAbstractWidget : public QWidget
 {
     Q_OBJECT
 
 public:
     SettingsAbstractWidget(QWidget *parent);
+    // virtual ~SettingsAbstractWidget() { /* nothing */ };
+
+    virtual QString label() const = 0;
+    virtual KIcon icon() const = 0;
 
 signals:
     void changed();
@@ -62,9 +51,6 @@ public slots:
     virtual void loadState() = 0;
     virtual void saveState() = 0;
     virtual void resetToDefaults() = 0;
-
-protected:
-    void selectValue(KComboBox *comboBox, const QString &value, int role = Qt::DisplayRole);
 };
 
 #endif // KBIBTEX_GUI_SETTINGSABSTRACTWIDGET_H

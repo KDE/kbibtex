@@ -21,13 +21,14 @@
 #include <QFormLayout>
 #include <QCheckBox>
 #include <QLabel>
-#include <QAbstractItemModel>
 
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <KLocale>
 #include <KComboBox>
 
+#include "guihelper.h"
+#include "italictextitemmodel.h"
 #include "preferences.h"
 #include "kbibtexnamespace.h"
 #include "fileexporterbibtex.h"
@@ -36,7 +37,6 @@
 #include "settingsfileexporterbibtexwidget.h"
 
 #define createDelimiterString(a, b) (QString("%1%2%3").arg(a).arg(QChar(8230)).arg(b))
-
 
 class SettingsFileExporterBibTeXWidget::SettingsFileExporterBibTeXWidgetPrivate
 {
@@ -64,16 +64,19 @@ public:
     void loadState() {
         KConfigGroup configGroup(config, configGroupName);
         QString encoding = configGroup.readEntry(Preferences::keyEncoding, Preferences::defaultEncoding);
-        p->selectValue(comboBoxEncodings, encoding);
+        int row = GUIHelper::selectValue(comboBoxEncodings->model(), encoding);
+        comboBoxEncodings->setCurrentIndex(row);
         QString stringDelimiter = configGroup.readEntry(Preferences::keyStringDelimiter, Preferences::defaultStringDelimiter);
-        p->selectValue(comboBoxStringDelimiters, createDelimiterString(stringDelimiter[0], stringDelimiter[1]));
+        row = GUIHelper::selectValue(comboBoxStringDelimiters->model(), createDelimiterString(stringDelimiter[0], stringDelimiter[1]));
+        comboBoxStringDelimiters->setCurrentIndex(row);
         Preferences::QuoteComment quoteComment = (Preferences::QuoteComment)configGroup.readEntry(Preferences::keyQuoteComment, (int)Preferences::defaultQuoteComment);
         comboBoxQuoteComment->setCurrentIndex((int)quoteComment);
         KBibTeX::Casing keywordCasing = (KBibTeX::Casing)configGroup.readEntry(Preferences::keyKeywordCasing, (int)Preferences::defaultKeywordCasing);
         comboBoxKeywordCasing->setCurrentIndex((int)keywordCasing);
         checkBoxProtectCasing->setChecked(configGroup.readEntry(Preferences::keyProtectCasing, Preferences::defaultProtectCasing));
         QString personNameFormatting = configGroup.readEntry(Person::keyPersonNameFormatting, "");
-        p->selectValue(comboBoxPersonNameFormatting, personNameFormatting, Qt::UserRole);
+        row = GUIHelper::selectValue(comboBoxPersonNameFormatting->model(), personNameFormatting, Qt::UserRole);
+        comboBoxPersonNameFormatting->setCurrentIndex(row);
     }
 
     void saveState() {
@@ -92,8 +95,10 @@ public:
     }
 
     void resetToDefaults() {
-        p->selectValue(comboBoxEncodings, Preferences::defaultEncoding);
-        p->selectValue(comboBoxStringDelimiters, createDelimiterString(Preferences::defaultStringDelimiter[0], Preferences::defaultStringDelimiter[1]));
+        int row = GUIHelper::selectValue(comboBoxEncodings->model(), Preferences::defaultEncoding);
+        comboBoxEncodings->setCurrentIndex(row);
+        row = GUIHelper::selectValue(comboBoxStringDelimiters->model(), createDelimiterString(Preferences::defaultStringDelimiter[0], Preferences::defaultStringDelimiter[1]));
+        comboBoxStringDelimiters->setCurrentIndex(row);
         comboBoxQuoteComment->setCurrentIndex((int)Preferences::defaultQuoteComment);
         comboBoxKeywordCasing->setCurrentIndex((int)Preferences::defaultKeywordCasing);
         checkBoxProtectCasing->setChecked(Preferences::defaultProtectCasing);
@@ -144,8 +149,8 @@ public:
         layout->addRow(i18n("Person Names Formatting:"), comboBoxPersonNameFormatting);
         ItalicTextItemModel *itim = new ItalicTextItemModel();
         itim->addItem(i18n("Use global settings"), QString(""));
-        itim->addItem(Person::transcribePersonName(&dummyPerson, QLatin1String("<%f ><%l>< %s>")), QLatin1String("<%f ><%l>< %s>"));
-        itim->addItem(Person::transcribePersonName(&dummyPerson, QLatin1String("<%l><, %s><, %f>")), QLatin1String("<%l><, %s><, %f>"));
+        itim->addItem(Person::transcribePersonName(&dummyPerson, QLatin1String("<%f ><%l>< %s>")), QLatin1String("<%f ><%l>< %s>")); // FIXME those string should be defined somewhere globally
+        itim->addItem(Person::transcribePersonName(&dummyPerson, QLatin1String("<%l><, %s><, %f>")), QLatin1String("<%l><, %s><, %f>")); // FIXME those string should be defined somewhere globally
         comboBoxPersonNameFormatting->setModel(itim);
         connect(comboBoxPersonNameFormatting, SIGNAL(currentIndexChanged(int)), p, SIGNAL(changed()));
     }
@@ -153,11 +158,13 @@ public:
     void loadProperties(File *file) {
         if (file->hasProperty(File::Encoding)) {
             QString encoding = file->property(File::Encoding).toString();
-            p->selectValue(comboBoxEncodings, encoding);
+            int row = GUIHelper::selectValue(comboBoxEncodings->model(), encoding);
+            comboBoxEncodings->setCurrentIndex(row);
         }
         if (file->hasProperty(File::StringDelimiter)) {
             QString stringDelimiter = file->property(File::StringDelimiter).toString();
-            p->selectValue(comboBoxStringDelimiters, createDelimiterString(stringDelimiter[0], stringDelimiter[1]));
+            int row = GUIHelper::selectValue(comboBoxStringDelimiters->model(), createDelimiterString(stringDelimiter[0], stringDelimiter[1]));
+            comboBoxStringDelimiters->setCurrentIndex(row);
         }
         if (file->hasProperty(File::QuoteComment)) {
             Preferences::QuoteComment quoteComment = (Preferences::QuoteComment)file->property(File::QuoteComment).toInt();
@@ -168,9 +175,11 @@ public:
             comboBoxKeywordCasing->setCurrentIndex((int)keywordCasing);
         }
         if (file->hasProperty(File::ProtectCasing))
-            checkBoxProtectCasing->setChecked(file->property(File::QuoteComment).toBool());
-        if (file->hasProperty(File::NameFormatting))
-            p->selectValue(comboBoxPersonNameFormatting, file->property(File::NameFormatting).toString(), Qt::UserRole);
+            checkBoxProtectCasing->setChecked(file->property(File::ProtectCasing).toBool());
+        if (file->hasProperty(File::NameFormatting)) {
+            int row = GUIHelper::selectValue(comboBoxPersonNameFormatting->model(), file->property(File::NameFormatting).toString(), Qt::UserRole);
+            comboBoxPersonNameFormatting->setCurrentIndex(row);
+        }
     }
 
     void saveProperties(File *file) {
@@ -205,6 +214,16 @@ SettingsFileExporterBibTeXWidget::SettingsFileExporterBibTeXWidget(File *file, Q
 SettingsFileExporterBibTeXWidget::~SettingsFileExporterBibTeXWidget()
 {
     delete d;
+}
+
+QString SettingsFileExporterBibTeXWidget::label() const
+{
+    return i18n("xxxxx");
+}
+
+KIcon SettingsFileExporterBibTeXWidget::icon() const
+{
+    return KIcon("xxxx");
 }
 
 void SettingsFileExporterBibTeXWidget::loadState()

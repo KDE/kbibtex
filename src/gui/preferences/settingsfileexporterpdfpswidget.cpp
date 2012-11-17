@@ -26,6 +26,7 @@
 #include <KComboBox>
 #include <KLocale>
 
+#include "guihelper.h"
 #include "fileexportertoolchain.h"
 #include "settingsfileexporterpdfpswidget.h"
 
@@ -55,13 +56,16 @@ public:
     void loadState() {
         KConfigGroup configGroupGeneral(config, configGroupNameGeneral);
         const QString paperSizeName = configGroupGeneral.readEntry(FileExporter::keyPaperSize, FileExporter::defaultPaperSize);
-        p->selectValue(comboBoxPaperSize, paperSizeLabelToName.key(paperSizeName));
+        int row = GUIHelper::selectValue(comboBoxPaperSize->model(), paperSizeLabelToName.key(paperSizeName));
+        comboBoxPaperSize->setCurrentIndex(row);
 
         KConfigGroup configGroup(config, configGroupName);
         QString babelLanguage = configGroup.readEntry(FileExporterToolchain::keyBabelLanguage, FileExporterToolchain::defaultBabelLanguage);
-        p->selectValue(comboBoxBabelLanguage, babelLanguage);
+        row = GUIHelper::selectValue(comboBoxBabelLanguage->model(), babelLanguage);
+        comboBoxBabelLanguage->setCurrentIndex(row);
         QString bibliographyStyle = configGroup.readEntry(FileExporterToolchain::keyBibliographyStyle, FileExporterToolchain::defaultBibliographyStyle);
-        p->selectValue(comboBoxBibliographyStyle, bibliographyStyle);
+        row = GUIHelper::selectValue(comboBoxBibliographyStyle->model(), bibliographyStyle);
+        comboBoxBibliographyStyle->setCurrentIndex(row);
     }
 
     void saveState() {
@@ -76,9 +80,12 @@ public:
     }
 
     void resetToDefaults() {
-        p->selectValue(comboBoxPaperSize, paperSizeLabelToName[FileExporter::defaultPaperSize]);
-        p->selectValue(comboBoxBabelLanguage, FileExporterToolchain::defaultBabelLanguage);
-        p->selectValue(comboBoxBibliographyStyle, FileExporterToolchain::defaultBibliographyStyle);
+        int row = GUIHelper::selectValue(comboBoxPaperSize->model(), paperSizeLabelToName[FileExporter::defaultPaperSize]);
+        comboBoxPaperSize->setCurrentIndex(row);
+        row = GUIHelper::selectValue(comboBoxBabelLanguage->model(), FileExporterToolchain::defaultBabelLanguage);
+        comboBoxBabelLanguage->setCurrentIndex(row);
+        row = GUIHelper::selectValue(comboBoxBibliographyStyle->model(), FileExporterToolchain::defaultBibliographyStyle);
+        comboBoxBibliographyStyle->setCurrentIndex(row);
     }
 
     void setupGUI() {
@@ -122,6 +129,16 @@ SettingsFileExporterPDFPSWidget::SettingsFileExporterPDFPSWidget(QWidget *parent
 SettingsFileExporterPDFPSWidget::~SettingsFileExporterPDFPSWidget()
 {
     delete d;
+}
+
+QString SettingsFileExporterPDFPSWidget::label() const
+{
+    return i18n("PDF & Postscript");
+}
+
+KIcon SettingsFileExporterPDFPSWidget::icon() const
+{
+    return KIcon("checkbox"); // TODO find better icon
 }
 
 void SettingsFileExporterPDFPSWidget::loadState()

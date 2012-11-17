@@ -50,6 +50,8 @@ set(
     preferences/settingsabstractwidget.cpp
     preferences/settingsidsuggestionswidget.cpp
     preferences/settingsidsuggestionseditor.cpp
+    guihelper.cpp
+    italictextitemmodel.cpp
     valuelistmodel.cpp
     delayedexecutiontimer.cpp
 )
@@ -71,7 +73,9 @@ set(
     preferences/settingsfileexporterpdfpswidget.h
     preferences/settingsidsuggestionswidget.h
     preferences/settingsidsuggestionseditor.h
+    guihelper.h
     valuelistmodel.h
+    italictextitemmodel.h
     delayedexecutiontimer.h
     kbibtexgui_export.h
     bibtex/findduplicatesui.h

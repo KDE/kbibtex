@@ -36,6 +36,9 @@ public:
     SettingsUserInterfaceWidget(QWidget *parent);
     ~SettingsUserInterfaceWidget();
 
+    virtual QString label() const;
+    virtual KIcon icon() const;
+
 public slots:
     void loadState();
     void saveState();

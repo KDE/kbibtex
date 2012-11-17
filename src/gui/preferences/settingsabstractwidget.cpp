@@ -18,88 +18,14 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include <QAbstractItemModel>
-
 #include <KComboBox>
 #include <KDebug>
 
 #include "settingsabstractwidget.h"
 
-ItalicTextItemModel::ItalicTextItemModel(QObject *parent)
-        : QAbstractItemModel(parent)
-{
-    // nothing
-}
-
-void ItalicTextItemModel::addItem(const QString &a, const QString &b)
-{
-    m_data.append(QPair<QString, QString>(a, b));
-}
-
-QVariant ItalicTextItemModel::data(const QModelIndex &index, int role) const
-{
-    if (index.row() < 0 || index.row() >= m_data.count())
-        return QVariant();
-
-    if (role == Qt::FontRole) {
-        QFont font;
-        if (m_data[index.row()].second.isEmpty())
-            font.setItalic(true);
-        return font;
-    } else if (role == Qt::DisplayRole) {
-        return m_data[index.row()].first;
-    } else if (role == Qt::UserRole) {
-        return m_data[index.row()].second;
-    }
-
-    return QVariant();
-}
-
-QModelIndex ItalicTextItemModel::index(int row, int column, const QModelIndex &) const
-{
-    return createIndex(row, column);
-}
-
-QModelIndex ItalicTextItemModel::parent(const QModelIndex &) const
-{
-    return QModelIndex();
-}
-
-int ItalicTextItemModel::rowCount(const QModelIndex &) const
-{
-    return m_data.count();
-}
-
-int ItalicTextItemModel::columnCount(const QModelIndex &) const
-{
-    return 1;
-}
-
-
 SettingsAbstractWidget::SettingsAbstractWidget(QWidget *parent)
         : QWidget(parent)
 {
     // nothing
-}
-
-void SettingsAbstractWidget::selectValue(KComboBox *comboBox, const QString &value, int role)
-{
-    bool foundLine = false;
-    QAbstractItemModel *model = comboBox->model();
-    int row = 0;
-    QModelIndex index;
-    const QString lowerValue = value.toLower();
-    while (row < model->rowCount() && (index = model->index(row, 0, QModelIndex())) != QModelIndex()) {
-        QString line = model->data(index, role).toString();
-        if (line.toLower() == lowerValue) {
-            comboBox->setCurrentIndex(row);
-            foundLine = true;
-            break;
-        }
-        ++row;
-    }
-
-    if (!foundLine)
-        kWarning() << "No line in combobox" << comboBox->objectName() << "matched" << value;
 }
 

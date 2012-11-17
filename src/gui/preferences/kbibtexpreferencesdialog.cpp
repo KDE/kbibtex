@@ -57,38 +57,44 @@ public:
     void addPages() {
         SettingsAbstractWidget *settingsWidget = new SettingsGeneralWidget(p);
         settingWidgets.insert(settingsWidget);
-        KPageWidgetItem *pageGlobal = p->addPage(settingsWidget, i18n("General"));
-        pageGlobal->setIcon(KIcon("kbibtex"));
+        KPageWidgetItem *pageGlobal = p->addPage(settingsWidget, settingsWidget->label());
+        pageGlobal->setIcon(settingsWidget->icon());
         connect(settingsWidget, SIGNAL(changed()), p, SLOT(gotChanged()));
 
         settingsWidget = new SettingsGlobalKeywordsWidget(p);
         settingWidgets.insert(settingsWidget);
-        KPageWidgetItem *page = p->addSubPage(pageGlobal, settingsWidget, i18n("Keywords"));
-        page->setIcon(KIcon("checkbox")); // TODO find better icon
+        KPageWidgetItem *page = p->addSubPage(pageGlobal, settingsWidget, settingsWidget->label());
+        page->setIcon(settingsWidget->icon());
         connect(settingsWidget, SIGNAL(changed()), p, SLOT(gotChanged()));
 
         settingsWidget = new SettingsColorLabelWidget(p);
         settingWidgets.insert(settingsWidget);
-        page = p->addSubPage(pageGlobal, settingsWidget, i18n("Color & Labels"));
-        page->setIcon(KIcon("preferences-desktop-color"));
+        page = p->addSubPage(pageGlobal, settingsWidget, settingsWidget->label());
+        page->setIcon(settingsWidget->icon());
         connect(settingsWidget, SIGNAL(changed()), p, SLOT(gotChanged()));
 
         settingsWidget = new SettingsIdSuggestionsWidget(p);
         settingWidgets.insert(settingsWidget);
-        page = p->addSubPage(pageGlobal, settingsWidget, i18n("Id Suggestions"));
-        page->setIcon(KIcon("view-filter"));
+        page = p->addSubPage(pageGlobal, settingsWidget, settingsWidget->label());
+        page->setIcon(settingsWidget->icon());
         connect(settingsWidget, SIGNAL(changed()), p, SLOT(gotChanged()));
 
         settingsWidget = new SettingsUserInterfaceWidget(p);
         settingWidgets.insert(settingsWidget);
-        page = p->addPage(settingsWidget, i18n("User Interface"));
-        page->setIcon(KIcon("user-identity"));
+        page = p->addPage(settingsWidget, settingsWidget->label());
+        page->setIcon(settingsWidget->icon());
         connect(settingsWidget, SIGNAL(changed()), p, SLOT(gotChanged()));
 
         settingsWidget = new SettingsFileExporterWidget(p);
         settingWidgets.insert(settingsWidget);
-        KPageWidgetItem *pageSaving = p->addPage(settingsWidget, i18n("Saving and Exporting"));
-        pageSaving->setIcon(KIcon("document-save"));
+        KPageWidgetItem *pageSaving = p->addPage(settingsWidget, settingsWidget->label());
+        pageSaving->setIcon(settingsWidget->icon());
+        connect(settingsWidget, SIGNAL(changed()), p, SLOT(gotChanged()));
+
+        settingsWidget = new SettingsFileExporterPDFPSWidget(p);
+        settingWidgets.insert(settingsWidget);
+        page = p->addSubPage(pageGlobal, settingsWidget, settingsWidget->label());
+        page->setIcon(settingsWidget->icon());
         connect(settingsWidget, SIGNAL(changed()), p, SLOT(gotChanged()));
     }
 

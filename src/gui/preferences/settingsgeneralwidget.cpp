@@ -25,6 +25,7 @@
 #include <KConfigGroup>
 #include <KComboBox>
 
+#include "guihelper.h"
 #include "value.h"
 #include "settingsgeneralwidget.h"
 
@@ -50,7 +51,8 @@ public:
     void loadState() {
         KConfigGroup configGroup(config, configGroupName);
         QString personNameFormatting = configGroup.readEntry(Person::keyPersonNameFormatting, Person::defaultPersonNameFormatting);
-        p->selectValue(comboBoxPersonNameFormatting, Person::transcribePersonName(&dummyPerson, personNameFormatting));
+        int row = GUIHelper::selectValue(comboBoxPersonNameFormatting->model(), Person::transcribePersonName(&dummyPerson, personNameFormatting));
+        comboBoxPersonNameFormatting->setCurrentIndex(row);
     }
 
     void saveState() {
@@ -60,7 +62,8 @@ public:
     }
 
     void resetToDefaults() {
-        p->selectValue(comboBoxPersonNameFormatting, Person::transcribePersonName(&dummyPerson, Person::defaultPersonNameFormatting));
+        int row = GUIHelper::selectValue(comboBoxPersonNameFormatting->model(), Person::transcribePersonName(&dummyPerson, Person::defaultPersonNameFormatting));
+        comboBoxPersonNameFormatting->setCurrentIndex(row);
     }
 
     void setupGUI() {
@@ -88,6 +91,16 @@ SettingsGeneralWidget::SettingsGeneralWidget(QWidget *parent)
 SettingsGeneralWidget::~SettingsGeneralWidget()
 {
     delete d;
+}
+
+QString SettingsGeneralWidget::label() const
+{
+    return i18n("General");
+}
+
+KIcon SettingsGeneralWidget::icon() const
+{
+    return KIcon("kbibtex");
 }
 
 void SettingsGeneralWidget::loadState()

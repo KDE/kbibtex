@@ -31,6 +31,8 @@
 #include <KFileDialog>
 #include <KUrlRequester>
 
+#include "guihelper.h"
+#include "italictextitemmodel.h"
 #include "fileexporter.h"
 #include "clipboard.h"
 #include "preferences.h"
@@ -63,7 +65,8 @@ public:
     void loadState() {
         KConfigGroup configGroup(config, Preferences::groupGeneral);
         const QString copyReferenceCommand = configGroup.readEntry(Clipboard::keyCopyReferenceCommand, Clipboard::defaultCopyReferenceCommand);
-        p->selectValue(comboBoxCopyReferenceCmd, copyReferenceCommand.isEmpty() ? QString("") : copyReferenceCommand, Qt::UserRole);
+        int row = GUIHelper::selectValue(comboBoxCopyReferenceCmd->model(), copyReferenceCommand.isEmpty() ? QString("") : copyReferenceCommand, Qt::UserRole);
+        comboBoxCopyReferenceCmd->setCurrentIndex(row);
 
         const int index = qMax(0, comboBoxBackupScope->findData(configGroup.readEntry(Preferences::keyBackupScope, (int)Preferences::defaultBackupScope)));
         comboBoxBackupScope->setCurrentIndex(index);
@@ -91,7 +94,8 @@ public:
     }
 
     void resetToDefaults() {
-        p->selectValue(comboBoxCopyReferenceCmd, QString(""), Qt::UserRole);
+        int row = GUIHelper::selectValue(comboBoxCopyReferenceCmd->model(), QString(""), Qt::UserRole);
+        comboBoxCopyReferenceCmd->setCurrentIndex(row);
 
         const int index = qMax(0, comboBoxBackupScope->findData(Preferences::defaultBackupScope));
         comboBoxBackupScope->setCurrentIndex(index);
@@ -160,6 +164,16 @@ SettingsFileExporterWidget::SettingsFileExporterWidget(QWidget *parent)
 SettingsFileExporterWidget::~SettingsFileExporterWidget()
 {
     delete d;
+}
+
+QString SettingsFileExporterWidget::label() const
+{
+    return i18n("Saving and Exporting");
+}
+
+KIcon SettingsFileExporterWidget::icon() const
+{
+    return KIcon("document-save");
 }
 
 void SettingsFileExporterWidget::loadState()

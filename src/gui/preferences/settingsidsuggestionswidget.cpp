@@ -289,6 +289,16 @@ SettingsIdSuggestionsWidget::~SettingsIdSuggestionsWidget()
     delete d;
 }
 
+QString SettingsIdSuggestionsWidget::label() const
+{
+    return i18n("Id Suggestions");
+}
+
+KIcon SettingsIdSuggestionsWidget::icon() const
+{
+    return KIcon("view-filter");
+}
+
 void SettingsIdSuggestionsWidget::loadState()
 {
     d->loadState();

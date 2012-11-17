@@ -310,6 +310,16 @@ SettingsColorLabelWidget::~SettingsColorLabelWidget()
     delete d;
 }
 
+QString SettingsColorLabelWidget::label() const
+{
+    return i18n("Color & Labels");
+}
+
+KIcon SettingsColorLabelWidget::icon() const
+{
+    return KIcon("preferences-desktop-color");
+}
+
 void SettingsColorLabelWidget::loadState()
 {
     d->loadState();

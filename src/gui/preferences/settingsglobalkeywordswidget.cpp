@@ -98,6 +98,16 @@ SettingsGlobalKeywordsWidget::~SettingsGlobalKeywordsWidget()
     delete d;
 }
 
+QString SettingsGlobalKeywordsWidget::label() const
+{
+    return i18n("Keywords");
+}
+
+KIcon SettingsGlobalKeywordsWidget::icon() const
+{
+    return KIcon("checkbox"); // TODO find better icon
+}
+
 void SettingsGlobalKeywordsWidget::loadState()
 {
     d->loadState();
