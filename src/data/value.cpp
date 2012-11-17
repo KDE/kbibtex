@@ -175,7 +175,7 @@ QString Person::transcribePersonName(const QString &formatting, const QString &f
 }
 
 const QString Person::keyPersonNameFormatting = QLatin1String("personNameFormatting");
-const QString Person::defaultPersonNameFormatting = QLatin1String("<%l><, %s><, %f>"); // "<%f ><%l>< %s>"
+const QString Person::defaultPersonNameFormatting = QLatin1String("<%l><, %s><, %f>"); // "<%f ><%l>< %s>" // FIXME those string should be defined somewhere globally
 
 
 const QRegExp MacroKey::validMacroKey = QRegExp("^[a-z][-.:/+_a-z0-9]*$|^[0-9]+$", Qt::CaseInsensitive);

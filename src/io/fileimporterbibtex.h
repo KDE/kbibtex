@@ -126,6 +126,7 @@ private:
         int countCurlyBrackets, countQuotationMarks;
         int countFirstNameFirst, countLastNameFirst;
         int countNoCommentQuote, countCommentPercent, countCommentCommand;
+        int countProtectedTitle, countUnprotectedTitle;
     } m_statistics;
 
     bool m_cancelFlag;

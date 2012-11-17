@@ -72,6 +72,8 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
     m_statistics.countNoCommentQuote = 0;
     m_statistics.countCommentPercent = 0;
     m_statistics.countCommentCommand = 0;
+    m_statistics.countProtectedTitle = 0;
+    m_statistics.countUnprotectedTitle = 0;
 
     m_nextDuePos = 0;
     m_textStream = new QTextStream(iodevice);
@@ -128,7 +130,9 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
     /// deduced from statistics built while parsing the file
     result->setProperty(File::StringDelimiter, m_statistics.countQuotationMarks > m_statistics.countCurlyBrackets ? QLatin1String("\"\"") : QLatin1String("{}"));
     /// Set the file's preferences for name formatting
-    result->setProperty(File::NameFormatting, m_statistics.countFirstNameFirst > m_statistics.countLastNameFirst ? QLatin1String("<%f ><%l>< %s>") : QLatin1String("<%l><, %s>,< %f>"));
+    result->setProperty(File::NameFormatting, m_statistics.countFirstNameFirst > m_statistics.countLastNameFirst ? QLatin1String("<%f ><%l>< %s>") : QLatin1String("<%l><, %s><, %f>")); // FIXME those string should be defined somewhere globally
+    /// Set the file's preferences for title protected
+    result->setProperty(File::ProtectCasing, m_statistics.countProtectedTitle> m_statistics.countUnprotectedTitle);
     /// Set the file's preferences for quoting of comments
     if (m_statistics.countNoCommentQuote > m_statistics.countCommentCommand && m_statistics.countNoCommentQuote > m_statistics.countCommentPercent)
         result->setProperty(File::QuoteComment, (int)Preferences::qcNone);
@@ -137,6 +141,9 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
     else
         result->setProperty(File::QuoteComment, (int)Preferences::qcPercentSign);
     // TODO gather more statistics for keyword casing etc.
+
+    kDebug()<<"countProtectedTitle"<<m_statistics.countProtectedTitle;
+    kDebug()<<"countUnprotectedTitle"<<m_statistics.countUnprotectedTitle;
 
     return result;
 }
@@ -650,7 +657,12 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value &value, const QStr
                 else
                     ++m_statistics.countFirstNameFirst;
             }
-        } else if (iKey == Entry::ftPages) {
+        } else if (iKey == Entry::ftTitle || iKey==Entry::ftBookTitle) {
+            if (text[0]==QChar('{')&& text[text.length()-1]==QChar('}'))
+                ++m_statistics.countProtectedTitle;
+            else
+                ++m_statistics.countUnprotectedTitle;
+         } else if (iKey == Entry::ftPages) {
             static const QRegExp rangeInAscii("\\s*--?\\s*");
             text.replace(rangeInAscii, QChar(0x2013));
             if (isStringKey)
