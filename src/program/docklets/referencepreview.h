@@ -35,7 +35,6 @@ public:
     ReferencePreview(QWidget *parent);
     ~ReferencePreview();
 
-    void setHtml(const QString &html, const QUrl &baseUrl = QUrl());
     void setEnabled(bool);
 
     void setEditor(BibTeXEditor *editor);
@@ -46,6 +45,8 @@ public slots:
 private:
     class ReferencePreviewPrivate;
     ReferencePreviewPrivate *d;
+
+    void setHtml(const QString &html, const QUrl &baseUrl = QUrl());
 
 private slots:
     void renderHTML();
