@@ -167,7 +167,7 @@ public:
             comboBoxKeywordCasing->setCurrentIndex((int)keywordCasing);
         }
         if (file->hasProperty(File::ProtectCasing))
-            checkBoxProtectCasing->setChecked(file->property(File::QuoteComment).toBool());
+            checkBoxProtectCasing->setChecked(file->property(File::ProtectCasing).toBool());
         if (file->hasProperty(File::NameFormatting))
             p->selectValue(comboBoxPersonNameFormatting, file->property(File::NameFormatting).toString(), Qt::UserRole);
     }
