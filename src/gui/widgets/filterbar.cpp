@@ -22,8 +22,8 @@
 #include <QFontMetrics>
 #include <QLabel>
 #include <QTimer>
-#include <QCheckBox>
 
+#include <KPushButton>
 #include <KComboBox>
 #include <KLocale>
 #include <KLineEdit>
@@ -48,7 +48,7 @@ public:
     const int maxNumStoredFilterTexts;
     KComboBox *comboBoxCombination;
     KComboBox *comboBoxField;
-    QCheckBox *checkboxSearchPDFfiles;
+    KPushButton *buttonSearchPDFfiles;
     DelayedExecutionTimer *delayedTimer;
 
     FilterBarPrivate(FilterBar *parent)
@@ -71,7 +71,7 @@ public:
         else /// any or every word
             result.terms = comboBoxFilterText->lineEdit()->text().split(QRegExp(QLatin1String("\\s+")), QString::SkipEmptyParts);
         result.field = comboBoxField->currentIndex() == 0 ? QString::null : comboBoxField->itemData(comboBoxField->currentIndex(), Qt::UserRole).toString();
-        result.searchPDFfiles = checkboxSearchPDFfiles->isChecked();
+        result.searchPDFfiles = buttonSearchPDFfiles->isChecked();
 
         return result;
     }
@@ -89,7 +89,7 @@ public:
                 break;
             }
         }
-        checkboxSearchPDFfiles->setChecked(fq.searchPDFfiles);
+        buttonSearchPDFfiles->setChecked(fq.searchPDFfiles);
 
         comboBoxCombination->blockSignals(false);
         comboBoxField->blockSignals(false);
@@ -133,7 +133,7 @@ public:
         KConfigGroup configGroup(config, configGroupName);
         configGroup.writeEntry(QLatin1String("CurrentCombination"), comboBoxCombination->currentIndex());
         configGroup.writeEntry(QLatin1String("CurrentField"), comboBoxField->currentIndex());
-        configGroup.writeEntry(QLatin1String("SearchPDFFiles"), checkboxSearchPDFfiles->isChecked());
+        configGroup.writeEntry(QLatin1String("SearchPDFFiles"), buttonSearchPDFfiles->isChecked());
         config->sync();
     }
 };
@@ -178,19 +178,20 @@ FilterBar::FilterBar(QWidget *parent)
             d->comboBoxField->addItem(fd->label, fd->upperCamelCase);
     }
 
-    d->checkboxSearchPDFfiles = new QCheckBox(this);
-    d->checkboxSearchPDFfiles->setIcon(KIcon("application-pdf"));
-    d->checkboxSearchPDFfiles->setToolTip(i18n("Include PDF files in full-text search"));
-    layout->addWidget(d->checkboxSearchPDFfiles, 1, 4);
+    d->buttonSearchPDFfiles = new KPushButton(this);
+    d->buttonSearchPDFfiles->setIcon(KIcon("application-pdf"));
+    d->buttonSearchPDFfiles->setToolTip(i18n("Include PDF files in full-text search"));
+    d->buttonSearchPDFfiles->setCheckable(true);
+    layout->addWidget(d->buttonSearchPDFfiles, 1, 4);
 
     connect(d->comboBoxFilterText->lineEdit(), SIGNAL(textChanged(QString)), d->delayedTimer, SLOT(trigger()));
     connect(d->comboBoxFilterText->lineEdit(), SIGNAL(returnPressed()), this, SLOT(userPressedEnter()));
     connect(d->comboBoxCombination, SIGNAL(currentIndexChanged(int)), this, SLOT(comboboxStatusChanged()));
     connect(d->comboBoxField, SIGNAL(currentIndexChanged(int)), this, SLOT(comboboxStatusChanged()));
-    connect(d->checkboxSearchPDFfiles, SIGNAL(toggled(bool)), this, SLOT(comboboxStatusChanged()));
+    connect(d->buttonSearchPDFfiles, SIGNAL(toggled(bool)), this, SLOT(comboboxStatusChanged()));
     connect(d->comboBoxCombination, SIGNAL(currentIndexChanged(int)), d->delayedTimer, SLOT(trigger()));
     connect(d->comboBoxField, SIGNAL(currentIndexChanged(int)), d->delayedTimer, SLOT(trigger()));
-    connect(d->checkboxSearchPDFfiles, SIGNAL(toggled(bool)), d->delayedTimer, SLOT(trigger()));
+    connect(d->buttonSearchPDFfiles, SIGNAL(toggled(bool)), d->delayedTimer, SLOT(trigger()));
 
     /// restore history on filter texts
     /// see addCompletionString for more detailed explanation
@@ -201,6 +202,8 @@ FilterBar::FilterBar(QWidget *parent)
     d->comboBoxFilterText->lineEdit()->setText(QLatin1String(""));
     d->comboBoxCombination->setCurrentIndex(configGroup.readEntry("CurrentCombination", 0));
     d->comboBoxField->setCurrentIndex(configGroup.readEntry("CurrentField", 0));
+
+    QTimer::singleShot(250, this, SLOT(buttonHeight()));
 }
 
 FilterBar::~FilterBar()
@@ -221,7 +224,7 @@ SortFilterBibTeXFileModel::FilterQuery FilterBar::filter()
 
 void FilterBar::comboboxStatusChanged()
 {
-    d->checkboxSearchPDFfiles->setEnabled(d->comboBoxField->currentIndex() == 0);
+    d->buttonSearchPDFfiles->setEnabled(d->comboBoxField->currentIndex() == 0);
     d->storeComboBoxStatus();
 }
 
@@ -236,4 +239,11 @@ void FilterBar::userPressedEnter()
 void FilterBar::publishFilter()
 {
     emit filterChanged(d->filter());
+}
+
+void FilterBar::buttonHeight()
+{
+    QSizePolicy sp =   d->buttonSearchPDFfiles->sizePolicy();
+    d->buttonSearchPDFfiles->setSizePolicy(sp.horizontalPolicy(), QSizePolicy::MinimumExpanding);
+    d->buttonSearchPDFfiles->setBaseSize(d->buttonSearchPDFfiles->baseSize().width(), d->comboBoxField->baseSize().height());
 }

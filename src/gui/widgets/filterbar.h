@@ -52,6 +52,7 @@ private slots:
     void comboboxStatusChanged();
     void userPressedEnter();
     void publishFilter();
+    void buttonHeight();
 };
 
 #endif // KBIBTEX_GUI_FILTERBAR_H
