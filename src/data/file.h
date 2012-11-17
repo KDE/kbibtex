@@ -99,6 +99,7 @@ public:
     QVariant property(const QString &key) const;
     QVariant property(const QString &key, const QVariant &defaultValue) const;
     bool hasProperty(const QString &key) const;
+    void setPropertiesToDefault();
 
 private:
     class FilePrivate;

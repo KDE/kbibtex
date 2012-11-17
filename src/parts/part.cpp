@@ -61,14 +61,14 @@
 #include "fileexporterxml.h"
 #include "fileexporterxslt.h"
 #include "bibtexfilemodel.h"
+#include "filesettingswidget.h"
 #include "filterbar.h"
 #include "findduplicatesui.h"
 #include "lyx.h"
 #include "preferences.h"
-#include "preferences/settingscolorlabelwidget.h"
-#include "preferences/settingsfileexporterbibtexwidget.h"
-#include "preferences/settingsfileexporterpdfpswidget.h"
-#include "element/findpdfui.h"
+#include "settingscolorlabelwidget.h"
+#include "settingsfileexporterpdfpswidget.h"
+#include "findpdfui.h"
 #include "valuelistmodel.h"
 #include "clipboard.h"
 #include "idsuggestions.h"
@@ -268,7 +268,8 @@ public:
 
             if (typeid(*exporter) == typeid(FileExporterBibTeX)) {
                 KDialog dlg(p->widget());
-                SettingsFileExporterBibTeXWidget settingsWidget(bibTeXFile, &dlg);
+                FileSettingsWidget settingsWidget(&dlg);
+                settingsWidget.loadProperties(bibTeXFile);
                 dlg.setMainWidget(&settingsWidget);
                 dlg.setCaption(i18n("BibTeX File Settings"));
                 dlg.setButtons(KDialog::Default | KDialog::Reset | KDialog::User1 | KDialog::Ok);

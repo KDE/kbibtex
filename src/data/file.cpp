@@ -51,6 +51,14 @@ private:
     KSharedConfigPtr config;
     const QString configGroupName;
 
+public:
+    QMap<QString, QVariant> properties;
+
+    FilePrivate(File *parent)
+            : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName(QLatin1String("FileExporterBibTeX")) {
+        loadConfiguration();
+    }
+
     void loadConfiguration() {
         /// Load and set configuration as stored in settings
         KConfigGroup configGroup(config, configGroupName);
@@ -60,14 +68,6 @@ private:
         properties.insert(File::KeywordCasing, (KBibTeX::Casing)configGroup.readEntry(Preferences::keyKeywordCasing, (int)Preferences::defaultKeywordCasing));
         properties.insert(File::NameFormatting,  configGroup.readEntry(Person::keyPersonNameFormatting, ""));
         properties.insert(File::ProtectCasing, configGroup.readEntry(Preferences::keyProtectCasing, Preferences::defaultProtectCasing));
-    }
-
-public:
-    QMap<QString, QVariant> properties;
-
-    FilePrivate(File *parent)
-            : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName(QLatin1String("FileExporterBibTeX")) {
-        loadConfiguration();
     }
 
 };
@@ -194,4 +194,9 @@ QVariant File::property(const QString &key, const QVariant &defaultValue) const
 bool File::hasProperty(const QString &key) const
 {
     return d->properties.contains(key);
+}
+
+void File::setPropertiesToDefault()
+{
+    d->loadConfiguration();
 }

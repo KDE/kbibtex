@@ -35,6 +35,7 @@ set(
     element/elementwidgets.cpp
     element/findpdfui.cpp
     widgets/menulineedit.cpp
+    widgets/filesettingswidget.cpp
     widgets/filterbar.cpp
     widgets/radiobuttontreeview.cpp
     widgets/hidingtabwidget.cpp
@@ -44,7 +45,6 @@ set(
     preferences/settingsglobalkeywordswidget.cpp
     preferences/settingscolorlabelwidget.cpp
     preferences/settingsuserinterfacewidget.cpp
-    preferences/settingsfileexporterbibtexwidget.cpp
     preferences/settingsfileexporterpdfpswidget.cpp
     preferences/settingsfileexporterwidget.cpp
     preferences/settingsabstractwidget.cpp
@@ -69,7 +69,6 @@ set(
     preferences/settingsgeneralwidget.h
     preferences/settingsabstractwidget.h
     preferences/settingscolorlabelwidget.h
-    preferences/settingsfileexporterbibtexwidget.h
     preferences/settingsfileexporterpdfpswidget.h
     preferences/settingsidsuggestionswidget.h
     preferences/settingsidsuggestionseditor.h
