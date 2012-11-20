@@ -97,6 +97,7 @@ public:
         hLayout->insertWidget(0, widget);
         widget->setStyleSheet(makeInnerWidgetsTransparent ? transparentStyleSheet : normalStyleSheet);
         setWidgetReadOnly(widget, m_isReadOnly);
+        fixTabOrder();
     }
 
     void appendWidget(QWidget *widget) {
@@ -104,6 +105,18 @@ public:
         hLayout->addWidget(widget);
         widget->setStyleSheet(makeInnerWidgetsTransparent ? transparentStyleSheet : normalStyleSheet);
         setWidgetReadOnly(widget, m_isReadOnly);
+        fixTabOrder();
+    }
+
+    void fixTabOrder() {
+        QWidget *cur = NULL;
+        if (hLayout->count() > 0)
+            p->setTabOrder(p, (cur = hLayout->itemAt(0)->widget()));
+        for (int i = 1; i < hLayout->count(); ++i) {
+            QWidget *next = hLayout->itemAt(i)->widget();
+            p->setTabOrder(cur, next);
+            cur = next;
+        }
     }
 
     void setStyleSheet(bool makeInnerWidgetsTransparent) {
