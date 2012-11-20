@@ -641,6 +641,15 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value &value, const QStr
         /// abstracts will keep their formatting (regarding line breaks)
         /// as requested by Thomas Jensch via mail (20 October 2010)
 
+        /// Maintain statistics on if (book) titles are protected
+        /// by surrounding curly brackets
+        if (iKey == Entry::ftTitle || iKey == Entry::ftBookTitle) {
+            if (text[0] == QChar('{') && text[text.length() - 1] == QChar('}'))
+                ++m_statistics.countProtectedTitle;
+            else
+                ++m_statistics.countUnprotectedTitle;
+        }
+
         if (m_keysForPersonDetection.contains(iKey)) {
             if (isStringKey)
                 value.append(QSharedPointer<MacroKey>(new MacroKey(text)));
@@ -654,11 +663,6 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value &value, const QStr
                 else
                     ++m_statistics.countFirstNameFirst;
             }
-        } else if (iKey == Entry::ftTitle || iKey == Entry::ftBookTitle) {
-            if (text[0] == QChar('{') && text[text.length() - 1] == QChar('}'))
-                ++m_statistics.countProtectedTitle;
-            else
-                ++m_statistics.countUnprotectedTitle;
         } else if (iKey == Entry::ftPages) {
             static const QRegExp rangeInAscii("\\s*--?\\s*");
             text.replace(rangeInAscii, QChar(0x2013));
