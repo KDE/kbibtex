@@ -25,10 +25,15 @@
 
 #include <KPushButton>
 #include <KLineEdit>
+#include <KConfigGroup>
 
+#include "notificationhub.h"
 #include "menulineedit.h"
 
-class MenuLineEdit::MenuLineEditPrivate
+const int MenuLineEdit::MenuLineConfigurationChangedEvent = NotificationHub::EventUserDefined + 1861;
+const QString MenuLineEdit::keyLimitKeyboardTabStops = QLatin1String("LimitKeyboardTabStops");
+
+class MenuLineEdit::MenuLineEditPrivate : public NotificationListener
 {
 private:
     MenuLineEdit *p;
@@ -55,6 +60,27 @@ public:
               + QLatin1String("QPushButton::menu-indicator {subcontrol-position: right center; subcontrol-origin: content;}")
           ), makeInnerWidgetsTransparent(false), m_singleLineEditText(NULL), m_multiLineEditText(NULL) {
         this->isMultiLine = isMultiLine;
+        /// listen to configuration change events specifically concerning a MenuLineEdit widget
+        NotificationHub::registerNotificationListener(this, MenuLineEdit::MenuLineConfigurationChangedEvent);
+    }
+
+    virtual void notificationEvent(int eventId) {
+        if (eventId == MenuLineEdit::MenuLineConfigurationChangedEvent) {
+            /// load setting limitKeyboardTabStops
+            KSharedConfigPtr config(KSharedConfig::openConfig(QLatin1String("kbibtexrc")));
+            static QString const configGroupName = QLatin1String("User Interface");
+            KConfigGroup configGroup(config, configGroupName);
+            const bool limitKeyboardTabStops = configGroup.readEntry(MenuLineEdit::keyLimitKeyboardTabStops, false);
+
+            /// check each widget inside MenuLineEdit
+            for (int i = hLayout->count() - 1; i >= 0; --i) {
+                QWidget *w = hLayout->itemAt(i)->widget();
+                if (w != NULL && w != m_singleLineEditText && w != m_multiLineEditText) {
+                    /// for all widgets except the main editing widget: change tab focus policy
+                    w->setFocusPolicy(limitKeyboardTabStops ? Qt::ClickFocus : Qt::StrongFocus);
+                }
+            }
+        }
     }
 
     void setupUI() {

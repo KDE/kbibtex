@@ -28,6 +28,7 @@
 #include <QTextStream>
 #include <QApplication>
 #include <QFileInfo>
+#include <QMenu>
 
 #include <KDebug>
 #include <KPushButton>
@@ -37,6 +38,7 @@
 #include <KConfigGroup>
 #include <kio/netaccess.h>
 
+#include "menulineedit.h"
 #include "entry.h"
 #include "comment.h"
 #include "macro.h"
@@ -65,8 +67,11 @@ private:
     ReferenceWidget *referenceWidget;
     ElementWidget *sourceWidget;
     KPushButton *buttonCheckWithBibTeX;
-    QCheckBox *checkBoxForceShowAllWidgets;
+
+    /// Settings management through a push button with menu
     KSharedConfigPtr config;
+    KPushButton *buttonOptions;
+    QAction *actionForceShowAllWidgets, *actionLimitKeyboardTabStops;
 
 public:
     HidingTabWidget *tab;
@@ -140,11 +145,12 @@ public:
     }
 
     void createGUI() {
-        /// load configuration
-        const QString configGroupName = QLatin1String("User Interface");
-        const QString keyEnableAllWidgets = QLatin1String("EnableAllWidgets");
+        /// load configuration for options push button
+        static const QString configGroupName = QLatin1String("User Interface");
+        static const QString keyEnableAllWidgets = QLatin1String("EnableAllWidgets");
         KConfigGroup configGroup(config, configGroupName);
         const bool showAll = configGroup.readEntry(keyEnableAllWidgets, true);
+        const bool limitKeyboardTabStops = configGroup.readEntry(MenuLineEdit::keyLimitKeyboardTabStops, false);
 
         widgets.clear();
 
@@ -163,10 +169,21 @@ public:
         QBoxLayout *hLayout = new QHBoxLayout();
         vLayout->addLayout(hLayout, 0);
 
-        checkBoxForceShowAllWidgets = new QCheckBox(i18n("Show all fields"), p);
-        checkBoxForceShowAllWidgets->setChecked(showAll);
-        hLayout->addWidget(checkBoxForceShowAllWidgets, 0);
-        connect(checkBoxForceShowAllWidgets, SIGNAL(toggled(bool)), p, SLOT(updateReqOptWidgets()));
+        /// Push button with menu to toggle various options
+        buttonOptions = new KPushButton(KIcon("configure"), i18n("Options"), p);
+        hLayout->addWidget(buttonOptions, 0);
+        QMenu *menuOptions = new QMenu(buttonOptions);
+        buttonOptions->setMenu(menuOptions);
+
+        /// Option to show all fields or only those require for current entry type
+        actionForceShowAllWidgets = menuOptions->addAction(i18n("Show all fields"), p, SLOT(updateReqOptWidgets()));
+        actionForceShowAllWidgets->setCheckable(true);
+        actionForceShowAllWidgets->setChecked(showAll);
+
+        /// Option to disable tab key focus to reach/visit various non-editable widgets
+        actionLimitKeyboardTabStops = menuOptions->addAction(i18n("Tab key visits only editable fields"), p, SLOT(limitKeyboardTabStops()));
+        actionLimitKeyboardTabStops->setCheckable(true);
+        actionLimitKeyboardTabStops->setChecked(limitKeyboardTabStops);
 
         hLayout->addStretch(10);
 
@@ -231,9 +248,9 @@ public:
         reset(element);
 
         /// show checkbox to enable all fields only if editing an entry
-        checkBoxForceShowAllWidgets->setVisible(!internalEntry.isNull());
+        actionForceShowAllWidgets->setVisible(!internalEntry.isNull());
         /// Disable widgets if necessary
-        if (!checkBoxForceShowAllWidgets->isChecked())
+        if (!actionForceShowAllWidgets->isChecked())
             updateReqOptWidgets();
     }
 
@@ -286,17 +303,28 @@ public:
         apply(tempEntry);
 
         /// update the enabled/disabled state of required and optional widgets/fields
-        bool forceVisible = checkBoxForceShowAllWidgets->isChecked();
+        bool forceVisible = actionForceShowAllWidgets->isChecked();
         foreach(ElementWidget *elementWidget, widgets) {
             elementWidget->showReqOptWidgets(forceVisible, tempEntry->type());
         }
 
         /// save configuration
-        QString const configGroupName = QLatin1String("User Interface");
-        QString const keyEnableAllWidgets = QLatin1String("EnableAllWidgets");
+        static const QString configGroupName = QLatin1String("User Interface");
+        static const QString keyEnableAllWidgets = QLatin1String("EnableAllWidgets");
         KConfigGroup configGroup(config, configGroupName);
-        configGroup.writeEntry(keyEnableAllWidgets, checkBoxForceShowAllWidgets->isChecked());
+        configGroup.writeEntry(keyEnableAllWidgets, actionForceShowAllWidgets->isChecked());
         config->sync();
+    }
+
+    void limitKeyboardTabStops() {
+        /// save configuration
+        static const QString configGroupName = QLatin1String("User Interface");
+        KConfigGroup configGroup(config, configGroupName);
+        configGroup.writeEntry(MenuLineEdit::keyLimitKeyboardTabStops, actionLimitKeyboardTabStops->isChecked());
+        config->sync();
+
+        /// notify all listening MenuLineEdit widgets to change their behavior
+        NotificationHub::publishEvent(MenuLineEdit::MenuLineConfigurationChangedEvent);
     }
 
     void switchTo(QWidget *newTab) {
@@ -440,4 +468,9 @@ void ElementEditor::childModified(bool m)
 void ElementEditor::updateReqOptWidgets()
 {
     d->updateReqOptWidgets();
+}
+
+void ElementEditor::limitKeyboardTabStops()
+{
+    d->limitKeyboardTabStops();
 }

@@ -35,6 +35,19 @@ class MenuLineEdit : public QFrame
     Q_OBJECT
 
 public:
+    /**
+     * @brief MenuLineConfigurationChangedEvent
+     * Event id for use with @c NotificationHub.
+     * All MenuLineWidgets register to this event.
+     */
+    static const int MenuLineConfigurationChangedEvent;
+    /**
+     * @brief keyLimitKeyboardTabStops
+     * Configuration key in group "UserInterface" to access
+     * the setting for limited keyboard tab stops.
+     */
+    static const QString keyLimitKeyboardTabStops;
+
     MenuLineEdit(bool isMultiLine, QWidget *parent);
     ~MenuLineEdit();
 

@@ -67,6 +67,7 @@ private slots:
     void checkBibTeX();
     void childModified(bool);
     void updateReqOptWidgets();
+    void limitKeyboardTabStops();
 
 private:
     class ElementEditorPrivate;
