@@ -141,6 +141,7 @@ public:
     bool saveHTML(KTemporaryFile &file) const {
         if (file.open()) {
             QTextStream ts(&file);
+            ts.setCodec("utf-8");
             ts << QString(htmlText).replace(QRegExp("<a[^>]+href=\"kbibtex:[^>]+>([^<]+)</a>"), "\\1");
             file.close();
             return true;
