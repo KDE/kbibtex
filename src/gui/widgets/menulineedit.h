@@ -60,6 +60,7 @@ public:
     void setButtonToolTip(const QString &);
     void setChildAcceptDrops(bool acceptDrops);
 
+    QWidget *buddy();
     void prependWidget(QWidget *widget);
     void appendWidget(QWidget *widget);
     void setInnerWidgetsTransparency(bool makeInnerWidgetsTransparent);

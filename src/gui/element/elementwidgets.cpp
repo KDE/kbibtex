@@ -210,7 +210,7 @@ void EntryConfiguredWidget::createGUI()
 
         /// create a label next to the editing widget
         labeledFieldInput->label = new QLabel(QString("%1:").arg(sfl.uiLabel), this);
-        labeledFieldInput->label->setBuddy(labeledFieldInput->fieldInput);
+        labeledFieldInput->label->setBuddy(labeledFieldInput->fieldInput->buddy());
         /// align label's text vertically to match field input
         Qt::Alignment horizontalAlignment = (Qt::Alignment)(labeledFieldInput->label->style()->styleHint(QStyle::SH_FormLayoutLabelAlignment) & 0x001f);
         labeledFieldInput->label->setAlignment(horizontalAlignment | (labeledFieldInput->isVerticallyMinimumExpaning ? Qt::AlignTop : Qt::AlignVCenter));
@@ -813,7 +813,7 @@ void OtherFieldsWidget::createGUI()
     label->setAlignment((Qt::Alignment)label->style()->styleHint(QStyle::SH_FormLayoutLabelAlignment));
     fieldContent = new FieldInput(KBibTeX::MultiLine, KBibTeX::tfSource, KBibTeX::tfSource, this);
     layout->addWidget(fieldContent, 1, 1, 1, 2);
-    label->setBuddy(fieldContent);
+    label->setBuddy(fieldContent->buddy());
 
     label = new QLabel(i18n("List:"), this);
     layout->addWidget(label, 2,  0, 1, 1,  Qt::AlignRight);
@@ -930,7 +930,7 @@ void MacroWidget::createGUI()
     label->setAlignment((Qt::Alignment)label->style()->styleHint(QStyle::SH_FormLayoutLabelAlignment));
     fieldInputValue = new FieldInput(KBibTeX::MultiLine, KBibTeX::tfPlainText, KBibTeX::tfPlainText | KBibTeX::tfSource, this);
     layout->addWidget(fieldInputValue, 1);
-    label->setBuddy(fieldInputValue);
+    label->setBuddy(fieldInputValue->buddy());
 
     connect(fieldInputValue, SIGNAL(modified()), this, SLOT(gotModified()));
 }
@@ -995,7 +995,7 @@ void PreambleWidget::createGUI()
     label->setAlignment((Qt::Alignment)label->style()->styleHint(QStyle::SH_FormLayoutLabelAlignment));
     fieldInputValue = new FieldInput(KBibTeX::MultiLine, KBibTeX::tfSource, KBibTeX::tfSource, this); // FIXME: other editing modes beyond Source applicable?
     layout->addWidget(fieldInputValue, 1);
-    label->setBuddy(fieldInputValue);
+    label->setBuddy(fieldInputValue->buddy());
 
     connect(fieldInputValue, SIGNAL(modified()), this, SLOT(gotModified()));
 }

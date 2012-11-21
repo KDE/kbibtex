@@ -241,6 +241,15 @@ void MenuLineEdit::setChildAcceptDrops(bool acceptDrops)
         d->m_multiLineEditText->setAcceptDrops(acceptDrops);
 }
 
+QWidget *MenuLineEdit::buddy()
+{
+    if (d->m_singleLineEditText != NULL)
+        return d->m_singleLineEditText;
+    if (d->m_multiLineEditText != NULL)
+        return d->m_multiLineEditText;
+    return NULL;
+}
+
 void MenuLineEdit::prependWidget(QWidget *widget)
 {
     d->prependWidget(widget);
