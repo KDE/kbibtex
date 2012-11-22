@@ -22,6 +22,7 @@
 #include <QApplication>
 #include <QTextEdit>
 #include <QMenu>
+#include <QTimer>
 
 #include <KPushButton>
 #include <KLineEdit>
@@ -145,6 +146,21 @@ public:
         }
     }
 
+    void verticallyStretchButtons() {
+        /// do not vertically stretch if using transparent style sheet
+        if (makeInnerWidgetsTransparent) return;
+
+        /// check each widget inside MenuLineEdit
+        for (int i = hLayout->count() - 1; i >= 0; --i) {
+            QWidget *w = hLayout->itemAt(i)->widget();
+            if (w != NULL && w != m_singleLineEditText && w != m_multiLineEditText) {
+                /// for all widgets except the main editing widget: change tab focus policy
+                QSizePolicy sp = w->sizePolicy();
+                w->setSizePolicy(sp.horizontalPolicy(), QSizePolicy::MinimumExpanding);
+            }
+        }
+    }
+
     void setStyleSheet(bool makeInnerWidgetsTransparent) {
         this->makeInnerWidgetsTransparent = makeInnerWidgetsTransparent;
         for (int i = hLayout->count() - 1; i >= 0; --i) {
@@ -176,6 +192,10 @@ MenuLineEdit::MenuLineEdit(bool isMultiLine, QWidget *parent)
         : QFrame(parent), d(new MenuLineEditPrivate(isMultiLine, this))
 {
     d->setupUI();
+    if (d->m_singleLineEditText != NULL) {
+        /// Only for single-line variants stretch buttons vertically
+        QTimer::singleShot(250, this, SLOT(slotVerticallyStretchButtons()));
+    }
 }
 
 MenuLineEdit::~MenuLineEdit()
@@ -292,4 +312,9 @@ void MenuLineEdit::slotTextChanged()
 {
     Q_ASSERT_X(d->m_multiLineEditText != NULL, "MenuLineEdit::slotTextChanged", "d->m_multiLineEditText is NULL");
     emit textChanged(d->m_multiLineEditText->toPlainText());
+}
+
+void MenuLineEdit::slotVerticallyStretchButtons()
+{
+    d->verticallyStretchButtons();
 }

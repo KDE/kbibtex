@@ -76,6 +76,7 @@ signals:
 
 private slots:
     void slotTextChanged();
+    void slotVerticallyStretchButtons();
 
 private:
     class MenuLineEditPrivate;
