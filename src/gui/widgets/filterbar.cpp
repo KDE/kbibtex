@@ -243,7 +243,6 @@ void FilterBar::publishFilter()
 
 void FilterBar::buttonHeight()
 {
-    QSizePolicy sp =   d->buttonSearchPDFfiles->sizePolicy();
+    QSizePolicy sp = d->buttonSearchPDFfiles->sizePolicy();
     d->buttonSearchPDFfiles->setSizePolicy(sp.horizontalPolicy(), QSizePolicy::MinimumExpanding);
-    d->buttonSearchPDFfiles->setBaseSize(d->buttonSearchPDFfiles->baseSize().width(), d->comboBoxField->baseSize().height());
 }

@@ -797,7 +797,7 @@ void OtherFieldsWidget::createGUI()
     layout->setRowStretch(4, 1);
 
     QLabel *label = new QLabel(i18n("Name:"), this);
-    layout->addWidget(label, 0, 0, 1, Qt::AlignRight);
+    layout->addWidget(label, 0, 0, 1, 1);
     label->setAlignment((Qt::Alignment)label->style()->styleHint(QStyle::SH_FormLayoutLabelAlignment));
 
     fieldName = new KLineEdit(this);
@@ -809,14 +809,14 @@ void OtherFieldsWidget::createGUI()
     layout->addWidget(buttonAddApply, 0, 2, 1, 1);
 
     label = new QLabel(i18n("Content:"), this);
-    layout->addWidget(label, 1, 0, 1, 1, Qt::AlignRight);
+    layout->addWidget(label, 1, 0, 1, 1);
     label->setAlignment((Qt::Alignment)label->style()->styleHint(QStyle::SH_FormLayoutLabelAlignment));
     fieldContent = new FieldInput(KBibTeX::MultiLine, KBibTeX::tfSource, KBibTeX::tfSource, this);
     layout->addWidget(fieldContent, 1, 1, 1, 2);
     label->setBuddy(fieldContent->buddy());
 
     label = new QLabel(i18n("List:"), this);
-    layout->addWidget(label, 2,  0, 1, 1,  Qt::AlignRight);
+    layout->addWidget(label, 2,  0, 1, 1);
     label->setAlignment((Qt::Alignment)label->style()->styleHint(QStyle::SH_FormLayoutLabelAlignment));
 
     otherFieldsList = new QTreeWidget(this);
