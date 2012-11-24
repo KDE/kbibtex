@@ -321,7 +321,7 @@ void FieldListEdit::dropEvent(QDropEvent *event)
 
         if (!entry.isNull() && d->fieldKey == QLatin1String("^external")) {
             /// handle "external" list differently
-            QList<KUrl> urlList = FileInfo::entryUrls(entry.data(), KUrl(file->property(File::Url).toString()), FileInfo::TestExistanceNo);
+            QList<KUrl> urlList = FileInfo::entryUrls(entry.data(), KUrl(file->property(File::Url).toUrl()), FileInfo::TestExistanceNo);
             Value v;
             foreach(const KUrl &url, urlList) {
                 v.append(QSharedPointer<VerbatimText>(new VerbatimText(url.pathOrUrl())));
@@ -704,7 +704,7 @@ void KeywordListEdit::slotAddKeywordsFromClipboard()
 {
     QClipboard *clipboard = QApplication::clipboard();
     QString text = clipboard->text(QClipboard::Clipboard);
-    if (text.isEmpty())
+    if (text.isEmpty()) ///< use "mouse" clipboard as fallback
         text = clipboard->text(QClipboard::Selection);
     if (!text.isEmpty()) {
         QList<QSharedPointer<Keyword> > keywords = FileImporterBibTeX::splitKeywords(text);

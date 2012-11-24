@@ -194,7 +194,7 @@ bool SortFilterBibTeXFileModel::filterAcceptsRow(int source_row, const QModelInd
 
         /// Test associated PDF files
         if (m_filterQuery.searchPDFfiles && m_filterQuery.field.isEmpty()) ///< not filtering for any specific field
-            foreach(const KUrl &url, FileInfo::entryUrls(entry.data(), bibTeXSourceModel()->bibTeXFile()->property(File::Url, KUrl()).toUrl(), FileInfo::TestExistanceYes)) {
+            foreach(const KUrl &url, FileInfo::entryUrls(entry.data(), bibTeXSourceModel()->bibTeXFile()->property(File::Url, QUrl()).toUrl(), FileInfo::TestExistanceYes)) {
             if (url.isLocalFile() && url.fileName().endsWith(QLatin1String(".pdf"))) {
                 const QString text = FileInfo::pdfToText(url.pathOrUrl());
                 int i = 0;
