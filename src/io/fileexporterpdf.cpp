@@ -21,23 +21,33 @@
 #include <QStringList>
 #include <QUrl>
 #include <QTextStream>
+#include <QDir>
 
 #include <KDebug>
 #include <KLocale>
 #include <KSharedConfig>
 #include <KConfigGroup>
 
+#include "fileinfo.h"
 #include "element.h"
 #include "entry.h"
 #include "fileexporterbibtex.h"
 #include "fileexporterpdf.h"
 
-FileExporterPDF::FileExporterPDF(bool embedFiles)
-        : FileExporterToolchain(), m_embedFiles(embedFiles)
+const QString extensionTeX = QLatin1String(".tex");
+const QString extensionAux = QLatin1String(".aux");
+const QString extensionBibTeX = QLatin1String(".bib");
+const QString extensionPDF = QLatin1String(".pdf");
+
+FileExporterPDF::FileExporterPDF(FileEmbedding fileEmbedding)
+        : FileExporterToolchain(), m_fileEmbedding(fileEmbedding)
 {
-    m_laTeXFilename = tempDir.name() + QLatin1String("/bibtex-to-pdf.tex");
-    m_bibTeXFilename = tempDir.name() + QLatin1String("/bibtex-to-pdf.bib");
-    m_outputFilename = tempDir.name() + QLatin1String("/bibtex-to-pdf.pdf");
+    m_fileBasename = QLatin1String("bibtex-to-pdf");
+    m_fileStem = tempDir.name() + QDir::separator() + m_fileBasename;
+
+    /// If there is not embedfile.sty file, disable embedding
+    /// irrespective of user's wishes
+    if (!kpsewhich("embedfile.sty")) m_fileEmbedding = NoFileEmbedding;
 
     reloadConfig();
 }
@@ -63,12 +73,12 @@ bool FileExporterPDF::save(QIODevice *iodevice, const File *bibtexfile, QStringL
 {
     bool result = false;
     m_embeddedFileList.clear();
-    if (m_embedFiles) {
-        m_embeddedFileList.append(QString("%1|%2").arg("BibTeX source").arg(m_bibTeXFilename));
+    if (m_fileEmbedding & EmbedBibTeXFile)
+        m_embeddedFileList.append(QString("%1|%2|%3").arg("BibTeX source").arg(m_fileStem + extensionBibTeX).arg(m_fileBasename + extensionBibTeX));
+    if (m_fileEmbedding & EmbedReferences)
         fillEmbeddedFileList(bibtexfile);
-    }
 
-    QFile output(m_bibTeXFilename);
+    QFile output(m_fileStem + extensionBibTeX);
     if (output.open(QIODevice::WriteOnly)) {
         FileExporterBibTeX *bibtexExporter = new FileExporterBibTeX();
         bibtexExporter->setEncoding(QLatin1String("latex"));
@@ -80,6 +90,9 @@ bool FileExporterPDF::save(QIODevice *iodevice, const File *bibtexfile, QStringL
     if (result)
         result = generatePDF(iodevice, errorLog);
 
+    if (errorLog != NULL)
+        kDebug() << "errorLog" << errorLog->join(";");
+
     return result;
 }
 
@@ -87,10 +100,10 @@ bool FileExporterPDF::save(QIODevice *iodevice, const QSharedPointer<const Eleme
 {
     bool result = false;
     m_embeddedFileList.clear();
-    if (m_embedFiles)
-        fillEmbeddedFileList(element);
+    //if (m_fileEmbedding & EmbedReferences)
+    // FIXME need File object    fillEmbeddedFileList(element);
 
-    QFile output(m_bibTeXFilename);
+    QFile output(m_fileStem + extensionBibTeX);
     if (output.open(QIODevice::WriteOnly)) {
         FileExporterBibTeX *bibtexExporter = new FileExporterBibTeX();
         bibtexExporter->setEncoding(QLatin1String("latex"));
@@ -112,16 +125,15 @@ void FileExporterPDF::setDocumentSearchPaths(const QStringList &searchPaths)
 
 bool FileExporterPDF::generatePDF(QIODevice *iodevice, QStringList *errorLog)
 {
-    QStringList cmdLines = QStringList() << QLatin1String("pdflatex -halt-on-error bibtex-to-pdf.tex") << QLatin1String("bibtex bibtex-to-pdf") << QLatin1String("pdflatex -halt-on-error bibtex-to-pdf.tex") << QLatin1String("pdflatex -halt-on-error bibtex-to-pdf.tex");
+    QStringList cmdLines = QStringList() << QLatin1String("pdflatex -halt-on-error ") + m_fileStem + extensionTeX << QLatin1String("bibtex ") + m_fileStem + extensionAux << QLatin1String("pdflatex -halt-on-error ") + m_fileStem + extensionTeX << QLatin1String("pdflatex -halt-on-error ") + m_fileStem + extensionTeX;
 
-    return writeLatexFile(m_laTeXFilename) && runProcesses(cmdLines, errorLog) && writeFileToIODevice(m_outputFilename, iodevice, errorLog);
+    return writeLatexFile(m_fileStem + extensionTeX) && runProcesses(cmdLines, errorLog) && writeFileToIODevice(m_fileStem + extensionPDF, iodevice, errorLog);
 }
 
 bool FileExporterPDF::writeLatexFile(const QString &filename)
 {
     QFile latexFile(filename);
     if (latexFile.open(QIODevice::WriteOnly)) {
-        m_embedFiles &= kpsewhich("embedfile.sty");
         QTextStream ts(&latexFile);
         ts.setCodec("UTF-8");
         ts << "\\documentclass{article}" << endl;
@@ -146,19 +158,24 @@ bool FileExporterPDF::writeLatexFile(const QString &filename)
         ts << "\\bibliographystyle{" << m_bibliographyStyle << "}" << endl;
         ts << "\\begin{document}" << endl;
 
-        if (m_embedFiles) {
-            ts << "\\embedfile[desc={" << i18n("BibTeX file") << "}]{bibtex-to-pdf.bib}" << endl;
-
+        kDebug() << "m_fileEmbedding" << m_fileEmbedding;
+        kDebug() << "m_embeddedFileList" << m_embeddedFileList.count() << m_embeddedFileList.join(",");
+        if (!m_embeddedFileList.isEmpty())
             for (QStringList::ConstIterator it = m_embeddedFileList.constBegin(); it != m_embeddedFileList.constEnd(); ++it) {
                 QStringList param = (*it).split("|");
                 QFile file(param[1]);
                 if (file.exists())
-                    ts << "\\embedfile[desc={" << param[0] << "}]{" << param[1] << "}" << endl;
+                    ts << "\\embedfile[desc={" << param[0] << "}";
+                ts << ",filespec={" << param[2] << "}";
+                if (param[2].endsWith(extensionBibTeX))
+                    ts << ",mimetype={text/x-bibtex}";
+                else if (param[2].endsWith(extensionPDF))
+                    ts << ",mimetype={application/pdf}";
+                ts << "]{" << param[1] << "}" << endl;
             }
-        }
 
         ts << "\\nocite{*}" << endl;
-        ts << "\\bibliography{bibtex-to-pdf}" << endl;
+        ts << QLatin1String("\\bibliography{") << m_fileBasename << QLatin1String("}") << endl;
         ts << "\\end{document}" << endl;
         latexFile.close();
         return true;
@@ -169,29 +186,25 @@ bool FileExporterPDF::writeLatexFile(const QString &filename)
 void FileExporterPDF::fillEmbeddedFileList(const File *bibtexfile)
 {
     for (File::ConstIterator it = bibtexfile->constBegin(); it != bibtexfile->constEnd(); ++it)
-        fillEmbeddedFileList(*it);
+        fillEmbeddedFileList(*it, bibtexfile);
 }
 
-void FileExporterPDF::fillEmbeddedFileList(const QSharedPointer<const Element> /*element*/)
+void FileExporterPDF::fillEmbeddedFileList(const QSharedPointer<const Element> element, const File *bibtexfile)
 {
-    /* FIXME
-    const Entry *entry = dynamic_cast<const Entry*>(element);
-    if (entry != NULL) {
-        QString id = entry->id();
-        QStringList urls = entry->urls();
-        for (QStringList::Iterator it = urls.begin(); it != urls.end(); ++it) {
-            QUrl url = QUrl(*it);
-            if (url.isValid() && url.scheme() == "file" && !(*it).endsWith("/") && QFile(url.path()).exists())
-                m_embeddedFileList.append(QString("%1|%2").arg(id).arg(url.path()));
-            else
-                for (QStringList::Iterator path_it = m_searchPaths.begin(); path_it != m_searchPaths.end(); ++path_it) {
-                    url = QUrl(QString(*path_it).append("/").append(*it));
-                    if (url.isValid() && url.scheme() == "file" && !(*it).endsWith("/") && QFile(url.path()).exists()) {
-                        m_embeddedFileList.append(QString("%1|%2").arg(id).arg(url.path()));
-                        break;
-                    }
-                }
+    if (bibtexfile == NULL || !bibtexfile->hasProperty(File::Url)) {
+        /// If no valid File was provided or File is not saved, do not append files
+        return;
+    }
+
+    const QSharedPointer<const Entry> entry = element.dynamicCast<const Entry>();
+    if (!entry.isNull()) {
+        const QString id = entry->id();
+        QList<KUrl> urlList = FileInfo::entryUrls(entry.data(), bibtexfile->property(File::Url).toUrl(), FileInfo::TestExistanceYes);
+        foreach(const KUrl &url, urlList) {
+            if (!url.isLocalFile()) continue;
+            const QString filename = url.pathOrUrl();
+            const QString basename = QFileInfo(filename).fileName();
+            m_embeddedFileList.append(QString("%1|%2|%3").arg(id).arg(filename).arg(basename));
         }
     }
-    */
 }

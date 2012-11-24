@@ -30,7 +30,8 @@
 class KBIBTEXIO_EXPORT FileExporterPDF : public FileExporterToolchain
 {
 public:
-    FileExporterPDF(bool embedFiles = false);
+    enum FileEmbedding { NoFileEmbedding = 0, EmbedBibTeXFile = 1, EmbedReferences = 2, EmbedBibTeXFileAndReferences = EmbedBibTeXFile | EmbedReferences};
+    FileExporterPDF(FileEmbedding fileEmbedding = FileExporterPDF::EmbedBibTeXFileAndReferences);
     ~FileExporterPDF();
 
     void reloadConfig();
@@ -41,21 +42,20 @@ public:
     void setDocumentSearchPaths(const QStringList &searchPaths);
 
 private:
-    QString m_laTeXFilename;
-    QString m_bibTeXFilename;
-    QString m_outputFilename;
+    QString m_fileBasename;
+    QString m_fileStem;
     QString m_babelLanguage;
     QString m_paperSize;
     QString m_font;
     QString m_bibliographyStyle;
-    bool m_embedFiles;
+    FileEmbedding m_fileEmbedding;
     QStringList m_embeddedFileList;
     QStringList m_searchPaths;
 
     bool generatePDF(QIODevice *iodevice, QStringList *errorLog);
     bool writeLatexFile(const QString &filename);
     void fillEmbeddedFileList(const File *bibtexfile);
-    void fillEmbeddedFileList(const QSharedPointer<const Element> element);
+    void fillEmbeddedFileList(const QSharedPointer<const Element> element, const File *bibtexfile);
 };
 
 #endif
