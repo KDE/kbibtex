@@ -17,7 +17,10 @@
 *   Free Software Foundation, Inc.,                                       *
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
+
+#include <QBuffer>
 #include <QFile>
+#include <QDir>
 #include <QStringList>
 #include <QUrl>
 #include <QTextStream>
@@ -28,88 +31,97 @@
 #include "element.h"
 #include "entry.h"
 #include "fileexporterbibtex.h"
-#include "fileexporterblg.h"
+#include "fileexporterbibtexoutput.h"
 
-FileExporterBLG::FileExporterBLG()
-        : FileExporterToolchain(), m_latexLanguage("english"), m_latexBibStyle("plain")
+const QString extensionTeX = QLatin1String(".tex");
+const QString extensionAux = QLatin1String(".aux");
+const QString extensionBBL = QLatin1String(".bbl");
+const QString extensionBLG = QLatin1String(".blg");
+
+FileExporterBibTeXOutput::FileExporterBibTeXOutput(OutputType outputType)
+    : FileExporterToolchain(), m_outputType(outputType), m_latexLanguage("english"), m_latexBibStyle("plain")
 {
-    m_laTeXFilename = tempDir.name() + QLatin1String("/bibtex-to-blg.tex");
-    m_bibTeXFilename = tempDir.name() + QLatin1String("/bibtex-to-blg.bib");
+    m_fileBasename = QLatin1String("bibtex-to-output");
+    m_fileStem = tempDir.name() + QDir::separator() + m_fileBasename;
 }
 
-FileExporterBLG::~FileExporterBLG()
+FileExporterBibTeXOutput::~FileExporterBibTeXOutput()
 {
     // nothing
 }
 
-void FileExporterBLG::reloadConfig()
+void FileExporterBibTeXOutput::reloadConfig()
 {
     // nothing
 }
 
-bool FileExporterBLG::save(QIODevice *ioDevice, const File *bibtexfile, QStringList *errorLog)
+bool FileExporterBibTeXOutput::save(QIODevice *ioDevice, const File *bibtexfile, QStringList *errorLog)
 {
     bool result = false;
 
-    QFile output(m_bibTeXFilename);
-    if (output.open(QIODevice::WriteOnly)) {
+    QBuffer buffer(this);
+    if (buffer.open(QIODevice::WriteOnly)) {
         FileExporterBibTeX *bibtexExporter = new FileExporterBibTeX();
         bibtexExporter->setEncoding(QLatin1String("utf-8"));
-        result = bibtexExporter->save(&output, bibtexfile, errorLog);
-        bibtexExporter->save(ioDevice, bibtexfile, NULL);
-        output.close();
+        result = bibtexExporter->save(&buffer, bibtexfile, errorLog);
+        buffer.close();
         delete bibtexExporter;
     }
 
     if (result)
-        result = generateBLG(errorLog);
+        result = generateOutput(errorLog);
+
+    if (result)
+        result = writeFileToIODevice(m_fileStem + (m_outputType == BibTeXLogFile ? extensionBLG : extensionBBL), ioDevice, errorLog);
 
     return result;
 }
 
-bool FileExporterBLG::save(QIODevice *ioDevice, const QSharedPointer<const Element> element, QStringList *errorLog)
+bool FileExporterBibTeXOutput::save(QIODevice *ioDevice, const QSharedPointer<const Element> element, QStringList *errorLog)
 {
     bool result = false;
 
-    QFile output(m_bibTeXFilename);
-    if (output.open(QIODevice::WriteOnly)) {
+    QBuffer buffer(this);
+    if (buffer.open(QIODevice::WriteOnly)) {
         FileExporterBibTeX *bibtexExporter = new FileExporterBibTeX();
         bibtexExporter->setEncoding(QLatin1String("utf-8"));
-        result = bibtexExporter->save(&output, element, errorLog);
-        bibtexExporter->save(ioDevice, element, NULL);
-        output.close();
+        result = bibtexExporter->save(&buffer, element, errorLog);
+        buffer.close();
         delete bibtexExporter;
     }
 
     if (result)
-        result = generateBLG(errorLog);
+        result = generateOutput(errorLog);
+
+    if (result)
+        result = writeFileToIODevice(m_fileStem + (m_outputType == BibTeXLogFile ? extensionBLG : extensionBBL), ioDevice, errorLog);
 
     return result;
 }
 
-void FileExporterBLG::setLaTeXLanguage(const QString &language)
+void FileExporterBibTeXOutput::setLaTeXLanguage(const QString &language)
 {
     m_latexLanguage = language;
 }
 
-void FileExporterBLG::setLaTeXBibliographyStyle(const QString &bibStyle)
+void FileExporterBibTeXOutput::setLaTeXBibliographyStyle(const QString &bibStyle)
 {
     m_latexBibStyle = bibStyle;
 }
 
-bool FileExporterBLG::generateBLG(QStringList *errorLog)
+bool FileExporterBibTeXOutput::generateOutput(QStringList *errorLog)
 {
-    QStringList cmdLines = QStringList() << QLatin1String("pdflatex -halt-on-error bibtex-to-blg.tex") << QLatin1String("bibtex bibtex-to-blg");
+    QStringList cmdLines = QStringList() << QLatin1String("pdflatex -halt-on-error ") + m_fileBasename + extensionTeX << QLatin1String("bibtex ") + m_fileBasename + extensionAux;
 
-    if (writeLatexFile(m_laTeXFilename) && runProcesses(cmdLines, errorLog))
+    if (writeLatexFile(m_fileStem + extensionTeX) && runProcesses(cmdLines, errorLog))
         return true;
     else {
-        kWarning() << "Generating BLG failed";
+        kWarning() << "Generating BibTeX output failed";
         return false;
     }
 }
 
-bool FileExporterBLG::writeLatexFile(const QString &filename)
+bool FileExporterBibTeXOutput::writeLatexFile(const QString &filename)
 {
     QFile latexFile(filename);
     if (latexFile.open(QIODevice::WriteOnly)) {
@@ -129,7 +141,7 @@ bool FileExporterBLG::writeLatexFile(const QString &filename)
         ts << "\\bibliographystyle{" << m_latexBibStyle << "}\n";
         ts << "\\begin{document}\n";
         ts << "\\nocite{*}\n";
-        ts << "\\bibliography{bibtex-to-blg}\n";
+        ts << QLatin1String("\\bibliography{") + m_fileBasename + QLatin1String("}\n");
         ts << "\\end{document}\n";
         latexFile.close();
         return true;

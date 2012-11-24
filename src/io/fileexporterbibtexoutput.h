@@ -17,8 +17,8 @@
 *   Free Software Foundation, Inc.,                                       *
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
-#ifndef BIBTEXFILEEXPORTERBLG_H
-#define BIBTEXFILEEXPORTERBLG_H
+#ifndef BIBTEXFILEEXPORTERBIBTEXOUTPUT_H
+#define BIBTEXFILEEXPORTERBIBTEXOUTPUT_H
 
 #include <QStringList>
 
@@ -27,11 +27,12 @@
 /**
 @author Thomas Fischer
 */
-class KBIBTEXIO_EXPORT FileExporterBLG : public FileExporterToolchain
+class KBIBTEXIO_EXPORT FileExporterBibTeXOutput : public FileExporterToolchain
 {
 public:
-    FileExporterBLG();
-    ~FileExporterBLG();
+    enum OutputType {BibTeXLogFile, BibTeXBlockList};
+    FileExporterBibTeXOutput(OutputType outputType);
+    ~FileExporterBibTeXOutput();
 
     void reloadConfig();
 
@@ -42,12 +43,13 @@ public:
     void setLaTeXBibliographyStyle(const QString &bibStyle);
 
 private:
-    QString m_laTeXFilename;
-    QString m_bibTeXFilename;
+    OutputType m_outputType;
+    QString m_fileBasename;
+    QString m_fileStem;
     QString m_latexLanguage;
     QString m_latexBibStyle;
 
-    bool generateBLG(QStringList *errorLog);
+    bool generateOutput(QStringList *errorLog);
     bool writeLatexFile(const QString &filename);
 };
 

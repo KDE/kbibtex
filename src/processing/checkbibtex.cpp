@@ -27,7 +27,7 @@
 #include <KMessageBox>
 #include <KLocale>
 
-#include "fileexporterblg.h"
+#include "fileexporterbibtexoutput.h"
 #include "file.h"
 #include "entry.h"
 #include "element.h"
@@ -79,7 +79,7 @@ CheckBibTeX::CheckBibTeXResult CheckBibTeX::checkBibTeX(QSharedPointer<Entry> &e
     QByteArray ba;
     QBuffer buffer(&ba);
     buffer.open(QIODevice::WriteOnly);
-    FileExporterBLG exporter;
+    FileExporterBibTeXOutput exporter(FileExporterBibTeXOutput::BibTeXLogFile);
     bool exporterResult = exporter.save(&buffer, &dummyFile, &bibtexOuput);
     buffer.close();
 

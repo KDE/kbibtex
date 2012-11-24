@@ -10,7 +10,7 @@ set(
     encoderxml.cpp
     fileexporterbibtex2html.cpp
     fileexporterbibtex.cpp
-    fileexporterblg.cpp
+    fileexporterbibtexoutput.cpp
     fileexporter.cpp
     fileexporterpdf.cpp
     fileexporterps.cpp
@@ -39,7 +39,7 @@ set(
     encoderxml.h
     fileexporterbibtex2html.h
     fileexporterbibtex.h
-    fileexporterblg.h
+    fileexporterbibtexoutput.h
     fileexporter.h
     fileexporterpdf.h
     fileexporterps.h

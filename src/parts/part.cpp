@@ -49,6 +49,7 @@
 #include "preamble.h"
 #include "comment.h"
 #include "fileinfo.h"
+#include "fileexporterbibtexoutput.h"
 #include "fileimporterbibtex.h"
 #include "fileexporterbibtex.h"
 #include "fileimporterris.h"
@@ -148,8 +149,10 @@ public:
             return new FileExporterPS();
         } else if (ending == "rtf") {
             return new FileExporterRTF();
-        } else if (ending == "html" || ending == "html") {
+        } else if (ending == "html" || ending == "htm") {
             return new FileExporterBibTeX2HTML();
+        } else if (ending == "bbl") {
+            return new FileExporterBibTeXOutput(FileExporterBibTeXOutput::BibTeXBlockList);
         } else {
             return new FileExporterBibTeX();
         }
@@ -223,7 +226,7 @@ public:
 
     KUrl getSaveFilename(bool mustBeImportable = true) {
         QString startDir = p->url().isValid() ? p->url().path() : QLatin1String("kfiledialog:///opensave");
-        QString supportedMimeTypes = QLatin1String("text/x-bibtex application/xml application/x-research-info-systems");
+        QString supportedMimeTypes = QLatin1String("text/x-bibtex text/x-bibtex-compiled application/xml text/x-research-info-systems");
         if (!mustBeImportable && FileExporterToolchain::which(QLatin1String("pdflatex")))
             supportedMimeTypes += QLatin1String(" application/pdf");
         if (!mustBeImportable && FileExporterToolchain::which(QLatin1String("dvips")))

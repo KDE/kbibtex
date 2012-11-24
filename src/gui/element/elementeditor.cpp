@@ -45,7 +45,6 @@
 #include "preamble.h"
 #include "element.h"
 #include "file.h"
-#include "fileexporterblg.h"
 #include "elementwidgets.h"
 #include "elementeditor.h"
 #include "checkbibtex.h"
