@@ -49,7 +49,8 @@ private:
     FilterBarPrivate *d;
 
 private slots:
-    void comboboxStatusChanged();
+    void stateChanged();
+    void resetState();
     void userPressedEnter();
     void publishFilter();
     void buttonHeight();
