@@ -20,6 +20,7 @@
 #include <QFile>
 #include <QStringList>
 #include <QTextStream>
+#include <QDir>
 
 #include <KSharedConfig>
 #include <KConfigGroup>
@@ -28,12 +29,16 @@
 #include "fileexporterbibtex.h"
 #include "fileexporterrtf.h"
 
+const QString extensionTeX = QLatin1String(".tex");
+const QString extensionAux = QLatin1String(".aux");
+const QString extensionBibTeX = QLatin1String(".bib");
+const QString extensionRTF = QLatin1String(".rtf");
+
 FileExporterRTF::FileExporterRTF()
         : FileExporterToolchain()
 {
-    m_laTeXFilename = tempDir.name() + QLatin1String("/bibtex-to-rtf.tex");
-    m_bibTeXFilename = tempDir.name() + QLatin1String("/bibtex-to-rtf.bib");
-    m_outputFilename = tempDir.name() + QLatin1String("/bibtex-to-rtf.rtf");
+    m_fileBasename = QLatin1String("bibtex-to-rtf");
+    m_fileStem = tempDir.name() + QDir::separator() + m_fileBasename;
 
     reloadConfig();
 }
@@ -58,7 +63,7 @@ bool FileExporterRTF::save(QIODevice *iodevice, const File *bibtexfile, QStringL
 {
     bool result = false;
 
-    QFile output(m_bibTeXFilename);
+    QFile output(m_fileStem + extensionBibTeX);
     if (output.open(QIODevice::WriteOnly)) {
         FileExporterBibTeX *bibtexExporter = new FileExporterBibTeX();
         bibtexExporter->setEncoding(QLatin1String("latex"));
@@ -77,7 +82,7 @@ bool FileExporterRTF::save(QIODevice *iodevice, const QSharedPointer<const Eleme
 {
     bool result = false;
 
-    QFile output(m_bibTeXFilename);
+    QFile output(m_fileStem + extensionBibTeX);
     if (output.open(QIODevice::WriteOnly)) {
         FileExporterBibTeX *bibtexExporter = new FileExporterBibTeX();
         bibtexExporter->setEncoding(QLatin1String("latex"));
@@ -96,7 +101,7 @@ bool FileExporterRTF::generateRTF(QIODevice *iodevice, QStringList *errorLog)
 {
     QStringList cmdLines = QStringList() << QLatin1String("latex -halt-on-error bibtex-to-rtf.tex") << QLatin1String("bibtex bibtex-to-rtf") << QLatin1String("latex -halt-on-error bibtex-to-rtf.tex") << QString(QLatin1String("latex2rtf -i %1 bibtex-to-rtf.tex")).arg(m_babelLanguage);
 
-    return writeLatexFile(m_laTeXFilename) && runProcesses(cmdLines, errorLog) && writeFileToIODevice(m_outputFilename, iodevice, errorLog);
+    return writeLatexFile(m_fileStem + extensionTeX) && runProcesses(cmdLines, errorLog) && writeFileToIODevice(m_fileStem + extensionRTF, iodevice, errorLog);
 }
 
 bool FileExporterRTF::writeLatexFile(const QString &filename)

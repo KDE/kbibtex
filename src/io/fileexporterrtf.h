@@ -39,9 +39,8 @@ public:
     bool save(QIODevice *iodevice, const QSharedPointer<const Element> element, QStringList *errorLog = NULL);
 
 private:
-    QString m_laTeXFilename;
-    QString m_bibTeXFilename;
-    QString m_outputFilename;
+    QString m_fileBasename;
+    QString m_fileStem;
     QString m_babelLanguage;
     QString m_bibliographyStyle;
     QString m_paperSize;

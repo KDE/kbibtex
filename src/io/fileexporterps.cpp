@@ -20,6 +20,7 @@
 #include <QFile>
 #include <QStringList>
 #include <QTextStream>
+#include <QDir>
 
 #include <KSharedConfig>
 #include <KConfigGroup>
@@ -28,12 +29,16 @@
 #include "fileexporterbibtex.h"
 #include "fileexporterps.h"
 
+const QString extensionTeX = QLatin1String(".tex");
+const QString extensionAux = QLatin1String(".aux");
+const QString extensionBibTeX = QLatin1String(".bib");
+const QString extensionPostScript = QLatin1String(".ps");
+
 FileExporterPS::FileExporterPS()
         : FileExporterToolchain()
 {
-    m_laTeXFilename = tempDir.name() + QLatin1String("/bibtex-to-ps.tex");
-    m_bibTeXFilename = tempDir.name() + QLatin1String("/bibtex-to-ps.bib");
-    m_outputFilename = tempDir.name() + QLatin1String("/bibtex-to-ps.ps");
+    m_fileBasename = QLatin1String("bibtex-to-ps");
+    m_fileStem = tempDir.name() + QDir::separator() + m_fileBasename;
 
     reloadConfig();
 }
@@ -59,7 +64,7 @@ bool FileExporterPS::save(QIODevice *iodevice, const File *bibtexfile, QStringLi
 {
     bool result = false;
 
-    QFile output(m_bibTeXFilename);
+    QFile output(m_fileStem + extensionBibTeX);
     if (output.open(QIODevice::WriteOnly)) {
         FileExporterBibTeX *bibtexExporter = new FileExporterBibTeX();
         bibtexExporter->setEncoding(QLatin1String("latex"));
@@ -78,7 +83,7 @@ bool FileExporterPS::save(QIODevice *iodevice, const QSharedPointer<const Elemen
 {
     bool result = false;
 
-    QFile output(m_bibTeXFilename);
+    QFile output(m_fileStem + extensionBibTeX);
     if (output.open(QIODevice::WriteOnly)) {
         FileExporterBibTeX *bibtexExporter = new FileExporterBibTeX();
         bibtexExporter->setEncoding(QLatin1String("latex"));
@@ -97,7 +102,7 @@ bool FileExporterPS::generatePS(QIODevice *iodevice, QStringList *errorLog)
 {
     QStringList cmdLines = QStringList() << QLatin1String("latex -halt-on-error bibtex-to-ps.tex") << QLatin1String("bibtex bibtex-to-ps") << QLatin1String("latex -halt-on-error bibtex-to-ps.tex") << QLatin1String("latex -halt-on-error bibtex-to-ps.tex") << QLatin1String("dvips -R2 -o bibtex-to-ps.ps bibtex-to-ps.dvi");
 
-    return writeLatexFile(m_laTeXFilename) && runProcesses(cmdLines, errorLog) && beautifyPostscriptFile(m_outputFilename, "Exported Bibliography") && writeFileToIODevice(m_outputFilename, iodevice, errorLog);
+    return writeLatexFile(m_fileStem + extensionTeX) && runProcesses(cmdLines, errorLog) && beautifyPostscriptFile(m_fileStem + extensionPostScript, "Exported Bibliography") && writeFileToIODevice(m_fileStem + extensionPostScript, iodevice, errorLog);
 }
 
 bool FileExporterPS::writeLatexFile(const QString &filename)
