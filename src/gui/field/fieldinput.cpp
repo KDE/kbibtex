@@ -39,11 +39,11 @@ class FieldInput::FieldInputPrivate
 {
 private:
     FieldInput *p;
-    FieldLineEdit *fieldLineEdit;
-    FieldListEdit *fieldListEdit;
     ColorLabelWidget *colorWidget;
 
 public:
+    FieldLineEdit *fieldLineEdit;
+    FieldListEdit *fieldListEdit;
     KBibTeX::FieldInputType fieldInputType;
     KBibTeX::TypeFlags typeFlags;
     KBibTeX::TypeFlag preferredTypeFlag;
@@ -51,7 +51,7 @@ public:
     const Element *element;
 
     FieldInputPrivate(FieldInput *parent)
-            : p(parent), fieldLineEdit(NULL), fieldListEdit(NULL), colorWidget(NULL), bibtexFile(NULL), element(NULL) {
+            : p(parent), colorWidget(NULL), fieldLineEdit(NULL), fieldListEdit(NULL), bibtexFile(NULL), element(NULL) {
         // TODO
     }
 
@@ -201,7 +201,7 @@ public:
     }
 
     void selectCrossRef() {
-        Q_ASSERT(fieldLineEdit != NULL);
+        Q_ASSERT_X(fieldLineEdit != NULL, "void FieldInput::FieldInputPrivate::selectCrossRef()", "fieldLineEdit is invalid");
         if (bibtexFile == NULL) return;
 
         /// create a standard input dialog with a list of all keys (ids of entries)
@@ -299,6 +299,14 @@ void FieldInput::setFieldKey(const QString &fieldKey)
 void FieldInput::setCompletionItems(const QStringList &items)
 {
     d->setCompletionItems(items);
+}
+
+QWidget *FieldInput::buddy()
+{
+    if (d->fieldLineEdit != NULL)
+        return d->fieldLineEdit->buddy();
+    // TODO fieldListEdit
+    return NULL;
 }
 
 void FieldInput::setMonth(int month)

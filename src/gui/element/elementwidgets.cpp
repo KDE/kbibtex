@@ -22,7 +22,6 @@
 
 #include <QLayout>
 #include <QTextEdit>
-#include <QBuffer>
 #include <QLabel>
 #include <QTreeWidget>
 #include <QFileInfo>
@@ -209,9 +208,10 @@ void EntryConfiguredWidget::createGUI()
 
         /// create a label next to the editing widget
         labeledFieldInput->label = new QLabel(QString("%1:").arg(sfl.uiLabel), this);
-        labeledFieldInput->label->setBuddy(labeledFieldInput->fieldInput);
+        labeledFieldInput->label->setBuddy(labeledFieldInput->fieldInput->buddy());
         /// align label's text vertically to match field input
-        labeledFieldInput->label->setAlignment(labeledFieldInput->isVerticallyMinimumExpaning ? Qt::AlignTop : Qt::AlignVCenter);
+        Qt::Alignment horizontalAlignment = (Qt::Alignment)(labeledFieldInput->label->style()->styleHint(QStyle::SH_FormLayoutLabelAlignment) & 0x001f);
+        labeledFieldInput->label->setAlignment(horizontalAlignment | (labeledFieldInput->isVerticallyMinimumExpaning ? Qt::AlignTop : Qt::AlignVCenter));
 
         listOfLabeledFieldInput[i] = labeledFieldInput;
 
@@ -426,6 +426,7 @@ void ReferenceWidget::createGUI()
     entryType->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
     QLabel *label = new QLabel(i18n("Type:"), this);
     label->setBuddy(entryType);
+    label->setAlignment((Qt::Alignment)label->style()->styleHint(QStyle::SH_FormLayoutLabelAlignment));
     layout->addWidget(label);
     layout->addWidget(entryType);
 
@@ -435,6 +436,7 @@ void ReferenceWidget::createGUI()
     entryId->setClearButtonShown(true);
     label = new QLabel(i18n("Id:"), this);
     label->setBuddy(entryId);
+    label->setAlignment((Qt::Alignment)label->style()->styleHint(QStyle::SH_FormLayoutLabelAlignment));
     layout->addWidget(label);
     layout->addWidget(entryId);
 
@@ -748,7 +750,7 @@ void OtherFieldsWidget::actionDelete()
 {
     if (isReadOnly) return; /// never modify anything if in read-only mode
 
-    Q_ASSERT(otherFieldsList->currentItem() != NULL);
+    Q_ASSERT_X(otherFieldsList->currentItem() != NULL, "OtherFieldsWidget::actionDelete", "otherFieldsList->currentItem() is NULL");
     QString key = otherFieldsList->currentItem()->text(0);
     if (!deletedKeys.contains(key)) deletedKeys << key;
 
@@ -793,7 +795,8 @@ void OtherFieldsWidget::createGUI()
     layout->setRowStretch(4, 1);
 
     QLabel *label = new QLabel(i18n("Name:"), this);
-    layout->addWidget(label, 0, 0, 1, Qt::AlignRight);
+    layout->addWidget(label, 0, 0, 1, 1);
+    label->setAlignment((Qt::Alignment)label->style()->styleHint(QStyle::SH_FormLayoutLabelAlignment));
 
     fieldName = new KLineEdit(this);
     layout->addWidget(fieldName, 0, 1, 1, 1);
@@ -804,13 +807,15 @@ void OtherFieldsWidget::createGUI()
     layout->addWidget(buttonAddApply, 0, 2, 1, 1);
 
     label = new QLabel(i18n("Content:"), this);
-    layout->addWidget(label, 1, 0, 1, 1, Qt::AlignRight);
+    layout->addWidget(label, 1, 0, 1, 1);
+    label->setAlignment((Qt::Alignment)label->style()->styleHint(QStyle::SH_FormLayoutLabelAlignment));
     fieldContent = new FieldInput(KBibTeX::MultiLine, KBibTeX::tfSource, KBibTeX::tfSource, this);
     layout->addWidget(fieldContent, 1, 1, 1, 2);
-    label->setBuddy(fieldContent);
+    label->setBuddy(fieldContent->buddy());
 
     label = new QLabel(i18n("List:"), this);
-    layout->addWidget(label, 2,  0, 1, 1,  Qt::AlignRight);
+    layout->addWidget(label, 2,  0, 1, 1);
+    label->setAlignment((Qt::Alignment)label->style()->styleHint(QStyle::SH_FormLayoutLabelAlignment));
 
     otherFieldsList = new QTreeWidget(this);
     otherFieldsList->setHeaderLabels(QStringList() << i18n("Key") << i18n("Value"));
@@ -920,9 +925,10 @@ void MacroWidget::createGUI()
 
     QLabel *label = new QLabel(i18n("Value:"), this);
     layout->addWidget(label, 0);
+    label->setAlignment((Qt::Alignment)label->style()->styleHint(QStyle::SH_FormLayoutLabelAlignment));
     fieldInputValue = new FieldInput(KBibTeX::MultiLine, KBibTeX::tfPlainText, KBibTeX::tfPlainText | KBibTeX::tfSource, this);
     layout->addWidget(fieldInputValue, 1);
-    label->setBuddy(fieldInputValue);
+    label->setBuddy(fieldInputValue->buddy());
 
     connect(fieldInputValue, SIGNAL(modified()), this, SLOT(gotModified()));
 }
@@ -984,9 +990,10 @@ void PreambleWidget::createGUI()
 
     QLabel *label = new QLabel(i18n("Value:"), this);
     layout->addWidget(label, 0);
+    label->setAlignment((Qt::Alignment)label->style()->styleHint(QStyle::SH_FormLayoutLabelAlignment));
     fieldInputValue = new FieldInput(KBibTeX::MultiLine, KBibTeX::tfSource, KBibTeX::tfSource, this); // FIXME: other editing modes beyond Source applicable?
     layout->addWidget(fieldInputValue, 1);
-    label->setBuddy(fieldInputValue);
+    label->setBuddy(fieldInputValue->buddy());
 
     connect(fieldInputValue, SIGNAL(modified()), this, SLOT(gotModified()));
 }
@@ -1063,19 +1070,15 @@ bool SourceWidget::reset(QSharedPointer<const Element> element)
 
     FileExporterBibTeX exporter;
     exporter.setEncoding(QLatin1String("utf-8"));
-    QBuffer textBuffer;
-    textBuffer.open(QIODevice::WriteOnly);
-    bool result = exporter.save(&textBuffer, element, NULL);
-    textBuffer.close();
-    textBuffer.open(QIODevice::ReadOnly);
-    QTextStream ts(&textBuffer);
-    ts.setCodec("utf-8");
-    originalText = ts.readAll();
-    sourceEdit->document()->setPlainText(originalText);
+    const QString exportedText = exporter.toString(element);
+    if (!exportedText.isNull()) {
+        originalText = exportedText;
+        sourceEdit->document()->setPlainText(originalText);
+    }
 
     connect(sourceEdit, SIGNAL(textChanged()), this, SLOT(gotModified()));
 
-    return result;
+    return !exportedText.isNull();
 }
 
 void SourceWidget::setReadOnly(bool isReadOnly)

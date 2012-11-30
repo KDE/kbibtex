@@ -321,7 +321,7 @@ void FieldListEdit::dropEvent(QDropEvent *event)
 
         if (!entry.isNull() && d->fieldKey == QLatin1String("^external")) {
             /// handle "external" list differently
-            QList<KUrl> urlList = FileInfo::entryUrls(entry.data(), KUrl(file->property(File::Url).toString()), FileInfo::TestExistanceNo);
+            QList<KUrl> urlList = FileInfo::entryUrls(entry.data(), KUrl(file->property(File::Url).toUrl()), FileInfo::TestExistanceNo);
             Value v;
             foreach(const KUrl &url, urlList) {
                 v.append(QSharedPointer<VerbatimText>(new VerbatimText(url.pathOrUrl())));
@@ -388,6 +388,7 @@ PersonListEdit::PersonListEdit(KBibTeX::TypeFlag preferredTypeFlag, KBibTeX::Typ
         : FieldListEdit(preferredTypeFlag, typeFlags, parent)
 {
     m_checkBoxOthers = new QCheckBox(i18n("... and others (et al.)"), this);
+    connect(m_checkBoxOthers, SIGNAL(toggled(bool)), this, SIGNAL(modified()));
     QBoxLayout *boxLayout = static_cast<QBoxLayout *>(layout());
     boxLayout->addWidget(m_checkBoxOthers);
 
@@ -428,6 +429,7 @@ void PersonListEdit::setReadOnly(bool isReadOnly)
 {
     FieldListEdit::setReadOnly(isReadOnly);
     m_checkBoxOthers->setEnabled(!isReadOnly);
+    m_buttonAddNamesFromClipboard->setEnabled(!isReadOnly);
 }
 
 void PersonListEdit::slotAddNamesFromClipboard()
@@ -600,7 +602,7 @@ void UrlListEdit::textChanged(QWidget *widget)
     // TODO more file types?
     bool canBeSaved = url.isValid() && !urlIsLocal(url) && (newText.endsWith(QLatin1String(".djvu")) || newText.endsWith(QLatin1String(".pdf")) || newText.endsWith(QLatin1String(".ps"))) && !urlIsLocal(url);
     buttonSaveLocally->setEnabled(canBeSaved);
-    buttonSaveLocally->setToolTip(canBeSaved ? i18n("Save file \"%1\" locally", url.pathOrUrl()) : QLatin1String(""));
+    buttonSaveLocally->setToolTip(canBeSaved ? i18n("Save file '%1' locally", url.pathOrUrl()) : QLatin1String(""));
 }
 
 QString &UrlListEdit::askRelativeOrStaticFilename(QWidget *parent, QString &filename, const QUrl &baseUrl)

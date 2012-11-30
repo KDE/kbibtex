@@ -59,6 +59,8 @@ public:
     virtual void setFieldKey(const QString &fieldKey);
     virtual void setCompletionItems(const QStringList &items);
 
+    QWidget *buddy();
+
 signals:
     void modified();
 
