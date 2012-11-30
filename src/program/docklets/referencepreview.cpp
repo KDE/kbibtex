@@ -77,11 +77,17 @@ public:
     const File *file;
     BibTeXEditor *editor;
     const QColor textColor;
+    const int defaultFontSize;
+    const QString htmlStart;
     const QString notAvailableMessage;
 
     ReferencePreviewPrivate(ReferencePreview *parent)
             : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName(QLatin1String("Reference Preview Docklet")),
-          configKeyName(QLatin1String("Style")), editor(NULL), textColor(QApplication::palette().text().color()), notAvailableMessage("<html><head><meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" /></head><body style=\"color: " + textColor.name() + "; font-family: '" + KGlobalSettings::generalFont().family() + "';\"><p style=\"font-size: " + QString::number(KGlobalSettings::generalFont().pointSize()) + "pt; font-style: italic;\">" + i18n("No preview available") + "</p><p style=\"font-size: " + QString::number(KGlobalSettings::generalFont().pointSize() * .9) + "pt;\">" + i18n("Reason:") + " %1</p></body></html>") {
+          configKeyName(QLatin1String("Style")), editor(NULL),
+          textColor(QApplication::palette().text().color()),
+          defaultFontSize(KGlobalSettings::generalFont().pointSize()),
+          htmlStart("<html>\n<head>\n<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" />\n</head>\n<body style=\"color: " + textColor.name() + "; font-size: " + QString::number(defaultFontSize) + "pt; font-family: '" + KGlobalSettings::generalFont().family() + "';\">\n"),
+          notAvailableMessage(htmlStart + "<p style=\"font-style: italic;\">" + i18n("No preview available") + "</p><p style=\"font-size: 90%;\">" + i18n("Reason:") + " %1</p></body></html>") {
         QGridLayout *gridLayout = new QGridLayout(p);
         gridLayout->setMargin(0);
         gridLayout->setColumnStretch(0, 1);
@@ -136,6 +142,7 @@ public:
     bool saveHTML(KTemporaryFile &file) const {
         if (file.open()) {
             QTextStream ts(&file);
+            ts.setCodec("utf-8");
             ts << QString(htmlText).replace(QRegExp("<a[^>]+href=\"kbibtex:[^>]+>([^<]+)</a>"), "\\1");
             file.close();
             return true;
@@ -240,7 +247,6 @@ void ReferencePreview::renderHTML()
 
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
-    QStringList errorLog;
     FileExporter *exporter = NULL;
 
     QStringList data = d->comboBox->itemData(d->comboBox->currentIndex()).toStringList();
@@ -267,6 +273,8 @@ void ReferencePreview::renderHTML()
     QBuffer buffer(this);
     buffer.open(QBuffer::WriteOnly);
 
+    bool exporterResult = false;
+    QStringList errorLog;
     QSharedPointer<const Entry> entry = d->element.dynamicCast<const Entry>();
     if (crossRefHandling == add && !entry.isNull()) {
         QString crossRef = PlainTextValue::text(entry->value(QLatin1String("crossref")), d->file);
@@ -275,14 +283,14 @@ void ReferencePreview::renderHTML()
             File file;
             file.append(QSharedPointer<Entry>(new Entry(*entry)));
             file.append(QSharedPointer<Entry>(new Entry(*crossRefEntry)));
-            exporter->save(&buffer, &file, &errorLog);
+            exporterResult = exporter->save(&buffer, &file, &errorLog);
         } else
-            exporter->save(&buffer, d->element, &errorLog);
+            exporterResult = exporter->save(&buffer, d->element, &errorLog);
     } else if (crossRefHandling == merge && !entry.isNull()) {
         QSharedPointer<Entry> merged = QSharedPointer<Entry>(Entry::resolveCrossref(*entry, d->file));
-        exporter->save(&buffer, merged, &errorLog);
+        exporterResult = exporter->save(&buffer, merged, &errorLog);
     } else
-        exporter->save(&buffer, d->element, &errorLog);
+        exporterResult = exporter->save(&buffer, d->element, &errorLog);
     buffer.close();
     delete exporter;
 
@@ -292,15 +300,23 @@ void ReferencePreview::renderHTML()
     QString text = ts.readAll();
     buffer.close();
 
-    if (text.isEmpty()) {
+    if (!exporterResult || text.isEmpty()) {
         /// something went wrong, no output ...
         text = d->notAvailableMessage.arg(i18n("No HTML output generated"));
         kDebug() << errorLog.join("\n");
     }
 
+    /// beautify text
+    text.replace("``", "&ldquo;");
+    text.replace("''", "&rdquo;");
+    static const QRegExp openingSingleQuotationRegExp(QLatin1String("(^|[> ,.;:!?])`(\\S)"));
+    static const QRegExp closingSingleQuotationRegExp(QLatin1String("(\\S)'([ ,.;:!?<]|$)"));
+    text.replace(openingSingleQuotationRegExp, "\\1&lsquo;\\2");
+    text.replace(closingSingleQuotationRegExp, "\\1&rsquo;\\2");
+
     if (d->comboBox->currentIndex() == 0) {
         /// source
-        text.prepend("<html><head><meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" /></head><body style=\"color: " + d->textColor.name() + ";\"><pre style=\"font-family: '" + KGlobalSettings::fixedFont().family() + "'; font-size: " + QString::number(KGlobalSettings::fixedFont().pointSize()) + "pt;\">"); //FIXME: Font size seems to be too small
+        text.prepend(d->htmlStart + "<pre style=\"font-family: '" + KGlobalSettings::fixedFont().family() + "';\">");
         text.append("</pre></body></html>");
     } else if (d->comboBox->currentIndex() < 9) {
         /// bibtex2html
@@ -316,17 +332,13 @@ void ReferencePreview::renderHTML()
         reAnchor.setMinimal(true);
         text.replace(reAnchor, "");
 
-        text.prepend("<html><head><meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" /></head><body style=\"color: " + d->textColor.name() + "; font-family: '" + font().family() + "'; font-size: " + QString::number(font().pointSize()) + "pt;\">");
+        text.prepend(d->htmlStart);
         text.append("</body></html>");
     } else {
         /// XML/XSLT
-        text.prepend("<html><head><meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" /></head><body style=\"color: " + d->textColor.name() + "; font-family: '" + font().family() + "'; font-size: " + QString::number(font().pointSize()) + "pt;\">");
+        text.prepend(d->htmlStart);
         text.append("</body></html>");
     }
-
-    /// beautify text
-    text.replace("``", "&ldquo;");
-    text.replace("''", "&rdquo;");
 
     /// adopt current color scheme
     text.replace(QLatin1String("color: black;"), QString(QLatin1String("color: %1;")).arg(d->textColor.name()));
