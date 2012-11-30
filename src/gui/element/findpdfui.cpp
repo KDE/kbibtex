@@ -99,20 +99,20 @@ QList<QWidget *> PDFItemDelegate::createItemWidgets() const
     label->setBackgroundRole(QPalette::NoRole);
     label->setAlignment(Qt::AlignTop | Qt::AlignLeft);
     list << label;
-    Q_ASSERT(list.count() == posLabelUrl + 1);
+    Q_ASSERT_X(list.count() == posLabelUrl + 1, "QList<QWidget *> PDFItemDelegate::createItemWidgets() const", "list.count() != posLabelUrl + 1");
 
     /// a label with shows either the PDF's title or a text snipplet
     QLabel *previewLabel = new QLabel();
     previewLabel->setBackgroundRole(QPalette::NoRole);
     previewLabel->setAlignment(Qt::AlignTop | Qt::AlignLeft);
     list << previewLabel;
-    Q_ASSERT(list.count() == posLabelPreview + 1);
+    Q_ASSERT_X(list.count() == posLabelUrl + 1, "QList<QWidget *> PDFItemDelegate::createItemWidgets() const", "list.count() != posLabelUrl + 1");
 
     /// add a push button to view the PDF file
     KPushButton *pushButton = new KPushButton(KIcon("application-pdf"), i18n("View"));
     list << pushButton;
     connect(pushButton, SIGNAL(clicked()), this, SLOT(slotViewPDF()));
-    Q_ASSERT(list.count() == posViewButton + 1);
+    Q_ASSERT_X(list.count() == posLabelUrl + 1, "QList<QWidget *> PDFItemDelegate::createItemWidgets() const", "list.count() != posLabelUrl + 1");
 
     /// a button group to choose what to do with this particular PDF file
     QButtonGroup *bg = new QButtonGroup();
@@ -122,21 +122,21 @@ QList<QWidget *> PDFItemDelegate::createItemWidgets() const
     bg->addButton(radioButton);
     list << radioButton;
     connect(radioButton, SIGNAL(toggled(bool)), this, SLOT(slotRadioNoDownloadToggled(bool)));
-    Q_ASSERT(list.count() == posRadioNoDownload + 1);
+    Q_ASSERT_X(list.count() == posLabelUrl + 1, "QList<QWidget *> PDFItemDelegate::createItemWidgets() const", "list.count() != posLabelUrl + 1");
 
     /// download this file and store it locally, user will be asked for "Save As"
     radioButton = new QRadioButton(i18n("Download"));
     bg->addButton(radioButton);
     list << radioButton;
     connect(radioButton, SIGNAL(toggled(bool)), this, SLOT(slotRadioDownloadToggled(bool)));
-    Q_ASSERT(list.count() == posRadioDownload + 1);
+    Q_ASSERT_X(list.count() == posLabelUrl + 1, "QList<QWidget *> PDFItemDelegate::createItemWidgets() const", "list.count() != posLabelUrl + 1");
 
     /// paste URL into BibTeX entry, no local copy is stored
     radioButton = new QRadioButton(i18n("Use URL only"));
     bg->addButton(radioButton);
     list << radioButton;
     connect(radioButton, SIGNAL(toggled(bool)), this, SLOT(slotRadioURLonlyToggled(bool)));
-    Q_ASSERT(list.count() == posRadioURLonly + 1);
+    Q_ASSERT_X(list.count() == posLabelUrl + 1, "QList<QWidget *> PDFItemDelegate::createItemWidgets() const", "list.count() != posLabelUrl + 1");
 
     return list;
 }
@@ -413,7 +413,7 @@ void FindPDFUI::apply(Entry &entry, const File &bibtexFile)
             }
         } else if (downloadMode == FindPDF::Download && !tempfileName.isEmpty()) {
             KUrl startUrl = bibtexFile.property(File::Url, QUrl()).toUrl();
-            QString localFilename = KFileDialog::getSaveFileName(KUrl::fromLocalFile(startUrl.directory()), QLatin1String("application/pdf"), this, i18n("Save URL \"%1\"", url.toString()));
+            QString localFilename = KFileDialog::getSaveFileName(KUrl::fromLocalFile(startUrl.directory()), QLatin1String("application/pdf"), this, i18n("Save URL '%1'", url.toString()));
             localFilename = UrlListEdit::askRelativeOrStaticFilename(this, localFilename, startUrl);
 
             if (!localFilename.isEmpty()) {

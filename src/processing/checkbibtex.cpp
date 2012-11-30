@@ -120,7 +120,7 @@ CheckBibTeX::CheckBibTeXResult CheckBibTeX::checkBibTeX(QSharedPointer<Entry> &e
                 warnings << i18n("Field <b>%1</b> is empty", warningEmptyField.cap(1));
             } else if (warningEmptyField2.indexIn(line) > -1) {
                 /// two empty/missing fields
-                warnings << i18n("Field <b>%1</b> and <b>%2</b> is empty, need at least one", warningEmptyField2.cap(1), warningEmptyField2.cap(2));
+                warnings << i18n("Fields <b>%1</b> and <b>%2</b> are empty, but at least one is required", warningEmptyField2.cap(1), warningEmptyField2.cap(2));
             } else if (warningThereIsBut.indexIn(line) > -1) {
                 /// there is a field which exists but another does not exist
                 warnings << i18n("Field <b>%1</b> exists, but <b>%2</b> does not exist", warningThereIsBut.cap(1), warningThereIsBut.cap(2));
@@ -145,12 +145,12 @@ CheckBibTeX::CheckBibTeXResult CheckBibTeX::checkBibTeX(QSharedPointer<Entry> &e
     QApplication::restoreOverrideCursor();
     if (!errorPlainText.isEmpty()) {
         result = BibTeXWarning;
-        KMessageBox::information(parent, i18n("<qt><p>The following error was found:</p><pre>%1</pre>", errorPlainText));
+        KMessageBox::information(parent, i18n("<qt><p>The following error was found:</p><pre>%1</pre></qt>", errorPlainText));
     } else if (!warnings.isEmpty()) {
-        KMessageBox::information(parent, i18n("<qt><p>The following warnings were found:</p><ul><li>%1</li></ul>", warnings.join("</li><li>")));
+        KMessageBox::information(parent, i18n("<qt><p>The following warnings were found:</p><ul><li>%1</li></ul></qt>", warnings.join("</li><li>")));
         result = BibTeXError;
     } else
-        KMessageBox::information(parent, i18n("No warnings or errors were found.%1", crossRefStr.isNull() ? QLatin1String("") : i18n("\n\nSome fields missing in this entry where taken from the crossref'ed entry \"%1\".", crossRefStr)));
+        KMessageBox::information(parent, i18n("No warnings or errors were found.%1", crossRefStr.isNull() ? QLatin1String("") : i18n("\n\nSome fields missing in this entry where taken from the crossref'ed entry '%1'.", crossRefStr)));
 
     return result;
 }

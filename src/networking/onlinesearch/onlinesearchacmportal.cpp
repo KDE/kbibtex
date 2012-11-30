@@ -176,7 +176,7 @@ void OnlineSearchAcmPortal::doneFetchingStartPage()
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingSearchPage()));
         } else {
             kWarning() << "Search using" << label() << "failed.";
-            KMessageBox::error(m_parent, i18n("Searching \"%1\" failed: Could not extract form from ACM's start page.", label()));
+            KMessageBox::error(m_parent, i18n("Searching '%1' failed: Could not extract form from ACM's start page.", label()));
             emit stoppedSearch(resultUnspecifiedError);
         }
     } else

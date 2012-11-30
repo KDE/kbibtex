@@ -72,7 +72,7 @@ public:
 
     FieldLineEditPrivate(KBibTeX::TypeFlag ptf, KBibTeX::TypeFlags tf, FieldLineEdit *p)
             : parent(p), preferredTypeFlag(ptf), typeFlags(tf), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupNameGeneral(QLatin1String("General")), file(NULL) {
-        menuTypes = new QMenu(i18n("Types"), parent);
+        menuTypes = new QMenu(i18nc("Value types like Source, Verbatim, Person, PlainText, ...", "Types"), parent);
         menuTypesSignalMapper = new QSignalMapper(parent);
         setupMenu();
         connect(menuTypesSignalMapper, SIGNAL(mapped(int)), parent, SLOT(slotTypeChanged(int)));
@@ -393,7 +393,7 @@ public:
 
         /// set special "open URL" button visible if URL (or file or DOI) found
         buttonOpenUrl->setVisible(urlToOpen.isValid());
-        buttonOpenUrl->setToolTip(i18n("Open \"%1\"", urlToOpen.pathOrUrl()));
+        buttonOpenUrl->setToolTip(i18n("Open '%1'", urlToOpen.pathOrUrl()));
     }
 
     void textChanged(const QString &text) {
@@ -442,7 +442,7 @@ void FieldLineEdit::slotTypeChanged(int newTypeFlagInt)
         d->typeFlag = newTypeFlag;
         d->reset(value);
     } else
-        KMessageBox::error(this, i18n("The current text cannot be used as value of type \"%1\".\n\nSwitching back to type \"%2\".", BibTeXFields::typeFlagToString(newTypeFlag), BibTeXFields::typeFlagToString(d->typeFlag)));
+        KMessageBox::error(this, i18n("The current text cannot be used as value of type '%1'.\n\nSwitching back to type '%2'.", BibTeXFields::typeFlagToString(newTypeFlag), BibTeXFields::typeFlagToString(d->typeFlag)));
 }
 
 void FieldLineEdit::setFile(const File *file)
