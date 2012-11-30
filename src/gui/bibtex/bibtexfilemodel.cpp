@@ -69,7 +69,7 @@ void SortFilterBibTeXFileModel::updateFilter(SortFilterBibTeXFileModel::FilterQu
 bool SortFilterBibTeXFileModel::lessThan(const QModelIndex &left, const QModelIndex &right) const
 {
     int column = left.column();
-    Q_ASSERT(left.column() == right.column()); ///< assume that we only sort by column
+    Q_ASSERT_X(left.column() == right.column(), "bool SortFilterBibTeXFileModel::lessThan(const QModelIndex &left, const QModelIndex &right) const", "Not comparing items in same column"); ///< assume that we only sort by column
 
     BibTeXFields *bibtexFields = BibTeXFields::self();
     const FieldDescription *fd = bibtexFields->at(column);
@@ -147,7 +147,7 @@ bool SortFilterBibTeXFileModel::filterAcceptsRow(int source_row, const QModelInd
     Q_UNUSED(source_parent)
 
     QSharedPointer<Element> rowElement = m_internalModel->element(source_row);
-    Q_ASSERT(!rowElement.isNull());
+    Q_ASSERT_X(!rowElement.isNull(), "bool SortFilterBibTeXFileModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const", "rowElement is NULL");
 
     /// check if showing comments is disabled
     if (!m_showComments && typeid(*rowElement) == typeid(Comment))
@@ -194,7 +194,7 @@ bool SortFilterBibTeXFileModel::filterAcceptsRow(int source_row, const QModelInd
 
         /// Test associated PDF files
         if (m_filterQuery.searchPDFfiles && m_filterQuery.field.isEmpty()) ///< not filtering for any specific field
-            foreach(const KUrl &url, FileInfo::entryUrls(entry.data(), bibTeXSourceModel()->bibTeXFile()->property(File::Url, KUrl()).toUrl(), FileInfo::TestExistanceYes)) {
+            foreach(const KUrl &url, FileInfo::entryUrls(entry.data(), bibTeXSourceModel()->bibTeXFile()->property(File::Url, QUrl()).toUrl(), FileInfo::TestExistanceYes)) {
             if (url.isLocalFile() && url.fileName().endsWith(QLatin1String(".pdf"))) {
                 const QString text = FileInfo::pdfToText(url.pathOrUrl());
                 int i = 0;
@@ -292,6 +292,7 @@ BibTeXFileModel::BibTeXFileModel(QObject *parent)
     KConfigGroup configGroup(config, Preferences::groupColor);
     QStringList colorCodes = configGroup.readEntry(Preferences::keyColorCodes, Preferences::defaultColorCodes);
     QStringList colorLabels = configGroup.readEntry(Preferences::keyColorLabels, Preferences::defaultcolorLabels);
+    colorToLabel.clear();
     for (QStringList::ConstIterator itc = colorCodes.constBegin(), itl = colorLabels.constBegin(); itc != colorCodes.constEnd() && itl != colorLabels.constEnd(); ++itc, ++itl) {
         colorToLabel.insert(*itc, *itl);
     }
