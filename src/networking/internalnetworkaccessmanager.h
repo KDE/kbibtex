@@ -23,6 +23,7 @@
 
 #include "kbibtexnetworking_export.h"
 
+#include <QNetworkAccessManager>
 #include <QUrl>
 
 class QNetworkAccessManager;

@@ -26,6 +26,7 @@
 #include <QSpinBox>
 #include <QCheckBox>
 #include <QSignalMapper>
+#include <QMenu>
 
 #include <KLineEdit>
 #include <KComboBox>
@@ -34,7 +35,6 @@
 #include <KAction>
 
 #include "settingsidsuggestionseditor.h"
-#include <QMenu>
 
 class TokenWidget : public QGroupBox
 {
