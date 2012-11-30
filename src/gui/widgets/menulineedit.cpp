@@ -22,6 +22,7 @@
 #include <QApplication>
 #include <QTextEdit>
 #include <QMenu>
+#include <QTimer>
 
 #include <KPushButton>
 #include <KLineEdit>
@@ -97,6 +98,7 @@ public:
         hLayout->insertWidget(0, widget);
         widget->setStyleSheet(makeInnerWidgetsTransparent ? transparentStyleSheet : normalStyleSheet);
         setWidgetReadOnly(widget, m_isReadOnly);
+        fixTabOrder();
     }
 
     void appendWidget(QWidget *widget) {
@@ -104,6 +106,33 @@ public:
         hLayout->addWidget(widget);
         widget->setStyleSheet(makeInnerWidgetsTransparent ? transparentStyleSheet : normalStyleSheet);
         setWidgetReadOnly(widget, m_isReadOnly);
+        fixTabOrder();
+    }
+
+    void fixTabOrder() {
+        QWidget *cur = NULL;
+        if (hLayout->count() > 0)
+            p->setTabOrder(p, (cur = hLayout->itemAt(0)->widget()));
+        for (int i = 1; i < hLayout->count(); ++i) {
+            QWidget *next = hLayout->itemAt(i)->widget();
+            p->setTabOrder(cur, next);
+            cur = next;
+        }
+    }
+
+    void verticallyStretchButtons() {
+        /// do not vertically stretch if using transparent style sheet
+        if (makeInnerWidgetsTransparent) return;
+
+        /// check each widget inside MenuLineEdit
+        for (int i = hLayout->count() - 1; i >= 0; --i) {
+            QWidget *w = hLayout->itemAt(i)->widget();
+            if (w != NULL && w != m_singleLineEditText && w != m_multiLineEditText) {
+                /// for all widgets except the main editing widget: change tab focus policy
+                QSizePolicy sp = w->sizePolicy();
+                w->setSizePolicy(sp.horizontalPolicy(), QSizePolicy::MinimumExpanding);
+            }
+        }
     }
 
     void setStyleSheet(bool makeInnerWidgetsTransparent) {
@@ -137,6 +166,10 @@ MenuLineEdit::MenuLineEdit(bool isMultiLine, QWidget *parent)
         : QFrame(parent), d(new MenuLineEditPrivate(isMultiLine, this))
 {
     d->setupUI();
+    if (d->m_singleLineEditText != NULL) {
+        /// Only for single-line variants stretch buttons vertically
+        QTimer::singleShot(250, this, SLOT(slotVerticallyStretchButtons()));
+    }
 }
 
 MenuLineEdit::~MenuLineEdit()
@@ -202,6 +235,15 @@ void MenuLineEdit::setChildAcceptDrops(bool acceptDrops)
         d->m_multiLineEditText->setAcceptDrops(acceptDrops);
 }
 
+QWidget *MenuLineEdit::buddy()
+{
+    if (d->m_singleLineEditText != NULL)
+        return d->m_singleLineEditText;
+    if (d->m_multiLineEditText != NULL)
+        return d->m_multiLineEditText;
+    return NULL;
+}
+
 void MenuLineEdit::prependWidget(QWidget *widget)
 {
     d->prependWidget(widget);
@@ -242,6 +284,11 @@ void MenuLineEdit::focusInEvent(QFocusEvent *)
 
 void MenuLineEdit::slotTextChanged()
 {
-    Q_ASSERT(d->m_multiLineEditText != NULL);
+    Q_ASSERT_X(d->m_multiLineEditText != NULL, "MenuLineEdit::slotTextChanged", "d->m_multiLineEditText is NULL");
     emit textChanged(d->m_multiLineEditText->toPlainText());
+}
+
+void MenuLineEdit::slotVerticallyStretchButtons()
+{
+    d->verticallyStretchButtons();
 }
