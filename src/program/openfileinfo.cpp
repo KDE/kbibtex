@@ -77,11 +77,11 @@ public:
             return NULL;
         }
 
-        Q_ASSERT(internalWidgetParent == NULL || internalWidgetParent == newWidgetParent);
+        Q_ASSERT_X(internalWidgetParent == NULL || internalWidgetParent == newWidgetParent, "KParts::ReadOnlyPart *OpenFileInfo::OpenFileInfoPrivate::createPart(QWidget *newWidgetParent, KService::Ptr newServicePtr = KService::Ptr())", "internal widget should be either NULL or the same one as supplied as \"newWidgetParent\"");
 
         /** use cached part for this parent if possible */
         if (internalWidgetParent == newWidgetParent && (newServicePtr == KService::Ptr() || internalServicePtr == newServicePtr)) {
-            Q_ASSERT(part != NULL);
+            Q_ASSERT_X(part != NULL, "KParts::ReadOnlyPart *OpenFileInfo::OpenFileInfoPrivate::createPart(QWidget *newWidgetParent, KService::Ptr newServicePtr = KService::Ptr())", "Part is NULL");
             return part;
         } else if (part != NULL) {
             KParts::ReadWritePart *rwp = dynamic_cast<KParts::ReadWritePart *>(part);
@@ -131,7 +131,7 @@ public:
         internalServicePtr = newServicePtr;
         internalWidgetParent = newWidgetParent;
 
-        Q_ASSERT(part != NULL); /// test should not be necessary, but just to be save ...
+        Q_ASSERT_X(part != NULL, "KParts::ReadOnlyPart *OpenFileInfo::OpenFileInfoPrivate::createPart(QWidget *newWidgetParent, KService::Ptr newServicePtr = KService::Ptr())", "Creation of part failed, is NULL"); /// test should not be necessary, but just to be save ...
         return part;
     }
 
@@ -169,7 +169,7 @@ OpenFileInfo::~OpenFileInfo()
 
 void OpenFileInfo::setUrl(const KUrl &url)
 {
-    Q_ASSERT(url.isValid());
+    Q_ASSERT_X(url.isValid(), "void OpenFileInfo::setUrl(const KUrl&)", "URL is not valid");
     d->url = url;
     d->mimeType = FileInfo::mimeTypeForUrl(url)->name();
     addFlags(OpenFileInfo::HasName);
@@ -441,7 +441,7 @@ OpenFileInfo *OpenFileInfoManager::createNew(const QString &mimeType)
 
 OpenFileInfo *OpenFileInfoManager::open(const KUrl &url)
 {
-    Q_ASSERT(url.isValid());
+    Q_ASSERT_X(url.isValid(), "OpenFileInfo *OpenFileInfoManager::open(const KUrl&)", "URL is not valid");
 
     OpenFileInfo *result = contains(url);
     if (result == NULL) {
