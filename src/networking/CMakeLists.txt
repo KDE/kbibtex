@@ -3,7 +3,9 @@
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/onlinesearch
+    ${CMAKE_CURRENT_SOURCE_DIR}/../libkbibtexio
     ${POPPLER_QT4_INCLUDE_DIR}
+    ${LIBXML2_INCLUDE_DIR}
 )
 
 set(
@@ -19,8 +21,12 @@ set(
     onlinesearch/onlinesearchspringerlink.cpp
     onlinesearch/onlinesearchjstor.cpp
     onlinesearch/onlinesearchmathscinet.cpp
+    onlinesearch/onlinesearchinspirehep.cpp
     onlinesearch/onlinesearchingentaconnect.cpp
+    onlinesearch/onlinesearchsimplebibtexdownload.cpp
     onlinesearch/onlinesearchgeneral.cpp
+    onlinesearch/onlinesearchsoanasaads.cpp
+    onlinesearch/onlinesearchisbndb.cpp
     findpdf.cpp
     internalnetworkaccessmanager.cpp
 )
@@ -39,7 +45,11 @@ set(
     onlinesearch/onlinesearcharxiv.h
     onlinesearch/onlinesearchpubmed.h
     onlinesearch/onlinesearchingentaconnect.h
+    onlinesearch/onlinesearchsimplebibtexdownload.h
+    onlinesearch/onlinesearchsoanasaads.h
     onlinesearch/onlinesearchmathscinet.h
+    onlinesearch/onlinesearchinspirehep.h
+    onlinesearch/onlinesearchisbndb.h
     kbibtexnetworking_export.h
     findpdf.h
     internalnetworkaccessmanager.h
@@ -52,10 +62,6 @@ add_definitions(
 # debug area for KBibTeX's web search library
 add_definitions(
     -DKDE_DEFAULT_DEBUG_AREA=101025
-)
-
-include_directories(
-    ${CMAKE_CURRENT_SOURCE_DIR}/../libkbibtexio
 )
 
 kde4_add_library(

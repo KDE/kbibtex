@@ -55,6 +55,9 @@
 #include <onlinesearchspringerlink.h>
 #include <onlinesearcharxiv.h>
 #include <onlinesearchjstor.h>
+#include <onlinesearchinspirehep.h>
+#include <onlinesearchsoanasaads.h>
+#include <onlinesearchisbndb.h>
 #include <onlinesearchmathscinet.h>
 #include <onlinesearchingentaconnect.h>
 #include <fileexporterbibtex.h>
@@ -216,9 +219,12 @@ public:
         addEngine(new OnlineSearchIngentaConnect(p));
         addEngine(new OnlineSearchJStor(p));
         addEngine(new OnlineSearchMathSciNet(p));
+        addEngine(new OnlineSearchInpireHep(p));
         addEngine(new OnlineSearchPubMed(p));
         addEngine(new OnlineSearchScienceDirect(p));
         addEngine(new OnlineSearchSpringerLink(p));
+        addEngine(new OnlineSearchSOANASAADS(p));
+        addEngine(new OnlineSearchIsbnDB(p));
 
         p->itemCheckChanged(NULL);
         updateGUI();
@@ -230,6 +236,7 @@ public:
         QListWidgetItem *item = new QListWidgetItem(engine->label(), enginesList);
         item->setCheckState(configGroup.readEntry(engine->name(), false) ? Qt::Checked : Qt::Unchecked);
         item->setIcon(engine->icon(item));
+        item->setToolTip(engine->label());
         item->setData(HomepageRole, engine->homepage());
         item->setData(NameRole, engine->name());
 
@@ -463,7 +470,7 @@ void SearchForm::enginesListCurrentChanged(QListWidgetItem *current, QListWidget
 
 void SearchForm::copyFromEntry()
 {
-    Q_ASSERT(!d->currentEntry.isNull());
+    Q_ASSERT_X(!d->currentEntry.isNull(), "SearchForm::copyFromEntry", "d->currentEntry is NULL");
 
     d->currentQueryForm()->copyFromEntry(*(d->currentEntry));
 }
