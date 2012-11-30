@@ -40,12 +40,17 @@ private:
 
 public:
     const QString gatewayUrl;
-    XSLTransform xslt;
+    XSLTransform *xslt;
     int numSteps, curStep;
 
     OnlineSearchIEEEXplorePrivate(OnlineSearchIEEEXplore *parent)
-            : p(parent), gatewayUrl(QLatin1String("http://ieeexplore.ieee.org/gateway/ipsSearch.jsp")), xslt(KStandardDirs::locate("data", "kbibtex/ieeexplore2bibtex.xsl")) {
-        // nothing
+            : p(parent), gatewayUrl(QLatin1String("http://ieeexplore.ieee.org/gateway/ipsSearch.jsp")) {
+        xslt = XSLTransform::createXSLTransform(KStandardDirs::locate("data", "kbibtex/ieeexplore2bibtex.xsl"));
+    }
+
+
+    ~OnlineSearchIEEEXplorePrivate() {
+        delete xslt;
     }
 
     KUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) {
@@ -183,7 +188,7 @@ void OnlineSearchIEEEXplore::doneFetchingXML()
             const QString xmlCode = ts.readAll();
 
             /// use XSL transformation to get BibTeX document from XML result
-            const QString bibTeXcode = d->xslt.transform(xmlCode);
+            const QString bibTeXcode = d->xslt->transform(xmlCode);
 
             FileImporterBibTeX importer;
             File *bibtexFile = importer.fromString(bibTeXcode);

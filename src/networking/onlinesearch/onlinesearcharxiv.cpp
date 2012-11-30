@@ -102,14 +102,18 @@ private:
     OnlineSearchArXiv *p;
 
 public:
-    XSLTransform xslt;
+    XSLTransform *xslt;
     OnlineSearchQueryFormArXiv *form;
     const QString arXivQueryBaseUrl;
     int numSteps, curStep;
 
     OnlineSearchArXivPrivate(OnlineSearchArXiv *parent)
-            : p(parent), xslt(KStandardDirs::locate("data", "kbibtex/arxiv2bibtex.xsl")), form(NULL), arXivQueryBaseUrl("http://export.arxiv.org/api/query?") {
-        // nothing
+            : p(parent), form(NULL), arXivQueryBaseUrl("http://export.arxiv.org/api/query?") {
+        xslt = XSLTransform::createXSLTransform(KStandardDirs::locate("data", "kbibtex/arxiv2bibtex.xsl"));
+    }
+
+    ~OnlineSearchArXivPrivate() {
+        delete xslt;
     }
 
     KUrl buildQueryUrl() {
@@ -640,7 +644,7 @@ void OnlineSearchArXiv::downloadDone()
         result = result.replace("xmlns=\"http://www.w3.org/2005/Atom\"", ""); // FIXME fix arxiv2bibtex.xsl to handle namespace
 
         /// use XSL transformation to get BibTeX document from XML result
-        QString bibTeXcode = d->xslt.transform(result).replace(QLatin1String("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"), QString());
+        QString bibTeXcode = d->xslt->transform(result).replace(QLatin1String("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"), QString());
 
         FileImporterBibTeX importer;
         File *bibtexFile = importer.fromString(bibTeXcode);

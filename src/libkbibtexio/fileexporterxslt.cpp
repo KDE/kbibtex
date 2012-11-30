@@ -55,53 +55,63 @@ FileExporterXSLT::~FileExporterXSLT()
 bool FileExporterXSLT::save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog)
 {
     m_cancelFlag = false;
-    XSLTransform xsltransformer(m_xsltFilename);
-    FileExporterXML xmlExporter;
+    XSLTransform *xsltransformer = XSLTransform::createXSLTransform(m_xsltFilename);
+    if (xsltransformer != NULL) {
+        FileExporterXML xmlExporter;
 
-    QBuffer buffer;
+        QBuffer buffer;
 
-    buffer.open(QIODevice::WriteOnly);
-    if (xmlExporter.save(&buffer, bibtexfile, errorLog)) {
-        buffer.close();
-        buffer.open(QIODevice::ReadOnly);
-        QTextStream ts(&buffer);
-        ts.setCodec("UTF-8");
-        QString xml = ts.readAll();
-        buffer.close();
-        QString html = xsltransformer.transform(xml);
-        QTextStream htmlTS(iodevice);
-        htmlTS.setCodec("UTF-8");
-        htmlTS << html << endl;
-        return !m_cancelFlag;
+        buffer.open(QIODevice::WriteOnly);
+        if (xmlExporter.save(&buffer, bibtexfile, errorLog)) {
+            buffer.close();
+            buffer.open(QIODevice::ReadOnly);
+            QTextStream ts(&buffer);
+            ts.setCodec("UTF-8");
+            QString xml = ts.readAll();
+            buffer.close();
+            QString html = xsltransformer->transform(xml);
+            QTextStream htmlTS(iodevice);
+            htmlTS.setCodec("UTF-8");
+            htmlTS << html << endl;
+
+            delete xsltransformer;
+            return !m_cancelFlag;
+        }
+
+        delete xsltransformer;
     }
-
     return false;
 }
 
 bool FileExporterXSLT::save(QIODevice *iodevice, const QSharedPointer<const Element> element, QStringList *errorLog)
 {
     m_cancelFlag = false;
-    XSLTransform xsltransformer(m_xsltFilename);
-    FileExporterXML xmlExporter;
+    XSLTransform *xsltransformer = XSLTransform::createXSLTransform(m_xsltFilename);
+    if (xsltransformer != NULL) {
+        FileExporterXML xmlExporter;
 
-    QBuffer buffer;
+        QBuffer buffer;
 
-    buffer.open(QIODevice::WriteOnly);
-    if (xmlExporter.save(&buffer, element, errorLog)) {
-        buffer.close();
-        buffer.open(QIODevice::ReadOnly);
-        QTextStream ts(&buffer);
-        ts.setCodec("UTF-8");
-        QString xml = ts.readAll();
-        buffer.close();
+        buffer.open(QIODevice::WriteOnly);
+        if (xmlExporter.save(&buffer, element, errorLog)) {
+            buffer.close();
+            buffer.open(QIODevice::ReadOnly);
+            QTextStream ts(&buffer);
+            ts.setCodec("UTF-8");
+            QString xml = ts.readAll();
+            buffer.close();
 
-        QString html = xsltransformer.transform(xml);
-        QTextStream htmlTS(iodevice);
-        htmlTS.setCodec("UTF-8");
-        htmlTS << html << endl;
-        return !m_cancelFlag;
+            QString html = xsltransformer->transform(xml);
+            QTextStream htmlTS(iodevice);
+            htmlTS.setCodec("UTF-8");
+            htmlTS << html << endl;
+
+            delete xsltransformer;
+            return !m_cancelFlag;
+        }
+
+        delete xsltransformer;
     }
-
     return false;
 }
 

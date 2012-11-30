@@ -25,6 +25,8 @@
 
 #include <QString>
 
+#include <libxslt/transform.h>
+
 /**
  * This class is a wrapper around libxslt, which allows to
  * apply XSL transformation on XML files.
@@ -38,7 +40,8 @@ public:
      * Create a new instance of a transformer.
      * @param xsltFilename file name of the XSL file
      */
-    XSLTransform(const QString &xsltFilename);
+    static XSLTransform *createXSLTransform(const QString &xsltFilename);
+
     ~XSLTransform();
 
     /**
@@ -49,9 +52,11 @@ public:
      */
     QString transform(const QString &xmlText) const;
 
+protected:
+    XSLTransform(const xsltStylesheetPtr &xsltStylesheet);
+
 private:
-    class XSLTransformPrivate;
-    XSLTransformPrivate *d;
+    const xsltStylesheetPtr xsltStylesheet;
 };
 
 #endif // KBIBTEX_XSLTRANSFORM_H

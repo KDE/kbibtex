@@ -18,7 +18,6 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include <libxslt/transform.h>
 #include <libxslt/xsltutils.h>
 
 #include <QFileInfo>
@@ -30,38 +29,38 @@
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
-class XSLTransform::XSLTransformPrivate
+XSLTransform *XSLTransform::createXSLTransform(const QString &xsltFilename)
 {
-public:
-    xsltStylesheetPtr xsltStylesheet;
-};
-
-XSLTransform::XSLTransform(const QString &xsltFilename)
-        : d(new XSLTransformPrivate)
-{
-    d->xsltStylesheet = NULL;
-
     if (xsltFilename.isEmpty()) {
-        kError() << "No XSLT file specified";
-        return;
-    } else if (!QFileInfo(xsltFilename).exists()) {
-        kError() << "XSLT file does not exist:" << xsltFilename;
-        return;
+        kWarning() << "Filename xsltFilename=" << xsltFilename << "is empty";
+        return NULL;
+    }
+
+    if (!QFileInfo(xsltFilename).exists()) {
+        kWarning() << "File xsltFilename=" << xsltFilename << " does not exist";
+        return NULL;
     }
 
     /// create an internal representation of the XSL file using libxslt
-    d->xsltStylesheet = xsltParseStylesheetFile((const xmlChar *) xsltFilename.toAscii().data());
-    if (d->xsltStylesheet == NULL)
-        kError() << "Could not load XSLT file " << xsltFilename;
+    const xsltStylesheetPtr xsltStylesheet = xsltParseStylesheetFile((const xmlChar *) xsltFilename.toAscii().data());
+    if (xsltStylesheet == NULL) {
+        kWarning() << "File xsltFilename=" << xsltFilename << " resulted in empty/invalid XSLT style sheet";
+        return NULL;
+    }
+
+    return new XSLTransform(xsltStylesheet);
+}
+
+XSLTransform::XSLTransform(const xsltStylesheetPtr &xsltSS)
+        : xsltStylesheet(xsltSS)
+{
+    // nothing
 }
 
 XSLTransform::~XSLTransform()
 {
     /// Clean up memory
-    if (d->xsltStylesheet != NULL) {
-        xsltFreeStylesheet(d->xsltStylesheet);
-    }
-    delete d;
+    xsltFreeStylesheet(xsltStylesheet);
 }
 
 QString XSLTransform::transform(const QString &xmlText) const
@@ -70,8 +69,8 @@ QString XSLTransform::transform(const QString &xmlText) const
     QByteArray xmlCText = xmlText.toUtf8();
     xmlDocPtr document = xmlParseMemory(xmlCText, xmlCText.length());
     if (document) {
-        if (d->xsltStylesheet != NULL) {
-            xmlDocPtr resultDocument = xsltApplyStylesheet(d->xsltStylesheet, document, NULL);
+        if (xsltStylesheet != NULL) {
+            xmlDocPtr resultDocument = xsltApplyStylesheet(xsltStylesheet, document, NULL);
             if (resultDocument) {
                 /// Save the result into the QString
                 xmlChar *mem;

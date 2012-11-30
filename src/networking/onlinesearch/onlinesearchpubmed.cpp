@@ -44,12 +44,16 @@ private:
     const QString pubMedUrlPrefix;
 
 public:
-    XSLTransform xslt;
+    XSLTransform *xslt;
     int numSteps, curStep;
 
     OnlineSearchPubMedPrivate(OnlineSearchPubMed *parent)
-            : p(parent), pubMedUrlPrefix(QLatin1String("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/")), xslt(KStandardDirs::locate("data", "kbibtex/pubmed2bibtex.xsl")) {
-        // nothing
+            : p(parent), pubMedUrlPrefix(QLatin1String("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/")) {
+        xslt = XSLTransform::createXSLTransform(KStandardDirs::locate("data", "kbibtex/pubmed2bibtex.xsl"));
+    }
+
+    ~OnlineSearchPubMedPrivate() {
+        delete xslt;
     }
 
     KUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) {
@@ -230,7 +234,7 @@ void OnlineSearchPubMed::eFetchDone()
         QString input = QString::fromUtf8(reply->readAll().data());
 
         /// use XSL transformation to get BibTeX document from XML result
-        QString bibTeXcode = d->xslt.transform(input);
+        QString bibTeXcode = d->xslt->transform(input);
         /// remove XML header
         if (bibTeXcode[0] == '<')
             bibTeXcode = bibTeXcode.mid(bibTeXcode.indexOf(">") + 1);
