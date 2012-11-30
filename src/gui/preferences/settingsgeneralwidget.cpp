@@ -90,6 +90,16 @@ SettingsGeneralWidget::~SettingsGeneralWidget()
     delete d;
 }
 
+QString SettingsGeneralWidget::label() const
+{
+    return i18n("General");
+}
+
+KIcon SettingsGeneralWidget::icon() const
+{
+    return KIcon("kbibtex");
+}
+
 void SettingsGeneralWidget::loadState()
 {
     d->loadState();

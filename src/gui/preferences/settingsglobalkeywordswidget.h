@@ -38,6 +38,9 @@ public:
     SettingsGlobalKeywordsWidget(QWidget *parent);
     ~SettingsGlobalKeywordsWidget();
 
+    virtual QString label() const;
+    virtual KIcon icon() const;
+
 public slots:
     void loadState();
     void saveState();

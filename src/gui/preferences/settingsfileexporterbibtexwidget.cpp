@@ -206,6 +206,16 @@ SettingsFileExporterBibTeXWidget::~SettingsFileExporterBibTeXWidget()
     delete d;
 }
 
+QString SettingsFileExporterBibTeXWidget::label() const
+{
+    return i18n("BibTeX");
+}
+
+KIcon SettingsFileExporterBibTeXWidget::icon() const
+{
+    return KIcon("text-x-tex"); // TODO find better icon
+}
+
 void SettingsFileExporterBibTeXWidget::loadState()
 {
     d->loadState();

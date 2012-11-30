@@ -36,6 +36,9 @@ public:
     SettingsFileExporterWidget(QWidget *parent);
     ~SettingsFileExporterWidget();
 
+    virtual QString label() const;
+    virtual KIcon icon() const;
+
 public slots:
     void loadState();
     void saveState();

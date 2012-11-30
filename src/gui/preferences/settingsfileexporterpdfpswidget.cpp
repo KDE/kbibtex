@@ -124,6 +124,16 @@ SettingsFileExporterPDFPSWidget::~SettingsFileExporterPDFPSWidget()
     delete d;
 }
 
+QString SettingsFileExporterPDFPSWidget::label() const
+{
+    return i18n("PDF & Postscript");
+}
+
+KIcon SettingsFileExporterPDFPSWidget::icon() const
+{
+    return KIcon("checkbox"); // TODO find better icon
+}
+
 void SettingsFileExporterPDFPSWidget::loadState()
 {
     d->loadState();

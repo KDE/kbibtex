@@ -26,6 +26,8 @@
 #include <QAbstractItemModel>
 #include <QWidget>
 
+#include <KIcon>
+
 class KComboBox;
 
 class ItalicTextItemModel : public QAbstractItemModel
@@ -54,6 +56,9 @@ class KBIBTEXGUI_EXPORT SettingsAbstractWidget : public QWidget
 
 public:
     SettingsAbstractWidget(QWidget *parent);
+
+    virtual QString label() const = 0;
+    virtual KIcon icon() const = 0;
 
 signals:
     void changed();

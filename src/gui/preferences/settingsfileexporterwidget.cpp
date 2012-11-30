@@ -162,6 +162,16 @@ SettingsFileExporterWidget::~SettingsFileExporterWidget()
     delete d;
 }
 
+QString SettingsFileExporterWidget::label() const
+{
+    return i18n("Saving and Exporting");
+}
+
+KIcon SettingsFileExporterWidget::icon() const
+{
+    return KIcon("document-save");
+}
+
 void SettingsFileExporterWidget::loadState()
 {
     d->loadState();

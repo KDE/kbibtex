@@ -104,6 +104,16 @@ SettingsUserInterfaceWidget::SettingsUserInterfaceWidget(QWidget *parent)
     d->loadState();
 }
 
+QString SettingsUserInterfaceWidget::label() const
+{
+    return i18n("User Interface");
+}
+
+KIcon SettingsUserInterfaceWidget::icon() const
+{
+    return KIcon("user-identity");
+}
+
 SettingsUserInterfaceWidget::~SettingsUserInterfaceWidget()
 {
     delete d;
