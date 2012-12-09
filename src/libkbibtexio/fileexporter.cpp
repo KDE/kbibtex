@@ -37,14 +37,15 @@ FileExporter::~FileExporter()
     // nothing
 }
 
-QString FileExporter::toString(const QSharedPointer<const Element> element)
+QString FileExporter::toString(const QSharedPointer<const Element> element, QStringList *errorLog)
 {
     QBuffer buffer;
     buffer.open(QBuffer::WriteOnly);
-    if (save(&buffer, element)) {
+    if (save(&buffer, element, errorLog)) {
         buffer.close();
         if (buffer.open(QBuffer::ReadOnly)) {
             QTextStream ts(&buffer);
+            ts.setCodec("utf-8");
             return ts.readAll();
         }
     }
@@ -52,14 +53,15 @@ QString FileExporter::toString(const QSharedPointer<const Element> element)
     return QString::null;
 }
 
-QString FileExporter::toString(const File *bibtexfile)
+QString FileExporter::toString(const File *bibtexfile, QStringList *errorLog)
 {
     QBuffer buffer;
     buffer.open(QBuffer::WriteOnly);
-    if (save(&buffer, bibtexfile)) {
+    if (save(&buffer, bibtexfile, errorLog)) {
         buffer.close();
         if (buffer.open(QBuffer::ReadOnly)) {
             QTextStream ts(&buffer);
+            ts.setCodec("utf-8");
             return ts.readAll();
         }
     }
