@@ -67,6 +67,9 @@ bool FileExporterToolchain::runProcess(const QString &cmd,  const QStringList &a
     QProcessEnvironment processEnvironment = QProcessEnvironment::systemEnvironment();
     /// avoid some paranoid security settings in BibTeX
     processEnvironment.insert("openout_any", "r");
+    /// Make applications use working directory as temporary directory
+    processEnvironment.insert("TMPDIR", tempDir.name());
+    processEnvironment.insert("TEMPDIR", tempDir.name());
     m_process->setProcessEnvironment(processEnvironment);
     m_process->setWorkingDirectory(tempDir.name());
 
@@ -91,8 +94,17 @@ bool FileExporterToolchain::runProcess(const QString &cmd,  const QStringList &a
     if (!result)
         errorLog->append(i18n("Process '%1' failed", (cmd + " " + args.join(" "))));
 
-    if (errorLog != NULL)
+    if (errorLog != NULL) {
+        QTextStream tsStdOut(m_process->readAllStandardOutput());
+        QString line;
+        while (!(line = tsStdOut.readLine()).isNull())
+            m_errorLog->append(line);
+        QTextStream tsStdErr(m_process->readAllStandardError());
+        while (!(line = tsStdErr.readLine()).isNull())
+            m_errorLog->append(line);
+
         errorLog->append(i18n("Stopped process '%1' with exit code %2", (cmd + " " + args.join(" ")), m_process->exitCode()));
+    }
 
     delete(m_process);
     m_process = NULL;
