@@ -43,8 +43,8 @@ public:
     FileExporter();
     ~FileExporter();
 
-    QString toString(const Element* element);
-    QString toString(const File* bibtexfile);
+    QString toString(const Element* element, QStringList *errorLog = NULL);
+    QString toString(const File* bibtexfile, QStringList *errorLog = NULL);
 
     virtual bool save(QIODevice *iodevice, const File* bibtexfile, QStringList *errorLog = NULL) = 0;
     virtual bool save(QIODevice *iodevice, const Element* element, QStringList *errorLog = NULL) = 0;
