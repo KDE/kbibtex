@@ -45,6 +45,8 @@
 const QString extraAlphaNumChars = QString("?'`-_:.+/$\\\"&");
 const QRegExp htmlRegExp = QRegExp("</?(a|pre|p|br|span|i|b|italic)\\b[^>]*>", Qt::CaseInsensitive);
 
+const char *FileImporterBibTeX::defaultCodecName = "utf-8";
+
 FileImporterBibTeX::FileImporterBibTeX(bool ignoreComments, KBibTeX::Casing keywordCasing)
         : FileImporter(), m_cancelFlag(false), m_lineNo(1), m_currentLine(), m_textStream(NULL), m_currentChar(' '), m_ignoreComments(ignoreComments), m_keywordCasing(keywordCasing)
 {
@@ -70,10 +72,12 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
     m_statistics.countNoCommentQuote = 0;
     m_statistics.countCommentPercent = 0;
     m_statistics.countCommentCommand = 0;
+    m_statistics.countProtectedTitle = 0;
+    m_statistics.countUnprotectedTitle = 0;
 
     m_nextDuePos = 0;
     m_textStream = new QTextStream(iodevice);
-    m_textStream->setCodec("us-ascii"); ///< unless we learn something else, assume 7-bit US-ASCII
+    m_textStream->setCodec(defaultCodecName); ///< unless we learn something else, assume 7-bit US-ASCII
     result->setProperty(File::Encoding, QLatin1String("latex"));
 
     QString rawText = "";
@@ -94,7 +98,7 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
 
     m_nextDuePos = 0;
     m_textStream = new QTextStream(&rawText, QIODevice::ReadOnly);
-    m_textStream->setCodec("UTF-8");
+    m_textStream->setCodec(defaultCodecName);
     m_lineNo = 1;
     m_prevLine = m_currentLine = QString();
 
@@ -124,6 +128,8 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
     result->setProperty(File::StringDelimiter, m_statistics.countQuotationMarks > m_statistics.countCurlyBrackets ? QLatin1String("\"\"") : QLatin1String("{}"));
     /// Set the file's preferences for name formatting
     result->setProperty(File::NameFormatting, m_statistics.countFirstNameFirst > m_statistics.countLastNameFirst ? QLatin1String("<%f ><%l>< %s>") : QLatin1String("<%l><, %s>,< %f>"));
+    /// Set the file's preferences for title protected
+    result->setProperty(File::ProtectCasing, m_statistics.countProtectedTitle > m_statistics.countUnprotectedTitle);
     /// Set the file's preferences for quoting of comments
     if (m_statistics.countNoCommentQuote > m_statistics.countCommentCommand && m_statistics.countNoCommentQuote > m_statistics.countCommentPercent)
         result->setProperty(File::QuoteComment, (int)FileExporterBibTeX::qcNone);
@@ -632,6 +638,15 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value &value, const QStr
         /// abstracts will keep their formatting (regarding line breaks)
         /// as requested by Thomas Jensch via mail (20 October 2010)
 
+        /// Maintain statistics on if (book) titles are protected
+        /// by surrounding curly brackets
+        if (iKey == Entry::ftTitle || iKey == Entry::ftBookTitle) {
+            if (text[0] == QChar('{') && text[text.length() - 1] == QChar('}'))
+                ++m_statistics.countProtectedTitle;
+            else
+                ++m_statistics.countUnprotectedTitle;
+        }
+
         if (m_keysForPersonDetection.contains(iKey)) {
             if (isStringKey)
                 value.append(QSharedPointer<MacroKey>(new MacroKey(text)));
@@ -735,6 +750,7 @@ QList<QSharedPointer<Keyword> > FileImporterBibTeX::splitKeywords(const QString 
     static char splitChars[] = ";,\0";
     static const QRegExp splitAlong[] = {QRegExp(QString("\\s*%1\\s*").arg(splitChars[0])), QRegExp(QString("\\s*%1\\s*").arg(splitChars[1])), QRegExp()};
     char *curSplitChar = splitChars;
+    static const QRegExp unneccessarySpacing(QLatin1String("[ \n\r\t]+"));
     int index = 0;
 
     /// for each char in list ...
@@ -743,7 +759,7 @@ QList<QSharedPointer<Keyword> > FileImporterBibTeX::splitKeywords(const QString 
         if (text.contains(*curSplitChar)) {
             /// split text along a pattern like spaces-splitchar-spaces
             /// extract keywords
-            const QStringList keywords = text.split(splitAlong[index], QString::SkipEmptyParts);
+            const QStringList keywords = text.split(splitAlong[index], QString::SkipEmptyParts).replaceInStrings(unneccessarySpacing, QChar(' '));
             /// build QList of Keyword objects from keywords
             foreach(const QString &keyword, keywords) {
                 result.append(QSharedPointer<Keyword>(new Keyword(keyword)));
@@ -790,7 +806,7 @@ QList<QSharedPointer<Person> > FileImporterBibTeX::splitNames(const QString &tex
 
     /// Split input string into tokens which are either name components (first or last name)
     /// or full names (composed of first and last name), depending on the input string's structure
-    static const QRegExp split(QLatin1String("\\s*([,]+|[,]*\\band\\b|[;]|\\n|\\s{4,})\\s*"));
+    static const QRegExp split(QLatin1String("\\s*([,]+|[,]*\\band\\b|[;]|&|\\n|\\s{4,})\\s*"));
     QStringList authorTokenList = internalText.split(split, QString::SkipEmptyParts);
 
     bool containsSpace = true;
@@ -1026,10 +1042,12 @@ bool FileImporterBibTeX::evaluateParameterComments(QTextStream *textStream, cons
     /** check if this file requests a special encoding */
     if (line.startsWith("@comment{x-kbibtex-encoding=") && line.endsWith("}")) {
         QString encoding = line.mid(28, line.length() - 29);
-        textStream->setCodec(encoding == "latex" ? "utf-8" : encoding.toAscii());
+        textStream->setCodec(encoding == "latex" ? defaultCodecName : encoding.toAscii().data());
         file->setProperty(File::Encoding, encoding == "latex" ? encoding : textStream->codec()->name());
         return true;
     } else if (line.startsWith("@comment{x-kbibtex-personnameformatting=") && line.endsWith("}")) {
+        // TODO usage of x-kbibtex-personnameformatting is deprecated,
+        // as automatic detection is in place
         QString personNameFormatting = line.mid(40, line.length() - 41);
         file->setProperty(File::NameFormatting, personNameFormatting);
         return true;

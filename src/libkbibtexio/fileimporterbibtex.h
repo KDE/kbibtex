@@ -46,6 +46,8 @@ class Keyword;
 class KBIBTEXIO_EXPORT FileImporterBibTeX : public FileImporter
 {
 public:
+    static const char *defaultCodecName;
+
     /**
      * Creates an importer class to read a BibTeX file.
      * @param encoding the file's encoding.
@@ -124,6 +126,7 @@ private:
         int countCurlyBrackets, countQuotationMarks;
         int countFirstNameFirst, countLastNameFirst;
         int countNoCommentQuote, countCommentPercent, countCommentCommand;
+        int countProtectedTitle, countUnprotectedTitle;
     } m_statistics;
 
     bool m_cancelFlag;
