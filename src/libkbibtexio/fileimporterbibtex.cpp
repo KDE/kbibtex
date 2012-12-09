@@ -45,6 +45,8 @@
 const QString extraAlphaNumChars = QString("?'`-_:.+/$\\\"&");
 const QRegExp htmlRegExp = QRegExp("</?(a|pre|p|br|span|i|b|italic)\\b[^>]*>", Qt::CaseInsensitive);
 
+const char *FileImporterBibTeX::defaultCodecName = "utf-8";
+
 FileImporterBibTeX::FileImporterBibTeX(bool ignoreComments, KBibTeX::Casing keywordCasing)
         : FileImporter(), m_cancelFlag(false), m_lineNo(1), m_currentLine(), m_textStream(NULL), m_currentChar(' '), m_ignoreComments(ignoreComments), m_keywordCasing(keywordCasing)
 {
@@ -63,7 +65,7 @@ File* FileImporterBibTeX::load(QIODevice *iodevice)
 
     m_textStreamLastPos = 0;
     m_textStream = new QTextStream(iodevice);
-    m_textStream->setCodec("us-ascii"); ///< unless we learn something else, assume 7-bit US-ASCII
+    m_textStream->setCodec(defaultCodecName); ///< unless we learn something else, assume 7-bit US-ASCII
     QString rawText = "";
     while (!m_textStream->atEnd()) {
         QString line = m_textStream->readLine();
@@ -86,7 +88,7 @@ File* FileImporterBibTeX::load(QIODevice *iodevice)
 
     m_textStreamLastPos = 0;
     m_textStream = new QTextStream(&rawText, QIODevice::ReadOnly);
-    m_textStream->setCodec("UTF-8");
+    m_textStream->setCodec(defaultCodecName);
     m_lineNo = 1;
     m_prevLine = m_currentLine = QString();
 
