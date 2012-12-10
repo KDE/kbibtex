@@ -220,17 +220,13 @@ void PDFItemDelegate::slotViewPDF()
             /// Guess mime type for url to open
             KUrl tempUrl(tempfileName);
             KMimeType::Ptr mimeType = FileInfo::mimeTypeForUrl(tempUrl);
-            QString mimeTypeName = mimeType->name();
-            if (mimeTypeName == QLatin1String("application/octet-stream"))
-                mimeTypeName = QLatin1String("text/html");
+            const QString mimeTypeName = mimeType->name();
             /// Ask KDE subsystem to open url in viewer matching mime type
             KRun::runUrl(tempUrl, mimeTypeName, NULL, false, false);
         } else if (url.isValid()) {
             /// Guess mime type for url to open
             KMimeType::Ptr mimeType = FileInfo::mimeTypeForUrl(url);
-            QString mimeTypeName = mimeType->name();
-            if (mimeTypeName == QLatin1String("application/octet-stream"))
-                mimeTypeName = QLatin1String("text/html");
+            const QString mimeTypeName = mimeType->name();
             /// Ask KDE subsystem to open url in viewer matching mime type
             KRun::runUrl(url, mimeTypeName, NULL, false, false);
         }
@@ -305,7 +301,7 @@ QVariant PDFListModel::data(const QModelIndex &index, int role) const
         else if (role == Qt::DecorationRole) {
             /// make an educated guess on the icon, based on URL or path
             QString iconName = FileInfo::mimeTypeForUrl(m_resultList[index.row()].url)->iconName();
-            iconName = iconName == QLatin1String("application-octet-stream") ? FileInfo::mimeTypeForUrl(m_resultList[index.row()].url)->iconName() : iconName;
+            iconName = iconName == QLatin1String("application-octet-stream") ? QLatin1String("application-pdf") : iconName;
             return KIcon(iconName).pixmap(KIconLoader::SizeMedium, KIconLoader::SizeMedium);
         } else
             return QVariant();

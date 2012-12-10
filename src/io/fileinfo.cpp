@@ -42,25 +42,45 @@ FileInfo::FileInfo()
     // TODO
 }
 
+const QString FileInfo::mimetypeOctetStream = QLatin1String("application/octet-stream");
+const QString FileInfo::mimetypeHTML = QLatin1String("text/html");
 const QString FileInfo::mimetypeBibTeX = QLatin1String("text/x-bibtex");
 const QString FileInfo::mimetypeRIS = QLatin1String("application/x-research-info-systems");
 
 KMimeType::Ptr FileInfo::mimeTypeForUrl(const KUrl &url)
 {
+    static const QString invalidExtension = QLatin1String("XXXXXXXXXXXXXXXXXXXXXXX");
+    static const KMimeType::Ptr mimetypeHTMLPtr(KMimeType::mimeType(mimetypeHTML));
+    static const KMimeType::Ptr mimetypeOctetStreamPtr(KMimeType::mimeType(mimetypeOctetStream));
     static const KMimeType::Ptr mimetypeBibTeXPtr(KMimeType::mimeType(mimetypeBibTeX));
-    static const QString mimetypeBibTeXExt = mimetypeBibTeXPtr.isNull() ? QString::null : mimetypeBibTeXPtr->mainExtension().mid(1);
+    /// Test if mime type for BibTeX is registered before determining file extension
+    static const QString mimetypeBibTeXExt = mimetypeBibTeXPtr.isNull() ? invalidExtension : mimetypeBibTeXPtr->mainExtension().mid(1);
     static const KMimeType::Ptr mimetypeRISPtr(KMimeType::mimeType(mimetypeRIS));
-    static const QString mimetypeRISExt = mimetypeRISPtr.isNull() ? QString::null : mimetypeRISPtr->mainExtension().mid(1);
+    /// Test if mime type for RIS is registered before determining file extension
+    static const QString mimetypeRISExt = mimetypeRISPtr.isNull() ? invalidExtension : mimetypeRISPtr->mainExtension().mid(1);
 
     const QString extension = KMimeType::extractKnownExtension(url.fileName()).toLower();
-
     if (extension == mimetypeBibTeXExt)
         return mimetypeBibTeXPtr;
     else if (extension == mimetypeRISExt)
         return mimetypeRISPtr;
     // TODO other extensions
-    else
-        return KMimeType::findByUrl(url);
+
+    /// Let the KDE subsystem guess the mime type
+    KMimeType::Ptr result = KMimeType::findByUrl(url);
+    /// Fall back to application/octet-stream if something goes wrong
+    if (result.isNull())
+        result = mimetypeOctetStreamPtr;
+
+    /// In case that KDE could not determine mime type,
+    /// do some educated guesses on our own
+    if (result.isNull() || result->name() == mimetypeOctetStream) {
+        if (url.protocol().startsWith(QLatin1String("http")))
+            result = mimetypeHTMLPtr;
+        // TODO more tests?
+    }
+
+    return result;
 }
 
 void FileInfo::urlsInText(const QString &text, TestExistance testExistance, const QString &baseDirectory, QList<KUrl> &result)
