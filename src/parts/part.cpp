@@ -606,9 +606,7 @@ void KBibTeXPart::elementViewDocument()
     if (url.isValid()) {
         /// Guess mime type for url to open
         KMimeType::Ptr mimeType = FileInfo::mimeTypeForUrl(url);
-        QString mimeTypeName = mimeType->name();
-        if (mimeTypeName == QLatin1String("application/octet-stream"))
-            mimeTypeName = QLatin1String("text/html");
+        const QString mimeTypeName = mimeType->name();
         /// Ask KDE subsystem to open url in viewer matching mime type
         KRun::runUrl(url, mimeTypeName, widget(), false, false);
     }
@@ -621,9 +619,7 @@ void KBibTeXPart::elementViewDocumentMenu(QObject *obj)
     /// Guess mime type for url to open
     KUrl url(text);
     KMimeType::Ptr mimeType = FileInfo::mimeTypeForUrl(url);
-    QString mimeTypeName = mimeType->name();
-    if (mimeTypeName == QLatin1String("application/octet-stream"))
-        mimeTypeName = QLatin1String("text/html");
+    const QString mimeTypeName = mimeType->name();
     /// Ask KDE subsystem to open url in viewer matching mime type
     KRun::runUrl(url, mimeTypeName, widget(), false, false);
 }

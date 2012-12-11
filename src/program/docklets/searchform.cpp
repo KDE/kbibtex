@@ -320,9 +320,7 @@ public:
             KUrl url = item->data(HomepageRole).value<KUrl>();
             /// Guess mime type for url to open
             KMimeType::Ptr mimeType = FileInfo::mimeTypeForUrl(url);
-            QString mimeTypeName = mimeType->name();
-            if (mimeTypeName == QLatin1String("application/octet-stream"))
-                mimeTypeName = QLatin1String("text/html");
+            const QString mimeTypeName = mimeType->name();
             /// Ask KDE subsystem to open url in viewer matching mime type
             KRun::runUrl(url, mimeTypeName, p, false, false);
         }

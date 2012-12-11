@@ -33,6 +33,8 @@ class Entry;
 class KBIBTEXIO_EXPORT FileInfo
 {
 public:
+    static const QString mimetypeOctetStream;
+    static const QString mimetypeHTML;
     static const QString mimetypeBibTeX;
     static const QString mimetypeRIS;
 
