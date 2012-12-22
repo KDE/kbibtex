@@ -43,10 +43,16 @@ const QString File::KeywordCasing = QLatin1String("KeywordCasing");
 const QString File::ProtectCasing = QLatin1String("ProtectCasing");
 const QString File::NameFormatting = QLatin1String("NameFormatting");
 
+const quint64 valid = 0x08090a0b0c0d0e0f;
+const quint64 invalid = 0x0102030405060708;
+
 class File::FilePrivate
 {
 private:
     File *p;
+    quint64 validInvalidField;
+    static quint64 instanceCounter;
+    const quint64 instanceNumber;
 
     KSharedConfigPtr config;
     const QString configGroupName;
@@ -55,8 +61,14 @@ public:
     QMap<QString, QVariant> properties;
 
     FilePrivate(File *parent)
-            : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName(QLatin1String("FileExporterBibTeX")) {
+            : p(parent), validInvalidField(valid), instanceNumber(++instanceCounter), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName(QLatin1String("FileExporterBibTeX")) {
+        kDebug() << "Creating File instance" << instanceNumber;
         loadConfiguration();
+    }
+
+    ~FilePrivate() {
+        kDebug() << "Deleting File instance" << instanceNumber;
+        validInvalidField = invalid;
     }
 
     void loadConfiguration() {
@@ -70,7 +82,12 @@ public:
         properties.insert(File::ProtectCasing, configGroup.readEntry(Preferences::keyProtectCasing, Preferences::defaultProtectCasing));
     }
 
+    bool checkValidity() {
+        return validInvalidField == valid;
+    }
 };
+
+quint64 File::FilePrivate::instanceCounter = 99999;
 
 File::File()
         : QList<QSharedPointer<Element> >(), d(new FilePrivate(this))
@@ -86,11 +103,13 @@ File::File(const File &other)
 
 File::~File()
 {
+    Q_ASSERT_X(d->checkValidity(), "File::~File()", "This File object is not valid");
     delete d;
 }
 
 const QSharedPointer<Element> File::containsKey(const QString &key, ElementTypes elementTypes) const
 {
+    Q_ASSERT_X(d->checkValidity(), "const QSharedPointer<Element> File::containsKey(const QString &key, ElementTypes elementTypes) const", "This File object is not valid");
     foreach(const QSharedPointer<Element> element, *this) {
         const QSharedPointer<Entry> entry = elementTypes.testFlag(etEntry) ? element.dynamicCast<Entry>() : QSharedPointer<Entry>();
         if (!entry.isNull()) {
@@ -110,6 +129,7 @@ const QSharedPointer<Element> File::containsKey(const QString &key, ElementTypes
 
 QStringList File::allKeys(ElementTypes elementTypes) const
 {
+    Q_ASSERT_X(d->checkValidity(), "QStringList File::allKeys(ElementTypes elementTypes) const", "This File object is not valid");
     QStringList result;
 
     foreach(const QSharedPointer<Element> element, *this) {
@@ -128,6 +148,7 @@ QStringList File::allKeys(ElementTypes elementTypes) const
 
 QSet<QString> File::uniqueEntryValuesSet(const QString &fieldName) const
 {
+    Q_ASSERT_X(d->checkValidity(), "QSet<QString> File::uniqueEntryValuesSet(const QString &fieldName) const", "This File object is not valid");
     QSet<QString> valueSet;
     const QString lcFieldName = fieldName.toLower();
 
@@ -170,6 +191,7 @@ QSet<QString> File::uniqueEntryValuesSet(const QString &fieldName) const
 
 QStringList File::uniqueEntryValuesList(const QString &fieldName) const
 {
+    Q_ASSERT_X(d->checkValidity(), "QStringList File::uniqueEntryValuesList(const QString &fieldName) const", "This File object is not valid");
     QSet<QString> valueSet = uniqueEntryValuesSet(fieldName);
     QStringList list = valueSet.toList();
     list.sort();
@@ -178,25 +200,30 @@ QStringList File::uniqueEntryValuesList(const QString &fieldName) const
 
 void File::setProperty(const QString &key, const QVariant &value)
 {
+    Q_ASSERT_X(d->checkValidity(), "void File::setProperty(const QString &key, const QVariant &value)", "This File object is not valid");
     d->properties.insert(key, value);
 }
 
 QVariant File::property(const QString &key) const
 {
+    Q_ASSERT_X(d->checkValidity(), "QVariant File::property(const QString &key) const", "This File object is not valid");
     return d->properties.contains(key) ? d->properties.value(key) : QVariant();
 }
 
 QVariant File::property(const QString &key, const QVariant &defaultValue) const
 {
+    Q_ASSERT_X(d->checkValidity(), "QVariant File::property(const QString &key, const QVariant &defaultValue) const", "This File object is not valid");
     return d->properties.value(key, defaultValue);
 }
 
 bool File::hasProperty(const QString &key) const
 {
+    Q_ASSERT_X(d->checkValidity(), "bool File::hasProperty(const QString &key) const", "This File object is not valid");
     return d->properties.contains(key);
 }
 
 void File::setPropertiesToDefault()
 {
+    Q_ASSERT_X(d->checkValidity(), "void File::setPropertiesToDefault()", "This File object is not valid");
     d->loadConfiguration();
 }
