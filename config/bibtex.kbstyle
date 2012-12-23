@@ -460,7 +460,7 @@ fieldInputLayout18=CrossRef
 [EntryLayoutTab4]
 uiCaption=Misc
 columns=1
-count=6
+count=7
 
 bibtexLabel1=type
 uiLabel1=Type
@@ -485,4 +485,8 @@ fieldInputLayout5=KeywordList
 bibtexLabel6=x-color
 uiLabel6=Color
 fieldInputLayout6=Color
+
+bibtexLabel7=x-stars
+uiLabel7=Star Rating
+fieldInputLayout7=StarRating
 
