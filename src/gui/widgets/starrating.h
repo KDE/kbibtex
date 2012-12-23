@@ -25,6 +25,8 @@
 
 #include <QWidget>
 
+#include <KIconLoader>
+
 #include "value.h"
 
 class QLabel;
@@ -41,14 +43,17 @@ class KBIBTEXGUI_EXPORT StarRating : public QWidget
     Q_OBJECT
 public:
     static const int defaultMaxNumberOfStars;
-    static const int UnsetStarsValue;
+    static const double UnsetStarsValue;
 
     StarRating(int maxNumberOfStars = defaultMaxNumberOfStars, QWidget *parent = NULL);
 
-    int value() const;
-    void setValue(int percent);
+    double value() const;
+    void setValue(double percent);
 
     void setReadOnly(bool isReadOnly);
+
+    static void paintStars(QPainter *painter, KIconLoader::States defaultState, int numTotalStars, double percent, const QRect &inside);
+    static double percentForPosition(const QPoint &pos, int numTotalStars, const QRect &inside);
 
 signals:
     void modified();
@@ -56,17 +61,26 @@ signals:
 protected:
     void paintEvent(QPaintEvent *);
     void mouseReleaseEvent(QMouseEvent *);
+    void mouseMoveEvent(QMouseEvent *);
+    void leaveEvent(QEvent *);
 
 private slots:
     void clear();
+    void buttonHeight();
 
 private:
+    static const int paintMargin;
+    int spacing;
+
     bool m_isReadOnly;
-    int m_percent;
+    double m_percent;
     int m_maxNumberOfStars;
     const QString m_unsetStarsText;
     QLabel *m_labelPercent;
     KPushButton *m_clearButton;
+    QPoint m_mouseLocation;
+
+    QRect starsInside() const;
 };
 
 /**

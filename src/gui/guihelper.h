@@ -36,9 +36,6 @@ class KBIBTEXGUI_EXPORT GUIHelper
 {
 public:
     static int selectValue(QAbstractItemModel *model, const QString &value, int role = Qt::DisplayRole);
-
-    static void paintStars(QPainter *painter, int numActiveStars, int numTotalStars, const QSize &maxSize, const QPoint &pos);
-    static int starsXvalueToPercent(int numTotalStars, const QSize &maxSize, const QPoint &pos, int xpos);
 };
 
 

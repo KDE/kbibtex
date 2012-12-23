@@ -26,20 +26,20 @@
 #include <QPaintEvent>
 #include <QMouseEvent>
 #include <QPainter>
+#include <QTimer>
 
 #include <KLocale>
 #include <KPushButton>
 #include <KDebug>
 
-#include "guihelper.h"
-
 const int StarRating::defaultMaxNumberOfStars = 8;
-const int StarRating::UnsetStarsValue = -1;
+const double StarRating::UnsetStarsValue = -1.0;
 
 StarRating::StarRating(int maxNumberOfStars, QWidget *parent)
         : QWidget(parent), m_isReadOnly(false), m_percent(-1), m_maxNumberOfStars(maxNumberOfStars), m_unsetStarsText(i18n("Not set"))
 {
     QHBoxLayout *layout = new QHBoxLayout(this);
+    spacing = qMax(layout->spacing(), 8);
 
     m_labelPercent = new QLabel(this);
     layout->addWidget(m_labelPercent, 0, Qt::AlignRight | Qt::AlignVCenter);
@@ -51,28 +51,32 @@ StarRating::StarRating(int maxNumberOfStars, QWidget *parent)
     layout->addStretch(1);
 
     m_clearButton = new KPushButton(KIcon("edit-clear-locationbar-rtl"), QString::null, this);
-    layout->addWidget(m_clearButton, 0);
+    layout->addWidget(m_clearButton, 0, Qt::AlignRight | Qt::AlignVCenter);
     connect(m_clearButton, SIGNAL(clicked()), this, SLOT(clear()));
+
+    QTimer::singleShot(250, this, SLOT(buttonHeight()));
+
+    setMouseTracking(true);
+}
+
+QRect StarRating::starsInside() const
+{
+    return QRect(QPoint(m_labelPercent->width() + spacing, 0), QSize(width() - 2 * spacing - m_clearButton->width() - m_labelPercent->width(), m_clearButton->height()));
 }
 
 void StarRating::paintEvent(QPaintEvent *ev)
 {
     QWidget::paintEvent(ev);
+    QPainter p(this);
 
-    if (m_percent >= 0) {
-        QPainter p(this);
-        const int space = qMax(layout()->spacing(), 8);
-        int numActiveStars = (m_percent * m_maxNumberOfStars + 50) / 100;
-        QSize size(width() - space - m_labelPercent->width(), height());
-        QPoint pos(m_labelPercent->width() + space, 0);
-        GUIHelper::paintStars(&p, numActiveStars, m_maxNumberOfStars, size, pos);
-    } else if (m_percent == UnsetStarsValue) {
-        QPainter p(this);
+    const QRect r = starsInside();
+    double percent = m_mouseLocation.isNull() ? m_percent : percentForPosition(m_mouseLocation, m_maxNumberOfStars, r);
+
+    if (percent >= 0.0)
+        paintStars(&p, KIconLoader::DefaultState, m_maxNumberOfStars, percent, starsInside());
+    else {
         p.setOpacity(0.7);
-        const int space = qMax(layout()->spacing(), 8);
-        QSize size(width() - space - m_labelPercent->width(), height());
-        QPoint pos(m_labelPercent->width() + space, 0);
-        GUIHelper::paintStars(&p, 0, m_maxNumberOfStars, size, pos);
+        paintStars(&p, KIconLoader::DisabledState, m_maxNumberOfStars, 0.0, starsInside());
     }
 
     ev->accept();
@@ -83,29 +87,46 @@ void StarRating::mouseReleaseEvent(QMouseEvent *ev)
     QWidget::mouseReleaseEvent(ev);
 
     if (!m_isReadOnly) {
-        const int space = qMax(layout()->spacing(), 8);
-        QSize size(width() - space - m_labelPercent->width(), height());
-        QPoint pos(m_labelPercent->width() + space, 0);
-        int newPercent = GUIHelper::starsXvalueToPercent(m_maxNumberOfStars, size, pos, ev->x());
-        newPercent = qMax(0, qMin(100, newPercent));
+        double newPercent = percentForPosition(ev->pos(), m_maxNumberOfStars, starsInside());
         setValue(newPercent);
         emit modified();
+        ev->accept();
     }
-
-    ev->accept();
 }
 
-int StarRating::value() const
+void StarRating::mouseMoveEvent(QMouseEvent *ev)
+{
+    QWidget::mouseMoveEvent(ev);
+
+    if (!m_isReadOnly) {
+        m_mouseLocation = ev->pos();
+        if (m_mouseLocation.x() < m_labelPercent->width() || m_mouseLocation.x() > width() - m_clearButton->width())
+            m_mouseLocation = QPoint();
+        update();
+        ev->accept();
+    }
+}
+
+void StarRating::leaveEvent(QEvent *)
+{
+    m_mouseLocation = QPoint();
+    update();
+}
+
+double StarRating::value() const
 {
     return m_percent;
 }
 
-void StarRating::setValue(int percent)
+void StarRating::setValue(double percent)
 {
-    if (percent >= 0 && percent <= 100) {
-        m_labelPercent->setText(QString::number(percent));
+    if (percent >= 0.0 && percent <= 100.0) {
+        if (m_maxNumberOfStars < 10)
+            m_labelPercent->setText(QString::number(percent * m_maxNumberOfStars / 100.0, 'f', 1));
+        else
+            m_labelPercent->setText(QString::number(percent * m_maxNumberOfStars / 100));
         m_percent = percent;
-    } else if (UnsetStarsValue == -1) {
+    } else if (percent < 0.0) {
         m_labelPercent->setText(m_unsetStarsText);
         m_percent = percent;
     }
@@ -115,6 +136,7 @@ void StarRating::setReadOnly(bool isReadOnly)
 {
     m_isReadOnly = isReadOnly;
     m_clearButton->setEnabled(!isReadOnly);
+    setMouseTracking(!isReadOnly);
 }
 
 void StarRating::clear()
@@ -125,6 +147,62 @@ void StarRating::clear()
     }
 }
 
+void StarRating::buttonHeight()
+{
+    QSizePolicy sp = m_clearButton->sizePolicy();
+    m_clearButton->setSizePolicy(sp.horizontalPolicy(), QSizePolicy::MinimumExpanding);
+}
+
+const int StarRating::paintMargin = 2;
+
+void StarRating::paintStars(QPainter *painter, KIconLoader::States defaultState, int numTotalStars, double percent, const QRect &inside)
+{
+    painter->save();
+
+    const int starSize = qMin(inside.height() - 2 * paintMargin, (inside.width() - 2 * paintMargin) / numTotalStars);
+    QPixmap starPixmap = KIconLoader::global()->loadIcon(QLatin1String("rating"), KIconLoader::Small, starSize, defaultState);
+
+    int numActiveStars = percent * numTotalStars / 100;
+    int coloredPartWidth = (percent * numTotalStars / 100 - numActiveStars) * starSize;
+
+    const int y = inside.top() + (inside.height() - starSize) / 2;
+    int x = inside.left() + paintMargin;
+    int i = 0;
+
+    /// draw active (colored) stars
+    for (; i < numActiveStars; ++i, x += starSize)
+        painter->drawPixmap(x, y, starPixmap);
+
+    if (coloredPartWidth > 0) {
+        /// one star is partially colored
+        painter->drawPixmap(x, y, starPixmap, 0, 0, coloredPartWidth, 0);
+    }
+
+    starPixmap = KIconLoader::global()->loadIcon(QLatin1String("rating"), KIconLoader::Small, starSize, KIconLoader::DisabledState);
+
+    if (coloredPartWidth > 0) {
+        /// one star is partially grey
+        painter->drawPixmap(x + coloredPartWidth, y, starPixmap, coloredPartWidth, 0, starSize - coloredPartWidth, 0);
+        x += starSize;
+        ++i;
+    }
+
+    /// draw inactive (grey) stars
+    for (; i < numTotalStars; ++i, x += starSize)
+        painter->drawPixmap(x, y, starPixmap);
+
+    painter->restore();
+}
+
+double StarRating::percentForPosition(const QPoint &pos, int numTotalStars, const QRect &inside)
+{
+    const int starSize = qMin(inside.height() - 2 * paintMargin, (inside.width() - 2 * paintMargin) / numTotalStars);
+    const int width = starSize * numTotalStars;
+    const int x = pos.x() - paintMargin - inside.left();
+    double percent = x * 100.0 / width;
+    return qMax(0.0, qMin(100.0, percent));
+}
+
 bool StarRatingFieldInput::reset(const Value &value)
 {
     bool result = false;
@@ -133,8 +211,8 @@ bool StarRatingFieldInput::reset(const Value &value)
         setValue(UnsetStarsValue);
         result = true;
     } else {
-        const int number = text.toInt(&result);
-        if (result && number >= 0 && number <= 100)
+        const double number = text.toDouble(&result);
+        if (result && number >= 0.0 && number <= 100.0)
             setValue(number);
         else {
             setValue(UnsetStarsValue);
@@ -147,7 +225,8 @@ bool StarRatingFieldInput::reset(const Value &value)
 bool StarRatingFieldInput::apply(Value &v) const
 {
     v.clear();
-    if (value() >= 0 && value() <= 100)
-        v.append(QSharedPointer<PlainText>(new PlainText(QString::number(value()))));
+    const double percent = value();
+    if (percent >= 0.0 && percent <= 100)
+        v.append(QSharedPointer<PlainText>(new PlainText(QString::number(percent, 'f', 2))));
     return true;
 }

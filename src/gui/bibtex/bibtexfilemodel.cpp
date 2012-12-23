@@ -27,7 +27,7 @@
 #include <KLocale>
 #include <KConfigGroup>
 
-#include "guihelper.h"
+#include "starrating.h"
 #include "element.h"
 #include "entry.h"
 #include "macro.h"
@@ -285,16 +285,12 @@ void BibTeXFileDelegate::paint(QPainter *painter, const QStyleOptionViewItem &op
 
     static const int numTotalStars = 8;
     bool ok = false;
-    int percent = index.data(BibTeXFileModel::NumberRole).toInt(&ok);
+    double percent = index.data(BibTeXFileModel::NumberRole).toDouble(&ok);
     if (ok) {
         BibTeXFields *bibtexFields = BibTeXFields::self();
         const FieldDescription *fd = bibtexFields->at(index.column());
-        if (fd->upperCamelCase.toLower() == Entry::ftStarRating) {
-            int numActiveStars = (percent * numTotalStars + 50) / 100;
-            QPoint p(option.rect.left(), option.rect.top());
-            GUIHelper::paintStars(painter, numActiveStars, numTotalStars, option.rect.size(), p);
-        } else
-            ok = false;
+        if (fd->upperCamelCase.toLower() == Entry::ftStarRating)
+            StarRating::paintStars(painter, KIconLoader::DefaultState, numTotalStars, percent, option.rect);
     }
 }
 
@@ -415,9 +411,9 @@ QVariant BibTeXFileModel::data(const QModelIndex &index, int role) const
             if (raw.toLower() == Entry::ftStarRating) {
                 const QString text = PlainTextValue::text(entry->value(raw), m_bibtexFile).simplified();
                 bool ok = false;
-                const int numValue = text.toInt(&ok);
+                const double numValue = text.toDouble(&ok);
                 if (ok)
-                    return QVariant::fromValue<int>(numValue);
+                    return QVariant::fromValue<double>(numValue);
                 else
                     return QVariant();
             } else
