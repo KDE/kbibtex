@@ -53,6 +53,7 @@ public:
         layout->setColumnStretch(1, 0);
 
         resultList = new BibTeXEditor(QLatin1String("SearchResults"), parent);
+        resultList->setItemDelegate(new BibTeXFileDelegate(resultList));
         resultList->setReadOnly(true);
         resultList->setFrameShadow(QFrame::Sunken);
         resultList->setFrameShape(QFrame::StyledPanel);

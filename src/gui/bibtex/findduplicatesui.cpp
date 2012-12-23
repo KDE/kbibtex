@@ -542,6 +542,7 @@ public:
         layout->addWidget(splitter);
 
         editor = new BibTeXEditor(QLatin1String("MergeWidget"), splitter);
+        editor->setItemDelegate(new BibTeXFileDelegate(editor));
         editor->setReadOnly(true);
 
         alternativesView = new RadioButtonTreeView(splitter);

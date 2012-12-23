@@ -27,6 +27,7 @@
 #include <KLocale>
 #include <KConfigGroup>
 
+#include "guihelper.h"
 #include "element.h"
 #include "entry.h"
 #include "macro.h"
@@ -278,6 +279,28 @@ void SortFilterBibTeXFileModel::loadState()
 }
 
 
+void BibTeXFileDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
+{
+    QStyledItemDelegate::paint(painter, option, index);
+
+    static const int numTotalStars = 8;
+    bool ok = false;
+    int percent = index.data(BibTeXFileModel::NumberRole).toInt(&ok);
+    if (ok) {
+        BibTeXFields *bibtexFields = BibTeXFields::self();
+        const FieldDescription *fd = bibtexFields->at(index.column());
+        if (fd->upperCamelCase.toLower() == Entry::ftStarRating) {
+            int numActiveStars = (percent * numTotalStars + 50) / 100;
+            QPoint p(option.rect.left(), option.rect.top());
+            GUIHelper::paintStars(painter, numActiveStars, numTotalStars, option.rect.size(), p);
+        } else
+            ok = false;
+    }
+}
+
+
+const int BibTeXFileModel::NumberRole = Qt::UserRole + 9581;
+
 const QString BibTeXFileModel::keyShowComments = QLatin1String("showComments");
 const bool BibTeXFileModel::defaultShowComments = true;
 const QString BibTeXFileModel::keyShowMacros = QLatin1String("showMacros");
@@ -367,7 +390,7 @@ QVariant BibTeXFileModel::data(const QModelIndex &index, int role) const
         return QVariant();
 
     /// for now, only display data (no editing or icons etc)
-    if (role != Qt::DisplayRole && role != Qt::ToolTipRole && role != Qt::BackgroundRole)
+    if (role != NumberRole && role != Qt::DisplayRole && role != Qt::ToolTipRole && role != Qt::BackgroundRole)
         return QVariant();
 
     BibTeXFields *bibtexFields = BibTeXFields::self();
@@ -381,13 +404,24 @@ QVariant BibTeXFileModel::data(const QModelIndex &index, int role) const
         /// if BibTeX entry has a "x-color" field, use that color to highlight row
         if (role == Qt::BackgroundRole) {
             QString colorName;
-            if (entry.isNull() || (colorName = PlainTextValue::text(entry->value("x-color"), m_bibtexFile)) == "#000000" || colorName.isEmpty())
+            if (entry.isNull() || (colorName = PlainTextValue::text(entry->value(Entry::ftColor), m_bibtexFile)) == "#000000" || colorName.isEmpty())
                 return QVariant();
             else {
                 QColor color(colorName);
                 color.setAlphaF(0.75);
                 return QVariant(color);
             }
+        } else if (role == NumberRole) {
+            if (raw.toLower() == Entry::ftStarRating) {
+                const QString text = PlainTextValue::text(entry->value(raw), m_bibtexFile).simplified();
+                bool ok = false;
+                const int numValue = text.toInt(&ok);
+                if (ok)
+                    return QVariant::fromValue<int>(numValue);
+                else
+                    return QVariant();
+            } else
+                return QVariant();
         }
 
         if (!entry.isNull()) {
@@ -402,6 +436,8 @@ QVariant BibTeXFileModel::data(const QModelIndex &index, int role) const
                     return QVariant(entry->type());
                 } else
                     return QVariant(label);
+            } else if (raw.toLower() == Entry::ftStarRating) {
+                return QVariant();
             } else if (raw.toLower() == Entry::ftColor) {
                 QString text = PlainTextValue::text(entry->value(raw), m_bibtexFile);
                 if (text.isEmpty()) return QVariant();

@@ -80,7 +80,7 @@ RequiredItems=title
 OptionalItems=author,howpublished,address,month,year,note
 
 [Column]
-count=36
+count=37
 
 [Column1]
 UpperCamelCase=^type
@@ -338,6 +338,13 @@ Visible=false
 TypeFlags=Verbatim;Source
 TypeIndependent=true
 
+[Column37]
+UpperCamelCase=X-Stars
+Label=Stars
+DefaultWidth=4
+Visible=false
+TypeFlags=Verbatim;Source
+TypeIndependent=true
 
 [EntryLayoutTab]
 count=4
@@ -478,3 +485,4 @@ fieldInputLayout5=KeywordList
 bibtexLabel6=x-color
 uiLabel6=Color
 fieldInputLayout6=Color
+

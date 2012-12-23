@@ -48,16 +48,19 @@ public:
 
     static QString convert(KBibTeX::FieldInputType fil) {
         switch (fil) {
-        case KBibTeX::List : return QLatin1String("List");
+        case KBibTeX::SingleLine : return QLatin1String("SingleLine");
         case KBibTeX::MultiLine : return QLatin1String("MultiLine");
+        case KBibTeX::List : return QLatin1String("List");
         case KBibTeX::URL : return QLatin1String("URL");
         case KBibTeX::Month : return QLatin1String("Month");
         case KBibTeX::Color : return QLatin1String("Color");
         case KBibTeX::PersonList : return QLatin1String("PersonList");
         case KBibTeX::KeywordList : return QLatin1String("KeywordList");
         case KBibTeX::CrossRef : return QLatin1String("CrossRef");
-        default: return QLatin1String("SingleLine");
+        case KBibTeX::StarRating : return QLatin1String("StarRating");
+        case KBibTeX::UrlList : return QLatin1String("UrlList");
         }
+        return QString::null;
     }
 
     static KBibTeX::FieldInputType convert(const QString &text) {
@@ -67,6 +70,8 @@ public:
             return KBibTeX::MultiLine;
         else if (text == QLatin1String("URL"))
             return KBibTeX::URL;
+        else if (text == QLatin1String("UrlList"))
+            return KBibTeX::UrlList;
         else if (text == QLatin1String("Month"))
             return KBibTeX::Month;
         else if (text == QLatin1String("Color"))
@@ -77,6 +82,8 @@ public:
             return KBibTeX::KeywordList;
         else if (text == QLatin1String("CrossRef"))
             return KBibTeX::CrossRef;
+        else if (text == QLatin1String("StarRating"))
+            return KBibTeX::StarRating;
         else
             return KBibTeX::SingleLine;
     }

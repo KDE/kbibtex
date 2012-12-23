@@ -22,8 +22,12 @@
 #define GUI_HELPER_H
 
 #include <QAbstractItemModel>
+#include <QPoint>
+#include <QSize>
 
 #include "kbibtexgui_export.h"
+
+class QPainter;
 
 /**
  * @author Thomas Fischer
@@ -32,6 +36,7 @@ class KBIBTEXGUI_EXPORT GUIHelper
 {
 public:
     static int selectValue(QAbstractItemModel *model, const QString &value, int role = Qt::DisplayRole);
+    static void paintStars(QPainter *painter, int numActiveStars, int numTotalStars, const QSize &maxSize, const QPoint &pos);
 };
 
 

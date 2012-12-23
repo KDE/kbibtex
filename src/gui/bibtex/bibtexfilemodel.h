@@ -26,6 +26,7 @@
 #include <QList>
 #include <QRegExp>
 #include <QStringList>
+#include <QStyledItemDelegate>
 
 #include <KSharedConfig>
 
@@ -34,6 +35,8 @@
 #include "notificationhub.h"
 #include "file.h"
 #include "entry.h"
+
+class QPainter;
 
 class BibTeXFileModel;
 
@@ -77,12 +80,26 @@ private:
 };
 
 
+class KBIBTEXGUI_EXPORT BibTeXFileDelegate : public QStyledItemDelegate
+{
+    Q_OBJECT
+
+public:
+    BibTeXFileDelegate(QWidget *parent = NULL)
+            : QStyledItemDelegate(parent) {
+        /* nothing */
+    }
+
+    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+};
+
 /**
 @author Thomas Fischer
 */
 class KBIBTEXGUI_EXPORT BibTeXFileModel : public QAbstractTableModel, private NotificationListener
 {
 public:
+    static const int NumberRole;
     static const QString keyShowComments;
     static const bool defaultShowComments;
     static const QString keyShowMacros;

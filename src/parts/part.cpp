@@ -397,6 +397,7 @@ KBibTeXPart::KBibTeXPart(QWidget *parentWidget, QObject *parent, bool browserVie
     // TODO Setup view
     d->editor = new BibTeXEditor(QLatin1String("Main"), parentWidget);
     d->editor->setReadOnly(!isReadWrite());
+    d->editor->setItemDelegate(new BibTeXFileDelegate(d->editor));
     setWidget(d->editor);
 
     connect(d->editor, SIGNAL(elementExecuted(QSharedPointer<Element>)), d->editor, SLOT(editElement(QSharedPointer<Element>)));

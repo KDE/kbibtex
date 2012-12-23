@@ -88,6 +88,8 @@ public:
     static const QLatin1String ftSchool;
     /** Representation of the BibTeX field key "series" */
     static const QLatin1String ftSeries;
+    /** Representation of the BibTeX field key "x-stars" */
+    static const QLatin1String ftStarRating;
     /** Representation of the BibTeX field key "title" */
     static const QLatin1String ftTitle;
     /** Representation of the BibTeX field key "url" */

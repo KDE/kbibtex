@@ -18,7 +18,11 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.               *
  *****************************************************************************/
 
+#include <QPainter>
+#include <QPixmap>
+
 #include <KDebug>
+#include <KIconLoader>
 
 #include "guihelper.h"
 
@@ -37,4 +41,25 @@ int GUIHelper::selectValue(QAbstractItemModel *model, const QString &value, int 
     kDebug() << "Could not find matching row in model for value " << value << " in role" << role;
 
     return -1;
+}
+
+void GUIHelper::paintStars(QPainter *painter, int numActiveStars, int numTotalStars, const QSize &maxSize, const QPoint &pos)
+{
+    painter->save();
+
+    static const int margin = 2;
+    const int maxHeight = qMin(maxSize.height() - 2 * margin, (maxSize.width() - 2 * margin) / numTotalStars);
+
+    QPixmap starPixmap = KIconLoader::global()->loadIcon(QLatin1String("rating"), KIconLoader::Small, maxHeight);
+
+    int x = pos.x() + margin;
+    const int y = pos.y() + (maxSize.height() - maxHeight) / 2;
+    for (int i = 0; i < numActiveStars; ++i, x += starPixmap.width())
+        painter->drawPixmap(x, y, starPixmap);
+
+    starPixmap = KIconLoader::global()->loadIcon(QLatin1String("rating"), KIconLoader::Small, maxHeight, KIconLoader::DisabledState);
+    for (int i = 0; i < numTotalStars - numActiveStars; ++i, x += starPixmap.width())
+        painter->drawPixmap(x, y, starPixmap);
+
+    painter->restore();
 }
