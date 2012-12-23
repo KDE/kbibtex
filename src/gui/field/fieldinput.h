@@ -18,6 +18,9 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
+#ifndef KBIBTEX_GUI_FIELDINPUT_H
+#define KBIBTEX_GUI_FIELDINPUT_H
+
 #include "kbibtexgui_export.h"
 
 #include <QWidget>
@@ -62,3 +65,5 @@ private:
     class FieldInputPrivate;
     FieldInputPrivate *d;
 };
+
+#endif // KBIBTEX_GUI_FIELDINPUT_H

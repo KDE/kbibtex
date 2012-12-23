@@ -48,18 +48,27 @@ void GUIHelper::paintStars(QPainter *painter, int numActiveStars, int numTotalSt
     painter->save();
 
     static const int margin = 2;
-    const int maxHeight = qMin(maxSize.height() - 2 * margin, (maxSize.width() - 2 * margin) / numTotalStars);
+    const int starSize = qMin(maxSize.height() - 2 * margin, (maxSize.width() - 2 * margin) / numTotalStars);
 
-    QPixmap starPixmap = KIconLoader::global()->loadIcon(QLatin1String("rating"), KIconLoader::Small, maxHeight);
+    QPixmap starPixmap = KIconLoader::global()->loadIcon(QLatin1String("rating"), KIconLoader::Small, starSize);
 
     int x = pos.x() + margin;
-    const int y = pos.y() + (maxSize.height() - maxHeight) / 2;
+    const int y = pos.y() + (maxSize.height() - starSize) / 2;
     for (int i = 0; i < numActiveStars; ++i, x += starPixmap.width())
         painter->drawPixmap(x, y, starPixmap);
 
-    starPixmap = KIconLoader::global()->loadIcon(QLatin1String("rating"), KIconLoader::Small, maxHeight, KIconLoader::DisabledState);
+    starPixmap = KIconLoader::global()->loadIcon(QLatin1String("rating"), KIconLoader::Small, starSize, KIconLoader::DisabledState);
     for (int i = 0; i < numTotalStars - numActiveStars; ++i, x += starPixmap.width())
         painter->drawPixmap(x, y, starPixmap);
 
     painter->restore();
+}
+
+int GUIHelper::starsXvalueToPercent(int numTotalStars, const QSize &maxSize, const QPoint &pos, int xpos)
+{
+    static const int margin = 2;
+    const int starSize = qMin(maxSize.height() - 2 * margin, (maxSize.width() - 2 * margin) / numTotalStars);
+    const int x = xpos - pos.x() - margin;
+    const int percent = x * 100 / starSize / numTotalStars;
+    return percent;
 }

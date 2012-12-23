@@ -31,9 +31,10 @@
 
 #include "file.h"
 #include "entry.h"
-#include <fieldlineedit.h>
-#include <fieldlistedit.h>
-#include <colorlabelwidget.h>
+#include "fieldlineedit.h"
+#include "fieldlistedit.h"
+#include "colorlabelwidget.h"
+#include "starrating.h"
 #include "fieldinput.h"
 
 class FieldInput::FieldInputPrivate
@@ -43,7 +44,7 @@ private:
 
 public:
     ColorLabelWidget *colorWidget;
-    QSpinBox *starRatingWidget;
+    StarRatingFieldInput *starRatingWidget;
     FieldLineEdit *fieldLineEdit;
     FieldListEdit *fieldListEdit;
     KBibTeX::FieldInputType fieldInputType;
@@ -104,10 +105,7 @@ public:
         }
         break;
         case KBibTeX::StarRating: {
-            starRatingWidget = new QSpinBox(p);
-            starRatingWidget->setMinimum(-1);
-            starRatingWidget->setMaximum(100);
-            starRatingWidget->setSpecialValueText(i18n("No stars"));
+            starRatingWidget = new StarRatingFieldInput(StarRating::defaultMaxNumberOfStars, p);
             layout->addWidget(starRatingWidget, 0);
         }
         break;
@@ -140,7 +138,7 @@ public:
         else if (colorWidget != NULL)
             colorWidget->clear();
         else if (starRatingWidget != NULL)
-            starRatingWidget->setValue(starRatingWidget->minimum());
+            starRatingWidget->setValue(StarRating::UnsetStarsValue);
         enableModifiedSignal();
     }
 
@@ -156,21 +154,8 @@ public:
             result = fieldListEdit->reset(value);
         else if (colorWidget != NULL)
             result = colorWidget->reset(value);
-        else if (starRatingWidget != NULL) {
-            const QString text = PlainTextValue::text(value, bibtexFile);
-            if (text.isEmpty()) {
-                starRatingWidget->setValue(starRatingWidget->minimum());
-                result = true;
-            } else {
-                const int number = text.toInt(&result);
-                if (result && number >= starRatingWidget->minimum() && number <= starRatingWidget->maximum())
-                    starRatingWidget->setValue(number);
-                else {
-                    starRatingWidget->setValue(starRatingWidget->minimum());
-                    result = false;
-                }
-            }
-        }
+        else if (starRatingWidget != NULL)
+            result = starRatingWidget->reset(value);
 
         enableModifiedSignal();
         return result;
@@ -184,12 +169,8 @@ public:
             result = fieldListEdit->apply(value);
         else if (colorWidget != NULL)
             result = colorWidget->apply(value);
-        else if (starRatingWidget != NULL) {
-            value.clear();
-            if (starRatingWidget->value() > starRatingWidget->minimum())
-                value.append(QSharedPointer<PlainText>(new PlainText(QString::number(starRatingWidget->value()))));
-            result = true;
-        }
+        else if (starRatingWidget != NULL)
+            result = starRatingWidget->apply(value);
         return result;
     }
 
@@ -265,7 +246,7 @@ public:
         if (colorWidget != NULL)
             connect(colorWidget, SIGNAL(modified()), p, SIGNAL(modified()));
         if (starRatingWidget != NULL)
-            connect(starRatingWidget, SIGNAL(editingFinished()), p, SIGNAL(modified()));
+            connect(starRatingWidget, SIGNAL(modified()), p, SIGNAL(modified()));
     }
 
     void disableModifiedSignal() {
@@ -276,7 +257,7 @@ public:
         if (colorWidget != NULL)
             disconnect(colorWidget, SIGNAL(modified()), p, SIGNAL(modified()));
         if (starRatingWidget != NULL)
-            disconnect(starRatingWidget, SIGNAL(editingFinished()), p, SIGNAL(modified()));
+            disconnect(starRatingWidget, SIGNAL(modified()), p, SIGNAL(modified()));
     }
 };
 

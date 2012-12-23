@@ -18,28 +18,70 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.               *
  *****************************************************************************/
 
-#ifndef GUI_HELPER_H
-#define GUI_HELPER_H
-
-#include <QAbstractItemModel>
-#include <QPoint>
-#include <QSize>
+#ifndef KBIBTEX_GUI_STARRATING_H
+#define KBIBTEX_GUI_STARRATING_H
 
 #include "kbibtexgui_export.h"
 
-class QPainter;
+#include <QWidget>
+
+#include "value.h"
+
+class QLabel;
+class QPaintEvent;
+class QMouseEvent;
+
+class KPushButton;
 
 /**
- * @author Thomas Fischer
- */
-class KBIBTEXGUI_EXPORT GUIHelper
+@author Thomas Fischer
+*/
+class KBIBTEXGUI_EXPORT StarRating : public QWidget
 {
+    Q_OBJECT
 public:
-    static int selectValue(QAbstractItemModel *model, const QString &value, int role = Qt::DisplayRole);
+    static const int defaultMaxNumberOfStars;
+    static const int UnsetStarsValue;
 
-    static void paintStars(QPainter *painter, int numActiveStars, int numTotalStars, const QSize &maxSize, const QPoint &pos);
-    static int starsXvalueToPercent(int numTotalStars, const QSize &maxSize, const QPoint &pos, int xpos);
+    StarRating(int maxNumberOfStars = defaultMaxNumberOfStars, QWidget *parent = NULL);
+
+    int value() const;
+    void setValue(int percent);
+
+    void setReadOnly(bool isReadOnly);
+
+signals:
+    void modified();
+
+protected:
+    void paintEvent(QPaintEvent *);
+    void mouseReleaseEvent(QMouseEvent *);
+
+private slots:
+    void clear();
+
+private:
+    bool m_isReadOnly;
+    int m_percent;
+    int m_maxNumberOfStars;
+    const QString m_unsetStarsText;
+    QLabel *m_labelPercent;
+    KPushButton *m_clearButton;
 };
 
+/**
+@author Thomas Fischer
+*/
+class KBIBTEXGUI_EXPORT StarRatingFieldInput : public StarRating
+{
+public:
+    StarRatingFieldInput(int maxNumberOfStars = defaultMaxNumberOfStars, QWidget *parent = NULL)
+            : StarRating(maxNumberOfStars, parent) {
+        /* nothing */
+    }
 
-#endif // GUI_HELPER_H
+    bool reset(const Value &value);
+    bool apply(Value &value) const;
+};
+
+#endif // KBIBTEX_GUI_STARRATING_H

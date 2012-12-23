@@ -39,6 +39,7 @@ set(
     widgets/filterbar.cpp
     widgets/radiobuttontreeview.cpp
     widgets/hidingtabwidget.cpp
+    widgets/starrating.cpp
     config/entrylayout.cpp
     preferences/kbibtexpreferencesdialog.cpp
     preferences/settingsgeneralwidget.cpp
