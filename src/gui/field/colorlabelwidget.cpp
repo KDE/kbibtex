@@ -180,8 +180,6 @@ bool ColorLabelWidget::apply(Value &value) const
     value.clear();
     if (color != Qt::black)
         value.append(QSharedPointer<VerbatimText>(new VerbatimText(color.name())));
-    else
-        value.clear();
     return true;
 }
 
