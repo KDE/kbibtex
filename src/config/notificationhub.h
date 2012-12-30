@@ -39,7 +39,9 @@ public:
 class KBIBTEXCONFIG_EXPORT NotificationHub
 {
 public:
-    static const int EventAny, EventConfigurationChanged, EventUserDefined;
+    static const int EventAny;
+    static const int EventConfigurationChanged;
+    static const int EventUserDefined;
 
     static void registerNotificationListener(NotificationListener *listener, int eventId = NotificationHub::EventAny);
     static void unregisterNotificationListener(NotificationListener *listener, int eventId = NotificationHub::EventAny);

@@ -221,7 +221,11 @@ void KBibTeXTest::processFileTest(TestFile *testFile)
 {
     kapp->processEvents();
 
+#ifdef _MSC_VER
+    const QString absoluteFilename = testFile->filename;
+#else // _MSC_VER
     const QString absoluteFilename = QLatin1String(TESTSET_DIRECTORY) + testFile->filename;
+#endif // _MSC_VER
     if (!QFileInfo(absoluteFilename).exists()) {
         addMessage(QString(QLatin1String("File '%1' does not exist")).arg(absoluteFilename), iconERROR);
         return;
