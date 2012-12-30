@@ -408,7 +408,7 @@ QVariant BibTeXFileModel::data(const QModelIndex &index, int role) const
                 return QVariant(color);
             }
         } else if (role == NumberRole) {
-            if (raw.toLower() == Entry::ftStarRating) {
+            if (!entry.isNull() && raw.toLower() == Entry::ftStarRating) {
                 const QString text = PlainTextValue::text(entry->value(raw), m_bibtexFile).simplified();
                 bool ok = false;
                 const double numValue = text.toDouble(&ok);
