@@ -173,7 +173,10 @@ public:
 
         /// add parts to stackedWidget
         okularPart = locatePart(QLatin1String("okularPoppler.desktop"), stackedWidget);
-        swpOkular = stackedWidget->addWidget(okularPart->widget());
+        swpOkular = (okularPart == NULL) ? -1 : stackedWidget->addWidget(okularPart->widget());
+        if (okularPart == NULL || swpOkular < 0) {
+            kWarning() << "No Okular part for PDF or PostScript document preview available.";
+        }
         htmlPart = locatePart(QLatin1String("khtml.desktop"), stackedWidget);
         swpHTML = stackedWidget->addWidget(htmlPart->widget());
 
@@ -262,12 +265,13 @@ public:
         stackedWidget->setCurrentIndex(swpMessage);
         message->setPixmap(QPixmap());
         message->setText(msgText);
-        stackedWidget->widget(swpOkular)->setEnabled(false);
+        if (swpOkular >= 0)
+            stackedWidget->widget(swpOkular)->setEnabled(false);
         stackedWidget->widget(swpHTML)->setEnabled(false);
     }
 
     void showPart(const KParts::ReadOnlyPart *part, QWidget *widget) {
-        if (part == okularPart) {
+        if (part == okularPart && swpOkular >= 0) {
             stackedWidget->setCurrentIndex(swpOkular);
             stackedWidget->widget(swpOkular)->setEnabled(true);
         } else if (part == htmlPart) {
@@ -284,12 +288,14 @@ public:
         static const QStringList htmlMimetypes = QStringList() << QLatin1String("text/html") << QLatin1String("application/xml") << QLatin1String("application/xhtml+xml");
         static const QStringList imageMimetypes = QStringList() << QLatin1String("image/jpeg") << QLatin1String("image/png") << QLatin1String("image/gif") << QLatin1String("image/tiff");
 
-        stackedWidget->widget(swpHTML)->setEnabled(false);
-        stackedWidget->widget(swpOkular)->setEnabled(false);
+        if (swpOkular >= 0 && okularPart != NULL) {
+            stackedWidget->widget(swpOkular)->setEnabled(false);
+            okularPart->closeUrl();
+        }
         okularPart->closeUrl();
         htmlPart->closeUrl();
 
-        if (okularMimetypes.contains(urlInfo.mimeType)) {
+        if (okularPart != NULL && okularMimetypes.contains(urlInfo.mimeType)) {
             p->setCursor(Qt::BusyCursor);
             showMessage(i18n("Loading ..."));
             okularPart->openUrl(urlInfo.url);
