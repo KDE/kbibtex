@@ -208,14 +208,17 @@ public:
 
         /// add parts to stackedWidget
         okularPart = locatePart(QLatin1String("okularPoppler.desktop"), stackedWidget);
-        swpOkular = stackedWidget->addWidget(okularPart->widget());
+        swpOkular = (okularPart == NULL) ? -1 : stackedWidget->addWidget(okularPart->widget());
+        if (okularPart == NULL || swpOkular < 0) {
+            kWarning() << "No Okular part for PDF or PostScript document preview available.";
+        }
 #ifdef HAVE_QTWEBKIT
-        kDebug() << "using WebKit";
+        kDebug() << "WebKit is available, using it instead of KHTML for HTML/Web preview.";
         htmlWidget = new QWebView(stackedWidget);
         swpHTML = stackedWidget->addWidget(htmlWidget);
         connect(htmlWidget, SIGNAL(loadFinished(bool)), p, SLOT(loadingFinished()));
 #else // HAVE_QTWEBKIT
-        kDebug() << "using KHTML";
+        kDebug() << "WebKit not is available, using KHTML instead for HTML/Web preview.";
         htmlPart = locatePart(QLatin1String("khtml.desktop"), stackedWidget);
         swpHTML = stackedWidget->addWidget(htmlPart->widget());
 #endif // HAVE_QTWEBKIT
@@ -263,7 +266,8 @@ public:
         p->setCursor(Qt::WaitCursor);
 
         /// reset and clear all controls
-        okularPart->closeUrl();
+        if (okularPart != NULL)
+            okularPart->closeUrl();
 #ifdef HAVE_QTWEBKIT
         htmlWidget->stop();
 #else // HAVE_QTWEBKIT
@@ -320,7 +324,8 @@ public:
         stackedWidget->setCurrentIndex(swpMessage);
         message->setPixmap(QPixmap());
         message->setText(msgText);
-        stackedWidget->widget(swpOkular)->setEnabled(false);
+        if (swpOkular >= 0)
+            stackedWidget->widget(swpOkular)->setEnabled(false);
         stackedWidget->widget(swpHTML)->setEnabled(false);
         menuBar->setVisible(false);
         toolBar->setVisible(true);
@@ -416,7 +421,7 @@ public:
         menuBar->clear();
         toolBar->clear();
 
-        if (part == okularPart) {
+        if (part == okularPart && swpOkular >= 0) {
             stackedWidget->setCurrentIndex(swpOkular);
             stackedWidget->widget(swpOkular)->setEnabled(true);
             setupToolMenuBarForPart(okularPart);
@@ -442,15 +447,17 @@ public:
         static const QStringList imageMimetypes = QStringList() << QLatin1String("image/jpeg") << QLatin1String("image/png") << QLatin1String("image/gif") << QLatin1String("image/tiff");
 
         stackedWidget->widget(swpHTML)->setEnabled(false);
-        stackedWidget->widget(swpOkular)->setEnabled(false);
-        okularPart->closeUrl();
+        if (swpOkular >= 0 && okularPart != NULL) {
+            stackedWidget->widget(swpOkular)->setEnabled(false);
+            okularPart->closeUrl();
+        }
 #ifdef HAVE_QTWEBKIT
         htmlWidget->stop();
 #else // HAVE_QTWEBKIT
         htmlPart->closeUrl();
 #endif // HAVE_QTWEBKIT
 
-        if (okularMimetypes.contains(urlInfo.mimeType)) {
+        if (okularPart != NULL && okularMimetypes.contains(urlInfo.mimeType)) {
             p->setCursor(Qt::BusyCursor);
             showMessage(i18n("Loading ..."));
             okularPart->openUrl(urlInfo.url);
