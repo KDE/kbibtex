@@ -40,6 +40,7 @@ StarRating::StarRating(int maxNumberOfStars, QWidget *parent)
 {
     QHBoxLayout *layout = new QHBoxLayout(this);
     spacing = qMax(layout->spacing(), 8);
+    layout->setContentsMargins(0, 0, 0, 0);
 
     m_labelPercent = new QLabel(this);
     layout->addWidget(m_labelPercent, 0, Qt::AlignRight | Qt::AlignVCenter);
@@ -61,7 +62,8 @@ StarRating::StarRating(int maxNumberOfStars, QWidget *parent)
 
 QRect StarRating::starsInside() const
 {
-    return QRect(QPoint(m_labelPercent->width() + spacing, 0), QSize(width() - 2 * spacing - m_clearButton->width() - m_labelPercent->width(), m_clearButton->height()));
+    const int starRectHeight = qMin(m_labelPercent->height() * 3 / 2, m_clearButton->height());
+    return QRect(QPoint(m_labelPercent->width() + spacing, (height() - starRectHeight) / 2), QSize(width() - 2 * spacing - m_clearButton->width() - m_labelPercent->width(), starRectHeight));
 }
 
 void StarRating::paintEvent(QPaintEvent *ev)
@@ -72,9 +74,13 @@ void StarRating::paintEvent(QPaintEvent *ev)
     const QRect r = starsInside();
     double percent = m_mouseLocation.isNull() ? m_percent : percentForPosition(m_mouseLocation, m_maxNumberOfStars, r);
 
-    if (percent >= 0.0)
+    if (percent >= 0.0) {
         paintStars(&p, KIconLoader::DefaultState, m_maxNumberOfStars, percent, starsInside());
-    else {
+        if (m_maxNumberOfStars < 10)
+            m_labelPercent->setText(QString::number(percent * m_maxNumberOfStars / 100.0, 'f', 1));
+        else
+            m_labelPercent->setText(QString::number(percent * m_maxNumberOfStars / 100));
+    } else {
         p.setOpacity(0.7);
         paintStars(&p, KIconLoader::DisabledState, m_maxNumberOfStars, 0.0, starsInside());
     }
