@@ -20,6 +20,7 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/src/networking
     ${CMAKE_SOURCE_DIR}/src/networking/onlinesearch
     ${CMAKE_CURRENT_SOURCE_DIR}/docklets
+    ${LIBXML2_INCLUDE_DIR}
 )
 
 set(

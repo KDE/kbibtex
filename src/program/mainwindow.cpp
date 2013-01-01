@@ -50,6 +50,7 @@
 #include "bibtexeditor.h"
 #include "documentlist.h"
 #include "filesettings.h"
+#include "xsltransform.h"
 
 class KBibTeXMainWindow::KBibTeXMainWindowPrivate
 {
@@ -248,6 +249,7 @@ KBibTeXMainWindow::KBibTeXMainWindow()
 KBibTeXMainWindow::~KBibTeXMainWindow()
 {
     delete d;
+    XSLTransform::cleanupGlobals();
 }
 
 void KBibTeXMainWindow::setupControllers()
