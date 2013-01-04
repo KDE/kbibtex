@@ -90,13 +90,11 @@ bool FileExporterXML::write(QTextStream &stream, const Element *element, const F
 
     const Entry *entry = dynamic_cast<const Entry *>(element);
     if (entry != NULL) {
-        if (bibtexfile != NULL) {
-// FIXME                entry = bibtexfile->completeReferencedFieldsConst( entry );
-            entry = new Entry(*entry);
-        }
+        if (bibtexfile != NULL)
+            entry->resolveCrossref(bibtexfile);
         result |= writeEntry(stream, entry);
         if (bibtexfile != NULL)
-            delete entry;
+            delete entry; /// delete artificially created Entry from resolveCrossref(..)
     } else {
         const Macro *macro = dynamic_cast<const Macro *>(element);
         if (macro != NULL)

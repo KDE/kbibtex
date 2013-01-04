@@ -194,6 +194,7 @@ void KBibTeXPreferencesDialog::ok()
 
 void KBibTeXPreferencesDialog::resetToDefaults()
 {
+    d->notifyOfChanges = true;
     d->resetToDefaults();
 }
 
