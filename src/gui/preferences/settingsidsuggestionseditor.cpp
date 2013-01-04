@@ -296,6 +296,8 @@ public:
         buttonAddTokenAtTop = new KPushButton(KIcon("list-add"), i18n("Add at top"), container);
         containerLayout->addWidget(buttonAddTokenAtTop, 0);
 
+        containerLayout->addStretch(1);
+
         buttonAddTokenAtBottom = new KPushButton(KIcon("list-add"), i18n("Add at bottom"), container);
         containerLayout->addWidget(buttonAddTokenAtBottom, 0);
 
@@ -350,7 +352,7 @@ public:
     }
 
     void add(TokenType tokenType, bool atTop) {
-        const int pos = atTop ? 1 : containerLayout->count() - 1;
+        const int pos = atTop ? 1 : containerLayout->count() - 2;
         TokenWidget *tokenWidget = NULL;
         switch (tokenType) {
         case ttTitle: {
@@ -400,24 +402,24 @@ public:
                 struct IdSuggestions::IdSuggestionTokenInfo info = p->evalToken(token.mid(1));
                 tokenWidget = new AuthorWidget(info, author, p, container);
                 widgetList << tokenWidget;
-                containerLayout->insertWidget(containerLayout->count() - 1, tokenWidget, 1);
+                containerLayout->insertWidget(containerLayout->count() - 2, tokenWidget, 1);
             } else if (token[0] == 'y') {
                 tokenWidget = new YearWidget(2, p, container);
                 widgetList << tokenWidget;
-                containerLayout->insertWidget(containerLayout->count() - 1, tokenWidget, 1);
+                containerLayout->insertWidget(containerLayout->count() - 2, tokenWidget, 1);
             } else if (token[0] == 'Y') {
                 tokenWidget = new YearWidget(4, p, container);
                 widgetList << tokenWidget;
-                containerLayout->insertWidget(containerLayout->count() - 1, tokenWidget, 1);
+                containerLayout->insertWidget(containerLayout->count() - 2, tokenWidget, 1);
             } else if (token[0] == 't' || token[0] == 'T') {
                 struct IdSuggestions::IdSuggestionTokenInfo info = p->evalToken(token.mid(1));
                 tokenWidget = new TitleWidget(info, token[0] == 'T', p, container);
                 widgetList << tokenWidget;
-                containerLayout->insertWidget(containerLayout->count() - 1, tokenWidget, 1);
+                containerLayout->insertWidget(containerLayout->count() - 2, tokenWidget, 1);
             } else if (token[0] == '"') {
                 tokenWidget = new TextWidget(token.mid(1), p, container);
                 widgetList << tokenWidget;
-                containerLayout->insertWidget(containerLayout->count() - 1, tokenWidget, 1);
+                containerLayout->insertWidget(containerLayout->count() - 2, tokenWidget, 1);
             }
 
             addManagementButtons(tokenWidget);
@@ -497,6 +499,7 @@ void IdSuggestionsEditWidget::removeToken(QWidget *widget)
     d->widgetList.removeOne(tokenWidget);
     d->containerLayout->removeWidget(tokenWidget);
     tokenWidget->deleteLater();
+    updatePreview();
 }
 
 void IdSuggestionsEditWidget::addToken(int cmd)
@@ -508,6 +511,7 @@ void IdSuggestionsEditWidget::addToken(int cmd)
         d->add((IdSuggestionsEditWidgetPrivate::TokenType)cmd, false);
         d->area->ensureWidgetVisible(d->buttonAddTokenAtBottom); // FIXME does not work as intended
     }
+    updatePreview();
 }
 
 IdSuggestionsEditDialog::IdSuggestionsEditDialog(QWidget *parent, Qt::WFlags flags)
