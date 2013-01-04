@@ -463,8 +463,9 @@ void ReferenceWidget::createGUI()
 void ReferenceWidget::prepareSuggestionsMenu()
 {
     /// Collect information on the current entry as it is edited
-    QSharedPointer<Entry> internalEntry(new Entry());
-    m_applyElement->apply(internalEntry);
+    QSharedPointer<Entry> guiDataEntry(new Entry());
+    m_applyElement->apply(guiDataEntry);
+    QSharedPointer<Entry> crossrefResolvedEntry(Entry::resolveCrossref(*guiDataEntry.data(), m_file));
 
     static const IdSuggestions *idSuggestions = new IdSuggestions();
     QMenu *suggestionsMenu = buttonSuggestId->menu();
@@ -472,9 +473,9 @@ void ReferenceWidget::prepareSuggestionsMenu()
 
     /// Keep track of shown suggestions to avoid duplicates
     QSet<QString> knownIdSuggestion;
-    QString defaultSuggestion = idSuggestions->defaultFormatId(*internalEntry.data());
+    QString defaultSuggestion = idSuggestions->defaultFormatId(*crossrefResolvedEntry.data());
 
-    foreach(QString suggestion, idSuggestions->formatIdList(*internalEntry.data())) {
+    foreach(QString suggestion, idSuggestions->formatIdList(*crossrefResolvedEntry.data())) {
         bool isDefault = suggestion == defaultSuggestion;
 
         /// Test for duplicate ids, use fallback ids with numeric suffix

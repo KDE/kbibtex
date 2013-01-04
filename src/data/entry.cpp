@@ -178,9 +178,17 @@ bool Entry::contains(const QString &key) const
     return false;
 }
 
+Entry *Entry::resolveCrossref(const File *bibTeXfile) const
+{
+    return resolveCrossref(*this, bibTeXfile);
+}
+
 Entry *Entry::resolveCrossref(const Entry &original, const File *bibTeXfile)
 {
     Entry *result = new Entry(original);
+
+    if (bibTeXfile == NULL)
+        return result;
 
     QString crossRef = PlainTextValue::text(original.value(QLatin1String("crossref")), bibTeXfile);
     const QSharedPointer<Entry> crossRefEntry = bibTeXfile != NULL ? bibTeXfile->containsKey(crossRef, File::etEntry).dynamicCast<Entry>() : QSharedPointer<Entry>();
