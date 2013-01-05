@@ -72,6 +72,7 @@ class AuthorWidget : public TokenWidget
 {
 private:
     KComboBox *comboBoxWhichAuthor;
+    QSpinBox *spinBoxStartWord, *spinBoxEndWord;
     KComboBox *comboBoxChangeCase;
     KLineEdit *lineEditTextInBetween;
     QSpinBox *spinBoxLength;
@@ -87,6 +88,24 @@ public:
         comboBoxWhichAuthor->addItem(i18n("All except first author"), IdSuggestions::aNotFirst);
         formLayout->addRow(i18n("Authors:"), comboBoxWhichAuthor);
         comboBoxWhichAuthor->setCurrentIndex(comboBoxWhichAuthor->findData(author));
+
+        QBoxLayout *boxLayout = new QHBoxLayout();
+        boxLayout->setMargin(0);
+        spinBoxStartWord = new QSpinBox(this);
+        boxLayout->addWidget(spinBoxStartWord);
+        QLabel *label = new QLabel(i18nc("Author range: \"First\" to \"Last\"", "to"), this);
+        boxLayout->addWidget(label);
+        spinBoxEndWord = new QSpinBox(this);
+        boxLayout->addWidget(spinBoxEndWord);
+        formLayout->addRow(i18n("Author range:"), boxLayout);
+        spinBoxStartWord->setSpecialValueText(i18n("First"));
+        spinBoxStartWord->setMinimum(0);
+        spinBoxStartWord->setMaximum(10);
+        spinBoxStartWord->setValue(info.startWord == 0 ? 0 : info.startWord + 1);
+        spinBoxEndWord->setSpecialValueText(i18n("Last"));
+        spinBoxEndWord->setMinimum(0);
+        spinBoxEndWord->setMaximum(10);
+        spinBoxEndWord->setValue(info.endWord > 9 ? 0 : info.endWord + 1);
 
         comboBoxChangeCase = new KComboBox(false, this);
         comboBoxChangeCase->addItem(i18n("No change"), ccNoChange);
@@ -130,6 +149,18 @@ public:
         else if (caseChange == ccToUpper)
             result.append(QLatin1String("u"));
 
+        if (spinBoxStartWord->value() != 0 || spinBoxEndWord->value() != 0) {
+            result[0] = QLatin1Char('A'); /// enforce IdSuggestions::aAll
+            int startWord = spinBoxStartWord->value() > 0 ? spinBoxStartWord->value() - 1 : 0;
+            int endWord = spinBoxEndWord->value() > 0 ? spinBoxEndWord->value() - 1 : 0x00ffffff;
+            if (startWord > endWord && endWord > 0) {
+                int swap = startWord;
+                startWord = endWord;
+                endWord = swap;
+            }
+            result.append(QString(QLatin1String("w%1%2")).arg(startWord).arg(endWord > 9 ? QLatin1String("I") : QString::number(endWord)));
+        }
+
         const QString text = lineEditTextInBetween->text();
         if (!text.isEmpty())
             result.append(QLatin1String("\"")).append(text);
@@ -168,6 +199,7 @@ public:
 class TitleWidget : public TokenWidget
 {
 private:
+    QSpinBox *spinBoxStartWord, *spinBoxEndWord;
     QCheckBox *checkBoxRemoveSmallWords;
     KComboBox *comboBoxChangeCase;
     KLineEdit *lineEditTextInBetween;
@@ -177,6 +209,24 @@ public:
     TitleWidget(const struct IdSuggestions::IdSuggestionTokenInfo &info, bool removeSmallWords, IdSuggestionsEditWidget *isew, QWidget *parent)
             : TokenWidget(parent) {
         setTitle(i18n("Title"));
+
+        QBoxLayout *boxLayout = new QHBoxLayout();
+        boxLayout->setMargin(0);
+        spinBoxStartWord = new QSpinBox(this);
+        boxLayout->addWidget(spinBoxStartWord);
+        QLabel *label = new QLabel(i18nc("Title word range: \"First\" to \"Last\"", "to"), this);
+        boxLayout->addWidget(label);
+        spinBoxEndWord = new QSpinBox(this);
+        boxLayout->addWidget(spinBoxEndWord);
+        formLayout->addRow(i18n("Word range:"), boxLayout);
+        spinBoxStartWord->setSpecialValueText(i18n("First"));
+        spinBoxStartWord->setMinimum(0);
+        spinBoxStartWord->setMaximum(10);
+        spinBoxStartWord->setValue(info.startWord == 0 ? 0 : info.startWord + 1);
+        spinBoxEndWord->setSpecialValueText(i18n("Last"));
+        spinBoxEndWord->setMinimum(0);
+        spinBoxEndWord->setMaximum(10);
+        spinBoxEndWord->setValue(info.endWord > 9 ? 0 : info.endWord + 1);
 
         checkBoxRemoveSmallWords = new QCheckBox(i18n("Remove"), this);
         formLayout->addRow(i18n("Small words:"), checkBoxRemoveSmallWords);
@@ -222,6 +272,17 @@ public:
             result.append(QLatin1String("l"));
         else if (caseChange == ccToUpper)
             result.append(QLatin1String("u"));
+
+        if (spinBoxStartWord->value() != 0 || spinBoxEndWord->value() != 0) {
+            int startWord = spinBoxStartWord->value() > 0 ? spinBoxStartWord->value() - 1 : 0;
+            int endWord = spinBoxEndWord->value() > 0 ? spinBoxEndWord->value() - 1 : 0x00ffffff;
+            if (startWord > endWord && endWord > 0) {
+                int swap = startWord;
+                startWord = endWord;
+                endWord = swap;
+            }
+            result.append(QString(QLatin1String("w%1%2")).arg(startWord).arg(endWord > 9 ? QLatin1String("I") : QString::number(endWord)));
+        }
 
         const QString text = lineEditTextInBetween->text();
         if (!text.isEmpty())
@@ -359,6 +420,8 @@ public:
             struct IdSuggestions::IdSuggestionTokenInfo info;
             info.inBetween = QString();
             info.len = -1;
+            info.startWord = 0;
+            info.endWord = 0x00ffffff;
             info.toLower = info.toUpper = false;
             tokenWidget = new TitleWidget(info, true, p, container);
             widgetList << tokenWidget;
@@ -369,6 +432,8 @@ public:
             struct IdSuggestions::IdSuggestionTokenInfo info;
             info.inBetween = QString();
             info.len = -1;
+            info.startWord = 0;
+            info.endWord = 0x00ffffff;
             info.toLower = info.toUpper = false;
             tokenWidget = new AuthorWidget(info, aAll, p, container);
             widgetList << tokenWidget;

@@ -80,14 +80,15 @@ public:
         bool first = true;
         static const QRegExp sequenceOfSpaces(QLatin1String("\\s+"));
         QStringList titleWords = PlainTextValue::text(entry.value(Entry::ftTitle)).split(sequenceOfSpaces, QString::SkipEmptyParts);
-        for (QStringList::ConstIterator it = titleWords.begin(); it != titleWords.end(); ++it) {
+        unsigned int index = 0;
+        for (QStringList::ConstIterator it = titleWords.begin(); it != titleWords.end(); ++it, ++index) {
             if (first)
                 first = false;
             else
                 result.append(tti.inBetween);
 
             QString lowerText = (*it).toLower();
-            if (!removeSmallWords || !smallWords.contains(lowerText))
+            if ((!removeSmallWords || !smallWords.contains(lowerText)) && index >= tti.startWord && index <= tti.endWord)
                 result.append(normalizeText(*it).left(tti.len));
         }
 
@@ -104,9 +105,10 @@ public:
         QString result;
         bool first = true, firstInserted = true;
         QStringList authors = authorsLastName(entry);
-        for (QStringList::ConstIterator it = authors.begin(); it != authors.end(); ++it) {
+        unsigned int index = 0;
+        for (QStringList::ConstIterator it = authors.begin(); it != authors.end(); ++it, ++index) {
             QString author =  normalizeText(*it).left(ati.len);
-            if (selectAuthors == aAll || (selectAuthors == aOnlyFirst && first) || (selectAuthors == aNotFirst && !first)) {
+            if ((selectAuthors == aAll && index >= ati.startWord && index <= ati.endWord) || (selectAuthors == aOnlyFirst && first) || (selectAuthors == aNotFirst && !first)) {
                 if (!firstInserted)
                     result.append(ati.inBetween);
                 result.append(author);
@@ -221,9 +223,14 @@ QStringList IdSuggestions::formatStrToHuman(const QString &formatStr) const
         QString text;
         if (token[0] == 'a' || token[0] == 'A' || token[0] == 'z') {
             struct IdSuggestionTokenInfo info = evalToken(token.mid(1));
-            if (token[0] == 'a') text.append(i18n("First author only"));
-            else if (token[0] == 'z') text.append(i18n("All but first author"));
-            else text.append(i18n("All authors"));
+            if (token[0] == 'a' || (info.startWord == 0 && info.endWord == 0))
+                text.append(i18n("First author only"));
+            else if (token[0] == 'z' || (info.startWord == 1 && info.endWord > 0xffff))
+                text.append(i18n("All but first author"));
+            else if (info.startWord == 0 && info.endWord > 0xffff)
+                text.append(i18n("All authors"));
+            else
+                text.append(i18n("From author %1 to author %2", info.startWord + 1, info.endWord + 1));
 
             int n = info.len;
             if (info.len < 0x00ffffff) text.append(i18np(", but only first letter of each last name", ", but only first %1 letters of each last name", n));
@@ -235,8 +242,14 @@ QStringList IdSuggestions::formatStrToHuman(const QString &formatStr) const
         else if (token[0] == 't' || token[0] == 'T') {
             struct IdSuggestionTokenInfo info = evalToken(token.mid(1));
             text.append(i18n("Title"));
-            int n = info.len;
-            if (info.len < 0x00ffffff) text.append(i18np(", but only first letter of each word", ", but only first %1 letters of each word", n));
+            if (info.startWord == 0 && info.endWord <= 0xffff)
+                text.append(i18np(", but only the first word", ", but only first %1 words", info.endWord + 1));
+            else if (info.startWord > 0 && info.endWord > 0xffff)
+                text.append(i18n(", but only starting from word %1", info.startWord + 1));
+            else if (info.startWord > 0 && info.endWord <= 0xffff)
+                text.append(i18n(", but only from word %1 to word %2", info.startWord + 1, info.endWord + 1));
+            if (info.len < 0x00ffffff)
+                text.append(i18np(", but only first letter of each word", ", but only first %1 letters of each word", info.len));
             if (info.toUpper) text.append(i18n(", in upper case"));
             else if (info.toLower) text.append(i18n(", in lower case"));
             if (info.inBetween != QString::null) text.append(i18n(", with '%1' in between", info.inBetween));
@@ -254,6 +267,8 @@ struct IdSuggestions::IdSuggestionTokenInfo IdSuggestions::evalToken(const QStri
     int pos = 0;
     struct IdSuggestionTokenInfo result;
     result.len = 0x00ffffff;
+    result.startWord = 0;
+    result.endWord = 0x00ffffff;
     result.toLower = false;
     result.toUpper = false;
     result.inBetween = QString::null;
@@ -271,6 +286,13 @@ struct IdSuggestions::IdSuggestionTokenInfo IdSuggestions::evalToken(const QStri
         result.toUpper = token[pos] == 'u';
         if (result.toUpper || result.toLower)
             ++pos;
+    }
+
+    int dvStart = -1, dvEnd = 0x00ffffff;
+    if (token.length() > pos && token[pos] == 'w' && (dvStart = token[pos + 1].digitValue()) > -1 && (token[pos + 2] == QLatin1Char('I') || (dvEnd = token[pos + 2].digitValue()) > -1)) {
+        result.startWord = dvStart;
+        result.endWord = dvEnd < 0 ? 0x00ffffff : dvEnd;
+        pos += 3;
     }
 
     if (token.length() > pos + 1 && token[pos] == '"')

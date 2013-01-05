@@ -150,6 +150,16 @@ public:
         return false;
     }
 
+    virtual bool insertRow(int row, const QModelIndex &parent = QModelIndex()) {
+        if (parent != QModelIndex()) return false;
+
+        beginInsertRows(parent, row, row);
+        m_formatStringList.insert(row, QLatin1String("T"));
+        endInsertRows();
+
+        return true;
+    }
+
     QVariant headerData(int section, Qt::Orientation, int role = Qt::DisplayRole) const {
         if (role == Qt::DisplayRole && section == 0)
             return i18n("Id Suggestions");
@@ -321,10 +331,11 @@ void SettingsIdSuggestionsWidget::buttonClicked()
 
     if (button == d->buttonNewSuggestion) {
         const QString newSuggestion = IdSuggestionsEditDialog::editSuggestion(d->idSuggestionsModel->previewEntry().data(), QLatin1String(""), this);
-        const int row = d->treeViewSuggestions->model()->rowCount(QModelIndex());
-        if (!newSuggestion.isEmpty() && d->treeViewSuggestions->model()->insertRow(row, QModelIndex())) {
-            QModelIndex index = d->treeViewSuggestions->model()->index(row, 0, QModelIndex());
-            d->treeViewSuggestions->model()->setData(index, newSuggestion, FormatStringRole);
+        const int row = 0;//d->treeViewSuggestions->model()->rowCount(QModelIndex());
+        bool b = d->idSuggestionsModel->insertRow(row);
+        if (!newSuggestion.isEmpty() && b) {
+            QModelIndex index = d->idSuggestionsModel->index(row, 0, QModelIndex());
+            d->idSuggestionsModel->setData(index, newSuggestion, FormatStringRole);
         }
     } else if (button == d->buttonEditSuggestion) {
         QModelIndex currIndex = d->treeViewSuggestions->currentIndex();
@@ -336,7 +347,7 @@ void SettingsIdSuggestionsWidget::buttonClicked()
                     emit changed();
                 }
             } else if (newSuggestion != suggestion)
-                d->treeViewSuggestions->model()->setData(currIndex, newSuggestion, FormatStringRole);
+                d->idSuggestionsModel->setData(currIndex, newSuggestion, FormatStringRole);
         }
     } else if (button == d->buttonDeleteSuggestion) {
         if (d->idSuggestionsModel->remove(selectedIndex)) {
@@ -369,6 +380,6 @@ void SettingsIdSuggestionsWidget::itemChanged(const QModelIndex &index)
 void SettingsIdSuggestionsWidget::toggleDefault()
 {
     QModelIndex curIndex = d->treeViewSuggestions->currentIndex();
-    bool current = d->treeViewSuggestions->model()->data(curIndex, IsDefaultFormatStringRole).toBool();
-    d->treeViewSuggestions->model()->setData(curIndex, !current, IsDefaultFormatStringRole);
+    bool current = d->idSuggestionsModel->data(curIndex, IsDefaultFormatStringRole).toBool();
+    d->idSuggestionsModel->setData(curIndex, !current, IsDefaultFormatStringRole);
 }
