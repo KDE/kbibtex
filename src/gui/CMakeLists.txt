@@ -18,6 +18,7 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/src/gui/field
     ${CMAKE_SOURCE_DIR}/src/gui/widgets
     ${CMAKE_SOURCE_DIR}/src/gui/config
+    ${QXT_INCLUDE_DIRS}
 )
 
 set(
@@ -108,6 +109,7 @@ target_link_libraries(
     ${QT_QTGUI_LIBRARY}
     ${KDE4_KDEUI_LIBS}
     ${KDE4_KIO_LIBS}
+    ${QXT_LIBRARIES}
     kbibtexconfig
     kbibtexdata
     kbibtexio

@@ -22,7 +22,6 @@
 #include <QFormLayout>
 #include <QScrollArea>
 #include <QLabel>
-#include <QGroupBox>
 #include <QSpinBox>
 #include <QCheckBox>
 #include <QSignalMapper>
@@ -34,140 +33,150 @@
 #include <KPushButton>
 #include <KAction>
 
+#include <QxtSpanSlider>
+
 #include "settingsidsuggestionseditor.h"
 
-class TokenWidget : public QGroupBox
+
+TokenWidget::TokenWidget(QWidget *parent)
+        : QGroupBox(parent)
 {
-protected:
-    enum CaseChange {ccNoChange, ccToUpper, ccToLower};
-    QGridLayout *gridLayout;
-    QFormLayout *formLayout;
+    gridLayout = new QGridLayout(this);
+    formLayout = new QFormLayout();
+    gridLayout->addLayout(formLayout, 0, 0, 4, 1);
+    gridLayout->setColumnStretch(0, 100);
+}
 
-public:
-    TokenWidget(QWidget *parent)
-            : QGroupBox(parent) {
-        gridLayout = new QGridLayout(this);
-        formLayout = new QFormLayout();
-        gridLayout->addLayout(formLayout, 0, 0, 4, 1);
-        gridLayout->setColumnStretch(0, 100);
-    }
-
-    void addButtons(KPushButton *buttonUp, KPushButton *buttonDown, KPushButton *buttonRemove) {
-        gridLayout->setColumnMinimumWidth(1, 32);
-        gridLayout->setColumnStretch(1, 1);
-        gridLayout->setColumnStretch(2, 1);
-
-        gridLayout->addWidget(buttonUp, 0, 2, 1, 1);
-        buttonUp->setParent(this);
-        gridLayout->addWidget(buttonDown, 1, 2, 1, 1);
-        buttonDown->setParent(this);
-        gridLayout->addWidget(buttonRemove, 2, 2, 1, 1);
-        buttonRemove->setParent(this);
-    }
-
-    virtual QString toString() const = 0;
-};
-
-class AuthorWidget : public TokenWidget
+void TokenWidget::addButtons(KPushButton *buttonUp, KPushButton *buttonDown, KPushButton *buttonRemove)
 {
-private:
-    KComboBox *comboBoxWhichAuthor;
-    QSpinBox *spinBoxStartWord, *spinBoxEndWord;
-    KComboBox *comboBoxChangeCase;
-    KLineEdit *lineEditTextInBetween;
-    QSpinBox *spinBoxLength;
+    gridLayout->setColumnMinimumWidth(1, 32);
+    gridLayout->setColumnStretch(1, 1);
+    gridLayout->setColumnStretch(2, 1);
 
-public:
-    AuthorWidget(const struct IdSuggestions::IdSuggestionTokenInfo &info, IdSuggestions::Authors author, IdSuggestionsEditWidget *isew, QWidget *parent)
-            : TokenWidget(parent) {
-        setTitle(i18n("Authors"));
+    gridLayout->addWidget(buttonUp, 0, 2, 1, 1);
+    buttonUp->setParent(this);
+    gridLayout->addWidget(buttonDown, 1, 2, 1, 1);
+    buttonDown->setParent(this);
+    gridLayout->addWidget(buttonRemove, 2, 2, 1, 1);
+    buttonRemove->setParent(this);
+}
 
-        comboBoxWhichAuthor = new KComboBox(false, this);
-        comboBoxWhichAuthor->addItem(i18n("All authors"), IdSuggestions::aAll);
-        comboBoxWhichAuthor->addItem(i18n("Only first author"), IdSuggestions::aOnlyFirst);
-        comboBoxWhichAuthor->addItem(i18n("All except first author"), IdSuggestions::aNotFirst);
-        formLayout->addRow(i18n("Authors:"), comboBoxWhichAuthor);
-        comboBoxWhichAuthor->setCurrentIndex(comboBoxWhichAuthor->findData(author));
 
-        QBoxLayout *boxLayout = new QHBoxLayout();
-        boxLayout->setMargin(0);
-        spinBoxStartWord = new QSpinBox(this);
-        boxLayout->addWidget(spinBoxStartWord);
-        QLabel *label = new QLabel(i18nc("Author range: \"First\" to \"Last\"", "to"), this);
-        boxLayout->addWidget(label);
-        spinBoxEndWord = new QSpinBox(this);
-        boxLayout->addWidget(spinBoxEndWord);
-        formLayout->addRow(i18n("Author range:"), boxLayout);
-        spinBoxStartWord->setSpecialValueText(i18n("First"));
-        spinBoxStartWord->setMinimum(0);
-        spinBoxStartWord->setMaximum(10);
-        spinBoxStartWord->setValue(info.startWord == 0 ? 0 : info.startWord + 1);
-        spinBoxEndWord->setSpecialValueText(i18n("Last"));
-        spinBoxEndWord->setMinimum(0);
-        spinBoxEndWord->setMaximum(10);
-        spinBoxEndWord->setValue(info.endWord > 9 ? 0 : info.endWord + 1);
+AuthorWidget::AuthorWidget(const struct IdSuggestions::IdSuggestionTokenInfo &info, IdSuggestions::Authors author, IdSuggestionsEditWidget *isew, QWidget *parent)
+        : TokenWidget(parent)
+{
+    setTitle(i18n("Authors"));
 
-        comboBoxChangeCase = new KComboBox(false, this);
-        comboBoxChangeCase->addItem(i18n("No change"), ccNoChange);
-        comboBoxChangeCase->addItem(i18n("To upper case"), ccToUpper);
-        comboBoxChangeCase->addItem(i18n("To lower case"), ccToLower);
-        formLayout->addRow(i18n("Change casing:"), comboBoxChangeCase);
-        if (info.toLower)
-            comboBoxChangeCase->setCurrentIndex(comboBoxChangeCase->findData(ccToLower));
-        else if (info.toUpper)
-            comboBoxChangeCase->setCurrentIndex(comboBoxChangeCase->findData(ccToUpper));
-        else
-            comboBoxChangeCase->setCurrentIndex(comboBoxChangeCase->findData(ccNoChange));
-
-        lineEditTextInBetween = new KLineEdit(this);
-        formLayout->addRow(i18n("Text in between:"), lineEditTextInBetween);
-        lineEditTextInBetween->setText(info.inBetween);
-
-        spinBoxLength = new QSpinBox(this);
-        formLayout->addRow(i18n("Only first characters:"), spinBoxLength);
-        spinBoxLength->setSpecialValueText(i18n("No limitation"));
-        spinBoxLength->setMinimum(0);
-        spinBoxLength->setMaximum(9);
-        spinBoxLength->setValue(info.len == 0 || info.len > 9 ? 0 : info.len);
-
-        connect(comboBoxWhichAuthor, SIGNAL(currentIndexChanged(int)), isew, SLOT(updatePreview()));
-        connect(comboBoxChangeCase, SIGNAL(currentIndexChanged(int)), isew, SLOT(updatePreview()));
-        connect(lineEditTextInBetween, SIGNAL(textEdited(QString)), isew, SLOT(updatePreview()));
-        connect(spinBoxLength, SIGNAL(valueChanged(int)), isew, SLOT(updatePreview()));
-    }
-
-    QString toString() const {
-        IdSuggestions::Authors author = (IdSuggestions::Authors)comboBoxWhichAuthor->itemData(comboBoxWhichAuthor->currentIndex()).toInt();
-        QString result = author == IdSuggestions::aAll ? QLatin1String("A") : (author == IdSuggestions::aOnlyFirst ? QLatin1String("a") : QLatin1String("z"));
-
-        if (spinBoxLength->value() > 0)
-            result.append(QString::number(spinBoxLength->value()));
-
-        CaseChange caseChange = (CaseChange)comboBoxChangeCase->itemData(comboBoxChangeCase->currentIndex()).toInt();
-        if (caseChange == ccToLower)
-            result.append(QLatin1String("l"));
-        else if (caseChange == ccToUpper)
-            result.append(QLatin1String("u"));
-
-        if (spinBoxStartWord->value() != 0 || spinBoxEndWord->value() != 0) {
-            result[0] = QLatin1Char('A'); /// enforce IdSuggestions::aAll
-            int startWord = spinBoxStartWord->value() > 0 ? spinBoxStartWord->value() - 1 : 0;
-            int endWord = spinBoxEndWord->value() > 0 ? spinBoxEndWord->value() - 1 : 0x00ffffff;
-            if (startWord > endWord && endWord > 0) {
-                int swap = startWord;
-                startWord = endWord;
-                endWord = swap;
-            }
-            result.append(QString(QLatin1String("w%1%2")).arg(startWord).arg(endWord > 9 ? QLatin1String("I") : QString::number(endWord)));
+    QBoxLayout *boxLayout = new QVBoxLayout();
+    boxLayout->setMargin(0);
+    formLayout->addRow(i18n("Author Range:"), boxLayout);
+    spanSliderAuthor = new QxtSpanSlider(Qt::Horizontal, this);
+    boxLayout->addWidget(spanSliderAuthor);
+    spanSliderAuthor->setRange(0, 9);
+    spanSliderAuthor->setHandleMovementMode(QxtSpanSlider::NoCrossing);
+    switch (author) {
+    case IdSuggestions::aAll:
+        if (info.startWord > 0 || info.endWord < 0xffff) {
+            spanSliderAuthor->setLowerValue(info.startWord);
+            spanSliderAuthor->setUpperValue(qMax(spanSliderAuthor->maximum(), info.endWord));
+        } else {
+            spanSliderAuthor->setLowerValue(0);
+            spanSliderAuthor->setUpperValue(spanSliderAuthor->maximum());
         }
-
-        const QString text = lineEditTextInBetween->text();
-        if (!text.isEmpty())
-            result.append(QLatin1String("\"")).append(text);
-
-        return result;
+        break;
+    case IdSuggestions::aNotFirst:
+        spanSliderAuthor->setLowerValue(1);
+        spanSliderAuthor->setUpperValue(spanSliderAuthor->maximum());
+        break;
+    case IdSuggestions::aOnlyFirst:
+        spanSliderAuthor->setLowerValue(0);
+        spanSliderAuthor->setUpperValue(0);
+        break;
     }
-};
+
+    labelAuthorRange = new QLabel(this);
+    boxLayout->addWidget(labelAuthorRange);
+    const int a = qMax(labelAuthorRange->fontMetrics().width(i18n("From first to last author")), labelAuthorRange->fontMetrics().width(i18n("From author %1 to last author", 88)));
+    const int b = qMax(labelAuthorRange->fontMetrics().width(i18n("From first author to author %1", 88)), labelAuthorRange->fontMetrics().width(i18n("From author %1 to author %2", 88, 88)));
+    labelAuthorRange->setMinimumWidth(qMax(a, b));
+
+    comboBoxChangeCase = new KComboBox(false, this);
+    comboBoxChangeCase->addItem(i18n("No change"), ccNoChange);
+    comboBoxChangeCase->addItem(i18n("To upper case"), ccToUpper);
+    comboBoxChangeCase->addItem(i18n("To lower case"), ccToLower);
+    formLayout->addRow(i18n("Change casing:"), comboBoxChangeCase);
+    if (info.toLower)
+        comboBoxChangeCase->setCurrentIndex(comboBoxChangeCase->findData(ccToLower));
+    else if (info.toUpper)
+        comboBoxChangeCase->setCurrentIndex(comboBoxChangeCase->findData(ccToUpper));
+    else
+        comboBoxChangeCase->setCurrentIndex(comboBoxChangeCase->findData(ccNoChange));
+
+    lineEditTextInBetween = new KLineEdit(this);
+    formLayout->addRow(i18n("Text in between:"), lineEditTextInBetween);
+    lineEditTextInBetween->setText(info.inBetween);
+
+    spinBoxLength = new QSpinBox(this);
+    formLayout->addRow(i18n("Only first characters:"), spinBoxLength);
+    spinBoxLength->setSpecialValueText(i18n("No limitation"));
+    spinBoxLength->setMinimum(0);
+    spinBoxLength->setMaximum(9);
+    spinBoxLength->setValue(info.len == 0 || info.len > 9 ? 0 : info.len);
+
+    connect(spanSliderAuthor, SIGNAL(lowerValueChanged(int)), isew, SLOT(updatePreview()));
+    connect(spanSliderAuthor, SIGNAL(upperValueChanged(int)), isew, SLOT(updatePreview()));
+    connect(spanSliderAuthor, SIGNAL(lowerValueChanged(int)), this, SLOT(updateRangeLabel()));
+    connect(spanSliderAuthor, SIGNAL(upperValueChanged(int)), this, SLOT(updateRangeLabel()));
+    connect(comboBoxChangeCase, SIGNAL(currentIndexChanged(int)), isew, SLOT(updatePreview()));
+    connect(lineEditTextInBetween, SIGNAL(textEdited(QString)), isew, SLOT(updatePreview()));
+    connect(spinBoxLength, SIGNAL(valueChanged(int)), isew, SLOT(updatePreview()));
+
+    updateRangeLabel();
+}
+
+QString AuthorWidget::toString() const
+{
+    QString result = QLatin1String("A");
+
+    if (spinBoxLength->value() > 0)
+        result.append(QString::number(spinBoxLength->value()));
+
+    CaseChange caseChange = (CaseChange)comboBoxChangeCase->itemData(comboBoxChangeCase->currentIndex()).toInt();
+    if (caseChange == ccToLower)
+        result.append(QLatin1String("l"));
+    else if (caseChange == ccToUpper)
+        result.append(QLatin1String("u"));
+
+    if (spanSliderAuthor->lowerValue() > spanSliderAuthor->minimum() || spanSliderAuthor->upperValue() < spanSliderAuthor->maximum())
+        result.append(QString(QLatin1String("w%1%2")).arg(spanSliderAuthor->lowerValue()).arg(spanSliderAuthor->upperValue() < spanSliderAuthor->maximum() ? QString::number(spanSliderAuthor->upperValue()) : QLatin1String("I")));
+
+    const QString text = lineEditTextInBetween->text();
+    if (!text.isEmpty())
+        result.append(QLatin1String("\"")).append(text);
+
+    return result;
+}
+
+void AuthorWidget::updateRangeLabel()
+{
+    const int lower = spanSliderAuthor->lowerValue();
+    const int upper = spanSliderAuthor->upperValue();
+    const int min = spanSliderAuthor->minimum();
+    const int max = spanSliderAuthor->maximum();
+
+    if (lower == min && upper == min)
+        labelAuthorRange->setText(i18n("First author only"));
+    else if (lower == min + 1 && upper == max)
+        labelAuthorRange->setText(i18n("All but first author"));
+    else if (lower == min && upper == max)
+        labelAuthorRange->setText(i18n("From first to last author"));
+    else if (lower > min && upper == max)
+        labelAuthorRange->setText(i18n("From author %1 to last author", lower + 1));
+    else if (lower == min && upper < max)
+        labelAuthorRange->setText(i18n("From first author to author %1", upper + 1));
+    else
+        labelAuthorRange->setText(i18n("From author %1 to author %2", lower + 1, upper + 1));
+}
 
 class YearWidget : public TokenWidget
 {
@@ -196,101 +205,112 @@ public:
     }
 };
 
-class TitleWidget : public TokenWidget
+TitleWidget::TitleWidget(const struct IdSuggestions::IdSuggestionTokenInfo &info, bool removeSmallWords, IdSuggestionsEditWidget *isew, QWidget *parent)
+        : TokenWidget(parent)
 {
-private:
-    QSpinBox *spinBoxStartWord, *spinBoxEndWord;
-    QCheckBox *checkBoxRemoveSmallWords;
-    KComboBox *comboBoxChangeCase;
-    KLineEdit *lineEditTextInBetween;
-    QSpinBox *spinBoxLength;
+    setTitle(i18n("Title"));
 
-public:
-    TitleWidget(const struct IdSuggestions::IdSuggestionTokenInfo &info, bool removeSmallWords, IdSuggestionsEditWidget *isew, QWidget *parent)
-            : TokenWidget(parent) {
-        setTitle(i18n("Title"));
-
-        QBoxLayout *boxLayout = new QHBoxLayout();
-        boxLayout->setMargin(0);
-        spinBoxStartWord = new QSpinBox(this);
-        boxLayout->addWidget(spinBoxStartWord);
-        QLabel *label = new QLabel(i18nc("Title word range: \"First\" to \"Last\"", "to"), this);
-        boxLayout->addWidget(label);
-        spinBoxEndWord = new QSpinBox(this);
-        boxLayout->addWidget(spinBoxEndWord);
-        formLayout->addRow(i18n("Word range:"), boxLayout);
-        spinBoxStartWord->setSpecialValueText(i18n("First"));
-        spinBoxStartWord->setMinimum(0);
-        spinBoxStartWord->setMaximum(10);
-        spinBoxStartWord->setValue(info.startWord == 0 ? 0 : info.startWord + 1);
-        spinBoxEndWord->setSpecialValueText(i18n("Last"));
-        spinBoxEndWord->setMinimum(0);
-        spinBoxEndWord->setMaximum(10);
-        spinBoxEndWord->setValue(info.endWord > 9 ? 0 : info.endWord + 1);
-
-        checkBoxRemoveSmallWords = new QCheckBox(i18n("Remove"), this);
-        formLayout->addRow(i18n("Small words:"), checkBoxRemoveSmallWords);
-        checkBoxRemoveSmallWords->setChecked(removeSmallWords);
-
-        comboBoxChangeCase = new KComboBox(false, this);
-        comboBoxChangeCase->addItem(i18n("No change"), ccNoChange);
-        comboBoxChangeCase->addItem(i18n("To upper case"), ccToUpper);
-        comboBoxChangeCase->addItem(i18n("To lower case"), ccToLower);
-        formLayout->addRow(i18n("Change casing:"), comboBoxChangeCase);
-        if (info.toLower)
-            comboBoxChangeCase->setCurrentIndex(comboBoxChangeCase->findData(ccToLower));
-        else if (info.toUpper)
-            comboBoxChangeCase->setCurrentIndex(comboBoxChangeCase->findData(ccToUpper));
-        else
-            comboBoxChangeCase->setCurrentIndex(comboBoxChangeCase->findData(ccNoChange));
-
-        lineEditTextInBetween = new KLineEdit(this);
-        formLayout->addRow(i18n("Text in between:"), lineEditTextInBetween);
-        lineEditTextInBetween->setText(info.inBetween);
-
-        spinBoxLength = new QSpinBox(this);
-        formLayout->addRow(i18n("Only first characters:"), spinBoxLength);
-        spinBoxLength->setSpecialValueText(i18n("No limitation"));
-        spinBoxLength->setMinimum(0);
-        spinBoxLength->setMaximum(9);
-        spinBoxLength->setValue(info.len == 0 || info.len > 9 ? 0 : info.len);
-
-        connect(checkBoxRemoveSmallWords, SIGNAL(toggled(bool)), isew, SLOT(updatePreview()));
-        connect(comboBoxChangeCase, SIGNAL(currentIndexChanged(int)), isew, SLOT(updatePreview()));
-        connect(lineEditTextInBetween, SIGNAL(textEdited(QString)), isew, SLOT(updatePreview()));
-        connect(spinBoxLength, SIGNAL(valueChanged(int)), isew, SLOT(updatePreview()));
+    QBoxLayout *boxLayout = new QVBoxLayout();
+    boxLayout->setMargin(0);
+    formLayout->addRow(i18n("Word Range:"), boxLayout);
+    spanSliderWords = new QxtSpanSlider(Qt::Horizontal, this);
+    boxLayout->addWidget(spanSliderWords);
+    spanSliderWords->setRange(0, 9);
+    spanSliderWords->setHandleMovementMode(QxtSpanSlider::NoCrossing);
+    if (info.startWord > 0 || info.endWord < 0xffff) {
+        spanSliderWords->setLowerValue(info.startWord);
+        spanSliderWords->setUpperValue(qMax(spanSliderWords->maximum(), info.endWord));
+    } else {
+        spanSliderWords->setLowerValue(0);
+        spanSliderWords->setUpperValue(spanSliderWords->maximum());
     }
 
-    QString toString() const {
-        QString result = checkBoxRemoveSmallWords->isChecked() ? QLatin1String("T") : QLatin1String("t");
+    labelWordsRange = new QLabel(this);
+    boxLayout->addWidget(labelWordsRange);
+    const int a = qMax(labelWordsRange->fontMetrics().width(i18n("From word to last word")), labelWordsRange->fontMetrics().width(i18n("From word %1 to last word", 88)));
+    const int b = qMax(labelWordsRange->fontMetrics().width(i18n("From word author to word %1", 88)), labelWordsRange->fontMetrics().width(i18n("From word %1 to word %2", 88, 88)));
+    labelWordsRange->setMinimumWidth(qMax(a, b));
 
-        if (spinBoxLength->value() > 0)
-            result.append(QString::number(spinBoxLength->value()));
+    checkBoxRemoveSmallWords = new QCheckBox(i18n("Remove"), this);
+    formLayout->addRow(i18n("Small words:"), checkBoxRemoveSmallWords);
+    checkBoxRemoveSmallWords->setChecked(removeSmallWords);
 
-        CaseChange caseChange = (CaseChange)comboBoxChangeCase->itemData(comboBoxChangeCase->currentIndex()).toInt();
-        if (caseChange == ccToLower)
-            result.append(QLatin1String("l"));
-        else if (caseChange == ccToUpper)
-            result.append(QLatin1String("u"));
+    comboBoxChangeCase = new KComboBox(false, this);
+    comboBoxChangeCase->addItem(i18n("No change"), ccNoChange);
+    comboBoxChangeCase->addItem(i18n("To upper case"), ccToUpper);
+    comboBoxChangeCase->addItem(i18n("To lower case"), ccToLower);
+    formLayout->addRow(i18n("Change casing:"), comboBoxChangeCase);
+    if (info.toLower)
+        comboBoxChangeCase->setCurrentIndex(comboBoxChangeCase->findData(ccToLower));
+    else if (info.toUpper)
+        comboBoxChangeCase->setCurrentIndex(comboBoxChangeCase->findData(ccToUpper));
+    else
+        comboBoxChangeCase->setCurrentIndex(comboBoxChangeCase->findData(ccNoChange));
 
-        if (spinBoxStartWord->value() != 0 || spinBoxEndWord->value() != 0) {
-            int startWord = spinBoxStartWord->value() > 0 ? spinBoxStartWord->value() - 1 : 0;
-            int endWord = spinBoxEndWord->value() > 0 ? spinBoxEndWord->value() - 1 : 0x00ffffff;
-            if (startWord > endWord && endWord > 0) {
-                int swap = startWord;
-                startWord = endWord;
-                endWord = swap;
-            }
-            result.append(QString(QLatin1String("w%1%2")).arg(startWord).arg(endWord > 9 ? QLatin1String("I") : QString::number(endWord)));
-        }
+    lineEditTextInBetween = new KLineEdit(this);
+    formLayout->addRow(i18n("Text in between:"), lineEditTextInBetween);
+    lineEditTextInBetween->setText(info.inBetween);
 
-        const QString text = lineEditTextInBetween->text();
-        if (!text.isEmpty())
-            result.append(QLatin1String("\"")).append(text);
+    spinBoxLength = new QSpinBox(this);
+    formLayout->addRow(i18n("Only first characters:"), spinBoxLength);
+    spinBoxLength->setSpecialValueText(i18n("No limitation"));
+    spinBoxLength->setMinimum(0);
+    spinBoxLength->setMaximum(9);
+    spinBoxLength->setValue(info.len == 0 || info.len > 9 ? 0 : info.len);
 
-        return result;
-    }
-};
+    connect(spanSliderWords, SIGNAL(lowerValueChanged(int)), isew, SLOT(updatePreview()));
+    connect(spanSliderWords, SIGNAL(upperValueChanged(int)), isew, SLOT(updatePreview()));
+    connect(spanSliderWords, SIGNAL(lowerValueChanged(int)), this, SLOT(updateRangeLabel()));
+    connect(spanSliderWords, SIGNAL(upperValueChanged(int)), this, SLOT(updateRangeLabel()));
+    connect(checkBoxRemoveSmallWords, SIGNAL(toggled(bool)), isew, SLOT(updatePreview()));
+    connect(comboBoxChangeCase, SIGNAL(currentIndexChanged(int)), isew, SLOT(updatePreview()));
+    connect(lineEditTextInBetween, SIGNAL(textEdited(QString)), isew, SLOT(updatePreview()));
+    connect(spinBoxLength, SIGNAL(valueChanged(int)), isew, SLOT(updatePreview()));
+}
+
+QString TitleWidget::toString() const
+{
+    QString result = checkBoxRemoveSmallWords->isChecked() ? QLatin1String("T") : QLatin1String("t");
+
+    if (spinBoxLength->value() > 0)
+        result.append(QString::number(spinBoxLength->value()));
+
+    CaseChange caseChange = (CaseChange)comboBoxChangeCase->itemData(comboBoxChangeCase->currentIndex()).toInt();
+    if (caseChange == ccToLower)
+        result.append(QLatin1String("l"));
+    else if (caseChange == ccToUpper)
+        result.append(QLatin1String("u"));
+
+    if (spanSliderWords->lowerValue() > spanSliderWords->minimum() || spanSliderWords->upperValue() < spanSliderWords->maximum())
+        result.append(QString(QLatin1String("w%1%2")).arg(spanSliderWords->lowerValue()).arg(spanSliderWords->upperValue() < spanSliderWords->maximum() ? QString::number(spanSliderWords->upperValue()) : QLatin1String("I")));
+
+    const QString text = lineEditTextInBetween->text();
+    if (!text.isEmpty())
+        result.append(QLatin1String("\"")).append(text);
+
+    return result;
+}
+
+void TitleWidget::updateRangeLabel()
+{
+    const int lower = spanSliderWords->lowerValue();
+    const int upper = spanSliderWords->upperValue();
+    const int min = spanSliderWords->minimum();
+    const int max = spanSliderWords->maximum();
+
+    if (lower == min && upper == min)
+        labelWordsRange->setText(i18n("First word only"));
+    else if (lower == min + 1 && upper == max)
+        labelWordsRange->setText(i18n("All but first word"));
+    else if (lower == min && upper == max)
+        labelWordsRange->setText(i18n("From first to last word"));
+    else if (lower > min && upper == max)
+        labelWordsRange->setText(i18n("From word %1 to last word", lower + 1));
+    else if (lower == min && upper < max)
+        labelWordsRange->setText(i18n("From first word to word %1", upper + 1));
+    else
+        labelWordsRange->setText(i18n("From word %1 to word %2", lower + 1, upper + 1));
+}
 
 class TextWidget : public TokenWidget
 {

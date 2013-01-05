@@ -25,11 +25,89 @@
 
 #include <QWidget>
 #include <QLayout>
+#include <QGroupBox>
 
 #include <KDialog>
 
 #include "idsuggestions.h"
 #include "entry.h"
+
+class QFormLayout;
+class QSpinBox;
+class QLabel;
+class QCheckBox;
+
+class KLineEdit;
+class KComboBox;
+
+class QxtSpanSlider;
+
+class IdSuggestionsEditWidget;
+
+/**
+ * @author Thomas Fischer
+ */
+class TokenWidget : public QGroupBox
+{
+protected:
+    enum CaseChange {ccNoChange, ccToUpper, ccToLower};
+    QGridLayout *gridLayout;
+    QFormLayout *formLayout;
+
+public:
+    TokenWidget(QWidget *parent);
+
+    void addButtons(KPushButton *buttonUp, KPushButton *buttonDown, KPushButton *buttonRemove);
+
+    virtual QString toString() const = 0;
+};
+
+/**
+ * @author Thomas Fischer
+ */
+class AuthorWidget : public TokenWidget
+{
+    Q_OBJECT
+
+private:
+    QxtSpanSlider *spanSliderAuthor;
+    QLabel *labelAuthorRange;
+    KComboBox *comboBoxChangeCase;
+    KLineEdit *lineEditTextInBetween;
+    QSpinBox *spinBoxLength;
+
+private slots:
+    void updateRangeLabel();
+
+public:
+    AuthorWidget(const struct IdSuggestions::IdSuggestionTokenInfo &info, IdSuggestions::Authors author, IdSuggestionsEditWidget *isew, QWidget *parent);
+
+    QString toString() const;
+};
+
+/**
+ * @author Thomas Fischer
+ */
+class TitleWidget : public TokenWidget
+{
+    Q_OBJECT
+
+private:
+    QxtSpanSlider *spanSliderWords;
+    QLabel *labelWordsRange;
+    QCheckBox *checkBoxRemoveSmallWords;
+    KComboBox *comboBoxChangeCase;
+    KLineEdit *lineEditTextInBetween;
+    QSpinBox *spinBoxLength;
+
+private slots:
+    void updateRangeLabel();
+
+public:
+    TitleWidget(const struct IdSuggestions::IdSuggestionTokenInfo &info, bool removeSmallWords, IdSuggestionsEditWidget *isew, QWidget *parent);
+
+    QString toString() const;
+};
 
 
 /**
