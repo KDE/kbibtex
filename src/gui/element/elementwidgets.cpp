@@ -820,6 +820,7 @@ void OtherFieldsWidget::createGUI()
 
     otherFieldsList = new QTreeWidget(this);
     otherFieldsList->setHeaderLabels(QStringList() << i18n("Key") << i18n("Value"));
+    otherFieldsList->setRootIsDecorated(false);
     layout->addWidget(otherFieldsList, 2, 1, 3, 1);
     label->setBuddy(otherFieldsList);
 
