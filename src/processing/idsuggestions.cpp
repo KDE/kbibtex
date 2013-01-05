@@ -289,7 +289,7 @@ struct IdSuggestions::IdSuggestionTokenInfo IdSuggestions::evalToken(const QStri
     }
 
     int dvStart = -1, dvEnd = 0x00ffffff;
-    if (token.length() > pos && token[pos] == 'w' && (dvStart = token[pos + 1].digitValue()) > -1 && (token[pos + 2] == QLatin1Char('I') || (dvEnd = token[pos + 2].digitValue()) > -1)) {
+    if (token.length() > pos + 2 && token[pos] == 'w' && (dvStart = token[pos + 1].digitValue()) > -1 && (token[pos + 2] == QLatin1Char('I') || (dvEnd = token[pos + 2].digitValue()) > -1)) {
         result.startWord = dvStart;
         result.endWord = dvEnd < 0 ? 0x00ffffff : dvEnd;
         pos += 3;

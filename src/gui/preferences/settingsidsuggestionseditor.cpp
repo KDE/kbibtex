@@ -78,7 +78,7 @@ AuthorWidget::AuthorWidget(const struct IdSuggestions::IdSuggestionTokenInfo &in
     case IdSuggestions::aAll:
         if (info.startWord > 0 || info.endWord < 0xffff) {
             spanSliderAuthor->setLowerValue(info.startWord);
-            spanSliderAuthor->setUpperValue(qMax(spanSliderAuthor->maximum(), info.endWord));
+            spanSliderAuthor->setUpperValue(qMin(spanSliderAuthor->maximum(), info.endWord));
         } else {
             spanSliderAuthor->setLowerValue(0);
             spanSliderAuthor->setUpperValue(spanSliderAuthor->maximum());
@@ -219,7 +219,7 @@ TitleWidget::TitleWidget(const struct IdSuggestions::IdSuggestionTokenInfo &info
     spanSliderWords->setHandleMovementMode(QxtSpanSlider::NoCrossing);
     if (info.startWord > 0 || info.endWord < 0xffff) {
         spanSliderWords->setLowerValue(info.startWord);
-        spanSliderWords->setUpperValue(qMax(spanSliderWords->maximum(), info.endWord));
+        spanSliderWords->setUpperValue(qMin(spanSliderWords->maximum(), info.endWord));
     } else {
         spanSliderWords->setLowerValue(0);
         spanSliderWords->setUpperValue(spanSliderWords->maximum());
