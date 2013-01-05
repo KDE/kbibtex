@@ -80,7 +80,7 @@ public:
         bool first = true;
         static const QRegExp sequenceOfSpaces(QLatin1String("\\s+"));
         QStringList titleWords = PlainTextValue::text(entry.value(Entry::ftTitle)).split(sequenceOfSpaces, QString::SkipEmptyParts);
-        unsigned int index = 0;
+        int index = 0;
         for (QStringList::ConstIterator it = titleWords.begin(); it != titleWords.end(); ++it, ++index) {
             if (first)
                 first = false;
@@ -105,7 +105,7 @@ public:
         QString result;
         bool first = true, firstInserted = true;
         QStringList authors = authorsLastName(entry);
-        unsigned int index = 0;
+        int index = 0;
         for (QStringList::ConstIterator it = authors.begin(); it != authors.end(); ++it, ++index) {
             QString author =  normalizeText(*it).left(ati.len);
             if ((selectAuthors == aAll && index >= ati.startWord && index <= ati.endWord) || (selectAuthors == aOnlyFirst && first) || (selectAuthors == aNotFirst && !first)) {

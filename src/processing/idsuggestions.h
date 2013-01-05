@@ -35,7 +35,7 @@ public:
 
     struct IdSuggestionTokenInfo {
         unsigned int len;
-        unsigned int startWord, endWord;
+        int startWord, endWord;
         bool toLower;
         bool toUpper;
         QString inBetween;
