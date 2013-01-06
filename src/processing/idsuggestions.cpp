@@ -74,7 +74,7 @@ public:
 
     QString translateTitleToken(const Entry &entry, const QString &token, bool removeSmallWords) const {
         struct IdSuggestionTokenInfo tti = p->evalToken(token);
-        const QStringList smallWords = QStringList() << QLatin1String("and") << QLatin1String("on") << QLatin1String("in") << QLatin1String("the") << QLatin1String("of") << QLatin1String("at") << QLatin1String("a") << QLatin1String("an") << QLatin1String("with") << QLatin1String("for") << QLatin1String("from");
+        static const QStringList smallWords = i18nc("Small words that can be removed from titles when generating id suggestions; separated by pipe symbol", "and|on|in|the|of|at|a|an|with|for|from").split(QLatin1Char('|'), QString::SkipEmptyParts);
 
         QString result;
         bool first = true;
