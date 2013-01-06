@@ -47,7 +47,7 @@ public slots:
     void resetToDefaults();
 
 private slots:
-    void addKeywordDialog();
+    void addKeyword();
     void removeKeyword();
     void enableRemoveButton();
 

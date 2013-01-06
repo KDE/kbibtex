@@ -31,6 +31,17 @@
 #include <fieldlistedit.h>
 #include "settingsglobalkeywordswidget.h"
 
+class DisallowEmptyStringListModel : public QStringListModel
+{
+public:
+    virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) {
+        if (role == Qt::EditRole && value.canConvert<QString>() && value.toString().isEmpty())
+            return false; /// do not accept values that are empty
+        else
+            return QStringListModel::setData(index, value, role);
+    }
+};
+
 class SettingsGlobalKeywordsWidget::SettingsGlobalKeywordsWidgetPrivate
 {
 private:
@@ -41,8 +52,9 @@ private:
 
 public:
     QListView *listViewKeywords;
-    QStringListModel stringListModel;
+    DisallowEmptyStringListModel stringListModel;
     KPushButton *buttonRemove;
+    static int keywordCounter;
 
     SettingsGlobalKeywordsWidgetPrivate(SettingsGlobalKeywordsWidget *parent)
             : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName(QLatin1String("Global Keywords")) {
@@ -74,9 +86,9 @@ public:
         listViewKeywords->setModel(&stringListModel);
         connect(listViewKeywords, SIGNAL(pressed(QModelIndex)), p, SLOT(enableRemoveButton()));
 
-        KPushButton *buttonAdd = new KPushButton(KIcon("list-add"), i18n("Add ..."), p);
+        KPushButton *buttonAdd = new KPushButton(KIcon("list-add"), i18n("Add"), p);
         layout->addWidget(buttonAdd, 0, 1, 1, 1);
-        connect(buttonAdd, SIGNAL(clicked()), p, SLOT(addKeywordDialog()));
+        connect(buttonAdd, SIGNAL(clicked()), p, SLOT(addKeyword()));
 
         buttonRemove = new KPushButton(KIcon("list-remove"), i18n("Remove"), p);
         layout->addWidget(buttonRemove, 1, 1, 1, 1);
@@ -84,6 +96,8 @@ public:
         connect(buttonRemove, SIGNAL(clicked()), p, SLOT(removeKeyword()));
     }
 };
+
+int SettingsGlobalKeywordsWidget::SettingsGlobalKeywordsWidgetPrivate::keywordCounter = 0;
 
 
 SettingsGlobalKeywordsWidget::SettingsGlobalKeywordsWidget(QWidget *parent)
@@ -123,28 +137,27 @@ void SettingsGlobalKeywordsWidget::resetToDefaults()
     d->resetToDefaults();
 }
 
-void SettingsGlobalKeywordsWidget::addKeywordDialog()
+void SettingsGlobalKeywordsWidget::addKeyword()
 {
-    bool ok = false;
-    QString newKeyword = KInputDialog::getText(i18n("New Keyword"), i18n("Enter a new keyword:"), QLatin1String(""), &ok, this);
-    if (ok && !d->stringListModel.stringList().contains(newKeyword)) {
-        QStringList list = d->stringListModel.stringList();
-        list.append(newKeyword);
-        list.sort();
-        d->stringListModel.setStringList(list);
+    if (d->stringListModel.insertRow(d->stringListModel.rowCount(), QModelIndex())) {
+        QModelIndex index = d->stringListModel.index(d->stringListModel.rowCount() - 1, 0);
+        d->stringListModel.setData(index, i18n("NewKeyword%1", d->keywordCounter++));
+        d->listViewKeywords->setCurrentIndex(index);
+        d->listViewKeywords->edit(index);
+        d->buttonRemove->setEnabled(true);
     }
 }
 
 void SettingsGlobalKeywordsWidget::removeKeyword()
 {
-    QString keyword = d->stringListModel.data(d->listViewKeywords->selectionModel()->selectedIndexes().first(), Qt::DisplayRole).toString();
-    QStringList list = d->stringListModel.stringList();
-    list.removeOne(keyword);
-    d->stringListModel.setStringList(list);
-    d->buttonRemove->setEnabled(false);
+    QModelIndex currIndex = d->listViewKeywords->currentIndex();
+    if (currIndex == QModelIndex())
+        currIndex = d->listViewKeywords->selectionModel()->selectedIndexes().first();
+    d->stringListModel.removeRow(currIndex.row());
+    d->buttonRemove->setEnabled(d->listViewKeywords->currentIndex() != QModelIndex());
 }
 
 void SettingsGlobalKeywordsWidget::enableRemoveButton()
 {
-    d->buttonRemove->setEnabled(!d->listViewKeywords->selectionModel()->selectedIndexes().isEmpty());
+    d->buttonRemove->setEnabled(d->listViewKeywords->currentIndex() != QModelIndex());
 }
