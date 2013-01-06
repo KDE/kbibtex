@@ -97,7 +97,7 @@ public slots:
     void resetToDefaults();
 
 private slots:
-    void addColorDialog();
+    void addColor();
     void removeColor();
     void enableRemoveButton();
 

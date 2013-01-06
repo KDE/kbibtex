@@ -18,6 +18,8 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
+#include <ctime>
+
 #include <QAbstractItemModel>
 #include <QLayout>
 #include <QStyledItemDelegate>
@@ -25,7 +27,6 @@
 
 #include <KSharedConfigPtr>
 #include <KPushButton>
-#include <KInputDialog>
 #include <KColorButton>
 #include <KColorDialog>
 #include <KLineEdit>
@@ -129,10 +130,13 @@ QVariant ColorLabelSettingsModel::data(const QModelIndex &index, int role) const
 bool ColorLabelSettingsModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     if (role == Qt::EditRole) {
+        const QModelIndex left = index.sibling(index.row(), 0);
+        const QModelIndex right = index.sibling(index.row(), 1);
         if (index.column() == 0 && value.canConvert<QColor>()) {
             QColor color = value.value<QColor>();
-            if (color != Qt::black) {
+            if (color != Qt::black && (color.red() > 0 || color.green() > 0 || color.blue() > 0)) {
                 colorLabelPairs[index.row()].color = color;
+                emit dataChanged(left, right);
                 emit modified();
                 return true;
             }
@@ -140,6 +144,7 @@ bool ColorLabelSettingsModel::setData(const QModelIndex &index, const QVariant &
             QString text = value.value<QString>();
             if (!text.isEmpty()) {
                 colorLabelPairs[index.row()].label = text;
+                emit dataChanged(left, right);
                 emit modified();
                 return true;
             }
@@ -289,7 +294,7 @@ public:
 
         KPushButton *buttonAdd = new KPushButton(KIcon("list-add"), i18n("Add ..."), p);
         layout->addWidget(buttonAdd, 0, 1, 1, 1);
-        connect(buttonAdd, SIGNAL(clicked()), p, SLOT(addColorDialog()));
+        connect(buttonAdd, SIGNAL(clicked()), p, SLOT(addColor()));
 
         buttonRemove = new KPushButton(KIcon("list-remove"), i18n("Remove"), p);
         layout->addWidget(buttonRemove, 1, 1, 1, 1);
@@ -302,6 +307,7 @@ public:
 SettingsColorLabelWidget::SettingsColorLabelWidget(QWidget *parent)
         : SettingsAbstractWidget(parent), d(new SettingsColorLabelWidgetPrivate(this))
 {
+    qsrand(time(NULL));
     d->setupGUI();
 }
 
@@ -335,22 +341,18 @@ void SettingsColorLabelWidget::resetToDefaults()
     d->resetToDefaults();
 }
 
-void SettingsColorLabelWidget::addColorDialog()
+void SettingsColorLabelWidget::addColor()
 {
-    bool ok = false;
-    QString newLabel = KInputDialog::getText(i18n("New Label"), i18n("Enter a new label:"), QLatin1String(""), &ok, this);
-    if (ok && !d->model->containsLabel(newLabel)) {
-        QColor color = Qt::red;
-        if (KColorDialog::getColor(color, this) == KColorDialog::Accepted && color != Qt::black)
-            d->model->addColorLabel(color, newLabel);
-    }
+    const QColor newColor((qrand() & 0xff) | 0x30, (qrand() & 0xff) | 0x30, (qrand() & 0xff) | 0x30);
+    const QString newColorName(newColor.name().replace(QLatin1Char('#'), QLatin1String("")));
+    d->model->addColorLabel(newColor, i18nc("Label for a new color; placeholder is for a 6-digit hex string", "NewColor%1", newColorName));
 }
 
 void SettingsColorLabelWidget::removeColor()
 {
     int row = d->view->selectionModel()->selectedIndexes().first().row();
     d->model->removeColorLabel(row);
-    d->buttonRemove->setEnabled(false);
+    d->buttonRemove->setEnabled(!d->view->selectionModel()->selectedIndexes().isEmpty());
 }
 
 void SettingsColorLabelWidget::enableRemoveButton()

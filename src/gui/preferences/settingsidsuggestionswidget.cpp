@@ -263,7 +263,7 @@ public:
         buttonEditSuggestion = new KPushButton(KIcon("document-edit"), i18n("Edit..."), p);
         layout->addWidget(buttonEditSuggestion, 1, 1, 1, 1);
 
-        buttonDeleteSuggestion = new KPushButton(KIcon("list-remove"), i18n("Delete"), p);
+        buttonDeleteSuggestion = new KPushButton(KIcon("list-remove"), i18n("Remove"), p);
         layout->addWidget(buttonDeleteSuggestion, 2, 1, 1, 1);
 
         buttonSuggestionUp = new KPushButton(KIcon("go-up"), i18n("Up"), p);
