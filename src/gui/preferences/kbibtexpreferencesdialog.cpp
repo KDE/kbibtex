@@ -93,7 +93,7 @@ public:
 
         settingsWidget = new SettingsFileExporterPDFPSWidget(p);
         settingWidgets.insert(settingsWidget);
-        page = p->addSubPage(pageGlobal, settingsWidget, settingsWidget->label());
+        page = p->addSubPage(pageSaving, settingsWidget, settingsWidget->label());
         page->setIcon(settingsWidget->icon());
         connect(settingsWidget, SIGNAL(changed()), p, SLOT(gotChanged()));
     }
