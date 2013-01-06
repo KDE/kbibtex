@@ -32,12 +32,12 @@ class KBIBTEXPROC_EXPORT IdSuggestions
 {
 public:
     enum Authors {aAll, aOnlyFirst, aNotFirst};
+    enum CaseChange {ccNoChange = 0, ccToUpper = 1, ccToLower = 2, ccToCamelCase = 3};
 
     struct IdSuggestionTokenInfo {
         unsigned int len;
         int startWord, endWord;
-        bool toLower;
-        bool toUpper;
+        CaseChange caseChange;
         QString inBetween;
     };
 

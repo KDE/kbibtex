@@ -88,14 +88,28 @@ public:
                 result.append(tti.inBetween);
 
             QString lowerText = (*it).toLower();
-            if ((!removeSmallWords || !smallWords.contains(lowerText)) && index >= tti.startWord && index <= tti.endWord)
-                result.append(normalizeText(*it).left(tti.len));
+            if ((!removeSmallWords || !smallWords.contains(lowerText)) && index >= tti.startWord && index <= tti.endWord) {
+                QString titleComponent = normalizeText(*it).left(tti.len);
+                if (tti.caseChange == IdSuggestions::ccToCamelCase)
+                    titleComponent = titleComponent[0].toUpper() + titleComponent.mid(1);
+
+                result.append(titleComponent);
+            }
         }
 
-        if (tti.toUpper)
+        switch (tti.caseChange) {
+        case IdSuggestions::ccToUpper:
             result = result.toUpper();
-        else if (tti.toLower)
+            break;
+        case IdSuggestions::ccToLower:
             result = result.toLower();
+            break;
+        case IdSuggestions::ccToCamelCase:
+            /// already processed above
+        case IdSuggestions::ccNoChange:
+            /// nothing
+            break;
+        }
 
         return result;
     }
@@ -107,7 +121,15 @@ public:
         QStringList authors = authorsLastName(entry);
         int index = 0;
         for (QStringList::ConstIterator it = authors.begin(); it != authors.end(); ++it, ++index) {
-            QString author =  normalizeText(*it).left(ati.len);
+            QString author = normalizeText(*it).left(ati.len);
+            if (ati.caseChange == IdSuggestions::ccToCamelCase) {
+                const QStringList nameComponents = author.split(QLatin1Char(' '), QString::SkipEmptyParts);
+                QStringList newNameComponents;
+                foreach(const QString &nameComponent, nameComponents) {
+                    newNameComponents.append(nameComponent[0].toUpper() + nameComponent.mid(1));
+                }
+                author = newNameComponents.join(QLatin1String(" "));
+            }
             if ((selectAuthors == aAll && index >= ati.startWord && index <= ati.endWord) || (selectAuthors == aOnlyFirst && first) || (selectAuthors == aNotFirst && !first)) {
                 if (!firstInserted)
                     result.append(ati.inBetween);
@@ -117,10 +139,20 @@ public:
             first = false;
         }
 
-        if (ati.toUpper)
+        switch (ati.caseChange) {
+        case IdSuggestions::ccToUpper:
             result = result.toUpper();
-        else if (ati.toLower)
+            break;
+        case IdSuggestions::ccToLower:
             result = result.toLower();
+            break;
+        case IdSuggestions::ccToCamelCase:
+            /// already processed above
+            break;
+        case IdSuggestions::ccNoChange:
+            /// nothing
+            break;
+        }
 
         return result;
     }
@@ -234,8 +266,21 @@ QStringList IdSuggestions::formatStrToHuman(const QString &formatStr) const
 
             int n = info.len;
             if (info.len < 0x00ffffff) text.append(i18np(", but only first letter of each last name", ", but only first %1 letters of each last name", n));
-            if (info.toUpper) text.append(i18n(", in upper case"));
-            else if (info.toLower) text.append(i18n(", in lower case"));
+
+            switch (info.caseChange) {
+            case IdSuggestions::ccToUpper:
+                text.append(i18n(", in upper case"));
+                break;
+            case IdSuggestions::ccToLower:
+                text.append(i18n(", in lower case"));
+                break;
+            case IdSuggestions::ccToCamelCase:
+                text.append(i18n(", in CamelCase"));
+                break;
+            case IdSuggestions::ccNoChange:
+                break;
+            }
+
             if (info.inBetween != QString::null) text.append(i18n(", with '%1' in between", info.inBetween));
         } else if (token[0] == 'y') text.append(i18n("Year (2 digits)"));
         else if (token[0] == 'Y') text.append(i18n("Year (4 digits)"));
@@ -250,8 +295,21 @@ QStringList IdSuggestions::formatStrToHuman(const QString &formatStr) const
                 text.append(i18n(", but only from word %1 to word %2", info.startWord + 1, info.endWord + 1));
             if (info.len < 0x00ffffff)
                 text.append(i18np(", but only first letter of each word", ", but only first %1 letters of each word", info.len));
-            if (info.toUpper) text.append(i18n(", in upper case"));
-            else if (info.toLower) text.append(i18n(", in lower case"));
+
+            switch (info.caseChange) {
+            case IdSuggestions::ccToUpper:
+                text.append(i18n(", in upper case"));
+                break;
+            case IdSuggestions::ccToLower:
+                text.append(i18n(", in lower case"));
+                break;
+            case IdSuggestions::ccToCamelCase:
+                text.append(i18n(", in CamelCase"));
+                break;
+            case IdSuggestions::ccNoChange:
+                break;
+            }
+
             if (info.inBetween != QString::null) text.append(i18n(", with '%1' in between", info.inBetween));
             if (token[0] == 'T') text.append(i18n(", small words removed"));
         } else if (token[0] == '"') text.append(i18n("Text: '%1'", token.mid(1)));
@@ -269,8 +327,7 @@ struct IdSuggestions::IdSuggestionTokenInfo IdSuggestions::evalToken(const QStri
     result.len = 0x00ffffff;
     result.startWord = 0;
     result.endWord = 0x00ffffff;
-    result.toLower = false;
-    result.toUpper = false;
+    result.caseChange = IdSuggestions::ccNoChange;
     result.inBetween = QString::null;
 
     if (token.length() > pos) {
@@ -282,10 +339,22 @@ struct IdSuggestions::IdSuggestionTokenInfo IdSuggestions::evalToken(const QStri
     }
 
     if (token.length() > pos) {
-        result.toLower = token[pos] == 'l';
-        result.toUpper = token[pos] == 'u';
-        if (result.toUpper || result.toLower)
+        switch (token[pos].unicode()) {
+        case 0x006c: // 'l'
+            result.caseChange = IdSuggestions::ccToLower;
             ++pos;
+            break;
+        case 0x0075: // 'u'
+            result.caseChange = IdSuggestions::ccToUpper;
+            ++pos;
+            break;
+        case 0x0063: // 'c'
+            result.caseChange = IdSuggestions::ccToCamelCase;
+            ++pos;
+            break;
+        default:
+            result.caseChange = IdSuggestions::ccNoChange;
+        }
     }
 
     int dvStart = -1, dvEnd = 0x00ffffff;

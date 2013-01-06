@@ -101,16 +101,12 @@ AuthorWidget::AuthorWidget(const struct IdSuggestions::IdSuggestionTokenInfo &in
     labelAuthorRange->setMinimumWidth(qMax(a, b));
 
     comboBoxChangeCase = new KComboBox(false, this);
-    comboBoxChangeCase->addItem(i18n("No change"), ccNoChange);
-    comboBoxChangeCase->addItem(i18n("To upper case"), ccToUpper);
-    comboBoxChangeCase->addItem(i18n("To lower case"), ccToLower);
+    comboBoxChangeCase->addItem(i18n("No change"), IdSuggestions::ccNoChange);
+    comboBoxChangeCase->addItem(i18n("To upper case"), IdSuggestions::ccToUpper);
+    comboBoxChangeCase->addItem(i18n("To lower case"), IdSuggestions::ccToLower);
+    comboBoxChangeCase->addItem(i18n("To CamelCase"), IdSuggestions::ccToCamelCase);
     formLayout->addRow(i18n("Change casing:"), comboBoxChangeCase);
-    if (info.toLower)
-        comboBoxChangeCase->setCurrentIndex(comboBoxChangeCase->findData(ccToLower));
-    else if (info.toUpper)
-        comboBoxChangeCase->setCurrentIndex(comboBoxChangeCase->findData(ccToUpper));
-    else
-        comboBoxChangeCase->setCurrentIndex(comboBoxChangeCase->findData(ccNoChange));
+    comboBoxChangeCase->setCurrentIndex((int)info.caseChange); /// enum has numbers assigned to cases and combo box has same indices
 
     lineEditTextInBetween = new KLineEdit(this);
     formLayout->addRow(i18n("Text in between:"), lineEditTextInBetween);
@@ -141,11 +137,13 @@ QString AuthorWidget::toString() const
     if (spinBoxLength->value() > 0)
         result.append(QString::number(spinBoxLength->value()));
 
-    CaseChange caseChange = (CaseChange)comboBoxChangeCase->itemData(comboBoxChangeCase->currentIndex()).toInt();
-    if (caseChange == ccToLower)
+    IdSuggestions::CaseChange caseChange = (IdSuggestions::CaseChange)comboBoxChangeCase->currentIndex();
+    if (caseChange == IdSuggestions::ccToLower)
         result.append(QLatin1String("l"));
-    else if (caseChange == ccToUpper)
+    else if (caseChange == IdSuggestions::ccToUpper)
         result.append(QLatin1String("u"));
+    else if (caseChange == IdSuggestions::ccToCamelCase)
+        result.append(QLatin1String("c"));
 
     if (spanSliderAuthor->lowerValue() > spanSliderAuthor->minimum() || spanSliderAuthor->upperValue() < spanSliderAuthor->maximum())
         result.append(QString(QLatin1String("w%1%2")).arg(spanSliderAuthor->lowerValue()).arg(spanSliderAuthor->upperValue() < spanSliderAuthor->maximum() ? QString::number(spanSliderAuthor->upperValue()) : QLatin1String("I")));
@@ -236,16 +234,12 @@ TitleWidget::TitleWidget(const struct IdSuggestions::IdSuggestionTokenInfo &info
     checkBoxRemoveSmallWords->setChecked(removeSmallWords);
 
     comboBoxChangeCase = new KComboBox(false, this);
-    comboBoxChangeCase->addItem(i18n("No change"), ccNoChange);
-    comboBoxChangeCase->addItem(i18n("To upper case"), ccToUpper);
-    comboBoxChangeCase->addItem(i18n("To lower case"), ccToLower);
+    comboBoxChangeCase->addItem(i18n("No change"), IdSuggestions::ccNoChange);
+    comboBoxChangeCase->addItem(i18n("To upper case"), IdSuggestions::ccToUpper);
+    comboBoxChangeCase->addItem(i18n("To lower case"), IdSuggestions::ccToLower);
+    comboBoxChangeCase->addItem(i18n("To CamelCase"), IdSuggestions::ccToCamelCase);
     formLayout->addRow(i18n("Change casing:"), comboBoxChangeCase);
-    if (info.toLower)
-        comboBoxChangeCase->setCurrentIndex(comboBoxChangeCase->findData(ccToLower));
-    else if (info.toUpper)
-        comboBoxChangeCase->setCurrentIndex(comboBoxChangeCase->findData(ccToUpper));
-    else
-        comboBoxChangeCase->setCurrentIndex(comboBoxChangeCase->findData(ccNoChange));
+    comboBoxChangeCase->setCurrentIndex((int)info.caseChange); /// enum has numbers assigned to cases and combo box has same indices
 
     lineEditTextInBetween = new KLineEdit(this);
     formLayout->addRow(i18n("Text in between:"), lineEditTextInBetween);
@@ -275,11 +269,13 @@ QString TitleWidget::toString() const
     if (spinBoxLength->value() > 0)
         result.append(QString::number(spinBoxLength->value()));
 
-    CaseChange caseChange = (CaseChange)comboBoxChangeCase->itemData(comboBoxChangeCase->currentIndex()).toInt();
-    if (caseChange == ccToLower)
+    IdSuggestions::CaseChange caseChange = (IdSuggestions::CaseChange)comboBoxChangeCase->currentIndex();
+    if (caseChange == IdSuggestions::ccToLower)
         result.append(QLatin1String("l"));
-    else if (caseChange == ccToUpper)
+    else if (caseChange == IdSuggestions::ccToUpper)
         result.append(QLatin1String("u"));
+    else if (caseChange == IdSuggestions::ccToCamelCase)
+        result.append(QLatin1String("c"));
 
     if (spanSliderWords->lowerValue() > spanSliderWords->minimum() || spanSliderWords->upperValue() < spanSliderWords->maximum())
         result.append(QString(QLatin1String("w%1%2")).arg(spanSliderWords->lowerValue()).arg(spanSliderWords->upperValue() < spanSliderWords->maximum() ? QString::number(spanSliderWords->upperValue()) : QLatin1String("I")));
@@ -442,7 +438,7 @@ public:
             info.len = -1;
             info.startWord = 0;
             info.endWord = 0x00ffffff;
-            info.toLower = info.toUpper = false;
+            info.caseChange = IdSuggestions::ccNoChange;
             tokenWidget = new TitleWidget(info, true, p, container);
             widgetList << tokenWidget;
             containerLayout->insertWidget(pos, tokenWidget, 1);
@@ -454,7 +450,7 @@ public:
             info.len = -1;
             info.startWord = 0;
             info.endWord = 0x00ffffff;
-            info.toLower = info.toUpper = false;
+            info.caseChange = IdSuggestions::ccNoChange;
             tokenWidget = new AuthorWidget(info, aAll, p, container);
             widgetList << tokenWidget;
             containerLayout->insertWidget(pos, tokenWidget, 1);

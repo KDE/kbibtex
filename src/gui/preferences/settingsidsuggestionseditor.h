@@ -50,7 +50,6 @@ class IdSuggestionsEditWidget;
 class TokenWidget : public QGroupBox
 {
 protected:
-    enum CaseChange {ccNoChange, ccToUpper, ccToLower};
     QGridLayout *gridLayout;
     QFormLayout *formLayout;
 
