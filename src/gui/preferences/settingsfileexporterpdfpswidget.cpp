@@ -131,7 +131,7 @@ QString SettingsFileExporterPDFPSWidget::label() const
 
 KIcon SettingsFileExporterPDFPSWidget::icon() const
 {
-    return KIcon("checkbox"); // TODO find better icon
+    return KIcon("application-pdf");
 }
 
 void SettingsFileExporterPDFPSWidget::loadState()

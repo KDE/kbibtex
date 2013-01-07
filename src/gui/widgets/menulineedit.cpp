@@ -20,10 +20,10 @@
 
 #include <QLayout>
 #include <QApplication>
-#include <QTextEdit>
 #include <QMenu>
 #include <QTimer>
 
+#include <KTextEdit>
 #include <KPushButton>
 #include <KLineEdit>
 
@@ -42,13 +42,13 @@ private:
 public:
     KPushButton *m_pushButtonType;
     KLineEdit *m_singleLineEditText;
-    QTextEdit *m_multiLineEditText;
+    KTextEdit *m_multiLineEditText;
 
     MenuLineEditPrivate(bool isMultiLine, MenuLineEdit *parent)
             : p(parent), m_isReadOnly(false),
           // FIXME much here is hard-coded. do it better?
           transparentStyleSheet(
-              QLatin1String("QTextEdit { border-style: none; background-color: transparent; }")
+              QLatin1String("KTextEdit { border-style: none; background-color: transparent; }")
               + QLatin1String("KLineEdit { border-style: none; background-color: transparent; }")
               + QLatin1String("KPushButton { border-style: none; background-color: transparent; padding: 0px; margin-left: 2px; margin-right:2px; text-align: left; }")
           ), normalStyleSheet(
@@ -71,7 +71,7 @@ public:
         m_pushButtonType->setObjectName("FieldLineEditButton");
 
         if (isMultiLine) {
-            m_multiLineEditText = new QTextEdit(p);
+            m_multiLineEditText = new KTextEdit(p);
             appendWidget(m_multiLineEditText);
             connect(m_multiLineEditText, SIGNAL(textChanged()), p, SLOT(slotTextChanged()));
             m_multiLineEditText->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
