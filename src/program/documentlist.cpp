@@ -308,7 +308,7 @@ void DocumentListView::openFileWithService(int i)
     QModelIndex modelIndex = currentIndex();
     if (modelIndex != QModelIndex()) {
         OpenFileInfo *ofi = qvariant_cast<OpenFileInfo *>(modelIndex.data(Qt::UserRole));
-        if (!ofi->isModified() || (KMessageBox::questionYesNo(this, i18n("The current document document has to be saved before switching the viewer/editor component."), i18n("Save before switching?"), KGuiItem(i18n("Save document"), KIcon("document-save")), KGuiItem(i18n("Do not switch"), KIcon("dialog-cancel"))) == KMessageBox::Yes && ofi->save()))
+        if (!ofi->isModified() || (KMessageBox::questionYesNo(this, i18n("The current document has to be saved before switching the viewer/editor component."), i18n("Save before switching?"), KGuiItem(i18n("Save document"), KIcon("document-save")), KGuiItem(i18n("Do not switch"), KIcon("dialog-cancel"))) == KMessageBox::Yes && ofi->save()))
             d->ofim->setCurrentFile(ofi, d->openMenuServices[i]);
     }
 }
