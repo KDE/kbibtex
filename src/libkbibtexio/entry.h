@@ -189,6 +189,7 @@ public:
      */
     bool contains(const QString &key) const;
 
+    Entry *resolveCrossref(const File *bibTeXfile) const;
     static Entry *resolveCrossref(const Entry &original, const File *bibTeXfile);
 
 private:
