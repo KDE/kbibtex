@@ -39,7 +39,6 @@
 class TokenWidget : public QGroupBox
 {
 protected:
-    enum CaseChange {ccNoChange, ccToUpper, ccToLower};
     QGridLayout *gridLayout;
     QFormLayout *formLayout;
 
@@ -89,16 +88,12 @@ public:
         comboBoxWhichAuthor->setCurrentIndex(comboBoxWhichAuthor->findData(author));
 
         comboBoxChangeCase = new KComboBox(false, this);
-        comboBoxChangeCase->addItem(i18n("No change"), ccNoChange);
-        comboBoxChangeCase->addItem(i18n("To upper case"), ccToUpper);
-        comboBoxChangeCase->addItem(i18n("To lower case"), ccToLower);
+        comboBoxChangeCase->addItem(i18n("No change"), IdSuggestions::ccNoChange);
+        comboBoxChangeCase->addItem(i18n("To upper case"), IdSuggestions::ccToUpper);
+        comboBoxChangeCase->addItem(i18n("To lower case"), IdSuggestions::IdSuggestions::ccToLower);
+        comboBoxChangeCase->addItem(i18n("To CamelCase"), IdSuggestions::ccToCamelCase);
         formLayout->addRow(i18n("Change casing:"), comboBoxChangeCase);
-        if (info.toLower)
-            comboBoxChangeCase->setCurrentIndex(comboBoxChangeCase->findData(ccToLower));
-        else if (info.toUpper)
-            comboBoxChangeCase->setCurrentIndex(comboBoxChangeCase->findData(ccToUpper));
-        else
-            comboBoxChangeCase->setCurrentIndex(comboBoxChangeCase->findData(ccNoChange));
+        comboBoxChangeCase->setCurrentIndex((int)info.caseChange); /// enum has numbers assigned to cases and combo box has same indices
 
         lineEditTextInBetween = new KLineEdit(this);
         formLayout->addRow(i18n("Text in between:"), lineEditTextInBetween);
@@ -124,11 +119,13 @@ public:
         if (spinBoxLength->value() > 0)
             result.append(QString::number(spinBoxLength->value()));
 
-        CaseChange caseChange = (CaseChange)comboBoxChangeCase->itemData(comboBoxChangeCase->currentIndex()).toInt();
-        if (caseChange == ccToLower)
+        IdSuggestions::CaseChange caseChange = (IdSuggestions::CaseChange)comboBoxChangeCase->itemData(comboBoxChangeCase->currentIndex()).toInt();
+        if (caseChange == IdSuggestions::ccToLower)
             result.append(QLatin1String("l"));
-        else if (caseChange == ccToUpper)
+        else if (caseChange == IdSuggestions::ccToUpper)
             result.append(QLatin1String("u"));
+        else if (caseChange == IdSuggestions::ccToCamelCase)
+            result.append(QLatin1String("c"));
 
         const QString text = lineEditTextInBetween->text();
         if (!text.isEmpty())
@@ -183,16 +180,12 @@ public:
         checkBoxRemoveSmallWords->setChecked(removeSmallWords);
 
         comboBoxChangeCase = new KComboBox(false, this);
-        comboBoxChangeCase->addItem(i18n("No change"), ccNoChange);
-        comboBoxChangeCase->addItem(i18n("To upper case"), ccToUpper);
-        comboBoxChangeCase->addItem(i18n("To lower case"), ccToLower);
+        comboBoxChangeCase->addItem(i18n("No change"), IdSuggestions::ccNoChange);
+        comboBoxChangeCase->addItem(i18n("To upper case"), IdSuggestions::ccToUpper);
+        comboBoxChangeCase->addItem(i18n("To lower case"), IdSuggestions::IdSuggestions::ccToLower);
+        comboBoxChangeCase->addItem(i18n("To CamelCase"), IdSuggestions::ccToCamelCase);
         formLayout->addRow(i18n("Change casing:"), comboBoxChangeCase);
-        if (info.toLower)
-            comboBoxChangeCase->setCurrentIndex(comboBoxChangeCase->findData(ccToLower));
-        else if (info.toUpper)
-            comboBoxChangeCase->setCurrentIndex(comboBoxChangeCase->findData(ccToUpper));
-        else
-            comboBoxChangeCase->setCurrentIndex(comboBoxChangeCase->findData(ccNoChange));
+        comboBoxChangeCase->setCurrentIndex((int)info.caseChange); /// enum has numbers assigned to cases and combo box has same indices
 
         lineEditTextInBetween = new KLineEdit(this);
         formLayout->addRow(i18n("Text in between:"), lineEditTextInBetween);
@@ -217,11 +210,13 @@ public:
         if (spinBoxLength->value() > 0)
             result.append(QString::number(spinBoxLength->value()));
 
-        CaseChange caseChange = (CaseChange)comboBoxChangeCase->itemData(comboBoxChangeCase->currentIndex()).toInt();
-        if (caseChange == ccToLower)
+        IdSuggestions::CaseChange caseChange = (IdSuggestions::CaseChange)comboBoxChangeCase->itemData(comboBoxChangeCase->currentIndex()).toInt();
+        if (caseChange == IdSuggestions::ccToLower)
             result.append(QLatin1String("l"));
-        else if (caseChange == ccToUpper)
+        else if (caseChange == IdSuggestions::ccToUpper)
             result.append(QLatin1String("u"));
+        else if (caseChange == IdSuggestions::ccToCamelCase)
+            result.append(QLatin1String("c"));
 
         const QString text = lineEditTextInBetween->text();
         if (!text.isEmpty())
@@ -296,6 +291,8 @@ public:
         buttonAddTokenAtTop = new KPushButton(KIcon("list-add"), i18n("Add at top"), container);
         containerLayout->addWidget(buttonAddTokenAtTop, 0);
 
+        containerLayout->addStretch(1);
+
         buttonAddTokenAtBottom = new KPushButton(KIcon("list-add"), i18n("Add at bottom"), container);
         containerLayout->addWidget(buttonAddTokenAtBottom, 0);
 
@@ -350,14 +347,14 @@ public:
     }
 
     void add(TokenType tokenType, bool atTop) {
-        const int pos = atTop ? 1 : containerLayout->count() - 1;
+        const int pos = atTop ? 1 : containerLayout->count() - 2;
         TokenWidget *tokenWidget = NULL;
         switch (tokenType) {
         case ttTitle: {
             struct IdSuggestions::IdSuggestionTokenInfo info;
             info.inBetween = QString();
             info.len = -1;
-            info.toLower = info.toUpper = false;
+            info.caseChange = IdSuggestions::ccNoChange;
             tokenWidget = new TitleWidget(info, true, p, container);
             widgetList << tokenWidget;
             containerLayout->insertWidget(pos, tokenWidget, 1);
@@ -367,7 +364,7 @@ public:
             struct IdSuggestions::IdSuggestionTokenInfo info;
             info.inBetween = QString();
             info.len = -1;
-            info.toLower = info.toUpper = false;
+            info.caseChange = IdSuggestions::ccNoChange;
             tokenWidget = new AuthorWidget(info, aAll, p, container);
             widgetList << tokenWidget;
             containerLayout->insertWidget(pos, tokenWidget, 1);
@@ -400,24 +397,24 @@ public:
                 struct IdSuggestions::IdSuggestionTokenInfo info = p->evalToken(token.mid(1));
                 tokenWidget = new AuthorWidget(info, author, p, container);
                 widgetList << tokenWidget;
-                containerLayout->insertWidget(containerLayout->count() - 1, tokenWidget, 1);
+                containerLayout->insertWidget(containerLayout->count() - 2, tokenWidget, 1);
             } else if (token[0] == 'y') {
                 tokenWidget = new YearWidget(2, p, container);
                 widgetList << tokenWidget;
-                containerLayout->insertWidget(containerLayout->count() - 1, tokenWidget, 1);
+                containerLayout->insertWidget(containerLayout->count() - 2, tokenWidget, 1);
             } else if (token[0] == 'Y') {
                 tokenWidget = new YearWidget(4, p, container);
                 widgetList << tokenWidget;
-                containerLayout->insertWidget(containerLayout->count() - 1, tokenWidget, 1);
+                containerLayout->insertWidget(containerLayout->count() - 2, tokenWidget, 1);
             } else if (token[0] == 't' || token[0] == 'T') {
                 struct IdSuggestions::IdSuggestionTokenInfo info = p->evalToken(token.mid(1));
                 tokenWidget = new TitleWidget(info, token[0] == 'T', p, container);
                 widgetList << tokenWidget;
-                containerLayout->insertWidget(containerLayout->count() - 1, tokenWidget, 1);
+                containerLayout->insertWidget(containerLayout->count() - 2, tokenWidget, 1);
             } else if (token[0] == '"') {
                 tokenWidget = new TextWidget(token.mid(1), p, container);
                 widgetList << tokenWidget;
-                containerLayout->insertWidget(containerLayout->count() - 1, tokenWidget, 1);
+                containerLayout->insertWidget(containerLayout->count() - 2, tokenWidget, 1);
             }
 
             addManagementButtons(tokenWidget);
@@ -497,6 +494,7 @@ void IdSuggestionsEditWidget::removeToken(QWidget *widget)
     d->widgetList.removeOne(tokenWidget);
     d->containerLayout->removeWidget(tokenWidget);
     tokenWidget->deleteLater();
+    updatePreview();
 }
 
 void IdSuggestionsEditWidget::addToken(int cmd)
@@ -508,6 +506,7 @@ void IdSuggestionsEditWidget::addToken(int cmd)
         d->add((IdSuggestionsEditWidgetPrivate::TokenType)cmd, false);
         d->area->ensureWidgetVisible(d->buttonAddTokenAtBottom); // FIXME does not work as intended
     }
+    updatePreview();
 }
 
 IdSuggestionsEditDialog::IdSuggestionsEditDialog(QWidget *parent, Qt::WFlags flags)

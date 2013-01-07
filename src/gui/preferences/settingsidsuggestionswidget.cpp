@@ -150,6 +150,16 @@ public:
         return false;
     }
 
+    virtual bool insertRow(int row, const QModelIndex &parent = QModelIndex()) {
+        if (parent != QModelIndex()) return false;
+
+        beginInsertRows(parent, row, row);
+        m_formatStringList.insert(row, QLatin1String("T"));
+        endInsertRows();
+
+        return true;
+    }
+
     QVariant headerData(int section, Qt::Orientation, int role = Qt::DisplayRole) const {
         if (role == Qt::DisplayRole && section == 0)
             return i18n("Id Suggestions");
@@ -253,7 +263,7 @@ public:
         buttonEditSuggestion = new KPushButton(KIcon("document-edit"), i18n("Edit..."), p);
         layout->addWidget(buttonEditSuggestion, 1, 1, 1, 1);
 
-        buttonDeleteSuggestion = new KPushButton(KIcon("list-remove"), i18n("Delete"), p);
+        buttonDeleteSuggestion = new KPushButton(KIcon("list-remove"), i18n("Remove"), p);
         layout->addWidget(buttonDeleteSuggestion, 2, 1, 1, 1);
 
         buttonSuggestionUp = new KPushButton(KIcon("go-up"), i18n("Up"), p);
@@ -273,6 +283,7 @@ public:
         connect(buttonSuggestionUp, SIGNAL(clicked()), p, SLOT(buttonClicked()));
         connect(buttonSuggestionDown, SIGNAL(clicked()), p, SLOT(buttonClicked()));
         connect(buttonToggleDefaultString, SIGNAL(clicked()), p, SLOT(toggleDefault()));
+        connect(treeViewSuggestions, SIGNAL(doubleClicked(QModelIndex)), p, SLOT(editItem(QModelIndex)));
     }
 };
 
@@ -322,22 +333,14 @@ void SettingsIdSuggestionsWidget::buttonClicked()
     if (button == d->buttonNewSuggestion) {
         const QString newSuggestion = IdSuggestionsEditDialog::editSuggestion(d->idSuggestionsModel->previewEntry().data(), QLatin1String(""), this);
         const int row = d->treeViewSuggestions->model()->rowCount(QModelIndex());
-        if (!newSuggestion.isEmpty() && d->treeViewSuggestions->model()->insertRow(row, QModelIndex())) {
-            QModelIndex index = d->treeViewSuggestions->model()->index(row, 0, QModelIndex());
-            d->treeViewSuggestions->model()->setData(index, newSuggestion, FormatStringRole);
+        if (!newSuggestion.isEmpty() && d->idSuggestionsModel->insertRow(row)) {
+            QModelIndex index = d->idSuggestionsModel->index(row, 0, QModelIndex());
+            if (d->idSuggestionsModel->setData(index, newSuggestion, FormatStringRole))
+                emit changed();
         }
     } else if (button == d->buttonEditSuggestion) {
         QModelIndex currIndex = d->treeViewSuggestions->currentIndex();
-        QString suggestion;
-        if (currIndex != QModelIndex() && !(suggestion = currIndex.data(FormatStringRole).toString()).isEmpty()) {
-            const QString newSuggestion = IdSuggestionsEditDialog::editSuggestion(d->idSuggestionsModel->previewEntry().data(), suggestion, this);
-            if (newSuggestion.isEmpty()) {
-                if (KMessageBox::questionYesNo(this, i18n("All token have been removed from this suggestion. Remove suggestion itself or restore original suggestion?"), i18n("Remove suggestion?"), KGuiItem(i18n("Remove suggestion"), KIcon("list-remove")), KGuiItem(i18n("Revert changes"), KIcon("edit-undo"))) == KMessageBox::Yes && d->idSuggestionsModel->remove(selectedIndex)) {
-                    emit changed();
-                }
-            } else if (newSuggestion != suggestion)
-                d->treeViewSuggestions->model()->setData(currIndex, newSuggestion, FormatStringRole);
-        }
+        editItem(currIndex);
     } else if (button == d->buttonDeleteSuggestion) {
         if (d->idSuggestionsModel->remove(selectedIndex)) {
             emit changed();
@@ -366,9 +369,26 @@ void SettingsIdSuggestionsWidget::itemChanged(const QModelIndex &index)
     d->buttonToggleDefaultString->setEnabled(enableChange);
 }
 
+void SettingsIdSuggestionsWidget::editItem(const QModelIndex &index)
+{
+    QString suggestion;
+    if (index != QModelIndex() && !(suggestion = index.data(FormatStringRole).toString()).isEmpty()) {
+        const QString newSuggestion = IdSuggestionsEditDialog::editSuggestion(d->idSuggestionsModel->previewEntry().data(), suggestion, this);
+        if (newSuggestion.isEmpty()) {
+            if (KMessageBox::questionYesNo(this, i18n("All token have been removed from this suggestion. Remove suggestion itself or restore original suggestion?"), i18n("Remove suggestion?"), KGuiItem(i18n("Remove suggestion"), KIcon("list-remove")), KGuiItem(i18n("Revert changes"), KIcon("edit-undo"))) == KMessageBox::Yes && d->idSuggestionsModel->remove(index)) {
+                emit changed();
+            }
+        } else if (newSuggestion != suggestion) {
+            if (d->idSuggestionsModel->setData(index, newSuggestion, FormatStringRole))
+                emit changed();
+        }
+    }
+
+}
+
 void SettingsIdSuggestionsWidget::toggleDefault()
 {
     QModelIndex curIndex = d->treeViewSuggestions->currentIndex();
-    bool current = d->treeViewSuggestions->model()->data(curIndex, IsDefaultFormatStringRole).toBool();
-    d->treeViewSuggestions->model()->setData(curIndex, !current, IsDefaultFormatStringRole);
+    bool current = d->idSuggestionsModel->data(curIndex, IsDefaultFormatStringRole).toBool();
+    d->idSuggestionsModel->setData(curIndex, !current, IsDefaultFormatStringRole);
 }

@@ -47,6 +47,7 @@ private slots:
     void buttonClicked();
     void itemChanged(const QModelIndex &index);
     void toggleDefault();
+    void editItem(const QModelIndex &index);
 
 private:
     class SettingsIdSuggestionsWidgetPrivate;

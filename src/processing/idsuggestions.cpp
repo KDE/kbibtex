@@ -74,27 +74,42 @@ public:
 
     QString translateTitleToken(const Entry &entry, const QString &token, bool removeSmallWords) const {
         struct IdSuggestionTokenInfo tti = p->evalToken(token);
-        const QStringList smallWords = QStringList() << QLatin1String("and") << QLatin1String("on") << QLatin1String("in") << QLatin1String("the") << QLatin1String("of") << QLatin1String("at") << QLatin1String("a") << QLatin1String("an") << QLatin1String("with") << QLatin1String("for") << QLatin1String("from");
+        static const QStringList smallWords = i18nc("Small words that can be removed from titles when generating id suggestions; separated by pipe symbol", "and|on|in|the|of|at|a|an|with|for|from").split(QLatin1Char('|'), QString::SkipEmptyParts);
 
         QString result;
         bool first = true;
         static const QRegExp sequenceOfSpaces(QLatin1String("\\s+"));
         QStringList titleWords = PlainTextValue::text(entry.value(Entry::ftTitle)).split(sequenceOfSpaces, QString::SkipEmptyParts);
-        for (QStringList::ConstIterator it = titleWords.begin(); it != titleWords.end(); ++it) {
+        int index = 0;
+        for (QStringList::ConstIterator it = titleWords.begin(); it != titleWords.end(); ++it, ++index) {
             if (first)
                 first = false;
             else
                 result.append(tti.inBetween);
 
             QString lowerText = (*it).toLower();
-            if (!removeSmallWords || !smallWords.contains(lowerText))
-                result.append(normalizeText(*it).left(tti.len));
+            if ((!removeSmallWords || !smallWords.contains(lowerText)) && index >= tti.startWord && index <= tti.endWord) {
+                QString titleComponent = normalizeText(*it).left(tti.len);
+                if (tti.caseChange == IdSuggestions::ccToCamelCase)
+                    titleComponent = titleComponent[0].toUpper() + titleComponent.mid(1);
+
+                result.append(titleComponent);
+            }
         }
 
-        if (tti.toUpper)
+        switch (tti.caseChange) {
+        case IdSuggestions::ccToUpper:
             result = result.toUpper();
-        else if (tti.toLower)
+            break;
+        case IdSuggestions::ccToLower:
             result = result.toLower();
+            break;
+        case IdSuggestions::ccToCamelCase:
+            /// already processed above
+        case IdSuggestions::ccNoChange:
+            /// nothing
+            break;
+        }
 
         return result;
     }
@@ -104,9 +119,18 @@ public:
         QString result;
         bool first = true, firstInserted = true;
         QStringList authors = authorsLastName(entry);
-        for (QStringList::ConstIterator it = authors.begin(); it != authors.end(); ++it) {
-            QString author =  normalizeText(*it).left(ati.len);
-            if (selectAuthors == aAll || (selectAuthors == aOnlyFirst && first) || (selectAuthors == aNotFirst && !first)) {
+        int index = 0;
+        for (QStringList::ConstIterator it = authors.begin(); it != authors.end(); ++it, ++index) {
+            QString author = normalizeText(*it).left(ati.len);
+            if (ati.caseChange == IdSuggestions::ccToCamelCase) {
+                const QStringList nameComponents = author.split(QLatin1Char(' '), QString::SkipEmptyParts);
+                QStringList newNameComponents;
+                foreach(const QString &nameComponent, nameComponents) {
+                    newNameComponents.append(nameComponent[0].toUpper() + nameComponent.mid(1));
+                }
+                author = newNameComponents.join(QLatin1String(" "));
+            }
+            if ((selectAuthors == aAll && index >= ati.startWord && index <= ati.endWord) || (selectAuthors == aOnlyFirst && first) || (selectAuthors == aNotFirst && !first)) {
                 if (!firstInserted)
                     result.append(ati.inBetween);
                 result.append(author);
@@ -115,10 +139,20 @@ public:
             first = false;
         }
 
-        if (ati.toUpper)
+        switch (ati.caseChange) {
+        case IdSuggestions::ccToUpper:
             result = result.toUpper();
-        else if (ati.toLower)
+            break;
+        case IdSuggestions::ccToLower:
             result = result.toLower();
+            break;
+        case IdSuggestions::ccToCamelCase:
+            /// already processed above
+            break;
+        case IdSuggestions::ccNoChange:
+            /// nothing
+            break;
+        }
 
         return result;
     }
@@ -221,24 +255,61 @@ QStringList IdSuggestions::formatStrToHuman(const QString &formatStr) const
         QString text;
         if (token[0] == 'a' || token[0] == 'A' || token[0] == 'z') {
             struct IdSuggestionTokenInfo info = evalToken(token.mid(1));
-            if (token[0] == 'a') text.append(i18n("First author only"));
-            else if (token[0] == 'z') text.append(i18n("All but first author"));
-            else text.append(i18n("All authors"));
+            if (token[0] == 'a' || (info.startWord == 0 && info.endWord == 0))
+                text.append(i18n("First author only"));
+            else if (token[0] == 'z' || (info.startWord == 1 && info.endWord > 0xffff))
+                text.append(i18n("All but first author"));
+            else if (info.startWord == 0 && info.endWord > 0xffff)
+                text.append(i18n("All authors"));
+            else
+                text.append(i18n("From author %1 to author %2", info.startWord + 1, info.endWord + 1));
 
             int n = info.len;
             if (info.len < 0x00ffffff) text.append(i18np(", but only first letter of each last name", ", but only first %1 letters of each last name", n));
-            if (info.toUpper) text.append(i18n(", in upper case"));
-            else if (info.toLower) text.append(i18n(", in lower case"));
+
+            switch (info.caseChange) {
+            case IdSuggestions::ccToUpper:
+                text.append(i18n(", in upper case"));
+                break;
+            case IdSuggestions::ccToLower:
+                text.append(i18n(", in lower case"));
+                break;
+            case IdSuggestions::ccToCamelCase:
+                text.append(i18n(", in CamelCase"));
+                break;
+            case IdSuggestions::ccNoChange:
+                break;
+            }
+
             if (info.inBetween != QString::null) text.append(i18n(", with '%1' in between", info.inBetween));
         } else if (token[0] == 'y') text.append(i18n("Year (2 digits)"));
         else if (token[0] == 'Y') text.append(i18n("Year (4 digits)"));
         else if (token[0] == 't' || token[0] == 'T') {
             struct IdSuggestionTokenInfo info = evalToken(token.mid(1));
             text.append(i18n("Title"));
-            int n = info.len;
-            if (info.len < 0x00ffffff) text.append(i18np(", but only first letter of each word", ", but only first %1 letters of each word", n));
-            if (info.toUpper) text.append(i18n(", in upper case"));
-            else if (info.toLower) text.append(i18n(", in lower case"));
+            if (info.startWord == 0 && info.endWord <= 0xffff)
+                text.append(i18np(", but only the first word", ", but only first %1 words", info.endWord + 1));
+            else if (info.startWord > 0 && info.endWord > 0xffff)
+                text.append(i18n(", but only starting from word %1", info.startWord + 1));
+            else if (info.startWord > 0 && info.endWord <= 0xffff)
+                text.append(i18n(", but only from word %1 to word %2", info.startWord + 1, info.endWord + 1));
+            if (info.len < 0x00ffffff)
+                text.append(i18np(", but only first letter of each word", ", but only first %1 letters of each word", info.len));
+
+            switch (info.caseChange) {
+            case IdSuggestions::ccToUpper:
+                text.append(i18n(", in upper case"));
+                break;
+            case IdSuggestions::ccToLower:
+                text.append(i18n(", in lower case"));
+                break;
+            case IdSuggestions::ccToCamelCase:
+                text.append(i18n(", in CamelCase"));
+                break;
+            case IdSuggestions::ccNoChange:
+                break;
+            }
+
             if (info.inBetween != QString::null) text.append(i18n(", with '%1' in between", info.inBetween));
             if (token[0] == 'T') text.append(i18n(", small words removed"));
         } else if (token[0] == '"') text.append(i18n("Text: '%1'", token.mid(1)));
@@ -254,8 +325,9 @@ struct IdSuggestions::IdSuggestionTokenInfo IdSuggestions::evalToken(const QStri
     int pos = 0;
     struct IdSuggestionTokenInfo result;
     result.len = 0x00ffffff;
-    result.toLower = false;
-    result.toUpper = false;
+    result.startWord = 0;
+    result.endWord = 0x00ffffff;
+    result.caseChange = IdSuggestions::ccNoChange;
     result.inBetween = QString::null;
 
     if (token.length() > pos) {
@@ -267,10 +339,29 @@ struct IdSuggestions::IdSuggestionTokenInfo IdSuggestions::evalToken(const QStri
     }
 
     if (token.length() > pos) {
-        result.toLower = token[pos] == 'l';
-        result.toUpper = token[pos] == 'u';
-        if (result.toUpper || result.toLower)
+        switch (token[pos].unicode()) {
+        case 0x006c: // 'l'
+            result.caseChange = IdSuggestions::ccToLower;
             ++pos;
+            break;
+        case 0x0075: // 'u'
+            result.caseChange = IdSuggestions::ccToUpper;
+            ++pos;
+            break;
+        case 0x0063: // 'c'
+            result.caseChange = IdSuggestions::ccToCamelCase;
+            ++pos;
+            break;
+        default:
+            result.caseChange = IdSuggestions::ccNoChange;
+        }
+    }
+
+    int dvStart = -1, dvEnd = 0x00ffffff;
+    if (token.length() > pos + 2 && token[pos] == 'w' && (dvStart = token[pos + 1].digitValue()) > -1 && (token[pos + 2] == QLatin1Char('I') || (dvEnd = token[pos + 2].digitValue()) > -1)) {
+        result.startWord = dvStart;
+        result.endWord = dvEnd < 0 ? 0x00ffffff : dvEnd;
+        pos += 3;
     }
 
     if (token.length() > pos + 1 && token[pos] == '"')
