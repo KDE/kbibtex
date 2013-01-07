@@ -91,3 +91,8 @@ QString XSLTransform::transform(const QString &xmlText) const
 
     return result;
 }
+
+void XSLTransform::cleanupGlobals()
+{
+    xsltCleanupGlobals();
+}

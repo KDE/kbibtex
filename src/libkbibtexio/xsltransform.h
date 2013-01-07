@@ -52,6 +52,8 @@ public:
      */
     QString transform(const QString &xmlText) const;
 
+    static void cleanupGlobals();
+
 protected:
     XSLTransform(const xsltStylesheetPtr &xsltStylesheet);
 

@@ -48,6 +48,7 @@
 #include "elementform.h"
 #include "bibtexeditor.h"
 #include "documentlist.h"
+#include "xsltransform.h"
 
 class KBibTeXMainWindow::KBibTeXMainWindowPrivate
 {
@@ -221,6 +222,7 @@ KBibTeXMainWindow::KBibTeXMainWindow()
 KBibTeXMainWindow::~KBibTeXMainWindow()
 {
     delete d;
+    XSLTransform::cleanupGlobals();
 }
 
 void KBibTeXMainWindow::setupControllers()
