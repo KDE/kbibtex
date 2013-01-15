@@ -335,6 +335,7 @@ void SettingsIdSuggestionsWidget::buttonClicked()
         const int row = d->treeViewSuggestions->model()->rowCount(QModelIndex());
         if (!newSuggestion.isEmpty() && d->idSuggestionsModel->insertRow(row)) {
             QModelIndex index = d->idSuggestionsModel->index(row, 0, QModelIndex());
+            d->treeViewSuggestions->setCurrentIndex(index);
             if (d->idSuggestionsModel->setData(index, newSuggestion, FormatStringRole))
                 emit changed();
         }
