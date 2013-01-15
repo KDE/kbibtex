@@ -291,8 +291,8 @@ void OnlineSearchSpringerLink::doneFetchingPAM()
 {
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
     if (handleErrors(reply)) {
-        QTextStream ts(reply->readAll());
-        const QString xmlSource = ts.readAll();
+        /// ensure proper treatment of UTF-8 characters
+        const QString xmlSource = QString::fromUtf8(reply->readAll().data());
 
         QString bibTeXcode = d->xslt->transform(xmlSource);
         bibTeXcode = bibTeXcode.replace(QLatin1String("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"), QString());

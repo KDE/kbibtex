@@ -19,7 +19,6 @@
 ***************************************************************************/
 
 #include <QNetworkReply>
-#include <QTextStream>
 
 #include <KMessageBox>
 #include <KConfigGroup>
@@ -183,9 +182,8 @@ void OnlineSearchIEEEXplore::doneFetchingXML()
             setNetworkReplyTimeout(reply);
             connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingXML()));
         } else {
-            QTextStream ts(reply->readAll());
-            ts.setCodec("utf-8");
-            const QString xmlCode = ts.readAll();
+            /// ensure proper treatment of UTF-8 characters
+            const QString xmlCode = QString::fromUtf8(reply->readAll().data());
 
             /// use XSL transformation to get BibTeX document from XML result
             const QString bibTeXcode = d->xslt->transform(xmlCode);
