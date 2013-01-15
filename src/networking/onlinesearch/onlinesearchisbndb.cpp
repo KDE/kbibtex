@@ -19,7 +19,6 @@
 ***************************************************************************/
 
 #include <QNetworkReply>
-#include <QTextStream>
 
 #include <KStandardDirs>
 #include <KLocale>
@@ -145,9 +144,8 @@ void OnlineSearchIsbnDB::downloadDone()
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
     if (handleErrors(reply)) {
-        QTextStream ts(reply->readAll());
-        ts.setCodec("utf-8");
-        QString xmlCode = ts.readAll();
+        /// ensure proper treatment of UTF-8 characters
+        const QString xmlCode = QString::fromUtf8(reply->readAll().data());
 
         dumpToFile("xml.xml", xmlCode);
 

@@ -51,6 +51,10 @@ public:
         // nothing
     }
 
+    virtual ~OnlineSearchQueryFormAbstract() {
+        /// nothing
+    }
+
     virtual bool readyToStart() const = 0;
 
     virtual void copyFromEntry(const Entry &) = 0;

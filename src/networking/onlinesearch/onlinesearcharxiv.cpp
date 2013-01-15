@@ -18,7 +18,6 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include <QTextStream>
 #include <QGridLayout>
 #include <QLabel>
 #include <QSpinBox>
@@ -638,9 +637,8 @@ void OnlineSearchArXiv::downloadDone()
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
     if (handleErrors(reply)) {
-        QTextStream ts(reply->readAll());
-        ts.setCodec("utf-8");
-        QString result = ts.readAll();
+        /// ensure proper treatment of UTF-8 characters
+        QString result = QString::fromUtf8(reply->readAll().data());
         result = result.replace("xmlns=\"http://www.w3.org/2005/Atom\"", ""); // FIXME fix arxiv2bibtex.xsl to handle namespace
 
         /// use XSL transformation to get BibTeX document from XML result

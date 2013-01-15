@@ -20,7 +20,6 @@
 
 #include <QNetworkRequest>
 #include <QNetworkReply>
-#include <QTextStream>
 
 #include <KDebug>
 
@@ -65,9 +64,8 @@ void OnlineSearchSimpleBibTeXDownload::downloadDone()
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
     if (handleErrors(reply)) {
-        QTextStream ts(reply->readAll());
-        ts.setCodec("utf-8");
-        QString bibTeXcode = ts.readAll();
+        /// ensure proper treatment of UTF-8 characters
+        QString bibTeXcode = QString::fromUtf8(reply->readAll().data());
 
         if (bibTeXcode.contains(QLatin1String("<html")) || bibTeXcode.contains(QLatin1String("<HTML"))) {
             /// Replace all linebreak-like characters, in case they occur inside the BibTeX code

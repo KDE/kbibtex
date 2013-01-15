@@ -315,8 +315,8 @@ void OnlineSearchScienceDirect::doneFetchingBibTeX()
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
     if (handleErrors(reply)) {
-        QTextStream ts(reply->readAll());
-        QString bibTeXcode = ts.readAll();
+        /// ensure proper treatment of UTF-8 characters
+        QString bibTeXcode = QString::fromUtf8(reply->readAll().data());
         d->sanitizeBibTeXCode(bibTeXcode);
 
         FileImporterBibTeX importer;

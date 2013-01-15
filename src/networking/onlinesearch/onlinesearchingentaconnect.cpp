@@ -375,9 +375,8 @@ void OnlineSearchIngentaConnect::downloadDone()
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
     if (handleErrors(reply)) {
-        QTextStream ts(reply->readAll());
-        ts.setCodec("utf-8");
-        QString bibTeXcode = ts.readAll();
+        /// ensure proper treatment of UTF-8 characters
+        QString bibTeXcode = QString::fromUtf8(reply->readAll().data());
 
         if (!bibTeXcode.isEmpty()) {
             FileImporterBibTeX importer;

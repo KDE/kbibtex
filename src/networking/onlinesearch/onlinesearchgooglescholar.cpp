@@ -221,7 +221,8 @@ void OnlineSearchGoogleScholar::doneFetchingBibTeX()
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
     if (handleErrors(reply)) {
-        QString rawText = reply->readAll();
+        /// ensure proper treatment of UTF-8 characters
+        QString rawText = QString::fromUtf8(reply->readAll().data());
         File *bibtexFile = d->importer.fromString(rawText);
 
         bool hasEntry = false;

@@ -234,7 +234,9 @@ void OnlineSearchMathSciNet::doneFetchingBibTeXcode()
     emit progress(3, 3);
 
     if (handleErrors(reply)) {
-        QString htmlCode(reply->readAll());
+        /// ensure proper treatment of UTF-8 characters
+        QString htmlCode = QString::fromUtf8(reply->readAll().data());
+
         QString bibtexCode;
         int p1 = -1, p2 = -1;
         while ((p1 = htmlCode.indexOf(QLatin1String("<pre>"), p2 + 1)) >= 0 && (p2 = htmlCode.indexOf(QLatin1String("</pre>"), p1 + 1)) >= 0) {

@@ -228,7 +228,8 @@ void OnlineSearchAcmPortal::doneFetchingBibTeX()
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
     if (handleErrors(reply)) {
-        QString bibTeXcode = reply->readAll();
+        /// ensure proper treatment of UTF-8 characters
+        QString bibTeXcode = QString::fromUtf8(reply->readAll().data());
 
         FileImporterBibTeX importer;
         File *bibtexFile = importer.fromString(bibTeXcode);
