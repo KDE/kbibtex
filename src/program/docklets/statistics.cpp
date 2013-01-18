@@ -34,13 +34,13 @@ class Statistics::StatisticsPrivate
 {
 private:
     Statistics *p;
-    QLabel *labelNumberOfElements, *labelNumberOfEntries, *labelNumberOfComments, *labelNumberOfMacros;
+    QLabel *labelNumberOfElements, *labelNumberOfEntries, *labelNumberOfJournalArticles, *labelNumberOfConferencePublications, *labelNumberOfBooks, *labelNumberOfComments, *labelNumberOfMacros;
 
 public:
     const File *file;
 
     StatisticsPrivate(Statistics *parent)
-        : p(parent) {
+            : p(parent) {
         QFormLayout *layout = new QFormLayout(parent);
 
         labelNumberOfElements = new QLabel(parent);
@@ -50,6 +50,15 @@ public:
         labelNumberOfEntries = new QLabel(parent);
         setBold(labelNumberOfEntries);
         layout->addRow(i18n("Number of Entries:"), labelNumberOfEntries);
+
+        labelNumberOfJournalArticles = new QLabel(parent);
+        layout->addRow(i18n("Journal Articles:"), labelNumberOfJournalArticles);
+
+        labelNumberOfConferencePublications = new QLabel(parent);
+        layout->addRow(i18n("Conference Publications:"), labelNumberOfConferencePublications);
+
+        labelNumberOfBooks = new QLabel(parent);
+        layout->addRow(i18n("Books:"), labelNumberOfBooks);
 
         labelNumberOfComments = new QLabel(parent);
         setBold(labelNumberOfComments);
@@ -68,28 +77,41 @@ public:
 
     void update() {
         if (file != NULL) {
-            int numEntries, numComments, numMacros;
-            countElementTypes(file, numEntries, numComments, numMacros);
+            int numEntries, numJournalArticles, numConferencePublications, numBooks, numComments, numMacros;
+            countElementTypes(file, numEntries, numJournalArticles, numConferencePublications, numBooks, numComments, numMacros);
 
             labelNumberOfElements->setText(QString::number(file->count()));
             labelNumberOfEntries->setText(QString::number(numEntries));
+            labelNumberOfJournalArticles->setText(QString::number(numJournalArticles));
+            labelNumberOfConferencePublications->setText(QString::number(numConferencePublications));
+            labelNumberOfBooks->setText(QString::number(numBooks));
             labelNumberOfComments->setText(QString::number(numComments));
             labelNumberOfMacros->setText(QString::number(numMacros));
         } else {
             labelNumberOfElements->setText(QChar(0x2013));
             labelNumberOfEntries->setText(QChar(0x2013));
+            labelNumberOfJournalArticles->setText(QChar(0x2013));
+            labelNumberOfConferencePublications->setText(QChar(0x2013));
+            labelNumberOfBooks->setText(QChar(0x2013));
             labelNumberOfComments->setText(QChar(0x2013));
             labelNumberOfMacros->setText(QChar(0x2013));
         }
     }
 
-    void countElementTypes(const File *file, int &numEntries, int &numComments, int &numMacros) {
-        numEntries = numComments = numMacros = 0;
+    void countElementTypes(const File *file, int &numEntries, int &numJournalArticles, int &numConferencePublications, int &numBooks, int &numComments, int &numMacros) {
+        numEntries = numJournalArticles = numConferencePublications = numBooks = numComments = numMacros = 0;
         for (File::ConstIterator it = file->constBegin(); it != file->constEnd(); ++it) {
-            const QSharedPointer<Element> &element = *it;
-            if (!element.dynamicCast<const Entry>().isNull())
+            const QSharedPointer<const Element> &element = *it;
+            const QSharedPointer<const Entry> entry = element.dynamicCast<const Entry>();
+            if (!entry.isNull()) {
+                if (entry->type().toLower() == Entry::etArticle)
+                    ++numJournalArticles;
+                else if (entry->type().toLower() == Entry::etInProceedings)
+                    ++numConferencePublications;
+                else if (entry->type().toLower() == Entry::etBook)
+                    ++numBooks;
                 ++numEntries;
-            else if (!element.dynamicCast<const Macro>().isNull())
+            } else if (!element.dynamicCast<const Macro>().isNull())
                 ++numMacros;
             else if (!element.dynamicCast<const Comment>().isNull())
                 ++numComments;
@@ -98,7 +120,7 @@ public:
 };
 
 Statistics::Statistics(QWidget *parent)
-    : QWidget(parent), d(new StatisticsPrivate(this))
+        : QWidget(parent), d(new StatisticsPrivate(this))
 {
     // nothing
 }
