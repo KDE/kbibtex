@@ -160,7 +160,7 @@ public:
         const QString text = parent->text().trimmed();
 
         EncoderLaTeX *encoder = EncoderLaTeX::instance();
-        const QString encodedText = encoder->decode(text);
+        const QString encodedText = encoder->decode(text).simplified();
         if (encodedText != text)
             parent->setText(encodedText);
 
