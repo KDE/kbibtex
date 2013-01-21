@@ -100,6 +100,7 @@ class KBIBTEXGUI_EXPORT BibTeXFileModel : public QAbstractTableModel, private No
 {
 public:
     static const int NumberRole;
+    static const int SortRole;
     static const QString keyShowComments;
     static const bool defaultShowComments;
     static const QString keyShowMacros;
