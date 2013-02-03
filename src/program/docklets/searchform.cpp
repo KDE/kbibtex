@@ -61,6 +61,7 @@
 #include "onlinesearchjstor.h"
 #include "onlinesearchmathscinet.h"
 #include "onlinesearchinspirehep.h"
+#include "onlinesearchcernds.h"
 #include "onlinesearchingentaconnect.h"
 #include "onlinesearchsoanasaads.h"
 #include "onlinesearchisbndb.h"
@@ -220,6 +221,7 @@ public:
         addEngine(new OnlineSearchJStor(p));
         addEngine(new OnlineSearchMathSciNet(p));
         addEngine(new OnlineSearchInpireHep(p));
+        addEngine(new OnlineSearchCERNDS(p));
         addEngine(new OnlineSearchPubMed(p));
         addEngine(new OnlineSearchScienceDirect(p));
         addEngine(new OnlineSearchSpringerLink(p));

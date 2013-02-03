@@ -23,6 +23,7 @@ set(
     onlinesearch/onlinesearchjstor.cpp
     onlinesearch/onlinesearchmathscinet.cpp
     onlinesearch/onlinesearchinspirehep.cpp
+    onlinesearch/onlinesearchcernds.cpp
     onlinesearch/onlinesearchingentaconnect.cpp
     onlinesearch/onlinesearchsimplebibtexdownload.cpp
     onlinesearch/onlinesearchgeneral.cpp
@@ -50,6 +51,7 @@ set(
     onlinesearch/onlinesearchsoanasaads.h
     onlinesearch/onlinesearchmathscinet.h
     onlinesearch/onlinesearchinspirehep.h
+    onlinesearch/onlinesearchcernds.h
     onlinesearch/onlinesearchisbndb.h
     kbibtexnetworking_export.h
     findpdf.h
