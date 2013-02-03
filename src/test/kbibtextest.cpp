@@ -29,6 +29,7 @@
 #include "fileexporterbibtex.h"
 #include "file.h"
 #include "kbibtextest.h"
+#include "version.h"
 
 KIcon iconOK(QLatin1String("dialog-ok-apply"));
 KIcon iconERROR(QLatin1String("dialog-cancel"));
@@ -121,6 +122,8 @@ KBibTeXTest::KBibTeXTest(QWidget *parent)
     m_testWidget->setupMenus();
 
     connect(this, SIGNAL(closeClicked()), this, SLOT(aboutToQuit()));
+
+    addMessage(QString(QLatin1String("Compiled for %1")).arg(versionNumber),iconINFO);
 }
 
 void KBibTeXTest::addMessage(const QString &message, const KIcon &icon)

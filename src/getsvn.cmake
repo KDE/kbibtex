@@ -32,7 +32,7 @@ if(
     )
         message(
             STATUS
-            "Extracting SVN version, please wait..."
+            "Extracting SVN version ..."
         )
         execute_process(
             COMMAND
@@ -121,6 +121,10 @@ if(
         copy_if_different
         "${BINARY_DIR}/src/version.h.tmp"
         "${BINARY_DIR}/src/version.h"
+        WORKING_DIRECTORY
+        "${SOURCE_DIR}"
+    )
+    execute_process(
         COMMAND
         ${CMAKE_COMMAND}
         -E

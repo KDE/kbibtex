@@ -25,13 +25,13 @@
 
 #include "part.h"
 #include "partfactory.h"
-//#include "version.h"
-const char *versionNumber = "some SVN revision";
+#include "version.h"
+//const char *versionNumber = "some SVN revision";
 
-static const char PartId[] =           "kbibtexpart";
-static const char PartName[] =         I18N_NOOP("KBibTeXPart");
-static const char PartDescription[] =  I18N_NOOP("BibTeX Editor Component");
-static const char PartCopyright[] =    "Copyright 2004-2012 Thomas Fischer";
+static const char PartId[] = "kbibtexpart";
+static const char PartName[] = I18N_NOOP("KBibTeXPart");
+static const char PartDescription[] = I18N_NOOP("BibTeX Editor Component");
+static const char PartCopyright[] = "Copyright 2004-2012 Thomas Fischer";
 static const char *programHomepage = I18N_NOOP("http://home.gna.org/kbibtex/");
 static const char *bugTrackerHomepage = "https://gna.org/bugs/?group=kbibtex";
 

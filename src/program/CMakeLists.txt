@@ -20,6 +20,7 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/src/networking
     ${CMAKE_SOURCE_DIR}/src/networking/onlinesearch
     ${CMAKE_CURRENT_SOURCE_DIR}/docklets
+    ${CMAKE_BINARY_DIR}/src
     ${LIBXML2_INCLUDE_DIR}
 )
 
@@ -47,12 +48,13 @@ add_definitions(
 
 kde4_add_app_icon(
     kbibtex_SRCS
-    "${CMAKE_CURRENT_SOURCE_DIR}/../../icons/hi*-app-kbibtex.png"
+    "${CMAKE_SOURCE_DIR}/icons/hi*-app-kbibtex.png"
 )
 
 kde4_add_executable(
     kbibtex${BINARY_POSTFIX}
     ${kbibtex_SRCS}
+    ${CMAKE_BINARY_DIR}/src/version.h
 )
 
 target_link_libraries(
@@ -67,6 +69,36 @@ target_link_libraries(
     kbibtexproc
     kbibtexgui
     kbibtexnetworking
+)
+
+
+# creates src/version.h using cmake script
+add_custom_target(
+    SVNrevisionForProgram
+    COMMAND
+    ${CMAKE_COMMAND}
+    -DSOURCE_DIR=${CMAKE_SOURCE_DIR}
+    -DBINARY_DIR=${CMAKE_BINARY_DIR}
+    -P
+    ${CMAKE_SOURCE_DIR}/src/getsvn.cmake
+    COMMENT
+    "Determine SVN version"
+)
+
+# version.h is a generated file
+set_source_files_properties(
+    ${CMAKE_BINARY_DIR}/src/version.h
+    PROPERTIES
+    GENERATED
+    TRUE
+    HEADER_FILE_ONLY
+    TRUE
+)
+
+
+add_dependencies(
+    kbibtex${BINARY_POSTFIX}
+    SVNrevisionForProgram
 )
 
 install(

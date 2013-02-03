@@ -22,6 +22,7 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/src/networking
     ${CMAKE_SOURCE_DIR}/src/networking/onlinesearch
     ${CMAKE_SOURCE_DIR}/src/processing
+    ${CMAKE_BINARY_DIR}/src
 )
 
 set(
@@ -30,11 +31,41 @@ set(
     kbibtextest.cpp
 )
 
+
+# creates src/version.h using cmake script
+add_custom_target(
+    SVNrevisionForPart
+    COMMAND
+    ${CMAKE_COMMAND}
+    -DSOURCE_DIR=${CMAKE_SOURCE_DIR}
+    -DBINARY_DIR=${CMAKE_BINARY_DIR}
+    -P
+    ${CMAKE_SOURCE_DIR}/src/getsvn.cmake
+    COMMENT
+    "Determine SVN version"
+)
+
+# version.h is a generated file
+set_source_files_properties(
+    ${CMAKE_BINARY_DIR}/src/version.h
+    PROPERTIES
+    GENERATED
+    TRUE
+    HEADER_FILE_ONLY
+    TRUE
+)
+
+
 kde4_add_executable(
     kbibtextest
     ${kbibtextest_SRCS}
+    ${CMAKE_BINARY_DIR}/src/version.h
 )
 
+add_dependencies(
+    kbibtextest
+    SVNrevisionForProgram
+)
 target_link_libraries(
     kbibtextest
     ${QT_QTWEBKIT_LIBRARIES}
