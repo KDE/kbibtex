@@ -103,45 +103,6 @@ macro_log_feature(
     "Required to transform process PDF files"
 )
 
-find_path(
-    QXTCORE_INCLUDE_DIRS
-    qxtglobal.h
-    PATH_SUFFIXES
-    QxtCore
-    DOC "The QxtCore library"
-)
-find_path(
-    QXTGUI_INCLUDE_DIRS
-    qxtglobalshortcut.h
-    PATH_SUFFIXES
-    QxtGui
-    DOC "The QxtGui library"
-)
-set(
-    QXT_INCLUDE_DIRS
-    ${QXTCORE_INCLUDE_DIRS}
-    ${QXTGUI_INCLUDE_DIRS}
-)
-find_library(
-    QXT_LIBRARIES
-    QxtGui
-)
-
-if(EXISTS ${QXT_LIBRARIES})
-    message(
-        STATUS "Found Qxt library dir: "
-        ${QXT_LIBRARIES}
-    )
-    message(
-        STATUS "Found Qxt include dirs: "
-        ${QXT_INCLUDE_DIRS}
-    )
-else(EXISTS ${QXT_LIBRARIES})
-    message(
-        FATAL_ERROR "Looking for QxtGui - not found"
-    )
-endif(EXISTS ${QXT_LIBRARIES})
-
 
 add_subdirectory(
     src

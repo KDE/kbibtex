@@ -33,7 +33,7 @@
 #include <KPushButton>
 #include <KAction>
 
-#include <QxtSpanSlider>
+#include <3rdparty/libqxt/gui/qxtspanslider.h>
 
 #include "settingsidsuggestionseditor.h"
 

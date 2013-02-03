@@ -5,6 +5,7 @@ include(
 )
 
 include_directories(
+    ${CMAKE_SOURCE_DIR}/src
     ${CMAKE_SOURCE_DIR}/src/config
     ${CMAKE_SOURCE_DIR}/src/data
     ${CMAKE_SOURCE_DIR}/src/io
@@ -18,7 +19,6 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/src/gui/field
     ${CMAKE_SOURCE_DIR}/src/gui/widgets
     ${CMAKE_SOURCE_DIR}/src/gui/config
-    ${QXT_INCLUDE_DIRS}
 )
 
 set(
@@ -56,6 +56,7 @@ set(
     italictextitemmodel.cpp
     valuelistmodel.cpp
     delayedexecutiontimer.cpp
+    ${CMAKE_SOURCE_DIR}/src/3rdparty/libqxt/gui/qxtspanslider.cpp
 )
 
 set(
@@ -109,7 +110,6 @@ target_link_libraries(
     ${QT_QTGUI_LIBRARY}
     ${KDE4_KDEUI_LIBS}
     ${KDE4_KIO_LIBS}
-    ${QXT_LIBRARIES}
     kbibtexconfig
     kbibtexdata
     kbibtexio
