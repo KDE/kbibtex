@@ -315,8 +315,18 @@ public:
         /// make backup before overwriting target destination
         makeBackup(url);
         /// upload temporary file to target destination
-        KIO::NetAccess::del(url, p->widget());
-        result &= KIO::NetAccess::file_copy(temporaryFile.fileName(), url, p->widget());
+        KUrl realUrl = url;
+        if (url.isLocalFile()) {
+            /// take precautions for local files
+            QFileInfo fileInfo(url.pathOrUrl());
+            if (fileInfo.isSymLink()) {
+                /// do not overwrite symbolic link,
+                /// but linked file instead
+                realUrl = KUrl::fromLocalFile(fileInfo.symLinkTarget());
+            }
+        }
+        KIO::NetAccess::del(realUrl, p->widget());
+        result &= KIO::NetAccess::file_copy(temporaryFile.fileName(), realUrl, p->widget());
 
         qApp->restoreOverrideCursor();
         if (!result)
