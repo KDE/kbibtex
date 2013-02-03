@@ -344,6 +344,52 @@ void BibTeXFileModel::readConfiguration()
     }
 }
 
+QVariant BibTeXFileModel::entryData(const Entry *entry, const QString &raw, const QString &rawAlt, int role, bool followCrossRef) const
+{
+    if (raw == "^id") // FIXME: Use constant here?
+        return QVariant(entry->id());
+    else if (raw == "^type") { // FIXME: Use constant here?
+        /// try to beautify type, e.g. translate "proceedings" into
+        /// "Conference or Workshop Proceedings"
+        QString label = BibTeXEntries::self()->label(entry->type());
+        if (label.isEmpty()) {
+            /// fall-back to entry type as it is
+            return QVariant(entry->type());
+        } else
+            return QVariant(label);
+    } else if (raw.toLower() == Entry::ftStarRating) {
+        return QVariant();
+    } else if (raw.toLower() == Entry::ftColor) {
+        QString text = PlainTextValue::text(entry->value(raw), m_bibtexFile);
+        if (text.isEmpty()) return QVariant();
+        QString colorText = colorToLabel[text];
+        if (colorText.isEmpty()) return QVariant(text);
+        return QVariant(colorText);
+    } else {
+        QString text = QString::null;
+        if (entry->contains(raw))
+            text = PlainTextValue::text(entry->value(raw), m_bibtexFile).simplified();
+        else if (!rawAlt.isNull() && entry->contains(rawAlt))
+            text = PlainTextValue::text(entry->value(rawAlt), m_bibtexFile).simplified();
+
+        if (followCrossRef && text.isEmpty() && entry->contains(Entry::ftCrossRef)) {
+            // TODO do not only follow "crossref", but other files from Biber/Biblatex as well
+            Entry *completedEntry = entry->resolveCrossref(m_bibtexFile);
+            QVariant result = entryData(completedEntry, raw, rawAlt, role, false);
+            delete completedEntry;
+            return result;
+        }
+
+        if (text.isEmpty())
+            return QVariant();
+        else if (role == BibTeXFileModel::SortRole)
+            return QVariant(text.toLower());
+        else
+            return QVariant(text);
+    }
+
+}
+
 File *BibTeXFileModel::bibTeXFile()
 {
     return m_bibtexFile;
@@ -423,39 +469,7 @@ QVariant BibTeXFileModel::data(const QModelIndex &index, int role) const
         }
 
         if (!entry.isNull()) {
-            if (raw == "^id") // FIXME: Use constant here?
-                return QVariant(entry->id());
-            else if (raw == "^type") { // FIXME: Use constant here?
-                /// try to beautify type, e.g. translate "proceedings" into
-                /// "Conference or Workshop Proceedings"
-                QString label = BibTeXEntries::self()->label(entry->type());
-                if (label.isEmpty()) {
-                    /// fall-back to entry type as it is
-                    return QVariant(entry->type());
-                } else
-                    return QVariant(label);
-            } else if (raw.toLower() == Entry::ftStarRating) {
-                return QVariant();
-            } else if (raw.toLower() == Entry::ftColor) {
-                QString text = PlainTextValue::text(entry->value(raw), m_bibtexFile);
-                if (text.isEmpty()) return QVariant();
-                QString colorText = colorToLabel[text];
-                if (colorText.isEmpty()) return QVariant(text);
-                return QVariant(colorText);
-            } else {
-                QString text = QString::null;
-                if (entry->contains(raw))
-                    text = PlainTextValue::text(entry->value(raw), m_bibtexFile).simplified();
-                else if (!rawAlt.isNull() && entry->contains(rawAlt))
-                    text = PlainTextValue::text(entry->value(rawAlt), m_bibtexFile).simplified();
-
-                if (text.isEmpty())
-                    return QVariant();
-                else if (role == BibTeXFileModel::SortRole)
-                    return QVariant(text.toLower());
-                else
-                    return QVariant(text);
-            }
+            return entryData(entry.data(), raw, rawAlt, role, true);
         } else {
             QSharedPointer<Macro> macro = element.dynamicCast<Macro>();
             if (!macro.isNull()) {
