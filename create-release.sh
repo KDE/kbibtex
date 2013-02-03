@@ -97,7 +97,7 @@ svn info kbibtex-${releaseversion} | awk '/^Last Changed Rev:/ {print $NF}' >kbi
 
 if [ ${releaseversion} != "svn" ] ; then
 	echo "Changing version number in source to ${releaseversion}"
-	sed -i -e 's/\(versionNumber\s*=\s*"\)[^"]*"/\1'${releaseversion}'"/g' kbibtex-${releaseversion}/src/parts/partfactory.cpp kbibtex-${releaseversion}/src/program/program.cpp || exit 5
+	sed -i -e 's!//const char \*versionNumber!const char \*versionNumber!;s/\(versionNumber\s*=\s*"\)[^"]*"/\1'${releaseversion}'"/g;/include "version.h"/d' kbibtex-${releaseversion}/src/parts/partfactory.cpp kbibtex-${releaseversion}/src/program/program.cpp || exit 5
 
 	sed -i -e 's/LIB_VERSION \s*"[^"]*"/LIB_VERSION "'${numericreleaseversion}'"/' kbibtex-${releaseversion}/CMakeLists.txt
 fi
