@@ -800,6 +800,7 @@ QList<QSharedPointer<Person> > FileImporterBibTeX::splitNames(const QString &tex
     /// Case: John Smith, Tim Johnson
     /// Case: John Smith, Tim Johnson, Ford Fulkerson
     /// Case: Smith, John ;  Johnson, Tim ;  Fulkerson, Ford (IEEE Xplore)
+    /// German case: Robert A. Gehring und Bernd Lutterbeck
 
     QList<QSharedPointer<Person> > result;
     QString internalText = text;
@@ -815,7 +816,7 @@ QList<QSharedPointer<Person> > FileImporterBibTeX::splitNames(const QString &tex
 
     /// Split input string into tokens which are either name components (first or last name)
     /// or full names (composed of first and last name), depending on the input string's structure
-    static const QRegExp split(QLatin1String("\\s*([,]+|[,]*\\band\\b|[;]|&|\\n|\\s{4,})\\s*"));
+    static const QRegExp split(QLatin1String("\\s*([,]+|[,]*\\b[au]nd\\b|[;]|&|\\n|\\s{4,})\\s*"));
     QStringList authorTokenList = internalText.split(split, QString::SkipEmptyParts);
 
     bool containsSpace = true;
