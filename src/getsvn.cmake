@@ -25,7 +25,7 @@ if(
 )
     find_program(
         SVNVERSION_EXECUTABLE
-        svnversion
+        NAMES svnversion svnversion.exe svnversion.bat
     )
     if(
         SVNVERSION_EXECUTABLE

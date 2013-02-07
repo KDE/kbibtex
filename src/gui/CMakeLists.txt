@@ -90,7 +90,7 @@ set(
 )
 
 add_definitions(
-    -DMAKE_KBIBTEXGUI_LIB
+    -DMAKE_KBIBTEXGUI_LIB -DBUILD_QXT_GUI
 )
 
 # debug area for KBibTeX's GUI library
