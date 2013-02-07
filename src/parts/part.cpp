@@ -580,7 +580,12 @@ bool KBibTeXPart::documentSaveAs()
     if (!url.isValid() || !d->checkOverwrite(url, widget()))
         return false;
 
-    return KParts::ReadWritePart::saveAs(url);
+    if (KParts::ReadWritePart::saveAs(url)) {
+        kDebug() << "setting url to be " << url.pathOrUrl();
+        d->model->bibTeXFile()->setProperty(File::Url, url);
+        return true;
+    } else
+        return false;
 }
 
 bool KBibTeXPart::documentSaveCopyAs()
