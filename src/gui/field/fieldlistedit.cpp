@@ -468,7 +468,6 @@ UrlListEdit::UrlListEdit(QWidget *parent)
     m_copyFile = new KPushButton(KIcon("document-save-all"), i18n("Insert file ..."), this);
     addButton(m_copyFile);
     connect(m_copyFile, SIGNAL(clicked()), this, SLOT(slotCopyFile()));
-    connect(m_copyFile, SIGNAL(clicked()), this, SIGNAL(modified()));
 }
 
 UrlListEdit::~UrlListEdit()
@@ -534,6 +533,7 @@ void UrlListEdit::slotCopyFile()
                 Value *value = new Value();
                 value->append(QSharedPointer<VerbatimText>(new VerbatimText(destinationFilename)));
                 lineAdd(value);
+                emit modified();
             }
         }
     }
