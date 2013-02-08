@@ -383,6 +383,7 @@ void KBibTeXMainWindow::documentSwitched(BibTeXEditor *oldEditor, BibTeXEditor *
     d->valueList->setEditor(newEditor);
     d->fileSettings->setEditor(newEditor);
     d->statistics->setFile(newEditor != NULL && newEditor->bibTeXModel() != NULL ? newEditor->bibTeXModel()->bibTeXFile() : NULL);
+    d->statistics->setSelectionModel(newEditor != NULL ? newEditor->selectionModel() : NULL);
     d->referencePreview->setEditor(newEditor);
 }
 

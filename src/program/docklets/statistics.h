@@ -22,6 +22,8 @@
 
 #include <QWidget>
 
+class QItemSelectionModel;
+
 class Element;
 class File;
 
@@ -34,6 +36,7 @@ public:
     ~Statistics();
 
     void setFile(const File *);
+    void setSelectionModel(const QItemSelectionModel *);
 
 public slots:
     void update();

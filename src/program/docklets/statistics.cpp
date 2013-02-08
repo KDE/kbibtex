@@ -20,6 +20,7 @@
 #include <QFormLayout>
 #include <QLabel>
 #include <QFont>
+#include <QItemSelectionModel>
 
 #include <KLocale>
 
@@ -34,13 +35,14 @@ class Statistics::StatisticsPrivate
 {
 private:
     Statistics *p;
-    QLabel *labelNumberOfElements, *labelNumberOfEntries, *labelNumberOfJournalArticles, *labelNumberOfConferencePublications, *labelNumberOfBooks, *labelNumberOfComments, *labelNumberOfMacros;
+    QLabel *labelNumberOfElements, *labelNumberOfEntries, *labelNumberOfJournalArticles, *labelNumberOfConferencePublications, *labelNumberOfBooks, *labelNumberOfOtherEntries, *labelNumberOfComments, *labelNumberOfMacros;
 
 public:
     const File *file;
+    const QItemSelectionModel *selectionModel;
 
     StatisticsPrivate(Statistics *parent)
-            : p(parent) {
+            : p(parent), file(NULL), selectionModel(NULL) {
         QFormLayout *layout = new QFormLayout(parent);
 
         labelNumberOfElements = new QLabel(parent);
@@ -60,6 +62,9 @@ public:
         labelNumberOfBooks = new QLabel(parent);
         layout->addRow(i18n("Books:"), labelNumberOfBooks);
 
+        labelNumberOfOtherEntries = new QLabel(parent);
+        layout->addRow(i18n("Other Entries:"), labelNumberOfOtherEntries);
+
         labelNumberOfComments = new QLabel(parent);
         setBold(labelNumberOfComments);
         layout->addRow(i18n("Number of Comments:"), labelNumberOfComments);
@@ -77,14 +82,15 @@ public:
 
     void update() {
         if (file != NULL) {
-            int numEntries, numJournalArticles, numConferencePublications, numBooks, numComments, numMacros;
-            countElementTypes(file, numEntries, numJournalArticles, numConferencePublications, numBooks, numComments, numMacros);
+            int numElements, numEntries, numJournalArticles, numConferencePublications, numBooks, numComments, numMacros;
+            countElementTypes(numElements, numEntries, numJournalArticles, numConferencePublications, numBooks, numComments, numMacros);
 
-            labelNumberOfElements->setText(QString::number(file->count()));
+            labelNumberOfElements->setText(QString::number(numElements));
             labelNumberOfEntries->setText(QString::number(numEntries));
             labelNumberOfJournalArticles->setText(QString::number(numJournalArticles));
             labelNumberOfConferencePublications->setText(QString::number(numConferencePublications));
             labelNumberOfBooks->setText(QString::number(numBooks));
+            labelNumberOfOtherEntries->setText(QString::number(numEntries - numJournalArticles - numConferencePublications - numBooks));
             labelNumberOfComments->setText(QString::number(numComments));
             labelNumberOfMacros->setText(QString::number(numMacros));
         } else {
@@ -93,28 +99,44 @@ public:
             labelNumberOfJournalArticles->setText(QChar(0x2013));
             labelNumberOfConferencePublications->setText(QChar(0x2013));
             labelNumberOfBooks->setText(QChar(0x2013));
+            labelNumberOfOtherEntries->setText(QChar(0x2013));
             labelNumberOfComments->setText(QChar(0x2013));
             labelNumberOfMacros->setText(QChar(0x2013));
         }
     }
 
-    void countElementTypes(const File *file, int &numEntries, int &numJournalArticles, int &numConferencePublications, int &numBooks, int &numComments, int &numMacros) {
-        numEntries = numJournalArticles = numConferencePublications = numBooks = numComments = numMacros = 0;
-        for (File::ConstIterator it = file->constBegin(); it != file->constEnd(); ++it) {
-            const QSharedPointer<const Element> &element = *it;
-            const QSharedPointer<const Entry> entry = element.dynamicCast<const Entry>();
-            if (!entry.isNull()) {
-                if (entry->type().toLower() == Entry::etArticle)
-                    ++numJournalArticles;
-                else if (entry->type().toLower() == Entry::etInProceedings)
-                    ++numConferencePublications;
-                else if (entry->type().toLower() == Entry::etBook)
-                    ++numBooks;
-                ++numEntries;
-            } else if (!element.dynamicCast<const Macro>().isNull())
-                ++numMacros;
-            else if (!element.dynamicCast<const Comment>().isNull())
-                ++numComments;
+    void countElement(const QSharedPointer<const Element> &element, int &numEntries, int &numJournalArticles, int &numConferencePublications, int &numBooks, int &numComments, int &numMacros) {
+        const QSharedPointer<const Entry> entry = element.dynamicCast<const Entry>();
+        if (!entry.isNull()) {
+            if (entry->type().toLower() == Entry::etArticle)
+                ++numJournalArticles;
+            else if (entry->type().toLower() == Entry::etInProceedings)
+                ++numConferencePublications;
+            else if (entry->type().toLower() == Entry::etBook)
+                ++numBooks;
+            ++numEntries;
+        } else if (!element.dynamicCast<const Macro>().isNull())
+            ++numMacros;
+        else if (!element.dynamicCast<const Comment>().isNull())
+            ++numComments;
+    }
+
+    void countElementTypes(int &numElements, int &numEntries, int &numJournalArticles, int &numConferencePublications, int &numBooks, int &numComments, int &numMacros) {
+        numElements = numEntries = numJournalArticles = numConferencePublications = numBooks = numComments = numMacros = 0;
+
+        if (selectionModel != NULL && selectionModel->selectedRows().count() > 1) {
+            /// Use selected items for statistics if selection contains at least two elements
+            numElements = selectionModel->selectedRows().count();
+            foreach(const QModelIndex &index, selectionModel->selectedRows()) {
+                const int row = index.row();
+                if (row >= 0 && row < file->count())
+                    countElement(file->at(row), numEntries, numJournalArticles, numConferencePublications, numBooks, numComments, numMacros);
+            }
+        } else {
+            /// Default/fall-back: use whole file for statistics
+            numElements = file->count();
+            for (File::ConstIterator it = file->constBegin(); it != file->constEnd(); ++it)
+                countElement(*it, numEntries, numJournalArticles, numConferencePublications, numBooks, numComments, numMacros);
         }
     }
 };
@@ -133,6 +155,19 @@ Statistics::~Statistics()
 void Statistics::setFile(const File *file)
 {
     d->file = file;
+    update();
+}
+
+void Statistics::setSelectionModel(const QItemSelectionModel *selectionModel)
+{
+    /// unregister from update notifications of selection models no longer used
+    if (d->selectionModel != NULL && selectionModel != d->selectionModel)
+        disconnect(d->selectionModel, SIGNAL(selectionChanged(QItemSelection, QItemSelection)), this, SLOT(update()));
+    /// register to update notifications of selection models to be used
+    if (selectionModel != NULL && selectionModel != d->selectionModel)
+        connect(selectionModel, SIGNAL(selectionChanged(QItemSelection, QItemSelection)), this, SLOT(update()));
+
+    d->selectionModel = selectionModel;
     update();
 }
 
