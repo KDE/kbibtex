@@ -10,7 +10,7 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/src/gui/bibtex
     ${CMAKE_SOURCE_DIR}/src/processing
     ${CMAKE_SOURCE_DIR}/src/networking
-    ${CMAKE_BINARY_DIR}/src
+    ${CMAKE_CURRENT_BINARY_DIR}
 )
 
 # debug area for KBibTeX's IO library
@@ -26,13 +26,13 @@ set(
 )
 
 
-# creates src/version.h using cmake script
+# creates version.h using cmake script
 add_custom_target(
-    SVNrevisionForPart
+    SVNrevision
     COMMAND
     ${CMAKE_COMMAND}
     -DSOURCE_DIR=${CMAKE_SOURCE_DIR}
-    -DBINARY_DIR=${CMAKE_BINARY_DIR}
+    -DBINARY_DIR=${CMAKE_CURRENT_BINARY_DIR}
     -P
     ${CMAKE_SOURCE_DIR}/src/getsvn.cmake
     COMMENT
@@ -41,7 +41,7 @@ add_custom_target(
 
 # version.h is a generated file
 set_source_files_properties(
-    ${CMAKE_BINARY_DIR}/src/version.h
+    ${CMAKE_CURRENT_BINARY_DIR}/version.h
     PROPERTIES
     GENERATED
     TRUE
@@ -53,7 +53,7 @@ set_source_files_properties(
 kde4_add_plugin(
     kbibtexpart
     ${kbibtexpart_SRCS}
-    ${CMAKE_BINARY_DIR}/src/version.h
+    ${CMAKE_CURRENT_BINARY_DIR}/version.h
 )
 
 target_link_libraries(
@@ -68,7 +68,7 @@ target_link_libraries(
 
 add_dependencies(
     kbibtexpart
-    SVNrevisionForPart
+    SVNrevision
 )
 
 install(

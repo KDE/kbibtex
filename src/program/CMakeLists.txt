@@ -20,7 +20,7 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/src/networking
     ${CMAKE_SOURCE_DIR}/src/networking/onlinesearch
     ${CMAKE_CURRENT_SOURCE_DIR}/docklets
-    ${CMAKE_BINARY_DIR}/src
+    ${CMAKE_CURRENT_BINARY_DIR}
     ${LIBXML2_INCLUDE_DIR}
 )
 
@@ -41,9 +41,9 @@ set(
     openfileinfo.cpp
 )
 
-# debug area for KBibTeX's IO library
+# debug area for KBibTeX's program
 add_definitions(
-    -DKDE_DEFAULT_DEBUG_AREA=101014
+    -DKDE_DEFAULT_DEBUG_AREA=101017
 )
 
 kde4_add_app_icon(
@@ -54,7 +54,7 @@ kde4_add_app_icon(
 kde4_add_executable(
     kbibtex${BINARY_POSTFIX}
     ${kbibtex_SRCS}
-    ${CMAKE_BINARY_DIR}/src/version.h
+    ${CMAKE_CURRENT_BINARY_DIR}/version.h
 )
 
 target_link_libraries(
@@ -72,13 +72,13 @@ target_link_libraries(
 )
 
 
-# creates src/version.h using cmake script
+# creates version.h using cmake script
 add_custom_target(
     SVNrevisionForProgram
     COMMAND
     ${CMAKE_COMMAND}
     -DSOURCE_DIR=${CMAKE_SOURCE_DIR}
-    -DBINARY_DIR=${CMAKE_BINARY_DIR}
+    -DBINARY_DIR=${CMAKE_CURRENT_BINARY_DIR}
     -P
     ${CMAKE_SOURCE_DIR}/src/getsvn.cmake
     COMMENT
@@ -87,7 +87,7 @@ add_custom_target(
 
 # version.h is a generated file
 set_source_files_properties(
-    ${CMAKE_BINARY_DIR}/src/version.h
+    ${CMAKE_CURRENT_BINARY_DIR}/version.h
     PROPERTIES
     GENERATED
     TRUE
@@ -95,11 +95,11 @@ set_source_files_properties(
     TRUE
 )
 
-
 add_dependencies(
     kbibtex${BINARY_POSTFIX}
     SVNrevisionForProgram
 )
+
 
 install(
     TARGETS

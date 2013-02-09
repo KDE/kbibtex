@@ -85,22 +85,22 @@ endif(
 # write a file with the SVNVERSION define
 file(
     WRITE
-    "${BINARY_DIR}/src/version.h.tmp"
+    "${BINARY_DIR}/version.h.tmp"
     "#ifndef VERSION_H\n"
 )
 file(
     APPEND
-    "${BINARY_DIR}/src/version.h.tmp"
+    "${BINARY_DIR}/version.h.tmp"
     "#define VERSION_H\n"
 )
 file(
     APPEND
-    "${BINARY_DIR}/src/version.h.tmp"
+    "${BINARY_DIR}/version.h.tmp"
     "const char *versionNumber = \"SVN revision ${SVN_REVISION}\";\n"
 )
 file(
     APPEND
-    "${BINARY_DIR}/src/version.h.tmp"
+    "${BINARY_DIR}/version.h.tmp"
     "#endif // VERSION_H\n"
 )
 
@@ -112,15 +112,15 @@ message(
 
 if(
     EXISTS
-    "${BINARY_DIR}/src/version.h.tmp"
+    "${BINARY_DIR}/version.h.tmp"
 )
     execute_process(
         COMMAND
         ${CMAKE_COMMAND}
         -E
         copy_if_different
-        "${BINARY_DIR}/src/version.h.tmp"
-        "${BINARY_DIR}/src/version.h"
+        "${BINARY_DIR}/version.h.tmp"
+        "${BINARY_DIR}/version.h"
         WORKING_DIRECTORY
         "${SOURCE_DIR}"
     )
@@ -129,19 +129,19 @@ if(
         ${CMAKE_COMMAND}
         -E
         remove
-        "${BINARY_DIR}/src/version.h.tmp"
+        "${BINARY_DIR}/version.h.tmp"
         WORKING_DIRECTORY
         "${SOURCE_DIR}"
     )
 else(
     EXISTS
-    "${BINARY_DIR}/src/version.h.tmp"
+    "${BINARY_DIR}/version.h.tmp"
 )
     message(
         STATUS
-        "${BINARY_DIR}/src/version.h.tmp does not exist"
+        "${BINARY_DIR}/version.h.tmp does not exist"
     )
 endif(
     EXISTS
-    "${BINARY_DIR}/src/version.h.tmp"
+    "${BINARY_DIR}/version.h.tmp"
 )
