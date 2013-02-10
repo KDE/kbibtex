@@ -144,7 +144,7 @@ public:
 Statistics::Statistics(QWidget *parent)
         : QWidget(parent), d(new StatisticsPrivate(this))
 {
-    // nothing
+    update();
 }
 
 Statistics::~Statistics()
