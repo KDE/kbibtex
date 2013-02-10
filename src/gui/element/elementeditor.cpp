@@ -112,10 +112,11 @@ public:
         index = tab->addTab(widget, widget->icon(), widget->label());
         tab->hideTab(index);
 
-        widget = new FilesWidget(tab);
-        connect(widget, SIGNAL(modified(bool)), p, SLOT(childModified(bool)));
-        widgets << widget;
-        index = tab->addTab(widget, widget->icon(), widget->label());
+        FilesWidget *filesWidget = new FilesWidget(tab);
+        filesWidget->setApplyElementInterface(this);
+        connect(filesWidget, SIGNAL(modified(bool)), p, SLOT(childModified(bool)));
+        widgets << filesWidget;
+        index = tab->addTab(filesWidget, filesWidget->icon(), filesWidget->label());
         tab->hideTab(index);
 
         QStringList blacklistedFields;
