@@ -57,7 +57,37 @@ if(
                 SVN_REVISION
                 "unknown"
             )
-        endif(
+        else(
+            SVN_REVISION
+            MATCHES
+            "exported"
+        )
+            find_program(
+                SVN_EXECUTABLE
+                NAMES svn svn.exe svn.bat
+            )
+            if(
+                SVN_EXECUTABLE
+            )
+                message(
+                    STATUS
+                    "Extracting detailed SVN information ..."
+                )
+                execute_process(
+                    COMMAND
+                    ${SVN_EXECUTABLE} info
+                    ${SOURCE_DIR}
+                    OUTPUT_VARIABLE
+                    SVN_OUTPUT
+                    OUTPUT_STRIP_TRAILING_WHITESPACE
+                )
+                string(
+                    REGEX MATCH "(trunk|branches|tags)(/.*)?" SVN_PATH ${SVN_OUTPUT}
+                )
+             endif(
+                SVN_EXECUTABLE
+            )
+       endif(
             SVN_REVISION
             MATCHES
             "exported"
@@ -96,7 +126,23 @@ file(
 file(
     APPEND
     "${BINARY_DIR}/version.h.tmp"
-    "const char *versionNumber = \"SVN revision ${SVN_REVISION}\";\n"
+    "const char *versionNumber = \"SVN revision ${SVN_REVISION}"
+)
+if(
+    SVN_PATH
+)
+    file(
+        APPEND
+        "${BINARY_DIR}/version.h.tmp"
+        " (${SVN_PATH})"
+    )
+endif(
+    SVN_PATH
+)
+file(
+    APPEND
+    "${BINARY_DIR}/version.h.tmp"
+    "\";\n"
 )
 file(
     APPEND
