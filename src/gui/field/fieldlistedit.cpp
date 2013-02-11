@@ -461,14 +461,12 @@ UrlListEdit::UrlListEdit(QWidget *parent)
     m_addReferenceToFile = new KPushButton(KIcon("emblem-symbolic-link"), i18n("Add reference to file ..."), this);
     addButton(m_addReferenceToFile);
     connect(m_addReferenceToFile, SIGNAL(clicked()), this, SLOT(slotAddReferenceToFile()));
-    connect(m_addReferenceToFile, SIGNAL(clicked()), this, SIGNAL(modified()));
 
     /// Button to copy a file near the BibTeX file (e.g. same folder) and then
     /// add the copy's relative filename to the entry
     m_copyFile = new KPushButton(KIcon("document-save-all"), i18n("Insert file ..."), this);
     addButton(m_copyFile);
     connect(m_copyFile, SIGNAL(clicked()), this, SLOT(slotCopyFile()));
-    connect(m_copyFile, SIGNAL(clicked()), this, SIGNAL(modified()));
 }
 
 UrlListEdit::~UrlListEdit()
@@ -488,6 +486,7 @@ void UrlListEdit::slotAddReferenceToFile()
         Value *value = new Value();
         value->append(QSharedPointer<VerbatimText>(new VerbatimText(filename)));
         lineAdd(value);
+        emit modified();
     }
 }
 
@@ -534,6 +533,7 @@ void UrlListEdit::slotCopyFile()
                 Value *value = new Value();
                 value->append(QSharedPointer<VerbatimText>(new VerbatimText(destinationFilename)));
                 lineAdd(value);
+                emit modified();
             }
         }
     }
