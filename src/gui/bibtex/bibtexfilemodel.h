@@ -82,6 +82,7 @@ private:
 class KBIBTEXGUI_EXPORT BibTeXFileModel : public QAbstractTableModel
 {
 public:
+    static const int SortRole;
     static const QString keyShowComments;
     static const bool defaultShowComments;
     static const QString keyShowMacros;

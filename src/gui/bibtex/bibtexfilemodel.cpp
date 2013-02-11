@@ -46,6 +46,7 @@ SortFilterBibTeXFileModel::SortFilterBibTeXFileModel(QObject *parent)
         : QSortFilterProxyModel(parent), m_internalModel(NULL), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc")))
 {
     loadState();
+    setSortRole(BibTeXFileModel::SortRole);
 };
 
 void SortFilterBibTeXFileModel::setSourceModel(QAbstractItemModel *model)
@@ -278,6 +279,8 @@ void SortFilterBibTeXFileModel::loadState()
 }
 
 
+const int BibTeXFileModel::SortRole = Qt::UserRole + 236; /// see also MDIWidget's SortRole
+
 const QString BibTeXFileModel::keyShowComments = QLatin1String("showComments");
 const bool BibTeXFileModel::defaultShowComments = true;
 const QString BibTeXFileModel::keyShowMacros = QLatin1String("showMacros");
@@ -343,7 +346,7 @@ QVariant BibTeXFileModel::data(const QModelIndex &index, int role) const
         return QVariant();
 
     /// for now, only display data (no editing or icons etc)
-    if (role != Qt::DisplayRole && role != Qt::ToolTipRole && role != Qt::BackgroundRole)
+    if (role != SortRole && role != Qt::DisplayRole && role != Qt::ToolTipRole && role != Qt::BackgroundRole)
         return QVariant();
 
     BibTeXFields *bibtexFields = BibTeXFields::self();
@@ -385,14 +388,18 @@ QVariant BibTeXFileModel::data(const QModelIndex &index, int role) const
                 if (colorText.isEmpty()) return QVariant(text);
                 return QVariant(colorText);
             } else {
-                if (entry->contains(raw)) {
-                    const QString text = PlainTextValue::text(entry->value(raw), m_bibtexFile).simplified();
-                    return QVariant(text);
-                } else if (!rawAlt.isNull() && entry->contains(rawAlt)) {
-                    const QString text = PlainTextValue::text(entry->value(rawAlt), m_bibtexFile).simplified();
-                    return QVariant(text);
-                } else
+                QString text = QString::null;
+                if (entry->contains(raw))
+                    text = PlainTextValue::text(entry->value(raw), m_bibtexFile).simplified();
+                else if (!rawAlt.isNull() && entry->contains(rawAlt))
+                    text = PlainTextValue::text(entry->value(rawAlt), m_bibtexFile).simplified();
+
+                if (text.isEmpty())
                     return QVariant();
+                else if (role == BibTeXFileModel::SortRole)
+                    return QVariant(text.toLower());
+                else
+                    return QVariant(text);
             }
         } else {
             QSharedPointer<Macro> macro = element.dynamicCast<Macro>();
