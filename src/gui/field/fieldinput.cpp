@@ -215,7 +215,7 @@ public:
 
     bool selectCrossRef() {
         Q_ASSERT_X(fieldLineEdit != NULL, "void FieldInput::FieldInputPrivate::selectCrossRef()", "fieldLineEdit is invalid");
-        if (bibtexFile == NULL) return;
+        if (bibtexFile == NULL) return false;
 
         /// create a standard input dialog with a list of all keys (ids of entries)
         bool ok = false;
