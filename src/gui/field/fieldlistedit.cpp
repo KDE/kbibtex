@@ -105,17 +105,13 @@ public:
         addLineButton = new KPushButton(KIcon("list-add"), i18n("Add"), pushButtonContainer);
         addLineButton->setObjectName(QLatin1String("addButton"));
         connect(addLineButton, SIGNAL(clicked()), p, SLOT(lineAdd()));
-        connect(addLineButton, SIGNAL(clicked()), p, SIGNAL(modified()));
         pushButtonContainerLayout->addWidget(addLineButton);
 
         layout->addStretch(100);
 
         connect(smRemove, SIGNAL(mapped(QWidget *)), p, SLOT(lineRemove(QWidget *)));
-        connect(smRemove, SIGNAL(mapped(QWidget *)), p, SIGNAL(modified()));
         connect(smGoDown, SIGNAL(mapped(QWidget *)), p, SLOT(lineGoDown(QWidget *)));
-        connect(smGoDown, SIGNAL(mapped(QWidget *)), p, SIGNAL(modified()));
         connect(smGoUp, SIGNAL(mapped(QWidget *)), p, SLOT(lineGoUp(QWidget *)));
-        connect(smGoDown, SIGNAL(mapped(QWidget *)), p, SIGNAL(modified()));
 
         scrollArea->setBackgroundRole(QPalette::Base);
         scrollArea->ensureWidgetVisible(container);
@@ -361,6 +357,7 @@ void FieldListEdit::lineAdd()
     QSize size(d->container->width(), d->recommendedHeight());
     d->container->resize(size);
     newEdit->setFocus(Qt::ShortcutFocusReason);
+    emit modified();
 }
 
 void FieldListEdit::lineRemove(QWidget *widget)
@@ -369,19 +366,21 @@ void FieldListEdit::lineRemove(QWidget *widget)
     d->removeFieldLineEdit(fieldLineEdit);
     QSize size(d->container->width(), d->recommendedHeight());
     d->container->resize(size);
+    emit modified();
 }
 
 void FieldListEdit::lineGoDown(QWidget *widget)
 {
     FieldLineEdit *fieldLineEdit = static_cast<FieldLineEdit *>(widget);
     d->goDownFieldLineEdit(fieldLineEdit);
+    emit modified();
 }
 
 void FieldListEdit::lineGoUp(QWidget *widget)
 {
     FieldLineEdit *fieldLineEdit = static_cast<FieldLineEdit *>(widget);
     d->goUpFieldLineEdit(fieldLineEdit);
-
+    emit modified();
 }
 
 PersonListEdit::PersonListEdit(KBibTeX::TypeFlag preferredTypeFlag, KBibTeX::TypeFlags typeFlags, QWidget *parent)
@@ -396,7 +395,6 @@ PersonListEdit::PersonListEdit(KBibTeX::TypeFlag preferredTypeFlag, KBibTeX::Typ
     m_buttonAddNamesFromClipboard->setToolTip(i18n("Add a list of names from clipboard"));
     addButton(m_buttonAddNamesFromClipboard);
     connect(m_buttonAddNamesFromClipboard, SIGNAL(clicked()), this, SLOT(slotAddNamesFromClipboard()));
-    connect(m_buttonAddNamesFromClipboard, SIGNAL(clicked()), this, SIGNAL(modified()));
 }
 
 bool PersonListEdit::reset(const Value &value)
@@ -439,12 +437,14 @@ void PersonListEdit::slotAddNamesFromClipboard()
     if (text.isEmpty())
         text = clipboard->text(QClipboard::Selection);
     if (!text.isEmpty()) {
-        QList<QSharedPointer<Person> > personList = FileImporterBibTeX::splitNames(text);
+        const QList<QSharedPointer<Person> > personList = FileImporterBibTeX::splitNames(text);
         foreach(QSharedPointer<Person> person, personList) {
             Value *value = new Value();
             value->append(person);
             lineAdd(value);
         }
+        if (!personList.isEmpty())
+            emit modified();
     }
 }
 
@@ -461,7 +461,6 @@ UrlListEdit::UrlListEdit(QWidget *parent)
     m_addReferenceToFile = new KPushButton(KIcon("emblem-symbolic-link"), i18n("Add reference to file ..."), this);
     addButton(m_addReferenceToFile);
     connect(m_addReferenceToFile, SIGNAL(clicked()), this, SLOT(slotAddReferenceToFile()));
-    connect(m_addReferenceToFile, SIGNAL(clicked()), this, SIGNAL(modified()));
 
     /// Button to copy a file near the BibTeX file (e.g. same folder) and then
     /// add the copy's relative filename to the entry
@@ -487,6 +486,7 @@ void UrlListEdit::slotAddReferenceToFile()
         Value *value = new Value();
         value->append(QSharedPointer<VerbatimText>(new VerbatimText(filename)));
         lineAdd(value);
+        emit modified();
     }
 }
 
@@ -663,12 +663,10 @@ KeywordListEdit::KeywordListEdit(QWidget *parent)
     m_buttonAddKeywordsFromList->setToolTip(i18n("Add keywords as selected from a pre-defined list of keywords"));
     addButton(m_buttonAddKeywordsFromList);
     connect(m_buttonAddKeywordsFromList, SIGNAL(clicked()), this, SLOT(slotAddKeywordsFromList()));
-    connect(m_buttonAddKeywordsFromList, SIGNAL(clicked()), this, SIGNAL(modified()));
     m_buttonAddKeywordsFromClipboard = new KPushButton(KIcon("edit-paste"), i18n("Add Keywords from Clipboard"), this);
     m_buttonAddKeywordsFromClipboard->setToolTip(i18n("Add a punctuation-separated list of keywords from clipboard"));
     addButton(m_buttonAddKeywordsFromClipboard);
     connect(m_buttonAddKeywordsFromClipboard, SIGNAL(clicked()), this, SLOT(slotAddKeywordsFromClipboard()));
-    connect(m_buttonAddKeywordsFromClipboard, SIGNAL(clicked()), this, SIGNAL(modified()));
 }
 
 void KeywordListEdit::slotAddKeywordsFromList()
@@ -690,13 +688,15 @@ void KeywordListEdit::slotAddKeywordsFromList()
     keywords = forCaseInsensitiveSorting.values();
 
     bool ok = false;
-    QStringList newKeywordList = KInputDialog::getItemList(i18n("Add Keywords"), i18n("Select keywords to add:"), keywords, QStringList(), true, &ok, this);
+    const QStringList newKeywordList = KInputDialog::getItemList(i18n("Add Keywords"), i18n("Select keywords to add:"), keywords, QStringList(), true, &ok, this);
     if (ok) {
         foreach(const QString &newKeywordText, newKeywordList) {
             Value *value = new Value();
             value->append(QSharedPointer<Keyword>(new Keyword(newKeywordText)));
             lineAdd(value);
         }
+        if (!newKeywordList.isEmpty())
+            emit modified();
     }
 }
 
@@ -707,12 +707,14 @@ void KeywordListEdit::slotAddKeywordsFromClipboard()
     if (text.isEmpty()) ///< use "mouse" clipboard as fallback
         text = clipboard->text(QClipboard::Selection);
     if (!text.isEmpty()) {
-        QList<QSharedPointer<Keyword> > keywords = FileImporterBibTeX::splitKeywords(text);
+        const QList<QSharedPointer<Keyword> > keywords = FileImporterBibTeX::splitKeywords(text);
         for (QList<QSharedPointer<Keyword> >::ConstIterator it = keywords.constBegin(); it != keywords.constEnd(); ++it) {
             Value *value = new Value();
             value->append(*it);
             lineAdd(value);
         }
+        if (!keywords.isEmpty())
+            emit modified();
     }
 }
 

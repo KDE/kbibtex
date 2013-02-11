@@ -77,7 +77,6 @@ public:
             KPushButton *monthSelector = new KPushButton(KIcon("view-calendar-month"), "");
             monthSelector->setToolTip(i18n("Select a predefined month"));
             fieldLineEdit->prependWidget(monthSelector);
-            connect(monthSelector, SIGNAL(clicked()), p, SIGNAL(modified()));
 
             QSignalMapper *sm = new QSignalMapper(monthSelector);
             connect(sm, SIGNAL(mapped(int)), p, SLOT(setMonth(int)));
@@ -96,7 +95,6 @@ public:
             referenceSelector->setToolTip(i18n("Select an existing entry"));
             fieldLineEdit->prependWidget(referenceSelector);
             connect(referenceSelector, SIGNAL(clicked()), p, SLOT(selectCrossRef()));
-            connect(referenceSelector, SIGNAL(clicked()), p, SIGNAL(modified()));
         }
         break;
         case KBibTeX::Color: {
@@ -215,7 +213,7 @@ public:
             fieldListEdit->setCompletionItems(items);
     }
 
-    void selectCrossRef() {
+    bool selectCrossRef() {
         Q_ASSERT_X(fieldLineEdit != NULL, "void FieldInput::FieldInputPrivate::selectCrossRef()", "fieldLineEdit is invalid");
         if (bibtexFile == NULL) return;
 
@@ -235,7 +233,9 @@ public:
             Value value;
             value.append(QSharedPointer<VerbatimText>(new VerbatimText(crossRef)));
             reset(value);
+            return true;
         }
+        return false;
     }
 
     void enableModifiedSignal() {
@@ -332,9 +332,11 @@ void FieldInput::setMonth(int month)
     Value value;
     value.append(QSharedPointer<MacroKey>(new MacroKey(KBibTeX::MonthsTriple[month - 1])));
     reset(value);
+    emit modified();
 }
 
 void FieldInput::selectCrossRef()
 {
-    d->selectCrossRef();
+    if (d->selectCrossRef())
+        emit modified();
 }
