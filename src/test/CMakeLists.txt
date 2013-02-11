@@ -7,7 +7,7 @@ include(
 )
 
 add_definitions(
-    -DTESTSET_DIRECTORY='\"${CMAKE_SOURCE_DIR}/testset/\"'
+    -DTESTSET_DIRECTORY=\\"${CMAKE_SOURCE_DIR}/testset/\\"
 )
 
 include_directories(

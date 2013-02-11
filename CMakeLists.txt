@@ -63,6 +63,7 @@ endif(
 
 find_package(
     LibXslt
+    REQUIRED
 )
 macro_log_feature(
     LIBXSLT_FOUND
@@ -76,6 +77,7 @@ macro_log_feature(
 
 find_package(
     LibXml2
+    REQUIRED
 )
 macro_log_feature(
     LIBXML2_FOUND
@@ -89,7 +91,18 @@ macro_log_feature(
 
 find_package(
     PopplerQt4
+    REQUIRED
 )
+macro_log_feature(
+    PopplerQt4_FOUND
+    "Poppler/Qt4"
+    "Poppler is a PDF rendering library"
+    "http://poppler.freedesktop.org/"
+    TRUE
+    ""
+    "Required to transform process PDF files"
+)
+
 
 add_subdirectory(
     src
