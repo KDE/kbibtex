@@ -150,8 +150,8 @@ void OnlineSearchScienceDirect::doneFetchingStartPage()
 
             KUrl url(d->scienceDirectBaseUrl + "science");
             QMap<QString, QString> inputMap = formParameters(htmlText, QLatin1String("<form name=\"qkSrch\""));
-            inputMap["qs_all"] = d->queryFreetext.trimmed();
-            inputMap["qs_author"] = d->queryAuthor.trimmed();
+            inputMap["qs_all"] = d->queryFreetext.simplified();
+            inputMap["qs_author"] = d->queryAuthor.simplified();
             inputMap["resultsPerPage"] = QString::number(d->numExpectedResults);
             inputMap["_ob"] = "QuickSearchURL";
             inputMap["_method"] = "submitForm";
