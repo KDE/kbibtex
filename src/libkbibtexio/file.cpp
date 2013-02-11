@@ -70,6 +70,11 @@ public:
         loadConfiguration();
     }
 
+    FilePrivate(File *parent, const File &other)
+        : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName(QLatin1String("FileExporterBibTeX")), properties(other.d->properties) {
+        /// nothing
+    }
+
 };
 
 File::File()
@@ -79,7 +84,7 @@ File::File()
 }
 
 File::File(const File &other)
-        : QList<QSharedPointer<Element> >(other), d(new FilePrivate(this))
+        : QList<QSharedPointer<Element> >(other), d(new FilePrivate(this, other))
 {
     // nothing
 }
