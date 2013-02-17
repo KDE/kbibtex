@@ -291,9 +291,16 @@ void WebSearchAbstract::setSuggestedHttpHeaders(QNetworkRequest &request, QNetwo
     if (!proxyHostName.isEmpty() && proxyHostName != QLatin1String("DIRECT")) {
         /// Extract both hostname and port number for proxy
         proxyHostName = proxyHostName.mid(proxyHostName.indexOf(QLatin1String("://")) + 3);
-        const QStringList proxyComponents = proxyHostName.split(QChar(':'));
-        /// Set proxy to Qt's NetworkAccessManager
-        m_networkAccessManager->setProxy(QNetworkProxy(QNetworkProxy::HttpProxy, proxyComponents[0], proxyComponents[1].toInt()));
+        QStringList proxyComponents = proxyHostName.split(QLatin1Char(':'), QString::SkipEmptyParts);
+        if (proxyComponents.length() == 1) {
+            /// Proxy configuration is missing a port number,
+            /// using 8080 as default
+            proxyComponents << QLatin1String("8080");
+        }
+        if (proxyComponents.length() == 2) {
+            /// Set proxy to Qt's NetworkAccessManager
+            m_networkAccessManager->setProxy(QNetworkProxy(QNetworkProxy::HttpProxy, proxyComponents[0], proxyComponents[1].toInt()));
+        }
     } else {
         /// No proxy to be used, clear previous settings
         m_networkAccessManager->setProxy(QNetworkProxy());
