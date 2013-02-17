@@ -135,9 +135,14 @@ QNetworkReply *InternalNetworkAccessManager::get(QNetworkRequest &request, const
     if (!proxyHostName.isEmpty() && proxyHostName != QLatin1String("DIRECT")) {
         /// Extract both hostname and port number for proxy
         proxyHostName = proxyHostName.mid(proxyHostName.indexOf(QLatin1String("://")) + 3);
-        const QStringList proxyComponents = proxyHostName.split(QChar(':'));
-        /// Set proxy to Qt's NetworkAccessManager
-        setProxy(QNetworkProxy(QNetworkProxy::HttpProxy, proxyComponents[0], proxyComponents[1].toInt()));
+        const QStringList proxyComponents = proxyHostName.split(QLatin1Char(':'), QString::SkipEmptyParts);
+        if (proxyComponents.length() != 2) {
+            /// Proxy string does not look like hostname:portnumber
+            setProxy(QNetworkProxy());
+        } else {
+            /// Set proxy to Qt's NetworkAccessManager
+            setProxy(QNetworkProxy(QNetworkProxy::HttpProxy, proxyComponents[0], proxyComponents[1].toInt()));
+        }
     } else {
         /// No proxy to be used, clear previous settings
         setProxy(QNetworkProxy());
