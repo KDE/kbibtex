@@ -37,7 +37,7 @@ public:
     void reloadConfig();
 
     bool save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog = NULL);
-    bool save(QIODevice *iodevice, const QSharedPointer<const Element> element, QStringList *errorLog = NULL);
+    bool save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog = NULL);
 
     void setDocumentSearchPaths(const QStringList &searchPaths);
 

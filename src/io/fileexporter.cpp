@@ -37,11 +37,11 @@ FileExporter::~FileExporter()
     // nothing
 }
 
-QString FileExporter::toString(const QSharedPointer<const Element> element, QStringList *errorLog)
+QString FileExporter::toString(const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog)
 {
     QBuffer buffer;
     buffer.open(QBuffer::WriteOnly);
-    if (save(&buffer, element, errorLog)) {
+    if (save(&buffer, element, bibtexfile, errorLog)) {
         buffer.close();
         if (buffer.open(QBuffer::ReadOnly)) {
             QTextStream ts(&buffer);

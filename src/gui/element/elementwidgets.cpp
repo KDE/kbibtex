@@ -1015,7 +1015,7 @@ protected:
         FileExporterBibTeX exporter;
         const File *file = importer.fromString(event->mimeData()->text());
         if (file->count() == 1)
-            document()->setPlainText(exporter.toString(file->first()));
+            document()->setPlainText(exporter.toString(file->first(), file));
         else
             QTextEdit::dropEvent(event);
     }
@@ -1074,7 +1074,7 @@ bool SourceWidget::reset(QSharedPointer<const Element> element)
 
     FileExporterBibTeX exporter;
     exporter.setEncoding(QLatin1String("utf-8"));
-    const QString exportedText = exporter.toString(element);
+    const QString exportedText = exporter.toString(element, m_file);
     if (!exportedText.isNull()) {
         originalText = exportedText;
         sourceEdit->document()->setPlainText(originalText);

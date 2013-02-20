@@ -284,12 +284,12 @@ void ReferencePreview::renderHTML()
             file.append(QSharedPointer<Entry>(new Entry(*crossRefEntry)));
             exporterResult = exporter->save(&buffer, &file, &errorLog);
         } else
-            exporterResult = exporter->save(&buffer, d->element, &errorLog);
+            exporterResult = exporter->save(&buffer, d->element, d->file, &errorLog);
     } else if (crossRefHandling == merge && !entry.isNull()) {
         QSharedPointer<Entry> merged = QSharedPointer<Entry>(Entry::resolveCrossref(*entry, d->file));
-        exporterResult = exporter->save(&buffer, merged, &errorLog);
+        exporterResult = exporter->save(&buffer, merged, d->file, &errorLog);
     } else
-        exporterResult = exporter->save(&buffer, d->element, &errorLog);
+        exporterResult = exporter->save(&buffer, d->element, d->file, &errorLog);
     buffer.close();
     delete exporter;
 

@@ -35,7 +35,7 @@ FileExporterRIS::~FileExporterRIS()
     // nothing
 }
 
-bool FileExporterRIS::save(QIODevice *iodevice, const QSharedPointer<const Element> element, QStringList * /*errorLog*/)
+bool FileExporterRIS::save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File * /*bibtexfile*/, QStringList * /*errorLog*/)
 {
     bool result = false;
     QTextStream stream(iodevice);

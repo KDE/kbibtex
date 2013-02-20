@@ -83,7 +83,7 @@ bool FileExporterXSLT::save(QIODevice *iodevice, const File *bibtexfile, QString
     return false;
 }
 
-bool FileExporterXSLT::save(QIODevice *iodevice, const QSharedPointer<const Element> element, QStringList *errorLog)
+bool FileExporterXSLT::save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog)
 {
     m_cancelFlag = false;
     XSLTransform *xsltransformer = XSLTransform::createXSLTransform(m_xsltFilename);
@@ -93,7 +93,7 @@ bool FileExporterXSLT::save(QIODevice *iodevice, const QSharedPointer<const Elem
         QBuffer buffer;
 
         buffer.open(QIODevice::WriteOnly);
-        if (xmlExporter.save(&buffer, element, errorLog)) {
+        if (xmlExporter.save(&buffer, element, bibtexfile, errorLog)) {
             buffer.close();
             buffer.open(QIODevice::ReadOnly);
             QTextStream ts(&buffer);

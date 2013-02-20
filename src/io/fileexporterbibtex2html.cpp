@@ -125,7 +125,7 @@ bool FileExporterBibTeX2HTML::save(QIODevice *iodevice, const File *bibtexfile, 
     return result;
 }
 
-bool FileExporterBibTeX2HTML::save(QIODevice *iodevice, const QSharedPointer<const Element> element, QStringList *errorLog)
+bool FileExporterBibTeX2HTML::save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog)
 {
     bool result = false;
 
@@ -133,7 +133,7 @@ bool FileExporterBibTeX2HTML::save(QIODevice *iodevice, const QSharedPointer<con
     if (output.open(QIODevice::WriteOnly)) {
         FileExporterBibTeX *bibtexExporter = new FileExporterBibTeX();
         bibtexExporter->setEncoding(QLatin1String("latex"));
-        result = bibtexExporter->save(&output, element, errorLog);
+        result = bibtexExporter->save(&output, element, bibtexfile, errorLog);
         output.close();
         delete bibtexExporter;
     }
