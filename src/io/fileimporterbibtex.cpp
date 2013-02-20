@@ -805,8 +805,8 @@ QList<QSharedPointer<Person> > FileImporterBibTeX::splitNames(const QString &tex
     QList<QSharedPointer<Person> > result;
     QString internalText = text;
 
-    /// Remove invalid characters such as (double) daggers for footnotes
-    static const QList<QChar> invalidChars = QList<QChar>() << QChar(0x2020) << QChar(0x2217) << QChar(0x2021) << QChar('*');
+    /// Remove invalid characters such as dots or (double) daggers for footnotes
+    static const QList<QChar> invalidChars = QList<QChar>() << QChar(0x00b7) << QChar(0x2020) << QChar(0x2217) << QChar(0x2021) << QChar('*');
     for (QList<QChar>::ConstIterator it = invalidChars.constBegin(); it != invalidChars.constEnd(); ++it)
         /// Replacing daggers with commas ensures that they act as persons' names separator
         internalText = internalText.replace(*it, QChar(','));
