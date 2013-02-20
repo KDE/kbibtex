@@ -83,6 +83,7 @@ public:
         KConfigGroup configGroup(config, configGroupName);
         encoding = configGroup.readEntry(Preferences::keyEncoding, Preferences::defaultEncoding);
         QString stringDelimiter = configGroup.readEntry(Preferences::keyStringDelimiter, Preferences::defaultStringDelimiter);
+        if (stringDelimiter.length() != 2) stringDelimiter = Preferences::defaultStringDelimiter;
         stringOpenDelimiter = stringDelimiter[0];
         stringCloseDelimiter = stringDelimiter[1];
         keywordCasing = (KBibTeX::Casing)configGroup.readEntry(Preferences::keyKeywordCasing, (int)Preferences::defaultKeywordCasing);
@@ -94,6 +95,34 @@ public:
             /// no person name formatting is specified for BibTeX, fall back to general setting
             KConfigGroup configGroupGeneral(config, configGroupNameGeneral);
             personNameFormatting = configGroupGeneral.readEntry(Person::keyPersonNameFormatting, Person::defaultPersonNameFormatting);
+        }
+    }
+
+    void loadStateFromFile(const File *bibtexfile) {
+        if (bibtexfile->hasProperty(File::Encoding))
+            encoding = bibtexfile->property(File::Encoding).toString();
+        if (!forcedEncoding.isEmpty())
+            encoding = forcedEncoding;
+        applyEncoding(encoding);
+        if (bibtexfile->hasProperty(File::StringDelimiter)) {
+            QString stringDelimiter = bibtexfile->property(File::StringDelimiter).toString();
+            stringOpenDelimiter = stringDelimiter[0];
+            stringCloseDelimiter = stringDelimiter[1];
+        }
+        // FIXME due to bug in LaTeXEncoder, enforce {...} for now
+        stringOpenDelimiter = QLatin1Char('{');
+        stringCloseDelimiter = QLatin1Char('}');
+        if (bibtexfile->hasProperty(File::QuoteComment))
+            quoteComment = (Preferences::QuoteComment)bibtexfile->property(File::QuoteComment).toInt();
+        if (bibtexfile->hasProperty(File::KeywordCasing))
+            keywordCasing = (KBibTeX::Casing)bibtexfile->property(File::KeywordCasing).toInt();
+        if (bibtexfile->hasProperty(File::ProtectCasing))
+            protectCasing = bibtexfile->property(File::ProtectCasing).toBool();
+        if (bibtexfile->hasProperty(File::NameFormatting)) {
+            /// if the user set "use global default", this property is an empty string
+            /// in this case, keep default value
+            const QString buffer = bibtexfile->property(File::NameFormatting).toString();
+            personNameFormatting = buffer.isEmpty() ? personNameFormatting : buffer;
         }
     }
 
@@ -323,32 +352,8 @@ bool FileExporterBibTeX::save(QIODevice *iodevice, const File *bibtexfile, QStri
     int totalElements = (int) bibtexfile->count();
     int currentPos = 0;
 
-    loadState();
-    if (bibtexfile->hasProperty(File::Encoding))
-        d->encoding = bibtexfile->property(File::Encoding).toString();
-    if (!d->forcedEncoding.isEmpty())
-        d->encoding = d->forcedEncoding;
-    d->applyEncoding(d->encoding);
-    if (bibtexfile->hasProperty(File::StringDelimiter)) {
-        QString stringDelimiter = bibtexfile->property(File::StringDelimiter).toString();
-        d->stringOpenDelimiter = stringDelimiter[0];
-        d->stringCloseDelimiter = stringDelimiter[1];
-    }
-    // FIXME due to bug in LaTeXEncoder, enforce {...} for now
-    d->stringOpenDelimiter = QChar('{');
-    d->stringCloseDelimiter = QChar('}');
-    if (bibtexfile->hasProperty(File::QuoteComment))
-        d->quoteComment = (Preferences::QuoteComment)bibtexfile->property(File::QuoteComment).toInt();
-    if (bibtexfile->hasProperty(File::KeywordCasing))
-        d->keywordCasing = (KBibTeX::Casing)bibtexfile->property(File::KeywordCasing).toInt();
-    if (bibtexfile->hasProperty(File::ProtectCasing))
-        d->protectCasing = bibtexfile->property(File::ProtectCasing).toBool();
-    if (bibtexfile->hasProperty(File::NameFormatting)) {
-        /// if the user set "use global default", this property is an empty string
-        /// in this case, keep default value
-        const QString buffer = bibtexfile->property(File::NameFormatting).toString();
-        d->personNameFormatting = buffer.isEmpty() ? d->personNameFormatting : buffer;
-    }
+    d->loadState();
+    d->loadStateFromFile(bibtexfile);
 
     if (d->encoding != QLatin1String("latex"))
         parameterCommentsList << QSharedPointer<const Comment>(new Comment("x-kbibtex-encoding=" + d->encoding, true));
@@ -393,11 +398,13 @@ bool FileExporterBibTeX::save(QIODevice *iodevice, const File *bibtexfile, QStri
     return result && !d->cancelFlag;
 }
 
-bool FileExporterBibTeX::save(QIODevice *iodevice, const QSharedPointer<const Element> element, QStringList * /*errorLog*/)
+bool FileExporterBibTeX::save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList * /*errorLog*/)
 {
     bool result = false;
 
-    loadState();
+    d->loadState();
+    d->loadStateFromFile(bibtexfile);
+
     if (!d->forcedEncoding.isEmpty())
         d->encoding = d->forcedEncoding;
     d->applyEncoding(d->encoding);
@@ -433,15 +440,13 @@ QString FileExporterBibTeX::valueToBibTeX(const Value &value, const QString &key
 {
     if (staticFileExporterBibTeX == NULL)
         staticFileExporterBibTeX = new FileExporterBibTeX();
-    else
-        staticFileExporterBibTeX->loadState();
     return staticFileExporterBibTeX->internalValueToBibTeX(value, key, useLaTeXEncoding);
 }
 
 QString FileExporterBibTeX::internalValueToBibTeX(const Value &value, const QString &key, UseLaTeXEncoding useLaTeXEncoding)
 {
     if (value.isEmpty())
-        return "";
+        return QString::null;
 
     EncoderLaTeX *encoder = useLaTeXEncoding == leLaTeX ? EncoderLaTeX::instance() : (useLaTeXEncoding == leUTF8 ? EncoderUTF8::instance() : NULL);
 
@@ -467,7 +472,7 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value &value, const QStr
                     if (textBody.contains("\"")) {
                         /// fall back to {...} delimiters if text contains quotation marks
                         result.append("{");
-                        stringCloseDelimiter = '}';
+                        stringCloseDelimiter = QLatin1Char('}');
                     } else {
                         result.append(d->stringOpenDelimiter);
                         stringCloseDelimiter = d->stringCloseDelimiter;
@@ -483,7 +488,7 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value &value, const QStr
                     if (textBody.contains("\"")) {
                         /// fall back to {...} delimiters if text contains quotation marks
                         result.append("{");
-                        stringCloseDelimiter = '}';
+                        stringCloseDelimiter = QLatin1Char('}');
                     } else {
                         result.append(d->stringOpenDelimiter);
                         stringCloseDelimiter = d->stringCloseDelimiter;
@@ -501,7 +506,7 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value &value, const QStr
                         if (textBody.contains("\"")) {
                             /// fall back to {...} delimiters if text contains quotation marks
                             result.append("{");
-                            stringCloseDelimiter = '}';
+                            stringCloseDelimiter = QLatin1Char('}');
                         } else {
                             result.append(d->stringOpenDelimiter);
                             stringCloseDelimiter = d->stringCloseDelimiter;
@@ -517,7 +522,7 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value &value, const QStr
                         if (textBody.contains("\"")) {
                             /// fall back to {...} delimiters if text contains quotation marks
                             result.append("{");
-                            stringCloseDelimiter = '}';
+                            stringCloseDelimiter = QLatin1Char('}');
                         } else {
                             result.append(d->stringOpenDelimiter);
                             stringCloseDelimiter = d->stringCloseDelimiter;
@@ -550,7 +555,7 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value &value, const QStr
                             if (thisName.contains("\"")) {
                                 /// fall back to {...} delimiters if text contains quotation marks
                                 result.append("{");
-                                stringCloseDelimiter = '}';
+                                stringCloseDelimiter = QLatin1Char('}');
                             } else {
                                 result.append(d->stringOpenDelimiter);
                                 stringCloseDelimiter = d->stringCloseDelimiter;
@@ -563,7 +568,7 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value &value, const QStr
                             if (thisName.contains("\"")) {
                                 /// fall back to {...} delimiters if text contains quotation marks
                                 result.append("{");
-                                stringCloseDelimiter = '}';
+                                stringCloseDelimiter = QLatin1Char('}');
                             } else {
                                 result.append(d->stringOpenDelimiter);
                                 stringCloseDelimiter = d->stringCloseDelimiter;
@@ -582,7 +587,7 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value &value, const QStr
                                 if (textBody.contains("\"")) {
                                     /// fall back to {...} delimiters if text contains quotation marks
                                     result.append("{");
-                                    stringCloseDelimiter = '}';
+                                    stringCloseDelimiter = QLatin1Char('}');
                                 } else {
                                     result.append(d->stringOpenDelimiter);
                                     stringCloseDelimiter = d->stringCloseDelimiter;
@@ -595,7 +600,7 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value &value, const QStr
                                 if (textBody.contains("\"")) {
                                     /// fall back to {...} delimiters if text contains quotation marks
                                     result.append("{");
-                                    stringCloseDelimiter = '}';
+                                    stringCloseDelimiter = QLatin1Char('}');
                                 } else {
                                     result.append(d->stringOpenDelimiter);
                                     stringCloseDelimiter = d->stringCloseDelimiter;
@@ -614,22 +619,6 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value &value, const QStr
     }
 
     if (isOpen) result.append(stringCloseDelimiter);
+
     return result;
-}
-
-QString FileExporterBibTeX::elementToString(const Element *element)
-{
-    QStringList result;
-    const Entry *entry = dynamic_cast<const Entry *>(element);
-    if (entry != NULL) {
-        result << QString("ID = %1").arg(entry->id());
-        for (QMap<QString, Value>::ConstIterator it = entry->constBegin(); it != entry->constEnd(); ++it)
-            result << QString("%1 = {%2}").arg(it.key()).arg(valueToBibTeX(it.value()));
-    }
-    return result.join("; ");
-}
-
-void FileExporterBibTeX::loadState()
-{
-    d->loadState();
 }
