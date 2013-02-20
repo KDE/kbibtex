@@ -33,12 +33,14 @@ private slots:
 private:
     bool m_running;
     TestWidget *m_testWidget;
+    bool m_isBusy;
 
     QList<OnlineSearchAbstract *> m_onlineSearchList;
     QList<OnlineSearchAbstract *>::ConstIterator m_currentOnlineSearch;
     int m_currentOnlineSearchNumFoundEntries;
 
     void addMessage(const QString &message, const KIcon &icon = KIcon());
+    void setBusy(bool isBusy);
 
     void processNextSearch();
     void processFileTest(TestFile *testFile);

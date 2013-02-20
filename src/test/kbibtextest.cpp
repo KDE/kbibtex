@@ -43,11 +43,11 @@ class TestWidget : public QWidget
 {
 private:
     KBibTeXTest *m_parent;
+    KPushButton *buttonStartTest;
+    KAction *actionStartOnlineSearchTests, *actionStartAllTestFileTests;
 
 public:
     KListWidget *messageList;
-    KPushButton *buttonStartTest;
-    KAction *actionStartOnlineSearchTests, *actionStartAllTestFileTests;
 
     TestWidget(KBibTeXTest *parent)
             : QWidget(parent), m_parent(parent) {
@@ -87,10 +87,16 @@ public:
             fileTestsSignalMapper->setMapping(action, id);
         }
     }
+
+    void setBusy(bool isBusy) {
+        buttonStartTest->setEnabled(!isBusy);
+        actionStartOnlineSearchTests->setEnabled(!isBusy);
+        actionStartAllTestFileTests->setEnabled(!isBusy);
+    }
 };
 
 KBibTeXTest::KBibTeXTest(QWidget *parent)
-        : KDialog(parent), m_running(false)
+        : KDialog(parent), m_running(false), m_isBusy(false)
 {
     testFiles << createTestFile(QLatin1String("bib/bug19489.bib"), 1, 1, QLatin1String("bart:04:1242"), QLatin1String("Ralph"), QLatin1String("a926264c17545bf6eb9a953a8e3f0970"));
     testFiles << createTestFile(QLatin1String("bib/names-with-braces.bib"), 1, 1, QLatin1String("names1"), QLatin1String("{{{{{LastName3A LastName3B}}}}}"), QLatin1String("c4a6575e606ac513b79d1b8e18bca02e"));
@@ -123,7 +129,7 @@ KBibTeXTest::KBibTeXTest(QWidget *parent)
 
     connect(this, SIGNAL(closeClicked()), this, SLOT(aboutToQuit()));
 
-    addMessage(QString(QLatin1String("Compiled for %1")).arg(versionNumber),iconINFO);
+    addMessage(QString(QLatin1String("Compiled for %1")).arg(versionNumber), iconINFO);
 }
 
 void KBibTeXTest::addMessage(const QString &message, const KIcon &icon)
@@ -135,6 +141,19 @@ void KBibTeXTest::addMessage(const QString &message, const KIcon &icon)
     kapp->processEvents();
 }
 
+void KBibTeXTest::setBusy(bool isBusy)
+{
+    m_testWidget->setBusy(isBusy);
+    if (isBusy && !m_isBusy) {
+        /// changing to busy state
+        QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+    } else if (!isBusy && m_isBusy) {
+        /// changing to idle state
+        QApplication::restoreOverrideCursor();
+    }
+    m_isBusy = isBusy;
+}
+
 void KBibTeXTest::aboutToQuit()
 {
     m_running = false;
@@ -144,7 +163,7 @@ void KBibTeXTest::aboutToQuit()
 void KBibTeXTest::startOnlineSearchTests()
 {
     m_running = true;
-    m_testWidget->buttonStartTest->setEnabled(false);
+    setBusy(true);
     m_testWidget->messageList->clear();
     kapp->processEvents();
     processNextSearch();
@@ -174,6 +193,7 @@ void KBibTeXTest::onlineSearchFoundEntry()
 void KBibTeXTest::processNextSearch()
 {
     if (m_running && m_currentOnlineSearch != m_onlineSearchList.constEnd()) {
+        setBusy(true);
         m_currentOnlineSearchNumFoundEntries = 0;
         addMessage(QString(QLatin1String("Searching '%1'")).arg((*m_currentOnlineSearch)->label()), iconINFO);
 
@@ -184,7 +204,7 @@ void KBibTeXTest::processNextSearch()
         (*m_currentOnlineSearch)->startSearch(query, 3);
     } else {
         addMessage(QLatin1String("Done testing"), iconINFO);
-        m_testWidget->buttonStartTest->setEnabled(true);
+        setBusy(false);
         m_running = false;
     }
 }
@@ -192,7 +212,7 @@ void KBibTeXTest::processNextSearch()
 void KBibTeXTest::startAllTestFileTests()
 {
     m_running = true;
-    m_testWidget->buttonStartTest->setEnabled(false);
+    setBusy(true);
     m_testWidget->messageList->clear();
     kapp->processEvents();
 
@@ -201,14 +221,14 @@ void KBibTeXTest::startAllTestFileTests()
     }
 
     addMessage(QLatin1String("Done testing"), iconINFO);
-    m_testWidget->buttonStartTest->setEnabled(true);
+    setBusy(false);
     m_running = false;
 }
 
 void KBibTeXTest::startTestFileTest(int index)
 {
     m_running = true;
-    m_testWidget->buttonStartTest->setEnabled(false);
+    setBusy(true);
     m_testWidget->messageList->clear();
     kapp->processEvents();
 
@@ -216,7 +236,7 @@ void KBibTeXTest::startTestFileTest(int index)
     processFileTest(testFile);
 
     addMessage(QLatin1String("Done testing"), iconINFO);
-    m_testWidget->buttonStartTest->setEnabled(true);
+    setBusy(false);
     m_running = false;
 }
 
@@ -224,11 +244,7 @@ void KBibTeXTest::processFileTest(TestFile *testFile)
 {
     kapp->processEvents();
 
-#ifdef _MSC_VER
-    const QString absoluteFilename = testFile->filename;
-#else // _MSC_VER
     const QString absoluteFilename = QLatin1String(TESTSET_DIRECTORY) + testFile->filename;
-#endif // _MSC_VER
     if (!QFileInfo(absoluteFilename).exists()) {
         addMessage(QString(QLatin1String("File '%1' does not exist")).arg(absoluteFilename), iconERROR);
         return;
