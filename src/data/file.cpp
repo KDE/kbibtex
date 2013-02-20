@@ -84,7 +84,7 @@ public:
         properties.insert(File::StringDelimiter, configGroup.readEntry(Preferences::keyStringDelimiter, Preferences::defaultStringDelimiter));
         properties.insert(File::QuoteComment, (Preferences::QuoteComment)configGroup.readEntry(Preferences::keyQuoteComment, (int)Preferences::defaultQuoteComment));
         properties.insert(File::KeywordCasing, (KBibTeX::Casing)configGroup.readEntry(Preferences::keyKeywordCasing, (int)Preferences::defaultKeywordCasing));
-        properties.insert(File::NameFormatting,  configGroup.readEntry(Person::keyPersonNameFormatting, ""));
+        properties.insert(File::NameFormatting, configGroup.readEntry(Person::keyPersonNameFormatting, QString()));
         properties.insert(File::ProtectCasing, configGroup.readEntry(Preferences::keyProtectCasing, Preferences::defaultProtectCasing));
     }
 
