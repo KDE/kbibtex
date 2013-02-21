@@ -48,7 +48,7 @@ protected:
 private slots:
     void doneFetchingStartPage();
     void doneFetchingResultPage();
-    void doneFetchingSummaryPage();
+    void doneFetchingBibTeXCode();
 
 private:
     class OnlineSearchJStorPrivate;
