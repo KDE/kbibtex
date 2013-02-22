@@ -99,6 +99,8 @@ public:
     }
 
     void loadStateFromFile(const File *bibtexfile) {
+        if (bibtexfile == NULL) return;
+
         if (bibtexfile->hasProperty(File::Encoding))
             encoding = bibtexfile->property(File::Encoding).toString();
         if (!forcedEncoding.isEmpty())
