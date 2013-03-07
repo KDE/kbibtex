@@ -105,7 +105,6 @@ public:
         addLineButton = new KPushButton(KIcon("list-add"), i18n("Add"), pushButtonContainer);
         addLineButton->setObjectName(QLatin1String("addButton"));
         connect(addLineButton, SIGNAL(clicked()), p, SLOT(lineAdd()));
-        connect(addLineButton, SIGNAL(clicked()), p, SIGNAL(modified()));
         pushButtonContainerLayout->addWidget(addLineButton);
 
         layout->addStretch(100);
@@ -361,6 +360,7 @@ void FieldListEdit::lineAdd()
     QSize size(d->container->width(), d->recommendedHeight());
     d->container->resize(size);
     newEdit->setFocus(Qt::ShortcutFocusReason);
+    emit modified();
 }
 
 void FieldListEdit::lineRemove(QWidget *widget)
@@ -396,7 +396,6 @@ PersonListEdit::PersonListEdit(KBibTeX::TypeFlag preferredTypeFlag, KBibTeX::Typ
     m_buttonAddNamesFromClipboard->setToolTip(i18n("Add a list of names from clipboard"));
     addButton(m_buttonAddNamesFromClipboard);
     connect(m_buttonAddNamesFromClipboard, SIGNAL(clicked()), this, SLOT(slotAddNamesFromClipboard()));
-    connect(m_buttonAddNamesFromClipboard, SIGNAL(clicked()), this, SIGNAL(modified()));
 }
 
 bool PersonListEdit::reset(const Value &value)
@@ -440,11 +439,13 @@ void PersonListEdit::slotAddNamesFromClipboard()
         text = clipboard->text(QClipboard::Selection);
     if (!text.isEmpty()) {
         QList<QSharedPointer<Person> > personList = FileImporterBibTeX::splitNames(text);
-        foreach(QSharedPointer<Person> person, personList) {
+         foreach(QSharedPointer<Person> person, personList) {
             Value *value = new Value();
             value->append(person);
             lineAdd(value);
         }
+        if (!personList.isEmpty())
+            emit modified();
     }
 }
 
@@ -573,6 +574,7 @@ void UrlListEdit::slotSaveLocally(QWidget *widget)
                 Value *value = new Value();
                 value->append(QSharedPointer<VerbatimText>(new VerbatimText(filename)));
                 lineAdd(value);
+                emit modified();
             }
             setEnabled(true);
             unsetCursor();
@@ -663,12 +665,10 @@ KeywordListEdit::KeywordListEdit(QWidget *parent)
     m_buttonAddKeywordsFromList->setToolTip(i18n("Add keywords as selected from a pre-defined list of keywords"));
     addButton(m_buttonAddKeywordsFromList);
     connect(m_buttonAddKeywordsFromList, SIGNAL(clicked()), this, SLOT(slotAddKeywordsFromList()));
-    connect(m_buttonAddKeywordsFromList, SIGNAL(clicked()), this, SIGNAL(modified()));
     m_buttonAddKeywordsFromClipboard = new KPushButton(KIcon("edit-paste"), i18n("Add Keywords from Clipboard"), this);
     m_buttonAddKeywordsFromClipboard->setToolTip(i18n("Add a punctuation-separated list of keywords from clipboard"));
     addButton(m_buttonAddKeywordsFromClipboard);
     connect(m_buttonAddKeywordsFromClipboard, SIGNAL(clicked()), this, SLOT(slotAddKeywordsFromClipboard()));
-    connect(m_buttonAddKeywordsFromClipboard, SIGNAL(clicked()), this, SIGNAL(modified()));
 }
 
 void KeywordListEdit::slotAddKeywordsFromList()
@@ -690,13 +690,15 @@ void KeywordListEdit::slotAddKeywordsFromList()
     keywords = forCaseInsensitiveSorting.values();
 
     bool ok = false;
-    QStringList newKeywordList = KInputDialog::getItemList(i18n("Add Keywords"), i18n("Select keywords to add:"), keywords, QStringList(), true, &ok, this);
+    const QStringList newKeywordList = KInputDialog::getItemList(i18n("Add Keywords"), i18n("Select keywords to add:"), keywords, QStringList(), true, &ok, this);
     if (ok) {
         foreach(const QString &newKeywordText, newKeywordList) {
             Value *value = new Value();
             value->append(QSharedPointer<Keyword>(new Keyword(newKeywordText)));
             lineAdd(value);
         }
+        if (!newKeywordList.isEmpty())
+                    emit modified();
     }
 }
 
@@ -712,8 +714,10 @@ void KeywordListEdit::slotAddKeywordsFromClipboard()
             Value *value = new Value();
             value->append(*it);
             lineAdd(value);
-        }
-    }
+           }
+        if (!keywords.isEmpty())
+                    emit modified();
+   }
 }
 
 void KeywordListEdit::setReadOnly(bool isReadOnly)

@@ -200,9 +200,9 @@ public:
             fieldListEdit->setCompletionItems(items);
     }
 
-    void selectCrossRef() {
+    bool selectCrossRef() {
         Q_ASSERT_X(fieldLineEdit != NULL, "void FieldInput::FieldInputPrivate::selectCrossRef()", "fieldLineEdit is invalid");
-        if (bibtexFile == NULL) return;
+        if (bibtexFile == NULL) return false;
 
         /// create a standard input dialog with a list of all keys (ids of entries)
         bool ok = false;
@@ -220,7 +220,9 @@ public:
             Value value;
             value.append(QSharedPointer<VerbatimText>(new VerbatimText(crossRef)));
             reset(value);
+            return true;
         }
+        return false;
     }
 
 
@@ -314,9 +316,11 @@ void FieldInput::setMonth(int month)
     Value value;
     value.append(QSharedPointer<MacroKey>(new MacroKey(KBibTeX::MonthsTriple[month - 1])));
     reset(value);
+    emit modified();
 }
 
 void FieldInput::selectCrossRef()
 {
-    d->selectCrossRef();
+    if (d->selectCrossRef())
+        emit modified();
 }
