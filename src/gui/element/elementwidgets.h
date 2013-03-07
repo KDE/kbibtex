@@ -166,6 +166,7 @@ public:
     bool reset(QSharedPointer<const Element> element);
     void setReadOnly(bool isReadOnly);
     void showReqOptWidgets(bool, const QString &) {};
+
     QString label();
     KIcon icon();
 

@@ -182,7 +182,7 @@ QString BibTeXFields::format(const QString &name, KBibTeX::Casing casing) const
         foreach(const FieldDescription *fd, *this) {
             /// configuration file uses camel-case
             QString itName = fd->upperCamelCase.toLower();
-            if (itName == iName && fd->upperCamelCaseAlt == QString::null) {
+            if (itName == iName && fd->upperCamelCaseAlt.isEmpty()) {
                 iName = fd->upperCamelCase;
                 break;
             }
@@ -196,7 +196,7 @@ QString BibTeXFields::format(const QString &name, KBibTeX::Casing casing) const
         foreach(const FieldDescription *fd, *this) {
             /// configuration file uses camel-case
             QString itName = fd->upperCamelCase.toLower();
-            if (itName == iName && fd->upperCamelCaseAlt == QString::null) {
+            if (itName == iName && fd->upperCamelCaseAlt.isEmpty()) {
                 iName = fd->upperCamelCase;
                 break;
             }

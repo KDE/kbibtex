@@ -48,7 +48,6 @@ FileExporterXML::~FileExporterXML()
 
 bool FileExporterXML::save(QIODevice *iodevice, const File *bibtexfile, QStringList * /*errorLog*/)
 {
-    // m_mutex.lock(); // FIXME: required?
     bool result = true;
     m_cancelFlag = false;
     QTextStream stream(iodevice);
@@ -64,7 +63,6 @@ bool FileExporterXML::save(QIODevice *iodevice, const File *bibtexfile, QStringL
 
     stream << "</bibliography>" << endl;
 
-    // m_mutex.unlock(); // FIXME: required?
     return result && !m_cancelFlag;
 }
 
@@ -91,7 +89,7 @@ bool FileExporterXML::write(QTextStream &stream, const Element *element, const F
     const Entry *entry = dynamic_cast<const Entry *>(element);
     if (entry != NULL) {
         if (bibtexfile != NULL)
-            entry->resolveCrossref(bibtexfile);
+            entry = entry->resolveCrossref(bibtexfile);
         result |= writeEntry(stream, entry);
         if (bibtexfile != NULL)
             delete entry; /// delete artificially created Entry from resolveCrossref(..)
