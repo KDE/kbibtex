@@ -45,9 +45,17 @@ public:
     }
 
     void sanitizeEntry(QSharedPointer<Entry> entry) {
+        if (KBibTeX::doiRegExp.indexIn(entry->id()) == 0) {
+            /// entry ID is a DOI
+            Value v;
+            v.append(QSharedPointer<VerbatimText>(new VerbatimText(KBibTeX::doiRegExp.cap(0))));
+            entry->insert(Entry::ftDOI, v);
+        }
+
         QString url = PlainTextValue::text(entry->value(Entry::ftUrl));
         if (url.startsWith("http://www.jstor.org/stable/")) {
-            entry->setId("jstor" + url.mid(28));
+            /// use JSTOR's own stable IDs for entry ID
+            entry->setId("jstor" + url.mid(28).replace(QLatin1Char(','), QString()));
         }
 
         const QString formattedDateKey = "jstor_formatteddate";
@@ -85,6 +93,13 @@ public:
             v.append(QSharedPointer<PlainText>(new PlainText(pages)));
             entry->insert(Entry::ftPages, v);
         }
+
+        for (QMap<QString, Value>::Iterator it = entry->begin(); it != entry->end();) {
+            if (PlainTextValue::text(it.value()).isEmpty())
+                it = entry->erase(it);
+            else
+                ++it;
+        }
     }
 };
 
@@ -108,12 +123,15 @@ void OnlineSearchJStor::startSearch(const QMap<QString, QString> &query, int num
     d->numSteps = 3;
     d->numFoundResults = 0;
 
+    /// Build search URL, to be used in the second step
+    /// after fetching the start page
     d->queryUrl = KUrl(d->jstorBaseUrl);
     d->queryUrl.setPath("/action/doAdvancedSearch");
     d->queryUrl.addQueryItem("Search", "Search");
     d->queryUrl.addQueryItem("wc", "on"); /// include external references, too
     d->queryUrl.addQueryItem("la", ""); /// no specific language
     d->queryUrl.addQueryItem("jo", ""); /// no specific journal
+    d->queryUrl.addQueryItem("Search", "Search");
     d->queryUrl.addQueryItem("hp", QString::number(numResults)); /// hits per page
     int queryNumber = 0;
     QStringList elements = splitRespectingQuotationMarks(query[queryKeyTitle]);
@@ -198,9 +216,9 @@ void OnlineSearchJStor::doneFetchingStartPage()
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingStartPage()));
         } else {
             QNetworkRequest request(d->queryUrl);
-            QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
-            setNetworkReplyTimeout(reply);
-            connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingResultPage()));
+            QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request);
+            setNetworkReplyTimeout(newReply);
+            connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingResultPage()));
         }
     } else
         kDebug() << "url was" << reply->url().toString();
@@ -213,39 +231,41 @@ void OnlineSearchJStor::doneFetchingResultPage()
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
     if (handleErrors(reply)) {
-        QString htmlText = reply->readAll();
-        QMap<QString, QString> formData = formParameters(htmlText, "<form action=\"/action/doAdvancedResults\"");
-        formData.remove("doi");
+        /// ensure proper treatment of UTF-8 characters
+       QString htmlText = QString::fromUtf8(reply->readAll().data());
 
-        if (formData.size() > 0) {
-            QStringList body;
-            foreach(const QString &key, formData.keys()) {
-                foreach(const QString &value, formData.values(key)) {
-                    body.append(encodeURL(key) + '=' + encodeURL(value));
-                }
+       /// extract all unique DOI from HTML code
+        QSet<QString> uniqueDOIs;
+      int p = -1;
+      while ((p = KBibTeX::doiRegExp.indexIn(htmlText, p + 1)) >= 0)
+        uniqueDOIs.insert(KBibTeX::doiRegExp.cap(0));
+
+      if (uniqueDOIs.isEmpty()) {
+                  /// no results found
+                  emit progress(d->numSteps, d->numSteps);
+                  emit stoppedSearch(resultNoError);
+              } else {
+                  /// Build search URL, to be used in the second step
+                  /// after fetching the start page
+                  KUrl bibTeXUrl = KUrl(d->jstorBaseUrl);
+                  bibTeXUrl.setPath("/action/downloadCitation");
+                  bibTeXUrl.addQueryItem("userAction", "export");
+                  bibTeXUrl.addQueryItem("format", "bibtex"); /// request BibTeX format
+                  bibTeXUrl.addQueryItem("include", "abs"); /// include abstracts
+                  foreach(const QString &doi, uniqueDOIs) {
+                      bibTeXUrl.addQueryItem("doi", doi);
             }
 
-            int p1 = htmlText.indexOf("<form action=\"/action/doAdvancedResults\""), p2 = -1;
-            while ((p1 = htmlText.indexOf("<input type=\"checkbox\" name=\"doi\" value=\"", p1 + 1)) >= 0 && (p2 = htmlText.indexOf("\"", p1 + 42)) >= 0) {
-                body.append("doi=" + encodeURL(htmlText.mid(p1 + 41, p2 - p1 - 41)));
-            }
-            body.append("selectUnselect=");
-
-            QNetworkRequest request(d->jstorBaseUrl + "action/downloadCitation?format=bibtex&include=abs");
-            request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
-            QNetworkReply *newReply = InternalNetworkAccessManager::self()->post(request, body.join("&").toUtf8());
+                  QNetworkRequest request(bibTeXUrl);
+                              QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request);
             setNetworkReplyTimeout(newReply);
-            connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingSummaryPage()));
-        } else {
-            /// no results found
-            emit progress(d->numSteps, d->numSteps);
-            emit stoppedSearch(resultNoError);
+         connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingBibTeXCode()));
         }
     } else
         kDebug() << "url was" << reply->url().toString();
 }
 
-void OnlineSearchJStor::doneFetchingSummaryPage()
+void OnlineSearchJStor::doneFetchingBibTeXCode()
 {
     emit progress(++d->curStep, d->numSteps);
 
@@ -261,7 +281,7 @@ void OnlineSearchJStor::doneFetchingSummaryPage()
         if (bibtexFile != NULL) {
             for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
                 QSharedPointer<Entry> entry = (*it).dynamicCast<Entry>();
-                if (!entry.isNull()) {
+                if (!entry.isNull() && !entry->id().isEmpty() /** skip invalid entries with empty ID */) {
                     Value v;
                     v.append(QSharedPointer<VerbatimText>(new VerbatimText(label())));
                     entry->insert("x-fetchedfrom", v);
