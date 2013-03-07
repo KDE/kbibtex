@@ -105,6 +105,7 @@ public:
         addLineButton = new KPushButton(KIcon("list-add"), i18n("Add"), pushButtonContainer);
         addLineButton->setObjectName(QLatin1String("addButton"));
         connect(addLineButton, SIGNAL(clicked()), p, SLOT(lineAdd()));
+        connect(addLineButton, SIGNAL(clicked()), p, SIGNAL(modified()));
         pushButtonContainerLayout->addWidget(addLineButton);
 
         layout->addStretch(100);
@@ -357,7 +358,6 @@ void FieldListEdit::lineAdd()
     QSize size(d->container->width(), d->recommendedHeight());
     d->container->resize(size);
     newEdit->setFocus(Qt::ShortcutFocusReason);
-    emit modified();
 }
 
 void FieldListEdit::lineRemove(QWidget *widget)
