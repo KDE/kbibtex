@@ -19,97 +19,110 @@ endif(
 )
 
 if(
-    NOT
-    DEFINED
-    SVN_REVISION
+   EXISTS ${SOURCE_DIR}/.svn
 )
-    find_program(
-        SVNVERSION_EXECUTABLE
-        NAMES svnversion svnversion.exe svnversion.bat
-    )
     if(
-        SVNVERSION_EXECUTABLE
+        NOT
+        DEFINED
+        SVN_REVISION
     )
-        message(
-            STATUS
-            "Extracting SVN version ..."
+        find_program(
+            SVNVERSION_EXECUTABLE
+            NAMES svnversion svnversion.exe svnversion.bat
         )
-        execute_process(
-            COMMAND
-            ${SVNVERSION_EXECUTABLE}
-            -n
-            ${SOURCE_DIR}
-            OUTPUT_VARIABLE
-            SVN_REVISION
-            OUTPUT_STRIP_TRAILING_WHITESPACE
-        )
-
         if(
-            SVN_REVISION
-            MATCHES
-            "exported"
+            SVNVERSION_EXECUTABLE
         )
             message(
                 STATUS
-                "Not an SVN version, assuming non-developer release"
+                "Extracting SVN version ..."
+            )
+            execute_process(
+                COMMAND
+                ${SVNVERSION_EXECUTABLE}
+                -n
+                ${SOURCE_DIR}
+                OUTPUT_VARIABLE
+                SVN_REVISION
+                OUTPUT_STRIP_TRAILING_WHITESPACE
+            )
+
+            if(
+                SVN_REVISION
+                MATCHES
+                "exported"
+            )
+                message(
+                    STATUS
+                    "Not an SVN version, assuming non-developer release"
+                )
+                set(
+                    SVN_REVISION
+                    "unknown"
+                )
+            else(
+                SVN_REVISION
+                MATCHES
+                "exported"
+            )
+                find_program(
+                    SVN_EXECUTABLE
+                    NAMES svn svn.exe svn.bat
+                )
+                if(
+                    SVN_EXECUTABLE
+                )
+                    message(
+                        STATUS
+                        "Extracting detailed SVN information ..."
+                    )
+                    execute_process(
+                        COMMAND
+                        ${SVN_EXECUTABLE} info
+                        ${SOURCE_DIR}
+                        OUTPUT_VARIABLE
+                        SVN_OUTPUT
+                        OUTPUT_STRIP_TRAILING_WHITESPACE
+                    )
+                    string(
+                        REGEX MATCH "(trunk|branches|tags)(/.*)?" SVN_PATH ${SVN_OUTPUT}
+                    )
+                endif(
+                    SVN_EXECUTABLE
+                )
+        endif(
+                SVN_REVISION
+                MATCHES
+                "exported"
+            )
+        else(
+            SVNVERSION_EXECUTABLE
+        )
+            message(
+                STATUS
+                "No Subversion installed, assuming non-developer release"
             )
             set(
                 SVN_REVISION
                 "unknown"
             )
-        else(
-            SVN_REVISION
-            MATCHES
-            "exported"
-        )
-            find_program(
-                SVN_EXECUTABLE
-                NAMES svn svn.exe svn.bat
-            )
-            if(
-                SVN_EXECUTABLE
-            )
-                message(
-                    STATUS
-                    "Extracting detailed SVN information ..."
-                )
-                execute_process(
-                    COMMAND
-                    ${SVN_EXECUTABLE} info
-                    ${SOURCE_DIR}
-                    OUTPUT_VARIABLE
-                    SVN_OUTPUT
-                    OUTPUT_STRIP_TRAILING_WHITESPACE
-                )
-                string(
-                    REGEX MATCH "(trunk|branches|tags)(/.*)?" SVN_PATH ${SVN_OUTPUT}
-                )
-             endif(
-                SVN_EXECUTABLE
-            )
-       endif(
-            SVN_REVISION
-            MATCHES
-            "exported"
-        )
-    else(
-        SVNVERSION_EXECUTABLE
-    )
-        message(
-            STATUS
-            "No Subversion installed, assuming non-developer release"
-        )
-        set(
-            SVN_REVISION
-            "unknown"
+        endif(
+            SVNVERSION_EXECUTABLE
         )
     endif(
-        SVNVERSION_EXECUTABLE
+        NOT
+        DEFINED
+        SVN_REVISION
+    )
+else(
+   EXISTS ${SOURCE_DIR}/.svn
+)
+    set(
+        SVN_REVISION
+        "unknown"
     )
 endif(
-    NOT
-    DEFINED
-    SVN_REVISION
+   EXISTS ${SOURCE_DIR}/.svn
 )
 
 # write a file with the SVNVERSION define
