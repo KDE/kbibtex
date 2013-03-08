@@ -211,6 +211,7 @@ void ValueList::resizeEvent(QResizeEvent *)
 
 void ValueList::listItemActivated(const QModelIndex &index)
 {
+    setEnabled(false);
     QString itemText = d->sortingModel->mapToSource(index).data(SearchTextRole).toString();
     QVariant fieldVar = d->comboboxFieldNames->itemData(d->comboboxFieldNames->currentIndex());
     QString fieldText = fieldVar.toString();
@@ -223,6 +224,7 @@ void ValueList::listItemActivated(const QModelIndex &index)
     fq.searchPDFfiles = false;
 
     d->editor->setFilterBarFilter(fq);
+    setEnabled(true);
 }
 
 void ValueList::searchSelection()
