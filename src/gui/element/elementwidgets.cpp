@@ -60,7 +60,8 @@ static const unsigned int interColumnSpace = 16;
 static const QStringList keyStart = QStringList() << Entry::ftUrl << QLatin1String("postscript") << Entry::ftLocalFile << Entry::ftDOI << Entry::ftFile << QLatin1String("ee") << QLatin1String("biburl");
 static const char *PropertyIdSuggestion = "PropertyIdSuggestion";
 
-ElementWidget::ElementWidget(QWidget *parent): QWidget(parent), isReadOnly(false), m_isModified(false)
+ElementWidget::ElementWidget(QWidget *parent)
+        : QWidget(parent), isReadOnly(false), m_file(NULL), m_isModified(false)
 {
     // nothing
 };
