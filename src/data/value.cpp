@@ -503,6 +503,12 @@ QString PlainTextValue::text(const Value &value, const File *file, bool debug)
     return result;
 }
 
+QString PlainTextValue::text(const QSharedPointer<ValueItem> &valueItem, const File *file, bool debug)
+{
+    const ValueItem *p = valueItem.data();
+    return text(*p, file, debug);
+}
+
 QString PlainTextValue::text(const ValueItem &valueItem, const File *file, bool debug)
 {
     ValueItemType vit;
