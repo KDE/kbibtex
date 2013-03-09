@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2012 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2013 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                              and contributors                           *
  *                                                                         *
  *   Contributions to this file were made by                               *
