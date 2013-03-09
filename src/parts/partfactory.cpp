@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2012 by Thomas Fischer                             *
+*   Copyright (C) 2004-2013 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -31,7 +31,7 @@
 static const char PartId[] = "kbibtexpart";
 static const char PartName[] = I18N_NOOP("KBibTeXPart");
 static const char PartDescription[] = I18N_NOOP("BibTeX Editor Component");
-static const char PartCopyright[] = "Copyright 2004-2012 Thomas Fischer";
+static const char PartCopyright[] = "Copyright 2004-2013 Thomas Fischer";
 static const char *programHomepage = I18N_NOOP("http://home.gna.org/kbibtex/");
 static const char *bugTrackerHomepage = "https://gna.org/bugs/?group=kbibtex";
 

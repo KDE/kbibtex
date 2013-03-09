@@ -3,11 +3,9 @@ INFO: This TODO list will most likely outdate very quickly
 For the upcoming 0.5 release, the following bugs have to get
 addressed:
 
-- Bug 19833: "file" location for Mendeley-generated files
-  Waiting for confirmation that bug is fixed.
-- Bug 19807: PubMed usage violates NCBI query limit policy
-  Waiting for confirmation that bug is fixed.
-- Bug 20123: Crash near File::property. More information needed
+- Bug 20123: Crash near File::property. Potential patch exists.
+- Bug 20515: Switching between different modes in a FieldLineEdit
+  is broken. Waiting for confirmation that problem is fixed.
 
 Within the scope of a 0.5.x release, the following features
 and bugs are to be addressed:
@@ -28,6 +26,10 @@ and bugs are to be addressed:
 - Bug 20088: Ambiguity about use of word "type". Waiting for
   confirmation that problem is fixed
 - Bug 20204: Memory issues
+- Bug 20540: Set timestamp when entry was created/modified.
+  Should be configurable.
+- Bug 20463: Author filter needs two clicks to work properly.
+  Bug needs to be confirmed and test data provided.
 
 Within the scope of more future releases (0.6.x), the following
 features and bugs are to be addressed:
@@ -49,6 +51,8 @@ features and bugs are to be addressed:
 - Bug 19362: When adding new entry, CPU usage goes up
 - Bug 19422: Poke KDE developers to fix KDE bug 294954
 - Bug 18662: BibLaTeX support needs to be refined and tested.
+  Related Bug 20407: Dynamic crossref resolution using "xdata"
+  and "xref"
 - Bug 18287, 19197: Automatic ID suggestion based on
   user-defined patterns (already work in progress).
 - Bug 18183: Increase number of search hits after initial

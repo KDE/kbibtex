@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2012 by Thomas Fischer                             *
+*   Copyright (C) 2004-2013 by Thomas Fischer                             *
 *   fischer@unix-ag.uni-kl.de                                             *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
 {
     KAboutData aboutData("kbibtex", 0, ki18n("KBibTeX"), versionNumber,
                          ki18n(description), KAboutData::License_GPL_V2,
-                         ki18n("Copyright 2004-2012 Thomas Fischer"), KLocalizedString(),
+                         ki18n("Copyright 2004-2013 Thomas Fischer"), KLocalizedString(),
                          programHomepage, bugTrackerHomepage);
     aboutData.addAuthor(ki18n("Thomas Fischer"), ki18n("Maintainer"), "fischer@unix-ag.uni-kl.de", "http://www.t-fischer.net/");
     aboutData.setCustomAuthorText(ki18n("Please use https://gna.org/bugs/?group=kbibtex to report bugs.\n"), ki18n("Please use <a href=\"https://gna.org/bugs/?group=kbibtex\">https://gna.org/bugs/?group=kbibtex</a> to report bugs.\n"));
