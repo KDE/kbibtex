@@ -83,7 +83,8 @@ public:
         KConfigGroup configGroup(config, configGroupName);
         encoding = configGroup.readEntry(Preferences::keyEncoding, Preferences::defaultEncoding);
         QString stringDelimiter = configGroup.readEntry(Preferences::keyStringDelimiter, Preferences::defaultStringDelimiter);
-        if (stringDelimiter.length() != 2) stringDelimiter = Preferences::defaultStringDelimiter;
+        if (stringDelimiter.length() != 2)
+            stringDelimiter = Preferences::defaultStringDelimiter;
         stringOpenDelimiter = stringDelimiter[0];
         stringCloseDelimiter = stringDelimiter[1];
         keywordCasing = (KBibTeX::Casing)configGroup.readEntry(Preferences::keyKeywordCasing, (int)Preferences::defaultKeywordCasing);
@@ -108,6 +109,8 @@ public:
         applyEncoding(encoding);
         if (bibtexfile->hasProperty(File::StringDelimiter)) {
             QString stringDelimiter = bibtexfile->property(File::StringDelimiter).toString();
+            if (stringDelimiter.length() != 2)
+                stringDelimiter = Preferences::defaultStringDelimiter;
             stringOpenDelimiter = stringDelimiter[0];
             stringCloseDelimiter = stringDelimiter[1];
         }
@@ -440,8 +443,10 @@ void FileExporterBibTeX::cancel()
 
 QString FileExporterBibTeX::valueToBibTeX(const Value &value, const QString &key, UseLaTeXEncoding useLaTeXEncoding)
 {
-    if (staticFileExporterBibTeX == NULL)
+    if (staticFileExporterBibTeX == NULL) {
         staticFileExporterBibTeX = new FileExporterBibTeX();
+        staticFileExporterBibTeX->d->loadState();
+    }
     return staticFileExporterBibTeX->internalValueToBibTeX(value, key, useLaTeXEncoding);
 }
 
@@ -473,7 +478,7 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value &value, const QStr
                     if (!result.isEmpty()) result.append(" # ");
                     if (textBody.contains("\"")) {
                         /// fall back to {...} delimiters if text contains quotation marks
-                        result.append("{");
+                        result.append(QLatin1Char('{'));
                         stringCloseDelimiter = QLatin1Char('}');
                     } else {
                         result.append(d->stringOpenDelimiter);
