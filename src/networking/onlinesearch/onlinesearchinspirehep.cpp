@@ -22,34 +22,34 @@
 
 #include "onlinesearchinspirehep.h"
 
-OnlineSearchInpireHep::OnlineSearchInpireHep(QWidget *parent)
-    : OnlineSearchSimpleBibTeXDownload(parent)
+OnlineSearchInspireHep::OnlineSearchInspireHep(QWidget *parent)
+        : OnlineSearchSimpleBibTeXDownload(parent)
 {
     // nothing
 }
 
-QString OnlineSearchInpireHep::label() const
+QString OnlineSearchInspireHep::label() const
 {
-    return i18n("Inpsire High-Energy Physics Literature Database");
+    return i18n("Inspire High-Energy Physics Literature Database");
 }
 
-OnlineSearchQueryFormAbstract *OnlineSearchInpireHep::customWidget(QWidget *parent)
+OnlineSearchQueryFormAbstract *OnlineSearchInspireHep::customWidget(QWidget *parent)
 {
     Q_UNUSED(parent)
     return NULL;
 }
 
-KUrl OnlineSearchInpireHep::homepage() const
+KUrl OnlineSearchInspireHep::homepage() const
 {
     return KUrl("http://inspirehep.net/");
 }
 
-QString OnlineSearchInpireHep::favIconUrl() const
+QString OnlineSearchInspireHep::favIconUrl() const
 {
     return QLatin1String("http://inspirehep.net/favicon.ico");
 }
 
-KUrl OnlineSearchInpireHep::buildQueryUrl(const QMap<QString, QString> &query, int numResults)
+KUrl OnlineSearchInspireHep::buildQueryUrl(const QMap<QString, QString> &query, int numResults)
 {
     static const QString typedSearch = QLatin1String("%1 %2"); ///< no quotation marks for search term?
 

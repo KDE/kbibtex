@@ -26,12 +26,12 @@
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
-class KBIBTEXNETWORKING_EXPORT OnlineSearchInpireHep : public OnlineSearchSimpleBibTeXDownload
+class KBIBTEXNETWORKING_EXPORT OnlineSearchInspireHep : public OnlineSearchSimpleBibTeXDownload
 {
     Q_OBJECT
 
 public:
-    OnlineSearchInpireHep(QWidget *parent);
+    OnlineSearchInspireHep(QWidget *parent);
 
     virtual QString label() const;
     virtual OnlineSearchQueryFormAbstract *customWidget(QWidget *parent);
