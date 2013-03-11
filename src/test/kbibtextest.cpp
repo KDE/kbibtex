@@ -172,7 +172,10 @@ void KBibTeXTest::startOnlineSearchTests()
 void KBibTeXTest::onlineSearchStoppedSearch(int searchResult)
 {
     if (searchResult == OnlineSearchAbstract::resultNoError) {
-        addMessage(QString(QLatin1String("No error searching '%1', found %2 entries")).arg((*m_currentOnlineSearch)->label()).arg(m_currentOnlineSearchNumFoundEntries), iconOK);
+        if (m_currentOnlineSearchNumFoundEntries == 0)
+            addMessage(QString(QLatin1String("Got no error message searching '%1', but found NO entries")).arg((*m_currentOnlineSearch)->label()), iconERROR);
+        else
+            addMessage(QString(QLatin1String("No error searching '%1', found %2 entries")).arg((*m_currentOnlineSearch)->label()).arg(m_currentOnlineSearchNumFoundEntries), iconOK);
     } else if (searchResult == OnlineSearchAbstract::resultAuthorizationRequired) {
         addMessage(QString(QLatin1String("Authorization required for '%1'")).arg((*m_currentOnlineSearch)->label()), iconAUTH);
     } else if (searchResult == OnlineSearchAbstract::resultNetworkError) {
