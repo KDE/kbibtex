@@ -118,16 +118,24 @@ void OnlineSearchGoogleScholar::doneFetchingStartPage()
 
     QUrl newDomainUrl;
     if (handleErrors(reply, newDomainUrl)) {
-        if (!newDomainUrl.isValid())
-            newDomainUrl = reply->url();
+        if (newDomainUrl.isValid() && newDomainUrl != reply->url()) {
+            /// following redirection to country-specific domain
+            ++d->numSteps;
+            QNetworkRequest request(newDomainUrl);
+            QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
+            setNetworkReplyTimeout(reply);
+            connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingStartPage()));
+        } else {
+            /// landed on country-specific domain
+            KUrl url(d->configPageUrl.arg(reply->url().host()));
+            url.addQueryItem("hl", "en");
+            url.addQueryItem("as_sdt", "0,5");
 
-        KUrl url(d->configPageUrl.arg(newDomainUrl.host()));
-        url.addQueryItem("hl", "en");
-
-        QNetworkRequest request(url);
-        QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply->url());
-        setNetworkReplyTimeout(newReply);
-        connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingConfigPage()));
+            QNetworkRequest request(url);
+            QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply->url());
+            setNetworkReplyTimeout(newReply);
+            connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingConfigPage()));
+        }
     } else
         kDebug() << "url was" << reply->url().toString();
 }
@@ -144,6 +152,7 @@ void OnlineSearchGoogleScholar::doneFetchingConfigPage()
         inputMap["scis"] = "yes";
         inputMap["scisf"] = "4";
         inputMap["num"] = QString::number(d->numResults);
+        inputMap["submit"] = "";
 
         KUrl url(d->setConfigPageUrl.arg(reply->url().host()));
         for (QMap<QString, QString>::ConstIterator it = inputMap.constBegin(); it != inputMap.constEnd(); ++it)
