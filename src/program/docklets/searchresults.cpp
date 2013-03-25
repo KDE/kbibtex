@@ -80,13 +80,11 @@ public:
         actionImportSelected = new KAction(KIcon("svn-update"), i18n("Import"), parent);
         resultList->addAction(actionImportSelected);
         actionImportSelected->setEnabled(false);
-        actionImportSelected->setShortcut(Qt::CTRL + Qt::Key_I);
         connect(actionImportSelected, SIGNAL(triggered()), parent, SLOT(importSelected()));
 
         actionCopySelected = new KAction(KIcon("edit-copy"), i18n("Copy"), parent);
         resultList->addAction(actionCopySelected);
         actionCopySelected->setEnabled(false);
-        actionCopySelected->setShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_C);
         connect(actionCopySelected, SIGNAL(triggered()), clipboard, SLOT(copy()));
 
         connect(resultList, SIGNAL(doubleClicked(QModelIndex)), resultList, SLOT(viewCurrentElement()));
@@ -166,9 +164,19 @@ void SearchResults::importSelected()
     BibTeXFileModel *sourceModel = d->resultList->bibTeXModel();
     QList<QModelIndex> selList = d->resultList->selectionModel()->selectedRows();
     for (QList<QModelIndex>::ConstIterator it = selList.constBegin(); it != selList.constEnd(); ++it) {
+        /// Map from visible row to 'real' row
+        /// that may be hidden through sorting
         int row = d->resultList->sortFilterProxyModel()->mapToSource(*it).row();
-        QSharedPointer<Element> element = sourceModel->element(row);
-        targetModel->insertRow(element, targetModel->rowCount());
+        /// Should only be an Entry,
+        /// everthing else is unexpected
+        QSharedPointer<Entry> entry = sourceModel->element(row).dynamicCast<Entry>();
+        if (!entry.isNull()) {
+            /// Important: make clone of entry before inserting
+            /// in main list, otherwise data would be shared
+            QSharedPointer<Entry> clone(new Entry(*entry));
+            targetModel->insertRow(clone, targetModel->rowCount());
+        } else
+            kWarning() << "Trying to import something that isn't an Entry";
     }
 
     if (!selList.isEmpty())
