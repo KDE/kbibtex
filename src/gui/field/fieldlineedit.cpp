@@ -157,12 +157,16 @@ public:
 
     bool apply(Value &value) const {
         value.clear();
-        const QString text = parent->text().simplified();
+        /// Remove unnecessary white space from input
+        /// Exception: source and verbatim content is kept unmodified
+        const QString text = typeFlag == KBibTeX::tfSource || typeFlag == KBibTeX::tfVerbatim ? parent->text() : parent->text().simplified();
 
         EncoderLaTeX *encoder = EncoderLaTeX::instance();
         const QString encodedText = encoder->decode(text);
-        if (encodedText != text)
+        if (encodedText != text) {
+            /// Feed back encoded and simplified text to widget
             parent->setText(encodedText);
+        }
 
         if (encodedText.isEmpty())
             return true;
