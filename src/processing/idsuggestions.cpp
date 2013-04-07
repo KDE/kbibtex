@@ -54,6 +54,7 @@ public:
             return QStringList();
 
         QStringList result;
+        int maxAuthors = 16; ///< limit the number of authors considered
         foreach(QSharedPointer<const ValueItem> item, value) {
             QSharedPointer<const Person> person = item.dynamicCast<const Person>();
             if (!person.isNull()) {
@@ -61,6 +62,7 @@ public:
                 if (!lastName.isEmpty())
                     result << lastName;
             }
+            if ( --maxAuthors <= 0 ) break; ///< limit the number of authors considered
         }
 
         return result;
