@@ -223,7 +223,8 @@ public:
         p->setCursor(Qt::WaitCursor);
 
         /// reset and clear all controls
-        okularPart->closeUrl();
+        if (okularPart != NULL)
+            okularPart->closeUrl();
         htmlPart->closeUrl();
         urlComboBox->setEnabled(false);
         urlComboBox->clear();
@@ -292,7 +293,6 @@ public:
             stackedWidget->widget(swpOkular)->setEnabled(false);
             okularPart->closeUrl();
         }
-        okularPart->closeUrl();
         htmlPart->closeUrl();
 
         if (okularPart != NULL && okularMimetypes.contains(urlInfo.mimeType)) {
