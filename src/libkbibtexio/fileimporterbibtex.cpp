@@ -43,7 +43,6 @@
 #include "fileimporterbibtex.h"
 
 const QString extraAlphaNumChars = QString("?'`-_:.+/$\\\"&");
-const QRegExp htmlRegExp = QRegExp("</?(a|pre|p|br|span|i|b|italic)\\b[^>]*>", Qt::CaseInsensitive);
 
 const char *FileImporterBibTeX::defaultCodecName = "utf-8";
 
@@ -94,7 +93,12 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
     delete m_textStream;
 
     /** Remove HTML code from the input source */
-    rawText = rawText.replace(htmlRegExp, "");
+    const int originalLength = rawText.length();
+    rawText = rawText.replace(KBibTeX::htmlRegExp, QLatin1String(""));
+    const int afterHTMLremovalLength = rawText.length();
+    if (originalLength != afterHTMLremovalLength)
+        kWarning() << (originalLength - afterHTMLremovalLength) << "characters of HTML tags have been removed";
+
 
     m_nextDuePos = 0;
     m_textStream = new QTextStream(&rawText, QIODevice::ReadOnly);
