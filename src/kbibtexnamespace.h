@@ -73,6 +73,7 @@ static const QRegExp doiRegExp("\\b10\\.\\d{4}([.][0-9]+)*/[-/a-z0-9.()<>_:;\\\\
 static const QRegExp mendeleyFileRegExp(":(.*):pdf", Qt::CaseInsensitive);
 static const QString doiUrlPrefix = QLatin1String("http://dx.doi.org/"); ///< use FileInfo::doiUrlPrefix() instead
 static const QRegExp domainNameRegExp("[a-z0-9.-]+\\.((a[cdefgilmnoqrstuwxz]|aero|arpa)|(b[abdefghijmnorstvwyz]|biz)|(c[acdfghiklmnorsuvxyz]|cat|com|coop)|d[ejkmoz]|(e[ceghrstu]|edu)|f[ijkmor]|(g[abdefghilmnpqrstuwy]|gov)|h[kmnrtu]|(i[delmnoqrst]|info|int)|(j[emop]|jobs)|k[eghimnprwyz]|l[abcikrstuvy]|(m[acdghklmnopqrstuvwxyz]|me|mil|mobi|museum)|(n[acefgilopruz]|name|net)|(om|org)|(p[aefghklmnrstwy]|pro)|qa|r[eouw]|s[abcdeghijklmnortvyz]|(t[cdfghjklmnoprtvwz]|travel)|u[agkmsyz]|v[aceginu]|w[fs]|y[etu]|z[amw])\\b", Qt::CaseInsensitive);
+static const QRegExp htmlRegExp = QRegExp("</?(a|pre|p|br|span|i|b|italic)\\b[^>{}]{,32}>", Qt::CaseInsensitive);
 
 inline static bool isLocalOrRelative(const KUrl &url)
 {
