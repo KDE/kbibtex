@@ -43,7 +43,7 @@ private:
 
 public:
     int numResults;
-    QStringList listBibTeXurls;
+    QMap<QString, QString> listBibTeXurls;
     QString queryFreetext, queryAuthor, queryYear;
     QString startPageUrl;
     QString advancedSearchPageUrl;
@@ -59,6 +59,56 @@ public:
         configPageUrl = QLatin1String("http://%1/scholar_settings");
         setConfigPageUrl = QLatin1String("http://%1/scholar_setprefs");
         queryPageUrl = QLatin1String("http://%1/scholar");
+    }
+
+    QString documentUrlForBibTeXEntry(const QString &htmlText, int bibLinkPos) {
+        /// Regular expression to detect text of a link to a document
+        static const QRegExp documentLinkIndicator(QLatin1String("\\[(PDF|HTML)\\]"), Qt::CaseSensitive);
+
+        /// Text for link is *before* the BibTeX link in Google's HTML code
+        int posDocumentLinkText = htmlText.lastIndexOf(documentLinkIndicator, bibLinkPos);
+        /// Check position of previous BibTeX link to not extract the wrong document link
+        int posPreviousBib = htmlText.lastIndexOf(QLatin1String("/scholar.bib"), bibLinkPos - 3);
+        if (posPreviousBib < 0) posPreviousBib = 0; /// no previous BibTeX entry?
+
+        /// If all found position values look reasonable ...
+        if (posDocumentLinkText > posPreviousBib) {
+            /// There is a [PDF] or [HTML] link for this BibTeX entry, so find URL
+            /// Variables p1 and p2 are used to close in to the document's URL
+            int p1 = htmlText.lastIndexOf(QLatin1String("<a "), posDocumentLinkText);
+            if (p1 > 0) {
+                p1 = htmlText.indexOf(QLatin1String("href=\""), p1);
+                if (p1 > 0) {
+                    int p2 = htmlText.indexOf(QLatin1Char('"'), p1 + 7);
+                    if (p2 > 0)
+                        return htmlText.mid(p1 + 6, p2 - p1 - 6);
+                }
+            }
+        }
+
+        return QString::null;
+    }
+
+    QString mainUrlForBibTeXEntry(const QString &htmlText, int bibLinkPos) {
+        /// Text for link is *before* the BibTeX link in Google's HTML code
+        int posH3 = htmlText.lastIndexOf(QLatin1String("<h3 "), bibLinkPos);
+        /// Check position of previous BibTeX link to not extract the wrong document link
+        int posPreviousBib = htmlText.lastIndexOf(QLatin1String("/scholar.bib"), bibLinkPos - 3);
+        if (posPreviousBib < 0) posPreviousBib = 0; /// no previous BibTeX entry?
+
+        /// If all found position values look reasonable ...
+        if (posH3 > posPreviousBib) {
+            /// There is a h3 tag for this BibTeX entry, so find URL
+            /// Variables p1 and p2 are used to close in to the document's URL
+            int p1 = htmlText.indexOf(QLatin1String("href=\""), posH3);
+            if (p1 > 0) {
+                int p2 = htmlText.indexOf(QLatin1Char('"'), p1 + 7);
+                if (p2 > 0)
+                    return htmlText.mid(p1 + 6, p2 - p1 - 6);
+            }
+        }
+
+        return QString::null;
     }
 };
 
@@ -205,16 +255,34 @@ void OnlineSearchGoogleScholar::doneFetchingQueryPage()
         int pos = 0;
         d->listBibTeXurls.clear();
         while ((pos = linkToBib.indexIn(htmlText, pos)) != -1) {
-            d->listBibTeXurls << "http://" + reply->url().host() + linkToBib.cap(0).replace("&amp;", "&");
+            /// Try to figure out [PDF] or [HTML] link associated with BibTeX entry
+            const QString documentUrl = d->documentUrlForBibTeXEntry(htmlText, pos);
+            /// Extract primary link associated with BibTeX entry
+            const QString primaryUrl = d->mainUrlForBibTeXEntry(htmlText, pos);
+
+            const QString bibtexUrl("http://" + reply->url().host() + linkToBib.cap(0).replace("&amp;", "&"));
+            d->listBibTeXurls.insert(bibtexUrl, primaryUrl + QLatin1Char('|') + documentUrl);
             pos += linkToBib.matchedLength();
         }
 
         if (!d->listBibTeXurls.isEmpty()) {
-            QNetworkRequest request(d->listBibTeXurls.first());
+            const QString bibtexUrl = d->listBibTeXurls.constBegin().key();
+            const QStringList urls = d->listBibTeXurls.constBegin().value().split(QLatin1Char('|'), QString::KeepEmptyParts);
+            const QString primaryUrl = urls.first();
+            const QString documentUrl = urls.last();
+            QNetworkRequest request(bibtexUrl);
             QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
+            if (!primaryUrl.isEmpty()) {
+                /// Store primary URL as a property of the request/reply
+                newReply->setProperty("primaryurl", QVariant::fromValue<QString>(primaryUrl));
+            }
+            if (!documentUrl.isEmpty()) {
+                /// Store URL to document as a property of the request/reply
+                newReply->setProperty("documenturl", QVariant::fromValue<QString>(documentUrl));
+            }
             setNetworkReplyTimeout(newReply);
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingBibTeX()));
-            d->listBibTeXurls.removeFirst();
+            d->listBibTeXurls.erase(d->listBibTeXurls.begin());
         } else {
             emit stoppedSearch(resultNoError);
             emit progress(d->numSteps, d->numSteps);
@@ -228,6 +296,9 @@ void OnlineSearchGoogleScholar::doneFetchingBibTeX()
     emit progress(++d->curStep, d->numSteps);
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
+    /// Extract previously stored URLs from reply
+    const QString primaryUrl = reply->property("primaryurl").toString();
+    const QString documentUrl = reply->property("documenturl").toString();
 
     if (handleErrors(reply)) {
         /// ensure proper treatment of UTF-8 characters
@@ -242,6 +313,18 @@ void OnlineSearchGoogleScholar::doneFetchingBibTeX()
                     Value v;
                     v.append(QSharedPointer<VerbatimText>(new VerbatimText(label())));
                     entry->insert("x-fetchedfrom", v);
+                    if (!primaryUrl.isEmpty()) {
+                        /// There is an external document associated with this BibTeX entry
+                        Value urlValue = entry->value(Entry::ftUrl);
+                        urlValue.append(QSharedPointer<VerbatimText>(new VerbatimText(primaryUrl)));
+                        entry->insert(Entry::ftUrl, urlValue);
+                    }
+                    if (!documentUrl.isEmpty()) {
+                        /// There is a web page associated with this BibTeX entry
+                        Value urlValue = entry->value(Entry::ftUrl);
+                        urlValue.append(QSharedPointer<VerbatimText>(new VerbatimText(documentUrl)));
+                        entry->insert(Entry::ftUrl, urlValue);
+                    }
                     emit foundEntry(entry);
                     hasEntry = true;
                 }
@@ -256,11 +339,23 @@ void OnlineSearchGoogleScholar::doneFetchingBibTeX()
         }
 
         if (!d->listBibTeXurls.isEmpty()) {
-            QNetworkRequest request(d->listBibTeXurls.first());
+            const QString bibtexUrl = d->listBibTeXurls.constBegin().key();
+            const QStringList urls = d->listBibTeXurls.constBegin().value().split(QLatin1Char('|'), QString::KeepEmptyParts);
+            const QString primaryUrl = urls.first();
+            const QString documentUrl = urls.last();
+            QNetworkRequest request(bibtexUrl);
             QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
             setNetworkReplyTimeout(newReply);
+            if (!primaryUrl.isEmpty()) {
+                /// Store primary URL as a property of the request/reply
+                newReply->setProperty("primaryurl", QVariant::fromValue<QString>(primaryUrl));
+            }
+            if (!documentUrl.isEmpty()) {
+                /// Store URL to document as a property of the request/reply
+                newReply->setProperty("documenturl", QVariant::fromValue<QString>(documentUrl));
+            }
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingBibTeX()));
-            d->listBibTeXurls.removeFirst();
+            d->listBibTeXurls.erase(d->listBibTeXurls.begin());
         } else {
             emit stoppedSearch(resultNoError);
             emit progress(d->numSteps, d->numSteps);
