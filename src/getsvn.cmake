@@ -49,6 +49,7 @@ else (DEFINED ENV{SVN_REV})
             execute_process (COMMAND ${GIT_EXECUTABLE} svn info
                              OUTPUT_VARIABLE SVN_OUTPUT
                              OUTPUT_STRIP_TRAILING_WHITESPACE)
+            string (REGEX MATCH "(trunk|branches|tags)" SVN_OUTPUT ${SVN_OUTPUT})
         else (GIT_EXECUTABLE)
             message( "Git configuration found, but no git executable." )
         endif (GIT_EXECUTABLE)
