@@ -143,6 +143,9 @@ public:
 
     bool canEdit(const Element *element);
 
+public slots:
+    void setEntryIdByDefault();
+
 private:
     ElementEditor::ApplyElementInterface *m_applyElement;
 

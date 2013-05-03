@@ -68,6 +68,7 @@ private slots:
     void childModified(bool);
     void updateReqOptWidgets();
     void limitKeyboardTabStops();
+    void delayedInitialization();
 
 private:
     class ElementEditorPrivate;

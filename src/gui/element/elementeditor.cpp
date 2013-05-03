@@ -29,6 +29,7 @@
 #include <QApplication>
 #include <QFileInfo>
 #include <QMenu>
+#include <QTimer>
 
 #include <KDebug>
 #include <KPushButton>
@@ -372,12 +373,16 @@ public:
             (*it)->setModified(newIsModified);
     }
 
+    void delayedInitialization() {
+        connect(p, SIGNAL(modified(bool)), referenceWidget, SLOT(setEntryIdByDefault()));
+    }
 };
 
 ElementEditor::ElementEditor(QWidget *parent)
         : QWidget(parent), d(new ElementEditorPrivate(this))
 {
     connect(d->tab, SIGNAL(currentChanged(int)), this, SLOT(tabChanged()));
+    QTimer::singleShot(250, this, SLOT(delayedInitialization()));
 }
 
 ElementEditor::~ElementEditor()
@@ -473,4 +478,9 @@ void ElementEditor::updateReqOptWidgets()
 void ElementEditor::limitKeyboardTabStops()
 {
     d->limitKeyboardTabStops();
+}
+
+void ElementEditor::delayedInitialization()
+{
+    d->delayedInitialization();
 }
