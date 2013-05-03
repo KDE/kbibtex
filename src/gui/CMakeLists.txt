@@ -117,6 +117,15 @@ target_link_libraries(
     kbibtexproc
 )
 
+set_target_properties(
+    kbibtexgui
+    PROPERTIES
+    VERSION
+    ${LIB_VERSION}
+    SOVERSION
+    ${LIB_SOVERSION}
+)
+
 install(
     TARGETS
     kbibtexgui
