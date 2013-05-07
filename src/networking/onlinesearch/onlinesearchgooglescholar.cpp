@@ -81,7 +81,7 @@ public:
                 if (p1 > 0) {
                     int p2 = htmlText.indexOf(QLatin1Char('"'), p1 + 7);
                     if (p2 > 0)
-                        return htmlText.mid(p1 + 6, p2 - p1 - 6);
+                        return htmlText.mid(p1 + 6, p2 - p1 - 6).replace(QLatin1String("&amp;"), QLatin1String("&"));
                 }
             }
         }
@@ -104,7 +104,7 @@ public:
             if (p1 > 0) {
                 int p2 = htmlText.indexOf(QLatin1Char('"'), p1 + 7);
                 if (p2 > 0)
-                    return htmlText.mid(p1 + 6, p2 - p1 - 6);
+                    return htmlText.mid(p1 + 6, p2 - p1 - 6).replace(QLatin1String("&amp;"), QLatin1String("&"));
             }
         }
 
@@ -319,7 +319,8 @@ void OnlineSearchGoogleScholar::doneFetchingBibTeX()
                         urlValue.append(QSharedPointer<VerbatimText>(new VerbatimText(primaryUrl)));
                         entry->insert(Entry::ftUrl, urlValue);
                     }
-                    if (!documentUrl.isEmpty()) {
+                    if (!documentUrl.isEmpty() &&
+                            primaryUrl != documentUrl /** avoid duplicates */) {
                         /// There is a web page associated with this BibTeX entry
                         Value urlValue = entry->value(Entry::ftUrl);
                         urlValue.append(QSharedPointer<VerbatimText>(new VerbatimText(documentUrl)));
