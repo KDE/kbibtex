@@ -55,6 +55,9 @@ public:
     bool elementChanged();
     bool elementUnapplied();
 
+    QWidget *currentPage() const;
+    void setCurrentPage(QWidget *tab);
+
 signals:
     void modified(bool);
 

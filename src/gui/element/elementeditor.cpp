@@ -453,6 +453,17 @@ bool ElementEditor::elementUnapplied()
     return d->elementUnapplied;
 }
 
+QWidget *ElementEditor::currentPage() const
+{
+    return d->tab->currentWidget();
+}
+
+void ElementEditor::setCurrentPage(QWidget *page)
+{
+    if (d->tab->indexOf(page) >= 0)
+        d->tab->setCurrentWidget(page);
+}
+
 void ElementEditor::tabChanged()
 {
     d->switchTo(d->tab->currentWidget());

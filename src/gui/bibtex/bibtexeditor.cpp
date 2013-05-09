@@ -104,7 +104,7 @@ private:
 const QString ElementEditorDialog::configGroupNameWindowSize = QLatin1String("ElementEditorDialog");
 
 BibTeXEditor::BibTeXEditor(const QString &name, QWidget *parent)
-        : BibTeXFileView(name, parent), m_isReadOnly(false), m_current(NULL), m_filterBar(NULL), m_elementEditorDialog(NULL), m_elementEditor(NULL)
+        : BibTeXFileView(name, parent), m_isReadOnly(false), m_current(NULL), m_filterBar(NULL), m_lastEditorPage(NULL), m_elementEditorDialog(NULL), m_elementEditor(NULL)
 {
     connect(this, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(itemActivated(QModelIndex)));
 }
@@ -119,7 +119,9 @@ void BibTeXEditor::viewElement(const QSharedPointer<Element> element)
     prepareEditorDialog(DialogTypeView);
     m_elementEditor->setElement(element, bibTeXModel()->bibTeXFile());
 
+    m_elementEditor->setCurrentPage(m_lastEditorPage);
     m_elementEditorDialog->exec();
+    m_lastEditorPage = m_elementEditor->currentPage();
 }
 
 void BibTeXEditor::editCurrentElement()
@@ -132,7 +134,9 @@ bool BibTeXEditor::editElement(QSharedPointer<Element> element)
     prepareEditorDialog(DialogTypeEdit);
     m_elementEditor->setElement(element, bibTeXModel()->bibTeXFile());
 
+    m_elementEditor->setCurrentPage(m_lastEditorPage);
     m_elementEditorDialog->exec();
+    m_lastEditorPage = m_elementEditor->currentPage();
 
     if (!isReadOnly()) {
         bool changed = m_elementEditor->elementChanged();

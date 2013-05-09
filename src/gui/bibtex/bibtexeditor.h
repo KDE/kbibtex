@@ -95,6 +95,7 @@ private:
     QSharedPointer<Element> m_current;
     QList<QSharedPointer<Element> > m_selection;
     FilterBar *m_filterBar;
+    QWidget *m_lastEditorPage;
 
     ElementEditorDialog *m_elementEditorDialog;
     ElementEditor *m_elementEditor;
