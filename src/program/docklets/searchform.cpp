@@ -65,6 +65,7 @@
 #include "onlinesearchingentaconnect.h"
 #include "onlinesearchsoanasaads.h"
 #include "onlinesearchisbndb.h"
+#include "onlinesearchideasrepec.h"
 #include "openfileinfo.h"
 #include "bibtexeditor.h"
 #include "bibtexfilemodel.h"
@@ -227,6 +228,7 @@ public:
         addEngine(new OnlineSearchSpringerLink(p));
         addEngine(new OnlineSearchSOANASAADS(p));
         addEngine(new OnlineSearchIsbnDB(p));
+        addEngine(new OnlineSearchIDEASRePEc(p));
 
         p->itemCheckChanged(NULL);
         updateGUI();

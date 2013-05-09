@@ -29,6 +29,7 @@ set(
     onlinesearch/onlinesearchgeneral.cpp
     onlinesearch/onlinesearchsoanasaads.cpp
     onlinesearch/onlinesearchisbndb.cpp
+    onlinesearch/onlinesearchideasrepec.cpp
     findpdf.cpp
     internalnetworkaccessmanager.cpp
 )
@@ -53,6 +54,7 @@ set(
     onlinesearch/onlinesearchinspirehep.h
     onlinesearch/onlinesearchcernds.h
     onlinesearch/onlinesearchisbndb.h
+    onlinesearch/onlinesearchideasrepec.h
     kbibtexnetworking_export.h
     findpdf.h
     internalnetworkaccessmanager.h
