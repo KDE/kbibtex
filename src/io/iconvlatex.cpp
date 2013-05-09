@@ -53,8 +53,10 @@ IConvLaTeX::~IConvLaTeX()
     delete d;
 }
 
-QByteArray IConvLaTeX::encode(const QString &input)
+QByteArray IConvLaTeX::encode(const QString &ninput)
 {
+    /// Perform Canonical Decomposition followed by Canonical Composition
+    const QString input = ninput.normalized(QString::NormalizationForm_C);
     /// Get an UTF-8 representation of the input string
     QByteArray inputByteArray = input.toUtf8();
     /// Limit the size of the output buffer
