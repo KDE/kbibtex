@@ -165,6 +165,7 @@ public:
         widgets << referenceWidget;
 
         tab = new HidingTabWidget(p);
+        tab->setUsesScrollButtons(false);
         vLayout->addWidget(tab, 10);
 
         QBoxLayout *hLayout = new QHBoxLayout();
