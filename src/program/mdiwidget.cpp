@@ -33,9 +33,9 @@
 #include <KPushButton>
 #include <KIcon>
 #include <KMessageBox>
-#include <kmimetypetrader.h>
 #include <kparts/part.h>
-#include <kio/netaccess.h>
+#include <KConfigGroup>
+#include <KSharedConfig>
 
 #include "kbibtexnamespace.h"
 #include "mdiwidget.h"
@@ -47,6 +47,7 @@ class LRUItemModel : public QAbstractItemModel
 {
 private:
     OpenFileInfoManager *ofim;
+
 public:
     LRUItemModel(OpenFileInfoManager *openFileInfoManager, QObject *parent = NULL)
             : QAbstractItemModel(parent), ofim(openFileInfoManager) {
@@ -54,7 +55,7 @@ public:
     }
 
     int columnCount(const QModelIndex &) const {
-        return 2;
+        return 3;
     }
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const {
@@ -73,6 +74,9 @@ public:
                     return ofiItem->lastAccess().toString(Qt::TextDate);
                 else if (role == SortRole)
                     return ofiItem->lastAccess().toTime_t();
+            } else if (index.column() == 2) {
+                if (role == Qt::DisplayRole || role == Qt::ToolTipRole || role == SortRole)
+                    return ofiItem->url().pathOrUrl();
             }
             if (role == URLRole) {
                 KUrl url = ofiItem->url();
@@ -87,9 +91,10 @@ public:
     }
 
     QVariant headerData(int section, Qt::Orientation , int role = Qt::DisplayRole) const {
-        if (role != Qt::DisplayRole || section >= 2)return QVariant();
+        if (role != Qt::DisplayRole || section > 2) return QVariant();
         else if (section == 0) return i18n("Filename");
-        else return i18n("Date/time of last use");
+        else if (section == 1) return i18n("Date/time of last use");
+        else return i18n("Full filename");
     }
 
     QModelIndex index(int row, int column, const QModelIndex &) const {
@@ -114,6 +119,9 @@ private:
     QTreeView *listLRU;
     LRUItemModel *modelLRU;
     QVector<QWidget *> welcomeWidgets;
+
+    static const QString configGroupName;
+    static const QString configHeaderState;
 
     void createWelcomeWidget() {
         welcomeWidget = new QWidget(p);
@@ -156,6 +164,20 @@ private:
         p->addWidget(welcomeWidget);
     }
 
+    void saveColumnsState() {
+        QByteArray headerState = listLRU->header()->saveState();
+        KConfigGroup configGroup(config, configGroupName);
+        configGroup.writeEntry(configHeaderState, headerState);
+        config->sync();
+    }
+
+    void restoreColumnsState() {
+        KConfigGroup configGroup(config, configGroupName);
+        QByteArray headerState = configGroup.readEntry(configHeaderState, QByteArray());
+        if (!headerState.isEmpty())
+            listLRU->header()->restoreState(headerState);
+    }
+
 public:
     MDIWidget *p;
     OpenFileInfoManager *ofim;
@@ -163,8 +185,10 @@ public:
     QWidget *welcomeWidget;
     QSignalMapper signalMapperCompleted;
 
+    KSharedConfigPtr config;
+
     MDIWidgetPrivate(MDIWidget *parent)
-            : p(parent), ofim(new OpenFileInfoManager), currentFile(NULL) {
+            : p(parent), ofim(new OpenFileInfoManager), currentFile(NULL), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))) {
         createWelcomeWidget();
 
         modelLRU = new LRUItemModel(ofim, listLRU);
@@ -175,9 +199,12 @@ public:
         updateLRU();
 
         connect(&signalMapperCompleted, SIGNAL(mapped(QObject *)), p, SLOT(slotCompleted(QObject *)));
+
+        restoreColumnsState();
     }
 
     ~MDIWidgetPrivate() {
+        saveColumnsState();
         delete ofim;
         delete welcomeWidget;
     }
@@ -193,6 +220,9 @@ public:
         listLRU->reset();
     }
 };
+
+const QString MDIWidget::MDIWidgetPrivate::configGroupName = QLatin1String("WelcomeWidget");
+const QString MDIWidget::MDIWidgetPrivate::configHeaderState = QLatin1String("LRUlistHeaderState");
 
 MDIWidget::MDIWidget(QWidget *parent)
         : QStackedWidget(parent), d(new MDIWidgetPrivate(this))
