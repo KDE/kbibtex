@@ -136,7 +136,7 @@ void OnlineSearchIDEASRePEc::downloadListDone()
         /// ensure proper treatment of UTF-8 characters
         const QString htmlCode = QString::fromUtf8(reply->readAll().data());
 
-        static const QRegExp publicationLinkRegExp(QLatin1String("http://ideas.repec.org/[ahp]/[a-z]{2,5}/[a-z]{2,}/[a-z0-9-]+.html"));
+        static const QRegExp publicationLinkRegExp(QLatin1String("http://ideas.repec.org/[ahpb]/[a-z]{2,5}/[a-z0-9-]{2,}/[a-z0-9-]+.html"));
         d->publicationLinks.clear();
         int p = -1;
         while ((p = publicationLinkRegExp.indexIn(htmlCode, p + 1)) >= 0) {
@@ -144,7 +144,10 @@ void OnlineSearchIDEASRePEc::downloadListDone()
         }
         d->numSteps = 2 * d->publicationLinks.count() + 1; ///< update number of steps
 
-        if (!d->publicationLinks.isEmpty()) {
+        if (d->publicationLinks.isEmpty()) {
+            emit stoppedSearch(resultNoError);
+            emit progress(1, 1);
+        } else {
             QSet<QString>::Iterator it = d->publicationLinks.begin();
             const QString publicationLink = *it;
             d->publicationLinks.erase(it);
