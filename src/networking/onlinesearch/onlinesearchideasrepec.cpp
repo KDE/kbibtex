@@ -136,7 +136,7 @@ void OnlineSearchIDEASRePEc::downloadListDone()
         /// ensure proper treatment of UTF-8 characters
         const QString htmlCode = QString::fromUtf8(reply->readAll().data());
 
-        static const QRegExp publicationLinkRegExp(QLatin1String("http://ideas.repec.org/[ahpb]/[a-z]{2,5}/[a-z0-9-]{2,}/[a-z0-9-]+.html"));
+        static const QRegExp publicationLinkRegExp(QLatin1String("http://ideas.repec.org/[a-z]/\\S{,8}/\\S{2,24}/\\S{,64}.html"));
         d->publicationLinks.clear();
         int p = -1;
         while ((p = publicationLinkRegExp.indexIn(htmlCode, p + 1)) >= 0) {
@@ -171,6 +171,13 @@ void OnlineSearchIDEASRePEc::downloadPublicationDone()
         /// ensure proper treatment of UTF-8 characters
         const QString htmlCode = QString::fromUtf8(reply->readAll().data());
 
+        QString downloadUrl;
+        static const QString downloadFormStart = QLatin1String("<FORM METHOD=GET ACTION=\"/cgi-bin/get_doc.pl\"");
+        if (htmlCode.contains(downloadFormStart)) {
+            QMap<QString, QString> form = formParameters(htmlCode, downloadFormStart);
+            downloadUrl = form[QLatin1String("url")];
+        }
+
         QMap<QString, QString> form = formParameters(htmlCode, QLatin1String("<form method=\"post\" action=\"/cgi-bin/refs.cgi\""));
         form[QLatin1String("output")] = QLatin1String("2"); ///< enforce BibTeX output
 
@@ -186,6 +193,7 @@ void OnlineSearchIDEASRePEc::downloadPublicationDone()
         QNetworkRequest request(url);
         request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
         reply = InternalNetworkAccessManager::self()->post(request, body.toUtf8());
+        reply->setProperty("downloadurl", QVariant::fromValue<QString>(downloadUrl));
         setNetworkReplyTimeout(reply);
         connect(reply, SIGNAL(finished()), this, SLOT(downloadBibTeXDone()));
 
@@ -203,8 +211,6 @@ void OnlineSearchIDEASRePEc::downloadBibTeXDone()
         /// ensure proper treatment of UTF-8 characters
         const QString bibTeXcode = QString::fromUtf8(reply->readAll().data());
 
-        kDebug() << "bibtexcode=" << bibTeXcode;
-
         if (!bibTeXcode.isEmpty()) {
             FileImporterBibTeX importer;
             File *bibtexFile = importer.fromString(bibTeXcode);
@@ -214,6 +220,14 @@ void OnlineSearchIDEASRePEc::downloadBibTeXDone()
                 for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
                     QSharedPointer<Entry> entry = (*it).dynamicCast<Entry>();
                     if (!entry.isNull()) {
+                        const QString downloadUrl = reply->property("downloadurl").toString();
+                        if (!downloadUrl.isEmpty()) {
+                            /// There is an external document associated with this BibTeX entry
+                            Value urlValue = entry->value(Entry::ftUrl);
+                            urlValue.append(QSharedPointer<VerbatimText>(new VerbatimText(downloadUrl)));
+                            entry->insert(Entry::ftUrl, urlValue);
+                        }
+
                         Value v;
                         v.append(QSharedPointer<VerbatimText>(new VerbatimText(label())));
                         entry->insert("x-fetchedfrom", v);
