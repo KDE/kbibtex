@@ -37,6 +37,7 @@ public:
     static const QString mimetypeHTML;
     static const QString mimetypeBibTeX;
     static const QString mimetypeRIS;
+    static const QString mimetypePDF;
 
     enum TestExistance {TestExistanceYes, TestExistanceNo};
 
