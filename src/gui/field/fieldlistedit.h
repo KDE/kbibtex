@@ -139,7 +139,7 @@ private slots:
     void textChanged(QWidget *widget);
 
 private:
-    KPushButton *m_addReferenceToFile, *m_copyFile;
+    KPushButton *m_buttonAddFile;
     QSignalMapper *m_signalMapperSaveLocallyButtonClicked;
     QSignalMapper *m_signalMapperFieldLineEditTextChanged;
 };

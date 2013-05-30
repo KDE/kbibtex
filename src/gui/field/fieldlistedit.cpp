@@ -30,6 +30,7 @@
 #include <QDropEvent>
 #include <QUrl>
 #include <QTimer>
+#include <QAction>
 
 #include <KMessageBox>
 #include <KLocale>
@@ -38,6 +39,7 @@
 #include <KInputDialog>
 #include <KIO/NetAccess>
 #include <KGlobalSettings>
+#include <KMenu>
 
 #include "fileinfo.h"
 #include "file.h"
@@ -457,16 +459,19 @@ UrlListEdit::UrlListEdit(QWidget *parent)
     m_signalMapperFieldLineEditTextChanged = new QSignalMapper(this);
     connect(m_signalMapperFieldLineEditTextChanged, SIGNAL(mapped(QWidget *)), this, SLOT(textChanged(QWidget *)));
 
-    /// Button to add a reference (i.e. only the filename or URL) to an entry
-    m_addReferenceToFile = new KPushButton(KIcon("emblem-symbolic-link"), i18n("Add reference to file ..."), this);
-    addButton(m_addReferenceToFile);
-    connect(m_addReferenceToFile, SIGNAL(clicked()), this, SLOT(slotAddReferenceToFile()));
+    m_buttonAddFile = new KPushButton(KIcon("list-add"), i18n("Add file ..."), this);
+    addButton(m_buttonAddFile);
+    KMenu *menuAddFile = new KMenu(m_buttonAddFile);
+    m_buttonAddFile->setMenu(menuAddFile);
+    connect(m_buttonAddFile, SIGNAL(clicked()), m_buttonAddFile, SLOT(showMenu()));
 
-    /// Button to copy a file near the BibTeX file (e.g. same folder) and then
+    /// Action to add a reference (i.e. only the filename or URL) to an entry
+    QAction *action = menuAddFile->addAction(KIcon("emblem-symbolic-link"), i18n("Add reference to file ..."), this, SLOT(slotCopyFile()));
+    action->setToolTip(i18n("Insert only a filename, but do not copy the file itself."));
+    /// Action to copy a file near the BibTeX file (e.g. same folder) and then
     /// add the copy's relative filename to the entry
-    m_copyFile = new KPushButton(KIcon("document-save-all"), i18n("Insert file ..."), this);
-    addButton(m_copyFile);
-    connect(m_copyFile, SIGNAL(clicked()), this, SLOT(slotCopyFile()));
+    action = menuAddFile->addAction(KIcon("document-save-all"), i18n("Insert file ..."), this, SLOT(slotCopyFile()));
+    action->setToolTip(i18n("Copy file next to bibliography file."));
 }
 
 UrlListEdit::~UrlListEdit()
@@ -649,8 +654,7 @@ FieldLineEdit *UrlListEdit::addFieldLineEdit()
 void UrlListEdit::setReadOnly(bool isReadOnly)
 {
     FieldListEdit::setReadOnly(isReadOnly);
-    m_addReferenceToFile->setEnabled(!isReadOnly);
-    m_copyFile->setEnabled(!isReadOnly);
+    m_buttonAddFile->setEnabled(!isReadOnly);
 }
 
 
