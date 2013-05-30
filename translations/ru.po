@@ -1,0 +1,1871 @@
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Michael Uleysky <uleysky@gmail.com>, 2013.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: https://gna.org/bugs/?group=kbibtex\n"
+"POT-Creation-Date: 2012-10-05 22:05+0200\n"
+"PO-Revision-Date: 2013-05-10 22:41+1100\n"
+"Last-Translator: Michael Uleysky <uleysky@gmail.com>\n"
+"Language-Team: Russian <kde-russian@lists.kde.ru>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<"
+"=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Lokalize 1.2\n"
+
+#: kbibtex/src/gui/bibtex/bibtexeditor.cpp:100
+msgid ""
+"The current entry has been modified. Do you want do discard your changes?"
+msgstr "Текущая запись была изменена. Отменить изменения?"
+
+#: kbibtex/src/gui/bibtex/bibtexeditor.cpp:100
+msgid "Discard changes?"
+msgstr "Отменить изменения?"
+
+#: kbibtex/src/gui/bibtex/bibtexeditor.cpp:100
+msgid "Discard"
+msgstr "Отменить"
+
+#: kbibtex/src/gui/bibtex/bibtexeditor.cpp:100
+msgid "Continue Editing"
+msgstr "Продолжить редактирование"
+
+#: kbibtex/src/gui/bibtex/bibtexeditor.cpp:328
+#: kbibtex/src/program/docklets/searchresults.cpp:74
+msgid "View Element"
+msgstr "Просмотреть элемент"
+
+#: kbibtex/src/gui/bibtex/bibtexeditor.cpp:333
+#: kbibtex/src/parts/part.cpp:462
+msgid "Edit Element"
+msgstr "Редактировать элемент"
+
+#: kbibtex/src/gui/bibtex/bibtexfilemodel.cpp:402
+#: kbibtex/src/gui/element/elementwidgets.cpp:385
+#: kbibtex/src/gui/element/elementwidgets.cpp:904
+msgid "Macro"
+msgstr "Макрос"
+
+#: kbibtex/src/gui/bibtex/bibtexfilemodel.cpp:412
+msgid "Comment"
+msgstr "Комментарий"
+
+#: kbibtex/src/gui/bibtex/bibtexfilemodel.cpp:422
+#: kbibtex/src/gui/element/elementwidgets.cpp:968
+msgid "Preamble"
+msgstr "Преамбула"
+
+#: kbibtex/src/gui/bibtex/bibtexfileview.cpp:207
+msgid "Adjust Column Widths"
+msgstr "Подобрать ширину столбцов"
+
+#: kbibtex/src/gui/bibtex/bibtexfileview.cpp:212
+msgid "Reset to defaults"
+msgstr "Выставить по умолчанию"
+
+#: kbibtex/src/gui/bibtex/findduplicatesui.cpp:137
+msgid "Alternatives"
+msgstr "Варианты"
+
+#: kbibtex/src/gui/bibtex/findduplicatesui.cpp:153
+msgid "Identifier"
+msgstr "Идентификатор"
+
+#: kbibtex/src/gui/bibtex/findduplicatesui.cpp:155
+msgid "Type"
+msgstr "Тип"
+
+#: kbibtex/src/gui/bibtex/findduplicatesui.cpp:190
+msgid "None of the above"
+msgstr "Ни один из перечисленных"
+
+#: kbibtex/src/gui/bibtex/findduplicatesui.cpp:538
+msgid "Select your duplicates"
+msgstr "Выберите дубликаты"
+
+#: kbibtex/src/gui/bibtex/findduplicatesui.cpp:557
+msgid "Previous Clique"
+msgstr "Предыдущая группа"
+
+#: kbibtex/src/gui/bibtex/findduplicatesui.cpp:559
+msgid "Next Clique"
+msgstr "Следующая группа"
+
+#: kbibtex/src/gui/bibtex/findduplicatesui.cpp:641
+msgid "Find Duplicates"
+msgstr "Найти дубликаты"
+
+#: kbibtex/src/gui/bibtex/findduplicatesui.cpp:673
+msgid ""
+"Multiple elements are selected. Do you want to search for duplicates only "
+"within the selection or in the whole document?"
+msgstr ""
+"Выбрано несколько записей. Искать дубликаты только в них "
+"или во всём документе?"
+
+#: kbibtex/src/gui/bibtex/findduplicatesui.cpp:673
+msgid "Search only in selection?"
+msgstr "Искать только в выбранном?"
+
+#: kbibtex/src/gui/bibtex/findduplicatesui.cpp:673
+msgid "Only in selection"
+msgstr "Только в выбранном"
+
+#: kbibtex/src/gui/bibtex/findduplicatesui.cpp:673
+msgid "Whole document"
+msgstr "Весь документ"
+
+#: kbibtex/src/gui/bibtex/findduplicatesui.cpp:690
+msgid "No duplicates have been found."
+msgstr "Дубликатов не найдено"
+
+#: kbibtex/src/gui/bibtex/findduplicatesui.cpp:690
+msgid "No duplicates found"
+msgstr "Дубликаты не найдены"
+
+#: kbibtex/src/gui/element/elementeditor.cpp:164
+msgid "Show all fields"
+msgstr "Показывать все поля"
+
+#: kbibtex/src/gui/element/elementeditor.cpp:171
+msgid "Check with BibTeX"
+msgstr "Проверить BibTeX'ом"
+
+#: kbibtex/src/gui/element/elementwidgets.cpp:427
+msgid "Type:"
+msgstr "Тип:"
+
+#: kbibtex/src/gui/element/elementwidgets.cpp:436
+msgid "Id:"
+msgstr ""
+
+#: kbibtex/src/gui/element/elementwidgets.cpp:447
+msgid "Select a suggested id for this entry"
+msgstr "Выберите предлагаемый идентификатор для этой записи"
+
+#: kbibtex/src/gui/element/elementwidgets.cpp:617
+msgid "External"
+msgstr "Внешние"
+
+#: kbibtex/src/gui/element/elementwidgets.cpp:683
+msgid "Other Fields"
+msgstr "Другие поля"
+
+#: kbibtex/src/gui/element/elementwidgets.cpp:795
+msgid "Name:"
+msgstr "Имя:"
+
+#: kbibtex/src/gui/element/elementwidgets.cpp:802
+#: kbibtex/src/gui/element/elementwidgets.cpp:862
+#: kbibtex/src/gui/field/fieldlistedit.cpp:105
+msgid "Add"
+msgstr "Добавить"
+
+#: kbibtex/src/gui/element/elementwidgets.cpp:806
+msgid "Content:"
+msgstr "Содержимое:"
+
+#: kbibtex/src/gui/element/elementwidgets.cpp:812
+msgid "List:"
+msgstr "Список:"
+
+#: kbibtex/src/gui/element/elementwidgets.cpp:816
+msgid "Key"
+msgstr "Ключ"
+
+#: kbibtex/src/gui/element/elementwidgets.cpp:816
+#: kbibtex/src/gui/valuelistmodel.cpp:306
+msgid "Value"
+msgstr "Значение"
+
+#: kbibtex/src/gui/element/elementwidgets.cpp:820
+#: kbibtex/src/gui/preferences/settingsidsuggestionswidget.cpp:256
+#: kbibtex/src/parts/part.cpp:486
+msgid "Delete"
+msgstr "Удалить"
+
+#: kbibtex/src/gui/element/elementwidgets.cpp:823
+#: kbibtex/src/program/docklets/referencepreview.cpp:113
+msgid "Open"
+msgstr "Открыть"
+
+#: kbibtex/src/gui/element/elementwidgets.cpp:862
+#: kbibtex/src/program/docklets/elementform.cpp:95
+msgid "Apply"
+msgstr "Применить"
+
+#: kbibtex/src/gui/element/elementwidgets.cpp:921
+#: kbibtex/src/gui/element/elementwidgets.cpp:985
+msgid "Value:"
+msgstr "Значение:"
+
+#: kbibtex/src/gui/element/elementwidgets.cpp:1091
+#: kbibtex/src/program/docklets/referencepreview.cpp:151
+msgid "Source"
+msgstr "Источник"
+
+#: kbibtex/src/gui/element/elementwidgets.cpp:1118
+msgid "Restore"
+msgstr "Восстановить"
+
+#: kbibtex/src/gui/element/findpdfui.cpp:112
+#: kbibtex/src/gui/element/findpdfui.cpp:158
+msgid "View"
+msgstr "Просмотр"
+
+#: kbibtex/src/gui/element/findpdfui.cpp:121
+#: kbibtex/src/gui/element/findpdfui.cpp:158
+msgid "Ignore"
+msgstr "Игнорировать"
+
+#: kbibtex/src/gui/element/findpdfui.cpp:128
+#: kbibtex/src/gui/element/findpdfui.cpp:158
+#: kbibtex/src/gui/element/findpdfui.cpp:203
+msgid "Download"
+msgstr "Загрузить"
+
+#: kbibtex/src/gui/element/findpdfui.cpp:135
+#: kbibtex/src/gui/element/findpdfui.cpp:158
+msgid "Use URL only"
+msgstr "Использовать только URL"
+
+#: kbibtex/src/gui/element/findpdfui.cpp:337
+msgid "Result"
+msgstr "Результат"
+
+#: kbibtex/src/gui/element/findpdfui.cpp:351
+msgid "Starting to search ..."
+msgstr "Начинаю искать..."
+
+#: kbibtex/src/gui/element/findpdfui.cpp:370
+msgid "Find PDF"
+msgstr "Найти PDF"
+
+#: kbibtex/src/gui/element/findpdfui.cpp:416
+msgid "Save URL '%1'"
+msgstr "Сохранить URL '%1'"
+
+#: kbibtex/src/gui/element/findpdfui.cpp:484
+msgid ""
+"Searching ...\n"
+"Number of visited pages: %1\n"
+"Number of found documents: %2"
+msgstr ""
+"Поиск...\n"
+"Просмотрено страниц: %1\n"
+"Найдено документов: %2"
+
+#: kbibtex/src/gui/field/colorlabelwidget.cpp:95
+#: kbibtex/src/gui/preferences/settingscolorlabelwidget.cpp:375
+msgid "No color"
+msgstr "Без цвета"
+
+#: kbibtex/src/gui/field/colorlabelwidget.cpp:97
+msgid "User-defined color"
+msgstr "Цвет пользователя"
+
+#: kbibtex/src/gui/field/colorlabelwidget.cpp:108
+msgid "Color & Label"
+msgstr "Цвет и метка"
+
+#: kbibtex/src/gui/field/fieldinput.cpp:75
+msgid "Select a predefined month"
+msgstr "Выберите месяц"
+
+#: kbibtex/src/gui/field/fieldinput.cpp:93
+msgid "Select an existing entry"
+msgstr "Выберите существующую запись"
+
+#: kbibtex/src/gui/field/fieldinput.cpp:216
+msgid "Select Cross Reference"
+msgstr "Выберите перекрёстную ссылку"
+
+#: kbibtex/src/gui/field/fieldinput.cpp:216
+msgid "Select the cross reference to another entry:"
+msgstr "Выберите перекрёстную ссылку на другую запись:"
+
+#: kbibtex/src/gui/field/fieldlineedit.cpp:75
+msgctxt "Value types like Source, Verbatim, Person, PlainText, ..."
+msgid "Types"
+msgstr "Типы"
+
+#: kbibtex/src/gui/field/fieldlineedit.cpp:246
+#: kbibtex/src/gui/field/fieldlineedit.cpp:287
+msgid "Plain Text"
+msgstr "Простой текст"
+
+#: kbibtex/src/gui/field/fieldlineedit.cpp:250
+#: kbibtex/src/gui/field/fieldlineedit.cpp:288
+msgid "Reference"
+msgstr "Ссылка"
+
+#: kbibtex/src/gui/field/fieldlineedit.cpp:254
+#: kbibtex/src/gui/field/fieldlineedit.cpp:289
+msgid "Person"
+msgstr ""
+
+#: kbibtex/src/gui/field/fieldlineedit.cpp:258
+#: kbibtex/src/gui/field/fieldlineedit.cpp:290
+msgid "Keyword"
+msgstr "Ключевое слово"
+
+#: kbibtex/src/gui/field/fieldlineedit.cpp:262
+#: kbibtex/src/gui/field/fieldlineedit.cpp:292
+msgid "Source Code"
+msgstr "Исходный код"
+
+#: kbibtex/src/gui/field/fieldlineedit.cpp:266
+#: kbibtex/src/gui/field/fieldlineedit.cpp:295
+msgid "Verbatim Text"
+msgstr ""
+
+#: kbibtex/src/gui/field/fieldlineedit.cpp:396
+msgid "Open '%1'"
+msgstr "Открыть '%1'"
+
+#: kbibtex/src/gui/field/fieldlineedit.cpp:445
+msgid ""
+"The current text cannot be used as value of type '%1'.\n"
+"\n"
+"Switching back to type '%2'."
+msgstr ""
+"Текущий текст не может быть значением типа '%1'.\n"
+"\n"
+"Переключаюсь на тип '%2'."
+
+#: kbibtex/src/gui/field/fieldlistedit.cpp:152
+msgid "Remove value"
+msgstr "Удалить значение"
+
+#: kbibtex/src/gui/field/fieldlistedit.cpp:158
+msgid "Move value down"
+msgstr "Сместить значение ниже"
+
+#: kbibtex/src/gui/field/fieldlistedit.cpp:164
+msgid "Move value up"
+msgstr "Сместить значение выше"
+
+#: kbibtex/src/gui/field/fieldlistedit.cpp:390
+msgid "... and others (et al.)"
+msgstr "... и другие (и др.)"
+
+#: kbibtex/src/gui/field/fieldlistedit.cpp:394
+msgid "Add from Clipboard"
+msgstr "Добавить из буфера обмена"
+
+#: kbibtex/src/gui/field/fieldlistedit.cpp:395
+msgid "Add a list of names from clipboard"
+msgstr "Добавить список имён из буфера обмена"
+
+#: kbibtex/src/gui/field/fieldlistedit.cpp:459
+msgid "Add reference to file ..."
+msgstr "Добавить ссылку на файл..."
+
+#: kbibtex/src/gui/field/fieldlistedit.cpp:466
+msgid "Insert file ..."
+msgstr "Вставить файл..."
+
+#: kbibtex/src/gui/field/fieldlistedit.cpp:483
+msgid "Select File"
+msgstr "Выбрать файл"
+
+#: kbibtex/src/gui/field/fieldlistedit.cpp:496
+msgid ""
+"The current BibTeX document has to be saved first before associating other "
+"files with this document."
+msgstr ""
+"Текущий документ BibTeX должен быть сохранён перед тем, как другие файлы"
+"будут ассоциированными с ним."
+
+#: kbibtex/src/gui/field/fieldlistedit.cpp:504
+msgctxt "When copying a file to a position relative to the bibliography file"
+msgid "Select Source File"
+msgstr "Выберите исходный файл"
+
+#: kbibtex/src/gui/field/fieldlistedit.cpp:515
+msgctxt "When copying a file to a position relative to the bibliography file"
+msgid "Select Destination"
+msgstr "Выберите назначение"
+
+#: kbibtex/src/gui/field/fieldlistedit.cpp:556
+#: kbibtex/src/gui/field/fieldlistedit.cpp:633
+msgid "Save file locally"
+msgstr "Сохранить файл локально"
+
+#: kbibtex/src/gui/field/fieldlistedit.cpp:603
+msgid "Save file '%1' locally"
+msgstr "Сохранить файл '%1' локально"
+
+#: kbibtex/src/gui/field/fieldlistedit.cpp:613
+msgid ""
+"<qt><p>Use a filename relative to the bibliography file?</p><p>The relative "
+"path would be<br/><tt style=\"font-family: %2;\">%1</tt></p>"
+msgstr ""
+"<qt><p>Использовать путь относительно к файлу библиографии?</p><p>"
+"Относительный "
+"путь будет<br/><tt style=\"font-family: %2;\">%1</tt></p>"
+
+#: kbibtex/src/gui/field/fieldlistedit.cpp:613
+msgid "Relative Path"
+msgstr "Относительный путь"
+
+#: kbibtex/src/gui/field/fieldlistedit.cpp:613
+msgid "Absolute Path"
+msgstr "Абсолютный путь"
+
+#: kbibtex/src/gui/field/fieldlistedit.cpp:660
+msgid "Add Keywords from List"
+msgstr "Добавить ключевые слова из списка"
+
+#: kbibtex/src/gui/field/fieldlistedit.cpp:661
+msgid "Add keywords as selected from a pre-defined list of keywords"
+msgstr "Добавить ключевые слова из предопределённого списка"
+
+#: kbibtex/src/gui/field/fieldlistedit.cpp:665
+msgid "Add Keywords from Clipboard"
+msgstr "Добавить ключевые слова из буфера обмена"
+
+#: kbibtex/src/gui/field/fieldlistedit.cpp:666
+msgid "Add a punctuation-separated list of keywords from clipboard"
+msgstr ""
+"Добавить пунктуационно-разделённый список ключевых слов из буфера обмена"
+
+#: kbibtex/src/gui/field/fieldlistedit.cpp:691
+msgid "Add Keywords"
+msgstr "Добавить ключевые слова"
+
+#: kbibtex/src/gui/field/fieldlistedit.cpp:691
+msgid "Select keywords to add:"
+msgstr "Выберите ключевые слова:"
+
+#: kbibtex/src/gui/preferences/kbibtexpreferencesdialog.cpp:57
+msgid "General"
+msgstr ""
+
+#: kbibtex/src/gui/preferences/kbibtexpreferencesdialog.cpp:63
+msgid "Keywords"
+msgstr "Ключевые слова"
+
+#: kbibtex/src/gui/preferences/kbibtexpreferencesdialog.cpp:69
+msgid "Color & Labels"
+msgstr "Цвета и метки"
+
+#: kbibtex/src/gui/preferences/kbibtexpreferencesdialog.cpp:75
+#: kbibtex/src/gui/preferences/settingsidsuggestionswidget.cpp:155
+msgid "Id Suggestions"
+msgstr "Предлагаемые идентификаторы"
+
+#: kbibtex/src/gui/preferences/kbibtexpreferencesdialog.cpp:81
+msgid "User Interface"
+msgstr "Интерфейс пользователя"
+
+#: kbibtex/src/gui/preferences/kbibtexpreferencesdialog.cpp:87
+msgid "Saving and Exporting"
+msgstr "Сохранение и экспорт"
+
+#: kbibtex/src/gui/preferences/kbibtexpreferencesdialog.cpp:105
+msgid ""
+"This will reset the settings to factory defaults. Should this affect only "
+"the current page or all settings?"
+msgstr ""
+"Это сбросит все настройки на значения по умолчанию. Применить только "
+"к текущей странице или ко всем настройкам?"
+
+#: kbibtex/src/gui/preferences/kbibtexpreferencesdialog.cpp:105
+msgid "Reset to Defaults"
+msgstr "Выставить по умолчанию"
+
+#: kbibtex/src/gui/preferences/kbibtexpreferencesdialog.cpp:105
+msgid "All settings"
+msgstr "Все настройки"
+
+#: kbibtex/src/gui/preferences/kbibtexpreferencesdialog.cpp:105
+msgid "Only current page"
+msgstr "Только текущая страница"
+
+#: kbibtex/src/gui/preferences/kbibtexpreferencesdialog.cpp:140
+msgid "Preferences"
+msgstr "Предпочтения"
+
+#: kbibtex/src/gui/preferences/settingscolorlabelwidget.cpp:163
+#: kbibtex/src/gui/preferences/settingscolorlabelwidget.cpp:357
+msgid "Color"
+msgstr "Цвет"
+
+#: kbibtex/src/gui/preferences/settingscolorlabelwidget.cpp:164
+msgid "Label"
+msgstr "Метка"
+
+#: kbibtex/src/gui/preferences/settingscolorlabelwidget.cpp:289
+#: kbibtex/src/gui/preferences/settingsglobalkeywordswidget.cpp:77
+msgid "Add ..."
+msgstr "Добавить..."
+
+#: kbibtex/src/gui/preferences/settingscolorlabelwidget.cpp:293
+#: kbibtex/src/gui/preferences/settingsglobalkeywordswidget.cpp:81
+#: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:181
+msgid "Remove"
+msgstr "Удалить"
+
+#: kbibtex/src/gui/preferences/settingscolorlabelwidget.cpp:330
+msgid "New Label"
+msgstr "Новая метка"
+
+#: kbibtex/src/gui/preferences/settingscolorlabelwidget.cpp:330
+msgid "Enter a new label:"
+msgstr "Введите новую метку:"
+
+#: kbibtex/src/gui/preferences/settingsfileexporterbibtexwidget.cpp:59
+#: kbibtex/src/gui/preferences/settingsgeneralwidget.cpp:46
+msgid "John"
+msgstr "Иван"
+
+#: kbibtex/src/gui/preferences/settingsfileexporterbibtexwidget.cpp:59
+#: kbibtex/src/gui/preferences/settingsgeneralwidget.cpp:46
+msgid "Doe"
+msgstr "Иванов"
+
+#: kbibtex/src/gui/preferences/settingsfileexporterbibtexwidget.cpp:59
+#: kbibtex/src/gui/preferences/settingsgeneralwidget.cpp:46
+msgid "Jr."
+msgstr "Мл."
+
+#: kbibtex/src/gui/preferences/settingsfileexporterbibtexwidget.cpp:107
+msgid "Encoding:"
+msgstr "Кодировка:"
+
+#: kbibtex/src/gui/preferences/settingsfileexporterbibtexwidget.cpp:115
+msgid "String Delimiters:"
+msgstr "Разделители строки:"
+
+#: kbibtex/src/gui/preferences/settingsfileexporterbibtexwidget.cpp:122
+msgid "Comment Quoting:"
+msgstr "Выделение комментариев"
+
+#: kbibtex/src/gui/preferences/settingsfileexporterbibtexwidget.cpp:123
+msgctxt "Comment Quoting"
+msgid "None"
+msgstr "Нет"
+
+#: kbibtex/src/gui/preferences/settingsfileexporterbibtexwidget.cpp:124
+msgctxt "Comment Quoting"
+msgid "@comment{%1}"
+msgstr ""
+
+#: kbibtex/src/gui/preferences/settingsfileexporterbibtexwidget.cpp:125
+msgctxt "Comment Quoting"
+msgid "%{%1}"
+msgstr ""
+
+#: kbibtex/src/gui/preferences/settingsfileexporterbibtexwidget.cpp:129
+msgid "Keyword Casing:"
+msgstr "Регистр ключевых слов:"
+
+#: kbibtex/src/gui/preferences/settingsfileexporterbibtexwidget.cpp:130
+msgctxt "Keyword Casing"
+msgid "lowercase"
+msgstr "нижний"
+
+#: kbibtex/src/gui/preferences/settingsfileexporterbibtexwidget.cpp:131
+msgctxt "Keyword Casing"
+msgid "Initial capital"
+msgstr "Первая заглавная"
+
+#: kbibtex/src/gui/preferences/settingsfileexporterbibtexwidget.cpp:132
+msgctxt "Keyword Casing"
+msgid "UpperCamelCase"
+msgstr "ВерхнийГорбатыйРегистр"
+
+#: kbibtex/src/gui/preferences/settingsfileexporterbibtexwidget.cpp:133
+msgctxt "Keyword Casing"
+msgid "lowerCamelCase"
+msgstr "нижнийГорбатыйРегистр"
+
+#: kbibtex/src/gui/preferences/settingsfileexporterbibtexwidget.cpp:134
+msgctxt "Keyword Casing"
+msgid "UPPERCASE"
+msgstr "ВЕРХНИЙ"
+
+#: kbibtex/src/gui/preferences/settingsfileexporterbibtexwidget.cpp:137
+msgid "Protect Titles"
+msgstr "Защита названий"
+
+#: kbibtex/src/gui/preferences/settingsfileexporterbibtexwidget.cpp:138
+msgid "Protect Casing?"
+msgstr "Защита регистра?"
+
+#: kbibtex/src/gui/preferences/settingsfileexporterbibtexwidget.cpp:143
+#: kbibtex/src/gui/preferences/settingsgeneralwidget.cpp:70
+msgid "Person Names Formatting:"
+msgstr "Форматирование имён:"
+
+#: kbibtex/src/gui/preferences/settingsfileexporterbibtexwidget.cpp:145
+msgid "Use global settings"
+msgstr "Использовать глобальные настройки"
+
+#: kbibtex/src/gui/preferences/settingsfileexporterpdfpswidget.cpp:50
+msgid "A4"
+msgstr "A4"
+
+#: kbibtex/src/gui/preferences/settingsfileexporterpdfpswidget.cpp:51
+msgid "Letter"
+msgstr "US Letter"
+
+#: kbibtex/src/gui/preferences/settingsfileexporterpdfpswidget.cpp:52
+msgid "Legal"
+msgstr "US Legal"
+
+#: kbibtex/src/gui/preferences/settingsfileexporterpdfpswidget.cpp:89
+msgid "Paper Size:"
+msgstr "Размер бумаги:"
+
+#: kbibtex/src/gui/preferences/settingsfileexporterpdfpswidget.cpp:99
+msgid "Language for 'babel':"
+msgstr "Язык для 'babel':"
+
+#: kbibtex/src/gui/preferences/settingsfileexporterpdfpswidget.cpp:107
+msgid "Bibliography style:"
+msgstr "Стиль библиографии:"
+
+#: kbibtex/src/gui/preferences/settingsfileexporterwidget.cpp:111
+msgid "Command for 'Copy Reference':"
+msgstr "Команда для 'Копировать ссылку'"
+
+#: kbibtex/src/gui/preferences/settingsfileexporterwidget.cpp:113
+msgid "No command"
+msgstr "Без команды"
+
+#: kbibtex/src/gui/preferences/settingsfileexporterwidget.cpp:122
+msgid "Detect LyX pipe automatically:"
+msgstr "Определять пайпы LyX автоматически:"
+
+#: kbibtex/src/gui/preferences/settingsfileexporterwidget.cpp:127
+msgid "Manually specified LyX pipe:"
+msgstr "Указать пайп LyX вручную:"
+
+#: kbibtex/src/gui/preferences/settingsfileexporterwidget.cpp:134
+msgid "No backups"
+msgstr "Без резервных копий"
+
+#: kbibtex/src/gui/preferences/settingsfileexporterwidget.cpp:135
+msgid "Local files only"
+msgstr "Только локальные файлы"
+
+#: kbibtex/src/gui/preferences/settingsfileexporterwidget.cpp:136
+msgid "Both local and remote files"
+msgstr "Локальные и удалённые файлы"
+
+#: kbibtex/src/gui/preferences/settingsfileexporterwidget.cpp:137
+msgid "Backups when saving:"
+msgstr "Резервные копии при сохранении:"
+
+#: kbibtex/src/gui/preferences/settingsfileexporterwidget.cpp:143
+msgid "Number of Backups:"
+msgstr "Число резервных копий:"
+
+#: kbibtex/src/gui/preferences/settingsgeneralwidget.cpp:46
+msgid "Changing this option requires a restart to take effect."
+msgstr "Изменение этой настройки требует перезапуска программы"
+
+#: kbibtex/src/gui/preferences/settingsglobalkeywordswidget.cpp:119
+msgid "New Keyword"
+msgstr "Новое ключевое слово"
+
+#: kbibtex/src/gui/preferences/settingsglobalkeywordswidget.cpp:119
+msgid "Enter a new keyword:"
+msgstr "Введите новое ключевое слово:"
+
+#: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:82
+msgid "Authors"
+msgstr "Авторы"
+
+#: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:85
+#: kbibtex/src/processing/idsuggestions.cpp:226
+msgid "All authors"
+msgstr "Все авторы"
+
+#: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:86
+msgid "Only first author"
+msgstr "Только первый автор"
+
+#: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:87
+msgid "All except first author"
+msgstr "Все авторы, кроме первого"
+
+#: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:88
+msgid "Authors:"
+msgstr "Авторы:"
+
+#: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:92
+#: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:186
+msgid "No change"
+msgstr "Без изменений"
+
+#: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:93
+#: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:187
+msgid "To upper case"
+msgstr "В верхний регистр"
+
+#: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:94
+#: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:188
+msgid "To lower case"
+msgstr "В нижний регистр"
+
+#: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:95
+#: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:189
+msgid "Change casing:"
+msgstr "Изменить регистр:"
+
+#: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:104
+#: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:198
+msgid "Text in between:"
+msgstr "Текст между:"
+
+#: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:108
+#: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:202
+msgid "Only first characters:"
+msgstr "Только первые буквы:"
+
+#: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:109
+#: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:203
+msgid "No limitation"
+msgstr "Без ограничений"
+
+#: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:149
+#: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:309
+#: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:322
+msgid "Year"
+msgstr "Год"
+
+#: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:152
+msgid "2 digits"
+msgstr "2 цифры"
+
+#: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:153
+msgid "4 digits"
+msgstr "4 цифры"
+
+#: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:154
+msgid "Digits:"
+msgstr "Цифры:"
+
+#: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:179
+#: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:305
+#: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:318
+#: kbibtex/src/processing/idsuggestions.cpp:237
+msgid "Title"
+msgstr "Название"
+
+#: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:182
+msgid "Small words:"
+msgstr "Короткие слова"
+
+#: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:242
+#: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:311
+#: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:324
+msgid "Text"
+msgstr "Текст"
+
+#: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:245
+msgid "Text:"
+msgstr "Текст:"
+
+#: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:296
+msgid "Add at top"
+msgstr "Добавить в начало"
+
+#: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:299
+msgid "Add at bottom"
+msgstr "Добавить в конец"
+
+#: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:307
+#: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:320
+#: kbibtex/src/networking/onlinesearch/onlinesearchbibsonomy.cpp:68
+msgid "Author"
+msgstr "Автор"
+
+#: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:465
+#: kbibtex/src/gui/preferences/settingsidsuggestionswidget.cpp:111
+msgid "<qt>Structure:<ul><li>%1</li></ul>Example: %2</qt>"
+msgstr "<qt>Стуктура:<ul><li>%1</li></ul>Пример: %2</qt>"
+
+#: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:516
+msgid "Edit Id Suggestion"
+msgstr "Редактировать предлагаемые идентификаторы"
+
+#: kbibtex/src/gui/preferences/settingsidsuggestionswidget.cpp:250
+msgid "Add..."
+msgstr "Добавить..."
+
+#: kbibtex/src/gui/preferences/settingsidsuggestionswidget.cpp:253
+msgid "Edit..."
+msgstr "Редактировать..."
+
+#: kbibtex/src/gui/preferences/settingsidsuggestionswidget.cpp:259
+msgid "Up"
+msgstr "Вверх"
+
+#: kbibtex/src/gui/preferences/settingsidsuggestionswidget.cpp:262
+msgid "Down"
+msgstr "Вниз"
+
+#: kbibtex/src/gui/preferences/settingsidsuggestionswidget.cpp:265
+msgid "Toggle Default"
+msgstr "Выбрать по умолчанию"
+
+#: kbibtex/src/gui/preferences/settingsidsuggestionswidget.cpp:325
+msgid ""
+"All token have been removed from this suggestion. Remove suggestion itself "
+"or restore original suggestion?"
+msgstr ""
+"Все части были удалены. Удалить предлагаемый идентификатор "
+"полностью или восстановить в исходном виде?"
+
+#: kbibtex/src/gui/preferences/settingsidsuggestionswidget.cpp:325
+msgid "Remove suggestion?"
+msgstr "Удалить предложение?"
+
+#: kbibtex/src/gui/preferences/settingsidsuggestionswidget.cpp:325
+msgid "Remove suggestion"
+msgstr "Удалить предложение"
+
+#: kbibtex/src/gui/preferences/settingsidsuggestionswidget.cpp:325
+msgid "Revert changes"
+msgstr "Восстановить изменения"
+
+#: kbibtex/src/gui/preferences/settingsuserinterfacewidget.cpp:85
+msgid "Show Comments:"
+msgstr "Показывать комментарии:"
+
+#: kbibtex/src/gui/preferences/settingsuserinterfacewidget.cpp:88
+msgid "Show Macros:"
+msgstr "Показывать макросы:"
+
+#: kbibtex/src/gui/preferences/settingsuserinterfacewidget.cpp:92
+msgid "Bibliography System:"
+msgstr "Библиографическая система"
+
+#: kbibtex/src/gui/valuelistmodel.cpp:308
+#: kbibtex/src/program/docklets/valuelist.cpp:68
+msgid "Count"
+msgstr "Количество"
+
+#: kbibtex/src/gui/widgets/filterbar.cpp:150
+msgid "Filter:"
+msgstr "Фильтр:"
+
+#: kbibtex/src/gui/widgets/filterbar.cpp:166
+msgid "any word"
+msgstr "любое слово"
+
+#: kbibtex/src/gui/widgets/filterbar.cpp:167
+msgid "every word"
+msgstr "каждое слово"
+
+#: kbibtex/src/gui/widgets/filterbar.cpp:168
+msgid "exact phrase"
+msgstr "точная фраза"
+
+#: kbibtex/src/gui/widgets/filterbar.cpp:173
+msgid "every field"
+msgstr "каждое поле"
+
+#: kbibtex/src/gui/widgets/filterbar.cpp:183
+msgid "Include PDF files in full-text search"
+msgstr "Включить PDF-файлы в полнотекстовый поиск"
+
+#: kbibtex/src/libkbibtexio/fileexporterbibtex2html.cpp:73
+msgid "The program <strong>bibtex2html</strong> is not available."
+msgstr "Программа <strong>bibtex2html</strong> не найдена."
+
+#: kbibtex/src/libkbibtexio/fileexporterbibtex2html.cpp:86
+msgid "The BibTeX style <strong>%1</strong> is not available."
+msgstr "Недоступен стиль BibTeX'а <strong>%1</strong>."
+
+#: kbibtex/src/libkbibtexio/fileexporterpdf.cpp:150
+msgid "BibTeX file"
+msgstr "Файл BibTeX'а"
+
+#: kbibtex/src/libkbibtexio/fileexportertoolchain.cpp:79
+msgid "Running process '%1' using working directory '%2'"
+msgstr "Запущен процесс '%' в рабочей директории '%2'"
+
+#: kbibtex/src/libkbibtexio/fileexportertoolchain.cpp:92
+msgid "Process '%1' failed"
+msgstr "Процесс '%1' завершился неуспешно"
+
+#: kbibtex/src/libkbibtexio/fileexportertoolchain.cpp:95
+msgid "Stopped process '%1' with exit code %2"
+msgstr "Процесс '%1' завершился с кодом '%2'"
+
+#: kbibtex/src/libkbibtexio/fileexportertoolchain.cpp:119
+msgid "Writing to file '%1' succeeded"
+msgstr "Запись в файл '%1' закончилась успешно"
+
+#: kbibtex/src/libkbibtexio/fileexportertoolchain.cpp:124
+msgid "Writing to file '%1' failed"
+msgstr "Ошибка записи в файл '%1'"
+
+#: kbibtex/src/networking/onlinesearch/onlinesearchabstract.cpp:143
+msgid "Searching '%1' failed for unknown reason."
+msgstr "Поиск '%1' не удался по неизвестным причинам"
+
+#: kbibtex/src/networking/onlinesearch/onlinesearchabstract.cpp:143
+msgid ""
+"Searching '%1' failed with error message:\n"
+"\n"
+"%2"
+msgstr ""
+"Поиск '%1' не удался. Сообщение об ошибке:\n"
+"\n"
+"%2"
+
+#: kbibtex/src/networking/onlinesearch/onlinesearchacmportal.cpp:133
+msgid "ACM Digital Library"
+msgstr ""
+
+#: kbibtex/src/networking/onlinesearch/onlinesearchacmportal.cpp:179
+msgid "Searching '%1' failed: Could not extract form from ACM's start page."
+msgstr ""
+"Поиск '%1' не удался: Невозможно извлечь форму из стартовой страницы ACM."
+
+#: kbibtex/src/networking/onlinesearch/onlinesearcharxiv.cpp:60
+#: kbibtex/src/networking/onlinesearch/onlinesearchgeneral.cpp:39
+msgid "Free text:"
+msgstr "Искать текст:"
+
+#: kbibtex/src/networking/onlinesearch/onlinesearcharxiv.cpp:69
+#: kbibtex/src/networking/onlinesearch/onlinesearchbibsonomy.cpp:79
+#: kbibtex/src/networking/onlinesearch/onlinesearchgeneral.cpp:72
+#: kbibtex/src/networking/onlinesearch/onlinesearchingentaconnect.cpp:114
+#: kbibtex/src/networking/onlinesearch/onlinesearchspringerlink.cpp:104
+msgid "Number of Results:"
+msgstr "Число результатов:"
+
+#: kbibtex/src/networking/onlinesearch/onlinesearcharxiv.cpp:607
+msgid "arXiv.org"
+msgstr ""
+
+#: kbibtex/src/networking/onlinesearch/onlinesearchbibsonomy.cpp:65
+msgid "Tag"
+msgstr "Тэг"
+
+#: kbibtex/src/networking/onlinesearch/onlinesearchbibsonomy.cpp:66
+msgid "User"
+msgstr "Пользователь"
+
+#: kbibtex/src/networking/onlinesearch/onlinesearchbibsonomy.cpp:67
+msgid "Group"
+msgstr "Группа"
+
+#: kbibtex/src/networking/onlinesearch/onlinesearchbibsonomy.cpp:69
+msgid "Concept"
+msgstr ""
+
+#: kbibtex/src/networking/onlinesearch/onlinesearchbibsonomy.cpp:70
+msgid "BibTeX Key"
+msgstr "Ключ BibTeX'а"
+
+#: kbibtex/src/networking/onlinesearch/onlinesearchbibsonomy.cpp:71
+msgid "Everywhere"
+msgstr "Везде"
+
+#: kbibtex/src/networking/onlinesearch/onlinesearchbibsonomy.cpp:217
+msgid "Bibsonomy"
+msgstr ""
+
+#: kbibtex/src/networking/onlinesearch/onlinesearchgeneral.cpp:48
+#: kbibtex/src/networking/onlinesearch/onlinesearchingentaconnect.cpp:80
+#: kbibtex/src/networking/onlinesearch/onlinesearchspringerlink.cpp:77
+msgid "Title:"
+msgstr "Название:"
+
+#: kbibtex/src/networking/onlinesearch/onlinesearchgeneral.cpp:56
+#: kbibtex/src/networking/onlinesearch/onlinesearchingentaconnect.cpp:85
+msgid "Author:"
+msgstr "Автор:"
+
+#: kbibtex/src/networking/onlinesearch/onlinesearchgeneral.cpp:64
+#: kbibtex/src/networking/onlinesearch/onlinesearchspringerlink.cpp:98
+msgid "Year:"
+msgstr "Год:"
+
+#: kbibtex/src/networking/onlinesearch/onlinesearchgooglescholar.cpp:264
+msgid "Google Scholar"
+msgstr ""
+
+#: kbibtex/src/networking/onlinesearch/onlinesearchieeexplore.cpp:291
+msgid "IEEEXplore"
+msgstr ""
+
+#: kbibtex/src/networking/onlinesearch/onlinesearchingentaconnect.cpp:75
+msgid "Full text:"
+msgstr "Полный текст:"
+
+#: kbibtex/src/networking/onlinesearch/onlinesearchingentaconnect.cpp:90
+msgid "Abstract/Keywords:"
+msgstr "Абстракт/Ключевые слова:"
+
+#: kbibtex/src/networking/onlinesearch/onlinesearchingentaconnect.cpp:95
+msgid "Publication:"
+msgstr "Опубликовано:"
+
+#: kbibtex/src/networking/onlinesearch/onlinesearchingentaconnect.cpp:100
+msgid "ISSN/ISBN/DOI:"
+msgstr ""
+
+#: kbibtex/src/networking/onlinesearch/onlinesearchingentaconnect.cpp:105
+msgid "Volume:"
+msgstr "Том:"
+
+#: kbibtex/src/networking/onlinesearch/onlinesearchingentaconnect.cpp:110
+msgid "Issue/Number:"
+msgstr "Выпуск/Номер:"
+
+#: kbibtex/src/networking/onlinesearch/onlinesearchingentaconnect.cpp:346
+msgid "IngentaConnect"
+msgstr ""
+
+#: kbibtex/src/networking/onlinesearch/onlinesearchisbndb.cpp:113
+msgid "ISBNdb.com"
+msgstr ""
+
+#: kbibtex/src/networking/onlinesearch/onlinesearchjstor.cpp:160
+msgid "JSTOR"
+msgstr ""
+
+#: kbibtex/src/networking/onlinesearch/onlinesearchmathscinet.cpp:135
+msgid "MathSciNet"
+msgstr ""
+
+#: kbibtex/src/networking/onlinesearch/onlinesearchpubmed.cpp:154
+msgid "PubMed"
+msgstr ""
+
+#: kbibtex/src/networking/onlinesearch/onlinesearchsciencedirect.cpp:103
+msgid "ScienceDirect"
+msgstr ""
+
+#: kbibtex/src/networking/onlinesearch/onlinesearchsoanasaads.cpp:33
+msgid "SAO/NASA Astrophysics Data System (ADS)"
+msgstr ""
+
+#: kbibtex/src/networking/onlinesearch/onlinesearchspringerlink.cpp:70
+msgid "Free Text:"
+msgstr "Искать текст:"
+
+#: kbibtex/src/networking/onlinesearch/onlinesearchspringerlink.cpp:84
+msgid "Book/Journal title:"
+msgstr "Название журнала/книги:"
+
+#: kbibtex/src/networking/onlinesearch/onlinesearchspringerlink.cpp:91
+msgid "Author or Editor:"
+msgstr "Автор или редактор:"
+
+#: kbibtex/src/networking/onlinesearch/onlinesearchspringerlink.cpp:261
+msgid "SpringerLink"
+msgstr ""
+
+#: kbibtex/src/parts/part.cpp:108
+#: kbibtex/src/parts/part.cpp:466
+msgid "View Document"
+msgstr "Просмотр"
+
+#: kbibtex/src/parts/part.cpp:161
+msgid "New%1"
+msgstr ""
+
+#: kbibtex/src/parts/part.cpp:221
+msgid "<qt>Could not create backup copies of document<br/><b>%1</b>.</qt>"
+msgstr "<qt>Не могу создать резервные копии документа<br/><b>%1</b>.</qt>"
+
+#: kbibtex/src/parts/part.cpp:221
+msgid "Backup copies"
+msgstr "Резервные копии"
+
+#: kbibtex/src/parts/part.cpp:273
+msgid "BibTeX File Settings"
+msgstr "Настройки файлов BibTeX"
+
+#: kbibtex/src/parts/part.cpp:275
+#: kbibtex/src/parts/part.cpp:287
+msgid "Save as Default"
+msgstr "Сохранить по умолчанию"
+
+#: kbibtex/src/parts/part.cpp:275
+#: kbibtex/src/parts/part.cpp:287
+msgid "Save this configuration as default for future Save As operations."
+msgstr ""
+"Сохранить эту конфигурацию как используемую по умолчанию для действий "
+"'Сохранить как'."
+
+#: kbibtex/src/parts/part.cpp:285
+msgid "PDF/PostScript File Settings"
+msgstr "Настройки файлов PDF/PostScript"
+
+#: kbibtex/src/parts/part.cpp:305
+msgid ""
+"Saving the bibliography to file '%1' failed.\n"
+"\n"
+"The following output was generated by the export filter:"
+msgstr ""
+"Не удалось сохранить библиографию в файл '%1'.\n"
+"\n"
+"Вывод, сгенерированный фильтром экспорта:"
+
+#: kbibtex/src/parts/part.cpp:305
+#: kbibtex/src/parts/part.cpp:319
+msgid "Saving bibliography failed"
+msgstr "Не удалось сохранить библиографию"
+
+#: kbibtex/src/parts/part.cpp:319
+msgid "Saving the bibliography to file '%1' failed."
+msgstr "Не удалось сохранить библиографию в файл '%1'."
+
+#: kbibtex/src/parts/part.cpp:333
+msgid ""
+"A file named '%1' already exists. Are you sure you want to overwrite it?"
+msgstr "Файл с именем '%1' уже существует. Хотите его перезаписать?"
+
+#: kbibtex/src/parts/part.cpp:333
+msgid "Overwrite File?"
+msgstr "Перезаписать файл?"
+
+#: kbibtex/src/parts/part.cpp:361
+msgid "Local Files"
+msgstr "Локальные файлы"
+
+#: kbibtex/src/parts/part.cpp:377
+msgid "Remote Files"
+msgstr "Удалённые файлы"
+
+#: kbibtex/src/parts/part.cpp:431
+msgid "Save Copy As..."
+msgstr "Сохранить копию как..."
+
+#: kbibtex/src/parts/part.cpp:437
+msgid "Filter"
+msgstr "Фильтр"
+
+#: kbibtex/src/parts/part.cpp:443
+msgid "New element"
+msgstr "Новый элемент"
+
+#: kbibtex/src/parts/part.cpp:448
+msgid "New entry"
+msgstr "Новая запись"
+
+#: kbibtex/src/parts/part.cpp:452
+msgid "New comment"
+msgstr "Новый комментарий"
+
+#: kbibtex/src/parts/part.cpp:455
+msgid "New macro"
+msgstr "Новый макрос"
+
+#: kbibtex/src/parts/part.cpp:458
+msgid "New preamble"
+msgstr "Новая преамбула"
+
+#: kbibtex/src/parts/part.cpp:471
+msgid "Find PDF ..."
+msgstr "Найти PDF..."
+
+#: kbibtex/src/parts/part.cpp:475
+msgid "Format entry ids"
+msgstr "Форматировать идентификаторы записей"
+
+#: kbibtex/src/parts/part.cpp:481
+msgid "Copy References"
+msgstr "Копировать ссылки"
+
+#: kbibtex/src/parts/part.cpp:543
+msgid ""
+"The document could not be saved, as it was not possible to write to '%1'.\n"
+"\n"
+"Check that you have write access to this file or that enough disk space is "
+"available."
+msgstr ""
+"Документ не будет сохранён, так как невозможна запись в файл '%1'.\n"
+"\n"
+"Проверьте, есть ли у вас права на запись в этот файл и достаточно ли на диске "
+"свободного места."
+
+#: kbibtex/src/parts/part.cpp:650
+msgid ""
+"Cannot apply default formatting for entry ids: No default format specified."
+msgstr ""
+"Невозможно применить форматирование по умолчанию к идентификаторам записей:\n"
+"Не указан формат по умолчанию."
+
+#: kbibtex/src/parts/partfactory.cpp:32
+msgid "KBibTeXPart"
+msgstr ""
+
+#: kbibtex/src/parts/partfactory.cpp:33
+msgid "BibTeX Editor Component"
+msgstr "Компонент редактора BibTeX"
+
+#: kbibtex/src/parts/partfactory.cpp:35
+#: kbibtex/src/program/program.cpp:32
+#: kbibtex/src/test/main.cpp:8
+msgid "http://home.gna.org/kbibtex/"
+msgstr ""
+
+#: kbibtex/src/parts/partfactory.cpp:76
+#: kbibtex/src/program/program.cpp:42
+#: kbibtex/src/test/main.cpp:17
+msgid "Thomas Fischer"
+msgstr ""
+
+#: kbibtex/src/parts/partfactory.cpp:76
+#: kbibtex/src/program/program.cpp:42
+#: kbibtex/src/test/main.cpp:17
+msgid "Maintainer"
+msgstr "Разработчик"
+
+#: kbibtex/src/parts/partfactory.cpp:77
+#: kbibtex/src/program/program.cpp:43
+#: kbibtex/src/test/main.cpp:18
+msgid "Please use https://gna.org/bugs/?group=kbibtex to report bugs.\n"
+msgstr ""
+"Пожалуйста, сообщайте об ошибках на https://gna.org/bugs/?group=kbibtex\n"
+
+#: kbibtex/src/parts/partfactory.cpp:77
+#: kbibtex/src/program/program.cpp:43
+#: kbibtex/src/test/main.cpp:18
+msgid ""
+"Please use <a href=\"https://gna.org/bugs/?group=kbibtex\">https://gna.org/"
+"bugs/?group=kbibtex</a> to report bugs.\n"
+msgstr ""
+"Пожалуйста, сообщайте об ошибках  на<a href=\"https://gna."
+"org/bugs/?group=kbibtex\">https://gna.org/"
+"bugs/?group=kbibtex</a>\n"
+
+#: kbibtex/src/preferences.h:37
+msgid "Important"
+msgstr "Важное"
+
+#: kbibtex/src/preferences.h:37
+msgid "Unread"
+msgstr "Непрочтённое"
+
+#: kbibtex/src/preferences.h:37
+msgid "Read"
+msgstr "Прочтённое"
+
+#: kbibtex/src/preferences.h:37
+msgid "Watch"
+msgstr ""
+
+#: kbibtex/src/processing/checkbibtex.cpp:88
+msgid ""
+"Running BibTeX failed.\n"
+"\n"
+"See the following output to trace the error."
+msgstr ""
+"Не удалось запустить BibTeX.\n"
+"\n"
+"Для поиска ошибки смотрите следующий вывод."
+
+#: kbibtex/src/processing/checkbibtex.cpp:120
+msgid "Field <b>%1</b> is empty"
+msgstr "Поле <b>%1</b> пусто"
+
+#: kbibtex/src/processing/checkbibtex.cpp:123
+msgid "Fields <b>%1</b> and <b>%2</b> are empty, but at least one is required"
+msgstr ""
+"Поля <b>%1</b> и <b>%2</b> пусты, но хотя бы одно должно быть заполнено"
+
+#: kbibtex/src/processing/checkbibtex.cpp:126
+msgid "Field <b>%1</b> exists, but <b>%2</b> does not exist"
+msgstr "Поле <b>%1</b> существует, но <b>%2</b> отсутствует"
+
+#: kbibtex/src/processing/checkbibtex.cpp:129
+msgid "Fields <b>%1</b> and <b>%2</b> cannot be used at the same time"
+msgstr "Поля <b>%1</b> и <b>%2</b> не могут использоваться одновременно"
+
+#: kbibtex/src/processing/checkbibtex.cpp:132
+msgid "Fields <b>%1</b> or <b>%2</b> are required to sort entry"
+msgstr "Для сортировки записи необходимо поле <b>%1</b> или <b>%2</b>"
+
+#: kbibtex/src/processing/checkbibtex.cpp:135
+msgid "Fields <b>%1</b>, <b>%2</b>, <b>%3</b> are required to sort entry"
+msgstr "Для сортировки записи необходимы поля <b>%1</b>, <b>%2</b> и <b>%3</b>"
+
+#: kbibtex/src/processing/checkbibtex.cpp:139
+msgid "Unknown warning: %1"
+msgstr "Неизвестное предупреждение: %1"
+
+#: kbibtex/src/processing/checkbibtex.cpp:148
+msgid "<qt><p>The following error was found:</p><pre>%1</pre></qt>"
+msgstr "<qt><p>Обнаружена следующая ошибка:</p><pre>%1</pre></qt>"
+
+#: kbibtex/src/processing/checkbibtex.cpp:150
+msgid "<qt><p>The following warnings were found:</p><ul><li>%1</li></ul></qt>"
+msgstr ""
+"<qt><p>Обнаружены следующие предупреждения:</p><ul><li>%1</li></ul></qt>"
+
+#: kbibtex/src/processing/checkbibtex.cpp:153
+msgid ""
+"\n"
+"\n"
+"Some fields missing in this entry where taken from the crossref'ed entry "
+"'%1'."
+msgstr ""
+"\n"
+"\n"
+"Некоторые поля, отсутствующие в данной записи, взяты из перекрёстной ссылки"
+"'%1'."
+
+#: kbibtex/src/processing/checkbibtex.cpp:153
+msgid "No warnings or errors were found.%1"
+msgstr "Ошибок и предупреждений не обнаружено.%1"
+
+#: kbibtex/src/processing/findduplicates.cpp:382
+msgid "Finding Duplicates"
+msgstr "Поиск дубликатов"
+
+#: kbibtex/src/processing/findduplicates.cpp:384
+#: kbibtex/src/processing/findduplicates.cpp:416
+msgid "Searching ..."
+msgstr "Ищем..."
+
+#: kbibtex/src/processing/idsuggestions.cpp:224
+msgid "First author only"
+msgstr "Только первый автор"
+
+#: kbibtex/src/processing/idsuggestions.cpp:225
+msgid "All but first author"
+msgstr "Все авторы, кроме первого"
+
+#: kbibtex/src/processing/idsuggestions.cpp:229
+msgid ", but only first letter of each last name"
+msgid_plural ", but only first %1 letters of each last name"
+msgstr[0] ", но только первая буква каждой фамилии"
+msgstr[1] ", но только первые %1 буквы каждой фамилии"
+msgstr[2] ", но только первые %1 букв каждой фамилии"
+
+#: kbibtex/src/processing/idsuggestions.cpp:230
+#: kbibtex/src/processing/idsuggestions.cpp:240
+msgid ", in upper case"
+msgstr ", в верхнем регистре"
+
+#: kbibtex/src/processing/idsuggestions.cpp:231
+#: kbibtex/src/processing/idsuggestions.cpp:241
+msgid ", in lower case"
+msgstr ", в нижнем регистре"
+
+#: kbibtex/src/processing/idsuggestions.cpp:232
+#: kbibtex/src/processing/idsuggestions.cpp:242
+msgid ", with '%1' in between"
+msgstr ", с '%1' посередине"
+
+#: kbibtex/src/processing/idsuggestions.cpp:233
+msgid "Year (2 digits)"
+msgstr "Год (2 цифры)"
+
+#: kbibtex/src/processing/idsuggestions.cpp:234
+msgid "Year (4 digits)"
+msgstr "Год (4 цифры)"
+
+#: kbibtex/src/processing/idsuggestions.cpp:239
+msgid ", but only first letter of each word"
+msgid_plural ", but only first %1 letters of each word"
+msgstr[0] ", но только первая буква каждого слова"
+msgstr[1] ", но только первые %1 буквы каждого слова"
+msgstr[2] ", но только первые %1 букв каждого слова"
+
+#: kbibtex/src/processing/idsuggestions.cpp:243
+msgid ", small words removed"
+msgstr ", без коротких слов"
+
+#: kbibtex/src/processing/idsuggestions.cpp:244
+msgid "Text: '%1'"
+msgstr "Текст: '%1'"
+
+#: kbibtex/src/processing/lyx.cpp:100
+msgid "Send to LyX"
+msgstr "Послать в LyX"
+
+#: kbibtex/src/processing/lyx.cpp:123
+msgid ""
+"\n"
+"\n"
+"Check that LyX or Kile are running and configured to receive references."
+msgstr ""
+"\n"
+"\n"
+"Убедитесь, что LyX или Kile запущены и настроены для приёма ссылок."
+
+#: kbibtex/src/processing/lyx.cpp:124
+msgid "Send Reference to LyX"
+msgstr "Послать ссылку в LyX"
+
+#: kbibtex/src/processing/lyx.cpp:129
+msgid "No 'LyX server pipe' was detected."
+msgstr "Не обнаружено серверного пайпа LyX"
+
+#: kbibtex/src/processing/lyx.cpp:134
+msgid "No references to send to LyX."
+msgstr "Ссылки в LyX не посланы."
+
+#: kbibtex/src/processing/lyx.cpp:140
+msgid "Could not open LyX server pipe '%1'."
+msgstr "Невозможно открыть серверный пайп LyX'а '%1'."
+
+#: kbibtex/src/program/docklets/documentpreview.cpp:170
+msgid "Open..."
+msgstr "Открываем..."
+
+#: kbibtex/src/program/docklets/documentpreview.cpp:173
+msgid "Only local files"
+msgstr "Только локальные файлы"
+
+#: kbibtex/src/program/docklets/documentpreview.cpp:193
+#: kbibtex/src/program/docklets/referencepreview.cpp:84
+msgid "No preview available"
+msgstr "Предпросмотр недоступен"
+
+#: kbibtex/src/program/docklets/documentpreview.cpp:266
+msgid "Refreshing ..."
+msgstr "Обновляем..."
+
+#: kbibtex/src/program/docklets/documentpreview.cpp:295
+msgid "No documents to show."
+msgstr "Отсутствуют документы для просмотра."
+
+#: kbibtex/src/program/docklets/documentpreview.cpp:302
+#: kbibtex/src/program/docklets/documentpreview.cpp:614
+msgid ""
+"<qt>No documents to show.<br/><a href=\"disableonlylocalfiles\">Disable the "
+"restriction</a> to local files to see remote documents.</qt>"
+msgstr ""
+"<qt>Отсутствуют документы для просмотра.<br/><a "
+"href=\"disableonlylocalfiles\">Уберите"
+"ограничение</a>  для просмотра удалённых документов.</qt>"
+
+#: kbibtex/src/program/docklets/documentpreview.cpp:426
+msgid "Cannot show requested part"
+msgstr "Невозможно отобразить запрошенную часть"
+
+#: kbibtex/src/program/docklets/documentpreview.cpp:445
+#: kbibtex/src/program/docklets/documentpreview.cpp:450
+msgid "Loading ..."
+msgstr "Загружаем..."
+
+#: kbibtex/src/program/docklets/documentpreview.cpp:464
+msgid "<qt>Don't know how to show mimetype '%1'.</qt>"
+msgstr "<qt>Неизвестно, как отображать тип MIME '%1'.</qt>"
+
+#: kbibtex/src/program/docklets/documentpreview.cpp:617
+msgid ""
+"No documents to show.\n"
+"Some URLs or files could not be retrieved."
+msgstr ""
+"Отсутствуют документы для просмотра.\n"
+"Не могут быть получены некоторые ссылки или файлы."
+
+#: kbibtex/src/program/docklets/elementform.cpp:76
+msgid "Automatically apply changes"
+msgstr "Применять изменения автоматически"
+
+#: kbibtex/src/program/docklets/elementform.cpp:91
+msgid "There are unsaved changes. Please press either 'Apply' or 'Reset'."
+msgstr "Есть несохранённые изменения. Нажмите 'Применить' или 'Сбросить'."
+
+#: kbibtex/src/program/docklets/elementform.cpp:98
+msgid "Reset"
+msgstr "Сбросить"
+
+#: kbibtex/src/program/docklets/elementform.cpp:180
+msgid ""
+"The current element got modified.\n"
+"Apply or discard changes?"
+msgstr ""
+"Текущий элемент изменён.\n"
+"Применить или отменить изменения?"
+
+#: kbibtex/src/program/docklets/elementform.cpp:180
+msgid "Element modified"
+msgstr "Элемент изменён"
+
+#: kbibtex/src/program/docklets/elementform.cpp:180
+msgid "Apply changes"
+msgstr "Применить изменения"
+
+#: kbibtex/src/program/docklets/elementform.cpp:180
+msgid "Discard changes"
+msgstr "Отменить изменения"
+
+#: kbibtex/src/program/docklets/referencepreview.cpp:84
+msgid "Reason:"
+msgstr "Причина:"
+
+#: kbibtex/src/program/docklets/referencepreview.cpp:107
+msgid "No preview available due to missing QtWebKit support on your system."
+msgstr ""
+"Предпросмотр недоступен, так как в вашей системе отсутствует поддержка "
+"QtWebKit."
+
+#: kbibtex/src/program/docklets/referencepreview.cpp:114
+msgid "Open reference in web browser."
+msgstr "Открыть ссылку в веб-браузере."
+
+#: kbibtex/src/program/docklets/referencepreview.cpp:117
+#: kbibtex/src/program/docklets/referencepreview.cpp:355
+msgid "Save as HTML"
+msgstr "Сохранить как HTML"
+
+#: kbibtex/src/program/docklets/referencepreview.cpp:118
+msgid "Save reference as HTML fragment."
+msgstr "Сохранить ссылку как фрагмент HTML"
+
+#: kbibtex/src/program/docklets/referencepreview.cpp:207
+msgid "Preview disabled"
+msgstr "Предпросмотр заблокирован"
+
+#: kbibtex/src/program/docklets/referencepreview.cpp:234
+msgid "No element selected"
+msgstr "Не выбран элемент"
+
+#: kbibtex/src/program/docklets/referencepreview.cpp:297
+msgid "No HTML output generated"
+msgstr "Вывод HTML не создан"
+
+#: kbibtex/src/program/docklets/searchform.cpp:164
+msgid "Go to Homepage"
+msgstr "На домашнюю страницу"
+
+#: kbibtex/src/program/docklets/searchform.cpp:187
+msgid "Query Terms"
+msgstr "Параметры запроса"
+
+#: kbibtex/src/program/docklets/searchform.cpp:190
+msgid "Engines"
+msgstr "Поисковые движки"
+
+#: kbibtex/src/program/docklets/searchform.cpp:192
+msgid "Use Entry"
+msgstr "Использовать запись"
+
+#: kbibtex/src/program/docklets/searchform.cpp:202
+#: kbibtex/src/program/docklets/searchform.cpp:259
+msgid "Search"
+msgstr "Поиск"
+
+#: kbibtex/src/program/docklets/searchform.cpp:271
+msgid "Stop"
+msgstr "Остановить"
+
+#: kbibtex/src/program/docklets/searchform.cpp:294
+msgid "No search engine selected (<a href=\"changeEngine\">change</a>)."
+msgstr "Не выбран поисковый движок (<a href=\"changeEngine\">выбрать</a>)."
+
+#: kbibtex/src/program/docklets/searchform.cpp:295
+msgid ""
+"Search engine <b>%1</b> is selected (<a href=\"changeEngine\">change</a>)."
+msgstr ""
+"Выбран поисковый движок <b>%1</b> (<a href=\"changeEngine\">поменять</a>)."
+
+#: kbibtex/src/program/docklets/searchform.cpp:296
+msgid ""
+"Search engines <b>%1</b> and <b>%2</b> are selected (<a href=\"changeEngine"
+"\">change</a>)."
+msgstr ""
+"Выбраны поисковые движки <b>%1</b> и <b>%2</b> (<a href=\"changeEngine"
+"\">поменять</a>)."
+
+#: kbibtex/src/program/docklets/searchform.cpp:297
+msgid ""
+"Search engines <b>%1</b>, <b>%2</b>, and <b>%3</b> are selected (<a href="
+"\"changeEngine\">change</a>)."
+msgstr ""
+"Выбраны поисковые движки <b>%1</b>, <b>%2</b> и <b>%3</b> (<a "
+"href=\"changeEngine"
+"\">поменять</a>)."
+
+#: kbibtex/src/program/docklets/searchform.cpp:298
+msgid ""
+"Search engines <b>%1</b>, <b>%2</b>, and more are selected (<a href="
+"\"changeEngine\">change</a>)."
+msgstr ""
+"Выбраны поисковые движки <b>%1</b>, <b>%2</b> и ещё несколько (<a "
+"href=\"changeEngine"
+"\">поменять</a>)."
+
+#: kbibtex/src/program/docklets/searchform.cpp:365
+msgid ""
+"Could not start searching the Internet:\n"
+"The search terms are not complete or invalid."
+msgstr ""
+"Невозможно начать поиск в Интернете:\n"
+"Поисковый запрос не полон или неверен."
+
+#: kbibtex/src/program/docklets/searchform.cpp:365
+msgid "Searching the Internet"
+msgstr "Искать в Интернете"
+
+#: kbibtex/src/program/docklets/searchresults.cpp:64
+#: kbibtex/src/program/docklets/searchresults.cpp:79
+msgid "Import"
+msgstr "Импортировать"
+
+#: kbibtex/src/program/docklets/searchresults.cpp:85
+msgid "Copy"
+msgstr "Копировать"
+
+#: kbibtex/src/program/docklets/valuelist.cpp:92
+msgid "Replace all occurrences"
+msgstr "Заменить везде"
+
+#: kbibtex/src/program/docklets/valuelist.cpp:96
+msgid "Delete all occurrences"
+msgstr "Удалить везде"
+
+#: kbibtex/src/program/docklets/valuelist.cpp:100
+msgid "Search for selected values"
+msgstr "Искать выбранные значения"
+
+#: kbibtex/src/program/docklets/valuelist.cpp:112
+msgid "Show Count Column"
+msgstr "Показать столбец 'Количество'"
+
+#: kbibtex/src/program/docklets/valuelist.cpp:116
+msgid "Sort by Count"
+msgstr "Сортировать по количеству"
+
+#: kbibtex/src/program/documentlist.cpp:59
+msgid "One level up"
+msgstr "Уровень выше"
+
+#: kbibtex/src/program/documentlist.cpp:63
+msgid "Go to Home folder"
+msgstr "В домашнюю папку"
+
+#: kbibtex/src/program/documentlist.cpp:247
+msgid "Close File"
+msgstr "Закрыть файл"
+
+#: kbibtex/src/program/documentlist.cpp:251
+msgid "Open File"
+msgstr "Открыть файл"
+
+#: kbibtex/src/program/documentlist.cpp:256
+msgid "Open with"
+msgstr "Открыть с помощью"
+
+#: kbibtex/src/program/documentlist.cpp:260
+msgid "Remove from Favorites"
+msgstr "Удалить из 'Избранного'"
+
+#: kbibtex/src/program/documentlist.cpp:264
+msgid "Add to Favorites"
+msgstr "Добавить в 'Избранное'"
+
+#: kbibtex/src/program/documentlist.cpp:311
+msgid ""
+"The current document document has to be saved before switching the viewer/"
+"editor component."
+msgstr ""
+"Необходимо сохранить текущий документ перед переключением"
+"редактора/просмотрщика."
+
+#: kbibtex/src/program/documentlist.cpp:311
+msgid "Save before switching?"
+msgstr "Сохранить перед переключением?"
+
+#: kbibtex/src/program/documentlist.cpp:311
+msgid "Save document"
+msgstr "Сохранить документ"
+
+#: kbibtex/src/program/documentlist.cpp:311
+msgid "Do not switch"
+msgstr "Не переключать"
+
+#: kbibtex/src/program/documentlist.cpp:375
+msgid "Open Files"
+msgstr "Открыть файлы"
+
+#: kbibtex/src/program/documentlist.cpp:380
+msgid "Recently Used"
+msgstr "Недавние"
+
+#: kbibtex/src/program/documentlist.cpp:385
+msgid "Favorites"
+msgstr "Избранное"
+
+#: kbibtex/src/program/documentlist.cpp:388
+msgid "Filesystem Browser"
+msgstr "Файловая система"
+
+#: kbibtex/src/program/mainwindow.cpp:99
+msgid "Show Panels"
+msgstr "Показать панели"
+
+#: kbibtex/src/program/mainwindow.cpp:104
+msgid "Recently used files"
+msgstr "Недавние файлы"
+
+#: kbibtex/src/program/mainwindow.cpp:120
+msgid "List of Documents"
+msgstr "Список документов"
+
+#: kbibtex/src/program/mainwindow.cpp:130
+msgid "List of Values"
+msgstr "Список значений"
+
+#: kbibtex/src/program/mainwindow.cpp:140
+msgid "Search Results"
+msgstr "Результаты поиска"
+
+#: kbibtex/src/program/mainwindow.cpp:151
+msgid "Online Search"
+msgstr "Поиск в Интернет"
+
+#: kbibtex/src/program/mainwindow.cpp:161
+msgid "Reference Preview"
+msgstr "Предпросмотр ссылки"
+
+#: kbibtex/src/program/mainwindow.cpp:171
+msgid "Document Preview"
+msgstr "Предпросмотр документа"
+
+#: kbibtex/src/program/mainwindow.cpp:182
+msgid "Element Editor"
+msgstr "Редактор элементов"
+
+#: kbibtex/src/program/mainwindow.cpp:269
+msgid ""
+"Creating a new document of mime type '%1' failed as no editor component "
+"could be instantiated."
+msgstr ""
+"Не удалось создать новый документ с типом MIME '%1' так как невозможно "
+"запустить "
+"соответствующий редактор."
+
+#: kbibtex/src/program/mainwindow.cpp:269
+msgid "Creating document failed"
+msgstr "Не удалось создать документ"
+
+#: kbibtex/src/program/mainwindow.cpp:323
+msgid "%1 - KBibTeX"
+msgstr ""
+
+#: kbibtex/src/program/mainwindow.cpp:323
+#: kbibtex/src/program/program.cpp:38
+msgid "KBibTeX"
+msgstr ""
+
+#: kbibtex/src/program/mdiwidget.cpp:91
+msgid "Filename"
+msgstr "Имя файла"
+
+#: kbibtex/src/program/mdiwidget.cpp:92
+msgid "Date/time of last use"
+msgstr "Дата и время последнего использования"
+
+#: kbibtex/src/program/mdiwidget.cpp:135
+msgid "<qt>Welcome to <b>KBibTeX</b> for <b>KDE 4</b></qt>"
+msgstr "<qt>Добро пожаловать в <b>KBibTeX</b> для <b>KDE 4</b></qt>"
+
+#: kbibtex/src/program/mdiwidget.cpp:138
+msgid "New"
+msgstr "Создать"
+
+#: kbibtex/src/program/mdiwidget.cpp:142
+msgid "Open ..."
+msgstr "Открыть..."
+
+#: kbibtex/src/program/mdiwidget.cpp:146
+msgid "List of recently used files:"
+msgstr "Список недавно используемых файлов"
+
+#: kbibtex/src/program/mdiwidget.cpp:218
+msgid "No part available for file '%1'."
+msgstr ""
+
+#: kbibtex/src/program/mdiwidget.cpp:218
+msgid "No part available"
+msgstr ""
+
+#: kbibtex/src/program/openfileinfo.cpp:228
+msgid "Unnamed-%1"
+msgstr "Безымянный-%1"
+
+#: kbibtex/src/program/program.cpp:31
+#: kbibtex/src/test/main.cpp:7
+msgid "A BibTeX editor for KDE"
+msgstr "BibTeX-редактор для KDE"
+
+#: kbibtex/src/program/program.cpp:40
+#: kbibtex/src/test/main.cpp:15
+msgid "Copyright 2004-2012 Thomas Fischer"
+msgstr ""
+
+#: kbibtex/src/program/program.cpp:46
+msgid "File(s) to load"
+msgstr "Файл(ы) для загрузки"
+
+#: kbibtex/src/program/program.cpp:59
+msgid ""
+"KBibTeX seems to be not installed completely. KBibTeX could not locate its "
+"own KPart.\n"
+"\n"
+"Only limited functionality will be available."
+msgstr ""
+"Похоже, KBibTeX установлен не полностью. KBibTeX не может найти собственный "
+"KPart.\n"
+"\n"
+"Будет доступна только ограниченная функциональность."
+
+#: kbibtex/src/program/program.cpp:59
+msgid "Incomplete KBibTeX Installation"
+msgstr "Неполная инсталляция KBibTeX"
+
+#: kbibtex/src/test/main.cpp:13
+msgid "KBibTeX Test"
+msgstr "Тест KBibTeX"
+
+#: rc.cpp:1
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Ваше имя"
+
+#: rc.cpp:2
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "Ваша электропочта"
+
+#. i18n: file: kbibtex/src/parts/kbibtexpartui.rc:4
+#. i18n: ectx: Menu (file)
+#. i18n: file: kbibtex/src/program/kbibtexui.rc:4
+#. i18n: ectx: Menu (file)
+#: rc.cpp:5 rc.cpp:17
+msgid "File"
+msgstr "Файл"
+
+#. i18n: file: kbibtex/src/parts/kbibtexpartui.rc:9
+#. i18n: ectx: Menu (edit)
+#: rc.cpp:8
+msgid "Edit"
+msgstr "Редактировать"
+
+#. i18n: file: kbibtex/src/parts/kbibtexpartui.rc:16
+#. i18n: ectx: Menu (element)
+#: rc.cpp:11
+msgid "Element"
+msgstr "Элемент"
+
+#. i18n: file: kbibtex/src/parts/kbibtexpartui.rc:28
+#. i18n: ectx: ToolBar (mainToolBar)
+#: rc.cpp:14
+msgid "Main Toolbar"
+msgstr "Главная панель инструментов"
+
+
