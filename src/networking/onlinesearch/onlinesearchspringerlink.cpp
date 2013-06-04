@@ -191,7 +191,7 @@ public:
     KUrl buildQueryUrl(const QMap<QString, QString> &query) {
         KUrl queryUrl = KUrl(QString("http://api.springer.com/metadata/pam/?api_key=").append(springerMetadataKey));
 
-        QString queryString = query[queryKeyFreeText] + ' ' + query[queryKeyTitle];
+        QString queryString = query[queryKeyFreeText];
 
         QStringList titleChunks = p->splitRespectingQuotationMarks(query[queryKeyTitle]);
         foreach(const QString &titleChunk, titleChunks) {
