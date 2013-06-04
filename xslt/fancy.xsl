@@ -67,13 +67,6 @@
 <i><a style="text-decoration: none; color: white;"><xsl:attribute name="href"><xsl:text>kbibtex:filter:booktitle=</xsl:text><xsl:value-of select="."/></xsl:attribute><xsl:value-of select="."/></a></i>
 </xsl:template>
 
-<!--
-<xsl:template match="school">
-<a style="text-decoration: none; color: white;"><xsl:attribute name="href"><xsl:text>kbibtex:filter:school=</xsl:text><xsl:value-of select="."/></xsl:attribute><xsl:value-of select="."/></a>
-<xsl:text>, </xsl:text>
-</xsl:template>
--->
-
 <xsl:template match="journal">
 <a style="text-decoration: none; color: white; font-style:italic;"><xsl:attribute name="href"><xsl:text>kbibtex:filter:journal=</xsl:text><xsl:value-of select="."/></xsl:attribute><xsl:value-of select="."/></a>
 <xsl:if test="string-length(../volume)>0">
@@ -148,25 +141,6 @@
 <xsl:apply-templates select="abstract" />
 </div>
 </xsl:if>
-<!--
-<p>
-<xsl:apply-templates select="authors" />
-<xsl:apply-templates select="title" />
-<xsl:apply-templates select="booktitle" />
-<xsl:apply-templates select="journal" />
-<xsl:apply-templates select="school" />
-<xsl:apply-templates select="volume" />
-<xsl:apply-templates select="edition" />
-<xsl:apply-templates select="publisher" />
-<xsl:apply-templates select="institution" />
-<xsl:apply-templates select="pages" />
-<xsl:apply-templates select="editors" />
-<xsl:apply-templates select="month" />
-<xsl:apply-templates select="year" />
-<xsl:apply-templates select="note" />
-<xsl:apply-templates select="abstract" />
-</p>
--->
 </xsl:template>
 
 <xsl:template match="bibliography">
