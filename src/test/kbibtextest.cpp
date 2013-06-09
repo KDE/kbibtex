@@ -13,6 +13,7 @@
 #include <QMenu>
 #include <QCryptographicHash>
 #include <QSignalMapper>
+#include <QProgressBar>
 
 #include <onlinesearchacmportal.h>
 #include <onlinesearcharxiv.h>
@@ -44,6 +45,7 @@ class TestWidget : public QWidget
 private:
     KBibTeXTest *m_parent;
     KPushButton *buttonStartTest;
+    QProgressBar *progressBar;
     KAction *actionStartOnlineSearchTests, *actionStartAllTestFileTests;
 
 public:
@@ -56,8 +58,22 @@ public:
         buttonStartTest = new KPushButton(KIcon("application-x-executable"), QLatin1String("Start Tests"), this);
         layout->addWidget(buttonStartTest, 0, 0, 1, 1);
 
+        progressBar = new QProgressBar(this);
+        layout->addWidget(progressBar, 0, 1, 1, 3);
+        progressBar->setVisible(false);
+
         messageList = new KListWidget(this);
         layout->addWidget(messageList, 1, 0, 4, 4);
+    }
+
+    void setProgress(int pos, int total) {
+        if (pos < 0 || total < 0)
+            progressBar->setVisible(false);
+        else {
+            progressBar->setVisible(true);
+            progressBar->setMaximum(total);
+            progressBar->setValue(pos);
+        }
     }
 
     void setupMenus() {
@@ -193,6 +209,11 @@ void KBibTeXTest::onlineSearchFoundEntry()
     ++m_currentOnlineSearchNumFoundEntries;
 }
 
+void KBibTeXTest::progress(int pos, int total)
+{
+    m_testWidget->setProgress(pos, total);
+}
+
 void KBibTeXTest::processNextSearch()
 {
     if (m_running && m_currentOnlineSearch != m_onlineSearchList.constEnd()) {
@@ -273,10 +294,13 @@ void KBibTeXTest::processFileTest(TestFile *testFile)
 
 File *KBibTeXTest::loadFile(const QString &absoluteFilename, TestFile *currentTestFile)
 {
+    progress(-1, -1);
+
     FileImporter *importer = NULL;
-    if (currentTestFile->filename.endsWith(QLatin1String(".bib")))
+    if (currentTestFile->filename.endsWith(QLatin1String(".bib"))) {
         importer = new FileImporterBibTeX(false);
-    else {
+        connect(importer, SIGNAL(progress(int, int)), this, SLOT(progress(int, int)));
+    } else {
         addMessage(QString(QLatin1String("Don't know format of '%1'")).arg(QFileInfo(absoluteFilename).fileName()), iconERROR);
         return NULL;
     }
@@ -286,6 +310,7 @@ File *KBibTeXTest::loadFile(const QString &absoluteFilename, TestFile *currentTe
     File *bibTeXFile = NULL;
     if (file.open(QFile::ReadOnly)) {
         bibTeXFile = importer->load(&file);
+        progress(-1, -1);
         file.close();
     } else {
         addMessage(QString(QLatin1String("Cannot open file '%1'")).arg(absoluteFilename), iconERROR);
@@ -332,7 +357,7 @@ File *KBibTeXTest::loadFile(const QString &absoluteFilename, TestFile *currentTe
             }
 
             if (!lastEntryLastAuthorLastName.isEmpty()) {
-                if (lastEntryLastAuthorLastName[0] == QChar('{') && lastEntryLastAuthorLastName[lastEntryLastAuthorLastName.length() - 1] == QChar('}'))
+                if (lastEntryLastAuthorLastName[0] == QLatin1Char('{') && lastEntryLastAuthorLastName[lastEntryLastAuthorLastName.length() - 1] == QLatin1Char('}'))
                     lastEntryLastAuthorLastName = lastEntryLastAuthorLastName.mid(1, lastEntryLastAuthorLastName.length() - 2);
                 lastAuthorsList << lastEntryLastAuthorLastName;
             }
@@ -340,18 +365,18 @@ File *KBibTeXTest::loadFile(const QString &absoluteFilename, TestFile *currentTe
     }
 
     if (countElements != currentTestFile->numElements) {
-        addMessage(QString(QLatin1String("File '%1' is supposed to have %2 elements, but only %3 were counted")).arg(QFileInfo(absoluteFilename).fileName()).arg(currentTestFile->numElements).arg(countElements), iconERROR);
+        addMessage(QString(QLatin1String("File '%1' is supposed to have %2 elements, but %3 were counted")).arg(QFileInfo(absoluteFilename).fileName()).arg(currentTestFile->numElements).arg(countElements), iconERROR);
         QSharedPointer<Entry> entry = bibTeXFile->at(bibTeXFile->count() - 1).dynamicCast<Entry>();
         if (!entry.isNull())
-            kDebug() << "Last entry had id" << entry->id();
+            kDebug() << "Last entry had id" << entry->id() << "(expected:" << currentTestFile->lastEntryId << ")";
         delete importer;
         delete bibTeXFile;
         return NULL;
     } else if (countEntries != currentTestFile->numEntries) {
-        addMessage(QString(QLatin1String("File '%1' is supposed to have %2 entries, but only %3 were counted")).arg(QFileInfo(absoluteFilename).fileName()).arg(currentTestFile->numEntries).arg(countEntries), iconERROR);
+        addMessage(QString(QLatin1String("File '%1' is supposed to have %2 entries, but %3 were counted")).arg(QFileInfo(absoluteFilename).fileName()).arg(currentTestFile->numEntries).arg(countEntries), iconERROR);
         QSharedPointer<Entry> entry = bibTeXFile->at(bibTeXFile->count() - 1).dynamicCast<Entry>();
         if (!entry.isNull())
-            kDebug() << "Last entry had id" << entry->id();
+            kDebug() << "Last entry had id" << entry->id() << "(expected:" << currentTestFile->lastEntryId << ")";
         delete importer;
         delete bibTeXFile;
         return NULL;
@@ -383,7 +408,6 @@ File *KBibTeXTest::loadFile(const QString &absoluteFilename, TestFile *currentTe
         } else
             kDebug() << "Failed to write list of authors to" << authorListFilename;
 
-
         if (hash.result() != currentTestFile->md4sum) {
             kDebug() << hash.result().toHex().data() << "for" << absoluteFilename << "based on" << currentTestFile->filename;
             addMessage(QString(QLatin1String("A hash sum over all last authors in file '%1' did not match the expected hash sum (%2)")).arg(QFileInfo(absoluteFilename).fileName()).arg(hash.result().toHex().data()), iconERROR);
@@ -402,11 +426,14 @@ File *KBibTeXTest::loadFile(const QString &absoluteFilename, TestFile *currentTe
 
 QString KBibTeXTest::saveFile(File *file, TestFile *currentTestFile)
 {
+    progress(-1, -1);
+
     const QString tempFilename = KStandardDirs::locateLocal("tmp", QFileInfo(currentTestFile->filename).fileName());
 
     FileExporter *exporter = NULL;
     if (currentTestFile->filename.endsWith(QLatin1String(".bib"))) {
         exporter = new FileExporterBibTeX();
+        connect(exporter, SIGNAL(progress(int, int)), this, SLOT(progress(int, int)));
     } else {
         addMessage(QString(QLatin1String("Don't know format of '%1'")).arg(tempFilename), iconERROR);
         return NULL;
@@ -416,6 +443,7 @@ QString KBibTeXTest::saveFile(File *file, TestFile *currentTestFile)
     if (tempFile.open(QFile::WriteOnly)) {
         bool result = exporter->save(&tempFile, file);
         tempFile.close();
+        progress(-1, -1);
         if (!result)    {
             addMessage(QString(QLatin1String("Could save to temporary file '%1'")).arg(QFileInfo(tempFile.fileName()).fileName()), iconERROR);
             delete exporter;

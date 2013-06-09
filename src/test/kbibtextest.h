@@ -29,6 +29,7 @@ private slots:
     void startTestFileTest(int);
     void onlineSearchStoppedSearch(int);
     void onlineSearchFoundEntry();
+    void progress(int, int);
 
 private:
     bool m_running;
