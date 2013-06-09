@@ -541,7 +541,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                     /// to check for
                     QString alpha = readAlphaCharacters(input, i + 2);
                     int nextPosAfterAlpha = i + 2 + alpha.size();
-                    if (input[nextPosAfterAlpha] == '}') {
+                    if (nextPosAfterAlpha < input.length() && input[nextPosAfterAlpha] == '}') {
                         /// We are dealing actually with a string like {\AA}
                         /// Check which command it is,
                         /// insert corresponding Unicode character
@@ -573,7 +573,8 @@ QString EncoderLaTeX::decode(const QString &input) const
                             output.append(c);
                         }
                     } else {
-                        /// Nothing special, copy input char to output
+                        /// Could be something like {\tt filename.txt}
+                        /// Keep it as it is
                         output.append(c);
                     }
                 }
