@@ -201,6 +201,7 @@ void KBibTeXTest::onlineSearchStoppedSearch(int searchResult)
     }
     m_currentOnlineSearch++;
 
+    progress(-1, -1);
     processNextSearch();
 }
 
@@ -225,12 +226,14 @@ void KBibTeXTest::processNextSearch()
         query.insert(OnlineSearchAbstract::queryKeyAuthor, QLatin1String("smith"));
         connect((*m_currentOnlineSearch), SIGNAL(stoppedSearch(int)), this, SLOT(onlineSearchStoppedSearch(int)));
         connect((*m_currentOnlineSearch), SIGNAL(foundEntry(QSharedPointer<Entry>)), this, SLOT(onlineSearchFoundEntry()));
+        connect((*m_currentOnlineSearch), SIGNAL(progress(int, int)), this, SLOT(progress(int, int)));
         (*m_currentOnlineSearch)->startSearch(query, 3);
     } else {
         addMessage(QLatin1String("Done testing"), iconINFO);
         setBusy(false);
         m_running = false;
     }
+    progress(-1, -1);
 }
 
 void KBibTeXTest::startAllTestFileTests()
