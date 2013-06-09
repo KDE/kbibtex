@@ -40,6 +40,7 @@ class KBIBTEXDATA_EXPORT ValueItem
 public:
     enum ReplaceMode {CompleteMatch, AnySubstring};
 
+    ValueItem();
     virtual ~ValueItem();
 
     virtual void replace(const QString &before, const QString &after, ValueItem::ReplaceMode replaceMode) = 0;
@@ -61,10 +62,22 @@ public:
       */
     virtual bool operator==(const ValueItem &other) const = 0;
 
+    /**
+     * Unique numeric identifier for every ValueItem instance.
+     * @return Unique numeric identifier
+     */
+    quint64 id() const;
+
 protected:
     /// contains text fragments to be removed before performing a "contains pattern" operation
     /// includes among other "{" and "}"
     static const QRegExp ignoredInSorting;
+
+private:
+    /// Unique numeric identifier
+    const quint64 internalId;
+    /// Keeping track of next available unique numeric identifier
+    static quint64 internalIdCounter;
 };
 
 class KBIBTEXDATA_EXPORT Keyword: public ValueItem
