@@ -47,7 +47,7 @@ const QString extraAlphaNumChars = QString("?'`-_:.+/$\\\"&");
 const char *FileImporterBibTeX::defaultCodecName = "utf-8";
 
 FileImporterBibTeX::FileImporterBibTeX(bool ignoreComments, KBibTeX::Casing keywordCasing)
-        : FileImporter(), m_cancelFlag(false), m_lineNo(1), m_currentLine(), m_textStream(NULL), m_currentChar(' '), m_ignoreComments(ignoreComments), m_keywordCasing(keywordCasing)
+        : FileImporter(), m_cancelFlag(false), m_textStream(NULL), m_ignoreComments(ignoreComments), m_keywordCasing(keywordCasing), m_lineNo(1)
 {
     m_keysForPersonDetection.append(Entry::ftAuthor);
     m_keysForPersonDetection.append(Entry::ftEditor);
@@ -74,7 +74,6 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
     m_statistics.countProtectedTitle = 0;
     m_statistics.countUnprotectedTitle = 0;
 
-    m_nextDuePos = 0;
     m_textStream = new QTextStream(iodevice);
     m_textStream->setCodec(defaultCodecName); ///< unless we learn something else, assume default codec
     result->setProperty(File::Encoding, QLatin1String("latex"));
@@ -101,14 +100,15 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
     if (originalLength != afterHTMLremovalLength)
         kWarning() << (originalLength - afterHTMLremovalLength) << "characters of HTML tags have been removed";
 
-    m_nextDuePos = 0;
     // TODO really necessary to pipe data through several QTextStreams?
     m_textStream = new QTextStream(&rawText, QIODevice::ReadOnly);
     m_textStream->setCodec(defaultCodecName);
     m_lineNo = 1;
     m_prevLine = m_currentLine = QString();
+    m_knownElementIds.clear();
+    readChar();
 
-    while (!m_cancelFlag && !m_textStream->atEnd()) {
+    while (!m_nextChar.isNull() && !m_cancelFlag && !m_textStream->atEnd()) {
         emit progress(m_textStream->pos(), rawText.length());
         Element *element = nextElement();
 
@@ -166,6 +166,7 @@ Element *FileImporterBibTeX::nextElement()
 
     if (token == tAt) {
         QString elementType = readSimpleString();
+
         if (elementType.toLower() == "comment") {
             ++m_statistics.countCommentCommand;
             return readCommentElement();
@@ -182,12 +183,15 @@ Element *FileImporterBibTeX::nextElement()
             kWarning() << "ElementType is empty";
             return NULL;
         }
-    } else if (token == tUnknown && m_currentChar == QChar('%')) {
+    } else if (token == tUnknown && m_prevChar == QLatin1Char('%')) {
+        /// undo recent read operation
+        m_nextChar = m_prevChar;
+        m_currentLine = m_currentLine.left(m_currentLine.length() - 1);
         /// do not complain about LaTeX-like comments, just eat them
         ++m_statistics.countCommentPercent;
         return readPlainCommentElement();
     } else if (token == tUnknown) {
-        kDebug() << "Unknown token '" << m_currentChar << "(" << QString("0x%1").arg(m_currentChar.unicode(), 4, 16, QLatin1Char('0')) << ")" << "' near line " << m_lineNo << "(" << m_prevLine << endl << m_currentLine << ")" << ", treating as comment";
+        kDebug() << "Unknown token '" << m_nextChar << "(" << QString("0x%1").arg(m_nextChar.unicode(), 4, 16, QLatin1Char('0')) << ")" << "' near line " << m_lineNo << "(" << m_prevLine << endl << m_currentLine << ")" << ", treating as comment";
         ++m_statistics.countNoCommentQuote;
         return readPlainCommentElement();
     }
@@ -200,49 +204,20 @@ Element *FileImporterBibTeX::nextElement()
 
 Comment *FileImporterBibTeX::readCommentElement()
 {
-    while (m_currentChar != '{' && m_currentChar != '(' && !m_textStream->atEnd()) {
-        if (m_currentChar == '\n') {
-            ++m_lineNo;
-            m_prevLine = m_currentLine;
-            m_currentLine = QLatin1String("");
-        } else
-            m_currentLine.append(m_currentChar);
-        *m_textStream >> m_currentChar;
-    }
-
-    return new Comment(EncoderLaTeX::instance()->decode(readBracketString(m_currentChar)));
+    if (!readCharUntil(QLatin1String("{(")))
+        return NULL;
+    return new Comment(EncoderLaTeX::instance()->decode(readBracketString()));
 }
 
 Comment *FileImporterBibTeX::readPlainCommentElement()
 {
     QString result = EncoderLaTeX::instance()->decode(readLine());
-    if (m_currentChar == '\n') {
-        ++m_lineNo;
-        m_prevLine = m_currentLine;
-        m_currentLine = QLatin1String("");
-    } else
-        m_currentLine.append(m_currentChar);
-    *m_textStream >> m_currentChar;
-    while (!m_textStream->atEnd() && m_currentChar != '@' && !m_currentChar.isSpace()) {
-        result.append('\n').append(m_currentChar);
-        if (m_currentChar == '\n') {
-            ++m_lineNo;
-            m_prevLine = m_currentLine;
-            m_currentLine = QLatin1String("");
-        } else
-            m_currentLine.append(m_currentChar);
-        *m_textStream >> m_currentChar;
-        result.append(EncoderLaTeX::instance()->decode(readLine()));
-        if (m_currentChar == '\n') {
-            ++m_lineNo;
-            m_prevLine = m_currentLine;
-            m_currentLine = QLatin1String("");
-        } else
-            m_currentLine.append(m_currentChar);
-        *m_textStream >> m_currentChar;
+    while (!m_nextChar.isNull() && m_nextChar != QLatin1Char('@')) {
+        result.append(QLatin1String("\n")).append(EncoderLaTeX::instance()->decode(readLine()));
     }
 
     if (result.startsWith(QLatin1String("x-kbibtex"))) {
+        kWarning() << "Plain comment element starts with \"x-kbibtex\", this should not happen";
         /// ignore special comments
         return NULL;
     }
@@ -262,6 +237,31 @@ Macro *FileImporterBibTeX::readMacroElement()
     }
 
     QString key = readSimpleString();
+
+    if (key.isEmpty()) {
+        /// Cope with empty keys,
+        /// duplicates are handled further below
+        key = QLatin1String("EmptyId");
+    } else if (!EncoderLaTeX::containsOnlyAscii(key)) {
+        /// Try to avoid non-ascii characters in ids
+        EncoderLaTeX *encoder = EncoderLaTeX::instance();
+        const QString newKey = encoder->convertToPlainAscii(key);
+        kWarning() << "Macro key" << key << "contains non-ASCII characters, converted to" << newKey;
+        key = newKey;
+    }
+
+    /// Check for duplicate entry ids, avoid collisions
+    if (m_knownElementIds.contains(key)) {
+        static const QString newIdPattern = QLatin1String("%1-%2");
+        int idx = 2;
+        QString newKey = newIdPattern.arg(key).arg(idx);
+        while (m_knownElementIds.contains(newKey))
+            newKey = newIdPattern.arg(key).arg(++idx);
+        kDebug() << "Duplicate macro key" << key << ", using replacement key" << newKey;
+        key = newKey;
+    }
+    m_knownElementIds.insert(key);
+
     if (nextToken() != tAssign) {
         kError() << "Error in parsing macro '" << key << "'' (near line " << m_lineNo << ":" << m_prevLine << endl << m_currentLine << "): Assign symbol (=) expected";
         return NULL;
@@ -270,7 +270,7 @@ Macro *FileImporterBibTeX::readMacroElement()
     Macro *macro = new Macro(key);
     do {
         bool isStringKey = false;
-        QString text = EncoderLaTeX::instance()->decode(readString(isStringKey).simplified());
+        QString text = EncoderLaTeX::instance()->decode(bibtexAwareSimplify(readString(isStringKey)));
         if (isStringKey)
             macro->value().append(QSharedPointer<MacroKey>(new MacroKey(text)));
         else
@@ -298,7 +298,7 @@ Preamble *FileImporterBibTeX::readPreambleElement()
         bool isStringKey = false;
         /// Remember: strings from preamble do not get encoded,
         /// may contain raw LaTeX commands and code
-        QString text = readString(isStringKey).simplified();
+        QString text = bibtexAwareSimplify(readString(isStringKey));
         if (isStringKey)
             preamble->value().append(QSharedPointer<MacroKey>(new MacroKey(text)));
         else
@@ -325,13 +325,29 @@ Entry *FileImporterBibTeX::readEntryElement(const QString &typeString)
         token = nextToken();
     }
 
-    QString id = readSimpleString(QChar(','));
-    /// try to avoid non-ascii characters in ids
-    if (!EncoderLaTeX::containsOnlyAscii(id)) {
+    QString id = readSimpleString(QChar(',')).trimmed();
+    if (id.isEmpty()) {
+        /// Cope with empty ids,
+        /// duplicates are handled further below
+        id = QLatin1String("EmptyId");
+    } else if (!EncoderLaTeX::containsOnlyAscii(id)) {
+        /// Try to avoid non-ascii characters in ids
         const QString newId = encoder->convertToPlainAscii(id);
         kWarning() << "Entry id" << id << "contains non-ASCII characters, converted to" << newId;
         id = newId;
     }
+
+    /// Check for duplicate entry ids, avoid collisions
+    if (m_knownElementIds.contains(id)) {
+        static const QString newIdPattern = QLatin1String("%1-%2");
+        int idx = 2;
+        QString newId = newIdPattern.arg(id).arg(idx);
+        while (m_knownElementIds.contains(newId))
+            newId = newIdPattern.arg(id).arg(++idx);
+        kDebug() << "Duplicate id" << id << ", using replacement id" << newId;
+        id = newId;
+    }
+    m_knownElementIds.insert(id);
 
     Entry *entry = new Entry(be->format(typeString, m_keywordCasing), id);
 
@@ -340,33 +356,45 @@ Entry *FileImporterBibTeX::readEntryElement(const QString &typeString)
         if (token == tBracketClose || token == tEOF)
             break;
         else if (token != tComma) {
-            if (m_currentChar.isLetter())
-                kWarning() << "Error in parsing entry" << id << "(near line" << m_lineNo << ":" << m_prevLine << endl << m_currentLine << "): Comma symbol (,) expected but got character" << m_currentChar << "(token" << tokenidToString(token) << ")";
-            else if (m_currentChar.isPrint())
-                kWarning() << "Error in parsing entry" << id << "(near line" << m_lineNo << ":" << m_prevLine << endl << m_currentLine << "): Comma symbol (,) expected but got character" << m_currentChar << "(" << QString("0x%1").arg(m_currentChar.unicode(), 4, 16, QLatin1Char('0')) << ", token" << tokenidToString(token) << ")";
+            if (m_nextChar.isLetter())
+                kWarning() << "Error in parsing entry" << id << "(near line" << m_lineNo << ":" << m_prevLine << endl << m_currentLine << "): Comma symbol (,) expected but got character" << m_nextChar << "(token" << tokenidToString(token) << ")";
+            else if (m_nextChar.isPrint())
+                kWarning() << "Error in parsing entry" << id << "(near line" << m_lineNo << ":" << m_prevLine << endl << m_currentLine << "): Comma symbol (,) expected but got character" << m_nextChar << "(" << QString("0x%1").arg(m_nextChar.unicode(), 4, 16, QLatin1Char('0')) << ", token" << tokenidToString(token) << ")";
             else
-                kWarning() << "Error in parsing entry" << id << "(near line" << m_lineNo << ":" << m_prevLine << endl << m_currentLine << "): Comma symbol (,) expected but got character" << QString("0x%1").arg(m_currentChar.unicode(), 4, 16, QLatin1Char('0')) << "(token" << tokenidToString(token) << ")";
+                kWarning() << "Error in parsing entry" << id << "(near line" << m_lineNo << ":" << m_prevLine << endl << m_currentLine << "): Comma symbol (,) expected but got character" << QString("0x%1").arg(m_nextChar.unicode(), 4, 16, QLatin1Char('0')) << "(token" << tokenidToString(token) << ")";
             delete entry;
             return NULL;
         }
 
         QString keyName = bf->format(readSimpleString(), m_keywordCasing);
-        /// try to avoid non-ascii characters in keys
+        if (keyName.isEmpty()) {
+            token = nextToken();
+            if (token == tBracketClose) {
+                /// Most often it is the case that the previous line ended with a comma,
+                /// implying that this entry continues, but instead it gets closed by
+                /// a closing curly bracket.
+                kDebug() << "Issue while parsing entry" << id << "(near line" << m_lineNo << ":" << m_prevLine << endl << m_currentLine << "): Last key-value pair ended with a non-conformant comma, ignoring that";
+                break;
+            } else {
+                /// Something looks terribly wrong
+                kWarning() << "Error in parsing entry" << id << "(near line" << m_lineNo << ":" << m_prevLine << endl << m_currentLine << "): Closing curly bracket expected, but found" << tokenidToString(token);
+                delete entry;
+                return NULL;
+            }
+        }
+        /// Try to avoid non-ascii characters in keys
         keyName = encoder->convertToPlainAscii(keyName);
 
         token = nextToken();
-        if (keyName.isEmpty() || token == tBracketClose) {
-            // entry is buggy, but we still accept it
-            break;
-        } else if (token != tAssign) {
-            kError() << "Error in parsing entry" << id << " (near line " << m_lineNo  << ":" << m_prevLine << endl << m_currentLine << "): Assign symbol (=) expected after field name" << keyName;
+        if (token != tAssign) {
+            kWarning() << "Error in parsing entry" << id << ", key" << keyName << " (near line " << m_lineNo  << ":" << m_prevLine << endl << m_currentLine << "): Assign symbol (=) expected after field name" << keyName;
             delete entry;
             return NULL;
         }
 
         Value value;
 
-        /** check for duplicate fields */
+        /// check for duplicate fields
         if (entry->contains(keyName)) {
             if (keyName.toLower() == Entry::ftKeywords || keyName.toLower() == Entry::ftUrl) {
                 /// Special handling of keywords and URLs: instead of using fallback names
@@ -385,7 +413,7 @@ Entry *FileImporterBibTeX::readEntryElement(const QString &typeString)
                     ++i;
                     appendix = QString::number(i);
                 }
-                kDebug() << "Entry already contains a key" << keyName << "(near line" << m_lineNo << ":" << m_prevLine << endl << m_currentLine << "), using" << (keyName + appendix);
+                kDebug() << "Entry" << id << " already contains a key" << keyName << "(near line" << m_lineNo << ":" << m_prevLine << endl << m_currentLine << "), using" << (keyName + appendix);
                 keyName += appendix;
             }
         }
@@ -400,129 +428,97 @@ Entry *FileImporterBibTeX::readEntryElement(const QString &typeString)
 
 FileImporterBibTeX::Token FileImporterBibTeX::nextToken()
 {
-    if (m_textStream->atEnd())
+    if (!skipWhiteChar()) {
+        /// Some error occurred while reading from data stream
         return tEOF;
-    if (m_textStream->pos() == m_nextDuePos)
-        *m_textStream >> m_currentChar;
-
-    Token curToken = tUnknown;
-
-    while (!m_textStream->atEnd() && (m_currentChar.isSpace() || m_currentChar == '\t')) {
-        if (m_currentChar == '\n') {
-            ++m_lineNo;
-            m_prevLine = m_currentLine;
-            m_currentLine = QLatin1String("");
-        } else
-            m_currentLine.append(m_currentChar);
-        *m_textStream >> m_currentChar;
     }
 
-    switch (m_currentChar.toAscii()) {
+    Token result = tUnknown;
+
+    switch (m_nextChar.toAscii()) {
     case '@':
-        curToken = tAt;
+        result = tAt;
         break;
     case '{':
     case '(':
-        curToken = tBracketOpen;
+        result = tBracketOpen;
         break;
     case '}':
     case ')':
-        curToken = tBracketClose;
+        result = tBracketClose;
         break;
     case ',':
-        curToken = tComma;
+        result = tComma;
         break;
     case '=':
-        curToken = tAssign;
+        result = tAssign;
         break;
     case '#':
-        curToken = tDoublecross;
+        result = tDoublecross;
         break;
     default:
         if (m_textStream->atEnd())
-            curToken = tEOF;
+            result = tEOF;
     }
 
-    m_nextDuePos = m_textStream->pos();
-
-    if (curToken != tUnknown && curToken != tEOF) {
-        if (m_currentChar == '\n') {
-            ++m_lineNo;
-            m_prevLine = m_currentLine;
-            m_currentLine = QLatin1String("");
-        } else
-            m_currentLine.append(m_currentChar);
-        *m_textStream >> m_currentChar;
-    }
-
-    return curToken;
+    readChar();
+    return result;
 }
 
 QString FileImporterBibTeX::readString(bool &isStringKey)
 {
-    if (m_currentChar.isSpace()) {
-        m_textStream->skipWhiteSpace();
-        if (m_currentChar == '\n') {
-            ++m_lineNo;
-            m_prevLine = m_currentLine;
-            m_currentLine = QLatin1String("");
-        } else
-            m_currentLine.append(m_currentChar);
-        *m_textStream >> m_currentChar;
+    /// Most often it is not a string key
+    isStringKey = false;
+
+    if (!skipWhiteChar()) {
+        /// Some error occurred while reading from data stream
+        return QString::null;
     }
 
-    isStringKey = false;
-    switch (m_currentChar.toAscii()) {
+    switch (m_nextChar.toAscii()) {
     case '{':
     case '(': {
         ++m_statistics.countCurlyBrackets;
-        return readBracketString(m_currentChar);
+        const QString result = readBracketString();
+        return result;
     }
     case '"': {
         ++m_statistics.countQuotationMarks;
-        return readQuotedString();
+        const QString result = readQuotedString();
+        return result;
     }
     default:
         isStringKey = true;
-        return readSimpleString();
+        const QString result = readSimpleString();
+        return result;
     }
 }
 
-QString FileImporterBibTeX::readSimpleString(QChar until)
+QString FileImporterBibTeX::readSimpleString(const QChar &until)
 {
     QString result;
 
-    if (m_currentChar == '\n') {
-        ++m_lineNo;
-        m_prevLine = m_currentLine;
-        m_currentLine = QLatin1String("");
-    }
-    if (m_currentChar.isSpace()) {
-        m_textStream->skipWhiteSpace();
-        *m_textStream >> m_currentChar;
+    if (!skipWhiteChar()) {
+        /// Some error occurred while reading from data stream
+        return QString::null;
     }
 
-    while (!m_textStream->atEnd()) {
+    while (!m_nextChar.isNull()) {
         if (until != '\0') {
             /// Variable "until" has user-defined value
-            if (m_currentChar == QChar('\n') || m_currentChar == QChar('\r') || m_currentChar == until) {
+            if (m_nextChar == QLatin1Char('\n') || m_nextChar == QLatin1Char('\r') || m_nextChar == until) {
                 /// Force break on line-breaks or if the "until" char has been read
                 break;
             } else {
                 /// Append read character to final result
-                result.append(m_currentChar);
+                result.append(m_nextChar);
             }
-        } else if (m_currentChar.isLetterOrNumber() || extraAlphaNumChars.contains(m_currentChar))
-            result.append(m_currentChar);
-        else
-            break;
-        if (m_currentChar == '\n') {
-            ++m_lineNo;
-            m_prevLine = m_currentLine;
-            m_currentLine = QLatin1String("");
+        } else if (m_nextChar.isLetterOrNumber() || extraAlphaNumChars.contains(m_nextChar)) {
+            /// Accept default set of alpha-numeric characters
+            result.append(m_nextChar);
         } else
-            m_currentLine.append(m_currentChar);
-        *m_textStream >> m_currentChar;
+            break;
+        if (!readChar()) break;
     }
     return result;
 }
@@ -530,101 +526,50 @@ QString FileImporterBibTeX::readSimpleString(QChar until)
 QString FileImporterBibTeX::readQuotedString()
 {
     QString result;
-    QChar lastChar = m_currentChar;
-    if (m_currentChar == '\n') {
-        ++m_lineNo;
-        m_prevLine = m_currentLine;
-        m_currentLine = QLatin1String("");
-    } else
-        m_currentLine.append(m_currentChar);
-    *m_textStream >> m_currentChar;
-    while (!m_textStream->atEnd()) {
-        if (m_currentChar != '"' || lastChar == '\\')
-            result.append(m_currentChar);
-        else
+
+    Q_ASSERT_X(m_nextChar == QLatin1Char('"'), "QString FileImporterBibTeX::readQuotedString()", "m_nextChar is not '\"'");
+
+    if (!readChar()) return QString::null;
+
+    while (!m_nextChar.isNull()) {
+        if (m_nextChar == QLatin1Char('"') && m_prevChar != QLatin1Char('\\'))
             break;
-        lastChar = m_currentChar;
-        if (m_currentChar == '\n') {
-            ++m_lineNo;
-            m_prevLine = m_currentLine;
-            m_currentLine = QLatin1String("");
-        } else
-            m_currentLine.append(m_currentChar);
-        *m_textStream >> m_currentChar;
+        else
+            result.append(m_nextChar);
+
+        if (!readChar()) return QString::null;
     }
 
-    /** read character after closing " */
-    if (m_currentChar == '\n') {
-        ++m_lineNo;
-        m_prevLine = m_currentLine;
-        m_currentLine = QLatin1String("");
-    } else
-        m_currentLine.append(m_currentChar);
-    *m_textStream >> m_currentChar;
-
+    if (!readChar()) return QString::null;
     return result;
 }
 
-QString FileImporterBibTeX::readLine()
+QString FileImporterBibTeX::readBracketString()
 {
+    static const QChar backslash = QLatin1Char('\\');
     QString result;
-    while (!m_textStream->atEnd() && m_currentChar != '\n') {
-        result.append(m_currentChar);
-        if (m_currentChar == '\n') {
-            ++m_lineNo;
-            m_prevLine = m_currentLine;
-            m_currentLine = QLatin1String("");
-        } else
-            m_currentLine.append(m_currentChar);
-        *m_textStream >> m_currentChar;
-    }
-    return result;
-}
-
-QString FileImporterBibTeX::readBracketString(const QChar openingBracket) ///< do not use reference on QChar here!
-{
-    static const QChar backslash = QChar('\\');
-    QString result;
-    QChar closingBracket = QChar('}');
-    if (openingBracket == QChar('('))
-        closingBracket = QChar(')');
+    const QChar openingBracket = m_nextChar;
+    const QChar closingBracket = openingBracket == QLatin1Char('{') ? QLatin1Char('}') : (openingBracket == QLatin1Char('(') ? QLatin1Char(')') : QChar());
+    Q_ASSERT_X(!closingBracket.isNull(), "QString FileImporterBibTeX::readBracketString()", "openingBracket==m_nextChar is neither '{' nor '('");
     int counter = 1;
-    if (m_currentChar == QChar('\n')) {
-        ++m_lineNo;
-        m_prevLine = m_currentLine;
-        m_currentLine = QLatin1String("");
-    } else
-        m_currentLine.append(m_currentChar);
 
-    QChar previousChar = m_currentChar;
-    *m_textStream >> m_currentChar;
-    while (!m_textStream->atEnd()) {
-        if (m_currentChar == openingBracket && previousChar != backslash)
-            counter++;
-        else if (m_currentChar == closingBracket && previousChar != backslash)
-            counter--;
+    if (!readChar()) return QString::null;
 
-        if (counter == 0)
+    while (!m_nextChar.isNull()) {
+        if (m_nextChar == openingBracket && m_prevChar != backslash)
+            ++counter;
+        else if (m_nextChar == closingBracket && m_prevChar != backslash)
+            --counter;
+
+        if (counter == 0) {
             break;
-        else
-            result.append(m_currentChar);
-        if (m_currentChar == '\n') {
-            ++m_lineNo;
-            m_prevLine = m_currentLine;
-            m_currentLine = QLatin1String("");
         } else
-            m_currentLine.append(m_currentChar);
+            result.append(m_nextChar);
 
-        previousChar = m_currentChar;
-        *m_textStream >> m_currentChar;
+        if (!readChar()) return QString::null;
     }
-    if (m_currentChar == '\n') {
-        ++m_lineNo;
-        m_prevLine = m_currentLine;
-        m_currentLine = QLatin1String("");
-    } else
-        m_currentLine.append(m_currentChar);
-    *m_textStream >> m_currentChar;
+
+    if (!readChar()) return QString::null;
     return result;
 }
 
@@ -639,7 +584,7 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value &value, const QStr
         /// for all entries except for abstracts ...
         if (iKey != Entry::ftAbstract && !(iKey.startsWith(Entry::ftUrl) && !iKey.startsWith(Entry::ftUrlDate)) && !iKey.startsWith(Entry::ftLocalFile) && !iKey.startsWith(Entry::ftFile)) {
             /// ... remove redundant spaces including newlines
-            text = text.simplified();
+            text = bibtexAwareSimplify(text);
         }
         /// abstracts will keep their formatting (regarding line breaks)
         /// as requested by Thomas Jensch via mail (20 October 2010)
@@ -647,7 +592,7 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value &value, const QStr
         /// Maintain statistics on if (book) titles are protected
         /// by surrounding curly brackets
         if (iKey == Entry::ftTitle || iKey == Entry::ftBookTitle) {
-            if (text[0] == QChar('{') && text[text.length() - 1] == QChar('}'))
+            if (text[0] == QLatin1Char('{') && text[text.length() - 1] == QLatin1Char('}'))
                 ++m_statistics.countProtectedTitle;
             else
                 ++m_statistics.countUnprotectedTitle;
@@ -752,6 +697,58 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value &value, const QStr
     } while (token == tDoublecross);
 
     return token;
+}
+
+bool FileImporterBibTeX::readChar()
+{
+    /// Memorize previous char
+    m_prevChar = m_nextChar;
+
+    if (m_textStream->atEnd()) {
+        /// At end of data stream
+        m_nextChar = QChar::Null;
+        return false;
+    }
+
+    /// Read next char
+    *m_textStream >> m_nextChar;
+
+    /// Test for new line
+    if (m_nextChar == QLatin1Char('\n')) {
+        /// Update variables tracking line numbers and line content
+        ++m_lineNo;
+        m_prevLine = m_currentLine;
+        m_currentLine.clear();
+    } else {
+        /// Add read char to current line
+        m_currentLine.append(m_nextChar);
+    }
+
+    return true;
+}
+
+bool  FileImporterBibTeX::readCharUntil(const QString &until)
+{
+    Q_ASSERT_X(!until.isEmpty(), "bool  FileImporterBibTeX::readCharUntil(const QString &until)", "\"until\" is empty or invalid");
+    bool result = true;
+    while (!until.contains(m_nextChar) && (result = readChar()));
+    return result;
+}
+
+bool FileImporterBibTeX::skipWhiteChar()
+{
+    bool result = true;
+    while ((m_nextChar.isSpace() || m_nextChar == QLatin1Char('\t') || m_nextChar == QLatin1Char('\n') || m_nextChar == QLatin1Char('\r')) && result) result = readChar();
+    return result;
+}
+
+QString FileImporterBibTeX::readLine()
+{
+    QString result;
+    while (m_nextChar != QLatin1Char('\n') && m_nextChar != QLatin1Char('\r') && readChar())
+        result.append(m_nextChar);
+    if (!readChar()) return QString::null;
+    return result;
 }
 
 QList<QSharedPointer<Keyword> > FileImporterBibTeX::splitKeywords(const QString &text)
@@ -1046,6 +1043,33 @@ void FileImporterBibTeX::contextSensitiveSplit(const QString &text, QStringList 
 
     if (!buffer.isEmpty())
         segments.append(buffer);
+}
+
+QString FileImporterBibTeX::bibtexAwareSimplify(const QString &text)
+{
+    QString result;
+    int i = 0;
+
+    /// Skip initial spaces, can be savely ignored
+    while (i < text.length() && text[i].isSpace()) ++i;
+
+    while (i < text.length()) {
+        /// Consume non-spaces
+        while (i < text.length() && !text[i].isSpace()) {
+            result.append(text[i]);
+            ++i;
+        }
+
+        /// String may end with a non-space
+        if (i >= text.length()) break;
+
+        /// Consume spaces, ...
+        while (i < text.length() && text[i].isSpace()) ++i;
+        /// ... but record only a single space
+        result.append(QLatin1String(" "));
+    }
+
+    return result;
 }
 
 bool FileImporterBibTeX::evaluateParameterComments(QTextStream *textStream, const QString &line, File *file)

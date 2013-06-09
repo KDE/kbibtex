@@ -130,15 +130,22 @@ private:
     } m_statistics;
 
     bool m_cancelFlag;
-    unsigned int m_lineNo;
-    QString m_prevLine, m_currentLine;
     QTextStream *m_textStream;
-    int m_nextDuePos;
-    QChar m_currentChar;
     bool m_ignoreComments;
     KBibTeX::Casing m_keywordCasing;
     QStringList m_keysForPersonDetection;
+    QSet<QString> m_knownElementIds;
 
+    /// low-level character operations
+    QChar m_prevChar, m_nextChar;
+    unsigned int m_lineNo;
+    QString m_prevLine, m_currentLine;
+    bool readChar();
+    bool readCharUntil(const QString &until);
+    bool skipWhiteChar();
+    QString readLine();
+
+    /// high-level parsing functions
     Comment *readCommentElement();
     Comment *readPlainCommentElement();
     Macro *readMacroElement();
@@ -147,10 +154,9 @@ private:
     Element *nextElement();
     Token nextToken();
     QString readString(bool &isStringKey);
-    QString readSimpleString(QChar until = QChar('\0'));
+    QString readSimpleString(const QChar &until = QLatin1Char('\0'));
     QString readQuotedString();
-    QString readLine();
-    QString readBracketString(const QChar openingBracket); ///< do not use reference on QChar here!
+    QString readBracketString();
     Token readValue(Value &value, const QString &fieldType);
 
     static QSharedPointer<Person> personFromString(const QString &name, CommaContainment *comma);
@@ -167,6 +173,8 @@ private:
      * @param segments list where chunks will be added to
      */
     static void contextSensitiveSplit(const QString &text, QStringList &segments);
+
+    static QString bibtexAwareSimplify(const QString &text);
 
     bool evaluateParameterComments(QTextStream *textStream, const QString &line, File *file);
     QString tokenidToString(Token token);
