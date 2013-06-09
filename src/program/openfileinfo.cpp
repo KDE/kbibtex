@@ -22,6 +22,7 @@
 #include <QLatin1String>
 #include <QTimer>
 #include <QFileInfo>
+#include <QWidget>
 
 #include <KConfig>
 #include <KConfigGroup>
@@ -29,6 +30,7 @@
 #include <KMimeTypeTrader>
 #include <KUrl>
 #include <kparts/part.h>
+#include <KIO/NetAccess>
 
 #include "fileimporterpdf.h"
 #include "openfileinfo.h"
@@ -250,6 +252,8 @@ void OpenFileInfo::setFlags(StatusFlags statusFlags)
 {
     /// disallow files without name or valid url to become favorites
     if (!d->url.isValid() || !d->flags.testFlag(HasName)) statusFlags &= ~Favorite;
+    /// files that got opened are by definition recently used files
+    if (!d->url.isValid() && d->flags.testFlag(Open)) statusFlags &= RecentlyUsed;
 
     bool hasChanged = d->flags != statusFlags;
     d->flags = statusFlags;
@@ -316,6 +320,7 @@ private:
     static const QString configGroupNameFavorites;
     static const QString configGroupNameOpen;
     static const int maxNumRecentlyUsedFiles, maxNumFavoriteFiles, maxNumOpenFiles;
+    QWidget *widget;
 
 public:
     OpenFileInfoManager *p;
@@ -323,8 +328,8 @@ public:
     OpenFileInfoManager::OpenFileInfoList openFileInfoList;
     OpenFileInfo *currentFileInfo;
 
-    OpenFileInfoManagerPrivate(OpenFileInfoManager *parent)
-            : p(parent), currentFileInfo(NULL) {
+    OpenFileInfoManagerPrivate(OpenFileInfoManager *parent, QWidget *w)
+            : widget(w), p(parent), currentFileInfo(NULL) {
         // nothing
     }
 
@@ -343,23 +348,10 @@ public:
         return left->lastAccess() > right->lastAccess(); /// reverse sorting!
     }
 
-    void restorePreviouslyOpenedFiles() {
-        KSharedConfigPtr config = KSharedConfig::openConfig("kbibtexrc");
-
-        KConfigGroup cg(config, configGroupNameOpen);
-        for (int i = 0; i < maxNumOpenFiles; ++i) {
-            KUrl fileUrl = KUrl(cg.readEntry(QString("%1-%2").arg(OpenFileInfo::OpenFileInfoPrivate::keyURL).arg(i), ""));
-            if (!fileUrl.isValid()) break;
-            OpenFileInfo *ofi = p->contains(fileUrl);
-            if (ofi == NULL)
-                ofi = p->open(fileUrl);
-            p->setCurrentFile(ofi);
-        }
-    }
-
     void readConfig() {
         readConfig(OpenFileInfo::RecentlyUsed, configGroupNameRecentlyUsed, maxNumRecentlyUsedFiles);
         readConfig(OpenFileInfo::Favorite, configGroupNameFavorites, maxNumFavoriteFiles);
+        readConfig(OpenFileInfo::Open, configGroupNameOpen, maxNumOpenFiles);
     }
 
     void writeConfig() {
@@ -371,13 +363,18 @@ public:
     void readConfig(OpenFileInfo::StatusFlag statusFlag, const QString &configGroupName, int maxNumFiles) {
         KSharedConfigPtr config = KSharedConfig::openConfig("kbibtexrc");
 
+        bool isFirst = true;
         KConfigGroup cg(config, configGroupName);
         for (int i = 0; i < maxNumFiles; ++i) {
             KUrl fileUrl = KUrl(cg.readEntry(QString("%1-%2").arg(OpenFileInfo::OpenFileInfoPrivate::keyURL).arg(i), ""));
             if (!fileUrl.isValid()) break;
 
             /// For local files, test if they exist; ignore local files that do not exist
-            if (fileUrl.isLocalFile() && !QFileInfo(fileUrl.pathOrUrl()).exists()) continue;
+            if (fileUrl.isLocalFile()) {
+                if (!QFileInfo(fileUrl.pathOrUrl()).exists())
+                    continue;
+            } else if (!KIO::NetAccess::exists(fileUrl, KIO::NetAccess::SourceSide, widget))
+                continue;
 
             OpenFileInfo *ofi = p->contains(fileUrl);
             if (ofi == NULL) {
@@ -386,6 +383,11 @@ public:
             ofi->addFlags(statusFlag);
             ofi->addFlags(OpenFileInfo::HasName);
             ofi->setLastAccess(QDateTime::fromString(cg.readEntry(QString("%1-%2").arg(OpenFileInfo::OpenFileInfoPrivate::keyLastAccess).arg(i), ""), OpenFileInfo::OpenFileInfoPrivate::dateTimeFormat));
+            if (isFirst) {
+                isFirst = false;
+                if (statusFlag == OpenFileInfo::Open)
+                    p->setCurrentFile(ofi);
+            }
         }
     }
 
@@ -417,11 +419,10 @@ const int OpenFileInfoManager::OpenFileInfoManagerPrivate::maxNumRecentlyUsedFil
 const int OpenFileInfoManager::OpenFileInfoManagerPrivate::maxNumOpenFiles = 16;
 
 
-OpenFileInfoManager::OpenFileInfoManager()
-        : d(new OpenFileInfoManagerPrivate(this))
+OpenFileInfoManager::OpenFileInfoManager(QWidget *widget)
+        : QObject(widget), d(new OpenFileInfoManagerPrivate(this, widget))
 {
-    d->readConfig();
-    QTimer::singleShot(500, this, SLOT(restorePreviouslyOpenedFiles()));
+    QTimer::singleShot(300, this, SLOT(delayedReadConfig()));
 }
 
 OpenFileInfoManager::~OpenFileInfoManager()
@@ -621,14 +622,13 @@ OpenFileInfoManager::OpenFileInfoList OpenFileInfoManager::filteredItems(OpenFil
 
 void OpenFileInfoManager::deferredListsChanged()
 {
-    kDebug() << "deferredListsChanged" << endl;
     OpenFileInfo::StatusFlags statusFlags = OpenFileInfo::Open;
     statusFlags |= OpenFileInfo::RecentlyUsed;
     statusFlags |= OpenFileInfo::Favorite;
     emit flagsChanged(statusFlags);
 }
 
-void OpenFileInfoManager::restorePreviouslyOpenedFiles()
+void OpenFileInfoManager::delayedReadConfig()
 {
-    d->restorePreviouslyOpenedFiles();
+    d->readConfig();
 }

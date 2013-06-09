@@ -188,7 +188,7 @@ public:
     KSharedConfigPtr config;
 
     MDIWidgetPrivate(MDIWidget *parent)
-            : p(parent), ofim(new OpenFileInfoManager), currentFile(NULL), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))) {
+            : p(parent), ofim(new OpenFileInfoManager(parent)), currentFile(NULL), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))) {
         createWelcomeWidget();
 
         modelLRU = new LRUItemModel(ofim, listLRU);

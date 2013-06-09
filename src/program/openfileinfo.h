@@ -108,7 +108,7 @@ class OpenFileInfoManager: public QObject
 public:
     typedef QVector<OpenFileInfo *> OpenFileInfoList;
 
-    OpenFileInfoManager();
+    OpenFileInfoManager(QWidget *parent);
     ~OpenFileInfoManager();
 
     OpenFileInfo *createNew(const QString &mimeType = FileInfo::mimetypeBibTeX);
@@ -151,7 +151,7 @@ private:
 
 private slots:
     void deferredListsChanged();
-    void restorePreviouslyOpenedFiles();
+    void delayedReadConfig();
 };
 
 #endif // KBIBTEX_PROGRAM_OPENFILEINFO_H
