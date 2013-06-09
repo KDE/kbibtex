@@ -183,10 +183,7 @@ Element *FileImporterBibTeX::nextElement()
             kWarning() << "ElementType is empty";
             return NULL;
         }
-    } else if (token == tUnknown && m_prevChar == QLatin1Char('%')) {
-        /// undo recent read operation
-        m_nextChar = m_prevChar;
-        m_currentLine = m_currentLine.left(m_currentLine.length() - 1);
+    } else if (token == tUnknown && m_nextChar == QLatin1Char('%')) {
         /// do not complain about LaTeX-like comments, just eat them
         ++m_statistics.countCommentPercent;
         return readPlainCommentElement();
@@ -461,7 +458,11 @@ FileImporterBibTeX::Token FileImporterBibTeX::nextToken()
             result = tEOF;
     }
 
-    readChar();
+    if (m_nextChar != QLatin1Char('%')) {
+        /// Unclean solution, but necessary for comments
+        /// that have a percent sign as a prefix
+        readChar();
+    }
     return result;
 }
 
