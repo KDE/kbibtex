@@ -255,4 +255,5 @@ void ElementForm::autoApplyToggled(bool isChecked)
     /// Save changed status of checkbox in configuration settings
     KConfigGroup configGroup(d->config, ElementFormPrivate::configGroupName);
     configGroup.writeEntry(ElementFormPrivate::configKeyAutoApply, d->checkBoxAutoApply->isChecked());
+    configGroup.sync();
 }
