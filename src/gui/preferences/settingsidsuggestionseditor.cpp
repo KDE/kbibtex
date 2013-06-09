@@ -225,8 +225,8 @@ TitleWidget::TitleWidget(const struct IdSuggestions::IdSuggestionTokenInfo &info
 
     labelWordsRange = new QLabel(this);
     boxLayout->addWidget(labelWordsRange);
-    const int a = qMax(labelWordsRange->fontMetrics().width(i18n("From word to last word")), labelWordsRange->fontMetrics().width(i18n("From word %1 to last word", 88)));
-    const int b = qMax(labelWordsRange->fontMetrics().width(i18n("From word author to word %1", 88)), labelWordsRange->fontMetrics().width(i18n("From word %1 to word %2", 88, 88)));
+    const int a = qMax(labelWordsRange->fontMetrics().width(i18n("From first to last word")), labelWordsRange->fontMetrics().width(i18n("From word %1 to last word", 88)));
+    const int b = qMax(labelWordsRange->fontMetrics().width(i18n("From first word to word %1", 88)), labelWordsRange->fontMetrics().width(i18n("From word %1 to word %2", 88, 88)));
     labelWordsRange->setMinimumWidth(qMax(a, b));
 
     checkBoxRemoveSmallWords = new QCheckBox(i18n("Remove"), this);
