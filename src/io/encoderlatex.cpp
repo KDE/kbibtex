@@ -324,6 +324,15 @@ mathCommand[] = {
     {QLatin1String("asterisk"), QChar(0x2217)},
     {QLatin1String("infty"), QChar(0x221E)},
     {QLatin1String("subset"), QChar(0x2282)},
+    {QLatin1String("supset"), QChar(0x2283)},
+    {QLatin1String("subseteq"), QChar(0x2286)},
+    {QLatin1String("supseteq"), QChar(0x2287)},
+    {QLatin1String("nsubseteq"), QChar(0x2288)},
+    {QLatin1String("nsupseteq"), QChar(0x2289)},
+    {QLatin1String("subsetneq"), QChar(0x228A)},
+    {QLatin1String("supsetneq"), QChar(0x228A)},
+    {QLatin1String("Subset"), QChar(0x22D0)},
+    {QLatin1String("Supset"), QChar(0x22D1)},
     {QLatin1String("top"), QChar(0x22A4)},
 };
 static const int mathCommandLen = sizeof(mathCommand) / sizeof(mathCommand[0]);
@@ -556,10 +565,13 @@ QString EncoderLaTeX::decode(const QString &input) const
                         /// Check if a math command has been read,
                         /// like \subset
                         /// (automatically skipped if command was found above)
-                        // FIXME a math command could be inside \ensuremath, which is not tested here
-                        // may lead to increasing numbers of nested \ensuremath commands
                         for (int k = 0; !foundCommand && k < mathCommandLen; ++k) {
                             if (mathCommand[k].written == alpha) {
+                                if (output.endsWith(QLatin1String("\\ensuremath"))) {
+                                    /// Remove "\ensuremath" right before this math command,
+                                    /// it will be re-inserted when exporting/saving the document
+                                    output = output.left(output.length() - 11);
+                                }
                                 output.append(mathCommand[k].unicode);
                                 foundCommand = true;
                             }
