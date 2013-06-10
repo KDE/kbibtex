@@ -49,13 +49,11 @@ public:
     OpenFileInfo *currentFile();
     OpenFileInfoManager *getOpenFileInfoManager();
 
-signals:
-    void setCaption(const QString &);
-
 public slots:
     void setFile(OpenFileInfo *openFileInfo, KService::Ptr servicePtr = KService::Ptr());
 
 signals:
+    void setCaption(const QString &);
     void documentSwitch(BibTeXEditor *, BibTeXEditor *);
     void activePartChanged(KParts::Part *);
     void documentNew();

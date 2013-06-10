@@ -616,7 +616,6 @@ OpenFileInfoManager::OpenFileInfoList OpenFileInfoManager::filteredItems(OpenFil
     else if (required == OpenFileInfo::Favorite || required == OpenFileInfo::Open)
         qSort(result.begin(), result.end(), OpenFileInfoManagerPrivate::byNameLessThan);
 
-
     return result;
 }
 
