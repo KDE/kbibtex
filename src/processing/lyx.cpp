@@ -97,7 +97,7 @@ const QString LyX::configGroupName = QLatin1String("LyXPipe");
 LyX::LyX(KParts::ReadOnlyPart *part, QWidget *widget)
         : QObject(part), d(new LyX::LyXPrivate(this, widget))
 {
-    d->action = new KAction(KIcon("application-x-lyx"), i18n("Send to LyX"), this);
+    d->action = new KAction(KIcon("application-x-lyx"), i18n("Send to LyX/Kile"), this);
     part->actionCollection()->addAction("sendtolyx", d->action);
     d->action->setEnabled(false);
     connect(d->action, SIGNAL(triggered()), this, SLOT(sendReferenceToLyX()));
@@ -131,7 +131,7 @@ void LyX::sendReferenceToLyX()
     }
 
     if (d->references.isEmpty()) {
-        KMessageBox::error(d->widget, i18n("No references to send to LyX."), msgBoxTitle);
+        KMessageBox::error(d->widget, i18n("No references to send to LyX/Kile."), msgBoxTitle);
         return;
     }
 
