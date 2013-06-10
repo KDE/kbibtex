@@ -54,6 +54,10 @@ public:
         // nothing
     }
 
+    void reset() {
+        QAbstractItemModel::reset();
+    }
+
     int columnCount(const QModelIndex &) const {
         return 3;
     }
@@ -196,7 +200,6 @@ public:
         sfpm->setSourceModel(modelLRU);
         sfpm->setSortRole(SortRole);
         listLRU->setModel(sfpm);
-        updateLRU();
 
         connect(&signalMapperCompleted, SIGNAL(mapped(QObject *)), p, SLOT(slotCompleted(QObject *)));
 
@@ -216,8 +219,7 @@ public:
     }
 
     void updateLRU() {
-
-        listLRU->reset();
+        modelLRU->reset();
     }
 };
 
