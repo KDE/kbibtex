@@ -293,7 +293,7 @@ void KBibTeXMainWindow::newDocument()
     OpenFileInfo *openFileInfo = d->mdiWidget->getOpenFileInfoManager()->createNew(mimeType);
     if (openFileInfo) {
         d->mdiWidget->getOpenFileInfoManager()->setCurrentFile(openFileInfo);
-        openFileInfo->setFlags(OpenFileInfo::Open);
+        openFileInfo->addFlags(OpenFileInfo::Open);
     } else
         KMessageBox::error(this, i18n("Creating a new document of mime type '%1' failed as no editor component could be instantiated.", mimeType), i18n("Creating document failed"));
 }
