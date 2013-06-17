@@ -277,8 +277,8 @@ public:
                 dlg.setCaption(i18n("BibTeX File Settings"));
                 dlg.setButtons(KDialog::Default | KDialog::Reset | KDialog::User1 | KDialog::Ok);
                 dlg.setButtonGuiItem(KDialog::User1, KGuiItem(i18n("Save as Default"), KIcon("edit-redo") /** matches reset button's icon */, i18n("Save this configuration as default for future Save As operations.")));
-                connect(&dlg, SIGNAL(user1Clicked()), &settingsWidget, SLOT(saveState()));
-                connect(&dlg, SIGNAL(resetClicked()), &settingsWidget, SLOT(loadState()));
+                connect(&dlg, SIGNAL(user1Clicked()), &settingsWidget, SLOT(saveProperties()));
+                connect(&dlg, SIGNAL(resetClicked()), &settingsWidget, SLOT(loadProperties()));
                 connect(&dlg, SIGNAL(defaultClicked()), &settingsWidget, SLOT(resetToDefaults()));
                 dlg.exec();
                 settingsWidget.saveProperties(bibTeXFile);
