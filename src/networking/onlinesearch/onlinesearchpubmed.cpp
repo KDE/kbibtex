@@ -245,15 +245,9 @@ void OnlineSearchPubMed::eFetchDone()
             bool hasEntry = false;
             for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
                 QSharedPointer<Entry> entry = (*it).dynamicCast<Entry>();
-                if (!entry.isNull()) {
-                    Value v;
-                    v.append(QSharedPointer<VerbatimText>(new VerbatimText(label())));
-                    entry->insert("x-fetchedfrom", v);
-
-                    hasEntry = true;
-                    emit foundEntry(entry);
-                }
+                hasEntry |= publishEntry(entry);
             }
+
             if (!hasEntry)
                 kDebug() << "No BibTeX entry found here:" << squeeze_text(bibTeXcode, 100);
             emit stoppedSearch(resultNoError);

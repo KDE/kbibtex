@@ -95,17 +95,7 @@ void OnlineSearchSimpleBibTeXDownload::downloadDone()
             if (bibtexFile != NULL) {
                 for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
                     QSharedPointer<Entry> entry = (*it).dynamicCast<Entry>();
-                    if (!entry.isNull()) {
-                        /// Sometimes, there is no identifier, so set a random one
-                        if (entry->id().isEmpty())
-                            entry->setId(QString(QLatin1String("entry-%1")).arg(QString::number(qrand(), 36)));
-                        Value v;
-                        v.append(QSharedPointer<VerbatimText>(new VerbatimText(label())));
-                        entry->insert("x-fetchedfrom", v);
-                        emit foundEntry(entry);
-                        hasEntries = true;
-                    }
-
+                    hasEntries |= publishEntry(entry);
                 }
 
                 if (!hasEntries)

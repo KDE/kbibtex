@@ -391,3 +391,62 @@ void OnlineSearchAbstract::delayedStoppedSearchTimer()
     emit progress(1, 1);
     emit stoppedSearch(m_delayedStoppedSearchReturnCode);
 }
+
+void OnlineSearchAbstract::sanitizeEntry(QSharedPointer<Entry> entry)
+{
+    if (entry.isNull()) return;
+
+    /// Sometimes, there is no identifier, so set a random one
+    if (entry->id().isEmpty())
+        entry->setId(QString(QLatin1String("entry-%1")).arg(QString::number(qrand(), 36)));
+
+    const QString ftIssue = QLatin1String("issue");
+    if (entry->contains(ftIssue)) {
+        /// ACM's Digital Library uses "issue" instead of "number" -> fix that
+        Value v = entry->value(ftIssue);
+        entry->remove(ftIssue);
+        entry->insert(Entry::ftNumber, v);
+    }
+
+    /// If entry contains a description field but no abstract,
+    /// rename description field to abstract
+    const QString ftDescription = QLatin1String("description");
+    if (!entry->contains(Entry::ftAbstract) && entry->contains(ftDescription)) {
+        Value v = entry->value(ftDescription);
+        entry->remove(ftDescription);
+        entry->insert(Entry::ftAbstract, v);
+    }
+
+    if (entry->contains(QLatin1String(Entry::ftMonth))) {
+        /// Fix strigns for months: "September" -> "sep"
+        const QString monthStr = PlainTextValue::text(entry->value(QLatin1String(Entry::ftMonth)));
+
+        static const QRegExp longMonth = QRegExp(QLatin1String("(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]+"), Qt::CaseInsensitive);
+        if (monthStr.indexOf(longMonth) == 0 && monthStr == longMonth.cap(0)) {
+            /// String used for month is actually a full name, therefore replace it
+            entry->remove(QLatin1String(Entry::ftMonth));
+
+            /// Regular expression checked for valid three-letter abbreviations
+            /// that month names start with. Use those three letters for a macro key
+            /// Example: "September" -> sep
+            Value v;
+            v.append(QSharedPointer<MacroKey>(new MacroKey(longMonth.cap(1).toLower())));
+            entry->insert(Entry::ftMonth, v);
+        }
+    }
+}
+
+bool OnlineSearchAbstract::publishEntry(QSharedPointer<Entry> entry)
+{
+    if (entry.isNull()) return false;
+
+    Value v;
+    v.append(QSharedPointer<VerbatimText>(new VerbatimText(label())));
+    entry->insert("x-fetchedfrom", v);
+
+    sanitizeEntry(entry);
+
+    emit foundEntry(entry);
+
+    return true;
+}

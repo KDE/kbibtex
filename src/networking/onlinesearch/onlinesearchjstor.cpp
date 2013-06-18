@@ -43,64 +43,6 @@ public:
             : p(parent) {
         // nothing
     }
-
-    void sanitizeEntry(QSharedPointer<Entry> entry) {
-        if (KBibTeX::doiRegExp.indexIn(entry->id()) == 0) {
-            /// entry ID is a DOI
-            Value v;
-            v.append(QSharedPointer<VerbatimText>(new VerbatimText(KBibTeX::doiRegExp.cap(0))));
-            entry->insert(Entry::ftDOI, v);
-        }
-
-        QString url = PlainTextValue::text(entry->value(Entry::ftUrl));
-        if (url.startsWith("http://www.jstor.org/stable/")) {
-            /// use JSTOR's own stable IDs for entry ID
-            entry->setId("jstor" + url.mid(28).replace(QLatin1Char(','), QString()));
-        }
-
-        const QString formattedDateKey = "jstor_formatteddate";
-        const QString formattedDate = PlainTextValue::text(entry->value(formattedDateKey));
-
-        /// first, try to guess month by inspecting the beginning
-        /// the jstor_formatteddate field
-        const QString formattedDateLower = formattedDate.toLower();
-        int i;
-        for (i = 0; i < 12; ++i)
-            if (formattedDateLower.startsWith(MonthsTriple[i])) break;
-        entry->remove(formattedDateKey);
-        if (i < 12) {
-            Value v;
-            v.append(QSharedPointer<MacroKey>(new MacroKey(MonthsTriple[i])));
-            entry->insert(Entry::ftMonth, v);
-        }
-        /// guessing failed, therefore extract first part if it exists
-        else if ((i = formattedDate.indexOf(",")) >= 0) {
-            /// text may be a season ("Winter")
-            Value v;
-            v.append(QSharedPointer<PlainText>(new PlainText(formattedDate.left(i))));
-            entry->insert(Entry::ftMonth, v);
-        } else {
-            /// this case happens if the field only contains a year
-            kDebug() << "Cannot extract month/season from date" << formattedDate;
-        }
-
-        /// page field may start with "pp. ", remove that
-        QString pages = PlainTextValue::text(entry->value(Entry::ftPages)).toLower();
-        if (pages.startsWith("pp. ")) {
-            pages = pages.mid(4);
-            entry->remove(Entry::ftPages);
-            Value v;
-            v.append(QSharedPointer<PlainText>(new PlainText(pages)));
-            entry->insert(Entry::ftPages, v);
-        }
-
-        for (QMap<QString, Value>::Iterator it = entry->begin(); it != entry->end();) {
-            if (PlainTextValue::text(it.value()).isEmpty())
-                it = entry->erase(it);
-            else
-                ++it;
-        }
-    }
 };
 
 const QString OnlineSearchJStor::OnlineSearchJStorPrivate::jstorBaseUrl = QLatin1String("http://www.jstor.org/");
@@ -281,16 +223,9 @@ void OnlineSearchJStor::doneFetchingBibTeXCode()
         if (bibtexFile != NULL) {
             for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
                 QSharedPointer<Entry> entry = (*it).dynamicCast<Entry>();
-                if (!entry.isNull() && !entry->id().isEmpty() /** skip invalid entries with empty ID */) {
-                    Value v;
-                    v.append(QSharedPointer<VerbatimText>(new VerbatimText(label())));
-                    entry->insert("x-fetchedfrom", v);
-
-                    d->sanitizeEntry(entry);
-                    emit foundEntry(entry);
-
+                if (publishEntry(entry))
                     ++d->numFoundResults;
-                }
+
             }
             delete bibtexFile;
         }
@@ -299,5 +234,66 @@ void OnlineSearchJStor::doneFetchingBibTeXCode()
         emit stoppedSearch(d->numFoundResults > 0 ? resultNoError : resultUnspecifiedError);
     } else
         kDebug() << "url was" << reply->url().toString();
+}
+
+void OnlineSearchJStor::sanitizeEntry(QSharedPointer<Entry> entry)
+{
+    OnlineSearchAbstract::sanitizeEntry(entry);
+
+    if (KBibTeX::doiRegExp.indexIn(entry->id()) == 0) {
+        /// entry ID is a DOI
+        Value v;
+        v.append(QSharedPointer<VerbatimText>(new VerbatimText(KBibTeX::doiRegExp.cap(0))));
+        entry->insert(Entry::ftDOI, v);
+    }
+
+    QString url = PlainTextValue::text(entry->value(Entry::ftUrl));
+    if (url.startsWith("http://www.jstor.org/stable/")) {
+        /// use JSTOR's own stable IDs for entry ID
+        entry->setId("jstor" + url.mid(28).replace(QLatin1Char(','), QString()));
+    }
+
+    const QString formattedDateKey = "jstor_formatteddate";
+    const QString formattedDate = PlainTextValue::text(entry->value(formattedDateKey));
+
+    /// first, try to guess month by inspecting the beginning
+    /// the jstor_formatteddate field
+    const QString formattedDateLower = formattedDate.toLower();
+    int i;
+    for (i = 0; i < 12; ++i)
+        if (formattedDateLower.startsWith(MonthsTriple[i])) break;
+    entry->remove(formattedDateKey);
+    if (i < 12) {
+        Value v;
+        v.append(QSharedPointer<MacroKey>(new MacroKey(MonthsTriple[i])));
+        entry->insert(Entry::ftMonth, v);
+    }
+    /// guessing failed, therefore extract first part if it exists
+    else if ((i = formattedDate.indexOf(",")) >= 0) {
+        /// text may be a season ("Winter")
+        Value v;
+        v.append(QSharedPointer<PlainText>(new PlainText(formattedDate.left(i))));
+        entry->insert(Entry::ftMonth, v);
+    } else {
+        /// this case happens if the field only contains a year
+        kDebug() << "Cannot extract month/season from date" << formattedDate;
+    }
+
+    /// page field may start with "pp. ", remove that
+    QString pages = PlainTextValue::text(entry->value(Entry::ftPages)).toLower();
+    if (pages.startsWith("pp. ")) {
+        pages = pages.mid(4);
+        entry->remove(Entry::ftPages);
+        Value v;
+        v.append(QSharedPointer<PlainText>(new PlainText(pages)));
+        entry->insert(Entry::ftPages, v);
+    }
+
+    for (QMap<QString, Value>::Iterator it = entry->begin(); it != entry->end();) {
+        if (PlainTextValue::text(it.value()).isEmpty())
+            it = entry->erase(it);
+        else
+            ++it;
+    }
 }
 

@@ -291,17 +291,6 @@ public:
         queryUrl.addQueryItem(QLatin1String("sortField"), QLatin1String("default"));
         return queryUrl;
     }
-
-    void sanitizeEntry(QSharedPointer<Entry> entry) {
-        /// if entry contains a description field but no abstract,
-        /// rename description field to abstract
-        const QString ftDescription = QLatin1String("description");
-        if (!entry->contains(Entry::ftAbstract) && entry->contains(ftDescription)) {
-            Value v = entry->value(ftDescription);
-            entry->insert(Entry::ftAbstract, v);
-            entry->remove(ftDescription);
-        }
-    }
 };
 
 OnlineSearchIngentaConnect::OnlineSearchIngentaConnect(QWidget *parent)
@@ -386,15 +375,7 @@ void OnlineSearchIngentaConnect::downloadDone()
             if (bibtexFile != NULL) {
                 for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
                     QSharedPointer<Entry> entry = (*it).dynamicCast<Entry>();
-                    if (!entry.isNull()) {
-                        Value v;
-                        v.append(QSharedPointer<VerbatimText>(new VerbatimText(label())));
-                        entry->insert("x-fetchedfrom", v);
-                        d->sanitizeEntry(entry);
-                        emit foundEntry(entry);
-                        hasEntries = true;
-                    }
-
+                    hasEntries |= publishEntry(entry);
                 }
 
                 if (!hasEntries)

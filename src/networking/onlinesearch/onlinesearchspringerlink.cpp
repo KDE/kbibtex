@@ -304,14 +304,7 @@ void OnlineSearchSpringerLink::doneFetchingPAM()
         if (bibtexFile != NULL) {
             foreach(const QSharedPointer<Element> &element, *bibtexFile) {
                 QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
-                if (!entry.isNull()) {
-                    Value v;
-                    v.append(QSharedPointer<VerbatimText>(new VerbatimText(label())));
-                    entry->insert("x-fetchedfrom", v);
-                    emit foundEntry(entry);
-                    hasEntries = true;
-                }
-
+                hasEntries |= publishEntry(entry);
             }
 
             if (!hasEntries)

@@ -326,13 +326,7 @@ void OnlineSearchScienceDirect::doneFetchingBibTeX()
         if (bibtexFile != NULL) {
             for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
                 QSharedPointer<Entry> entry = (*it).dynamicCast<Entry>();
-                if (!entry.isNull()) {
-                    hasEntry = true;
-                    Value v;
-                    v.append(QSharedPointer<VerbatimText>(new VerbatimText(label())));
-                    entry->insert("x-fetchedfrom", v);
-                    emit foundEntry(entry);
-                }
+                hasEntry |= publishEntry(entry);
             }
             delete bibtexFile;
         }

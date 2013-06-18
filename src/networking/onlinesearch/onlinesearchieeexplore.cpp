@@ -87,50 +87,6 @@ public:
 
         return queryUrl;
     }
-
-    void sanitize(QSharedPointer<Entry> entry) {
-        /// XSL file cannot yet replace semicolon-separate author list
-        /// by "and"-separated author list, so do it manually
-        const QString ftXAuthor = QLatin1String("x-author");
-        if (!entry->contains(Entry::ftAuthor) && entry->contains(ftXAuthor)) {
-            const Value xAuthorValue = entry->value(ftXAuthor);
-            Value authorValue;
-            for (Value::ConstIterator it = xAuthorValue.constBegin(); it != xAuthorValue.constEnd(); ++it) {
-                QSharedPointer<PlainText> pt = it->dynamicCast<PlainText>();
-                if (!pt.isNull()) {
-                    const QList<QSharedPointer<Person> > personList = FileImporterBibTeX::splitNames(pt->text());
-                    for (QList<QSharedPointer<Person> >::ConstIterator pit = personList.constBegin(); pit != personList.constEnd(); ++pit)
-                        authorValue << *pit;
-                }
-            }
-
-            entry->insert(Entry::ftAuthor, authorValue);
-            entry->remove(ftXAuthor);
-        }
-    }
-
-    /*
-    void sanitizeBibTeXCode(QString &code) {
-        const QRegExp htmlEncodedCharDec("&?#(\\d+);");
-        const QRegExp htmlEncodedCharHex("&?#x([0-9a-f]+);", Qt::CaseInsensitive);
-
-        while (htmlEncodedCharDec.indexIn(code) >= 0) {
-            bool ok = false;
-            QChar c(htmlEncodedCharDec.cap(1).toInt(&ok));
-            if (ok) {
-                code = code.replace(htmlEncodedCharDec.cap(0), c);
-            }
-        }
-
-        while (htmlEncodedCharHex.indexIn(code) >= 0) {
-            bool ok = false;
-            QChar c(htmlEncodedCharHex.cap(1).toInt(&ok, 16));
-            if (ok) {
-                code = code.replace(htmlEncodedCharHex.cap(0), c);
-            }
-        }
-    }
-    */
 };
 
 OnlineSearchIEEEXplore::OnlineSearchIEEEXplore(QWidget *parent)
@@ -195,15 +151,7 @@ void OnlineSearchIEEEXplore::doneFetchingXML()
             if (bibtexFile != NULL) {
                 for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
                     QSharedPointer<Entry> entry = (*it).dynamicCast<Entry>();
-                    if (!entry.isNull()) {
-                        Value v;
-                        v.append(QSharedPointer<VerbatimText>(new VerbatimText(label())));
-                        entry->insert("x-fetchedfrom", v);
-                        d->sanitize(entry);
-                        emit foundEntry(entry);
-                        hasEntries = true;
-                    }
-
+                    hasEntries |= publishEntry(entry);
                 }
 
                 if (!hasEntries)
@@ -244,4 +192,28 @@ KUrl OnlineSearchIEEEXplore::homepage() const
 void OnlineSearchIEEEXplore::cancel()
 {
     OnlineSearchAbstract::cancel();
+}
+
+void OnlineSearchIEEEXplore::sanitizeEntry(QSharedPointer<Entry> entry)
+{
+    OnlineSearchAbstract::sanitizeEntry(entry);
+
+    /// XSL file cannot yet replace semicolon-separate author list
+    /// by "and"-separated author list, so do it manually
+    const QString ftXAuthor = QLatin1String("x-author");
+    if (!entry->contains(Entry::ftAuthor) && entry->contains(ftXAuthor)) {
+        const Value xAuthorValue = entry->value(ftXAuthor);
+        Value authorValue;
+        for (Value::ConstIterator it = xAuthorValue.constBegin(); it != xAuthorValue.constEnd(); ++it) {
+            QSharedPointer<PlainText> pt = it->dynamicCast<PlainText>();
+            if (!pt.isNull()) {
+                const QList<QSharedPointer<Person> > personList = FileImporterBibTeX::splitNames(pt->text());
+                for (QList<QSharedPointer<Person> >::ConstIterator pit = personList.constBegin(); pit != personList.constEnd(); ++pit)
+                    authorValue << *pit;
+            }
+        }
+
+        entry->insert(Entry::ftAuthor, authorValue);
+        entry->remove(ftXAuthor);
+    }
 }

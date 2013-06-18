@@ -45,6 +45,7 @@ public slots:
 
 protected:
     virtual QString favIconUrl() const;
+    virtual void sanitizeEntry(QSharedPointer<Entry> entry);
 
 private slots:
     void doneFetchingXML();

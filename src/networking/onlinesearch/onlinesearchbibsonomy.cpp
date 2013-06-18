@@ -257,15 +257,7 @@ void OnlineSearchBibsonomy::downloadDone()
             if (bibtexFile != NULL) {
                 for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
                     QSharedPointer<Entry> entry = (*it).dynamicCast<Entry>();
-                    if (!entry.isNull()) {
-                        Value v;
-                        v.append(QSharedPointer<VerbatimText>(new VerbatimText(label())));
-                        entry->insert("x-fetchedfrom", v);
-                        d->sanitizeEntry(entry);
-                        emit foundEntry(entry);
-                        hasEntries = true;
-                    }
-
+                    hasEntries |= publishEntry(entry);
                 }
 
                 if (!hasEntries)

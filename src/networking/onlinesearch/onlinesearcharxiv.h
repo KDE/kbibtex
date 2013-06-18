@@ -44,6 +44,7 @@ public slots:
 
 protected:
     virtual QString favIconUrl() const;
+    virtual void sanitizeEntry(QSharedPointer<Entry> entry);
 
 private:
     class OnlineSearchQueryFormArXiv;

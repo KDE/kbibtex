@@ -65,27 +65,6 @@ public:
             }
         }
     }
-
-    void sanitizeEntry(QSharedPointer<Entry> entry) {
-        if (entry->contains(QLatin1String("issue"))) {
-            /// ACM's Digital Library uses "issue" instead of "number" -> fix that
-            Value v = entry->value(QLatin1String("issue"));
-            entry->remove(QLatin1String("issue"));
-            entry->insert(Entry::ftNumber, v);
-        }
-        if (entry->contains(QLatin1String(Entry::ftMonth))) {
-            /// ACM's Digital Library uses strings like "September" for months -> fix that
-            const QString monthStr = PlainTextValue::text(entry->value(QLatin1String(Entry::ftMonth)));
-            entry->remove(QLatin1String(Entry::ftMonth));
-
-            /// This assumes that month strings can be converted to three-letter abbreviation
-            /// by taking the first three letters and converting them to lower case.
-            /// Example: "September" -> sep
-            Value v;
-            v.append(QSharedPointer<MacroKey>(new MacroKey(monthStr.left(3).toLower())));
-            entry->insert(Entry::ftMonth, v);
-        }
-    }
 };
 
 OnlineSearchAcmPortal::OnlineSearchAcmPortal(QWidget *parent)
@@ -238,15 +217,8 @@ void OnlineSearchAcmPortal::doneFetchingBibTeX()
         if (bibtexFile != NULL) {
             for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
                 QSharedPointer<Entry> entry = (*it).dynamicCast<Entry>();
-                if (!entry.isNull()) {
-                    Value v;
-                    v.append(QSharedPointer<VerbatimText>(new VerbatimText(label())));
-                    entry->insert("x-fetchedfrom", v);
-
-                    d->sanitizeEntry(entry);
-                    emit foundEntry(entry);
+                if (publishEntry(entry))
                     ++d->numFoundResults;
-                }
             }
             delete bibtexFile;
         }

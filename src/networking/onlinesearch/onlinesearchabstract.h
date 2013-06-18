@@ -152,6 +152,24 @@ protected:
      */
     void delayedStoppedSearch(int returnCode);
 
+    /**
+     * Correct the most common problems encountered in fetched entries.
+     * This function should be specialized in each descendant of this class.
+     * @param entry Entry to sanitize
+     */
+    virtual void sanitizeEntry(QSharedPointer<Entry> entry);
+
+    /**
+     * Perform the following steps: (1) sanitize entry, (2) add name
+     * of search engine that found the entry, (3) send it back to search
+     * result list.
+     * Returns true if a valid entry was passed to this function and all
+     * steps could be performed.
+     * @param entry Entry to publish
+     * @return returns true if a valid entry was passed to this function and all steps could be performed.
+     */
+    bool publishEntry(QSharedPointer<Entry> entry);
+
 private:
     QString m_name;
     static const char *httpUnsafeChars;

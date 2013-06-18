@@ -651,15 +651,7 @@ void OnlineSearchArXiv::downloadDone()
         if (bibtexFile != NULL) {
             for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
                 QSharedPointer<Entry> entry = (*it).dynamicCast<Entry>();
-                if (!entry.isNull()) {
-                    d->interpreteJournal(*entry);
-                    Value v;
-                    v.append(QSharedPointer<VerbatimText>(new VerbatimText(label())));
-                    entry->insert("x-fetchedfrom", v);
-                    emit foundEntry(entry);
-                    hasEntries = true;
-                }
-
+                hasEntries |= publishEntry(entry);
             }
 
             if (!hasEntries)
@@ -674,4 +666,11 @@ void OnlineSearchArXiv::downloadDone()
         }
     } else
         kDebug() << "url was" << reply->url().toString();
+}
+
+void OnlineSearchArXiv::sanitizeEntry(QSharedPointer<Entry> entry)
+{
+    OnlineSearchAbstract::sanitizeEntry(entry);
+
+    d->interpreteJournal(*entry);
 }

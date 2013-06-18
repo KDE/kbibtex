@@ -47,16 +47,6 @@ public:
             : p(parent) {
         // nothing
     }
-
-    void sanitizeEntry(QSharedPointer<Entry> entry) {
-        const QString ftFJournal = QLatin1String("fjournal");
-        if (entry->contains(ftFJournal)) {
-            Value v = entry->value(ftFJournal);
-            entry->remove(Entry::ftJournal);
-            entry->remove(ftFJournal);
-            entry->insert(Entry::ftJournal, v);
-        }
-    }
 };
 
 const QString OnlineSearchMathSciNet::OnlineSearchMathSciNetPrivate::queryFormUrl = QLatin1String("http://www.ams.org/mathscinet/");
@@ -250,14 +240,8 @@ void OnlineSearchMathSciNet::doneFetchingBibTeXcode()
         if (bibtexFile != NULL) {
             for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
                 QSharedPointer<Entry> entry = (*it).dynamicCast<Entry>();
-                if (!entry.isNull()) {
-                    hasEntry = true;
-                    Value v;
-                    v.append(QSharedPointer<VerbatimText>(new VerbatimText(label())));
-                    entry->insert("x-fetchedfrom", v);
-                    d->sanitizeEntry(entry);
-                    emit foundEntry(entry);
-                }
+                hasEntry |= publishEntry(entry);
+
             }
             delete bibtexFile;
         }
@@ -265,4 +249,15 @@ void OnlineSearchMathSciNet::doneFetchingBibTeXcode()
         emit stoppedSearch(hasEntry ? resultNoError : resultUnspecifiedError);
     } else
         kDebug() << "url was" << reply->url().toString();
+}
+
+void OnlineSearchMathSciNet::sanitizeEntry(QSharedPointer<Entry> entry)
+{
+    const QString ftFJournal = QLatin1String("fjournal");
+    if (entry->contains(ftFJournal)) {
+        Value v = entry->value(ftFJournal);
+        entry->remove(Entry::ftJournal);
+        entry->remove(ftFJournal);
+        entry->insert(Entry::ftJournal, v);
+    }
 }
