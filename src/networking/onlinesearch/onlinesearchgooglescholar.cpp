@@ -224,11 +224,11 @@ void OnlineSearchGoogleScholar::doneFetchingSetConfigPage()
 
     if (handleErrors(reply)) {
         KUrl url(QString(d->queryPageUrl).arg(reply->url().host()));
-        url.addEncodedQueryItem(QString("as_q").toAscii(), d->queryFreetext.toAscii());
-        url.addEncodedQueryItem(QString("as_sauthors").toAscii(), d->queryAuthor.toAscii());
-        url.addEncodedQueryItem(QString("as_ylo").toAscii(), d->queryYear.toAscii());
-        url.addEncodedQueryItem(QString("as_yhi").toAscii(), d->queryYear.toAscii());
-        url.addEncodedQueryItem(QString("as_vis").toAscii(), "1"); ///< include citations
+        url.addEncodedQueryItem(QString("as_q").toLatin1(), d->queryFreetext.toLatin1());
+        url.addEncodedQueryItem(QString("as_sauthors").toLatin1(), d->queryAuthor.toLatin1());
+        url.addEncodedQueryItem(QString("as_ylo").toLatin1(), d->queryYear.toLatin1());
+        url.addEncodedQueryItem(QString("as_yhi").toLatin1(), d->queryYear.toLatin1());
+        url.addEncodedQueryItem(QString("as_vis").toLatin1(), "1"); ///< include citations
         url.addQueryItem("num", QString::number(d->numResults));
         url.addQueryItem("btnG", "Search Scholar");
 
