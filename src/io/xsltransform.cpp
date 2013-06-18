@@ -42,7 +42,7 @@ XSLTransform *XSLTransform::createXSLTransform(const QString &xsltFilename)
     }
 
     /// create an internal representation of the XSL file using libxslt
-    const xsltStylesheetPtr xsltStylesheet = xsltParseStylesheetFile((const xmlChar *) xsltFilename.toAscii().data());
+    const xsltStylesheetPtr xsltStylesheet = xsltParseStylesheetFile((const xmlChar *) xsltFilename.toLatin1().data());
     if (xsltStylesheet == NULL) {
         kWarning() << "File xsltFilename=" << xsltFilename << " resulted in empty/invalid XSLT style sheet";
         return NULL;

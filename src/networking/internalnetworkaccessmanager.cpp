@@ -54,7 +54,7 @@ public:
             const QString path = cookieContent.cap(3);
             QUrl cookieUrl = url;
             QList<QNetworkCookie> cookies = cookiesForUrl(cookieUrl);
-            cookies.append(QNetworkCookie(key.toAscii(), value.toAscii()));
+            cookies.append(QNetworkCookie(key.toLatin1(), value.toLatin1()));
             setCookiesFromUrl(cookies, cookieUrl);
         }
     }
@@ -150,12 +150,12 @@ QNetworkReply *InternalNetworkAccessManager::get(QNetworkRequest &request, const
         setProxy(QNetworkProxy());
     }
 
-    request.setRawHeader(QString("Accept").toAscii(), QString("text/*, */*;q=0.7").toAscii());
-    request.setRawHeader(QString("Accept-Charset").toAscii(), QString("utf-8, us-ascii, ISO-8859-1;q=0.7, ISO-8859-15;q=0.7, windows-1252;q=0.3").toAscii());
-    request.setRawHeader(QString("Accept-Language").toAscii(), QString("en-US, en;q=0.9").toAscii());
-    request.setRawHeader("User-Agent", userAgent().toAscii());
+    request.setRawHeader(QString("Accept").toLatin1(), QString("text/*, */*;q=0.7").toLatin1());
+    request.setRawHeader(QString("Accept-Charset").toLatin1(), QString("utf-8, us-ascii, ISO-8859-1;q=0.7, ISO-8859-15;q=0.7, windows-1252;q=0.3").toLatin1());
+    request.setRawHeader(QString("Accept-Language").toLatin1(), QString("en-US, en;q=0.9").toLatin1());
+    request.setRawHeader("User-Agent", userAgent().toLatin1());
     if (oldUrl.isValid())
-        request.setRawHeader("Referer", oldUrl.toString().toAscii());
+        request.setRawHeader("Referer", oldUrl.toString().toLatin1());
     QNetworkReply *reply = QNetworkAccessManager::get(request);
     return reply;
 }

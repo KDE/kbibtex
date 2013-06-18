@@ -62,7 +62,7 @@ public:
                 if (!lastName.isEmpty())
                     result << lastName;
             }
-            if ( --maxAuthors <= 0 ) break; ///< limit the number of authors considered
+            if (--maxAuthors <= 0) break;   ///< limit the number of authors considered
         }
 
         return result;
@@ -160,7 +160,7 @@ public:
     }
 
     QString translateToken(const Entry &entry, const QString &token) const {
-        switch (token[0].toAscii()) {
+        switch (token[0].toLatin1()) {
         case 'a': return translateAuthorsToken(entry, token.mid(1), aOnlyFirst);
         case 'A': return translateAuthorsToken(entry, token.mid(1), aAll);
         case 'z': return translateAuthorsToken(entry, token.mid(1), aNotFirst);

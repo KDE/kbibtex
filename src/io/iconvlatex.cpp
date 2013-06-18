@@ -44,7 +44,7 @@ public:
 IConvLaTeX::IConvLaTeX(const QString &destEncoding)
         : d(new IConvLaTeXPrivate(this))
 {
-    d->iconvHandle = iconv_open(destEncoding.toAscii().data(), QLatin1String("utf-8").latin1());
+    d->iconvHandle = iconv_open(destEncoding.toLatin1().data(), QLatin1String("utf-8").latin1());
 }
 
 IConvLaTeX::~IConvLaTeX()

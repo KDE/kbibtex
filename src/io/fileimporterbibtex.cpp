@@ -432,7 +432,7 @@ FileImporterBibTeX::Token FileImporterBibTeX::nextToken()
 
     Token result = tUnknown;
 
-    switch (m_nextChar.toAscii()) {
+    switch (m_nextChar.toLatin1()) {
     case '@':
         result = tAt;
         break;
@@ -476,7 +476,7 @@ QString FileImporterBibTeX::readString(bool &isStringKey)
         return QString::null;
     }
 
-    switch (m_nextChar.toAscii()) {
+    switch (m_nextChar.toLatin1()) {
     case '{':
     case '(': {
         ++m_statistics.countCurlyBrackets;
@@ -1080,7 +1080,7 @@ bool FileImporterBibTeX::evaluateParameterComments(QTextStream *textStream, cons
     /** check if this file requests a special encoding */
     if (line.startsWith("@comment{x-kbibtex-encoding=") && line.endsWith("}")) {
         QString encoding = line.mid(28, line.length() - 29);
-        textStream->setCodec(encoding == "latex" ? defaultCodecName : encoding.toAscii().data());
+        textStream->setCodec(encoding == "latex" ? defaultCodecName : encoding.toLatin1().data());
         file->setProperty(File::Encoding, encoding == "latex" ? encoding : textStream->codec()->name());
         return true;
     } else if (line.startsWith("@comment{x-kbibtex-personnameformatting=") && line.endsWith("}")) {
@@ -1093,7 +1093,7 @@ bool FileImporterBibTeX::evaluateParameterComments(QTextStream *textStream, cons
         /// Interprete JabRef's encoding information
         QString encoding = line.mid(12);
         kDebug() << "Using JabRef's encoding:" << encoding;
-        textStream->setCodec(encoding.toAscii());
+        textStream->setCodec(encoding.toLatin1());
         encoding = textStream->codec()->name();
         file->setProperty(File::Encoding, encoding);
         return true;

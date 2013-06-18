@@ -470,6 +470,6 @@ KBibTeXTest::TestFile *KBibTeXTest::createTestFile(const QString &filename, int 
     r->numEntries = numEntries;
     r->lastEntryId = lastEntryId;
     r->lastEntryLastAuthorLastName = lastEntryLastAuthorLastName;
-    r->md4sum = QByteArray::fromHex(md4sumHex.toAscii());
+    r->md4sum = QByteArray::fromHex(md4sumHex.toLatin1());
     return r;
 }

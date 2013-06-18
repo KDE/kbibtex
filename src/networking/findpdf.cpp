@@ -164,7 +164,7 @@ void FindPDF::downloadFinished()
 
             QFile htmlFile(QString("/tmp/file%1.html").arg(++fileCounter));
             if (htmlFile.open(QFile::WriteOnly)) {
-                htmlFile.write(reply->url().toString().toAscii());
+                htmlFile.write(reply->url().toString().toLatin1());
                 htmlFile.write("\n\n\n");
                 htmlFile.write(data);
                 htmlFile.close();
@@ -228,7 +228,7 @@ void FindPDF::processGeneralHTML(QNetworkReply *reply, const QString &text)
     bool gotLink = false;
     for (int i = 0; !gotLink && i < 4; ++i) {
         if (anchorRegExp[i].indexIn(text) >= 0) {
-            QUrl url = QUrl::fromEncoded(anchorRegExp[i].cap(1).toAscii());
+            QUrl url = QUrl::fromEncoded(anchorRegExp[i].cap(1).toLatin1());
             queueUrl(reply->url().resolved(url), term, origin, depth - 1);
             gotLink = true;
         }
@@ -238,7 +238,7 @@ void FindPDF::processGeneralHTML(QNetworkReply *reply, const QString &text)
         /// this is only the last resort:
         /// to follow the first link found in the HTML document
         if (anchorRegExp[4].indexIn(text) >= 0) {
-            QUrl url = QUrl::fromEncoded(anchorRegExp[4].cap(1).toAscii());
+            QUrl url = QUrl::fromEncoded(anchorRegExp[4].cap(1).toLatin1());
             queueUrl(reply->url().resolved(url), term, origin, depth - 1);
         }
     }
@@ -292,7 +292,7 @@ void FindPDF::processCiteSeerX(QNetworkReply *reply, const QString &text)
         int depth = reply->property(depthProperty).toInt(&ok);
         if (!ok) depth = 0;
 
-        QUrl url(QUrl::fromEncoded(downloadPDFlink.cap(1).toAscii()));
+        QUrl url(QUrl::fromEncoded(downloadPDFlink.cap(1).toLatin1()));
         queueUrl(reply->url().resolved(url), QString::null, QLatin1String("citeseerx"), depth - 1);
     }
 }
