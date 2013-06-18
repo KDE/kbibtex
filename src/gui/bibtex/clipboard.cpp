@@ -232,7 +232,7 @@ void Clipboard::editorMouseEvent(QMouseEvent *event)
 
         QDrag *drag = new QDrag(d->bibTeXEditor);
         QMimeData *mimeData = new QMimeData();
-        QByteArray data = text.toAscii();
+        QByteArray data = text.toLatin1();
         mimeData->setData("text/plain", data);
         drag->setMimeData(mimeData);
 

@@ -172,7 +172,7 @@ QString Person::transcribePersonName(const QString &formatting, const QString &f
     int p1 = -1, p2 = -1, p3 = -1;
     while ((p1 = result.indexOf('<')) >= 0 && (p2 = result.indexOf('>', p1 + 1)) >= 0 && (p3 = result.indexOf('%', p1)) >= 0 && p3 < p2) {
         QString insert;
-        switch (result[p3 + 1].toAscii()) {
+        switch (result[p3 + 1].toLatin1()) {
         case 'f':
             insert = firstName;
             break;

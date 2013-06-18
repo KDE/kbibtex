@@ -433,7 +433,7 @@ public:
     virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) {
         bool ok;
         int checkState = value.toInt(&ok);
-        Q_ASSERT_X(ok, "CheckableBibTeXFileModel::setData", QString("Could not convert value " + value.toString()).toAscii());
+        Q_ASSERT_X(ok, "CheckableBibTeXFileModel::setData", QString("Could not convert value " + value.toString()).toLatin1());
         if (ok && role == Qt::CheckStateRole && index.column() == 1) {
             QSharedPointer<Entry> entry = element(index.row()).dynamicCast<Entry>();
             if (!entry.isNull()) {
