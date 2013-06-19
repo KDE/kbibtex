@@ -88,7 +88,6 @@ public:
             }
 
             QString typeFlags = configGroup.readEntry("TypeFlags", "Source");
-
             fd->typeFlags = typeFlagsFromString(typeFlags);
             QString preferredTypeFlag = typeFlags.split(';').first();
             fd->preferredTypeFlag = typeFlagFromString(preferredTypeFlag);
@@ -217,6 +216,7 @@ const FieldDescription *BibTeXFields::find(const QString &name) const
         if (fd->upperCamelCase.toLower() == iName && fd->upperCamelCaseAlt.isEmpty())
             return fd;
     }
+    kWarning() << "No field description for " << name << "(" << iName << ")";
     return NULL;
 }
 
