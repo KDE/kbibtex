@@ -194,6 +194,9 @@ public:
     Entry *resolveCrossref(const File *bibTeXfile) const;
     static Entry *resolveCrossref(const Entry &original, const File *bibTeXfile);
 
+    static QStringList authorsLastName(const Entry &entry);
+    QStringList authorsLastName() const;
+
 private:
     class EntryPrivate;
     EntryPrivate *const d;

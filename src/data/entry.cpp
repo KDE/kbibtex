@@ -209,3 +209,34 @@ Entry *Entry::resolveCrossref(const Entry &original, const File *bibTeXfile)
 
     return result;
 }
+
+QStringList Entry::authorsLastName(const Entry &entry)
+{
+    Value value;
+    if (entry.contains(Entry::ftAuthor))
+        value = entry.value(Entry::ftAuthor);
+    if (value.isEmpty() && entry.contains(Entry::ftEditor))
+        value = entry.value(Entry::ftEditor);
+    if (value.isEmpty())
+        return QStringList();
+
+    QStringList result;
+    int maxAuthors = 16; ///< limit the number of authors considered
+    foreach(QSharedPointer<const ValueItem> item, value) {
+        QSharedPointer<const Person> person = item.dynamicCast<const Person>();
+        if (!person.isNull()) {
+            const QString lastName = person->lastName();
+            if (!lastName.isEmpty())
+                result << lastName;
+        }
+        if (--maxAuthors <= 0) break;   ///< limit the number of authors considered
+    }
+
+    return result;
+}
+
+QStringList Entry::authorsLastName() const
+{
+    return authorsLastName(*this);
+}
+

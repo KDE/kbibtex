@@ -71,7 +71,6 @@ public:
     QStringList formatStrToHuman(const QString &formatStr) const;
 
 protected:
-
     struct IdSuggestionTokenInfo evalToken(const QString &token) const;
 
 private:

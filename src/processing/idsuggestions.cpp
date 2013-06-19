@@ -44,30 +44,6 @@ public:
         return EncoderLaTeX::instance()->convertToPlainAscii(input).replace(unwantedChars, QLatin1String(""));
     }
 
-    QStringList authorsLastName(const Entry &entry) const {
-        Value value;
-        if (entry.contains(Entry::ftAuthor))
-            value = entry.value(Entry::ftAuthor);
-        if (value.isEmpty() && entry.contains(Entry::ftEditor))
-            value = entry.value(Entry::ftEditor);
-        if (value.isEmpty())
-            return QStringList();
-
-        QStringList result;
-        int maxAuthors = 16; ///< limit the number of authors considered
-        foreach(QSharedPointer<const ValueItem> item, value) {
-            QSharedPointer<const Person> person = item.dynamicCast<const Person>();
-            if (!person.isNull()) {
-                const QString lastName = normalizeText(person->lastName());
-                if (!lastName.isEmpty())
-                    result << lastName;
-            }
-            if (--maxAuthors <= 0) break;   ///< limit the number of authors considered
-        }
-
-        return result;
-    }
-
     inline int extractYear(const Entry &entry) const {
         bool ok = false;
         int result = PlainTextValue::text(entry.value(Entry::ftYear)).toInt(&ok);
@@ -120,7 +96,7 @@ public:
         struct IdSuggestionTokenInfo ati = p->evalToken(token);
         QString result;
         bool first = true, firstInserted = true;
-        QStringList authors = authorsLastName(entry);
+        QStringList authors = entry.authorsLastName();
         int index = 0;
         for (QStringList::ConstIterator it = authors.begin(); it != authors.end(); ++it, ++index) {
             QString author = normalizeText(*it).left(ati.len);
