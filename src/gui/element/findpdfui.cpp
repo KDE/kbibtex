@@ -314,9 +314,7 @@ bool PDFListModel::setData(const QModelIndex &index, const QVariant &value, int 
     if (index != QModelIndex() && index.row() < m_resultList.count() && role == DownloadModeRole) {
         bool ok = false;
         FindPDF::DownloadMode downloadMode = (FindPDF::DownloadMode)value.toInt(&ok);
-        kDebug() << "FindPDF::DownloadMode=" << downloadMode << ok;
         if (ok) {
-            kDebug()    << "Setting row " << index.row();
             m_resultList[index.row()].downloadMode = downloadMode;
             return true;
         }
@@ -347,7 +345,7 @@ FindPDFUI::FindPDFUI(Entry &entry, QWidget *parent)
     m_labelMessage->setText(i18n("Starting to search ..."));
 
     connect(m_findpdf, SIGNAL(finished()), this, SLOT(searchFinished()));
-    connect(m_findpdf, SIGNAL(progress(int, int)), this, SLOT(searchProgress(int, int)));
+    connect(m_findpdf, SIGNAL(progress(int, int, int)), this, SLOT(searchProgress(int, int, int)));
     m_findpdf->search(entry);
 }
 
@@ -413,6 +411,7 @@ void FindPDFUI::apply(Entry &entry, const File &bibtexFile)
             localFilename = UrlListEdit::askRelativeOrStaticFilename(this, localFilename, startUrl);
 
             if (!localFilename.isEmpty()) {
+                kDebug() << "Saving PDF from " << url << " to local file" << localFilename;
                 KIO::NetAccess::file_copy(KUrl::fromLocalFile(tempfileName), KUrl::fromLocalFile(localFilename), this);
 
                 bool alreadyContained = false;
@@ -473,9 +472,9 @@ void FindPDFUI::searchFinished()
     emit resultAvailable(true);
 }
 
-void FindPDFUI::searchProgress(int visitedPages, int foundDocuments)
+void FindPDFUI::searchProgress(int visitedPages, int runningJobs, int foundDocuments)
 {
     m_listViewResult->hide();
     m_labelMessage->show();
-    m_labelMessage->setText(i18n("Searching ...\nNumber of visited pages: %1\nNumber of found documents: %2", visitedPages, foundDocuments));
+    m_labelMessage->setText(i18n("<qt><large>Searching ...</large><br/>Number of visited pages: <b>%1</b><br/>Number of running downloads: <b>%2</b><br/>Number of found documents: <b>%3</b></qt>", visitedPages, runningJobs, foundDocuments));
 }

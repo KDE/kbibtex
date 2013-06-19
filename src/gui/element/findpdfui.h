@@ -90,7 +90,7 @@ private:
 
 private slots:
     void searchFinished();
-    void searchProgress(int visitedPages, int foundDocuments);
+    void searchProgress(int visitedPages, int runningJobs, int foundDocuments);
 };
 
 
