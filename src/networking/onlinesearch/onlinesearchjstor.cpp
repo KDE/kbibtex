@@ -104,7 +104,7 @@ void OnlineSearchJStor::startSearch(const QMap<QString, QString> &query, int num
 
     QNetworkRequest request(d->jstorBaseUrl);
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
-    setNetworkReplyTimeout(reply);
+    InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
     connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingStartPage()));
     emit progress(d->curStep, d->numSteps);
 }
@@ -154,12 +154,12 @@ void OnlineSearchJStor::doneFetchingStartPage()
             /// redirection to another url
             QNetworkRequest request(redirUrl);
             QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply->url());
-            setNetworkReplyTimeout(newReply);
+            InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingStartPage()));
         } else {
             QNetworkRequest request(d->queryUrl);
             QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request);
-            setNetworkReplyTimeout(newReply);
+            InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingResultPage()));
         }
     } else
@@ -200,7 +200,7 @@ void OnlineSearchJStor::doneFetchingResultPage()
 
             QNetworkRequest request(bibTeXUrl);
             QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request);
-            setNetworkReplyTimeout(newReply);
+            InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingBibTeXCode()));
         }
     } else

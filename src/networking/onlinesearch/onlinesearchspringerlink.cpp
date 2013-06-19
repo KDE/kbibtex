@@ -240,7 +240,7 @@ void OnlineSearchSpringerLink::startSearch()
     emit progress(0, 1);
     QNetworkRequest request(springerLinkSearchUrl);
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
-    setNetworkReplyTimeout(reply);
+    InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
     connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingPAM()));
 
     if (d->form != NULL) d->form->saveState();
@@ -256,7 +256,7 @@ void OnlineSearchSpringerLink::startSearch(const QMap<QString, QString> &query, 
     emit progress(0, 1);
     QNetworkRequest request(springerLinkSearchUrl);
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
-    setNetworkReplyTimeout(reply);
+    InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
     connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingPAM()));
 }
 

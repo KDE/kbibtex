@@ -94,7 +94,7 @@ void OnlineSearchIDEASRePEc::startSearch(const QMap<QString, QString> &query, in
 
     QNetworkRequest request(url);
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
-    setNetworkReplyTimeout(reply);
+    InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
     connect(reply, SIGNAL(finished()), this, SLOT(downloadListDone()));
 
     emit progress(0, d->numSteps);
@@ -153,7 +153,7 @@ void OnlineSearchIDEASRePEc::downloadListDone()
             d->publicationLinks.erase(it);
             QNetworkRequest request = QNetworkRequest(QUrl(publicationLink));
             reply = InternalNetworkAccessManager::self()->get(request, reply);
-            setNetworkReplyTimeout(reply);
+            InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
             connect(reply, SIGNAL(finished()), this, SLOT(downloadPublicationDone()));
         }
     } else
@@ -194,7 +194,7 @@ void OnlineSearchIDEASRePEc::downloadPublicationDone()
         request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
         reply = InternalNetworkAccessManager::self()->post(request, body.toUtf8());
         reply->setProperty("downloadurl", QVariant::fromValue<QString>(downloadUrl));
-        setNetworkReplyTimeout(reply);
+        InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
         connect(reply, SIGNAL(finished()), this, SLOT(downloadBibTeXDone()));
 
     } else
@@ -253,7 +253,7 @@ void OnlineSearchIDEASRePEc::downloadBibTeXDone()
             d->publicationLinks.erase(it);
             QNetworkRequest request = QNetworkRequest(QUrl(publicationLink));
             reply = InternalNetworkAccessManager::self()->get(request, reply);
-            setNetworkReplyTimeout(reply);
+            InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
             connect(reply, SIGNAL(finished()), this, SLOT(downloadPublicationDone()));
         }
     } else

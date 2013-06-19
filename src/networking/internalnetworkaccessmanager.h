@@ -25,9 +25,11 @@
 
 #include <QNetworkAccessManager>
 #include <QUrl>
+#include <QMap>
 
 class QNetworkAccessManager;
 class QNetworkReply;
+class QTimer;
 
 class HTTPEquivCookieJar;
 
@@ -36,6 +38,8 @@ class HTTPEquivCookieJar;
  */
 class KBIBTEXNETWORKING_EXPORT InternalNetworkAccessManager : public QNetworkAccessManager
 {
+    Q_OBJECT
+
 public:
     static InternalNetworkAccessManager *self();
     QNetworkReply *get(QNetworkRequest &request, const QUrl &oldUrl);
@@ -43,16 +47,24 @@ public:
 
     void mergeHtmlHeadCookies(const QString &htmlCode, const QUrl &url);
 
+    void setNetworkReplyTimeout(QNetworkReply *reply, int timeOutSec = 30);
+
 protected:
     InternalNetworkAccessManager(QObject *parent = NULL);
     class HTTPEquivCookieJar;
     HTTPEquivCookieJar *cookieJar;
 
 private:
+    QMap<QTimer *, QNetworkReply *> m_mapTimerToReply;
+
     static InternalNetworkAccessManager *instance;
     static QString userAgentString;
 
     static QString userAgent();
+
+private slots:
+    void networkReplyTimeout();
+    void networkReplyFinished();
 
 };
 

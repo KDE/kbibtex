@@ -96,7 +96,7 @@ void OnlineSearchAcmPortal::startSearch(const QMap<QString, QString> &query, int
 
     QNetworkRequest request(d->acmPortalBaseUrl);
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
-    setNetworkReplyTimeout(reply);
+    InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
     connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingStartPage()));
     emit progress(0, d->numSteps);
 }
@@ -151,7 +151,7 @@ void OnlineSearchAcmPortal::doneFetchingStartPage()
             QNetworkRequest request(url);
             request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
             QNetworkReply *newReply = InternalNetworkAccessManager::self()->post(request, body.toUtf8());
-            setNetworkReplyTimeout(newReply);
+            InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingSearchPage()));
         } else {
             kWarning() << "Search using" << label() << "failed.";
@@ -184,12 +184,12 @@ void OnlineSearchAcmPortal::doneFetchingSearchPage()
 
             QNetworkRequest request(url);
             QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
-            setNetworkReplyTimeout(newReply);
+            InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingSearchPage()));
         } else if (!d->bibTeXUrls.isEmpty()) {
             QNetworkRequest request(d->bibTeXUrls.first());
             QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
-            setNetworkReplyTimeout(newReply);
+            InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingBibTeX()));
             d->bibTeXUrls.removeFirst();
         } else {
@@ -226,7 +226,7 @@ void OnlineSearchAcmPortal::doneFetchingBibTeX()
         if (!d->bibTeXUrls.isEmpty() && d->numFoundResults < d->numExpectedResults) {
             QNetworkRequest request(d->bibTeXUrls.first());
             QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
-            setNetworkReplyTimeout(newReply);
+            InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingBibTeX()));
             d->bibTeXUrls.removeFirst();
         } else {

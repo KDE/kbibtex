@@ -92,7 +92,7 @@ void OnlineSearchScienceDirect::startSearch(const QMap<QString, QString> &query,
     ++d->runningJobs;
     QNetworkRequest request(d->scienceDirectBaseUrl);
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
-    setNetworkReplyTimeout(reply);
+    InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
     connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingStartPage()));
 
     emit progress(0, d->numSteps);
@@ -143,7 +143,7 @@ void OnlineSearchScienceDirect::doneFetchingStartPage()
             /// redirection to another url
             QNetworkRequest request(redirUrl);
             QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply->url());
-            setNetworkReplyTimeout(newReply);
+            InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingStartPage()));
         } else {
             InternalNetworkAccessManager::self()->mergeHtmlHeadCookies(htmlText, reply->url());
@@ -167,7 +167,7 @@ void OnlineSearchScienceDirect::doneFetchingStartPage()
             QNetworkRequest request(url);
             QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingResultPage()));
-            setNetworkReplyTimeout(newReply);
+            InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
         }
     } else
         kDebug() << "url was" << reply->url().toString();
@@ -187,7 +187,7 @@ void OnlineSearchScienceDirect::doneFetchingResultPage()
             QNetworkRequest request(redirUrl);
             QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingResultPage()));
-            setNetworkReplyTimeout(newReply);
+            InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
         } else {
             emit progress(++d->curStep, d->numSteps);
 
@@ -202,7 +202,7 @@ void OnlineSearchScienceDirect::doneFetchingResultPage()
                     KUrl url(htmlText.mid(p, p2 - p));
                     QNetworkRequest request(url);
                     QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
-                    setNetworkReplyTimeout(newReply);
+                    InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
                     connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingAbstractPage()));
                 }
         }
@@ -229,7 +229,7 @@ void OnlineSearchScienceDirect::doneFetchingAbstractPage()
             QNetworkRequest request(redirUrl);
             QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingAbstractPage()));
-            setNetworkReplyTimeout(newReply);
+            InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
         } else {
             emit progress(++d->curStep, d->numSteps);
 
@@ -243,7 +243,7 @@ void OnlineSearchScienceDirect::doneFetchingAbstractPage()
                 QNetworkRequest request(url);
                 QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
                 connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingExportCitationPage()));
-                setNetworkReplyTimeout(newReply);
+                InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
             }
         }
 
@@ -269,7 +269,7 @@ void OnlineSearchScienceDirect::doneFetchingExportCitationPage()
             QNetworkRequest request(redirUrl);
             QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingExportCitationPage()));
-            setNetworkReplyTimeout(newReply);
+            InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
         } else {
             emit progress(++d->curStep, d->numSteps);
 
@@ -293,7 +293,7 @@ void OnlineSearchScienceDirect::doneFetchingExportCitationPage()
             QNetworkRequest request(KUrl(d->scienceDirectBaseUrl + "/science"));
             request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
             QNetworkReply *newReply = InternalNetworkAccessManager::self()->post(request, body.toUtf8());
-            setNetworkReplyTimeout(newReply);
+            InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingBibTeX()));
         }
 

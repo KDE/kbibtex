@@ -109,7 +109,7 @@ void OnlineSearchMathSciNet::startSearch(const QMap<QString, QString> &query, in
     /// issue request for start page
     QNetworkRequest request(d->queryFormUrl);
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
-    setNetworkReplyTimeout(reply);
+    InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
     connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingQueryForm()));
 }
 
@@ -170,7 +170,7 @@ void OnlineSearchMathSciNet::doneFetchingQueryForm()
         /// issue request for result page
         QNetworkRequest request(url);
         QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
-        setNetworkReplyTimeout(newReply);
+        InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
         connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingResultPage()));
     } else
         kDebug() << "url was" << reply->url().toString();
@@ -206,7 +206,7 @@ void OnlineSearchMathSciNet::doneFetchingResultPage()
             /// issue request for bibtex code
             QNetworkRequest request(url);
             QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
-            setNetworkReplyTimeout(newReply);
+            InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingBibTeXcode()));
         } else {
             /// nothing found

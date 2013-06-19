@@ -310,7 +310,7 @@ void OnlineSearchIngentaConnect::startSearch(const QMap<QString, QString> &query
 
     QNetworkRequest request(d->buildQueryUrl(query, numResults));
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
-    setNetworkReplyTimeout(reply);
+    InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
     connect(reply, SIGNAL(finished()), this, SLOT(downloadDone()));
 
     emit progress(0, 1);
@@ -322,7 +322,7 @@ void OnlineSearchIngentaConnect::startSearch()
 
     QNetworkRequest request(d->buildQueryUrl());
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
-    setNetworkReplyTimeout(reply);
+    InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
     connect(reply, SIGNAL(finished()), this, SLOT(downloadDone()));
 
     emit progress(0, 1);

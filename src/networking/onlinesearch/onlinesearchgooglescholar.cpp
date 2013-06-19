@@ -154,7 +154,7 @@ void OnlineSearchGoogleScholar::startSearch(const QMap<QString, QString> &query,
     KUrl url(d->startPageUrl);
     QNetworkRequest request(url);
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
-    setNetworkReplyTimeout(reply);
+    InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
     connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingStartPage()));
 
     emit progress(0, d->numSteps);
@@ -173,7 +173,7 @@ void OnlineSearchGoogleScholar::doneFetchingStartPage()
             ++d->numSteps;
             QNetworkRequest request(newDomainUrl);
             QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
-            setNetworkReplyTimeout(reply);
+            InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
             connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingStartPage()));
         } else {
             /// landed on country-specific domain
@@ -183,7 +183,7 @@ void OnlineSearchGoogleScholar::doneFetchingStartPage()
 
             QNetworkRequest request(url);
             QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply->url());
-            setNetworkReplyTimeout(newReply);
+            InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingConfigPage()));
         }
     } else
@@ -210,7 +210,7 @@ void OnlineSearchGoogleScholar::doneFetchingConfigPage()
 
         QNetworkRequest request(url);
         QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
-        setNetworkReplyTimeout(newReply);
+        InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
         connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingSetConfigPage()));
     } else
         kDebug() << "url was" << reply->url().toString();
@@ -234,7 +234,7 @@ void OnlineSearchGoogleScholar::doneFetchingSetConfigPage()
 
         QNetworkRequest request(url);
         QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
-        setNetworkReplyTimeout(newReply);
+        InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
         connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingQueryPage()));
     } else
         kDebug() << "url was" << reply->url().toString();
@@ -280,7 +280,7 @@ void OnlineSearchGoogleScholar::doneFetchingQueryPage()
                 /// Store URL to document as a property of the request/reply
                 newReply->setProperty("documenturl", QVariant::fromValue<QString>(documentUrl));
             }
-            setNetworkReplyTimeout(newReply);
+            InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingBibTeX()));
             d->listBibTeXurls.erase(d->listBibTeXurls.begin());
         } else {
@@ -346,7 +346,7 @@ void OnlineSearchGoogleScholar::doneFetchingBibTeX()
             const QString documentUrl = urls.last();
             QNetworkRequest request(bibtexUrl);
             QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
-            setNetworkReplyTimeout(newReply);
+            InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
             if (!primaryUrl.isEmpty()) {
                 /// Store primary URL as a property of the request/reply
                 newReply->setProperty("primaryurl", QVariant::fromValue<QString>(primaryUrl));

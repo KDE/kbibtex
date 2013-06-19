@@ -319,36 +319,6 @@ QMap<QString, QString> OnlineSearchAbstract::formParameters(const QString &htmlT
     return result;
 }
 
-
-void OnlineSearchAbstract::setNetworkReplyTimeout(QNetworkReply *reply, int timeOutSec)
-{
-    QTimer *timer = new QTimer(reply);
-    connect(timer, SIGNAL(timeout()), this, SLOT(networkReplyTimeout()));
-    m_mapTimerToReply.insert(timer, reply);
-    timer->start(timeOutSec * 1000);
-    connect(reply, SIGNAL(finished()), this, SLOT(networkReplyFinished()));
-}
-
-void OnlineSearchAbstract::networkReplyTimeout()
-{
-    QTimer *timer = static_cast<QTimer *>(sender());
-    QNetworkReply *reply = m_mapTimerToReply[timer];
-    if (reply != NULL) {
-        kDebug() << "Timout on reply to " << reply->url().toString();
-        reply->close();
-        m_mapTimerToReply.remove(timer);
-    }
-}
-void OnlineSearchAbstract::networkReplyFinished()
-{
-    QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
-    QTimer *timer = m_mapTimerToReply.key(reply, NULL);
-    if (timer != NULL) {
-        m_mapTimerToReply.remove(timer);
-        timer->stop();
-    }
-}
-
 void OnlineSearchAbstract::iconDownloadFinished()
 {
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());

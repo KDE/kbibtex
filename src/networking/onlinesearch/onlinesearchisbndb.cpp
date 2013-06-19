@@ -99,7 +99,7 @@ void OnlineSearchIsbnDB::startSearch(const QMap<QString, QString> &query, int nu
 
     QNetworkRequest request(d->buildBooksUrl(query, numResults));
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
-    setNetworkReplyTimeout(reply);
+    InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
     connect(reply, SIGNAL(finished()), this, SLOT(downloadDone()));
 
     emit progress(0, 2);

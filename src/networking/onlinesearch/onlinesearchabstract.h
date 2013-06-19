@@ -141,8 +141,6 @@ protected:
 
     QMap<QString, QString> formParameters(const QString &htmlText, const QString &formTagBegin);
 
-    void setNetworkReplyTimeout(QNetworkReply *reply, int timeOutSec = 30);
-
     void dumpToFile(const QString &filename, const QString &text);
 
     /**
@@ -173,15 +171,12 @@ protected:
 private:
     QString m_name;
     static const char *httpUnsafeChars;
-    QMap<QTimer *, QNetworkReply *> m_mapTimerToReply;
     QMap<QNetworkReply *, QListWidgetItem *> m_iconReplyToListWidgetItem;
     int m_delayedStoppedSearchReturnCode;
 
     void sendVisualNotification(const QString &text, const QString &title, const QString &icon, int timeout);
 
 private slots:
-    void networkReplyTimeout();
-    void networkReplyFinished();
     void iconDownloadFinished();
     void delayedStoppedSearchTimer();
 

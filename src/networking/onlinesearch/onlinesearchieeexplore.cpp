@@ -114,7 +114,7 @@ void OnlineSearchIEEEXplore::startSearch(const QMap<QString, QString> &query, in
 
     QNetworkRequest request(d->buildQueryUrl(query, numResults));
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
-    setNetworkReplyTimeout(reply);
+    InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
     connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingXML()));
 
     emit progress(d->curStep, d->numSteps);
@@ -135,7 +135,7 @@ void OnlineSearchIEEEXplore::doneFetchingXML()
 
             QNetworkRequest request(redirUrl);
             QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
-            setNetworkReplyTimeout(reply);
+            InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
             connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingXML()));
         } else {
             /// ensure proper treatment of UTF-8 characters
