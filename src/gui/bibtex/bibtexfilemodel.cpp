@@ -386,7 +386,10 @@ QVariant BibTeXFileModel::entryData(const Entry *entry, const QString &raw, cons
             return QVariant();
         else if (role == BibTeXFileModel::SortRole)
             return QVariant(text.toLower());
-        else
+        else if (role == Qt::ToolTipRole) {
+            // TODO: find a better solution, such as line-wrapping tooltips
+            return QVariant(leftSqueezeText(text, 128));
+        } else
             return QVariant(text);
     }
 

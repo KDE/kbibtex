@@ -99,6 +99,11 @@ inline static QString squeezeText(const QString &text, int n)
     return text.length() <= n ? text : text.left(n / 2 - 1) + QLatin1String("...") + text.right(n / 2 - 2);
 }
 
+inline static QString leftSqueezeText(const QString &text, int n)
+{
+    return text.length() <= n ? text : text.left(n) + QLatin1String("...");
+}
+
 #define squeeze_text(text, n) ((text).length()<=(n)?(text):(text).left((n)/2-1)+QLatin1String("...")+(text).right((n)/2-2))
 
 #endif // KBIBTEX_NAMESPACE_H
