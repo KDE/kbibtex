@@ -30,6 +30,7 @@ private slots:
     void onlineSearchStoppedSearch(int);
     void onlineSearchFoundEntry();
     void progress(int, int);
+    void resetProgress();
 
 private:
     bool m_running;

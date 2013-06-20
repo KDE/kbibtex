@@ -67,9 +67,11 @@ public:
     }
 
     void setProgress(int pos, int total) {
-        if (pos < 0 || total < 0)
+        if (pos < 0 || total < 0) {
             progressBar->setVisible(false);
-        else {
+            progressBar->setMaximum(1);
+            progressBar->setValue(0);
+        } else {
             progressBar->setVisible(true);
             progressBar->setMaximum(total);
             progressBar->setValue(pos);
@@ -215,6 +217,11 @@ void KBibTeXTest::progress(int pos, int total)
     m_testWidget->setProgress(pos, total);
 }
 
+void KBibTeXTest::resetProgress()
+{
+    m_testWidget->setProgress(-1, -1);
+}
+
 void KBibTeXTest::processNextSearch()
 {
     if (m_running && m_currentOnlineSearch != m_onlineSearchList.constEnd()) {
@@ -232,8 +239,8 @@ void KBibTeXTest::processNextSearch()
         addMessage(QLatin1String("Done testing"), iconINFO);
         setBusy(false);
         m_running = false;
+        QTimer::singleShot(500, this, SLOT(resetProgress()));
     }
-    progress(-1, -1);
 }
 
 void KBibTeXTest::startAllTestFileTests()
@@ -313,7 +320,7 @@ File *KBibTeXTest::loadFile(const QString &absoluteFilename, TestFile *currentTe
     File *bibTeXFile = NULL;
     if (file.open(QFile::ReadOnly)) {
         bibTeXFile = importer->load(&file);
-        progress(-1, -1);
+        QTimer::singleShot(500, this, SLOT(resetProgress()));
         file.close();
     } else {
         addMessage(QString(QLatin1String("Cannot open file '%1'")).arg(absoluteFilename), iconERROR);
@@ -446,7 +453,7 @@ QString KBibTeXTest::saveFile(File *file, TestFile *currentTestFile)
     if (tempFile.open(QFile::WriteOnly)) {
         bool result = exporter->save(&tempFile, file);
         tempFile.close();
-        progress(-1, -1);
+        QTimer::singleShot(500, this, SLOT(resetProgress()));
         if (!result)    {
             addMessage(QString(QLatin1String("Could save to temporary file '%1'")).arg(QFileInfo(tempFile.fileName()).fileName()), iconERROR);
             delete exporter;
