@@ -254,15 +254,15 @@ QMap<QString, QString> OnlineSearchAbstract::formParameters(const QString &htmlT
     QMap<QString, QString> result;
 
     /// determined boundaries of (only) "form" tag
-    int startPos = htmlText.indexOf(formTagBegin);
-    int endPos = htmlText.indexOf(formTagEnd, startPos);
+    int startPos = htmlText.indexOf(formTagBegin, Qt::CaseInsensitive);
+    int endPos = htmlText.indexOf(formTagEnd, startPos, Qt::CaseInsensitive);
     if (startPos < 0 || endPos < 0) {
         kWarning() << "Could not locate form" << formTagBegin << "in text";
         return result;
     }
 
     /// search for "input" tags within form
-    int p = htmlText.indexOf(inputTagBegin, startPos);
+    int p = htmlText.indexOf(inputTagBegin, startPos, Qt::CaseInsensitive);
     while (p > startPos && p < endPos) {
         /// get "type", "name", and "value" attributes
         QString inputType = inputTypeRegExp.indexIn(htmlText, p) == p ? inputTypeRegExp.cap(1).toLower() : QString();
@@ -288,18 +288,18 @@ QMap<QString, QString> OnlineSearchAbstract::formParameters(const QString &htmlT
         }
         /// ignore input type "image"
 
-        p = htmlText.indexOf(inputTagBegin, p + 1);
+        p = htmlText.indexOf(inputTagBegin, p + 1, Qt::CaseInsensitive);
     }
 
     /// search for "select" tags within form
-    p = htmlText.indexOf(selectTagBegin, startPos);
+    p = htmlText.indexOf(selectTagBegin, startPos, Qt::CaseInsensitive);
     while (p > startPos && p < endPos) {
         /// get "name" attribute from "select" tag
         QString selectName = selectNameRegExp.indexIn(htmlText, p) == p ? selectNameRegExp.cap(1) : QString::null;
 
         /// "select" tag contains one or several "option" tags, search all
-        int popt = htmlText.indexOf(optionTagBegin, p);
-        int endSelect = htmlText.indexOf(selectTagEnd, p);
+        int popt = htmlText.indexOf(optionTagBegin, p, Qt::CaseInsensitive);
+        int endSelect = htmlText.indexOf(selectTagEnd, p, Qt::CaseInsensitive);
         while (popt > p && popt < endSelect) {
             /// get "value" attribute from "option" tag
             QString optionValue = optionValueRegExp.indexIn(htmlText, popt) == popt ? optionValueRegExp.cap(1) : QString::null;
@@ -310,10 +310,10 @@ QMap<QString, QString> OnlineSearchAbstract::formParameters(const QString &htmlT
                 }
             }
 
-            popt = htmlText.indexOf(optionTagBegin, popt + 1);
+            popt = htmlText.indexOf(optionTagBegin, popt + 1, Qt::CaseInsensitive);
         }
 
-        p = htmlText.indexOf(selectTagBegin, p + 1);
+        p = htmlText.indexOf(selectTagBegin, p + 1, Qt::CaseInsensitive);
     }
 
     return result;
