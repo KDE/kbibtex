@@ -787,8 +787,11 @@ bool EncoderLaTeX::testAndCopyVerbatimCommands(const QString &input, int &pos, Q
     return copyBytesCount > 0;
 }
 
-QString EncoderLaTeX::encode(const QString &input) const
+QString EncoderLaTeX::encode(const QString &ninput) const
 {
+    /// Perform Canonical Decomposition followed by Canonical Composition
+    const QString input = ninput.normalized(QString::NormalizationForm_C);
+
     int len = input.length();
     QString output;
     output.reserve(len);
@@ -904,8 +907,11 @@ QString EncoderLaTeX::encode(const QString &input) const
     return output;
 }
 
-QString EncoderLaTeX::convertToPlainAscii(const QString &input) const
+QString EncoderLaTeX::convertToPlainAscii(const QString &ninput) const
 {
+    /// Perform Canonical Decomposition followed by Canonical Composition
+    const QString input = ninput.normalized(QString::NormalizationForm_C);
+
     int len = input.length();
     QString output;
     output.reserve(len);
@@ -964,8 +970,11 @@ QString EncoderLaTeX::convertToPlainAscii(const QString &input) const
     return output;
 }
 
-bool EncoderLaTeX::containsOnlyAscii(const QString &text)
+bool EncoderLaTeX::containsOnlyAscii(const QString &ntext)
 {
+    /// Perform Canonical Decomposition followed by Canonical Composition
+    const QString text = ntext.normalized(QString::NormalizationForm_C);
+
     for (QString::ConstIterator it = text.constBegin(); it != text.constEnd(); ++it)
         if (it->unicode() > 127) return false;
     return true;
