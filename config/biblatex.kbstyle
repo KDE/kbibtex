@@ -178,7 +178,7 @@ RequiredItems=author,title,institution,year^date
 OptionalItems=subtitle,titleaddon,type,language,number,version,note,location,month,isrn,chapter,pages,pagetotal,addendum,pubstate,doi,eprint,eprintclass,eprinttype,url,urldate
 
 [Column]
-count=115
+count=117
 
 [Column1]
 UpperCamelCase=^type
@@ -454,7 +454,6 @@ TypeFlags=Text;Reference;Source
 
 [Column41]
 UpperCamelCase=JournalTitle
-UpperCamelCaseAlt=Journal
 Label=Journal Title
 DefaultWidth=4
 Visible=false
@@ -531,7 +530,7 @@ Visible=false
 TypeFlags=Text;Reference;Source
 
 [Column52]
-UpperCamelCase=IRSN
+UpperCamelCase=ISRN
 Label=ISRN
 DefaultWidth=2
 Visible=false
@@ -587,7 +586,6 @@ TypeFlags=Text;Reference;Source
 
 [Column60]
 UpperCamelCase=Annotation
-UpperCamelCaseAlt=Annote
 Label=Annotation
 DefaultWidth=5
 Visible=false
@@ -790,7 +788,6 @@ TypeFlags=Verbatim
 
 [Column88]
 UpperCamelCase=EPrintClass
-UpperCamelCaseAlt=PrimaryClass
 Label=E-Print Class
 DefaultWidth=2
 Visible=false
@@ -798,7 +795,6 @@ TypeFlags=Text;Reference;Source
 
 [Column89]
 UpperCamelCase=EPrintType
-UpperCamelCaseAlt=ArchivePrefix
 Label=E-Print Type
 DefaultWidth=2
 Visible=false
@@ -1003,6 +999,19 @@ DefaultWidth=2
 Visible=false
 TypeFlags=Text;Reference;Source
 TypeIndependent=true
+
+[Column116]
+UpperCamelCase=ISAN
+Label=ISAN
+DefaultWidth=2
+Visible=false
+
+[Column117]
+UpperCamelCase=Location
+Label=Location
+DefaultWidth=3
+Visible=false
+TypeFlags=Text;Reference;Source
 
 [EntryLayoutTab]
 count=9
