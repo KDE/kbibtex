@@ -235,6 +235,6 @@ QString FileExporterXML::valueToXML(const Value &value, const QString &)
 QString FileExporterXML::cleanXML(const QString &text)
 {
     QString result = text;
-    result = result.replace(lineBreaksRegExp, "<br/>").replace(removal, "");
+    result = result.replace(lineBreaksRegExp, "<br/>").replace(removal, QString()).replace(QLatin1String("\\ensuremath"), QString());
     return result;
 }
