@@ -63,6 +63,10 @@
 <xsl:text>, </xsl:text><i><a style="text-decoration: none; color: black;"><xsl:attribute name="href"><xsl:text>kbibtex:filter:booktitle=</xsl:text><xsl:value-of select="."/></xsl:attribute><xsl:value-of select="."/></a></i>
 </xsl:template>
 
+<xsl:template match="type">
+<xsl:text>, </xsl:text><a style="text-decoration: none; color: black;"><xsl:attribute name="href"><xsl:text>kbibtex:filter:type=</xsl:text><xsl:value-of select="."/></xsl:attribute><xsl:value-of select="."/></a>
+</xsl:template>
+
 <xsl:template match="school">
 <xsl:text>, </xsl:text><a style="text-decoration: none; color: black;"><xsl:attribute name="href"><xsl:text>kbibtex:filter:school=</xsl:text><xsl:value-of select="."/></xsl:attribute><xsl:value-of select="."/></a>
 </xsl:template>
@@ -139,6 +143,7 @@
 <xsl:apply-templates select="title" />
 <xsl:apply-templates select="booktitle" />
 <xsl:apply-templates select="journal" />
+<xsl:apply-templates select="type" />
 <xsl:apply-templates select="school" />
 <xsl:apply-templates select="volume" />
 <xsl:apply-templates select="edition" />
