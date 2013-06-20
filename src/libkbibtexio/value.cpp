@@ -29,11 +29,29 @@
 #include <preferences.h>
 #include "value.h"
 
+quint64 ValueItem::internalIdCounter = 0;
+
+uint qHash(const QSharedPointer<ValueItem> &valueItem)
+{
+    return qHash(valueItem->id());
+}
+
 const QRegExp ValueItem::ignoredInSorting = QRegExp("[{}\\\\]+");
+
+ValueItem::ValueItem()
+    : internalId(++internalIdCounter)
+{
+    // nothing
+}
 
 ValueItem::~ValueItem()
 {
     // nothing
+}
+
+quint64 ValueItem::id() const
+{
+    return internalId;
 }
 
 Keyword::Keyword(const Keyword &other)
@@ -431,7 +449,7 @@ void Value::replace(const QString &before, const QSharedPointer<ValueItem> &afte
             QString valueItemText = PlainTextValue::text(*at(i).data());
             if (valueItemText == before) {
                 /// Perform replacement operation
-                QVector::replace(i, after);
+                QVector<QSharedPointer<ValueItem> >::replace(i, after);
                 valueItemText = PlainTextValue::text(*after.data());
                 //  uniqueValueItemTexts.insert(PlainTextValue::text(*after.data()));
             }

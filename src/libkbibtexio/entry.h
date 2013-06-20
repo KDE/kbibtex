@@ -192,9 +192,24 @@ public:
     Entry *resolveCrossref(const File *bibTeXfile) const;
     static Entry *resolveCrossref(const Entry &original, const File *bibTeXfile);
 
+    quint64 uniqueId() const;
+
 private:
+    /// Unique numeric identifier
+    const quint64 internalUniqueId;
+    /// Keeping track of next available unique numeric identifier
+    static quint64 internalUniqueIdCounter;
+
     class EntryPrivate;
     EntryPrivate *const d;
 };
+
+/**
+ * Comparison operator, necessary for QMap operations.
+ */
+static inline bool operator< (const QSharedPointer<Entry> &a, const QSharedPointer<Entry> &b)
+{
+    return a->uniqueId() < b->uniqueId();
+}
 
 #endif // BIBTEXBIBTEXENTRY_H
