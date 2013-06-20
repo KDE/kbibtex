@@ -541,7 +541,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                     /// to check for
                     QString alpha = readAlphaCharacters(input, i + 2);
                     int nextPosAfterAlpha = i + 2 + alpha.size();
-                    if (input[nextPosAfterAlpha] == '}') {
+                    if (nextPosAfterAlpha < input.length() && input[nextPosAfterAlpha] == '}') {
                         /// We are dealing actually with a string like {\AA}
                         /// Check which command it is,
                         /// insert corresponding Unicode character
@@ -556,10 +556,13 @@ QString EncoderLaTeX::decode(const QString &input) const
                         /// Check if a math command has been read,
                         /// like \subset
                         /// (automatically skipped if command was found above)
-                        // FIXME a math command could be inside \ensuremath, which is not tested here
-                        // may lead to increasing numbers of nested \ensuremath commands
                         for (int k = 0; !foundCommand && k < mathCommandLen; ++k) {
                             if (mathCommand[k].written == alpha) {
+                                if (output.endsWith(QLatin1String("\\ensuremath"))) {
+                                    /// Remove "\ensuremath" right before this math command,
+                                    /// it will be re-inserted when exporting/saving the document
+                                    output = output.left(output.length() - 11);
+                                }
                                 output.append(mathCommand[k].unicode);
                                 foundCommand = true;
                             }
@@ -573,7 +576,8 @@ QString EncoderLaTeX::decode(const QString &input) const
                             output.append(c);
                         }
                     } else {
-                        /// Nothing special, copy input char to output
+                        /// Could be something like {\tt filename.txt}
+                        /// Keep it as it is
                         output.append(c);
                     }
                 }
