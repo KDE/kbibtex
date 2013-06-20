@@ -466,7 +466,7 @@ UrlListEdit::UrlListEdit(QWidget *parent)
     connect(m_buttonAddFile, SIGNAL(clicked()), m_buttonAddFile, SLOT(showMenu()));
 
     /// Action to add a reference (i.e. only the filename or URL) to an entry
-    QAction *action = menuAddFile->addAction(KIcon("emblem-symbolic-link"), i18n("Add reference to file ..."), this, SLOT(slotCopyFile()));
+    QAction *action = menuAddFile->addAction(KIcon("emblem-symbolic-link"), i18n("Add reference to file ..."), this, SLOT(slotAddReferenceToFile()));
     action->setToolTip(i18n("Insert only a filename, but do not copy the file itself."));
     /// Action to copy a file near the BibTeX file (e.g. same folder) and then
     /// add the copy's relative filename to the entry
