@@ -65,6 +65,8 @@ const QLatin1String Entry::etPhDThesis = QLatin1String("phdthesis");
 const QLatin1String Entry::etTechReport = QLatin1String("techreport");
 const QLatin1String Entry::etUnpublished = QLatin1String("unpublished");
 
+quint64 Entry::internalUniqueIdCounter = 0;
+
 /**
  * Private class to store internal variables that should not be visible
  * in the interface as defined in the header file.
@@ -77,14 +79,14 @@ public:
 };
 
 Entry::Entry(const QString &type, const QString &id)
-        : Element(), QMap<QString, Value>(), d(new Entry::EntryPrivate)
+        : Element(), QMap<QString, Value>(), internalUniqueId(++internalUniqueIdCounter), d(new Entry::EntryPrivate)
 {
     d->type = type;
     d->id = id;
 }
 
 Entry::Entry(const Entry &other)
-        : Element(), QMap<QString, Value>(), d(new Entry::EntryPrivate)
+        : Element(), QMap<QString, Value>(), internalUniqueId(++internalUniqueIdCounter), d(new Entry::EntryPrivate)
 {
     operator=(other);
 }
@@ -93,6 +95,11 @@ Entry::~Entry()
 {
     clear();
     delete d;
+}
+
+quint64 Entry::uniqueId() const
+{
+    return internalUniqueId;
 }
 
 Entry &Entry::operator= (const Entry &other)
