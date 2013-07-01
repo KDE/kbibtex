@@ -200,7 +200,7 @@ public:
                 kWarning() << "Parsing " << fakeBibTeXFile << " did not result in valid entry";
             return !value.isEmpty();
         } else if (typeFlag == KBibTeX::tfVerbatim) {
-            value.append(QSharedPointer<VerbatimText>(new VerbatimText(encodedText)));
+            value.append(QSharedPointer<VerbatimText>(new VerbatimText(text)));
             return true;
         }
 
