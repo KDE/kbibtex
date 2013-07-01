@@ -581,7 +581,8 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value &value, const QStr
 
     do {
         bool isStringKey = false;
-        QString text = EncoderLaTeX::instance()->decode(readString(isStringKey));
+        const QString rawText = readString(isStringKey);
+        QString text = EncoderLaTeX::instance()->decode(rawText);
         /// for all entries except for abstracts ...
         if (iKey != Entry::ftAbstract && !(iKey.startsWith(Entry::ftUrl) && !iKey.startsWith(Entry::ftUrlDate)) && !iKey.startsWith(Entry::ftLocalFile) && !iKey.startsWith(Entry::ftFile)) {
             /// ... remove redundant spaces including newlines
@@ -625,7 +626,7 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value &value, const QStr
             else {
                 /// Assumption: in fields like Url or LocalFile, file names are separated by ; or ,
                 static const QRegExp semicolonSpace = QRegExp("[;]\\s*");
-                QStringList fileList = text.split(semicolonSpace, QString::SkipEmptyParts);
+                QStringList fileList = rawText.split(semicolonSpace, QString::SkipEmptyParts);
                 foreach(const QString &filename, fileList) {
                     value.append(QSharedPointer<VerbatimText>(new VerbatimText(filename)));
                 }
@@ -639,7 +640,7 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value &value, const QStr
                 ///  :C$\backslash$:/Users/BarisEvrim/Documents/Mendeley Desktop/GeversPAMI10.pdf:pdf
                 ///  ::
                 ///  :Users/Fred/Library/Application Support/Mendeley Desktop/Downloaded/Hasselman et al. - 2011 - (Still) Growing Up What should we be a realist about in the cognitive and behavioural sciences Abstract.pdf:pdf
-                if (KBibTeX::mendeleyFileRegExp.indexIn(text) >= 0)    {
+                if (KBibTeX::mendeleyFileRegExp.indexIn(rawText) >= 0)    {
                     const QString backslashLaTeX = QLatin1String("$\\backslash$");
                     QString filename = KBibTeX::mendeleyFileRegExp.cap(1);
                     filename = filename.replace(backslashLaTeX, QString::null);
@@ -666,19 +667,24 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value &value, const QStr
                 value.append(QSharedPointer<MacroKey>(new MacroKey(text)));
             else {
                 int p = -5;
-                while ((p = KBibTeX::doiRegExp.indexIn(text, p + 5)) >= 0)
+                /// Take care of "; " which separates multiple DOIs, but which may baffle the regexp
+                QString preprocessedText = rawText;
+                preprocessedText.replace(QLatin1String("; "), QLatin1String(" "));
+                /// Extract everything that looks like a DOI using a regular expression,
+                /// ignore everything else
+                while ((p = KBibTeX::doiRegExp.indexIn(preprocessedText, p + 5)) >= 0)
                     value.append(QSharedPointer<VerbatimText>(new VerbatimText(KBibTeX::doiRegExp.cap(0))));
             }
         } else if (iKey == Entry::ftColor) {
             if (isStringKey)
                 value.append(QSharedPointer<MacroKey>(new MacroKey(text)));
             else
-                value.append(QSharedPointer<VerbatimText>(new VerbatimText(text)));
+                value.append(QSharedPointer<VerbatimText>(new VerbatimText(rawText)));
         } else if (iKey == Entry::ftCrossRef) {
             if (isStringKey)
                 value.append(QSharedPointer<MacroKey>(new MacroKey(text)));
             else
-                value.append(QSharedPointer<VerbatimText>(new VerbatimText(text)));
+                value.append(QSharedPointer<VerbatimText>(new VerbatimText(rawText)));
         } else if (iKey == Entry::ftKeywords) {
             if (isStringKey)
                 value.append(QSharedPointer<MacroKey>(new MacroKey(text)));
