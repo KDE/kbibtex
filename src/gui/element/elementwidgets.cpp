@@ -540,7 +540,7 @@ FilesWidget::FilesWidget(QWidget *parent)
         : ElementWidget(parent)
 {
     QVBoxLayout *layout = new QVBoxLayout(this);
-    fileList = new FieldInput(KBibTeX::UrlList, KBibTeX::tfVerbatim, KBibTeX::tfVerbatim, this);
+    fileList = new FieldInput(KBibTeX::UrlList, KBibTeX::tfVerbatim /* eventually ignored, see constructor of UrlListEdit */, KBibTeX::tfVerbatim /* eventually ignored, see constructor of UrlListEdit */, this);
     fileList->setFieldKey(QLatin1String("^external"));
     layout->addWidget(fileList);
     connect(fileList, SIGNAL(modified()), this, SLOT(gotModified()));
@@ -568,7 +568,7 @@ bool FilesWidget::apply(QSharedPointer<Element> element) const
     for (Value::ConstIterator it = combinedValue.constBegin(); it != combinedValue.constEnd(); ++it) {
         const QSharedPointer<VerbatimText> verbatimText = (*it).dynamicCast<VerbatimText>();
         if (!verbatimText.isNull()) {
-            QString text = verbatimText->text();
+            const QString text = verbatimText->text();
             if (KBibTeX::urlRegExp.indexIn(text) > -1) {
                 /// add full URL
                 VerbatimText *newVT = new VerbatimText(KBibTeX::urlRegExp.cap(0));
