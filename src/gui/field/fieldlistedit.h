@@ -122,7 +122,7 @@ public:
 
     virtual void setReadOnly(bool isReadOnly);
 
-    static QString &askRelativeOrStaticFilename(QWidget *parent, QString &filename, const QUrl &baseUrl);
+    static QString askRelativeOrStaticFilename(QWidget *parent, const QString &filename, const QUrl &baseUrl);
 
     /// Own function as KUrl's isLocalFile is not reliable
     static bool urlIsLocal(const QUrl &url);
