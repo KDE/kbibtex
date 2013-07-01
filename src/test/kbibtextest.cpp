@@ -116,13 +116,14 @@ public:
 KBibTeXTest::KBibTeXTest(QWidget *parent)
         : KDialog(parent), m_running(false), m_isBusy(false)
 {
-    testFiles << createTestFile(QLatin1String("bib/bug19489.bib"), 1, 1, QLatin1String("bart:04:1242"), QLatin1String("Ralph"), QLatin1String("a926264c17545bf6eb9a953a8e3f0970"));
-    testFiles << createTestFile(QLatin1String("bib/names-with-braces.bib"), 1, 1, QLatin1String("names1"), QLatin1String("{{{{{LastName3A LastName3B}}}}}"), QLatin1String("c4a6575e606ac513b79d1b8e18bca02e"));
-    testFiles << createTestFile(QLatin1String("bib/duplicates.bib"), 23, 23, QLatin1String("books/aw/Sedgewick88"), QLatin1String("Sedgewick"), QLatin1String("f743ccb08afda3514a7122710e6590ba"));
-    testFiles << createTestFile(QLatin1String("bib/minix.bib"), 163, 123, QLatin1String("Jesshope:2006:ACS"), QLatin1String("Egan"), QLatin1String("c45e76eb809ba4c811f40452215bce04"));
-    testFiles << createTestFile(QLatin1String("bib/bug19484-refs.bib"), 641, 641, QLatin1String("Bagnara-etal-2002"), QLatin1String("Hill"), QLatin1String("a6737870e88b13fd2a6dff00b583cc5b"));
-    testFiles << createTestFile(QLatin1String("bib/bug19362-file15701-database.bib"), 911, 911, QLatin1String("New1"), QLatin1String("Sunder"), QLatin1String("eb93fa136f4b114c3a6fc4a821b4117c"));
-    testFiles << createTestFile(QLatin1String("bib/digiplay.bib"), 3074, 3074, QLatin1String("1180"), QLatin1String("Huizinga"), QLatin1String("2daf695fccb01f4b4cfbe967db62b0a8"));
+    testFiles << createTestFile(QLatin1String("bib/bug19489.bib"), 1, 1, QLatin1String("bart:04:1242"), QLatin1String("Ralph"), QLatin1String("a926264c17545bf6eb9a953a8e3f0970"), QLatin1String("544dc57e2a9908cfb35f35152462ac2e"));
+    testFiles << createTestFile(QLatin1String("bib/names-with-braces.bib"), 1, 1, QLatin1String("names1"), QLatin1String("{{{{{LastName3A LastName3B}}}}}"), QLatin1String("c4a6575e606ac513b79d1b8e18bca02e"), QLatin1String("d41d8cd98f00b204e9800998ecf8427e"));
+    testFiles << createTestFile(QLatin1String("bib/duplicates.bib"), 23, 23, QLatin1String("books/aw/Sedgewick88"), QLatin1String("Sedgewick"), QLatin1String("f743ccb08afda3514a7122710e6590ba"), QLatin1String("9ffb791547bcd10b459dec2d0022314c"));
+    testFiles << createTestFile(QLatin1String("bib/minix.bib"), 163, 123, QLatin1String("Jesshope:2006:ACS"), QLatin1String("Egan"), QLatin1String("c45e76eb809ba4c811f40452215bce04"), QLatin1String("4e64d5806c9be0cf2d77a152157d044c"));
+    testFiles << createTestFile(QLatin1String("bib/bug19484-refs.bib"), 641, 641, QLatin1String("Bagnara-etal-2002"), QLatin1String("Hill"), QLatin1String("a6737870e88b13fd2a6dff00b583cc5b"), QLatin1String("71a66fb634275a6f46e5e0828fbceb83"));
+    testFiles << createTestFile(QLatin1String("bib/bug19362-file15701-database.bib"), 911, 911, QLatin1String("New1"), QLatin1String("Sunder"), QLatin1String("eb93fa136f4b114c3a6fc4a821b4117c"), QLatin1String("0ac293b3abbfa56867e5514d8bb68614"));
+    testFiles << createTestFile(QLatin1String("bib/digiplay.bib"), 3074, 3074, QLatin1String("1180"), QLatin1String("Huizinga"), QLatin1String("2daf695fccb01f4b4cfbe967db62b0a8"), QLatin1String("5d5bf8178652107ab160bc697b5b008f"));
+    testFiles << createTestFile(QLatin1String("bib/backslash.bib"), 1, 1, QLatin1String("backslash-test"), QLatin1String("Doe"), QLatin1String("4f2ab90ecfa9e5e62cdfb4e55cbb0e05"), QLatin1String("f9f35d6b95b0676751bc613d1d60aa6b"));
     m_onlineSearchList << new OnlineSearchAcmPortal(this);
     m_onlineSearchList << new OnlineSearchArXiv(this);
     m_onlineSearchList << new OnlineSearchBibsonomy(this);
@@ -335,7 +336,7 @@ File *KBibTeXTest::loadFile(const QString &absoluteFilename, TestFile *currentTe
         return NULL;
     }
 
-    QStringList lastAuthorsList;
+    QStringList lastAuthorsList, filesUrlsDoiList;
     int countElements = bibTeXFile->count(), countEntries = 0;
     QString lastEntryId, lastEntryLastAuthorLastName;
     for (File::ConstIterator fit = bibTeXFile->constBegin(); fit != bibTeXFile->constEnd(); ++fit) {
@@ -346,7 +347,7 @@ File *KBibTeXTest::loadFile(const QString &absoluteFilename, TestFile *currentTe
             lastEntryId = entry->id();
 
             Value authors = entry->value(Entry::ftAuthor);
-            if (!authors.empty()) {
+            if (!authors.isEmpty()) {
                 ValueItem *vi = authors.last().data();
                 Person *p = dynamic_cast<Person *>(vi);
                 if (p != NULL) {
@@ -355,7 +356,7 @@ File *KBibTeXTest::loadFile(const QString &absoluteFilename, TestFile *currentTe
                     lastEntryLastAuthorLastName = QString::null;
             } else {
                 Value editors = entry->value(Entry::ftEditor);
-                if (!editors.empty()) {
+                if (!editors.isEmpty()) {
                     ValueItem *vi = editors.last().data();
                     Person *p = dynamic_cast<Person *>(vi);
                     if (p != NULL) {
@@ -370,6 +371,31 @@ File *KBibTeXTest::loadFile(const QString &absoluteFilename, TestFile *currentTe
                 if (lastEntryLastAuthorLastName[0] == QLatin1Char('{') && lastEntryLastAuthorLastName[lastEntryLastAuthorLastName.length() - 1] == QLatin1Char('}'))
                     lastEntryLastAuthorLastName = lastEntryLastAuthorLastName.mid(1, lastEntryLastAuthorLastName.length() - 2);
                 lastAuthorsList << lastEntryLastAuthorLastName;
+            }
+
+            for (int index = 1; index < 100; ++index) {
+                const QString field = index == 1 ? Entry::ftUrl : QString(QLatin1String("%1%2")).arg(Entry::ftUrl).arg(index);
+                Value v = entry->value(field);
+                foreach(const QSharedPointer<ValueItem> &vi, v) {
+                    filesUrlsDoiList << PlainTextValue::text(vi);
+                }
+                if (v.isEmpty() && index > 10) break;
+            }
+            for (int index = 1; index < 100; ++index) {
+                const QString field = index == 1 ? Entry::ftDOI : QString(QLatin1String("%1%2")).arg(Entry::ftDOI).arg(index);
+                Value v = entry->value(field);
+                foreach(const QSharedPointer<ValueItem> &vi, v) {
+                    filesUrlsDoiList << PlainTextValue::text(vi);
+                }
+                if (v.isEmpty() && index > 10) break;
+            }
+            for (int index = 1; index < 100; ++index) {
+                const QString field = index == 1 ? Entry::ftLocalFile : QString(QLatin1String("%1%2")).arg(Entry::ftLocalFile).arg(index);
+                Value v = entry->value(field);
+                foreach(const QSharedPointer<ValueItem> &vi, v) {
+                    filesUrlsDoiList << PlainTextValue::text(vi);
+                }
+                if (v.isEmpty() && index > 10) break;
             }
         }
     }
@@ -402,10 +428,10 @@ File *KBibTeXTest::loadFile(const QString &absoluteFilename, TestFile *currentTe
         return NULL;
     } else {
         /// Delay cryptographic hash computation until no other test has failed
-        QCryptographicHash hash(QCryptographicHash::Md4);
+        QCryptographicHash hashAuthors(QCryptographicHash::Md4);
         lastAuthorsList.sort();
         for (QStringList::ConstIterator it = lastAuthorsList.constBegin(); it != lastAuthorsList.constEnd(); ++it)
-            hash.addData((*it).toUtf8());
+            hashAuthors.addData((*it).toUtf8());
 
         const QString authorListFilename = KStandardDirs::locateLocal("tmp", QFileInfo(currentTestFile->filename).baseName()) + QString(QLatin1String("_authors_%1.txt")).arg(++filenameCounter);
         QFile authorListFile(authorListFilename);
@@ -418,9 +444,33 @@ File *KBibTeXTest::loadFile(const QString &absoluteFilename, TestFile *currentTe
         } else
             kDebug() << "Failed to write list of authors to" << authorListFilename;
 
-        if (hash.result() != currentTestFile->md4sum) {
-            kDebug() << hash.result().toHex().data() << "for" << absoluteFilename << "based on" << currentTestFile->filename;
-            addMessage(QString(QLatin1String("A hash sum over all last authors in file '%1' did not match the expected hash sum (%2)")).arg(QFileInfo(absoluteFilename).fileName()).arg(hash.result().toHex().data()), iconERROR);
+        if (hashAuthors.result() != currentTestFile->hashAuthors) {
+            kDebug() << hashAuthors.result().toHex().data() << "for" << absoluteFilename << "based on" << currentTestFile->filename;
+            addMessage(QString(QLatin1String("A hash sum over all last authors in file '%1' did not match the expected hash sum (%2 vs. %3)")).arg(QFileInfo(absoluteFilename).fileName()).arg(hashAuthors.result().toHex().data()).arg(currentTestFile->hashAuthors.toHex().data()), iconERROR);
+            delete importer;
+            delete bibTeXFile;
+            return NULL;
+        }
+
+        QCryptographicHash hashFilesUrlsDoi(QCryptographicHash::Md5);
+        for (QStringList::ConstIterator it = filesUrlsDoiList.constBegin(); it != filesUrlsDoiList.constEnd(); ++it)
+            hashFilesUrlsDoi.addData((*it).toUtf8());
+        kDebug() << "hashFilesUrlsDoi " << hashFilesUrlsDoi.result().toHex().data();
+
+        const QString filesUrlsDoiFilename = KStandardDirs::locateLocal("tmp", QFileInfo(currentTestFile->filename).baseName()) + QString(QLatin1String("_filesUrlsDoi_%1.txt")).arg(++filenameCounter);
+        QFile filesUrlsDoiFile(filesUrlsDoiFilename);
+        if (filesUrlsDoiFile.open(QFile::WriteOnly)) {
+            QTextStream ts(&filesUrlsDoiFile);
+            for (QStringList::ConstIterator it = filesUrlsDoiList.constBegin(); it != filesUrlsDoiList.constEnd(); ++it)
+                ts << *it << endl;
+            filesUrlsDoiFile.close();
+            kDebug() << "Saved list of filenames, URLs, and DOIs in" << filesUrlsDoiFilename;
+        } else
+            kDebug() << "Failed to write list of filenames, URLs, and DOIs to" << filesUrlsDoiFilename;
+
+        if (hashFilesUrlsDoi.result() != currentTestFile->hashFilesUrlsDoi) {
+            kDebug() << hashFilesUrlsDoi.result().toHex().data() << "for" << absoluteFilename << "based on" << currentTestFile->filename;
+            addMessage(QString(QLatin1String("A hash sum over all last URLs, filenames, and DOIs in file '%1' did not match the expected hash sum (%2 vs. %3)")).arg(QFileInfo(absoluteFilename).fileName()).arg(hashFilesUrlsDoi.result().toHex().data()).arg(currentTestFile->hashFilesUrlsDoi.toHex().data()), iconERROR);
             delete importer;
             delete bibTeXFile;
             return NULL;
@@ -442,7 +492,9 @@ QString KBibTeXTest::saveFile(File *file, TestFile *currentTestFile)
 
     FileExporter *exporter = NULL;
     if (currentTestFile->filename.endsWith(QLatin1String(".bib"))) {
-        exporter = new FileExporterBibTeX();
+        FileExporterBibTeX *bibTeXExporter = new FileExporterBibTeX();
+        bibTeXExporter->setEncoding(QLatin1String("utf-8"));
+        exporter = bibTeXExporter;
         connect(exporter, SIGNAL(progress(int, int)), this, SLOT(progress(int, int)));
     } else {
         addMessage(QString(QLatin1String("Don't know format of '%1'")).arg(tempFilename), iconERROR);
@@ -469,7 +521,7 @@ QString KBibTeXTest::saveFile(File *file, TestFile *currentTestFile)
     return tempFilename;
 }
 
-KBibTeXTest::TestFile *KBibTeXTest::createTestFile(const QString &filename, int numElements, int numEntries, const QString &lastEntryId, const QString &lastEntryLastAuthorLastName, const QString &md4sumHex)
+KBibTeXTest::TestFile *KBibTeXTest::createTestFile(const QString &filename, int numElements, int numEntries, const QString &lastEntryId, const QString &lastEntryLastAuthorLastName, const QString &hashAuthors, const QString &hashFilesUrlsDoi)
 {
     TestFile *r = new TestFile();
     r->filename = filename;
@@ -477,6 +529,7 @@ KBibTeXTest::TestFile *KBibTeXTest::createTestFile(const QString &filename, int 
     r->numEntries = numEntries;
     r->lastEntryId = lastEntryId;
     r->lastEntryLastAuthorLastName = lastEntryLastAuthorLastName;
-    r->md4sum = QByteArray::fromHex(md4sumHex.toLatin1());
+    r->hashAuthors = QByteArray::fromHex(hashAuthors.toLatin1());
+    r->hashFilesUrlsDoi = QByteArray::fromHex(hashFilesUrlsDoi.toLatin1());
     return r;
 }

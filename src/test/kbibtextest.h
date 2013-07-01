@@ -15,7 +15,7 @@ public:
         QString filename;
         int numElements, numEntries;
         QString lastEntryId, lastEntryLastAuthorLastName;
-        QByteArray md4sum;
+        QByteArray hashAuthors, hashFilesUrlsDoi;
     } TestFile;
 
     KBibTeXTest(QWidget *parent = NULL);
@@ -49,5 +49,5 @@ private:
 
     File *loadFile(const QString &absoluteFilename, TestFile *currentTestFile);
     QString saveFile(File *file, TestFile *currentTestFile);
-    TestFile *createTestFile(const QString &filename, int numElements, int numEntries, const QString &lastEntryId, const QString &lastEntryLastAuthorLastName, const QString &md4sumHex);
+    TestFile *createTestFile(const QString &filename, int numElements, int numEntries, const QString &lastEntryId, const QString &lastEntryLastAuthorLastName, const QString &hashAuthors, const QString &hashFilesUrlsDoi);
 };
