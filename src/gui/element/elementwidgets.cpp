@@ -948,7 +948,7 @@ bool MacroWidget::canEdit(const Element *element)
 
 void MacroWidget::createGUI()
 {
-    QVBoxLayout *layout = new QVBoxLayout(this);
+    QBoxLayout *layout = new QHBoxLayout(this);
 
     QLabel *label = new QLabel(i18n("Value:"), this);
     layout->addWidget(label, 0);
@@ -1013,7 +1013,7 @@ bool PreambleWidget::canEdit(const Element *element)
 
 void PreambleWidget::createGUI()
 {
-    QVBoxLayout *layout = new QVBoxLayout(this);
+    QBoxLayout *layout = new QHBoxLayout(this);
 
     QLabel *label = new QLabel(i18n("Value:"), this);
     layout->addWidget(label, 0);
