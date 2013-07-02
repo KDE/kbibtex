@@ -396,6 +396,23 @@ public:
 
         return result;
     }
+
+    void readConfiguration() {
+        /// Fetch settings from configuration
+        KConfigGroup configGroup(config, Preferences::groupUserInterface);
+        const Preferences::ElementDoubleClickAction doubleClickAction = (Preferences::ElementDoubleClickAction)configGroup.readEntry(Preferences::keyElementDoubleClickAction, (int)Preferences::defaultElementDoubleClickAction);
+
+        disconnect(editor, SIGNAL(elementExecuted(QSharedPointer<Element>)), editor, SLOT(editElement(QSharedPointer<Element>)));
+        disconnect(editor, SIGNAL(elementExecuted(QSharedPointer<Element>)), p, SLOT(elementViewDocument()));
+        switch (doubleClickAction) {
+        case Preferences::ActionOpenEditor:
+            connect(editor, SIGNAL(elementExecuted(QSharedPointer<Element>)), editor, SLOT(editElement(QSharedPointer<Element>)));
+            break;
+        case Preferences::ActionViewDocument:
+            connect(editor, SIGNAL(elementExecuted(QSharedPointer<Element>)), p, SLOT(elementViewDocument()));
+            break;
+        }
+    }
 };
 
 KBibTeXPart::KBibTeXPart(QWidget *parentWidget, QObject *parent, bool browserViewWanted)
@@ -409,8 +426,6 @@ KBibTeXPart::KBibTeXPart(QWidget *parentWidget, QObject *parent, bool browserVie
     d->editor->setReadOnly(!isReadWrite());
     d->editor->setItemDelegate(new BibTeXFileDelegate(d->editor));
     setWidget(d->editor);
-
-    connect(d->editor, SIGNAL(elementExecuted(QSharedPointer<Element>)), d->editor, SLOT(editElement(QSharedPointer<Element>)));
     connect(d->editor, SIGNAL(modified()), this, SLOT(setModified()));
 
     setupActions(browserViewWanted);
@@ -421,6 +436,9 @@ KBibTeXPart::KBibTeXPart(QWidget *parentWidget, QObject *parent, bool browserVie
         */
 
     d->initializeNew();
+
+    NotificationHub::registerNotificationListener(this, NotificationHub::EventConfigurationChanged);
+    d->readConfiguration();
 
     setModified(false);
 }
@@ -436,6 +454,12 @@ void KBibTeXPart::setModified(bool modified)
     KParts::ReadWritePart::setModified(modified);
 
     d->fileSaveAction->setEnabled(modified);
+}
+
+void KBibTeXPart::notificationEvent(int eventId)
+{
+    if (eventId == NotificationHub::EventConfigurationChanged)
+        d->readConfiguration();
 }
 
 void KBibTeXPart::setupActions(bool /*browserViewWanted FIXME*/)

@@ -44,10 +44,15 @@ static const BackupScope defaultBackupScope = LocalOnly;
 static const QString keyNumberOfBackups = QLatin1String("numberOfBackups");
 static const int defaultNumberOfBackups = 5;
 
+static const QString groupUserInterface = QLatin1String("User Interface");
+static const QString keyElementDoubleClickAction = QLatin1String("elementDoubleClickAction");
+enum ElementDoubleClickAction { ActionOpenEditor = 0, ActionViewDocument = 1 };
+static const ElementDoubleClickAction defaultElementDoubleClickAction = ActionOpenEditor;
+
 /**
  * Preferences for File objects
  */
-enum QuoteComment {qcNone = 0, qcCommand = 1, qcPercentSign = 2};
+enum QuoteComment { qcNone = 0, qcCommand = 1, qcPercentSign = 2 };
 
 const QString keyEncoding = QLatin1String("encoding");
 const QString defaultEncoding = QLatin1String("LaTeX");

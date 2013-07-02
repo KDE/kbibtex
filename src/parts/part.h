@@ -23,9 +23,10 @@
 
 #include <kparts/part.h>
 
+#include "notificationhub.h"
 #include "bibtexeditor.h"
 
-class KBibTeXPart : public KParts::ReadWritePart
+class KBibTeXPart : public KParts::ReadWritePart, private NotificationListener
 {
     Q_OBJECT
 
@@ -36,6 +37,8 @@ public:
     virtual ~KBibTeXPart();
 
     void setModified(bool modified);
+
+    virtual void notificationEvent(int eventId);
 
 protected:
     virtual bool openFile();
