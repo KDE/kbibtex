@@ -65,7 +65,7 @@ public:
     }
 
     bool checkBibTeX2HTMLexists(QIODevice *iodevice) {
-        if (p->which("bibtex2html"))
+        if (!p->which("bibtex2html").isEmpty())
             return true;
 
         QTextStream ts(iodevice);

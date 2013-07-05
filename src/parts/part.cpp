@@ -227,13 +227,13 @@ public:
     KUrl getSaveFilename(bool mustBeImportable = true) {
         QString startDir = p->url().isValid() ? p->url().path() : QLatin1String("kfiledialog:///opensave");
         QString supportedMimeTypes = QLatin1String("text/x-bibtex text/x-bibtex-compiled application/xml text/x-research-info-systems");
-        if (!mustBeImportable && FileExporterToolchain::which(QLatin1String("pdflatex")))
+        if (!mustBeImportable && !FileExporterToolchain::which(QLatin1String("pdflatex")).isEmpty())
             supportedMimeTypes += QLatin1String(" application/pdf");
-        if (!mustBeImportable && FileExporterToolchain::which(QLatin1String("dvips")))
+        if (!mustBeImportable && !FileExporterToolchain::which(QLatin1String("dvips")).isEmpty())
             supportedMimeTypes += QLatin1String(" application/postscript");
         if (!mustBeImportable)
             supportedMimeTypes += QLatin1String(" text/html");
-        if (!mustBeImportable && FileExporterToolchain::which(QLatin1String("latex2rtf")))
+        if (!mustBeImportable && !FileExporterToolchain::which(QLatin1String("latex2rtf")).isEmpty())
             supportedMimeTypes += QLatin1String(" application/rtf");
 
         KFileDialog saveDlg(startDir, supportedMimeTypes, p->widget());
