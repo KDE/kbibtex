@@ -313,8 +313,11 @@ void ReferencePreview::renderHTML()
 
     if (type == "source") {
         /// source
-        text.prepend(d->htmlStart + "<pre style=\"font-family: '" + KGlobalSettings::fixedFont().family() + "';\">");
-        text.append("</pre></body></html>");
+        text.prepend(QLatin1String("';\">"));
+        text.prepend(KGlobalSettings::fixedFont().family());
+        text.prepend(QLatin1String("<pre style=\"font-family: '"));
+        text.prepend(d->htmlStart);
+        text.append(QLatin1String("</pre></body></html>"));
     } else if (type == "bibtex2html") {
         /// bibtex2html
 
