@@ -41,7 +41,7 @@ private:
     bool isMultiLine;
     bool m_isReadOnly;
     QHBoxLayout *hLayout;
-    const QString transparentStyleSheet, normalStyleSheet;
+    static const QString transparentStyleSheet, normalStyleSheet;
     bool makeInnerWidgetsTransparent;
 
 public:
@@ -50,19 +50,18 @@ public:
     KTextEdit *m_multiLineEditText;
 
     MenuLineEditPrivate(bool isMultiLine, MenuLineEdit *parent)
-            : p(parent), m_isReadOnly(false),
-          // FIXME much here is hard-coded. do it better?
-          transparentStyleSheet(
-              QLatin1String("KTextEdit { border-style: none; background-color: transparent; }")
-              + QLatin1String("KLineEdit { border-style: none; background-color: transparent; }")
-              + QLatin1String("KPushButton { border-style: none; background-color: transparent; padding: 0px; margin-left: 2px; margin-right:2px; text-align: left; }")
-          ), normalStyleSheet(
-              QLatin1String("KPushButton { padding:4px; margin:0px;  text-align: left; }")
-              + QLatin1String("QPushButton::menu-indicator {subcontrol-position: right center; subcontrol-origin: content;}")
-          ), makeInnerWidgetsTransparent(false), m_singleLineEditText(NULL), m_multiLineEditText(NULL) {
+            : p(parent), m_isReadOnly(false), makeInnerWidgetsTransparent(false), m_singleLineEditText(NULL), m_multiLineEditText(NULL) {
         this->isMultiLine = isMultiLine;
         /// listen to configuration change events specifically concerning a MenuLineEdit widget
         NotificationHub::registerNotificationListener(this, MenuLineEdit::MenuLineConfigurationChangedEvent);
+    }
+
+    ~MenuLineEditPrivate() {
+        if (m_singleLineEditText != NULL) delete m_singleLineEditText;
+        else if (m_multiLineEditText != NULL) delete m_multiLineEditText;
+
+        while (!hLayout->isEmpty())
+            delete hLayout->itemAt(0)->widget();
     }
 
     virtual void notificationEvent(int eventId) {
@@ -187,6 +186,9 @@ public:
         }
     }
 };
+
+const QString MenuLineEdit::MenuLineEditPrivate::transparentStyleSheet = QLatin1String("KTextEdit { border-style: none; background-color: transparent; }\nKLineEdit { border-style: none; background-color: transparent; }\nKPushButton { border-style: none; background-color: transparent; padding: 0px; margin-left: 2px; margin-right:2px; text-align: left; }");
+const QString MenuLineEdit::MenuLineEditPrivate::normalStyleSheet = QLatin1String("KPushButton { padding:4px; margin:0px;  text-align: left; }\nQPushButton::menu-indicator {subcontrol-position: right center; subcontrol-origin: content;}");
 
 MenuLineEdit::MenuLineEdit(bool isMultiLine, QWidget *parent)
         : QFrame(parent), d(new MenuLineEditPrivate(isMultiLine, this))
