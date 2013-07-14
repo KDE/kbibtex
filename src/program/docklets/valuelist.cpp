@@ -70,6 +70,11 @@ public:
         initialize();
     }
 
+    ~ValueListPrivate() {
+        delete comboboxFieldNames;
+        // TODO more deletes
+    }
+
     void setupGUI() {
         QGridLayout *layout = new QGridLayout(p);
         layout->setMargin(0);

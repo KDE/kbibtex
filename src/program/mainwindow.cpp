@@ -23,7 +23,7 @@
 #include <QDropEvent>
 #include <QLabel>
 
-#include <kio/netaccess.h>
+#include <KIO/NetAccess>
 #include <KApplication>
 #include <KAction>
 #include <KActionMenu>
@@ -83,6 +83,11 @@ public:
     KBibTeXMainWindowPrivate(KBibTeXMainWindow *parent)
             : p(parent) {
         // nothing
+    }
+
+    ~KBibTeXMainWindowPrivate() {
+        elementForm->deleteLater();
+        // TODO other deletes
     }
 };
 

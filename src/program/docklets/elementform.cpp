@@ -102,6 +102,10 @@ public:
         connect(checkBoxAutoApply, SIGNAL(toggled(bool)), p, SLOT(autoApplyToggled(bool)));
     }
 
+    ~ElementFormPrivate() {
+        delete elementEditor;
+    }
+
     void refreshElement() {
         loadElement(element, file);
     }

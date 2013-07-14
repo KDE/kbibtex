@@ -24,7 +24,6 @@
 #include <QSignalMapper>
 #include <QSpinBox>
 
-#include <KDebug>
 #include <KLocale>
 #include <KPushButton>
 #include <KInputDialog>
@@ -56,6 +55,13 @@ public:
     FieldInputPrivate(FieldInput *parent)
             : p(parent), colorWidget(NULL), starRatingWidget(NULL), fieldLineEdit(NULL), fieldListEdit(NULL), bibtexFile(NULL), element(NULL) {
         // nothing
+    }
+
+    ~FieldInputPrivate() {
+        if (colorWidget != NULL) delete colorWidget;
+        else if (starRatingWidget != NULL) delete starRatingWidget;
+        else if (fieldLineEdit != NULL) delete fieldLineEdit;
+        else if (fieldListEdit != NULL) delete fieldListEdit;
     }
 
     void createGUI() {

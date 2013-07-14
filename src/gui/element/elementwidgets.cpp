@@ -93,7 +93,12 @@ EntryConfiguredWidget::EntryConfiguredWidget(QSharedPointer<EntryTabLayout> &ent
 
 EntryConfiguredWidget::~EntryConfiguredWidget()
 {
+    for (int i = fieldInputCount - 1; i >= 0; --i) {
+        delete listOfLabeledFieldInput[i]->fieldInput;
+        delete listOfLabeledFieldInput[i]->label;
+    }
     delete[] listOfLabeledFieldInput;
+    delete gridLayout;
 }
 
 bool EntryConfiguredWidget::apply(QSharedPointer<Element> element) const
@@ -665,6 +670,11 @@ OtherFieldsWidget::OtherFieldsWidget(const QStringList &blacklistedFields, QWidg
     createGUI();
 }
 
+OtherFieldsWidget::~OtherFieldsWidget()
+{
+    delete fieldContent;
+}
+
 bool OtherFieldsWidget::apply(QSharedPointer<Element> element) const
 {
     if (isReadOnly) return false; /// never save data if in read-only mode
@@ -902,6 +912,11 @@ MacroWidget::MacroWidget(QWidget *parent)
     createGUI();
 }
 
+MacroWidget::~MacroWidget()
+{
+    delete fieldInputValue;
+}
+
 bool MacroWidget::apply(QSharedPointer<Element> element) const
 {
     if (isReadOnly) return false; /// never save data if in read-only mode
@@ -1050,6 +1065,11 @@ SourceWidget::SourceWidget(QWidget *parent)
         : ElementWidget(parent)
 {
     createGUI();
+}
+
+SourceWidget::~SourceWidget()
+{
+    delete sourceEdit;
 }
 
 bool SourceWidget::apply(QSharedPointer<Element> element) const
