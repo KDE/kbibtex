@@ -427,7 +427,6 @@ OpenFileInfoManager::OpenFileInfoManager(QWidget *widget)
 
 OpenFileInfoManager::~OpenFileInfoManager()
 {
-    d->writeConfig();
     delete d;
 }
 
@@ -574,6 +573,8 @@ bool OpenFileInfoManager::queryCloseAll()
         foreach(OpenFileInfo *openFileInfo, restoreLaterList) {
             openFileInfo->addFlags(OpenFileInfo::Open);
         }
+
+        d->writeConfig();
     }
 
     return isClosing;
