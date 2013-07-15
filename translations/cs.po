@@ -4,13 +4,13 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 #  <fischer@unix-ag.uni-kl.de>, 2012.
-# Pavel Fric <pavelfric@seznam.cz>, 2012.
+# Pavel Fric <pavelfric@seznam.cz>, 2012, 2013.
 msgid ""
 msgstr ""
 "Project-Id-Version: KBibTeX 0.5\n"
 "Report-Msgid-Bugs-To: https://gna.org/bugs/?group=kbibtex\n"
 "POT-Creation-Date: 2013-05-30 22:04+0200\n"
-"PO-Revision-Date: 2012-10-04 15:57+0200\n"
+"PO-Revision-Date: 2013-07-10 19:41+0200\n"
 "Last-Translator: Pavel Fric <pavelfric@seznam.cz>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
 "Language: cs\n"
@@ -92,13 +92,12 @@ msgid "Select your duplicates"
 msgstr "Vyberte své duplikáty"
 
 #: kbibtex/src/gui/bibtex/findduplicatesui.cpp:558
-#, fuzzy
 msgid "Previous Clique"
-msgstr "Předchozí"
+msgstr "Předchozí uzavřená skupina"
 
 #: kbibtex/src/gui/bibtex/findduplicatesui.cpp:560
 msgid "Next Clique"
-msgstr ""
+msgstr "Další  uzavřená skupina"
 
 #: kbibtex/src/gui/bibtex/findduplicatesui.cpp:642
 msgid "Find Duplicates"
@@ -134,7 +133,7 @@ msgstr "Nenalezeny žádné duplikáty"
 
 #: kbibtex/src/gui/element/elementeditor.cpp:175
 msgid "Options"
-msgstr ""
+msgstr "Volby"
 
 #: kbibtex/src/gui/element/elementeditor.cpp:181
 msgid "Show all fields"
@@ -142,7 +141,7 @@ msgstr "Ukázat všechna pole"
 
 #: kbibtex/src/gui/element/elementeditor.cpp:186
 msgid "Tab key visits only editable fields"
-msgstr ""
+msgstr "Klávesa tabulátoru navštěvuje pouze upravitelná pole"
 
 #: kbibtex/src/gui/element/elementeditor.cpp:192
 msgid "Check with BibTeX"
@@ -259,9 +258,8 @@ msgid "Find PDF"
 msgstr "Najít PDF"
 
 #: kbibtex/src/gui/element/findpdfui.cpp:412
-#, fuzzy
 msgid "Save URL '%1'"
-msgstr "Uložit adresu (URL) \"%1\""
+msgstr "Uložit adresu (URL) '%1'"
 
 #: kbibtex/src/gui/element/findpdfui.cpp:480
 msgid ""
@@ -303,7 +301,6 @@ msgid "Select the cross reference to another entry:"
 msgstr "Vybrat křížový odkaz na jiný záznam:"
 
 #: kbibtex/src/gui/field/fieldlineedit.cpp:75
-#, fuzzy
 msgctxt "Value types like Source, Verbatim, Person, PlainText, ..."
 msgid "Types"
 msgstr "Typy"
@@ -339,20 +336,18 @@ msgid "Verbatim Text"
 msgstr "Podrobný text"
 
 #: kbibtex/src/gui/field/fieldlineedit.cpp:398
-#, fuzzy
 msgid "Open '%1'"
-msgstr "Otevřít \"%1\""
+msgstr "Otevřít '%1'"
 
 #: kbibtex/src/gui/field/fieldlineedit.cpp:447
-#, fuzzy
 msgid ""
 "The current text cannot be used as value of type '%1'.\n"
 "\n"
 "Switching back to type '%2'."
 msgstr ""
-"Nynější text nelze použít jako hodnotu typu \"%1\".\n"
+"Nynější text nelze použít jako hodnotu typu '%1'.\n"
 "\n"
-"Přepíná se zpět na typ \"%2\"."
+"Přepíná se zpět na typ '%2'."
 
 #: kbibtex/src/gui/field/fieldlistedit.cpp:151
 msgid "Remove value"
@@ -379,9 +374,8 @@ msgid "Add a list of names from clipboard"
 msgstr "Přidat seznam jmen ze schránky"
 
 #: kbibtex/src/gui/field/fieldlistedit.cpp:462
-#, fuzzy
 msgid "Add file ..."
-msgstr "Přidat..."
+msgstr "Přidat soubor..."
 
 #: kbibtex/src/gui/field/fieldlistedit.cpp:469
 msgid "Add reference to file ..."
@@ -389,16 +383,15 @@ msgstr "Přidat odkaz na soubor..."
 
 #: kbibtex/src/gui/field/fieldlistedit.cpp:470
 msgid "Insert only a filename, but do not copy the file itself."
-msgstr ""
+msgstr "Vložit pouze název souboru, ale nekopírovat sám soubor."
 
 #: kbibtex/src/gui/field/fieldlistedit.cpp:473
 msgid "Insert file ..."
 msgstr "Vložit soubor..."
 
 #: kbibtex/src/gui/field/fieldlistedit.cpp:474
-#, fuzzy
 msgid "Copy file next to bibliography file."
-msgstr "Uložení bibliografie se nezdařilo"
+msgstr "Kopírovat soubor vedle souboru bibliografie."
 
 #: kbibtex/src/gui/field/fieldlistedit.cpp:488
 msgid "Select File"
@@ -413,13 +406,11 @@ msgstr ""
 "dokumentu musí smazat."
 
 #: kbibtex/src/gui/field/fieldlistedit.cpp:510
-#, fuzzy
 msgctxt "When copying a file to a position relative to the bibliography file"
 msgid "Select Source File"
 msgstr "Vybrat zdrojový soubor"
 
 #: kbibtex/src/gui/field/fieldlistedit.cpp:521
-#, fuzzy
 msgctxt "When copying a file to a position relative to the bibliography file"
 msgid "Select Destination"
 msgstr "Vybrat cíl"
@@ -430,12 +421,10 @@ msgid "Save file locally"
 msgstr "Uložit soubor místně"
 
 #: kbibtex/src/gui/field/fieldlistedit.cpp:610
-#, fuzzy
 msgid "Save file '%1' locally"
-msgstr "Uložit soubor \"%1\" místně"
+msgstr "Uložit soubor '%1' místně"
 
 #: kbibtex/src/gui/field/fieldlistedit.cpp:620
-#, fuzzy
 msgid ""
 "<qt><p>Use a filename relative to the bibliography file?</p><p>The relative "
 "path would be<br/><tt style=\"font-family: %2;\">%1</tt></p></qt>"
@@ -526,10 +515,9 @@ msgid "Color & Labels"
 msgstr "Barva a popisky"
 
 #: kbibtex/src/gui/preferences/settingscolorlabelwidget.cpp:348
-#, fuzzy
 msgctxt "Label for a new color; placeholder is for a 6-digit hex string"
 msgid "NewColor%1"
-msgstr "Barva"
+msgstr "Nová barva %1"
 
 #: kbibtex/src/gui/preferences/settingsfileexporterpdfpswidget.cpp:51
 msgid "A4"
@@ -557,10 +545,9 @@ msgstr "Styl bibliografie:"
 
 #: kbibtex/src/gui/preferences/settingsfileexporterpdfpswidget.cpp:136
 msgid "PDF & Postscript"
-msgstr ""
+msgstr "PDF a PostScript"
 
 #: kbibtex/src/gui/preferences/settingsfileexporterwidget.cpp:115
-#, fuzzy
 msgid "Command for 'Copy Reference':"
 msgstr "Příkaz pro Kopírovat odkaz:"
 
@@ -633,40 +620,37 @@ msgid "Keywords"
 msgstr "Klíčová slova"
 
 #: kbibtex/src/gui/preferences/settingsglobalkeywordswidget.cpp:144
-#, fuzzy
 msgid "NewKeyword%1"
-msgstr "Nové klíčové slovo"
+msgstr "Nové klíčové slovo %1"
 
 #: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:68
 msgid "Authors"
 msgstr "Autoři"
 
 #: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:72
-#, fuzzy
 msgid "Author Range:"
-msgstr "Autor:"
+msgstr "Rozsah autorů:"
 
 #: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:99
 #: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:170
-#, fuzzy
 msgid "From first to last author"
-msgstr "Jen první autor"
+msgstr "Od prvního po posledního autora"
 
 #: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:99
 #: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:172
 msgid "From author %1 to last author"
-msgstr ""
+msgstr "Od autora %1 po posledního autora"
 
 #: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:100
 #: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:174
 msgid "From first author to author %1"
-msgstr ""
+msgstr "Od prvního autora po autora %1"
 
 #: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:100
 #: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:176
 #: kbibtex/src/processing/idsuggestions.cpp:267
 msgid "From author %1 to author %2"
-msgstr ""
+msgstr "Od autora %1 po autora %2"
 
 #: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:104
 #: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:237
@@ -685,9 +669,8 @@ msgstr "Na malá písmena"
 
 #: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:107
 #: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:240
-#, fuzzy
 msgid "To CamelCase"
-msgstr "velbloudHrbMalý"
+msgstr "VelbloudíHrb"
 
 #: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:108
 #: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:241
@@ -745,49 +728,46 @@ msgid "Title"
 msgstr "Název"
 
 #: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:213
-#, fuzzy
 msgid "Word Range:"
-msgstr "Velikost písmen klíčového slova:"
+msgstr "Rozsah slov:"
 
 #: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:228
 msgid "From word to last word"
-msgstr ""
+msgstr "Od slova po poslední slovo"
 
 #: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:228
 #: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:304
 msgid "From word %1 to last word"
-msgstr ""
+msgstr "Od slova %1 po poslední slovo"
 
 #: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:229
 msgid "From word author to word %1"
-msgstr ""
+msgstr "Od slova autor po slovo %1"
 
 #: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:229
 #: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:308
 msgid "From word %1 to word %2"
-msgstr ""
+msgstr "Od slova %1 po slovo %2"
 
 #: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:233
 msgid "Small words:"
 msgstr "Malá slova:"
 
 #: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:298
-#, fuzzy
 msgid "First word only"
-msgstr "Jen první autor"
+msgstr "Jen první slovo"
 
 #: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:300
-#, fuzzy
 msgid "All but first word"
-msgstr "Všichni autoři kromě prvního"
+msgstr "Vše kromě prvního slova"
 
 #: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:302
 msgid "From first to last word"
-msgstr ""
+msgstr "Od prvního po poslední slovo"
 
 #: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:306
 msgid "From first word to word %1"
-msgstr ""
+msgstr "Od prvního slova po slovo %1"
 
 #: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:319
 #: kbibtex/src/gui/preferences/settingsidsuggestionseditor.cpp:390
@@ -901,19 +881,16 @@ msgid "Comment Quoting:"
 msgstr "Uvození poznámky:"
 
 #: kbibtex/src/gui/widgets/filesettingswidget.cpp:140
-#, fuzzy
 msgctxt "Comment Quoting"
 msgid "None"
 msgstr "Žádný"
 
 #: kbibtex/src/gui/widgets/filesettingswidget.cpp:141
-#, fuzzy
 msgctxt "Comment Quoting"
 msgid "@comment{%1}"
-msgstr "@comment{%1}"
+msgstr "@Poznámka{%1}"
 
 #: kbibtex/src/gui/widgets/filesettingswidget.cpp:142
-#, fuzzy
 msgctxt "Comment Quoting"
 msgid "%{%1}"
 msgstr "%{%1}"
@@ -923,34 +900,29 @@ msgid "Keyword Casing:"
 msgstr "Velikost písmen klíčového slova:"
 
 #: kbibtex/src/gui/widgets/filesettingswidget.cpp:147
-#, fuzzy
 msgctxt "Keyword Casing"
 msgid "lowercase"
-msgstr "Malá písmena"
+msgstr "malá písmena"
 
 #: kbibtex/src/gui/widgets/filesettingswidget.cpp:148
-#, fuzzy
 msgctxt "Keyword Casing"
 msgid "Initial capital"
-msgstr "První písmeno velké"
+msgstr "Počáteční písmeno velké"
 
 #: kbibtex/src/gui/widgets/filesettingswidget.cpp:149
-#, fuzzy
 msgctxt "Keyword Casing"
 msgid "UpperCamelCase"
-msgstr "VelbloudHrb"
+msgstr "VelbloudíHrb"
 
 #: kbibtex/src/gui/widgets/filesettingswidget.cpp:150
-#, fuzzy
 msgctxt "Keyword Casing"
 msgid "lowerCamelCase"
-msgstr "velbloudHrbMalý"
+msgstr "VelbloudíHrbMalýZačátek"
 
 #: kbibtex/src/gui/widgets/filesettingswidget.cpp:151
-#, fuzzy
 msgctxt "Keyword Casing"
 msgid "UPPERCASE"
-msgstr "VELKÁ PÍSMENA"
+msgstr "Velká písmena"
 
 #: kbibtex/src/gui/widgets/filesettingswidget.cpp:154
 msgid "Protect Titles"
@@ -965,44 +937,36 @@ msgid "Use global settings"
 msgstr "Použít celková nastavení"
 
 #: kbibtex/src/gui/widgets/filterbar.cpp:68
-#, fuzzy
 msgid "Reset filter"
-msgstr "Nastavit znovu na výchozí"
+msgstr "Nastavit filtr znovu"
 
 #: kbibtex/src/gui/widgets/filterbar.cpp:71
-#, fuzzy
 msgid "Combination"
-msgstr "Žádné omezení"
+msgstr "Spojení"
 
 #: kbibtex/src/gui/widgets/filterbar.cpp:73
-#, fuzzy
 msgid "Any word"
 msgstr "Kterékoli slovo"
 
 #: kbibtex/src/gui/widgets/filterbar.cpp:78
-#, fuzzy
 msgid "Every word"
 msgstr "Každé slovo"
 
 #: kbibtex/src/gui/widgets/filterbar.cpp:82
-#, fuzzy
 msgid "Exact phrase"
 msgstr "Přesné slovní spojení"
 
 #: kbibtex/src/gui/widgets/filterbar.cpp:88
-#, fuzzy
 msgid "Fields"
-msgstr "Jiná pole"
+msgstr "Pole"
 
 #: kbibtex/src/gui/widgets/filterbar.cpp:90
-#, fuzzy
 msgid "Every field"
 msgstr "Každé pole"
 
 #: kbibtex/src/gui/widgets/filterbar.cpp:106
-#, fuzzy
 msgid "Search PDF files"
-msgstr "Výsledky hledání"
+msgstr "Prohledat soubory PDF"
 
 #: kbibtex/src/gui/widgets/filterbar.cpp:109
 msgid "Include PDF files in full-text search"
@@ -1014,11 +978,11 @@ msgstr "Filtr:"
 
 #: kbibtex/src/gui/widgets/filterbar.cpp:239
 msgid "Configure the filter"
-msgstr ""
+msgstr "Nastavit filtr"
 
 #: kbibtex/src/gui/widgets/starrating.cpp:39
 msgid "Not set"
-msgstr ""
+msgstr "Nic není vybráno"
 
 #: kbibtex/src/io/fileexporterbibtex2html.cpp:73
 msgid "The program <strong>bibtex2html</strong> is not available."
@@ -1041,28 +1005,24 @@ msgid "Stopped process '%1' with exit code %2"
 msgstr "Proces '%1' zastaven s kódem pro ukončení %2"
 
 #: kbibtex/src/io/fileexportertoolchain.cpp:131
-#, fuzzy
 msgid "Writing to file '%1' succeeded"
 msgstr "Zápis do souboru '%1'' se podařil"
 
 #: kbibtex/src/io/fileexportertoolchain.cpp:136
-#, fuzzy
 msgid "Writing to file '%1' failed"
 msgstr "Zápis do souboru '%1'' se nezdařil"
 
 #: kbibtex/src/networking/onlinesearch/onlinesearchabstract.cpp:143
-#, fuzzy
 msgid "Searching '%1' failed for unknown reason."
-msgstr "Hledání \"%1\" neuspělo z neznámého důvodu."
+msgstr "Hledání '%1' neuspělo z neznámého důvodu."
 
 #: kbibtex/src/networking/onlinesearch/onlinesearchabstract.cpp:143
-#, fuzzy
 msgid ""
 "Searching '%1' failed with error message:\n"
 "\n"
 "%2"
 msgstr ""
-"Hledání \"%1\" neuspělo s chybovou zprávou:\n"
+"Hledání '%1' neuspělo s chybovou zprávou:\n"
 "\n"
 "%2"
 
@@ -1071,10 +1031,9 @@ msgid "ACM Digital Library"
 msgstr "Digitální knihovna ACM"
 
 #: kbibtex/src/networking/onlinesearch/onlinesearchacmportal.cpp:179
-#, fuzzy
 msgid "Searching '%1' failed: Could not extract form from ACM's start page."
 msgstr ""
-"Hledání \"%1\" neuspělo: Nepodařilo se vytáhnout formulář ze zahajovací "
+"Hledání '%1' neuspělo: Nepodařilo se vytáhnout formulář ze zahajovací "
 "stránky ACM."
 
 #: kbibtex/src/networking/onlinesearch/onlinesearcharxiv.cpp:59
@@ -1123,9 +1082,8 @@ msgid "Bibsonomy"
 msgstr "Bibsonomy"
 
 #: kbibtex/src/networking/onlinesearch/onlinesearchcernds.cpp:33
-#, fuzzy
 msgid "CERN Document Server"
-msgstr "Náhled na dokument"
+msgstr "Dokumentový server CERN"
 
 #: kbibtex/src/networking/onlinesearch/onlinesearchgeneral.cpp:48
 #: kbibtex/src/networking/onlinesearch/onlinesearchingentaconnect.cpp:80
@@ -1149,7 +1107,7 @@ msgstr "Google Scholar"
 
 #: kbibtex/src/networking/onlinesearch/onlinesearchideasrepec.cpp:106
 msgid "IDEAS (RePEc)"
-msgstr ""
+msgstr "IDEAS (RePEc)"
 
 #: kbibtex/src/networking/onlinesearch/onlinesearchieeexplore.cpp:226
 msgid "IEEEXplore"
@@ -1185,7 +1143,7 @@ msgstr "IngentaConnect"
 
 #: kbibtex/src/networking/onlinesearch/onlinesearchinspirehep.cpp:33
 msgid "Inspire High-Energy Physics Literature Database"
-msgstr ""
+msgstr "Inspire High-Energy Physics Literature Database"
 
 #: kbibtex/src/networking/onlinesearch/onlinesearchisbndb.cpp:116
 msgid "ISBNdb.com"
@@ -1260,13 +1218,12 @@ msgid "PDF/PostScript File Settings"
 msgstr "Nastavení pro soubory PDF/PostScript"
 
 #: kbibtex/src/parts/part.cpp:309
-#, fuzzy
 msgid ""
 "Saving the bibliography to file '%1' failed.\n"
 "\n"
 "The following output was generated by the export filter:"
 msgstr ""
-"Uložení bibliografie do souboru \"%1\" se nezdařilo.\n"
+"Uložení bibliografie do souboru '%1'  se nezdařilo.\n"
 "\n"
 "Následující výstup byl vytvořen vyváděcím filtrem:"
 
@@ -1275,15 +1232,13 @@ msgid "Saving bibliography failed"
 msgstr "Uložení bibliografie se nezdařilo"
 
 #: kbibtex/src/parts/part.cpp:333
-#, fuzzy
 msgid "Saving the bibliography to file '%1' failed."
-msgstr "Uložení bibliografie do souboru \"%1\" se nezdařilo."
+msgstr "Uložení bibliografie do souboru '%1'  se nezdařilo."
 
 #: kbibtex/src/parts/part.cpp:347
-#, fuzzy
 msgid ""
 "A file named '%1' already exists. Are you sure you want to overwrite it?"
-msgstr "Soubor s názvem \"%1\" již existuje. Opravdu jej přejete přepsat?"
+msgstr "Soubor s názvem '%1'  již existuje. Opravdu jej přejete přepsat?"
 
 #: kbibtex/src/parts/part.cpp:347
 msgid "Overwrite File?"
@@ -1338,14 +1293,13 @@ msgid "Copy References"
 msgstr "Kopírovat odkazy"
 
 #: kbibtex/src/parts/part.cpp:558
-#, fuzzy
 msgid ""
 "The document could not be saved, as it was not possible to write to '%1'.\n"
 "\n"
 "Check that you have write access to this file or that enough disk space is "
 "available."
 msgstr ""
-"Dokument se nepodařilo uložit, protože nebylo možné zapisovat do %1\n"
+"Dokument se nepodařilo uložit, protože nebylo možné zapisovat do '%1' .\n"
 "\n"
 "Prověřte, zda máte oprávnění pro zápis do tohoto souboru, nebo že je "
 "dostupný dostatek místa na disku."
@@ -1426,7 +1380,6 @@ msgid "Field <b>%1</b> is empty"
 msgstr "Pole <b>%1</b> je prázdné"
 
 #: kbibtex/src/processing/checkbibtex.cpp:123
-#, fuzzy
 msgid "Fields <b>%1</b> and <b>%2</b> are empty, but at least one is required"
 msgstr ""
 "Pole <b>%1</b> a <b>%2</b> jsou prázdná. Je potřeba alespoň jedno z nich"
@@ -1453,17 +1406,15 @@ msgid "Unknown warning: %1"
 msgstr "Neznámé varování: %1"
 
 #: kbibtex/src/processing/checkbibtex.cpp:148
-#, fuzzy
 msgid "<qt><p>The following error was found:</p><pre>%1</pre></qt>"
-msgstr "<qt><p>Byla nalezena následující chyba:</p><pre>%1</pre>"
+msgstr "<qt><p>Byla nalezena následující chyba:</p><pre>%1</pre></qt>"
 
 #: kbibtex/src/processing/checkbibtex.cpp:150
-#, fuzzy
 msgid "<qt><p>The following warnings were found:</p><ul><li>%1</li></ul></qt>"
-msgstr "<qt><p>Byla nalezena následující varování:</p><ul><li>%1</li></ul>"
+msgstr ""
+"<qt><p>Byla nalezena následující varování:</p><ul><li>%1</li></ul></qt>"
 
 #: kbibtex/src/processing/checkbibtex.cpp:153
-#, fuzzy
 msgid ""
 "\n"
 "\n"
@@ -1473,7 +1424,7 @@ msgstr ""
 "\n"
 "\n"
 "Některá pole, která v tomto záznamu chyběla, byla vzata z křížově "
-"odkazovaného záznamu \"%1\"."
+"odkazovaného záznamu '%1'."
 
 #: kbibtex/src/processing/checkbibtex.cpp:153
 msgid "No warnings or errors were found.%1"
@@ -1493,7 +1444,7 @@ msgctxt ""
 "Small words that can be removed from titles when generating id suggestions; "
 "separated by pipe symbol"
 msgid "and|on|in|the|of|at|a|an|with|for|from"
-msgstr ""
+msgstr "and|on|in|the|of|at|a|an|with|for|from|a|nebo|na|s|pro|s"
 
 #: kbibtex/src/processing/idsuggestions.cpp:265
 msgid "All authors"
@@ -1518,9 +1469,8 @@ msgstr ", v malých písmenech"
 
 #: kbibtex/src/processing/idsuggestions.cpp:280
 #: kbibtex/src/processing/idsuggestions.cpp:309
-#, fuzzy
 msgid ", in CamelCase"
-msgstr "VelbloudHrb"
+msgstr ", v VelbloudíHrb"
 
 #: kbibtex/src/processing/idsuggestions.cpp:286
 #: kbibtex/src/processing/idsuggestions.cpp:315
@@ -1536,22 +1486,19 @@ msgid "Year (4 digits)"
 msgstr "Rok (4 číslice)"
 
 #: kbibtex/src/processing/idsuggestions.cpp:293
-#, fuzzy
 msgid ", but only the first word"
 msgid_plural ", but only first %1 words"
-msgstr[0] ", ale jen první písmeno každého slova"
-msgstr[1] ", ale jen první %1 písmena každého slova"
-msgstr[2] ", ale jen prvních %1 písmen každého slova"
+msgstr[0] ", ale jen první písmeno"
+msgstr[1] ", ale jen první %1 písmena"
+msgstr[2] ", ale jen prvních %1 písmen"
 
 #: kbibtex/src/processing/idsuggestions.cpp:295
-#, fuzzy
 msgid ", but only starting from word %1"
-msgstr ", ale jen první písmeno každého slova"
+msgstr ", ale jen počínaje od slova %1"
 
 #: kbibtex/src/processing/idsuggestions.cpp:297
-#, fuzzy
 msgid ", but only from word %1 to word %2"
-msgstr ", ale jen první písmeno každého slova"
+msgstr ", ale jen od slova %1 po slovo %2"
 
 #: kbibtex/src/processing/idsuggestions.cpp:299
 msgid ", but only first letter of each word"
@@ -1587,7 +1534,6 @@ msgid "Send Reference to LyX"
 msgstr "Poslat odkaz LyXu"
 
 #: kbibtex/src/processing/lyx.cpp:129
-#, fuzzy
 msgid "No 'LyX server pipe' was detected."
 msgstr "Nebyl zjištěn žádný \"přenos dat serveru LyX\"."
 
@@ -1596,17 +1542,17 @@ msgid "No references to send to LyX."
 msgstr "Žádné odkazy k odeslání LyXu."
 
 #: kbibtex/src/processing/lyx.cpp:140
-#, fuzzy
 msgid "Could not open LyX server pipe '%1'."
-msgstr "Nepodařilo se otevřít přenos dat serveru LyX \"%1\"."
+msgstr "Nepodařilo se otevřít přenos dat serveru LyX '%1'."
 
 #: kbibtex/src/program/docklets/documentpreview.cpp:169
 msgid "Toggle between local files only and all documents including remote ones"
 msgstr ""
+"Přepnout mezi jen místními soubory a všemi dokumenty (včetně vzdálených)"
 
 #: kbibtex/src/program/docklets/documentpreview.cpp:180
 msgid "Open in external program"
-msgstr ""
+msgstr "Otevřít ve vnějším programu"
 
 #: kbibtex/src/program/docklets/documentpreview.cpp:203
 #: kbibtex/src/program/docklets/referencepreview.cpp:89
@@ -1800,43 +1746,36 @@ msgid "Copy"
 msgstr "Kopírovat"
 
 #: kbibtex/src/program/docklets/statistics.cpp:50
-#, fuzzy
 msgid "Number of Elements:"
-msgstr "Počet výsledků:"
+msgstr "Počet prvků:"
 
 #: kbibtex/src/program/docklets/statistics.cpp:54
-#, fuzzy
 msgid "Number of Entries:"
-msgstr "Počet výsledků:"
+msgstr "Počet záznamů:"
 
 #: kbibtex/src/program/docklets/statistics.cpp:57
-#, fuzzy
 msgid "Journal Articles:"
-msgstr "Název knihy/časopisu:"
+msgstr "Články časopisu:"
 
 #: kbibtex/src/program/docklets/statistics.cpp:60
-#, fuzzy
 msgid "Conference Publications:"
-msgstr "Zveřejnění:"
+msgstr "Sborníky z konferencí:"
 
 #: kbibtex/src/program/docklets/statistics.cpp:63
 msgid "Books:"
-msgstr ""
+msgstr "Knihy:"
 
 #: kbibtex/src/program/docklets/statistics.cpp:66
-#, fuzzy
 msgid "Other Entries:"
-msgstr "Jiná pole"
+msgstr "Jiná záznamy:"
 
 #: kbibtex/src/program/docklets/statistics.cpp:70
-#, fuzzy
 msgid "Number of Comments:"
-msgstr "Počet výsledků:"
+msgstr "Počet poznámek:"
 
 #: kbibtex/src/program/docklets/statistics.cpp:74
-#, fuzzy
 msgid "Number of Macros:"
-msgstr "Počet záloh:"
+msgstr "Počet maker:"
 
 #: kbibtex/src/program/docklets/valuelist.cpp:92
 msgid "Replace all occurrences"
@@ -1887,7 +1826,6 @@ msgid "Add to Favorites"
 msgstr "Přidat do oblíbených"
 
 #: kbibtex/src/program/documentlist.cpp:311
-#, fuzzy
 msgid ""
 "The current document has to be saved before switching the viewer/editor "
 "component."
@@ -1940,7 +1878,7 @@ msgstr "Seznam hodnot"
 
 #: kbibtex/src/program/mainwindow.cpp:148
 msgid "Statistics"
-msgstr ""
+msgstr "Statistika"
 
 #: kbibtex/src/program/mainwindow.cpp:158
 msgid "Search Results"
@@ -1963,17 +1901,15 @@ msgid "Element Editor"
 msgstr "Editor prvku"
 
 #: kbibtex/src/program/mainwindow.cpp:210
-#, fuzzy
 msgid "File Settings"
-msgstr "Nastavení pro soubory BibTeX"
+msgstr "Nastavení souborů"
 
 #: kbibtex/src/program/mainwindow.cpp:298
-#, fuzzy
 msgid ""
 "Creating a new document of mime type '%1' failed as no editor component "
 "could be instantiated."
 msgstr ""
-"Vytvoření nového dokumentu MIME typu \"%1\" se nezdařilo, protože se "
+"Vytvoření nového dokumentu MIME typu '%1' se nezdařilo, protože se "
 "nepodařilo najít žádnou součástku editoru."
 
 #: kbibtex/src/program/mainwindow.cpp:298
@@ -1997,9 +1933,8 @@ msgid "Date/time of last use"
 msgstr "Datum/Čas posledního užití"
 
 #: kbibtex/src/program/mdiwidget.cpp:97
-#, fuzzy
 msgid "Full filename"
-msgstr "Název souboru"
+msgstr "Celý název souboru"
 
 #: kbibtex/src/program/mdiwidget.cpp:143
 msgid "<qt>Welcome to <b>KBibTeX</b> for <b>KDE 4</b></qt>"
@@ -2034,9 +1969,8 @@ msgid "A BibTeX editor for KDE"
 msgstr "Editor BibTeX pro KDE"
 
 #: kbibtex/src/program/program.cpp:39 kbibtex/src/test/main.cpp:15
-#, fuzzy
 msgid "Copyright 2004-2013 Thomas Fischer"
-msgstr "Autorské právo 2004-2012 Thomas Fischer"
+msgstr "Autorské právo 2004-2013 Thomas Fischer"
 
 #: kbibtex/src/program/program.cpp:45
 msgid "File(s) to load"
@@ -2077,23 +2011,20 @@ msgstr "fripohled.blogspot.com"
 #. i18n: file: kbibtex/src/program/kbibtexui.rc:4
 #. i18n: ectx: Menu (file)
 #: rc.cpp:5 rc.cpp:17
-#, fuzzy
 msgid "File"
-msgstr "&Soubor"
+msgstr "Soubor"
 
 #. i18n: file: kbibtex/src/parts/kbibtexpartui.rc:9
 #. i18n: ectx: Menu (edit)
 #: rc.cpp:8
-#, fuzzy
 msgid "Edit"
-msgstr "Úp&ravy"
+msgstr "Upravit"
 
 #. i18n: file: kbibtex/src/parts/kbibtexpartui.rc:16
 #. i18n: ectx: Menu (element)
 #: rc.cpp:11
-#, fuzzy
 msgid "Element"
-msgstr "&Prvek"
+msgstr "Prvek"
 
 #. i18n: file: kbibtex/src/parts/kbibtexpartui.rc:28
 #. i18n: ectx: ToolBar (mainToolBar)
