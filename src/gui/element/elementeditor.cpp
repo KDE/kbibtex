@@ -31,7 +31,6 @@
 #include <QMenu>
 #include <QTimer>
 
-#include <KDebug>
 #include <KPushButton>
 #include <KMessageBox>
 #include <KLocale>

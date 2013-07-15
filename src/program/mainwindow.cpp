@@ -87,6 +87,7 @@ public:
 
     ~KBibTeXMainWindowPrivate() {
         elementForm->deleteLater();
+        delete mdiWidget;
         // TODO other deletes
     }
 };
