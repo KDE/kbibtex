@@ -3,9 +3,11 @@ INFO: This TODO list will most likely outdate very quickly
 For the upcoming 0.5 release, the following bugs have to get
 addressed:
 
-- Bug 20123: Crash near File::property. Potential patch exists.
-- Bug 20515: Switching between different modes in a FieldLineEdit
-  is broken. Waiting for confirmation that problem is fixed.
+- Bug 20123: Crash near File::property, problems reproducing it
+- Bug 20811, 20812: Compile on SL6 / RHEL6 failing.
+  Should be fixed, waiting for confirmation.
+- Bug 20707: Cannot deal with underscore in DOI.
+  Should be fixed, waiting for confirmation.
 
 Within the scope of a 0.5.x release, the following features
 and bugs are to be addressed:
@@ -17,23 +19,15 @@ and bugs are to be addressed:
   to 0.5 branch)
 - Bug 19575: rendering when switching files not smooth
   (solution would be developed in trunk and backported to 0.5 branch)
-- Bug 19362: When adding new entry, CPU usage goes up (solution
-  would be developed in trunk and backported to 0.5 branch)
 - Bug 19484: KBibTeX uses a lot of CPU time (solution would be
   developed in trunk and backported to 0.5 branch)
-- Bug 19422: Poke KDE developers to fix KDE bug 294954 (solution
-  would be developed in trunk and backported to 0.5 branch)
 - Bug 20088: Ambiguity about use of word "type". Waiting for
   confirmation that problem is fixed
-- Bug 20204: Memory issues
-- Bug 20540: Set timestamp when entry was created/modified.
-  Should be configurable.
-- Bug 20463: Author filter needs two clicks to work properly.
-  Bug needs to be confirmed and test data provided.
 
 Within the scope of more future releases (0.6.x), the following
 features and bugs are to be addressed:
 
+- Consider "QScopedPointer" for cleaner memory management
 - Bug 19750: Filter bar looks into every field including
   localfile. Needs more information.
 - Bug 19969: Please document the SVN ID used in release
@@ -48,11 +42,6 @@ features and bugs are to be addressed:
 - Bug 19575: rendering when switching files not smooth
 - Bug 19516: Add spell-checking support
 - Bug 19484: KBibTeX uses a lot of CPU time
-- Bug 19362: When adding new entry, CPU usage goes up
-- Bug 19422: Poke KDE developers to fix KDE bug 294954
-- Bug 18662: BibLaTeX support needs to be refined and tested.
-  Related Bug 20407: Dynamic crossref resolution using "xdata"
-  and "xref"
 - Bug 18287, 19197: Automatic ID suggestion based on
   user-defined patterns (already work in progress).
 - Bug 18183: Increase number of search hits after initial
@@ -72,10 +61,22 @@ features and bugs are to be addressed:
 - Bug 20042: Create your own custom fields like in KDE3 version
 - Bug 20090: Improved drag'n'drop support for PDF files
 - Bug 20094: Rearrange items order manually
-- Bug 20204: Memory issues
+- Bug 20735: Retrieve bibliography information via known DOI
 
 More far future:
 
 - Bug 19863: slow "author list generator"?
   Due to generation of user interface. May need considerable
   redesign in the future.
+
+BibLaTeX-related:
+- Bug 20928: Conversion of aliases in biblatex files
+- Bug 20407: Dynamic crossref resolution
+- Bug 18662: BibLaTeX support needs to be refined and tested.
+  Related Bug 20407: Dynamic crossref resolution using "xdata"
+  and "xref"
+
+Unconfirmed or need info:
+- Bug 20922: list doesn't scroll down when browsing with cursor keys
+- Bug 20798: Crash when opening kbibtex
+- Bug 20732: KBibTeX doesn't remember its window width correctly
