@@ -510,7 +510,14 @@ QString EncoderLaTeX::decode(const QString &input) const
                     /// we are looking at something like {\"A}
                     /// Use lookup table to see what Unicode char this
                     /// represents
-                    output.append(lookupTable[lookupTablePos]->unicode[input[i + 3].toLatin1() - 'A']);
+                    const QChar unicodeLetter = lookupTable[lookupTablePos]->unicode[input[i + 3].toLatin1() - 'A'];
+                    if (unicodeLetter.unicode() < 127) {
+                        /// This combination of modifier and letter is not known,
+                        /// so try to preserve it
+                        output.append(input.mid(i, 5));
+                        kDebug() << "Don't know how to translate this into Unicode: " << input.mid(i, 5);
+                    } else
+                        output.append(unicodeLetter);
                     /// Step over those additional characters
                     i += 4;
                 } else if (lookupTablePos >= 0 && input[i + 3] == '\\' && input[i + 4] >= 'A' && input[i + 4] <= 'z' && input[i + 5] == '}') {
@@ -531,7 +538,14 @@ QString EncoderLaTeX::decode(const QString &input) const
                     /// we are looking at something like {\"{A}}
                     /// Use lookup table to see what Unicode char this
                     /// represents
-                    output.append(lookupTable[lookupTablePos]->unicode[input[i + 4].toLatin1() - 'A']);
+                    const QChar unicodeLetter = lookupTable[lookupTablePos]->unicode[input[i + 4].toLatin1() - 'A'];
+                    if (unicodeLetter.unicode() < 127) {
+                        /// This combination of modifier and letter is not known,
+                        /// so try to preserve it
+                        output.append(input.mid(i, 7));
+                        kDebug() << "Don't know how to translate this into Unicode: " << input.mid(i, 7);
+                    } else
+                        output.append(unicodeLetter);
                     /// Step over those additional characters
                     i += 6;
                 } else if (lookupTablePos >= 0 && input[i + 3] == '{' && input[i + 4] == '\\' && input[i + 5] >= 'A' && input[i + 5] <= 'z' && input[i + 6] == '}' && input[i + 7] == '}') {
@@ -612,7 +626,14 @@ QString EncoderLaTeX::decode(const QString &input) const
                 /// like \"u inside Kr\"uger
                 /// Use lookup table to see what Unicode char this
                 /// represents
-                output.append(lookupTable[lookupTablePos]->unicode[input[i + 2].toLatin1() - 'A']);
+                const QChar unicodeLetter = lookupTable[lookupTablePos]->unicode[input[i + 2].toLatin1() - 'A'];
+                if (unicodeLetter.unicode() < 127) {
+                    /// This combination of modifier and letter is not known,
+                    /// so try to preserve it
+                    output.append(input.mid(i, 3));
+                    kDebug() << "Don't know how to translate this into Unicode: " << input.mid(i, 3);
+                } else
+                    output.append(unicodeLetter);
                 /// Step over those additional characters
                 i += 2;
             } else if (lookupTablePos >= 0 && i <= len - 3 && input[i + 2] >= 'A' && input[i + 2] <= 'z' && (i == len - 3 || input[i + 3] == '}' ||  input[i + 3] == '{' || input[i + 3] == ' ' || input[i + 3] == '\t' || input[i + 3] == '\\' || input[i + 3] == '\r' || input[i + 3] == '\n')) {
@@ -622,7 +643,14 @@ QString EncoderLaTeX::decode(const QString &input) const
                 /// like \"u
                 /// Use lookup table to see what Unicode char this
                 /// represents
-                output.append(lookupTable[lookupTablePos]->unicode[input[i + 2].toLatin1() - 'A']);
+                const QChar unicodeLetter = lookupTable[lookupTablePos]->unicode[input[i + 2].toLatin1() - 'A'];
+                if (unicodeLetter.unicode() < 127) {
+                    /// This combination of modifier and letter is not known,
+                    /// so try to preserve it
+                    output.append(input.mid(i, 3));
+                    kDebug() << "Don't know how to translate this into Unicode: " << input.mid(i, 3);
+                } else
+                    output.append(unicodeLetter);
                 /// Step over those additional characters
                 i += 2;
 
@@ -643,7 +671,14 @@ QString EncoderLaTeX::decode(const QString &input) const
                 /// like \"{u}
                 /// Use lookup table to see what Unicode char this
                 /// represents
-                output.append(lookupTable[lookupTablePos]->unicode[input[i + 3].toLatin1() - 'A']);
+                const QChar unicodeLetter = lookupTable[lookupTablePos]->unicode[input[i + 3].toLatin1() - 'A'];
+                if (unicodeLetter.unicode() < 127) {
+                    /// This combination of modifier and letter is not known,
+                    /// so try to preserve it
+                    output.append(input.mid(i, 5));
+                    kDebug() << "Don't know how to translate this into Unicode: " << input.mid(i, 5);
+                } else
+                    output.append(unicodeLetter);
                 /// Step over those additional characters
                 i += 4;
             } else if (lookupTablePos >= 0 && input[i + 2] == '\\' && input[i + 3] >= 'A' && input[i + 3] <= 'z') {
