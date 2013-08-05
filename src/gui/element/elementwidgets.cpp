@@ -126,8 +126,8 @@ bool EntryConfiguredWidget::reset(QSharedPointer<const Element> element)
 
     /// clear all widgets
     for (QMap<QString, FieldInput *>::Iterator it = bibtexKeyToWidget.begin(); it != bibtexKeyToWidget.end(); ++it) {
-        it.value()->clear();
         it.value()->setFile(m_file);
+        it.value()->clear();
     }
 
     for (Entry::ConstIterator it = entry->constBegin(); it != entry->constEnd(); ++it) {
@@ -167,8 +167,9 @@ KIcon EntryConfiguredWidget::icon()
 
 void EntryConfiguredWidget::setFile(const File *file)
 {
-    if (file != NULL)
-        for (QMap<QString, FieldInput *>::Iterator it = bibtexKeyToWidget.begin(); it != bibtexKeyToWidget.end(); ++it) {
+    for (QMap<QString, FieldInput *>::Iterator it = bibtexKeyToWidget.begin(); it != bibtexKeyToWidget.end(); ++it) {
+        it.value()->setFile(file);
+        if (file != NULL) {
             /// list of unique values for same field
             QStringList list = file->uniqueEntryValuesList(it.key());
             /// for crossref fields, add all entries' ids
@@ -179,6 +180,7 @@ void EntryConfiguredWidget::setFile(const File *file)
 
             it.value()->setCompletionItems(list);
         }
+    }
 
     ElementWidget::setFile(file);
 }
@@ -635,7 +637,6 @@ bool FilesWidget::reset(QSharedPointer<const Element> element)
                 combinedValue.append(*it);
         }
     fileList->setElement(element.data());
-    fileList->setFile(m_file);
     fileList->reset(combinedValue);
 
     return true;
@@ -655,6 +656,12 @@ QString FilesWidget::label()
 KIcon FilesWidget::icon()
 {
     return KIcon("emblem-symbolic-link");
+}
+
+void FilesWidget::setFile(const File *file)
+{
+    ElementWidget::setFile(file);
+    fileList->setFile(file);
 }
 
 bool FilesWidget::canEdit(const Element *element)
