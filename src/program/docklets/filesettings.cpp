@@ -27,7 +27,7 @@
 #include "preferences.h"
 #include "guihelper.h"
 #include "italictextitemmodel.h"
-#include "bibtexfileview.h"
+#include "bibtexeditor.h"
 #include "bibtexfilemodel.h"
 #include "value.h"
 #include "iconvlatex.h"
@@ -35,20 +35,20 @@
 #include "filesettings.h"
 
 FileSettings::FileSettings(QWidget *parent)
-        : FileSettingsWidget(parent)
+        : FileSettingsWidget(parent), m_currentFile(NULL), m_editor(NULL)
 {
-    m_currentFile = NULL;
     setEnabled(false);
 
     connect(this, SIGNAL(widgetsChanged()), this, SLOT(widgetsChangedSlot()));
 }
 
-void FileSettings::setEditor(BibTeXFileView *fileView)
+void FileSettings::setEditor(BibTeXEditor *editor)
 {
     m_currentFile = NULL;
+    m_editor = editor;
 
-    if (fileView != NULL && fileView->bibTeXModel() != NULL) {
-        m_currentFile = fileView->bibTeXModel()->bibTeXFile();
+    if (m_editor != NULL && m_editor->bibTeXModel() != NULL) {
+        m_currentFile = m_editor->bibTeXModel()->bibTeXFile();
         if (m_currentFile != NULL)
             loadProperties(m_currentFile);
         setEnabled(true);
@@ -58,6 +58,9 @@ void FileSettings::setEditor(BibTeXFileView *fileView)
 
 void FileSettings::widgetsChangedSlot()
 {
-    if (m_currentFile != NULL)
+    if (m_currentFile != NULL) {
         saveProperties(m_currentFile);
+        /// Notify main editor about change it its data
+        m_editor->externalModification();
+    }
 }

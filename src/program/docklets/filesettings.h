@@ -23,8 +23,9 @@
 
 #include "filesettingswidget.h"
 
-class BibTeXFileView;
+class BibTeXEditor;
 class File;
+
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
@@ -36,13 +37,14 @@ class FileSettings : public FileSettingsWidget
 public:
     FileSettings(QWidget *parent);
 
-    void setEditor(BibTeXFileView *fileView);
+    void setEditor(BibTeXEditor *editor);
 
 private slots:
     void widgetsChangedSlot();
 
 private:
     File *m_currentFile;
+    BibTeXEditor *m_editor;
 };
 
 #endif // DOCKLET_FILESETTINGS_H
