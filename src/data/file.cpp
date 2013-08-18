@@ -62,18 +62,18 @@ public:
 
     FilePrivate(File *parent)
             : p(parent), validInvalidField(valid), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName(QLatin1String("FileExporterBibTeX")), internalId(++internalIdCounter) {
-        kDebug() << "Creating File instance" << instanceNumber;
+        kDebug() << "Creating File instance" << internalId;
         loadConfiguration();
     }
 
     FilePrivate(File *parent, const File &other)
             : p(parent), validInvalidField(valid), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName(QLatin1String("FileExporterBibTeX")), internalId(++internalIdCounter), properties(other.d->properties) {
-        kDebug() << "Creating File instance" << instanceNumber;
+        kDebug() << "Creating File instance" << internalId;
         loadConfiguration();
     }
 
     ~FilePrivate() {
-        kDebug() << "Deleting File instance" << instanceNumber;
+        kDebug() << "Deleting File instance" << internalId;
         validInvalidField = invalid;
     }
 
