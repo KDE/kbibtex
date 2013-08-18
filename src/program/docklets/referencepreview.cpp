@@ -156,6 +156,8 @@ public:
         /// source view should always be included
         comboBox->addItem(i18n("Source"), QStringList(QStringList() << "source" << "source"));
 
+        comboBox->addItem(i18n("Wikipedia"), QStringList(QStringList() << "wikipedia-cite" << "plain_xml"));
+
         KConfigGroup configGroup(config, configGroupName);
         QStringList previewStyles = configGroup.readEntry("PreviewStyles", QStringList());
         foreach(const QString &entry, previewStyles) {
@@ -252,16 +254,16 @@ void ReferencePreview::renderHTML()
     QString type = data.at(1);
     QString style = data.at(0);
 
-    if (type == "source") {
+    if (type == QLatin1String("source")) {
         FileExporterBibTeX *exporterBibTeX = new FileExporterBibTeX();
         exporterBibTeX->setEncoding(QLatin1String("utf-8"));
         exporter = exporterBibTeX;
-    } else if (type == "bibtex2html") {
+    } else if (type == QLatin1String("bibtex2html")) {
         crossRefHandling = merge;
         FileExporterBibTeX2HTML *exporterHTML = new FileExporterBibTeX2HTML();
         exporterHTML->setLaTeXBibliographyStyle(style);
         exporter = exporterHTML;
-    } else if (type == "xml") {
+    } else if (type == QLatin1String("xml") || type == QLatin1String("plain_xml")) {
         crossRefHandling = merge;
         FileExporterXSLT *exporterXSLT = new FileExporterXSLT();
         QString filename = style + ".xsl";
@@ -304,14 +306,17 @@ void ReferencePreview::renderHTML()
     }
 
     /// beautify text
-    text.replace("``", "&ldquo;");
-    text.replace("''", "&rdquo;");
+    text.replace(QLatin1String("``"), QLatin1String("&ldquo;"));
+    text.replace(QLatin1String("''"), QLatin1String("&rdquo;"));
     static const QRegExp openingSingleQuotationRegExp(QLatin1String("(^|[> ,.;:!?])`(\\S)"));
     static const QRegExp closingSingleQuotationRegExp(QLatin1String("(\\S)'([ ,.;:!?<]|$)"));
-    text.replace(openingSingleQuotationRegExp, "\\1&lsquo;\\2");
-    text.replace(closingSingleQuotationRegExp, "\\1&rsquo;\\2");
+    text.replace(openingSingleQuotationRegExp, QLatin1String("\\1&lsquo;\\2"));
+    text.replace(closingSingleQuotationRegExp, QLatin1String("\\1&rsquo;\\2"));
 
-    if (type == "source") {
+    if (text.contains(QLatin1String("{{cite FIXME"))) {
+        /// Wikipedia {{cite ...}} command had problems (e.g. unknown entry type)
+        text = d->notAvailableMessage.arg(i18n("This type of element is not supported by the <tt>{{cite}}</tt> command."));
+    } else if (type == QLatin1String("source") || type.startsWith(QLatin1String("plain"))) {
         /// source
         text.prepend(QLatin1String("';\">"));
         text.prepend(KGlobalSettings::fixedFont().family());
