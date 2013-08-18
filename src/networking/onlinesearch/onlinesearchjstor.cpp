@@ -249,8 +249,12 @@ void OnlineSearchJStor::sanitizeEntry(QSharedPointer<Entry> entry)
 
     QString url = PlainTextValue::text(entry->value(Entry::ftUrl));
     if (url.startsWith("http://www.jstor.org/stable/")) {
-        /// use JSTOR's own stable IDs for entry ID
+        /// use JSTOR's own stable ID for entry ID
         entry->setId("jstor" + url.mid(28).replace(QLatin1Char(','), QString()));
+        /// store JSTOR's own stable ID
+        Value v;
+        v.append(QSharedPointer<VerbatimText>(new VerbatimText(url.mid(28))));
+        entry->insert(QLatin1String("jstor_id"), v);
     }
 
     const QString formattedDateKey = "jstor_formatteddate";
