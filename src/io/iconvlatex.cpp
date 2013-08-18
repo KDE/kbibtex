@@ -134,7 +134,7 @@ const QStringList IConvLaTeX::encodings()
             encodingList << QLatin1String("ISO-8859-") + QString::number(i);
         encodingList << QLatin1String("KOI8-R");
         for (int i = 1; i <= 10; ++i)
-            encodingList << QLatin1String("Latin-") + QString::number(i);
+            encodingList << QLatin1String("Latin") + QString::number(i);
         encodingList << QLatin1String("UTF-8");
         for (int *cur = windowsCodepages; *cur > 0; ++cur)
             encodingList << QLatin1String("Windows-") + QString::number(*cur);
