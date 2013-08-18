@@ -101,6 +101,20 @@ public:
     bool hasProperty(const QString &key) const;
     void setPropertiesToDefault();
 
+    /**
+     * Unique numeric identifier for every File instance.
+     * @return Unique numeric identifier
+     */
+    quint64 id() const;
+
+    /**
+     * Performs a simple check if the memory of this File
+     * instance is properly allocate. No high-level checks,
+     * such as on the File instance's content, are performed.
+     * @return True if instance's memory is properly allocated
+     */
+    bool isMemoryValid() const;
+
 private:
     class FilePrivate;
     FilePrivate *d;

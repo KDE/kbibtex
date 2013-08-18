@@ -51,23 +51,23 @@ class File::FilePrivate
 private:
     File *p;
     quint64 validInvalidField;
-    static quint64 instanceCounter;
-    const quint64 instanceNumber;
+    static quint64 internalIdCounter;
 
     KSharedConfigPtr config;
     const QString configGroupName;
 
 public:
-    QMap<QString, QVariant> properties;
+    const quint64 internalId;
+    QHash<QString, QVariant> properties;
 
     FilePrivate(File *parent)
-            : p(parent), validInvalidField(valid), instanceNumber(++instanceCounter), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName(QLatin1String("FileExporterBibTeX")) {
+            : p(parent), validInvalidField(valid), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName(QLatin1String("FileExporterBibTeX")), internalId(++internalIdCounter) {
         kDebug() << "Creating File instance" << instanceNumber;
         loadConfiguration();
     }
 
     FilePrivate(File *parent, const File &other)
-            : p(parent), validInvalidField(valid), instanceNumber(++instanceCounter), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName(QLatin1String("FileExporterBibTeX")), properties(other.d->properties) {
+            : p(parent), validInvalidField(valid), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName(QLatin1String("FileExporterBibTeX")), internalId(++internalIdCounter), properties(other.d->properties) {
         kDebug() << "Creating File instance" << instanceNumber;
         loadConfiguration();
     }
@@ -93,7 +93,7 @@ public:
     }
 };
 
-quint64 File::FilePrivate::instanceCounter = 99999;
+quint64 File::FilePrivate::internalIdCounter = 99999;
 
 File::File()
         : QList<QSharedPointer<Element> >(), d(new FilePrivate(this))
@@ -232,4 +232,14 @@ void File::setPropertiesToDefault()
 {
     Q_ASSERT_X(d->checkValidity(), "void File::setPropertiesToDefault()", "This File object is not valid");
     d->loadConfiguration();
+}
+
+quint64 File::id() const
+{
+    return d->internalId;
+}
+
+bool File::isMemoryValid() const
+{
+    return d->checkValidity();
 }
