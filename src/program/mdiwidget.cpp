@@ -144,7 +144,7 @@ private:
         layout->setColumnStretch(5, 10);
         layout->setColumnStretch(6, 1);
 
-        QLabel *label = new QLabel(i18n("<qt>Welcome to <b>KBibTeX</b> for <b>KDE 4</b></qt>"), welcomeWidget);
+        QLabel *label = new QLabel(i18n("<qt>Welcome to <b>KBibTeX</b></qt>"), welcomeWidget);
         layout->addWidget(label, 1, 2, 1, 3, Qt::AlignHCenter | Qt::AlignTop);
 
         KPushButton *buttonNew = new KPushButton(KIcon("document-new"), i18n("New"), welcomeWidget);
