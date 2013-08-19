@@ -34,7 +34,7 @@ EncoderLaTeX *EncoderLaTeX::self = NULL;
 /**
  * This structure contains information how escaped characters
  * such as \"a are translated to an Unicode character and back.
- * The structure is a table with three columns: (1) the modified
+ * The structure is a table with three columns: (1) the modifier
  * (in the example before the quotation mark) (2) the ASCII
  * character ((in the example before the 'a') (3) the Unicode
  * character described by a hexcode.
