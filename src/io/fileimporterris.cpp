@@ -57,14 +57,14 @@ public:
     RISitemList readElement(QTextStream &textStream) {
         RISitemList result;
         QString line = textStream.readLine();
-        while (!line.startsWith("TY  - ") && !textStream.atEnd())
+        while (!line.startsWith(QLatin1String("TY  - ")) && !textStream.atEnd())
             line = textStream.readLine();
         if (textStream.atEnd())
             return result;
 
         QString key, value;
-        while (!line.startsWith("ER  -") && !textStream.atEnd()) {
-            if (line.mid(2, 3) == "  -") {
+        while (!line.startsWith(QLatin1String("ER  -")) && !textStream.atEnd()) {
+            if (line.mid(2, 3) == QLatin1String("  -")) {
                 if (!value.isEmpty()) {
                     RISitem item;
                     item.key = key;
@@ -78,7 +78,7 @@ public:
                 line = line.simplified();
                 if (line.length() > 1) {
                     /// multi-line field are joined to one long line
-                    value += ' ' + line;
+                    value += QLatin1Char(' ') + line;
                 }
             }
 
@@ -117,7 +117,7 @@ public:
                 else if ((*it).value.startsWith("RPRT"))
                     entryType = Entry::etTechReport;
                 else if ((*it).value.startsWith("THES"))
-                    entryType = Entry::etPhDThesis;
+                    entryType = Entry::etPhDThesis; // FIXME what about etMastersThesis?
                 else if ((*it).value.startsWith("UNPB"))
                     entryType = Entry::etUnpublished;
                 entry->setType(entryType);
@@ -168,8 +168,12 @@ public:
                 appendValue(entry, Entry::ftChapter, QSharedPointer<PlainText>(new PlainText((*it).value)));
             } else if ((*it).key == "IS") {
                 appendValue(entry, Entry::ftNumber, QSharedPointer<PlainText>(new PlainText((*it).value)));
+            } else if ((*it).key == "DO") {
+                appendValue(entry, Entry::ftDOI, QSharedPointer<PlainText>(new PlainText((*it).value)));
             } else if ((*it).key == "PB") {
                 appendValue(entry, Entry::ftPublisher, QSharedPointer<PlainText>(new PlainText((*it).value)));
+            } else if ((*it).key == "IN") {
+                appendValue(entry, Entry::ftSchool, QSharedPointer<PlainText>(new PlainText((*it).value)));
             } else if ((*it).key == "SN") {
                 const QString fieldName = entryType == Entry::etBook || entryType == Entry::etInBook ? Entry::ftISBN : Entry::ftISSN;
                 appendValue(entry, fieldName, QSharedPointer<PlainText>(new PlainText((*it).value)));
@@ -178,7 +182,7 @@ public:
             }  else if ((*it).key == "AD") {
                 appendValue(entry, Entry::ftAddress, QSharedPointer<PlainText>(new PlainText((*it).value)));
             } else if ((*it).key == "L1" || (*it).key == "L2" || (*it).key == "L3" || (*it).key == "UR") {
-                const QString fieldName = KBibTeX::doiRegExp.indexIn((*it).value) >= 0 ? Entry::ftDOI : Entry::ftUrl;
+                const QString fieldName = KBibTeX::doiRegExp.indexIn((*it).value) >= 0 ? Entry::ftDOI : (KBibTeX::urlRegExp.indexIn((*it).value) >= 0 ? Entry::ftUrl : Entry::ftLocalFile);
                 appendValue(entry, fieldName, QSharedPointer<PlainText>(new PlainText((*it).value)));
             } else if ((*it).key == "SP") {
                 startPage = (*it).value;

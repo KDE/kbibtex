@@ -17,6 +17,7 @@
 *   Free Software Foundation, Inc.,                                       *
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
+
 #include <QRegExp>
 #include <QStringList>
 
@@ -86,13 +87,16 @@ bool FileExporterRIS::writeEntry(QTextStream &stream, const Entry *entry, const 
         writeKeyValue(stream, "TY", "JOUR");
     else if (type == Entry::etTechReport)
         writeKeyValue(stream, "TY", "RPRT");
-    else if (type == Entry::etPhDThesis)
+    else if (type == Entry::etPhDThesis || type == Entry::etMastersThesis)
         writeKeyValue(stream, "TY", "THES");
+    else if (type == Entry::etUnpublished)
+        writeKeyValue(stream, "TY", "UNPB");
     else
         writeKeyValue(stream, "TY", "GEN");
 
-    QString year = "";
-    QString month = "";
+    writeKeyValue(stream, "ID", entry->id());
+
+    QString year, month;
 
     for (Entry::ConstIterator it = entry->constBegin(); result && it != entry->constEnd(); it++) {
         const QString key = it.key();
@@ -119,26 +123,34 @@ bool FileExporterRIS::writeEntry(QTextStream &stream, const Entry *entry, const 
             }
         } else if (key == Entry::ftTitle)
             result &= writeKeyValue(stream, "TI", PlainTextValue::text(value, bibtexfile));
+        else if (key == Entry::ftBookTitle)
+            result &= writeKeyValue(stream, "BT", PlainTextValue::text(value, bibtexfile));
+        else if (key == Entry::ftSeries)
+            result &= writeKeyValue(stream, "T3", PlainTextValue::text(value, bibtexfile));
         else if (key == Entry::ftJournal)
-            result &= writeKeyValue(stream, "JO", PlainTextValue::text(value, bibtexfile));
+            result &= writeKeyValue(stream, "JO", PlainTextValue::text(value, bibtexfile)); ///< "JF" instead?
         else if (key == Entry::ftChapter)
             result &= writeKeyValue(stream, "CP", PlainTextValue::text(value, bibtexfile));
         else if (key == Entry::ftISSN)
             result &= writeKeyValue(stream, "SN", PlainTextValue::text(value, bibtexfile));
         else if (key == Entry::ftISBN)
             result &= writeKeyValue(stream, "SN", PlainTextValue::text(value, bibtexfile));
+        else if (key == Entry::ftSchool) /// == "institution"
+            result &= writeKeyValue(stream, "IN", PlainTextValue::text(value, bibtexfile));
         else if (key == Entry::ftVolume)
             result &= writeKeyValue(stream, "VL", PlainTextValue::text(value, bibtexfile));
-        else if (key == Entry::ftNumber)
+        else if (key == Entry::ftNumber) /// == "issue"
             result &= writeKeyValue(stream, "IS", PlainTextValue::text(value, bibtexfile));
         else if (key == Entry::ftNote)
             result &= writeKeyValue(stream, "N1", PlainTextValue::text(value, bibtexfile));
         else if (key == Entry::ftAbstract)
-            result &= writeKeyValue(stream, "N2", PlainTextValue::text(value, bibtexfile));
+            result &= writeKeyValue(stream, "N2", PlainTextValue::text(value, bibtexfile)); ///< "AB" instead?
         else if (key == Entry::ftPublisher)
             result &= writeKeyValue(stream, "PB", PlainTextValue::text(value, bibtexfile));
         else if (key == Entry::ftLocation)
             result &= writeKeyValue(stream, "CY", PlainTextValue::text(value, bibtexfile));
+        else if (key == Entry::ftDOI)
+            result &= writeKeyValue(stream, "DO", PlainTextValue::text(value, bibtexfile));
         else if (key == Entry::ftKeywords)
             result &= writeKeyValue(stream, "KW", PlainTextValue::text(value, bibtexfile));
         else if (key == Entry::ftYear)
@@ -147,9 +159,11 @@ bool FileExporterRIS::writeEntry(QTextStream &stream, const Entry *entry, const 
             month = PlainTextValue::text(value, bibtexfile);
         else if (key == Entry::ftAddress)
             result &= writeKeyValue(stream, "AD", PlainTextValue::text(value, bibtexfile));
-        else if (key == Entry::ftUrl)
+        else if (key == Entry::ftUrl) {
+            // FIXME one "UR" line per URL
+            // FIXME for local files, use "L1"
             result &= writeKeyValue(stream, "UR", PlainTextValue::text(value, bibtexfile));
-        else if (key == Entry::ftPages) {
+        } else if (key == Entry::ftPages) {
             QStringList pageRange = PlainTextValue::text(value, bibtexfile).split(QRegExp(QString("--|-|%1").arg(QChar(0x2013))));
             if (pageRange.count() == 2) {
                 result &= writeKeyValue(stream, "SP", pageRange[ 0 ]);
