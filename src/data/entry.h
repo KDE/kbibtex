@@ -115,6 +115,8 @@ public:
     static const QLatin1String etTechReport;
     /** Representation of the BibTeX entry type "PhDThesis" */
     static const QLatin1String etPhDThesis;
+    /** Representation of the BibTeX entry type "MastersThesis" */
+    static const QLatin1String etMastersThesis;
     /** Representation of the BibTeX entry type "Unpublished" */
     static const QLatin1String etUnpublished;
 
