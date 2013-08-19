@@ -81,6 +81,15 @@ public:
         createGUI();
     }
 
+    ~ElementEditorPrivate() {
+        // FIXME delete tab;
+        while (!widgets.isEmpty()) {
+            QWidget *w = widgets.last();
+            widgets.pop_back();
+            delete w;
+        }
+    }
+
     void setElement(QSharedPointer<Element> element, const File *file) {
         this->element = element;
         this->file = file;
@@ -387,6 +396,7 @@ ElementEditor::ElementEditor(QWidget *parent)
 
 ElementEditor::~ElementEditor()
 {
+    disconnect(d->tab, SIGNAL(currentChanged(int)), this, SLOT(tabChanged()));
     delete d;
 }
 
