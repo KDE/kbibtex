@@ -74,21 +74,24 @@ OnlineSearchAbstract::OnlineSearchAbstract(QWidget *parent)
 KIcon OnlineSearchAbstract::icon(QListWidgetItem *listWidgetItem)
 {
     static const QRegExp invalidChars("[^-a-z0-9_]", Qt::CaseInsensitive);
-    QString fileName = favIconUrl();
-    fileName = fileName.replace(invalidChars, "");
-    fileName.prepend(KStandardDirs::locateLocal("cache", "favicons/"));
+    const QString fileNameStem = KStandardDirs::locateLocal("cache", "favicons/") + QString(favIconUrl()).replace(invalidChars, "");
+    const QStringList fileNameExtensions = QStringList() << QLatin1String(".ico") << QLatin1String(".png") << QString();
 
-    if (!QFileInfo(fileName).exists()) {
-        QNetworkRequest request(favIconUrl());
-        QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
-        reply->setObjectName(fileName);
-        if (listWidgetItem != NULL)
-            m_iconReplyToListWidgetItem.insert(reply, listWidgetItem);
-        connect(reply, SIGNAL(finished()), this, SLOT(iconDownloadFinished()));
-        return KIcon(QLatin1String("applications-internet"));
+    foreach(const QString &extension, fileNameExtensions) {
+        const QString fileName = fileNameStem + extension;
+        if (QFileInfo(fileName).exists()) {
+            kDebug() << "KIcon(fileName)=" << fileNameStem << extension;
+            return KIcon(fileName);
+        }
     }
 
-    return KIcon(fileName);
+    QNetworkRequest request(favIconUrl());
+    QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
+    reply->setObjectName(fileNameStem);
+    if (listWidgetItem != NULL)
+        m_iconReplyToListWidgetItem.insert(reply, listWidgetItem);
+    connect(reply, SIGNAL(finished()), this, SLOT(iconDownloadFinished()));
+    return KIcon(QLatin1String("applications-internet"));
 }
 
 QString OnlineSearchAbstract::name()
@@ -324,17 +327,31 @@ void OnlineSearchAbstract::iconDownloadFinished()
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
     if (reply->error() == QNetworkReply::NoError) {
-        const QString filename = reply->objectName();
+        const QByteArray iconData = reply->readAll();
+
+        QString extension;
+        if (iconData[1] == 'P' && iconData[2] == 'N' && iconData[3] == 'G') {
+            /// PNG files have string "PNG" at second to fourth byte
+            extension = QLatin1String(".png");
+        } else if (iconData[0] == (char)0x00 && iconData[1] == (char)0x00 && iconData[2] == (char)0x01 && iconData[3] == (char)0x00) {
+            /// Microsoft Icon have first two bytes always 0x0000,
+            /// third and fourth byte is 0x0001 (for .ico)
+            extension = QLatin1String(".ico");
+        }
+        const QString filename = reply->objectName() + extension;
+        kDebug() << reply->objectName() << extension;
+
         QFile iconFile(filename);
         if (iconFile.open(QFile::WriteOnly)) {
-            iconFile.write(reply->readAll());
+            iconFile.write(iconData);
             iconFile.close();
 
             QListWidgetItem *listWidgetItem = m_iconReplyToListWidgetItem.value(reply, NULL);
             if (listWidgetItem != NULL)
                 listWidgetItem->setIcon(KIcon(filename));
         }
-    }
+    } else
+        kWarning() << "Could not download icon " << reply->url().toString();
 }
 
 void OnlineSearchAbstract::dumpToFile(const QString &filename, const QString &text)

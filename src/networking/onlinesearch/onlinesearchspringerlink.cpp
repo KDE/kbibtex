@@ -267,7 +267,7 @@ QString OnlineSearchSpringerLink::label() const
 
 QString OnlineSearchSpringerLink::favIconUrl() const
 {
-    return QLatin1String("http://www.springerlink.com/images/favicon.ico");
+    return QLatin1String("http://link.springer.com/static/0.6623/sites/link/images/favicon.ico");
 }
 
 OnlineSearchQueryFormAbstract *OnlineSearchSpringerLink::customWidget(QWidget *parent)
