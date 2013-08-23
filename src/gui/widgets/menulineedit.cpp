@@ -58,6 +58,14 @@ public:
         this->isMultiLine = isMultiLine;
     }
 
+    ~MenuLineEditPrivate() {
+        if (m_singleLineEditText != NULL) delete m_singleLineEditText;
+        else if (m_multiLineEditText != NULL) delete m_multiLineEditText;
+
+        while (!hLayout->isEmpty())
+            delete hLayout->itemAt(0)->widget();
+    }
+
     void setupUI() {
         p->setObjectName("FieldLineEdit");
 
