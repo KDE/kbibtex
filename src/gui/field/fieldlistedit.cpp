@@ -445,7 +445,7 @@ void PersonListEdit::slotAddNamesFromClipboard()
         text = clipboard->text(QClipboard::Selection);
     if (!text.isEmpty()) {
         QList<QSharedPointer<Person> > personList = FileImporterBibTeX::splitNames(text);
-         foreach(QSharedPointer<Person> person, personList) {
+        foreach(QSharedPointer<Person> person, personList) {
             Value *value = new Value();
             value->append(person);
             lineAdd(value);
@@ -614,17 +614,18 @@ void UrlListEdit::textChanged(QWidget *widget)
     buttonSaveLocally->setToolTip(canBeSaved ? i18n("Save file '%1' locally", url.pathOrUrl()) : QLatin1String(""));
 }
 
-QString &UrlListEdit::askRelativeOrStaticFilename(QWidget *parent, QString &filename, const QUrl &baseUrl)
+QString UrlListEdit::askRelativeOrStaticFilename(QWidget *parent, const QString &absoluteFilename, const QUrl &baseUrl)
 {
     QFileInfo baseUrlInfo = baseUrl.isEmpty() ? QFileInfo() : QFileInfo(baseUrl.path());
-    QFileInfo filenameInfo(filename);
+    QFileInfo filenameInfo(absoluteFilename);
     if (!baseUrl.isEmpty() && (filenameInfo.absolutePath() == baseUrlInfo.absolutePath() || filenameInfo.absolutePath().startsWith(baseUrlInfo.absolutePath() + QDir::separator()))) {
-        QString relativePath = filenameInfo.absolutePath().mid(baseUrlInfo.absolutePath().length() + 1);
-        QString relativeFilename = relativePath + (relativePath.isEmpty() ? QLatin1String("") : QString(QDir::separator())) + filenameInfo.fileName();
-        if (KMessageBox::questionYesNo(parent, i18n("<qt><p>Use a filename relative to the bibliography file?</p><p>The relative path would be<br/><tt style=\"font-family: %2;\">%1</tt></p>", relativeFilename, KGlobalSettings::fixedFont().family()), i18n("Relative Path"), KGuiItem(i18n("Relative Path")), KGuiItem(i18n("Absolute Path"))) == KMessageBox::Yes)
-            filename = relativeFilename;
+        // TODO cover level-up cases like "../../test.pdf"
+        const QString relativePath = filenameInfo.absolutePath().mid(baseUrlInfo.absolutePath().length() + 1);
+        const QString relativeFilename = relativePath + (relativePath.isEmpty() ? QLatin1String("") : QString(QDir::separator())) + filenameInfo.fileName();
+        if (KMessageBox::questionYesNo(parent, i18n("<qt><p>Use a filename relative to the bibliography file?</p><p>The relative path would be<br/><tt style=\"font-family: %3;\">%1</tt></p><p>The absolute path would be<br/><tt style=\"font-family: %3;\">%2</tt></p></qt>", relativeFilename, absoluteFilename, KGlobalSettings::fixedFont().family()), i18n("Relative Path"), KGuiItem(i18n("Relative Path")), KGuiItem(i18n("Absolute Path"))) == KMessageBox::Yes)
+            return relativeFilename;
     }
-    return filename;
+    return absoluteFilename;
 }
 
 bool UrlListEdit::urlIsLocal(const QUrl &url)
@@ -705,7 +706,7 @@ void KeywordListEdit::slotAddKeywordsFromList()
             lineAdd(value);
         }
         if (!newKeywordList.isEmpty())
-                    emit modified();
+            emit modified();
     }
 }
 
@@ -721,10 +722,10 @@ void KeywordListEdit::slotAddKeywordsFromClipboard()
             Value *value = new Value();
             value->append(*it);
             lineAdd(value);
-           }
+        }
         if (!keywords.isEmpty())
-                    emit modified();
-   }
+            emit modified();
+    }
 }
 
 void KeywordListEdit::setReadOnly(bool isReadOnly)
