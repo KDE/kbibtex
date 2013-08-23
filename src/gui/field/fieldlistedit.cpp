@@ -272,16 +272,22 @@ void FieldListEdit::setReadOnly(bool isReadOnly)
 void FieldListEdit::setFile(const File *file)
 {
     d->file = file;
+    for (QList<FieldLineEdit *>::ConstIterator it = d->lineEditList.constBegin(); it != d->lineEditList.constEnd(); ++it)
+        (*it)->setFile(file);
 }
 
 void FieldListEdit::setElement(const Element *element)
 {
     m_element = element;
+    for (QList<FieldLineEdit *>::ConstIterator it = d->lineEditList.constBegin(); it != d->lineEditList.constEnd(); ++it)
+        (*it)->setElement(element);
 }
 
 void FieldListEdit::setFieldKey(const QString &fieldKey)
 {
     d->fieldKey = fieldKey;
+    for (QList<FieldLineEdit *>::ConstIterator it = d->lineEditList.constBegin(); it != d->lineEditList.constEnd(); ++it)
+        (*it)->setFieldKey(fieldKey);
 }
 
 void FieldListEdit::setCompletionItems(const QStringList &items)

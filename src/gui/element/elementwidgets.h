@@ -170,6 +170,8 @@ public:
     QString label();
     KIcon icon();
 
+    virtual void setFile(const File *file);
+
     bool canEdit(const Element *element);
 };
 
