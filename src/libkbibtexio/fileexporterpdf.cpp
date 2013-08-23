@@ -189,13 +189,13 @@ void FileExporterPDF::fillEmbeddedFileList(const QSharedPointer<const Element> e
 
     const QSharedPointer<const Entry> entry = element.dynamicCast<const Entry>();
     if (!entry.isNull()) {
-        const QString id = entry->id();
+        const QString title = PlainTextValue::text(entry->value(Entry::ftTitle));
         QList<KUrl> urlList = FileInfo::entryUrls(entry.data(), bibtexfile->property(File::Url).toUrl(), FileInfo::TestExistanceYes);
         foreach(const KUrl &url, urlList) {
             if (!url.isLocalFile()) continue;
             const QString filename = url.pathOrUrl();
             const QString basename = QFileInfo(filename).fileName();
-            m_embeddedFileList.append(QString("%1|%2|%3").arg(id).arg(filename).arg(basename));
+            m_embeddedFileList.append(QString("%1|%2|%3").arg(title).arg(filename).arg(basename));
         }
     }
 }
