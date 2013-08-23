@@ -102,7 +102,7 @@ private:
 
 public:
     EntryConfiguredWidget(QSharedPointer<EntryTabLayout> &entryTabLayout, QWidget *parent);
-    ~EntryConfiguredWidget();
+    virtual ~EntryConfiguredWidget();
 
     bool apply(QSharedPointer<Element> element) const;
     bool reset(QSharedPointer<const Element> element);
@@ -195,6 +195,7 @@ private:
 
 public:
     OtherFieldsWidget(const QStringList &blacklistedFields, QWidget *parent);
+    ~OtherFieldsWidget();
 
     bool apply(QSharedPointer<Element> element) const;
     bool reset(QSharedPointer<const Element> element);
@@ -223,6 +224,7 @@ private:
 
 public:
     MacroWidget(QWidget *parent);
+    ~MacroWidget();
 
     bool apply(QSharedPointer<Element> element) const;
     bool reset(QSharedPointer<const Element> element);
@@ -267,6 +269,7 @@ private:
 
 public:
     SourceWidget(QWidget *parent);
+    ~SourceWidget();
 
     bool apply(QSharedPointer<Element> element) const;
     bool reset(QSharedPointer<const Element> element);
