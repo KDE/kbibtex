@@ -409,18 +409,20 @@ void FindPDFUI::apply(Entry &entry, const File &bibtexFile)
             }
         } else if (downloadMode == FindPDF::Download && !tempfileName.isEmpty()) {
             KUrl startUrl = bibtexFile.property(File::Url, QUrl()).toUrl();
-            QString localFilename = KFileDialog::getSaveFileName(KUrl::fromLocalFile(startUrl.directory()), QLatin1String("application/pdf"), this, i18n("Save URL '%1'", url.toString()));
-            localFilename = UrlListEdit::askRelativeOrStaticFilename(this, localFilename, startUrl);
+            const QString absoluteFilename = KFileDialog::getSaveFileName(KUrl::fromLocalFile(startUrl.directory()), QLatin1String("application/pdf"), this, i18n("Save URL '%1'", url.toString()));
+            if (!absoluteFilename.isEmpty()) {
+                const QString visibleFilename = UrlListEdit::askRelativeOrStaticFilename(this, absoluteFilename, startUrl);
 
-            if (!localFilename.isEmpty()) {
-                KIO::NetAccess::file_copy(KUrl::fromLocalFile(tempfileName), KUrl::fromLocalFile(localFilename), this);
+                kDebug() << "Saving PDF from " << url << " to file " << absoluteFilename << " known as " << visibleFilename;
+                // FIXME test for overwrite
+                KIO::NetAccess::file_copy(KUrl::fromLocalFile(tempfileName), KUrl::fromLocalFile(absoluteFilename), this);
 
                 bool alreadyContained = false;
                 for (QMap<QString, Value>::ConstIterator it = entry.constBegin(); !alreadyContained && it != entry.constEnd(); ++it)
                     alreadyContained |= (it.key().toLower().startsWith(Entry::ftLocalFile) || it.key().toLower().startsWith(Entry::ftUrl)) && PlainTextValue::text(it.value()) == url.toString();
                 if (!alreadyContained) {
                     Value value;
-                    value.append(QSharedPointer<VerbatimText>(new VerbatimText(localFilename)));
+                    value.append(QSharedPointer<VerbatimText>(new VerbatimText(visibleFilename)));
                     if (!entry.contains(Entry::ftLocalFile))
                         entry.insert(Entry::ftLocalFile, value);
                     else
