@@ -34,7 +34,7 @@ EncoderLaTeX *EncoderLaTeX::self = NULL;
 /**
  * This structure contains information how escaped characters
  * such as \"a are translated to an Unicode character and back.
- * The structure is a table with three columns: (1) the modified
+ * The structure is a table with three columns: (1) the modifier
  * (in the example before the quotation mark) (2) the ASCII
  * character ((in the example before the 'a') (3) the Unicode
  * character described by a hexcode.
@@ -45,105 +45,105 @@ EncoderLaTeX *EncoderLaTeX::self = NULL;
 static const struct EncoderLaTeXEscapedCharacter {
     const char modifier;
     const char letter;
-    QChar unicode;
+    ushort unicode;
 }
 encoderLaTeXEscapedCharacters[] = {
-    {'`', 'A', QChar(0x00C0)},
-    {'\'', 'A', QChar(0x00C1)},
-    {'^', 'A', QChar(0x00C2)},
-    {'~', 'A', QChar(0x00C3)},
-    {'"', 'A', QChar(0x00C4)},
-    {'r', 'A', QChar(0x00C5)},
+    {'`', 'A', 0x00C0},
+    {'\'', 'A', 0x00C1},
+    {'^', 'A', 0x00C2},
+    {'~', 'A', 0x00C3},
+    {'"', 'A', 0x00C4},
+    {'r', 'A', 0x00C5},
     /** 0x00C6 */
-    {'c', 'C', QChar(0x00C7)},
-    {'`', 'E', QChar(0x00C8)},
-    {'\'', 'E', QChar(0x00C9)},
-    {'^', 'E', QChar(0x00CA)},
-    {'"', 'E', QChar(0x00CB)},
-    {'`', 'I', QChar(0x00CC)},
-    {'\'', 'I', QChar(0x00CD)},
-    {'^', 'I', QChar(0x00CE)},
-    {'"', 'I', QChar(0x00CF)},
+    {'c', 'C', 0x00C7},
+    {'`', 'E', 0x00C8},
+    {'\'', 'E', 0x00C9},
+    {'^', 'E', 0x00CA},
+    {'"', 'E', 0x00CB},
+    {'`', 'I', 0x00CC},
+    {'\'', 'I', 0x00CD},
+    {'^', 'I', 0x00CE},
+    {'"', 'I', 0x00CF},
     /** 0x00D0: see EncoderLaTeXCharacterCommand */
-    {'~', 'N', QChar(0x00D1)},
-    {'`', 'O', QChar(0x00D2)},
-    {'\'', 'O', QChar(0x00D3)},
-    {'^', 'O', QChar(0x00D4)},
-    {'~', 'O', QChar(0x00D5)},
-    {'"', 'O', QChar(0x00D6)},
+    {'~', 'N', 0x00D1},
+    {'`', 'O', 0x00D2},
+    {'\'', 'O', 0x00D3},
+    {'^', 'O', 0x00D4},
+    {'~', 'O', 0x00D5},
+    {'"', 'O', 0x00D6},
     /** 0x00D7 */
     /** 0x00D8: see EncoderLaTeXCharacterCommand */
-    {'`', 'U', QChar(0x00D9)},
-    {'\'', 'U', QChar(0x00DA)},
-    {'^', 'U', QChar(0x00DB)},
-    {'"', 'U', QChar(0x00DC)},
-    {'\'', 'Y', QChar(0x00DD)},
+    {'`', 'U', 0x00D9},
+    {'\'', 'U', 0x00DA},
+    {'^', 'U', 0x00DB},
+    {'"', 'U', 0x00DC},
+    {'\'', 'Y', 0x00DD},
     /** 0x00DE */
-    {'"', 's', QChar(0x00DF)},
-    {'`', 'a', QChar(0x00E0)},
-    {'\'', 'a', QChar(0x00E1)},
-    {'^', 'a', QChar(0x00E2)},
-    {'~', 'a', QChar(0x00E3)},
-    {'"', 'a', QChar(0x00E4)},
-    {'r', 'a', QChar(0x00E5)},
+    {'"', 's', 0x00DF},
+    {'`', 'a', 0x00E0},
+    {'\'', 'a', 0x00E1},
+    {'^', 'a', 0x00E2},
+    {'~', 'a', 0x00E3},
+    {'"', 'a', 0x00E4},
+    {'r', 'a', 0x00E5},
     /** 0x00E6 */
-    {'c', 'c', QChar(0x00E7)},
-    {'`', 'e', QChar(0x00E8)},
-    {'\'', 'e', QChar(0x00E9)},
-    {'^', 'e', QChar(0x00EA)},
-    {'"', 'e', QChar(0x00EB)},
-    {'`', 'i', QChar(0x00EC)},
-    {'\'', 'i', QChar(0x00ED)},
-    {'^', 'i', QChar(0x00EE)},
-    {'"', 'i', QChar(0x00EF)},
+    {'c', 'c', 0x00E7},
+    {'`', 'e', 0x00E8},
+    {'\'', 'e', 0x00E9},
+    {'^', 'e', 0x00EA},
+    {'"', 'e', 0x00EB},
+    {'`', 'i', 0x00EC},
+    {'\'', 'i', 0x00ED},
+    {'^', 'i', 0x00EE},
+    {'"', 'i', 0x00EF},
     /** 0x00F0 */
-    {'~', 'n', QChar(0x00F1)},
-    {'`', 'o', QChar(0x00F2)},
-    {'\'', 'o', QChar(0x00F3)},
-    {'^', 'o', QChar(0x00F4)},
-    {'~', 'o', QChar(0x00F5)},
-    {'"', 'o', QChar(0x00F6)},
+    {'~', 'n', 0x00F1},
+    {'`', 'o', 0x00F2},
+    {'\'', 'o', 0x00F3},
+    {'^', 'o', 0x00F4},
+    {'~', 'o', 0x00F5},
+    {'"', 'o', 0x00F6},
     /** 0x00F7 Division Sign */
     /** 0x00F8: see EncoderLaTeXCharacterCommand */
-    {'`', 'u', QChar(0x00F9)},
-    {'\'', 'u', QChar(0x00FA)},
-    {'^', 'u', QChar(0x00FB)},
-    {'"', 'u', QChar(0x00FC)},
-    {'\'', 'y', QChar(0x00FD)},
+    {'`', 'u', 0x00F9},
+    {'\'', 'u', 0x00FA},
+    {'^', 'u', 0x00FB},
+    {'"', 'u', 0x00FC},
+    {'\'', 'y', 0x00FD},
     /** 0x00FE Thorn */
     /** 0x00FF Umlaut-y*/
-    {'=', 'A', QChar(0x0100)},
-    {'=', 'a', QChar(0x0101)},
-    {'u', 'A', QChar(0x0102)},
-    {'u', 'a', QChar(0x0103)},
-    {'c', 'A', QChar(0x0104)},
-    {'c', 'a', QChar(0x0105)},
-    {'\'', 'C', QChar(0x0106)},
-    {'\'', 'c', QChar(0x0107)},
+    {'=', 'A', 0x0100},
+    {'=', 'a', 0x0101},
+    {'u', 'A', 0x0102},
+    {'u', 'a', 0x0103},
+    {'c', 'A', 0x0104},
+    {'c', 'a', 0x0105},
+    {'\'', 'C', 0x0106},
+    {'\'', 'c', 0x0107},
     /** 0x0108 */
     /** 0x0109 */
     /** 0x010A */
     /** 0x010B */
-    {'v', 'C', QChar(0x010C)},
-    {'v', 'c', QChar(0x010D)},
-    {'v', 'D', QChar(0x010E)},
+    {'v', 'C', 0x010C},
+    {'v', 'c', 0x010D},
+    {'v', 'D', 0x010E},
     /** 0x010F */
     /** 0x0110 */
     /** 0x0111 */
-    {'=', 'E', QChar(0x0112)},
-    {'=', 'e', QChar(0x0113)},
+    {'=', 'E', 0x0112},
+    {'=', 'e', 0x0113},
     /** 0x0114 */
     /** 0x0115 */
     /** 0x0116 */
     /** 0x0117 */
-    {'c', 'E', QChar(0x0118)},
-    {'c', 'e', QChar(0x0119)},
-    {'v', 'E', QChar(0x011A)},
-    {'v', 'e', QChar(0x011B)},
+    {'c', 'E', 0x0118},
+    {'c', 'e', 0x0119},
+    {'v', 'E', 0x011A},
+    {'v', 'e', 0x011B},
     /** 0x011C */
     /** 0x011D */
-    {'u', 'G', QChar(0x011E)},
-    {'u', 'g', QChar(0x011F)},
+    {'u', 'G', 0x011E},
+    {'u', 'g', 0x011F},
     /** 0x0120 */
     /** 0x0121 */
     /** 0x0122 */
@@ -152,12 +152,12 @@ encoderLaTeXEscapedCharacters[] = {
     /** 0x0125 */
     /** 0x0126 */
     /** 0x0127 */
-    {'~', 'I', QChar(0x0128)},
-    {'~', 'i', QChar(0x0129)},
-    {'=', 'I', QChar(0x012A)},
-    {'=', 'i', QChar(0x012B)},
-    {'u', 'I', QChar(0x012C)},
-    {'u', 'i', QChar(0x012D)},
+    {'~', 'I', 0x0128},
+    {'~', 'i', 0x0129},
+    {'=', 'I', 0x012A},
+    {'=', 'i', 0x012B},
+    {'u', 'I', 0x012C},
+    {'u', 'i', 0x012D},
     /** 0x012E */
     /** 0x012F */
     /** 0x0130 */
@@ -169,8 +169,8 @@ encoderLaTeXEscapedCharacters[] = {
     /** 0x0136 */
     /** 0x0137 */
     /** 0x0138 */
-    {'\'', 'L', QChar(0x0139)},
-    {'\'', 'l', QChar(0x013A)},
+    {'\'', 'L', 0x0139},
+    {'\'', 'l', 0x013A},
     /** 0x013B */
     /** 0x013C */
     /** 0x013D */
@@ -179,51 +179,51 @@ encoderLaTeXEscapedCharacters[] = {
     /** 0x0140 */
     /** 0x0141 */
     /** 0x0142 */
-    {'\'', 'N', QChar(0x0143)},
-    {'\'', 'n', QChar(0x0144)},
+    {'\'', 'N', 0x0143},
+    {'\'', 'n', 0x0144},
     /** 0x0145 */
     /** 0x0146 */
-    {'v', 'N', QChar(0x0147)},
-    {'v', 'n', QChar(0x0148)},
+    {'v', 'N', 0x0147},
+    {'v', 'n', 0x0148},
     /** 0x0149 */
     /** 0x014A */
     /** 0x014B */
-    {'=', 'O', QChar(0x014C)},
-    {'=', 'o', QChar(0x014D)},
-    {'u', 'O', QChar(0x014E)},
-    {'u', 'o', QChar(0x014F)},
-    {'H', 'O', QChar(0x0150)},
-    {'H', 'o', QChar(0x0151)},
+    {'=', 'O', 0x014C},
+    {'=', 'o', 0x014D},
+    {'u', 'O', 0x014E},
+    {'u', 'o', 0x014F},
+    {'H', 'O', 0x0150},
+    {'H', 'o', 0x0151},
     /** 0x0152 */
     /** 0x0153 */
-    {'\'', 'R', QChar(0x0154)},
-    {'\'', 'r', QChar(0x0155)},
+    {'\'', 'R', 0x0154},
+    {'\'', 'r', 0x0155},
     /** 0x0156 */
     /** 0x0157 */
-    {'v', 'R', QChar(0x0158)},
-    {'v', 'r', QChar(0x0159)},
-    {'\'', 'S', QChar(0x015A)},
-    {'\'', 's', QChar(0x015B)},
+    {'v', 'R', 0x0158},
+    {'v', 'r', 0x0159},
+    {'\'', 'S', 0x015A},
+    {'\'', 's', 0x015B},
     /** 0x015C */
     /** 0x015D */
-    {'c', 'S', QChar(0x015E)},
-    {'c', 's', QChar(0x015F)},
-    {'v', 'S', QChar(0x0160)},
-    {'v', 's', QChar(0x0161)},
+    {'c', 'S', 0x015E},
+    {'c', 's', 0x015F},
+    {'v', 'S', 0x0160},
+    {'v', 's', 0x0161},
     /** 0x0162 */
     /** 0x0163 */
-    {'v', 'T', QChar(0x0164)},
+    {'v', 'T', 0x0164},
     /** 0x0165 */
     /** 0x0166 */
     /** 0x0167 */
-    {'~', 'U', QChar(0x0168)},
-    {'~', 'u', QChar(0x0169)},
-    {'=', 'U', QChar(0x016A)},
-    {'=', 'u', QChar(0x016B)},
-    {'u', 'U', QChar(0x016C)},
-    {'u', 'u', QChar(0x016D)},
-    {'r', 'U', QChar(0x016E)},
-    {'r', 'u', QChar(0x016F)},
+    {'~', 'U', 0x0168},
+    {'~', 'u', 0x0169},
+    {'=', 'U', 0x016A},
+    {'=', 'u', 0x016B},
+    {'u', 'U', 0x016C},
+    {'u', 'u', 0x016D},
+    {'r', 'U', 0x016E},
+    {'r', 'u', 0x016F},
     /** 0x0170 */
     /** 0x0171 */
     /** 0x0172 */
@@ -232,22 +232,22 @@ encoderLaTeXEscapedCharacters[] = {
     /** 0x0175 */
     /** 0x0176 */
     /** 0x0177 */
-    {'"', 'Y', QChar(0x0178)},
-    {'\'', 'Z', QChar(0x0179)},
-    {'\'', 'z', QChar(0x017A)},
+    {'"', 'Y', 0x0178},
+    {'\'', 'Z', 0x0179},
+    {'\'', 'z', 0x017A},
     /** 0x017B */
     /** 0x017C */
-    {'v', 'Z', QChar(0x017D)},
-    {'v', 'z', QChar(0x017E)},
+    {'v', 'Z', 0x017D},
+    {'v', 'z', 0x017E},
     /** 0x017F */
     /** 0x0180 */
-    {'=', 'Y', QChar(0x0232)},
-    {'=', 'y', QChar(0x0233)},
-    {'v', 'A', QChar(0x01CD)},
-    {'v', 'a', QChar(0x01CE)},
-    {'v', 'G', QChar(0x01E6)},
-    {'v', 'g', QChar(0x01E7)},
-    {'r', 'q', QChar(0x2019)} ///< tricky: this is \rq
+    {'=', 'Y', 0x0232},
+    {'=', 'y', 0x0233},
+    {'v', 'A', 0x01CD},
+    {'v', 'a', 0x01CE},
+    {'v', 'G', 0x01E6},
+    {'v', 'g', 0x01E7},
+    {'r', 'q', 0x2019} ///< tricky: this is \rq
 };
 static const int encoderLaTeXEscapedCharactersLen = sizeof(encoderLaTeXEscapedCharacters) / sizeof(encoderLaTeXEscapedCharacters[0]);
 
@@ -266,21 +266,21 @@ static const int encoderLaTeXEscapedCharactersLen = sizeof(encoderLaTeXEscapedCh
 static const struct DotlessIJCharacter {
     const char modifier;
     const char letter;
-    QChar unicode;
+    ushort unicode;
 }
 dotlessIJCharacters[] = {
-    {'`', 'i', QChar(0x00EC)},
-    {'\'', 'i', QChar(0x00ED)},
-    {'^', 'i', QChar(0x00EE)},
-    {'"', 'i', QChar(0x00EF)},
-    {'~', 'i', QChar(0x0129)},
-    {'=', 'i', QChar(0x012B)},
-    {'u', 'i', QChar(0x012D)},
-    {'k', 'i', QChar(0x012F)},
-    {'^', 'j', QChar(0x0135)},
-    {'v', 'i', QChar(0x01D0)},
-    {'v', 'j', QChar(0x01F0)},
-    {'t', 'i', QChar(0x020B)}
+    {'`', 'i', 0x00EC},
+    {'\'', 'i', 0x00ED},
+    {'^', 'i', 0x00EE},
+    {'"', 'i', 0x00EF},
+    {'~', 'i', 0x0129},
+    {'=', 'i', 0x012B},
+    {'u', 'i', 0x012D},
+    {'k', 'i', 0x012F},
+    {'^', 'j', 0x0135},
+    {'v', 'i', 0x01D0},
+    {'v', 'j', 0x01F0},
+    {'t', 'i', 0x020B}
 };
 static const int dotlessIJCharactersLen = sizeof(dotlessIJCharacters) / sizeof(dotlessIJCharacters[0]);
 
@@ -311,20 +311,29 @@ static struct EncoderLaTeXEscapedCharacterLookupTableRow {
  * in text mode.
  */
 static const struct MathCommand {
-    QString written;
-    QChar unicode;
+    const char *written;
+    ushort unicode;
 }
 mathCommand[] = {
-    {QLatin1String("ell"), QChar(0x2113)},
-    {QLatin1String("rightarrow"), QChar(0x2192)},
-    {QLatin1String("forall"), QChar(0x2200)},
-    {QLatin1String("exists"), QChar(0x2203)},
-    {QLatin1String("in"), QChar(0x2208)},
-    {QLatin1String("ni"), QChar(0x220B)},
-    {QLatin1String("asterisk"), QChar(0x2217)},
-    {QLatin1String("infty"), QChar(0x221E)},
-    {QLatin1String("subset"), QChar(0x2282)},
-    {QLatin1String("top"), QChar(0x22A4)},
+    {"ell", 0x2113},
+    {"rightarrow", 0x2192},
+    {"forall", 0x2200},
+    {"exists", 0x2203},
+    {"in", 0x2208},
+    {"ni", 0x220B},
+    {"asterisk", 0x2217},
+    {"infty", 0x221E},
+    {"subset", 0x2282},
+    {"supset", 0x2283},
+    {"subseteq", 0x2286},
+    {"supseteq", 0x2287},
+    {"nsubseteq", 0x2288},
+    {"nsupseteq", 0x2289},
+    {"subsetneq", 0x228A},
+    {"supsetneq", 0x228A},
+    {"Subset", 0x22D0},
+    {"Supset", 0x22D1},
+    {"top", 0x22A4}
 };
 static const int mathCommandLen = sizeof(mathCommand) / sizeof(mathCommand[0]);
 
@@ -338,43 +347,43 @@ static const int mathCommandLen = sizeof(mathCommand) / sizeof(mathCommand[0]);
  * hexcode.
  */
 static const struct EncoderLaTeXCharacterCommand {
-    QString letters;
-    QChar unicode;
+    const char *letters;
+    ushort unicode;
     bool meaningfulCommandName;
 }
 encoderLaTeXCharacterCommands[] = {
-    {QLatin1String("pounds"), QChar(0x00A3), false},
-    {QLatin1String("S"), QChar(0x00A7), true},
-    {QLatin1String("copyright"), QChar(0x00A9), false},
-    {QLatin1String("textperiodcentered"), QChar(0x00B7), false},
-    {QLatin1String("AA"), QChar(0x00C5), true},
-    {QLatin1String("AE"), QChar(0x00C6), true},
-    {QLatin1String("DH"), QChar(0x00D0), true},
-    {QLatin1String("DJ"), QChar(0x00D0), true},
-    {QLatin1String("O"), QChar(0x00D8), true},
-    {QLatin1String("TH"), QChar(0x00DE), true},
-    {QLatin1String("ss"), QChar(0x00DF), true},
-    {QLatin1String("aa"), QChar(0x00E5), true},
-    {QLatin1String("ae"), QChar(0x00E6), true},
-    {QLatin1String("dh"), QChar(0x00F0), true},
-    {QLatin1String("o"), QChar(0x00F8), true},
-    {QLatin1String("th"), QChar(0x00FE), true},
-    {QLatin1String("i"), QChar(0x0131), true},
-    {QLatin1String("NG"), QChar(0x014A), true},
-    {QLatin1String("ng"), QChar(0x014B), true},
-    {QLatin1String("L"), QChar(0x0141), true},
-    {QLatin1String("l"), QChar(0x0142), true},
-    {QLatin1String("OE"), QChar(0x0152), true},
-    {QLatin1String("oe"), QChar(0x0153), true},
-    {QLatin1String("j"), QChar(0x0237), true},
-    {QLatin1String("ldots"), QChar(0x2026), false}, /** \ldots must be before \l */
-    {QLatin1String("grqq"), QChar(0x201C), false},
-    {QLatin1String("rqq"), QChar(0x201D), false},
-    {QLatin1String("glqq"), QChar(0x201E), false},
-    {QLatin1String("frqq"), QChar(0x00BB), false},
-    {QLatin1String("flqq"), QChar(0x00AB), false},
-    {QLatin1String("rq"), QChar(0x2019), false}, ///< tricky one: 'r' is a valid modifier
-    {QLatin1String("lq"), QChar(0x2018), false},
+    {"pounds", 0x00A3, false},
+    {"S", 0x00A7, true},
+    {"copyright", 0x00A9, false},
+    {"textperiodcentered", 0x00B7, false},
+    {"AA", 0x00C5, true},
+    {"AE", 0x00C6, true},
+    {"DH", 0x00D0, true},
+    {"DJ", 0x00D0, true},
+    {"O", 0x00D8, true},
+    {"TH", 0x00DE, true},
+    {"ss", 0x00DF, true},
+    {"aa", 0x00E5, true},
+    {"ae", 0x00E6, true},
+    {"dh", 0x00F0, true},
+    {"o", 0x00F8, true},
+    {"th", 0x00FE, true},
+    {"i", 0x0131, true},
+    {"NG", 0x014A, true},
+    {"ng", 0x014B, true},
+    {"L", 0x0141, true},
+    {"l", 0x0142, true},
+    {"OE", 0x0152, true},
+    {"oe", 0x0153, true},
+    {"j", 0x0237, true},
+    {"ldots", 0x2026, false}, /** \ldots must be before \l */
+    {"grqq", 0x201C, false},
+    {"rqq", 0x201D, false},
+    {"glqq", 0x201E, false},
+    {"frqq", 0x00BB, false},
+    {"flqq", 0x00AB, false},
+    {"rq", 0x2019, false}, ///< tricky one: 'r' is a valid modifier
+    {"lq", 0x2018, false},
 };
 static const int encoderLaTeXCharacterCommandsLen = sizeof(encoderLaTeXCharacterCommands) / sizeof(encoderLaTeXCharacterCommands[0]);
 
@@ -395,24 +404,24 @@ const int EncoderLaTeX::encoderLaTeXProtectedTextOnlySymbolsLen = sizeof(encoder
  */
 static const struct EncoderLaTeXSymbolSequence {
     const char *latex;
-    QChar unicode;
+    ushort unicode;
     bool useUnicode;
 } encoderLaTeXSymbolSequences[] = {
-    {"!`", QChar(0x00A1), true},
-    {"\"<", QChar(0x00AB), true},
-    {"\">", QChar(0x00BB), true},
-    {"?`", QChar(0x00BF), true},
-    {"---", QChar(0x2014), true},
-    {"--", QChar(0x2013), true},
-    {"``", QChar(0x201C), true},
-    {"''", QChar(0x201D), true},
-    {"ff", QChar(0xFB00), false},
-    {"fi", QChar(0xFB01), false},
-    {"fl", QChar(0xFB02), false},
-    {"ffi", QChar(0xFB03), false},
-    {"ffl", QChar(0xFB04), false},
-    {"ft", QChar(0xFB05), false},
-    {"st", QChar(0xFB06), false}
+    {"!`", 0x00A1, true},
+    {"\"<", 0x00AB, true},
+    {"\">", 0x00BB, true},
+    {"?`", 0x00BF, true},
+    {"---", 0x2014, true},
+    {"--", 0x2013, true},
+    {"``", 0x201C, true},
+    {"''", 0x201D, true},
+    {"ff", 0xFB00, false},
+    {"fi", 0xFB01, false},
+    {"fl", 0xFB02, false},
+    {"ffi", 0xFB03, false},
+    {"ffl", 0xFB04, false},
+    {"ft", 0xFB05, false},
+    {"st", 0xFB06, false}
 };
 static const int encoderLaTeXSymbolSequencesLen = sizeof(encoderLaTeXSymbolSequences) / sizeof(encoderLaTeXSymbolSequences[0]);
 
@@ -441,7 +450,7 @@ EncoderLaTeX::EncoderLaTeX()
             for (int k = 0; k < lookupTableNumCharacters; ++k) {
                 /// If no special character is known for a letter+modifier
                 /// combination, fall back using the ASCII character only
-                lookupTable[lookupTableCount]->unicode[k] = QChar('A' + k);
+                lookupTable[lookupTableCount]->unicode[k] = QLatin1Char('A' + k);
             }
             j = lookupTableCount;
             ++lookupTableCount;
@@ -451,7 +460,7 @@ EncoderLaTeX::EncoderLaTeX()
         /// into Unicode char array in the current modifier's row in the lookup table.
         if (encoderLaTeXEscapedCharacters[i].letter >= 'A' && encoderLaTeXEscapedCharacters[i].letter <= 'z') {
             int pos = encoderLaTeXEscapedCharacters[i].letter - 'A';
-            lookupTable[j]->unicode[pos] = encoderLaTeXEscapedCharacters[i].unicode;
+            lookupTable[j]->unicode[pos] = QChar(encoderLaTeXEscapedCharacters[i].unicode);
         } else
             kWarning() << "Cannot handle letter " << encoderLaTeXEscapedCharacters[i].letter;
     }
@@ -501,15 +510,22 @@ QString EncoderLaTeX::decode(const QString &input) const
                     /// we are looking at something like {\"A}
                     /// Use lookup table to see what Unicode char this
                     /// represents
-                    output.append(lookupTable[lookupTablePos]->unicode[input[i + 3].toAscii() - 'A']);
+                    const QChar unicodeLetter = lookupTable[lookupTablePos]->unicode[input[i + 3].toLatin1() - 'A'];
+                    if (unicodeLetter.unicode() < 127) {
+                        /// This combination of modifier and letter is not known,
+                        /// so try to preserve it
+                        output.append(input.mid(i, 5));
+                        kDebug() << "Don't know how to translate this into Unicode: " << input.mid(i, 5);
+                    } else
+                        output.append(unicodeLetter);
                     /// Step over those additional characters
                     i += 4;
                 } else if (lookupTablePos >= 0 && input[i + 3] == '\\' && input[i + 4] >= 'A' && input[i + 4] <= 'z' && input[i + 5] == '}') {
                     /// This is the case for {\'\i} or alike.
                     bool found = false;
                     for (int k = 0; !found && k < dotlessIJCharactersLen; ++k)
-                        if (dotlessIJCharacters[k].letter == input[i + 4] && dotlessIJCharacters[k].modifier == input[i + 2]) {
-                            output.append(dotlessIJCharacters[k].unicode);
+                        if (dotlessIJCharacters[k].letter == input[i + 4].toLatin1() && dotlessIJCharacters[k].modifier == input[i + 2].toLatin1()) {
+                            output.append(QChar(dotlessIJCharacters[k].unicode));
                             i += 5;
                             found = true;
                         }
@@ -522,15 +538,22 @@ QString EncoderLaTeX::decode(const QString &input) const
                     /// we are looking at something like {\"{A}}
                     /// Use lookup table to see what Unicode char this
                     /// represents
-                    output.append(lookupTable[lookupTablePos]->unicode[input[i + 4].toAscii() - 'A']);
+                    const QChar unicodeLetter = lookupTable[lookupTablePos]->unicode[input[i + 4].toLatin1() - 'A'];
+                    if (unicodeLetter.unicode() < 127) {
+                        /// This combination of modifier and letter is not known,
+                        /// so try to preserve it
+                        output.append(input.mid(i, 7));
+                        kDebug() << "Don't know how to translate this into Unicode: " << input.mid(i, 7);
+                    } else
+                        output.append(unicodeLetter);
                     /// Step over those additional characters
                     i += 6;
                 } else if (lookupTablePos >= 0 && input[i + 3] == '{' && input[i + 4] == '\\' && input[i + 5] >= 'A' && input[i + 5] <= 'z' && input[i + 6] == '}' && input[i + 7] == '}') {
                     /// This is the case for {\'{\i}} or alike.
                     bool found = false;
                     for (int k = 0; !found && k < dotlessIJCharactersLen; ++k)
-                        if (dotlessIJCharacters[k].letter == input[i + 5] && dotlessIJCharacters[k].modifier == input[i + 2]) {
-                            output.append(dotlessIJCharacters[k].unicode);
+                        if (dotlessIJCharacters[k].letter == input[i + 5].toLatin1() && dotlessIJCharacters[k].modifier == input[i + 2].toLatin1()) {
+                            output.append(QChar(dotlessIJCharacters[k].unicode));
                             i += 7;
                             found = true;
                         }
@@ -547,8 +570,8 @@ QString EncoderLaTeX::decode(const QString &input) const
                         /// insert corresponding Unicode character
                         bool foundCommand = false;
                         for (int ci = 0; !foundCommand && ci < encoderLaTeXCharacterCommandsLen; ++ci) {
-                            if (encoderLaTeXCharacterCommands[ci].letters == alpha) {
-                                output.append(encoderLaTeXCharacterCommands[ci].unicode);
+                            if (QLatin1String(encoderLaTeXCharacterCommands[ci].letters) == alpha) {
+                                output.append(QChar(encoderLaTeXCharacterCommands[ci].unicode));
                                 foundCommand = true;
                             }
                         }
@@ -557,13 +580,13 @@ QString EncoderLaTeX::decode(const QString &input) const
                         /// like \subset
                         /// (automatically skipped if command was found above)
                         for (int k = 0; !foundCommand && k < mathCommandLen; ++k) {
-                            if (mathCommand[k].written == alpha) {
+                            if (QLatin1String(mathCommand[k].written) == alpha) {
                                 if (output.endsWith(QLatin1String("\\ensuremath"))) {
                                     /// Remove "\ensuremath" right before this math command,
                                     /// it will be re-inserted when exporting/saving the document
                                     output = output.left(output.length() - 11);
                                 }
-                                output.append(mathCommand[k].unicode);
+                                output.append(QChar(mathCommand[k].unicode));
                                 foundCommand = true;
                             }
                         }
@@ -603,7 +626,14 @@ QString EncoderLaTeX::decode(const QString &input) const
                 /// like \"u inside Kr\"uger
                 /// Use lookup table to see what Unicode char this
                 /// represents
-                output.append(lookupTable[lookupTablePos]->unicode[input[i + 2].toAscii() - 'A']);
+                const QChar unicodeLetter = lookupTable[lookupTablePos]->unicode[input[i + 2].toLatin1() - 'A'];
+                if (unicodeLetter.unicode() < 127) {
+                    /// This combination of modifier and letter is not known,
+                    /// so try to preserve it
+                    output.append(input.mid(i, 3));
+                    kDebug() << "Don't know how to translate this into Unicode: " << input.mid(i, 3);
+                } else
+                    output.append(unicodeLetter);
                 /// Step over those additional characters
                 i += 2;
             } else if (lookupTablePos >= 0 && i <= len - 3 && input[i + 2] >= 'A' && input[i + 2] <= 'z' && (i == len - 3 || input[i + 3] == '}' ||  input[i + 3] == '{' || input[i + 3] == ' ' || input[i + 3] == '\t' || input[i + 3] == '\\' || input[i + 3] == '\r' || input[i + 3] == '\n')) {
@@ -613,7 +643,14 @@ QString EncoderLaTeX::decode(const QString &input) const
                 /// like \"u
                 /// Use lookup table to see what Unicode char this
                 /// represents
-                output.append(lookupTable[lookupTablePos]->unicode[input[i + 2].toAscii() - 'A']);
+                const QChar unicodeLetter = lookupTable[lookupTablePos]->unicode[input[i + 2].toLatin1() - 'A'];
+                if (unicodeLetter.unicode() < 127) {
+                    /// This combination of modifier and letter is not known,
+                    /// so try to preserve it
+                    output.append(input.mid(i, 3));
+                    kDebug() << "Don't know how to translate this into Unicode: " << input.mid(i, 3);
+                } else
+                    output.append(unicodeLetter);
                 /// Step over those additional characters
                 i += 2;
 
@@ -634,15 +671,22 @@ QString EncoderLaTeX::decode(const QString &input) const
                 /// like \"{u}
                 /// Use lookup table to see what Unicode char this
                 /// represents
-                output.append(lookupTable[lookupTablePos]->unicode[input[i + 3].toAscii() - 'A']);
+                const QChar unicodeLetter = lookupTable[lookupTablePos]->unicode[input[i + 3].toLatin1() - 'A'];
+                if (unicodeLetter.unicode() < 127) {
+                    /// This combination of modifier and letter is not known,
+                    /// so try to preserve it
+                    output.append(input.mid(i, 5));
+                    kDebug() << "Don't know how to translate this into Unicode: " << input.mid(i, 5);
+                } else
+                    output.append(unicodeLetter);
                 /// Step over those additional characters
                 i += 4;
             } else if (lookupTablePos >= 0 && input[i + 2] == '\\' && input[i + 3] >= 'A' && input[i + 3] <= 'z') {
                 /// This is the case for \'\i or alike.
                 bool found = false;
                 for (int k = 0; !found && k < dotlessIJCharactersLen; ++k)
-                    if (dotlessIJCharacters[k].letter == input[i + 3] && dotlessIJCharacters[k].modifier == input[i + 1]) {
-                        output.append(dotlessIJCharacters[k].unicode);
+                    if (dotlessIJCharacters[k].letter == input[i + 3].toLatin1() && dotlessIJCharacters[k].modifier == input[i + 1].toLatin1()) {
+                        output.append(QChar(dotlessIJCharacters[k].unicode));
                         i += 3;
                         found = true;
                     }
@@ -652,8 +696,8 @@ QString EncoderLaTeX::decode(const QString &input) const
                 /// This is the case for \'{\i} or alike.
                 bool found = false;
                 for (int k = 0; !found && k < dotlessIJCharactersLen; ++k)
-                    if (dotlessIJCharacters[k].letter == input[i + 4] && dotlessIJCharacters[k].modifier == input[i + 1]) {
-                        output.append(dotlessIJCharacters[k].unicode);
+                    if (dotlessIJCharacters[k].letter == input[i + 4].toLatin1() && dotlessIJCharacters[k].modifier == input[i + 1].toLatin1()) {
+                        output.append(QChar(dotlessIJCharacters[k].unicode));
                         i += 5;
                         found = true;
                     }
@@ -670,8 +714,8 @@ QString EncoderLaTeX::decode(const QString &input) const
                     /// insert corresponding Unicode character
                     bool foundCommand = false;
                     for (int ci = 0; !foundCommand && ci < encoderLaTeXCharacterCommandsLen; ++ci) {
-                        if (encoderLaTeXCharacterCommands[ci].letters == alpha) {
-                            output.append(encoderLaTeXCharacterCommands[ci].unicode);
+                        if (QLatin1String(encoderLaTeXCharacterCommands[ci].letters) == alpha) {
+                            output.append(QChar(encoderLaTeXCharacterCommands[ci].unicode));
                             foundCommand = true;
                         }
                     }
@@ -735,15 +779,15 @@ QString EncoderLaTeX::decode(const QString &input) const
                 /// First, check if read input character matches beginning of symbol sequence
                 /// and input buffer as enough characters left to potentially contain
                 /// symbol sequence
-                if (encoderLaTeXSymbolSequences[l].useUnicode && encoderLaTeXSymbolSequences[l].latex[0] == c && i <= len - (int)qstrlen(encoderLaTeXSymbolSequences[l].latex)) {
+                if (encoderLaTeXSymbolSequences[l].useUnicode && encoderLaTeXSymbolSequences[l].latex[0] == c.toLatin1() && i <= len - (int)qstrlen(encoderLaTeXSymbolSequences[l].latex)) {
                     /// Now actually check if symbol sequence is in input buffer
                     isSymbolSequence = true;
                     for (int p = 1; isSymbolSequence && p < (int)qstrlen(encoderLaTeXSymbolSequences[l].latex); ++p)
-                        isSymbolSequence &= encoderLaTeXSymbolSequences[l].latex[p] == input[i + p];
+                        isSymbolSequence &= encoderLaTeXSymbolSequences[l].latex[p] == input[i + p].toLatin1();
                     if (isSymbolSequence) {
                         /// Ok, found sequence: insert Unicode character in output
                         /// and hop over sequence in input buffer
-                        output.append(encoderLaTeXSymbolSequences[l].unicode);
+                        output.append(QChar(encoderLaTeXSymbolSequences[l].unicode));
                         i += qstrlen(encoderLaTeXSymbolSequences[l].latex) - 1;
                         break;
                     }
@@ -828,7 +872,7 @@ QString EncoderLaTeX::encode(const QString &ninput) const
                 /// ... test if there is a symbol sequence like ---
                 /// to encode it
                 for (int k = 0; k < encoderLaTeXSymbolSequencesLen; ++k)
-                    if (encoderLaTeXSymbolSequences[k].unicode == c) {
+                    if (encoderLaTeXSymbolSequences[k].unicode == c.unicode()) {
                         for (int l = 0; l < (int)qstrlen(encoderLaTeXSymbolSequences[k].latex); ++l)
                             output.append(encoderLaTeXSymbolSequences[k].latex[l]);
                         found = true;
@@ -840,7 +884,7 @@ QString EncoderLaTeX::encode(const QString &ninput) const
                 /// Ok, no symbol sequence. Let's test character
                 /// commands like \ss
                 for (int k = 0; k < encoderLaTeXCharacterCommandsLen; ++k)
-                    if (encoderLaTeXCharacterCommands[k].unicode == c) {
+                    if (encoderLaTeXCharacterCommands[k].unicode == c.unicode()) {
                         output.append(QString("{\\%1}").arg(encoderLaTeXCharacterCommands[k].letters));
                         found = true;
                         break;
@@ -851,7 +895,7 @@ QString EncoderLaTeX::encode(const QString &ninput) const
                 /// Ok, neither a character command. Let's test
                 /// escaped characters with modifiers like \"a
                 for (int k = 0; k < encoderLaTeXEscapedCharactersLen; ++k)
-                    if (encoderLaTeXEscapedCharacters[k].unicode == c) {
+                    if (encoderLaTeXEscapedCharacters[k].unicode == c.unicode()) {
                         output.append(QString("\\%1{%2}").arg(encoderLaTeXEscapedCharacters[k].modifier).arg(encoderLaTeXEscapedCharacters[k].letter));
                         found = true;
                         break;
@@ -861,7 +905,7 @@ QString EncoderLaTeX::encode(const QString &ninput) const
             if (!found) {
                 /// Ok, test for math commands
                 for (int k = 0; k < mathCommandLen; ++k)
-                    if (mathCommand[k].unicode == c) {
+                    if (mathCommand[k].unicode == c.unicode()) {
                         if (inMathMode)
                             output.append(QString("\\%1{}").arg(mathCommand[k].written));
                         else
@@ -883,7 +927,7 @@ QString EncoderLaTeX::encode(const QString &ninput) const
             bool found = false;
             for (int k = 0; k < encoderLaTeXProtectedSymbolsLen; ++k)
                 if (encoderLaTeXProtectedSymbols[k] == c) {
-                    output.append(QChar('\\'));
+                    output.append(QLatin1Char('\\'));
                     found = true;
                     break;
                 }
@@ -891,7 +935,7 @@ QString EncoderLaTeX::encode(const QString &ninput) const
             if (!found && !inMathMode)
                 for (int k = 0; k < encoderLaTeXProtectedTextOnlySymbolsLen; ++k)
                     if (encoderLaTeXProtectedTextOnlySymbols[k] == c) {
-                        output.append(QChar('\\'));
+                        output.append(QLatin1Char('\\'));
                         found = true;
                         break;
                     }
@@ -902,7 +946,7 @@ QString EncoderLaTeX::encode(const QString &ninput) const
             /// Finally, check if input character is a dollar sign
             /// without a preceeding backslash, means toggling between
             /// text mode and math mode
-            if (c == '$' && (i == 0 || input[i - 1] != QChar('\\')))
+            if (c == '$' && (i == 0 || input[i - 1] != QLatin1Char('\\')))
                 inMathMode = !inMathMode;
         }
     }
@@ -933,15 +977,15 @@ QString EncoderLaTeX::convertToPlainAscii(const QString &ninput) const
 
             /// Let's test character commands like \'\i
             for (int k = 0; k < dotlessIJCharactersLen; ++k)
-                if (dotlessIJCharacters[k].unicode == c) {
-                    output.append(dotlessIJCharacters[k].letter);
+                if (dotlessIJCharacters[k].unicode == c.unicode()) {
+                    output.append(QChar(dotlessIJCharacters[k].letter));
                     found = true;
                     break;
                 }
 
             /// Let's test character commands like \ss
             for (int k = 0; k < encoderLaTeXCharacterCommandsLen; ++k)
-                if (encoderLaTeXCharacterCommands[k].meaningfulCommandName && encoderLaTeXCharacterCommands[k].unicode == c) {
+                if (encoderLaTeXCharacterCommands[k].meaningfulCommandName && encoderLaTeXCharacterCommands[k].unicode == c.unicode()) {
                     output.append(encoderLaTeXCharacterCommands[k].letters);
                     found = true;
                     break;
@@ -951,7 +995,7 @@ QString EncoderLaTeX::convertToPlainAscii(const QString &ninput) const
                 /// Ok, not a character command. Let's test
                 /// escaped characters with modifiers like \"a
                 for (int k = 0; k < encoderLaTeXEscapedCharactersLen; ++k)
-                    if (encoderLaTeXEscapedCharacters[k].unicode == c) {
+                    if (encoderLaTeXEscapedCharacters[k].unicode == c.unicode()) {
                         output.append(encoderLaTeXEscapedCharacters[k].letter);
                         found = true;
                         break;
@@ -984,10 +1028,11 @@ bool EncoderLaTeX::containsOnlyAscii(const QString &ntext)
     return true;
 }
 
-int EncoderLaTeX::modifierInLookupTable(const QChar &c) const
+int EncoderLaTeX::modifierInLookupTable(const QChar &modifier) const
 {
+    const char latinModifier = modifier.toLatin1();
     for (int m = 0; m < lookupTableNumModifiers && lookupTable[m] != NULL; ++m)
-        if (lookupTable[m]->modifier == c) return m;
+        if (lookupTable[m]->modifier == latinModifier) return m;
     return -1;
 }
 
