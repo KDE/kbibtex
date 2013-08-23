@@ -67,7 +67,7 @@ static const QString MonthsTriple[] = {
 
 static const QRegExp fileListSeparatorRegExp("[ \\t]*[;\\n]+[ \\t]*");
 static const QRegExp fileRegExp("(\\bfile:)?[^{}\\t]+\\.\\w{2,4}\\b", Qt::CaseInsensitive);
-static const QRegExp urlRegExp("\\b(http|s?ftp|webdav|file)s?://[^ {}\"]+\\b", Qt::CaseInsensitive);
+static const QRegExp urlRegExp("\\b(http|s?ftp|webdav|file)s?://[^ {}\"]+(\\b|[/])", Qt::CaseInsensitive);
 static const QRegExp doiRegExp("\\b10\\.\\d{4}([.][0-9]+)*/[/-a-z0-9.()<>_:;\\\\]+", Qt::CaseInsensitive);
 static const QRegExp mendeleyFileRegExp(":(.*):pdf", Qt::CaseInsensitive);
 static const QString doiUrlPrefix = QLatin1String("http://dx.doi.org/"); ///< use FileInfo::doiUrlPrefix() instead
