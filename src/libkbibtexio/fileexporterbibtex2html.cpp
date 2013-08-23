@@ -21,6 +21,7 @@
 
 #include <KDebug>
 #include <KLocale>
+#include <KStandardDirs>
 
 #include "fileexporterbibtex.h"
 #include "fileexporterbibtex2html.h"
@@ -65,7 +66,7 @@ public:
     }
 
     bool checkBibTeX2HTMLexists(QIODevice *iodevice) {
-        if (p->which("bibtex2html"))
+        if (!KStandardDirs::findExe("bibtex2html").isEmpty())
             return true;
 
         QTextStream ts(iodevice);

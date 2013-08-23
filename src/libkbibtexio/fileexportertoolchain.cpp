@@ -185,14 +185,3 @@ bool FileExporterToolchain::kpsewhich(const QString &filename)
 
     return result;
 }
-
-bool FileExporterToolchain::which(const QString &filename)
-{
-    QStringList paths = QString(getenv("PATH")).split(QLatin1String(":")); // FIXME: Most likely not portable?
-    for (QStringList::Iterator it = paths.begin(); it != paths.end(); ++it) {
-        QFileInfo fi(*it + "/" + filename);
-        if (fi.exists() && fi.isExecutable()) return true;
-    }
-
-    return false;
-}
