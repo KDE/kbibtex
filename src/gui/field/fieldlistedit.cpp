@@ -487,11 +487,11 @@ void UrlListEdit::slotAddReferenceToFile()
     QUrl bibtexUrl(d->file != NULL ? d->file->property(File::Url, QVariant()).toUrl() : QUrl());
     QFileInfo bibtexUrlInfo = bibtexUrl.isEmpty() ? QFileInfo() : QFileInfo(bibtexUrl.path());
 
-    QString filename = KFileDialog::getOpenFileName(KUrl(bibtexUrlInfo.absolutePath()), QString(), this, i18n("Select File"));
+    const QString filename = KFileDialog::getOpenFileName(KUrl(bibtexUrlInfo.absolutePath()), QString(), this, i18n("Select File"));
     if (!filename.isEmpty()) {
-        filename = askRelativeOrStaticFilename(this, filename, bibtexUrl);
+        const QString visibleFilename = askRelativeOrStaticFilename(this, filename, bibtexUrl);
         Value *value = new Value();
-        value->append(QSharedPointer<VerbatimText>(new VerbatimText(filename)));
+        value->append(QSharedPointer<VerbatimText>(new VerbatimText(visibleFilename)));
         lineAdd(value);
         emit modified();
     }
@@ -567,18 +567,19 @@ void UrlListEdit::slotSaveLocally(QWidget *widget)
         if (!filename.isEmpty()) {
             /// Ask user if reference to local file should be
             /// relative or absolute in relation to the BibTeX file
-            QString absoluteFilename = filename;
+            const QString absoluteFilename = filename;
+            QString visibleFilename = filename;
             if (bibFileinfo.isFile())
-                filename = askRelativeOrStaticFilename(this, filename, d->file->property(File::Url).toUrl());
+                visibleFilename = askRelativeOrStaticFilename(this, absoluteFilename, d->file->property(File::Url).toUrl());
 
             /// Download remote file and save it locally
             // FIXME: KIO::NetAccess::download is blocking
             setEnabled(false);
             setCursor(Qt::WaitCursor);
-            if (KIO::NetAccess::download(url, absoluteFilename, this)) {
+            if (KIO::NetAccess::file_copy(url, KUrl::fromLocalFile(absoluteFilename), this)) {
                 /// Download succeeded, add reference to local file to this BibTeX entry
                 Value *value = new Value();
-                value->append(QSharedPointer<VerbatimText>(new VerbatimText(filename)));
+                value->append(QSharedPointer<VerbatimText>(new VerbatimText(visibleFilename)));
                 lineAdd(value);
                 emit modified();
             }
