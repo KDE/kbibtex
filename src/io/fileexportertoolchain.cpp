@@ -185,23 +185,3 @@ bool FileExporterToolchain::kpsewhich(const QString &filename)
 
     return result;
 }
-
-QString FileExporterToolchain::which(const QString &filename)
-{
-    static const QChar listSeparator =
-#ifdef Q_OS_MSDOS // includes DOS and Windows
-        QLatin1Char(';');
-#else // Q_OS_MSDOS
-        QLatin1Char(':');
-#endif // Q_OS_MSDOS
-
-    const QString pathVariable = QProcessEnvironment::systemEnvironment().value(QLatin1String("PATH"));
-    const QStringList paths = pathVariable.split(listSeparator);
-    for (QStringList::ConstIterator it = paths.constBegin(); it != paths.constEnd(); ++it) {
-        QFileInfo fi(*it + QDir::separator() + filename);
-        if (fi.exists() && fi.isExecutable())
-            return fi.absoluteFilePath();
-    }
-
-    return QString::null;
-}

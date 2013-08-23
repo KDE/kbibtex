@@ -48,17 +48,6 @@ public:
 
     static bool kpsewhich(const QString &filename);
 
-    /**
-     * Mimics the command line program 'which' by searching a
-     * file (e.g. a program executable) in all paths specified
-     * in the system environment's PATH variable.
-     * Supports both DOS/Windows and Linux/Unix/MacOSX.
-     *
-     * @param filename program file to search for
-     * @return absolute path of the program if found
-     */
-    static QString which(const QString &filename);
-
 public slots:
     void cancel();
 
