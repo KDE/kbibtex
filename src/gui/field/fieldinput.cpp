@@ -23,7 +23,6 @@
 #include <QDate>
 #include <QSignalMapper>
 
-#include <KDebug>
 #include <KLocale>
 #include <KPushButton>
 #include <KInputDialog>
@@ -53,6 +52,12 @@ public:
     FieldInputPrivate(FieldInput *parent)
             : p(parent), colorWidget(NULL), fieldLineEdit(NULL), fieldListEdit(NULL), bibtexFile(NULL), element(NULL) {
         // TODO
+    }
+
+    ~FieldInputPrivate() {
+        if (colorWidget != NULL) delete colorWidget;
+        else if (fieldLineEdit != NULL) delete fieldLineEdit;
+        else if (fieldListEdit != NULL) delete fieldListEdit;
     }
 
     void createGUI() {
