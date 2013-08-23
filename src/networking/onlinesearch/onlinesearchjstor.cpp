@@ -180,7 +180,7 @@ QString OnlineSearchJStor::label() const
 
 QString OnlineSearchJStor::favIconUrl() const
 {
-    return QLatin1String("http://www.jstor.org/favicon.ico");
+    return QLatin1String("http://www.jstor.org/templates/jsp/favicon.ico");
 }
 
 OnlineSearchQueryFormAbstract *OnlineSearchJStor::customWidget(QWidget *)
@@ -232,34 +232,34 @@ void OnlineSearchJStor::doneFetchingResultPage()
 
     if (handleErrors(reply)) {
         /// ensure proper treatment of UTF-8 characters
-       QString htmlText = QString::fromUtf8(reply->readAll().data());
+        QString htmlText = QString::fromUtf8(reply->readAll().data());
 
-       /// extract all unique DOI from HTML code
+        /// extract all unique DOI from HTML code
         QSet<QString> uniqueDOIs;
-      int p = -1;
-      while ((p = KBibTeX::doiRegExp.indexIn(htmlText, p + 1)) >= 0)
-        uniqueDOIs.insert(KBibTeX::doiRegExp.cap(0));
+        int p = -1;
+        while ((p = KBibTeX::doiRegExp.indexIn(htmlText, p + 1)) >= 0)
+            uniqueDOIs.insert(KBibTeX::doiRegExp.cap(0));
 
-      if (uniqueDOIs.isEmpty()) {
-                  /// no results found
-                  emit progress(d->numSteps, d->numSteps);
-                  emit stoppedSearch(resultNoError);
-              } else {
-                  /// Build search URL, to be used in the second step
-                  /// after fetching the start page
-                  KUrl bibTeXUrl = KUrl(d->jstorBaseUrl);
-                  bibTeXUrl.setPath("/action/downloadCitation");
-                  bibTeXUrl.addQueryItem("userAction", "export");
-                  bibTeXUrl.addQueryItem("format", "bibtex"); /// request BibTeX format
-                  bibTeXUrl.addQueryItem("include", "abs"); /// include abstracts
-                  foreach(const QString &doi, uniqueDOIs) {
-                      bibTeXUrl.addQueryItem("doi", doi);
+        if (uniqueDOIs.isEmpty()) {
+            /// no results found
+            emit progress(d->numSteps, d->numSteps);
+            emit stoppedSearch(resultNoError);
+        } else {
+            /// Build search URL, to be used in the second step
+            /// after fetching the start page
+            KUrl bibTeXUrl = KUrl(d->jstorBaseUrl);
+            bibTeXUrl.setPath("/action/downloadCitation");
+            bibTeXUrl.addQueryItem("userAction", "export");
+            bibTeXUrl.addQueryItem("format", "bibtex"); /// request BibTeX format
+            bibTeXUrl.addQueryItem("include", "abs"); /// include abstracts
+            foreach(const QString &doi, uniqueDOIs) {
+                bibTeXUrl.addQueryItem("doi", doi);
             }
 
-                  QNetworkRequest request(bibTeXUrl);
-                              QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request);
+            QNetworkRequest request(bibTeXUrl);
+            QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request);
             setNetworkReplyTimeout(newReply);
-         connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingBibTeXCode()));
+            connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingBibTeXCode()));
         }
     } else
         kDebug() << "url was" << reply->url().toString();
