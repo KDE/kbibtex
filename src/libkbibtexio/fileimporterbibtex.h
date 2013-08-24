@@ -168,6 +168,8 @@ private:
      */
     static void contextSensitiveSplit(const QString &text, QStringList &segments);
 
+    static QString bibtexAwareSimplify(const QString &text);
+
     bool evaluateParameterComments(QTextStream *textStream, const QString &line, File *file);
     QString tokenidToString(Token token);
 };

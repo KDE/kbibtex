@@ -268,7 +268,7 @@ Macro *FileImporterBibTeX::readMacroElement()
     Macro *macro = new Macro(key);
     do {
         bool isStringKey = false;
-        QString text = EncoderLaTeX::instance()->decode(readString(isStringKey).simplified());
+        QString text = EncoderLaTeX::instance()->decode(bibtexAwareSimplify(readString(isStringKey)));
         if (isStringKey)
             macro->value().append(QSharedPointer<MacroKey>(new MacroKey(text)));
         else
@@ -296,7 +296,7 @@ Preamble *FileImporterBibTeX::readPreambleElement()
         bool isStringKey = false;
         /// Remember: strings from preamble do not get encoded,
         /// may contain raw LaTeX commands and code
-        QString text = readString(isStringKey).simplified();
+        QString text = bibtexAwareSimplify(readString(isStringKey));
         if (isStringKey)
             preamble->value().append(QSharedPointer<MacroKey>(new MacroKey(text)));
         else
@@ -638,7 +638,7 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value &value, const QStr
         /// for all entries except for abstracts ...
         if (iKey != Entry::ftAbstract && !(iKey.startsWith(Entry::ftUrl) && !iKey.startsWith(Entry::ftUrlDate)) && !iKey.startsWith(Entry::ftLocalFile) && !iKey.startsWith(Entry::ftFile)) {
             /// ... remove redundant spaces including newlines
-            text = text.simplified();
+            text = bibtexAwareSimplify(text);
         }
         /// abstracts will keep their formatting (regarding line breaks)
         /// as requested by Thomas Jensch via mail (20 October 2010)
@@ -1045,6 +1045,34 @@ void FileImporterBibTeX::contextSensitiveSplit(const QString &text, QStringList 
     if (!buffer.isEmpty())
         segments.append(buffer);
 }
+
+QString FileImporterBibTeX::bibtexAwareSimplify(const QString &text)
+{
+    QString result;
+    int i = 0;
+
+    /// Skip initial spaces, can be savely ignored
+    while (i < text.length() && text[i].isSpace()) ++i;
+
+    while (i < text.length()) {
+        /// Consume non-spaces
+        while (i < text.length() && !text[i].isSpace()) {
+            result.append(text[i]);
+            ++i;
+        }
+
+        /// String may end with a non-space
+        if (i >= text.length()) break;
+
+        /// Consume spaces, ...
+        while (i < text.length() && text[i].isSpace()) ++i;
+        /// ... but record only a single space
+        result.append(QLatin1String(" "));
+    }
+
+    return result;
+}
+
 
 bool FileImporterBibTeX::evaluateParameterComments(QTextStream *textStream, const QString &line, File *file)
 {
