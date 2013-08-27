@@ -110,6 +110,8 @@ public:
 
     void reset();
 
+    QVariant entryData(const Entry *entry, const QString &raw, const QString &rawAlt, int role, bool followCrossRef) const;
+
 private:
     File *m_bibtexFile;
     QMap<QString, QString> colorToLabel;
