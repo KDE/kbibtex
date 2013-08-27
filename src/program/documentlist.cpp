@@ -18,7 +18,6 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include <QFontMetrics>
 #include <QStringListModel>
 #include <QTimer>
 #include <QSignalMapper>
@@ -387,10 +386,6 @@ public:
         dirOperator = new DirOperatorWidget(p);
         p->addTab(dirOperator,  KIcon("system-file-manager"), i18n("Filesystem Browser"));
         connect(dirOperator->dirOperator, SIGNAL(fileSelected(KFileItem)), p, SLOT(fileSelected(KFileItem)));
-
-        /** set minimum width of widget depending on tab's text width */
-        QFontMetrics fm(p->font());
-        p->setMinimumWidth(fm.width(p->tabText(0)) * (p->count() + 1));
     }
 };
 
