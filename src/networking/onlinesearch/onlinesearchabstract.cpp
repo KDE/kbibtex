@@ -404,14 +404,26 @@ void OnlineSearchAbstract::sanitizeEntry(QSharedPointer<Entry> entry)
         entry->insert(Entry::ftAbstract, v);
     }
 
-    if (entry->contains(QLatin1String(Entry::ftMonth))) {
+    /// Remove "dblp" artifacts in abstracts and keywords
+    if (entry->contains(Entry::ftAbstract)) {
+        const QString abstract = PlainTextValue::text(entry->value(Entry::ftAbstract));
+        if (abstract == QLatin1String("dblp"))
+            entry->remove(Entry::ftAbstract);
+    }
+    if (entry->contains(Entry::ftKeywords)) {
+        const QString keywords = PlainTextValue::text(entry->value(Entry::ftKeywords));
+        if (keywords == QLatin1String("dblp"))
+            entry->remove(Entry::ftKeywords);
+    }
+
+    if (entry->contains(Entry::ftMonth)) {
         /// Fix strigns for months: "September" -> "sep"
-        const QString monthStr = PlainTextValue::text(entry->value(QLatin1String(Entry::ftMonth)));
+        const QString monthStr = PlainTextValue::text(entry->value(Entry::ftMonth));
 
         static const QRegExp longMonth = QRegExp(QLatin1String("(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]+"), Qt::CaseInsensitive);
         if (monthStr.indexOf(longMonth) == 0 && monthStr == longMonth.cap(0)) {
             /// String used for month is actually a full name, therefore replace it
-            entry->remove(QLatin1String(Entry::ftMonth));
+            entry->remove(Entry::ftMonth);
 
             /// Regular expression checked for valid three-letter abbreviations
             /// that month names start with. Use those three letters for a macro key
@@ -421,6 +433,10 @@ void OnlineSearchAbstract::sanitizeEntry(QSharedPointer<Entry> entry)
             entry->insert(Entry::ftMonth, v);
         }
     }
+
+    /// Referenced strings or entries do not exist in the search result
+    /// and BibTeX breaks if it finds a reference to a non-existing string or entry
+    entry->remove(Entry::ftCrossRef);
 }
 
 bool OnlineSearchAbstract::publishEntry(QSharedPointer<Entry> entry)
