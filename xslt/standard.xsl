@@ -155,6 +155,8 @@
 <xsl:apply-templates select="note" />
 <xsl:apply-templates select="abstract" />
 </p>
+<xsl:text>
+</xsl:text>
 </xsl:template>
 
 <xsl:template match="bibliography">
