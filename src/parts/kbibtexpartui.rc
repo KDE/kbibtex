@@ -30,7 +30,8 @@
   <Action name="file_save_as" group="file_operations" />
   <Separator/>
   <Action name="element_new" />
-  <Separator/>
+</ToolBar>
+<ToolBar name="filterToolBar" noMerge="1"><text>Filter Toolbar</text>
   <Action name="toolbar_filter_widget" />
 </ToolBar>
 </kpartgui>
