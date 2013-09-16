@@ -39,23 +39,40 @@ class QTimer;
   */
 class DelayedExecutionTimer : public QObject
 {
-Q_OBJECT
+    Q_OBJECT
 public:
-    DelayedExecutionTimer(int maximumDelay = 1000, int minimumDelay = 250, QObject* parent = 0);
-    DelayedExecutionTimer(QObject* parent);
+    DelayedExecutionTimer(int maximumDelay = 1000, int minimumDelay = 250, QObject *parent = 0);
+    DelayedExecutionTimer(QObject *parent);
 
     /**
       The minimum delay is the time the class will wait after being triggered before
       emitting the triggered() signals.
       */
-    void setMinimumDelay(int delay) {m_minimumDelay = delay;}
-    int minimumDelay() const {return m_minimumDelay;}
+    void setMinimumDelay(int delay) {
+        m_minimumDelay = delay;
+    }
+    int minimumDelay() const {
+        return m_minimumDelay;
+    }
     /**
       The maximum delay is the maximum time that will pass before a call to the trigger() slot
       leads to a triggered() signal.
       */
-    void setMaximumDelay(int delay) {m_maximumDelay = delay;}
-    int maximumDelay() const {return m_maximumDelay;}
+    void setMaximumDelay(int delay) {
+        m_maximumDelay = delay;
+    }
+    int maximumDelay() const {
+        return m_maximumDelay;
+    }
+
+    /**
+     * Toggle if this timer is reacting on trigger signals.
+     * This timer may still send out trigger events itself.
+     * @param isEnabled timer will react if set to true
+     */
+    void setEnabled(bool isEnabled) {
+        m_isEnabled = isEnabled;
+    }
 
 signals:
     void triggered();
@@ -67,11 +84,12 @@ private slots:
     void timeout();
 
 private:
+    bool m_isEnabled;
     int m_minimumDelay;
     int m_maximumDelay;
 
-    QTimer* m_minimumTimer;
-    QTimer* m_maximumTimer;
+    QTimer *m_minimumTimer;
+    QTimer *m_maximumTimer;
 };
 
 #endif // DELAYEDEXECUTIONTIMER_H
