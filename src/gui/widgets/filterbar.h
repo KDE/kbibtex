@@ -39,7 +39,12 @@ public:
     SortFilterBibTeXFileModel::FilterQuery filter();
 
 public slots:
-    void setFilter(SortFilterBibTeXFileModel::FilterQuery);
+    /**
+     * Set the filter critera to be both shown in this filter bar
+     * and applied to the list of elements.
+     * @param fq query data structure to be used
+     */
+    void setFilter(SortFilterBibTeXFileModel::FilterQuery fq);
 
 signals:
     void filterChanged(SortFilterBibTeXFileModel::FilterQuery);
@@ -49,7 +54,7 @@ private:
     FilterBarPrivate *d;
 
 private slots:
-    void stateChanged();
+    void comboboxStatusChanged();
     void resetState();
     void userPressedEnter();
     void publishFilter();

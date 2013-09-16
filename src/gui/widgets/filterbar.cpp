@@ -21,7 +21,6 @@
 #include <QLayout>
 #include <QLabel>
 #include <QTimer>
-#include <QMenu>
 
 #include <KPushButton>
 #include <KComboBox>
@@ -30,6 +29,7 @@
 #include <KConfigGroup>
 #include <KStandardDirs>
 #include <KIcon>
+#include <KDebug>
 
 #include "filterbar.h"
 #include "bibtexfields.h"
@@ -46,10 +46,11 @@ public:
 
     KComboBox *comboBoxFilterText;
     const int maxNumStoredFilterTexts;
-    KPushButton *buttonOptions;
+    KComboBox *comboBoxCombination;
+    KComboBox *comboBoxField;
+    KPushButton *buttonSearchPDFfiles;
+    KPushButton *buttonClearAll;
     DelayedExecutionTimer *delayedTimer;
-    QActionGroup *actionGroupCombination, *actionGroupFields;
-    QAction *actionSearchPDFfiles;
 
     FilterBarPrivate(FilterBar *parent)
             : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))),
@@ -62,97 +63,62 @@ public:
         delete delayedTimer;
     }
 
-    QMenu *buildOptionsMenu(QWidget *menuParent) {
-        QMenu *result = new QMenu(menuParent);
-
-        QAction *action = result->addAction(i18n("Reset filter"), p, SLOT(resetState()));
-        result->addSeparator();
-
-        QMenu *submenu = result->addMenu(i18n("Combination"));
-        actionGroupCombination = new QActionGroup(submenu);
-        action = submenu->addAction(i18n("Any word"), p, SLOT(stateChanged()));
-        action->setCheckable(true);
-        action->setChecked(true);
-        action->setData(0);
-        actionGroupCombination->addAction(action);
-        action = submenu->addAction(i18n("Every word"), p, SLOT(stateChanged()));
-        action->setCheckable(true);
-        action->setData(1);
-        actionGroupCombination->addAction(action);
-        action = submenu->addAction(i18n("Exact phrase"), p, SLOT(stateChanged()));
-        action->setCheckable(true);
-        action->setData(2);
-        actionGroupCombination->addAction(action);
-        connect(actionGroupCombination, SIGNAL(triggered(QAction *)), delayedTimer, SLOT(trigger()));
-
-        submenu = result->addMenu(i18n("Fields"));
-        actionGroupFields = new QActionGroup(submenu);
-        action = submenu->addAction(i18n("Every field"), p, SLOT(stateChanged()));
-        action->setCheckable(true);
-        action->setChecked(true);
-        action->setData(QVariant());
-        actionGroupFields->addAction(action);
-        submenu->addSeparator();
-        foreach(const FieldDescription *fd, *BibTeXFields::self()) {
-            if (fd->upperCamelCaseAlt.isEmpty()) {
-                action = submenu->addAction(fd->label, p, SLOT(stateChanged()));
-                action->setCheckable(true);
-                action->setData(fd->upperCamelCase);
-                actionGroupFields->addAction(action);
-            }
-        }
-        connect(actionGroupFields, SIGNAL(triggered(QAction *)), delayedTimer, SLOT(trigger()));
-
-        actionSearchPDFfiles = result->addAction(KIcon("application-pdf"), i18n("Search PDF files"), p, SLOT(stateChanged()));
-        connect(actionSearchPDFfiles, SIGNAL(toggled(bool)), delayedTimer, SLOT(trigger()));
-        actionSearchPDFfiles->setCheckable(true);
-        actionSearchPDFfiles->setToolTip(i18n("Include PDF files in full-text search"));
-
-        return result;
-    }
-
     SortFilterBibTeXFileModel::FilterQuery filter() {
         SortFilterBibTeXFileModel::FilterQuery result;
-        result.combination = actionGroupCombination->checkedAction()->data().toInt() == 0 ? SortFilterBibTeXFileModel::AnyTerm : SortFilterBibTeXFileModel::EveryTerm;
+        result.combination = comboBoxCombination->currentIndex() == 0 ? SortFilterBibTeXFileModel::AnyTerm : SortFilterBibTeXFileModel::EveryTerm;
         result.terms.clear();
-        if (actionGroupCombination->checkedAction()->data().toInt() == 2)  /// exact phrase
+        if (comboBoxCombination->currentIndex() == 2) /// exact phrase
             result.terms << comboBoxFilterText->lineEdit()->text();
         else /// any or every word
             result.terms = comboBoxFilterText->lineEdit()->text().split(QRegExp(QLatin1String("\\s+")), QString::SkipEmptyParts);
-        result.field = actionGroupFields->checkedAction()->data().toString();
-        result.searchPDFfiles = actionSearchPDFfiles->isChecked();
+        result.field = comboBoxField->currentIndex() == 0 ? QString::null : comboBoxField->itemData(comboBoxField->currentIndex(), Qt::UserRole).toString();
+        result.searchPDFfiles = buttonSearchPDFfiles->isChecked();
 
         return result;
     }
 
     void setFilter(SortFilterBibTeXFileModel::FilterQuery fq) {
-        int combinationIndex = fq.combination == SortFilterBibTeXFileModel::AnyTerm ? 0 : (fq.terms.count() < 2 ? 2 : 1);
-        actionGroupCombination->blockSignals(true);
-        foreach(QAction *action, actionGroupCombination->actions()) action->blockSignals(true);
-        actionGroupCombination->actions()[combinationIndex]->setChecked(true);
-        actionGroupCombination->blockSignals(false);
-        foreach(QAction *action, actionGroupCombination->actions()) action->blockSignals(false);
+        delayedTimer->setEnabled(false);
 
-        actionGroupFields->blockSignals(true);
-        foreach(QAction *action, actionGroupFields->actions()) action->blockSignals(true);
+        /// Avoid triggering loops of activation
+        comboBoxCombination->blockSignals(true);
+        /// Set check state for action for either "any word",
+        /// "every word", or "exact phrase", respectively
+        const int combinationIndex = fq.combination == SortFilterBibTeXFileModel::AnyTerm ? 0 : (fq.terms.count() < 2 ? 2 : 1);
+        comboBoxCombination->setCurrentIndex(combinationIndex);
+        /// Reset activation block
+        comboBoxCombination->blockSignals(false);
+
+
+        /// Avoid triggering loops of activation
+        comboBoxField->blockSignals(true);
+        /// Find and check action that corresponds to field name ("author", ...)
         const QString lower = fq.field.toLower();
-        foreach(QAction *action, actionGroupFields->actions()) {
-            if (action->text().toLower() == lower || action->data().toString().toLower() == lower) {
-                action->setChecked(true);
+        for (int idx = comboBoxField->count() - 1; idx >= 0; --idx) {
+            const QString lower = fq.field.toLower();
+            if (comboBoxField->itemData(idx, Qt::UserRole).toString().toLower() == lower) {
+                comboBoxField->setCurrentIndex(idx);
                 break;
             }
         }
+        /// Reset activation block
+        comboBoxField->blockSignals(false);
 
-        actionGroupFields->blockSignals(false);
-        foreach(QAction *action, actionGroupFields->actions()) action->blockSignals(false);
+        /// Avoid triggering loops of activation
+        buttonSearchPDFfiles->blockSignals(true);
+        /// Set flag if associated PDF files have to be searched
+        buttonSearchPDFfiles->setChecked(fq.searchPDFfiles);
+        /// Reset activation block
+        buttonSearchPDFfiles->blockSignals(false);
 
-        actionSearchPDFfiles->blockSignals(true);
-        actionSearchPDFfiles->setChecked(fq.searchPDFfiles);
-        actionSearchPDFfiles->blockSignals(false);
-
+        /// Avoid triggering loops of activation
         comboBoxFilterText->blockSignals(true);
+        /// Set filter text widget's content
         comboBoxFilterText->lineEdit()->setText(fq.terms.join(" "));
+        /// Reset activation block
         comboBoxFilterText->blockSignals(false);
+
+        delayedTimer->setEnabled(true);
     }
 
     void addCompletionString(const QString &text) {
@@ -189,25 +155,26 @@ public:
             comboBoxFilterText->addItem(text);
     }
 
-    void storeState() {
+    void storeComboBoxStatus() {
         KConfigGroup configGroup(config, configGroupName);
-        configGroup.writeEntry(QLatin1String("CurrentCombination"), actionGroupCombination->checkedAction()->data().toInt());
-        configGroup.writeEntry(QLatin1String("CurrentField"), actionGroupFields->actions().indexOf(actionGroupFields->checkedAction()));
-        configGroup.writeEntry(QLatin1String("SearchPDFFiles"), actionSearchPDFfiles->isChecked());
+        configGroup.writeEntry(QLatin1String("CurrentCombination"), comboBoxCombination->currentIndex());
+        configGroup.writeEntry(QLatin1String("CurrentField"), comboBoxField->currentIndex());
+        configGroup.writeEntry(QLatin1String("SearchPDFFiles"), buttonSearchPDFfiles->isChecked());
         config->sync();
     }
 
     void restoreState() {
         KConfigGroup configGroup(config, configGroupName);
-        actionGroupCombination->actions()[ configGroup.readEntry("CurrentCombination", 0)]->setChecked(true);
-        actionGroupFields->actions()[configGroup.readEntry("CurrentField", 0)]->setChecked(true);
+        comboBoxCombination->setCurrentIndex(configGroup.readEntry(QLatin1String("CurrentCombination"), 0));
+        comboBoxField->setCurrentIndex(configGroup.readEntry(QLatin1String("CurrentField"), 0));
+        buttonSearchPDFfiles->setChecked(configGroup.readEntry(QLatin1String("SearchPDFFiles"), false));
     }
 
     void resetState() {
         comboBoxFilterText->lineEdit()->clear();
-        actionGroupCombination->actions()[0]->setChecked(true);
-        actionGroupFields->actions()[0]->setChecked(true);
-        actionSearchPDFfiles->setChecked(false);
+        comboBoxCombination->setCurrentIndex(0);
+        comboBoxField->setCurrentIndex(0);
+        buttonSearchPDFfiles->setChecked(false);
     }
 };
 
@@ -234,14 +201,43 @@ FilterBar::FilterBar(QWidget *parent)
     KLineEdit *lineEdit = static_cast<KLineEdit *>(d->comboBoxFilterText->lineEdit());
     lineEdit->setClearButtonShown(true);
 
-    d->buttonOptions = new KPushButton(this);
-    d->buttonOptions->setIcon(KIcon("configure"));
-    d->buttonOptions->setToolTip(i18n("Configure the filter"));
-    d->buttonOptions->setMenu(d->buildOptionsMenu(d->buttonOptions));
-    layout->addWidget(d->buttonOptions, 1, 2);
+    d->comboBoxCombination = new KComboBox(false, this);
+    layout->addWidget(d->comboBoxCombination, 1, 2);
+    d->comboBoxCombination->addItem(i18n("any word")); /// AnyWord=0
+    d->comboBoxCombination->addItem(i18n("every word")); /// EveryWord=1
+    d->comboBoxCombination->addItem(i18n("exact phrase")); /// ExactPhrase=2
+    d->comboBoxCombination->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+
+    d->comboBoxField = new KComboBox(false, this);
+    layout->addWidget(d->comboBoxField, 1, 3);
+    d->comboBoxField->addItem(i18n("any field"), QVariant());
+    d->comboBoxField->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+
+    foreach(const FieldDescription *fd, *BibTeXFields::self()) {
+        if (fd->upperCamelCaseAlt.isEmpty())
+            d->comboBoxField->addItem(fd->label, fd->upperCamelCase);
+    }
+
+    d->buttonSearchPDFfiles = new KPushButton(this);
+    d->buttonSearchPDFfiles->setIcon(KIcon("application-pdf"));
+    d->buttonSearchPDFfiles->setToolTip(i18n("Include PDF files in full-text search"));
+    d->buttonSearchPDFfiles->setCheckable(true);
+    layout->addWidget(d->buttonSearchPDFfiles, 1, 4);
+
+    d->buttonClearAll = new KPushButton(this);
+    d->buttonClearAll->setIcon(KIcon("edit-clear-locationbar-rtl"));
+    d->buttonClearAll->setToolTip(i18n("Reset filter critera"));
+    layout->addWidget(d->buttonClearAll, 1, 5);
 
     connect(d->comboBoxFilterText->lineEdit(), SIGNAL(textChanged(QString)), d->delayedTimer, SLOT(trigger()));
     connect(d->comboBoxFilterText->lineEdit(), SIGNAL(returnPressed()), this, SLOT(userPressedEnter()));
+    connect(d->comboBoxCombination, SIGNAL(currentIndexChanged(int)), this, SLOT(comboboxStatusChanged()));
+    connect(d->comboBoxField, SIGNAL(currentIndexChanged(int)), this, SLOT(comboboxStatusChanged()));
+    connect(d->buttonSearchPDFfiles, SIGNAL(toggled(bool)), this, SLOT(comboboxStatusChanged()));
+    connect(d->comboBoxCombination, SIGNAL(currentIndexChanged(int)), d->delayedTimer, SLOT(trigger()));
+    connect(d->comboBoxField, SIGNAL(currentIndexChanged(int)), d->delayedTimer, SLOT(trigger()));
+    connect(d->buttonSearchPDFfiles, SIGNAL(toggled(bool)), d->delayedTimer, SLOT(trigger()));
+    connect(d->buttonClearAll, SIGNAL(clicked()), this, SLOT(resetState()));
 
     /// restore history on filter texts
     /// see addCompletionString for more detailed explanation
@@ -250,6 +246,8 @@ FilterBar::FilterBar(QWidget *parent)
     for (QStringList::Iterator it = completionListDate.begin(); it != completionListDate.end(); ++it)
         d->comboBoxFilterText->addItem((*it).mid(12));
     d->comboBoxFilterText->lineEdit()->setText(QLatin1String(""));
+    d->comboBoxCombination->setCurrentIndex(configGroup.readEntry("CurrentCombination", 0));
+    d->comboBoxField->setCurrentIndex(configGroup.readEntry("CurrentField", 0));
 
     d->restoreState();
 
@@ -272,15 +270,16 @@ SortFilterBibTeXFileModel::FilterQuery FilterBar::filter()
     return d->filter();
 }
 
-void FilterBar::stateChanged()
+void FilterBar::comboboxStatusChanged()
 {
-    d->actionSearchPDFfiles->setEnabled(d->actionGroupFields->actions()[0] == d->actionGroupFields->checkedAction());
-    d->storeState();
+    d->buttonSearchPDFfiles->setEnabled(d->comboBoxField->currentIndex() == 0);
+    d->storeComboBoxStatus();
 }
 
 void FilterBar::resetState()
 {
     d->resetState();
+    emit filterChanged(d->filter());
 }
 
 void FilterBar::userPressedEnter()
@@ -298,6 +297,7 @@ void FilterBar::publishFilter()
 
 void FilterBar::buttonHeight()
 {
-    QSizePolicy sp = d->buttonOptions->sizePolicy();
-    d->buttonOptions->setSizePolicy(sp.horizontalPolicy(), QSizePolicy::MinimumExpanding);
+    QSizePolicy sp = d->buttonSearchPDFfiles->sizePolicy();
+    d->buttonSearchPDFfiles->setSizePolicy(sp.horizontalPolicy(), QSizePolicy::MinimumExpanding);
+    d->buttonClearAll->setSizePolicy(sp.horizontalPolicy(), QSizePolicy::MinimumExpanding);
 }
