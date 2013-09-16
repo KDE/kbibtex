@@ -79,10 +79,8 @@ KIcon OnlineSearchAbstract::icon(QListWidgetItem *listWidgetItem)
 
     foreach(const QString &extension, fileNameExtensions) {
         const QString fileName = fileNameStem + extension;
-        if (QFileInfo(fileName).exists()) {
-            kDebug() << "KIcon(fileName)=" << fileNameStem << extension;
+        if (QFileInfo(fileName).exists())
             return KIcon(fileName);
-        }
     }
 
     QNetworkRequest request(favIconUrl());
@@ -339,7 +337,6 @@ void OnlineSearchAbstract::iconDownloadFinished()
             extension = QLatin1String(".ico");
         }
         const QString filename = reply->objectName() + extension;
-        kDebug() << reply->objectName() << extension;
 
         QFile iconFile(filename);
         if (iconFile.open(QFile::WriteOnly)) {
