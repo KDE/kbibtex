@@ -8,8 +8,9 @@ File licence not repeated here for space reasons. See file "delayedexecutiontime
 #include <QTimer>
 #include <QStringBuilder>
 
-DelayedExecutionTimer::DelayedExecutionTimer(int maximumDelay, int minimumDelay, QObject* parent):
+DelayedExecutionTimer::DelayedExecutionTimer(int maximumDelay, int minimumDelay, QObject *parent):
     QObject(parent),
+    m_isEnabled(true),
     m_minimumDelay(minimumDelay),
     m_maximumDelay(maximumDelay),
     m_minimumTimer(new QTimer(this)),
@@ -19,7 +20,7 @@ DelayedExecutionTimer::DelayedExecutionTimer(int maximumDelay, int minimumDelay,
     connect(m_maximumTimer, SIGNAL(timeout()), SLOT(timeout()));
 }
 
-DelayedExecutionTimer::DelayedExecutionTimer(QObject* parent):
+DelayedExecutionTimer::DelayedExecutionTimer(QObject *parent):
     QObject(parent),
     m_minimumDelay(250),
     m_maximumDelay(1000),
@@ -39,6 +40,8 @@ void DelayedExecutionTimer::timeout()
 
 void DelayedExecutionTimer::trigger()
 {
+    if (!m_isEnabled) return; /// ignore trigger events if disabled
+
     if (!m_maximumTimer->isActive()) {
         m_maximumTimer->start(m_maximumDelay);
     }
