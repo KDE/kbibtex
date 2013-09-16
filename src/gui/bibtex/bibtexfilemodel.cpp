@@ -46,6 +46,7 @@ const QString SortFilterBibTeXFileModel::configGroupName = QLatin1String("User I
 SortFilterBibTeXFileModel::SortFilterBibTeXFileModel(QObject *parent)
         : QSortFilterProxyModel(parent), m_internalModel(NULL), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc")))
 {
+    m_filterQuery.combination = AnyTerm;
     loadState();
     setSortRole(BibTeXFileModel::SortRole);
 };
@@ -181,7 +182,7 @@ bool SortFilterBibTeXFileModel::filterAcceptsRow(int source_row, const QModelInd
             const QString type = entry->type();
             /// Check type's description ("Journal Article")
             const QString label = BibTeXEntries::self()->label(type);
-            // TODO test for internationlized variants like "Artikel" or "bok" as well?
+            // TODO test for internationalized variants like "Artikel" or "bok" as well?
             int i = 0;
             for (QStringList::ConstIterator itsl = m_filterQuery.terms.constBegin(); itsl != m_filterQuery.terms.constEnd(); ++itsl, ++i)
                 eachTerm[i] |= (*itsl).isEmpty() ? true : type.contains(*itsl, Qt::CaseInsensitive) || label.contains(*itsl, Qt::CaseInsensitive);
