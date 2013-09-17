@@ -29,7 +29,6 @@
 #include <KConfigGroup>
 #include <KStandardDirs>
 #include <KIcon>
-#include <KDebug>
 
 #include "filterbar.h"
 #include "bibtexfields.h"
@@ -78,8 +77,6 @@ public:
     }
 
     void setFilter(SortFilterBibTeXFileModel::FilterQuery fq) {
-        delayedTimer->setEnabled(false);
-
         /// Avoid triggering loops of activation
         comboBoxCombination->blockSignals(true);
         /// Set check state for action for either "any word",
@@ -112,13 +109,11 @@ public:
         buttonSearchPDFfiles->blockSignals(false);
 
         /// Avoid triggering loops of activation
-        comboBoxFilterText->blockSignals(true);
+        comboBoxFilterText->lineEdit()->blockSignals(true);
         /// Set filter text widget's content
         comboBoxFilterText->lineEdit()->setText(fq.terms.join(" "));
         /// Reset activation block
-        comboBoxFilterText->blockSignals(false);
-
-        delayedTimer->setEnabled(true);
+        comboBoxFilterText->lineEdit()->blockSignals(false);
     }
 
     void addCompletionString(const QString &text) {
