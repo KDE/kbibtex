@@ -22,6 +22,7 @@ DelayedExecutionTimer::DelayedExecutionTimer(int maximumDelay, int minimumDelay,
 
 DelayedExecutionTimer::DelayedExecutionTimer(QObject *parent):
     QObject(parent),
+    m_isEnabled(true),
     m_minimumDelay(250),
     m_maximumDelay(1000),
     m_minimumTimer(new QTimer(this)),
