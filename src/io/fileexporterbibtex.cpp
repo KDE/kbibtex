@@ -381,7 +381,7 @@ bool FileExporterBibTeX::save(QIODevice *iodevice, const File *bibtexfile, QStri
             if (!comment.isNull() && !comment->text().startsWith("x-kbibtex-")) {
                 result &= d->writeComment(iodevice, *comment);
                 emit progress(++currentPos, totalElements);
-            } else {
+            } else if (!allPreamblesAndMacrosProcessed) {
                 QSharedPointer<const Preamble> preamble = element.dynamicCast<const Preamble>();
                 if (!preamble.isNull()) {
                     result &= d->writePreamble(iodevice, *preamble);
