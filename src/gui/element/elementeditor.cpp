@@ -29,6 +29,7 @@
 #include <QFileInfo>
 #include <QMenu>
 #include <QTimer>
+#include <QScrollArea>
 
 #include <KPushButton>
 #include <KMessageBox>
@@ -75,9 +76,9 @@ public:
     HidingTabWidget *tab;
     bool elementChanged, elementUnapplied;
 
-    ElementEditorPrivate(ElementEditor *parent)
+    ElementEditorPrivate(bool scrollable, ElementEditor *parent)
             : file(NULL), p(parent), previousWidget(NULL), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), elementChanged(false), elementUnapplied(false) {
-        createGUI();
+        createGUI(scrollable);
     }
 
     ~ElementEditorPrivate() {
@@ -155,15 +156,13 @@ public:
         tab->hideTab(index);
     }
 
-    void createGUI() {
+    void createGUI(bool scrollable) {
         /// load configuration for options push button
         static const QString configGroupName = QLatin1String("User Interface");
         static const QString keyEnableAllWidgets = QLatin1String("EnableAllWidgets");
         KConfigGroup configGroup(config, configGroupName);
         const bool showAll = configGroup.readEntry(keyEnableAllWidgets, true);
         const bool limitKeyboardTabStops = configGroup.readEntry(MenuLineEdit::keyLimitKeyboardTabStops, false);
-
-        clearWidgets();
 
         QBoxLayout *vLayout = new QVBoxLayout(p);
 
@@ -174,9 +173,19 @@ public:
         vLayout->addWidget(referenceWidget, 0);
         widgets << referenceWidget;
 
-        tab = new HidingTabWidget(p);
-        tab->setUsesScrollButtons(false);
-        vLayout->addWidget(tab, 10);
+        if (scrollable) {
+            QScrollArea *sa = new QScrollArea(p);
+            tab = new HidingTabWidget(sa);
+            sa->setFrameStyle(0);
+            sa->setWidget(tab);
+            sa->setWidgetResizable(true);
+            sa->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+            sa->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+            vLayout->addWidget(sa, 10);
+        } else {
+            tab = new HidingTabWidget(p);
+            vLayout->addWidget(tab, 10);
+        }
 
         QBoxLayout *hLayout = new QHBoxLayout();
         vLayout->addLayout(hLayout, 0);
@@ -389,8 +398,8 @@ public:
     }
 };
 
-ElementEditor::ElementEditor(QWidget *parent)
-        : QWidget(parent), d(new ElementEditorPrivate(this))
+ElementEditor::ElementEditor(bool scrollable, QWidget *parent)
+        : QWidget(parent), d(new ElementEditorPrivate(scrollable, this))
 {
     connect(d->tab, SIGNAL(currentChanged(int)), this, SLOT(tabChanged()));
     QTimer::singleShot(250, this, SLOT(delayedInitialization()));

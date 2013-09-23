@@ -46,7 +46,7 @@ public:
         }
     };
 
-    ElementEditor(QWidget *parent);
+    ElementEditor(bool scrollable, QWidget *parent);
     ~ElementEditor();
 
     void setElement(QSharedPointer<Element> element, const File *file);

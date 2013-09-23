@@ -66,7 +66,7 @@ public:
         layout->setColumnStretch(2, 0);
         layout->setColumnStretch(3, 0);
 
-        elementEditor = new ElementEditor(p);
+        elementEditor = new ElementEditor(true, p);
         layout->addWidget(elementEditor, 0, 0, 1, 4);
         elementEditor->setEnabled(false);
         elementEditor->layout()->setMargin(0);

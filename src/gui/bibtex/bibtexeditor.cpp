@@ -314,7 +314,7 @@ void BibTeXEditor::prepareEditorDialog(DialogType dialogType)
     if (m_elementEditorDialog == NULL)
         m_elementEditorDialog = new ElementEditorDialog(this);
     if (m_elementEditor == NULL) {
-        m_elementEditor = new ElementEditor(m_elementEditorDialog);
+        m_elementEditor = new ElementEditor(false, m_elementEditorDialog);
         m_elementEditorDialog->setElementEditor(m_elementEditor);
     }
 
