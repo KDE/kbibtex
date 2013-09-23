@@ -21,7 +21,6 @@
 #include <typeinfo>
 
 #include <QCheckBox>
-#include <QTabWidget>
 #include <QLabel>
 #include <QLayout>
 #include <QBuffer>
@@ -82,12 +81,15 @@ public:
     }
 
     ~ElementEditorPrivate() {
-        // FIXME delete tab;
-        while (!widgets.isEmpty()) {
-            QWidget *w = widgets.last();
-            widgets.pop_back();
-            delete w;
+        clearWidgets();
+    }
+
+    void clearWidgets() {
+        for (int i = widgets.count() - 1; i >= 0; --i) {
+            QWidget *w = widgets[i];
+            w->deleteLater();
         }
+        widgets.clear();
     }
 
     void setElement(QSharedPointer<Element> element, const File *file) {
@@ -161,7 +163,7 @@ public:
         const bool showAll = configGroup.readEntry(keyEnableAllWidgets, true);
         const bool limitKeyboardTabStops = configGroup.readEntry(MenuLineEdit::keyLimitKeyboardTabStops, false);
 
-        widgets.clear();
+        clearWidgets();
 
         QBoxLayout *vLayout = new QVBoxLayout(p);
 
