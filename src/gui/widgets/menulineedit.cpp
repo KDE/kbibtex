@@ -59,11 +59,10 @@ public:
     }
 
     ~MenuLineEditPrivate() {
-        if (m_singleLineEditText != NULL) delete m_singleLineEditText;
-        else if (m_multiLineEditText != NULL) delete m_multiLineEditText;
-
-        while (!hLayout->isEmpty())
-            delete hLayout->itemAt(0)->widget();
+        for (int i = hLayout->count() - 1; i >= 0; --i) {
+            QWidget *w = hLayout->itemAt(i)->widget();
+            w->deleteLater();
+        }
     }
 
     void setupUI() {
