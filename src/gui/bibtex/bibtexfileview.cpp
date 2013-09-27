@@ -212,6 +212,16 @@ BibTeXFileView::BibTeXFileView(const QString &name, QWidget *parent)
     action = new KAction(i18n("Reset to defaults"), header());
     connect(action, SIGNAL(triggered()), this, SLOT(headerResetToDefaults()));
     header()->addAction(action);
+
+    /// add separator to header's context menu
+    action = new KAction(header());
+    action->setSeparator(true);
+    header()->addAction(action);
+
+    /// add action to disable any sorting
+    action = new KAction(i18n("No sorting"), header());
+    connect(action, SIGNAL(triggered()), this, SLOT(noSorting()));
+    header()->addAction(action);
 }
 
 BibTeXFileView::~BibTeXFileView()
@@ -296,4 +306,13 @@ void BibTeXFileView::sort(int t, Qt::SortOrder s)
     SortFilterBibTeXFileModel *sortedModel = dynamic_cast<SortFilterBibTeXFileModel *>(model());
     if (sortedModel != NULL)
         sortedModel->sort(t, s);
+}
+
+void BibTeXFileView::noSorting()
+{
+    SortFilterBibTeXFileModel *sortedModel = dynamic_cast<SortFilterBibTeXFileModel *>(model());
+    if (sortedModel != NULL) {
+        sortedModel->sort(-1);
+        header()->setSortIndicator(-1, Qt::AscendingOrder);
+    }
 }
