@@ -57,6 +57,7 @@ private slots:
     void headerResetToDefaults();
     void headerAdjustColumnWidths();
     void sort(int, Qt::SortOrder);
+    void noSorting();
 };
 
 
