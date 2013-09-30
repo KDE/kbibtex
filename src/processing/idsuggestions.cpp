@@ -144,11 +144,13 @@ public:
             int year = extractYear(entry);
             if (year > -1)
                 return QString::number(year % 100 + 100).mid(1);
+            break;
         }
         case 'Y': {
             int year = extractYear(entry);
             if (year > -1)
                 return QString::number(year % 10000 + 10000).mid(1);
+            break;
         }
         case 't': return translateTitleToken(entry, token.mid(1), false);
         case 'T': return translateTitleToken(entry, token.mid(1), true);
