@@ -148,10 +148,12 @@ public slots:
 
 private:
     ElementEditor::ApplyElementInterface *m_applyElement;
+    bool m_entryIdManuallySet;
 
 private slots:
     void prepareSuggestionsMenu();
     void insertSuggestionFromAction();
+    void entryIdManuallyChanged();
 
 signals:
     void entryTypeChanged();

@@ -329,7 +329,7 @@ void EntryConfiguredWidget::layoutGUI(bool forceVisible, const QString &entryTyp
 }
 
 ReferenceWidget::ReferenceWidget(QWidget *parent)
-        : ElementWidget(parent), m_applyElement(NULL)
+        : ElementWidget(parent), m_applyElement(NULL), m_entryIdManuallySet(false)
 {
     createGUI();
 }
@@ -367,7 +367,7 @@ bool ReferenceWidget::reset(QSharedPointer<const Element> element)
     /// if signals are not deactivated, the "modified" signal would be emitted when
     /// resetting the widgets' values
     disconnect(entryType, SIGNAL(editTextChanged(QString)), this, SLOT(gotModified()));
-    disconnect(entryId, SIGNAL(textChanged(QString)), this, SLOT(gotModified()));
+    disconnect(entryId, SIGNAL(textChanged(QString)), this, SLOT(entryIdManuallyChanged()));
 
     bool result = false;
     QSharedPointer<const Entry> entry = element.dynamicCast<const Entry>();
@@ -385,7 +385,14 @@ bool ReferenceWidget::reset(QSharedPointer<const Element> element)
                 entryType->setCurrentIndex(index);
                 break;
             }
+
         entryId->setText(entry->id());
+        /// New entries have no values. Use this fact
+        /// to recognize new entries, for which it is
+        /// allowed to automatic set their ids
+        /// if a default id suggestion had been specified.
+        m_entryIdManuallySet = entry->count() > 0;
+
         result = true;
     } else {
         entryType->setEnabled(false);
@@ -399,7 +406,7 @@ bool ReferenceWidget::reset(QSharedPointer<const Element> element)
     }
 
     connect(entryType, SIGNAL(editTextChanged(QString)), this, SLOT(gotModified()));
-    connect(entryId, SIGNAL(textChanged(QString)), this, SLOT(gotModified()));
+    connect(entryId, SIGNAL(textChanged(QString)), this, SLOT(entryIdManuallyChanged()));
 
     return result;
 }
@@ -462,7 +469,7 @@ void ReferenceWidget::createGUI()
     buttonSuggestId->setMenu(suggestionsMenu);
 
     connect(entryType->lineEdit(), SIGNAL(textEdited(QString)), this, SLOT(gotModified()));
-    connect(entryId, SIGNAL(textEdited(QString)), this, SLOT(gotModified()));
+    connect(entryId, SIGNAL(textEdited(QString)), this, SLOT(entryIdManuallyChanged()));
     connect(entryType->lineEdit(), SIGNAL(textEdited(QString)), this, SIGNAL(entryTypeChanged()));
     connect(entryType, SIGNAL(currentIndexChanged(int)), this, SIGNAL(entryTypeChanged()));
     connect(suggestionsMenu, SIGNAL(aboutToShow()), this, SLOT(prepareSuggestionsMenu()));
@@ -519,10 +526,22 @@ void ReferenceWidget::insertSuggestionFromAction()
     }
 }
 
+void ReferenceWidget::entryIdManuallyChanged()
+{
+    m_entryIdManuallySet = true;
+    gotModified();
+}
+
 void ReferenceWidget::setEntryIdByDefault()
 {
     if (isReadOnly) {
         /// Never set the suggestion automatically if in read-only mode
+        return;
+    }
+
+    if (m_entryIdManuallySet) {
+        /// If user changed entry id manually,
+        /// do not overwrite it by a default value
         return;
     }
 
@@ -537,8 +556,10 @@ void ReferenceWidget::setEntryIdByDefault()
         const QString defaultSuggestion = idSuggestions->defaultFormatId(*crossrefResolvedEntry.data());
 
         if (!defaultSuggestion.isEmpty()) {
+            disconnect(entryId, SIGNAL(textChanged(QString)), this, SLOT(entryIdManuallyChanged()));
             /// Apply default suggestion to widget
             entryId->setText(defaultSuggestion);
+            connect(entryId, SIGNAL(textChanged(QString)), this, SLOT(entryIdManuallyChanged()));
         }
     }
 }
