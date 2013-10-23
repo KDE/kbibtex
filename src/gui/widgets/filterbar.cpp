@@ -177,7 +177,6 @@ FilterBar::FilterBar(QWidget *parent)
         : QWidget(parent), d(new FilterBarPrivate(this))
 {
     QGridLayout *layout = new QGridLayout(this);
-    layout->setMargin(0);
     layout->setRowStretch(0, 1);
     layout->setRowStretch(1, 0);
     layout->setRowStretch(2, 1);
