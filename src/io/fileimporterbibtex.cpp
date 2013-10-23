@@ -763,8 +763,8 @@ QList<QSharedPointer<Keyword> > FileImporterBibTeX::splitKeywords(const QString 
     QList<QSharedPointer<Keyword> > result;
     /// define a list of characters where keywords will be split along
     /// finalize list with null character
-    static char splitChars[] = ";,\0";
-    static const QRegExp splitAlong[] = {QRegExp(QString("\\s*%1\\s*").arg(splitChars[0])), QRegExp(QString("\\s*%1\\s*").arg(splitChars[1])), QRegExp()};
+    static char splitChars[] = "\n;,\0";
+    static const QRegExp splitAlong[] = {QRegExp(QString("\\s*%1\\s*").arg(splitChars[0])), QRegExp(QString("\\s*%1\\s*").arg(splitChars[1])), QRegExp(QString("\\s*%1\\s*").arg(splitChars[2])), QRegExp()};
     char *curSplitChar = splitChars;
     static const QRegExp unneccessarySpacing(QLatin1String("[ \n\r\t]+"));
     int index = 0;
