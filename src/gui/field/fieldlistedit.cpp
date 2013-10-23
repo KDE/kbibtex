@@ -195,7 +195,7 @@ public:
 
     void goDownFieldLineEdit(FieldLineEdit *fieldLineEdit) {
         int idx = lineEditList.indexOf(fieldLineEdit);
-        if (idx < lineEditList.count() - lineEditList.size()) {
+        if (idx < lineEditList.count() - 1) {
             layout->removeWidget(fieldLineEdit);
             lineEditList.removeOne(fieldLineEdit);
             lineEditList.insert(idx + 1, fieldLineEdit);
