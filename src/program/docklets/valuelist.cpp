@@ -172,6 +172,7 @@ public:
             else
                 sortingModel->sort(1, Qt::DescendingOrder);
             sortingModel->setSortRole(SortRole);
+            sortingModel->setSortLocaleAware(true);
             usedModel = sortingModel;
         }
         treeviewFieldValues->setModel(usedModel);

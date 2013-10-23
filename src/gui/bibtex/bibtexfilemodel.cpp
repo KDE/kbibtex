@@ -69,6 +69,17 @@ void SortFilterBibTeXFileModel::updateFilter(SortFilterBibTeXFileModel::FilterQu
     invalidate();
 }
 
+bool SortFilterBibTeXFileModel::simpleLessThan(const QModelIndex &left, const QModelIndex &right) const
+{
+    const QString leftString = left.data(Qt::DisplayRole).toString().toLower();
+    const QString rightString = right.data(Qt::DisplayRole).toString().toLower();
+    const int cmp = QString::localeAwareCompare(leftString, rightString) < 0;
+    if (cmp == 0)
+        return left.row() < right.row();
+    else
+        return cmp < 0;
+}
+
 bool SortFilterBibTeXFileModel::lessThan(const QModelIndex &left, const QModelIndex &right) const
 {
     int column = left.column();
@@ -85,7 +96,7 @@ bool SortFilterBibTeXFileModel::lessThan(const QModelIndex &left, const QModelIn
         QSharedPointer<Entry> entryA = m_internalModel->element(left.row()).dynamicCast<Entry>();
         QSharedPointer<Entry> entryB = m_internalModel->element(right.row()).dynamicCast<Entry>();
         if (entryA.isNull() || entryB.isNull())
-            return QSortFilterProxyModel::lessThan(left, right);
+            return simpleLessThan(left, right);
 
         /// retrieve values of both cells
         Value valueA = entryA->value(fd->upperCamelCase);
@@ -97,7 +108,7 @@ bool SortFilterBibTeXFileModel::lessThan(const QModelIndex &left, const QModelIn
 
         /// if either value is empty, use default implementation
         if (valueA.isEmpty() || valueB.isEmpty())
-            return QSortFilterProxyModel::lessThan(left, right);
+            return simpleLessThan(left, right);
 
         /// compare each person in both values
         for (Value::Iterator itA = valueA.begin(), itB = valueB.begin(); itA != valueA.end() &&  itB != valueB.end(); ++itA, ++itB) {
@@ -107,17 +118,17 @@ bool SortFilterBibTeXFileModel::lessThan(const QModelIndex &left, const QModelIn
             if (personA.isNull() || personB.isNull()) return QSortFilterProxyModel::lessThan(left, right);
 
             /// get both values' next persons' last names for comparison
-            QString nameA = personA->lastName().replace(curlyRegExp, "");
-            QString nameB = personB->lastName().replace(curlyRegExp, "");
-            int cmp = QString::compare(nameA, nameB, Qt::CaseInsensitive);
+            QString nameA = personA->lastName().replace(curlyRegExp, "").toLower();
+            QString nameB = personB->lastName().replace(curlyRegExp, "").toLower();
+            int cmp = QString::localeAwareCompare(nameA, nameB);
             if (cmp < 0) return true;
             if (cmp > 0) return false;
 
             /// if last names were inconclusive ...
             /// get both values' next persons' first names for comparison
-            nameA = personA->firstName().replace(curlyRegExp, "");
-            nameB = personB->firstName().replace(curlyRegExp, "");
-            cmp = QString::compare(nameA, nameB, Qt::CaseInsensitive);
+            nameA = personA->firstName().replace(curlyRegExp, "").toLower();
+            nameB = personB->firstName().replace(curlyRegExp, "").toLower();
+            cmp = QString::localeAwareCompare(nameA, nameB);
             if (cmp < 0) return true;
             if (cmp > 0) return false;
 
@@ -126,7 +137,7 @@ bool SortFilterBibTeXFileModel::lessThan(const QModelIndex &left, const QModelIn
 
         /// comparison by names did not work (was not conclusive)
         /// fall back to default implementation
-        return QSortFilterProxyModel::lessThan(left, right);
+        return simpleLessThan(left, right);
     } else {
         /// if comparing two numbers, do not perform lexicographical sorting (i.e. 13 < 2),
         /// but numerical sorting instead (i.e. 13 > 2)
@@ -141,7 +152,7 @@ bool SortFilterBibTeXFileModel::lessThan(const QModelIndex &left, const QModelIn
 
         /// everything else can be sorted by default implementation
         /// (i.e. alphabetically or lexicographically)
-        return QSortFilterProxyModel::lessThan(left, right);
+        return simpleLessThan(left, right);
     }
 }
 
