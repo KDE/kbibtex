@@ -176,18 +176,18 @@ public:
 FilterBar::FilterBar(QWidget *parent)
         : QWidget(parent), d(new FilterBarPrivate(this))
 {
-    QGridLayout *layout = new QGridLayout(this);
-    layout->setRowStretch(0, 1);
-    layout->setRowStretch(1, 0);
-    layout->setRowStretch(2, 1);
+    QBoxLayout *layout = new QHBoxLayout(this);
+    layout->setMargin(1);
+
+    layout->addSpacing(4);
 
     QLabel *label = new QLabel(i18n("Filter:"), this);
-    layout->addWidget(label, 1, 0);
+    layout->addWidget(label, 0);
 
     d->comboBoxFilterText = new KComboBox(true, this);
     label->setBuddy(d->comboBoxFilterText);
     setFocusProxy(d->comboBoxFilterText);
-    layout->addWidget(d->comboBoxFilterText, 1, 1);
+    layout->addWidget(d->comboBoxFilterText, 5);
     d->comboBoxFilterText->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Preferred);
     d->comboBoxFilterText->setEditable(true);
     QFontMetrics metrics(d->comboBoxFilterText->font());
@@ -196,14 +196,14 @@ FilterBar::FilterBar(QWidget *parent)
     lineEdit->setClearButtonShown(true);
 
     d->comboBoxCombination = new KComboBox(false, this);
-    layout->addWidget(d->comboBoxCombination, 1, 2);
+    layout->addWidget(d->comboBoxCombination, 1);
     d->comboBoxCombination->addItem(i18n("any word")); /// AnyWord=0
     d->comboBoxCombination->addItem(i18n("every word")); /// EveryWord=1
     d->comboBoxCombination->addItem(i18n("exact phrase")); /// ExactPhrase=2
     d->comboBoxCombination->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 
     d->comboBoxField = new KComboBox(false, this);
-    layout->addWidget(d->comboBoxField, 1, 3);
+    layout->addWidget(d->comboBoxField, 1);
     d->comboBoxField->addItem(i18n("any field"), QVariant());
     d->comboBoxField->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 
@@ -216,12 +216,14 @@ FilterBar::FilterBar(QWidget *parent)
     d->buttonSearchPDFfiles->setIcon(KIcon("application-pdf"));
     d->buttonSearchPDFfiles->setToolTip(i18n("Include PDF files in full-text search"));
     d->buttonSearchPDFfiles->setCheckable(true);
-    layout->addWidget(d->buttonSearchPDFfiles, 1, 4);
+    layout->addWidget(d->buttonSearchPDFfiles, 0);
 
     d->buttonClearAll = new KPushButton(this);
     d->buttonClearAll->setIcon(KIcon("edit-clear-locationbar-rtl"));
     d->buttonClearAll->setToolTip(i18n("Reset filter critera"));
-    layout->addWidget(d->buttonClearAll, 1, 5);
+    layout->addWidget(d->buttonClearAll, 0);
+
+    layout->addSpacing(4);
 
     connect(d->comboBoxFilterText->lineEdit(), SIGNAL(textChanged(QString)), d->delayedTimer, SLOT(trigger()));
     connect(d->comboBoxFilterText->lineEdit(), SIGNAL(returnPressed()), this, SLOT(userPressedEnter()));
