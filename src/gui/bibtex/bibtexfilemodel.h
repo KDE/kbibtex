@@ -73,6 +73,7 @@ private:
     bool m_showComments, m_showMacros;
 
     void loadState();
+    bool simpleLessThan(const QModelIndex &left, const QModelIndex &right) const;
 };
 
 
