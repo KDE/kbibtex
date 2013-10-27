@@ -55,7 +55,6 @@ class ElementEditor::ElementEditorPrivate : public ElementEditor::ApplyElementIn
 private:
     typedef QVector<ElementWidget *> WidgetList;
     WidgetList widgets;
-    QSharedPointer<Element> element;
     const File *file;
     QSharedPointer<Entry> internalEntry;
     QSharedPointer<Macro> internalMacro;
@@ -73,6 +72,7 @@ private:
     QAction *actionForceShowAllWidgets, *actionLimitKeyboardTabStops;
 
 public:
+    QSharedPointer<Element> element;
     HidingTabWidget *tab;
     bool elementChanged, elementUnapplied;
 
@@ -96,6 +96,7 @@ public:
     void setElement(QSharedPointer<Element> element, const File *file) {
         this->element = element;
         this->file = file;
+        referenceWidget->setOriginalElement(element);
         updateTabVisibility();
     }
 
@@ -243,6 +244,10 @@ public:
                 tab->setCurrentIndex(firstEnabledTab);
         }
         connect(tab, SIGNAL(currentChanged(int)), p, SLOT(tabChanged()));
+    }
+
+    bool hasDuplicateId() const {
+        return referenceWidget != NULL && referenceWidget->isDuplicateId();
     }
 
     void apply() {
@@ -413,7 +418,33 @@ ElementEditor::~ElementEditor()
 
 void ElementEditor::apply()
 {
+    QSharedPointer<Entry> entry = d->element.dynamicCast<Entry>();
+    QSharedPointer<Macro> macro = d->element.dynamicCast<Macro>();
+    const bool doReplaceId = d->hasDuplicateId() && (
+                                 /// the id of the entry is already in use by another entry
+                                 (!entry.isNull() && KMessageBox::warningContinueCancel(this, i18n("The entered id is already in use for another entry."), i18n("Id already in use"), KGuiItem(i18n("Keep duplicate ids")), KGuiItem(i18n("Restore original id"))) == KMessageBox::Cancel)
+                                 /// the key of a macro is already in use by another macro
+                                 || (!macro.isNull() && KMessageBox::warningContinueCancel(this, i18n("The entered key is already in use for another macro."), i18n("Key already in use"), KGuiItem(i18n("Keep duplicate keys")), KGuiItem(i18n("Restore original key"))) == KMessageBox::Cancel)
+                             );
+
+    QString replacementId;
+    if (doReplaceId) {
+        if (!entry.isNull())
+            replacementId = entry->id();
+        else if (!macro.isNull())
+            replacementId = macro->key();
+    }
+
     d->apply();
+
+    if (doReplaceId) {
+        if (!entry.isNull())
+            entry->setId(replacementId);
+        else if (!macro.isNull())
+            macro->setKey(replacementId);
+        d->reset();
+    }
+
     d->setModified(false);
     emit modified(false);
 }
