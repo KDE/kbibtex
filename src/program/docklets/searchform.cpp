@@ -219,7 +219,7 @@ public:
         addEngine(new OnlineSearchIngentaConnect(p));
         addEngine(new OnlineSearchJStor(p));
         addEngine(new OnlineSearchMathSciNet(p));
-        addEngine(new OnlineSearchInpireHep(p));
+        addEngine(new OnlineSearchInspireHep(p));
         addEngine(new OnlineSearchPubMed(p));
         addEngine(new OnlineSearchScienceDirect(p));
         addEngine(new OnlineSearchSpringerLink(p));
