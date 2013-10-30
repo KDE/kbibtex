@@ -1,5 +1,14 @@
 ChangeLog
 
+Diff 0.4.1 to 0.5
+
+- Initial support for BibLaTeX
+- Id Suggestion editor like available in old KDE3 version
+- "Find PDF" function to locate PDF files through web search engines
+- New online database searches: MathSciNet, Ingenta Connect, Inspire Hep, SAO/NASA ADS, ISBN DB, JStor
+- Improved memory management
+- Numerous bug fixes and improvements
+
 Diff 0.4 to 0.4.1
 
 - SpringerLink search: GUI changes, using api.springer.com for search
