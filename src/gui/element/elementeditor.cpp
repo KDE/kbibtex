@@ -422,9 +422,9 @@ void ElementEditor::apply()
     QSharedPointer<Macro> macro = d->element.dynamicCast<Macro>();
     const bool doReplaceId = d->hasDuplicateId() && (
                                  /// the id of the entry is already in use by another entry
-                                 (!entry.isNull() && KMessageBox::warningContinueCancel(this, i18n("The entered id is already in use for another entry."), i18n("Id already in use"), KGuiItem(i18n("Keep duplicate ids")), KGuiItem(i18n("Restore original id"))) == KMessageBox::Cancel)
+                                 (!entry.isNull() && KMessageBox::warningContinueCancel(this, i18n("The entered id '%1' is already in use for another entry.", entry->id()), i18n("Id already in use"), KGuiItem(i18n("Keep duplicate ids")), KGuiItem(i18n("Restore original id"))) == KMessageBox::Cancel)
                                  /// the key of a macro is already in use by another macro
-                                 || (!macro.isNull() && KMessageBox::warningContinueCancel(this, i18n("The entered key is already in use for another macro."), i18n("Key already in use"), KGuiItem(i18n("Keep duplicate keys")), KGuiItem(i18n("Restore original key"))) == KMessageBox::Cancel)
+                                 || (!macro.isNull() && KMessageBox::warningContinueCancel(this, i18n("The entered key '%1' is already in use for another macro.", macro->key()), i18n("Key already in use"), KGuiItem(i18n("Keep duplicate keys")), KGuiItem(i18n("Restore original key"))) == KMessageBox::Cancel)
                              );
 
     QString replacementId;
