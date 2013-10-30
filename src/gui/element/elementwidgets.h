@@ -138,6 +138,9 @@ public:
         m_applyElement = applyElement;
     }
 
+    void setOriginalElement(const QSharedPointer<Element> &orig);
+    bool isDuplicateId() const;
+
     QString label();
     KIcon icon();
 
@@ -145,6 +148,7 @@ public:
 
 private:
     ElementEditor::ApplyElementInterface *m_applyElement;
+    QSharedPointer<Element> m_element;
 
 private slots:
     void prepareSuggestionsMenu();

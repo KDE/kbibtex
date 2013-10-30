@@ -326,7 +326,7 @@ void EntryConfiguredWidget::layoutGUI(bool forceVisible, const QString &entryTyp
 }
 
 ReferenceWidget::ReferenceWidget(QWidget *parent)
-        : ElementWidget(parent), m_applyElement(NULL)
+        : ElementWidget(parent), m_applyElement(NULL), m_element(QSharedPointer<Element>())
 {
     createGUI();
 }
@@ -422,6 +422,17 @@ KIcon ReferenceWidget::icon()
 bool ReferenceWidget::canEdit(const Element *element)
 {
     return typeid(*element) == typeid(Entry) || typeid(*element) == typeid(Macro);
+}
+
+void ReferenceWidget::setOriginalElement(const QSharedPointer<Element> &orig)
+{
+    m_element = orig;
+}
+
+bool ReferenceWidget::isDuplicateId()const
+{
+    const QSharedPointer<Element> knowElementWithSameId = m_file->containsKey(entryId->text(), File::etEntry);
+    return !knowElementWithSameId.isNull() && m_element != knowElementWithSameId;
 }
 
 void ReferenceWidget::createGUI()
