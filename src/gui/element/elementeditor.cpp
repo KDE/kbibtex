@@ -28,7 +28,6 @@
 #include <QApplication>
 #include <QFileInfo>
 #include <QMenu>
-#include <QTimer>
 #include <QScrollArea>
 
 #include <KPushButton>
@@ -398,8 +397,8 @@ public:
             (*it)->setModified(newIsModified);
     }
 
-    void delayedInitialization() {
-        connect(p, SIGNAL(modified(bool)), referenceWidget, SLOT(setEntryIdByDefault()));
+    void referenceWidgetSetEntryIdByDefault() {
+        referenceWidget->setEntryIdByDefault();
     }
 };
 
@@ -407,7 +406,6 @@ ElementEditor::ElementEditor(bool scrollable, QWidget *parent)
         : QWidget(parent), d(new ElementEditorPrivate(scrollable, this))
 {
     connect(d->tab, SIGNAL(currentChanged(int)), this, SLOT(tabChanged()));
-    QTimer::singleShot(250, this, SLOT(delayedInitialization()));
 }
 
 ElementEditor::~ElementEditor()
@@ -528,8 +526,10 @@ void ElementEditor::checkBibTeX()
 
 void ElementEditor::childModified(bool m)
 {
-    if (m)
+    if (m) {
         d->elementUnapplied = true;
+        d->referenceWidgetSetEntryIdByDefault();
+    }
     emit modified(m);
 }
 
@@ -541,9 +541,4 @@ void ElementEditor::updateReqOptWidgets()
 void ElementEditor::limitKeyboardTabStops()
 {
     d->limitKeyboardTabStops();
-}
-
-void ElementEditor::delayedInitialization()
-{
-    d->delayedInitialization();
 }
