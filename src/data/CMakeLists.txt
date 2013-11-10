@@ -40,6 +40,10 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/src/config
 )
 
+if(UNITY_BUILD)
+    enable_unity_build(kbibtexdata kbibtexdata_LIB_SRCS)
+endif(UNITY_BUILD)
+
 kde4_add_library(
     kbibtexdata
     SHARED

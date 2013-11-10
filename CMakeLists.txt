@@ -23,6 +23,11 @@ set(
     "Where to install manpages"
 )
 
+option(
+    UNITY_BUILD
+    "Compile multiple C++ files in one big, merged file (\"Unity build\")"
+)
+
 find_package(
     Qt4
     REQUIRED

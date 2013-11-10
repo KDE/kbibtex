@@ -56,7 +56,6 @@ set(
     italictextitemmodel.cpp
     valuelistmodel.cpp
     delayedexecutiontimer.cpp
-    ${CMAKE_SOURCE_DIR}/src/3rdparty/libqxt/gui/qxtspanslider.cpp
 )
 
 set(
@@ -98,10 +97,15 @@ add_definitions(
     -DKDE_DEFAULT_DEBUG_AREA=101012
 )
 
+if(UNITY_BUILD)
+    enable_unity_build(kbibtexgui kbibtexgui_LIB_SRCS)
+endif(UNITY_BUILD)
+
 kde4_add_library(
     kbibtexgui
     SHARED
     ${kbibtexgui_LIB_SRCS}
+    ${CMAKE_SOURCE_DIR}/src/3rdparty/libqxt/gui/qxtspanslider.cpp
 )
 
 target_link_libraries(

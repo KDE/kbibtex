@@ -78,6 +78,10 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/config
 )
 
+if(UNITY_BUILD)
+    enable_unity_build(kbibtexio kbibtexio_LIB_SRCS)
+endif(UNITY_BUILD)
+
 kde4_add_library(
     kbibtexio
     SHARED

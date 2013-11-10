@@ -32,6 +32,10 @@ add_definitions(
     -DKDE_DEFAULT_DEBUG_AREA=101016
 )
 
+if(UNITY_BUILD)
+    enable_unity_build(kbibtexproc processing_LIB_SRCS)
+endif(UNITY_BUILD)
+
 kde4_add_library(
     kbibtexproc
     SHARED

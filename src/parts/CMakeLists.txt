@@ -50,6 +50,10 @@ set_source_files_properties(
 )
 
 
+if(UNITY_BUILD)
+    enable_unity_build(kbibtexpart kbibtexpart_SRCS)
+endif(UNITY_BUILD)
+
 kde4_add_plugin(
     kbibtexpart
     ${kbibtexpart_SRCS}

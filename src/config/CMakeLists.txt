@@ -18,6 +18,10 @@ include_directories(
 # TODO
 )
 
+if(UNITY_BUILD)
+    enable_unity_build(kbibtexconfig kbibtexconfig_LIB_SRCS)
+endif(UNITY_BUILD)
+
 kde4_add_library(
     kbibtexconfig
     SHARED

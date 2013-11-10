@@ -41,6 +41,10 @@ kde4_add_app_icon(
     "${CMAKE_SOURCE_DIR}/icons/hi*-app-kbibtex.png"
 )
 
+if(UNITY_BUILD)
+    enable_unity_build(kbibtextest kbibtextest_SRCS)
+endif(UNITY_BUILD)
+
 kde4_add_executable(
     kbibtextest
     ${kbibtextest_SRCS}
