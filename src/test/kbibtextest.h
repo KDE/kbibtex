@@ -1,3 +1,6 @@
+#ifndef KBIBTEXTEST_H
+#define KBIBTEXTEST_H
+
 #include <QList>
 
 #include <KDialog>
@@ -51,3 +54,5 @@ private:
     QString saveFile(File *file, TestFile *currentTestFile);
     TestFile *createTestFile(const QString &filename, int numElements, int numEntries, const QString &lastEntryId, const QString &lastEntryLastAuthorLastName, const QString &hashAuthors, const QString &hashFilesUrlsDoi);
 };
+
+#endif // KBIBTEXTEST_H

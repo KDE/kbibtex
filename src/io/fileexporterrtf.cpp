@@ -28,11 +28,7 @@
 #include "element.h"
 #include "fileexporterbibtex.h"
 #include "fileexporterrtf.h"
-
-const QString extensionTeX = QLatin1String(".tex");
-const QString extensionAux = QLatin1String(".aux");
-const QString extensionBibTeX = QLatin1String(".bib");
-const QString extensionRTF = QLatin1String(".rtf");
+#include "kbibtexnamespace.h"
 
 FileExporterRTF::FileExporterRTF()
         : FileExporterToolchain()
@@ -63,7 +59,7 @@ bool FileExporterRTF::save(QIODevice *iodevice, const File *bibtexfile, QStringL
 {
     bool result = false;
 
-    QFile output(m_fileStem + extensionBibTeX);
+    QFile output(m_fileStem + KBibTeX::extensionBibTeX);
     if (output.open(QIODevice::WriteOnly)) {
         FileExporterBibTeX *bibtexExporter = new FileExporterBibTeX();
         bibtexExporter->setEncoding(QLatin1String("latex"));
@@ -82,7 +78,7 @@ bool FileExporterRTF::save(QIODevice *iodevice, const QSharedPointer<const Eleme
 {
     bool result = false;
 
-    QFile output(m_fileStem + extensionBibTeX);
+    QFile output(m_fileStem + KBibTeX::extensionBibTeX);
     if (output.open(QIODevice::WriteOnly)) {
         FileExporterBibTeX *bibtexExporter = new FileExporterBibTeX();
         bibtexExporter->setEncoding(QLatin1String("latex"));
@@ -101,7 +97,7 @@ bool FileExporterRTF::generateRTF(QIODevice *iodevice, QStringList *errorLog)
 {
     QStringList cmdLines = QStringList() << QLatin1String("latex -halt-on-error bibtex-to-rtf.tex") << QLatin1String("bibtex bibtex-to-rtf") << QLatin1String("latex -halt-on-error bibtex-to-rtf.tex") << QString(QLatin1String("latex2rtf -i %1 bibtex-to-rtf.tex")).arg(m_babelLanguage);
 
-    return writeLatexFile(m_fileStem + extensionTeX) && runProcesses(cmdLines, errorLog) && writeFileToIODevice(m_fileStem + extensionRTF, iodevice, errorLog);
+    return writeLatexFile(m_fileStem + KBibTeX::extensionTeX) && runProcesses(cmdLines, errorLog) && writeFileToIODevice(m_fileStem + KBibTeX::extensionRTF, iodevice, errorLog);
 }
 
 bool FileExporterRTF::writeLatexFile(const QString &filename)

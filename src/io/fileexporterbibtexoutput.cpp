@@ -32,11 +32,7 @@
 #include "entry.h"
 #include "fileexporterbibtex.h"
 #include "fileexporterbibtexoutput.h"
-
-const QString extensionTeX = QLatin1String(".tex");
-const QString extensionAux = QLatin1String(".aux");
-const QString extensionBBL = QLatin1String(".bbl");
-const QString extensionBLG = QLatin1String(".blg");
+#include "kbibtexnamespace.h"
 
 FileExporterBibTeXOutput::FileExporterBibTeXOutput(OutputType outputType)
         : FileExporterToolchain(), m_outputType(outputType), m_latexLanguage("english"), m_latexBibStyle("plain")
@@ -72,7 +68,7 @@ bool FileExporterBibTeXOutput::save(QIODevice *ioDevice, const File *bibtexfile,
         result = generateOutput(errorLog);
 
     if (result)
-        result = writeFileToIODevice(m_fileStem + (m_outputType == BibTeXLogFile ? extensionBLG : extensionBBL), ioDevice, errorLog);
+        result = writeFileToIODevice(m_fileStem + (m_outputType == BibTeXLogFile ? KBibTeX::extensionBLG : KBibTeX::extensionBBL), ioDevice, errorLog);
 
     return result;
 }
@@ -94,7 +90,7 @@ bool FileExporterBibTeXOutput::save(QIODevice *ioDevice, const QSharedPointer<co
         result = generateOutput(errorLog);
 
     if (result)
-        result = writeFileToIODevice(m_fileStem + (m_outputType == BibTeXLogFile ? extensionBLG : extensionBBL), ioDevice, errorLog);
+        result = writeFileToIODevice(m_fileStem + (m_outputType == BibTeXLogFile ? KBibTeX::extensionBLG : KBibTeX::extensionBBL), ioDevice, errorLog);
 
     return result;
 }
@@ -111,9 +107,9 @@ void FileExporterBibTeXOutput::setLaTeXBibliographyStyle(const QString &bibStyle
 
 bool FileExporterBibTeXOutput::generateOutput(QStringList *errorLog)
 {
-    QStringList cmdLines = QStringList() << QLatin1String("pdflatex -halt-on-error ") + m_fileBasename + extensionTeX << QLatin1String("bibtex ") + m_fileBasename + extensionAux;
+    QStringList cmdLines = QStringList() << QLatin1String("pdflatex -halt-on-error ") + m_fileBasename + KBibTeX::extensionTeX << QLatin1String("bibtex ") + m_fileBasename + KBibTeX::extensionAux;
 
-    if (writeLatexFile(m_fileStem + extensionTeX) && runProcesses(cmdLines, errorLog))
+    if (writeLatexFile(m_fileStem + KBibTeX::extensionTeX) && runProcesses(cmdLines, errorLog))
         return true;
     else {
         kWarning() << "Generating BibTeX output failed";

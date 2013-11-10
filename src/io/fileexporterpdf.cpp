@@ -33,11 +33,7 @@
 #include "entry.h"
 #include "fileexporterbibtex.h"
 #include "fileexporterpdf.h"
-
-const QString extensionTeX = QLatin1String(".tex");
-const QString extensionAux = QLatin1String(".aux");
-const QString extensionBibTeX = QLatin1String(".bib");
-const QString extensionPDF = QLatin1String(".pdf");
+#include "kbibtexnamespace.h"
 
 FileExporterPDF::FileExporterPDF(FileEmbedding fileEmbedding)
         : FileExporterToolchain(), m_fileEmbedding(fileEmbedding)
@@ -74,11 +70,11 @@ bool FileExporterPDF::save(QIODevice *iodevice, const File *bibtexfile, QStringL
     bool result = false;
     m_embeddedFileList.clear();
     if (m_fileEmbedding & EmbedBibTeXFile)
-        m_embeddedFileList.append(QString("%1|%2|%3").arg("BibTeX source").arg(m_fileStem + extensionBibTeX).arg(m_fileBasename + extensionBibTeX));
+        m_embeddedFileList.append(QString("%1|%2|%3").arg("BibTeX source").arg(m_fileStem + KBibTeX::extensionBibTeX).arg(m_fileBasename + KBibTeX::extensionBibTeX));
     if (m_fileEmbedding & EmbedReferences)
         fillEmbeddedFileList(bibtexfile);
 
-    QFile output(m_fileStem + extensionBibTeX);
+    QFile output(m_fileStem + KBibTeX::extensionBibTeX);
     if (output.open(QIODevice::WriteOnly)) {
         FileExporterBibTeX *bibtexExporter = new FileExporterBibTeX();
         bibtexExporter->setEncoding(QLatin1String("latex"));
@@ -103,7 +99,7 @@ bool FileExporterPDF::save(QIODevice *iodevice, const QSharedPointer<const Eleme
     //if (m_fileEmbedding & EmbedReferences)
     // FIXME need File object    fillEmbeddedFileList(element);
 
-    QFile output(m_fileStem + extensionBibTeX);
+    QFile output(m_fileStem + KBibTeX::extensionBibTeX);
     if (output.open(QIODevice::WriteOnly)) {
         FileExporterBibTeX *bibtexExporter = new FileExporterBibTeX();
         bibtexExporter->setEncoding(QLatin1String("latex"));
@@ -125,9 +121,9 @@ void FileExporterPDF::setDocumentSearchPaths(const QStringList &searchPaths)
 
 bool FileExporterPDF::generatePDF(QIODevice *iodevice, QStringList *errorLog)
 {
-    QStringList cmdLines = QStringList() << QLatin1String("pdflatex -halt-on-error ") + m_fileStem + extensionTeX << QLatin1String("bibtex ") + m_fileStem + extensionAux << QLatin1String("pdflatex -halt-on-error ") + m_fileStem + extensionTeX << QLatin1String("pdflatex -halt-on-error ") + m_fileStem + extensionTeX;
+    QStringList cmdLines = QStringList() << QLatin1String("pdflatex -halt-on-error ") + m_fileStem + KBibTeX::extensionTeX << QLatin1String("bibtex ") + m_fileStem + KBibTeX::extensionAux << QLatin1String("pdflatex -halt-on-error ") + m_fileStem + KBibTeX::extensionTeX << QLatin1String("pdflatex -halt-on-error ") + m_fileStem + KBibTeX::extensionTeX;
 
-    return writeLatexFile(m_fileStem + extensionTeX) && runProcesses(cmdLines, errorLog) && writeFileToIODevice(m_fileStem + extensionPDF, iodevice, errorLog);
+    return writeLatexFile(m_fileStem + KBibTeX::extensionTeX) && runProcesses(cmdLines, errorLog) && writeFileToIODevice(m_fileStem + KBibTeX::extensionPDF, iodevice, errorLog);
 }
 
 bool FileExporterPDF::writeLatexFile(const QString &filename)
@@ -167,9 +163,9 @@ bool FileExporterPDF::writeLatexFile(const QString &filename)
                 if (file.exists())
                     ts << "\\embedfile[desc={" << param[0] << "}";
                 ts << ",filespec={" << param[2] << "}";
-                if (param[2].endsWith(extensionBibTeX))
+                if (param[2].endsWith(KBibTeX::extensionBibTeX))
                     ts << ",mimetype={text/x-bibtex}";
-                else if (param[2].endsWith(extensionPDF))
+                else if (param[2].endsWith(KBibTeX::extensionPDF))
                     ts << ",mimetype={application/pdf}";
                 ts << "]{" << param[1] << "}" << endl;
             }

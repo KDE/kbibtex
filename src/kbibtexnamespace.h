@@ -28,6 +28,15 @@
 namespace KBibTeX
 {
 
+const QString extensionTeX = QLatin1String(".tex");
+const QString extensionAux = QLatin1String(".aux");
+const QString extensionBBL = QLatin1String(".bbl");
+const QString extensionBLG = QLatin1String(".blg");
+const QString extensionBibTeX = QLatin1String(".bib");
+const QString extensionPDF = QLatin1String(".pdf");
+const QString extensionPostScript = QLatin1String(".ps");
+const QString extensionRTF = QLatin1String(".rtf");
+
 enum Casing {
     cLowerCase = 0,
     cInitialCapital = 1,

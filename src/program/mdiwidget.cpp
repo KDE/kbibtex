@@ -40,15 +40,15 @@
 #include "kbibtexnamespace.h"
 #include "mdiwidget.h"
 
-const int URLRole = Qt::UserRole + 235;
-const int SortRole = Qt::UserRole + 236;
-
 class LRUItemModel : public QAbstractItemModel
 {
 private:
     OpenFileInfoManager *ofim;
 
 public:
+    static const int URLRole = Qt::UserRole + 235;
+    static const int SortRole = Qt::UserRole + 236;
+
     LRUItemModel(OpenFileInfoManager *openFileInfoManager, QObject *parent = NULL)
             : QAbstractItemModel(parent), ofim(openFileInfoManager) {
         // nothing
@@ -198,7 +198,7 @@ public:
         modelLRU = new LRUItemModel(ofim, listLRU);
         QSortFilterProxyModel *sfpm = new QSortFilterProxyModel(listLRU);
         sfpm->setSourceModel(modelLRU);
-        sfpm->setSortRole(SortRole);
+        sfpm->setSortRole(LRUItemModel::SortRole);
         listLRU->setModel(sfpm);
 
         connect(&signalMapperCompleted, SIGNAL(mapped(QObject *)), p, SLOT(slotCompleted(QObject *)));
@@ -319,7 +319,7 @@ void MDIWidget::slotStatusFlagsChanged(OpenFileInfo::StatusFlags statusFlags)
 
 void MDIWidget::slotOpenLRU(const QModelIndex &index)
 {
-    KUrl url = index.data(URLRole).toUrl();
+    KUrl url = index.data(LRUItemModel::URLRole).toUrl();
     if (url.isValid())
         emit documentOpenURL(url);
 }

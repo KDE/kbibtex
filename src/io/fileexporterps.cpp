@@ -28,11 +28,7 @@
 #include "element.h"
 #include "fileexporterbibtex.h"
 #include "fileexporterps.h"
-
-const QString extensionTeX = QLatin1String(".tex");
-const QString extensionAux = QLatin1String(".aux");
-const QString extensionBibTeX = QLatin1String(".bib");
-const QString extensionPostScript = QLatin1String(".ps");
+#include "kbibtexnamespace.h"
 
 FileExporterPS::FileExporterPS()
         : FileExporterToolchain()
@@ -64,7 +60,7 @@ bool FileExporterPS::save(QIODevice *iodevice, const File *bibtexfile, QStringLi
 {
     bool result = false;
 
-    QFile output(m_fileStem + extensionBibTeX);
+    QFile output(m_fileStem + KBibTeX::extensionBibTeX);
     if (output.open(QIODevice::WriteOnly)) {
         FileExporterBibTeX *bibtexExporter = new FileExporterBibTeX();
         bibtexExporter->setEncoding(QLatin1String("latex"));
@@ -83,7 +79,7 @@ bool FileExporterPS::save(QIODevice *iodevice, const QSharedPointer<const Elemen
 {
     bool result = false;
 
-    QFile output(m_fileStem + extensionBibTeX);
+    QFile output(m_fileStem + KBibTeX::extensionBibTeX);
     if (output.open(QIODevice::WriteOnly)) {
         FileExporterBibTeX *bibtexExporter = new FileExporterBibTeX();
         bibtexExporter->setEncoding(QLatin1String("latex"));
@@ -102,7 +98,7 @@ bool FileExporterPS::generatePS(QIODevice *iodevice, QStringList *errorLog)
 {
     QStringList cmdLines = QStringList() << QLatin1String("latex -halt-on-error bibtex-to-ps.tex") << QLatin1String("bibtex bibtex-to-ps") << QLatin1String("latex -halt-on-error bibtex-to-ps.tex") << QLatin1String("latex -halt-on-error bibtex-to-ps.tex") << QLatin1String("dvips -R2 -o bibtex-to-ps.ps bibtex-to-ps.dvi");
 
-    return writeLatexFile(m_fileStem + extensionTeX) && runProcesses(cmdLines, errorLog) && beautifyPostscriptFile(m_fileStem + extensionPostScript, "Exported Bibliography") && writeFileToIODevice(m_fileStem + extensionPostScript, iodevice, errorLog);
+    return writeLatexFile(m_fileStem + KBibTeX::extensionTeX) && runProcesses(cmdLines, errorLog) && beautifyPostscriptFile(m_fileStem + KBibTeX::extensionPostScript, "Exported Bibliography") && writeFileToIODevice(m_fileStem + KBibTeX::extensionPostScript, iodevice, errorLog);
 }
 
 bool FileExporterPS::writeLatexFile(const QString &filename)
