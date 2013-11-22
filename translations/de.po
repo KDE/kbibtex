@@ -1009,7 +1009,7 @@ msgid "Include PDF files in full-text search"
 msgstr "PDF-Datei in Volltextsuche mit einbeziehen"
 
 #: kbibtex/src/gui/widgets/filterbar.cpp:223
-msgid "Reset filter critera"
+msgid "Reset filter criteria"
 msgstr "Zurück auf Standardwerte"
 
 #: kbibtex/src/gui/widgets/starrating.cpp:39

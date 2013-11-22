@@ -40,7 +40,7 @@ public:
 
 public slots:
     /**
-     * Set the filter critera to be both shown in this filter bar
+     * Set the filter criteria to be both shown in this filter bar
      * and applied to the list of elements.
      * @param fq query data structure to be used
      */

@@ -220,7 +220,7 @@ FilterBar::FilterBar(QWidget *parent)
 
     d->buttonClearAll = new KPushButton(this);
     d->buttonClearAll->setIcon(KIcon("edit-clear-locationbar-rtl"));
-    d->buttonClearAll->setToolTip(i18n("Reset filter critera"));
+    d->buttonClearAll->setToolTip(i18n("Reset filter criteria"));
     layout->addWidget(d->buttonClearAll, 0);
 
     layout->addSpacing(4);
