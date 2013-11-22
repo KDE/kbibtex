@@ -78,15 +78,15 @@ target_link_libraries(
 
 # creates version.h using cmake script
 add_custom_target(
-    SVNrevisionForProgram
+    GITrevision
     COMMAND
     ${CMAKE_COMMAND}
     -DSOURCE_DIR=${CMAKE_SOURCE_DIR}
     -DBINARY_DIR=${CMAKE_CURRENT_BINARY_DIR}
     -P
-    ${CMAKE_SOURCE_DIR}/src/getsvn.cmake
+    ${CMAKE_SOURCE_DIR}/src/getgit.cmake
     COMMENT
-    "Determine SVN version"
+    "Determine Git revision"
 )
 
 # version.h is a generated file
@@ -101,7 +101,7 @@ set_source_files_properties(
 
 add_dependencies(
     kbibtex${BINARY_POSTFIX}
-    SVNrevisionForProgram
+    GITrevision
 )
 
 
