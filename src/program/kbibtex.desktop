@@ -1,10 +1,7 @@
 [Desktop Entry]
 Name=KBibTeX
-Name[de]=KBibTeX
 Comment=KDE-based editor for bibliographic files
-Comment[de]=KDE-basierter Editor für Bibliographiedateien
 GenericName=BibTeX Editor
-GenericName[de]=BibTeX-Editor
 Icon=kbibtex
 Exec=kbibtex -caption "%c" %U
 Type=Application
