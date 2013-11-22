@@ -1414,7 +1414,7 @@ msgstr ""
 msgid ""
 "\n"
 "\n"
-"Some fields missing in this entry where taken from the crossref'ed entry "
+"Some fields missing in this entry were taken from the crossref'ed entry "
 "'%1'."
 msgstr ""
 

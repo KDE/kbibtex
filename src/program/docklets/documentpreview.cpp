@@ -310,7 +310,7 @@ public:
                 p->setCursor(Qt::ArrowCursor);
             } else if (runningJobs.isEmpty()) {
                 /// Case no stat jobs are running. As there were URLs (tested in
-                /// previous condition), this implies that the there were remote
+                /// previous condition), this implies that there were remote
                 /// references that were ignored by executing "continue" above.
                 /// Give user hint that by enabling remote files, more can be shown.
                 showMessage(i18n("<qt>No documents to show.<br/><a href=\"disableonlylocalfiles\">Disable the restriction</a> to local files to see remote documents.</qt>"));
