@@ -64,6 +64,7 @@ features and bugs are to be addressed:
 - Bug 20090: Improved drag'n'drop support for PDF files
 - Bug 20094: Rearrange items order manually
 - Bug 20735: Retrieve bibliography information via known DOI
+- Bug 21012: Element editor too large, resizing issues
 
 More far future:
 
@@ -77,8 +78,10 @@ BibLaTeX-related:
 - Bug 18662: BibLaTeX support needs to be refined and tested.
   Related Bug 20407: Dynamic crossref resolution using "xdata"
   and "xref"
+BibLaTeX amplifies bug 21012
 
 Unconfirmed or need info:
 - Bug 20922: list doesn't scroll down when browsing with cursor keys
 - Bug 20798: Crash when opening kbibtex
 - Bug 20732: KBibTeX doesn't remember its window width correctly
+- Bug 20813: Selected entries are deleted
