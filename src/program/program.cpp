@@ -22,6 +22,7 @@
 #include <KApplication>
 #include <KAboutData>
 #include <KMessageBox>
+#include <KDebug>
 
 #include "mainwindow.h"
 #include "version.h"
@@ -46,6 +47,8 @@ int main(int argc, char *argv[])
 
     KCmdLineArgs::init(argc, argv, &aboutData);
     KApplication programCore;
+
+    kDebug() << "Starting KBibTeX version" << versionNumber;
 
     KGlobal::locale()->insertCatalog("libkbibtexio");
     KGlobal::locale()->insertCatalog("libkbibtexgui");
