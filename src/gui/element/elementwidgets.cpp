@@ -941,7 +941,7 @@ void OtherFieldsWidget::updateGUI()
     else {
         buttonAddApply->setEnabled(!isReadOnly);
         buttonAddApply->setText(internalEntry->contains(key) ? i18n("Apply") : i18n("Add"));
-        buttonAddApply->setIcon(internalEntry->contains(key) ? KIcon("edit") : KIcon("list-add"));
+        buttonAddApply->setIcon(internalEntry->contains(key) ? KIcon("document-edit") : KIcon("list-add"));
     }
 }
 
