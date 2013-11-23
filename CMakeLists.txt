@@ -127,12 +127,3 @@ add_subdirectory(
 add_subdirectory(
     mime
 )
-if(WIN32)
-    message(
-        "Translations are not yet supported on Windows platforms."
-    )
-else(WIN32)
-    add_subdirectory(
-        translations
-    )
-endif(WIN32)
