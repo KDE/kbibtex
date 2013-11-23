@@ -109,10 +109,10 @@ Person *FileImporter::splitName(const QString &name)
             }
         }
     } else {
-        bool inLastName = TRUE;
+        bool inLastName = true;
         for (int i = 0; i < segments.count(); ++i) {
             if (segments[i] == ",")
-                inLastName = FALSE;
+                inLastName = false;
             else if (inLastName) {
                 if (!lastName.isEmpty()) lastName.append(" ");
                 lastName.append(segments[i]);

@@ -62,7 +62,7 @@ public:
     }
 
     static bool guessCanDecode(const QString &) {
-        return FALSE;
+        return false;
     };
 
     /**
