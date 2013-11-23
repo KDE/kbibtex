@@ -2,7 +2,15 @@
 Type=Service
 Icon=kbibtex
 Name=BibTeX Viewer and Editor
+Name[de]=BibTeX-Betrachter und -Editor
+Name[pt_BR]=Editor e visualizador de BibTeX
+Name[uk]=Програма для перегляду та редагування даних BibTeX
+Name[x-test]=xxBibTeX Viewer and Editorxx
 Comment=KParts component to view and edit bibliographic files
+Comment[de]=KParts-Komponente zum Betrachten und Editieren von Bibliographiedateien
+Comment[pt_BR]=Componente do KParts para editar e visualizar arquivos bibliográficos
+Comment[uk]=Компонент KParts для перегляду та редагування файлів бібліографії
+Comment[x-test]=xxKParts component to view and edit bibliographic filesxx
 X-KDE-ServiceTypes=KParts/ReadOnlyPart,KParts/ReadWritePart,Browser/View
 X-KDE-Library=kbibtexpart
 MimeType=text/x-bibtex;text/x-endnote-refer;application/x-isi-export-format;
