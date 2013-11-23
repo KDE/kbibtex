@@ -114,7 +114,7 @@ bool FileExporterPS::writeLatexFile(const QString &filename)
             ts << "\\usepackage[" << m_babelLanguage << "]{babel}" << endl;
         if (kpsewhich("url.sty"))
             ts << "\\usepackage{url}" << endl;
-        if (m_bibliographyStyle.startsWith("apacite") && kpsewhich("apacite.sty"))
+        if (m_bibliographyStyle.startsWith(QLatin1String("apacite")) && kpsewhich("apacite.sty"))
             ts << "\\usepackage[bibnewpage]{apacite}" << endl;
         if ((m_bibliographyStyle == QLatin1String("agsm") || m_bibliographyStyle == QLatin1String("dcu") || m_bibliographyStyle == QLatin1String("jmr") || m_bibliographyStyle == QLatin1String("jphysicsB") || m_bibliographyStyle == QLatin1String("kluwer") || m_bibliographyStyle == QLatin1String("nederlands") || m_bibliographyStyle == QLatin1String("dcu") || m_bibliographyStyle == QLatin1String("dcu")) && kpsewhich("harvard.sty") && kpsewhich("html.sty"))
             ts << "\\usepackage{html}" << endl << "\\usepackage[dcucite]{harvard}" << endl << "\\renewcommand{\\harvardurl}{URL: \\url}" << endl;
@@ -142,9 +142,9 @@ bool FileExporterPS::beautifyPostscriptFile(const QString &filename, const QStri
         QString line;
         int i = 0;
         while (!(line = ts.readLine()).isNull()) {
-            if (i < 32 && line.startsWith("%%Title:"))
+            if (i < 32 && line.startsWith(QLatin1String("%%Title:")))
                 line = "%%Title: " + title;
-            else if (i < 32 && line.startsWith("%%Creator:"))
+            else if (i < 32 && line.startsWith(QLatin1String("%%Creator:")))
                 line += "; exported from within KBibTeX: http://home.gna.org/kbibtex/";
             lines += line;
             ++i;

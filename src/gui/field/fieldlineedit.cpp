@@ -484,7 +484,7 @@ void FieldLineEdit::dropEvent(QDropEvent *event)
     if (clipboardText.isEmpty()) return;
 
     const File *file = NULL;
-    if (!d->fieldKey.isEmpty() && clipboardText.startsWith("@")) {
+    if (!d->fieldKey.isEmpty() && clipboardText.startsWith(QLatin1String("@"))) {
         FileImporterBibTeX importer;
         file = importer.fromString(clipboardText);
         const QSharedPointer<Entry> entry = (file != NULL && file->count() == 1) ? file->first().dynamicCast<Entry>() : QSharedPointer<Entry>();

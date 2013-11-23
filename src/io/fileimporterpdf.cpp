@@ -53,7 +53,7 @@ File *FileImporterPDF::load(QIODevice *iodevice)
 
     if (doc->hasEmbeddedFiles()) {
         foreach(Poppler::EmbeddedFile *file, doc->embeddedFiles())
-        if (file->name().endsWith(".bib")) {
+        if (file->name().endsWith(QLatin1String(".bib"))) {
             kDebug() << "filename is " << file->name();
             QByteArray data = file->data();
             QBuffer buffer(&data);
@@ -96,7 +96,7 @@ bool FileImporterPDF::containsBibTeXData(const KUrl &url)
         if (doc != NULL) {
             if (doc->hasEmbeddedFiles())
                 foreach(Poppler::EmbeddedFile *file, doc->embeddedFiles())
-                if (file->name().endsWith(".bib")) {
+                if (file->name().endsWith(QLatin1String(".bib"))) {
                     result = true;
                     break;
                 }

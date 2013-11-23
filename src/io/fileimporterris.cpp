@@ -106,19 +106,19 @@ public:
 
         for (RISitemList::iterator it = list.begin(); it != list.end(); ++it) {
             if ((*it).key == "TY") {
-                if ((*it).value.startsWith("BOOK") || (*it).value.startsWith("SER"))
+                if ((*it).value.startsWith(QLatin1String("BOOK")) || (*it).value.startsWith(QLatin1String("SER")))
                     entryType = Entry::etBook;
-                else if ((*it).value.startsWith("CHAP"))
+                else if ((*it).value.startsWith(QLatin1String("CHAP")))
                     entryType = Entry::etInBook;
-                else if ((*it).value.startsWith("CONF"))
+                else if ((*it).value.startsWith(QLatin1String("CONF")))
                     entryType = Entry::etInProceedings;
-                else if ((*it).value.startsWith("JFULL") || (*it).value.startsWith("JOUR") || (*it).value.startsWith("MGZN"))
+                else if ((*it).value.startsWith(QLatin1String("JFULL")) || (*it).value.startsWith(QLatin1String("JOUR")) || (*it).value.startsWith(QLatin1String("MGZN")))
                     entryType = Entry::etArticle;
-                else if ((*it).value.startsWith("RPRT"))
+                else if ((*it).value.startsWith(QLatin1String("RPRT")))
                     entryType = Entry::etTechReport;
-                else if ((*it).value.startsWith("THES"))
+                else if ((*it).value.startsWith(QLatin1String("THES")))
                     entryType = Entry::etPhDThesis; // FIXME what about etMastersThesis?
-                else if ((*it).value.startsWith("UNPB"))
+                else if ((*it).value.startsWith(QLatin1String("UNPB")))
                     entryType = Entry::etUnpublished;
                 entry->setType(entryType);
             } else if ((*it).key == "AU" || (*it).key == "A1") {

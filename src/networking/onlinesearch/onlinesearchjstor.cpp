@@ -248,7 +248,7 @@ void OnlineSearchJStor::sanitizeEntry(QSharedPointer<Entry> entry)
     }
 
     QString url = PlainTextValue::text(entry->value(Entry::ftUrl));
-    if (url.startsWith("http://www.jstor.org/stable/")) {
+    if (url.startsWith(QLatin1String("http://www.jstor.org/stable/"))) {
         /// use JSTOR's own stable ID for entry ID
         entry->setId("jstor" + url.mid(28).replace(QLatin1Char(','), QString()));
         /// store JSTOR's own stable ID
@@ -285,7 +285,7 @@ void OnlineSearchJStor::sanitizeEntry(QSharedPointer<Entry> entry)
 
     /// page field may start with "pp. ", remove that
     QString pages = PlainTextValue::text(entry->value(Entry::ftPages)).toLower();
-    if (pages.startsWith("pp. ")) {
+    if (pages.startsWith(QLatin1String("pp. "))) {
         pages = pages.mid(4);
         entry->remove(Entry::ftPages);
         Value v;

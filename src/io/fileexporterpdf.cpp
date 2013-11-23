@@ -141,7 +141,7 @@ bool FileExporterPDF::writeLatexFile(const QString &filename)
             ts << "\\usepackage[pdfborder={0 0 0},pdfproducer={KBibTeX: http://home.gna.org/kbibtex/},pdftex]{hyperref}" << endl;
         else if (kpsewhich("url.sty"))
             ts << "\\usepackage{url}" << endl;
-        if (m_bibliographyStyle.startsWith("apacite") && kpsewhich("apacite.sty"))
+        if (m_bibliographyStyle.startsWith(QLatin1String("apacite")) && kpsewhich("apacite.sty"))
             ts << "\\usepackage[bibnewpage]{apacite}" << endl;
         if ((m_bibliographyStyle == QLatin1String("agsm") || m_bibliographyStyle == QLatin1String("dcu") || m_bibliographyStyle == QLatin1String("jmr") || m_bibliographyStyle == QLatin1String("jphysicsB") || m_bibliographyStyle == QLatin1String("kluwer") || m_bibliographyStyle == QLatin1String("nederlands") || m_bibliographyStyle == QLatin1String("dcu") || m_bibliographyStyle == QLatin1String("dcu")) && kpsewhich("harvard.sty") && kpsewhich("html.sty"))
             ts << "\\usepackage{html}" << endl << "\\usepackage[dcucite]{harvard}" << endl << "\\renewcommand{\\harvardurl}{URL: \\url}" << endl;

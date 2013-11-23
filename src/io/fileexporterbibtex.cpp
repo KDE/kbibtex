@@ -378,7 +378,7 @@ bool FileExporterBibTeX::save(QIODevice *iodevice, const File *bibtexfile, QStri
             emit progress(++currentPos, totalElements);
         } else {
             QSharedPointer<const Comment> comment = element.dynamicCast<const Comment>();
-            if (!comment.isNull() && !comment->text().startsWith("x-kbibtex-")) {
+            if (!comment.isNull() && !comment->text().startsWith(QLatin1String("x-kbibtex-"))) {
                 result &= d->writeComment(iodevice, *comment);
                 emit progress(++currentPos, totalElements);
             } else if (!allPreamblesAndMacrosProcessed) {

@@ -132,7 +132,7 @@ bool FileExporterBibTeXOutput::writeLatexFile(const QString &filename)
             ts << "\\usepackage[pdfproducer={KBibTeX: http://home.gna.org/kbibtex/},pdftex]{hyperref}\n";
         else if (kpsewhich("url.sty"))
             ts << "\\usepackage{url}\n";
-        if (m_latexBibStyle.startsWith("apacite") && kpsewhich("apacite.sty"))
+        if (m_latexBibStyle.startsWith(QLatin1String("apacite")) && kpsewhich("apacite.sty"))
             ts << "\\usepackage[bibnewpage]{apacite}\n";
         ts << "\\bibliographystyle{" << m_latexBibStyle << "}\n";
         ts << "\\begin{document}\n";

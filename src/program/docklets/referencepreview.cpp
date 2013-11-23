@@ -385,7 +385,7 @@ void ReferencePreview::saveAsHTML()
 void ReferencePreview::linkClicked(const QUrl &url)
 {
     QString text = url.toString();
-    if (text.startsWith("kbibtex:filter:")) {
+    if (text.startsWith(QLatin1String("kbibtex:filter:"))) {
         text = text.mid(15);
         if (d->editor != NULL) {
             int p = text.indexOf("=");
