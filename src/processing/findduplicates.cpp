@@ -591,7 +591,7 @@ bool MergeDuplicates::mergeDuplicateEntriesAuto(const QList<EntryClique *> &entr
      * Same procedure for each clique ...
      */
     foreach(EntryClique *entryClique, entryCliques) {
-        /// Create a new entry which will eventually replace the clique's Entrys
+        /// Create a new entry which will eventually replace the clique's Entries
         Entry *mergedEntry = new Entry(QString::null, QString::null);
 
         /// Sort entries in clique according into sortedEntries

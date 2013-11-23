@@ -48,7 +48,6 @@
 #include "searchresults.h"
 #include "elementform.h"
 #include "bibtexeditor.h"
-#include "documentlist.h"
 #include "filesettings.h"
 #include "xsltransform.h"
 

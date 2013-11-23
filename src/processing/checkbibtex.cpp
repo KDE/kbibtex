@@ -74,7 +74,7 @@ CheckBibTeX::CheckBibTeXResult CheckBibTeX::checkBibTeX(QSharedPointer<Entry> &e
             if (typeid(**it) == typeid(Macro))
                 dummyFile << *it;
 
-    /// run special exporter to get BibTeX's ouput
+    /// run special exporter to get BibTeX's output
     QStringList bibtexOuput;
     QByteArray ba;
     QBuffer buffer(&ba);
@@ -89,7 +89,7 @@ CheckBibTeX::CheckBibTeXResult CheckBibTeX::checkBibTeX(QSharedPointer<Entry> &e
         return FailedToCheck;
     }
 
-    /// define variables how to parse BibTeX's ouput
+    /// define variables how to parse BibTeX's output
     static const QString warningStart = QLatin1String("Warning--");
     static const QRegExp warningEmptyField("empty (\\w+) in ");
     static const QRegExp warningEmptyField2("empty (\\w+) or (\\w+) in ");

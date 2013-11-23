@@ -13,7 +13,6 @@
 #include <QMenu>
 #include <QCryptographicHash>
 #include <QSignalMapper>
-#include <QProgressBar>
 
 #include <onlinesearchacmportal.h>
 #include <onlinesearcharxiv.h>

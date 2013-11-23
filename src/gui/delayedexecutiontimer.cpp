@@ -2,7 +2,7 @@
 Copyright (c) 2011, Andre Somers
 All rights reserved.
 
-File licence not repeated here for space reasons. See file "delayedexecutiontimer.h" for details of licence.
+File license not repeated here for space reasons. See file "delayedexecutiontimer.h" for details of license.
 */
 #include "delayedexecutiontimer.h"
 #include <QTimer>

@@ -337,7 +337,7 @@ void BibTeXFileModel::notificationEvent(int eventId)
             /// Person name formatting may has changed
             columnChanged |= fd->upperCamelCase.toLower() == Entry::ftAuthor || fd->upperCamelCase.toLower() == Entry::ftEditor;
             columnChanged |= fd->upperCamelCaseAlt.toLower() == Entry::ftAuthor || fd->upperCamelCaseAlt.toLower() == Entry::ftEditor;
-            /// Changes necessary for this colum? Publish update
+            /// Changes necessary for this column? Publish update
             if (columnChanged)
                 emit dataChanged(index(0, column), index(rowCount() - 1, column));
             ++column;

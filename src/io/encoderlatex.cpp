@@ -291,7 +291,7 @@ static const int dotlessIJCharactersLen = sizeof(dotlessIJCharacters) / sizeof(d
  * consists of a number of rows. Each row consists of a
  * modifier (like '"' or 'v') and an array of Unicode chars.
  * Letters 'A'..'Z','a'..'z' are used as index to this array
- * by substracting 'A', i.e. 'A' gets index 0, 'B' gets index 1,
+ * by subtracting 'A', i.e. 'A' gets index 0, 'B' gets index 1,
  * etc.
  * This data structure is built in the constructor.
  */
@@ -798,7 +798,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                 output.append(c);
 
                 /// Still, check if input character is a dollar sign
-                /// without a preceeding backslash, means toggling between
+                /// without a preceding backslash, means toggling between
                 /// text mode and math mode
                 if (c == '$' && (i == 0 || input[i - 1] != '\\'))
                     inMathMode = !inMathMode;
@@ -923,7 +923,7 @@ QString EncoderLaTeX::encode(const QString &ninput) const
             /// Current character is normal ASCII
 
             /// Still, some characters have special meaning
-            /// in TeX and have to be preceeded with a backslash
+            /// in TeX and have to be preceded with a backslash
             bool found = false;
             for (int k = 0; k < encoderLaTeXProtectedSymbolsLen; ++k)
                 if (encoderLaTeXProtectedSymbols[k] == c) {
@@ -944,7 +944,7 @@ QString EncoderLaTeX::encode(const QString &ninput) const
             output.append(c);
 
             /// Finally, check if input character is a dollar sign
-            /// without a preceeding backslash, means toggling between
+            /// without a preceding backslash, means toggling between
             /// text mode and math mode
             if (c == '$' && (i == 0 || input[i - 1] != QLatin1Char('\\')))
                 inMathMode = !inMathMode;

@@ -44,7 +44,6 @@
 #include <KDebug>
 #include <kio/netaccess.h>
 #include <KPushButton>
-#include <KDebug>
 #include <kio/jobclasses.h>
 #include <kio/job.h>
 #include <kio/jobuidelegate.h>

@@ -57,7 +57,7 @@ QString EncoderUTF8::encode(const QString &input) const
         const QChar c = input[i];
 
         /// Some characters have special meaning
-        /// in TeX and have to be preceeded with a backslash
+        /// in TeX and have to be preceded with a backslash
         bool found = false;
         for (int k = 0; k < encoderLaTeXProtectedSymbolsLen; ++k)
             if (encoderLaTeXProtectedSymbols[k] == c) {
@@ -78,7 +78,7 @@ QString EncoderUTF8::encode(const QString &input) const
         output.append(c);
 
         /// Finally, check if input character is a dollar sign
-        /// without a preceeding backslash, means toggling between
+        /// without a preceding backslash, means toggling between
         /// text mode and math mode
         if (c == '$' && (i == 0 || input[i - 1] != QChar('\\')))
             inMathMode = !inMathMode;

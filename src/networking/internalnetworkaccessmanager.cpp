@@ -28,7 +28,6 @@
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QtGlobal>
-#include <QNetworkProxy>
 #include <QTimer>
 
 #include <KDebug>

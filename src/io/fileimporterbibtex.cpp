@@ -780,7 +780,7 @@ QList<QSharedPointer<Keyword> > FileImporterBibTeX::splitKeywords(const QString 
             foreach(const QString &keyword, keywords) {
                 result.append(QSharedPointer<Keyword>(new Keyword(keyword)));
             }
-            /// no more splits neccessary
+            /// no more splits necessary
             break;
         }
         /// no success so far, test next splitting character
@@ -1057,7 +1057,7 @@ QString FileImporterBibTeX::bibtexAwareSimplify(const QString &text)
     QString result;
     int i = 0;
 
-    /// Skip initial spaces, can be savely ignored
+    /// Skip initial spaces, can be safely ignored
     while (i < text.length() && text[i].isSpace()) ++i;
 
     while (i < text.length()) {
