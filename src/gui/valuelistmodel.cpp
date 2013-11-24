@@ -336,7 +336,7 @@ void ValueListModel::readConfiguration()
     QStringList colorLabels = configGroup.readEntry(Preferences::keyColorLabels, Preferences::defaultcolorLabels);
     colorToLabel.clear();
     for (QStringList::ConstIterator itc = colorCodes.constBegin(), itl = colorLabels.constBegin(); itc != colorCodes.constEnd() && itl != colorLabels.constEnd(); ++itc, ++itl) {
-        colorToLabel.insert(*itc, *itl);
+        colorToLabel.insert(*itc, i18n((*itl).toUtf8().constData()));
     }
 }
 

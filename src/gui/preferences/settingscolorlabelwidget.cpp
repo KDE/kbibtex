@@ -182,7 +182,7 @@ void ColorLabelSettingsModel::loadState()
     for (QStringList::ConstIterator itc = colorCodes.constBegin(), itl = colorLabels.constBegin(); itc != colorCodes.constEnd() && itl != colorLabels.constEnd(); ++itc, ++itl) {
         ColorLabelPair clp;
         clp.color = QColor(*itc);
-        clp.label = *itl;
+        clp.label = i18n((*itl).toUtf8().constData());
         colorLabelPairs << clp;
     }
 }
@@ -207,7 +207,7 @@ void ColorLabelSettingsModel::resetToDefaults()
     for (QStringList::ConstIterator itc = Preferences::defaultColorCodes.constBegin(), itl = Preferences::defaultcolorLabels.constBegin(); itc != Preferences::defaultColorCodes.constEnd() && itl != Preferences::defaultcolorLabels.constEnd(); ++itc, ++itl) {
         ColorLabelPair clp;
         clp.color = QColor(*itc);
-        clp.label = *itl;
+        clp.label = i18n((*itl).toUtf8().constData());
         colorLabelPairs << clp;
     }
     emit modified();
@@ -431,7 +431,7 @@ void ColorLabelContextMenu::rebuildMenu()
     QStringList colorCodes = configGroup.readEntry(Preferences::keyColorCodes, Preferences::defaultColorCodes);
     QStringList colorLabels = configGroup.readEntry(Preferences::keyColorLabels, Preferences::defaultcolorLabels);
     for (QStringList::ConstIterator itc = colorCodes.constBegin(), itl = colorLabels.constBegin(); itc != colorCodes.constEnd() && itl != colorLabels.constEnd(); ++itc, ++itl) {
-        KAction *action = new KAction(KIcon(ColorLabelWidget::createSolidIcon(*itc)), *itl, m_menu);
+        KAction *action = new KAction(KIcon(ColorLabelWidget::createSolidIcon(*itc)), i18n((*itl).toUtf8().constData()), m_menu);
         m_menu->addAction(action);
         m_sm->setMapping(action, *itc);
         connect(action, SIGNAL(triggered()), m_sm, SLOT(map()));

@@ -349,7 +349,7 @@ bool VerbatimText::containsPattern(const QString &pattern, Qt::CaseSensitivity c
         for (QStringList::ConstIterator itc = colorCodes.constBegin(), itl = colorLabels.constBegin(); itc != colorCodes.constEnd() && itl != colorLabels.constEnd(); ++itc, ++itl) {
             ColorLabelPair clp;
             clp.hexColor = *itc;
-            clp.label = *itl;
+            clp.label = i18n((*itl).toUtf8().constData());
             colorLabelPairs << clp;
         }
     }
