@@ -104,7 +104,7 @@ private:
 const QString ElementEditorDialog::configGroupNameWindowSize = QLatin1String("ElementEditorDialog");
 
 BibTeXEditor::BibTeXEditor(const QString &name, QWidget *parent)
-        : BibTeXFileView(name, parent), m_isReadOnly(false), m_current(NULL), m_filterBar(NULL), m_elementEditorDialog(NULL), m_elementEditor(NULL)
+    : BibTeXFileView(name, parent), m_isReadOnly(false), m_current(QSharedPointer<Element>()), m_filterBar(NULL), m_elementEditorDialog(NULL), m_elementEditor(NULL)
 {
     connect(this, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(itemActivated(QModelIndex)));
 }
