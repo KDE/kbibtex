@@ -40,7 +40,7 @@ public:
      * @param text comment's textual content
      * @param useCommand mark this comment to use BibTeX's comment command
      */
-    Comment(const QString &text = QString::null, bool useCommand = false);
+    explicit Comment(const QString &text = QString::null, bool useCommand = false);
 
     /**
      * Copy constructor cloning another comment object.

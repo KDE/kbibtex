@@ -31,7 +31,7 @@
 class KBIBTEXGUI_EXPORT ItalicTextItemModel : public QAbstractItemModel
 {
 public:
-    ItalicTextItemModel(QObject *parent = NULL);
+    explicit ItalicTextItemModel(QObject *parent = NULL);
 
     void addItem(const QString &a, const QString &b);
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;

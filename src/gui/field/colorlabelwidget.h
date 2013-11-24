@@ -35,7 +35,7 @@ class KBIBTEXGUI_EXPORT ColorLabelWidget : public KComboBox
     Q_OBJECT
 
 public:
-    ColorLabelWidget(QWidget *parent = NULL);
+    explicit ColorLabelWidget(QWidget *parent = NULL);
     ~ColorLabelWidget();
 
     void clear();

@@ -38,7 +38,7 @@ class KBIBTEXNETWORKING_EXPORT OnlineSearchIngentaConnect : public OnlineSearchA
     Q_OBJECT
 
 public:
-    OnlineSearchIngentaConnect(QWidget *parent);
+    explicit OnlineSearchIngentaConnect(QWidget *parent);
     ~OnlineSearchIngentaConnect();
 
     virtual void startSearch();

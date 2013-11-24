@@ -35,7 +35,7 @@ class FileSettings : public FileSettingsWidget
     Q_OBJECT
 
 public:
-    FileSettings(QWidget *parent);
+    explicit FileSettings(QWidget *parent);
 
     void setEditor(BibTeXEditor *editor);
 

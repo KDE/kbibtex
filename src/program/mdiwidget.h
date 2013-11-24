@@ -42,7 +42,7 @@ class MDIWidget : public QStackedWidget
     Q_OBJECT
 
 public:
-    MDIWidget(QWidget *parent);
+    explicit MDIWidget(QWidget *parent);
     ~MDIWidget();
 
     BibTeXEditor *editor();

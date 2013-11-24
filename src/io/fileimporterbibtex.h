@@ -58,7 +58,7 @@ public:
      *     Useful if you for example read from an HTML file,
      *     as all HTML content you be treated as comments otherwise.
      */
-    FileImporterBibTeX(bool ignoreComments = true, KBibTeX::Casing keywordCasing = KBibTeX::cLowerCase);
+    explicit FileImporterBibTeX(bool ignoreComments = true, KBibTeX::Casing keywordCasing = KBibTeX::cLowerCase);
     ~FileImporterBibTeX();
 
     /**

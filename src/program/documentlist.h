@@ -41,7 +41,7 @@ private:
     OpenFileInfoManager *ofim;
 
 public:
-    DocumentListDelegate(OpenFileInfoManager *openFileInfoManager, QObject *parent = NULL);
+    explicit DocumentListDelegate(OpenFileInfoManager *openFileInfoManager, QObject *parent = NULL);
 
     void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
     QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
@@ -98,7 +98,7 @@ class DocumentList : public QTabWidget
 public:
     enum Category { OpenFiles = 0, RecentFiles = 1, Favorites = 2 };
 
-    DocumentList(OpenFileInfoManager *openFileInfoManager, QWidget *parent = NULL);
+    explicit DocumentList(OpenFileInfoManager *openFileInfoManager, QWidget *parent = NULL);
 
 signals:
     void openFile(const KUrl &url);

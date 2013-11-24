@@ -38,7 +38,7 @@ class KBIBTEXGUI_EXPORT SettingsAbstractWidget : public QWidget
     Q_OBJECT
 
 public:
-    SettingsAbstractWidget(QWidget *parent);
+    explicit SettingsAbstractWidget(QWidget *parent);
     // virtual ~SettingsAbstractWidget() { /* nothing */ };
 
     virtual QString label() const = 0;

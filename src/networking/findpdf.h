@@ -52,7 +52,7 @@ public:
         DownloadMode downloadMode;
     } ResultItem;
 
-    FindPDF(QObject *parent = NULL);
+    explicit FindPDF(QObject *parent = NULL);
 
     bool search(const Entry &entry);
     QList<ResultItem> results();

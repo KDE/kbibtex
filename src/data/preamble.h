@@ -33,7 +33,7 @@ class KBIBTEXDATA_EXPORT Preamble : public Element
     Q_PROPERTY(Value value READ value WRITE setValue)
 
 public:
-    Preamble(const Value &value = Value());
+    explicit Preamble(const Value &value = Value());
     Preamble(const Preamble &other);
     ~Preamble();
 

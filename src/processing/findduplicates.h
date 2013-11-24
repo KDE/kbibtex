@@ -79,7 +79,7 @@ class KBIBTEXPROC_EXPORT FindDuplicates : public QObject
     Q_OBJECT
 
 public:
-    FindDuplicates(QWidget *parent, int sensitivity = 4000);
+    explicit FindDuplicates(QWidget *parent, int sensitivity = 4000);
     ~FindDuplicates();
 
     bool findDuplicateEntries(File *file, QList<EntryClique *> &entryCliqueList);
@@ -104,7 +104,7 @@ class KBIBTEXPROC_EXPORT MergeDuplicates
 public:
     enum MergePriority { None = 0, ISODateEarlier = 1, ISODateLater = 2, NumericHigher = 3, NumericLower = 4, LexicallyEarlier = 5, LexicallyLater = 6, LexicallyEarlierCaseInsensitive = 7, LexicallyLaterCaseInsensitive = 8 };
 
-    MergeDuplicates(QWidget *parent);
+    explicit MergeDuplicates(QWidget *parent);
 
     bool mergeDuplicateEntries(const QList<EntryClique *> &entryCliques, File *file);
 

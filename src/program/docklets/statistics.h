@@ -32,7 +32,7 @@ class Statistics : public QWidget
     Q_OBJECT
 
 public:
-    Statistics(QWidget *parent);
+    explicit Statistics(QWidget *parent);
     ~Statistics();
 
     void setFile(const File *);

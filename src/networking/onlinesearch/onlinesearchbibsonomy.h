@@ -35,7 +35,7 @@ class KBIBTEXNETWORKING_EXPORT OnlineSearchBibsonomy : public OnlineSearchAbstra
     Q_OBJECT
 
 public:
-    OnlineSearchBibsonomy(QWidget *parent);
+    explicit OnlineSearchBibsonomy(QWidget *parent);
     ~OnlineSearchBibsonomy();
 
     virtual void startSearch();

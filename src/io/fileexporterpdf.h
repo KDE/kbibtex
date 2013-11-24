@@ -31,7 +31,7 @@ class KBIBTEXIO_EXPORT FileExporterPDF : public FileExporterToolchain
 {
 public:
     enum FileEmbedding { NoFileEmbedding = 0, EmbedBibTeXFile = 1, EmbedReferences = 2, EmbedBibTeXFileAndReferences = EmbedBibTeXFile | EmbedReferences};
-    FileExporterPDF(FileEmbedding fileEmbedding = FileExporterPDF::EmbedBibTeXFileAndReferences);
+    explicit FileExporterPDF(FileEmbedding fileEmbedding = FileExporterPDF::EmbedBibTeXFileAndReferences);
     ~FileExporterPDF();
 
     void reloadConfig();

@@ -32,7 +32,7 @@ class KBIBTEXGUI_EXPORT SettingsIdSuggestionsWidget : public SettingsAbstractWid
 {
     Q_OBJECT
 public:
-    SettingsIdSuggestionsWidget(QWidget *parent);
+    explicit SettingsIdSuggestionsWidget(QWidget *parent);
     ~SettingsIdSuggestionsWidget();
 
     virtual QString label() const;

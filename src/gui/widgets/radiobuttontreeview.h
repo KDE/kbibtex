@@ -36,7 +36,7 @@ static const int IsRadioRole = Qt::UserRole + 103;
 class RadioButtonItemDelegate : public QStyledItemDelegate
 {
 public:
-    RadioButtonItemDelegate(QObject *p);
+    explicit RadioButtonItemDelegate(QObject *p);
 
     void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
 
@@ -62,7 +62,7 @@ public:
 class RadioButtonTreeView : public QTreeView
 {
 public:
-    RadioButtonTreeView(QWidget *parent);
+    explicit RadioButtonTreeView(QWidget *parent);
 
 protected:
     void mouseReleaseEvent(QMouseEvent *event);

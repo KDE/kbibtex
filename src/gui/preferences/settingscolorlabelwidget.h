@@ -44,7 +44,7 @@ class ColorLabelSettingsModel : public QAbstractItemModel
     Q_OBJECT
 
 public:
-    ColorLabelSettingsModel(QObject *parent);
+    explicit ColorLabelSettingsModel(QObject *parent);
 
     virtual int rowCount(const QModelIndex &parent) const;
     virtual int columnCount(const QModelIndex &parent) const;
@@ -85,7 +85,7 @@ class KBIBTEXGUI_EXPORT SettingsColorLabelWidget : public SettingsAbstractWidget
     Q_OBJECT
 
 public:
-    SettingsColorLabelWidget(QWidget *parent);
+    explicit SettingsColorLabelWidget(QWidget *parent);
     ~SettingsColorLabelWidget();
 
     virtual QString label() const;
@@ -114,7 +114,7 @@ class KBIBTEXGUI_EXPORT ColorLabelContextMenu : public QObject, private Notifica
     Q_OBJECT
 
 public:
-    ColorLabelContextMenu(BibTeXEditor *widget);
+    explicit ColorLabelContextMenu(BibTeXEditor *widget);
 
     KActionMenu *menuAction();
     void setEnabled(bool);

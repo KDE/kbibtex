@@ -40,7 +40,7 @@ class KBIBTEXGUI_EXPORT FileSettingsWidget : public QWidget
     Q_OBJECT
 
 public:
-    FileSettingsWidget(QWidget *parent);
+    explicit FileSettingsWidget(QWidget *parent);
 
     void loadProperties(File *file);
     void saveProperties(File *file);

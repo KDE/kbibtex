@@ -35,7 +35,7 @@ class KBIBTEXGUI_EXPORT SettingsGlobalKeywordsWidget : public SettingsAbstractWi
     Q_OBJECT
 
 public:
-    SettingsGlobalKeywordsWidget(QWidget *parent);
+    explicit SettingsGlobalKeywordsWidget(QWidget *parent);
     ~SettingsGlobalKeywordsWidget();
 
     virtual QString label() const;

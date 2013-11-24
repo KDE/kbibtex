@@ -30,7 +30,7 @@ class KBIBTEXNETWORKING_EXPORT OnlineSearchArXiv : public OnlineSearchAbstract
     Q_OBJECT
 
 public:
-    OnlineSearchArXiv(QWidget *parent);
+    explicit OnlineSearchArXiv(QWidget *parent);
     ~OnlineSearchArXiv();
 
     virtual void startSearch();

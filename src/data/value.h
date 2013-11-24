@@ -84,7 +84,7 @@ class KBIBTEXDATA_EXPORT Keyword: public ValueItem
 {
 public:
     Keyword(const Keyword &other);
-    Keyword(const QString &text);
+    explicit Keyword(const QString &text);
 
     void setText(const QString &text);
     QString text() const;
@@ -137,7 +137,7 @@ class KBIBTEXDATA_EXPORT MacroKey: public ValueItem
 {
 public:
     MacroKey(const MacroKey &other);
-    MacroKey(const QString &text);
+    explicit MacroKey(const QString &text);
 
     void setText(const QString &text);
     QString text() const;
@@ -156,7 +156,7 @@ class KBIBTEXDATA_EXPORT PlainText: public ValueItem
 {
 public:
     PlainText(const PlainText &other);
-    PlainText(const QString &text);
+    explicit PlainText(const QString &text);
 
     void setText(const QString &text);
     QString text() const;
@@ -173,7 +173,7 @@ class KBIBTEXDATA_EXPORT VerbatimText: public ValueItem
 {
 public:
     VerbatimText(const VerbatimText &other);
-    VerbatimText(const QString &text);
+    explicit VerbatimText(const QString &text);
 
     void setText(const QString &text);
     QString text() const;

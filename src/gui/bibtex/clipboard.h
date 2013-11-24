@@ -40,7 +40,7 @@ public:
     static const QString keyCopyReferenceCommand;
     static const QString defaultCopyReferenceCommand;
 
-    Clipboard(BibTeXEditor *bibTeXEditor);
+    explicit Clipboard(BibTeXEditor *bibTeXEditor);
     ~Clipboard();
 
 public slots:

@@ -31,7 +31,7 @@ class KBIBTEXNETWORKING_EXPORT OnlineSearchGoogleScholar : public OnlineSearchAb
     Q_OBJECT
 
 public:
-    OnlineSearchGoogleScholar(QWidget *parent);
+    explicit OnlineSearchGoogleScholar(QWidget *parent);
     ~OnlineSearchGoogleScholar();
 
     virtual void startSearch();

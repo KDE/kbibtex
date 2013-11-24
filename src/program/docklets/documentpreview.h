@@ -42,7 +42,7 @@ class File;
 class ImageLabel : public QLabel
 {
 public:
-    ImageLabel(const QString &text, QWidget *parent = NULL, Qt::WindowFlags f = 0);
+    explicit ImageLabel(const QString &text, QWidget *parent = NULL, Qt::WindowFlags f = 0);
     void setPixmap(const QPixmap &pixmap);
 
 protected:
@@ -56,7 +56,7 @@ class DocumentPreview : public QWidget
 {
     Q_OBJECT
 public:
-    DocumentPreview(QDockWidget *parent);
+    explicit DocumentPreview(QDockWidget *parent);
     ~DocumentPreview();
 
 public slots:

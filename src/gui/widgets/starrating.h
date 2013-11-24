@@ -45,7 +45,7 @@ public:
     static const int defaultMaxNumberOfStars;
     static const double UnsetStarsValue;
 
-    StarRating(int maxNumberOfStars = defaultMaxNumberOfStars, QWidget *parent = NULL);
+    explicit StarRating(int maxNumberOfStars = defaultMaxNumberOfStars, QWidget *parent = NULL);
 
     double value() const;
     void setValue(double percent);
@@ -89,7 +89,7 @@ private:
 class KBIBTEXGUI_EXPORT StarRatingFieldInput : public StarRating
 {
 public:
-    StarRatingFieldInput(int maxNumberOfStars = defaultMaxNumberOfStars, QWidget *parent = NULL)
+    explicit StarRatingFieldInput(int maxNumberOfStars = defaultMaxNumberOfStars, QWidget *parent = NULL)
             : StarRating(maxNumberOfStars, parent) {
         /* nothing */
     }

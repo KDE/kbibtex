@@ -30,7 +30,7 @@ class KBIBTEXNETWORKING_EXPORT OnlineSearchIsbnDB : public OnlineSearchAbstract
     Q_OBJECT
 
 public:
-    OnlineSearchIsbnDB(QWidget *parent);
+    explicit OnlineSearchIsbnDB(QWidget *parent);
     ~OnlineSearchIsbnDB();
 
     virtual void startSearch();

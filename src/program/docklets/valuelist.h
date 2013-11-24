@@ -34,7 +34,7 @@ class ValueList : public QWidget
     Q_OBJECT
 
 public:
-    ValueList(QWidget *parent);
+    explicit ValueList(QWidget *parent);
     ~ValueList();
 
     void setEditor(BibTeXEditor *editor);

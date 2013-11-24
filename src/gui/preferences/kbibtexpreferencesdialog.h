@@ -33,7 +33,7 @@ class KBIBTEXGUI_EXPORT KBibTeXPreferencesDialog : public KPageDialog
     Q_OBJECT
 
 public:
-    KBibTeXPreferencesDialog(QWidget *parent, Qt::WFlags flags = 0);
+    explicit KBibTeXPreferencesDialog(QWidget *parent, Qt::WFlags flags = 0);
     ~KBibTeXPreferencesDialog();
 
 protected:

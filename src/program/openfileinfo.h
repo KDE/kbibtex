@@ -108,7 +108,7 @@ class OpenFileInfoManager: public QObject
 public:
     typedef QVector<OpenFileInfo *> OpenFileInfoList;
 
-    OpenFileInfoManager(QWidget *parent);
+    explicit OpenFileInfoManager(QWidget *parent);
     ~OpenFileInfoManager();
 
     OpenFileInfo *createNew(const QString &mimeType = FileInfo::mimetypeBibTeX);

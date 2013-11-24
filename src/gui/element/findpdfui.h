@@ -99,7 +99,7 @@ class PDFListModel : public QAbstractListModel
     Q_OBJECT
 
 public:
-    PDFListModel(QList<FindPDF::ResultItem> &resultList, QObject *parent = NULL);
+    explicit PDFListModel(QList<FindPDF::ResultItem> &resultList, QObject *parent = NULL);
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;

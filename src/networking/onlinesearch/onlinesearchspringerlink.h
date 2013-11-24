@@ -42,7 +42,7 @@ class KBIBTEXNETWORKING_EXPORT OnlineSearchSpringerLink : public OnlineSearchAbs
     Q_OBJECT
 
 public:
-    OnlineSearchSpringerLink(QWidget *parent);
+    explicit OnlineSearchSpringerLink(QWidget *parent);
     ~OnlineSearchSpringerLink();
 
     virtual void startSearch();

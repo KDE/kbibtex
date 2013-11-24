@@ -31,7 +31,7 @@ class KBIBTEXNETWORKING_EXPORT OnlineSearchIEEEXplore : public OnlineSearchAbstr
     Q_OBJECT
 
 public:
-    OnlineSearchIEEEXplore(QWidget *parent);
+    explicit OnlineSearchIEEEXplore(QWidget *parent);
     ~OnlineSearchIEEEXplore();
 
     virtual void startSearch();

@@ -50,7 +50,7 @@ class ElementWidget : public QWidget
     Q_OBJECT
 
 public:
-    ElementWidget(QWidget *parent);
+    explicit ElementWidget(QWidget *parent);
     virtual bool apply(QSharedPointer<Element> element) const = 0;
     virtual bool reset(QSharedPointer<const Element> element) = 0;
     virtual void setReadOnly(bool isReadOnly) {
@@ -128,7 +128,7 @@ private:
     void createGUI();
 
 public:
-    ReferenceWidget(QWidget *parent);
+    explicit ReferenceWidget(QWidget *parent);
 
     bool apply(QSharedPointer<Element> element) const;
     bool reset(QSharedPointer<const Element> element);
@@ -169,7 +169,7 @@ private:
     FieldInput *fileList;
 
 public:
-    FilesWidget(QWidget *parent);
+    explicit FilesWidget(QWidget *parent);
 
     bool apply(QSharedPointer<Element> element) const;
     bool reset(QSharedPointer<const Element> element);
@@ -240,7 +240,7 @@ private:
     void createGUI();
 
 public:
-    MacroWidget(QWidget *parent);
+    explicit MacroWidget(QWidget *parent);
     ~MacroWidget();
 
     bool apply(QSharedPointer<Element> element) const;
@@ -261,7 +261,7 @@ private:
     void createGUI();
 
 public:
-    PreambleWidget(QWidget *parent);
+    explicit PreambleWidget(QWidget *parent);
 
     bool apply(QSharedPointer<Element> element) const;
     bool reset(QSharedPointer<const Element> element);
@@ -285,7 +285,7 @@ private:
     void createGUI();
 
 public:
-    SourceWidget(QWidget *parent);
+    explicit SourceWidget(QWidget *parent);
     ~SourceWidget();
 
     bool apply(QSharedPointer<Element> element) const;

@@ -31,7 +31,7 @@ class KBIBTEXNETWORKING_EXPORT OnlineSearchPubMed : public OnlineSearchAbstract
     Q_OBJECT
 
 public:
-    OnlineSearchPubMed(QWidget *parent);
+    explicit OnlineSearchPubMed(QWidget *parent);
     ~OnlineSearchPubMed();
 
     virtual void startSearch();

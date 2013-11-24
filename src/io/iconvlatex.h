@@ -39,7 +39,7 @@ class QStringList;
 class KBIBTEXIO_EXPORT IConvLaTeX
 {
 public:
-    IConvLaTeX(const QString &destEncoding);
+    explicit IConvLaTeX(const QString &destEncoding);
     ~IConvLaTeX();
 
     QByteArray encode(const QString &input);

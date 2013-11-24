@@ -38,7 +38,7 @@ public:
     /// Negative value to describe an invalid tab position
     static const int InvalidTabPosition;
 
-    HidingTabWidget(QWidget *parent = NULL);
+    explicit HidingTabWidget(QWidget *parent = NULL);
 
     /**
      * Hides the tab at position @param index from this stack of widgets.

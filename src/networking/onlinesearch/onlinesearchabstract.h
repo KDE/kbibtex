@@ -46,7 +46,7 @@ class KBIBTEXNETWORKING_EXPORT OnlineSearchQueryFormAbstract : public QWidget
     Q_OBJECT
 
 public:
-    OnlineSearchQueryFormAbstract(QWidget *parent)
+    explicit OnlineSearchQueryFormAbstract(QWidget *parent)
             : QWidget(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))) {
         // nothing
     }
@@ -78,7 +78,7 @@ class KBIBTEXNETWORKING_EXPORT OnlineSearchAbstract : public QObject
     Q_OBJECT
 
 public:
-    OnlineSearchAbstract(QWidget *parent);
+    explicit OnlineSearchAbstract(QWidget *parent);
 
     static const QString queryKeyFreeText;
     static const QString queryKeyTitle;

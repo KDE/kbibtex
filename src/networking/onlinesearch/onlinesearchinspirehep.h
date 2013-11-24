@@ -31,7 +31,7 @@ class KBIBTEXNETWORKING_EXPORT OnlineSearchInspireHep : public OnlineSearchSimpl
     Q_OBJECT
 
 public:
-    OnlineSearchInspireHep(QWidget *parent);
+    explicit OnlineSearchInspireHep(QWidget *parent);
 
     virtual QString label() const;
     virtual OnlineSearchQueryFormAbstract *customWidget(QWidget *parent);

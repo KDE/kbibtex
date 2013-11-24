@@ -36,7 +36,7 @@ class KBIBTEXNETWORKING_EXPORT OnlineSearchAcmPortal : public OnlineSearchAbstra
     Q_OBJECT
 
 public:
-    OnlineSearchAcmPortal(QWidget *parent);
+    explicit OnlineSearchAcmPortal(QWidget *parent);
     ~OnlineSearchAcmPortal();
 
     virtual void startSearch();

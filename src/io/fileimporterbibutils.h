@@ -36,7 +36,7 @@ class FileImporterBibUtils : public FileImporter
 public:
     enum InputFormat {ifRIS = BIBL_RISIN, ifMedLine = BIBL_MEDLINEIN, ifISI = BIBL_ISIIN, ifEndNote = BIBL_ENDNOTEIN, ifCOPAC = BIBL_COPACIN, ifMODS = BIBL_MODSIN, ifUndefined = -9999};
 
-    FileImporterBibUtils(InputFormat inputFormat);
+    explicit FileImporterBibUtils(InputFormat inputFormat);
     ~FileImporterBibUtils();
 
     File *load(QIODevice *iodevice);

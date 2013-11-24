@@ -32,7 +32,7 @@ class ReferencePreview : public QWidget
 {
     Q_OBJECT
 public:
-    ReferencePreview(QWidget *parent);
+    explicit ReferencePreview(QWidget *parent);
     ~ReferencePreview();
 
     void setEnabled(bool);

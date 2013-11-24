@@ -117,7 +117,7 @@ class UrlListEdit : public FieldListEdit
     Q_OBJECT
 
 public:
-    UrlListEdit(QWidget *parent = NULL);
+    explicit UrlListEdit(QWidget *parent = NULL);
     ~UrlListEdit();
 
     virtual void setReadOnly(bool isReadOnly);
@@ -155,7 +155,7 @@ class KeywordListEdit : public FieldListEdit
 public:
     static const QString keyGlobalKeywordList;
 
-    KeywordListEdit(QWidget *parent = NULL);
+    explicit KeywordListEdit(QWidget *parent = NULL);
 
     virtual void setReadOnly(bool isReadOnly);
     virtual void setFile(const File *file);

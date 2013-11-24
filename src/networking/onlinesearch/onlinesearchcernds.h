@@ -31,7 +31,7 @@ class KBIBTEXNETWORKING_EXPORT OnlineSearchCERNDS : public OnlineSearchSimpleBib
     Q_OBJECT
 
 public:
-    OnlineSearchCERNDS(QWidget *parent);
+    explicit OnlineSearchCERNDS(QWidget *parent);
 
     virtual QString label() const;
     virtual OnlineSearchQueryFormAbstract *customWidget(QWidget *parent);

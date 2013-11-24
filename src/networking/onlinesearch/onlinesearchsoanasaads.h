@@ -30,7 +30,7 @@ class KBIBTEXNETWORKING_EXPORT OnlineSearchSOANASAADS : public OnlineSearchSimpl
     Q_OBJECT
 
 public:
-    OnlineSearchSOANASAADS(QWidget *parent);
+    explicit OnlineSearchSOANASAADS(QWidget *parent);
 
     virtual QString label() const;
     virtual OnlineSearchQueryFormAbstract *customWidget(QWidget *parent);

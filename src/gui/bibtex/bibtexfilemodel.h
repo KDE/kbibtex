@@ -56,7 +56,7 @@ public:
         bool searchPDFfiles;
     };
 
-    SortFilterBibTeXFileModel(QObject *parent = 0);
+    explicit SortFilterBibTeXFileModel(QObject *parent = 0);
 
     virtual void setSourceModel(QAbstractItemModel *model);
     BibTeXFileModel *bibTeXSourceModel() const;
@@ -86,7 +86,7 @@ class KBIBTEXGUI_EXPORT BibTeXFileDelegate : public QStyledItemDelegate
     Q_OBJECT
 
 public:
-    BibTeXFileDelegate(QWidget *parent = NULL)
+    explicit BibTeXFileDelegate(QWidget *parent = NULL)
             : QStyledItemDelegate(parent) {
         /* nothing */
     }
@@ -107,7 +107,7 @@ public:
     static const QString keyShowMacros;
     static const bool defaultShowMacros;
 
-    BibTeXFileModel(QObject *parent = 0);
+    explicit BibTeXFileModel(QObject *parent = 0);
 
     File *bibTeXFile();
     virtual void setBibTeXFile(File *bibtexFile);

@@ -33,7 +33,7 @@ class KBIBTEXNETWORKING_EXPORT OnlineSearchQueryFormGeneral : public OnlineSearc
     Q_OBJECT
 
 public:
-    OnlineSearchQueryFormGeneral(QWidget *parent);
+    explicit OnlineSearchQueryFormGeneral(QWidget *parent);
 
     bool readyToStart() const;
     void copyFromEntry(const Entry &);

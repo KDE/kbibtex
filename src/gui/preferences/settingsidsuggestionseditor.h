@@ -54,7 +54,7 @@ protected:
     QFormLayout *formLayout;
 
 public:
-    TokenWidget(QWidget *parent);
+    explicit TokenWidget(QWidget *parent);
 
     void addButtons(KPushButton *buttonUp, KPushButton *buttonDown, KPushButton *buttonRemove);
 

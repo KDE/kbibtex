@@ -33,7 +33,7 @@ class KBIBTEXGUI_EXPORT SettingsFileExporterPDFPSWidget : public SettingsAbstrac
     Q_OBJECT
 
 public:
-    SettingsFileExporterPDFPSWidget(QWidget *parent);
+    explicit SettingsFileExporterPDFPSWidget(QWidget *parent);
     ~SettingsFileExporterPDFPSWidget();
 
     virtual QString label() const;

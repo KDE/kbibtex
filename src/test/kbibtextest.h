@@ -21,7 +21,7 @@ public:
         QByteArray hashAuthors, hashFilesUrlsDoi;
     } TestFile;
 
-    KBibTeXTest(QWidget *parent = NULL);
+    explicit KBibTeXTest(QWidget *parent = NULL);
 
     QList<TestFile *> testFiles;
 

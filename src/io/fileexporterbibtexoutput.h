@@ -31,7 +31,7 @@ class KBIBTEXIO_EXPORT FileExporterBibTeXOutput : public FileExporterToolchain
 {
 public:
     enum OutputType {BibTeXLogFile, BibTeXBlockList};
-    FileExporterBibTeXOutput(OutputType outputType);
+    explicit FileExporterBibTeXOutput(OutputType outputType);
     ~FileExporterBibTeXOutput();
 
     void reloadConfig();

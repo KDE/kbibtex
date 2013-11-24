@@ -33,7 +33,7 @@ class KBIBTEXGUI_EXPORT FilterBar : public QWidget
 {
     Q_OBJECT
 public:
-    FilterBar(QWidget *parent);
+    explicit FilterBar(QWidget *parent);
     ~FilterBar();
 
     SortFilterBibTeXFileModel::FilterQuery filter();

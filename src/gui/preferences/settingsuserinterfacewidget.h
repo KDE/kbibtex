@@ -33,7 +33,7 @@ class KBIBTEXGUI_EXPORT SettingsUserInterfaceWidget : public SettingsAbstractWid
     Q_OBJECT
 
 public:
-    SettingsUserInterfaceWidget(QWidget *parent);
+    explicit SettingsUserInterfaceWidget(QWidget *parent);
     ~SettingsUserInterfaceWidget();
 
     virtual QString label() const;
