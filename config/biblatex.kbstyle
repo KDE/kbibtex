@@ -125,13 +125,13 @@ OptionalItems=subtitle,titleaddon,maintitle,mainsubtitle,maintitleaddon,booksubt
 
 [EntryType21]
 UpperCamelCase=Reference
-Label=Single-volumne Reference (e.g. Encyclopedia)
+Label=Single-volume Reference (e.g. Encyclopedia)
 RequiredItems=editor,title,year^date
 OptionalItems=editora,editorb,editorc,translator,annotator,commentator,introduction,foreword,afterword,subtitle,titleaddon,maintitle,mainsubtitle,maintitleaddon,language,origlanguage,volume,part,edition,volumes,series,number,note,publisher,location,isbn,chapter,pages,pagetotal,addendum,pubstate,doi,eprint,eprintclass,eprinttype,url,urldate
 
 [EntryType22]
 UpperCamelCase=MVReference
-Label=Multi-volumne Reference (e.g. Encyclopedia)
+Label=Multi-volume Reference (e.g. Encyclopedia)
 RequiredItems=editor,title,year^date
 OptionalItems=editora,editorb,editorc,translator,annotator,commentator,introduction,foreword,afterword,subtitle,titleaddon,language,origlanguage,edition,volumes,series,number,note,publisher,location,isbn,pagetotal,addendum,pubstate,doi,eprint,eprintclass,eprinttype,url,urldate
 
