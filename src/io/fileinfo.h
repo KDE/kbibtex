@@ -62,7 +62,7 @@ public:
      * Different test may get performed depending of the test for existence
      * of a potential file should be checked or not checked or if this matter
      * is undecided/irrelevant (recommended default case). For the test of
-     * existance, baseDirectory is used to resolve relative paths.
+     * existence, baseDirectory is used to resolve relative paths.
      * @param text text to scan for filenames or URLs
      * @param testExistance shall be tested for file existence?
      * @param baseDirectory base directory for tests on relative path names

@@ -206,7 +206,7 @@ double StarRating::percentForPosition(const QPoint &pos, int numTotalStars, cons
     const int width = starSize * numTotalStars;
     const int x = pos.x() - paintMargin - inside.left();
     double percent = x * 100.0 / width;
-    return qMax(0.0, qMin(100.0, percent));
+    return qMax(qreal(0.0), qMin(qreal(100.0), percent));
 }
 
 bool StarRatingFieldInput::reset(const Value &value)
