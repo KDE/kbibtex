@@ -2,6 +2,7 @@
 Type=Service
 Icon=kbibtex
 Name=BibTeX Viewer and Editor
+Name[cs]=Prohlížeč a editor BibTeX
 Name[de]=BibTeX-Betrachter und -Editor
 Name[nl]=BibTeX-viewer en -bewerker
 Name[pt]=Visualizador e Editor do BibTeX
