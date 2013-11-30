@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2013 by Thomas Fischer                             *
+ *   Copyright (C) 2004-2013 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *   fischer@unix-ag.uni-kl.de                                             *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
