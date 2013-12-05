@@ -3,8 +3,9 @@
 export LC_ALL=en_US.utf8
 export LANG=C
 
-find src -type f -name '*.cpp' -o -name '*.h' | xargs svn status | while read status filename ; do
-	if [[ ${status} != "M" && ${status} != "A" ]] ; then continue ; fi
+find src -type f -name '*.cpp' -o -name '*.h' | xargs git status | while read hash status filename ; do
+	if [[ ${hash} != "#" ]] ; then continue ; fi
+	if [[ ${status} != "modified:" && ${status} != "added:" ]] ; then continue ; fi
 	if [[ ! -s "${filename}" ]] ; then continue ; fi
 
 	echo "Processing \"${filename}\""
