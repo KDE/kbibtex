@@ -28,6 +28,7 @@
 #include <QButtonGroup>
 #include <QRadioButton>
 #include <QLabel>
+#include <QtCore/QPointer>
 
 #include <KDialog>
 #include <KLocale>
@@ -358,17 +359,18 @@ FindPDFUI::~FindPDFUI()
 
 void FindPDFUI::interactiveFindPDF(Entry &entry, const File &bibtexFile, QWidget *parent)
 {
-    KDialog dlg(parent);
-    FindPDFUI widget(entry, &dlg);
-    dlg.setCaption(i18n("Find PDF"));
-    dlg.setMainWidget(&widget);
-    dlg.enableButtonOk(false);
+    QPointer<KDialog> dlg = new KDialog(parent);
+    FindPDFUI widget(entry, dlg);
+    dlg->setCaption(i18n("Find PDF"));
+    dlg->setMainWidget(&widget);
+    dlg->enableButtonOk(false);
 
-    connect(&widget, SIGNAL(resultAvailable(bool)), &dlg, SLOT(enableButtonOk(bool)));
+    connect(&widget, SIGNAL(resultAvailable(bool)), dlg, SLOT(enableButtonOk(bool)));
 
-    if (dlg.exec() == KDialog::Accepted) {
+    if (dlg->exec() == KDialog::Accepted) {
         widget.apply(entry, bibtexFile);
     }
+    delete dlg;
 }
 
 void FindPDFUI::apply(Entry &entry, const File &bibtexFile)

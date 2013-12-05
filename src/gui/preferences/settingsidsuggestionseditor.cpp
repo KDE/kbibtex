@@ -25,6 +25,7 @@
 #include <QCheckBox>
 #include <QSignalMapper>
 #include <QMenu>
+#include <QtCore/QPointer>
 
 #include <KLineEdit>
 #include <KComboBox>
@@ -608,14 +609,16 @@ IdSuggestionsEditDialog::~IdSuggestionsEditDialog()
 
 QString IdSuggestionsEditDialog::editSuggestion(const Entry *previewEntry, const QString &suggestion, QWidget *parent)
 {
-    IdSuggestionsEditDialog dlg(parent);
-    IdSuggestionsEditWidget widget(previewEntry, &dlg);
-    dlg.setMainWidget(&widget);
+    QPointer<IdSuggestionsEditDialog> dlg = new IdSuggestionsEditDialog(parent);
+    IdSuggestionsEditWidget widget(previewEntry, dlg);
+    dlg->setMainWidget(&widget);
 
 
     widget.setFormatString(suggestion);
-    if (dlg.exec() == Accepted)
+    if (dlg->exec() == Accepted)
         return widget.formatString();
+
+    delete dlg;
 
     /// Return unmodified original suggestion
     return suggestion;

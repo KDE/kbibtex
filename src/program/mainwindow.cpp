@@ -21,6 +21,7 @@
 #include <QDragEnterEvent>
 #include <QDropEvent>
 #include <QLabel>
+#include <QtCore/QPointer>
 
 #include <KIO/NetAccess>
 #include <KApplication>
@@ -343,8 +344,9 @@ void KBibTeXMainWindow::closeEvent(QCloseEvent *event)
 
 void KBibTeXMainWindow::showPreferences()
 {
-    KBibTeXPreferencesDialog dlg(this);
-    dlg.exec();
+    QPointer<KBibTeXPreferencesDialog> dlg = new KBibTeXPreferencesDialog(this);
+    dlg->exec();
+    delete dlg;
 }
 
 void KBibTeXMainWindow::documentSwitched(BibTeXEditor *oldEditor, BibTeXEditor *newEditor)
