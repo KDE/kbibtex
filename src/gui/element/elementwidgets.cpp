@@ -500,7 +500,7 @@ void ReferenceWidget::prepareSuggestionsMenu()
     QSet<QString> knownIdSuggestion;
     const QString defaultSuggestion = idSuggestions->defaultFormatId(*crossrefResolvedEntry.data());
 
-    foreach(QString suggestion, idSuggestions->formatIdList(*crossrefResolvedEntry.data())) {
+    foreach(const QString &suggestion, idSuggestions->formatIdList(*crossrefResolvedEntry.data())) {
         bool isDefault = suggestion == defaultSuggestion;
 
         /// Test for duplicate ids, use fallback ids with numeric suffix

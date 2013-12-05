@@ -97,7 +97,7 @@ void EntryClique::setChosenValue(const QString &field, Value &value, ValueOperat
     }
     case AddValue: {
         QString text = PlainTextValue::text(value);
-        foreach(Value value, chosenValueMap[field])
+        foreach(const Value &value, chosenValueMap[field])
         if (PlainTextValue::text(value) == text)
             return;
         chosenValueMap[field] << value;
@@ -161,7 +161,7 @@ void EntryClique::recalculateValueMap()
     }
 
     QList<QString> fl = fieldList();
-    foreach(QString fieldName, fl)
+    foreach(const QString &fieldName, fl)
     if (valueMap[fieldName].count() < 2) {
         valueMap.remove(fieldName);
         chosenValueMap.remove(fieldName);
@@ -178,7 +178,7 @@ void EntryClique::insertKeyValueToValueMap(const QString &fieldName, const Value
 
         bool alreadyContained = false;
         QList<Value> alternatives = valueMap[fieldName];
-        foreach(Value v, alternatives)
+        foreach(const Value &v, alternatives)
         if (PlainTextValue::text(v) == fieldValueText) {
             alreadyContained = true;
             break;
@@ -542,7 +542,7 @@ bool MergeDuplicates::mergeDuplicateEntries(const QList<EntryClique *> &entryCli
                 mergedEntry->setType(PlainTextValue::text(entryClique->chosenValue(field)));
             else {
                 Value combined;
-                foreach(Value v, entryClique->chosenValues(field)) {
+                foreach(const Value &v, entryClique->chosenValues(field)) {
                     combined.merge(v);
                 }
                 if (!combined.isEmpty())

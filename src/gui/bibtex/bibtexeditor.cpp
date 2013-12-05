@@ -229,7 +229,7 @@ void BibTeXEditor::selectionDelete()
 {
     QModelIndexList mil = selectionModel()->selectedRows();
     QList<int> rows;
-    foreach(QModelIndex idx, mil)
+    foreach(const QModelIndex &idx, mil)
     rows << sortFilterProxyModel()->mapToSource(idx).row();
 
     bibTeXModel()->removeRowList(rows);
