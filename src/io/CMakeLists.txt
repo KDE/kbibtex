@@ -20,7 +20,6 @@ set(
     fileexporterxml.cpp
     fileexporterxslt.cpp
     fileimporterbibtex.cpp
-    # FIXME fileimporterbibutils.cpp
     fileimporter.cpp
     fileimporterpdf.cpp
     fileimporterris.cpp
@@ -49,7 +48,6 @@ set(
     fileexporterxml.h
     fileexporterxslt.h
     fileimporterbibtex.h
-    # FIXME fileimporterbibutils.h
     fileimporter.h
     fileimporterpdf.h
     fileimporterris.h
