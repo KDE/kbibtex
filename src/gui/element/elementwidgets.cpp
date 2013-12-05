@@ -500,13 +500,13 @@ void ReferenceWidget::prepareSuggestionsMenu()
     QSet<QString> knownIdSuggestion;
     const QString defaultSuggestion = idSuggestions->defaultFormatId(*crossrefResolvedEntry.data());
 
-    foreach(const QString &suggestion, idSuggestions->formatIdList(*crossrefResolvedEntry.data())) {
-        bool isDefault = suggestion == defaultSuggestion;
+    foreach(const QString &suggestionBase, idSuggestions->formatIdList(*crossrefResolvedEntry.data())) {
+        bool isDefault = suggestionBase == defaultSuggestion;
+        QString suggestion = suggestionBase;
 
         /// Test for duplicate ids, use fallback ids with numeric suffix
         if (m_file != NULL && m_file->containsKey(suggestion)) {
             int suffix = 2;
-            const QString suggestionBase = suggestion;
             while (m_file->containsKey(suggestion = suggestionBase + QChar('_') + QString::number(suffix)))
                 ++suffix;
         }
