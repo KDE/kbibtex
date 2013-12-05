@@ -135,7 +135,7 @@ KBibTeXMainWindow::KBibTeXMainWindow()
     d->dockDocumentList->setWidget(d->listDocumentList);
     d->dockDocumentList->setObjectName("dockDocumentList");
     d->dockDocumentList->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
-    connect(d->listDocumentList, SIGNAL(openFile(const KUrl &)), this, SLOT(openDocument(const KUrl &)));
+    connect(d->listDocumentList, SIGNAL(openFile(KUrl)), this, SLOT(openDocument(const KUrl &)));
     showPanelsMenu->addAction(d->dockDocumentList->toggleViewAction());
 
     d->dockValueList = new QDockWidget(i18n("List of Values"), this);
@@ -167,7 +167,7 @@ KBibTeXMainWindow::KBibTeXMainWindow()
     d->dockSearchResults->setObjectName("dockResultsFrom");
     d->dockSearchResults->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
     showPanelsMenu->addAction(d->dockSearchResults->toggleViewAction());
-    connect(d->mdiWidget, SIGNAL(documentSwitch(BibTeXEditor *, BibTeXEditor *)), d->searchResults, SLOT(documentSwitched(BibTeXEditor *, BibTeXEditor *)));
+    connect(d->mdiWidget, SIGNAL(documentSwitch(BibTeXEditor*,BibTeXEditor*)), d->searchResults, SLOT(documentSwitched(BibTeXEditor *, BibTeXEditor *)));
 
     d->dockSearchForm = new QDockWidget(i18n("Online Search"), this);
     d->dockSearchForm->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
@@ -227,12 +227,12 @@ KBibTeXMainWindow::KBibTeXMainWindow()
     actionCollection()->addAction(KStandardAction::Quit, this, SLOT(queryCloseAll()));
     actionCollection()->addAction(KStandardAction::Preferences, this, SLOT(showPreferences()));
 
-    connect(d->mdiWidget, SIGNAL(documentSwitch(BibTeXEditor *, BibTeXEditor *)), this, SLOT(documentSwitched(BibTeXEditor *, BibTeXEditor *)));
-    connect(d->mdiWidget, SIGNAL(activePartChanged(KParts::Part *)), this, SLOT(createGUI(KParts::Part *)));
+    connect(d->mdiWidget, SIGNAL(documentSwitch(BibTeXEditor*,BibTeXEditor*)), this, SLOT(documentSwitched(BibTeXEditor *, BibTeXEditor *)));
+    connect(d->mdiWidget, SIGNAL(activePartChanged(KParts::Part*)), this, SLOT(createGUI(KParts::Part *)));
     connect(d->mdiWidget, SIGNAL(documentNew()), this, SLOT(newDocument()));
     connect(d->mdiWidget, SIGNAL(documentOpen()), this, SLOT(openDocumentDialog()));
     connect(d->mdiWidget, SIGNAL(documentOpenURL(KUrl)), this, SLOT(openDocument(KUrl)));
-    connect(d->mdiWidget->getOpenFileInfoManager(), SIGNAL(currentChanged(OpenFileInfo *, KService::Ptr)), d->mdiWidget, SLOT(setFile(OpenFileInfo *, KService::Ptr)));
+    connect(d->mdiWidget->getOpenFileInfoManager(), SIGNAL(currentChanged(OpenFileInfo*,KService::Ptr)), d->mdiWidget, SLOT(setFile(OpenFileInfo *, KService::Ptr)));
     connect(d->mdiWidget->getOpenFileInfoManager(), SIGNAL(flagsChanged(OpenFileInfo::StatusFlags)), this, SLOT(documentListsChanged(OpenFileInfo::StatusFlags)));
     connect(d->mdiWidget, SIGNAL(setCaption(QString)), this, SLOT(setCaption(QString)));
 
@@ -360,20 +360,20 @@ void KBibTeXMainWindow::documentSwitched(BibTeXEditor *oldEditor, BibTeXEditor *
     d->elementForm->setEnabled(newEditor != NULL);
     d->documentPreview->setEnabled(newEditor != NULL);
     if (oldEditor != NULL) {
-        disconnect(oldEditor, SIGNAL(currentElementChanged(QSharedPointer<Element>, const File *)), d->referencePreview, SLOT(setElement(QSharedPointer<Element>, const File *)));
-        disconnect(oldEditor, SIGNAL(currentElementChanged(QSharedPointer<Element>, const File *)), d->elementForm, SLOT(setElement(QSharedPointer<Element>, const File *)));
-        disconnect(oldEditor, SIGNAL(currentElementChanged(QSharedPointer<Element>, const File *)), d->documentPreview, SLOT(setElement(QSharedPointer<Element>, const File *)));
-        disconnect(oldEditor, SIGNAL(currentElementChanged(QSharedPointer<Element>, const File *)), d->searchForm, SLOT(setElement(QSharedPointer<Element>, const File *)));
+        disconnect(oldEditor, SIGNAL(currentElementChanged(QSharedPointer<Element>,File*)), d->referencePreview, SLOT(setElement(QSharedPointer<Element>, const File *)));
+        disconnect(oldEditor, SIGNAL(currentElementChanged(QSharedPointer<Element>,File*)), d->elementForm, SLOT(setElement(QSharedPointer<Element>, const File *)));
+        disconnect(oldEditor, SIGNAL(currentElementChanged(QSharedPointer<Element>,File*)), d->documentPreview, SLOT(setElement(QSharedPointer<Element>, const File *)));
+        disconnect(oldEditor, SIGNAL(currentElementChanged(QSharedPointer<Element>,File*)), d->searchForm, SLOT(setElement(QSharedPointer<Element>, const File *)));
         disconnect(oldEditor, SIGNAL(modified()), d->valueList, SLOT(update()));
         disconnect(oldEditor, SIGNAL(modified()), d->statistics, SLOT(update()));
         // FIXME disconnect(oldEditor, SIGNAL(modified()), d->elementForm, SLOT(refreshElement()));
         disconnect(d->elementForm, SIGNAL(elementModified()), oldEditor, SLOT(externalModification()));
     }
     if (newEditor != NULL) {
-        connect(newEditor, SIGNAL(currentElementChanged(QSharedPointer<Element>, const File *)), d->referencePreview, SLOT(setElement(QSharedPointer<Element>, const File *)));
-        connect(newEditor, SIGNAL(currentElementChanged(QSharedPointer<Element>, const File *)), d->elementForm, SLOT(setElement(QSharedPointer<Element>, const File *)));
-        connect(newEditor, SIGNAL(currentElementChanged(QSharedPointer<Element>, const File *)), d->documentPreview, SLOT(setElement(QSharedPointer<Element>, const File *)));
-        connect(newEditor, SIGNAL(currentElementChanged(QSharedPointer<Element>, const File *)), d->searchForm, SLOT(setElement(QSharedPointer<Element>, const File *)));
+        connect(newEditor, SIGNAL(currentElementChanged(QSharedPointer<Element>,File*)), d->referencePreview, SLOT(setElement(QSharedPointer<Element>, const File *)));
+        connect(newEditor, SIGNAL(currentElementChanged(QSharedPointer<Element>,File*)), d->elementForm, SLOT(setElement(QSharedPointer<Element>, const File *)));
+        connect(newEditor, SIGNAL(currentElementChanged(QSharedPointer<Element>,File*)), d->documentPreview, SLOT(setElement(QSharedPointer<Element>, const File *)));
+        connect(newEditor, SIGNAL(currentElementChanged(QSharedPointer<Element>,File*)), d->searchForm, SLOT(setElement(QSharedPointer<Element>, const File *)));
         connect(newEditor, SIGNAL(modified()), d->valueList, SLOT(update()));
         connect(newEditor, SIGNAL(modified()), d->statistics, SLOT(update()));
         // FIXME connect(newEditor, SIGNAL(modified()), d->elementForm, SLOT(refreshElement()));

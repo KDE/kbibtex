@@ -106,7 +106,7 @@ public:
 
     KBibTeXPartPrivate(KBibTeXPart *parent)
             : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), bibTeXFile(NULL), model(NULL), sortFilterProxyModel(NULL), signalMapperNewElement(new QSignalMapper(parent)), viewDocumentMenu(new KMenu(i18n("View Document"), parent->widget())), signalMapperViewDocument(new QSignalMapper(parent)), isSaveAsOperation(false) {
-        connect(signalMapperViewDocument, SIGNAL(mapped(QObject *)), p, SLOT(elementViewDocumentMenu(QObject *)));
+        connect(signalMapperViewDocument, SIGNAL(mapped(QObject*)), p, SLOT(elementViewDocumentMenu(QObject *)));
     }
 
     ~KBibTeXPartPrivate() {
@@ -554,7 +554,7 @@ void KBibTeXPart::setupActions(bool /*browserViewWanted FIXME*/)
     // TODO
 
     connect(d->editor, SIGNAL(selectedElementsChanged()), this, SLOT(updateActions()));
-    connect(d->editor, SIGNAL(currentElementChanged(QSharedPointer<Element>, const File *)), this, SLOT(updateActions()));
+    connect(d->editor, SIGNAL(currentElementChanged(QSharedPointer<Element>,File*)), this, SLOT(updateActions()));
 
     d->editor->addAction(d->elementFindPDFAction);
     d->editor->addAction(d->entryApplyDefaultFormatString);

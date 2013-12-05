@@ -250,7 +250,7 @@ void KBibTeXTest::processNextSearch()
         query.insert(OnlineSearchAbstract::queryKeyAuthor, QLatin1String("smith"));
         connect((*m_currentOnlineSearch), SIGNAL(stoppedSearch(int)), this, SLOT(onlineSearchStoppedSearch(int)));
         connect((*m_currentOnlineSearch), SIGNAL(foundEntry(QSharedPointer<Entry>)), this, SLOT(onlineSearchFoundEntry()));
-        connect((*m_currentOnlineSearch), SIGNAL(progress(int, int)), this, SLOT(progress(int, int)));
+        connect((*m_currentOnlineSearch), SIGNAL(progress(int,int)), this, SLOT(progress(int, int)));
         (*m_currentOnlineSearch)->startSearch(query, 3);
     } else {
         addMessage(QLatin1String("Done testing"), iconINFO);
@@ -326,7 +326,7 @@ File *KBibTeXTest::loadFile(const QString &absoluteFilename, TestFile *currentTe
     FileImporter *importer = NULL;
     if (currentTestFile->filename.endsWith(QLatin1String(".bib"))) {
         importer = new FileImporterBibTeX(false);
-        connect(importer, SIGNAL(progress(int, int)), this, SLOT(progress(int, int)));
+        connect(importer, SIGNAL(progress(int,int)), this, SLOT(progress(int, int)));
     } else {
         addMessage(QString(QLatin1String("Don't know format of '%1'")).arg(QFileInfo(absoluteFilename).fileName()), iconERROR);
         return NULL;
@@ -511,7 +511,7 @@ QString KBibTeXTest::saveFile(File *file, TestFile *currentTestFile)
         FileExporterBibTeX *bibTeXExporter = new FileExporterBibTeX();
         bibTeXExporter->setEncoding(QLatin1String("utf-8"));
         exporter = bibTeXExporter;
-        connect(exporter, SIGNAL(progress(int, int)), this, SLOT(progress(int, int)));
+        connect(exporter, SIGNAL(progress(int,int)), this, SLOT(progress(int, int)));
     } else {
         addMessage(QString(QLatin1String("Don't know format of '%1'")).arg(tempFilename), iconERROR);
         return NULL;

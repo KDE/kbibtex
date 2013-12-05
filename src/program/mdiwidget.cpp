@@ -198,7 +198,7 @@ public:
         sfpm->setSortRole(LRUItemModel::SortRole);
         listLRU->setModel(sfpm);
 
-        connect(&signalMapperCompleted, SIGNAL(mapped(QObject *)), p, SLOT(slotCompleted(QObject *)));
+        connect(&signalMapperCompleted, SIGNAL(mapped(QObject*)), p, SLOT(slotCompleted(QObject *)));
 
         restoreColumnsState();
     }

@@ -106,8 +106,8 @@ public:
         p->setEnabled(false);
 
         connect(comboboxFieldNames, SIGNAL(activated(int)), p, SLOT(update()));
-        connect(treeviewFieldValues, SIGNAL(activated(const QModelIndex &)), p, SLOT(listItemActivated(const QModelIndex &)));
-        connect(delegate, SIGNAL(closeEditor(QWidget *)), treeviewFieldValues, SLOT(reset()));
+        connect(treeviewFieldValues, SIGNAL(activated(QModelIndex)), p, SLOT(listItemActivated(const QModelIndex &)));
+        connect(delegate, SIGNAL(closeEditor(QWidget*)), treeviewFieldValues, SLOT(reset()));
 
         /// add context menu to header
         treeviewFieldValues->header()->setContextMenuPolicy(Qt::ActionsContextMenu);
@@ -146,7 +146,7 @@ public:
         QByteArray headerState = configGroup.readEntry(configKeyHeaderState, QByteArray());
         treeviewFieldValues->header()->restoreState(headerState);
 
-        connect(treeviewFieldValues->header(), SIGNAL(sortIndicatorChanged(int, Qt::SortOrder)), p, SLOT(columnsChanged()));
+        connect(treeviewFieldValues->header(), SIGNAL(sortIndicatorChanged(int,Qt::SortOrder)), p, SLOT(columnsChanged()));
     }
 
     void update() {

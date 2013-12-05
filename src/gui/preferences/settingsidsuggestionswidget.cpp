@@ -251,7 +251,7 @@ public:
         idSuggestionsModel = new IdSuggestionsModel(treeViewSuggestions);
         treeViewSuggestions->setModel(idSuggestionsModel);
         treeViewSuggestions->setRootIsDecorated(false);
-        connect(treeViewSuggestions->selectionModel(), SIGNAL(currentChanged(QModelIndex, QModelIndex)), p, SLOT(itemChanged(QModelIndex)));
+        connect(treeViewSuggestions->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)), p, SLOT(itemChanged(QModelIndex)));
         treeViewSuggestions->setMinimumSize(treeViewSuggestions->fontMetrics().width(QChar('W')) * 25, treeViewSuggestions->fontMetrics().height() * 15);
 
         buttonNewSuggestion = new KPushButton(KIcon("list-add"), i18n("Add..."), p);

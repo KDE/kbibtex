@@ -256,7 +256,7 @@ ValueListModel *BibTeXEditor::valueListModel(const QString &field)
     if (bibteXModel != NULL) {
         ValueListModel *result = new ValueListModel(bibteXModel->bibTeXFile(), field, this);
         /// Keep track of external changes through modifications in this ValueListModel instance
-        connect(result, SIGNAL(dataChanged(QModelIndex, QModelIndex)), this, SLOT(externalModification()));
+        connect(result, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(externalModification()));
         return result;
     }
 

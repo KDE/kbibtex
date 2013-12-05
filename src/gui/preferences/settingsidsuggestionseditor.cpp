@@ -403,11 +403,11 @@ public:
         connect(signalMapperAddMenu, SIGNAL(mapped(int)), p, SLOT(addToken(int)));
 
         signalMapperMoveUp = new QSignalMapper(p);
-        connect(signalMapperMoveUp, SIGNAL(mapped(QWidget *)), p, SLOT(moveUpToken(QWidget *)));
+        connect(signalMapperMoveUp, SIGNAL(mapped(QWidget*)), p, SLOT(moveUpToken(QWidget *)));
         signalMapperMoveDown = new QSignalMapper(p);
-        connect(signalMapperMoveDown, SIGNAL(mapped(QWidget *)), p, SLOT(moveDownToken(QWidget *)));
+        connect(signalMapperMoveDown, SIGNAL(mapped(QWidget*)), p, SLOT(moveDownToken(QWidget *)));
         signalMapperRemove = new QSignalMapper(p);
-        connect(signalMapperRemove, SIGNAL(mapped(QWidget *)), p, SLOT(removeToken(QWidget *)));
+        connect(signalMapperRemove, SIGNAL(mapped(QWidget*)), p, SLOT(removeToken(QWidget *)));
 
     }
 

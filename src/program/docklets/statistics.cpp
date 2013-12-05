@@ -160,10 +160,10 @@ void Statistics::setSelectionModel(const QItemSelectionModel *selectionModel)
 {
     /// unregister from update notifications of selection models no longer used
     if (d->selectionModel != NULL && selectionModel != d->selectionModel)
-        disconnect(d->selectionModel, SIGNAL(selectionChanged(QItemSelection, QItemSelection)), this, SLOT(update()));
+        disconnect(d->selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(update()));
     /// register to update notifications of selection models to be used
     if (selectionModel != NULL && selectionModel != d->selectionModel)
-        connect(selectionModel, SIGNAL(selectionChanged(QItemSelection, QItemSelection)), this, SLOT(update()));
+        connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(update()));
 
     d->selectionModel = selectionModel;
     update();

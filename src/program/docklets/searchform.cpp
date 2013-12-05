@@ -158,8 +158,8 @@ public:
 
         enginesList = new QListWidget(listContainer);
         layout->addWidget(enginesList, 0, 0, 1, 1);
-        connect(enginesList, SIGNAL(itemChanged(QListWidgetItem *)), p, SLOT(itemCheckChanged(QListWidgetItem *)));
-        connect(enginesList, SIGNAL(currentItemChanged(QListWidgetItem *, QListWidgetItem *)), p, SLOT(enginesListCurrentChanged(QListWidgetItem *, QListWidgetItem *)));
+        connect(enginesList, SIGNAL(itemChanged(QListWidgetItem*)), p, SLOT(itemCheckChanged(QListWidgetItem *)));
+        connect(enginesList, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)), p, SLOT(enginesListCurrentChanged(QListWidgetItem *, QListWidgetItem *)));
         enginesList->setSelectionMode(QAbstractItemView::NoSelection);
 
         actionOpenHomepage = new KAction(KIcon("internet-web-browser"), i18n("Go to Homepage"), p);
@@ -254,7 +254,7 @@ public:
         itemToOnlineSearch.insert(item, engine);
         connect(engine, SIGNAL(foundEntry(QSharedPointer<Entry>)), p, SLOT(foundEntry(QSharedPointer<Entry>)));
         connect(engine, SIGNAL(stoppedSearch(int)), p, SLOT(stoppedSearch(int)));
-        connect(engine, SIGNAL(progress(int, int)), p, SLOT(updateProgress(int, int)));
+        connect(engine, SIGNAL(progress(int,int)), p, SLOT(updateProgress(int, int)));
     }
 
     void switchToSearch() {

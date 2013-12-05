@@ -55,7 +55,7 @@ File *FileImporterPDF::load(QIODevice *iodevice)
             QByteArray data = file->data();
             QBuffer buffer(&data);
             FileImporterBibTeX bibTeXimporter;
-            connect(&bibTeXimporter, SIGNAL(progress(int, int)), this, SIGNAL(progress(int, int)));
+            connect(&bibTeXimporter, SIGNAL(progress(int,int)), this, SIGNAL(progress(int,int)));
             buffer.open(QIODevice::ReadOnly);
             result = bibTeXimporter.load(&buffer);
             buffer.close();
