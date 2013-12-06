@@ -51,7 +51,7 @@ bool FileExporterRIS::save(QIODevice *iodevice, const File *bibtexfile, QStringL
     m_cancelFlag = false;
     QTextStream stream(iodevice);
 
-    for (File::ConstIterator it = bibtexfile->constBegin(); it != bibtexfile->constEnd() && result && !m_cancelFlag; it++) {
+    for (File::ConstIterator it = bibtexfile->constBegin(); it != bibtexfile->constEnd() && result && !m_cancelFlag; ++it) {
         const QSharedPointer<Entry> entry = (*it).dynamicCast<Entry>();
         if (!entry.isNull()) {
 //                 FIXME Entry *myEntry = bibtexfile->completeReferencedFieldsConst( entry );
@@ -95,7 +95,7 @@ bool FileExporterRIS::writeEntry(QTextStream &stream, const Entry *entry, const 
 
     QString year, month;
 
-    for (Entry::ConstIterator it = entry->constBegin(); result && it != entry->constEnd(); it++) {
+    for (Entry::ConstIterator it = entry->constBegin(); result && it != entry->constEnd(); ++it) {
         const QString key = it.key();
         const Value value = it.value();
         QString plainText = PlainTextValue::text(value, bibtexfile);

@@ -209,7 +209,7 @@ public:
             iodevice->putChar('\n');
         } else if (quoteComment == Preferences::qcPercentSign) {
             QStringList commentLines = text.split('\n', QString::SkipEmptyParts);
-            for (QStringList::Iterator it = commentLines.begin(); it != commentLines.end(); it++) {
+            for (QStringList::Iterator it = commentLines.begin(); it != commentLines.end(); ++it) {
                 const QByteArray line = iconvLaTeX->encode(*it);
                 iodevice->putChar('%');
                 if (line.length() > 0 && line[0] != '%') {
@@ -258,8 +258,8 @@ public:
             addBrackets = false;
             int count = 0;
             for (int i = text.length() - 2; !addBrackets && i >= 1; --i)
-                if (text[i] == '{')++count;
-                else if (text[i] == '}')--count;
+                if (text[i] == '{') ++count;
+                else if (text[i] == '}') --count;
                 else if (count == 0) addBrackets = true;
         }
 
@@ -334,7 +334,7 @@ bool FileExporterBibTeX::save(QIODevice *iodevice, const File *bibtexfile, QStri
 
     /// Memorize which entries are used in a crossref field
     QStringList crossRefIdList;
-    for (File::ConstIterator it = bibtexfile->constBegin(); it != bibtexfile->constEnd() && result && !d->cancelFlag; it++) {
+    for (File::ConstIterator it = bibtexfile->constBegin(); it != bibtexfile->constEnd() && result && !d->cancelFlag; ++it) {
         QSharedPointer<const Entry> entry = (*it).dynamicCast<const Entry>();
         if (!entry.isNull()) {
             const QString crossRef = PlainTextValue::text(entry->value(Entry::ftCrossRef));
@@ -344,7 +344,7 @@ bool FileExporterBibTeX::save(QIODevice *iodevice, const File *bibtexfile, QStri
     }
 
     bool allPreamblesAndMacrosProcessed = false;
-    for (File::ConstIterator it = bibtexfile->constBegin(); it != bibtexfile->constEnd() && result && !d->cancelFlag; it++) {
+    for (File::ConstIterator it = bibtexfile->constBegin(); it != bibtexfile->constEnd() && result && !d->cancelFlag; ++it) {
         QSharedPointer<const Element> element = (*it);
         QSharedPointer<const Entry> entry = element.dynamicCast<const Entry>();
 
@@ -355,7 +355,7 @@ bool FileExporterBibTeX::save(QIODevice *iodevice, const File *bibtexfile, QStri
             if (!allPreamblesAndMacrosProcessed) {
                 /// Guarantee that all macros and the preamble are written
                 /// before the first entry (@article, ...) is written
-                for (File::ConstIterator msit = it + 1; msit != bibtexfile->constEnd() && result && !d->cancelFlag; msit++) {
+                for (File::ConstIterator msit = it + 1; msit != bibtexfile->constEnd() && result && !d->cancelFlag; ++msit) {
                     QSharedPointer<const Preamble> preamble = (*msit).dynamicCast<const Preamble>();
                     if (!preamble.isNull()) {
                         result &= d->writePreamble(iodevice, *preamble);
