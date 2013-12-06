@@ -127,7 +127,7 @@ protected:
     * @see handleErrors(KJob*)
     * @param newUrl will be set to the new URL if reply contains a redirection, otherwise reply's original URL
     */
-    bool handleErrors(QNetworkReply *reply, QUrl &newUrl);
+    bool handleErrors(QNetworkReply *reply, KUrl &newUrl);
 
     /**
      * Encode a text to be HTTP URL save, e.g. replace '=' by '%3D'.

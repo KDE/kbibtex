@@ -128,7 +128,7 @@ void OnlineSearchScienceDirect::doneFetchingStartPage()
     if (d->runningJobs != 0)
         kWarning() << "In OnlineSearchScienceDirect::doneFetchingStartPage: Some jobs are running (" << d->runningJobs << "!= 0 )";
 
-    QUrl redirUrl;
+    KUrl redirUrl;
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
     if (handleErrors(reply, redirUrl)) {
         const QString htmlText = reply->readAll();

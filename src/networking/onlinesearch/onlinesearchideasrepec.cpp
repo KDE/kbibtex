@@ -186,7 +186,7 @@ void OnlineSearchIDEASRePEc::downloadPublicationDone()
             ++it;
         }
 
-        const QUrl url = QUrl(QLatin1String("http://ideas.repec.org/cgi-bin/refs.cgi"));
+        const KUrl url = KUrl(QLatin1String("http://ideas.repec.org/cgi-bin/refs.cgi"));
         QNetworkRequest request(url);
         request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
         reply = InternalNetworkAccessManager::self()->post(request, body.toUtf8());

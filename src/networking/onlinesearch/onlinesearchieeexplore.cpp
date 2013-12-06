@@ -124,7 +124,7 @@ void OnlineSearchIEEEXplore::doneFetchingXML()
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
-    QUrl redirUrl;
+    KUrl redirUrl;
     if (handleErrors(reply, redirUrl)) {
         if (redirUrl.isValid()) {
             /// redirection to another url

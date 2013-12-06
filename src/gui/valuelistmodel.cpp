@@ -23,6 +23,7 @@
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <KColorScheme>
+#include <KLineEdit>
 
 #include <QApplication>
 #include <QTextDocument>
@@ -30,7 +31,6 @@
 #include <QListView>
 #include <QGridLayout>
 #include <QStringListModel>
-#include <QLineEdit>
 #include <QPainter>
 #include <QFrame>
 #include <QLayout>
@@ -84,7 +84,7 @@ QSize ValueListDelegate::sizeHint(const QStyleOptionViewItem &option, const QMod
 
 void ValueListDelegate::commitAndCloseEditor()
 {
-    QLineEdit *editor = qobject_cast<QLineEdit *>(sender());
+    KLineEdit *editor = qobject_cast<KLineEdit *>(sender());
     emit commitData(editor);
     emit closeEditor(editor);
 }

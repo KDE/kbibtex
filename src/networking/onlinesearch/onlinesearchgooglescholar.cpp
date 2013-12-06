@@ -163,7 +163,7 @@ void OnlineSearchGoogleScholar::doneFetchingStartPage()
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
-    QUrl newDomainUrl;
+    KUrl newDomainUrl;
     if (handleErrors(reply, newDomainUrl)) {
         if (newDomainUrl.isValid() && newDomainUrl != reply->url()) {
             /// following redirection to country-specific domain

@@ -18,7 +18,6 @@
 #include <typeinfo>
 
 #include <QLayout>
-#include <QTextEdit>
 #include <QBuffer>
 #include <QLabel>
 #include <QTreeWidget>
@@ -37,6 +36,7 @@
 #include <KDebug>
 #include <KMimeType>
 #include <KRun>
+#include <KTextEdit>
 
 #include "idsuggestions.h"
 #include "fileinfo.h"
@@ -1077,11 +1077,11 @@ void PreambleWidget::createGUI()
 }
 
 
-class SourceWidget::SourceWidgetTextEdit : public QTextEdit
+class SourceWidget::SourceWidgetTextEdit : public KTextEdit
 {
 public:
     SourceWidgetTextEdit(QWidget *parent)
-            : QTextEdit(parent) {
+            : KTextEdit(parent) {
         // nothing
     }
 
@@ -1093,7 +1093,7 @@ protected:
         if (file->count() == 1)
             document()->setPlainText(exporter.toString(file->first(), file));
         else
-            QTextEdit::dropEvent(event);
+            KTextEdit::dropEvent(event);
     }
 };
 

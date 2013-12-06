@@ -18,11 +18,11 @@
 #ifndef KBIBTEX_PROGRAM_DOCUMENTLIST_H
 #define KBIBTEX_PROGRAM_DOCUMENTLIST_H
 
-#include <QTabWidget>
 #include <QListView>
 #include <QAbstractListModel>
 #include <QStyledItemDelegate>
 
+#include <KTabWidget>
 #include <KListWidget>
 #include <KUrl>
 
@@ -88,7 +88,7 @@ private:
     DocumentListViewPrivate *d;
 };
 
-class DocumentList : public QTabWidget
+class DocumentList : public KTabWidget
 {
     Q_OBJECT
 

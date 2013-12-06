@@ -248,7 +248,7 @@ void FindPDF::processGeneralHTML(QNetworkReply *reply, const QString &text)
     bool gotLink = false;
     for (int i = 0; !gotLink && i < 4; ++i) {
         if (anchorRegExp[i].indexIn(text) >= 0) {
-            QUrl url = QUrl::fromEncoded(anchorRegExp[i].cap(1).toLatin1());
+            const KUrl url = KUrl::fromEncoded(anchorRegExp[i].cap(1).toLatin1());
             queueUrl(reply->url().resolved(url), term, origin, depth - 1);
             gotLink = true;
         }
@@ -258,7 +258,7 @@ void FindPDF::processGeneralHTML(QNetworkReply *reply, const QString &text)
         /// this is only the last resort:
         /// to follow the first link found in the HTML document
         if (anchorRegExp[4].indexIn(text) >= 0) {
-            QUrl url = QUrl::fromEncoded(anchorRegExp[4].cap(1).toLatin1());
+            const KUrl url = KUrl::fromEncoded(anchorRegExp[4].cap(1).toLatin1());
             queueUrl(reply->url().resolved(url), term, origin, depth - 1);
         }
     }
