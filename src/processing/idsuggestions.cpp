@@ -154,7 +154,7 @@ public:
         case '"': return token.mid(1);
         }
 
-        return QString::null;
+        return QString();
     }
 
     QString defaultFormatString() const {
@@ -167,7 +167,7 @@ public:
 };
 
 const QString IdSuggestions::keyDefaultFormatString = QLatin1String("DefaultFormatString");
-const QString IdSuggestions::defaultDefaultFormatString = QString::null;
+const QString IdSuggestions::defaultDefaultFormatString = QString();
 const QString IdSuggestions::keyFormatStringList = QLatin1String("FormatStringList");
 const QStringList IdSuggestions::defaultFormatStringList = QStringList() << QLatin1String("A") << QLatin1String("A2|y") << QLatin1String("A3|y") << QLatin1String("A4|y|\":|T5") << QLatin1String("al|\":|T") << QLatin1String("al|y") << QLatin1String("al|Y") << QLatin1String("Al\"-|\"-|y") << QLatin1String("Al\"+|Y") << QLatin1String("al|y|T") << QLatin1String("al|Y|T3") << QLatin1String("al|Y|T3l") << QLatin1String("a|\":|Y|\":|T1") << QLatin1String("a|y") << QLatin1String("A|\":|Y");
 const QString IdSuggestions::configGroupName = QLatin1String("IdSuggestions");
@@ -258,7 +258,7 @@ QStringList IdSuggestions::formatStrToHuman(const QString &formatStr) const
                 break;
             }
 
-            if (info.inBetween != QString::null) text.append(i18n(", with '%1' in between", info.inBetween));
+            if (!info.inBetween.isEmpty()) text.append(i18n(", with '%1' in between", info.inBetween));
         } else if (token[0] == 'y') text.append(i18n("Year (2 digits)"));
         else if (token[0] == 'Y') text.append(i18n("Year (4 digits)"));
         else if (token[0] == 't' || token[0] == 'T') {
@@ -287,7 +287,7 @@ QStringList IdSuggestions::formatStrToHuman(const QString &formatStr) const
                 break;
             }
 
-            if (info.inBetween != QString::null) text.append(i18n(", with '%1' in between", info.inBetween));
+            if (!info.inBetween.isEmpty()) text.append(i18n(", with '%1' in between", info.inBetween));
             if (token[0] == 'T') text.append(i18n(", small words removed"));
         } else if (token[0] == '"') text.append(i18n("Text: '%1'", token.mid(1)));
         else text.append("?");
@@ -305,7 +305,7 @@ struct IdSuggestions::IdSuggestionTokenInfo IdSuggestions::evalToken(const QStri
     result.startWord = 0;
     result.endWord = 0x00ffffff;
     result.caseChange = IdSuggestions::ccNoChange;
-    result.inBetween = QString::null;
+    result.inBetween = QString();
 
     if (token.length() > pos) {
         int dv = token[pos].digitValue();

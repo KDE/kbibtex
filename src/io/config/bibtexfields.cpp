@@ -72,7 +72,6 @@ public:
                 continue;
 
             fd->upperCamelCaseAlt = configGroup.readEntry("UpperCamelCaseAlt", "");
-            if (fd->upperCamelCaseAlt.isEmpty()) fd->upperCamelCaseAlt = QString::null;
 
             fd->label = configGroup.readEntry("Label", fd->upperCamelCase);
 
@@ -268,5 +267,5 @@ QString BibTeXFields::typeFlagToString(KBibTeX::TypeFlag typeFlag)
     if (typeFlag == KBibTeX::tfKeyword) return QLatin1String("Keyword");
     if (typeFlag == KBibTeX::tfReference) return QLatin1String("Reference");
     if (typeFlag == KBibTeX::tfVerbatim) return QLatin1String("Verbatim");
-    return QString::null;
+    return QString();
 }

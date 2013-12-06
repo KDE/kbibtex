@@ -47,7 +47,7 @@ QString FileExporter::toString(const QSharedPointer<const Element> element, cons
         }
     }
 
-    return QString::null;
+    return QString();
 }
 
 QString FileExporter::toString(const File *bibtexfile, QStringList *errorLog)
@@ -63,5 +63,5 @@ QString FileExporter::toString(const File *bibtexfile, QStringList *errorLog)
         }
     }
 
-    return QString::null;
+    return QString();
 }

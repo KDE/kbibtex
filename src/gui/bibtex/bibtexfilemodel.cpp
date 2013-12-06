@@ -377,10 +377,10 @@ QVariant BibTeXFileModel::entryData(const Entry *entry, const QString &raw, cons
         if (colorText.isEmpty()) return QVariant(text);
         return QVariant(colorText);
     } else {
-        QString text = QString::null;
+        QString text = QString();
         if (entry->contains(raw))
             text = PlainTextValue::text(entry->value(raw), m_bibtexFile).simplified();
-        else if (!rawAlt.isNull() && entry->contains(rawAlt))
+        else if (!rawAlt.isEmpty() && entry->contains(rawAlt))
             text = PlainTextValue::text(entry->value(rawAlt), m_bibtexFile).simplified();
 
         if (followCrossRef && text.isEmpty() && entry->contains(Entry::ftCrossRef)) {

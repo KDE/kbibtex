@@ -172,5 +172,5 @@ QString BibTeXEntries::label(const QString &name) const
         if (itName == iName || (!(itName = (*it).upperCamelCaseAlt.toLower()).isEmpty() && itName == iName))
             return (*it).label;
     }
-    return QString::null;
+    return QString();
 }

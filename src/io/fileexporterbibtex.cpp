@@ -175,7 +175,7 @@ public:
     bool writeMacro(QIODevice *iodevice, const Macro &macro) {
         BibTeXEntries *be = BibTeXEntries::self();
 
-        QString text = p->internalValueToBibTeX(macro.value(), QString::null, leUTF8);
+        QString text = p->internalValueToBibTeX(macro.value(), QString(), leUTF8);
         if (protectCasing)
             addProtectiveCasing(text);
 
@@ -238,7 +238,7 @@ public:
         iodevice->putChar('{');
         /// Remember: strings from preamble do not get encoded,
         /// may contain raw LaTeX commands and code
-        iodevice->write(iconvLaTeX->encode(p->internalValueToBibTeX(preamble.value(), QString::null, leRaw)));
+        iodevice->write(iconvLaTeX->encode(p->internalValueToBibTeX(preamble.value(), QString(), leRaw)));
         iodevice->putChar('}');
         iodevice->putChar('\n');
         iodevice->putChar('\n');
@@ -457,7 +457,7 @@ QString FileExporterBibTeX::valueToBibTeX(const Value &value, const QString &key
 QString FileExporterBibTeX::internalValueToBibTeX(const Value &value, const QString &key, UseLaTeXEncoding useLaTeXEncoding)
 {
     if (value.isEmpty())
-        return QString::null;
+        return QString();
 
     EncoderLaTeX *encoder = useLaTeXEncoding == leLaTeX ? EncoderLaTeX::instance() : (useLaTeXEncoding == leUTF8 ? EncoderUTF8::instance() : NULL);
 

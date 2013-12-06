@@ -35,7 +35,7 @@ FileImporter::~FileImporter()
 
 File *FileImporter::fromString(const QString &text)
 {
-    if (text.isNull() || text.isEmpty())
+    if (text.isEmpty())
         return NULL;
 
     QBuffer buffer;

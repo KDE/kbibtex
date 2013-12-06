@@ -83,7 +83,7 @@ public:
             }
         }
 
-        return QString::null;
+        return QString();
     }
 
     QString mainUrlForBibTeXEntry(const QString &htmlText, int bibLinkPos) {
@@ -105,7 +105,7 @@ public:
             }
         }
 
-        return QString::null;
+        return QString();
     }
 };
 

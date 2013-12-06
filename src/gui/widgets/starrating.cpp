@@ -49,7 +49,7 @@ StarRating::StarRating(int maxNumberOfStars, QWidget *parent)
 
     layout->addStretch(1);
 
-    m_clearButton = new KPushButton(KIcon("edit-clear-locationbar-rtl"), QString::null, this);
+    m_clearButton = new KPushButton(KIcon("edit-clear-locationbar-rtl"), QString(), this);
     layout->addWidget(m_clearButton, 0, Qt::AlignRight | Qt::AlignVCenter);
     connect(m_clearButton, SIGNAL(clicked()), this, SLOT(clear()));
 

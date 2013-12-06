@@ -38,7 +38,7 @@ private:
 
 public:
     explicit ValueListDelegate(QTreeView *parent = NULL)
-            : QStyledItemDelegate(parent), m_fieldName(QString::null), m_parent(parent) {}
+            : QStyledItemDelegate(parent), m_fieldName(QString()), m_parent(parent) {}
 
     QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &, const QModelIndex &index) const;
     void setEditorData(QWidget *editor, const QModelIndex &index) const;

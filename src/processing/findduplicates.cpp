@@ -531,7 +531,7 @@ bool MergeDuplicates::mergeDuplicateEntries(const QList<EntryClique *> &entryCli
         /// which have been remove (not added) 10 lines below
         QSet<QString> coveredFields;
 
-        Entry *mergedEntry = new Entry(QString::null, QString::null);
+        Entry *mergedEntry = new Entry(QString(), QString());
         foreach(const QString &field, entryClique->fieldList()) {
             coveredFields << field;
             if (field == QLatin1String("^id"))
@@ -589,7 +589,7 @@ bool MergeDuplicates::mergeDuplicateEntriesAuto(const QList<EntryClique *> &entr
      */
     foreach(EntryClique *entryClique, entryCliques) {
         /// Create a new entry which will eventually replace the clique's Entries
-        Entry *mergedEntry = new Entry(QString::null, QString::null);
+        Entry *mergedEntry = new Entry(QString(), QString());
 
         /// Sort entries in clique according into sortedEntries
         /// according to values in field sortCriteriumField and

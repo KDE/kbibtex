@@ -109,7 +109,7 @@ public:
     @param lastName Last name of a person. Example: "Smith"
     @param suffix Suffix after a name. Example: "jr."
     */
-    Person(const QString &firstName, const QString &lastName, const QString &suffix = QString::null);
+    Person(const QString &firstName, const QString &lastName, const QString &suffix = QString());
     Person(const Person &other);
 
     QString firstName() const;
@@ -120,7 +120,7 @@ public:
     bool containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const;
     bool operator==(const ValueItem &other) const;
 
-    static QString transcribePersonName(const QString &formatting, const QString &firstName, const QString &lastName, const QString &suffix = QString::null);
+    static QString transcribePersonName(const QString &formatting, const QString &firstName, const QString &lastName, const QString &suffix = QString());
     static QString transcribePersonName(const Person *person, const QString &formatting);
 
 private:

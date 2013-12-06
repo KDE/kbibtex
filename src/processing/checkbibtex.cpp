@@ -55,7 +55,7 @@ CheckBibTeX::CheckBibTeXResult CheckBibTeX::checkBibTeX(QSharedPointer<Entry> &e
     dummyFile << entry;
 
     /// fetch and inser crossref'ed entry
-    QString crossRefStr = QString::null;
+    QString crossRefStr = QString();
     Value crossRefVal = entry->value(Entry::ftCrossRef);
     if (!crossRefVal.isEmpty() && file != NULL) {
         crossRefStr = PlainTextValue::text(crossRefVal, file);
@@ -63,7 +63,7 @@ CheckBibTeX::CheckBibTeXResult CheckBibTeX::checkBibTeX(QSharedPointer<Entry> &e
         if (!crossRefDest.isNull())
             dummyFile << crossRefDest;
         else
-            crossRefStr = QString::null; /// memorize crossref'ing failed
+            crossRefStr.clear(); /// memorize crossref'ing failed
     }
 
     /// include all macro definitions, in case they are referenced
@@ -148,7 +148,7 @@ CheckBibTeX::CheckBibTeXResult CheckBibTeX::checkBibTeX(QSharedPointer<Entry> &e
         KMessageBox::information(parent, i18n("<qt><p>The following warnings were found:</p><ul><li>%1</li></ul></qt>", warnings.join("</li><li>")));
         result = BibTeXError;
     } else
-        KMessageBox::information(parent, i18n("No warnings or errors were found.%1", crossRefStr.isNull() ? QLatin1String("") : i18n("\n\nSome fields missing in this entry were taken from the crossref'ed entry '%1'.", crossRefStr)));
+        KMessageBox::information(parent, i18n("No warnings or errors were found.%1", crossRefStr.isEmpty() ? QString() : i18n("\n\nSome fields missing in this entry were taken from the crossref'ed entry '%1'.", crossRefStr)));
 
     return result;
 }

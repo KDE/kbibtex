@@ -37,7 +37,7 @@ public:
      * @param text comment's textual content
      * @param useCommand mark this comment to use BibTeX's comment command
      */
-    explicit Comment(const QString &text = QString::null, bool useCommand = false);
+    explicit Comment(const QString &text = QString(), bool useCommand = false);
 
     /**
      * Copy constructor cloning another comment object.

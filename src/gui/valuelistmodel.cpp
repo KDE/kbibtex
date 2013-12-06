@@ -467,7 +467,7 @@ bool ValueListModel::searchAndReplaceValueInModel(const QModelIndex &index, cons
         values[row].text = newText;
         values[row].value = newValue;
         const QSharedPointer<Person> person = newValue.first().dynamicCast<Person>();
-        values[row].sortBy = person.isNull() ? QString::null : person->lastName() + QLatin1String(" ") + person->firstName();
+        values[row].sortBy = person.isNull() ? QString() : person->lastName() + QLatin1String(" ") + person->firstName();
     } else {
         /// The user-entered text existed before
 

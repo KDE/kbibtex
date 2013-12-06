@@ -55,7 +55,7 @@ public:
     }
 
     QString locateConfiguredLyXPipe() {
-        QString result = QString::null;
+        QString result = QString();
 
         /// First, check if automatic detection is disabled.
         /// In this case, read the LyX pipe's path from configuration
@@ -87,7 +87,7 @@ const bool LyX::defaultUseAutomaticLyXPipeDetection =
 #else // Q_WS_WIN
     true;
 #endif // Q_WS_WIN
-const QString LyX::defaultLyXPipePath = QString::null;
+const QString LyX::defaultLyXPipePath = QString();
 const QString LyX::configGroupName = QLatin1String("LyXPipe");
 
 
@@ -151,7 +151,7 @@ QString LyX::guessLyXPipeLocation()
 {
     struct stat fileInfo;
     const QStringList nameFilter = QStringList() << QLatin1String("*lyxpipe*in*");
-    QString result = QString::null;
+    QString result = QString();
 
     /// Start with scanning the user's home directory for pipes
     QDir home = QDir::home();

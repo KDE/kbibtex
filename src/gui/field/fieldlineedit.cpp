@@ -314,7 +314,7 @@ public:
 
         bool result = true;
         EncoderLaTeX *enc = EncoderLaTeX::instance();
-        QString rawText = QString::null;
+        QString rawText = QString();
         const QSharedPointer<ValueItem> first = value.first();
 
         const QSharedPointer<PlainText> plainText = first.dynamicCast<PlainText>();
@@ -384,7 +384,7 @@ public:
 
     void updateURL(const QString &text) {
         QList<KUrl> urls;
-        FileInfo::urlsInText(text, FileInfo::TestExistanceYes, file != NULL && file->property(File::Url).toUrl().isValid() ? KUrl(file->property(File::Url).toUrl()).directory() : QString::null, urls);
+        FileInfo::urlsInText(text, FileInfo::TestExistanceYes, file != NULL && file->property(File::Url).toUrl().isValid() ? KUrl(file->property(File::Url).toUrl()).directory() : QString(), urls);
         if (!urls.isEmpty() && urls.first().isValid())
             urlToOpen = urls.first();
         else

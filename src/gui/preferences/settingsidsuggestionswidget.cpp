@@ -64,7 +64,7 @@ public:
         return exampleBibTeXEntry;
     }
 
-    void setFormatStringList(const QStringList &formatStringList, const QString &defaultString = QString::null) {
+    void setFormatStringList(const QStringList &formatStringList, const QString &defaultString = QString()) {
         m_formatStringList = formatStringList;
         m_defaultFormatStringRow = m_formatStringList.indexOf(defaultString);
         reset();
@@ -78,7 +78,7 @@ public:
         if (m_defaultFormatStringRow >= 0 && m_defaultFormatStringRow < m_formatStringList.length())
             return m_formatStringList[m_defaultFormatStringRow];
         else
-            return QString::null;
+            return QString();
     }
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const {

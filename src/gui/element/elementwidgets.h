@@ -95,7 +95,7 @@ private:
     QMap<QString, FieldInput *> bibtexKeyToWidget;
 
     void createGUI();
-    void layoutGUI(bool forceVisible, const QString &entryType = QString::null);
+    void layoutGUI(bool forceVisible, const QString &entryType = QString());
 
 public:
     EntryConfiguredWidget(QSharedPointer<EntryTabLayout> &entryTabLayout, QWidget *parent);

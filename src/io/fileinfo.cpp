@@ -173,7 +173,7 @@ QList<KUrl> FileInfo::entryUrls(const Entry *entry, const KUrl &bibTeXUrl, TestE
     if (entry == NULL || entry->isEmpty())
         return result;
 
-    const QString baseDirectory = bibTeXUrl.isValid() ? bibTeXUrl.directory() : QString::null;
+    const QString baseDirectory = bibTeXUrl.isValid() ? bibTeXUrl.directory() : QString();
 
     for (Entry::ConstIterator it = entry->constBegin(); it != entry->constEnd(); ++it) {
         /// skip abstracts, they contain sometimes strange text fragments
@@ -226,7 +226,7 @@ QString FileInfo::pdfToText(const QString &pdfFilename)
     QString textFilename = QString(pdfFilename).replace(invalidChars, "").append(QLatin1String(".txt")).prepend(KStandardDirs::locateLocal("cache", "pdftotext/"));
 
     /// Initialize return value
-    QString text = QString::null;
+    QString text = QString();
 
     /// First, check if there is a cache text file
     if (QFileInfo(textFilename).exists()) {
@@ -240,7 +240,7 @@ QString FileInfo::pdfToText(const QString &pdfFilename)
     }
 
     /// Either no cache text file existed or could not load text from it
-    if (text.isNull()) {
+    if (text.isEmpty()) {
         /// Load PDF file through Poppler
         Poppler::Document *doc = Poppler::Document::load(pdfFilename);
         if (doc != NULL) {

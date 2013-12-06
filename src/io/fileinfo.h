@@ -86,7 +86,7 @@ public:
      * Makes use of Poppler to load and parse the file. All text
      * will be cached and loaded from cache if possible.
      * @param pdfFilename PDF file to load and extract text from
-     * @return extracted plain text, either directly from PDF file or from cache OR QString::null if there was an error
+     * @return extracted plain text, either directly from PDF file or from cache OR QString() if there was an error
      */
     static QString pdfToText(const QString &pdfFilename);
 

@@ -33,7 +33,7 @@ class Comment;
 class KBIBTEXIO_EXPORT FileExporterXSLT : public FileExporter
 {
 public:
-    explicit FileExporterXSLT(const QString &xsltFilename = QString::null);
+    explicit FileExporterXSLT(const QString &xsltFilename = QString());
     ~FileExporterXSLT();
 
     bool save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog = NULL);

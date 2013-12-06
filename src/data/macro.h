@@ -40,7 +40,7 @@ public:
      * @param key macro's key
      * @param value macro's value
      */
-    explicit Macro(const QString &key = QString::null, const Value &value = Value());
+    explicit Macro(const QString &key = QString(), const Value &value = Value());
 
     /**
      * Copy constructor cloning another macro object.

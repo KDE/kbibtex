@@ -63,7 +63,7 @@ QStringList OnlineSearchQueryFormAbstract::authorLastNames(const Entry &entry)
 }
 
 OnlineSearchAbstract::OnlineSearchAbstract(QWidget *parent)
-        : QObject(parent), m_name(QString::null)
+        : QObject(parent), m_name(QString())
 {
     m_parent = parent;
 }
@@ -92,7 +92,7 @@ KIcon OnlineSearchAbstract::icon(QListWidgetItem *listWidgetItem)
 QString OnlineSearchAbstract::name()
 {
     static const QRegExp invalidChars("[^-a-z0-9]", Qt::CaseInsensitive);
-    if (m_name.isNull())
+    if (m_name.isEmpty())
         m_name = label().replace(invalidChars, QLatin1String(""));
     return m_name;
 }
@@ -293,15 +293,15 @@ QMap<QString, QString> OnlineSearchAbstract::formParameters(const QString &htmlT
     p = htmlText.indexOf(selectTagBegin, startPos, Qt::CaseInsensitive);
     while (p > startPos && p < endPos) {
         /// get "name" attribute from "select" tag
-        QString selectName = selectNameRegExp.indexIn(htmlText, p) == p ? selectNameRegExp.cap(1) : QString::null;
+        const QString selectName = selectNameRegExp.indexIn(htmlText, p) == p ? selectNameRegExp.cap(1) : QString();
 
         /// "select" tag contains one or several "option" tags, search all
         int popt = htmlText.indexOf(optionTagBegin, p, Qt::CaseInsensitive);
         int endSelect = htmlText.indexOf(selectTagEnd, p, Qt::CaseInsensitive);
         while (popt > p && popt < endSelect) {
             /// get "value" attribute from "option" tag
-            QString optionValue = optionValueRegExp.indexIn(htmlText, popt) == popt ? optionValueRegExp.cap(1) : QString::null;
-            if (!selectName.isNull() && !optionValue.isNull()) {
+            const QString optionValue = optionValueRegExp.indexIn(htmlText, popt) == popt ? optionValueRegExp.cap(1) : QString();
+            if (!selectName.isEmpty() && !optionValue.isEmpty()) {
                 /// if this "option" tag is "selected", store value
                 if (htmlText.indexOf(optionSelectedRegExp, popt) == popt) {
                     result[selectName] = optionValue;

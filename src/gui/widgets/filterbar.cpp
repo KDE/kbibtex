@@ -67,7 +67,7 @@ public:
             result.terms << comboBoxFilterText->lineEdit()->text();
         else /// any or every word
             result.terms = comboBoxFilterText->lineEdit()->text().split(QRegExp(QLatin1String("\\s+")), QString::SkipEmptyParts);
-        result.field = comboBoxField->currentIndex() == 0 ? QString::null : comboBoxField->itemData(comboBoxField->currentIndex(), Qt::UserRole).toString();
+        result.field = comboBoxField->currentIndex() == 0 ? QString() : comboBoxField->itemData(comboBoxField->currentIndex(), Qt::UserRole).toString();
         result.searchPDFfiles = buttonSearchPDFfiles->isChecked();
 
         return result;

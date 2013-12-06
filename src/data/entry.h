@@ -123,7 +123,7 @@ public:
      * Both type and id can be set and retrieved later.
      * @param type type of this entry
      */
-    explicit Entry(const QString &type = QString::null, const QString &id = QString::null);
+    explicit Entry(const QString &type = QString(), const QString &id = QString());
 
     /**
      * Copy constructor cloning another entry object.

@@ -299,7 +299,7 @@ void FindPDF::processSpringerLink(QNetworkReply *reply, const QString &text)
         if (!ok) depth = 0;
 
         QUrl url(fulltextPDFlink.cap(1));
-        queueUrl(reply->url().resolved(url), QString::null, QLatin1String("springerlink"), depth - 1);
+        queueUrl(reply->url().resolved(url), QString(), QLatin1String("springerlink"), depth - 1);
     }
 }
 
@@ -313,7 +313,7 @@ void FindPDF::processCiteSeerX(QNetworkReply *reply, const QString &text)
         if (!ok) depth = 0;
 
         QUrl url(QUrl::fromEncoded(downloadPDFlink.cap(1).toLatin1()));
-        queueUrl(reply->url().resolved(url), QString::null, QLatin1String("citeseerx"), depth - 1);
+        queueUrl(reply->url().resolved(url), QString(), QLatin1String("citeseerx"), depth - 1);
     }
 }
 

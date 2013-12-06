@@ -470,7 +470,7 @@ QString FileImporterBibTeX::readString(bool &isStringKey)
 
     if (!skipWhiteChar()) {
         /// Some error occurred while reading from data stream
-        return QString::null;
+        return QString();
     }
 
     switch (m_nextChar.toLatin1()) {
@@ -498,7 +498,7 @@ QString FileImporterBibTeX::readSimpleString(const QChar &until)
 
     if (!skipWhiteChar()) {
         /// Some error occurred while reading from data stream
-        return QString::null;
+        return QString();
     }
 
     while (!m_nextChar.isNull()) {
@@ -527,7 +527,7 @@ QString FileImporterBibTeX::readQuotedString()
 
     Q_ASSERT_X(m_nextChar == QLatin1Char('"'), "QString FileImporterBibTeX::readQuotedString()", "m_nextChar is not '\"'");
 
-    if (!readChar()) return QString::null;
+    if (!readChar()) return QString();
 
     while (!m_nextChar.isNull()) {
         if (m_nextChar == QLatin1Char('"') && m_prevChar != QLatin1Char('\\'))
@@ -535,10 +535,10 @@ QString FileImporterBibTeX::readQuotedString()
         else
             result.append(m_nextChar);
 
-        if (!readChar()) return QString::null;
+        if (!readChar()) return QString();
     }
 
-    if (!readChar()) return QString::null;
+    if (!readChar()) return QString();
     return result;
 }
 
@@ -551,7 +551,7 @@ QString FileImporterBibTeX::readBracketString()
     Q_ASSERT_X(!closingBracket.isNull(), "QString FileImporterBibTeX::readBracketString()", "openingBracket==m_nextChar is neither '{' nor '('");
     int counter = 1;
 
-    if (!readChar()) return QString::null;
+    if (!readChar()) return QString();
 
     while (!m_nextChar.isNull()) {
         if (m_nextChar == openingBracket && m_prevChar != backslash)
@@ -564,10 +564,10 @@ QString FileImporterBibTeX::readBracketString()
         } else
             result.append(m_nextChar);
 
-        if (!readChar()) return QString::null;
+        if (!readChar()) return QString();
     }
 
-    if (!readChar()) return QString::null;
+    if (!readChar()) return QString();
     return result;
 }
 
@@ -640,7 +640,7 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value &value, const QStr
                 if (KBibTeX::mendeleyFileRegExp.indexIn(rawText) >= 0)    {
                     const QString backslashLaTeX = QLatin1String("$\\backslash$");
                     QString filename = KBibTeX::mendeleyFileRegExp.cap(1);
-                    filename = filename.replace(backslashLaTeX, QString::null);
+                    filename = filename.replace(backslashLaTeX, QString());
                     if (filename.startsWith(QLatin1String("home/")) || filename.startsWith(QLatin1String("Users/"))) {
                         /// Mendeley doesn't have a slash at the beginning of absolute paths,
                         /// so, insert one
@@ -751,7 +751,7 @@ QString FileImporterBibTeX::readLine()
     QString result;
     while (m_nextChar != QLatin1Char('\n') && m_nextChar != QLatin1Char('\r') && readChar())
         result.append(m_nextChar);
-    if (!readChar()) return QString::null;
+    if (!readChar()) return QString();
     return result;
 }
 
@@ -861,7 +861,7 @@ void FileImporterBibTeX::parsePersonList(const QString &text, Value &value, Comm
     contextSensitiveSplit(text, tokens);
 
     int nameStart = 0;
-    QString prevToken = QString::null;
+    QString prevToken = QString();
     bool encounteredName = false;
     for (int i = 0; i < tokens.count(); ++i) {
         if (tokens[i] == tokenAnd) {
@@ -966,7 +966,7 @@ QSharedPointer<Person> FileImporterBibTeX::personFromTokenList(const QStringList
     }
     if (commaCount > 0) {
         if (comma != NULL) *comma = ccContainsComma;
-        return QSharedPointer<Person>(new Person(partC.isEmpty() ? partB.join(QChar(' ')) : partC.join(QChar(' ')), partA.join(QChar(' ')), partC.isEmpty() ? QString::null : partB.join(QChar(' '))));
+        return QSharedPointer<Person>(new Person(partC.isEmpty() ? partB.join(QChar(' ')) : partC.join(QChar(' ')), partA.join(QChar(' ')), partC.isEmpty() ? QString() : partB.join(QChar(' '))));
     }
 
     /**
@@ -1016,7 +1016,7 @@ QSharedPointer<Person> FileImporterBibTeX::personFromTokenList(const QStringList
     if (!partB.isEmpty()) {
         /// Name was actually like "Peter Ole van der Tuckwell",
         /// split into "Peter Ole" and "van der Tuckwell"
-        return QSharedPointer<Person>(new Person(partA.join(QChar(' ')), partB.join(QChar(' ')), partC.isEmpty() ? QString::null : partC.join(QChar(' '))));
+        return QSharedPointer<Person>(new Person(partA.join(QChar(' ')), partB.join(QChar(' ')), partC.isEmpty() ? QString() : partC.join(QChar(' '))));
     }
 
     kWarning() << "Don't know how to handle name" << tokens.join(QChar(' '));

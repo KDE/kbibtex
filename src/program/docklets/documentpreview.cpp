@@ -161,7 +161,7 @@ public:
         QHBoxLayout *innerLayout = new QHBoxLayout();
         layout->addLayout(innerLayout, 0);
 
-        onlyLocalFilesButton = new KPushButton(KIcon("applications-internet"), QString::null, p);
+        onlyLocalFilesButton = new KPushButton(KIcon("applications-internet"), QString(), p);
         onlyLocalFilesButton->setToolTip(i18n("Toggle between local files only and all documents including remote ones"));
         innerLayout->addWidget(onlyLocalFilesButton, 0);
         onlyLocalFilesButton->setCheckable(true);
@@ -172,7 +172,7 @@ public:
         urlComboBox = new KComboBox(false, p);
         innerLayout->addWidget(urlComboBox, 1);
 
-        externalViewerButton = new KPushButton(KIcon("document-open"), QString::null, p);
+        externalViewerButton = new KPushButton(KIcon("document-open"), QString(), p);
         externalViewerButton->setToolTip(i18n("Open in external program"));
         innerLayout->addWidget(externalViewerButton, 0);
         sp = externalViewerButton->sizePolicy();

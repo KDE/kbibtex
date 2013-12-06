@@ -503,7 +503,7 @@ QString PlainTextValue::text(const Value &value, const File *file, bool debug)
     QString result = "";
     for (Value::ConstIterator it = value.constBegin(); it != value.constEnd(); ++it) {
         QString nextText = text(**it, vit, file, debug);
-        if (!nextText.isNull()) {
+        if (!nextText.isEmpty()) {
             if (lastVit == VITPerson && vit == VITPerson)
                 result.append(" and ");
             else if (lastVit == VITKeyword && vit == VITKeyword)
@@ -532,7 +532,7 @@ QString PlainTextValue::text(const ValueItem &valueItem, const File *file, bool 
 
 QString PlainTextValue::text(const ValueItem &valueItem, ValueItemType &vit, const File * /*file*/, bool debug)
 {
-    QString result = QString::null;
+    QString result = QString();
     vit = VITOther;
 
     if (notificationListener == NULL)
@@ -613,5 +613,5 @@ void PlainTextValue::readConfiguration()
     personNameFormatting = configGroup.readEntry(Person::keyPersonNameFormatting, Person::defaultPersonNameFormatting);
 }
 
-QString PlainTextValue::personNameFormatting = QString::null;
+QString PlainTextValue::personNameFormatting = QString();
 PlainTextValue *PlainTextValue::notificationListener = NULL;

@@ -369,7 +369,7 @@ File *KBibTeXTest::loadFile(const QString &absoluteFilename, TestFile *currentTe
                 if (p != NULL) {
                     lastEntryLastAuthorLastName = p->lastName();
                 } else
-                    lastEntryLastAuthorLastName = QString::null;
+                    lastEntryLastAuthorLastName.clear();
             } else {
                 Value editors = entry->value(Entry::ftEditor);
                 if (!editors.isEmpty()) {
@@ -378,9 +378,9 @@ File *KBibTeXTest::loadFile(const QString &absoluteFilename, TestFile *currentTe
                     if (p != NULL) {
                         lastEntryLastAuthorLastName = p->lastName();
                     } else
-                        lastEntryLastAuthorLastName = QString::null;
+                        lastEntryLastAuthorLastName.clear();
                 } else
-                    lastEntryLastAuthorLastName = QString::null;
+                    lastEntryLastAuthorLastName.clear();
             }
 
             if (!lastEntryLastAuthorLastName.isEmpty()) {
@@ -525,12 +525,12 @@ QString KBibTeXTest::saveFile(File *file, TestFile *currentTestFile)
         if (!result)    {
             addMessage(QString(QLatin1String("Could save to temporary file '%1'")).arg(QFileInfo(tempFile.fileName()).fileName()), iconERROR);
             delete exporter;
-            return QString::null;
+            return QString();
         }
     } else {
         addMessage(QString(QLatin1String("Could not open temporary file '%1'")).arg(QFileInfo(tempFile.fileName()).fileName()), iconERROR);
         delete exporter;
-        return QString::null;
+        return QString();
     }
 
     addMessage(QString(QLatin1String("File '%1' was exported to '%2'")).arg(QFileInfo(currentTestFile->filename).fileName()).arg(tempFilename), iconOK);

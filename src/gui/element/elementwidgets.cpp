@@ -339,7 +339,7 @@ bool ReferenceWidget::apply(QSharedPointer<Element> element) const
     QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
     if (!entry.isNull()) {
         BibTeXEntries *be = BibTeXEntries::self();
-        QString type = QString::null;
+        QString type = QString();
         if (entryType->currentIndex() < 0 || entryType->lineEdit()->isModified())
             type = be->format(entryType->lineEdit()->text(), KBibTeX::cUpperCamelCase);
         else
@@ -418,7 +418,7 @@ void ReferenceWidget::setReadOnly(bool isReadOnly)
 
 QString ReferenceWidget::label()
 {
-    return QString::null;
+    return QString();
 }
 
 KIcon ReferenceWidget::icon()
@@ -913,8 +913,8 @@ void OtherFieldsWidget::createGUI()
 
 void OtherFieldsWidget::updateList()
 {
-    QString selText = otherFieldsList->selectedItems().isEmpty() ? QString::null : otherFieldsList->selectedItems().first()->text(0);
-    QString curText = otherFieldsList->currentItem() == NULL ? QString::null : otherFieldsList->currentItem()->text(0);
+    const QString selText = otherFieldsList->selectedItems().isEmpty() ? QString() : otherFieldsList->selectedItems().first()->text(0);
+    const QString curText = otherFieldsList->currentItem() == NULL ? QString() : otherFieldsList->currentItem()->text(0);
     otherFieldsList->clear();
 
     for (Entry::ConstIterator it = internalEntry->constBegin(); it != internalEntry->constEnd(); ++it)
@@ -1156,14 +1156,14 @@ bool SourceWidget::reset(QSharedPointer<const Element> element)
     FileExporterBibTeX exporter;
     exporter.setEncoding(QLatin1String("utf-8"));
     const QString exportedText = exporter.toString(element, m_file);
-    if (!exportedText.isNull()) {
+    if (!exportedText.isEmpty()) {
         originalText = exportedText;
         sourceEdit->document()->setPlainText(originalText);
     }
 
     connect(sourceEdit, SIGNAL(textChanged()), this, SLOT(gotModified()));
 
-    return !exportedText.isNull();
+    return !exportedText.isEmpty();
 }
 
 void SourceWidget::setReadOnly(bool isReadOnly)

@@ -38,7 +38,7 @@ struct FieldDescription {
     bool typeIndependent;
 
     FieldDescription()
-            : upperCamelCase(QString::null), upperCamelCaseAlt(QString::null), label(QString::null), defaultWidth(0), typeIndependent(false) {
+            : upperCamelCase(QString()), upperCamelCaseAlt(QString()), label(QString()), defaultWidth(0), typeIndependent(false) {
         /* nothing */
     }
 
@@ -49,7 +49,7 @@ struct FieldDescription {
     }
 
     bool isNull() const {
-        return upperCamelCase.isNull() && label.isNull();
+        return upperCamelCase.isEmpty() && label.isEmpty();
     }
 
     static const FieldDescription null;

@@ -57,7 +57,7 @@ public:
         case KBibTeX::StarRating : return QLatin1String("StarRating");
         case KBibTeX::UrlList : return QLatin1String("UrlList");
         }
-        return QString::null;
+        return QString();
     }
 
     static KBibTeX::FieldInputType convert(const QString &text) {
