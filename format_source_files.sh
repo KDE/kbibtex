@@ -9,7 +9,7 @@ find src -type f -name '*.cpp' -o -name '*.h' | xargs git status | while read ha
 	if [[ ! -s "${filename}" ]] ; then continue ; fi
 
 	echo "Processing \"${filename}\""
-	astyle --align-reference=name --align-pointer=name --indent=spaces=4 --brackets=linux --indent-labels --pad-oper --unpad-paren --pad-header --keep-one-line-statements --convert-tabs --indent-preprocessor "${filename}"
+	astyle -n --align-reference=name --align-pointer=name --indent=spaces=4 --brackets=linux --indent-labels --pad-oper --unpad-paren --pad-header --keep-one-line-statements --convert-tabs --indent-preprocessor "${filename}"
 
 	# normalize SIGNAL statements as recommended at
 	# http://marcmutz.wordpress.com/effective-qt/prefer-to-use-normalised-signalslot-signatures/
