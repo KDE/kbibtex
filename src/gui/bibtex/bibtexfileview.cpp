@@ -53,7 +53,7 @@ public:
         int widgetWidth = p->viewport()->size().width();
         if (widgetWidth < 8) return; ///< widget is too narrow or not yet initialized
 
-        disconnect(p->header(), SIGNAL(sectionResized(int,int,int)), p, SLOT(columnResized(int, int, int)));
+        disconnect(p->header(), SIGNAL(sectionResized(int,int,int)), p, SLOT(columnResized(int,int,int)));
         disconnect(p->header(), SIGNAL(sectionMoved(int,int,int)), p, SLOT(columnMoved()));
 
         int sum = 0;
@@ -90,7 +90,7 @@ public:
         config->sync();
 
         connect(p->header(), SIGNAL(sectionMoved(int,int,int)), p, SLOT(columnMoved()));
-        connect(p->header(), SIGNAL(sectionResized(int,int,int)), p, SLOT(columnResized(int, int, int)));
+        connect(p->header(), SIGNAL(sectionResized(int,int,int)), p, SLOT(columnResized(int,int,int)));
     }
 
     void storeColumns() {
@@ -105,7 +105,7 @@ public:
         if (widgetWidth < 8) return; ///< widget is too narrow or not yet initialized
 
         disconnect(p->header(), SIGNAL(sectionMoved(int,int,int)), p, SLOT(columnMoved()));
-        disconnect(p->header(), SIGNAL(sectionResized(int,int,int)), p, SLOT(columnResized(int, int, int)));
+        disconnect(p->header(), SIGNAL(sectionResized(int,int,int)), p, SLOT(columnResized(int,int,int)));
 
         const int columnCount = p->header()->count();
         int *columnWidths = new int[columnCount];
@@ -131,12 +131,12 @@ public:
         delete[] columnWidths;
 
         connect(p->header(), SIGNAL(sectionMoved(int,int,int)), p, SLOT(columnMoved()));
-        connect(p->header(), SIGNAL(sectionResized(int,int,int)), p, SLOT(columnResized(int, int, int)));
+        connect(p->header(), SIGNAL(sectionResized(int,int,int)), p, SLOT(columnResized(int,int,int)));
     }
 
     void setColumnVisible(int column, bool isVisible) {
         disconnect(p->header(), SIGNAL(sectionMoved(int,int,int)), p, SLOT(columnMoved()));
-        disconnect(p->header(), SIGNAL(sectionResized(int,int,int)), p, SLOT(columnResized(int, int, int)));
+        disconnect(p->header(), SIGNAL(sectionResized(int,int,int)), p, SLOT(columnResized(int,int,int)));
 
         if (isVisible) {
             static const int colMinWidth = p->fontMetrics().width(QChar('W')) * 5;
@@ -146,7 +146,7 @@ public:
         p->setColumnHidden(column, !isVisible);
 
         connect(p->header(), SIGNAL(sectionMoved(int,int,int)), p, SLOT(columnMoved()));
-        connect(p->header(), SIGNAL(sectionResized(int,int,int)), p, SLOT(columnResized(int, int, int)));
+        connect(p->header(), SIGNAL(sectionResized(int,int,int)), p, SLOT(columnResized(int,int,int)));
     }
 };
 
@@ -177,11 +177,11 @@ BibTeXFileView::BibTeXFileView(const QString &name, QWidget *parent)
     header()->setClickable(true);
     header()->setSortIndicatorShown(true);
     header()->setSortIndicator(-1, Qt::AscendingOrder);
-    connect(header(), SIGNAL(sortIndicatorChanged(int,Qt::SortOrder)), this, SLOT(sort(int, Qt::SortOrder)));
+    connect(header(), SIGNAL(sortIndicatorChanged(int,Qt::SortOrder)), this, SLOT(sort(int,Qt::SortOrder)));
     header()->setContextMenuPolicy(Qt::ActionsContextMenu);
 
     connect(header(), SIGNAL(sectionMoved(int,int,int)), this, SLOT(columnMoved()));
-    connect(header(), SIGNAL(sectionResized(int,int,int)), this, SLOT(columnResized(int, int, int)));
+    connect(header(), SIGNAL(sectionResized(int,int,int)), this, SLOT(columnResized(int,int,int)));
 
     /// build context menu for header to show/hide single columns
     int col = 0;

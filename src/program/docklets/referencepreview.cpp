@@ -106,7 +106,7 @@ public:
         webView = new QWebView(frame);
         layout->addWidget(webView);
         webView->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
-        connect(webView, SIGNAL(linkClicked(QUrl)), p, SLOT(linkClicked(const QUrl &)));
+        connect(webView, SIGNAL(linkClicked(QUrl)), p, SLOT(linkClicked(QUrl)));
 #else // HAVE_QTWEBKIT
         messageLabel = new QLabel(i18n("No preview available due to missing QtWebKit support on your system."), frame);
         messageLabel->setWordWrap(true);

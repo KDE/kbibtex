@@ -106,7 +106,7 @@ public:
         p->setEnabled(false);
 
         connect(comboboxFieldNames, SIGNAL(activated(int)), p, SLOT(update()));
-        connect(treeviewFieldValues, SIGNAL(activated(QModelIndex)), p, SLOT(listItemActivated(const QModelIndex &)));
+        connect(treeviewFieldValues, SIGNAL(activated(QModelIndex)), p, SLOT(listItemActivated(QModelIndex)));
         connect(delegate, SIGNAL(closeEditor(QWidget*)), treeviewFieldValues, SLOT(reset()));
 
         /// add context menu to header

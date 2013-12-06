@@ -902,8 +902,8 @@ void OtherFieldsWidget::createGUI()
     buttonOpen->setEnabled(false);
     layout->addWidget(buttonOpen, 3, 2, 1, 1);
 
-    connect(otherFieldsList, SIGNAL(itemActivated(QTreeWidgetItem*,int)), this, SLOT(listElementExecuted(QTreeWidgetItem *, int)));
-    connect(otherFieldsList, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)), this, SLOT(listCurrentChanged(QTreeWidgetItem *, QTreeWidgetItem *)));
+    connect(otherFieldsList, SIGNAL(itemActivated(QTreeWidgetItem*,int)), this, SLOT(listElementExecuted(QTreeWidgetItem*,int)));
+    connect(otherFieldsList, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)), this, SLOT(listCurrentChanged(QTreeWidgetItem*,QTreeWidgetItem*)));
     connect(otherFieldsList, SIGNAL(itemSelectionChanged()), this, SLOT(updateGUI()));
     connect(fieldName, SIGNAL(textEdited(QString)), this, SLOT(updateGUI()));
     connect(buttonAddApply, SIGNAL(clicked()), this, SLOT(actionAddApply()));

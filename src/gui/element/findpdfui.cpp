@@ -343,7 +343,7 @@ FindPDFUI::FindPDFUI(Entry &entry, QWidget *parent)
     m_labelMessage->setText(i18n("Starting to search ..."));
 
     connect(m_findpdf, SIGNAL(finished()), this, SLOT(searchFinished()));
-    connect(m_findpdf, SIGNAL(progress(int,int,int)), this, SLOT(searchProgress(int, int, int)));
+    connect(m_findpdf, SIGNAL(progress(int,int,int)), this, SLOT(searchProgress(int,int,int)));
     m_findpdf->search(entry);
 }
 

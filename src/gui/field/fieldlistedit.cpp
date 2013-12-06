@@ -110,9 +110,9 @@ public:
 
         layout->addStretch(100);
 
-        connect(smRemove, SIGNAL(mapped(QWidget*)), p, SLOT(lineRemove(QWidget *)));
-        connect(smGoDown, SIGNAL(mapped(QWidget*)), p, SLOT(lineGoDown(QWidget *)));
-        connect(smGoUp, SIGNAL(mapped(QWidget*)), p, SLOT(lineGoUp(QWidget *)));
+        connect(smRemove, SIGNAL(mapped(QWidget*)), p, SLOT(lineRemove(QWidget*)));
+        connect(smGoDown, SIGNAL(mapped(QWidget*)), p, SLOT(lineGoDown(QWidget*)));
+        connect(smGoUp, SIGNAL(mapped(QWidget*)), p, SLOT(lineGoUp(QWidget*)));
 
         scrollArea->setBackgroundRole(QPalette::Base);
         scrollArea->ensureWidgetVisible(container);
@@ -459,9 +459,9 @@ UrlListEdit::UrlListEdit(QWidget *parent)
         : FieldListEdit(KBibTeX::tfVerbatim, KBibTeX::tfVerbatim, parent)
 {
     m_signalMapperSaveLocallyButtonClicked = new QSignalMapper(this);
-    connect(m_signalMapperSaveLocallyButtonClicked, SIGNAL(mapped(QWidget*)), this, SLOT(slotSaveLocally(QWidget *)));
+    connect(m_signalMapperSaveLocallyButtonClicked, SIGNAL(mapped(QWidget*)), this, SLOT(slotSaveLocally(QWidget*)));
     m_signalMapperFieldLineEditTextChanged = new QSignalMapper(this);
-    connect(m_signalMapperFieldLineEditTextChanged, SIGNAL(mapped(QWidget*)), this, SLOT(textChanged(QWidget *)));
+    connect(m_signalMapperFieldLineEditTextChanged, SIGNAL(mapped(QWidget*)), this, SLOT(textChanged(QWidget*)));
 
     m_buttonAddFile = new KPushButton(KIcon("list-add"), i18n("Add file ..."), this);
     addButton(m_buttonAddFile);

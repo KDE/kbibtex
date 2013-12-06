@@ -297,7 +297,7 @@ public:
                 KIO::StatJob *job = KIO::stat(*it, KIO::StatJob::SourceSide, 3, KIO::HideProgressInfo);
                 runningJobs << job;
                 job->ui()->setWindow(p);
-                connect(job, SIGNAL(result(KJob*)), p, SLOT(statFinished(KJob *)));
+                connect(job, SIGNAL(result(KJob*)), p, SLOT(statFinished(KJob*)));
             }
             if (urlList.isEmpty()) {
                 /// Case no URLs associated with this entry.

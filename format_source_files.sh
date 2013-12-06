@@ -14,7 +14,7 @@ find src -type f -name '*.cpp' -o -name '*.h' | xargs git status | while read ha
 	# normalize SIGNAL statements as recommended at
 	# http://marcmutz.wordpress.com/effective-qt/prefer-to-use-normalised-signalslot-signatures/
 	# astyle would insert spaces etc
-	grep -Po 'SIGNAL\([^(]+\([^)]*\)\)' "${filename}" | while read original ; do
+	grep -Po '(SIGNAL|SLOT)\([^(]+\([^)]*\)\)' "${filename}" | while read original ; do
 		normalized="$(sed -e 's/const //g;s/&//g;s/ //g;s/\//\\\//g' <<<${original})"
 		originalregexpized="$(sed -e 's/\*/\\*/g;s/\//\\\//g' <<<${original})"
 		sed -i -e 's/'"${originalregexpized}"'/'"${normalized}"'/g' "${filename}"
