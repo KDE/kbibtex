@@ -77,7 +77,7 @@ public:
             if (role == URLRole) {
                 KUrl url = ofiItem->url();
                 if (url.isLocalFile())
-                    return QUrl::fromLocalFile(url.path());
+                    return KUrl::fromLocalFile(url.path());
                 else
                     return url;
             }

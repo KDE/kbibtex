@@ -228,7 +228,7 @@ void FindPDF::processGeneralHTML(QNetworkReply *reply, const QString &text)
     bool gotLink = false;
     for (int i = 0; !gotLink && i < 4; ++i) {
         if (anchorRegExp[i].indexIn(text) >= 0) {
-            QUrl url = QUrl::fromEncoded(anchorRegExp[i].cap(1).toAscii());
+            const KUrl url = KUrl::fromEncoded(anchorRegExp[i].cap(1).toLatin1());
             queueUrl(reply->url().resolved(url), term, origin, depth - 1);
             gotLink = true;
         }
@@ -238,7 +238,7 @@ void FindPDF::processGeneralHTML(QNetworkReply *reply, const QString &text)
         /// this is only the last resort:
         /// to follow the first link found in the HTML document
         if (anchorRegExp[4].indexIn(text) >= 0) {
-            QUrl url = QUrl::fromEncoded(anchorRegExp[4].cap(1).toAscii());
+            const KUrl url = KUrl::fromEncoded(anchorRegExp[4].cap(1).toLatin1());
             queueUrl(reply->url().resolved(url), term, origin, depth - 1);
         }
     }
@@ -262,8 +262,8 @@ void FindPDF::processGoogleResult(QNetworkReply *reply, const QString &text)
         if ((p = text.indexOf(h3Tag, p + 1)) >= 0 && (p = text.indexOf(aTag, p + 1)) >= 0 && (p = text.indexOf(hrefAttrib, p + 1)) >= 0) {
             int p1 = p + 6;
             int p2 = text.indexOf(QChar('"'), p1 + 1);
-            QUrl url(text.mid(p1, p2 - p1));
-            kDebug() << "Google URL" << i << " : " << url.toString();
+            const KUrl url(text.mid(p1, p2 - p1));
+            kDebug() << "Google URL" << i << " : " << url.pathOrUrl();
             queueUrl(reply->url().resolved(url), term, QLatin1String("scholar.google"), depth - 1);
         }
     }
@@ -278,7 +278,7 @@ void FindPDF::processSpringerLink(QNetworkReply *reply, const QString &text)
         int depth = reply->property(depthProperty).toInt(&ok);
         if (!ok) depth = 0;
 
-        QUrl url(fulltextPDFlink.cap(1));
+        const KUrl url(fulltextPDFlink.cap(1));
         queueUrl(reply->url().resolved(url), QString::null, QLatin1String("springerlink"), depth - 1);
     }
 }

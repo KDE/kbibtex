@@ -20,7 +20,6 @@
 
 #include <QLayout>
 #include <QMap>
-#include <QTabWidget>
 #include <QLabel>
 #include <QListWidget>
 #include <QSpinBox>
@@ -43,6 +42,7 @@
 #include <kparts/part.h>
 #include <KStandardDirs>
 #include <KConfigGroup>
+#include <KTabWidget>
 
 #include <onlinesearchabstract.h>
 #include <onlinesearchgeneral.h>
@@ -94,7 +94,7 @@ public:
     KPushButton *searchButton;
     KPushButton *useEntryButton;
     OnlineSearchQueryFormGeneral *generalQueryTermsForm;
-    QTabWidget *tabWidget;
+    KTabWidget *tabWidget;
     QSharedPointer<const Entry> currentEntry;
     QProgressBar *progressBar;
     QMap<OnlineSearchAbstract *, int> progressMap;
@@ -179,7 +179,7 @@ public:
         layout->setColumnStretch(1, 1);
         layout->setColumnStretch(2, 0);
 
-        tabWidget = new QTabWidget(p);
+        tabWidget = new KTabWidget(p);
         tabWidget->setDocumentMode(true);
         layout->addWidget(tabWidget, 0, 0, 1, 3);
         connect(tabWidget, SIGNAL(currentChanged(int)), p, SLOT(tabSwitched(int)));

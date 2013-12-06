@@ -126,13 +126,13 @@ QStringList OnlineSearchAbstract::splitRespectingQuotationMarks(const QString &t
 
 bool OnlineSearchAbstract::handleErrors(QNetworkReply *reply)
 {
-    QUrl url;
+    KUrl url;
     return handleErrors(reply, url);
 }
 
-bool OnlineSearchAbstract::handleErrors(QNetworkReply *reply, QUrl &newUrl)
+bool OnlineSearchAbstract::handleErrors(QNetworkReply *reply, KUrl &newUrl)
 {
-    newUrl = QUrl();
+    newUrl = KUrl();
     if (m_hasBeenCanceled) {
         kDebug() << "Searching" << label() << "got cancelled";
         emit stoppedSearch(resultCancelled);
@@ -161,7 +161,7 @@ bool OnlineSearchAbstract::handleErrors(QNetworkReply *reply, QUrl &newUrl)
      */
     if (reply->attribute(QNetworkRequest::RedirectionTargetAttribute).isValid()) {
         newUrl = reply->url().resolved(reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl());
-        kDebug() << "Redirection from" << reply->url().toString() << "to" << newUrl.toString();
+        kDebug() << "Redirection from" << reply->url().toString() << "to" << newUrl.pathOrUrl();
     } else if (reply->size() == 0)
         kWarning() << "Search using" << label() << "on url" << reply->url().toString() << "returned no data";
 
