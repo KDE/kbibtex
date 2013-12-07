@@ -227,7 +227,7 @@ void ReferencePreview::setEnabled(bool enabled)
     d->comboBox->setEnabled(enabled);
 }
 
-void ReferencePreview::setElement(QSharedPointer<Element> element, const File *file)
+void ReferencePreview::setElement(QSharedPointer<Element> element, File *file)
 {
     d->element = element;
     d->file = file;

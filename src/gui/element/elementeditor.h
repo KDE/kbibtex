@@ -46,8 +46,8 @@ public:
     ElementEditor(bool scrollable, QWidget *parent);
     ~ElementEditor();
 
-    void setElement(QSharedPointer<Element> element, const File *file);
-    void setElement(QSharedPointer<const Element> element, const File *file);
+    void setElement(QSharedPointer<Element> element, File *file);
+    void setElement(QSharedPointer<const Element> element, File *file);
     void setReadOnly(bool isReadOnly = true);
     bool elementChanged();
     bool elementUnapplied();

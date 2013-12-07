@@ -36,7 +36,7 @@ public:
     ~ElementForm();
 
 public slots:
-    void setElement(QSharedPointer<Element>, const File *);
+    void setElement(QSharedPointer<Element>, File *);
     void refreshElement();
 
 signals:

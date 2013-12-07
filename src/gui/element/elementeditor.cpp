@@ -89,7 +89,7 @@ public:
         widgets.clear();
     }
 
-    void setElement(QSharedPointer<Element> element, const File *file) {
+    void setElement(QSharedPointer<Element> element, File *file) {
         this->element = element;
         this->file = file;
         referenceWidget->setOriginalElement(element);
@@ -450,14 +450,14 @@ void ElementEditor::reset()
     emit modified(false);
 }
 
-void ElementEditor::setElement(QSharedPointer<Element> element, const File *file)
+void ElementEditor::setElement(QSharedPointer<Element> element, File *file)
 {
     d->setElement(element, file);
     d->reset();
     emit modified(false);
 }
 
-void ElementEditor::setElement(QSharedPointer<const Element> element, const File *file)
+void ElementEditor::setElement(QSharedPointer<const Element> element, File *file)
 {
     QSharedPointer<Element> clone;
     QSharedPointer<const Entry> entry = element.dynamicCast<const Entry>();
