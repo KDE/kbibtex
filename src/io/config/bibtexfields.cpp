@@ -20,6 +20,7 @@
 #include <KSharedPtr>
 #include <KStandardDirs>
 #include <KDebug>
+#include <KLocale>
 
 #include "bibtexfields.h"
 
@@ -73,7 +74,7 @@ public:
 
             fd->upperCamelCaseAlt = configGroup.readEntry("UpperCamelCaseAlt", "");
 
-            fd->label = configGroup.readEntry("Label", fd->upperCamelCase);
+            fd->label = i18n(configGroup.readEntry("Label", fd->upperCamelCase).toUtf8().constData());
 
             fd->defaultWidth = configGroup.readEntry("DefaultWidth", 10);
             fd->defaultVisible = configGroup.readEntry("Visible", true);

@@ -20,6 +20,7 @@
 #include <KGlobal>
 #include <KStandardDirs>
 #include <KDebug>
+#include <KLocale>
 
 #include "entrylayout.h"
 
@@ -119,7 +120,7 @@ void EntryLayout::load()
         KConfigGroup configGroup(d->layoutConfig, groupName);
 
         QSharedPointer<EntryTabLayout> etl = QSharedPointer<EntryTabLayout>(new EntryTabLayout);
-        etl->uiCaption = configGroup.readEntry("uiCaption", "");
+        etl->uiCaption = i18n(configGroup.readEntry("uiCaption", QString()).toUtf8().constData());
         etl->iconName = configGroup.readEntry("iconName", "entry");
         etl->columns = configGroup.readEntry("columns", 1);
         if (etl->uiCaption.isEmpty())
@@ -128,8 +129,8 @@ void EntryLayout::load()
         int fieldCount = qMin(configGroup.readEntry("count", 0), entryLayoutMaxFieldPerTabCount);
         for (int field = 1; field <= fieldCount; ++field) {
             SingleFieldLayout sfl;
-            sfl.bibtexLabel = configGroup.readEntry(QString("bibtexLabel%1").arg(field), "");
-            sfl.uiLabel = configGroup.readEntry(QString("uiLabel%1").arg(field), "");
+            sfl.bibtexLabel = configGroup.readEntry(QString("bibtexLabel%1").arg(field), QString());
+            sfl.uiLabel = i18n(configGroup.readEntry(QString("uiLabel%1").arg(field), QString()).toUtf8().constData());
             sfl.fieldInputLayout = EntryLayoutPrivate::convert(configGroup.readEntry(QString("fieldInputLayout%1").arg(field), "SingleLine"));
             if (sfl.bibtexLabel.isEmpty() || sfl.uiLabel.isEmpty())
                 continue;
