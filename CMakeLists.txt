@@ -25,8 +25,13 @@ set(
 
 option(
     UNITY_BUILD
-    "Compile multiple C++ files in one big, merged file (\"Unity build\")"
+    "Compile multiple C++ files in one big, merged file (\"Unity build\")\nSee also http://t-fischer.dreamwidth.org/3054.html"
 )
+if(UNITY_BUILD)
+    message(STATUS "Unity build enabled")
+else(UNITY_BUILD)
+    message(STATUS "Unity build disabled (default), use option UNITY_BUILD to enable it")
+endif(UNITY_BUILD)
 
 find_package(
     Qt4
