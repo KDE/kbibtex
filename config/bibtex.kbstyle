@@ -64,7 +64,7 @@ OptionalItems=type,address,month,note
 
 [EntryType11]
 UpperCamelCase=Unpublished
-Label=Unpublish Material
+Label=Unpublished Material
 RequiredItems=author,title,note
 OptionalItems=month,year
 
