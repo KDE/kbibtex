@@ -155,7 +155,7 @@ OptionalItems=subtitle,titleaddon,language,note,location,month,isbn,chapter,page
 
 [EntryType26]
 UpperCamelCase=Unpublished
-Label=Unpublish Material
+Label=Unpublished Material
 RequiredItems=author,title,year^date
 OptionalItems=subtitle,titleaddon,language,howpublished,note,location,isbn,date,month,year,addendum,pubstate,url,urldate
 
