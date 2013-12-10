@@ -273,7 +273,7 @@ public:
         urlComboBox->clear();
         cbxEntryToUrlInfo.clear();
         externalViewerButton->setEnabled(false);
-        showMessage(i18n("Refreshing ..."));
+        showMessage(i18n("Refreshing ...")); // krazy:exclude=qmethods
 
         /// cancel/kill all running jobs
         for (QList<KIO::StatJob *>::ConstIterator it = runningJobs.constBegin(); it != runningJobs.constEnd(); ++it)
