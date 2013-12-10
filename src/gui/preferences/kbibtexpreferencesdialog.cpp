@@ -119,7 +119,7 @@ public:
     KIcon iconFromFavicon(const QString &url) {
         static const QRegExp invalidChars("[^-a-z0-9_]", Qt::CaseInsensitive);
         QString fileName = url;
-        fileName = fileName.replace(invalidChars, "");
+        fileName = fileName.remove(invalidChars);
         fileName.prepend(KStandardDirs::locateLocal("cache", "favicons/")).append(".png");
 
         if (!QFileInfo(fileName).exists()) {

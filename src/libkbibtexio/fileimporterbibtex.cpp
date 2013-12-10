@@ -94,7 +94,7 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
 
     /** Remove HTML code from the input source */
     const int originalLength = rawText.length();
-    rawText = rawText.replace(KBibTeX::htmlRegExp, QLatin1String(""));
+    rawText = rawText.remove(KBibTeX::htmlRegExp);
     const int afterHTMLremovalLength = rawText.length();
     if (originalLength != afterHTMLremovalLength)
         kWarning() << (originalLength - afterHTMLremovalLength) << "characters of HTML tags have been removed";
@@ -695,7 +695,7 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value &value, const QStr
                 if (KBibTeX::mendeleyFileRegExp.indexIn(rawText) >= 0)    {
                     const QString backslashLaTeX = QLatin1String("$\\backslash$");
                     QString filename = KBibTeX::mendeleyFileRegExp.cap(1);
-                    filename = filename.replace(backslashLaTeX, QString::null);
+                    filename = filename.remove(backslashLaTeX);
                     value.append(QSharedPointer<VerbatimText>(new VerbatimText(filename)));
                 } else
                     value.append(QSharedPointer<VerbatimText>(new VerbatimText(text)));

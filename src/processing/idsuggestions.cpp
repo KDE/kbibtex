@@ -41,7 +41,7 @@ public:
 
     QString normalizeText(const QString &input) const {
         static const QRegExp unwantedChars = QRegExp("[^-_:/=+a-zA-Z0-9]+");
-        return EncoderLaTeX::instance()->convertToPlainAscii(input).replace(unwantedChars, QLatin1String(""));
+        return EncoderLaTeX::instance()->convertToPlainAscii(input).remove(unwantedChars);
     }
 
     QStringList authorsLastName(const Entry &entry) const {

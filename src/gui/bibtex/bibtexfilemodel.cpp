@@ -116,16 +116,16 @@ bool SortFilterBibTeXFileModel::lessThan(const QModelIndex &left, const QModelIn
             if (personA.isNull() || personB.isNull()) return QSortFilterProxyModel::lessThan(left, right);
 
             /// get both values' next persons' last names for comparison
-            QString nameA = personA->lastName().replace(curlyRegExp, "").toLower();
-            QString nameB = personB->lastName().replace(curlyRegExp, "").toLower();
+            QString nameA = personA->lastName().remove(curlyRegExp).toLower();
+            QString nameB = personB->lastName().remove(curlyRegExp).toLower();
             int cmp = QString::localeAwareCompare(nameA, nameB);
             if (cmp < 0) return true;
             if (cmp > 0) return false;
 
             /// if last names were inconclusive ...
             /// get both values' next persons' first names for comparison
-            nameA = personA->firstName().replace(curlyRegExp, "").toLower();
-            nameB = personB->firstName().replace(curlyRegExp, "").toLower();
+            nameA = personA->firstName().remove(curlyRegExp).toLower();
+            nameB = personB->firstName().remove(curlyRegExp).toLower();
             cmp = QString::localeAwareCompare(nameA, nameB);
             if (cmp < 0) return true;
             if (cmp > 0) return false;
