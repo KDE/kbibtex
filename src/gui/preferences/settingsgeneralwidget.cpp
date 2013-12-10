@@ -15,6 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "settingsgeneralwidget.h"
+
 #include <QFormLayout>
 
 #include <KLocale>
@@ -24,7 +26,6 @@
 
 #include "guihelper.h"
 #include "value.h"
-#include "settingsgeneralwidget.h"
 
 class SettingsGeneralWidget::SettingsGeneralWidgetPrivate
 {

@@ -15,10 +15,10 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "settingsabstractwidget.h"
+
 #include <KComboBox>
 #include <KDebug>
-
-#include "settingsabstractwidget.h"
 
 SettingsAbstractWidget::SettingsAbstractWidget(QWidget *parent)
         : QWidget(parent)

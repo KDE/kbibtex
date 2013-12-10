@@ -15,6 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "internalnetworkaccessmanager.h"
+
 #include <ctime>
 
 #include <QStringList>
@@ -31,8 +33,6 @@
 #include <KUrl>
 #include <KApplication>
 #include <KProtocolManager>
-
-#include "internalnetworkaccessmanager.h"
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>

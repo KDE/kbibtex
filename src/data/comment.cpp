@@ -14,10 +14,11 @@
 *   You should have received a copy of the GNU General Public License     *
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
-#include <QRegExp>
-#include <QStringList>
 
 #include "comment.h"
+
+#include <QRegExp>
+#include <QStringList>
 
 /**
  * Private class to store internal variables that should not be visible

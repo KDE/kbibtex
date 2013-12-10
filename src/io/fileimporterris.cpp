@@ -15,6 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "fileimporterris.h"
+
 #include <QVector>
 #include <QTextStream>
 #include <QRegExp>
@@ -26,7 +28,6 @@
 #include "kbibtexnamespace.h"
 #include "entry.h"
 #include "value.h"
-#include "fileimporterris.h"
 
 #define appendValue(entry, fieldname, newvalue) { Value value = (entry)->value((fieldname)); value.append((newvalue)); (entry)->insert((fieldname), value); }
 

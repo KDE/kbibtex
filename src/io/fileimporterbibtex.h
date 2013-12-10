@@ -22,6 +22,7 @@
 #include <QTextStream>
 #include <QSharedPointer>
 #include <QStringList>
+#include <QSet>
 
 #include "kbibtexnamespace.h"
 #include "fileimporter.h"

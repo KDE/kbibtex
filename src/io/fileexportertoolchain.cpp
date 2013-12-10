@@ -15,6 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "fileexportertoolchain.h"
+
 #include <QCoreApplication>
 #include <QStringList>
 #include <QFile>
@@ -24,8 +26,6 @@
 #include <QProcessEnvironment>
 
 #include <KLocale>
-
-#include "fileexportertoolchain.h"
 
 const QString FileExporterToolchain::keyBabelLanguage = QLatin1String("babelLanguage");
 const QString FileExporterToolchain::defaultBabelLanguage = QLatin1String("english");

@@ -15,6 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "mdiwidget.h"
+
 #include <QVector>
 #include <QPair>
 #include <QLabel>
@@ -35,7 +37,6 @@
 #include <KSharedConfig>
 
 #include "kbibtexnamespace.h"
-#include "mdiwidget.h"
 
 class LRUItemModel : public QAbstractItemModel
 {

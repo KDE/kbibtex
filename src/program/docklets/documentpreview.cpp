@@ -15,6 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "documentpreview.h"
+
 #include <typeinfo>
 
 #include <QList>
@@ -54,7 +56,6 @@
 #include "entry.h"
 #include "file.h"
 #include "fileinfo.h"
-#include "documentpreview.h"
 
 ImageLabel::ImageLabel(const QString &text, QWidget *parent, Qt::WindowFlags f)
         : QLabel(text, parent, f)

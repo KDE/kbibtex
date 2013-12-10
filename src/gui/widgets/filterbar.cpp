@@ -15,6 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "filterbar.h"
+
 #include <QLayout>
 #include <QLabel>
 #include <QTimer>
@@ -27,7 +29,6 @@
 #include <KStandardDirs>
 #include <KIcon>
 
-#include "filterbar.h"
 #include "bibtexfields.h"
 #include "delayedexecutiontimer.h"
 

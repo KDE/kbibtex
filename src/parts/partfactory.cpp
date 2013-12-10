@@ -15,13 +15,14 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "partfactory.h"
+
 #include <KComponentData>
 #include <KAboutData>
 #include <KLocale>
 #include <KDebug>
 
 #include "part.h"
-#include "partfactory.h"
 #include "version.h"
 //const char *versionNumber = "some SVN revision";
 

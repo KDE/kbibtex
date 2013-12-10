@@ -15,6 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "findduplicates.h"
+
 #include <typeinfo>
 
 #include <QLinkedList>
@@ -26,7 +28,6 @@
 
 #include "file.h"
 #include "entry.h"
-#include "findduplicates.h"
 
 EntryClique::EntryClique()
 {

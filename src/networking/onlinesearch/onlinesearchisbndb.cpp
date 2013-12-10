@@ -15,6 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "onlinesearchisbndb.h"
+
 #include <QNetworkReply>
 
 #include <KStandardDirs>
@@ -24,7 +26,6 @@
 #include "fileimporterbibtex.h"
 #include "xsltransform.h"
 #include "internalnetworkaccessmanager.h"
-#include "onlinesearchisbndb.h"
 
 class OnlineSearchIsbnDB::OnlineSearchIsbnDBPrivate
 {

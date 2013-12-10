@@ -15,10 +15,10 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "macro.h"
+
 #include <QRegExp>
 #include <QStringList>
-
-#include "macro.h"
 
 /**
  * Private class to store internal variables that should not be visible

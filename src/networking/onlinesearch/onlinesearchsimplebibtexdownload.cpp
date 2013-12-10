@@ -15,6 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "onlinesearchsimplebibtexdownload.h"
+
 #include <QNetworkRequest>
 #include <QNetworkReply>
 
@@ -22,7 +24,6 @@
 
 #include "fileimporterbibtex.h"
 #include "internalnetworkaccessmanager.h"
-#include "onlinesearchsimplebibtexdownload.h"
 
 OnlineSearchSimpleBibTeXDownload::OnlineSearchSimpleBibTeXDownload(QWidget *parent)
         : OnlineSearchAbstract(parent)

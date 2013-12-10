@@ -15,11 +15,11 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "encoderxml.h"
+
 #include <QStringList>
 #include <QRegExp>
 #include <QList>
-
-#include "encoderxml.h"
 
 EncoderXML *encoderXML = NULL;
 

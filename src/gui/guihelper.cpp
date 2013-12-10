@@ -16,13 +16,13 @@
  *   along with this program; if not, see <http://www.gnu.org/licenses/>.    *
  *****************************************************************************/
 
+#include "guihelper.h"
+
 #include <QPainter>
 #include <QPixmap>
 
 #include <KDebug>
 #include <KIconLoader>
-
-#include "guihelper.h"
 
 int GUIHelper::selectValue(QAbstractItemModel *model, const QString &value, int role)
 {

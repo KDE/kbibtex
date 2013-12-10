@@ -16,9 +16,9 @@
  *   along with this program; if not, see <http://www.gnu.org/licenses/>.    *
  *****************************************************************************/
 
-#include <QFont>
-
 #include "italictextitemmodel.h"
+
+#include <QFont>
 
 ItalicTextItemModel::ItalicTextItemModel(QObject *parent)
         : QAbstractItemModel(parent)

@@ -15,12 +15,13 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "iconvlatex.h"
+
 #include <iconv.h>
 
 #include <QStringList>
 
-#include <encoderlatex.h>
-#include "iconvlatex.h"
+#include "encoderlatex.h"
 
 QStringList IConvLaTeX::encodingList;
 

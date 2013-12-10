@@ -15,6 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "settingsidsuggestionseditor.h"
+
 #include <QGridLayout>
 #include <QFormLayout>
 #include <QScrollArea>
@@ -32,8 +34,6 @@
 #include <KAction>
 
 #include <3rdparty/libqxt/gui/qxtspanslider.h>
-
-#include "settingsidsuggestionseditor.h"
 
 
 TokenWidget::TokenWidget(QWidget *parent)

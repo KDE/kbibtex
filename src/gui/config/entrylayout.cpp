@@ -15,14 +15,14 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "entrylayout.h"
+
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <KGlobal>
 #include <KStandardDirs>
 #include <KDebug>
 #include <KLocale>
-
-#include "entrylayout.h"
 
 static const int entryLayoutMaxTabCount = 256;
 static const int entryLayoutMaxFieldPerTabCount = 256;

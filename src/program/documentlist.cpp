@@ -15,6 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "documentlist.h"
+
 #include <QStringListModel>
 #include <QTimer>
 #include <QSignalMapper>
@@ -36,7 +38,6 @@
 #include <KMessageBox>
 
 #include "kbibtexnamespace.h"
-#include "documentlist.h"
 
 class DirOperatorWidget : public QWidget
 {

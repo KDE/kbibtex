@@ -15,6 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "findduplicatesui.h"
+
 #include <QApplication>
 #include <QWidget>
 #include <QBoxLayout>
@@ -46,7 +48,6 @@
 #include "radiobuttontreeview.h"
 #include "bibtexeditor.h"
 #include "bibtexfilemodel.h"
-#include "findduplicatesui.h"
 #include "findduplicates.h"
 
 const int FieldNameRole = Qt::UserRole + 101;

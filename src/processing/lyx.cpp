@@ -15,6 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "lyx.h"
+
 #include <sys/stat.h>
 
 #include <QWidget>
@@ -33,8 +35,6 @@
 #include <KConfigGroup>
 
 #include <kdeversion.h>
-
-#include "lyx.h"
 
 class LyX::LyXPrivate
 {

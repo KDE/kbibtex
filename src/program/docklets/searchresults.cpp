@@ -15,6 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "searchresults.h"
+
 #include <QGridLayout>
 
 #include <KLocale>
@@ -27,7 +29,6 @@
 #include "bibtexeditor.h"
 #include "bibtexfilemodel.h"
 #include "idsuggestions.h"
-#include "searchresults.h"
 
 class SearchResults::SearchResultsPrivate
 {

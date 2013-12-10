@@ -15,14 +15,14 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "bibtexfields.h"
+
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <KSharedPtr>
 #include <KStandardDirs>
 #include <KDebug>
 #include <KLocale>
-
-#include "bibtexfields.h"
 
 bool operator==(const FieldDescription &a, const FieldDescription &b)
 {

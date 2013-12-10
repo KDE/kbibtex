@@ -16,6 +16,8 @@
  *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
  ***************************************************************************/
 
+#include "checkbibtex.h"
+
 #include <typeinfo>
 
 #include <QApplication>
@@ -30,8 +32,6 @@
 #include "entry.h"
 #include "element.h"
 #include "macro.h"
-#include "checkbibtex.h"
-
 
 CheckBibTeX::CheckBibTeXResult CheckBibTeX::checkBibTeX(QSharedPointer<Element> &element, const File *file, QWidget *parent)
 {

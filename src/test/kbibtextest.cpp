@@ -15,13 +15,7 @@
  *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
  ***************************************************************************/
 
-#include <KApplication>
-#include <KIcon>
-#include <KPushButton>
-#include <KListWidget>
-#include <KStandardDirs>
-#include <KAction>
-#include <KDebug>
+#include "kbibtextest.h"
 
 #include <QProgressBar>
 #include <QTimer>
@@ -30,6 +24,14 @@
 #include <QMenu>
 #include <QCryptographicHash>
 #include <QSignalMapper>
+
+#include <KApplication>
+#include <KIcon>
+#include <KPushButton>
+#include <KListWidget>
+#include <KStandardDirs>
+#include <KAction>
+#include <KDebug>
 
 #include <onlinesearchacmportal.h>
 #include <onlinesearcharxiv.h>
@@ -45,7 +47,6 @@
 #include "fileimporterbibtex.h"
 #include "fileexporterbibtex.h"
 #include "file.h"
-#include "kbibtextest.h"
 #include "version.h"
 
 KIcon iconOK(QLatin1String("dialog-ok-apply"));

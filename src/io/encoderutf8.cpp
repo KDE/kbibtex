@@ -15,11 +15,11 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "encoderutf8.h"
+
 #include <QString>
 
 #include <KDebug>
-
-#include "encoderutf8.h"
 
 EncoderUTF8 *EncoderUTF8::self = NULL;
 

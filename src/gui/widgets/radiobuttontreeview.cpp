@@ -15,14 +15,13 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "radiobuttontreeview.h"
+
 #include <QMouseEvent>
 #include <QKeyEvent>
 #include <QApplication>
 
 #include <KDebug>
-
-#include "radiobuttontreeview.h"
-
 
 RadioButtonItemDelegate::RadioButtonItemDelegate(QObject *p)
         : QStyledItemDelegate(p)

@@ -15,6 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "bibtexfileview.h"
+
 #include <QHeaderView>
 #include <QScrollBar>
 #include <QKeyEvent>
@@ -26,7 +28,6 @@
 
 #include "bibtexfields.h"
 #include "bibtexfilemodel.h"
-#include "bibtexfileview.h"
 
 class BibTeXFileView::BibTeXFileViewPrivate
 {

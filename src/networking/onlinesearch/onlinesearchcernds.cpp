@@ -16,10 +16,11 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.   *
 ****************************************************************************/
 
+#include "onlinesearchcernds.h"
+
 #include <KLocale>
 #include <KDebug>
 
-#include "onlinesearchcernds.h"
 OnlineSearchCERNDS::OnlineSearchCERNDS(QWidget *parent)
         : OnlineSearchSimpleBibTeXDownload(parent)
 {

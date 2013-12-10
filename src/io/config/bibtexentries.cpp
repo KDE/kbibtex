@@ -15,13 +15,14 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "bibtexentries.h"
+
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <KStandardDirs>
 #include <KDebug>
 
 #include "entry.h"
-#include "bibtexentries.h"
 
 bool operator==(const EntryDescription &a, const EntryDescription &b)
 {

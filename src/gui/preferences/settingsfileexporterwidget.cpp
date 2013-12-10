@@ -15,6 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "settingsfileexporterwidget.h"
+
 #include <QFormLayout>
 #include <QCheckBox>
 #include <QSpinBox>
@@ -34,7 +36,6 @@
 #include "clipboard.h"
 #include "preferences.h"
 #include "lyx.h"
-#include "settingsfileexporterwidget.h"
 
 class SettingsFileExporterWidget::SettingsFileExporterWidgetPrivate
 {

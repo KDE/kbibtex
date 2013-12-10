@@ -15,6 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "onlinesearchspringerlink.h"
+
 #include <QFile>
 #include <QFormLayout>
 #include <QSpinBox>
@@ -33,7 +35,6 @@
 #include "encoderlatex.h"
 #include "fileimporterbibtex.h"
 #include "xsltransform.h"
-#include "onlinesearchspringerlink.h"
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>

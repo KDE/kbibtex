@@ -15,6 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "settingsglobalkeywordswidget.h"
+
 #include <QLayout>
 #include <QStringListModel>
 #include <QListView>
@@ -26,7 +28,6 @@
 #include <KInputDialog>
 
 #include <fieldlistedit.h>
-#include "settingsglobalkeywordswidget.h"
 
 class DisallowEmptyStringListModel : public QStringListModel
 {

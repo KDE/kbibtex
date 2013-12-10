@@ -15,9 +15,10 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "browserextension.h"
+
 #include <kaction.h>
 
-#include "browserextension.h"
 #include "part.h"
 
 KBibTeXBrowserExtension::KBibTeXBrowserExtension(KBibTeXPart *p)

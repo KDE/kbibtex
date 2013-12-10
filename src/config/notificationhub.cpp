@@ -16,11 +16,11 @@
  *   along with this program; if not, see <http://www.gnu.org/licenses/>.    *
  *****************************************************************************/
 
+#include "notificationhub.h"
+
 #include <QSet>
 
 #include <KDebug>
-
-#include "notificationhub.h"
 
 NotificationListener::~NotificationListener()
 {

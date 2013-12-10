@@ -15,6 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "settingsidsuggestionswidget.h"
+
 #include <QLayout>
 #include <QTreeView>
 
@@ -27,7 +29,6 @@
 
 #include "fileimporterbibtex.h"
 #include "idsuggestions.h"
-#include "settingsidsuggestionswidget.h"
 #include "settingsidsuggestionseditor.h"
 
 const int FormatStringRole = Qt::UserRole + 7811;

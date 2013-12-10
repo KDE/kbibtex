@@ -15,6 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "onlinesearchsciencedirect.h"
+
 #include <QNetworkReply>
 
 #include <KDebug>
@@ -22,7 +24,6 @@
 
 #include "encoderlatex.h"
 #include "fileimporterbibtex.h"
-#include "onlinesearchsciencedirect.h"
 #include "internalnetworkaccessmanager.h"
 
 class OnlineSearchScienceDirect::OnlineSearchScienceDirectPrivate

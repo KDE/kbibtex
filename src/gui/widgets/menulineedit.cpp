@@ -15,6 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "menulineedit.h"
+
 #include <QLayout>
 #include <QApplication>
 #include <QMenu>
@@ -26,7 +28,6 @@
 #include <KConfigGroup>
 
 #include "notificationhub.h"
-#include "menulineedit.h"
 
 const int MenuLineEdit::MenuLineConfigurationChangedEvent = NotificationHub::EventUserDefined + 1861;
 const QString MenuLineEdit::keyLimitKeyboardTabStops = QLatin1String("LimitKeyboardTabStops");

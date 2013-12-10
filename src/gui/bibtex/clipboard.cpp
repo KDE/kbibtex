@@ -15,6 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "clipboard.h"
+
 #include <QApplication>
 #include <QClipboard>
 #include <QBuffer>
@@ -29,7 +31,6 @@
 #include "fileimporterbibtex.h"
 #include "fileexporterbibtex.h"
 #include "file.h"
-#include "clipboard.h"
 
 const QString Clipboard::keyCopyReferenceCommand = QLatin1String("copyReferenceCommand");
 const QString Clipboard::defaultCopyReferenceCommand = QLatin1String("");

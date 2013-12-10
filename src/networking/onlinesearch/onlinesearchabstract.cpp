@@ -15,6 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "onlinesearchabstract.h"
+
 #include <QFileInfo>
 #include <QNetworkReply>
 #include <QTimer>
@@ -32,7 +34,6 @@
 #include "encoderlatex.h"
 #include "internalnetworkaccessmanager.h"
 #include "kbibtexnamespace.h"
-#include "onlinesearchabstract.h"
 
 const QString OnlineSearchAbstract::queryKeyFreeText = QLatin1String("free");
 const QString OnlineSearchAbstract::queryKeyTitle = QLatin1String("title");

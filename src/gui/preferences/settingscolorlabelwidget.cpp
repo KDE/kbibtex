@@ -15,6 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "settingscolorlabelwidget.h"
+
 #include <ctime>
 
 #include <QAbstractItemModel>
@@ -35,7 +37,6 @@
 #include "colorlabelwidget.h"
 #include "bibtexfilemodel.h"
 #include "preferences.h"
-#include "settingscolorlabelwidget.h"
 
 class ColorLabelSettingsDelegate : public QStyledItemDelegate
 {

@@ -15,6 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "elementform.h"
+
 #include <QLayout>
 #include <QDockWidget>
 #include <QLabel>
@@ -29,7 +31,6 @@
 #include "entry.h"
 #include "elementeditor.h"
 #include "mdiwidget.h"
-#include "elementform.h"
 
 class ElementForm::ElementFormPrivate
 {

@@ -14,6 +14,9 @@
 *   You should have received a copy of the GNU General Public License     *
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
+
+#include "fileexporterrtf.h"
+
 #include <QFile>
 #include <QStringList>
 #include <QTextStream>
@@ -24,7 +27,6 @@
 
 #include "element.h"
 #include "fileexporterbibtex.h"
-#include "fileexporterrtf.h"
 #include "kbibtexnamespace.h"
 
 FileExporterRTF::FileExporterRTF()

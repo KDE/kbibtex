@@ -15,6 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "onlinesearchbibsonomy.h"
+
 #include <QBuffer>
 #include <QLayout>
 #include <QSpinBox>
@@ -33,7 +35,6 @@
 #include "file.h"
 #include "entry.h"
 #include "internalnetworkaccessmanager.h"
-#include "onlinesearchbibsonomy.h"
 
 class OnlineSearchBibsonomy::OnlineSearchQueryFormBibsonomy : public OnlineSearchQueryFormAbstract
 {

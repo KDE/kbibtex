@@ -15,6 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "onlinesearchgooglescholar.h"
+
 #include <QSpinBox>
 #include <QLayout>
 #include <QLabel>
@@ -30,7 +32,6 @@
 
 #include "fileimporterbibtex.h"
 #include "internalnetworkaccessmanager.h"
-#include "onlinesearchgooglescholar.h"
 
 
 class OnlineSearchGoogleScholar::OnlineSearchGoogleScholarPrivate

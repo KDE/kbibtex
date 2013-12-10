@@ -15,6 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "bibtexfilemodel.h"
+
 #include <typeinfo>
 
 #include <QColor>
@@ -34,7 +36,6 @@
 #include "bibtexfields.h"
 #include "fileinfo.h"
 #include "preferences.h"
-#include "bibtexfilemodel.h"
 
 static const QRegExp curlyRegExp("[{}]+");
 

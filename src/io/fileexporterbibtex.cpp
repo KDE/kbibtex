@@ -15,6 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "fileexporterbibtex.h"
+
 #include <typeinfo>
 
 #include <QTextCodec>
@@ -43,7 +45,6 @@
 #include "bibtexentries.h"
 #include "bibtexfields.h"
 #include "iconvlatex.h"
-#include "fileexporterbibtex.h"
 
 #define encodercheck(encoder, text) ((encoder)?(encoder)->encode((text)):(text))
 

@@ -14,6 +14,9 @@
 *   You should have received a copy of the GNU General Public License     *
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
+
+#include "fileexporterbibtex2html.h"
+
 #include <QFile>
 
 #include <KDebug>
@@ -21,7 +24,6 @@
 #include <KStandardDirs>
 
 #include "fileexporterbibtex.h"
-#include "fileexporterbibtex2html.h"
 
 class FileExporterBibTeX2HTML::FileExporterBibTeX2HTMLPrivate
 {

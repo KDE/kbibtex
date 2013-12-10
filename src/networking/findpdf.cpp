@@ -15,6 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "findpdf.h"
+
 #include <QNetworkReply>
 #include <QNetworkRequest>
 #include <QRegExp>
@@ -30,7 +32,6 @@
 #include "internalnetworkaccessmanager.h"
 #include "value.h"
 #include "fileinfo.h"
-#include "findpdf.h"
 
 int FindPDF::fileCounter = 0;
 

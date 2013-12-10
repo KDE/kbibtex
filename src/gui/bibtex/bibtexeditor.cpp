@@ -15,6 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "bibtexeditor.h"
+
 #include <QDropEvent>
 #include <QTimer>
 
@@ -31,7 +33,6 @@
 #include "bibtexfilemodel.h"
 #include "fileexporterbibtex.h"
 #include "valuelistmodel.h"
-#include "bibtexeditor.h"
 
 /**
  * Specialized dialog for element editing. It will check if the used

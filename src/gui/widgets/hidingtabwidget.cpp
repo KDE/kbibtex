@@ -15,9 +15,9 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
-#include <KDebug>
-
 #include "hidingtabwidget.h"
+
+#include <KDebug>
 
 /// required to for QSet<HiddenTabInfo>
 uint qHash(const HidingTabWidget::HiddenTabInfo &hti)

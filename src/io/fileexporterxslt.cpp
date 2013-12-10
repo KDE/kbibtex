@@ -15,6 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "fileexporterxslt.h"
+
 #include <QRegExp>
 #include <QStringList>
 #include <QBuffer>
@@ -31,7 +33,6 @@
 #include "encoderxml.h"
 #include "fileexporterxml.h"
 #include "iocommon.h"
-#include "fileexporterxslt.h"
 #include "xsltransform.h"
 
 FileExporterXSLT::FileExporterXSLT(const QString &xsltFilename)

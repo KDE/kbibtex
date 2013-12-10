@@ -15,6 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "onlinesearchgeneral.h"
+
 #include <QFormLayout>
 #include <QLabel>
 #include <QSpinBox>
@@ -24,7 +26,6 @@
 #include <KConfigGroup>
 
 #include "entry.h"
-#include "onlinesearchgeneral.h"
 
 OnlineSearchQueryFormGeneral::OnlineSearchQueryFormGeneral(QWidget *parent)
         : OnlineSearchQueryFormAbstract(parent),

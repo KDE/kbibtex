@@ -15,6 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "settingsuserinterfacewidget.h"
+
 #include <QFormLayout>
 #include <QCheckBox>
 #include <QBoxLayout>
@@ -27,7 +29,6 @@
 #include "preferences.h"
 #include "elementwidgets.h"
 #include "bibtexfilemodel.h"
-#include "settingsuserinterfacewidget.h"
 
 class SettingsUserInterfaceWidget::SettingsUserInterfaceWidgetPrivate
 {

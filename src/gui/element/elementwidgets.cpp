@@ -15,6 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "elementwidgets.h"
+
 #include <typeinfo>
 
 #include <QLayout>
@@ -40,18 +42,17 @@
 
 #include "idsuggestions.h"
 #include "fileinfo.h"
-#include <kbibtexnamespace.h>
+#include "kbibtexnamespace.h"
 #include "bibtexentries.h"
 #include "bibtexfields.h"
 #include "fileimporterbibtex.h"
 #include "fileexporterbibtex.h"
 #include "file.h"
-#include <fieldinput.h>
+#include "fieldinput.h"
 #include "entry.h"
 #include "macro.h"
 #include "preamble.h"
-#include <fieldlineedit.h>
-#include "elementwidgets.h"
+#include "fieldlineedit.h"
 
 static const unsigned int interColumnSpace = 16;
 static const QStringList keyStart = QStringList() << Entry::ftUrl << QLatin1String("postscript") << Entry::ftLocalFile << Entry::ftDOI << Entry::ftFile << QLatin1String("ee") << QLatin1String("biburl");

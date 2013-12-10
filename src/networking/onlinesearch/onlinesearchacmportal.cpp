@@ -15,6 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "onlinesearchacmportal.h"
+
 #include <QBuffer>
 #include <QLayout>
 #include <QNetworkRequest>
@@ -30,7 +32,6 @@
 #include "entry.h"
 #include "fileimporterbibtex.h"
 #include "internalnetworkaccessmanager.h"
-#include "onlinesearchacmportal.h"
 
 class OnlineSearchAcmPortal::OnlineSearchAcmPortalPrivate
 {

@@ -15,9 +15,9 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
-#include <KLocale>
-
 #include "onlinesearchsoanasaads.h"
+
+#include <KLocale>
 
 OnlineSearchSOANASAADS::OnlineSearchSOANASAADS(QWidget *parent)
         : OnlineSearchSimpleBibTeXDownload(parent)

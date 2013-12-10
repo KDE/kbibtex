@@ -15,9 +15,9 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
-#include <KLocale>
-
 #include "onlinesearchinspirehep.h"
+
+#include <KLocale>
 
 OnlineSearchInspireHep::OnlineSearchInspireHep(QWidget *parent)
         : OnlineSearchSimpleBibTeXDownload(parent)

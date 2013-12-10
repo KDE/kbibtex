@@ -14,6 +14,9 @@
 *   You should have received a copy of the GNU General Public License     *
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
+
+#include "fieldinput.h"
+
 #include <QLayout>
 #include <QApplication>
 #include <QMenu>
@@ -31,7 +34,6 @@
 #include "fieldlistedit.h"
 #include "colorlabelwidget.h"
 #include "starrating.h"
-#include "fieldinput.h"
 
 class FieldInput::FieldInputPrivate
 {

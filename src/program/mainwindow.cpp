@@ -15,6 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "mainwindow.h"
+
 #include <QDockWidget>
 #include <QDragEnterEvent>
 #include <QDropEvent>
@@ -35,7 +37,6 @@
 
 #include "kbibtexnamespace.h"
 #include "preferences/kbibtexpreferencesdialog.h"
-#include "mainwindow.h"
 #include "valuelist.h"
 #include "statistics.h"
 #include "documentlist.h"

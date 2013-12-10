@@ -21,6 +21,8 @@
 #include <QWidget>
 #include <QUrl>
 
+#include <KUrl>
+
 class Element;
 class File;
 class BibTeXEditor;

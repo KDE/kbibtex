@@ -15,6 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "searchform.h"
+
 #include <QLayout>
 #include <QMap>
 #include <QLabel>
@@ -68,7 +70,6 @@
 #include "bibtexeditor.h"
 #include "bibtexfilemodel.h"
 #include "searchresults.h"
-#include "searchform.h"
 
 const int HomepageRole = Qt::UserRole + 5;
 const int WidgetRole = Qt::UserRole + 6;

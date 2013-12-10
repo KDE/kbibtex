@@ -15,6 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "findpdfui.h"
+
 #include <QGridLayout>
 #include <QListView>
 #include <QAbstractListModel>
@@ -42,7 +44,6 @@
 
 #include "fileinfo.h"
 #include "fieldlistedit.h"
-#include "findpdfui.h"
 
 class PDFListModel;
 

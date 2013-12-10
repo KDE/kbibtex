@@ -15,6 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "onlinesearchingentaconnect.h"
+
 #include <QBuffer>
 #include <QLabel>
 #include <QNetworkReply>
@@ -31,7 +33,6 @@
 #include "entry.h"
 #include "fileimporterbibtex.h"
 #include "internalnetworkaccessmanager.h"
-#include "onlinesearchingentaconnect.h"
 
 class OnlineSearchIngentaConnect::OnlineSearchQueryFormIngentaConnect : public OnlineSearchQueryFormAbstract
 {

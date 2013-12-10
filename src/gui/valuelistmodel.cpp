@@ -15,6 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "valuelistmodel.h"
+
 #include <typeinfo>
 
 #include <KComboBox>
@@ -40,7 +42,6 @@
 #include "bibtexfields.h"
 #include "entry.h"
 #include <preferences.h>
-#include "valuelistmodel.h"
 
 const int CountRole = Qt::UserRole + 611;
 

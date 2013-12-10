@@ -15,6 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "kbibtexpreferencesdialog.h"
+
 #include <QSet>
 #include <QFileInfo>
 
@@ -34,7 +36,6 @@
 #include "settingscolorlabelwidget.h"
 #include "settingsuserinterfacewidget.h"
 #include "settingsidsuggestionswidget.h"
-#include "kbibtexpreferencesdialog.h"
 
 class KBibTeXPreferencesDialog::KBibTeXPreferencesDialogPrivate
 {

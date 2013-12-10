@@ -19,6 +19,8 @@
 
 #include "kbibtexio_export.h"
 
+#include <KUrl>
+
 #include "fileimporter.h"
 
 class FileImporterBibTeX;

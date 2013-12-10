@@ -15,6 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "settingsfileexporterpdfpswidget.h"
+
 #include <QFormLayout>
 #include <QLineEdit>
 
@@ -25,7 +27,6 @@
 
 #include "guihelper.h"
 #include "fileexportertoolchain.h"
-#include "settingsfileexporterpdfpswidget.h"
 
 class SettingsFileExporterPDFPSWidget::SettingsFileExporterPDFPSWidgetPrivate
 {

@@ -15,6 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "fileexporterbibtexoutput.h"
+
 #include <QBuffer>
 #include <QFile>
 #include <QDir>
@@ -28,7 +30,6 @@
 #include "element.h"
 #include "entry.h"
 #include "fileexporterbibtex.h"
-#include "fileexporterbibtexoutput.h"
 #include "kbibtexnamespace.h"
 
 FileExporterBibTeXOutput::FileExporterBibTeXOutput(OutputType outputType)

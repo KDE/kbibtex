@@ -15,6 +15,8 @@
  *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
  ***************************************************************************/
 
+#include "statistics.h"
+
 #include <QFormLayout>
 #include <QLabel>
 #include <QFont>
@@ -22,7 +24,6 @@
 
 #include <KLocale>
 
-#include "statistics.h"
 #include "element.h"
 #include "file.h"
 #include "entry.h"

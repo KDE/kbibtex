@@ -15,6 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "value.h"
+
 #include <QSet>
 #include <QString>
 #include <QStringList>
@@ -24,7 +26,6 @@
 
 #include "file.h"
 #include "preferences.h"
-#include "value.h"
 
 quint64 ValueItem::internalIdCounter = 0;
 

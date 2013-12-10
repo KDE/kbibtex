@@ -15,13 +15,14 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "fileexporterris.h"
+
 #include <QRegExp>
 #include <QStringList>
 
 #include <KDebug>
 
 #include "entry.h"
-#include "fileexporterris.h"
 
 FileExporterRIS::FileExporterRIS() : FileExporter()
 {

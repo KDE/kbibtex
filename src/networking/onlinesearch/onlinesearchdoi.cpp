@@ -15,6 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "onlinesearchdoi.h"
+
 #include <QLabel>
 #include <QGridLayout>
 #include <QNetworkRequest>
@@ -28,7 +30,6 @@
 #include "kbibtexnamespace.h"
 #include "internalnetworkaccessmanager.h"
 #include "fileimporterbibtex.h"
-#include "onlinesearchdoi.h"
 
 class OnlineSearchDOI::OnlineSearchQueryFormDOI : public OnlineSearchQueryFormAbstract
 {

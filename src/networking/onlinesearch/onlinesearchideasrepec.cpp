@@ -15,6 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "onlinesearchideasrepec.h"
+
 #include <QSet>
 #include <QNetworkRequest>
 #include <QNetworkReply>
@@ -24,7 +26,6 @@
 
 #include "fileimporterbibtex.h"
 #include "internalnetworkaccessmanager.h"
-#include "onlinesearchideasrepec.h"
 
 class OnlineSearchIDEASRePEc::OnlineSearchIDEASRePEcPrivate
 {

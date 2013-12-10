@@ -15,6 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "elementeditor.h"
+
 #include <typeinfo>
 
 #include <QCheckBox>
@@ -42,7 +44,6 @@
 #include "element.h"
 #include "file.h"
 #include "elementwidgets.h"
-#include "elementeditor.h"
 #include "checkbibtex.h"
 #include "hidingtabwidget.h"
 

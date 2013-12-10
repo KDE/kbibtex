@@ -15,6 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "openfileinfo.h"
+
 #include <QString>
 #include <QLatin1String>
 #include <QTimer>
@@ -30,7 +32,6 @@
 #include <KIO/NetAccess>
 
 #include "fileimporterpdf.h"
-#include "openfileinfo.h"
 
 class OpenFileInfo::OpenFileInfoPrivate
 {

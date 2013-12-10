@@ -15,6 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "onlinesearchieeexplore.h"
+
 #include <QNetworkReply>
 
 #include <KMessageBox>
@@ -27,7 +29,6 @@
 #include "internalnetworkaccessmanager.h"
 #include "xsltransform.h"
 #include "fileimporterbibtex.h"
-#include "onlinesearchieeexplore.h"
 
 class OnlineSearchIEEEXplore::OnlineSearchIEEEXplorePrivate
 {

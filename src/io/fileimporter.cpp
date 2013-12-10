@@ -14,13 +14,15 @@
 *   You should have received a copy of the GNU General Public License     *
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
+
+#include "fileimporter.h"
+
 #include <QBuffer>
 #include <QTextStream>
 #include <QStringList>
 #include <QRegExp>
 
 #include "value.h"
-#include "fileimporter.h"
 
 FileImporter::FileImporter()
         : QObject()

@@ -15,12 +15,13 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "idsuggestions.h"
+
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <KLocale>
 
 #include "encoderlatex.h"
-#include "idsuggestions.h"
 
 class IdSuggestions::IdSuggestionsPrivate
 {

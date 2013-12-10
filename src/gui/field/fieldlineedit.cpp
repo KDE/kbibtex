@@ -15,6 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "fieldlineedit.h"
+
 #include <typeinfo>
 
 #include <QMenu>
@@ -44,7 +46,6 @@
 #include "fileexporterbibtex.h"
 #include "bibtexfields.h"
 #include "encoderlatex.h"
-#include "fieldlineedit.h"
 
 class FieldLineEdit::FieldLineEditPrivate
 {

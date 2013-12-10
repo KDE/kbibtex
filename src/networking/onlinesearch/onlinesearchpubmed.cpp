@@ -15,6 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "onlinesearchpubmed.h"
+
 #include <QNetworkReply>
 #include <QDateTime>
 #include <QTimer>
@@ -27,7 +29,6 @@
 #include "xsltransform.h"
 #include "fileimporterbibtex.h"
 #include "internalnetworkaccessmanager.h"
-#include "onlinesearchpubmed.h"
 
 const int OnlineSearchPubMed::maxNumResults = 25;
 const qint64 OnlineSearchPubMed::queryChokeTimeout = 10 * 1000; /// 10 seconds

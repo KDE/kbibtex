@@ -15,6 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "onlinesearchmathscinet.h"
+
 #include <QNetworkReply>
 #include <QNetworkRequest>
 #include <QNetworkAccessManager>
@@ -26,7 +28,6 @@
 #include "fileimporterbibtex.h"
 #include "kbibtexnamespace.h"
 #include "internalnetworkaccessmanager.h"
-#include "onlinesearchmathscinet.h"
 
 class OnlineSearchMathSciNet::OnlineSearchMathSciNetPrivate
 {

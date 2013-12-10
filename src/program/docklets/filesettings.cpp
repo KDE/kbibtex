@@ -16,6 +16,8 @@
  *   along with this program; if not, see <http://www.gnu.org/licenses/>.    *
  *****************************************************************************/
 
+#include "filesettings.h"
+
 #include <QFormLayout>
 #include <QCheckBox>
 
@@ -30,7 +32,6 @@
 #include "value.h"
 #include "iconvlatex.h"
 #include "file.h"
-#include "filesettings.h"
 
 FileSettings::FileSettings(QWidget *parent)
         : FileSettingsWidget(parent), m_currentFile(NULL), m_editor(NULL)

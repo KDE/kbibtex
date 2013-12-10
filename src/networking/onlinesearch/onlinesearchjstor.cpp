@@ -15,6 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "onlinesearchjstor.h"
+
 #include <QNetworkRequest>
 #include <QNetworkReply>
 
@@ -24,7 +26,6 @@
 #include "internalnetworkaccessmanager.h"
 #include "iocommon.h"
 #include "fileimporterbibtex.h"
-#include "onlinesearchjstor.h"
 
 class OnlineSearchJStor::OnlineSearchJStorPrivate
 {

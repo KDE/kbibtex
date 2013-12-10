@@ -19,6 +19,8 @@
  *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
  ***************************************************************************/
 
+#include "referencepreview.h"
+
 #include <QFrame>
 #include <QBuffer>
 #ifdef HAVE_QTWEBKIT
@@ -50,7 +52,6 @@
 #include "file.h"
 #include "entry.h"
 #include "bibtexeditor.h"
-#include "referencepreview.h"
 
 class ReferencePreview::ReferencePreviewPrivate
 {

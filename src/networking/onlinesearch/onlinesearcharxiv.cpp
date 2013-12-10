@@ -15,6 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "onlinesearcharxiv.h"
+
 #include <QGridLayout>
 #include <QLabel>
 #include <QSpinBox>
@@ -29,7 +31,6 @@
 
 #include "fileimporterbibtex.h"
 #include "xsltransform.h"
-#include "onlinesearcharxiv.h"
 #include "internalnetworkaccessmanager.h"
 
 

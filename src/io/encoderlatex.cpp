@@ -15,11 +15,11 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "encoderlatex.h"
+
 #include <QString>
 
 #include <KDebug>
-
-#include "encoderlatex.h"
 
 /**
  * General documentation on this topic:

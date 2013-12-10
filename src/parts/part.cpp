@@ -15,6 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "part.h"
+
 #include <typeinfo>
 
 #include <QLabel>
@@ -72,7 +74,6 @@
 #include "valuelistmodel.h"
 #include "clipboard.h"
 #include "idsuggestions.h"
-#include "part.h"
 #include "partfactory.h"
 // #include "browserextension.h" // FIXME
 

@@ -16,6 +16,8 @@
  *   along with this program; if not, see <http://www.gnu.org/licenses/>.    *
  *****************************************************************************/
 
+#include "filesettingswidget.h"
+
 #include <QCheckBox>
 #include <QFormLayout>
 
@@ -27,7 +29,6 @@
 #include "iconvlatex.h"
 #include "file.h"
 #include "guihelper.h"
-#include "filesettingswidget.h"
 
 #define createDelimiterString(a, b) (QString("%1%2%3").arg(a).arg(QChar(8230)).arg(b))
 

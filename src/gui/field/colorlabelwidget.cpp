@@ -15,6 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "colorlabelwidget.h"
+
 #include <QAbstractItemModel>
 #include <QFontMetrics>
 #include <QPainter>
@@ -26,7 +28,6 @@
 
 #include "notificationhub.h"
 #include "preferences.h"
-#include "colorlabelwidget.h"
 
 const int ColorRole = Qt::UserRole + 521;
 

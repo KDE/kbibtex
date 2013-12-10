@@ -20,6 +20,8 @@
 
 #include "kbibtexio_export.h"
 
+#include <QStringList>
+
 #include "kbibtexnamespace.h"
 
 typedef struct {

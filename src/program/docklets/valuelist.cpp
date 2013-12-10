@@ -15,6 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "valuelist.h"
+
 #include <typeinfo>
 
 #include <QTreeView>
@@ -36,7 +38,6 @@
 #include "entry.h"
 #include "bibtexeditor.h"
 #include "valuelistmodel.h"
-#include "valuelist.h"
 
 class ValueList::ValueListPrivate
 {

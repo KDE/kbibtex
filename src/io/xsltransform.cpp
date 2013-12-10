@@ -15,13 +15,13 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "xsltransform.h"
+
 #include <libxslt/xsltutils.h>
 
 #include <QFileInfo>
 
 #include <KDebug>
-
-#include "xsltransform.h"
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>

@@ -15,6 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "fieldlistedit.h"
+
 #include <typeinfo>
 
 #include <QApplication>
@@ -44,8 +46,7 @@
 #include "entry.h"
 #include "fileimporterbibtex.h"
 #include "fileexporterbibtex.h"
-#include <fieldlineedit.h>
-#include "fieldlistedit.h"
+#include "fieldlineedit.h"
 
 class FieldListEdit::FieldListEditProtected
 {

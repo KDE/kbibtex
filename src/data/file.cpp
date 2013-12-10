@@ -15,6 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "file.h"
+
 #include <QFile>
 #include <QTextStream>
 #include <QIODevice>
@@ -26,7 +28,6 @@
 #include <KConfigGroup>
 
 #include "preferences.h"
-#include "file.h"
 #include "entry.h"
 #include "element.h"
 #include "macro.h"

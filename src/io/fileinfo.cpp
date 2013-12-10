@@ -15,6 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "fileinfo.h"
+
 #include <poppler/qt4/poppler-qt4.h>
 
 #include <QFileInfo>
@@ -27,7 +29,6 @@
 
 #include "kbibtexnamespace.h"
 #include "entry.h"
-#include "fileinfo.h"
 
 static const QRegExp regExpEscapedChars = QRegExp("\\\\+([&_~])");
 

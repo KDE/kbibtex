@@ -15,6 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
+#include "fileexporterxml.h"
+
 #include <typeinfo>
 
 #include <QRegExp>
@@ -26,7 +28,6 @@
 #include "comment.h"
 #include "encoderxml.h"
 #include "iocommon.h"
-#include "fileexporterxml.h"
 
 static QRegExp removal("[{}]+");
 static QRegExp abstractRegExp("\\bAbstract[:]?([ ]|&nbsp;|&amp;nbsp;)*", Qt::CaseInsensitive);
