@@ -342,7 +342,7 @@ void SettingsColorLabelWidget::resetToDefaults()
 void SettingsColorLabelWidget::addColor()
 {
     const QColor newColor((qrand() & 0xff) | 0x30, (qrand() & 0xff) | 0x30, (qrand() & 0xff) | 0x30);
-    const QString newColorName(newColor.name().replace(QLatin1Char('#'), QLatin1String("")));
+    const QString newColorName(newColor.name().remove(QLatin1Char('#')));
     d->model->addColorLabel(newColor, i18nc("Label for a new color; placeholder is for a 6-digit hex string", "NewColor%1", newColorName));
 }
 

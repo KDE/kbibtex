@@ -47,7 +47,7 @@ public:
 
         /// bibtex2html automatically appends ".html" to output filenames
         QString outputFilenameNoEnding = outputFilename;
-        outputFilenameNoEnding.replace(QLatin1String(".html"), QLatin1String(""));
+        outputFilenameNoEnding.remove(QLatin1String(".html"));
 
         QStringList args;
         args << "-s" << bibStyle; /// BibTeX style (plain, alpha, ...)

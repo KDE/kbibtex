@@ -68,7 +68,7 @@ void OnlineSearchSimpleBibTeXDownload::downloadDone()
         if (bibTeXcode.contains(QLatin1String("<html")) || bibTeXcode.contains(QLatin1String("<HTML"))) {
             /// Replace all linebreak-like characters, in case they occur inside the BibTeX code
             static const QRegExp htmlLinebreakRegExp(QLatin1String("<[/]?(br|p)[^>]*[/]?>"));
-            bibTeXcode = bibTeXcode.replace(htmlLinebreakRegExp, QLatin1String(""));
+            bibTeXcode = bibTeXcode.remove(htmlLinebreakRegExp);
 
             /// Find first BibTeX entry in HTML code, clip away all HTML code before that
             static const QRegExp elementTypeRegExp(QLatin1String("[@]\\S+\\{"));

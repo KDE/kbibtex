@@ -99,7 +99,7 @@ void FileInfo::urlsInText(const QString &text, TestExistance testExistance, cons
     int pos = 0;
     while ((pos = KBibTeX::doiRegExp.indexIn(internalText, pos)) != -1) {
         QString match = KBibTeX::doiRegExp.cap(0);
-        KUrl url(doiUrlPrefix() + match.replace("\\", ""));
+        KUrl url(doiUrlPrefix() + match.remove("\\"));
         if (url.isValid() && !result.contains(url))
             result << url;
         /// remove match from internal text to avoid duplicates
@@ -207,7 +207,7 @@ QList<KUrl> FileInfo::entryUrls(const Entry *entry, const KUrl &bibTeXUrl, TestE
         /// check if in the same directory as the BibTeX file there is a subdirectory
         /// similar to the BibTeX file's name and which contains a PDF file exists
         /// which filename is based on the entry's id
-        QString basename = bibTeXUrl.fileName().replace(QRegExp("\\.[^.]{2,5}$"), "");
+        QString basename = bibTeXUrl.fileName().remove(QRegExp("\\.[^.]{2,5}$"));
         QString directory = baseDirectory + QDir::separator() + basename;
         for (QStringList::ConstIterator extensionIt = documentFileExtensions.constBegin(); extensionIt != documentFileExtensions.constEnd(); ++extensionIt) {
             KUrl url(directory + QDir::separator() + entry->id() + *extensionIt);
@@ -224,7 +224,7 @@ QString FileInfo::pdfToText(const QString &pdfFilename)
 {
     /// Build filename for text file where PDF file's plain text is cached
     static const QRegExp invalidChars("[^-a-z0-9_]", Qt::CaseInsensitive);
-    QString textFilename = QString(pdfFilename).replace(invalidChars, "").append(QLatin1String(".txt")).prepend(KStandardDirs::locateLocal("cache", "pdftotext/"));
+    QString textFilename = QString(pdfFilename).remove(invalidChars).append(QLatin1String(".txt")).prepend(KStandardDirs::locateLocal("cache", "pdftotext/"));
 
     /// Initialize return value
     QString text;

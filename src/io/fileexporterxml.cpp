@@ -131,7 +131,7 @@ bool FileExporterXML::writeEntry(QTextStream &stream, const Entry *entry)
         } else if (key == Entry::ftAbstract) {
             /// clean up HTML artifacts
             QString text = valueToXML(value);
-            text = text.replace(abstractRegExp, "");
+            text = text.remove(abstractRegExp);
             stream << "  <" << key << ">" << text << "</" << key << ">" << endl;
         } else if (key == Entry::ftMonth) {
             stream << "  <month";
@@ -233,6 +233,6 @@ QString FileExporterXML::valueToXML(const Value &value, const QString &)
 QString FileExporterXML::cleanXML(const QString &text)
 {
     QString result = text;
-    result = result.replace(lineBreaksRegExp, "<br/>").replace(removal, QString()).replace(QLatin1String("\\ensuremath"), QString());
+    result = result.replace(lineBreaksRegExp, "<br/>").remove(removal).remove(QLatin1String("\\ensuremath"));
     return result;
 }

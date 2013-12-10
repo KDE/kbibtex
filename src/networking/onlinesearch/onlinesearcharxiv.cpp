@@ -637,10 +637,10 @@ void OnlineSearchArXiv::downloadDone()
     if (handleErrors(reply)) {
         /// ensure proper treatment of UTF-8 characters
         QString result = QString::fromUtf8(reply->readAll().data());
-        result = result.replace("xmlns=\"http://www.w3.org/2005/Atom\"", ""); // FIXME fix arxiv2bibtex.xsl to handle namespace
+        result = result.remove("xmlns=\"http://www.w3.org/2005/Atom\""); // FIXME fix arxiv2bibtex.xsl to handle namespace
 
         /// use XSL transformation to get BibTeX document from XML result
-        QString bibTeXcode = d->xslt->transform(result).replace(QLatin1String("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"), QString());
+        QString bibTeXcode = d->xslt->transform(result).remove(QLatin1String("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
 
         FileImporterBibTeX importer;
         File *bibtexFile = importer.fromString(bibTeXcode);

@@ -84,7 +84,7 @@ void Keyword::replace(const QString &before, const QString &after, ValueItem::Re
 
 bool Keyword::containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive) const
 {
-    const QString text = QString(m_text).replace(ignoredInSorting, "");
+    const QString text = QString(m_text).remove(ignoredInSorting);
     return text.contains(pattern, caseSensitive);
 }
 
@@ -143,9 +143,9 @@ void Person::replace(const QString &before, const QString &after, ValueItem::Rep
 
 bool Person::containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive) const
 {
-    const QString firstName = QString(m_firstName).replace(ignoredInSorting, "");
-    const QString lastName = QString(m_lastName).replace(ignoredInSorting, "");
-    const QString suffix = QString(m_suffix).replace(ignoredInSorting, "");
+    const QString firstName = QString(m_firstName).remove(ignoredInSorting);
+    const QString lastName = QString(m_lastName).remove(ignoredInSorting);
+    const QString suffix = QString(m_suffix).remove(ignoredInSorting);
 
     return firstName.contains(pattern, caseSensitive) || lastName.contains(pattern, caseSensitive) || suffix.contains(pattern, caseSensitive) || QString("%1 %2|%2, %1").arg(firstName).arg(lastName).contains(pattern, caseSensitive);
 }
@@ -235,7 +235,7 @@ void MacroKey::replace(const QString &before, const QString &after, ValueItem::R
 
 bool MacroKey::containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive) const
 {
-    const QString text = QString(m_text).replace(ignoredInSorting, "");
+    const QString text = QString(m_text).remove(ignoredInSorting);
     return text.contains(pattern, caseSensitive);
 }
 
@@ -281,7 +281,7 @@ void PlainText::replace(const QString &before, const QString &after, ValueItem::
 
 bool PlainText::containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive) const
 {
-    const QString text = QString(m_text).replace(ignoredInSorting, "");
+    const QString text = QString(m_text).remove(ignoredInSorting);
     return text.contains(pattern, caseSensitive);
 }
 
@@ -330,7 +330,7 @@ void VerbatimText::replace(const QString &before, const QString &after, ValueIte
 
 bool VerbatimText::containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive) const
 {
-    const QString text = QString(m_text).replace(ignoredInSorting, "");
+    const QString text = QString(m_text).remove(ignoredInSorting);
 
     /// Initialize map of labels to color (hex string) only once
     // FIXME if user changes colors/labels later, it will not be updated here

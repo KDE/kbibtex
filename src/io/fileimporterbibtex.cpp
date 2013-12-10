@@ -93,7 +93,7 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
     /** Remove HTML code from the input source */
     // FIXME HTML data should be removed somewhere else? onlinesearch ...
     const int originalLength = rawText.length();
-    rawText = rawText.replace(KBibTeX::htmlRegExp, QLatin1String(""));
+    rawText = rawText.remove(KBibTeX::htmlRegExp);
     const int afterHTMLremovalLength = rawText.length();
     if (originalLength != afterHTMLremovalLength)
         kWarning() << (originalLength - afterHTMLremovalLength) << "characters of HTML tags have been removed";
@@ -641,7 +641,7 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value &value, const QStr
                 if (KBibTeX::mendeleyFileRegExp.indexIn(rawText) >= 0)    {
                     const QString backslashLaTeX = QLatin1String("$\\backslash$");
                     QString filename = KBibTeX::mendeleyFileRegExp.cap(1);
-                    filename = filename.replace(backslashLaTeX, QString());
+                    filename = filename.remove(backslashLaTeX);
                     if (filename.startsWith(QLatin1String("home/")) || filename.startsWith(QLatin1String("Users/"))) {
                         /// Mendeley doesn't have a slash at the beginning of absolute paths,
                         /// so, insert one
@@ -773,7 +773,7 @@ QList<QSharedPointer<Keyword> > FileImporterBibTeX::splitKeywords(const QString 
         if (text.contains(*curSplitChar)) {
             /// split text along a pattern like spaces-splitchar-spaces
             /// extract keywords
-            const QStringList keywords = text.split(splitAlong[index], QString::SkipEmptyParts).replaceInStrings(unneccessarySpacing, QChar(' '));
+            const QStringList keywords = text.split(splitAlong[index], QString::SkipEmptyParts).replaceInStrings(unneccessarySpacing, QLatin1String(" "));
             /// build QList of Keyword objects from keywords
             foreach(const QString &keyword, keywords) {
                 result.append(QSharedPointer<Keyword>(new Keyword(keyword)));
