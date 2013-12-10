@@ -30,7 +30,6 @@ static const char PartName[] = I18N_NOOP("KBibTeXPart");
 static const char PartDescription[] = I18N_NOOP("BibTeX Editor Component");
 static const char PartCopyright[] = "Copyright 2004-2013 Thomas Fischer";
 static const char *programHomepage = I18N_NOOP("http://home.gna.org/kbibtex/");
-static const char *bugTrackerHomepage = "https://gna.org/bugs/?group=kbibtex";
 
 static KComponentData *_componentData = 0;
 static KAboutData *_aboutData = 0;
@@ -69,9 +68,8 @@ const KComponentData &KBibTeXPartFactory::componentData()
         _aboutData = new KAboutData(PartId, 0, ki18n(PartName), versionNumber,
                                     ki18n(PartDescription), KAboutData::License_GPL_V2,
                                     ki18n(PartCopyright), KLocalizedString(),
-                                    programHomepage, bugTrackerHomepage);
+                                    programHomepage);
         _aboutData->addAuthor(ki18n("Thomas Fischer"), ki18n("Maintainer"), "fischer@unix-ag.uni-kl.de", "http://www.t-fischer.net/");
-        _aboutData->setCustomAuthorText(ki18n("Please use https://gna.org/bugs/?group=kbibtex to report bugs.\n"), ki18n("Please use <a href=\"https://gna.org/bugs/?group=kbibtex\">https://gna.org/bugs/?group=kbibtex</a> to report bugs.\n"));
         _componentData = new KComponentData(_aboutData);
     }
     return *_componentData;
