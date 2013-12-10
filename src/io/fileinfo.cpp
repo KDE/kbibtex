@@ -226,7 +226,7 @@ QString FileInfo::pdfToText(const QString &pdfFilename)
     QString textFilename = QString(pdfFilename).replace(invalidChars, "").append(QLatin1String(".txt")).prepend(KStandardDirs::locateLocal("cache", "pdftotext/"));
 
     /// Initialize return value
-    QString text = QString();
+    QString text;
 
     /// First, check if there is a cache text file
     if (QFileInfo(textFilename).exists()) {

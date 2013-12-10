@@ -532,7 +532,7 @@ QString PlainTextValue::text(const ValueItem &valueItem, const File *file, bool 
 
 QString PlainTextValue::text(const ValueItem &valueItem, ValueItemType &vit, const File * /*file*/, bool debug)
 {
-    QString result = QString();
+    QString result;
     vit = VITOther;
 
     if (notificationListener == NULL)
@@ -613,5 +613,5 @@ void PlainTextValue::readConfiguration()
     personNameFormatting = configGroup.readEntry(Person::keyPersonNameFormatting, Person::defaultPersonNameFormatting);
 }
 
-QString PlainTextValue::personNameFormatting = QString();
+QString PlainTextValue::personNameFormatting;
 PlainTextValue *PlainTextValue::notificationListener = NULL;

@@ -377,7 +377,7 @@ QVariant BibTeXFileModel::entryData(const Entry *entry, const QString &raw, cons
         if (colorText.isEmpty()) return QVariant(text);
         return QVariant(colorText);
     } else {
-        QString text = QString();
+        QString text;
         if (entry->contains(raw))
             text = PlainTextValue::text(entry->value(raw), m_bibtexFile).simplified();
         else if (!rawAlt.isEmpty() && entry->contains(rawAlt))

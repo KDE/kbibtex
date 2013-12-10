@@ -314,7 +314,7 @@ public:
 
         bool result = true;
         EncoderLaTeX *enc = EncoderLaTeX::instance();
-        QString rawText = QString();
+        QString rawText;
         const QSharedPointer<ValueItem> first = value.first();
 
         const QSharedPointer<PlainText> plainText = first.dynamicCast<PlainText>();

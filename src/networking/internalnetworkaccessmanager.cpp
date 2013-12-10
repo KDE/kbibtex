@@ -99,7 +99,7 @@ const QStringList userAgentList = QStringList()
                                   << QLatin1String("Mozilla/5.0 (SymbianOS/9.1; U; [en]; Series60/3.0 NokiaE60/4.06.0) AppleWebKit/413 (KHTML, like Gecko) Safari/413")
                                   << QLatin1String("Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US) AppleWebKit/534.16 (KHTML, like Gecko) Chrome/10.0.648.133 Safari/534.16");
 
-QString InternalNetworkAccessManager::userAgentString = QString();
+QString InternalNetworkAccessManager::userAgentString;
 InternalNetworkAccessManager *InternalNetworkAccessManager::instance = NULL;
 
 InternalNetworkAccessManager::InternalNetworkAccessManager(QObject *parent)

@@ -861,7 +861,7 @@ void FileImporterBibTeX::parsePersonList(const QString &text, Value &value, Comm
     contextSensitiveSplit(text, tokens);
 
     int nameStart = 0;
-    QString prevToken = QString();
+    QString prevToken;
     bool encounteredName = false;
     for (int i = 0; i < tokens.count(); ++i) {
         if (tokens[i] == tokenAnd) {

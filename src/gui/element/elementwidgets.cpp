@@ -339,7 +339,7 @@ bool ReferenceWidget::apply(QSharedPointer<Element> element) const
     QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
     if (!entry.isNull()) {
         BibTeXEntries *be = BibTeXEntries::self();
-        QString type = QString();
+        QString type;
         if (entryType->currentIndex() < 0 || entryType->lineEdit()->isModified())
             type = be->format(entryType->lineEdit()->text(), KBibTeX::cUpperCamelCase);
         else
