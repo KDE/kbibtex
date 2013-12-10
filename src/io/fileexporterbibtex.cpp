@@ -395,7 +395,7 @@ bool FileExporterBibTeX::save(QIODevice *iodevice, const File *bibtexfile, QStri
     }
 
     /// Crossref'ed entries are written last
-    for (File::ConstIterator it = bibtexfile->constBegin(); it != bibtexfile->constEnd() && result && !d->cancelFlag; it++) {
+    for (File::ConstIterator it = bibtexfile->constBegin(); it != bibtexfile->constEnd() && result && !d->cancelFlag; ++it) {
         QSharedPointer<const Entry> entry = (*it).dynamicCast<const Entry>();
         if (entry.isNull()) continue;
         if (!crossRefIdList.contains(entry->id())) continue;
