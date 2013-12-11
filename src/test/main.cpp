@@ -15,6 +15,8 @@
  *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
  ***************************************************************************/
 
+#include <QPointer>
+
 #include <KCmdLineArgs>
 #include <KApplication>
 #include <KAboutData>
@@ -37,7 +39,7 @@ int main(int argc, char *argv[])
     KCmdLineArgs::init(argc, argv, &aboutData);
     KApplication programCore;
 
-    KBibTeXTest *test = new KBibTeXTest();
+    QPointer<KBibTeXTest> test = new KBibTeXTest();
     test->exec();
 
     return programCore.exec();
