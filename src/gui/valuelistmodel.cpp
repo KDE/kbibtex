@@ -221,7 +221,7 @@ QVariant ValueListModel::data(const QModelIndex &index, int role) const
         } else
             return QVariant(values[index.row()].count);
     } else if (role == SortRole) {
-        QString buffer = values[index.row()].sortBy.isNull() ? values[index.row()].text : values[index.row()].sortBy;
+        QString buffer = values[index.row()].sortBy.isEmpty() ? values[index.row()].text : values[index.row()].sortBy;
         buffer = buffer.remove(ignoredInSorting).toLower();
 
         if ((showCountColumn && index.column() == 1) || (!showCountColumn && sortBy == SortByCount)) {

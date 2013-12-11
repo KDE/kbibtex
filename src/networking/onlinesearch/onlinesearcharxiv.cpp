@@ -82,7 +82,7 @@ public:
     }
 
     void copyFromEntry(const Entry &entry) {
-        lineEditFreeText->setText(authorLastNames(entry).join(" ") + " " + PlainTextValue::text(entry[Entry::ftTitle]));
+        lineEditFreeText->setText(authorLastNames(entry).join(QLatin1String(" ")) + QLatin1Char(' ') + PlainTextValue::text(entry[Entry::ftTitle]));
     }
 
     void saveState() {

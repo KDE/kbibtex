@@ -146,16 +146,16 @@ void OnlineSearchScienceDirect::doneFetchingStartPage()
         } else {
             InternalNetworkAccessManager::self()->mergeHtmlHeadCookies(htmlText, reply->url());
 
-            KUrl url(d->scienceDirectBaseUrl + "science");
+            KUrl url(d->scienceDirectBaseUrl + QLatin1String("science"));
             QMap<QString, QString> inputMap = formParameters(htmlText, QLatin1String("<form name=\"qkSrch\""));
-            inputMap["qs_all"] = d->queryFreetext.simplified();
-            inputMap["qs_author"] = d->queryAuthor.simplified();
-            inputMap["resultsPerPage"] = QString::number(d->numExpectedResults);
-            inputMap["_ob"] = "QuickSearchURL";
-            inputMap["_method"] = "submitForm";
-            inputMap["sdSearch"] = "Search";
+            inputMap[QLatin1String("qs_all")] = d->queryFreetext.simplified();
+            inputMap[QLatin1String("qs_author")] = d->queryAuthor.simplified();
+            inputMap[QLatin1String("resultsPerPage")] = QString::number(d->numExpectedResults);
+            inputMap[QLatin1String("_ob")] = QLatin1String("QuickSearchURL");
+            inputMap[QLatin1String("_method")] = QLatin1String("submitForm");
+            inputMap[QLatin1String("sdSearch")] = QLatin1String("Search");
 
-            static const QStringList orderOfParameters = QString("_ob|_method|_acct|_origin|_zone|md5|_eidkey|qs_issue|qs_pages|qs_title|qs_vol|sdSearch|qs_all|qs_author|resultsPerPage").split("|");
+            static const QStringList orderOfParameters = QString(QLatin1String("_ob|_method|_acct|_origin|_zone|md5|_eidkey|qs_issue|qs_pages|qs_title|qs_vol|sdSearch|qs_all|qs_author|resultsPerPage")).split(QLatin1Char('|'));
             foreach(const QString &key, orderOfParameters) {
                 if (!inputMap.contains(key)) continue;
                 url.addQueryItem(key, inputMap[key]);
@@ -275,10 +275,10 @@ void OnlineSearchScienceDirect::doneFetchingExportCitationPage()
             InternalNetworkAccessManager::self()->mergeHtmlHeadCookies(htmlText, reply->url());
 
             QMap<QString, QString> inputMap = formParameters(htmlText, QLatin1String("<form name=\"exportCite\""));
-            inputMap["format"] = "cite";
-            inputMap["citation-type"] = "BIBTEX";
-            inputMap["RETURN_URL"] = d->scienceDirectBaseUrl + "/science/home";
-            static const QStringList orderOfParameters = QString("_ob|_method|_acct|_userid|_docType|_eidkey|_ArticleListID|_uoikey|count|md5|JAVASCRIPT_ON|format|citation-type|Export|RETURN_URL").split("|");
+            inputMap[QLatin1String("format")] = QLatin1String("cite");
+            inputMap[QLatin1String("citation-type")] = QLatin1String("BIBTEX");
+            inputMap[QLatin1String("RETURN_URL")] = d->scienceDirectBaseUrl + QLatin1String("/science/home");
+            static const QStringList orderOfParameters = QString(QLatin1String("_ob|_method|_acct|_userid|_docType|_eidkey|_ArticleListID|_uoikey|count|md5|JAVASCRIPT_ON|format|citation-type|Export|RETURN_URL")).split(QLatin1Char('|'));
 
             QString body;
             foreach(const QString &key, orderOfParameters) {

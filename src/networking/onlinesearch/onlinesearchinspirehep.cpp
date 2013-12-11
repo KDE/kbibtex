@@ -79,9 +79,9 @@ KUrl OnlineSearchInspireHep::buildQueryUrl(const QMap<QString, QString> &query, 
     urlText.append(QString(QLatin1String("&rg=%1")).arg(numResults));
     /// Append actual query
     urlText.append(QLatin1String("&p="));
-    urlText.append(queryFragments.join(" and "));
+    urlText.append(queryFragments.join(QLatin1String(" and ")));
     /// URL-encode text
-    urlText = urlText.replace(" ", "%20").replace("\"", "%22");
+    urlText = urlText.replace(QLatin1Char(' '), QLatin1String("%20")).replace(QLatin1Char('"'), QLatin1String("%22"));
 
     return KUrl(urlText);
 }

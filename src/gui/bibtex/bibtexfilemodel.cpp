@@ -37,7 +37,7 @@
 #include "fileinfo.h"
 #include "preferences.h"
 
-static const QRegExp curlyRegExp("[{}]+");
+static const QRegExp curlyRegExp(QLatin1String("[{}]+"));
 
 const QString SortFilterBibTeXFileModel::configGroupName = QLatin1String("User Interface");
 

@@ -196,11 +196,11 @@ void OnlineSearchGoogleScholar::doneFetchingConfigPage()
 
     if (handleErrors(reply)) {
         QMap<QString, QString> inputMap = formParameters(reply->readAll(), "<form ");
-        inputMap["hl"] = "en";
-        inputMap["scis"] = "yes";
-        inputMap["scisf"] = "4";
-        inputMap["num"] = QString::number(d->numResults);
-        inputMap["submit"] = "";
+        inputMap[QLatin1String("hl")] = QLatin1String("en");
+        inputMap[QLatin1String("scis")] = QLatin1String("yes");
+        inputMap[QLatin1String("scisf")] = QLatin1String("4");
+        inputMap[QLatin1String("num")] = QString::number(d->numResults);
+        inputMap[QLatin1String("submit")] = QLatin1String("");
 
         KUrl url(d->setConfigPageUrl.arg(reply->url().host()));
         for (QMap<QString, QString>::ConstIterator it = inputMap.constBegin(); it != inputMap.constEnd(); ++it)

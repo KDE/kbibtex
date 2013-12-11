@@ -79,8 +79,8 @@ KUrl OnlineSearchSOANASAADS::buildQueryUrl(const QMap<QString, QString> &query, 
 
     /// Build URL
     QString urlText = QLatin1String("http://adsabs.harvard.edu/cgi-bin/basic_connect?version=1&data_type=BIBTEXPLUS&type=FILE&sort=NDATE&qsearch=");
-    urlText.append(queryFragments.join("+"));
-    urlText = urlText.replace("\"", "%22");
+    urlText.append(queryFragments.join(QLatin1String("+")));
+    urlText = urlText.replace(QLatin1Char('"'), QLatin1String("%22"));
     /// set number of expected results
     urlText.append(QString(QLatin1String("&nr_to_return=%1")).arg(numResults));
 

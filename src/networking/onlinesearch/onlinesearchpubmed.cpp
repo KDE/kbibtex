@@ -91,11 +91,11 @@ public:
         }
 
         /// Join all search terms with an AND operation
-        url.append(queryFragments.join("+AND+"));
-        url = url.replace("\"", "%22");
+        url.append(queryFragments.join(QLatin1String("+AND+")));
+        url = url.replace(QLatin1Char('"'), QLatin1String("%22"));
 
         /// set number of expected results
-        url.append(QString("&retstart=0&retmax=%1&retmode=xml").arg(numResults));
+        url.append(QString(QLatin1String("&retstart=0&retmax=%1&retmode=xml")).arg(numResults));
 
         return KUrl(url);
     }

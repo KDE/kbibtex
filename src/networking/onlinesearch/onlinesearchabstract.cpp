@@ -71,8 +71,8 @@ OnlineSearchAbstract::OnlineSearchAbstract(QWidget *parent)
 
 KIcon OnlineSearchAbstract::icon(QListWidgetItem *listWidgetItem)
 {
-    static const QRegExp invalidChars("[^-a-z0-9_]", Qt::CaseInsensitive);
-    const QString fileNameStem = KStandardDirs::locateLocal("cache", "favicons/") + QString(favIconUrl()).remove(invalidChars);
+    static const QRegExp invalidChars(QLatin1String("[^-a-z0-9_]"), Qt::CaseInsensitive);
+    const QString fileNameStem = KStandardDirs::locateLocal("cache", QLatin1String("favicons/")) + QString(favIconUrl()).remove(invalidChars);
     const QStringList fileNameExtensions = QStringList() << QLatin1String(".ico") << QLatin1String(".png") << QString();
 
     foreach(const QString &extension, fileNameExtensions) {
@@ -215,7 +215,7 @@ QString OnlineSearchAbstract::encodeURL(QString rawText)
         rawText = rawText.replace(QChar(*cur), '%' + QString::number(*cur, 16));
         ++cur;
     }
-    rawText = rawText.replace(" ", "+");
+    rawText = rawText.replace(QLatin1Char(' '), QLatin1Char('+'));
     return rawText;
 }
 
@@ -228,7 +228,7 @@ QString OnlineSearchAbstract::decodeURL(QString rawText)
         if (ok)
             rawText = rawText.replace(mimeRegExp.cap(0), c);
     }
-    rawText = rawText.replace("&amp;", "&").replace("+", " ");
+    rawText = rawText.replace(QLatin1String("&amp;"), QLatin1String("&")).replace(QLatin1Char('+'), QLatin1String(" "));
     return rawText;
 }
 

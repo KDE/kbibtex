@@ -95,7 +95,7 @@ public:
 
     void copyFromEntry(const Entry &entry) {
         comboBoxSearchWhere->setCurrentIndex(comboBoxSearchWhere->count() - 1);
-        lineEditSearchTerm->setText(authorLastNames(entry).join(" ") + " " + PlainTextValue::text(entry[Entry::ftTitle]));
+        lineEditSearchTerm->setText(authorLastNames(entry).join(QLatin1String(" ")) + QLatin1Char(' ') + PlainTextValue::text(entry[Entry::ftTitle]));
     }
 
     void saveState() {
@@ -139,11 +139,11 @@ public:
         bool hasAuthor = !query[queryKeyAuthor].isEmpty();
         bool hasYear = !query[queryKeyYear].isEmpty();
 
-        QString searchType = "search";
+        QString searchType = QLatin1String("search");
         if (hasAuthor && !hasFreeText && !hasTitle && !hasYear) {
             /// if only the author field is used, a special author search
             /// on BibSonomy can be used
-            searchType = "author";
+            searchType = QLatin1String("author");
         }
 
         QStringList queryFragments;
@@ -151,8 +151,8 @@ public:
             queryFragments << p->encodeURL(it.value());
         }
 
-        QString queryString = queryFragments.join("%20");
-        url.append(searchType + "/" + queryString + QString("?items=%1").arg(numResults));
+        QString queryString = queryFragments.join(QLatin1String("%20"));
+        url.append(searchType + QLatin1Char('/') + queryString + QString(QLatin1String("?items=%1")).arg(numResults));
 
         return KUrl(url);
     }
