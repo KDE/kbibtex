@@ -602,7 +602,7 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value &value, const QStr
             if (isStringKey)
                 value.append(QSharedPointer<MacroKey>(new MacroKey(text)));
             else {
-                CommaContainment comma;
+                CommaContainment comma = ccContainsComma;
                 parsePersonList(text, value, &comma);
 
                 /// Update statistics on name formatting
