@@ -221,7 +221,7 @@ FilterBar::FilterBar(QWidget *parent)
 
     d->buttonClearAll = new KPushButton(this);
     d->buttonClearAll->setIcon(KIcon("edit-clear-locationbar-rtl"));
-    d->buttonClearAll->setToolTip(i18n("Reset filter critera"));
+    d->buttonClearAll->setToolTip(i18n("Reset filter criteria"));
     layout->addWidget(d->buttonClearAll, 1, 5);
 
     connect(d->comboBoxFilterText->lineEdit(), SIGNAL(textChanged(QString)), d->delayedTimer, SLOT(trigger()));
