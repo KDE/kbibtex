@@ -137,15 +137,15 @@ void OnlineSearchGoogleScholar::startSearch(const QMap<QString, QString> &query,
     d->numSteps = numResults + 4;
 
     QStringList queryFragments;
-    foreach(QString queryFragment, splitRespectingQuotationMarks(query[queryKeyFreeText])) {
+    foreach(const QString &queryFragment, splitRespectingQuotationMarks(query[queryKeyFreeText])) {
         queryFragments.append(encodeURL(queryFragment));
     }
-    foreach(QString queryFragment, splitRespectingQuotationMarks(query[queryKeyTitle])) {
+    foreach(const QString &queryFragment, splitRespectingQuotationMarks(query[queryKeyTitle])) {
         queryFragments.append(encodeURL(queryFragment));
     }
     d->queryFreetext = queryFragments.join("+");
     queryFragments.clear();
-    foreach(QString queryFragment, splitRespectingQuotationMarks(query[queryKeyAuthor])) {
+    foreach(const QString &queryFragment, splitRespectingQuotationMarks(query[queryKeyAuthor])) {
         queryFragments.append(encodeURL(queryFragment));
     }
     d->queryAuthor = queryFragments.join("+");

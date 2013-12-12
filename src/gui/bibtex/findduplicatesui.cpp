@@ -202,7 +202,7 @@ public:
 
                 QList<Value> chosenValues = currentClique->chosenValues(fieldName);
                 QString text = PlainTextValue::text(values.at(index.row()));
-                foreach(Value value, chosenValues) {
+                foreach(const Value &value, chosenValues) {
                     if (PlainTextValue::text(value) == text)
                         return Qt::Checked;
                 }

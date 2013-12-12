@@ -119,7 +119,7 @@ public:
         /// format search terms
         QStringList queryFragments;
 
-        foreach(QString queryFragment, p->splitRespectingQuotationMarks(form->lineEditFreeText->text()))
+        foreach(const QString &queryFragment, p->splitRespectingQuotationMarks(form->lineEditFreeText->text()))
         queryFragments.append(p->encodeURL(queryFragment));
         return KUrl(QString("%1search_query=all:\"%3\"&start=0&max_results=%2").arg(arXivQueryBaseUrl).arg(form->numResultsField->value()).arg(queryFragments.join("\"+AND+all:\""))); ///< join search terms with an AND operation
     }
@@ -128,7 +128,7 @@ public:
         /// format search terms
         QStringList queryFragments;
         for (QMap<QString, QString>::ConstIterator it = query.constBegin(); it != query.constEnd(); ++it)
-            foreach(QString queryFragment, p->splitRespectingQuotationMarks(it.value()))
+            foreach(const QString &queryFragment, p->splitRespectingQuotationMarks(it.value()))
             queryFragments.append(p->encodeURL(queryFragment));
         return KUrl(QString("%1search_query=all:\"%3\"&start=0&max_results=%2").arg(arXivQueryBaseUrl).arg(numResults).arg(queryFragments.join("\"+AND+all:\""))); ///< join search terms with an AND operation
     }

@@ -53,7 +53,7 @@ public:
         checkBoxShowComments->setChecked(configGroup.readEntry(BibTeXFileModel::keyShowComments, BibTeXFileModel::defaultShowComments));
         checkBoxShowMacros->setChecked(configGroup.readEntry(BibTeXFileModel::keyShowMacros, BibTeXFileModel::defaultShowMacros));
         const QStringList styles = configGroup.readEntry("BibTeXStyles", QStringList());
-        foreach(QString style, styles) {
+        foreach(const QString &style, styles) {
             QStringList item = style.split("|");
             QString itemLabel = item.at(0);
             item.removeFirst();

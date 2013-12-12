@@ -89,7 +89,7 @@ public:
         layout->addRow(i18n("Paper Size:"), comboBoxPaperSize);
         QStringList paperSizeLabelToNameKeys = paperSizeLabelToName.keys();
         paperSizeLabelToNameKeys.sort();
-        foreach(QString labelText, paperSizeLabelToNameKeys) {
+        foreach(const QString &labelText, paperSizeLabelToNameKeys) {
             comboBoxPaperSize->addItem(labelText, paperSizeLabelToName[labelText]);
         }
         connect(comboBoxPaperSize, SIGNAL(currentIndexChanged(int)), p, SIGNAL(changed()));
