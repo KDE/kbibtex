@@ -150,7 +150,7 @@ CheckBibTeX::CheckBibTeXResult CheckBibTeX::checkBibTeX(QSharedPointer<Entry> &e
         KMessageBox::information(parent, i18n("<qt><p>The following warnings were found:</p><ul><li>%1</li></ul></qt>", warnings.join("</li><li>")));
         result = BibTeXError;
     } else
-        KMessageBox::information(parent, i18n("No warnings or errors were found.%1", crossRefStr.isNull() ? QLatin1String("") : i18n("\n\nSome fields missing in this entry where taken from the crossref'ed entry '%1'.", crossRefStr)));
+        KMessageBox::information(parent, i18n("No warnings or errors were found.%1", crossRefStr.isNull() ? QLatin1String("") : i18n("\n\nSome fields missing in this entry were taken from the crossref'ed entry '%1'.", crossRefStr)));
 
     return result;
 }
