@@ -28,6 +28,7 @@
 #include <QMouseEvent>
 #include <QKeyEvent>
 #include <QSplitter>
+#include <QtCore/QPointer>
 
 #include <KPushButton>
 #include <KAction>
@@ -659,8 +660,8 @@ void FindDuplicatesUI::slotFindDuplicates()
     //if (!ok) sensitivity = 4000;
     int sensitivity = 4000;
 
-    KDialog dlg(d->part->widget());
-    FindDuplicates fd(&dlg, sensitivity);
+    QPointer<KDialog> dlg = new KDialog(d->part->widget());
+    FindDuplicates fd(dlg, sensitivity);
     /// File to be used to find duplicate in,
     /// may be only a subset of the original one if selection is used (see below)
     File *file = d->editor->bibTeXModel()->bibTeXFile();
@@ -689,11 +690,11 @@ void FindDuplicatesUI::slotFindDuplicates()
     if (cliques.isEmpty()) {
         KMessageBox::information(d->part->widget(), i18n("No duplicates have been found."), i18n("No duplicates found"));
     } else {
-        MergeWidget mw(d->editor->bibTeXModel()->bibTeXFile(), cliques, &dlg);
-        dlg.setMainWidget(&mw);
+        MergeWidget mw(d->editor->bibTeXModel()->bibTeXFile(), cliques, dlg);
+        dlg->setMainWidget(&mw);
 
-        if (dlg.exec() == QDialog::Accepted) {
-            MergeDuplicates md(&dlg);
+        if (dlg->exec() == QDialog::Accepted) {
+            MergeDuplicates md(dlg);
             if (md.mergeDuplicateEntries(cliques, originalFile)) {
                 d->editor->bibTeXModel()->reset();
                 d->editor->externalModification();
@@ -708,4 +709,5 @@ void FindDuplicatesUI::slotFindDuplicates()
     }
 
     if (deleteFileLater) delete file;
+    delete dlg;
 }
