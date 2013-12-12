@@ -34,7 +34,7 @@ lists corps = { 0, 0, NULL };
 char progname[] = "KBibTeX";
 
 FileImporterBibUtils::FileImporterBibUtils(InputFormat inputFormat)
-        : FileImporter(), m_workingDir(createTempDir()), m_inputFormat(inputFormat), m_bibTeXImporter(new FileImporterBibTeX(FALSE, "latin1"))
+        : FileImporter(), m_workingDir(createTempDir()), m_inputFormat(inputFormat), m_bibTeXImporter(new FileImporterBibTeX(false, "latin1"))
 {
 // nothing
 }
@@ -59,7 +59,7 @@ File *FileImporterBibUtils::load(QIODevice *iodevice)
     m_mutex.lock();
 
     File *result = NULL;
-    m_cancelFlag = FALSE;
+    m_cancelFlag = false;
     QString inputFileName = QString(m_workingDir).append("/input.tmp");
     QString bibFileName = QString(m_workingDir).append("/input.bib");
 
@@ -152,7 +152,7 @@ FileImporterBibUtils::InputFormat FileImporterBibUtils::guessInputFormat(const Q
 void FileImporterBibUtils::cancel()
 {
     m_bibTeXImporter->cancel();
-    m_cancelFlag = TRUE;
+    m_cancelFlag = true;
 }
 
 QString FileImporterBibUtils::createTempDir()

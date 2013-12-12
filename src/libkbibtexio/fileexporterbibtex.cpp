@@ -258,15 +258,15 @@ public:
             return;
         }
 
-        bool addBrackets = TRUE;
+        bool addBrackets = true;
 
         if (text[1] == '{' && text[text.length() - 2] == '}') {
-            addBrackets = FALSE;
+            addBrackets = false;
             int count = 0;
             for (int i = text.length() - 2; !addBrackets && i >= 1; --i)
                 if (text[i] == '{')++count;
                 else if (text[i] == '}')--count;
-                else if (count == 0) addBrackets = TRUE;
+                else if (count == 0) addBrackets = true;
         }
 
         if (addBrackets)

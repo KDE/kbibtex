@@ -84,7 +84,7 @@ void FileExporterXML::cancel()
 
 bool FileExporterXML::write(QTextStream &stream, const Element *element, const File *bibtexfile)
 {
-    bool result = FALSE;
+    bool result = false;
 
     const Entry *entry = dynamic_cast<const Entry *>(element);
     if (entry != NULL) {
@@ -137,7 +137,7 @@ bool FileExporterXML::writeEntry(QTextStream &stream, const Entry *entry)
             stream << "  <" << key << ">" << text << "</" << key << ">" << endl;
         } else if (key == Entry::ftMonth) {
             stream << "  <month";
-            bool ok = FALSE;
+            bool ok = false;
 
             int month = -1;
             QString tag = "";
