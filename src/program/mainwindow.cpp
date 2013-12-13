@@ -247,7 +247,6 @@ KBibTeXMainWindow::KBibTeXMainWindow()
     setCorner(Qt::BottomLeftCorner, Qt::LeftDockWidgetArea);
     setCorner(Qt::BottomRightCorner, Qt::RightDockWidgetArea);
 
-
     setAcceptDrops(true);
 }
 
@@ -258,16 +257,6 @@ KBibTeXMainWindow::~KBibTeXMainWindow()
 }
 
 void KBibTeXMainWindow::setupControllers()
-{
-    // TODO
-}
-
-void KBibTeXMainWindow::saveProperties(KConfigGroup &/*configGroup*/)
-{
-    // TODO
-}
-
-void KBibTeXMainWindow::readProperties(const KConfigGroup &/*configGroup*/)
 {
     // TODO
 }
