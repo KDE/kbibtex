@@ -240,12 +240,13 @@ KBibTeXMainWindow::KBibTeXMainWindow()
     documentListsChanged(OpenFileInfo::RecentlyUsed); /// force initialization of menu of recently used files
 
     setupControllers();
-    setupGUI();
+    setupGUI(KXmlGuiWindow::Create | KXmlGuiWindow::Save | KXmlGuiWindow::Keys | KXmlGuiWindow::ToolBar);
 
     setCorner(Qt::TopLeftCorner, Qt::LeftDockWidgetArea);
     setCorner(Qt::TopRightCorner, Qt::RightDockWidgetArea);
     setCorner(Qt::BottomLeftCorner, Qt::LeftDockWidgetArea);
     setCorner(Qt::BottomRightCorner, Qt::RightDockWidgetArea);
+
 
     setAcceptDrops(true);
 }
