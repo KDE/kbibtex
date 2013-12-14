@@ -214,7 +214,7 @@ else
 fi
 
 # Update release name (e.g. version number) in source files
-sed -i -e 's!//const char \*versionNumber!const char \*versionNumber!;s/\(versionNumber\s*=\s*"\)[^"]*"/\1'${RELEASE_NAME}'"/g;/include "version.h"/d' src/parts/partfactory.cpp src/program/program.cpp || { popd ; echo "${MY_NAME}: Could not change release name to: ${RELEASE_NAME}" >&2 ; rm -rf ${TEMPDIR} ; exit 1 ; }
+sed -i -e 's!//const char \*versionNumber!const char \*versionNumber!;s/\(versionNumber\s*=\s*"\).*/\1'${RELEASE_NAME}'";/g;/include "version.h"/d' src/parts/partfactory.cpp src/program/program.cpp || { popd ; echo "${MY_NAME}: Could not change release name to: ${RELEASE_NAME}" >&2 ; rm -rf ${TEMPDIR} ; exit 1 ; }
 # Update shared library version number
 sed -i -e 's/LIB_VERSION \s*"[^"]*"/LIB_VERSION "'${NUMERIC_RELEASE}'"/' CMakeLists.txt || { popd ; echo "${MY_NAME}: Could not change shared library version to: ${RELEASE_NAME}" >&2 ; rm -rf ${TEMPDIR} ; exit 1 ; }
 
