@@ -26,7 +26,7 @@
 #include "part.h"
 #include "partfactory.h"
 //#include "version.h"
-const char *versionNumber = "branches/0.5 from SVN";
+const char *versionNumber = "branch \"kbibtex/0.5\" from Git";
 
 static const char PartId[] =           "kbibtexpart";
 static const char PartName[] =         I18N_NOOP("KBibTeXPart");
