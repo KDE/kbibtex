@@ -284,7 +284,7 @@ public:
                 connect(dlg, SIGNAL(defaultClicked()), &settingsWidget, SLOT(resetToDefaults()));
                 dlg->exec();
                 settingsWidget.saveProperties(bibTeXFile);
-                delete dlg;
+                dlg->deleteLater();
             } else if ((fet = dynamic_cast<FileExporterToolchain *>(exporter)) != NULL) {
                 QPointer<KDialog> dlg = new KDialog(p->widget());
                 SettingsFileExporterPDFPSWidget settingsWidget(dlg);
@@ -298,7 +298,7 @@ public:
                 dlg->exec();
                 settingsWidget.saveState();
                 fet->reloadConfig();
-                delete dlg;
+                dlg->deleteLater();
             }
         }
 
