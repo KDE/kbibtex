@@ -683,6 +683,7 @@ void FindDuplicatesUI::slotFindDuplicates()
     bool gotCanceled = fd.findDuplicateEntries(file, cliques);
     if (gotCanceled) {
         if (deleteFileLater) delete file;
+        delete dlg;
         return;
     }
 
