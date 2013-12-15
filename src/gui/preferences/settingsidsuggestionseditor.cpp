@@ -614,11 +614,11 @@ QString IdSuggestionsEditDialog::editSuggestion(const Entry *previewEntry, const
 
     widget.setFormatString(suggestion);
     if (dlg->exec() == Accepted) {
-        delete dlg;
+        dlg->deleteLater();
         return widget.formatString();
     }
 
-    delete dlg;
+    dlg->deleteLater();
 
     /// Return unmodified original suggestion
     return suggestion;

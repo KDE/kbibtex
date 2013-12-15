@@ -369,7 +369,7 @@ void FindPDFUI::interactiveFindPDF(Entry &entry, const File &bibtexFile, QWidget
     if (dlg->exec() == KDialog::Accepted) {
         widget.apply(entry, bibtexFile);
     }
-    delete dlg;
+    dlg->deleteLater();
 }
 
 void FindPDFUI::apply(Entry &entry, const File &bibtexFile)
