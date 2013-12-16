@@ -55,7 +55,7 @@ public:
 
         const QStringList styles = configGroup.readEntry("BibTeXStyles", QStringList());
         foreach(const QString &style, styles) {
-            QStringList item = style.split("|");
+            QStringList item = style.split(QLatin1String("|"));
             QString itemLabel = item.at(0);
             item.removeFirst();
             comboBoxBibliographySystem->addItem(itemLabel, item);

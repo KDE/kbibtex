@@ -265,7 +265,7 @@ void OnlineSearchGoogleScholar::doneFetchingQueryPage()
 
         if (!d->listBibTeXurls.isEmpty()) {
             const QString bibtexUrl = d->listBibTeXurls.constBegin().key();
-            const QStringList urls = d->listBibTeXurls.constBegin().value().split(QLatin1Char('|'), QString::KeepEmptyParts);
+            const QStringList urls = d->listBibTeXurls.constBegin().value().split(QLatin1String("|"), QString::KeepEmptyParts);
             const QString primaryUrl = urls.first();
             const QString documentUrl = urls.last();
             QNetworkRequest request(bibtexUrl);
@@ -339,7 +339,7 @@ void OnlineSearchGoogleScholar::doneFetchingBibTeX()
 
         if (!d->listBibTeXurls.isEmpty()) {
             const QString bibtexUrl = d->listBibTeXurls.constBegin().key();
-            const QStringList urls = d->listBibTeXurls.constBegin().value().split(QLatin1Char('|'), QString::KeepEmptyParts);
+            const QStringList urls = d->listBibTeXurls.constBegin().value().split(QLatin1String("|"), QString::KeepEmptyParts);
             const QString primaryUrl = urls.first();
             const QString documentUrl = urls.last();
             QNetworkRequest request(bibtexUrl);

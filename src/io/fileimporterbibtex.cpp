@@ -1082,12 +1082,12 @@ bool FileImporterBibTeX::evaluateParameterComments(QTextStream *textStream, cons
     /// Assertion: variable "line" is all lower-case
 
     /** check if this file requests a special encoding */
-    if (line.startsWith(QLatin1String("@comment{x-kbibtex-encoding=")) && line.endsWith("}")) {
+    if (line.startsWith(QLatin1String("@comment{x-kbibtex-encoding=")) && line.endsWith(QLatin1Char('}'))) {
         QString encoding = line.mid(28, line.length() - 29);
         textStream->setCodec(encoding == "latex" ? defaultCodecName : encoding.toLatin1().data());
         file->setProperty(File::Encoding, encoding == "latex" ? encoding : textStream->codec()->name());
         return true;
-    } else if (line.startsWith(QLatin1String("@comment{x-kbibtex-personnameformatting=")) && line.endsWith("}")) {
+    } else if (line.startsWith(QLatin1String("@comment{x-kbibtex-personnameformatting=")) && line.endsWith(QLatin1Char('}'))) {
         // TODO usage of x-kbibtex-personnameformatting is deprecated,
         // as automatic detection is in place
         QString personNameFormatting = line.mid(40, line.length() - 41);

@@ -68,7 +68,7 @@ public:
                 if (role == Qt::DisplayRole || role == SortRole)
                     return ofiItem->url().fileName();
                 else if (role == Qt::DecorationRole)
-                    return KIcon(ofiItem->mimeType().replace("/", "-"));
+                    return KIcon(ofiItem->mimeType().replace(QLatin1Char('/'), QLatin1Char('-')));
                 else if (role == Qt::ToolTipRole)
                     return squeeze_text(ofiItem->url().pathOrUrl(), 64);
             } else if (index.column() == 1) {

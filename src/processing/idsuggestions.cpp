@@ -50,7 +50,7 @@ public:
 
     QString translateTitleToken(const Entry &entry, const QString &token, bool removeSmallWords) const {
         struct IdSuggestionTokenInfo tti = p->evalToken(token);
-        static const QStringList smallWords = i18nc("Small words that can be removed from titles when generating id suggestions; separated by pipe symbol", "and|on|in|the|of|at|a|an|with|for|from").split(QLatin1Char('|'), QString::SkipEmptyParts);
+        static const QStringList smallWords = i18nc("Small words that can be removed from titles when generating id suggestions; separated by pipe symbol", "and|on|in|the|of|at|a|an|with|for|from").split(QLatin1String("|"), QString::SkipEmptyParts);
 
         QString result;
         bool first = true;
@@ -99,7 +99,7 @@ public:
         for (QStringList::ConstIterator it = authors.begin(); it != authors.end(); ++it, ++index) {
             QString author = normalizeText(*it).left(ati.len);
             if (ati.caseChange == IdSuggestions::ccToCamelCase) {
-                const QStringList nameComponents = author.split(QLatin1Char(' '), QString::SkipEmptyParts);
+                const QStringList nameComponents = author.split(QLatin1String(" "), QString::SkipEmptyParts);
                 QStringList newNameComponents;
                 foreach(const QString &nameComponent, nameComponents) {
                     newNameComponents.append(nameComponent[0].toUpper() + nameComponent.mid(1));
@@ -187,7 +187,7 @@ IdSuggestions::~IdSuggestions()
 QString IdSuggestions::formatId(const Entry &entry, const QString &formatStr) const
 {
     QString id;
-    QStringList tokenList = formatStr.split(QLatin1Char('|'), QString::SkipEmptyParts);
+    QStringList tokenList = formatStr.split(QLatin1String("|"), QString::SkipEmptyParts);
     foreach(const QString &token, tokenList) {
         id.append(d->translateToken(entry, token));
     }
@@ -228,7 +228,7 @@ QStringList IdSuggestions::formatIdList(const Entry &entry) const
 QStringList IdSuggestions::formatStrToHuman(const QString &formatStr) const
 {
     QStringList result;
-    QStringList tokenList = formatStr.split(QLatin1Char('|'), QString::SkipEmptyParts);
+    QStringList tokenList = formatStr.split(QLatin1String("|"), QString::SkipEmptyParts);
     foreach(const QString &token, tokenList) {
         QString text;
         if (token[0] == 'a' || token[0] == 'A' || token[0] == 'z') {

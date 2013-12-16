@@ -472,7 +472,7 @@ public:
         while (!widgetList.isEmpty())
             delete widgetList.takeFirst();
 
-        QStringList tokenList = formatString.split(QLatin1Char('|'), QString::SkipEmptyParts);
+        QStringList tokenList = formatString.split(QLatin1String("|"), QString::SkipEmptyParts);
         foreach(const QString &token, tokenList) {
             TokenWidget *tokenWidget = NULL;
 

@@ -174,7 +174,7 @@ QVariant DocumentListModel::data(const QModelIndex &index, int role) const
     case Qt::DecorationRole: {
         /// determine mime type-based icon and overlays (e.g. for modified files)
         QStringList overlays;
-        QString iconName = openFileInfo->mimeType().replace("/", "-");
+        QString iconName = openFileInfo->mimeType().replace(QLatin1Char('/'), QLatin1Char('-'));
         if (openFileInfo->flags().testFlag(OpenFileInfo::Favorite))
             overlays << "favorites";
         else

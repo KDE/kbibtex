@@ -242,10 +242,10 @@ void EntryConfiguredWidget::layoutGUI(bool forceVisible, const QString &entryTyp
                 /// this ugly conversion is necessary because we have a "^" (xor) and "|" (and/or)
                 /// syntax to differentiate required items (not used yet, but will be used
                 /// later if missing required items are marked).
-                QString visible = bit->requiredItems.join(",");
-                visible += "," + bit->optionalItems.join(",");
-                visible = visible.replace("|", ",").replace("^", ",");
-                visibleItems = visible.split(",");
+                QString visible = bit->requiredItems.join(QLatin1String(","));
+                visible += QLatin1Char(',') + bit->optionalItems.join(QLatin1String(","));
+                visible = visible.replace(QLatin1Char('|'), QLatin1Char(',')).replace(QLatin1Char('^'), QLatin1Char(','));
+                visibleItems = visible.split(QLatin1String(","));
                 break;
             }
         }

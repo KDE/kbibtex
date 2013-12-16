@@ -111,7 +111,7 @@ public:
                 configGroup.writeEntry("Width_" + treeViewName, fd->width[treeViewName]);
                 configGroup.writeEntry("Visible_" + treeViewName, fd->visible[treeViewName]);
             }
-            QString typeFlagsString = fd->typeFlags == fd->preferredTypeFlag ? "" : ";" + typeFlagsToString(fd->typeFlags);
+            QString typeFlagsString = fd->typeFlags == fd->preferredTypeFlag ? QString() : QLatin1Char(';') + typeFlagsToString(fd->typeFlags);
             typeFlagsString.prepend(typeFlagToString(fd->preferredTypeFlag));
             configGroup.writeEntry("TypeFlags", typeFlagsString);
             configGroup.writeEntry("TypeIndependent", fd->typeIndependent);

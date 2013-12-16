@@ -166,7 +166,7 @@ public:
             /// Skip styles that use bibtex2html if binary is not available
             if (!hasBibTeX2HTML && entry.contains(QLatin1String("bibtex2html"))) continue;
 
-            QStringList style = entry.split("|");
+            QStringList style = entry.split(QLatin1String("|"));
             QString styleLabel = style.at(0);
             style.removeFirst();
             comboBox->addItem(styleLabel, style);

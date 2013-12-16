@@ -155,7 +155,7 @@ void OnlineSearchScienceDirect::doneFetchingStartPage()
             inputMap[QLatin1String("_method")] = QLatin1String("submitForm");
             inputMap[QLatin1String("sdSearch")] = QLatin1String("Search");
 
-            static const QStringList orderOfParameters = QString(QLatin1String("_ob|_method|_acct|_origin|_zone|md5|_eidkey|qs_issue|qs_pages|qs_title|qs_vol|sdSearch|qs_all|qs_author|resultsPerPage")).split(QLatin1Char('|'));
+            static const QStringList orderOfParameters = QString(QLatin1String("_ob|_method|_acct|_origin|_zone|md5|_eidkey|qs_issue|qs_pages|qs_title|qs_vol|sdSearch|qs_all|qs_author|resultsPerPage")).split(QLatin1String("|"));
             foreach(const QString &key, orderOfParameters) {
                 if (!inputMap.contains(key)) continue;
                 url.addQueryItem(key, inputMap[key]);
@@ -278,7 +278,7 @@ void OnlineSearchScienceDirect::doneFetchingExportCitationPage()
             inputMap[QLatin1String("format")] = QLatin1String("cite");
             inputMap[QLatin1String("citation-type")] = QLatin1String("BIBTEX");
             inputMap[QLatin1String("RETURN_URL")] = d->scienceDirectBaseUrl + QLatin1String("/science/home");
-            static const QStringList orderOfParameters = QString(QLatin1String("_ob|_method|_acct|_userid|_docType|_eidkey|_ArticleListID|_uoikey|count|md5|JAVASCRIPT_ON|format|citation-type|Export|RETURN_URL")).split(QLatin1Char('|'));
+            static const QStringList orderOfParameters = QString(QLatin1String("_ob|_method|_acct|_userid|_docType|_eidkey|_ArticleListID|_uoikey|count|md5|JAVASCRIPT_ON|format|citation-type|Export|RETURN_URL")).split(QLatin1String("|"));
 
             QString body;
             foreach(const QString &key, orderOfParameters) {

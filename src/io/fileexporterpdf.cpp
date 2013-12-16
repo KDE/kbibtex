@@ -157,7 +157,7 @@ bool FileExporterPDF::writeLatexFile(const QString &filename)
         kDebug() << "m_embeddedFileList" << m_embeddedFileList.count() << m_embeddedFileList.join(",");
         if (!m_embeddedFileList.isEmpty())
             for (QStringList::ConstIterator it = m_embeddedFileList.constBegin(); it != m_embeddedFileList.constEnd(); ++it) {
-                QStringList param = (*it).split("|");
+                QStringList param = (*it).split(QLatin1String("|"));
                 QFile file(param[1]);
                 if (file.exists())
                     ts << "\\embedfile[desc={" << param[0] << "}";

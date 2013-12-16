@@ -76,7 +76,7 @@ bool FileExporterToolchain::runProcess(const QString &cmd, const QStringList &ar
     }
 
     if (errorLog != NULL)
-        errorLog->append(i18n("Running process '%1' using working directory '%2'", (cmd + " " + args.join(" ")), m_process->workingDirectory()));
+        errorLog->append(i18n("Running process '%1' using working directory '%2'", (cmd + QLatin1Char(' ') + args.join(QLatin1String(" "))), m_process->workingDirectory()));
     m_process->start(cmd, args);
     m_errorLog = errorLog;
 
@@ -89,7 +89,7 @@ bool FileExporterToolchain::runProcess(const QString &cmd, const QStringList &ar
         result = false;
 
     if (!result)
-        errorLog->append(i18n("Process '%1' failed", (cmd + " " + args.join(" "))));
+        errorLog->append(i18n("Process '%1' failed", (cmd + QLatin1Char(' ') + args.join(QLatin1String(" ")))));
 
     if (errorLog != NULL) {
         QTextStream tsStdOut(m_process->readAllStandardOutput());
@@ -100,7 +100,7 @@ bool FileExporterToolchain::runProcess(const QString &cmd, const QStringList &ar
         while (!(line = tsStdErr.readLine()).isNull())
             m_errorLog->append(line);
 
-        errorLog->append(i18n("Stopped process '%1' with exit code %2", (cmd + " " + args.join(" ")), m_process->exitCode()));
+        errorLog->append(i18n("Stopped process '%1' with exit code %2", (cmd + QLatin1Char(' ') + args.join(QLatin1String(" "))), m_process->exitCode()));
     }
 
     delete(m_process);

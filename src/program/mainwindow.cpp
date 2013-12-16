@@ -400,7 +400,7 @@ void KBibTeXMainWindow::documentListsChanged(OpenFileInfo::StatusFlags statusFla
             const QString squeezedFullCap = squeeze_text(cur->fullCaption(), squeezeLen);
             KAction *action = new KAction(QString("%1 [%2]").arg(squeezedShortCap).arg(squeezedFullCap), this);
             action->setData(cur->url());
-            action->setIcon(KIcon(cur->mimeType().replace("/", "-")));
+            action->setIcon(KIcon(cur->mimeType().replace(QLatin1Char('/'), QLatin1Char('-'))));
             d->actionMenuRecentFilesMenu->addAction(action);
             connect(action, SIGNAL(triggered()), this, SLOT(openRecentFile()));
         }

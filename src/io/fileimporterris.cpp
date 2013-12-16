@@ -213,7 +213,7 @@ public:
             entry->insert(Entry::ftPages, value);
         }
 
-        QStringList dateFragments = date.split("/", QString::SkipEmptyParts);
+        QStringList dateFragments = date.split(QLatin1String("/"), QString::SkipEmptyParts);
         if (dateFragments.count() > 0) {
             bool ok;
             int year = dateFragments[0].toInt(&ok);

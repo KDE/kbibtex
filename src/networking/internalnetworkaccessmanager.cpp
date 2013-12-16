@@ -133,7 +133,7 @@ QNetworkReply *InternalNetworkAccessManager::get(QNetworkRequest &request, const
     if (!proxyHostName.isEmpty() && proxyHostName != QLatin1String("DIRECT")) {
         /// Extract both hostname and port number for proxy
         proxyHostName = proxyHostName.mid(proxyHostName.indexOf(QLatin1String("://")) + 3);
-        QStringList proxyComponents = proxyHostName.split(QLatin1Char(':'), QString::SkipEmptyParts);
+        QStringList proxyComponents = proxyHostName.split(QLatin1String(":"), QString::SkipEmptyParts);
         if (proxyComponents.length() == 1) {
             /// Proxy configuration is missing a port number,
             /// using 8080 as default
