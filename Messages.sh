@@ -5,7 +5,7 @@
 # to extract strings in configuration files to be translated as well.
 # In C++ code used like this:
 #   QString translated = i18n(configGroup.readEntry("uiCaption", QString()).toUtf8().constData());
-find config -name \*.kbstyle -exec sed -ne '/Label=\|uiLabel\|uiCaption/p' {} \; | sed 's/.*=\([A-Za-z\(\)\/].*\)/i18n("\1");/' >rc.cpp
+find config -name \*.kbstyle -exec sed -ne '/Label=\|uiLabel\|uiCaption/p' {} \; | sed 's/.*=\([A-Za-z\(\)\/].*\)/i18n("\1");/' >>rc.cpp
 
 # Taking instructions from
 # http://techbase.kde.org/Development/Tutorials/Localization/i18n_Build_Systems
