@@ -1,3 +1,4 @@
+// krazy:excludeall=copyright,license
 /*
 Copyright (c) 2011, Andre Somers
 All rights reserved.

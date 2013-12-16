@@ -1,3 +1,4 @@
+// krazy:excludeall=copyright,license
 /****************************************************************************
  **
  ** Copyright (C) Qxt Foundation. Some rights reserved.
