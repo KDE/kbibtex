@@ -303,14 +303,14 @@ public:
             if (urlList.isEmpty()) {
                 /// Case no URLs associated with this entry.
                 /// For-loop above was never executed.
-                showMessage(i18n("No documents to show."));
+                showMessage(i18n("No documents to show.")); // krazy:exclude=qmethods
                 p->setCursor(Qt::ArrowCursor);
             } else if (runningJobs.isEmpty()) {
                 /// Case no stat jobs are running. As there were URLs (tested in
                 /// previous condition), this implies that there were remote
                 /// references that were ignored by executing "continue" above.
                 /// Give user hint that by enabling remote files, more can be shown.
-                showMessage(i18n("<qt>No documents to show.<br/><a href=\"disableonlylocalfiles\">Disable the restriction</a> to local files to see remote documents.</qt>"));
+                showMessage(i18n("<qt>No documents to show.<br/><a href=\"disableonlylocalfiles\">Disable the restriction</a> to local files to see remote documents.</qt>")); // krazy:exclude=qmethods
                 p->setCursor(Qt::ArrowCursor);
             }
         } else
@@ -435,7 +435,7 @@ public:
         } else if (widget == message) {
             stackedWidget->setCurrentIndex(swpMessage);
         } else
-            showMessage(i18n("Cannot show requested part"));
+            showMessage(i18n("Cannot show requested part")); // krazy:exclude=qmethods
     }
 
     bool showUrl(const struct UrlInfo &urlInfo) {
@@ -456,12 +456,12 @@ public:
 
         if (okularPart != NULL && okularMimetypes.contains(urlInfo.mimeType)) {
             p->setCursor(Qt::BusyCursor);
-            showMessage(i18n("Loading ..."));
+            showMessage(i18n("Loading ...")); // krazy:exclude=qmethods
             okularPart->openUrl(urlInfo.url);
             return true;
         } else if (htmlMimetypes.contains(urlInfo.mimeType)) {
             p->setCursor(Qt::BusyCursor);
-            showMessage(i18n("Loading ..."));
+            showMessage(i18n("Loading ...")); // krazy:exclude=qmethods
 #ifdef HAVE_QTWEBKIT
             htmlWidget->load(urlInfo.url);
 #else // HAVE_QTWEBKIT
@@ -475,7 +475,7 @@ public:
             p->unsetCursor();
             return true;
         } else
-            showMessage(i18n("<qt>Don't know how to show mimetype '%1'.</qt>", urlInfo.mimeType));
+            showMessage(i18n("<qt>Don't know how to show mimetype '%1'.</qt>", urlInfo.mimeType)); // krazy:exclude=qmethods
 
         return false;
     }
@@ -623,10 +623,10 @@ void DocumentPreview::statFinished(KJob *kjob)
             if (d->anyRemote && !d->onlyLocalFilesButton->isChecked()) {
                 /// There are some remote URLs to probe,
                 /// but user was only looking for local files
-                d->showMessage(i18n("<qt>No documents to show.<br/><a href=\"disableonlylocalfiles\">Disable the restriction</a> to local files to see remote documents.</qt>"));
+                d->showMessage(i18n("<qt>No documents to show.<br/><a href=\"disableonlylocalfiles\">Disable the restriction</a> to local files to see remote documents.</qt>")); // krazy:exclude=qmethods
             } else {
                 /// No stat job at all succeeded. Show message to user.
-                d->showMessage(i18n("No documents to show.\nSome URLs or files could not be retrieved."));
+                d->showMessage(i18n("No documents to show.\nSome URLs or files could not be retrieved.")); // krazy:exclude=qmethods
             }
         }
     }
