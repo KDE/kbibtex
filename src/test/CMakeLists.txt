@@ -41,9 +41,9 @@ kde4_add_app_icon(
     "${CMAKE_SOURCE_DIR}/icons/hi*-app-kbibtex.png"
 )
 
-if(UNITY_BUILD)
+if(UNITY_BUILD AND NOT WIN32) # FIXME: Unity build of programs breaks on Windows
     enable_unity_build(kbibtextest kbibtextest_SRCS)
-endif(UNITY_BUILD)
+endif(UNITY_BUILD AND NOT WIN32)
 
 kde4_add_executable(
     kbibtextest
