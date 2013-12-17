@@ -27,7 +27,7 @@ else (DEFINED ENV{GIT_INFO})
     set(GIT_INFO "unknown")
 
     # Git
-    find_program( GIT_EXECUTABLE NAMES git )  # FIXME git.exe? -> not tested on windows
+    find_program( GIT_EXECUTABLE NAMES git.bat git ) # for Windows, "git.bat" must be found before "git"
     if (GIT_EXECUTABLE)
         if (EXISTS ${SOURCE_DIR}/.git)
             execute_process (
