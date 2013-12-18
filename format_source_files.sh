@@ -2,15 +2,18 @@
 
 export LC_ALL=en_US.utf8
 export LANG=C
+MY_NAME="$(basename "$0")"
 
-find src -type f -name '*.cpp' -o -name '*.h' | xargs git status | while read hash status filename ; do
-	if [[ ${hash} != "#" ]] ; then continue ; fi
-	if [[ ${status} != "modified:" && ${status} != "added:" ]] ; then continue ; fi
-	if [[ ! -s "${filename}" ]] ; then continue ; fi
+find src -type f -name '*.cpp' -o -name '*.h' | xargs git status --untracked-files=no --porcelain | while read status filename ; do
+	if [[ ${status} != "M" && ${status} != "A" ]] ; then continue ; fi
+	if [[ ! -s "${filename}" ]] ; then
+		echo "${MY_NAME}: File not found: \"${filename}\" (state: ${status})" >&2
+		continue
+	fi
 
 	TEMPFILE=$(mktemp 'kbibtex_formatted_source_XXXXXXXXXXX.cpp')
 
-	echo "Processing \"${filename}\""
+	echo "Processing \"${filename}\" (state: ${status})"
 	astyle -n --align-reference=name --align-pointer=name --indent=spaces=4 --brackets=linux --indent-labels --pad-oper --unpad-paren --pad-header --keep-one-line-statements --convert-tabs --indent-preprocessor <"${filename}" >${TEMPFILE}
 
 	# normalize SIGNAL statements as recommended at
