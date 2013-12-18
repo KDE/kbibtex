@@ -79,6 +79,7 @@ private slots:
     void newCommentTriggered();
     void newPreambleTriggered();
     void updateActions();
+    void fileExternallyChange(const QString &path);
 
 private:
     class KBibTeXPartPrivate;

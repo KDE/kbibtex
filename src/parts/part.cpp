@@ -27,6 +27,7 @@
 #include <QKeyEvent>
 #include <QSignalMapper>
 #include <QtCore/QPointer>
+#include <QFileSystemWatcher>
 
 #include <KFileDialog>
 #include <KDebug>
@@ -104,10 +105,12 @@ public:
     FindDuplicatesUI *findDuplicatesUI;
     ColorLabelContextMenu *colorLabelContextMenu;
     KAction *colorLabelContextMenuAction;
+    QFileSystemWatcher fileSystemWatcher;
 
     KBibTeXPartPrivate(KBibTeXPart *parent)
-            : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), bibTeXFile(NULL), model(NULL), sortFilterProxyModel(NULL), signalMapperNewElement(new QSignalMapper(parent)), viewDocumentMenu(new KMenu(i18n("View Document"), parent->widget())), signalMapperViewDocument(new QSignalMapper(parent)), isSaveAsOperation(false) {
+            : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), bibTeXFile(NULL), model(NULL), sortFilterProxyModel(NULL), signalMapperNewElement(new QSignalMapper(parent)), viewDocumentMenu(new KMenu(i18n("View Document"), parent->widget())), signalMapperViewDocument(new QSignalMapper(parent)), isSaveAsOperation(false), fileSystemWatcher(p) {
         connect(signalMapperViewDocument, SIGNAL(mapped(QObject*)), p, SLOT(elementViewDocumentMenu(QObject*)));
+        connect(&fileSystemWatcher, SIGNAL(fileChanged(QString)), p, SLOT(fileExternallyChange(QString)));
     }
 
     ~KBibTeXPartPrivate() {
@@ -627,7 +630,20 @@ bool KBibTeXPart::saveFile()
         return false;
     }
 
-    if (!d->saveFile(localFilePath())) {
+    /// If the current file is "watchable" (i.e. a local file),
+    /// memorize local filename for future reference
+    const QString watchableFilename = url().isValid() && url().isLocalFile() ? url().pathOrUrl() : QString();
+    /// Stop watching local file that will be written to
+    if (!watchableFilename.isEmpty())
+        d->fileSystemWatcher.removePath(watchableFilename);
+
+    const bool saveOperationSuccess = d->saveFile(localFilePath());
+
+    /// Continue watching local file after write operation
+    if (!watchableFilename.isEmpty())
+        d->fileSystemWatcher.addPath(watchableFilename);
+
+    if (!saveOperationSuccess) {
         KMessageBox::error(widget(), i18n("The document could not be saved, as it was not possible to write to '%1'.\n\nCheck that you have write access to this file or that enough disk space is available.", url().pathOrUrl()));
         return false;
     }
@@ -649,13 +665,17 @@ bool KBibTeXPart::documentSave()
 bool KBibTeXPart::documentSaveAs()
 {
     d->isSaveAsOperation = true;
-    KUrl url = d->getSaveFilename();
-    if (!url.isValid() || !d->checkOverwrite(url, widget()))
+    KUrl newUrl = d->getSaveFilename();
+    if (!newUrl.isValid() || !d->checkOverwrite(newUrl, widget()))
         return false;
 
-    if (KParts::ReadWritePart::saveAs(url)) {
-        kDebug() << "setting url to be " << url.pathOrUrl();
-        d->model->bibTeXFile()->setProperty(File::Url, url);
+    /// Remove old URL from file system watcher
+    if (url().isValid() && url().isLocalFile())
+        d->fileSystemWatcher.removePath(url().pathOrUrl());
+
+    if (KParts::ReadWritePart::saveAs(newUrl)) {
+        kDebug() << "setting url to be " << newUrl.pathOrUrl();
+        d->model->bibTeXFile()->setProperty(File::Url, newUrl);
         return true;
     } else
         return false;
@@ -664,13 +684,13 @@ bool KBibTeXPart::documentSaveAs()
 bool KBibTeXPart::documentSaveCopyAs()
 {
     d->isSaveAsOperation = true;
-    KUrl url = d->getSaveFilename(false);
-    if (!url.isValid() || !d->checkOverwrite(url, widget()))
+    KUrl newUrl = d->getSaveFilename(false);
+    if (!newUrl.isValid() || !d->checkOverwrite(newUrl, widget()) || newUrl.equals(url()))
         return false;
 
     /// difference from KParts::ReadWritePart::saveAs:
     /// current document's URL won't be changed
-    return d->saveFile(url);
+    return d->saveFile(newUrl);
 }
 
 void KBibTeXPart::elementViewDocument()
@@ -861,4 +881,26 @@ void KBibTeXPart::updateActions()
         }
     }
     d->lyx->setReferences(references);
+}
+
+void KBibTeXPart::fileExternallyChange(const QString &path)
+{
+    /// Should never happen: triggering this slot for non-local or invalid URLs
+    if (!url().isValid() || !url().isLocalFile())
+        return;
+    /// Should never happen: triggering this slot for filenames not being the opened file
+    if (path != url().pathOrUrl()) {
+        kWarning() << "Got file modification warning for wrong file: " << path << "!=" << url().pathOrUrl();
+        return;
+    }
+
+    /// Stop watching file while asking for user interaction
+    d->fileSystemWatcher.removePath(path);
+
+    if (KMessageBox::warningContinueCancel(widget(), i18n("The file '%1' has changed on disk.\n\nReload file or ignore changes on disk?", path), i18n("File changed externally"), KGuiItem(i18n("Reload file"), KIcon("edit-redo")), KGuiItem(i18n("Ignore on-disk changes"), KIcon("edit-undo"))) == KMessageBox::Continue) {
+        d->openFile(KUrl::fromLocalFile(path), path);
+    }
+
+    /// Resume watching file
+    d->fileSystemWatcher.addPath(path);
 }
