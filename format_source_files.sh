@@ -33,8 +33,7 @@ find src -type f -name '*.cpp' -o -name '*.h' | xargs git status --untracked-fil
 	fi
 
 	# only change/touch original file if it has been changed
-	diff -q ${TEMPFILE} "${filename}" >/dev/null || cp -p ${TEMPFILE} "${filename}"
+	diff -q ${TEMPFILE} "${filename}" >/dev/null || { echo "Updating \"${filename}\"" ; cp -p ${TEMPFILE} "${filename}" || echo "Cannot copy \"${TEMPFILE}\" \"${filename}\"" ; }
 
 	rm -f ${TEMPFILE}
 done
-
