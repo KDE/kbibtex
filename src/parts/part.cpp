@@ -181,6 +181,51 @@ public:
         connect(filterBar, SIGNAL(filterChanged(SortFilterBibTeXFileModel::FilterQuery)), sortFilterProxyModel, SLOT(updateFilter(SortFilterBibTeXFileModel::FilterQuery)));
     }
 
+    bool openFile(const KUrl &url, const QString &localFilePath) {
+        p->setObjectName("KBibTeXPart::KBibTeXPart for " + url.pathOrUrl());
+
+        FileImporter *importer = fileImporterFactory(url);
+        importer->showImportDialog(p->widget());
+
+        qApp->setOverrideCursor(Qt::WaitCursor);
+
+        if (bibTeXFile != NULL) {
+            const QUrl oldUrl = bibTeXFile->property(File::Url, QUrl()).toUrl();
+            if (oldUrl.isValid() && oldUrl.isLocalFile())
+                fileSystemWatcher.removePath(oldUrl.toString());
+            delete bibTeXFile;
+        }
+
+        QFile inputfile(localFilePath);
+        inputfile.open(QIODevice::ReadOnly);
+        bibTeXFile = importer->load(&inputfile);
+        inputfile.close();
+        delete importer;
+
+        if (bibTeXFile == NULL) {
+            kWarning() << "Opening file failed:" << url.pathOrUrl();
+            qApp->restoreOverrideCursor();
+            return false;
+        }
+
+        bibTeXFile->setProperty(File::Url, QUrl(url));
+
+        model->setBibTeXFile(bibTeXFile);
+        editor->setModel(model);
+        if (sortFilterProxyModel != NULL) delete sortFilterProxyModel;
+        sortFilterProxyModel = new SortFilterBibTeXFileModel(p);
+        sortFilterProxyModel->setSourceModel(model);
+        editor->setModel(sortFilterProxyModel);
+        connect(filterBar, SIGNAL(filterChanged(SortFilterBibTeXFileModel::FilterQuery)), sortFilterProxyModel, SLOT(updateFilter(SortFilterBibTeXFileModel::FilterQuery)));
+
+        if (url.isLocalFile())
+            fileSystemWatcher.addPath(url.pathOrUrl());
+
+        qApp->restoreOverrideCursor();
+
+        return true;
+    }
+
     void makeBackup(const KUrl &url) const {
         /// Do not make backup copies if file does not exist yet
         if (!KIO::NetAccess::exists(url, KIO::NetAccess::DestinationSide, p->widget()))
@@ -706,40 +751,9 @@ void KBibTeXPart::fitActionSettings()
 
 bool KBibTeXPart::openFile()
 {
-    setObjectName("KBibTeXPart::KBibTeXPart for " + url().pathOrUrl());
-
-    FileImporter *importer = d->fileImporterFactory(url());
-    importer->showImportDialog(widget());
-
-    qApp->setOverrideCursor(Qt::WaitCursor);
-
-    QFile inputfile(localFilePath());
-    inputfile.open(QIODevice::ReadOnly);
-    if (d->bibTeXFile != NULL) delete d->bibTeXFile;
-    d->bibTeXFile = importer->load(&inputfile);
-    inputfile.close();
-    delete importer;
-
-    if (d->bibTeXFile == NULL) {
-        kWarning() << "Opening file failed:" << url().pathOrUrl();
-        qApp->restoreOverrideCursor();
-        return false;
-    }
-
-    d->bibTeXFile->setProperty(File::Url, QUrl(url()));
-
-    d->model->setBibTeXFile(d->bibTeXFile);
-    d->editor->setModel(d->model);
-    if (d->sortFilterProxyModel != NULL) delete d->sortFilterProxyModel;
-    d->sortFilterProxyModel = new SortFilterBibTeXFileModel(this);
-    d->sortFilterProxyModel->setSourceModel(d->model);
-    d->editor->setModel(d->sortFilterProxyModel);
-    connect(d->filterBar, SIGNAL(filterChanged(SortFilterBibTeXFileModel::FilterQuery)), d->sortFilterProxyModel, SLOT(updateFilter(SortFilterBibTeXFileModel::FilterQuery)));
-
-    qApp->restoreOverrideCursor();
-
+    const bool success = d->openFile(url(), localFilePath());
     emit completed();
-    return true;
+    return success;
 }
 
 void KBibTeXPart::newElementTriggered(int event)
