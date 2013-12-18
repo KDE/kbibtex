@@ -234,10 +234,15 @@ cd ..
 TARBALL="${OUTPUT_DIRECTORY}/${STEM}.tar.xz"
 tar -c --exclude .svn --exclude .git --exclude testset --exclude test ${STEM} | nice -n 19 xz >"${TARBALL}"
 
+# Go to output directory to omit absolute filenames in hashsum files
+pushd ${OUTPUT_DIRECTORY}
+TARBALL_BASENAME="$(basename "${TARBALL}")"
 # Create various cryptographic hashes of tar ball
-nice md5sum "${TARBALL}" >"${TARBALL}.md5" || { popd ; echo "${MY_NAME}: Hashing file with md5sum failed: ${TARBALL}" >&2 ; rm -rf ${TEMPDIR} ; exit 1 ; }
-nice sha1sum "${TARBALL}" >"${TARBALL}.sha1" || { popd ; echo "${MY_NAME}: Hashing file with sha1sum failed: ${TARBALL}" >&2 ; rm -rf ${TEMPDIR} ; exit 1 ; }
-nice sha512sum "${TARBALL}" >"${TARBALL}.sha512" || { popd ; echo "${MY_NAME}: Hashing file with sha512sum failed: ${TARBALL}" >&2 ; rm -rf ${TEMPDIR} ; exit 1 ; }
+nice md5sum "${TARBALL_BASENAME}" >"${TARBALL}.md5" || { popd ; popd ; echo "${MY_NAME}: Hashing file with md5sum failed: ${TARBALL}" >&2 ; rm -rf ${TEMPDIR} ; exit 1 ; }
+nice sha1sum "${TARBALL_BASENAME}" >"${TARBALL}.sha1" || { popd ; popd ; echo "${MY_NAME}: Hashing file with sha1sum failed: ${TARBALL}" >&2 ; rm -rf ${TEMPDIR} ; exit 1 ; }
+nice sha512sum "${TARBALL_BASENAME}" >"${TARBALL}.sha512" || { popd ; popd ; echo "${MY_NAME}: Hashing file with sha512sum failed: ${TARBALL}" >&2 ; rm -rf ${TEMPDIR} ; exit 1 ; }
+# Leave output directory
+popd
 
 # If user specified a GnuPG key to sign tar balls and hashes ...
 if [[ -n "${GPG_KEY}" ]] ; then
