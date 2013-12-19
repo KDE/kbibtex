@@ -19,8 +19,12 @@
 #define KBIBTEX_NETWORKING_ZOTERO_COLLECTIONMODEL_H
 
 #include <QAbstractItemModel>
+#include <QHash>
+#include <QVector>
 
 #include "kbibtexnetworking_export.h"
+
+class InternalNetworkAccessManager;
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
@@ -30,12 +34,24 @@ class KBIBTEXNETWORKING_EXPORT CollectionModel : public QAbstractItemModel
     Q_OBJECT
 
 public:
+    explicit CollectionModel(int userId = 475425, QObject *parent = NULL);
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     QModelIndex index(int row, int column, const QModelIndex &) const;
     QModelIndex parent(const QModelIndex &) const;
     int rowCount(const QModelIndex &) const;
     int columnCount(const QModelIndex &) const;
+    bool hasChildren(const QModelIndex &parent = QModelIndex()) const;
 
+private:
+    int m_userId;
+    InternalNetworkAccessManager *m_nam;
+
+    QHash<int, QString> m_collectionToLabel;
+    QHash<int, int> m_collectionToParent;
+    QHash<int, QVector<int> > m_collectionToChildren;
+
+private slots:
+    void finishedFetchingCollection();
 };
 
 #endif // KBIBTEX_NETWORKING_ZOTERO_COLLECTIONMODEL_H
