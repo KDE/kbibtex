@@ -30,6 +30,7 @@ Zotero::Zotero(QWidget *parent)
     layout->addWidget(treeView);
     QAbstractItemModel *model = new CollectionModel();
     treeView->setModel(model);
+    treeView->setHeaderHidden(true);
 }
 
 Zotero::~Zotero()
