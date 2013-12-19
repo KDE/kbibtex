@@ -19,6 +19,7 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/src/gui/widgets
     ${CMAKE_SOURCE_DIR}/src/networking
     ${CMAKE_SOURCE_DIR}/src/networking/onlinesearch
+    ${CMAKE_SOURCE_DIR}/src/networking/zotero
     ${CMAKE_CURRENT_SOURCE_DIR}/docklets
     ${CMAKE_CURRENT_BINARY_DIR}
     ${LIBXML2_INCLUDE_DIR}
@@ -38,6 +39,7 @@ set(
     docklets/searchresults.cpp
     docklets/elementform.cpp
     docklets/filesettings.cpp
+    docklets/zotero.cpp
     openfileinfo.cpp
 )
 

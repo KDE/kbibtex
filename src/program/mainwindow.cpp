@@ -38,6 +38,7 @@
 #include "kbibtexnamespace.h"
 #include "preferences/kbibtexpreferencesdialog.h"
 #include "valuelist.h"
+#include "zotero.h"
 #include "statistics.h"
 #include "documentlist.h"
 #include "mdiwidget.h"
@@ -61,6 +62,7 @@ public:
     QDockWidget *dockReferencePreview;
     QDockWidget *dockDocumentPreview;
     QDockWidget *dockValueList;
+    QDockWidget *dockZotero;
     QDockWidget *dockStatistics;
     QDockWidget *dockSearchForm;
     QDockWidget *dockSearchResults;
@@ -72,6 +74,7 @@ public:
     DocumentPreview *documentPreview;
     FileSettings *fileSettings;
     ValueList *valueList;
+    Zotero *zotero;
     Statistics *statistics;
     SearchForm *searchForm;
     SearchResults *searchResults;
@@ -148,6 +151,16 @@ KBibTeXMainWindow::KBibTeXMainWindow()
     d->dockValueList->setObjectName("dockValueList");
     d->dockValueList->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
     showPanelsMenu->addAction(d->dockValueList->toggleViewAction());
+
+    d->dockZotero = new QDockWidget(i18n("Zotero"), this);
+    d->dockZotero->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+    addDockWidget(Qt::LeftDockWidgetArea, d->dockZotero);
+    tabifyDockWidget(d->dockDocumentList, d->dockZotero);
+    d->zotero = new Zotero(d->dockZotero);
+    d->dockZotero->setWidget(d->zotero);
+    d->dockZotero->setObjectName("dockZotero");
+    d->dockZotero->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
+    showPanelsMenu->addAction(d->dockZotero->toggleViewAction());
 
     d->dockStatistics = new QDockWidget(i18n("Statistics"), this);
     d->dockStatistics->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
