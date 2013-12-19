@@ -5,6 +5,7 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/src/data
     ${CMAKE_SOURCE_DIR}/src/io
     ${CMAKE_SOURCE_DIR}/src/networking/onlinesearch
+    ${CMAKE_SOURCE_DIR}/src/networking/zotero
     ${POPPLER_QT4_INCLUDE_DIR}
     ${LIBXML2_INCLUDE_DIR}
 )
@@ -31,6 +32,7 @@ set(
     onlinesearch/onlinesearchisbndb.cpp
     onlinesearch/onlinesearchideasrepec.cpp
     onlinesearch/onlinesearchdoi.cpp
+    zotero/collectionmodel.cpp
     findpdf.cpp
     internalnetworkaccessmanager.cpp
 )
@@ -57,6 +59,7 @@ set(
     onlinesearch/onlinesearchisbndb.h
     onlinesearch/onlinesearchideasrepec.h
     onlinesearch/onlinesearchdoi.h
+    zotero/collectionmodel.h
     kbibtexnetworking_export.h
     findpdf.h
     internalnetworkaccessmanager.h
