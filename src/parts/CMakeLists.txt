@@ -62,6 +62,7 @@ kde4_add_plugin(
 
 target_link_libraries(
     kbibtexpart
+    LINK_PRIVATE
     ${KDE4_KPARTS_LIBS}
     kbibtexconfig
     kbibtexdata

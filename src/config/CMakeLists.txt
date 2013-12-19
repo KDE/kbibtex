@@ -30,6 +30,7 @@ kde4_add_library(
 
 target_link_libraries(
     kbibtexconfig
+    LINK_PRIVATE
     ${QT_QTCORE_LIBRARY}
     ${KDE4_KDECORE_LIBS}
 )

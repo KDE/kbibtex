@@ -83,6 +83,7 @@ kde4_add_library(
 
 target_link_libraries(
     kbibtexnetworking
+    LINK_PRIVATE
     ${QT_QTCORE_LIBRARY}
     ${QT_QTWEBKIT_LIBRARY}
     ${KDE4_KDECORE_LIBS}

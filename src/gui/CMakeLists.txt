@@ -110,6 +110,7 @@ kde4_add_library(
 
 target_link_libraries(
     kbibtexgui
+    LINK_PRIVATE
     ${QT_QTCORE_LIBRARY}
     ${QT_QTGUI_LIBRARY}
     ${KDE4_KDEUI_LIBS}

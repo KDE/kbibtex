@@ -91,6 +91,7 @@ if(
 )
     target_link_libraries(
         kbibtexio
+        LINK_PRIVATE
         ${QT_QTCORE_LIBRARY}
         ${KDE4_KDECORE_LIBS}
         ${KDE4_KIO_LIBS}
@@ -106,6 +107,7 @@ else(
 )
     target_link_libraries(
         kbibtexio
+        LINK_PRIVATE
         ${QT_QTCORE_LIBRARY}
         ${KDE4_KDECORE_LIBS}
         ${KDE4_KIO_LIBS}
