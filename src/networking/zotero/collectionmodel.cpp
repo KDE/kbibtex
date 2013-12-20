@@ -20,38 +20,45 @@
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QUrl>
+#include <QXmlStreamReader>
 
 #include <KLocale>
 #include <KIcon>
-#include <KDebug>
 
 #include "internalnetworkaccessmanager.h"
 
-#define collectionId(index) (index.internalId())
+#define zoteroId(index) ((index)==QModelIndex()?QString():QLatin1String((const char*)((index).internalPointer())))
+
+Q_DECLARE_METATYPE(QModelIndex)
+
+const QString rootKey = QLatin1String("ROOT_KEY_KBIBTEX");
 
 CollectionModel::CollectionModel(int userId, QObject *parent)
         : QAbstractItemModel(parent), m_userId(userId), m_nam(InternalNetworkAccessManager::self())
 {
-    m_collectionToLabel.insert(0, i18n("Library for user id %1", m_userId));
-    m_collectionToParent.insert(0, -1);
+    /// Initialize root node
+    m_collectionToLabel.insert(rootKey, i18n("Library for user id %1", m_userId));
+    m_collectionToModelIndexParent.insert(rootKey, QModelIndex());
+    m_collectionToParent.insert(rootKey, QString());
 }
 
 QVariant CollectionModel::data(const QModelIndex &index, int role) const
 {
-    const int cId = collectionId(index);
-    if (cId < 0)
+    const QString id = zoteroId(index);
+    if (!m_collectionToLabel.contains(id))
         return QVariant();
 
-    if (role == Qt::DisplayRole && m_collectionToLabel.contains(cId))
-        return m_collectionToLabel[cId];
+    if (role == Qt::DisplayRole && m_collectionToLabel.contains(id))
+        return m_collectionToLabel[id];
     else if (role == Qt::DecorationRole) {
-        if (cId == 0)
+        if (id == rootKey)
             return KIcon("folder-tar");
         else
             return KIcon("folder-yellow");
     }
 
-    // TODO
+    // TODO more roles to cover
+
     return QVariant();
 }
 
@@ -59,43 +66,42 @@ QModelIndex CollectionModel::index(int row, int column, const QModelIndex &paren
 {
     /// Cover root node
     if (parent == QModelIndex())
-        return createIndex(row, column, 0);
+        return createIndex(row, column, strdup(rootKey.toAscii().data()));
 
-    const int parent_cId = collectionId(parent);
-    /// For invalid parents, create no index
-    if (parent_cId < 0)
-        return QModelIndex();
-
+    const QString parentId = zoteroId(parent);
     /// For known children, create an index containing
     /// the children's unique id as data
-    if (!m_collectionToChildren.contains(parent_cId) || m_collectionToChildren[parent_cId].count() <= row)
-        return createIndex(row, column, m_collectionToChildren[parent_cId][row]);
+    if (row >= 0 && m_collectionToChildren.contains(parentId) && row < m_collectionToChildren[parentId].count())
+        return createIndex(row, column, strdup(m_collectionToChildren[parentId][row].toAscii().data()));
 
-    /// No previous case covered?
+    /// This should never happen!
     return QModelIndex();
 }
 
 QModelIndex CollectionModel::parent(const QModelIndex &index) const
 {
-    const int cId = collectionId(index);
+    const QString id = zoteroId(index);
 
-    /// Only invalid or unknown indices
-    /// or the root node have no parents
-    if (cId < 0 || !m_collectionToParent.contains(cId) || m_collectionToParent[cId] < 0)
+    if (m_collectionToModelIndexParent.contains(id))
+        return m_collectionToModelIndexParent[id];
+    else
         return QModelIndex();
-
-    // TODO
-    return QModelIndex();
 }
 
 int CollectionModel::rowCount(const QModelIndex &parent) const
 {
+    /// There is one root node
     if (parent == QModelIndex())
-        // TODO
         return 1;
 
-// TODO
-    return 0;
+    const QString parentId = zoteroId(parent);
+    if (m_collectionToChildren.contains(parentId)) {
+        /// Node has known children
+        return m_collectionToChildren[parentId].count();
+    } else {
+        /// No knowledge about child nodes
+        return 0;
+    }
 }
 
 int CollectionModel::columnCount(const QModelIndex &) const
@@ -106,37 +112,78 @@ int CollectionModel::columnCount(const QModelIndex &) const
 
 bool CollectionModel::hasChildren(const QModelIndex &parent) const
 {
-    const int parent_cId = collectionId(parent);
-    /// Only invalid elements and elements where it is known
-    /// that no children exist will return that they have no chidren
-    if (parent_cId < 0 || (m_collectionToChildren.contains(parent_cId) && m_collectionToChildren[parent_cId].isEmpty()))
-        return false;
+    const QString parentId = zoteroId(parent);
+    return !m_collectionToChildren.contains(parentId) || !m_collectionToChildren[parentId].isEmpty();
+}
 
-    if (!m_collectionToChildren.contains(parent_cId)) {
+bool CollectionModel::canFetchMore(const QModelIndex &parent) const
+{
+    const QString parentId = zoteroId(parent);
+    /// Only for nodes where no more children are known
+    /// and where download is running, allow to fetch more
+    const bool canFetch = !parentId.isEmpty() && !m_collectionToChildren.contains(parentId) && !m_downloadingKeys.contains(parentId);
+    return canFetch;
+}
+
+void CollectionModel::fetchMore(const QModelIndex &parent)
+{
+    const QString parentId = zoteroId(parent);
+
+    /// Only for nodes where no more children are known
+    /// and where download is running, download more data
+    if (!m_collectionToChildren.contains(parentId) && !m_downloadingKeys.contains(parentId)) {
+        m_downloadingKeys.insert(parentId);
         QUrl url(QLatin1String("https://api.zotero.org"));
-        if (parent_cId == 0)
+        if (parentId == rootKey)
             url.setPath(QString(QLatin1String("/users/%1/collections/top")).arg(m_userId));
         else
-            url.setPath(QString(QLatin1String("/users/%1/collections/%2/collections")).arg(m_userId).arg(parent_cId));
+            url.setPath(QString(QLatin1String("/users/%1/collections/%2/collections")).arg(m_userId).arg(parentId));
         url.addQueryItem(QLatin1String("limit"), QLatin1String("25"));
+
         QNetworkRequest request(url);
         request.setRawHeader("Zotero-API-Version", "2");
+
         QNetworkReply *reply = m_nam->get(request);
         connect(reply, SIGNAL(finished()), this, SLOT(finishedFetchingCollection()));
-        reply->setProperty("parent_cId", QVariant::fromValue<int>(parent_cId));
+        reply->setProperty("parentId", QVariant::fromValue<QString>(parentId));
+        reply->setProperty("parent", QVariant::fromValue<QModelIndex>(parent));
     }
-
-    /// Default assumption: every collection has children
-    return true;
 }
 
 void CollectionModel::finishedFetchingCollection()
 {
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
-    bool ok = false;
-    const int parent_cId = reply->property("parent_cId").toInt(&ok);
-    if (!ok) return;
+    const QString parentId = reply->property("parentId").toString();
+    const QModelIndex parent = reply->property("parent").value<QModelIndex>();
 
-    QString rawText = QString::fromUtf8(reply->readAll().data());
-    kDebug() << rawText.left(1024);
+    m_collectionToChildren[parentId] = QVector<QString>();
+
+    QXmlStreamReader xmlReader(reply);
+    while (!xmlReader.atEnd() && !xmlReader.hasError()) {
+        const QXmlStreamReader::TokenType tt = xmlReader.readNext();
+        if (tt == QXmlStreamReader::StartElement && xmlReader.name() == QLatin1String("entry")) {
+            QString title = QLatin1String("unknown"), key;
+            while (!xmlReader.atEnd() && !xmlReader.hasError()) {
+                const QXmlStreamReader::TokenType tt = xmlReader.readNext();
+                if (tt == QXmlStreamReader::StartElement && xmlReader.name() == QLatin1String("title"))
+                    title = xmlReader.readElementText(QXmlStreamReader::IncludeChildElements);
+                else if (tt == QXmlStreamReader::StartElement && xmlReader.name() == QLatin1String("key"))
+                    key = xmlReader.readElementText(QXmlStreamReader::IncludeChildElements);
+                else if (tt == QXmlStreamReader::EndElement && xmlReader.name() == QLatin1String("entry"))
+                    break;
+            }
+
+            m_collectionToLabel.insert(key, title);
+            m_collectionToModelIndexParent.insert(key, parent);
+            m_collectionToParent.insert(key, parentId);
+            QVector<QString> vec = m_collectionToChildren[parentId];
+            vec.append(key);
+            m_collectionToChildren[parentId] = vec;
+        } else if (tt == QXmlStreamReader::EndElement && xmlReader.name() == QLatin1String("feed"))
+            break;
+    }
+    m_downloadingKeys.remove(parentId);
+
+    if (m_collectionToChildren.contains(parentId) && !m_collectionToChildren[parentId].isEmpty())
+        insertRows(0, m_collectionToChildren[parentId].count(), parent);
 }

@@ -21,6 +21,7 @@
 #include <QAbstractItemModel>
 #include <QHash>
 #include <QVector>
+#include <QSet>
 
 #include "kbibtexnetworking_export.h"
 
@@ -42,13 +43,18 @@ public:
     int columnCount(const QModelIndex &) const;
     bool hasChildren(const QModelIndex &parent = QModelIndex()) const;
 
+    virtual bool canFetchMore(const QModelIndex &parent) const;
+    virtual void fetchMore(const QModelIndex &parent);
+
 private:
     int m_userId;
     InternalNetworkAccessManager *m_nam;
 
-    QHash<int, QString> m_collectionToLabel;
-    QHash<int, int> m_collectionToParent;
-    QHash<int, QVector<int> > m_collectionToChildren;
+    QHash<QString, QString> m_collectionToLabel;
+    QHash<QString, QModelIndex> m_collectionToModelIndexParent;
+    QHash<QString, QString> m_collectionToParent;
+    QHash<QString, QVector<QString> > m_collectionToChildren;
+    QSet<QString> m_downloadingKeys;
 
 private slots:
     void finishedFetchingCollection();
