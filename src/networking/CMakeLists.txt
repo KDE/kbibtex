@@ -33,6 +33,7 @@ set(
     onlinesearch/onlinesearchideasrepec.cpp
     onlinesearch/onlinesearchdoi.cpp
     zotero/collectionmodel.cpp
+    zotero/collection.cpp
     findpdf.cpp
     internalnetworkaccessmanager.cpp
 )
@@ -60,6 +61,7 @@ set(
     onlinesearch/onlinesearchideasrepec.h
     onlinesearch/onlinesearchdoi.h
     zotero/collectionmodel.h
+    zotero/collection.h
     kbibtexnetworking_export.h
     findpdf.h
     internalnetworkaccessmanager.h

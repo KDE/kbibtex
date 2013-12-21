@@ -38,7 +38,7 @@
 #include "kbibtexnamespace.h"
 #include "preferences/kbibtexpreferencesdialog.h"
 #include "valuelist.h"
-#include "zotero.h"
+#include "zoterobrowser.h"
 #include "statistics.h"
 #include "documentlist.h"
 #include "mdiwidget.h"
@@ -74,7 +74,7 @@ public:
     DocumentPreview *documentPreview;
     FileSettings *fileSettings;
     ValueList *valueList;
-    Zotero *zotero;
+    ZoteroBrowser *zotero;
     Statistics *statistics;
     SearchForm *searchForm;
     SearchResults *searchResults;
@@ -156,7 +156,7 @@ KBibTeXMainWindow::KBibTeXMainWindow()
     d->dockZotero->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
     addDockWidget(Qt::LeftDockWidgetArea, d->dockZotero);
     tabifyDockWidget(d->dockDocumentList, d->dockZotero);
-    d->zotero = new Zotero(d->dockZotero);
+    d->zotero = new ZoteroBrowser(d->dockZotero);
     d->dockZotero->setWidget(d->zotero);
     d->dockZotero->setObjectName("dockZotero");
     d->dockZotero->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
