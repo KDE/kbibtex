@@ -15,25 +15,27 @@
  *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
  ***************************************************************************/
 
-#include "zotero.h"
+#include "zoterobrowser.h"
 
 #include <QTreeView>
 #include <QLayout>
 
-#include "collectionmodel.h"
+#include "zotero/collectionmodel.h"
+#include "zotero/collection.h"
 
-Zotero::Zotero(QWidget *parent)
+ZoteroBrowser::ZoteroBrowser(QWidget *parent)
         : QWidget(parent)
 {
     QBoxLayout *layout = new QVBoxLayout(this);
     QTreeView *treeView = new QTreeView(this);
     layout->addWidget(treeView);
-    QAbstractItemModel *model = new CollectionModel();
+    Zotero::Collection *collection = Zotero::Collection::fromUserId(475425, this);
+    QAbstractItemModel *model = new Zotero::CollectionModel(collection, this);
     treeView->setModel(model);
     treeView->setHeaderHidden(true);
 }
 
-Zotero::~Zotero()
+ZoteroBrowser::~ZoteroBrowser()
 {
     // TODO
 }

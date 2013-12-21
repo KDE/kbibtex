@@ -15,43 +15,53 @@
  *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
  ***************************************************************************/
 
-#ifndef KBIBTEX_NETWORKING_ZOTERO_COLLECTIONMODEL_H
-#define KBIBTEX_NETWORKING_ZOTERO_COLLECTIONMODEL_H
+#ifndef KBIBTEX_NETWORKING_ZOTERO_COLLECTION_H
+#define KBIBTEX_NETWORKING_ZOTERO_COLLECTION_H
 
-#include <QAbstractItemModel>
-#include <QHash>
-#include <QVector>
-#include <QSet>
+#include <QObject>
+#include <QScopedPointer>
+
+#include <KUrl>
 
 #include "kbibtexnetworking_export.h"
 
 namespace Zotero
 {
 
-class Collection;
-
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
-class KBIBTEXNETWORKING_EXPORT CollectionModel : public QAbstractItemModel
+class KBIBTEXNETWORKING_EXPORT Collection : public QObject
 {
     Q_OBJECT
-
 public:
-    explicit CollectionModel(Zotero::Collection *collection, QObject *parent = NULL);
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-    QModelIndex index(int row, int column, const QModelIndex &) const;
-    QModelIndex parent(const QModelIndex &) const;
-    int rowCount(const QModelIndex &) const;
-    int columnCount(const QModelIndex &) const;
-    bool hasChildren(const QModelIndex &parent = QModelIndex()) const;
+    static Collection *fromUserId(int userId, QObject *parent = NULL);
+    static Collection *fromGroupId(int groupId, QObject *parent = NULL);
 
-private slots:
-    void fetchingDone();
+    bool initialized() const;
+
+    QString collectionLabel(const QString &collectionId) const;
+    QString collectionParent(const QString &collectionId) const;
+    QVector<QString> collectionChildren(const QString &collectionId) const;
+    uint collectionNumericId(const QString &collectionId) const;
+    QString collectionFromNumericId(uint numericId) const;
+
+signals:
+    void finishedLoading();
+
+protected:
+    Collection(const KUrl &baseUrl, QObject *parent);
+
+    static const KUrl zoteroUrl;
 
 private:
     class Private;
     Private *const d;
+
+    void emitFinishedLoading();
+
+private slots:
+    void finishedFetchingCollection();
 };
 
 } // end of namespace Zotero

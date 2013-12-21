@@ -15,22 +15,22 @@
  *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
  ***************************************************************************/
 
-#ifndef KBIBTEX_PROGRAM_ZOTERO_H
-#define KBIBTEX_PROGRAM_ZOTERO_H
+#ifndef KBIBTEX_PROGRAM_ZOTEROBROWSER_H
+#define KBIBTEX_PROGRAM_ZOTEROBROWSER_H
 
 #include <QWidget>
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
-class Zotero : public QWidget
+class ZoteroBrowser : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit Zotero(QWidget *parent);
-    ~Zotero();
+    explicit ZoteroBrowser(QWidget *parent);
+    ~ZoteroBrowser();
 };
 
 
-#endif // KBIBTEX_PROGRAM_ZOTERO_H
+#endif // KBIBTEX_PROGRAM_ZOTEROBROWSER_H
