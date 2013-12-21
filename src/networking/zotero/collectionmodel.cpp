@@ -19,10 +19,13 @@
 
 #include <QHash>
 
+#include <KIcon>
+
 #include "zotero/collection.h"
 
-using namespace Zotero;
+const int CollectionIdRole = Qt::UserRole + 6681;
 
+using namespace Zotero;
 
 class Zotero::CollectionModel::Private
 {
@@ -43,6 +46,7 @@ public:
 CollectionModel::CollectionModel(Collection *collection, QObject *parent)
         : QAbstractItemModel(parent), d(new Zotero::CollectionModel::Private(collection, this))
 {
+    beginResetModel();
     connect(collection, SIGNAL(finishedLoading()), this, SLOT(fetchingDone()));
 }
 
@@ -54,9 +58,22 @@ QVariant CollectionModel::data(const QModelIndex &index, int role) const
     if (index == QModelIndex())
         return QVariant();
 
-    const QString collectionId = d->collection->collectionFromNumericId(index.internalId());
-    if (role == Qt::DisplayRole)
+    if (role == Qt::DecorationRole) {
+        /// Fancy icons for collections
+        if (index.internalId() == 0) /// root node
+            return KIcon(QLatin1String("folder-orange"));
+        else /// any other node
+            return KIcon(QLatin1String("folder-yellow"));
+    } else if (role == Qt::DisplayRole) {
+        /// Show collections' human-readable description
+        const QString collectionId = d->collection->collectionFromNumericId(index.internalId());
         return d->collection->collectionLabel(collectionId);
+    } else if (role == CollectionIdRole) {
+        if (index.internalId() == 0) /// root node
+            return QString();
+        else /// any other node
+            return d->collection->collectionFromNumericId(index.internalId());
+    }
 
     return QVariant();
 }
@@ -125,6 +142,5 @@ bool CollectionModel::hasChildren(const QModelIndex &parent) const
 
 void CollectionModel::fetchingDone()
 {
-    beginResetModel();
     endResetModel();
 }

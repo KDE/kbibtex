@@ -19,6 +19,7 @@
 
 #include <QTreeView>
 #include <QLayout>
+#include <QAbstractItemModel>
 
 #include "zotero/collectionmodel.h"
 #include "zotero/collection.h"
@@ -33,6 +34,10 @@ ZoteroBrowser::ZoteroBrowser(QWidget *parent)
     QAbstractItemModel *model = new Zotero::CollectionModel(collection, this);
     treeView->setModel(model);
     treeView->setHeaderHidden(true);
+
+    setEnabled(false);
+    setCursor(Qt::WaitCursor);
+    connect(model, SIGNAL(modelReset()), this, SLOT(modelReset()));
 }
 
 ZoteroBrowser::~ZoteroBrowser()
@@ -40,3 +45,8 @@ ZoteroBrowser::~ZoteroBrowser()
     // TODO
 }
 
+void ZoteroBrowser::modelReset()
+{
+    setEnabled(true);
+    setCursor(Qt::ArrowCursor); // TODO should be default cursor
+}

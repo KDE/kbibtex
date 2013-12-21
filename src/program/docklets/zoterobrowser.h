@@ -30,6 +30,9 @@ class ZoteroBrowser : public QWidget
 public:
     explicit ZoteroBrowser(QWidget *parent);
     ~ZoteroBrowser();
+
+private slots:
+    void modelReset();
 };
 
 

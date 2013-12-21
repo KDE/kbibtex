@@ -24,6 +24,7 @@
 #include <QXmlStreamReader>
 
 #include <KDebug>
+#include <KLocale>
 
 #include "internalnetworkaccessmanager.h"
 
@@ -86,14 +87,14 @@ Collection *Collection::fromUserId(int userId, QObject *parent)
 {
     KUrl baseUrl = zoteroUrl;
     baseUrl.setPath(QString(QLatin1String("/users/%1")).arg(userId));
-    return new Collection(baseUrl, parent);
+    return new Collection(baseUrl, i18n("User %1's Library", userId), parent);
 }
 
 Collection *Collection::fromGroupId(int groupId, QObject *parent)
 {
     KUrl baseUrl = zoteroUrl;
     baseUrl.setPath(QString(QLatin1String("/groups/%1")).arg(groupId));
-    return new Collection(baseUrl, parent);
+    return new Collection(baseUrl, i18n("Group %1's Library", groupId), parent);
 }
 
 bool Collection::initialized() const
@@ -104,9 +105,6 @@ bool Collection::initialized() const
 QString Collection::collectionLabel(const QString &collectionId) const
 {
     if (!d->initialized) return QString();
-
-    if (collectionId == rootKey) /// root node
-        return QLatin1String("Root node");
 
     return d->collectionToLabel[collectionId];
 }
@@ -149,10 +147,13 @@ QString Collection::collectionFromNumericId(uint numericId) const
     return QString();
 }
 
-Collection::Collection(const KUrl &baseUrl, QObject *parent)
+Collection::Collection(const KUrl &baseUrl, const QString &rootNodeLabel, QObject *parent)
         : QObject(parent), d(new Zotero::Collection::Private(this))
 {
     d->baseUrl = baseUrl;
+
+    d->collectionToLabel[rootKey] = rootNodeLabel;
+
     KUrl url = baseUrl;
     url.addPath(QLatin1String("/collections/top"));
     d->requestZoteroUrl(url, rootKey);
