@@ -50,7 +50,7 @@ signals:
     void finishedLoading();
 
 protected:
-    Collection(const KUrl &baseUrl, QObject *parent);
+    Collection(const KUrl &baseUrl, const QString &rootNodeLabel, QObject *parent);
 
     static const KUrl zoteroUrl;
 
