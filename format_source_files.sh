@@ -5,7 +5,7 @@ export LANG=C
 MY_NAME="$(basename "$0")"
 
 find src -type f -name '*.cpp' -o -name '*.h' | xargs git status --untracked-files=no --porcelain | while read status filename ; do
-	if [[ ${status} != "M" && ${status} != "A" && ${status} != "AM" ]] ; then continue ; fi
+	if [[ ${status} != "M" && ${status} != "A" && ${status} != "AM" && ${status} != "MM" ]] ; then continue ; fi
 	if [[ ! -s "${filename}" ]] ; then
 		echo "${MY_NAME}: File not found: \"${filename}\" (state: ${status})" >&2
 		continue
