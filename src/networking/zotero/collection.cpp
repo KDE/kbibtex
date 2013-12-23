@@ -102,6 +102,11 @@ bool Collection::initialized() const
     return d->initialized;
 }
 
+KUrl Collection::baseUrl() const
+{
+    return d->baseUrl;
+}
+
 QString Collection::collectionLabel(const QString &collectionId) const
 {
     if (!d->initialized) return QString();

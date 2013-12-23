@@ -19,6 +19,17 @@
 #define KBIBTEX_PROGRAM_ZOTEROBROWSER_H
 
 #include <QWidget>
+#include <QModelIndex>
+
+class Element;
+class SearchResults;
+
+namespace Zotero
+{
+class Items;
+class Collection;
+class CollectionModel;
+}
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
@@ -28,11 +39,19 @@ class ZoteroBrowser : public QWidget
     Q_OBJECT
 
 public:
-    explicit ZoteroBrowser(QWidget *parent);
+    explicit ZoteroBrowser(SearchResults *searchResults, QWidget *parent);
     ~ZoteroBrowser();
+
+private:
+    Zotero::Items *m_items;
+    Zotero::Collection *m_collection;
+    Zotero::CollectionModel *m_model;
+    SearchResults *m_searchResults;
 
 private slots:
     void modelReset();
+    void collectionDoubleClicked(const QModelIndex &index);
+    void showItem(QSharedPointer<Element>);
 };
 
 

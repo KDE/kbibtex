@@ -23,9 +23,9 @@
 
 #include "zotero/collection.h"
 
-const int CollectionIdRole = Qt::UserRole + 6681;
-
 using namespace Zotero;
+
+const int Zotero::CollectionModel::CollectionIdRole = Qt::UserRole + 6681;
 
 class Zotero::CollectionModel::Private
 {

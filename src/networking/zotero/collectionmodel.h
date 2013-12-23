@@ -38,6 +38,8 @@ class KBIBTEXNETWORKING_EXPORT CollectionModel : public QAbstractItemModel
     Q_OBJECT
 
 public:
+    static const int CollectionIdRole;
+
     explicit CollectionModel(Zotero::Collection *collection, QObject *parent = NULL);
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     QModelIndex index(int row, int column, const QModelIndex &) const;
