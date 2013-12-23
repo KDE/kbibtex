@@ -34,6 +34,7 @@ set(
     onlinesearch/onlinesearchdoi.cpp
     zotero/collectionmodel.cpp
     zotero/collection.cpp
+    zotero/items.cpp
     findpdf.cpp
     internalnetworkaccessmanager.cpp
 )
@@ -62,6 +63,7 @@ set(
     onlinesearch/onlinesearchdoi.h
     zotero/collectionmodel.h
     zotero/collection.h
+    zotero/items.h
     kbibtexnetworking_export.h
     findpdf.h
     internalnetworkaccessmanager.h

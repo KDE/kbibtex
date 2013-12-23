@@ -15,15 +15,17 @@
  *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
  ***************************************************************************/
 
-#ifndef KBIBTEX_NETWORKING_ZOTERO_COLLECTION_H
-#define KBIBTEX_NETWORKING_ZOTERO_COLLECTION_H
+#ifndef KBIBTEX_NETWORKING_ZOTERO_ITEMS_H
+#define KBIBTEX_NETWORKING_ZOTERO_ITEMS_H
 
 #include <QObject>
-#include <QScopedPointer>
+#include <QSharedPointer>
 
 #include <KUrl>
 
 #include "kbibtexnetworking_export.h"
+
+class Element;
 
 namespace Zotero
 {
@@ -31,40 +33,27 @@ namespace Zotero
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
-class KBIBTEXNETWORKING_EXPORT Collection : public QObject
+class KBIBTEXNETWORKING_EXPORT Items : public QObject
 {
     Q_OBJECT
 public:
-    static Collection *fromUserId(int userId, QObject *parent = NULL);
-    static Collection *fromGroupId(int groupId, QObject *parent = NULL);
+    Items(QObject *parent = NULL);
 
-    bool initialized() const;
-    KUrl baseUrl() const;
-
-    QString collectionLabel(const QString &collectionId) const;
-    QString collectionParent(const QString &collectionId) const;
-    QVector<QString> collectionChildren(const QString &collectionId) const;
-    uint collectionNumericId(const QString &collectionId) const;
-    QString collectionFromNumericId(uint numericId) const;
+    void retrieveItems(const KUrl &baseUrl, const QString &collection);
 
 signals:
-    void finishedLoading();
-
-protected:
-    Collection(const KUrl &baseUrl, const QString &rootNodeLabel, QObject *parent);
-
-    static const KUrl zoteroUrl;
+    void foundElement(QSharedPointer<Element>);
 
 private:
     class Private;
     Private *const d;
 
-    void emitFinishedLoading();
-
 private slots:
-    void finishedFetchingCollection();
+    void finishedFetchingItemList();
+    void finishedFetchingItem();
 };
 
 } // end of namespace Zotero
 
-#endif // KBIBTEX_NETWORKING_ZOTERO_COLLECTIONMODEL_H
+#endif // KBIBTEX_NETWORKING_ZOTERO_ITEMS_H
+
