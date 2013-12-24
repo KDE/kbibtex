@@ -49,8 +49,7 @@ private:
     Private *const d;
 
 private slots:
-    void finishedFetchingItemList();
-    void finishedFetchingItem();
+    void finishedFetchingItems();
 };
 
 } // end of namespace Zotero
