@@ -55,8 +55,10 @@ public:
 
     void requestZoteroUrl(const KUrl &url, const QString &parentId) {
         KUrl internalUrl = url;
-        if (!url.queryItems().contains(QLatin1String("limit")))
+        if (!internalUrl.queryItems().contains(QLatin1String("limit")))
             internalUrl.addQueryItem(QLatin1String("limit"), QString::number(limit));
+        if (!internalUrl.queryItems().contains(QLatin1String("key")))
+            internalUrl.addQueryItem(QLatin1String("key"), QLatin1String("xxxxxxx"));
         QNetworkRequest request(internalUrl);
         request.setRawHeader("Zotero-API-Version", "2");
 
@@ -176,7 +178,12 @@ void Collection::finishedFetchingCollection()
         QXmlStreamReader xmlReader(reply);
         while (!xmlReader.atEnd() && !xmlReader.hasError()) {
             const QXmlStreamReader::TokenType tt = xmlReader.readNext();
-            if (tt == QXmlStreamReader::StartElement && xmlReader.name() == QLatin1String("entry")) {
+            if (tt == QXmlStreamReader::StartElement && xmlReader.name() == QLatin1String("title")) {
+                /// Not perfect: guess author name from collection's title
+                const QStringList titleFragments = xmlReader.readElementText(QXmlStreamReader::IncludeChildElements).split(QLatin1String(" / "));
+                if (titleFragments.count() == 3)
+                    d->collectionToLabel[rootKey] = i18n("%1's Library", titleFragments[1]);
+            } else if (tt == QXmlStreamReader::StartElement && xmlReader.name() == QLatin1String("entry")) {
                 QString title, key;
                 while (!xmlReader.atEnd() && !xmlReader.hasError()) {
                     const QXmlStreamReader::TokenType tt = xmlReader.readNext();
@@ -208,7 +215,8 @@ void Collection::finishedFetchingCollection()
             d->requestZoteroUrl(nextPage, parentId);
         } else
             d->runNextInDownloadQueue();
-    }
+    } else
+        kWarning() << reply->errorString(); ///< something went wrong
 }
 
 void Collection::emitFinishedLoading()
