@@ -40,7 +40,6 @@ public:
     Collection(API *api, QObject *parent);
 
     bool initialized() const;
-    KUrl baseUrl() const;
 
     QString collectionLabel(const QString &collectionId) const;
     QString collectionParent(const QString &collectionId) const;
