@@ -26,25 +26,26 @@
 #include <KDebug>
 #include <KLocale>
 
+#include "api.h"
+
 #include "internalnetworkaccessmanager.h"
 
 using namespace Zotero;
 
-const QString rootKey = QLatin1String("ROOT_KEY_KBIBTEX");
-const int limit = 45;
+const QString top = QLatin1String("top");
 
 class Zotero::Collection::Private
 {
 private:
     Zotero::Collection *p;
+    Zotero::API *api;
 
 public:
-    Private(Zotero::Collection *parent)
-            : p(parent) {
+    Private(API *a, Zotero::Collection *parent)
+            : p(parent), api(a) {
         initialized = false;
     }
 
-    KUrl baseUrl;
     bool initialized;
 
     QQueue<QString> downloadQueue;
@@ -53,28 +54,21 @@ public:
     QHash<QString, QString> collectionToParent;
     QHash<QString, QVector<QString> > collectionToChildren;
 
-    void requestZoteroUrl(const KUrl &url, const QString &parentId) {
+    QNetworkReply *requestZoteroUrl(const KUrl &url) {
         KUrl internalUrl = url;
-        if (!internalUrl.queryItems().contains(QLatin1String("limit")))
-            internalUrl.addQueryItem(QLatin1String("limit"), QString::number(limit));
-        if (!internalUrl.queryItems().contains(QLatin1String("key")))
-            internalUrl.addQueryItem(QLatin1String("key"), QLatin1String("xxxxxxx"));
-        QNetworkRequest request(internalUrl);
-        request.setRawHeader("Zotero-API-Version", "2");
-
-        kDebug() << "Requesting from Zotero: " << internalUrl.pathOrUrl();
-
+        api->addLimitToUrl(internalUrl);
+        QNetworkRequest request = api->request(internalUrl);
         QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
         connect(reply, SIGNAL(finished()), p, SLOT(finishedFetchingCollection()));
-        reply->setProperty("parentId", QVariant::fromValue<QString>(parentId));
+        return reply;
     }
 
     void runNextInDownloadQueue() {
         if (!downloadQueue.isEmpty()) {
             const QString head = downloadQueue.dequeue();
-            KUrl url = baseUrl;
+            KUrl url = api->baseUrl();
             url.addPath(QString(QLatin1String("/collections/%1/collections")).arg(head));
-            requestZoteroUrl(url, head);
+            requestZoteroUrl(url);
         } else {
             initialized = true;
             kDebug() << "Queue is empty, number of found collections:" << collectionToLabel.count();
@@ -83,30 +77,19 @@ public:
     }
 };
 
-const KUrl Collection::zoteroUrl = KUrl(QLatin1String("https://api.zotero.org"));
-
-Collection *Collection::fromUserId(int userId, QObject *parent)
+Collection::Collection(API *api, QObject *parent)
+        : QObject(parent), d(new Zotero::Collection::Private(api, this))
 {
-    KUrl baseUrl = zoteroUrl;
-    baseUrl.setPath(QString(QLatin1String("/users/%1")).arg(userId));
-    return new Collection(baseUrl, i18n("User %1's Library", userId), parent);
-}
+    d->collectionToLabel[top] = i18n("Library");
 
-Collection *Collection::fromGroupId(int groupId, QObject *parent)
-{
-    KUrl baseUrl = zoteroUrl;
-    baseUrl.setPath(QString(QLatin1String("/groups/%1")).arg(groupId));
-    return new Collection(baseUrl, i18n("Group %1's Library", groupId), parent);
+    KUrl url = api->baseUrl();
+    url.addPath(QLatin1String("/collections/top"));
+    d->requestZoteroUrl(url);
 }
 
 bool Collection::initialized() const
 {
     return d->initialized;
-}
-
-KUrl Collection::baseUrl() const
-{
-    return d->baseUrl;
 }
 
 QString Collection::collectionLabel(const QString &collectionId) const
@@ -134,7 +117,7 @@ uint Collection::collectionNumericId(const QString &collectionId) const
 {
     if (!d->initialized) return 0;
 
-    if (collectionId == rootKey) /// root node
+    if (collectionId == top) /// root node
         return 0;
 
     return qHash(collectionId);
@@ -143,7 +126,7 @@ uint Collection::collectionNumericId(const QString &collectionId) const
 QString Collection::collectionFromNumericId(uint numericId) const
 {
     if (numericId == 0) /// root node
-        return rootKey;
+        return top;
 
     // TODO make those resolutions more efficient
     const QList<QString> keys = d->collectionToLabel.keys();
@@ -154,26 +137,12 @@ QString Collection::collectionFromNumericId(uint numericId) const
     return QString();
 }
 
-Collection::Collection(const KUrl &baseUrl, const QString &rootNodeLabel, QObject *parent)
-        : QObject(parent), d(new Zotero::Collection::Private(this))
-{
-    d->baseUrl = baseUrl;
-
-    d->collectionToLabel[rootKey] = rootNodeLabel;
-
-    KUrl url = baseUrl;
-    url.addPath(QLatin1String("/collections/top"));
-    d->requestZoteroUrl(url, rootKey);
-}
-
 void Collection::finishedFetchingCollection()
 {
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
-    const QString parentId = reply->property("parentId").toString();
+    QString parentId = top;
 
     if (reply->error() == QNetworkReply::NoError) {
-        d->collectionToChildren[parentId] = QVector<QString>();
-
         QString nextPage;
         QXmlStreamReader xmlReader(reply);
         while (!xmlReader.atEnd() && !xmlReader.hasError()) {
@@ -182,7 +151,7 @@ void Collection::finishedFetchingCollection()
                 /// Not perfect: guess author name from collection's title
                 const QStringList titleFragments = xmlReader.readElementText(QXmlStreamReader::IncludeChildElements).split(QLatin1String(" / "));
                 if (titleFragments.count() == 3)
-                    d->collectionToLabel[rootKey] = i18n("%1's Library", titleFragments[1]);
+                    d->collectionToLabel[top] = i18n("%1's Library", titleFragments[1]);
             } else if (tt == QXmlStreamReader::StartElement && xmlReader.name() == QLatin1String("entry")) {
                 QString title, key;
                 while (!xmlReader.atEnd() && !xmlReader.hasError()) {
@@ -199,7 +168,7 @@ void Collection::finishedFetchingCollection()
                     d->downloadQueue.enqueue(key);
                     d->collectionToLabel.insert(key, title);
                     d->collectionToParent.insert(key, parentId);
-                    QVector<QString> vec =  d->collectionToChildren[parentId];
+                    QVector<QString> vec = d->collectionToChildren[parentId];
                     vec.append(key);
                     d->collectionToChildren[parentId] = vec;
                 }
@@ -207,12 +176,19 @@ void Collection::finishedFetchingCollection()
                 const QXmlStreamAttributes attrs = xmlReader.attributes();
                 if (attrs.hasAttribute(QLatin1String("rel")) && attrs.hasAttribute(QLatin1String("href")) && attrs.value(QLatin1String("rel")) == QLatin1String("next"))
                     nextPage = attrs.value(QLatin1String("href")).toString();
+                else if (attrs.hasAttribute(QLatin1String("rel")) && attrs.hasAttribute(QLatin1String("href")) && attrs.value(QLatin1String("rel")) == QLatin1String("self")) {
+                    const QString text = attrs.value(QLatin1String("href")).toString();
+                    const int p1 = text.indexOf(QLatin1String("/collections/"));
+                    const int p2 = text.indexOf(QLatin1String("/"), p1 + 14);
+                    if (p1 > 0 && p2 > p1 + 14)
+                        parentId = text.mid(p1 + 13, p2 - p1 - 13);
+                }
             } else if (tt == QXmlStreamReader::EndElement && xmlReader.name() == QLatin1String("feed"))
                 break;
         }
 
         if (!nextPage.isEmpty()) {
-            d->requestZoteroUrl(nextPage, parentId);
+            d->requestZoteroUrl(nextPage);
         } else
             d->runNextInDownloadQueue();
     } else

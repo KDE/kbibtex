@@ -26,6 +26,7 @@
 #include "zotero/collectionmodel.h"
 #include "zotero/collection.h"
 #include "zotero/items.h"
+#include "zotero/api.h"
 
 ZoteroBrowser::ZoteroBrowser(SearchResults *searchResults, QWidget *parent)
         : QWidget(parent), m_searchResults(searchResults)
@@ -33,15 +34,15 @@ ZoteroBrowser::ZoteroBrowser(SearchResults *searchResults, QWidget *parent)
     QBoxLayout *layout = new QVBoxLayout(this);
     QTreeView *treeView = new QTreeView(this);
     layout->addWidget(treeView);
-    m_items = new Zotero::Items(this);
-    m_collection = Zotero::Collection::fromUserId(475425, this);
+    Zotero::API *api = new Zotero::API(Zotero::API::UserRequest, 475425, QString(), this);
+    m_items = new Zotero::Items(api, this);
+    m_collection = new Zotero::Collection(api, this);
     m_model = new Zotero::CollectionModel(m_collection, this);
     treeView->setModel(m_model);
     treeView->setHeaderHidden(true);
     treeView->setExpandsOnDoubleClick(false);
 
     setEnabled(false);
-    setCursor(Qt::WaitCursor);
     connect(m_model, SIGNAL(modelReset()), this, SLOT(modelReset()));
     connect(treeView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(collectionDoubleClicked(QModelIndex)));
     connect(m_items, SIGNAL(foundElement(QSharedPointer<Element>)), this, SLOT(showItem(QSharedPointer<Element>)));
@@ -55,16 +56,13 @@ ZoteroBrowser::~ZoteroBrowser()
 void ZoteroBrowser::modelReset()
 {
     setEnabled(true);
-    setCursor(Qt::ArrowCursor); // TODO should be default cursor
 }
 
 void ZoteroBrowser::collectionDoubleClicked(const QModelIndex &index)
 {
     const QString collectionId = index.data(Zotero::CollectionModel::CollectionIdRole).toString();
-    if (!collectionId.isEmpty()) {
-        m_searchResults->clear();
-        m_items->retrieveItems(m_collection->baseUrl(), collectionId);
-    }
+    m_searchResults->clear();
+    m_items->retrieveItems(collectionId);
 }
 
 void ZoteroBrowser::showItem(QSharedPointer<Element> e)

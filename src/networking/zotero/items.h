@@ -30,6 +30,8 @@ class Element;
 namespace Zotero
 {
 
+class API;
+
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
@@ -37,9 +39,9 @@ class KBIBTEXNETWORKING_EXPORT Items : public QObject
 {
     Q_OBJECT
 public:
-    Items(QObject *parent = NULL);
+    Items(API *api, QObject *parent = NULL);
 
-    void retrieveItems(const KUrl &baseUrl, const QString &collection);
+    void retrieveItems(const QString &collectionId);
 
 signals:
     void foundElement(QSharedPointer<Element>);

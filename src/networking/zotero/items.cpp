@@ -25,12 +25,11 @@
 
 #include "file.h"
 #include "fileimporterbibtex.h"
+#include "api.h"
 
 #include "internalnetworkaccessmanager.h"
 
 using namespace Zotero;
-
-const int limit = 45;
 
 class Zotero::Items::Private
 {
@@ -38,28 +37,20 @@ private:
     Zotero::Items *p;
 
 public:
-    Private(Zotero::Items *parent)
-            : p(parent) {
+    API *api;
+
+    Private(API *a, Zotero::Items *parent)
+            : p(parent), api(a) {
         /// nothing
     }
 
     QNetworkReply *requestZoteroUrl(const KUrl &url) {
         KUrl internalUrl = url;
-
-        static const QString queryItemLimit = QLatin1String("limit");
-        internalUrl.removeQueryItem(queryItemLimit);
-        internalUrl.addQueryItem(queryItemLimit, QString::number(limit));
-
-        static const QString queryItemKey = QLatin1String("key");
-        internalUrl.removeQueryItem(queryItemKey);
-        internalUrl.addQueryItem(queryItemKey, QLatin1String("xxxxxxx"));
-
-        QNetworkRequest request(internalUrl);
-        request.setRawHeader("Zotero-API-Version", "2");
-
-        kDebug() << "Requesting from Zotero: " << internalUrl.pathOrUrl();
-
-        return InternalNetworkAccessManager::self()->get(request);
+        api->addLimitToUrl(internalUrl);
+        QNetworkRequest request = api->request(internalUrl);
+        QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
+        connect(reply, SIGNAL(finished()), p, SLOT(finishedFetchingItems()));
+        return reply;
     }
 
     void retrieveItems(const KUrl &url, int start) {
@@ -69,21 +60,23 @@ public:
         internalUrl.removeQueryItem(queryItemStart);
         internalUrl.addQueryItem(queryItemStart, QString::number(start));
 
-        QNetworkReply *reply = requestZoteroUrl(internalUrl);
-        connect(reply, SIGNAL(finished()), p, SLOT(finishedFetchingItems()));
+        requestZoteroUrl(internalUrl);
     }
 };
 
-Items::Items(QObject *parent)
-        : QObject(parent), d(new Zotero::Items::Private(this))
+Items::Items(API *api, QObject *parent)
+        : QObject(parent), d(new Zotero::Items::Private(api, this))
 {
     /// nothing
 }
 
-void Items::retrieveItems(const KUrl &baseUrl, const QString &collection)
+void Items::retrieveItems(const QString &collection)
 {
-    KUrl url = baseUrl;
-    url.addPath(QString(QLatin1String("/collections/%1/items")).arg(collection));
+    KUrl url = d->api->baseUrl();
+    if (collection.isEmpty())
+        url.addPath(QLatin1String("items"));
+    else
+        url.addPath(QString(QLatin1String("/collections/%1/items")).arg(collection));
     url.addQueryItem(QLatin1String("format"), QLatin1String("bibtex"));
     d->retrieveItems(url, 0);
 }
@@ -113,7 +106,7 @@ void Items::finishedFetchingItems()
             delete bibtexFile;
 
             /// Non-empty result means there may be more ...
-            d->retrieveItems(reply->url(), start + limit);
+            d->retrieveItems(reply->url(), start + Zotero::API::limit);
         }
     } else
         kWarning() << reply->errorString(); ///< something went wrong
