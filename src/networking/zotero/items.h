@@ -45,6 +45,7 @@ public:
 
 signals:
     void foundElement(QSharedPointer<Element>);
+    void stoppedSearch(int);
 
 private:
     class Private;

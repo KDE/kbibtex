@@ -18,8 +18,14 @@
 #include "zoterobrowser.h"
 
 #include <QTreeView>
+#include <QTabWidget>
 #include <QLayout>
+#include <QFormLayout>
 #include <QAbstractItemModel>
+
+#include <KLocale>
+#include <KLineEdit>
+#include <KPushButton>
 
 #include "element.h"
 #include "searchresults.h"
@@ -28,29 +34,84 @@
 #include "zotero/items.h"
 #include "zotero/api.h"
 
-ZoteroBrowser::ZoteroBrowser(SearchResults *searchResults, QWidget *parent)
-        : QWidget(parent), m_searchResults(searchResults)
+class ZoteroBrowser::Private
 {
-    QBoxLayout *layout = new QVBoxLayout(this);
-    QTreeView *treeView = new QTreeView(this);
-    layout->addWidget(treeView);
-    Zotero::API *api = new Zotero::API(Zotero::API::UserRequest, 475425, QString(), this);
-    m_items = new Zotero::Items(api, this);
-    m_collection = new Zotero::Collection(api, this);
-    m_model = new Zotero::CollectionModel(m_collection, this);
-    treeView->setModel(m_model);
-    treeView->setHeaderHidden(true);
-    treeView->setExpandsOnDoubleClick(false);
+private:
+    ZoteroBrowser *p;
 
+public:
+    Zotero::Items *items;
+    Zotero::Collection *collection;
+    Zotero::CollectionModel *model;
+    Zotero::API *api;
+
+    SearchResults *searchResults;
+
+    QTabWidget *tabWidget;
+    QTreeView *collectionBrowser;
+    KLineEdit *lineEditNumericUserId;
+    KLineEdit *lineEditApiKey;
+
+    Private(SearchResults *sr, ZoteroBrowser *parent)
+            : p(parent), searchResults(sr) {
+        /// nothing
+    }
+};
+
+ZoteroBrowser::ZoteroBrowser(SearchResults *searchResults, QWidget *parent)
+        : QWidget(parent), d(new ZoteroBrowser::Private(searchResults, this))
+{
+    setupGUI();
     setEnabled(false);
-    connect(m_model, SIGNAL(modelReset()), this, SLOT(modelReset()));
-    connect(treeView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(collectionDoubleClicked(QModelIndex)));
-    connect(m_items, SIGNAL(foundElement(QSharedPointer<Element>)), this, SLOT(showItem(QSharedPointer<Element>)));
 }
 
 ZoteroBrowser::~ZoteroBrowser()
 {
     // TODO
+}
+
+void ZoteroBrowser::setupGUI()
+{
+    QBoxLayout *layout = new QVBoxLayout(this);
+    d->tabWidget = new QTabWidget(this);
+    layout->addWidget(d->tabWidget);
+
+    /// Credentials
+    QWidget *container = new QWidget(d->tabWidget);
+    d->tabWidget->addTab(container, i18n("Credentials"));
+    QBoxLayout *containerLayout = new QVBoxLayout(container);
+    QFormLayout *containerForm = new QFormLayout();
+    containerLayout->addLayout(containerForm, 1);
+    d->lineEditNumericUserId = new KLineEdit(container);
+    d->lineEditNumericUserId->setClearButtonShown(true);
+    d->lineEditNumericUserId->setText(QLatin1String("475425"));
+    containerForm->addRow(i18n("Numeric user id:"), d->lineEditNumericUserId);
+    d->lineEditApiKey = new KLineEdit(container);
+    d->lineEditApiKey->setClearButtonShown(true);
+    containerForm->addRow(i18n("API key:"), d->lineEditApiKey);
+    QBoxLayout *containerButtonLayout = new QHBoxLayout();
+    containerLayout->addLayout(containerButtonLayout, 0);
+    KPushButton *buttonApplyCredentials = new KPushButton(i18n("Apply"), container);
+    containerButtonLayout->addStretch(1);
+    containerButtonLayout->addWidget(buttonApplyCredentials, 0);
+    connect(buttonApplyCredentials, SIGNAL(clicked()), this, SLOT(applyCredentials()));
+
+    /// Collection browser
+    d->collectionBrowser = new QTreeView(d->tabWidget);
+    d->tabWidget->addTab(d->collectionBrowser, i18n("Collections"));
+    d->tabWidget->setCurrentWidget(d->collectionBrowser);
+    d->api = new Zotero::API(Zotero::API::UserRequest, 475425, QString(), this);
+    d->items = new Zotero::Items(d->api, this);
+    d->collection = new Zotero::Collection(d->api, this);
+    d->model = new Zotero::CollectionModel(d->collection, this);
+    d->collectionBrowser->setModel(d->model);
+    d->collectionBrowser->setHeaderHidden(true);
+    d->collectionBrowser->setExpandsOnDoubleClick(false);
+
+    connect(d->collectionBrowser, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(collectionDoubleClicked(QModelIndex)));
+    connect(d->model, SIGNAL(modelReset()), this, SLOT(modelReset()));
+    connect(d->items, SIGNAL(foundElement(QSharedPointer<Element>)), this, SLOT(showItem(QSharedPointer<Element>)));
+    connect(d->items, SIGNAL(stoppedSearch(int)), this, SLOT(reenableList()));
 }
 
 void ZoteroBrowser::modelReset()
@@ -61,11 +122,39 @@ void ZoteroBrowser::modelReset()
 void ZoteroBrowser::collectionDoubleClicked(const QModelIndex &index)
 {
     const QString collectionId = index.data(Zotero::CollectionModel::CollectionIdRole).toString();
-    m_searchResults->clear();
-    m_items->retrieveItems(collectionId);
+    d->searchResults->clear();
+    setEnabled(false); ///< will be re-enabled when item retrieve got finished (signal stoppedSearch)
+    d->items->retrieveItems(collectionId);
 }
 
 void ZoteroBrowser::showItem(QSharedPointer<Element> e)
 {
-    m_searchResults->insertElement(e);
+    d->searchResults->insertElement(e);
+}
+
+void ZoteroBrowser::reenableList()
+{
+    setEnabled(true);
+}
+
+void ZoteroBrowser::applyCredentials()
+{
+    d->api->deleteLater();
+    d->collection->deleteLater();
+    d->items->deleteLater();
+    d->model->deleteLater();
+
+    const int id = d->lineEditNumericUserId->text().toInt();
+    d->api = new Zotero::API(Zotero::API::UserRequest, id, d->lineEditApiKey->text(), this);
+    d->items = new Zotero::Items(d->api, this);
+    d->collection = new Zotero::Collection(d->api, this);
+    d->model = new Zotero::CollectionModel(d->collection, this);
+    d->collectionBrowser->setModel(d->model);
+
+    connect(d->model, SIGNAL(modelReset()), this, SLOT(modelReset()));
+    connect(d->items, SIGNAL(foundElement(QSharedPointer<Element>)), this, SLOT(showItem(QSharedPointer<Element>)));
+    connect(d->items, SIGNAL(stoppedSearch(int)), this, SLOT(reenableList()));
+
+    setEnabled(false);
+    d->tabWidget->setCurrentIndex(1);
 }
