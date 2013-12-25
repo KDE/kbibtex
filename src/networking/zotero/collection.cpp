@@ -191,8 +191,11 @@ void Collection::finishedFetchingCollection()
             d->requestZoteroUrl(nextPage);
         } else
             d->runNextInDownloadQueue();
-    } else
+    } else {
         kWarning() << reply->errorString(); ///< something went wrong
+        d->initialized = false;
+        emit finishedLoading();
+    }
 }
 
 void Collection::emitFinishedLoading()
