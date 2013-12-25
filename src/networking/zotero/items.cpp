@@ -70,13 +70,23 @@ Items::Items(API *api, QObject *parent)
     /// nothing
 }
 
-void Items::retrieveItems(const QString &collection)
+void Items::retrieveItemsByCollection(const QString &collection)
 {
     KUrl url = d->api->baseUrl();
     if (collection.isEmpty())
         url.addPath(QLatin1String("items"));
     else
         url.addPath(QString(QLatin1String("/collections/%1/items")).arg(collection));
+    url.addQueryItem(QLatin1String("format"), QLatin1String("bibtex"));
+    d->retrieveItems(url, 0);
+}
+
+void  Items::retrieveItemsByTag(const QString &tag)
+{
+    KUrl url = d->api->baseUrl();
+    if (!tag.isEmpty())
+        url.addQueryItem(QLatin1String("tag"), tag);
+    url.addPath(QLatin1String("items"));
     url.addQueryItem(QLatin1String("format"), QLatin1String("bibtex"));
     d->retrieveItems(url, 0);
 }

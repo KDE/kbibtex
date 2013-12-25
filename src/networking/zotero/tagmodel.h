@@ -15,48 +15,47 @@
  *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
  ***************************************************************************/
 
-#ifndef KBIBTEX_NETWORKING_ZOTERO_ITEMS_H
-#define KBIBTEX_NETWORKING_ZOTERO_ITEMS_H
+#ifndef KBIBTEX_NETWORKING_ZOTERO_TAGMODEL_H
+#define KBIBTEX_NETWORKING_ZOTERO_TAGMODEL_H
 
-#include <QObject>
-#include <QSharedPointer>
-
-#include <KUrl>
+#include <QAbstractItemModel>
+#include <QHash>
+#include <QVector>
+#include <QSet>
 
 #include "kbibtexnetworking_export.h"
-
-class Element;
 
 namespace Zotero
 {
 
-class API;
+class Tags;
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
-class KBIBTEXNETWORKING_EXPORT Items : public QObject
+class KBIBTEXNETWORKING_EXPORT TagModel : public QAbstractItemModel
 {
     Q_OBJECT
+
 public:
-    Items(API *api, QObject *parent = NULL);
+    static const int TagRole, TagCountRole;
 
-    void retrieveItemsByCollection(const QString &collectionId);
-    void retrieveItemsByTag(const QString &tag);
+    explicit TagModel(Zotero::Tags *tags, QObject *parent = NULL);
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+    QModelIndex index(int row, int column, const QModelIndex &) const;
+    QModelIndex parent(const QModelIndex &) const;
+    int rowCount(const QModelIndex &) const;
+    int columnCount(const QModelIndex &) const;
+    bool hasChildren(const QModelIndex &parent = QModelIndex()) const;
 
-signals:
-    void foundElement(QSharedPointer<Element>);
-    void stoppedSearch(int);
+private slots:
+    void fetchingDone();
 
 private:
     class Private;
     Private *const d;
-
-private slots:
-    void finishedFetchingItems();
 };
 
 } // end of namespace Zotero
 
-#endif // KBIBTEX_NETWORKING_ZOTERO_ITEMS_H
-
+#endif // KBIBTEX_NETWORKING_ZOTERO_TAGMODEL_H

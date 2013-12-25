@@ -44,6 +44,7 @@ private:
 private slots:
     void modelReset();
     void collectionDoubleClicked(const QModelIndex &index);
+    void tagDoubleClicked(const QModelIndex &index);
     void showItem(QSharedPointer<Element>);
     void reenableList();
     void applyCredentials();
