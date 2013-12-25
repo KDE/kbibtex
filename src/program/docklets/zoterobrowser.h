@@ -24,13 +24,6 @@
 class Element;
 class SearchResults;
 
-namespace Zotero
-{
-class Items;
-class Collection;
-class CollectionModel;
-}
-
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
@@ -43,16 +36,17 @@ public:
     ~ZoteroBrowser();
 
 private:
-    Zotero::Items *m_items;
-    Zotero::Collection *m_collection;
-    Zotero::CollectionModel *m_model;
+    class Private;
+    Private *const d;
 
-    SearchResults *m_searchResults;
+    void setupGUI();
 
 private slots:
     void modelReset();
     void collectionDoubleClicked(const QModelIndex &index);
     void showItem(QSharedPointer<Element>);
+    void reenableList();
+    void applyCredentials();
 };
 
 

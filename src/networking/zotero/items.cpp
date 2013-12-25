@@ -107,7 +107,12 @@ void Items::finishedFetchingItems()
 
             /// Non-empty result means there may be more ...
             d->retrieveItems(reply->url(), start + Zotero::API::limit);
+        } else {
+            /// Done retrieving BibTeX code
+            emit stoppedSearch(0); // TODO proper error codes
         }
-    } else
+    } else {
         kWarning() << reply->errorString(); ///< something went wrong
+        emit stoppedSearch(1); // TODO proper error codes
+    }
 }
