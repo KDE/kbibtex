@@ -46,6 +46,7 @@ private:
     Zotero::Items *m_items;
     Zotero::Collection *m_collection;
     Zotero::CollectionModel *m_model;
+
     SearchResults *m_searchResults;
 
 private slots:

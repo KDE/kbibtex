@@ -28,6 +28,8 @@
 namespace Zotero
 {
 
+class API;
+
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
@@ -35,8 +37,7 @@ class KBIBTEXNETWORKING_EXPORT Collection : public QObject
 {
     Q_OBJECT
 public:
-    static Collection *fromUserId(int userId, QObject *parent = NULL);
-    static Collection *fromGroupId(int groupId, QObject *parent = NULL);
+    Collection(API *api, QObject *parent);
 
     bool initialized() const;
     KUrl baseUrl() const;
@@ -51,7 +52,6 @@ signals:
     void finishedLoading();
 
 protected:
-    Collection(const KUrl &baseUrl, const QString &rootNodeLabel, QObject *parent);
 
     static const KUrl zoteroUrl;
 
