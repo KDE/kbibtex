@@ -110,7 +110,6 @@ QModelIndex CollectionModel::parent(const QModelIndex &index) const
 
     const QString parentId = d->collection->collectionParent(d->collection->collectionFromNumericId(index.internalId()));
     return d->collectionIdToModelIndex[parentId];
-
 }
 
 int CollectionModel::rowCount(const QModelIndex &parent) const
