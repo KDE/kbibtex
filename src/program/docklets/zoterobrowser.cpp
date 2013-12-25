@@ -123,7 +123,6 @@ ZoteroBrowser::ZoteroBrowser(SearchResults *searchResults, QWidget *parent)
 {
     setupGUI();
     d->loadState();
-    applyCredentials();
 }
 
 ZoteroBrowser::~ZoteroBrowser()
@@ -153,7 +152,7 @@ void ZoteroBrowser::setupGUI()
     containerForm->addRow(i18n("API key:"), d->comboBoxApiKey);
     QBoxLayout *containerButtonLayout = new QHBoxLayout();
     containerLayout->addLayout(containerButtonLayout, 0);
-    KPushButton *buttonApplyCredentials = new KPushButton(i18n("Apply"), container);
+    KPushButton *buttonApplyCredentials = new KPushButton(KIcon("download"), i18n("Load bibliography"), container);
     containerButtonLayout->addStretch(1);
     containerButtonLayout->addWidget(buttonApplyCredentials, 0);
     connect(buttonApplyCredentials, SIGNAL(clicked()), this, SLOT(applyCredentials()));
@@ -165,8 +164,6 @@ void ZoteroBrowser::setupGUI()
     /// Collection browser
     d->collectionBrowser = new QTreeView(d->tabWidget);
     d->tabWidget->addTab(d->collectionBrowser, i18n("Collections"));
-    d->tabWidget->setCurrentWidget(d->collectionBrowser);
-    d->collectionBrowser->setModel(d->model);
     d->collectionBrowser->setHeaderHidden(true);
     d->collectionBrowser->setExpandsOnDoubleClick(false);
     connect(d->collectionBrowser, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(collectionDoubleClicked(QModelIndex)));
