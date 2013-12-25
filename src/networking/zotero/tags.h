@@ -15,17 +15,13 @@
  *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
  ***************************************************************************/
 
-#ifndef KBIBTEX_NETWORKING_ZOTERO_ITEMS_H
-#define KBIBTEX_NETWORKING_ZOTERO_ITEMS_H
+#ifndef KBIBTEX_NETWORKING_ZOTERO_TAGS_H
+#define KBIBTEX_NETWORKING_ZOTERO_TAGS_H
 
 #include <QObject>
-#include <QSharedPointer>
-
-#include <KUrl>
+#include <QMap>
 
 #include "kbibtexnetworking_export.h"
-
-class Element;
 
 namespace Zotero
 {
@@ -35,28 +31,27 @@ class API;
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
-class KBIBTEXNETWORKING_EXPORT Items : public QObject
+class KBIBTEXNETWORKING_EXPORT Tags : public QObject
 {
     Q_OBJECT
 public:
-    Items(API *api, QObject *parent = NULL);
+    Tags(API *api, QObject *parent = NULL);
 
-    void retrieveItemsByCollection(const QString &collectionId);
-    void retrieveItemsByTag(const QString &tag);
+    bool initialized() const;
+
+    QMap<QString, int> tags() const;
 
 signals:
-    void foundElement(QSharedPointer<Element>);
-    void stoppedSearch(int);
+    void finishedLoading();
 
 private:
     class Private;
     Private *const d;
 
 private slots:
-    void finishedFetchingItems();
+    void finishedFetchingTags();
 };
 
 } // end of namespace Zotero
 
 #endif // KBIBTEX_NETWORKING_ZOTERO_ITEMS_H
-

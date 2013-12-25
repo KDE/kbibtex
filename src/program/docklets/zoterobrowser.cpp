@@ -19,6 +19,7 @@
 
 #include <QTreeView>
 #include <QTabWidget>
+#include <QListView>
 #include <QLayout>
 #include <QFormLayout>
 #include <QAbstractItemModel>
@@ -35,6 +36,8 @@
 #include "zotero/collectionmodel.h"
 #include "zotero/collection.h"
 #include "zotero/items.h"
+#include "zotero/tags.h"
+#include "zotero/tagmodel.h"
 #include "zotero/api.h"
 
 class ZoteroBrowser::Private
@@ -48,19 +51,22 @@ private:
 
 public:
     Zotero::Items *items;
+    Zotero::Tags *tags;
+    Zotero::TagModel *tagModel;
     Zotero::Collection *collection;
-    Zotero::CollectionModel *model;
+    Zotero::CollectionModel *collectionModel;
     Zotero::API *api;
 
     SearchResults *searchResults;
 
     QTabWidget *tabWidget;
     QTreeView *collectionBrowser;
+    QListView *tagBrowser;
     KComboBox *comboBoxNumericUserId;
     KComboBox *comboBoxApiKey;
 
     Private(SearchResults *sr, ZoteroBrowser *parent)
-            : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), items(NULL), collection(NULL), model(NULL), api(NULL), searchResults(sr) {
+            : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), items(NULL), tags(NULL), tagModel(NULL), collection(NULL), collectionModel(NULL), api(NULL), searchResults(sr) {
         /// nothing
     }
 
@@ -167,11 +173,16 @@ void ZoteroBrowser::setupGUI()
     d->collectionBrowser->setHeaderHidden(true);
     d->collectionBrowser->setExpandsOnDoubleClick(false);
     connect(d->collectionBrowser, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(collectionDoubleClicked(QModelIndex)));
+
+    /// Collection browser
+    d->tagBrowser = new QListView(d->tabWidget);
+    d->tabWidget->addTab(d->tagBrowser, i18n("Tags"));
+    connect(d->tagBrowser, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(tagDoubleClicked(QModelIndex)));
 }
 
 void ZoteroBrowser::modelReset()
 {
-    setEnabled(true);
+    setEnabled(d->collection->initialized() && d->tags->initialized());
 }
 
 void ZoteroBrowser::collectionDoubleClicked(const QModelIndex &index)
@@ -179,7 +190,15 @@ void ZoteroBrowser::collectionDoubleClicked(const QModelIndex &index)
     const QString collectionId = index.data(Zotero::CollectionModel::CollectionIdRole).toString();
     d->searchResults->clear();
     setEnabled(false); ///< will be re-enabled when item retrieve got finished (signal stoppedSearch)
-    d->items->retrieveItems(collectionId);
+    d->items->retrieveItemsByCollection(collectionId);
+}
+
+void ZoteroBrowser::tagDoubleClicked(const QModelIndex &index)
+{
+    const QString tag = index.data(Zotero::TagModel::TagRole).toString();
+    d->searchResults->clear();
+    setEnabled(false); ///< will be re-enabled when item retrieve got finished (signal stoppedSearch)
+    d->items->retrieveItemsByTag(tag);
 }
 
 void ZoteroBrowser::showItem(QSharedPointer<Element> e)
@@ -200,18 +219,24 @@ void ZoteroBrowser::applyCredentials()
         d->api->deleteLater();
         d->collection->deleteLater();
         d->items->deleteLater();
-        d->model->deleteLater();
+        d->tags->deleteLater();
+        d->collectionModel->deleteLater();
+        d->tagModel->deleteLater();
 
         d->addTextToLists();
         d->saveState();
 
         d->api = new Zotero::API(Zotero::API::UserRequest, id, d->comboBoxApiKey->currentText(), this);
         d->items = new Zotero::Items(d->api, this);
+        d->tags = new Zotero::Tags(d->api, this);
+        d->tagModel = new Zotero::TagModel(d->tags, this);
+        d->tagBrowser->setModel(d->tagModel);
         d->collection = new Zotero::Collection(d->api, this);
-        d->model = new Zotero::CollectionModel(d->collection, this);
-        d->collectionBrowser->setModel(d->model);
+        d->collectionModel = new Zotero::CollectionModel(d->collection, this);
+        d->collectionBrowser->setModel(d->collectionModel);
 
-        connect(d->model, SIGNAL(modelReset()), this, SLOT(modelReset()));
+        connect(d->collectionModel, SIGNAL(modelReset()), this, SLOT(modelReset()));
+        connect(d->tagModel, SIGNAL(modelReset()), this, SLOT(modelReset()));
         connect(d->items, SIGNAL(foundElement(QSharedPointer<Element>)), this, SLOT(showItem(QSharedPointer<Element>)));
         connect(d->items, SIGNAL(stoppedSearch(int)), this, SLOT(reenableList()));
 

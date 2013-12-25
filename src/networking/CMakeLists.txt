@@ -35,6 +35,8 @@ set(
     zotero/collectionmodel.cpp
     zotero/collection.cpp
     zotero/api.cpp
+    zotero/tags.cpp
+    zotero/tagmodel.cpp
     zotero/items.cpp
     findpdf.cpp
     internalnetworkaccessmanager.cpp
@@ -64,6 +66,8 @@ set(
     onlinesearch/onlinesearchdoi.h
     zotero/collectionmodel.h
     zotero/collection.h
+    zotero/tags.h
+    zotero/tagmodel.h
     zotero/items.h
     zotero/api.h
     kbibtexnetworking_export.h
