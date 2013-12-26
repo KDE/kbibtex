@@ -25,7 +25,7 @@
 #include "version.h"
 
 const char *description = I18N_NOOP("A BibTeX editor for KDE");
-const char *programHomepage = I18N_NOOP("http://home.gna.org/kbibtex/");
+const char *programHomepage = "http://home.gna.org/kbibtex/";
 
 int main(int argc, char *argv[])
 {

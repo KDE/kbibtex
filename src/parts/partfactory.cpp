@@ -30,7 +30,7 @@ static const char PartId[] = "kbibtexpart";
 static const char PartName[] = I18N_NOOP("KBibTeXPart");
 static const char PartDescription[] = I18N_NOOP("BibTeX Editor Component");
 static const char PartCopyright[] = "Copyright 2004-2013 Thomas Fischer";
-static const char *programHomepage = I18N_NOOP("http://home.gna.org/kbibtex/");
+static const char *programHomepage = "http://home.gna.org/kbibtex/";
 
 static KComponentData *_componentData = 0;
 static KAboutData *_aboutData = 0;
