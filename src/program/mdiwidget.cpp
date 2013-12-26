@@ -149,7 +149,7 @@ private:
         layout->addWidget(buttonNew, 2, 2, 1, 1, Qt::AlignLeft | Qt::AlignBottom);
         connect(buttonNew, SIGNAL(clicked()), p, SIGNAL(documentNew()));
 
-        KPushButton *buttonOpen = new KPushButton(KIcon("document-open"), i18n("Open ..."), welcomeWidget);
+        KPushButton *buttonOpen = new KPushButton(KIcon("document-open"), i18n("Open..."), welcomeWidget);
         layout->addWidget(buttonOpen, 2, 4, 1, 1, Qt::AlignRight | Qt::AlignBottom);
         connect(buttonOpen, SIGNAL(clicked()), p, SIGNAL(documentOpen()));
 

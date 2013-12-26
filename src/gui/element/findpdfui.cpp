@@ -341,7 +341,7 @@ FindPDFUI::FindPDFUI(Entry &entry, QWidget *parent)
     createGUI();
 
     m_labelMessage->show();
-    m_labelMessage->setText(i18n("Starting to search ..."));
+    m_labelMessage->setText(i18n("Starting to search..."));
 
     connect(m_findpdf, SIGNAL(finished()), this, SLOT(searchFinished()));
     connect(m_findpdf, SIGNAL(progress(int,int,int)), this, SLOT(searchProgress(int,int,int)));
@@ -477,5 +477,5 @@ void FindPDFUI::searchProgress(int visitedPages, int runningJobs, int foundDocum
 {
     m_listViewResult->hide();
     m_labelMessage->show();
-    m_labelMessage->setText(i18n("<qt><large>Searching ...</large><br/>Number of visited pages: <b>%1</b><br/>Number of running downloads: <b>%2</b><br/>Number of found documents: <b>%3</b></qt>", visitedPages, runningJobs, foundDocuments));
+    m_labelMessage->setText(i18n("<qt><large>Searching...</large><br/>Number of visited pages: <b>%1</b><br/>Number of running downloads: <b>%2</b><br/>Number of found documents: <b>%3</b></qt>", visitedPages, runningJobs, foundDocuments));
 }

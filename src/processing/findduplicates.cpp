@@ -379,7 +379,7 @@ bool FindDuplicates::findDuplicateEntries(File *file, QList<EntryClique *> &entr
         KApplication::setOverrideCursor(Qt::WaitCursor);
         progressDlg = new KProgressDialog(d->widget, i18n("Finding Duplicates"));
         progressDlg->setModal(true);
-        progressDlg->setLabelText(i18n("Searching ..."));
+        progressDlg->setLabelText(i18n("Searching..."));
         progressDlg->setMinimumWidth(d->widget->fontMetrics().averageCharWidth() * 48);
         progressDlg->setAllowCancel(true);
         connect(progressDlg, SIGNAL(cancelClicked()), this, SLOT(gotCanceled()));
@@ -411,7 +411,7 @@ bool FindDuplicates::findDuplicateEntries(File *file, QList<EntryClique *> &entr
     if (d->widget != NULL) {
         progressDlg->progressBar()->setMaximum(maxProgress);
         progressDlg->show();
-        progressDlg->setLabelText(i18n("Searching ..."));
+        progressDlg->setLabelText(i18n("Searching..."));
     }
 
     emit maximumProgress(maxProgress);

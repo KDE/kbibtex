@@ -290,7 +290,7 @@ public:
         delegate = new ColorLabelSettingsDelegate(view);
         view->setItemDelegate(delegate);
 
-        KPushButton *buttonAdd = new KPushButton(KIcon("list-add"), i18n("Add ..."), p);
+        KPushButton *buttonAdd = new KPushButton(KIcon("list-add"), i18n("Add..."), p);
         layout->addWidget(buttonAdd, 0, 1, 1, 1);
         connect(buttonAdd, SIGNAL(clicked()), p, SLOT(addColor()));
 

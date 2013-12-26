@@ -464,18 +464,18 @@ UrlListEdit::UrlListEdit(QWidget *parent)
     m_signalMapperFieldLineEditTextChanged = new QSignalMapper(this);
     connect(m_signalMapperFieldLineEditTextChanged, SIGNAL(mapped(QWidget*)), this, SLOT(textChanged(QWidget*)));
 
-    m_buttonAddFile = new KPushButton(KIcon("list-add"), i18n("Add file ..."), this);
+    m_buttonAddFile = new KPushButton(KIcon("list-add"), i18n("Add file..."), this);
     addButton(m_buttonAddFile);
     KMenu *menuAddFile = new KMenu(m_buttonAddFile);
     m_buttonAddFile->setMenu(menuAddFile);
     connect(m_buttonAddFile, SIGNAL(clicked()), m_buttonAddFile, SLOT(showMenu()));
 
     /// Action to add a reference (i.e. only the filename or URL) to an entry
-    QAction *action = menuAddFile->addAction(KIcon("emblem-symbolic-link"), i18n("Add reference to file ..."), this, SLOT(slotAddReferenceToFile()));
+    QAction *action = menuAddFile->addAction(KIcon("emblem-symbolic-link"), i18n("Add reference to file..."), this, SLOT(slotAddReferenceToFile()));
     action->setToolTip(i18n("Insert only a filename, but do not copy the file itself."));
     /// Action to copy a file near the BibTeX file (e.g. same folder) and then
     /// add the copy's relative filename to the entry
-    action = menuAddFile->addAction(KIcon("document-save-all"), i18n("Insert file ..."), this, SLOT(slotCopyFile()));
+    action = menuAddFile->addAction(KIcon("document-save-all"), i18n("Insert file..."), this, SLOT(slotCopyFile()));
     action->setToolTip(i18n("Copy file next to bibliography file."));
 }
 

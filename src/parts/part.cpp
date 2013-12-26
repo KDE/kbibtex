@@ -559,7 +559,7 @@ void KBibTeXPart::setupActions(bool /*browserViewWanted FIXME*/)
     actionCollection()->addAction(QLatin1String("element_viewdocument"),  d->elementViewDocumentAction);
     connect(d->elementViewDocumentAction, SIGNAL(triggered()), this, SLOT(elementViewDocument()));
 
-    d->elementFindPDFAction = new KAction(KIcon("application-pdf"), i18n("Find PDF ..."), this);
+    d->elementFindPDFAction = new KAction(KIcon("application-pdf"), i18n("Find PDF..."), this);
     actionCollection()->addAction(QLatin1String("element_findpdf"),  d->elementFindPDFAction);
     connect(d->elementFindPDFAction, SIGNAL(triggered()), this, SLOT(elementFindPDF()));
 

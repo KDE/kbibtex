@@ -274,7 +274,7 @@ public:
         urlComboBox->clear();
         cbxEntryToUrlInfo.clear();
         externalViewerButton->setEnabled(false);
-        showMessage(i18n("Refreshing ...")); // krazy:exclude=qmethods
+        showMessage(i18n("Refreshing...")); // krazy:exclude=qmethods
 
         /// cancel/kill all running jobs
         for (QList<KIO::StatJob *>::ConstIterator it = runningJobs.constBegin(); it != runningJobs.constEnd(); ++it)
@@ -456,12 +456,12 @@ public:
 
         if (okularPart != NULL && okularMimetypes.contains(urlInfo.mimeType)) {
             p->setCursor(Qt::BusyCursor);
-            showMessage(i18n("Loading ...")); // krazy:exclude=qmethods
+            showMessage(i18n("Loading...")); // krazy:exclude=qmethods
             okularPart->openUrl(urlInfo.url);
             return true;
         } else if (htmlMimetypes.contains(urlInfo.mimeType)) {
             p->setCursor(Qt::BusyCursor);
-            showMessage(i18n("Loading ...")); // krazy:exclude=qmethods
+            showMessage(i18n("Loading...")); // krazy:exclude=qmethods
 #ifdef HAVE_QTWEBKIT
             htmlWidget->load(urlInfo.url);
 #else // HAVE_QTWEBKIT
@@ -475,7 +475,7 @@ public:
             p->unsetCursor();
             return true;
         } else
-            showMessage(i18n("<qt>Don't know how to show mimetype '%1'.</qt>", urlInfo.mimeType)); // krazy:exclude=qmethods
+            showMessage(i18n("<qt>Do not know how to show mimetype '%1'.</qt>", urlInfo.mimeType)); // krazy:exclude=qmethods
 
         return false;
     }
