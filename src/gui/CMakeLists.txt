@@ -19,7 +19,6 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/src/gui/field
     ${CMAKE_SOURCE_DIR}/src/gui/widgets
     ${CMAKE_SOURCE_DIR}/src/gui/config
-    ${CMAKE_SOURCE_DIR}/src/3rdparty/libqxt/gui
 )
 
 set(
@@ -90,7 +89,7 @@ set(
 )
 
 add_definitions(
-    -DMAKE_KBIBTEXGUI_LIB -DBUILD_QXT_GUI
+    -DMAKE_KBIBTEXGUI_LIB
 )
 
 # debug area for KBibTeX's GUI library
@@ -102,11 +101,34 @@ if(UNITY_BUILD)
     enable_unity_build(kbibtexgui kbibtexgui_LIB_SRCS)
 endif(UNITY_BUILD)
 
+if(QXT_FOUND_QXTCORE AND QXT_FOUND_QXTGUI)
+    include_directories(
+        ${QXT_QXTGUI_INCLUDE_DIR}
+        ${QXT_QXTCORE_INCLUDE_DIR}
+    )
+    list(
+        APPEND
+        kbibtexgui_LIBS
+        ${QXT_QXTGUI_LIB_RELEASE}
+    )
+else()
+    include_directories(
+        ${CMAKE_SOURCE_DIR}/src/3rdparty/libqxt/gui
+    )
+    list(
+        APPEND
+        kbibtexgui_LIB_SRCS
+        ${CMAKE_SOURCE_DIR}/src/3rdparty/libqxt/gui/qxtspanslider.cpp
+    )
+    add_definitions(
+        -DBUILD_QXT_GUI
+    )
+endif()
+
 kde4_add_library(
     kbibtexgui
     SHARED
     ${kbibtexgui_LIB_SRCS}
-    ${CMAKE_SOURCE_DIR}/src/3rdparty/libqxt/gui/qxtspanslider.cpp
 )
 
 target_link_libraries(
@@ -121,6 +143,7 @@ target_link_libraries(
     kbibtexio
     kbibtexnetworking
     kbibtexproc
+    ${kbibtexgui_LIBS}
 )
 
 set_target_properties(

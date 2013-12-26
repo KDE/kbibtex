@@ -7,6 +7,12 @@ cmake_minimum_required(
     2.6
 )
 
+set(
+    CMAKE_MODULE_PATH
+    ${CMAKE_SOURCE_DIR}/cmake/modules
+    ${CMAKE_MODULE_PATH}
+)
+
 # Version number for the exported headers / libs
 set(
     LIB_VERSION "0.5.0"
@@ -111,6 +117,10 @@ macro_log_feature(
     TRUE
     ""
     "Required to transform process PDF files"
+)
+
+find_package(
+    Qxt
 )
 
 
