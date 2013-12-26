@@ -19,6 +19,7 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/src/gui/field
     ${CMAKE_SOURCE_DIR}/src/gui/widgets
     ${CMAKE_SOURCE_DIR}/src/gui/config
+    ${CMAKE_SOURCE_DIR}/src/3rdparty/libqxt/gui
 )
 
 set(

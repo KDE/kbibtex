@@ -33,7 +33,7 @@
 #include <KPushButton>
 #include <KAction>
 
-#include <3rdparty/libqxt/gui/qxtspanslider.h>
+#include <qxtspanslider.h>
 
 
 TokenWidget::TokenWidget(QWidget *parent)
