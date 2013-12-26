@@ -16,4 +16,4 @@ $EXTRACTRC `find src -name \*.rc -o -name \*.ui -o -name \*.kcfg | sort -u` >>rc
 
 # call xgettext on all source files. If your sources have other filename
 # extensions besides .cpp and .h, just add them in the find call.
-$XGETTEXT `find src -name \*.h -o -name \*.cpp` rc.cpp -o $podir/kbibtex.pot
+$XGETTEXT `find src -name \*.h -o -name \*.cpp | grep -v '/test/'` rc.cpp -o $podir/kbibtex.pot
