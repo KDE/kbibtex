@@ -144,7 +144,7 @@ void ZoteroBrowser::setupGUI()
 
     /// Credentials
     QWidget *container = new QWidget(d->tabWidget);
-    d->tabWidget->addTab(container, i18n("Credentials"));
+    d->tabWidget->addTab(container, KIcon("preferences-web-browser-identification"), i18n("Credentials"));
     QBoxLayout *containerLayout = new QVBoxLayout(container);
     QFormLayout *containerForm = new QFormLayout();
     containerLayout->addLayout(containerForm, 1);
@@ -169,14 +169,14 @@ void ZoteroBrowser::setupGUI()
 
     /// Collection browser
     d->collectionBrowser = new QTreeView(d->tabWidget);
-    d->tabWidget->addTab(d->collectionBrowser, i18n("Collections"));
+    d->tabWidget->addTab(d->collectionBrowser, KIcon("folder-yellow"), i18n("Collections"));
     d->collectionBrowser->setHeaderHidden(true);
     d->collectionBrowser->setExpandsOnDoubleClick(false);
     connect(d->collectionBrowser, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(collectionDoubleClicked(QModelIndex)));
 
     /// Collection browser
     d->tagBrowser = new QListView(d->tabWidget);
-    d->tabWidget->addTab(d->tagBrowser, i18n("Tags"));
+    d->tabWidget->addTab(d->tagBrowser, KIcon("mail-tagged"), i18n("Tags"));
     connect(d->tagBrowser, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(tagDoubleClicked(QModelIndex)));
 }
 
