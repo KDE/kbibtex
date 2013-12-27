@@ -69,6 +69,9 @@ QVariant TagModel::data(const QModelIndex &index, int role) const
             return dataKeys[index.row()];
         else if (index.column() == 1)
             return data.value(dataKeys[index.row()]);
+    } else if (role == Qt::DecorationRole) {
+        if (index.column() == 0)
+            return KIcon("mail-tagged");
     } else if (role == TagRole)
         return dataKeys[index.row()];
     else if (role == TagCountRole)
