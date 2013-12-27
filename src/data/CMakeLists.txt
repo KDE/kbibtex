@@ -50,34 +50,25 @@ kde4_add_library(
     ${kbibtexdata_LIB_SRCS}
 )
 
+target_link_libraries(
+    kbibtexdata
+    LINK_PRIVATE
+    ${QT_QTCORE_LIBRARY}
+    ${KDE4_KDECORE_LIBS}
+    ${KDE4_KIO_LIBS}
+    ${LIBXML2_LIBRARIES}
+    ${LIBXSLT_LIBRARIES}
+    ${POPPLER_QT4_LIBRARIES}
+    kbibtexconfig
+)
+
 if(
     WIN32
 )
     target_link_libraries(
         kbibtexdata
         LINK_PRIVATE
-        ${QT_QTCORE_LIBRARY}
-        ${KDE4_KDECORE_LIBS}
-        ${KDE4_KIO_LIBS}
-        ${LIBXML2_LIBRARIES}
-        ${LIBXSLT_LIBRARIES}
-        ${POPPLER_QT4_LIBRARIES}
         iconv
-        kbibtexconfig
-    )
-else(
-    WIN32
-)
-    target_link_libraries(
-        kbibtexdata
-        LINK_PRIVATE
-        ${QT_QTCORE_LIBRARY}
-        ${KDE4_KDECORE_LIBS}
-        ${KDE4_KIO_LIBS}
-        ${LIBXML2_LIBRARIES}
-        ${LIBXSLT_LIBRARIES}
-        ${POPPLER_QT4_LIBRARIES}
-        kbibtexconfig
     )
 endif(
     WIN32
