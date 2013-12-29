@@ -15,8 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
-#ifndef KBIBTEX_GUI_DIALOGS_ELEMENTSEDITOR_H
-#define KBIBTEX_GUI_DIALOGS_ELEMENTSEDITOR_H
+#ifndef KBIBTEX_GUI_ELEMENTEDITOR_H
+#define KBIBTEX_GUI_ELEMENTEDITOR_H
 
 #include "kbibtexgui_export.h"
 
@@ -74,4 +74,4 @@ private:
     ElementEditorPrivate *d;
 };
 
-#endif // KBIBTEX_GUI_DIALOGS_ELEMENTSEDITOR_H
+#endif // KBIBTEX_GUI_ELEMENTEDITOR_H

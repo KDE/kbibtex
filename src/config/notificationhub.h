@@ -16,8 +16,8 @@
  *   along with this program; if not, see <http://www.gnu.org/licenses/>.    *
  *****************************************************************************/
 
-#ifndef CONFIG_SETTINGS_H
-#define CONFIG_SETTINGS_H
+#ifndef CONFIG_NOTIFICATIONHUB_H
+#define CONFIG_NOTIFICATIONHUB_H
 
 #include "kbibtexconfig_export.h"
 
@@ -55,4 +55,4 @@ private:
     NotificationHub();
 };
 
-#endif // CONFIG_SETTINGS_H
+#endif // CONFIG_NOTIFICATIONHUB_H

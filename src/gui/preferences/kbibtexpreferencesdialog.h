@@ -15,8 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
-#ifndef KBIBTEX_GUI_PREFERENCESDIALOG_H
-#define KBIBTEX_GUI_PREFERENCESDIALOG_H
+#ifndef KBIBTEX_GUI_KBIBTEXPREFERENCESDIALOG_H
+#define KBIBTEX_GUI_KBIBTEXPREFERENCESDIALOG_H
 
 #include <kbibtexgui_export.h>
 
@@ -48,4 +48,4 @@ private slots:
     void gotChanged();
 };
 
-#endif // KBIBTEX_GUI_PREFERENCESDIALOG_H
+#endif // KBIBTEX_GUI_KBIBTEXPREFERENCESDIALOG_H

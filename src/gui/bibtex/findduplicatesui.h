@@ -15,8 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
-#ifndef KBIBTEX_GUI_FINDDUPLICATES_H
-#define KBIBTEX_GUI_FINDDUPLICATES_H
+#ifndef KBIBTEX_GUI_FINDDUPLICATESUI_H
+#define KBIBTEX_GUI_FINDDUPLICATESUI_H
 
 #include "kbibtexgui_export.h"
 
@@ -75,4 +75,4 @@ private:
     FindDuplicatesUIPrivate *d;
 };
 
-#endif // KBIBTEX_GUI_FINDDUPLICATES_H
+#endif // KBIBTEX_GUI_FINDDUPLICATESUI_H

@@ -15,8 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
-#ifndef KBIBTEX_GUI_DIALOGS_ELEMENTSWIDGETS_H
-#define KBIBTEX_GUI_DIALOGS_ELEMENTSWIDGETS_H
+#ifndef KBIBTEX_GUI_ELEMENTWIDGETS_H
+#define KBIBTEX_GUI_ELEMENTWIDGETS_H
 
 #include "kbibtexgui_export.h"
 
@@ -301,4 +301,4 @@ private:
     KPushButton *m_buttonRestore;
 };
 
-#endif // KBIBTEX_GUI_DIALOGS_ELEMENTSWIDGETS_H
+#endif // KBIBTEX_GUI_ELEMENTWIDGETS_H

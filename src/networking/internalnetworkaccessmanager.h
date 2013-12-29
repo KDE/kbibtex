@@ -15,8 +15,8 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
-#ifndef KBIBTEX_NETWORKING_INTERNALNAM_H
-#define KBIBTEX_NETWORKING_INTERNALNAM_H
+#ifndef KBIBTEX_NETWORKING_INTERNALNETWORKACCESSMANAGER_H
+#define KBIBTEX_NETWORKING_INTERNALNETWORKACCESSMANAGER_H
 
 #include "kbibtexnetworking_export.h"
 
@@ -65,4 +65,4 @@ private slots:
 
 };
 
-#endif // KBIBTEX_NETWORKING_INTERNALNAM_H
+#endif // KBIBTEX_NETWORKING_INTERNALNETWORKACCESSMANAGER_H
