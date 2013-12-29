@@ -17,8 +17,6 @@
 
 #include "lyx.h"
 
-#include <sys/stat.h>
-
 #include <QWidget>
 #include <QDir>
 #include <QTextStream>
@@ -33,6 +31,7 @@
 #include <KDebug>
 #include <KSharedConfig>
 #include <KConfigGroup>
+#include <kde_file.h>
 
 #include <kdeversion.h>
 
@@ -149,7 +148,7 @@ void LyX::sendReferenceToLyX()
 
 QString LyX::guessLyXPipeLocation()
 {
-    struct stat fileInfo;
+    KDE_struct_stat fileInfo;
     const QStringList nameFilter = QStringList() << QLatin1String("*lyxpipe*in*");
     QString result;
 
@@ -158,7 +157,7 @@ QString LyX::guessLyXPipeLocation()
     QStringList files = home.entryList(nameFilter, QDir::Hidden | QDir::System | QDir::Writable, QDir::Unsorted);
     foreach(const QString &filename, files) {
         QString const absoluteFilename = home.absolutePath() + QDir::separator() + filename;
-        if (stat(absoluteFilename.toLatin1(), &fileInfo) == 0 && S_ISFIFO(fileInfo.st_mode)) {
+        if (KDE_stat(absoluteFilename.toLatin1(), &fileInfo) == 0 && S_ISFIFO(fileInfo.st_mode)) {
             result = absoluteFilename;
             break;
         }
@@ -172,7 +171,7 @@ QString LyX::guessLyXPipeLocation()
             QStringList files = home.entryList(nameFilter, QDir::Hidden | QDir::System | QDir::Writable, QDir::Unsorted);
             foreach(const QString &filename, files) {
                 QString const absoluteFilename = home.absolutePath() + QDir::separator() + filename;
-                if (stat(absoluteFilename.toLatin1(), &fileInfo) == 0 && S_ISFIFO(fileInfo.st_mode)) {
+                if (KDE_stat(absoluteFilename.toLatin1(), &fileInfo) == 0 && S_ISFIFO(fileInfo.st_mode)) {
                     result = absoluteFilename;
                     break;
                 }
