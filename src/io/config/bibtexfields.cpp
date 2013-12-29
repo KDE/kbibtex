@@ -107,9 +107,9 @@ public:
             QString groupName = QString("Column%1").arg(columnCount);
             KConfigGroup configGroup(layoutConfig, groupName);
 
-            foreach(const QString &treeViewName, fd->width.keys()) {
-                configGroup.writeEntry("Width_" + treeViewName, fd->width[treeViewName]);
-                configGroup.writeEntry("Visible_" + treeViewName, fd->visible[treeViewName]);
+            for (QMap<QString, int>::ConstIterator it = fd->width.constBegin(); it != fd->width.constEnd(); ++it) {
+                configGroup.writeEntry("Width_" + it.key(), it.value());
+                configGroup.writeEntry("Visible_" +  it.key(), it.value());
             }
             QString typeFlagsString = fd->typeFlags == fd->preferredTypeFlag ? QString() : QLatin1Char(';') + typeFlagsToString(fd->typeFlags);
             typeFlagsString.prepend(typeFlagToString(fd->preferredTypeFlag));
