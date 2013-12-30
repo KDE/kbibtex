@@ -122,6 +122,17 @@ macro_log_feature(
 find_package(
     Qxt
 )
+if(QXT_FOUND_QXTCORE AND QXT_FOUND_QXTGUI)
+    message(
+        STATUS
+        "Using system installation of LibQxt instead of built-in version"
+    )
+else()
+    message(
+        STATUS
+        "No system installation of LibQxt found, using built-in version instead"
+    )
+endif()
 
 
 add_subdirectory(
