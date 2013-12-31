@@ -21,6 +21,7 @@
 #include <KConfigGroup>
 #include <KStandardDirs>
 #include <KDebug>
+#include <KLocale>
 
 #include "entry.h"
 
@@ -68,7 +69,7 @@ public:
             ed.upperCamelCase = configGroup.readEntry("UpperCamelCase", "");
             if (ed.upperCamelCase.isEmpty()) continue;
             ed.upperCamelCaseAlt = configGroup.readEntry("UpperCamelCaseAlt", "");
-            ed.label = configGroup.readEntry("Label", ed.upperCamelCase);
+            ed.label = i18n(configGroup.readEntry("Label", ed.upperCamelCase).toUtf8().constData());
             ed.requiredItems = configGroup.readEntry("RequiredItems", QStringList());
             ed.optionalItems = configGroup.readEntry("OptionalItems", QStringList());
             p->append(ed);
