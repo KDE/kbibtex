@@ -252,9 +252,9 @@ if [[ -n "${GPG_KEY}" ]] ; then
 		# Force removal of old signatures
 		rm -f "${f}.asc"
 		# Quick check if file-to-be-signed exists
-		test -f "${f}" || { popd ; echo "${MY_NAME}: Cound not find file to sign: ${f}" >&2 ; rm -rf ${TEMPDIR} ; exit 1 ; }
+		test -f "${f}" || { popd ; echo "${MY_NAME}: Could not find file to sign: ${f}" >&2 ; rm -rf ${TEMPDIR} ; exit 1 ; }
 		# Sign file using GnuPG
-		gpg --output ${f}.asc --default-key ${GPG_KEY} -ba ${f} || { popd ; echo "${MY_NAME}: Cound not sign \"${f}\" using GPG key ${GPG_KEY}" >&2 ; rm -rf ${TEMPDIR} ; exit 1 ; }
+		gpg --output ${f}.asc --default-key ${GPG_KEY} -ba ${f} || { popd ; echo "${MY_NAME}: Could not sign \"${f}\" using GPG key ${GPG_KEY}" >&2 ; rm -rf ${TEMPDIR} ; exit 1 ; }
 
 		# Print file and signature file
 		ls -l "${f}" "${f}.asc"
