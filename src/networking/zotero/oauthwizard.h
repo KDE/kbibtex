@@ -15,41 +15,46 @@
  *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
  ***************************************************************************/
 
-#ifndef KBIBTEX_PROGRAM_ZOTEROBROWSER_H
-#define KBIBTEX_PROGRAM_ZOTEROBROWSER_H
+#ifndef KBIBTEX_NETWORKING_ZOTERO_OAUTHWIZARD_H
+#define KBIBTEX_NETWORKING_ZOTERO_OAUTHWIZARD_H
 
-#include <QWidget>
-#include <QModelIndex>
+#include <QWizard>
 
-class Element;
-class SearchResults;
+#include "kbibtexnetworking_export.h"
+
+namespace Zotero
+{
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
-class ZoteroBrowser : public QWidget
+class KBIBTEXNETWORKING_EXPORT OAuthWizard : public QWizard
 {
     Q_OBJECT
 
 public:
-    explicit ZoteroBrowser(SearchResults *searchResults, QWidget *parent);
-    ~ZoteroBrowser();
+    explicit OAuthWizard(QWidget *parent);
+    ~OAuthWizard();
+
+    bool exec();
+
+    int userId() const;
+    QString apiKey() const;
+    QString username() const;
+
+protected:
+    virtual void initializePage(int id);
+    virtual void accept();
+
+private slots:
+    void copyAuthorizationUrl();
+    void openAuthorizationUrl();
 
 private:
     class Private;
     Private *const d;
-
-    void setupGUI();
-
-private slots:
-    void modelReset();
-    void collectionDoubleClicked(const QModelIndex &index);
-    void tagDoubleClicked(const QModelIndex &index);
-    void showItem(QSharedPointer<Element>);
-    void reenableList();
-    void applyCredentials();
-    void getOAuthCredentials();
 };
 
+} // end of namespace Zotero
 
-#endif // KBIBTEX_PROGRAM_ZOTEROBROWSER_H
+#endif // KBIBTEX_NETWORKING_ZOTERO_OAUTHWIZARD_H
