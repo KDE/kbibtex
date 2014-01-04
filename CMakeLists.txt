@@ -134,6 +134,21 @@ else()
     )
 endif()
 
+find_package(
+    QCA2
+    REQUIRED
+)
+find_package(
+    QtOAuth
+    REQUIRED
+)
+if(NOT QTOAUTH_FOUND)
+    message(
+        STATUS
+        "No QtOAuth installed, disabling support for Zotero"
+    )
+endif()
+
 
 add_subdirectory(
     src

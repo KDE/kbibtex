@@ -39,6 +39,7 @@
 #include "zotero/tags.h"
 #include "zotero/tagmodel.h"
 #include "zotero/api.h"
+#include "zotero/oauthwizard.h"
 
 class ZoteroBrowser::Private
 {
@@ -148,24 +149,33 @@ void ZoteroBrowser::setupGUI()
     QBoxLayout *containerLayout = new QVBoxLayout(container);
     QFormLayout *containerForm = new QFormLayout();
     containerLayout->addLayout(containerForm, 1);
+
     d->comboBoxNumericUserId = new KComboBox(container);
     d->comboBoxNumericUserId->setEditable(true);
+    QSizePolicy sizePolicy = d->comboBoxNumericUserId->sizePolicy();
+    sizePolicy.setHorizontalPolicy(QSizePolicy::MinimumExpanding);
+    d->comboBoxNumericUserId->setSizePolicy(sizePolicy);
     dynamic_cast<KLineEdit *>(d->comboBoxNumericUserId->lineEdit())->setClearButtonShown(true);
     containerForm->addRow(i18n("Numeric user id:"), d->comboBoxNumericUserId);
+
     d->comboBoxApiKey = new KComboBox(container);
     d->comboBoxApiKey->setEditable(true);
+    d->comboBoxApiKey->setSizePolicy(sizePolicy);
     dynamic_cast<KLineEdit *>(d->comboBoxApiKey->lineEdit())->setClearButtonShown(true);
     containerForm->addRow(i18n("API key:"), d->comboBoxApiKey);
+
     QBoxLayout *containerButtonLayout = new QHBoxLayout();
     containerLayout->addLayout(containerButtonLayout, 0);
-    KPushButton *buttonApplyCredentials = new KPushButton(KIcon("download"), i18n("Load bibliography"), container);
+
+    KPushButton *buttonGetOAuthCredentials = new KPushButton(KIcon("preferences-web-browser-identification"), i18n("Get Credentials"), container);
+    containerButtonLayout->addWidget(buttonGetOAuthCredentials, 0);
+    connect(buttonGetOAuthCredentials, SIGNAL(clicked()), this, SLOT(getOAuthCredentials()));
+
     containerButtonLayout->addStretch(1);
+
+    KPushButton *buttonApplyCredentials = new KPushButton(KIcon("download"), i18n("Load bibliography"), container);
     containerButtonLayout->addWidget(buttonApplyCredentials, 0);
     connect(buttonApplyCredentials, SIGNAL(clicked()), this, SLOT(applyCredentials()));
-    QSizePolicy sizePolicy =  d->comboBoxApiKey->sizePolicy();
-    sizePolicy.setHorizontalPolicy(QSizePolicy::MinimumExpanding);
-    d->comboBoxApiKey->setSizePolicy(sizePolicy);
-    d->comboBoxNumericUserId->setSizePolicy(sizePolicy);
 
     /// Collection browser
     d->collectionBrowser = new QTreeView(d->tabWidget);
@@ -244,4 +254,13 @@ void ZoteroBrowser::applyCredentials()
         d->tabWidget->setCurrentIndex(1);
     } else
         KMessageBox::information(this, i18n("Value '%1' is not a valid numeric identifier of a user or a group.", d->comboBoxNumericUserId->currentText()), i18n("Invalid numeric identifier"));
+}
+
+void ZoteroBrowser::getOAuthCredentials()
+{
+    Zotero::OAuthWizard wizard(this);
+    if (wizard.exec()) {
+        d->comboBoxApiKey->setEditText(wizard.apiKey());
+        d->comboBoxNumericUserId->setEditText(QString::number(wizard.userId()));
+    }
 }

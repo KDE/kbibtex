@@ -8,6 +8,8 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/src/networking
     ${POPPLER_QT4_INCLUDE_DIR}
     ${LIBXML2_INCLUDE_DIR}
+    ${QTOAUTH_INCLUDE_DIR}
+    ${QCA2_INCLUDE_DIR}
 )
 
 set(
@@ -35,6 +37,7 @@ set(
     zotero/collectionmodel.cpp
     zotero/collection.cpp
     zotero/api.cpp
+    zotero/oauthwizard.cpp
     zotero/tags.cpp
     zotero/tagmodel.cpp
     zotero/items.cpp
@@ -70,6 +73,7 @@ set(
     zotero/tagmodel.h
     zotero/items.h
     zotero/api.h
+    zotero/oauthwizard.h
     kbibtexnetworking_export.h
     findpdf.h
     internalnetworkaccessmanager.h
@@ -102,6 +106,7 @@ target_link_libraries(
     ${KDE4_KDECORE_LIBS}
     ${KDE4_KIO_LIBS}
     ${POPPLER_QT4_LIBRARIES}
+    ${QTOAUTH_LIBRARY}
     kbibtexconfig
     kbibtexdata
     kbibtexio
