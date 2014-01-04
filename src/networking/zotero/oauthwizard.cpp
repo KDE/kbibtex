@@ -118,7 +118,7 @@ public:
         QOAuth::ParamMap params;
         params.insert("oauth_callback", "oob");
         // TODO make it non-blocking?
-        QOAuth::ParamMap reply = qOAuth->requestToken("https://www.zotero.org/oauth/request", QOAuth::POST, QOAuth::HMAC_SHA1, params);
+        QOAuth::ParamMap reply = qOAuth->requestToken("https://www.zotero.org/oauth/request", QOAuth::GET, QOAuth::HMAC_SHA1, params);
 
         /// If no error occurred, read the received token and token secret
         if (qOAuth->error() == QOAuth::NoError) {
@@ -189,7 +189,7 @@ public:
 
         QOAuth::ParamMap oAuthVerifierParams;
         oAuthVerifierParams.insert("oauth_verifier", verifier.toUtf8());
-        QOAuth::ParamMap oAuthVerifierRequest = qOAuth->accessToken("https://www.zotero.org/oauth/access", QOAuth::POST, token, tokenSecret, QOAuth::HMAC_SHA1, oAuthVerifierParams);
+        QOAuth::ParamMap oAuthVerifierRequest = qOAuth->accessToken("https://www.zotero.org/oauth/access", QOAuth::GET, token, tokenSecret, QOAuth::HMAC_SHA1, oAuthVerifierParams);
         if (qOAuth->error() == QOAuth::NoError) {
             token = oAuthVerifierRequest.value(QOAuth::tokenParameterName());
             tokenSecret = oAuthVerifierRequest.value(QOAuth::tokenSecretParameterName());
