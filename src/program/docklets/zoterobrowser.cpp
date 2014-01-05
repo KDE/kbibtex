@@ -65,6 +65,7 @@ public:
     QListView *tagBrowser;
     KComboBox *comboBoxNumericUserId;
     KComboBox *comboBoxApiKey;
+    KPushButton *buttonLoadBibliography;
 
     Private(SearchResults *sr, ZoteroBrowser *parent)
             : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), items(NULL), tags(NULL), tagModel(NULL), collection(NULL), collectionModel(NULL), api(NULL), searchResults(sr) {
@@ -173,9 +174,11 @@ void ZoteroBrowser::setupGUI()
 
     containerButtonLayout->addStretch(1);
 
-    KPushButton *buttonApplyCredentials = new KPushButton(KIcon("download"), i18n("Load bibliography"), container);
-    containerButtonLayout->addWidget(buttonApplyCredentials, 0);
-    connect(buttonApplyCredentials, SIGNAL(clicked()), this, SLOT(applyCredentials()));
+    d->buttonLoadBibliography = new KPushButton(KIcon("download"), i18n("Load bibliography"), container);
+    containerButtonLayout->addWidget(d->buttonLoadBibliography, 0);
+    connect(d->buttonLoadBibliography, SIGNAL(clicked()), this, SLOT(applyCredentials()));
+    connect(d->comboBoxNumericUserId->lineEdit(), SIGNAL(textChanged(QString)), this, SLOT(updateButtons()));
+    connect(d->comboBoxApiKey->lineEdit(), SIGNAL(textChanged(QString)), this, SLOT(updateButtons()));
 
     /// Collection browser
     d->collectionBrowser = new QTreeView(d->tabWidget);
@@ -184,7 +187,7 @@ void ZoteroBrowser::setupGUI()
     d->collectionBrowser->setExpandsOnDoubleClick(false);
     connect(d->collectionBrowser, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(collectionDoubleClicked(QModelIndex)));
 
-    /// Collection browser
+    /// Tag browser
     d->tagBrowser = new QListView(d->tabWidget);
     d->tabWidget->addTab(d->tagBrowser, KIcon("mail-tagged"), i18n("Tags"));
     connect(d->tagBrowser, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(tagDoubleClicked(QModelIndex)));
@@ -219,6 +222,11 @@ void ZoteroBrowser::showItem(QSharedPointer<Element> e)
 void ZoteroBrowser::reenableList()
 {
     setEnabled(true);
+}
+
+void ZoteroBrowser::updateButtons()
+{
+    d->buttonLoadBibliography->setEnabled(!d->comboBoxNumericUserId->currentText().isEmpty() && !d->comboBoxApiKey->currentText().isEmpty());
 }
 
 void ZoteroBrowser::applyCredentials()
@@ -259,7 +267,7 @@ void ZoteroBrowser::applyCredentials()
 void ZoteroBrowser::getOAuthCredentials()
 {
     Zotero::OAuthWizard wizard(this);
-    if (wizard.exec()) {
+    if (wizard.exec() && !wizard.apiKey().isEmpty() && wizard.userId() >= 0) {
         d->comboBoxApiKey->setEditText(wizard.apiKey());
         d->comboBoxNumericUserId->setEditText(QString::number(wizard.userId()));
     }

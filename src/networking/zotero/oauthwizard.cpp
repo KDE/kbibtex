@@ -19,6 +19,7 @@
 
 #include <QLabel>
 #include <QLayout>
+#include <QFormLayout>
 #include <QGridLayout>
 #include <QClipboard>
 #include <QApplication>
@@ -45,11 +46,10 @@ private:
 public:
     HexInputLineEdit(int expectedLength, QWidget *parent)
             : KLineEdit(parent), correctInput(QString(QLatin1String("^[a-f0-9]{%1}$")).arg(expectedLength)) {
-        /// nothing
+        setMaxLength(expectedLength);
     }
 
     bool hasAcceptableInput() const {
-        // FIXME does not work yet?
         return correctInput.exactMatch(text());
     }
 };
@@ -66,13 +66,20 @@ public:
             : QWizardPage(parent), p(parent) {
         QBoxLayout *layout = new QVBoxLayout(this);
         setTitle(i18n("Verification Code"));
-        QLabel *label = new QLabel(i18n("<qt><p>Once you have granted permissions to KBibTeX on Zotero's web page, you should see a light-green field with a black hexadecimal code (example: <span style=\"color:black;background:#cfc;\">48b6661cc282cdea</span>).<br/>Copy the code from the web page and paste it in the input field below:</p></qt>"), this);
+        setSubTitle(i18n("Copy the code from the web page and paste it in the input field below."));
+        QLabel *label = new QLabel(i18n("<qt><p>Once you have granted permissions to KBibTeX on Zotero's web page, you should see a light-green field with a black hexadecimal code (example: <span style=\"color:black;background:#cfc;\">48b6661cc282cdea</span>).</p></qt>"), this);
         label->setWordWrap(true);
         layout->addWidget(label);
+        layout->addSpacing(8);
+        QFormLayout *formLayout = new QFormLayout();
+        layout->addLayout(formLayout);
         lineEditVerificationCode = new HexInputLineEdit(16, this);
-        layout->addWidget(lineEditVerificationCode);
-        registerField("lineEditVerificationCode", lineEditVerificationCode);
+        formLayout->addRow(i18n("Verification Code:"), lineEditVerificationCode);
         connect(lineEditVerificationCode, SIGNAL(textEdited(QString)), this, SIGNAL(completeChanged()));
+    }
+
+    virtual bool isComplete() const {
+        return lineEditVerificationCode->hasAcceptableInput();
     }
 
 protected:
@@ -117,15 +124,12 @@ public:
         /// Send a request for an unauthorized token
         QOAuth::ParamMap params;
         params.insert("oauth_callback", "oob");
-        // TODO make it non-blocking?
-        QOAuth::ParamMap reply = qOAuth->requestToken("https://www.zotero.org/oauth/request", QOAuth::GET, QOAuth::HMAC_SHA1, params);
+        QOAuth::ParamMap reply = qOAuth->requestToken("https://www.zotero.org/oauth/request", QOAuth::POST, QOAuth::HMAC_SHA1, params);
 
         /// If no error occurred, read the received token and token secret
         if (qOAuth->error() == QOAuth::NoError) {
             token = reply.value(QOAuth::tokenParameterName());
             tokenSecret = reply.value(QOAuth::tokenSecretParameterName());
-            kDebug() << "token=" << token;
-            kDebug() << "tokenSecret=" << tokenSecret;
 
             KUrl oauthAuthorizationUrl = KUrl(QLatin1String("https://www.zotero.org/oauth/authorize"));
             oauthAuthorizationUrl.addQueryItem("oauth_token", token);
@@ -153,24 +157,22 @@ public:
         gridLayout->setColumnStretch(1, 0);
         gridLayout->setColumnStretch(2, 0);
         page->setTitle(i18n("Authorization URL"));
-        label = new QLabel(i18n("<qt><p>Open the following URL in your favorite browser:</p></qt>"), page);
-        label->setWordWrap(true);
-        gridLayout->addWidget(label, 0, 0, 1, 3);
+        page->setSubTitle(i18n("Open the shown URL in your favorite browser."));
         lineEditAuthorizationUrl = new KLineEdit(page);
         lineEditAuthorizationUrl->setReadOnly(true);
-        gridLayout->addWidget(lineEditAuthorizationUrl, 1, 0, 1, 3);
+        gridLayout->addWidget(lineEditAuthorizationUrl, 0, 0, 1, 3);
         KPushButton *buttonCopyAuthorizationUrl = new KPushButton(KIcon("edit-copy"), i18n("Copy URL"), page);
-        gridLayout->addWidget(buttonCopyAuthorizationUrl, 2, 1, 1, 1);
+        gridLayout->addWidget(buttonCopyAuthorizationUrl, 1, 1, 1, 1);
         connect(buttonCopyAuthorizationUrl, SIGNAL(clicked()), p, SLOT(copyAuthorizationUrl()));
         connect(buttonCopyAuthorizationUrl, SIGNAL(clicked()), p, SLOT(next()));
         KPushButton *buttonOpenAuthorizationUrl = new KPushButton(KIcon("document-open-remote"), i18n("Open URL"), page);
-        gridLayout->addWidget(buttonOpenAuthorizationUrl, 2, 2, 1, 1);
+        gridLayout->addWidget(buttonOpenAuthorizationUrl, 1, 2, 1, 1);
         connect(buttonOpenAuthorizationUrl, SIGNAL(clicked()), p, SLOT(openAuthorizationUrl()));
         connect(buttonOpenAuthorizationUrl, SIGNAL(clicked()), p, SLOT(next()));
-        gridLayout->setRowMinimumHeight(3, 8);
-        label = new QLabel(i18n("<qt><p>You will be asked to login into Zotero and select and confirm the permissions for KBibTeX.</p></qt>"), page);
+        gridLayout->setRowMinimumHeight(2, 8);
+        label = new QLabel(i18n("You will be asked to login into Zotero and select and confirm the permissions for KBibTeX."), page);
         label->setWordWrap(true);
-        gridLayout->addWidget(label, 4, 0, 1, 3);
+        gridLayout->addWidget(label, 3, 0, 1, 3);
 
         verificationCodePage = new VerificationCodePage(p);
         pageIdVerificationCode = p->addPage(verificationCodePage);
@@ -180,13 +182,6 @@ public:
 
 
     void setOAuthVerifier(const QString &verifier) {
-        // FIXME this should be caught earlier, i.e. user is not allowed to continue without verification code
-        if (verificationCodePage->lineEditVerificationCode->text().isEmpty())
-            return; ///< No valid verification code entered
-
-        kDebug() << "token=" << token;
-        kDebug() << "tokenSecret=" << tokenSecret;
-
         QOAuth::ParamMap oAuthVerifierParams;
         oAuthVerifierParams.insert("oauth_verifier", verifier.toUtf8());
         QOAuth::ParamMap oAuthVerifierRequest = qOAuth->accessToken("https://www.zotero.org/oauth/access", QOAuth::GET, token, tokenSecret, QOAuth::HMAC_SHA1, oAuthVerifierParams);
@@ -194,11 +189,6 @@ public:
             token = oAuthVerifierRequest.value(QOAuth::tokenParameterName());
             tokenSecret = oAuthVerifierRequest.value(QOAuth::tokenSecretParameterName());
 
-            for (QOAuth::ParamMap::ConstIterator it = oAuthVerifierRequest.constBegin(); it != oAuthVerifierRequest.constEnd(); ++it) {
-                kDebug() << "key=" << QString::fromAscii(it.key()) <<   "  value=" << QString::fromAscii(it.value());
-            }
-            kDebug() << "token=" << token;
-            kDebug() << "tokenSecret=" << tokenSecret;
             if (! token.isEmpty() && !tokenSecret.isEmpty()) {
                 kDebug() << "KBibTeX is authorized successfully";
                 bool ok = false;
@@ -259,7 +249,10 @@ void OAuthWizard::initializePage(int id)
     if (id == d->pageIdInstructions) {
         /// nothing
     } else if (id == d->pageIdAuthorizationUrl) {
+        const QCursor currentCursor = cursor();
+        setCursor(Qt::WaitCursor);
         d->lineEditAuthorizationUrl->setText(d->oAuthAuthorizationUrl().pathOrUrl());
+        setCursor(currentCursor);
     } else if (id == d->pageIdVerificationCode) {
         /// This page initializes itself, see VerificationCodePage::initializePage
     }
@@ -267,8 +260,10 @@ void OAuthWizard::initializePage(int id)
 
 void OAuthWizard::accept()
 {
-    // TODO non-blocking
+    const QCursor currentCursor = cursor();
+    setCursor(Qt::WaitCursor);
     d->setOAuthVerifier(d->verificationCodePage->lineEditVerificationCode->text());
+    setCursor(currentCursor);
     QWizard::accept();
 }
 

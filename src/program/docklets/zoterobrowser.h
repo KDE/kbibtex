@@ -47,6 +47,7 @@ private slots:
     void tagDoubleClicked(const QModelIndex &index);
     void showItem(QSharedPointer<Element>);
     void reenableList();
+    void updateButtons();
     void applyCredentials();
     void getOAuthCredentials();
 };
