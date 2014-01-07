@@ -37,6 +37,14 @@
 
 using namespace Zotero;
 
+/**
+ * Specialization of a regular line edit, as only a specified number
+ * of hexadecimal characters is accepted as valid input.
+ * In contrast to using a validator like QRegExpValidator, this approach
+ * still accepts paste operations from clipboard.
+ *
+ * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ */
 class HexInputLineEdit: public KLineEdit
 {
 private:
