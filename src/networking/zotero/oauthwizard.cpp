@@ -128,6 +128,7 @@ public:
 
         /// If no error occurred, read the received token and token secret
         if (qOAuth->error() == QOAuth::NoError) {
+            kDebug() << "Correctly retrieved authorization URL parameters";
             token = reply.value(QOAuth::tokenParameterName());
             tokenSecret = reply.value(QOAuth::tokenSecretParameterName());
 
@@ -197,18 +198,18 @@ public:
                     userId = -1;
                     apiKey.clear();
                     username.clear();
+                    kWarning() << "Returned user id is not a valid number:" << oAuthVerifierRequest.value("userID");
                 } else {
                     apiKey = oAuthVerifierRequest.value("oauth_token");
                     username = oAuthVerifierRequest.value("username");
                 }
             } else {
-                kDebug() << "QOAuth error: token or tokenSecret empty";
+                kWarning() << "QOAuth error: token or tokenSecret empty";
             }
         } else {
-            kDebug() << "QOAuth error: " + qOAuth->error();
+            kWarning() << "QOAuth error:" << qOAuth->error();
         }
     }
-
 };
 
 
