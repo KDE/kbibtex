@@ -67,13 +67,13 @@ public:
         QBoxLayout *layout = new QVBoxLayout(this);
         setTitle(i18n("Verification Code"));
         setSubTitle(i18n("Copy the code from the web page and paste it in the input field below."));
-        QLabel *label = new QLabel(i18n("<qt><p>Once you have granted permissions to KBibTeX on Zotero's web page, you should see a light-green field with a black hexadecimal code (example: <span style=\"color:black;background:#cfc;\">48b6661cc282cdea</span>).</p></qt>"), this);
+        QLabel *label = new QLabel(i18n("<qt><p>Once you have granted permissions to KBibTeX on Zotero's web page, you should see a light-green field with a black hexadecimal code (example: <span style=\"color:black;background:#cfc;\">48b67422661cc282cdea</span>).</p></qt>"), this);
         label->setWordWrap(true);
         layout->addWidget(label);
         layout->addSpacing(8);
         QFormLayout *formLayout = new QFormLayout();
         layout->addLayout(formLayout);
-        lineEditVerificationCode = new HexInputLineEdit(16, this);
+        lineEditVerificationCode = new HexInputLineEdit(20, this);
         formLayout->addRow(i18n("Verification Code:"), lineEditVerificationCode);
         connect(lineEditVerificationCode, SIGNAL(textEdited(QString)), this, SIGNAL(completeChanged()));
     }
