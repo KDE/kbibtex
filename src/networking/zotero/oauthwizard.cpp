@@ -23,7 +23,6 @@
 #include <QGridLayout>
 #include <QClipboard>
 #include <QApplication>
-#include <QRegExp>
 
 #include <KLocale>
 #include <KLineEdit>
