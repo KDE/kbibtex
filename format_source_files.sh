@@ -73,7 +73,7 @@ while read filename ; do
 		continue
 	fi
 
-	TEMPFILE=$(mktemp 'kbibtex_formatted_source_XXXXXXXXXXX.cpp')
+	TEMPFILE=$(mktemp -t 'kbibtex_formatted_source_XXXXXXXXXXX.cpp')
 
 	echo "Processing \"${filename}\""
 	astyle -n --align-reference=name --align-pointer=name --indent=spaces=4 --brackets=linux --indent-labels --pad-oper --unpad-paren --pad-header --keep-one-line-statements --convert-tabs --indent-preprocessor <"${filename}" >${TEMPFILE}
