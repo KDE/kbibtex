@@ -181,7 +181,6 @@ public:
         p->setWindowTitle(i18n("Zotero OAuth Key Exchange"));
     }
 
-
     void setOAuthVerifier(const QString &verifier) {
         QOAuth::ParamMap oAuthVerifierParams;
         oAuthVerifierParams.insert("oauth_verifier", verifier.toUtf8());
@@ -190,7 +189,7 @@ public:
             token = oAuthVerifierRequest.value(QOAuth::tokenParameterName());
             tokenSecret = oAuthVerifierRequest.value(QOAuth::tokenSecretParameterName());
 
-            if (! token.isEmpty() && !tokenSecret.isEmpty()) {
+            if (!token.isEmpty() && !tokenSecret.isEmpty()) {
                 kDebug() << "KBibTeX is authorized successfully";
                 bool ok = false;
                 userId = oAuthVerifierRequest.value("userID").toInt(&ok);
