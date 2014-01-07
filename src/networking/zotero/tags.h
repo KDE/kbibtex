@@ -38,6 +38,7 @@ public:
     Tags(API *api, QObject *parent = NULL);
 
     bool initialized() const;
+    bool busy() const;
 
     QMap<QString, int> tags() const;
 

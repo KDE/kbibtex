@@ -39,13 +39,15 @@ public:
     Private(API *a, Zotero::Tags *parent)
             : p(parent), api(a) {
         initialized = false;
+        busy = false;
     }
 
-    bool initialized;
+    bool initialized, busy;
 
     QMap<QString, int> tags;
 
     QNetworkReply *requestZoteroUrl(const KUrl &url) {
+        busy = true;
         KUrl internalUrl = url;
         api->addLimitToUrl(internalUrl);
         QNetworkRequest request = api->request(internalUrl);
@@ -66,6 +68,11 @@ Tags::Tags(API *api, QObject *parent)
 bool Tags::initialized() const
 {
     return d->initialized;
+}
+
+bool Tags::busy() const
+{
+    return d->busy;
 }
 
 QMap<QString, int> Tags::tags() const
@@ -110,11 +117,13 @@ void Tags::finishedFetchingTags()
         if (!nextPage.isEmpty())
             d->requestZoteroUrl(nextPage);
         else {
+            d->busy = false;
             d->initialized = true;
             emit finishedLoading();
         }
     } else {
         kWarning() << reply->errorString(); ///< something went wrong
+        d->busy = false;
         d->initialized = false;
         emit finishedLoading();
     }

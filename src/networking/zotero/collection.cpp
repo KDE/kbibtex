@@ -44,9 +44,10 @@ public:
     Private(API *a, Zotero::Collection *parent)
             : p(parent), api(a) {
         initialized = false;
+        busy = false;
     }
 
-    bool initialized;
+    bool initialized, busy;
 
     QQueue<QString> downloadQueue;
 
@@ -55,6 +56,7 @@ public:
     QHash<QString, QVector<QString> > collectionToChildren;
 
     QNetworkReply *requestZoteroUrl(const KUrl &url) {
+        busy = true;
         KUrl internalUrl = url;
         api->addLimitToUrl(internalUrl);
         QNetworkRequest request = api->request(internalUrl);
@@ -90,6 +92,11 @@ Collection::Collection(API *api, QObject *parent)
 bool Collection::initialized() const
 {
     return d->initialized;
+}
+
+bool Collection::busy() const
+{
+    return d->busy;
 }
 
 QString Collection::collectionLabel(const QString &collectionId) const
@@ -193,6 +200,7 @@ void Collection::finishedFetchingCollection()
             d->runNextInDownloadQueue();
     } else {
         kWarning() << reply->errorString(); ///< something went wrong
+        d->busy = false;
         d->initialized = false;
         emit finishedLoading();
     }
@@ -200,5 +208,6 @@ void Collection::finishedFetchingCollection()
 
 void Collection::emitFinishedLoading()
 {
+    d->busy = false;
     emit finishedLoading();
 }
