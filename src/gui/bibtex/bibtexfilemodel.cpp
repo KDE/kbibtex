@@ -71,7 +71,7 @@ bool SortFilterBibTeXFileModel::simpleLessThan(const QModelIndex &left, const QM
 {
     const QString leftString = left.data(Qt::DisplayRole).toString().toLower();
     const QString rightString = right.data(Qt::DisplayRole).toString().toLower();
-    const int cmp = QString::localeAwareCompare(leftString, rightString) < 0;
+    const int cmp = QString::localeAwareCompare(leftString, rightString);
     if (cmp == 0)
         return left.row() < right.row();
     else
