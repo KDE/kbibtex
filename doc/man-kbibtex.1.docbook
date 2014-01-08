@@ -1,0 +1,127 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN" "dtd/kdex.dtd" [
+<!ENTITY % English "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<title>KDE User's Manual</title>
+<author><firstname>Thomas</firstname><surname>Fischer</surname>
+<contrib>KBibTeX man page.</contrib>
+<email>fischer@unix-ag.uni-kl.de</email></author>
+<date>2013-12-30</date>
+<productname>K Desktop Environment</productname>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle><command>kbibtex</command></refentrytitle>
+<manvolnum>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname><command>kbibtex</command></refname>
+<refpurpose>a BibTeX editor for KDE written by Thomas Fischer and released under the GPL version 2 or later.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis>
+<command>kbibtex</command>
+<arg choice="opt"><replaceable>Qt-options</replaceable></arg>
+<arg choice="opt"><replaceable>KDE-options</replaceable></arg>
+<arg choice="opt"><replaceable>URL</replaceable></arg>
+</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title>Description</title>
+<para>
+  KBibTeX is a BibTeX editor for KDE written by Thomas Fischer and released under the GPL version 2 or later.
+</para>
+<para>
+  KBibTeX can be started as a standalone program or embedded as a KPart into virtually every &kde; program (&eg; Konqueror).
+</para>
+</refsect1>
+
+<refsect1 id="generic_options"><title>Generic Options</title>
+<variablelist>
+  <varlistentry>
+  <term><option>--help</option></term>
+  <listitem>
+<para>Show help about options.</para>
+  </listitem>
+  </varlistentry>
+  <varlistentry>
+  <term><option>--help-qt</option></term>
+  <listitem>
+<para>Show Qt specific options.</para>
+  </listitem>
+  </varlistentry>
+  <varlistentry>
+  <term><option>--help-kde</option></term>
+  <listitem>
+<para>Show KDE specific options.</para>
+  </listitem>
+  </varlistentry>
+  <varlistentry>
+  <term><option>--help-all</option></term>
+  <listitem>
+<para>Show all options.</para>
+  </listitem>
+  </varlistentry>
+  <varlistentry>
+  <term><option>--author</option></term>
+  <listitem>
+<para>Show author information.</para>
+  </listitem>
+  </varlistentry>
+  <varlistentry>
+  <term><option>-v, --version</option></term>
+  <listitem>
+<para>Show version information.</para>
+  </listitem>
+  </varlistentry>
+  <varlistentry>
+  <term><option>--license</option></term>
+  <listitem>
+<para>Show license information.</para>
+  </listitem>
+  </varlistentry>
+  <varlistentry>
+  <term><option>--</option></term>
+  <listitem>
+<para>End of options.</para>
+  </listitem>
+  </varlistentry>
+</variablelist>
+</refsect1>
+
+<refsect1 id="arguments"><title>Arguments</title>
+<variablelist>
+  <varlistentry>
+    <term><option>URL</option></term>
+  <listitem>
+    <para>An address or several addresses of the bibliography documents to be opened.</para>
+  </listitem>
+  </varlistentry>
+</variablelist>
+</refsect1>
+
+<refsect1>
+<title>See Also</title>
+<para>More detailed user documentation is available from <ulink
+url="help:/kbibtex">help:/kbibtex</ulink>
+(either enter this <acronym>URL</acronym> into &konqueror;, or run
+<userinput><command>khelpcenter</command>
+<parameter>help:/kbibtex</parameter></userinput>).</para>
+
+<para>There is also further information available at the <ulink
+url="http://home.gna.org/kbibtex/">KBibTeX official website</ulink>.</para>
+</refsect1>
+
+<refsect1>
+<title>Authors</title>
+<para>KBibTeX was written by <personname><firstname>Thomas</firstname><surname>Fischer</surname></personname> <email>fischer@unix-ag.uni-kl.de</email>.
+</para>
+</refsect1>
+
+</refentry>
