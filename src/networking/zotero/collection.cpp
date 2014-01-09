@@ -200,9 +200,8 @@ void Collection::finishedFetchingCollection()
             d->runNextInDownloadQueue();
     } else {
         kWarning() << reply->errorString(); ///< something went wrong
-        d->busy = false;
         d->initialized = false;
-        emit finishedLoading();
+        emitFinishedLoading();
     }
 }
 
