@@ -67,8 +67,10 @@ public:
     KComboBox *comboBoxApiKey;
     KPushButton *buttonLoadBibliography;
 
+    QCursor nonBusyCursor;
+
     Private(SearchResults *sr, ZoteroBrowser *parent)
-            : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), items(NULL), tags(NULL), tagModel(NULL), collection(NULL), collectionModel(NULL), api(NULL), searchResults(sr) {
+            : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), items(NULL), tags(NULL), tagModel(NULL), collection(NULL), collectionModel(NULL), api(NULL), searchResults(sr), nonBusyCursor(p->cursor()) {
         /// nothing
     }
 
@@ -85,6 +87,8 @@ public:
         comboBoxApiKey->clear();
         comboBoxApiKey->addItems(apiKeys);
         if (!apiKeys.isEmpty()) comboBoxApiKey->setCurrentIndex(0);
+
+        p->updateButtons();
     }
 
     void saveState() {
@@ -167,18 +171,21 @@ void ZoteroBrowser::setupGUI()
 
     QBoxLayout *containerButtonLayout = new QHBoxLayout();
     containerLayout->addLayout(containerButtonLayout, 0);
-
-    KPushButton *buttonGetOAuthCredentials = new KPushButton(KIcon("preferences-web-browser-identification"), i18n("Get Credentials"), container);
-    containerButtonLayout->addWidget(buttonGetOAuthCredentials, 0);
-    connect(buttonGetOAuthCredentials, SIGNAL(clicked()), this, SLOT(getOAuthCredentials()));
-
     containerButtonLayout->addStretch(1);
-
     d->buttonLoadBibliography = new KPushButton(KIcon("download"), i18n("Load bibliography"), container);
     containerButtonLayout->addWidget(d->buttonLoadBibliography, 0);
     connect(d->buttonLoadBibliography, SIGNAL(clicked()), this, SLOT(applyCredentials()));
     connect(d->comboBoxNumericUserId->lineEdit(), SIGNAL(textChanged(QString)), this, SLOT(updateButtons()));
     connect(d->comboBoxApiKey->lineEdit(), SIGNAL(textChanged(QString)), this, SLOT(updateButtons()));
+
+    containerLayout->addStretch(10);
+
+    containerButtonLayout = new QHBoxLayout();
+    containerLayout->addLayout(containerButtonLayout, 0);
+    KPushButton *buttonGetOAuthCredentials = new KPushButton(KIcon("preferences-web-browser-identification"), i18n("Get Credentials"), container);
+    containerButtonLayout->addWidget(buttonGetOAuthCredentials, 0);
+    connect(buttonGetOAuthCredentials, SIGNAL(clicked()), this, SLOT(getOAuthCredentials()));
+    containerButtonLayout->addStretch(1);
 
     /// Collection browser
     d->collectionBrowser = new QTreeView(d->tabWidget);
@@ -195,7 +202,14 @@ void ZoteroBrowser::setupGUI()
 
 void ZoteroBrowser::modelReset()
 {
-    setEnabled(!d->collection->busy() && !d->tags->busy());
+    if (!d->collection->busy() && !d->tags->busy()) {
+        setCursor(d->nonBusyCursor);
+        setEnabled(true);
+    } else {
+        setCursor(Qt::WaitCursor);
+        setEnabled(false);
+    }
+
     if (!d->collection->busy() && !d->collection->initialized())
         KMessageBox::sorry(this, i18n("KBibTeX failed to retrieve the specified collection from Zotero. Please check that the provided user id and API key are valid."), i18n("Failed to retrieve collection"));
     if (!d->tags->busy() && !d->tags->initialized())
@@ -204,17 +218,21 @@ void ZoteroBrowser::modelReset()
 
 void ZoteroBrowser::collectionDoubleClicked(const QModelIndex &index)
 {
+    setCursor(Qt::WaitCursor);
+    setEnabled(false); ///< will be re-enabled when item retrieve got finished (slot reenableList)
+
     const QString collectionId = index.data(Zotero::CollectionModel::CollectionIdRole).toString();
     d->searchResults->clear();
-    setEnabled(false); ///< will be re-enabled when item retrieve got finished (signal stoppedSearch)
     d->items->retrieveItemsByCollection(collectionId);
 }
 
 void ZoteroBrowser::tagDoubleClicked(const QModelIndex &index)
 {
+    setCursor(Qt::WaitCursor);
+    setEnabled(false); ///< will be re-enabled when item retrieve got finished (slot reenableList)
+
     const QString tag = index.data(Zotero::TagModel::TagRole).toString();
     d->searchResults->clear();
-    setEnabled(false); ///< will be re-enabled when item retrieve got finished (signal stoppedSearch)
     d->items->retrieveItemsByTag(tag);
 }
 
@@ -225,6 +243,7 @@ void ZoteroBrowser::showItem(QSharedPointer<Element> e)
 
 void ZoteroBrowser::reenableList()
 {
+    setCursor(d->nonBusyCursor);
     setEnabled(true);
 }
 
@@ -238,6 +257,9 @@ void ZoteroBrowser::applyCredentials()
     bool ok = false;
     const int id = d->comboBoxNumericUserId->currentText().toInt(&ok);
     if (ok) {
+        setCursor(Qt::WaitCursor);
+        setEnabled(false);
+
         d->api->deleteLater();
         d->collection->deleteLater();
         d->items->deleteLater();
@@ -261,8 +283,8 @@ void ZoteroBrowser::applyCredentials()
         connect(d->tagModel, SIGNAL(modelReset()), this, SLOT(modelReset()));
         connect(d->items, SIGNAL(foundElement(QSharedPointer<Element>)), this, SLOT(showItem(QSharedPointer<Element>)));
         connect(d->items, SIGNAL(stoppedSearch(int)), this, SLOT(reenableList()));
+        connect(d->tags, SIGNAL(finishedLoading()), this, SLOT(reenableList()));
 
-        setEnabled(false);
         d->tabWidget->setCurrentIndex(1);
     } else
         KMessageBox::information(this, i18n("Value '%1' is not a valid numeric identifier of a user or a group.", d->comboBoxNumericUserId->currentText()), i18n("Invalid numeric identifier"));
