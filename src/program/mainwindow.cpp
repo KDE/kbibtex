@@ -22,6 +22,7 @@
 #include <QDropEvent>
 #include <QLabel>
 #include <QtCore/QPointer>
+#include <QTimer>
 
 #include <KIO/NetAccess>
 #include <KApplication>
@@ -49,6 +50,7 @@
 #include "bibtexeditor.h"
 #include "filesettings.h"
 #include "xsltransform.h"
+#include "bibliographyservice.h"
 
 class KBibTeXMainWindow::KBibTeXMainWindowPrivate
 {
@@ -248,6 +250,8 @@ KBibTeXMainWindow::KBibTeXMainWindow()
     setCorner(Qt::BottomRightCorner, Qt::RightDockWidgetArea);
 
     setAcceptDrops(true);
+
+    QTimer::singleShot(500, this, SLOT(delayed()));
 }
 
 KBibTeXMainWindow::~KBibTeXMainWindow()
@@ -418,4 +422,11 @@ void KBibTeXMainWindow::queryCloseAll()
 {
     if (d->mdiWidget->getOpenFileInfoManager()->queryCloseAll())
         kapp->quit();
+}
+
+void KBibTeXMainWindow::delayed() {
+    BibliographyService bs;
+    if (!bs.isKBibTeXdefault() && KMessageBox::questionYesNo(this, i18n("KBibTeX is not the default editor for its bibliography formats like BibTeX or RIS."), i18n("Default Bibliography Editor"), KGuiItem(i18n("Set as Default Editor")), KGuiItem(i18n("Keep settings unchanged"))) == KMessageBox::Yes)
+        bs.setKBibTeXasDefault();
+
 }
