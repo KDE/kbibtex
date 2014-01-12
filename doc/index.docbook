@@ -212,7 +212,10 @@
       Writing a Bibliography File for Beginners
     </title>
     <para>
-      When you run &kbibtex; for the first time you will see a window that looks similar to this:
+      After the first run, &kbibtex; will propose to make it the default editor for bibliography formats. We recommend you to do so.<footnote><para>If for some reasons you will decide to reconsider please remove the strings with <literal>kbibtex</literal> substring from <filename>mimeapps.list</filename> file in <filename role="directory">.local/share/applications</filename> folder of your home folder.</para></footnote>
+    </para>
+    <para>
+      Then you will see a window that looks similar to this:
     </para>
     <screenshot>
       <screeninfo>&kbibtex; window after the first start</screeninfo>
