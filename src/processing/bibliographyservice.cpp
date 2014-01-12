@@ -27,7 +27,7 @@ private:
     BibliographyService *p;
 
     /// Representing configuration file "mimeapps.list"
-    /// see http://www.freedesktop.org/wiki/Specifications/mime-actions-spec/‎
+    /// see http://www.freedesktop.org/wiki/Specifications/mime-actions-spec/
     KSharedConfig::Ptr configXDGMimeAppsList;
     /// Groups inside "mimeapps.list"
     KConfigGroup configGroupAddedKDEServiceAssociations, configGroupRemovedKDEServiceAssociations;
