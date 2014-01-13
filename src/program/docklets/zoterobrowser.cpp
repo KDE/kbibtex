@@ -210,10 +210,8 @@ void ZoteroBrowser::modelReset()
         setEnabled(false);
     }
 
-    if (!d->collection->busy() && !d->collection->initialized())
-        KMessageBox::sorry(this, i18n("KBibTeX failed to retrieve the specified collection from Zotero. Please check that the provided user id and API key are valid."), i18n("Failed to retrieve collection"));
-    if (!d->tags->busy() && !d->tags->initialized())
-        KMessageBox::sorry(this, i18n("KBibTeX failed to retrieve the specified tags from Zotero. Please check that the provided user id and API key are valid."), i18n("Failed to retrieve tags"));
+    if (!d->tags->busy() && !d->collection->busy() && !(d->collection->initialized() && d->tags->initialized()))
+        KMessageBox::sorry(this, i18n("KBibTeX failed to retrieve the bibliography from Zotero. Please check that the provided user id and API key are valid."), i18n("Failed to retrieve data from Zotero"));
 }
 
 void ZoteroBrowser::collectionDoubleClicked(const QModelIndex &index)
