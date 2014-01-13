@@ -60,7 +60,7 @@ if [[ ${ALL_FILES} -eq 0 ]] ; then
 	# Format only files seen by git as added or modified,
 	# filter for .cpp or .h files.
 	# Trying to handle filenames with spaces correctly (not tested)
-	git status --untracked-files=no --porcelain | awk '/^\s*[AM]+\s+.*[.](cpp|h)$/ {for(i=2;i<NR;++i){printf $i" "};printf $NR"\n"}'
+	git status --untracked-files=no --porcelain | awk '/^\s*[AM]+\s+.*[.](cpp|h)$/ {for(i=2;i<NF;++i){printf $i" "};printf $NF"\n"}'
 else
 	# Format all .cpp or .h files; using "find" to located those files
 	find . -type f -name '*.cpp' -o -name '*.h'
