@@ -109,20 +109,24 @@ public:
 
     void addTextToLists() {
         QString buffer = comboBoxNumericUserId->currentText();
-        for (int i = 0; i < comboBoxNumericUserId->count(); ++i)
-            if (comboBoxNumericUserId->itemText(i) == buffer) {
-                comboBoxNumericUserId->removeItem(i);
-                break;
-            }
-        comboBoxNumericUserId->insertItem(0, buffer);
+        if (comboBoxNumericUserId->itemText(0) != buffer) {
+            for (int i = 0; i < comboBoxNumericUserId->count(); ++i)
+                if (comboBoxNumericUserId->itemText(i) == buffer) {
+                    comboBoxNumericUserId->removeItem(i);
+                    break;
+                }
+            comboBoxNumericUserId->insertItem(0, buffer);
+        }
 
         buffer = comboBoxApiKey->currentText();
-        for (int i = 0; i < comboBoxApiKey->count(); ++i)
-            if (comboBoxApiKey->itemText(i) == buffer) {
-                comboBoxApiKey->removeItem(i);
-                break;
-            }
-        comboBoxApiKey->insertItem(0, buffer);
+        if (comboBoxApiKey->itemText(0) != buffer) {
+            for (int i = 0; i < comboBoxApiKey->count(); ++i)
+                if (comboBoxApiKey->itemText(i) == buffer) {
+                    comboBoxApiKey->removeItem(i);
+                    break;
+                }
+            comboBoxApiKey->insertItem(0, buffer);
+        }
     }
 };
 
