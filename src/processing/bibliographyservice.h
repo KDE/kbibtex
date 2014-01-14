@@ -21,13 +21,22 @@
 
 #include "kbibtexproc_export.h"
 
+#include <QProcess>
+
 /**
+ * To make (or test for) KBibTeX the default bibliography editor,
+ * this class offers some essential functions. To make the association work,
+ * KBibTeX's .desktop files have to be placed where KDE (including kbuildsycoca4)
+ * can find them.
+ *
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
-class KBIBTEXPROC_EXPORT BibliographyService
+class KBIBTEXPROC_EXPORT BibliographyService : public QObject
 {
+    Q_OBJECT
+
 public:
-    BibliographyService();
+    BibliographyService(QWidget *parentWidget);
 
     /**
      * Set KBibTeX as default editor for supported
@@ -41,6 +50,9 @@ public:
      * @return true if KBibTeX is default editor, else false
      */
     bool isKBibTeXdefault() const;
+
+private slots:
+    void kbuildsycoca4finished(int exitCode, QProcess::ExitStatus exitStatus);
 
 private:
     class Private;

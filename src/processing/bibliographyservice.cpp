@@ -20,6 +20,8 @@
 
 #include <KSharedConfig>
 #include <KConfigGroup>
+#include <KLocale>
+#include <KMessageBox>
 
 class BibliographyService::Private
 {
@@ -41,13 +43,16 @@ private:
     static const QString katePartDesktop;
 
 public:
-    Private(BibliographyService *parent)
-        : p(parent),
+    QWidget *parentWidget;
+
+    Private(QWidget *w, BibliographyService *parent)
+            : p(parent),
           configXDGMimeAppsList(KSharedConfig::openConfig(QLatin1String("mimeapps.list"), KConfig::NoGlobals, "xdgdata-apps")),
           configGroupAddedKDEServiceAssociations(configXDGMimeAppsList, "Added KDE Service Associations"),
           configGroupRemovedKDEServiceAssociations(configXDGMimeAppsList, "Removed KDE Service Associations"),
           configGroupAddedAssociations(configXDGMimeAppsList, "Added Associations"),
-          configGroupRemovedAssociations(configXDGMimeAppsList, "Removed Associations")
+          configGroupRemovedAssociations(configXDGMimeAppsList, "Removed Associations"),
+          parentWidget(w)
     {
         /// nothing
     }
@@ -152,8 +157,8 @@ const QString BibliographyService::Private::kbibtexPartDesktop = QLatin1String("
 const QString BibliographyService::Private::kateApplicationDesktop = QLatin1String("kde4-kate.desktop");
 const QString BibliographyService::Private::katePartDesktop = QLatin1String("katepart.desktop");
 
-BibliographyService::BibliographyService()
-    : d(new BibliographyService::Private(this))
+BibliographyService::BibliographyService(QWidget *parentWidget)
+        : QObject(parentWidget), d(new BibliographyService::Private(parentWidget, this))
 {
     /// nothing
 }
@@ -164,6 +169,11 @@ void BibliographyService::setKBibTeXasDefault() {
     d->setKBibTeXforMimeType(QLatin1String("text/x-bibtex"), true);
     /// Cover Research Information Systems (RIS) bibliographies
     d->setKBibTeXforMimeType(QLatin1String("application/x-research-info-systems"), true);
+
+    /// kbuildsycoca4 has to be run to update the mime type associations
+    QProcess *kbuildsycoca4Process = new QProcess(d->parentWidget);
+    connect(kbuildsycoca4Process, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(kbuildsycoca4finished(int,QProcess::ExitStatus)));
+    kbuildsycoca4Process->start(QLatin1String("kbuildsycoca4"));
 }
 
 bool BibliographyService::isKBibTeXdefault() const {
@@ -173,4 +183,9 @@ bool BibliographyService::isKBibTeXdefault() const {
         d->isKBibTeXdefaultForMimeType(QLatin1String("text/x-bibtex"))
         /// Test for Research Information Systems (RIS) bibliographies
         && d->isKBibTeXdefaultForMimeType(QLatin1String("application/x-research-info-systems"));
+}
+
+void BibliographyService::kbuildsycoca4finished(int exitCode, QProcess::ExitStatus exitStatus) {
+    if (exitCode != 0 || exitStatus != QProcess::NormalExit)
+        KMessageBox::error(d->parentWidget, i18n("Failed to run 'kbuildsycoca4' to update mime type associations.\n\nThe system may not know how to use KBibTeX to open bibliography files."), i18n("Failed to run 'kbuildsycoca4'"));
 }

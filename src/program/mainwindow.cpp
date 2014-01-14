@@ -425,8 +425,28 @@ void KBibTeXMainWindow::queryCloseAll()
 }
 
 void KBibTeXMainWindow::delayed() {
-    BibliographyService bs;
-    if (!bs.isKBibTeXdefault() && KMessageBox::questionYesNo(this, i18n("KBibTeX is not the default editor for its bibliography formats like BibTeX or RIS."), i18n("Default Bibliography Editor"), KGuiItem(i18n("Set as Default Editor")), KGuiItem(i18n("Keep settings unchanged"))) == KMessageBox::Yes)
-        bs.setKBibTeXasDefault();
+    /// Static variable, memorizes the dynamically created
+    /// BibliographyService instance and allows to tell if
+    /// this slot was called for the first or second time.
+    static BibliographyService *bs = NULL;
 
+    if (bs == NULL) {
+        /// First call to this slot
+        bs = new BibliographyService(this);
+        if (!bs->isKBibTeXdefault() && KMessageBox::questionYesNo(this, i18n("KBibTeX is not the default editor for its bibliography formats like BibTeX or RIS."), i18n("Default Bibliography Editor"), KGuiItem(i18n("Set as Default Editor")), KGuiItem(i18n("Keep settings unchanged"))) == KMessageBox::Yes) {
+            bs->setKBibTeXasDefault();
+            /// QTimer calls this slot again, but as 'bs' will not be NULL,
+            /// the 'if' construct's 'else' path will be followed.
+            QTimer::singleShot(5000, this, SLOT(delayed()));
+        } else {
+            /// KBibTeX is default application or user doesn't care,
+            /// therefore clean up memory
+            delete bs;
+            bs = NULL;
+        }
+    } else {
+        /// Second call to this slot. This time, clean up memory.
+        bs->deleteLater();
+        bs = NULL;
+    }
 }
