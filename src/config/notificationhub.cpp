@@ -38,13 +38,13 @@ public:
     QSet<NotificationListener *> allListeners;
 
     NotificationHubPrivate(NotificationHub *parent)
-        : p(parent) {
+            : p(parent) {
         // nothing
     }
 };
 
 NotificationHub::NotificationHub()
-    : d(new NotificationHubPrivate(this))
+        : d(new NotificationHubPrivate(this))
 {
     // TODO
 }
@@ -86,10 +86,10 @@ void NotificationHub::publishEvent(int eventId)
         kDebug() << "Notifying about event" << eventId;
 
         QSet< NotificationListener *> set(d->listenersPerEventId.value(eventId,  QSet<NotificationListener *>()));
-        foreach(NotificationListener * listener, d->allListeners) {
+        foreach(NotificationListener *listener, d->allListeners) {
             set.insert(listener);
         }
-        foreach(NotificationListener * listener, set) {
+        foreach(NotificationListener *listener, set) {
             listener->notificationEvent(eventId);
         }
         kDebug() << set.count() << d->allListeners.count() << d->listenersPerEventId.value(eventId,  QSet<NotificationListener *>()).count();

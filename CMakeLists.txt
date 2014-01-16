@@ -163,7 +163,7 @@ add_subdirectory(
     icons
 )
 add_subdirectory(
-    man
+    doc
 )
 add_subdirectory(
     mime
