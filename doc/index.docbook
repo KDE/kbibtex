@@ -918,12 +918,8 @@ latex example</screen>
       <varlistentry>
 	<term>
 	  <menuchoice>
-	    <guimenu>
-	      Edit
-	    </guimenu>
-	    <guimenuitem>
-	      Delete
-	    </guimenuitem>
+	    <guimenu>Edit</guimenu>
+	    <guimenuitem>Delete</guimenuitem>
 	  </menuchoice>
 	</term>
 	<listitem>
@@ -935,12 +931,8 @@ latex example</screen>
       <varlistentry>
 	<term>
 	  <menuchoice>
-	    <guimenu>
-	      Edit
-	    </guimenu>
-	    <guimenuitem>
-	      Find Duplicates
-	    </guimenuitem>
+	    <guimenu>Edit</guimenu>
+	    <guimenuitem>Find Duplicates</guimenuitem>
 	  </menuchoice>
 	</term>
 	<listitem>
@@ -952,15 +944,9 @@ latex example</screen>
       <varlistentry>
 	<term>
 	  <menuchoice>
-	    <guimenu>
-	      Element
-	    </guimenu>
-	    <guisubmenu>
-	      New element
-	    </guisubmenu>
-	    <guimenuitem>
-	      New entry
-	    </guimenuitem>
+	    <guimenu>Element</guimenu>
+	    <guisubmenu>New element</guisubmenu>
+	    <guimenuitem>New entry</guimenuitem>
 	  </menuchoice>
 	</term>
 	<listitem>
@@ -972,15 +958,9 @@ latex example</screen>
       <varlistentry>
 	<term>
 	  <menuchoice>
-	    <guimenu>
-	      Element
-	    </guimenu>
-	    <guisubmenu>
-	      New element
-	    </guisubmenu>
-	    <guimenuitem>
-	      New comment
-	    </guimenuitem>
+	    <guimenu>Element</guimenu>
+	    <guisubmenu>New element</guisubmenu>
+	    <guimenuitem>New comment</guimenuitem>
 	  </menuchoice>
 	</term>
 	<listitem>
@@ -992,15 +972,9 @@ latex example</screen>
       <varlistentry>
 	<term>
 	  <menuchoice>
-	    <guimenu>
-	      Element
-	    </guimenu>
-	    <guisubmenu>
-	      New element
-	    </guisubmenu>
-	    <guimenuitem>
-	      New macro
-	    </guimenuitem>
+	    <guimenu>Element</guimenu>
+	    <guisubmenu>New element</guisubmenu>
+	    <guimenuitem>New macro</guimenuitem>
 	  </menuchoice>
 	</term>
 	<listitem>
@@ -1012,15 +986,9 @@ latex example</screen>
       <varlistentry>
 	<term>
 	  <menuchoice>
-	    <guimenu>
-	      Element
-	    </guimenu>
-	    <guisubmenu>
-	      New element
-	    </guisubmenu>
-	    <guimenuitem>
-	      New preamble
-	    </guimenuitem>
+	    <guimenu>Element</guimenu>
+	    <guisubmenu>New element</guisubmenu>
+	    <guimenuitem>New preamble</guimenuitem>
 	  </menuchoice>
 	</term>
 	<listitem>
@@ -1038,12 +1006,8 @@ latex example</screen>
 		<keycap>E</keycap>
 	      </keycombo>
 	    </shortcut>
-	    <guimenu>
-	      Element
-	    </guimenu>
-	    <guimenuitem>
-	      Edit Element
-	    </guimenuitem>
+	    <guimenu>Element</guimenu>
+	    <guimenuitem>Edit Element</guimenuitem>
 	  </menuchoice>
 	</term>
 	<listitem>
@@ -1061,12 +1025,8 @@ latex example</screen>
 		<keycap>D</keycap>
 	      </keycombo>
 	    </shortcut>
-	    <guimenu>
-	      Element
-	    </guimenu>
-	    <guisubmenu>
-	      View Document
-	    </guisubmenu>
+	    <guimenu>Element</guimenu>
+	    <guisubmenu>View Document</guisubmenu>
 	  </menuchoice>
 	</term>
 	<listitem>
@@ -1157,12 +1117,8 @@ latex example</screen>
       <varlistentry>
 	<term>
 	  <menuchoice>
-	    <guimenu>
-	      Element
-	    </guimenu>
-	    <guimenuitem>
-	      Find &pdf;...
-	    </guimenuitem>
+	    <guimenu>Element</guimenu>
+	    <guimenuitem>Find &pdf;...</guimenuitem>
 	  </menuchoice>
 	</term>
 	<listitem>
@@ -1188,12 +1144,8 @@ latex example</screen>
       <varlistentry id="format-entry-ids">
 	<term>
 	  <menuchoice>
-	    <guimenu>
-	      Element
-	    </guimenu>
-	    <guimenuitem>
-	      Format entry ids
-	    </guimenuitem>
+	    <guimenu>Element</guimenu>
+	    <guimenuitem>Format entry ids</guimenuitem>
 	  </menuchoice>
 	</term>
 	<listitem>
@@ -1208,12 +1160,8 @@ latex example</screen>
       <varlistentry>
 	<term>
 	  <menuchoice>
-	    <guimenu>
-	      Element
-	    </guimenu>
-	    <guisubmenu>
-	      Color
-	    </guisubmenu>
+	    <guimenu>Element</guimenu>
+	    <guisubmenu>Color</guisubmenu>
 	  </menuchoice>
 	</term>
 	<listitem>
@@ -1228,12 +1176,8 @@ latex example</screen>
       <varlistentry>
 	<term>
 	  <menuchoice>
-	    <guimenu>
-	      Element
-	    </guimenu>
-	    <guimenuitem>
-	      Send to &lyx;/&kile;
-	    </guimenuitem>
+	    <guimenu>Element</guimenu>
+	    <guimenuitem>Send to &lyx;/&kile;</guimenuitem>
 	  </menuchoice>
 	</term>
 	<listitem>
@@ -1245,12 +1189,8 @@ latex example</screen>
       <varlistentry>
 	<term>
 	  <menuchoice>
-	    <guimenu>
-	      Settings
-	    </guimenu>
-	    <guimenuitem>
-	      Configure &kbibtex;...
-	    </guimenuitem>
+	    <guimenu>Settings</guimenu>
+	    <guimenuitem>Configure &kbibtex;...</guimenuitem>
 	  </menuchoice>
 	</term>
 	<listitem>
