@@ -165,6 +165,7 @@ void ZoteroBrowser::setupGUI()
     QBoxLayout *containerLayout = new QVBoxLayout(container);
     QFormLayout *containerForm = new QFormLayout();
     containerLayout->addLayout(containerForm, 1);
+    containerForm->setMargin(0);
 
     d->comboBoxNumericUserId = new KComboBox(container);
     d->comboBoxNumericUserId->setEditable(true);
@@ -186,6 +187,7 @@ void ZoteroBrowser::setupGUI()
 
     QWidget *libraryContainer = new QWidget(container);
     QGridLayout *libraryContainerLayout = new QGridLayout(libraryContainer);
+    libraryContainerLayout->setMargin(0);
     libraryContainerLayout->setColumnMinimumWidth(0, 16); // TODO determine size of a radio button
     containerForm->addRow(QString(), libraryContainer);
     d->radioPersonalLibrary = new QRadioButton(i18n("Personal library"), libraryContainer);
@@ -203,6 +205,7 @@ void ZoteroBrowser::setupGUI()
 
     QBoxLayout *containerButtonLayout = new QHBoxLayout();
     containerLayout->addLayout(containerButtonLayout, 0);
+    containerButtonLayout->setMargin(0);
     containerButtonLayout->addStretch(1);
     d->buttonLoadBibliography = new KPushButton(KIcon("download"), i18n("Load bibliography"), container);
     containerButtonLayout->addWidget(d->buttonLoadBibliography, 0);
@@ -212,6 +215,7 @@ void ZoteroBrowser::setupGUI()
 
     containerButtonLayout = new QHBoxLayout();
     containerLayout->addLayout(containerButtonLayout, 0);
+    containerButtonLayout->setMargin(0);
     KPushButton *buttonGetOAuthCredentials = new KPushButton(KIcon("preferences-web-browser-identification"), i18n("Get Credentials"), container);
     containerButtonLayout->addWidget(buttonGetOAuthCredentials, 0);
     connect(buttonGetOAuthCredentials, SIGNAL(clicked()), this, SLOT(getOAuthCredentials()));
