@@ -49,6 +49,7 @@ private slots:
     void reenableWidget();
     void updateButtons();
     void applyCredentials();
+    void radioButtonsToggled();
     void retrieveGroupList();
     void gotGroupList();
     void getOAuthCredentials();

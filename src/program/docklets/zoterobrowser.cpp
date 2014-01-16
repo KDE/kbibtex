@@ -70,14 +70,14 @@ public:
     KComboBox *comboBoxApiKey;
     QRadioButton *radioPersonalLibrary;
     QRadioButton *radioGroupLibrary;
+    bool comboBoxGroupListInitialized;
     KComboBox *comboBoxGroupList;
-    KPushButton *buttonGetGroupList;
     KPushButton *buttonLoadBibliography;
 
     QCursor nonBusyCursor;
 
     Private(SearchResults *sr, ZoteroBrowser *parent)
-            : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), items(NULL), groups(NULL), tags(NULL), tagModel(NULL), collection(NULL), collectionModel(NULL), api(NULL), searchResults(sr), nonBusyCursor(p->cursor()) {
+            : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), items(NULL), groups(NULL), tags(NULL), tagModel(NULL), collection(NULL), collectionModel(NULL), api(NULL), searchResults(sr), comboBoxGroupListInitialized(false), nonBusyCursor(p->cursor()) {
         /// nothing
     }
 
@@ -185,16 +185,17 @@ void ZoteroBrowser::setupGUI()
     libraryContainerLayout->setColumnMinimumWidth(0, 16); // TODO determine size of a radio button
     containerForm->addRow(QString(), libraryContainer);
     d->radioPersonalLibrary = new QRadioButton(i18n("Personal library"), libraryContainer);
-    libraryContainerLayout->addWidget(d->radioPersonalLibrary, 0, 0, 1, 3);
+    libraryContainerLayout->addWidget(d->radioPersonalLibrary, 0, 0, 1, 2);
+    connect(d->radioPersonalLibrary, SIGNAL(toggled(bool)), this, SLOT(radioButtonsToggled()));
     d->radioGroupLibrary = new QRadioButton(i18n("Group library"), libraryContainer);
-    libraryContainerLayout->addWidget(d->radioGroupLibrary, 1, 0, 1, 3);
+    libraryContainerLayout->addWidget(d->radioGroupLibrary, 1, 0, 1, 2);
+    connect(d->radioGroupLibrary, SIGNAL(toggled(bool)), this, SLOT(radioButtonsToggled()));
     d->comboBoxGroupList = new KComboBox(false, libraryContainer);
     libraryContainerLayout->addWidget(d->comboBoxGroupList, 2, 1, 1, 1);
     d->comboBoxGroupList->setSizePolicy(sizePolicy);
-    d->buttonGetGroupList = new KPushButton(KIcon("download"), QString(), libraryContainer);
-    libraryContainerLayout->addWidget(d->buttonGetGroupList, 2, 2, 1, 1);
-    connect(d->buttonGetGroupList, SIGNAL(clicked()), this, SLOT(retrieveGroupList()));
     d->radioPersonalLibrary->setChecked(true);
+    d->comboBoxGroupList->setEnabled(false);
+    d->comboBoxGroupList->addItem(i18n("No groups available"));
 
     QBoxLayout *containerButtonLayout = new QHBoxLayout();
     containerLayout->addLayout(containerButtonLayout, 0);
@@ -320,17 +321,20 @@ void ZoteroBrowser::applyCredentials()
         KMessageBox::information(this, i18n("Value '%1' is not a valid numeric identifier of a user or a group.", d->comboBoxNumericUserId->currentText()), i18n("Invalid numeric identifier"));
 }
 
-void ZoteroBrowser::retrieveGroupList() {
-    const int h = qMax(d->comboBoxGroupList->height(), d->buttonGetGroupList->height());
-    d->comboBoxGroupList->setMinimumHeight(h);
-    d->buttonGetGroupList->setMinimumHeight(h);
+void ZoteroBrowser::radioButtonsToggled() {
+    d->comboBoxGroupList->setEnabled(d->comboBoxGroupListInitialized && d->comboBoxGroupList->count() > 0 && d->radioGroupLibrary->isChecked());
+    if (!d->comboBoxGroupListInitialized &&  d->radioGroupLibrary->isChecked())
+        retrieveGroupList();
+}
 
+void ZoteroBrowser::retrieveGroupList() {
     bool ok = false;
     const int userId = d->comboBoxNumericUserId->currentText().toInt(&ok);
     if (ok) {
         setCursor(Qt::WaitCursor);
         setEnabled(false);
         d->comboBoxGroupList->clear();
+        d->comboBoxGroupListInitialized = false;
 
         d->api->deleteLater();
         d->groups->deleteLater();
@@ -347,10 +351,15 @@ void ZoteroBrowser::gotGroupList() {
     for (QMap<int, QString>::ConstIterator it = groupMap.constBegin(); it != groupMap.constEnd(); ++it) {
         d->comboBoxGroupList->addItem(it.value(), QVariant::fromValue<int>(it.key()));
     }
-    if (groupMap.isEmpty())
+    if (groupMap.isEmpty()) {
         d->radioPersonalLibrary->setChecked(true);
-    else
+        d->comboBoxGroupList->addItem(i18n("No groups available or no permissions"));
+        d->comboBoxGroupList->setEnabled(false);
+    } else {
+        d->comboBoxGroupListInitialized = true;
         d->radioGroupLibrary->setChecked(true);
+        d->comboBoxGroupList->setEnabled(true);
+    }
 
     reenableWidget();
 }
