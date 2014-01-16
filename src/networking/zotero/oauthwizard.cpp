@@ -131,6 +131,10 @@ public:
         /// Send a request for an unauthorized token
         QOAuth::ParamMap params;
         params.insert("oauth_callback", "oob");
+        params.insert("library_access", "1");
+        params.insert("notes_access", "0");
+        params.insert("write_access", "0");
+        params.insert("all_groups", "read"); // FIXME Zotero still sets "no access" for groups ...
         QOAuth::ParamMap reply = qOAuth->requestToken("https://www.zotero.org/oauth/request", QOAuth::POST, QOAuth::HMAC_SHA1, params);
 
         /// If no error occurred, read the received token and token secret
