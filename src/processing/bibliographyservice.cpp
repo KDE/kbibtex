@@ -44,6 +44,7 @@ private:
 
 public:
     QWidget *parentWidget;
+    const QStringList textBasedMimeTypes;
 
     Private(QWidget *w, BibliographyService *parent)
             : p(parent),
@@ -52,7 +53,11 @@ public:
           configGroupRemovedKDEServiceAssociations(configXDGMimeAppsList, "Removed KDE Service Associations"),
           configGroupAddedAssociations(configXDGMimeAppsList, "Added Associations"),
           configGroupRemovedAssociations(configXDGMimeAppsList, "Removed Associations"),
-          parentWidget(w)
+          parentWidget(w),
+          textBasedMimeTypes(QStringList()
+                             << QLatin1String("text/x-bibtex") ///< classical BibTeX bibliographies
+                             << QLatin1String("application/x-research-info-systems") ///< Research Information Systems (RIS) bibliographies
+                             << QLatin1String("application/x-isi-export-format")) ///< Information Sciences Institute (ISI) bibliographies
     {
         /// nothing
     }
@@ -164,13 +169,10 @@ BibliographyService::BibliographyService(QWidget *parentWidget)
 }
 
 void BibliographyService::setKBibTeXasDefault() {
-    // TODO global definition of mime type strings
-    /// Cover classical BibTeX bibliographies
-    d->setKBibTeXforMimeType(QLatin1String("text/x-bibtex"), true);
-    /// Cover Research Information Systems (RIS) bibliographies
-    d->setKBibTeXforMimeType(QLatin1String("application/x-research-info-systems"), true);
-    /// Cover Information Sciences Institute (ISI) bibliographies
-    d->setKBibTeXforMimeType(QLatin1String("application/x-isi-export-format"), true);
+    /// Go through all supported mime types
+    foreach(const QString &mimeType, d->textBasedMimeTypes) {
+        d->setKBibTeXforMimeType(mimeType, true);
+    }
 
     /// kbuildsycoca4 has to be run to update the mime type associations
     QProcess *kbuildsycoca4Process = new QProcess(d->parentWidget);
@@ -179,14 +181,13 @@ void BibliographyService::setKBibTeXasDefault() {
 }
 
 bool BibliographyService::isKBibTeXdefault() const {
-    // TODO global definition of mime type strings
-    return
-        /// Test for classical BibTeX bibliographies
-        d->isKBibTeXdefaultForMimeType(QLatin1String("text/x-bibtex"))
-        /// Test for Research Information Systems (RIS) bibliographies
-        && d->isKBibTeXdefaultForMimeType(QLatin1String("application/x-research-info-systems"))
-        /// Test for Information Sciences Institute (ISI) bibliographies
-        && d->isKBibTeXdefaultForMimeType(QLatin1String("application/x-isi-export-format"));
+    /// Go through all supported mime types
+    foreach(const QString &mimeType, d->textBasedMimeTypes) {
+        /// Test if KBibTeX is default handler for mime type
+        if (!d->isKBibTeXdefaultForMimeType(mimeType))
+            return false; ///< Failing any test means KBibTeX is not default application/part
+    }
+    return true; ///< All tests passed, KBibTeX is default application/part
 }
 
 void BibliographyService::kbuildsycoca4finished(int exitCode, QProcess::ExitStatus exitStatus) {
