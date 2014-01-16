@@ -173,12 +173,16 @@ void ZoteroBrowser::setupGUI()
     d->comboBoxNumericUserId->setSizePolicy(sizePolicy);
     dynamic_cast<KLineEdit *>(d->comboBoxNumericUserId->lineEdit())->setClearButtonShown(true);
     containerForm->addRow(i18n("Numeric user id:"), d->comboBoxNumericUserId);
+    connect(d->comboBoxNumericUserId->lineEdit(), SIGNAL(textChanged(QString)), this, SLOT(invalidateGroupList()));
+    connect(d->comboBoxNumericUserId->lineEdit(), SIGNAL(textChanged(QString)), this, SLOT(updateButtons()));
 
     d->comboBoxApiKey = new KComboBox(container);
     d->comboBoxApiKey->setEditable(true);
     d->comboBoxApiKey->setSizePolicy(sizePolicy);
     dynamic_cast<KLineEdit *>(d->comboBoxApiKey->lineEdit())->setClearButtonShown(true);
     containerForm->addRow(i18n("API key:"), d->comboBoxApiKey);
+    connect(d->comboBoxApiKey->lineEdit(), SIGNAL(textChanged(QString)), this, SLOT(invalidateGroupList()));
+    connect(d->comboBoxApiKey->lineEdit(), SIGNAL(textChanged(QString)), this, SLOT(updateButtons()));
 
     QWidget *libraryContainer = new QWidget(container);
     QGridLayout *libraryContainerLayout = new QGridLayout(libraryContainer);
@@ -203,8 +207,6 @@ void ZoteroBrowser::setupGUI()
     d->buttonLoadBibliography = new KPushButton(KIcon("download"), i18n("Load bibliography"), container);
     containerButtonLayout->addWidget(d->buttonLoadBibliography, 0);
     connect(d->buttonLoadBibliography, SIGNAL(clicked()), this, SLOT(applyCredentials()));
-    connect(d->comboBoxNumericUserId->lineEdit(), SIGNAL(textChanged(QString)), this, SLOT(updateButtons()));
-    connect(d->comboBoxApiKey->lineEdit(), SIGNAL(textChanged(QString)), this, SLOT(updateButtons()));
 
     containerLayout->addStretch(10);
 
@@ -346,6 +348,14 @@ void ZoteroBrowser::retrieveGroupList() {
     }
 }
 
+void ZoteroBrowser::invalidateGroupList() {
+    d->comboBoxGroupList->clear();
+    d->comboBoxGroupListInitialized = false;
+    d->comboBoxGroupList->addItem(i18n("No groups available or no permissions"));
+    d->comboBoxGroupList->setEnabled(false);
+    d->radioPersonalLibrary->setChecked(true);
+}
+
 void ZoteroBrowser::gotGroupList() {
     const QMap<int, QString> groupMap = d->groups->groups();
     for (QMap<int, QString>::ConstIterator it = groupMap.constBegin(); it != groupMap.constEnd(); ++it) {
@@ -353,8 +363,7 @@ void ZoteroBrowser::gotGroupList() {
     }
     if (groupMap.isEmpty()) {
         d->radioPersonalLibrary->setChecked(true);
-        d->comboBoxGroupList->addItem(i18n("No groups available or no permissions"));
-        d->comboBoxGroupList->setEnabled(false);
+        invalidateGroupList();
     } else {
         d->comboBoxGroupListInitialized = true;
         d->radioGroupLibrary->setChecked(true);

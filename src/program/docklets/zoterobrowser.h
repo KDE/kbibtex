@@ -51,6 +51,7 @@ private slots:
     void applyCredentials();
     void radioButtonsToggled();
     void retrieveGroupList();
+    void invalidateGroupList();
     void gotGroupList();
     void getOAuthCredentials();
 };
