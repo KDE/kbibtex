@@ -361,5 +361,6 @@ void ZoteroBrowser::getOAuthCredentials()
     if (wizard.exec() && !wizard.apiKey().isEmpty() && wizard.userId() >= 0) {
         d->comboBoxApiKey->setEditText(wizard.apiKey());
         d->comboBoxNumericUserId->setEditText(QString::number(wizard.userId()));
+        d->addTextToLists();
     }
 }
