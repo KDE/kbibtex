@@ -23,6 +23,7 @@
 #include <QLayout>
 #include <QFormLayout>
 #include <QAbstractItemModel>
+#include <QRadioButton>
 
 #include <KLocale>
 #include <KComboBox>
@@ -36,6 +37,7 @@
 #include "zotero/collectionmodel.h"
 #include "zotero/collection.h"
 #include "zotero/items.h"
+#include "zotero/groups.h"
 #include "zotero/tags.h"
 #include "zotero/tagmodel.h"
 #include "zotero/api.h"
@@ -52,6 +54,7 @@ private:
 
 public:
     Zotero::Items *items;
+    Zotero::Groups *groups;
     Zotero::Tags *tags;
     Zotero::TagModel *tagModel;
     Zotero::Collection *collection;
@@ -65,12 +68,16 @@ public:
     QListView *tagBrowser;
     KComboBox *comboBoxNumericUserId;
     KComboBox *comboBoxApiKey;
+    QRadioButton *radioPersonalLibrary;
+    QRadioButton *radioGroupLibrary;
+    KComboBox *comboBoxGroupList;
+    KPushButton *buttonGetGroupList;
     KPushButton *buttonLoadBibliography;
 
     QCursor nonBusyCursor;
 
     Private(SearchResults *sr, ZoteroBrowser *parent)
-            : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), items(NULL), tags(NULL), tagModel(NULL), collection(NULL), collectionModel(NULL), api(NULL), searchResults(sr), nonBusyCursor(p->cursor()) {
+            : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), items(NULL), groups(NULL), tags(NULL), tagModel(NULL), collection(NULL), collectionModel(NULL), api(NULL), searchResults(sr), nonBusyCursor(p->cursor()) {
         /// nothing
     }
 
@@ -173,6 +180,22 @@ void ZoteroBrowser::setupGUI()
     dynamic_cast<KLineEdit *>(d->comboBoxApiKey->lineEdit())->setClearButtonShown(true);
     containerForm->addRow(i18n("API key:"), d->comboBoxApiKey);
 
+    QWidget *libraryContainer = new QWidget(container);
+    QGridLayout *libraryContainerLayout = new QGridLayout(libraryContainer);
+    libraryContainerLayout->setColumnMinimumWidth(0, 16); // TODO determine size of a radio button
+    containerForm->addRow(QString(), libraryContainer);
+    d->radioPersonalLibrary = new QRadioButton(i18n("Personal library"), libraryContainer);
+    libraryContainerLayout->addWidget(d->radioPersonalLibrary, 0, 0, 1, 3);
+    d->radioGroupLibrary = new QRadioButton(i18n("Group library"), libraryContainer);
+    libraryContainerLayout->addWidget(d->radioGroupLibrary, 1, 0, 1, 3);
+    d->comboBoxGroupList = new KComboBox(false, libraryContainer);
+    libraryContainerLayout->addWidget(d->comboBoxGroupList, 2, 1, 1, 1);
+    d->comboBoxGroupList->setSizePolicy(sizePolicy);
+    d->buttonGetGroupList = new KPushButton(KIcon("download"), QString(), libraryContainer);
+    libraryContainerLayout->addWidget(d->buttonGetGroupList, 2, 2, 1, 1);
+    connect(d->buttonGetGroupList, SIGNAL(clicked()), this, SLOT(retrieveGroupList()));
+    d->radioPersonalLibrary->setChecked(true);
+
     QBoxLayout *containerButtonLayout = new QHBoxLayout();
     containerLayout->addLayout(containerButtonLayout, 0);
     containerButtonLayout->addStretch(1);
@@ -221,7 +244,7 @@ void ZoteroBrowser::modelReset()
 void ZoteroBrowser::collectionDoubleClicked(const QModelIndex &index)
 {
     setCursor(Qt::WaitCursor);
-    setEnabled(false); ///< will be re-enabled when item retrieve got finished (slot reenableList)
+    setEnabled(false); ///< will be re-enabled when item retrieve got finished (slot reenableWidget)
 
     const QString collectionId = index.data(Zotero::CollectionModel::CollectionIdRole).toString();
     d->searchResults->clear();
@@ -231,7 +254,7 @@ void ZoteroBrowser::collectionDoubleClicked(const QModelIndex &index)
 void ZoteroBrowser::tagDoubleClicked(const QModelIndex &index)
 {
     setCursor(Qt::WaitCursor);
-    setEnabled(false); ///< will be re-enabled when item retrieve got finished (slot reenableList)
+    setEnabled(false); ///< will be re-enabled when item retrieve got finished (slot reenableWidget)
 
     const QString tag = index.data(Zotero::TagModel::TagRole).toString();
     d->searchResults->clear();
@@ -243,7 +266,7 @@ void ZoteroBrowser::showItem(QSharedPointer<Element> e)
     d->searchResults->insertElement(e);
 }
 
-void ZoteroBrowser::reenableList()
+void ZoteroBrowser::reenableWidget()
 {
     setCursor(d->nonBusyCursor);
     setEnabled(true);
@@ -257,10 +280,14 @@ void ZoteroBrowser::updateButtons()
 void ZoteroBrowser::applyCredentials()
 {
     bool ok = false;
-    const int id = d->comboBoxNumericUserId->currentText().toInt(&ok);
+    const int userId = d->comboBoxNumericUserId->currentText().toInt(&ok);
     if (ok) {
         setCursor(Qt::WaitCursor);
         setEnabled(false);
+
+        ok = false;
+        int groupId = d->comboBoxGroupList->itemData(d->comboBoxGroupList->currentIndex()).toInt(&ok);
+        if (!ok) groupId = -1;
 
         d->api->deleteLater();
         d->collection->deleteLater();
@@ -272,7 +299,8 @@ void ZoteroBrowser::applyCredentials()
         d->addTextToLists();
         d->saveState();
 
-        d->api = new Zotero::API(Zotero::API::UserRequest, id, d->comboBoxApiKey->currentText(), this);
+        const bool makeGroupRequest = d->radioGroupLibrary->isChecked() && groupId > 0;
+        d->api = new Zotero::API(makeGroupRequest ? Zotero::API::GroupRequest : Zotero::API::UserRequest, makeGroupRequest ? groupId : userId, d->comboBoxApiKey->currentText(), this);
         d->items = new Zotero::Items(d->api, this);
         d->tags = new Zotero::Tags(d->api, this);
         d->tagModel = new Zotero::TagModel(d->tags, this);
@@ -284,12 +312,47 @@ void ZoteroBrowser::applyCredentials()
         connect(d->collectionModel, SIGNAL(modelReset()), this, SLOT(modelReset()));
         connect(d->tagModel, SIGNAL(modelReset()), this, SLOT(modelReset()));
         connect(d->items, SIGNAL(foundElement(QSharedPointer<Element>)), this, SLOT(showItem(QSharedPointer<Element>)));
-        connect(d->items, SIGNAL(stoppedSearch(int)), this, SLOT(reenableList()));
-        connect(d->tags, SIGNAL(finishedLoading()), this, SLOT(reenableList()));
+        connect(d->items, SIGNAL(stoppedSearch(int)), this, SLOT(reenableWidget()));
+        connect(d->tags, SIGNAL(finishedLoading()), this, SLOT(reenableWidget()));
 
         d->tabWidget->setCurrentIndex(1);
     } else
         KMessageBox::information(this, i18n("Value '%1' is not a valid numeric identifier of a user or a group.", d->comboBoxNumericUserId->currentText()), i18n("Invalid numeric identifier"));
+}
+
+void ZoteroBrowser::retrieveGroupList() {
+    const int h = qMax(d->comboBoxGroupList->height(), d->buttonGetGroupList->height());
+    d->comboBoxGroupList->setMinimumHeight(h);
+    d->buttonGetGroupList->setMinimumHeight(h);
+
+    bool ok = false;
+    const int userId = d->comboBoxNumericUserId->currentText().toInt(&ok);
+    if (ok) {
+        setCursor(Qt::WaitCursor);
+        setEnabled(false);
+        d->comboBoxGroupList->clear();
+
+        d->api->deleteLater();
+        d->groups->deleteLater();
+
+        d->api = new Zotero::API(Zotero::API::UserRequest, userId, d->comboBoxApiKey->currentText(), this);
+        d->groups = new Zotero::Groups(d->api, this);
+
+        connect(d->groups, SIGNAL(finishedLoading()), this, SLOT(gotGroupList()));
+    }
+}
+
+void ZoteroBrowser::gotGroupList() {
+    const QMap<int, QString> groupMap = d->groups->groups();
+    for (QMap<int, QString>::ConstIterator it = groupMap.constBegin(); it != groupMap.constEnd(); ++it) {
+        d->comboBoxGroupList->addItem(it.value(), QVariant::fromValue<int>(it.key()));
+    }
+    if (groupMap.isEmpty())
+        d->radioPersonalLibrary->setChecked(true);
+    else
+        d->radioGroupLibrary->setChecked(true);
+
+    reenableWidget();
 }
 
 void ZoteroBrowser::getOAuthCredentials()

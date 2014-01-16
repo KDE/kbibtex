@@ -38,6 +38,7 @@ set(
     zotero/collection.cpp
     zotero/api.cpp
     zotero/oauthwizard.cpp
+    zotero/groups.cpp
     zotero/tags.cpp
     zotero/tagmodel.cpp
     zotero/items.cpp
@@ -69,6 +70,7 @@ set(
     onlinesearch/onlinesearchdoi.h
     zotero/collectionmodel.h
     zotero/collection.h
+    zotero/groups.h
     zotero/tags.h
     zotero/tagmodel.h
     zotero/items.h

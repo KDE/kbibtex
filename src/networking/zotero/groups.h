@@ -15,44 +15,44 @@
  *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
  ***************************************************************************/
 
-#ifndef KBIBTEX_PROGRAM_ZOTEROBROWSER_H
-#define KBIBTEX_PROGRAM_ZOTEROBROWSER_H
+#ifndef KBIBTEX_NETWORKING_ZOTERO_GROUPS_H
+#define KBIBTEX_NETWORKING_ZOTERO_GROUPS_H
 
-#include <QWidget>
-#include <QModelIndex>
+#include <QObject>
+#include <QMap>
 
-class Element;
-class SearchResults;
+#include "kbibtexnetworking_export.h"
+
+namespace Zotero
+{
+
+class API;
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
-class ZoteroBrowser : public QWidget
+class KBIBTEXNETWORKING_EXPORT Groups : public QObject
 {
     Q_OBJECT
-
 public:
-    explicit ZoteroBrowser(SearchResults *searchResults, QWidget *parent);
-    ~ZoteroBrowser();
+    Groups(API *api, QObject *parent = NULL);
+
+    bool initialized() const;
+    bool busy() const;
+
+    QMap<int, QString> groups() const;
+
+signals:
+    void finishedLoading();
 
 private:
     class Private;
     Private *const d;
 
-    void setupGUI();
-
 private slots:
-    void modelReset();
-    void collectionDoubleClicked(const QModelIndex &index);
-    void tagDoubleClicked(const QModelIndex &index);
-    void showItem(QSharedPointer<Element>);
-    void reenableWidget();
-    void updateButtons();
-    void applyCredentials();
-    void retrieveGroupList();
-    void gotGroupList();
-    void getOAuthCredentials();
+    void finishedFetchingGroups();
 };
 
+} // end of namespace Zotero
 
-#endif // KBIBTEX_PROGRAM_ZOTEROBROWSER_H
+#endif // KBIBTEX_NETWORKING_ZOTERO_GROUPS_H
