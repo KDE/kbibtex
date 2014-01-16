@@ -127,6 +127,7 @@ public:
         delete qOAuth;
     }
 
+    // TODO separate GUI code from functional code
     KUrl oAuthAuthorizationUrl() {
         /// Send a request for an unauthorized token
         QOAuth::ParamMap params;
@@ -192,6 +193,7 @@ public:
         p->setWindowTitle(i18n("Zotero OAuth Key Exchange"));
     }
 
+    // TODO separate GUI code from functional code
     void setOAuthVerifier(const QString &verifier) {
         QOAuth::ParamMap oAuthVerifierParams;
         oAuthVerifierParams.insert("oauth_verifier", verifier.toUtf8());
