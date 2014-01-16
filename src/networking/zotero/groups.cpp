@@ -37,7 +37,7 @@ public:
     API *api;
 
     Private(API *a, Zotero::Groups *parent)
-        : p(parent), api(a) {
+            : p(parent), api(a) {
         initialized = false;
         busy = false;
     }
@@ -58,7 +58,7 @@ public:
 };
 
 Groups::Groups(API *api, QObject *parent)
-    : QObject(parent), d(new Zotero::Groups::Private(api, this))
+        : QObject(parent), d(new Zotero::Groups::Private(api, this))
 {
     KUrl url = api->baseUrl();
     Q_ASSERT_X(url.path().contains(QLatin1String("users/")), "Groups::Groups(API *api, QObject *parent)", "Provided base URL does not contain 'users/' as expected");
