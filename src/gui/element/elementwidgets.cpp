@@ -33,8 +33,6 @@
 #include <KLocale>
 #include <KLineEdit>
 #include <KComboBox>
-#include <KSharedConfig>
-#include <KConfigGroup>
 #include <KDebug>
 #include <KMimeType>
 #include <KRun>
@@ -850,12 +848,6 @@ void OtherFieldsWidget::actionOpen()
 
 void OtherFieldsWidget::createGUI()
 {
-    /// retrieve information from settings if labels should be
-    /// above widgets or on the left side
-    KSharedConfigPtr config(KSharedConfig::openConfig(QLatin1String("kbibtexrc")));
-    const QString configGroupName(QLatin1String("User Interface"));
-    KConfigGroup configGroup(config, configGroupName);
-
     QGridLayout *layout = new QGridLayout(this);
     /// set row and column stretches based on chosen layout
     layout->setColumnStretch(0, 0);
