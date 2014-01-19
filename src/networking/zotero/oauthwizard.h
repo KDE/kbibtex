@@ -18,6 +18,8 @@
 #ifndef KBIBTEX_NETWORKING_ZOTERO_OAUTHWIZARD_H
 #define KBIBTEX_NETWORKING_ZOTERO_OAUTHWIZARD_H
 
+#ifdef HAVE_QTOAUTH
+
 #include <QWizard>
 
 #include "kbibtexnetworking_export.h"
@@ -56,5 +58,7 @@ private:
 };
 
 } // end of namespace Zotero
+
+#endif // HAVE_QTOAUTH
 
 #endif // KBIBTEX_NETWORKING_ZOTERO_OAUTHWIZARD_H

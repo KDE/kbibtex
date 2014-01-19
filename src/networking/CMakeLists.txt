@@ -37,7 +37,6 @@ set(
     zotero/collectionmodel.cpp
     zotero/collection.cpp
     zotero/api.cpp
-    zotero/oauthwizard.cpp
     zotero/groups.cpp
     zotero/tags.cpp
     zotero/tagmodel.cpp
@@ -45,6 +44,18 @@ set(
     findpdf.cpp
     internalnetworkaccessmanager.cpp
 )
+if(
+    QTOAUTH_FOUND
+)
+    set(
+        networking_LIB_SRCS
+        ${networking_LIB_SRCS}
+        zotero/oauthwizard.cpp
+    )
+endif(
+    QTOAUTH_FOUND
+)
+
 
 set(
     kbibtexnetworking_HDRS
@@ -75,10 +86,20 @@ set(
     zotero/tagmodel.h
     zotero/items.h
     zotero/api.h
-    zotero/oauthwizard.h
     kbibtexnetworking_export.h
     findpdf.h
     internalnetworkaccessmanager.h
+)
+if(
+    QTOAUTH_FOUND
+)
+    set(
+        kbibtexnetworking_HDRS
+        ${kbibtexnetworking_HDRS}
+        zotero/oauthwizard.h
+    )
+endif(
+    QTOAUTH_FOUND
 )
 
 add_definitions(

@@ -53,7 +53,9 @@ private slots:
     void retrieveGroupList();
     void invalidateGroupList();
     void gotGroupList();
+#ifdef HAVE_QTOAUTH
     void getOAuthCredentials();
+#endif // HAVE_QTOAUTH
 };
 
 

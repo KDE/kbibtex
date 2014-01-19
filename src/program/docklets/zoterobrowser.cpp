@@ -41,7 +41,9 @@
 #include "zotero/tags.h"
 #include "zotero/tagmodel.h"
 #include "zotero/api.h"
+#ifdef HAVE_QTOAUTH
 #include "zotero/oauthwizard.h"
+#endif // HAVE_QTOAUTH
 
 class ZoteroBrowser::Private
 {
@@ -213,6 +215,7 @@ void ZoteroBrowser::setupGUI()
 
     containerLayout->addStretch(10);
 
+#ifdef HAVE_QTOAUTH
     containerButtonLayout = new QHBoxLayout();
     containerLayout->addLayout(containerButtonLayout, 0);
     containerButtonLayout->setMargin(0);
@@ -220,6 +223,7 @@ void ZoteroBrowser::setupGUI()
     containerButtonLayout->addWidget(buttonGetOAuthCredentials, 0);
     connect(buttonGetOAuthCredentials, SIGNAL(clicked()), this, SLOT(getOAuthCredentials()));
     containerButtonLayout->addStretch(1);
+#endif // HAVE_QTOAUTH
 
     /// Collection browser
     d->collectionBrowser = new QTreeView(d->tabWidget);
@@ -377,6 +381,7 @@ void ZoteroBrowser::gotGroupList() {
     reenableWidget();
 }
 
+#ifdef HAVE_QTOAUTH
 void ZoteroBrowser::getOAuthCredentials()
 {
     Zotero::OAuthWizard wizard(this);
@@ -386,3 +391,4 @@ void ZoteroBrowser::getOAuthCredentials()
         d->addTextToLists();
     }
 }
+#endif // HAVE_QTOAUTH

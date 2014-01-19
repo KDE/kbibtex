@@ -15,6 +15,8 @@
  *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
  ***************************************************************************/
 
+#ifdef HAVE_QTOAUTH
+
 #include "oauthwizard.h"
 
 #include <QLabel>
@@ -290,3 +292,5 @@ void OAuthWizard::openAuthorizationUrl()
 {
     KRun::runUrl(KUrl(d->lineEditAuthorizationUrl->text()), QLatin1String("text/html"), this);
 }
+
+#endif // HAVE_QTOAUTH

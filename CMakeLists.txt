@@ -140,14 +140,23 @@ find_package(
 )
 find_package(
     QtOAuth
-    REQUIRED
 )
-if(NOT QTOAUTH_FOUND)
+if(
+    QTOAUTH_FOUND
+)
+    add_definitions(
+        -DHAVE_QTOAUTH
+    )
+else(
+    QTOAUTH_FOUND
+)
     message(
         STATUS
-        "No QtOAuth installed, disabling support for Zotero"
+        "No QtOAuth installed, disabling Zotero OAuth wizard"
     )
-endif()
+endif(
+    QTOAUTH_FOUND
+)
 
 
 add_subdirectory(
