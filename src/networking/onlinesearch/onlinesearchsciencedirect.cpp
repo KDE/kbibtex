@@ -54,6 +54,19 @@ public:
         while ((p = quotationMarks.indexIn(code, p + 2)) >= 0) {
             code = code.left(p - 1) + quotationMarks.cap(1) + '\\' + '"' + quotationMarks.cap(2) + code.mid(p + quotationMarks.cap(0).length());
         }
+        /// Remove "<!-- Tag Not Handled -->" and other XML tags from keywords
+        int i1 = -1;
+        while ((i1 = code.indexOf(QLatin1String("keywords = "), i1 + 1)) > 0) {
+            const int i2 = code.indexOf(QLatin1String("\n"), i1);
+            int t1 = -1;
+            while ((t1 = code.indexOf(QLatin1Char('<'), i1 + 7)) > 0) {
+                const int t2 = code.indexOf(QLatin1Char('>'), t1);
+                if (t2 > 0 && t1 < i2 && t2 < i2)
+                    code = code.left(t1) + code.mid(t2 + 1);
+                else
+                    break;
+            }
+        }
     }
 };
 
