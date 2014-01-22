@@ -130,7 +130,7 @@ public:
     bool apply(QSharedPointer<Element> element) const;
     bool reset(QSharedPointer<const Element> element);
     void setReadOnly(bool isReadOnly);
-    void showReqOptWidgets(bool, const QString &) {};
+    void showReqOptWidgets(bool, const QString &) {}
     void setApplyElementInterface(ElementEditor::ApplyElementInterface *applyElement) {
         m_applyElement = applyElement;
     }
@@ -171,7 +171,7 @@ public:
     bool apply(QSharedPointer<Element> element) const;
     bool reset(QSharedPointer<const Element> element);
     void setReadOnly(bool isReadOnly);
-    void showReqOptWidgets(bool, const QString &) {};
+    void showReqOptWidgets(bool, const QString &) {}
     void setApplyElementInterface(ElementEditor::ApplyElementInterface *applyElement) {
         m_applyElement = applyElement;
     }
@@ -214,7 +214,7 @@ public:
     bool apply(QSharedPointer<Element> element) const;
     bool reset(QSharedPointer<const Element> element);
     void setReadOnly(bool isReadOnly);
-    void showReqOptWidgets(bool, const QString &) {};
+    void showReqOptWidgets(bool, const QString &) {}
     QString label();
     KIcon icon();
 
@@ -243,7 +243,7 @@ public:
     bool apply(QSharedPointer<Element> element) const;
     bool reset(QSharedPointer<const Element> element);
     void setReadOnly(bool isReadOnly);
-    void showReqOptWidgets(bool, const QString &) {};
+    void showReqOptWidgets(bool, const QString &) {}
     QString label();
     KIcon icon();
 
@@ -263,7 +263,7 @@ public:
     bool apply(QSharedPointer<Element> element) const;
     bool reset(QSharedPointer<const Element> element);
     void setReadOnly(bool isReadOnly);
-    void showReqOptWidgets(bool, const QString &) {};
+    void showReqOptWidgets(bool, const QString &) {}
     QString label();
     KIcon icon();
 
@@ -288,7 +288,7 @@ public:
     bool apply(QSharedPointer<Element> element) const;
     bool reset(QSharedPointer<const Element> element);
     void setReadOnly(bool isReadOnly);
-    void showReqOptWidgets(bool, const QString &) {};
+    void showReqOptWidgets(bool, const QString &) {}
     QString label();
     KIcon icon();
 
