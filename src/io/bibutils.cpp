@@ -35,14 +35,14 @@ public:
     Private(BibUtils *parent)
             : p(parent), format(BibUtils::MODS)
     {
-        // TODO
+        /// nothing
     }
 };
 
 BibUtils::BibUtils()
         : d(new BibUtils::Private(this))
 {
-    // TODO
+    /// nothing
 }
 
 void BibUtils::setFormat(const BibUtils::Format &format) {
@@ -163,6 +163,8 @@ bool BibUtils::convert(QIODevice &source, const BibUtils::Format &sourceFormat, 
             if (!stdOut.isEmpty()) {
                 /// Write transformed data to destination device
                 const int amountWritten = destination.write(stdOut);
+                /// Check that the same amount of bytes is written
+                /// as recevied from the BibUtils program
                 result = amountWritten == stdOut.size();
             } else
                 result = false;
