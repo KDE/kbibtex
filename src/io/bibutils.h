@@ -28,7 +28,7 @@
 class KBIBTEXIO_EXPORT BibUtils
 {
 public:
-    enum Format { MODS = 0, BibTeX = 1, BibLaTeX = 2, ISI = 3, RIS = 4, EndNote = 5 /* , ADS=6, WordBib=7, Copac=8, Med=9 */};
+    enum Format { MODS = 0, BibTeX = 1, BibLaTeX = 2, ISI = 5, RIS = 6, EndNote = 10, EndNoteXML = 11, ADS = 15, WordBib = 16, Copac = 17, Med = 18 };
 
     BibUtils::Format format() const;
     void setFormat(const BibUtils::Format &format);

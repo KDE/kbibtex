@@ -98,6 +98,11 @@ bool BibUtils::convert(QIODevice &source, const BibUtils::Format &sourceFormat, 
     case ISI: bibUtilsProgram = QLatin1String("isi"); break;
     case RIS: bibUtilsProgram = QLatin1String("ris"); break;
     case EndNote: bibUtilsProgram = QLatin1String("end"); break;
+    case EndNoteXML: bibUtilsProgram = QLatin1String("endx"); break;
+        /// case ADS not supported by BibUtils
+    case WordBib: bibUtilsProgram = QLatin1String("wordbib"); break;
+    case Copac: bibUtilsProgram = QLatin1String("copac"); break;
+    case Med: bibUtilsProgram = QLatin1String("med"); break;
     default:
         kWarning() << "Unsupported BibUtils input format:" << sourceFormat;
         return false;
@@ -109,10 +114,15 @@ bool BibUtils::convert(QIODevice &source, const BibUtils::Format &sourceFormat, 
     switch (destinationFormat) {
     case MODS: bibUtilsProgram.append(QLatin1String("xml")); break;
     case BibTeX: bibUtilsProgram.append(QLatin1String("bib")); break;
-    case BibLaTeX: bibUtilsProgram.append(QLatin1String("biblatex")); break;
+        /// case BibLaTeX not supported by BibUtils
     case ISI: bibUtilsProgram.append(QLatin1String("isi")); break;
-    case RIS: bibUtilsProgram.append(QLatin1String("end")); break;
+    case RIS: bibUtilsProgram.append(QLatin1String("ris")); break;
     case EndNote: bibUtilsProgram.append(QLatin1String("end")); break;
+        /// case EndNoteXML not supported by BibUtils
+    case ADS: bibUtilsProgram.append(QLatin1String("ads")); break;
+    case WordBib: bibUtilsProgram.append(QLatin1String("wordbib")); break;
+        /// case Copac not supported by BibUtils
+        /// case Med not supported by BibUtils
     default:
         kWarning() << "Unsupported BibUtils output format:" << destinationFormat;
         return false;
