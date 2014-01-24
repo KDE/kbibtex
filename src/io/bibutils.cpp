@@ -149,7 +149,6 @@ bool BibUtils::convert(QIODevice &source, const BibUtils::Format &sourceFormat, 
     bibUtilsProcess.start(bibUtilsProgram, arguments);
 
     bool result = bibUtilsProcess.waitForStarted();
-    kDebug() << "bibUtilsProcess.waitForStarted" << result;
     if (result) {
         /// Write source data to process's stdin
         bibUtilsProcess.write(source.readAll());
@@ -161,7 +160,6 @@ bool BibUtils::convert(QIODevice &source, const BibUtils::Format &sourceFormat, 
         if (result && bibUtilsProcess.exitStatus() == QProcess::NormalExit) {
             /// Read process's output, i.e. the transformed data
             const QByteArray stdOut = bibUtilsProcess.readAllStandardOutput();
-            kDebug() << "stdOut.size" << stdOut.size();
             if (!stdOut.isEmpty()) {
                 /// Write transformed data to destination device
                 const int amountWritten = destination.write(stdOut);
@@ -179,5 +177,6 @@ bool BibUtils::convert(QIODevice &source, const BibUtils::Format &sourceFormat, 
     /// Close both source and destination device
     source.close();
     destination.close();
+
     return result;
 }
