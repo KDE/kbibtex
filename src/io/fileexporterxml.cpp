@@ -22,6 +22,8 @@
 #include <QRegExp>
 #include <QStringList>
 
+#include <KDebug>
+
 #include "file.h"
 #include "entry.h"
 #include "macro.h"
@@ -46,6 +48,11 @@ FileExporterXML::~FileExporterXML()
 
 bool FileExporterXML::save(QIODevice *iodevice, const File *bibtexfile, QStringList * /*errorLog*/)
 {
+    if (!iodevice->isWritable() && !iodevice->open(QIODevice::WriteOnly)) {
+        kDebug() << "Output device not writable";
+        return false;
+    }
+
     bool result = true;
     m_cancelFlag = false;
     QTextStream stream(iodevice);
@@ -61,18 +68,28 @@ bool FileExporterXML::save(QIODevice *iodevice, const File *bibtexfile, QStringL
 
     stream << "</bibliography>" << endl;
 
+    iodevice->close();
     return result && !m_cancelFlag;
 }
 
 bool FileExporterXML::save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File * /*bibtexfile*/, QStringList * /*errorLog*/)
 {
+    if (!iodevice->isWritable() && !iodevice->open(QIODevice::WriteOnly)) {
+        kDebug() << "Output device not writable";
+        return false;
+    }
+
     QTextStream stream(iodevice);
     stream.setCodec("UTF-8");
 
     stream << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << endl;
     stream << "<!-- XML document written by KBibTeXIO as part of KBibTeX/KDE4 -->" << endl;
     stream << "<!-- http://home.gna.org/kbibtex/ -->" << endl;
-    return write(stream, element.data());
+
+    const bool result = write(stream, element.data());
+
+    iodevice->close();
+    return result;
 }
 
 void FileExporterXML::cancel()

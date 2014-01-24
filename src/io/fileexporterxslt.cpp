@@ -52,6 +52,11 @@ FileExporterXSLT::~FileExporterXSLT()
 
 bool FileExporterXSLT::save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog)
 {
+    if (!iodevice->isWritable() && !iodevice->open(QIODevice::WriteOnly)) {
+        kDebug() << "Output device not writable";
+        return false;
+    }
+
     m_cancelFlag = false;
     XSLTransform *xsltransformer = XSLTransform::createXSLTransform(m_xsltFilename);
     if (xsltransformer != NULL) {
@@ -73,16 +78,24 @@ bool FileExporterXSLT::save(QIODevice *iodevice, const File *bibtexfile, QString
             htmlTS << html << endl;
 
             delete xsltransformer;
+            iodevice->close();
             return !m_cancelFlag;
         }
 
         delete xsltransformer;
     }
+
+    iodevice->close();
     return false;
 }
 
 bool FileExporterXSLT::save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog)
 {
+    if (!iodevice->isWritable() && !iodevice->open(QIODevice::WriteOnly)) {
+        kDebug() << "Output device not writable";
+        return false;
+    }
+
     m_cancelFlag = false;
     XSLTransform *xsltransformer = XSLTransform::createXSLTransform(m_xsltFilename);
     if (xsltransformer != NULL) {
@@ -105,11 +118,14 @@ bool FileExporterXSLT::save(QIODevice *iodevice, const QSharedPointer<const Elem
             htmlTS << html << endl;
 
             delete xsltransformer;
+            iodevice->close();
             return !m_cancelFlag;
         }
 
         delete xsltransformer;
     }
+
+    iodevice->close();
     return false;
 }
 

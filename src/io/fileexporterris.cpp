@@ -36,6 +36,11 @@ FileExporterRIS::~FileExporterRIS()
 
 bool FileExporterRIS::save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File * /*bibtexfile*/, QStringList * /*errorLog*/)
 {
+    if (!iodevice->isWritable() && !iodevice->open(QIODevice::WriteOnly)) {
+        kDebug() << "Output device not writable";
+        return false;
+    }
+
     bool result = false;
     QTextStream stream(iodevice);
 
@@ -43,11 +48,17 @@ bool FileExporterRIS::save(QIODevice *iodevice, const QSharedPointer<const Eleme
     if (!entry.isNull())
         result = writeEntry(stream, entry.data());
 
+    iodevice->close();
     return result && !m_cancelFlag;
 }
 
 bool FileExporterRIS::save(QIODevice *iodevice, const File *bibtexfile, QStringList * /*errorLog*/)
 {
+    if (!iodevice->isWritable() && !iodevice->open(QIODevice::WriteOnly)) {
+        kDebug() << "Output device not writable";
+        return false;
+    }
+
     bool result = true;
     m_cancelFlag = false;
     QTextStream stream(iodevice);
@@ -62,6 +73,7 @@ bool FileExporterRIS::save(QIODevice *iodevice, const File *bibtexfile, QStringL
         }
     }
 
+    iodevice->close();
     return result && !m_cancelFlag;
 }
 

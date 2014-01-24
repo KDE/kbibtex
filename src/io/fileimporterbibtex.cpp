@@ -59,6 +59,11 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
 {
     m_cancelFlag = false;
 
+    if (!iodevice->isReadable() && !iodevice->open(QIODevice::ReadOnly)) {
+        kDebug() << "Input device not readable";
+        return NULL;
+    }
+
     File *result = new File();
     /// Used to determine if file prefers quotation marks over
     /// curly brackets or the other way around
@@ -143,6 +148,7 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
         result->setProperty(File::QuoteComment, (int)Preferences::qcPercentSign);
     // TODO gather more statistics for keyword casing etc.
 
+    iodevice->close();
     return result;
 }
 
