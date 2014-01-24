@@ -66,6 +66,11 @@ void FileExporterPDF::reloadConfig()
 
 bool FileExporterPDF::save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog)
 {
+    if (!iodevice->isWritable() && !iodevice->open(QIODevice::WriteOnly)) {
+        kDebug() << "Output device not writable";
+        return false;
+    }
+
     bool result = false;
     m_embeddedFileList.clear();
     if (m_fileEmbedding & EmbedBibTeXFile)
@@ -88,11 +93,17 @@ bool FileExporterPDF::save(QIODevice *iodevice, const File *bibtexfile, QStringL
     if (errorLog != NULL)
         kDebug() << "errorLog" << errorLog->join(";");
 
+    iodevice->close();
     return result;
 }
 
 bool FileExporterPDF::save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog)
 {
+    if (!iodevice->isWritable() && !iodevice->open(QIODevice::WriteOnly)) {
+        kDebug() << "Output device not writable";
+        return false;
+    }
+
     bool result = false;
     m_embeddedFileList.clear();
     //if (m_fileEmbedding & EmbedReferences)
@@ -110,6 +121,7 @@ bool FileExporterPDF::save(QIODevice *iodevice, const QSharedPointer<const Eleme
     if (result)
         result = generatePDF(iodevice, errorLog);
 
+    iodevice->close();
     return result;
 }
 

@@ -254,6 +254,11 @@ FileImporterRIS::~FileImporterRIS()
 
 File *FileImporterRIS::load(QIODevice *iodevice)
 {
+    if (!iodevice->isReadable() && !iodevice->open(QIODevice::ReadOnly)) {
+        kDebug() << "Input device not readable";
+        return NULL;
+    }
+
     d->cancelFlag = false;
     d->referenceCounter = 0;
     QTextStream textStream(iodevice);
@@ -274,6 +279,7 @@ File *FileImporterRIS::load(QIODevice *iodevice)
         result = NULL;
     }
 
+    iodevice->close();
     return result;
 }
 

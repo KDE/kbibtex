@@ -40,6 +40,11 @@ FileImporterPDF::~FileImporterPDF()
 
 File *FileImporterPDF::load(QIODevice *iodevice)
 {
+    if (!iodevice->isReadable() && !iodevice->open(QIODevice::ReadOnly)) {
+        kDebug() << "Input device not readable";
+        return NULL;
+    }
+
     m_cancelFlag = false;
     File *result = NULL;
     QByteArray buffer = iodevice->readAll();
@@ -47,6 +52,7 @@ File *FileImporterPDF::load(QIODevice *iodevice)
     Poppler::Document *doc = Poppler::Document::loadFromData(buffer);
     if (doc == NULL) {
         kWarning() << "Could not load PDF document";
+        iodevice->close();
         return NULL;
     }
 
@@ -71,6 +77,7 @@ File *FileImporterPDF::load(QIODevice *iodevice)
     }
 
     delete doc;
+    iodevice->close();
     return result;
 }
 

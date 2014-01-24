@@ -51,6 +51,11 @@ void FileExporterBibTeXOutput::reloadConfig()
 
 bool FileExporterBibTeXOutput::save(QIODevice *ioDevice, const File *bibtexfile, QStringList *errorLog)
 {
+    if (!ioDevice->isWritable() && !ioDevice->open(QIODevice::WriteOnly)) {
+        kDebug() << "Output device not writable";
+        return false;
+    }
+
     bool result = false;
 
     QBuffer buffer(this);
@@ -68,11 +73,17 @@ bool FileExporterBibTeXOutput::save(QIODevice *ioDevice, const File *bibtexfile,
     if (result)
         result = writeFileToIODevice(m_fileStem + (m_outputType == BibTeXLogFile ? KBibTeX::extensionBLG : KBibTeX::extensionBBL), ioDevice, errorLog);
 
+    ioDevice->close();
     return result;
 }
 
 bool FileExporterBibTeXOutput::save(QIODevice *ioDevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog)
 {
+    if (!ioDevice->isWritable() && !ioDevice->open(QIODevice::WriteOnly)) {
+        kDebug() << "Output device not writable";
+        return false;
+    }
+
     bool result = false;
 
     QBuffer buffer(this);
@@ -90,6 +101,7 @@ bool FileExporterBibTeXOutput::save(QIODevice *ioDevice, const QSharedPointer<co
     if (result)
         result = writeFileToIODevice(m_fileStem + (m_outputType == BibTeXLogFile ? KBibTeX::extensionBLG : KBibTeX::extensionBBL), ioDevice, errorLog);
 
+    ioDevice->close();
     return result;
 }
 

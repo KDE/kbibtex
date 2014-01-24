@@ -321,6 +321,11 @@ void FileExporterBibTeX::setEncoding(const QString &encoding)
 
 bool FileExporterBibTeX::save(QIODevice *iodevice, const File *bibtexfile, QStringList * /*errorLog*/)
 {
+    if (!iodevice->isWritable() && !iodevice->open(QIODevice::WriteOnly)) {
+        kDebug() << "Output device not writable";
+        return false;
+    }
+
     bool result = true;
     int totalElements = (int) bibtexfile->count();
     int currentPos = 0;
@@ -405,11 +410,17 @@ bool FileExporterBibTeX::save(QIODevice *iodevice, const File *bibtexfile, QStri
         emit progress(++currentPos, totalElements);
     }
 
+    iodevice->close();
     return result && !d->cancelFlag;
 }
 
 bool FileExporterBibTeX::save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList * /*errorLog*/)
 {
+    if (!iodevice->isWritable() && !iodevice->open(QIODevice::WriteOnly)) {
+        kDebug() << "Output device not writable";
+        return false;
+    }
+
     bool result = false;
 
     d->loadState();
@@ -438,6 +449,7 @@ bool FileExporterBibTeX::save(QIODevice *iodevice, const QSharedPointer<const El
         }
     }
 
+    iodevice->close();
     return result && !d->cancelFlag;
 }
 
