@@ -55,7 +55,9 @@
 #include "fileimporterbibtex.h"
 #include "fileexporterbibtex.h"
 #include "fileimporterris.h"
+#include "fileimporterbibutils.h"
 #include "fileexporterris.h"
+#include "fileexporterbibutils.h"
 #include "fileimporterpdf.h"
 #include "fileexporterps.h"
 #include "fileexporterpdf.h"
@@ -130,6 +132,10 @@ public:
             return new FileImporterPDF();
         } else if (ending == "ris") {
             return new FileImporterRIS();
+        } else if (BibUtils::available() && ending == "isi") {
+            FileImporterBibUtils *fileImporterBibUtils = new FileImporterBibUtils();
+            fileImporterBibUtils->setFormat(BibUtils::ISI);
+            return fileImporterBibUtils;
         } else {
             return new FileImporterBibTeX(false);
         }
@@ -150,6 +156,10 @@ public:
             return new FileExporterPDF();
         } else if (ending == "ps") {
             return new FileExporterPS();
+        } else if (BibUtils::available() && ending == "isi") {
+            FileExporterBibUtils *fileExporterBibUtils = new FileExporterBibUtils();
+            fileExporterBibUtils->setFormat(BibUtils::ISI);
+            return fileExporterBibUtils;
         } else if (ending == "rtf") {
             return new FileExporterRTF();
         } else if (ending == "html" || ending == "htm") {
@@ -275,6 +285,8 @@ public:
     KUrl getSaveFilename(bool mustBeImportable = true) {
         QString startDir = p->url().isValid() ? p->url().path() : QLatin1String("kfiledialog:///opensave");
         QString supportedMimeTypes = QLatin1String("text/x-bibtex text/x-bibtex-compiled application/xml text/x-research-info-systems");
+        if (BibUtils::available())
+            supportedMimeTypes += QLatin1String(" application/x-isi-export-format application/x-endnote-refer");
         if (!mustBeImportable && !KStandardDirs::findExe(QLatin1String("pdflatex")).isEmpty())
             supportedMimeTypes += QLatin1String(" application/pdf");
         if (!mustBeImportable && !KStandardDirs::findExe(QLatin1String("dvips")).isEmpty())

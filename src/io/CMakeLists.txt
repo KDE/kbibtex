@@ -10,6 +10,7 @@ set(
     encoderxml.cpp
     fileexporterbibtex2html.cpp
     fileexporterbibtex.cpp
+    fileexporterbibutils.cpp
     fileexporterbibtexoutput.cpp
     fileexporter.cpp
     fileexporterpdf.cpp
@@ -20,11 +21,13 @@ set(
     fileexporterxml.cpp
     fileexporterxslt.cpp
     fileimporterbibtex.cpp
+    fileimporterbibutils.cpp
     fileimporter.cpp
     fileimporterpdf.cpp
     fileimporterris.cpp
     fileinfo.cpp
     iconvlatex.cpp
+    bibutils.cpp
     xsltransform.cpp
 )
 
@@ -38,6 +41,7 @@ set(
     encoderxml.h
     fileexporterbibtex2html.h
     fileexporterbibtex.h
+    fileexporterbibutils.h
     fileexporterbibtexoutput.h
     fileexporter.h
     fileexporterpdf.h
@@ -48,6 +52,7 @@ set(
     fileexporterxml.h
     fileexporterxslt.h
     fileimporterbibtex.h
+    fileimporterbibutils.h
     fileimporter.h
     fileimporterpdf.h
     fileimporterris.h
@@ -55,6 +60,7 @@ set(
     iconvlatex.h
     iocommon.h
     kbibtexio_export.h
+    bibutils.h
     xsltransform.h
 )
 

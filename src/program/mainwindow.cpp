@@ -51,6 +51,7 @@
 #include "filesettings.h"
 #include "xsltransform.h"
 #include "bibliographyservice.h"
+#include "bibutils.h"
 
 class KBibTeXMainWindow::KBibTeXMainWindowPrivate
 {
@@ -307,8 +308,11 @@ void KBibTeXMainWindow::openDocumentDialog()
         if (url.isValid()) startDir = url.path();
     }
 
-    // TODO application/x-research-info-systems application/x-endnote-refer
-    KUrl url = KFileDialog::getOpenUrl(startDir, QLatin1String("text/x-bibtex application/x-research-info-systems application/xml all/all"), this);
+    QString supportedMimeTypes = QLatin1String("text/x-bibtex application/x-research-info-systems application/xml");
+    if (BibUtils::available())
+        supportedMimeTypes += QLatin1String(" application/x-isi-export-format application/x-endnote-refer");
+    supportedMimeTypes += QLatin1String(" all/all");
+    KUrl url = KFileDialog::getOpenUrl(startDir, supportedMimeTypes, this);
     if (!url.isEmpty()) {
         openDocument(url);
     }
