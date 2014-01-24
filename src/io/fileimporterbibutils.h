@@ -22,7 +22,7 @@
 #include "bibutils.h"
 
 /**
- * @author Thomas Fischer
+ * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
 class KBIBTEXIO_EXPORT FileImporterBibUtils : public FileImporter, public BibUtils
 {

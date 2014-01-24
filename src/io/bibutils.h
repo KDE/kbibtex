@@ -23,7 +23,14 @@
 #include "kbibtexio_export.h"
 
 /**
- * @author Thomas Fischer
+ * This class encapsulates calling the various binary programs of the BibUtils program set.
+ * BibUtils is available at http://sourceforge.net/projects/bibutils/
+ *
+ * This class is inherited by @see FileImporterBibUtils and @see FileExporterBibUtils,
+ * which make use of its protected functions.
+ * Using this class directly should only happen to call its public static functions.
+ *
+ * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
 class KBIBTEXIO_EXPORT BibUtils
 {
@@ -33,6 +40,13 @@ public:
     BibUtils::Format format() const;
     void setFormat(const BibUtils::Format &format);
 
+    /**
+     * Test if BibUtils is installed. This test checks if a number of known
+     * BibUtils binaries are available (i.e. found in PATH). If any binary
+     * is missing, it is assumed that BibUtils is not available. The test is
+     * performed only once and the result cached for future calls to this function.
+     * @return true if BibUtils is correctly installed, false otherwise
+     */
     static bool available();
 
 protected:
