@@ -56,13 +56,15 @@ BibUtils::Format BibUtils::format() const {
 bool BibUtils::available() {
     enum State {untested, avail, unavail};
     static State state = untested;
+    /// Perform test only once, later rely on statically stored result
     if (state == untested) {
+        /// Test a number of known BibUtils programs
         static const QStringList programs = QStringList() << QLatin1String("bib2xml") << QLatin1String("isi2xml") << QLatin1String("ris2xml") << QLatin1String("end2xml");
         state = avail;
         foreach(const QString &program, programs) {
             const QString fullPath = KStandardDirs::findExe(program);
             if (fullPath.isEmpty()) {
-                state = unavail;
+                state = unavail; ///< missing a single program is reason to assume that BibUtils is not correctly installed
                 break;
             }
         }
@@ -71,9 +73,13 @@ bool BibUtils::available() {
 }
 
 bool BibUtils::convert(QIODevice &source, const BibUtils::Format &sourceFormat, QIODevice &destination, const BibUtils::Format &destinationFormat) const {
-    QString bibUtilsProgram;
-
+    /// To proceed, either the source format or the destination format
+    /// has to be MODS, otherwise ...
     if (sourceFormat != MODS && destinationFormat != MODS) {
+        /// Add indirection: convert source format to MODS,
+        /// then convert MODS data to destination format
+
+        /// Intermediate buffer to hold MODS data
         QBuffer buffer;
         bool result = convert(source, sourceFormat, buffer, BibUtils::MODS);
         if (result)
@@ -81,8 +87,10 @@ bool BibUtils::convert(QIODevice &source, const BibUtils::Format &sourceFormat, 
         return result;
     }
 
+    QString bibUtilsProgram;
     QString utf8Argument = QLatin1String("-un");
 
+    /// Determine part of BibUtils program name that represents source format
     switch (sourceFormat) {
     case MODS: bibUtilsProgram = QLatin1String("xml"); utf8Argument = QLatin1String("-nb"); break;
     case BibTeX: bibUtilsProgram = QLatin1String("bib"); break;
@@ -97,6 +105,7 @@ bool BibUtils::convert(QIODevice &source, const BibUtils::Format &sourceFormat, 
 
     bibUtilsProgram.append(QLatin1String("2"));
 
+    /// Determine part of BibUtils program name that represents destination format
     switch (destinationFormat) {
     case MODS: bibUtilsProgram.append(QLatin1String("xml")); break;
     case BibTeX: bibUtilsProgram.append(QLatin1String("bib")); break;
@@ -109,17 +118,16 @@ bool BibUtils::convert(QIODevice &source, const BibUtils::Format &sourceFormat, 
         return false;
     }
 
+    /// Test if required BibUtils program is available
     bibUtilsProgram = KStandardDirs::findExe(bibUtilsProgram);
     kDebug() << "bibutilsProgram" << bibUtilsProgram;
     if (bibUtilsProgram.isEmpty())
         return false;
 
-    kDebug() << "source.isOpen" << source.isOpen();
-    kDebug() << "source.isReadable" << source.isReadable();
-    kDebug() << "destination.isOpen" << destination.isOpen();
-    kDebug() << "destination.isWritable" << destination.isWritable();
+    /// Test if source device is readable
     if (!source.isReadable() && !source.open(QIODevice::ReadOnly))
         return false;
+    /// Test if destination device is writable
     if (!destination.isWritable() && !destination.open(QIODevice::WriteOnly)) {
         source.close();
         return false;
@@ -127,24 +135,25 @@ bool BibUtils::convert(QIODevice &source, const BibUtils::Format &sourceFormat, 
 
     QProcess bibUtilsProcess;
     const QStringList arguments = QStringList() << QLatin1String("-i") << QLatin1String("utf8") << utf8Argument;
-    kDebug() << "Running" << bibUtilsProgram << arguments.join(QLatin1String(" "));
+    /// Start BibUtils program/process
     bibUtilsProcess.start(bibUtilsProgram, arguments);
 
     bool result = bibUtilsProcess.waitForStarted();
     kDebug() << "bibUtilsProcess.waitForStarted" << result;
     if (result) {
+        /// Write source data to process's stdin
         bibUtilsProcess.write(source.readAll());
+        /// Close process's stdin start transformation
         bibUtilsProcess.closeWriteChannel();
         result = bibUtilsProcess.waitForFinished();
-        kDebug() << "bibUtilsProcess.waitForFinished" << result;
-        const QString errorText = QString(bibUtilsProcess.readAllStandardError());
-        kDebug() << "errorText" << errorText.left(256);
+
+        /// If process run without problems ...
         if (result && bibUtilsProcess.exitStatus() == QProcess::NormalExit) {
+            /// Read process's output, i.e. the transformed data
             const QByteArray stdOut = bibUtilsProcess.readAllStandardOutput();
             kDebug() << "stdOut.size" << stdOut.size();
             if (!stdOut.isEmpty()) {
-                const QString stdOutText = QString(stdOut);
-                kDebug() << "stdOutText" << stdOutText.left(256);
+                /// Write transformed data to destination device
                 const int amountWritten = destination.write(stdOut);
                 result = amountWritten == stdOut.size();
             } else
@@ -157,8 +166,7 @@ bool BibUtils::convert(QIODevice &source, const BibUtils::Format &sourceFormat, 
     /// In case it did not terminate earlier
     bibUtilsProcess.terminate();
 
-    kDebug() << "result" << result;
-
+    /// Close both source and destination device
     source.close();
     destination.close();
     return result;
