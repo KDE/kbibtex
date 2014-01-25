@@ -132,21 +132,23 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
 
     delete m_textStream;
 
-    /// Set the file's preferences for string delimiters
-    /// deduced from statistics built while parsing the file
-    result->setProperty(File::StringDelimiter, m_statistics.countQuotationMarks > m_statistics.countCurlyBrackets ? QLatin1String("\"\"") : QLatin1String("{}"));
-    /// Set the file's preferences for name formatting
-    result->setProperty(File::NameFormatting, m_statistics.countFirstNameFirst > m_statistics.countLastNameFirst ? QLatin1String("<%f ><%l>< %s>") : QLatin1String("<%l><, %s><, %f>")); // FIXME those string should be defined somewhere globally
-    /// Set the file's preferences for title protected
-    result->setProperty(File::ProtectCasing, m_statistics.countProtectedTitle > m_statistics.countUnprotectedTitle);
-    /// Set the file's preferences for quoting of comments
-    if (m_statistics.countNoCommentQuote > m_statistics.countCommentCommand && m_statistics.countNoCommentQuote > m_statistics.countCommentPercent)
-        result->setProperty(File::QuoteComment, (int)Preferences::qcNone);
-    else if (m_statistics.countCommentCommand > m_statistics.countNoCommentQuote && m_statistics.countCommentCommand > m_statistics.countCommentPercent)
-        result->setProperty(File::QuoteComment, (int)Preferences::qcCommand);
-    else
-        result->setProperty(File::QuoteComment, (int)Preferences::qcPercentSign);
-    // TODO gather more statistics for keyword casing etc.
+    if (result != NULL) {
+        /// Set the file's preferences for string delimiters
+        /// deduced from statistics built while parsing the file
+        result->setProperty(File::StringDelimiter, m_statistics.countQuotationMarks > m_statistics.countCurlyBrackets ? QLatin1String("\"\"") : QLatin1String("{}"));
+        /// Set the file's preferences for name formatting
+        result->setProperty(File::NameFormatting, m_statistics.countFirstNameFirst > m_statistics.countLastNameFirst ? QLatin1String("<%f ><%l>< %s>") : QLatin1String("<%l><, %s><, %f>")); // FIXME those string should be defined somewhere globally
+        /// Set the file's preferences for title protected
+        result->setProperty(File::ProtectCasing, m_statistics.countProtectedTitle > m_statistics.countUnprotectedTitle);
+        /// Set the file's preferences for quoting of comments
+        if (m_statistics.countNoCommentQuote > m_statistics.countCommentCommand && m_statistics.countNoCommentQuote > m_statistics.countCommentPercent)
+            result->setProperty(File::QuoteComment, (int)Preferences::qcNone);
+        else if (m_statistics.countCommentCommand > m_statistics.countNoCommentQuote && m_statistics.countCommentCommand > m_statistics.countCommentPercent)
+            result->setProperty(File::QuoteComment, (int)Preferences::qcCommand);
+        else
+            result->setProperty(File::QuoteComment, (int)Preferences::qcPercentSign);
+        // TODO gather more statistics for keyword casing etc.
+    }
 
     iodevice->close();
     return result;

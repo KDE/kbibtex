@@ -33,6 +33,7 @@
     <mime-type type="application/x-endnote-refer">
         <sub-class-of type="text/plain"/>
         <alias type="text/x-endnote-refer"/>
+        <alias type="application/x-endnote-library"/>
         <comment>EndNote library</comment>
         <glob pattern="*.enl"/>
     </mime-type>
