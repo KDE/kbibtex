@@ -68,6 +68,7 @@ private slots:
     void documentListsChanged(OpenFileInfo::StatusFlags statusFlags);
     void openRecentFile();
     void queryCloseAll();
+    void delayed();
 
 private:
     class KBibTeXMainWindowPrivate;

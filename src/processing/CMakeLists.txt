@@ -6,6 +6,7 @@ set(
     idsuggestions.cpp
     lyx.cpp
     checkbibtex.cpp
+    bibliographyservice.cpp
 )
 
 set(
@@ -14,6 +15,7 @@ set(
     idsuggestions.h
     lyx.h
     checkbibtex.h
+    bibliographyservice.h
     kbibtexproc_export.h
 )
 
