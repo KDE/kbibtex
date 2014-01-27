@@ -1,6 +1,5 @@
 /***************************************************************************
  *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
- *   fischer@unix-ag.uni-kl.de                                             *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
