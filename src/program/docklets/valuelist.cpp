@@ -124,9 +124,9 @@ public:
     }
 
     void setComboboxFieldNamesCurrentItem(const QString &text) {
-        int index = comboboxFieldNames->findText(text, Qt::MatchExactly);
-        if (index < 0) index = comboboxFieldNames->findText(text, Qt::MatchStartsWith);
-        if (index < 0) index = comboboxFieldNames->findText(text, Qt::MatchContains);
+        int index = comboboxFieldNames->findData(text, Qt::UserRole, Qt::MatchExactly);
+        if (index < 0) index = comboboxFieldNames->findData(text, Qt::UserRole, Qt::MatchStartsWith);
+        if (index < 0) index = comboboxFieldNames->findData(text, Qt::UserRole, Qt::MatchContains);
         if (index >= 0) comboboxFieldNames->setCurrentIndex(index);
     }
 
