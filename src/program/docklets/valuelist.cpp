@@ -151,8 +151,7 @@ public:
     }
 
     void update() {
-        QVariant var = comboboxFieldNames->itemData(comboboxFieldNames->currentIndex());
-        QString text = var.toString();
+        QString text = comboboxFieldNames->itemData(comboboxFieldNames->currentIndex()).toString();
         if (text.isEmpty()) text = comboboxFieldNames->currentText();
 
         delegate->setFieldName(text);
