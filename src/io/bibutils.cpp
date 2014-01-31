@@ -130,7 +130,6 @@ bool BibUtils::convert(QIODevice &source, const BibUtils::Format &sourceFormat, 
 
     /// Test if required BibUtils program is available
     bibUtilsProgram = KStandardDirs::findExe(bibUtilsProgram);
-    kDebug() << "bibutilsProgram" << bibUtilsProgram;
     if (bibUtilsProgram.isEmpty())
         return false;
 
