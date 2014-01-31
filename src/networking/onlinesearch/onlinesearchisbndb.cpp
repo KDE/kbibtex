@@ -34,13 +34,13 @@ private:
     static const QString accessKey;
     static const QString booksUrl, authorsUrl;
 
-    QString cachedPersonId;
-
 public:
     XSLTransform *xslt;
+    KUrl queryUrl;
+    int currentPage, maxPage;
 
     OnlineSearchIsbnDBPrivate(OnlineSearchIsbnDB *parent)
-            : p(parent), xslt() {
+            : p(parent), xslt(), currentPage(0), maxPage(0) {
         xslt = XSLTransform::createXSLTransform(KStandardDirs::locate("data", "kbibtex/isbndb2bibtex.xsl"));
     }
 
@@ -49,25 +49,22 @@ public:
     }
 
     KUrl buildBooksUrl(const QMap<QString, QString> &query, int numResults) {
-        Q_UNUSED(numResults)
+        currentPage = 1;
+        maxPage = (numResults + 9) / 10;
 
-        KUrl queryUrl(booksUrl);
+        queryUrl = KUrl(booksUrl);
         queryUrl.addQueryItem(QLatin1String("access_key"), accessKey);
-        queryUrl.addQueryItem(QLatin1String("results"), QLatin1String("details,texts"));
+        queryUrl.addQueryItem(QLatin1String("results"), QLatin1String("texts,authors"));
 
         QString index1, value1;
         if (query[queryKeyFreeText].isEmpty() && query[queryKeyAuthor].isEmpty() && !query[queryKeyTitle].isEmpty()) {
             /// only searching for title
             index1 = QLatin1String("title");
             value1 = query[queryKeyTitle];
-        } else if (!cachedPersonId.isEmpty() && query[queryKeyFreeText].isEmpty() && !query[queryKeyAuthor].isEmpty() && query[queryKeyTitle].isEmpty()) {
-            /// only searching for author
-            index1 = QLatin1String("person_id");
-            value1 = cachedPersonId;
         } else {
             /// multiple different values given
             index1 = QLatin1String("full");
-            value1 = query[queryKeyFreeText] + QChar(' ') + query[queryKeyAuthor] + QChar(' ') + query[queryKeyTitle];
+            value1 = query[queryKeyFreeText] + QLatin1Char(' ') + query[queryKeyAuthor] + QLatin1Char(' ') + query[queryKeyTitle];
         }
         queryUrl.addQueryItem(QLatin1String("index1"), index1);
         queryUrl.addQueryItem(QLatin1String("value1"), value1);
@@ -95,12 +92,12 @@ void OnlineSearchIsbnDB::startSearch(const QMap<QString, QString> &query, int nu
 {
     m_hasBeenCanceled = false;
 
+    emit progress(0, d->maxPage);
+
     QNetworkRequest request(d->buildBooksUrl(query, numResults));
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
     InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
     connect(reply, SIGNAL(finished()), this, SLOT(downloadDone()));
-
-    emit progress(0, 2);
 }
 
 void OnlineSearchIsbnDB::startSearch()
@@ -137,7 +134,7 @@ void OnlineSearchIsbnDB::cancel()
 
 void OnlineSearchIsbnDB::downloadDone()
 {
-    emit progress(1, 2);
+    emit progress(d->currentPage, d->maxPage);
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
@@ -145,12 +142,8 @@ void OnlineSearchIsbnDB::downloadDone()
         /// ensure proper treatment of UTF-8 characters
         const QString xmlCode = QString::fromUtf8(reply->readAll().data());
 
-        dumpToFile("xml.xml", xmlCode);
-
         /// use XSL transformation to get BibTeX document from XML result
-        QString bibtexCode = d->xslt->transform(xmlCode).replace(QLatin1String("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"), QString());
-
-        dumpToFile("bib.bib", bibtexCode);
+        const QString bibtexCode = d->xslt->transform(xmlCode).remove(QLatin1String("<?xml version=\"1.0\" encoding=\"UTF-8\"?>")).replace(QLatin1String("&amp;"), QLatin1String("&"));
 
         FileImporterBibTeX importer;
         File *bibtexFile = importer.fromString(bibtexCode);
@@ -161,18 +154,27 @@ void OnlineSearchIsbnDB::downloadDone()
                 QSharedPointer<Entry> entry = (*it).dynamicCast<Entry>();
                 hasEntries |= publishEntry(entry);
             }
-
-            if (!hasEntries)
-                kDebug() << "No hits found in" << reply->url().toString();
-            emit stoppedSearch(resultNoError);
-
             delete bibtexFile;
+
+            if (!hasEntries) {
+                kDebug() << "No hits found in" << reply->url().toString();
+                emit stoppedSearch(resultNoError);
+            } else if (d->currentPage >= d->maxPage)
+                emit stoppedSearch(resultNoError);
+            else {
+                ++d->currentPage;
+                KUrl nextUrl = d->queryUrl;
+                nextUrl.addQueryItem(QLatin1String("page_number"), QString::number(d->currentPage));
+                QNetworkRequest request(nextUrl);
+                QNetworkReply *nextReply = InternalNetworkAccessManager::self()->get(request);
+                InternalNetworkAccessManager::self()->setNetworkReplyTimeout(nextReply);
+                connect(nextReply, SIGNAL(finished()), this, SLOT(downloadDone()));
+                return;
+            }
         } else {
             kWarning() << "No valid BibTeX file results returned on request on" << reply->url().toString();
             emit stoppedSearch(resultUnspecifiedError);
         }
     } else
         kDebug() << "url was" << reply->url().toString();
-
-    emit progress(2, 2);
 }
