@@ -3,7 +3,6 @@ INFO: This TODO list will most likely outdate very quickly
 For the upcoming 0.5 release, the following bugs have to get
 addressed:
 
-- Bug 20123: Crash near File::property, problems reproducing it
 - Bug 20811, 20812: Compile on SL6 / RHEL6 failing.
   Should be fixed, waiting for confirmation.
 - Bug 20707: Cannot deal with underscore in DOI.
@@ -12,39 +11,22 @@ addressed:
 Within the scope of a 0.5.x release, the following features
 and bugs are to be addressed:
 
-- Bug 19750: Filter bar looks into every field including
-  localfile. Needs more information.
-- Bug 19634: Make configuration setting handling more consistent
-  across GUI (solution would be developed in trunk and backported
-  to 0.5 branch)
 - Bug 19575: rendering when switching files not smooth
   (solution would be developed in trunk and backported to 0.5 branch)
-- Bug 19484: KBibTeX uses a lot of CPU time (solution would be
-  developed in trunk and backported to 0.5 branch)
 
 Within the scope of more future releases (0.6.x), the following
 features and bugs are to be addressed:
 
 - Consider "QScopedPointer" for cleaner memory management
 - Look into QtConcurrent if it may be of use for KBibTeX
-- Bug 21014: Look into auto-completion as it seems to hinder people
 - Bug 21007: Make formatting, indentation, and capitalization
   customizable when writing BibTeX files
 - Bug 19750: Filter bar looks into every field including
   localfile. Needs more information.
-- Bug 19969: Please document the SVN ID used in release
-  More information is needed here. As it affects SVN snapshots
-  only, it does not related to stable releases.
 - Bug 19657: Add support for isbndb
-- Bug 19644: Start adding translations: Test translation
-  infrastructure, provide an initial translation for at least
-  one language to test it
-- Bug 19634: Make configuration setting handling more consistent
-  across GUI
 - Bug 19575: rendering when switching files not smooth
 - Bug 19516: Add spell-checking support
-- Bug 19484: KBibTeX uses a lot of CPU time
-- Bug 18287, 19197: Automatic ID suggestion based on
+- Bug 18287: Automatic ID suggestion based on
   user-defined patterns (already work in progress).
 - Bug 18183: Increase number of search hits after initial
   search is complete. Should be added before more search
@@ -63,7 +45,6 @@ features and bugs are to be addressed:
 - Bug 20042: Create your own custom fields like in KDE3 version
 - Bug 20090: Improved drag'n'drop support for PDF files
 - Bug 20094: Rearrange items order manually
-- Bug 20735: Retrieve bibliography information via known DOI
 - Bug 21012: Element editor too large, resizing issues
 
 More far future:
