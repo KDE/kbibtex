@@ -37,13 +37,18 @@
 #include <onlinesearcharxiv.h>
 #include <onlinesearchbibsonomy.h>
 #include <onlinesearchgooglescholar.h>
+#include <onlinesearchcernds.h>
 #include <onlinesearchieeexplore.h>
 #include <onlinesearchingentaconnect.h>
+#include <onlinesearchinspirehep.h>
+#include <onlinesearchideasrepec.h>
+#include <onlinesearchisbndb.h>
 #include <onlinesearchjstor.h>
 #include <onlinesearchmathscinet.h>
 #include <onlinesearchpubmed.h>
 #include <onlinesearchsciencedirect.h>
 #include <onlinesearchspringerlink.h>
+#include <onlinesearchsoanasaads.h>
 #include "fileimporterbibtex.h"
 #include "fileexporterbibtex.h"
 #include "file.h"
@@ -144,13 +149,18 @@ KBibTeXTest::KBibTeXTest(QWidget *parent)
     m_onlineSearchList << new OnlineSearchAcmPortal(this);
     m_onlineSearchList << new OnlineSearchArXiv(this);
     m_onlineSearchList << new OnlineSearchBibsonomy(this);
+    m_onlineSearchList << new OnlineSearchCERNDS(this);
     m_onlineSearchList << new OnlineSearchGoogleScholar(this);
+    m_onlineSearchList << new OnlineSearchIDEASRePEc(this);
     m_onlineSearchList << new OnlineSearchIEEEXplore(this);
     m_onlineSearchList << new OnlineSearchIngentaConnect(this);
+    m_onlineSearchList << new OnlineSearchInspireHep(this);
+    m_onlineSearchList << new OnlineSearchIsbnDB(this);
     m_onlineSearchList << new OnlineSearchJStor(this);
     m_onlineSearchList << new OnlineSearchMathSciNet(this);
     m_onlineSearchList << new OnlineSearchPubMed(this);
     m_onlineSearchList << new OnlineSearchScienceDirect(this);
+    m_onlineSearchList << new OnlineSearchSOANASAADS(this);
     m_onlineSearchList << new OnlineSearchSpringerLink(this);
     m_currentOnlineSearch = m_onlineSearchList.constBegin();
 
