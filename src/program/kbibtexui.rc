@@ -24,5 +24,7 @@
     <Separator/>
     <Merge/>
 </ToolBar>
+<ToolBar name="filterToolBar" noMerge="1"><text>Filter Toolbar</text>
+</ToolBar>
 <!-- TODO -->
 </kpartgui>
