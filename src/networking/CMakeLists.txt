@@ -5,8 +5,11 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/src/data
     ${CMAKE_SOURCE_DIR}/src/io
     ${CMAKE_SOURCE_DIR}/src/networking/onlinesearch
+    ${CMAKE_SOURCE_DIR}/src/networking
     ${POPPLER_QT4_INCLUDE_DIR}
     ${LIBXML2_INCLUDE_DIR}
+    ${QTOAUTH_INCLUDE_DIR}
+    ${QCA2_INCLUDE_DIR}
 )
 
 set(
@@ -31,9 +34,28 @@ set(
     onlinesearch/onlinesearchisbndb.cpp
     onlinesearch/onlinesearchideasrepec.cpp
     onlinesearch/onlinesearchdoi.cpp
+    zotero/collectionmodel.cpp
+    zotero/collection.cpp
+    zotero/api.cpp
+    zotero/groups.cpp
+    zotero/tags.cpp
+    zotero/tagmodel.cpp
+    zotero/items.cpp
     findpdf.cpp
     internalnetworkaccessmanager.cpp
 )
+if(
+    QTOAUTH_FOUND
+)
+    set(
+        networking_LIB_SRCS
+        ${networking_LIB_SRCS}
+        zotero/oauthwizard.cpp
+    )
+endif(
+    QTOAUTH_FOUND
+)
+
 
 set(
     kbibtexnetworking_HDRS
@@ -57,9 +79,27 @@ set(
     onlinesearch/onlinesearchisbndb.h
     onlinesearch/onlinesearchideasrepec.h
     onlinesearch/onlinesearchdoi.h
+    zotero/collectionmodel.h
+    zotero/collection.h
+    zotero/groups.h
+    zotero/tags.h
+    zotero/tagmodel.h
+    zotero/items.h
+    zotero/api.h
     kbibtexnetworking_export.h
     findpdf.h
     internalnetworkaccessmanager.h
+)
+if(
+    QTOAUTH_FOUND
+)
+    set(
+        kbibtexnetworking_HDRS
+        ${kbibtexnetworking_HDRS}
+        zotero/oauthwizard.h
+    )
+endif(
+    QTOAUTH_FOUND
 )
 
 add_definitions(
@@ -89,6 +129,7 @@ target_link_libraries(
     ${KDE4_KDECORE_LIBS}
     ${KDE4_KIO_LIBS}
     ${POPPLER_QT4_LIBRARIES}
+    ${QTOAUTH_LIBRARY}
     kbibtexconfig
     kbibtexdata
     kbibtexio
