@@ -315,9 +315,7 @@ bool PDFListModel::setData(const QModelIndex &index, const QVariant &value, int 
     if (index != QModelIndex() && index.row() < m_resultList.count() && role == DownloadModeRole) {
         bool ok = false;
         FindPDF::DownloadMode downloadMode = (FindPDF::DownloadMode)value.toInt(&ok);
-        kDebug() << "FindPDF::DownloadMode=" << downloadMode << ok;
         if (ok) {
-            kDebug()    << "Setting row " << index.row();
             m_resultList[index.row()].downloadMode = downloadMode;
             return true;
         }

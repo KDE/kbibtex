@@ -119,7 +119,6 @@ bool FindPDF::search(const Entry &entry)
 bool FindPDF::queueUrl(const QUrl &url, const QString &term, const QString &origin, int depth)
 {
     if (!m_knownUrls.contains(url) && depth > 0) {
-        kDebug() << "Starting download for" << url.toString() << "(" << origin << ")";
         m_knownUrls.insert(url);
         QNetworkRequest request = QNetworkRequest(url);
         QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
@@ -157,18 +156,9 @@ void FindPDF::downloadFinished()
         QByteArray data = reply->readAll();
 
         QUrl redirUrl = reply->url().resolved(reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl());
-        kDebug() << "finished Downloading " << reply->url().toString() << "   depth=" << depth  << "  aliveCounter=" << aliveCounter << "  data.size=" << data.size() << "  redirUrl=" << redirUrl.toString() << "   origin=" << origin;
 
         if (data.contains(htmlHead1) || data.contains(htmlHead2)) {
             /// returned data is a HTML file, i.e. contains "<html"
-
-            QFile htmlFile(QString("/tmp/file%1.html").arg(++fileCounter));
-            if (htmlFile.open(QFile::WriteOnly)) {
-                htmlFile.write(reply->url().toString().toAscii());
-                htmlFile.write("\n\n\n");
-                htmlFile.write(data);
-                htmlFile.close();
-            }
 
             /// check for limited depth before continuing
             if (depthOk && depth > 0) {
@@ -263,7 +253,6 @@ void FindPDF::processGoogleResult(QNetworkReply *reply, const QString &text)
             int p1 = p + 6;
             int p2 = text.indexOf(QChar('"'), p1 + 1);
             const KUrl url(text.mid(p1, p2 - p1));
-            kDebug() << "Google URL" << i << " : " << url.pathOrUrl();
             queueUrl(reply->url().resolved(url), term, QLatin1String("scholar.google"), depth - 1);
         }
     }
@@ -302,8 +291,6 @@ void FindPDF::processPDF(QNetworkReply *reply, const QByteArray &data)
     const QString origin = reply->property(originProperty).toString();
 
     Poppler::Document *doc = Poppler::Document::loadFromData(data);
-
-    kDebug() << "PDF title:" << doc->info("Title") << endl;
 
     QUrl url = reply->url();
 
