@@ -1,23 +1,20 @@
 INFO: This TODO list will most likely outdate very quickly
 
-For the upcoming 0.5 release, the following bugs have to get
-addressed:
-
-- Bug 20811, 20812: Compile on SL6 / RHEL6 failing.
-  Should be fixed, waiting for confirmation.
-- Bug 20707: Cannot deal with underscore in DOI.
-  Should be fixed, waiting for confirmation.
-
 Within the scope of a 0.5.x release, the following features
 and bugs are to be addressed:
 
 - Bug 19575: rendering when switching files not smooth
   (solution would be developed in trunk and backported to 0.5 branch)
+- Bug 20811, 20812: Compile on SL6 / RHEL6 failing.
+  Should be fixed, waiting for confirmation.
+- Bug 20707: Cannot deal with underscore in DOI.
+  Should be fixed, waiting for confirmation.
 
 Within the scope of more future releases (0.6.x), the following
 features and bugs are to be addressed:
 
-- Consider "QScopedPointer" for cleaner memory management
+- Consider "QScopedPointer" and "QPointer" for cleaner memory
+  management
 - Look into QtConcurrent if it may be of use for KBibTeX
 - Bug 21007: Make formatting, indentation, and capitalization
   customizable when writing BibTeX files
