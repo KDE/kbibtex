@@ -39,7 +39,7 @@
 <holder>Thomas Fischer</holder>
 </copyright>
 
-<date>2013-12-29</date>
+<date>2014-02-09</date>
 <releaseinfo>0.5</releaseinfo>
 
 <legalnotice>
@@ -197,6 +197,11 @@
       <listitem>
 	<para>
 	  Find and fix duplicate entries in bibliography using <menuchoice><guimenu>Edit</guimenu><guimenuitem>Find Duplicates</guimenuitem></menuchoice> menu item or <link linkend="main-toolbar">Main Toolbar</link>.
+	</para>
+      </listitem>
+      <listitem>
+	<para>
+	  Import your <ulink url="https://www.zotero.org/">Zotero</ulink> library using <link linkend="zotero">Zotero panel</link>.
 	</para>
       </listitem>
     </itemizedlist>
@@ -615,6 +620,51 @@ latex example</screen>
 	</para>
 	<para>
 	  To visit the database homepage in the Internet click with &RMB; on its entry in the <guilabel>Engines</guilabel> tab and select <guimenuitem>Go to Homepage</guimenuitem>.
+	</para>
+    </sect2>
+    <sect2 id="zotero">
+      <title>
+	Zotero Panel
+      </title>
+	<para>
+	  The <guilabel>Zotero</guilabel> panel can be used to import your <ulink url="https://www.zotero.org/">Zotero</ulink> library.
+	</para>
+	<para>
+	  Zotero uses specialized browser add-ons to save bibliography entries from Internet pages. The data are stored in an online database that can be reached from anywhere. Zotero documentation can be found <ulink url="https://www.zotero.org/support/">here</ulink>.
+	</para>
+	<para>
+	  <screenshot>
+	    <screeninfo>Zotero panel</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="zotero.png" format="PNG" />
+	      </imageobject>
+	      <textobject>
+		<phrase>Zotero panel</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+	<para>
+	  Click the <guibutton>
+	  <inlinemediaobject>
+	    <imageobject>
+	      <imagedata fileref="preferences-web-browser-identification.png" format="PNG"/>
+	    </imageobject>
+	  </inlinemediaobject>
+	  Get Credentials</guibutton> button on <guilabel>Credentials</guilabel> tab to start the Zotero authorization wizard. Follow the instructions to allow &kbibtex; access your Zotero library.
+	</para>
+	<para>
+	  Then the <guibutton>
+	  <inlinemediaobject>
+	    <imageobject>
+	      <imagedata fileref="download.png" format="PNG"/>
+	    </imageobject>
+	  </inlinemediaobject>
+	  Load bibliography</guibutton> button can be used to download data from Zotero library.
+	</para>
+	<para>
+	  To access the downloaded library entries double-click on the corresponding item on <guilabel>Collections</guilabel> or <guilabel>Tags</guilabel> tabs. The entries that satisfy the chosen criteria will be shown on the <link linkend="search-results">Search Results panel</link>.
 	</para>
     </sect2>
     <sect2 id="search-results">
