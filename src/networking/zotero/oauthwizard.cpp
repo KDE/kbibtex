@@ -161,7 +161,7 @@ public:
         QBoxLayout *layout = new QVBoxLayout(page);
         page->setTitle(i18n("Instructions"));
         page->setSubTitle(i18n("<qt>To allow <strong>KBibTeX</strong> access your <strong>Zotero bibliography</strong>, this KBibTeX instance has to be authorized.</qt>"));
-        QLabel *label = new QLabel(i18n("<qt><p>The process of authorization involves multiple steps:</p><ol><li>Open the URL a shown on the next page.</li><li>Follow the instructions as shown on Zotero's webpage.<br/>Configure permissions for KBibTeX.</li><li>Eventually, you will get a hexadecimal string (black on light-green background) which you have to copy and paste into this wizard's last page</li></ol></qt>"), page);
+        QLabel *label = new QLabel(i18n("<qt><p>The process of authorization involves multiple steps:</p><ol><li>Open the URL as shown on the next page.</li><li>Follow the instructions as shown on Zotero's webpage.<br/>Configure permissions for KBibTeX.</li><li>Eventually, you will get a hexadecimal string (black on light-green background) which you have to copy and paste into this wizard's last page</li></ol></qt>"), page);
         label->setWordWrap(true);
         layout->addWidget(label);
 
