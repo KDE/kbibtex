@@ -1447,7 +1447,7 @@ latex example</screen>
 	  </mediaobject>
 	</screenshot>
 	<para>
-	  This page allows you to choose a &latex; command (&eg; <userinput>\cite{...}</userinput>) which will be used as a wrapper for the reference copied with <menuchoice><shortcut>&Ctrl;&Shift;<keycap>C</keycap></shortcut><guimenuitem>Copy Reference</guimenuitem></menuchoice> item of popup menu from the bibliography list.
+	  This page allows you to choose a &latex; command (&eg; <userinput>\cite{...}</userinput>) which will be used as a wrapper for the reference copied with <menuchoice><shortcut><keycombo>&Ctrl;&Shift;<keycap>C</keycap></keycombo></shortcut><guimenuitem>Copy Reference</guimenuitem></menuchoice> item of popup menu from the bibliography list.
 	</para>
 	<para>
 	  It is also possible to make &kbibtex; determine <link linkend="lyx-integration">&lyx; data pipe</link> automatically by checking the corresponding box.
