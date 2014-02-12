@@ -321,10 +321,9 @@ void FindPDF::processCiteSeerX(QNetworkReply *reply, const QString &text)
 void FindPDF::processPDF(QNetworkReply *reply, const QByteArray &data)
 {
     const QString origin = reply->property(originProperty).toString();
+    const QUrl url = reply->url();
 
     Poppler::Document *doc = Poppler::Document::loadFromData(data);
-
-    QUrl url = reply->url();
 
     /// search for duplicate URLs
     bool containsUrl = false;
@@ -348,13 +347,18 @@ void FindPDF::processPDF(QNetworkReply *reply, const QByteArray &data)
         result.url = url;
         result.textPreview = doc->info("Title").simplified();
         const int maxTextLen = 1024;
-        for (int i = 0; i < doc->numPages() && result.textPreview.length() < maxTextLen; ++i)
-            result.textPreview += QLatin1Char(' ') + doc->page(i)->text(QRect()).simplified().left(maxTextLen);
+        for (int i = 0; i < doc->numPages() && result.textPreview.length() < maxTextLen; ++i) {
+            Poppler::Page *page = doc->page(i);
+            result.textPreview += QLatin1Char(' ') + page->text(QRect()).simplified().left(maxTextLen);
+            delete page;
+        }
         result.downloadMode = NoDownload;
         result.relevance = origin == Entry::ftDOI ? 1.0 : (origin == QLatin1String("eprint") ? 0.75 : 0.5);
         m_result << result;
 
         emit progress(m_knownUrls.count(), aliveCounter, m_result.count());
     }
+
+    delete doc;
 }
 

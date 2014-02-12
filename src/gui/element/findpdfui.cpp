@@ -359,15 +359,15 @@ FindPDFUI::~FindPDFUI()
 void FindPDFUI::interactiveFindPDF(Entry &entry, const File &bibtexFile, QWidget *parent)
 {
     QPointer<KDialog> dlg = new KDialog(parent);
-    FindPDFUI widget(entry, dlg);
+    QPointer<FindPDFUI> widget = new FindPDFUI(entry, dlg);
     dlg->setCaption(i18n("Find PDF"));
-    dlg->setMainWidget(&widget);
+    dlg->setMainWidget(widget);
     dlg->enableButtonOk(false);
 
-    connect(&widget, SIGNAL(resultAvailable(bool)), dlg, SLOT(enableButtonOk(bool)));
+    connect(widget, SIGNAL(resultAvailable(bool)), dlg, SLOT(enableButtonOk(bool)));
 
     if (dlg->exec() == KDialog::Accepted) {
-        widget.apply(entry, bibtexFile);
+        widget->apply(entry, bibtexFile);
     }
     dlg->deleteLater();
 }
