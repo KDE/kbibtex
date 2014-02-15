@@ -35,7 +35,7 @@ class KBIBTEXNETWORKING_EXPORT Groups : public QObject
 {
     Q_OBJECT
 public:
-    Groups(API *api, QObject *parent = NULL);
+    explicit Groups(API *api, QObject *parent = NULL);
 
     bool initialized() const;
     bool busy() const;

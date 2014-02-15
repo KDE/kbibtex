@@ -163,7 +163,7 @@ bool BibUtils::convert(QIODevice &source, const BibUtils::Format &sourceFormat, 
                 /// Write transformed data to destination device
                 const int amountWritten = destination.write(stdOut);
                 /// Check that the same amount of bytes is written
-                /// as recevied from the BibUtils program
+                /// as received from the BibUtils program
                 result = amountWritten == stdOut.size();
             } else
                 result = false;

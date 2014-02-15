@@ -35,7 +35,7 @@ class KBIBTEXNETWORKING_EXPORT Tags : public QObject
 {
     Q_OBJECT
 public:
-    Tags(API *api, QObject *parent = NULL);
+    explicit Tags(API *api, QObject *parent = NULL);
 
     bool initialized() const;
     bool busy() const;

@@ -35,7 +35,7 @@ class KBIBTEXPROC_EXPORT BibliographyService : public QObject
     Q_OBJECT
 
 public:
-    BibliographyService(QWidget *parentWidget);
+    explicit BibliographyService(QWidget *parentWidget);
 
     /**
      * Set KBibTeX as default editor for supported
