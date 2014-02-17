@@ -8,7 +8,6 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/src/networking
     ${POPPLER_QT4_INCLUDE_DIR}
     ${LIBXML2_INCLUDE_DIR}
-    ${QTOAUTH_INCLUDE_DIR}
     ${QCA2_INCLUDE_DIR}
 )
 
@@ -47,6 +46,9 @@ set(
 if(
     QTOAUTH_FOUND
 )
+    include_directories(
+        ${QTOAUTH_INCLUDE_DIR}
+    )
     set(
         networking_LIB_SRCS
         ${networking_LIB_SRCS}
@@ -129,10 +131,21 @@ target_link_libraries(
     ${KDE4_KDECORE_LIBS}
     ${KDE4_KIO_LIBS}
     ${POPPLER_QT4_LIBRARIES}
-    ${QTOAUTH_LIBRARY}
     kbibtexconfig
     kbibtexdata
     kbibtexio
+)
+
+if(
+    QTOAUTH_FOUND
+)
+    target_link_libraries(
+      kbibtexnetworking
+      LINK_PRIVATE
+      ${QTOAUTH_LIBRARY}
+    )
+endif(
+    QTOAUTH_FOUND
 )
 
 set_target_properties(
