@@ -163,15 +163,6 @@ BibTeXFileView::BibTeXFileView(const QString &name, QWidget *parent)
     setAllColumnsShowFocus(true);
     setRootIsDecorated(false);
 
-    /// restore header appearance
-    KConfigGroup configGroup(d->config, d->configGroupName);
-    QByteArray headerState = configGroup.readEntry(d->configHeaderState.arg(d->name), QByteArray());
-    if (headerState.isEmpty())
-        d->resetColumnsToDefault();
-    else {
-        header()->restoreState(headerState);
-        d->storeColumns();
-    }
     header()->setStretchLastSection(false);
 
     /// header appearance and behaviour
@@ -220,6 +211,16 @@ BibTeXFileView::BibTeXFileView(const QString &name, QWidget *parent)
     action = new KAction(i18n("No sorting"), header());
     connect(action, SIGNAL(triggered()), this, SLOT(noSorting()));
     header()->addAction(action);
+
+    /// restore header appearance
+    KConfigGroup configGroup(d->config, d->configGroupName);
+    QByteArray headerState = configGroup.readEntry(d->configHeaderState.arg(d->name), QByteArray());
+    if (headerState.isEmpty())
+        d->resetColumnsToDefault();
+    else {
+        header()->restoreState(headerState);
+        d->storeColumns();
+    }
 }
 
 BibTeXFileView::~BibTeXFileView()
@@ -302,8 +303,10 @@ void BibTeXFileView::headerResetToDefaults()
 void BibTeXFileView::sort(int t, Qt::SortOrder s)
 {
     SortFilterBibTeXFileModel *sortedModel = dynamic_cast<SortFilterBibTeXFileModel *>(model());
-    if (sortedModel != NULL)
+    if (sortedModel != NULL) {
         sortedModel->sort(t, s);
+        d->storeColumns();
+    }
 }
 
 void BibTeXFileView::noSorting()
@@ -312,5 +315,6 @@ void BibTeXFileView::noSorting()
     if (sortedModel != NULL) {
         sortedModel->sort(-1);
         header()->setSortIndicator(-1, Qt::AscendingOrder);
+        d->storeColumns();
     }
 }
