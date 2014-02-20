@@ -40,6 +40,7 @@ const QString File::QuoteComment = QLatin1String("QuoteComment");
 const QString File::KeywordCasing = QLatin1String("KeywordCasing");
 const QString File::ProtectCasing = QLatin1String("ProtectCasing");
 const QString File::NameFormatting = QLatin1String("NameFormatting");
+const QString File::ListSeparator = QLatin1String("ListSeparator");
 
 const quint64 valid = 0x08090a0b0c0d0e0f;
 const quint64 invalid = 0x0102030405060708;
@@ -84,6 +85,7 @@ public:
         properties.insert(File::KeywordCasing, (KBibTeX::Casing)configGroup.readEntry(Preferences::keyKeywordCasing, (int)Preferences::defaultKeywordCasing));
         properties.insert(File::NameFormatting, configGroup.readEntry(Person::keyPersonNameFormatting, QString()));
         properties.insert(File::ProtectCasing, configGroup.readEntry(Preferences::keyProtectCasing, Preferences::defaultProtectCasing));
+        properties.insert(File::ListSeparator, configGroup.readEntry(Preferences::keyListSeparator, Preferences::defaultListSeparator));
     }
 
     bool checkValidity() {

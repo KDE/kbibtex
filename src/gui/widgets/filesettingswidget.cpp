@@ -84,6 +84,11 @@ void FileSettingsWidget::loadProperties(File *file)
         m_comboBoxPersonNameFormatting->setCurrentIndex(row);
         m_comboBoxPersonNameFormatting->blockSignals(false);
     }
+    if (file->hasProperty(File::ListSeparator)) {
+        m_comboBoxListSeparator->blockSignals(true);
+        m_comboBoxListSeparator->setCurrentIndex(m_comboBoxListSeparator->findData(file->property(File::ListSeparator)));
+        m_comboBoxListSeparator->blockSignals(false);
+    }
 }
 
 void FileSettingsWidget::saveProperties()
@@ -104,6 +109,7 @@ void FileSettingsWidget::saveProperties(File *file)
     file->setProperty(File::KeywordCasing, (int)keywordCasing);
     file->setProperty(File::ProtectCasing, m_checkBoxProtectCasing->isChecked());
     file->setProperty(File::NameFormatting, m_comboBoxPersonNameFormatting->itemData(m_comboBoxPersonNameFormatting->currentIndex()));
+    file->setProperty(File::ListSeparator, m_comboBoxListSeparator->itemData(m_comboBoxListSeparator->currentIndex()).toString());
 }
 
 void FileSettingsWidget::resetToDefaults()
@@ -150,13 +156,14 @@ void FileSettingsWidget::setupGUI()
     m_comboBoxKeywordCasing->addItem(i18nc("Keyword Casing", "UPPERCASE"));
     connect(m_comboBoxKeywordCasing, SIGNAL(currentIndexChanged(int)), this, SIGNAL(widgetsChanged()));
 
-    m_checkBoxProtectCasing = new QCheckBox(i18n("Protect Titles"));
+    m_checkBoxProtectCasing = new QCheckBox(i18n("Protect Titles"), this);
     layout->addRow(i18n("Protect Casing?"), m_checkBoxProtectCasing);
     connect(m_checkBoxProtectCasing, SIGNAL(toggled(bool)), this, SIGNAL(widgetsChanged()));
 
     m_comboBoxPersonNameFormatting = new KComboBox(false, this);
     m_comboBoxPersonNameFormatting->setObjectName("comboBoxPersonNameFormatting");
     layout->addRow(i18n("Person Names Formatting:"), m_comboBoxPersonNameFormatting);
+    connect(m_comboBoxPersonNameFormatting, SIGNAL(currentIndexChanged(int)), this, SIGNAL(widgetsChanged()));
 
     ItalicTextItemModel *itim = new ItalicTextItemModel();
     itim->addItem(i18n("Use global settings"), QString(""));
@@ -164,5 +171,9 @@ void FileSettingsWidget::setupGUI()
     itim->addItem(Person::transcribePersonName(&dummyPerson, QLatin1String("<%l><, %s><, %f>")), QLatin1String("<%l><, %s><, %f>")); // FIXME those string should be defined somewhere globally
     m_comboBoxPersonNameFormatting->setModel(itim);
 
-    connect(m_comboBoxPersonNameFormatting, SIGNAL(currentIndexChanged(int)), this, SIGNAL(widgetsChanged()));
+    m_comboBoxListSeparator = new KComboBox(false, this);
+    layout->addRow(i18n("List Separator"), m_comboBoxListSeparator);
+    connect(m_comboBoxListSeparator, SIGNAL(currentIndexChanged(int)), this, SIGNAL(widgetsChanged()));
+    m_comboBoxListSeparator->addItem(QLatin1String(";"), QVariant::fromValue<QString>(QLatin1String("; ")));
+    m_comboBoxListSeparator->addItem(QLatin1String(","), QVariant::fromValue<QString>(QLatin1String(", ")));
 }

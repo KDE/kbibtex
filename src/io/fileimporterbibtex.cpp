@@ -76,6 +76,7 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
     m_statistics.countCommentCommand = 0;
     m_statistics.countProtectedTitle = 0;
     m_statistics.countUnprotectedTitle = 0;
+    m_statistics.mostRecentListSeparator.clear();
 
     m_textStream = new QTextStream(iodevice);
     m_textStream->setCodec(defaultCodecName); ///< unless we learn something else, assume default codec
@@ -147,6 +148,8 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
             result->setProperty(File::QuoteComment, (int)Preferences::qcCommand);
         else
             result->setProperty(File::QuoteComment, (int)Preferences::qcPercentSign);
+        if (!m_statistics.mostRecentListSeparator.isEmpty())
+            result->setProperty(File::ListSeparator, m_statistics.mostRecentListSeparator);
         // TODO gather more statistics for keyword casing etc.
     }
 
@@ -630,7 +633,7 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value &value, const QStr
             if (isStringKey)
                 value.append(QSharedPointer<MacroKey>(new MacroKey(text)));
             else {
-                /// Assumption: in fields like Url or LocalFile, file names are separated by ; or ,
+                /// Assumption: in fields like Url or LocalFile, file names are separated by ;
                 static const QRegExp semicolonSpace = QRegExp("[;]\\s*");
                 QStringList fileList = rawText.split(semicolonSpace, QString::SkipEmptyParts);
                 foreach(const QString &filename, fileList) {
@@ -695,9 +698,17 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value &value, const QStr
             if (isStringKey)
                 value.append(QSharedPointer<MacroKey>(new MacroKey(text)));
             else {
-                QList<QSharedPointer<Keyword> > keywords = splitKeywords(text);
+                char splitChar;
+                QList<QSharedPointer<Keyword> > keywords = splitKeywords(text, &splitChar);
                 for (QList<QSharedPointer<Keyword> >::ConstIterator it = keywords.constBegin(); it != keywords.constEnd(); ++it)
                     value.append(*it);
+                /// Memorize (some) split characters for later use
+                /// (e.g. when writing file again)
+                if (splitChar == ';')
+                    m_statistics.mostRecentListSeparator = QLatin1String("; ");
+                else if (splitChar == ',')
+                    m_statistics.mostRecentListSeparator = QLatin1String(", ");
+
             }
         } else {
             if (isStringKey)
@@ -764,7 +775,7 @@ QString FileImporterBibTeX::readLine()
     return result;
 }
 
-QList<QSharedPointer<Keyword> > FileImporterBibTeX::splitKeywords(const QString &text)
+QList<QSharedPointer<Keyword> > FileImporterBibTeX::splitKeywords(const QString &text, char *usedSplitChar)
 {
     QList<QSharedPointer<Keyword> > result;
     /// define a list of characters where keywords will be split along
@@ -774,6 +785,8 @@ QList<QSharedPointer<Keyword> > FileImporterBibTeX::splitKeywords(const QString 
     char *curSplitChar = splitChars;
     static const QRegExp unneccessarySpacing(QLatin1String("[ \n\r\t]+"));
     int index = 0;
+    if (usedSplitChar != 0)
+        *usedSplitChar = '\0';
 
     /// for each char in list ...
     while (*curSplitChar != '\0') {
@@ -786,6 +799,10 @@ QList<QSharedPointer<Keyword> > FileImporterBibTeX::splitKeywords(const QString 
             foreach(const QString &keyword, keywords) {
                 result.append(QSharedPointer<Keyword>(new Keyword(keyword)));
             }
+            /// Memorize (some) split characters for later use
+            /// (e.g. when writing file again)
+            if (usedSplitChar != 0)
+                *usedSplitChar = *curSplitChar;
             /// no more splits necessary
             break;
         }

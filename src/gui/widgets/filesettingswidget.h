@@ -25,8 +25,9 @@
 
 #include "value.h"
 
-class KComboBox;
 class QCheckBox;
+
+class KComboBox;
 
 class File;
 
@@ -58,6 +59,7 @@ private:
     KComboBox *m_comboBoxKeywordCasing;
     QCheckBox *m_checkBoxProtectCasing;
     KComboBox *m_comboBoxPersonNameFormatting;
+    KComboBox *m_comboBoxListSeparator;
 
     const Person dummyPerson;
     File *m_file;

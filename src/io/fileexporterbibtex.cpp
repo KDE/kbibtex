@@ -63,6 +63,7 @@ public:
     QString encoding, forcedEncoding;
     bool protectCasing;
     QString personNameFormatting;
+    QString listSeparator;
     bool cancelFlag;
     IConvLaTeX *iconvLaTeX;
     KSharedConfigPtr config;
@@ -88,7 +89,8 @@ public:
         keywordCasing = (KBibTeX::Casing)configGroup.readEntry(Preferences::keyKeywordCasing, (int)Preferences::defaultKeywordCasing);
         quoteComment = (Preferences::QuoteComment)configGroup.readEntry(Preferences::keyQuoteComment, (int)Preferences::defaultQuoteComment);
         protectCasing = configGroup.readEntry(Preferences::keyProtectCasing, Preferences::defaultProtectCasing);
-        personNameFormatting = configGroup.readEntry(Person::keyPersonNameFormatting, "");
+        personNameFormatting = configGroup.readEntry(Person::keyPersonNameFormatting, QString());
+        listSeparator = configGroup.readEntry(Preferences::keyListSeparator, Preferences::defaultListSeparator);
 
         if (personNameFormatting.isEmpty()) {
             /// no person name formatting is specified for BibTeX, fall back to general setting
@@ -127,6 +129,8 @@ public:
             const QString buffer = bibtexfile->property(File::NameFormatting).toString();
             personNameFormatting = buffer.isEmpty() ? personNameFormatting : buffer;
         }
+        if (bibtexfile->hasProperty(File::ListSeparator))
+            listSeparator = bibtexfile->property(File::ListSeparator).toString();
     }
 
     bool writeEntry(QIODevice *iodevice, const Entry &entry) {
@@ -537,7 +541,9 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value &value, const QStr
                         }
                     } else if (!prev.dynamicCast<const VerbatimText>().isNull()) {
                         if (key.toLower().startsWith(Entry::ftUrl) || key.toLower().startsWith(Entry::ftLocalFile) || key.toLower().startsWith(Entry::ftDOI))
-                            result.append("; ");
+                            /// Filenames and alike have be separated by a semicolon,
+                            /// as a plain comma may be part of the filename or URL
+                            result.append(QLatin1String("; "));
                         else
                             result.append(' ');
                     } else {
@@ -617,7 +623,7 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value &value, const QStr
                                     stringCloseDelimiter = d->stringCloseDelimiter;
                                 }
                             } else if (!prev.dynamicCast<const Keyword>().isNull())
-                                result.append("; ");
+                                result.append(d->listSeparator);
                             else {
                                 result.append(stringCloseDelimiter).append(" # ");
 

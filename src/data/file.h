@@ -56,6 +56,7 @@ public:
     const static QString KeywordCasing;
     const static QString ProtectCasing;
     const static QString NameFormatting;
+    const static QString ListSeparator;
 
     File();
     File(const File &other);
