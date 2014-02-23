@@ -35,6 +35,7 @@ set(
     element/elementeditor.cpp
     element/elementwidgets.cpp
     element/findpdfui.cpp
+    element/associatedfilesui.cpp
     widgets/menulineedit.cpp
     widgets/filesettingswidget.cpp
     widgets/filterbar.cpp
@@ -86,6 +87,7 @@ set(
     bibtex/bibtexeditor.h
     element/findpdfui.h
     element/elementeditor.h
+    element/associatedfilesui.h
 )
 
 add_definitions(
