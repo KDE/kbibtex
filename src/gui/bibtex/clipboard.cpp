@@ -215,8 +215,9 @@ void Clipboard::copyReferences()
 void Clipboard::paste()
 {
     QClipboard *clipboard = QApplication::clipboard();
-    d->insertText(clipboard->text(), d->bibTeXEditor->currentElement());
-    d->bibTeXEditor->externalModification();
+    const bool modified = d->insertText(clipboard->text(), d->bibTeXEditor->currentElement());
+    if (modified)
+        d->bibTeXEditor->externalModification();
 }
 
 
@@ -267,7 +268,8 @@ void Clipboard::editorDropEvent(QDropEvent *event)
             element = d->bibTeXEditor->currentElement();
         }
 
-        d->insertText(text, element);
-        d->bibTeXEditor->externalModification();
+        const bool modified = d->insertText(text, element);
+        if (modified)
+            d->bibTeXEditor->externalModification();
     }
 }
