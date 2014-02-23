@@ -170,6 +170,9 @@ QString AssociatedFiles::associateDocumentURL(const QUrl &document, File *bibTeX
 QUrl AssociatedFiles::copyDocument(const QUrl &sourceUrl, QSharedPointer<Entry> entry, File *bibTeXFile, RenameOperation renameOperation, MoveCopyOperation moveCopyOperation, QWidget *widget) {
     Q_ASSERT(bibTeXFile != NULL); // FIXME more graceful?
 
+    if (moveCopyOperation == mcoNoCopyMove)
+        return sourceUrl; /// nothing to do if no move or copy requested
+
     const QUrl baseUrl = bibTeXFile->property(File::Url).toUrl();
     const QUrl internalSourceUrl = baseUrl.resolved(sourceUrl);
     kDebug() << "internalSourceUrl=" << internalSourceUrl.toString();
@@ -184,25 +187,33 @@ QUrl AssociatedFiles::copyDocument(const QUrl &sourceUrl, QSharedPointer<Entry> 
     kDebug() << "filename=" << filename;
     kDebug() << "suffix=" << suffix;
 
+    if (!bibTeXFile->hasProperty(File::Url)) return QUrl(); /// no valid URL set of BibTeX file object
     QUrl targetUrl = bibTeXFile->property(File::Url).toUrl();
+    if (targetUrl.isEmpty()) return QUrl(); /// no valid URL set of BibTeX file object
     const QString targetPath = QFileInfo(targetUrl.path()).absolutePath();
     targetUrl.setPath(targetPath + QDir::separator() + (renameOperation == roEntryId ? entry->id() + QLatin1String(".") + suffix : filename));
     kDebug() << "targetUrl=" << targetUrl.toString();
 
+    bool success = true;
     if (urlIsLocal(internalSourceUrl) && urlIsLocal(targetUrl)) {
-        const bool r = QFile::copy(internalSourceUrl.path(), targetUrl.path()); // FIXME check if succeeded
-        kDebug() << "copy=" << r << sourceUrl.path() << targetUrl.path();
+        QFile(targetUrl.path()).remove();
+        success &= QFile::copy(internalSourceUrl.path(), targetUrl.path()); // FIXME check if succeeded
+        kDebug() << "copy=" << success << sourceUrl.path() << targetUrl.path();
         if (moveCopyOperation == mcoMove) {
-            const bool r = QFile(internalSourceUrl.path()).remove();
-            kDebug() << "remove=" << r;
+            success &= QFile(internalSourceUrl.path()).remove();
+            kDebug() << "remove=" << success;
         }
     } else {
-        const bool r = KIO::NetAccess::file_copy(sourceUrl, targetUrl, widget); // FIXME non-blocking
-        kDebug() << "KIO copy=" << r;
+        KIO::NetAccess::del(sourceUrl, widget); // FIXME non-blocking
+        success &= KIO::NetAccess::file_copy(sourceUrl, targetUrl, widget); // FIXME non-blocking
+        kDebug() << "KIO copy=" << success;
         if (moveCopyOperation == mcoMove) {
-            const bool r = KIO::NetAccess::del(sourceUrl, widget); // FIXME non-blocking
-            kDebug() << "KIO del=" << r;
+            success &= KIO::NetAccess::del(sourceUrl, widget); // FIXME non-blocking
+            kDebug() << "KIO del=" << success;
         }
     }
+
+    if (!success) return QUrl(); ///< either copy/move or delete operation failed
+
     return targetUrl;
 }

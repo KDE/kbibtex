@@ -36,7 +36,7 @@ class KBIBTEXNETWORKING_EXPORT AssociatedFiles
 public:
     enum PathType {ptAbsolute = 0, ptRelative = 1};
     enum RenameOperation {roKeepName = 0, roEntryId = 1};
-    enum MoveCopyOperation {mcoCopy = 0, mcoMove = 1 };
+    enum MoveCopyOperation {mcoNoCopyMove = 0, mcoCopy = 1, mcoMove = 2};
 
     static bool urlIsLocal(const QUrl &url);
     static QString relativeFilename(const QUrl &document, const QUrl &baseUrl);
