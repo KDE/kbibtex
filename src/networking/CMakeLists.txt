@@ -40,6 +40,7 @@ set(
     zotero/tags.cpp
     zotero/tagmodel.cpp
     zotero/items.cpp
+    associatedfiles.cpp
     findpdf.cpp
     internalnetworkaccessmanager.cpp
 )
@@ -89,6 +90,7 @@ set(
     zotero/items.h
     zotero/api.h
     kbibtexnetworking_export.h
+    associatedfiles.h
     findpdf.h
     internalnetworkaccessmanager.h
 )
