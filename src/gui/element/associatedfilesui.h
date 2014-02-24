@@ -41,7 +41,7 @@ public:
     AssociatedFiles::PathType pathType() const;
 
 protected:
-    explicit AssociatedFilesUI(QWidget *parent);
+    explicit AssociatedFilesUI(QSharedPointer<Entry> &entry, File *bibTeXfile, QWidget *parent);
 
 private slots:
     void updateUIandPreview();
