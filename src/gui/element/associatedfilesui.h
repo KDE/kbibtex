@@ -34,14 +34,16 @@ class KBIBTEXGUI_EXPORT AssociatedFilesUI: public QWidget
     Q_OBJECT
 
 public:
-    static bool associateUrl(const QUrl &url, QSharedPointer<Entry> &entry, File *bibTeXfile, QWidget *parent);
+    static bool associateUrl(const QUrl &url, QSharedPointer<Entry> &entry, const File *bibTeXfile, QWidget *parent);
+    static QString associateUrl(const QUrl &url, const QString &entryId, const File *bibTeXfile, QWidget *parent);
 
     AssociatedFiles::RenameOperation renameOperation() const;
     AssociatedFiles::MoveCopyOperation moveCopyOperation() const;
     AssociatedFiles::PathType pathType() const;
+    QString userDefinedFilename() const;
 
 protected:
-    explicit AssociatedFilesUI(QSharedPointer<Entry> &entry, File *bibTeXfile, QWidget *parent);
+    explicit AssociatedFilesUI(const QString &entryId, const File *bibTeXfile, QWidget *parent);
 
 private slots:
     void updateUIandPreview();
