@@ -35,15 +35,16 @@ class KBIBTEXNETWORKING_EXPORT AssociatedFiles
 {
 public:
     enum PathType {ptAbsolute = 0, ptRelative = 1};
-    enum RenameOperation {roKeepName = 0, roEntryId = 1};
+    enum RenameOperation {roKeepName = 0, roEntryId = 1, roUserDefined = 2};
     enum MoveCopyOperation {mcoNoCopyMove = 0, mcoCopy = 1, mcoMove = 2};
 
     static bool urlIsLocal(const QUrl &url);
     static QString relativeFilename(const QUrl &document, const QUrl &baseUrl);
     static QString absoluteFilename(const QUrl &document, const QUrl &baseUrl);
 
-    static QString associateDocumentURL(const QUrl &document, QSharedPointer<Entry> entry, File *bibTeXFile, PathType pathType, const bool dryRun = false);
-    static QUrl copyDocument(const QUrl &document, QSharedPointer<Entry> entry, File *bibTeXFile, RenameOperation renameOperation, MoveCopyOperation moveCopyOperation, QWidget *widget, const bool dryRun = false);
+    static QString associateDocumentURL(const QUrl &document, QSharedPointer<Entry> &entry, const File *bibTeXFile, PathType pathType, const bool dryRun = false);
+    static QString associateDocumentURL(const QUrl &document, const File *bibTeXFile, PathType pathType);
+    static QUrl copyDocument(const QUrl &document, const QString &entryId, const File *bibTeXFile, RenameOperation renameOperation, MoveCopyOperation moveCopyOperation, QWidget *widget, const QString &userDefinedFilename = QString(), const bool dryRun = false);
 };
 
 #endif // KBIBTEX_NETWORKING_ASSOCIATEDFILES_H
