@@ -42,9 +42,8 @@ public:
     static QString relativeFilename(const QUrl &document, const QUrl &baseUrl);
     static QString absoluteFilename(const QUrl &document, const QUrl &baseUrl);
 
-    static QString associateDocumentURL(const QUrl &document, QSharedPointer<Entry> entry, File *bibTeXFile, PathType pathType);
-    static QString associateDocumentURL(const QUrl &document, File *bibTeXFile, PathType pathType);
-    static QUrl copyDocument(const QUrl &document, QSharedPointer<Entry> entry, File *bibTeXFile, RenameOperation renameOperation, MoveCopyOperation moveCopyOperation, QWidget *widget);
+    static QString associateDocumentURL(const QUrl &document, QSharedPointer<Entry> entry, File *bibTeXFile, PathType pathType, const bool dryRun = false);
+    static QUrl copyDocument(const QUrl &document, QSharedPointer<Entry> entry, File *bibTeXFile, RenameOperation renameOperation, MoveCopyOperation moveCopyOperation, QWidget *widget, const bool dryRun = false);
 };
 
 #endif // KBIBTEX_NETWORKING_ASSOCIATEDFILES_H

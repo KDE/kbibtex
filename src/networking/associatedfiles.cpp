@@ -108,7 +108,7 @@ QString AssociatedFiles::absoluteFilename(const QUrl &file, const QUrl &baseUrl)
     }
 }
 
-QString AssociatedFiles::associateDocumentURL(const QUrl &document, QSharedPointer<Entry> entry, File *bibTeXFile, PathType pathType) {
+QString AssociatedFiles::associateDocumentURL(const QUrl &document, QSharedPointer<Entry> entry, File *bibTeXFile, PathType pathType, const bool dryRun) {
     Q_ASSERT(bibTeXFile != NULL); // FIXME more graceful?
 
     kDebug() << "document=" << document.toString();
@@ -124,50 +124,28 @@ QString AssociatedFiles::associateDocumentURL(const QUrl &document, QSharedPoint
     const QString field = isLocal ? Entry::ftLocalFile : Entry::ftUrl;
     QString finalUrl = pathType == ptAbsolute ? absoluteFilename(document, baseUrl) : relativeFilename(document, baseUrl);
 
-    /*  Value value = entry->value(Entry::ftLocalFile);
-      value.append(QSharedPointer<VerbatimText>(new VerbatimText(finalUrl)));
-      entry->insert(Entry::ftUrl, value);
-      kDebug() << "finalUrl=" << finalUrl;
-      return finalUrl;*/
-
-    bool alreadyContained = false;
-    kDebug() << "Adding url" << finalUrl;
-    for (QMap<QString, Value>::ConstIterator it = entry->constBegin(); !alreadyContained && it != entry->constEnd(); ++it) {
-        const Value v = it.value();
-        for (Value::ConstIterator vit = v.constBegin(); !alreadyContained && vit != v.constEnd(); ++vit) {
-            if (PlainTextValue::text(*vit, bibTeXFile) == finalUrl)
-                alreadyContained = true;
+    if (!dryRun) { /// only if not pretending
+        bool alreadyContained = false;
+        kDebug() << "Adding url" << finalUrl;
+        for (QMap<QString, Value>::ConstIterator it = entry->constBegin(); !alreadyContained && it != entry->constEnd(); ++it) {
+            const Value v = it.value();
+            for (Value::ConstIterator vit = v.constBegin(); !alreadyContained && vit != v.constEnd(); ++vit) {
+                if (PlainTextValue::text(*vit, bibTeXFile) == finalUrl)
+                    alreadyContained = true;
+            }
+        }
+        kDebug() << "alreadyContained=" << alreadyContained;
+        if (!alreadyContained) {
+            Value value = entry->value(field);
+            value.append(QSharedPointer<VerbatimText>(new VerbatimText(finalUrl)));
+            entry->insert(field, value);
         }
     }
-    kDebug() << "alreadyContained=" << alreadyContained;
-    if (!alreadyContained) {
-        Value value = entry->value(field);
-        value.append(QSharedPointer<VerbatimText>(new VerbatimText(finalUrl)));
-        entry->insert(field, value);
-    }
+
     return finalUrl;
 }
 
-QString AssociatedFiles::associateDocumentURL(const QUrl &document, File *bibTeXFile, PathType pathType) {
-    Q_ASSERT(bibTeXFile != NULL); // FIXME more graceful?
-
-    const QUrl baseUrl = bibTeXFile->property(File::Url).toUrl();
-
-    kDebug() << "document=" << document.toString();
-    kDebug() << "bibTeXFile.count()=" << bibTeXFile->count();
-    kDebug() << "bibTeXFile->property(File::Url).toUrl()=baseUrl=" << baseUrl;
-    kDebug() << "pathType=" << pathType;
-
-    if (urlIsLocal(document)) {
-        /// Document URL points to a local file
-        return pathType == ptAbsolute ? absoluteFilename(document, baseUrl) : relativeFilename(document, baseUrl);
-    } else {
-        /// Document URL points to a remote location
-        return document.toString();
-    }
-}
-
-QUrl AssociatedFiles::copyDocument(const QUrl &sourceUrl, QSharedPointer<Entry> entry, File *bibTeXFile, RenameOperation renameOperation, MoveCopyOperation moveCopyOperation, QWidget *widget) {
+QUrl AssociatedFiles::copyDocument(const QUrl &sourceUrl, QSharedPointer<Entry> entry, File *bibTeXFile, RenameOperation renameOperation, MoveCopyOperation moveCopyOperation, QWidget *widget, const bool dryRun) {
     Q_ASSERT(bibTeXFile != NULL); // FIXME more graceful?
 
     if (moveCopyOperation == mcoNoCopyMove)
@@ -182,10 +160,13 @@ QUrl AssociatedFiles::copyDocument(const QUrl &sourceUrl, QSharedPointer<Entry> 
     kDebug() << "renameOperation=" << renameOperation;
     kDebug() << "moveCopyOperation=" << moveCopyOperation;
 
-    const QString filename = QFileInfo(internalSourceUrl.path()).fileName();
-    const QString suffix = QFileInfo(internalSourceUrl.path()).suffix();
-    kDebug() << "filename=" << filename;
+    QString suffix = QFileInfo(internalSourceUrl.path()).suffix();
+    if (suffix.isEmpty()) suffix = QLatin1String("html");
     kDebug() << "suffix=" << suffix;
+    QString filename = QFileInfo(internalSourceUrl.path()).fileName();
+    kDebug() << "filename=" << filename;
+    if (filename.isEmpty()) filename = internalSourceUrl.toString().remove(QDir::separator()).remove(QLatin1Char('/')).remove(QLatin1Char(':')).remove(QLatin1Char('.')) + QLatin1String(".") + suffix;
+    kDebug() << "filename=" << filename;
 
     if (!bibTeXFile->hasProperty(File::Url)) return QUrl(); /// no valid URL set of BibTeX file object
     QUrl targetUrl = bibTeXFile->property(File::Url).toUrl();
@@ -194,26 +175,28 @@ QUrl AssociatedFiles::copyDocument(const QUrl &sourceUrl, QSharedPointer<Entry> 
     targetUrl.setPath(targetPath + QDir::separator() + (renameOperation == roEntryId ? entry->id() + QLatin1String(".") + suffix : filename));
     kDebug() << "targetUrl=" << targetUrl.toString();
 
-    bool success = true;
-    if (urlIsLocal(internalSourceUrl) && urlIsLocal(targetUrl)) {
-        QFile(targetUrl.path()).remove();
-        success &= QFile::copy(internalSourceUrl.path(), targetUrl.path()); // FIXME check if succeeded
-        kDebug() << "copy=" << success << sourceUrl.path() << targetUrl.path();
-        if (moveCopyOperation == mcoMove) {
-            success &= QFile(internalSourceUrl.path()).remove();
-            kDebug() << "remove=" << success;
+    if (!dryRun) { /// only if not pretending
+        bool success = true;
+        if (urlIsLocal(internalSourceUrl) && urlIsLocal(targetUrl)) {
+            QFile(targetUrl.path()).remove();
+            success &= QFile::copy(internalSourceUrl.path(), targetUrl.path()); // FIXME check if succeeded
+            kDebug() << "copy=" << success << sourceUrl.path() << targetUrl.path();
+            if (moveCopyOperation == mcoMove) {
+                success &= QFile(internalSourceUrl.path()).remove();
+                kDebug() << "remove=" << success;
+            }
+        } else {
+            KIO::NetAccess::del(sourceUrl, widget); // FIXME non-blocking
+            success &= KIO::NetAccess::file_copy(sourceUrl, targetUrl, widget); // FIXME non-blocking
+            kDebug() << "KIO copy=" << success;
+            if (moveCopyOperation == mcoMove) {
+                success &= KIO::NetAccess::del(sourceUrl, widget); // FIXME non-blocking
+                kDebug() << "KIO del=" << success;
+            }
         }
-    } else {
-        KIO::NetAccess::del(sourceUrl, widget); // FIXME non-blocking
-        success &= KIO::NetAccess::file_copy(sourceUrl, targetUrl, widget); // FIXME non-blocking
-        kDebug() << "KIO copy=" << success;
-        if (moveCopyOperation == mcoMove) {
-            success &= KIO::NetAccess::del(sourceUrl, widget); // FIXME non-blocking
-            kDebug() << "KIO del=" << success;
-        }
-    }
 
-    if (!success) return QUrl(); ///< either copy/move or delete operation failed
+        if (!success) return QUrl(); ///< either copy/move or delete operation failed
+    }
 
     return targetUrl;
 }
