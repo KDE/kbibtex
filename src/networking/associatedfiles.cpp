@@ -26,6 +26,7 @@
 
 bool AssociatedFiles::urlIsLocal(const QUrl &url)
 {
+    // FIXME same function as in UrlListEdit; move to common code base?
     const QString scheme = url.scheme();
     /// Test various schemes such as "http", "https", "ftp", ...
     return !scheme.startsWith(QLatin1String("http")) && !scheme.startsWith(QLatin1String("ftp")) && !scheme.startsWith(QLatin1String("sftp")) && !scheme.startsWith(QLatin1String("fish")) && !scheme.startsWith(QLatin1String("webdav")) && scheme != QLatin1String("smb");

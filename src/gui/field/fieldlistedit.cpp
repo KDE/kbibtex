@@ -596,9 +596,10 @@ QString UrlListEdit::askRelativeOrStaticFilename(QWidget *parent, const QString 
 
 bool UrlListEdit::urlIsLocal(const QUrl &url)
 {
+    // FIXME same function as in AssociateFiles; move to common code base?
     const QString scheme = url.scheme();
     /// Test various schemes such as "http", "https", "ftp", ...
-    return !scheme.startsWith(QLatin1String("http")) && !scheme.startsWith(QLatin1String("ftp")) && !scheme.startsWith(QLatin1String("webdav")) && scheme != QLatin1String("smb");
+    return !scheme.startsWith(QLatin1String("http")) && !scheme.startsWith(QLatin1String("ftp")) && !scheme.startsWith(QLatin1String("sftp")) && !scheme.startsWith(QLatin1String("fish")) && !scheme.startsWith(QLatin1String("webdav")) && scheme != QLatin1String("smb");
 }
 
 FieldLineEdit *UrlListEdit::addFieldLineEdit()
