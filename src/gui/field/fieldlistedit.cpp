@@ -611,7 +611,7 @@ void UrlListEdit::textChanged(QWidget *widget)
     /// Enable button only if Url is valid and points to a remote
     /// DjVu, PDF, or PostScript file
     // TODO more file types?
-    bool canBeSaved = url.isValid() && !urlIsLocal(url) && (newText.endsWith(QLatin1String(".djvu")) || newText.endsWith(QLatin1String(".pdf")) || newText.endsWith(QLatin1String(".ps"))) && !urlIsLocal(url);
+    bool canBeSaved = url.isValid() && !urlIsLocal(url) && (newText.endsWith(QLatin1String(".djvu")) || newText.endsWith(QLatin1String(".pdf")) || newText.endsWith(QLatin1String(".ps")));
     buttonSaveLocally->setEnabled(canBeSaved);
     buttonSaveLocally->setToolTip(canBeSaved ? i18n("Save file '%1' locally", url.pathOrUrl()) : QLatin1String(""));
 }
