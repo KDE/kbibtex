@@ -110,14 +110,17 @@ public:
         connect(buttonGroup, SIGNAL(buttonClicked(int)), p, SLOT(updateUIandPreview()));
         radioRenameToEntryId->setChecked(true); /// by default
 
-        groupBoxPathType = new QGroupBox(i18n("Path Type"), p);
+        groupBoxPathType = new QGroupBox(i18n("Path as Inserted into Entry"), p);
+        buttonGroup = new QButtonGroup(groupBoxRename);
         layout->addWidget(groupBoxPathType);
         groupBoxLayout = new QVBoxLayout(groupBoxPathType);
         radioRelativePath = new QRadioButton(i18n("Relative Path"), groupBoxPathType);
         groupBoxLayout->addWidget(radioRelativePath);
+        buttonGroup->addButton(radioRelativePath);
         radioAbsolutePath = new QRadioButton(i18n("Absolute Path"), groupBoxPathType);
         groupBoxLayout->addWidget(radioAbsolutePath);
-        connect(radioAbsolutePath, SIGNAL(clicked()), p, SLOT(updateUIandPreview()));
+        buttonGroup->addButton(radioAbsolutePath);
+        connect(buttonGroup, SIGNAL(buttonClicked(int)), p, SLOT(updateUIandPreview()));
         radioAbsolutePath->setChecked(true); /// by default
 
         layout->addSpacing(8);
