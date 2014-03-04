@@ -31,15 +31,39 @@ class File;
 #include "kbibtexnetworking_export.h"
 
 /**
+ * Given a remote or local filename/URL, this class will, (1) at the user's
+ * discretion, move or copy this file next to the bibliography's file into
+ * the same directory, (2) rename the copied file (again, at the user's
+ * discretion) to either match the corresponding entry's id or follow a name
+ * provided by the user and (3) modify the entry to include a reference
+ * (either relative or absolute path) to the newly moved/copied file or its
+ * original filename/URL.
+ *
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
 class KBIBTEXNETWORKING_EXPORT AssociatedFiles
 {
 public:
-    enum PathType {ptAbsolute = 0, ptRelative = 1};
-    enum RenameOperation {roKeepName = 0, roEntryId = 1, roUserDefined = 2};
-    enum MoveCopyOperation {mcoNoCopyMove = 0, mcoCopy = 1, mcoMove = 2};
+    enum PathType {
+        ptAbsolute = 0, ///< Use absolute filenames/paths if possible
+        ptRelative = 1 ///< Use relative filenames/paths if possible
+    };
+    enum RenameOperation {
+        roKeepName = 0, ///< Do not rename a file
+        roEntryId = 1, ///< Rename the file following the entry's id
+        roUserDefined = 2 ///< Rename after a string provided by the user
+    };
+    enum MoveCopyOperation {
+        mcoNoCopyMove = 0, ///< Do not move or copy a file, use a reference only
+        mcoCopy = 1, ///< Copy the file next to the bibiliograpy file
+        mcoMove = 2 /// Same as copy, but delete original
+    };
 
+    /**
+     * Test if a given URL points to a local file or a remote location.
+     * @param url URL to test
+     * @return true if the URL points to a local file
+     */
     static bool urlIsLocal(const QUrl &url);
 
     /**
