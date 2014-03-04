@@ -128,8 +128,8 @@ protected:
     virtual FieldLineEdit *addFieldLineEdit();
 
 private slots:
-    void slotAddReferenceToFile();
-    void slotCopyFile();
+    void slotAddReference();
+    void slotAddReferenceFromClipboard();
     /// Slot for events where the "save locally" button is triggered
     void slotSaveLocally(QWidget *widget);
     /// Catch events where the line edit's text change
@@ -139,6 +139,8 @@ private:
     KPushButton *m_buttonAddFile;
     QSignalMapper *m_signalMapperSaveLocallyButtonClicked;
     QSignalMapper *m_signalMapperFieldLineEditTextChanged;
+
+    void addReference(const QUrl &url);
 };
 
 

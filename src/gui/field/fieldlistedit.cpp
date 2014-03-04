@@ -47,6 +47,8 @@
 #include "fileimporterbibtex.h"
 #include "fileexporterbibtex.h"
 #include "fieldlineedit.h"
+#include "associatedfiles.h"
+#include "associatedfilesui.h"
 
 class FieldListEdit::FieldListEditProtected
 {
@@ -470,13 +472,8 @@ UrlListEdit::UrlListEdit(QWidget *parent)
     m_buttonAddFile->setMenu(menuAddFile);
     connect(m_buttonAddFile, SIGNAL(clicked()), m_buttonAddFile, SLOT(showMenu()));
 
-    /// Action to add a reference (i.e. only the filename or URL) to an entry
-    QAction *action = menuAddFile->addAction(KIcon("emblem-symbolic-link"), i18n("Add reference to file..."), this, SLOT(slotAddReferenceToFile()));
-    action->setToolTip(i18n("Insert only a filename, but do not copy the file itself."));
-    /// Action to copy a file near the BibTeX file (e.g. same folder) and then
-    /// add the copy's relative filename to the entry
-    action = menuAddFile->addAction(KIcon("document-save-all"), i18n("Insert file..."), this, SLOT(slotCopyFile()));
-    action->setToolTip(i18n("Copy file next to bibliography file."));
+    menuAddFile->addAction(KIcon("emblem-symbolic-link"), i18n("Add reference ..."), this, SLOT(slotAddReference()));
+    menuAddFile->addAction(KIcon("emblem-symbolic-link"), i18n("Add reference from clipboard"), this, SLOT(slotAddReferenceFromClipboard()));
 }
 
 UrlListEdit::~UrlListEdit()
@@ -485,67 +482,34 @@ UrlListEdit::~UrlListEdit()
     delete m_signalMapperFieldLineEditTextChanged;
 }
 
-void UrlListEdit::slotAddReferenceToFile()
+void UrlListEdit::slotAddReference()
 {
     QUrl bibtexUrl(d->file != NULL ? d->file->property(File::Url, QVariant()).toUrl() : QUrl());
-    QFileInfo bibtexUrlInfo = bibtexUrl.isEmpty() ? QFileInfo() : QFileInfo(bibtexUrl.path());
+    if (!bibtexUrl.isEmpty()) {
+        const QFileInfo fi(bibtexUrl.path());
+        bibtexUrl.setPath(fi.absolutePath());
+    }
+    const KUrl documentUrl = KFileDialog::getOpenUrl(bibtexUrl, QString(), this, i18n("File to Associate"));
+    if (!documentUrl.isEmpty())
+        addReference(documentUrl);
+}
 
-    const QString filename = KFileDialog::getOpenFileName(KUrl(bibtexUrlInfo.absolutePath()), QString(), this, i18n("Select File"));
-    if (!filename.isEmpty()) {
-        const QString visibleFilename = askRelativeOrStaticFilename(this, filename, bibtexUrl);
+void UrlListEdit::slotAddReferenceFromClipboard()
+{
+    const KUrl url = KUrl::fromUserInput(QApplication::clipboard()->text());
+    if (!url.isEmpty())
+        addReference(url);
+}
+
+void UrlListEdit::addReference(const QUrl &url) {
+    const Entry *entry = dynamic_cast<const Entry *>(m_element);
+    const QString entryId = entry != NULL ? entry->id() : QString();
+    const QString visibleFilename = AssociatedFilesUI::associateUrl(url, entryId, d->file, this);
+    if (!visibleFilename.isEmpty()) {
         Value *value = new Value();
         value->append(QSharedPointer<VerbatimText>(new VerbatimText(visibleFilename)));
         lineAdd(value);
         emit modified();
-    }
-}
-
-void UrlListEdit::slotCopyFile()
-{
-    QUrl bibtexUrl(d->file != NULL ? d->file->property(File::Url, QVariant()).toUrl() : QUrl());
-    if (!bibtexUrl.isValid() || bibtexUrl.isEmpty()) {
-        KMessageBox::information(this, i18n("The current BibTeX document has to be saved first before associating other files with this document."));
-        return;
-    }
-    /// Gather information on BibTeX file's URL
-    QFileInfo bibtexUrlInfo = QFileInfo(bibtexUrl.path());
-
-    /// Ask user which file to associate with the BibTeX document
-    // TODO allow a similar operation by drag-and-drop of e.g. PDF files
-    const QString sourceFilename = KFileDialog::getOpenFileName(KUrl(), QString(), this, i18nc("When copying a file to a position relative to the bibliography file", "Select Source File"));
-    if (!sourceFilename.isEmpty()) {
-        /// Build a proposal for the new filename relative to the BibTeX document
-        // TODO make this more configurable, e.g. via templates
-        const Entry *entry = dynamic_cast<const Entry *>(m_element);
-        const QString entryKey = entry != NULL ? entry->id() : QLatin1String("");
-        int p = sourceFilename.lastIndexOf(QLatin1Char('.'));
-        const QString extension = p > 0 && !entryKey.isEmpty() ? sourceFilename.mid(p) : QString();
-        QString destinationFilename = bibtexUrlInfo.absolutePath() + QDir::separator() + entryKey + extension;
-
-        /// Ask user for confirmation on the new filename
-        destinationFilename = KFileDialog::getSaveFileName(KUrl(destinationFilename), QString(), this, i18nc("When copying a file to a position relative to the bibliography file", "Select Destination"));
-        if (!destinationFilename.isEmpty()) {
-            /// Memorize the absolute filename for the copy operation further below
-            const QString absoluteDestinationFilename = destinationFilename;
-
-            /// Determine the relative filename (relative to the BibTeX file)
-            QFileInfo destinationFilenameInfo(destinationFilename);
-            if (destinationFilenameInfo.absolutePath() == bibtexUrlInfo.absolutePath() || destinationFilenameInfo.absolutePath().startsWith(bibtexUrlInfo.absolutePath() + QDir::separator())) {
-                QString relativePath = destinationFilenameInfo.absolutePath().mid(bibtexUrlInfo.absolutePath().length() + 1);
-                destinationFilename = relativePath + (relativePath.isEmpty() ? QLatin1String("") : QString(QDir::separator())) + destinationFilenameInfo.fileName();
-            }
-
-            /// If file with same destination filename exists, delete it
-            KIO::NetAccess::del(KUrl(absoluteDestinationFilename), this);
-            /// Copy associated document to destination using the absolute filename
-            if (KIO::NetAccess::file_copy(KUrl(sourceFilename), KUrl(absoluteDestinationFilename), this)) {
-                /// Only if copy operation succeeded, add reference to copied file into BibTeX entry
-                Value *value = new Value();
-                value->append(QSharedPointer<VerbatimText>(new VerbatimText(destinationFilename)));
-                lineAdd(value);
-                emit modified();
-            }
-        }
     }
 }
 
@@ -632,9 +596,10 @@ QString UrlListEdit::askRelativeOrStaticFilename(QWidget *parent, const QString 
 
 bool UrlListEdit::urlIsLocal(const QUrl &url)
 {
+    // FIXME same function as in AssociateFiles; move to common code base?
     const QString scheme = url.scheme();
     /// Test various schemes such as "http", "https", "ftp", ...
-    return !scheme.startsWith(QLatin1String("http")) && !scheme.startsWith(QLatin1String("ftp")) && !scheme.startsWith(QLatin1String("webdav")) && scheme != QLatin1String("smb");
+    return !scheme.startsWith(QLatin1String("http")) && !scheme.startsWith(QLatin1String("ftp")) && !scheme.startsWith(QLatin1String("sftp")) && !scheme.startsWith(QLatin1String("fish")) && !scheme.startsWith(QLatin1String("webdav")) && scheme != QLatin1String("smb");
 }
 
 FieldLineEdit *UrlListEdit::addFieldLineEdit()

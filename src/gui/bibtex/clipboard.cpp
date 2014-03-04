@@ -31,6 +31,7 @@
 #include "fileimporterbibtex.h"
 #include "fileexporterbibtex.h"
 #include "file.h"
+#include "associatedfilesui.h"
 
 const QString Clipboard::keyCopyReferenceCommand = QLatin1String("copyReferenceCommand");
 const QString Clipboard::defaultCopyReferenceCommand = QLatin1String("");
@@ -120,38 +121,9 @@ public:
                 kDebug() << "Adding in entry" << entry->id();
 
                 /// Check if text looks like an URL
-                KUrl url(text);
+                const QUrl url(text);
                 if (url.isValid()) {
-                    /// Try to resolve relative URLs
-                    QUrl fileUrl = bibTeXEditor->bibTeXModel()->bibTeXFile()->property(File::Url, QUrl()).toUrl();
-                    if (url.isRelative() && fileUrl.isValid()) url = fileUrl.resolved(url);
-
-                    // FIXME this code is redundant to findpdfui.cpp
-                    bool alreadyContained = false;
-                    const QString urlText = url.pathOrUrl();
-                    kDebug() << "Adding url" << urlText;
-                    for (QMap<QString, Value>::ConstIterator it = entry->constBegin(); !alreadyContained && it != entry->constEnd(); ++it) {
-                        const QString key = it.key().toLower();
-                        // FIXME this will terribly break if URLs in an entry's URL field are separated with semicolons
-                        alreadyContained |= (key.startsWith(Entry::ftUrl) || key.startsWith(Entry::ftLocalFile)) && PlainTextValue::text(it.value()) == urlText;
-                    }
-                    if (!alreadyContained) {
-                        Value value;
-                        value.append(QSharedPointer<VerbatimText>(new VerbatimText(urlText)));
-                        const QString field = url.isLocalFile() ? Entry::ftLocalFile : Entry::ftUrl;
-                        kDebug() << "Adding to field" << field;
-                        if (!entry->contains(field))
-                            entry->insert(field, value);
-                        else
-                            for (int i = 2; i < 256; ++i) {
-                                const QString keyName = QString("%1%2").arg(field).arg(i);
-                                if (!entry->contains(keyName)) {
-                                    entry->insert(keyName, value);
-                                    break;
-                                }
-                            }
-                    }
-                    return true;
+                    return AssociatedFilesUI::associateUrl(url, entry, bibTeXEditor->bibTeXModel()->bibTeXFile(), bibTeXEditor);
                 }
             }
         } else
