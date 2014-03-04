@@ -20,6 +20,8 @@
 
 #include <QUrl>
 
+#include <KUrl>
+
 #include "entry.h"
 
 class QWidget;
@@ -39,8 +41,29 @@ public:
     enum MoveCopyOperation {mcoNoCopyMove = 0, mcoCopy = 1, mcoMove = 2};
 
     static bool urlIsLocal(const QUrl &url);
-    static QString relativeFilename(const QUrl &document, const QUrl &baseUrl);
-    static QString absoluteFilename(const QUrl &document, const QUrl &baseUrl);
+
+    /**
+     * Translate a given URL of a document (e.g. a PDF file) to a string
+     * representation pointing to the relative location of this document.
+     * A "base URL", i.e. the bibliography's file location has to provided to
+     * calculate the relative location of the document.
+     * "Upwards relativity" (i.e. paths containing "..") is not supported for this
+     * functions output; in this case, an absolute path will be generated as fallback.
+     * @param document The document's URL
+     * @param baseUrl The base URL
+     * @return The document URL's string representation relative to the base URL
+     */
+    static QString relativeFilename(const KUrl &document, const KUrl &baseUrl);
+    /**
+     * Translate a given URL of a document (e.g. a PDF file) to a string
+     * representation pointing to the absolute location of this document.
+     * A "base URL", i.e. the bibliography's file location may be provided to
+     * resolve relative document URLs
+     * @param document The document's URL
+     * @param baseUrl The base URL
+     * @return The document URL's string representation in absolute form
+     */
+    static QString absoluteFilename(const KUrl &document, const KUrl &baseUrl);
 
     static QString associateDocumentURL(const QUrl &document, QSharedPointer<Entry> &entry, const File *bibTeXFile, PathType pathType, const bool dryRun = false);
     static QString associateDocumentURL(const QUrl &document, const File *bibTeXFile, PathType pathType);

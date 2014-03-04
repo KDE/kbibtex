@@ -32,81 +32,77 @@ bool AssociatedFiles::urlIsLocal(const QUrl &url)
     return !scheme.startsWith(QLatin1String("http")) && !scheme.startsWith(QLatin1String("ftp")) && !scheme.startsWith(QLatin1String("sftp")) && !scheme.startsWith(QLatin1String("fish")) && !scheme.startsWith(QLatin1String("webdav")) && scheme != QLatin1String("smb");
 }
 
-QString AssociatedFiles::relativeFilename(const QUrl &file, const QUrl &baseUrl) {
-    kDebug() << "file=" << file.toString();
-    kDebug() << "baseUrl=" << baseUrl.toString();
-
-    QUrl internalFile = file;
-    if (internalFile.isRelative()) internalFile = baseUrl.resolved(internalFile);
-    kDebug() << "internalFile=" << internalFile.toString();
-
-    const QFileInfo baseUrlInfo = baseUrl.isEmpty() ? QFileInfo() : QFileInfo(baseUrl.path());
-    const QString baseCanonicalPath = baseUrlInfo.absolutePath();
-    kDebug() << "baseCanonicalPath=" << baseCanonicalPath;
-    const QFileInfo fileInfo(internalFile.path());
-    const QString fileCanonicalName = fileInfo.absoluteFilePath();
-    kDebug() << "fileCanonicalName=" << fileCanonicalName;
-    if (urlIsLocal(internalFile)) {
-        /// Document URL points to a local file
-        if (!baseUrl.isEmpty()) {
-            if (baseCanonicalPath.endsWith(QDir::separator()) && fileCanonicalName.startsWith(baseCanonicalPath)) {
-                const QString relativeFilename = fileCanonicalName.mid(baseCanonicalPath.length());
-                kDebug() << "relativeFilename=" << relativeFilename;
-                return relativeFilename;
-            } else if (fileCanonicalName.startsWith(baseCanonicalPath + QDir::separator())) {
-                const QString relativeFilename = fileCanonicalName.mid(baseCanonicalPath.length() + 1);
-                kDebug() << "relativeFilename=" << relativeFilename;
-                return relativeFilename;
-            }
-        }
-        /// Fallback if relative filename cannot be determined
-        kDebug() << "fileCanonicalName=" << fileCanonicalName;
-        return fileCanonicalName;
-    } else {
-        /// Document URL points to a remote location
-        internalFile.setPath(fileCanonicalName);
-        const QString internalFilePath = internalFile.toString();
-        kDebug() << "internalFilePath=" << internalFilePath;
-        QUrl internalBaseUrl = baseUrl;
-        internalBaseUrl.setPath(baseCanonicalPath);
-        const QString internalBasePath = internalBaseUrl.toString();
-        kDebug() << "internalBasePath=" << internalBasePath;
-
-        if (!internalBaseUrl.isEmpty()) {
-            if (internalBasePath.endsWith(QDir::separator()) && internalFilePath.startsWith(internalBasePath)) {
-                const QString relativeFilename = internalFilePath.mid(internalBasePath.length());
-                kDebug() << "relativeFilename=" << relativeFilename;
-                return relativeFilename;
-            } else if (internalFilePath.startsWith(internalBasePath + QDir::separator())) {
-                const QString relativeFilename = internalFilePath.mid(internalBasePath.length() + 1);
-                kDebug() << "relativeFilename=" << relativeFilename;
-                return relativeFilename;
-            }
-        }
-
-        /// Fallback if relative filename cannot be determined
-        kDebug() << "internalFilePath=" << internalFilePath;
-        return internalFilePath;
+QString AssociatedFiles::relativeFilename(const KUrl &documentUrl, const KUrl &baseUrl) {
+    if (documentUrl.isEmpty()) {
+        kWarning() << "document URL has to point to a file location or URL";
+        return documentUrl.pathOrUrl();
     }
+    if (baseUrl.isEmpty() || baseUrl.isRelative()) {
+        kWarning() << "base URL has to point to an absolute file location or URL";
+        return documentUrl.pathOrUrl();
+    }
+    if (documentUrl.scheme() != baseUrl.scheme() || (documentUrl.scheme() != QLatin1String("file") && documentUrl.host() != baseUrl.host())) {
+        kWarning() << "document URL and base URL do not match (protocol, host, ...)";
+        return documentUrl.pathOrUrl();
+    }
+
+    kDebug() << "documentUrl=" << documentUrl.pathOrUrl();
+    kDebug() << "baseUrl=" << baseUrl.pathOrUrl();
+
+    /// First, resolve the provided document URL to an absolute URL
+    /// using the given base URL
+    KUrl internalDocumentUrl = documentUrl;
+    if (internalDocumentUrl.isRelative())
+        internalDocumentUrl = baseUrl.resolved(internalDocumentUrl);
+    kDebug() << "internalDocumentUrl=" << internalDocumentUrl.pathOrUrl();
+
+    /// Get the absolute path of the base URL
+    const QString baseAbsolutePath = QFileInfo(baseUrl.path()).absolutePath();
+    kDebug() << "baseAbsolutePath=" << baseAbsolutePath;
+    /// Get the absolute path of the document URL
+    const QString documentAbsoluteName = QFileInfo(internalDocumentUrl.path()).absoluteFilePath();
+    kDebug() << "documentAbsoluteName=" << documentAbsoluteName;
+
+    /// Second, figure out to which extend base and document URL "overlap"
+    if (baseAbsolutePath.endsWith(QDir::separator()) && documentAbsoluteName.startsWith(baseAbsolutePath)) {
+        const QString relativeFilename = documentAbsoluteName.mid(baseAbsolutePath.length());
+        kDebug() << "relativeFilename=" << relativeFilename;
+        return relativeFilename;
+    } else if (documentAbsoluteName.startsWith(baseAbsolutePath + QDir::separator())) {
+        const QString relativeFilename = documentAbsoluteName.mid(baseAbsolutePath.length() + 1);
+        kDebug() << "relativeFilename=" << relativeFilename;
+        return relativeFilename;
+    }
+
+    /// Fallback if relative filename cannot be determined
+    return internalDocumentUrl.pathOrUrl();
 }
 
-QString AssociatedFiles::absoluteFilename(const QUrl &file, const QUrl &baseUrl) {
-    kDebug() << "file=" << file.toString();
-    QUrl internalFile = file;
-    if (internalFile.isRelative()) internalFile = baseUrl.resolved(internalFile);
-    kDebug() << "internalFile=" << internalFile.toString();
-
-    const QFileInfo fileInfo(internalFile.path());
-    if (urlIsLocal(internalFile)) {
-        /// Document URL points to a local file
-        kDebug() << "fileInfo.absoluteFilePath()=" << fileInfo.absoluteFilePath();
-        return fileInfo.absoluteFilePath();
-    } else {
-        /// Document URL points to a remote location
-        internalFile.setPath(fileInfo.absoluteFilePath());
-        kDebug() << "internalFile=" << internalFile.toString();
-        return internalFile.toString();
+QString AssociatedFiles::absoluteFilename(const KUrl &documentUrl, const KUrl &baseUrl) {
+    if (documentUrl.isEmpty()) {
+        kWarning() << "document URL has to point to a file location or URL";
+        return documentUrl.pathOrUrl();
     }
+    if (documentUrl.isRelative() && (baseUrl.isEmpty() || baseUrl.isRelative())) {
+        kWarning() << "base URL has to point to an absolute file location or URL if the document URL is relative";
+        return documentUrl.pathOrUrl();
+    }
+    if (documentUrl.isRelative() && (documentUrl.scheme() != baseUrl.scheme() || (documentUrl.scheme() != QLatin1String("file") && documentUrl.host() != baseUrl.host()))) {
+        kWarning() << "document URL and base URL do not match (protocol, host, ...), but necessary if the document URL is relative";
+        return documentUrl.pathOrUrl();
+    }
+
+    kDebug() << "documentUrl=" << documentUrl.pathOrUrl();
+    kDebug() << "baseUrl=" << baseUrl.pathOrUrl();
+
+    /// Resolve the provided document URL to an absolute URL
+    /// using the given base URL
+    KUrl internalDocumentUrl = documentUrl;
+    if (internalDocumentUrl.isRelative())
+        internalDocumentUrl = baseUrl.resolved(internalDocumentUrl);
+    kDebug() << "internalDocumentUrl=" << internalDocumentUrl.pathOrUrl();
+
+    return internalDocumentUrl.pathOrUrl();
 }
 
 QString AssociatedFiles::associateDocumentURL(const QUrl &document, QSharedPointer<Entry> &entry, const File *bibTeXFile, PathType pathType, const bool dryRun) {
