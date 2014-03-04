@@ -24,7 +24,7 @@
 #include <KIO/NetAccess>
 #include <KDebug>
 
-bool AssociatedFiles::urlIsLocal(const QUrl &url)
+bool AssociatedFiles::urlIsLocal(const KUrl &url)
 {
     // FIXME same function as in UrlListEdit; move to common code base?
     const QString scheme = url.scheme();
@@ -105,17 +105,17 @@ QString AssociatedFiles::absoluteFilename(const KUrl &documentUrl, const KUrl &b
     return internalDocumentUrl.pathOrUrl();
 }
 
-QString AssociatedFiles::associateDocumentURL(const QUrl &document, QSharedPointer<Entry> &entry, const File *bibTeXFile, PathType pathType, const bool dryRun) {
+QString AssociatedFiles::associateDocumentURL(const KUrl &document, QSharedPointer<Entry> &entry, const File *bibTeXFile, PathType pathType, const bool dryRun) {
     Q_ASSERT(bibTeXFile != NULL); // FIXME more graceful?
 
-    kDebug() << "document=" << document.toString();
+    kDebug() << "document=" << document.pathOrUrl();
     kDebug() << "urlIsLocal(document)=" << urlIsLocal(document);
     kDebug() << "entry.id()=" << entry->id();
     kDebug() << "bibTeXFile.count()=" << bibTeXFile->count();
     kDebug() << "pathType=" << pathType;
 
-    const QUrl baseUrl = bibTeXFile->property(File::Url).toUrl();
-    kDebug() << "bibTeXFile->property(File::Url).toUrl()=" << baseUrl.toString();
+    const KUrl baseUrl = bibTeXFile->property(File::Url).toUrl();
+    kDebug() << "bibTeXFile->property(File::Url).toUrl()=" << baseUrl.pathOrUrl();
     if (baseUrl.isEmpty() && pathType == ptRelative) {
         /// If no base URL was given but still a relative path was requested,
         /// revert choice and enforce the generation of an absolute one
@@ -147,16 +147,16 @@ QString AssociatedFiles::associateDocumentURL(const QUrl &document, QSharedPoint
     return finalUrl;
 }
 
-QString AssociatedFiles::associateDocumentURL(const QUrl &document, const File *bibTeXFile, PathType pathType) {
+QString AssociatedFiles::associateDocumentURL(const KUrl &document, const File *bibTeXFile, PathType pathType) {
     Q_ASSERT(bibTeXFile != NULL); // FIXME more graceful?
 
-    kDebug() << "document=" << document.toString();
+    kDebug() << "document=" << document.pathOrUrl();
     kDebug() << "urlIsLocal(document)=" << urlIsLocal(document);
     kDebug() << "bibTeXFile.count()=" << bibTeXFile->count();
     kDebug() << "pathType=" << pathType;
 
-    const QUrl baseUrl = bibTeXFile->property(File::Url).toUrl();
-    kDebug() << "bibTeXFile->property(File::Url).toUrl()=" << baseUrl.toString();
+    const KUrl baseUrl = bibTeXFile->property(File::Url).toUrl();
+    kDebug() << "bibTeXFile->property(File::Url).toUrl()=" << baseUrl.pathOrUrl();
     if (baseUrl.isEmpty() && pathType == ptRelative) {
         /// If no base URL was given but still a relative path was requested,
         /// revert choice and enforce the generation of an absolute one
@@ -168,7 +168,7 @@ QString AssociatedFiles::associateDocumentURL(const QUrl &document, const File *
     return finalUrl;
 }
 
-QUrl AssociatedFiles::copyDocument(const QUrl &sourceUrl, const QString &entryId, const File *bibTeXFile, RenameOperation renameOperation, MoveCopyOperation moveCopyOperation, QWidget *widget, const QString &userDefinedFilename, const bool dryRun) {
+KUrl AssociatedFiles::copyDocument(const KUrl &sourceUrl, const QString &entryId, const File *bibTeXFile, RenameOperation renameOperation, MoveCopyOperation moveCopyOperation, QWidget *widget, const QString &userDefinedFilename, const bool dryRun) {
     Q_ASSERT(bibTeXFile != NULL); // FIXME more graceful?
 
     if (moveCopyOperation == mcoNoCopyMove)
@@ -180,12 +180,12 @@ QUrl AssociatedFiles::copyDocument(const QUrl &sourceUrl, const QString &entryId
         renameOperation = roKeepName;
     }
 
-    const QUrl baseUrl = bibTeXFile->property(File::Url).toUrl();
-    const QUrl internalSourceUrl = baseUrl.resolved(sourceUrl);
-    kDebug() << "internalSourceUrl=" << internalSourceUrl.toString();
+    const KUrl baseUrl = bibTeXFile->property(File::Url).toUrl();
+    const KUrl internalSourceUrl = baseUrl.resolved(sourceUrl);
+    kDebug() << "internalSourceUrl=" << internalSourceUrl.pathOrUrl();
     kDebug() << "entry.id()=" << entryId;
     kDebug() << "bibTeXFile.count()=" << bibTeXFile->count();
-    kDebug() << "bibTeXFile->property(File::Url).toUrl()=" << baseUrl.toString();
+    kDebug() << "bibTeXFile->property(File::Url).toUrl()=" << baseUrl.pathOrUrl();
     kDebug() << "renameOperation=" << renameOperation;
     kDebug() << "moveCopyOperation=" << moveCopyOperation;
     kDebug() << "userDefinedFilename=" << userDefinedFilename;
@@ -199,15 +199,15 @@ QUrl AssociatedFiles::copyDocument(const QUrl &sourceUrl, const QString &entryId
     }
     kDebug() << "suffix=" << suffix;
     kDebug() << "filename=" << filename;
-    if (filename.isEmpty()) filename = internalSourceUrl.toString().remove(QDir::separator()).remove(QLatin1Char('/')).remove(QLatin1Char(':')).remove(QLatin1Char('.')) + QLatin1String(".") + suffix;
+    if (filename.isEmpty()) filename = internalSourceUrl.pathOrUrl().remove(QDir::separator()).remove(QLatin1Char('/')).remove(QLatin1Char(':')).remove(QLatin1Char('.')) + QLatin1String(".") + suffix;
     kDebug() << "filename=" << filename;
 
-    if (!bibTeXFile->hasProperty(File::Url)) return QUrl(); /// no valid URL set of BibTeX file object
-    QUrl targetUrl = bibTeXFile->property(File::Url).toUrl();
-    if (targetUrl.isEmpty()) return QUrl(); /// no valid URL set of BibTeX file object
+    if (!bibTeXFile->hasProperty(File::Url)) return KUrl(); /// no valid URL set of BibTeX file object
+    KUrl targetUrl = bibTeXFile->property(File::Url).toUrl();
+    if (targetUrl.isEmpty()) return KUrl(); /// no valid URL set of BibTeX file object
     const QString targetPath = QFileInfo(targetUrl.path()).absolutePath();
     targetUrl.setPath(targetPath + QDir::separator() + (renameOperation == roEntryId ? entryId + QLatin1String(".") + suffix : (renameOperation == roUserDefined ? userDefinedFilename : filename)));
-    kDebug() << "targetUrl=" << targetUrl.toString();
+    kDebug() << "targetUrl=" << targetUrl.pathOrUrl();
 
     if (!dryRun) { /// only if not pretending
         bool success = true;
@@ -229,7 +229,7 @@ QUrl AssociatedFiles::copyDocument(const QUrl &sourceUrl, const QString &entryId
             }
         }
 
-        if (!success) return QUrl(); ///< either copy/move or delete operation failed
+        if (!success) return KUrl(); ///< either copy/move or delete operation failed
     }
 
     return targetUrl;

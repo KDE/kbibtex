@@ -18,8 +18,6 @@
 #ifndef KBIBTEX_NETWORKING_ASSOCIATEDFILES_H
 #define KBIBTEX_NETWORKING_ASSOCIATEDFILES_H
 
-#include <QUrl>
-
 #include <KUrl>
 
 #include "entry.h"
@@ -64,7 +62,7 @@ public:
      * @param url URL to test
      * @return true if the URL points to a local file
      */
-    static bool urlIsLocal(const QUrl &url);
+    static bool urlIsLocal(const KUrl &url);
 
     /**
      * Translate a given URL of a document (e.g. a PDF file) to a string
@@ -89,9 +87,9 @@ public:
      */
     static QString absoluteFilename(const KUrl &document, const KUrl &baseUrl);
 
-    static QString associateDocumentURL(const QUrl &document, QSharedPointer<Entry> &entry, const File *bibTeXFile, PathType pathType, const bool dryRun = false);
-    static QString associateDocumentURL(const QUrl &document, const File *bibTeXFile, PathType pathType);
-    static QUrl copyDocument(const QUrl &document, const QString &entryId, const File *bibTeXFile, RenameOperation renameOperation, MoveCopyOperation moveCopyOperation, QWidget *widget, const QString &userDefinedFilename = QString(), const bool dryRun = false);
+    static QString associateDocumentURL(const KUrl &document, QSharedPointer<Entry> &entry, const File *bibTeXFile, PathType pathType, const bool dryRun = false);
+    static QString associateDocumentURL(const KUrl &document, const File *bibTeXFile, PathType pathType);
+    static KUrl copyDocument(const KUrl &document, const QString &entryId, const File *bibTeXFile, RenameOperation renameOperation, MoveCopyOperation moveCopyOperation, QWidget *widget, const QString &userDefinedFilename = QString(), const bool dryRun = false);
 };
 
 #endif // KBIBTEX_NETWORKING_ASSOCIATEDFILES_H
