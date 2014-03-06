@@ -384,11 +384,12 @@ void ZoteroBrowser::gotGroupList() {
 #ifdef HAVE_QTOAUTH
 void ZoteroBrowser::getOAuthCredentials()
 {
-    Zotero::OAuthWizard wizard(this);
-    if (wizard.exec() && !wizard.apiKey().isEmpty() && wizard.userId() >= 0) {
-        d->comboBoxApiKey->setEditText(wizard.apiKey());
-        d->comboBoxNumericUserId->setEditText(QString::number(wizard.userId()));
+    QPointer<Zotero::OAuthWizard> wizard = new Zotero::OAuthWizard(this);
+    if (wizard->exec() && !wizard->apiKey().isEmpty() && wizard->userId() >= 0) {
+        d->comboBoxApiKey->setEditText(wizard->apiKey());
+        d->comboBoxNumericUserId->setEditText(QString::number(wizard->userId()));
         d->addTextToLists();
     }
+    delete wizard;
 }
 #endif // HAVE_QTOAUTH
