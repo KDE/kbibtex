@@ -91,22 +91,37 @@ public:
     }
 
     QString translateAuthorsToken(const Entry &entry, const QString &token, Authors selectAuthors) const {
-        struct IdSuggestionTokenInfo ati = p->evalToken(token);
+        /// Evaluate the token string, store information in struct IdSuggestionTokenInfo ati
+        const struct IdSuggestionTokenInfo ati = p->evalToken(token);
         QString result;
+        /// Variables to memorize TODO
         bool first = true, firstInserted = true;
-        QStringList authors = entry.authorsLastName();
+        /// Get list of authors' last names
+        const QStringList authors = entry.authorsLastName();
+        /// Keep track of which author (number/position) is processed
         int index = 0;
-        for (QStringList::ConstIterator it = authors.begin(); it != authors.end(); ++it, ++index) {
+        /// Go through all authors
+        for (QStringList::ConstIterator it = authors.constBegin(); it != authors.constEnd(); ++it, ++index) {
+            /// Get current author, normalize name (remove unwanted characters), cut to maximum length
             QString author = normalizeText(*it).left(ati.len);
+            /// Check if camel case is requests
             if (ati.caseChange == IdSuggestions::ccToCamelCase) {
+                /// Get components of the author's last name
                 const QStringList nameComponents = author.split(QLatin1String(" "), QString::SkipEmptyParts);
                 QStringList newNameComponents;
+                /// Camel-case each name component
                 foreach(const QString &nameComponent, nameComponents) {
                     newNameComponents.append(nameComponent[0].toUpper() + nameComponent.mid(1));
                 }
+                /// Re-assemble name from camel-cased components
                 author = newNameComponents.join(QLatin1String(" "));
             }
-            if ((selectAuthors == aAll && index >= ati.startWord && index <= ati.endWord) || (selectAuthors == aOnlyFirst && first) || (selectAuthors == aNotFirst && !first)) {
+            if (
+                (selectAuthors == aAll && index >= ati.startWord && index <= ati.endWord) ///< all authors or defined sub-range
+                || (selectAuthors == aOnlyFirst && first) ///< only first author (deprecated due to use of aOnlyFirst)
+                || (selectAuthors == aNotFirst && !first) ///< all but first author (deprecated due to use of aNotFirst)
+                || (ati.lastWord && index == authors.count() - 1) ///< explicitly inserting last author if requested in lastWord flag
+            ) {
                 if (!firstInserted)
                     result.append(ati.inBetween);
                 result.append(author);
@@ -233,14 +248,13 @@ QStringList IdSuggestions::formatStrToHuman(const QString &formatStr) const
         QString text;
         if (token[0] == 'a' || token[0] == 'A' || token[0] == 'z') {
             struct IdSuggestionTokenInfo info = evalToken(token.mid(1));
-            if (token[0] == 'a' || (info.startWord == 0 && info.endWord == 0))
-                text.append(i18n("First author only"));
-            else if (token[0] == 'z' || (info.startWord == 1 && info.endWord > 0xffff))
-                text.append(i18n("All but first author"));
-            else if (info.startWord == 0 && info.endWord > 0xffff)
-                text.append(i18n("All authors"));
-            else
-                text.append(i18n("From author %1 to author %2", info.startWord + 1, info.endWord + 1));
+            if (token[0] == 'a')
+                info.startWord = info.endWord = 0;
+            else if (token[0] == 'z') {
+                info.startWord = 1;
+                info.endWord = 0x00ffffff;
+            }
+            text = formatAuthorRange(info.startWord, info.endWord, info.lastWord);
 
             int n = info.len;
             if (info.len < 0x00ffffff) text.append(i18np(", but only first letter of each last name", ", but only first %1 letters of each last name", n));
@@ -299,12 +313,47 @@ QStringList IdSuggestions::formatStrToHuman(const QString &formatStr) const
     return result;
 }
 
+QString IdSuggestions::formatAuthorRange(int minValue, int maxValue, bool lastAuthor) {
+    if (minValue == 0) {
+        if (maxValue == 0) {
+            if (lastAuthor)
+                return i18n("First and last authors only");
+            else
+                return i18n("First author only");
+        } else if (maxValue > 0xffff)
+            return i18n("All authors");
+        else {
+            if (lastAuthor)
+                return i18n("From first author to author %1 and last author", maxValue + 1);
+            else
+                return i18n("From first author to author %1", maxValue + 1);
+        }
+    } else if (minValue == 1) {
+        if (maxValue > 0xffff)
+            return i18n("All but first author");
+        else {
+            if (lastAuthor)
+                return i18n("From author %1 to author %2 and last author", minValue + 1, maxValue + 1);
+            else
+                return i18n("From author %1 to author %2", minValue + 1, maxValue + 1);
+        }
+    } else {
+        if (maxValue > 0xffff)
+            return i18n("From author %1 to last author", minValue + 1);
+        else if (lastAuthor)
+            return i18n("From author %1 to author %2 and last author", minValue + 1, maxValue + 1);
+        else
+            return i18n("From author %1 to author %2", minValue + 1, maxValue + 1);
+    }
+}
+
 struct IdSuggestions::IdSuggestionTokenInfo IdSuggestions::evalToken(const QString &token) const {
     int pos = 0;
     struct IdSuggestionTokenInfo result;
     result.len = 0x00ffffff;
     result.startWord = 0;
     result.endWord = 0x00ffffff;
+    result.lastWord = false;
     result.caseChange = IdSuggestions::ccNoChange;
     result.inBetween = QString();
 
@@ -336,10 +385,22 @@ struct IdSuggestions::IdSuggestionTokenInfo IdSuggestions::evalToken(const QStri
     }
 
     int dvStart = -1, dvEnd = 0x00ffffff;
-    if (token.length() > pos + 2 && token[pos] == 'w' && (dvStart = token[pos + 1].digitValue()) > -1 && (token[pos + 2] == QLatin1Char('I') || (dvEnd = token[pos + 2].digitValue()) > -1)) {
+    if (token.length() > pos + 2 ///< sufficiently many characters to follow
+            && token[pos] == 'w' ///< identifier to start specifying a range of words
+            && (dvStart = token[pos + 1].digitValue()) > -1 ///< first word index correctly parsed
+            && (
+                token[pos + 2] == QLatin1Char('I') ///< infinitely many words
+                || (dvEnd = token[pos + 2].digitValue()) > -1) ///< last word index finite and correctly parsed
+       ) {
         result.startWord = dvStart;
         result.endWord = dvEnd < 0 ? 0x00ffffff : dvEnd;
         pos += 3;
+
+        /// Optionally, the last word (e.g. last author) is explicitly requested
+        if (token.length() > pos && token[pos] == QLatin1Char('L')) {
+            result.lastWord = true;
+            ++pos;
+        }
     }
 
     if (token.length() > pos + 1 && token[pos] == '"')

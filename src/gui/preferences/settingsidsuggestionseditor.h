@@ -67,6 +67,7 @@ class AuthorWidget : public TokenWidget
 
 private:
     QxtSpanSlider *spanSliderAuthor;
+    QCheckBox *checkBoxLastAuthor;
     QLabel *labelAuthorRange;
     KComboBox *comboBoxChangeCase;
     KLineEdit *lineEditTextInBetween;

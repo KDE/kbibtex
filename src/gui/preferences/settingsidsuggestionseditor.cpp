@@ -92,11 +92,13 @@ AuthorWidget::AuthorWidget(const struct IdSuggestions::IdSuggestionTokenInfo &in
         break;
     }
 
+    checkBoxLastAuthor = new QCheckBox(i18n("... and last author"), this);
+    boxLayout->addWidget(checkBoxLastAuthor);
+
     labelAuthorRange = new QLabel(this);
     boxLayout->addWidget(labelAuthorRange);
-    const int a = qMax(labelAuthorRange->fontMetrics().width(i18n("From first to last author")), labelAuthorRange->fontMetrics().width(i18n("From author %1 to last author", 88)));
-    const int b = qMax(labelAuthorRange->fontMetrics().width(i18n("From first author to author %1", 88)), labelAuthorRange->fontMetrics().width(i18n("From author %1 to author %2", 88, 88)));
-    labelAuthorRange->setMinimumWidth(qMax(a, b));
+    const int maxWidth = qMax(labelAuthorRange->fontMetrics().width(i18n("From first author to author %1 and last author", 88)), labelAuthorRange->fontMetrics().width(i18n("From author %1 to author %2 and last author", 88, 88)));
+    labelAuthorRange->setMinimumWidth(maxWidth);
 
     comboBoxChangeCase = new KComboBox(false, this);
     comboBoxChangeCase->addItem(i18n("No change"), IdSuggestions::ccNoChange);
@@ -121,6 +123,8 @@ AuthorWidget::AuthorWidget(const struct IdSuggestions::IdSuggestionTokenInfo &in
     connect(spanSliderAuthor, SIGNAL(upperValueChanged(int)), isew, SLOT(updatePreview()));
     connect(spanSliderAuthor, SIGNAL(lowerValueChanged(int)), this, SLOT(updateRangeLabel()));
     connect(spanSliderAuthor, SIGNAL(upperValueChanged(int)), this, SLOT(updateRangeLabel()));
+    connect(checkBoxLastAuthor, SIGNAL(toggled(bool)), isew, SLOT(updatePreview()));
+    connect(checkBoxLastAuthor, SIGNAL(toggled(bool)), this, SLOT(updateRangeLabel()));
     connect(comboBoxChangeCase, SIGNAL(currentIndexChanged(int)), isew, SLOT(updatePreview()));
     connect(lineEditTextInBetween, SIGNAL(textEdited(QString)), isew, SLOT(updatePreview()));
     connect(spinBoxLength, SIGNAL(valueChanged(int)), isew, SLOT(updatePreview()));
@@ -145,6 +149,8 @@ QString AuthorWidget::toString() const
 
     if (spanSliderAuthor->lowerValue() > spanSliderAuthor->minimum() || spanSliderAuthor->upperValue() < spanSliderAuthor->maximum())
         result.append(QString(QLatin1String("w%1%2")).arg(spanSliderAuthor->lowerValue()).arg(spanSliderAuthor->upperValue() < spanSliderAuthor->maximum() ? QString::number(spanSliderAuthor->upperValue()) : QLatin1String("I")));
+    if (checkBoxLastAuthor->isChecked())
+        result.append(QLatin1String("L"));
 
     const QString text = lineEditTextInBetween->text();
     if (!text.isEmpty())
@@ -160,18 +166,7 @@ void AuthorWidget::updateRangeLabel()
     const int min = spanSliderAuthor->minimum();
     const int max = spanSliderAuthor->maximum();
 
-    if (lower == min && upper == min)
-        labelAuthorRange->setText(i18n("First author only"));
-    else if (lower == min + 1 && upper == max)
-        labelAuthorRange->setText(i18n("All but first author"));
-    else if (lower == min && upper == max)
-        labelAuthorRange->setText(i18n("From first to last author"));
-    else if (lower > min && upper == max)
-        labelAuthorRange->setText(i18n("From author %1 to last author", lower + 1));
-    else if (lower == min && upper < max)
-        labelAuthorRange->setText(i18n("From first author to author %1", upper + 1));
-    else
-        labelAuthorRange->setText(i18n("From author %1 to author %2", lower + 1, upper + 1));
+    labelAuthorRange->setText(IdSuggestions::formatAuthorRange(lower == min ? 0 : lower, upper == max ? 0x00ffffff : upper, checkBoxLastAuthor->isChecked()));
 }
 
 class YearWidget : public TokenWidget
@@ -436,6 +431,7 @@ public:
             info.len = -1;
             info.startWord = 0;
             info.endWord = 0x00ffffff;
+            info.lastWord = false;
             info.caseChange = IdSuggestions::ccNoChange;
             tokenWidget = new TitleWidget(info, true, p, container);
             widgetList << tokenWidget;
@@ -448,6 +444,7 @@ public:
             info.len = -1;
             info.startWord = 0;
             info.endWord = 0x00ffffff;
+            info.lastWord = false;
             info.caseChange = IdSuggestions::ccNoChange;
             tokenWidget = new AuthorWidget(info, aAll, p, container);
             widgetList << tokenWidget;

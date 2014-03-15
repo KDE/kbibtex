@@ -28,12 +28,18 @@
 class KBIBTEXPROC_EXPORT IdSuggestions
 {
 public:
+    /// This enum is only used for backwards-compatibility.
+    /// It has been replaced by the more detailed information as part of
+    /// struct IdSuggestionTokenInfo (see below), where startWord
+    /// and endWord are used to define ranges.
     enum Authors {aAll, aOnlyFirst, aNotFirst};
+
     enum CaseChange {ccNoChange = 0, ccToUpper = 1, ccToLower = 2, ccToCamelCase = 3};
 
     struct IdSuggestionTokenInfo {
         unsigned int len;
         int startWord, endWord;
+        bool lastWord;
         CaseChange caseChange;
         QString inBetween;
     };
@@ -66,6 +72,8 @@ public:
     QStringList formatIdList(const Entry &entry) const;
 
     QStringList formatStrToHuman(const QString &formatStr) const;
+
+    static QString formatAuthorRange(int minValue, int maxValue, bool lastAuthor);
 
 protected:
     struct IdSuggestionTokenInfo evalToken(const QString &token) const;
