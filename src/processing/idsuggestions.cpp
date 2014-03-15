@@ -90,12 +90,10 @@ public:
         return result;
     }
 
-    QString translateAuthorsToken(const Entry &entry, const QString &token, Authors selectAuthors) const {
-        /// Evaluate the token string, store information in struct IdSuggestionTokenInfo ati
-        const struct IdSuggestionTokenInfo ati = p->evalToken(token);
+    QString translateAuthorsToken(const Entry &entry, const struct IdSuggestionTokenInfo &ati) const {
         QString result;
-        /// Variables to memorize TODO
-        bool first = true, firstInserted = true;
+        /// Already some author inserted into result?
+        bool firstInserted = false;
         /// Get list of authors' last names
         const QStringList authors = entry.authorsLastName();
         /// Keep track of which author (number/position) is processed
@@ -117,17 +115,14 @@ public:
                 author = newNameComponents.join(QLatin1String(" "));
             }
             if (
-                (selectAuthors == aAll && index >= ati.startWord && index <= ati.endWord) ///< all authors or defined sub-range
-                || (selectAuthors == aOnlyFirst && first) ///< only first author (deprecated due to use of aOnlyFirst)
-                || (selectAuthors == aNotFirst && !first) ///< all but first author (deprecated due to use of aNotFirst)
-                || (ati.lastWord && index == authors.count() - 1) ///< explicitly inserting last author if requested in lastWord flag
+                (index >= ati.startWord && index <= ati.endWord) ///< check for requested author range
+                || (ati.lastWord && index == authors.count() - 1) ///< explicitly insert last author if requested in lastWord flag
             ) {
-                if (!firstInserted)
+                if (firstInserted)
                     result.append(ati.inBetween);
                 result.append(author);
-                firstInserted = false;
+                firstInserted = true;
             }
-            first = false;
         }
 
         switch (ati.caseChange) {
@@ -150,9 +145,27 @@ public:
 
     QString translateToken(const Entry &entry, const QString &token) const {
         switch (token[0].toLatin1()) {
-        case 'a': return translateAuthorsToken(entry, token.mid(1), aOnlyFirst);
-        case 'A': return translateAuthorsToken(entry, token.mid(1), aAll);
-        case 'z': return translateAuthorsToken(entry, token.mid(1), aNotFirst);
+        case 'a': ///< deprecated but still supported case
+        {
+            /// Evaluate the token string, store information in struct IdSuggestionTokenInfo ati
+            struct IdSuggestionTokenInfo ati = p->evalToken(token);
+            ati.startWord = ati.endWord = 0; ///< only first author
+            return translateAuthorsToken(entry, ati);
+        }
+        case 'A': {
+            /// Evaluate the token string, store information in struct IdSuggestionTokenInfo ati
+            const struct IdSuggestionTokenInfo ati = p->evalToken(token);
+            return translateAuthorsToken(entry, ati);
+        }
+        case 'z': ///< deprecated but still supported case
+        {
+            /// Evaluate the token string, store information in struct IdSuggestionTokenInfo ati
+            struct IdSuggestionTokenInfo ati = p->evalToken(token);
+            /// All but first author
+            ati.startWord = 1;
+            ati.endWord = 0x00ffffff;
+            return translateAuthorsToken(entry, ati);
+        }
         case 'y': {
             int year = extractYear(entry);
             if (year > -1)

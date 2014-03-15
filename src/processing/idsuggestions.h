@@ -28,12 +28,6 @@
 class KBIBTEXPROC_EXPORT IdSuggestions
 {
 public:
-    /// This enum is only used for backwards-compatibility.
-    /// It has been replaced by the more detailed information as part of
-    /// struct IdSuggestionTokenInfo (see below), where startWord
-    /// and endWord are used to define ranges.
-    enum Authors {aAll, aOnlyFirst, aNotFirst};
-
     enum CaseChange {ccNoChange = 0, ccToUpper = 1, ccToLower = 2, ccToCamelCase = 3};
 
     struct IdSuggestionTokenInfo {

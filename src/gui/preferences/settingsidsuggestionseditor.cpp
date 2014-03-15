@@ -60,7 +60,7 @@ void TokenWidget::addButtons(KPushButton *buttonUp, KPushButton *buttonDown, KPu
 }
 
 
-AuthorWidget::AuthorWidget(const struct IdSuggestions::IdSuggestionTokenInfo &info, IdSuggestions::Authors author, IdSuggestionsEditWidget *isew, QWidget *parent)
+AuthorWidget::AuthorWidget(const struct IdSuggestions::IdSuggestionTokenInfo &info, IdSuggestionsEditWidget *isew, QWidget *parent)
         : TokenWidget(parent)
 {
     setTitle(i18n("Authors"));
@@ -72,25 +72,8 @@ AuthorWidget::AuthorWidget(const struct IdSuggestions::IdSuggestionTokenInfo &in
     boxLayout->addWidget(spanSliderAuthor);
     spanSliderAuthor->setRange(0, 9);
     spanSliderAuthor->setHandleMovementMode(QxtSpanSlider::NoCrossing);
-    switch (author) {
-    case IdSuggestions::aAll:
-        if (info.startWord > 0 || info.endWord < 0xffff) {
-            spanSliderAuthor->setLowerValue(info.startWord);
-            spanSliderAuthor->setUpperValue(qMin(spanSliderAuthor->maximum(), info.endWord));
-        } else {
-            spanSliderAuthor->setLowerValue(0);
-            spanSliderAuthor->setUpperValue(spanSliderAuthor->maximum());
-        }
-        break;
-    case IdSuggestions::aNotFirst:
-        spanSliderAuthor->setLowerValue(1);
-        spanSliderAuthor->setUpperValue(spanSliderAuthor->maximum());
-        break;
-    case IdSuggestions::aOnlyFirst:
-        spanSliderAuthor->setLowerValue(0);
-        spanSliderAuthor->setUpperValue(0);
-        break;
-    }
+    spanSliderAuthor->setLowerValue(info.startWord);
+    spanSliderAuthor->setUpperValue(qMin(spanSliderAuthor->maximum(), info.endWord));
 
     checkBoxLastAuthor = new QCheckBox(i18n("... and last author"), this);
     boxLayout->addWidget(checkBoxLastAuthor);
@@ -446,7 +429,7 @@ public:
             info.endWord = 0x00ffffff;
             info.lastWord = false;
             info.caseChange = IdSuggestions::ccNoChange;
-            tokenWidget = new AuthorWidget(info, aAll, p, container);
+            tokenWidget = new AuthorWidget(info, p, container);
             widgetList << tokenWidget;
             containerLayout->insertWidget(pos, tokenWidget, 1);
         }
@@ -474,9 +457,15 @@ public:
             TokenWidget *tokenWidget = NULL;
 
             if (token[0] == 'a' || token[0] == 'A' || token[0] == 'z') {
-                IdSuggestions::Authors author = token[0] == 'a' ? aOnlyFirst : (token[0] == 'A' ? aAll : aNotFirst);
                 struct IdSuggestions::IdSuggestionTokenInfo info = p->evalToken(token.mid(1));
-                tokenWidget = new AuthorWidget(info, author, p, container);
+                /// Support deprecated 'a' and 'z' cases
+                if (token[0] == 'a')
+                    info.startWord = info.endWord = 0;
+                else if (token[0] == 'z') {
+                    info.startWord = 1;
+                    info.endWord = 0x00ffffff;
+                }
+                tokenWidget = new AuthorWidget(info, p, container);
                 widgetList << tokenWidget;
                 containerLayout->insertWidget(containerLayout->count() - 2, tokenWidget, 1);
             } else if (token[0] == 'y') {

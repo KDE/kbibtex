@@ -77,7 +77,7 @@ private slots:
     void updateRangeLabel();
 
 public:
-    AuthorWidget(const struct IdSuggestions::IdSuggestionTokenInfo &info, IdSuggestions::Authors author, IdSuggestionsEditWidget *isew, QWidget *parent);
+    AuthorWidget(const struct IdSuggestions::IdSuggestionTokenInfo &info, IdSuggestionsEditWidget *isew, QWidget *parent);
 
     QString toString() const;
 };
