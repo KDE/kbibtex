@@ -236,6 +236,8 @@ TitleWidget::TitleWidget(const struct IdSuggestions::IdSuggestionTokenInfo &info
     connect(comboBoxChangeCase, SIGNAL(currentIndexChanged(int)), isew, SLOT(updatePreview()));
     connect(lineEditTextInBetween, SIGNAL(textEdited(QString)), isew, SLOT(updatePreview()));
     connect(spinBoxLength, SIGNAL(valueChanged(int)), isew, SLOT(updatePreview()));
+
+    updateRangeLabel();
 }
 
 QString TitleWidget::toString() const
