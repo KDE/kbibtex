@@ -59,13 +59,44 @@
 <xsl:text>}</xsl:text>
 </xsl:if>
 
-<!-- authors (no detailed parsing here) -->
-<xsl:if test="AuthorsText and string-length(AuthorsText)>2">
+<!-- authors -->
+<xsl:choose>
+<xsl:when test="AuthorsText and string-length(AuthorsText)>2">
 <xsl:text>,
     author = {{</xsl:text>
 <xsl:value-of select="AuthorsText" />
 <xsl:text>}}</xsl:text>
+</xsl:when>
+<xsl:otherwise>
+<xsl:if test="Authors/Person and string-length(Authors/Person)>2">
+<xsl:text>,
+    author = {</xsl:text>
+<xsl:for-each select="Authors/Person">
+<xsl:apply-templates select="."/>
+<xsl:if test="position()!=last()"><xsl:text> and </xsl:text></xsl:if>
+</xsl:for-each>
+<xsl:text>}</xsl:text>
 </xsl:if>
+</xsl:otherwise>
+</xsl:choose>
+
+<!-- ISBN -->
+<xsl:choose>
+<xsl:when test="@isbn13 and string-length(@isbn13)>2">
+<xsl:text>,
+    isbn = {</xsl:text>
+<xsl:value-of select="@isbn13" />
+<xsl:text>}</xsl:text>
+</xsl:when>
+<xsl:otherwise>
+<xsl:if test="@isbn and string-length(@isbn)>2">
+<xsl:text>,
+    isbn = {</xsl:text>
+<xsl:value-of select="@isbn" />
+<xsl:text>}</xsl:text>
+</xsl:if>
+</xsl:otherwise>
+</xsl:choose>
 
 <!-- closing entry -->
 <xsl:text>
