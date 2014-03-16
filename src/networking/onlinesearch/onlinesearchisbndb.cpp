@@ -175,7 +175,7 @@ void OnlineSearchIsbnDB::downloadDone()
                 nextUrl.addQueryItem(QLatin1String("page_number"), QString::number(d->currentPage));
                 QNetworkRequest request(nextUrl);
                 QNetworkReply *nextReply = InternalNetworkAccessManager::self()->get(request);
-                InternalNetworkAccessManager::self()->setNetworkReplyTimeout(nextReply);
+                setNetworkReplyTimeout(nextReply);
                 connect(nextReply, SIGNAL(finished()), this, SLOT(downloadDone()));
                 return;
             }
