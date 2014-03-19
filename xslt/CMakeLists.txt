@@ -8,6 +8,7 @@ install(
     pam2bibtex.xsl
     isbndb2bibtex.xsl
     ieeexplore2bibtex.xsl
+    worldcatopensearch2bibtex.xsl
     DESTINATION
     ${DATA_INSTALL_DIR}/kbibtex
 )
