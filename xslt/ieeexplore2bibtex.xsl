@@ -1,4 +1,4 @@
-<xsl:stylesheet version = '1.0' xmlns:xsl='http://www.w3.org/1999/XSL/Transform' xmlns:arxiv="http://arxiv.org/schemas/atom">
+<xsl:stylesheet version = '1.0' xmlns:xsl='http://www.w3.org/1999/XSL/Transform'>
 
 <!--
   - This Extensible Stylesheet Language Transformation file translates XML files
@@ -9,7 +9,7 @@
   - It is released under the GNU Public License version 2 or later.
   -
   - To run test this transformation file, run e.g.
-  - wget 'http://ieeexplore.ieee.org/gateway/ipsSearch.jsp?querytext=java&au=Wang&hc=10&rs=11&sortfield=ti&sortorder=asc' -O - | xsltproc  arxiv2bibtex.xsl -
+  - wget 'http://ieeexplore.ieee.org/gateway/ipsSearch.jsp?querytext=java&au=Wang&hc=10&rs=11&sortfield=ti&sortorder=asc' -O - | xsltproc ieeexplore2bibtex.xsl -
   - Within KBibTeX, some post-processing on the resulting BibTeX file is done.
   -->
 
