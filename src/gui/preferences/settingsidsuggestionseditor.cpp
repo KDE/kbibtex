@@ -596,17 +596,17 @@ IdSuggestionsEditDialog::~IdSuggestionsEditDialog()
 QString IdSuggestionsEditDialog::editSuggestion(const Entry *previewEntry, const QString &suggestion, QWidget *parent)
 {
     QPointer<IdSuggestionsEditDialog> dlg = new IdSuggestionsEditDialog(parent);
-    IdSuggestionsEditWidget widget(previewEntry, dlg);
-    dlg->setMainWidget(&widget);
+    IdSuggestionsEditWidget *widget = new IdSuggestionsEditWidget(previewEntry, dlg);
+    dlg->setMainWidget(widget);
 
-
-    widget.setFormatString(suggestion);
+    widget->setFormatString(suggestion);
     if (dlg->exec() == Accepted) {
-        dlg->deleteLater();
-        return widget.formatString();
+        const QString formatString = widget->formatString();
+        delete dlg;
+        return formatString;
     }
 
-    dlg->deleteLater();
+    delete dlg;
 
     /// Return unmodified original suggestion
     return suggestion;
