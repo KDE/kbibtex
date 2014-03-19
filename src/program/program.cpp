@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
         KCmdLineArgs *arguments = KCmdLineArgs::parsedArgs();
 
         for (int i = 0; i < arguments->count(); ++i) {
-            KUrl url(arguments->arg(i));
+            const KUrl url = arguments->url(i);
             if (url.isValid())
                 mainWindow->openDocument(url);
         }
