@@ -17,19 +17,71 @@
 
 #include "onlinesearchoclcworldcat.h"
 
+#include <QNetworkReply>
+#include <QNetworkRequest>
+
 #include <KLocale>
+#include <KStandardDirs>
+#include <KDebug>
+
+#include "fileimporterbibtex.h"
+#include "xsltransform.h"
+#include "internalnetworkaccessmanager.h"
 
 class OnlineSearchOCLCWorldCat::Private
 {
 private:
-    OnlineSearchOCLCWorldCat *p;
+    static const QString APIkey;
 
+    OnlineSearchOCLCWorldCat *p;
 public:
+    static const int countPerStep;
+    int maxSteps, curStep;
+
+    KUrl baseUrl;
+
+    XSLTransform *xslt;
+
     Private(OnlineSearchOCLCWorldCat *parent)
-            : p(parent) {
-        /// nothing
+            : p(parent), maxSteps(0), curStep(0) {
+        xslt = XSLTransform::createXSLTransform(KStandardDirs::locate("data", "kbibtex/worldcatopensearch2bibtex.xsl"));
+    }
+
+    ~Private() {
+        delete xslt;
+    }
+
+    void setBaseUrl(const QMap<QString, QString> &query) {
+        QStringList queryFragments;
+        static const QString parenthesis = QLatin1String("\"%1\"");
+
+        /// add words from "free text" field
+        const QStringList freeTextWords = p->splitRespectingQuotationMarks(query[queryKeyFreeText]);
+        for (QStringList::ConstIterator it = freeTextWords.constBegin(); it != freeTextWords.constEnd(); ++it)
+            queryFragments.append(parenthesis.arg(*it));
+        /// add words from "title" field
+        const QStringList titleWords = p->splitRespectingQuotationMarks(query[queryKeyTitle]);
+        for (QStringList::ConstIterator it = titleWords.constBegin(); it != titleWords.constEnd(); ++it)
+            queryFragments.append(parenthesis.arg(*it));
+        /// add words from "author" field
+        const QStringList authorWords = p->splitRespectingQuotationMarks(query[queryKeyAuthor]);
+        for (QStringList::ConstIterator it = authorWords.constBegin(); it != authorWords.constEnd(); ++it)
+            queryFragments.append(parenthesis.arg(*it));
+        /// add words from "author" field
+        const QStringList yearWords = p->splitRespectingQuotationMarks(query[queryKeyYear]);
+        for (QStringList::ConstIterator it = yearWords.constBegin(); it != yearWords.constEnd(); ++it)
+            queryFragments.append(parenthesis.arg(*it));
+
+
+        const QString queryString = queryFragments.join(QLatin1String("+"));
+        baseUrl = KUrl(QString(QLatin1String("http://www.worldcat.org/webservices/catalog/search/worldcat/opensearch?q=%1&format=atom&wskey=%2")).arg(queryString).arg(OnlineSearchOCLCWorldCat::Private::APIkey));
+
+        baseUrl.addQueryItem(QLatin1String("count"), QString::number(OnlineSearchOCLCWorldCat::Private::countPerStep));
     }
 };
+
+const int OnlineSearchOCLCWorldCat::Private::countPerStep = 7;
+const QString OnlineSearchOCLCWorldCat::Private::APIkey = QLatin1String("Bt6h4KIHrfbSXEahwUzpFQD6SNjQZfQUG3W2LN9oNEB5tROFGeRiDVntycEEyBe0aH17sH4wrNlnVANH");
 
 OnlineSearchOCLCWorldCat::OnlineSearchOCLCWorldCat(QWidget *parent)
         : OnlineSearchAbstract(parent), d(new OnlineSearchOCLCWorldCat::Private(this)) {
@@ -43,19 +95,25 @@ OnlineSearchOCLCWorldCat::~OnlineSearchOCLCWorldCat() {
 void OnlineSearchOCLCWorldCat::startSearch() {
     m_hasBeenCanceled = false;
     delayedStoppedSearch(resultNoError);
-    // TOOD
 }
 
 void OnlineSearchOCLCWorldCat::startSearch(const QMap<QString, QString> &query, int numResults) {
-    Q_UNUSED(query)
-    Q_UNUSED(numResults)
     m_hasBeenCanceled = false;
-    delayedStoppedSearch(resultNoError);
-    // TOOD
+
+    d->maxSteps = (numResults + OnlineSearchOCLCWorldCat::Private::countPerStep - 1) / OnlineSearchOCLCWorldCat::Private::countPerStep;
+    d->curStep = 0;
+    emit progress(d->curStep, d->maxSteps);
+
+    d->setBaseUrl(query);
+    KUrl startUrl = d->baseUrl;
+    QNetworkRequest request(startUrl);
+    QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
+    InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
+    connect(reply, SIGNAL(finished()), this, SLOT(downloadDone()));
 }
 
 QString OnlineSearchOCLCWorldCat::label() const {
-    return i18n("OCLC WorldCat");
+    return i18n("OCLC WorldCat Books");
 }
 
 OnlineSearchQueryFormAbstract *OnlineSearchOCLCWorldCat::customWidget(QWidget *) {
@@ -72,4 +130,50 @@ void OnlineSearchOCLCWorldCat::cancel() {
 
 QString OnlineSearchOCLCWorldCat::favIconUrl() const {
     return QLatin1String("http://www.worldcat.org/favicon.ico");
+}
+
+void OnlineSearchOCLCWorldCat::downloadDone() {
+    emit progress(++d->curStep, d->maxSteps);
+
+    QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
+
+    if (handleErrors(reply)) {
+        /// ensure proper treatment of UTF-8 characters
+        const QString atomCode = QString::fromUtf8(reply->readAll().data()).remove("xmlns=\"http://www.w3.org/2005/Atom\""); // FIXME fix worldcatopensearch2bibtex.xsl to handle namespace
+
+        /// use XSL transformation to get BibTeX document from XML result
+        const QString bibTeXcode = d->xslt->transform(atomCode).remove(QLatin1String("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
+
+        FileImporterBibTeX importer;
+        File *bibtexFile = importer.fromString(bibTeXcode);
+
+        bool hasEntries = false;
+        if (bibtexFile != NULL) {
+            for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
+                QSharedPointer<Entry> entry = (*it).dynamicCast<Entry>();
+                hasEntries |= publishEntry(entry);
+            }
+            delete bibtexFile;
+
+            if (!hasEntries) {
+                kDebug() << "No hits found in" << reply->url().toString();
+                emit progress(d->maxSteps, d->maxSteps);
+                emit stoppedSearch(resultNoError);
+            } else if (d->curStep < d->maxSteps) {
+                KUrl nextUrl = d->baseUrl;
+                nextUrl.addQueryItem(QLatin1String("start"), QString::number(d->curStep * OnlineSearchOCLCWorldCat::Private::countPerStep + 1));
+                QNetworkRequest request(nextUrl);
+                QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request);
+                InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
+                connect(newReply, SIGNAL(finished()), this, SLOT(downloadDone()));
+            } else {
+                emit progress(d->maxSteps, d->maxSteps);
+                emit stoppedSearch(resultNoError);
+            }
+        } else {
+            kWarning() << "No valid BibTeX file results returned on request on" << reply->url().toString();
+            emit stoppedSearch(resultUnspecifiedError);
+        }
+    } else
+        kDebug() << "url was" << reply->url().toString();
 }

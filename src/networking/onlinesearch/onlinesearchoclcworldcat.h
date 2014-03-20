@@ -43,6 +43,9 @@ public slots:
 protected:
     virtual QString favIconUrl() const;
 
+private slots:
+    void downloadDone();
+
 private:
     class Private;
     Private *const d;
