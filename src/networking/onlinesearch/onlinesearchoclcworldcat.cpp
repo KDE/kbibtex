@@ -44,7 +44,7 @@ public:
 
     Private(OnlineSearchOCLCWorldCat *parent)
             : p(parent), maxSteps(0), curStep(0) {
-        xslt = XSLTransform::createXSLTransform(KStandardDirs::locate("data", "kbibtex/worldcatopensearch2bibtex.xsl"));
+        xslt = XSLTransform::createXSLTransform(KStandardDirs::locate("data", "kbibtex/worldcatdc2bibtex.xsl"));
     }
 
     ~Private() {
@@ -53,30 +53,47 @@ public:
 
     void setBaseUrl(const QMap<QString, QString> &query) {
         QStringList queryFragments;
-        static const QString parenthesis = QLatin1String("\"%1\"");
 
         /// add words from "free text" field
+        // FIXME not supported in srw queries?
+        /*
         const QStringList freeTextWords = p->splitRespectingQuotationMarks(query[queryKeyFreeText]);
-        for (QStringList::ConstIterator it = freeTextWords.constBegin(); it != freeTextWords.constEnd(); ++it)
-            queryFragments.append(parenthesis.arg(*it));
+        for (QStringList::ConstIterator it = freeTextWords.constBegin(); it != freeTextWords.constEnd(); ++it) {
+            queryFragments.append(*it);
+        }
+        */
         /// add words from "title" field
         const QStringList titleWords = p->splitRespectingQuotationMarks(query[queryKeyTitle]);
-        for (QStringList::ConstIterator it = titleWords.constBegin(); it != titleWords.constEnd(); ++it)
-            queryFragments.append(parenthesis.arg(*it));
+        for (QStringList::ConstIterator it = titleWords.constBegin(); it != titleWords.constEnd(); ++it) {
+            static const QString titleParenthesis = QLatin1String("srw.ti+all+\"%1\"");
+            queryFragments.append(titleParenthesis.arg(*it));
+        }
         /// add words from "author" field
         const QStringList authorWords = p->splitRespectingQuotationMarks(query[queryKeyAuthor]);
-        for (QStringList::ConstIterator it = authorWords.constBegin(); it != authorWords.constEnd(); ++it)
-            queryFragments.append(parenthesis.arg(*it));
-        /// add words from "author" field
+        for (QStringList::ConstIterator it = authorWords.constBegin(); it != authorWords.constEnd(); ++it) {
+            static const QString authorParenthesis = QLatin1String("srw.au+all+\"%1\"");
+            queryFragments.append(authorParenthesis.arg(*it));
+        }
+
+        /// Field year cannot stand alone, therefore if no query fragments
+        /// have been assembled yet, no valid search will be possible.
+        /// Invalidate base URL and return in this case.
+        if (queryFragments.isEmpty()) {
+            kWarning() << "For WorldCat OCLC search to work, either a title or an author has get specified; free text or year only is not sufficient";
+            baseUrl.clear();
+            return;
+        }
+
+        /// add words from "year" field
         const QStringList yearWords = p->splitRespectingQuotationMarks(query[queryKeyYear]);
-        for (QStringList::ConstIterator it = yearWords.constBegin(); it != yearWords.constEnd(); ++it)
-            queryFragments.append(parenthesis.arg(*it));
+        for (QStringList::ConstIterator it = yearWords.constBegin(); it != yearWords.constEnd(); ++it) {
+            static const QString yearParenthesis = QLatin1String("srw.yr+any+\"%1\"");
+            queryFragments.append(yearParenthesis.arg(*it));
+        }
 
-
-        const QString queryString = queryFragments.join(QLatin1String("+"));
-        baseUrl = KUrl(QString(QLatin1String("http://www.worldcat.org/webservices/catalog/search/worldcat/opensearch?q=%1&format=atom&wskey=%2")).arg(queryString).arg(OnlineSearchOCLCWorldCat::Private::APIkey));
-
-        baseUrl.addQueryItem(QLatin1String("count"), QString::number(OnlineSearchOCLCWorldCat::Private::countPerStep));
+        const QString queryString = queryFragments.join(QLatin1String("+and+"));
+        baseUrl = KUrl(QString(QLatin1String("http://www.worldcat.org/webservices/catalog/search/worldcat/sru?query=%1&recordSchema=%3&wskey=%2")).arg(queryString).arg(OnlineSearchOCLCWorldCat::Private::APIkey).arg(QLatin1String("info%3Asrw%2Fschema%2F1%2Fdc")));
+        baseUrl.addQueryItem(QLatin1String("maximumRecords"), QString::number(OnlineSearchOCLCWorldCat::Private::countPerStep));
     }
 };
 
@@ -105,6 +122,12 @@ void OnlineSearchOCLCWorldCat::startSearch(const QMap<QString, QString> &query, 
     emit progress(d->curStep, d->maxSteps);
 
     d->setBaseUrl(query);
+    if (d->baseUrl.isEmpty()) {
+        /// No base URL set for some reason, no search possible
+        m_hasBeenCanceled = false;
+        delayedStoppedSearch(resultInvalidArguments);
+        return;
+    }
     KUrl startUrl = d->baseUrl;
     QNetworkRequest request(startUrl);
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
@@ -139,7 +162,7 @@ void OnlineSearchOCLCWorldCat::downloadDone() {
 
     if (handleErrors(reply)) {
         /// ensure proper treatment of UTF-8 characters
-        const QString atomCode = QString::fromUtf8(reply->readAll().data()).remove("xmlns=\"http://www.w3.org/2005/Atom\""); // FIXME fix worldcatopensearch2bibtex.xsl to handle namespace
+        const QString atomCode = QString::fromUtf8(reply->readAll().data()).remove("xmlns=\"http://www.w3.org/2005/Atom\"").remove(" xmlns=\"http://www.loc.gov/zing/srw/\""); // FIXME fix worldcatdc2bibtex.xsl to handle namespace
 
         /// use XSL transformation to get BibTeX document from XML result
         const QString bibTeXcode = d->xslt->transform(atomCode).remove(QLatin1String("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
