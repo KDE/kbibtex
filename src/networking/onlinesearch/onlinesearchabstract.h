@@ -87,6 +87,7 @@ public:
     static const int resultUnspecifiedError;
     static const int resultAuthorizationRequired;
     static const int resultNetworkError;
+    static const int resultInvalidArguments;
 
     virtual void startSearch() = 0;
     virtual void startSearch(const QMap<QString, QString> &query, int numResults) = 0;
