@@ -65,9 +65,10 @@ public:
         if (index.row() < ofiList.count()) {
             OpenFileInfo *ofiItem = ofiList[index.row()];
             if (index.column() == 0) {
-                if (role == Qt::DisplayRole || role == SortRole)
-                    return ofiItem->url().fileName();
-                else if (role == Qt::DecorationRole)
+                if (role == Qt::DisplayRole || role == SortRole) {
+                    const QString fileName = ofiItem->url().fileName();
+                    return fileName.isEmpty() ? squeeze_text(ofiItem->url().pathOrUrl(), 32) : fileName;
+                } else if (role == Qt::DecorationRole)
                     return KIcon(ofiItem->mimeType().replace(QLatin1Char('/'), QLatin1Char('-')));
                 else if (role == Qt::ToolTipRole)
                     return squeeze_text(ofiItem->url().pathOrUrl(), 64);
