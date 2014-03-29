@@ -150,19 +150,19 @@ public:
         case 'a': ///< deprecated but still supported case
         {
             /// Evaluate the token string, store information in struct IdSuggestionTokenInfo ati
-            struct IdSuggestionTokenInfo ati = p->evalToken(token);
+            struct IdSuggestionTokenInfo ati = p->evalToken(token.mid(1));
             ati.startWord = ati.endWord = 0; ///< only first author
             return translateAuthorsToken(entry, ati);
         }
         case 'A': {
             /// Evaluate the token string, store information in struct IdSuggestionTokenInfo ati
-            const struct IdSuggestionTokenInfo ati = p->evalToken(token);
+            const struct IdSuggestionTokenInfo ati = p->evalToken(token.mid(1));
             return translateAuthorsToken(entry, ati);
         }
         case 'z': ///< deprecated but still supported case
         {
             /// Evaluate the token string, store information in struct IdSuggestionTokenInfo ati
-            struct IdSuggestionTokenInfo ati = p->evalToken(token);
+            struct IdSuggestionTokenInfo ati = p->evalToken(token.mid(1));
             /// All but first author
             ati.startWord = 1;
             ati.endWord = 0x00ffffff;
