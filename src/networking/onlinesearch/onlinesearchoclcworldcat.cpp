@@ -54,25 +54,25 @@ public:
     void setBaseUrl(const QMap<QString, QString> &query) {
         QStringList queryFragments;
 
-        /// add words from "free text" field
-        // FIXME not supported in srw queries?
-        /*
+        /// Add words from "free text" field
+        /// WorldCat's Open Search does not support "free" search,
+        /// instead, title, keyword, subject etc are searched OR-connected
         const QStringList freeTextWords = p->splitRespectingQuotationMarks(query[queryKeyFreeText]);
         for (QStringList::ConstIterator it = freeTextWords.constBegin(); it != freeTextWords.constEnd(); ++it) {
-            queryFragments.append(*it);
+            static const QString freeWorldTemplate = QLatin1String("(+srw.ti+all+\"%1\"+or+srw.kw+all+\"%1\"+or+srw.au+all+\"%1\"+or+srw.bn+all+\"%1\"+or+srw.su+all+\"%1\"+)");
+            queryFragments.append(freeWorldTemplate.arg(*it));
         }
-        */
-        /// add words from "title" field
+        /// Add words from "title" field
         const QStringList titleWords = p->splitRespectingQuotationMarks(query[queryKeyTitle]);
         for (QStringList::ConstIterator it = titleWords.constBegin(); it != titleWords.constEnd(); ++it) {
-            static const QString titleParenthesis = QLatin1String("srw.ti+all+\"%1\"");
-            queryFragments.append(titleParenthesis.arg(*it));
+            static const QString titleTemplate = QLatin1String("srw.ti+all+\"%1\"");
+            queryFragments.append(titleTemplate.arg(*it));
         }
-        /// add words from "author" field
+        /// Add words from "author" field
         const QStringList authorWords = p->splitRespectingQuotationMarks(query[queryKeyAuthor]);
         for (QStringList::ConstIterator it = authorWords.constBegin(); it != authorWords.constEnd(); ++it) {
-            static const QString authorParenthesis = QLatin1String("srw.au+all+\"%1\"");
-            queryFragments.append(authorParenthesis.arg(*it));
+            static const QString authorTemplate = QLatin1String("srw.au+all+\"%1\"");
+            queryFragments.append(authorTemplate.arg(*it));
         }
 
         /// Field year cannot stand alone, therefore if no query fragments
@@ -84,11 +84,11 @@ public:
             return;
         }
 
-        /// add words from "year" field
+        /// Add words from "year" field
         const QStringList yearWords = p->splitRespectingQuotationMarks(query[queryKeyYear]);
         for (QStringList::ConstIterator it = yearWords.constBegin(); it != yearWords.constEnd(); ++it) {
-            static const QString yearParenthesis = QLatin1String("srw.yr+any+\"%1\"");
-            queryFragments.append(yearParenthesis.arg(*it));
+            static const QString yearTemplate = QLatin1String("srw.yr+any+\"%1\"");
+            queryFragments.append(yearTemplate.arg(*it));
         }
 
         const QString queryString = queryFragments.join(QLatin1String("+and+"));
@@ -97,7 +97,7 @@ public:
     }
 };
 
-const int OnlineSearchOCLCWorldCat::Private::countPerStep = 7;
+const int OnlineSearchOCLCWorldCat::Private::countPerStep = 11; /// pseudo-randomly chosen prime number between 10 and 20
 const QString OnlineSearchOCLCWorldCat::Private::APIkey = QLatin1String("Bt6h4KIHrfbSXEahwUzpFQD6SNjQZfQUG3W2LN9oNEB5tROFGeRiDVntycEEyBe0aH17sH4wrNlnVANH");
 
 OnlineSearchOCLCWorldCat::OnlineSearchOCLCWorldCat(QWidget *parent)
@@ -136,7 +136,7 @@ void OnlineSearchOCLCWorldCat::startSearch(const QMap<QString, QString> &query, 
 }
 
 QString OnlineSearchOCLCWorldCat::label() const {
-    return i18n("OCLC WorldCat Books");
+    return i18n("OCLC WorldCat");
 }
 
 OnlineSearchQueryFormAbstract *OnlineSearchOCLCWorldCat::customWidget(QWidget *) {
@@ -161,10 +161,10 @@ void OnlineSearchOCLCWorldCat::downloadDone() {
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
     if (handleErrors(reply)) {
-        /// ensure proper treatment of UTF-8 characters
-        const QString atomCode = QString::fromUtf8(reply->readAll().data()).remove("xmlns=\"http://www.w3.org/2005/Atom\"").remove(" xmlns=\"http://www.loc.gov/zing/srw/\""); // FIXME fix worldcatdc2bibtex.xsl to handle namespace
+        /// Ensure proper treatment of UTF-8 characters
+        const QString atomCode = QString::fromUtf8(reply->readAll().data()).remove(QLatin1String("xmlns=\"http://www.w3.org/2005/Atom\"")).remove(QLatin1String(" xmlns=\"http://www.loc.gov/zing/srw/\"")); // FIXME fix worldcatdc2bibtex.xsl to handle namespace
 
-        /// use XSL transformation to get BibTeX document from XML result
+        /// Use XSL transformation to get BibTeX document from XML result
         const QString bibTeXcode = d->xslt->transform(atomCode).remove(QLatin1String("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
 
         FileImporterBibTeX importer;

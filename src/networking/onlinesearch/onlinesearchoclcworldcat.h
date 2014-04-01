@@ -21,6 +21,15 @@
 #include "onlinesearchabstract.h"
 
 /**
+ * According to its own description at oclc.org, "OCLC is a worldwide library
+ * cooperative, providing services and research to improve access to the
+ * world's information."
+ * Access to their services is available through the developers' portal at
+ * https://oclc.org/developer/
+ * WorldCat, according to OCLC's description, "connects library users to
+ * hundreds of millions of electronic resources, including e-books, licensed
+ * databases, online periodicals and collections of digital items."
+ *
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
 class KBIBTEXNETWORKING_EXPORT OnlineSearchOCLCWorldCat : public OnlineSearchAbstract
