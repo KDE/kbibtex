@@ -13,12 +13,12 @@
   <!ENTITY kbibtex "KBibTeX">
   <!ENTITY lyx "<application>LyX</application>">
   <!ENTITY kappname "&kbibtex;">
-  <!ENTITY package "extragear">
+  <!ENTITY package "extragear-office">
   <!ENTITY % addindex "IGNORE">
   <!ENTITY % English "INCLUDE">
 ]>
 
-<book id="kile" lang="&language;">
+<book id="kbibtex" lang="&language;">
 
 <bookinfo>
 <title>The &kbibtex; Handbook</title>
