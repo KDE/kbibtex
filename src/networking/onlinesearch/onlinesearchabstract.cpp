@@ -45,6 +45,7 @@ const int OnlineSearchAbstract::resultCancelled = 0; /// may get redefined in th
 const int OnlineSearchAbstract::resultUnspecifiedError = 1;
 const int OnlineSearchAbstract::resultAuthorizationRequired = 2;
 const int OnlineSearchAbstract::resultNetworkError = 3;
+const int OnlineSearchAbstract::resultInvalidArguments = 4;
 
 const char *OnlineSearchAbstract::httpUnsafeChars = "%:/=+$?&\0";
 
