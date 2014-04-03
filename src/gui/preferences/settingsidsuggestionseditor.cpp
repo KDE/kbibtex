@@ -286,6 +286,62 @@ void TitleWidget::updateRangeLabel()
         labelWordsRange->setText(i18n("From word %1 to word %2", lower + 1, upper + 1));
 }
 
+/**
+ * @author Thomas Fischer
+ */
+class JournalWidget : public TokenWidget
+{
+private:
+    KComboBox *comboBoxChangeCase;
+    QSpinBox *spinBoxLength;
+
+public:
+    JournalWidget(const struct IdSuggestions::IdSuggestionTokenInfo &info, IdSuggestionsEditWidget *isew, QWidget *parent)
+            : TokenWidget(parent)
+    {
+        setTitle(i18n("Journal"));
+
+        QBoxLayout *boxLayout = new QVBoxLayout();
+        boxLayout->setMargin(0);
+
+        comboBoxChangeCase = new KComboBox(false, this);
+        comboBoxChangeCase->addItem(i18n("No change"), IdSuggestions::ccNoChange);
+        comboBoxChangeCase->addItem(i18n("To upper case"), IdSuggestions::ccToUpper);
+        comboBoxChangeCase->addItem(i18n("To lower case"), IdSuggestions::ccToLower);
+        comboBoxChangeCase->addItem(i18n("To CamelCase"), IdSuggestions::ccToCamelCase);
+        formLayout->addRow(i18n("Change casing:"), comboBoxChangeCase);
+        comboBoxChangeCase->setCurrentIndex((int)info.caseChange); /// enum has numbers assigned to cases and combo box has same indices
+
+        spinBoxLength = new QSpinBox(this);
+        formLayout->addRow(i18n("Only first characters:"), spinBoxLength);
+        spinBoxLength->setSpecialValueText(i18n("No limitation"));
+        spinBoxLength->setMinimum(0);
+        spinBoxLength->setMaximum(9);
+        spinBoxLength->setValue(info.len == 0 || info.len > 9 ? 0 : info.len);
+
+        connect(comboBoxChangeCase, SIGNAL(currentIndexChanged(int)), isew, SLOT(updatePreview()));
+        connect(spinBoxLength, SIGNAL(valueChanged(int)), isew, SLOT(updatePreview()));
+    }
+
+    QString toString() const
+    {
+        QString result = QLatin1String("j");
+
+        if (spinBoxLength->value() > 0)
+            result.append(QString::number(spinBoxLength->value()));
+
+        IdSuggestions::CaseChange caseChange = (IdSuggestions::CaseChange)comboBoxChangeCase->currentIndex();
+        if (caseChange == IdSuggestions::ccToLower)
+            result.append(QLatin1String("l"));
+        else if (caseChange == IdSuggestions::ccToUpper)
+            result.append(QLatin1String("u"));
+        else if (caseChange == IdSuggestions::ccToCamelCase)
+            result.append(QLatin1String("c"));
+
+        return result;
+    }
+};
+
 class TextWidget : public TokenWidget
 {
 private:
@@ -314,7 +370,7 @@ class IdSuggestionsEditWidget::IdSuggestionsEditWidgetPrivate
 private:
     IdSuggestionsEditWidget *p;
 public:
-    enum TokenType {ttTitle = 0, ttAuthor = 1, ttYear = 2, ttText = 3};
+    enum TokenType {ttTitle = 0, ttAuthor = 1, ttYear = 2, ttJournal = 3, ttText = 4};
 
     QWidget *container;
     QBoxLayout *containerLayout;
@@ -365,6 +421,8 @@ public:
         signalMapperAddMenu->setMapping(action, -ttAuthor);
         action = menuAddToken->addAction(i18n("Year"), signalMapperAddMenu, SLOT(map()));
         signalMapperAddMenu->setMapping(action, -ttYear);
+        action = menuAddToken->addAction(i18n("Journal"), signalMapperAddMenu, SLOT(map()));
+        signalMapperAddMenu->setMapping(action, -ttJournal);
         action = menuAddToken->addAction(i18n("Text"), signalMapperAddMenu, SLOT(map()));
         signalMapperAddMenu->setMapping(action, -ttText);
         connect(signalMapperAddMenu, SIGNAL(mapped(int)), p, SLOT(addToken(int)));
@@ -378,6 +436,8 @@ public:
         signalMapperAddMenu->setMapping(action, ttAuthor);
         action = menuAddToken->addAction(i18n("Year"), signalMapperAddMenu, SLOT(map()));
         signalMapperAddMenu->setMapping(action, ttYear);
+        action = menuAddToken->addAction(i18n("Journal"), signalMapperAddMenu, SLOT(map()));
+        signalMapperAddMenu->setMapping(action, ttJournal);
         action = menuAddToken->addAction(i18n("Text"), signalMapperAddMenu, SLOT(map()));
         signalMapperAddMenu->setMapping(action, ttText);
         connect(signalMapperAddMenu, SIGNAL(mapped(int)), p, SLOT(addToken(int)));
@@ -441,6 +501,19 @@ public:
             widgetList << tokenWidget;
             containerLayout->insertWidget(pos, tokenWidget, 1);
             break;
+        case ttJournal: {
+            struct IdSuggestions::IdSuggestionTokenInfo info;
+            info.inBetween = QString();
+            info.len = 1;
+            info.startWord = 0;
+            info.endWord = 0x00ffffff;
+            info.lastWord = false;
+            info.caseChange = IdSuggestions::ccNoChange;
+            tokenWidget = new JournalWidget(info, p, container);
+            widgetList << tokenWidget;
+            containerLayout->insertWidget(pos, tokenWidget, 1);
+        }
+        break;
         case ttText:
             tokenWidget = new TextWidget(QString(), p, container);
             widgetList << tokenWidget;
@@ -481,6 +554,11 @@ public:
             } else if (token[0] == 't' || token[0] == 'T') {
                 struct IdSuggestions::IdSuggestionTokenInfo info = p->evalToken(token.mid(1));
                 tokenWidget = new TitleWidget(info, token[0] == 'T', p, container);
+                widgetList << tokenWidget;
+                containerLayout->insertWidget(containerLayout->count() - 2, tokenWidget, 1);
+            } else if (token[0] == 'j') {
+                struct IdSuggestions::IdSuggestionTokenInfo info = p->evalToken(token.mid(1));
+                tokenWidget = new JournalWidget(info, p, container);
                 widgetList << tokenWidget;
                 containerLayout->insertWidget(containerLayout->count() - 2, tokenWidget, 1);
             } else if (token[0] == '"') {
