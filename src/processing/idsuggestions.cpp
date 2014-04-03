@@ -21,6 +21,7 @@
 #include <KConfigGroup>
 #include <KLocale>
 
+#include "journalabbreviations.h"
 #include "encoderlatex.h"
 
 class IdSuggestions::IdSuggestionsPrivate
@@ -48,8 +49,7 @@ public:
         return ok ? result : -1;
     }
 
-    QString translateTitleToken(const Entry &entry, const QString &token, bool removeSmallWords) const {
-        struct IdSuggestionTokenInfo tti = p->evalToken(token);
+    QString translateTitleToken(const Entry &entry, const struct IdSuggestionTokenInfo &tti, bool removeSmallWords) const {
         /// list of small words taken from OCLC:
         /// http://www.oclc.org/developer/develop/web-services/worldcat-search-api/bibliographic-resource.en.html
         static const QStringList smallWords = i18nc("Small words that can be removed from titles when generating id suggestions; separated by pipe symbol", "a|als|am|an|are|as|at|auf|aus|be|but|by|das|dass|de|der|des|dich|dir|du|er|es|for|from|had|have|he|her|his|how|ihr|ihre|ihres|im|in|is|ist|it|kein|la|le|les|mein|mich|mir|mit|of|on|sein|sie|that|the|this|to|un|une|von|was|wer|which|wie|wird|with|yousie|that|the|this|to|un|une|von|was|wer|which|wie|wird|with|you").split(QLatin1String("|"), QString::SkipEmptyParts);
@@ -145,6 +145,44 @@ public:
         return result;
     }
 
+    QString translateJournalToken(const Entry &entry, const struct IdSuggestionTokenInfo &jti) const {
+        static const QRegExp sequenceOfSpaces(QLatin1String("\\s+"));
+        QString journalName = PlainTextValue::text(entry.value(Entry::ftJournal));
+        journalName = JournalAbbreviations::self()->toShortName(journalName);
+        QStringList journalWords = journalName.split(sequenceOfSpaces, QString::SkipEmptyParts);
+
+        QString result;
+        for (QStringList::ConstIterator it = journalWords.constBegin(); it != journalWords.constEnd(); ++it) {
+            QString journalComponent = normalizeText(*it);
+
+            /// Try to keep sequences of capital letters at the start of the journal name,
+            /// those may already be abbreviations.
+            unsigned int countCaptialCharsAtStart = 0;
+            while (journalComponent[countCaptialCharsAtStart].isUpper()) ++countCaptialCharsAtStart;
+            journalComponent = journalComponent.left(qMax(jti.len, countCaptialCharsAtStart));
+
+            if (jti.caseChange == IdSuggestions::ccToCamelCase)
+                journalComponent = journalComponent[0].toUpper() + journalComponent.mid(1);
+            result.append(journalComponent);
+        }
+
+        switch (jti.caseChange) {
+        case IdSuggestions::ccToUpper:
+            result = result.toUpper();
+            break;
+        case IdSuggestions::ccToLower:
+            result = result.toLower();
+            break;
+        case IdSuggestions::ccToCamelCase:
+            /// already processed above
+        case IdSuggestions::ccNoChange:
+            /// nothing
+            break;
+        }
+
+        return result;
+    }
+
     QString translateToken(const Entry &entry, const QString &token) const {
         switch (token[0].toLatin1()) {
         case 'a': ///< deprecated but still supported case
@@ -180,8 +218,17 @@ public:
                 return QString::number(year % 10000 + 10000).mid(1);
             break;
         }
-        case 't': return translateTitleToken(entry, token.mid(1), false);
-        case 'T': return translateTitleToken(entry, token.mid(1), true);
+        case 't':
+        case 'T': {
+            /// Evaluate the token string, store information in struct IdSuggestionTokenInfo jti
+            const struct IdSuggestionTokenInfo tti = p->evalToken(token.mid(1));
+            return translateTitleToken(entry, tti, token[0].toLatin1() == 'T');
+        }
+        case 'j': {
+            /// Evaluate the token string, store information in struct IdSuggestionTokenInfo jti
+            const struct IdSuggestionTokenInfo jti = p->evalToken(token.mid(1));
+            return translateJournalToken(entry, jti);
+        }
         case '"': return token.mid(1);
         }
 
@@ -289,8 +336,11 @@ QStringList IdSuggestions::formatStrToHuman(const QString &formatStr) const
             }
 
             if (!info.inBetween.isEmpty()) text.append(i18n(", with '%1' in between", info.inBetween));
-        } else if (token[0] == 'y') text.append(i18n("Year (2 digits)"));
-        else if (token[0] == 'Y') text.append(i18n("Year (4 digits)"));
+        }
+        else if (token[0] == 'y')
+            text.append(i18n("Year (2 digits)"));
+        else if (token[0] == 'Y')
+            text.append(i18n("Year (4 digits)"));
         else if (token[0] == 't' || token[0] == 'T') {
             struct IdSuggestionTokenInfo info = evalToken(token.mid(1));
             text.append(i18n("Title"));
@@ -319,8 +369,29 @@ QStringList IdSuggestions::formatStrToHuman(const QString &formatStr) const
 
             if (!info.inBetween.isEmpty()) text.append(i18n(", with '%1' in between", info.inBetween));
             if (token[0] == 'T') text.append(i18n(", small words removed"));
-        } else if (token[0] == '"') text.append(i18n("Text: '%1'", token.mid(1)));
-        else text.append("?");
+        }
+        else if (token[0] == 'j') {
+            struct IdSuggestionTokenInfo info = evalToken(token.mid(1));
+            text.append(i18n("Journal"));
+            if (info.len < 0x00ffffff)
+                text.append(i18np(", but only first letter of each word", ", but only first %1 letters of each word", info.len));
+            switch (info.caseChange) {
+            case IdSuggestions::ccToUpper:
+                text.append(i18n(", in upper case"));
+                break;
+            case IdSuggestions::ccToLower:
+                text.append(i18n(", in lower case"));
+                break;
+            case IdSuggestions::ccToCamelCase:
+                text.append(i18n(", in CamelCase"));
+                break;
+            case IdSuggestions::ccNoChange:
+                break;
+            }
+        } else if (token[0] == '"')
+            text.append(i18n("Text: '%1'", token.mid(1)));
+        else
+            text.append("?");
 
         result.append(text);
     }
