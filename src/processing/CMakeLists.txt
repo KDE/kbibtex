@@ -13,6 +13,7 @@ set(
     lyx.cpp
     checkbibtex.cpp
     bibliographyservice.cpp
+    journalabbreviations.cpp
 )
 
 set(
@@ -22,6 +23,7 @@ set(
     lyx.h
     checkbibtex.h
     bibliographyservice.h
+    journalabbreviations.h
     kbibtexproc_export.h
 )
 
