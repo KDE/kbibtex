@@ -1,5 +1,26 @@
 ChangeLog
 
+Diff 0.5 to 0.5.1
+
+- KDE Bug 329724: https://bugs.kde.org/show_bug.cgi?id=329724
+  Fixing sorting issue in main list
+- KDE Bug 329750: https://bugs.kde.org/show_bug.cgi?id=329750
+  KBibTeX will set itself as default bibliography editor in KDE
+- KDE Bug 330700: https://bugs.kde.org/show_bug.cgi?id=330700
+  Crash when finding PDFs
+- KDE Bug 332043: https://bugs.kde.org/show_bug.cgi?id=332043
+  Fixing crash in id suggestion editor
+- Gentoo Bug 498932: https://bugs.gentoo.org/show_bug.cgi?id=498932
+  Fixing compilation issue
+- Gna Bug 21581: http://gna.org/bugs/?21581
+  Restoring session state (1)
+- Gna Bug 21545: http://gna.org/bugs/?21545
+  Restoring session state (2)
+- Debian Bug 689310: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=689310
+  Correctly parsing command line arguments if relative paths are given
+- Various minor clean-ups and improvements
+  Run   git log v0.5..v0.5.1   for a more detailed change log
+
 Diff 0.4.1 to 0.5
 
 - Initial support for BibLaTeX
