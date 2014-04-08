@@ -45,12 +45,6 @@ struct FieldDescription {
         /* nothing */
     }
 
-    FieldDescription(const FieldDescription &other)
-            : upperCamelCase(other.upperCamelCase), upperCamelCaseAlt(other.upperCamelCaseAlt), label(other.label), typeFlags(other.typeFlags), preferredTypeFlag(other.preferredTypeFlag), defaultWidth(other.defaultWidth), typeIndependent(other.typeIndependent) {
-        foreach(const QString & key, other.width.keys()) width.insert(key, other.width[key]);
-        foreach(const QString & key, other.visible.keys()) visible.insert(key, other.visible[key]);
-    }
-
     bool isNull() const {
         return upperCamelCase.isNull() && label.isNull();
     }
