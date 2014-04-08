@@ -196,7 +196,7 @@ void ElementForm::setElement(QSharedPointer<Element> element, const File *file)
  */
 void ElementForm::modified(bool gotModified)
 {
-    /// Only interest in modifications, not resets of modified status
+    /// Only interested in modifications, not resets of modified status
     if (!gotModified) return;
 
     if (d->checkBoxAutoApply->isChecked()) {
