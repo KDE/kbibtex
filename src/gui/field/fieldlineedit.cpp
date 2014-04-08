@@ -161,10 +161,6 @@ public:
 
         EncoderLaTeX *encoder = EncoderLaTeX::instance();
         const QString encodedText = encoder->decode(text);
-        if (encodedText != text) {
-            /// Feed back encoded and simplified text to widget
-            parent->setText(encodedText);
-        }
 
         if (encodedText.isEmpty())
             return true;
