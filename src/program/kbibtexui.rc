@@ -1,8 +1,7 @@
 <!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
 <kpartgui name="KBibTeX" version="1">
 <MenuBar>
-  <Menu name="file" noMerge="1"><text>&amp;File</text>
-
+  <Menu name="file"><text>File</text>
     <Action name="file_new" />
     <Action name="file_open" />
     <Action name="file_open_recent" />
@@ -17,12 +16,11 @@
   </Menu>
   <Merge />
 </MenuBar>
-<ToolBar noMerge="1" name="mainToolBar"><text>Main Toolbar</text>
+<ToolBar name="mainToolBar"><text>Main Toolbar</text>
     <Action name="file_new" />
     <Action name="file_open" />
     <Action name="file_close" />
     <Separator/>
     <Merge/>
 </ToolBar>
-<!-- TODO -->
 </kpartgui>
