@@ -1,12 +1,12 @@
 <!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
 <kpartgui name="kbibtexpart" version="1">
 <MenuBar>
-  <Menu name="file" noMerge="1"><text>File</text>
+  <Menu name="file"><text>File</text>
     <Action name="file_save" group="save_merge" />
     <Action name="file_save_as" group="save_merge" />
     <Action name="file_save_copy_as" group="save_merge" />
   </Menu>
-  <Menu name="edit" noMerge="1"><text>Edit</text>
+  <Menu name="edit"><text>Edit</text>
     <Action name="edit_cut" group="edit_paste_merge" />
     <Action name="edit_copy" group="edit_paste_merge" />
     <Action name="edit_copy_references" group="edit_paste_merge" />
@@ -25,13 +25,13 @@
   </Menu>
 </MenuBar>
 
-<ToolBar name="mainToolBar" noMerge="1"><text>Main Toolbar</text>
+<ToolBar name="mainToolBar"><text>Main Toolbar</text>
   <Action name="file_save" group="file_operations" />
   <Action name="file_save_as" group="file_operations" />
   <Separator/>
   <Action name="element_new" />
 </ToolBar>
-<ToolBar name="filterToolBar" noMerge="1"><text>Filter Toolbar</text>
+<ToolBar name="filterToolBar"><text>Filter Toolbar</text>
   <Action name="toolbar_filter_widget" />
 </ToolBar>
 </kpartgui>
