@@ -103,6 +103,11 @@ public:
         action = new KAction(KIcon("edit-find"), i18n("Search for selected values"), p);
         connect(action, SIGNAL(triggered()), p, SLOT(searchSelection()));
         treeviewFieldValues->addAction(action);
+        /// create context menu item to assign value to selected bibliography elements
+        action = new KAction(KIcon("emblem-new"), i18n("Assign/add value to selected entries"), p);
+        connect(action, SIGNAL(triggered()), p, SLOT(assignSelection()));
+        // TODO disable this action if no elements have been selected in editor
+        treeviewFieldValues->addAction(action);
 
         p->setEnabled(false);
 
@@ -249,6 +254,69 @@ void ValueList::searchSelection()
 
     if (!fq.terms.isEmpty())
         d->editor->setFilterBarFilter(fq);
+}
+
+void ValueList::assignSelection() {
+    QString field = d->comboboxFieldNames->itemData(d->comboboxFieldNames->currentIndex()).toString();
+    if (field.isEmpty()) field = d->comboboxFieldNames->currentText();
+    if (field.isEmpty()) return; ///< empty field is invalid; quit
+
+    const Value toBeAssignedValue = d->sortingModel->mapToSource(d->treeviewFieldValues->currentIndex()).data(Qt::EditRole).value<Value>();
+    if (toBeAssignedValue.isEmpty()) return; ///< empty value is invalid; quit
+    const QString toBeAssignedValueText = PlainTextValue::text(toBeAssignedValue);
+
+    /// Keep track if any modifications were made to the bibliography file
+    bool madeModification = false;
+
+    /// Go through all selected elements in current editor
+    const QList<QSharedPointer<Element> > &selection = d->editor->selectedElements();
+    foreach(const QSharedPointer<Element> &element, selection) {
+        /// Only entries (not macros or comments) are of interest
+        QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
+        if (!entry.isNull()) {
+            /// Fields are separated into two categories:
+            /// 1. Where more values can be appended, like authors or URLs
+            /// 2. Where values should be replaced, like title, year, or journal
+            if (field.compare(Entry::ftAuthor, Qt::CaseInsensitive) == 0
+                    || field.compare(Entry::ftEditor, Qt::CaseInsensitive) == 0
+                    || field.compare(Entry::ftUrl, Qt::CaseInsensitive) == 0
+                    || field.compare(Entry::ftLocalFile, Qt::CaseInsensitive) == 0
+                    || field.compare(Entry::ftDOI, Qt::CaseInsensitive) == 0
+                    || field.compare(Entry::ftKeywords, Qt::CaseInsensitive) == 0) {
+                /// Fields for which multiple values are valid
+                bool valueItemAlreadyContained = false; ///< add only if to-be-assigned value is not yet contained
+                Value entrysValueForField = entry->value(field);
+                foreach(const QSharedPointer<ValueItem> &containedValueItem, entrysValueForField) {
+                    valueItemAlreadyContained |= PlainTextValue::text(containedValueItem) == toBeAssignedValueText;
+                    if (valueItemAlreadyContained) break;
+                }
+
+                if (!valueItemAlreadyContained) {
+                    /// Add each ValueItem from the to-be-assigned value to the entry's value for this field
+                    foreach(const QSharedPointer<ValueItem> &newValueItem, toBeAssignedValue) {
+                        entrysValueForField.append(newValueItem);
+                    }
+                    /// "Write back" value to field in entry
+                    entry->remove(field);
+                    entry->insert(field, entrysValueForField);
+                    /// Keep track that bibliography file has been modified
+                    madeModification = true;
+                }
+            } else {
+                /// Fields for which only value is valid, thus the old value will be replaced
+                entry->remove(field);
+                entry->insert(field, toBeAssignedValue);
+                /// Keep track that bibliography file has been modified
+                madeModification = true;
+            }
+
+        }
+    }
+
+    if (madeModification) {
+        /// Notify main editor about change it its data
+        d->editor->externalModification();
+    }
 }
 
 void ValueList::startItemRenaming()

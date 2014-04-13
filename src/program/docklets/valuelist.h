@@ -45,6 +45,7 @@ protected slots:
 private slots:
     void listItemActivated(const QModelIndex &);
     void searchSelection();
+    void assignSelection();
     void startItemRenaming();
     void deleteAllOccurrences();
     void showCountColumnToggled();
