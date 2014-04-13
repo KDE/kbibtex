@@ -210,14 +210,16 @@ void BibTeXEditor::selectionChanged(const QItemSelection &selected, const QItemS
     QTreeView::selectionChanged(selected, deselected);
 
     QModelIndexList set = selected.indexes();
-    for (QModelIndexList::Iterator it = set.begin(); it != set.end(); ++it) {
+    for (QModelIndexList::ConstIterator it = set.constBegin(); it != set.constEnd(); ++it) {
+        if ((*it).column() != 0) continue; ///< consider only column-0 indices to avoid duplicate elements
         m_selection.append(bibTeXModel()->element((*it).row()));
     }
     if (m_current == NULL && !set.isEmpty())
         m_current = bibTeXModel()->element(set.first().row());
 
     set = deselected.indexes();
-    for (QModelIndexList::Iterator it = set.begin(); it != set.end(); ++it) {
+    for (QModelIndexList::ConstIterator it = set.constBegin(); it != set.constEnd(); ++it) {
+        if ((*it).column() != 0) continue; ///< consider only column-0 indices to avoid duplicate elements
         m_selection.removeOne(bibTeXModel()->element((*it).row()));
     }
 
