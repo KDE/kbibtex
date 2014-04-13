@@ -1413,7 +1413,7 @@ fieldInputLayout6=SingleLine
 [EntryLayoutTab9]
 uiCaption=Misc
 columns=1
-count=6
+count=11
 
 bibtexLabel1=type
 uiLabel1=Type
