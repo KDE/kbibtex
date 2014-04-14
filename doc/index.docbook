@@ -39,8 +39,8 @@
 <holder>Thomas Fischer</holder>
 </copyright>
 
-<date>2014-02-09</date>
-<releaseinfo>0.5</releaseinfo>
+<date>2014-04-14</date>
+<releaseinfo>0.6</releaseinfo>
 
 <legalnotice>
   &FDLNotice;
@@ -466,7 +466,7 @@ latex example</screen>
 	  The upper drop down box is used to choose the bibliography field to display statistic data (a count of entries with the same value for the field) on the lower list.
 	</para>
 	<para>
-	  You can click with &RMB; on an entry in the lower list to access the batch editing capabilities. It is possible to <guimenuitem>Replace all occurrences</guimenuitem> of the value, <guimenuitem>Delete all occurrences</guimenuitem> of the value, or <guimenuitem>Search for selected values</guimenuitem> using the <link linkend="filter-toolbar">Filter Toolbar</link>.
+	  You can click with &RMB; on an entry in the lower list to access the batch editing capabilities. It is possible to <guimenuitem>Replace all occurrences</guimenuitem> of the value, <guimenuitem>Delete all occurrences</guimenuitem> of the value, <guimenuitem>Search for selected values</guimenuitem> using the <link linkend="filter-toolbar">Filter Toolbar</link>, or <guimenuitem>Assign/add values to selected entries</guimenuitem> (some entries should be selected in the main entry list first).
 	</para>
 	<para>
 	  <screenshot>
