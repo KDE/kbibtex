@@ -9,8 +9,6 @@
         <sub-class-of type="text/plain"/>
         <alias type="text/x-research-info-systems"/>
         <comment>RIS bibliography file</comment>
-        <comment xml:lang="de">RIS-Bibliografiedatei</comment>
-        <comment xml:lang="en_GB">RIS bibliography file</comment>
         <acronym>RIS</acronym>
         <expanded-acronym>Research Information Systems</expanded-acronym>
         <glob pattern="*.ris"/>
@@ -21,8 +19,6 @@
     <mime-type type="application/x-isi-export-format">
         <sub-class-of type="text/plain"/>
         <comment>ISI bibliography file</comment>
-        <comment xml:lang="de">ISI-Bibliografiedatei</comment>
-        <comment xml:lang="en_GB">ISI bibliography file</comment>
         <acronym>ISI</acronym>
         <expanded-acronym>Information Sciences Institute</expanded-acronym>
         <glob pattern="*.isi"/>
