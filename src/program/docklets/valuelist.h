@@ -46,6 +46,7 @@ private slots:
     void listItemActivated(const QModelIndex &);
     void searchSelection();
     void assignSelection();
+    void removeSelection();
     void startItemRenaming();
     void deleteAllOccurrences();
     void showCountColumnToggled();

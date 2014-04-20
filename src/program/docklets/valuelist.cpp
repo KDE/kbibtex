@@ -57,6 +57,7 @@ public:
     KComboBox *comboboxFieldNames;
     const int countWidth;
     KAction *assignSelectionAction;
+    KAction *removeSelectionAction;
     KToggleAction *showCountColumnAction;
     KToggleAction *sortByCountAction;
 
@@ -107,8 +108,11 @@ public:
         /// create context menu item to assign value to selected bibliography elements
         assignSelectionAction = new KAction(KIcon("emblem-new"), i18n("Assign/add value to selected entries"), p);
         connect(assignSelectionAction, SIGNAL(triggered()), p, SLOT(assignSelection()));
-        // TODO disable this action if no elements have been selected in editor
         treeviewFieldValues->addAction(assignSelectionAction);
+        /// create context menu item to remove value from selected bibliography elements
+        removeSelectionAction = new KAction(KIcon("list-remove"), i18n("Remove value from selected entries"), p);
+        connect(removeSelectionAction, SIGNAL(triggered()), p, SLOT(removeSelection()));
+        treeviewFieldValues->addAction(removeSelectionAction);
 
         p->setEnabled(false);
 
@@ -200,7 +204,8 @@ ValueList::~ValueList()
 
 void ValueList::setEditor(BibTeXEditor *editor)
 {
-    disconnect(d->editor, SIGNAL(selectedElementsChanged()), this, SLOT(editorSelectionChanged()));
+    if (d->editor != NULL)
+        disconnect(d->editor, SIGNAL(selectedElementsChanged()), this, SLOT(editorSelectionChanged()));
     d->editor = editor;
     connect(d->editor, SIGNAL(selectedElementsChanged()), this, SLOT(editorSelectionChanged()));
     editorSelectionChanged();
@@ -323,6 +328,48 @@ void ValueList::assignSelection() {
     }
 }
 
+void ValueList::removeSelection() {
+    QString field = d->comboboxFieldNames->itemData(d->comboboxFieldNames->currentIndex()).toString();
+    if (field.isEmpty()) field = d->comboboxFieldNames->currentText();
+    if (field.isEmpty()) return; ///< empty field is invalid; quit
+
+    const Value toBeRemovedValue = d->sortingModel->mapToSource(d->treeviewFieldValues->currentIndex()).data(Qt::EditRole).value<Value>();
+    if (toBeRemovedValue.isEmpty()) return; ///< empty value is invalid; quit
+    const QString toBeRemovedValueText = PlainTextValue::text(toBeRemovedValue);
+
+    /// Keep track if any modifications were made to the bibliography file
+    bool madeModification = false;
+
+    /// Go through all selected elements in current editor
+    const QList<QSharedPointer<Element> > &selection = d->editor->selectedElements();
+    foreach(const QSharedPointer<Element> &element, selection) {
+        /// Only entries (not macros or comments) are of interest
+        QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
+        if (!entry.isNull()) {
+            Value entrysValueForField = entry->value(field);
+            bool valueModified = false;
+            for (int i = 0; i < entrysValueForField.count(); ++i) {
+                const QString valueItemText = PlainTextValue::text(entrysValueForField[i]);
+                if (valueItemText == toBeRemovedValueText) {
+                    valueModified = true;
+                    entrysValueForField.remove(i);
+                    break;
+                }
+            }
+            if (valueModified) {
+                entry->remove(field);
+                entry->insert(field, entrysValueForField);
+                madeModification = true;
+            }
+        }
+    }
+
+    if (madeModification) {
+        /// Notify main editor about change it its data
+        d->editor->externalModification();
+    }
+}
+
 void ValueList::startItemRenaming()
 {
     /// Get current index from sorted model
@@ -385,5 +432,7 @@ void ValueList::columnsChanged()
 }
 
 void ValueList::editorSelectionChanged() {
-    d->assignSelectionAction->setEnabled(d->editor->selectedElements().count() > 0);
+    const bool selectedElements = d->editor == NULL ? false : d->editor->selectedElements().count() > 0;
+    d->assignSelectionAction->setEnabled(selectedElements);
+    d->removeSelectionAction->setEnabled(selectedElements);
 }
