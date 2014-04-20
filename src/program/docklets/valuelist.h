@@ -52,6 +52,7 @@ private slots:
     void sortByCountToggled();
     void delayedResize();
     void columnsChanged();
+    void editorSelectionChanged();
 
 private:
     class ValueListPrivate;
