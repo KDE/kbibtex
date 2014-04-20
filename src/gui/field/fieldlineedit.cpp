@@ -161,8 +161,6 @@ public:
 
         EncoderLaTeX *encoder = EncoderLaTeX::instance();
         const QString encodedText = encoder->decode(text);
-        if (encodedText != text)
-            parent->setText(encodedText);
 
         if (encodedText.isEmpty())
             return true;
