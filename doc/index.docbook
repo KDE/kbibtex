@@ -466,7 +466,7 @@ latex example</screen>
 	  The upper drop down box is used to choose the bibliography field to display statistic data (a count of entries with the same value for the field) on the lower list.
 	</para>
 	<para>
-	  You can click with &RMB; on an entry in the lower list to access the batch editing capabilities. It is possible to <guimenuitem>Replace all occurrences</guimenuitem> of the value, <guimenuitem>Delete all occurrences</guimenuitem> of the value, <guimenuitem>Search for selected values</guimenuitem> using the <link linkend="filter-toolbar">Filter Toolbar</link>, <guimenuitem>Remove value from selected entries</guimenuitem> or <guimenuitem>Assign/add values to selected entries</guimenuitem> (some entries should be selected in the main entry list first).
+	  You can click with &RMB; on an entry in the lower list to access the batch editing capabilities. It is possible to <guimenuitem>Replace all occurrences</guimenuitem> of the value, <guimenuitem>Delete all occurrences</guimenuitem> of the value, <guimenuitem>Search for selected values</guimenuitem> using the <link linkend="filter-toolbar">Filter Toolbar</link>, <guimenuitem>Assign/add values to selected entries</guimenuitem> or <guimenuitem>Remove value from selected entries</guimenuitem> (some entries should be selected in the main entry list first).
 	</para>
 	<para>
 	  <screenshot>
