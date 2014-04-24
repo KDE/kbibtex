@@ -19,6 +19,7 @@
         <comment xml:lang="sk">Súbor bibliografie RIS</comment>
         <comment xml:lang="sv">RIS-bibliografifil</comment>
         <comment xml:lang="uk">файл бібліографії RIS</comment>
+        <comment xml:lang="zh_TW">RIS bibliography 檔</comment>
         <acronym>RIS</acronym>
         <expanded-acronym>Research Information Systems</expanded-acronym>
         <glob pattern="*.ris"/>
@@ -39,6 +40,7 @@
         <comment xml:lang="sk">Súbor bibliografie ISI</comment>
         <comment xml:lang="sv">ISI-bibliografifil</comment>
         <comment xml:lang="uk">файл бібліографії ISI</comment>
+        <comment xml:lang="zh_TW">ISI bibliography 檔</comment>
         <acronym>ISI</acronym>
         <expanded-acronym>Information Sciences Institute</expanded-acronym>
         <glob pattern="*.isi"/>
@@ -61,6 +63,7 @@
         <comment xml:lang="sk">Knižnica EndNote</comment>
         <comment xml:lang="sv">EndNote-bibliotek</comment>
         <comment xml:lang="uk">бібліотека EndNote</comment>
+        <comment xml:lang="zh_TW">EndNote 函式庫</comment>
         <glob pattern="*.enl"/>
     </mime-type>
 </mime-info>
