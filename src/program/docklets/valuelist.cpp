@@ -365,6 +365,7 @@ void ValueList::removeSelection() {
     }
 
     if (madeModification) {
+        update();
         /// Notify main editor about change it its data
         d->editor->externalModification();
     }
