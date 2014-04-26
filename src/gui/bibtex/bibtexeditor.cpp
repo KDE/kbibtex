@@ -199,7 +199,7 @@ void BibTeXEditor::currentChanged(const QModelIndex &current, const QModelIndex 
 {
     QTreeView::currentChanged(current, previous); // FIXME necessary?
 
-    m_current = bibTeXModel()->element(sortFilterProxyModel()->mapToSource(current).row());
+    m_current = elementAt(current);
     emit currentElementChanged(m_current, bibTeXModel()->bibTeXFile());
 }
 
@@ -213,7 +213,7 @@ void BibTeXEditor::selectionChanged(const QItemSelection &selected, const QItemS
         m_selection.append(elementAt(*it));
     }
     if (m_current == NULL && !set.isEmpty())
-        m_current = bibTeXModel()->element(set.first().row());
+        m_current = elementAt(set.first());
 
     set = deselected.indexes();
     for (QModelIndexList::ConstIterator it = set.constBegin(); it != set.constEnd(); ++it) {
@@ -298,7 +298,7 @@ void BibTeXEditor::dragMoveEvent(QDragMoveEvent *event)
 
 void BibTeXEditor::itemActivated(const QModelIndex &index)
 {
-    emit elementExecuted(bibTeXModel()->element(sortFilterProxyModel()->mapToSource(index).row()));
+    emit elementExecuted(elementAt(index));
 }
 
 void BibTeXEditor::prepareEditorDialog(DialogType dialogType)
