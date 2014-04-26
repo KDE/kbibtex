@@ -212,7 +212,7 @@ void BibTeXEditor::selectionChanged(const QItemSelection &selected, const QItemS
     QModelIndexList set = selected.indexes();
     for (QModelIndexList::ConstIterator it = set.constBegin(); it != set.constEnd(); ++it) {
         if ((*it).column() != 0) continue; ///< consider only column-0 indices to avoid duplicate elements
-        m_selection.append(bibTeXModel()->element((*it).row()));
+        m_selection.append(elementAt(*it));
     }
     if (m_current == NULL && !set.isEmpty())
         m_current = bibTeXModel()->element(set.first().row());
@@ -220,7 +220,7 @@ void BibTeXEditor::selectionChanged(const QItemSelection &selected, const QItemS
     set = deselected.indexes();
     for (QModelIndexList::ConstIterator it = set.constBegin(); it != set.constEnd(); ++it) {
         if ((*it).column() != 0) continue; ///< consider only column-0 indices to avoid duplicate elements
-        m_selection.removeOne(bibTeXModel()->element((*it).row()));
+        m_selection.removeOne(elementAt(*it));
     }
 
     emit selectedElementsChanged();
