@@ -170,6 +170,7 @@ bool FileExporterRIS::writeEntry(QTextStream &stream, const Entry *entry, const 
                 result &= writeKeyValue(stream, "SP", pageRange[ 0 ]);
                 result &= writeKeyValue(stream, "EP", pageRange[ 1 ]);
             }
+        }
     }
 
     if (!year.isEmpty() || !month.isEmpty()) {
