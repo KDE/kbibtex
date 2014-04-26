@@ -179,8 +179,6 @@ bool FileExporterRIS::writeEntry(QTextStream &stream, const Entry *entry, const 
                 result &= writeKeyValue(stream, "SP", pageRange[ 0 ]);
                 result &= writeKeyValue(stream, "EP", pageRange[ 1 ]);
             }
-        } else if (key == Entry::ftDOI)
-            result &= writeKeyValue(stream, "UR", PlainTextValue::text(value, bibtexfile));
     }
 
     if (!year.isEmpty() || !month.isEmpty()) {
