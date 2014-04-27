@@ -54,6 +54,7 @@ private slots:
     void delayedResize();
     void columnsChanged();
     void editorSelectionChanged();
+    void fieldNamesChanged(int);
 
 private:
     class ValueListPrivate;

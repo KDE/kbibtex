@@ -106,7 +106,7 @@ public:
         connect(action, SIGNAL(triggered()), p, SLOT(searchSelection()));
         treeviewFieldValues->addAction(action);
         /// create context menu item to assign value to selected bibliography elements
-        assignSelectionAction = new KAction(KIcon("emblem-new"), i18n("Assign/add value to selected entries"), p);
+        assignSelectionAction = new KAction(KIcon("emblem-new"), i18n("Add value to selected entries"), p);
         connect(assignSelectionAction, SIGNAL(triggered()), p, SLOT(assignSelection()));
         treeviewFieldValues->addAction(assignSelectionAction);
         /// create context menu item to remove value from selected bibliography elements
@@ -116,7 +116,7 @@ public:
 
         p->setEnabled(false);
 
-        connect(comboboxFieldNames, SIGNAL(activated(int)), p, SLOT(update()));
+        connect(comboboxFieldNames, SIGNAL(activated(int)), p, SLOT(fieldNamesChanged(int)));
         connect(treeviewFieldValues, SIGNAL(activated(QModelIndex)), p, SLOT(listItemActivated(QModelIndex)));
         connect(delegate, SIGNAL(closeEditor(QWidget*)), treeviewFieldValues, SLOT(reset()));
 
@@ -151,6 +151,10 @@ public:
         KConfigGroup configGroup(config, configGroupName);
         QString fieldName = configGroup.readEntry(configKeyFieldName, QString(Entry::ftAuthor));
         setComboboxFieldNamesCurrentItem(fieldName);
+        if (allowsMultipleValues(fieldName))
+            assignSelectionAction->setText(i18n("Add value to selected entries"));
+        else
+            assignSelectionAction->setText(i18n("Replace value of selected entries"));
         showCountColumnAction->setChecked(configGroup.readEntry(configKeyShowCountColumn, true));
         sortByCountAction->setChecked(configGroup.readEntry(configKeySortByCountAction, false));
         sortByCountAction->setEnabled(!showCountColumnAction->isChecked());
@@ -188,6 +192,15 @@ public:
         KConfigGroup configGroup(config, configGroupName);
         configGroup.writeEntry(configKeyFieldName, text);
         config->sync();
+    }
+
+    bool allowsMultipleValues(const QString &field) const {
+        return (field.compare(Entry::ftAuthor, Qt::CaseInsensitive) == 0
+                || field.compare(Entry::ftEditor, Qt::CaseInsensitive) == 0
+                || field.compare(Entry::ftUrl, Qt::CaseInsensitive) == 0
+                || field.compare(Entry::ftLocalFile, Qt::CaseInsensitive) == 0
+                || field.compare(Entry::ftDOI, Qt::CaseInsensitive) == 0
+                || field.compare(Entry::ftKeywords, Qt::CaseInsensitive) == 0);
     }
 };
 
@@ -286,12 +299,7 @@ void ValueList::assignSelection() {
             /// Fields are separated into two categories:
             /// 1. Where more values can be appended, like authors or URLs
             /// 2. Where values should be replaced, like title, year, or journal
-            if (field.compare(Entry::ftAuthor, Qt::CaseInsensitive) == 0
-                    || field.compare(Entry::ftEditor, Qt::CaseInsensitive) == 0
-                    || field.compare(Entry::ftUrl, Qt::CaseInsensitive) == 0
-                    || field.compare(Entry::ftLocalFile, Qt::CaseInsensitive) == 0
-                    || field.compare(Entry::ftDOI, Qt::CaseInsensitive) == 0
-                    || field.compare(Entry::ftKeywords, Qt::CaseInsensitive) == 0) {
+            if (d->allowsMultipleValues(field)) {
                 /// Fields for which multiple values are valid
                 bool valueItemAlreadyContained = false; ///< add only if to-be-assigned value is not yet contained
                 Value entrysValueForField = entry->value(field);
@@ -436,4 +444,13 @@ void ValueList::editorSelectionChanged() {
     const bool selectedElements = d->editor == NULL ? false : d->editor->selectedElements().count() > 0;
     d->assignSelectionAction->setEnabled(selectedElements);
     d->removeSelectionAction->setEnabled(selectedElements);
+}
+
+void ValueList::fieldNamesChanged(int i) {
+    const QString field = d->comboboxFieldNames->itemData(i).toString();
+    if (d->allowsMultipleValues(field))
+        d->assignSelectionAction->setText(i18n("Add value to selected entries"));
+    else
+        d->assignSelectionAction->setText(i18n("Replace value of selected entries"));
+    update();
 }
