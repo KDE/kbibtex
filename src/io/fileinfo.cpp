@@ -184,7 +184,7 @@ QList<KUrl> FileInfo::entryUrls(const Entry *entry, const KUrl &bibTeXUrl, TestE
         Value v = it.value();
 
         for (Value::ConstIterator vit = v.constBegin(); vit != v.constEnd(); ++vit) {
-            QString plainText = PlainTextValue::text(*(*vit), NULL);
+            QString plainText = PlainTextValue::text(*(*vit));
 
             int pos = -1;
             while ((pos = regExpEscapedChars.indexIn(plainText, pos + 1)) != -1)

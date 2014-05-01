@@ -362,7 +362,7 @@ void ValueListModel::updateValues()
 void ValueListModel::insertValue(const Value &value)
 {
     foreach(QSharedPointer<ValueItem> item, value) {
-        const QString text = PlainTextValue::text(*item, file);
+        const QString text = PlainTextValue::text(*item);
         if (text.isEmpty()) continue; ///< skip empty values
 
         int index = indexOf(text);
@@ -575,4 +575,3 @@ void ValueListModel::removeValueFromModel(const QModelIndex &index)
     values.remove(lastRow);
     endRemoveRows();
 }
-

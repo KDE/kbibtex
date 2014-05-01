@@ -57,7 +57,7 @@ CheckBibTeX::CheckBibTeXResult CheckBibTeX::checkBibTeX(QSharedPointer<Entry> &e
     QString crossRefStr;
     Value crossRefVal = entry->value(Entry::ftCrossRef);
     if (!crossRefVal.isEmpty() && file != NULL) {
-        crossRefStr = PlainTextValue::text(crossRefVal, file);
+        crossRefStr = PlainTextValue::text(crossRefVal);
         QSharedPointer<Entry> crossRefDest = file->containsKey(crossRefStr, File::etEntry).dynamicCast<Entry>();
         if (!crossRefDest.isNull())
             dummyFile << crossRefDest;

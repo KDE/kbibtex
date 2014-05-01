@@ -603,7 +603,7 @@ bool MergeDuplicates::mergeDuplicateEntriesAuto(const QList<EntryClique *> &entr
             else {
                 /// Get string, number and date based on current,
                 /// unsorted Entry
-                const QString a = PlainTextValue::text(entry->value(sortCriteriumField), file);
+                const QString a = PlainTextValue::text(entry->value(sortCriteriumField));
                 const int ai = a.toInt();
                 const QDate aDate = QDate::fromString(a, Qt::ISODate);
 
@@ -611,7 +611,7 @@ bool MergeDuplicates::mergeDuplicateEntriesAuto(const QList<EntryClique *> &entr
                 for (it = sortedEntries.begin(); it != sortedEntries.end(); ++it) {
                     /// Get string, number and date based on iterator's
                     /// current Entry in sortedEntries list
-                    const QString b = PlainTextValue::text((*it)->value(sortCriteriumField), file);
+                    const QString b = PlainTextValue::text((*it)->value(sortCriteriumField));
                     const int bi = b.toInt();
                     const QDate bDate = QDate::fromString(b, Qt::ISODate);
 

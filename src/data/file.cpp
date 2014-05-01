@@ -187,7 +187,7 @@ QSet<QString> File::uniqueEntryValuesSet(const QString &fieldName) const
                     } else {
                         /// Default case: use PlainTextValue::text to translate ValueItem
                         /// to a human-readable text
-                        valueSet.insert(PlainTextValue::text(*valueItem, this));
+                        valueSet.insert(PlainTextValue::text(*valueItem));
                     }
                 }
     }

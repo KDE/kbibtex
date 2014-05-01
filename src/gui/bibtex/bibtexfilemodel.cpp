@@ -372,7 +372,7 @@ QVariant BibTeXFileModel::entryData(const Entry *entry, const QString &raw, cons
     } else if (raw.toLower() == Entry::ftStarRating) {
         return QVariant();
     } else if (raw.toLower() == Entry::ftColor) {
-        QString text = PlainTextValue::text(entry->value(raw), m_bibtexFile);
+        QString text = PlainTextValue::text(entry->value(raw));
         if (text.isEmpty()) return QVariant();
         QString colorText = colorToLabel[text];
         if (colorText.isEmpty()) return QVariant(text);
@@ -380,9 +380,9 @@ QVariant BibTeXFileModel::entryData(const Entry *entry, const QString &raw, cons
     } else {
         QString text;
         if (entry->contains(raw))
-            text = PlainTextValue::text(entry->value(raw), m_bibtexFile).simplified();
+            text = PlainTextValue::text(entry->value(raw)).simplified();
         else if (!rawAlt.isEmpty() && entry->contains(rawAlt))
-            text = PlainTextValue::text(entry->value(rawAlt), m_bibtexFile).simplified();
+            text = PlainTextValue::text(entry->value(rawAlt)).simplified();
 
         if (followCrossRef && text.isEmpty() && entry->contains(Entry::ftCrossRef)) {
             // TODO do not only follow "crossref", but other files from Biber/Biblatex as well
@@ -463,7 +463,7 @@ QVariant BibTeXFileModel::data(const QModelIndex &index, int role) const
         /// if BibTeX entry has a "x-color" field, use that color to highlight row
         if (role == Qt::BackgroundRole) {
             QString colorName;
-            if (entry.isNull() || (colorName = PlainTextValue::text(entry->value(Entry::ftColor), m_bibtexFile)) == "#000000" || colorName.isEmpty())
+            if (entry.isNull() || (colorName = PlainTextValue::text(entry->value(Entry::ftColor))) == "#000000" || colorName.isEmpty())
                 return QVariant();
             else {
                 QColor color(colorName);
@@ -472,7 +472,7 @@ QVariant BibTeXFileModel::data(const QModelIndex &index, int role) const
             }
         } else if (role == NumberRole) {
             if (!entry.isNull() && raw.toLower() == Entry::ftStarRating) {
-                const QString text = PlainTextValue::text(entry->value(raw), m_bibtexFile).simplified();
+                const QString text = PlainTextValue::text(entry->value(raw)).simplified();
                 bool ok = false;
                 const double numValue = text.toDouble(&ok);
                 if (ok)
@@ -493,7 +493,7 @@ QVariant BibTeXFileModel::data(const QModelIndex &index, int role) const
                 else if (raw == "^type")
                     return QVariant(i18n("Macro"));
                 else if (raw == "Title") {
-                    const QString text = PlainTextValue::text(macro->value(), m_bibtexFile).simplified();
+                    const QString text = PlainTextValue::text(macro->value()).simplified();
                     return QVariant(text);
                 } else
                     return QVariant();
@@ -513,7 +513,7 @@ QVariant BibTeXFileModel::data(const QModelIndex &index, int role) const
                         if (raw == "^type")
                             return QVariant(i18n("Preamble"));
                         else if (raw == Entry::ftTitle) {
-                            const QString text = PlainTextValue::text(preamble->value(), m_bibtexFile).simplified();
+                            const QString text = PlainTextValue::text(preamble->value()).simplified();
                             return QVariant(text);
                         } else
                             return QVariant();

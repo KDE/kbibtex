@@ -40,7 +40,7 @@ public slots:
 private:
     bool m_cancelFlag;
 
-    bool writeEntry(QTextStream &stream, const Entry *entry, const File *bibtexfile = NULL);
+    bool writeEntry(QTextStream &stream, const Entry *entry);
     bool writeKeyValue(QTextStream &stream, const QString &key, const QString &value);
 };
 

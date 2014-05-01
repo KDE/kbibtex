@@ -82,7 +82,7 @@ void FileExporterRIS::cancel()
     m_cancelFlag = true;
 }
 
-bool FileExporterRIS::writeEntry(QTextStream &stream, const Entry *entry, const File *bibtexfile)
+bool FileExporterRIS::writeEntry(QTextStream &stream, const Entry *entry)
 {
     bool result = true;
     QString type = entry->type();
@@ -111,70 +111,69 @@ bool FileExporterRIS::writeEntry(QTextStream &stream, const Entry *entry, const 
     for (Entry::ConstIterator it = entry->constBegin(); result && it != entry->constEnd(); ++it) {
         const QString key = it.key();
         const Value value = it.value();
-        QString plainText = PlainTextValue::text(value, bibtexfile);
 
         if (key.startsWith(QLatin1String("RISfield_")))
-            result &= writeKeyValue(stream, key.right(2), plainText);
+            result &= writeKeyValue(stream, key.right(2), PlainTextValue::text(value));
         else if (key == Entry::ftAuthor) {
             for (Value::ConstIterator it = value.constBegin(); result && it != value.constEnd(); ++it) {
                 QSharedPointer<const Person> person = (*it).dynamicCast<const Person>();
                 if (!person.isNull())
-                    result &= writeKeyValue(stream, "AU", PlainTextValue::text(**it, bibtexfile));
+                    result &= writeKeyValue(stream, "AU", PlainTextValue::text(**it));
                 else
-                    kWarning() << "Cannot write value " << PlainTextValue::text(**it, bibtexfile) << " for field AU (author), not supported by RIS format" << endl;
+                    kWarning() << "Cannot write value " << PlainTextValue::text(**it) << " for field AU (author), not supported by RIS format" << endl;
             }
         } else if (key.toLower() == Entry::ftEditor) {
             for (Value::ConstIterator it = value.constBegin(); result && it != value.constEnd(); ++it) {
                 QSharedPointer<const Person> person = (*it).dynamicCast<const Person>();
                 if (!person.isNull())
-                    result &= writeKeyValue(stream, "ED", PlainTextValue::text(**it, bibtexfile));
+                    result &= writeKeyValue(stream, "ED", PlainTextValue::text(**it));
                 else
-                    kWarning() << "Cannot write value " << PlainTextValue::text(**it, bibtexfile) << " for field ED (editor), not supported by RIS format" << endl;
+                    kWarning() << "Cannot write value " << PlainTextValue::text(**it) << " for field ED (editor), not supported by RIS format" << endl;
             }
         } else if (key == Entry::ftTitle)
-            result &= writeKeyValue(stream, "TI", PlainTextValue::text(value, bibtexfile));
+            result &= writeKeyValue(stream, "TI", PlainTextValue::text(value));
         else if (key == Entry::ftBookTitle)
-            result &= writeKeyValue(stream, "BT", PlainTextValue::text(value, bibtexfile));
+            result &= writeKeyValue(stream, "BT", PlainTextValue::text(value));
         else if (key == Entry::ftSeries)
-            result &= writeKeyValue(stream, "T3", PlainTextValue::text(value, bibtexfile));
+            result &= writeKeyValue(stream, "T3", PlainTextValue::text(value));
         else if (key == Entry::ftJournal)
-            result &= writeKeyValue(stream, "JO", PlainTextValue::text(value, bibtexfile)); ///< "JF" instead?
+            result &= writeKeyValue(stream, "JO", PlainTextValue::text(value)); ///< "JF" instead?
         else if (key == Entry::ftChapter)
-            result &= writeKeyValue(stream, "CP", PlainTextValue::text(value, bibtexfile));
+            result &= writeKeyValue(stream, "CP", PlainTextValue::text(value));
         else if (key == Entry::ftISSN)
-            result &= writeKeyValue(stream, "SN", PlainTextValue::text(value, bibtexfile));
+            result &= writeKeyValue(stream, "SN", PlainTextValue::text(value));
         else if (key == Entry::ftISBN)
-            result &= writeKeyValue(stream, "SN", PlainTextValue::text(value, bibtexfile));
+            result &= writeKeyValue(stream, "SN", PlainTextValue::text(value));
         else if (key == Entry::ftSchool) /// == "institution"
-            result &= writeKeyValue(stream, "IN", PlainTextValue::text(value, bibtexfile));
+            result &= writeKeyValue(stream, "IN", PlainTextValue::text(value));
         else if (key == Entry::ftVolume)
-            result &= writeKeyValue(stream, "VL", PlainTextValue::text(value, bibtexfile));
+            result &= writeKeyValue(stream, "VL", PlainTextValue::text(value));
         else if (key == Entry::ftNumber) /// == "issue"
-            result &= writeKeyValue(stream, "IS", PlainTextValue::text(value, bibtexfile));
+            result &= writeKeyValue(stream, "IS", PlainTextValue::text(value));
         else if (key == Entry::ftNote)
-            result &= writeKeyValue(stream, "N1", PlainTextValue::text(value, bibtexfile));
+            result &= writeKeyValue(stream, "N1", PlainTextValue::text(value));
         else if (key == Entry::ftAbstract)
-            result &= writeKeyValue(stream, "N2", PlainTextValue::text(value, bibtexfile)); ///< "AB" instead?
+            result &= writeKeyValue(stream, "N2", PlainTextValue::text(value)); ///< "AB" instead?
         else if (key == Entry::ftPublisher)
-            result &= writeKeyValue(stream, "PB", PlainTextValue::text(value, bibtexfile));
+            result &= writeKeyValue(stream, "PB", PlainTextValue::text(value));
         else if (key == Entry::ftLocation)
-            result &= writeKeyValue(stream, "CY", PlainTextValue::text(value, bibtexfile));
+            result &= writeKeyValue(stream, "CY", PlainTextValue::text(value));
         else if (key == Entry::ftDOI)
-            result &= writeKeyValue(stream, "DO", PlainTextValue::text(value, bibtexfile));
+            result &= writeKeyValue(stream, "DO", PlainTextValue::text(value));
         else if (key == Entry::ftKeywords)
-            result &= writeKeyValue(stream, "KW", PlainTextValue::text(value, bibtexfile));
+            result &= writeKeyValue(stream, "KW", PlainTextValue::text(value));
         else if (key == Entry::ftYear)
-            year = PlainTextValue::text(value, bibtexfile);
+            year = PlainTextValue::text(value);
         else if (key == Entry::ftMonth)
-            month = PlainTextValue::text(value, bibtexfile);
+            month = PlainTextValue::text(value);
         else if (key == Entry::ftAddress)
-            result &= writeKeyValue(stream, "AD", PlainTextValue::text(value, bibtexfile));
+            result &= writeKeyValue(stream, "AD", PlainTextValue::text(value));
         else if (key == Entry::ftUrl) {
             // FIXME one "UR" line per URL
             // FIXME for local files, use "L1"
-            result &= writeKeyValue(stream, "UR", PlainTextValue::text(value, bibtexfile));
+            result &= writeKeyValue(stream, "UR", PlainTextValue::text(value));
         } else if (key == Entry::ftPages) {
-            QStringList pageRange = PlainTextValue::text(value, bibtexfile).split(QRegExp(QString("--|-|%1").arg(QChar(0x2013))));
+            QStringList pageRange = PlainTextValue::text(value).split(QRegExp(QString("--|-|%1").arg(QChar(0x2013))));
             if (pageRange.count() == 2) {
                 result &= writeKeyValue(stream, "SP", pageRange[ 0 ]);
                 result &= writeKeyValue(stream, "EP", pageRange[ 1 ]);

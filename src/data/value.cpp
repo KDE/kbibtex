@@ -496,14 +496,14 @@ void Value::mergeFrom(const Value &other)
         append(*it);
 }
 
-QString PlainTextValue::text(const Value &value, const File *file, bool debug)
+QString PlainTextValue::text(const Value &value)
 {
     ValueItemType vit = VITOther;
     ValueItemType lastVit = VITOther;
 
     QString result = "";
     for (Value::ConstIterator it = value.constBegin(); it != value.constEnd(); ++it) {
-        QString nextText = text(**it, vit, file, debug);
+        QString nextText = text(**it, vit);
         if (!nextText.isEmpty()) {
             if (lastVit == VITPerson && vit == VITPerson)
                 result.append(" and ");
@@ -519,19 +519,19 @@ QString PlainTextValue::text(const Value &value, const File *file, bool debug)
     return result;
 }
 
-QString PlainTextValue::text(const QSharedPointer<ValueItem> &valueItem, const File *file, bool debug)
+QString PlainTextValue::text(const QSharedPointer<ValueItem> &valueItem)
 {
     const ValueItem *p = valueItem.data();
-    return text(*p, file, debug);
+    return text(*p);
 }
 
-QString PlainTextValue::text(const ValueItem &valueItem, const File *file, bool debug)
+QString PlainTextValue::text(const ValueItem &valueItem)
 {
     ValueItemType vit;
-    return text(valueItem, vit, file, debug);
+    return text(valueItem, vit);
 }
 
-QString PlainTextValue::text(const ValueItem &valueItem, ValueItemType &vit, const File * /*file*/, bool debug)
+QString PlainTextValue::text(const ValueItem &valueItem, ValueItemType &vit)
 {
     QString result;
     vit = VITOther;
@@ -542,29 +542,24 @@ QString PlainTextValue::text(const ValueItem &valueItem, ValueItemType &vit, con
     const PlainText *plainText = dynamic_cast<const PlainText *>(&valueItem);
     if (plainText != NULL) {
         result = plainText->text();
-        if (debug) result = "[:" + result + ":PlainText]";
     } else {
         const MacroKey *macroKey = dynamic_cast<const MacroKey *>(&valueItem);
         if (macroKey != NULL) {
             result = macroKey->text(); // TODO Use File to resolve key to full text
-            if (debug) result = "[:" + result + ":MacroKey]";
         } else {
             const Person *person = dynamic_cast<const Person *>(&valueItem);
             if (person != NULL) {
                 result = Person::transcribePersonName(person, personNameFormatting);
                 vit = VITPerson;
-                if (debug) result = "[:" + result + ":Person]";
             } else {
                 const Keyword *keyword = dynamic_cast<const Keyword *>(&valueItem);
                 if (keyword != NULL) {
                     result = keyword->text();
                     vit = VITKeyword;
-                    if (debug) result = "[:" + result + ":Keyword]";
                 } else {
                     const VerbatimText *verbatimText = dynamic_cast<const VerbatimText *>(&valueItem);
                     if (verbatimText != NULL) {
                         result = verbatimText->text();
-                        if (debug) result = "[:" + result + ":VerbatimText]";
                     }
                 }
             }
@@ -591,7 +586,6 @@ QString PlainTextValue::text(const ValueItem &valueItem, ValueItemType &vit, con
     }
     result.resize(j);
 
-    if (debug) result = "[:" + result + ":Debug]";
     return result;
 }
 

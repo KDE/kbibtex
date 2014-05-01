@@ -285,7 +285,7 @@ void ReferencePreview::renderHTML()
     QStringList errorLog;
     QSharedPointer<const Entry> entry = d->element.dynamicCast<const Entry>();
     if (crossRefHandling == add && !entry.isNull()) {
-        QString crossRef = PlainTextValue::text(entry->value(QLatin1String("crossref")), d->file);
+        QString crossRef = PlainTextValue::text(entry->value(QLatin1String("crossref")));
         QSharedPointer<const Entry> crossRefEntry = d->file == NULL ? QSharedPointer<const Entry>() : d->file->containsKey(crossRef) .dynamicCast<const Entry>();
         if (!crossRefEntry.isNull()) {
             File file;

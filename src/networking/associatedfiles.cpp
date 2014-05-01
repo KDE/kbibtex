@@ -132,7 +132,7 @@ QString AssociatedFiles::associateDocumentURL(const KUrl &document, QSharedPoint
         for (QMap<QString, Value>::ConstIterator it = entry->constBegin(); !alreadyContained && it != entry->constEnd(); ++it) {
             const Value v = it.value();
             for (Value::ConstIterator vit = v.constBegin(); !alreadyContained && vit != v.constEnd(); ++vit) {
-                if (PlainTextValue::text(*vit, bibTeXFile) == finalUrl)
+                if (PlainTextValue::text(*vit) == finalUrl)
                     alreadyContained = true;
             }
         }
@@ -234,3 +234,4 @@ KUrl AssociatedFiles::copyDocument(const KUrl &sourceUrl, const QString &entryId
 
     return targetUrl;
 }
+

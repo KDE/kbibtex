@@ -228,9 +228,9 @@ private:
 class KBIBTEXDATA_EXPORT PlainTextValue: private NotificationListener
 {
 public:
-    static QString text(const Value &value, const File *file = NULL, bool debug = false);
-    static QString text(const ValueItem &valueItem, const File *file = NULL, bool debug = false);
-    static QString text(const QSharedPointer<ValueItem> &valueItem, const File *file = NULL, bool debug = false);
+    static QString text(const Value &value);
+    static QString text(const ValueItem &valueItem);
+    static QString text(const QSharedPointer<ValueItem> &valueItem);
 
     void notificationEvent(int eventId);
 
@@ -242,10 +242,10 @@ private:
     static PlainTextValue *notificationListener;
     static QString personNameFormatting;
 
-    static QString text(const ValueItem &valueItem, ValueItemType &vit, const File *file, bool debug);
+    static QString text(const ValueItem &valueItem, ValueItemType &vit);
 
 };
 
-Q_DECLARE_METATYPE(Value);
+Q_DECLARE_METATYPE(Value)
 
 #endif
