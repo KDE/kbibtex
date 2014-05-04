@@ -510,8 +510,11 @@ QString PlainTextValue::text(const Value &value, const File *file, bool debug)
         QString nextText = text(**it, vit, file, debug);
         if (!nextText.isNull()) {
             if (lastVit == VITPerson && vit == VITPerson)
-                result.append(" and ");
-            else if (lastVit == VITKeyword && vit == VITKeyword)
+                result.append(i18n(" and ")); // TODO proper list of authors/editors, not just joined by "and"
+            else if (lastVit == VITPerson && vit == VITOther && nextText == QLatin1String("others")) {
+                /// "and others" case: replace text to be appended by translated variant
+                nextText = i18n(" and others");
+            } else if (lastVit == VITKeyword && vit == VITKeyword)
                 result.append("; ");
             else if (!result.isEmpty())
                 result.append(" ");
