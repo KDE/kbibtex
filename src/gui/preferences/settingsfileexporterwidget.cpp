@@ -63,7 +63,7 @@ public:
     void loadState() {
         KConfigGroup configGroup(config, Preferences::groupGeneral);
         const QString copyReferenceCommand = configGroup.readEntry(Clipboard::keyCopyReferenceCommand, Clipboard::defaultCopyReferenceCommand);
-        int row = GUIHelper::selectValue(comboBoxCopyReferenceCmd->model(), copyReferenceCommand.isEmpty() ? QString("") : copyReferenceCommand, Qt::UserRole);
+        int row = GUIHelper::selectValue(comboBoxCopyReferenceCmd->model(), copyReferenceCommand.isEmpty() ? QString("") : copyReferenceCommand, ItalicTextItemModel::IdentifierRole);
         comboBoxCopyReferenceCmd->setCurrentIndex(row);
 
         const int index = qMax(0, comboBoxBackupScope->findData(configGroup.readEntry(Preferences::keyBackupScope, (int)Preferences::defaultBackupScope)));

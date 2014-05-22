@@ -1,5 +1,5 @@
 /*****************************************************************************
- *   Copyright (C) 2004-2013 by Thomas Fischer <fischer@unix-ag.uni-kl.de>   *
+ *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de>   *
  *                                                                           *
  *                                                                           *
  *   This program is free software; you can redistribute it and/or modify    *
@@ -20,31 +20,57 @@
 
 #include <QFont>
 
-ItalicTextItemModel::ItalicTextItemModel(QObject *parent)
-        : QAbstractItemModel(parent)
+#include <KDebug>
+
+class ItalicTextItemModel::Private
 {
-    // nothing
+private:
+    ItalicTextItemModel *p;
+
+public:
+    QList<QPair<QString, QString> > data;
+
+    Private(ItalicTextItemModel *parent)
+            : p(parent)
+    {
+        /// nothing
+    }
+};
+
+ItalicTextItemModel::ItalicTextItemModel(QObject *parent)
+        : QAbstractItemModel(parent), d(new Private(this))
+{
+    /// nothing
 }
 
 void ItalicTextItemModel::addItem(const QString &a, const QString &b)
 {
-    m_data.append(QPair<QString, QString>(a, b));
+    /// Store both arguments in a pair of strings,
+    /// added to the data structure
+    d->data.append(QPair<QString, QString>(a, b));
 }
 
 QVariant ItalicTextItemModel::data(const QModelIndex &index, int role) const
 {
-    if (index.row() < 0 || index.row() >= m_data.count())
+    /// Test and ignore for invalid rows
+    if (index.row() < 0 || index.row() >= d->data.count())
         return QVariant();
 
     if (role == Qt::FontRole) {
         QFont font;
-        if (m_data[index.row()].second.isEmpty())
+        /// If the identifier for a data row is empty,
+        /// set the row's text in italics
+        if (d->data[index.row()].second.isEmpty())
             font.setItalic(true);
         return font;
     } else if (role == Qt::DisplayRole) {
-        return m_data[index.row()].first;
+        /// Show text as passed as first parameter to function addItem
+        return d->data[index.row()].first;
     } else if (role == Qt::UserRole) {
-        return m_data[index.row()].second;
+        kWarning() << "Requesting data from Qt::UserRole is deprecated, should not happen";
+    } else if (role == IdentifierRole) {
+        /// Return string as passed as second parameter to function addItem
+        return d->data[index.row()].second;
     }
 
     return QVariant();
@@ -57,15 +83,19 @@ QModelIndex ItalicTextItemModel::index(int row, int column, const QModelIndex &)
 
 QModelIndex ItalicTextItemModel::parent(const QModelIndex &) const
 {
+    /// Flat, single-level model
     return QModelIndex();
 }
 
 int ItalicTextItemModel::rowCount(const QModelIndex &) const
 {
-    return m_data.count();
+    /// As many rows as elements in data structure
+    /// (should be as many calls to addItem were made)
+    return d->data.count();
 }
 
 int ItalicTextItemModel::columnCount(const QModelIndex &) const
 {
+    /// Just one column, thus suitable for combo boxes
     return 1;
 }

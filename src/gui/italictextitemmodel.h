@@ -24,14 +24,31 @@
 #include "kbibtexgui_export.h"
 
 /**
+ * The ItalicTextItemModel allows to maintain a list of value pairs:
+ * The first element of the pair will be the shown text (should be
+ * i18n'ized), the second value is supposed to be a string to identify
+ * the shown text. If this identifier is empty or null, the first pair
+ * element will be drawn in italic text.
+ *
  * @author Thomas Fischer
  */
 class KBIBTEXGUI_EXPORT ItalicTextItemModel : public QAbstractItemModel
 {
 public:
+    enum ItalicTextItemModelRole {
+        /// Role to retrieve identifier for a row
+        IdentifierRole = Qt::UserRole + 9672
+    };
+
     explicit ItalicTextItemModel(QObject *parent = NULL);
 
-    void addItem(const QString &a, const QString &b);
+    /**
+     * Add a new entry (pair of shown text and identifier) to this model.
+     * @param shownText i18n'ized text to be shown to the user
+     * @param identifier internal identifier (if empty, shownText will be set in italics)
+     */
+    void addItem(const QString &shownText, const QString &identifier);
+
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     QModelIndex index(int row, int column, const QModelIndex &) const;
     QModelIndex parent(const QModelIndex &) const;
@@ -39,7 +56,8 @@ public:
     int columnCount(const QModelIndex &) const;
 
 private:
-    QList<QPair<QString, QString> > m_data;
+    class Private;
+    Private *const d;
 };
 
 #endif // GUI_ITALICTEXTITEMMODEL_H

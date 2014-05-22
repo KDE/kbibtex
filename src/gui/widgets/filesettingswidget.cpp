@@ -80,7 +80,7 @@ void FileSettingsWidget::loadProperties(File *file)
     }
     if (file->hasProperty(File::NameFormatting)) {
         m_comboBoxPersonNameFormatting->blockSignals(true);
-        int row = GUIHelper::selectValue(m_comboBoxPersonNameFormatting->model(), file->property(File::NameFormatting).toString(), Qt::UserRole);
+        int row = GUIHelper::selectValue(m_comboBoxPersonNameFormatting->model(), file->property(File::NameFormatting).toString(), ItalicTextItemModel::IdentifierRole);
         m_comboBoxPersonNameFormatting->setCurrentIndex(row);
         m_comboBoxPersonNameFormatting->blockSignals(false);
     }
@@ -108,7 +108,7 @@ void FileSettingsWidget::saveProperties(File *file)
     KBibTeX::Casing keywordCasing = (KBibTeX::Casing)m_comboBoxKeywordCasing->currentIndex();
     file->setProperty(File::KeywordCasing, (int)keywordCasing);
     file->setProperty(File::ProtectCasing, m_checkBoxProtectCasing->isChecked());
-    file->setProperty(File::NameFormatting, m_comboBoxPersonNameFormatting->itemData(m_comboBoxPersonNameFormatting->currentIndex()));
+    file->setProperty(File::NameFormatting, m_comboBoxPersonNameFormatting->itemData(m_comboBoxPersonNameFormatting->currentIndex(), ItalicTextItemModel::IdentifierRole));
     file->setProperty(File::ListSeparator, m_comboBoxListSeparator->itemData(m_comboBoxListSeparator->currentIndex()).toString());
 }
 
