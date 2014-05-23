@@ -238,6 +238,7 @@ void BibTeXEditor::selectionDelete()
     emit modified();
 }
 
+/// FIXME the existence of this function is basically just one big hack
 void BibTeXEditor::externalModification()
 {
     emit modified();
