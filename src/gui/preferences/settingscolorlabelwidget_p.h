@@ -15,71 +15,53 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
-#ifndef KBIBTEX_GUI_SETTINGSCOLORLABELWIDGET_H
-#define KBIBTEX_GUI_SETTINGSCOLORLABELWIDGET_H
+#ifndef KBIBTEX_GUI_SETTINGSCOLORLABELWIDGET_P_H
+#define KBIBTEX_GUI_SETTINGSCOLORLABELWIDGET_P_H
 
-#include <kbibtexgui_export.h>
+#include <QAbstractItemModel>
+#include <QColor>
 
-#include "settingsabstractwidget.h"
-#include "notificationhub.h"
-
-class QSignalMapper;
-
-class KActionMenu;
-
-class BibTeXEditor;
+#include <KSharedConfig>
 
 /**
-@author Thomas Fischer
-*/
-class KBIBTEXGUI_EXPORT SettingsColorLabelWidget : public SettingsAbstractWidget
+ * This model maintains a list of label-color pairs.
+ * @author Thomas Fischer
+ */
+class ColorLabelSettingsModel : public QAbstractItemModel
 {
     Q_OBJECT
 
 public:
-    explicit SettingsColorLabelWidget(QWidget *parent);
-    ~SettingsColorLabelWidget();
+    explicit ColorLabelSettingsModel(QObject *parent);
 
-    virtual QString label() const;
-    virtual KIcon icon() const;
+    virtual int rowCount(const QModelIndex &parent) const;
+    virtual int columnCount(const QModelIndex &parent) const;
+    virtual QModelIndex index(int row, int column, const QModelIndex &parent) const;
+    virtual QModelIndex parent(const QModelIndex &) const;
+    virtual QVariant data(const QModelIndex &index, int role) const;
+    virtual bool setData(const QModelIndex &index, const QVariant &value, int role);
+    virtual Qt::ItemFlags flags(const QModelIndex &index) const;
+    virtual QVariant headerData(int section, Qt::Orientation orientation, int role) const;
 
-public slots:
     void loadState();
     void saveState();
     void resetToDefaults();
 
-private slots:
-    void addColor();
-    void removeColor();
-    void updateRemoveButtonStatus();
+    void addColorLabel(const QColor &color, const QString &label);
+    void removeColorLabel(int row);
+
+signals:
+    void modified();
 
 private:
-    class Private;
-    Private *d;
+    struct ColorLabelPair {
+        QColor color;
+        QString label;
+    };
+
+    QList<ColorLabelPair> colorLabelPairs;
+    KSharedConfigPtr config;
+
 };
 
-/**
-@author Thomas Fischer
-*/
-class KBIBTEXGUI_EXPORT ColorLabelContextMenu : public QObject, private NotificationListener
-{
-    Q_OBJECT
-
-public:
-    explicit ColorLabelContextMenu(BibTeXEditor *widget);
-    ~ColorLabelContextMenu();
-
-    KActionMenu *menuAction();
-    void setEnabled(bool);
-
-    void notificationEvent(int eventId);
-
-private slots:
-    void colorActivated(const QString &colorString);
-
-private:
-    class Private;
-    Private *const d;
-};
-
-#endif // KBIBTEX_GUI_SETTINGSCOLORLABELWIDGET_H
+#endif // KBIBTEX_GUI_SETTINGSCOLORLABELWIDGET_P_H

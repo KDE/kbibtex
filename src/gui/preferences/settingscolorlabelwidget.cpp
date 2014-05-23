@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2004-2013 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+*   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
 *   it under the terms of the GNU General Public License as published by  *
@@ -16,15 +16,14 @@
 ***************************************************************************/
 
 #include "settingscolorlabelwidget.h"
+#include "settingscolorlabelwidget_p.h"
 
 #include <ctime>
 
-#include <QAbstractItemModel>
 #include <QLayout>
 #include <QStyledItemDelegate>
 #include <QSignalMapper>
 
-#include <KSharedConfigPtr>
 #include <KPushButton>
 #include <KColorButton>
 #include <KColorDialog>
@@ -43,22 +42,26 @@ class ColorLabelSettingsDelegate : public QStyledItemDelegate
 public:
     ColorLabelSettingsDelegate(QWidget *parent = NULL)
             : QStyledItemDelegate(parent) {
-        // nothing
+        /// nothing
     }
 
     virtual QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &, const QModelIndex &index) const {
         if (index.column() == 0)
+            /// Colors are to be edited in a color button
             return new KColorButton(parent);
         else
+            /// Text strings are to be edited in a line edit
             return new KLineEdit(parent);
     }
 
     void setEditorData(QWidget *editor, const QModelIndex &index) const {
         if (index.column() == 0) {
             KColorButton *colorButton = qobject_cast<KColorButton *>(editor);
+            /// Initialized color button with row's current color
             colorButton->setColor(index.model()->data(index, Qt::EditRole).value<QColor>());
         } else {
             KLineEdit *lineEdit = qobject_cast<KLineEdit *>(editor);
+            /// Initialized line edit with row's current color's label
             lineEdit->setText(index.model()->data(index, Qt::EditRole).toString());
         }
     }
@@ -67,10 +70,12 @@ public:
         if (index.column() == 0) {
             KColorButton *colorButton = qobject_cast<KColorButton *>(editor);
             if (colorButton->color() != Qt::black)
+                /// Assign color button's color back to model
                 model->setData(index, colorButton->color(), Qt::EditRole);
-        } else {
+        } else if (index.column() == 1) {
             KLineEdit *lineEdit = qobject_cast<KLineEdit *>(editor);
             if (!lineEdit->text().isEmpty())
+                /// Assign line edit's text back to model
                 model->setData(index, lineEdit->text(), Qt::EditRole);
         }
     }
@@ -78,6 +83,7 @@ public:
     QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const {
         QSize hint = QStyledItemDelegate::sizeHint(option, index);
         QFontMetrics fm = QFontMetrics(QFont());
+        /// Enforce minimum height of 4 times x-height
         hint.setHeight(qMax(hint.height(), fm.xHeight() * 4));
         return hint;
     }
@@ -87,40 +93,50 @@ public:
 ColorLabelSettingsModel::ColorLabelSettingsModel(QObject *parent)
         : QAbstractItemModel(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc")))
 {
+    /// Load stored color-label pairs
     loadState();
 }
 
 int ColorLabelSettingsModel::rowCount(const QModelIndex &parent) const
 {
+    /// Single-level list of color-label pairs has as many rows as pairs
     return parent == QModelIndex() ? colorLabelPairs.count() : 0;
 }
 
 int ColorLabelSettingsModel::columnCount(const QModelIndex &parent) const
 {
+    /// Single-level list of color-label pairs has as 2 columns
+    /// (one of color, one for label)
     return parent == QModelIndex() ? 2 : 0;
 }
 
 QModelIndex ColorLabelSettingsModel::index(int row, int column, const QModelIndex &parent) const
 {
     if (row >= 0 && row <= colorLabelPairs.count() - 1 && column >= 0 && column <= 1 && parent == QModelIndex())
+        /// Create index for valid combinations of row, column, and parent
         return createIndex(row, column, row);
-    else return QModelIndex();
+    else
+        return QModelIndex();
 }
 
 QModelIndex ColorLabelSettingsModel::parent(const QModelIndex &) const
 {
+    /// Single-level list's indices have no other index as parent
     return QModelIndex();
 }
 
 QVariant ColorLabelSettingsModel::data(const QModelIndex &index, int role) const
 {
+    /// Skip invalid model indices
     if (index == QModelIndex() || index.row() < 0 || index.row() >= colorLabelPairs.count())
         return QVariant();
 
-    if ((role == Qt::DisplayRole || role == Qt::EditRole) && index.column() == 1)
-        return colorLabelPairs[index.row()].label;
-    else if ((role == Qt::DecorationRole || role == Qt::EditRole) && index.column() == 0)
+    if ((role == Qt::DecorationRole || role == Qt::EditRole) && index.column() == 0)
+        /// First column has colors only (no text)
         return colorLabelPairs[index.row()].color;
+    else if ((role == Qt::DisplayRole || role == Qt::EditRole) && index.column() == 1)
+        /// Second column has colors' labels
+        return colorLabelPairs[index.row()].label;
 
     return QVariant();
 }
@@ -131,17 +147,23 @@ bool ColorLabelSettingsModel::setData(const QModelIndex &index, const QVariant &
         const QModelIndex left = index.sibling(index.row(), 0);
         const QModelIndex right = index.sibling(index.row(), 1);
         if (index.column() == 0 && value.canConvert<QColor>()) {
-            QColor color = value.value<QColor>();
+            /// For first column if a valid color is to be set ...
+            const QColor color = value.value<QColor>();
             if (color != Qt::black && (color.red() > 0 || color.green() > 0 || color.blue() > 0)) {
+                /// ... store this color in the data structure
                 colorLabelPairs[index.row()].color = color;
+                /// Notify everyone about the changes
                 emit dataChanged(left, right);
                 emit modified();
                 return true;
             }
         } else if (index.column() == 1 && value.canConvert<QString>()) {
-            QString text = value.value<QString>();
+            /// For second column if a label text is to be set ...
+            const QString text = value.value<QString>();
             if (!text.isEmpty()) {
+                /// ... store this text in the data structure
                 colorLabelPairs[index.row()].label = text;
+                /// Notify everyone about the changes
                 emit dataChanged(left, right);
                 emit modified();
                 return true;
@@ -154,12 +176,13 @@ bool ColorLabelSettingsModel::setData(const QModelIndex &index, const QVariant &
 Qt::ItemFlags ColorLabelSettingsModel::flags(const QModelIndex &index) const
 {
     Qt::ItemFlags result = QAbstractItemModel::flags(index);
-    result |= Qt::ItemIsEditable;
+    result |= Qt::ItemIsEditable; ///< all cells can be edited (color or text label)
     return result;
 }
 
 QVariant ColorLabelSettingsModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
+    /// Only vertical lists supported
     if (orientation != Qt::Horizontal || role != Qt::DisplayRole)
         return QVariant();
 
@@ -170,6 +193,10 @@ QVariant ColorLabelSettingsModel::headerData(int section, Qt::Orientation orient
     }
 }
 
+/**
+ * Load list of color-label pairs from user's configuration file.
+ * Fall back on pre-defined colors and labels if no user settings exist.
+ */
 void ColorLabelSettingsModel::loadState()
 {
     KConfigGroup configGroup(config, Preferences::groupColor);
@@ -185,6 +212,9 @@ void ColorLabelSettingsModel::loadState()
     }
 }
 
+/**
+ * Save list of color-label pairs in user's configuration file.
+ */
 void ColorLabelSettingsModel::saveState()
 {
     QStringList colorCodes, colorLabels;
@@ -199,6 +229,10 @@ void ColorLabelSettingsModel::saveState()
     config->sync();
 }
 
+/**
+ * Revert in-memory data structure (list of color-label pairs) to defaults.
+ * Does not touch user's configuration file (would require an Apply operation).
+ */
 void ColorLabelSettingsModel::resetToDefaults()
 {
     colorLabelPairs.clear();
@@ -211,15 +245,14 @@ void ColorLabelSettingsModel::resetToDefaults()
     emit modified();
 }
 
-bool ColorLabelSettingsModel::containsLabel(const QString &label)
-{
-    foreach(const ColorLabelPair &clp, colorLabelPairs) {
-        if (clp.label == label)
-            return true;
-    }
-    return false;
-}
-
+/**
+ * Add a new color-label pair to this model.
+ * The pair will be appended to the list's end.
+ * No check is performed if a similiar color or label is already in use.
+ *
+ * @param color Color of the color-label pair
+ * @param label Label of the color-label pair
+ */
 void ColorLabelSettingsModel::addColorLabel(const QColor &color, const QString &label)
 {
     const int newRow = colorLabelPairs.size();
@@ -233,6 +266,12 @@ void ColorLabelSettingsModel::addColorLabel(const QColor &color, const QString &
     emit modified();
 }
 
+/**
+ * Remove a color-label pair from this model.
+ * The pair is identified by the row number.
+ *
+ * @param row Row number of the pair to be removed
+ */
 void ColorLabelSettingsModel::removeColorLabel(int row)
 {
     if (row >= 0 && row < colorLabelPairs.count()) {
@@ -244,7 +283,7 @@ void ColorLabelSettingsModel::removeColorLabel(int row)
 }
 
 
-class SettingsColorLabelWidget::SettingsColorLabelWidgetPrivate
+class SettingsColorLabelWidget::Private
 {
 private:
     SettingsColorLabelWidget *p;
@@ -257,43 +296,59 @@ public:
     KPushButton *buttonRemove;
     QTreeView *view;
 
-    SettingsColorLabelWidgetPrivate(SettingsColorLabelWidget *parent)
-            : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))) {
-        // nothing
+    Private(SettingsColorLabelWidget *parent)
+            : p(parent), delegate(NULL), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))),
+          model(NULL), buttonRemove(NULL), view(NULL) {
+        /// nothing
     }
 
     void loadState() {
-        model->loadState();
+        /// Delegate state maintenance to model
+        if (model != NULL)
+            model->loadState();
     }
 
     void saveState() {
-        model->saveState();
+        /// Delegate state maintenance to model
+        if (model != NULL)
+            model->saveState();
     }
 
     void resetToDefaults() {
-        model->resetToDefaults();
+        /// Delegate state maintenance to model
+        if (model != NULL)
+            model->resetToDefaults();
     }
 
     void setupGUI() {
         QGridLayout *layout = new QGridLayout(p);
         layout->setMargin(0);
 
+        /// Central element in the the main widget
+        /// is a tree view for color-label pairs
         view = new QTreeView(p);
         layout->addWidget(view, 0, 0, 3, 1);
         view->setRootIsDecorated(false);
-        connect(view, SIGNAL(pressed(QModelIndex)), p, SLOT(enableRemoveButton()));
 
+        /// Tree view's model maintains color-label pairs
         model = new ColorLabelSettingsModel(view);
         view->setModel(model);
+        /// Changes in the model (e.g. through setData(..))
+        /// get propagated as this widget's changed() signal
         connect(model, SIGNAL(modified()), p, SIGNAL(changed()));
 
+        /// Delegate to handle changes of color (through KColorButton)
+        /// and label (throuh KLineEdit)
         delegate = new ColorLabelSettingsDelegate(view);
         view->setItemDelegate(delegate);
 
+        /// Button to add a new randomized color
         KPushButton *buttonAdd = new KPushButton(KIcon("list-add"), i18n("Add..."), p);
         layout->addWidget(buttonAdd, 0, 1, 1, 1);
         connect(buttonAdd, SIGNAL(clicked()), p, SLOT(addColor()));
 
+        /// Remove selected color-label pair; button is disabled
+        /// if no row is selected in tree view
         buttonRemove = new KPushButton(KIcon("list-remove"), i18n("Remove"), p);
         layout->addWidget(buttonRemove, 1, 1, 1, 1);
         buttonRemove->setEnabled(false);
@@ -303,10 +358,15 @@ public:
 
 
 SettingsColorLabelWidget::SettingsColorLabelWidget(QWidget *parent)
-        : SettingsAbstractWidget(parent), d(new SettingsColorLabelWidgetPrivate(this))
+        : SettingsAbstractWidget(parent), d(new Private(this))
 {
+    /// Seed random number generator
     qsrand(time(NULL));
+
+    /// Setup GUI elements
     d->setupGUI();
+    /// Connect signals
+    connect(d->view->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(updateRemoveButtonStatus()));
 }
 
 SettingsColorLabelWidget::~SettingsColorLabelWidget()
@@ -341,106 +401,154 @@ void SettingsColorLabelWidget::resetToDefaults()
 
 void SettingsColorLabelWidget::addColor()
 {
+    /// Create a randomized color, but guarantee
+    /// some minimum value for each color component
     const QColor newColor((qrand() & 0xff) | 0x30, (qrand() & 0xff) | 0x30, (qrand() & 0xff) | 0x30);
+    /// Set the new label to be the color's hex string
     const QString newColorName(newColor.name().remove(QLatin1Char('#')));
+    /// Add new color-label pair to model's data
     d->model->addColorLabel(newColor, i18nc("Label for a new color; placeholder is for a 6-digit hex string", "NewColor%1", newColorName));
 }
 
 void SettingsColorLabelWidget::removeColor()
 {
-    int row = d->view->selectionModel()->selectedIndexes().first().row();
-    d->model->removeColorLabel(row);
+    if (!d->view->selectionModel()->selectedIndexes().isEmpty()) {
+        /// Determine which row is selected
+        const int row = d->view->selectionModel()->selectedIndexes().first().row();
+        /// Remove row from model
+        d->model->removeColorLabel(row);
+        updateRemoveButtonStatus();
+    }
+}
+
+void SettingsColorLabelWidget::updateRemoveButtonStatus()
+{
+    /// Enable remove button iff tree view's selection is not empty
     d->buttonRemove->setEnabled(!d->view->selectionModel()->selectedIndexes().isEmpty());
 }
 
-void SettingsColorLabelWidget::enableRemoveButton()
+
+class ColorLabelContextMenu::Private
 {
-    d->buttonRemove->setEnabled(!d->view->selectionModel()->selectedIndexes().isEmpty());
-}
+private:
+    ColorLabelContextMenu *p;
+
+public:
+    /// Tree view to show this context menu in
+    BibTeXEditor *bibTeXEditor;
+    /// Actual menu to show
+    KActionMenu *menu;
+    /// Signal handle to react to calls to items in menu
+    QSignalMapper *sm;
+
+    Private(BibTeXEditor *be, ColorLabelContextMenu *parent)
+            : p(parent), bibTeXEditor(be)
+    {
+        sm = new QSignalMapper(parent);
+        menu = new KActionMenu(KIcon("preferences-desktop-color"), i18n("Color"), bibTeXEditor);
+        /// Let menu be a sub menu to the tree view's context menu
+        bibTeXEditor->addAction(menu);
+    }
+
+    void rebuildMenu()  {
+        menu->menu()->clear();
+
+        /// Add color-label pairs to menu as stored
+        /// in the user's configuration file
+        KSharedConfigPtr config(KSharedConfig::openConfig(QLatin1String("kbibtexrc")));
+        KConfigGroup configGroup(config, Preferences::groupColor);
+        QStringList colorCodes = configGroup.readEntry(Preferences::keyColorCodes, Preferences::defaultColorCodes);
+        QStringList colorLabels = configGroup.readEntry(Preferences::keyColorLabels, Preferences::defaultcolorLabels);
+        for (QStringList::ConstIterator itc = colorCodes.constBegin(), itl = colorLabels.constBegin(); itc != colorCodes.constEnd() && itl != colorLabels.constEnd(); ++itc, ++itl) {
+            KAction *action = new KAction(KIcon(ColorLabelWidget::createSolidIcon(*itc)), i18n((*itl).toUtf8().constData()), menu);
+            menu->addAction(action);
+            sm->setMapping(action, *itc);
+            connect(action, SIGNAL(triggered()), sm, SLOT(map()));
+        }
+
+        KAction *action = new KAction(menu);
+        action->setSeparator(true);
+        menu->addAction(action);
+
+        /// Special action that removes any color
+        /// from a BibTeX entry by setting the color to black
+        action = new KAction(i18n("No color"), menu);
+        menu->addAction(action);
+        sm->setMapping(action, QLatin1String("#000000"));
+        connect(action, SIGNAL(triggered()), sm, SLOT(map()));
+    }
+};
 
 
 ColorLabelContextMenu::ColorLabelContextMenu(BibTeXEditor *widget)
-        : QObject(widget), m_tv(widget)
+        : QObject(widget), d(new Private(widget, this))
 {
-    m_sm = new QSignalMapper(this);
-    connect(m_sm, SIGNAL(mapped(QString)), this, SLOT(colorActivated(QString)));
+    connect(d->sm, SIGNAL(mapped(QString)), this, SLOT(colorActivated(QString)));
 
-    m_menu = new KActionMenu(KIcon("preferences-desktop-color"), i18n("Color"), widget);
-    widget->addAction(m_menu);
-
+    /// Listen to changes in the configuration files
     NotificationHub::registerNotificationListener(this, NotificationHub::EventConfigurationChanged);
 
-    rebuildMenu();
+    d->rebuildMenu();
+}
+
+ColorLabelContextMenu::~ColorLabelContextMenu() {
+    delete d;
 }
 
 KActionMenu *ColorLabelContextMenu::menuAction()
 {
-    return m_menu;
+    return d->menu;
 }
 
 void ColorLabelContextMenu::setEnabled(bool enabled)
 {
-    m_menu->setEnabled(enabled);
+    d->menu->setEnabled(enabled);
 }
 
 void ColorLabelContextMenu::notificationEvent(int eventId)
 {
     if (eventId == NotificationHub::EventConfigurationChanged)
-        rebuildMenu();
+        d->rebuildMenu();
 }
 
 void ColorLabelContextMenu::colorActivated(const QString &colorString)
 {
-    SortFilterBibTeXFileModel *sfbfm = dynamic_cast<SortFilterBibTeXFileModel *>(m_tv->model());
+    /// User activated some color from the menu,
+    /// so apply this color code to the currently
+    /// selected item in the tree view
+
+    SortFilterBibTeXFileModel *sfbfm = dynamic_cast<SortFilterBibTeXFileModel *>(d->bibTeXEditor->model());
     Q_ASSERT_X(sfbfm != NULL, "ColorLabelContextMenu::colorActivated(const QString &colorString)", "SortFilterBibTeXFileModel *sfbfm is NULL");
     BibTeXFileModel *model = sfbfm->bibTeXSourceModel();
     Q_ASSERT_X(model != NULL, "ColorLabelContextMenu::colorActivated(const QString &colorString)", "BibTeXFileModel *model is NULL");
     File *file = model->bibTeXFile();
     Q_ASSERT_X(file != NULL, "ColorLabelContextMenu::colorActivated(const QString &colorString)", "File *file is NULL");
 
+    /// Keep track if any changes to the bibliography is made
     bool modifying = false;
-    QModelIndexList list = m_tv->selectionModel()->selectedIndexes();
+    /// Apply color change to all selected rows
+    QModelIndexList list = d->bibTeXEditor->selectionModel()->selectedIndexes();
     foreach(const QModelIndex &index, list) {
         const QModelIndex mappedIndex = sfbfm->mapToSource(index);
+        /// Selection may span over multiple columns;
+        /// to avoid duplicate assignments, consider only column 1
         if (mappedIndex.column() == 1) {
             QSharedPointer<Entry> entry = file->at(mappedIndex.row()).dynamicCast<Entry>();
             if (!entry.isNull()) {
-                entry->remove(Entry::ftColor);
-                if (colorString != QLatin1String("#000000")) {
+                /// Clear old color entry
+                modifying |= entry->remove(Entry::ftColor) > 0;
+                if (colorString != QLatin1String("#000000")) { ///< black is a special color that means "no color"
+                    /// Only if valid color was selected, set this color
                     Value v;
                     v.append(QSharedPointer<VerbatimText>(new VerbatimText(colorString)));
                     entry->insert(Entry::ftColor, v);
+                    modifying = true;
                 }
-                modifying = true;
             }
         }
     }
 
     if (modifying)
-        m_tv->externalModification();
-}
-
-void ColorLabelContextMenu::rebuildMenu()
-{
-    m_menu->menu()->clear();
-
-    KSharedConfigPtr config(KSharedConfig::openConfig(QLatin1String("kbibtexrc")));
-    KConfigGroup configGroup(config, Preferences::groupColor);
-    QStringList colorCodes = configGroup.readEntry(Preferences::keyColorCodes, Preferences::defaultColorCodes);
-    QStringList colorLabels = configGroup.readEntry(Preferences::keyColorLabels, Preferences::defaultcolorLabels);
-    for (QStringList::ConstIterator itc = colorCodes.constBegin(), itl = colorLabels.constBegin(); itc != colorCodes.constEnd() && itl != colorLabels.constEnd(); ++itc, ++itl) {
-        KAction *action = new KAction(KIcon(ColorLabelWidget::createSolidIcon(*itc)), i18n((*itl).toUtf8().constData()), m_menu);
-        m_menu->addAction(action);
-        m_sm->setMapping(action, *itc);
-        connect(action, SIGNAL(triggered()), m_sm, SLOT(map()));
-    }
-
-    KAction *action = new KAction(m_menu);
-    action->setSeparator(true);
-    m_menu->addAction(action);
-
-    action = new KAction(i18n("No color"), m_menu);
-    m_menu->addAction(action);
-    m_sm->setMapping(action, QLatin1String("#000000"));
-    connect(action, SIGNAL(triggered()), m_sm, SLOT(map()));
+        /// Let the BibTeXEditor widget know that its underlying data model has been changed
+        d->bibTeXEditor->externalModification();
 }
