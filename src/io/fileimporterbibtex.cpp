@@ -138,7 +138,7 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
         /// deduced from statistics built while parsing the file
         result->setProperty(File::StringDelimiter, m_statistics.countQuotationMarks > m_statistics.countCurlyBrackets ? QLatin1String("\"\"") : QLatin1String("{}"));
         /// Set the file's preferences for name formatting
-        result->setProperty(File::NameFormatting, m_statistics.countFirstNameFirst > m_statistics.countLastNameFirst ? QLatin1String("<%f ><%l>< %s>") : QLatin1String("<%l><, %s><, %f>")); // FIXME those string should be defined somewhere globally
+        result->setProperty(File::NameFormatting, m_statistics.countFirstNameFirst > m_statistics.countLastNameFirst ? Preferences::personNameFormatFirstLast : Preferences::personNameFormatLastFirst);
         /// Set the file's preferences for title protected
         result->setProperty(File::ProtectCasing, m_statistics.countProtectedTitle > m_statistics.countUnprotectedTitle);
         /// Set the file's preferences for quoting of comments

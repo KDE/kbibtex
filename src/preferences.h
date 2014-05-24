@@ -65,6 +65,15 @@ const bool defaultProtectCasing = true;
 const QString keyListSeparator = QLatin1String("ListSeparator");
 const QString defaultListSeparator = QLatin1String("; ");
 
+/**
+ * Preferences for Data objects
+ */
+const QString keyPersonNameFormatting = QLatin1String("personNameFormatting");
+const QString personNameFormatLastFirst = QLatin1String("<%l><, %s><, %f>");
+const QString personNameFormatFirstLast = QLatin1String("<%f ><%l>< %s>");
+const QString defaultPersonNameFormatting = personNameFormatLastFirst;
+
+
 }
 
 #endif // KBIBTEX_PREFERENCES_H

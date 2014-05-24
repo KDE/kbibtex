@@ -167,8 +167,8 @@ void FileSettingsWidget::setupGUI()
 
     ItalicTextItemModel *itim = new ItalicTextItemModel();
     itim->addItem(i18n("Use global settings"), QString(""));
-    itim->addItem(Person::transcribePersonName(&dummyPerson, QLatin1String("<%f ><%l>< %s>")), QLatin1String("<%f ><%l>< %s>")); // FIXME those string should be defined somewhere globally
-    itim->addItem(Person::transcribePersonName(&dummyPerson, QLatin1String("<%l><, %s><, %f>")), QLatin1String("<%l><, %s><, %f>")); // FIXME those string should be defined somewhere globally
+    itim->addItem(Person::transcribePersonName(&dummyPerson, Preferences::personNameFormatFirstLast), Preferences::personNameFormatFirstLast);
+    itim->addItem(Person::transcribePersonName(&dummyPerson, Preferences::personNameFormatLastFirst), Preferences::personNameFormatLastFirst);
     m_comboBoxPersonNameFormatting->setModel(itim);
 
     m_comboBoxListSeparator = new KComboBox(false, this);

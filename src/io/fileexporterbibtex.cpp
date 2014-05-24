@@ -89,13 +89,13 @@ public:
         keywordCasing = (KBibTeX::Casing)configGroup.readEntry(Preferences::keyKeywordCasing, (int)Preferences::defaultKeywordCasing);
         quoteComment = (Preferences::QuoteComment)configGroup.readEntry(Preferences::keyQuoteComment, (int)Preferences::defaultQuoteComment);
         protectCasing = configGroup.readEntry(Preferences::keyProtectCasing, Preferences::defaultProtectCasing);
-        personNameFormatting = configGroup.readEntry(Person::keyPersonNameFormatting, QString());
+        personNameFormatting = configGroup.readEntry(Preferences::keyPersonNameFormatting, QString());
         listSeparator = configGroup.readEntry(Preferences::keyListSeparator, Preferences::defaultListSeparator);
 
         if (personNameFormatting.isEmpty()) {
             /// no person name formatting is specified for BibTeX, fall back to general setting
             KConfigGroup configGroupGeneral(config, configGroupNameGeneral);
-            personNameFormatting = configGroupGeneral.readEntry(Person::keyPersonNameFormatting, Person::defaultPersonNameFormatting);
+            personNameFormatting = configGroupGeneral.readEntry(Preferences::keyPersonNameFormatting, Preferences::defaultPersonNameFormatting);
         }
     }
 
@@ -577,7 +577,7 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value &value, const QStr
                         /// Fall back and enforce comma-based name formatting
                         /// if name contains a suffix like "Jr."
                         /// Otherwise name could not be parsed again reliable
-                        const QString pnf = suffix.isEmpty() ? d->personNameFormatting : QLatin1String("<%l><, %s><, %f>");
+                        const QString pnf = suffix.isEmpty() ? d->personNameFormatting : Preferences::personNameFormatLastFirst;
                         QString thisName = encodercheck(encoder, Person::transcribePersonName(pnf, firstName, lastName, suffix));
 
                         if (!isOpen) {

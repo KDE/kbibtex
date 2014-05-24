@@ -26,6 +26,7 @@
 
 #include "guihelper.h"
 #include "value.h"
+#include "preferences.h"
 
 class SettingsGeneralWidget::SettingsGeneralWidgetPrivate
 {
@@ -48,19 +49,19 @@ public:
 
     void loadState() {
         KConfigGroup configGroup(config, configGroupName);
-        QString personNameFormatting = configGroup.readEntry(Person::keyPersonNameFormatting, Person::defaultPersonNameFormatting);
+        QString personNameFormatting = configGroup.readEntry(Preferences::keyPersonNameFormatting, Preferences::defaultPersonNameFormatting);
         int row = GUIHelper::selectValue(comboBoxPersonNameFormatting->model(), Person::transcribePersonName(&dummyPerson, personNameFormatting));
         comboBoxPersonNameFormatting->setCurrentIndex(row);
     }
 
     void saveState() {
         KConfigGroup configGroup(config, configGroupName);
-        configGroup.writeEntry(Person::keyPersonNameFormatting, comboBoxPersonNameFormatting->itemData(comboBoxPersonNameFormatting->currentIndex()));
+        configGroup.writeEntry(Preferences::keyPersonNameFormatting, comboBoxPersonNameFormatting->itemData(comboBoxPersonNameFormatting->currentIndex()));
         config->sync();
     }
 
     void resetToDefaults() {
-        int row = GUIHelper::selectValue(comboBoxPersonNameFormatting->model(), Person::transcribePersonName(&dummyPerson, Person::defaultPersonNameFormatting));
+        int row = GUIHelper::selectValue(comboBoxPersonNameFormatting->model(), Person::transcribePersonName(&dummyPerson, Preferences::defaultPersonNameFormatting));
         comboBoxPersonNameFormatting->setCurrentIndex(row);
     }
 
@@ -69,7 +70,7 @@ public:
 
         comboBoxPersonNameFormatting = new KComboBox(false, p);
         layout->addRow(i18n("Person Names Formatting:"), comboBoxPersonNameFormatting);
-        const QStringList formattingOptions = QStringList() << QLatin1String("<%f ><%l>< %s>") << QLatin1String("<%l><, %s><, %f>");
+        const QStringList formattingOptions = QStringList() << Preferences::personNameFormatFirstLast << Preferences::personNameFormatLastFirst;
         foreach(const QString &formattingOption, formattingOptions) {
             comboBoxPersonNameFormatting->addItem(Person::transcribePersonName(&dummyPerson, formattingOption), formattingOption);
         }

@@ -46,6 +46,7 @@
 #include "fileexporterbibtex.h"
 #include "bibtexfields.h"
 #include "encoderlatex.h"
+#include "preferences.h"
 
 class FieldLineEdit::FieldLineEditPrivate
 {
@@ -88,7 +89,7 @@ public:
         updateGUI(typeFlag);
 
         KConfigGroup configGroup(config, configGroupNameGeneral);
-        personNameFormatting = configGroup.readEntry(Person::keyPersonNameFormatting, Person::defaultPersonNameFormatting);
+        personNameFormatting = configGroup.readEntry(Preferences::keyPersonNameFormatting, Preferences::defaultPersonNameFormatting);
     }
 
     ~FieldLineEditPrivate() {

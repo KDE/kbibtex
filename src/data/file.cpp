@@ -83,7 +83,7 @@ public:
         properties.insert(File::StringDelimiter, configGroup.readEntry(Preferences::keyStringDelimiter, Preferences::defaultStringDelimiter));
         properties.insert(File::QuoteComment, (Preferences::QuoteComment)configGroup.readEntry(Preferences::keyQuoteComment, (int)Preferences::defaultQuoteComment));
         properties.insert(File::KeywordCasing, (KBibTeX::Casing)configGroup.readEntry(Preferences::keyKeywordCasing, (int)Preferences::defaultKeywordCasing));
-        properties.insert(File::NameFormatting, configGroup.readEntry(Person::keyPersonNameFormatting, QString()));
+        properties.insert(File::NameFormatting, configGroup.readEntry(Preferences::keyPersonNameFormatting, QString()));
         properties.insert(File::ProtectCasing, configGroup.readEntry(Preferences::keyProtectCasing, Preferences::defaultProtectCasing));
         properties.insert(File::ListSeparator, configGroup.readEntry(Preferences::keyListSeparator, Preferences::defaultListSeparator));
     }
@@ -171,11 +171,11 @@ QSet<QString> File::uniqueEntryValuesSet(const QString &fieldName) const
                         static QStringList personNameFormattingList; ///< use static to do pattern assembly only once
                         if (personNameFormattingList.isEmpty()) {
                             /// Use the two default patterns last-name-first and first-name-first
-                            personNameFormattingList << QLatin1String("<%l><, %s><, %f>") << QLatin1String("<%f ><%l>< %s>");
+                            personNameFormattingList << Preferences::personNameFormatLastFirst << Preferences::personNameFormatFirstLast;
                             /// Check configuration if user-specified formatting template is different
                             KSharedConfigPtr config(KSharedConfig::openConfig(QLatin1String("kbibtexrc")));
                             KConfigGroup configGroup(config, "General");
-                            QString personNameFormatting = configGroup.readEntry(Person::keyPersonNameFormatting, Person::defaultPersonNameFormatting);
+                            QString personNameFormatting = configGroup.readEntry(Preferences::keyPersonNameFormatting, Preferences::defaultPersonNameFormatting);
                             /// Add user's template if it differs from the two specified above
                             if (!personNameFormattingList.contains(personNameFormatting))
                                 personNameFormattingList << personNameFormatting;

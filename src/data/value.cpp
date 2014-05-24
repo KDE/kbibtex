@@ -190,9 +190,6 @@ QString Person::transcribePersonName(const QString &formatting, const QString &f
     return result;
 }
 
-const QString Person::keyPersonNameFormatting = QLatin1String("personNameFormatting");
-const QString Person::defaultPersonNameFormatting = QLatin1String("<%l><, %s><, %f>"); // "<%f ><%l>< %s>" // FIXME those string should be defined somewhere globally
-
 
 const QRegExp MacroKey::validMacroKey = QRegExp("^[a-z][-.:/+_a-z0-9]*$|^[0-9]+$", Qt::CaseInsensitive);
 
@@ -608,7 +605,7 @@ void PlainTextValue::readConfiguration()
 {
     KSharedConfigPtr config(KSharedConfig::openConfig(QLatin1String("kbibtexrc")));
     KConfigGroup configGroup(config, "General");
-    personNameFormatting = configGroup.readEntry(Person::keyPersonNameFormatting, Person::defaultPersonNameFormatting);
+    personNameFormatting = configGroup.readEntry(Preferences::keyPersonNameFormatting, Preferences::defaultPersonNameFormatting);
 }
 
 QString PlainTextValue::personNameFormatting;

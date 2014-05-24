@@ -97,9 +97,6 @@ protected:
 class KBIBTEXDATA_EXPORT Person: public ValueItem
 {
 public:
-    static const QString keyPersonNameFormatting;
-    static const QString defaultPersonNameFormatting;
-
     /**
     * Create a representation for a person's name. In bibliographies,
     * a person is either an author or an editor. The four parameters
