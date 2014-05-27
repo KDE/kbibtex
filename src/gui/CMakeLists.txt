@@ -13,7 +13,7 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/src/networking
     ${CMAKE_SOURCE_DIR}/src/processing
     ${CMAKE_SOURCE_DIR}/src/gui
-    ${CMAKE_SOURCE_DIR}/src/gui/bibtex
+    ${CMAKE_SOURCE_DIR}/src/gui/file
     ${CMAKE_SOURCE_DIR}/src/gui/dialogs
     ${CMAKE_SOURCE_DIR}/src/gui/element
     ${CMAKE_SOURCE_DIR}/src/gui/field
@@ -27,11 +27,11 @@ set(
     field/fieldlineedit.cpp
     field/fieldlistedit.cpp
     field/colorlabelwidget.cpp
-    bibtex/bibtexeditor.cpp
-    bibtex/findduplicatesui.cpp
-    bibtex/clipboard.cpp
-    bibtex/bibtexfilemodel.cpp
-    bibtex/bibtexfileview.cpp
+    file/bibtexeditor.cpp
+    file/findduplicatesui.cpp
+    file/clipboard.cpp
+    file/bibtexfilemodel.cpp
+    file/bibtexfileview.cpp
     element/elementeditor.cpp
     element/elementwidgets.cpp
     element/findpdfui.cpp
@@ -80,11 +80,11 @@ set(
     italictextitemmodel.h
     delayedexecutiontimer.h
     kbibtexgui_export.h
-    bibtex/findduplicatesui.h
-    bibtex/bibtexfileview.h
-    bibtex/clipboard.h
-    bibtex/bibtexfilemodel.h
-    bibtex/bibtexeditor.h
+    file/findduplicatesui.h
+    file/bibtexfileview.h
+    file/clipboard.h
+    file/bibtexfilemodel.h
+    file/bibtexeditor.h
     element/findpdfui.h
     element/elementeditor.h
     element/associatedfilesui.h
@@ -170,7 +170,7 @@ install(
 
 install(
     FILES
-    bibtex/findduplicatesui.rc
+    file/findduplicatesui.rc
     DESTINATION
     ${DATA_INSTALL_DIR}/kbibtex
 )

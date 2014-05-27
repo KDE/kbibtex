@@ -31,8 +31,8 @@
 class Element;
 
 /**
- * This class represents a bibliographic file such as a BibTeX
- * (or any other format after proper conversion). The files content
+ * This class represents a bibliographic file such as a BibTeX file
+ * (or any other format after proper conversion). The file's content
  * can be accessed using the inherited QList interface (for example
  * list iterators).
  * @see Element

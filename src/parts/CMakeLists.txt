@@ -7,7 +7,7 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/src/gui/element
     ${CMAKE_SOURCE_DIR}/src/gui/preferences
     ${CMAKE_SOURCE_DIR}/src/gui/widgets
-    ${CMAKE_SOURCE_DIR}/src/gui/bibtex
+    ${CMAKE_SOURCE_DIR}/src/gui/file
     ${CMAKE_SOURCE_DIR}/src/processing
     ${CMAKE_SOURCE_DIR}/src/networking
     ${CMAKE_CURRENT_BINARY_DIR}
