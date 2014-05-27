@@ -15,7 +15,7 @@
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
 
-#include "bibtexfilemodel.h"
+#include "filemodel.h"
 
 #include <typeinfo>
 
@@ -39,35 +39,35 @@
 
 static const QRegExp curlyRegExp(QLatin1String("[{}]+"));
 
-const QString SortFilterBibTeXFileModel::configGroupName = QLatin1String("User Interface");
+const QString SortFilterFileModel::configGroupName = QLatin1String("User Interface");
 
-SortFilterBibTeXFileModel::SortFilterBibTeXFileModel(QObject *parent)
+SortFilterFileModel::SortFilterFileModel(QObject *parent)
         : QSortFilterProxyModel(parent), m_internalModel(NULL), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc")))
 {
     m_filterQuery.combination = AnyTerm;
     loadState();
-    setSortRole(BibTeXFileModel::SortRole);
+    setSortRole(FileModel::SortRole);
 };
 
-void SortFilterBibTeXFileModel::setSourceModel(QAbstractItemModel *model)
+void SortFilterFileModel::setSourceModel(QAbstractItemModel *model)
 {
     QSortFilterProxyModel::setSourceModel(model);
-    m_internalModel = dynamic_cast<BibTeXFileModel *>(model);
+    m_internalModel = dynamic_cast<FileModel *>(model);
 }
 
-BibTeXFileModel *SortFilterBibTeXFileModel::bibTeXSourceModel() const
+FileModel *SortFilterFileModel::fileSourceModel() const
 {
     return m_internalModel;
 }
 
-void SortFilterBibTeXFileModel::updateFilter(SortFilterBibTeXFileModel::FilterQuery filterQuery)
+void SortFilterFileModel::updateFilter(SortFilterFileModel::FilterQuery filterQuery)
 {
     m_filterQuery = filterQuery;
     m_filterQuery.field = filterQuery.field.toLower(); /// required for comparison in filter code
     invalidate();
 }
 
-bool SortFilterBibTeXFileModel::simpleLessThan(const QModelIndex &left, const QModelIndex &right) const
+bool SortFilterFileModel::simpleLessThan(const QModelIndex &left, const QModelIndex &right) const
 {
     const QString leftString = left.data(Qt::DisplayRole).toString().toLower();
     const QString rightString = right.data(Qt::DisplayRole).toString().toLower();
@@ -78,10 +78,10 @@ bool SortFilterBibTeXFileModel::simpleLessThan(const QModelIndex &left, const QM
         return cmp < 0;
 }
 
-bool SortFilterBibTeXFileModel::lessThan(const QModelIndex &left, const QModelIndex &right) const
+bool SortFilterFileModel::lessThan(const QModelIndex &left, const QModelIndex &right) const
 {
     int column = left.column();
-    Q_ASSERT_X(left.column() == right.column(), "bool SortFilterBibTeXFileModel::lessThan(const QModelIndex &left, const QModelIndex &right) const", "Not comparing items in same column"); ///< assume that we only sort by column
+    Q_ASSERT_X(left.column() == right.column(), "bool SortFilterFileModel::lessThan(const QModelIndex &left, const QModelIndex &right) const", "Not comparing items in same column"); ///< assume that we only sort by column
 
     BibTeXFields *bibtexFields = BibTeXFields::self();
     const FieldDescription *fd = bibtexFields->at(column);
@@ -154,12 +154,12 @@ bool SortFilterBibTeXFileModel::lessThan(const QModelIndex &left, const QModelIn
     }
 }
 
-bool SortFilterBibTeXFileModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const
+bool SortFilterFileModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const
 {
     Q_UNUSED(source_parent)
 
     QSharedPointer<Element> rowElement = m_internalModel->element(source_row);
-    Q_ASSERT_X(!rowElement.isNull(), "bool SortFilterBibTeXFileModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const", "rowElement is NULL");
+    Q_ASSERT_X(!rowElement.isNull(), "bool SortFilterFileModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const", "rowElement is NULL");
 
     /// check if showing comments is disabled
     if (!m_showComments && typeid(*rowElement) == typeid(Comment))
@@ -206,7 +206,7 @@ bool SortFilterBibTeXFileModel::filterAcceptsRow(int source_row, const QModelInd
 
         /// Test associated PDF files
         if (m_filterQuery.searchPDFfiles && m_filterQuery.field.isEmpty()) ///< not filtering for any specific field
-            foreach(const KUrl &url, FileInfo::entryUrls(entry.data(), bibTeXSourceModel()->bibTeXFile()->property(File::Url, QUrl()).toUrl(), FileInfo::TestExistanceYes)) {
+            foreach(const KUrl &url, FileInfo::entryUrls(entry.data(), fileSourceModel()->bibliographyFile()->property(File::Url, QUrl()).toUrl(), FileInfo::TestExistanceYes)) {
             if (url.isLocalFile() && url.fileName().endsWith(QLatin1String(".pdf"))) {
                 // FIXME if you have a large collection of PDF files and the text version
                 // has not been generated yet, this will freeze KBibTeX for some time
@@ -278,27 +278,27 @@ bool SortFilterBibTeXFileModel::filterAcceptsRow(int source_row, const QModelInd
     }
     delete[] eachTerm;
 
-    if (m_filterQuery.combination == SortFilterBibTeXFileModel::AnyTerm)
+    if (m_filterQuery.combination == SortFilterFileModel::AnyTerm)
         return any;
     else
         return every;
 }
 
-void SortFilterBibTeXFileModel::loadState()
+void SortFilterFileModel::loadState()
 {
     KConfigGroup configGroup(config, configGroupName);
-    m_showComments = configGroup.readEntry(BibTeXFileModel::keyShowComments, BibTeXFileModel::defaultShowComments);
-    m_showMacros = configGroup.readEntry(BibTeXFileModel::keyShowMacros, BibTeXFileModel::defaultShowMacros);
+    m_showComments = configGroup.readEntry(FileModel::keyShowComments, FileModel::defaultShowComments);
+    m_showMacros = configGroup.readEntry(FileModel::keyShowMacros, FileModel::defaultShowMacros);
 }
 
 
-void BibTeXFileDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
+void FileDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     QStyledItemDelegate::paint(painter, option, index);
 
     static const int numTotalStars = 8;
     bool ok = false;
-    double percent = index.data(BibTeXFileModel::NumberRole).toDouble(&ok);
+    double percent = index.data(FileModel::NumberRole).toDouble(&ok);
     if (ok) {
         BibTeXFields *bibtexFields = BibTeXFields::self();
         const FieldDescription *fd = bibtexFields->at(index.column());
@@ -308,23 +308,23 @@ void BibTeXFileDelegate::paint(QPainter *painter, const QStyleOptionViewItem &op
 }
 
 
-const int BibTeXFileModel::NumberRole = Qt::UserRole + 9581;
-const int BibTeXFileModel::SortRole = Qt::UserRole + 236; /// see also MDIWidget's SortRole
+const int FileModel::NumberRole = Qt::UserRole + 9581;
+const int FileModel::SortRole = Qt::UserRole + 236; /// see also MDIWidget's SortRole
 
-const QString BibTeXFileModel::keyShowComments = QLatin1String("showComments");
-const bool BibTeXFileModel::defaultShowComments = true;
-const QString BibTeXFileModel::keyShowMacros = QLatin1String("showMacros");
-const bool BibTeXFileModel::defaultShowMacros = true;
+const QString FileModel::keyShowComments = QLatin1String("showComments");
+const bool FileModel::defaultShowComments = true;
+const QString FileModel::keyShowMacros = QLatin1String("showMacros");
+const bool FileModel::defaultShowMacros = true;
 
 
-BibTeXFileModel::BibTeXFileModel(QObject *parent)
-        : QAbstractTableModel(parent), m_bibtexFile(NULL)
+FileModel::FileModel(QObject *parent)
+        : QAbstractTableModel(parent), m_file(NULL)
 {
     NotificationHub::registerNotificationListener(this, NotificationHub::EventConfigurationChanged);
     readConfiguration();
 }
 
-void BibTeXFileModel::notificationEvent(int eventId)
+void FileModel::notificationEvent(int eventId)
 {
     if (eventId == NotificationHub::EventConfigurationChanged) {
         readConfiguration();
@@ -343,7 +343,7 @@ void BibTeXFileModel::notificationEvent(int eventId)
     }
 }
 
-void BibTeXFileModel::readConfiguration()
+void FileModel::readConfiguration()
 {
     /// load mapping from color value to label
     KSharedConfigPtr config(KSharedConfig::openConfig(QLatin1String("kbibtexrc")));
@@ -356,7 +356,7 @@ void BibTeXFileModel::readConfiguration()
     }
 }
 
-QVariant BibTeXFileModel::entryData(const Entry *entry, const QString &raw, const QString &rawAlt, int role, bool followCrossRef) const
+QVariant FileModel::entryData(const Entry *entry, const QString &raw, const QString &rawAlt, int role, bool followCrossRef) const
 {
     if (raw == "^id") // FIXME: Use constant here?
         return QVariant(entry->id());
@@ -386,7 +386,7 @@ QVariant BibTeXFileModel::entryData(const Entry *entry, const QString &raw, cons
 
         if (followCrossRef && text.isEmpty() && entry->contains(Entry::ftCrossRef)) {
             // TODO do not only follow "crossref", but other files from Biber/Biblatex as well
-            Entry *completedEntry = entry->resolveCrossref(m_bibtexFile);
+            Entry *completedEntry = entry->resolveCrossref(m_file);
             QVariant result = entryData(completedEntry, raw, rawAlt, role, false);
             delete completedEntry;
             return result;
@@ -394,7 +394,7 @@ QVariant BibTeXFileModel::entryData(const Entry *entry, const QString &raw, cons
 
         if (text.isEmpty())
             return QVariant();
-        else if (role == BibTeXFileModel::SortRole)
+        else if (role == FileModel::SortRole)
             return QVariant(text.toLower());
         else if (role == Qt::ToolTipRole) {
             // TODO: find a better solution, such as line-wrapping tooltips
@@ -405,47 +405,47 @@ QVariant BibTeXFileModel::entryData(const Entry *entry, const QString &raw, cons
 
 }
 
-File *BibTeXFileModel::bibTeXFile()
+File *FileModel::bibliographyFile()
 {
-    return m_bibtexFile;
+    return m_file;
 }
 
-void BibTeXFileModel::setBibTeXFile(File *bibtexFile)
+void FileModel::setBibliographyFile(File *file)
 {
-    bool doReset = m_bibtexFile != bibtexFile;
-    m_bibtexFile = bibtexFile;
+    bool doReset = m_file != file;
+    m_file = file;
     if (doReset) reset(); // TODO necessary here?
 }
 
-QModelIndex BibTeXFileModel::parent(const QModelIndex &index) const
+QModelIndex FileModel::parent(const QModelIndex &index) const
 {
     Q_UNUSED(index)
     return QModelIndex();
 }
 
-bool BibTeXFileModel::hasChildren(const QModelIndex &parent) const
+bool FileModel::hasChildren(const QModelIndex &parent) const
 {
     return parent == QModelIndex();
 }
 
-int BibTeXFileModel::rowCount(const QModelIndex & /*parent*/) const
+int FileModel::rowCount(const QModelIndex & /*parent*/) const
 {
-    return m_bibtexFile != NULL ? m_bibtexFile->count() : 0;
+    return m_file != NULL ? m_file->count() : 0;
 }
 
-int BibTeXFileModel::columnCount(const QModelIndex & /*parent*/) const
+int FileModel::columnCount(const QModelIndex & /*parent*/) const
 {
     return BibTeXFields::self()->count();
 }
 
-QVariant BibTeXFileModel::data(const QModelIndex &index, int role) const
+QVariant FileModel::data(const QModelIndex &index, int role) const
 {
     /// do not accept invalid indices
     if (!index.isValid())
         return QVariant();
 
     /// check backend storage (File object)
-    if (m_bibtexFile == NULL)
+    if (m_file == NULL)
         return QVariant();
 
     /// for now, only display data (no editing or icons etc)
@@ -453,11 +453,11 @@ QVariant BibTeXFileModel::data(const QModelIndex &index, int role) const
         return QVariant();
 
     BibTeXFields *bibtexFields = BibTeXFields::self();
-    if (index.row() < m_bibtexFile->count() && index.column() < bibtexFields->count()) {
+    if (index.row() < m_file->count() && index.column() < bibtexFields->count()) {
         const FieldDescription *fd = bibtexFields->at(index.column());
         QString raw = fd->upperCamelCase;
         QString rawAlt = fd->upperCamelCaseAlt;
-        QSharedPointer<Element> element = (*m_bibtexFile)[index.row()];
+        QSharedPointer<Element> element = (*m_file)[index.row()];
         QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
 
         /// if BibTeX entry has a "x-color" field, use that color to highlight row
@@ -526,7 +526,7 @@ QVariant BibTeXFileModel::data(const QModelIndex &index, int role) const
         return QVariant("?");
 }
 
-QVariant BibTeXFileModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant FileModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     const BibTeXFields *bibtexFields = BibTeXFields::self();
     if (role != Qt::DisplayRole || orientation != Qt::Horizontal || section < 0 || section >= bibtexFields->count())
@@ -534,47 +534,47 @@ QVariant BibTeXFileModel::headerData(int section, Qt::Orientation orientation, i
     return bibtexFields->at(section)->label;
 }
 
-Qt::ItemFlags BibTeXFileModel::flags(const QModelIndex &index) const
+Qt::ItemFlags FileModel::flags(const QModelIndex &index) const
 {
     Q_UNUSED(index)
     return Qt::ItemIsEnabled | Qt::ItemIsSelectable; // FIXME: What about drag'n'drop?
 }
 
-bool BibTeXFileModel::removeRow(int row, const QModelIndex &parent)
+bool FileModel::removeRow(int row, const QModelIndex &parent)
 {
-    if (row < 0 || m_bibtexFile == NULL || row >= rowCount() || row >= m_bibtexFile->count())
+    if (row < 0 || m_file == NULL || row >= rowCount() || row >= m_file->count())
         return false;
     if (parent != QModelIndex())
         return false;
 
     beginRemoveRows(QModelIndex(), row, row);
-    m_bibtexFile->removeAt(row);
+    m_file->removeAt(row);
     endRemoveRows();
 
     return true;
 }
 
-bool BibTeXFileModel::removeRowList(const QList<int> &rows)
+bool FileModel::removeRowList(const QList<int> &rows)
 {
-    if (m_bibtexFile == NULL) return false;
+    if (m_file == NULL) return false;
 
     QList<int> internalRows = rows;
     qSort(internalRows.begin(), internalRows.end(), qGreater<int>());
 
     beginRemoveRows(QModelIndex(), internalRows.last(), internalRows.first());
     foreach(int row, internalRows) {
-        if (row < 0 || row >= rowCount() || row >= m_bibtexFile->count())
+        if (row < 0 || row >= rowCount() || row >= m_file->count())
             return false;
-        m_bibtexFile->removeAt(row);
+        m_file->removeAt(row);
     }
     endRemoveRows();
 
     return true;
 }
 
-bool BibTeXFileModel::insertRow(QSharedPointer<Element> element, int row, const QModelIndex &parent)
+bool FileModel::insertRow(QSharedPointer<Element> element, int row, const QModelIndex &parent)
 {
-    if (m_bibtexFile == NULL || row < 0 || row > rowCount() || parent != QModelIndex())
+    if (m_file == NULL || row < 0 || row > rowCount() || parent != QModelIndex())
         return false;
 
     /// Check for duplicate ids or keys when inserting a new element
@@ -583,14 +583,14 @@ bool BibTeXFileModel::insertRow(QSharedPointer<Element> element, int row, const 
     if (!entry.isNull()) {
         /// Fetch current entry's id
         const QString id = entry->id();
-        if (!m_bibtexFile->containsKey(id).isNull()) {
+        if (!m_file->containsKey(id).isNull()) {
             /// Same entry id used for an existing entry or macro
             int overflow = 2;
             static const QString pattern = QLatin1String("%1_%2");
             /// Test alternative ids with increasing "overflow" counter:
             /// id_2, id_3, id_4 ,...
             QString newId = pattern.arg(id).arg(overflow);
-            while (!m_bibtexFile->containsKey(newId).isNull()) {
+            while (!m_file->containsKey(newId).isNull()) {
                 ++overflow;
                 newId = pattern.arg(id).arg(overflow);
             }
@@ -603,14 +603,14 @@ bool BibTeXFileModel::insertRow(QSharedPointer<Element> element, int row, const 
         if (!macro.isNull()) {
             /// Fetch current macro's key
             const QString key = macro->key();
-            if (!m_bibtexFile->containsKey(key).isNull()) {
+            if (!m_file->containsKey(key).isNull()) {
                 /// Same entry key used for an existing entry or macro
                 int overflow = 2;
                 static const QString pattern = QLatin1String("%1_%2");
                 /// Test alternative keys with increasing "overflow" counter:
                 /// key_2, key_3, key_4 ,...
                 QString newKey = pattern.arg(key).arg(overflow);
-                while (!m_bibtexFile->containsKey(newKey).isNull()) {
+                while (!m_file->containsKey(newKey).isNull()) {
                     ++overflow;
                     newKey = pattern.arg(key).arg(overflow);
                 }
@@ -621,26 +621,26 @@ bool BibTeXFileModel::insertRow(QSharedPointer<Element> element, int row, const 
     }
 
     beginInsertRows(QModelIndex(), row, row);
-    m_bibtexFile->insert(row, element);
+    m_file->insert(row, element);
     endInsertRows();
 
     return true;
 }
 
-QSharedPointer<Element> BibTeXFileModel::element(int row) const
+QSharedPointer<Element> FileModel::element(int row) const
 {
-    if (m_bibtexFile == NULL || row < 0 || row >= m_bibtexFile->count()) return QSharedPointer<Element>();
+    if (m_file == NULL || row < 0 || row >= m_file->count()) return QSharedPointer<Element>();
 
-    return (*m_bibtexFile)[row];
+    return (*m_file)[row];
 }
 
-int BibTeXFileModel::row(QSharedPointer<Element> element) const
+int FileModel::row(QSharedPointer<Element> element) const
 {
-    if (m_bibtexFile == NULL) return -1;
-    return m_bibtexFile->indexOf(element);
+    if (m_file == NULL) return -1;
+    return m_file->indexOf(element);
 }
 
-void BibTeXFileModel::reset()
+void FileModel::reset()
 {
     QAbstractTableModel::reset();
 }

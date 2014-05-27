@@ -21,7 +21,7 @@
 
 #include <QWidget>
 
-#include "bibtexfilemodel.h"
+#include "filemodel.h"
 
 /**
 @author Thomas Fischer
@@ -33,7 +33,7 @@ public:
     explicit FilterBar(QWidget *parent);
     ~FilterBar();
 
-    SortFilterBibTeXFileModel::FilterQuery filter();
+    SortFilterFileModel::FilterQuery filter();
 
 public slots:
     /**
@@ -41,10 +41,10 @@ public slots:
      * and applied to the list of elements.
      * @param fq query data structure to be used
      */
-    void setFilter(SortFilterBibTeXFileModel::FilterQuery fq);
+    void setFilter(SortFilterFileModel::FilterQuery fq);
 
 signals:
-    void filterChanged(SortFilterBibTeXFileModel::FilterQuery);
+    void filterChanged(SortFilterFileModel::FilterQuery);
 
 private:
     class FilterBarPrivate;

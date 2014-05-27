@@ -23,7 +23,7 @@
 #include <QStyledItemDelegate>
 
 #include "notificationhub.h"
-#include "bibtexfilemodel.h"
+#include "filemodel.h"
 
 static const int SortRole = Qt::UserRole + 113;
 static const int SearchTextRole = Qt::UserRole + 114;

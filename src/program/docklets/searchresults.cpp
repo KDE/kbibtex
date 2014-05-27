@@ -27,7 +27,7 @@
 #include "file.h"
 #include "clipboard.h"
 #include "bibtexeditor.h"
-#include "bibtexfilemodel.h"
+#include "filemodel.h"
 #include "idsuggestions.h"
 
 class SearchResults::SearchResultsPrivate
@@ -51,7 +51,7 @@ public:
         layout->setColumnStretch(1, 0);
 
         resultList = new BibTeXEditor(QLatin1String("SearchResults"), parent);
-        resultList->setItemDelegate(new BibTeXFileDelegate(resultList));
+        resultList->setItemDelegate(new FileDelegate(resultList));
         resultList->setReadOnly(true);
         resultList->setFrameShadow(QFrame::Sunken);
         resultList->setFrameShape(QFrame::StyledPanel);
@@ -64,10 +64,10 @@ public:
         layout->addWidget(buttonImport, 1, 1, 1, 1);
         buttonImport->setEnabled(false);
 
-        SortFilterBibTeXFileModel *model = new SortFilterBibTeXFileModel(parent);
-        BibTeXFileModel *bibTeXModel = new BibTeXFileModel(parent);
-        bibTeXModel->setBibTeXFile(file);
-        model->setSourceModel(bibTeXModel);
+        SortFilterFileModel *model = new SortFilterFileModel(parent);
+        FileModel *fileModel = new FileModel(parent);
+        fileModel->setBibliographyFile(file);
+        model->setSourceModel(fileModel);
         resultList->setModel(model);
 
         actionViewCurrent = new KAction(KIcon("document-preview"), i18n("View Element"), parent);
@@ -96,12 +96,12 @@ public:
 
     void clear() {
         file->clear();
-        resultList->bibTeXModel()->reset();
+        resultList->fileModel()->reset();
     }
 
     bool insertElement(QSharedPointer<Element> element) {
         static IdSuggestions idSuggestions;
-        BibTeXFileModel *model = resultList->bibTeXModel();
+        FileModel *model = resultList->fileModel();
 
         /// If the user had configured a default formatting string
         /// for entry ids, apply this formatting strings here
@@ -158,8 +158,8 @@ void SearchResults::importSelected()
 {
     Q_ASSERT_X(d->mainEditor != NULL, "SearchResults::importSelected", "d->mainEditor is NULL");
 
-    BibTeXFileModel *targetModel = d->mainEditor->bibTeXModel();
-    BibTeXFileModel *sourceModel = d->resultList->bibTeXModel();
+    FileModel *targetModel = d->mainEditor->fileModel();
+    FileModel *sourceModel = d->resultList->fileModel();
     QList<QModelIndex> selList = d->resultList->selectionModel()->selectedRows();
     for (QList<QModelIndex>::ConstIterator it = selList.constBegin(); it != selList.constEnd(); ++it) {
         /// Map from visible row to 'real' row

@@ -19,8 +19,7 @@
 #define KBIBTEX_PROGRAM_VALUELIST_H
 
 #include <QWidget>
-
-#include <bibtexfilemodel.h>
+#include <QModelIndex>
 
 class Element;
 class File;

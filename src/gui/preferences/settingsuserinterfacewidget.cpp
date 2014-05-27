@@ -28,7 +28,7 @@
 
 #include "preferences.h"
 #include "elementwidgets.h"
-#include "bibtexfilemodel.h"
+#include "filemodel.h"
 
 class SettingsUserInterfaceWidget::SettingsUserInterfaceWidgetPrivate
 {
@@ -50,8 +50,8 @@ public:
 
     void loadState() {
         KConfigGroup configGroup(config, configGroupName);
-        checkBoxShowComments->setChecked(configGroup.readEntry(BibTeXFileModel::keyShowComments, BibTeXFileModel::defaultShowComments));
-        checkBoxShowMacros->setChecked(configGroup.readEntry(BibTeXFileModel::keyShowMacros, BibTeXFileModel::defaultShowMacros));
+        checkBoxShowComments->setChecked(configGroup.readEntry(FileModel::keyShowComments, FileModel::defaultShowComments));
+        checkBoxShowMacros->setChecked(configGroup.readEntry(FileModel::keyShowMacros, FileModel::defaultShowMacros));
 
         const QStringList styles = configGroup.readEntry("BibTeXStyles", QStringList());
         foreach(const QString &style, styles) {
@@ -69,16 +69,16 @@ public:
 
     void saveState() {
         KConfigGroup configGroup(config, configGroupName);
-        configGroup.writeEntry(BibTeXFileModel::keyShowComments, checkBoxShowComments->isChecked());
-        configGroup.writeEntry(BibTeXFileModel::keyShowMacros, checkBoxShowMacros->isChecked());
+        configGroup.writeEntry(FileModel::keyShowComments, checkBoxShowComments->isChecked());
+        configGroup.writeEntry(FileModel::keyShowMacros, checkBoxShowMacros->isChecked());
         configGroup.writeEntry("CurrentStyle", comboBoxBibliographySystem->itemData(comboBoxBibliographySystem->currentIndex()).toString());
         configGroup.writeEntry(Preferences::keyElementDoubleClickAction, comboBoxElementDoubleClickAction->currentIndex());
         config->sync();
     }
 
     void resetToDefaults() {
-        checkBoxShowComments->setChecked(BibTeXFileModel::defaultShowComments);
-        checkBoxShowMacros->setChecked(BibTeXFileModel::defaultShowMacros);
+        checkBoxShowComments->setChecked(FileModel::defaultShowComments);
+        checkBoxShowMacros->setChecked(FileModel::defaultShowMacros);
         comboBoxBibliographySystem->setCurrentIndex(0);
         comboBoxElementDoubleClickAction->setCurrentIndex(Preferences::defaultElementDoubleClickAction);
     }

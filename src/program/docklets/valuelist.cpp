@@ -38,6 +38,7 @@
 #include "entry.h"
 #include "bibtexeditor.h"
 #include "valuelistmodel.h"
+#include "filemodel.h"
 
 class ValueList::ValueListPrivate
 {
@@ -247,9 +248,9 @@ void ValueList::listItemActivated(const QModelIndex &index)
     QString fieldText = fieldVar.toString();
     if (fieldText.isEmpty()) fieldText = d->comboboxFieldNames->currentText();
 
-    SortFilterBibTeXFileModel::FilterQuery fq;
+    SortFilterFileModel::FilterQuery fq;
     fq.terms << itemText;
-    fq.combination = SortFilterBibTeXFileModel::EveryTerm;
+    fq.combination = SortFilterFileModel::EveryTerm;
     fq.field = fieldText;
     fq.searchPDFfiles = false;
 
@@ -263,8 +264,8 @@ void ValueList::searchSelection()
     QString fieldText = fieldVar.toString();
     if (fieldText.isEmpty()) fieldText = d->comboboxFieldNames->currentText();
 
-    SortFilterBibTeXFileModel::FilterQuery fq;
-    fq.combination = SortFilterBibTeXFileModel::EveryTerm;
+    SortFilterFileModel::FilterQuery fq;
+    fq.combination = SortFilterFileModel::EveryTerm;
     fq.field = fieldText;
     foreach(const QModelIndex &index, d->treeviewFieldValues->selectionModel()->selectedIndexes()) {
         if (index.column() == 0) {

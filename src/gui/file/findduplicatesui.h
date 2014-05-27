@@ -36,8 +36,6 @@ class File;
 
 class RadioButtonTreeView;
 class AlternativesItemModel;
-class CheckableBibTeXFileModel;
-class FilterIdBibTeXFileModel;
 
 class KBIBTEXGUI_EXPORT MergeWidget : public QWidget
 {

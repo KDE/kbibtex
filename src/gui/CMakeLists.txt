@@ -30,7 +30,7 @@ set(
     file/bibtexeditor.cpp
     file/findduplicatesui.cpp
     file/clipboard.cpp
-    file/bibtexfilemodel.cpp
+    file/filemodel.cpp
     file/bibtexfileview.cpp
     element/elementeditor.cpp
     element/elementwidgets.cpp
@@ -83,7 +83,7 @@ set(
     file/findduplicatesui.h
     file/bibtexfileview.h
     file/clipboard.h
-    file/bibtexfilemodel.h
+    file/filemodel.h
     file/bibtexeditor.h
     element/findpdfui.h
     element/elementeditor.h

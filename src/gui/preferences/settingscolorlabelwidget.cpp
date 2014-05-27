@@ -34,7 +34,7 @@
 #include "file.h"
 #include "bibtexeditor.h"
 #include "colorlabelwidget.h"
-#include "bibtexfilemodel.h"
+#include "filemodel.h"
 #include "preferences.h"
 
 class ColorLabelSettingsDelegate : public QStyledItemDelegate
@@ -517,11 +517,11 @@ void ColorLabelContextMenu::colorActivated(const QString &colorString)
     /// so apply this color code to the currently
     /// selected item in the tree view
 
-    SortFilterBibTeXFileModel *sfbfm = dynamic_cast<SortFilterBibTeXFileModel *>(d->bibTeXEditor->model());
-    Q_ASSERT_X(sfbfm != NULL, "ColorLabelContextMenu::colorActivated(const QString &colorString)", "SortFilterBibTeXFileModel *sfbfm is NULL");
-    BibTeXFileModel *model = sfbfm->bibTeXSourceModel();
-    Q_ASSERT_X(model != NULL, "ColorLabelContextMenu::colorActivated(const QString &colorString)", "BibTeXFileModel *model is NULL");
-    File *file = model->bibTeXFile();
+    SortFilterFileModel *sfbfm = dynamic_cast<SortFilterFileModel *>(d->bibTeXEditor->model());
+    Q_ASSERT_X(sfbfm != NULL, "ColorLabelContextMenu::colorActivated(const QString &colorString)", "SortFilterFileModel *sfbfm is NULL");
+    FileModel *model = sfbfm->fileSourceModel();
+    Q_ASSERT_X(model != NULL, "ColorLabelContextMenu::colorActivated(const QString &colorString)", "FileModel *model is NULL");
+    File *file = model->bibliographyFile();
     Q_ASSERT_X(file != NULL, "ColorLabelContextMenu::colorActivated(const QString &colorString)", "File *file is NULL");
 
     /// Keep track if any changes to the bibliography is made

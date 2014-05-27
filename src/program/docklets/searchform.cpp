@@ -69,7 +69,7 @@
 #include "onlinesearchoclcworldcat.h"
 #include "openfileinfo.h"
 #include "bibtexeditor.h"
-#include "bibtexfilemodel.h"
+#include "filemodel.h"
 #include "searchresults.h"
 
 const int HomepageRole = Qt::UserRole + 5;

@@ -65,7 +65,7 @@
 #include "fileexporterbibtex2html.h"
 #include "fileexporterxml.h"
 #include "fileexporterxslt.h"
-#include "bibtexfilemodel.h"
+#include "filemodel.h"
 #include "filesettingswidget.h"
 #include "filterbar.h"
 #include "findduplicatesui.h"
@@ -95,8 +95,8 @@ private:
 public:
     File *bibTeXFile;
     BibTeXEditor *editor;
-    BibTeXFileModel *model;
-    SortFilterBibTeXFileModel *sortFilterProxyModel;
+    FileModel *model;
+    SortFilterFileModel *sortFilterProxyModel;
     FilterBar *filterBar;
     QSignalMapper *signalMapperNewElement;
     KAction *editCutAction, *editDeleteAction, *editCopyAction, *editPasteAction, *editCopyReferencesAction, *elementEditAction, *elementViewDocumentAction, *fileSaveAction, *elementFindPDFAction, *entryApplyDefaultFormatString;
@@ -184,14 +184,14 @@ public:
 
     void initializeNew() {
         bibTeXFile = new File();
-        model = new BibTeXFileModel();
-        model->setBibTeXFile(bibTeXFile);
+        model = new FileModel();
+        model->setBibliographyFile(bibTeXFile);
 
         if (sortFilterProxyModel != NULL) delete sortFilterProxyModel;
-        sortFilterProxyModel = new SortFilterBibTeXFileModel(p);
+        sortFilterProxyModel = new SortFilterFileModel(p);
         sortFilterProxyModel->setSourceModel(model);
         editor->setModel(sortFilterProxyModel);
-        connect(filterBar, SIGNAL(filterChanged(SortFilterBibTeXFileModel::FilterQuery)), sortFilterProxyModel, SLOT(updateFilter(SortFilterBibTeXFileModel::FilterQuery)));
+        connect(filterBar, SIGNAL(filterChanged(SortFilterFileModel::FilterQuery)), sortFilterProxyModel, SLOT(updateFilter(SortFilterFileModel::FilterQuery)));
     }
 
     bool openFile(const KUrl &url, const QString &localFilePath) {
@@ -223,13 +223,13 @@ public:
 
         bibTeXFile->setProperty(File::Url, QUrl(url));
 
-        model->setBibTeXFile(bibTeXFile);
+        model->setBibliographyFile(bibTeXFile);
         editor->setModel(model);
         if (sortFilterProxyModel != NULL) delete sortFilterProxyModel;
-        sortFilterProxyModel = new SortFilterBibTeXFileModel(p);
+        sortFilterProxyModel = new SortFilterFileModel(p);
         sortFilterProxyModel->setSourceModel(model);
         editor->setModel(sortFilterProxyModel);
-        connect(filterBar, SIGNAL(filterChanged(SortFilterBibTeXFileModel::FilterQuery)), sortFilterProxyModel, SLOT(updateFilter(SortFilterBibTeXFileModel::FilterQuery)));
+        connect(filterBar, SIGNAL(filterChanged(SortFilterFileModel::FilterQuery)), sortFilterProxyModel, SLOT(updateFilter(SortFilterFileModel::FilterQuery)));
 
         if (url.isLocalFile())
             fileSystemWatcher.addPath(url.pathOrUrl());
@@ -323,8 +323,8 @@ public:
             return false;
 
         /// export bibliography data into temporary file
-        SortFilterBibTeXFileModel *model = dynamic_cast<SortFilterBibTeXFileModel *>(editor->model());
-        Q_ASSERT_X(model != NULL, "bool KBibTeXPart::KBibTeXPartPrivate:saveFile(const KUrl &url)", "SortFilterBibTeXFileModel *model from editor->model() is invalid");
+        SortFilterFileModel *model = dynamic_cast<SortFilterFileModel *>(editor->model());
+        Q_ASSERT_X(model != NULL, "bool KBibTeXPart::KBibTeXPartPrivate:saveFile(const KUrl &url)", "SortFilterFileModel *model from editor->model() is invalid");
         FileExporter *exporter = fileExporterFactory(url);
 
         if (isSaveAsOperation) {
@@ -365,7 +365,7 @@ public:
         qApp->setOverrideCursor(Qt::WaitCursor);
 
         QStringList errorLog;
-        bool result = exporter->save(&temporaryFile, model->bibTeXSourceModel()->bibTeXFile(), &errorLog);
+        bool result = exporter->save(&temporaryFile, model->fileSourceModel()->bibliographyFile(), &errorLog);
 
         if (!result) {
             delete exporter;
@@ -417,7 +417,7 @@ public:
 
         QSharedPointer<const Entry> entry = editor->currentElement().dynamicCast<const Entry>();
         if (!entry.isNull()) {
-            QList<KUrl> urlList = FileInfo::entryUrls(entry.data(), editor->bibTeXModel()->bibTeXFile()->property(File::Url).toUrl(), FileInfo::TestExistanceYes);
+            QList<KUrl> urlList = FileInfo::entryUrls(entry.data(), editor->fileModel()->bibliographyFile()->property(File::Url).toUrl(), FileInfo::TestExistanceYes);
             if (!urlList.isEmpty()) {
                 /// First iteration: local references only
                 KAction *firstAction = NULL;
@@ -488,7 +488,7 @@ KBibTeXPart::KBibTeXPart(QWidget *parentWidget, QObject *parent, bool browserVie
     // TODO Setup view
     d->editor = new BibTeXEditor(QLatin1String("Main"), parentWidget);
     d->editor->setReadOnly(!isReadWrite());
-    d->editor->setItemDelegate(new BibTeXFileDelegate(d->editor));
+    d->editor->setItemDelegate(new FileDelegate(d->editor));
     setWidget(d->editor);
     connect(d->editor, SIGNAL(modified()), this, SLOT(setModified()));
 
@@ -687,7 +687,7 @@ bool KBibTeXPart::documentSaveAs()
 
     if (KParts::ReadWritePart::saveAs(newUrl)) {
         kDebug() << "setting url to be " << newUrl.pathOrUrl();
-        d->model->bibTeXFile()->setProperty(File::Url, newUrl);
+        d->model->bibliographyFile()->setProperty(File::Url, newUrl);
         return true;
     } else
         return false;
@@ -753,7 +753,7 @@ void KBibTeXPart::elementFindPDF()
 {
     QModelIndexList mil = d->editor->selectionModel()->selectedRows();
     if (mil.count() == 1) {
-        QSharedPointer<Entry> entry = d->editor->bibTeXModel()->element(d->editor->sortFilterProxyModel()->mapToSource(*mil.constBegin()).row()).dynamicCast<Entry>();
+        QSharedPointer<Entry> entry = d->editor->fileModel()->element(d->editor->sortFilterProxyModel()->mapToSource(*mil.constBegin()).row()).dynamicCast<Entry>();
         if (!entry.isNull())
             FindPDFUI::interactiveFindPDF(*entry, *d->bibTeXFile, widget());
     }
@@ -763,7 +763,7 @@ void KBibTeXPart::applyDefaultFormatString()
 {
     QModelIndexList mil = d->editor->selectionModel()->selectedRows();
     foreach(const QModelIndex &index, mil) {
-        QSharedPointer<Entry> entry = d->editor->bibTeXModel()->element(d->editor->sortFilterProxyModel()->mapToSource(index).row()).dynamicCast<Entry>();
+        QSharedPointer<Entry> entry = d->editor->fileModel()->element(d->editor->sortFilterProxyModel()->mapToSource(index).row()).dynamicCast<Entry>();
         if (!entry.isNull()) {
             static IdSuggestions idSuggestions;
             bool success = idSuggestions.applyDefaultFormatId(*entry.data());
@@ -887,7 +887,7 @@ void KBibTeXPart::updateActions()
     if (d->editor->selectionModel() != NULL) {
         QModelIndexList mil = d->editor->selectionModel()->selectedRows();
         for (QModelIndexList::ConstIterator it = mil.constBegin(); it != mil.constEnd(); ++it) {
-            QSharedPointer<Entry> entry = d->editor->bibTeXModel()->element(d->editor->sortFilterProxyModel()->mapToSource(*it).row()).dynamicCast<Entry>();
+            QSharedPointer<Entry> entry = d->editor->fileModel()->element(d->editor->sortFilterProxyModel()->mapToSource(*it).row()).dynamicCast<Entry>();
             if (!entry.isNull())
                 references << entry->id();
         }

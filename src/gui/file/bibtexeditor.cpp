@@ -30,7 +30,7 @@
 #include "elementeditor.h"
 #include "entry.h"
 #include "macro.h"
-#include "bibtexfilemodel.h"
+#include "filemodel.h"
 #include "fileexporterbibtex.h"
 #include "valuelistmodel.h"
 
@@ -115,7 +115,7 @@ void BibTeXEditor::viewCurrentElement()
 void BibTeXEditor::viewElement(const QSharedPointer<Element> element)
 {
     prepareEditorDialog(DialogTypeView);
-    m_elementEditor->setElement(element, bibTeXModel()->bibTeXFile());
+    m_elementEditor->setElement(element, fileModel()->bibliographyFile());
 
     m_elementEditor->setCurrentPage(m_lastEditorPage);
     m_elementEditorDialog->exec();
@@ -130,7 +130,7 @@ void BibTeXEditor::editCurrentElement()
 bool BibTeXEditor::editElement(QSharedPointer<Element> element)
 {
     prepareEditorDialog(DialogTypeEdit);
-    m_elementEditor->setElement(element, bibTeXModel()->bibTeXFile());
+    m_elementEditor->setElement(element, fileModel()->bibliographyFile());
 
     m_elementEditor->setCurrentPage(m_lastEditorPage);
     m_elementEditorDialog->exec();
@@ -139,7 +139,7 @@ bool BibTeXEditor::editElement(QSharedPointer<Element> element)
     if (!isReadOnly()) {
         bool changed = m_elementEditor->elementChanged();
         if (changed) {
-            emit currentElementChanged(currentElement(), bibTeXModel()->bibTeXFile());
+            emit currentElementChanged(currentElement(), fileModel()->bibliographyFile());
             emit selectedElementsChanged();
             emit modified();
         }
@@ -160,7 +160,7 @@ void BibTeXEditor::setSelectedElements(QList<QSharedPointer<Element> > &list)
     QItemSelectionModel *selModel = selectionModel();
     selModel->clear();
     for (QList<QSharedPointer<Element> >::ConstIterator it = list.constBegin(); it != list.constEnd(); ++it) {
-        int row = bibTeXModel()->row(*it);
+        int row = fileModel()->row(*it);
         for (int col = model()->columnCount(QModelIndex()) - 1; col >= 0; --col) {
             QModelIndex idx = model()->index(row, col);
             selModel->setCurrentIndex(idx, QItemSelectionModel::Select);
@@ -175,7 +175,7 @@ void BibTeXEditor::setSelectedElement(QSharedPointer<Element> element)
 
     QItemSelectionModel *selModel = selectionModel();
     selModel->clear();
-    int row = bibTeXModel()->row(element);
+    int row = fileModel()->row(element);
     for (int col = model()->columnCount(QModelIndex()) - 1; col >= 0; --col) {
         QModelIndex idx = model()->index(row, col);
         selModel->setCurrentIndex(idx, QItemSelectionModel::Select);
@@ -194,7 +194,7 @@ QSharedPointer<Element> BibTeXEditor::currentElement()
 
 QSharedPointer<Element> BibTeXEditor::elementAt(const QModelIndex &index)
 {
-    return bibTeXModel()->element(sortFilterProxyModel()->mapToSource(index).row());
+    return fileModel()->element(sortFilterProxyModel()->mapToSource(index).row());
 }
 
 void BibTeXEditor::currentChanged(const QModelIndex &current, const QModelIndex &previous)
@@ -202,7 +202,7 @@ void BibTeXEditor::currentChanged(const QModelIndex &current, const QModelIndex 
     QTreeView::currentChanged(current, previous); // FIXME necessary?
 
     m_current = elementAt(current);
-    emit currentElementChanged(m_current, bibTeXModel()->bibTeXFile());
+    emit currentElementChanged(m_current, fileModel()->bibliographyFile());
 }
 
 void BibTeXEditor::selectionChanged(const QItemSelection &selected, const QItemSelection &deselected)
@@ -233,7 +233,7 @@ void BibTeXEditor::selectionDelete()
     foreach(const QModelIndex &idx, mil)
     rows << sortFilterProxyModel()->mapToSource(idx).row();
 
-    bibTeXModel()->removeRowList(rows);
+    fileModel()->removeRowList(rows);
 
     emit modified();
 }
@@ -256,9 +256,9 @@ bool BibTeXEditor::isReadOnly() const
 
 ValueListModel *BibTeXEditor::valueListModel(const QString &field)
 {
-    BibTeXFileModel *bibteXModel = bibTeXModel();
-    if (bibteXModel != NULL) {
-        ValueListModel *result = new ValueListModel(bibteXModel->bibTeXFile(), field, this);
+    FileModel *model = fileModel();
+    if (model != NULL) {
+        ValueListModel *result = new ValueListModel(model->bibliographyFile(), field, this);
         /// Keep track of external changes through modifications in this ValueListModel instance
         connect(result, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(externalModification()));
         return result;
@@ -272,7 +272,7 @@ void BibTeXEditor::setFilterBar(FilterBar *filterBar)
     m_filterBar = filterBar;
 }
 
-void BibTeXEditor::setFilterBarFilter(SortFilterBibTeXFileModel::FilterQuery fq)
+void BibTeXEditor::setFilterBarFilter(SortFilterFileModel::FilterQuery fq)
 {
     if (m_filterBar != NULL)
         m_filterBar->setFilter(fq);

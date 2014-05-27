@@ -398,7 +398,7 @@ void KBibTeXMainWindow::documentSwitched(BibTeXEditor *oldEditor, BibTeXEditor *
     d->documentPreview->setElement(QSharedPointer<Element>(), NULL);
     d->valueList->setEditor(newEditor);
     d->fileSettings->setEditor(newEditor);
-    d->statistics->setFile(newEditor != NULL && newEditor->bibTeXModel() != NULL ? newEditor->bibTeXModel()->bibTeXFile() : NULL);
+    d->statistics->setFile(newEditor != NULL && newEditor->fileModel() != NULL ? newEditor->fileModel()->bibliographyFile() : NULL);
     d->statistics->setSelectionModel(newEditor != NULL ? newEditor->selectionModel() : NULL);
     d->referencePreview->setEditor(newEditor);
 }

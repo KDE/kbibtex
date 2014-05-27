@@ -47,7 +47,7 @@
 #include "bibtexentries.h"
 #include "radiobuttontreeview.h"
 #include "bibtexeditor.h"
-#include "bibtexfilemodel.h"
+#include "filemodel.h"
 #include "findduplicates.h"
 
 const int FieldNameRole = Qt::UserRole + 101;
@@ -398,7 +398,7 @@ public:
 };
 
 
-class CheckableBibTeXFileModel : public BibTeXFileModel
+class CheckableFileModel : public FileModel
 {
 private:
     QList<EntryClique *> cl;
@@ -406,8 +406,8 @@ private:
     QTreeView *tv;
 
 public:
-    CheckableBibTeXFileModel(QList<EntryClique *> &cliqueList, QTreeView *treeView, QObject *parent = NULL)
-            : BibTeXFileModel(parent), cl(cliqueList), currentClique(0), tv(treeView) {
+    CheckableFileModel(QList<EntryClique *> &cliqueList, QTreeView *treeView, QObject *parent = NULL)
+            : FileModel(parent), cl(cliqueList), currentClique(0), tv(treeView) {
         // nothing
     }
 
@@ -418,7 +418,7 @@ public:
     virtual QVariant data(const QModelIndex &index, int role) const {
         if (role == Qt::CheckStateRole && index.column() == 1) {
             QSharedPointer<Entry> entry = element(index.row()).dynamicCast<Entry>();
-            Q_ASSERT_X(!entry.isNull(), "CheckableBibTeXFileModel::data", "entry is NULL");
+            Q_ASSERT_X(!entry.isNull(), "CheckableFileModel::data", "entry is NULL");
             if (!entry.isNull()) {
                 QList<QSharedPointer<Entry> > entryList = cl[currentClique]->entryList();
                 if (entryList.contains(QSharedPointer<Entry>(entry))) // TODO does this work?
@@ -426,13 +426,13 @@ public:
             }
         }
 
-        return BibTeXFileModel::data(index, role);
+        return FileModel::data(index, role);
     }
 
     virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) {
         bool ok;
         int checkState = value.toInt(&ok);
-        Q_ASSERT_X(ok, "CheckableBibTeXFileModel::setData", QString("Could not convert value " + value.toString()).toLatin1());
+        Q_ASSERT_X(ok, "CheckableFileModel::setData", QString("Could not convert value " + value.toString()).toLatin1());
         if (ok && role == Qt::CheckStateRole && index.column() == 1) {
             QSharedPointer<Entry> entry = element(index.row()).dynamicCast<Entry>();
             if (!entry.isNull()) {
@@ -453,7 +453,7 @@ public:
     }
 
     virtual Qt::ItemFlags flags(const QModelIndex &index) const {
-        Qt::ItemFlags f = BibTeXFileModel::flags(index);
+        Qt::ItemFlags f = FileModel::flags(index);
         if (index.column() == 1)
             f |= Qt::ItemIsUserCheckable;
         return f;
@@ -461,20 +461,20 @@ public:
 };
 
 
-class FilterIdBibTeXFileModel : public QSortFilterProxyModel
+class FilterIdFileModel : public QSortFilterProxyModel
 {
 private:
-    CheckableBibTeXFileModel *internalModel;
+    CheckableFileModel *internalModel;
     EntryClique *currentClique;
 
 public:
-    FilterIdBibTeXFileModel(QObject *parent = NULL)
+    FilterIdFileModel(QObject *parent = NULL)
             : QSortFilterProxyModel(parent), internalModel(NULL), currentClique(NULL) {
         // nothing
     }
 
     void setCurrentClique(EntryClique *currentClique) {
-        Q_ASSERT_X(internalModel != NULL, "FilterIdBibTeXFileModel::setCurrentClique(EntryClique *currentClique)", "internalModel is NULL");
+        Q_ASSERT_X(internalModel != NULL, "FilterIdFileModel::setCurrentClique(EntryClique *currentClique)", "internalModel is NULL");
         internalModel->setCurrentClique(currentClique);
         this->currentClique = currentClique;
         invalidate();
@@ -482,8 +482,8 @@ public:
 
     void setSourceModel(QAbstractItemModel *model) {
         QSortFilterProxyModel::setSourceModel(model);
-        internalModel = dynamic_cast<CheckableBibTeXFileModel *>(model);
-        Q_ASSERT_X(internalModel != NULL, "FilterIdBibTeXFileModel::setSourceModel(QAbstractItemModel *model)", "internalModel is NULL");
+        internalModel = dynamic_cast<CheckableFileModel *>(model);
+        Q_ASSERT_X(internalModel != NULL, "FilterIdFileModel::setSourceModel(QAbstractItemModel *model)", "internalModel is NULL");
     }
 
     bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const {
@@ -513,8 +513,8 @@ public:
     QLabel *labelWhichClique;
     static const char *whichCliqueText;
 
-    CheckableBibTeXFileModel *model;
-    FilterIdBibTeXFileModel *filterModel;
+    CheckableFileModel *model;
+    FilterIdFileModel *filterModel;
 
     RadioButtonTreeView *alternativesView;
     AlternativesItemModel *alternativesItemModel;
@@ -541,13 +541,13 @@ public:
         layout->addWidget(splitter);
 
         editor = new BibTeXEditor(QLatin1String("MergeWidget"), splitter);
-        editor->setItemDelegate(new BibTeXFileDelegate(editor));
+        editor->setItemDelegate(new FileDelegate(editor));
         editor->setReadOnly(true);
 
         alternativesView = new RadioButtonTreeView(splitter);
 
-        model = new CheckableBibTeXFileModel(cl, alternativesView, p);
-        model->setBibTeXFile(file);
+        model = new CheckableFileModel(cl, alternativesView, p);
+        model->setBibliographyFile(file);
 
         QBoxLayout *containerLayout = new QHBoxLayout();
         layout->addLayout(containerLayout);
@@ -559,7 +559,7 @@ public:
         buttonNext = new KPushButton(KIcon("go-next"), i18n("Next Clique"), p);
         containerLayout->addWidget(buttonNext, 1);
 
-        filterModel = new FilterIdBibTeXFileModel(p);
+        filterModel = new FilterIdFileModel(p);
         filterModel->setSourceModel(model);
         alternativesItemModel = new AlternativesItemModel(alternativesView);
         alternativesItemDelegate = new AlternativesItemDelegate(alternativesView);
@@ -663,7 +663,7 @@ void FindDuplicatesUI::slotFindDuplicates()
     FindDuplicates fd(dlg, sensitivity);
     /// File to be used to find duplicate in,
     /// may be only a subset of the original one if selection is used (see below)
-    File *file = d->editor->bibTeXModel()->bibTeXFile();
+    File *file = d->editor->fileModel()->bibliographyFile();
     /// Full file, used to remove merged elements from
     /// Stays the same even when merging is restricted to selected elements
     File *originalFile = file;
@@ -675,7 +675,7 @@ void FindDuplicatesUI::slotFindDuplicates()
         file = new File();
         deleteFileLater = true;
         for (QModelIndexList::ConstIterator it = mil.constBegin(); it != mil.constEnd(); ++it) {
-            file->append(d->editor->bibTeXModel()->element(d->editor->sortFilterProxyModel()->mapToSource(*it).row()));
+            file->append(d->editor->fileModel()->element(d->editor->sortFilterProxyModel()->mapToSource(*it).row()));
         }
     }
 
@@ -690,13 +690,13 @@ void FindDuplicatesUI::slotFindDuplicates()
     if (cliques.isEmpty()) {
         KMessageBox::information(d->part->widget(), i18n("No duplicates have been found."), i18n("No duplicates found"));
     } else {
-        MergeWidget mw(d->editor->bibTeXModel()->bibTeXFile(), cliques, dlg);
+        MergeWidget mw(d->editor->fileModel()->bibliographyFile(), cliques, dlg);
         dlg->setMainWidget(&mw);
 
         if (dlg->exec() == QDialog::Accepted) {
             MergeDuplicates md(dlg);
             if (md.mergeDuplicateEntries(cliques, originalFile)) {
-                d->editor->bibTeXModel()->reset();
+                d->editor->fileModel()->reset();
                 d->editor->externalModification();
             }
         }

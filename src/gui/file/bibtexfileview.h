@@ -21,7 +21,7 @@
 
 #include "kbibtexgui_export.h"
 
-class BibTeXFileModel;
+class FileModel;
 class QSortFilterProxyModel;
 
 /**
@@ -35,7 +35,7 @@ public:
     ~BibTeXFileView();
 
     virtual void setModel(QAbstractItemModel *model);
-    BibTeXFileModel *bibTeXModel();
+    FileModel *fileModel();
     QSortFilterProxyModel *sortFilterProxyModel();
 
 protected:

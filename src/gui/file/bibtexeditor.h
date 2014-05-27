@@ -70,7 +70,7 @@ public slots:
     void setSelectedElement(QSharedPointer<Element>);
     void selectionDelete();
     void externalModification();
-    void setFilterBarFilter(SortFilterBibTeXFileModel::FilterQuery);
+    void setFilterBarFilter(SortFilterFileModel::FilterQuery);
 
 protected:
     bool m_isReadOnly;

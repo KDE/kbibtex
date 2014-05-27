@@ -388,9 +388,9 @@ void ReferencePreview::linkClicked(const QUrl &url)
         text = text.mid(15);
         if (d->editor != NULL) {
             int p = text.indexOf("=");
-            SortFilterBibTeXFileModel::FilterQuery fq;
+            SortFilterFileModel::FilterQuery fq;
             fq.terms << text.mid(p + 1);
-            fq.combination = SortFilterBibTeXFileModel::EveryTerm;
+            fq.combination = SortFilterFileModel::EveryTerm;
             fq.field = text.left(p);
             d->editor->setFilterBarFilter(fq);
             fq.searchPDFfiles = false;

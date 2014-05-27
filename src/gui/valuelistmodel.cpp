@@ -38,10 +38,11 @@
 #include <QLayout>
 #include <QHeaderView>
 
-#include <fieldlineedit.h>
+#include "fieldlineedit.h"
 #include "bibtexfields.h"
 #include "entry.h"
-#include <preferences.h>
+#include "preferences.h"
+#include "filemodel.h"
 
 const int CountRole = Qt::UserRole + 611;
 

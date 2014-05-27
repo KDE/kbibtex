@@ -14,8 +14,8 @@
 *   You should have received a copy of the GNU General Public License     *
 *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
 ***************************************************************************/
-#ifndef KBIBTEX_GUI_BIBTEXFILEMODEL_H
-#define KBIBTEX_GUI_BIBTEXFILEMODEL_H
+#ifndef KBIBTEX_GUI_FILEMODEL_H
+#define KBIBTEX_GUI_FILEMODEL_H
 
 #include <QAbstractItemModel>
 #include <QSortFilterProxyModel>
@@ -35,12 +35,12 @@
 
 class QPainter;
 
-class BibTeXFileModel;
+class FileModel;
 
 /**
 @author Thomas Fischer
 */
-class KBIBTEXGUI_EXPORT SortFilterBibTeXFileModel : public QSortFilterProxyModel
+class KBIBTEXGUI_EXPORT SortFilterFileModel : public QSortFilterProxyModel
 {
     Q_OBJECT
 
@@ -53,21 +53,21 @@ public:
         bool searchPDFfiles;
     };
 
-    explicit SortFilterBibTeXFileModel(QObject *parent = 0);
+    explicit SortFilterFileModel(QObject *parent = 0);
 
     virtual void setSourceModel(QAbstractItemModel *model);
-    BibTeXFileModel *bibTeXSourceModel() const;
+    FileModel *fileSourceModel() const;
 
 public slots:
-    void updateFilter(SortFilterBibTeXFileModel::FilterQuery);
+    void updateFilter(SortFilterFileModel::FilterQuery);
 
 protected:
     virtual bool lessThan(const QModelIndex &left, const QModelIndex &right) const;
     virtual bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const;
 
 private:
-    BibTeXFileModel *m_internalModel;
-    SortFilterBibTeXFileModel::FilterQuery m_filterQuery;
+    FileModel *m_internalModel;
+    SortFilterFileModel::FilterQuery m_filterQuery;
 
     KSharedConfigPtr config;
     static const QString configGroupName;
@@ -78,12 +78,12 @@ private:
 };
 
 
-class KBIBTEXGUI_EXPORT BibTeXFileDelegate : public QStyledItemDelegate
+class KBIBTEXGUI_EXPORT FileDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
 
 public:
-    explicit BibTeXFileDelegate(QWidget *parent = NULL)
+    explicit FileDelegate(QWidget *parent = NULL)
             : QStyledItemDelegate(parent) {
         /* nothing */
     }
@@ -94,7 +94,7 @@ public:
 /**
 @author Thomas Fischer
 */
-class KBIBTEXGUI_EXPORT BibTeXFileModel : public QAbstractTableModel, private NotificationListener
+class KBIBTEXGUI_EXPORT FileModel : public QAbstractTableModel, private NotificationListener
 {
 public:
     static const int NumberRole;
@@ -104,10 +104,10 @@ public:
     static const QString keyShowMacros;
     static const bool defaultShowMacros;
 
-    explicit BibTeXFileModel(QObject *parent = 0);
+    explicit FileModel(QObject *parent = 0);
 
-    File *bibTeXFile();
-    virtual void setBibTeXFile(File *bibtexFile);
+    File *bibliographyFile();
+    virtual void setBibliographyFile(File *file);
 
     virtual QModelIndex parent(const QModelIndex &index) const;
     virtual bool hasChildren(const QModelIndex &parent = QModelIndex()) const;
@@ -129,7 +129,7 @@ public:
     void notificationEvent(int eventId);
 
 private:
-    File *m_bibtexFile;
+    File *m_file;
     QMap<QString, QString> colorToLabel;
 
     void readConfiguration();
@@ -137,5 +137,4 @@ private:
     QVariant entryData(const Entry *entry, const QString &raw, const QString &rawAlt, int role, bool followCrossRef) const;
 };
 
-
-#endif // KBIBTEX_GUI_BIBTEXFILEMODEL_H
+#endif // KBIBTEX_GUI_FILEMODEL_H

@@ -27,7 +27,7 @@
 #include <KDebug>
 
 #include "bibtexeditor.h"
-#include "bibtexfilemodel.h"
+#include "filemodel.h"
 #include "fileimporterbibtex.h"
 #include "fileexporterbibtex.h"
 #include "file.h"
@@ -56,7 +56,7 @@ public:
         QModelIndexList mil = bibTeXEditor->selectionModel()->selectedRows();
         File *file = new File();
         for (QModelIndexList::ConstIterator it = mil.constBegin(); it != mil.constEnd(); ++it)
-            file->append(bibTeXEditor->bibTeXModel()->element(bibTeXEditor->sortFilterProxyModel()->mapToSource(*it).row()));
+            file->append(bibTeXEditor->fileModel()->element(bibTeXEditor->sortFilterProxyModel()->mapToSource(*it).row()));
 
         FileExporterBibTeX exporter;
         exporter.setEncoding(QLatin1String("latex"));
@@ -83,14 +83,14 @@ public:
         File *file = importer.fromString(text);
 
         if (!file->isEmpty()) {
-            BibTeXFileModel *bibTeXModel = bibTeXEditor->bibTeXModel();
+            FileModel *fileModel = bibTeXEditor->fileModel();
             QSortFilterProxyModel *sfpModel = bibTeXEditor->sortFilterProxyModel();
 
             /// insert new elements one by one
-            int startRow = bibTeXModel->rowCount(); ///< memorize row where insertion started
+            int startRow = fileModel->rowCount(); ///< memorize row where insertion started
             for (File::Iterator it = file->begin(); it != file->end(); ++it)
-                bibTeXModel->insertRow(*it, bibTeXEditor->model()->rowCount());
-            int endRow = bibTeXModel->rowCount() - 1; ///< memorize row where insertion ended
+                fileModel->insertRow(*it, bibTeXEditor->model()->rowCount());
+            int endRow = fileModel->rowCount() - 1; ///< memorize row where insertion ended
 
             /// select newly inserted elements
             QItemSelectionModel *ism = bibTeXEditor->selectionModel();
@@ -99,7 +99,7 @@ public:
             QModelIndex minRowTargetModelIndex;
             /// highlight those rows in the editor which correspond to newly inserted elements
             for (int i = startRow; i <= endRow; ++i) {
-                QModelIndex targetModelIndex = sfpModel->mapFromSource(bibTeXModel->index(i, 0));
+                QModelIndex targetModelIndex = sfpModel->mapFromSource(fileModel->index(i, 0));
                 ism->select(targetModelIndex, QItemSelectionModel::Rows | QItemSelectionModel::Select);
 
                 /// update the most upward inserted element
@@ -123,7 +123,7 @@ public:
                 /// Check if text looks like an URL
                 const QUrl url(text);
                 if (url.isValid()) {
-                    return AssociatedFilesUI::associateUrl(url, entry, bibTeXEditor->bibTeXModel()->bibTeXFile(), bibTeXEditor);
+                    return AssociatedFilesUI::associateUrl(url, entry, bibTeXEditor->fileModel()->bibliographyFile(), bibTeXEditor);
                 }
             }
         } else
@@ -166,7 +166,7 @@ void Clipboard::copyReferences()
     QStringList references;
     QModelIndexList mil = d->bibTeXEditor->selectionModel()->selectedRows();
     for (QModelIndexList::ConstIterator it = mil.constBegin(); it != mil.constEnd(); ++it) {
-        QSharedPointer<Entry> entry = d->bibTeXEditor->bibTeXModel()->element(d->bibTeXEditor->sortFilterProxyModel()->mapToSource(*it).row()).dynamicCast<Entry>();
+        QSharedPointer<Entry> entry = d->bibTeXEditor->fileModel()->element(d->bibTeXEditor->sortFilterProxyModel()->mapToSource(*it).row()).dynamicCast<Entry>();
         if (!entry.isNull())
             references << entry->id();
     }

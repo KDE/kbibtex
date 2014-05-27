@@ -60,9 +60,9 @@ public:
         delete delayedTimer;
     }
 
-    SortFilterBibTeXFileModel::FilterQuery filter() {
-        SortFilterBibTeXFileModel::FilterQuery result;
-        result.combination = comboBoxCombination->currentIndex() == 0 ? SortFilterBibTeXFileModel::AnyTerm : SortFilterBibTeXFileModel::EveryTerm;
+    SortFilterFileModel::FilterQuery filter() {
+        SortFilterFileModel::FilterQuery result;
+        result.combination = comboBoxCombination->currentIndex() == 0 ? SortFilterFileModel::AnyTerm : SortFilterFileModel::EveryTerm;
         result.terms.clear();
         if (comboBoxCombination->currentIndex() == 2) /// exact phrase
             result.terms << comboBoxFilterText->lineEdit()->text();
@@ -74,12 +74,12 @@ public:
         return result;
     }
 
-    void setFilter(SortFilterBibTeXFileModel::FilterQuery fq) {
+    void setFilter(SortFilterFileModel::FilterQuery fq) {
         /// Avoid triggering loops of activation
         comboBoxCombination->blockSignals(true);
         /// Set check state for action for either "any word",
         /// "every word", or "exact phrase", respectively
-        const int combinationIndex = fq.combination == SortFilterBibTeXFileModel::AnyTerm ? 0 : (fq.terms.count() < 2 ? 2 : 1);
+        const int combinationIndex = fq.combination == SortFilterFileModel::AnyTerm ? 0 : (fq.terms.count() < 2 ? 2 : 1);
         comboBoxCombination->setCurrentIndex(combinationIndex);
         /// Reset activation block
         comboBoxCombination->blockSignals(false);
@@ -253,13 +253,13 @@ FilterBar::~FilterBar()
     delete d;
 }
 
-void FilterBar::setFilter(SortFilterBibTeXFileModel::FilterQuery fq)
+void FilterBar::setFilter(SortFilterFileModel::FilterQuery fq)
 {
     d->setFilter(fq);
     emit filterChanged(fq);
 }
 
-SortFilterBibTeXFileModel::FilterQuery FilterBar::filter()
+SortFilterFileModel::FilterQuery FilterBar::filter()
 {
     return d->filter();
 }

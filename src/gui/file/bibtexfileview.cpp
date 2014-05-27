@@ -27,7 +27,7 @@
 #include <KSharedConfig>
 
 #include "bibtexfields.h"
-#include "bibtexfilemodel.h"
+#include "filemodel.h"
 
 class BibTeXFileView::BibTeXFileViewPrivate
 {
@@ -41,7 +41,7 @@ public:
     const QString configGroupName;
     const QString configHeaderState;
 
-    BibTeXFileModel *bibTeXFileModel;
+    FileModel *fileModel;
     QSortFilterProxyModel *sortFilterProxyModel;
 
     BibTeXFileViewPrivate(const QString &n, BibTeXFileView *parent)
@@ -233,23 +233,23 @@ void BibTeXFileView::setModel(QAbstractItemModel *model)
     QTreeView::setModel(model);
 
     d->sortFilterProxyModel = NULL;
-    d->bibTeXFileModel = dynamic_cast<BibTeXFileModel *>(model);
-    if (d->bibTeXFileModel == NULL) {
+    d->fileModel = dynamic_cast<FileModel *>(model);
+    if (d->fileModel == NULL) {
         d->sortFilterProxyModel = dynamic_cast<QSortFilterProxyModel *>(model);
         Q_ASSERT_X(d->sortFilterProxyModel != NULL, "BibTeXFileView::setModel(QAbstractItemModel *model)", "d->sortFilterProxyModel is NULL");
-        d->bibTeXFileModel = dynamic_cast<BibTeXFileModel *>(d->sortFilterProxyModel->sourceModel());
+        d->fileModel = dynamic_cast<FileModel *>(d->sortFilterProxyModel->sourceModel());
     }
 
     /// sort according to session
     if (header()->isSortIndicatorShown())
         sort(header()->sortIndicatorSection(), header()->sortIndicatorOrder());
 
-    Q_ASSERT_X(d->bibTeXFileModel != NULL, "BibTeXFileView::setModel(QAbstractItemModel *model)", "d->bibTeXFileModel is NULL");
+    Q_ASSERT_X(d->fileModel != NULL, "BibTeXFileView::setModel(QAbstractItemModel *model)", "d->fileModel is NULL");
 }
 
-BibTeXFileModel *BibTeXFileView::bibTeXModel()
+FileModel *BibTeXFileView::fileModel()
 {
-    return d->bibTeXFileModel;
+    return d->fileModel;
 }
 
 QSortFilterProxyModel *BibTeXFileView::sortFilterProxyModel()
@@ -302,7 +302,7 @@ void BibTeXFileView::headerResetToDefaults()
 
 void BibTeXFileView::sort(int t, Qt::SortOrder s)
 {
-    SortFilterBibTeXFileModel *sortedModel = dynamic_cast<SortFilterBibTeXFileModel *>(model());
+    SortFilterFileModel *sortedModel = dynamic_cast<SortFilterFileModel *>(model());
     if (sortedModel != NULL) {
         sortedModel->sort(t, s);
         d->storeColumns();
@@ -311,7 +311,7 @@ void BibTeXFileView::sort(int t, Qt::SortOrder s)
 
 void BibTeXFileView::noSorting()
 {
-    SortFilterBibTeXFileModel *sortedModel = dynamic_cast<SortFilterBibTeXFileModel *>(model());
+    SortFilterFileModel *sortedModel = dynamic_cast<SortFilterFileModel *>(model());
     if (sortedModel != NULL) {
         sortedModel->sort(-1);
         header()->setSortIndicator(-1, Qt::AscendingOrder);

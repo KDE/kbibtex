@@ -28,7 +28,7 @@
 #include "guihelper.h"
 #include "italictextitemmodel.h"
 #include "bibtexeditor.h"
-#include "bibtexfilemodel.h"
+#include "filemodel.h"
 #include "value.h"
 #include "iconvlatex.h"
 #include "file.h"
@@ -46,8 +46,8 @@ void FileSettings::setEditor(BibTeXEditor *editor)
     m_currentFile = NULL;
     m_editor = editor;
 
-    if (m_editor != NULL && m_editor->bibTeXModel() != NULL) {
-        m_currentFile = m_editor->bibTeXModel()->bibTeXFile();
+    if (m_editor != NULL && m_editor->fileModel() != NULL) {
+        m_currentFile = m_editor->fileModel()->bibliographyFile();
         if (m_currentFile != NULL)
             loadProperties(m_currentFile);
         setEnabled(true);
