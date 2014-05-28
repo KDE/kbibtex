@@ -51,7 +51,7 @@ public:
     const QString configGroupName;
     const QString configKeyFieldName, configKeyShowCountColumn, configKeySortByCountAction, configKeyHeaderState;
 
-    FileView *editor;
+    FileView *fileView;
     QTreeView *treeviewFieldValues;
     ValueListModel *model;
     QSortFilterProxyModel *sortingModel;
@@ -66,7 +66,7 @@ public:
             : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName(QLatin1String("Value List Docklet")),
           configKeyFieldName(QLatin1String("FieldName")), configKeyShowCountColumn(QLatin1String("ShowCountColumn")),
           configKeySortByCountAction(QLatin1String("SortByCountAction")), configKeyHeaderState(QLatin1String("HeaderState")),
-          editor(NULL), model(NULL), sortingModel(NULL), countWidth(8 + parent->fontMetrics().width(i18n("Count"))) {
+          fileView(NULL), model(NULL), sortingModel(NULL), countWidth(8 + parent->fontMetrics().width(i18n("Count"))) {
         setupGUI();
         initialize();
     }
@@ -170,7 +170,7 @@ public:
         if (text.isEmpty()) text = comboboxFieldNames->currentText();
 
         delegate->setFieldName(text);
-        model = editor == NULL ? NULL : editor->valueListModel(text);
+        model = fileView == NULL ? NULL : fileView->valueListModel(text);
         QAbstractItemModel *usedModel = model;
         if (usedModel != NULL) {
             model->setShowCountColumn(showCountColumnAction->isChecked());
@@ -216,12 +216,12 @@ ValueList::~ValueList()
     delete d;
 }
 
-void ValueList::setEditor(FileView *editor)
+void ValueList::setFileView(FileView *fileView)
 {
-    if (d->editor != NULL)
-        disconnect(d->editor, SIGNAL(selectedElementsChanged()), this, SLOT(editorSelectionChanged()));
-    d->editor = editor;
-    connect(d->editor, SIGNAL(selectedElementsChanged()), this, SLOT(editorSelectionChanged()));
+    if (d->fileView != NULL)
+        disconnect(d->fileView, SIGNAL(selectedElementsChanged()), this, SLOT(editorSelectionChanged()));
+    d->fileView = fileView;
+    connect(d->fileView, SIGNAL(selectedElementsChanged()), this, SLOT(editorSelectionChanged()));
     editorSelectionChanged();
     update();
     resizeEvent(NULL);
@@ -230,7 +230,7 @@ void ValueList::setEditor(FileView *editor)
 void ValueList::update()
 {
     d->update();
-    setEnabled(d->editor != NULL);
+    setEnabled(d->fileView != NULL);
 }
 
 void ValueList::resizeEvent(QResizeEvent *)
@@ -254,7 +254,7 @@ void ValueList::listItemActivated(const QModelIndex &index)
     fq.field = fieldText;
     fq.searchPDFfiles = false;
 
-    d->editor->setFilterBarFilter(fq);
+    d->fileView->setFilterBarFilter(fq);
     setEnabled(true);
 }
 
@@ -276,7 +276,7 @@ void ValueList::searchSelection()
     fq.searchPDFfiles = false;
 
     if (!fq.terms.isEmpty())
-        d->editor->setFilterBarFilter(fq);
+        d->fileView->setFilterBarFilter(fq);
 }
 
 void ValueList::assignSelection() {
@@ -292,7 +292,7 @@ void ValueList::assignSelection() {
     bool madeModification = false;
 
     /// Go through all selected elements in current editor
-    const QList<QSharedPointer<Element> > &selection = d->editor->selectedElements();
+    const QList<QSharedPointer<Element> > &selection = d->fileView->selectedElements();
     foreach(const QSharedPointer<Element> &element, selection) {
         /// Only entries (not macros or comments) are of interest
         QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
@@ -333,7 +333,7 @@ void ValueList::assignSelection() {
 
     if (madeModification) {
         /// Notify main editor about change it its data
-        d->editor->externalModification();
+        d->fileView->externalModification();
     }
 }
 
@@ -350,7 +350,7 @@ void ValueList::removeSelection() {
     bool madeModification = false;
 
     /// Go through all selected elements in current editor
-    const QList<QSharedPointer<Element> > &selection = d->editor->selectedElements();
+    const QList<QSharedPointer<Element> > &selection = d->fileView->selectedElements();
     foreach(const QSharedPointer<Element> &element, selection) {
         /// Only entries (not macros or comments) are of interest
         QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
@@ -376,7 +376,7 @@ void ValueList::removeSelection() {
     if (madeModification) {
         update();
         /// Notify main editor about change it its data
-        d->editor->externalModification();
+        d->fileView->externalModification();
     }
 }
 
@@ -399,7 +399,7 @@ void ValueList::deleteAllOccurrences()
     /// Remove current index from data model
     d->model->removeValue(realIndex);
     /// Notify main editor about change it its data
-    d->editor->externalModification();
+    d->fileView->externalModification();
 }
 
 void ValueList::showCountColumnToggled()
@@ -442,7 +442,7 @@ void ValueList::columnsChanged()
 }
 
 void ValueList::editorSelectionChanged() {
-    const bool selectedElements = d->editor == NULL ? false : d->editor->selectedElements().count() > 0;
+    const bool selectedElements = d->fileView == NULL ? false : d->fileView->selectedElements().count() > 0;
     d->assignSelectionAction->setEnabled(selectedElements);
     d->removeSelectionAction->setEnabled(selectedElements);
 }

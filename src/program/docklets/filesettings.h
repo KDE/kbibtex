@@ -35,14 +35,14 @@ class FileSettings : public FileSettingsWidget
 public:
     explicit FileSettings(QWidget *parent);
 
-    void setEditor(FileView *editor);
+    void setFileView(FileView *fileView);
 
 private slots:
     void widgetsChangedSlot();
 
 private:
     File *m_currentFile;
-    FileView *m_editor;
+    FileView *m_fileView;
 };
 
 #endif // DOCKLET_FILESETTINGS_H

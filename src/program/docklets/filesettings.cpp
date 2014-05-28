@@ -34,20 +34,20 @@
 #include "file.h"
 
 FileSettings::FileSettings(QWidget *parent)
-        : FileSettingsWidget(parent), m_currentFile(NULL), m_editor(NULL)
+        : FileSettingsWidget(parent), m_currentFile(NULL), m_fileView(NULL)
 {
     setEnabled(false);
 
     connect(this, SIGNAL(widgetsChanged()), this, SLOT(widgetsChangedSlot()));
 }
 
-void FileSettings::setEditor(FileView *editor)
+void FileSettings::setFileView(FileView *fileView)
 {
     m_currentFile = NULL;
-    m_editor = editor;
+    m_fileView = fileView;
 
-    if (m_editor != NULL && m_editor->fileModel() != NULL) {
-        m_currentFile = m_editor->fileModel()->bibliographyFile();
+    if (m_fileView != NULL && m_fileView->fileModel() != NULL) {
+        m_currentFile = m_fileView->fileModel()->bibliographyFile();
         if (m_currentFile != NULL)
             loadProperties(m_currentFile);
         setEnabled(true);
@@ -59,7 +59,7 @@ void FileSettings::widgetsChangedSlot()
 {
     if (m_currentFile != NULL) {
         saveProperties(m_currentFile);
-        /// Notify main editor about change it its data
-        m_editor->externalModification();
+        /// Notify main view about change it its data
+        m_fileView->externalModification();
     }
 }

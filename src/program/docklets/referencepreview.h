@@ -36,7 +36,7 @@ public:
 
     void setEnabled(bool);
 
-    void setEditor(FileView *editor);
+    void setFileView(FileView *fileView);
 
 public slots:
     void setElement(QSharedPointer<Element>, File *);

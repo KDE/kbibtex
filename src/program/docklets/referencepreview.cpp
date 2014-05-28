@@ -74,7 +74,7 @@ public:
     KComboBox *comboBox;
     QSharedPointer<const Element> element;
     const File *file;
-    FileView *editor;
+    FileView *fileView;
     const QColor textColor;
     const int defaultFontSize;
     const QString htmlStart;
@@ -82,7 +82,7 @@ public:
 
     ReferencePreviewPrivate(ReferencePreview *parent)
             : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName(QLatin1String("Reference Preview Docklet")),
-          configKeyName(QLatin1String("Style")), editor(NULL),
+          configKeyName(QLatin1String("Style")), fileView(NULL),
           textColor(QApplication::palette().text().color()),
           defaultFontSize(KGlobalSettings::generalFont().pointSize()),
           htmlStart("<html>\n<head>\n<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" />\n</head>\n<body style=\"color: " + textColor.name() + "; font-size: " + QString::number(defaultFontSize) + "pt; font-family: '" + KGlobalSettings::generalFont().family() + "';\">\n"),
@@ -386,19 +386,19 @@ void ReferencePreview::linkClicked(const QUrl &url)
     QString text = url.toString();
     if (text.startsWith(QLatin1String("kbibtex:filter:"))) {
         text = text.mid(15);
-        if (d->editor != NULL) {
+        if (d->fileView != NULL) {
             int p = text.indexOf("=");
             SortFilterFileModel::FilterQuery fq;
             fq.terms << text.mid(p + 1);
             fq.combination = SortFilterFileModel::EveryTerm;
             fq.field = text.left(p);
-            d->editor->setFilterBarFilter(fq);
+            d->fileView->setFilterBarFilter(fq);
             fq.searchPDFfiles = false;
         }
     }
 }
 
-void ReferencePreview::setEditor(FileView *editor)
+void ReferencePreview::setFileView(FileView *fileView)
 {
-    d->editor = editor;
+    d->fileView = fileView;
 }

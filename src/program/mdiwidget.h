@@ -42,7 +42,7 @@ public:
     explicit MDIWidget(QWidget *parent);
     ~MDIWidget();
 
-    FileView *editor();
+    FileView *fileView();
     OpenFileInfo *currentFile();
     OpenFileInfoManager *getOpenFileInfoManager();
 

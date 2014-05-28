@@ -33,7 +33,7 @@ public:
     explicit ValueList(QWidget *parent);
     ~ValueList();
 
-    void setEditor(FileView *editor);
+    void setFileView(FileView *fileView);
 
 public slots:
     void update();

@@ -277,7 +277,7 @@ void MDIWidget::setFile(OpenFileInfo *openFileInfo, KService::Ptr servicePtr)
         emit setCaption("");
 }
 
-FileView *MDIWidget::editor()
+FileView *MDIWidget::fileView()
 {
     OpenFileInfo *ofi = d->ofim->currentFile();
     return dynamic_cast<FileView *>(ofi->part(this)->widget());

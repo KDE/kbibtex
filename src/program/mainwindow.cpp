@@ -359,7 +359,7 @@ void KBibTeXMainWindow::showPreferences()
     delete dlg;
 }
 
-void KBibTeXMainWindow::documentSwitched(FileView *oldEditor, FileView *newEditor)
+void KBibTeXMainWindow::documentSwitched(FileView *oldFileView, FileView *newFileView)
 {
     OpenFileInfo *openFileInfo = d->mdiWidget->currentFile();
     bool validFile = openFileInfo != NULL;
@@ -367,40 +367,40 @@ void KBibTeXMainWindow::documentSwitched(FileView *oldEditor, FileView *newEdito
 
     setCaption(validFile ? i18n("%1 - KBibTeX", openFileInfo->shortCaption()) : i18n("KBibTeX"));
 
-    d->fileSettings->setEnabled(newEditor != NULL);
-    d->referencePreview->setEnabled(newEditor != NULL);
-    d->elementForm->setEnabled(newEditor != NULL);
-    d->documentPreview->setEnabled(newEditor != NULL);
-    if (oldEditor != NULL) {
-        disconnect(oldEditor, SIGNAL(currentElementChanged(QSharedPointer<Element>,File*)), d->referencePreview, SLOT(setElement(QSharedPointer<Element>,File*)));
-        disconnect(oldEditor, SIGNAL(currentElementChanged(QSharedPointer<Element>,File*)), d->elementForm, SLOT(setElement(QSharedPointer<Element>,File*)));
-        disconnect(oldEditor, SIGNAL(currentElementChanged(QSharedPointer<Element>,File*)), d->documentPreview, SLOT(setElement(QSharedPointer<Element>,File*)));
-        disconnect(oldEditor, SIGNAL(currentElementChanged(QSharedPointer<Element>,File*)), d->searchForm, SLOT(setElement(QSharedPointer<Element>,File*)));
-        disconnect(oldEditor, SIGNAL(modified()), d->valueList, SLOT(update()));
-        disconnect(oldEditor, SIGNAL(modified()), d->statistics, SLOT(update()));
+    d->fileSettings->setEnabled(newFileView != NULL);
+    d->referencePreview->setEnabled(newFileView != NULL);
+    d->elementForm->setEnabled(newFileView != NULL);
+    d->documentPreview->setEnabled(newFileView != NULL);
+    if (oldFileView != NULL) {
+        disconnect(oldFileView, SIGNAL(currentElementChanged(QSharedPointer<Element>,File*)), d->referencePreview, SLOT(setElement(QSharedPointer<Element>,File*)));
+        disconnect(oldFileView, SIGNAL(currentElementChanged(QSharedPointer<Element>,File*)), d->elementForm, SLOT(setElement(QSharedPointer<Element>,File*)));
+        disconnect(oldFileView, SIGNAL(currentElementChanged(QSharedPointer<Element>,File*)), d->documentPreview, SLOT(setElement(QSharedPointer<Element>,File*)));
+        disconnect(oldFileView, SIGNAL(currentElementChanged(QSharedPointer<Element>,File*)), d->searchForm, SLOT(setElement(QSharedPointer<Element>,File*)));
+        disconnect(oldFileView, SIGNAL(modified()), d->valueList, SLOT(update()));
+        disconnect(oldFileView, SIGNAL(modified()), d->statistics, SLOT(update()));
         // FIXME disconnect(oldEditor, SIGNAL(modified()), d->elementForm, SLOT(refreshElement()));
-        disconnect(d->elementForm, SIGNAL(elementModified()), oldEditor, SLOT(externalModification()));
+        disconnect(d->elementForm, SIGNAL(elementModified()), oldFileView, SLOT(externalModification()));
     }
-    if (newEditor != NULL) {
-        connect(newEditor, SIGNAL(currentElementChanged(QSharedPointer<Element>,File*)), d->referencePreview, SLOT(setElement(QSharedPointer<Element>,File*)));
-        connect(newEditor, SIGNAL(currentElementChanged(QSharedPointer<Element>,File*)), d->elementForm, SLOT(setElement(QSharedPointer<Element>,File*)));
-        connect(newEditor, SIGNAL(currentElementChanged(QSharedPointer<Element>,File*)), d->documentPreview, SLOT(setElement(QSharedPointer<Element>,File*)));
-        connect(newEditor, SIGNAL(currentElementChanged(QSharedPointer<Element>,File*)), d->searchForm, SLOT(setElement(QSharedPointer<Element>,File*)));
-        connect(newEditor, SIGNAL(modified()), d->valueList, SLOT(update()));
-        connect(newEditor, SIGNAL(modified()), d->statistics, SLOT(update()));
+    if (newFileView != NULL) {
+        connect(newFileView, SIGNAL(currentElementChanged(QSharedPointer<Element>,File*)), d->referencePreview, SLOT(setElement(QSharedPointer<Element>,File*)));
+        connect(newFileView, SIGNAL(currentElementChanged(QSharedPointer<Element>,File*)), d->elementForm, SLOT(setElement(QSharedPointer<Element>,File*)));
+        connect(newFileView, SIGNAL(currentElementChanged(QSharedPointer<Element>,File*)), d->documentPreview, SLOT(setElement(QSharedPointer<Element>,File*)));
+        connect(newFileView, SIGNAL(currentElementChanged(QSharedPointer<Element>,File*)), d->searchForm, SLOT(setElement(QSharedPointer<Element>,File*)));
+        connect(newFileView, SIGNAL(modified()), d->valueList, SLOT(update()));
+        connect(newFileView, SIGNAL(modified()), d->statistics, SLOT(update()));
         // FIXME connect(newEditor, SIGNAL(modified()), d->elementForm, SLOT(refreshElement()));
-        connect(d->elementForm, SIGNAL(elementModified()), newEditor, SLOT(externalModification()));
+        connect(d->elementForm, SIGNAL(elementModified()), newFileView, SLOT(externalModification()));
     }
 
     d->documentPreview->setBibTeXUrl(validFile ? openFileInfo->url() : KUrl());
     d->referencePreview->setElement(QSharedPointer<Element>(), NULL);
     d->elementForm->setElement(QSharedPointer<Element>(), NULL);
     d->documentPreview->setElement(QSharedPointer<Element>(), NULL);
-    d->valueList->setEditor(newEditor);
-    d->fileSettings->setEditor(newEditor);
-    d->statistics->setFile(newEditor != NULL && newEditor->fileModel() != NULL ? newEditor->fileModel()->bibliographyFile() : NULL);
-    d->statistics->setSelectionModel(newEditor != NULL ? newEditor->selectionModel() : NULL);
-    d->referencePreview->setEditor(newEditor);
+    d->valueList->setFileView(newFileView);
+    d->fileSettings->setFileView(newFileView);
+    d->statistics->setFile(newFileView != NULL && newFileView->fileModel() != NULL ? newFileView->fileModel()->bibliographyFile() : NULL);
+    d->statistics->setSelectionModel(newFileView != NULL ? newFileView->selectionModel() : NULL);
+    d->referencePreview->setFileView(newFileView);
 }
 
 void KBibTeXMainWindow::showSearchResults()
