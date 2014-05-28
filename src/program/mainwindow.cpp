@@ -48,7 +48,7 @@
 #include "searchform.h"
 #include "searchresults.h"
 #include "elementform.h"
-#include "bibtexeditor.h"
+#include "fileview.h"
 #include "filesettings.h"
 #include "xsltransform.h"
 #include "bibliographyservice.h"
@@ -174,7 +174,7 @@ KBibTeXMainWindow::KBibTeXMainWindow()
     d->dockSearchResults->setObjectName("dockResultsFrom");
     d->dockSearchResults->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
     showPanelsMenu->addAction(d->dockSearchResults->toggleViewAction());
-    connect(d->mdiWidget, SIGNAL(documentSwitch(BibTeXEditor*,BibTeXEditor*)), d->searchResults, SLOT(documentSwitched(BibTeXEditor*,BibTeXEditor*)));
+    connect(d->mdiWidget, SIGNAL(documentSwitch(FileView*,FileView*)), d->searchResults, SLOT(documentSwitched(FileView*,FileView*)));
 
     d->dockSearchForm = new QDockWidget(i18n("Online Search"), this);
     d->dockSearchForm->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
@@ -244,7 +244,7 @@ KBibTeXMainWindow::KBibTeXMainWindow()
     actionCollection()->addAction(KStandardAction::Quit, this, SLOT(queryCloseAll()));
     actionCollection()->addAction(KStandardAction::Preferences, this, SLOT(showPreferences()));
 
-    connect(d->mdiWidget, SIGNAL(documentSwitch(BibTeXEditor*,BibTeXEditor*)), this, SLOT(documentSwitched(BibTeXEditor*,BibTeXEditor*)));
+    connect(d->mdiWidget, SIGNAL(documentSwitch(FileView*,FileView*)), this, SLOT(documentSwitched(FileView*,FileView*)));
     connect(d->mdiWidget, SIGNAL(activePartChanged(KParts::Part*)), this, SLOT(createGUI(KParts::Part*)));
     connect(d->mdiWidget, SIGNAL(documentNew()), this, SLOT(newDocument()));
     connect(d->mdiWidget, SIGNAL(documentOpen()), this, SLOT(openDocumentDialog()));
@@ -359,7 +359,7 @@ void KBibTeXMainWindow::showPreferences()
     delete dlg;
 }
 
-void KBibTeXMainWindow::documentSwitched(BibTeXEditor *oldEditor, BibTeXEditor *newEditor)
+void KBibTeXMainWindow::documentSwitched(FileView *oldEditor, FileView *newEditor)
 {
     OpenFileInfo *openFileInfo = d->mdiWidget->currentFile();
     bool validFile = openFileInfo != NULL;

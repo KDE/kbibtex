@@ -46,7 +46,7 @@
 #include "fileimporterbibtex.h"
 #include "bibtexentries.h"
 #include "radiobuttontreeview.h"
-#include "bibtexeditor.h"
+#include "fileview.h"
 #include "filemodel.h"
 #include "findduplicates.h"
 
@@ -508,7 +508,7 @@ private:
 
 public:
     File *file;
-    BibTeXEditor *editor;
+    FileView *editor;
     KPushButton *buttonNext, *buttonPrev;
     QLabel *labelWhichClique;
     static const char *whichCliqueText;
@@ -540,7 +540,7 @@ public:
         QSplitter *splitter = new QSplitter(Qt::Vertical, p);
         layout->addWidget(splitter);
 
-        editor = new BibTeXEditor(QLatin1String("MergeWidget"), splitter);
+        editor = new FileView(QLatin1String("MergeWidget"), splitter);
         editor->setItemDelegate(new FileDelegate(editor));
         editor->setReadOnly(true);
 
@@ -627,16 +627,16 @@ private:
 
 public:
     KParts::Part *part;
-    BibTeXEditor *editor;
+    FileView *view;
 
-    FindDuplicatesUIPrivate(FindDuplicatesUI *parent, KParts::Part *kpart, BibTeXEditor *bibTeXEditor)
-            : p(parent), part(kpart), editor(bibTeXEditor) {
+    FindDuplicatesUIPrivate(FindDuplicatesUI *parent, KParts::Part *kpart, FileView *fileView)
+            : p(parent), part(kpart), view(fileView) {
         // nothing
     }
 };
 
-FindDuplicatesUI::FindDuplicatesUI(KParts::Part *part, BibTeXEditor *bibTeXEditor)
-        : QObject(), d(new FindDuplicatesUIPrivate(this, part, bibTeXEditor))
+FindDuplicatesUI::FindDuplicatesUI(KParts::Part *part, FileView *fileView)
+        : QObject(), d(new FindDuplicatesUIPrivate(this, part, fileView))
 {
     KAction *newAction = new KAction(KIcon("tab-duplicate"), i18n("Find Duplicates"), this);
     part->actionCollection()->addAction(QLatin1String("findduplicates"), newAction);
@@ -663,19 +663,19 @@ void FindDuplicatesUI::slotFindDuplicates()
     FindDuplicates fd(dlg, sensitivity);
     /// File to be used to find duplicate in,
     /// may be only a subset of the original one if selection is used (see below)
-    File *file = d->editor->fileModel()->bibliographyFile();
+    File *file = d->view->fileModel()->bibliographyFile();
     /// Full file, used to remove merged elements from
     /// Stays the same even when merging is restricted to selected elements
     File *originalFile = file;
     bool deleteFileLater = false;
 
-    int rowCount = d->editor->selectedElements().count() / d->editor->model()->columnCount();
-    if (rowCount > 1 && rowCount < d->editor->model()->rowCount() && KMessageBox::questionYesNo(d->part->widget(), i18n("Multiple elements are selected. Do you want to search for duplicates only within the selection or in the whole document?"), i18n("Search only in selection?"), KGuiItem(i18n("Only in selection")), KGuiItem(i18n("Whole document"))) == KMessageBox::Yes) {
-        QModelIndexList mil = d->editor->selectionModel()->selectedRows();
+    int rowCount = d->view->selectedElements().count() / d->view->model()->columnCount();
+    if (rowCount > 1 && rowCount < d->view->model()->rowCount() && KMessageBox::questionYesNo(d->part->widget(), i18n("Multiple elements are selected. Do you want to search for duplicates only within the selection or in the whole document?"), i18n("Search only in selection?"), KGuiItem(i18n("Only in selection")), KGuiItem(i18n("Whole document"))) == KMessageBox::Yes) {
+        QModelIndexList mil = d->view->selectionModel()->selectedRows();
         file = new File();
         deleteFileLater = true;
         for (QModelIndexList::ConstIterator it = mil.constBegin(); it != mil.constEnd(); ++it) {
-            file->append(d->editor->fileModel()->element(d->editor->sortFilterProxyModel()->mapToSource(*it).row()));
+            file->append(d->view->fileModel()->element(d->view->sortFilterProxyModel()->mapToSource(*it).row()));
         }
     }
 
@@ -690,14 +690,14 @@ void FindDuplicatesUI::slotFindDuplicates()
     if (cliques.isEmpty()) {
         KMessageBox::information(d->part->widget(), i18n("No duplicates have been found."), i18n("No duplicates found"));
     } else {
-        MergeWidget mw(d->editor->fileModel()->bibliographyFile(), cliques, dlg);
+        MergeWidget mw(d->view->fileModel()->bibliographyFile(), cliques, dlg);
         dlg->setMainWidget(&mw);
 
         if (dlg->exec() == QDialog::Accepted) {
             MergeDuplicates md(dlg);
             if (md.mergeDuplicateEntries(cliques, originalFile)) {
-                d->editor->fileModel()->reset();
-                d->editor->externalModification();
+                d->view->fileModel()->reset();
+                d->view->externalModification();
             }
         }
 

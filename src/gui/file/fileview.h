@@ -15,15 +15,15 @@
  *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
  ***************************************************************************/
 
-#ifndef KBIBTEX_GUI_BIBTEXEDITOR_H
-#define KBIBTEX_GUI_BIBTEXEDITOR_H
+#ifndef KBIBTEX_GUI_FILEVIEW_H
+#define KBIBTEX_GUI_FILEVIEW_H
 
 #include <QWidget>
 
 #include "kbibtexgui_export.h"
 
 #include "filterbar.h"
-#include "bibtexfileview.h"
+#include "basicfileview.h"
 #include "element.h"
 
 class ValueListModel;
@@ -31,13 +31,13 @@ class ElementEditor;
 class ElementEditorDialog;
 
 /**
-@author Thomas Fischer
+ * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
-class KBIBTEXGUI_EXPORT BibTeXEditor : public BibTeXFileView
+class KBIBTEXGUI_EXPORT FileView : public BasicFileView
 {
     Q_OBJECT
 public:
-    BibTeXEditor(const QString &name, QWidget *parent);
+    FileView(const QString &name, QWidget *parent);
 
     const QList<QSharedPointer<Element> > &selectedElements() const;
     const QSharedPointer<Element> currentElement() const;
@@ -101,4 +101,4 @@ private:
 };
 
 
-#endif // KBIBTEX_GUI_BIBTEXEDITOR_H
+#endif // KBIBTEX_GUI_FILEVIEW_H

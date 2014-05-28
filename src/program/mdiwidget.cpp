@@ -238,7 +238,7 @@ MDIWidget::~MDIWidget()
 
 void MDIWidget::setFile(OpenFileInfo *openFileInfo, KService::Ptr servicePtr)
 {
-    BibTeXEditor *oldEditor = NULL;
+    FileView *oldEditor = NULL;
     bool hasChanged = true;
 
     KParts::Part *part = openFileInfo == NULL ? NULL : openFileInfo->part(this, servicePtr);
@@ -252,7 +252,7 @@ void MDIWidget::setFile(OpenFileInfo *openFileInfo, KService::Ptr servicePtr)
     }
 
     if (indexOf(widget) >= 0) {
-        oldEditor = dynamic_cast<BibTeXEditor *>(currentWidget());
+        oldEditor = dynamic_cast<FileView *>(currentWidget());
         hasChanged = widget != currentWidget();
     } else {
         addWidget(widget);
@@ -262,7 +262,7 @@ void MDIWidget::setFile(OpenFileInfo *openFileInfo, KService::Ptr servicePtr)
     d->currentFile = openFileInfo;
 
     if (hasChanged) {
-        BibTeXEditor *newEditor = dynamic_cast<BibTeXEditor *>(widget);
+        FileView *newEditor = dynamic_cast<FileView *>(widget);
         emit activePartChanged(part);
         emit documentSwitch(oldEditor, newEditor);
     }
@@ -277,10 +277,10 @@ void MDIWidget::setFile(OpenFileInfo *openFileInfo, KService::Ptr servicePtr)
         emit setCaption("");
 }
 
-BibTeXEditor *MDIWidget::editor()
+FileView *MDIWidget::editor()
 {
     OpenFileInfo *ofi = d->ofim->currentFile();
-    return dynamic_cast<BibTeXEditor *>(ofi->part(this)->widget());
+    return dynamic_cast<FileView *>(ofi->part(this)->widget());
 }
 
 OpenFileInfo *MDIWidget::currentFile()

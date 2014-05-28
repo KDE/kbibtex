@@ -38,7 +38,7 @@ class QPainter;
 class FileModel;
 
 /**
-@author Thomas Fischer
+ * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
 class KBIBTEXGUI_EXPORT SortFilterFileModel : public QSortFilterProxyModel
 {

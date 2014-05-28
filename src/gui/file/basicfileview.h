@@ -14,8 +14,9 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
  ***************************************************************************/
-#ifndef KBIBTEX_GUI_BIBTEXFILEVIEW_H
-#define KBIBTEX_GUI_BIBTEXFILEVIEW_H
+
+#ifndef KBIBTEX_GUI_BASICFILEVIEW_H
+#define KBIBTEX_GUI_BASICFILEVIEW_H
 
 #include <QTreeView>
 
@@ -25,14 +26,14 @@ class FileModel;
 class QSortFilterProxyModel;
 
 /**
-@author Thomas Fischer
+ * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
-class KBIBTEXGUI_EXPORT BibTeXFileView : public QTreeView
+class KBIBTEXGUI_EXPORT BasicFileView : public QTreeView
 {
     Q_OBJECT
 public:
-    explicit BibTeXFileView(const QString &name, QWidget *parent = 0);
-    ~BibTeXFileView();
+    explicit BasicFileView(const QString &name, QWidget *parent = 0);
+    ~BasicFileView();
 
     virtual void setModel(QAbstractItemModel *model);
     FileModel *fileModel();
@@ -46,8 +47,8 @@ protected slots:
     void columnResized(int column, int oldSize, int newSize);
 
 private:
-    class BibTeXFileViewPrivate;
-    BibTeXFileViewPrivate *d;
+    class Private;
+    Private *d;
 
 private slots:
     void headerActionToggled();
@@ -58,4 +59,4 @@ private slots:
 };
 
 
-#endif // KBIBTEX_GUI_BIBTEXFILEVIEW_H
+#endif // KBIBTEX_GUI_BASICFILEVIEW_H

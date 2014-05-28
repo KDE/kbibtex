@@ -26,7 +26,7 @@
 #include <KConfigGroup>
 #include <KDebug>
 
-#include "bibtexeditor.h"
+#include "fileview.h"
 #include "filemodel.h"
 #include "fileimporterbibtex.h"
 #include "fileexporterbibtex.h"
@@ -42,25 +42,25 @@ private:
     Clipboard *parent;
 
 public:
-    BibTeXEditor *bibTeXEditor;
+    FileView *fileView;
     QPoint previousPosition;
     KSharedConfigPtr config;
     const QString configGroupName;
 
-    ClipboardPrivate(BibTeXEditor *be, Clipboard *p)
-            : parent(p), bibTeXEditor(be), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName(QLatin1String("General")) {
-        // TODO
+    ClipboardPrivate(FileView *fv, Clipboard *p)
+            : parent(p), fileView(fv), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName(QLatin1String("General")) {
+        /// nothing
     }
 
     QString selectionToText() {
-        QModelIndexList mil = bibTeXEditor->selectionModel()->selectedRows();
+        QModelIndexList mil = fileView->selectionModel()->selectedRows();
         File *file = new File();
         for (QModelIndexList::ConstIterator it = mil.constBegin(); it != mil.constEnd(); ++it)
-            file->append(bibTeXEditor->fileModel()->element(bibTeXEditor->sortFilterProxyModel()->mapToSource(*it).row()));
+            file->append(fileView->fileModel()->element(fileView->sortFilterProxyModel()->mapToSource(*it).row()));
 
         FileExporterBibTeX exporter;
         exporter.setEncoding(QLatin1String("latex"));
-        QBuffer buffer(bibTeXEditor);
+        QBuffer buffer(fileView);
         buffer.open(QBuffer::WriteOnly);
         exporter.save(&buffer, file);
         buffer.close();
@@ -83,17 +83,17 @@ public:
         File *file = importer.fromString(text);
 
         if (!file->isEmpty()) {
-            FileModel *fileModel = bibTeXEditor->fileModel();
-            QSortFilterProxyModel *sfpModel = bibTeXEditor->sortFilterProxyModel();
+            FileModel *fileModel = fileView->fileModel();
+            QSortFilterProxyModel *sfpModel = fileView->sortFilterProxyModel();
 
             /// insert new elements one by one
             int startRow = fileModel->rowCount(); ///< memorize row where insertion started
             for (File::Iterator it = file->begin(); it != file->end(); ++it)
-                fileModel->insertRow(*it, bibTeXEditor->model()->rowCount());
+                fileModel->insertRow(*it, fileView->model()->rowCount());
             int endRow = fileModel->rowCount() - 1; ///< memorize row where insertion ended
 
             /// select newly inserted elements
-            QItemSelectionModel *ism = bibTeXEditor->selectionModel();
+            QItemSelectionModel *ism = fileView->selectionModel();
             ism->clear();
             /// keep track of the insert element which is most upwards in the list when inserted
             QModelIndex minRowTargetModelIndex;
@@ -107,7 +107,7 @@ public:
                     minRowTargetModelIndex = targetModelIndex;
             }
             /// scroll tree view to show top-most inserted element
-            bibTeXEditor->scrollTo(minRowTargetModelIndex, QAbstractItemView::PositionAtTop);
+            fileView->scrollTo(minRowTargetModelIndex, QAbstractItemView::PositionAtTop);
 
             /// clean up
             delete file;
@@ -123,7 +123,7 @@ public:
                 /// Check if text looks like an URL
                 const QUrl url(text);
                 if (url.isValid()) {
-                    return AssociatedFilesUI::associateUrl(url, entry, bibTeXEditor->fileModel()->bibliographyFile(), bibTeXEditor);
+                    return AssociatedFilesUI::associateUrl(url, entry, fileView->fileModel()->bibliographyFile(), fileView);
                 }
             }
         } else
@@ -133,14 +133,14 @@ public:
     }
 };
 
-Clipboard::Clipboard(BibTeXEditor *bibTeXEditor)
-        : QObject(bibTeXEditor), d(new ClipboardPrivate(bibTeXEditor, this))
+Clipboard::Clipboard(FileView *fileView)
+        : QObject(fileView), d(new ClipboardPrivate(fileView, this))
 {
-    connect(bibTeXEditor, SIGNAL(editorMouseEvent(QMouseEvent*)), this, SLOT(editorMouseEvent(QMouseEvent*)));
-    connect(bibTeXEditor, SIGNAL(editorDragEnterEvent(QDragEnterEvent*)), this, SLOT(editorDragEnterEvent(QDragEnterEvent*)));
-    connect(bibTeXEditor, SIGNAL(editorDragMoveEvent(QDragMoveEvent*)), this, SLOT(editorDragMoveEvent(QDragMoveEvent*)));
-    connect(bibTeXEditor, SIGNAL(editorDropEvent(QDropEvent*)), this, SLOT(editorDropEvent(QDropEvent*)));
-    bibTeXEditor->setAcceptDrops(!bibTeXEditor->isReadOnly());
+    connect(fileView, SIGNAL(editorMouseEvent(QMouseEvent*)), this, SLOT(editorMouseEvent(QMouseEvent*)));
+    connect(fileView, SIGNAL(editorDragEnterEvent(QDragEnterEvent*)), this, SLOT(editorDragEnterEvent(QDragEnterEvent*)));
+    connect(fileView, SIGNAL(editorDragMoveEvent(QDragMoveEvent*)), this, SLOT(editorDragMoveEvent(QDragMoveEvent*)));
+    connect(fileView, SIGNAL(editorDropEvent(QDropEvent*)), this, SLOT(editorDropEvent(QDropEvent*)));
+    fileView->setAcceptDrops(!fileView->isReadOnly());
 }
 
 Clipboard::~Clipboard()
@@ -151,7 +151,7 @@ Clipboard::~Clipboard()
 void Clipboard::cut()
 {
     copy();
-    d->bibTeXEditor->selectionDelete();
+    d->fileView->selectionDelete();
 }
 
 void Clipboard::copy()
@@ -164,9 +164,9 @@ void Clipboard::copy()
 void Clipboard::copyReferences()
 {
     QStringList references;
-    QModelIndexList mil = d->bibTeXEditor->selectionModel()->selectedRows();
+    QModelIndexList mil = d->fileView->selectionModel()->selectedRows();
     for (QModelIndexList::ConstIterator it = mil.constBegin(); it != mil.constEnd(); ++it) {
-        QSharedPointer<Entry> entry = d->bibTeXEditor->fileModel()->element(d->bibTeXEditor->sortFilterProxyModel()->mapToSource(*it).row()).dynamicCast<Entry>();
+        QSharedPointer<Entry> entry = d->fileView->fileModel()->element(d->fileView->sortFilterProxyModel()->mapToSource(*it).row()).dynamicCast<Entry>();
         if (!entry.isNull())
             references << entry->id();
     }
@@ -187,9 +187,9 @@ void Clipboard::copyReferences()
 void Clipboard::paste()
 {
     QClipboard *clipboard = QApplication::clipboard();
-    const bool modified = d->insertText(clipboard->text(), d->bibTeXEditor->currentElement());
+    const bool modified = d->insertText(clipboard->text(), d->fileView->currentElement());
     if (modified)
-        d->bibTeXEditor->externalModification();
+        d->fileView->externalModification();
 }
 
 
@@ -201,7 +201,7 @@ void Clipboard::editorMouseEvent(QMouseEvent *event)
     if (d->previousPosition.x() > -1 && (event->pos() - d->previousPosition).manhattanLength() >= QApplication::startDragDistance()) {
         QString text = d->selectionToText();
 
-        QDrag *drag = new QDrag(d->bibTeXEditor);
+        QDrag *drag = new QDrag(d->fileView);
         QMimeData *mimeData = new QMimeData();
         QByteArray data = text.toLatin1();
         mimeData->setData("text/plain", data);
@@ -215,13 +215,13 @@ void Clipboard::editorMouseEvent(QMouseEvent *event)
 
 void Clipboard::editorDragEnterEvent(QDragEnterEvent *event)
 {
-    if (event->mimeData()->hasText() && !d->bibTeXEditor->isReadOnly())
+    if (event->mimeData()->hasText() && !d->fileView->isReadOnly())
         event->acceptProposedAction();
 }
 
 void Clipboard::editorDragMoveEvent(QDragMoveEvent *event)
 {
-    if (event->mimeData()->hasText() && !d->bibTeXEditor->isReadOnly())
+    if (event->mimeData()->hasText() && !d->fileView->isReadOnly())
         event->acceptProposedAction();
 }
 
@@ -229,19 +229,19 @@ void Clipboard::editorDropEvent(QDropEvent *event)
 {
     QString text = event->mimeData()->text();
 
-    if (!text.isEmpty() && !d->bibTeXEditor->isReadOnly()) {
+    if (!text.isEmpty() && !d->fileView->isReadOnly()) {
         QSharedPointer<Element> element;
         /// Locate element drop was performed on (if dropped, and not some copy&paste)
-        QModelIndex dropIndex = d->bibTeXEditor->indexAt(event->pos());
+        QModelIndex dropIndex = d->fileView->indexAt(event->pos());
         if (dropIndex.isValid())
-            element = d->bibTeXEditor->elementAt(dropIndex);
+            element = d->fileView->elementAt(dropIndex);
         if (element.isNull()) {
             /// Still invalid element? Use current one
-            element = d->bibTeXEditor->currentElement();
+            element = d->fileView->currentElement();
         }
 
         const bool modified = d->insertText(text, element);
         if (modified)
-            d->bibTeXEditor->externalModification();
+            d->fileView->externalModification();
     }
 }

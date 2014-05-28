@@ -51,7 +51,7 @@
 #include "element.h"
 #include "file.h"
 #include "entry.h"
-#include "bibtexeditor.h"
+#include "fileview.h"
 
 class ReferencePreview::ReferencePreviewPrivate
 {
@@ -74,7 +74,7 @@ public:
     KComboBox *comboBox;
     QSharedPointer<const Element> element;
     const File *file;
-    BibTeXEditor *editor;
+    FileView *editor;
     const QColor textColor;
     const int defaultFontSize;
     const QString htmlStart;
@@ -398,7 +398,7 @@ void ReferencePreview::linkClicked(const QUrl &url)
     }
 }
 
-void ReferencePreview::setEditor(BibTeXEditor *editor)
+void ReferencePreview::setEditor(FileView *editor)
 {
     d->editor = editor;
 }

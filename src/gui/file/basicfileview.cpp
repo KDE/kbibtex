@@ -15,7 +15,7 @@
  *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
  ***************************************************************************/
 
-#include "bibtexfileview.h"
+#include "basicfileview.h"
 
 #include <QHeaderView>
 #include <QScrollBar>
@@ -29,10 +29,10 @@
 #include "bibtexfields.h"
 #include "filemodel.h"
 
-class BibTeXFileView::BibTeXFileViewPrivate
+class BasicFileView::Private
 {
 private:
-    BibTeXFileView *p;
+    BasicFileView *p;
     const int storedColumnCount;
 
 public:
@@ -44,8 +44,8 @@ public:
     FileModel *fileModel;
     QSortFilterProxyModel *sortFilterProxyModel;
 
-    BibTeXFileViewPrivate(const QString &n, BibTeXFileView *parent)
-            : p(parent), storedColumnCount(BibTeXFields::self()->count()), name(n), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName(QLatin1String("BibTeXFileView")), configHeaderState(QLatin1String("HeaderState_%1")) {
+    Private(const QString &n, BasicFileView *parent)
+            : p(parent), storedColumnCount(BibTeXFields::self()->count()), name(n), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName(QLatin1String("ReadOnlyFileView")), configHeaderState(QLatin1String("HeaderState_%1")) {
         // nothing
     }
 
@@ -151,8 +151,8 @@ public:
     }
 };
 
-BibTeXFileView::BibTeXFileView(const QString &name, QWidget *parent)
-        : QTreeView(parent), d(new BibTeXFileViewPrivate(name, this))
+BasicFileView::BasicFileView(const QString &name, QWidget *parent)
+        : QTreeView(parent), d(new Private(name, this))
 {
     /// general visual appearance and behaviour
     setSelectionMode(QAbstractItemView::ExtendedSelection);
@@ -223,12 +223,12 @@ BibTeXFileView::BibTeXFileView(const QString &name, QWidget *parent)
     }
 }
 
-BibTeXFileView::~BibTeXFileView()
+BasicFileView::~BasicFileView()
 {
     delete d;
 }
 
-void BibTeXFileView::setModel(QAbstractItemModel *model)
+void BasicFileView::setModel(QAbstractItemModel *model)
 {
     QTreeView::setModel(model);
 
@@ -236,7 +236,7 @@ void BibTeXFileView::setModel(QAbstractItemModel *model)
     d->fileModel = dynamic_cast<FileModel *>(model);
     if (d->fileModel == NULL) {
         d->sortFilterProxyModel = dynamic_cast<QSortFilterProxyModel *>(model);
-        Q_ASSERT_X(d->sortFilterProxyModel != NULL, "BibTeXFileView::setModel(QAbstractItemModel *model)", "d->sortFilterProxyModel is NULL");
+        Q_ASSERT_X(d->sortFilterProxyModel != NULL, "ReadOnlyFileView::setModel(QAbstractItemModel *model)", "d->sortFilterProxyModel is NULL");
         d->fileModel = dynamic_cast<FileModel *>(d->sortFilterProxyModel->sourceModel());
     }
 
@@ -244,20 +244,20 @@ void BibTeXFileView::setModel(QAbstractItemModel *model)
     if (header()->isSortIndicatorShown())
         sort(header()->sortIndicatorSection(), header()->sortIndicatorOrder());
 
-    Q_ASSERT_X(d->fileModel != NULL, "BibTeXFileView::setModel(QAbstractItemModel *model)", "d->fileModel is NULL");
+    Q_ASSERT_X(d->fileModel != NULL, "ReadOnlyFileView::setModel(QAbstractItemModel *model)", "d->fileModel is NULL");
 }
 
-FileModel *BibTeXFileView::fileModel()
+FileModel *BasicFileView::fileModel()
 {
     return d->fileModel;
 }
 
-QSortFilterProxyModel *BibTeXFileView::sortFilterProxyModel()
+QSortFilterProxyModel *BasicFileView::sortFilterProxyModel()
 {
     return d->sortFilterProxyModel;
 }
 
-void BibTeXFileView::keyPressEvent(QKeyEvent *event)
+void BasicFileView::keyPressEvent(QKeyEvent *event)
 {
     if ((event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter) && event->modifiers() == Qt::NoModifier && currentIndex() != QModelIndex()) {
         emit doubleClicked(currentIndex());
@@ -266,19 +266,19 @@ void BibTeXFileView::keyPressEvent(QKeyEvent *event)
     QTreeView::keyPressEvent(event);
 }
 
-void BibTeXFileView::columnMoved()
+void BasicFileView::columnMoved()
 {
     QTreeView::columnMoved();
     d->storeColumns();
 }
 
-void BibTeXFileView::columnResized(int column, int oldSize, int newSize)
+void BasicFileView::columnResized(int column, int oldSize, int newSize)
 {
     QTreeView::columnResized(column, oldSize, newSize);
     d->storeColumns();
 }
 
-void BibTeXFileView::headerActionToggled()
+void BasicFileView::headerActionToggled()
 {
     KAction *action = static_cast<KAction *>(sender());
     bool ok = false;
@@ -290,17 +290,17 @@ void BibTeXFileView::headerActionToggled()
     d->adjustColumns();
 }
 
-void BibTeXFileView::headerAdjustColumnWidths()
+void BasicFileView::headerAdjustColumnWidths()
 {
     d->adjustColumns();
 }
 
-void BibTeXFileView::headerResetToDefaults()
+void BasicFileView::headerResetToDefaults()
 {
     d->resetColumnsToDefault();
 }
 
-void BibTeXFileView::sort(int t, Qt::SortOrder s)
+void BasicFileView::sort(int t, Qt::SortOrder s)
 {
     SortFilterFileModel *sortedModel = dynamic_cast<SortFilterFileModel *>(model());
     if (sortedModel != NULL) {
@@ -309,7 +309,7 @@ void BibTeXFileView::sort(int t, Qt::SortOrder s)
     }
 }
 
-void BibTeXFileView::noSorting()
+void BasicFileView::noSorting()
 {
     SortFilterFileModel *sortedModel = dynamic_cast<SortFilterFileModel *>(model());
     if (sortedModel != NULL) {

@@ -23,7 +23,7 @@
 
 class Element;
 class File;
-class BibTeXEditor;
+class FileView;
 
 class ValueList : public QWidget
 {
@@ -33,7 +33,7 @@ public:
     explicit ValueList(QWidget *parent);
     ~ValueList();
 
-    void setEditor(BibTeXEditor *editor);
+    void setEditor(FileView *editor);
 
 public slots:
     void update();

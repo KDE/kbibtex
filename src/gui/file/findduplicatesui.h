@@ -30,13 +30,16 @@ class Part;
 class KXMLGUIClient;
 class KPushButton;
 
-class BibTeXEditor;
+class FileView;
 class EntryClique;
 class File;
 
 class RadioButtonTreeView;
 class AlternativesItemModel;
 
+/**
+ * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ */
 class KBIBTEXGUI_EXPORT MergeWidget : public QWidget
 {
     Q_OBJECT
@@ -57,12 +60,15 @@ private:
 };
 
 
+/**
+ * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ */
 class KBIBTEXGUI_EXPORT FindDuplicatesUI : public QObject
 {
     Q_OBJECT
 
 public:
-    FindDuplicatesUI(KParts::Part *part, BibTeXEditor *bibTeXEditor);
+    FindDuplicatesUI(KParts::Part *part, FileView *fileView);
     ~FindDuplicatesUI();
 
 private slots:

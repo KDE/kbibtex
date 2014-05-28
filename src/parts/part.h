@@ -21,7 +21,7 @@
 #include <kparts/part.h>
 
 #include "notificationhub.h"
-#include "bibtexeditor.h"
+#include "fileview.h"
 
 class KBibTeXPart : public KParts::ReadWritePart, private NotificationListener
 {

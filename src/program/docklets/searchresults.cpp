@@ -26,7 +26,7 @@
 
 #include "file.h"
 #include "clipboard.h"
-#include "bibtexeditor.h"
+#include "fileview.h"
 #include "filemodel.h"
 #include "idsuggestions.h"
 
@@ -40,7 +40,7 @@ public:
     MDIWidget *m;
     File *file;
     KPushButton *buttonImport;
-    BibTeXEditor *resultList, *mainEditor;
+    FileView *resultList, *mainEditor;
     KAction *actionViewCurrent, *actionImportSelected, *actionCopySelected;
 
     SearchResultsPrivate(MDIWidget *mdiWidget, SearchResults *parent)
@@ -50,7 +50,7 @@ public:
         layout->setColumnStretch(0, 1);
         layout->setColumnStretch(1, 0);
 
-        resultList = new BibTeXEditor(QLatin1String("SearchResults"), parent);
+        resultList = new FileView(QLatin1String("SearchResults"), parent);
         resultList->setItemDelegate(new FileDelegate(resultList));
         resultList->setReadOnly(true);
         resultList->setFrameShadow(QFrame::Sunken);
@@ -139,7 +139,7 @@ bool SearchResults::insertElement(QSharedPointer<Element> element)
     return d->insertElement(element);
 }
 
-void SearchResults::documentSwitched(BibTeXEditor *oldEditor, BibTeXEditor *newEditor)
+void SearchResults::documentSwitched(FileView *oldEditor, FileView *newEditor)
 {
     Q_UNUSED(oldEditor);
     d->mainEditor = newEditor;

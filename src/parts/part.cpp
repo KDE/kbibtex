@@ -94,7 +94,7 @@ private:
 
 public:
     File *bibTeXFile;
-    BibTeXEditor *editor;
+    FileView *editor;
     FileModel *model;
     SortFilterFileModel *sortFilterProxyModel;
     FilterBar *filterBar;
@@ -486,7 +486,7 @@ KBibTeXPart::KBibTeXPart(QWidget *parentWidget, QObject *parent, bool browserVie
     setObjectName("KBibTeXPart::KBibTeXPart");
 
     // TODO Setup view
-    d->editor = new BibTeXEditor(QLatin1String("Main"), parentWidget);
+    d->editor = new FileView(QLatin1String("Main"), parentWidget);
     d->editor->setReadOnly(!isReadWrite());
     d->editor->setItemDelegate(new FileDelegate(d->editor));
     setWidget(d->editor);

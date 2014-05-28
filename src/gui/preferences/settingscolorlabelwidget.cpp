@@ -32,7 +32,7 @@
 #include <KMenu>
 
 #include "file.h"
-#include "bibtexeditor.h"
+#include "fileview.h"
 #include "colorlabelwidget.h"
 #include "filemodel.h"
 #include "preferences.h"
@@ -435,19 +435,19 @@ private:
 
 public:
     /// Tree view to show this context menu in
-    BibTeXEditor *bibTeXEditor;
+    FileView *fileView;
     /// Actual menu to show
     KActionMenu *menu;
     /// Signal handle to react to calls to items in menu
     QSignalMapper *sm;
 
-    Private(BibTeXEditor *be, ColorLabelContextMenu *parent)
-            : p(parent), bibTeXEditor(be)
+    Private(FileView *fv, ColorLabelContextMenu *parent)
+            : p(parent), fileView(fv)
     {
         sm = new QSignalMapper(parent);
-        menu = new KActionMenu(KIcon("preferences-desktop-color"), i18n("Color"), bibTeXEditor);
+        menu = new KActionMenu(KIcon("preferences-desktop-color"), i18n("Color"), fileView);
         /// Let menu be a sub menu to the tree view's context menu
-        bibTeXEditor->addAction(menu);
+        fileView->addAction(menu);
     }
 
     void rebuildMenu()  {
@@ -480,7 +480,7 @@ public:
 };
 
 
-ColorLabelContextMenu::ColorLabelContextMenu(BibTeXEditor *widget)
+ColorLabelContextMenu::ColorLabelContextMenu(FileView *widget)
         : QObject(widget), d(new Private(widget, this))
 {
     connect(d->sm, SIGNAL(mapped(QString)), this, SLOT(colorActivated(QString)));
@@ -517,7 +517,7 @@ void ColorLabelContextMenu::colorActivated(const QString &colorString)
     /// so apply this color code to the currently
     /// selected item in the tree view
 
-    SortFilterFileModel *sfbfm = dynamic_cast<SortFilterFileModel *>(d->bibTeXEditor->model());
+    SortFilterFileModel *sfbfm = dynamic_cast<SortFilterFileModel *>(d->fileView->model());
     Q_ASSERT_X(sfbfm != NULL, "ColorLabelContextMenu::colorActivated(const QString &colorString)", "SortFilterFileModel *sfbfm is NULL");
     FileModel *model = sfbfm->fileSourceModel();
     Q_ASSERT_X(model != NULL, "ColorLabelContextMenu::colorActivated(const QString &colorString)", "FileModel *model is NULL");
@@ -527,7 +527,7 @@ void ColorLabelContextMenu::colorActivated(const QString &colorString)
     /// Keep track if any changes to the bibliography is made
     bool modifying = false;
     /// Apply color change to all selected rows
-    QModelIndexList list = d->bibTeXEditor->selectionModel()->selectedIndexes();
+    QModelIndexList list = d->fileView->selectionModel()->selectedIndexes();
     foreach(const QModelIndex &index, list) {
         const QModelIndex mappedIndex = sfbfm->mapToSource(index);
         /// Selection may span over multiple columns;
@@ -549,6 +549,6 @@ void ColorLabelContextMenu::colorActivated(const QString &colorString)
     }
 
     if (modifying)
-        /// Let the BibTeXEditor widget know that its underlying data model has been changed
-        d->bibTeXEditor->externalModification();
+        /// Let the FileView widget know that its underlying data model has been changed
+        d->fileView->externalModification();
 }

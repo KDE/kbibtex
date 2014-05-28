@@ -23,7 +23,7 @@
 class MDIWidget;
 
 class Element;
-class BibTeXEditor;
+class FileView;
 
 class SearchResults : public QWidget
 {
@@ -37,7 +37,7 @@ public:
     bool insertElement(QSharedPointer<Element> element);
 
 public slots:
-    void documentSwitched(BibTeXEditor *, BibTeXEditor *);
+    void documentSwitched(FileView *, FileView *);
 
 private:
     class SearchResultsPrivate;

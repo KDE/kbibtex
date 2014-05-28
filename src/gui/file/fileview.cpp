@@ -15,7 +15,7 @@
  *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
  ***************************************************************************/
 
-#include "bibtexeditor.h"
+#include "fileview.h"
 
 #include <QDropEvent>
 #include <QTimer>
@@ -101,18 +101,18 @@ private:
 
 const QString ElementEditorDialog::configGroupNameWindowSize = QLatin1String("ElementEditorDialog");
 
-BibTeXEditor::BibTeXEditor(const QString &name, QWidget *parent)
-        : BibTeXFileView(name, parent), m_isReadOnly(false), m_current(QSharedPointer<Element>()), m_filterBar(NULL), m_lastEditorPage(NULL), m_elementEditorDialog(NULL), m_elementEditor(NULL)
+FileView::FileView(const QString &name, QWidget *parent)
+        : BasicFileView(name, parent), m_isReadOnly(false), m_current(QSharedPointer<Element>()), m_filterBar(NULL), m_lastEditorPage(NULL), m_elementEditorDialog(NULL), m_elementEditor(NULL)
 {
     connect(this, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(itemActivated(QModelIndex)));
 }
 
-void BibTeXEditor::viewCurrentElement()
+void FileView::viewCurrentElement()
 {
     viewElement(currentElement());
 }
 
-void BibTeXEditor::viewElement(const QSharedPointer<Element> element)
+void FileView::viewElement(const QSharedPointer<Element> element)
 {
     prepareEditorDialog(DialogTypeView);
     m_elementEditor->setElement(element, fileModel()->bibliographyFile());
@@ -122,12 +122,12 @@ void BibTeXEditor::viewElement(const QSharedPointer<Element> element)
     m_lastEditorPage = m_elementEditor->currentPage();
 }
 
-void BibTeXEditor::editCurrentElement()
+void FileView::editCurrentElement()
 {
     editElement(currentElement());
 }
 
-bool BibTeXEditor::editElement(QSharedPointer<Element> element)
+bool FileView::editElement(QSharedPointer<Element> element)
 {
     prepareEditorDialog(DialogTypeEdit);
     m_elementEditor->setElement(element, fileModel()->bibliographyFile());
@@ -148,12 +148,12 @@ bool BibTeXEditor::editElement(QSharedPointer<Element> element)
         return false;
 }
 
-const QList<QSharedPointer<Element> > &BibTeXEditor::selectedElements() const
+const QList<QSharedPointer<Element> > &FileView::selectedElements() const
 {
     return m_selection;
 }
 
-void BibTeXEditor::setSelectedElements(QList<QSharedPointer<Element> > &list)
+void FileView::setSelectedElements(QList<QSharedPointer<Element> > &list)
 {
     m_selection = list;
 
@@ -168,7 +168,7 @@ void BibTeXEditor::setSelectedElements(QList<QSharedPointer<Element> > &list)
     }
 }
 
-void BibTeXEditor::setSelectedElement(QSharedPointer<Element> element)
+void FileView::setSelectedElement(QSharedPointer<Element> element)
 {
     m_selection.clear();
     m_selection << element;
@@ -182,22 +182,22 @@ void BibTeXEditor::setSelectedElement(QSharedPointer<Element> element)
     }
 }
 
-const QSharedPointer<Element> BibTeXEditor::currentElement() const
+const QSharedPointer<Element> FileView::currentElement() const
 {
     return m_current;
 }
 
-QSharedPointer<Element> BibTeXEditor::currentElement()
+QSharedPointer<Element> FileView::currentElement()
 {
     return m_current;
 }
 
-QSharedPointer<Element> BibTeXEditor::elementAt(const QModelIndex &index)
+QSharedPointer<Element> FileView::elementAt(const QModelIndex &index)
 {
     return fileModel()->element(sortFilterProxyModel()->mapToSource(index).row());
 }
 
-void BibTeXEditor::currentChanged(const QModelIndex &current, const QModelIndex &previous)
+void FileView::currentChanged(const QModelIndex &current, const QModelIndex &previous)
 {
     QTreeView::currentChanged(current, previous); // FIXME necessary?
 
@@ -205,7 +205,7 @@ void BibTeXEditor::currentChanged(const QModelIndex &current, const QModelIndex 
     emit currentElementChanged(m_current, fileModel()->bibliographyFile());
 }
 
-void BibTeXEditor::selectionChanged(const QItemSelection &selected, const QItemSelection &deselected)
+void FileView::selectionChanged(const QItemSelection &selected, const QItemSelection &deselected)
 {
     QTreeView::selectionChanged(selected, deselected);
 
@@ -226,7 +226,7 @@ void BibTeXEditor::selectionChanged(const QItemSelection &selected, const QItemS
     emit selectedElementsChanged();
 }
 
-void BibTeXEditor::selectionDelete()
+void FileView::selectionDelete()
 {
     QModelIndexList mil = selectionModel()->selectedRows();
     QList<int> rows;
@@ -239,22 +239,22 @@ void BibTeXEditor::selectionDelete()
 }
 
 /// FIXME the existence of this function is basically just one big hack
-void BibTeXEditor::externalModification()
+void FileView::externalModification()
 {
     emit modified();
 }
 
-void BibTeXEditor::setReadOnly(bool isReadOnly)
+void FileView::setReadOnly(bool isReadOnly)
 {
     m_isReadOnly = isReadOnly;
 }
 
-bool BibTeXEditor::isReadOnly() const
+bool FileView::isReadOnly() const
 {
     return m_isReadOnly;
 }
 
-ValueListModel *BibTeXEditor::valueListModel(const QString &field)
+ValueListModel *FileView::valueListModel(const QString &field)
 {
     FileModel *model = fileModel();
     if (model != NULL) {
@@ -267,44 +267,44 @@ ValueListModel *BibTeXEditor::valueListModel(const QString &field)
     return NULL;
 }
 
-void BibTeXEditor::setFilterBar(FilterBar *filterBar)
+void FileView::setFilterBar(FilterBar *filterBar)
 {
     m_filterBar = filterBar;
 }
 
-void BibTeXEditor::setFilterBarFilter(SortFilterFileModel::FilterQuery fq)
+void FileView::setFilterBarFilter(SortFilterFileModel::FilterQuery fq)
 {
     if (m_filterBar != NULL)
         m_filterBar->setFilter(fq);
 }
 
-void BibTeXEditor::mouseMoveEvent(QMouseEvent *event)
+void FileView::mouseMoveEvent(QMouseEvent *event)
 {
     emit editorMouseEvent(event);
 }
 
-void BibTeXEditor::dragEnterEvent(QDragEnterEvent *event)
+void FileView::dragEnterEvent(QDragEnterEvent *event)
 {
     emit editorDragEnterEvent(event);
 }
 
-void BibTeXEditor::dropEvent(QDropEvent *event)
+void FileView::dropEvent(QDropEvent *event)
 {
     if (event->source() != this)
         emit editorDropEvent(event);
 }
 
-void BibTeXEditor::dragMoveEvent(QDragMoveEvent *event)
+void FileView::dragMoveEvent(QDragMoveEvent *event)
 {
     emit editorDragMoveEvent(event);
 }
 
-void BibTeXEditor::itemActivated(const QModelIndex &index)
+void FileView::itemActivated(const QModelIndex &index)
 {
     emit elementExecuted(elementAt(index));
 }
 
-void BibTeXEditor::prepareEditorDialog(DialogType dialogType)
+void FileView::prepareEditorDialog(DialogType dialogType)
 {
     if (dialogType != DialogTypeView && isReadOnly()) {
         kWarning() << "In read-only mode, you may only view elements, not edit them";

@@ -25,7 +25,7 @@
 #include "value.h"
 
 /**
-@author Thomas Fischer
+ * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
 class KBIBTEXGUI_EXPORT ColorLabelWidget : public KComboBox
 {

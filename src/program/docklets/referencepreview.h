@@ -25,7 +25,7 @@
 
 class Element;
 class File;
-class BibTeXEditor;
+class FileView;
 
 class ReferencePreview : public QWidget
 {
@@ -36,7 +36,7 @@ public:
 
     void setEnabled(bool);
 
-    void setEditor(BibTeXEditor *editor);
+    void setEditor(FileView *editor);
 
 public slots:
     void setElement(QSharedPointer<Element>, File *);

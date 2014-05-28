@@ -27,10 +27,10 @@ class QSignalMapper;
 
 class KActionMenu;
 
-class BibTeXEditor;
+class FileView;
 
 /**
-@author Thomas Fischer
+ * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
 class KBIBTEXGUI_EXPORT SettingsColorLabelWidget : public SettingsAbstractWidget
 {
@@ -66,7 +66,7 @@ class KBIBTEXGUI_EXPORT ColorLabelContextMenu : public QObject, private Notifica
     Q_OBJECT
 
 public:
-    explicit ColorLabelContextMenu(BibTeXEditor *widget);
+    explicit ColorLabelContextMenu(FileView *widget);
     ~ColorLabelContextMenu();
 
     KActionMenu *menuAction();

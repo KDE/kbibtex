@@ -25,7 +25,7 @@
 #include <KService>
 
 #include "openfileinfo.h"
-#include <bibtexeditor.h>
+#include <fileview.h>
 
 namespace KParts
 {
@@ -42,7 +42,7 @@ public:
     explicit MDIWidget(QWidget *parent);
     ~MDIWidget();
 
-    BibTeXEditor *editor();
+    FileView *editor();
     OpenFileInfo *currentFile();
     OpenFileInfoManager *getOpenFileInfoManager();
 
@@ -51,7 +51,7 @@ public slots:
 
 signals:
     void setCaption(const QString &);
-    void documentSwitch(BibTeXEditor *, BibTeXEditor *);
+    void documentSwitch(FileView *, FileView *);
     void activePartChanged(KParts::Part *);
     void documentNew();
     void documentOpen();

@@ -29,7 +29,7 @@ class QDropEvent;
 class QCloseEvent;
 
 class ReferencePreview;
-class BibTeXEditor;
+class FileView;
 
 class KBibTeXMainWindow : public KParts::MainWindow
 {
@@ -55,7 +55,7 @@ protected slots:
     void openDocumentDialog();
     void closeDocument();
     void showPreferences();
-    void documentSwitched(BibTeXEditor *, BibTeXEditor *);
+    void documentSwitched(FileView *, FileView *);
 
 private slots:
     void showSearchResults();

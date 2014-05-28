@@ -27,11 +27,11 @@ set(
     field/fieldlineedit.cpp
     field/fieldlistedit.cpp
     field/colorlabelwidget.cpp
-    file/bibtexeditor.cpp
+    file/fileview.cpp
     file/findduplicatesui.cpp
     file/clipboard.cpp
     file/filemodel.cpp
-    file/bibtexfileview.cpp
+    file/basicfileview.cpp
     element/elementeditor.cpp
     element/elementwidgets.cpp
     element/findpdfui.cpp
@@ -81,10 +81,10 @@ set(
     delayedexecutiontimer.h
     kbibtexgui_export.h
     file/findduplicatesui.h
-    file/bibtexfileview.h
+    file/basicfileview.h
     file/clipboard.h
     file/filemodel.h
-    file/bibtexeditor.h
+    file/fileview.h
     element/findpdfui.h
     element/elementeditor.h
     element/associatedfilesui.h

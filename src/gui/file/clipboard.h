@@ -27,7 +27,7 @@ class QDragEnterEvent;
 class QDragMoveEvent;
 class QDropEvent;
 
-class BibTeXEditor;
+class FileView;
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
@@ -40,7 +40,7 @@ public:
     static const QString keyCopyReferenceCommand;
     static const QString defaultCopyReferenceCommand;
 
-    explicit Clipboard(BibTeXEditor *bibTeXEditor);
+    explicit Clipboard(FileView *fileView);
     ~Clipboard();
 
 public slots:

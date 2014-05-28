@@ -47,7 +47,7 @@ SortFilterFileModel::SortFilterFileModel(QObject *parent)
     m_filterQuery.combination = AnyTerm;
     loadState();
     setSortRole(FileModel::SortRole);
-};
+}
 
 void SortFilterFileModel::setSourceModel(QAbstractItemModel *model)
 {

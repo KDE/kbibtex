@@ -36,7 +36,7 @@ class Element;
 class FieldLineEdit;
 
 /**
-@author Thomas Fischer
+ * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
 class FieldListEdit : public QWidget
 {

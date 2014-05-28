@@ -27,7 +27,7 @@
 #include "preferences.h"
 #include "guihelper.h"
 #include "italictextitemmodel.h"
-#include "bibtexeditor.h"
+#include "fileview.h"
 #include "filemodel.h"
 #include "value.h"
 #include "iconvlatex.h"
@@ -41,7 +41,7 @@ FileSettings::FileSettings(QWidget *parent)
     connect(this, SIGNAL(widgetsChanged()), this, SLOT(widgetsChangedSlot()));
 }
 
-void FileSettings::setEditor(BibTeXEditor *editor)
+void FileSettings::setEditor(FileView *editor)
 {
     m_currentFile = NULL;
     m_editor = editor;

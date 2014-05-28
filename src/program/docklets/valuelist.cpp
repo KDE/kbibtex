@@ -36,7 +36,7 @@
 
 #include "bibtexfields.h"
 #include "entry.h"
-#include "bibtexeditor.h"
+#include "fileview.h"
 #include "valuelistmodel.h"
 #include "filemodel.h"
 
@@ -51,7 +51,7 @@ public:
     const QString configGroupName;
     const QString configKeyFieldName, configKeyShowCountColumn, configKeySortByCountAction, configKeyHeaderState;
 
-    BibTeXEditor *editor;
+    FileView *editor;
     QTreeView *treeviewFieldValues;
     ValueListModel *model;
     QSortFilterProxyModel *sortingModel;
@@ -216,7 +216,7 @@ ValueList::~ValueList()
     delete d;
 }
 
-void ValueList::setEditor(BibTeXEditor *editor)
+void ValueList::setEditor(FileView *editor)
 {
     if (d->editor != NULL)
         disconnect(d->editor, SIGNAL(selectedElementsChanged()), this, SLOT(editorSelectionChanged()));

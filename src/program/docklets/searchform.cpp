@@ -68,7 +68,7 @@
 #include "onlinesearchdoi.h"
 #include "onlinesearchoclcworldcat.h"
 #include "openfileinfo.h"
-#include "bibtexeditor.h"
+#include "fileview.h"
 #include "filemodel.h"
 #include "searchresults.h"
 
