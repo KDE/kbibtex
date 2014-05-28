@@ -108,7 +108,7 @@ public:
         }
         break;
         case KBibTeX::StarRating: {
-            starRatingWidget = new StarRatingFieldInput(StarRating::defaultMaxNumberOfStars, p);
+            starRatingWidget = new StarRatingFieldInput(8 /* = #stars */, p);
             layout->addWidget(starRatingWidget, 0);
         }
         break;
@@ -141,7 +141,7 @@ public:
         else if (colorWidget != NULL)
             colorWidget->clear();
         else if (starRatingWidget != NULL)
-            starRatingWidget->setValue(StarRating::UnsetStarsValue);
+            starRatingWidget->unsetValue();
         enableModifiedSignal();
     }
 

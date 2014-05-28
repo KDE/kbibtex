@@ -34,24 +34,64 @@ class QMouseEvent;
 class KPushButton;
 
 /**
-@author Thomas Fischer
-*/
+ * A widget which shows a number of stars in a horizonal row.
+ * A floating-point value between 0.0 and n (n=number of stars) can be
+ * assigned to this widget; based on this value, the corresponding
+ * number of stars on the left side will be colored golden, the stars
+ * on the right side will be greyed out.
+ *
+ * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ */
 class KBIBTEXGUI_EXPORT StarRating : public QWidget
 {
     Q_OBJECT
 public:
-    static const int defaultMaxNumberOfStars;
-    static const double UnsetStarsValue;
+    /**
+     * Create a star rating widget with a given number of stars.
+     *
+     * @param maxNumberOfStars number of stars (recommended value is 8)
+     * @param parent parent widget
+     */
+    explicit StarRating(int maxNumberOfStars, QWidget *parent = NULL);
 
-    explicit StarRating(int maxNumberOfStars = defaultMaxNumberOfStars, QWidget *parent = NULL);
-
+    /**
+     * Get the current rating in percent (i.e >=0.0 and <=100.0).
+     * If no rating has been set (e.g. by a previous call of @see unsetValue),
+     * the return value will be negative.
+     * @return either percent between 0.0 and 100.0, or a negative value
+     */
     double value() const;
+
+    /**
+     * Set the rating in percent (valid only >=0.0 and <=100.0).
+     * @param percent value between 0.0 and 100.0
+     */
     void setValue(double percent);
 
+    /**
+     * Remove any value assigned to this widget.
+     * No stars will be highlighted and some "no value set" text
+     * will be shown.
+     * @see value will return a negative value.
+     */
+    void unsetValue();
+
+    /**
+     * Set this widget in read-only or read-writeable mode.
+     * @param isReadOnly @c true if widget is to be read-only, @c false if modifyable
+     */
     void setReadOnly(bool isReadOnly);
 
+    /**
+     * Paint a horizonal sequence of stars on a painter.
+     *
+     * @param painter painter to draw on
+     * @param defaultState how icons shall be drawn; common values are KIconLoader::DefaultState and KIconLoader::DisabledState
+     * @param numTotalStars maximum/total number of stars
+     * @param percent percent value of "glowing" starts, to be >=0.0 and <= 100.0
+     * @param inside fit and paint stars inside this rectangle on the painter
+     */
     static void paintStars(QPainter *painter, KIconLoader::States defaultState, int numTotalStars, double percent, const QRect &inside);
-    static double percentForPosition(const QPoint &pos, int numTotalStars, const QRect &inside);
 
 signals:
     void modified();
@@ -65,34 +105,40 @@ protected:
 private slots:
     void clear();
     void buttonHeight();
+    double percentForPosition(const QPoint &pos, int numTotalStars, const QRect &inside);
 
 private:
-    static const int paintMargin;
-    int spacing;
-
-    bool m_isReadOnly;
-    double m_percent;
-    int m_maxNumberOfStars;
-    const QString m_unsetStarsText;
-    QLabel *m_labelPercent;
-    KPushButton *m_clearButton;
-    QPoint m_mouseLocation;
-
-    QRect starsInside() const;
+    class Private;
+    Private *const d;
 };
 
 /**
-@author Thomas Fischer
-*/
+ * A specialization of @see StarRating mimicing a FieldInput widget.
+ * As part of this specialization, @see apply and @see reset functions
+ * to write to or read from a Value object.
+ *
+ * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ */
 class KBIBTEXGUI_EXPORT StarRatingFieldInput : public StarRating
 {
 public:
-    explicit StarRatingFieldInput(int maxNumberOfStars = defaultMaxNumberOfStars, QWidget *parent = NULL)
+    explicit StarRatingFieldInput(int maxNumberOfStars, QWidget *parent = NULL)
             : StarRating(maxNumberOfStars, parent) {
         /* nothing */
     }
 
+    /**
+     * Set this widget's state based on the provided Value object
+     * @param value Value object to evaluate
+     * @return @c true if the Value could be interpreted into a star rating, @c false otherwise
+     */
     bool reset(const Value &value);
+
+    /**
+     * Write this widget's value into the provided Value object.
+     * @param value Value object to modify
+     * @return @c true if the apply operation succeeded, @c false otherwise (should not happen)
+     */
     bool apply(Value &value) const;
 };
 
