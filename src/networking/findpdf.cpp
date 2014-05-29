@@ -33,28 +33,198 @@
 #include "value.h"
 #include "fileinfo.h"
 
-int FindPDF::fileCounter = 0;
-
 int maxDepth = 5;
 const char *depthProperty = "depth";
 const char *termProperty = "term";
 const char *originProperty = "origin";
 
-FindPDF::FindPDF(QObject *parent)
-        : QObject(parent), aliveCounter(0)
+
+class FindPDF::Private
 {
-    // TODO
+private:
+    FindPDF *p;
+
+public:
+    int aliveCounter;
+    QList<ResultItem> result;
+    Entry currentEntry;
+    QSet<QUrl> knownUrls;
+
+    Private(FindPDF *parent)
+            : p(parent), aliveCounter(0)
+    {
+        /// nothing
+    }
+
+    bool queueUrl(const QUrl &url, const QString &term, const QString &origin, int depth)
+    {
+        if (!knownUrls.contains(url) && depth > 0) {
+            kDebug() << "Starting download for" << url.toString() << "(" << origin << ")";
+            knownUrls.insert(url);
+            QNetworkRequest request = QNetworkRequest(url);
+            QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
+            InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply, 15); ///< set a timeout on network connections
+            reply->setProperty(depthProperty, QVariant::fromValue<int>(depth));
+            reply->setProperty(termProperty, term);
+            reply->setProperty(originProperty, origin);
+            connect(reply, SIGNAL(finished()), p, SLOT(downloadFinished()));
+            ++aliveCounter;
+            return true;
+        } else
+            return false;
+    }
+
+    void processGeneralHTML(QNetworkReply *reply, const QString &text)
+    {
+        /// fetch some properties from Reply object
+        const QString term = reply->property(termProperty).toString();
+        const QString origin = reply->property(originProperty).toString();
+        bool ok = false;
+        int depth = reply->property(depthProperty).toInt(&ok);
+        if (!ok) depth = 0;
+
+        /// regular expressions to guess links to follow
+        const QRegExp anchorRegExp[5] = {
+            QRegExp(QString(QLatin1String("<a[^>]*href=\"([^\"]*%1[^\"]*[.]pdf)\"")).arg(QRegExp::escape(term)), Qt::CaseInsensitive),
+            QRegExp(QString(QLatin1String("<a[^>]*href=\"([^\"]+)\"[^>]*>[^<]*%1[^<]*[.]pdf")).arg(QRegExp::escape(term)), Qt::CaseInsensitive),
+            QRegExp(QString(QLatin1String("<a[^>]*href=\"([^\"]*%1[^\"]*)\"")).arg(QRegExp::escape(term)), Qt::CaseInsensitive),
+            QRegExp(QString(QLatin1String("<a[^>]*href=\"([^\"]+)\"[^>]*>[^<]*%1[^<]*\\b")).arg(QRegExp::escape(term)), Qt::CaseInsensitive),
+            QRegExp(QLatin1String("<a[^>]*href=\"([^\"]+)\""), Qt::CaseInsensitive) /// any link
+        };
+
+        bool gotLink = false;
+        for (int i = 0; !gotLink && i < 4; ++i) {
+            if (anchorRegExp[i].indexIn(text) >= 0) {
+                const KUrl url = KUrl::fromEncoded(anchorRegExp[i].cap(1).toLatin1());
+                queueUrl(reply->url().resolved(url), term, origin, depth - 1);
+                gotLink = true;
+            }
+        }
+
+        if (!gotLink && text.count(anchorRegExp[4]) == 1) {
+            /// this is only the last resort:
+            /// to follow the first link found in the HTML document
+            if (anchorRegExp[4].indexIn(text) >= 0) {
+                const KUrl url = KUrl::fromEncoded(anchorRegExp[4].cap(1).toLatin1());
+                queueUrl(reply->url().resolved(url), term, origin, depth - 1);
+            }
+        }
+    }
+
+    void processGoogleResult(QNetworkReply *reply, const QString &text)
+    {
+        static const QString h3Tag(QLatin1String("<h3"));
+        static const QString aTag(QLatin1String("<a"));
+        static const QString hrefAttrib(QLatin1String("href=\""));
+
+        const QString term = reply->property(termProperty).toString();
+        bool ok = false;
+        int depth = reply->property(depthProperty).toInt(&ok);
+        if (!ok) depth = 0;
+
+        /// extract the first numHitsToFollow-many hits found by Google Scholar
+        const int numHitsToFollow = 10;
+        int p = -1;
+        for (int i = 0; i < numHitsToFollow; ++i) {
+            if ((p = text.indexOf(h3Tag, p + 1)) >= 0 && (p = text.indexOf(aTag, p + 1)) >= 0 && (p = text.indexOf(hrefAttrib, p + 1)) >= 0) {
+                int p1 = p + 6;
+                int p2 = text.indexOf(QLatin1Char('"'), p1 + 1);
+                QUrl url(text.mid(p1, p2 - p1));
+                kDebug() << "Google URL" << i << " : " << url.toString();
+                queueUrl(reply->url().resolved(url), term, QLatin1String("scholar.google"), depth - 1);
+            }
+        }
+    }
+
+    void processSpringerLink(QNetworkReply *reply, const QString &text)
+    {
+        static const QRegExp fulltextPDFlink(QLatin1String("href=\"([^\"]+/fulltext.pdf)\""));
+
+        if (fulltextPDFlink.indexIn(text) > 0) {
+            bool ok = false;
+            int depth = reply->property(depthProperty).toInt(&ok);
+            if (!ok) depth = 0;
+
+            QUrl url(fulltextPDFlink.cap(1));
+            queueUrl(reply->url().resolved(url), QString(), QLatin1String("springerlink"), depth - 1);
+        }
+    }
+
+    void processCiteSeerX(QNetworkReply *reply, const QString &text)
+    {
+        static const QRegExp downloadPDFlink(QLatin1String("href=\"(/viewdoc/download[^\"]+type=pdf)\""));
+
+        if (downloadPDFlink.indexIn(text) > 0) {
+            bool ok = false;
+            int depth = reply->property(depthProperty).toInt(&ok);
+            if (!ok) depth = 0;
+
+            QUrl url(QUrl::fromEncoded(downloadPDFlink.cap(1).toLatin1()));
+            queueUrl(reply->url().resolved(url), QString(), QLatin1String("citeseerx"), depth - 1);
+        }
+    }
+
+    bool processPDF(QNetworkReply *reply, const QByteArray &data)
+    {
+        bool progress = false;
+        const QString origin = reply->property(originProperty).toString();
+        const QUrl url = reply->url();
+
+        Poppler::Document *doc = Poppler::Document::loadFromData(data);
+
+        /// search for duplicate URLs
+        bool containsUrl = false;
+        foreach(const ResultItem &ri, result) {
+            containsUrl |= ri.url == url;
+            if (containsUrl) break;
+        }
+
+        if (!containsUrl) {
+            ResultItem resultItem;
+            resultItem.tempFilename = new KTemporaryFile();
+            resultItem.tempFilename->setAutoRemove(true);
+            resultItem.tempFilename->setSuffix(QLatin1String(".pdf"));
+            if (resultItem.tempFilename->open()) {
+                resultItem.tempFilename->write(data);
+                resultItem.tempFilename->close();
+            } else {
+                delete resultItem.tempFilename;
+                resultItem.tempFilename = NULL;
+            }
+            resultItem.url = url;
+            resultItem.textPreview = doc->info("Title").simplified();
+            const int maxTextLen = 1024;
+            for (int i = 0; i < doc->numPages() && resultItem.textPreview.length() < maxTextLen; ++i) {
+                Poppler::Page *page = doc->page(i);
+                resultItem.textPreview += QLatin1Char(' ') + page->text(QRect()).simplified().left(maxTextLen);
+                delete page;
+            }
+            resultItem.downloadMode = NoDownload;
+            resultItem.relevance = origin == Entry::ftDOI ? 1.0 : (origin == QLatin1String("eprint") ? 0.75 : 0.5);
+            result << resultItem;
+            progress = true;
+        }
+
+        delete doc;
+        return progress;
+    }
+};
+
+FindPDF::FindPDF(QObject *parent)
+        : QObject(parent), d(new Private(this))
+{
+    /// nothing
 }
 
 bool FindPDF::search(const Entry &entry)
 {
-    if (aliveCounter > 0) return false;
+    if (d->aliveCounter > 0) return false;
 
-    m_knownUrls.clear();
-    m_result.clear();
-    m_currentEntry = entry;
+    d->knownUrls.clear();
+    d->result.clear();
+    d->currentEntry = entry;
 
-    emit progress(0, aliveCounter, 0);
+    emit progress(0, d->aliveCounter, 0);
 
     /// Generate a string which contains the title's beginning
     QString searchWords;
@@ -79,11 +249,11 @@ bool FindPDF::search(const Entry &entry)
             const QString fieldText = PlainTextValue::text(entry.value(field));
             int p = -1;
             while ((p = KBibTeX::doiRegExp.indexIn(fieldText, p + 1)) >= 0)
-                queueUrl(QUrl(FileInfo::doiUrlPrefix() + KBibTeX::doiRegExp.cap(0)), fieldText, Entry::ftDOI, maxDepth);
+                d->queueUrl(QUrl(FileInfo::doiUrlPrefix() + KBibTeX::doiRegExp.cap(0)), fieldText, Entry::ftDOI, maxDepth);
 
             p = -1;
             while ((p = KBibTeX::urlRegExp.indexIn(fieldText, p + 1)) >= 0)
-                queueUrl(QUrl(KBibTeX::urlRegExp.cap(0)), searchWords, Entry::ftUrl, maxDepth);
+                d->queueUrl(QUrl(KBibTeX::urlRegExp.cap(0)), searchWords, Entry::ftUrl, maxDepth);
         }
     }
 
@@ -91,68 +261,47 @@ bool FindPDF::search(const Entry &entry)
         /// check eprint fields as used for arXiv
         const QString fieldText = PlainTextValue::text(entry.value(QLatin1String("eprint")));
         if (!fieldText.isEmpty())
-            queueUrl(QUrl(QLatin1String("http://arxiv.org/pdf/") + fieldText), fieldText, QLatin1String("eprint"), maxDepth);
+            d->queueUrl(QUrl(QLatin1String("http://arxiv.org/pdf/") + fieldText), fieldText, QLatin1String("eprint"), maxDepth);
     }
 
     if (!searchWords.isEmpty()) {
-        QString fieldText = PlainTextValue::text(entry.value(Entry::ftTitle));
-
         /// use title to search in Google Scholar
-        if (!fieldText.isEmpty()) {
-            KUrl url(QLatin1String("http://scholar.google.com/scholar?hl=en&btnG=Search&as_sdt=1"));
-            url.addQueryItem(QLatin1String("q"), QLatin1String(" filetype:pdf"));
-            queueUrl(url, searchWords, QLatin1String("scholar.google"), maxDepth);
-        }
+        KUrl googleScholarUrl(QLatin1String("http://scholar.google.com/scholar?hl=en&btnG=Search&as_sdt=1"));
+        googleScholarUrl.addQueryItem(QLatin1String("q"), searchWords + QLatin1String(" filetype:pdf"));
+        d->queueUrl(googleScholarUrl, searchWords, QLatin1String("scholar.google"), maxDepth);
 
         /// use title to search in Bing
-        if (!fieldText.isEmpty()) {
-            KUrl url(QLatin1String("http://www.bing.com/search?setmkt=en-IE&setlang=match"));
-            url.addQueryItem(QLatin1String("q"), fieldText + QLatin1String(" filetype:pdf"));
-            queueUrl(url, searchWords, QLatin1String("bing"), maxDepth);
-        }
+        KUrl bingUrl(QLatin1String("http://www.bing.com/search?setmkt=en-IE&setlang=match"));
+        bingUrl.addQueryItem(QLatin1String("q"), searchWords + QLatin1String(" filetype:pdf"));
+        d->queueUrl(bingUrl, searchWords, QLatin1String("bing"), maxDepth);
 
         /// use title to search in Microsoft Academic Search
-        if (!fieldText.isEmpty()) {
-            KUrl url(QLatin1String("http://academic.research.microsoft.com/Search"));
-            url.addQueryItem(QLatin1String("query"), fieldText);
-            queueUrl(url, searchWords, QLatin1String("academicsearch"), maxDepth);
-        }
+        KUrl masUrl(QLatin1String("http://academic.research.microsoft.com/Search"));
+        masUrl.addQueryItem(QLatin1String("query"), searchWords);
+        d->queueUrl(masUrl, searchWords, QLatin1String("academicsearch"), maxDepth);
 
         /// use title to search in CiteSeerX
-        if (!fieldText.isEmpty()) {
-            KUrl url(QLatin1String("http://citeseerx.ist.psu.edu/search?submit=Search&sort=rlv&t=doc"));
-            url.addQueryItem(QLatin1String("q"), fieldText);
-            queueUrl(url, searchWords, QLatin1String("citeseerx"), maxDepth);
-        }
+        KUrl citeseerXurl(QLatin1String("http://citeseerx.ist.psu.edu/search?submit=Search&sort=rlv&t=doc"));
+        citeseerXurl.addQueryItem(QLatin1String("q"), searchWords);
+        d->queueUrl(citeseerXurl, searchWords, QLatin1String("citeseerx"), maxDepth);
     }
 
-    if (aliveCounter == 0)
+    if (d->aliveCounter == 0) {
+        kWarning() << "Directly at start, no URLs are queue for a search -> this should never happen";
         emit finished();
+    }
 
     return true;
 }
 
-bool FindPDF::queueUrl(const QUrl &url, const QString &term, const QString &origin, int depth)
-{
-    if (!m_knownUrls.contains(url) && depth > 0) {
-        kDebug() << "Starting download for" << url.toString() << "(" << origin << ")";
-        m_knownUrls.insert(url);
-        QNetworkRequest request = QNetworkRequest(url);
-        QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
-        InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply, 15); ///< set a timeout on network connections
-        reply->setProperty(depthProperty, QVariant::fromValue<int>(depth));
-        reply->setProperty(termProperty, term);
-        reply->setProperty(originProperty, origin);
-        connect(reply, SIGNAL(finished()), this, SLOT(downloadFinished()));
-        ++aliveCounter;
-        return true;
-    } else
-        return false;
-}
-
 QList<FindPDF::ResultItem> FindPDF::results()
 {
-    return m_result;
+    if (d->aliveCounter == 0)
+        return d->result;
+    else {
+        /// Return empty list while search is running
+        return QList<FindPDF::ResultItem>();
+    }
 }
 
 void FindPDF::downloadFinished()
@@ -160,8 +309,8 @@ void FindPDF::downloadFinished()
     static const char *htmlHead1 = "<html", *htmlHead2 = "<HTML";
     static const char *pdfHead = "%PDF-";
 
-    --aliveCounter;
-    emit progress(m_knownUrls.count(), aliveCounter, m_result.count());
+    --d->aliveCounter;
+    emit progress(d->knownUrls.count(), d->aliveCounter, d->result.count());
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
     const QString term = reply->property(termProperty).toString();
@@ -174,18 +323,10 @@ void FindPDF::downloadFinished()
         QByteArray data = reply->readAll();
 
         QUrl redirUrl = reply->url().resolved(reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl());
-        kDebug() << "finished Downloading " << reply->url().toString() << "   depth=" << depth  << "  aliveCounter=" << aliveCounter << "  data.size=" << data.size() << "  redirUrl=" << redirUrl.toString() << "   origin=" << origin;
+        kDebug() << "finished Downloading " << reply->url().toString() << "   depth=" << depth  << "  d->aliveCounter=" << d->aliveCounter << "  data.size=" << data.size() << "  redirUrl=" << redirUrl.toString() << "   origin=" << origin;
 
         if (data.contains(htmlHead1) || data.contains(htmlHead2)) {
             /// returned data is a HTML file, i.e. contains "<html"
-
-            QFile htmlFile(QString("/tmp/file%1.html").arg(++fileCounter));
-            if (htmlFile.open(QFile::WriteOnly)) {
-                htmlFile.write(reply->url().toString().toLatin1());
-                htmlFile.write("\n\n\n");
-                htmlFile.write(data);
-                htmlFile.close();
-            }
 
             /// check for limited depth before continuing
             if (depthOk && depth > 0) {
@@ -201,19 +342,21 @@ void FindPDF::downloadFinished()
                 static const QRegExp citeseerxTitleRegExp(QLatin1String("<title>CiteSeerX &mdash; [^>]*</title>"));
 
                 if (text.indexOf(googleScholarTitleRegExp) > 0)
-                    processGoogleResult(reply, text);
+                    d->processGoogleResult(reply, text);
                 else if (text.indexOf(springerLinkTitleRegExp) > 0)
-                    processSpringerLink(reply, text);
+                    d->processSpringerLink(reply, text);
                 else if (text.indexOf(citeseerxTitleRegExp) > 0)
-                    processCiteSeerX(reply, text);
+                    d->processCiteSeerX(reply, text);
                 else
-                    processGeneralHTML(reply, text);
+                    d->processGeneralHTML(reply, text);
             }
         } else if (data.contains(pdfHead)) {
             /// looks like a PDF file -> grab it
-            processPDF(reply, data);
+            const bool gotPDFfile = d->processPDF(reply, data);
+            if (gotPDFfile)
+                emit progress(d->knownUrls.count(), d->aliveCounter, d->result.count());
         } else if (redirUrl.isValid())
-            queueUrl(redirUrl, term, origin, depth - 1);
+            d->queueUrl(redirUrl, term, origin, depth - 1);
         else {
             QTextStream ts(data);
             const QString text = ts.readAll();
@@ -222,143 +365,9 @@ void FindPDF::downloadFinished()
     } else
         kDebug() << "error from reply: " << reply->errorString();
 
-    if (aliveCounter == 0) {
+    if (d->aliveCounter == 0) {
         /// no more running downloads left
         emit finished();
     }
-}
-
-void FindPDF::processGeneralHTML(QNetworkReply *reply, const QString &text)
-{
-    /// fetch some properties from Reply object
-    const QString term = reply->property(termProperty).toString();
-    const QString origin = reply->property(originProperty).toString();
-    bool ok = false;
-    int depth = reply->property(depthProperty).toInt(&ok);
-    if (!ok) depth = 0;
-
-    /// regular expressions to guess links to follow
-    const QRegExp anchorRegExp[5] = {
-        QRegExp(QString(QLatin1String("<a[^>]*href=\"([^\"]*%1[^\"]*[.]pdf)\"")).arg(QRegExp::escape(term)), Qt::CaseInsensitive),
-        QRegExp(QString(QLatin1String("<a[^>]*href=\"([^\"]+)\"[^>]*>[^<]*%1[^<]*[.]pdf")).arg(QRegExp::escape(term)), Qt::CaseInsensitive),
-        QRegExp(QString(QLatin1String("<a[^>]*href=\"([^\"]*%1[^\"]*)\"")).arg(QRegExp::escape(term)), Qt::CaseInsensitive),
-        QRegExp(QString(QLatin1String("<a[^>]*href=\"([^\"]+)\"[^>]*>[^<]*%1[^<]*\\b")).arg(QRegExp::escape(term)), Qt::CaseInsensitive),
-        QRegExp(QLatin1String("<a[^>]*href=\"([^\"]+)\""), Qt::CaseInsensitive) /// any link
-    };
-
-    bool gotLink = false;
-    for (int i = 0; !gotLink && i < 4; ++i) {
-        if (anchorRegExp[i].indexIn(text) >= 0) {
-            const KUrl url = KUrl::fromEncoded(anchorRegExp[i].cap(1).toLatin1());
-            queueUrl(reply->url().resolved(url), term, origin, depth - 1);
-            gotLink = true;
-        }
-    }
-
-    if (!gotLink && text.count(anchorRegExp[4]) == 1) {
-        /// this is only the last resort:
-        /// to follow the first link found in the HTML document
-        if (anchorRegExp[4].indexIn(text) >= 0) {
-            const KUrl url = KUrl::fromEncoded(anchorRegExp[4].cap(1).toLatin1());
-            queueUrl(reply->url().resolved(url), term, origin, depth - 1);
-        }
-    }
-}
-
-void FindPDF::processGoogleResult(QNetworkReply *reply, const QString &text)
-{
-    static const QString h3Tag(QLatin1String("<h3"));
-    static const QString aTag(QLatin1String("<a"));
-    static const QString hrefAttrib(QLatin1String("href=\""));
-
-    const QString term = reply->property(termProperty).toString();
-    bool ok = false;
-    int depth = reply->property(depthProperty).toInt(&ok);
-    if (!ok) depth = 0;
-
-    /// extract the first numHitsToFollow-many hits found by Google Scholar
-    const int numHitsToFollow = 10;
-    int p = -1;
-    for (int i = 0; i < numHitsToFollow; ++i) {
-        if ((p = text.indexOf(h3Tag, p + 1)) >= 0 && (p = text.indexOf(aTag, p + 1)) >= 0 && (p = text.indexOf(hrefAttrib, p + 1)) >= 0) {
-            int p1 = p + 6;
-            int p2 = text.indexOf(QLatin1Char('"'), p1 + 1);
-            QUrl url(text.mid(p1, p2 - p1));
-            kDebug() << "Google URL" << i << " : " << url.toString();
-            queueUrl(reply->url().resolved(url), term, QLatin1String("scholar.google"), depth - 1);
-        }
-    }
-}
-
-void FindPDF::processSpringerLink(QNetworkReply *reply, const QString &text)
-{
-    static const QRegExp fulltextPDFlink(QLatin1String("href=\"([^\"]+/fulltext.pdf)\""));
-
-    if (fulltextPDFlink.indexIn(text) > 0) {
-        bool ok = false;
-        int depth = reply->property(depthProperty).toInt(&ok);
-        if (!ok) depth = 0;
-
-        QUrl url(fulltextPDFlink.cap(1));
-        queueUrl(reply->url().resolved(url), QString(), QLatin1String("springerlink"), depth - 1);
-    }
-}
-
-void FindPDF::processCiteSeerX(QNetworkReply *reply, const QString &text)
-{
-    static const QRegExp downloadPDFlink(QLatin1String("href=\"(/viewdoc/download[^\"]+type=pdf)\""));
-
-    if (downloadPDFlink.indexIn(text) > 0) {
-        bool ok = false;
-        int depth = reply->property(depthProperty).toInt(&ok);
-        if (!ok) depth = 0;
-
-        QUrl url(QUrl::fromEncoded(downloadPDFlink.cap(1).toLatin1()));
-        queueUrl(reply->url().resolved(url), QString(), QLatin1String("citeseerx"), depth - 1);
-    }
-}
-
-void FindPDF::processPDF(QNetworkReply *reply, const QByteArray &data)
-{
-    const QString origin = reply->property(originProperty).toString();
-    const QUrl url = reply->url();
-
-    Poppler::Document *doc = Poppler::Document::loadFromData(data);
-
-    /// search for duplicate URLs
-    bool containsUrl = false;
-    foreach(const ResultItem &ri, m_result) {
-        containsUrl |= ri.url == url;
-        if (containsUrl) break;
-    }
-
-    if (!containsUrl) {
-        ResultItem result;
-        result.tempFilename = new KTemporaryFile();
-        result.tempFilename->setAutoRemove(true);
-        result.tempFilename->setSuffix(QLatin1String(".pdf"));
-        if (result.tempFilename->open()) {
-            result.tempFilename->write(data);
-            result.tempFilename->close();
-        } else {
-            delete result.tempFilename;
-            result.tempFilename = NULL;
-        }
-        result.url = url;
-        result.textPreview = doc->info("Title").simplified();
-        const int maxTextLen = 1024;
-        for (int i = 0; i < doc->numPages() && result.textPreview.length() < maxTextLen; ++i) {
-            Poppler::Page *page = doc->page(i);
-            result.textPreview += QLatin1Char(' ') + page->text(QRect()).simplified().left(maxTextLen);
-            delete page;
-        }
-        result.downloadMode = NoDownload;
-        result.relevance = origin == Entry::ftDOI ? 1.0 : (origin == QLatin1String("eprint") ? 0.75 : 0.5);
-        m_result << result;
-
-        emit progress(m_knownUrls.count(), aliveCounter, m_result.count());
-    }
-
-    delete doc;
 }
 
