@@ -30,7 +30,7 @@ class Encoder
 public:
     virtual ~Encoder() {
         /* nothing */
-    };
+    }
 
     /**
      * Decode from external textual representation to internal (UTF-8) representation.
