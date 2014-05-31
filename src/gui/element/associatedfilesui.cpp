@@ -157,7 +157,7 @@ bool AssociatedFilesUI::associateUrl(const QUrl &url, QSharedPointer<Entry> &ent
         }
     }
 
-    dlg->deleteLater();
+    delete dlg;
     return accepted && success;
 }
 
@@ -182,7 +182,8 @@ QString AssociatedFilesUI::associateUrl(const QUrl &url, const QString &entryId,
             success &= !referenceString.isEmpty();
         }
     }
-    dlg->deleteLater();
+
+    delete dlg;
     return accepted && success ? referenceString : QString();
 }
 
