@@ -9,7 +9,9 @@
         <sub-class-of type="text/plain"/>
         <alias type="text/x-research-info-systems"/>
         <comment>RIS bibliography file</comment>
+        <comment xml:lang="pl">Plik bibliografii RIS</comment>
         <comment xml:lang="pt">Ficheiro de bibliografia do RIS</comment>
+        <comment xml:lang="sk">Súbor bibliografie RIS</comment>
         <comment xml:lang="sv">RIS-bibliografifil</comment>
         <comment xml:lang="uk">файл бібліографії RIS</comment>
         <acronym>RIS</acronym>
@@ -22,7 +24,9 @@
     <mime-type type="application/x-isi-export-format">
         <sub-class-of type="text/plain"/>
         <comment>ISI bibliography file</comment>
+        <comment xml:lang="pl">Plik bibliografii ISI</comment>
         <comment xml:lang="pt">Ficheiro de bibliografia do ISI</comment>
+        <comment xml:lang="sk">Súbor bibliografie ISI</comment>
         <comment xml:lang="sv">ISI-bibliografifil</comment>
         <comment xml:lang="uk">файл бібліографії ISI</comment>
         <acronym>ISI</acronym>
@@ -37,7 +41,9 @@
         <alias type="text/x-endnote-refer"/>
         <alias type="application/x-endnote-library"/>
         <comment>EndNote library</comment>
+        <comment xml:lang="pl">Biblioteka EndNote</comment>
         <comment xml:lang="pt">Biblioteca do EndNote</comment>
+        <comment xml:lang="sk">Knižnica EndNote</comment>
         <comment xml:lang="sv">EndNote-bibliotek</comment>
         <comment xml:lang="uk">бібліотека EndNote</comment>
         <glob pattern="*.enl"/>
