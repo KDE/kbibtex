@@ -34,14 +34,14 @@ public:
     Private(FileImporterBibUtils */* UNUSED parent*/)
     // UNUSED : p(parent)
     {
-        // TODO
+        /// nothing
     }
 };
 
 FileImporterBibUtils::FileImporterBibUtils()
         : FileImporter(), BibUtils(), d(new FileImporterBibUtils::Private(this))
 {
-    // TOOD
+    /// nothing
 }
 
 FileImporterBibUtils::~FileImporterBibUtils()

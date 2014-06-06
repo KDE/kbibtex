@@ -54,7 +54,7 @@ const QString OnlineSearchMathSciNet::OnlineSearchMathSciNetPrivate::queryUrlSte
 OnlineSearchMathSciNet::OnlineSearchMathSciNet(QWidget *parent)
         : OnlineSearchAbstract(parent), d(new OnlineSearchMathSciNetPrivate(this))
 {
-    // nothing
+    /// nothing
 }
 
 OnlineSearchMathSciNet::~OnlineSearchMathSciNet()

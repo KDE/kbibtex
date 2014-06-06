@@ -595,7 +595,7 @@ const char *MergeWidget::MergeWidgetPrivate::whichCliqueText = "Showing clique %
 MergeWidget::MergeWidget(File *file, QList<EntryClique *> &cliqueList, QWidget *parent)
         : QWidget(parent), d(new MergeWidgetPrivate(this, file, cliqueList))
 {
-    // nothing
+    /// nothing
 }
 
 MergeWidget::~MergeWidget()

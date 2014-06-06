@@ -49,7 +49,7 @@ const QString OnlineSearchJStor::OnlineSearchJStorPrivate::jstorBaseUrl = QLatin
 OnlineSearchJStor::OnlineSearchJStor(QWidget *parent)
         : OnlineSearchAbstract(parent), d(new OnlineSearchJStorPrivate(this))
 {
-    // nothing
+    /// nothing
 }
 
 OnlineSearchJStor::~OnlineSearchJStor()
