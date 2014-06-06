@@ -62,6 +62,7 @@ public:
             if (fd->defaultVisible)
                 sum += fd->defaultWidth;
         }
+        Q_ASSERT_X(sum > 0, "BasicFileView::Private::resetColumnsToDefault", "Sum of default widths over columns visible by default is zero.");
 
         int col = 0;
         foreach(const FieldDescription *fd, *BibTeXFields::self()) {
@@ -118,6 +119,7 @@ public:
                 sum += columnWidths[col];
             ++col;
         }
+        Q_ASSERT_X(sum > 0, "BasicFileView::Private::adjustColumns", "Sum of column widths over visible columns is zero.");
 
         for (int col = storedColumnCount - 1; col >= 0; --col) {
             p->setColumnWidth(col, columnWidths[col] * widgetWidth / sum);
