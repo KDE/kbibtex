@@ -39,14 +39,27 @@ class KBIBTEXGUI_EXPORT FindPDFUI : public QWidget
     Q_OBJECT
 
 public:
-    FindPDFUI(Entry &entry, QWidget *parent);
     ~FindPDFUI();
 
+    /**
+     * Show a modal dialog that allows the user to start searching for PDF files,
+     * and from the set of found results to select (1) which PDF files to download
+     * and keep, (2) which URLs to PDF files to keep (no file downloading) and (3)
+     * which PDF files to ignore.
+     *
+     * @param entry
+     * @param bibtexFile
+     * @param parent
+     */
     static void interactiveFindPDF(Entry &entry, const File &bibtexFile, QWidget *parent);
-    void apply(Entry &entry, const File &bibtexFile);
 
 signals:
     void resultAvailable(bool);
+
+protected:
+    FindPDFUI(Entry &entry, QWidget *parent);
+
+    void apply(Entry &entry, const File &bibtexFile);
 
 private:
     class Private;
