@@ -276,88 +276,91 @@ void ReferencePreview::renderHTML()
         QString filename = style + ".xsl";
         exporterXSLT->setXSLTFilename(KStandardDirs::locate("data", QLatin1String("kbibtex/") + filename));
         exporter = exporterXSLT;
-    }
+    } else
+        kWarning() << "Don't know how to handle output type " << type;
 
-    QBuffer buffer(this);
-    buffer.open(QBuffer::WriteOnly);
+    if (exporter != NULL) {
+        QBuffer buffer(this);
+        buffer.open(QBuffer::WriteOnly);
 
-    bool exporterResult = false;
-    QStringList errorLog;
-    QSharedPointer<const Entry> entry = d->element.dynamicCast<const Entry>();
-    if (crossRefHandling == add && !entry.isNull()) {
-        QString crossRef = PlainTextValue::text(entry->value(QLatin1String("crossref")));
-        QSharedPointer<const Entry> crossRefEntry = d->file == NULL ? QSharedPointer<const Entry>() : d->file->containsKey(crossRef) .dynamicCast<const Entry>();
-        if (!crossRefEntry.isNull()) {
-            File file;
-            file.append(QSharedPointer<Entry>(new Entry(*entry)));
-            file.append(QSharedPointer<Entry>(new Entry(*crossRefEntry)));
-            exporterResult = exporter->save(&buffer, &file, &errorLog);
+        bool exporterResult = false;
+        QStringList errorLog;
+        QSharedPointer<const Entry> entry = d->element.dynamicCast<const Entry>();
+        if (crossRefHandling == add && !entry.isNull()) {
+            QString crossRef = PlainTextValue::text(entry->value(QLatin1String("crossref")));
+            QSharedPointer<const Entry> crossRefEntry = d->file == NULL ? QSharedPointer<const Entry>() : d->file->containsKey(crossRef) .dynamicCast<const Entry>();
+            if (!crossRefEntry.isNull()) {
+                File file;
+                file.append(QSharedPointer<Entry>(new Entry(*entry)));
+                file.append(QSharedPointer<Entry>(new Entry(*crossRefEntry)));
+                exporterResult = exporter->save(&buffer, &file, &errorLog);
+            } else
+                exporterResult = exporter->save(&buffer, d->element, d->file, &errorLog);
+        } else if (crossRefHandling == merge && !entry.isNull()) {
+            QSharedPointer<Entry> merged = QSharedPointer<Entry>(Entry::resolveCrossref(*entry, d->file));
+            exporterResult = exporter->save(&buffer, merged, d->file, &errorLog);
         } else
             exporterResult = exporter->save(&buffer, d->element, d->file, &errorLog);
-    } else if (crossRefHandling == merge && !entry.isNull()) {
-        QSharedPointer<Entry> merged = QSharedPointer<Entry>(Entry::resolveCrossref(*entry, d->file));
-        exporterResult = exporter->save(&buffer, merged, d->file, &errorLog);
-    } else
-        exporterResult = exporter->save(&buffer, d->element, d->file, &errorLog);
-    buffer.close();
-    delete exporter;
+        buffer.close();
+        delete exporter;
 
-    buffer.open(QBuffer::ReadOnly);
-    QString text = QString::fromUtf8(buffer.readAll().data());
-    buffer.close();
+        buffer.open(QBuffer::ReadOnly);
+        QString text = QString::fromUtf8(buffer.readAll().data());
+        buffer.close();
 
-    if (!exporterResult || text.isEmpty()) {
-        /// something went wrong, no output ...
-        text = d->notAvailableMessage.arg(i18n("No HTML output generated"));
-        kDebug() << errorLog.join("\n");
-    } else {
-        /// beautify text
-        text.replace(QLatin1String("``"), QLatin1String("&ldquo;"));
-        text.replace(QLatin1String("''"), QLatin1String("&rdquo;"));
-        static const QRegExp openingSingleQuotationRegExp(QLatin1String("(^|[> ,.;:!?])`(\\S)"));
-        static const QRegExp closingSingleQuotationRegExp(QLatin1String("(\\S)'([ ,.;:!?<]|$)"));
-        text.replace(openingSingleQuotationRegExp, QLatin1String("\\1&lsquo;\\2"));
-        text.replace(closingSingleQuotationRegExp, QLatin1String("\\1&rsquo;\\2"));
+        if (!exporterResult || text.isEmpty()) {
+            /// something went wrong, no output ...
+            text = d->notAvailableMessage.arg(i18n("No HTML output generated"));
+            kDebug() << errorLog.join("\n");
+        } else {
+            /// beautify text
+            text.replace(QLatin1String("``"), QLatin1String("&ldquo;"));
+            text.replace(QLatin1String("''"), QLatin1String("&rdquo;"));
+            static const QRegExp openingSingleQuotationRegExp(QLatin1String("(^|[> ,.;:!?])`(\\S)"));
+            static const QRegExp closingSingleQuotationRegExp(QLatin1String("(\\S)'([ ,.;:!?<]|$)"));
+            text.replace(openingSingleQuotationRegExp, QLatin1String("\\1&lsquo;\\2"));
+            text.replace(closingSingleQuotationRegExp, QLatin1String("\\1&rsquo;\\2"));
 
-        if (text.contains(QLatin1String("{{cite FIXME"))) {
-            /// Wikipedia {{cite ...}} command had problems (e.g. unknown entry type)
-            text = d->notAvailableMessage.arg(i18n("This type of element is not supported by Wikipedia's <tt>{{cite}}</tt> command."));
-        } else if (type.startsWith(QLatin1String("source")) || type.startsWith(QLatin1String("plain"))) {
-            /// source
-            text.prepend(QLatin1String("';\">"));
-            text.prepend(KGlobalSettings::fixedFont().family());
-            text.prepend(QLatin1String("<pre style=\"font-family: '"));
-            text.prepend(d->htmlStart);
-            text.append(QLatin1String("</pre></body></html>"));
-        } else if (type == "bibtex2html") {
-            /// bibtex2html
+            if (text.contains(QLatin1String("{{cite FIXME"))) {
+                /// Wikipedia {{cite ...}} command had problems (e.g. unknown entry type)
+                text = d->notAvailableMessage.arg(i18n("This type of element is not supported by Wikipedia's <tt>{{cite}}</tt> command."));
+            } else if (type.startsWith(QLatin1String("source")) || type.startsWith(QLatin1String("plain"))) {
+                /// source
+                text.prepend(QLatin1String("';\">"));
+                text.prepend(KGlobalSettings::fixedFont().family());
+                text.prepend(QLatin1String("<pre style=\"font-family: '"));
+                text.prepend(d->htmlStart);
+                text.append(QLatin1String("</pre></body></html>"));
+            } else if (type == "bibtex2html") {
+                /// bibtex2html
 
-            /// remove "generated by" line from HTML code if BibTeX2HTML was used
-            text.remove(QRegExp("<hr><p><em>.*</p>"));
-            text.remove(QRegExp("<[/]?(font)[^>]*>"));
-            QRegExp reTable("^.*<td.*</td.*<td>");
-            reTable.setMinimal(true);
-            text.remove(reTable);
-            text.remove(QRegExp("</td>.*$"));
-            QRegExp reAnchor("\\[ <a.*</a> \\]");
-            reAnchor.setMinimal(true);
-            text.remove(reAnchor);
+                /// remove "generated by" line from HTML code if BibTeX2HTML was used
+                text.remove(QRegExp("<hr><p><em>.*</p>"));
+                text.remove(QRegExp("<[/]?(font)[^>]*>"));
+                QRegExp reTable("^.*<td.*</td.*<td>");
+                reTable.setMinimal(true);
+                text.remove(reTable);
+                text.remove(QRegExp("</td>.*$"));
+                QRegExp reAnchor("\\[ <a.*</a> \\]");
+                reAnchor.setMinimal(true);
+                text.remove(reAnchor);
 
-            text.prepend(d->htmlStart);
-            text.append("</body></html>");
-        } else if (type == "xml") {
-            /// XML/XSLT
-            text.prepend(d->htmlStart);
-            text.append("</body></html>");
+                text.prepend(d->htmlStart);
+                text.append("</body></html>");
+            } else if (type == "xml") {
+                /// XML/XSLT
+                text.prepend(d->htmlStart);
+                text.append("</body></html>");
+            }
+
+            /// adopt current color scheme
+            text.replace(QLatin1String("color: black;"), QString(QLatin1String("color: %1;")).arg(d->textColor.name()));
         }
 
-        /// adopt current color scheme
-        text.replace(QLatin1String("color: black;"), QString(QLatin1String("color: %1;")).arg(d->textColor.name()));
+        setHtml(text, d->baseUrl);
+
+        d->saveState();
     }
-
-    setHtml(text, d->baseUrl);
-
-    d->saveState();
 
     QApplication::restoreOverrideCursor();
 }

@@ -254,7 +254,7 @@ void MDIWidget::setFile(OpenFileInfo *openFileInfo, KService::Ptr servicePtr)
     if (indexOf(widget) >= 0) {
         oldEditor = dynamic_cast<FileView *>(currentWidget());
         hasChanged = widget != currentWidget();
-    } else {
+    } else if (openFileInfo != NULL) {
         addWidget(widget);
         d->addToMapper(openFileInfo);
     }

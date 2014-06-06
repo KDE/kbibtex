@@ -308,7 +308,7 @@ public:
         }
 
         OnlineSearchQueryFormAbstract *currentQueryWidget = NULL;
-        if (checkedEngines.size() == 1)
+        if (cursor != NULL && checkedEngines.size() == 1)
             currentQueryWidget = cursor->data(WidgetRole).value<OnlineSearchQueryFormAbstract *>();
         if (currentQueryWidget == NULL)
             currentQueryWidget = generalQueryTermsForm;

@@ -88,7 +88,7 @@ bool FileExporterToolchain::runProcess(const QString &cmd, const QStringList &ar
     } else
         result = false;
 
-    if (!result)
+    if (!result && errorLog != NULL)
         errorLog->append(i18n("Process '%1' failed", (cmd + QLatin1Char(' ') + args.join(QLatin1String(" ")))));
 
     if (errorLog != NULL) {
