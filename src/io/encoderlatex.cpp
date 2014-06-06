@@ -933,7 +933,6 @@ QString EncoderLaTeX::encode(const QString &ninput) const
                 for (int k = 0; k < encoderLaTeXProtectedTextOnlySymbolsLen; ++k)
                     if (encoderLaTeXProtectedTextOnlySymbols[k] == c) {
                         output.append(QLatin1Char('\\'));
-                        found = true;
                         break;
                     }
 

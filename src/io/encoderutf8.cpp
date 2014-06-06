@@ -67,7 +67,6 @@ QString EncoderUTF8::encode(const QString &input) const
             for (int k = 0; k < encoderLaTeXProtectedTextOnlySymbolsLen; ++k)
                 if (encoderLaTeXProtectedTextOnlySymbols[k] == c) {
                     output.append(QChar('\\'));
-                    found = true;
                     break;
                 }
 

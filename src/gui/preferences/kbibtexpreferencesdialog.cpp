@@ -41,7 +41,6 @@ class KBibTeXPreferencesDialog::KBibTeXPreferencesDialogPrivate
 {
 private:
     KBibTeXPreferencesDialog *p;
-    KComboBox *listOfEncodings;
     QSet<SettingsAbstractWidget *> settingWidgets;
 
 public:

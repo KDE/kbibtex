@@ -232,7 +232,7 @@ public:
     void notificationEvent(int eventId);
 
 private:
-    enum ValueItemType { VITOther = 0, VITPerson, VITKeyword} lastItem;
+    enum ValueItemType { VITOther = 0, VITPerson, VITKeyword};
 
     PlainTextValue();
     void readConfiguration();
