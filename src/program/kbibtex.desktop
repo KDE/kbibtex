@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=KBibTeX
 Name[fr]=KBibTeX
+Name[nl]=KBibTeX
 Name[pl]=KBibTeX
 Name[pt]=KBibTeX
 Name[sk]=KBibTeX
@@ -9,6 +10,7 @@ Name[uk]=KBibTeX
 Name[x-test]=xxKBibTeXxx
 Comment=KDE-based editor for bibliographic files
 Comment[fr]=Éditeur de fichiers de bibliographie fondé sur KDE
+Comment[nl]=Op KDE gebaseerde bewerker van bibliografische bestanden
 Comment[pl]=Edytor plików bibliografii oparty na KDE
 Comment[pt]=Editor baseado no KDE para ficheiros bibliográficos
 Comment[sk]=Editor založený na KDE pre bibliografické súbory
@@ -17,6 +19,7 @@ Comment[uk]=Заснований на KDE редактор файлів бібл
 Comment[x-test]=xxKDE-based editor for bibliographic filesxx
 GenericName=BibTeX Editor
 GenericName[fr]=Éditeur BibTeX
+GenericName[nl]=BibTeX-bewerker
 GenericName[pl]=Edytor BibTeX
 GenericName[pt]=Editor do BibTeX
 GenericName[sk]=Editor BibTeX
