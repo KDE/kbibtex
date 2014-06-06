@@ -200,7 +200,7 @@ void EntryClique::insertKeyValueToValueMap(const QString &fieldName, const Value
 class FindDuplicates::FindDuplicatesPrivate
 {
 private:
-    FindDuplicates *p;
+    // UNUSED FindDuplicates *p;
     const unsigned int maxDistance;
     int **d;
     static const int dsize;
@@ -210,8 +210,8 @@ public:
     int sensitivity;
     QWidget *widget;
 
-    FindDuplicatesPrivate(FindDuplicates *parent, int sens, QWidget *w)
-            : p(parent), maxDistance(10000), gotCanceled(false), sensitivity(sens), widget(w) {
+    FindDuplicatesPrivate(FindDuplicates */* UNUSED parent*/, int sens, QWidget *w)
+        : /* UNUSED p(parent),*/ maxDistance(10000), gotCanceled(false), sensitivity(sens), widget(w) {
         d = new int*[dsize];
         for (int i = 0; i < dsize; ++i)
             d[i] = new int[dsize];
@@ -506,13 +506,13 @@ void FindDuplicates::gotCanceled()
 class MergeDuplicates::MergeDuplicatesPrivate
 {
 private:
-    MergeDuplicates *p;
+    // UNUSED MergeDuplicates *p;
 
 public:
     QWidget *widget;
 
-    MergeDuplicatesPrivate(MergeDuplicates *parent, QWidget *w)
-            : p(parent), widget(w) {
+    MergeDuplicatesPrivate(MergeDuplicates */* UNUSED parent*/, QWidget *w)
+        : /* UNUSED p(parent),*/ widget(w) {
         // nothing
     }
 };

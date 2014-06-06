@@ -25,7 +25,7 @@
 class BibliographyService::Private
 {
 private:
-    BibliographyService *p;
+    // UNUSED BibliographyService *p;
 
     /// Representing configuration file "mimeapps.list"
     /// see http://www.freedesktop.org/wiki/Specifications/mime-actions-spec/
@@ -45,18 +45,18 @@ public:
     QWidget *parentWidget;
     const QStringList textBasedMimeTypes;
 
-    Private(QWidget *w, BibliographyService *parent)
-            : p(parent),
-          configXDGMimeAppsList(KSharedConfig::openConfig(QLatin1String("mimeapps.list"), KConfig::NoGlobals, "xdgdata-apps")),
-          configGroupAddedKDEServiceAssociations(configXDGMimeAppsList, "Added KDE Service Associations"),
-          configGroupRemovedKDEServiceAssociations(configXDGMimeAppsList, "Removed KDE Service Associations"),
-          configGroupAddedAssociations(configXDGMimeAppsList, "Added Associations"),
-          configGroupRemovedAssociations(configXDGMimeAppsList, "Removed Associations"),
-          parentWidget(w),
-          textBasedMimeTypes(QStringList()
-                             << QLatin1String("text/x-bibtex") ///< classical BibTeX bibliographies
-                             << QLatin1String("application/x-research-info-systems") ///< Research Information Systems (RIS) bibliographies
-                             << QLatin1String("application/x-isi-export-format")) ///< Information Sciences Institute (ISI) bibliographies
+    Private(QWidget *w, BibliographyService */* UNUSED parent*/)
+        : // UNUSED p(parent),
+        configXDGMimeAppsList(KSharedConfig::openConfig(QLatin1String("mimeapps.list"), KConfig::NoGlobals, "xdgdata-apps")),
+        configGroupAddedKDEServiceAssociations(configXDGMimeAppsList, "Added KDE Service Associations"),
+        configGroupRemovedKDEServiceAssociations(configXDGMimeAppsList, "Removed KDE Service Associations"),
+        configGroupAddedAssociations(configXDGMimeAppsList, "Added Associations"),
+        configGroupRemovedAssociations(configXDGMimeAppsList, "Removed Associations"),
+        parentWidget(w),
+        textBasedMimeTypes(QStringList()
+                           << QLatin1String("text/x-bibtex") ///< classical BibTeX bibliographies
+                           << QLatin1String("application/x-research-info-systems") ///< Research Information Systems (RIS) bibliographies
+                           << QLatin1String("application/x-isi-export-format")) ///< Information Sciences Institute (ISI) bibliographies
     {
         /// nothing
     }

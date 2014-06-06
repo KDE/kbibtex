@@ -26,13 +26,13 @@
 class FileExporterBibUtils::Private
 {
 private:
-    FileExporterBibUtils *p;
+    // UNUSED FileExporterBibUtils *p;
 
 public:
     FileExporterBibTeX bibtexExporter;
 
-    Private(FileExporterBibUtils *parent)
-            : p(parent)
+    Private(FileExporterBibUtils */* UNUSED parent*/)
+    // UNUSED : p(parent)
     {
         bibtexExporter.setEncoding(QLatin1String("utf-8"));
     }

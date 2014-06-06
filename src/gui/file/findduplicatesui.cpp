@@ -623,15 +623,15 @@ void MergeWidget::nextClique()
 class FindDuplicatesUI::FindDuplicatesUIPrivate
 {
 private:
-    FindDuplicatesUI *p;
+    // UNUSED FindDuplicatesUI *p;
 
 public:
     KParts::Part *part;
     FileView *view;
 
-    FindDuplicatesUIPrivate(FindDuplicatesUI *parent, KParts::Part *kpart, FileView *fileView)
-            : p(parent), part(kpart), view(fileView) {
-        // nothing
+    FindDuplicatesUIPrivate(FindDuplicatesUI */* UNUSED parent*/, KParts::Part *kpart, FileView *fileView)
+        : /* UNUSED p(parent),*/ part(kpart), view(fileView) {
+        /// nothing
     }
 };
 

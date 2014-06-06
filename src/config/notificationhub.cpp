@@ -30,15 +30,16 @@ NotificationListener::~NotificationListener()
 class NotificationHub::NotificationHubPrivate
 {
 private:
-    NotificationHub *p;
+    // UNUSED NotificationHub *p;
 
 public:
     static NotificationHub *singleton;
     QHash<int, QSet<NotificationListener *> > listenersPerEventId;
     QSet<NotificationListener *> allListeners;
 
-    NotificationHubPrivate(NotificationHub *parent)
-            : p(parent) {
+    NotificationHubPrivate(NotificationHub */* UNUSED parent*/)
+    // UNUSED : p(parent)
+    {
         // nothing
     }
 };

@@ -30,11 +30,11 @@ const int Zotero::CollectionModel::CollectionIdRole = Qt::UserRole + 6681;
 class Zotero::CollectionModel::Private
 {
 private:
-    Zotero::CollectionModel *p;
+    // UNUSED Zotero::CollectionModel *p;
 
 public:
-    Private(Collection *c, Zotero::CollectionModel *parent)
-            : p(parent), collection(c) {
+    Private(Collection *c, Zotero::CollectionModel */* UNUSED parent*/)
+        : /* UNUSED p(parent),*/ collection(c) {
         /// nothing
     }
 

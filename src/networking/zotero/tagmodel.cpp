@@ -31,11 +31,11 @@ const int Zotero::TagModel::TagCountRole = Qt::UserRole + 6686;
 class Zotero::TagModel::Private
 {
 private:
-    Zotero::TagModel *p;
+    // UNUSED Zotero::TagModel *p;
 
 public:
-    Private(Tags *t, Zotero::TagModel *parent)
-            : p(parent), tags(t) {
+    Private(Tags *t, Zotero::TagModel */* UNUSED parent*/)
+        : /* UNUSED p(parent),*/ tags(t) {
         /// nothing
     }
 

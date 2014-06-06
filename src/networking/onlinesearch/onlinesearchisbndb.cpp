@@ -30,7 +30,7 @@
 class OnlineSearchIsbnDB::OnlineSearchIsbnDBPrivate
 {
 private:
-    OnlineSearchIsbnDB *p;
+    // UNUSED OnlineSearchIsbnDB *p;
     static const QString accessKey;
     static const QString booksUrl, authorsUrl;
 
@@ -39,8 +39,8 @@ public:
     KUrl queryUrl;
     int currentPage, maxPage;
 
-    OnlineSearchIsbnDBPrivate(OnlineSearchIsbnDB *parent)
-            : p(parent), xslt(), currentPage(0), maxPage(0) {
+    OnlineSearchIsbnDBPrivate(OnlineSearchIsbnDB */* UNUSED parent*/)
+        : /* UNUSED p(parent),*/ xslt(), currentPage(0), maxPage(0) {
         xslt = XSLTransform::createXSLTransform(KStandardDirs::locate("data", "kbibtex/isbndb2bibtex.xsl"));
     }
 

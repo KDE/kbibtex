@@ -28,14 +28,14 @@
 class JournalAbbreviations::Private
 {
 private:
-    JournalAbbreviations *p;
+    // UNUSED JournalAbbreviations *p;
     const QString journalFilename;
 
     QHash<QString, QString> leftToRightMap, rightToLeftMap;
 
 public:
-    Private(JournalAbbreviations *parent)
-            : p(parent), journalFilename(KGlobal::dirs()->findResource("data", QLatin1String("kbibtex/jabref_journalabbrevlist.txt")))
+    Private(JournalAbbreviations */* UNUSED parent*/)
+        : /* UNUSED p(parent),*/ journalFilename(KGlobal::dirs()->findResource("data", QLatin1String("kbibtex/jabref_journalabbrevlist.txt")))
     {
         /// nothing
     }

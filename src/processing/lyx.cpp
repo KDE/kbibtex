@@ -38,7 +38,7 @@
 class LyX::LyXPrivate
 {
 private:
-    LyX *p;
+    // UNUSED LyX *p;
 
 public:
     QWidget *widget;
@@ -48,8 +48,8 @@ public:
     KSharedConfigPtr config;
     const KConfigGroup group;
 
-    LyXPrivate(LyX *parent, QWidget *widget)
-            : p(parent), action(NULL), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), group(config, LyX::configGroupName) {
+    LyXPrivate(LyX */* UNUSED parent*/, QWidget *widget)
+        : /* UNUSED p(parent),*/ action(NULL), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), group(config, LyX::configGroupName) {
         this->widget = widget;
     }
 

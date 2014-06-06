@@ -128,14 +128,15 @@ public:
 class ColorLabelWidget::ColorLabelWidgetPrivate
 {
 private:
-    ColorLabelWidget *parent;
+    // UNUSED ColorLabelWidget *parent;
 
 public:
     ColorLabelComboBoxModel *model;
 
-    ColorLabelWidgetPrivate(ColorLabelWidget *p)
-            : parent(p) {
-        // nothing
+    ColorLabelWidgetPrivate(ColorLabelWidget */*UNUSED p*/)
+    // UNUSED : parent(p)
+    {
+        /// nothing
     }
 };
 

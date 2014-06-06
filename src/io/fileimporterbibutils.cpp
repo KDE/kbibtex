@@ -26,13 +26,13 @@
 class FileImporterBibUtils::Private
 {
 private:
-    FileImporterBibUtils *p;
+    // UNUSED FileImporterBibUtils *p;
 
 public:
     FileImporterBibTeX bibtexImporter;
 
-    Private(FileImporterBibUtils *parent)
-            : p(parent)
+    Private(FileImporterBibUtils */* UNUSED parent*/)
+    // UNUSED : p(parent)
     {
         // TODO
     }

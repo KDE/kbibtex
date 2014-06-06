@@ -135,12 +135,13 @@ public:
     OpenFileInfoManager::OpenFileInfoList ofiList;
 
 private:
-    DocumentListModel *p;
+    // UNUSED DocumentListModel *p;
 
 public:
-    DocumentListModelPrivate(OpenFileInfo::StatusFlag statusFlag, OpenFileInfoManager *openFileInfoManager, DocumentListModel *parent)
-            : sf(statusFlag), ofim(openFileInfoManager), p(parent) {
-        // nothing
+    DocumentListModelPrivate(OpenFileInfo::StatusFlag statusFlag, OpenFileInfoManager *openFileInfoManager, DocumentListModel */* UNUSED parent*/)
+            : sf(statusFlag), ofim(openFileInfoManager)// UNUSED , p(parent)
+    {
+        /// nothing
     }
 };
 

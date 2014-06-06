@@ -32,7 +32,7 @@
 class OnlineSearchMathSciNet::OnlineSearchMathSciNetPrivate
 {
 private:
-    OnlineSearchMathSciNet *p;
+    // UNUSED OnlineSearchMathSciNet *p;
 
 public:
     QMap<QString, QString> queryParameters;
@@ -41,9 +41,10 @@ public:
     static const QString queryFormUrl;
     static const QString queryUrlStem;
 
-    OnlineSearchMathSciNetPrivate(OnlineSearchMathSciNet *parent)
-            : p(parent) {
-        // nothing
+    OnlineSearchMathSciNetPrivate(OnlineSearchMathSciNet */* UNUSED parent*/)
+    // : UNUSED p(parent)
+    {
+        /// nothing
     }
 };
 

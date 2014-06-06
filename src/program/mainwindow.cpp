@@ -57,7 +57,7 @@
 class KBibTeXMainWindow::KBibTeXMainWindowPrivate
 {
 private:
-    KBibTeXMainWindow *p;
+    // UNUSED KBibTeXMainWindow *p;
 
 public:
     KAction *actionClose;
@@ -84,9 +84,10 @@ public:
     ElementForm *elementForm;
     KMenu *actionMenuRecentFilesMenu;
 
-    KBibTeXMainWindowPrivate(KBibTeXMainWindow *parent)
-            : p(parent) {
-        // nothing
+    KBibTeXMainWindowPrivate(KBibTeXMainWindow */* UNUSED parent*/)
+    // UNUSED : p(parent)
+    {
+        /// nothing
     }
 
     ~KBibTeXMainWindowPrivate() {

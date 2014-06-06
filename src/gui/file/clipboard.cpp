@@ -39,7 +39,7 @@ const QString Clipboard::defaultCopyReferenceCommand = QLatin1String("");
 class Clipboard::ClipboardPrivate
 {
 private:
-    Clipboard *parent;
+    // UNUSED Clipboard *parent;
 
 public:
     FileView *fileView;
@@ -47,8 +47,8 @@ public:
     KSharedConfigPtr config;
     const QString configGroupName;
 
-    ClipboardPrivate(FileView *fv, Clipboard *p)
-            : parent(p), fileView(fv), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName(QLatin1String("General")) {
+    ClipboardPrivate(FileView *fv, Clipboard */* UNUSED p*/)
+        : /* UNUSED parent(p),*/ fileView(fv), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName(QLatin1String("General")) {
         /// nothing
     }
 

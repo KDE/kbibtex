@@ -27,13 +27,13 @@
 class BibUtils::Private
 {
 private:
-    BibUtils *p;
+    // UNUSED BibUtils *p;
 
 public:
     BibUtils::Format format;
 
-    Private(BibUtils *parent)
-            : p(parent), format(BibUtils::MODS)
+    Private(BibUtils */* UNUSED parent*/)
+        : /* UNUSED p(parent),*/ format(BibUtils::MODS)
     {
         /// nothing
     }

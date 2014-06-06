@@ -36,7 +36,7 @@
 class OnlineSearchAcmPortal::OnlineSearchAcmPortalPrivate
 {
 private:
-    OnlineSearchAcmPortal *p;
+    // UNUSED OnlineSearchAcmPortal *p;
 
 public:
     QString joinedQueryString;
@@ -47,8 +47,8 @@ public:
 
     int curStep, numSteps;
 
-    OnlineSearchAcmPortalPrivate(OnlineSearchAcmPortal *parent)
-            : p(parent), numExpectedResults(0), numFoundResults(0),
+    OnlineSearchAcmPortalPrivate(OnlineSearchAcmPortal */* UNUSED parent*/)
+        : /* UNUSED p(parent),*/ numExpectedResults(0), numFoundResults(0),
           acmPortalBaseUrl(QLatin1String("http://dl.acm.org/")) {
         // nothing
     }

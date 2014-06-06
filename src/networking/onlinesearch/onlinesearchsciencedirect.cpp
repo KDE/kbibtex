@@ -29,7 +29,7 @@
 class OnlineSearchScienceDirect::OnlineSearchScienceDirectPrivate
 {
 private:
-    OnlineSearchScienceDirect *p;
+    // UNUSED OnlineSearchScienceDirect *p;
 
 public:
     QString queryFreetext, queryAuthor;
@@ -40,9 +40,9 @@ public:
     int runningJobs;
     int numSteps, curStep;
 
-    OnlineSearchScienceDirectPrivate(OnlineSearchScienceDirect *parent)
-            : p(parent), scienceDirectBaseUrl(QLatin1String("http://www.sciencedirect.com/")) {
-        // nothing
+    OnlineSearchScienceDirectPrivate(OnlineSearchScienceDirect */* UNUSED parent*/)
+        : /* UNUSED p(parent), */scienceDirectBaseUrl(QLatin1String("http://www.sciencedirect.com/")) {
+        /// nothing
     }
 
     void sanitizeBibTeXCode(QString &code) {

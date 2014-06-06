@@ -33,7 +33,7 @@
 class Statistics::StatisticsPrivate
 {
 private:
-    Statistics *p;
+    // UNUSED Statistics *p;
     QLabel *labelNumberOfElements, *labelNumberOfEntries, *labelNumberOfJournalArticles, *labelNumberOfConferencePublications, *labelNumberOfBooks, *labelNumberOfOtherEntries, *labelNumberOfComments, *labelNumberOfMacros;
 
 public:
@@ -41,7 +41,7 @@ public:
     const QItemSelectionModel *selectionModel;
 
     StatisticsPrivate(Statistics *parent)
-            : p(parent), file(NULL), selectionModel(NULL) {
+        : /* UNUSED p(parent),*/ file(NULL), selectionModel(NULL) {
         QFormLayout *layout = new QFormLayout(parent);
 
         labelNumberOfElements = new QLabel(parent);

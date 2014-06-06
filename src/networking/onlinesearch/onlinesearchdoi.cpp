@@ -81,14 +81,14 @@ public:
 class OnlineSearchDOI::OnlineSearchDOIPrivate
 {
 private:
-    OnlineSearchDOI *p;
+    // UNUSED OnlineSearchDOI *p;
 
 public:
     OnlineSearchQueryFormDOI *form;
     int numSteps, curStep;
 
-    OnlineSearchDOIPrivate(OnlineSearchDOI *parent)
-            : p(parent), form(NULL) {
+    OnlineSearchDOIPrivate(OnlineSearchDOI */* UNUSED parent*/)
+        : /* UNUSED p(parent),*/ form(NULL) {
         // nothing
     }
 

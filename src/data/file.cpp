@@ -48,7 +48,7 @@ const quint64 invalid = 0x0102030405060708;
 class File::FilePrivate
 {
 private:
-    File *p;
+    // UNUSED File *p;
     quint64 validInvalidField;
     static quint64 internalIdCounter;
 
@@ -59,14 +59,14 @@ public:
     const quint64 internalId;
     QHash<QString, QVariant> properties;
 
-    FilePrivate(File *parent)
-            : p(parent), validInvalidField(valid), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName(QLatin1String("FileExporterBibTeX")), internalId(++internalIdCounter) {
+    FilePrivate(File */* UNUSED parent*/)
+        : /* UNUSED p(parent),*/ validInvalidField(valid), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName(QLatin1String("FileExporterBibTeX")), internalId(++internalIdCounter) {
         kDebug() << "Creating File instance" << internalId;
         loadConfiguration();
     }
 
-    FilePrivate(File *parent, const File &other)
-            : p(parent), validInvalidField(valid), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName(QLatin1String("FileExporterBibTeX")), internalId(++internalIdCounter), properties(other.d->properties) {
+    FilePrivate(File */* UNUSED parent*/, const File &other)
+        : /* UNUSED p(parent),*/ validInvalidField(valid), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName(QLatin1String("FileExporterBibTeX")), internalId(++internalIdCounter), properties(other.d->properties) {
         kDebug() << "Creating File instance" << internalId;
         loadConfiguration();
     }

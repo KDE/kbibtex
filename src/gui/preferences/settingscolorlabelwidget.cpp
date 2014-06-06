@@ -431,7 +431,7 @@ void SettingsColorLabelWidget::updateRemoveButtonStatus()
 class ColorLabelContextMenu::Private
 {
 private:
-    ColorLabelContextMenu *p;
+    // UNUSED ColorLabelContextMenu *p;
 
 public:
     /// Tree view to show this context menu in
@@ -442,7 +442,7 @@ public:
     QSignalMapper *sm;
 
     Private(FileView *fv, ColorLabelContextMenu *parent)
-            : p(parent), fileView(fv)
+        : /* UNUSED p(parent),*/ fileView(fv)
     {
         sm = new QSignalMapper(parent);
         menu = new KActionMenu(KIcon("preferences-desktop-color"), i18n("Color"), fileView);

@@ -37,7 +37,7 @@
 class OnlineSearchGoogleScholar::OnlineSearchGoogleScholarPrivate
 {
 private:
-    OnlineSearchGoogleScholar *p;
+    // UNUSED OnlineSearchGoogleScholar *p;
 
 public:
     int numResults;
@@ -51,8 +51,9 @@ public:
     FileImporterBibTeX importer;
     int numSteps, curStep;
 
-    OnlineSearchGoogleScholarPrivate(OnlineSearchGoogleScholar *parent)
-            : p(parent) {
+    OnlineSearchGoogleScholarPrivate(OnlineSearchGoogleScholar */* UNUSED parent*/)
+    // : UNUSED p(parent)
+    {
         startPageUrl = QLatin1String("http://scholar.google.com/");
         configPageUrl = QLatin1String("http://%1/scholar_settings");
         setConfigPageUrl = QLatin1String("http://%1/scholar_setprefs");

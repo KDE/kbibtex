@@ -28,14 +28,15 @@ QStringList IConvLaTeX::encodingList;
 class IConvLaTeX::IConvLaTeXPrivate
 {
 private:
-    IConvLaTeX *p;
+    // UNUSED IConvLaTeX *p;
 
 public:
     iconv_t iconvHandle;
 
-    IConvLaTeXPrivate(IConvLaTeX *parent)
-            : p(parent) {
-        // nothing
+    IConvLaTeXPrivate(IConvLaTeX */* UNUSED parent*/)
+    // : UNUSED p(parent)
+    {
+        /// nothing
     }
 };
 

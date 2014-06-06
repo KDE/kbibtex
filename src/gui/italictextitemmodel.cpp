@@ -25,13 +25,13 @@
 class ItalicTextItemModel::Private
 {
 private:
-    ItalicTextItemModel *p;
+    // UNUSED ItalicTextItemModel *p;
 
 public:
     QList<QPair<QString, QString> > data;
 
-    Private(ItalicTextItemModel *parent)
-            : p(parent)
+    Private(ItalicTextItemModel */* UNUSED parent*/)
+    // UNUSED : p(parent)
     {
         /// nothing
     }

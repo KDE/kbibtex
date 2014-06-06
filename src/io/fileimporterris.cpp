@@ -34,7 +34,7 @@
 class FileImporterRIS::FileImporterRISPrivate
 {
 private:
-    FileImporterRIS *p;
+    // UNUSED FileImporterRIS *p;
 
 public:
     int referenceCounter;
@@ -47,8 +47,8 @@ public:
     RISitem;
     typedef QVector<RISitem> RISitemList;
 
-    FileImporterRISPrivate(FileImporterRIS *parent)
-            : p(parent), referenceCounter(0), cancelFlag(false) {
+    FileImporterRISPrivate(FileImporterRIS */* UNUSED parent*/)
+        : /* UNUSED p(parent),*/ referenceCounter(0), cancelFlag(false) {
         // nothing
     }
 

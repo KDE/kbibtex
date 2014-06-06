@@ -30,16 +30,17 @@
 class OnlineSearchJStor::OnlineSearchJStorPrivate
 {
 private:
-    OnlineSearchJStor *p;
+    // UNUSED OnlineSearchJStor *p;
 
 public:
     int numFoundResults, curStep, numSteps;
     static const QString jstorBaseUrl;
     KUrl queryUrl;
 
-    OnlineSearchJStorPrivate(OnlineSearchJStor *parent)
-            : p(parent) {
-        // nothing
+    OnlineSearchJStorPrivate(OnlineSearchJStor */* UNUSED parent*/)
+    // : UNUSED p(parent)
+    {
+        /// nothing
     }
 };
 
