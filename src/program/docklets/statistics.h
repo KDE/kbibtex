@@ -33,11 +33,11 @@ public:
     explicit Statistics(QWidget *parent);
     ~Statistics();
 
-    void setFile(const File *);
-    void setSelectionModel(const QItemSelectionModel *);
+    void setFile(const File *, const QItemSelectionModel *);
 
-public slots:
+private slots:
     void update();
+    void selectionModelDestroyed();
 
 private:
     class StatisticsPrivate;

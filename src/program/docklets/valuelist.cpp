@@ -221,7 +221,10 @@ void ValueList::setFileView(FileView *fileView)
     if (d->fileView != NULL)
         disconnect(d->fileView, SIGNAL(selectedElementsChanged()), this, SLOT(editorSelectionChanged()));
     d->fileView = fileView;
-    connect(d->fileView, SIGNAL(selectedElementsChanged()), this, SLOT(editorSelectionChanged()));
+    if (d->fileView != NULL) {
+        connect(d->fileView, SIGNAL(selectedElementsChanged()), this, SLOT(editorSelectionChanged()));
+        connect(d->fileView, SIGNAL(destroyed()), this, SLOT(editorDestroyed()));
+    }
     editorSelectionChanged();
     update();
     resizeEvent(NULL);
@@ -445,6 +448,13 @@ void ValueList::editorSelectionChanged() {
     const bool selectedElements = d->fileView == NULL ? false : d->fileView->selectedElements().count() > 0;
     d->assignSelectionAction->setEnabled(selectedElements);
     d->removeSelectionAction->setEnabled(selectedElements);
+}
+
+void ValueList::editorDestroyed() {
+    /// Reset internal variable to NULL to avoid
+    /// accessing invalid pointer/data later
+    d->fileView = NULL;
+    editorSelectionChanged();
 }
 
 void ValueList::fieldNamesChanged(int i) {

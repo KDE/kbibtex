@@ -53,6 +53,7 @@ private slots:
     void delayedResize();
     void columnsChanged();
     void editorSelectionChanged();
+    void editorDestroyed();
     void fieldNamesChanged(int);
 
 private:

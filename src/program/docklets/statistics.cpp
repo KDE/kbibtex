@@ -151,26 +151,32 @@ Statistics::~Statistics()
     delete d;
 }
 
-void Statistics::setFile(const File *file)
-{
-    d->file = file;
-    update();
-}
-
-void Statistics::setSelectionModel(const QItemSelectionModel *selectionModel)
+void Statistics::setFile(const File *file, const QItemSelectionModel *selectionModel)
 {
     /// unregister from update notifications of selection models no longer used
     if (d->selectionModel != NULL && selectionModel != d->selectionModel)
         disconnect(d->selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(update()));
-    /// register to update notifications of selection models to be used
-    if (selectionModel != NULL && selectionModel != d->selectionModel)
-        connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(update()));
 
+    d->file = file;
     d->selectionModel = selectionModel;
+
+    if (d->selectionModel != NULL) {
+        connect(d->selectionModel, SIGNAL(destroyed()), this, SLOT(selectionModelDestroyed()));
+        /// register to update notifications of selection models to be used
+        if (d->selectionModel != d->selectionModel)
+            connect(d->selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(update()));
+    }
+
     update();
 }
 
 void Statistics::update()
 {
     d->update();
+}
+
+void Statistics::selectionModelDestroyed() {
+    d->file = NULL;
+    d->selectionModel = NULL;
+    update();
 }
