@@ -12,6 +12,7 @@
         <comment xml:lang="cs">Soubor se seznamem použité literatury RIS</comment>
         <comment xml:lang="de">RIS-Bibliografiedatei</comment>
         <comment xml:lang="es">Archivo de bibliografía RIS</comment>
+        <comment xml:lang="fa">پرونده‌ی تاریخچه RIS</comment>
         <comment xml:lang="hu">RIS bibliográfia fájl</comment>
         <comment xml:lang="nl">RIS-bibliografiebestand</comment>
         <comment xml:lang="pl">Plik bibliografii RIS</comment>
@@ -34,6 +35,7 @@
         <comment xml:lang="cs">Soubor se seznamem použité literatury ISI</comment>
         <comment xml:lang="de">ISI-Bibliografiedatei</comment>
         <comment xml:lang="es">Archivo de bibliografía ISI</comment>
+        <comment xml:lang="fa">پرونده‌ی تاریخچه ISI</comment>
         <comment xml:lang="hu">ISI bibliográfia fájl</comment>
         <comment xml:lang="nl">ISI-bibliografiebestand</comment>
         <comment xml:lang="pl">Plik bibliografii ISI</comment>
@@ -58,6 +60,7 @@
         <comment xml:lang="cs">Knihovna EndNote</comment>
         <comment xml:lang="de">EndNote-Bibliothek</comment>
         <comment xml:lang="es">Biblioteca EndNote</comment>
+        <comment xml:lang="fa">کتابخانه EndNote</comment>
         <comment xml:lang="hu">EndNote könyvtár</comment>
         <comment xml:lang="nl">EndNote-bibliotheek</comment>
         <comment xml:lang="pl">Biblioteka EndNote</comment>
