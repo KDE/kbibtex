@@ -9,11 +9,19 @@
         <sub-class-of type="text/plain"/>
         <alias type="text/x-research-info-systems"/>
         <comment>RIS bibliography file</comment>
+        <comment xml:lang="cs">Soubor se seznamem použité literatury RIS</comment>
+        <comment xml:lang="de">RIS-Bibliografiedatei</comment>
+        <comment xml:lang="es">Archivo de bibliografía RIS</comment>
+        <comment xml:lang="fa">پرونده‌ی تاریخچه RIS</comment>
+        <comment xml:lang="hu">RIS bibliográfia fájl</comment>
+        <comment xml:lang="nl">RIS-bibliografiebestand</comment>
         <comment xml:lang="pl">Plik bibliografii RIS</comment>
         <comment xml:lang="pt">Ficheiro de bibliografia do RIS</comment>
+        <comment xml:lang="pt_BR">Arquivo de bibliografia RIS</comment>
         <comment xml:lang="sk">Súbor bibliografie RIS</comment>
         <comment xml:lang="sv">RIS-bibliografifil</comment>
         <comment xml:lang="uk">файл бібліографії RIS</comment>
+        <comment xml:lang="zh_TW">RIS bibliography 檔</comment>
         <acronym>RIS</acronym>
         <expanded-acronym>Research Information Systems</expanded-acronym>
         <glob pattern="*.ris"/>
@@ -24,11 +32,19 @@
     <mime-type type="application/x-isi-export-format">
         <sub-class-of type="text/plain"/>
         <comment>ISI bibliography file</comment>
+        <comment xml:lang="cs">Soubor se seznamem použité literatury ISI</comment>
+        <comment xml:lang="de">ISI-Bibliografiedatei</comment>
+        <comment xml:lang="es">Archivo de bibliografía ISI</comment>
+        <comment xml:lang="fa">پرونده‌ی تاریخچه ISI</comment>
+        <comment xml:lang="hu">ISI bibliográfia fájl</comment>
+        <comment xml:lang="nl">ISI-bibliografiebestand</comment>
         <comment xml:lang="pl">Plik bibliografii ISI</comment>
         <comment xml:lang="pt">Ficheiro de bibliografia do ISI</comment>
+        <comment xml:lang="pt_BR">Arquivo de bibliografia ISI</comment>
         <comment xml:lang="sk">Súbor bibliografie ISI</comment>
         <comment xml:lang="sv">ISI-bibliografifil</comment>
         <comment xml:lang="uk">файл бібліографії ISI</comment>
+        <comment xml:lang="zh_TW">ISI bibliography 檔</comment>
         <acronym>ISI</acronym>
         <expanded-acronym>Information Sciences Institute</expanded-acronym>
         <glob pattern="*.isi"/>
@@ -41,11 +57,19 @@
         <alias type="text/x-endnote-refer"/>
         <alias type="application/x-endnote-library"/>
         <comment>EndNote library</comment>
+        <comment xml:lang="cs">Knihovna EndNote</comment>
+        <comment xml:lang="de">EndNote-Bibliothek</comment>
+        <comment xml:lang="es">Biblioteca EndNote</comment>
+        <comment xml:lang="fa">کتابخانه EndNote</comment>
+        <comment xml:lang="hu">EndNote könyvtár</comment>
+        <comment xml:lang="nl">EndNote-bibliotheek</comment>
         <comment xml:lang="pl">Biblioteka EndNote</comment>
         <comment xml:lang="pt">Biblioteca do EndNote</comment>
+        <comment xml:lang="pt_BR">Biblioteca EndNote</comment>
         <comment xml:lang="sk">Knižnica EndNote</comment>
         <comment xml:lang="sv">EndNote-bibliotek</comment>
         <comment xml:lang="uk">бібліотека EndNote</comment>
+        <comment xml:lang="zh_TW">EndNote 函式庫</comment>
         <glob pattern="*.enl"/>
     </mime-type>
 </mime-info>
