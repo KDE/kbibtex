@@ -51,9 +51,8 @@ FileImporterBibUtils::~FileImporterBibUtils()
 
 File *FileImporterBibUtils::load(QIODevice *iodevice)
 {
-    kDebug() << "iodevice->isReadable()" << iodevice->isReadable();
     if (!iodevice->isReadable() && !iodevice->open(QIODevice::ReadOnly)) {
-        kDebug() << "Input device not readable";
+        kWarning() << "Input device not readable";
         return NULL;
     }
 
