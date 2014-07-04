@@ -1,0 +1,35 @@
+<?xml version="1.0" ?>
+<component type="desktop">
+  <id>kbibtex.desktop</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-2.0+</project_license>
+  <name>KBibTeX</name>
+  <summary>BibTeX editor for KDE to edit bibliographies used with LaTeX</summary>
+  <description>
+    <p>
+      KBibTeX is a reference management application which can be used to collect TeX/LaTeX bibliographies and export them in various formats.
+    </p>
+    <p>KBibTeX can do the following things:</p>
+    <ul>
+      <li>Preview bibliography entries in various formats (Source (BibTeX), Source (RIS), Wikipedia, standard (XML/XSLT), fancy (XML/XSLT), and abstract-only (XML/XSLT)). Additional preview styles become available when bibtex2html is installed.</li>
+      <li>Import data in various bibliography file formats such as BibTeX, RIS and ISI (requires bibutils) and export data to PDF (requires pdflatex), PostScript (requires latex), RTF (requires latex2rtf), and HTML.</li>
+      <li>Search for the bibliography entries data in online databases (e.g. Google Scholar, ACM, IEEE, arXiv, etc.)</li>
+      <li>Preview local or remote (online) resources, e.g. PDF files, linked in the BibTEX entry.</li>
+      <li>Find and merge duplicate entries in bibliography.</li>
+      <li>Integrate your bibliographies with LaTeX editors such as Kile and LyX.</li>
+      <li>Import your Zotero library.</li>
+    </ul>
+  </description>
+  <url type="homepage">http://home.gna.org/kbibtex/</url>
+  <url type="bugtracker">https://bugs.kde.org/enter_bug.cgi?format=guided&amp;product=kbibtex</url>
+  <url type="help">http://docs.kde.org/development/en/extragear-office/kbibtex/index.html</url>
+  <screenshots>
+    <screenshot type="default">
+      <image>http://home.gna.org/kbibtex/screenshots/kbibtex-20110213.png</image>
+    </screenshot>
+  </screenshots>
+  <project_group>KDE</project_group>
+  <provides>
+    <binary>kbibtex</binary>
+  </provides>
+</component>
