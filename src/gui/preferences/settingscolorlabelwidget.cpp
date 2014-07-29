@@ -248,7 +248,7 @@ void ColorLabelSettingsModel::resetToDefaults()
 /**
  * Add a new color-label pair to this model.
  * The pair will be appended to the list's end.
- * No check is performed if a similiar color or label is already in use.
+ * No check is performed if a similar color or label is already in use.
  *
  * @param color Color of the color-label pair
  * @param label Label of the color-label pair

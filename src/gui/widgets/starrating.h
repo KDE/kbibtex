@@ -38,7 +38,7 @@ class KPushButton;
  * A floating-point value between 0.0 and n (n=number of stars) can be
  * assigned to this widget; based on this value, the corresponding
  * number of stars on the left side will be colored golden, the stars
- * on the right side will be greyed out.
+ * on the right side will be shown in grey.
  *
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */

@@ -71,7 +71,7 @@ public:
 
     /**
      * Once a search has been complete (signal @see finished),
-     * tihs function allows to retrieve the collected results
+     * this function allows to retrieve the collected results
      * @return @c After a search, list of results, @c before or during a search, an empty list
      */
     QList<ResultItem> results();
