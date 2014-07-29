@@ -28,7 +28,7 @@
 #include <QStackedWidget>
 #include <QDockWidget>
 #include <QMutex>
-#ifdef HAVE_QTWEBKIT
+#ifdef HAVE_QTWEBKIT // krazy:exclude=cpp
 #include <QWebView>
 #endif // HAVE_QTWEBKIT
 
@@ -116,7 +116,7 @@ private:
     KMenuBar *menuBar;
     KToolBar *toolBar;
     KParts::ReadOnlyPart *okularPart;
-#ifdef HAVE_QTWEBKIT
+#ifdef HAVE_QTWEBKIT // krazy:exclude=cpp
     QWebView *htmlWidget;
 #else // HAVE_QTWEBKIT
     KParts::ReadOnlyPart *htmlPart;
@@ -209,7 +209,7 @@ public:
         if (okularPart == NULL || swpOkular < 0) {
             kWarning() << "No Okular part for PDF or PostScript document preview available.";
         }
-#ifdef HAVE_QTWEBKIT
+#ifdef HAVE_QTWEBKIT // krazy:exclude=cpp
         kDebug() << "WebKit is available, using it instead of KHTML for HTML/Web preview.";
         htmlWidget = new QWebView(stackedWidget);
         swpHTML = stackedWidget->addWidget(htmlWidget);
@@ -265,7 +265,7 @@ public:
         /// reset and clear all controls
         if (okularPart != NULL)
             okularPart->closeUrl();
-#ifdef HAVE_QTWEBKIT
+#ifdef HAVE_QTWEBKIT // krazy:exclude=cpp
         htmlWidget->stop();
 #else // HAVE_QTWEBKIT
         htmlPart->closeUrl();
@@ -422,7 +422,7 @@ public:
             stackedWidget->setCurrentIndex(swpOkular);
             stackedWidget->widget(swpOkular)->setEnabled(true);
             setupToolMenuBarForPart(okularPart);
-#ifdef HAVE_QTWEBKIT
+#ifdef HAVE_QTWEBKIT // krazy:exclude=cpp
         } else if (widget == htmlWidget) {
             stackedWidget->setCurrentIndex(swpHTML);
             stackedWidget->widget(swpHTML)->setEnabled(true);
@@ -448,7 +448,7 @@ public:
             stackedWidget->widget(swpOkular)->setEnabled(false);
             okularPart->closeUrl();
         }
-#ifdef HAVE_QTWEBKIT
+#ifdef HAVE_QTWEBKIT // krazy:exclude=cpp
         htmlWidget->stop();
 #else // HAVE_QTWEBKIT
         htmlPart->closeUrl();
@@ -462,7 +462,7 @@ public:
         } else if (htmlMimetypes.contains(urlInfo.mimeType)) {
             p->setCursor(Qt::BusyCursor);
             showMessage(i18n("Loading...")); // krazy:exclude=qmethods
-#ifdef HAVE_QTWEBKIT
+#ifdef HAVE_QTWEBKIT // krazy:exclude=cpp
             htmlWidget->load(urlInfo.url);
 #else // HAVE_QTWEBKIT
             htmlPart->openUrl(urlInfo.url);

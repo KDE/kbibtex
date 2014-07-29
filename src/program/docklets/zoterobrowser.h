@@ -53,7 +53,7 @@ private slots:
     void retrieveGroupList();
     void invalidateGroupList();
     void gotGroupList();
-#ifdef HAVE_QTOAUTH
+#ifdef HAVE_QTOAUTH // krazy:exclude=cpp
     void getOAuthCredentials();
 #endif // HAVE_QTOAUTH
 };

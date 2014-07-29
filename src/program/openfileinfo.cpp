@@ -480,7 +480,7 @@ bool OpenFileInfoManager::changeUrl(OpenFileInfo *openFileInfo, const KUrl &url)
     if (!url.equals(oldUrl) && oldUrl.isValid()) {
         /// current document was most probabily renamed (e.g. due to "Save As")
         /// add old URL to recently used files, but exclude the open files list
-        OpenFileInfo *ofi = open(oldUrl);
+        OpenFileInfo *ofi = open(oldUrl); // krazy:exclude=syscalls
         OpenFileInfo::StatusFlags statusFlags = (openFileInfo->flags() & (~OpenFileInfo::Open)) | OpenFileInfo::RecentlyUsed;
         ofi->setFlags(statusFlags);
     }

@@ -41,7 +41,7 @@
 #include "zotero/tags.h"
 #include "zotero/tagmodel.h"
 #include "zotero/api.h"
-#ifdef HAVE_QTOAUTH
+#ifdef HAVE_QTOAUTH // krazy:exclude=cpp
 #include "zotero/oauthwizard.h"
 #endif // HAVE_QTOAUTH
 
@@ -215,7 +215,7 @@ void ZoteroBrowser::setupGUI()
 
     containerLayout->addStretch(10);
 
-#ifdef HAVE_QTOAUTH
+#ifdef HAVE_QTOAUTH // krazy:exclude=cpp
     containerButtonLayout = new QHBoxLayout();
     containerLayout->addLayout(containerButtonLayout, 0);
     containerButtonLayout->setMargin(0);
@@ -381,7 +381,7 @@ void ZoteroBrowser::gotGroupList() {
     reenableWidget();
 }
 
-#ifdef HAVE_QTOAUTH
+#ifdef HAVE_QTOAUTH // krazy:exclude=cpp
 void ZoteroBrowser::getOAuthCredentials()
 {
     QPointer<Zotero::OAuthWizard> wizard = new Zotero::OAuthWizard(this);

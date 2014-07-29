@@ -18,7 +18,7 @@
 #ifndef KBIBTEX_NETWORKING_ZOTERO_OAUTHWIZARD_H
 #define KBIBTEX_NETWORKING_ZOTERO_OAUTHWIZARD_H
 
-#ifdef HAVE_QTOAUTH
+#ifdef HAVE_QTOAUTH // krazy:exclude=cpp
 
 #include <QWizard>
 

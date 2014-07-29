@@ -23,7 +23,7 @@
 
 #include <QFrame>
 #include <QBuffer>
-#ifdef HAVE_QTWEBKIT
+#ifdef HAVE_QTWEBKIT // krazy:exclude=cpp
 #include <QWebView>
 #else // HAVE_QTWEBKIT
 #include <QLabel>
@@ -66,7 +66,7 @@ public:
     KPushButton *buttonOpen, *buttonSaveAsHTML;
     QString htmlText;
     QUrl baseUrl;
-#ifdef HAVE_QTWEBKIT
+#ifdef HAVE_QTWEBKIT // krazy:exclude=cpp
     QWebView *webView;
 #else // HAVE_QTWEBKIT
     QLabel *messageLabel;
@@ -103,7 +103,7 @@ public:
 
         QVBoxLayout *layout = new QVBoxLayout(frame);
         layout->setMargin(0);
-#ifdef HAVE_QTWEBKIT
+#ifdef HAVE_QTWEBKIT // krazy:exclude=cpp
         webView = new QWebView(frame);
         layout->addWidget(webView);
         webView->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
@@ -204,7 +204,7 @@ void ReferencePreview::setHtml(const QString &html, const KUrl &baseUrl)
 {
     d->htmlText = QString(html).remove("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
     d->baseUrl = baseUrl;
-#ifdef HAVE_QTWEBKIT
+#ifdef HAVE_QTWEBKIT // krazy:exclude=cpp
     d->webView->setHtml(html, baseUrl);
 #endif // HAVE_QTWEBKIT
     d->buttonOpen->setEnabled(true);
@@ -216,13 +216,13 @@ void ReferencePreview::setEnabled(bool enabled)
     if (enabled)
         setHtml(d->htmlText, d->baseUrl);
     else {
-#ifdef HAVE_QTWEBKIT
+#ifdef HAVE_QTWEBKIT // krazy:exclude=cpp
         d->webView->setHtml(d->notAvailableMessage.arg(i18n("Preview disabled")), d->baseUrl);
 #endif // HAVE_QTWEBKIT
         d->buttonOpen->setEnabled(false);
         d->buttonSaveAsHTML->setEnabled(false);
     }
-#ifdef HAVE_QTWEBKIT
+#ifdef HAVE_QTWEBKIT // krazy:exclude=cpp
     d->webView->setEnabled(enabled);
 #endif // HAVE_QTWEBKIT
     d->comboBox->setEnabled(enabled);
@@ -243,7 +243,7 @@ void ReferencePreview::renderHTML()
          } crossRefHandling = ignore;
 
     if (d->element.isNull()) {
-#ifdef HAVE_QTWEBKIT
+#ifdef HAVE_QTWEBKIT // krazy:exclude=cpp
         d->webView->setHtml(d->notAvailableMessage.arg(i18n("No element selected")), d->baseUrl);
 #endif // HAVE_QTWEBKIT
         d->buttonOpen->setEnabled(false);

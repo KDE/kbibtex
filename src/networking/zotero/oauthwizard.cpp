@@ -15,7 +15,7 @@
  *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
  ***************************************************************************/
 
-#ifdef HAVE_QTOAUTH
+#ifdef HAVE_QTOAUTH // krazy:exclude=cpp
 
 #include "oauthwizard.h"
 
