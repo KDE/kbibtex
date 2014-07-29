@@ -34,7 +34,7 @@ uint qHash(const EntryDescription &a)
     return qHash(a.upperCamelCase);
 }
 
-static const int entryTypeMaxCount = 256;
+static const int entryTypeMaxCount = 0x0fff;
 
 class BibTeXEntries::BibTeXEntriesPrivate
 {
@@ -58,17 +58,19 @@ public:
 
         EntryDescription ed;
 
-        QString groupName = QLatin1String("EntryType");
-        KConfigGroup configGroup(layoutConfig, groupName);
-        int typeCount = qMin(configGroup.readEntry("count", 0), entryTypeMaxCount);
+        /// Field "count" is deprecated, invalid values are a common origin of bugs
+        // QString groupName = QLatin1String("EntryType");
+        // KConfigGroup configGroup(layoutConfig, groupName);
+        // int typeCount = configGroup.readEntry("count", entryTypeMaxCount);
 
-        for (int col = 1; col <= typeCount; ++col) {
-            QString groupName = QString("EntryType%1").arg(col);
+        for (int col = 1; col <= entryTypeMaxCount; ++col) {
+            const QString groupName = QString("EntryType%1").arg(col);
             KConfigGroup configGroup(layoutConfig, groupName);
+            if (!configGroup.exists()) break;
 
-            ed.upperCamelCase = configGroup.readEntry("UpperCamelCase", "");
+            ed.upperCamelCase = configGroup.readEntry("UpperCamelCase", QString());
             if (ed.upperCamelCase.isEmpty()) continue;
-            ed.upperCamelCaseAlt = configGroup.readEntry("UpperCamelCaseAlt", "");
+            ed.upperCamelCaseAlt = configGroup.readEntry("UpperCamelCaseAlt", QString());
             ed.label = i18n(configGroup.readEntry("Label", ed.upperCamelCase).toUtf8().constData());
             ed.requiredItems = configGroup.readEntry("RequiredItems", QStringList());
             ed.optionalItems = configGroup.readEntry("OptionalItems", QStringList());
@@ -92,6 +94,7 @@ public:
             configGroup.writeEntry("OptionalItems", ed.optionalItems);
         }
 
+        /// Although field "count" is deprecated, it is written for backwards compatibility
         QString groupName = QLatin1String("EntryType");
         KConfigGroup configGroup(layoutConfig, groupName);
         configGroup.writeEntry("count", typeCount);
@@ -169,7 +172,7 @@ QString BibTeXEntries::label(const QString &name) const
     const QString iName = name.toLower();
 
     for (ConstIterator it = begin(); it != end(); ++it) {
-        /// configuration file uses camel-case
+        /// Configuration file uses camel-case, convert this to lower case for faster comparison
         QString itName = (*it).upperCamelCase.toLower();
         if (itName == iName || (!(itName = (*it).upperCamelCaseAlt.toLower()).isEmpty() && itName == iName))
             return (*it).label;

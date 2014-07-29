@@ -58,6 +58,12 @@ uint qHash(const FieldDescription &a);
 class KBIBTEXIO_EXPORT BibTeXFields : public QList<FieldDescription *>
 {
 public:
+    virtual ~BibTeXFields();
+
+    /**
+     * Only one instance of this class has to be used
+     * @return the class's singleton
+     */
     static BibTeXFields *self();
 
     void save();

@@ -33,7 +33,7 @@ uint qHash(const FieldDescription &a)
     return qHash(a.upperCamelCase);
 }
 
-static const int bibTeXFieldsMaxColumnCount = 256;
+static const int bibTeXFieldsMaxColumnCount = 0x0fff;
 
 const FieldDescription FieldDescription::null;
 
@@ -59,20 +59,21 @@ public:
 
         QString groupName = QLatin1String("Column");
         KConfigGroup configGroup(layoutConfig, groupName);
-        int columnCount = qMin(configGroup.readEntry("count", 0), bibTeXFieldsMaxColumnCount);
+        int columnCount = configGroup.readEntry("count", bibTeXFieldsMaxColumnCount);
         const QStringList treeViewNames = QStringList() << QLatin1String("SearchResults") << QLatin1String("Main") << QLatin1String("MergeWidget") << QLatin1String("Zotero");
 
         for (int col = 1; col <= columnCount; ++col) {
+            const QString groupName = QString("Column%1").arg(col);
+            KConfigGroup configGroup(layoutConfig, groupName);
+            if (!configGroup.exists()) break;
+
             FieldDescription *fd = new FieldDescription();
 
-            QString groupName = QString("Column%1").arg(col);
-            KConfigGroup configGroup(layoutConfig, groupName);
-
-            fd->upperCamelCase = configGroup.readEntry("UpperCamelCase", "");
+            fd->upperCamelCase = configGroup.readEntry("UpperCamelCase", QString());
             if (fd->upperCamelCase.isEmpty())
                 continue;
 
-            fd->upperCamelCaseAlt = configGroup.readEntry("UpperCamelCaseAlt", "");
+            fd->upperCamelCaseAlt = configGroup.readEntry("UpperCamelCaseAlt", QString());
 
             fd->label = i18n(configGroup.readEntry("Label", fd->upperCamelCase).toUtf8().constData());
 
@@ -145,6 +146,11 @@ BibTeXFields::BibTeXFields()
         : QList<FieldDescription *>(), d(new BibTeXFieldsPrivate(this))
 {
     d->load();
+}
+
+BibTeXFields::~BibTeXFields()
+{
+    delete d;
 }
 
 BibTeXFields *BibTeXFields::self()

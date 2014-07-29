@@ -43,13 +43,30 @@ class KBIBTEXIO_EXPORT BibTeXEntries : public QList<EntryDescription>
 public:
     virtual ~BibTeXEntries();
 
+    /**
+     * Only one instance of this class has to be used
+     * @return the class's singleton
+     */
     static BibTeXEntries *self();
 
     /**
      * Change the casing of a given entry name to one of the predefine formats.
+     *
+     */
+    /**
+     * Change the casing of a given entry name to one of the predefine formats.
+     * @param name entry name to format
+     * @param casing can be any of the predefined formats such as lower camel case or upper case
+     * @return returns the formatted entry name if possible or the "name" parameter's value as fall-back
      */
     QString format(const QString &name, KBibTeX::Casing casing) const;
 
+    /**
+     * Returns the given entry name's i18n'ized, human-readable label,
+     * for example "Journal Article" for entry name "article".
+     * @param name entry name to look up the label for
+     * @return the label for the entry if available, else an empty string
+     */
     QString label(const QString &name) const;
 
 protected:
