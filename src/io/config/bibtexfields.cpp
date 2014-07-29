@@ -146,10 +146,13 @@ BibTeXFields::BibTeXFields()
     d->load();
 }
 
+// FIXME destructor seems to crash KBibTeX ...
+/*
 BibTeXFields::~BibTeXFields()
 {
     delete d;
 }
+*/
 
 BibTeXFields *BibTeXFields::self()
 {

@@ -56,7 +56,8 @@ uint qHash(const FieldDescription &a);
 class KBIBTEXIO_EXPORT BibTeXFields : public QList<FieldDescription *>
 {
 public:
-    virtual ~BibTeXFields();
+    // FIXME destructor seems to crash KBibTeX ...
+    // virtual ~BibTeXFields();
 
     /**
      * Only one instance of this class has to be used
