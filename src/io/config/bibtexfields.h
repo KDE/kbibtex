@@ -45,8 +45,6 @@ struct FieldDescription {
     bool isNull() const {
         return upperCamelCase.isEmpty() && label.isEmpty();
     }
-
-    static const FieldDescription null;
 };
 
 bool operator==(const FieldDescription &a, const FieldDescription &b);
