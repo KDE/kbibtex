@@ -256,7 +256,7 @@ public:
     void apply(QSharedPointer<Element> element) {
         if (referenceWidget != NULL)
             referenceWidget->apply(element);
-        ElementWidget *currentElementWidget = dynamic_cast<ElementWidget *>(tab->currentWidget());
+        ElementWidget *currentElementWidget = qobject_cast<ElementWidget *>(tab->currentWidget());
         //Q_ASSERT_X(currentElementWidget != NULL || tab->currentWidget() == NULL, "ElementEditor::ElementEditorPrivate::apply", "Could not cast currentWidget to ElementWidget");
         for (WidgetList::ConstIterator it = widgets.constBegin(); it != widgets.constEnd(); ++it)
             if ((*it) != currentElementWidget && (*it) != sourceWidget)
@@ -352,7 +352,7 @@ public:
 
     void switchTo(QWidget *newTab) {
         bool isSourceWidget = newTab == sourceWidget;
-        ElementWidget *newWidget = dynamic_cast<ElementWidget *>(newTab);
+        ElementWidget *newWidget = qobject_cast<ElementWidget *>(newTab);
         if (previousWidget != NULL && newWidget != NULL) {
             QSharedPointer<Element> temp;
             if (!internalEntry.isNull())
@@ -368,7 +368,7 @@ public:
             previousWidget->apply(temp);
             if (isSourceWidget && referenceWidget != NULL) referenceWidget->apply(temp);
             newWidget->reset(temp);
-            if (referenceWidget != NULL && dynamic_cast<SourceWidget *>(previousWidget) != NULL)
+            if (referenceWidget != NULL && qobject_cast<SourceWidget *>(previousWidget) != NULL)
                 referenceWidget->reset(temp);
         }
         previousWidget = newWidget;

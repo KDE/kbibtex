@@ -237,7 +237,7 @@ void BasicFileView::setModel(QAbstractItemModel *model)
     d->sortFilterProxyModel = NULL;
     d->fileModel = dynamic_cast<FileModel *>(model);
     if (d->fileModel == NULL) {
-        d->sortFilterProxyModel = dynamic_cast<QSortFilterProxyModel *>(model);
+        d->sortFilterProxyModel = qobject_cast<QSortFilterProxyModel *>(model);
         Q_ASSERT_X(d->sortFilterProxyModel != NULL, "ReadOnlyFileView::setModel(QAbstractItemModel *model)", "d->sortFilterProxyModel is NULL");
         d->fileModel = dynamic_cast<FileModel *>(d->sortFilterProxyModel->sourceModel());
     }
@@ -304,7 +304,7 @@ void BasicFileView::headerResetToDefaults()
 
 void BasicFileView::sort(int t, Qt::SortOrder s)
 {
-    SortFilterFileModel *sortedModel = dynamic_cast<SortFilterFileModel *>(model());
+    SortFilterFileModel *sortedModel = qobject_cast<SortFilterFileModel *>(model());
     if (sortedModel != NULL) {
         sortedModel->sort(t, s);
         d->storeColumns();
@@ -313,7 +313,7 @@ void BasicFileView::sort(int t, Qt::SortOrder s)
 
 void BasicFileView::noSorting()
 {
-    SortFilterFileModel *sortedModel = dynamic_cast<SortFilterFileModel *>(model());
+    SortFilterFileModel *sortedModel = qobject_cast<SortFilterFileModel *>(model());
     if (sortedModel != NULL) {
         sortedModel->sort(-1);
         header()->setSortIndicator(-1, Qt::AscendingOrder);

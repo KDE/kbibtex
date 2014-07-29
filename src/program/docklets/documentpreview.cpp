@@ -635,7 +635,7 @@ void DocumentPreview::statFinished(KJob *kjob)
 void DocumentPreview::loadingFinished()
 {
     setCursor(Qt::ArrowCursor);
-    d->showPart(dynamic_cast<KParts::ReadOnlyPart *>(sender()), dynamic_cast<QWidget *>(sender()));
+    d->showPart(qobject_cast<KParts::ReadOnlyPart *>(sender()), qobject_cast<QWidget *>(sender()));
 }
 
 void DocumentPreview::linkActivated(const QString &link)

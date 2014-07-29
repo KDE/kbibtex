@@ -516,7 +516,7 @@ void UrlListEdit::addReference(const QUrl &url) {
 void UrlListEdit::slotSaveLocally(QWidget *widget)
 {
     /// Determine FieldLineEdit widget
-    FieldLineEdit *fieldLineEdit = dynamic_cast<FieldLineEdit *>(widget);
+    FieldLineEdit *fieldLineEdit = qobject_cast<FieldLineEdit *>(widget);
     /// Build Url from line edit's content
     const KUrl url(fieldLineEdit->text());
 
@@ -558,11 +558,11 @@ void UrlListEdit::slotSaveLocally(QWidget *widget)
 void UrlListEdit::textChanged(QWidget *widget)
 {
     /// Determine associated KPushButton "Save locally"
-    KPushButton *buttonSaveLocally = dynamic_cast<KPushButton *>(widget);
+    KPushButton *buttonSaveLocally = qobject_cast<KPushButton *>(widget);
     if (buttonSaveLocally == NULL) return; ///< should never happen!
 
     /// Assume a FieldLineEdit was the sender of this signal
-    FieldLineEdit *fieldLineEdit = dynamic_cast<FieldLineEdit *>(m_signalMapperFieldLineEditTextChanged->mapping(widget));
+    FieldLineEdit *fieldLineEdit = qobject_cast<FieldLineEdit *>(m_signalMapperFieldLineEditTextChanged->mapping(widget));
     if (fieldLineEdit == NULL) return; ///< should never happen!
 
     /// Create URL from new text to make some tests on it

@@ -526,7 +526,7 @@ void ReferenceWidget::prepareSuggestionsMenu()
 
 void ReferenceWidget::insertSuggestionFromAction()
 {
-    QAction *action = dynamic_cast<QAction *>(sender());
+    QAction *action = qobject_cast<QAction *>(sender());
     if (action != NULL) {
         const QString suggestion = action->property(PropertyIdSuggestion).toString();
         entryId->setText(suggestion);

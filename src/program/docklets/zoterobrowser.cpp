@@ -174,7 +174,7 @@ void ZoteroBrowser::setupGUI()
     QSizePolicy sizePolicy = d->comboBoxNumericUserId->sizePolicy();
     sizePolicy.setHorizontalPolicy(QSizePolicy::MinimumExpanding);
     d->comboBoxNumericUserId->setSizePolicy(sizePolicy);
-    dynamic_cast<KLineEdit *>(d->comboBoxNumericUserId->lineEdit())->setClearButtonShown(true);
+    qobject_cast<KLineEdit *>(d->comboBoxNumericUserId->lineEdit())->setClearButtonShown(true);
     containerForm->addRow(i18n("Numeric user id:"), d->comboBoxNumericUserId);
     connect(d->comboBoxNumericUserId->lineEdit(), SIGNAL(textChanged(QString)), this, SLOT(invalidateGroupList()));
     connect(d->comboBoxNumericUserId->lineEdit(), SIGNAL(textChanged(QString)), this, SLOT(updateButtons()));
@@ -182,7 +182,7 @@ void ZoteroBrowser::setupGUI()
     d->comboBoxApiKey = new KComboBox(container);
     d->comboBoxApiKey->setEditable(true);
     d->comboBoxApiKey->setSizePolicy(sizePolicy);
-    dynamic_cast<KLineEdit *>(d->comboBoxApiKey->lineEdit())->setClearButtonShown(true);
+    qobject_cast<KLineEdit *>(d->comboBoxApiKey->lineEdit())->setClearButtonShown(true);
     containerForm->addRow(i18n("API key:"), d->comboBoxApiKey);
     connect(d->comboBoxApiKey->lineEdit(), SIGNAL(textChanged(QString)), this, SLOT(invalidateGroupList()));
     connect(d->comboBoxApiKey->lineEdit(), SIGNAL(textChanged(QString)), this, SLOT(updateButtons()));

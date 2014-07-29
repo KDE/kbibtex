@@ -253,7 +253,7 @@ void MDIWidget::setFile(OpenFileInfo *openFileInfo, KService::Ptr servicePtr)
     }
 
     if (indexOf(widget) >= 0) {
-        oldEditor = dynamic_cast<FileView *>(currentWidget());
+        oldEditor = qobject_cast<FileView *>(currentWidget());
         hasChanged = widget != currentWidget();
     } else if (openFileInfo != NULL) {
         addWidget(widget);
@@ -263,7 +263,7 @@ void MDIWidget::setFile(OpenFileInfo *openFileInfo, KService::Ptr servicePtr)
     d->currentFile = openFileInfo;
 
     if (hasChanged) {
-        FileView *newEditor = dynamic_cast<FileView *>(widget);
+        FileView *newEditor = qobject_cast<FileView *>(widget);
         emit activePartChanged(part);
         emit documentSwitch(oldEditor, newEditor);
     }
@@ -281,7 +281,7 @@ void MDIWidget::setFile(OpenFileInfo *openFileInfo, KService::Ptr servicePtr)
 FileView *MDIWidget::fileView()
 {
     OpenFileInfo *ofi = d->ofim->currentFile();
-    return dynamic_cast<FileView *>(ofi->part(this)->widget());
+    return qobject_cast<FileView *>(ofi->part(this)->widget());
 }
 
 OpenFileInfo *MDIWidget::currentFile()

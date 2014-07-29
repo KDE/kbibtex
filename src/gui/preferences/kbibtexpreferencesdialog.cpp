@@ -115,7 +115,7 @@ public:
             }
             break;
         case KMessageBox::No: {
-            SettingsAbstractWidget *widget = dynamic_cast<SettingsAbstractWidget *>(p->currentPage()->widget());
+            SettingsAbstractWidget *widget = qobject_cast<SettingsAbstractWidget *>(p->currentPage()->widget());
             if (widget != NULL)
                 widget->resetToDefaults();
         }

@@ -64,7 +64,7 @@ public:
 
     ~OpenFileInfoPrivate() {
         if (part != NULL) {
-            KParts::ReadWritePart *rwp = dynamic_cast<KParts::ReadWritePart *>(part);
+            KParts::ReadWritePart *rwp = qobject_cast<KParts::ReadWritePart *>(part);
             if (rwp != NULL)
                 rwp->closeUrl(true);
             delete part;
@@ -84,7 +84,7 @@ public:
             Q_ASSERT_X(part != NULL, "KParts::ReadOnlyPart *OpenFileInfo::OpenFileInfoPrivate::createPart(QWidget *newWidgetParent, KService::Ptr newServicePtr = KService::Ptr())", "Part is NULL");
             return part;
         } else if (part != NULL) {
-            KParts::ReadWritePart *rwp = dynamic_cast<KParts::ReadWritePart *>(part);
+            KParts::ReadWritePart *rwp = qobject_cast<KParts::ReadWritePart *>(part);
             if (rwp != NULL)
                 rwp->closeUrl(true);
             part->deleteLater();
@@ -182,7 +182,7 @@ KUrl OpenFileInfo::url() const
 
 bool OpenFileInfo::isModified() const
 {
-    KParts::ReadWritePart *rwPart = dynamic_cast< KParts::ReadWritePart *>(d->part);
+    KParts::ReadWritePart *rwPart = qobject_cast< KParts::ReadWritePart *>(d->part);
     if (rwPart == NULL)
         return false;
     else
@@ -191,7 +191,7 @@ bool OpenFileInfo::isModified() const
 
 bool OpenFileInfo::save()
 {
-    KParts::ReadWritePart *rwPart = dynamic_cast< KParts::ReadWritePart *>(d->part);
+    KParts::ReadWritePart *rwPart = qobject_cast< KParts::ReadWritePart *>(d->part);
     if (rwPart == NULL)
         return true;
     else
@@ -205,7 +205,7 @@ bool OpenFileInfo::close()
         return true;
     }
 
-    KParts::ReadWritePart *rwp = dynamic_cast<KParts::ReadWritePart *>(d->part);
+    KParts::ReadWritePart *rwp = qobject_cast<KParts::ReadWritePart *>(d->part);
     if (rwp == NULL || rwp->closeUrl(true)) {
         d->part->deleteLater();
         d->part = NULL;

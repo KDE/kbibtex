@@ -517,7 +517,7 @@ void ColorLabelContextMenu::colorActivated(const QString &colorString)
     /// so apply this color code to the currently
     /// selected item in the tree view
 
-    SortFilterFileModel *sfbfm = dynamic_cast<SortFilterFileModel *>(d->fileView->model());
+    SortFilterFileModel *sfbfm = qobject_cast<SortFilterFileModel *>(d->fileView->model());
     Q_ASSERT_X(sfbfm != NULL, "ColorLabelContextMenu::colorActivated(const QString &colorString)", "SortFilterFileModel *sfbfm is NULL");
     FileModel *model = sfbfm->fileSourceModel();
     Q_ASSERT_X(model != NULL, "ColorLabelContextMenu::colorActivated(const QString &colorString)", "FileModel *model is NULL");

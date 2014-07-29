@@ -325,7 +325,7 @@ void SettingsIdSuggestionsWidget::resetToDefaults()
 
 void SettingsIdSuggestionsWidget::buttonClicked()
 {
-    KPushButton *button = dynamic_cast<KPushButton *>(sender());
+    KPushButton *button = qobject_cast<KPushButton *>(sender());
     QModelIndex selectedIndex = d->treeViewSuggestions->selectionModel()->currentIndex();
 
     if (button == d->buttonNewSuggestion) {

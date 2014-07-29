@@ -323,7 +323,7 @@ public:
             return false;
 
         /// export bibliography data into temporary file
-        SortFilterFileModel *model = dynamic_cast<SortFilterFileModel *>(editor->model());
+        SortFilterFileModel *model = qobject_cast<SortFilterFileModel *>(editor->model());
         Q_ASSERT_X(model != NULL, "bool KBibTeXPart::KBibTeXPartPrivate:saveFile(const KUrl &url)", "SortFilterFileModel *model from editor->model() is invalid");
         FileExporter *exporter = fileExporterFactory(url);
 
@@ -345,7 +345,7 @@ public:
                 dlg->exec();
                 settingsWidget.saveProperties(bibTeXFile);
                 delete dlg;
-            } else if ((fet = dynamic_cast<FileExporterToolchain *>(exporter)) != NULL) {
+            } else if ((fet = qobject_cast<FileExporterToolchain *>(exporter)) != NULL) {
                 QPointer<KDialog> dlg = new KDialog(p->widget());
                 SettingsFileExporterPDFPSWidget settingsWidget(dlg);
                 dlg->setMainWidget(&settingsWidget);
