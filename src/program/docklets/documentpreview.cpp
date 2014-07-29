@@ -228,7 +228,7 @@ public:
     }
 
     bool addUrl(const struct UrlInfo &urlInfo) {
-        bool isLocal = KBibTeX::isLocalOrRelative(urlInfo.url);
+        bool isLocal = isLocalOrRelative(urlInfo.url);
         anyLocal |= isLocal;
 
         if (!onlyLocalFilesButton->isChecked() && !isLocal) return true; ///< ignore URL if only local files are allowed
@@ -290,7 +290,7 @@ public:
             QList<KUrl> urlList = FileInfo::entryUrls(entry.data(), baseUrl, FileInfo::TestExistanceYes);
 
             for (QList<KUrl>::ConstIterator it = urlList.constBegin(); it != urlList.constEnd(); ++it) {
-                bool isLocal = KBibTeX::isLocalOrRelative(*it);
+                bool isLocal = isLocalOrRelative(*it);
                 kDebug() << "testing " << (*it).prettyUrl() << isLocal;
                 anyRemote |= !isLocal;
                 if (!onlyLocalFilesButton->isChecked() && !isLocal) continue;
@@ -493,7 +493,7 @@ public:
         UrlInfo result;
         result.url = url;
 
-        if (!KBibTeX::isLocalOrRelative(url) && url.fileName().isEmpty()) {
+        if (!isLocalOrRelative(url) && url.fileName().isEmpty()) {
             /// URLs not pointing to a specific file should be opened with a web browser component
             result.icon = KIcon("text-html");
             result.mimeType = QLatin1String("text/html");
@@ -501,7 +501,7 @@ public:
         }
 
         int accuracy = 0;
-        KMimeType::Ptr mimeTypePtr = KMimeType::findByUrl(url, 0, KBibTeX::isLocalOrRelative(url), true, &accuracy);
+        KMimeType::Ptr mimeTypePtr = KMimeType::findByUrl(url, 0, isLocalOrRelative(url), true, &accuracy);
         if (accuracy < 50) {
             mimeTypePtr = KMimeType::findByPath(url.fileName(), 0, true, &accuracy);
         }
