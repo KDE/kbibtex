@@ -20,7 +20,7 @@
 #include <QVariant>
 #include <QRegExp>
 
-#include <KUrl>
+#include <KDE/KUrl>
 
 namespace KBibTeX
 {
