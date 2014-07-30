@@ -1,0 +1,20 @@
+/** @mainpage KBibTeX API Reference
+
+KBibTeX is a graphical editor for BibTeX and BibLaTeX files.
+
+@authors
+Thomas Fischer <fischer@unix-ag.uni-kl.de>
+
+@maintainers
+Thomas Fischer <fischer@unix-ag.uni-kl.de>
+
+@licenses
+@gpl
+
+*/
+
+// DOXYGEN_ENABLE = YES
+// DOXYGEN_SET_RECURSIVE=YES
+// DOXYGEN_SET_PROJECT_NAME = KBibTeX
+// DOXYGEN_COPYRIGHT = 2004-2014 Thomas Fischer
+// vim:ts=4:sw=4:expandtab:filetype=doxygen
