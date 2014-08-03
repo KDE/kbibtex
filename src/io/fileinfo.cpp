@@ -110,22 +110,33 @@ void FileInfo::urlsInText(const QString &text, TestExistance testExistance, cons
     for (QStringList::ConstIterator filesIt = fileList.constBegin(); filesIt != fileList.constEnd(); ++filesIt) {
         internalText = *filesIt;
 
+        /// If testing for the actual existance of a filename found in the text ...
         if (testExistance == TestExistanceYes) {
-            QFileInfo fileInfo(internalText);
-            KUrl url = KUrl(fileInfo.filePath());
-            if (fileInfo.exists() && fileInfo.isFile() && url.isValid() && !result.contains(url)) {
-                /// text points to existing file (most likely with absolute path)
-                result << url;
-                /// stop searching for urls or filenames in current internal text
-                continue;
-            } else if (!baseDirectory.isEmpty()) {
+            /// If a base directory (e.g. the location of the parent .bib file) is given
+            /// and the potential filename fragment is NOT an absolute path, ...
+            if (!baseDirectory.isEmpty() &&
+                    // TODO the following test assumes that absolute paths start
+                    // with a dir separator, which may only be true on Unix/Linux,
+                    // but not Windows. May be a test for 'first character is a letter,
+                    // second is ":", third is "\"' may be necessary.
+                    !internalText.startsWith(QDir::separator())) {
+                /// To get the absolute path, prepend filename fragment with base directory
                 const QString fullFilename = baseDirectory + QDir::separator() + internalText;
-                fileInfo = QFileInfo(fullFilename);
-                url = KUrl(fileInfo.filePath());
+                const QFileInfo fileInfo(fullFilename);
+                const KUrl url = KUrl(fileInfo.filePath());
                 if (fileInfo.exists() && fileInfo.isFile() && url.isValid() && !result.contains(url)) {
-                    /// text points to existing file in base directory
                     result << url;
-                    /// stop searching for urls or filenames in current internal text
+                    /// Stop searching for URLs or filenames in current internal text
+                    continue;
+                }
+            } else {
+                /// Either the filename fragment is an absolute path OR no base directory
+                /// was given (current working directory is assumed), ...
+                const QFileInfo fileInfo(internalText);
+                const KUrl url = KUrl(fileInfo.filePath());
+                if (fileInfo.exists() && fileInfo.isFile() && url.isValid() && !result.contains(url)) {
+                    result << url;
+                    /// stop searching for URLs or filenames in current internal text
                     continue;
                 }
             }

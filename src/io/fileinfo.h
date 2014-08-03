@@ -36,7 +36,10 @@ public:
     static const QString mimetypeRIS;
     static const QString mimetypePDF;
 
-    enum TestExistance {TestExistanceYes, TestExistanceNo};
+    enum TestExistance {
+        TestExistanceYes, ///< Test if file exists
+        TestExistanceNo ///< Skip test if file exists
+    };
 
     /**
      * Finds a KMimeType with the given url.
