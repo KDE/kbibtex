@@ -64,15 +64,15 @@ public:
         OpenFileInfoManager::OpenFileInfoList ofiList = ofim->filteredItems(OpenFileInfo::RecentlyUsed);
         if (index.row() < ofiList.count()) {
             OpenFileInfo *ofiItem = ofiList[index.row()];
-            const KUrl url = ofiItem->url();
             if (index.column() == 0) {
                 if (role == Qt::DisplayRole || role == SortRole) {
+                    const KUrl url = ofiItem->url();
                     const QString fileName = url.fileName();
                     return fileName.isEmpty() ? squeeze_text(url.pathOrUrl(), 32) : fileName;
                 } else if (role == Qt::DecorationRole)
                     return KIcon(ofiItem->mimeType().replace(QLatin1Char('/'), QLatin1Char('-')));
                 else if (role == Qt::ToolTipRole)
-                    return squeeze_text(url.pathOrUrl(), 64);
+                    return squeeze_text(ofiItem->url().pathOrUrl(), 64);
             } else if (index.column() == 1) {
                 if (role == Qt::DisplayRole || role == Qt::ToolTipRole)
                     return ofiItem->lastAccess().toString(Qt::TextDate);
@@ -80,10 +80,10 @@ public:
                     return ofiItem->lastAccess().toTime_t();
             } else if (index.column() == 2) {
                 if (role == Qt::DisplayRole || role == Qt::ToolTipRole || role == SortRole)
-                    return url.pathOrUrl();
+                    return ofiItem->url().pathOrUrl();
             }
             if (role == URLRole) {
-                KUrl url = url;
+                const KUrl url = ofiItem->url();
                 if (url.isLocalFile())
                     return KUrl::fromLocalFile(url.path());
                 else
