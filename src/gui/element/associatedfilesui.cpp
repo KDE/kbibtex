@@ -38,6 +38,8 @@ public:
     QLabel *labelGreeting, *labelFollowingOperations;
     KLineEdit *lineEditSourceUrl;
     QRadioButton *radioNoCopyMove, *radioCopyFile, *radioMoveFile;
+    QLabel *labelMoveCopyLocation;
+    KLineEdit *lineMoveCopyLocation;
     QGroupBox *groupBoxRename;
     QRadioButton *radioKeepFilename, *radioRenameToEntryId, *radioUserDefinedName;
     KLineEdit *lineEditUserDefinedName;
@@ -87,6 +89,12 @@ public:
         buttonGroup->addButton(radioMoveFile);
         connect(buttonGroup, SIGNAL(buttonClicked(int)), p, SLOT(updateUIandPreview()));
         radioNoCopyMove->setChecked(true); /// by default
+        groupBoxLayout->addSpacing(4);
+        labelMoveCopyLocation = new QLabel(i18n("Path and filename of bibliography file:"), groupBox);
+        groupBoxLayout->addWidget(labelMoveCopyLocation, 1);
+        lineMoveCopyLocation = new KLineEdit(groupBox);
+        lineMoveCopyLocation->setReadOnly(true);
+        groupBoxLayout->addWidget(lineMoveCopyLocation, 1);
 
         groupBoxRename = new QGroupBox(i18n("Rename Document?"), p);
         layout->addWidget(groupBoxRename);
@@ -98,7 +106,7 @@ public:
         radioKeepFilename = new QRadioButton(i18n("Keep document's original filename"), groupBoxRename);
         gridLayout->addWidget(radioKeepFilename, 0, 0, 1, 2);
         buttonGroup->addButton(radioKeepFilename);
-        radioRenameToEntryId = new QRadioButton(i18n("Rename after entry's id"), groupBoxRename);
+        radioRenameToEntryId = new QRadioButton(groupBoxRename);
         gridLayout->addWidget(radioRenameToEntryId, 1, 0, 1, 2);
         buttonGroup->addButton(radioRenameToEntryId);
         radioUserDefinedName = new QRadioButton(i18n("User-defined name:"), groupBoxRename);
@@ -234,8 +242,14 @@ void AssociatedFilesUI::updateUIandPreview() {
     if (d->bibTeXfile == NULL || !d->bibTeXfile->hasProperty(File::Url)) {
         d->radioRelativePath->setEnabled(false);
         d->radioAbsolutePath->setChecked(true);
-    } else
+        d->labelMoveCopyLocation->hide();
+        d->lineMoveCopyLocation->hide();
+    } else {
         d->radioRelativePath->setEnabled(true);
+        d->labelMoveCopyLocation->show();
+        d->lineMoveCopyLocation->show();
+        d->lineMoveCopyLocation->setText(d->bibTeXfile->property(File::Url).toUrl().path());
+    }
 
     if (d->bibTeXfile != NULL && !d->sourceUrl.isEmpty() && !entryId.isEmpty()) {
         const QUrl newUrl = AssociatedFiles::copyDocument(d->sourceUrl, entryId, d->bibTeXfile, renameOperation(), moveCopyOperation(), NULL, d->lineEditUserDefinedName->text(), true);
@@ -252,10 +266,13 @@ void AssociatedFilesUI::updateUIandPreview() {
 void AssociatedFilesUI::setupForRemoteUrl(const QUrl &url, const QString &entryId) {
     d->sourceUrl = url;
     d->lineEditSourceUrl->setText(url.toString());
-    if (entryId.isEmpty())
+    if (entryId.isEmpty()) {
         d->labelGreeting->setText(i18n("The following remote document is about to be associated with the current entry:"));
-    else
+        d->radioRenameToEntryId->setText(QString());
+    } else {
         d->labelGreeting->setText(i18n("The following remote document is about to be associated with the entry '%1':", entryId));
+        d->radioRenameToEntryId->setText(i18n("Rename after entry's id: '%1'", entryId));
+    }
     updateUIandPreview();
 }
 
