@@ -268,7 +268,7 @@ void AssociatedFilesUI::setupForRemoteUrl(const QUrl &url, const QString &entryI
     d->lineEditSourceUrl->setText(url.toString());
     if (entryId.isEmpty()) {
         d->labelGreeting->setText(i18n("The following remote document is about to be associated with the current entry:"));
-        d->radioRenameToEntryId->setText(QString());
+        d->radioRenameToEntryId->setText(i18n("Rename after entry's id"));
     } else {
         d->labelGreeting->setText(i18n("The following remote document is about to be associated with the entry '%1':", entryId));
         d->radioRenameToEntryId->setText(i18n("Rename after entry's id: '%1'", entryId));
@@ -279,9 +279,12 @@ void AssociatedFilesUI::setupForRemoteUrl(const QUrl &url, const QString &entryI
 void AssociatedFilesUI::setupForLocalFile(const QUrl &url, const QString &entryId) {
     d->sourceUrl = url;
     d->lineEditSourceUrl->setText(url.path());
-    if (entryId.isEmpty())
+    if (entryId.isEmpty()) {
         d->labelGreeting->setText(i18n("The following local document is about to be associated with the current entry:"));
-    else
+        d->radioRenameToEntryId->setText(i18n("Rename after entry's id"));
+    } else {
         d->labelGreeting->setText(i18n("The following local document is about to be associated with the entry '%1':", entryId));
+        d->radioRenameToEntryId->setText(i18n("Rename after entry's id: '%1'", entryId));
+    }
     updateUIandPreview();
 }
