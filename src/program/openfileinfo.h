@@ -95,7 +95,7 @@ private:
     OpenFileInfoPrivate *d;
 };
 
-Q_DECLARE_METATYPE(OpenFileInfo *);
+Q_DECLARE_METATYPE(OpenFileInfo *)
 
 
 class OpenFileInfoManager: public QObject
@@ -109,7 +109,19 @@ public:
     ~OpenFileInfoManager();
 
     OpenFileInfo *createNew(const QString &mimeType = FileInfo::mimetypeBibTeX);
+
+    /**
+     * Open the given bibliography file as specified in the URL.
+     * If the file is already open, an existing OpenFileInfo pointer will be
+     * returned. If the file was not yet open, a new OpenFileInfo object will
+     * be created and returned.
+     * There shall be no two different OpenFileInfo objects representing
+     * the same file.
+     * @param url URL to bibliography file to open
+     * @return an OpenFileInfo object representing the opened file
+     */
     OpenFileInfo *open(const KUrl &url);
+
     OpenFileInfo *contains(const KUrl &url) const;
     OpenFileInfo *currentFile() const;
     bool changeUrl(OpenFileInfo *openFileInfo, const KUrl &url);
