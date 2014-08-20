@@ -447,7 +447,7 @@ OpenFileInfo *OpenFileInfoManager::open(const KUrl &url)
         result = new OpenFileInfo(this, url);
         connect(result, SIGNAL(flagsChanged(OpenFileInfo::StatusFlags)), this, SIGNAL(flagsChanged(OpenFileInfo::StatusFlags)));
         d->openFileInfoList << result;
-    }
+    } /// else: file was already open, re-use and return existing OpenFileInfo pointer
     result->setLastAccess();
     return result;
 }
