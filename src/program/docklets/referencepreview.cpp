@@ -395,8 +395,8 @@ void ReferencePreview::linkClicked(const QUrl &url)
             fq.terms << text.mid(p + 1);
             fq.combination = SortFilterFileModel::EveryTerm;
             fq.field = text.left(p);
-            d->fileView->setFilterBarFilter(fq);
             fq.searchPDFfiles = false;
+            d->fileView->setFilterBarFilter(fq);
         }
     }
 }
