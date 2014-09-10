@@ -485,12 +485,22 @@ KBibTeXPart::KBibTeXPart(QWidget *parentWidget, QObject *parent, bool browserVie
     setComponentData(KBibTeXPartFactory::componentData());
     setObjectName("KBibTeXPart::KBibTeXPart");
 
+    QWidget *container = new QWidget(parentWidget);
+    QBoxLayout *containerLayout = new QVBoxLayout(container);
+    containerLayout->setMargin(0);
+
+    d->filterBar = new FilterBar(container);
+    containerLayout->addWidget(d->filterBar, 0);
+
     // TODO Setup view
-    d->editor = new FileView(QLatin1String("Main"), parentWidget);
+    d->editor = new FileView(QLatin1String("Main"), container);
+    containerLayout->addWidget(d->editor, 0xffffff);
+    d->editor->setFilterBar(d->filterBar);
     d->editor->setReadOnly(!isReadWrite());
     d->editor->setItemDelegate(new FileDelegate(d->editor));
-    setWidget(d->editor);
     connect(d->editor, SIGNAL(modified()), this, SLOT(setModified()));
+
+    setWidget(container);
 
     setupActions(browserViewWanted);
 
@@ -535,12 +545,9 @@ void KBibTeXPart::setupActions(bool /*browserViewWanted FIXME*/)
     actionCollection()->addAction("file_save_copy_as", saveCopyAsAction);
     connect(saveCopyAsAction, SIGNAL(triggered()), this, SLOT(documentSaveCopyAs()));
 
-    d->filterBar = new FilterBar(0);
-    d->editor->setFilterBar(d->filterBar);
     KAction *filterWidgetAction = new KAction(i18n("Filter"), this);
     actionCollection()->addAction("toolbar_filter_widget", filterWidgetAction);
     filterWidgetAction->setShortcut(Qt::CTRL + Qt::Key_F);
-    filterWidgetAction->setDefaultWidget(d->filterBar);
     connect(filterWidgetAction, SIGNAL(triggered()), d->filterBar, SLOT(setFocus()));
 
     KActionMenu *newElementAction = new KActionMenu(KIcon("address-book-new"), i18n("New element"), this);

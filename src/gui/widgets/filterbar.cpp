@@ -175,16 +175,13 @@ FilterBar::FilterBar(QWidget *parent)
         : QWidget(parent), d(new FilterBarPrivate(this))
 {
     QBoxLayout *layout = new QHBoxLayout(this);
-    layout->setMargin(1);
-
-    layout->addSpacing(4);
+    layout->setMargin(0);
 
     QLabel *label = new QLabel(i18n("Filter:"), this);
     layout->addWidget(label, 0);
 
     d->comboBoxFilterText = new KComboBox(true, this);
     label->setBuddy(d->comboBoxFilterText);
-    setFocusProxy(d->comboBoxFilterText);
     layout->addWidget(d->comboBoxFilterText, 5);
     d->comboBoxFilterText->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Preferred);
     d->comboBoxFilterText->setEditable(true);
@@ -220,8 +217,6 @@ FilterBar::FilterBar(QWidget *parent)
     d->buttonClearAll->setIcon(KIcon("edit-clear-locationbar-rtl"));
     d->buttonClearAll->setToolTip(i18n("Reset filter criteria"));
     layout->addWidget(d->buttonClearAll, 0);
-
-    layout->addSpacing(4);
 
     connect(d->comboBoxFilterText->lineEdit(), SIGNAL(textChanged(QString)), d->delayedTimer, SLOT(trigger()));
     connect(d->comboBoxFilterText->lineEdit(), SIGNAL(returnPressed()), this, SLOT(userPressedEnter()));

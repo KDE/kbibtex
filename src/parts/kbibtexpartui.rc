@@ -31,7 +31,4 @@
   <Separator/>
   <Action name="element_new" />
 </ToolBar>
-<ToolBar name="filterToolBar"><text>Filter Toolbar</text>
-  <Action name="toolbar_filter_widget" />
-</ToolBar>
 </kpartgui>
