@@ -206,6 +206,8 @@ public:
             const QUrl oldUrl = bibTeXFile->property(File::Url, QUrl()).toUrl();
             if (oldUrl.isValid() && oldUrl.isLocalFile())
                 fileSystemWatcher.removePath(oldUrl.toString());
+            else
+                kWarning() << "KBibTeXPartPrivate::openFile: Not removing" << oldUrl.toString() << "from fileSystemWatcher";
             delete bibTeXFile;
         }
 
@@ -691,6 +693,8 @@ bool KBibTeXPart::documentSaveAs()
     /// Remove old URL from file system watcher
     if (url().isValid() && url().isLocalFile())
         d->fileSystemWatcher.removePath(url().pathOrUrl());
+    else
+        kWarning() << "KBibTeXPart::documentSaveAs: Not removing" << url().pathOrUrl() << "from fileSystemWatcher";
 
     if (KParts::ReadWritePart::saveAs(newUrl)) {
         kDebug() << "setting url to be " << newUrl.pathOrUrl();
