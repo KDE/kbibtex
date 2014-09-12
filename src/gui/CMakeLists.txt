@@ -28,6 +28,7 @@ set(
     field/fieldlistedit.cpp
     field/colorlabelwidget.cpp
     file/fileview.cpp
+    file/partwidget.cpp
     file/findduplicatesui.cpp
     file/clipboard.cpp
     file/filemodel.cpp
@@ -85,6 +86,7 @@ set(
     file/clipboard.h
     file/filemodel.h
     file/fileview.h
+    file/partwidget.h
     element/findpdfui.h
     element/elementeditor.h
     element/associatedfilesui.h

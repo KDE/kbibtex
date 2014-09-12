@@ -20,8 +20,10 @@
 
 #include <kparts/part.h>
 
+#include <QObject>
+
 #include "notificationhub.h"
-#include "fileview.h"
+#include "partwidget.h"
 
 class KBibTeXPart : public KParts::ReadWritePart, private NotificationListener
 {

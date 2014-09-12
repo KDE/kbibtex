@@ -78,6 +78,7 @@
 #include "clipboard.h"
 #include "idsuggestions.h"
 #include "partfactory.h"
+#include "fileview.h"
 // #include "browserextension.h" // FIXME
 
 static const char RCFileName[] = "kbibtexpartui.rc";
@@ -94,10 +95,9 @@ private:
 
 public:
     File *bibTeXFile;
-    FileView *editor;
+    PartWidget *partWidget;
     FileModel *model;
     SortFilterFileModel *sortFilterProxyModel;
-    FilterBar *filterBar;
     QSignalMapper *signalMapperNewElement;
     KAction *editCutAction, *editDeleteAction, *editCopyAction, *editPasteAction, *editCopyReferencesAction, *elementEditAction, *elementViewDocumentAction, *fileSaveAction, *elementFindPDFAction, *entryApplyDefaultFormatString;
     KMenu *viewDocumentMenu;
@@ -190,8 +190,8 @@ public:
         if (sortFilterProxyModel != NULL) delete sortFilterProxyModel;
         sortFilterProxyModel = new SortFilterFileModel(p);
         sortFilterProxyModel->setSourceModel(model);
-        editor->setModel(sortFilterProxyModel);
-        connect(filterBar, SIGNAL(filterChanged(SortFilterFileModel::FilterQuery)), sortFilterProxyModel, SLOT(updateFilter(SortFilterFileModel::FilterQuery)));
+        partWidget->fileView()->setModel(sortFilterProxyModel);
+        connect(partWidget->filterBar(), SIGNAL(filterChanged(SortFilterFileModel::FilterQuery)), sortFilterProxyModel, SLOT(updateFilter(SortFilterFileModel::FilterQuery)));
     }
 
     bool openFile(const KUrl &url, const QString &localFilePath) {
@@ -224,12 +224,12 @@ public:
         bibTeXFile->setProperty(File::Url, QUrl(url));
 
         model->setBibliographyFile(bibTeXFile);
-        editor->setModel(model);
+        partWidget->fileView()->setModel(model);
         if (sortFilterProxyModel != NULL) delete sortFilterProxyModel;
         sortFilterProxyModel = new SortFilterFileModel(p);
         sortFilterProxyModel->setSourceModel(model);
-        editor->setModel(sortFilterProxyModel);
-        connect(filterBar, SIGNAL(filterChanged(SortFilterFileModel::FilterQuery)), sortFilterProxyModel, SLOT(updateFilter(SortFilterFileModel::FilterQuery)));
+        partWidget->fileView()->setModel(sortFilterProxyModel);
+        connect(partWidget->filterBar(), SIGNAL(filterChanged(SortFilterFileModel::FilterQuery)), sortFilterProxyModel, SLOT(updateFilter(SortFilterFileModel::FilterQuery)));
 
         if (url.isLocalFile())
             fileSystemWatcher.addPath(url.pathOrUrl());
@@ -323,7 +323,7 @@ public:
             return false;
 
         /// export bibliography data into temporary file
-        SortFilterFileModel *model = qobject_cast<SortFilterFileModel *>(editor->model());
+        SortFilterFileModel *model = qobject_cast<SortFilterFileModel *>(partWidget->fileView()->model());
         Q_ASSERT_X(model != NULL, "bool KBibTeXPart::KBibTeXPartPrivate:saveFile(const KUrl &url)", "SortFilterFileModel *model from editor->model() is invalid");
         FileExporter *exporter = fileExporterFactory(url);
 
@@ -415,9 +415,9 @@ public:
         viewDocumentMenu->clear();
         int result = 0;
 
-        QSharedPointer<const Entry> entry = editor->currentElement().dynamicCast<const Entry>();
+        QSharedPointer<const Entry> entry = partWidget->fileView()->currentElement().dynamicCast<const Entry>();
         if (!entry.isNull()) {
-            QList<KUrl> urlList = FileInfo::entryUrls(entry.data(), editor->fileModel()->bibliographyFile()->property(File::Url).toUrl(), FileInfo::TestExistanceYes);
+            QList<KUrl> urlList = FileInfo::entryUrls(entry.data(), partWidget->fileView()->fileModel()->bibliographyFile()->property(File::Url).toUrl(), FileInfo::TestExistanceYes);
             if (!urlList.isEmpty()) {
                 /// First iteration: local references only
                 KAction *firstAction = NULL;
@@ -466,14 +466,14 @@ public:
         KConfigGroup configGroup(config, Preferences::groupUserInterface);
         const Preferences::ElementDoubleClickAction doubleClickAction = (Preferences::ElementDoubleClickAction)configGroup.readEntry(Preferences::keyElementDoubleClickAction, (int)Preferences::defaultElementDoubleClickAction);
 
-        disconnect(editor, SIGNAL(elementExecuted(QSharedPointer<Element>)), editor, SLOT(editElement(QSharedPointer<Element>)));
-        disconnect(editor, SIGNAL(elementExecuted(QSharedPointer<Element>)), p, SLOT(elementViewDocument()));
+        disconnect(partWidget->fileView(), SIGNAL(elementExecuted(QSharedPointer<Element>)), partWidget->fileView(), SLOT(editElement(QSharedPointer<Element>)));
+        disconnect(partWidget->fileView(), SIGNAL(elementExecuted(QSharedPointer<Element>)), p, SLOT(elementViewDocument()));
         switch (doubleClickAction) {
         case Preferences::ActionOpenEditor:
-            connect(editor, SIGNAL(elementExecuted(QSharedPointer<Element>)), editor, SLOT(editElement(QSharedPointer<Element>)));
+            connect(partWidget->fileView(), SIGNAL(elementExecuted(QSharedPointer<Element>)), partWidget->fileView(), SLOT(editElement(QSharedPointer<Element>)));
             break;
         case Preferences::ActionViewDocument:
-            connect(editor, SIGNAL(elementExecuted(QSharedPointer<Element>)), p, SLOT(elementViewDocument()));
+            connect(partWidget->fileView(), SIGNAL(elementExecuted(QSharedPointer<Element>)), p, SLOT(elementViewDocument()));
             break;
         }
     }
@@ -485,22 +485,9 @@ KBibTeXPart::KBibTeXPart(QWidget *parentWidget, QObject *parent, bool browserVie
     setComponentData(KBibTeXPartFactory::componentData());
     setObjectName("KBibTeXPart::KBibTeXPart");
 
-    QWidget *container = new QWidget(parentWidget);
-    QBoxLayout *containerLayout = new QVBoxLayout(container);
-    containerLayout->setMargin(0);
-
-    d->filterBar = new FilterBar(container);
-    containerLayout->addWidget(d->filterBar, 0);
-
-    // TODO Setup view
-    d->editor = new FileView(QLatin1String("Main"), container);
-    containerLayout->addWidget(d->editor, 0xffffff);
-    d->editor->setFilterBar(d->filterBar);
-    d->editor->setReadOnly(!isReadWrite());
-    d->editor->setItemDelegate(new FileDelegate(d->editor));
-    connect(d->editor, SIGNAL(modified()), this, SLOT(setModified()));
-
-    setWidget(container);
+    d->partWidget = new PartWidget(parentWidget);
+    d->partWidget->fileView()->setReadOnly(!isReadWrite());
+    setWidget(d->partWidget);
 
     setupActions(browserViewWanted);
 
@@ -548,7 +535,7 @@ void KBibTeXPart::setupActions(bool /*browserViewWanted FIXME*/)
     KAction *filterWidgetAction = new KAction(i18n("Filter"), this);
     actionCollection()->addAction("toolbar_filter_widget", filterWidgetAction);
     filterWidgetAction->setShortcut(Qt::CTRL + Qt::Key_F);
-    connect(filterWidgetAction, SIGNAL(triggered()), d->filterBar, SLOT(setFocus()));
+    connect(filterWidgetAction, SIGNAL(triggered()), d->partWidget->filterBar(), SLOT(setFocus()));
 
     KActionMenu *newElementAction = new KActionMenu(KIcon("address-book-new"), i18n("New element"), this);
     actionCollection()->addAction("element_new", newElementAction);
@@ -572,7 +559,7 @@ void KBibTeXPart::setupActions(bool /*browserViewWanted FIXME*/)
     d->elementEditAction = new KAction(KIcon("document-edit"), i18n("Edit Element"), this);
     d->elementEditAction->setShortcut(Qt::CTRL + Qt::Key_E);
     actionCollection()->addAction(QLatin1String("element_edit"),  d->elementEditAction);
-    connect(d->elementEditAction, SIGNAL(triggered()), d->editor, SLOT(editCurrentElement()));
+    connect(d->elementEditAction, SIGNAL(triggered()), d->partWidget->fileView(), SLOT(editCurrentElement()));
     d->elementViewDocumentAction = new KAction(KIcon("application-pdf"), i18n("View Document"), this);
     d->elementViewDocumentAction->setShortcut(Qt::CTRL + Qt::Key_D);
     actionCollection()->addAction(QLatin1String("element_viewdocument"),  d->elementViewDocumentAction);
@@ -586,7 +573,7 @@ void KBibTeXPart::setupActions(bool /*browserViewWanted FIXME*/)
     actionCollection()->addAction(QLatin1String("entry_applydefaultformatstring"), d->entryApplyDefaultFormatString);
     connect(d->entryApplyDefaultFormatString, SIGNAL(triggered()), this, SLOT(applyDefaultFormatString()));
 
-    Clipboard *clipboard = new Clipboard(d->editor);
+    Clipboard *clipboard = new Clipboard(d->partWidget->fileView());
 
     d->editCopyReferencesAction = new KAction(KIcon("edit-copy"), i18n("Copy References"), this);
     d->editCopyReferencesAction->setShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_C);
@@ -596,7 +583,7 @@ void KBibTeXPart::setupActions(bool /*browserViewWanted FIXME*/)
     d->editDeleteAction = new KAction(KIcon("edit-table-delete-row"), i18n("Delete"), this);
     d->editDeleteAction->setShortcut(Qt::Key_Delete);
     actionCollection()->addAction(QLatin1String("edit_delete"),  d->editDeleteAction);
-    connect(d->editDeleteAction, SIGNAL(triggered()), d->editor, SLOT(selectionDelete()));
+    connect(d->editDeleteAction, SIGNAL(triggered()), d->partWidget->fileView(), SLOT(selectionDelete()));
 
     d->editCutAction = actionCollection()->addAction(KStandardAction::Cut, clipboard, SLOT(cut()));
     d->editCopyAction = actionCollection()->addAction(KStandardAction::Copy, clipboard, SLOT(copy()));
@@ -604,36 +591,36 @@ void KBibTeXPart::setupActions(bool /*browserViewWanted FIXME*/)
     d->editPasteAction = actionCollection()->addAction(KStandardAction::Paste, clipboard, SLOT(paste()));
 
     /// build context menu for central BibTeX file view
-    d->editor->setContextMenuPolicy(Qt::ActionsContextMenu);
-    d->editor->addAction(d->elementEditAction);
-    d->editor->addAction(d->elementViewDocumentAction);
+    d->partWidget->fileView()->setContextMenuPolicy(Qt::ActionsContextMenu);
+    d->partWidget->fileView()->addAction(d->elementEditAction);
+    d->partWidget->fileView()->addAction(d->elementViewDocumentAction);
     QAction *separator = new QAction(this);
     separator->setSeparator(true);
-    d->editor->addAction(separator);
-    d->editor->addAction(d->editCutAction);
-    d->editor->addAction(d->editCopyAction);
-    d->editor->addAction(d->editCopyReferencesAction);
-    d->editor->addAction(d->editPasteAction);
-    d->editor->addAction(d->editDeleteAction);
+    d->partWidget->fileView()->addAction(separator);
+    d->partWidget->fileView()->addAction(d->editCutAction);
+    d->partWidget->fileView()->addAction(d->editCopyAction);
+    d->partWidget->fileView()->addAction(d->editCopyReferencesAction);
+    d->partWidget->fileView()->addAction(d->editPasteAction);
+    d->partWidget->fileView()->addAction(d->editDeleteAction);
     separator = new QAction(this);
     separator->setSeparator(true);
-    d->editor->addAction(separator);
+    d->partWidget->fileView()->addAction(separator);
 
     // TODO
 
-    connect(d->editor, SIGNAL(selectedElementsChanged()), this, SLOT(updateActions()));
-    connect(d->editor, SIGNAL(currentElementChanged(QSharedPointer<Element>,File*)), this, SLOT(updateActions()));
+    connect(d->partWidget->fileView(), SIGNAL(selectedElementsChanged()), this, SLOT(updateActions()));
+    connect(d->partWidget->fileView(), SIGNAL(currentElementChanged(QSharedPointer<Element>,File*)), this, SLOT(updateActions()));
 
-    d->editor->addAction(d->elementFindPDFAction);
-    d->editor->addAction(d->entryApplyDefaultFormatString);
+    d->partWidget->fileView()->addAction(d->elementFindPDFAction);
+    d->partWidget->fileView()->addAction(d->entryApplyDefaultFormatString);
 
-    d->colorLabelContextMenu = new ColorLabelContextMenu(d->editor);
+    d->colorLabelContextMenu = new ColorLabelContextMenu(d->partWidget->fileView());
     d->colorLabelContextMenuAction = actionCollection()->addAction(QLatin1String("entry_colorlabel"), d->colorLabelContextMenu->menuAction());
 
     setXMLFile(RCFileName);
 
-    d->findDuplicatesUI = new FindDuplicatesUI(this, d->editor);
-    d->lyx = new LyX(this, d->editor);
+    d->findDuplicatesUI = new FindDuplicatesUI(this, d->partWidget->fileView());
+    d->lyx = new LyX(this, d->partWidget->fileView());
 
     updateActions();
     fitActionSettings();
@@ -758,9 +745,9 @@ void KBibTeXPart::elementViewDocumentMenu(QObject *obj)
 
 void KBibTeXPart::elementFindPDF()
 {
-    QModelIndexList mil = d->editor->selectionModel()->selectedRows();
+    QModelIndexList mil = d->partWidget->fileView()->selectionModel()->selectedRows();
     if (mil.count() == 1) {
-        QSharedPointer<Entry> entry = d->editor->fileModel()->element(d->editor->sortFilterProxyModel()->mapToSource(*mil.constBegin()).row()).dynamicCast<Entry>();
+        QSharedPointer<Entry> entry = d->partWidget->fileView()->fileModel()->element(d->partWidget->fileView()->sortFilterProxyModel()->mapToSource(*mil.constBegin()).row()).dynamicCast<Entry>();
         if (!entry.isNull())
             FindPDFUI::interactiveFindPDF(*entry, *d->bibTeXFile, widget());
     }
@@ -768,9 +755,9 @@ void KBibTeXPart::elementFindPDF()
 
 void KBibTeXPart::applyDefaultFormatString()
 {
-    QModelIndexList mil = d->editor->selectionModel()->selectedRows();
+    QModelIndexList mil = d->partWidget->fileView()->selectionModel()->selectedRows();
     foreach(const QModelIndex &index, mil) {
-        QSharedPointer<Entry> entry = d->editor->fileModel()->element(d->editor->sortFilterProxyModel()->mapToSource(index).row()).dynamicCast<Entry>();
+        QSharedPointer<Entry> entry = d->partWidget->fileView()->fileModel()->element(d->partWidget->fileView()->sortFilterProxyModel()->mapToSource(index).row()).dynamicCast<Entry>();
         if (!entry.isNull()) {
             static IdSuggestions idSuggestions;
             bool success = idSuggestions.applyDefaultFormatId(*entry.data());
@@ -816,9 +803,9 @@ void KBibTeXPart::newEntryTriggered()
 {
     QSharedPointer<Entry> newEntry = QSharedPointer<Entry>(new Entry(QLatin1String("Article"), d->findUnusedId()));
     d->model->insertRow(newEntry, d->model->rowCount());
-    d->editor->setSelectedElement(newEntry);
-    if (d->editor->editElement(newEntry))
-        d->editor->scrollToBottom(); // FIXME always correct behaviour?
+    d->partWidget->fileView()->setSelectedElement(newEntry);
+    if (d->partWidget->fileView()->editElement(newEntry))
+        d->partWidget->fileView()->scrollToBottom(); // FIXME always correct behaviour?
     else {
         /// Editing this new element was cancelled,
         /// therefore remove it again
@@ -830,9 +817,9 @@ void KBibTeXPart::newMacroTriggered()
 {
     QSharedPointer<Macro> newMacro = QSharedPointer<Macro>(new Macro(d->findUnusedId()));
     d->model->insertRow(newMacro, d->model->rowCount());
-    d->editor->setSelectedElement(newMacro);
-    if (d->editor->editElement(newMacro))
-        d->editor->scrollToBottom(); // FIXME always correct behaviour?
+    d->partWidget->fileView()->setSelectedElement(newMacro);
+    if (d->partWidget->fileView()->editElement(newMacro))
+        d->partWidget->fileView()->scrollToBottom(); // FIXME always correct behaviour?
     else {
         /// Editing this new element was cancelled,
         /// therefore remove it again
@@ -844,9 +831,9 @@ void KBibTeXPart::newPreambleTriggered()
 {
     QSharedPointer<Preamble> newPreamble = QSharedPointer<Preamble>(new Preamble());
     d->model->insertRow(newPreamble, d->model->rowCount());
-    d->editor->setSelectedElement(newPreamble);
-    if (d->editor->editElement(newPreamble))
-        d->editor->scrollToBottom(); // FIXME always correct behaviour?
+    d->partWidget->fileView()->setSelectedElement(newPreamble);
+    if (d->partWidget->fileView()->editElement(newPreamble))
+        d->partWidget->fileView()->scrollToBottom(); // FIXME always correct behaviour?
     else {
         /// Editing this new element was cancelled,
         /// therefore remove it again
@@ -858,9 +845,9 @@ void KBibTeXPart::newCommentTriggered()
 {
     QSharedPointer<Comment> newComment = QSharedPointer<Comment>(new Comment());
     d->model->insertRow(newComment, d->model->rowCount());
-    d->editor->setSelectedElement(newComment);
-    if (d->editor->editElement(newComment))
-        d->editor->scrollToBottom(); // FIXME always correct behaviour?
+    d->partWidget->fileView()->setSelectedElement(newComment);
+    if (d->partWidget->fileView()->editElement(newComment))
+        d->partWidget->fileView()->scrollToBottom(); // FIXME always correct behaviour?
     else {
         /// Editing this new element was cancelled,
         /// therefore remove it again
@@ -870,7 +857,7 @@ void KBibTeXPart::newCommentTriggered()
 
 void KBibTeXPart::updateActions()
 {
-    bool emptySelection = d->editor->selectedElements().isEmpty();
+    bool emptySelection = d->partWidget->fileView()->selectedElements().isEmpty();
     d->elementEditAction->setEnabled(!emptySelection);
     d->editCopyAction->setEnabled(!emptySelection);
     d->editCopyReferencesAction->setEnabled(!emptySelection);
@@ -891,10 +878,10 @@ void KBibTeXPart::updateActions()
 
     /// update list of references which can be sent to LyX
     QStringList references;
-    if (d->editor->selectionModel() != NULL) {
-        QModelIndexList mil = d->editor->selectionModel()->selectedRows();
+    if (d->partWidget->fileView()->selectionModel() != NULL) {
+        QModelIndexList mil = d->partWidget->fileView()->selectionModel()->selectedRows();
         for (QModelIndexList::ConstIterator it = mil.constBegin(); it != mil.constEnd(); ++it) {
-            QSharedPointer<Entry> entry = d->editor->fileModel()->element(d->editor->sortFilterProxyModel()->mapToSource(*it).row()).dynamicCast<Entry>();
+            QSharedPointer<Entry> entry = d->partWidget->fileView()->fileModel()->element(d->partWidget->fileView()->sortFilterProxyModel()->mapToSource(*it).row()).dynamicCast<Entry>();
             if (!entry.isNull())
                 references << entry->id();
         }
