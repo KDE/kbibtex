@@ -37,6 +37,7 @@
 #include <KSharedConfig>
 
 #include "kbibtexnamespace.h"
+#include "partwidget.h"
 
 class LRUItemModel : public QAbstractItemModel
 {
@@ -253,7 +254,7 @@ void MDIWidget::setFile(OpenFileInfo *openFileInfo, KService::Ptr servicePtr)
     }
 
     if (indexOf(widget) >= 0) {
-        oldEditor = qobject_cast<FileView *>(currentWidget());
+        oldEditor = qobject_cast<PartWidget *>(currentWidget())->fileView();
         hasChanged = widget != currentWidget();
     } else if (openFileInfo != NULL) {
         addWidget(widget);
@@ -263,7 +264,7 @@ void MDIWidget::setFile(OpenFileInfo *openFileInfo, KService::Ptr servicePtr)
     d->currentFile = openFileInfo;
 
     if (hasChanged) {
-        FileView *newEditor = qobject_cast<FileView *>(widget);
+        FileView *newEditor = qobject_cast<PartWidget *>(widget)->fileView();
         emit activePartChanged(part);
         emit documentSwitch(oldEditor, newEditor);
     }
@@ -281,7 +282,7 @@ void MDIWidget::setFile(OpenFileInfo *openFileInfo, KService::Ptr servicePtr)
 FileView *MDIWidget::fileView()
 {
     OpenFileInfo *ofi = d->ofim->currentFile();
-    return qobject_cast<FileView *>(ofi->part(this)->widget());
+    return qobject_cast<PartWidget *>(ofi->part(this)->widget())->fileView();
 }
 
 OpenFileInfo *MDIWidget::currentFile()
