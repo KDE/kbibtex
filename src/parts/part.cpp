@@ -487,6 +487,7 @@ KBibTeXPart::KBibTeXPart(QWidget *parentWidget, QObject *parent, bool browserVie
 
     d->partWidget = new PartWidget(parentWidget);
     d->partWidget->fileView()->setReadOnly(!isReadWrite());
+    connect(d->partWidget->fileView(), SIGNAL(modified()), this, SLOT(setModified()));
     setWidget(d->partWidget);
 
     setupActions(browserViewWanted);
