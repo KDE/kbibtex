@@ -43,7 +43,6 @@ public:
         layout->addWidget(fileView, 0xffffff);
         fileView->setFilterBar(filterBar);
         fileView->setItemDelegate(new FileDelegate(fileView));
-        connect(fileView, SIGNAL(modified()), parent, SLOT(setModified()));
     }
 };
 
