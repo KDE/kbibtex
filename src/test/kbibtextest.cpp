@@ -20,10 +20,13 @@
 #include <onlinesearchgooglescholar.h>
 #include <onlinesearchieeexplore.h>
 #include <onlinesearchingentaconnect.h>
+#include <onlinesearchinspirehep.h>
+#include <onlinesearchisbndb.h>
 #include <onlinesearchjstor.h>
 #include <onlinesearchmathscinet.h>
 #include <onlinesearchpubmed.h>
 #include <onlinesearchsciencedirect.h>
+#include <onlinesearchsoanasaads.h>
 #include <onlinesearchspringerlink.h>
 #include <fileimporterbibtex.h>
 #include <fileexporterbibtex.h>
@@ -104,10 +107,13 @@ KBibTeXTest::KBibTeXTest(QWidget *parent)
     m_onlineSearchList << new OnlineSearchGoogleScholar(this);
     m_onlineSearchList << new OnlineSearchIEEEXplore(this);
     m_onlineSearchList << new OnlineSearchIngentaConnect(this);
+    m_onlineSearchList << new OnlineSearchInspireHep(this);
+    m_onlineSearchList << new OnlineSearchIsbnDB(this);
     m_onlineSearchList << new OnlineSearchJStor(this);
     m_onlineSearchList << new OnlineSearchMathSciNet(this);
     m_onlineSearchList << new OnlineSearchPubMed(this);
     m_onlineSearchList << new OnlineSearchScienceDirect(this);
+    m_onlineSearchList << new OnlineSearchSOANASAADS(this);
     m_onlineSearchList << new OnlineSearchSpringerLink(this);
     m_currentOnlineSearch = m_onlineSearchList.constBegin();
 
