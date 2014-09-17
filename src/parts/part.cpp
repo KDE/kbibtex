@@ -335,30 +335,30 @@ public:
 
             if (typeid(*exporter) == typeid(FileExporterBibTeX)) {
                 QPointer<KDialog> dlg = new KDialog(p->widget());
-                FileSettingsWidget settingsWidget(dlg);
-                settingsWidget.loadProperties(bibTeXFile);
-                dlg->setMainWidget(&settingsWidget);
+                FileSettingsWidget *settingsWidget = new FileSettingsWidget(dlg);
+                settingsWidget->loadProperties(bibTeXFile);
+                dlg->setMainWidget(settingsWidget);
                 dlg->setCaption(i18n("BibTeX File Settings"));
                 dlg->setButtons(KDialog::Default | KDialog::Reset | KDialog::User1 | KDialog::Ok);
                 dlg->setButtonGuiItem(KDialog::User1, KGuiItem(i18n("Save as Default"), KIcon("edit-redo") /** matches reset button's icon */, i18n("Save this configuration as default for future Save As operations.")));
-                connect(dlg, SIGNAL(user1Clicked()), &settingsWidget, SLOT(saveProperties()));
-                connect(dlg, SIGNAL(resetClicked()), &settingsWidget, SLOT(loadProperties()));
-                connect(dlg, SIGNAL(defaultClicked()), &settingsWidget, SLOT(resetToDefaults()));
+                connect(dlg, SIGNAL(user1Clicked()), settingsWidget, SLOT(saveProperties()));
+                connect(dlg, SIGNAL(resetClicked()), settingsWidget, SLOT(loadProperties()));
+                connect(dlg, SIGNAL(defaultClicked()), settingsWidget, SLOT(resetToDefaults()));
                 dlg->exec();
-                settingsWidget.saveProperties(bibTeXFile);
+                settingsWidget->saveProperties(bibTeXFile);
                 delete dlg;
             } else if ((fet = qobject_cast<FileExporterToolchain *>(exporter)) != NULL) {
                 QPointer<KDialog> dlg = new KDialog(p->widget());
-                SettingsFileExporterPDFPSWidget settingsWidget(dlg);
-                dlg->setMainWidget(&settingsWidget);
+                SettingsFileExporterPDFPSWidget *settingsWidget = new SettingsFileExporterPDFPSWidget(dlg);
+                dlg->setMainWidget(settingsWidget);
                 dlg->setCaption(i18n("PDF/PostScript File Settings"));
                 dlg->setButtons(KDialog::Default | KDialog::Reset | KDialog::User1 | KDialog::Ok);
                 dlg->setButtonGuiItem(KDialog::User1, KGuiItem(i18n("Save as Default"), KIcon("edit-redo") /** matches reset button's icon */, i18n("Save this configuration as default for future Save As operations.")));
-                connect(dlg, SIGNAL(user1Clicked()), &settingsWidget, SLOT(saveState()));
-                connect(dlg, SIGNAL(resetClicked()), &settingsWidget, SLOT(loadState()));
-                connect(dlg, SIGNAL(defaultClicked()), &settingsWidget, SLOT(resetToDefaults()));
+                connect(dlg, SIGNAL(user1Clicked()), settingsWidget, SLOT(saveState()));
+                connect(dlg, SIGNAL(resetClicked()), settingsWidget, SLOT(loadState()));
+                connect(dlg, SIGNAL(defaultClicked()), settingsWidget, SLOT(resetToDefaults()));
                 dlg->exec();
-                settingsWidget.saveState();
+                settingsWidget->saveState();
                 fet->reloadConfig();
                 delete dlg;
             }
