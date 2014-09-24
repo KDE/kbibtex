@@ -24,6 +24,7 @@ set(
     onlinesearch/onlinesearchspringerlink.cpp
     onlinesearch/onlinesearchjstor.cpp
     onlinesearch/onlinesearchmathscinet.cpp
+    onlinesearch/onlinesearchmrlookup.cpp
     onlinesearch/onlinesearchinspirehep.cpp
     onlinesearch/onlinesearchcernds.cpp
     onlinesearch/onlinesearchingentaconnect.cpp
@@ -78,6 +79,7 @@ set(
     onlinesearch/onlinesearchsimplebibtexdownload.h
     onlinesearch/onlinesearchsoanasaads.h
     onlinesearch/onlinesearchmathscinet.h
+    onlinesearch/onlinesearchmrlookup.h
     onlinesearch/onlinesearchinspirehep.h
     onlinesearch/onlinesearchcernds.h
     onlinesearch/onlinesearchisbndb.h
