@@ -60,7 +60,6 @@ private slots:
     void doneFetchingStartPage();
     void doneFetchingResultPage();
     void doneFetchingAbstractPage();
-    void doneFetchingExportCitationPage();
     void doneFetchingBibTeX();
 };
 
