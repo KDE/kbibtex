@@ -33,6 +33,21 @@ class QPainter;
 class KBIBTEXGUI_EXPORT GUIHelper
 {
 public:
+    /**
+     * Given a model containing strings in the first column attached
+     * to the root node, search all those strings for equivalence to
+     * a given string. The test for equivalence is case-insensitive
+     * and the role how this string is retrieved from the model can
+     * be chosen.
+     * If the string was found, the row number (0 to rowCount()-1) is
+     * returned. If the string was not found or any other error
+     * condition occurred, a negative value is returned.
+     *
+     * @param model model containing strings to test for case-insensitive equivalence
+     * @param value value to search for in the model
+     * @param role role used to retrieve string data from the model
+     * @return row of value's occurrence or a negative value if not found or any other error
+     */
     static int selectValue(QAbstractItemModel *model, const QString &value, int role = Qt::DisplayRole);
 };
 

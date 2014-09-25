@@ -45,6 +45,7 @@
 #include <onlinesearchisbndb.h>
 #include <onlinesearchjstor.h>
 #include <onlinesearchmathscinet.h>
+#include <onlinesearchmrlookup.h>
 #include <onlinesearchpubmed.h>
 #include <onlinesearchsciencedirect.h>
 #include <onlinesearchspringerlink.h>
@@ -158,6 +159,7 @@ KBibTeXTest::KBibTeXTest(QWidget *parent)
     m_onlineSearchList << new OnlineSearchIsbnDB(this);
     m_onlineSearchList << new OnlineSearchJStor(this);
     m_onlineSearchList << new OnlineSearchMathSciNet(this);
+    m_onlineSearchList << new OnlineSearchMRLookup(this);
     m_onlineSearchList << new OnlineSearchPubMed(this);
     m_onlineSearchList << new OnlineSearchScienceDirect(this);
     m_onlineSearchList << new OnlineSearchSOANASAADS(this);
