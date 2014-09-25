@@ -233,8 +233,15 @@ public:
         partWidget->fileView()->setModel(sortFilterProxyModel);
         connect(partWidget->filterBar(), SIGNAL(filterChanged(SortFilterFileModel::FilterQuery)), sortFilterProxyModel, SLOT(updateFilter(SortFilterFileModel::FilterQuery)));
 
-        if (url.isLocalFile())
-            fileSystemWatcher.addPath(url.pathOrUrl());
+        if (url.isLocalFile()) {
+            const QStringList filesBefore = fileSystemWatcher.files();
+            const QString toBeAdded = url.pathOrUrl();
+            fileSystemWatcher.addPath(toBeAdded);
+            const QStringList filesAfter = fileSystemWatcher.files();
+            kWarning() << "toBeAdded:" << toBeAdded;
+            kWarning() << "files before:" << filesBefore.count() << " files after:" << filesAfter.count();
+            kWarning() << "before included?" << filesBefore.contains(toBeAdded) << " after included?" << filesAfter.contains(toBeAdded);
+        }
 
         qApp->restoreOverrideCursor();
 
@@ -649,8 +656,16 @@ bool KBibTeXPart::saveFile()
     const bool saveOperationSuccess = d->saveFile(localFilePath());
 
     /// Continue watching local file after write operation
-    if (!watchableFilename.isEmpty())
-        d->fileSystemWatcher.addPath(watchableFilename);
+    if (!watchableFilename.isEmpty()) {
+        const QStringList filesBefore = d->fileSystemWatcher.files();
+        const QString toBeAdded = watchableFilename;
+        d->fileSystemWatcher.addPath(toBeAdded);
+        const QStringList filesAfter = d->fileSystemWatcher.files();
+        kWarning() << "toBeAdded:" << toBeAdded;
+        kWarning() << "files before:" << filesBefore.count() << " files after:" << filesAfter.count();
+        kWarning() << "before included?" << filesBefore.contains(toBeAdded) << " after included?" << filesAfter.contains(toBeAdded);
+    } else
+        kWarning() << "watchableFilename is Empty";
 
     if (!saveOperationSuccess) {
         KMessageBox::error(widget(), i18n("The document could not be saved, as it was not possible to write to '%1'.\n\nCheck that you have write access to this file or that enough disk space is available.", url().pathOrUrl()));
@@ -913,5 +928,14 @@ void KBibTeXPart::fileExternallyChange(const QString &path)
     }
 
     /// Resume watching file
-    d->fileSystemWatcher.addPath(path);
+    if (!path.isEmpty()) {
+        const QStringList filesBefore = d->fileSystemWatcher.files();
+        const QString toBeAdded = path;
+        d->fileSystemWatcher.addPath(toBeAdded);
+        const QStringList filesAfter = d->fileSystemWatcher.files();
+        kWarning() << "toBeAdded:" << toBeAdded;
+        kWarning() << "files before:" << filesBefore.count() << " files after:" << filesAfter.count();
+        kWarning() << "before included?" << filesBefore.contains(toBeAdded) << " after included?" << filesAfter.contains(toBeAdded);
+    } else
+        kWarning() << "path is Empty";
 }
