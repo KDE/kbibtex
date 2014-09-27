@@ -925,17 +925,20 @@ void KBibTeXPart::fileExternallyChange(const QString &path)
 
     if (KMessageBox::warningContinueCancel(widget(), i18n("The file '%1' has changed on disk.\n\nReload file or ignore changes on disk?", path), i18n("File changed externally"), KGuiItem(i18n("Reload file"), KIcon("edit-redo")), KGuiItem(i18n("Ignore on-disk changes"), KIcon("edit-undo"))) == KMessageBox::Continue) {
         d->openFile(KUrl::fromLocalFile(path), path);
+        /// No explicit call to QFileSystemWatcher.addPath(...) necessary,
+        /// openFile(...) has done that already
+    } else {
+        /// Even if the user did not request reloaded the file,
+        /// still resume watching file for future external changes
+        if (!path.isEmpty()) {
+            const QStringList filesBefore = d->fileSystemWatcher.files();
+            const QString toBeAdded = path;
+            d->fileSystemWatcher.addPath(toBeAdded);
+            const QStringList filesAfter = d->fileSystemWatcher.files();
+            kWarning() << "toBeAdded:" << toBeAdded;
+            kWarning() << "files before:" << filesBefore.count() << " files after:" << filesAfter.count();
+            kWarning() << "before included?" << filesBefore.contains(toBeAdded) << " after included?" << filesAfter.contains(toBeAdded);
+        } else
+            kWarning() << "path is Empty";
     }
-
-    /// Resume watching file
-    if (!path.isEmpty()) {
-        const QStringList filesBefore = d->fileSystemWatcher.files();
-        const QString toBeAdded = path;
-        d->fileSystemWatcher.addPath(toBeAdded);
-        const QStringList filesAfter = d->fileSystemWatcher.files();
-        kWarning() << "toBeAdded:" << toBeAdded;
-        kWarning() << "files before:" << filesBefore.count() << " files after:" << filesAfter.count();
-        kWarning() << "before included?" << filesBefore.contains(toBeAdded) << " after included?" << filesAfter.contains(toBeAdded);
-    } else
-        kWarning() << "path is Empty";
 }
