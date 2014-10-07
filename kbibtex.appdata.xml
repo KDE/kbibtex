@@ -4,6 +4,7 @@
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-2.0+</project_license>
   <name>KBibTeX</name>
+  <name xml:lang="ca">KBibTeX</name>
   <name xml:lang="cs">KBibTeX</name>
   <name xml:lang="de">KBibTeX</name>
   <name xml:lang="en-GB">KBibTeX</name>
@@ -17,6 +18,8 @@
   <name xml:lang="uk">KBibTeX</name>
   <name xml:lang="x-test">xxKBibTeXxx</name>
   <summary>BibTeX editor for KDE to edit bibliographies used with LaTeX</summary>
+  <summary xml:lang="ca">Editor de BibTeX pel KDE, per editar bibliografies emprant LaTeX</summary>
+  <summary xml:lang="de">BibTeX-Editor für KDE zum Bearbeiten von Bibliografien mit LaTeX</summary>
   <summary xml:lang="en-GB">BibTeX editor for KDE to edit bibliographies used with LaTeX</summary>
   <summary xml:lang="es">Editor de BibTeX para KDE para editar bibliografías utilizadas con LaTeX</summary>
   <summary xml:lang="nl">BibTeX-bewerker voor KDE om bibliografieën te bewerken gebruikt met LaTeX</summary>
@@ -31,6 +34,8 @@
     <p>
       KBibTeX is a reference management application which can be used to collect TeX/LaTeX bibliographies and export them in various formats.
     </p>
+    <p xml:lang="ca">El KBibTeX és una aplicació per a la gestió de referències que es pot utilitzar per recollir bibliografies en TeX/LaTeX i exportar-les a diversos formats.</p>
+    <p xml:lang="de">KBibTeX ist ein Programm zur Verwaltung von Referenzen und kann dazu benutzt werden, TeX/LaTeX-Bibliografien zusammenzustellen und sie in verschiedenen Formaten zu exportieren.</p>
     <p xml:lang="en-GB">KBibTeX is a reference management application which can be used to collect TeX/LaTeX bibliographies and export them in various formats.</p>
     <p xml:lang="es">KBibTeX es una aplicación de gestión de referencias que se puede utilizar para recoger bibliografías TeX/LaTeX y exportarlas en varios formatos.</p>
     <p xml:lang="nl">KBibTeX is een toepassing voor beheer van referenties die gebruikt kunnen worden om TeX/LaTeX bibliografieën te verzamelen en te exporteren in verschillende formaten.</p>
@@ -42,6 +47,8 @@
     <p xml:lang="uk">KBibTeX — програма для керування посиланнями, якою можна скористатися для створення бібліографій TeX/LaTeX та експортування даних бібліографій у різноманітних форматах.</p>
     <p xml:lang="x-test">xxKBibTeX is a reference management application which can be used to collect TeX/LaTeX bibliographies and export them in various formats.xx</p>
     <p>KBibTeX can do the following things:</p>
+    <p xml:lang="ca">KBibTeX pot fer les següents coses:</p>
+    <p xml:lang="de">Mit KBibTeX können Sie folgende Aufgabe erledigen:</p>
     <p xml:lang="en-GB">KBibTeX can do the following things:</p>
     <p xml:lang="es">KBibTeX puede hacer las siguientes tareas:</p>
     <p xml:lang="nl">KBibTeX kan de volgende dingen:</p>
@@ -54,6 +61,8 @@
     <p xml:lang="x-test">xxKBibTeX can do the following things:xx</p>
     <ul>
       <li>Preview bibliography entries in various formats (Source (BibTeX), Source (RIS), Wikipedia, standard (XML/XSLT), fancy (XML/XSLT), and abstract-only (XML/XSLT)). Additional preview styles become available when bibtex2html is installed.</li>
+      <li xml:lang="ca">Vista prèvia de les entrades a la bibliografia en diversos formats (Origen (BibTeX), Origen (RIS), Viquipèdia, estàndard (XML/XSLT), elaborat (XML/XSLT), i només el resum (XML/XSLT)). Hi ha disponibles estils de vista prèvia addicionals quan s'instal·la «bibtex2html».</li>
+      <li xml:lang="de">Vorschau und Speichern von Bibliografie-Einträgen in verschiedenen Formaten (Quelltext (BibTeX), Quelltext (RIS), Wikipedia, Standard (XML/XSLT), fancy (XML/XSLT) und abstract-only (XML/XSLT)). Zusätzliche Vorschaustile sind verfügbar, wenn Sie „bibtex2html“ installiert haben.</li>
       <li xml:lang="en-GB">Preview bibliography entries in various formats (Source (BibTeX), Source (RIS), Wikipedia, standard (XML/XSLT), fancy (XML/XSLT), and abstract-only (XML/XSLT)). Additional preview styles become available when bibtex2html is installed.</li>
       <li xml:lang="es">Previsualizar las entradas de bibliografías en varios formatos (Fuente (BibTeX), fuente (RIS), Wikipedia, estándar (XML/XSLT), elegante (XML/XSLT), y solo abstracto (XML/XSLT)). Al instalar bibtex2html dispondrá de estilos de previsualización adicionales.</li>
       <li xml:lang="nl">Bibliografische items bekijken in verschillende formaten (bron (BibTeX), bron (RIS), Wikipedia, standaard (XML/XSLT), fancy (XML/XSLT) en alleen abstract (XML/XSLT)). Extra stijlen voor bekijken komen beschikbaar wanneer bibtex2html is geïnstalleerd.</li>
@@ -65,6 +74,8 @@
       <li xml:lang="uk">Виконувати попередній перегляд і зберігати записи бібліографії у різних форматах (початковий код (BibTeX), початковий код (RIS), Вікіпедія, standard (XML/XSLT), fancy (XML/XSLT) та abstract-only (XML/XSLT)). Доступ до додаткових стилів попереднього перегляду можна отримати після встановлення програми bibtex2html.</li>
       <li xml:lang="x-test">xxPreview bibliography entries in various formats (Source (BibTeX), Source (RIS), Wikipedia, standard (XML/XSLT), fancy (XML/XSLT), and abstract-only (XML/XSLT)). Additional preview styles become available when bibtex2html is installed.xx</li>
       <li>Import data in various bibliography file formats such as BibTeX, RIS and ISI (requires bibutils) and export data to PDF (requires pdflatex), PostScript (requires latex), RTF (requires latex2rtf), and HTML.</li>
+      <li xml:lang="ca">Importar les dades en diversos formats de fitxer per a bibliografies, tals com BibTeX, RIS i ISI (requereix «bibutils») i exporta les dades a PDF (requereix «pdflatex»), PostScript (requereix «latex»), RTF (requereix «latex2rtf»), i HTML.</li>
+      <li xml:lang="de">Import von Daten aus verschiedenen Bibliografie-Dateiformaten wie BibTeX, RIS und ISI (benötigt bibutils) und Export von Daten in die Formate PDF (benötigt pdflatex), PostScript (benötigt latex), RTF (benötigt latex2rtf) und HTML.</li>
       <li xml:lang="en-GB">Import data in various bibliography file formats such as BibTeX, RIS and ISI (requires bibutils) and export data to PDF (requires pdflatex), PostScript (requires latex), RTF (requires latex2rtf), and HTML.</li>
       <li xml:lang="es">Importa datos en varios formatos de archivo de bibliografía, como por ejemplo BibTeX, RIS y ISI (requiere bibutils) y exporta datos a PDF (requiere pdflatex), PostScript (requiere latex), RTF (requiere latex2rtf), y HTML.</li>
       <li xml:lang="nl">Gegevens importeren in verschillende bestandsformaten voor bibliografieën zoals BibTeX, RIS en ISI (vereist bibutils) en exporteert gegevens naar PDF (vereist pdflatex), PostScript (vereist latex), RTF (vereist latex2rtf), en HTML.</li>
@@ -76,6 +87,8 @@
       <li xml:lang="uk">Імпортувати дані у різноманітних форматах файлів бібліографії, зокрема BibTeX, RIS та ISI (слід встановити bibutils) та експортувати дані до PDF (потребує встановлення pdflatex), PostScript (потребує встановлення latex), RTF (потребує встановлення latex2rtf) та HTML.</li>
       <li xml:lang="x-test">xxImport data in various bibliography file formats such as BibTeX, RIS and ISI (requires bibutils) and export data to PDF (requires pdflatex), PostScript (requires latex), RTF (requires latex2rtf), and HTML.xx</li>
       <li>Search for the bibliography entries data in online databases (e.g. Google Scholar, ACM, IEEE, arXiv, etc.)</li>
+      <li xml:lang="ca">Cerca dades d'entrades bibliogràfiques a les bases de dades en línia (p. ex., Google Scholar, ACM, IEEE, arXiv, etc.)</li>
+      <li xml:lang="de">Suche nach Daten mit Bibliografie-Einträgen in Online-Datenbanken (z. B. Google Scholar, ACM, IEEE, arXiv, usw.)</li>
       <li xml:lang="en-GB">Search for the bibliography entries data in online databases (e.g. Google Scholar, ACM, IEEE, arXiv, etc.)</li>
       <li xml:lang="es">Busca datos de las entradas bibliográficas en bases de datos en línea (por ejemplo Google Scholar, ACM, IEEE, arXiv, etc.)</li>
       <li xml:lang="nl">Zoeken naar bibliografie-items in online databases (bijv. Google Scholar, ACM, IEEE, arXiv, etc.)</li>
@@ -87,6 +100,8 @@
       <li xml:lang="uk">Виконувати пошук даних записів бібліографії у базах даних у інтернеті (зокрема у Google Scholar, ACM, IEEE, arXiv тощо).</li>
       <li xml:lang="x-test">xxSearch for the bibliography entries data in online databases (e.g. Google Scholar, ACM, IEEE, arXiv, etc.)xx</li>
       <li>Preview local or remote (online) resources, e.g. PDF files, linked in the BibTEX entry.</li>
+      <li xml:lang="ca">Vista prèvia de recursos locals o remots (connectats), p. ex., fitxers PDF, vinculats amb l'entrada de BibTeX.</li>
+      <li xml:lang="de">Anzeige von lokalen und entfernten (Online-) Ressourcen wie zum Beispiel PDF-Dateien, die mit einem BibTEX Eintrag verknüpft sind.</li>
       <li xml:lang="en-GB">Preview local or remote (online) resources, e.g. PDF files, linked in the BibTEX entry.</li>
       <li xml:lang="es">Previsualiza los recursos locales o remotos (en línea), por ejemplo archivos PDF, que estén enlazados en una entrada BibTEX.</li>
       <li xml:lang="nl">Bekijken van lokale hulpbronnen of op afstand (online), bijv. PDF-bestanden, gekoppeld in het BibTEX-item.</li>
@@ -98,6 +113,8 @@
       <li xml:lang="uk">Попередньо переглядати локальні та інтернет-ресурси, зокрема файли PDF, пов’язані із записом бібліографії BibTeX.</li>
       <li xml:lang="x-test">xxPreview local or remote (online) resources, e.g. PDF files, linked in the BibTEX entry.xx</li>
       <li>Find and merge duplicate entries in bibliography.</li>
+      <li xml:lang="ca">Troba i fusiona les entrades duplicades a la bibliografia.</li>
+      <li xml:lang="de"> Suchen und zusammenführen von doppelten Einträgen in Bibliografien.</li>
       <li xml:lang="en-GB">Find and merge duplicate entries in bibliography.</li>
       <li xml:lang="es">Busca y fusiona las entradas duplicadas en la bibliografía.</li>
       <li xml:lang="nl">Zoek en voeg dubbele items in de bibliografie samen.</li>
@@ -109,6 +126,8 @@
       <li xml:lang="uk">Шукати і об’єднувати дублікати записів у бібліографії.</li>
       <li xml:lang="x-test">xxFind and merge duplicate entries in bibliography.xx</li>
       <li>Integrate your bibliographies with LaTeX editors such as Kile and LyX.</li>
+      <li xml:lang="ca">Integra les vostres bibliografies amb editors de LaTeX com Kile i LyX.</li>
+      <li xml:lang="de">Integration Ihrer Bibliografien mit LaTeX-Editoren wie Kile und LyX.</li>
       <li xml:lang="en-GB">Integrate your bibliographies with LaTeX editors such as Kile and LyX.</li>
       <li xml:lang="es">Integra sus bibliografías con editores LaTeX como Kile y LyX.</li>
       <li xml:lang="nl">Integreer uw bibliografieën met LaTeX bewerkers zoals Kile en LyX.</li>
@@ -120,6 +139,7 @@
       <li xml:lang="uk">Інтегрувати ваші бібліографії з редакторами LaTeX, зокрема Kile та LyX.</li>
       <li xml:lang="x-test">xxIntegrate your bibliographies with LaTeX editors such as Kile and LyX.xx</li>
       <li>Import your Zotero library.</li>
+      <li xml:lang="ca">Importa la vostra biblioteca de Zotero.</li>
       <li xml:lang="de">Import Ihrer Zotero-Bibliothek.</li>
       <li xml:lang="en-GB">Import your Zotero library.</li>
       <li xml:lang="es">Importa su librería Zotero.</li>
