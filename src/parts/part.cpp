@@ -923,11 +923,14 @@ void KBibTeXPart::fileExternallyChange(const QString &path)
     /// Stop watching file while asking for user interaction
     d->fileSystemWatcher.removePath(path);
 
+    kDebug() << "Got notification that file was changed externally:" << path;
     if (KMessageBox::warningContinueCancel(widget(), i18n("The file '%1' has changed on disk.\n\nReload file or ignore changes on disk?", path), i18n("File changed externally"), KGuiItem(i18n("Reload file"), KIcon("edit-redo")), KGuiItem(i18n("Ignore on-disk changes"), KIcon("edit-undo"))) == KMessageBox::Continue) {
+        kDebug() << "  User chose to continue";
         d->openFile(KUrl::fromLocalFile(path), path);
         /// No explicit call to QFileSystemWatcher.addPath(...) necessary,
         /// openFile(...) has done that already
     } else {
+        kDebug() << "  User chose to cancel reload";
         /// Even if the user did not request reloaded the file,
         /// still resume watching file for future external changes
         if (!path.isEmpty()) {
