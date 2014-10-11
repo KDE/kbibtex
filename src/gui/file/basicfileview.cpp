@@ -25,7 +25,6 @@
 #include <KConfigGroup>
 #include <KLocale>
 #include <KSharedConfig>
-#include <KDebug>
 
 #include "bibtexfields.h"
 #include "filemodel.h"
@@ -88,7 +87,6 @@ public:
             headerProperty->columns[col].isHidden = !fd->defaultVisible;
             headerProperty->columns[col].width = fd->defaultWidth;
             headerProperty->columns[col].visualIndex = col;
-            kDebug() << name << col << headerProperty->columns[col].isHidden << headerProperty->columns[col].width;
             if (!headerProperty->columns[col].isHidden)
                 headerProperty->sumWidths += fd->defaultWidth;
             ++col;
@@ -104,11 +102,9 @@ public:
 
         p->header()->blockSignals(true);
 
-        kDebug() << name << "A headerProperty->sumWidths=" << headerProperty->sumWidths << "  widgetWidth=" << widgetWidth;
         headerProperty->sumWidths = 0;
         for (int col = 0; col < headerProperty->columnCount; ++col)
             headerProperty->sumWidths += headerProperty->columns[col].isHidden ? 0 : headerProperty->columns[col].width;
-        kDebug() << name << "B headerProperty->sumWidths=" << headerProperty->sumWidths;
 
         for (int col = 0; col < headerProperty->columnCount; ++col) {
             p->setColumnHidden(col, headerProperty->columns[col].isHidden);
@@ -143,7 +139,6 @@ public:
             headerProperty->columns[col].isHidden = p->isColumnHidden(col);
             headerProperty->columns[col].width = p->columnWidth(col);
             headerProperty->columns[col].visualIndex = p->header()->visualIndex(col);
-            kDebug() << name << col << headerProperty->columns[col].isHidden << headerProperty->columns[col].width << headerProperty->columns[col].visualIndex;
             if (!headerProperty->columns[col].isHidden) {
                 ++countVisible;
                 headerProperty->sumWidths += headerProperty->columns[col].width;
@@ -156,8 +151,6 @@ public:
         Q_ASSERT(headerProperty->sumWidths > 0);
         Q_ASSERT(countVisible > 0);
         const int hiddenColumnWidth = headerProperty->sumWidths / countVisible;
-        kDebug()  << name << "hiddenColumnWidth=" << hiddenColumnWidth;
-        Q_ASSERT(hiddenColumnWidth > 0);
         for (int col = 0; col < headerProperty->columnCount; ++col)
             if (headerProperty->columns[col].isHidden)
                 headerProperty->columns[col].width = hiddenColumnWidth;
@@ -171,7 +164,6 @@ public:
             headerProperty->columns[col].isHidden = configGroup.readEntry(configHeaderState.arg(name).append(QString::number(col)).append(QLatin1String("IsHidden")), !fd->defaultVisible);
             headerProperty->columns[col].width = configGroup.readEntry(configHeaderState.arg(name).append(QString::number(col)).append(QLatin1String("Width")), fd->defaultWidth);
             headerProperty->columns[col].visualIndex = configGroup.readEntry(configHeaderState.arg(name).append(QString::number(col)).append(QLatin1String("VisualIndex")), col);
-            kDebug() << name << col << headerProperty->columns[col].isHidden << headerProperty->columns[col].width << headerProperty->columns[col].visualIndex;
             if (!headerProperty->columns[col].isHidden)
                 headerProperty->sumWidths += headerProperty->columns[col].width;
             ++col;
@@ -191,7 +183,6 @@ public:
             configGroup.writeEntry(configHeaderState.arg(name).append(QString::number(col)).append(QLatin1String("IsHidden")), headerProperty->columns[col].isHidden);
             configGroup.writeEntry(configHeaderState.arg(name).append(QString::number(col)).append(QLatin1String("Width")), headerProperty->columns[col].width);
             configGroup.writeEntry(configHeaderState.arg(name).append(QString::number(col)).append(QLatin1String("VisualIndex")), headerProperty->columns[col].visualIndex);
-            kDebug() << name << col << headerProperty->columns[col].isHidden << headerProperty->columns[col].width << headerProperty->columns[col].visualIndex;
         }
 
         configGroup.writeEntry(configHeaderState.arg(name).append(QLatin1String("SortedColumn")), headerProperty->sortedColumn);
@@ -214,15 +205,11 @@ public:
                     ++countVisible;
                     headerProperty->sumWidths += headerProperty->columns[col].width;
                 }
-                kDebug() << name << col << headerProperty->columns[col].isHidden << headerProperty->columns[col].width << headerProperty->columns[col].visualIndex << countVisible;
             }
 
-            kDebug() << name << "headerProperty->sumWidths=" << headerProperty->sumWidths;
             Q_ASSERT(headerProperty->sumWidths > 0);
-            kDebug() << name << "countVisible=" << countVisible;
             Q_ASSERT(countVisible > 0);
             const int hiddenColumnWidth = headerProperty->sumWidths / countVisible;
-            kDebug() << name << "hiddenColumnWidth=" << hiddenColumnWidth;
             headerProperty->columns[column].width = hiddenColumnWidth;
             headerProperty->sumWidths += hiddenColumnWidth;
         } else {
@@ -290,10 +277,8 @@ BasicFileView::BasicFileView(const QString &name, QWidget *parent)
     /// restore header appearance
     KConfigGroup configGroup(d->config, d->configGroupName);
     if (configGroup.hasKey(d->configHeaderState.arg(name).append(QLatin1String("1VisualIndex")))) {
-        kDebug() << name << "loadHeaderProperties";
         d->loadHeaderProperties();
     } else {
-        kDebug() << name << "resetHeaderProperties";
         d->resetHeaderProperties();
     }
     d->applyHeaderProperties();
@@ -351,15 +336,11 @@ void BasicFileView::resizeEvent(QResizeEvent *event) {
 
 void BasicFileView::columnMoved()
 {
-    kDebug() << d->name;
-    //QTreeView::columnMoved();
     d->updateHeaderProperties();
 }
 
 void BasicFileView::columnResized(int /*column*/, int /*oldSize*/, int /*newSize*/)
 {
-    kDebug() << d->name;
-    //QTreeView::columnResized(column, oldSize, newSize);
     d->updateHeaderProperties();
 }
 
