@@ -329,9 +329,8 @@ void BasicFileView::keyPressEvent(QKeyEvent *event)
 }
 
 void BasicFileView::resizeEvent(QResizeEvent *event) {
+    Q_UNUSED(event);
     d->applyHeaderProperties();
-    QTreeView::resizeEvent(event);
-    d->updateHeaderProperties();
 }
 
 void BasicFileView::columnMoved()
