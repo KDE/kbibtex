@@ -145,7 +145,7 @@ void OnlineSearchScienceDirect::doneFetchingStartPage()
     KUrl redirUrl;
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
     if (handleErrors(reply, redirUrl)) {
-        const QString htmlText = reply->readAll();
+        const QString htmlText = QString::fromUtf8(reply->readAll().data());
 
         if (redirUrl.isValid()) {
             ++d->numSteps;
@@ -202,7 +202,7 @@ void OnlineSearchScienceDirect::doneFetchingResultPage()
         } else {
             emit progress(++d->curStep, d->numSteps);
 
-            const QString htmlText = reply->readAll();
+            const QString htmlText = QString::fromUtf8(reply->readAll().data());
             InternalNetworkAccessManager::self()->mergeHtmlHeadCookies(htmlText, reply->url());
 
             QSet<QString> knownUrls;
@@ -250,7 +250,7 @@ void OnlineSearchScienceDirect::doneFetchingAbstractPage()
         } else {
             emit progress(++d->curStep, d->numSteps);
 
-            const QString htmlText = reply->readAll();
+            const QString htmlText = QString::fromUtf8(reply->readAll().data());
             InternalNetworkAccessManager::self()->mergeHtmlHeadCookies(htmlText, reply->url());
 
             int p1 = -1, p2 = -1;

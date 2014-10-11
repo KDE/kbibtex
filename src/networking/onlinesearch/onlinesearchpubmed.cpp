@@ -183,7 +183,7 @@ void OnlineSearchPubMed::eSearchDone()
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
     if (handleErrors(reply)) {
-        QString result = reply->readAll();
+        const QString result = QString::fromUtf8(reply->readAll().data());
 
         if (!result.contains(QLatin1String("<Count>0</Count>"))) {
             /// without parsing XML text correctly, just extract all PubMed ids

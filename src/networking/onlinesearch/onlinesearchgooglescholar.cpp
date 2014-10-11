@@ -196,7 +196,8 @@ void OnlineSearchGoogleScholar::doneFetchingConfigPage()
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
     if (handleErrors(reply)) {
-        QMap<QString, QString> inputMap = formParameters(reply->readAll(), "<form ");
+        const QString htmlText = QString::fromUtf8(reply->readAll().data());
+        QMap<QString, QString> inputMap = formParameters(htmlText, "<form ");
         inputMap[QLatin1String("hl")] = QLatin1String("en");
         inputMap[QLatin1String("scis")] = QLatin1String("yes");
         inputMap[QLatin1String("scisf")] = QLatin1String("4");
@@ -246,9 +247,7 @@ void OnlineSearchGoogleScholar::doneFetchingQueryPage()
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
     if (handleErrors(reply)) {
-        QString htmlText = reply->readAll();
-
-        dumpToFile("googlescholar.html", htmlText);
+        const QString htmlText = QString::fromUtf8(reply->readAll().data());
 
         static const QRegExp linkToBib("/scholar.bib\\?[^\" >]+");
         int pos = 0;
@@ -333,7 +332,7 @@ void OnlineSearchGoogleScholar::doneFetchingBibTeX()
         }
 
         if (!hasEntry) {
-            kWarning() << "Searching" << label() << "resulted in invalid BibTeX data:" << QString(reply->readAll());
+            kWarning() << "Searching" << label() << "resulted in invalid BibTeX data:" << rawText;
             emit stoppedSearch(resultUnspecifiedError);
             return;
         }
