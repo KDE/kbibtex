@@ -94,7 +94,7 @@ void OnlineSearchScienceDirect::startSearch(const QMap<QString, QString> &query,
     d->bibTeXUrls.clear();
     d->currentSearchPosition = 0;
     d->curStep = 0;
-    d->numSteps = 2 + 3 * numResults;
+    d->numSteps = 2 + 2 * numResults;
 
     d->queryFreetext = query[queryKeyFreeText] + ' ' + query[queryKeyTitle] + ' ' + query[queryKeyYear];
     d->queryAuthor = query[queryKeyAuthor];
@@ -160,7 +160,7 @@ void OnlineSearchScienceDirect::doneFetchingStartPage()
             InternalNetworkAccessManager::self()->mergeHtmlHeadCookies(htmlText, reply->url());
 
             KUrl url(d->scienceDirectBaseUrl + QLatin1String("science"));
-            QMap<QString, QString> inputMap = formParameters(htmlText, QLatin1String("<form name=\"qkSrch\""));
+            QMap<QString, QString> inputMap = formParameters(htmlText, QLatin1String("<form id=\"quickSearch\" name=\"qkSrch\" metho"));
             inputMap[QLatin1String("qs_all")] = d->queryFreetext.simplified();
             inputMap[QLatin1String("qs_author")] = d->queryAuthor.simplified();
             inputMap[QLatin1String("resultsPerPage")] = QString::number(d->numExpectedResults);
@@ -205,17 +205,23 @@ void OnlineSearchScienceDirect::doneFetchingResultPage()
             const QString htmlText = reply->readAll();
             InternalNetworkAccessManager::self()->mergeHtmlHeadCookies(htmlText, reply->url());
 
+            QSet<QString> knownUrls;
             int p = -1, p2 = -1;
-            while ((p = htmlText.indexOf("http://www.sciencedirect.com/science/article/pii/", p + 1)) >= 0 && (p2 = htmlText.indexOf("\"", p + 1)) >= 0)
+            while ((p = htmlText.indexOf("http://www.sciencedirect.com/science/article/pii/", p + 1)) >= 0 && (p2 = htmlText.indexOf(QRegExp("[\"/ #]"), p + 50)) >= 0) {
+                const QString urlText = htmlText.mid(p, p2 - p);
+                if (knownUrls.contains(urlText)) continue;
+                knownUrls.insert(urlText);
+
                 if (d->numFoundResults < d->numExpectedResults) {
                     ++d->numFoundResults;
                     ++d->runningJobs;
-                    KUrl url(htmlText.mid(p, p2 - p));
+                    KUrl url(urlText);
                     QNetworkRequest request(url);
                     QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
                     InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
                     connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingAbstractPage()));
                 }
+            }
         }
 
         if (d->runningJobs <= 0) {
@@ -248,64 +254,17 @@ void OnlineSearchScienceDirect::doneFetchingAbstractPage()
             InternalNetworkAccessManager::self()->mergeHtmlHeadCookies(htmlText, reply->url());
 
             int p1 = -1, p2 = -1;
-            if ((p1 = htmlText.indexOf("/science?_ob=DownloadURL&")) >= 0 && (p2 = htmlText.indexOf("\"", p1 + 1)) >= 0) {
+            if ((p1 = htmlText.indexOf("/science?_ob=DownloadURL&")) >= 0 && (p2 = htmlText.indexOf(QRegExp("[ \"<>]"), p1 + 1)) >= 0) {
                 KUrl url("http://www.sciencedirect.com" + htmlText.mid(p1, p2 - p1));
+                url.addQueryItem(QLatin1String("citation-type"), QLatin1String("BIBTEX"));
+                url.addQueryItem(QLatin1String("format"), QLatin1String("cite-abs"));
+                url.addQueryItem(QLatin1String("export"), QLatin1String("Export"));
                 ++d->runningJobs;
                 QNetworkRequest request(url);
                 QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
-                connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingExportCitationPage()));
+                connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingBibTeX()));
                 InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
             }
-        }
-
-        if (d->runningJobs <= 0) {
-            emit stoppedSearch(resultNoError);
-            emit progress(d->numSteps, d->numSteps);
-        }
-    } else
-        kDebug() << "url was" << reply->url().toString();
-}
-
-void OnlineSearchScienceDirect::doneFetchingExportCitationPage()
-{
-    --d->runningJobs;
-    if (d->runningJobs < 0)
-        kWarning() << "In OnlineSearchScienceDirect::doneFetchingAbstractPage: Counting jobs failed (" << d->runningJobs << "< 0 )";
-
-    QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
-    if (handleErrors(reply)) {
-        KUrl redirUrl = reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl();
-        if (!redirUrl.isEmpty()) {
-            ++d->runningJobs;
-            QNetworkRequest request(redirUrl);
-            QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
-            connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingExportCitationPage()));
-            InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
-        } else {
-            emit progress(++d->curStep, d->numSteps);
-
-            const QString htmlText = reply->readAll();
-            InternalNetworkAccessManager::self()->mergeHtmlHeadCookies(htmlText, reply->url());
-
-            QMap<QString, QString> inputMap = formParameters(htmlText, QLatin1String("<form name=\"exportCite\""));
-            inputMap[QLatin1String("format")] = QLatin1String("cite");
-            inputMap[QLatin1String("citation-type")] = QLatin1String("BIBTEX");
-            inputMap[QLatin1String("RETURN_URL")] = d->scienceDirectBaseUrl + QLatin1String("/science/home");
-            static const QStringList orderOfParameters = QString(QLatin1String("_ob|_method|_acct|_userid|_docType|_eidkey|_ArticleListID|_uoikey|count|md5|JAVASCRIPT_ON|format|citation-type|Export|RETURN_URL")).split(QLatin1String("|"));
-
-            QString body;
-            foreach(const QString &key, orderOfParameters) {
-                if (!inputMap.contains(key)) continue;
-                if (!body.isEmpty()) body += '&';
-                body += encodeURL(key) + '=' + encodeURL(inputMap[key]);
-            }
-
-            ++d->runningJobs;
-            QNetworkRequest request(KUrl(d->scienceDirectBaseUrl + "/science"));
-            request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
-            QNetworkReply *newReply = InternalNetworkAccessManager::self()->post(request, body.toUtf8());
-            InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
-            connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingBibTeX()));
         }
 
         if (d->runningJobs <= 0) {
@@ -337,6 +296,7 @@ void OnlineSearchScienceDirect::doneFetchingBibTeX()
         if (bibtexFile != NULL) {
             for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
                 QSharedPointer<Entry> entry = (*it).dynamicCast<Entry>();
+                kDebug() << "entry's title=" << PlainTextValue::text(entry->value(Entry::ftTitle));
                 hasEntry |= publishEntry(entry);
             }
             delete bibtexFile;
