@@ -12,8 +12,6 @@ features and bugs are to be addressed:
   localfile. Needs more information.
 - Bug 19657: Add support for isbndb
 - Bug 19516: Add spell-checking support
-- Bug 18287: Automatic ID suggestion based on
-  user-defined patterns (already work in progress).
 - Bug 18183: Increase number of search hits after initial
   search is complete. Should be added before more search
   engines are added
