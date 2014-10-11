@@ -240,6 +240,8 @@ FilterBar::FilterBar(QWidget *parent)
 
     d->restoreState();
 
+    setFocusProxy(d->comboBoxFilterText);
+
     QTimer::singleShot(250, this, SLOT(buttonHeight()));
 }
 

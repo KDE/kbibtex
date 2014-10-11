@@ -535,6 +535,7 @@ void KBibTeXPart::setupActions(bool /*browserViewWanted FIXME*/)
 
     KAction *filterWidgetAction = new KAction(i18n("Filter"), this);
     actionCollection()->addAction("toolbar_filter_widget", filterWidgetAction);
+    filterWidgetAction->setIcon(KIcon("view-filter"));
     filterWidgetAction->setShortcut(Qt::CTRL + Qt::Key_F);
     connect(filterWidgetAction, SIGNAL(triggered()), d->partWidget->filterBar(), SLOT(setFocus()));
 

@@ -1,15 +1,5 @@
 INFO: This TODO list will most likely outdate very quickly
 
-Within the scope of a 0.5.x release, the following features
-and bugs are to be addressed:
-
-- Bug 19575: rendering when switching files not smooth
-  (solution would be developed in trunk and backported to 0.5 branch)
-- Bug 20811, 20812: Compile on SL6 / RHEL6 failing.
-  Should be fixed, waiting for confirmation.
-- Bug 20707: Cannot deal with underscore in DOI.
-  Should be fixed, waiting for confirmation.
-
 Within the scope of more future releases (0.6.x), the following
 features and bugs are to be addressed:
 
@@ -21,7 +11,6 @@ features and bugs are to be addressed:
 - Bug 19750: Filter bar looks into every field including
   localfile. Needs more information.
 - Bug 19657: Add support for isbndb
-- Bug 19575: rendering when switching files not smooth
 - Bug 19516: Add spell-checking support
 - Bug 18287: Automatic ID suggestion based on
   user-defined patterns (already work in progress).

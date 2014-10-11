@@ -151,7 +151,7 @@ void OnlineSearchMathSciNet::doneFetchingQueryForm()
     emit progress(1, 3);
 
     if (handleErrors(reply)) {
-        QString htmlText(reply->readAll());
+        // UNUSED const QString htmlText = QString::fromUtf8(reply->readAll().data());
 
         /// extract form's parameters ...
         QMap<QString, QString> formParams;
@@ -182,7 +182,7 @@ void OnlineSearchMathSciNet::doneFetchingResultPage()
     emit progress(2, 3);
 
     if (handleErrors(reply)) {
-        QString htmlText(reply->readAll());
+        const QString htmlText = QString::fromUtf8(reply->readAll().data());
 
         /// extract form's parameters ...
         QMap<QString, QString> formParams = formParameters(htmlText, QLatin1String("<form name=\"batchDownload\" action="));

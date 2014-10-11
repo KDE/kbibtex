@@ -182,13 +182,6 @@ KUrl AssociatedFiles::copyDocument(const KUrl &sourceUrl, const QString &entryId
 
     const KUrl baseUrl = bibTeXFile->property(File::Url).toUrl();
     const KUrl internalSourceUrl = baseUrl.resolved(sourceUrl);
-    kDebug() << "internalSourceUrl=" << internalSourceUrl.pathOrUrl();
-    kDebug() << "entry.id()=" << entryId;
-    kDebug() << "bibTeXFile.count()=" << bibTeXFile->count();
-    kDebug() << "bibTeXFile->property(File::Url).toUrl()=" << baseUrl.pathOrUrl();
-    kDebug() << "renameOperation=" << renameOperation;
-    kDebug() << "moveCopyOperation=" << moveCopyOperation;
-    kDebug() << "userDefinedFilename=" << userDefinedFilename;
 
     const QFileInfo internalSourceInfo(internalSourceUrl.path());
     QString filename = internalSourceInfo.fileName();
