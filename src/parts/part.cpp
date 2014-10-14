@@ -204,9 +204,14 @@ public:
 
         if (bibTeXFile != NULL) {
             const QUrl oldUrl = bibTeXFile->property(File::Url, QUrl()).toUrl();
-            if (oldUrl.isValid() && oldUrl.isLocalFile())
-                fileSystemWatcher.removePath(oldUrl.toString());
-            else
+            if (oldUrl.isValid() && oldUrl.isLocalFile()) {
+                const QString path = oldUrl.toString();
+                if (!path.isEmpty()) {
+                    kWarning() << "Stopping to watch" << path;
+                    d->fileSystemWatcher.removePath(path);
+                } else
+                    kWarning() << "No filename to stop watching";
+            } else
                 kWarning() << "KBibTeXPartPrivate::openFile: Not removing" << oldUrl.toString() << "from fileSystemWatcher";
             delete bibTeXFile;
         }
@@ -651,8 +656,11 @@ bool KBibTeXPart::saveFile()
     /// memorize local filename for future reference
     const QString watchableFilename = url().isValid() && url().isLocalFile() ? url().pathOrUrl() : QString();
     /// Stop watching local file that will be written to
-    if (!watchableFilename.isEmpty())
+    if (!watchableFilename.isEmpty()) {
+        kWarning() << "Stopping to watch" << watchableFilename;
         d->fileSystemWatcher.removePath(watchableFilename);
+    } else
+        kWarning() << "No filename to stop watching";
 
     const bool saveOperationSuccess = d->saveFile(localFilePath());
 
@@ -695,9 +703,14 @@ bool KBibTeXPart::documentSaveAs()
         return false;
 
     /// Remove old URL from file system watcher
-    if (url().isValid() && url().isLocalFile())
-        d->fileSystemWatcher.removePath(url().pathOrUrl());
-    else
+    if (url().isValid() && url().isLocalFile()) {
+        const QString path = url().pathOrUrl();
+        if (!path.isEmpty()) {
+            kWarning() << "Stopping to watch" << path;
+            d->fileSystemWatcher.removePath(path);
+        } else
+            kWarning() << "No filename to stop watching";
+    } else
         kWarning() << "KBibTeXPart::documentSaveAs: Not removing" << url().pathOrUrl() << "from fileSystemWatcher";
 
     if (KParts::ReadWritePart::saveAs(newUrl)) {
@@ -922,7 +935,11 @@ void KBibTeXPart::fileExternallyChange(const QString &path)
     }
 
     /// Stop watching file while asking for user interaction
-    d->fileSystemWatcher.removePath(path);
+    if (!path.isEmpty()) {
+        kWarning() << "Stopping to watch" << path;
+        d->fileSystemWatcher.removePath(path);
+    } else
+        kWarning() << "No filename to stop watching";
 
     kDebug() << "Got notification that file was changed externally:" << path;
     if (KMessageBox::warningContinueCancel(widget(), i18n("The file '%1' has changed on disk.\n\nReload file or ignore changes on disk?", path), i18n("File changed externally"), KGuiItem(i18n("Reload file"), KIcon("edit-redo")), KGuiItem(i18n("Ignore on-disk changes"), KIcon("edit-undo"))) == KMessageBox::Continue) {
