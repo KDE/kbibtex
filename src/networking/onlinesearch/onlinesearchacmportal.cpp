@@ -137,7 +137,7 @@ void OnlineSearchAcmPortal::doneFetchingStartPage()
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
     if (handleErrors(reply)) {
-        QString htmlSource = reply->readAll();
+        const QString htmlSource = QString::fromUtf8(reply->readAll().data());
         int p1 = -1, p2 = -1, p3 = -1;
         if ((p1 = htmlSource.indexOf("<form name=\"qiksearch\"")) >= 0
                 && (p2 = htmlSource.indexOf("action=", p1)) >= 0
@@ -167,7 +167,7 @@ void OnlineSearchAcmPortal::doneFetchingSearchPage()
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
     if (handleErrors(reply)) {
-        QString htmlSource = reply->readAll();
+        const QString htmlSource = QString::fromUtf8(reply->readAll().data());
         static QRegExp paramRegExp("<a [^>]+\\?id=([0-9]+)\\.([0-9]+).*CFID=([0-9]+).*CFTOKEN=([0-9]+)", Qt::CaseInsensitive);
         int p1 = -1;
         while ((p1 = htmlSource.indexOf(paramRegExp, p1 + 1)) >= 0) {
