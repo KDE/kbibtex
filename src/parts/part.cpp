@@ -208,7 +208,7 @@ public:
                 const QString path = oldUrl.toString();
                 if (!path.isEmpty()) {
                     kWarning() << "Stopping to watch" << path;
-                    d->fileSystemWatcher.removePath(path);
+                    fileSystemWatcher.removePath(path);
                 } else
                     kWarning() << "No filename to stop watching";
             } else
