@@ -569,13 +569,17 @@ QString PlainTextValue::text(const ValueItem &valueItem, ValueItemType &vit)
     /// clean up result string
     const int len = result.length();
     int j = 0;
-    static const QChar cbo = QChar('{'), cbc = QChar('}'), bs = QChar('\\'), mns = QChar('-');
+    static const QChar cbo = QLatin1Char('{'), cbc = QLatin1Char('}'), bs = QLatin1Char('\\'), mns = QLatin1Char('-'), comma = QLatin1Char(','), thinspace = QChar(0x2009);
     for (int i = 0; i < len; ++i) {
         if ((result[i] == cbo || result[i] == cbc) && (i < 1 || result[i - 1] != bs)) {
             /// hop over curly brackets
         } else if (i < len - 1 && result[i] == bs && result[i + 1] == mns) {
             /// hop over hyphenation commands
             ++i;
+        } else if (i < len - 1 && result[i] == bs && result[i + 1] == comma) {
+            /// place '\,' with a thin space
+            result[j] = thinspace;
+            ++i; ++j;
         } else {
             if (i > j) {
                 /// move individual characters forward in result string
