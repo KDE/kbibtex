@@ -129,7 +129,7 @@ public:
         groupBoxLayout->addWidget(radioAbsolutePath);
         buttonGroup->addButton(radioAbsolutePath);
         connect(buttonGroup, SIGNAL(buttonClicked(int)), p, SLOT(updateUIandPreview()));
-        radioAbsolutePath->setChecked(true); /// by default
+        radioRelativePath->setChecked(true); /// by default
 
         layout->addSpacing(8);
 
