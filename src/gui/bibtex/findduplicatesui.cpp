@@ -670,7 +670,7 @@ void FindDuplicatesUI::slotFindDuplicates()
     File *originalFile = file;
     bool deleteFileLater = false;
 
-    int rowCount = d->editor->selectedElements().count() / d->editor->model()->columnCount();
+    const int rowCount = d->editor->selectedElements().count();
     if (rowCount > 1 && rowCount < d->editor->model()->rowCount() && KMessageBox::questionYesNo(d->part->widget(), i18n("Multiple elements are selected. Do you want to search for duplicates only within the selection or in the whole document?"), i18n("Search only in selection?"), KGuiItem(i18n("Only in selection")), KGuiItem(i18n("Whole document"))) == KMessageBox::Yes) {
         QModelIndexList mil = d->editor->selectionModel()->selectedRows();
         file = new File();
