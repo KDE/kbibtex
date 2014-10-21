@@ -352,6 +352,7 @@ encoderLaTeXCharacterCommands[] = {
     {"pounds", 0x00A3, false},
     {"S", 0x00A7, true},
     {"copyright", 0x00A9, false},
+    {"textregistered", 0x00AE, false},
     {"textperiodcentered", 0x00B7, false},
     {"AA", 0x00C5, true},
     {"AE", 0x00C6, true},
