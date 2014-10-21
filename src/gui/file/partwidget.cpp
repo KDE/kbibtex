@@ -43,6 +43,8 @@ public:
         layout->addWidget(fileView, 0xffffff);
         fileView->setFilterBar(filterBar);
         fileView->setItemDelegate(new FileDelegate(fileView));
+
+        connect(fileView, SIGNAL(searchFor(QString)), p, SLOT(searchFor(QString)));
     }
 };
 
@@ -57,4 +59,14 @@ FileView *PartWidget::fileView() {
 
 FilterBar *PartWidget::filterBar() {
     return d->filterBar;
+}
+
+void PartWidget::searchFor(QString text) {
+    SortFilterFileModel::FilterQuery fq;
+    fq.combination = SortFilterFileModel::EveryTerm;
+    fq.field = QString();
+    fq.searchPDFfiles = false;
+    fq.terms = QStringList() << text;
+    d->filterBar->setFilter(fq);
+    d->filterBar->setFocus();
 }

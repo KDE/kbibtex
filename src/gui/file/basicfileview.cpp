@@ -261,9 +261,13 @@ QSortFilterProxyModel *BasicFileView::sortFilterProxyModel()
 
 void BasicFileView::keyPressEvent(QKeyEvent *event)
 {
-    if ((event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter) && event->modifiers() == Qt::NoModifier && currentIndex() != QModelIndex()) {
-        emit doubleClicked(currentIndex());
-        event->accept();
+    if (event->modifiers() == Qt::NoModifier) {
+        if ((event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter) && currentIndex() != QModelIndex()) {
+            emit doubleClicked(currentIndex());
+            event->accept();
+        } else if (!event->text().isEmpty() && event->text().at(0).isLetterOrNumber()) {
+            emit searchFor(event->text());
+        }
     }
     QTreeView::keyPressEvent(event);
 }
