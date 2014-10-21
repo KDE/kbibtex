@@ -84,13 +84,11 @@ public:
         /// Reset activation block
         comboBoxCombination->blockSignals(false);
 
-
         /// Avoid triggering loops of activation
         comboBoxField->blockSignals(true);
         /// Find and check action that corresponds to field name ("author", ...)
         const QString lower = fq.field.toLower();
         for (int idx = comboBoxField->count() - 1; idx >= 0; --idx) {
-            const QString lower = fq.field.toLower();
             if (comboBoxField->itemData(idx, Qt::UserRole).toString().toLower() == lower) {
                 comboBoxField->setCurrentIndex(idx);
                 break;
