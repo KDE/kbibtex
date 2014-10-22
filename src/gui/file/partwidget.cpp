@@ -44,6 +44,8 @@ public:
         fileView->setFilterBar(filterBar);
         fileView->setItemDelegate(new FileDelegate(fileView));
 
+        fileView->setFocus();
+
         connect(fileView, SIGNAL(searchFor(QString)), p, SLOT(searchFor(QString)));
     }
 };
