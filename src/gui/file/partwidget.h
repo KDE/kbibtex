@@ -37,6 +37,9 @@ public:
     FileView *fileView();
     FilterBar *filterBar();
 
+private slots:
+    void searchFor(QString);
+
 private:
     class Private;
     Private *const d;

@@ -39,6 +39,9 @@ public:
     FileModel *fileModel();
     QSortFilterProxyModel *sortFilterProxyModel();
 
+signals:
+    void searchFor(QString);
+
 protected:
     virtual void keyPressEvent(QKeyEvent *event);
     virtual void resizeEvent(QResizeEvent *event);

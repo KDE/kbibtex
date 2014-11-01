@@ -35,6 +35,8 @@ public:
 
     SortFilterFileModel::FilterQuery filter();
 
+    void setClickMessage(const QString &msg);
+
 public slots:
     /**
      * Set the filter criteria to be both shown in this filter bar

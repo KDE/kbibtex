@@ -46,36 +46,17 @@ QString AssociatedFiles::relativeFilename(const KUrl &documentUrl, const KUrl &b
         return documentUrl.pathOrUrl();
     }
 
-    kDebug() << "documentUrl=" << documentUrl.pathOrUrl();
-    kDebug() << "baseUrl=" << baseUrl.pathOrUrl();
-
     /// First, resolve the provided document URL to an absolute URL
     /// using the given base URL
     KUrl internalDocumentUrl = documentUrl;
     if (internalDocumentUrl.isRelative())
         internalDocumentUrl = baseUrl.resolved(internalDocumentUrl);
-    kDebug() << "internalDocumentUrl=" << internalDocumentUrl.pathOrUrl();
 
     /// Get the absolute path of the base URL
-    const QString baseAbsolutePath = QFileInfo(baseUrl.path()).absolutePath();
-    kDebug() << "baseAbsolutePath=" << baseAbsolutePath;
-    /// Get the absolute path of the document URL
-    const QString documentAbsoluteName = QFileInfo(internalDocumentUrl.path()).absoluteFilePath();
-    kDebug() << "documentAbsoluteName=" << documentAbsoluteName;
+    const QString baseUrlDirectory = QFileInfo(baseUrl.path()).absolutePath();
 
-    /// Second, figure out to which extend base and document URL "overlap"
-    if (baseAbsolutePath.endsWith(QDir::separator()) && documentAbsoluteName.startsWith(baseAbsolutePath)) {
-        const QString relativeFilename = documentAbsoluteName.mid(baseAbsolutePath.length());
-        kDebug() << "relativeFilename=" << relativeFilename;
-        return relativeFilename;
-    } else if (documentAbsoluteName.startsWith(baseAbsolutePath + QDir::separator())) {
-        const QString relativeFilename = documentAbsoluteName.mid(baseAbsolutePath.length() + 1);
-        kDebug() << "relativeFilename=" << relativeFilename;
-        return relativeFilename;
-    }
-
-    /// Fallback if relative filename cannot be determined
-    return internalDocumentUrl.pathOrUrl();
+    /// Let QDir calculate the relative directory
+    return QDir(baseUrlDirectory).relativeFilePath(internalDocumentUrl.path());
 }
 
 QString AssociatedFiles::absoluteFilename(const KUrl &documentUrl, const KUrl &baseUrl) {

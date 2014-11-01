@@ -527,7 +527,7 @@ bool OpenFileInfoManager::close(OpenFileInfo *openFileInfo)
 
     /// If the current document is to be closed,
     /// switch over to the next available one
-    if (isClosing && nextCurrent != NULL)
+    if (isClosing)
         setCurrentFile(nextCurrent);
 
     return isClosing;
