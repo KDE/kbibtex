@@ -369,7 +369,9 @@ void BasicFileView::sort(int t, Qt::SortOrder s)
     SortFilterFileModel *sortedModel = qobject_cast<SortFilterFileModel *>(model());
     if (sortedModel != NULL) {
         sortedModel->sort(t, s);
-        // FIXME d->storeColumns();
+        /// Store sorting column and order in configuration data struct
+        d->headerProperty->sortedColumn = header()->sortIndicatorSection();
+        d->headerProperty->sortOrder = header()->sortIndicatorOrder();
     }
 }
 
@@ -379,6 +381,8 @@ void BasicFileView::noSorting()
     if (sortedModel != NULL) {
         sortedModel->sort(-1);
         header()->setSortIndicator(-1, Qt::AscendingOrder);
-        // FIXME d->storeColumns();
+        /// Store sorting column and order in configuration data struct
+        d->headerProperty->sortedColumn = header()->sortIndicatorSection();
+        d->headerProperty->sortOrder = header()->sortIndicatorOrder();
     }
 }
