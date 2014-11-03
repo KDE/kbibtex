@@ -58,7 +58,10 @@ public:
     } *headerProperty;
 
     Private(const QString &n, BasicFileView *parent)
-            : p(parent), storedColumnCount(BibTeXFields::self()->count()), name(n), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName(QLatin1String("ReadOnlyFileView")), configHeaderState(QLatin1String("HeaderState_%1")) {
+            : p(parent), storedColumnCount(BibTeXFields::self()->count()), name(n),
+              config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))),
+              configGroupName(QLatin1String("BibliographyView")),
+              configHeaderState(QLatin1String("HeaderState_%1")) {
         /// Allocate memory for headerProperty structure
         headerProperty = (struct HeaderProperty *)calloc(1, sizeof(struct HeaderProperty));
         headerProperty->columnCount = BibTeXFields::self()->count();
