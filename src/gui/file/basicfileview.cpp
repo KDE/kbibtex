@@ -282,7 +282,6 @@ BasicFileView::BasicFileView(const QString &name, QWidget *parent)
         d->resetHeaderProperties();
     }
     d->applyHeaderProperties();
-    //header()->setStretchLastSection(false);
 }
 
 BasicFileView::~BasicFileView()
@@ -298,7 +297,7 @@ void BasicFileView::setModel(QAbstractItemModel *model)
     d->fileModel = dynamic_cast<FileModel *>(model);
     if (d->fileModel == NULL) {
         d->sortFilterProxyModel = qobject_cast<QSortFilterProxyModel *>(model);
-        Q_ASSERT_X(d->sortFilterProxyModel != NULL, "ReadOnlyFileView::setModel(QAbstractItemModel *model)", "d->sortFilterProxyModel is NULL");
+        Q_ASSERT_X(d->sortFilterProxyModel != NULL, "BasicFileView::setModel(QAbstractItemModel *model)", "d->sortFilterProxyModel is NULL");
         d->fileModel = dynamic_cast<FileModel *>(d->sortFilterProxyModel->sourceModel());
     }
 
@@ -306,7 +305,7 @@ void BasicFileView::setModel(QAbstractItemModel *model)
     if (header()->isSortIndicatorShown())
         sort(header()->sortIndicatorSection(), header()->sortIndicatorOrder());
 
-    Q_ASSERT_X(d->fileModel != NULL, "ReadOnlyFileView::setModel(QAbstractItemModel *model)", "d->fileModel is NULL");
+    Q_ASSERT_X(d->fileModel != NULL, "BasicFileView::setModel(QAbstractItemModel *model)", "d->fileModel is NULL");
 }
 
 FileModel *BasicFileView::fileModel()
