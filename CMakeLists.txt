@@ -47,6 +47,9 @@ find_package(
     KDE4
     REQUIRED
 )
+include(
+    KDE4Defaults
+)
 
 # FIXME may have to be cleaned up a little bit
 # Contributed by Jeremy Cribb <cribb.jeremy@gmail.com>
