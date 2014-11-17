@@ -18,7 +18,7 @@
 *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 ***************************************************************************/
 
-#include <poppler/qt4/poppler-qt4.h>
+#include <poppler-qt4.h>
 
 #include <QFileInfo>
 #include <QDir>
