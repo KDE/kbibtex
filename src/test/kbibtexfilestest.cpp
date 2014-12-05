@@ -47,8 +47,41 @@ private slots:
     void testFiles();
 
 private:
+    /**
+     * Load a bibliography file and checks a number of known properties
+     * such as number of elements/entries or the hash sum of authors' last names.
+     * It is the caller's responsibility to pass a valid argument to @p outFile
+     * and later delete the returned File object.
+     *
+     * @param absoluteFilename biblography file to laod
+     * @param currentTestFile data structure holding the baseline values
+     * @param outFile returns pointer to the opened file
+     */
     void loadFile(const QString &absoluteFilename, const TestFile &currentTestFile, File **outFile);
+
+    /**
+     * Save a bibliography in a temporary file.
+     * It is the caller's responsibility to pass a valid argument to @p outFile,
+     * which will hold the temporary file's name upon successful return.
+     *
+     * @param file bibliography data structure to be saved
+     * @param currentTestFile baseline data structure used to determine temporary file's name
+     * @param outFile returns the temporary file's name
+     */
     void saveFile(File *file, const TestFile &currentTestFile, QString *outFile);
+
+    /**
+     * Create and fill a TestFile data structure based on the provided values.
+     *
+     * @param filename Bibliography file's filename
+     * @param numElements Number of elements to expect in bibliography
+     * @param numEntries Number of entries to expect in bibliography
+     * @param lastEntryId Identifier of last entry in bibliography
+     * @param lastEntryLastAuthorLastName Last author's last name in bibliography
+     * @param hashAuthors The hash sum over all authors/editors in bibliography
+     * @param hashFilesUrlsDoi The hash sum over all URLs and DOIs in bibliography
+     * @return An initialized TestFile data structure
+     */
     TestFile createTestFile(const QString &filename, int numElements, int numEntries, const QString &lastEntryId, const QString &lastEntryLastAuthorLastName, const QString &hashAuthors, const QString &hashFilesUrlsDoi);
 };
 
@@ -79,17 +112,17 @@ void KBibTeXFilesTest::testFiles()
     const QString absoluteFilename = QLatin1String(TESTSET_DIRECTORY) + testFile.filename;
     QVERIFY(QFileInfo(absoluteFilename).exists());
 
-    // first load the file
+    /// First load the file ...
     File *file = NULL;
     loadFile(absoluteFilename, testFile, &file);
     QVERIFY(file);
 
-    // then save it again to file
+    /// ... then save it again to file ...
     QString tempFileName;
     saveFile(file, testFile, &tempFileName);
     QVERIFY(!tempFileName.isEmpty());
 
-    // try to load again the newly saved version
+    /// ... and finally try to load again the newly saved version
     File *file2 = NULL;
     loadFile(tempFileName, testFile, &file2);
     QVERIFY(file2);
@@ -218,7 +251,7 @@ void KBibTeXFilesTest::saveFile(File *file, const TestFile &currentTestFile, QSt
     }
 
     QTemporaryFile tempFile(QDir::tempPath() + "/XXXXXX." + QFileInfo(currentTestFile.filename).fileName());
-    // will be removed manually
+    /// It is the function caller's responsibility to remove the temporary file later
     tempFile.setAutoRemove(false);
     QVERIFY(tempFile.open());
     QVERIFY(exporter->save(&tempFile, file));
