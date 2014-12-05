@@ -35,7 +35,7 @@ typedef struct {
     QByteArray hashAuthors, hashFilesUrlsDoi;
 } TestFile;
 
-Q_DECLARE_METATYPE(TestFile);
+Q_DECLARE_METATYPE(TestFile)
 
 class KBibTeXFilesTest : public QObject
 {
