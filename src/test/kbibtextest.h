@@ -24,29 +24,17 @@
 
 class OnlineSearchAbstract;
 class TestWidget;
-class File;
 
 class KBibTeXTest : public KDialog
 {
     Q_OBJECT
 
 public:
-    typedef struct {
-        QString filename;
-        int numElements, numEntries;
-        QString lastEntryId, lastEntryLastAuthorLastName;
-        QByteArray hashAuthors, hashFilesUrlsDoi;
-    } TestFile;
-
     explicit KBibTeXTest(QWidget *parent = NULL);
-
-    QList<TestFile *> testFiles;
 
 private slots:
     void aboutToQuit();
     void startOnlineSearchTests();
-    void startAllTestFileTests();
-    void startTestFileTest(int);
     void onlineSearchStoppedSearch(int);
     void onlineSearchFoundEntry();
     void progress(int, int);
@@ -65,11 +53,6 @@ private:
     void setBusy(bool isBusy);
 
     void processNextSearch();
-    void processFileTest(TestFile *testFile);
-
-    File *loadFile(const QString &absoluteFilename, TestFile *currentTestFile);
-    QString saveFile(File *file, TestFile *currentTestFile);
-    TestFile *createTestFile(const QString &filename, int numElements, int numEntries, const QString &lastEntryId, const QString &lastEntryLastAuthorLastName, const QString &hashAuthors, const QString &hashFilesUrlsDoi);
 };
 
 #endif // KBIBTEXTEST_H
