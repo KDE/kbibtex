@@ -21,14 +21,6 @@ set(
     LIB_SOVERSION "1"
 )
 
-set(
-    MANDIR
-    "share/man"
-    CACHE
-    STRING
-    "Where to install manpages"
-)
-
 option(
     UNITY_BUILD
     "Compile multiple C++ files in one big, merged file (\"Unity build\")\nSee also http://t-fischer.dreamwidth.org/3054.html"
@@ -46,6 +38,9 @@ find_package(
 find_package(
     KDE4
     REQUIRED
+)
+include(
+    KDE4Defaults
 )
 
 # FIXME may have to be cleaned up a little bit
