@@ -25,6 +25,7 @@
 #include <KConfigGroup>
 #include <KLocale>
 #include <KSharedConfig>
+#include <KDebug>
 
 #include "bibtexfields.h"
 #include "filemodel.h"

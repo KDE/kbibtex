@@ -149,7 +149,6 @@ KBibTeXMainWindow::KBibTeXMainWindow()
     d->dockValueList = new QDockWidget(i18n("List of Values"), this);
     d->dockValueList->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
     addDockWidget(Qt::LeftDockWidgetArea, d->dockValueList);
-    tabifyDockWidget(d->dockDocumentList, d->dockValueList);
     d->valueList = new ValueList(d->dockValueList);
     d->dockValueList->setWidget(d->valueList);
     d->dockValueList->setObjectName("dockValueList");
@@ -159,7 +158,6 @@ KBibTeXMainWindow::KBibTeXMainWindow()
     d->dockStatistics = new QDockWidget(i18n("Statistics"), this);
     d->dockStatistics->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
     addDockWidget(Qt::LeftDockWidgetArea, d->dockStatistics);
-    tabifyDockWidget(d->dockDocumentList, d->dockStatistics);
     d->statistics = new Statistics(d->dockStatistics);
     d->dockStatistics->setWidget(d->statistics);
     d->dockStatistics->setObjectName("dockStatistics");
@@ -190,7 +188,6 @@ KBibTeXMainWindow::KBibTeXMainWindow()
     d->dockZotero = new QDockWidget(i18n("Zotero"), this);
     d->dockZotero->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
     addDockWidget(Qt::LeftDockWidgetArea, d->dockZotero);
-    tabifyDockWidget(d->dockDocumentList, d->dockZotero);
     d->zotero = new ZoteroBrowser(d->searchResults, d->dockZotero);
     d->dockZotero->setWidget(d->zotero);
     d->dockZotero->setObjectName("dockZotero");
@@ -200,7 +197,6 @@ KBibTeXMainWindow::KBibTeXMainWindow()
     d->dockReferencePreview = new QDockWidget(i18n("Reference Preview"), this);
     d->dockReferencePreview->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
     addDockWidget(Qt::LeftDockWidgetArea, d->dockReferencePreview);
-    tabifyDockWidget(d->dockReferencePreview, d->dockSearchForm);
     d->referencePreview = new ReferencePreview(d->dockReferencePreview);
     d->dockReferencePreview->setWidget(d->referencePreview);
     d->dockReferencePreview->setObjectName("dockReferencePreview");
@@ -231,12 +227,18 @@ KBibTeXMainWindow::KBibTeXMainWindow()
     d->dockFileSettings = new QDockWidget(i18n("File Settings"), this);
     d->dockFileSettings->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
     addDockWidget(Qt::LeftDockWidgetArea, d->dockFileSettings);
-    tabifyDockWidget(d->dockFileSettings, d->dockSearchForm);
     d->fileSettings = new FileSettings(d->dockFileSettings);
     d->dockFileSettings->setWidget(d->fileSettings);
     d->dockFileSettings->setObjectName("dockFileSettings");
     d->dockFileSettings->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
     showPanelsMenu->addAction(d->dockFileSettings->toggleViewAction());
+
+    tabifyDockWidget(d->dockFileSettings, d->dockSearchForm);
+    tabifyDockWidget(d->dockZotero, d->dockSearchForm);
+    tabifyDockWidget(d->dockValueList, d->dockStatistics);
+    tabifyDockWidget(d->dockStatistics, d->dockFileSettings);
+    tabifyDockWidget(d->dockSearchForm, d->dockReferencePreview);
+    tabifyDockWidget(d->dockFileSettings, d->dockDocumentList);
 
     actionCollection()->addAction(KStandardAction::New, this, SLOT(newDocument()));
     actionCollection()->addAction(KStandardAction::Open, this, SLOT(openDocumentDialog()));
