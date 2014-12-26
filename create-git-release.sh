@@ -9,6 +9,7 @@ GIT_TAG=
 GIT_COMMIT=
 STEM=
 GPG_KEY=
+PO_SVN_REVISION=
 
 function get_numeric_release() {
 	# The single parameter pass to this function should be something like
@@ -68,7 +69,7 @@ function get_numeric_release() {
 
 function parsearguments {
 	local SHOW_HELP=0
-	local ARGS=$(getopt -o "h,r:,n:,o:,b:,c:,t:,s:,g:" -l "help,repository:,name:,output-directory:,branch:,commit:,tag:,stem:,gpg-key:" -n $(basename $0) -- "$@")
+	local ARGS=$(getopt -o "h,r:,n:,o:,b:,c:,t:,s:,g:,p:" -l "help,repository:,name:,output-directory:,branch:,commit:,tag:,stem:,gpg-key:,po-svn-revision:" -n $(basename $0) -- "$@")
 
 	#Bad arguments
 	if [ $? -ne 0 ] ; then
@@ -116,6 +117,10 @@ function parsearguments {
 			GPG_KEY="$2"
 			shift 2
 		;;
+		-p|--po-svn-revision)
+			PO_SVN_REVISION="$2"
+			shift 2
+		;;
 		--)
 			shift
 			break
@@ -159,6 +164,8 @@ function parsearguments {
 		echo "    Optional, default: ${OUTPUT_DIRECTORY}">&2
 		echo " --gpg-key" >&2
 		echo "    GnuPG key used to sign tar ball and cryptographic hash sums." >&2
+		echo " --po-svn-revision" >&2
+		echo "    WebSVN revision to fetch to get fitting .po translation files" >&2
 		echo >&2
 		echo "Example:" >&2
 		echo "  ${MY_NAME} --branch remotes/origin/kbibtex/0.5 --gpg-key 0xA2641F41 --stem kbibtex --name 0.5-beta3" >&2
@@ -197,6 +204,8 @@ function parsearguments {
 	echo "NUMERIC_RELEASE=${NUMERIC_RELEASE}"
 	echo "OUTPUT_DIRECTORY=${OUTPUT_DIRECTORY}"
 	echo "STEM=${STEM}"
+	echo "GPG_KEY=${GPG_KEY}"
+	echo "PO_SVN_REVISION=${PO_SVN_REVISION}"
 	test -n "${GIT_BRANCH}" && echo "GIT_BRANCH=${GIT_BRANCH}"
 	test -n "${GIT_COMMIT}" && echo "GIT_COMMIT=${GIT_COMMIT}"
 	test -n "${GIT_TAG}" && echo "GIT_TAG=${GIT_TAG}"
@@ -242,6 +251,10 @@ if [ -d src/test ] ; then
 	sed -n -i -e '1h;1!H;${;g;s/add_subdirectory\s*(\s*test\s*)//g; p;}' src/CMakeLists.txt || { popd ; echo "${MY_NAME}: Could not remove test code from CMakeLists.txt" >&2 ; rm -rf ${TEMPDIR} ; exit 1 ; }
 	rm -rf src/test
 fi
+
+# Fetch .po files
+cd po ; grep -v 'REV=' <download-po-files-from-websvn.sh >download-po-files-from-websvn-without-REV.sh && REV=${PO_SVN_REVISION} bash download-po-files-from-websvn-without-REV.sh ; cd ..
+rm -f po/download-po-files-from-websvn*
 
 # Go to base directory
 cd ..
