@@ -855,8 +855,11 @@ QList<QSharedPointer<Person> > FileImporterBibTeX::splitNames(const QString &tex
 
     if (containsSpace) {
         /// Tokens look like "John Smith"
-        for (QStringList::ConstIterator it = authorTokenList.constBegin(); it != authorTokenList.constEnd(); ++it)
-            result.append(personFromString(*it));
+        for (QStringList::ConstIterator it = authorTokenList.constBegin(); it != authorTokenList.constEnd(); ++it) {
+            QSharedPointer<Person> person = personFromString(*it);
+            if (!person.isNull())
+                result.append(person);
+        }
     } else {
         /// Tokens look like "Smith" or "John"
         /// Assumption: two consecutive tokens form a name
@@ -865,7 +868,9 @@ QList<QSharedPointer<Person> > FileImporterBibTeX::splitNames(const QString &tex
             ++it;
             if (it != authorTokenList.constEnd()) {
                 lastname += QLatin1String(", ") + (*it);
-                result.append(personFromString(lastname));
+                QSharedPointer<Person> person = personFromString(lastname);
+                if (!person.isNull())
+                    result.append(person);
             } else
                 break;
         }
@@ -895,8 +900,11 @@ void FileImporterBibTeX::parsePersonList(const QString &text, Value &value, Comm
                 kDebug() << "Two subsequent" << tokenAnd << "found in person list";
             else if (!encounteredName)
                 kDebug() << "Found" << tokenAnd << "but no name before it";
-            else
-                value.append(personFromTokenList(tokens.mid(nameStart, i - nameStart), comma));
+            else {
+                const QSharedPointer<Person> person = personFromTokenList(tokens.mid(nameStart, i - nameStart), comma);
+                if (!person.isNull())
+                    value.append(person);
+            }
             nameStart = i + 1;
             encounteredName = false;
         } else if (tokens[i] == tokenOthers) {
@@ -911,8 +919,11 @@ void FileImporterBibTeX::parsePersonList(const QString &text, Value &value, Comm
         prevToken = tokens[i];
     }
 
-    if (nameStart < tokens.count())
-        value.append(personFromTokenList(tokens.mid(nameStart), comma));
+    if (nameStart < tokens.count()) {
+        const QSharedPointer<Person> person = personFromTokenList(tokens.mid(nameStart), comma);
+        if (!person.isNull())
+            value.append(person);
+    }
 }
 
 QSharedPointer<Person> FileImporterBibTeX::personFromString(const QString &name)

@@ -172,7 +172,9 @@ public:
             value.append(QSharedPointer<MacroKey>(new MacroKey(encodedText)));
             return true;
         } else if (typeFlag == KBibTeX::tfPerson) {
-            value.append(FileImporterBibTeX::personFromString(encodedText));
+            QSharedPointer<Person> person = FileImporterBibTeX::personFromString(encodedText);
+            if (!person.isNull())
+                value.append(person);
             return true;
         } else if (typeFlag == KBibTeX::tfKeyword) {
             QList<QSharedPointer<Keyword> > keywords = FileImporterBibTeX::splitKeywords(encodedText);
