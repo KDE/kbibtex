@@ -42,6 +42,7 @@ bool FileExporterRIS::save(QIODevice *iodevice, const QSharedPointer<const Eleme
     }
 
     bool result = false;
+    m_cancelFlag = false;
     QTextStream stream(iodevice);
 
     const QSharedPointer<const Entry> entry = element.dynamicCast<const Entry>();
