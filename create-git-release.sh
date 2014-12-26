@@ -43,7 +43,11 @@ function get_numeric_release() {
 			NUMERIC_RELEASE="${num1}.$((${num2} - 1))"
 		fi
 
-		if [ $namepart = "alpha1" ] ; then NUMERIC_RELEASE="${NUMERIC_RELEASE}.80"
+		if [ $namepart = "test1" ] ; then NUMERIC_RELEASE="${NUMERIC_RELEASE}.60"
+		elif [ $namepart = "test2" ] ; then NUMERIC_RELEASE="${NUMERIC_RELEASE}.61"
+		elif [ $namepart = "test3" ] ; then NUMERIC_RELEASE="${NUMERIC_RELEASE}.62"
+		elif [ $namepart = "test4" ] ; then NUMERIC_RELEASE="${NUMERIC_RELEASE}.63"
+		elif [ $namepart = "alpha1" ] ; then NUMERIC_RELEASE="${NUMERIC_RELEASE}.80"
 		elif [ $namepart = "alpha2" ] ; then NUMERIC_RELEASE="${NUMERIC_RELEASE}.81"
 		elif [ $namepart = "alpha3" ] ; then NUMERIC_RELEASE="${NUMERIC_RELEASE}.82"
 		elif [ $namepart = "alpha4" ] ; then NUMERIC_RELEASE="${NUMERIC_RELEASE}.83"
