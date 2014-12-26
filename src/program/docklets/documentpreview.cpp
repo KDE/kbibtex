@@ -477,8 +477,12 @@ public:
             showPart(NULL, message);
             p->unsetCursor();
             return true;
-        } else
-            showMessage(i18n("<qt>Don't know how to show mimetype '%1'.</qt>", urlInfo.mimeType));
+        } else {
+            QString additionalInformation;
+            if (urlInfo.mimeType == QLatin1String("application/pdf"))
+                additionalInformation = i18nc("Additional information in case there is not KPart available for mime type 'application/pdf'", "<br/><br/>Please install <a href=\"https://userbase.kde.org/Okular\">Okular</a> to make use of its PDF viewing component.");
+            showMessage(i18nc("First parameter is mime type, second parameter is optional information (may be empty)", "<qt>Don't know how to show mimetype '%1'.%2</qt>", urlInfo.mimeType, additionalInformation));
+        }
 
         return false;
     }
