@@ -23,7 +23,16 @@ for lang in af ar as ast be be@latin bg bn bn_IN br bs ca ca@valencia crh cs csb
 		# No .po files downloaded
 		rm -rf "${TEMPDIR}" "${lang}" ; echo "Language '${lang}' not supported" >&2 ; continue ;
 	}
+	test -s ${TEMPDIR}/kbibtex.appdata.po || {
+		# No .po files downloaded
+		rm -rf "${TEMPDIR}" "${lang}" ; echo "Language '${lang}' not supported" >&2 ; continue ;
+	}
 	grep -q "ViewVC" ${TEMPDIR}/kbibtex.po && {
+		# If .po files contain error message instead of translation,
+		# try to erase language's subdirectory including its content
+		rm -rf "${TEMPDIR}" "${lang}" ; echo "Language '${lang}' not supported" >&2 ; continue ;
+	}
+	grep -q "ViewVC" ${TEMPDIR}/kbibtex.appdata.po && {
 		# If .po files contain error message instead of translation,
 		# try to erase language's subdirectory including its content
 		rm -rf "${TEMPDIR}" "${lang}" ; echo "Language '${lang}' not supported" >&2 ; continue ;
