@@ -172,5 +172,8 @@ add_subdirectory(
 add_subdirectory(
     mime
 )
+add_subdirectory(
+    po
+)
 
 install(FILES kbibtex.appdata.xml DESTINATION ${SHARE_INSTALL_PREFIX}/appdata/)
