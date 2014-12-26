@@ -6,6 +6,7 @@ RELEASE_NAME="git"
 OUTPUT_DIRECTORY="/tmp"
 GIT_BRANCH=
 GIT_TAG=
+GIT_COMMIT=
 STEM=
 GPG_KEY=
 
@@ -67,7 +68,7 @@ function get_numeric_release() {
 
 function parsearguments {
 	local SHOW_HELP=0
-	local ARGS=$(getopt -o "h,r:,n:,o:,b:,t:,s:,g:" -l "help,repository:,name:,output-directory:,branch:,tag:,stem:,gpg-key:" -n $(basename $0) -- "$@")
+	local ARGS=$(getopt -o "h,r:,n:,o:,b:,c:,t:,s:,g:" -l "help,repository:,name:,output-directory:,branch:,commit:,tag:,stem:,gpg-key:" -n $(basename $0) -- "$@")
 
 	#Bad arguments
 	if [ $? -ne 0 ] ; then
@@ -103,6 +104,10 @@ function parsearguments {
 			GIT_BRANCH="$2"
 			shift 2
 		;;
+		-c|--commit)
+			GIT_COMMIT="$2"
+			shift 2
+		;;
 		-t|--tag)
 			GIT_TAG="$2"
 			shift 2
@@ -130,12 +135,17 @@ function parsearguments {
 		echo "    Required, default: ${GIT_REPOSITORY}">&2
 		echo " --branch BRANCH" >&2
 		echo "    Git branch to base tar ball on." >&2
-		echo "    Either this option or --tag has to be specified" >&2
+		echo "    Either this option or --tag or --commit has to be specified" >&2
 		echo "    No default" >&2
 		echo " --tag TAG" >&2
 		echo "    Git tag to base tar ball on." >&2
-		echo "    Either this option or --branch has to be specified" >&2
+		echo "    Either this option or --branch or --commit has to be specified" >&2
 		echo "    No default" >&2
+		echo " --commit HASH" >&2
+		echo "    Git commit to base tar ball on." >&2
+		echo "    Either this option or --branch or --tag has to be specified" >&2
+		echo "    No default" >&2
+		echo "    Usage not recommended, releases should be tagged or based on a branch" >&2
 		echo " --name RELEASE_NAME" >&2
 		echo "    Release name, should be version number," >&2
 		echo "    optionally followed by fancy suffix like \"beta2\"." >&2
@@ -169,10 +179,10 @@ function parsearguments {
 	# Convert to absolute directory:
 	OUTPUT_DIRECTORY="$(cd "${OUTPUT_DIRECTORY}" && pwd)"
 
-	# Test if both GIT_BRANCH and GIT_TAG are provided
-	test -n "${GIT_BRANCH}" -a -n "${GIT_TAG}" && { echo "${MY_NAME}: Either a Git branch or a tag have to be specified, not both at the same time" >&2 ; exit 1 ; }
-	# Test if neither GIT_BRANCH nor GIT_TAG are provided
-	test -z "${GIT_BRANCH}" -a -z "${GIT_TAG}" && { echo "${MY_NAME}: Either a Git branch or a tag have to be specified" >&2 ; exit 1 ; }
+	# Test if both GIT_BRANCH, GIT_COMMIT, and GIT_TAG are provided
+	test -n "${GIT_BRANCH}" -a -n "${GIT_TAG}" -a -n "${GIT_COMMIT}" && { echo "${MY_NAME}: Either a Git branch, tag, or commit hash have to be specified, not all at the same time" >&2 ; exit 1 ; }
+	# Test if neither GIT_BRANCH, GIT_COMMIT, nor GIT_TAG are provided
+	test -z "${GIT_BRANCH}" -a -z "${GIT_TAG}" -a -z "${GIT_COMMIT}" && { echo "${MY_NAME}: Either a Git branch, tag, or commit hash have to be specified" >&2 ; exit 1 ; }
 
 	# Determine numeric release based on fancy name ("beta2")
 	NUMERIC_RELEASE=$(get_numeric_release "${RELEASE_NAME}")
@@ -188,6 +198,7 @@ function parsearguments {
 	echo "OUTPUT_DIRECTORY=${OUTPUT_DIRECTORY}"
 	echo "STEM=${STEM}"
 	test -n "${GIT_BRANCH}" && echo "GIT_BRANCH=${GIT_BRANCH}"
+	test -n "${GIT_COMMIT}" && echo "GIT_COMMIT=${GIT_COMMIT}"
 	test -n "${GIT_TAG}" && echo "GIT_TAG=${GIT_TAG}"
 }
 
@@ -212,6 +223,9 @@ if [ -n "${GIT_BRANCH}" ] ; then
 elif [ -n "${GIT_TAG}" ] ; then
 	# Recall user-specified tag
 	git checkout "${GIT_TAG}" || { popd ; echo "${MY_NAME}: Could checkout tag: ${GIT_TAG}" >&2 ; rm -rf ${TEMPDIR} ; exit 1 ; }
+elif [ -n "${GIT_COMMIT}" ] ; then
+	# Recall user-specified commit
+	git checkout "${GIT_COMMIT}" || { popd ; echo "${MY_NAME}: Could checkout commit: ${GIT_COMMIT}" >&2 ; rm -rf ${TEMPDIR} ; exit 1 ; }
 else
 	# This case should never trigger!
 	exit 1
