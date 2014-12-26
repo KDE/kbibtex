@@ -649,4 +649,14 @@ void DocumentPreview::linkActivated(const QString &link)
 {
     if (link == QLatin1String("disableonlylocalfiles"))
         d->onlyLocalFilesButton->setChecked(true);
+    else if (link.startsWith(QLatin1String("http://")) || link.startsWith(QLatin1String("https://"))) {
+        const KUrl urlToOpen = KUrl::fromUserInput(link);
+        if (urlToOpen.isValid()) {
+            /// Guess mime type for url to open
+            KMimeType::Ptr mimeType = FileInfo::mimeTypeForUrl(urlToOpen);
+            const QString mimeTypeName = mimeType->name();
+            /// Ask KDE subsystem to open url in viewer matching mime type
+            KRun::runUrl(urlToOpen, mimeTypeName, this, false, false);
+        }
+    }
 }
