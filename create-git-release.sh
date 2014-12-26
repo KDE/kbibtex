@@ -234,7 +234,9 @@ elif [ -n "${GIT_TAG}" ] ; then
 	git checkout "${GIT_TAG}" || { popd ; echo "${MY_NAME}: Could checkout tag: ${GIT_TAG}" >&2 ; rm -rf ${TEMPDIR} ; exit 1 ; }
 elif [ -n "${GIT_COMMIT}" ] ; then
 	# Recall user-specified commit
-	git checkout "${GIT_COMMIT}" || { popd ; echo "${MY_NAME}: Could checkout commit: ${GIT_COMMIT}" >&2 ; rm -rf ${TEMPDIR} ; exit 1 ; }
+	INTERNAL_GIT_BRANCH="${STEM//\//}-tarball"
+	git branch "${INTERNAL_GIT_BRANCH}" "${GIT_COMMIT}" || { popd ; echo "${MY_NAME}: Could checkout commit: ${GIT_COMMIT}" >&2 ; rm -rf ${TEMPDIR} ; exit 1 ; }
+	git checkout "${INTERNAL_GIT_BRANCH}"
 else
 	# This case should never trigger!
 	exit 1
