@@ -287,7 +287,7 @@ public:
 
         /// do not load external reference if widget is hidden
         if (isVisible()) {
-            QList<KUrl> urlList = FileInfo::entryUrls(entry.data(), baseUrl, FileInfo::TestExistanceYes);
+            QList<KUrl> urlList = FileInfo::entryUrls(entry.data(), baseUrl, FileInfo::TestExistenceYes);
 
             for (QList<KUrl>::ConstIterator it = urlList.constBegin(); it != urlList.constEnd(); ++it) {
                 bool isLocal = isLocalOrRelative(*it);

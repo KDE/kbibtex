@@ -327,7 +327,7 @@ void FieldListEdit::dropEvent(QDropEvent *event)
 
         if (file != NULL && !entry.isNull() && d->fieldKey == QLatin1String("^external")) {
             /// handle "external" list differently
-            QList<KUrl> urlList = FileInfo::entryUrls(entry.data(), KUrl(file->property(File::Url).toUrl()), FileInfo::TestExistanceNo);
+            QList<KUrl> urlList = FileInfo::entryUrls(entry.data(), KUrl(file->property(File::Url).toUrl()), FileInfo::TestExistenceNo);
             Value v;
             foreach(const KUrl &url, urlList) {
                 v.append(QSharedPointer<VerbatimText>(new VerbatimText(url.pathOrUrl())));
