@@ -106,7 +106,10 @@ public:
 
     OnlineSearchArXivPrivate(OnlineSearchArXiv *parent)
             : p(parent), form(NULL), arXivQueryBaseUrl("http://export.arxiv.org/api/query?") {
-        xslt = XSLTransform::createXSLTransform(KStandardDirs::locate("data", "kbibtex/arxiv2bibtex.xsl"));
+        const QString xsltFilename = QLatin1String("kbibtex/arxiv2bibtex.xsl");
+        xslt = XSLTransform::createXSLTransform(KStandardDirs::locate("data", xsltFilename));
+        if (xslt == NULL)
+            kWarning() << "Could not create XSLT transformation for" << xsltFilename;
     }
 
     ~OnlineSearchArXivPrivate() {
@@ -575,6 +578,13 @@ OnlineSearchArXiv::~OnlineSearchArXiv()
 
 void OnlineSearchArXiv::startSearch()
 {
+    if (d->xslt == NULL) {
+        /// Don't allow searches if xslt is not defined
+        kWarning() << "Cannot allow searching" << label() << "if XSL Transformation not available";
+        delayedStoppedSearch(resultUnspecifiedError);
+        return;
+    }
+
     d->curStep = 0;
     d->numSteps = 1;
     m_hasBeenCanceled = false;
@@ -591,6 +601,13 @@ void OnlineSearchArXiv::startSearch()
 
 void OnlineSearchArXiv::startSearch(const QMap<QString, QString> &query, int numResults)
 {
+    if (d->xslt == NULL) {
+        /// Don't allow searches if xslt is not defined
+        kWarning() << "Cannot allow searching" << label() << "if XSL Transformation not available";
+        delayedStoppedSearch(resultUnspecifiedError);
+        return;
+    }
+
     d->curStep = 0;
     d->numSteps = 1;
     m_hasBeenCanceled = false;

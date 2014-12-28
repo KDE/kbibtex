@@ -41,7 +41,10 @@ public:
 
     OnlineSearchIsbnDBPrivate(OnlineSearchIsbnDB */* UNUSED parent*/)
         : /* UNUSED p(parent),*/ xslt(), currentPage(0), maxPage(0) {
-        xslt = XSLTransform::createXSLTransform(KStandardDirs::locate("data", "kbibtex/isbndb2bibtex.xsl"));
+        const QString xsltFilename = QLatin1String("kbibtex/isbndb2bibtex.xsl");
+        xslt = XSLTransform::createXSLTransform(KStandardDirs::locate("data", xsltFilename));
+        if (xslt == NULL)
+            kWarning() << "Could not create XSLT transformation for" << xsltFilename;
     }
 
     ~OnlineSearchIsbnDBPrivate() {
@@ -90,6 +93,13 @@ OnlineSearchIsbnDB::~OnlineSearchIsbnDB()
 
 void OnlineSearchIsbnDB::startSearch(const QMap<QString, QString> &query, int numResults)
 {
+    if (d->xslt == NULL) {
+        /// Don't allow searches if xslt is not defined
+        kWarning() << "Cannot allow searching" << label() << "if XSL Transformation not available";
+        delayedStoppedSearch(resultUnspecifiedError);
+        return;
+    }
+
     m_hasBeenCanceled = false;
 
     emit progress(0, d->maxPage);
