@@ -106,7 +106,10 @@ public:
 
     OnlineSearchArXivPrivate(OnlineSearchArXiv *parent)
             : p(parent), form(NULL), arXivQueryBaseUrl("http://export.arxiv.org/api/query?") {
-        xslt = XSLTransform::createXSLTransform(KStandardDirs::locate("data", "kbibtex/arxiv2bibtex.xsl"));
+        const QString xsltFilename = QLatin1String("kbibtex/arxiv2bibtex.xsl");
+        xslt = XSLTransform::createXSLTransform(KStandardDirs::locate("data", xsltFilename));
+        if (xslt == NULL)
+            kWarning() << "Could not create XSLT transformation for" << xsltFilename;
     }
 
     ~OnlineSearchArXivPrivate() {
@@ -117,8 +120,8 @@ public:
         /// format search terms
         QStringList queryFragments;
 
-        foreach(const QString &queryFragment, p->splitRespectingQuotationMarks(form->lineEditFreeText->text()))
-        queryFragments.append(p->encodeURL(queryFragment));
+        foreach (const QString &queryFragment, p->splitRespectingQuotationMarks(form->lineEditFreeText->text()))
+            queryFragments.append(p->encodeURL(queryFragment));
         return KUrl(QString("%1search_query=all:\"%3\"&start=0&max_results=%2").arg(arXivQueryBaseUrl).arg(form->numResultsField->value()).arg(queryFragments.join("\"+AND+all:\""))); ///< join search terms with an AND operation
     }
 
@@ -126,8 +129,8 @@ public:
         /// format search terms
         QStringList queryFragments;
         for (QMap<QString, QString>::ConstIterator it = query.constBegin(); it != query.constEnd(); ++it)
-            foreach(const QString &queryFragment, p->splitRespectingQuotationMarks(it.value()))
-            queryFragments.append(p->encodeURL(queryFragment));
+            foreach (const QString &queryFragment, p->splitRespectingQuotationMarks(it.value()))
+                queryFragments.append(p->encodeURL(queryFragment));
         return KUrl(QString("%1search_query=all:\"%3\"&start=0&max_results=%2").arg(arXivQueryBaseUrl).arg(numResults).arg(queryFragments.join("\"+AND+all:\""))); ///< join search terms with an AND operation
     }
 
@@ -575,6 +578,13 @@ OnlineSearchArXiv::~OnlineSearchArXiv()
 
 void OnlineSearchArXiv::startSearch()
 {
+    if (d->xslt == NULL) {
+        /// Don't allow searches if xslt is not defined
+        kWarning() << "Cannot allow searching" << label() << "if XSL Transformation not available";
+        delayedStoppedSearch(resultUnspecifiedError);
+        return;
+    }
+
     d->curStep = 0;
     d->numSteps = 1;
     m_hasBeenCanceled = false;
@@ -591,6 +601,13 @@ void OnlineSearchArXiv::startSearch()
 
 void OnlineSearchArXiv::startSearch(const QMap<QString, QString> &query, int numResults)
 {
+    if (d->xslt == NULL) {
+        /// Don't allow searches if xslt is not defined
+        kWarning() << "Cannot allow searching" << label() << "if XSL Transformation not available";
+        delayedStoppedSearch(resultUnspecifiedError);
+        return;
+    }
+
     d->curStep = 0;
     d->numSteps = 1;
     m_hasBeenCanceled = false;

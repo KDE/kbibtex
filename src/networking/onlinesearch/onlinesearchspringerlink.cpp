@@ -147,7 +147,10 @@ public:
 
     OnlineSearchSpringerLinkPrivate(OnlineSearchSpringerLink *parent)
             : p(parent), springerMetadataKey(QLatin1String("7pphfmtb9rtwt3dw3e4hm7av")), form(NULL) {
-        xslt = XSLTransform::createXSLTransform(KStandardDirs::locate("data", "kbibtex/pam2bibtex.xsl"));
+        const QString xsltFilename = QLatin1String("kbibtex/pam2bibtex.xsl");
+        xslt = XSLTransform::createXSLTransform(KStandardDirs::locate("data", xsltFilename));
+        if (xslt == NULL)
+            kWarning() << "Could not create XSLT transformation for" << xsltFilename;
     }
 
     ~OnlineSearchSpringerLinkPrivate() {
@@ -162,17 +165,17 @@ public:
         QString queryString = form->lineEditFreeText->text();
 
         QStringList titleChunks = p->splitRespectingQuotationMarks(form->lineEditTitle->text());
-        foreach(const QString &titleChunk, titleChunks) {
+        foreach (const QString &titleChunk, titleChunks) {
             queryString += QString(QLatin1String(" title:%1")).arg(EncoderLaTeX::instance()->convertToPlainAscii(titleChunk));
         }
 
         titleChunks = p->splitRespectingQuotationMarks(form->lineEditBookTitle->text());
-        foreach(const QString &titleChunk, titleChunks) {
+        foreach (const QString &titleChunk, titleChunks) {
             queryString += QString(QLatin1String(" ( journal:%1 OR book:%1 )")).arg(EncoderLaTeX::instance()->convertToPlainAscii(titleChunk));
         }
 
         QStringList authors = p->splitRespectingQuotationMarks(form->lineEditAuthorEditor->text());
-        foreach(const QString &author, authors) {
+        foreach (const QString &author, authors) {
             queryString += QString(QLatin1String(" name:%1")).arg(EncoderLaTeX::instance()->convertToPlainAscii(author));
         }
 
@@ -192,12 +195,12 @@ public:
         QString queryString = query[queryKeyFreeText];
 
         QStringList titleChunks = p->splitRespectingQuotationMarks(query[queryKeyTitle]);
-        foreach(const QString &titleChunk, titleChunks) {
+        foreach (const QString &titleChunk, titleChunks) {
             queryString += QString(QLatin1String(" title:%1")).arg(EncoderLaTeX::instance()->convertToPlainAscii(titleChunk));
         }
 
         QStringList authors = p->splitRespectingQuotationMarks(query[queryKeyAuthor]);
-        foreach(const QString &author, authors) {
+        foreach (const QString &author, authors) {
             queryString += QString(QLatin1String(" name:%1")).arg(EncoderLaTeX::instance()->convertToPlainAscii(author));
         }
 
@@ -231,6 +234,13 @@ OnlineSearchSpringerLink::~OnlineSearchSpringerLink()
 
 void OnlineSearchSpringerLink::startSearch()
 {
+    if (d->xslt == NULL) {
+        /// Don't allow searches if xslt is not defined
+        kWarning() << "Cannot allow searching" << label() << "if XSL Transformation not available";
+        delayedStoppedSearch(resultUnspecifiedError);
+        return;
+    }
+
     m_hasBeenCanceled = false;
 
     KUrl springerLinkSearchUrl = d->buildQueryUrl();
@@ -246,6 +256,13 @@ void OnlineSearchSpringerLink::startSearch()
 
 void OnlineSearchSpringerLink::startSearch(const QMap<QString, QString> &query, int numResults)
 {
+    if (d->xslt == NULL) {
+        /// Don't allow searches if xslt is not defined
+        kWarning() << "Cannot allow searching" << label() << "if XSL Transformation not available";
+        delayedStoppedSearch(resultUnspecifiedError);
+        return;
+    }
+
     m_hasBeenCanceled = false;
 
     KUrl springerLinkSearchUrl = d->buildQueryUrl(query);
@@ -300,7 +317,7 @@ void OnlineSearchSpringerLink::doneFetchingPAM()
 
         bool hasEntries = false;
         if (bibtexFile != NULL) {
-            foreach(const QSharedPointer<Element> &element, *bibtexFile) {
+            foreach (const QSharedPointer<Element> &element, *bibtexFile) {
                 QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
                 hasEntries |= publishEntry(entry);
             }
