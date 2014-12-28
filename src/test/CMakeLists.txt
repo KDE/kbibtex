@@ -31,6 +31,11 @@ set(
     kbibtextest.cpp
 )
 
+set(
+    kbibtexfilestest_SRCS
+    kbibtexfilestest.cpp
+)
+
 # debug area for KBibTeX's test program
 add_definitions(
     -DKDE_DEFAULT_DEBUG_AREA=101023
@@ -43,12 +48,18 @@ kde4_add_app_icon(
 
 if(UNITY_BUILD AND NOT WIN32) # FIXME: Unity build of programs breaks on Windows
     enable_unity_build(kbibtextest kbibtextest_SRCS)
+    enable_unity_build(kbibtexfilestest kbibtexfilestest_SRCS)
 endif(UNITY_BUILD AND NOT WIN32)
 
 kde4_add_executable(
     kbibtextest
     ${kbibtextest_SRCS}
     ${CMAKE_CURRENT_BINARY_DIR}/version.h
+)
+
+kde4_add_unit_test(
+    kbibtexfilestest
+    ${kbibtexfilestest_SRCS}
 )
 
 target_link_libraries(
@@ -64,6 +75,15 @@ target_link_libraries(
     kbibtexproc
     kbibtexgui
     kbibtexnetworking
+)
+
+target_link_libraries(
+    kbibtexfilestest
+    LINK_PRIVATE
+    ${QT_QTTEST_LIBRARY}
+    ${KDE4_KDECORE_LIBS}
+    kbibtexdata
+    kbibtexio
 )
 
 

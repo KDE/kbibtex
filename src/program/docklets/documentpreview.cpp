@@ -474,8 +474,12 @@ public:
             showPart(NULL, message);
             p->unsetCursor();
             return true;
-        } else
-            showMessage(i18n("<qt>Do not know how to show mimetype '%1'.</qt>", urlInfo.mimeType)); // krazy:exclude=qmethods
+        } else {
+            QString additionalInformation;
+            if (urlInfo.mimeType == QLatin1String("application/pdf"))
+                additionalInformation = i18nc("Additional information in case there is not KPart available for mime type 'application/pdf'", "<br/><br/>Please install <a href=\"https://userbase.kde.org/Okular\">Okular</a> to make use of its PDF viewing component.");
+            showMessage(i18nc("First parameter is mime type, second parameter is optional information (may be empty)", "<qt>Don't know how to show mimetype '%1'.%2</qt>", urlInfo.mimeType, additionalInformation)); // krazy:exclude=qmethods
+        }
 
         return false;
     }
@@ -642,4 +646,14 @@ void DocumentPreview::linkActivated(const QString &link)
 {
     if (link == QLatin1String("disableonlylocalfiles"))
         d->onlyLocalFilesButton->setChecked(true);
+    else if (link.startsWith(QLatin1String("http://")) || link.startsWith(QLatin1String("https://"))) {
+        const KUrl urlToOpen = KUrl::fromUserInput(link);
+        if (urlToOpen.isValid()) {
+            /// Guess mime type for url to open
+            KMimeType::Ptr mimeType = FileInfo::mimeTypeForUrl(urlToOpen);
+            const QString mimeTypeName = mimeType->name();
+            /// Ask KDE subsystem to open url in viewer matching mime type
+            KRun::runUrl(urlToOpen, mimeTypeName, this, false, false);
+        }
+    }
 }

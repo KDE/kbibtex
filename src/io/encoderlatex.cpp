@@ -21,6 +21,8 @@
 
 #include <KDebug>
 
+#include "iconvlatex.h"
+
 /**
  * General documentation on this topic:
  *   http://www.tex.ac.uk/CTAN/macros/latex/doc/encguide.pdf
@@ -954,65 +956,17 @@ QString EncoderLaTeX::encode(const QString &ninput) const
 
 QString EncoderLaTeX::convertToPlainAscii(const QString &ninput) const
 {
-    /// Perform Canonical Decomposition followed by Canonical Composition
-    const QString input = ninput.normalized(QString::NormalizationForm_C);
-
-    int len = input.length();
-    QString output;
-    output.reserve(len);
-
-    /// Go through input char by char
-    for (int i = 0; i < len; ++i) {
-        const QChar c = input[i];
-
-        if (c.unicode() > 127) {
-            /// If current char is outside ASCII boundaries ...
-
-            /// ... test if there is a symbol sequence like ---
-            /// to encode it
-            bool found = false;
-
-            /// Let's test character commands like \'\i
-            for (int k = 0; k < dotlessIJCharactersLen; ++k)
-                if (dotlessIJCharacters[k].unicode == c.unicode()) {
-                    output.append(QChar(dotlessIJCharacters[k].letter));
-                    found = true;
-                    break;
-                }
-
-            /// Let's test character commands like \ss
-            for (int k = 0; k < encoderLaTeXCharacterCommandsLen; ++k)
-                if (encoderLaTeXCharacterCommands[k].meaningfulCommandName && encoderLaTeXCharacterCommands[k].unicode == c.unicode()) {
-                    output.append(encoderLaTeXCharacterCommands[k].letters);
-                    found = true;
-                    break;
-                }
-
-            if (!found) {
-                /// Ok, not a character command. Let's test
-                /// escaped characters with modifiers like \"a
-                for (int k = 0; k < encoderLaTeXEscapedCharactersLen; ++k)
-                    if (encoderLaTeXEscapedCharacters[k].unicode == c.unicode()) {
-                        output.append(encoderLaTeXEscapedCharacters[k].letter);
-                        found = true;
-                        break;
-                    }
-            }
-
-            if (!found) {
-                kDebug() << "Don't know how to convert to plain ASCII this Unicode char: " << QString("0x%1").arg(c.unicode(), 4, 16, QLatin1Char('0'));
-                output.append(QLatin1Char('X'));
-            }
-        } else {
-            /// Current character is normal ASCII
-
-            /// Dump character to output
-            output.append(c);
-        }
-    }
-
-    output.squeeze();
-    return output;
+    /// From iconv's man page:
+    /// If the string //TRANSLIT is appended to to-encoding, characters
+    /// being converted are transliterated when needed and  possible.
+    /// This means that when a character cannot be represented in the
+    /// target character set, it can be approximated through one or
+    /// several similar looking characters.  Characters that are outside
+    /// of the target character set and cannot be transliterated are
+    /// replaced with a question mark (?) in the output.
+    IConvLaTeX iconv(QLatin1String("ascii//translit"));
+    const QByteArray translit = iconv.encode(ninput);
+    return QString(translit);
 }
 
 bool EncoderLaTeX::containsOnlyAscii(const QString &ntext)
