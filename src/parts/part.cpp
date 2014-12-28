@@ -197,8 +197,6 @@ public:
     bool openFile(const KUrl &url, const QString &localFilePath) {
         p->setObjectName("KBibTeXPart::KBibTeXPart for " + url.pathOrUrl());
 
-        FileImporter *importer = fileImporterFactory(url);
-        importer->showImportDialog(p->widget());
 
         qApp->setOverrideCursor(Qt::WaitCursor);
 
@@ -210,14 +208,25 @@ public:
         }
 
         QFile inputfile(localFilePath);
-        inputfile.open(QIODevice::ReadOnly);
+        if (!inputfile.open(QIODevice::ReadOnly)) {
+            kWarning() << "Opening file failed, creating new one instead:" << localFilePath;
+            qApp->restoreOverrideCursor();
+            /// Opening file failed, creating new one instead
+            initializeNew();
+            return false;
+        }
+
+        FileImporter *importer = fileImporterFactory(url);
+        importer->showImportDialog(p->widget());
         bibTeXFile = importer->load(&inputfile);
         inputfile.close();
         delete importer;
 
         if (bibTeXFile == NULL) {
-            kWarning() << "Opening file failed:" << url.pathOrUrl();
+            kWarning() << "Opening file failed, creating new one instead:" << url.pathOrUrl();
             qApp->restoreOverrideCursor();
+            /// Opening file failed, creating new one instead
+            initializeNew();
             return false;
         }
 
