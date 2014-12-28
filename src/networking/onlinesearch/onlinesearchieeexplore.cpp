@@ -60,7 +60,7 @@ public:
 
         /// Free text
         QStringList freeTextFragments = p->splitRespectingQuotationMarks(query[queryKeyAuthor]);
-        foreach(const QString &freeTextFragment, freeTextFragments) {
+        foreach (const QString &freeTextFragment, freeTextFragments) {
             queryText << QString(QLatin1String("\"%1\"")).arg(freeTextFragment);
         }
 
@@ -70,7 +70,7 @@ public:
 
         /// Author
         QStringList authors = p->splitRespectingQuotationMarks(query[queryKeyAuthor]);
-        foreach(const QString &author, authors) {
+        foreach (const QString &author, authors) {
             queryText << QString(QLatin1String("Author:\"%1\"")).arg(author);
         }
 

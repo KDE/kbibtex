@@ -165,17 +165,17 @@ public:
         QString queryString = form->lineEditFreeText->text();
 
         QStringList titleChunks = p->splitRespectingQuotationMarks(form->lineEditTitle->text());
-        foreach(const QString &titleChunk, titleChunks) {
+        foreach (const QString &titleChunk, titleChunks) {
             queryString += QString(QLatin1String(" title:%1")).arg(EncoderLaTeX::instance()->convertToPlainAscii(titleChunk));
         }
 
         titleChunks = p->splitRespectingQuotationMarks(form->lineEditBookTitle->text());
-        foreach(const QString &titleChunk, titleChunks) {
+        foreach (const QString &titleChunk, titleChunks) {
             queryString += QString(QLatin1String(" ( journal:%1 OR book:%1 )")).arg(EncoderLaTeX::instance()->convertToPlainAscii(titleChunk));
         }
 
         QStringList authors = p->splitRespectingQuotationMarks(form->lineEditAuthorEditor->text());
-        foreach(const QString &author, authors) {
+        foreach (const QString &author, authors) {
             queryString += QString(QLatin1String(" name:%1")).arg(EncoderLaTeX::instance()->convertToPlainAscii(author));
         }
 
@@ -195,12 +195,12 @@ public:
         QString queryString = query[queryKeyFreeText];
 
         QStringList titleChunks = p->splitRespectingQuotationMarks(query[queryKeyTitle]);
-        foreach(const QString &titleChunk, titleChunks) {
+        foreach (const QString &titleChunk, titleChunks) {
             queryString += QString(QLatin1String(" title:%1")).arg(EncoderLaTeX::instance()->convertToPlainAscii(titleChunk));
         }
 
         QStringList authors = p->splitRespectingQuotationMarks(query[queryKeyAuthor]);
-        foreach(const QString &author, authors) {
+        foreach (const QString &author, authors) {
             queryString += QString(QLatin1String(" name:%1")).arg(EncoderLaTeX::instance()->convertToPlainAscii(author));
         }
 
@@ -317,7 +317,7 @@ void OnlineSearchSpringerLink::doneFetchingPAM()
 
         bool hasEntries = false;
         if (bibtexFile != NULL) {
-            foreach(const QSharedPointer<Element> &element, *bibtexFile) {
+            foreach (const QSharedPointer<Element> &element, *bibtexFile) {
                 QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
                 hasEntries |= publishEntry(entry);
             }
