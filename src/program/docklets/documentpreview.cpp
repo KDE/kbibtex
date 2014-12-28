@@ -452,17 +452,16 @@ public:
         if (okularPart != NULL && okularMimetypes.contains(urlInfo.mimeType)) {
             p->setCursor(Qt::BusyCursor);
             showMessage(i18n("Loading...")); // krazy:exclude=qmethods
-            okularPart->openUrl(urlInfo.url);
-            return true;
+            return okularPart->openUrl(urlInfo.url);
         } else if (htmlMimetypes.contains(urlInfo.mimeType)) {
             p->setCursor(Qt::BusyCursor);
             showMessage(i18n("Loading...")); // krazy:exclude=qmethods
 #ifdef HAVE_QTWEBKIT // krazy:exclude=cpp
             htmlWidget->load(urlInfo.url);
-#else // HAVE_QTWEBKIT
-            htmlPart->openUrl(urlInfo.url);
-#endif // HAVE_QTWEBKIT
             return true;
+#else // HAVE_QTWEBKIT
+            return htmlPart->openUrl(urlInfo.url);
+#endif // HAVE_QTWEBKIT
         } else if (imageMimetypes.contains(urlInfo.mimeType)) {
             p->setCursor(Qt::BusyCursor);
             message->setPixmap(QPixmap(urlInfo.url.pathOrUrl()));
