@@ -233,7 +233,6 @@ public:
         bibTeXFile->setProperty(File::Url, QUrl(url));
 
         model->setBibliographyFile(bibTeXFile);
-        partWidget->fileView()->setModel(model);
         if (sortFilterProxyModel != NULL) delete sortFilterProxyModel;
         sortFilterProxyModel = new SortFilterFileModel(p);
         sortFilterProxyModel->setSourceModel(model);
