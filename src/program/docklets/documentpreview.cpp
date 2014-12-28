@@ -291,7 +291,6 @@ public:
 
             for (QList<KUrl>::ConstIterator it = urlList.constBegin(); it != urlList.constEnd(); ++it) {
                 bool isLocal = isLocalOrRelative(*it);
-                kDebug() << "testing " << (*it).prettyUrl() << isLocal;
                 anyRemote |= !isLocal;
                 if (!onlyLocalFilesButton->isChecked() && !isLocal) continue;
 
@@ -392,14 +391,10 @@ public:
             for (int j = 0; j < actionProperties.count(); ++j) {
                 QDomNode actionNode = actionProperties.at(j);
                 if (actionNode.nodeName() == QLatin1String("Action")) {
-                    kDebug() << actionNode.attributes().namedItem("name").isNull() << actionNode.attributes().namedItem("name").isAttr();
-
                     const QString actionName = actionNode.attributes().namedItem("name").toAttr().nodeValue();
                     const QString actionShortcut = actionNode.attributes().namedItem("shortcut").toAttr().value();
-                    kDebug() << actionName << actionShortcut;
                     QAction *action = part->actionCollection()->action(actionName);
                     if (action != NULL) {
-                        kDebug() << "setting shortcut" << actionShortcut << "to action" << actionName;
                         action->setShortcut(QKeySequence(actionShortcut));
                     } else
                         kDebug() << "Could not locate an action with name " << actionName << "for shortcut" << actionShortcut;
@@ -523,7 +518,6 @@ public:
         }
 
         if (url.pathOrUrl().startsWith(arXivPDFUrlStart)) {
-            kDebug() << "URL looks like a PDF url from arXiv";
             result.icon = KIcon("application-pdf");
             result.mimeType = QLatin1String("application/pdf");
         }
