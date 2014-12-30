@@ -60,6 +60,7 @@ find_package(Gettext REQUIRED)
 
 EOF
 
+cd po
 # For each language subdirectory ...
 ls -1d [a-z][a-z] [a-z][a-z][@_][a-z][a-z]* | while read lang ; do
 	# Add a new line to CMakeLists.txt
@@ -67,6 +68,7 @@ ls -1d [a-z][a-z] [a-z][a-z][@_][a-z][a-z]* | while read lang ; do
 
 	# Create language-specific LANGUAGE/CMakeLists.txt file
 	# (overwriting existing one)
-	echo 'file(GLOB _po_files *.po)' >po/${lang}/CMakeLists.txt
-	echo 'gettext_process_po_files('${lang}' ALL INSTALL_DESTINATION ${LOCALE_INSTALL_DIR} ${_po_files} )' >>po/${lang}/CMakeLists.txt
-done >>po/CMakeLists.txt
+	echo 'file(GLOB _po_files *.po)' >${lang}/CMakeLists.txt
+	echo 'gettext_process_po_files('${lang}' ALL INSTALL_DESTINATION ${LOCALE_INSTALL_DIR} ${_po_files} )' >>${lang}/CMakeLists.txt
+done >>CMakeLists.txt
+cd ..

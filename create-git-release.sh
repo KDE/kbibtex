@@ -255,7 +255,7 @@ if [ -d src/test ] ; then
 fi
 
 # Fetch .po files
-mkdir po ; grep -v 'REV=' <download-po-files-from-websvn.sh >download-po-files-from-websvn-without-REV.sh && REV=${PO_SVN_REVISION} bash download-po-files-from-websvn-without-REV.sh
+mkdir -p po ; grep -v 'REV=' <download-po-files-from-websvn.sh >download-po-files-from-websvn-without-REV.sh && REV=${PO_SVN_REVISION} bash download-po-files-from-websvn-without-REV.sh
 rm -f download-po-files-from-websvn*
 
 # Go to base directory
