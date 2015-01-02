@@ -379,10 +379,16 @@ public:
         NotificationHub::publishEvent(MenuLineEdit::MenuLineConfigurationChangedEvent);
     }
 
-    void switchTo(QWidget *newTab) {
-        bool isSourceWidget = newTab == sourceWidget;
-        ElementWidget *newWidget = qobject_cast<ElementWidget *>(newTab);
-        if (previousWidget != NULL && newWidget != NULL) {
+    void switchTo(QWidget *futureTab) {
+        /// Switched from source widget to another widget?
+        const bool isToSourceWidget = futureTab == sourceWidget;
+        /// Switch from some widget to the source widget?
+        const bool isFromSourceWidget = previousWidget == sourceWidget;
+        /// Interprete future widget as an ElementWidget
+        ElementWidget *futureWidget = qobject_cast<ElementWidget *>(futureTab);
+        /// Past and future ElementWidget values are valid?
+        if (previousWidget != NULL && futureWidget != NULL) {
+            /// Assign to temp wihch internal variable holds current state
             QSharedPointer<Element> temp;
             if (!internalEntry.isNull())
                 temp = internalEntry;
@@ -394,16 +400,21 @@ public:
                 temp = internalPreamble;
             Q_ASSERT_X(!temp.isNull(), "void ElementEditor::ElementEditorPrivate::switchTo(QWidget *newTab)", "temp is NULL");
 
+            /// Past widget writes its state to the internal state
             previousWidget->apply(temp);
-            if (isSourceWidget && referenceWidget != NULL) referenceWidget->apply(temp);
-            newWidget->reset(temp);
-            if (referenceWidget != NULL && qobject_cast<SourceWidget *>(previousWidget) != NULL)
+            /// Before switching to source widget, store internally reference widget's state
+            if (isToSourceWidget && referenceWidget != NULL) referenceWidget->apply(temp);
+            /// Tell future widget to initialize itself based on internal state
+            futureWidget->reset(temp);
+            /// When switchin from source widget to another widget, initialize reference widget
+            if (isFromSourceWidget && referenceWidget != NULL)
                 referenceWidget->reset(temp);
         }
-        previousWidget = newWidget;
+        previousWidget = futureWidget;
 
+        /// Enable/disable tabs
         for (WidgetList::Iterator it = widgets.begin(); it != widgets.end(); ++it)
-            (*it)->setEnabled(!isSourceWidget || *it == newTab);
+            (*it)->setEnabled(!isToSourceWidget || *it == futureTab);
     }
 
     /**
