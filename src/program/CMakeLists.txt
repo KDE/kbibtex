@@ -53,17 +53,17 @@ kde4_add_app_icon(
 )
 
 if(UNITY_BUILD AND NOT WIN32) # FIXME: Unity build of programs breaks on Windows
-    enable_unity_build(kbibtex${BINARY_POSTFIX} kbibtex_SRCS)
+    enable_unity_build(kbibtex kbibtex_SRCS)
 endif(UNITY_BUILD AND NOT WIN32)
 
 kde4_add_executable(
-    kbibtex${BINARY_POSTFIX}
+    kbibtex
     ${kbibtex_SRCS}
     ${CMAKE_CURRENT_BINARY_DIR}/version.h
 )
 
 target_link_libraries(
-    kbibtex${BINARY_POSTFIX}
+    kbibtex
     LINK_PRIVATE
     ${QT_QTWEBKIT_LIBRARIES}
     ${KDE4_KIO_LIBS}
@@ -102,14 +102,14 @@ set_source_files_properties(
 )
 
 add_dependencies(
-    kbibtex${BINARY_POSTFIX}
+    kbibtex
     GITrevision
 )
 
 
 install(
     TARGETS
-    kbibtex${BINARY_POSTFIX}
+    kbibtex
     ${INSTALL_TARGETS_DEFAULT_ARGS}
 )
 
