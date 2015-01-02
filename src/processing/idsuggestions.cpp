@@ -57,7 +57,7 @@ public:
         QString result;
         bool first = true;
         static const QRegExp sequenceOfSpaces(QLatin1String("\\s+"));
-        QStringList titleWords = PlainTextValue::text(entry.value(Entry::ftTitle)).split(sequenceOfSpaces, QString::SkipEmptyParts);
+        const QStringList titleWords = PlainTextValue::text(entry.value(Entry::ftTitle)).split(sequenceOfSpaces, QString::SkipEmptyParts);
         int index = 0;
         for (QStringList::ConstIterator it = titleWords.begin(); it != titleWords.end(); ++it, ++index) {
             if (first)
