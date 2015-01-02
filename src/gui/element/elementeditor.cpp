@@ -254,15 +254,44 @@ public:
     }
 
     void apply(QSharedPointer<Element> element) {
-        if (referenceWidget != NULL)
-            referenceWidget->apply(element);
-        ElementWidget *currentElementWidget = qobject_cast<ElementWidget *>(tab->currentWidget());
-        //Q_ASSERT_X(currentElementWidget != NULL || tab->currentWidget() == NULL, "ElementEditor::ElementEditorPrivate::apply", "Could not cast currentWidget to ElementWidget");
-        for (WidgetList::ConstIterator it = widgets.constBegin(); it != widgets.constEnd(); ++it)
-            if ((*it) != currentElementWidget && (*it) != sourceWidget)
-                (*it)->apply(element);
-        if (currentElementWidget != NULL)
-            currentElementWidget->apply(element);
+        if (tab->currentWidget() == sourceWidget) {
+            /// Very simple if source view is active: BibTeX code contains
+            /// all necessary data
+            sourceWidget->apply(element);
+        } else {
+            /// Start by assigning the current internal element's
+            /// data to the output element
+            QSharedPointer<Entry> e = element.dynamicCast<Entry>();
+            if (!e.isNull())
+                *e = *internalEntry;
+            else {
+                QSharedPointer<Macro> m = element.dynamicCast<Macro>();
+                if (!m.isNull())
+                    *m = *internalMacro;
+                else {
+                    QSharedPointer<Comment> c = element.dynamicCast<Comment>();
+                    if (!c.isNull())
+                        *c = *internalComment;
+                    else {
+                        QSharedPointer<Preamble> p = element.dynamicCast<Preamble>();
+                        if (!p.isNull())
+                            *p = *internalPreamble;
+                        else
+                            Q_ASSERT_X(element.isNull(), "ElementEditor::ElementEditorPrivate::apply(QSharedPointer<Element> element)", "element is not NULL but could not be cast on a valid Element sub-class");
+                    }
+                }
+            }
+
+            /// The internal element may be outdated (only updated on tab switch),
+            /// so apply the reference widget's data on the output element
+            if (referenceWidget != NULL)
+                referenceWidget->apply(element);
+            /// The internal element may be outdated (only updated on tab switch),
+            /// so apply the current widget's data on the output element
+            ElementWidget *currentElementWidget = qobject_cast<ElementWidget *>(tab->currentWidget());
+            if (currentElementWidget != NULL)
+                currentElementWidget->apply(element);
+        }
     }
 
     void reset() {
