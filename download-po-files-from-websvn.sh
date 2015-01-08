@@ -60,6 +60,14 @@ done
 cat <<EOF >po/CMakeLists.txt
 find_package(Gettext REQUIRED)
 
+if (NOT GETTEXT_MSGMERGE_EXECUTABLE)
+    message(FATAL_ERROR "Please install the msgmerge program from the gettext package.")
+endif (NOT GETTEXT_MSGMERGE_EXECUTABLE)
+
+if (NOT GETTEXT_MSGFMT_EXECUTABLE)
+    message(FATAL_ERROR "Please install the msgfmt program from the gettext package.")
+endif (NOT GETTEXT_MSGFMT_EXECUTABLE)
+
 EOF
 
 cd po
