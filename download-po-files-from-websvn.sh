@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+export LANG=en_US.utf8
+
 test -d po || { echo "Need to have a po/ directory to run safely!" >&2 ; exit 1 ; }
 
 # REV= # KBibTeX master
