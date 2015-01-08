@@ -27,6 +27,7 @@
 #include <QTimer>
 #include <QSortFilterProxyModel>
 
+#include <KLineEdit>
 #include <KComboBox>
 #include <KStandardDirs>
 #include <KConfigGroup>
@@ -56,6 +57,7 @@ public:
     ValueListModel *model;
     QSortFilterProxyModel *sortingModel;
     KComboBox *comboboxFieldNames;
+    KLineEdit *lineeditFilter;
     const int countWidth;
     KAction *assignSelectionAction;
     KAction *removeSelectionAction;
@@ -77,16 +79,21 @@ public:
     }
 
     void setupGUI() {
-        QGridLayout *layout = new QGridLayout(p);
+        QBoxLayout *layout = new QVBoxLayout(p);
         layout->setMargin(0);
 
         comboboxFieldNames = new KComboBox(true, p);
-        layout->addWidget(comboboxFieldNames, 0, 0, 1, 1);
+        layout->addWidget(comboboxFieldNames);
+
+        lineeditFilter = new KLineEdit(p);
+        layout->addWidget(lineeditFilter);
+        lineeditFilter->setClearButtonShown(true);
 
         treeviewFieldValues = new QTreeView(p);
-        layout->addWidget(treeviewFieldValues, 1, 0, 1, 1);
+        layout->addWidget(treeviewFieldValues);
         treeviewFieldValues->setEditTriggers(QAbstractItemView::EditKeyPressed);
         treeviewFieldValues->setSortingEnabled(true);
+        treeviewFieldValues->sortByColumn(0, Qt::AscendingOrder);
         delegate = new ValueListDelegate(treeviewFieldValues);
         treeviewFieldValues->setItemDelegate(delegate);
         treeviewFieldValues->setRootIsDecorated(false);
@@ -118,6 +125,7 @@ public:
         p->setEnabled(false);
 
         connect(comboboxFieldNames, SIGNAL(activated(int)), p, SLOT(fieldNamesChanged(int)));
+        connect(comboboxFieldNames, SIGNAL(activated(int)), lineeditFilter, SLOT(clear()));
         connect(treeviewFieldValues, SIGNAL(activated(QModelIndex)), p, SLOT(listItemActivated(QModelIndex)));
         connect(delegate, SIGNAL(closeEditor(QWidget*)), treeviewFieldValues, SLOT(reset()));
 
@@ -142,6 +150,7 @@ public:
     void initialize() {
         const BibTeXFields *bibtexFields = BibTeXFields::self();
 
+        lineeditFilter->clear();
         comboboxFieldNames->clear();
         foreach(const FieldDescription *fd, *bibtexFields) {
             if (!fd->upperCamelCaseAlt.isEmpty()) continue; /// keep only "single" fields and not combined ones like "Author or Editor"
@@ -184,6 +193,10 @@ public:
             else
                 sortingModel->sort(1, Qt::DescendingOrder);
             sortingModel->setSortRole(ValueListModel::SortRole);
+            sortingModel->setFilterKeyColumn(0);
+            sortingModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
+            sortingModel->setFilterRole(ValueListModel::SearchTextRole);
+            connect(lineeditFilter, SIGNAL(textEdited(QString)), sortingModel, SLOT(setFilterFixedString(QString)));
             sortingModel->setSortLocaleAware(true);
             usedModel = sortingModel;
         }
