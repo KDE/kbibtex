@@ -25,9 +25,6 @@
 #include "notificationhub.h"
 #include "filemodel.h"
 
-static const int SortRole = Qt::UserRole + 113;
-static const int SearchTextRole = Qt::UserRole + 114;
-
 class KBIBTEXGUI_EXPORT ValueListDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
@@ -58,6 +55,13 @@ private slots:
 class KBIBTEXGUI_EXPORT ValueListModel : public QAbstractTableModel, private NotificationListener
 {
 public:
+    enum ValueListModelRole {
+        /// Role to sort values
+        SortRole = Qt::UserRole + 113,
+        /// Role to get text to filter for
+        SearchTextRole = Qt::UserRole + 114
+    };
+
     enum SortBy { SortByText, SortByCount };
 
 private:

@@ -183,7 +183,7 @@ public:
                 sortingModel->sort(treeviewFieldValues->header()->sortIndicatorSection(), treeviewFieldValues->header()->sortIndicatorOrder());
             else
                 sortingModel->sort(1, Qt::DescendingOrder);
-            sortingModel->setSortRole(SortRole);
+            sortingModel->setSortRole(ValueListModel::SortRole);
             sortingModel->setSortLocaleAware(true);
             usedModel = sortingModel;
         }
@@ -246,7 +246,7 @@ void ValueList::resizeEvent(QResizeEvent *)
 void ValueList::listItemActivated(const QModelIndex &index)
 {
     setEnabled(false);
-    QString itemText = d->sortingModel->mapToSource(index).data(SearchTextRole).toString();
+    QString itemText = d->sortingModel->mapToSource(index).data(ValueListModel::SearchTextRole).toString();
     QVariant fieldVar = d->comboboxFieldNames->itemData(d->comboboxFieldNames->currentIndex());
     QString fieldText = fieldVar.toString();
     if (fieldText.isEmpty()) fieldText = d->comboboxFieldNames->currentText();
@@ -272,7 +272,7 @@ void ValueList::searchSelection()
     fq.field = fieldText;
     foreach(const QModelIndex &index, d->treeviewFieldValues->selectionModel()->selectedIndexes()) {
         if (index.column() == 0) {
-            QString itemText = index.data(SearchTextRole).toString();
+            QString itemText = index.data(ValueListModel::SearchTextRole).toString();
             fq.terms << itemText;
         }
     }
