@@ -24,9 +24,6 @@
 class QMouseEvent;
 class QKeyEvent;
 
-static const int RadioSelectedRole = Qt::UserRole + 102;
-static const int IsRadioRole = Qt::UserRole + 103;
-
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
@@ -59,6 +56,11 @@ public:
 class RadioButtonTreeView : public QTreeView
 {
 public:
+    enum RadioButtonTreeViewRole {
+        RadioSelectedRole = Qt::UserRole + 102,
+        IsRadioRole = Qt::UserRole + 103
+    };
+
     explicit RadioButtonTreeView(QWidget *parent);
 
 protected:

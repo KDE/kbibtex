@@ -197,34 +197,48 @@ public:
     bool openFile(const KUrl &url, const QString &localFilePath) {
         p->setObjectName("KBibTeXPart::KBibTeXPart for " + url.pathOrUrl());
 
-        FileImporter *importer = fileImporterFactory(url);
-        importer->showImportDialog(p->widget());
 
         qApp->setOverrideCursor(Qt::WaitCursor);
 
         if (bibTeXFile != NULL) {
             const QUrl oldUrl = bibTeXFile->property(File::Url, QUrl()).toUrl();
-            if (oldUrl.isValid() && oldUrl.isLocalFile())
-                fileSystemWatcher.removePath(oldUrl.toString());
+            if (oldUrl.isValid() && oldUrl.isLocalFile()) {
+                const QString path = oldUrl.toString();
+                if (!path.isEmpty())
+                    fileSystemWatcher.removePath(path);
+                else
+                    kWarning() << "No filename to stop watching";
+            } else
+                kWarning() << "Not removing" << oldUrl.toString() << "from fileSystemWatcher";
             delete bibTeXFile;
         }
 
         QFile inputfile(localFilePath);
-        inputfile.open(QIODevice::ReadOnly);
+        if (!inputfile.open(QIODevice::ReadOnly)) {
+            kWarning() << "Opening file failed, creating new one instead:" << localFilePath;
+            qApp->restoreOverrideCursor();
+            /// Opening file failed, creating new one instead
+            initializeNew();
+            return false;
+        }
+
+        FileImporter *importer = fileImporterFactory(url);
+        importer->showImportDialog(p->widget());
         bibTeXFile = importer->load(&inputfile);
         inputfile.close();
         delete importer;
 
         if (bibTeXFile == NULL) {
-            kWarning() << "Opening file failed:" << url.pathOrUrl();
+            kWarning() << "Opening file failed, creating new one instead:" << url.pathOrUrl();
             qApp->restoreOverrideCursor();
+            /// Opening file failed, creating new one instead
+            initializeNew();
             return false;
         }
 
         bibTeXFile->setProperty(File::Url, QUrl(url));
 
         model->setBibliographyFile(bibTeXFile);
-        partWidget->fileView()->setModel(model);
         if (sortFilterProxyModel != NULL) delete sortFilterProxyModel;
         sortFilterProxyModel = new SortFilterFileModel(p);
         sortFilterProxyModel->setSourceModel(model);
@@ -417,7 +431,7 @@ public:
 
         QSharedPointer<const Entry> entry = partWidget->fileView()->currentElement().dynamicCast<const Entry>();
         if (!entry.isNull()) {
-            QList<KUrl> urlList = FileInfo::entryUrls(entry.data(), partWidget->fileView()->fileModel()->bibliographyFile()->property(File::Url).toUrl(), FileInfo::TestExistanceYes);
+            QList<KUrl> urlList = FileInfo::entryUrls(entry.data(), partWidget->fileView()->fileModel()->bibliographyFile()->property(File::Url).toUrl(), FileInfo::TestExistenceYes);
             if (!urlList.isEmpty()) {
                 /// First iteration: local references only
                 KAction *firstAction = NULL;
@@ -645,12 +659,16 @@ bool KBibTeXPart::saveFile()
     /// Stop watching local file that will be written to
     if (!watchableFilename.isEmpty())
         d->fileSystemWatcher.removePath(watchableFilename);
+    else
+        kWarning() << "watchableFilename is Empty";
 
     const bool saveOperationSuccess = d->saveFile(localFilePath());
 
     /// Continue watching local file after write operation
     if (!watchableFilename.isEmpty())
         d->fileSystemWatcher.addPath(watchableFilename);
+    else
+        kWarning() << "watchableFilename is Empty";
 
     if (!saveOperationSuccess) {
         KMessageBox::error(widget(), i18n("The document could not be saved, as it was not possible to write to '%1'.\n\nCheck that you have write access to this file or that enough disk space is available.", url().pathOrUrl()));
@@ -679,8 +697,14 @@ bool KBibTeXPart::documentSaveAs()
         return false;
 
     /// Remove old URL from file system watcher
-    if (url().isValid() && url().isLocalFile())
-        d->fileSystemWatcher.removePath(url().pathOrUrl());
+    if (url().isValid() && url().isLocalFile()) {
+        const QString path = url().pathOrUrl();
+        if (!path.isEmpty())
+            d->fileSystemWatcher.removePath(path);
+        else
+            kWarning() << "No filename to stop watching";
+    } else
+        kWarning() << "Not removing" << url().pathOrUrl() << "from fileSystemWatcher";
 
     if (KParts::ReadWritePart::saveAs(newUrl)) {
         kDebug() << "setting url to be " << newUrl.pathOrUrl();
@@ -904,12 +928,22 @@ void KBibTeXPart::fileExternallyChange(const QString &path)
     }
 
     /// Stop watching file while asking for user interaction
-    d->fileSystemWatcher.removePath(path);
+    if (!path.isEmpty())
+        d->fileSystemWatcher.removePath(path);
+    else
+        kWarning() << "No filename to stop watching";
 
     if (KMessageBox::warningContinueCancel(widget(), i18n("The file '%1' has changed on disk.\n\nReload file or ignore changes on disk?", path), i18n("File changed externally"), KGuiItem(i18n("Reload file"), KIcon("edit-redo")), KGuiItem(i18n("Ignore on-disk changes"), KIcon("edit-undo"))) == KMessageBox::Continue) {
         d->openFile(KUrl::fromLocalFile(path), path);
+        /// No explicit call to QFileSystemWatcher.addPath(...) necessary,
+        /// openFile(...) has done that already
+    } else {
+        kDebug() << "User chose to cancel reload";
+        /// Even if the user did not request reloaded the file,
+        /// still resume watching file for future external changes
+        if (!path.isEmpty())
+            d->fileSystemWatcher.addPath(path);
+        else
+            kWarning() << "path is Empty";
     }
-
-    /// Resume watching file
-    d->fileSystemWatcher.addPath(path);
 }

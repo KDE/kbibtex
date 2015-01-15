@@ -172,7 +172,7 @@ add_subdirectory(
 add_subdirectory(
     mime
 )
-add_subdirectory(
+macro_optional_add_subdirectory(
     po
 )
 

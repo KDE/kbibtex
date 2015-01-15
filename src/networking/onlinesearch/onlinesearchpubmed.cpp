@@ -46,7 +46,10 @@ public:
 
     OnlineSearchPubMedPrivate(OnlineSearchPubMed *parent)
             : p(parent), pubMedUrlPrefix(QLatin1String("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/")) {
-        xslt = XSLTransform::createXSLTransform(KStandardDirs::locate("data", "kbibtex/pubmed2bibtex.xsl"));
+        const QString xsltFilename = QLatin1String("kbibtex/pubmed2bibtex.xsl");
+        xslt = XSLTransform::createXSLTransform(KStandardDirs::locate("data", xsltFilename));
+        if (xslt == NULL)
+            kWarning() << "Could not create XSLT transformation for" << xsltFilename;
     }
 
     ~OnlineSearchPubMedPrivate() {
@@ -128,6 +131,13 @@ void OnlineSearchPubMed::startSearch()
 
 void OnlineSearchPubMed::startSearch(const QMap<QString, QString> &query, int numResults)
 {
+    if (d->xslt == NULL) {
+        /// Don't allow searches if xslt is not defined
+        kWarning() << "Cannot allow searching" << label() << "if XSL Transformation not available";
+        delayedStoppedSearch(resultUnspecifiedError);
+        return;
+    }
+
     d->curStep = 0;
     d->numSteps = 2;
     m_hasBeenCanceled = false;

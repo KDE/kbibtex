@@ -44,7 +44,10 @@ public:
 
     Private(OnlineSearchOCLCWorldCat *parent)
             : p(parent), maxSteps(0), curStep(0) {
-        xslt = XSLTransform::createXSLTransform(KStandardDirs::locate("data", "kbibtex/worldcatdc2bibtex.xsl"));
+        const QString xsltFilename = QLatin1String("kbibtex/worldcatdc2bibtex.xsl");
+        xslt = XSLTransform::createXSLTransform(KStandardDirs::locate("data", xsltFilename));
+        if (xslt == NULL)
+            kWarning() << "Could not create XSLT transformation for" << xsltFilename;
     }
 
     ~Private() {
@@ -115,6 +118,13 @@ void OnlineSearchOCLCWorldCat::startSearch() {
 }
 
 void OnlineSearchOCLCWorldCat::startSearch(const QMap<QString, QString> &query, int numResults) {
+    if (d->xslt == NULL) {
+        /// Don't allow searches if xslt is not defined
+        kWarning() << "Cannot allow searching" << label() << "if XSL Transformation not available";
+        delayedStoppedSearch(resultUnspecifiedError);
+        return;
+    }
+
     m_hasBeenCanceled = false;
 
     d->maxSteps = (numResults + OnlineSearchOCLCWorldCat::Private::countPerStep - 1) / OnlineSearchOCLCWorldCat::Private::countPerStep;

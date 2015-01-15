@@ -42,7 +42,10 @@ public:
 
     OnlineSearchIEEEXplorePrivate(OnlineSearchIEEEXplore *parent)
             : p(parent), gatewayUrl(QLatin1String("http://ieeexplore.ieee.org/gateway/ipsSearch.jsp")) {
-        xslt = XSLTransform::createXSLTransform(KStandardDirs::locate("data", "kbibtex/ieeexplore2bibtex.xsl"));
+        const QString xsltFilename = QLatin1String("kbibtex/ieeexplore2bibtex.xsl");
+        xslt = XSLTransform::createXSLTransform(KStandardDirs::locate("data", xsltFilename));
+        if (xslt == NULL)
+            kWarning() << "Could not create XSLT transformation for" << xsltFilename;
     }
 
 
@@ -57,7 +60,7 @@ public:
 
         /// Free text
         QStringList freeTextFragments = p->splitRespectingQuotationMarks(query[queryKeyAuthor]);
-        foreach(const QString &freeTextFragment, freeTextFragments) {
+        foreach (const QString &freeTextFragment, freeTextFragments) {
             queryText << QString(QLatin1String("\"%1\"")).arg(freeTextFragment);
         }
 
@@ -67,7 +70,7 @@ public:
 
         /// Author
         QStringList authors = p->splitRespectingQuotationMarks(query[queryKeyAuthor]);
-        foreach(const QString &author, authors) {
+        foreach (const QString &author, authors) {
             queryText << QString(QLatin1String("Author:\"%1\"")).arg(author);
         }
 
@@ -106,6 +109,13 @@ void OnlineSearchIEEEXplore::startSearch()
 
 void OnlineSearchIEEEXplore::startSearch(const QMap<QString, QString> &query, int numResults)
 {
+    if (d->xslt == NULL) {
+        /// Don't allow searches if xslt is not defined
+        kWarning() << "Cannot allow searching" << label() << "if XSL Transformation not available";
+        delayedStoppedSearch(resultUnspecifiedError);
+        return;
+    }
+
     m_hasBeenCanceled = false;
     d->curStep = 0;
     d->numSteps = 2;

@@ -255,8 +255,8 @@ if [ -d src/test ] ; then
 fi
 
 # Fetch .po files
-cd po ; grep -v 'REV=' <download-po-files-from-websvn.sh >download-po-files-from-websvn-without-REV.sh && REV=${PO_SVN_REVISION} bash download-po-files-from-websvn-without-REV.sh ; cd ..
-rm -f po/download-po-files-from-websvn*
+mkdir -p po ; grep -v 'REV=' <download-po-files-from-websvn.sh >download-po-files-from-websvn-without-REV.sh && REV=${PO_SVN_REVISION} bash download-po-files-from-websvn-without-REV.sh
+rm -f download-po-files-from-websvn*
 
 # Go to base directory
 cd ..
@@ -265,7 +265,7 @@ cd ..
 # skip various files/directories irrelevant for tar ball,
 # and compress tar ball.
 TARBALL="${OUTPUT_DIRECTORY}/${STEM}.tar.xz"
-tar -c --exclude .svn --exclude .git --exclude testset --exclude test ${STEM} | nice -n 19 xz >"${TARBALL}"
+tar -c --exclude .svn --exclude .git --exclude testset --exclude '*.sh' --exclude test ${STEM} | nice -n 19 xz >"${TARBALL}"
 
 # Go to output directory to omit absolute filenames in hashsum files
 pushd ${OUTPUT_DIRECTORY}

@@ -48,6 +48,12 @@ public:
     virtual ~Comment();
 
     /**
+     * Assignment operator, working similar to a copy constructor,
+     * but overwrites the current object's values.
+     */
+    Comment &operator= (const Comment &other);
+
+    /**
      * Retrieve the text of this comment.
      * @return text of this comment
      */
