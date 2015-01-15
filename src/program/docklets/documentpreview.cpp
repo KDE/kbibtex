@@ -287,11 +287,10 @@ public:
 
         /// do not load external reference if widget is hidden
         if (isVisible()) {
-            QList<KUrl> urlList = FileInfo::entryUrls(entry.data(), baseUrl, FileInfo::TestExistanceYes);
+            QList<KUrl> urlList = FileInfo::entryUrls(entry.data(), baseUrl, FileInfo::TestExistenceYes);
 
             for (QList<KUrl>::ConstIterator it = urlList.constBegin(); it != urlList.constEnd(); ++it) {
                 bool isLocal = isLocalOrRelative(*it);
-                kDebug() << "testing " << (*it).prettyUrl() << isLocal;
                 anyRemote |= !isLocal;
                 if (!onlyLocalFilesButton->isChecked() && !isLocal) continue;
 
@@ -392,14 +391,10 @@ public:
             for (int j = 0; j < actionProperties.count(); ++j) {
                 QDomNode actionNode = actionProperties.at(j);
                 if (actionNode.nodeName() == QLatin1String("Action")) {
-                    kDebug() << actionNode.attributes().namedItem("name").isNull() << actionNode.attributes().namedItem("name").isAttr();
-
                     const QString actionName = actionNode.attributes().namedItem("name").toAttr().nodeValue();
                     const QString actionShortcut = actionNode.attributes().namedItem("shortcut").toAttr().value();
-                    kDebug() << actionName << actionShortcut;
                     QAction *action = part->actionCollection()->action(actionName);
                     if (action != NULL) {
-                        kDebug() << "setting shortcut" << actionShortcut << "to action" << actionName;
                         action->setShortcut(QKeySequence(actionShortcut));
                     } else
                         kDebug() << "Could not locate an action with name " << actionName << "for shortcut" << actionShortcut;
@@ -457,25 +452,28 @@ public:
         if (okularPart != NULL && okularMimetypes.contains(urlInfo.mimeType)) {
             p->setCursor(Qt::BusyCursor);
             showMessage(i18n("Loading...")); // krazy:exclude=qmethods
-            okularPart->openUrl(urlInfo.url);
-            return true;
+            return okularPart->openUrl(urlInfo.url);
         } else if (htmlMimetypes.contains(urlInfo.mimeType)) {
             p->setCursor(Qt::BusyCursor);
             showMessage(i18n("Loading...")); // krazy:exclude=qmethods
 #ifdef HAVE_QTWEBKIT // krazy:exclude=cpp
             htmlWidget->load(urlInfo.url);
-#else // HAVE_QTWEBKIT
-            htmlPart->openUrl(urlInfo.url);
-#endif // HAVE_QTWEBKIT
             return true;
+#else // HAVE_QTWEBKIT
+            return htmlPart->openUrl(urlInfo.url);
+#endif // HAVE_QTWEBKIT
         } else if (imageMimetypes.contains(urlInfo.mimeType)) {
             p->setCursor(Qt::BusyCursor);
             message->setPixmap(QPixmap(urlInfo.url.pathOrUrl()));
             showPart(NULL, message);
             p->unsetCursor();
             return true;
-        } else
-            showMessage(i18n("<qt>Do not know how to show mimetype '%1'.</qt>", urlInfo.mimeType)); // krazy:exclude=qmethods
+        } else {
+            QString additionalInformation;
+            if (urlInfo.mimeType == QLatin1String("application/pdf"))
+                additionalInformation = i18nc("Additional information in case there is not KPart available for mime type 'application/pdf'", "<br/><br/>Please install <a href=\"https://userbase.kde.org/Okular\">Okular</a> to make use of its PDF viewing component.");
+            showMessage(i18nc("First parameter is mime type, second parameter is optional information (may be empty)", "<qt>Don't know how to show mimetype '%1'.%2</qt>", urlInfo.mimeType, additionalInformation)); // krazy:exclude=qmethods
+        }
 
         return false;
     }
@@ -519,7 +517,6 @@ public:
         }
 
         if (url.pathOrUrl().startsWith(arXivPDFUrlStart)) {
-            kDebug() << "URL looks like a PDF url from arXiv";
             result.icon = KIcon("application-pdf");
             result.mimeType = QLatin1String("application/pdf");
         }
@@ -642,4 +639,14 @@ void DocumentPreview::linkActivated(const QString &link)
 {
     if (link == QLatin1String("disableonlylocalfiles"))
         d->onlyLocalFilesButton->setChecked(true);
+    else if (link.startsWith(QLatin1String("http://")) || link.startsWith(QLatin1String("https://"))) {
+        const KUrl urlToOpen = KUrl::fromUserInput(link);
+        if (urlToOpen.isValid()) {
+            /// Guess mime type for url to open
+            KMimeType::Ptr mimeType = FileInfo::mimeTypeForUrl(urlToOpen);
+            const QString mimeTypeName = mimeType->name();
+            /// Ask KDE subsystem to open url in viewer matching mime type
+            KRun::runUrl(urlToOpen, mimeTypeName, this, false, false);
+        }
+    }
 }

@@ -197,8 +197,6 @@ public:
     bool openFile(const KUrl &url, const QString &localFilePath) {
         p->setObjectName("KBibTeXPart::KBibTeXPart for " + url.pathOrUrl());
 
-        FileImporter *importer = fileImporterFactory(url);
-        importer->showImportDialog(p->widget());
 
         qApp->setOverrideCursor(Qt::WaitCursor);
 
@@ -217,21 +215,31 @@ public:
         }
 
         QFile inputfile(localFilePath);
-        inputfile.open(QIODevice::ReadOnly);
+        if (!inputfile.open(QIODevice::ReadOnly)) {
+            kWarning() << "Opening file failed, creating new one instead:" << localFilePath;
+            qApp->restoreOverrideCursor();
+            /// Opening file failed, creating new one instead
+            initializeNew();
+            return false;
+        }
+
+        FileImporter *importer = fileImporterFactory(url);
+        importer->showImportDialog(p->widget());
         bibTeXFile = importer->load(&inputfile);
         inputfile.close();
         delete importer;
 
         if (bibTeXFile == NULL) {
-            kWarning() << "Opening file failed:" << url.pathOrUrl();
+            kWarning() << "Opening file failed, creating new one instead:" << url.pathOrUrl();
             qApp->restoreOverrideCursor();
+            /// Opening file failed, creating new one instead
+            initializeNew();
             return false;
         }
 
         bibTeXFile->setProperty(File::Url, QUrl(url));
 
         model->setBibliographyFile(bibTeXFile);
-        partWidget->fileView()->setModel(model);
         if (sortFilterProxyModel != NULL) delete sortFilterProxyModel;
         sortFilterProxyModel = new SortFilterFileModel(p);
         sortFilterProxyModel->setSourceModel(model);
@@ -431,7 +439,7 @@ public:
 
         QSharedPointer<const Entry> entry = partWidget->fileView()->currentElement().dynamicCast<const Entry>();
         if (!entry.isNull()) {
-            QList<KUrl> urlList = FileInfo::entryUrls(entry.data(), partWidget->fileView()->fileModel()->bibliographyFile()->property(File::Url).toUrl(), FileInfo::TestExistanceYes);
+            QList<KUrl> urlList = FileInfo::entryUrls(entry.data(), partWidget->fileView()->fileModel()->bibliographyFile()->property(File::Url).toUrl(), FileInfo::TestExistenceYes);
             if (!urlList.isEmpty()) {
                 /// First iteration: local references only
                 KAction *firstAction = NULL;
@@ -552,6 +560,7 @@ void KBibTeXPart::setupActions(bool /*browserViewWanted FIXME*/)
     filterWidgetAction->setIcon(KIcon("view-filter"));
     filterWidgetAction->setShortcut(Qt::CTRL + Qt::Key_F);
     connect(filterWidgetAction, SIGNAL(triggered()), d->partWidget->filterBar(), SLOT(setFocus()));
+    d->partWidget->filterBar()->setClickMessage(i18n("Filter bibliographic entries (%1)", filterWidgetAction->shortcut().toString()));
 
     KActionMenu *newElementAction = new KActionMenu(KIcon("address-book-new"), i18n("New element"), this);
     actionCollection()->addAction("element_new", newElementAction);

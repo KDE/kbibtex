@@ -32,10 +32,13 @@ class KBIBTEXGUI_EXPORT PartWidget : public QWidget {
     Q_OBJECT
 
 public:
-    PartWidget(QWidget *parent);
+    explicit PartWidget(QWidget *parent);
 
     FileView *fileView();
     FilterBar *filterBar();
+
+private slots:
+    void searchFor(QString);
 
 private:
     class Private;

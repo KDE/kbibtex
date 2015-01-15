@@ -1,0 +1,4 @@
+REPOSITORY = 'git://anongit.kde.org/kbibtex'
+REVIEWBOARD_URL = "https://git.reviewboard.kde.org"
+GUESS_DESCRIPTION = True
+BRANCH = "master"

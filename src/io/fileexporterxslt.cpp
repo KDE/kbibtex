@@ -59,7 +59,9 @@ bool FileExporterXSLT::save(QIODevice *iodevice, const File *bibtexfile, QString
 
     m_cancelFlag = false;
     XSLTransform *xsltransformer = XSLTransform::createXSLTransform(m_xsltFilename);
-    if (xsltransformer != NULL) {
+    if (xsltransformer == NULL)
+        kWarning() << "Could not create XSLT transformation for" << m_xsltFilename;
+    else {
         FileExporterXML xmlExporter;
 
         QBuffer buffer;
@@ -98,7 +100,9 @@ bool FileExporterXSLT::save(QIODevice *iodevice, const QSharedPointer<const Elem
 
     m_cancelFlag = false;
     XSLTransform *xsltransformer = XSLTransform::createXSLTransform(m_xsltFilename);
-    if (xsltransformer != NULL) {
+    if (xsltransformer == NULL)
+        kWarning() << "Could not create XSLT transformation for" << m_xsltFilename;
+    else {
         FileExporterXML xmlExporter;
 
         QBuffer buffer;

@@ -154,7 +154,7 @@ public:
                     return i18n("Type");
                 else
                     return BibTeXEntries::self()->format(fieldName, KBibTeX::cUpperCamelCase);
-            case IsRadioRole:
+            case RadioButtonTreeView::IsRadioRole:
                 /// this is not to be a radio widget
                 return QVariant::fromValue(false);
             case Qt::FontRole:
@@ -207,7 +207,7 @@ public:
 
                 return Qt::Unchecked;
             }
-            case RadioSelectedRole: {
+            case RadioButtonTreeView::RadioSelectedRole: {
                 if (selectionType(fieldName) != SelectionTypeRadio)
                     return QVariant::fromValue(false);
 
@@ -222,7 +222,7 @@ public:
                 }
                 return QVariant::fromValue(false);
             }
-            case IsRadioRole:
+            case RadioButtonTreeView::IsRadioRole:
                 /// this is to be a radio widget
                 return QVariant::fromValue(selectionType(fieldName) == SelectionTypeRadio);
             }
@@ -231,7 +231,7 @@ public:
         return QVariant();
     }
 
-    bool setData(const QModelIndex &index, const QVariant &value, int role = RadioSelectedRole) {
+    bool setData(const QModelIndex &index, const QVariant &value, int role = RadioButtonTreeView::RadioSelectedRole) {
         if (index.parent() != QModelIndex()) {
             bool isInt;
             int checkState = value.toInt(&isInt);
@@ -239,7 +239,7 @@ public:
             const QString fieldName = index.parent().data(FieldNameRole).toString();
             QList<Value> &values = currentClique->values(fieldName);
 
-            if (role == RadioSelectedRole && value.canConvert<bool>() && value.toBool() == true && selectionType(fieldName) == SelectionTypeRadio) {
+            if (role == RadioButtonTreeView::RadioSelectedRole && value.canConvert<bool>() && value.toBool() == true && selectionType(fieldName) == SelectionTypeRadio) {
                 /// start with determining which list of alternatives actually to use
 
                 /// store which alternative was selected
@@ -381,7 +381,7 @@ public:
             if (AlternativesItemModel::selectionType(fieldName) == AlternativesItemModel::SelectionTypeCheck)
                 model->setData(index, Qt::Checked, Qt::CheckStateRole);
             else if (AlternativesItemModel::selectionType(fieldName) == AlternativesItemModel::SelectionTypeRadio)
-                model->setData(index, true, RadioSelectedRole);
+                model->setData(index, true, RadioButtonTreeView::RadioSelectedRole);
         }
     }
 
@@ -669,7 +669,7 @@ void FindDuplicatesUI::slotFindDuplicates()
     File *originalFile = file;
     bool deleteFileLater = false;
 
-    int rowCount = d->view->selectedElements().count() / d->view->model()->columnCount();
+    const int rowCount = d->view->selectedElements().count();
     if (rowCount > 1 && rowCount < d->view->model()->rowCount() && KMessageBox::questionYesNo(d->part->widget(), i18n("Multiple elements are selected. Do you want to search for duplicates only within the selection or in the whole document?"), i18n("Search only in selection?"), KGuiItem(i18n("Only in selection")), KGuiItem(i18n("Whole document"))) == KMessageBox::Yes) {
         QModelIndexList mil = d->view->selectionModel()->selectedRows();
         file = new File();

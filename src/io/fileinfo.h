@@ -36,9 +36,9 @@ public:
     static const QString mimetypeRIS;
     static const QString mimetypePDF;
 
-    enum TestExistance {
-        TestExistanceYes, ///< Test if file exists
-        TestExistanceNo ///< Skip test if file exists
+    enum TestExistence {
+        TestExistenceYes, ///< Test if file exists
+        TestExistenceNo ///< Skip test if file exists
     };
 
     /**
@@ -64,11 +64,11 @@ public:
      * is undecided/irrelevant (recommended default case). For the test of
      * existence, baseDirectory is used to resolve relative paths.
      * @param text text to scan for filenames or URLs
-     * @param testExistance shall be tested for file existence?
+     * @param testExistence shall be tested for file existence?
      * @param baseDirectory base directory for tests on relative path names
      * @param addTo add found URLs/filenames to this list
      */
-    static void urlsInText(const QString &text, TestExistance testExistance, const QString &baseDirectory, QList<KUrl> &addTo);
+    static void urlsInText(const QString &text, TestExistence testExistence, const QString &baseDirectory, QList<KUrl> &addTo);
 
     /**
      * Find all file or URL references in the given entry. Found filenames or
@@ -79,10 +79,10 @@ public:
      * existence, bibTeXUrl is used to resolve relative paths.
      * @param entry entry to scan for filenames or URLs
      * @param bibTeXUrl base directory/URL for tests on relative path names
-     * @param testExistance shall be tested for file existence?
+     * @param testExistence shall be tested for file existence?
      * @return list of found URLs/filenames (duplicates are avoided)
      */
-    static QList<KUrl> entryUrls(const Entry *entry, const KUrl &bibTeXUrl, TestExistance testExistance);
+    static QList<KUrl> entryUrls(const Entry *entry, const KUrl &bibTeXUrl, TestExistence testExistence);
 
     /**
      * Load the given PDF file and return the contained plain text.

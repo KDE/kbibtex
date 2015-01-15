@@ -24,7 +24,6 @@
 
 #include "part.h"
 #include "version.h"
-//const char *versionNumber = "some SVN revision";
 
 static const char PartId[] = "kbibtexpart";
 static const char PartName[] = I18N_NOOP("KBibTeXPart");

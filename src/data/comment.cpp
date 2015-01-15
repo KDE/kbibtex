@@ -50,6 +50,15 @@ Comment::~Comment()
     delete d;
 }
 
+Comment &Comment::operator= (const Comment &other)
+{
+    if (this != &other) {
+        d->text = other.text();
+        d->useCommand = other.useCommand();
+    }
+    return *this;
+}
+
 QString Comment::text() const
 {
     return d->text;

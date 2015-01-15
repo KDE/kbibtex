@@ -39,8 +39,12 @@ public:
     FileModel *fileModel();
     QSortFilterProxyModel *sortFilterProxyModel();
 
+signals:
+    void searchFor(QString);
+
 protected:
     virtual void keyPressEvent(QKeyEvent *event);
+    virtual void resizeEvent(QResizeEvent *event);
 
 protected slots:
     void columnMoved();
@@ -53,7 +57,6 @@ private:
 private slots:
     void headerActionToggled();
     void headerResetToDefaults();
-    void headerAdjustColumnWidths();
     void sort(int, Qt::SortOrder);
     void noSorting();
 };
