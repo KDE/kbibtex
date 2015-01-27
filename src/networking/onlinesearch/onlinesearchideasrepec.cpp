@@ -204,6 +204,7 @@ void OnlineSearchIDEASRePEc::downloadBibTeXDone()
     emit progress(++d->curStep, d->numSteps);
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
+    const QString downloadUrl = reply->property("downloadurl").toString();
 
     if (handleErrors(reply)) {
         /// ensure proper treatment of UTF-8 characters
@@ -218,7 +219,6 @@ void OnlineSearchIDEASRePEc::downloadBibTeXDone()
                 for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
                     QSharedPointer<Entry> entry = (*it).dynamicCast<Entry>();
                     if (!entry.isNull()) {
-                        const QString downloadUrl = reply->property("downloadurl").toString();
                         if (!downloadUrl.isEmpty()) {
                             /// There is an external document associated with this BibTeX entry
                             Value urlValue = entry->value(Entry::ftUrl);
@@ -236,7 +236,7 @@ void OnlineSearchIDEASRePEc::downloadBibTeXDone()
                 }
 
                 if (!hasEntries)
-                    kDebug() << "No hits found in" << reply->url().toString();
+                    kDebug() << "No hits found in" << reply->url().toString() << "(was" << downloadUrl << ")";
 
                 delete bibtexFile;
             }
@@ -255,5 +255,5 @@ void OnlineSearchIDEASRePEc::downloadBibTeXDone()
             connect(reply, SIGNAL(finished()), this, SLOT(downloadPublicationDone()));
         }
     } else
-        kDebug() << "url was" << reply->url().toString();
+        kDebug() << "url was" << reply->url().toString() << "(was" << downloadUrl << ")";
 }
