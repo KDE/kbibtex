@@ -34,7 +34,7 @@ public:
     QSet<QString> publicationLinks;
 
     KUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) {
-        QString urlBase = QLatin1String("http://ideas.repec.org/cgi-bin/htsearch?cmd=Search%21&form=extended&m=all&fmt=url&wm=wrd&sp=1&sy=1&dt=range");
+        QString urlBase = QLatin1String("https://ideas.repec.org/cgi-bin/htsearch?cmd=Search%21&form=extended&m=all&fmt=url&wm=wrd&sp=1&sy=1&dt=range");
 
         bool hasFreeText = !query[queryKeyFreeText].isEmpty();
         bool hasTitle = !query[queryKeyTitle].isEmpty();
@@ -187,7 +187,7 @@ void OnlineSearchIDEASRePEc::downloadPublicationDone()
             ++it;
         }
 
-        const KUrl url = KUrl(QLatin1String("http://ideas.repec.org/cgi-bin/refs.cgi"));
+        const KUrl url = KUrl(QLatin1String("https://ideas.repec.org/cgi-bin/refs.cgi"));
         QNetworkRequest request(url);
         request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
         reply = InternalNetworkAccessManager::self()->post(request, body.toUtf8());
