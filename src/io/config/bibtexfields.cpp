@@ -182,11 +182,11 @@ QString BibTeXFields::format(const QString &name, KBibTeX::Casing casing) const
         iName[0] = iName[0].toUpper();
         return iName;
     case KBibTeX::cLowerCamelCase: {
-        foreach(const FieldDescription *fd, *this) {
+        for (QList<FieldDescription *>::ConstIterator it = constBegin(); it != constEnd(); ++it) {
             /// configuration file uses camel-case
-            QString itName = fd->upperCamelCase.toLower();
-            if (itName == iName && fd->upperCamelCaseAlt.isEmpty()) {
-                iName = fd->upperCamelCase;
+            QString itName = (*it)->upperCamelCase.toLower();
+            if (itName == iName && (*it)->upperCamelCaseAlt.isEmpty()) {
+                iName = (*it)->upperCamelCase;
                 break;
             }
         }
@@ -196,11 +196,11 @@ QString BibTeXFields::format(const QString &name, KBibTeX::Casing casing) const
         return iName;
     }
     case KBibTeX::cUpperCamelCase: {
-        foreach(const FieldDescription *fd, *this) {
+        for (QList<FieldDescription *>::ConstIterator it = constBegin(); it != constEnd(); ++it) {
             /// configuration file uses camel-case
-            QString itName = fd->upperCamelCase.toLower();
-            if (itName == iName && fd->upperCamelCaseAlt.isEmpty()) {
-                iName = fd->upperCamelCase;
+            QString itName = (*it)->upperCamelCase.toLower();
+            if (itName == iName && (*it)->upperCamelCaseAlt.isEmpty()) {
+                iName = (*it)->upperCamelCase;
                 break;
             }
         }
@@ -216,9 +216,9 @@ QString BibTeXFields::format(const QString &name, KBibTeX::Casing casing) const
 const FieldDescription *BibTeXFields::find(const QString &name) const
 {
     const QString iName = name.toLower();
-    foreach(const FieldDescription *fd, *this) {
-        if (fd->upperCamelCase.toLower() == iName && fd->upperCamelCaseAlt.isEmpty())
-            return fd;
+    for (QList<FieldDescription *>::ConstIterator it = constBegin(); it != constEnd(); ++it) {
+        if ((*it)->upperCamelCase.toLower() == iName && (*it)->upperCamelCaseAlt.isEmpty())
+            return (*it);
     }
     kWarning() << "No field description for " << name << "(" << iName << ")";
     return NULL;
