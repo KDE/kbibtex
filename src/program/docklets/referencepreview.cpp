@@ -202,7 +202,7 @@ ReferencePreview::~ReferencePreview()
 
 void ReferencePreview::setHtml(const QString &html, const KUrl &baseUrl)
 {
-    d->htmlText = QString(html).remove("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+    d->htmlText = QString(html).remove(QLatin1String("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"));
     d->baseUrl = baseUrl;
 #ifdef HAVE_QTWEBKIT // krazy:exclude=cpp
     d->webView->setHtml(html, baseUrl);
