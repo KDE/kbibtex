@@ -85,7 +85,7 @@ public:
           configKeyName(QLatin1String("Style")), fileView(NULL),
           textColor(QApplication::palette().text().color()),
           defaultFontSize(KGlobalSettings::generalFont().pointSize()),
-          htmlStart("<html>\n<head>\n<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" />\n</head>\n<body style=\"color: " + textColor.name() + "; font-size: " + QString::number(defaultFontSize) + "pt; font-family: '" + KGlobalSettings::generalFont().family() + "';\">\n"),
+          htmlStart("<html>\n<head>\n<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" />\n<style type=\"text/css\">\npre {\n white-space: pre-wrap;\n white-space: -moz-pre-wrap;\n white-space: -pre-wrap;\n white-space: -o-pre-wrap;\n word-wrap: break-word;\n}\n</style>\n</head>\n<body style=\"color: " + textColor.name() + "; font-size: " + QString::number(defaultFontSize) + "pt; font-family: '" + KGlobalSettings::generalFont().family() + "';\">"),
           notAvailableMessage(htmlStart + "<p style=\"font-style: italic;\">" + i18n("No preview available") + "</p><p style=\"font-size: 90%;\">" + i18n("Reason:") + " %1</p></body></html>") {
         QGridLayout *gridLayout = new QGridLayout(p);
         gridLayout->setMargin(0);
