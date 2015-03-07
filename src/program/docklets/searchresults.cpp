@@ -67,7 +67,7 @@ public:
         /// stating that there are no search results. It will only be
         /// shown until the first search results arrive.
         // TODO nearly identical code as in ElementFormPrivate constructor, create common class
-        widgetCannotImport = new QWidget(p);
+        widgetCannotImport = new QWidget(parent);
         layout->addWidget(widgetCannotImport, 1, 0, 1, 1);
         QBoxLayout *layoutCannotImport = new QHBoxLayout(widgetCannotImport);
         layoutCannotImport->addStretch(10);
