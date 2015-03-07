@@ -46,7 +46,7 @@ public:
     KAction *actionViewCurrent, *actionImportSelected, *actionCopySelected;
 
     SearchResultsPrivate(MDIWidget *mdiWidget, SearchResults *parent)
-            : p(parent), m(mdiWidget), file(new File()) {
+            : p(parent), m(mdiWidget), file(new File()), mainEditor(NULL) {
         QGridLayout *layout = new QGridLayout(parent);
         layout->setMargin(0);
         layout->setColumnStretch(0, 1);
