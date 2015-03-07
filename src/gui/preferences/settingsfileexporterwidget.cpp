@@ -77,7 +77,7 @@ public:
 
     void saveState() {
         KConfigGroup configGroup(config, Preferences::groupGeneral);
-        const QString copyReferenceCommand = comboBoxCopyReferenceCmd->itemData(comboBoxCopyReferenceCmd->currentIndex(), ItalicTextItemModel::IdentifierRole).toString();
+        const QString copyReferenceCommand = comboBoxCopyReferenceCmd->itemData(comboBoxCopyReferenceCmd->currentIndex(), Qt::UserRole).toString();
         configGroup.writeEntry(Clipboard::keyCopyReferenceCommand, copyReferenceCommand);
 
         configGroup.writeEntry(Preferences::keyBackupScope, comboBoxBackupScope->itemData(comboBoxBackupScope->currentIndex()).toInt());
