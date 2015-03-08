@@ -22,6 +22,7 @@
 #include <QIODevice>
 #include <QStringList>
 #include <QRegExp>
+#include <QSet>
 
 #include <KDebug>
 #include <KSharedConfig>
