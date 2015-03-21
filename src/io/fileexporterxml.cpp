@@ -21,8 +21,7 @@
 
 #include <QRegExp>
 #include <QStringList>
-
-#include <KDebug>
+#include <QDebug>
 
 #include "file.h"
 #include "entry.h"
@@ -49,7 +48,7 @@ FileExporterXML::~FileExporterXML()
 bool FileExporterXML::save(QIODevice *iodevice, const File *bibtexfile, QStringList * /*errorLog*/)
 {
     if (!iodevice->isWritable() && !iodevice->open(QIODevice::WriteOnly)) {
-        kDebug() << "Output device not writable";
+        qWarning() << "Output device not writable";
         return false;
     }
 
@@ -75,7 +74,7 @@ bool FileExporterXML::save(QIODevice *iodevice, const File *bibtexfile, QStringL
 bool FileExporterXML::save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File * /*bibtexfile*/, QStringList * /*errorLog*/)
 {
     if (!iodevice->isWritable() && !iodevice->open(QIODevice::WriteOnly)) {
-        kDebug() << "Output device not writable";
+        qWarning() << "Output device not writable";
         return false;
     }
 

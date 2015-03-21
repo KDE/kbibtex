@@ -28,7 +28,6 @@
 
 #include <KLocale>
 #include <KPushButton>
-#include <KDebug>
 
 class StarRating::Private
 {

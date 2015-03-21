@@ -24,7 +24,7 @@
 #include <QNetworkReply>
 
 #include <KLocale>
-#include <KDebug>
+#include <QDebug>
 #include <kio/job.h>
 #include <KMessageBox>
 
@@ -152,12 +152,12 @@ void OnlineSearchAcmPortal::doneFetchingStartPage()
             InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingSearchPage()));
         } else {
-            kWarning() << "Search using" << label() << "failed.";
+            qWarning() << "Search using" << label() << "failed.";
             KMessageBox::error(m_parent, i18n("Searching '%1' failed: Could not extract form from ACM's start page.", label()));
             emit stoppedSearch(resultUnspecifiedError);
         }
     } else
-        kDebug() << "url was" << reply->url().toString();
+        qWarning() << "url was" << reply->url().toString();
 }
 
 void OnlineSearchAcmPortal::doneFetchingSearchPage()
@@ -195,7 +195,7 @@ void OnlineSearchAcmPortal::doneFetchingSearchPage()
             emit progress(d->numSteps, d->numSteps);
         }
     }  else
-        kDebug() << "url was" << reply->url().toString();
+        qWarning() << "url was" << reply->url().toString();
 }
 
 void OnlineSearchAcmPortal::doneFetchingBibTeX()
@@ -232,5 +232,5 @@ void OnlineSearchAcmPortal::doneFetchingBibTeX()
             emit progress(d->numSteps, d->numSteps);
         }
     } else
-        kDebug() << "url was" << reply->url().toString();
+        qWarning() << "url was" << reply->url().toString();
 }

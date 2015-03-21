@@ -19,8 +19,7 @@
 #include "notificationhub.h"
 
 #include <QSet>
-
-#include <KDebug>
+#include <QDebug>
 
 NotificationListener::~NotificationListener()
 {
@@ -84,7 +83,7 @@ void NotificationHub::publishEvent(int eventId)
 {
     NotificationHub::NotificationHubPrivate *d = getHub()->d;
     if (eventId >= 0) {
-        kDebug() << "Notifying about event" << eventId;
+        qDebug() << "Notifying about event" << eventId;
 
         QSet< NotificationListener *> set(d->listenersPerEventId.value(eventId,  QSet<NotificationListener *>()));
         foreach(NotificationListener *listener, d->allListeners) {
@@ -93,7 +92,6 @@ void NotificationHub::publishEvent(int eventId)
         foreach(NotificationListener *listener, set) {
             listener->notificationEvent(eventId);
         }
-        kDebug() << set.count() << d->allListeners.count() << d->listenersPerEventId.value(eventId,  QSet<NotificationListener *>()).count();
     }
 }
 

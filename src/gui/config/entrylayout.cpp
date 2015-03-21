@@ -17,11 +17,12 @@
 
 #include "entrylayout.h"
 
+#include <QDebug>
+
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <KGlobal>
 #include <KStandardDirs>
-#include <KDebug>
 #include <KLocale>
 
 static const int entryLayoutMaxTabCount = 256;
@@ -140,7 +141,7 @@ void EntryLayout::load()
         append(etl);
     }
 
-    if (isEmpty()) kWarning() << "List of entry layouts is empty";
+    if (isEmpty()) qWarning() << "List of entry layouts is empty";
 }
 
 void EntryLayout::save()

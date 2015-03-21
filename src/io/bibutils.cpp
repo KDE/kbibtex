@@ -17,11 +17,11 @@
 
 #include "bibutils.h"
 
+#include <QDebug>
 #include <QProcess>
 #include <QBuffer>
 #include <QByteArray>
 
-#include <KDebug>
 #include <KStandardDirs>
 
 class BibUtils::Private
@@ -104,7 +104,7 @@ bool BibUtils::convert(QIODevice &source, const BibUtils::Format &sourceFormat, 
     case Copac: bibUtilsProgram = QLatin1String("copac"); break;
     case Med: bibUtilsProgram = QLatin1String("med"); break;
     default:
-        kWarning() << "Unsupported BibUtils input format:" << sourceFormat;
+        qWarning() << "Unsupported BibUtils input format:" << sourceFormat;
         return false;
     }
 
@@ -124,7 +124,7 @@ bool BibUtils::convert(QIODevice &source, const BibUtils::Format &sourceFormat, 
         /// case Copac not supported by BibUtils
         /// case Med not supported by BibUtils
     default:
-        kWarning() << "Unsupported BibUtils output format:" << destinationFormat;
+        qWarning() << "Unsupported BibUtils output format:" << destinationFormat;
         return false;
     }
 

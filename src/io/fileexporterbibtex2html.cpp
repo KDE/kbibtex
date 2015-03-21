@@ -17,9 +17,9 @@
 
 #include "fileexporterbibtex2html.h"
 
+#include <QDebug>
 #include <QFile>
 
-#include <KDebug>
 #include <KLocale>
 #include <KStandardDirs>
 

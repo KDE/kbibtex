@@ -22,8 +22,8 @@
 #include <QIODevice>
 #include <QStringList>
 #include <QRegExp>
+#include <QDebug>
 
-#include <KDebug>
 #include <KSharedConfig>
 #include <KConfigGroup>
 
@@ -61,18 +61,18 @@ public:
 
     FilePrivate(File */* UNUSED parent*/)
         : /* UNUSED p(parent),*/ validInvalidField(valid), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName(QLatin1String("FileExporterBibTeX")), internalId(++internalIdCounter) {
-        kDebug() << "Creating File instance" << internalId;
+        qDebug() << "Creating File instance" << internalId;
         loadConfiguration();
     }
 
     FilePrivate(File */* UNUSED parent*/, const File &other)
         : /* UNUSED p(parent),*/ validInvalidField(valid), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName(QLatin1String("FileExporterBibTeX")), internalId(++internalIdCounter), properties(other.d->properties) {
-        kDebug() << "Creating File instance" << internalId;
+        qDebug() << "Creating File instance" << internalId;
         loadConfiguration();
     }
 
     ~FilePrivate() {
-        kDebug() << "Deleting File instance" << internalId;
+        qDebug() << "Deleting File instance" << internalId;
         validInvalidField = invalid;
     }
 

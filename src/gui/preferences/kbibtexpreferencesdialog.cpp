@@ -19,12 +19,12 @@
 
 #include <QSet>
 #include <QFileInfo>
+#include <QDebug>
 
 #include <KLocale>
 #include <KComboBox>
 #include <KStandardDirs>
 #include <KIO/NetAccess>
-#include <KDebug>
 #include <KMessageBox>
 #include <KGuiItem>
 
@@ -134,7 +134,6 @@ public:
                 return KIcon();
         }
 
-        kDebug() << "icon fileName" << fileName;
         return KIcon(fileName);
     }
 };

@@ -19,8 +19,6 @@
 
 #include <QString>
 
-#include <KDebug>
-
 EncoderUTF8 *EncoderUTF8::self = NULL;
 
 EncoderUTF8::EncoderUTF8()

@@ -30,10 +30,10 @@
 #include <QRadioButton>
 #include <QLabel>
 #include <QtCore/QPointer>
+#include <QDebug>
 
 #include <KDialog>
 #include <KLocale>
-#include <KDebug>
 #include <KSqueezedTextLabel>
 #include <KMenu>
 #include <KPushButton>
@@ -148,7 +148,7 @@ void PDFItemDelegate::updateItemWidgets(const QList<QWidget *> widgets, const QS
 
     const PDFListModel *model = qobject_cast<const PDFListModel *>(index.model());
     if (model == NULL) {
-        kDebug() << "WARNING - INVALID MODEL!";
+        qDebug() << "WARNING - INVALID MODEL!";
         return;
     }
 
@@ -420,7 +420,7 @@ void FindPDFUI::apply(Entry &entry, const File &bibtexFile)
         bool ok = false;
         FindPDF::DownloadMode downloadMode = (FindPDF::DownloadMode)model->data(model->index(i, 0), DownloadModeRole).toInt(&ok);
         if (!ok) {
-            kDebug() << "Could not interprete download mode";
+            qDebug() << "Could not interprete download mode";
             downloadMode = FindPDF::NoDownload;
         }
 
@@ -452,7 +452,7 @@ void FindPDFUI::apply(Entry &entry, const File &bibtexFile)
             if (!absoluteFilename.isEmpty()) {
                 const QString visibleFilename = UrlListEdit::askRelativeOrStaticFilename(this, absoluteFilename, startUrl);
 
-                kDebug() << "Saving PDF from " << url << " to file " << absoluteFilename << " known as " << visibleFilename;
+                qDebug() << "Saving PDF from " << url << " to file " << absoluteFilename << " known as " << visibleFilename;
                 // FIXME test for overwrite
                 KIO::NetAccess::file_copy(KUrl::fromLocalFile(tempfileName), KUrl::fromLocalFile(absoluteFilename), this);
 

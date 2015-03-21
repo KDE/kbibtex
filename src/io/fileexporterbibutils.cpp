@@ -18,8 +18,7 @@
 #include "fileexporterbibutils.h"
 
 #include <QBuffer>
-
-#include <KDebug>
+#include <QDebug>
 
 #include "fileexporterbibtex.h"
 
@@ -52,7 +51,7 @@ FileExporterBibUtils::~FileExporterBibUtils()
 bool FileExporterBibUtils::save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog)
 {
     if (!iodevice->isWritable() && !iodevice->open(QIODevice::WriteOnly)) {
-        kDebug() << "Output device not writable";
+        qWarning() << "Output device not writable";
         return false;
     }
 
@@ -67,7 +66,6 @@ bool FileExporterBibUtils::save(QIODevice *iodevice, const File *bibtexfile, QSt
 
 bool FileExporterBibUtils::save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog)
 {
-    kDebug() << "iodevice->isWritable()" << iodevice->isWritable();
     if (!iodevice->isWritable() && !iodevice->open(QIODevice::WriteOnly))
         return false;
 

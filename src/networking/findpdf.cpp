@@ -25,7 +25,7 @@
 #include <poppler-qt4.h>
 
 #include <KApplication>
-#include <KDebug>
+#include <QDebug>
 #include <KTemporaryFile>
 
 #include "kbibtexnamespace.h"
@@ -59,7 +59,6 @@ public:
     bool queueUrl(const QUrl &url, const QString &term, const QString &origin, int depth)
     {
         if (!knownUrls.contains(url) && depth > 0) {
-            kDebug() << "Starting download for" << url.toString() << "(" << origin << ")";
             knownUrls.insert(url);
             QNetworkRequest request = QNetworkRequest(url);
             QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
@@ -130,7 +129,6 @@ public:
                 int p1 = p + 6;
                 int p2 = text.indexOf(QLatin1Char('"'), p1 + 1);
                 QUrl url(text.mid(p1, p2 - p1));
-                kDebug() << "Google URL" << i << " : " << url.toString();
                 queueUrl(reply->url().resolved(url), term, QLatin1String("scholar.google"), depth - 1);
             }
         }
@@ -239,7 +237,6 @@ bool FindPDF::search(const Entry &entry)
     const QStringList authors = entry.authorsLastName();
     for (int i = 0; i < authors.count() && searchWords.length() < 96; ++i)
         searchWords += QLatin1Char(' ') + authors[i];
-    kDebug() << "searchWords=" << searchWords;
 
     QStringList urlFields = QStringList() << Entry::ftDOI << Entry::ftUrl << QLatin1String("ee");
     for (int i = 2; i < 256; ++i)
@@ -287,7 +284,7 @@ bool FindPDF::search(const Entry &entry)
     }
 
     if (d->aliveCounter == 0) {
-        kWarning() << "Directly at start, no URLs are queue for a search -> this should never happen";
+        qWarning() << "Directly at start, no URLs are queue for a search -> this should never happen";
         emit finished();
     }
 
@@ -323,7 +320,6 @@ void FindPDF::downloadFinished()
         QByteArray data = reply->readAll();
 
         QUrl redirUrl = reply->url().resolved(reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl());
-        kDebug() << "finished Downloading " << reply->url().toString() << "   depth=" << depth  << "  d->aliveCounter=" << d->aliveCounter << "  data.size=" << data.size() << "  redirUrl=" << redirUrl.toString() << "   origin=" << origin;
 
         if (data.contains(htmlHead1) || data.contains(htmlHead2)) {
             /// returned data is a HTML file, i.e. contains "<html"
@@ -360,10 +356,10 @@ void FindPDF::downloadFinished()
         else {
             QTextStream ts(data);
             const QString text = ts.readAll();
-            kDebug() << "don't know how to handle " << text.left(256);
+            qWarning() << "don't know how to handle " << text.left(256);
         }
     } else
-        kDebug() << "error from reply: " << reply->errorString();
+        qWarning() << "error from reply: " << reply->errorString();
 
     if (d->aliveCounter == 0) {
         /// no more running downloads left

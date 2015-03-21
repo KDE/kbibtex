@@ -19,8 +19,8 @@
 
 #include <QBuffer>
 #include <QFile>
+#include <QDebug>
 
-#include <KDebug>
 #include <kio/netaccess.h>
 
 #include <poppler-qt4.h>
@@ -41,7 +41,7 @@ FileImporterPDF::~FileImporterPDF()
 File *FileImporterPDF::load(QIODevice *iodevice)
 {
     if (!iodevice->isReadable() && !iodevice->open(QIODevice::ReadOnly)) {
-        kDebug() << "Input device not readable";
+        qWarning() << "Input device not readable";
         return NULL;
     }
 
@@ -51,7 +51,7 @@ File *FileImporterPDF::load(QIODevice *iodevice)
 
     Poppler::Document *doc = Poppler::Document::loadFromData(buffer);
     if (doc == NULL) {
-        kWarning() << "Could not load PDF document";
+        qWarning() << "Could not load PDF document";
         iodevice->close();
         return NULL;
     }
@@ -59,7 +59,6 @@ File *FileImporterPDF::load(QIODevice *iodevice)
     if (doc->hasEmbeddedFiles()) {
         foreach(Poppler::EmbeddedFile *file, doc->embeddedFiles())
         if (file->name().endsWith(QLatin1String(".bib"))) {
-            kDebug() << "filename is " << file->name();
             QByteArray data = file->data();
             QBuffer buffer(&data);
             FileImporterBibTeX bibTeXimporter;
@@ -69,9 +68,9 @@ File *FileImporterPDF::load(QIODevice *iodevice)
             buffer.close();
 
             if (result)
-                kDebug() << "result = " << result->count() << "  " << data.size() << "  " << buffer.size();
+                qDebug() << "result = " << result->count() << "  " << data.size() << "  " << buffer.size();
             else
-                kDebug() << "result is empty";
+                qDebug() << "result is empty";
             break;
         }
     }

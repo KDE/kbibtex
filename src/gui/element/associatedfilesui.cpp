@@ -27,7 +27,6 @@
 #include <KLineEdit>
 #include <KDialog>
 #include <KLocale>
-#include <KDebug>
 
 class AssociatedFilesUI::Private
 {
@@ -230,9 +229,6 @@ QString AssociatedFilesUI::userDefinedFilename() const {
 void AssociatedFilesUI::updateUIandPreview() {
     QString preview = i18n("No preview available");
     const QString entryId = d->entryId.isEmpty() && !d->entry.isNull() ? d->entry->id() : d->entryId;
-    kDebug() << "d->bibTeXfile != NULL " << (d->bibTeXfile != NULL);
-    kDebug() << "!d->sourceUrl.isEmpty() " << (!d->sourceUrl.isEmpty());
-    kDebug() << "entryId " << entryId;
 
     if (entryId.isEmpty()) {
         d->radioRenameToEntryId->setEnabled(false);
@@ -253,11 +249,9 @@ void AssociatedFilesUI::updateUIandPreview() {
 
     if (d->bibTeXfile != NULL && !d->sourceUrl.isEmpty() && !entryId.isEmpty()) {
         const QUrl newUrl = AssociatedFiles::copyDocument(d->sourceUrl, entryId, d->bibTeXfile, renameOperation(), moveCopyOperation(), NULL, d->lineEditUserDefinedName->text(), true);
-        kDebug() << "newUrl= " << newUrl.toString();
         if (!newUrl.isEmpty())
             preview = AssociatedFiles::associateDocumentURL(newUrl,  d->bibTeXfile, pathType());
     }
-    kDebug() << "preview= " << preview;
     d->linePreview->setText(preview);
 
     d->groupBoxRename->setEnabled(!d->radioNoCopyMove->isChecked());

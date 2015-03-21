@@ -19,13 +19,13 @@
 
 #include <QDropEvent>
 #include <QTimer>
+#include <QDebug>
 
 #include <KDialog>
 #include <KLocale>
 #include <KMessageBox>
 #include <KGuiItem>
 #include <KConfigGroup>
-#include <KDebug>
 
 #include "elementeditor.h"
 #include "entry.h"
@@ -307,7 +307,7 @@ void FileView::itemActivated(const QModelIndex &index)
 void FileView::prepareEditorDialog(DialogType dialogType)
 {
     if (dialogType != DialogTypeView && isReadOnly()) {
-        kWarning() << "In read-only mode, you may only view elements, not edit them";
+        qWarning() << "In read-only mode, you may only view elements, not edit them";
         dialogType = DialogTypeView;
     }
 

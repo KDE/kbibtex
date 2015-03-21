@@ -22,7 +22,7 @@
 
 #include <KTemporaryFile>
 #include <KIO/NetAccess>
-#include <KDebug>
+#include <QDebug>
 
 bool AssociatedFiles::urlIsLocal(const KUrl &url)
 {
@@ -34,15 +34,15 @@ bool AssociatedFiles::urlIsLocal(const KUrl &url)
 
 QString AssociatedFiles::relativeFilename(const KUrl &documentUrl, const KUrl &baseUrl) {
     if (documentUrl.isEmpty()) {
-        kWarning() << "document URL has to point to a file location or URL";
+        qWarning() << "document URL has to point to a file location or URL";
         return documentUrl.pathOrUrl();
     }
     if (baseUrl.isEmpty() || baseUrl.isRelative()) {
-        kWarning() << "base URL has to point to an absolute file location or URL";
+        qWarning() << "base URL has to point to an absolute file location or URL";
         return documentUrl.pathOrUrl();
     }
     if (documentUrl.scheme() != baseUrl.scheme() || (documentUrl.scheme() != QLatin1String("file") && documentUrl.host() != baseUrl.host())) {
-        kWarning() << "document URL and base URL do not match (protocol, host, ...)";
+        qWarning() << "document URL and base URL do not match (protocol, host, ...)";
         return documentUrl.pathOrUrl();
     }
 
@@ -61,27 +61,23 @@ QString AssociatedFiles::relativeFilename(const KUrl &documentUrl, const KUrl &b
 
 QString AssociatedFiles::absoluteFilename(const KUrl &documentUrl, const KUrl &baseUrl) {
     if (documentUrl.isEmpty()) {
-        kWarning() << "document URL has to point to a file location or URL";
+        qWarning() << "document URL has to point to a file location or URL";
         return documentUrl.pathOrUrl();
     }
     if (documentUrl.isRelative() && (baseUrl.isEmpty() || baseUrl.isRelative())) {
-        kWarning() << "base URL has to point to an absolute file location or URL if the document URL is relative";
+        qWarning() << "base URL has to point to an absolute file location or URL if the document URL is relative";
         return documentUrl.pathOrUrl();
     }
     if (documentUrl.isRelative() && (documentUrl.scheme() != baseUrl.scheme() || (documentUrl.scheme() != QLatin1String("file") && documentUrl.host() != baseUrl.host()))) {
-        kWarning() << "document URL and base URL do not match (protocol, host, ...), but necessary if the document URL is relative";
+        qWarning() << "document URL and base URL do not match (protocol, host, ...), but necessary if the document URL is relative";
         return documentUrl.pathOrUrl();
     }
-
-    kDebug() << "documentUrl=" << documentUrl.pathOrUrl();
-    kDebug() << "baseUrl=" << baseUrl.pathOrUrl();
 
     /// Resolve the provided document URL to an absolute URL
     /// using the given base URL
     KUrl internalDocumentUrl = documentUrl;
     if (internalDocumentUrl.isRelative())
         internalDocumentUrl = baseUrl.resolved(internalDocumentUrl);
-    kDebug() << "internalDocumentUrl=" << internalDocumentUrl.pathOrUrl();
 
     return internalDocumentUrl.pathOrUrl();
 }
@@ -89,14 +85,7 @@ QString AssociatedFiles::absoluteFilename(const KUrl &documentUrl, const KUrl &b
 QString AssociatedFiles::associateDocumentURL(const KUrl &document, QSharedPointer<Entry> &entry, const File *bibTeXFile, PathType pathType, const bool dryRun) {
     Q_ASSERT(bibTeXFile != NULL); // FIXME more graceful?
 
-    kDebug() << "document=" << document.pathOrUrl();
-    kDebug() << "urlIsLocal(document)=" << urlIsLocal(document);
-    kDebug() << "entry.id()=" << entry->id();
-    kDebug() << "bibTeXFile.count()=" << bibTeXFile->count();
-    kDebug() << "pathType=" << pathType;
-
     const KUrl baseUrl = bibTeXFile->property(File::Url).toUrl();
-    kDebug() << "bibTeXFile->property(File::Url).toUrl()=" << baseUrl.pathOrUrl();
     if (baseUrl.isEmpty() && pathType == ptRelative) {
         /// If no base URL was given but still a relative path was requested,
         /// revert choice and enforce the generation of an absolute one
@@ -109,7 +98,6 @@ QString AssociatedFiles::associateDocumentURL(const KUrl &document, QSharedPoint
 
     if (!dryRun) { /// only if not pretending
         bool alreadyContained = false;
-        kDebug() << "Adding url" << finalUrl;
         for (QMap<QString, Value>::ConstIterator it = entry->constBegin(); !alreadyContained && it != entry->constEnd(); ++it) {
             const Value v = it.value();
             for (Value::ConstIterator vit = v.constBegin(); !alreadyContained && vit != v.constEnd(); ++vit) {
@@ -117,7 +105,6 @@ QString AssociatedFiles::associateDocumentURL(const KUrl &document, QSharedPoint
                     alreadyContained = true;
             }
         }
-        kDebug() << "alreadyContained=" << alreadyContained;
         if (!alreadyContained) {
             Value value = entry->value(field);
             value.append(QSharedPointer<VerbatimText>(new VerbatimText(finalUrl)));
@@ -131,13 +118,7 @@ QString AssociatedFiles::associateDocumentURL(const KUrl &document, QSharedPoint
 QString AssociatedFiles::associateDocumentURL(const KUrl &document, const File *bibTeXFile, PathType pathType) {
     Q_ASSERT(bibTeXFile != NULL); // FIXME more graceful?
 
-    kDebug() << "document=" << document.pathOrUrl();
-    kDebug() << "urlIsLocal(document)=" << urlIsLocal(document);
-    kDebug() << "bibTeXFile.count()=" << bibTeXFile->count();
-    kDebug() << "pathType=" << pathType;
-
     const KUrl baseUrl = bibTeXFile->property(File::Url).toUrl();
-    kDebug() << "bibTeXFile->property(File::Url).toUrl()=" << baseUrl.pathOrUrl();
     if (baseUrl.isEmpty() && pathType == ptRelative) {
         /// If no base URL was given but still a relative path was requested,
         /// revert choice and enforce the generation of an absolute one
@@ -171,35 +152,27 @@ KUrl AssociatedFiles::copyDocument(const KUrl &sourceUrl, const QString &entryId
         suffix = QLatin1String("html");
         filename.append(QLatin1Char('.')).append(suffix);
     }
-    kDebug() << "suffix=" << suffix;
-    kDebug() << "filename=" << filename;
     if (filename.isEmpty()) filename = internalSourceUrl.pathOrUrl().remove(QDir::separator()).remove(QLatin1Char('/')).remove(QLatin1Char(':')).remove(QLatin1Char('.')) + QLatin1String(".") + suffix;
-    kDebug() << "filename=" << filename;
 
     if (!bibTeXFile->hasProperty(File::Url)) return KUrl(); /// no valid URL set of BibTeX file object
     KUrl targetUrl = bibTeXFile->property(File::Url).toUrl();
     if (targetUrl.isEmpty()) return KUrl(); /// no valid URL set of BibTeX file object
     const QString targetPath = QFileInfo(targetUrl.path()).absolutePath();
     targetUrl.setPath(targetPath + QDir::separator() + (renameOperation == roEntryId ? entryId + QLatin1String(".") + suffix : (renameOperation == roUserDefined ? userDefinedFilename : filename)));
-    kDebug() << "targetUrl=" << targetUrl.pathOrUrl();
 
     if (!dryRun) { /// only if not pretending
         bool success = true;
         if (urlIsLocal(internalSourceUrl) && urlIsLocal(targetUrl)) {
             QFile(targetUrl.path()).remove();
             success &= QFile::copy(internalSourceUrl.path(), targetUrl.path()); // FIXME check if succeeded
-            kDebug() << "copy=" << success << sourceUrl.path() << targetUrl.path();
             if (moveCopyOperation == mcoMove) {
                 success &= QFile(internalSourceUrl.path()).remove();
-                kDebug() << "remove=" << success;
             }
         } else {
             KIO::NetAccess::del(sourceUrl, widget); // FIXME non-blocking
             success &= KIO::NetAccess::file_copy(sourceUrl, targetUrl, widget); // FIXME non-blocking
-            kDebug() << "KIO copy=" << success;
             if (moveCopyOperation == mcoMove) {
                 success &= KIO::NetAccess::del(sourceUrl, widget); // FIXME non-blocking
-                kDebug() << "KIO del=" << success;
             }
         }
 

@@ -28,8 +28,8 @@
 #include <QNetworkReply>
 #include <QtGlobal>
 #include <QTimer>
+#include <QDebug>
 
-#include <KDebug>
 #include <KUrl>
 #include <KApplication>
 #include <KProtocolManager>
@@ -188,7 +188,7 @@ void InternalNetworkAccessManager::networkReplyTimeout()
     timer->stop();
     QNetworkReply *reply = m_mapTimerToReply[timer];
     if (reply != NULL) {
-        kDebug() << "Timeout on reply to " << reply->url().toString();
+        qWarning() << "Timeout on reply to " << reply->url().toString();
         reply->close();
         m_mapTimerToReply.remove(timer);
     }

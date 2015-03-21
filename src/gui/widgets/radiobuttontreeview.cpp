@@ -21,8 +21,6 @@
 #include <QKeyEvent>
 #include <QApplication>
 
-#include <KDebug>
-
 RadioButtonItemDelegate::RadioButtonItemDelegate(QObject *p)
         : QStyledItemDelegate(p)
 {

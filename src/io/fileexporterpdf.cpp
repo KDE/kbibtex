@@ -22,8 +22,8 @@
 #include <QUrl>
 #include <QTextStream>
 #include <QDir>
+#include <QDebug>
 
-#include <KDebug>
 #include <KLocale>
 #include <KSharedConfig>
 #include <KConfigGroup>
@@ -67,7 +67,7 @@ void FileExporterPDF::reloadConfig()
 bool FileExporterPDF::save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog)
 {
     if (!iodevice->isWritable() && !iodevice->open(QIODevice::WriteOnly)) {
-        kDebug() << "Output device not writable";
+        qWarning() <<"Output device not writable";
         return false;
     }
 
@@ -91,7 +91,7 @@ bool FileExporterPDF::save(QIODevice *iodevice, const File *bibtexfile, QStringL
         result = generatePDF(iodevice, errorLog);
 
     if (errorLog != NULL)
-        kDebug() << "errorLog" << errorLog->join(";");
+        qDebug() << "errorLog" << errorLog->join(";");
 
     iodevice->close();
     return result;
@@ -100,7 +100,7 @@ bool FileExporterPDF::save(QIODevice *iodevice, const File *bibtexfile, QStringL
 bool FileExporterPDF::save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog)
 {
     if (!iodevice->isWritable() && !iodevice->open(QIODevice::WriteOnly)) {
-        kDebug() << "Output device not writable";
+        qWarning() <<"Output device not writable";
         return false;
     }
 
@@ -165,8 +165,6 @@ bool FileExporterPDF::writeLatexFile(const QString &filename)
         ts << "\\bibliographystyle{" << m_bibliographyStyle << "}" << endl;
         ts << "\\begin{document}" << endl;
 
-        kDebug() << "m_fileEmbedding" << m_fileEmbedding;
-        kDebug() << "m_embeddedFileList" << m_embeddedFileList.count() << m_embeddedFileList.join(",");
         if (!m_embeddedFileList.isEmpty())
             for (QStringList::ConstIterator it = m_embeddedFileList.constBegin(); it != m_embeddedFileList.constEnd(); ++it) {
                 QStringList param = (*it).split(QLatin1String("|"));

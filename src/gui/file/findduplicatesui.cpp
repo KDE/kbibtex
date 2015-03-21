@@ -28,6 +28,7 @@
 #include <QKeyEvent>
 #include <QSplitter>
 #include <QtCore/QPointer>
+#include <QDebug>
 
 #include <KPushButton>
 #include <KAction>
@@ -38,7 +39,6 @@
 #include <KStandardDirs>
 #include <kparts/part.h>
 #include <KMessageBox>
-#include <KDebug>
 #include <KLineEdit>
 
 #include <kdeversion.h>
@@ -295,7 +295,7 @@ public:
                                     for (QList<QSharedPointer<Keyword> >::ConstIterator it = keywordList.constBegin(); it != keywordList.constEnd(); ++it)
                                         v.append(*it);
                                 } else {
-                                    kDebug() << "Not know how to set this text:" << text;
+                                    qDebug() << "Not know how to set this text:" << text;
                                 }
                             }
                         }

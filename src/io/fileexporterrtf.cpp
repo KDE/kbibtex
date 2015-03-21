@@ -21,10 +21,10 @@
 #include <QStringList>
 #include <QTextStream>
 #include <QDir>
+#include <QDebug>
 
 #include <KSharedConfig>
 #include <KConfigGroup>
-#include <KDebug>
 
 #include "element.h"
 #include "fileexporterbibtex.h"
@@ -58,7 +58,7 @@ void FileExporterRTF::reloadConfig()
 bool FileExporterRTF::save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog)
 {
     if (!iodevice->isWritable() && !iodevice->open(QIODevice::WriteOnly)) {
-        kDebug() << "Output device not writable";
+        qWarning() << "Output device not writable";
         return false;
     }
 
@@ -83,7 +83,7 @@ bool FileExporterRTF::save(QIODevice *iodevice, const File *bibtexfile, QStringL
 bool FileExporterRTF::save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog)
 {
     if (!iodevice->isWritable() && !iodevice->open(QIODevice::WriteOnly)) {
-        kDebug() << "Output device not writable";
+        qWarning() << "Output device not writable";
         return false;
     }
 

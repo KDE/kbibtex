@@ -27,13 +27,13 @@
 #include <QDropEvent>
 #include <QMenu>
 #include <QStyle>
+#include <QDebug>
 
 #include <KPushButton>
 #include <KGlobalSettings>
 #include <KLocale>
 #include <KLineEdit>
 #include <KComboBox>
-#include <KDebug>
 #include <KMimeType>
 #include <KRun>
 #include <KTextEdit>
@@ -248,7 +248,7 @@ void EntryConfiguredWidget::layoutGUI(bool forceVisible, const QString &entryTyp
             }
         }
     } else if (!forceVisible)
-        kDebug() << "EntryType should not be empty if visibility is not enforced";
+        qDebug() << "EntryType should not be empty if visibility is not enforced";
 
     /// variables to keep track which and how many field inputs will be visible
     int countVisible = 0;
@@ -1130,11 +1130,11 @@ bool SourceWidget::apply(QSharedPointer<Element> element) const
                     preamble->operator =(*readPreamble.data());
                     result = true;
                 } else
-                    kWarning() << "Do not know how to apply source code";
+                    qWarning() << "Do not know how to apply source code";
             }
         }
     } else
-        kDebug() << "Expected exactly 1 BibTeX element in source code, but found" << file->count() << "instead";
+        qDebug() << "Expected exactly 1 BibTeX element in source code, but found" << file->count() << "instead";
 
     delete file;
     return result;
