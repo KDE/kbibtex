@@ -29,6 +29,7 @@
 #include <QSplitter>
 #include <QtCore/QPointer>
 #include <QDebug>
+#include <QStandardPaths>
 
 #include <KPushButton>
 #include <KAction>
@@ -642,7 +643,7 @@ FindDuplicatesUI::FindDuplicatesUI(KParts::Part *part, FileView *fileView)
     part->actionCollection()->addAction(QLatin1String("findduplicates"), newAction);
     connect(newAction, SIGNAL(triggered()), this, SLOT(slotFindDuplicates()));
 #if KDE_IS_VERSION(4, 4, 0)
-    part->replaceXMLFile(KStandardDirs::locate("data", "kbibtex/findduplicatesui.rc"), KStandardDirs::locateLocal("data", "kbibtex/findduplicatesui.rc"), true);
+    part->replaceXMLFile(QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kbibtex/findduplicatesui.rc"), QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + "kbibtex/findduplicatesui.rc"), true;
 #endif
 }
 

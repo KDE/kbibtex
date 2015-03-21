@@ -107,7 +107,7 @@ public:
     OnlineSearchArXivPrivate(OnlineSearchArXiv *parent)
             : p(parent), form(NULL), arXivQueryBaseUrl("http://export.arxiv.org/api/query?") {
         const QString xsltFilename = QLatin1String("kbibtex/arxiv2bibtex.xsl");
-        xslt = XSLTransform::createXSLTransform(KStandardDirs::locate("data", xsltFilename));
+        xslt = XSLTransform::createXSLTransform(QStandardPaths::locate(QStandardPaths::GenericDataLocation, xsltFilename));
         if (xslt == NULL)
             kWarning() << "Could not create XSLT transformation for" << xsltFilename;
     }

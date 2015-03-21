@@ -26,7 +26,6 @@
 #include <KLocale>
 #include <KLineEdit>
 #include <KConfigGroup>
-#include <KStandardDirs>
 #include <KIcon>
 
 #include "bibtexfields.h"

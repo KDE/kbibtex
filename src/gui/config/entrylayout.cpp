@@ -17,12 +17,12 @@
 
 #include "entrylayout.h"
 
+#include <QStandardPaths>
 #include <QDebug>
 
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <KGlobal>
-#include <KStandardDirs>
 #include <KLocale>
 
 static const int entryLayoutMaxTabCount = 256;
@@ -42,7 +42,7 @@ public:
         KSharedConfigPtr config(KSharedConfig::openConfig("kbibtexrc"));
         KConfigGroup configGroup(config, QString("User Interface"));
         const QString stylefile = configGroup.readEntry("CurrentStyle", "bibtex").append(".kbstyle").prepend("kbibtex/");
-        layoutConfig = KSharedConfig::openConfig(stylefile, KConfig::FullConfig, "data");
+        layoutConfig = KSharedConfig::openConfig(stylefile, KConfig::FullConfig, QStandardPaths::GenericDataLocation);
     }
 
     static QString convert(KBibTeX::FieldInputType fil) {

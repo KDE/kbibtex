@@ -23,10 +23,10 @@
 
 #include <KLocale>
 #include <KComboBox>
-#include <KStandardDirs>
 #include <KIO/NetAccess>
 #include <KMessageBox>
 #include <KGuiItem>
+#include <QStandardPaths>
 
 #include "notificationhub.h"
 #include "settingsgeneralwidget.h"
@@ -127,7 +127,7 @@ public:
         static const QRegExp invalidChars("[^-a-z0-9_]", Qt::CaseInsensitive);
         QString fileName = url;
         fileName = fileName.remove(invalidChars);
-        fileName.prepend(KStandardDirs::locateLocal("cache", "favicons/")).append(".png");
+        fileName.prepend(QStandardPaths::writableLocation(QStandardPaths::CacheLocation) + QLatin1Char('/') + "favicons/")).append(".png";
 
         if (!QFileInfo(fileName).exists()) {
             if (!KIO::NetAccess::file_copy(QUrl(url), QUrl(fileName), NULL))

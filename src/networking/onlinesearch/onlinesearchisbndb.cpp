@@ -42,7 +42,7 @@ public:
     OnlineSearchIsbnDBPrivate(OnlineSearchIsbnDB */* UNUSED parent*/)
         : /* UNUSED p(parent),*/ xslt(), currentPage(0), maxPage(0) {
         const QString xsltFilename = QLatin1String("kbibtex/isbndb2bibtex.xsl");
-        xslt = XSLTransform::createXSLTransform(KStandardDirs::locate("data", xsltFilename));
+        xslt = XSLTransform::createXSLTransform(QStandardPaths::locate(QStandardPaths::GenericDataLocation, xsltFilename));
         if (xslt == NULL)
             kWarning() << "Could not create XSLT transformation for" << xsltFilename;
     }

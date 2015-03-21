@@ -21,8 +21,7 @@
 #include <QProcess>
 #include <QBuffer>
 #include <QByteArray>
-
-#include <KStandardDirs>
+#include <QStandardPaths>
 
 class BibUtils::Private
 {
@@ -62,7 +61,7 @@ bool BibUtils::available() {
         static const QStringList programs = QStringList() << QLatin1String("bib2xml") << QLatin1String("isi2xml") << QLatin1String("ris2xml") << QLatin1String("end2xml");
         state = avail;
         foreach(const QString &program, programs) {
-            const QString fullPath = KStandardDirs::findExe(program);
+            const QString fullPath = QStandardPaths::findExecutable(program);
             if (fullPath.isEmpty()) {
                 state = unavail; ///< missing a single program is reason to assume that BibUtils is not correctly installed
                 break;
@@ -129,7 +128,7 @@ bool BibUtils::convert(QIODevice &source, const BibUtils::Format &sourceFormat, 
     }
 
     /// Test if required BibUtils program is available
-    bibUtilsProgram = KStandardDirs::findExe(bibUtilsProgram);
+    bibUtilsProgram = QStandardPaths::findExecutable(bibUtilsProgram);
     if (bibUtilsProgram.isEmpty())
         return false;
 

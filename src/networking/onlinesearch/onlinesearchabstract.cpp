@@ -24,12 +24,13 @@
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusConnectionInterface>
 
-#include <KStandardDirs>
+
 #include <kio/netaccess.h>
 #include <QDebug>
 #include <KLocale>
 #include <KMessageBox>
 #include <KPassivePopup>
+#include <QStandardPaths>
 
 #include "encoderlatex.h"
 #include "internalnetworkaccessmanager.h"
@@ -73,7 +74,7 @@ OnlineSearchAbstract::OnlineSearchAbstract(QWidget *parent)
 KIcon OnlineSearchAbstract::icon(QListWidgetItem *listWidgetItem)
 {
     static const QRegExp invalidChars(QLatin1String("[^-a-z0-9_]"), Qt::CaseInsensitive);
-    const QString fileNameStem = KStandardDirs::locateLocal("cache", QLatin1String("favicons/")) + QString(favIconUrl()).remove(invalidChars);
+    const QString fileNameStem = QStandardPaths::writableLocation(QStandardPaths::CacheLocation) + QLatin1String("/favicons/")) + QString(favIconUrl()).remove(invalidChars;
     const QStringList fileNameExtensions = QStringList() << QLatin1String(".ico") << QLatin1String(".png") << QString();
 
     foreach(const QString &extension, fileNameExtensions) {
@@ -349,7 +350,7 @@ void OnlineSearchAbstract::iconDownloadFinished()
 
 void OnlineSearchAbstract::dumpToFile(const QString &filename, const QString &text)
 {
-    const QString usedFilename = KStandardDirs::locateLocal("tmp", filename, true);
+    const QString usedFilename = QDir::tempPath() + QLatin1Char('/') +  filename, true);
 
     QFile f(usedFilename);
     if (f.open(QFile::WriteOnly)) {

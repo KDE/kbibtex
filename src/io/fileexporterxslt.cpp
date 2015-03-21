@@ -22,8 +22,7 @@
 #include <QBuffer>
 #include <QFile>
 #include <QDebug>
-
-#include <KStandardDirs>
+#include <QStandardPaths>
 
 #include "file.h"
 #include "element.h"
@@ -39,7 +38,7 @@ FileExporterXSLT::FileExporterXSLT(const QString &xsltFilename)
         : FileExporter()
 {
     if (xsltFilename.isEmpty() || !QFile(xsltFilename).exists())
-        setXSLTFilename(KStandardDirs::locate("data", "kbibtex/standard.xsl"));
+        setXSLTFilename(QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kbibtex/standard.xsl"));
     else
         setXSLTFilename(xsltFilename);
 }
