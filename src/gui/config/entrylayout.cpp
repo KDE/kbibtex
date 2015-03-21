@@ -23,7 +23,6 @@
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <KGlobal>
-#include <KLocale>
 
 static const int entryLayoutMaxTabCount = 256;
 static const int entryLayoutMaxFieldPerTabCount = 256;

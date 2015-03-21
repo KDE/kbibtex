@@ -18,7 +18,6 @@
 #include "fileimporterbibutils.h"
 
 #include <QBuffer>
-
 #include <QDebug>
 
 #include "fileimporterbibtex.h"

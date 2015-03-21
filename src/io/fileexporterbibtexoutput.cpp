@@ -25,8 +25,6 @@
 #include <QUrl>
 #include <QTextStream>
 
-#include <KLocale>
-
 #include "element.h"
 #include "entry.h"
 #include "fileexporterbibtex.h"
@@ -36,7 +34,7 @@ FileExporterBibTeXOutput::FileExporterBibTeXOutput(OutputType outputType)
         : FileExporterToolchain(), m_outputType(outputType), m_latexLanguage("english"), m_latexBibStyle("plain")
 {
     m_fileBasename = QLatin1String("bibtex-to-output");
-    m_fileStem = tempDir.name() + QDir::separator() + m_fileBasename;
+    m_fileStem = tempDir.path() + QDir::separator() + m_fileBasename;
 }
 
 FileExporterBibTeXOutput::~FileExporterBibTeXOutput()

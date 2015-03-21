@@ -20,7 +20,6 @@
 #include <libxslt/xsltutils.h>
 
 #include <QFileInfo>
-
 #include <QDebug>
 
 /**
