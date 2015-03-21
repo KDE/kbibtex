@@ -5,34 +5,27 @@ set(
     notificationhub.cpp
 )
 
-add_definitions(
-    -DMAKE_KBIBTEXCONFIG_LIB
+set(
+    kbibtexconfig_HDRS
+    notificationhub.h
 )
 
-# debug area for KBibTeX's Config library
-add_definitions(
-    -DKDE_DEFAULT_DEBUG_AREA=101039
-)
+# # debug area for KBibTeX's Config library
+# add_definitions(
+#     -DKDE_DEFAULT_DEBUG_AREA=101039
+# )
 
-include_directories(
-# TODO
-)
+# if(UNITY_BUILD)
+#     enable_unity_build(kbibtexconfig kbibtexconfig_LIB_SRCS)
+# endif(UNITY_BUILD)
 
-if(UNITY_BUILD)
-    enable_unity_build(kbibtexconfig kbibtexconfig_LIB_SRCS)
-endif(UNITY_BUILD)
-
-kde4_add_library(
+add_library(
     kbibtexconfig
     SHARED
     ${kbibtexconfig_LIB_SRCS}
 )
-
-target_link_libraries(
-    kbibtexconfig
-    LINK_PRIVATE
-    ${QT_QTCORE_LIBRARY}
-    ${KDE4_KDECORE_LIBS}
+target_link_libraries( kbibtexconfig
+    Qt5::Core
 )
 
 set_target_properties(
@@ -47,10 +40,17 @@ set_target_properties(
 install(
     TARGETS
     kbibtexconfig
-    RUNTIME
+    ${INSTALL_TARGETS_DEFAULT_ARGS}
+)
+
+generate_export_header( kbibtexconfig )
+
+install(
+    FILES
+    ${kbibtexconfig_HDRS}
+    ${PROJECT_BINARY_DIR}/src/data/kbibtexdata_export.h
     DESTINATION
-    bin
-    LIBRARY
-    DESTINATION
-    ${LIB_INSTALL_DIR}
+    ${INCLUDE_INSTALL_DIR}/kbibtex/config
+    COMPONENT
+    development
 )

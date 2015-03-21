@@ -17,66 +17,56 @@ set(
     element.h
     entry.h
     file.h
-    kbibtexdata_export.h
     macro.h
     preamble.h
     value.h
 )
 
-add_definitions(
-    -DMAKE_KBIBTEXDATA_LIB
-)
+# # debug area for KBibTeX's Data library
+# add_definitions(
+#     -DKDE_DEFAULT_DEBUG_AREA=101032
+# )
 
-# debug area for KBibTeX's Data library
-add_definitions(
-    -DKDE_DEFAULT_DEBUG_AREA=101032
-)
+# if(UNITY_BUILD)
+#     enable_unity_build(kbibtexdata kbibtexdata_LIB_SRCS)
+# endif(UNITY_BUILD)
 
 include_directories(
-    ${LIBXML2_INCLUDE_DIR}
-    ${LIBXSLT_INCLUDE_DIR}
-    ${POPPLER_QT4_INCLUDE_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}/config
     ${CMAKE_SOURCE_DIR}/src/config
+    ${PROJECT_BINARY_DIR}/src/config
+    ${CMAKE_SOURCE_DIR}/src
 )
 
-if(UNITY_BUILD)
-    enable_unity_build(kbibtexdata kbibtexdata_LIB_SRCS)
-endif(UNITY_BUILD)
-
-kde4_add_library(
+add_library(
     kbibtexdata
     SHARED
     ${kbibtexdata_LIB_SRCS}
 )
 
-target_link_libraries(
-    kbibtexdata
-    LINK_PRIVATE
-    ${QT_QTCORE_LIBRARY}
-    ${KDE4_KDECORE_LIBS}
-    ${KDE4_KIO_LIBS}
-    ${LIBXML2_LIBRARIES}
-    ${LIBXSLT_LIBRARIES}
-    ${POPPLER_QT4_LIBRARIES}
+target_link_libraries( kbibtexdata
+    Qt5::Core
+    Qt5::Widgets
+    KF5::I18n
+    KF5::XmlGui
     kbibtexconfig
 )
 
-if(
-    WIN32
-)
-    target_link_libraries(
-        kbibtexdata
-        LINK_PRIVATE
-        iconv
-    )
-endif(
-    WIN32
-)
+# if(
+#     WIN32
+# )
+#     target_link_libraries(
+#         kbibtexdata
+#         LINK_PRIVATE
+#         iconv
+#     )
+# endif(
+#     WIN32
+# )
 
 set_target_properties(
     kbibtexdata
     PROPERTIES
+    EXPORT_NAME "kbibtexdata"
     VERSION
     ${LIB_VERSION}
     SOVERSION
@@ -86,19 +76,17 @@ set_target_properties(
 install(
     TARGETS
     kbibtexdata
-    RUNTIME
-    DESTINATION
-    bin
-    LIBRARY
-    DESTINATION
-    ${LIB_INSTALL_DIR}
+    ${INSTALL_TARGETS_DEFAULT_ARGS}
 )
+
+generate_export_header( kbibtexdata )
 
 install(
     FILES
     ${kbibtexdata_HDRS}
+    ${PROJECT_BINARY_DIR}/src/data/kbibtexdata_export.h
     DESTINATION
-    ${INCLUDE_INSTALL_DIR}/kbibtex
+    ${INCLUDE_INSTALL_DIR}/kbibtex/data
     COMPONENT
-    Devel
+    development
 )
