@@ -33,7 +33,7 @@ public:
     int numSteps, curStep;
     QSet<QString> publicationLinks;
 
-    KUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) {
+    QUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) {
         QString urlBase = QLatin1String("https://ideas.repec.org/cgi-bin/htsearch?cmd=Search%21&form=extended&m=all&fmt=url&wm=wrd&sp=1&sy=1&dt=range");
 
         bool hasFreeText = !query[queryKeyFreeText].isEmpty();
@@ -59,7 +59,7 @@ public:
             fieldDE = QLatin1String("31/12/") + query[queryKeyYear];
         }
 
-        KUrl url(urlBase);
+        QUrl url(urlBase);
         url.addQueryItem(QLatin1String("ps"), QString::number(numResults));
         url.addQueryItem(QLatin1String("db"), fieldDB);
         url.addQueryItem(QLatin1String("de"), fieldDE);
@@ -85,7 +85,7 @@ void OnlineSearchIDEASRePEc::startSearch()
 
 void OnlineSearchIDEASRePEc::startSearch(const QMap<QString, QString> &query, int numResults)
 {
-    const KUrl url = d->buildQueryUrl(query, numResults);
+    const QUrl url = d->buildQueryUrl(query, numResults);
     d->curStep = 0;
     d->numSteps = 2 * numResults + 1;
     m_hasBeenCanceled = false;
@@ -114,9 +114,9 @@ OnlineSearchQueryFormAbstract *OnlineSearchIDEASRePEc::customWidget(QWidget *)
     return NULL;
 }
 
-KUrl OnlineSearchIDEASRePEc::homepage() const
+QUrl OnlineSearchIDEASRePEc::homepage() const
 {
-    return KUrl("http://ideas.repec.org/");
+    return QUrl("http://ideas.repec.org/");
 }
 
 void OnlineSearchIDEASRePEc::cancel()
@@ -130,7 +130,7 @@ void OnlineSearchIDEASRePEc::downloadListDone()
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
-    KUrl redirUrl;
+    QUrl redirUrl;
     if (handleErrors(reply, redirUrl)) {
         if (redirUrl.isValid()) {
             /// redirection to another url
@@ -202,7 +202,7 @@ void OnlineSearchIDEASRePEc::downloadPublicationDone()
             ++it;
         }
 
-        const KUrl url = KUrl(QLatin1String("https://ideas.repec.org/cgi-bin/refs.cgi"));
+        const QUrl url = QUrl(QLatin1String("https://ideas.repec.org/cgi-bin/refs.cgi"));
         QNetworkRequest request(url);
         request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
         reply = InternalNetworkAccessManager::self()->post(request, body.toUtf8());

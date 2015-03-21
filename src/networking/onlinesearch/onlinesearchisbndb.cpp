@@ -36,7 +36,7 @@ private:
 
 public:
     XSLTransform *xslt;
-    KUrl queryUrl;
+    QUrl queryUrl;
     int currentPage, maxPage;
 
     OnlineSearchIsbnDBPrivate(OnlineSearchIsbnDB */* UNUSED parent*/)
@@ -51,11 +51,11 @@ public:
         delete xslt;
     }
 
-    KUrl buildBooksUrl(const QMap<QString, QString> &query, int numResults) {
+    QUrl buildBooksUrl(const QMap<QString, QString> &query, int numResults) {
         currentPage = 1;
         maxPage = (numResults + 9) / 10;
 
-        queryUrl = KUrl(booksUrl);
+        queryUrl = QUrl(booksUrl);
         queryUrl.addQueryItem(QLatin1String("access_key"), accessKey);
         queryUrl.addQueryItem(QLatin1String("results"), QLatin1String("texts,authors"));
 
@@ -132,9 +132,9 @@ OnlineSearchQueryFormAbstract *OnlineSearchIsbnDB::customWidget(QWidget *parent)
     return NULL;
 }
 
-KUrl OnlineSearchIsbnDB::homepage() const
+QUrl OnlineSearchIsbnDB::homepage() const
 {
-    return KUrl("http://isbndb.com/");
+    return QUrl("http://isbndb.com/");
 }
 
 void OnlineSearchIsbnDB::cancel()
@@ -173,7 +173,7 @@ void OnlineSearchIsbnDB::downloadDone()
                 emit stoppedSearch(resultNoError);
             else {
                 ++d->currentPage;
-                KUrl nextUrl = d->queryUrl;
+                QUrl nextUrl = d->queryUrl;
                 nextUrl.addQueryItem(QLatin1String("page_number"), QString::number(d->currentPage));
                 QNetworkRequest request(nextUrl);
                 QNetworkReply *nextReply = InternalNetworkAccessManager::self()->get(request);

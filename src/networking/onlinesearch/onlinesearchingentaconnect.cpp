@@ -168,13 +168,13 @@ public:
         // nothing
     }
 
-    KUrl buildQueryUrl() {
+    QUrl buildQueryUrl() {
         if (form == NULL) {
             kWarning() << "Cannot build query url if no form is specified";
             return KUrl();
         }
 
-        KUrl queryUrl(ingentaConnectBaseUrl);
+        QUrl queryUrl(ingentaConnectBaseUrl);
 
 
         int index = 1;
@@ -249,8 +249,8 @@ public:
         return queryUrl;
     }
 
-    KUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) {
-        KUrl queryUrl(ingentaConnectBaseUrl);
+    QUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) {
+        QUrl queryUrl(ingentaConnectBaseUrl);
 
         int index = 1;
         QStringList chunks = p->splitRespectingQuotationMarks(query[queryKeyFreeText]);
@@ -345,9 +345,9 @@ OnlineSearchQueryFormAbstract *OnlineSearchIngentaConnect::customWidget(QWidget 
     return d->form;
 }
 
-KUrl OnlineSearchIngentaConnect::homepage() const
+QUrl OnlineSearchIngentaConnect::homepage() const
 {
-    return KUrl("http://www.ingentaconnect.com/");
+    return QUrl("http://www.ingentaconnect.com/");
 }
 
 void OnlineSearchIngentaConnect::cancel()

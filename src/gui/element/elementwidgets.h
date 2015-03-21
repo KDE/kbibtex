@@ -23,7 +23,7 @@
 #include <QLabel>
 #include <QWidget>
 
-#include <KUrl>
+#include <QUrl>
 #include <KIcon>
 
 #include "elementeditor.h"
@@ -198,7 +198,7 @@ private:
     KPushButton *buttonDelete;
     KPushButton *buttonOpen;
     KPushButton *buttonAddApply;
-    KUrl currentUrl;
+    QUrl currentUrl;
     const QStringList blackListed;
     QSharedPointer<Entry> internalEntry;
     QStringList deletedKeys, modifiedKeys;

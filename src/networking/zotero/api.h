@@ -21,7 +21,7 @@
 #include <QObject>
 #include <QNetworkRequest>
 
-#include <KUrl>
+#include <QUrl>
 
 #include "kbibtexnetworking_export.h"
 
@@ -61,13 +61,13 @@ public:
      * Add a limit parameter to a given Zotero URL.
      * @param url value of this parameter will be changed to contain the limit
      */
-    void addLimitToUrl(KUrl &url) const;
+    void addLimitToUrl(QUrl &url) const;
 
     /**
      * Base URL for all requests to Zotero. Contains user/group id, API key, ...
      * @return Basic URL which only needs to have a proper path set
      */
-    KUrl baseUrl() const;
+    QUrl baseUrl() const;
 
     /**
      * @return Group or user prefix as specified in constructor.
@@ -81,7 +81,7 @@ public:
      * @param url URL to base the request on
      * @return Request to Zotero
      */
-    QNetworkRequest request(const KUrl &url) const;
+    QNetworkRequest request(const QUrl &url) const;
 
 private:
     class Private;

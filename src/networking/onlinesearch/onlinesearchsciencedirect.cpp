@@ -124,9 +124,9 @@ OnlineSearchQueryFormAbstract *OnlineSearchScienceDirect::customWidget(QWidget *
     return NULL;
 }
 
-KUrl OnlineSearchScienceDirect::homepage() const
+QUrl OnlineSearchScienceDirect::homepage() const
 {
-    return KUrl("http://www.sciencedirect.com/");
+    return QUrl("http://www.sciencedirect.com/");
 }
 
 void OnlineSearchScienceDirect::cancel()
@@ -142,7 +142,7 @@ void OnlineSearchScienceDirect::doneFetchingStartPage()
     if (d->runningJobs != 0)
         kWarning() << "In OnlineSearchScienceDirect::doneFetchingStartPage: Some jobs are running (" << d->runningJobs << "!= 0 )";
 
-    KUrl redirUrl;
+    QUrl redirUrl;
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
     if (handleErrors(reply, redirUrl)) {
         const QString htmlText = QString::fromUtf8(reply->readAll().data());
@@ -159,7 +159,7 @@ void OnlineSearchScienceDirect::doneFetchingStartPage()
         } else {
             InternalNetworkAccessManager::self()->mergeHtmlHeadCookies(htmlText, reply->url());
 
-            KUrl url(d->scienceDirectBaseUrl + QLatin1String("science"));
+            QUrl url(d->scienceDirectBaseUrl + QLatin1String("science"));
             QMap<QString, QString> inputMap = formParameters(htmlText, QLatin1String("<form id=\"quickSearch\" name=\"qkSrch\" metho"));
             inputMap[QLatin1String("qs_all")] = d->queryFreetext.simplified();
             inputMap[QLatin1String("qs_author")] = d->queryAuthor.simplified();
@@ -192,7 +192,7 @@ void OnlineSearchScienceDirect::doneFetchingResultPage()
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
     if (handleErrors(reply)) {
-        KUrl redirUrl = reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl();
+        QUrl redirUrl = reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl();
         if (!redirUrl.isEmpty()) {
             ++d->runningJobs;
             QNetworkRequest request(redirUrl);
@@ -215,7 +215,7 @@ void OnlineSearchScienceDirect::doneFetchingResultPage()
                 if (d->numFoundResults < d->numExpectedResults) {
                     ++d->numFoundResults;
                     ++d->runningJobs;
-                    KUrl url(urlText);
+                    QUrl url(urlText);
                     QNetworkRequest request(url);
                     QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
                     InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
@@ -240,7 +240,7 @@ void OnlineSearchScienceDirect::doneFetchingAbstractPage()
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
     if (handleErrors(reply)) {
-        KUrl redirUrl = reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl();
+        QUrl redirUrl = reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl();
         if (!redirUrl.isEmpty()) {
             ++d->runningJobs;
             QNetworkRequest request(redirUrl);
@@ -255,7 +255,7 @@ void OnlineSearchScienceDirect::doneFetchingAbstractPage()
 
             int p1 = -1, p2 = -1;
             if ((p1 = htmlText.indexOf("/science?_ob=DownloadURL&")) >= 0 && (p2 = htmlText.indexOf(QRegExp("[ \"<>]"), p1 + 1)) >= 0) {
-                KUrl url("http://www.sciencedirect.com" + htmlText.mid(p1, p2 - p1));
+                QUrl url("http://www.sciencedirect.com" + htmlText.mid(p1, p2 - p1));
                 url.addQueryItem(QLatin1String("citation-type"), QLatin1String("BIBTEX"));
                 url.addQueryItem(QLatin1String("format"), QLatin1String("cite-abs"));
                 url.addQueryItem(QLatin1String("export"), QLatin1String("Export"));

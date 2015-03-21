@@ -56,7 +56,7 @@ public:
         delete xslt;
     }
 
-    KUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) {
+    QUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) {
         /// used to auto-detect PMIDs (unique identifiers for documents) in free text search
         static const QRegExp pmidRegExp(QLatin1String("^[0-9]{6,}$"));
 
@@ -100,15 +100,15 @@ public:
         /// set number of expected results
         url.append(QString(QLatin1String("&retstart=0&retmax=%1&retmode=xml")).arg(numResults));
 
-        return KUrl(url);
+        return QUrl(url);
     }
 
-    KUrl buildFetchIdUrl(const QStringList &idList) {
+    QUrl buildFetchIdUrl(const QStringList &idList) {
         QString url = pubMedUrlPrefix + QLatin1String("efetch.fcgi?retmode=xml&db=pubmed&id=");
 
         url.append(idList.join(QLatin1String(",")));
 
-        return KUrl(url);
+        return QUrl(url);
     }
 };
 
@@ -175,9 +175,9 @@ OnlineSearchQueryFormAbstract *OnlineSearchPubMed::customWidget(QWidget *)
     return NULL;
 }
 
-KUrl OnlineSearchPubMed::homepage() const
+QUrl OnlineSearchPubMed::homepage() const
 {
-    return KUrl("http://www.pubmed.gov/");
+    return QUrl("http://www.pubmed.gov/");
 }
 
 void OnlineSearchPubMed::cancel()

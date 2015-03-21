@@ -46,7 +46,7 @@ public:
     virtual void startSearch(const QMap<QString, QString> &query, int numResults);
     virtual QString label() const;
     virtual OnlineSearchQueryFormAbstract *customWidget(QWidget *parent);
-    virtual KUrl homepage() const;
+    virtual QUrl homepage() const;
 
 public slots:
     void cancel();

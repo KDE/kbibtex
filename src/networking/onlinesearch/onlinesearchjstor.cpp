@@ -35,7 +35,7 @@ private:
 public:
     int numFoundResults, curStep, numSteps;
     static const QString jstorBaseUrl;
-    KUrl queryUrl;
+    QUrl queryUrl;
 
     OnlineSearchJStorPrivate(OnlineSearchJStor */* UNUSED parent*/)
     // : UNUSED p(parent)
@@ -66,7 +66,7 @@ void OnlineSearchJStor::startSearch(const QMap<QString, QString> &query, int num
 
     /// Build search URL, to be used in the second step
     /// after fetching the start page
-    d->queryUrl = KUrl(d->jstorBaseUrl);
+    d->queryUrl = QUrl(d->jstorBaseUrl);
     d->queryUrl.setPath("/action/doAdvancedSearch");
     d->queryUrl.addQueryItem("Search", "Search");
     d->queryUrl.addQueryItem("wc", "on"); /// include external references, too
@@ -129,9 +129,9 @@ OnlineSearchQueryFormAbstract *OnlineSearchJStor::customWidget(QWidget *)
     return NULL;
 }
 
-KUrl OnlineSearchJStor::homepage() const
+QUrl OnlineSearchJStor::homepage() const
 {
-    return KUrl("http://www.jstor.org/");
+    return QUrl("http://www.jstor.org/");
 }
 
 void OnlineSearchJStor::cancel()
@@ -145,7 +145,7 @@ void OnlineSearchJStor::doneFetchingStartPage()
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
-    KUrl redirUrl;
+    QUrl redirUrl;
     if (handleErrors(reply, redirUrl)) {
         if (redirUrl.isValid()) {
             ++d->numSteps;
@@ -188,7 +188,7 @@ void OnlineSearchJStor::doneFetchingResultPage()
         } else {
             /// Build search URL, to be used in the second step
             /// after fetching the start page
-            KUrl bibTeXUrl = KUrl(d->jstorBaseUrl);
+            QUrl bibTeXUrl = QUrl(d->jstorBaseUrl);
             bibTeXUrl.setPath("/action/downloadCitation");
             bibTeXUrl.addQueryItem("userAction", "export");
             bibTeXUrl.addQueryItem("format", "bibtex"); /// request BibTeX format

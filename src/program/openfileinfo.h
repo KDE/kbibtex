@@ -24,7 +24,7 @@
 #include <QVariant>
 
 #include <KService>
-#include <KUrl>
+#include <QUrl>
 
 #include "fileinfo.h"
 
@@ -55,7 +55,7 @@ public:
     QString shortCaption() const;
     QString fullCaption() const;
     QString mimeType() const;
-    KUrl url() const;
+    QUrl url() const;
     bool isModified() const;
     bool save();
 
@@ -86,9 +86,9 @@ signals:
     void flagsChanged(OpenFileInfo::StatusFlags statusFlags);
 
 protected:
-    OpenFileInfo(OpenFileInfoManager *openFileInfoManager, const KUrl &url);
+    OpenFileInfo(OpenFileInfoManager *openFileInfoManager, const QUrl &url);
     OpenFileInfo(OpenFileInfoManager *openFileInfoManager, const QString &mimeType = FileInfo::mimetypeBibTeX);
-    void setUrl(const KUrl &url);
+    void setUrl(const QUrl &url);
 
 private:
     class OpenFileInfoPrivate;
@@ -120,11 +120,11 @@ public:
      * @param url URL to bibliography file to open
      * @return an OpenFileInfo object representing the opened file
      */
-    OpenFileInfo *open(const KUrl &url);
+    OpenFileInfo *open(const QUrl &url);
 
-    OpenFileInfo *contains(const KUrl &url) const;
+    OpenFileInfo *contains(const QUrl &url) const;
     OpenFileInfo *currentFile() const;
-    bool changeUrl(OpenFileInfo *openFileInfo, const KUrl &url);
+    bool changeUrl(OpenFileInfo *openFileInfo, const QUrl &url);
     bool close(OpenFileInfo *openFileInfo);
 
     /**

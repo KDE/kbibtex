@@ -92,23 +92,23 @@ public:
         // nothing
     }
 
-    KUrl buildQueryUrl() {
+    QUrl buildQueryUrl() {
         if (form == NULL) {
             kWarning() << "Cannot build query url if no form is specified";
             return KUrl();
         }
 
-        return KUrl(QLatin1String("http://dx.doi.org/") + form->lineEditDoiNumber->text());
+        return QUrl(QLatin1String("http://dx.doi.org/") + form->lineEditDoiNumber->text());
     }
 
-    KUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) {
+    QUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) {
         Q_UNUSED(numResults)
 
         if (KBibTeX::doiRegExp.indexIn(query[queryKeyFreeText]) >= 0) {
-            return KUrl(QLatin1String("http://dx.doi.org/") + KBibTeX::doiRegExp.cap(0));
+            return QUrl(QLatin1String("http://dx.doi.org/") + KBibTeX::doiRegExp.cap(0));
         }
 
-        return KUrl();
+        return QUrl();
     }
 };
 
@@ -130,7 +130,7 @@ void OnlineSearchDOI::startSearch()
     d->curStep = 0;
     d->numSteps = 1;
 
-    const KUrl url = d->buildQueryUrl();
+    const QUrl url = d->buildQueryUrl();
     if (url.isValid()) {
         QNetworkRequest request(url);
         request.setRawHeader(QString("Accept").toLatin1(), QString("text/bibliography; style=bibtex").toLatin1());
@@ -151,7 +151,7 @@ void OnlineSearchDOI::startSearch(const QMap<QString, QString> &query, int numRe
     d->curStep = 0;
     d->numSteps = 1;
 
-    const KUrl url = d->buildQueryUrl(query, numResults);
+    const QUrl url = d->buildQueryUrl(query, numResults);
     if (url.isValid()) {
         QNetworkRequest request(url);
         request.setRawHeader(QString("Accept").toLatin1(), QString("text/bibliography; style=bibtex").toLatin1());
@@ -176,9 +176,9 @@ OnlineSearchQueryFormAbstract *OnlineSearchDOI::customWidget(QWidget *parent)
     return d->form;
 }
 
-KUrl OnlineSearchDOI::homepage() const
+QUrl OnlineSearchDOI::homepage() const
 {
-    return KUrl(QLatin1String("http://dx.doi.org/"));
+    return QUrl(QLatin1String("http://dx.doi.org/"));
 }
 
 void OnlineSearchDOI::cancel()
@@ -196,7 +196,7 @@ void OnlineSearchDOI::downloadDone()
     emit progress(++d->curStep, d->numSteps);
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
-    KUrl redirUrl;
+    QUrl redirUrl;
     if (handleErrors(reply, redirUrl)) {
         if (redirUrl.isValid()) {
             /// redirection to another url

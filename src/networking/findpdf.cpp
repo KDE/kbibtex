@@ -94,7 +94,7 @@ public:
         bool gotLink = false;
         for (int i = 0; !gotLink && i < 4; ++i) {
             if (anchorRegExp[i].indexIn(text) >= 0) {
-                const KUrl url = KUrl::fromEncoded(anchorRegExp[i].cap(1).toLatin1());
+                const QUrl url = QUrl::fromEncoded(anchorRegExp[i].cap(1).toLatin1());
                 queueUrl(reply->url().resolved(url), term, origin, depth - 1);
                 gotLink = true;
             }
@@ -104,7 +104,7 @@ public:
             /// this is only the last resort:
             /// to follow the first link found in the HTML document
             if (anchorRegExp[4].indexIn(text) >= 0) {
-                const KUrl url = KUrl::fromEncoded(anchorRegExp[4].cap(1).toLatin1());
+                const QUrl url = QUrl::fromEncoded(anchorRegExp[4].cap(1).toLatin1());
                 queueUrl(reply->url().resolved(url), term, origin, depth - 1);
             }
         }
@@ -263,22 +263,22 @@ bool FindPDF::search(const Entry &entry)
 
     if (!searchWords.isEmpty()) {
         /// use title to search in Google Scholar
-        KUrl googleScholarUrl(QLatin1String("http://scholar.google.com/scholar?hl=en&btnG=Search&as_sdt=1"));
+        QUrl googleScholarUrl(QLatin1String("http://scholar.google.com/scholar?hl=en&btnG=Search&as_sdt=1"));
         googleScholarUrl.addQueryItem(QLatin1String("q"), searchWords + QLatin1String(" filetype:pdf"));
         d->queueUrl(googleScholarUrl, searchWords, QLatin1String("scholar.google"), maxDepth);
 
         /// use title to search in Bing
-        KUrl bingUrl(QLatin1String("http://www.bing.com/search?setmkt=en-IE&setlang=match"));
+        QUrl bingUrl(QLatin1String("http://www.bing.com/search?setmkt=en-IE&setlang=match"));
         bingUrl.addQueryItem(QLatin1String("q"), searchWords + QLatin1String(" filetype:pdf"));
         d->queueUrl(bingUrl, searchWords, QLatin1String("bing"), maxDepth);
 
         /// use title to search in Microsoft Academic Search
-        KUrl masUrl(QLatin1String("http://academic.research.microsoft.com/Search"));
+        QUrl masUrl(QLatin1String("http://academic.research.microsoft.com/Search"));
         masUrl.addQueryItem(QLatin1String("query"), searchWords);
         d->queueUrl(masUrl, searchWords, QLatin1String("academicsearch"), maxDepth);
 
         /// use title to search in CiteSeerX
-        KUrl citeseerXurl(QLatin1String("http://citeseerx.ist.psu.edu/search?submit=Search&sort=rlv&t=doc"));
+        QUrl citeseerXurl(QLatin1String("http://citeseerx.ist.psu.edu/search?submit=Search&sort=rlv&t=doc"));
         citeseerXurl.addQueryItem(QLatin1String("q"), searchWords);
         d->queueUrl(citeseerXurl, searchWords, QLatin1String("citeseerx"), maxDepth);
     }

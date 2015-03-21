@@ -125,13 +125,13 @@ QStringList OnlineSearchAbstract::splitRespectingQuotationMarks(const QString &t
 
 bool OnlineSearchAbstract::handleErrors(QNetworkReply *reply)
 {
-    KUrl url;
+    QUrl url;
     return handleErrors(reply, url);
 }
 
-bool OnlineSearchAbstract::handleErrors(QNetworkReply *reply, KUrl &newUrl)
+bool OnlineSearchAbstract::handleErrors(QNetworkReply *reply, QUrl &newUrl)
 {
-    newUrl = KUrl();
+    newUrl = QUrl();
     if (m_hasBeenCanceled) {
         emit stoppedSearch(resultCancelled);
         return false;

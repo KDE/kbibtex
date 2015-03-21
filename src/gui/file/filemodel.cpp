@@ -206,7 +206,7 @@ bool SortFilterFileModel::filterAcceptsRow(int source_row, const QModelIndex &so
 
         /// Test associated PDF files
         if (m_filterQuery.searchPDFfiles && m_filterQuery.field.isEmpty()) ///< not filtering for any specific field
-            foreach(const KUrl &url, FileInfo::entryUrls(entry.data(), fileSourceModel()->bibliographyFile()->property(File::Url, QUrl()).toUrl(), FileInfo::TestExistenceYes)) {
+            foreach(const QUrl &url, FileInfo::entryUrls(entry.data(), fileSourceModel()->bibliographyFile()->property(File::Url, QUrl()).toUrl(), FileInfo::TestExistenceYes)) {
             if (url.isLocalFile() && url.fileName().endsWith(QLatin1String(".pdf"))) {
                 // FIXME if you have a large collection of PDF files and the text version
                 // has not been generated yet, this will freeze KBibTeX for some time

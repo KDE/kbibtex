@@ -53,8 +53,8 @@ public:
         delete xslt;
     }
 
-    KUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) {
-        KUrl queryUrl = KUrl(gatewayUrl);
+    QUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) {
+        QUrl queryUrl = QUrl(gatewayUrl);
 
         QStringList queryText;
 
@@ -135,7 +135,7 @@ void OnlineSearchIEEEXplore::doneFetchingXML()
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
-    KUrl redirUrl;
+    QUrl redirUrl;
     if (handleErrors(reply, redirUrl)) {
         if (redirUrl.isValid()) {
             /// redirection to another url
@@ -192,9 +192,9 @@ OnlineSearchQueryFormAbstract *OnlineSearchIEEEXplore::customWidget(QWidget *)
     return NULL;
 }
 
-KUrl OnlineSearchIEEEXplore::homepage() const
+QUrl OnlineSearchIEEEXplore::homepage() const
 {
-    return KUrl("http://ieeexplore.ieee.org/");
+    return QUrl("http://ieeexplore.ieee.org/");
 }
 
 void OnlineSearchIEEEXplore::cancel()

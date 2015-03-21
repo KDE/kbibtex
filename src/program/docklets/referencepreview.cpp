@@ -124,7 +124,7 @@ public:
         gridLayout->addWidget(buttonSaveAsHTML, 2, 2, 1, 1);
     }
 
-    bool saveHTML(const KUrl &url) const {
+    bool saveHTML(const QUrl &url) const {
         KTemporaryFile file;
         file.setAutoRemove(true);
 
@@ -132,7 +132,7 @@ public:
 
         if (result) {
             KIO::NetAccess::del(url, p); /// ignore error if file does not exist
-            result = KIO::NetAccess::file_copy(KUrl(file.fileName()), url, p);
+            result = KIO::NetAccess::file_copy(QUrl(file.fileName()), url, p);
         }
 
         return result;
@@ -200,7 +200,7 @@ ReferencePreview::~ReferencePreview()
     delete d;
 }
 
-void ReferencePreview::setHtml(const QString &html, const KUrl &baseUrl)
+void ReferencePreview::setHtml(const QString &html, const QUrl &baseUrl)
 {
     d->htmlText = QString(html).remove(QLatin1String("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"));
     d->baseUrl = baseUrl;
@@ -373,13 +373,13 @@ void ReferencePreview::openAsHTML()
     d->saveHTML(file);
 
     /// Ask KDE subsystem to open url in viewer matching mime type
-    KUrl url(file.fileName());
+    QUrl url(file.fileName());
     KRun::runUrl(url, QLatin1String("text/html"), this, false, false);
 }
 
 void ReferencePreview::saveAsHTML()
 {
-    KUrl url = KFileDialog::getSaveUrl(KUrl(), "text/html", this, i18n("Save as HTML"));
+    QUrl url = KFileDialog::getSaveUrl(QUrl(), "text/html", this, i18n("Save as HTML"));
     if (url.isValid())
         d->saveHTML(url);
 }

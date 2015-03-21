@@ -150,7 +150,7 @@ void OnlineSearchGoogleScholar::startSearch(const QMap<QString, QString> &query,
     d->queryAuthor = queryFragments.join("+");
     d->queryYear = encodeURL(query[queryKeyYear]);
 
-    KUrl url(d->startPageUrl);
+    QUrl url(d->startPageUrl);
     QNetworkRequest request(url);
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
     InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
@@ -165,7 +165,7 @@ void OnlineSearchGoogleScholar::doneFetchingStartPage()
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
-    KUrl newDomainUrl;
+    QUrl newDomainUrl;
     if (handleErrors(reply, newDomainUrl)) {
         if (newDomainUrl.isValid() && newDomainUrl != reply->url()) {
             /// following redirection to country-specific domain
@@ -176,7 +176,7 @@ void OnlineSearchGoogleScholar::doneFetchingStartPage()
             connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingStartPage()));
         } else {
             /// landed on country-specific domain
-            KUrl url(d->configPageUrl.arg(reply->url().host()));
+            QUrl url(d->configPageUrl.arg(reply->url().host()));
             url.addQueryItem("hl", "en");
             url.addQueryItem("as_sdt", "0,5");
 
@@ -204,7 +204,7 @@ void OnlineSearchGoogleScholar::doneFetchingConfigPage()
         inputMap[QLatin1String("num")] = QString::number(d->numResults);
         inputMap[QLatin1String("submit")] = QLatin1String("");
 
-        KUrl url(d->setConfigPageUrl.arg(reply->url().host()));
+        QUrl url(d->setConfigPageUrl.arg(reply->url().host()));
         for (QMap<QString, QString>::ConstIterator it = inputMap.constBegin(); it != inputMap.constEnd(); ++it)
             url.addQueryItem(it.key(), it.value());
 
@@ -223,7 +223,7 @@ void OnlineSearchGoogleScholar::doneFetchingSetConfigPage()
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
     if (handleErrors(reply)) {
-        KUrl url(QString(d->queryPageUrl).arg(reply->url().host()));
+        QUrl url(QString(d->queryPageUrl).arg(reply->url().host()));
         url.addEncodedQueryItem(QString("as_q").toLatin1(), d->queryFreetext.toLatin1());
         url.addEncodedQueryItem(QString("as_sauthors").toLatin1(), d->queryAuthor.toLatin1());
         url.addEncodedQueryItem(QString("as_ylo").toLatin1(), d->queryYear.toLatin1());
@@ -378,9 +378,9 @@ OnlineSearchQueryFormAbstract *OnlineSearchGoogleScholar::customWidget(QWidget *
     return NULL;
 }
 
-KUrl OnlineSearchGoogleScholar::homepage() const
+QUrl OnlineSearchGoogleScholar::homepage() const
 {
-    return KUrl("http://scholar.google.com/");
+    return QUrl("http://scholar.google.com/");
 }
 
 void OnlineSearchGoogleScholar::cancel()

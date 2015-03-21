@@ -157,10 +157,10 @@ public:
         delete xslt;
     }
 
-    KUrl buildQueryUrl() {
-        if (form == NULL) return KUrl();
+    QUrl buildQueryUrl() {
+        if (form == NULL) return QUrl();
 
-        KUrl queryUrl = KUrl(QString("http://api.springer.com/metadata/pam/?api_key=").append(springerMetadataKey));
+        QUrl queryUrl = QUrl(QString("http://api.springer.com/metadata/pam/?api_key=").append(springerMetadataKey));
 
         QString queryString = form->lineEditFreeText->text();
 
@@ -189,8 +189,8 @@ public:
         return queryUrl;
     }
 
-    KUrl buildQueryUrl(const QMap<QString, QString> &query) {
-        KUrl queryUrl = KUrl(QString("http://api.springer.com/metadata/pam/?api_key=").append(springerMetadataKey));
+    QUrl buildQueryUrl(const QMap<QString, QString> &query) {
+        QUrl queryUrl = QUrl(QString("http://api.springer.com/metadata/pam/?api_key=").append(springerMetadataKey));
 
         QString queryString = query[queryKeyFreeText];
 
@@ -243,7 +243,7 @@ void OnlineSearchSpringerLink::startSearch()
 
     m_hasBeenCanceled = false;
 
-    KUrl springerLinkSearchUrl = d->buildQueryUrl();
+    QUrl springerLinkSearchUrl = d->buildQueryUrl();
 
     emit progress(0, 1);
     QNetworkRequest request(springerLinkSearchUrl);
@@ -265,7 +265,7 @@ void OnlineSearchSpringerLink::startSearch(const QMap<QString, QString> &query, 
 
     m_hasBeenCanceled = false;
 
-    KUrl springerLinkSearchUrl = d->buildQueryUrl(query);
+    QUrl springerLinkSearchUrl = d->buildQueryUrl(query);
     springerLinkSearchUrl.addQueryItem(QLatin1String("p"), QString::number(numResults));
 
     emit progress(0, 1);
@@ -292,9 +292,9 @@ OnlineSearchQueryFormAbstract *OnlineSearchSpringerLink::customWidget(QWidget *p
     return d->form;
 }
 
-KUrl OnlineSearchSpringerLink::homepage() const
+QUrl OnlineSearchSpringerLink::homepage() const
 {
-    return KUrl("http://www.springerlink.com/");
+    return QUrl("http://www.springerlink.com/");
 }
 
 void OnlineSearchSpringerLink::cancel()

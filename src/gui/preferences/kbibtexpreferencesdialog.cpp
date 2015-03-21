@@ -130,7 +130,7 @@ public:
         fileName.prepend(KStandardDirs::locateLocal("cache", "favicons/")).append(".png");
 
         if (!QFileInfo(fileName).exists()) {
-            if (!KIO::NetAccess::file_copy(KUrl(url), KUrl(fileName), NULL))
+            if (!KIO::NetAccess::file_copy(QUrl(url), QUrl(fileName), NULL))
                 return KIcon();
         }
 

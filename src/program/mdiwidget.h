@@ -21,7 +21,7 @@
 #include <QStackedWidget>
 #include <QModelIndex>
 
-#include <KUrl>
+#include <QUrl>
 #include <KService>
 
 #include "openfileinfo.h"
@@ -55,7 +55,7 @@ signals:
     void activePartChanged(KParts::Part *);
     void documentNew();
     void documentOpen();
-    void documentOpenURL(KUrl);
+    void documentOpenURL(QUrl);
 
 private:
     class MDIWidgetPrivate;

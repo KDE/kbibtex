@@ -120,9 +120,9 @@ OnlineSearchQueryFormAbstract *OnlineSearchAcmPortal::customWidget(QWidget *)
     return NULL;
 }
 
-KUrl OnlineSearchAcmPortal::homepage() const
+QUrl OnlineSearchAcmPortal::homepage() const
 {
-    return KUrl("http://dl.acm.org/");
+    return QUrl("http://dl.acm.org/");
 }
 
 void OnlineSearchAcmPortal::cancel()
@@ -143,7 +143,7 @@ void OnlineSearchAcmPortal::doneFetchingStartPage()
                 && (p2 = htmlSource.indexOf("action=", p1)) >= 0
                 && (p3 = htmlSource.indexOf("\"", p2 + 8)) >= 0) {
             QString action = decodeURL(htmlSource.mid(p2 + 8, p3 - p2 - 8));
-            KUrl url(d->acmPortalBaseUrl + action);
+            QUrl url(d->acmPortalBaseUrl + action);
             QString body = QString("Go=&query=%1").arg(d->joinedQueryString).simplified();
 
             QNetworkRequest request(url);
@@ -176,7 +176,7 @@ void OnlineSearchAcmPortal::doneFetchingSearchPage()
 
         if (d->currentSearchPosition + 20 < d->numExpectedResults) {
             d->currentSearchPosition += 20;
-            KUrl url(reply->url());
+            QUrl url(reply->url());
             QMap<QString, QString> queryItems = url.queryItems();
             queryItems["start"] = QString::number(d->currentSearchPosition);
 

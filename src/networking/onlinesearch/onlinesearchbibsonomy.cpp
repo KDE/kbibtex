@@ -121,17 +121,17 @@ public:
         // nothing
     }
 
-    KUrl buildQueryUrl() {
+    QUrl buildQueryUrl() {
         if (form == NULL) {
             kWarning() << "Cannot build query url if no form is specified";
             return KUrl();
         }
 
         QString queryString = p->encodeURL(form->lineEditSearchTerm->text());
-        return KUrl("http://www.bibsonomy.org/bib/" + form->comboBoxSearchWhere->itemData(form->comboBoxSearchWhere->currentIndex()).toString() + "/" + queryString + QString("?items=%1").arg(form->numResultsField->value()));
+        return QUrl("http://www.bibsonomy.org/bib/" + form->comboBoxSearchWhere->itemData(form->comboBoxSearchWhere->currentIndex()).toString() + "/" + queryString + QString("?items=%1").arg(form->numResultsField->value()));
     }
 
-    KUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) {
+    QUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) {
         QString url = QLatin1String("http://www.bibsonomy.org/bib/");
 
         bool hasFreeText = !query[queryKeyFreeText].isEmpty();
@@ -154,7 +154,7 @@ public:
         QString queryString = queryFragments.join(QLatin1String("%20"));
         url.append(searchType + QLatin1Char('/') + queryString + QString(QLatin1String("?items=%1")).arg(numResults));
 
-        return KUrl(url);
+        return QUrl(url);
     }
 
     void sanitizeEntry(QSharedPointer<Entry> entry) {
@@ -227,9 +227,9 @@ OnlineSearchQueryFormAbstract *OnlineSearchBibsonomy::customWidget(QWidget *pare
     return d->form;
 }
 
-KUrl OnlineSearchBibsonomy::homepage() const
+QUrl OnlineSearchBibsonomy::homepage() const
 {
-    return KUrl("http://www.bibsonomy.org/");
+    return QUrl("http://www.bibsonomy.org/");
 }
 
 void OnlineSearchBibsonomy::cancel()

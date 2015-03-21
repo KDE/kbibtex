@@ -143,7 +143,7 @@ KBibTeXMainWindow::KBibTeXMainWindow()
     d->dockDocumentList->setWidget(d->listDocumentList);
     d->dockDocumentList->setObjectName("dockDocumentList");
     d->dockDocumentList->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
-    connect(d->listDocumentList, SIGNAL(openFile(KUrl)), this, SLOT(openDocument(KUrl)));
+    connect(d->listDocumentList, SIGNAL(openFile(QUrl)), this, SLOT(openDocument(QUrl)));
     showPanelsMenu->addAction(d->dockDocumentList->toggleViewAction());
 
     d->dockValueList = new QDockWidget(i18n("List of Values"), this);
@@ -251,7 +251,7 @@ KBibTeXMainWindow::KBibTeXMainWindow()
     connect(d->mdiWidget, SIGNAL(activePartChanged(KParts::Part*)), this, SLOT(createGUI(KParts::Part*)));
     connect(d->mdiWidget, SIGNAL(documentNew()), this, SLOT(newDocument()));
     connect(d->mdiWidget, SIGNAL(documentOpen()), this, SLOT(openDocumentDialog()));
-    connect(d->mdiWidget, SIGNAL(documentOpenURL(KUrl)), this, SLOT(openDocument(KUrl)));
+    connect(d->mdiWidget, SIGNAL(documentOpenURL(QUrl)), this, SLOT(openDocument(QUrl)));
     connect(d->mdiWidget->getOpenFileInfoManager(), SIGNAL(currentChanged(OpenFileInfo*,KService::Ptr)), d->mdiWidget, SLOT(setFile(OpenFileInfo*,KService::Ptr)));
     connect(d->mdiWidget->getOpenFileInfoManager(), SIGNAL(flagsChanged(OpenFileInfo::StatusFlags)), this, SLOT(documentListsChanged(OpenFileInfo::StatusFlags)));
     connect(d->mdiWidget, SIGNAL(setCaption(QString)), this, SLOT(setCaption(QString)));
@@ -316,11 +316,11 @@ void KBibTeXMainWindow::newDocument()
 void KBibTeXMainWindow::openDocumentDialog()
 {
     OpenFileInfo *currFile = d->mdiWidget->getOpenFileInfoManager()->currentFile();
-    KUrl currFileUrl = currFile == NULL ? KUrl() : currFile->url();
-    QString startDir = currFileUrl.isValid() ? KUrl(currFileUrl.url()).path() : QString();
+    QUrl currFileUrl = currFile == NULL ? QUrl() : currFile->url();
+    QString startDir = currFileUrl.isValid() ? QUrl(currFileUrl.url()).path() : QString();
     OpenFileInfo *ofi = d->mdiWidget->getOpenFileInfoManager()->currentFile();
     if (ofi != NULL) {
-        KUrl url = ofi->url();
+        QUrl url = ofi->url();
         if (url.isValid()) startDir = url.path();
     }
 
@@ -328,13 +328,13 @@ void KBibTeXMainWindow::openDocumentDialog()
     if (BibUtils::available())
         supportedMimeTypes += QLatin1String(" application/x-isi-export-format application/x-endnote-refer");
     supportedMimeTypes += QLatin1String(" all/all");
-    KUrl url = KFileDialog::getOpenUrl(startDir, supportedMimeTypes, this);
+    QUrl url = KFileDialog::getOpenUrl(startDir, supportedMimeTypes, this);
     if (!url.isEmpty()) {
         openDocument(url);
     }
 }
 
-void KBibTeXMainWindow::openDocument(const KUrl &url)
+void KBibTeXMainWindow::openDocument(const QUrl &url)
 {
     OpenFileInfo *openFileInfo = d->mdiWidget->getOpenFileInfoManager()->open(url);
     d->mdiWidget->getOpenFileInfoManager()->setCurrentFile(openFileInfo);
@@ -395,7 +395,7 @@ void KBibTeXMainWindow::documentSwitched(FileView *oldFileView, FileView *newFil
         connect(d->elementForm, SIGNAL(elementModified()), newFileView, SLOT(externalModification()));
     }
 
-    d->documentPreview->setBibTeXUrl(validFile ? openFileInfo->url() : KUrl());
+    d->documentPreview->setBibTeXUrl(validFile ? openFileInfo->url() : QUrl());
     d->referencePreview->setElement(QSharedPointer<Element>(), NULL);
     d->elementForm->setElement(QSharedPointer<Element>(), NULL);
     d->documentPreview->setElement(QSharedPointer<Element>(), NULL);
@@ -436,7 +436,7 @@ void KBibTeXMainWindow::documentListsChanged(OpenFileInfo::StatusFlags statusFla
 void KBibTeXMainWindow::openRecentFile()
 {
     KAction *action = static_cast<KAction *>(sender());
-    KUrl url = action->data().value<KUrl>();
+    QUrl url = action->data().value<QUrl>();
     openDocument(url);
 }
 

@@ -92,7 +92,7 @@ class DocumentPreview::DocumentPreviewPrivate
 {
 public:
     struct UrlInfo {
-        KUrl url;
+        QUrl url;
         QString mimeType;
         KIcon icon;
     };
@@ -128,7 +128,7 @@ public:
     KPushButton *onlyLocalFilesButton;
     QList<KIO::StatJob *> runningJobs;
     QSharedPointer<const Entry> entry;
-    KUrl baseUrl;
+    QUrl baseUrl;
     bool anyRemote;
 
     KParts::ReadOnlyPart *locatePart(const QString &desktopFile, QWidget *parentWidget) {
@@ -238,12 +238,12 @@ public:
             /// (based on patch by Luis Silva)
             QString fn = urlInfo.url.fileName();
             QString full = urlInfo.url.pathOrUrl();
-            QString dir = urlInfo.url.directory();
+            QString dir = urlInfo.url.adjusted(QUrl::RemoveFilename|QUrl::StripTrailingSlash).path();
             QString text = fn.isEmpty() ? full : (dir.isEmpty() ? fn : QString("%1 [%2]").arg(fn).arg(dir));
             urlComboBox->addItem(urlInfo.icon, text);
         } else {
             /// create a drop-down list entry if file is a remote file
-            urlComboBox->addItem(urlInfo.icon, urlInfo.url.prettyUrl());
+            urlComboBox->addItem(urlInfo.icon, urlInfo.url.toDisplayString());
         }
         urlComboBox->setEnabled(true);
         cbxEntryToUrlInfo.insert(urlComboBox->count() - 1, urlInfo);
@@ -287,9 +287,9 @@ public:
 
         /// do not load external reference if widget is hidden
         if (isVisible()) {
-            QList<KUrl> urlList = FileInfo::entryUrls(entry.data(), baseUrl, FileInfo::TestExistenceYes);
+            QList<QUrl> urlList = FileInfo::entryUrls(entry.data(), baseUrl, FileInfo::TestExistenceYes);
 
-            for (QList<KUrl>::ConstIterator it = urlList.constBegin(); it != urlList.constEnd(); ++it) {
+            for (QList<QUrl>::ConstIterator it = urlList.constBegin(); it != urlList.constEnd(); ++it) {
                 bool isLocal = isLocalOrRelative(*it);
                 anyRemote |= !isLocal;
                 if (!onlyLocalFilesButton->isChecked() && !isLocal) continue;
@@ -479,7 +479,7 @@ public:
     }
 
     void openExternally() {
-        KUrl url(cbxEntryToUrlInfo[urlComboBox->currentIndex()].url);
+        QUrl url(cbxEntryToUrlInfo[urlComboBox->currentIndex()].url);
         /// Guess mime type for url to open
         KMimeType::Ptr mimeType = FileInfo::mimeTypeForUrl(url);
         const QString mimeTypeName = mimeType->name();
@@ -487,7 +487,7 @@ public:
         KRun::runUrl(url, mimeTypeName, p, false, false);
     }
 
-    UrlInfo urlMetaInfo(const KUrl &url) {
+    UrlInfo urlMetaInfo(const QUrl &url) {
         UrlInfo result;
         result.url = url;
 
@@ -510,7 +510,7 @@ public:
             /// application/octet-stream is a fall-back if KDE did not know better
             result.icon = KIcon("text-html");
             result.mimeType = QLatin1String("text/html");
-        } else if (result.mimeType == QLatin1String("inode/directory") && (result.url.protocol() == QLatin1String("http") || result.url.protocol() == QLatin1String("https"))) {
+        } else if (result.mimeType == QLatin1String("inode/directory") && (result.url.scheme() == QLatin1String("http") || result.url.scheme() == QLatin1String("https"))) {
             /// directory via http means normal webpage (not browsable directory)
             result.icon = KIcon("text-html");
             result.mimeType = QLatin1String("text/html");
@@ -573,7 +573,7 @@ void DocumentPreview::openExternally()
     d->openExternally();
 }
 
-void DocumentPreview::setBibTeXUrl(const KUrl &url)
+void DocumentPreview::setBibTeXUrl(const QUrl &url)
 {
     d->baseUrl = url;
 }
@@ -600,9 +600,9 @@ void DocumentPreview::statFinished(KJob *kjob)
     d->runningJobs.removeOne(job);
     if (!job->error()) {
 #if KDE_IS_VERSION(4, 4, 0)
-        const KUrl url = job->mostLocalUrl();
+        const QUrl url = job->mostLocalUrl();
 #else // KDE_IS_VERSION
-        const KUrl url = job->url();
+        const QUrl url = job->url();
 #endif // KDE_IS_VERSION
         DocumentPreviewPrivate::UrlInfo urlInfo = d->urlMetaInfo(url);
         setCursor(d->runningJobs.isEmpty() ? Qt::ArrowCursor : Qt::BusyCursor);
@@ -640,7 +640,7 @@ void DocumentPreview::linkActivated(const QString &link)
     if (link == QLatin1String("disableonlylocalfiles"))
         d->onlyLocalFilesButton->setChecked(true);
     else if (link.startsWith(QLatin1String("http://")) || link.startsWith(QLatin1String("https://"))) {
-        const KUrl urlToOpen = KUrl::fromUserInput(link);
+        const QUrl urlToOpen = QUrl::fromUserInput(link);
         if (urlToOpen.isValid()) {
             /// Guess mime type for url to open
             KMimeType::Ptr mimeType = FileInfo::mimeTypeForUrl(urlToOpen);

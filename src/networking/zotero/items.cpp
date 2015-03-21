@@ -44,8 +44,8 @@ public:
         /// nothing
     }
 
-    QNetworkReply *requestZoteroUrl(const KUrl &url) {
-        KUrl internalUrl = url;
+    QNetworkReply *requestZoteroUrl(const QUrl &url) {
+        QUrl internalUrl = url;
         api->addLimitToUrl(internalUrl);
         QNetworkRequest request = api->request(internalUrl);
         QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
@@ -53,8 +53,8 @@ public:
         return reply;
     }
 
-    void retrieveItems(const KUrl &url, int start) {
-        KUrl internalUrl = url;
+    void retrieveItems(const QUrl &url, int start) {
+        QUrl internalUrl = url;
 
         static const QString queryItemStart = QLatin1String("start");
         internalUrl.removeQueryItem(queryItemStart);
@@ -72,21 +72,24 @@ Items::Items(API *api, QObject *parent)
 
 void Items::retrieveItemsByCollection(const QString &collection)
 {
-    KUrl url = d->api->baseUrl();
+    QUrl url = d->api->baseUrl();
     if (collection.isEmpty())
-        url.addPath(QLatin1String("items"));
+        url = url.adjusted(QUrl::StripTrailingSlash);
+        url.setPath(url.path() + '/' + (QLatin1String("items")));
     else
-        url.addPath(QString(QLatin1String("/collections/%1/items")).arg(collection));
+        url = url.adjusted(QUrl::StripTrailingSlash);
+        url.setPath(url.path() + '/' + (QString(QLatin1String("/collections/%1/items")).arg(collection)));
     url.addQueryItem(QLatin1String("format"), QLatin1String("bibtex"));
     d->retrieveItems(url, 0);
 }
 
 void  Items::retrieveItemsByTag(const QString &tag)
 {
-    KUrl url = d->api->baseUrl();
+    QUrl url = d->api->baseUrl();
     if (!tag.isEmpty())
         url.addQueryItem(QLatin1String("tag"), tag);
-    url.addPath(QLatin1String("items"));
+    url = url.adjusted(QUrl::StripTrailingSlash);
+    url.setPath(url.path() + '/' + (QLatin1String("items")));
     url.addQueryItem(QLatin1String("format"), QLatin1String("bibtex"));
     d->retrieveItems(url, 0);
 }

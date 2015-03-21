@@ -29,8 +29,8 @@
 #include <QtGlobal>
 #include <QTimer>
 #include <QDebug>
+#include <QUrl>
 
-#include <KUrl>
 #include <KApplication>
 #include <KProtocolManager>
 

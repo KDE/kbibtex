@@ -33,7 +33,7 @@
 #include <KMessageBox>
 #include <KGlobalSettings>
 #include <KLocale>
-#include <KUrl>
+#include <QUrl>
 #include <KPushButton>
 #include <KSharedConfig>
 #include <KConfigGroup>
@@ -65,7 +65,7 @@ private:
 public:
     QMenu *menuTypes;
     KBibTeX::TypeFlag typeFlag;
-    KUrl urlToOpen;
+    QUrl urlToOpen;
     const File *file;
     QString fieldKey;
 
@@ -383,12 +383,12 @@ public:
     }
 
     void updateURL(const QString &text) {
-        QList<KUrl> urls;
-        FileInfo::urlsInText(text, FileInfo::TestExistenceYes, file != NULL && file->property(File::Url).toUrl().isValid() ? KUrl(file->property(File::Url).toUrl()).directory() : QString(), urls);
+        QList<QUrl> urls;
+        FileInfo::urlsInText(text, FileInfo::TestExistenceYes, file != NULL && file->property(File::Url).toUrl().isValid() ? QUrl(file->property(File::Url).toUrl()).directory() : QString(), urls);
         if (!urls.isEmpty() && urls.first().isValid())
             urlToOpen = urls.first();
         else
-            urlToOpen = KUrl();
+            urlToOpen = QUrl();
 
         /// set special "open URL" button visible if URL (or file or DOI) found
         buttonOpenUrl->setVisible(urlToOpen.isValid());

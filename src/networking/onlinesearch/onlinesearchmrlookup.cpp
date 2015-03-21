@@ -42,7 +42,7 @@ void OnlineSearchMRLookup::startSearch(const QMap<QString, QString> &query, int)
 {
     m_hasBeenCanceled = false;
 
-    KUrl url(queryUrlStem);
+    QUrl url(queryUrlStem);
 
     const QString title = query[queryKeyTitle];
     url.addQueryItem(QLatin1String("ti"), title);
@@ -85,9 +85,9 @@ OnlineSearchQueryFormAbstract *OnlineSearchMRLookup::customWidget(QWidget *)
     return NULL;
 }
 
-KUrl OnlineSearchMRLookup::homepage() const
+QUrl OnlineSearchMRLookup::homepage() const
 {
-    return KUrl("http://www.ams.org/mrlookup");
+    return QUrl("http://www.ams.org/mrlookup");
 }
 
 void OnlineSearchMRLookup::cancel()

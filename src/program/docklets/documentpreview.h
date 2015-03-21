@@ -22,7 +22,7 @@
 #include <QLabel>
 #include <QPixmap>
 
-#include <KUrl>
+#include <QUrl>
 
 class QDockWidget;
 class QResizeEvent;
@@ -58,13 +58,13 @@ public:
 
 public slots:
     void setElement(QSharedPointer<Element>, File *);
-    void setBibTeXUrl(const KUrl &);
+    void setBibTeXUrl(const QUrl &);
 
 private:
     class DocumentPreviewPrivate;
     DocumentPreviewPrivate *d;
 
-    QString mimeType(const KUrl &url);
+    QString mimeType(const QUrl &url);
 
 private slots:
     void openExternally();

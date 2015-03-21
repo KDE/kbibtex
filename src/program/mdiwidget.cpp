@@ -67,7 +67,7 @@ public:
             OpenFileInfo *ofiItem = ofiList[index.row()];
             if (index.column() == 0) {
                 if (role == Qt::DisplayRole || role == SortRole) {
-                    const KUrl url = ofiItem->url();
+                    const QUrl url = ofiItem->url();
                     const QString fileName = url.fileName();
                     return fileName.isEmpty() ? squeeze_text(url.pathOrUrl(), 32) : fileName;
                 } else if (role == Qt::DecorationRole)
@@ -84,9 +84,9 @@ public:
                     return ofiItem->url().pathOrUrl();
             }
             if (role == URLRole) {
-                const KUrl url = ofiItem->url();
+                const QUrl url = ofiItem->url();
                 if (url.isLocalFile())
-                    return KUrl::fromLocalFile(url.path());
+                    return QUrl::fromLocalFile(url.path());
                 else
                     return url;
             }
@@ -272,7 +272,7 @@ void MDIWidget::setFile(OpenFileInfo *openFileInfo, KService::Ptr servicePtr)
     }
 
     if (openFileInfo != NULL) {
-        KUrl url = openFileInfo->url();
+        QUrl url = openFileInfo->url();
         if (url.isValid())
             emit setCaption(QString("%1 [%2]").arg(openFileInfo->shortCaption()).arg(squeeze_text(openFileInfo->fullCaption(), 64)));
         else
@@ -300,8 +300,8 @@ OpenFileInfoManager *MDIWidget::getOpenFileInfoManager()
 void MDIWidget::slotCompleted(QObject *obj)
 {
     OpenFileInfo *ofi = static_cast<OpenFileInfo *>(obj);
-    KUrl oldUrl = ofi->url();
-    KUrl newUrl = ofi->part(this)->url();
+    QUrl oldUrl = ofi->url();
+    QUrl newUrl = ofi->part(this)->url();
 
     if (!oldUrl.equals(newUrl)) {
         kDebug() << "Url changed from " << oldUrl.pathOrUrl() << " to " << newUrl.pathOrUrl() << endl;
@@ -322,7 +322,7 @@ void MDIWidget::slotStatusFlagsChanged(OpenFileInfo::StatusFlags statusFlags)
 
 void MDIWidget::slotOpenLRU(const QModelIndex &index)
 {
-    KUrl url = index.data(LRUItemModel::URLRole).toUrl();
+    QUrl url = index.data(LRUItemModel::URLRole).toUrl();
     if (url.isValid())
         emit documentOpenURL(url);
 }

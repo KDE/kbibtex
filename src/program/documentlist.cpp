@@ -60,7 +60,7 @@ public:
         buttonHome->setToolTip(i18n("Go to Home folder"));
         layout->addWidget(buttonHome, 0, 1, 1, 1);
 
-        dirOperator = new KDirOperator(KUrl("file:" + QDir::homePath()), this);
+        dirOperator = new KDirOperator(QUrl("file:" + QDir::homePath()), this);
         layout->addWidget(dirOperator, 1, 0, 1, 3);
         dirOperator->setView(KFile::Detail);
 

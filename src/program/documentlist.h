@@ -24,7 +24,7 @@
 
 #include <KTabWidget>
 #include <KListWidget>
-#include <KUrl>
+#include <QUrl>
 
 #include "openfileinfo.h"
 
@@ -98,7 +98,7 @@ public:
     explicit DocumentList(OpenFileInfoManager *openFileInfoManager, QWidget *parent = NULL);
 
 signals:
-    void openFile(const KUrl &url);
+    void openFile(const QUrl &url);
 
 private slots:
     void fileSelected(const KFileItem &item);

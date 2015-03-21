@@ -19,8 +19,7 @@
 
 #include <QVariant>
 #include <QRegExp>
-
-#include <KDE/KUrl>
+#include <QUrl>
 
 namespace KBibTeX
 {
@@ -83,9 +82,9 @@ static const QRegExp htmlRegExp = QRegExp("</?(a|pre|p|br|span|i|b|italic)\\b[^>
 
 }
 
-inline static bool isLocalOrRelative(const KUrl &url)
+inline static bool isLocalOrRelative(const QUrl &url)
 {
-    return url.isLocalFile() || url.isRelative() || url.protocol().isEmpty();
+    return url.isLocalFile() || url.isRelative() || url.scheme().isEmpty();
 }
 
 /**

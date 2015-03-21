@@ -38,9 +38,9 @@ OnlineSearchQueryFormAbstract *OnlineSearchCERNDS::customWidget(QWidget *parent)
     return NULL;
 }
 
-KUrl OnlineSearchCERNDS::homepage() const
+QUrl OnlineSearchCERNDS::homepage() const
 {
-    return KUrl("http://cds.cern.ch/");
+    return QUrl("http://cds.cern.ch/");
 }
 
 QString OnlineSearchCERNDS::favIconUrl() const
@@ -48,7 +48,7 @@ QString OnlineSearchCERNDS::favIconUrl() const
     return QLatin1String("http://cds.cern.ch/favicon.ico");
 }
 
-KUrl OnlineSearchCERNDS::buildQueryUrl(const QMap<QString, QString> &query, int numResults)
+QUrl OnlineSearchCERNDS::buildQueryUrl(const QMap<QString, QString> &query, int numResults)
 {
     /// Example for a search URL:
     /// http://cds.cern.ch/search?action_search=Search&sf=&so=d&rm=&sc=0&of=hx&f=&rg=10&ln=en&as=1&m1=a&p1=stone&f1=title&op1=a&m2=a&p2=smith&f2=author&op2=a&m3=a&p3=&f3=
@@ -63,7 +63,7 @@ KUrl OnlineSearchCERNDS::buildQueryUrl(const QMap<QString, QString> &query, int 
     ///   fX   ""=any field; title; author; reportnumber; year; fulltext
 
     /// Build URL
-    KUrl url = KUrl(QLatin1String("http://cds.cern.ch/search?ln=en&action_search=Search&c=Articles+%26+Preprints&as=1&sf=&so=d&rm=&sc=0&of=hx&f="));
+    QUrl url = QUrl(QLatin1String("http://cds.cern.ch/search?ln=en&action_search=Search&c=Articles+%26+Preprints&as=1&sf=&so=d&rm=&sc=0&of=hx&f="));
     /// Set number of expected results
     url.addQueryItem(QLatin1String("rg"), QString::number(numResults));
 

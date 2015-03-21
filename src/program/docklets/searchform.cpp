@@ -325,7 +325,7 @@ public:
     void openHomepage() {
         QListWidgetItem *item = enginesList->currentItem();
         if (item != NULL) {
-            KUrl url = item->data(HomepageRole).value<KUrl>();
+            QUrl url = item->data(HomepageRole).value<QUrl>();
             /// Guess mime type for url to open
             KMimeType::Ptr mimeType = FileInfo::mimeTypeForUrl(url);
             const QString mimeTypeName = mimeType->name();

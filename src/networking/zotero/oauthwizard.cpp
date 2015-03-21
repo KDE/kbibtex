@@ -130,7 +130,7 @@ public:
     }
 
     // TODO separate GUI code from functional code
-    KUrl oAuthAuthorizationUrl() {
+    QUrl oAuthAuthorizationUrl() {
         /// Send a request for an unauthorized token
         QOAuth::ParamMap params;
         params.insert("oauth_callback", "oob");
@@ -142,7 +142,7 @@ public:
             token = reply.value(QOAuth::tokenParameterName());
             tokenSecret = reply.value(QOAuth::tokenSecretParameterName());
 
-            KUrl oauthAuthorizationUrl = KUrl(QLatin1String("https://www.zotero.org/oauth/authorize"));
+            QUrl oauthAuthorizationUrl = QUrl(QLatin1String("https://www.zotero.org/oauth/authorize"));
             oauthAuthorizationUrl.addQueryItem("oauth_token", token);
             oauthAuthorizationUrl.addQueryItem("library_access", "1");
             oauthAuthorizationUrl.addQueryItem("notes_access", "0");
@@ -152,7 +152,7 @@ public:
         } else
             kWarning() << "Error getting token" << qOAuth->error();
 
-        return KUrl();
+        return QUrl();
     }
 
     void setupGUI() {
@@ -290,7 +290,7 @@ void OAuthWizard::copyAuthorizationUrl()
 
 void OAuthWizard::openAuthorizationUrl()
 {
-    KRun::runUrl(KUrl(d->lineEditAuthorizationUrl->text()), QLatin1String("text/html"), this);
+    KRun::runUrl(QUrl(d->lineEditAuthorizationUrl->text()), QLatin1String("text/html"), this);
 }
 
 #endif // HAVE_QTOAUTH

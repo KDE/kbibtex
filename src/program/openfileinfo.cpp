@@ -22,12 +22,12 @@
 #include <QTimer>
 #include <QFileInfo>
 #include <QWidget>
+#include <QUrl>
 
 #include <KConfig>
 #include <KConfigGroup>
 #include <KDebug>
 #include <KMimeTypeTrader>
-#include <KUrl>
 #include <kparts/part.h>
 #include <KIO/NetAccess>
 
@@ -53,9 +53,9 @@ public:
     StatusFlags flags;
     OpenFileInfoManager *openFileInfoManager;
     QString mimeType;
-    KUrl url;
+    QUrl url;
 
-    OpenFileInfoPrivate(OpenFileInfoManager *openFileInfoManager, const KUrl &url, const QString &mimeType, OpenFileInfo *p)
+    OpenFileInfoPrivate(OpenFileInfoManager *openFileInfoManager, const QUrl &url, const QString &mimeType, OpenFileInfo *p)
         :  m_counter(-1), p(p), part(NULL), internalServicePtr(KService::Ptr()), internalWidgetParent(NULL), flags(0) {
         this->openFileInfoManager = openFileInfoManager;
         this->url = url;
@@ -124,7 +124,7 @@ public:
             p->addFlags(OpenFileInfo::HasName);
         } else {
             /// initialize part with empty document
-            part->openUrl(KUrl());
+            part->openUrl(QUrl());
         }
         p->addFlags(OpenFileInfo::Open);
 
@@ -150,14 +150,14 @@ const QString OpenFileInfo::OpenFileInfoPrivate::dateTimeFormat = QLatin1String(
 const QString OpenFileInfo::OpenFileInfoPrivate::keyLastAccess = QLatin1String("LastAccess");
 const QString OpenFileInfo::OpenFileInfoPrivate::keyURL = QLatin1String("URL");
 
-OpenFileInfo::OpenFileInfo(OpenFileInfoManager *openFileInfoManager, const KUrl &url)
+OpenFileInfo::OpenFileInfo(OpenFileInfoManager *openFileInfoManager, const QUrl &url)
         : d(new OpenFileInfoPrivate(openFileInfoManager, url, FileInfo::mimeTypeForUrl(url)->name(), this))
 {
     // nothing
 }
 
 OpenFileInfo::OpenFileInfo(OpenFileInfoManager *openFileInfoManager, const QString &mimeType)
-        : d(new OpenFileInfoPrivate(openFileInfoManager, KUrl(), mimeType, this))
+        : d(new OpenFileInfoPrivate(openFileInfoManager, QUrl(), mimeType, this))
 {
     // nothing
 }
@@ -167,15 +167,15 @@ OpenFileInfo::~OpenFileInfo()
     delete d;
 }
 
-void OpenFileInfo::setUrl(const KUrl &url)
+void OpenFileInfo::setUrl(const QUrl &url)
 {
-    Q_ASSERT_X(url.isValid(), "void OpenFileInfo::setUrl(const KUrl&)", "URL is not valid");
+    Q_ASSERT_X(url.isValid(), "void OpenFileInfo::setUrl(const QUrl&)", "URL is not valid");
     d->url = url;
     d->mimeType = FileInfo::mimeTypeForUrl(url)->name();
     addFlags(OpenFileInfo::HasName);
 }
 
-KUrl OpenFileInfo::url() const
+QUrl OpenFileInfo::url() const
 {
     return d->url;
 }
@@ -364,7 +364,7 @@ public:
         bool isFirst = true;
         KConfigGroup cg(config, configGroupName);
         for (int i = 0; i < maxNumFiles; ++i) {
-            KUrl fileUrl = KUrl(cg.readEntry(QString("%1-%2").arg(OpenFileInfo::OpenFileInfoPrivate::keyURL).arg(i), ""));
+            QUrl fileUrl = QUrl(cg.readEntry(QString("%1-%2").arg(OpenFileInfo::OpenFileInfoPrivate::keyURL).arg(i), ""));
             if (!fileUrl.isValid()) break;
 
             /// For local files, test if they exist; ignore local files that do not exist
@@ -437,9 +437,9 @@ OpenFileInfo *OpenFileInfoManager::createNew(const QString &mimeType)
     return result;
 }
 
-OpenFileInfo *OpenFileInfoManager::open(const KUrl &url)
+OpenFileInfo *OpenFileInfoManager::open(const QUrl &url)
 {
-    Q_ASSERT_X(url.isValid(), "OpenFileInfo *OpenFileInfoManager::open(const KUrl&)", "URL is not valid");
+    Q_ASSERT_X(url.isValid(), "OpenFileInfo *OpenFileInfoManager::open(const QUrl&)", "URL is not valid");
 
     OpenFileInfo *result = contains(url);
     if (result == NULL) {
@@ -452,7 +452,7 @@ OpenFileInfo *OpenFileInfoManager::open(const KUrl &url)
     return result;
 }
 
-OpenFileInfo *OpenFileInfoManager::contains(const KUrl &url) const
+OpenFileInfo *OpenFileInfoManager::contains(const QUrl &url) const
 {
     if (!url.isValid()) return NULL; /// can only be unnamed file
 
@@ -464,7 +464,7 @@ OpenFileInfo *OpenFileInfoManager::contains(const KUrl &url) const
     return NULL;
 }
 
-bool OpenFileInfoManager::changeUrl(OpenFileInfo *openFileInfo, const KUrl &url)
+bool OpenFileInfoManager::changeUrl(OpenFileInfo *openFileInfo, const QUrl &url)
 {
     OpenFileInfo *previouslyContained = contains(url);
 
@@ -474,7 +474,7 @@ bool OpenFileInfoManager::changeUrl(OpenFileInfo *openFileInfo, const KUrl &url)
         close(previouslyContained);
     }
 
-    KUrl oldUrl = openFileInfo->url();
+    QUrl oldUrl = openFileInfo->url();
     openFileInfo->setUrl(url);
 
     if (!url.equals(oldUrl) && oldUrl.isValid()) {

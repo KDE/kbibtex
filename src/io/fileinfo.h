@@ -21,8 +21,8 @@
 #include "kbibtexio_export.h"
 
 #include <QList>
+#include <QUrl>
 
-#include <KUrl>
 #include <KMimeType>
 
 class Entry;
@@ -54,7 +54,7 @@ public:
      * @param url Url to analyze
      * @return Guessed mime type
      */
-    static KMimeType::Ptr mimeTypeForUrl(const KUrl &url);
+    static KMimeType::Ptr mimeTypeForUrl(const QUrl &url);
 
     /**
      * Find all file or URL references in the given text. Found filenames or
@@ -68,7 +68,7 @@ public:
      * @param baseDirectory base directory for tests on relative path names
      * @param addTo add found URLs/filenames to this list
      */
-    static void urlsInText(const QString &text, TestExistence testExistence, const QString &baseDirectory, QList<KUrl> &addTo);
+    static void urlsInText(const QString &text, TestExistence testExistence, const QString &baseDirectory, QList<QUrl> &addTo);
 
     /**
      * Find all file or URL references in the given entry. Found filenames or
@@ -82,7 +82,7 @@ public:
      * @param testExistence shall be tested for file existence?
      * @return list of found URLs/filenames (duplicates are avoided)
      */
-    static QList<KUrl> entryUrls(const Entry *entry, const KUrl &bibTeXUrl, TestExistence testExistence);
+    static QList<QUrl> entryUrls(const Entry *entry, const QUrl &bibTeXUrl, TestExistence testExistence);
 
     /**
      * Load the given PDF file and return the contained plain text.

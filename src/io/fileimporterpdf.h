@@ -19,7 +19,7 @@
 
 #include "kbibtexio_export.h"
 
-#include <KUrl>
+#include <QUrl>
 
 #include "fileimporter.h"
 
@@ -37,7 +37,7 @@ public:
     File *load(QIODevice *iodevice);
     static bool guessCanDecode(const QString &text);
 
-    static bool containsBibTeXData(const KUrl &url);
+    static bool containsBibTeXData(const QUrl &url);
 
 public slots:
     void cancel();

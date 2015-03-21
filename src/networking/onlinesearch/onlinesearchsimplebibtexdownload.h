@@ -33,7 +33,7 @@ public:
     virtual void startSearch(const QMap<QString, QString> &query, int numResults);
 
 protected:
-    virtual KUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) = 0;
+    virtual QUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) = 0;
 
 public slots:
     void cancel();

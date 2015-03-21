@@ -38,7 +38,7 @@ public:
     static const int countPerStep;
     int maxSteps, curStep;
 
-    KUrl baseUrl;
+    QUrl baseUrl;
 
     XSLTransform *xslt;
 
@@ -95,7 +95,7 @@ public:
         }
 
         const QString queryString = queryFragments.join(QLatin1String("+and+"));
-        baseUrl = KUrl(QString(QLatin1String("http://www.worldcat.org/webservices/catalog/search/worldcat/sru?query=%1&recordSchema=%3&wskey=%2")).arg(queryString).arg(OnlineSearchOCLCWorldCat::Private::APIkey).arg(QLatin1String("info%3Asrw%2Fschema%2F1%2Fdc")));
+        baseUrl = QUrl(QString(QLatin1String("http://www.worldcat.org/webservices/catalog/search/worldcat/sru?query=%1&recordSchema=%3&wskey=%2")).arg(queryString).arg(OnlineSearchOCLCWorldCat::Private::APIkey).arg(QLatin1String("info%3Asrw%2Fschema%2F1%2Fdc")));
         baseUrl.addQueryItem(QLatin1String("maximumRecords"), QString::number(OnlineSearchOCLCWorldCat::Private::countPerStep));
     }
 };
@@ -138,7 +138,7 @@ void OnlineSearchOCLCWorldCat::startSearch(const QMap<QString, QString> &query, 
         delayedStoppedSearch(resultInvalidArguments);
         return;
     }
-    KUrl startUrl = d->baseUrl;
+    QUrl startUrl = d->baseUrl;
     QNetworkRequest request(startUrl);
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
     InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
@@ -153,8 +153,8 @@ OnlineSearchQueryFormAbstract *OnlineSearchOCLCWorldCat::customWidget(QWidget *)
     return NULL;
 }
 
-KUrl OnlineSearchOCLCWorldCat::homepage() const {
-    return KUrl(QLatin1String("http://www.worldcat.org/"));
+QUrl OnlineSearchOCLCWorldCat::homepage() const {
+    return QUrl(QLatin1String("http://www.worldcat.org/"));
 }
 
 void OnlineSearchOCLCWorldCat::cancel() {
@@ -193,7 +193,7 @@ void OnlineSearchOCLCWorldCat::downloadDone() {
                 emit progress(d->maxSteps, d->maxSteps);
                 emit stoppedSearch(resultNoError);
             } else if (d->curStep < d->maxSteps) {
-                KUrl nextUrl = d->baseUrl;
+                QUrl nextUrl = d->baseUrl;
                 nextUrl.addQueryItem(QLatin1String("start"), QString::number(d->curStep * OnlineSearchOCLCWorldCat::Private::countPerStep + 1));
                 QNetworkRequest request(nextUrl);
                 QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request);

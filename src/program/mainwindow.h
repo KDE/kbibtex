@@ -40,7 +40,7 @@ public:
     virtual ~KBibTeXMainWindow();
 
 public slots:
-    void openDocument(const KUrl &url);
+    void openDocument(const QUrl &url);
 
 protected: // KMainWindow API
     void dragEnterEvent(QDragEnterEvent *event);

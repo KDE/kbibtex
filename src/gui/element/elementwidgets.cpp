@@ -783,11 +783,11 @@ void OtherFieldsWidget::listCurrentChanged(QTreeWidgetItem *item, QTreeWidgetIte
     bool somethingSelected = item != NULL;
     buttonDelete->setEnabled(somethingSelected && !isReadOnly);
     if (somethingSelected) {
-        currentUrl = KUrl(item->text(1));
+        currentUrl = QUrl(item->text(1));
         validUrl = currentUrl.isValid() && currentUrl.isLocalFile() & QFileInfo(currentUrl.pathOrUrl()).exists();
         if (!validUrl) {
             if (KBibTeX::urlRegExp.indexIn(item->text(1)) > -1) {
-                currentUrl = KUrl(KBibTeX::urlRegExp.cap(0));
+                currentUrl = QUrl(KBibTeX::urlRegExp.cap(0));
                 validUrl = currentUrl.isValid();
                 buttonOpen->setEnabled(validUrl);
             }
@@ -795,7 +795,7 @@ void OtherFieldsWidget::listCurrentChanged(QTreeWidgetItem *item, QTreeWidgetIte
     }
 
     if (!validUrl)
-        currentUrl = KUrl();
+        currentUrl = QUrl();
     buttonOpen->setEnabled(validUrl);
 }
 

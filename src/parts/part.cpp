@@ -124,7 +124,7 @@ public:
         delete signalMapperViewDocument;
     }
 
-    FileImporter *fileImporterFactory(const KUrl &url) {
+    FileImporter *fileImporterFactory(const QUrl &url) {
         QString ending = url.path().toLower();
         int p = ending.lastIndexOf(".");
         ending = ending.mid(p + 1);
@@ -142,7 +142,7 @@ public:
         }
     }
 
-    FileExporter *fileExporterFactory(const KUrl &url) {
+    FileExporter *fileExporterFactory(const QUrl &url) {
         QString ending = url.path().toLower();
         int p = ending.lastIndexOf(".");
         ending = ending.mid(p + 1);
@@ -195,7 +195,7 @@ public:
         connect(partWidget->filterBar(), SIGNAL(filterChanged(SortFilterFileModel::FilterQuery)), sortFilterProxyModel, SLOT(updateFilter(SortFilterFileModel::FilterQuery)));
     }
 
-    bool openFile(const KUrl &url, const QString &localFilePath) {
+    bool openFile(const QUrl &url, const QString &localFilePath) {
         p->setObjectName("KBibTeXPart::KBibTeXPart for " + url.pathOrUrl());
 
 
@@ -254,7 +254,7 @@ public:
         return true;
     }
 
-    void makeBackup(const KUrl &url) const {
+    void makeBackup(const QUrl &url) const {
         /// Do not make backup copies if file does not exist yet
         if (!KIO::NetAccess::exists(url, KIO::NetAccess::DestinationSide, p->widget()))
             return;
@@ -275,11 +275,13 @@ public:
         bool copySucceeded = true;
         /// copy e.g. test.bib~ to test.bib~2 and test.bib~3 to test.bib~4 etc.
         for (int i = numberOfBackups - 1; copySucceeded && i >= 1; --i) {
-            KUrl a(url);
-            a.setFileName(url.fileName() + (i > 1 ? QString("~%1").arg(i) : QLatin1String("~")));
+            QUrl a(url);
+            a = a.adjusted(QUrl::RemoveFilename);
+            a.setPath(a.path() + url.fileName() + (i > 1 ? QString("~%1").arg(i) : QLatin1String("~")));
             if (KIO::NetAccess::exists(a, KIO::NetAccess::DestinationSide, p->widget())) {
-                KUrl b(url);
-                b.setFileName(url.fileName() + QString("~%1").arg(i + 1));
+                QUrl b(url);
+                b = b.adjusted(QUrl::RemoveFilename);
+                b.setPath(b.path() + url.fileName() + QString("~%1").arg(i + 1));
                 KIO::NetAccess::del(b, p->widget());
                 copySucceeded = KIO::NetAccess::file_copy(a, b, p->widget());
             }
@@ -287,8 +289,9 @@ public:
 
         if (copySucceeded && (numberOfBackups > 0)) {
             /// copy e.g. test.bib into test.bib~
-            KUrl b(url);
-            b.setFileName(url.fileName() + QLatin1String("~"));
+            QUrl b(url);
+            b = b.adjusted(QUrl::RemoveFilename);
+            b.setPath(b.path() + url.fileName() + QLatin1String("~"));
             KIO::NetAccess::del(b, p->widget());
             copySucceeded = KIO::NetAccess::file_copy(url, b, p->widget());
         }
@@ -297,7 +300,7 @@ public:
             KMessageBox::error(p->widget(), i18n("<qt>Could not create backup copies of document<br/><b>%1</b>.</qt>", url.pathOrUrl()), i18n("Backup copies"));
     }
 
-    KUrl getSaveFilename(bool mustBeImportable = true) {
+    QUrl getSaveFilename(bool mustBeImportable = true) {
         QString startDir = p->url().isValid() ? p->url().path() : QLatin1String("kfiledialog:///opensave");
         QString supportedMimeTypes = QLatin1String("text/x-bibtex text/x-bibtex-compiled application/xml text/x-research-info-systems");
         if (BibUtils::available())
@@ -319,14 +322,14 @@ public:
         saveDlg->setOperationMode(KFileDialog::Saving);
         if (saveDlg->exec() != QDialog::Accepted)
             /// User cancelled saving operation, return invalid filename/URL
-            return KUrl();
-        const KUrl selectedUrl = saveDlg->selectedUrl();
+            return QUrl();
+        const QUrl selectedUrl = saveDlg->selectedUrl();
         delete saveDlg;
         return selectedUrl;
     }
 
-    bool saveFile(const KUrl &url) {
-        Q_ASSERT_X(!url.isEmpty(), "bool KBibTeXPart::KBibTeXPartPrivate:saveFile(const KUrl &url)", "url is not allowed to be empty");
+    bool saveFile(const QUrl &url) {
+        Q_ASSERT_X(!url.isEmpty(), "bool KBibTeXPart::KBibTeXPartPrivate:saveFile(const QUrl &url)", "url is not allowed to be empty");
 
         /// configure and open temporary file
         KTemporaryFile temporaryFile;
@@ -339,7 +342,7 @@ public:
 
         /// export bibliography data into temporary file
         SortFilterFileModel *model = qobject_cast<SortFilterFileModel *>(partWidget->fileView()->model());
-        Q_ASSERT_X(model != NULL, "bool KBibTeXPart::KBibTeXPartPrivate:saveFile(const KUrl &url)", "SortFilterFileModel *model from editor->model() is invalid");
+        Q_ASSERT_X(model != NULL, "bool KBibTeXPart::KBibTeXPartPrivate:saveFile(const QUrl &url)", "SortFilterFileModel *model from editor->model() is invalid");
         FileExporter *exporter = fileExporterFactory(url);
 
         if (isSaveAsOperation) {
@@ -394,14 +397,14 @@ public:
         /// make backup before overwriting target destination
         makeBackup(url);
         /// upload temporary file to target destination
-        KUrl realUrl = url;
+        QUrl realUrl = url;
         if (url.isLocalFile()) {
             /// take precautions for local files
             QFileInfo fileInfo(url.pathOrUrl());
             if (fileInfo.isSymLink()) {
                 /// do not overwrite symbolic link,
                 /// but linked file instead
-                realUrl = KUrl::fromLocalFile(fileInfo.symLinkTarget());
+                realUrl = QUrl::fromLocalFile(fileInfo.symLinkTarget());
             }
         }
         KIO::NetAccess::del(realUrl, p->widget());
@@ -415,7 +418,7 @@ public:
         return result;
     }
 
-    bool checkOverwrite(const KUrl &url, QWidget *parent) {
+    bool checkOverwrite(const QUrl &url, QWidget *parent) {
         if (!url.isLocalFile())
             return true;
 
@@ -451,12 +454,12 @@ public:
         /// Test and continue if there was an Entry to retrieve
         if (!entry.isNull()) {
             /// Get list of URLs associated with this entry
-            QList<KUrl> urlList = FileInfo::entryUrls(entry.data(), partWidget->fileView()->fileModel()->bibliographyFile()->property(File::Url).toUrl(), FileInfo::TestExistenceYes);
+            QList<QUrl> urlList = FileInfo::entryUrls(entry.data(), partWidget->fileView()->fileModel()->bibliographyFile()->property(File::Url).toUrl(), FileInfo::TestExistenceYes);
             if (!urlList.isEmpty()) {
                 /// Memorize first action, necessary to set menu title
                 KAction *firstAction = NULL;
                 /// First iteration: local references only
-                for (QList<KUrl>::ConstIterator it = urlList.constBegin(); it != urlList.constEnd(); ++it) {
+                for (QList<QUrl>::ConstIterator it = urlList.constBegin(); it != urlList.constEnd(); ++it) {
                     /// First iteration: local references only
                     if (!(*it).isLocalFile()) continue; ///< skip remote URLs
 
@@ -483,7 +486,7 @@ public:
 
                 firstAction = NULL; /// Now the first remote action is to be memorized
                 /// Second iteration: remote references only
-                for (QList<KUrl>::ConstIterator it = urlList.constBegin(); it != urlList.constEnd(); ++it) {
+                for (QList<QUrl>::ConstIterator it = urlList.constBegin(); it != urlList.constEnd(); ++it) {
                     if ((*it).isLocalFile()) continue; ///< skip local files
 
                     /// Build a nice menu item (label, icon, ...)
@@ -729,7 +732,7 @@ bool KBibTeXPart::documentSave()
 bool KBibTeXPart::documentSaveAs()
 {
     d->isSaveAsOperation = true;
-    KUrl newUrl = d->getSaveFilename();
+    QUrl newUrl = d->getSaveFilename();
     if (!newUrl.isValid() || !d->checkOverwrite(newUrl, widget()))
         return false;
 
@@ -754,7 +757,7 @@ bool KBibTeXPart::documentSaveAs()
 bool KBibTeXPart::documentSaveCopyAs()
 {
     d->isSaveAsOperation = true;
-    KUrl newUrl = d->getSaveFilename(false);
+    QUrl newUrl = d->getSaveFilename(false);
     if (!newUrl.isValid() || !d->checkOverwrite(newUrl, widget()) || newUrl.equals(url()))
         return false;
 
@@ -765,13 +768,13 @@ bool KBibTeXPart::documentSaveCopyAs()
 
 void KBibTeXPart::elementViewDocument()
 {
-    KUrl url;
+    QUrl url;
 
     QList<QAction *> actionList = d->viewDocumentMenu->actions();
     /// Go through all actions (i.e. document URLs) for this element
     for (QList<QAction *>::ConstIterator it = actionList.constBegin(); it != actionList.constEnd(); ++it) {
         /// Make URL from action's data ...
-        KUrl tmpUrl = KUrl((*it)->data().toString());
+        QUrl tmpUrl = QUrl((*it)->data().toString());
         /// ... but skip this action if the URL is invalid
         if (!tmpUrl.isValid()) continue;
         if (tmpUrl.isLocalFile()) {
@@ -971,7 +974,7 @@ void KBibTeXPart::fileExternallyChange(const QString &path)
         kWarning() << "No filename to stop watching";
 
     if (KMessageBox::warningContinueCancel(widget(), i18n("The file '%1' has changed on disk.\n\nReload file or ignore changes on disk?", path), i18n("File changed externally"), KGuiItem(i18n("Reload file"), KIcon("edit-redo")), KGuiItem(i18n("Ignore on-disk changes"), KIcon("edit-undo"))) == KMessageBox::Continue) {
-        d->openFile(KUrl::fromLocalFile(path), path);
+        d->openFile(QUrl::fromLocalFile(path), path);
         /// No explicit call to QFileSystemWatcher.addPath(...) necessary,
         /// openFile(...) has done that already
     } else {

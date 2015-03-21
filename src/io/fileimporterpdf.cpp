@@ -91,7 +91,7 @@ void FileImporterPDF::cancel()
     m_bibTeXimporter->cancel();
 }
 
-bool FileImporterPDF::containsBibTeXData(const KUrl &url)
+bool FileImporterPDF::containsBibTeXData(const QUrl &url)
 {
     bool result = false;
 

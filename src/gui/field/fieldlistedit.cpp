@@ -326,9 +326,9 @@ void FieldListEdit::dropEvent(QDropEvent *event)
 
         if (file != NULL && !entry.isNull() && d->fieldKey == QLatin1String("^external")) {
             /// handle "external" list differently
-            QList<KUrl> urlList = FileInfo::entryUrls(entry.data(), KUrl(file->property(File::Url).toUrl()), FileInfo::TestExistenceNo);
+            QList<QUrl> urlList = FileInfo::entryUrls(entry.data(), QUrl(file->property(File::Url).toUrl()), FileInfo::TestExistenceNo);
             Value v;
-            foreach(const KUrl &url, urlList) {
+            foreach(const QUrl &url, urlList) {
                 v.append(QSharedPointer<VerbatimText>(new VerbatimText(url.pathOrUrl())));
             }
             reset(v);
@@ -488,14 +488,14 @@ void UrlListEdit::slotAddReference()
         const QFileInfo fi(bibtexUrl.path());
         bibtexUrl.setPath(fi.absolutePath());
     }
-    const KUrl documentUrl = KFileDialog::getOpenUrl(bibtexUrl, QString(), this, i18n("File to Associate"));
+    const QUrl documentUrl = KFileDialog::getOpenUrl(bibtexUrl, QString(), this, i18n("File to Associate"));
     if (!documentUrl.isEmpty())
         addReference(documentUrl);
 }
 
 void UrlListEdit::slotAddReferenceFromClipboard()
 {
-    const KUrl url = KUrl::fromUserInput(QApplication::clipboard()->text());
+    const QUrl url = QUrl::fromUserInput(QApplication::clipboard()->text());
     if (!url.isEmpty())
         addReference(url);
 }
@@ -517,7 +517,7 @@ void UrlListEdit::slotSaveLocally(QWidget *widget)
     /// Determine FieldLineEdit widget
     FieldLineEdit *fieldLineEdit = qobject_cast<FieldLineEdit *>(widget);
     /// Build Url from line edit's content
-    const KUrl url(fieldLineEdit->text());
+    const QUrl url(fieldLineEdit->text());
 
     /// Only proceed if Url is valid and points to a remote location
     if (url.isValid() && !urlIsLocal(url)) {
@@ -542,7 +542,7 @@ void UrlListEdit::slotSaveLocally(QWidget *widget)
             // FIXME: KIO::NetAccess::download is blocking
             setEnabled(false);
             setCursor(Qt::WaitCursor);
-            if (KIO::NetAccess::file_copy(url, KUrl::fromLocalFile(absoluteFilename), this)) {
+            if (KIO::NetAccess::file_copy(url, QUrl::fromLocalFile(absoluteFilename), this)) {
                 /// Download succeeded, add reference to local file to this BibTeX entry
                 Value *value = new Value();
                 value->append(QSharedPointer<VerbatimText>(new VerbatimText(visibleFilename)));
@@ -568,7 +568,7 @@ void UrlListEdit::textChanged(QWidget *widget)
     /// Only remote URLs are of interest, therefore no tests
     /// on local file or relative paths
     QString newText = fieldLineEdit->text();
-    KUrl url(newText);
+    QUrl url(newText);
     newText = newText.toLower();
 
     /// Enable button only if Url is valid and points to a remote

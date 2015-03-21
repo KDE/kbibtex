@@ -121,7 +121,7 @@ public:
 
     static QString askRelativeOrStaticFilename(QWidget *parent, const QString &filename, const QUrl &baseUrl);
 
-    /// Own function as KUrl's isLocalFile is not reliable
+    /// Own function as QUrl's isLocalFile is not reliable
     static bool urlIsLocal(const QUrl &url);
 
 protected:
