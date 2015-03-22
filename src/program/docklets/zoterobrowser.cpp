@@ -31,6 +31,7 @@
 #include <KPushButton>
 #include <KConfigGroup>
 #include <KMessageBox>
+#include <KSharedConfig>
 
 #include "element.h"
 #include "searchresults.h"

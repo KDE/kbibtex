@@ -27,6 +27,7 @@
 
 #include <KConfig>
 #include <KConfigGroup>
+#include <KSharedConfig>
 #include <KMimeTypeTrader>
 #include <kparts/part.h>
 #include <KIO/NetAccess>

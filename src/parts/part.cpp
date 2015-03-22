@@ -41,6 +41,7 @@
 #include <KActionMenu>
 #include <KSelectAction>
 #include <KToggleAction>
+#include <KSharedConfig>
 #include <KMenu>
 #include <KTemporaryFile>
 #include <KIO/NetAccess>

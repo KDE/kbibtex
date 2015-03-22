@@ -27,6 +27,7 @@
 #include <KIconLoader>
 #include <KMessageBox>
 #include <KConfigGroup>
+#include <KSharedConfig>
 
 #include "entry.h"
 #include "elementeditor.h"

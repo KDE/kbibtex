@@ -43,6 +43,7 @@
 #include <KMimeType>
 #include <KRun>
 #include <KIO/NetAccess>
+#include <KSharedConfig>
 
 #include "fileexporterbibtex.h"
 #include "fileexporterbibtex2html.h"

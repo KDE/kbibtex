@@ -33,6 +33,7 @@
 #include <KLocale>
 #include <KAction>
 #include <KToggleAction>
+#include <KSharedConfig>
 
 #include "bibtexfields.h"
 #include "entry.h"

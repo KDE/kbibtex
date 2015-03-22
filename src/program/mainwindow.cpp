@@ -35,6 +35,7 @@
 #include <KPluginLoader>
 #include <KMessageBox>
 #include <KMenu>
+#include <KSharedConfig>
 
 #include "kbibtexnamespace.h"
 #include "preferences/kbibtexpreferencesdialog.h"
@@ -104,7 +105,7 @@ KBibTeXMainWindow::KBibTeXMainWindow()
 
     /*
         const char mainWindowStateKey[] = "State";
-        KConfigGroup group( KGlobal::config(), "MainWindow" );
+        KConfigGroup group( KSharedConfig::openConfig(), "MainWindow" );
         if( !group.hasKey(mainWindowStateKey) )
             group.writeEntry( mainWindowStateKey, mainWindowState );
     */

@@ -27,6 +27,7 @@
 #include <KLocale>
 #include <KLineEdit>
 #include <KConfigGroup>
+#include <KSharedConfig>
 
 #include "bibtexfields.h"
 #include "delayedexecutiontimer.h"

@@ -44,6 +44,7 @@
 #include <KStandardDirs>
 #include <KConfigGroup>
 #include <KTabWidget>
+#include <KSharedConfig>
 
 #include "element.h"
 #include "file.h"

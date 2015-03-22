@@ -26,6 +26,7 @@
 #include <KLineEdit>
 #include <KTextEdit>
 #include <KConfigGroup>
+#include <KSharedConfig>
 
 #include "notificationhub.h"
 

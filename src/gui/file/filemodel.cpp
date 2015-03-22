@@ -25,6 +25,7 @@
 
 #include <KLocale>
 #include <KConfigGroup>
+#include <KSharedConfig>
 
 #include "starrating.h"
 #include "element.h"
