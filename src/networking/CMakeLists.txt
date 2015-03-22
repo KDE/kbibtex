@@ -93,7 +93,6 @@ set(
     zotero/tagmodel.h
     zotero/items.h
     zotero/api.h
-    kbibtexnetworking_export.h
     associatedfiles.h
     findpdf.h
     internalnetworkaccessmanager.h

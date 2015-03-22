@@ -24,7 +24,6 @@ set(
     checkbibtex.h
     bibliographyservice.h
     journalabbreviations.h
-    kbibtexproc_export.h
 )
 
 add_definitions(

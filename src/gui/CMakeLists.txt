@@ -80,7 +80,6 @@ set(
     valuelistmodel.h
     italictextitemmodel.h
     delayedexecutiontimer.h
-    kbibtexgui_export.h
     file/findduplicatesui.h
     file/basicfileview.h
     file/clipboard.h

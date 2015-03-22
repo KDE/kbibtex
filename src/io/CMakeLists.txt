@@ -59,7 +59,6 @@ set(
     fileinfo.h
     iconvlatex.h
     iocommon.h
-    kbibtexio_export.h
     bibutils.h
     xsltransform.h
 )
@@ -82,9 +81,9 @@ include_directories(
     ${LIBXSLT_INCLUDE_DIR}
 #     ${POPPLER_QT5_INCLUDE_DIR}
     ${CMAKE_SOURCE_DIR}/src/config
-    ${PROJECT_BINARY_DIR}/src/config
+    ${CMAKE_BINARY_DIR}/src/config
     ${CMAKE_SOURCE_DIR}/src/data
-    ${PROJECT_BINARY_DIR}/src/data
+    ${CMAKE_BINARY_DIR}/src/data
     ${CMAKE_SOURCE_DIR}/src
 )
 
@@ -138,7 +137,7 @@ generate_export_header( kbibtexio )
 install(
     FILES
     ${kbibtexio_HDRS}
-    ${PROJECT_BINARY_DIR}/src/io/kbibtexio_export.h
+    ${CMAKE_BINARY_DIR}/src/io/kbibtexio_export.h
     DESTINATION
     ${INCLUDE_INSTALL_DIR}/kbibtex/io
     COMPONENT

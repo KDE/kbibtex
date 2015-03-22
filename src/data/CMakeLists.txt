@@ -33,7 +33,7 @@ set(
 
 include_directories(
     ${CMAKE_SOURCE_DIR}/src/config
-    ${PROJECT_BINARY_DIR}/src/config
+    ${CMAKE_BINARY_DIR}/src/config
     ${CMAKE_SOURCE_DIR}/src
 )
 
@@ -84,7 +84,7 @@ generate_export_header( kbibtexdata )
 install(
     FILES
     ${kbibtexdata_HDRS}
-    ${PROJECT_BINARY_DIR}/src/data/kbibtexdata_export.h
+    ${CMAKE_BINARY_DIR}/src/data/kbibtexdata_export.h
     DESTINATION
     ${INCLUDE_INSTALL_DIR}/kbibtex/data
     COMPONENT
