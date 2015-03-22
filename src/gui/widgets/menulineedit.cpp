@@ -104,7 +104,7 @@ public:
             m_singleLineEditText = new KLineEdit(p);
             appendWidget(m_singleLineEditText);
             hLayout->setStretchFactor(m_singleLineEditText, 100);
-            m_singleLineEditText->setClearButtonShown(true);
+            m_singleLineEditText->setClearButtonEnabled(true);
             m_singleLineEditText->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
             m_singleLineEditText->setCompletionMode(KGlobalSettings::CompletionPopup);
             m_singleLineEditText->completionObject()->setIgnoreCase(true);

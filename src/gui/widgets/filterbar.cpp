@@ -186,7 +186,7 @@ FilterBar::FilterBar(QWidget *parent)
     QFontMetrics metrics(d->comboBoxFilterText->font());
     d->comboBoxFilterText->setMinimumWidth(metrics.width(QLatin1String("AIWaiw")) * 7);
     KLineEdit *lineEdit = static_cast<KLineEdit *>(d->comboBoxFilterText->lineEdit());
-    lineEdit->setClearButtonShown(true);
+    lineEdit->setClearButtonEnabled(true);
     lineEdit->setClickMessage(i18n("Filter bibliographic entries"));
 
     d->comboBoxCombination = new KComboBox(false, this);

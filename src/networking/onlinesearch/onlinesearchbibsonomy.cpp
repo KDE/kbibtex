@@ -24,9 +24,9 @@
 #include <QNetworkReply>
 #include <QDebug>
 #include <QIcon>
+#include <QLineEdit>
 
 #include <KLocale>
-#include <KLineEdit>
 #include <KComboBox>
 #include <KMessageBox>
 #include <KConfigGroup>
@@ -50,7 +50,7 @@ private:
 
 public:
     KComboBox *comboBoxSearchWhere;
-    KLineEdit *lineEditSearchTerm;
+    QLineEdit *lineEditSearchTerm;
     QSpinBox *numResultsField;
 
     OnlineSearchQueryFormBibsonomy(QWidget *widget)
@@ -69,9 +69,9 @@ public:
         comboBoxSearchWhere->addItem(i18n("Everywhere"), "search");
         comboBoxSearchWhere->setCurrentIndex(comboBoxSearchWhere->count() - 1);
 
-        lineEditSearchTerm = new KLineEdit(this);
+        lineEditSearchTerm = new QLineEdit(this);
         layout->addWidget(lineEditSearchTerm, 0, 1, 1, 1);
-        lineEditSearchTerm->setClearButtonShown(true);
+        lineEditSearchTerm->setClearButtonEnabled(true);
         connect(lineEditSearchTerm, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
 
         QLabel *label = new QLabel(i18n("Number of Results:"), this);

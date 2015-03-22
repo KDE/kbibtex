@@ -69,42 +69,42 @@ public:
         layout->setMargin(0);
 
         lineEditFullText = new KLineEdit(this);
-        lineEditFullText->setClearButtonShown(true);
+        lineEditFullText->setClearButtonEnabled(true);
         layout->addRow(i18n("Full text:"), lineEditFullText);
         connect(lineEditFullText, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
 
         lineEditTitle = new KLineEdit(this);
-        lineEditTitle->setClearButtonShown(true);
+        lineEditTitle->setClearButtonEnabled(true);
         layout->addRow(i18n("Title:"), lineEditTitle);
         connect(lineEditTitle, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
 
         lineEditAuthor = new KLineEdit(this);
-        lineEditAuthor->setClearButtonShown(true);
+        lineEditAuthor->setClearButtonEnabled(true);
         layout->addRow(i18n("Author:"), lineEditAuthor);
         connect(lineEditAuthor, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
 
         lineEditAbstractKeywords = new KLineEdit(this);
-        lineEditAbstractKeywords->setClearButtonShown(true);
+        lineEditAbstractKeywords->setClearButtonEnabled(true);
         layout->addRow(i18n("Abstract/Keywords:"), lineEditAbstractKeywords);
         connect(lineEditAbstractKeywords, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
 
         lineEditPublication = new KLineEdit(this);
-        lineEditPublication->setClearButtonShown(true);
+        lineEditPublication->setClearButtonEnabled(true);
         layout->addRow(i18n("Publication:"), lineEditPublication);
         connect(lineEditPublication, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
 
         lineEditISSNDOIISBN = new KLineEdit(this);
-        lineEditISSNDOIISBN->setClearButtonShown(true);
+        lineEditISSNDOIISBN->setClearButtonEnabled(true);
         layout->addRow(i18n("ISSN/ISBN/DOI:"), lineEditISSNDOIISBN);
         connect(lineEditISSNDOIISBN, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
 
         lineEditVolume = new KLineEdit(this);
-        lineEditVolume->setClearButtonShown(true);
+        lineEditVolume->setClearButtonEnabled(true);
         layout->addRow(i18n("Volume:"), lineEditVolume);
         connect(lineEditVolume, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
 
         lineEditIssue = new KLineEdit(this);
-        lineEditIssue->setClearButtonShown(true);
+        lineEditIssue->setClearButtonEnabled(true);
         layout->addRow(i18n("Issue/Number:"), lineEditIssue);
         connect(lineEditIssue, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
 

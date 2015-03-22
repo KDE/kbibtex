@@ -58,7 +58,7 @@ public:
         QLabel *label = new QLabel(i18n("Free text:"), this);
         layout->addWidget(label, 0, 0, 1, 1);
         lineEditFreeText = new KLineEdit(this);
-        lineEditFreeText->setClearButtonShown(true);
+        lineEditFreeText->setClearButtonEnabled(true);
         lineEditFreeText->setFocus(Qt::TabFocusReason);
         layout->addWidget(lineEditFreeText, 0, 1, 1, 1);
         label->setBuddy(lineEditFreeText);

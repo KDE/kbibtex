@@ -459,7 +459,7 @@ void ReferenceWidget::createGUI()
     layout->addSpacing(interColumnSpace);
 
     entryId = new KLineEdit(this);
-    entryId->setClearButtonShown(true);
+    entryId->setClearButtonEnabled(true);
     label = new QLabel(i18n("Id:"), this);
     label->setBuddy(entryId);
     label->setAlignment((Qt::Alignment)label->style()->styleHint(QStyle::SH_FormLayoutLabelAlignment));

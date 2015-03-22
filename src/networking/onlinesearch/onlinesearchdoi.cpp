@@ -53,7 +53,7 @@ public:
         layout->addWidget(label, 0, 0, 1, 1);
         lineEditDoiNumber = new KLineEdit(this);
         layout->addWidget(lineEditDoiNumber, 0, 1, 1, 1);
-        lineEditDoiNumber->setClearButtonShown(true);
+        lineEditDoiNumber->setClearButtonEnabled(true);
         connect(lineEditDoiNumber, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
 
         layout->setRowStretch(1, 100);
