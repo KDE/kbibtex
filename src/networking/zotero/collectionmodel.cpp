@@ -84,7 +84,7 @@ QModelIndex CollectionModel::index(int row, int column, const QModelIndex &paren
         return QModelIndex();
 
     if (parent == QModelIndex()) { ///< root node
-        const QModelIndex result = createIndex(row, column, 0);
+        const QModelIndex result = createIndex(row, column, (quintptr)0);
         d->collectionIdToModelIndex.insert(d->collection->collectionFromNumericId(0), result);
         return result;
     }
