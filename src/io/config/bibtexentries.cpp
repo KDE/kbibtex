@@ -20,9 +20,9 @@
 #include <QDebug>
 #include <QStandardPaths>
 
+#include <KLocalizedString>
 #include <KSharedConfig>
 #include <KConfigGroup>
-#include <KLocale>
 
 #include "entry.h"
 

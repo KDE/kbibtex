@@ -25,7 +25,7 @@
 #include <QTextStream>
 #include <QProcessEnvironment>
 
-#include <KLocale>
+#include <KLocalizedString>
 
 const QString FileExporterToolchain::keyBabelLanguage = QLatin1String("babelLanguage");
 const QString FileExporterToolchain::defaultBabelLanguage = QLatin1String("english");

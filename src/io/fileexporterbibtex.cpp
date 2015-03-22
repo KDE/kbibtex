@@ -29,7 +29,6 @@
 #include <QAbstractItemModel>
 
 #include <KDialog>
-#include <KLocale>
 #include <KComboBox>
 
 #include "preferences.h"

@@ -23,7 +23,7 @@
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <KSharedPtr>
-#include <KLocale>
+#include <KLocalizedString>
 
 bool operator==(const FieldDescription &a, const FieldDescription &b)
 {

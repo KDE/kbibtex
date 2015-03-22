@@ -21,7 +21,7 @@
 #include <QFile>
 #include <QStandardPaths>
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include "fileexporterbibtex.h"
 
