@@ -24,6 +24,8 @@
 #include <QSpinBox>
 #include <QStackedWidget>
 #include <QProgressBar>
+#include <QMimeDatabase>
+#include <QMimeType>
 #include <QTimer>
 #include <QSet>
 #include <QScrollArea>
@@ -34,7 +36,7 @@
 #include <KLineEdit>
 #include <KLocale>
 #include <KRun>
-#include <KMimeType>
+
 #include <KMessageBox>
 #include <KTemporaryFile>
 #include <KAction>
@@ -327,8 +329,8 @@ public:
         if (item != NULL) {
             QUrl url = item->data(HomepageRole).value<QUrl>();
             /// Guess mime type for url to open
-            KMimeType::Ptr mimeType = FileInfo::mimeTypeForUrl(url);
-            const QString mimeTypeName = mimeType->name();
+            QMimeType mimeType = FileInfo::mimeTypeForUrl(url);
+            const QString mimeTypeName = mimeType.name();
             /// Ask KDE subsystem to open url in viewer matching mime type
             KRun::runUrl(url, mimeTypeName, p, false, false);
         }

@@ -28,7 +28,6 @@
 #include <QDropEvent>
 #include <QDebug>
 
-#include <KMimeType>
 #include <KRun>
 #include <KMessageBox>
 #include <KGlobalSettings>
@@ -37,6 +36,8 @@
 #include <KPushButton>
 #include <KSharedConfig>
 #include <KConfigGroup>
+#include <QMimeDatabase>
+#include <QMimeType>
 
 #include "fileinfo.h"
 #include "file.h"
@@ -301,8 +302,8 @@ public:
     void openUrl() {
         if (urlToOpen.isValid()) {
             /// Guess mime type for url to open
-            KMimeType::Ptr mimeType = FileInfo::mimeTypeForUrl(urlToOpen);
-            const QString mimeTypeName = mimeType->name();
+            QMimeType mimeType = FileInfo::mimeTypeForUrl(urlToOpen);
+            const QString mimeTypeName = mimeType.name();
             /// Ask KDE subsystem to open url in viewer matching mime type
             KRun::runUrl(urlToOpen, mimeTypeName, parent, false, false);
         }

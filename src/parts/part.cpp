@@ -26,6 +26,8 @@
 #include <QLayout>
 #include <QKeyEvent>
 #include <QSignalMapper>
+#include <QMimeDatabase>
+#include <QMimeType>
 #include <QtCore/QPointer>
 #include <QFileSystemWatcher>
 #include <QDebug>
@@ -43,7 +45,6 @@
 #include <KTemporaryFile>
 #include <KIO/NetAccess>
 #include <KRun>
-#include <KMimeType>
 #include <KStandardDirs>
 
 #include "file.h"
@@ -789,8 +790,8 @@ void KBibTeXPart::elementViewDocument()
     /// Open selected URL
     if (url.isValid()) {
         /// Guess mime type for url to open
-        KMimeType::Ptr mimeType = FileInfo::mimeTypeForUrl(url);
-        const QString mimeTypeName = mimeType->name();
+        QMimeType mimeType = FileInfo::mimeTypeForUrl(url);
+        const QString mimeTypeName = mimeType.name();
         /// Ask KDE subsystem to open url in viewer matching mime type
         KRun::runUrl(url, mimeTypeName, widget(), false, false);
     }
@@ -802,8 +803,8 @@ void KBibTeXPart::elementViewDocumentMenu(QObject *obj)
 
     /// Guess mime type for url to open
     KUrl url(text);
-    KMimeType::Ptr mimeType = FileInfo::mimeTypeForUrl(url);
-    const QString mimeTypeName = mimeType->name();
+    QMimeType mimeType = FileInfo::mimeTypeForUrl(url);
+    const QString mimeTypeName = mimeType.name();
     /// Ask KDE subsystem to open url in viewer matching mime type
     KRun::runUrl(url, mimeTypeName, widget(), false, false);
 }

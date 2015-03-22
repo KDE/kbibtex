@@ -37,11 +37,13 @@
 #include <KSqueezedTextLabel>
 #include <KMenu>
 #include <KPushButton>
-#include <KMimeType>
+
 #include <KRun>
 #include <KTemporaryFile>
 #include <KFileDialog>
 #include <KIO/NetAccess>
+#include <QMimeDatabase>
+#include <QMimeType>
 
 #include "fileinfo.h"
 #include "fieldlistedit.h"
@@ -219,14 +221,14 @@ void PDFItemDelegate::slotViewPDF()
         if (!tempfileName.isEmpty()) {
             /// Guess mime type for url to open
             KUrl tempUrl(tempfileName);
-            KMimeType::Ptr mimeType = FileInfo::mimeTypeForUrl(tempUrl);
-            const QString mimeTypeName = mimeType->name();
+            QMimeType mimeType = FileInfo::mimeTypeForUrl(tempUrl);
+            const QString mimeTypeName = mimeType.name();
             /// Ask KDE subsystem to open url in viewer matching mime type
             KRun::runUrl(tempUrl, mimeTypeName, NULL, false, false);
         } else if (url.isValid()) {
             /// Guess mime type for url to open
-            KMimeType::Ptr mimeType = FileInfo::mimeTypeForUrl(url);
-            const QString mimeTypeName = mimeType->name();
+            QMimeType mimeType = FileInfo::mimeTypeForUrl(url);
+            const QString mimeTypeName = mimeType.name();
             /// Ask KDE subsystem to open url in viewer matching mime type
             KRun::runUrl(url, mimeTypeName, NULL, false, false);
         }

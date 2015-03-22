@@ -28,6 +28,8 @@
 #include <QStackedWidget>
 #include <QDockWidget>
 #include <QMutex>
+#include <QMimeDatabase>
+#include <QMimeType>
 #include <QIcon>
 #ifdef HAVE_QTWEBKIT // krazy:exclude=cpp
 #include <QWebView>
@@ -36,7 +38,6 @@
 #include <KLocale>
 #include <KComboBox>
 #include <KRun>
-#include <KMimeType>
 #include <KMimeTypeTrader>
 #include <KService>
 #include <kparts/part.h>
@@ -480,8 +481,8 @@ public:
     void openExternally() {
         QUrl url(cbxEntryToUrlInfo[urlComboBox->currentIndex()].url);
         /// Guess mime type for url to open
-        KMimeType::Ptr mimeType = FileInfo::mimeTypeForUrl(url);
-        const QString mimeTypeName = mimeType->name();
+        QMimeType mimeType = FileInfo::mimeTypeForUrl(url);
+        const QString mimeTypeName = mimeType.name();
         /// Ask KDE subsystem to open url in viewer matching mime type
         KRun::runUrl(url, mimeTypeName, p, false, false);
     }
@@ -498,9 +499,10 @@ public:
         }
 
         int accuracy = 0;
-        KMimeType::Ptr mimeTypePtr = KMimeType::findByUrl(url, 0, isLocalOrRelative(url), true, &accuracy);
+QMimeDatabase db;
+        QMimeType mimeTypePtr = db.mimeTypeForUrl(url, 0, isLocalOrRelative(url), true, &accuracy);
         if (accuracy < 50) {
-            mimeTypePtr = KMimeType::findByPath(url.fileName(), 0, true, &accuracy);
+            mimeTypePtr = db.mimeTypeForFile(url.fileName(), 0, true, &accuracy);
         }
         result.mimeType = mimeTypePtr.name();
         result.icon = QIcon::fromTheme(mimeTypePtr.iconName());
@@ -642,8 +644,8 @@ void DocumentPreview::linkActivated(const QString &link)
         const QUrl urlToOpen = QUrl::fromUserInput(link);
         if (urlToOpen.isValid()) {
             /// Guess mime type for url to open
-            KMimeType::Ptr mimeType = FileInfo::mimeTypeForUrl(urlToOpen);
-            const QString mimeTypeName = mimeType->name();
+            QMimeType mimeType = FileInfo::mimeTypeForUrl(urlToOpen);
+            const QString mimeTypeName = mimeType.name();
             /// Ask KDE subsystem to open url in viewer matching mime type
             KRun::runUrl(urlToOpen, mimeTypeName, this, false, false);
         }

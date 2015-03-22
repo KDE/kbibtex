@@ -26,6 +26,8 @@
 #include <QFileInfo>
 #include <QDropEvent>
 #include <QMenu>
+#include <QMimeDatabase>
+#include <QMimeType>
 #include <QStyle>
 #include <QDebug>
 
@@ -34,7 +36,6 @@
 #include <KLocale>
 #include <KLineEdit>
 #include <KComboBox>
-#include <KMimeType>
 #include <KRun>
 #include <KTextEdit>
 
@@ -840,8 +841,8 @@ void OtherFieldsWidget::actionOpen()
 {
     if (currentUrl.isValid()) {
         /// Guess mime type for url to open
-        KMimeType::Ptr mimeType = FileInfo::mimeTypeForUrl(currentUrl);
-        const QString mimeTypeName = mimeType->name();
+        QMimeType mimeType = FileInfo::mimeTypeForUrl(currentUrl);
+        const QString mimeTypeName = mimeType.name();
         /// Ask KDE subsystem to open url in viewer matching mime type
         KRun::runUrl(currentUrl, mimeTypeName, this, false, false);
     }
