@@ -119,6 +119,7 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/src/io
     ${CMAKE_SOURCE_DIR}/src/networking/onlinesearch
     ${CMAKE_SOURCE_DIR}/src/networking
+    ${CMAKE_SOURCE_DIR}/src
 #     ${POPPLER_QT4_INCLUDE_DIR}
     ${LIBXML2_INCLUDE_DIR}
 #     ${QCA2_INCLUDE_DIR}
@@ -137,6 +138,7 @@ target_link_libraries(
     Qt5::Network
     KF5::I18n
     KF5::XmlGui
+    KF5::Completion
     kbibtexconfig
     kbibtexdata
     kbibtexio
