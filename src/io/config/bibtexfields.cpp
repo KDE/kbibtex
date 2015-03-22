@@ -17,11 +17,12 @@
 
 #include "bibtexfields.h"
 
+#include <QDebug>
+
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <KSharedPtr>
 #include <KStandardDirs>
-#include <KDebug>
 #include <KLocale>
 
 bool operator==(const FieldDescription &a, const FieldDescription &b)
@@ -93,11 +94,11 @@ public:
             p->append(fd);
         }
 
-        if (p->isEmpty()) kWarning() << "List of field descriptions is empty after load()";
+        if (p->isEmpty()) qWarning() << "List of field descriptions is empty after load()";
     }
 
     void save() {
-        if (p->isEmpty()) kWarning() << "List of field descriptions is empty before save()";
+        if (p->isEmpty()) qWarning() << "List of field descriptions is empty before save()";
 
         QStringList treeViewNames;
         int columnCount = 0;
@@ -220,7 +221,7 @@ const FieldDescription *BibTeXFields::find(const QString &name) const
         if ((*it)->upperCamelCase.toLower() == iName && (*it)->upperCamelCaseAlt.isEmpty())
             return (*it);
     }
-    kWarning() << "No field description for " << name << "(" << iName << ")";
+    qWarning() << "No field description for " << name << "(" << iName << ")";
     return NULL;
 }
 

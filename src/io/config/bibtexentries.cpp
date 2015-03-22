@@ -17,10 +17,11 @@
 
 #include "bibtexentries.h"
 
+#include <QDebug>
+
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <KStandardDirs>
-#include <KDebug>
 #include <KLocale>
 
 #include "entry.h"
@@ -77,7 +78,7 @@ public:
             p->append(ed);
         }
 
-        if (p->isEmpty()) kWarning() << "List of entry descriptions is empty";
+        if (p->isEmpty()) qWarning() << "List of entry descriptions is empty";
     }
 
     void save() {

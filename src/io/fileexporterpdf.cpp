@@ -67,7 +67,7 @@ void FileExporterPDF::reloadConfig()
 bool FileExporterPDF::save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog)
 {
     if (!iodevice->isWritable() && !iodevice->open(QIODevice::WriteOnly)) {
-        qWarning() <<"Output device not writable";
+        qWarning() << "Output device not writable";
         return false;
     }
 
@@ -100,7 +100,7 @@ bool FileExporterPDF::save(QIODevice *iodevice, const File *bibtexfile, QStringL
 bool FileExporterPDF::save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog)
 {
     if (!iodevice->isWritable() && !iodevice->open(QIODevice::WriteOnly)) {
-        qWarning() <<"Output device not writable";
+        qWarning() << "Output device not writable";
         return false;
     }
 

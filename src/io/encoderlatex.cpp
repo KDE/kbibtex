@@ -18,6 +18,7 @@
 #include "encoderlatex.h"
 
 #include <QString>
+#include <QDebug>
 
 #include "iconvlatex.h"
 
