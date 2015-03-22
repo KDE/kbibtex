@@ -75,7 +75,7 @@ OnlineSearchAbstract::OnlineSearchAbstract(QWidget *parent)
 QIcon OnlineSearchAbstract::icon(QListWidgetItem *listWidgetItem)
 {
     static const QRegExp invalidChars(QLatin1String("[^-a-z0-9_]"), Qt::CaseInsensitive);
-    const QString fileNameStem = QStandardPaths::writableLocation(QStandardPaths::CacheLocation) + QLatin1String("/favicons/")) + QString(favIconUrl()).remove(invalidChars;
+    const QString fileNameStem = QStandardPaths::writableLocation(QStandardPaths::CacheLocation) + QLatin1String("/favicons/") + QString(favIconUrl()).remove(invalidChars);
     const QStringList fileNameExtensions = QStringList() << QLatin1String(".ico") << QLatin1String(".png") << QString();
 
     foreach(const QString &extension, fileNameExtensions) {
