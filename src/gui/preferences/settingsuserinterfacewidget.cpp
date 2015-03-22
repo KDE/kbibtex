@@ -125,7 +125,7 @@ QString SettingsUserInterfaceWidget::label() const
 
 KIcon SettingsUserInterfaceWidget::icon() const
 {
-    return KIcon("user-identity");
+    return QIcon::fromTheme("user-identity");
 }
 
 SettingsUserInterfaceWidget::~SettingsUserInterfaceWidget()

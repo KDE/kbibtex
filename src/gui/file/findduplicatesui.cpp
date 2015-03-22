@@ -555,9 +555,9 @@ public:
         containerLayout->addStretch(10);
         labelWhichClique = new QLabel(p);
         containerLayout->addWidget(labelWhichClique);
-        buttonPrev = new KPushButton(KIcon("go-previous"), i18n("Previous Clique"), p);
+        buttonPrev = new KPushButton(QIcon::fromTheme("go-previous"), i18n("Previous Clique"), p);
         containerLayout->addWidget(buttonPrev, 1);
-        buttonNext = new KPushButton(KIcon("go-next"), i18n("Next Clique"), p);
+        buttonNext = new KPushButton(QIcon::fromTheme("go-next"), i18n("Next Clique"), p);
         containerLayout->addWidget(buttonNext, 1);
 
         filterModel = new FilterIdFileModel(p);
@@ -639,7 +639,7 @@ public:
 FindDuplicatesUI::FindDuplicatesUI(KParts::Part *part, FileView *fileView)
         : QObject(), d(new FindDuplicatesUIPrivate(this, part, fileView))
 {
-    KAction *newAction = new KAction(KIcon("tab-duplicate"), i18n("Find Duplicates"), this);
+    KAction *newAction = new KAction(QIcon::fromTheme("tab-duplicate"), i18n("Find Duplicates"), this);
     part->actionCollection()->addAction(QLatin1String("findduplicates"), newAction);
     connect(newAction, SIGNAL(triggered()), this, SLOT(slotFindDuplicates()));
 #if KDE_IS_VERSION(4, 4, 0)

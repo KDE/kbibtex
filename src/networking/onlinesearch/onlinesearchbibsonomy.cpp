@@ -22,10 +22,10 @@
 #include <QSpinBox>
 #include <QLabel>
 #include <QNetworkReply>
+#include <QIcon>
 
 #include <KLocale>
 #include <KDebug>
-#include <KIcon>
 #include <KLineEdit>
 #include <KComboBox>
 #include <KMessageBox>

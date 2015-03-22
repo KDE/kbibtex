@@ -171,7 +171,7 @@ QString SettingsFileExporterWidget::label() const
 
 KIcon SettingsFileExporterWidget::icon() const
 {
-    return KIcon("document-save");
+    return QIcon::fromTheme("document-save");
 }
 
 void SettingsFileExporterWidget::loadState()

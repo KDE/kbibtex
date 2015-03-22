@@ -20,13 +20,13 @@
 #include <QLayout>
 #include <QLabel>
 #include <QTimer>
+#include <QIcon>
 
 #include <KPushButton>
 #include <KComboBox>
 #include <KLocale>
 #include <KLineEdit>
 #include <KConfigGroup>
-#include <KIcon>
 
 #include "bibtexfields.h"
 #include "delayedexecutiontimer.h"
@@ -206,13 +206,13 @@ FilterBar::FilterBar(QWidget *parent)
     }
 
     d->buttonSearchPDFfiles = new KPushButton(this);
-    d->buttonSearchPDFfiles->setIcon(KIcon("application-pdf"));
+    d->buttonSearchPDFfiles->setIcon(QIcon::fromTheme("application-pdf"));
     d->buttonSearchPDFfiles->setToolTip(i18n("Include PDF files in full-text search"));
     d->buttonSearchPDFfiles->setCheckable(true);
     layout->addWidget(d->buttonSearchPDFfiles, 0);
 
     d->buttonClearAll = new KPushButton(this);
-    d->buttonClearAll->setIcon(KIcon("edit-clear-locationbar-rtl"));
+    d->buttonClearAll->setIcon(QIcon::fromTheme("edit-clear-locationbar-rtl"));
     d->buttonClearAll->setToolTip(i18n("Reset filter criteria"));
     layout->addWidget(d->buttonClearAll, 0);
 

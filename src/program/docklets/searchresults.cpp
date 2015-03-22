@@ -80,7 +80,7 @@ public:
         layoutCannotImport->addWidget(labelCannotImportMsg);
         /// see also updateCannotImportMessage()
 
-        buttonImport = new KPushButton(KIcon("svn-update"), i18n("Import"), parent);
+        buttonImport = new KPushButton(QIcon::fromTheme("svn-update"), i18n("Import"), parent);
         layout->addWidget(buttonImport, 1, 1, 1, 1);
         buttonImport->setEnabled(false);
 
@@ -90,17 +90,17 @@ public:
         model->setSourceModel(fileModel);
         resultList->setModel(model);
 
-        actionViewCurrent = new KAction(KIcon("document-preview"), i18n("View Element"), parent);
+        actionViewCurrent = new KAction(QIcon::fromTheme("document-preview"), i18n("View Element"), parent);
         resultList->addAction(actionViewCurrent);
         actionViewCurrent->setEnabled(false);
         connect(actionViewCurrent, SIGNAL(triggered()), resultList, SLOT(viewCurrentElement()));
 
-        actionImportSelected = new KAction(KIcon("svn-update"), i18n("Import"), parent);
+        actionImportSelected = new KAction(QIcon::fromTheme("svn-update"), i18n("Import"), parent);
         resultList->addAction(actionImportSelected);
         actionImportSelected->setEnabled(false);
         connect(actionImportSelected, SIGNAL(triggered()), parent, SLOT(importSelected()));
 
-        actionCopySelected = new KAction(KIcon("edit-copy"), i18n("Copy"), parent);
+        actionCopySelected = new KAction(QIcon::fromTheme("edit-copy"), i18n("Copy"), parent);
         resultList->addAction(actionCopySelected);
         actionCopySelected->setEnabled(false);
         connect(actionCopySelected, SIGNAL(triggered()), clipboard, SLOT(copy()));

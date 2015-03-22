@@ -27,10 +27,10 @@
 #include <QAbstractItemModel>
 #include <QSortFilterProxyModel>
 #include <QHeaderView>
+#include <QIcon>
 
 #include <KDebug>
 #include <KPushButton>
-#include <KIcon>
 #include <KMessageBox>
 #include <kparts/part.h>
 #include <KConfigGroup>
@@ -71,7 +71,7 @@ public:
                     const QString fileName = url.fileName();
                     return fileName.isEmpty() ? squeeze_text(url.pathOrUrl(), 32) : fileName;
                 } else if (role == Qt::DecorationRole)
-                    return KIcon(ofiItem->mimeType().replace(QLatin1Char('/'), QLatin1Char('-')));
+                    return QIcon::fromTheme(ofiItem->mimeType().replace(QLatin1Char('/'), QLatin1Char('-')));
                 else if (role == Qt::ToolTipRole)
                     return squeeze_text(ofiItem->url().pathOrUrl(), 64);
             } else if (index.column() == 1) {
@@ -148,11 +148,11 @@ private:
         QLabel *label = new QLabel(i18n("<qt>Welcome to <b>KBibTeX</b></qt>"), welcomeWidget);
         layout->addWidget(label, 1, 2, 1, 3, Qt::AlignHCenter | Qt::AlignTop);
 
-        KPushButton *buttonNew = new KPushButton(KIcon("document-new"), i18n("New"), welcomeWidget);
+        KPushButton *buttonNew = new KPushButton(QIcon::fromTheme("document-new"), i18n("New"), welcomeWidget);
         layout->addWidget(buttonNew, 2, 2, 1, 1, Qt::AlignLeft | Qt::AlignBottom);
         connect(buttonNew, SIGNAL(clicked()), p, SIGNAL(documentNew()));
 
-        KPushButton *buttonOpen = new KPushButton(KIcon("document-open"), i18n("Open..."), welcomeWidget);
+        KPushButton *buttonOpen = new KPushButton(QIcon::fromTheme("document-open"), i18n("Open..."), welcomeWidget);
         layout->addWidget(buttonOpen, 2, 4, 1, 1, Qt::AlignRight | Qt::AlignBottom);
         connect(buttonOpen, SIGNAL(clicked()), p, SIGNAL(documentOpen()));
 

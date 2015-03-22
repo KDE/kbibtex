@@ -80,7 +80,7 @@ KIcon OnlineSearchAbstract::icon(QListWidgetItem *listWidgetItem)
     foreach(const QString &extension, fileNameExtensions) {
         const QString fileName = fileNameStem + extension;
         if (QFileInfo(fileName).exists())
-            return KIcon(fileName);
+            return QIcon::fromTheme(fileName);
     }
 
     QNetworkRequest request(favIconUrl());
@@ -89,7 +89,7 @@ KIcon OnlineSearchAbstract::icon(QListWidgetItem *listWidgetItem)
     if (listWidgetItem != NULL)
         m_iconReplyToListWidgetItem.insert(reply, listWidgetItem);
     connect(reply, SIGNAL(finished()), this, SLOT(iconDownloadFinished()));
-    return KIcon(QLatin1String("applications-internet"));
+    return QIcon::fromTheme(QLatin1String("applications-internet"));
 }
 
 QString OnlineSearchAbstract::name()
@@ -342,7 +342,7 @@ void OnlineSearchAbstract::iconDownloadFinished()
 
             QListWidgetItem *listWidgetItem = m_iconReplyToListWidgetItem.value(reply, NULL);
             if (listWidgetItem != NULL)
-                listWidgetItem->setIcon(KIcon(filename));
+                listWidgetItem->setIcon(QIcon::fromTheme(filename));
         }
     } else
         qWarning() << "Could not download icon " << reply->url().toString();

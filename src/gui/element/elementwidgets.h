@@ -24,7 +24,7 @@
 #include <QWidget>
 
 #include <QUrl>
-#include <KIcon>
+#include <QIcon>
 
 #include "elementeditor.h"
 #include "entrylayout.h"

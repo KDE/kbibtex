@@ -21,9 +21,9 @@
 #include <QTimer>
 #include <QLayout>
 #include <QMenu>
+#include <QIcon>
 
 #include <KApplication>
-#include <KIcon>
 #include <KPushButton>
 #include <KListWidget>
 #include <KStandardDirs>
@@ -72,7 +72,7 @@ public:
             : QWidget(parent), m_parent(parent) {
         QGridLayout *layout = new QGridLayout(this);
 
-        buttonStartTest = new KPushButton(KIcon("application-x-executable"), QLatin1String("Start Tests"), this);
+        buttonStartTest = new KPushButton(QIcon::fromTheme("application-x-executable"), QLatin1String("Start Tests"), this);
         layout->addWidget(buttonStartTest, 0, 0, 1, 1);
 
         progressBar = new QProgressBar(this);

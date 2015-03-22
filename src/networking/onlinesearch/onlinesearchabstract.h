@@ -25,7 +25,7 @@
 #include <QWidget>
 #include <QMetaType>
 
-#include <KIcon>
+#include <QIcon>
 #include <QUrl>
 #include <KSharedConfig>
 

@@ -176,11 +176,11 @@ public:
         lineEditAuthorizationUrl = new KLineEdit(page);
         lineEditAuthorizationUrl->setReadOnly(true);
         gridLayout->addWidget(lineEditAuthorizationUrl, 0, 0, 1, 3);
-        KPushButton *buttonCopyAuthorizationUrl = new KPushButton(KIcon("edit-copy"), i18n("Copy URL"), page);
+        KPushButton *buttonCopyAuthorizationUrl = new KPushButton(QIcon::fromTheme("edit-copy"), i18n("Copy URL"), page);
         gridLayout->addWidget(buttonCopyAuthorizationUrl, 1, 1, 1, 1);
         connect(buttonCopyAuthorizationUrl, SIGNAL(clicked()), p, SLOT(copyAuthorizationUrl()));
         connect(buttonCopyAuthorizationUrl, SIGNAL(clicked()), p, SLOT(next()));
-        KPushButton *buttonOpenAuthorizationUrl = new KPushButton(KIcon("document-open-remote"), i18n("Open URL"), page);
+        KPushButton *buttonOpenAuthorizationUrl = new KPushButton(QIcon::fromTheme("document-open-remote"), i18n("Open URL"), page);
         gridLayout->addWidget(buttonOpenAuthorizationUrl, 1, 2, 1, 1);
         connect(buttonOpenAuthorizationUrl, SIGNAL(clicked()), p, SLOT(openAuthorizationUrl()));
         connect(buttonOpenAuthorizationUrl, SIGNAL(clicked()), p, SLOT(next()));

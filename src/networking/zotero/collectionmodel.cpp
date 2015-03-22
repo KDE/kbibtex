@@ -19,7 +19,7 @@
 
 #include <QHash>
 
-#include <KIcon>
+#include <QIcon>
 
 #include "zotero/collection.h"
 
@@ -61,9 +61,9 @@ QVariant CollectionModel::data(const QModelIndex &index, int role) const
     if (role == Qt::DecorationRole) {
         /// Fancy icons for collections
         if (index.internalId() == 0) /// root node
-            return KIcon(QLatin1String("folder-orange"));
+            return QIcon::fromTheme(QLatin1String("folder-orange"));
         else /// any other node
-            return KIcon(QLatin1String("folder-yellow"));
+            return QIcon::fromTheme(QLatin1String("folder-yellow"));
     } else if (role == Qt::DisplayRole) {
         /// Show collections' human-readable description
         const QString collectionId = d->collection->collectionFromNumericId(index.internalId());

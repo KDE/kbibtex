@@ -119,7 +119,7 @@ KBibTeXMainWindow::KBibTeXMainWindow()
     KMenu *showPanelsMenu = new KMenu(showPanelsAction->text(), widget());
     showPanelsAction->setMenu(showPanelsMenu);
 
-    KActionMenu *actionMenuRecentFiles = new KActionMenu(KIcon("document-open-recent"), i18n("Recently used files"), this);
+    KActionMenu *actionMenuRecentFiles = new KActionMenu(QIcon::fromTheme("document-open-recent"), i18n("Recently used files"), this);
     actionCollection()->addAction("file_open_recent", actionMenuRecentFiles);
     d->actionMenuRecentFilesMenu = new KMenu(actionMenuRecentFiles->text(), widget());
     actionMenuRecentFiles->setMenu(d->actionMenuRecentFilesMenu);
@@ -426,7 +426,7 @@ void KBibTeXMainWindow::documentListsChanged(OpenFileInfo::StatusFlags statusFla
             const QString squeezedFullCap = squeeze_text(cur->fullCaption(), squeezeLen);
             KAction *action = new KAction(QString("%1 [%2]").arg(squeezedShortCap).arg(squeezedFullCap), this);
             action->setData(cur->url());
-            action->setIcon(KIcon(cur->mimeType().replace(QLatin1Char('/'), QLatin1Char('-'))));
+            action->setIcon(QIcon::fromTheme(cur->mimeType().replace(QLatin1Char('/'), QLatin1Char('-'))));
             d->actionMenuRecentFilesMenu->addAction(action);
             connect(action, SIGNAL(triggered()), this, SLOT(openRecentFile()));
         }

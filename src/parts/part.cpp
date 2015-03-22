@@ -356,7 +356,7 @@ public:
                 dlg->setMainWidget(settingsWidget);
                 dlg->setCaption(i18n("BibTeX File Settings"));
                 dlg->setButtons(KDialog::Default | KDialog::Reset | KDialog::User1 | KDialog::Ok);
-                dlg->setButtonGuiItem(KDialog::User1, KGuiItem(i18n("Save as Default"), KIcon("edit-redo") /** matches reset button's icon */, i18n("Save this configuration as default for future Save As operations.")));
+                dlg->setButtonGuiItem(KDialog::User1, KGuiItem(i18n("Save as Default"), QIcon::fromTheme("edit-redo") /** matches reset button's icon */, i18n("Save this configuration as default for future Save As operations.")));
                 connect(dlg, SIGNAL(user1Clicked()), settingsWidget, SLOT(saveProperties()));
                 connect(dlg, SIGNAL(resetClicked()), settingsWidget, SLOT(loadProperties()));
                 connect(dlg, SIGNAL(defaultClicked()), settingsWidget, SLOT(resetToDefaults()));
@@ -369,7 +369,7 @@ public:
                 dlg->setMainWidget(settingsWidget);
                 dlg->setCaption(i18n("PDF/PostScript File Settings"));
                 dlg->setButtons(KDialog::Default | KDialog::Reset | KDialog::User1 | KDialog::Ok);
-                dlg->setButtonGuiItem(KDialog::User1, KGuiItem(i18n("Save as Default"), KIcon("edit-redo") /** matches reset button's icon */, i18n("Save this configuration as default for future Save As operations.")));
+                dlg->setButtonGuiItem(KDialog::User1, KGuiItem(i18n("Save as Default"), QIcon::fromTheme("edit-redo") /** matches reset button's icon */, i18n("Save this configuration as default for future Save As operations.")));
                 connect(dlg, SIGNAL(user1Clicked()), settingsWidget, SLOT(saveState()));
                 connect(dlg, SIGNAL(resetClicked()), settingsWidget, SLOT(loadState()));
                 connect(dlg, SIGNAL(defaultClicked()), settingsWidget, SLOT(resetToDefaults()));
@@ -466,7 +466,7 @@ public:
                     /// Build a nice menu item (label, icon, ...)
                     QFileInfo fi((*it).pathOrUrl());
                     const QString label = QString("%1 [%2]").arg(fi.fileName()).arg(fi.absolutePath());
-                    KAction *action = new KAction(KIcon(KMimeType::iconNameForUrl(*it)), label, p);
+                    KAction *action = new KAction(QIcon::fromTheme(KMimeType::iconNameForUrl(*it)), label, p);
                     action->setData((*it).pathOrUrl());
                     action->setToolTip((*it).prettyUrl());
                     /// Register action at signal handler to open URL when triggered
@@ -490,7 +490,7 @@ public:
                     if ((*it).isLocalFile()) continue; ///< skip local files
 
                     /// Build a nice menu item (label, icon, ...)
-                    KAction *action = new KAction(KIcon(KMimeType::iconNameForUrl(*it)), (*it).pathOrUrl(), p);
+                    KAction *action = new KAction(QIcon::fromTheme(KMimeType::iconNameForUrl(*it)), (*it).pathOrUrl(), p);
                     action->setData((*it).pathOrUrl());
                     action->setToolTip((*it).prettyUrl());
                     /// Register action at signal handler to open URL when triggered
@@ -583,61 +583,61 @@ void KBibTeXPart::setupActions(bool /*browserViewWanted FIXME*/)
     d->fileSaveAction = actionCollection()->addAction(KStandardAction::Save, this, SLOT(documentSave()));
     d->fileSaveAction->setEnabled(false);
     actionCollection()->addAction(KStandardAction::SaveAs, this, SLOT(documentSaveAs()));
-    KAction *saveCopyAsAction = new KAction(KIcon("document-save"), i18n("Save Copy As..."), this);
+    KAction *saveCopyAsAction = new KAction(QIcon::fromTheme("document-save"), i18n("Save Copy As..."), this);
     actionCollection()->addAction("file_save_copy_as", saveCopyAsAction);
     connect(saveCopyAsAction, SIGNAL(triggered()), this, SLOT(documentSaveCopyAs()));
 
     KAction *filterWidgetAction = new KAction(i18n("Filter"), this);
     actionCollection()->addAction("toolbar_filter_widget", filterWidgetAction);
-    filterWidgetAction->setIcon(KIcon("view-filter"));
+    filterWidgetAction->setIcon(QIcon::fromTheme("view-filter"));
     filterWidgetAction->setShortcut(Qt::CTRL + Qt::Key_F);
     connect(filterWidgetAction, SIGNAL(triggered()), d->partWidget->filterBar(), SLOT(setFocus()));
     d->partWidget->filterBar()->setClickMessage(i18n("Filter bibliographic entries (%1)", filterWidgetAction->shortcut().toString()));
 
-    KActionMenu *newElementAction = new KActionMenu(KIcon("address-book-new"), i18n("New element"), this);
+    KActionMenu *newElementAction = new KActionMenu(QIcon::fromTheme("address-book-new"), i18n("New element"), this);
     actionCollection()->addAction("element_new", newElementAction);
     KMenu *newElementMenu = new KMenu(newElementAction->text(), widget());
     newElementAction->setMenu(newElementMenu);
     connect(newElementAction, SIGNAL(triggered()), this, SLOT(newEntryTriggered()));
-    QAction *newEntry = newElementMenu->addAction(KIcon("address-book-new"), i18n("New entry"));
+    QAction *newEntry = newElementMenu->addAction(QIcon::fromTheme("address-book-new"), i18n("New entry"));
     newEntry->setShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_N);
     connect(newEntry, SIGNAL(triggered()), d->signalMapperNewElement, SLOT(map()));
     d->signalMapperNewElement->setMapping(newEntry, smEntry);
-    QAction *newComment = newElementMenu->addAction(KIcon("address-book-new"), i18n("New comment"));
+    QAction *newComment = newElementMenu->addAction(QIcon::fromTheme("address-book-new"), i18n("New comment"));
     connect(newComment, SIGNAL(triggered()), d->signalMapperNewElement, SLOT(map()));
     d->signalMapperNewElement->setMapping(newComment, smComment);
-    QAction *newMacro = newElementMenu->addAction(KIcon("address-book-new"), i18n("New macro"));
+    QAction *newMacro = newElementMenu->addAction(QIcon::fromTheme("address-book-new"), i18n("New macro"));
     connect(newMacro, SIGNAL(triggered()), d->signalMapperNewElement, SLOT(map()));
     d->signalMapperNewElement->setMapping(newMacro, smMacro);
-    QAction *newPreamble = newElementMenu->addAction(KIcon("address-book-new"), i18n("New preamble"));
+    QAction *newPreamble = newElementMenu->addAction(QIcon::fromTheme("address-book-new"), i18n("New preamble"));
     connect(newPreamble, SIGNAL(triggered()), d->signalMapperNewElement, SLOT(map()));
     d->signalMapperNewElement->setMapping(newPreamble, smPreamble);
     connect(d->signalMapperNewElement, SIGNAL(mapped(int)), this, SLOT(newElementTriggered(int)));
-    d->elementEditAction = new KAction(KIcon("document-edit"), i18n("Edit Element"), this);
+    d->elementEditAction = new KAction(QIcon::fromTheme("document-edit"), i18n("Edit Element"), this);
     d->elementEditAction->setShortcut(Qt::CTRL + Qt::Key_E);
     actionCollection()->addAction(QLatin1String("element_edit"),  d->elementEditAction);
     connect(d->elementEditAction, SIGNAL(triggered()), d->partWidget->fileView(), SLOT(editCurrentElement()));
-    d->elementViewDocumentAction = new KAction(KIcon("application-pdf"), i18n("View Document"), this);
+    d->elementViewDocumentAction = new KAction(QIcon::fromTheme("application-pdf"), i18n("View Document"), this);
     d->elementViewDocumentAction->setShortcut(Qt::CTRL + Qt::Key_D);
     actionCollection()->addAction(QLatin1String("element_viewdocument"),  d->elementViewDocumentAction);
     connect(d->elementViewDocumentAction, SIGNAL(triggered()), this, SLOT(elementViewDocument()));
 
-    d->elementFindPDFAction = new KAction(KIcon("application-pdf"), i18n("Find PDF..."), this);
+    d->elementFindPDFAction = new KAction(QIcon::fromTheme("application-pdf"), i18n("Find PDF..."), this);
     actionCollection()->addAction(QLatin1String("element_findpdf"),  d->elementFindPDFAction);
     connect(d->elementFindPDFAction, SIGNAL(triggered()), this, SLOT(elementFindPDF()));
 
-    d->entryApplyDefaultFormatString = new KAction(KIcon("favorites"), i18n("Format entry ids"), this);
+    d->entryApplyDefaultFormatString = new KAction(QIcon::fromTheme("favorites"), i18n("Format entry ids"), this);
     actionCollection()->addAction(QLatin1String("entry_applydefaultformatstring"), d->entryApplyDefaultFormatString);
     connect(d->entryApplyDefaultFormatString, SIGNAL(triggered()), this, SLOT(applyDefaultFormatString()));
 
     Clipboard *clipboard = new Clipboard(d->partWidget->fileView());
 
-    d->editCopyReferencesAction = new KAction(KIcon("edit-copy"), i18n("Copy References"), this);
+    d->editCopyReferencesAction = new KAction(QIcon::fromTheme("edit-copy"), i18n("Copy References"), this);
     d->editCopyReferencesAction->setShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_C);
     actionCollection()->addAction(QLatin1String("edit_copy_references"),  d->editCopyReferencesAction);
     connect(d->editCopyReferencesAction, SIGNAL(triggered()), clipboard, SLOT(copyReferences()));
 
-    d->editDeleteAction = new KAction(KIcon("edit-table-delete-row"), i18n("Delete"), this);
+    d->editDeleteAction = new KAction(QIcon::fromTheme("edit-table-delete-row"), i18n("Delete"), this);
     d->editDeleteAction->setShortcut(Qt::Key_Delete);
     actionCollection()->addAction(QLatin1String("edit_delete"),  d->editDeleteAction);
     connect(d->editDeleteAction, SIGNAL(triggered()), d->partWidget->fileView(), SLOT(selectionDelete()));
@@ -973,7 +973,7 @@ void KBibTeXPart::fileExternallyChange(const QString &path)
     else
         kWarning() << "No filename to stop watching";
 
-    if (KMessageBox::warningContinueCancel(widget(), i18n("The file '%1' has changed on disk.\n\nReload file or ignore changes on disk?", path), i18n("File changed externally"), KGuiItem(i18n("Reload file"), KIcon("edit-redo")), KGuiItem(i18n("Ignore on-disk changes"), KIcon("edit-undo"))) == KMessageBox::Continue) {
+    if (KMessageBox::warningContinueCancel(widget(), i18n("The file '%1' has changed on disk.\n\nReload file or ignore changes on disk?", path), i18n("File changed externally"), KGuiItem(i18n("Reload file"), QIcon::fromTheme("edit-redo")), KGuiItem(i18n("Ignore on-disk changes"), QIcon::fromTheme("edit-undo"))) == KMessageBox::Continue) {
         d->openFile(QUrl::fromLocalFile(path), path);
         /// No explicit call to QFileSystemWatcher.addPath(...) necessary,
         /// openFile(...) has done that already

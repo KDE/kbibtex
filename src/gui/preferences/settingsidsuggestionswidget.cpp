@@ -102,9 +102,9 @@ public:
         }
         case Qt::DecorationRole:
             if (index.row() == m_defaultFormatStringRow)
-                return KIcon("favorites");
+                return QIcon::fromTheme("favorites");
             else
-                return KIcon("view-filter");
+                return QIcon::fromTheme("view-filter");
         case Qt::ToolTipRole:
             return i18n("<qt>Structure:<ul><li>%1</li></ul>Example: %2</qt>", m_idSuggestions->formatStrToHuman(m_formatStringList[index.row()]).join(QLatin1String("</li><li>")), m_idSuggestions->formatId(*exampleBibTeXEntry, m_formatStringList[index.row()]));
         case Qt::DisplayRole:
@@ -255,22 +255,22 @@ public:
         connect(treeViewSuggestions->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)), p, SLOT(itemChanged(QModelIndex)));
         treeViewSuggestions->setMinimumSize(treeViewSuggestions->fontMetrics().width(QChar('W')) * 25, treeViewSuggestions->fontMetrics().height() * 15);
 
-        buttonNewSuggestion = new KPushButton(KIcon("list-add"), i18n("Add..."), p);
+        buttonNewSuggestion = new KPushButton(QIcon::fromTheme("list-add"), i18n("Add..."), p);
         layout->addWidget(buttonNewSuggestion, 0, 1, 1, 1);
 
-        buttonEditSuggestion = new KPushButton(KIcon("document-edit"), i18n("Edit..."), p);
+        buttonEditSuggestion = new KPushButton(QIcon::fromTheme("document-edit"), i18n("Edit..."), p);
         layout->addWidget(buttonEditSuggestion, 1, 1, 1, 1);
 
-        buttonDeleteSuggestion = new KPushButton(KIcon("list-remove"), i18n("Remove"), p);
+        buttonDeleteSuggestion = new KPushButton(QIcon::fromTheme("list-remove"), i18n("Remove"), p);
         layout->addWidget(buttonDeleteSuggestion, 2, 1, 1, 1);
 
-        buttonSuggestionUp = new KPushButton(KIcon("go-up"), i18n("Up"), p);
+        buttonSuggestionUp = new KPushButton(QIcon::fromTheme("go-up"), i18n("Up"), p);
         layout->addWidget(buttonSuggestionUp, 3, 1, 1, 1);
 
-        buttonSuggestionDown = new KPushButton(KIcon("go-down"), i18n("Down"), p);
+        buttonSuggestionDown = new KPushButton(QIcon::fromTheme("go-down"), i18n("Down"), p);
         layout->addWidget(buttonSuggestionDown, 4, 1, 1, 1);
 
-        buttonToggleDefaultString = new KPushButton(KIcon("favorites"), i18n("Toggle Default"), p);
+        buttonToggleDefaultString = new KPushButton(QIcon::fromTheme("favorites"), i18n("Toggle Default"), p);
         layout->addWidget(buttonToggleDefaultString, 5, 1, 1, 1);
 
         p->itemChanged(QModelIndex());
@@ -305,7 +305,7 @@ QString SettingsIdSuggestionsWidget::label() const
 
 KIcon SettingsIdSuggestionsWidget::icon() const
 {
-    return KIcon("view-filter");
+    return QIcon::fromTheme("view-filter");
 }
 
 void SettingsIdSuggestionsWidget::loadState()
@@ -374,7 +374,7 @@ void SettingsIdSuggestionsWidget::editItem(const QModelIndex &index)
     if (index != QModelIndex() && !(suggestion = index.data(FormatStringRole).toString()).isEmpty()) {
         const QString newSuggestion = IdSuggestionsEditDialog::editSuggestion(d->idSuggestionsModel->previewEntry().data(), suggestion, this);
         if (newSuggestion.isEmpty()) {
-            if (KMessageBox::questionYesNo(this, i18n("All token have been removed from this suggestion. Remove suggestion itself or restore original suggestion?"), i18n("Remove suggestion?"), KGuiItem(i18n("Remove suggestion"), KIcon("list-remove")), KGuiItem(i18n("Revert changes"), KIcon("edit-undo"))) == KMessageBox::Yes && d->idSuggestionsModel->remove(index)) {
+            if (KMessageBox::questionYesNo(this, i18n("All token have been removed from this suggestion. Remove suggestion itself or restore original suggestion?"), i18n("Remove suggestion?"), KGuiItem(i18n("Remove suggestion"), QIcon::fromTheme("list-remove")), KGuiItem(i18n("Revert changes"), QIcon::fromTheme("edit-undo"))) == KMessageBox::Yes && d->idSuggestionsModel->remove(index)) {
                 emit changed();
             }
         } else if (newSuggestion != suggestion) {

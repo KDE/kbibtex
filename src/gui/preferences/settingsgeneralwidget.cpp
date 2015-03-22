@@ -99,7 +99,7 @@ QString SettingsGeneralWidget::label() const
 
 KIcon SettingsGeneralWidget::icon() const
 {
-    return KIcon("kbibtex");
+    return QIcon::fromTheme("kbibtex");
 }
 
 void SettingsGeneralWidget::loadState()

@@ -158,7 +158,7 @@ QString EntryConfiguredWidget::label()
 
 KIcon EntryConfiguredWidget::icon()
 {
-    return KIcon(etl->iconName);
+    return QIcon::fromTheme(etl->iconName);
 }
 
 void EntryConfiguredWidget::setFile(const File *file)
@@ -422,7 +422,7 @@ QString ReferenceWidget::label()
 
 KIcon ReferenceWidget::icon()
 {
-    return KIcon();
+    return QIcon();
 }
 
 bool ReferenceWidget::canEdit(const Element *element)
@@ -469,7 +469,7 @@ void ReferenceWidget::createGUI()
         entryType->addItem(it->label, it->upperCamelCase);
 
     /// Button with a menu listing a set of preconfigured id suggestions
-    buttonSuggestId = new KPushButton(KIcon("view-filter"), QLatin1String(""), this);
+    buttonSuggestId = new KPushButton(QIcon::fromTheme("view-filter"), QLatin1String(""), this);
     buttonSuggestId->setToolTip(i18n("Select a suggested id for this entry"));
     layout->addWidget(buttonSuggestId);
     QMenu *suggestionsMenu = new QMenu(buttonSuggestId);
@@ -514,7 +514,7 @@ void ReferenceWidget::prepareSuggestionsMenu()
 
         /// Create action for suggestion, use icon depending if default or not
         QAction *suggestionAction = new QAction(suggestion, suggestionsMenu);
-        suggestionAction->setIcon(KIcon(isDefault ? "favorites" : "view-filter"));
+        suggestionAction->setIcon(QIcon::fromTheme(isDefault ? "favorites" : "view-filter"));
 
         /// Mesh action into GUI
         suggestionsMenu->addAction(suggestionAction);
@@ -683,7 +683,7 @@ QString FilesWidget::label()
 
 KIcon FilesWidget::icon()
 {
-    return KIcon("emblem-symbolic-link");
+    return QIcon::fromTheme("emblem-symbolic-link");
 }
 
 void FilesWidget::setFile(const File *file)
@@ -760,7 +760,7 @@ QString OtherFieldsWidget::label()
 
 KIcon OtherFieldsWidget::icon()
 {
-    return KIcon("other");
+    return QIcon::fromTheme("other");
 }
 
 bool OtherFieldsWidget::canEdit(const Element *element)
@@ -867,7 +867,7 @@ void OtherFieldsWidget::createGUI()
     layout->addWidget(fieldName, 0, 1, 1, 1);
     label->setBuddy(fieldName);
 
-    buttonAddApply = new KPushButton(KIcon("list-add"), i18n("Add"), this);
+    buttonAddApply = new KPushButton(QIcon::fromTheme("list-add"), i18n("Add"), this);
     buttonAddApply->setEnabled(false);
     layout->addWidget(buttonAddApply, 0, 2, 1, 1);
 
@@ -888,10 +888,10 @@ void OtherFieldsWidget::createGUI()
     layout->addWidget(otherFieldsList, 2, 1, 3, 1);
     label->setBuddy(otherFieldsList);
 
-    buttonDelete = new KPushButton(KIcon("list-remove"), i18n("Delete"), this);
+    buttonDelete = new KPushButton(QIcon::fromTheme("list-remove"), i18n("Delete"), this);
     buttonDelete->setEnabled(false);
     layout->addWidget(buttonDelete,  2, 2, 1, 1);
-    buttonOpen = new KPushButton(KIcon("document-open"), i18n("Open"), this);
+    buttonOpen = new KPushButton(QIcon::fromTheme("document-open"), i18n("Open"), this);
     buttonOpen->setEnabled(false);
     layout->addWidget(buttonOpen, 3, 2, 1, 1);
 
@@ -915,7 +915,7 @@ void OtherFieldsWidget::updateList()
             QTreeWidgetItem *item = new QTreeWidgetItem();
             item->setText(0, it.key());
             item->setText(1, PlainTextValue::text(it.value()));
-            item->setIcon(0, KIcon("entry")); // FIXME
+            item->setIcon(0, QIcon::fromTheme("entry")); // FIXME
             otherFieldsList->addTopLevelItem(item);
             item->setSelected(selText == it.key());
             if (it.key() == curText)
@@ -931,7 +931,7 @@ void OtherFieldsWidget::updateGUI()
     else {
         buttonAddApply->setEnabled(!isReadOnly);
         buttonAddApply->setText(internalEntry->contains(key) ? i18n("Apply") : i18n("Add"));
-        buttonAddApply->setIcon(internalEntry->contains(key) ? KIcon("document-edit") : KIcon("list-add"));
+        buttonAddApply->setIcon(internalEntry->contains(key) ? QIcon::fromTheme("document-edit") : QIcon::fromTheme("list-add"));
     }
 }
 
@@ -982,7 +982,7 @@ QString MacroWidget::label()
 
 KIcon MacroWidget::icon()
 {
-    return KIcon("macro");
+    return QIcon::fromTheme("macro");
 }
 
 bool MacroWidget::canEdit(const Element *element)
@@ -1047,7 +1047,7 @@ QString PreambleWidget::label()
 
 KIcon PreambleWidget::icon()
 {
-    return KIcon("preamble");
+    return QIcon::fromTheme("preamble");
 }
 
 bool PreambleWidget::canEdit(const Element *element)
@@ -1174,7 +1174,7 @@ QString SourceWidget::label()
 
 KIcon SourceWidget::icon()
 {
-    return KIcon("code-context");
+    return QIcon::fromTheme("code-context");
 }
 
 bool SourceWidget::canEdit(const Element *element)
@@ -1196,7 +1196,7 @@ void SourceWidget::createGUI()
     sourceEdit->document()->setDefaultFont(KGlobalSettings::fixedFont());
     sourceEdit->setTabStopWidth(QFontMetrics(sourceEdit->font()).averageCharWidth() * 4);
 
-    m_buttonRestore = new KPushButton(KIcon("edit-undo"), i18n("Restore"), this);
+    m_buttonRestore = new KPushButton(QIcon::fromTheme("edit-undo"), i18n("Restore"), this);
     layout->addWidget(m_buttonRestore, 1, 1, 1, 1);
     connect(m_buttonRestore, SIGNAL(clicked()), this, SLOT(reset()));
 

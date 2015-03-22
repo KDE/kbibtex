@@ -28,13 +28,13 @@
 #include <QStackedWidget>
 #include <QDockWidget>
 #include <QMutex>
+#include <QIcon>
 #ifdef HAVE_QTWEBKIT // krazy:exclude=cpp
 #include <QWebView>
 #endif // HAVE_QTWEBKIT
 
 #include <KLocale>
 #include <KComboBox>
-#include <KIcon>
 #include <KRun>
 #include <KMimeType>
 #include <KMimeTypeTrader>
@@ -162,7 +162,7 @@ public:
         QHBoxLayout *innerLayout = new QHBoxLayout();
         layout->addLayout(innerLayout, 0);
 
-        onlyLocalFilesButton = new KPushButton(KIcon("applications-internet"), QString(), p);
+        onlyLocalFilesButton = new KPushButton(QIcon::fromTheme("applications-internet"), QString(), p);
         onlyLocalFilesButton->setToolTip(i18n("Toggle between local files only and all documents including remote ones"));
         innerLayout->addWidget(onlyLocalFilesButton, 0);
         onlyLocalFilesButton->setCheckable(true);
@@ -173,7 +173,7 @@ public:
         urlComboBox = new KComboBox(false, p);
         innerLayout->addWidget(urlComboBox, 1);
 
-        externalViewerButton = new KPushButton(KIcon("document-open"), QString(), p);
+        externalViewerButton = new KPushButton(QIcon::fromTheme("document-open"), QString(), p);
         externalViewerButton->setToolTip(i18n("Open in external program"));
         innerLayout->addWidget(externalViewerButton, 0);
         sp = externalViewerButton->sizePolicy();
@@ -493,7 +493,7 @@ public:
 
         if (!isLocalOrRelative(url) && url.fileName().isEmpty()) {
             /// URLs not pointing to a specific file should be opened with a web browser component
-            result.icon = KIcon("text-html");
+            result.icon = QIcon::fromTheme("text-html");
             result.mimeType = QLatin1String("text/html");
             return result;
         }
@@ -503,21 +503,21 @@ public:
         if (accuracy < 50) {
             mimeTypePtr = KMimeType::findByPath(url.fileName(), 0, true, &accuracy);
         }
-        result.mimeType = mimeTypePtr->name();
-        result.icon = KIcon(mimeTypePtr->iconName());
+        result.mimeType = mimeTypePtr.name();
+        result.icon = QIcon::fromTheme(mimeTypePtr.iconName());
 
         if (result.mimeType == QLatin1String("application/octet-stream")) {
             /// application/octet-stream is a fall-back if KDE did not know better
-            result.icon = KIcon("text-html");
+            result.icon = QIcon::fromTheme("text-html");
             result.mimeType = QLatin1String("text/html");
         } else if (result.mimeType == QLatin1String("inode/directory") && (result.url.scheme() == QLatin1String("http") || result.url.scheme() == QLatin1String("https"))) {
             /// directory via http means normal webpage (not browsable directory)
-            result.icon = KIcon("text-html");
+            result.icon = QIcon::fromTheme("text-html");
             result.mimeType = QLatin1String("text/html");
         }
 
         if (url.pathOrUrl().startsWith(arXivPDFUrlStart)) {
-            result.icon = KIcon("application-pdf");
+            result.icon = QIcon::fromTheme("application-pdf");
             result.mimeType = QLatin1String("application/pdf");
         }
 

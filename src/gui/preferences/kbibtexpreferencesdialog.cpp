@@ -131,10 +131,10 @@ public:
 
         if (!QFileInfo(fileName).exists()) {
             if (!KIO::NetAccess::file_copy(QUrl(url), QUrl(fileName), NULL))
-                return KIcon();
+                return QIcon();
         }
 
-        return KIcon(fileName);
+        return QIcon::fromTheme(fileName);
     }
 };
 

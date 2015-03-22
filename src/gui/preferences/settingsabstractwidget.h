@@ -23,7 +23,7 @@
 #include <QAbstractItemModel>
 #include <QWidget>
 
-#include <KIcon>
+#include <QIcon>
 
 class KComboBox;
 

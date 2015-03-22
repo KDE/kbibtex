@@ -22,13 +22,13 @@
 #include <QLabel>
 #include <QFormLayout>
 #include <QNetworkReply>
+#include <QIcon>
 
 #include <KLocale>
 #include <KMessageBox>
 #include <KDebug>
 #include <KConfigGroup>
 #include <KLineEdit>
-#include <KIcon>
 
 #include "fileimporterbibtex.h"
 #include "internalnetworkaccessmanager.h"

@@ -76,7 +76,7 @@ public:
         setupMenu();
         connect(menuTypesSignalMapper, SIGNAL(mapped(int)), parent, SLOT(slotTypeChanged(int)));
 
-        buttonOpenUrl = new KPushButton(KIcon("document-open-remote"), "", parent);
+        buttonOpenUrl = new KPushButton(QIcon::fromTheme("document-open-remote"), "", parent);
         buttonOpenUrl->setVisible(false);
         buttonOpenUrl->setProperty("isConst", true);
         parent->appendWidget(buttonOpenUrl);
@@ -271,13 +271,13 @@ public:
 
     KIcon iconForTypeFlag(KBibTeX::TypeFlag typeFlag) {
         switch (typeFlag) {
-        case KBibTeX::tfPlainText: return KIcon("draw-text");
-        case KBibTeX::tfReference: return KIcon("emblem-symbolic-link");
-        case KBibTeX::tfPerson: return KIcon("user-identity");
-        case KBibTeX::tfKeyword: return KIcon("edit-find");
-        case KBibTeX::tfSource: return KIcon("code-context");
-        case KBibTeX::tfVerbatim: return KIcon("preferences-desktop-keyboard");
-        default: return KIcon();
+        case KBibTeX::tfPlainText: return QIcon::fromTheme("draw-text");
+        case KBibTeX::tfReference: return QIcon::fromTheme("emblem-symbolic-link");
+        case KBibTeX::tfPerson: return QIcon::fromTheme("user-identity");
+        case KBibTeX::tfKeyword: return QIcon::fromTheme("edit-find");
+        case KBibTeX::tfSource: return QIcon::fromTheme("code-context");
+        case KBibTeX::tfVerbatim: return QIcon::fromTheme("preferences-desktop-keyboard");
+        default: return QIcon();
         };
     }
 

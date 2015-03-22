@@ -91,10 +91,10 @@ public:
         label->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
         layoutUnmodifiedChanges->addWidget(label);
 
-        buttonApply = new KPushButton(KIcon("dialog-ok-apply"), i18n("Apply"), p);
+        buttonApply = new KPushButton(QIcon::fromTheme("dialog-ok-apply"), i18n("Apply"), p);
         layout->addWidget(buttonApply, 1, 2, 1, 1);
 
-        buttonReset = new KPushButton(KIcon("edit-undo"), i18n("Reset"), p);
+        buttonReset = new KPushButton(QIcon::fromTheme("edit-undo"), i18n("Reset"), p);
         layout->addWidget(buttonReset, 1, 3, 1, 1);
 
         connect(buttonApply, SIGNAL(clicked()), p, SIGNAL(elementModified()));
@@ -180,7 +180,7 @@ void ElementForm::setElement(QSharedPointer<Element> element, File *file)
     /// changes rather than to discard them -> apply changes in previous element.
     /// FIXME If the previous element got delete from the file and therefore a different
     /// element gets set, changes will be still applied to the element to-be-deleted.
-    if (d->gotModified && element != d->element && KMessageBox::questionYesNo(this, i18n("The current element got modified.\nApply or discard changes?"), i18n("Element modified"), KGuiItem(i18n("Apply changes"), KIcon("dialog-ok-apply")), KGuiItem(i18n("Discard changes"), KIcon("edit-undo"))) == KMessageBox::Yes) {
+    if (d->gotModified && element != d->element && KMessageBox::questionYesNo(this, i18n("The current element got modified.\nApply or discard changes?"), i18n("Element modified"), KGuiItem(i18n("Apply changes"), QIcon::fromTheme("dialog-ok-apply")), KGuiItem(i18n("Discard changes"), QIcon::fromTheme("edit-undo"))) == KMessageBox::Yes) {
         d->apply();
     }
     if (element != d->element) {

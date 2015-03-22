@@ -136,7 +136,7 @@ QString SettingsFileExporterPDFPSWidget::label() const
 
 KIcon SettingsFileExporterPDFPSWidget::icon() const
 {
-    return KIcon("application-pdf");
+    return QIcon::fromTheme("application-pdf");
 }
 
 void SettingsFileExporterPDFPSWidget::loadState()

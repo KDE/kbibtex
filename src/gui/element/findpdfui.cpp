@@ -109,7 +109,7 @@ QList<QWidget *> PDFItemDelegate::createItemWidgets() const
     Q_ASSERT_X(list.count() == posLabelPreview + 1, "QList<QWidget *> PDFItemDelegate::createItemWidgets() const", "list.count() != posLabelPreview + 1");
 
     /// add a push button to view the PDF file
-    KPushButton *pushButton = new KPushButton(KIcon("application-pdf"), i18n("View"));
+    KPushButton *pushButton = new KPushButton(QIcon::fromTheme("application-pdf"), i18n("View"));
     list << pushButton;
     connect(pushButton, SIGNAL(clicked()), this, SLOT(slotViewPDF()));
     Q_ASSERT_X(list.count() == posViewButton + 1, "QList<QWidget *> PDFItemDelegate::createItemWidgets() const", "list.count() != posViewButton + 1");
@@ -302,7 +302,7 @@ QVariant PDFListModel::data(const QModelIndex &index, int role) const
             /// make an educated guess on the icon, based on URL or path
             QString iconName = FileInfo::mimeTypeForUrl(m_resultList[index.row()].url)->iconName();
             iconName = iconName == QLatin1String("application-octet-stream") ? QLatin1String("application-pdf") : iconName;
-            return KIcon(iconName).pixmap(KIconLoader::SizeMedium, KIconLoader::SizeMedium);
+            return QIcon::fromTheme(iconName).pixmap(KIconLoader::SizeMedium, KIconLoader::SizeMedium);
         } else
             return QVariant();
     }
