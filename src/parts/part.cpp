@@ -802,7 +802,7 @@ void KBibTeXPart::elementViewDocumentMenu(QObject *obj)
     QString text = static_cast<QAction *>(obj)->data().toString(); ///< only a KAction will be passed along
 
     /// Guess mime type for url to open
-    KUrl url(text);
+    QUrl url(text);
     QMimeType mimeType = FileInfo::mimeTypeForUrl(url);
     const QString mimeTypeName = mimeType.name();
     /// Ask KDE subsystem to open url in viewer matching mime type

@@ -220,7 +220,7 @@ void PDFItemDelegate::slotViewPDF()
         QUrl url = index.data(URLRole).toUrl();
         if (!tempfileName.isEmpty()) {
             /// Guess mime type for url to open
-            KUrl tempUrl(tempfileName);
+            QUrl tempUrl(tempfileName);
             QMimeType mimeType = FileInfo::mimeTypeForUrl(tempUrl);
             const QString mimeTypeName = mimeType.name();
             /// Ask KDE subsystem to open url in viewer matching mime type
@@ -449,14 +449,14 @@ void FindPDFUI::apply(Entry &entry, const File &bibtexFile)
                     }
             }
         } else if (downloadMode == FindPDF::Download && !tempfileName.isEmpty()) {
-            KUrl startUrl = bibtexFile.property(File::Url, QUrl()).toUrl();
-            const QString absoluteFilename = KFileDialog::getSaveFileName(KUrl::fromLocalFile(startUrl.directory()), QLatin1String("application/pdf"), this, i18n("Save URL '%1'", url.toString()));
+            QUrl startUrl = bibtexFile.property(File::Url, QUrl()).toUrl();
+            const QString absoluteFilename = KFileDialog::getSaveFileName(QUrl::fromLocalFile(startUrl.adjusted(QUrl::RemoveFilename|QUrl::StripTrailingSlash).path()), QLatin1String("application/pdf"), this, i18n("Save URL '%1'", url.toString()));
             if (!absoluteFilename.isEmpty()) {
                 const QString visibleFilename = UrlListEdit::askRelativeOrStaticFilename(this, absoluteFilename, startUrl);
 
                 qDebug() << "Saving PDF from " << url << " to file " << absoluteFilename << " known as " << visibleFilename;
                 // FIXME test for overwrite
-                KIO::NetAccess::file_copy(KUrl::fromLocalFile(tempfileName), KUrl::fromLocalFile(absoluteFilename), this);
+                KIO::NetAccess::file_copy(QUrl::fromLocalFile(tempfileName), QUrl::fromLocalFile(absoluteFilename), this);
 
                 bool alreadyContained = false;
                 for (QMap<QString, Value>::ConstIterator it = entry.constBegin(); !alreadyContained && it != entry.constEnd(); ++it)
