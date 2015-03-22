@@ -71,7 +71,7 @@ OnlineSearchAbstract::OnlineSearchAbstract(QWidget *parent)
     m_parent = parent;
 }
 
-KIcon OnlineSearchAbstract::icon(QListWidgetItem *listWidgetItem)
+QIcon OnlineSearchAbstract::icon(QListWidgetItem *listWidgetItem)
 {
     static const QRegExp invalidChars(QLatin1String("[^-a-z0-9_]"), Qt::CaseInsensitive);
     const QString fileNameStem = QStandardPaths::writableLocation(QStandardPaths::CacheLocation) + QLatin1String("/favicons/")) + QString(favIconUrl()).remove(invalidChars;

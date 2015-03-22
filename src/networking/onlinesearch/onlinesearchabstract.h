@@ -93,7 +93,7 @@ public:
     virtual void startSearch(const QMap<QString, QString> &query, int numResults) = 0;
     virtual QString label() const = 0;
     QString name();
-    virtual KIcon icon(QListWidgetItem *listWidgetItem = NULL);
+    virtual QIcon icon(QListWidgetItem *listWidgetItem = NULL);
     virtual OnlineSearchQueryFormAbstract *customWidget(QWidget *parent) = 0;
     virtual QUrl homepage() const = 0;
 
