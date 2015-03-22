@@ -22,6 +22,7 @@
 #include <QNetworkRequest>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
+#include <QUrlQuery>
 
 #include <KLocalizedString>
 #include <QDebug>
@@ -177,8 +178,9 @@ void OnlineSearchAcmPortal::doneFetchingSearchPage()
         if (d->currentSearchPosition + 20 < d->numExpectedResults) {
             d->currentSearchPosition += 20;
             QUrl url(reply->url());
-            QMap<QString, QString> queryItems = url.queryItems();
-            queryItems["start"] = QString::number(d->currentSearchPosition);
+            QUrlQuery query(url);
+            query.addQueryItem(QLatin1String("start"), QString::number(d->currentSearchPosition));
+            url.setQuery(query);
 
             QNetworkRequest request(url);
             QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);

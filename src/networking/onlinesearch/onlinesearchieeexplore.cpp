@@ -21,6 +21,7 @@
 #include <QDebug>
 #include <QStandardPaths>
 #include <QUrl>
+#include <QUrlQuery>
 
 #include <KMessageBox>
 #include <KConfigGroup>
@@ -78,11 +79,13 @@ public:
         if (!query[queryKeyYear].isEmpty())
             queryText << QString(QLatin1String("\"Publication Year\":\"%1\"")).arg(query[queryKeyYear]);
 
-        queryUrl.addQueryItem(QLatin1String("queryText"), queryText.join(QLatin1String(" AND ")));
-        queryUrl.addQueryItem(QLatin1String("sortfield"), QLatin1String("py"));
-        queryUrl.addQueryItem(QLatin1String("sortorder"), QLatin1String("desc"));
-        queryUrl.addQueryItem(QLatin1String("hc"), QString::number(numResults));
-        queryUrl.addQueryItem(QLatin1String("rs"), QLatin1String("1"));
+        QUrlQuery q(queryUrl);
+        q.addQueryItem(QLatin1String("queryText"), queryText.join(QLatin1String(" AND ")));
+        q.addQueryItem(QLatin1String("sortfield"), QLatin1String("py"));
+        q.addQueryItem(QLatin1String("sortorder"), QLatin1String("desc"));
+        q.addQueryItem(QLatin1String("hc"), QString::number(numResults));
+        q.addQueryItem(QLatin1String("rs"), QLatin1String("1"));
+        queryUrl.setQuery(q);
 
         return queryUrl;
     }

@@ -21,6 +21,7 @@
 #include <QNetworkRequest>
 #include <QDebug>
 #include <QStandardPaths>
+#include <QUrlQuery>
 
 #include <KLocalizedString>
 
@@ -95,8 +96,7 @@ public:
         }
 
         const QString queryString = queryFragments.join(QLatin1String("+and+"));
-        baseUrl = QUrl(QString(QLatin1String("http://www.worldcat.org/webservices/catalog/search/worldcat/sru?query=%1&recordSchema=%3&wskey=%2")).arg(queryString).arg(OnlineSearchOCLCWorldCat::Private::APIkey).arg(QLatin1String("info%3Asrw%2Fschema%2F1%2Fdc")));
-        baseUrl.addQueryItem(QLatin1String("maximumRecords"), QString::number(OnlineSearchOCLCWorldCat::Private::countPerStep));
+        baseUrl = QUrl(QString(QLatin1String("http://www.worldcat.org/webservices/catalog/search/worldcat/sru?query=%1&recordSchema=%3&wskey=%2&maximumRecords=%4")).arg(queryString).arg(OnlineSearchOCLCWorldCat::Private::APIkey).arg(QLatin1String("info%3Asrw%2Fschema%2F1%2Fdc")).arg(OnlineSearchOCLCWorldCat::Private::countPerStep));
     }
 };
 
@@ -193,7 +193,10 @@ void OnlineSearchOCLCWorldCat::downloadDone() {
                 emit stoppedSearch(resultNoError);
             } else if (d->curStep < d->maxSteps) {
                 QUrl nextUrl = d->baseUrl;
-                nextUrl.addQueryItem(QLatin1String("start"), QString::number(d->curStep * OnlineSearchOCLCWorldCat::Private::countPerStep + 1));
+                QUrlQuery query(nextUrl);
+                query.addQueryItem(QLatin1String("start"), QString::number(d->curStep *
+                OnlineSearchOCLCWorldCat::Private::countPerStep + 1));
+                nextUrl.setQuery(query);
                 QNetworkRequest request(nextUrl);
                 QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request);
                 InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);

@@ -21,6 +21,7 @@
 #include <QNetworkReply>
 #include <QXmlStreamReader>
 #include <QDebug>
+#include <QUrlQuery>
 
 #include "file.h"
 #include "fileimporterbibtex.h"
@@ -56,8 +57,10 @@ public:
         QUrl internalUrl = url;
 
         static const QString queryItemStart = QLatin1String("start");
-        internalUrl.removeQueryItem(queryItemStart);
-        internalUrl.addQueryItem(queryItemStart, QString::number(start));
+        QUrlQuery query(internalUrl);
+        query.removeQueryItem(queryItemStart);
+        query.addQueryItem(queryItemStart, QString::number(start));
+        internalUrl.setQuery(query);
 
         requestZoteroUrl(internalUrl);
     }
@@ -78,18 +81,22 @@ void Items::retrieveItemsByCollection(const QString &collection)
     else
         url = url.adjusted(QUrl::StripTrailingSlash);
         url.setPath(url.path() + '/' + (QString(QLatin1String("/collections/%1/items")).arg(collection)));
-    url.addQueryItem(QLatin1String("format"), QLatin1String("bibtex"));
+    QUrlQuery query(url);
+    query.addQueryItem(QLatin1String("format"), QLatin1String("bibtex"));
+    url.setQuery(query);
     d->retrieveItems(url, 0);
 }
 
 void  Items::retrieveItemsByTag(const QString &tag)
 {
     QUrl url = d->api->baseUrl();
+    QUrlQuery query(url);
     if (!tag.isEmpty())
-        url.addQueryItem(QLatin1String("tag"), tag);
+        query.addQueryItem(QLatin1String("tag"), tag);
     url = url.adjusted(QUrl::StripTrailingSlash);
     url.setPath(url.path() + '/' + (QLatin1String("items")));
-    url.addQueryItem(QLatin1String("format"), QLatin1String("bibtex"));
+    query.addQueryItem(QLatin1String("format"), QLatin1String("bibtex"));
+    url.setQuery(query);
     d->retrieveItems(url, 0);
 }
 

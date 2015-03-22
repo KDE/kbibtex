@@ -20,6 +20,7 @@
 #include <QNetworkReply>
 #include <QDebug>
 #include <QStandardPaths>
+#include <QUrlQuery>
 
 #include <KLocalizedString>
 
@@ -56,8 +57,9 @@ public:
         maxPage = (numResults + 9) / 10;
 
         queryUrl = QUrl(booksUrl);
-        queryUrl.addQueryItem(QLatin1String("access_key"), accessKey);
-        queryUrl.addQueryItem(QLatin1String("results"), QLatin1String("texts,authors"));
+        QUrlQuery q(queryUrl);
+        q.addQueryItem(QLatin1String("access_key"), accessKey);
+        q.addQueryItem(QLatin1String("results"), QLatin1String("texts,authors"));
 
         QString index1, value1;
         if (query[queryKeyFreeText].isEmpty() && query[queryKeyAuthor].isEmpty() && !query[queryKeyTitle].isEmpty()) {
@@ -69,9 +71,10 @@ public:
             index1 = QLatin1String("full");
             value1 = query[queryKeyFreeText] + QLatin1Char(' ') + query[queryKeyAuthor] + QLatin1Char(' ') + query[queryKeyTitle];
         }
-        queryUrl.addQueryItem(QLatin1String("index1"), index1);
-        queryUrl.addQueryItem(QLatin1String("value1"), value1);
+        q.addQueryItem(QLatin1String("index1"), index1);
+        q.addQueryItem(QLatin1String("value1"), value1);
 
+        queryUrl.setQuery(q);
         return queryUrl;
     }
 };
@@ -173,7 +176,9 @@ void OnlineSearchIsbnDB::downloadDone()
             else {
                 ++d->currentPage;
                 QUrl nextUrl = d->queryUrl;
-                nextUrl.addQueryItem(QLatin1String("page_number"), QString::number(d->currentPage));
+                QUrlQuery query(nextUrl);
+                query.addQueryItem(QLatin1String("page_number"), QString::number(d->currentPage));
+                nextUrl.setQuery(query);
                 QNetworkRequest request(nextUrl);
                 QNetworkReply *nextReply = InternalNetworkAccessManager::self()->get(request);
                 InternalNetworkAccessManager::self()->setNetworkReplyTimeout(nextReply);

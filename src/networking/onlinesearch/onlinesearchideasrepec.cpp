@@ -21,6 +21,7 @@
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QDebug>
+#include <QUrlQuery>
 
 #include <KLocalizedString>
 
@@ -60,11 +61,13 @@ public:
         }
 
         QUrl url(urlBase);
-        url.addQueryItem(QLatin1String("ps"), QString::number(numResults));
-        url.addQueryItem(QLatin1String("db"), fieldDB);
-        url.addQueryItem(QLatin1String("de"), fieldDE);
-        url.addQueryItem(QLatin1String("q"), fieldQ);
-        url.addQueryItem(QLatin1String("wf"), fieldWF);
+        QUrlQuery q(url);
+        q.addQueryItem(QLatin1String("ps"), QString::number(numResults));
+        q.addQueryItem(QLatin1String("db"), fieldDB);
+        q.addQueryItem(QLatin1String("de"), fieldDE);
+        q.addQueryItem(QLatin1String("q"), fieldQ);
+        q.addQueryItem(QLatin1String("wf"), fieldWF);
+        url.setQuery(q);
 
         return url;
     }

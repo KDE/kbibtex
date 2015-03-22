@@ -18,6 +18,7 @@
 #include "api.h"
 
 #include <QUrl>
+#include <QUrlQuery>
 
 using namespace Zotero;
 
@@ -49,8 +50,10 @@ API::API(RequestScope requestScope, int userOrGroupPrefix, const QString &apiKey
 void API::addLimitToUrl(QUrl &url) const
 {
     static const QString limitKey = QLatin1String("limit");
-    url.removeQueryItem(limitKey);
-    url.addQueryItem(limitKey, QString::number(Zotero::API::limit));
+    QUrlQuery query(url);
+    query.removeQueryItem(limitKey);
+    query.addQueryItem(limitKey, QString::number(Zotero::API::limit));
+    url.setQuery(query);
 }
 
 QUrl API::baseUrl() const

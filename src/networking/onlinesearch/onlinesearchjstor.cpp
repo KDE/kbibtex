@@ -20,6 +20,7 @@
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QDebug>
+#include <QUrlQuery>
 
 #include <KLocalizedString>
 
@@ -67,39 +68,41 @@ void OnlineSearchJStor::startSearch(const QMap<QString, QString> &query, int num
     /// Build search URL, to be used in the second step
     /// after fetching the start page
     d->queryUrl = QUrl(d->jstorBaseUrl);
+    QUrlQuery q(d->queryUrl);
     d->queryUrl.setPath("/action/doAdvancedSearch");
-    d->queryUrl.addQueryItem("Search", "Search");
-    d->queryUrl.addQueryItem("wc", "on"); /// include external references, too
-    d->queryUrl.addQueryItem("la", ""); /// no specific language
-    d->queryUrl.addQueryItem("jo", ""); /// no specific journal
-    d->queryUrl.addQueryItem("Search", "Search");
-    d->queryUrl.addQueryItem("hp", QString::number(numResults)); /// hits per page
+    q.addQueryItem("Search", "Search");
+    q.addQueryItem("wc", "on"); /// include external references, too
+    q.addQueryItem("la", ""); /// no specific language
+    q.addQueryItem("jo", ""); /// no specific journal
+    q.addQueryItem("Search", "Search");
+    q.addQueryItem("hp", QString::number(numResults)); /// hits per page
     int queryNumber = 0;
     QStringList elements = splitRespectingQuotationMarks(query[queryKeyTitle]);
     foreach(const QString &element, elements) {
-        if (queryNumber > 0) d->queryUrl.addQueryItem(QString("c%1").arg(queryNumber), "AND"); ///< join search terms with an AND operation
-        d->queryUrl.addQueryItem(QString("f%1").arg(queryNumber), "ti");
-        d->queryUrl.addQueryItem(QString("q%1").arg(queryNumber), element);
+        if (queryNumber > 0) q.addQueryItem(QString("c%1").arg(queryNumber), "AND"); ///< join search terms with an AND operation
+        q.addQueryItem(QString("f%1").arg(queryNumber), "ti");
+        q.addQueryItem(QString("q%1").arg(queryNumber), element);
         ++queryNumber;
     }
     elements = splitRespectingQuotationMarks(query[queryKeyAuthor]);
     foreach(const QString &element, elements) {
-        if (queryNumber > 0) d->queryUrl.addQueryItem(QString("c%1").arg(queryNumber), "AND"); ///< join search terms with an AND operation
-        d->queryUrl.addQueryItem(QString("f%1").arg(queryNumber), "au");
-        d->queryUrl.addQueryItem(QString("q%1").arg(queryNumber), element);
+        if (queryNumber > 0) q.addQueryItem(QString("c%1").arg(queryNumber), "AND"); ///< join search terms with an AND operation
+        q.addQueryItem(QString("f%1").arg(queryNumber), "au");
+        q.addQueryItem(QString("q%1").arg(queryNumber), element);
         ++queryNumber;
     }
     elements = splitRespectingQuotationMarks(query[queryKeyFreeText]);
     foreach(const QString &element, elements) {
-        if (queryNumber > 0) d->queryUrl.addQueryItem(QString("c%1").arg(queryNumber), "AND"); ///< join search terms with an AND operation
-        d->queryUrl.addQueryItem(QString("f%1").arg(queryNumber), "all");
-        d->queryUrl.addQueryItem(QString("q%1").arg(queryNumber), element);
+        if (queryNumber > 0) q.addQueryItem(QString("c%1").arg(queryNumber), "AND"); ///< join search terms with an AND operation
+        q.addQueryItem(QString("f%1").arg(queryNumber), "all");
+        q.addQueryItem(QString("q%1").arg(queryNumber), element);
         ++queryNumber;
     }
     if (!query[queryKeyYear].isEmpty()) {
-        d->queryUrl.addQueryItem("sd", query[queryKeyYear]);
-        d->queryUrl.addQueryItem("ed", query[queryKeyYear]);
+        q.addQueryItem("sd", query[queryKeyYear]);
+        q.addQueryItem("ed", query[queryKeyYear]);
     }
+    d->queryUrl.setQuery(q);
 
     QNetworkRequest request(d->jstorBaseUrl);
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
@@ -190,12 +193,14 @@ void OnlineSearchJStor::doneFetchingResultPage()
             /// after fetching the start page
             QUrl bibTeXUrl = QUrl(d->jstorBaseUrl);
             bibTeXUrl.setPath("/action/downloadCitation");
-            bibTeXUrl.addQueryItem("userAction", "export");
-            bibTeXUrl.addQueryItem("format", "bibtex"); /// request BibTeX format
-            bibTeXUrl.addQueryItem("include", "abs"); /// include abstracts
+            QUrlQuery query(bibTeXUrl);
+            query.addQueryItem("userAction", "export");
+            query.addQueryItem("format", "bibtex"); /// request BibTeX format
+            query.addQueryItem("include", "abs"); /// include abstracts
             foreach(const QString &doi, uniqueDOIs) {
-                bibTeXUrl.addQueryItem("doi", doi);
+                query.addQueryItem("doi", doi);
             }
+            bibTeXUrl.setQuery(query);
 
             QNetworkRequest request(bibTeXUrl);
             QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request);

@@ -19,6 +19,7 @@
 
 #include <QNetworkReply>
 #include <QDebug>
+#include <QUrlQuery>
 
 #include <KLocalizedString>
 
@@ -168,11 +169,13 @@ void OnlineSearchScienceDirect::doneFetchingStartPage()
             inputMap[QLatin1String("_method")] = QLatin1String("submitForm");
             inputMap[QLatin1String("sdSearch")] = QLatin1String("Search");
 
+            QUrlQuery query(url);
             static const QStringList orderOfParameters = QString(QLatin1String("_ob|_method|_acct|_origin|_zone|md5|_eidkey|qs_issue|qs_pages|qs_title|qs_vol|sdSearch|qs_all|qs_author|resultsPerPage")).split(QLatin1String("|"));
             foreach(const QString &key, orderOfParameters) {
                 if (!inputMap.contains(key)) continue;
-                url.addQueryItem(key, inputMap[key]);
+                query.addQueryItem(key, inputMap[key]);
             }
+            url.setQuery(query);
 
             ++d->runningJobs;
             QNetworkRequest request(url);
@@ -256,9 +259,11 @@ void OnlineSearchScienceDirect::doneFetchingAbstractPage()
             int p1 = -1, p2 = -1;
             if ((p1 = htmlText.indexOf("/science?_ob=DownloadURL&")) >= 0 && (p2 = htmlText.indexOf(QRegExp("[ \"<>]"), p1 + 1)) >= 0) {
                 QUrl url("http://www.sciencedirect.com" + htmlText.mid(p1, p2 - p1));
-                url.addQueryItem(QLatin1String("citation-type"), QLatin1String("BIBTEX"));
-                url.addQueryItem(QLatin1String("format"), QLatin1String("cite-abs"));
-                url.addQueryItem(QLatin1String("export"), QLatin1String("Export"));
+                QUrlQuery query(url);
+                query.addQueryItem(QLatin1String("citation-type"), QLatin1String("BIBTEX"));
+                query.addQueryItem(QLatin1String("format"), QLatin1String("cite-abs"));
+                query.addQueryItem(QLatin1String("export"), QLatin1String("Export"));
+                url.setQuery(query);
                 ++d->runningJobs;
                 QNetworkRequest request(url);
                 QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);

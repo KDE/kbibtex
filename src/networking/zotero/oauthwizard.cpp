@@ -27,6 +27,7 @@
 #include <QApplication>
 #include <QDebug>
 #include <QUrl>
+#include <QUrlQuery>
 
 #include <KLocalizedString>
 #include <KLineEdit>
@@ -142,11 +143,13 @@ public:
             tokenSecret = reply.value(QOAuth::tokenSecretParameterName());
 
             QUrl oauthAuthorizationUrl = QUrl(QLatin1String("https://www.zotero.org/oauth/authorize"));
-            oauthAuthorizationUrl.addQueryItem("oauth_token", token);
-            oauthAuthorizationUrl.addQueryItem("library_access", "1");
-            oauthAuthorizationUrl.addQueryItem("notes_access", "0");
-            oauthAuthorizationUrl.addQueryItem("write_access", "0");
-            oauthAuthorizationUrl.addQueryItem("all_groups", "read");
+            QUrlQuery query(oauthAuthorizationUrl);
+            query.addQueryItem("oauth_token", token);
+            query.addQueryItem("library_access", "1");
+            query.addQueryItem("notes_access", "0");
+            query.addQueryItem("write_access", "0");
+            query.addQueryItem("all_groups", "read");
+            oauthAuthorizationUrl.setQuery(query);
             return oauthAuthorizationUrl;
         } else
             qWarning() << "Error getting token" << qOAuth->error();

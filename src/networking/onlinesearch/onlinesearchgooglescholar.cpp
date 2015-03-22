@@ -24,6 +24,7 @@
 #include <QNetworkReply>
 #include <QIcon>
 #include <QDebug>
+#include <QUrlQuery>
 
 #include <KLocalizedString>
 #include <KMessageBox>
@@ -177,8 +178,10 @@ void OnlineSearchGoogleScholar::doneFetchingStartPage()
         } else {
             /// landed on country-specific domain
             QUrl url(d->configPageUrl.arg(reply->url().host()));
-            url.addQueryItem("hl", "en");
-            url.addQueryItem("as_sdt", "0,5");
+            QUrlQuery query(url);
+            query.addQueryItem("hl", "en");
+            query.addQueryItem("as_sdt", "0,5");
+            url.setQuery(query);
 
             QNetworkRequest request(url);
             QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply->url());
@@ -205,9 +208,11 @@ void OnlineSearchGoogleScholar::doneFetchingConfigPage()
         inputMap[QLatin1String("submit")] = QLatin1String("");
 
         QUrl url(d->setConfigPageUrl.arg(reply->url().host()));
+        QUrlQuery query(url);
         for (QMap<QString, QString>::ConstIterator it = inputMap.constBegin(); it != inputMap.constEnd(); ++it)
-            url.addQueryItem(it.key(), it.value());
-
+            query.addQueryItem(it.key(), it.value());
+        url.setQuery(query);
+        
         QNetworkRequest request(url);
         QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
         InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
@@ -224,13 +229,15 @@ void OnlineSearchGoogleScholar::doneFetchingSetConfigPage()
 
     if (handleErrors(reply)) {
         QUrl url(QString(d->queryPageUrl).arg(reply->url().host()));
-        url.addEncodedQueryItem(QString("as_q").toLatin1(), d->queryFreetext.toLatin1());
-        url.addEncodedQueryItem(QString("as_sauthors").toLatin1(), d->queryAuthor.toLatin1());
-        url.addEncodedQueryItem(QString("as_ylo").toLatin1(), d->queryYear.toLatin1());
-        url.addEncodedQueryItem(QString("as_yhi").toLatin1(), d->queryYear.toLatin1());
-        url.addEncodedQueryItem(QString("as_vis").toLatin1(), "1"); ///< include citations
-        url.addQueryItem("num", QString::number(d->numResults));
-        url.addQueryItem("btnG", "Search Scholar");
+        QUrlQuery query(url);
+        query.addQueryItem(QString("as_q").toLatin1(), d->queryFreetext.toLatin1());
+        query.addQueryItem(QString("as_sauthors").toLatin1(), d->queryAuthor.toLatin1());
+        query.addQueryItem(QString("as_ylo").toLatin1(), d->queryYear.toLatin1());
+        query.addQueryItem(QString("as_yhi").toLatin1(), d->queryYear.toLatin1());
+        query.addQueryItem(QString("as_vis").toLatin1(), "1"); ///< include citations
+        query.addQueryItem("num", QString::number(d->numResults));
+        query.addQueryItem("btnG", "Search Scholar");
+        url.setQuery(query);
 
         QNetworkRequest request(url);
         QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);

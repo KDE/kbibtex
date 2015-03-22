@@ -26,6 +26,7 @@
 #include <QNetworkReply>
 #include <QDebug>
 #include <QStandardPaths>
+#include <QUrlQuery>
 
 #include <KLocalizedString>
 #include <KLineEdit>
@@ -184,7 +185,9 @@ public:
             queryString += QString(QLatin1String(" year:%1")).arg(year);
 
         queryString = queryString.simplified();
-        queryUrl.addQueryItem(QLatin1String("q"), queryString);
+        QUrlQuery query(queryUrl);
+        query.addQueryItem(QLatin1String("q"), queryString);
+        queryUrl.setQuery(query);
 
         return queryUrl;
     }
@@ -214,7 +217,9 @@ public:
         }
 
         queryString = queryString.simplified();
-        queryUrl.addQueryItem(QLatin1String("q"), queryString);
+        QUrlQuery q(queryUrl);
+        q.addQueryItem(QLatin1String("q"), queryString);
+        queryUrl.setQuery(q);
 
         return queryUrl;
     }
@@ -266,7 +271,9 @@ void OnlineSearchSpringerLink::startSearch(const QMap<QString, QString> &query, 
     m_hasBeenCanceled = false;
 
     QUrl springerLinkSearchUrl = d->buildQueryUrl(query);
-    springerLinkSearchUrl.addQueryItem(QLatin1String("p"), QString::number(numResults));
+    QUrlQuery q(springerLinkSearchUrl);
+    q.addQueryItem(QLatin1String("p"), QString::number(numResults));
+    springerLinkSearchUrl.setQuery(q);
 
     emit progress(0, 1);
     QNetworkRequest request(springerLinkSearchUrl);
