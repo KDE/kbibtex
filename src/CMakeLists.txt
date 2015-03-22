@@ -71,9 +71,9 @@ add_subdirectory(
 add_subdirectory(
     io
 )
-# add_subdirectory(
-#     processing
-# )
+add_subdirectory(
+    processing
+)
 # add_subdirectory(
 #     networking
 # )
