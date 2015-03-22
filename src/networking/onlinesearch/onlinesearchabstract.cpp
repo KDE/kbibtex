@@ -19,6 +19,7 @@
 
 #include <QFileInfo>
 #include <QNetworkReply>
+#include <QDir>
 #include <QTimer>
 #include <QListWidgetItem>
 #include <QtDBus/QDBusConnection>
@@ -350,7 +351,7 @@ void OnlineSearchAbstract::iconDownloadFinished()
 
 void OnlineSearchAbstract::dumpToFile(const QString &filename, const QString &text)
 {
-    const QString usedFilename = QDir::tempPath() + QLatin1Char('/') +  filename, true);
+    const QString usedFilename = QDir::tempPath() + QLatin1Char('/') +  filename;
 
     QFile f(usedFilename);
     if (f.open(QFile::WriteOnly)) {
