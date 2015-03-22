@@ -35,8 +35,8 @@
 #include "comment.h"
 #include "encoderlatex.h"
 #include "encoderutf8.h"
-#include "bibtexentries.h"
-#include "bibtexfields.h"
+#include "config/bibtexentries.h"
+#include "config/bibtexfields.h"
 #include "iconvlatex.h"
 
 #define encodercheck(encoder, text) ((encoder)?(encoder)->encode((text)):(text))
