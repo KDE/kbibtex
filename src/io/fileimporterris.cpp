@@ -22,7 +22,6 @@
 #include <QRegExp>
 #include <QCoreApplication>
 #include <QStringList>
-
 #include <QDebug>
 
 #include "kbibtexnamespace.h"

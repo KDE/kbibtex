@@ -23,13 +23,7 @@
 #include <QTextCodec>
 #include <QTextStream>
 #include <QStringList>
-#include <QLabel>
-#include <QLineEdit>
-#include <QFormLayout>
-#include <QAbstractItemModel>
 
-#include <KDialog>
-#include <KComboBox>
 
 #include "preferences.h"
 #include "file.h"
