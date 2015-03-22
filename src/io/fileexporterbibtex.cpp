@@ -24,6 +24,8 @@
 #include <QTextStream>
 #include <QStringList>
 
+#include <KSharedConfig>
+#include <KConfigGroup>
 
 #include "preferences.h"
 #include "file.h"
