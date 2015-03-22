@@ -181,29 +181,29 @@ find_package(
 #     )
 # endif()
 
-# find_package(
-#     QCA2
-#     REQUIRED
-# )
-# find_package(
-#     QtOAuth
-# )
-# if(
-#     QTOAUTH_FOUND
-# )
-#     add_definitions(
-#         -DHAVE_QTOAUTH
-#     )
-# else(
-#     QTOAUTH_FOUND
-# )
-#     message(
-#         STATUS
-#         "No QtOAuth installed, disabling Zotero OAuth wizard"
-#     )
-# endif(
-#     QTOAUTH_FOUND
-# )
+find_package(
+    QCA2
+    REQUIRED
+)
+find_package(
+    QtOAuth
+)
+if(
+    QTOAUTH_FOUND
+)
+    add_definitions(
+        -DHAVE_QTOAUTH
+    )
+else(
+    QTOAUTH_FOUND
+)
+    message(
+        STATUS
+        "No QtOAuth installed, disabling Zotero OAuth wizard"
+    )
+endif(
+    QTOAUTH_FOUND
+)
 
 
 add_subdirectory(
