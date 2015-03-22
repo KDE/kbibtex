@@ -20,9 +20,9 @@
 #include <QNetworkReply>
 #include <QNetworkRequest>
 #include <QDebug>
+#include <QStandardPaths>
 
 #include <KLocale>
-#include <KStandardDirs>
 
 #include "fileimporterbibtex.h"
 #include "xsltransform.h"
