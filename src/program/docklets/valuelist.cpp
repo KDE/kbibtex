@@ -28,7 +28,6 @@
 #include <QSortFilterProxyModel>
 
 #include <KComboBox>
-#include <KStandardDirs>
 #include <KConfigGroup>
 #include <KLocale>
 #include <KAction>

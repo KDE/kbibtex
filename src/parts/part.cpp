@@ -46,7 +46,6 @@
 #include <KTemporaryFile>
 #include <KIO/NetAccess>
 #include <KRun>
-#include <KStandardDirs>
 
 #include "file.h"
 #include "macro.h"

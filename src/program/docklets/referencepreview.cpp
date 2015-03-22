@@ -30,6 +30,7 @@
 #endif // HAVE_QTWEBKIT
 #include <QLayout>
 #include <QApplication>
+#include <QStandardPaths>
 #include <QTextStream>
 #include <QPalette>
 #include <QDebug>
@@ -37,7 +38,6 @@
 #include <KTemporaryFile>
 #include <KLocale>
 #include <KComboBox>
-#include <KStandardDirs>
 #include <KPushButton>
 #include <KFileDialog>
 #include <KMimeType>
@@ -275,7 +275,7 @@ void ReferencePreview::renderHTML()
         crossRefHandling = merge;
         FileExporterXSLT *exporterXSLT = new FileExporterXSLT();
         QString filename = style + ".xsl";
-        exporterXSLT->setXSLTFilename(KStandardDirs::locate("data", QLatin1String("kbibtex/") + filename));
+        exporterXSLT->setXSLTFilename(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("kbibtex/") + filename));
         exporter = exporterXSLT;
     } else
         qWarning() << "Don't know how to handle output type " << type;

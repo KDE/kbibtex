@@ -27,7 +27,6 @@
 #include <KApplication>
 #include <KPushButton>
 #include <KListWidget>
-#include <KStandardDirs>
 #include <KAction>
 
 #include <onlinesearchacmportal.h>

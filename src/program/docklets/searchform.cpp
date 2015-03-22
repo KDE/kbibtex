@@ -36,12 +36,10 @@
 #include <KLineEdit>
 #include <KLocale>
 #include <KRun>
-
 #include <KMessageBox>
 #include <KTemporaryFile>
 #include <KAction>
 #include <kparts/part.h>
-#include <KStandardDirs>
 #include <KConfigGroup>
 #include <KTabWidget>
 #include <KSharedConfig>

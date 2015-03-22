@@ -37,7 +37,6 @@
 #include <KActionCollection>
 #include <KLocale>
 #include <KXMLGUIClient>
-#include <KStandardDirs>
 #include <kparts/part.h>
 #include <KMessageBox>
 #include <KLineEdit>
