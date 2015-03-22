@@ -74,12 +74,10 @@ Items::Items(API *api, QObject *parent)
 
 void Items::retrieveItemsByCollection(const QString &collection)
 {
-    QUrl url = d->api->baseUrl();
+    QUrl url = d->api->baseUrl().adjusted(QUrl::StripTrailingSlash);
     if (collection.isEmpty())
-        url = url.adjusted(QUrl::StripTrailingSlash);
         url.setPath(url.path() + '/' + (QLatin1String("items")));
     else
-        url = url.adjusted(QUrl::StripTrailingSlash);
         url.setPath(url.path() + '/' + (QString(QLatin1String("/collections/%1/items")).arg(collection)));
     QUrlQuery query(url);
     query.addQueryItem(QLatin1String("format"), QLatin1String("bibtex"));
@@ -89,11 +87,10 @@ void Items::retrieveItemsByCollection(const QString &collection)
 
 void  Items::retrieveItemsByTag(const QString &tag)
 {
-    QUrl url = d->api->baseUrl();
+    QUrl url = d->api->baseUrl().adjusted(QUrl::StripTrailingSlash);
     QUrlQuery query(url);
     if (!tag.isEmpty())
         query.addQueryItem(QLatin1String("tag"), tag);
-    url = url.adjusted(QUrl::StripTrailingSlash);
     url.setPath(url.path() + '/' + (QLatin1String("items")));
     query.addQueryItem(QLatin1String("format"), QLatin1String("bibtex"));
     url.setQuery(query);
@@ -105,7 +102,7 @@ void Items::finishedFetchingItems()
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
     static const QString queryItemStart = QLatin1String("start");
     bool ok = false;
-    const int start = reply->url().queryItemValue(queryItemStart).toInt(&ok);
+    const int start = QUrlQuery(reply->url()).queryItemValue(queryItemStart).toInt(&ok);
 
     if (reply->error() == QNetworkReply::NoError && ok) {
         const QString bibTeXcode = QString::fromUtf8(reply->readAll().data());
