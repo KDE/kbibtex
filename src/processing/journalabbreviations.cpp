@@ -21,9 +21,8 @@
 #include <QFile>
 #include <QTextStream>
 #include <QRegExp>
+#include <QDebug>
 #include <QStandardPaths>
-
-#include <KDebug>
 
 class JournalAbbreviations::Private
 {
@@ -74,7 +73,7 @@ public:
 
             return !leftToRightMap.isEmpty();
         } else {
-            kWarning() << "Cannot open journal abbreviation list file at" << journalFilename;
+            qWarning() << "Cannot open journal abbreviation list file at" << journalFilename;
             return false;
         }
     }

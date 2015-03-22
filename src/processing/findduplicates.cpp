@@ -20,8 +20,8 @@
 #include <typeinfo>
 
 #include <QLinkedList>
+#include <QDebug>
 
-#include <KDebug>
 #include <KProgressDialog>
 #include <KLocale>
 #include <KApplication>
