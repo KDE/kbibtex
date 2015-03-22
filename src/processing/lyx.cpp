@@ -27,13 +27,13 @@
 #include <KLocale>
 #include <KParts/ReadOnlyPart>
 #include <KMessageBox>
-#include <KStandardDirs>
 #include <KDebug>
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <kde_file.h>
 
 #include <kdeversion.h>
+#include <QStandardPaths>
 
 class LyX::LyXPrivate
 {
@@ -98,7 +98,7 @@ LyX::LyX(KParts::ReadOnlyPart *part, QWidget *widget)
     d->action->setEnabled(false);
     connect(d->action, SIGNAL(triggered()), this, SLOT(sendReferenceToLyX()));
 #if KDE_IS_VERSION(4, 4, 0)
-    part->replaceXMLFile(KStandardDirs::locate("data", "kbibtex/lyx.rc"), KStandardDirs::locateLocal("data", "kbibtex/lyx.rc"), true);
+    part->replaceXMLFile(QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kbibtex/lyx.rc"), QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + "kbibtex/lyx.rc"), true;
 #endif
     widget->addAction(d->action);
 }

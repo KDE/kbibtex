@@ -21,8 +21,8 @@
 #include <QFile>
 #include <QTextStream>
 #include <QRegExp>
+#include <QStandardPaths>
 
-#include <KStandardDirs>
 #include <KDebug>
 
 class JournalAbbreviations::Private
@@ -35,7 +35,7 @@ private:
 
 public:
     Private(JournalAbbreviations */* UNUSED parent*/)
-        : /* UNUSED p(parent),*/ journalFilename(KGlobal::dirs()->findResource("data", QLatin1String("kbibtex/jabref_journalabbrevlist.txt")))
+        : /* UNUSED p(parent),*/ journalFilename(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("kbibtex/jabref_journalabbrevlist.txt")))
     {
         /// nothing
     }
