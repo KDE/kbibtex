@@ -46,41 +46,42 @@ const QString FileInfo::mimetypeBibTeX = QLatin1String("text/x-bibtex");
 const QString FileInfo::mimetypeRIS = QLatin1String("application/x-research-info-systems");
 const QString FileInfo::mimetypePDF = QLatin1String("application/pdf");
 
-KMimeType::Ptr FileInfo::mimeTypeForUrl(const QUrl &url)
+QMimeType FileInfo::mimeTypeForUrl(const QUrl &url)
 {
+    static QMimeDatabase db;
     static const QString invalidExtension = QLatin1String("XXXXXXXXXXXXXXXXXXXXXXX");
-    static const KMimeType::Ptr mimetypeHTMLPtr(KMimeType::mimeType(mimetypeHTML));
-    static const KMimeType::Ptr mimetypeOctetStreamPtr(KMimeType::mimeType(mimetypeOctetStream));
-    static const KMimeType::Ptr mimetypeBibTeXPtr(KMimeType::mimeType(mimetypeBibTeX));
-    static const KMimeType::Ptr mimetypePDFPtr(KMimeType::mimeType(mimetypePDF));
+    static const QMimeType mtHTML(db.mimeTypeForName(mimetypeHTML));
+    static const QMimeType mtOctetStream(db.mimeTypeForName(mimetypeOctetStream));
+    static const QMimeType mtBibTeX(db.mimeTypeForName(mimetypeBibTeX));
+    static const QMimeType mtPDF(db.mimeTypeForName(mimetypePDF));
+    static const QMimeType mtRIS(db.mimeTypeForName(mimetypeRIS));
     /// Test if mime type for BibTeX is registered before determining file extension
-    static const QString mimetypeBibTeXExt = mimetypeBibTeXPtr.isNull() ? invalidExtension : mimetypeBibTeXPtr->mainExtension().mid(1);
-    static const KMimeType::Ptr mimetypeRISPtr(KMimeType::mimeType(mimetypeRIS));
+    static const QString mimetypeBibTeXExt = mtBibTeX.preferredSuffix();
     /// Test if mime type for RIS is registered before determining file extension
-    static const QString mimetypeRISExt = mimetypeRISPtr.isNull() ? invalidExtension : mimetypeRISPtr->mainExtension().mid(1);
+    static const QString mimetypeRISExt = mtRIS.preferredSuffix();
     /// Test if mime type for PDF is registered before determining file extension
-    static const QString mimetypePDFExt = mimetypePDFPtr.isNull() ? invalidExtension : mimetypePDFPtr->mainExtension().mid(1);
+    static const QString mimetypePDFExt = mtPDF.preferredSuffix();
 
-    const QString extension = KMimeType::extractKnownExtension(url.fileName()).toLower();
+    const QString extension = db.suffixForFileName(url.fileName()).toLower();
     if (extension == mimetypeBibTeXExt)
-        return mimetypeBibTeXPtr;
+        return mtBibTeX;
     else if (extension == mimetypeRISExt)
-        return mimetypeRISPtr;
+        return mtRIS;
     else if (extension == mimetypePDFExt)
-        return mimetypePDFPtr;
+        return mtPDF;
     // TODO other extensions
 
     /// Let the KDE subsystem guess the mime type
-    KMimeType::Ptr result = KMimeType::findByUrl(url);
+    QMimeType result = db.mimeTypeForUrl(url);
     /// Fall back to application/octet-stream if something goes wrong
-    if (result.isNull())
-        result = mimetypeOctetStreamPtr;
+    if (!result.isValid())
+        result = mtOctetStream;
 
     /// In case that KDE could not determine mime type,
     /// do some educated guesses on our own
-    if (result.isNull() || result->name() == mimetypeOctetStream) {
-        if (url.protocol().startsWith(QLatin1String("http")))
-            result = mimetypeHTMLPtr;
+    if (!result.isValid() || result.name() == mimetypeOctetStream) {
+        if (url.scheme().startsWith(QLatin1String("http")))
+            result = mtHTML;
         // TODO more tests?
     }
 
