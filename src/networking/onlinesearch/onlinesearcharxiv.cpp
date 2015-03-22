@@ -26,7 +26,6 @@
 
 #include <KLineEdit>
 #include <KLocalizedString>
-#include <KStandardDirs>
 #include <KMessageBox>
 #include <KConfigGroup>
 

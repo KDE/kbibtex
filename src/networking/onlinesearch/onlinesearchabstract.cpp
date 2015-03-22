@@ -22,6 +22,7 @@
 #include <QDir>
 #include <QTimer>
 #include <QListWidgetItem>
+#include <QStandardPaths>
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusConnectionInterface>
 
@@ -31,7 +32,6 @@
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <KPassivePopup>
-#include <QStandardPaths>
 
 #include "encoderlatex.h"
 #include "internalnetworkaccessmanager.h"
