@@ -22,10 +22,10 @@
 #include <QFileInfo>
 #include <QDir>
 #include <QTextStream>
+#include <QStandardPaths>
 
 #include <KSharedConfig>
 #include <KConfigGroup>
-#include <KStandardDirs>
 
 #include "kbibtexnamespace.h"
 #include "entry.h"

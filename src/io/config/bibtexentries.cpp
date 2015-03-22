@@ -18,10 +18,10 @@
 #include "bibtexentries.h"
 
 #include <QDebug>
+#include <QStandardPaths>
 
 #include <KSharedConfig>
 #include <KConfigGroup>
-#include <KStandardDirs>
 #include <KLocale>
 
 #include "entry.h"
@@ -51,7 +51,7 @@ public:
         KSharedConfigPtr config(KSharedConfig::openConfig("kbibtexrc"));
         KConfigGroup configGroup(config, QString("User Interface"));
         const QString stylefile = configGroup.readEntry("CurrentStyle", "bibtex").append(".kbstyle").prepend("kbibtex/");
-        layoutConfig = KSharedConfig::openConfig(stylefile, KConfig::FullConfig, "data");
+        layoutConfig = KSharedConfig::openConfig(stylefile, KConfig::FullConfig, QStandardPaths::AppDataLocation);
     }
 
     void load() {

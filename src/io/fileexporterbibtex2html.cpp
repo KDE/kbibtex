@@ -22,7 +22,6 @@
 #include <QStandardPaths>
 
 #include <KLocale>
-#include <KStandardDirs>
 
 #include "fileexporterbibtex.h"
 
