@@ -231,7 +231,6 @@ void OnlineSearchIDEASRePEc::downloadBibTeXDone()
             FileImporterBibTeX importer;
             File *bibtexFile = importer.fromString(bibTeXcode);
 
-            bool hasEntries = false;
             if (bibtexFile != NULL) {
                 for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
                     QSharedPointer<Entry> entry = (*it).dynamicCast<Entry>();
@@ -247,7 +246,6 @@ void OnlineSearchIDEASRePEc::downloadBibTeXDone()
                         v.append(QSharedPointer<VerbatimText>(new VerbatimText(label())));
                         entry->insert("x-fetchedfrom", v);
                         emit foundEntry(entry);
-                        hasEntries = true;
                     }
 
                 }
