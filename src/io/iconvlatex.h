@@ -20,6 +20,8 @@
 
 #include "kbibtexio_export.h"
 
+class QString;
+class QByteArray;
 class QStringList;
 
 /**
