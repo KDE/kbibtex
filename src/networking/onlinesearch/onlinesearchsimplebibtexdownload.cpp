@@ -19,8 +19,7 @@
 
 #include <QNetworkRequest>
 #include <QNetworkReply>
-
-#include <KDebug>
+#include <QDebug>
 
 #include "fileimporterbibtex.h"
 #include "internalnetworkaccessmanager.h"
@@ -42,7 +41,6 @@ void OnlineSearchSimpleBibTeXDownload::startSearch(const QMap<QString, QString> 
     m_hasBeenCanceled = false;
 
     QNetworkRequest request(buildQueryUrl(query, numResults));
-    kDebug() << "request url=" << request.url().toString();
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
     InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
     connect(reply, SIGNAL(finished()), this, SLOT(downloadDone()));
@@ -96,22 +94,19 @@ void OnlineSearchSimpleBibTeXDownload::downloadDone()
                     hasEntries |= publishEntry(entry);
                 }
 
-                if (!hasEntries)
-                    kDebug() << "No hits found in" << reply->url().toString();
                 emit stoppedSearch(resultNoError);
 
                 delete bibtexFile;
             } else {
-                kWarning() << "No valid BibTeX file results returned on request on" << reply->url().toString();
+                qWarning() << "No valid BibTeX file results returned on request on" << reply->url().toString();
                 emit stoppedSearch(resultUnspecifiedError);
             }
         } else {
             /// returned file is empty
-            kDebug() << "No hits found in" << reply->url().toString();
             emit stoppedSearch(resultNoError);
         }
     } else
-        kDebug() << "url was" << reply->url().toString();
+        qWarning() << "url was" << reply->url().toString();
 
     emit progress(2, 2);
 }

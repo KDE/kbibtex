@@ -25,12 +25,12 @@
 #include <QGridLayout>
 #include <QClipboard>
 #include <QApplication>
+#include <QDebug>
 
 #include <KLocale>
 #include <KLineEdit>
 #include <KPushButton>
 #include <KUrl>
-#include <KDebug>
 #include <KRun>
 
 #include "internalnetworkaccessmanager.h"
@@ -138,7 +138,6 @@ public:
 
         /// If no error occurred, read the received token and token secret
         if (qOAuth->error() == QOAuth::NoError) {
-            kDebug() << "Correctly retrieved authorization URL parameters";
             token = reply.value(QOAuth::tokenParameterName());
             tokenSecret = reply.value(QOAuth::tokenSecretParameterName());
 
@@ -150,7 +149,7 @@ public:
             oauthAuthorizationUrl.addQueryItem("all_groups", "read");
             return oauthAuthorizationUrl;
         } else
-            kWarning() << "Error getting token" << qOAuth->error();
+            qWarning() << "Error getting token" << qOAuth->error();
 
         return QUrl();
     }
@@ -205,23 +204,22 @@ public:
             tokenSecret = oAuthVerifierRequest.value(QOAuth::tokenSecretParameterName());
 
             if (!token.isEmpty() && !tokenSecret.isEmpty()) {
-                kDebug() << "KBibTeX is authorized successfully";
                 bool ok = false;
                 userId = oAuthVerifierRequest.value("userID").toInt(&ok);
                 if (!ok) {
                     userId = -1;
                     apiKey.clear();
                     username.clear();
-                    kWarning() << "Returned user id is not a valid number:" << oAuthVerifierRequest.value("userID");
+                    qWarning() << "Returned user id is not a valid number:" << oAuthVerifierRequest.value("userID");
                 } else {
                     apiKey = oAuthVerifierRequest.value("oauth_token");
                     username = oAuthVerifierRequest.value("username");
                 }
             } else {
-                kWarning() << "QOAuth error: token or tokenSecret empty";
+                qWarning() << "QOAuth error: token or tokenSecret empty";
             }
         } else {
-            kWarning() << "QOAuth error:" << qOAuth->error();
+            qWarning() << "QOAuth error:" << qOAuth->error();
         }
     }
 };

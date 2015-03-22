@@ -21,9 +21,9 @@
 #include <QGridLayout>
 #include <QNetworkRequest>
 #include <QNetworkReply>
+#include <QDebug>
 
 #include <KLineEdit>
-#include <KDebug>
 #include <KConfigGroup>
 #include <KLocale>
 
@@ -94,7 +94,7 @@ public:
 
     QUrl buildQueryUrl() {
         if (form == NULL) {
-            kWarning() << "Cannot build query url if no form is specified";
+            qWarning() << "Cannot build query url if no form is specified";
             return KUrl();
         }
 
@@ -221,21 +221,18 @@ void OnlineSearchDOI::downloadDone()
                         hasEntries |= publishEntry(entry);
                     }
 
-                    if (!hasEntries)
-                        kDebug() << "No hits found in" << reply->url().toString();
                     emit stoppedSearch(resultNoError);
 
                     delete bibtexFile;
                 } else {
-                    kWarning() << "No valid BibTeX file results returned on request on" << reply->url().toString();
+                    qWarning() << "No valid BibTeX file results returned on request on" << reply->url().toString();
                     emit stoppedSearch(resultUnspecifiedError);
                 }
             } else {
                 /// returned file is empty
-                kDebug() << "No hits found in" << reply->url().toString();
                 emit stoppedSearch(resultNoError);
             }
         }
     } else
-        kDebug() << "url was" << reply->url().toString();
+        qWarning() << "url was" << reply->url().toString();
 }

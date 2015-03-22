@@ -19,9 +19,9 @@
 
 #include <QNetworkReply>
 #include <QXmlStreamReader>
+#include <QDebug>
 
 #include <KUrl>
-#include <KDebug>
 
 #include "internalnetworkaccessmanager.h"
 #include "api.h"
@@ -124,7 +124,7 @@ void Groups::finishedFetchingGroups()
             emit finishedLoading();
         }
     } else {
-        kWarning() << reply->errorString(); ///< something went wrong
+        qWarning() << reply->errorString(); ///< something went wrong
         d->busy = false;
         d->initialized = false;
         emit finishedLoading();

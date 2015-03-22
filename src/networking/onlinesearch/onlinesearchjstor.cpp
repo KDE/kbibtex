@@ -19,9 +19,9 @@
 
 #include <QNetworkRequest>
 #include <QNetworkReply>
+#include <QDebug>
 
 #include <KLocale>
-#include <KDebug>
 
 #include "internalnetworkaccessmanager.h"
 #include "iocommon.h"
@@ -162,7 +162,7 @@ void OnlineSearchJStor::doneFetchingStartPage()
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingResultPage()));
         }
     } else
-        kDebug() << "url was" << reply->url().toString();
+        qWarning() << "url was" << reply->url().toString();
 }
 
 void OnlineSearchJStor::doneFetchingResultPage()
@@ -203,7 +203,7 @@ void OnlineSearchJStor::doneFetchingResultPage()
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingBibTeXCode()));
         }
     } else
-        kDebug() << "url was" << reply->url().toString();
+        qWarning() << "url was" << reply->url().toString();
 }
 
 void OnlineSearchJStor::doneFetchingBibTeXCode()
@@ -232,7 +232,7 @@ void OnlineSearchJStor::doneFetchingBibTeXCode()
         emit progress(d->numSteps, d->numSteps);
         emit stoppedSearch(d->numFoundResults > 0 ? resultNoError : resultUnspecifiedError);
     } else
-        kDebug() << "url was" << reply->url().toString();
+        qWarning() << "url was" << reply->url().toString();
 }
 
 void OnlineSearchJStor::sanitizeEntry(QSharedPointer<Entry> entry)
@@ -279,7 +279,7 @@ void OnlineSearchJStor::sanitizeEntry(QSharedPointer<Entry> entry)
         entry->insert(Entry::ftMonth, v);
     } else {
         /// this case happens if the field only contains a year
-        kDebug() << "Cannot extract month/season from date" << formattedDate;
+        //qDebug() << "Cannot extract month/season from date" << formattedDate;
     }
 
     /// page field may start with "pp. ", remove that

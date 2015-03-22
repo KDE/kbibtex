@@ -20,8 +20,7 @@
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QXmlStreamReader>
-
-#include <KDebug>
+#include <QDebug>
 
 #include "file.h"
 #include "fileimporterbibtex.h"
@@ -125,7 +124,7 @@ void Items::finishedFetchingItems()
             emit stoppedSearch(0); // TODO proper error codes
         }
     } else {
-        kWarning() << reply->errorString(); ///< something went wrong
+        qWarning() << reply->errorString(); ///< something went wrong
         emit stoppedSearch(1); // TODO proper error codes
     }
 }

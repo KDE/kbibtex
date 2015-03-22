@@ -22,10 +22,10 @@
 #include <QSpinBox>
 #include <QLabel>
 #include <QNetworkReply>
+#include <QDebug>
 #include <QIcon>
 
 #include <KLocale>
-#include <KDebug>
 #include <KLineEdit>
 #include <KComboBox>
 #include <KMessageBox>
@@ -123,7 +123,7 @@ public:
 
     QUrl buildQueryUrl() {
         if (form == NULL) {
-            kWarning() << "Cannot build query url if no form is specified";
+            qWarning() << "Cannot build query url if no form is specified";
             return KUrl();
         }
 
@@ -258,22 +258,19 @@ void OnlineSearchBibsonomy::downloadDone()
                     hasEntries |= publishEntry(entry);
                 }
 
-                if (!hasEntries)
-                    kDebug() << "No hits found in" << reply->url().toString();
                 emit stoppedSearch(resultNoError);
                 emit progress(d->numSteps, d->numSteps);
 
                 delete bibtexFile;
             } else {
-                kWarning() << "No valid BibTeX file results returned on request on" << reply->url().toString();
+                qWarning() << "No valid BibTeX file results returned on request on" << reply->url().toString();
                 emit stoppedSearch(resultUnspecifiedError);
             }
         } else {
             /// returned file is empty
-            kDebug() << "No hits found in" << reply->url().toString();
             emit stoppedSearch(resultNoError);
             emit progress(d->numSteps, d->numSteps);
         }
     } else
-        kDebug() << "url was" << reply->url().toString();
+        qWarning() << "url was" << reply->url().toString();
 }

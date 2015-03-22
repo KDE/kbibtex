@@ -18,10 +18,10 @@
 #include "onlinesearchisbndb.h"
 
 #include <QNetworkReply>
+#include <QDebug>
 
 #include <KStandardDirs>
 #include <KLocale>
-#include <KDebug>
 
 #include "fileimporterbibtex.h"
 #include "xsltransform.h"
@@ -44,7 +44,7 @@ public:
         const QString xsltFilename = QLatin1String("kbibtex/isbndb2bibtex.xsl");
         xslt = XSLTransform::createXSLTransform(QStandardPaths::locate(QStandardPaths::GenericDataLocation, xsltFilename));
         if (xslt == NULL)
-            kWarning() << "Could not create XSLT transformation for" << xsltFilename;
+            qWarning() << "Could not create XSLT transformation for" << xsltFilename;
     }
 
     ~OnlineSearchIsbnDBPrivate() {
@@ -95,7 +95,7 @@ void OnlineSearchIsbnDB::startSearch(const QMap<QString, QString> &query, int nu
 {
     if (d->xslt == NULL) {
         /// Don't allow searches if xslt is not defined
-        kWarning() << "Cannot allow searching" << label() << "if XSL Transformation not available";
+        qWarning() << "Cannot allow searching" << label() << "if XSL Transformation not available";
         delayedStoppedSearch(resultUnspecifiedError);
         return;
     }
@@ -167,7 +167,6 @@ void OnlineSearchIsbnDB::downloadDone()
             delete bibtexFile;
 
             if (!hasEntries) {
-                kDebug() << "No hits found in" << reply->url().toString();
                 emit stoppedSearch(resultNoError);
             } else if (d->currentPage >= d->maxPage)
                 emit stoppedSearch(resultNoError);
@@ -182,9 +181,9 @@ void OnlineSearchIsbnDB::downloadDone()
                 return;
             }
         } else {
-            kWarning() << "No valid BibTeX file results returned on request on" << reply->url().toString();
+            qWarning() << "No valid BibTeX file results returned on request on" << reply->url().toString();
             emit stoppedSearch(resultUnspecifiedError);
         }
     } else
-        kDebug() << "url was" << reply->url().toString();
+        qWarning() << "url was" << reply->url().toString();
 }

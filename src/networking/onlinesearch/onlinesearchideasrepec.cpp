@@ -20,9 +20,9 @@
 #include <QSet>
 #include <QNetworkRequest>
 #include <QNetworkReply>
+#include <QDebug>
 
 #include <KLocale>
-#include <KDebug>
 
 #include "fileimporterbibtex.h"
 #include "internalnetworkaccessmanager.h"
@@ -156,7 +156,6 @@ void OnlineSearchIDEASRePEc::downloadListDone()
             d->numSteps += 2 * d->publicationLinks.count(); ///< update number of steps
 
             if (d->publicationLinks.isEmpty()) {
-                kDebug() << "No publication links found";
                 emit stoppedSearch(resultNoError);
                 emit progress(1, 1);
             } else {
@@ -170,7 +169,7 @@ void OnlineSearchIDEASRePEc::downloadListDone()
             }
         }
     } else
-        kDebug() << "url was" << reply->url().toString();
+        qWarning() << "url was" << reply->url().toString();
 
 }
 
@@ -211,7 +210,7 @@ void OnlineSearchIDEASRePEc::downloadPublicationDone()
         connect(reply, SIGNAL(finished()), this, SLOT(downloadBibTeXDone()));
 
     } else
-        kDebug() << "url was" << reply->url().toString();
+        qWarning() << "url was" << reply->url().toString();
 }
 
 void OnlineSearchIDEASRePEc::downloadBibTeXDone()
@@ -250,9 +249,6 @@ void OnlineSearchIDEASRePEc::downloadBibTeXDone()
 
                 }
 
-                if (!hasEntries)
-                    kDebug() << "No hits found in" << reply->url().toString() << "(was" << downloadUrl << ")";
-
                 delete bibtexFile;
             }
         }
@@ -270,5 +266,5 @@ void OnlineSearchIDEASRePEc::downloadBibTeXDone()
             connect(reply, SIGNAL(finished()), this, SLOT(downloadPublicationDone()));
         }
     } else
-        kDebug() << "url was" << reply->url().toString() << "(was" << downloadUrl << ")";
+        qWarning() << "url was" << reply->url().toString() << "(was" << downloadUrl << ")";
 }

@@ -20,8 +20,8 @@
 #include <QNetworkReply>
 #include <QDateTime>
 #include <QTimer>
+#include <QDebug>
 
-#include <KDebug>
 #include <KLocale>
 #include <KStandardDirs>
 #include <KMessageBox>
@@ -49,7 +49,7 @@ public:
         const QString xsltFilename = QLatin1String("kbibtex/pubmed2bibtex.xsl");
         xslt = XSLTransform::createXSLTransform(KStandardDirs::locate("data", xsltFilename));
         if (xslt == NULL)
-            kWarning() << "Could not create XSLT transformation for" << xsltFilename;
+            qWarning() << "Could not create XSLT transformation for" << xsltFilename;
     }
 
     ~OnlineSearchPubMedPrivate() {
@@ -133,7 +133,7 @@ void OnlineSearchPubMed::startSearch(const QMap<QString, QString> &query, int nu
 {
     if (d->xslt == NULL) {
         /// Don't allow searches if xslt is not defined
-        kWarning() << "Cannot allow searching" << label() << "if XSL Transformation not available";
+        qWarning() << "Cannot allow searching" << label() << "if XSL Transformation not available";
         delayedStoppedSearch(resultUnspecifiedError);
         return;
     }
@@ -146,7 +146,7 @@ void OnlineSearchPubMed::startSearch(const QMap<QString, QString> &query, int nu
     numResults = qMin(maxNumResults, numResults);
     /// enforcing choke on number of searchs per time
     if (QDateTime::currentDateTime().toTime_t() - lastQueryEpoch < queryChokeTimeout) {
-        kDebug() << "Too many search queries per time; choke enforces pause of" << (queryChokeTimeout / 1000) << "seconds between queries";
+        qWarning() << "Too many search queries per time; choke enforces pause of" << (queryChokeTimeout / 1000) << "seconds between queries";
         delayedStoppedSearch(resultNoError);
         return;
     }
@@ -211,7 +211,6 @@ void OnlineSearchPubMed::eSearchDone()
             }
 
             if (idList.isEmpty()) {
-                kDebug() << "No ids here:" << squeeze_text(result.simplified(), 100);
                 emit stoppedSearch(resultUnspecifiedError);
             } else {
                 /// fetch full bibliographic details for found PubMed ids
@@ -226,7 +225,7 @@ void OnlineSearchPubMed::eSearchDone()
             emit progress(d->numSteps, d->numSteps);
         }
     } else
-        kDebug() << "url was" << reply->url().toString();
+        qWarning() << "url was" << reply->url().toString();
 }
 
 void OnlineSearchPubMed::eFetchDone()
@@ -256,15 +255,12 @@ void OnlineSearchPubMed::eFetchDone()
                 hasEntry |= publishEntry(entry);
             }
 
-            if (!hasEntry)
-                kDebug() << "No BibTeX entry found here:" << squeeze_text(bibTeXcode, 100);
             emit stoppedSearch(resultNoError);
             emit progress(d->numSteps, d->numSteps);
             delete bibtexFile;
         } else {
-            kDebug() << "Doesn't look like BibTeX file:" << squeeze_text(bibTeXcode, 100);
             emit stoppedSearch(resultUnspecifiedError);
         }
     } else
-        kDebug() << "url was" << reply->url().toString();
+        qWarning() << "url was" << reply->url().toString();
 }

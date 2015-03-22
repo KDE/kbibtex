@@ -22,9 +22,9 @@
 #include <QNetworkRequest>
 #include <QNetworkAccessManager>
 #include <QMap>
+#include <QDebug>
 
 #include <KLocale>
-#include <KDebug>
 
 #include "fileimporterbibtex.h"
 #include "kbibtexnamespace.h"
@@ -125,7 +125,7 @@ void OnlineSearchMRLookup::doneFetchingResultPage()
 
         emit stoppedSearch(hasEntry ? resultNoError : resultUnspecifiedError);
     } else
-        kDebug() << "url was" << reply->url().toString();
+        qWarning() << "url was" << reply->url().toString();
 }
 
 void OnlineSearchMRLookup::sanitizeEntry(QSharedPointer<Entry> entry)

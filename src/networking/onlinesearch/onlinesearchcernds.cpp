@@ -18,8 +18,9 @@
 
 #include "onlinesearchcernds.h"
 
+#include <QDebug>
+
 #include <KLocale>
-#include <KDebug>
 
 OnlineSearchCERNDS::OnlineSearchCERNDS(QWidget *parent)
         : OnlineSearchSimpleBibTeXDownload(parent)
@@ -110,6 +111,5 @@ QUrl OnlineSearchCERNDS::buildQueryUrl(const QMap<QString, QString> &query, int 
         url.addQueryItem(QString(QLatin1String("f%1")).arg(argumentCount), QLatin1String("year"));
     }
 
-    kDebug() << "url=" << url.pathOrUrl();
     return url;
 }

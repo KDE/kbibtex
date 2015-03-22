@@ -19,10 +19,10 @@
 
 #include <QNetworkReply>
 #include <QNetworkRequest>
+#include <QDebug>
 
 #include <KLocale>
 #include <KStandardDirs>
-#include <KDebug>
 
 #include "fileimporterbibtex.h"
 #include "xsltransform.h"
@@ -47,7 +47,7 @@ public:
         const QString xsltFilename = QLatin1String("kbibtex/worldcatdc2bibtex.xsl");
         xslt = XSLTransform::createXSLTransform(QStandardPaths::locate(QStandardPaths::GenericDataLocation, xsltFilename));
         if (xslt == NULL)
-            kWarning() << "Could not create XSLT transformation for" << xsltFilename;
+            qWarning() << "Could not create XSLT transformation for" << xsltFilename;
     }
 
     ~Private() {
@@ -82,7 +82,7 @@ public:
         /// have been assembled yet, no valid search will be possible.
         /// Invalidate base URL and return in this case.
         if (queryFragments.isEmpty()) {
-            kWarning() << "For WorldCat OCLC search to work, either a title or an author has get specified; free text or year only is not sufficient";
+            qWarning() << "For WorldCat OCLC search to work, either a title or an author has get specified; free text or year only is not sufficient";
             baseUrl.clear();
             return;
         }
@@ -120,7 +120,7 @@ void OnlineSearchOCLCWorldCat::startSearch() {
 void OnlineSearchOCLCWorldCat::startSearch(const QMap<QString, QString> &query, int numResults) {
     if (d->xslt == NULL) {
         /// Don't allow searches if xslt is not defined
-        kWarning() << "Cannot allow searching" << label() << "if XSL Transformation not available";
+        qWarning() << "Cannot allow searching" << label() << "if XSL Transformation not available";
         delayedStoppedSearch(resultUnspecifiedError);
         return;
     }
@@ -189,7 +189,6 @@ void OnlineSearchOCLCWorldCat::downloadDone() {
             delete bibtexFile;
 
             if (!hasEntries) {
-                kDebug() << "No hits found in" << reply->url().toString();
                 emit progress(d->maxSteps, d->maxSteps);
                 emit stoppedSearch(resultNoError);
             } else if (d->curStep < d->maxSteps) {
@@ -204,9 +203,9 @@ void OnlineSearchOCLCWorldCat::downloadDone() {
                 emit stoppedSearch(resultNoError);
             }
         } else {
-            kWarning() << "No valid BibTeX file results returned on request on" << reply->url().toString();
+            qWarning() << "No valid BibTeX file results returned on request on" << reply->url().toString();
             emit stoppedSearch(resultUnspecifiedError);
         }
     } else
-        kDebug() << "url was" << reply->url().toString();
+        qWarning() << "url was" << reply->url().toString();
 }

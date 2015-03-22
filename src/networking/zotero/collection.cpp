@@ -22,8 +22,8 @@
 #include <QVector>
 #include <QNetworkReply>
 #include <QXmlStreamReader>
+#include <QDebug>
 
-#include <KDebug>
 #include <KLocale>
 
 #include "api.h"
@@ -74,7 +74,6 @@ public:
             requestZoteroUrl(url);
         } else {
             initialized = true;
-            kDebug() << "Queue is empty, number of found collections:" << collectionToLabel.count();
             p->emitFinishedLoading();
         }
     }
@@ -201,7 +200,7 @@ void Collection::finishedFetchingCollection()
         } else
             d->runNextInDownloadQueue();
     } else {
-        kWarning() << reply->errorString(); ///< something went wrong
+        qWarning() << reply->errorString(); ///< something went wrong
         d->initialized = false;
         emitFinishedLoading();
     }

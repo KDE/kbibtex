@@ -23,10 +23,10 @@
 #include <QFormLayout>
 #include <QNetworkReply>
 #include <QIcon>
+#include <QDebug>
 
 #include <KLocale>
 #include <KMessageBox>
-#include <KDebug>
 #include <KConfigGroup>
 #include <KLineEdit>
 
@@ -186,7 +186,7 @@ void OnlineSearchGoogleScholar::doneFetchingStartPage()
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingConfigPage()));
         }
     } else
-        kDebug() << "url was" << reply->url().toString();
+        qWarning() << "url was" << reply->url().toString();
 }
 
 void OnlineSearchGoogleScholar::doneFetchingConfigPage()
@@ -213,7 +213,7 @@ void OnlineSearchGoogleScholar::doneFetchingConfigPage()
         InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
         connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingSetConfigPage()));
     } else
-        kDebug() << "url was" << reply->url().toString();
+        qWarning() << "url was" << reply->url().toString();
 }
 
 void OnlineSearchGoogleScholar::doneFetchingSetConfigPage()
@@ -237,7 +237,7 @@ void OnlineSearchGoogleScholar::doneFetchingSetConfigPage()
         InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
         connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingQueryPage()));
     } else
-        kDebug() << "url was" << reply->url().toString();
+        qWarning() << "url was" << reply->url().toString();
 }
 
 void OnlineSearchGoogleScholar::doneFetchingQueryPage()
@@ -286,7 +286,7 @@ void OnlineSearchGoogleScholar::doneFetchingQueryPage()
             emit progress(d->numSteps, d->numSteps);
         }
     } else
-        kDebug() << "url was" << reply->url().toString();
+        qWarning() << "url was" << reply->url().toString();
 }
 
 void OnlineSearchGoogleScholar::doneFetchingBibTeX()
@@ -332,7 +332,7 @@ void OnlineSearchGoogleScholar::doneFetchingBibTeX()
         }
 
         if (!hasEntry) {
-            kWarning() << "Searching" << label() << "resulted in invalid BibTeX data:" << rawText;
+            qWarning() << "Searching" << label() << "resulted in invalid BibTeX data:" << rawText;
             emit stoppedSearch(resultUnspecifiedError);
             return;
         }
@@ -360,7 +360,7 @@ void OnlineSearchGoogleScholar::doneFetchingBibTeX()
             emit progress(d->numSteps, d->numSteps);
         }
     } else
-        kDebug() << "url was" << reply->url().toString();
+        qWarning() << "url was" << reply->url().toString();
 }
 
 QString OnlineSearchGoogleScholar::label() const

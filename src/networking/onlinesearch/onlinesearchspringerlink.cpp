@@ -24,9 +24,9 @@
 #include <QNetworkRequest>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
+#include <QDebug>
 
 #include <KLocale>
-#include <KDebug>
 #include <KLineEdit>
 #include <KConfigGroup>
 #include <KStandardDirs>
@@ -150,7 +150,7 @@ public:
         const QString xsltFilename = QLatin1String("kbibtex/pam2bibtex.xsl");
         xslt = XSLTransform::createXSLTransform(KStandardDirs::locate("data", xsltFilename));
         if (xslt == NULL)
-            kWarning() << "Could not create XSLT transformation for" << xsltFilename;
+            qWarning() << "Could not create XSLT transformation for" << xsltFilename;
     }
 
     ~OnlineSearchSpringerLinkPrivate() {
@@ -236,7 +236,7 @@ void OnlineSearchSpringerLink::startSearch()
 {
     if (d->xslt == NULL) {
         /// Don't allow searches if xslt is not defined
-        kWarning() << "Cannot allow searching" << label() << "if XSL Transformation not available";
+        qWarning() << "Cannot allow searching" << label() << "if XSL Transformation not available";
         delayedStoppedSearch(resultUnspecifiedError);
         return;
     }
@@ -258,7 +258,7 @@ void OnlineSearchSpringerLink::startSearch(const QMap<QString, QString> &query, 
 {
     if (d->xslt == NULL) {
         /// Don't allow searches if xslt is not defined
-        kWarning() << "Cannot allow searching" << label() << "if XSL Transformation not available";
+        qWarning() << "Cannot allow searching" << label() << "if XSL Transformation not available";
         delayedStoppedSearch(resultUnspecifiedError);
         return;
     }
@@ -322,17 +322,15 @@ void OnlineSearchSpringerLink::doneFetchingPAM()
                 hasEntries |= publishEntry(entry);
             }
 
-            if (!hasEntries)
-                kDebug() << "No hits found in" << reply->url().toString();
             emit stoppedSearch(resultNoError);
             emit progress(1, 1);
 
             delete bibtexFile;
         } else {
-            kWarning() << "No valid BibTeX file results returned on request on" << reply->url().toString();
+            qWarning() << "No valid BibTeX file results returned on request on" << reply->url().toString();
             emit stoppedSearch(resultUnspecifiedError);
         }
     } else
-        kDebug() << "url was" << reply->url().toString();
+        qWarning() << "url was" << reply->url().toString();
 }
 

@@ -18,10 +18,10 @@
 #include "onlinesearchieeexplore.h"
 
 #include <QNetworkReply>
+#include <QDebug>
 
 #include <KMessageBox>
 #include <KConfigGroup>
-#include <KDebug>
 #include <KLocale>
 #include <KStandardDirs>
 #include <KUrl>
@@ -45,7 +45,7 @@ public:
         const QString xsltFilename = QLatin1String("kbibtex/ieeexplore2bibtex.xsl");
         xslt = XSLTransform::createXSLTransform(QStandardPaths::locate(QStandardPaths::GenericDataLocation, xsltFilename));
         if (xslt == NULL)
-            kWarning() << "Could not create XSLT transformation for" << xsltFilename;
+            qWarning() << "Could not create XSLT transformation for" << xsltFilename;
     }
 
 
@@ -84,8 +84,6 @@ public:
         queryUrl.addQueryItem(QLatin1String("hc"), QString::number(numResults));
         queryUrl.addQueryItem(QLatin1String("rs"), QLatin1String("1"));
 
-        kDebug() << "buildQueryUrl=" << queryUrl.pathOrUrl();
-
         return queryUrl;
     }
 };
@@ -111,7 +109,7 @@ void OnlineSearchIEEEXplore::startSearch(const QMap<QString, QString> &query, in
 {
     if (d->xslt == NULL) {
         /// Don't allow searches if xslt is not defined
-        kWarning() << "Cannot allow searching" << label() << "if XSL Transformation not available";
+        qWarning() << "Cannot allow searching" << label() << "if XSL Transformation not available";
         delayedStoppedSearch(resultUnspecifiedError);
         return;
     }
@@ -163,18 +161,18 @@ void OnlineSearchIEEEXplore::doneFetchingXML()
                 }
 
                 if (!hasEntries)
-                    kDebug() << "No hits found in" << reply->url().toString();
+                    //qDebug() << "No hits found in" << reply->url().toString();
                 emit stoppedSearch(resultNoError);
                 emit progress(d->numSteps, d->numSteps);
 
                 delete bibtexFile;
             } else {
-                kWarning() << "No valid BibTeX file results returned on request on" << reply->url().toString();
+                qWarning() << "No valid BibTeX file results returned on request on" << reply->url().toString();
                 emit stoppedSearch(resultUnspecifiedError);
             }
         }
     } else
-        kDebug() << "url was" << reply->url().toString();
+        qWarning() << "url was" << reply->url().toString();
 }
 
 QString OnlineSearchIEEEXplore::label() const

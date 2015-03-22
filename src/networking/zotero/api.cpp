@@ -18,7 +18,6 @@
 #include "api.h"
 
 #include <KUrl>
-#include <KDebug>
 
 using namespace Zotero;
 
@@ -66,7 +65,6 @@ int API::userOrGroupPrefix() const
 
 QNetworkRequest API::request(const QUrl &url) const
 {
-    kDebug() << "url=" << url.pathOrUrl();
     QNetworkRequest request(url);
     request.setRawHeader("Zotero-API-Version", "2");
     return request;
