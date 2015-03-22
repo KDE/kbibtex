@@ -37,7 +37,7 @@ FileExporterPDF::FileExporterPDF(FileEmbedding fileEmbedding)
         : FileExporterToolchain(), m_fileEmbedding(fileEmbedding)
 {
     m_fileBasename = QLatin1String("bibtex-to-pdf");
-    m_fileStem = tempDir.name() + QDir::separator() + m_fileBasename;
+    m_fileStem = tempDir.path() + QDir::separator() + m_fileBasename;
 
     /// If there is not embedfile.sty file, disable embedding
     /// irrespective of user's wishes

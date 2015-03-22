@@ -34,7 +34,7 @@ FileExporterPS::FileExporterPS()
         : FileExporterToolchain()
 {
     m_fileBasename = QLatin1String("bibtex-to-ps");
-    m_fileStem = tempDir.name() + QDir::separator() + m_fileBasename;
+    m_fileStem = tempDir.path() + QDir::separator() + m_fileBasename;
 
     reloadConfig();
 }

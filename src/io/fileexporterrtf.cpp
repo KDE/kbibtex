@@ -34,7 +34,7 @@ FileExporterRTF::FileExporterRTF()
         : FileExporterToolchain()
 {
     m_fileBasename = QLatin1String("bibtex-to-rtf");
-    m_fileStem = tempDir.name() + QDir::separator() + m_fileBasename;
+    m_fileStem = tempDir.path() + QDir::separator() + m_fileBasename;
 
     reloadConfig();
 }
