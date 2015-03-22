@@ -74,9 +74,9 @@ add_subdirectory(
 add_subdirectory(
     processing
 )
-# add_subdirectory(
-#     networking
-# )
+add_subdirectory(
+    networking
+)
 # add_subdirectory(
 #     gui
 # )

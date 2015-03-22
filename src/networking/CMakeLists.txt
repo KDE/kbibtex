@@ -1,18 +1,7 @@
-# OnlineSearch library
-
-include_directories(
-    ${CMAKE_SOURCE_DIR}/src/config
-    ${CMAKE_SOURCE_DIR}/src/data
-    ${CMAKE_SOURCE_DIR}/src/io
-    ${CMAKE_SOURCE_DIR}/src/networking/onlinesearch
-    ${CMAKE_SOURCE_DIR}/src/networking
-    ${POPPLER_QT4_INCLUDE_DIR}
-    ${LIBXML2_INCLUDE_DIR}
-    ${QCA2_INCLUDE_DIR}
-)
+# Network library
 
 set(
-    networking_LIB_SRCS
+    kbibtexnetworking_LIB_SRCS
     onlinesearch/onlinesearchabstract.cpp
     onlinesearch/onlinesearchbibsonomy.cpp
     onlinesearch/onlinesearcharxiv.cpp
@@ -53,14 +42,13 @@ if(
         ${QTOAUTH_INCLUDE_DIR}
     )
     set(
-        networking_LIB_SRCS
-        ${networking_LIB_SRCS}
+        kbibtexnetworking_LIB_SRCS
+        ${kbibtexnetworking_LIB_SRCS}
         zotero/oauthwizard.cpp
     )
 endif(
     QTOAUTH_FOUND
 )
-
 
 set(
     kbibtexnetworking_HDRS
@@ -109,33 +97,46 @@ endif(
     QTOAUTH_FOUND
 )
 
-add_definitions(
-    -DMAKE_NETWORKING_LIB
+# add_definitions(
+#     -DMAKE_NETWORKING_LIB
+# )
+
+# # debug area for KBibTeX's web search library
+# add_definitions(
+#     -DKDE_DEFAULT_DEBUG_AREA=101025
+# )
+
+# if(UNITY_BUILD)
+#     enable_unity_build(kbibtexnetworking kbibtexnetworking_LIB_SRCS)
+# endif(UNITY_BUILD)
+
+include_directories(
+    ${CMAKE_BINARY_DIR}/src/config
+    ${CMAKE_SOURCE_DIR}/src/config
+    ${CMAKE_BINARY_DIR}/src/data
+    ${CMAKE_SOURCE_DIR}/src/data
+    ${CMAKE_BINARY_DIR}/src/io
+    ${CMAKE_SOURCE_DIR}/src/io
+    ${CMAKE_SOURCE_DIR}/src/networking/onlinesearch
+    ${CMAKE_SOURCE_DIR}/src/networking
+#     ${POPPLER_QT4_INCLUDE_DIR}
+    ${LIBXML2_INCLUDE_DIR}
+#     ${QCA2_INCLUDE_DIR}
 )
 
-# debug area for KBibTeX's web search library
-add_definitions(
-    -DKDE_DEFAULT_DEBUG_AREA=101025
-)
-
-if(UNITY_BUILD)
-    enable_unity_build(kbibtexnetworking networking_LIB_SRCS)
-endif(UNITY_BUILD)
-
-kde4_add_library(
+add_library(
     kbibtexnetworking
     SHARED
-    ${networking_LIB_SRCS}
+    ${kbibtexnetworking_LIB_SRCS}
 )
 
 target_link_libraries(
     kbibtexnetworking
-    LINK_PRIVATE
-    ${QT_QTCORE_LIBRARY}
-    ${QT_QTWEBKIT_LIBRARY}
-    ${KDE4_KDECORE_LIBS}
-    ${KDE4_KIO_LIBS}
-    ${POPPLER_QT4_LIBRARIES}
+    Qt5::Core
+    Qt5::Widgets
+    Qt5::Network
+    KF5::I18n
+    KF5::XmlGui
     kbibtexconfig
     kbibtexdata
     kbibtexio
@@ -156,6 +157,7 @@ endif(
 set_target_properties(
     kbibtexnetworking
     PROPERTIES
+    EXPORT_NAME "kbibtexnetworking"
     VERSION
     ${LIB_VERSION}
     SOVERSION
@@ -165,19 +167,17 @@ set_target_properties(
 install(
     TARGETS
     kbibtexnetworking
-    RUNTIME
-    DESTINATION
-    bin
-    LIBRARY
-    DESTINATION
-    ${LIB_INSTALL_DIR}
+    ${INSTALL_TARGETS_DEFAULT_ARGS}
 )
+
+generate_export_header( kbibtexnetworking )
 
 install(
     FILES
     ${kbibtexnetworking_HDRS}
+    ${CMAKE_BINARY_DIR}/src/networking/kbibtexnetworking_export.h
     DESTINATION
-    ${INCLUDE_INSTALL_DIR}/kbibtex
+    ${INCLUDE_INSTALL_DIR}/kbibtex/networking
     COMPONENT
-    Devel
+    development
 )
