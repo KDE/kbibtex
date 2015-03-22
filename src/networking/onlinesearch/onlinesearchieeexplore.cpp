@@ -20,11 +20,11 @@
 #include <QNetworkReply>
 #include <QDebug>
 #include <QStandardPaths>
+#include <QUrl>
 
 #include <KMessageBox>
 #include <KConfigGroup>
 #include <KLocale>
-#include <KUrl>
 
 #include "internalnetworkaccessmanager.h"
 #include "xsltransform.h"

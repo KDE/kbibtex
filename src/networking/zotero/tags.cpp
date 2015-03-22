@@ -20,8 +20,7 @@
 #include <QNetworkReply>
 #include <QXmlStreamReader>
 #include <QDebug>
-
-#include <KUrl>
+#include <QUrl>
 
 #include "internalnetworkaccessmanager.h"
 #include "api.h"

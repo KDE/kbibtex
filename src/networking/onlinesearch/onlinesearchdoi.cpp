@@ -95,7 +95,7 @@ public:
     QUrl buildQueryUrl() {
         if (form == NULL) {
             qWarning() << "Cannot build query url if no form is specified";
-            return KUrl();
+            return QUrl();
         }
 
         return QUrl(QLatin1String("http://dx.doi.org/") + form->lineEditDoiNumber->text());

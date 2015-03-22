@@ -17,7 +17,7 @@
 
 #include "api.h"
 
-#include <KUrl>
+#include <QUrl>
 
 using namespace Zotero;
 

@@ -171,7 +171,7 @@ public:
     QUrl buildQueryUrl() {
         if (form == NULL) {
             qWarning() << "Cannot build query url if no form is specified";
-            return KUrl();
+            return QUrl();
         }
 
         QUrl queryUrl(ingentaConnectBaseUrl);

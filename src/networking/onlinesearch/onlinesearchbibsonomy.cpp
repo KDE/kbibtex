@@ -124,7 +124,7 @@ public:
     QUrl buildQueryUrl() {
         if (form == NULL) {
             qWarning() << "Cannot build query url if no form is specified";
-            return KUrl();
+            return QUrl();
         }
 
         QString queryString = p->encodeURL(form->lineEditSearchTerm->text());

@@ -26,11 +26,11 @@
 #include <QClipboard>
 #include <QApplication>
 #include <QDebug>
+#include <QUrl>
 
 #include <KLocale>
 #include <KLineEdit>
 #include <KPushButton>
-#include <KUrl>
 #include <KRun>
 
 #include "internalnetworkaccessmanager.h"
