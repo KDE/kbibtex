@@ -25,8 +25,8 @@
 #include <QPainter>
 #include <QApplication>
 #include <QIcon>
+#include <QDebug>
 
-#include <KDebug>
 #include <KLocale>
 #include <KGlobal>
 #include <KMimeType>

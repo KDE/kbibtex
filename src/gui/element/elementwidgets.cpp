@@ -247,8 +247,9 @@ void EntryConfiguredWidget::layoutGUI(bool forceVisible, const QString &entryTyp
                 break;
             }
         }
-    } else if (!forceVisible)
-        qDebug() << "EntryType should not be empty if visibility is not enforced";
+    } else if (!forceVisible) {
+        // TODO is this an error condition?
+    }
 
     /// variables to keep track which and how many field inputs will be visible
     int countVisible = 0;
@@ -1133,8 +1134,7 @@ bool SourceWidget::apply(QSharedPointer<Element> element) const
                     qWarning() << "Do not know how to apply source code";
             }
         }
-    } else
-        qDebug() << "Expected exactly 1 BibTeX element in source code, but found" << file->count() << "instead";
+    }
 
     delete file;
     return result;

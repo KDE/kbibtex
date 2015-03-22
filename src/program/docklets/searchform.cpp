@@ -28,11 +28,11 @@
 #include <QSet>
 #include <QScrollArea>
 #include <QIcon>
+#include <QDebug>
 
 #include <KPushButton>
 #include <KLineEdit>
 #include <KLocale>
-#include <KDebug>
 #include <KRun>
 #include <KMimeType>
 #include <KMessageBox>
@@ -422,7 +422,6 @@ void SearchForm::stoppedSearch(int resultCode)
 {
     OnlineSearchAbstract *engine = static_cast<OnlineSearchAbstract *>(sender());
     if (d->runningSearches.remove(engine)) {
-        kDebug() << "Search from engine" << engine->label() << "stopped with code" << resultCode  << (resultCode == 0 ? "(OK)" : "(Error)");
         if (d->runningSearches.isEmpty()) {
             /// last search engine stopped
             d->switchToSearch();
@@ -436,7 +435,7 @@ void SearchForm::stoppedSearch(int resultCode)
                 remainingEngines.append(running->label());
             }
             if (!remainingEngines.isEmpty())
-                kDebug() << "Remaining running engines:" << remainingEngines.join(", ");
+                qDebug() << "Remaining running engines:" << remainingEngines.join(", ");
         }
     }
 }

@@ -23,10 +23,10 @@
 #include <QFileInfo>
 #include <QWidget>
 #include <QUrl>
+#include <QDebug>
 
 #include <KConfig>
 #include <KConfigGroup>
-#include <KDebug>
 #include <KMimeTypeTrader>
 #include <kparts/part.h>
 #include <KIO/NetAccess>
@@ -73,7 +73,7 @@ public:
 
     KParts::ReadOnlyPart *createPart(QWidget *newWidgetParent, KService::Ptr newServicePtr = KService::Ptr()) {
         if (!p->flags().testFlag(OpenFileInfo::Open)) {
-            kWarning() << "Cannot create part for a file which is not open";
+            qWarning() << "Cannot create part for a file which is not open";
             return NULL;
         }
 
@@ -101,7 +101,7 @@ public:
             newServicePtr = p->defaultService();
         }
         if (newServicePtr.isNull()) {
-            kError() << "Cannot find service to handle mimetype " << mimeType << endl;
+            qCritical() << "Cannot find service to handle mimetype " << mimeType << endl;
             return NULL;
         }
 
@@ -112,7 +112,7 @@ public:
         }
         if (part == NULL) {
             /// still cannot create part, must be error
-            kError() << "Cannot find part for mimetype " << mimeType << endl;
+            qCritical() << "Cannot find part for mimetype " << mimeType << endl;
             return NULL;
         }
 
@@ -139,7 +139,7 @@ public:
         if (!url.isValid() && m_counter < 0)
             m_counter = ++globalCounter;
         else if (url.isValid())
-            kWarning() << "This function should not be called if URL is valid";
+            qWarning() << "This function should not be called if URL is valid";
         return m_counter;
     }
 
@@ -470,7 +470,7 @@ bool OpenFileInfoManager::changeUrl(OpenFileInfo *openFileInfo, const QUrl &url)
 
     /// check if old url differs from new url and old url is valid
     if (previouslyContained != NULL && previouslyContained->flags().testFlag(OpenFileInfo::Open) && previouslyContained != openFileInfo) {
-        kDebug() << "Open file with same URL already exists, forcefully closing it" << endl;
+        qWarning() << "Open file with same URL already exists, forcefully closing it" << endl;
         close(previouslyContained);
     }
 

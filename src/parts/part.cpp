@@ -28,9 +28,9 @@
 #include <QSignalMapper>
 #include <QtCore/QPointer>
 #include <QFileSystemWatcher>
+#include <QDebug>
 
 #include <KFileDialog>
-#include <KDebug>
 #include <KMessageBox>
 #include <KLocale>
 #include <KAction>
@@ -208,15 +208,15 @@ public:
                 if (!path.isEmpty())
                     fileSystemWatcher.removePath(path);
                 else
-                    kWarning() << "No filename to stop watching";
+                    qWarning() << "No filename to stop watching";
             } else
-                kWarning() << "Not removing" << oldUrl.toString() << "from fileSystemWatcher";
+                qWarning() << "Not removing" << oldUrl.toString() << "from fileSystemWatcher";
             delete bibTeXFile;
         }
 
         QFile inputfile(localFilePath);
         if (!inputfile.open(QIODevice::ReadOnly)) {
-            kWarning() << "Opening file failed, creating new one instead:" << localFilePath;
+            qWarning() << "Opening file failed, creating new one instead:" << localFilePath;
             qApp->restoreOverrideCursor();
             /// Opening file failed, creating new one instead
             initializeNew();
@@ -230,7 +230,7 @@ public:
         delete importer;
 
         if (bibTeXFile == NULL) {
-            kWarning() << "Opening file failed, creating new one instead:" << url.pathOrUrl();
+            qWarning() << "Opening file failed, creating new one instead:" << url.pathOrUrl();
             qApp->restoreOverrideCursor();
             /// Opening file failed, creating new one instead
             initializeNew();
@@ -688,7 +688,6 @@ bool KBibTeXPart::saveFile()
     Q_ASSERT_X(isReadWrite(), "bool KBibTeXPart::saveFile()", "Trying to save although document is in read-only mode");
 
     if (url().isEmpty()) {
-        kDebug() << "unexpected: url is empty";
         documentSaveAs();
         return false;
     }
@@ -700,7 +699,7 @@ bool KBibTeXPart::saveFile()
     if (!watchableFilename.isEmpty())
         d->fileSystemWatcher.removePath(watchableFilename);
     else
-        kWarning() << "watchableFilename is Empty";
+        qWarning() << "watchableFilename is Empty";
 
     const bool saveOperationSuccess = d->saveFile(localFilePath());
 
@@ -708,7 +707,7 @@ bool KBibTeXPart::saveFile()
     if (!watchableFilename.isEmpty())
         d->fileSystemWatcher.addPath(watchableFilename);
     else
-        kWarning() << "watchableFilename is Empty";
+        qWarning() << "watchableFilename is Empty";
 
     if (!saveOperationSuccess) {
         KMessageBox::error(widget(), i18n("The document could not be saved, as it was not possible to write to '%1'.\n\nCheck that you have write access to this file or that enough disk space is available.", url().pathOrUrl()));
@@ -742,12 +741,11 @@ bool KBibTeXPart::documentSaveAs()
         if (!path.isEmpty())
             d->fileSystemWatcher.removePath(path);
         else
-            kWarning() << "No filename to stop watching";
+            qWarning() << "No filename to stop watching";
     } else
-        kWarning() << "Not removing" << url().pathOrUrl() << "from fileSystemWatcher";
+        qWarning() << "Not removing" << url().pathOrUrl() << "from fileSystemWatcher";
 
     if (KParts::ReadWritePart::saveAs(newUrl)) {
-        kDebug() << "setting url to be " << newUrl.pathOrUrl();
         d->model->bibliographyFile()->setProperty(File::Url, newUrl);
         return true;
     } else
@@ -963,7 +961,7 @@ void KBibTeXPart::fileExternallyChange(const QString &path)
         return;
     /// Should never happen: triggering this slot for filenames not being the opened file
     if (path != url().pathOrUrl()) {
-        kWarning() << "Got file modification warning for wrong file: " << path << "!=" << url().pathOrUrl();
+        qWarning() << "Got file modification warning for wrong file: " << path << "!=" << url().pathOrUrl();
         return;
     }
 
@@ -971,19 +969,18 @@ void KBibTeXPart::fileExternallyChange(const QString &path)
     if (!path.isEmpty())
         d->fileSystemWatcher.removePath(path);
     else
-        kWarning() << "No filename to stop watching";
+        qWarning() << "No filename to stop watching";
 
     if (KMessageBox::warningContinueCancel(widget(), i18n("The file '%1' has changed on disk.\n\nReload file or ignore changes on disk?", path), i18n("File changed externally"), KGuiItem(i18n("Reload file"), QIcon::fromTheme("edit-redo")), KGuiItem(i18n("Ignore on-disk changes"), QIcon::fromTheme("edit-undo"))) == KMessageBox::Continue) {
         d->openFile(QUrl::fromLocalFile(path), path);
         /// No explicit call to QFileSystemWatcher.addPath(...) necessary,
         /// openFile(...) has done that already
     } else {
-        kDebug() << "User chose to cancel reload";
         /// Even if the user did not request reloaded the file,
         /// still resume watching file for future external changes
         if (!path.isEmpty())
             d->fileSystemWatcher.addPath(path);
         else
-            kWarning() << "path is Empty";
+            qWarning() << "path is Empty";
     }
 }

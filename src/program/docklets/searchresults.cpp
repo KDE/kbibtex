@@ -22,7 +22,7 @@
 
 #include <KLocale>
 #include <KPushButton>
-#include <KDebug>
+#include <QDebug>
 #include <KAction>
 
 #include "file.h"
@@ -210,7 +210,7 @@ void SearchResults::importSelected()
             QSharedPointer<Entry> clone(new Entry(*entry));
             targetModel->insertRow(clone, targetModel->rowCount());
         } else
-            kWarning() << "Trying to import something that isn't an Entry";
+            qWarning() << "Trying to import something that isn't an Entry";
     }
 
     if (!selList.isEmpty())

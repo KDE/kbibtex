@@ -21,7 +21,7 @@
 #include <QCryptographicHash>
 #include <QTemporaryFile>
 
-#include <KDebug>
+#include <QDebug>
 
 #include "entry.h"
 #include "fileimporterbibtex.h"

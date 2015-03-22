@@ -32,6 +32,7 @@
 #include <QApplication>
 #include <QTextStream>
 #include <QPalette>
+#include <QDebug>
 
 #include <KTemporaryFile>
 #include <KLocale>
@@ -39,7 +40,6 @@
 #include <KStandardDirs>
 #include <KPushButton>
 #include <KFileDialog>
-#include <KDebug>
 #include <KMimeType>
 #include <KRun>
 #include <KIO/NetAccess>
@@ -277,7 +277,7 @@ void ReferencePreview::renderHTML()
         exporterXSLT->setXSLTFilename(KStandardDirs::locate("data", QLatin1String("kbibtex/") + filename));
         exporter = exporterXSLT;
     } else
-        kWarning() << "Don't know how to handle output type " << type;
+        qWarning() << "Don't know how to handle output type " << type;
 
     if (exporter != NULL) {
         QBuffer buffer(this);
@@ -311,7 +311,7 @@ void ReferencePreview::renderHTML()
         if (!exporterResult || text.isEmpty()) {
             /// something went wrong, no output ...
             text = d->notAvailableMessage.arg(i18n("No HTML output generated"));
-            kDebug() << errorLog.join("\n");
+            qDebug() << errorLog.join("\n");
         } else {
             /// beautify text
             text.replace(QLatin1String("``"), QLatin1String("&ldquo;"));

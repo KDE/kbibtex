@@ -28,8 +28,8 @@
 #include <QSortFilterProxyModel>
 #include <QHeaderView>
 #include <QIcon>
+#include <QDebug>
 
-#include <KDebug>
 #include <KPushButton>
 #include <KMessageBox>
 #include <kparts/part.h>
@@ -304,7 +304,7 @@ void MDIWidget::slotCompleted(QObject *obj)
     QUrl newUrl = ofi->part(this)->url();
 
     if (!oldUrl.equals(newUrl)) {
-        kDebug() << "Url changed from " << oldUrl.pathOrUrl() << " to " << newUrl.pathOrUrl() << endl;
+        qDebug() << "Url changed from " << oldUrl.pathOrUrl() << " to " << newUrl.pathOrUrl() << endl;
         d->ofim->changeUrl(ofi, newUrl);
 
         /// completely opened or saved files should be marked as "recently used"

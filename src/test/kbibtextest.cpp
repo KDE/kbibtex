@@ -22,13 +22,13 @@
 #include <QLayout>
 #include <QMenu>
 #include <QIcon>
+#include <QDebug>
 
 #include <KApplication>
 #include <KPushButton>
 #include <KListWidget>
 #include <KStandardDirs>
 #include <KAction>
-#include <KDebug>
 
 #include <onlinesearchacmportal.h>
 #include <onlinesearcharxiv.h>

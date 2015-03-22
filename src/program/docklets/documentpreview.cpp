@@ -40,7 +40,7 @@
 #include <KMimeTypeTrader>
 #include <KService>
 #include <kparts/part.h>
-#include <KDebug>
+#include <QDebug>
 #include <kio/netaccess.h>
 #include <KPushButton>
 #include <kio/jobclasses.h>
@@ -207,15 +207,15 @@ public:
         okularPart = locatePart(QLatin1String("okularPoppler.desktop"), stackedWidget);
         swpOkular = (okularPart == NULL) ? -1 : stackedWidget->addWidget(okularPart->widget());
         if (okularPart == NULL || swpOkular < 0) {
-            kWarning() << "No Okular part for PDF or PostScript document preview available.";
+            qWarning() << "No Okular part for PDF or PostScript document preview available.";
         }
 #ifdef HAVE_QTWEBKIT // krazy:exclude=cpp
-        kDebug() << "WebKit is available, using it instead of KHTML for HTML/Web preview.";
+        qDebug() << "WebKit is available, using it instead of KHTML for HTML/Web preview.";
         htmlWidget = new QWebView(stackedWidget);
         swpHTML = stackedWidget->addWidget(htmlWidget);
         connect(htmlWidget, SIGNAL(loadFinished(bool)), p, SLOT(loadingFinished()));
 #else // HAVE_QTWEBKIT
-        kDebug() << "WebKit not is available, using KHTML instead for HTML/Web preview.";
+        qDebug() << "WebKit not is available, using KHTML instead for HTML/Web preview.";
         htmlPart = locatePart(QLatin1String("khtml.desktop"), stackedWidget);
         swpHTML = stackedWidget->addWidget(htmlPart->widget());
 #endif // HAVE_QTWEBKIT
@@ -396,8 +396,7 @@ public:
                     QAction *action = part->actionCollection()->action(actionName);
                     if (action != NULL) {
                         action->setShortcut(QKeySequence(actionShortcut));
-                    } else
-                        kDebug() << "Could not locate an action with name " << actionName << "for shortcut" << actionShortcut;
+                    }
                 }
             }
         }
@@ -608,7 +607,7 @@ void DocumentPreview::statFinished(KJob *kjob)
         setCursor(d->runningJobs.isEmpty() ? Qt::ArrowCursor : Qt::BusyCursor);
         d->addUrl(urlInfo);
     } else {
-        kDebug() << job->error() << job->errorString();
+        qWarning() << job->error() << job->errorString();
     }
 
     if (d->runningJobs.isEmpty()) {

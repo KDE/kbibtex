@@ -15,11 +15,12 @@
  *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
  ***************************************************************************/
 
+#include <QDebug>
+
 #include <KCmdLineArgs>
 #include <KApplication>
 #include <KAboutData>
 #include <KMessageBox>
-#include <KDebug>
 
 #include "mainwindow.h"
 #include "version.h"
@@ -42,7 +43,7 @@ int main(int argc, char *argv[])
     KCmdLineArgs::init(argc, argv, &aboutData);
     KApplication programCore;
 
-    kDebug() << "Starting KBibTeX version" << versionNumber;
+    qDebug() << "Starting KBibTeX version" << versionNumber;
 
     KService::Ptr service = KService::serviceByStorageId("kbibtexpart.desktop");
     if (service.isNull())

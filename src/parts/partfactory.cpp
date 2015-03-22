@@ -17,10 +17,11 @@
 
 #include "partfactory.h"
 
+#include <QDebug>
+
 #include <KComponentData>
 #include <KAboutData>
 #include <KLocale>
-#include <KDebug>
 
 #include "part.h"
 #include "version.h"
@@ -38,7 +39,7 @@ static KAboutData *_aboutData = 0;
 KBibTeXPartFactory::KBibTeXPartFactory()
         : KParts::Factory()
 {
-    kDebug() << "Creating KBibTeXPart version" << versionNumber;
+    qDebug() << "Creating KBibTeXPart version" << versionNumber;
 }
 
 
