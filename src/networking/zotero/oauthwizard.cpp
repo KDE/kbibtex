@@ -28,7 +28,7 @@
 #include <QDebug>
 #include <QUrl>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KLineEdit>
 #include <KPushButton>
 #include <KRun>

@@ -22,7 +22,7 @@
 #include <QSpinBox>
 
 #include <KLineEdit>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KConfigGroup>
 
 #include "entry.h"

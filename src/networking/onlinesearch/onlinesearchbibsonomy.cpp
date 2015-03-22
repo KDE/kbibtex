@@ -26,7 +26,7 @@
 #include <QIcon>
 #include <QLineEdit>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KComboBox>
 #include <KMessageBox>
 #include <KConfigGroup>

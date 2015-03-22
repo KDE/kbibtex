@@ -21,7 +21,7 @@
 #include <QNetworkReply>
 #include <QDebug>
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include "internalnetworkaccessmanager.h"
 #include "iocommon.h"

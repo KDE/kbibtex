@@ -27,7 +27,7 @@
 #include <QDebug>
 #include <QStandardPaths>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KLineEdit>
 #include <KConfigGroup>
 

@@ -22,7 +22,7 @@
 #include <QDebug>
 #include <QStandardPaths>
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include "fileimporterbibtex.h"
 #include "xsltransform.h"

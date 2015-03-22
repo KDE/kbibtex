@@ -20,7 +20,7 @@
 #include <QNetworkReply>
 #include <QDebug>
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include "encoderlatex.h"
 #include "fileimporterbibtex.h"

@@ -22,7 +22,7 @@
 #include <QTimer>
 #include <QDebug>
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <KMessageBox>
 #include <QStandardPaths>

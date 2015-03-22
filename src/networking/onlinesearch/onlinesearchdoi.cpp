@@ -25,7 +25,7 @@
 
 #include <KLineEdit>
 #include <KConfigGroup>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include "kbibtexnamespace.h"
 #include "internalnetworkaccessmanager.h"

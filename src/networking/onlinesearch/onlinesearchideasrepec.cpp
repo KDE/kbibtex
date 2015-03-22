@@ -22,7 +22,7 @@
 #include <QNetworkReply>
 #include <QDebug>
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include "fileimporterbibtex.h"
 #include "internalnetworkaccessmanager.h"

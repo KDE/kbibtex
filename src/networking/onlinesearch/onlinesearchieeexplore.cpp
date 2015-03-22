@@ -24,7 +24,7 @@
 
 #include <KMessageBox>
 #include <KConfigGroup>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include "internalnetworkaccessmanager.h"
 #include "xsltransform.h"

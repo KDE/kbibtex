@@ -17,7 +17,7 @@
 
 #include "onlinesearchsoanasaads.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 OnlineSearchSOANASAADS::OnlineSearchSOANASAADS(QWidget *parent)
         : OnlineSearchSimpleBibTeXDownload(parent)

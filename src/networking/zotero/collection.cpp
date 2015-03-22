@@ -24,7 +24,7 @@
 #include <QXmlStreamReader>
 #include <QDebug>
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include "api.h"
 

@@ -20,7 +20,7 @@
 
 #include <QDebug>
 
-#include <KLocale>
+#include <KLocalizedString>
 
 OnlineSearchCERNDS::OnlineSearchCERNDS(QWidget *parent)
         : OnlineSearchSimpleBibTeXDownload(parent)

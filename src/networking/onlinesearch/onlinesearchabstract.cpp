@@ -28,7 +28,7 @@
 
 #include <kio/netaccess.h>
 #include <QDebug>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 #include <KPassivePopup>
 #include <QStandardPaths>

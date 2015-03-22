@@ -24,7 +24,7 @@
 #include <QMap>
 #include <QDebug>
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include "fileimporterbibtex.h"
 #include "kbibtexnamespace.h"

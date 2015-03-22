@@ -17,7 +17,7 @@
 
 #include "onlinesearchinspirehep.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 OnlineSearchInspireHep::OnlineSearchInspireHep(QWidget *parent)
         : OnlineSearchSimpleBibTeXDownload(parent)

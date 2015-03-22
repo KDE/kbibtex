@@ -25,7 +25,7 @@
 #include <QIcon>
 #include <QDebug>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 #include <KConfigGroup>
 #include <KLineEdit>

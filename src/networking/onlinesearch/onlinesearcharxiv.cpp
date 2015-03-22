@@ -25,7 +25,7 @@
 #include <QStandardPaths>
 
 #include <KLineEdit>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KStandardDirs>
 #include <KMessageBox>
 #include <KConfigGroup>

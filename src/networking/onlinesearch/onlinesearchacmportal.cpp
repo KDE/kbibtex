@@ -23,7 +23,7 @@
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <QDebug>
 #include <kio/job.h>
 #include <KMessageBox>
