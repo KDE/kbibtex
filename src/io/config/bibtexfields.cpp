@@ -17,12 +17,12 @@
 
 #include "bibtexfields.h"
 
+#include <QExplicitlySharedDataPointer>
 #include <QDebug>
 #include <QStandardPaths>
 
 #include <KSharedConfig>
 #include <KConfigGroup>
-#include <KSharedPtr>
 #include <KLocalizedString>
 
 bool operator==(const FieldDescription &a, const FieldDescription &b)
