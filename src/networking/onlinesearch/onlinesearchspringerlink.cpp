@@ -25,11 +25,11 @@
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QDebug>
+#include <QStandardPaths>
 
 #include <KLocale>
 #include <KLineEdit>
 #include <KConfigGroup>
-#include <KStandardDirs>
 
 #include "internalnetworkaccessmanager.h"
 #include "encoderlatex.h"
@@ -148,7 +148,7 @@ public:
     OnlineSearchSpringerLinkPrivate(OnlineSearchSpringerLink *parent)
             : p(parent), springerMetadataKey(QLatin1String("7pphfmtb9rtwt3dw3e4hm7av")), form(NULL) {
         const QString xsltFilename = QLatin1String("kbibtex/pam2bibtex.xsl");
-        xslt = XSLTransform::createXSLTransform(KStandardDirs::locate("data", xsltFilename));
+        xslt = XSLTransform::createXSLTransform(QStandardPaths::locate(QStandardPaths::GenericDataLocation, xsltFilename));
         if (xslt == NULL)
             qWarning() << "Could not create XSLT transformation for" << xsltFilename;
     }

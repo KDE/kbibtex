@@ -19,8 +19,8 @@
 
 #include <QNetworkReply>
 #include <QDebug>
+#include <QStandardPaths>
 
-#include <KStandardDirs>
 #include <KLocale>
 
 #include "fileimporterbibtex.h"

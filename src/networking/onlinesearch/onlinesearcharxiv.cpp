@@ -22,6 +22,7 @@
 #include <QSpinBox>
 #include <QNetworkReply>
 #include <QDebug>
+#include <QStandardPaths>
 
 #include <KLineEdit>
 #include <KLocale>

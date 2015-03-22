@@ -19,11 +19,11 @@
 
 #include <QNetworkReply>
 #include <QDebug>
+#include <QStandardPaths>
 
 #include <KMessageBox>
 #include <KConfigGroup>
 #include <KLocale>
-#include <KStandardDirs>
 #include <KUrl>
 
 #include "internalnetworkaccessmanager.h"

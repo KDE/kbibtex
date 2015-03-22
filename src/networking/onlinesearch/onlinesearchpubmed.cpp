@@ -23,8 +23,9 @@
 #include <QDebug>
 
 #include <KLocale>
-#include <KStandardDirs>
+
 #include <KMessageBox>
+#include <QStandardPaths>
 
 #include "xsltransform.h"
 #include "fileimporterbibtex.h"
@@ -47,7 +48,7 @@ public:
     OnlineSearchPubMedPrivate(OnlineSearchPubMed *parent)
             : p(parent), pubMedUrlPrefix(QLatin1String("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/")) {
         const QString xsltFilename = QLatin1String("kbibtex/pubmed2bibtex.xsl");
-        xslt = XSLTransform::createXSLTransform(KStandardDirs::locate("data", xsltFilename));
+        xslt = XSLTransform::createXSLTransform(QStandardPaths::locate(QStandardPaths::GenericDataLocation, xsltFilename));
         if (xslt == NULL)
             qWarning() << "Could not create XSLT transformation for" << xsltFilename;
     }
