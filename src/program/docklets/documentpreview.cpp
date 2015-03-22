@@ -27,6 +27,7 @@
 #include <QCheckBox>
 #include <QStackedWidget>
 #include <QDockWidget>
+#include <QDebug>
 #include <QMutex>
 #include <QMimeDatabase>
 #include <QMimeType>
@@ -41,7 +42,6 @@
 #include <KMimeTypeTrader>
 #include <KService>
 #include <kparts/part.h>
-#include <QDebug>
 #include <kio/netaccess.h>
 #include <KPushButton>
 #include <kio/jobclasses.h>
