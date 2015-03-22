@@ -37,7 +37,7 @@ static const QStringList documentFileExtensions = QStringList() << ".pdf" << ".p
 
 FileInfo::FileInfo()
 {
-    // TODO
+    /// nothing
 }
 
 const QString FileInfo::mimetypeOctetStream = QLatin1String("application/octet-stream");
