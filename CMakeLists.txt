@@ -21,6 +21,8 @@ add_definitions(-DTRANSLATION_DOMAIN="kbibtex")
 
 set(
     CMAKE_MODULE_PATH
+    ${CMAKE_MODULE_PATH}
+    /usr/share/apps/cmake/modules/
     ${ECM_MODULE_PATH}
     ${ECM_KDE_MODULE_DIR}
     ${CMAKE_SOURCE_DIR}/cmake/modules
@@ -44,6 +46,7 @@ find_package(
     REQUIRED
     Core
     Widgets
+    Network
 )
 
 find_package(
