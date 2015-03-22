@@ -17,7 +17,7 @@
 
 #include "fileinfo.h"
 
-#include <poppler-qt4.h>
+// FIXME #include <poppler-qt4.h>
 
 #include <QFileInfo>
 #include <QDir>
@@ -255,6 +255,8 @@ QString FileInfo::pdfToText(const QString &pdfFilename)
     /// Either no cache text file existed or could not load text from it
     if (text.isEmpty()) {
         /// Load PDF file through Poppler
+        // FIXME
+        /*
         Poppler::Document *doc = Poppler::Document::load(pdfFilename);
         if (doc != NULL) {
             /// Build text by appending each page's text
@@ -271,6 +273,7 @@ QString FileInfo::pdfToText(const QString &pdfFilename)
                 f.close();
             }
         }
+        */
     }
 
     return text;

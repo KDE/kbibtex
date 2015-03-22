@@ -23,7 +23,7 @@
 
 #include <kio/netaccess.h>
 
-#include <poppler-qt4.h>
+// FIXME #include <poppler-qt4.h>
 
 #include "file.h"
 #include "fileimporterbibtex.h"
@@ -49,6 +49,8 @@ File *FileImporterPDF::load(QIODevice *iodevice)
     File *result = NULL;
     QByteArray buffer = iodevice->readAll();
 
+    // FIXME
+    /*
     Poppler::Document *doc = Poppler::Document::loadFromData(buffer);
     if (doc == NULL) {
         qWarning() << "Could not load PDF document";
@@ -76,6 +78,7 @@ File *FileImporterPDF::load(QIODevice *iodevice)
     }
 
     delete doc;
+    */
     iodevice->close();
     return result;
 }
@@ -94,7 +97,9 @@ void FileImporterPDF::cancel()
 bool FileImporterPDF::containsBibTeXData(const QUrl &url)
 {
     bool result = false;
-
+    
+    // FIXME
+    /*
     QString tmpFile;
     if (KIO::NetAccess::download(url, tmpFile, NULL)) {
         Poppler::Document *doc = Poppler::Document::load(tmpFile);
@@ -109,6 +114,7 @@ bool FileImporterPDF::containsBibTeXData(const QUrl &url)
         }
         KIO::NetAccess::removeTempFile(tmpFile);
     }
+    */
 
     return result;
 }
