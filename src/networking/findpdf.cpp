@@ -22,7 +22,7 @@
 #include <QRegExp>
 #include <QTextStream>
 
-#include <poppler-qt4.h>
+// FIXME #include <poppler-qt4.h>
 
 #include <KApplication>
 #include <QDebug>
@@ -168,6 +168,8 @@ public:
         const QString origin = reply->property(originProperty).toString();
         const QUrl url = reply->url();
 
+        // FIXME
+        /*
         Poppler::Document *doc = Poppler::Document::loadFromData(data);
 
         /// search for duplicate URLs
@@ -204,6 +206,7 @@ public:
         }
 
         delete doc;
+        */
         return progress;
     }
 };
