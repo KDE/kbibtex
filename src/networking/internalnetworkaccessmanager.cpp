@@ -23,6 +23,7 @@
 #include <QRegExp>
 #include <QNetworkAccessManager>
 #include <QNetworkCookieJar>
+#include <QNetworkCookie>
 #include <QNetworkProxy>
 #include <QNetworkRequest>
 #include <QNetworkReply>
