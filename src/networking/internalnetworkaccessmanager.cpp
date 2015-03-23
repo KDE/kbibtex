@@ -27,11 +27,11 @@
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QtGlobal>
+#include <QApplication>
 #include <QTimer>
 #include <QDebug>
 #include <QUrl>
 
-#include <KApplication>
 #include <KProtocolManager>
 
 /**
@@ -119,7 +119,7 @@ void InternalNetworkAccessManager::mergeHtmlHeadCookies(const QString &htmlCode,
 InternalNetworkAccessManager *InternalNetworkAccessManager::self()
 {
     if (instance == NULL) {
-        instance = new InternalNetworkAccessManager(KApplication::instance());
+        instance = new InternalNetworkAccessManager(QApplication::instance());
     }
 
     return instance;

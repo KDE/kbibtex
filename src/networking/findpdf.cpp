@@ -21,10 +21,10 @@
 #include <QNetworkRequest>
 #include <QRegExp>
 #include <QTextStream>
+#include <QApplication>
 
 // FIXME #include <poppler-qt4.h>
 
-#include <KApplication>
 #include <QDebug>
 #include <QTemporaryFile>
 
