@@ -32,7 +32,7 @@
 #include <QAction>
 
 #include <KMessageBox>
-#include <KLocale>
+#include <KLocalizeString>
 #include <KPushButton>
 #include <KFileDialog>
 #include <KInputDialog>

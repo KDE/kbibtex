@@ -33,7 +33,7 @@
 #include <QDebug>
 
 #include <KDialog>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KSqueezedTextLabel>
 #include <KMenu>
 #include <KPushButton>

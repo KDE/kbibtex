@@ -20,8 +20,8 @@
 #include <typeinfo>
 
 #include <KComboBox>
-#include <KLocale>
 #include <QDebug>
+#include <KLocalizeString>
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <KColorScheme>

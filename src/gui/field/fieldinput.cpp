@@ -24,7 +24,7 @@
 #include <QSignalMapper>
 #include <QSpinBox>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KPushButton>
 #include <KInputDialog>
 

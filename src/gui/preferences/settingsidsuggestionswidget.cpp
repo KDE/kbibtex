@@ -23,7 +23,7 @@
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <KPushButton>
-#include <KLocale>
+#include <KLocalizeString>
 #include <KGlobalSettings>
 #include <KMessageBox>
 

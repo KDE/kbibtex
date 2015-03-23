@@ -24,7 +24,7 @@
 
 #include <KPushButton>
 #include <KComboBox>
-#include <KLocale>
+#include <KLocalizeString>
 #include <KLineEdit>
 #include <KConfigGroup>
 #include <KSharedConfig>

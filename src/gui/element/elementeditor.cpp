@@ -31,7 +31,7 @@
 
 #include <KPushButton>
 #include <KMessageBox>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <kio/netaccess.h>

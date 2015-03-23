@@ -24,7 +24,7 @@
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <KPushButton>
-#include <KLocale>
+#include <KLocalizeString>
 #include <KInputDialog>
 
 #include <fieldlistedit.h>

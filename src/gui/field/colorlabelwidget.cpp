@@ -22,7 +22,7 @@
 #include <QPainter>
 
 #include <KColorDialog>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KSharedConfig>
 #include <KConfigGroup>
 

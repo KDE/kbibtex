@@ -23,7 +23,7 @@
 #include <QFile>
 #include <QString>
 
-#include <KLocale>
+#include <KLocalizeString>
 #include <KConfigGroup>
 #include <KSharedConfig>
 

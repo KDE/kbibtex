@@ -21,7 +21,7 @@
 #include <QFileInfo>
 #include <QDebug>
 
-#include <KLocale>
+#include <KLocalizeString>
 #include <KComboBox>
 #include <KIO/NetAccess>
 #include <KMessageBox>

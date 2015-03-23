@@ -23,7 +23,7 @@
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <KComboBox>
-#include <KLocale>
+#include <KLocalizeString>
 
 #include "guihelper.h"
 #include "fileexportertoolchain.h"

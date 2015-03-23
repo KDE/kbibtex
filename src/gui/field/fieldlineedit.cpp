@@ -31,7 +31,7 @@
 #include <KRun>
 #include <KMessageBox>
 #include <KGlobalSettings>
-#include <KLocale>
+#include <KLocalizeString>
 #include <QUrl>
 #include <KPushButton>
 #include <KSharedConfig>

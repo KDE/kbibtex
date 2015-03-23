@@ -26,7 +26,7 @@
 
 #include <KLineEdit>
 #include <KDialog>
-#include <KLocale>
+#include <KLocalizedString>
 
 class AssociatedFilesUI::Private
 {

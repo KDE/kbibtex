@@ -26,7 +26,7 @@
 #include <QPainter>
 #include <QTimer>
 
-#include <KLocale>
+#include <KLocalizeString>
 #include <KPushButton>
 
 class StarRating::Private

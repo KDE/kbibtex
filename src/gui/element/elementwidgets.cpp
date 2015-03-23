@@ -33,7 +33,7 @@
 
 #include <KPushButton>
 #include <KGlobalSettings>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KLineEdit>
 #include <KComboBox>
 #include <KRun>

@@ -29,7 +29,7 @@
 
 #include <KLineEdit>
 #include <KComboBox>
-#include <KLocale>
+#include <KLocalizeString>
 #include <KPushButton>
 #include <KAction>
 
