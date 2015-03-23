@@ -30,14 +30,15 @@
 #include <QPushButton>
 #include <QFontDatabase>
 #include <QUrl>
+#include <QMimeDatabase>
+#include <QMimeType>
+#include <QMimeData>
 
 #include <KRun>
 #include <KMessageBox>
 #include <KLocalizedString>
 #include <KSharedConfig>
 #include <KConfigGroup>
-#include <QMimeDatabase>
-#include <QMimeType>
 
 #include "fileinfo.h"
 #include "file.h"
