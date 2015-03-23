@@ -69,11 +69,11 @@ public:
                 if (role == Qt::DisplayRole || role == SortRole) {
                     const QUrl url = ofiItem->url();
                     const QString fileName = url.fileName();
-                    return fileName.isEmpty() ? squeeze_text(url.pathOrUrl(), 32) : fileName;
+                    return fileName.isEmpty() ? squeeze_text(url.url(QUrl::PreferLocalFile), 32) : fileName;
                 } else if (role == Qt::DecorationRole)
                     return QIcon::fromTheme(ofiItem->mimeType().replace(QLatin1Char('/'), QLatin1Char('-')));
                 else if (role == Qt::ToolTipRole)
-                    return squeeze_text(ofiItem->url().pathOrUrl(), 64);
+                    return squeeze_text(ofiItem->url().url(QUrl::PreferLocalFile), 64);
             } else if (index.column() == 1) {
                 if (role == Qt::DisplayRole || role == Qt::ToolTipRole)
                     return ofiItem->lastAccess().toString(Qt::TextDate);
@@ -81,7 +81,7 @@ public:
                     return ofiItem->lastAccess().toTime_t();
             } else if (index.column() == 2) {
                 if (role == Qt::DisplayRole || role == Qt::ToolTipRole || role == SortRole)
-                    return ofiItem->url().pathOrUrl();
+                    return ofiItem->url().url(QUrl::PreferLocalFile);
             }
             if (role == URLRole) {
                 const QUrl url = ofiItem->url();
@@ -304,7 +304,7 @@ void MDIWidget::slotCompleted(QObject *obj)
     QUrl newUrl = ofi->part(this)->url();
 
     if (!oldUrl.equals(newUrl)) {
-        qDebug() << "Url changed from " << oldUrl.pathOrUrl() << " to " << newUrl.pathOrUrl() << endl;
+        qDebug() << "Url changed from " << oldUrl.url(QUrl::PreferLocalFile) << " to " << newUrl.url(QUrl::PreferLocalFile) << endl;
         d->ofim->changeUrl(ofi, newUrl);
 
         /// completely opened or saved files should be marked as "recently used"

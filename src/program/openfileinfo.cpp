@@ -232,7 +232,7 @@ QString OpenFileInfo::shortCaption() const
 QString OpenFileInfo::fullCaption() const
 {
     if (d->url.isValid())
-        return d->url.pathOrUrl();
+        return d->url.url(QUrl::PreferLocalFile);
     else
         return shortCaption();
 }
@@ -370,7 +370,7 @@ public:
 
             /// For local files, test if they exist; ignore local files that do not exist
             if (fileUrl.isLocalFile()) {
-                if (!QFileInfo(fileUrl.pathOrUrl()).exists())
+                if (!QFileInfo(fileUrl.url(QUrl::PreferLocalFile)).exists())
                     continue;
             } else if (!KIO::NetAccess::exists(fileUrl, KIO::NetAccess::SourceSide, widget))
                 continue;
@@ -399,7 +399,7 @@ public:
         for (OpenFileInfoManager::OpenFileInfoList::ConstIterator it = list.constBegin(); i < maxNumFiles && it != list.constEnd(); ++it, ++i) {
             OpenFileInfo *ofi = *it;
 
-            cg.writeEntry(QString("%1-%2").arg(OpenFileInfo::OpenFileInfoPrivate::keyURL).arg(i), ofi->url().pathOrUrl());
+            cg.writeEntry(QString("%1-%2").arg(OpenFileInfo::OpenFileInfoPrivate::keyURL).arg(i), ofi->url().url(QUrl::PreferLocalFile));
             cg.writeEntry(QString("%1-%2").arg(OpenFileInfo::OpenFileInfoPrivate::keyLastAccess).arg(i), ofi->lastAccess().toString(OpenFileInfo::OpenFileInfoPrivate::dateTimeFormat));
         }
         for (; i < maxNumFiles; ++i) {

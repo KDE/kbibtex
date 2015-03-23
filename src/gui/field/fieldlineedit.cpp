@@ -29,11 +29,11 @@
 #include <QDebug>
 #include <QPushButton>
 #include <QFontDatabase>
+#include <QUrl>
 
 #include <KRun>
 #include <KMessageBox>
 #include <KLocalizedString>
-#include <QUrl>
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <QMimeDatabase>
@@ -385,7 +385,7 @@ public:
 
     void updateURL(const QString &text) {
         QList<QUrl> urls;
-        FileInfo::urlsInText(text, FileInfo::TestExistenceYes, file != NULL && file->property(File::Url).toUrl().isValid() ? QUrl(file->property(File::Url).toUrl()).directory() : QString(), urls);
+        FileInfo::urlsInText(text, FileInfo::TestExistenceYes, file != NULL && file->property(File::Url).toUrl().isValid() ? QUrl(file->property(File::Url).toUrl()).path() : QString(), urls);
         if (!urls.isEmpty() && urls.first().isValid())
             urlToOpen = urls.first();
         else
@@ -393,7 +393,7 @@ public:
 
         /// set special "open URL" button visible if URL (or file or DOI) found
         buttonOpenUrl->setVisible(urlToOpen.isValid());
-        buttonOpenUrl->setToolTip(i18n("Open '%1'", urlToOpen.pathOrUrl()));
+        buttonOpenUrl->setToolTip(i18n("Open '%1'", urlToOpen.url(QUrl::PreferLocalFile) ));
     }
 
     void textChanged(const QString &text) {

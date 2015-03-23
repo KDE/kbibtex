@@ -330,7 +330,7 @@ void FieldListEdit::dropEvent(QDropEvent *event)
             QList<QUrl> urlList = FileInfo::entryUrls(entry.data(), QUrl(file->property(File::Url).toUrl()), FileInfo::TestExistenceNo);
             Value v;
             foreach(const QUrl &url, urlList) {
-                v.append(QSharedPointer<VerbatimText>(new VerbatimText(url.pathOrUrl())));
+                v.append(QSharedPointer<VerbatimText>(new VerbatimText(url.url(QUrl::PreferLocalFile))));
             }
             reset(v);
             emit modified();
@@ -577,7 +577,7 @@ void UrlListEdit::textChanged(QWidget *widget)
     // TODO more file types?
     bool canBeSaved = url.isValid() && !urlIsLocal(url) && (newText.endsWith(QLatin1String(".djvu")) || newText.endsWith(QLatin1String(".pdf")) || newText.endsWith(QLatin1String(".ps")));
     buttonSaveLocally->setEnabled(canBeSaved);
-    buttonSaveLocally->setToolTip(canBeSaved ? i18n("Save file '%1' locally", url.pathOrUrl()) : QLatin1String(""));
+    buttonSaveLocally->setToolTip(canBeSaved ? i18n("Save file '%1' locally", url.url(QUrl::PreferLocalFile)) : QLatin1String(""));
 }
 
 QString UrlListEdit::askRelativeOrStaticFilename(QWidget *parent, const QString &absoluteFilename, const QUrl &baseUrl)

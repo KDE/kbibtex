@@ -239,7 +239,7 @@ public:
             /// create a drop-down list entry if file is a local file
             /// (based on patch by Luis Silva)
             QString fn = urlInfo.url.fileName();
-            QString full = urlInfo.url.pathOrUrl();
+            QString full = urlInfo.url.url(QUrl::PreferLocalFile);
             QString dir = urlInfo.url.adjusted(QUrl::RemoveFilename|QUrl::StripTrailingSlash).path();
             QString text = fn.isEmpty() ? full : (dir.isEmpty() ? fn : QString("%1 [%2]").arg(fn).arg(dir));
             urlComboBox->addItem(urlInfo.icon, text);
@@ -465,7 +465,7 @@ public:
 #endif // HAVE_QTWEBKIT
         } else if (imageMimetypes.contains(urlInfo.mimeType)) {
             p->setCursor(Qt::BusyCursor);
-            message->setPixmap(QPixmap(urlInfo.url.pathOrUrl()));
+            message->setPixmap(QPixmap(urlInfo.url.url(QUrl::PreferLocalFile)));
             showPart(NULL, message);
             p->unsetCursor();
             return true;
@@ -518,7 +518,7 @@ QMimeDatabase db;
             result.mimeType = QLatin1String("text/html");
         }
 
-        if (url.pathOrUrl().startsWith(arXivPDFUrlStart)) {
+        if (url.url(QUrl::PreferLocalFile).startsWith(arXivPDFUrlStart)) {
             result.icon = QIcon::fromTheme("application-pdf");
             result.mimeType = QLatin1String("application/pdf");
         }
