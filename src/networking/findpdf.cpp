@@ -24,9 +24,9 @@
 #include <QApplication>
 #include <QDebug>
 #include <QTemporaryFile>
+#include <QUrlQuery>
 
 // FIXME #include <poppler-qt4.h>
-
 
 #include "kbibtexnamespace.h"
 #include "internalnetworkaccessmanager.h"
