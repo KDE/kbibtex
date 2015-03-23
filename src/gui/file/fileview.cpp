@@ -26,6 +26,7 @@
 #include <KMessageBox>
 #include <KGuiItem>
 #include <KConfigGroup>
+#include <KSharedConfig>
 
 #include "elementeditor.h"
 #include "entry.h"

@@ -39,6 +39,7 @@
 #include <KIO/NetAccess>
 #include <KGlobalSettings>
 #include <KMenu>
+#include <KSharedConfig>
 
 #include "fileinfo.h"
 #include "file.h"

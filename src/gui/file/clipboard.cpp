@@ -25,6 +25,7 @@
 #include <QDebug>
 
 #include <KConfigGroup>
+#include <KSharedConfig>
 
 #include "fileview.h"
 #include "filemodel.h"
