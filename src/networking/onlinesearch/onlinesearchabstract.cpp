@@ -21,6 +21,7 @@
 #include <QNetworkReply>
 #include <QDir>
 #include <QTimer>
+#include <QDebug>
 #include <QListWidgetItem>
 #include <QStandardPaths>
 #include <QtDBus/QDBusConnection>
@@ -28,7 +29,6 @@
 
 
 #include <kio/netaccess.h>
-#include <QDebug>
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <KPassivePopup>

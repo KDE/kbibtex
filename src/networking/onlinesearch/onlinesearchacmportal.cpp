@@ -19,13 +19,13 @@
 
 #include <QBuffer>
 #include <QLayout>
+#include <QDebug>
 #include <QNetworkRequest>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QUrlQuery>
 
 #include <KLocalizedString>
-#include <QDebug>
 #include <kio/job.h>
 #include <KMessageBox>
 

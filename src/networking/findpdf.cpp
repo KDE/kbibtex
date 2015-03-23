@@ -22,11 +22,11 @@
 #include <QRegExp>
 #include <QTextStream>
 #include <QApplication>
+#include <QDebug>
+#include <QTemporaryFile>
 
 // FIXME #include <poppler-qt4.h>
 
-#include <QDebug>
-#include <QTemporaryFile>
 
 #include "kbibtexnamespace.h"
 #include "internalnetworkaccessmanager.h"
