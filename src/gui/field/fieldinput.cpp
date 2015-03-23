@@ -24,9 +24,9 @@
 #include <QSignalMapper>
 #include <QSpinBox>
 #include <QPushButton>
+#include <QInputDialog>
 
 #include <KLocalizedString>
-#include <KInputDialog>
 
 #include "file.h"
 #include "entry.h"
@@ -231,7 +231,7 @@ public:
         const Entry *entry = dynamic_cast<const Entry *>(element);
         if (entry != NULL) list.removeOne(entry->id());
 
-        QString crossRef = KInputDialog::getItem(i18n("Select Cross Reference"), i18n("Select the cross reference to another entry:"), list, 0, false, &ok, p);
+        QString crossRef = QInputDialog::getItem(p, i18n("Select Cross Reference"), i18n("Select the cross reference to another entry:"), list, 0, false, &ok);
 
         if (ok && !crossRef.isEmpty()) {
             /// insert selected cross reference into edit widget
