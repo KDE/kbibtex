@@ -27,7 +27,7 @@
 #include <QTimer>
 #include <QPushButton>
 
-#include <KLocalizeString>
+#include <KLocalizedString>
 
 class StarRating::Private
 {

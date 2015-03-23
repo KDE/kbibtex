@@ -23,7 +23,7 @@
 
 #include <KSharedConfig>
 #include <KConfigGroup>
-#include <KLocalizeString>
+#include <KLocalizedString>
 #include <QFontDatabase>
 #include <KMessageBox>
 

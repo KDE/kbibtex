@@ -19,7 +19,7 @@
 
 #include <QFormLayout>
 
-#include <KLocalizeString>
+#include <KLocalizedString>
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <KComboBox>

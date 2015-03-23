@@ -22,7 +22,7 @@
 #include <QSpinBox>
 #include <QPushButton>
 
-#include <KLocalizeString>
+#include <KLocalizedString>
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <KComboBox>

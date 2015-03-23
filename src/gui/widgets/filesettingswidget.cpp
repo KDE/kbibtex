@@ -22,7 +22,7 @@
 #include <QFormLayout>
 
 #include <KComboBox>
-#include <KLocalizeString>
+#include <KLocalizedString>
 
 #include "preferences.h"
 #include "italictextitemmodel.h"

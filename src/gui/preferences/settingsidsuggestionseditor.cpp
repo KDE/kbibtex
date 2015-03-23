@@ -30,7 +30,7 @@
 
 #include <KLineEdit>
 #include <KComboBox>
-#include <KLocalizeString>
+#include <KLocalizedString>
 #include <KAction>
 
 #include <qxtspanslider.h>

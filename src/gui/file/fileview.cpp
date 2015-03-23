@@ -22,7 +22,7 @@
 #include <QDebug>
 
 #include <KDialog>
-#include <KLocalizeString>
+#include <KLocalizedString>
 #include <KMessageBox>
 #include <KGuiItem>
 #include <KConfigGroup>

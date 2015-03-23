@@ -24,7 +24,7 @@
 #include <QPushButton>
 
 #include <KComboBox>
-#include <KLocalizeString>
+#include <KLocalizedString>
 #include <KLineEdit>
 #include <KConfigGroup>
 #include <KSharedConfig>

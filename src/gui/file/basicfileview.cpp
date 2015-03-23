@@ -23,7 +23,7 @@
 
 #include <KAction>
 #include <KConfigGroup>
-#include <KLocalizeString>
+#include <KLocalizedString>
 #include <KSharedConfig>
 
 #include "bibtexfields.h"

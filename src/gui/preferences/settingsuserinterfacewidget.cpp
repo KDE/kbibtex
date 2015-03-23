@@ -22,7 +22,7 @@
 #include <QBoxLayout>
 
 #include <KComboBox>
-#include <KLocalizeString>
+#include <KLocalizedString>
 #include <KSharedConfig>
 #include <KConfigGroup>
 

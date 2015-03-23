@@ -32,7 +32,7 @@
 #include <QHeaderView>
 
 #include <KComboBox>
-#include <KLocalizeString>
+#include <KLocalizedString>
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <KColorScheme>

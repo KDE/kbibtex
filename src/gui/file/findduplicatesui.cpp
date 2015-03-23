@@ -35,7 +35,7 @@
 #include <KAction>
 #include <KDialog>
 #include <KActionCollection>
-#include <KLocalizeString>
+#include <KLocalizedString>
 #include <KXMLGUIClient>
 #include <kparts/part.h>
 #include <KMessageBox>

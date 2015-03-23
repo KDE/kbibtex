@@ -34,7 +34,7 @@
 #include <QFontDatabase>
 
 #include <KMessageBox>
-#include <KLocalizeString>
+#include <KLocalizedString>
 #include <KFileDialog>
 #include <KInputDialog>
 #include <KIO/NetAccess>
