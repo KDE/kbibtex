@@ -139,6 +139,10 @@ target_link_libraries(
     KF5::I18n
     KF5::XmlGui
     KF5::Completion
+    KF5::KIOCore
+    KF5::KIOFileWidgets
+    KF5::KIOWidgets
+    KF5::KIONTLM
     kbibtexconfig
     kbibtexdata
     kbibtexio
