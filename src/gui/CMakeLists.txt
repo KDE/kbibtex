@@ -137,6 +137,7 @@ add_library(
 
 target_link_libraries( kbibtexgui
     Qt5::Core
+    KF5::IconThemes
     kbibtexconfig
     kbibtexdata
     kbibtexio

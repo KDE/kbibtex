@@ -56,6 +56,7 @@ find_package(
     I18n
     XmlGui
     KIO
+    IconThemes
 )
 #     Archive
 #     Bookmarks
