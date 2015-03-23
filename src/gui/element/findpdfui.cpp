@@ -32,6 +32,7 @@
 #include <QtCore/QPointer>
 #include <QDebug>
 #include <QPushButton>
+#include <QFileDialog>
 
 #include <KDialog>
 #include <KLocalizedString>
@@ -39,7 +40,6 @@
 #include <KMenu>
 #include <KRun>
 #include <KTemporaryFile>
-#include <KFileDialog>
 #include <KIO/NetAccess>
 #include <QMimeDatabase>
 #include <QMimeType>
@@ -449,7 +449,7 @@ void FindPDFUI::apply(Entry &entry, const File &bibtexFile)
             }
         } else if (downloadMode == FindPDF::Download && !tempfileName.isEmpty()) {
             QUrl startUrl = bibtexFile.property(File::Url, QUrl()).toUrl();
-            const QString absoluteFilename = KFileDialog::getSaveFileName(QUrl::fromLocalFile(startUrl.adjusted(QUrl::RemoveFilename|QUrl::StripTrailingSlash).path()), QLatin1String("application/pdf"), this, i18n("Save URL '%1'", url.toString()));
+            const QString absoluteFilename = QFileDialog::getSaveFileName(this, i18n("Save URL '%1'", url.url(QUrl::PreferLocalFile), QUrl::fromLocalFile(startUrl.adjusted(QUrl::RemoveFilename|QUrl::StripTrailingSlash).path()), QLatin1String("application/pdf")));
             if (!absoluteFilename.isEmpty()) {
                 const QString visibleFilename = UrlListEdit::askRelativeOrStaticFilename(this, absoluteFilename, startUrl);
 

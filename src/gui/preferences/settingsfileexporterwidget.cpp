@@ -27,7 +27,6 @@
 #include <KConfigGroup>
 #include <KComboBox>
 #include <KLineEdit>
-#include <KFileDialog>
 #include <KUrlRequester>
 
 #include "guihelper.h"

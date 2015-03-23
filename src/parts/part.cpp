@@ -31,8 +31,8 @@
 #include <QtCore/QPointer>
 #include <QFileSystemWatcher>
 #include <QDebug>
+#include <QFileDialog>
 
-#include <KFileDialog>
 #include <KMessageBox>
 #include <KLocale>
 #include <KAction>
@@ -302,7 +302,7 @@ public:
     }
 
     QUrl getSaveFilename(bool mustBeImportable = true) {
-        QString startDir = p->url().isValid() ? p->url().path() : QLatin1String("kfiledialog:///opensave");
+        QString startDir = p->url().isValid() ? p->url().path() : QString();
         QString supportedMimeTypes = QLatin1String("text/x-bibtex text/x-bibtex-compiled application/xml text/x-research-info-systems");
         if (BibUtils::available())
             supportedMimeTypes += QLatin1String(" application/x-isi-export-format application/x-endnote-refer");
@@ -315,12 +315,12 @@ public:
         if (!mustBeImportable && !KStandardDirs::findExe(QLatin1String("latex2rtf")).isEmpty())
             supportedMimeTypes += QLatin1String(" application/rtf");
 
-        QPointer<KFileDialog> saveDlg = new KFileDialog(startDir, supportedMimeTypes, p->widget());
+        QPointer<QFileDialog> saveDlg = new QFileDialog(p->widget(), i18n("Save file") /* TODO better text */, startDir, supportedMimeTypes );
         /// Setting list of mime types for the second time,
         /// essentially calling this function only to set the "default mime type" parameter
         saveDlg->setMimeFilter(supportedMimeTypes.split(QChar(' '), QString::SkipEmptyParts), QLatin1String("text/x-bibtex"));
         /// Setting the dialog into "Saving" mode make the "add extension" checkbox available
-        saveDlg->setOperationMode(KFileDialog::Saving);
+        // FIXME saveDlg->setOperationMode(KFileDialog::Saving);
         if (saveDlg->exec() != QDialog::Accepted)
             /// User cancelled saving operation, return invalid filename/URL
             return QUrl();

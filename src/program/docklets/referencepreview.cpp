@@ -34,12 +34,12 @@
 #include <QTextStream>
 #include <QPalette>
 #include <QDebug>
+#include <QFileDialog>
 
 #include <KTemporaryFile>
 #include <KLocale>
 #include <KComboBox>
 #include <KPushButton>
-#include <KFileDialog>
 #include <KMimeType>
 #include <KRun>
 #include <KIO/NetAccess>
@@ -380,7 +380,7 @@ void ReferencePreview::openAsHTML()
 
 void ReferencePreview::saveAsHTML()
 {
-    QUrl url = KFileDialog::getSaveUrl(QUrl(), "text/html", this, i18n("Save as HTML"));
+    QUrl url = QFileDialog::getSaveFileUrl(this, i18n("Save as HTML"), QUrl(), QLatin1String("text/html"));
     if (url.isValid())
         d->saveHTML(url);
 }

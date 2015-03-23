@@ -23,12 +23,12 @@
 #include <QLabel>
 #include <QtCore/QPointer>
 #include <QTimer>
+#include <QFileDialog>
 
 #include <KIO/NetAccess>
 #include <KApplication>
 #include <KAction>
 #include <KActionMenu>
-#include <KEncodingFileDialog>
 #include <KGlobal>
 #include <KActionCollection>
 #include <KPluginFactory>
@@ -329,7 +329,7 @@ void KBibTeXMainWindow::openDocumentDialog()
     if (BibUtils::available())
         supportedMimeTypes += QLatin1String(" application/x-isi-export-format application/x-endnote-refer");
     supportedMimeTypes += QLatin1String(" all/all");
-    QUrl url = KFileDialog::getOpenUrl(startDir, supportedMimeTypes, this);
+    QUrl url = QFileDialog::getOpenFileUrl(this, i18n("Open file") /* TODO better text */, startDir, supportedMimeTypes);
     if (!url.isEmpty()) {
         openDocument(url);
     }

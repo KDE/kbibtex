@@ -32,10 +32,10 @@
 #include <QAction>
 #include <QPushButton>
 #include <QFontDatabase>
+#include <QFileDialog>
 
 #include <KMessageBox>
 #include <KLocalizedString>
-#include <KFileDialog>
 #include <KInputDialog>
 #include <KIO/NetAccess>
 #include <KMenu>
@@ -489,7 +489,7 @@ void UrlListEdit::slotAddReference()
         const QFileInfo fi(bibtexUrl.path());
         bibtexUrl.setPath(fi.absolutePath());
     }
-    const QUrl documentUrl = KFileDialog::getOpenUrl(bibtexUrl, QString(), this, i18n("File to Associate"));
+    const QUrl documentUrl = QFileDialog::getOpenFileUrl(this, i18n("File to Associate"), bibtexUrl);
     if (!documentUrl.isEmpty())
         addReference(documentUrl);
 }
@@ -529,7 +529,7 @@ void UrlListEdit::slotSaveLocally(QWidget *widget)
         /// Build proposal to a local filename for remote file
         filename = bibFileinfo.isFile() ? bibFileinfo.absolutePath() + QDir::separator() + filename : filename;
         /// Ask user for actual local filename to save remote file to
-        filename = KFileDialog::getSaveFileName(filename, QLatin1String("application/pdf application/postscript image/vnd.djvu"), this, i18n("Save file locally"));
+        filename = QFileDialog::getSaveFileName(this, i18n("Save file locally"), filename, QLatin1String("application/pdf application/postscript image/vnd.djvu"));
         /// Check if user entered a valid filename ...
         if (!filename.isEmpty()) {
             /// Ask user if reference to local file should be
