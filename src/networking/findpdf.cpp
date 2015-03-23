@@ -26,7 +26,7 @@
 
 #include <KApplication>
 #include <QDebug>
-#include <KTemporaryFile>
+#include <QTemporaryFile>
 
 #include "kbibtexnamespace.h"
 #include "internalnetworkaccessmanager.h"
@@ -179,7 +179,7 @@ public:
 
         if (!containsUrl) {
             ResultItem resultItem;
-            resultItem.tempFilename = new KTemporaryFile();
+            resultItem.tempFilename = new QTemporaryFile();
             resultItem.tempFilename->setAutoRemove(true);
             resultItem.tempFilename->setSuffix(QLatin1String(".pdf"));
             if (resultItem.tempFilename->open()) {

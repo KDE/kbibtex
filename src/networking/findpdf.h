@@ -29,7 +29,7 @@
 
 class QNetworkAccessManager;
 class QNetworkReply;
-class KTemporaryFile;
+class QTemporaryFile;
 
 /**
  * Search known Internet resources (search engines) for PDF files
@@ -54,7 +54,7 @@ public:
     typedef struct {
         QUrl url; ///< Where has this PDF been found?
         QString textPreview; ///< Text extracted from the PDF file
-        KTemporaryFile *tempFilename; ///< Local temporary copy
+        QTemporaryFile *tempFilename; ///< Local temporary copy
         float relevance; /// Assessment of relevance (useful for sorting results)
         DownloadMode downloadMode; /// User's preference what to do with this hit (default is NoDownload)
     } ResultItem;

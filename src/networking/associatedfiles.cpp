@@ -20,7 +20,7 @@
 #include <QFileInfo>
 #include <QDir>
 
-#include <KTemporaryFile>
+#include <QTemporaryFile>
 #include <KIO/NetAccess>
 #include <QDebug>
 
