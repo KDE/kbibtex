@@ -181,9 +181,8 @@ public:
 
         if (!containsUrl) {
             ResultItem resultItem;
-            resultItem.tempFilename = new QTemporaryFile();
+            resultItem.tempFilename = new QTemporaryFile(QLatin1String("kbibtex_findpdf_XXXXXX.pdf"));
             resultItem.tempFilename->setAutoRemove(true);
-            resultItem.tempFilename->setSuffix(QLatin1String(".pdf"));
             if (resultItem.tempFilename->open()) {
                 resultItem.tempFilename->write(data);
                 resultItem.tempFilename->close();
