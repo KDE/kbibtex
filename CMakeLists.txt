@@ -55,6 +55,7 @@ find_package(
     COMPONENTS
     I18n
     XmlGui
+    KIO
 )
 #     Archive
 #     Bookmarks
