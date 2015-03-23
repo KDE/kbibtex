@@ -26,7 +26,6 @@
 #include <QUrlQuery>
 
 #include <KLocalizedString>
-#include <kio/job.h>
 #include <KMessageBox>
 
 #include "file.h"

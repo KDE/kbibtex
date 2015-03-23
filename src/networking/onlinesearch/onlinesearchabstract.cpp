@@ -27,11 +27,8 @@
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusConnectionInterface>
 
-
-#include <kio/netaccess.h>
 #include <KLocalizedString>
 #include <KMessageBox>
-#include <KPassivePopup>
 
 #include "encoderlatex.h"
 #include "internalnetworkaccessmanager.h"
