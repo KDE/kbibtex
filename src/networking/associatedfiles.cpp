@@ -21,7 +21,7 @@
 #include <QDir>
 
 #include <QTemporaryFile>
-#include <KIO/NetAccess>
+// FIXME #include <KIO/NetAccess>
 #include <QDebug>
 
 bool AssociatedFiles::urlIsLocal(const QUrl &url)
@@ -169,11 +169,15 @@ QUrl AssociatedFiles::copyDocument(const QUrl &sourceUrl, const QString &entryId
                 success &= QFile(internalSourceUrl.path()).remove();
             }
         } else {
+            // FIXME
+            success = false;
+            /*
             KIO::NetAccess::del(sourceUrl, widget); // FIXME non-blocking
             success &= KIO::NetAccess::file_copy(sourceUrl, targetUrl, widget); // FIXME non-blocking
             if (moveCopyOperation == mcoMove) {
                 success &= KIO::NetAccess::del(sourceUrl, widget); // FIXME non-blocking
             }
+            */
         }
 
         if (!success) return QUrl(); ///< either copy/move or delete operation failed
