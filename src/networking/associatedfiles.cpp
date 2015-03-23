@@ -35,15 +35,15 @@ bool AssociatedFiles::urlIsLocal(const QUrl &url)
 QString AssociatedFiles::relativeFilename(const QUrl &documentUrl, const QUrl &baseUrl) {
     if (documentUrl.isEmpty()) {
         qWarning() << "document URL has to point to a file location or URL";
-        return documentUrl.pathOrUrl();
+        return documentUrl.url(QUrl::PreferLocalFile);
     }
     if (baseUrl.isEmpty() || baseUrl.isRelative()) {
         qWarning() << "base URL has to point to an absolute file location or URL";
-        return documentUrl.pathOrUrl();
+        return documentUrl.url(QUrl::PreferLocalFile);
     }
     if (documentUrl.scheme() != baseUrl.scheme() || (documentUrl.scheme() != QLatin1String("file") && documentUrl.host() != baseUrl.host())) {
         qWarning() << "document URL and base URL do not match (protocol, host, ...)";
-        return documentUrl.pathOrUrl();
+        return documentUrl.url(QUrl::PreferLocalFile);
     }
 
     /// First, resolve the provided document URL to an absolute URL
@@ -62,15 +62,15 @@ QString AssociatedFiles::relativeFilename(const QUrl &documentUrl, const QUrl &b
 QString AssociatedFiles::absoluteFilename(const QUrl &documentUrl, const QUrl &baseUrl) {
     if (documentUrl.isEmpty()) {
         qWarning() << "document URL has to point to a file location or URL";
-        return documentUrl.pathOrUrl();
+        return documentUrl.url(QUrl::PreferLocalFile);
     }
     if (documentUrl.isRelative() && (baseUrl.isEmpty() || baseUrl.isRelative())) {
         qWarning() << "base URL has to point to an absolute file location or URL if the document URL is relative";
-        return documentUrl.pathOrUrl();
+        return documentUrl.url(QUrl::PreferLocalFile);
     }
     if (documentUrl.isRelative() && (documentUrl.scheme() != baseUrl.scheme() || (documentUrl.scheme() != QLatin1String("file") && documentUrl.host() != baseUrl.host()))) {
         qWarning() << "document URL and base URL do not match (protocol, host, ...), but necessary if the document URL is relative";
-        return documentUrl.pathOrUrl();
+        return documentUrl.url(QUrl::PreferLocalFile);
     }
 
     /// Resolve the provided document URL to an absolute URL
@@ -79,7 +79,7 @@ QString AssociatedFiles::absoluteFilename(const QUrl &documentUrl, const QUrl &b
     if (internalDocumentUrl.isRelative())
         internalDocumentUrl = baseUrl.resolved(internalDocumentUrl);
 
-    return internalDocumentUrl.pathOrUrl();
+    return internalDocumentUrl.url(QUrl::PreferLocalFile);
 }
 
 QString AssociatedFiles::associateDocumentURL(const QUrl &document, QSharedPointer<Entry> &entry, const File *bibTeXFile, PathType pathType, const bool dryRun) {
@@ -152,7 +152,7 @@ QUrl AssociatedFiles::copyDocument(const QUrl &sourceUrl, const QString &entryId
         suffix = QLatin1String("html");
         filename.append(QLatin1Char('.')).append(suffix);
     }
-    if (filename.isEmpty()) filename = internalSourceUrl.pathOrUrl().remove(QDir::separator()).remove(QLatin1Char('/')).remove(QLatin1Char(':')).remove(QLatin1Char('.')) + QLatin1String(".") + suffix;
+    if (filename.isEmpty()) filename = internalSourceUrl.url(QUrl::PreferLocalFile).remove(QDir::separator()).remove(QLatin1Char('/')).remove(QLatin1Char(':')).remove(QLatin1Char('.')) + QLatin1String(".") + suffix;
 
     if (!bibTeXFile->hasProperty(File::Url)) return QUrl(); /// no valid URL set of BibTeX file object
     QUrl targetUrl = bibTeXFile->property(File::Url).toUrl();
