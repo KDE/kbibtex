@@ -31,13 +31,13 @@
 #include <QTimer>
 #include <QAction>
 #include <QPushButton>
+#include <QFontDatabase>
 
 #include <KMessageBox>
 #include <KLocalizeString>
 #include <KFileDialog>
 #include <KInputDialog>
 #include <KIO/NetAccess>
-#include <KGlobalSettings>
 #include <KMenu>
 #include <KSharedConfig>
 
@@ -588,7 +588,7 @@ QString UrlListEdit::askRelativeOrStaticFilename(QWidget *parent, const QString 
         // TODO cover level-up cases like "../../test.pdf"
         const QString relativePath = filenameInfo.absolutePath().mid(baseUrlInfo.absolutePath().length() + 1);
         const QString relativeFilename = relativePath + (relativePath.isEmpty() ? QLatin1String("") : QString(QDir::separator())) + filenameInfo.fileName();
-        if (KMessageBox::questionYesNo(parent, i18n("<qt><p>Use a filename relative to the bibliography file?</p><p>The relative path would be<br/><tt style=\"font-family: %3;\">%1</tt></p><p>The absolute path would be<br/><tt style=\"font-family: %3;\">%2</tt></p></qt>", relativeFilename, absoluteFilename, KGlobalSettings::fixedFont().family()), i18n("Relative Path"), KGuiItem(i18n("Relative Path")), KGuiItem(i18n("Absolute Path"))) == KMessageBox::Yes)
+        if (KMessageBox::questionYesNo(parent, i18n("<qt><p>Use a filename relative to the bibliography file?</p><p>The relative path would be<br/><tt style=\"font-family: %3;\">%1</tt></p><p>The absolute path would be<br/><tt style=\"font-family: %3;\">%2</tt></p></qt>", relativeFilename, absoluteFilename, QFontDatabase::systemFont(QFontDatabase::FixedFont).family()), i18n("Relative Path"), KGuiItem(i18n("Relative Path")), KGuiItem(i18n("Absolute Path"))) == KMessageBox::Yes)
             return relativeFilename;
     }
     return absoluteFilename;

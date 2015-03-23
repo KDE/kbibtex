@@ -28,11 +28,11 @@
 #include <QDropEvent>
 #include <QDebug>
 #include <QPushButton>
+#include <QFontDatabase>
 
 #include <KRun>
 #include <KMessageBox>
-#include <KGlobalSettings>
-#include <KLocalizeString>
+#include <KLocalizedString>
 #include <QUrl>
 #include <KSharedConfig>
 #include <KConfigGroup>
@@ -283,7 +283,7 @@ public:
     }
 
     void updateGUI(KBibTeX::TypeFlag typeFlag) {
-        parent->setFont(KGlobalSettings::generalFont());
+        parent->setFont(QFontDatabase::systemFont(QFontDatabase::GeneralFont));
         parent->setIcon(iconForTypeFlag(typeFlag));
         switch (typeFlag) {
         case KBibTeX::tfPlainText: parent->setButtonToolTip(i18n("Plain Text")); break;
@@ -292,7 +292,7 @@ public:
         case KBibTeX::tfKeyword: parent->setButtonToolTip(i18n("Keyword")); break;
         case KBibTeX::tfSource:
             parent->setButtonToolTip(i18n("Source Code"));
-            parent->setFont(KGlobalSettings::fixedFont());
+            parent->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
             break;
         case KBibTeX::tfVerbatim: parent->setButtonToolTip(i18n("Verbatim Text")); break;
         default: parent->setButtonToolTip(""); break;

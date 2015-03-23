@@ -24,7 +24,7 @@
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <KLocalizeString>
-#include <KGlobalSettings>
+#include <QFontDatabase>
 #include <KMessageBox>
 
 #include "fileimporterbibtex.h"
@@ -95,7 +95,7 @@ public:
 
         switch (role) {
         case Qt::FontRole: {
-            QFont defaultFont = KGlobalSettings::generalFont();
+            QFont defaultFont = QFontDatabase::systemFont(QFontDatabase::GeneralFont);
             if (index.row() == m_defaultFormatStringRow)
                 defaultFont.setBold(true);
             return defaultFont;

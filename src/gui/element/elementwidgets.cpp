@@ -31,8 +31,8 @@
 #include <QStyle>
 #include <QDebug>
 #include <QPushButton>
+#include <QFontDatabase>
 
-#include <KGlobalSettings>
 #include <KLocalizedString>
 #include <KLineEdit>
 #include <KComboBox>
@@ -1194,7 +1194,7 @@ void SourceWidget::createGUI()
 
     sourceEdit = new SourceWidgetTextEdit(this);
     layout->addWidget(sourceEdit, 0, 0, 1, 3);
-    sourceEdit->document()->setDefaultFont(KGlobalSettings::fixedFont());
+    sourceEdit->document()->setDefaultFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
     sourceEdit->setTabStopWidth(QFontMetrics(sourceEdit->font()).averageCharWidth() * 4);
 
     m_buttonRestore = new QPushButton(QIcon::fromTheme("edit-undo"), i18n("Restore"), this);
