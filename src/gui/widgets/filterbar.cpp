@@ -21,8 +21,8 @@
 #include <QLabel>
 #include <QTimer>
 #include <QIcon>
+#include <QPushButton>
 
-#include <KPushButton>
 #include <KComboBox>
 #include <KLocalizeString>
 #include <KLineEdit>
@@ -45,8 +45,8 @@ public:
     const int maxNumStoredFilterTexts;
     KComboBox *comboBoxCombination;
     KComboBox *comboBoxField;
-    KPushButton *buttonSearchPDFfiles;
-    KPushButton *buttonClearAll;
+    QPushButton *buttonSearchPDFfiles;
+    QPushButton *buttonClearAll;
     DelayedExecutionTimer *delayedTimer;
 
     FilterBarPrivate(FilterBar *parent)
@@ -206,13 +206,13 @@ FilterBar::FilterBar(QWidget *parent)
             d->comboBoxField->addItem(fd->label, fd->upperCamelCase);
     }
 
-    d->buttonSearchPDFfiles = new KPushButton(this);
+    d->buttonSearchPDFfiles = new QPushButton(this);
     d->buttonSearchPDFfiles->setIcon(QIcon::fromTheme("application-pdf"));
     d->buttonSearchPDFfiles->setToolTip(i18n("Include PDF files in full-text search"));
     d->buttonSearchPDFfiles->setCheckable(true);
     layout->addWidget(d->buttonSearchPDFfiles, 0);
 
-    d->buttonClearAll = new KPushButton(this);
+    d->buttonClearAll = new QPushButton(this);
     d->buttonClearAll->setIcon(QIcon::fromTheme("edit-clear-locationbar-rtl"));
     d->buttonClearAll->setToolTip(i18n("Reset filter criteria"));
     layout->addWidget(d->buttonClearAll, 0);

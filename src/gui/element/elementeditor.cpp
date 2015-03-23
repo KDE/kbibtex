@@ -28,8 +28,8 @@
 #include <QFileInfo>
 #include <QMenu>
 #include <QScrollArea>
+#include <QPushButton>
 
-#include <KPushButton>
 #include <KMessageBox>
 #include <KLocalizedString>
 #include <KSharedConfig>
@@ -61,11 +61,11 @@ private:
     ElementWidget *previousWidget;
     ReferenceWidget *referenceWidget;
     ElementWidget *sourceWidget;
-    KPushButton *buttonCheckWithBibTeX;
+    QPushButton *buttonCheckWithBibTeX;
 
     /// Settings management through a push button with menu
     KSharedConfigPtr config;
-    KPushButton *buttonOptions;
+    QPushButton *buttonOptions;
     QAction *actionForceShowAllWidgets, *actionLimitKeyboardTabStops;
 
 public:
@@ -189,7 +189,7 @@ public:
         vLayout->addLayout(hLayout, 0);
 
         /// Push button with menu to toggle various options
-        buttonOptions = new KPushButton(QIcon::fromTheme("configure"), i18n("Options"), p);
+        buttonOptions = new QPushButton(QIcon::fromTheme("configure"), i18n("Options"), p);
         hLayout->addWidget(buttonOptions, 0);
         QMenu *menuOptions = new QMenu(buttonOptions);
         buttonOptions->setMenu(menuOptions);
@@ -206,7 +206,7 @@ public:
 
         hLayout->addStretch(10);
 
-        buttonCheckWithBibTeX = new KPushButton(QIcon::fromTheme("tools-check-spelling"), i18n("Check with BibTeX"), p);
+        buttonCheckWithBibTeX = new QPushButton(QIcon::fromTheme("tools-check-spelling"), i18n("Check with BibTeX"), p);
         hLayout->addWidget(buttonCheckWithBibTeX, 0);
         connect(buttonCheckWithBibTeX, SIGNAL(clicked()), p, SLOT(checkBibTeX()));
 

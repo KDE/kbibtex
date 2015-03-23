@@ -31,13 +31,12 @@
 #include <QLabel>
 #include <QtCore/QPointer>
 #include <QDebug>
+#include <QPushButton>
 
 #include <KDialog>
 #include <KLocalizedString>
 #include <KSqueezedTextLabel>
 #include <KMenu>
-#include <KPushButton>
-
 #include <KRun>
 #include <KTemporaryFile>
 #include <KFileDialog>
@@ -111,7 +110,7 @@ QList<QWidget *> PDFItemDelegate::createItemWidgets() const
     Q_ASSERT_X(list.count() == posLabelPreview + 1, "QList<QWidget *> PDFItemDelegate::createItemWidgets() const", "list.count() != posLabelPreview + 1");
 
     /// add a push button to view the PDF file
-    KPushButton *pushButton = new KPushButton(QIcon::fromTheme("application-pdf"), i18n("View"));
+    QPushButton *pushButton = new QPushButton(QIcon::fromTheme("application-pdf"), i18n("View"));
     list << pushButton;
     connect(pushButton, SIGNAL(clicked()), this, SLOT(slotViewPDF()));
     Q_ASSERT_X(list.count() == posViewButton + 1, "QList<QWidget *> PDFItemDelegate::createItemWidgets() const", "list.count() != posViewButton + 1");
@@ -180,7 +179,7 @@ void PDFItemDelegate::updateItemWidgets(const QList<QWidget *> widgets, const QS
     }
 
     /// setup the view button
-    KPushButton *viewButton = qobject_cast<KPushButton *>(widgets[posViewButton]);
+    QPushButton *viewButton = qobject_cast<QPushButton *>(widgets[posViewButton]);
     if (viewButton != NULL) {
         viewButton->move(margin * 2 + KIconLoader::SizeMedium, option.rect.height() - margin - buttonHeight);
         viewButton->resize(buttonWidth, buttonHeight);

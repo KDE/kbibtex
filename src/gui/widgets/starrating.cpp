@@ -25,9 +25,9 @@
 #include <QMouseEvent>
 #include <QPainter>
 #include <QTimer>
+#include <QPushButton>
 
 #include <KLocalizeString>
-#include <KPushButton>
 
 class StarRating::Private
 {
@@ -43,7 +43,7 @@ public:
     int spacing;
     const QString unsetStarsText;
     QLabel *labelPercent;
-    KPushButton *clearButton;
+    QPushButton *clearButton;
     QPoint mouseLocation;
 
     Private(int mnos, StarRating *parent)
@@ -78,7 +78,7 @@ StarRating::StarRating(int maxNumberOfStars, QWidget *parent)
 
     layout->addStretch(1);
 
-    d->clearButton = new KPushButton(QIcon::fromTheme("edit-clear-locationbar-rtl"), QString(), this);
+    d->clearButton = new QPushButton(QIcon::fromTheme("edit-clear-locationbar-rtl"), QString(), this);
     layout->addWidget(d->clearButton, 0, Qt::AlignRight | Qt::AlignVCenter);
     connect(d->clearButton, SIGNAL(clicked()), this, SLOT(clear()));
 

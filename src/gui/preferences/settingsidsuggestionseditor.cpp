@@ -26,11 +26,11 @@
 #include <QSignalMapper>
 #include <QMenu>
 #include <QtCore/QPointer>
+#include <QPushButton>
 
 #include <KLineEdit>
 #include <KComboBox>
 #include <KLocalizeString>
-#include <KPushButton>
 #include <KAction>
 
 #include <qxtspanslider.h>
@@ -45,7 +45,7 @@ TokenWidget::TokenWidget(QWidget *parent)
     gridLayout->setColumnStretch(0, 100);
 }
 
-void TokenWidget::addButtons(KPushButton *buttonUp, KPushButton *buttonDown, KPushButton *buttonRemove)
+void TokenWidget::addButtons(QPushButton *buttonUp, QPushButton *buttonDown, QPushButton *buttonRemove)
 {
     gridLayout->setColumnMinimumWidth(1, 32);
     gridLayout->setColumnStretch(1, 1);
@@ -376,7 +376,7 @@ public:
     QBoxLayout *containerLayout;
     QList<TokenWidget *> widgetList;
     QLabel *labelPreview;
-    KPushButton *buttonAddTokenAtTop, *buttonAddTokenAtBottom;
+    QPushButton *buttonAddTokenAtTop, *buttonAddTokenAtBottom;
     const Entry *previewEntry;
     QSignalMapper *signalMapperRemove, *signalMapperMoveUp, *signalMapperMoveDown;
     QScrollArea *area;
@@ -404,12 +404,12 @@ public:
         containerLayout = new QVBoxLayout(container);
         area->setMinimumSize(384, 256);
 
-        buttonAddTokenAtTop = new KPushButton(QIcon::fromTheme("list-add"), i18n("Add at top"), container);
+        buttonAddTokenAtTop = new QPushButton(QIcon::fromTheme("list-add"), i18n("Add at top"), container);
         containerLayout->addWidget(buttonAddTokenAtTop, 0);
 
         containerLayout->addStretch(1);
 
-        buttonAddTokenAtBottom = new KPushButton(QIcon::fromTheme("list-add"), i18n("Add at bottom"), container);
+        buttonAddTokenAtBottom = new QPushButton(QIcon::fromTheme("list-add"), i18n("Add at bottom"), container);
         containerLayout->addWidget(buttonAddTokenAtBottom, 0);
 
         QMenu *menuAddToken = new QMenu(p);
@@ -453,9 +453,9 @@ public:
 
     void addManagementButtons(TokenWidget *tokenWidget) {
         if (tokenWidget != NULL) {
-            KPushButton *buttonUp = new KPushButton(QIcon::fromTheme("go-up"), QLatin1String(""), tokenWidget);
-            KPushButton *buttonDown = new KPushButton(QIcon::fromTheme("go-down"), QLatin1String(""), tokenWidget);
-            KPushButton *buttonRemove = new KPushButton(QIcon::fromTheme("list-remove"), QLatin1String(""), tokenWidget);
+            QPushButton *buttonUp = new QPushButton(QIcon::fromTheme("go-up"), QLatin1String(""), tokenWidget);
+            QPushButton *buttonDown = new QPushButton(QIcon::fromTheme("go-down"), QLatin1String(""), tokenWidget);
+            QPushButton *buttonRemove = new QPushButton(QIcon::fromTheme("list-remove"), QLatin1String(""), tokenWidget);
             tokenWidget->addButtons(buttonUp, buttonDown, buttonRemove);
             connect(buttonUp, SIGNAL(clicked(bool)), signalMapperMoveUp, SLOT(map()));
             signalMapperMoveUp->setMapping(buttonUp, tokenWidget);

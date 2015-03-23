@@ -31,7 +31,7 @@ class QLabel;
 class QPaintEvent;
 class QMouseEvent;
 
-class KPushButton;
+class QPushButton;
 
 /**
  * A widget which shows a number of stars in a horizonal row.

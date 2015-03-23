@@ -23,9 +23,9 @@
 #include <QDate>
 #include <QSignalMapper>
 #include <QSpinBox>
+#include <QPushButton>
 
 #include <KLocalizedString>
-#include <KPushButton>
 #include <KInputDialog>
 
 #include "file.h"
@@ -79,7 +79,7 @@ public:
         case KBibTeX::Month: {
             fieldLineEdit = new FieldLineEdit(preferredTypeFlag, typeFlags, false, p);
             layout->addWidget(fieldLineEdit);
-            KPushButton *monthSelector = new KPushButton(QIcon::fromTheme("view-calendar-month"), "");
+            QPushButton *monthSelector = new QPushButton(QIcon::fromTheme("view-calendar-month"), "");
             monthSelector->setToolTip(i18n("Select a predefined month"));
             fieldLineEdit->prependWidget(monthSelector);
 
@@ -96,7 +96,7 @@ public:
         case KBibTeX::CrossRef: {
             fieldLineEdit = new FieldLineEdit(preferredTypeFlag, typeFlags, false, p);
             layout->addWidget(fieldLineEdit);
-            KPushButton *referenceSelector = new KPushButton(QIcon::fromTheme("flag-gree"), ""); ///< find better icon
+            QPushButton *referenceSelector = new QPushButton(QIcon::fromTheme("flag-gree"), ""); ///< find better icon
             referenceSelector->setToolTip(i18n("Select an existing entry"));
             fieldLineEdit->prependWidget(referenceSelector);
             connect(referenceSelector, SIGNAL(clicked()), p, SLOT(selectCrossRef()));

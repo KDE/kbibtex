@@ -30,8 +30,8 @@
 #include <QMimeType>
 #include <QStyle>
 #include <QDebug>
+#include <QPushButton>
 
-#include <KPushButton>
 #include <KGlobalSettings>
 #include <KLocalizedString>
 #include <KLineEdit>
@@ -471,7 +471,7 @@ void ReferenceWidget::createGUI()
         entryType->addItem(it->label, it->upperCamelCase);
 
     /// Button with a menu listing a set of preconfigured id suggestions
-    buttonSuggestId = new KPushButton(QIcon::fromTheme("view-filter"), QLatin1String(""), this);
+    buttonSuggestId = new QPushButton(QIcon::fromTheme("view-filter"), QLatin1String(""), this);
     buttonSuggestId->setToolTip(i18n("Select a suggested id for this entry"));
     layout->addWidget(buttonSuggestId);
     QMenu *suggestionsMenu = new QMenu(buttonSuggestId);
@@ -869,7 +869,7 @@ void OtherFieldsWidget::createGUI()
     layout->addWidget(fieldName, 0, 1, 1, 1);
     label->setBuddy(fieldName);
 
-    buttonAddApply = new KPushButton(QIcon::fromTheme("list-add"), i18n("Add"), this);
+    buttonAddApply = new QPushButton(QIcon::fromTheme("list-add"), i18n("Add"), this);
     buttonAddApply->setEnabled(false);
     layout->addWidget(buttonAddApply, 0, 2, 1, 1);
 
@@ -890,10 +890,10 @@ void OtherFieldsWidget::createGUI()
     layout->addWidget(otherFieldsList, 2, 1, 3, 1);
     label->setBuddy(otherFieldsList);
 
-    buttonDelete = new KPushButton(QIcon::fromTheme("list-remove"), i18n("Delete"), this);
+    buttonDelete = new QPushButton(QIcon::fromTheme("list-remove"), i18n("Delete"), this);
     buttonDelete->setEnabled(false);
     layout->addWidget(buttonDelete,  2, 2, 1, 1);
-    buttonOpen = new KPushButton(QIcon::fromTheme("document-open"), i18n("Open"), this);
+    buttonOpen = new QPushButton(QIcon::fromTheme("document-open"), i18n("Open"), this);
     buttonOpen->setEnabled(false);
     layout->addWidget(buttonOpen, 3, 2, 1, 1);
 
@@ -1197,7 +1197,7 @@ void SourceWidget::createGUI()
     sourceEdit->document()->setDefaultFont(KGlobalSettings::fixedFont());
     sourceEdit->setTabStopWidth(QFontMetrics(sourceEdit->font()).averageCharWidth() * 4);
 
-    m_buttonRestore = new KPushButton(QIcon::fromTheme("edit-undo"), i18n("Restore"), this);
+    m_buttonRestore = new QPushButton(QIcon::fromTheme("edit-undo"), i18n("Restore"), this);
     layout->addWidget(m_buttonRestore, 1, 1, 1, 1);
     connect(m_buttonRestore, SIGNAL(clicked()), this, SLOT(reset()));
 

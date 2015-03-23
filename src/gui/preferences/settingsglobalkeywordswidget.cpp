@@ -20,10 +20,10 @@
 #include <QLayout>
 #include <QStringListModel>
 #include <QListView>
+#include <QPushButton>
 
 #include <KSharedConfig>
 #include <KConfigGroup>
-#include <KPushButton>
 #include <KLocalizeString>
 #include <KInputDialog>
 
@@ -51,7 +51,7 @@ private:
 public:
     QListView *listViewKeywords;
     DisallowEmptyStringListModel stringListModel;
-    KPushButton *buttonRemove;
+    QPushButton *buttonRemove;
     static int keywordCounter;
 
     SettingsGlobalKeywordsWidgetPrivate(SettingsGlobalKeywordsWidget *parent)
@@ -84,11 +84,11 @@ public:
         listViewKeywords->setModel(&stringListModel);
         connect(listViewKeywords, SIGNAL(pressed(QModelIndex)), p, SLOT(enableRemoveButton()));
 
-        KPushButton *buttonAdd = new KPushButton(QIcon::fromTheme("list-add"), i18n("Add"), p);
+        QPushButton *buttonAdd = new QPushButton(QIcon::fromTheme("list-add"), i18n("Add"), p);
         layout->addWidget(buttonAdd, 0, 1, 1, 1);
         connect(buttonAdd, SIGNAL(clicked()), p, SLOT(addKeyword()));
 
-        buttonRemove = new KPushButton(QIcon::fromTheme("list-remove"), i18n("Remove"), p);
+        buttonRemove = new QPushButton(QIcon::fromTheme("list-remove"), i18n("Remove"), p);
         layout->addWidget(buttonRemove, 1, 1, 1, 1);
         buttonRemove->setEnabled(false);
         connect(buttonRemove, SIGNAL(clicked()), p, SLOT(removeKeyword()));

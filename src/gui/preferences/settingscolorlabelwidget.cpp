@@ -23,8 +23,8 @@
 #include <QLayout>
 #include <QStyledItemDelegate>
 #include <QSignalMapper>
+#include <QPushButton>
 
-#include <KPushButton>
 #include <KColorButton>
 #include <KColorDialog>
 #include <KLineEdit>
@@ -294,7 +294,7 @@ private:
 
 public:
     ColorLabelSettingsModel *model;
-    KPushButton *buttonRemove;
+    QPushButton *buttonRemove;
     QTreeView *view;
 
     Private(SettingsColorLabelWidget *parent)
@@ -344,13 +344,13 @@ public:
         view->setItemDelegate(delegate);
 
         /// Button to add a new randomized color
-        KPushButton *buttonAdd = new KPushButton(QIcon::fromTheme("list-add"), i18n("Add..."), p);
+        QPushButton *buttonAdd = new QPushButton(QIcon::fromTheme("list-add"), i18n("Add..."), p);
         layout->addWidget(buttonAdd, 0, 1, 1, 1);
         connect(buttonAdd, SIGNAL(clicked()), p, SLOT(addColor()));
 
         /// Remove selected color-label pair; button is disabled
         /// if no row is selected in tree view
-        buttonRemove = new KPushButton(QIcon::fromTheme("list-remove"), i18n("Remove"), p);
+        buttonRemove = new QPushButton(QIcon::fromTheme("list-remove"), i18n("Remove"), p);
         layout->addWidget(buttonRemove, 1, 1, 1, 1);
         buttonRemove->setEnabled(false);
         connect(buttonRemove, SIGNAL(clicked()), p, SLOT(removeColor()));

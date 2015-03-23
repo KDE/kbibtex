@@ -35,7 +35,7 @@ class QGridLayout;
 
 class KLineEdit;
 class KComboBox;
-class KPushButton;
+class QPushButton;
 
 class File;
 class Entry;
@@ -120,7 +120,7 @@ class ReferenceWidget : public ElementWidget
 private:
     KComboBox *entryType;
     KLineEdit *entryId;
-    KPushButton *buttonSuggestId;
+    QPushButton *buttonSuggestId;
 
     void createGUI();
 
@@ -195,9 +195,9 @@ private:
     KLineEdit *fieldName;
     FieldInput *fieldContent;
     QTreeWidget *otherFieldsList;
-    KPushButton *buttonDelete;
-    KPushButton *buttonOpen;
-    KPushButton *buttonAddApply;
+    QPushButton *buttonDelete;
+    QPushButton *buttonOpen;
+    QPushButton *buttonAddApply;
     QUrl currentUrl;
     const QStringList blackListed;
     QSharedPointer<Entry> internalEntry;
@@ -298,7 +298,7 @@ private slots:
     void reset();
 
 private:
-    KPushButton *m_buttonRestore;
+    QPushButton *m_buttonRestore;
 };
 
 #endif // KBIBTEX_GUI_ELEMENTWIDGETS_H

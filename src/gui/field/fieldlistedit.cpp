@@ -30,10 +30,10 @@
 #include <QUrl>
 #include <QTimer>
 #include <QAction>
+#include <QPushButton>
 
 #include <KMessageBox>
 #include <KLocalizeString>
-#include <KPushButton>
 #include <KFileDialog>
 #include <KInputDialog>
 #include <KIO/NetAccess>
@@ -64,7 +64,7 @@ public:
     QList<FieldLineEdit *> lineEditList;
     QWidget *pushButtonContainer;
     QBoxLayout *pushButtonContainerLayout;
-    KPushButton *addLineButton;
+    QPushButton *addLineButton;
     const File *file;
     QString fieldKey;
     QWidget *container;
@@ -105,7 +105,7 @@ public:
         pushButtonContainerLayout->setMargin(0);
         layout->addWidget(pushButtonContainer);
 
-        addLineButton = new KPushButton(QIcon::fromTheme("list-add"), i18n("Add"), pushButtonContainer);
+        addLineButton = new QPushButton(QIcon::fromTheme("list-add"), i18n("Add"), pushButtonContainer);
         addLineButton->setObjectName(QLatin1String("addButton"));
         connect(addLineButton, SIGNAL(clicked()), p, SLOT(lineAdd()));
         connect(addLineButton, SIGNAL(clicked()), p, SIGNAL(modified()));
@@ -122,7 +122,7 @@ public:
         scrollArea->setWidgetResizable(true);
     }
 
-    void addButton(KPushButton *button) {
+    void addButton(QPushButton *button) {
         button->setParent(pushButtonContainer);
         pushButtonContainerLayout->addWidget(button);
     }
@@ -148,19 +148,19 @@ public:
         layout->insertWidget(layout->count() - 2, le);
         lineEditList.append(le);
 
-        KPushButton *remove = new KPushButton(QIcon::fromTheme("list-remove"), QLatin1String(""), le);
+        QPushButton *remove = new QPushButton(QIcon::fromTheme("list-remove"), QLatin1String(""), le);
         remove->setToolTip(i18n("Remove value"));
         le->appendWidget(remove);
         connect(remove, SIGNAL(clicked()), smRemove, SLOT(map()));
         smRemove->setMapping(remove, le);
 
-        KPushButton *goDown = new KPushButton(QIcon::fromTheme("go-down"), QLatin1String(""), le);
+        QPushButton *goDown = new QPushButton(QIcon::fromTheme("go-down"), QLatin1String(""), le);
         goDown->setToolTip(i18n("Move value down"));
         le->appendWidget(goDown);
         connect(goDown, SIGNAL(clicked()), smGoDown, SLOT(map()));
         smGoDown->setMapping(goDown, le);
 
-        KPushButton *goUp = new KPushButton(QIcon::fromTheme("go-up"), QLatin1String(""), le);
+        QPushButton *goUp = new QPushButton(QIcon::fromTheme("go-up"), QLatin1String(""), le);
         goUp->setToolTip(i18n("Move value up"));
         le->appendWidget(goUp);
         connect(goUp, SIGNAL(clicked()), smGoUp, SLOT(map()));
@@ -303,7 +303,7 @@ FieldLineEdit *FieldListEdit::addFieldLineEdit()
     return d->addFieldLineEdit();
 }
 
-void FieldListEdit::addButton(KPushButton *button)
+void FieldListEdit::addButton(QPushButton *button)
 {
     d->addButton(button);
 }
@@ -400,7 +400,7 @@ PersonListEdit::PersonListEdit(KBibTeX::TypeFlag preferredTypeFlag, KBibTeX::Typ
     QBoxLayout *boxLayout = static_cast<QBoxLayout *>(layout());
     boxLayout->addWidget(m_checkBoxOthers);
 
-    m_buttonAddNamesFromClipboard = new KPushButton(QIcon::fromTheme("edit-paste"), i18n("Add from Clipboard"), this);
+    m_buttonAddNamesFromClipboard = new QPushButton(QIcon::fromTheme("edit-paste"), i18n("Add from Clipboard"), this);
     m_buttonAddNamesFromClipboard->setToolTip(i18n("Add a list of names from clipboard"));
     addButton(m_buttonAddNamesFromClipboard);
     connect(m_buttonAddNamesFromClipboard, SIGNAL(clicked()), this, SLOT(slotAddNamesFromClipboard()));
@@ -466,7 +466,7 @@ UrlListEdit::UrlListEdit(QWidget *parent)
     m_signalMapperFieldLineEditTextChanged = new QSignalMapper(this);
     connect(m_signalMapperFieldLineEditTextChanged, SIGNAL(mapped(QWidget*)), this, SLOT(textChanged(QWidget*)));
 
-    m_buttonAddFile = new KPushButton(QIcon::fromTheme("list-add"), i18n("Add file..."), this);
+    m_buttonAddFile = new QPushButton(QIcon::fromTheme("list-add"), i18n("Add file..."), this);
     addButton(m_buttonAddFile);
     KMenu *menuAddFile = new KMenu(m_buttonAddFile);
     m_buttonAddFile->setMenu(menuAddFile);
@@ -557,8 +557,8 @@ void UrlListEdit::slotSaveLocally(QWidget *widget)
 
 void UrlListEdit::textChanged(QWidget *widget)
 {
-    /// Determine associated KPushButton "Save locally"
-    KPushButton *buttonSaveLocally = qobject_cast<KPushButton *>(widget);
+    /// Determine associated QPushButton "Save locally"
+    QPushButton *buttonSaveLocally = qobject_cast<QPushButton *>(widget);
     if (buttonSaveLocally == NULL) return; ///< should never happen!
 
     /// Assume a FieldLineEdit was the sender of this signal
@@ -608,7 +608,7 @@ FieldLineEdit *UrlListEdit::addFieldLineEdit()
     FieldLineEdit *fieldLineEdit = FieldListEdit::addFieldLineEdit();
 
     /// Create a new "save locally" button
-    KPushButton *buttonSaveLocally = new KPushButton(QIcon::fromTheme("document-save"), QLatin1String(""), fieldLineEdit);
+    QPushButton *buttonSaveLocally = new QPushButton(QIcon::fromTheme("document-save"), QLatin1String(""), fieldLineEdit);
     buttonSaveLocally->setToolTip(i18n("Save file locally"));
     buttonSaveLocally->setEnabled(false);
     /// Append button to new FieldLineEdit
@@ -635,11 +635,11 @@ const QString KeywordListEdit::keyGlobalKeywordList = QLatin1String("globalKeywo
 KeywordListEdit::KeywordListEdit(QWidget *parent)
         : FieldListEdit(KBibTeX::tfKeyword, KBibTeX::tfKeyword | KBibTeX::tfSource, parent), m_config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), m_configGroupName(QLatin1String("Global Keywords"))
 {
-    m_buttonAddKeywordsFromList = new KPushButton(QIcon::fromTheme("list-add"), i18n("Add Keywords from List"), this);
+    m_buttonAddKeywordsFromList = new QPushButton(QIcon::fromTheme("list-add"), i18n("Add Keywords from List"), this);
     m_buttonAddKeywordsFromList->setToolTip(i18n("Add keywords as selected from a pre-defined list of keywords"));
     addButton(m_buttonAddKeywordsFromList);
     connect(m_buttonAddKeywordsFromList, SIGNAL(clicked()), this, SLOT(slotAddKeywordsFromList()));
-    m_buttonAddKeywordsFromClipboard = new KPushButton(QIcon::fromTheme("edit-paste"), i18n("Add Keywords from Clipboard"), this);
+    m_buttonAddKeywordsFromClipboard = new QPushButton(QIcon::fromTheme("edit-paste"), i18n("Add Keywords from Clipboard"), this);
     m_buttonAddKeywordsFromClipboard->setToolTip(i18n("Add a punctuation-separated list of keywords from clipboard"));
     addButton(m_buttonAddKeywordsFromClipboard);
     connect(m_buttonAddKeywordsFromClipboard, SIGNAL(clicked()), this, SLOT(slotAddKeywordsFromClipboard()));

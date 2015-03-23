@@ -53,7 +53,7 @@ protected:
 public:
     explicit TokenWidget(QWidget *parent);
 
-    void addButtons(KPushButton *buttonUp, KPushButton *buttonDown, KPushButton *buttonRemove);
+    void addButtons(QPushButton *buttonUp, QPushButton *buttonDown, QPushButton *buttonRemove);
 
     virtual QString toString() const = 0;
 };

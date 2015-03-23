@@ -30,7 +30,7 @@ class QDropEvent;
 class QDragEnterEvent;
 class QSignalMapper;
 
-class KPushButton;
+class QPushButton;
 
 class Element;
 class FieldLineEdit;
@@ -63,7 +63,7 @@ protected:
     /// Add a new field line edit to this list
     /// Allows to get overwritten by descentants of this class
     virtual FieldLineEdit *addFieldLineEdit();
-    void addButton(KPushButton *button);
+    void addButton(QPushButton *button);
     void lineAdd(Value *value);
     void dragEnterEvent(QDragEnterEvent *event);
     void dropEvent(QDropEvent *);
@@ -102,7 +102,7 @@ private slots:
 
 private:
     QCheckBox *m_checkBoxOthers;
-    KPushButton *m_buttonAddNamesFromClipboard;
+    QPushButton *m_buttonAddNamesFromClipboard;
 };
 
 
@@ -136,7 +136,7 @@ private slots:
     void textChanged(QWidget *widget);
 
 private:
-    KPushButton *m_buttonAddFile;
+    QPushButton *m_buttonAddFile;
     QSignalMapper *m_signalMapperSaveLocallyButtonClicked;
     QSignalMapper *m_signalMapperFieldLineEditTextChanged;
 
@@ -167,7 +167,7 @@ private slots:
 private:
     KSharedConfigPtr m_config;
     const QString m_configGroupName;
-    KPushButton *m_buttonAddKeywordsFromList, *m_buttonAddKeywordsFromClipboard;
+    QPushButton *m_buttonAddKeywordsFromList, *m_buttonAddKeywordsFromClipboard;
     QSet<QString> m_keywordsFromFile;
 };
 

@@ -20,13 +20,13 @@
 #include <QFormLayout>
 #include <QCheckBox>
 #include <QSpinBox>
+#include <QPushButton>
 
 #include <KLocalizeString>
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <KComboBox>
 #include <KLineEdit>
-#include <KPushButton>
 #include <KFileDialog>
 #include <KUrlRequester>
 

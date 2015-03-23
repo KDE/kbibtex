@@ -30,8 +30,8 @@
 #include <QtCore/QPointer>
 #include <QDebug>
 #include <QStandardPaths>
+#include <QPushButton>
 
-#include <KPushButton>
 #include <KAction>
 #include <KDialog>
 #include <KActionCollection>
@@ -509,7 +509,7 @@ private:
 public:
     File *file;
     FileView *editor;
-    KPushButton *buttonNext, *buttonPrev;
+    QPushButton *buttonNext, *buttonPrev;
     QLabel *labelWhichClique;
     static const char *whichCliqueText;
 
@@ -554,9 +554,9 @@ public:
         containerLayout->addStretch(10);
         labelWhichClique = new QLabel(p);
         containerLayout->addWidget(labelWhichClique);
-        buttonPrev = new KPushButton(QIcon::fromTheme("go-previous"), i18n("Previous Clique"), p);
+        buttonPrev = new QPushButton(QIcon::fromTheme("go-previous"), i18n("Previous Clique"), p);
         containerLayout->addWidget(buttonPrev, 1);
-        buttonNext = new KPushButton(QIcon::fromTheme("go-next"), i18n("Next Clique"), p);
+        buttonNext = new QPushButton(QIcon::fromTheme("go-next"), i18n("Next Clique"), p);
         containerLayout->addWidget(buttonNext, 1);
 
         filterModel = new FilterIdFileModel(p);

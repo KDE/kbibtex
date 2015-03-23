@@ -27,13 +27,13 @@
 #include <QDragEnterEvent>
 #include <QDropEvent>
 #include <QDebug>
+#include <QPushButton>
 
 #include <KRun>
 #include <KMessageBox>
 #include <KGlobalSettings>
 #include <KLocalizeString>
 #include <QUrl>
-#include <KPushButton>
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <QMimeDatabase>
@@ -57,7 +57,7 @@ private:
     KBibTeX::TypeFlag preferredTypeFlag;
     KBibTeX::TypeFlags typeFlags;
     QSignalMapper *menuTypesSignalMapper;
-    KPushButton *buttonOpenUrl;
+    QPushButton *buttonOpenUrl;
 
     KSharedConfigPtr config;
     const QString configGroupNameGeneral;
@@ -77,7 +77,7 @@ public:
         setupMenu();
         connect(menuTypesSignalMapper, SIGNAL(mapped(int)), parent, SLOT(slotTypeChanged(int)));
 
-        buttonOpenUrl = new KPushButton(QIcon::fromTheme("document-open-remote"), "", parent);
+        buttonOpenUrl = new QPushButton(QIcon::fromTheme("document-open-remote"), "", parent);
         buttonOpenUrl->setVisible(false);
         buttonOpenUrl->setProperty("isConst", true);
         parent->appendWidget(buttonOpenUrl);
