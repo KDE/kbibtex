@@ -115,7 +115,7 @@ QString SettingsGlobalKeywordsWidget::label() const
     return i18n("Keywords");
 }
 
-KIcon SettingsGlobalKeywordsWidget::icon() const
+QIcon SettingsGlobalKeywordsWidget::icon() const
 {
     return QIcon::fromTheme("checkbox"); // TODO find better icon
 }

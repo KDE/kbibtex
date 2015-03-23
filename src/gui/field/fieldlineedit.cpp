@@ -270,7 +270,7 @@ public:
         }
     }
 
-    KIcon iconForTypeFlag(KBibTeX::TypeFlag typeFlag) {
+    QIcon iconForTypeFlag(KBibTeX::TypeFlag typeFlag) {
         switch (typeFlag) {
         case KBibTeX::tfPlainText: return QIcon::fromTheme("draw-text");
         case KBibTeX::tfReference: return QIcon::fromTheme("emblem-symbolic-link");

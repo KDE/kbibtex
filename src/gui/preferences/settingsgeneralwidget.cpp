@@ -97,7 +97,7 @@ QString SettingsGeneralWidget::label() const
     return i18n("General");
 }
 
-KIcon SettingsGeneralWidget::icon() const
+QIcon SettingsGeneralWidget::icon() const
 {
     return QIcon::fromTheme("kbibtex");
 }

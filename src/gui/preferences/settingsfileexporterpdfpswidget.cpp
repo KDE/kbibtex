@@ -134,7 +134,7 @@ QString SettingsFileExporterPDFPSWidget::label() const
     return i18n("PDF & Postscript");
 }
 
-KIcon SettingsFileExporterPDFPSWidget::icon() const
+QIcon SettingsFileExporterPDFPSWidget::icon() const
 {
     return QIcon::fromTheme("application-pdf");
 }

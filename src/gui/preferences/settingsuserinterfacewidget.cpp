@@ -123,7 +123,7 @@ QString SettingsUserInterfaceWidget::label() const
     return i18n("User Interface");
 }
 
-KIcon SettingsUserInterfaceWidget::icon() const
+QIcon SettingsUserInterfaceWidget::icon() const
 {
     return QIcon::fromTheme("user-identity");
 }

@@ -96,7 +96,7 @@ public:
     struct UrlInfo {
         QUrl url;
         QString mimeType;
-        KIcon icon;
+        QIcon icon;
     };
 
 private:

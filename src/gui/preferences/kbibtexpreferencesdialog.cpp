@@ -123,7 +123,7 @@ public:
         }
     }
 
-    KIcon iconFromFavicon(const QString &url) {
+    QIcon iconFromFavicon(const QString &url) {
         static const QRegExp invalidChars("[^-a-z0-9_]", Qt::CaseInsensitive);
         QString fileName = url;
         fileName = fileName.remove(invalidChars);

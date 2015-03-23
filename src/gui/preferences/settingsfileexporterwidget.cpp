@@ -169,7 +169,7 @@ QString SettingsFileExporterWidget::label() const
     return i18n("Saving and Exporting");
 }
 
-KIcon SettingsFileExporterWidget::icon() const
+QIcon SettingsFileExporterWidget::icon() const
 {
     return QIcon::fromTheme("document-save");
 }

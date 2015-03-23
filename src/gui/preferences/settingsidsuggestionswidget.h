@@ -33,7 +33,7 @@ public:
     ~SettingsIdSuggestionsWidget();
 
     virtual QString label() const;
-    virtual KIcon icon() const;
+    virtual QIcon icon() const;
 
 public slots:
     void loadState();

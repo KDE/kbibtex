@@ -157,7 +157,7 @@ QString EntryConfiguredWidget::label()
     return etl->uiCaption;
 }
 
-KIcon EntryConfiguredWidget::icon()
+QIcon EntryConfiguredWidget::icon()
 {
     return QIcon::fromTheme(etl->iconName);
 }
@@ -422,7 +422,7 @@ QString ReferenceWidget::label()
     return QString();
 }
 
-KIcon ReferenceWidget::icon()
+QIcon ReferenceWidget::icon()
 {
     return QIcon();
 }
@@ -683,7 +683,7 @@ QString FilesWidget::label()
     return i18n("External");
 }
 
-KIcon FilesWidget::icon()
+QIcon FilesWidget::icon()
 {
     return QIcon::fromTheme("emblem-symbolic-link");
 }
@@ -760,7 +760,7 @@ QString OtherFieldsWidget::label()
     return i18n("Other Fields");
 }
 
-KIcon OtherFieldsWidget::icon()
+QIcon OtherFieldsWidget::icon()
 {
     return QIcon::fromTheme("other");
 }
@@ -982,7 +982,7 @@ QString MacroWidget::label()
     return i18n("Macro");
 }
 
-KIcon MacroWidget::icon()
+QIcon MacroWidget::icon()
 {
     return QIcon::fromTheme("macro");
 }
@@ -1047,7 +1047,7 @@ QString PreambleWidget::label()
     return i18n("Preamble");
 }
 
-KIcon PreambleWidget::icon()
+QIcon PreambleWidget::icon()
 {
     return QIcon::fromTheme("preamble");
 }
@@ -1173,7 +1173,7 @@ QString SourceWidget::label()
     return i18n("Source");
 }
 
-KIcon SourceWidget::icon()
+QIcon SourceWidget::icon()
 {
     return QIcon::fromTheme("code-context");
 }

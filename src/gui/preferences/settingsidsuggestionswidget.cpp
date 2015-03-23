@@ -303,7 +303,7 @@ QString SettingsIdSuggestionsWidget::label() const
     return i18n("Id Suggestions");
 }
 
-KIcon SettingsIdSuggestionsWidget::icon() const
+QIcon SettingsIdSuggestionsWidget::icon() const
 {
     return QIcon::fromTheme("view-filter");
 }

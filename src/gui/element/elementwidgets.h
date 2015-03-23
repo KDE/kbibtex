@@ -55,7 +55,7 @@ public:
     }
     virtual void showReqOptWidgets(bool, const QString &) = 0;
     virtual QString label() = 0;
-    virtual KIcon icon() = 0;
+    virtual QIcon icon() = 0;
     bool isModified() const;
     void setModified(bool);
 
@@ -106,7 +106,7 @@ public:
     void setReadOnly(bool isReadOnly);
     void showReqOptWidgets(bool forceVisible, const QString &entryType);
     QString label();
-    KIcon icon();
+    QIcon icon();
 
     virtual void setFile(const File *file);
 
@@ -139,7 +139,7 @@ public:
     bool isDuplicateId() const;
 
     QString label();
-    KIcon icon();
+    QIcon icon();
 
     bool canEdit(const Element *element);
 
@@ -177,7 +177,7 @@ public:
     }
 
     QString label();
-    KIcon icon();
+    QIcon icon();
 
     virtual void setFile(const File *file);
 
@@ -216,7 +216,7 @@ public:
     void setReadOnly(bool isReadOnly);
     void showReqOptWidgets(bool, const QString &) {}
     QString label();
-    KIcon icon();
+    QIcon icon();
 
     bool canEdit(const Element *element);
 
@@ -245,7 +245,7 @@ public:
     void setReadOnly(bool isReadOnly);
     void showReqOptWidgets(bool, const QString &) {}
     QString label();
-    KIcon icon();
+    QIcon icon();
 
     bool canEdit(const Element *element);
 };
@@ -265,7 +265,7 @@ public:
     void setReadOnly(bool isReadOnly);
     void showReqOptWidgets(bool, const QString &) {}
     QString label();
-    KIcon icon();
+    QIcon icon();
 
     bool canEdit(const Element *element);
 };
@@ -290,7 +290,7 @@ public:
     void setReadOnly(bool isReadOnly);
     void showReqOptWidgets(bool, const QString &) {}
     QString label();
-    KIcon icon();
+    QIcon icon();
 
     bool canEdit(const Element *element);
 

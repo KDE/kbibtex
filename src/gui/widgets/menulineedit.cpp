@@ -235,7 +235,7 @@ void MenuLineEdit::setText(const QString &text)
     }
 }
 
-void MenuLineEdit::setIcon(const KIcon &icon)
+void MenuLineEdit::setIcon(const QIcon &icon)
 {
     d->m_pushButtonType->setIcon(icon);
 }

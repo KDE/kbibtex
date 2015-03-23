@@ -380,7 +380,7 @@ QString SettingsColorLabelWidget::label() const
     return i18n("Color & Labels");
 }
 
-KIcon SettingsColorLabelWidget::icon() const
+QIcon SettingsColorLabelWidget::icon() const
 {
     return QIcon::fromTheme("preferences-desktop-color");
 }
