@@ -19,14 +19,7 @@
 
 #include <typeinfo>
 
-#include <KComboBox>
 #include <QDebug>
-#include <KLocalizeString>
-#include <KSharedConfig>
-#include <KConfigGroup>
-#include <KColorScheme>
-#include <KLineEdit>
-
 #include <QApplication>
 #include <QTextDocument>
 #include <QAbstractTextDocumentLayout>
@@ -37,6 +30,13 @@
 #include <QFrame>
 #include <QLayout>
 #include <QHeaderView>
+
+#include <KComboBox>
+#include <KLocalizeString>
+#include <KSharedConfig>
+#include <KConfigGroup>
+#include <KColorScheme>
+#include <KLineEdit>
 
 #include "fieldlineedit.h"
 #include "bibtexfields.h"
