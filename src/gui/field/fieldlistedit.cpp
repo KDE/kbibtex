@@ -36,7 +36,6 @@
 
 #include <KMessageBox>
 #include <KLocalizedString>
-#include <KInputDialog>
 // FIXME #include <KIO/NetAccess>
 #include <KMenu>
 #include <KSharedConfig>
@@ -665,6 +664,8 @@ void KeywordListEdit::slotAddKeywordsFromList()
     /// re-create string list from map's values
     keywords = forCaseInsensitiveSorting.values();
 
+    // FIXME QInputDialog does not have a 'getItemList'
+    /*
     bool ok = false;
     const QStringList newKeywordList = KInputDialog::getItemList(i18n("Add Keywords"), i18n("Select keywords to add:"), keywords, QStringList(), true, &ok, this);
     if (ok) {
@@ -676,6 +677,7 @@ void KeywordListEdit::slotAddKeywordsFromList()
         if (!newKeywordList.isEmpty())
             emit modified();
     }
+    */
 }
 
 void KeywordListEdit::slotAddKeywordsFromClipboard()
