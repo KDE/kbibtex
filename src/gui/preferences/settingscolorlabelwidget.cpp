@@ -24,12 +24,12 @@
 #include <QStyledItemDelegate>
 #include <QSignalMapper>
 #include <QPushButton>
+#include <QMenu>
 
 #include <KColorButton>
 #include <KColorDialog>
 #include <KLineEdit>
 #include <KActionMenu>
-#include <KMenu>
 #include <KSharedConfig>
 
 #include "file.h"

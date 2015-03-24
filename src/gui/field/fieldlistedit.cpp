@@ -33,11 +33,11 @@
 #include <QPushButton>
 #include <QFontDatabase>
 #include <QFileDialog>
+#include <QMenu>
 
 #include <KMessageBox>
 #include <KLocalizedString>
 // FIXME #include <KIO/NetAccess>
-#include <KMenu>
 #include <KSharedConfig>
 
 #include "fileinfo.h"
@@ -467,7 +467,7 @@ UrlListEdit::UrlListEdit(QWidget *parent)
 
     m_buttonAddFile = new QPushButton(QIcon::fromTheme("list-add"), i18n("Add file..."), this);
     addButton(m_buttonAddFile);
-    KMenu *menuAddFile = new KMenu(m_buttonAddFile);
+    QMenu *menuAddFile = new QMenu(m_buttonAddFile);
     m_buttonAddFile->setMenu(menuAddFile);
     connect(m_buttonAddFile, SIGNAL(clicked()), m_buttonAddFile, SLOT(showMenu()));
 

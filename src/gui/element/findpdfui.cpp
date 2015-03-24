@@ -37,7 +37,6 @@
 #include <KDialog>
 #include <KLocalizedString>
 #include <KSqueezedTextLabel>
-#include <KMenu>
 #include <KRun>
 #include <KTemporaryFile>
 // FIXME #include <KIO/NetAccess>
