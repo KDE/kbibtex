@@ -19,6 +19,7 @@
 
 #include <QApplication>
 #include <QClipboard>
+#include <QMimeData>
 #include <QBuffer>
 #include <QMouseEvent>
 #include <QDrag>

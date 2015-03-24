@@ -28,6 +28,7 @@
 #include <QMenu>
 #include <QMimeDatabase>
 #include <QMimeType>
+#include <QMimeData>
 #include <QStyle>
 #include <QDebug>
 #include <QPushButton>
