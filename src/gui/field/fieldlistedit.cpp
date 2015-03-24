@@ -27,6 +27,7 @@
 #include <QCheckBox>
 #include <QDragEnterEvent>
 #include <QDropEvent>
+#include <QMimeData>
 #include <QUrl>
 #include <QTimer>
 #include <QAction>
@@ -39,6 +40,7 @@
 #include <KLocalizedString>
 // FIXME #include <KIO/NetAccess>
 #include <KSharedConfig>
+#include <KConfigGroup>
 
 #include "fileinfo.h"
 #include "file.h"
