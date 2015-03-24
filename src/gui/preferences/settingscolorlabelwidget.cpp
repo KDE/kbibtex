@@ -27,7 +27,6 @@
 #include <QMenu>
 
 #include <KColorButton>
-#include <KColorDialog>
 #include <KLineEdit>
 #include <KActionMenu>
 #include <KSharedConfig>

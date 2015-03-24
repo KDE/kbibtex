@@ -20,8 +20,8 @@
 #include <QAbstractItemModel>
 #include <QFontMetrics>
 #include <QPainter>
+#include <QColorDialog>
 
-#include <KColorDialog>
 #include <KLocalizedString>
 #include <KSharedConfig>
 #include <KConfigGroup>
@@ -88,7 +88,7 @@ public:
     virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const {
         if (role == ColorRole) {
             if (index.row() == 0)
-                return Qt::black;
+                return QColor(Qt::black);
             else if (index.row() == rowCount() - 1)
                 return userColor;
             else
@@ -203,7 +203,7 @@ void ColorLabelWidget::slotCurrentIndexChanged(int index)
 {
     if (index == count() - 1) {
         QColor dialogColor = d->model->userColor;
-        if (KColorDialog::getColor(dialogColor, this) == KColorDialog::Accepted)
+        if (QColorDialog::getColor(dialogColor, this) == QColorDialog::Accepted)
             d->model->setColor(dialogColor);
     }
 
