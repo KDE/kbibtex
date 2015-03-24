@@ -20,8 +20,8 @@
 #include <QHeaderView>
 #include <QScrollBar>
 #include <QKeyEvent>
+#include <QAction>
 
-#include <KAction>
 #include <KConfigGroup>
 #include <KLocalizedString>
 #include <KSharedConfig>
@@ -248,7 +248,7 @@ BasicFileView::BasicFileView(const QString &name, QWidget *parent)
     /// build context menu for header to show/hide single columns
     int col = 0;
     foreach(const FieldDescription *fd, *BibTeXFields::self()) {
-        KAction *action = new KAction(fd->label, header());
+        QAction *action = new QAction(fd->label, header());
         action->setData(col);
         action->setCheckable(true);
         action->setChecked(!isColumnHidden(col));
@@ -258,22 +258,22 @@ BasicFileView::BasicFileView(const QString &name, QWidget *parent)
     }
 
     /// add separator to header's context menu
-    KAction *action = new KAction(header());
+    QAction *action = new QAction(header());
     action->setSeparator(true);
     header()->addAction(action);
 
     /// add action to reset to defaults (regarding column visibility) to header's context menu
-    action = new KAction(i18n("Reset to defaults"), header());
+    action = new QAction(i18n("Reset to defaults"), header());
     connect(action, SIGNAL(triggered()), this, SLOT(headerResetToDefaults()));
     header()->addAction(action);
 
     /// add separator to header's context menu
-    action = new KAction(header());
+    action = new QAction(header());
     action->setSeparator(true);
     header()->addAction(action);
 
     /// add action to disable any sorting
-    action = new KAction(i18n("No sorting"), header());
+    action = new QAction(i18n("No sorting"), header());
     connect(action, SIGNAL(triggered()), this, SLOT(noSorting()));
     header()->addAction(action);
 
@@ -351,7 +351,7 @@ void BasicFileView::columnResized(int /*column*/, int /*oldSize*/, int /*newSize
 
 void BasicFileView::headerActionToggled()
 {
-    KAction *action = static_cast<KAction *>(sender());
+    QAction *action = static_cast<QAction *>(sender());
     bool ok = false;
     const int col = (int)action->data().toInt(&ok);
     if (!ok) return;

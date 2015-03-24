@@ -31,8 +31,8 @@
 #include <QDebug>
 #include <QStandardPaths>
 #include <QPushButton>
+#include <QAction>
 
-#include <KAction>
 #include <KDialog>
 #include <KActionCollection>
 #include <KLocalizedString>
@@ -638,7 +638,7 @@ public:
 FindDuplicatesUI::FindDuplicatesUI(KParts::Part *part, FileView *fileView)
         : QObject(), d(new FindDuplicatesUIPrivate(this, part, fileView))
 {
-    KAction *newAction = new KAction(QIcon::fromTheme("tab-duplicate"), i18n("Find Duplicates"), this);
+    QAction *newAction = new QAction(QIcon::fromTheme("tab-duplicate"), i18n("Find Duplicates"), this);
     part->actionCollection()->addAction(QLatin1String("findduplicates"), newAction);
     connect(newAction, SIGNAL(triggered()), this, SLOT(slotFindDuplicates()));
 #if KDE_IS_VERSION(4, 4, 0)

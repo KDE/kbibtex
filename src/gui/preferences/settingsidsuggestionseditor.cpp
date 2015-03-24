@@ -27,11 +27,11 @@
 #include <QMenu>
 #include <QtCore/QPointer>
 #include <QPushButton>
+#include <QAction>
 
 #include <KLineEdit>
 #include <KComboBox>
 #include <KLocalizedString>
-#include <KAction>
 
 #include <qxtspanslider.h>
 

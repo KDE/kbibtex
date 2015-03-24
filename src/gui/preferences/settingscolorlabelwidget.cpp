@@ -460,19 +460,19 @@ public:
         QStringList colorCodes = configGroup.readEntry(Preferences::keyColorCodes, Preferences::defaultColorCodes);
         QStringList colorLabels = configGroup.readEntry(Preferences::keyColorLabels, Preferences::defaultcolorLabels);
         for (QStringList::ConstIterator itc = colorCodes.constBegin(), itl = colorLabels.constBegin(); itc != colorCodes.constEnd() && itl != colorLabels.constEnd(); ++itc, ++itl) {
-            KAction *action = new KAction(QIcon::fromTheme(ColorLabelWidget::createSolidIcon(*itc)), i18n((*itl).toUtf8().constData()), menu);
+            QAction *action = new QAction(QIcon::fromTheme(ColorLabelWidget::createSolidIcon(*itc)), i18n((*itl).toUtf8().constData()), menu);
             menu->addAction(action);
             sm->setMapping(action, *itc);
             connect(action, SIGNAL(triggered()), sm, SLOT(map()));
         }
 
-        KAction *action = new KAction(menu);
+        QAction *action = new QAction(menu);
         action->setSeparator(true);
         menu->addAction(action);
 
         /// Special action that removes any color
         /// from a BibTeX entry by setting the color to black
-        action = new KAction(i18n("No color"), menu);
+        action = new QAction(i18n("No color"), menu);
         menu->addAction(action);
         sm->setMapping(action, QLatin1String("#000000"));
         connect(action, SIGNAL(triggered()), sm, SLOT(map()));
