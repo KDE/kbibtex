@@ -23,7 +23,7 @@
 
 #include <KLocalizedString>
 #include <KComboBox>
-#include <KIO/NetAccess>
+// FIXME #include <KIO/NetAccess>
 #include <KMessageBox>
 #include <KGuiItem>
 #include <QStandardPaths>
@@ -130,7 +130,7 @@ public:
         fileName.prepend(QStandardPaths::writableLocation(QStandardPaths::CacheLocation) + QLatin1Char('/') + "favicons/")).append(".png";
 
         if (!QFileInfo(fileName).exists()) {
-            if (!KIO::NetAccess::file_copy(QUrl(url), QUrl(fileName), NULL))
+            // FIXME if (!KIO::NetAccess::file_copy(QUrl(url), QUrl(fileName), NULL))
                 return QIcon();
         }
 

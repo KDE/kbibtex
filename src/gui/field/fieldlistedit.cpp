@@ -37,7 +37,7 @@
 #include <KMessageBox>
 #include <KLocalizedString>
 #include <KInputDialog>
-#include <KIO/NetAccess>
+// FIXME #include <KIO/NetAccess>
 #include <KMenu>
 #include <KSharedConfig>
 
@@ -541,6 +541,7 @@ void UrlListEdit::slotSaveLocally(QWidget *widget)
 
             /// Download remote file and save it locally
             // FIXME: KIO::NetAccess::download is blocking
+            /*
             setEnabled(false);
             setCursor(Qt::WaitCursor);
             if (KIO::NetAccess::file_copy(url, QUrl::fromLocalFile(absoluteFilename), this)) {
@@ -550,6 +551,7 @@ void UrlListEdit::slotSaveLocally(QWidget *widget)
                 lineAdd(value);
             }
             setEnabled(true);
+            */
             unsetCursor();
         }
     }
