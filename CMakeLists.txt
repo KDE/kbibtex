@@ -57,6 +57,7 @@ find_package(
     XmlGui
     KIO
     IconThemes
+    KDELibs4Support
 )
 #     Archive
 #     Bookmarks

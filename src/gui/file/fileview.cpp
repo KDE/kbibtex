@@ -20,8 +20,8 @@
 #include <QDropEvent>
 #include <QTimer>
 #include <QDebug>
-#include <QDialog>
 
+#include <KDialog>
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <KGuiItem>
@@ -43,7 +43,7 @@
  *
  * @author Thomas Fischer
  */
-class ElementEditorDialog : public QDialog
+class ElementEditorDialog : public KDialog
 {
 private:
     ElementEditor *elementEditor;
@@ -52,7 +52,7 @@ private:
 
 public:
     ElementEditorDialog(QWidget *parent)
-            : QDialog(parent), elementEditor(NULL) {
+            : KDialog(parent), elementEditor(NULL) {
         /// restore window size
         KSharedConfigPtr config(KSharedConfig::openConfig(QLatin1String("kbibtexrc")));
         configGroup = KConfigGroup(config, configGroupNameWindowSize);
@@ -71,7 +71,7 @@ protected:
     virtual void closeEvent(QCloseEvent *e) {
         /// strangely enough, close events have always to be rejected ...
         e->setAccepted(false);
-        QDialog::closeEvent(e);
+        KDialog::closeEvent(e);
     }
 
 protected Q_SLOTS:
@@ -79,13 +79,13 @@ protected Q_SLOTS:
     /// given a re-implementation of closeEvent as above
     virtual void slotButtonClicked(int button) {
         /// save window size of Ok is clicked
-        if (button == QDialog::Ok)
+        if (button == KDialog::Ok)
             saveDialogSize(configGroup);
 
         /// ignore button event if it is from the Cancel button
         /// and the user does not want to discard his/her changes
-        if (button != QDialog::Cancel || allowedToClose())
-            QDialog::slotButtonClicked(button);
+        if (button != KDialog::Cancel || allowedToClose())
+            KDialog::slotButtonClicked(button);
     }
 
 private:
@@ -332,13 +332,13 @@ void FileView::prepareEditorDialog(DialogType dialogType)
         /// View mode, as use in read-only situations
         m_elementEditor->setReadOnly(true);
         m_elementEditorDialog->setCaption(i18n("View Element"));
-        m_elementEditorDialog->setButtons(QDialog::Close);
+        m_elementEditorDialog->setButtons(KDialog::Close);
     } else if (dialogType == DialogTypeEdit) {
         /// Edit mode, used in normal operations
         m_elementEditor->setReadOnly(false);
         m_elementEditorDialog->setCaption(i18n("Edit Element"));
-        m_elementEditorDialog->setButtons(QDialog::Ok | QDialog::Apply | QDialog::Cancel | QDialog::Reset);
-        m_elementEditorDialog->enableButton(QDialog::Apply, false);
+        m_elementEditorDialog->setButtons(KDialog::Ok | KDialog::Apply | KDialog::Cancel | KDialog::Reset);
+        m_elementEditorDialog->enableButton(KDialog::Apply, false);
 
         /// Establish signal-slot connections for modification/editing events
         connect(m_elementEditor, SIGNAL(modified(bool)), m_elementEditorDialog, SLOT(enableButtonApply(bool)));
