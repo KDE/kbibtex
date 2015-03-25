@@ -460,7 +460,7 @@ public:
         QStringList colorCodes = configGroup.readEntry(Preferences::keyColorCodes, Preferences::defaultColorCodes);
         QStringList colorLabels = configGroup.readEntry(Preferences::keyColorLabels, Preferences::defaultcolorLabels);
         for (QStringList::ConstIterator itc = colorCodes.constBegin(), itl = colorLabels.constBegin(); itc != colorCodes.constEnd() && itl != colorLabels.constEnd(); ++itc, ++itl) {
-            QAction *action = new QAction(QIcon::fromTheme(ColorLabelWidget::createSolidIcon(*itc)), i18n((*itl).toUtf8().constData()), menu);
+            QAction *action = new QAction(QIcon(ColorLabelWidget::createSolidIcon(*itc)), i18n((*itl).toUtf8().constData()), menu);
             menu->addAction(action);
             sm->setMapping(action, *itc);
             connect(action, SIGNAL(triggered()), sm, SLOT(map()));

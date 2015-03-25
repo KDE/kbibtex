@@ -641,9 +641,7 @@ FindDuplicatesUI::FindDuplicatesUI(KParts::Part *part, FileView *fileView)
     QAction *newAction = new QAction(QIcon::fromTheme("tab-duplicate"), i18n("Find Duplicates"), this);
     part->actionCollection()->addAction(QLatin1String("findduplicates"), newAction);
     connect(newAction, SIGNAL(triggered()), this, SLOT(slotFindDuplicates()));
-#if KDE_IS_VERSION(4, 4, 0)
-    part->replaceXMLFile(QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kbibtex/findduplicatesui.rc"), QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + "kbibtex/findduplicatesui.rc"), true;
-#endif
+    part->replaceXMLFile(QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kbibtex/findduplicatesui.rc"), QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + "kbibtex/findduplicatesui.rc", true);
 }
 
 FindDuplicatesUI::~FindDuplicatesUI()

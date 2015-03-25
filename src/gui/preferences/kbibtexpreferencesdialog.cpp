@@ -127,7 +127,7 @@ public:
         static const QRegExp invalidChars("[^-a-z0-9_]", Qt::CaseInsensitive);
         QString fileName = url;
         fileName = fileName.remove(invalidChars);
-        fileName.prepend(QStandardPaths::writableLocation(QStandardPaths::CacheLocation) + QLatin1Char('/') + "favicons/")).append(".png";
+        fileName.prepend(QStandardPaths::writableLocation(QStandardPaths::CacheLocation) + QLatin1String("/favicons/")).append(".png");
 
         if (!QFileInfo(fileName).exists()) {
             // FIXME if (!KIO::NetAccess::file_copy(QUrl(url), QUrl(fileName), NULL))
