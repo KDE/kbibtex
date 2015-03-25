@@ -109,17 +109,22 @@ public:
 
     void resetToDefaults() {
         switch (KMessageBox::warningYesNoCancel(p, i18n("This will reset the settings to factory defaults. Should this affect only the current page or all settings?"), i18n("Reset to Defaults"), KGuiItem(i18n("All settings"), QLatin1String("edit-undo")), KGuiItem(i18n("Only current page"), QLatin1String("document-revert")))) {
-        case KMessageBox::Yes:
+        case KMessageBox::Yes: {
             foreach(SettingsAbstractWidget *settingsWidget, settingWidgets) {
                 settingsWidget->resetToDefaults();
             }
             break;
+        }
         case KMessageBox::No: {
             SettingsAbstractWidget *widget = qobject_cast<SettingsAbstractWidget *>(p->currentPage()->widget());
             if (widget != NULL)
                 widget->resetToDefaults();
+            break;
         }
-        break;
+        case KMessageBox::Cancel:
+            break; // nothing to do here
+        default:
+            qWarning() << "There should be no use for a default case here!";
         }
     }
 
