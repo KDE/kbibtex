@@ -302,7 +302,7 @@ QVariant PDFListModel::data(const QModelIndex &index, int role) const
             return m_resultList[index.row()].downloadMode;
         else if (role == Qt::DecorationRole) {
             /// make an educated guess on the icon, based on URL or path
-            QString iconName = FileInfo::mimeTypeForUrl(m_resultList[index.row()].url)->iconName();
+            QString iconName = FileInfo::mimeTypeForUrl(m_resultList[index.row()].url).iconName();
             iconName = iconName == QLatin1String("application-octet-stream") ? QLatin1String("application-pdf") : iconName;
             return QIcon::fromTheme(iconName).pixmap(KIconLoader::SizeMedium, KIconLoader::SizeMedium);
         } else
