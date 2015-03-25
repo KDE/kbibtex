@@ -187,7 +187,7 @@ FilterBar::FilterBar(QWidget *parent)
     d->comboBoxFilterText->setMinimumWidth(metrics.width(QLatin1String("AIWaiw")) * 7);
     KLineEdit *lineEdit = static_cast<KLineEdit *>(d->comboBoxFilterText->lineEdit());
     lineEdit->setClearButtonEnabled(true);
-    lineEdit->setClickMessage(i18n("Filter bibliographic entries"));
+    lineEdit->setPlaceholderText(i18n("Filter bibliographic entries"));
 
     d->comboBoxCombination = new KComboBox(false, this);
     layout->addWidget(d->comboBoxCombination, 1);
@@ -260,9 +260,9 @@ SortFilterFileModel::FilterQuery FilterBar::filter()
     return d->filter();
 }
 
-void FilterBar::setClickMessage(const QString &msg) {
+void FilterBar::setPlaceholderText(const QString &msg) {
     KLineEdit *lineEdit = static_cast<KLineEdit *>(d->comboBoxFilterText->lineEdit());
-    lineEdit->setClickMessage(msg);
+    lineEdit->setPlaceholderText(msg);
 }
 
 void FilterBar::comboboxStatusChanged()
