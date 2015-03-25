@@ -97,6 +97,7 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/src/processing
     ${CMAKE_BINARY_DIR}/src/processing
     ${CMAKE_SOURCE_DIR}/src/gui
+    ${CMAKE_BINARY_DIR}/src/gui
     ${CMAKE_SOURCE_DIR}/src/gui/file
     ${CMAKE_SOURCE_DIR}/src/gui/dialogs
     ${CMAKE_SOURCE_DIR}/src/gui/element
@@ -171,7 +172,7 @@ install(
     ${DATA_INSTALL_DIR}/kbibtex
 )
 
-generate_export_header( kbibtexio )
+generate_export_header( kbibtexgui )
 
 install(
     FILES
