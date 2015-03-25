@@ -57,6 +57,8 @@ find_package(
     XmlGui
     KIO
     IconThemes
+    ItemViews
+    Completion
     KDELibs4Support
 )
 #     Archive
