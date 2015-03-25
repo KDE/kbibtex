@@ -148,11 +148,11 @@ KBibTeXPreferencesDialog::KBibTeXPreferencesDialog(QWidget *parent, Qt::WFlags f
 {
     setFaceType(KPageDialog::Tree);
     setWindowTitle(i18n("Preferences"));
-    setButtons(Default | Reset | Ok | Apply | Cancel);
-    setDefaultButton(Ok);
-    enableButtonApply(false);
+    // FIXME setButtons(Default | Reset | Ok | Apply | Cancel);
+    // FIXME setDefaultButton(Ok);
+    // FIXME enableButtonApply(false);
     setModal(true);
-    showButtonSeparator(true);
+    // FIXME showButtonSeparator(true);
 
     connect(this, SIGNAL(applyClicked()), this, SLOT(apply()));
     connect(this, SIGNAL(okClicked()), this, SLOT(ok()));
@@ -175,14 +175,14 @@ void KBibTeXPreferencesDialog::hideEvent(QHideEvent *)
 
 void KBibTeXPreferencesDialog::apply()
 {
-    enableButtonApply(false);
+    // FIXME enableButtonApply(false);
     d->saveState();
     d->notifyOfChanges = true;
 }
 
 void KBibTeXPreferencesDialog::reset()
 {
-    enableButtonApply(false);
+    // FIXME enableButtonApply(false);
     d->loadState();
 }
 
@@ -201,5 +201,5 @@ void KBibTeXPreferencesDialog::resetToDefaults()
 
 void KBibTeXPreferencesDialog::gotChanged()
 {
-    enableButtonApply(true);
+    // FIXME enableButtonApply(true);
 }
