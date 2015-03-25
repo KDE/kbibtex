@@ -91,8 +91,9 @@ void PDFItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &optio
     painter->restore();
 }
 
-QList<QWidget *> PDFItemDelegate::createItemWidgets() const
+QList<QWidget *> PDFItemDelegate::createItemWidgets(const QModelIndex &index) const
 {
+    Q_UNUSED(index) // FIXME really of no use?
     QList<QWidget *> list;
 
     /// first, the label with shows the found PDF file's origin (URL)
