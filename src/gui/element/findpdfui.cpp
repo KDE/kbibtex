@@ -36,6 +36,7 @@
 
 #include <KDialog>
 #include <KLocalizedString>
+#include <KIconLoader>
 #include <KSqueezedTextLabel>
 #include <KRun>
 #include <KTemporaryFile>
