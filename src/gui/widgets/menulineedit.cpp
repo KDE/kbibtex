@@ -106,7 +106,7 @@ public:
             hLayout->setStretchFactor(m_singleLineEditText, 100);
             m_singleLineEditText->setClearButtonEnabled(true);
             m_singleLineEditText->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
-            m_singleLineEditText->setCompletionMode(KGlobalSettings::CompletionPopup);
+            m_singleLineEditText->setCompletionMode(KCompletion::CompletionPopup);
             m_singleLineEditText->completionObject()->setIgnoreCase(true);
             p->setFocusProxy(m_singleLineEditText);
             connect(m_singleLineEditText, SIGNAL(textEdited(QString)), p, SIGNAL(textChanged(QString)));
