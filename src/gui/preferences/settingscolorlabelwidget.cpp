@@ -30,6 +30,7 @@
 #include <KLineEdit>
 #include <KActionMenu>
 #include <KSharedConfig>
+#include <KConfigGroup>
 
 #include "file.h"
 #include "fileview.h"
