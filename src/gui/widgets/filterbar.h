@@ -35,7 +35,7 @@ public:
 
     SortFilterFileModel::FilterQuery filter();
 
-    void setClickMessage(const QString &msg);
+    void setPlaceholderText(const QString &msg);
 
 public slots:
     /**
