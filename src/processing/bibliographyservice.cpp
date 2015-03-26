@@ -49,16 +49,16 @@ public:
 
     Private(QWidget *w, BibliographyService */* UNUSED parent*/)
         : // UNUSED p(parent),
-        configXDGMimeAppsList(KSharedConfig::openConfig(QLatin1String("mimeapps.list"), KConfig::NoGlobals, QStandardPaths::ApplicationsLocation),
-        configGroupAddedKDEServiceAssociations(configXDGMimeAppsList, "Added KDE Service Associations"),
-        configGroupRemovedKDEServiceAssociations(configXDGMimeAppsList, "Removed KDE Service Associations"),
-        configGroupAddedAssociations(configXDGMimeAppsList, "Added Associations"),
-        configGroupRemovedAssociations(configXDGMimeAppsList, "Removed Associations"),
-        parentWidget(w),
-        textBasedMimeTypes(QStringList()
-                           << QLatin1String("text/x-bibtex") ///< classical BibTeX bibliographies
-                           << QLatin1String("application/x-research-info-systems") ///< Research Information Systems (RIS) bibliographies
-                           << QLatin1String("application/x-isi-export-format")) ///< Information Sciences Institute (ISI) bibliographies
+          configXDGMimeAppsList(KSharedConfig::openConfig(QLatin1String("mimeapps.list"), KConfig::NoGlobals, QStandardPaths::ApplicationsLocation)),
+          configGroupAddedKDEServiceAssociations(configXDGMimeAppsList, "Added KDE Service Associations"),
+          configGroupRemovedKDEServiceAssociations(configXDGMimeAppsList, "Removed KDE Service Associations"),
+          configGroupAddedAssociations(configXDGMimeAppsList, "Added Associations"),
+          configGroupRemovedAssociations(configXDGMimeAppsList, "Removed Associations"),
+          parentWidget(w),
+          textBasedMimeTypes(QStringList()
+                             << QLatin1String("text/x-bibtex") ///< classical BibTeX bibliographies
+                             << QLatin1String("application/x-research-info-systems") ///< Research Information Systems (RIS) bibliographies
+                             << QLatin1String("application/x-isi-export-format")) ///< Information Sciences Institute (ISI) bibliographies
     {
         /// nothing
     }
