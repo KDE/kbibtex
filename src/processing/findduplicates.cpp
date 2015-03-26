@@ -23,6 +23,7 @@
 #include <QDebug>
 #include <QProgressDialog>
 #include <QApplication>
+#include <QDate>
 
 #include <KLocalizedString>
 

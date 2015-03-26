@@ -27,7 +27,6 @@
 #include <KLocalizedString>
 #include <KParts/ReadOnlyPart>
 #include <KMessageBox>
-#include <KDebug>
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <kde_file.h>

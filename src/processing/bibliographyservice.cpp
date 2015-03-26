@@ -18,11 +18,11 @@
 #include "bibliographyservice.h"
 
 #include <QMessageBox>
+#include <QStandardPaths>
 
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <KLocalizedString>
-#include <QStandardPaths>
 
 class BibliographyService::Private
 {

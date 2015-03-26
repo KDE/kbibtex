@@ -18,7 +18,10 @@
 #ifndef KBIBTEX_PROC_JOURNALABBREVIATIONS_H
 #define KBIBTEX_PROC_JOURNALABBREVIATIONS_H
 
+#include <QString>
+
 #include "kbibtexproc_export.h"
+
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
