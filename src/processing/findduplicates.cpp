@@ -21,8 +21,8 @@
 
 #include <QLinkedList>
 #include <QDebug>
+#include <QProgressDialog>
 
-#include <KProgressDialog>
 #include <KLocale>
 #include <KApplication>
 
@@ -374,14 +374,14 @@ FindDuplicates::~FindDuplicates()
 
 bool FindDuplicates::findDuplicateEntries(File *file, QList<EntryClique *> &entryCliqueList)
 {
-    KProgressDialog *progressDlg = 0;
+    QProgressDialog *progressDlg = 0;
     if (d->widget != NULL) {
-        KApplication::setOverrideCursor(Qt::WaitCursor);
-        progressDlg = new KProgressDialog(d->widget, i18n("Finding Duplicates"));
-        progressDlg->setModal(true);
-        progressDlg->setLabelText(i18n("Searching..."));
+        QApplication::setOverrideCursor(Qt::WaitCursor);
+        progressDlg = new QProgressDialog(d->widget/* FIXME , i18n("Finding Duplicates")*/);
+        progressDlg->setWindowModality(Qt::WindowModal);
+        progressDlg->setLabelText(i18n("Searching ..."));
         progressDlg->setMinimumWidth(d->widget->fontMetrics().averageCharWidth() * 48);
-        progressDlg->setAllowCancel(true);
+        // FIXME progressDlg->setAllowCancel(true);
         connect(progressDlg, SIGNAL(cancelClicked()), this, SLOT(gotCanceled()));
     }
     entryCliqueList.clear();
@@ -409,7 +409,7 @@ bool FindDuplicates::findDuplicateEntries(File *file, QList<EntryClique *> &entr
     int progressDelta = 1;
 
     if (d->widget != NULL) {
-        progressDlg->progressBar()->setMaximum(maxProgress);
+        progressDlg->setMaximum(maxProgress);
         progressDlg->show();
         progressDlg->setLabelText(i18n("Searching..."));
     }
@@ -427,7 +427,7 @@ bool FindDuplicates::findDuplicateEntries(File *file, QList<EntryClique *> &entr
         }
 
         if (d->widget != NULL) {
-            progressDlg->progressBar()->setValue(curProgress);
+            progressDlg->setValue(curProgress);
         }
         emit currentProgress(curProgress);
         /// ... and find a "clique" of entries where it will match, i.e. distance is below sensitivity
@@ -465,14 +465,14 @@ bool FindDuplicates::findDuplicateEntries(File *file, QList<EntryClique *> &entr
         curProgress += progressDelta;
         ++progressDelta;
         if (d->widget != NULL) {
-            progressDlg->progressBar()->setValue(curProgress);
+            progressDlg->setValue(curProgress);
         }
 
         emit currentProgress(curProgress);
     }
 
     if (d->widget != NULL) {
-        progressDlg->progressBar()->setValue(progressDlg->progressBar()->maximum());
+        progressDlg->setValue(progressDlg->maximum());
         progressDlg->close();
     }
 
