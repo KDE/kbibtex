@@ -1,4 +1,4 @@
-# Processing library
+# KBibTeX Processing library
 
 set(
     kbibtexproc_LIB_SRCS
@@ -30,7 +30,7 @@ set(
 # )
 
 # if(UNITY_BUILD)
-#     enable_unity_build(kbibtexproc kbibtexprocessing_LIB_SRCS)
+#     enable_unity_build(kbibtexproc kbibtexproc_LIB_SRCS)
 # endif(UNITY_BUILD)
 
 include_directories(
@@ -45,11 +45,12 @@ include_directories(
 add_library(
     kbibtexproc
     SHARED
-    ${kbibtexprocessing_LIB_SRCS}
+    ${kbibtexproc_LIB_SRCS}
 )
 
 target_link_libraries( kbibtexproc
     Qt5::Core
+    KF5::Parts
 #     Qt5::Widgets
 #     KF5::I18n
 #     KF5::XmlGui
@@ -78,8 +79,9 @@ install(
 
 install(
     FILES
+    lyx.rc
     DESTINATION
-    ${DATA_INSTALL_DIR}/kbibtex
+    ${KXMLGUI_INSTALL_DIR}/kbibtex
 )
 
 generate_export_header( kbibtexproc )
@@ -87,7 +89,6 @@ generate_export_header( kbibtexproc )
 install(
     FILES
     ${kbibtexproc_HDRS}
-    lyx.rc
     ${CMAKE_BINARY_DIR}/src/processing/kbibtexproc_export.h
     DESTINATION
     ${INCLUDE_INSTALL_DIR}/kbibtex/proc
