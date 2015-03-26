@@ -22,9 +22,9 @@
 #include <QLinkedList>
 #include <QDebug>
 #include <QProgressDialog>
+#include <QApplication>
 
 #include <KLocale>
-#include <KApplication>
 
 #include "file.h"
 #include "entry.h"
@@ -400,7 +400,7 @@ bool FindDuplicates::findDuplicateEntries(File *file, QList<EntryClique *> &entr
         entryCliqueList.clear();
         if (d->widget != NULL) {
             progressDlg->deleteLater();
-            KApplication::restoreOverrideCursor();
+            QApplication::restoreOverrideCursor();
         }
         return d->gotCanceled;
     }
@@ -419,7 +419,7 @@ bool FindDuplicates::findDuplicateEntries(File *file, QList<EntryClique *> &entr
     /// go through all entries ...
     for (QList<QSharedPointer<Entry> >::ConstIterator eit = listOfEntries.constBegin(); eit != listOfEntries.constEnd(); ++eit) {
         if (d->widget != NULL) {
-            KApplication::instance()->processEvents();
+            QApplication::instance()->processEvents();
         }
         if (d->gotCanceled) {
             entryCliqueList.clear();
@@ -446,7 +446,7 @@ bool FindDuplicates::findDuplicateEntries(File *file, QList<EntryClique *> &entr
             }
 
             if (d->widget != NULL) {
-                KApplication::instance()->processEvents();
+                QApplication::instance()->processEvents();
             }
             if (d->gotCanceled) {
                 entryCliqueList.clear();
@@ -492,7 +492,7 @@ bool FindDuplicates::findDuplicateEntries(File *file, QList<EntryClique *> &entr
 
     if (d->widget != NULL) {
         progressDlg->deleteLater();
-        KApplication::restoreOverrideCursor();
+        QApplication::restoreOverrideCursor();
     }
     return d->gotCanceled;
 }
