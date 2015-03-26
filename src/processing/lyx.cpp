@@ -24,7 +24,7 @@
 
 #include <KAction>
 #include <KActionCollection>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KParts/ReadOnlyPart>
 #include <KMessageBox>
 #include <KDebug>

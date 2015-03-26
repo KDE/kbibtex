@@ -24,7 +24,7 @@
 #include <QTextStream>
 #include <QMessageBox>
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include "fileexporterbibtexoutput.h"
 #include "file.h"

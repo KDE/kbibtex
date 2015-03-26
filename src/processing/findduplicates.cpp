@@ -24,7 +24,7 @@
 #include <QProgressDialog>
 #include <QApplication>
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include "file.h"
 #include "entry.h"

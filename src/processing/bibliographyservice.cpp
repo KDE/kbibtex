@@ -21,7 +21,7 @@
 
 #include <KSharedConfig>
 #include <KConfigGroup>
-#include <KLocale>
+#include <KLocalizedString>
 #include <QStandardPaths>
 
 class BibliographyService::Private
