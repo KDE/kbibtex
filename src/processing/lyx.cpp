@@ -18,11 +18,11 @@
 #include "lyx.h"
 
 #include <QWidget>
+#include <QAction>
 #include <QDir>
 #include <QTextStream>
 #include <QFileInfo>
 
-#include <KAction>
 #include <KActionCollection>
 #include <KLocalizedString>
 #include <KParts/ReadOnlyPart>
@@ -41,7 +41,7 @@ private:
 
 public:
     QWidget *widget;
-    KAction *action;
+    QAction *action;
     QStringList references;
 
     KSharedConfigPtr config;
@@ -92,7 +92,7 @@ const QString LyX::configGroupName = QLatin1String("LyXPipe");
 LyX::LyX(KParts::ReadOnlyPart *part, QWidget *widget)
         : QObject(part), d(new LyX::LyXPrivate(this, widget))
 {
-    d->action = new KAction(QIcon::fromTheme("application-x-lyx"), i18n("Send to LyX/Kile"), this);
+    d->action = new QAction(QIcon::fromTheme("application-x-lyx"), i18n("Send to LyX/Kile"), this);
     part->actionCollection()->addAction("sendtolyx", d->action);
     d->action->setEnabled(false);
     connect(d->action, SIGNAL(triggered()), this, SLOT(sendReferenceToLyX()));
