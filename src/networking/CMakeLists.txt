@@ -148,7 +148,7 @@ if(
 )
     target_link_libraries(
       kbibtexnetworking
-      LINK_PRIVATE
+      ${cmake_2_8_12_PRIVATE}
       ${QTOAUTH_LIBRARY}
     )
 endif(
