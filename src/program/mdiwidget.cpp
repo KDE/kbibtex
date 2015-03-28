@@ -305,7 +305,7 @@ void MDIWidget::slotCompleted(QObject *obj)
     QUrl oldUrl = ofi->url();
     QUrl newUrl = ofi->part(this)->url();
 
-    if (!oldUrl.equals(newUrl)) {
+    if (oldUrl != newUrl) {
         qDebug() << "Url changed from " << oldUrl.url(QUrl::PreferLocalFile) << " to " << newUrl.url(QUrl::PreferLocalFile) << endl;
         d->ofim->changeUrl(ofi, newUrl);
 

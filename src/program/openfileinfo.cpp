@@ -462,7 +462,7 @@ OpenFileInfo *OpenFileInfoManager::contains(const QUrl &url) const
 
     for (OpenFileInfoList::ConstIterator it = d->openFileInfoList.constBegin(); it != d->openFileInfoList.constEnd(); ++it) {
         OpenFileInfo *ofi = *it;
-        if (ofi->url().equals(url))
+        if (ofi->url() == url)
             return ofi;
     }
     return NULL;
@@ -481,7 +481,7 @@ bool OpenFileInfoManager::changeUrl(OpenFileInfo *openFileInfo, const QUrl &url)
     QUrl oldUrl = openFileInfo->url();
     openFileInfo->setUrl(url);
 
-    if (!url.equals(oldUrl) && oldUrl.isValid()) {
+    if (url != oldUrl && oldUrl.isValid()) {
         /// current document was most probabily renamed (e.g. due to "Save As")
         /// add old URL to recently used files, but exclude the open files list
         OpenFileInfo *ofi = open(oldUrl); // krazy:exclude=syscalls
