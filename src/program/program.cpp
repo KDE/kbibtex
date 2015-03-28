@@ -16,9 +16,9 @@
  ***************************************************************************/
 
 #include <QDebug>
+#include <QApplication>
 
 #include <KCmdLineArgs>
-#include <KApplication>
 #include <KAboutData>
 #include <KLocalizedString>
 

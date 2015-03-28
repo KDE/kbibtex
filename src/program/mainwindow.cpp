@@ -26,10 +26,10 @@
 #include <QMessageBox>
 #include <QMenu>
 #include <QTimer>
+#include <QApplication>
 #include <QFileDialog>
 #include <QAction>
 
-#include <KApplication>
 #include <KActionMenu>
 #include <KGlobal>
 #include <KActionCollection>
@@ -445,7 +445,7 @@ void KBibTeXMainWindow::openRecentFile()
 void KBibTeXMainWindow::queryCloseAll()
 {
     if (d->mdiWidget->getOpenFileInfoManager()->queryCloseAll())
-        kapp->quit();
+        qApp->quit();
 }
 
 void KBibTeXMainWindow::delayed() {
