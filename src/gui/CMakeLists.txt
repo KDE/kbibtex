@@ -169,7 +169,7 @@ install(
     FILES
     file/findduplicatesui.rc
     DESTINATION
-    ${DATA_INSTALL_DIR}/kbibtex
+    ${KXMLGUI_INSTALL_DIR}/kbibtex
 )
 
 generate_export_header( kbibtexgui )
