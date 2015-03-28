@@ -34,13 +34,13 @@
 #include <QTextStream>
 #include <QTemporaryFile>
 #include <QPalette>
+#include <QMimeType>
 #include <QDebug>
 #include <QFileDialog>
 #include <QPushButton>
 
 #include <KLocalizedString>
 #include <KComboBox>
-#include <KMimeType>
 #include <KRun>
 // FIXME #include <KIO/NetAccess>
 #include <KSharedConfig>

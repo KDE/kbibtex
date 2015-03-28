@@ -32,7 +32,6 @@
 
 #include <KLocale>
 #include <KGlobal>
-#include <KMimeType>
 #include <KLocalizedString>
 #include <KActionMenu>
 #include <KDirOperator>

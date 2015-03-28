@@ -21,6 +21,7 @@
 #include <QDragEnterEvent>
 #include <QDropEvent>
 #include <QLabel>
+#include <QMimeData>
 #include <QtCore/QPointer>
 #include <QMessageBox>
 #include <QTimer>

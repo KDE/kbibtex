@@ -140,7 +140,7 @@ public:
 
     KParts::ReadOnlyPart *locatePart(const QString &desktopFile, QWidget *parentWidget) {
         KService::Ptr service = KService::serviceByDesktopPath(desktopFile);
-        if (!service.isNull()) {
+        if (service) {
             KParts::ReadOnlyPart *part = service->createInstance<KParts::ReadOnlyPart>(parentWidget, p);
             connect(part, SIGNAL(completed()), p, SLOT(loadingFinished()));
             return part;
@@ -504,14 +504,16 @@ public:
             return result;
         }
 
-        int accuracy = 0;
-QMimeDatabase db;
-        QMimeType mimeTypePtr = db.mimeTypeForUrl(url, 0, isLocalOrRelative(url), true, &accuracy);
+        QMimeType mimeType = FileInfo::mimeTypeForUrl(url);
+        // FIXME accuracy, necessary:
+        /*
         if (accuracy < 50) {
-            mimeTypePtr = db.mimeTypeForFile(url.fileName(), 0, true, &accuracy);
+QMimeDatabase db;
+            mimeType = db.mimeTypeForFile(url.fileName());
         }
-        result.mimeType = mimeTypePtr.name();
-        result.icon = QIcon::fromTheme(mimeTypePtr.iconName());
+        */
+        result.mimeType = mimeType.name();
+        result.icon = QIcon::fromTheme(mimeType.iconName());
 
         if (result.mimeType == QLatin1String("application/octet-stream")) {
             /// application/octet-stream is a fall-back if KDE did not know better

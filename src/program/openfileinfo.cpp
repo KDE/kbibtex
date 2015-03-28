@@ -99,12 +99,12 @@ public:
         internalServicePtr = KService::Ptr();
         internalWidgetParent = NULL;
 
-        if (newServicePtr.isNull()) {
+        if (!newServicePtr) {
             /// no valid KService has been passed
             /// try to find a read-write part to open file
             newServicePtr = p->defaultService();
         }
-        if (newServicePtr.isNull()) {
+        if (!newServicePtr) {
             qCritical() << "Cannot find service to handle mimetype " << mimeType << endl;
             return NULL;
         }
@@ -155,7 +155,7 @@ const QString OpenFileInfo::OpenFileInfoPrivate::keyLastAccess = QLatin1String("
 const QString OpenFileInfo::OpenFileInfoPrivate::keyURL = QLatin1String("URL");
 
 OpenFileInfo::OpenFileInfo(OpenFileInfoManager *openFileInfoManager, const QUrl &url)
-        : d(new OpenFileInfoPrivate(openFileInfoManager, url, FileInfo::mimeTypeForUrl(url)->name(), this))
+        : d(new OpenFileInfoPrivate(openFileInfoManager, url, FileInfo::mimeTypeForUrl(url).name(), this))
 {
     // nothing
 }
@@ -175,7 +175,7 @@ void OpenFileInfo::setUrl(const QUrl &url)
 {
     Q_ASSERT_X(url.isValid(), "void OpenFileInfo::setUrl(const QUrl&)", "URL is not valid");
     d->url = url;
-    d->mimeType = FileInfo::mimeTypeForUrl(url)->name();
+    d->mimeType = FileInfo::mimeTypeForUrl(url).name();
     addFlags(OpenFileInfo::HasName);
 }
 
@@ -305,7 +305,7 @@ KService::Ptr OpenFileInfo::defaultService()
 {
     const QString mt = mimeType();
     KService::Ptr result = KMimeTypeTrader::self()->preferredService(mt, QLatin1String("KParts/ReadWritePart"));
-    if (result.isNull())
+    if (!result)
         result = KMimeTypeTrader::self()->preferredService(mt, QLatin1String("KParts/ReadOnlyPart"));
     return result;
 }
