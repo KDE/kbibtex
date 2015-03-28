@@ -329,15 +329,15 @@ public:
         QPointer<QFileDialog> saveDlg = new QFileDialog(p->widget(), i18n("Save file") /* TODO better text */, startDir, supportedMimeTypes );
         /// Setting list of mime types for the second time,
         /// essentially calling this function only to set the "default mime type" parameter
-        saveDlg->setMimeFilter(supportedMimeTypes.split(QChar(' '), QString::SkipEmptyParts), QLatin1String("text/x-bibtex"));
+        saveDlg->setMimeTypeFilters(supportedMimeTypes.split(QLatin1Char(' '), QString::SkipEmptyParts));
         /// Setting the dialog into "Saving" mode make the "add extension" checkbox available
         // FIXME saveDlg->setOperationMode(KFileDialog::Saving);
         if (saveDlg->exec() != QDialog::Accepted)
             /// User cancelled saving operation, return invalid filename/URL
             return QUrl();
-        const QUrl selectedUrl = saveDlg->selectedUrl();
+        const QList<QUrl> selectedUrls = saveDlg->selectedUrls();
         delete saveDlg;
-        return selectedUrl;
+        return selectedUrls.isEmpty() ? QUrl(): selectedUrls.first();
     }
 
     bool saveFile(const QUrl &url) {
