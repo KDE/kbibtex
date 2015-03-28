@@ -35,20 +35,6 @@ set(
     findpdf.cpp
     internalnetworkaccessmanager.cpp
 )
-if(
-    QTOAUTH_FOUND
-)
-    include_directories(
-        ${QTOAUTH_INCLUDE_DIR}
-    )
-    set(
-        kbibtexnetworking_LIB_SRCS
-        ${kbibtexnetworking_LIB_SRCS}
-        zotero/oauthwizard.cpp
-    )
-endif(
-    QTOAUTH_FOUND
-)
 
 set(
     kbibtexnetworking_HDRS
@@ -85,17 +71,6 @@ set(
     findpdf.h
     internalnetworkaccessmanager.h
 )
-if(
-    QTOAUTH_FOUND
-)
-    set(
-        kbibtexnetworking_HDRS
-        ${kbibtexnetworking_HDRS}
-        zotero/oauthwizard.h
-    )
-endif(
-    QTOAUTH_FOUND
-)
 
 # add_definitions(
 #     -DMAKE_NETWORKING_LIB
@@ -122,7 +97,27 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/src
 #     ${POPPLER_QT4_INCLUDE_DIR}
     ${LIBXML2_INCLUDE_DIR}
-#     ${QCA2_INCLUDE_DIR}
+    ${QCA2_INCLUDE_DIR}
+)
+
+if(
+    QTOAUTH_FOUND
+)
+    include_directories(
+        ${QTOAUTH_INCLUDE_DIR}
+    )
+    set(
+        kbibtexnetworking_HDRS
+        ${kbibtexnetworking_HDRS}
+        zotero/oauthwizard.h
+    )
+    set(
+        kbibtexnetworking_LIB_SRCS
+        ${kbibtexnetworking_LIB_SRCS}
+        zotero/oauthwizard.cpp
+    )
+endif(
+    QTOAUTH_FOUND
 )
 
 add_library(
