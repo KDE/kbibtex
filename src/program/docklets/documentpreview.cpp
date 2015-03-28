@@ -42,6 +42,7 @@
 
 #include <KLocalizedString>
 #include <KComboBox>
+#include <KJobWidgets>
 #include <KRun>
 #include <KMimeTypeTrader>
 #include <KService>
@@ -300,7 +301,7 @@ public:
 
                 KIO::StatJob *job = KIO::stat(*it, KIO::StatJob::SourceSide, 3, KIO::HideProgressInfo);
                 runningJobs << job;
-                job->ui()->setWindow(p);
+                KJobWidgets::setWindow(job, p);
                 connect(job, SIGNAL(result(KJob*)), p, SLOT(statFinished(KJob*)));
             }
             if (urlList.isEmpty()) {
