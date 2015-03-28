@@ -17,13 +17,13 @@
 
 #include "searchresults.h"
 
+#include <QDebug>
 #include <QGridLayout>
 #include <QLabel>
 #include <QPushButton>
 #include <QAction>
 
 #include <KLocalizedString>
-#include <QDebug>
 
 #include "file.h"
 #include "clipboard.h"

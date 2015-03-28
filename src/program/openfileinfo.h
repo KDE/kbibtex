@@ -21,10 +21,10 @@
 #include <QObject>
 #include <QList>
 #include <QDateTime>
+#include <QUrl>
 #include <QVariant>
 
 #include <KService>
-#include <QUrl>
 
 #include "fileinfo.h"
 
