@@ -32,7 +32,7 @@ class KBibTeXPart : public KParts::ReadWritePart, private NotificationListener
     friend class KBibTeXBrowserExtension;
 
 public:
-    KBibTeXPart(QWidget *parentWidget, QObject *parent, bool browserViewWanted);
+    KBibTeXPart(QWidget *parentWidget, QObject *parent);
     virtual ~KBibTeXPart();
 
     void setModified(bool modified);

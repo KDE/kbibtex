@@ -80,7 +80,6 @@
 #include "idsuggestions.h"
 #include "partfactory.h"
 #include "fileview.h"
-// #include "browserextension.h" // FIXME
 
 static const char RCFileName[] = "kbibtexpartui.rc";
 static const int smEntry = 1;
@@ -534,7 +533,7 @@ public:
     }
 };
 
-KBibTeXPart::KBibTeXPart(QWidget *parentWidget, QObject *parent, bool browserViewWanted)
+KBibTeXPart::KBibTeXPart(QWidget *parentWidget, QObject *parent)
         : KParts::ReadWritePart(parent), d(new KBibTeXPartPrivate(this))
 {
     setComponentData(KBibTeXPartFactory::componentData());
@@ -545,12 +544,7 @@ KBibTeXPart::KBibTeXPart(QWidget *parentWidget, QObject *parent, bool browserVie
     connect(d->partWidget->fileView(), SIGNAL(modified()), this, SLOT(setModified()));
     setWidget(d->partWidget);
 
-    setupActions(browserViewWanted);
-
-    /* // FIXME
-    if (browserViewWanted)
-        new KBibTeXBrowserExtension(this);
-        */
+    setupActions();
 
     d->initializeNew();
 
@@ -579,7 +573,7 @@ void KBibTeXPart::notificationEvent(int eventId)
         d->readConfiguration();
 }
 
-void KBibTeXPart::setupActions(bool /*browserViewWanted FIXME*/)
+void KBibTeXPart::setupActions()
 {
     d->fileSaveAction = actionCollection()->addAction(KStandardAction::Save, this, SLOT(documentSave()));
     d->fileSaveAction->setEnabled(false);
