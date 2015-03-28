@@ -45,6 +45,7 @@
 #include <KToggleAction>
 #include <KDialog> // FIXME deprecated
 #include <KSharedConfig>
+#include <KConfigGroup>
 #include <KTemporaryFile>
 #include <KIO/NetAccess>
 #include <KRun>
