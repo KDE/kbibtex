@@ -17,8 +17,8 @@
 
 #include <QDebug>
 #include <QApplication>
+#include <QCommandLineParser>
 
-#include <KCmdLineArgs>
 #include <KAboutData>
 #include <KLocalizedString>
 
@@ -30,22 +30,60 @@ const char *programHomepage = "http://home.gna.org/kbibtex/";
 
 int main(int argc, char *argv[])
 {
-    KAboutData aboutData("kbibtex", 0, ki18n("KBibTeX"), versionNumber,
-                         ki18n(description), KAboutData::License_GPL_V2,
-                         ki18n("Copyright 2004-2015 Thomas Fischer"), KLocalizedString(),
-                         programHomepage);
-    aboutData.addAuthor(ki18n("Thomas Fischer"), ki18n("Maintainer"), "fischer@unix-ag.uni-kl.de", "http://www.t-fischer.net/");
+    QApplication programCore(argc, argv);
 
-    KCmdLineOptions programOptions;
-    programOptions.add("+[URL(s)]", ki18n("File(s) to load"), 0);
-    KCmdLineArgs::addCmdLineOptions(programOptions);
+    KLocalizedString::setApplicationDomain("kbibtex");
 
-    KCmdLineArgs::init(argc, argv, &aboutData);
-    KApplication programCore;
+    KAboutData aboutData(QLatin1String("kbibtex"), i18n("KBibTeX"), QLatin1String(versionNumber), i18n("A BibTeX editor for KDE"), KAboutLicense::GPL_V2, i18n("Copyright 2004-2015 Thomas Fischer"), QString(), QLatin1String(programHomepage));
+
+    aboutData.addAuthor(i18n("Thomas Fischer"), i18n("Maintainer"), QLatin1String("fischer@unix-ag.uni-kl.de"));
+
+    KAboutData::setApplicationData(aboutData);
+
+    programCore.setApplicationName(aboutData.componentName());
+    programCore.setOrganizationDomain(aboutData.organizationDomain());
+    programCore.setApplicationVersion(aboutData.version());
+    programCore.setApplicationDisplayName(aboutData.displayName());
+    programCore.setWindowIcon(QIcon::fromTheme(QLatin1String("kbibtex")));
+
+    //  KCmdLineOptions programOptions;
+    //  programOptions.add("+[URL(s)]", ki18n("File(s) to load"), 0);
+    //  KCmdLineArgs::addCmdLineOptions(programOptions);
+
+    //  KAboutData::setApplicationData(aboutData);
+    //  KCmdLineArgs::init(argc, argv, &aboutData);
+    // KApplication programCore;
 
     qDebug() << "Starting KBibTeX version" << versionNumber;
 
-    KService::Ptr service = KService::serviceByStorageId("kbibtexpart.desktop");
+    QCommandLineParser cmdLineParser;
+    cmdLineParser.addHelpOption();
+    cmdLineParser.addVersionOption();
+    cmdLineParser.addPositionalArgument(QStringLiteral("urls"), i18n("File(s) to load."), QStringLiteral("[urls...]"));
+
+    cmdLineParser.process(programCore);
+    aboutData.processCommandLine(&cmdLineParser);
+
+    KBibTeXMainWindow *mainWindow = new KBibTeXMainWindow();
+
+    const QStringList urls = cmdLineParser.positionalArguments();
+    // Process arguments
+    if (!urls.isEmpty())
+    {
+        const QRegExp withProtocolChecker(QStringLiteral("^[a-zA-Z]+:"));
+        foreach (const QString &url, urls) {
+            const QUrl u = (withProtocolChecker.indexIn(url) == 0) ? QUrl::fromUserInput(url) : QUrl::fromLocalFile(url);
+            mainWindow->openDocument(u);
+        }
+    }
+
+    mainWindow->show();
+
+    //}
+
+
+    /*
+     KService::Ptr service = KService::serviceByStorageId("kbibtexpart.desktop");
     if (service.isNull())
         KMessageBox::error(NULL, i18n("KBibTeX seems to be not installed completely. KBibTeX could not locate its own KPart.\n\nOnly limited functionality will be available."), i18n("Incomplete KBibTeX Installation"));
 
@@ -69,6 +107,9 @@ int main(int argc, char *argv[])
     }
 
     return programCore.exec();
+    */
+
+
 }
 
 
