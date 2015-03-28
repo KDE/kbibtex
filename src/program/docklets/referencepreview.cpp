@@ -44,6 +44,7 @@
 #include <KRun>
 // FIXME #include <KIO/NetAccess>
 #include <KSharedConfig>
+#include <KConfigGroup>
 
 #include "fileexporterbibtex.h"
 #include "fileexporterbibtex2html.h"

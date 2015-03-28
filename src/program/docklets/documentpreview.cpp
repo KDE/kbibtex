@@ -56,6 +56,7 @@
 #include <KToolBar>
 #include <KActionCollection>
 #include <KSharedConfig>
+#include <KConfigGroup>
 
 #include "kbibtexnamespace.h"
 #include "element.h"
