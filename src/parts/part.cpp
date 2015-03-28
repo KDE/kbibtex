@@ -37,7 +37,7 @@
 #include <QFileDialog>
 
 #include <KMessageBox> // FIXME deprecated
-#include <KLocale>
+#include <KLocalizedString>
 #include <KActionCollection>
 #include <KStandardAction>
 #include <KActionMenu>
