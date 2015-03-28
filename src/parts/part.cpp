@@ -767,7 +767,7 @@ bool KBibTeXPart::documentSaveCopyAs()
 {
     d->isSaveAsOperation = true;
     QUrl newUrl = d->getSaveFilename(false);
-    if (!newUrl.isValid() || !d->checkOverwrite(newUrl, widget()) || newUrl.equals(url()))
+    if (!newUrl.isValid() || !d->checkOverwrite(newUrl, widget()) || newUrl == url())
         return false;
 
     /// difference from KParts::ReadWritePart::saveAs:
