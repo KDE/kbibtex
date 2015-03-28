@@ -22,7 +22,7 @@
 #include <QAbstractListModel>
 #include <QStyledItemDelegate>
 
-#include <KTabWidget>
+#include <QTabWidget>
 #include <KListWidget>
 #include <QUrl>
 
@@ -88,7 +88,7 @@ private:
     DocumentListViewPrivate *d;
 };
 
-class DocumentList : public KTabWidget
+class DocumentList : public QTabWidget
 {
     Q_OBJECT
 

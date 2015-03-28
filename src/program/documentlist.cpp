@@ -390,7 +390,7 @@ public:
 };
 
 DocumentList::DocumentList(OpenFileInfoManager *openFileInfoManager, QWidget *parent)
-        : KTabWidget(parent), d(new DocumentListPrivate(openFileInfoManager, this))
+        : QTabWidget(parent), d(new DocumentListPrivate(openFileInfoManager, this))
 {
     setDocumentMode(true);
 }

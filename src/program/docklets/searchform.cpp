@@ -23,6 +23,7 @@
 #include <QListWidget>
 #include <QSpinBox>
 #include <QStackedWidget>
+#include <QTabWidget>
 #include <QProgressBar>
 #include <QMimeDatabase>
 #include <QMimeType>
@@ -41,7 +42,6 @@
 #include <KParts/Part>
 #include <KParts/ReadOnlyPart>
 #include <KConfigGroup>
-#include <KTabWidget>
 #include <KSharedConfig>
 
 #include "element.h"
@@ -98,7 +98,7 @@ public:
     QPushButton *searchButton;
     QPushButton *useEntryButton;
     OnlineSearchQueryFormGeneral *generalQueryTermsForm;
-    KTabWidget *tabWidget;
+    QTabWidget *tabWidget;
     QSharedPointer<const Entry> currentEntry;
     QProgressBar *progressBar;
     QMap<OnlineSearchAbstract *, int> progressMap;
@@ -183,7 +183,7 @@ public:
         layout->setColumnStretch(1, 1);
         layout->setColumnStretch(2, 0);
 
-        tabWidget = new KTabWidget(p);
+        tabWidget = new QTabWidget(p);
         tabWidget->setDocumentMode(true);
         layout->addWidget(tabWidget, 0, 0, 1, 3);
         connect(tabWidget, SIGNAL(currentChanged(int)), p, SLOT(tabSwitched(int)));
