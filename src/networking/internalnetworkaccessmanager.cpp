@@ -130,7 +130,7 @@ QNetworkReply *InternalNetworkAccessManager::get(QNetworkRequest &request, const
 {
     /// Query the KDE subsystem if a proxy has to be used
     /// for the host of a given URL
-    QString proxyHostName = KProtocolManager::proxyForUrl(request.url());
+    QString proxyHostName = QString();// FIXME KProtocolManager::proxyForUrl(request.url());
     if (!proxyHostName.isEmpty() && proxyHostName != QLatin1String("DIRECT")) {
         /// Extract both hostname and port number for proxy
         proxyHostName = proxyHostName.mid(proxyHostName.indexOf(QLatin1String("://")) + 3);
