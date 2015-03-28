@@ -32,11 +32,11 @@
 #include <QApplication>
 #include <QStandardPaths>
 #include <QTextStream>
+#include <QTemporaryFile>
 #include <QPalette>
 #include <QDebug>
 #include <QFileDialog>
 
-#include <KTemporaryFile>
 #include <KLocale>
 #include <KComboBox>
 #include <KPushButton>
@@ -126,7 +126,7 @@ public:
     }
 
     bool saveHTML(const QUrl &url) const {
-        KTemporaryFile file;
+        QTemporaryFile file;
         file.setAutoRemove(true);
 
         bool result = saveHTML(file);
@@ -139,7 +139,7 @@ public:
         return result;
     }
 
-    bool saveHTML(KTemporaryFile &file) const {
+    bool saveHTML(QTemporaryFile &file) const {
         if (file.open()) {
             QTextStream ts(&file);
             ts.setCodec("utf-8");
@@ -368,8 +368,7 @@ void ReferencePreview::renderHTML()
 
 void ReferencePreview::openAsHTML()
 {
-    KTemporaryFile file;
-    file.setSuffix(".html");
+    QTemporaryFile file(QLatin1String("referencePreview-openAsHTML-XXXXXX.html"));
     file.setAutoRemove(false); /// let file stay alive for browser
     d->saveHTML(file);
 

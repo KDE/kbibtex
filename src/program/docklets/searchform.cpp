@@ -37,7 +37,6 @@
 #include <KLocale>
 #include <KRun>
 #include <KMessageBox>
-#include <KTemporaryFile>
 #include <KAction>
 #include <kparts/part.h>
 #include <KConfigGroup>

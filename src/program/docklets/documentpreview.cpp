@@ -49,7 +49,6 @@
 #include <kio/jobclasses.h>
 #include <kio/job.h>
 #include <kio/jobuidelegate.h>
-#include <KTemporaryFile>
 #include <KMenuBar>
 #include <KToolBar>
 #include <KActionCollection>
