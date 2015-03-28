@@ -224,9 +224,6 @@ add_subdirectory(
 #     xslt
 # )
 # add_subdirectory(
-#     icons
-# )
-# add_subdirectory(
 #     doc
 # )
 # add_subdirectory(
