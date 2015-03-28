@@ -317,13 +317,13 @@ public:
         QString supportedMimeTypes = QLatin1String("text/x-bibtex text/x-bibtex-compiled application/xml text/x-research-info-systems");
         if (BibUtils::available())
             supportedMimeTypes += QLatin1String(" application/x-isi-export-format application/x-endnote-refer");
-        if (!mustBeImportable && !KStandardDirs::findExe(QLatin1String("pdflatex")).isEmpty())
+        if (!mustBeImportable && !QStandardPaths::findExecutable(QLatin1String("pdflatex")).isEmpty())
             supportedMimeTypes += QLatin1String(" application/pdf");
-        if (!mustBeImportable && !KStandardDirs::findExe(QLatin1String("dvips")).isEmpty())
+        if (!mustBeImportable && !QStandardPaths::findExecutable(QLatin1String("dvips")).isEmpty())
             supportedMimeTypes += QLatin1String(" application/postscript");
         if (!mustBeImportable)
             supportedMimeTypes += QLatin1String(" text/html");
-        if (!mustBeImportable && !KStandardDirs::findExe(QLatin1String("latex2rtf")).isEmpty())
+        if (!mustBeImportable && !QStandardPaths::findExecutable(QLatin1String("latex2rtf")).isEmpty())
             supportedMimeTypes += QLatin1String(" application/rtf");
 
         QPointer<QFileDialog> saveDlg = new QFileDialog(p->widget(), i18n("Save file") /* TODO better text */, startDir, supportedMimeTypes );
