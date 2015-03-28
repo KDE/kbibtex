@@ -20,6 +20,7 @@
 #include <QTreeView>
 #include <QTabWidget>
 #include <QListView>
+#include <QMessageBox>
 #include <QLayout>
 #include <QFormLayout>
 #include <QAbstractItemModel>
@@ -30,7 +31,6 @@
 #include <KComboBox>
 #include <KLineEdit>
 #include <KConfigGroup>
-#include <KMessageBox>
 #include <KSharedConfig>
 
 #include "element.h"
@@ -250,7 +250,7 @@ void ZoteroBrowser::modelReset()
     }
 
     if (!d->tags->busy() && !d->collection->busy() && !(d->collection->initialized() && d->tags->initialized()))
-        KMessageBox::sorry(this, i18n("KBibTeX failed to retrieve the bibliography from Zotero. Please check that the provided user id and API key are valid."), i18n("Failed to retrieve data from Zotero"));
+        QMessageBox::information(this, i18n("Failed to retrieve data from Zotero"), i18n("KBibTeX failed to retrieve the bibliography from Zotero. Please check that the provided user id and API key are valid."));
 }
 
 void ZoteroBrowser::collectionDoubleClicked(const QModelIndex &index)
@@ -329,7 +329,7 @@ void ZoteroBrowser::applyCredentials()
 
         d->tabWidget->setCurrentIndex(1);
     } else
-        KMessageBox::information(this, i18n("Value '%1' is not a valid numeric identifier of a user or a group.", d->comboBoxNumericUserId->currentText()), i18n("Invalid numeric identifier"));
+        QMessageBox::information(this, i18n("Invalid numeric identifier"), i18n("Value '%1' is not a valid numeric identifier of a user or a group.", d->comboBoxNumericUserId->currentText()));
 }
 
 void ZoteroBrowser::radioButtonsToggled() {

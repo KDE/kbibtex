@@ -20,12 +20,12 @@
 #include <QLayout>
 #include <QDockWidget>
 #include <QLabel>
+#include <QMessageBox>
 #include <QCheckBox>
 #include <QPushButton>
 
 #include <KLocalizedString>
 #include <KIconLoader>
-#include <KMessageBox>
 #include <KConfigGroup>
 #include <KSharedConfig>
 
@@ -181,7 +181,7 @@ void ElementForm::setElement(QSharedPointer<Element> element, File *file)
     /// changes rather than to discard them -> apply changes in previous element.
     /// FIXME If the previous element got delete from the file and therefore a different
     /// element gets set, changes will be still applied to the element to-be-deleted.
-    if (d->gotModified && element != d->element && KMessageBox::questionYesNo(this, i18n("The current element got modified.\nApply or discard changes?"), i18n("Element modified"), KGuiItem(i18n("Apply changes"), QIcon::fromTheme("dialog-ok-apply")), KGuiItem(i18n("Discard changes"), QIcon::fromTheme("edit-undo"))) == KMessageBox::Yes) {
+    if (d->gotModified && element != d->element && QMessageBox::question(this, i18n("Element modified"), i18n("The current element got modified.\nApply or discard changes?")/*, KGuiItem(i18n("Apply changes"), QIcon::fromTheme("dialog-ok-apply")), KGuiItem(i18n("Discard changes"), QIcon::fromTheme("edit-undo"))*/) == QMessageBox::Yes) {
         d->apply();
     }
     if (element != d->element) {

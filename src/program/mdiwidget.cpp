@@ -26,12 +26,12 @@
 #include <QTreeView>
 #include <QAbstractItemModel>
 #include <QSortFilterProxyModel>
+#include <QMessageBox>
 #include <QHeaderView>
 #include <QPushButton>
 #include <QIcon>
 #include <QDebug>
 
-#include <KMessageBox>
 #include <KParts/Part>
 #include <KParts/ReadOnlyPart>
 #include <KConfigGroup>
@@ -250,7 +250,7 @@ void MDIWidget::setFile(OpenFileInfo *openFileInfo, KService::Ptr servicePtr)
     if (part != NULL) {
         widget = part->widget();
     } else if (openFileInfo != NULL) {
-        KMessageBox::error(this, i18n("No part available for file '%1'.", openFileInfo->url().fileName()), i18n("No part available"));
+        QMessageBox::warning(this, i18n("No Part Available"), i18n("No part available for file '%1'.", openFileInfo->url().fileName()));
         d->ofim->close(openFileInfo);
         return;
     }
