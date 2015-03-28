@@ -165,7 +165,7 @@ public:
 
         KConfigGroup configGroup(config, configGroupName);
         QStringList previewStyles = configGroup.readEntry("PreviewStyles", QStringList());
-        static bool hasBibTeX2HTML = !KStandardDirs::findExe(QLatin1String("bibtex2html")).isEmpty();
+        static bool hasBibTeX2HTML = !QStandardPaths::findExecutable(QLatin1String("bibtex2html")).isEmpty();
         foreach(const QString &entry, previewStyles) {
             /// Skip styles that use bibtex2html if binary is not available
             if (!hasBibTeX2HTML && entry.contains(QLatin1String("bibtex2html"))) continue;
