@@ -25,9 +25,9 @@
 #include <QMessageBox>
 #include <QTimer>
 #include <QFileDialog>
+#include <QAction>
 
 #include <KApplication>
-#include <KAction>
 #include <KActionMenu>
 #include <KGlobal>
 #include <KActionCollection>
@@ -61,7 +61,7 @@ private:
     // UNUSED KBibTeXMainWindow *p;
 
 public:
-    KAction *actionClose;
+    QAction *actionClose;
     QDockWidget *dockDocumentList;
     QDockWidget *dockReferencePreview;
     QDockWidget *dockDocumentPreview;
@@ -122,7 +122,7 @@ KBibTeXMainWindow::KBibTeXMainWindow()
 
     KActionMenu *actionMenuRecentFiles = new KActionMenu(QIcon::fromTheme("document-open-recent"), i18n("Recently used files"), this);
     actionCollection()->addAction("file_open_recent", actionMenuRecentFiles);
-    d->actionMenuRecentFilesMenu = new KMenu(actionMenuRecentFiles->text(), widget());
+    d->actionMenuRecentFilesMenu = new QMenu(actionMenuRecentFiles->text(), widget());
     actionMenuRecentFiles->setMenu(d->actionMenuRecentFilesMenu);
 
     /**
@@ -425,7 +425,7 @@ void KBibTeXMainWindow::documentListsChanged(OpenFileInfo::StatusFlags statusFla
             const int squeezeLen = 64;
             const QString squeezedShortCap = squeeze_text(cur->shortCaption(), squeezeLen);
             const QString squeezedFullCap = squeeze_text(cur->fullCaption(), squeezeLen);
-            KAction *action = new KAction(QString("%1 [%2]").arg(squeezedShortCap).arg(squeezedFullCap), this);
+            QAction *action = new QAction(QString("%1 [%2]").arg(squeezedShortCap).arg(squeezedFullCap), this);
             action->setData(cur->url());
             action->setIcon(QIcon::fromTheme(cur->mimeType().replace(QLatin1Char('/'), QLatin1Char('-'))));
             d->actionMenuRecentFilesMenu->addAction(action);
@@ -436,7 +436,7 @@ void KBibTeXMainWindow::documentListsChanged(OpenFileInfo::StatusFlags statusFla
 
 void KBibTeXMainWindow::openRecentFile()
 {
-    KAction *action = static_cast<KAction *>(sender());
+    QAction *action = static_cast<QAction *>(sender());
     QUrl url = action->data().value<QUrl>();
     openDocument(url);
 }

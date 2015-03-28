@@ -28,11 +28,11 @@
 #include <QApplication>
 #include <QIcon>
 #include <QDebug>
+#include <QAction>
 
 #include <KLocale>
 #include <KGlobal>
 #include <KMimeType>
-#include <KAction>
 #include <KLocalizedString>
 #include <KActionMenu>
 #include <KDirOperator>
@@ -223,10 +223,10 @@ private:
 
 public:
     OpenFileInfoManager *ofim;
-    KAction *actionAddToFav, *actionRemFromFav;
-    KAction *actionCloseFile, *actionOpenFile;
+    QAction *actionAddToFav, *actionRemFromFav;
+    QAction *actionCloseFile, *actionOpenFile;
     KActionMenu *actionOpenMenu;
-    QList<KAction *> openMenuActions;
+    QList<QAction *> openMenuActions;
     KService::List openMenuServices;
     QSignalMapper openMenuSignalMapper;
 
@@ -243,11 +243,11 @@ DocumentListView::DocumentListView(OpenFileInfoManager *openFileInfoManager, Ope
     setItemDelegate(new DocumentListDelegate(openFileInfoManager, this));
 
     if (statusFlag == OpenFileInfo::Open) {
-        d->actionCloseFile = new KAction(QIcon::fromTheme("document-close"), i18n("Close File"), this);
+        d->actionCloseFile = new QAction(QIcon::fromTheme("document-close"), i18n("Close File"), this);
         connect(d->actionCloseFile, SIGNAL(triggered()), this, SLOT(closeFile()));
         addAction(d->actionCloseFile);
     } else {
-        d->actionOpenFile = new KAction(QIcon::fromTheme("document-open"), i18n("Open File"), this);
+        d->actionOpenFile = new QAction(QIcon::fromTheme("document-open"), i18n("Open File"), this);
         connect(d->actionOpenFile, SIGNAL(triggered()), this, SLOT(openFile()));
         addAction(d->actionOpenFile);
     }
@@ -256,11 +256,11 @@ DocumentListView::DocumentListView(OpenFileInfoManager *openFileInfoManager, Ope
     addAction(d->actionOpenMenu);
 
     if (statusFlag == OpenFileInfo::Favorite) {
-        d->actionRemFromFav = new KAction(QIcon::fromTheme("favorites"), i18n("Remove from Favorites"), this);
+        d->actionRemFromFav = new QAction(QIcon::fromTheme("favorites"), i18n("Remove from Favorites"), this);
         connect(d->actionRemFromFav, SIGNAL(triggered()), this, SLOT(removeFromFavorites()));
         addAction(d->actionRemFromFav);
     } else {
-        d->actionAddToFav = new KAction(QIcon::fromTheme("favorites"), i18n("Add to Favorites"), this);
+        d->actionAddToFav = new QAction(QIcon::fromTheme("favorites"), i18n("Add to Favorites"), this);
         connect(d->actionAddToFav, SIGNAL(triggered()), this, SLOT(addToFavorites()));
         addAction(d->actionAddToFav);
     }
@@ -338,14 +338,15 @@ void DocumentListView::currentChanged(const QModelIndex &current, const QModelIn
     if (d->actionRemFromFav != NULL)
         d->actionRemFromFav->setEnabled(hasCurrent && isFavorite);
 
-    foreach(KAction *action, d->openMenuActions)
-    d->actionOpenMenu->removeAction(action);
+    foreach(QAction *action, d->openMenuActions) {
+         d->actionOpenMenu->removeAction(action);
+    }
     d->openMenuServices.clear();
     if (ofi != NULL) {
         d->openMenuServices = ofi->listOfServices();
         int i = 0;
         foreach(KService::Ptr servicePtr, d->openMenuServices) {
-            KAction *menuItem = new KAction(QIcon::fromTheme(servicePtr->icon()), servicePtr->name(), this);
+            QAction *menuItem = new QAction(QIcon::fromTheme(servicePtr->icon()), servicePtr->name(), this);
             d->actionOpenMenu->addAction(menuItem);
             d->openMenuActions << menuItem;
 

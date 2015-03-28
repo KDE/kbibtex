@@ -28,6 +28,7 @@
 #include <QMimeType>
 #include <QTimer>
 #include <QSet>
+#include <QAction>
 #include <QScrollArea>
 #include <QIcon>
 #include <QPushButton>
@@ -37,7 +38,6 @@
 #include <KLocalizedString>
 #include <KRun>
 #include <KMessageBox>
-#include <KAction>
 #include <KParts/Part>
 #include <KParts/ReadOnlyPart>
 #include <KConfigGroup>
@@ -86,7 +86,7 @@ private:
     QWidget *listContainer;
     QListWidget *enginesList;
     QLabel *whichEnginesLabel;
-    KAction *actionOpenHomepage;
+    QAction *actionOpenHomepage;
 
 public:
     KSharedConfigPtr config;
@@ -166,7 +166,7 @@ public:
         connect(enginesList, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)), p, SLOT(enginesListCurrentChanged(QListWidgetItem*,QListWidgetItem*)));
         enginesList->setSelectionMode(QAbstractItemView::NoSelection);
 
-        actionOpenHomepage = new KAction(QIcon::fromTheme("internet-web-browser"), i18n("Go to Homepage"), p);
+        actionOpenHomepage = new QAction(QIcon::fromTheme("internet-web-browser"), i18n("Go to Homepage"), p);
         connect(actionOpenHomepage, SIGNAL(triggered()), p, SLOT(openHomepage()));
         enginesList->addAction(actionOpenHomepage);
         enginesList->setContextMenuPolicy(Qt::ActionsContextMenu);
