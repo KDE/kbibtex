@@ -224,9 +224,9 @@ add_subdirectory(
 add_subdirectory(
     src
 )
-# add_subdirectory(
-#     xslt
-# )
+add_subdirectory(
+    xslt
+)
 # add_subdirectory(
 #     doc
 # )
