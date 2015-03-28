@@ -20,6 +20,7 @@
 #include <typeinfo>
 
 #include <QLabel>
+#include <QAction>
 #include <QFile>
 #include <QFileInfo>
 #include <QApplication>
@@ -35,7 +36,6 @@
 
 #include <KMessageBox>
 #include <KLocale>
-#include <KAction>
 #include <KActionCollection>
 #include <KStandardAction>
 #include <KActionMenu>
@@ -99,7 +99,7 @@ public:
     FileModel *model;
     SortFilterFileModel *sortFilterProxyModel;
     QSignalMapper *signalMapperNewElement;
-    KAction *editCutAction, *editDeleteAction, *editCopyAction, *editPasteAction, *editCopyReferencesAction, *elementEditAction, *elementViewDocumentAction, *fileSaveAction, *elementFindPDFAction, *entryApplyDefaultFormatString;
+    QAction *editCutAction, *editDeleteAction, *editCopyAction, *editPasteAction, *editCopyReferencesAction, *elementEditAction, *elementViewDocumentAction, *fileSaveAction, *elementFindPDFAction, *entryApplyDefaultFormatString;
     KMenu *viewDocumentMenu;
     QSignalMapper *signalMapperViewDocument;
     QSet<QObject *> signalMapperViewDocumentSenders;
@@ -107,7 +107,7 @@ public:
     LyX *lyx;
     FindDuplicatesUI *findDuplicatesUI;
     ColorLabelContextMenu *colorLabelContextMenu;
-    KAction *colorLabelContextMenuAction;
+    QAction *colorLabelContextMenuAction;
     QFileSystemWatcher fileSystemWatcher;
 
     KBibTeXPartPrivate(KBibTeXPart *parent)
@@ -441,7 +441,7 @@ public:
 
         /// Clean signal mapper of old mappings
         /// as stored in QSet signalMapperViewDocumentSenders
-        /// and identified by their KAction*'s
+        /// and identified by their QAction*'s
         QSet<QObject *>::Iterator it = signalMapperViewDocumentSenders.begin();
         while (it != signalMapperViewDocumentSenders.end()) {
             signalMapperViewDocument->removeMappings(*it);
@@ -457,7 +457,7 @@ public:
             QList<QUrl> urlList = FileInfo::entryUrls(entry.data(), partWidget->fileView()->fileModel()->bibliographyFile()->property(File::Url).toUrl(), FileInfo::TestExistenceYes);
             if (!urlList.isEmpty()) {
                 /// Memorize first action, necessary to set menu title
-                KAction *firstAction = NULL;
+                QAction *firstAction = NULL;
                 /// First iteration: local references only
                 for (QList<QUrl>::ConstIterator it = urlList.constBegin(); it != urlList.constEnd(); ++it) {
                     /// First iteration: local references only
@@ -466,9 +466,10 @@ public:
                     /// Build a nice menu item (label, icon, ...)
                     QFileInfo fi((*it).url(QUrl::PreferLocalFile));
                     const QString label = QString("%1 [%2]").arg(fi.fileName()).arg(fi.absolutePath());
-                    KAction *action = new KAction(QIcon::fromTheme(KMimeType::iconNameForUrl(*it)), label, p);
+                    QMimeDatabase db;
+                    QAction *action = new QAction(QIcon::fromTheme(db.mimeTypeForUrl(*it).iconName()), label, p);
                     action->setData((*it).url(QUrl::PreferLocalFile));
-                    action->setToolTip((*it).prettyUrl());
+                    action->setToolTip((*it).url(QUrl::PreferLocalFile));
                     /// Register action at signal handler to open URL when triggered
                     connect(action, SIGNAL(triggered()), signalMapperViewDocument, SLOT(map()));
                     signalMapperViewDocument->setMapping(action, action);
@@ -490,9 +491,11 @@ public:
                     if ((*it).isLocalFile()) continue; ///< skip local files
 
                     /// Build a nice menu item (label, icon, ...)
-                    KAction *action = new KAction(QIcon::fromTheme(KMimeType::iconNameForUrl(*it)), (*it).url(QUrl::PreferLocalFile), p);
-                    action->setData((*it).url(QUrl::PreferLocalFile));
-                    action->setToolTip((*it).prettyUrl());
+                    const QString prettyUrl = (*it).url(QUrl::PreferLocalFile);
+                    QMimeDatabase db;
+                    QAction *action = new QAction(QIcon::fromTheme(db.mimeTypeForUrl(*it).iconName()), prettyUrl, p);
+                    action->setData(prettyUrl);
+                    action->setToolTip(prettyUrl);
                     /// Register action at signal handler to open URL when triggered
                     connect(action, SIGNAL(triggered()), signalMapperViewDocument, SLOT(map()));
                     signalMapperViewDocument->setMapping(action, action);
@@ -578,11 +581,11 @@ void KBibTeXPart::setupActions()
     d->fileSaveAction = actionCollection()->addAction(KStandardAction::Save, this, SLOT(documentSave()));
     d->fileSaveAction->setEnabled(false);
     actionCollection()->addAction(KStandardAction::SaveAs, this, SLOT(documentSaveAs()));
-    KAction *saveCopyAsAction = new KAction(QIcon::fromTheme("document-save"), i18n("Save Copy As..."), this);
+    QAction *saveCopyAsAction = new QAction(QIcon::fromTheme("document-save"), i18n("Save Copy As..."), this);
     actionCollection()->addAction("file_save_copy_as", saveCopyAsAction);
     connect(saveCopyAsAction, SIGNAL(triggered()), this, SLOT(documentSaveCopyAs()));
 
-    KAction *filterWidgetAction = new KAction(i18n("Filter"), this);
+    QAction *filterWidgetAction = new QAction(i18n("Filter"), this);
     actionCollection()->addAction("toolbar_filter_widget", filterWidgetAction);
     filterWidgetAction->setIcon(QIcon::fromTheme("view-filter"));
     filterWidgetAction->setShortcut(Qt::CTRL + Qt::Key_F);
@@ -608,31 +611,31 @@ void KBibTeXPart::setupActions()
     connect(newPreamble, SIGNAL(triggered()), d->signalMapperNewElement, SLOT(map()));
     d->signalMapperNewElement->setMapping(newPreamble, smPreamble);
     connect(d->signalMapperNewElement, SIGNAL(mapped(int)), this, SLOT(newElementTriggered(int)));
-    d->elementEditAction = new KAction(QIcon::fromTheme("document-edit"), i18n("Edit Element"), this);
+    d->elementEditAction = new QAction(QIcon::fromTheme("document-edit"), i18n("Edit Element"), this);
     d->elementEditAction->setShortcut(Qt::CTRL + Qt::Key_E);
     actionCollection()->addAction(QLatin1String("element_edit"),  d->elementEditAction);
     connect(d->elementEditAction, SIGNAL(triggered()), d->partWidget->fileView(), SLOT(editCurrentElement()));
-    d->elementViewDocumentAction = new KAction(QIcon::fromTheme("application-pdf"), i18n("View Document"), this);
+    d->elementViewDocumentAction = new QAction(QIcon::fromTheme("application-pdf"), i18n("View Document"), this);
     d->elementViewDocumentAction->setShortcut(Qt::CTRL + Qt::Key_D);
     actionCollection()->addAction(QLatin1String("element_viewdocument"),  d->elementViewDocumentAction);
     connect(d->elementViewDocumentAction, SIGNAL(triggered()), this, SLOT(elementViewDocument()));
 
-    d->elementFindPDFAction = new KAction(QIcon::fromTheme("application-pdf"), i18n("Find PDF..."), this);
+    d->elementFindPDFAction = new QAction(QIcon::fromTheme("application-pdf"), i18n("Find PDF..."), this);
     actionCollection()->addAction(QLatin1String("element_findpdf"),  d->elementFindPDFAction);
     connect(d->elementFindPDFAction, SIGNAL(triggered()), this, SLOT(elementFindPDF()));
 
-    d->entryApplyDefaultFormatString = new KAction(QIcon::fromTheme("favorites"), i18n("Format entry ids"), this);
+    d->entryApplyDefaultFormatString = new QAction(QIcon::fromTheme("favorites"), i18n("Format entry ids"), this);
     actionCollection()->addAction(QLatin1String("entry_applydefaultformatstring"), d->entryApplyDefaultFormatString);
     connect(d->entryApplyDefaultFormatString, SIGNAL(triggered()), this, SLOT(applyDefaultFormatString()));
 
     Clipboard *clipboard = new Clipboard(d->partWidget->fileView());
 
-    d->editCopyReferencesAction = new KAction(QIcon::fromTheme("edit-copy"), i18n("Copy References"), this);
+    d->editCopyReferencesAction = new QAction(QIcon::fromTheme("edit-copy"), i18n("Copy References"), this);
     d->editCopyReferencesAction->setShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_C);
     actionCollection()->addAction(QLatin1String("edit_copy_references"),  d->editCopyReferencesAction);
     connect(d->editCopyReferencesAction, SIGNAL(triggered()), clipboard, SLOT(copyReferences()));
 
-    d->editDeleteAction = new KAction(QIcon::fromTheme("edit-table-delete-row"), i18n("Delete"), this);
+    d->editDeleteAction = new QAction(QIcon::fromTheme("edit-table-delete-row"), i18n("Delete"), this);
     d->editDeleteAction->setShortcut(Qt::Key_Delete);
     actionCollection()->addAction(QLatin1String("edit_delete"),  d->editDeleteAction);
     connect(d->editDeleteAction, SIGNAL(triggered()), d->partWidget->fileView(), SLOT(selectionDelete()));
@@ -793,7 +796,7 @@ void KBibTeXPart::elementViewDocument()
 
 void KBibTeXPart::elementViewDocumentMenu(QObject *obj)
 {
-    QString text = static_cast<QAction *>(obj)->data().toString(); ///< only a KAction will be passed along
+    QString text = static_cast<QAction *>(obj)->data().toString(); ///< only a QAction will be passed along
 
     /// Guess mime type for url to open
     QUrl url(text);
