@@ -19,63 +19,35 @@
 
 #include <QDebug>
 
-#include <KComponentData>
-#include <KAboutData>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include "part.h"
 #include "version.h"
 
-static const char PartId[] = "kbibtexpart";
-static const char PartName[] = I18N_NOOP("KBibTeXPart");
-static const char PartDescription[] = I18N_NOOP("BibTeX Editor Component");
-static const char PartCopyright[] = "Copyright 2004-2015 Thomas Fischer";
-static const char *programHomepage = "http://home.gna.org/kbibtex/";
-
-static KComponentData *_componentData = 0;
-static KAboutData *_aboutData = 0;
-
-
 KBibTeXPartFactory::KBibTeXPartFactory()
-        : KParts::Factory()
+        : KPluginFactory(), m_aboutData(QStringLiteral("kbibtexpart"), i18n("KBibTeXPart"), versionNumber, i18n("BibTeX Editor Component"), KAboutLicense::GPL_V2, i18n("Copyright 2004-2015 Thomas Fischer"))
 {
+    m_aboutData.addAuthor(i18n("Thomas Fischer"), i18n("Maintainer"), QLatin1String("fischer@unix-ag.uni-kl.de"));
     qDebug() << "Creating KBibTeXPart version" << versionNumber;
 }
 
 
 KBibTeXPartFactory::~KBibTeXPartFactory()
 {
-    delete _componentData;
-    delete _aboutData;
-
-    _componentData = 0;
+    /// nothing
 }
 
-KParts::Part *KBibTeXPartFactory::createPartObject(QWidget *parentWidget, QObject *parent, const char *cn, const QStringList &/*args*/)
+QObject* KBibTeXPartFactory::create(const char *cn, QWidget *parentWidget, QObject *parent, const QVariantList &args, const QString &keyword)
+// KParts::Part *KBibTeXPartFactory::createPartObject(QWidget *parentWidget, QObject *parent, const char *cn, const QStringList &/*args*/)
 {
-    const QByteArray classname(cn);
-    bool readOnlyWanted = classname == QLatin1String("Browser/View") || classname == QLatin1String("KParts::ReadOnlyPart");
+    Q_UNUSED(args)
+    Q_UNUSED(keyword);
 
-    KBibTeXPart *part = new KBibTeXPart(parentWidget, parent);
+    const QByteArray classname(cn);
+    bool readOnlyWanted = (classname == "Browser/View") || (classname == "KParts::ReadOnlyPart");
+
+    KBibTeXPart *part = new KBibTeXPart(parentWidget, parent, m_aboutData);
     part->setReadWrite(!readOnlyWanted);
 
     return part;
 }
-
-const KComponentData &KBibTeXPartFactory::componentData()
-{
-    if (!_componentData) {
-        _aboutData = new KAboutData(PartId, 0, ki18n(PartName), versionNumber,
-                                    ki18n(PartDescription), KAboutData::License_GPL_V2,
-                                    ki18n(PartCopyright), KLocalizedString(),
-                                    programHomepage);
-        _aboutData->addAuthor(ki18n("Thomas Fischer"), ki18n("Maintainer"), "fischer@unix-ag.uni-kl.de", "http://www.t-fischer.net/");
-        _componentData = new KComponentData(_aboutData);
-    }
-    return *_componentData;
-}
-
-
-K_EXPORT_COMPONENT_FACTORY(kbibtexpart, KBibTeXPartFactory)
-
-#include "partfactory.moc"

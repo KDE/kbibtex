@@ -18,11 +18,11 @@
 #ifndef KBIBTEX_PART_PARTFACTORY_H
 #define KBIBTEX_PART_PARTFACTORY_H
 
-#include <kparts/factory.h>
+#include <KAboutData>
+#include <KPluginFactory>
+#include <KParts/Part>
 
-class KComponentData;
-
-class KBibTeXPartFactory : public KParts::Factory
+class KBibTeXPartFactory : public KPluginFactory
 {
     Q_OBJECT
 
@@ -30,11 +30,10 @@ public:
     KBibTeXPartFactory();
     virtual ~KBibTeXPartFactory();
 
-public:
-    virtual KParts::Part *createPartObject(QWidget *parentWidget, QObject *parent, const char *classname, const QStringList &args);
+    virtual QObject* create(const char *cn, QWidget *parentWidget, QObject *parent, const QVariantList &args, const QString &keyword);
 
-public:
-    static const KComponentData &componentData();
+private:
+    KAboutData m_aboutData;
 };
 
 #endif // KBIBTEX_PART_PARTFACTORY_H
