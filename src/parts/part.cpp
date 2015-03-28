@@ -344,10 +344,9 @@ public:
         Q_ASSERT_X(!url.isEmpty(), "bool KBibTeXPart::KBibTeXPartPrivate:saveFile(const QUrl &url)", "url is not allowed to be empty");
 
         /// configure and open temporary file
-        KTemporaryFile temporaryFile;
         const QRegExp suffixRegExp("\\.[^.]{1,4}$");
-        if (suffixRegExp.indexIn(url.url(QUrl::PreferLocalFile)) >= 0)
-            temporaryFile.setSuffix(suffixRegExp.cap(0));
+        const QString suffix = suffixRegExp.indexIn(url.url(QUrl::PreferLocalFile)) >= 0 ? suffixRegExp.cap(0): QString();
+        QTemporaryFile temporaryFile(QString(QLatin1String("savefile-XXXXXX")).append(suffix));
         temporaryFile.setAutoRemove(true);
         if (!temporaryFile.open())
             return false;
