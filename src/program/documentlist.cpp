@@ -32,6 +32,7 @@
 #include <KGlobal>
 #include <KMimeType>
 #include <KAction>
+#include <KLocalizedString>
 #include <KActionMenu>
 #include <KDirOperator>
 #include <KService>

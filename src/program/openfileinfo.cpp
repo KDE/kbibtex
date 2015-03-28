@@ -25,6 +25,7 @@
 #include <QUrl>
 #include <QDebug>
 
+#include <KLocalizedString>
 #include <KConfig>
 #include <KConfigGroup>
 #include <KSharedConfig>

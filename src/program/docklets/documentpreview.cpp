@@ -40,7 +40,7 @@
 #include <QWebView>
 #endif // HAVE_QTWEBKIT
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KComboBox>
 #include <KRun>
 #include <KMimeTypeTrader>

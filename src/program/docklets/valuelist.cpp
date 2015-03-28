@@ -29,7 +29,7 @@
 
 #include <KComboBox>
 #include <KConfigGroup>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KAction>
 #include <KToggleAction>
 #include <KSharedConfig>

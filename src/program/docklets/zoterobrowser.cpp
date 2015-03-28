@@ -26,7 +26,7 @@
 #include <QRadioButton>
 #include <QPushButton>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KComboBox>
 #include <KLineEdit>
 #include <KConfigGroup>

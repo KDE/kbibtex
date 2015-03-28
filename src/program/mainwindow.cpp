@@ -35,6 +35,7 @@
 #include <KPluginLoader>
 #include <KMessageBox>
 #include <KMenu>
+#include <KLocalizedString>
 #include <KSharedConfig>
 
 #include "kbibtexnamespace.h"

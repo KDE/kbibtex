@@ -34,7 +34,7 @@
 #include <QDebug>
 
 #include <KLineEdit>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KRun>
 #include <KMessageBox>
 #include <KAction>

@@ -38,7 +38,7 @@
 #include <QFileDialog>
 #include <QPushButton>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KComboBox>
 #include <KMimeType>
 #include <KRun>

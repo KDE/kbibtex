@@ -21,7 +21,7 @@
 #include <QLabel>
 #include <QPushButton>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <QDebug>
 #include <KAction>
 

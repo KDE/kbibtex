@@ -35,6 +35,7 @@
 #include <kparts/part.h>
 #include <KConfigGroup>
 #include <KSharedConfig>
+#include <KLocalizedString>
 
 #include "kbibtexnamespace.h"
 #include "partwidget.h"

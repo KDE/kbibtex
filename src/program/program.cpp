@@ -21,6 +21,7 @@
 #include <KApplication>
 #include <KAboutData>
 #include <KMessageBox>
+#include <KLocalizedString>
 
 #include "mainwindow.h"
 #include "version.h"

@@ -22,7 +22,7 @@
 #include <QFont>
 #include <QItemSelectionModel>
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include "element.h"
 #include "file.h"

@@ -22,7 +22,7 @@
 #include <QCheckBox>
 
 #include <KComboBox>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include "preferences.h"
 #include "guihelper.h"

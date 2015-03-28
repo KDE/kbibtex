@@ -23,7 +23,7 @@
 #include <QCheckBox>
 #include <QPushButton>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KIconLoader>
 #include <KMessageBox>
 #include <KConfigGroup>
