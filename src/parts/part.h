@@ -46,7 +46,7 @@ protected:
     virtual bool saveFile();
 
 protected:
-    void setupActions(bool BrowserViewWanted);
+    void setupActions();
     void fitActionSettings();
 
     /*
