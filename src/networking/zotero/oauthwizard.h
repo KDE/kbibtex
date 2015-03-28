@@ -38,7 +38,7 @@ public:
     explicit OAuthWizard(QWidget *parent);
     ~OAuthWizard();
 
-    bool exec();
+    virtual int exec();
 
     int userId() const;
     QString apiKey() const;

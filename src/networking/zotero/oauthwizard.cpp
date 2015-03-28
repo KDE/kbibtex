@@ -239,10 +239,10 @@ OAuthWizard::~OAuthWizard()
     delete d;
 }
 
-bool OAuthWizard::exec()
+int OAuthWizard::exec()
 {
-    const bool result = QWizard::exec() == Accepted && d->userId >= 0;
-    return result;
+    const int result = QWizard::exec();
+    return d->userId >= 0 ? result : Rejected;
 }
 
 int OAuthWizard::userId() const
