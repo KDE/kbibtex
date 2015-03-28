@@ -603,7 +603,7 @@ void KBibTeXPart::setupActions()
     filterWidgetAction->setIcon(QIcon::fromTheme("view-filter"));
     filterWidgetAction->setShortcut(Qt::CTRL + Qt::Key_F);
     connect(filterWidgetAction, SIGNAL(triggered()), d->partWidget->filterBar(), SLOT(setFocus()));
-    d->partWidget->filterBar()->setClickMessage(i18n("Filter bibliographic entries (%1)", filterWidgetAction->shortcut().toString()));
+    d->partWidget->filterBar()->setPlaceholderText(i18n("Filter bibliographic entries (%1)", filterWidgetAction->shortcut().toString()));
 
     KActionMenu *newElementAction = new KActionMenu(QIcon::fromTheme("address-book-new"), i18n("New element"), this);
     actionCollection()->addAction("element_new", newElementAction);
