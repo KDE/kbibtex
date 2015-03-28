@@ -21,8 +21,8 @@
 #include <QDockWidget>
 #include <QLabel>
 #include <QCheckBox>
+#include <QPushButton>
 
-#include <KPushButton>
 #include <KLocale>
 #include <KIconLoader>
 #include <KMessageBox>
@@ -44,7 +44,7 @@ public:
     ElementEditor *elementEditor;
     MDIWidget *mdiWidget;
     QCheckBox *checkBoxAutoApply;
-    KPushButton *buttonApply, *buttonReset;
+    QPushButton *buttonApply, *buttonReset;
     QWidget *widgetUnmodifiedChanges;
     bool gotModified;
     QSharedPointer<Element> element;
@@ -92,10 +92,10 @@ public:
         label->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
         layoutUnmodifiedChanges->addWidget(label);
 
-        buttonApply = new KPushButton(QIcon::fromTheme("dialog-ok-apply"), i18n("Apply"), p);
+        buttonApply = new QPushButton(QIcon::fromTheme("dialog-ok-apply"), i18n("Apply"), p);
         layout->addWidget(buttonApply, 1, 2, 1, 1);
 
-        buttonReset = new KPushButton(QIcon::fromTheme("edit-undo"), i18n("Reset"), p);
+        buttonReset = new QPushButton(QIcon::fromTheme("edit-undo"), i18n("Reset"), p);
         layout->addWidget(buttonReset, 1, 3, 1, 1);
 
         connect(buttonApply, SIGNAL(clicked()), p, SIGNAL(elementModified()));

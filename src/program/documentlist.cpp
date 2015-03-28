@@ -23,6 +23,7 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QPainter>
+#include <QPushButton>
 #include <QApplication>
 #include <QIcon>
 #include <QDebug>
@@ -33,7 +34,6 @@
 #include <KAction>
 #include <KActionMenu>
 #include <KDirOperator>
-#include <KPushButton>
 #include <KService>
 #include <KMessageBox>
 
@@ -52,11 +52,11 @@ public:
         layout->setColumnStretch(1, 0);
         layout->setColumnStretch(2, 1);
 
-        KPushButton *buttonUp = new KPushButton(QIcon::fromTheme("go-up"), "", this);
+        QPushButton *buttonUp = new QPushButton(QIcon::fromTheme("go-up"), "", this);
         buttonUp->setToolTip(i18n("One level up"));
         layout->addWidget(buttonUp, 0, 0, 1, 1);
 
-        KPushButton *buttonHome = new KPushButton(QIcon::fromTheme("user-home"), "", this);
+        QPushButton *buttonHome = new QPushButton(QIcon::fromTheme("user-home"), "", this);
         buttonHome->setToolTip(i18n("Go to Home folder"));
         layout->addWidget(buttonHome, 0, 1, 1, 1);
 

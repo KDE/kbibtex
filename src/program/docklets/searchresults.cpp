@@ -19,9 +19,9 @@
 
 #include <QGridLayout>
 #include <QLabel>
+#include <QPushButton>
 
 #include <KLocale>
-#include <KPushButton>
 #include <QDebug>
 #include <KAction>
 
@@ -42,7 +42,7 @@ public:
     File *file;
     QWidget *widgetCannotImport;
     QLabel *labelCannotImportMsg;
-    KPushButton *buttonImport;
+    QPushButton *buttonImport;
     FileView *resultList, *mainEditor;
     KAction *actionViewCurrent, *actionImportSelected, *actionCopySelected;
 
@@ -80,7 +80,7 @@ public:
         layoutCannotImport->addWidget(labelCannotImportMsg);
         /// see also updateCannotImportMessage()
 
-        buttonImport = new KPushButton(QIcon::fromTheme("svn-update"), i18n("Import"), parent);
+        buttonImport = new QPushButton(QIcon::fromTheme("svn-update"), i18n("Import"), parent);
         layout->addWidget(buttonImport, 1, 1, 1, 1);
         buttonImport->setEnabled(false);
 

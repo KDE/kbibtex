@@ -36,10 +36,10 @@
 #include <QPalette>
 #include <QDebug>
 #include <QFileDialog>
+#include <QPushButton>
 
 #include <KLocale>
 #include <KComboBox>
-#include <KPushButton>
 #include <KMimeType>
 #include <KRun>
 #include <KIO/NetAccess>
@@ -64,7 +64,7 @@ public:
     const QString configGroupName;
     const QString configKeyName;
 
-    KPushButton *buttonOpen, *buttonSaveAsHTML;
+    QPushButton *buttonOpen, *buttonSaveAsHTML;
     QString htmlText;
     QUrl baseUrl;
 #ifdef HAVE_QTWEBKIT // krazy:exclude=cpp
@@ -116,11 +116,11 @@ public:
         layout->addWidget(messageLabel);
 #endif // HAVE_QTWEBKIT
 
-        buttonOpen = new KPushButton(QIcon::fromTheme("document-open"), i18n("Open"), p);
+        buttonOpen = new QPushButton(QIcon::fromTheme("document-open"), i18n("Open"), p);
         buttonOpen->setToolTip(i18n("Open reference in web browser."));
         gridLayout->addWidget(buttonOpen, 2, 1, 1, 1);
 
-        buttonSaveAsHTML = new KPushButton(QIcon::fromTheme("document-save"), i18n("Save as HTML"), p);
+        buttonSaveAsHTML = new QPushButton(QIcon::fromTheme("document-save"), i18n("Save as HTML"), p);
         buttonSaveAsHTML->setToolTip(i18n("Save reference as HTML fragment."));
         gridLayout->addWidget(buttonSaveAsHTML, 2, 2, 1, 1);
     }

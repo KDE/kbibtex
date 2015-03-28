@@ -31,6 +31,7 @@
 #include <QStackedWidget>
 #include <QDockWidget>
 #include <QDebug>
+#include <QPushButton>
 #include <QMutex>
 #include <QMimeDatabase>
 #include <QMimeType>
@@ -46,7 +47,6 @@
 #include <KService>
 #include <kparts/part.h>
 #include <kio/netaccess.h>
-#include <KPushButton>
 #include <kio/jobclasses.h>
 #include <kio/job.h>
 #include <kio/jobuidelegate.h>
@@ -108,7 +108,7 @@ private:
     static const QString configGroupName;
     static const QString onlyLocalFilesCheckConfig;
 
-    KPushButton *externalViewerButton;
+    QPushButton *externalViewerButton;
     QStackedWidget *stackedWidget;
     ImageLabel *message;
     QMap<int, struct UrlInfo> cbxEntryToUrlInfo;
@@ -129,7 +129,7 @@ private:
 
 public:
     KComboBox *urlComboBox;
-    KPushButton *onlyLocalFilesButton;
+    QPushButton *onlyLocalFilesButton;
     QList<KIO::StatJob *> runningJobs;
     QSharedPointer<const Entry> entry;
     QUrl baseUrl;
@@ -166,7 +166,7 @@ public:
         QHBoxLayout *innerLayout = new QHBoxLayout();
         layout->addLayout(innerLayout, 0);
 
-        onlyLocalFilesButton = new KPushButton(QIcon::fromTheme("applications-internet"), QString(), p);
+        onlyLocalFilesButton = new QPushButton(QIcon::fromTheme("applications-internet"), QString(), p);
         onlyLocalFilesButton->setToolTip(i18n("Toggle between local files only and all documents including remote ones"));
         innerLayout->addWidget(onlyLocalFilesButton, 0);
         onlyLocalFilesButton->setCheckable(true);
@@ -177,7 +177,7 @@ public:
         urlComboBox = new KComboBox(false, p);
         innerLayout->addWidget(urlComboBox, 1);
 
-        externalViewerButton = new KPushButton(QIcon::fromTheme("document-open"), QString(), p);
+        externalViewerButton = new QPushButton(QIcon::fromTheme("document-open"), QString(), p);
         externalViewerButton->setToolTip(i18n("Open in external program"));
         innerLayout->addWidget(externalViewerButton, 0);
         sp = externalViewerButton->sizePolicy();

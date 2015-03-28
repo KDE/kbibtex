@@ -24,11 +24,11 @@
 #include <QFormLayout>
 #include <QAbstractItemModel>
 #include <QRadioButton>
+#include <QPushButton>
 
 #include <KLocale>
 #include <KComboBox>
 #include <KLineEdit>
-#include <KPushButton>
 #include <KConfigGroup>
 #include <KMessageBox>
 #include <KSharedConfig>
@@ -75,7 +75,7 @@ public:
     QRadioButton *radioGroupLibrary;
     bool comboBoxGroupListInitialized;
     KComboBox *comboBoxGroupList;
-    KPushButton *buttonLoadBibliography;
+    QPushButton *buttonLoadBibliography;
 
     QCursor nonBusyCursor;
 
@@ -210,7 +210,7 @@ void ZoteroBrowser::setupGUI()
     containerLayout->addLayout(containerButtonLayout, 0);
     containerButtonLayout->setMargin(0);
     containerButtonLayout->addStretch(1);
-    d->buttonLoadBibliography = new KPushButton(QIcon::fromTheme("download"), i18n("Load bibliography"), container);
+    d->buttonLoadBibliography = new QPushButton(QIcon::fromTheme("download"), i18n("Load bibliography"), container);
     containerButtonLayout->addWidget(d->buttonLoadBibliography, 0);
     connect(d->buttonLoadBibliography, SIGNAL(clicked()), this, SLOT(applyCredentials()));
 
@@ -220,7 +220,7 @@ void ZoteroBrowser::setupGUI()
     containerButtonLayout = new QHBoxLayout();
     containerLayout->addLayout(containerButtonLayout, 0);
     containerButtonLayout->setMargin(0);
-    KPushButton *buttonGetOAuthCredentials = new KPushButton(QIcon::fromTheme("preferences-web-browser-identification"), i18n("Get Credentials"), container);
+    QPushButton *buttonGetOAuthCredentials = new QPushButton(QIcon::fromTheme("preferences-web-browser-identification"), i18n("Get Credentials"), container);
     containerButtonLayout->addWidget(buttonGetOAuthCredentials, 0);
     connect(buttonGetOAuthCredentials, SIGNAL(clicked()), this, SLOT(getOAuthCredentials()));
     containerButtonLayout->addStretch(1);

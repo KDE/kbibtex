@@ -27,10 +27,10 @@
 #include <QAbstractItemModel>
 #include <QSortFilterProxyModel>
 #include <QHeaderView>
+#include <QPushButton>
 #include <QIcon>
 #include <QDebug>
 
-#include <KPushButton>
 #include <KMessageBox>
 #include <kparts/part.h>
 #include <KConfigGroup>
@@ -148,11 +148,11 @@ private:
         QLabel *label = new QLabel(i18n("<qt>Welcome to <b>KBibTeX</b></qt>"), welcomeWidget);
         layout->addWidget(label, 1, 2, 1, 3, Qt::AlignHCenter | Qt::AlignTop);
 
-        KPushButton *buttonNew = new KPushButton(QIcon::fromTheme("document-new"), i18n("New"), welcomeWidget);
+        QPushButton *buttonNew = new QPushButton(QIcon::fromTheme("document-new"), i18n("New"), welcomeWidget);
         layout->addWidget(buttonNew, 2, 2, 1, 1, Qt::AlignLeft | Qt::AlignBottom);
         connect(buttonNew, SIGNAL(clicked()), p, SIGNAL(documentNew()));
 
-        KPushButton *buttonOpen = new KPushButton(QIcon::fromTheme("document-open"), i18n("Open..."), welcomeWidget);
+        QPushButton *buttonOpen = new QPushButton(QIcon::fromTheme("document-open"), i18n("Open..."), welcomeWidget);
         layout->addWidget(buttonOpen, 2, 4, 1, 1, Qt::AlignRight | Qt::AlignBottom);
         connect(buttonOpen, SIGNAL(clicked()), p, SIGNAL(documentOpen()));
 

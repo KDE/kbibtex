@@ -30,9 +30,9 @@
 #include <QSet>
 #include <QScrollArea>
 #include <QIcon>
+#include <QPushButton>
 #include <QDebug>
 
-#include <KPushButton>
 #include <KLineEdit>
 #include <KLocale>
 #include <KRun>
@@ -94,8 +94,8 @@ public:
     SearchResults *sr;
     QMap<QListWidgetItem *, OnlineSearchAbstract *> itemToOnlineSearch;
     QSet<OnlineSearchAbstract *> runningSearches;
-    KPushButton *searchButton;
-    KPushButton *useEntryButton;
+    QPushButton *searchButton;
+    QPushButton *useEntryButton;
     OnlineSearchQueryFormGeneral *generalQueryTermsForm;
     KTabWidget *tabWidget;
     QSharedPointer<const Entry> currentEntry;
@@ -193,7 +193,7 @@ public:
         QWidget *listContainer = createEnginesGUI(tabWidget);
         tabWidget->addTab(listContainer, QIcon::fromTheme("applications-engineering"), i18n("Engines"));
 
-        useEntryButton = new KPushButton(QIcon::fromTheme("go-up"), i18n("Use Entry"), p);
+        useEntryButton = new QPushButton(QIcon::fromTheme("go-up"), i18n("Use Entry"), p);
         layout->addWidget(useEntryButton, 1, 0, 1, 1);
         useEntryButton->setEnabled(false);
         connect(useEntryButton, SIGNAL(clicked()), p, SLOT(copyFromEntry()));
@@ -203,7 +203,7 @@ public:
         progressBar->setMaximum(1000);
         progressBar->hide();
 
-        searchButton = new KPushButton(QIcon::fromTheme("edit-find"), i18n("Search"), p);
+        searchButton = new QPushButton(QIcon::fromTheme("edit-find"), i18n("Search"), p);
         layout->addWidget(searchButton, 1, 2, 1, 1);
         connect(generalQueryTermsForm, SIGNAL(returnPressed()), searchButton, SLOT(click()));
 
