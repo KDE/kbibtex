@@ -30,7 +30,9 @@
 #include <KConfigGroup>
 #include <KSharedConfig>
 #include <KMimeTypeTrader>
-#include <kparts/part.h>
+#include <KParts/Part>
+#include <KParts/ReadOnlyPart>
+#include <KParts/ReadWritePart>
 #include <KIO/NetAccess>
 
 #include "fileimporterpdf.h"

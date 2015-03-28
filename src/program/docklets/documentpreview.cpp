@@ -46,7 +46,8 @@
 #include <KRun>
 #include <KMimeTypeTrader>
 #include <KService>
-#include <kparts/part.h>
+#include <KParts/Part>
+#include <KParts/ReadOnlyPart>
 #include <kio/netaccess.h>
 #include <kio/jobclasses.h>
 #include <kio/job.h>

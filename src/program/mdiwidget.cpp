@@ -32,7 +32,8 @@
 #include <QDebug>
 
 #include <KMessageBox>
-#include <kparts/part.h>
+#include <KParts/Part>
+#include <KParts/ReadOnlyPart>
 #include <KConfigGroup>
 #include <KSharedConfig>
 #include <KLocalizedString>

@@ -38,7 +38,8 @@
 #include <KRun>
 #include <KMessageBox>
 #include <KAction>
-#include <kparts/part.h>
+#include <KParts/Part>
+#include <KParts/ReadOnlyPart>
 #include <KConfigGroup>
 #include <KTabWidget>
 #include <KSharedConfig>
