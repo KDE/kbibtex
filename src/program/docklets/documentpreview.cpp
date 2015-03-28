@@ -27,6 +27,7 @@
 #include <QFileInfo>
 #include <QResizeEvent>
 #include <QCheckBox>
+#include <QMenuBar>
 #include <QStackedWidget>
 #include <QDockWidget>
 #include <QDebug>
@@ -116,7 +117,7 @@ private:
     static const QString arXivPDFUrlStart;
     bool anyLocal;
 
-    KMenuBar *menuBar;
+    QMenuBar *menuBar;
     KToolBar *toolBar;
     KParts::ReadOnlyPart *okularPart;
 #ifdef HAVE_QTWEBKIT // krazy:exclude=cpp
@@ -183,7 +184,7 @@ public:
         sp.setVerticalPolicy(QSizePolicy::MinimumExpanding);
         externalViewerButton->setSizePolicy(sp);
 
-        menuBar = new KMenuBar(p);
+        menuBar = new QMenuBar(p);
         menuBar->setBackgroundRole(QPalette::Window);
         menuBar->setVisible(false);
         layout->addWidget(menuBar, 0);
