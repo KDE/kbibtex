@@ -43,6 +43,7 @@
 #include <KActionMenu>
 #include <KSelectAction>
 #include <KToggleAction>
+#include <KDialog> // FIXME deprecated
 #include <KSharedConfig>
 #include <KTemporaryFile>
 #include <KIO/NetAccess>
