@@ -19,6 +19,8 @@
 
 #include <typeinfo>
 
+#include <QDomDocument>
+#include <QDomElement>
 #include <QList>
 #include <QLayout>
 #include <QMap>
