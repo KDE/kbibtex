@@ -92,6 +92,6 @@ install(
     FILES
     kbibtexpartui.rc
     DESTINATION
-    ${DATA_INSTALL_DIR}/kbibtexpart
+    ${KXMLGUI_INSTALL_DIR}/kbibtexpart
 )
 

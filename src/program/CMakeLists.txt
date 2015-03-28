@@ -1,27 +1,7 @@
+# KBibTeX main program
+
 project(
     kbibtexprogram
-)
-
-include(
-    AddFileDependencies
-)
-
-include_directories(
-    ${CMAKE_SOURCE_DIR}/src/config
-    ${CMAKE_SOURCE_DIR}/src/data
-    ${CMAKE_SOURCE_DIR}/src/io
-    ${CMAKE_SOURCE_DIR}/src/io/config
-    ${CMAKE_SOURCE_DIR}/src/processing
-    ${CMAKE_SOURCE_DIR}/src/gui
-    ${CMAKE_SOURCE_DIR}/src/gui/config
-    ${CMAKE_SOURCE_DIR}/src/gui/file
-    ${CMAKE_SOURCE_DIR}/src/gui/element
-    ${CMAKE_SOURCE_DIR}/src/gui/widgets
-    ${CMAKE_SOURCE_DIR}/src/networking
-    ${CMAKE_SOURCE_DIR}/src/networking/onlinesearch
-    ${CMAKE_CURRENT_SOURCE_DIR}/docklets
-    ${CMAKE_CURRENT_BINARY_DIR}
-    ${LIBXML2_INCLUDE_DIR}
 )
 
 set(
@@ -42,14 +22,38 @@ set(
     openfileinfo.cpp
 )
 
-# debug area for KBibTeX's program
-add_definitions(
-    -DKDE_DEFAULT_DEBUG_AREA=101017
-)
+# # debug area for KBibTeX's program
+# add_definitions(
+#     -DKDE_DEFAULT_DEBUG_AREA=101017
+# )
 
-if(UNITY_BUILD AND NOT WIN32) # FIXME: Unity build of programs breaks on Windows
-    enable_unity_build(kbibtex kbibtex_SRCS)
-endif(UNITY_BUILD AND NOT WIN32)
+# if(UNITY_BUILD AND NOT WIN32) # FIXME: Unity build of programs breaks on Windows
+#     enable_unity_build(kbibtex kbibtex_SRCS)
+# endif(UNITY_BUILD AND NOT WIN32)
+
+include_directories(
+    ${CMAKE_BINARY_DIR}/src
+    ${CMAKE_SOURCE_DIR}/src
+    ${CMAKE_SOURCE_DIR}/src/config
+    ${CMAKE_BINARY_DIR}/src/config
+    ${CMAKE_SOURCE_DIR}/src/data
+    ${CMAKE_BINARY_DIR}/src/data
+    ${CMAKE_SOURCE_DIR}/src/processing
+    ${CMAKE_BINARY_DIR}/src/processing
+    ${CMAKE_SOURCE_DIR}/src/io
+    ${CMAKE_BINARY_DIR}/src/io
+    ${CMAKE_SOURCE_DIR}/src/io/config
+    ${CMAKE_SOURCE_DIR}/src/networking
+    ${CMAKE_BINARY_DIR}/src/networking
+    ${CMAKE_SOURCE_DIR}/src/networking/onlinesearch
+    ${CMAKE_SOURCE_DIR}/src/gui
+    ${CMAKE_BINARY_DIR}/src/gui
+    ${CMAKE_SOURCE_DIR}/src/gui/widgets
+    ${CMAKE_SOURCE_DIR}/src/gui/file
+    ${CMAKE_SOURCE_DIR}/src/gui/element
+    ${CMAKE_SOURCE_DIR}/src/program/docklets
+    ${LIBXML2_INCLUDE_DIR}
+)
 
 ecm_add_app_icon( kbibtex_SRCS
     ICONS
@@ -61,27 +65,29 @@ ecm_add_app_icon( kbibtex_SRCS
     ${CMAKE_SOURCE_DIR}/icons/64-apps-kbibtex.png
 )
 
-kde4_add_executable(
+add_executable(
     kbibtex
     ${kbibtex_SRCS}
-    ${CMAKE_CURRENT_BINARY_DIR}/version.h
+    ${CMAKE_BINARY_DIR}/src/version.h
 )
 
-target_link_libraries(
-    kbibtex
-    LINK_PRIVATE
-    ${QT_QTWEBKIT_LIBRARIES}
-    ${KDE4_KIO_LIBS}
-    ${KDE4_KPARTS_LIBS}
-    ${KDE4_KFILE_LIBS}
-    kbibtexconfig
-    kbibtexdata
+target_link_libraries( kbibtex
+    Qt5::Core
+    Qt5::Widgets
+    KF5::CoreAddons
+    KF5::I18n
+    KF5::ConfigCore
+    KF5::Service
+    KF5::Parts
+    KF5::IconThemes
+    KF5::KIOCore
+    KF5::KIOFileWidgets
+    KF5::KIOWidgets
+    KF5::KIONTLM
     kbibtexio
-    kbibtexproc
     kbibtexgui
     kbibtexnetworking
 )
-
 
 # creates version.h using cmake script
 add_custom_target(
@@ -89,7 +95,7 @@ add_custom_target(
     COMMAND
     ${CMAKE_COMMAND}
     -DSOURCE_DIR=${CMAKE_SOURCE_DIR}
-    -DBINARY_DIR=${CMAKE_CURRENT_BINARY_DIR}
+    -DBINARY_DIR=${CMAKE_BINARY_DIR}/src
     -P
     ${CMAKE_SOURCE_DIR}/src/getgit.cmake
     COMMENT
@@ -98,7 +104,7 @@ add_custom_target(
 
 # version.h is a generated file
 set_source_files_properties(
-    ${CMAKE_CURRENT_BINARY_DIR}/version.h
+    ${CMAKE_BINARY_DIR}/src/version.h
     PROPERTIES
     GENERATED
     TRUE
@@ -111,7 +117,6 @@ add_dependencies(
     GITrevision
 )
 
-
 install(
     TARGETS
     kbibtex
@@ -119,7 +124,7 @@ install(
 )
 
 install(
-    FILES
+    PROGRAMS
     kbibtex.desktop
     DESTINATION
     ${XDG_APPS_INSTALL_DIR}
