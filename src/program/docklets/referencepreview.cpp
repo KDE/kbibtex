@@ -38,6 +38,7 @@
 #include <QDebug>
 #include <QFileDialog>
 #include <QPushButton>
+#include <QFontDatabase>
 
 #include <KLocalizedString>
 #include <KComboBox>
@@ -86,8 +87,8 @@ public:
             : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName(QLatin1String("Reference Preview Docklet")),
           configKeyName(QLatin1String("Style")), fileView(NULL),
           textColor(QApplication::palette().text().color()),
-          defaultFontSize(KGlobalSettings::generalFont().pointSize()),
-          htmlStart("<html>\n<head>\n<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" />\n<style type=\"text/css\">\npre {\n white-space: pre-wrap;\n white-space: -moz-pre-wrap;\n white-space: -pre-wrap;\n white-space: -o-pre-wrap;\n word-wrap: break-word;\n}\n</style>\n</head>\n<body style=\"color: " + textColor.name() + "; font-size: " + QString::number(defaultFontSize) + "pt; font-family: '" + KGlobalSettings::generalFont().family() + "';\">"),
+          defaultFontSize(QFontDatabase::systemFont(QFontDatabase::GeneralFont).pointSize()),
+          htmlStart("<html>\n<head>\n<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" />\n<style type=\"text/css\">\npre {\n white-space: pre-wrap;\n white-space: -moz-pre-wrap;\n white-space: -pre-wrap;\n white-space: -o-pre-wrap;\n word-wrap: break-word;\n}\n</style>\n</head>\n<body style=\"color: " + textColor.name() + "; font-size: " + QString::number(defaultFontSize) + "pt; font-family: '" + QFontDatabase::systemFont(QFontDatabase::GeneralFont).family() + "';\">"),
           notAvailableMessage(htmlStart + "<p style=\"font-style: italic;\">" + i18n("No preview available") + "</p><p style=\"font-size: 90%;\">" + i18n("Reason:") + " %1</p></body></html>") {
         QGridLayout *gridLayout = new QGridLayout(p);
         gridLayout->setMargin(0);
@@ -330,7 +331,7 @@ void ReferencePreview::renderHTML()
             } else if (type.startsWith(QLatin1String("source")) || type.startsWith(QLatin1String("plain"))) {
                 /// source
                 text.prepend(QLatin1String("';\">"));
-                text.prepend(KGlobalSettings::fixedFont().family());
+                text.prepend(QFontDatabase::systemFont(QFontDatabase::FixedFont).family());
                 text.prepend(QLatin1String("<pre style=\"font-family: '"));
                 text.prepend(d->htmlStart);
                 text.append(QLatin1String("</pre></body></html>"));
