@@ -47,14 +47,19 @@ add_definitions(
     -DKDE_DEFAULT_DEBUG_AREA=101017
 )
 
-kde4_add_app_icon(
-    kbibtex_SRCS
-    "${CMAKE_SOURCE_DIR}/icons/hi*-app-kbibtex.png"
-)
-
 if(UNITY_BUILD AND NOT WIN32) # FIXME: Unity build of programs breaks on Windows
     enable_unity_build(kbibtex kbibtex_SRCS)
 endif(UNITY_BUILD AND NOT WIN32)
+
+ecm_add_app_icon( kbibtex_SRCS
+    ICONS
+    ${CMAKE_SOURCE_DIR}/icons/128-apps-kbibtex.png
+    ${CMAKE_SOURCE_DIR}/icons/16-apps-kbibtex.png
+    ${CMAKE_SOURCE_DIR}/icons/22-apps-kbibtex.png
+    ${CMAKE_SOURCE_DIR}/icons/32-apps-kbibtex.png
+    ${CMAKE_SOURCE_DIR}/icons/48-apps-kbibtex.png
+    ${CMAKE_SOURCE_DIR}/icons/64-apps-kbibtex.png
+)
 
 kde4_add_executable(
     kbibtex
@@ -124,4 +129,15 @@ install(
     kbibtexui.rc
     DESTINATION
     ${DATA_INSTALL_DIR}/kbibtex
+)
+
+ecm_install_icons(
+    ICONS
+    ${CMAKE_SOURCE_DIR}/icons/128-apps-kbibtex.png
+    ${CMAKE_SOURCE_DIR}/icons/16-apps-kbibtex.png
+    ${CMAKE_SOURCE_DIR}/icons/22-apps-kbibtex.png
+    ${CMAKE_SOURCE_DIR}/icons/32-apps-kbibtex.png
+    ${CMAKE_SOURCE_DIR}/icons/48-apps-kbibtex.png
+    ${CMAKE_SOURCE_DIR}/icons/64-apps-kbibtex.png
+    DESTINATION ${ICON_INSTALL_DIR}
 )
