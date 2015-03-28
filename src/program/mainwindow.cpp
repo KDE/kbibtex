@@ -25,7 +25,6 @@
 #include <QTimer>
 #include <QFileDialog>
 
-#include <KIO/NetAccess>
 #include <KApplication>
 #include <KAction>
 #include <KActionMenu>

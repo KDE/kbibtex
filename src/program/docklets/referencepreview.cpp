@@ -42,7 +42,7 @@
 #include <KComboBox>
 #include <KMimeType>
 #include <KRun>
-#include <KIO/NetAccess>
+// FIXME #include <KIO/NetAccess>
 #include <KSharedConfig>
 
 #include "fileexporterbibtex.h"
@@ -132,8 +132,9 @@ public:
         bool result = saveHTML(file);
 
         if (result) {
-            KIO::NetAccess::del(url, p); /// ignore error if file does not exist
-            result = KIO::NetAccess::file_copy(QUrl(file.fileName()), url, p);
+            // FIXME KIO::NetAccess::del(url, p); /// ignore error if file does not exist
+            // FIXME result = KIO::NetAccess::file_copy(QUrl(file.fileName()), url, p);
+            result = false;// FIXME
         }
 
         return result;
