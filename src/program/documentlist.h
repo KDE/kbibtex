@@ -20,10 +20,9 @@
 
 #include <QListView>
 #include <QAbstractListModel>
+#include <QListWidgetItem>
 #include <QStyledItemDelegate>
-
 #include <QTabWidget>
-#include <KListWidget>
 #include <QUrl>
 
 #include "openfileinfo.h"
