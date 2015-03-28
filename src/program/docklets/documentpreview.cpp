@@ -608,11 +608,7 @@ void DocumentPreview::statFinished(KJob *kjob)
     KIO::StatJob *job = static_cast<KIO::StatJob *>(kjob);
     d->runningJobs.removeOne(job);
     if (!job->error()) {
-#if KDE_IS_VERSION(4, 4, 0)
         const QUrl url = job->mostLocalUrl();
-#else // KDE_IS_VERSION
-        const QUrl url = job->url();
-#endif // KDE_IS_VERSION
         DocumentPreviewPrivate::UrlInfo urlInfo = d->urlMetaInfo(url);
         setCursor(d->runningJobs.isEmpty() ? Qt::ArrowCursor : Qt::BusyCursor);
         d->addUrl(urlInfo);
