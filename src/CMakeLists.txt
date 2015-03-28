@@ -77,12 +77,12 @@ add_subdirectory(
 add_subdirectory(
     networking
 )
-# add_subdirectory(
-#     gui
-# )
-# add_subdirectory(
-#     program
-# )
+add_subdirectory(
+    gui
+)
+add_subdirectory(
+    program
+)
 # add_subdirectory(
 #     parts
 # )
