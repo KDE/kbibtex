@@ -47,7 +47,7 @@
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <KTemporaryFile>
-#include <KIO/NetAccess>
+// FIXME #include <KIO/NetAccess>
 #include <KRun>
 
 #include "file.h"
@@ -259,8 +259,11 @@ public:
 
     void makeBackup(const QUrl &url) const {
         /// Do not make backup copies if file does not exist yet
+        // FIXME
+        /*
         if (!KIO::NetAccess::exists(url, KIO::NetAccess::DestinationSide, p->widget()))
             return;
+        */
 
         /// Fetch settings from configuration
         KConfigGroup configGroup(config, Preferences::groupGeneral);
@@ -281,6 +284,8 @@ public:
             QUrl a(url);
             a = a.adjusted(QUrl::RemoveFilename);
             a.setPath(a.path() + url.fileName() + (i > 1 ? QString("~%1").arg(i) : QLatin1String("~")));
+            copySucceeded = false;// FIXME
+            /*
             if (KIO::NetAccess::exists(a, KIO::NetAccess::DestinationSide, p->widget())) {
                 QUrl b(url);
                 b = b.adjusted(QUrl::RemoveFilename);
@@ -288,6 +293,7 @@ public:
                 KIO::NetAccess::del(b, p->widget());
                 copySucceeded = KIO::NetAccess::file_copy(a, b, p->widget());
             }
+            */
         }
 
         if (copySucceeded && (numberOfBackups > 0)) {
@@ -295,8 +301,11 @@ public:
             QUrl b(url);
             b = b.adjusted(QUrl::RemoveFilename);
             b.setPath(b.path() + url.fileName() + QLatin1String("~"));
+            copySucceeded = false;// FIXME
+            /*
             KIO::NetAccess::del(b, p->widget());
             copySucceeded = KIO::NetAccess::file_copy(url, b, p->widget());
+            */
         }
 
         if (!copySucceeded)
@@ -410,8 +419,11 @@ public:
                 realUrl = QUrl::fromLocalFile(fileInfo.symLinkTarget());
             }
         }
+        result = false;// FIXME
+        /*
         KIO::NetAccess::del(realUrl, p->widget());
         result &= KIO::NetAccess::file_copy(temporaryFile.fileName(), realUrl, p->widget());
+        */
 
         qApp->restoreOverrideCursor();
         if (!result)
