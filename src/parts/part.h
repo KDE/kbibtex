@@ -18,9 +18,11 @@
 #ifndef KBIBTEX_PART_PART_H
 #define KBIBTEX_PART_PART_H
 
-#include <kparts/part.h>
-
 #include <QObject>
+
+#include <KParts/Part>
+#include <KParts/ReadWritePart>
+#include <KAboutData>
 
 #include "notificationhub.h"
 #include "partwidget.h"
@@ -32,7 +34,7 @@ class KBibTeXPart : public KParts::ReadWritePart, private NotificationListener
     friend class KBibTeXBrowserExtension;
 
 public:
-    KBibTeXPart(QWidget *parentWidget, QObject *parent);
+    KBibTeXPart(QWidget *parentWidget, QObject *parent, const KAboutData &aboutData);
     virtual ~KBibTeXPart();
 
     void setModified(bool modified);

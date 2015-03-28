@@ -550,11 +550,10 @@ public:
     }
 };
 
-KBibTeXPart::KBibTeXPart(QWidget *parentWidget, QObject *parent)
+KBibTeXPart::KBibTeXPart(QWidget *parentWidget, QObject *parent, const KAboutData &aboutData)
         : KParts::ReadWritePart(parent), d(new KBibTeXPartPrivate(this))
 {
-    setComponentData(KBibTeXPartFactory::componentData());
-    setObjectName("KBibTeXPart::KBibTeXPart");
+    setComponentData(aboutData);
 
     d->partWidget = new PartWidget(parentWidget);
     d->partWidget->fileView()->setReadOnly(!isReadWrite());
