@@ -25,7 +25,8 @@
 #include <KService>
 
 #include "openfileinfo.h"
-#include <fileview.h>
+
+class FileView;
 
 namespace KParts
 {

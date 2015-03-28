@@ -31,7 +31,6 @@
 #include <QAction>
 
 #include <KActionMenu>
-#include <KGlobal>
 #include <KActionCollection>
 #include <KPluginFactory>
 #include <KPluginLoader>
