@@ -24,6 +24,7 @@
 #include <QAction>
 
 #include <KLocalizedString>
+#include <KIconLoader>
 
 #include "file.h"
 #include "clipboard.h"

@@ -30,8 +30,6 @@
 #include <QDebug>
 #include <QAction>
 
-#include <KLocale>
-#include <KGlobal>
 #include <KLocalizedString>
 #include <KActionMenu>
 #include <KDirOperator>
