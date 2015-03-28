@@ -23,6 +23,7 @@
 #include <QAction>
 #include <QFile>
 #include <QFileInfo>
+#include <QMenu>
 #include <QApplication>
 #include <QLayout>
 #include <QKeyEvent>
@@ -42,7 +43,6 @@
 #include <KSelectAction>
 #include <KToggleAction>
 #include <KSharedConfig>
-#include <KMenu>
 #include <KTemporaryFile>
 #include <KIO/NetAccess>
 #include <KRun>
@@ -100,7 +100,7 @@ public:
     SortFilterFileModel *sortFilterProxyModel;
     QSignalMapper *signalMapperNewElement;
     QAction *editCutAction, *editDeleteAction, *editCopyAction, *editPasteAction, *editCopyReferencesAction, *elementEditAction, *elementViewDocumentAction, *fileSaveAction, *elementFindPDFAction, *entryApplyDefaultFormatString;
-    KMenu *viewDocumentMenu;
+    QMenu *viewDocumentMenu;
     QSignalMapper *signalMapperViewDocument;
     QSet<QObject *> signalMapperViewDocumentSenders;
     bool isSaveAsOperation;
@@ -111,7 +111,7 @@ public:
     QFileSystemWatcher fileSystemWatcher;
 
     KBibTeXPartPrivate(KBibTeXPart *parent)
-            : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), bibTeXFile(NULL), model(NULL), sortFilterProxyModel(NULL), signalMapperNewElement(new QSignalMapper(parent)), viewDocumentMenu(new KMenu(i18n("View Document"), parent->widget())), signalMapperViewDocument(new QSignalMapper(parent)), isSaveAsOperation(false), fileSystemWatcher(p) {
+            : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), bibTeXFile(NULL), model(NULL), sortFilterProxyModel(NULL), signalMapperNewElement(new QSignalMapper(parent)), viewDocumentMenu(new QMenu(i18n("View Document"), parent->widget())), signalMapperViewDocument(new QSignalMapper(parent)), isSaveAsOperation(false), fileSystemWatcher(p) {
         connect(signalMapperViewDocument, SIGNAL(mapped(QObject*)), p, SLOT(elementViewDocumentMenu(QObject*)));
         connect(&fileSystemWatcher, SIGNAL(fileChanged(QString)), p, SLOT(fileExternallyChange(QString)));
     }
@@ -482,7 +482,7 @@ public:
                     /// If there is 'first action', then there must be
                     /// local URLs (i.e. local files) and firstAction
                     /// is the first one where a title can be set above
-                    viewDocumentMenu->addTitle(i18n("Local Files"), firstAction);
+                    viewDocumentMenu->insertSection(firstAction, i18n("Local Files"));
                 }
 
                 firstAction = NULL; /// Now the first remote action is to be memorized
@@ -508,7 +508,7 @@ public:
                     /// If there is 'first action', then there must be
                     /// some remote URLs and firstAction is the first
                     /// one where a title can be set above
-                    viewDocumentMenu->addTitle(i18n("Remote Files"), firstAction);
+                    viewDocumentMenu->insertSection(firstAction, i18n("Remote Files"));
                 }
 
                 result = urlList.count();
@@ -594,7 +594,7 @@ void KBibTeXPart::setupActions()
 
     KActionMenu *newElementAction = new KActionMenu(QIcon::fromTheme("address-book-new"), i18n("New element"), this);
     actionCollection()->addAction("element_new", newElementAction);
-    KMenu *newElementMenu = new KMenu(newElementAction->text(), widget());
+    QMenu *newElementMenu = new QMenu(newElementAction->text(), widget());
     newElementAction->setMenu(newElementMenu);
     connect(newElementAction, SIGNAL(triggered()), this, SLOT(newEntryTriggered()));
     QAction *newEntry = newElementMenu->addAction(QIcon::fromTheme("address-book-new"), i18n("New entry"));
