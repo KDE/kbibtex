@@ -419,7 +419,7 @@ void SearchForm::foundEntry(QSharedPointer<Entry> entry)
     d->sr->insertElement(entry);
 }
 
-void SearchForm::stoppedSearch(int resultCode)
+void SearchForm::stoppedSearch(int)
 {
     OnlineSearchAbstract *engine = static_cast<OnlineSearchAbstract *>(sender());
     if (d->runningSearches.remove(engine)) {
