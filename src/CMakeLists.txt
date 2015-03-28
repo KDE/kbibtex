@@ -83,9 +83,9 @@ add_subdirectory(
 add_subdirectory(
     program
 )
-# add_subdirectory(
-#     parts
-# )
+add_subdirectory(
+    parts
+)
 # add_subdirectory(
 #     test
 # )

@@ -1,6 +1,24 @@
+# KBibTeX KPart
+
+set(
+    kbibtexpart_SRCS
+    part.cpp
+    partfactory.cpp
+)
+
+# # debug area for KBibTeX's IO library
+# add_definitions(
+#     -DKDE_DEFAULT_DEBUG_AREA=101013
+# )
+
+# if(UNITY_BUILD)
+#     enable_unity_build(kbibtexpart kbibtexpart_SRCS)
+# endif(UNITY_BUILD)
+
 include_directories(
     ${CMAKE_SOURCE_DIR}/src/config
     ${CMAKE_SOURCE_DIR}/src/data
+    ${CMAKE_BINARY_DIR}/src/io
     ${CMAKE_SOURCE_DIR}/src/io
     ${CMAKE_SOURCE_DIR}/src/gui
     ${CMAKE_SOURCE_DIR}/src/gui/config
@@ -10,33 +28,8 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/src/gui/file
     ${CMAKE_SOURCE_DIR}/src/processing
     ${CMAKE_SOURCE_DIR}/src/networking
+    ${CMAKE_SOURCE_DIR}/src
     ${CMAKE_CURRENT_BINARY_DIR}
-)
-
-# debug area for KBibTeX's IO library
-add_definitions(
-    -DKDE_DEFAULT_DEBUG_AREA=101013
-)
-
-set(
-    kbibtexpart_SRCS
-    part.cpp
-    browserextension.cpp
-    partfactory.cpp
-)
-
-
-# creates version.h using cmake script
-add_custom_target(
-    GITrevision
-    COMMAND
-    ${CMAKE_COMMAND}
-    -DSOURCE_DIR=${CMAKE_SOURCE_DIR}
-    -DBINARY_DIR=${CMAKE_CURRENT_BINARY_DIR}
-    -P
-    ${CMAKE_SOURCE_DIR}/src/getgit.cmake
-    COMMENT
-    "Determine Git revision"
 )
 
 # version.h is a generated file
@@ -49,21 +42,14 @@ set_source_files_properties(
     TRUE
 )
 
-
-if(UNITY_BUILD)
-    enable_unity_build(kbibtexpart kbibtexpart_SRCS)
-endif(UNITY_BUILD)
-
-kde4_add_plugin(
-    kbibtexpart
+add_library( kbibtexpart
+    MODULE
     ${kbibtexpart_SRCS}
     ${CMAKE_CURRENT_BINARY_DIR}/version.h
 )
 
-target_link_libraries(
-    kbibtexpart
-    LINK_PRIVATE
-    ${KDE4_KPARTS_LIBS}
+target_link_libraries( kbibtexpart
+    KF5::KDELibs4Support
     kbibtexconfig
     kbibtexdata
     kbibtexio
@@ -71,9 +57,21 @@ target_link_libraries(
     kbibtexproc
 )
 
-add_dependencies(
-    kbibtexpart
-    GITrevision
+add_dependencies( kbibtexpart
+    GITrevisionPart
+)
+
+# creates version.h using cmake script
+add_custom_target(
+    GITrevisionPart
+    COMMAND
+    ${CMAKE_COMMAND}
+    -DSOURCE_DIR=${CMAKE_SOURCE_DIR}
+    -DBINARY_DIR=${CMAKE_CURRENT_BINARY_DIR}
+    -P
+    ${CMAKE_SOURCE_DIR}/src/getgit.cmake
+    COMMENT
+    "Determine Git revision"
 )
 
 install(
