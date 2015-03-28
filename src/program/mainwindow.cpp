@@ -24,6 +24,7 @@
 #include <QMimeData>
 #include <QtCore/QPointer>
 #include <QMessageBox>
+#include <QMenu>
 #include <QTimer>
 #include <QFileDialog>
 #include <QAction>
@@ -34,7 +35,6 @@
 #include <KActionCollection>
 #include <KPluginFactory>
 #include <KPluginLoader>
-#include <KMenu>
 #include <KLocalizedString>
 #include <KSharedConfig>
 
@@ -84,7 +84,7 @@ public:
     SearchForm *searchForm;
     SearchResults *searchResults;
     ElementForm *elementForm;
-    KMenu *actionMenuRecentFilesMenu;
+    QMenu *actionMenuRecentFilesMenu;
 
     KBibTeXMainWindowPrivate(KBibTeXMainWindow */* UNUSED parent*/)
     // UNUSED : p(parent)
@@ -118,7 +118,7 @@ KBibTeXMainWindow::KBibTeXMainWindow()
 
     KActionMenu *showPanelsAction = new KActionMenu(i18n("Show Panels"), this);
     actionCollection()->addAction("settings_shown_panels", showPanelsAction);
-    KMenu *showPanelsMenu = new KMenu(showPanelsAction->text(), widget());
+    QMenu *showPanelsMenu = new QMenu(showPanelsAction->text(), widget());
     showPanelsAction->setMenu(showPanelsMenu);
 
     KActionMenu *actionMenuRecentFiles = new KActionMenu(QIcon::fromTheme("document-open-recent"), i18n("Recently used files"), this);
