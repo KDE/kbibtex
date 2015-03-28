@@ -33,7 +33,7 @@ set(
 include(KDEInstallDirs)
 include(KDECompilerSettings)
 include(KDECMakeSettings)
-# include(ECMInstallIcons)
+include(ECMInstallIcons)
 # include(ECMGenerateHeaders)
 include(GenerateExportHeader)
 # include(ECMSetupVersion)
@@ -59,6 +59,9 @@ find_package(
     IconThemes
     ItemViews
     Completion
+    Parts
+    CoreAddons
+    Service
     KDELibs4Support
 )
 #     Archive
