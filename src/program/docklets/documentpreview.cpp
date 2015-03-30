@@ -224,7 +224,7 @@ public:
 #else // HAVE_QTWEBKIT
         qDebug() << "WebKit not is available, using KHTML instead for HTML/Web preview.";
         htmlPart = locatePart(QLatin1String("khtml.desktop"), stackedWidget);
-        swpHTML = stackedWidget->addWidget(htmlPart->widget());
+        swpHTML = (htmlPart == NULL) ? -1 : stackedWidget->addWidget(htmlPart->widget());
 #endif // HAVE_QTWEBKIT
 
         loadState();
@@ -275,7 +275,7 @@ public:
 #ifdef HAVE_QTWEBKIT // krazy:exclude=cpp
         htmlWidget->stop();
 #else // HAVE_QTWEBKIT
-        htmlPart->closeUrl();
+        if (htmlPart != NULL) htmlPart->closeUrl();
 #endif // HAVE_QTWEBKIT
         urlComboBox->setEnabled(false);
         urlComboBox->clear();
@@ -329,7 +329,8 @@ public:
         message->setText(msgText);
         if (swpOkular >= 0)
             stackedWidget->widget(swpOkular)->setEnabled(false);
-        stackedWidget->widget(swpHTML)->setEnabled(false);
+        if (swpHTML >= 0)
+            stackedWidget->widget(swpHTML)->setEnabled(false);
         menuBar->setVisible(false);
         toolBar->setVisible(true);
         menuBar->clear();
@@ -444,7 +445,8 @@ public:
         static const QStringList htmlMimetypes = QStringList() << QLatin1String("text/html") << QLatin1String("application/xml") << QLatin1String("application/xhtml+xml");
         static const QStringList imageMimetypes = QStringList() << QLatin1String("image/jpeg") << QLatin1String("image/png") << QLatin1String("image/gif") << QLatin1String("image/tiff");
 
-        stackedWidget->widget(swpHTML)->setEnabled(false);
+        if (swpHTML >= 0)
+            stackedWidget->widget(swpHTML)->setEnabled(false);
         if (swpOkular >= 0 && okularPart != NULL) {
             stackedWidget->widget(swpOkular)->setEnabled(false);
             okularPart->closeUrl();
@@ -452,7 +454,7 @@ public:
 #ifdef HAVE_QTWEBKIT // krazy:exclude=cpp
         htmlWidget->stop();
 #else // HAVE_QTWEBKIT
-        htmlPart->closeUrl();
+        if (htmlPart != NULL) htmlPart->closeUrl();
 #endif // HAVE_QTWEBKIT
 
         if (okularPart != NULL && okularMimetypes.contains(urlInfo.mimeType)) {
@@ -466,7 +468,7 @@ public:
             htmlWidget->load(urlInfo.url);
             return true;
 #else // HAVE_QTWEBKIT
-            return htmlPart->openUrl(urlInfo.url);
+            return htmlPart == NULL ? false : htmlPart->openUrl(urlInfo.url);
 #endif // HAVE_QTWEBKIT
         } else if (imageMimetypes.contains(urlInfo.mimeType)) {
             p->setCursor(Qt::BusyCursor);
