@@ -105,11 +105,9 @@ int main(int argc, char *argv[])
 
         arguments->clear();
     }
-
-    return programCore.exec();
     */
 
-
+    return programCore.exec();
 }
 
 
