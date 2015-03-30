@@ -245,7 +245,7 @@ public:
             /// (based on patch by Luis Silva)
             QString fn = urlInfo.url.fileName();
             QString full = urlInfo.url.url(QUrl::PreferLocalFile);
-            QString dir = urlInfo.url.adjusted(QUrl::RemoveFilename|QUrl::StripTrailingSlash).path();
+            QString dir = urlInfo.url.adjusted(QUrl::RemoveFilename | QUrl::StripTrailingSlash).path();
             QString text = fn.isEmpty() ? full : (dir.isEmpty() ? fn : QString("%1 [%2]").arg(fn).arg(dir));
             urlComboBox->addItem(urlInfo.icon, text);
         } else {
@@ -510,7 +510,7 @@ public:
         // FIXME accuracy, necessary:
         /*
         if (accuracy < 50) {
-QMimeDatabase db;
+        QMimeDatabase db;
             mimeType = db.mimeTypeForFile(url.fileName());
         }
         */
