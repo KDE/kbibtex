@@ -65,6 +65,7 @@
         <alias type="text/x-endnote-refer"/>
         <alias type="application/x-endnote-library"/>
         <comment>EndNote library</comment>
+        <comment xml:lang="ast">Biblioteca EndNote</comment>
         <comment xml:lang="bs">EndNote biblioteka</comment>
         <comment xml:lang="ca">Biblioteca EndNote</comment>
         <comment xml:lang="cs">Knihovna EndNote</comment>
