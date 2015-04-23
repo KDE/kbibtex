@@ -25,9 +25,6 @@
 
 using namespace Zotero;
 
-const int Zotero::TagModel::TagRole = Qt::UserRole + 6685;
-const int Zotero::TagModel::TagCountRole = Qt::UserRole + 6686;
-
 class Zotero::TagModel::Private
 {
 private:
