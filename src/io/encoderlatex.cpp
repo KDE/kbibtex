@@ -757,7 +757,13 @@ QString EncoderLaTeX::decode(const QString &input) const
                     /// except for hopping over this backslash
                     if (foundCommand)
                         ++i;
-                    else {
+                    else if (i < len - 1 && input[i + 1] == QChar(0x002c /* comma */)) {
+                        /// Found a thin space: \,
+                        /// Replacing Latex-like thin space with Unicode thin space
+                        output.append(QChar(0x2009));
+                        foundCommand = true;
+                        ++i;
+                    } else {
                         /// Nothing special, copy input char to output
                         output.append(c);
                     }
@@ -913,6 +919,12 @@ QString EncoderLaTeX::encode(const QString &ninput) const
                         found = true;
                         break;
                     }
+            }
+
+            if (!found && c.unicode() == 0x2009) {
+                /// Thin space
+                output.append(QLatin1String("\\,"));
+                found = true;
             }
 
             if (!found) {
