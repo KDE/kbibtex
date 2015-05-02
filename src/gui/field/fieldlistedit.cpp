@@ -665,10 +665,10 @@ void KeywordListEdit::slotAddKeywordsFromList()
     QMap<QString, QString> forCaseInsensitiveSorting;
     /// insert all stored, global keywords
     foreach(const QString &keyword, keywords)
-    forCaseInsensitiveSorting.insert(keyword.toLower(), keyword);
+        forCaseInsensitiveSorting.insert(keyword.toLower(), keyword);
     /// insert all unique keywords used in this file
     foreach(const QString &keyword, m_keywordsFromFile)
-    forCaseInsensitiveSorting.insert(keyword.toLower(), keyword);
+        forCaseInsensitiveSorting.insert(keyword.toLower(), keyword);
     /// re-create string list from map's values
     keywords = forCaseInsensitiveSorting.values();
 
@@ -734,10 +734,10 @@ void KeywordListEdit::setCompletionItems(const QStringList &items)
     QMap<QString, QString> forCaseInsensitiveSorting;
     /// insert all stored, global keywords
     foreach(const QString &keyword, keywords)
-    forCaseInsensitiveSorting.insert(keyword.toLower(), keyword);
+        forCaseInsensitiveSorting.insert(keyword.toLower(), keyword);
     /// insert all unique keywords used in this file
     foreach(const QString &keyword, items)
-    forCaseInsensitiveSorting.insert(keyword.toLower(), keyword);
+        forCaseInsensitiveSorting.insert(keyword.toLower(), keyword);
     /// re-create string list from map's values
     keywords = forCaseInsensitiveSorting.values();
 
