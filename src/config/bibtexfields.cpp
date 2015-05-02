@@ -52,6 +52,8 @@ public:
         KConfigGroup configGroup(config, QStringLiteral("User Interface"));
         const QString stylefile = configGroup.readEntry(QStringLiteral("CurrentStyle"), QString(QStringLiteral("bibtex"))).append(QStringLiteral(".kbstyle"));
         layoutConfig = KSharedConfig::openConfig(stylefile, KConfig::FullConfig, QStandardPaths::AppDataLocation);
+        if (layoutConfig->groupList().isEmpty())
+            qCWarning(LOG_KBIBTEX_CONFIG) << "The configuration file for BibTeX fields could not be located or is empty:" << stylefile;
     }
 
     void load() {
@@ -61,6 +63,9 @@ public:
         KConfigGroup configGroup(layoutConfig, groupName);
         int columnCount = configGroup.readEntry(QStringLiteral("count"), bibTeXFieldsMaxColumnCount);
         static const QStringList treeViewNames = QStringList() << QStringLiteral("SearchResults") << QStringLiteral("Main") << QStringLiteral("MergeWidget") << QStringLiteral("Zotero");
+
+        if (columnCount == 0)
+            qCWarning(LOG_KBIBTEX_CONFIG) << "The configuration file for BibTeX fields does not contain columns:" << layoutConfig->name();
 
         for (int col = 1; col <= columnCount; ++col) {
             const QString groupName = QString(QStringLiteral("Column%1")).arg(col);

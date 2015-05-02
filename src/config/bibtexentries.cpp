@@ -51,6 +51,8 @@ public:
         KConfigGroup configGroup(config, QStringLiteral("User Interface"));
         const QString stylefile = configGroup.readEntry("CurrentStyle", "bibtex").append(".kbstyle");
         layoutConfig = KSharedConfig::openConfig(stylefile, KConfig::FullConfig, QStandardPaths::AppDataLocation);
+        if (layoutConfig->groupList().isEmpty())
+            qCWarning(LOG_KBIBTEX_CONFIG) << "The configuration file for BibTeX fields could not be located or is empty:" << stylefile;
     }
 
     void load() {
