@@ -15,25 +15,25 @@
  *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
  ***************************************************************************/
 
-#ifndef KBIBTEX_PART_PARTFACTORY_H
-#define KBIBTEX_PART_PARTFACTORY_H
+#include "browserextension.h"
 
-#include <KAboutData>
-#include <KPluginFactory>
-#include <KParts/Part>
+#include <KParts/ReadOnlyPart>
+#include <KIconLoader>
 
-class KBibTeXPartFactory : public KPluginFactory
+struct BrowserExtension::Private
 {
-    Q_OBJECT
-
-public:
-    KBibTeXPartFactory();
-    virtual ~KBibTeXPartFactory();
-
-    virtual QObject* create(const char *cn, QWidget *parentWidget, QObject *parent, const QVariantList &args, const QString &keyword);
-
-private:
-    KAboutData m_aboutData;
+    KParts::ReadOnlyPart *part;
 };
 
-#endif // KBIBTEX_PART_PARTFACTORY_H
+BrowserExtension::BrowserExtension(KParts::ReadOnlyPart *part)
+    : KParts::BrowserExtension(part), d(new Private)
+{
+    d->part = part;
+    const QString iconPath = KIconLoader::global()->iconPath("text-x-bibtex", KIconLoader::SizeSmall);
+    emit setIconUrl(QUrl::fromLocalFile(iconPath));
+}
+
+BrowserExtension::~BrowserExtension()
+{
+    delete d;
+}

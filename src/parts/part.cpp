@@ -49,6 +49,7 @@
 #include <KTemporaryFile>
 // FIXME #include <KIO/NetAccess>
 #include <KRun>
+#include <KPluginFactory>
 
 #include "file.h"
 #include "macro.h"
@@ -81,8 +82,11 @@
 #include "valuelistmodel.h"
 #include "clipboard.h"
 #include "idsuggestions.h"
-#include "partfactory.h"
 #include "fileview.h"
+#include "browserextension.h"
+
+K_PLUGIN_FACTORY(KBibTeXPartFactory, registerPlugin<KBibTeXPart>();)
+K_EXPORT_PLUGIN(KBibTeXPartFactory("KBibTeXPart"))
 
 static const char RCFileName[] = "kbibtexpartui.rc";
 static const int smEntry = 1;
@@ -550,10 +554,10 @@ public:
     }
 };
 
-KBibTeXPart::KBibTeXPart(QWidget *parentWidget, QObject *parent, const KAboutData &aboutData)
+KBibTeXPart::KBibTeXPart(QWidget *parentWidget, QObject *parent, const QVariantList& args)
         : KParts::ReadWritePart(parent), d(new KBibTeXPartPrivate(this))
 {
-    setComponentData(aboutData);
+    // FIXME setComponentData(KBibTeXPartFactory::componentData(), false);
 
     d->partWidget = new PartWidget(parentWidget);
     d->partWidget->fileView()->setReadOnly(!isReadWrite());
@@ -563,6 +567,8 @@ KBibTeXPart::KBibTeXPart(QWidget *parentWidget, QObject *parent, const KAboutDat
     setupActions();
 
     d->initializeNew();
+
+    new BrowserExtension(this);
 
     NotificationHub::registerNotificationListener(this, NotificationHub::EventConfigurationChanged);
     d->readConfiguration();
@@ -995,3 +1001,5 @@ void KBibTeXPart::fileExternallyChange(const QString &path)
             qWarning() << "path is Empty";
     }
 }
+
+#include "part.moc"

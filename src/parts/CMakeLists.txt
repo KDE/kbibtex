@@ -3,7 +3,7 @@
 set(
     kbibtexpart_SRCS
     part.cpp
-    partfactory.cpp
+    browserextension.cpp
 )
 
 # # debug area for KBibTeX's IO library
@@ -49,6 +49,7 @@ add_library( kbibtexpart
 )
 
 target_link_libraries( kbibtexpart
+    KF5::Parts
     KF5::KDELibs4Support
     kbibtexconfig
     kbibtexdata
@@ -78,18 +79,17 @@ install(
     TARGETS
     kbibtexpart
     DESTINATION
-    ${PLUGIN_INSTALL_DIR}
+    ${KDE_INSTALL_PLUGINDIR}
 )
 install(
     FILES
     kbibtexpart.desktop
     DESTINATION
-    ${SERVICES_INSTALL_DIR}
+    ${KDE_INSTALL_KSERVICES5DIR}
 )
 install(
     FILES
-    kbibtexpartui.rc
+    part.rc
     DESTINATION
-    ${KDE_INSTALL_KXMLGUI5DIR}/kbibtex
+    ${KXMLGUI_INSTALL_DIR}/kbibtex
 )
-
