@@ -37,8 +37,6 @@ public:
     File *load(QIODevice *iodevice);
     static bool guessCanDecode(const QString &text);
 
-    static bool containsBibTeXData(const QUrl &url);
-
 public slots:
     void cancel();
 
