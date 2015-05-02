@@ -1,5 +1,24 @@
 ChangeLog
 
+Diff 0.5.2 to 0.6
+
+- Migrating to KDE's Git infrastructure
+- Allowing "unity builds", i.e. merging source code files for faster compilation
+- Enabling BibUtils support to import/export exotic file formats
+- Entries can be rated with stars
+- Adding entry type for Master's thesis
+- Setting entry identifiers automatically if configured by user
+- Files (e.g. PDF) can be 'associated' with an entry, including moving/copying/renaming the file to match the bibliography's location and the entry's id
+- In the element editor, unused tabs are no longer just disabled, but hidden instead
+- Automatic column-resizing improved
+- Adding user interface translations to various languages
+- Various fixes as suggested by KDE's code analysis tool Krazy
+- Numerous small fixes and changes, run 'git diff v0.5.2..v0.6' for details
+
+RESUME AT Comment *FileImporterBibTeX::readCommentElement
+
+Diff 0.5.1 to 0.5.2
+
 Diff 0.5 to 0.5.1
 
 - KDE Bug 329724: https://bugs.kde.org/show_bug.cgi?id=329724
