@@ -23,7 +23,6 @@
 
 #include <KLocalizedString>
 #include <KComboBox>
-// FIXME #include <KIO/NetAccess>
 #include <KMessageBox>
 #include <KGuiItem>
 #include <QStandardPaths>
@@ -126,20 +125,6 @@ public:
         default:
             qWarning() << "There should be no use for a default case here!";
         }
-    }
-
-    QIcon iconFromFavicon(const QString &url) {
-        static const QRegExp invalidChars("[^-a-z0-9_]", Qt::CaseInsensitive);
-        QString fileName = url;
-        fileName = fileName.remove(invalidChars);
-        fileName.prepend(QStandardPaths::writableLocation(QStandardPaths::CacheLocation) + QLatin1String("/favicons/")).append(".png");
-
-        if (!QFileInfo(fileName).exists()) {
-            // FIXME if (!KIO::NetAccess::file_copy(QUrl(url), QUrl(fileName), NULL))
-                return QIcon();
-        }
-
-        return QIcon::fromTheme(fileName);
     }
 };
 
