@@ -326,7 +326,7 @@ public:
         if (!mustBeImportable && !QStandardPaths::findExecutable(QLatin1String("latex2rtf")).isEmpty())
             supportedMimeTypes += QLatin1String(" application/rtf");
 
-        QPointer<QFileDialog> saveDlg = new QFileDialog(p->widget(), i18n("Save file") /* TODO better text */, startDir, supportedMimeTypes );
+        QPointer<QFileDialog> saveDlg = new QFileDialog(p->widget(), i18n("Save file") /* TODO better text */, startDir, supportedMimeTypes);
         /// Setting list of mime types for the second time,
         /// essentially calling this function only to set the "default mime type" parameter
         saveDlg->setMimeTypeFilters(supportedMimeTypes.split(QLatin1Char(' '), QString::SkipEmptyParts));
@@ -337,7 +337,7 @@ public:
             return QUrl();
         const QList<QUrl> selectedUrls = saveDlg->selectedUrls();
         delete saveDlg;
-        return selectedUrls.isEmpty() ? QUrl(): selectedUrls.first();
+        return selectedUrls.isEmpty() ? QUrl() : selectedUrls.first();
     }
 
     bool saveFile(const QUrl &url) {
@@ -345,7 +345,7 @@ public:
 
         /// configure and open temporary file
         const QRegExp suffixRegExp("\\.[^.]{1,4}$");
-        const QString suffix = suffixRegExp.indexIn(url.url(QUrl::PreferLocalFile)) >= 0 ? suffixRegExp.cap(0): QString();
+        const QString suffix = suffixRegExp.indexIn(url.url(QUrl::PreferLocalFile)) >= 0 ? suffixRegExp.cap(0) : QString();
         QTemporaryFile temporaryFile(QString(QLatin1String("savefile-XXXXXX")).append(suffix));
         temporaryFile.setAutoRemove(true);
         if (!temporaryFile.open())
