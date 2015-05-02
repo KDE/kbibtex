@@ -40,7 +40,6 @@
 #include <KSqueezedTextLabel>
 #include <KRun>
 #include <KTemporaryFile>
-// FIXME #include <KIO/NetAccess>
 #include <QMimeDatabase>
 #include <QMimeType>
 
@@ -456,11 +455,9 @@ void FindPDFUI::apply(Entry &entry, const File &bibtexFile)
             if (!absoluteFilename.isEmpty()) {
                 const QString visibleFilename = UrlListEdit::askRelativeOrStaticFilename(this, absoluteFilename, startUrl);
 
-                // FIXME KIO::NetAccess != KF5
-                /*
                 qDebug() << "Saving PDF from " << url << " to file " << absoluteFilename << " known as " << visibleFilename;
                 // FIXME test for overwrite
-                KIO::NetAccess::file_copy(QUrl::fromLocalFile(tempfileName), QUrl::fromLocalFile(absoluteFilename), this);
+                QFile::copy(tempfileName, absoluteFilename);
 
                 bool alreadyContained = false;
                 for (QMap<QString, Value>::ConstIterator it = entry.constBegin(); !alreadyContained && it != entry.constEnd(); ++it)
@@ -479,7 +476,6 @@ void FindPDFUI::apply(Entry &entry, const File &bibtexFile)
                             }
                         }
                 }
-                */
             }
         }
     }
