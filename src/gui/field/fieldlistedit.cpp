@@ -19,6 +19,7 @@
 
 #include <typeinfo>
 
+#include <QDebug>
 #include <QApplication>
 #include <QClipboard>
 #include <QScrollArea>
@@ -38,7 +39,7 @@
 
 #include <KMessageBox>
 #include <KLocalizedString>
-// FIXME #include <KIO/NetAccess>
+#include <KIO/CopyJob>
 #include <KSharedConfig>
 #include <KConfigGroup>
 
@@ -519,7 +520,7 @@ void UrlListEdit::slotSaveLocally(QWidget *widget)
     /// Determine FieldLineEdit widget
     FieldLineEdit *fieldLineEdit = qobject_cast<FieldLineEdit *>(widget);
     /// Build Url from line edit's content
-    const QUrl url(fieldLineEdit->text());
+    const QUrl url = QUrl::fromUserInput(fieldLineEdit->text());
 
     /// Only proceed if Url is valid and points to a remote location
     if (url.isValid() && !urlIsLocal(url)) {
@@ -541,21 +542,27 @@ void UrlListEdit::slotSaveLocally(QWidget *widget)
                 visibleFilename = askRelativeOrStaticFilename(this, absoluteFilename, d->file->property(File::Url).toUrl());
 
             /// Download remote file and save it locally
-            // FIXME: KIO::NetAccess::download is blocking
-            /*
             setEnabled(false);
             setCursor(Qt::WaitCursor);
-            if (KIO::NetAccess::file_copy(url, QUrl::fromLocalFile(absoluteFilename), this)) {
-                /// Download succeeded, add reference to local file to this BibTeX entry
-                Value *value = new Value();
-                value->append(QSharedPointer<VerbatimText>(new VerbatimText(visibleFilename)));
-                lineAdd(value);
-            }
-            setEnabled(true);
-            */
-            unsetCursor();
+            KIO::CopyJob *job = KIO::copy(url, QUrl::fromLocalFile(absoluteFilename), KIO::Overwrite);
+            job->setProperty("visibleFilename", QVariant::fromValue<QString>(visibleFilename));
+            connect(job, &KJob::result, this, &UrlListEdit::downloadFinished);
         }
     }
+}
+
+void UrlListEdit::downloadFinished(KJob *j) {
+    KIO::CopyJob *job = static_cast<KIO::CopyJob *>(j);
+    if (job->error() == 0) {
+        /// Download succeeded, add reference to local file to this BibTeX entry
+        Value *value = new Value();
+        value->append(QSharedPointer<VerbatimText>(new VerbatimText(job->property("visibleFilename").toString())));
+        lineAdd(value);
+    } else {
+        qWarning() << "Downloading" << job->srcUrls().first().toDisplayString() << "failed with error" << job->error() << job->errorString();
+    }
+    setEnabled(true);
+    unsetCursor();
 }
 
 void UrlListEdit::textChanged(QWidget *widget)
@@ -571,16 +578,15 @@ void UrlListEdit::textChanged(QWidget *widget)
     /// Create URL from new text to make some tests on it
     /// Only remote URLs are of interest, therefore no tests
     /// on local file or relative paths
-    QString newText = fieldLineEdit->text();
-    QUrl url(newText);
-    newText = newText.toLower();
+    const QString newText = fieldLineEdit->text();
+    const QString lowerText = newText.toLower();
 
     /// Enable button only if Url is valid and points to a remote
     /// DjVu, PDF, or PostScript file
     // TODO more file types?
-    bool canBeSaved = url.isValid() && !urlIsLocal(url) && (newText.endsWith(QLatin1String(".djvu")) || newText.endsWith(QLatin1String(".pdf")) || newText.endsWith(QLatin1String(".ps")));
+    const bool canBeSaved = lowerText.contains(QLatin1String("://")) && (lowerText.endsWith(QLatin1String(".djvu")) || lowerText.endsWith(QLatin1String(".pdf")) || lowerText.endsWith(QLatin1String(".ps")));
     buttonSaveLocally->setEnabled(canBeSaved);
-    buttonSaveLocally->setToolTip(canBeSaved ? i18n("Save file '%1' locally", url.url(QUrl::PreferLocalFile)) : QLatin1String(""));
+    buttonSaveLocally->setToolTip(canBeSaved ? i18n("Save file '%1' locally", newText) : QLatin1String(""));
 }
 
 QString UrlListEdit::askRelativeOrStaticFilename(QWidget *parent, const QString &absoluteFilename, const QUrl &baseUrl)

@@ -29,8 +29,9 @@ class QCheckBox;
 class QDropEvent;
 class QDragEnterEvent;
 class QSignalMapper;
-
 class QPushButton;
+
+class KJob;
 
 class Element;
 class FieldLineEdit;
@@ -132,6 +133,7 @@ private slots:
     void slotAddReferenceFromClipboard();
     /// Slot for events where the "save locally" button is triggered
     void slotSaveLocally(QWidget *widget);
+    void downloadFinished(KJob *);
     /// Catch events where the line edit's text change
     void textChanged(QWidget *widget);
 
