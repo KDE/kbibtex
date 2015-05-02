@@ -33,8 +33,8 @@
 #include <QDebug>
 #include <QPushButton>
 #include <QFileDialog>
+#include <QDialog>
 
-#include <KDialog>
 #include <KLocalizedString>
 #include <KIconLoader>
 #include <KSqueezedTextLabel>
@@ -401,11 +401,13 @@ FindPDFUI::~FindPDFUI()
 
 void FindPDFUI::interactiveFindPDF(Entry &entry, const File &bibtexFile, QWidget *parent)
 {
-    QPointer<KDialog> dlg = new KDialog(parent);
+    QPointer<QDialog> dlg = new QDialog(parent);
     QPointer<FindPDFUI> widget = new FindPDFUI(entry, dlg);
-    dlg->setCaption(i18n("Find PDF"));
-    dlg->setMainWidget(widget);
-    dlg->enableButtonOk(false);
+    dlg->setWindowTitle(i18n("Find PDF"));
+    QBoxLayout *layout = new QVBoxLayout(dlg);
+    layout->addWidget(widget);
+    dlg->setLayout(layout);
+    // FIXME dlg->enableButtonOk(false);
 
     connect(widget, SIGNAL(resultAvailable(bool)), dlg, SLOT(enableButtonOk(bool)));
 
