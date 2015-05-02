@@ -109,14 +109,16 @@ public:
             return NULL;
         }
 
-        part = newServicePtr->createInstance<KParts::ReadWritePart>(newWidgetParent, (QObject *)newWidgetParent);
+        QString errorString;
+        part = newServicePtr->createInstance<KParts::ReadWritePart>(newWidgetParent, (QObject *)newWidgetParent, QVariantList(), &errorString);
         if (part == NULL) {
+            qDebug() << "Could not instanciate read-write part for service" << newServicePtr->name() << "(" << errorString << ")";
             /// creating a read-write part failed, so maybe it is read-only (like Okular's PDF viewer)?
-            part = newServicePtr->createInstance<KParts::ReadOnlyPart>(newWidgetParent, (QObject *)newWidgetParent);
+            part = newServicePtr->createInstance<KParts::ReadOnlyPart>(newWidgetParent, (QObject *)newWidgetParent, QVariantList(), &errorString);
         }
         if (part == NULL) {
             /// still cannot create part, must be error
-            qCritical() << "Cannot find part for mimetype " << mimeType << endl;
+            qCritical() << "Could not instanciate part for service" << newServicePtr->name() << "(mimeType=" << mimeType << ", error msg=" << errorString << ")";
             return NULL;
         }
 
@@ -307,6 +309,10 @@ KService::Ptr OpenFileInfo::defaultService()
     KService::Ptr result = KMimeTypeTrader::self()->preferredService(mt, QLatin1String("KParts/ReadWritePart"));
     if (!result)
         result = KMimeTypeTrader::self()->preferredService(mt, QLatin1String("KParts/ReadOnlyPart"));
+    if (result)
+        qDebug() << "Using service" << result->name() << "(" << result->comment() << ") for mime type" << mt;
+    else
+        qWarning() << "Could not find service for mime type" << mt;
     return result;
 }
 

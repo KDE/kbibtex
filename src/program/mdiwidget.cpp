@@ -250,8 +250,12 @@ void MDIWidget::setFile(OpenFileInfo *openFileInfo, KService::Ptr servicePtr)
     if (part != NULL) {
         widget = part->widget();
     } else if (openFileInfo != NULL) {
-        QMessageBox::warning(this, i18n("No Part Available"), i18n("No part available for file '%1'.", openFileInfo->url().fileName()));
-        d->ofim->close(openFileInfo);
+        d->ofim->close(openFileInfo); // FIXME does not close correctly if file is new
+        const QString filename = openFileInfo->url().fileName();
+        if (filename.isEmpty())
+            QMessageBox::warning(this, i18n("No Part Available"), i18n("No part available for file of mime type '%1'.", openFileInfo->mimeType()));
+        else
+            QMessageBox::warning(this, i18n("No Part Available"), i18n("No part available for file '%1'.", filename));
         return;
     }
 
