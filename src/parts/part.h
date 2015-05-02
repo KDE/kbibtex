@@ -49,24 +49,6 @@ protected:
     void setupActions();
     void fitActionSettings();
 
-    /*
-      protected Q_SLOTS: // action slots
-        void onSelectAll();
-        void onUnselect();
-        void onSetCoding( int Coding );
-        void onSetEncoding( int Encoding );
-        void onSetShowsNonprinting( bool on );
-        void onSetResizeStyle( int Style );
-        void onToggleOffsetColumn( bool on );
-        void onToggleValueCharColumns( int VisibleColunms );
-    */
-
-    /*
-      private Q_SLOTS:
-        // used to catch changes in the bytearray widget
-        void onSelectionChanged( bool HasSelection );
-    */
-
 protected slots:
     bool documentSave();
     bool documentSaveAs();
