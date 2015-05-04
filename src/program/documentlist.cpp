@@ -30,6 +30,7 @@
 #include <QDebug>
 #include <QAction>
 
+#include <KIconLoader>
 #include <KLocalizedString>
 #include <KActionMenu>
 #include <KDirOperator>
@@ -190,7 +191,7 @@ QVariant DocumentListModel::data(const QModelIndex &index, int role) const
             overlays << "document-save";
         else
             overlays << "";
-        return QIcon::fromTheme(iconName);//KDE::icon(iconName, overlays, 0); // FIXME does this work? look-up KDE::icon
+        return KDE::icon(iconName, overlays, 0);
     }
     case Qt::ToolTipRole: return squeeze_text(openFileInfo->fullCaption(), 64);
     case Qt::UserRole: return qVariantFromValue(openFileInfo);
