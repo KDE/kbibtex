@@ -85,13 +85,8 @@ public:
                 if (role == Qt::DisplayRole || role == Qt::ToolTipRole || role == SortRole)
                     return ofiItem->url().url(QUrl::PreferLocalFile);
             }
-            if (role == URLRole) {
-                const QUrl url = ofiItem->url();
-                if (url.isLocalFile())
-                    return QUrl::fromLocalFile(url.path());
-                else
-                    return url;
-            }
+            if (role == URLRole)
+                return ofiItem->url();
         }
 
         return QVariant();

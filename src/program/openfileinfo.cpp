@@ -63,6 +63,8 @@ public:
         :  m_counter(-1), p(p), part(NULL), internalServicePtr(KService::Ptr()), internalWidgetParent(NULL), flags(0) {
         this->openFileInfoManager = openFileInfoManager;
         this->url = url;
+        if (this->url.scheme().isEmpty())
+            qWarning() << "No scheme specified for URL" << this->url.toDisplayString();
         this->mimeType = mimeType;
     }
 
@@ -177,6 +179,8 @@ void OpenFileInfo::setUrl(const QUrl &url)
 {
     Q_ASSERT_X(url.isValid(), "void OpenFileInfo::setUrl(const QUrl&)", "URL is not valid");
     d->url = url;
+    if (d->url.scheme().isEmpty())
+        qWarning() << "No scheme specified for URL" << d->url.toDisplayString();
     d->mimeType = FileInfo::mimeTypeForUrl(url).name();
     addFlags(OpenFileInfo::HasName);
 }
@@ -375,6 +379,8 @@ public:
         for (int i = 0; i < maxNumFiles; ++i) {
             QUrl fileUrl = QUrl(cg.readEntry(QString("%1-%2").arg(OpenFileInfo::OpenFileInfoPrivate::keyURL).arg(i), ""));
             if (!fileUrl.isValid()) break;
+            if (fileUrl.scheme().isEmpty())
+                fileUrl.setScheme(QLatin1String("file"));
 
             /// For local files, test if they exist; ignore local files that do not exist
             if (fileUrl.isLocalFile()) {
