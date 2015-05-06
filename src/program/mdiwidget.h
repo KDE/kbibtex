@@ -45,7 +45,6 @@ public:
 
     FileView *fileView();
     OpenFileInfo *currentFile();
-    OpenFileInfoManager *getOpenFileInfoManager();
 
 public slots:
     void setFile(OpenFileInfo *openFileInfo, KService::Ptr servicePtr = KService::Ptr());

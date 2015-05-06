@@ -37,7 +37,7 @@ private:
     OpenFileInfoManager *ofim;
 
 public:
-    explicit DocumentListDelegate(OpenFileInfoManager *openFileInfoManager, QObject *parent = NULL);
+    explicit DocumentListDelegate(QObject *parent = NULL);
 
     void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
     QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
@@ -49,7 +49,7 @@ class DocumentListModel : public QAbstractListModel
     Q_OBJECT
 
 public:
-    DocumentListModel(OpenFileInfo::StatusFlag statusFlag, OpenFileInfoManager *openFileInfoManager, QObject *parent = NULL);
+    DocumentListModel(OpenFileInfo::StatusFlag statusFlag, QObject *parent = NULL);
     ~DocumentListModel();
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
@@ -69,7 +69,7 @@ class DocumentListView : public QListView
     Q_OBJECT
 
 public:
-    DocumentListView(OpenFileInfoManager *openFileInfoManager, OpenFileInfo::StatusFlag statusFlag, QWidget *parent);
+    DocumentListView(OpenFileInfo::StatusFlag statusFlag, QWidget *parent);
     ~DocumentListView();
 
 private slots:
@@ -94,7 +94,7 @@ class DocumentList : public QTabWidget
 public:
     enum Category { OpenFiles = 0, RecentFiles = 1, Favorites = 2 };
 
-    explicit DocumentList(OpenFileInfoManager *openFileInfoManager, QWidget *parent = NULL);
+    explicit DocumentList(QWidget *parent = NULL);
 
 signals:
     void openFile(const QUrl &url);

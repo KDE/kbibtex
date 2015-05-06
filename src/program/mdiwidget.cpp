@@ -195,7 +195,7 @@ public:
     KSharedConfigPtr config;
 
     MDIWidgetPrivate(MDIWidget *parent)
-            : p(parent), ofim(new OpenFileInfoManager(parent)), currentFile(NULL), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))) {
+            : p(parent), ofim(OpenFileInfoManager::instance()), currentFile(NULL), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))) {
         createWelcomeWidget();
 
         modelLRU = new LRUItemModel(ofim, listLRU);
@@ -211,7 +211,6 @@ public:
 
     ~MDIWidgetPrivate() {
         saveColumnsState();
-        delete ofim;
         delete welcomeWidget;
     }
 
@@ -296,11 +295,6 @@ FileView *MDIWidget::fileView()
 OpenFileInfo *MDIWidget::currentFile()
 {
     return d->currentFile;
-}
-
-OpenFileInfoManager *MDIWidget::getOpenFileInfoManager()
-{
-    return d->ofim;
 }
 
 void MDIWidget::slotCompleted(QObject *obj)

@@ -68,8 +68,8 @@ public:
     }
 };
 
-DocumentListDelegate::DocumentListDelegate(OpenFileInfoManager *openFileInfoManager, QObject *parent)
-        : QStyledItemDelegate(parent), ofim(openFileInfoManager)
+DocumentListDelegate::DocumentListDelegate(QObject *parent)
+        : QStyledItemDelegate(parent), ofim(OpenFileInfoManager::instance())
 {
     // nothing
 }
@@ -137,19 +137,19 @@ private:
     // UNUSED DocumentListModel *p;
 
 public:
-    DocumentListModelPrivate(OpenFileInfo::StatusFlag statusFlag, OpenFileInfoManager *openFileInfoManager, DocumentListModel */* UNUSED parent*/)
-            : sf(statusFlag), ofim(openFileInfoManager)// UNUSED , p(parent)
+    DocumentListModelPrivate(OpenFileInfo::StatusFlag statusFlag, DocumentListModel */* UNUSED parent*/)
+            : sf(statusFlag), ofim(OpenFileInfoManager::instance())// UNUSED , p(parent)
     {
         /// nothing
     }
 };
 
-DocumentListModel::DocumentListModel(OpenFileInfo::StatusFlag statusFlag, OpenFileInfoManager *openFileInfoManager, QObject *parent)
-        : QAbstractListModel(parent), d(new DocumentListModel::DocumentListModelPrivate(statusFlag, openFileInfoManager, this))
+DocumentListModel::DocumentListModel(OpenFileInfo::StatusFlag statusFlag, QObject *parent)
+        : QAbstractListModel(parent), d(new DocumentListModel::DocumentListModelPrivate(statusFlag, this))
 {
     listsChanged(d->sf);
 
-    connect(openFileInfoManager, SIGNAL(flagsChanged(OpenFileInfo::StatusFlags)), this, SLOT(listsChanged(OpenFileInfo::StatusFlags)));
+    connect(OpenFileInfoManager::instance(), SIGNAL(flagsChanged(OpenFileInfo::StatusFlags)), this, SLOT(listsChanged(OpenFileInfo::StatusFlags)));
 }
 
 DocumentListModel::~DocumentListModel()
@@ -228,17 +228,17 @@ public:
     KService::List openMenuServices;
     QSignalMapper openMenuSignalMapper;
 
-    DocumentListViewPrivate(DocumentListView *parent, OpenFileInfoManager *openFileInfoManager)
-            : p(parent), ofim(openFileInfoManager), actionAddToFav(NULL), actionRemFromFav(NULL), actionCloseFile(NULL), actionOpenFile(NULL) {
+    DocumentListViewPrivate(DocumentListView *parent)
+            : p(parent), ofim(OpenFileInfoManager::instance()), actionAddToFav(NULL), actionRemFromFav(NULL), actionCloseFile(NULL), actionOpenFile(NULL) {
         connect(&openMenuSignalMapper, SIGNAL(mapped(int)), p, SLOT(openFileWithService(int)));
     }
 };
 
-DocumentListView::DocumentListView(OpenFileInfoManager *openFileInfoManager, OpenFileInfo::StatusFlag statusFlag, QWidget *parent)
-        : QListView(parent), d(new DocumentListViewPrivate(this, openFileInfoManager))
+DocumentListView::DocumentListView(OpenFileInfo::StatusFlag statusFlag, QWidget *parent)
+        : QListView(parent), d(new DocumentListViewPrivate(this))
 {
     setContextMenuPolicy(Qt::ActionsContextMenu);
-    setItemDelegate(new DocumentListDelegate(openFileInfoManager, this));
+    setItemDelegate(new DocumentListDelegate(this));
 
     if (statusFlag == OpenFileInfo::Open) {
         d->actionCloseFile = new QAction(QIcon::fromTheme("document-close"), i18n("Close File"), this);
@@ -366,19 +366,19 @@ public:
     DocumentListView *listFavorites;
     DirOperatorWidget *dirOperator;
 
-    DocumentListPrivate(OpenFileInfoManager *openFileInfoManager, DocumentList *p) {
-        listOpenFiles = new DocumentListView(openFileInfoManager, OpenFileInfo::Open, p);
-        DocumentListModel *model = new DocumentListModel(OpenFileInfo::Open, openFileInfoManager, listOpenFiles);
+    DocumentListPrivate(DocumentList *p) {
+        listOpenFiles = new DocumentListView(OpenFileInfo::Open, p);
+        DocumentListModel *model = new DocumentListModel(OpenFileInfo::Open, listOpenFiles);
         listOpenFiles->setModel(model);
         p->addTab(listOpenFiles, QIcon::fromTheme("document-open"), i18n("Open Files"));
 
-        listRecentFiles = new DocumentListView(openFileInfoManager, OpenFileInfo::RecentlyUsed, p);
-        model = new DocumentListModel(OpenFileInfo::RecentlyUsed, openFileInfoManager, listRecentFiles);
+        listRecentFiles = new DocumentListView(OpenFileInfo::RecentlyUsed, p);
+        model = new DocumentListModel(OpenFileInfo::RecentlyUsed, listRecentFiles);
         listRecentFiles->setModel(model);
         p->addTab(listRecentFiles, QIcon::fromTheme("clock"), i18n("Recently Used"));
 
-        listFavorites = new DocumentListView(openFileInfoManager, OpenFileInfo::Favorite, p);
-        model = new DocumentListModel(OpenFileInfo::Favorite, openFileInfoManager, listFavorites);
+        listFavorites = new DocumentListView(OpenFileInfo::Favorite, p);
+        model = new DocumentListModel(OpenFileInfo::Favorite, listFavorites);
         listFavorites->setModel(model);
         p->addTab(listFavorites, QIcon::fromTheme("favorites"), i18n("Favorites"));
 
@@ -388,8 +388,8 @@ public:
     }
 };
 
-DocumentList::DocumentList(OpenFileInfoManager *openFileInfoManager, QWidget *parent)
-        : QTabWidget(parent), d(new DocumentListPrivate(openFileInfoManager, this))
+DocumentList::DocumentList(QWidget *parent)
+        : QTabWidget(parent), d(new DocumentListPrivate(this))
 {
     setDocumentMode(true);
 }

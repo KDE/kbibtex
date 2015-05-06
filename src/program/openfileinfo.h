@@ -105,7 +105,7 @@ class OpenFileInfoManager: public QObject
 public:
     typedef QVector<OpenFileInfo *> OpenFileInfoList;
 
-    explicit OpenFileInfoManager(QWidget *parent);
+    static OpenFileInfoManager *instance();
     ~OpenFileInfoManager();
 
     OpenFileInfo *createNew(const QString &mimeType = FileInfo::mimetypeBibTeX);
@@ -154,9 +154,14 @@ signals:
     void currentChanged(OpenFileInfo *, KService::Ptr);
     void flagsChanged(OpenFileInfo::StatusFlags statusFlags);
 
+protected:
+    explicit OpenFileInfoManager(QObject *parent);
+
 private:
     class OpenFileInfoManagerPrivate;
     OpenFileInfoManagerPrivate *d;
+
+    static OpenFileInfoManager *singleton;
 
 private slots:
     void deferredListsChanged();

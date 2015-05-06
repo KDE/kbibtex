@@ -328,7 +328,6 @@ private:
     static const QString configGroupNameFavorites;
     static const QString configGroupNameOpen;
     static const int maxNumRecentlyUsedFiles, maxNumFavoriteFiles, maxNumOpenFiles;
-    QWidget *widget;
 
 public:
     OpenFileInfoManager *p;
@@ -336,8 +335,8 @@ public:
     OpenFileInfoManager::OpenFileInfoList openFileInfoList;
     OpenFileInfo *currentFileInfo;
 
-    OpenFileInfoManagerPrivate(OpenFileInfoManager *parent, QWidget *w)
-            : widget(w), p(parent), currentFileInfo(NULL) {
+    OpenFileInfoManagerPrivate(OpenFileInfoManager *parent)
+            : p(parent), currentFileInfo(NULL) {
         // nothing
     }
 
@@ -426,11 +425,18 @@ const int OpenFileInfoManager::OpenFileInfoManagerPrivate::maxNumFavoriteFiles =
 const int OpenFileInfoManager::OpenFileInfoManagerPrivate::maxNumRecentlyUsedFiles = 8;
 const int OpenFileInfoManager::OpenFileInfoManagerPrivate::maxNumOpenFiles = 16;
 
+OpenFileInfoManager *OpenFileInfoManager::singleton = NULL;
 
-OpenFileInfoManager::OpenFileInfoManager(QWidget *widget)
-        : QObject(widget), d(new OpenFileInfoManagerPrivate(this, widget))
+OpenFileInfoManager::OpenFileInfoManager(QObject *parent)
+        : QObject(parent), d(new OpenFileInfoManagerPrivate(this))
 {
     QTimer::singleShot(300, this, SLOT(delayedReadConfig()));
+}
+
+OpenFileInfoManager *OpenFileInfoManager::instance() {
+    if (singleton == NULL)
+        singleton = new OpenFileInfoManager(QCoreApplication::instance());
+    return singleton;
 }
 
 OpenFileInfoManager::~OpenFileInfoManager()
