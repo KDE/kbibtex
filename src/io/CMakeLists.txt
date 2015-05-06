@@ -100,6 +100,7 @@ target_link_libraries( kbibtexio
     KF5::XmlGui
     ${LIBXML2_LIBRARIES}
     ${LIBXSLT_LIBRARIES}
+    ${ICU_LIBRARIES}
     kbibtexconfig
     kbibtexdata
 )
