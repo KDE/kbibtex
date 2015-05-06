@@ -133,6 +133,24 @@ find_package(
     QCA2
     REQUIRED
 )
+
+find_package(
+    ICU
+    REQUIRED
+    COMPONENTS uc i18n
+)
+if(
+    ICU_FOUND
+)
+    message(
+        STATUS
+        "Found ICU " ${ICU_VERSION}
+    )
+    include_directories(${ICU_INCLUDE_DIRS})
+endif(
+    ICU_FOUND
+)
+
 find_package(
     QtOAuth
 )

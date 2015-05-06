@@ -17,6 +17,8 @@
 
 #include "encoderlatex.h"
 
+#include <unicode/translit.h>
+
 #include <QString>
 
 #include <KDebug>
@@ -968,17 +970,38 @@ QString EncoderLaTeX::encode(const QString &ninput) const
 
 QString EncoderLaTeX::convertToPlainAscii(const QString &ninput) const
 {
-    /// From iconv's man page:
-    /// If the string //TRANSLIT is appended to to-encoding, characters
-    /// being converted are transliterated when needed and  possible.
-    /// This means that when a character cannot be represented in the
-    /// target character set, it can be approximated through one or
-    /// several similar looking characters.  Characters that are outside
-    /// of the target character set and cannot be transliterated are
-    /// replaced with a question mark (?) in the output.
-    IConvLaTeX iconv(QLatin1String("ascii//translit"));
-    const QByteArray translit = iconv.encode(ninput);
-    return QString(translit);
+    /// Previously, iconv's //TRANSLIT feature had been used here.
+    /// However, the transliteration is locale-specific as discussed
+    /// here:
+    /// http://taschenorakel.de/mathias/2007/11/06/iconv-transliterations/
+    /// Therefore, iconv is not an acceptable solution.
+    ///
+    /// Instead, "International Components for Unicode" (ICU) is used.
+    /// It is already a dependency for Qt, so there is no "cost" involved
+    /// in using it.
+
+    const int ninputLen = ninput.length();
+    /// Make a copy of the input string into an array of UChar
+    UChar *uChars = new UChar[ninputLen];
+    for (int i = 0; i < ninputLen; ++i)
+        uChars[i] = ninput.at(i).unicode();
+    /// Create an ICU-specific unicode string
+    UnicodeString uString = UnicodeString(uChars, ninputLen);
+    /// Create an ICO Transliterator, configured to
+    /// transliterate virtually anything into plain ASCII
+    UErrorCode uec = U_ZERO_ERROR;
+    Transliterator *trans = icu::Transliterator::createInstance("Any-Latin;Latin-ASCII", UTRANS_FORWARD, uec);
+    /// Perform the actual transliteration, modifying Unicode string
+    trans->transliterate(uString);
+    /// Create regular C++ string from Unicode string
+    std::string cppString;
+    uString.toUTF8String(cppString);
+    /// Clean up any mess
+    delete[] uChars;
+    delete trans;
+    /// Convert regular C++ to Qt-specific QString,
+    /// should work as cppString contains only ASCII text
+    return QString::fromAscii(cppString.c_str());
 }
 
 bool EncoderLaTeX::containsOnlyAscii(const QString &ntext)
