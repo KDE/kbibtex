@@ -708,8 +708,8 @@ QString EncoderLaTeX::decode(const QString &input) const
                 /// to check for
                 QString alpha = readAlphaCharacters(input, i + 1);
                 int nextPosAfterAlpha = i + 1 + alpha.size();
-                if (alpha.size() > 1) {
-                    /// We are dealing actually with a string like \AA
+                if (alpha.size() >= 1 && alpha.at(0).isLetter()) {
+                    /// We are dealing actually with a string like \AA or \o
                     /// Check which command it is,
                     /// insert corresponding Unicode character
                     bool foundCommand = false;
