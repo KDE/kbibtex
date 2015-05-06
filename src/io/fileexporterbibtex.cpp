@@ -211,11 +211,10 @@ public:
             QStringList commentLines = text.split('\n', QString::SkipEmptyParts);
             for (QStringList::Iterator it = commentLines.begin(); it != commentLines.end(); ++it) {
                 const QByteArray line = iconvLaTeX->encode(*it);
-                iodevice->putChar('%');
-                if (line.length() > 0 && line[0] != '%') {
-                    /// Avoid space in between if multiple percent signs are used
-                    /// at the beginning of a comment
-                    iodevice->putChar(' ');
+                if (line.length() == 0 || line[0] != QLatin1Char('%')) {
+                    /// Guarantee that every line starts with
+                    /// a percent sign
+                    iodevice->putChar('%');
                 }
                 iodevice->write(line);
                 iodevice->putChar('\n');

@@ -198,7 +198,7 @@ Element *FileImporterBibTeX::nextElement()
     } else if (token == tUnknown) {
         qDebug() << "Unknown token '" << m_nextChar << "(" << QString("0x%1").arg(m_nextChar.unicode(), 4, 16, QLatin1Char('0')) << ")" << "' near line " << m_lineNo << "(" << m_prevLine << endl << m_currentLine << ")" << ", treating as comment";
         ++m_statistics.countNoCommentQuote;
-        return readPlainCommentElement();
+        return readPlainCommentElement(QString(m_prevChar) + m_nextChar);
     }
 
     if (token != tEOF)
@@ -214,11 +214,15 @@ Comment *FileImporterBibTeX::readCommentElement()
     return new Comment(EncoderLaTeX::instance()->decode(readBracketString()));
 }
 
-Comment *FileImporterBibTeX::readPlainCommentElement()
+Comment *FileImporterBibTeX::readPlainCommentElement(const QString &prefix)
 {
-    QString result = EncoderLaTeX::instance()->decode(readLine());
+    QString result = EncoderLaTeX::instance()->decode(prefix + readLine());
+    while (m_nextChar == QLatin1Char('\n') || m_nextChar == QLatin1Char('\r')) readChar();
     while (!m_nextChar.isNull() && m_nextChar != QLatin1Char('@')) {
-        result.append(QLatin1String("\n")).append(EncoderLaTeX::instance()->decode(readLine()));
+        const QChar nextChar = m_nextChar;
+        const QString line = readLine();
+        while (m_nextChar == QLatin1Char('\n') || m_nextChar == QLatin1Char('\r')) readChar();
+        result.append(EncoderLaTeX::instance()->decode((nextChar == QLatin1Char('%') ? QString() : QString(nextChar)) + line));
     }
 
     if (result.startsWith(QLatin1String("x-kbibtex"))) {
@@ -770,7 +774,6 @@ QString FileImporterBibTeX::readLine()
     QString result;
     while (m_nextChar != QLatin1Char('\n') && m_nextChar != QLatin1Char('\r') && readChar())
         result.append(m_nextChar);
-    if (!readChar()) return QString();
     return result;
 }
 

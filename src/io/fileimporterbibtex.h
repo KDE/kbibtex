@@ -146,7 +146,7 @@ private:
 
     /// high-level parsing functions
     Comment *readCommentElement();
-    Comment *readPlainCommentElement();
+    Comment *readPlainCommentElement(const QString &prefix = QString());
     Macro *readMacroElement();
     Preamble *readPreambleElement();
     Entry *readEntryElement(const QString &typeString);
