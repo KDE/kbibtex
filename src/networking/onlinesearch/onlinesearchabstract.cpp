@@ -321,6 +321,12 @@ void OnlineSearchAbstract::iconDownloadFinished()
 
     if (reply->error() == QNetworkReply::NoError) {
         const QByteArray iconData = reply->readAll();
+        if (iconData.size() < 10) {
+            /// Unlikely that an icon's data is less than 10 bytes,
+            /// must be an error.
+            qWarning() << "Received invalid icon data from " << reply->url().toString();
+            return;
+        }
 
         QString extension;
         if (iconData[1] == 'P' && iconData[2] == 'N' && iconData[3] == 'G') {
