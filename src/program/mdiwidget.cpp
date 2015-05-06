@@ -84,11 +84,8 @@ public:
                     return ofiItem->url().pathOrUrl();
             }
             if (role == URLRole) {
-                const KUrl url = ofiItem->url();
-                if (url.isLocalFile())
-                    return KUrl::fromLocalFile(url.path());
-                else
-                    return url;
+                if (role == URLRole)
+                    return ofiItem->url();
             }
         }
 
