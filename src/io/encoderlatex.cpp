@@ -112,7 +112,7 @@ encoderLaTeXEscapedCharacters[] = {
     {'"', 'u', 0x00FC},
     {'\'', 'y', 0x00FD},
     /** 0x00FE Thorn */
-    /** 0x00FF Umlaut-y*/
+    {'"', 'y', 0x00FF},
     {'=', 'A', 0x0100},
     {'=', 'a', 0x0101},
     {'u', 'A', 0x0102},
@@ -225,8 +225,8 @@ encoderLaTeXEscapedCharacters[] = {
     {'u', 'u', 0x016D},
     {'r', 'U', 0x016E},
     {'r', 'u', 0x016F},
-    /** 0x0170 */
-    /** 0x0171 */
+    {'H', 'U', 0x0170},
+    {'H', 'u', 0x0171},
     /** 0x0172 */
     /** 0x0173 */
     /** 0x0174 */
@@ -242,12 +242,29 @@ encoderLaTeXEscapedCharacters[] = {
     {'v', 'z', 0x017E},
     /** 0x017F */
     /** 0x0180 */
-    {'=', 'Y', 0x0232},
-    {'=', 'y', 0x0233},
     {'v', 'A', 0x01CD},
     {'v', 'a', 0x01CE},
     {'v', 'G', 0x01E6},
     {'v', 'g', 0x01E7},
+    {'\'', 'F', 0x01F4},
+    {'\'', 'f', 0x01F5},
+    {'=', 'Y', 0x0232},
+    {'=', 'y', 0x0233},
+    {'"', 'H', 0x1E26},
+    {'"', 'h', 0x1E27},
+    {'`', 'W', 0x1E80},
+    {'`', 'w', 0x1E81},
+    {'\'', 'W', 0x1E82},
+    {'\'', 'w', 0x1E83},
+    {'"', 'W', 0x1E84},
+    {'"', 'w', 0x1E85},
+    {'"', 'X', 0x1E8C},
+    {'"', 'x', 0x1E8D},
+    {'"', 't', 0x1E97},
+    {'r', 'w', 0x1E98},
+    {'r', 'y', 0x1E99},
+    {'`', 'Y', 0x1EF2},
+    {'`', 'y', 0x1EF3},
     {'r', 'q', 0x2019} ///< tricky: this is \rq
 };
 static const int encoderLaTeXEscapedCharactersLen = sizeof(encoderLaTeXEscapedCharacters) / sizeof(encoderLaTeXEscapedCharacters[0]);
