@@ -43,7 +43,7 @@
 #include <KLocalizedString>
 #include <KComboBox>
 #include <KRun>
-// FIXME #include <KIO/NetAccess>
+#include <KIO/NetAccess>
 #include <KSharedConfig>
 #include <KConfigGroup>
 
@@ -134,9 +134,8 @@ public:
         bool result = saveHTML(file);
 
         if (result) {
-            // FIXME KIO::NetAccess::del(url, p); /// ignore error if file does not exist
-            // FIXME result = KIO::NetAccess::file_copy(QUrl(file.fileName()), url, p);
-            result = false;// FIXME
+            KIO::NetAccess::del(url, p); /// ignore error if file does not exist
+            result = KIO::NetAccess::file_copy(QUrl(file.fileName()), url, p);
         }
 
         return result;

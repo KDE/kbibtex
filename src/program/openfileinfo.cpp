@@ -24,6 +24,7 @@
 #include <QWidget>
 #include <QUrl>
 #include <QDebug>
+#include <QApplication>
 
 #include <KLocalizedString>
 #include <KConfig>
@@ -33,7 +34,7 @@
 #include <KParts/Part>
 #include <KParts/ReadOnlyPart>
 #include <KParts/ReadWritePart>
-// FIXME #include <KIO/NetAccess>
+#include <KIO/NetAccess>
 
 #include "fileimporterpdf.h"
 
@@ -386,8 +387,8 @@ public:
             if (fileUrl.isLocalFile()) {
                 if (!QFileInfo(fileUrl.url(QUrl::PreferLocalFile)).exists())
                     continue;
-            } /* FIXME else if (!KIO::NetAccess::exists(fileUrl, KIO::NetAccess::SourceSide, widget))
-                continue;*/
+            } else if (!KIO::NetAccess::exists(fileUrl, KIO::NetAccess::SourceSide, QApplication::activeWindow()))
+                continue;
 
             OpenFileInfo *ofi = p->contains(fileUrl);
             if (ofi == NULL) {

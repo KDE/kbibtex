@@ -48,7 +48,6 @@
 #include <KService>
 #include <KParts/Part>
 #include <KParts/ReadOnlyPart>
-// FIXME #include <kio/netaccess.h>
 #include <kio/jobclasses.h>
 #include <kio/job.h>
 #include <kio/jobuidelegate.h>
