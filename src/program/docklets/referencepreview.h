@@ -21,8 +21,6 @@
 #include <QWidget>
 #include <QUrl>
 
-#include <QUrl>
-
 class Element;
 class File;
 class FileView;
