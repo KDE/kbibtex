@@ -321,6 +321,9 @@ void ReferencePreview::renderHTML()
             text.replace(openingSingleQuotationRegExp, QLatin1String("\\1&lsquo;\\2"));
             text.replace(closingSingleQuotationRegExp, QLatin1String("\\1&rsquo;\\2"));
 
+            if (style == QLatin1String("wikipedia-cite"))
+                text.remove(QLatin1String("\n"));
+
             if (text.contains(QLatin1String("{{cite FIXME"))) {
                 /// Wikipedia {{cite ...}} command had problems (e.g. unknown entry type)
                 text = d->notAvailableMessage.arg(i18n("This type of element is not supported by Wikipedia's <tt>{{cite}}</tt> command."));
