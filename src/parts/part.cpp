@@ -692,10 +692,8 @@ bool KBibTeXPart::saveFile()
 {
     Q_ASSERT_X(isReadWrite(), "bool KBibTeXPart::saveFile()", "Trying to save although document is in read-only mode");
 
-    if (url().isEmpty()) {
-        documentSaveAs();
-        return false;
-    }
+    if (url().isEmpty())
+        return documentSaveAs();
 
     /// If the current file is "watchable" (i.e. a local file),
     /// memorize local filename for future reference
@@ -750,6 +748,7 @@ bool KBibTeXPart::documentSaveAs()
     } else
         qWarning() << "Not removing" << url().url(QUrl::PreferLocalFile) << "from fileSystemWatcher";
 
+    // TODO how does SaveAs dialog know which mime types to support?
     if (KParts::ReadWritePart::saveAs(newUrl)) {
         d->model->bibliographyFile()->setProperty(File::Url, newUrl);
         return true;
