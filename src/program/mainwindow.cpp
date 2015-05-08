@@ -325,14 +325,23 @@ void KBibTeXMainWindow::openDocumentDialog()
         if (url.isValid()) startDir = url.path();
     }
 
-    QString supportedMimeTypes = QLatin1String("text/x-bibtex application/x-research-info-systems application/xml");
-    if (BibUtils::available())
-        supportedMimeTypes += QLatin1String(" application/x-isi-export-format application/x-endnote-refer");
-    supportedMimeTypes += QLatin1String(" all/all");
-    QUrl url = QFileDialog::getOpenFileUrl(this, i18n("Open file") /* TODO better text */, startDir, supportedMimeTypes);
-    if (!url.isEmpty()) {
-        openDocument(url);
+    /// Assemble list of supported mimetypes
+    QStringList supportedMimeTypes = QStringList() << QLatin1String("text/x-bibtex") << QLatin1String("application/x-research-info-systems") << QLatin1String("application/xml");
+    if (BibUtils::available()) {
+        supportedMimeTypes.append(QLatin1String("application/x-isi-export-format"));
+        supportedMimeTypes.append(QLatin1String("application/x-endnote-refer"));
     }
+    supportedMimeTypes.append(QLatin1String("all/all"))
+    ;
+    QPointer<QFileDialog> dlg = new QFileDialog(this, i18n("Open file") /* TODO better text */, startDir);
+    dlg->setMimeTypeFilters(supportedMimeTypes);
+
+    const QUrl url = (dlg->exec() == QFileDialog::Accept && !dlg->selectedUrls().isEmpty()) ? dlg->selectedUrls().first() : QUrl();
+
+    delete dlg;
+
+    if (!url.isEmpty())
+        openDocument(url);
 }
 
 void KBibTeXMainWindow::openDocument(const QUrl &url)
