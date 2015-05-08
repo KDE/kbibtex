@@ -23,11 +23,7 @@
 
 #include <QFrame>
 #include <QBuffer>
-#ifdef HAVE_QTWEBKIT // krazy:exclude=cpp
-#include <QWebView>
-#else // HAVE_QTWEBKIT
-#include <QLabel>
-#endif // HAVE_QTWEBKIT
+#include <QtWebEngineWidgets/QtWebEngineWidgets>
 #include <QLayout>
 #include <QApplication>
 #include <QStandardPaths>
@@ -69,11 +65,7 @@ public:
     QPushButton *buttonOpen, *buttonSaveAsHTML;
     QString htmlText;
     QUrl baseUrl;
-#ifdef HAVE_QTWEBKIT // krazy:exclude=cpp
-    QWebView *webView;
-#else // HAVE_QTWEBKIT
-    QLabel *messageLabel;
-#endif // HAVE_QTWEBKIT
+    QWebEngineView *webView;
     KComboBox *comboBox;
     QSharedPointer<const Element> element;
     const File *file;
@@ -106,17 +98,10 @@ public:
 
         QVBoxLayout *layout = new QVBoxLayout(frame);
         layout->setMargin(0);
-#ifdef HAVE_QTWEBKIT // krazy:exclude=cpp
-        webView = new QWebView(frame);
+        webView = new QWebEngineView(frame);
         layout->addWidget(webView);
-        webView->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
-        connect(webView, SIGNAL(linkClicked(QUrl)), p, SLOT(linkClicked(QUrl)));
-#else // HAVE_QTWEBKIT
-        messageLabel = new QLabel(i18n("No preview available due to missing QtWebKit support on your system."), frame);
-        messageLabel->setWordWrap(true);
-        messageLabel->setAlignment(Qt::AlignCenter);
-        layout->addWidget(messageLabel);
-#endif // HAVE_QTWEBKIT
+        // FIXME webView->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
+        connect(webView->page(),&QWebEnginePage::urlChanged,p,&ReferencePreview::linkClicked);
 
         buttonOpen = new QPushButton(QIcon::fromTheme("document-open"), i18n("Open"), p);
         buttonOpen->setToolTip(i18n("Open reference in web browser."));
@@ -207,9 +192,7 @@ void ReferencePreview::setHtml(const QString &html, const QUrl &baseUrl)
 {
     d->htmlText = QString(html).remove(QLatin1String("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"));
     d->baseUrl = baseUrl;
-#ifdef HAVE_QTWEBKIT // krazy:exclude=cpp
     d->webView->setHtml(html, baseUrl);
-#endif // HAVE_QTWEBKIT
     d->buttonOpen->setEnabled(true);
     d->buttonSaveAsHTML->setEnabled(true);
 }
@@ -219,15 +202,11 @@ void ReferencePreview::setEnabled(bool enabled)
     if (enabled)
         setHtml(d->htmlText, d->baseUrl);
     else {
-#ifdef HAVE_QTWEBKIT // krazy:exclude=cpp
         d->webView->setHtml(d->notAvailableMessage.arg(i18n("Preview disabled")), d->baseUrl);
-#endif // HAVE_QTWEBKIT
         d->buttonOpen->setEnabled(false);
         d->buttonSaveAsHTML->setEnabled(false);
     }
-#ifdef HAVE_QTWEBKIT // krazy:exclude=cpp
     d->webView->setEnabled(enabled);
-#endif // HAVE_QTWEBKIT
     d->comboBox->setEnabled(enabled);
 }
 
@@ -246,9 +225,7 @@ void ReferencePreview::renderHTML()
          } crossRefHandling = ignore;
 
     if (d->element.isNull()) {
-#ifdef HAVE_QTWEBKIT // krazy:exclude=cpp
         d->webView->setHtml(d->notAvailableMessage.arg(i18n("No element selected")), d->baseUrl);
-#endif // HAVE_QTWEBKIT
         d->buttonOpen->setEnabled(false);
         d->buttonSaveAsHTML->setEnabled(false);
         return;

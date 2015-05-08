@@ -74,6 +74,7 @@ add_executable(
 target_link_libraries( kbibtex
     Qt5::Core
     Qt5::Widgets
+    Qt5::WebEngineWidgets
     KF5::CoreAddons
     KF5::I18n
     KF5::ConfigCore
