@@ -124,7 +124,7 @@ public:
         webView = new QWebEngineView(frame);
         layout->addWidget(webView);
         // FIXME webView->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
-        connect(webView->page(),&QWebEnginePage::urlChanged,p,&ReferencePreview::linkClicked);
+        connect(webView->page(), &QWebEnginePage::urlChanged, p, &ReferencePreview::linkClicked);
 
         buttonOpen = new QPushButton(QIcon::fromTheme("document-open"), i18n("Open"), p);
         buttonOpen->setToolTip(i18n("Open reference in web browser."));
