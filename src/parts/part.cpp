@@ -742,6 +742,7 @@ bool KBibTeXPart::documentSaveAs()
     } else
         kWarning() << "Not removing" << url().pathOrUrl() << "from fileSystemWatcher";
 
+    // TODO how does SaveAs dialog know which mime types to support?
     if (KParts::ReadWritePart::saveAs(newUrl)) {
         kDebug() << "setting url to be " << newUrl.pathOrUrl();
         d->model->bibliographyFile()->setProperty(File::Url, newUrl);
