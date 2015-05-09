@@ -53,6 +53,29 @@
 #include "entry.h"
 #include "fileview.h"
 
+static const struct PreviewStyles {
+    QString label, style, type;
+}
+previewStyles[] = {
+    {i18n("Source (BibTeX)"), QLatin1String("bibtex"), QLatin1String("exporter")},
+    {i18n("Source (RIS)"), QLatin1String("ris"), QLatin1String("exporter")},
+    {QLatin1String("abbrv"), QLatin1String("abbrv"), QLatin1String("bibtex2html")},
+    {QLatin1String("acm"), QLatin1String("acm"), QLatin1String("bibtex2html")},
+    {QLatin1String("alpha"), QLatin1String("alpha"), QLatin1String("bibtex2html")},
+    {QLatin1String("apalike"), QLatin1String("apalike"), QLatin1String("bibtex2html")},
+    {QLatin1String("ieeetr"), QLatin1String("ieeetr"), QLatin1String("bibtex2html")},
+    {QLatin1String("plain"), QLatin1String("plain"), QLatin1String("bibtex2html")},
+    {QLatin1String("siam"), QLatin1String("siam"), QLatin1String("bibtex2html")},
+    {QLatin1String("unsrt"), QLatin1String("unsrt"), QLatin1String("bibtex2html")},
+    {i18n("Standard"), QLatin1String("standard"), QLatin1String("xml")},
+    {i18n("Fancy"), QLatin1String("fancy"), QLatin1String("xml")},
+    {i18n("Wikipedia Citation"), QLatin1String("wikipedia-cite"), QLatin1String("plain_xml")},
+    {i18n("Abstract-only"), QLatin1String("abstractonly"), QLatin1String("xml")}
+};
+static const int previewStylesLen = sizeof(previewStyles) / sizeof(previewStyles[0]);
+
+Q_DECLARE_METATYPE(PreviewStyles)
+
 class ReferencePreview::ReferencePreviewPrivate
 {
 private:
@@ -151,34 +174,26 @@ public:
     }
 
     void loadState() {
-        comboBox->clear();
-
-        /// source view should always be included
-        comboBox->addItem(i18n("Source (BibTeX)"), QStringList(QStringList() << "source_bibtex" << "source_bibtex"));
-        comboBox->addItem(i18n("Source (RIS)"), QStringList(QStringList() << "source_ris" << "source_ris"));
-
-        comboBox->addItem(i18n("Wikipedia"), QStringList(QStringList() << "wikipedia-cite" << "plain_xml"));
-
-        KConfigGroup configGroup(config, configGroupName);
-        QStringList previewStyles = configGroup.readEntry("PreviewStyles", QStringList());
         static bool hasBibTeX2HTML = !KStandardDirs::findExe(QLatin1String("bibtex2html")).isEmpty();
-        foreach(const QString &entry, previewStyles) {
-            /// Skip styles that use bibtex2html if binary is not available
-            if (!hasBibTeX2HTML && entry.contains(QLatin1String("bibtex2html"))) continue;
 
-            QStringList style = entry.split(QLatin1String("|"));
-            QString styleLabel = style.at(0);
-            style.removeFirst();
-            comboBox->addItem(styleLabel, style);
+        int styleIndex = 0;
+        KConfigGroup configGroup(config, configGroupName);
+        const QString previousStyle = configGroup.readEntry(configKeyName, QString());
+
+        comboBox->clear();
+        for (int i = 0, c = 0; i < previewStylesLen; ++i) {
+            if (!hasBibTeX2HTML && previewStyles[i].type.contains(QLatin1String("bibtex2html"))) continue;
+            comboBox->addItem(previewStyles[i].label, QVariant::fromValue(previewStyles[i]));
+            if (previousStyle == previewStyles[i].style)
+                styleIndex = c;
+            ++c;
         }
-        int styleIndex = comboBox->findData(configGroup.readEntry(configKeyName, QStringList()));
-        if (styleIndex < 0) styleIndex = 0;
         comboBox->setCurrentIndex(styleIndex);
     }
 
     void saveState() {
         KConfigGroup configGroup(config, configGroupName);
-        configGroup.writeEntry(configKeyName, comboBox->itemData(comboBox->currentIndex()).toStringList());
+        configGroup.writeEntry(configKeyName, comboBox->itemData(comboBox->currentIndex()).value<PreviewStyles>().style);
         config->sync();
     }
 };
@@ -255,29 +270,28 @@ void ReferencePreview::renderHTML()
 
     FileExporter *exporter = NULL;
 
-    QStringList data = d->comboBox->itemData(d->comboBox->currentIndex()).toStringList();
-    QString type = data.at(1);
-    QString style = data.at(0);
+    const PreviewStyles previewStyle = d->comboBox->itemData(d->comboBox->currentIndex()).value<PreviewStyles>();
 
-    if (type == QLatin1String("source_bibtex")) {
-        FileExporterBibTeX *exporterBibTeX = new FileExporterBibTeX();
-        exporterBibTeX->setEncoding(QLatin1String("utf-8"));
-        exporter = exporterBibTeX;
-    } else if (type == QLatin1String("source_ris")) {
-        exporter = new FileExporterRIS();
-    } else if (type == QLatin1String("bibtex2html")) {
+    if (previewStyle.type == QLatin1String("exporter")) {
+        if (previewStyle.style == QLatin1String("bibtex")) {
+            FileExporterBibTeX *exporterBibTeX = new FileExporterBibTeX();
+            exporterBibTeX->setEncoding(QLatin1String("utf-8"));
+            exporter = exporterBibTeX;
+        } else if (previewStyle.style == QLatin1String("ris"))
+            exporter = new FileExporterRIS();
+    } else if (previewStyle.type == QLatin1String("bibtex2html")) {
         crossRefHandling = merge;
         FileExporterBibTeX2HTML *exporterHTML = new FileExporterBibTeX2HTML();
-        exporterHTML->setLaTeXBibliographyStyle(style);
+        exporterHTML->setLaTeXBibliographyStyle(previewStyle.style);
         exporter = exporterHTML;
-    } else if (type == QLatin1String("xml") || type == QLatin1String("plain_xml")) {
+    } else if (previewStyle.type == QLatin1String("xml") || previewStyle.type.endsWith(QLatin1String("_xml"))) {
         crossRefHandling = merge;
         FileExporterXSLT *exporterXSLT = new FileExporterXSLT();
-        QString filename = style + ".xsl";
+        QString filename = previewStyle.style + ".xsl";
         exporterXSLT->setXSLTFilename(KStandardDirs::locate("data", QLatin1String("kbibtex/") + filename));
         exporter = exporterXSLT;
     } else
-        kWarning() << "Don't know how to handle output type " << type;
+        kWarning() << "Don't know how to handle output type " << previewStyle.type;
 
     if (exporter != NULL) {
         QBuffer buffer(this);
@@ -321,20 +335,20 @@ void ReferencePreview::renderHTML()
             text.replace(openingSingleQuotationRegExp, QLatin1String("\\1&lsquo;\\2"));
             text.replace(closingSingleQuotationRegExp, QLatin1String("\\1&rsquo;\\2"));
 
-            if (style == QLatin1String("wikipedia-cite"))
+            if (previewStyle.style == QLatin1String("wikipedia-cite"))
                 text.remove(QLatin1String("\n"));
 
             if (text.contains(QLatin1String("{{cite FIXME"))) {
                 /// Wikipedia {{cite ...}} command had problems (e.g. unknown entry type)
                 text = d->notAvailableMessage.arg(i18n("This type of element is not supported by Wikipedia's <tt>{{cite}}</tt> command."));
-            } else if (type.startsWith(QLatin1String("source")) || type.startsWith(QLatin1String("plain"))) {
+            } else if (previewStyle.type == QLatin1String("exporter") || previewStyle.type.startsWith(QLatin1String("plain_"))) {
                 /// source
                 text.prepend(QLatin1String("';\">"));
                 text.prepend(KGlobalSettings::fixedFont().family());
                 text.prepend(QLatin1String("<pre style=\"font-family: '"));
                 text.prepend(d->htmlStart);
                 text.append(QLatin1String("</pre></body></html>"));
-            } else if (type == "bibtex2html") {
+            } else if (previewStyle.type == QLatin1String("bibtex2html")) {
                 /// bibtex2html
 
                 /// remove "generated by" line from HTML code if BibTeX2HTML was used
@@ -350,7 +364,7 @@ void ReferencePreview::renderHTML()
 
                 text.prepend(d->htmlStart);
                 text.append("</body></html>");
-            } else if (type == "xml") {
+            } else if (previewStyle.type == QLatin1String("xml")) {
                 /// XML/XSLT
                 text.prepend(d->htmlStart);
                 text.append("</body></html>");
