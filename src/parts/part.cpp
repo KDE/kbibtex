@@ -686,8 +686,7 @@ bool KBibTeXPart::saveFile()
 
     if (url().isEmpty()) {
         kDebug() << "unexpected: url is empty";
-        documentSaveAs();
-        return false;
+        return documentSaveAs();
     }
 
     /// If the current file is "watchable" (i.e. a local file),
