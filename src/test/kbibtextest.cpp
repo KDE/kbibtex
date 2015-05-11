@@ -43,6 +43,7 @@
 #include <onlinesearchjstor.h>
 #include <onlinesearchmathscinet.h>
 #include <onlinesearchmrlookup.h>
+#include <onlinesearchoclcworldcat.h>
 #include <onlinesearchpubmed.h>
 #include <onlinesearchsciencedirect.h>
 #include <onlinesearchspringerlink.h>
@@ -127,6 +128,7 @@ KBibTeXTest::KBibTeXTest(QWidget *parent)
     m_onlineSearchList << new OnlineSearchJStor(this);
     m_onlineSearchList << new OnlineSearchMathSciNet(this);
     m_onlineSearchList << new OnlineSearchMRLookup(this);
+    // TODO needs a valid WSKey // m_onlineSearchList << new OnlineSearchOCLCWorldCat(this);
     m_onlineSearchList << new OnlineSearchPubMed(this);
     m_onlineSearchList << new OnlineSearchScienceDirect(this);
     m_onlineSearchList << new OnlineSearchSOANASAADS(this);

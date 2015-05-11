@@ -232,7 +232,7 @@ public:
         addEngine(new OnlineSearchIsbnDB(p));
         addEngine(new OnlineSearchIDEASRePEc(p));
         addEngine(new OnlineSearchDOI(p));
-        addEngine(new OnlineSearchOCLCWorldCat(p));
+        // TODO needs a valid WSKey // addEngine(new OnlineSearchOCLCWorldCat(p));
 
         p->itemCheckChanged(NULL);
         updateGUI();
