@@ -2,7 +2,6 @@ ChangeLog
 
 Diff 0.5.2 to 0.6
 
-- Migrating to KDE's Git infrastructure
 - Allowing "unity builds", i.e. merging source code files for faster compilation
 - Enabling BibUtils support to import/export exotic file formats
 - Entries can be rated with stars
@@ -11,13 +10,18 @@ Diff 0.5.2 to 0.6
 - Files (e.g. PDF) can be 'associated' with an entry, including moving/copying/renaming the file to match the bibliography's location and the entry's id
 - In the element editor, unused tabs are no longer just disabled, but hidden instead
 - Automatic column-resizing improved
+- Bibliographies can be imported from Zotero
 - Adding user interface translations to various languages
+- New online search engines: CERN Document Server, DOI, IDEAS (RePEc), MR Lookup, OCLC WorldCat; fixes to existing search engines
+- New dockets for file settings, file statistics, and browsing Zotero bibliographies
+- Value selected in the value list can be added or removed from selected entries
+- Enhancing the Id Suggestion system
 - Various fixes as suggested by KDE's code analysis tool Krazy
 - Numerous small fixes and changes, run 'git diff v0.5.2..v0.6' for details
 
-RESUME AT Comment *FileImporterBibTeX::readCommentElement
-
 Diff 0.5.1 to 0.5.2
+
+- Migrating to KDE's Git infrastructure
 
 Diff 0.5 to 0.5.1
 
