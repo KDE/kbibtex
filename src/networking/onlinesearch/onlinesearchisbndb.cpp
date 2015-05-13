@@ -126,7 +126,7 @@ QString OnlineSearchIsbnDB::label() const
 
 QString OnlineSearchIsbnDB::favIconUrl() const
 {
-    return QLatin1String("http://www.isbndb.com/favicon.ico");
+    return QLatin1String("https://isbndb.com/favicon.ico");
 }
 
 OnlineSearchQueryFormAbstract *OnlineSearchIsbnDB::customWidget(QWidget *parent)

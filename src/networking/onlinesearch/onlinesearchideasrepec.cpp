@@ -109,7 +109,7 @@ QString OnlineSearchIDEASRePEc::label() const
 
 QString OnlineSearchIDEASRePEc::favIconUrl() const
 {
-    return QLatin1String("http://ideas.repec.org/favicon.ico");
+    return QLatin1String("https://ideas.repec.org/favicon.ico");
 }
 
 OnlineSearchQueryFormAbstract *OnlineSearchIDEASRePEc::customWidget(QWidget *)
@@ -119,7 +119,7 @@ OnlineSearchQueryFormAbstract *OnlineSearchIDEASRePEc::customWidget(QWidget *)
 
 QUrl OnlineSearchIDEASRePEc::homepage() const
 {
-    return QUrl("http://ideas.repec.org/");
+    return QUrl("https://ideas.repec.org/");
 }
 
 void OnlineSearchIDEASRePEc::cancel()
