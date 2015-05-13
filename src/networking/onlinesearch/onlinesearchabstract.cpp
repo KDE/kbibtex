@@ -72,13 +72,15 @@ OnlineSearchAbstract::OnlineSearchAbstract(QWidget *parent)
 QIcon OnlineSearchAbstract::icon(QListWidgetItem *listWidgetItem)
 {
     static const QRegExp invalidChars(QLatin1String("[^-a-z0-9_]"), Qt::CaseInsensitive);
-    const QString fileNameStem = QStandardPaths::writableLocation(QStandardPaths::CacheLocation) + QLatin1String("/favicons/") + QString(favIconUrl()).remove(invalidChars);
+    const QString cacheDirectory = QStandardPaths::writableLocation(QStandardPaths::CacheLocation) + QLatin1String("/favicons/");
+    QDir().mkpath(cacheDirectory);
+    const QString fileNameStem = cacheDirectory + QString(favIconUrl()).remove(invalidChars);
     const QStringList fileNameExtensions = QStringList() << QLatin1String(".ico") << QLatin1String(".png") << QString();
 
     foreach(const QString &extension, fileNameExtensions) {
         const QString fileName = fileNameStem + extension;
         if (QFileInfo(fileName).exists())
-            return QIcon::fromTheme(fileName);
+            return QIcon(fileName);
     }
 
     QNetworkRequest request(favIconUrl());
@@ -336,6 +338,9 @@ void OnlineSearchAbstract::iconDownloadFinished()
             /// Microsoft Icon have first two bytes always 0x0000,
             /// third and fourth byte is 0x0001 (for .ico)
             extension = QLatin1String(".ico");
+        } else {
+            qWarning() << "Favicon is of unknown format: " << reply->url().toDisplayString();
+            return;
         }
         const QString filename = reply->objectName() + extension;
 
@@ -346,7 +351,10 @@ void OnlineSearchAbstract::iconDownloadFinished()
 
             QListWidgetItem *listWidgetItem = m_iconReplyToListWidgetItem.value(reply, NULL);
             if (listWidgetItem != NULL)
-                listWidgetItem->setIcon(QIcon::fromTheme(filename));
+                listWidgetItem->setIcon(QIcon(filename));
+        } else {
+            qWarning() << "Could not save icon data from URL" << reply->url().toDisplayString() << "to file" << filename;
+            return;
         }
     } else
         qWarning() << "Could not download icon " << reply->url().toString();
