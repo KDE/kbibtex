@@ -91,10 +91,16 @@ find_package(
 
 # Version number for the exported headers / libs
 set(
-    LIB_VERSION "0.7.0"
+    VERSION_BRANCH "0.8"
 )
 set(
-    LIB_SOVERSION "1"
+    REVISION_VERSION "0"
+)
+set(
+    LIB_VERSION ${VERSION_BRANCH}.${REVISION_VERSION}
+)
+set(
+    LIB_SOVERSION ${VERSION_BRANCH}
 )
 
 # option(
