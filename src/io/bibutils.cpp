@@ -67,6 +67,10 @@ bool BibUtils::available() {
                 break;
             }
         }
+        if (state == avail)
+            qDebug() << "BibUtils found, using it to import/export certain types of bibliographies";
+        else if (state == unavail)
+            qWarning() << "No or only an incomplete installation of BibUtils found";
     }
     return state == avail;
 }
