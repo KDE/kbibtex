@@ -68,6 +68,10 @@ bool BibUtils::available() {
                 break;
             }
         }
+        if (state == avail)
+            kDebug() << "BibUtils found, using it to import/export certain types of bibliographies";
+        else if (state == unavail)
+            kWarning() << "No or only an incomplete installation of BibUtils found";
     }
     return state == avail;
 }
