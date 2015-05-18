@@ -230,8 +230,8 @@ void FileView::selectionDelete()
 {
     QModelIndexList mil = selectionModel()->selectedRows();
     QList<int> rows;
-    foreach(const QModelIndex &idx, mil)
-    rows << sortFilterProxyModel()->mapToSource(idx).row();
+    foreach (const QModelIndex &idx, mil)
+        rows << sortFilterProxyModel()->mapToSource(idx).row();
 
     fileModel()->removeRowList(rows);
 
