@@ -259,7 +259,7 @@ bool FindPDF::search(const Entry &entry)
     QStringList urlFields = QStringList() << Entry::ftDOI << Entry::ftUrl << QLatin1String("ee");
     for (int i = 2; i < 256; ++i)
         urlFields << QString(QLatin1String("%1%2")).arg(Entry::ftDOI).arg(i) << QString(QLatin1String("%1%2")).arg(Entry::ftUrl).arg(i);
-    foreach(const QString &field, urlFields) {
+    foreach (const QString &field, urlFields) {
         if (entry.contains(field)) {
             const QString fieldText = PlainTextValue::text(entry.value(field));
             int p = -1;
@@ -370,7 +370,7 @@ void FindPDF::downloadFinished()
                 static const QRegExp googleScholarTitleRegExp(QLatin1String("<title>[^>]* - Google Scholar</title>"));
                 /// regular expression to check if this is a SpringerLink page
                 static const QRegExp springerLinkTitleRegExp(QLatin1String("<title>[^>]*SpringerLink - [^>]*</title>"));
-                /// regular expression to check if this is a SpringerLink page
+                /// regular expression to check if this is a CiteSeerX page
                 static const QRegExp citeseerxTitleRegExp(QLatin1String("<title>CiteSeerX &mdash; [^>]*</title>"));
 
                 if (text.indexOf(googleScholarTitleRegExp) > 0)
