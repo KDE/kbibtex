@@ -296,7 +296,7 @@ bool FindPDF::search(const Entry &entry)
         d->queueUrl(googleScholarUrl, searchWords, QLatin1String("scholar.google"), maxDepth);
 
         /// use title to search in Bing
-        QUrl bingUrl(QLatin1String("http://www.bing.com/search?setmkt=en-IE&setlang=match"));
+        QUrl bingUrl(QLatin1String("https://www.bing.com/search?setlang=en-US"));
         query = QUrlQuery(bingUrl);
         query.addQueryItem(QLatin1String("q"), searchWords + QLatin1String(" filetype:pdf"));
         bingUrl.setQuery(query);
