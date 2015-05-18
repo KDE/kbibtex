@@ -353,8 +353,16 @@ void FindPDF::downloadFinished()
                     d->processSpringerLink(reply, text);
                 else if (text.indexOf(citeseerxTitleRegExp) > 0)
                     d->processCiteSeerX(reply, text);
-                else
+                else {
+                    /// regular expression to extract title
+                    static QRegExp titleRegExp(QLatin1String("<title>(.*)</title>"));
+                    titleRegExp.setMinimal(true);
+                    if (titleRegExp.indexIn(text) >= 0)
+                        kDebug() << "Using general HTML processor for page" << titleRegExp.cap(1) << " URL=" << reply->url().toString();
+                    else
+                        kDebug() << "Using general HTML processor for URL=" << reply->url().toString();
                     d->processGeneralHTML(reply, text);
+                }
             }
         } else if (data.contains(pdfHead)) {
             /// looks like a PDF file -> grab it
