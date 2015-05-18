@@ -49,6 +49,7 @@ public:
     QList<ResultItem> result;
     Entry currentEntry;
     QSet<QUrl> knownUrls;
+    QSet<QNetworkReply *> runningDownloads;
 
     Private(FindPDF *parent)
             : p(parent), aliveCounter(0)
@@ -66,6 +67,7 @@ public:
             reply->setProperty(depthProperty, QVariant::fromValue<int>(depth));
             reply->setProperty(termProperty, term);
             reply->setProperty(originProperty, origin);
+            runningDownloads.insert(reply);
             connect(reply, SIGNAL(finished()), p, SLOT(downloadFinished()));
             ++aliveCounter;
             return true;
@@ -216,6 +218,10 @@ FindPDF::FindPDF(QObject *parent)
     /// nothing
 }
 
+FindPDF::~FindPDF() {
+    abort();
+}
+
 bool FindPDF::search(const Entry &entry)
 {
     if (d->aliveCounter > 0) return false;
@@ -311,6 +317,15 @@ QList<FindPDF::ResultItem> FindPDF::results()
     }
 }
 
+void FindPDF::abort() {
+    QSet<QNetworkReply *>::Iterator it = d->runningDownloads.begin();
+    while (it != d->runningDownloads.end()) {
+        QNetworkReply *reply = *it;
+        it = d->runningDownloads.erase(it);
+        reply->abort();
+    }
+}
+
 void FindPDF::downloadFinished()
 {
     static const char *htmlHead1 = "<html", *htmlHead2 = "<HTML";
@@ -320,6 +335,7 @@ void FindPDF::downloadFinished()
     emit progress(d->knownUrls.count(), d->aliveCounter, d->result.count());
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
+    d->runningDownloads.remove(reply);
     const QString term = reply->property(termProperty).toString();
     const QString origin = reply->property(originProperty).toString();
     bool depthOk = false;

@@ -60,6 +60,7 @@ public:
     } ResultItem;
 
     explicit FindPDF(QObject *parent = NULL);
+    ~FindPDF();
 
     /**
      * Initiate a search for PDF files matching a given entry.
@@ -91,6 +92,12 @@ signals:
      * @param foundDocuments how many PDF files have been found
      */
     void progress(int visitedPages, int runningJobs, int foundDocuments);
+
+public slots:
+    /**
+     * Abort any running downloads.
+     */
+    void abort();
 
 private slots:
     void downloadFinished();
