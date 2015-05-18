@@ -170,19 +170,10 @@ find_package(
 #     "Required to transform XML files"
 # )
 
-# find_package(
-#     PopplerQt5
-#     REQUIRED
-# )
-# macro_log_feature(
-#     PopplerQt4_FOUND
-#     "Poppler/Qt4"
-#     "Poppler is a PDF rendering library"
-#     "http://poppler.freedesktop.org/"
-#     TRUE
-#     ""
-#     "Required to transform process PDF files"
-# )
+find_package(
+    Poppler
+    REQUIRED
+)
 
 # find_package(
 #     Qxt

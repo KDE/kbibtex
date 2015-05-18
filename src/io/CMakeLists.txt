@@ -87,6 +87,13 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/src
 )
 
+# *** taken from Okular's CMakeLists.txt files ***
+# Can be multiple include directories for poppler
+separate_arguments(POPPLER_INCLUDE_DIR)
+foreach(_include_dir ${POPPLER_INCLUDE_DIR})
+    include_directories(${_include_dir})
+endforeach(_include_dir ${POPPLER_INCLUDE_DIR})
+
 add_library(
     kbibtexio
     SHARED
@@ -100,6 +107,7 @@ target_link_libraries( kbibtexio
     KF5::XmlGui
     ${LIBXML2_LIBRARIES}
     ${LIBXSLT_LIBRARIES}
+    ${POPPLER_LIBRARY}
     ${ICU_LIBRARIES}
     kbibtexconfig
     kbibtexdata

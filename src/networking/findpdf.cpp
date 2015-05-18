@@ -25,8 +25,10 @@
 #include <QDebug>
 #include <QTemporaryFile>
 #include <QUrlQuery>
+#include <QStandardPaths>
+#include <QDir>
 
-// FIXME #include <poppler-qt4.h>
+#include <poppler/qt5/poppler-qt5.h>
 
 #include "kbibtexnamespace.h"
 #include "internalnetworkaccessmanager.h"
@@ -170,44 +172,52 @@ public:
         const QString origin = reply->property(originProperty).toString();
         const QUrl url = reply->url();
 
-        // FIXME
-        /*
-        Poppler::Document *doc = Poppler::Document::loadFromData(data);
-
-        /// search for duplicate URLs
+        /// Search for duplicate URLs
         bool containsUrl = false;
-        foreach(const ResultItem &ri, result) {
+        foreach (const ResultItem &ri, result) {
             containsUrl |= ri.url == url;
+            /// Skip already visited URLs
             if (containsUrl) break;
         }
 
         if (!containsUrl) {
+            Poppler::Document *doc = Poppler::Document::loadFromData(data);
+
             ResultItem resultItem;
-            resultItem.tempFilename = new QTemporaryFile(QLatin1String("kbibtex_findpdf_XXXXXX.pdf"));
+            resultItem.tempFilename = new QTemporaryFile(QStandardPaths::writableLocation(QStandardPaths::TempLocation) + QDir::separator() + QLatin1String("kbibtex_findpdf_XXXXXX.pdf"));
             resultItem.tempFilename->setAutoRemove(true);
             if (resultItem.tempFilename->open()) {
-                resultItem.tempFilename->write(data);
+                const int lenDataWritten = resultItem.tempFilename->write(data);
                 resultItem.tempFilename->close();
+                if (lenDataWritten != data.length()) {
+                    /// Failed to write to temporary file
+                    qWarning() << "Failed to write to temporary file for filename" << resultItem.tempFilename->fileName();
+                    delete resultItem.tempFilename;
+                    resultItem.tempFilename = NULL;
+                }
             } else {
+                /// Failed to create temporary file
+                qWarning() << "Failed to create temporary file for templaet" << resultItem.tempFilename->fileTemplate();
                 delete resultItem.tempFilename;
                 resultItem.tempFilename = NULL;
             }
             resultItem.url = url;
-            resultItem.textPreview = doc->info("Title").simplified();
-            const int maxTextLen = 1024;
+            resultItem.textPreview = doc->info(QLatin1String("Title")).simplified();
+            static const int maxTextLen = 1024;
             for (int i = 0; i < doc->numPages() && resultItem.textPreview.length() < maxTextLen; ++i) {
                 Poppler::Page *page = doc->page(i);
-                resultItem.textPreview += QLatin1Char(' ') + page->text(QRect()).simplified().left(maxTextLen);
+                if (!resultItem.textPreview.isEmpty()) resultItem.textPreview += QLatin1Char(' ');
+                resultItem.textPreview += page->text(QRect()).simplified().left(maxTextLen);
                 delete page;
             }
             resultItem.downloadMode = NoDownload;
             resultItem.relevance = origin == Entry::ftDOI ? 1.0 : (origin == QLatin1String("eprint") ? 0.75 : 0.5);
             result << resultItem;
             progress = true;
+
+            delete doc;
         }
 
-        delete doc;
-        */
         return progress;
     }
 };
