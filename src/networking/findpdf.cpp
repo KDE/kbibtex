@@ -133,7 +133,8 @@ public:
                 int p1 = p + 6;
                 int p2 = text.indexOf(QLatin1Char('"'), p1 + 1);
                 QUrl url(text.mid(p1, p2 - p1));
-                queueUrl(reply->url().resolved(url), term, QLatin1String("scholar.google"), depth - 1);
+                const QString googleService = reply->url().host().contains(QLatin1String("scholar.google")) ? QLatin1String("scholar.google") : QLatin1String("www.google");
+                queueUrl(reply->url().resolved(url), term, googleService, depth - 1);
             }
         }
     }
@@ -281,8 +282,15 @@ bool FindPDF::search(const Entry &entry)
 
     if (!searchWords.isEmpty()) {
         /// use title to search in Google Scholar
-        QUrl googleScholarUrl(QLatin1String("http://scholar.google.com/scholar?hl=en&btnG=Search&as_sdt=1"));
-        QUrlQuery query(googleScholarUrl);
+        QUrl googleUrl(QLatin1String("https://www.google.com/search?hl=en&sa=G"));
+        QUrlQuery query(googleUrl);
+        query.addQueryItem(QLatin1String("q"), searchWords + QLatin1String(" filetype:pdf"));
+        googleUrl.setQuery(query);
+        d->queueUrl(googleUrl, searchWords, QLatin1String("www.google"), maxDepth);
+
+        /// use title to search in Google Scholar
+        QUrl googleScholarUrl(QLatin1String("https://scholar.google.com/scholar?hl=en&btnG=Search&as_sdt=1"));
+        query = QUrlQuery(googleScholarUrl);
         query.addQueryItem(QLatin1String("q"), searchWords + QLatin1String(" filetype:pdf"));
         googleScholarUrl.setQuery(query);
         d->queueUrl(googleScholarUrl, searchWords, QLatin1String("scholar.google"), maxDepth);
