@@ -36,9 +36,7 @@
 #include <QMimeDatabase>
 #include <QMimeType>
 #include <QIcon>
-#ifdef HAVE_QTWEBKIT // krazy:exclude=cpp
-#include <QWebView>
-#endif // HAVE_QTWEBKIT
+#include <QtWebEngineWidgets/QtWebEngineWidgets>
 
 #include <KLocalizedString>
 #include <KComboBox>
@@ -122,11 +120,7 @@ private:
     QMenuBar *menuBar;
     KToolBar *toolBar;
     KParts::ReadOnlyPart *okularPart;
-#ifdef HAVE_QTWEBKIT // krazy:exclude=cpp
-    QWebView *htmlWidget;
-#else // HAVE_QTWEBKIT
-    KParts::ReadOnlyPart *htmlPart;
-#endif // HAVE_QTWEBKIT
+    QWebEngineView *htmlWidget;
     int swpMessage, swpOkular, swpHTML;
 
 public:
@@ -215,16 +209,9 @@ public:
         if (okularPart == NULL || swpOkular < 0) {
             qWarning() << "No Okular part for PDF or PostScript document preview available.";
         }
-#ifdef HAVE_QTWEBKIT // krazy:exclude=cpp
-        qDebug() << "WebKit is available, using it instead of KHTML for HTML/Web preview.";
-        htmlWidget = new QWebView(stackedWidget);
+        htmlWidget = new QWebEngineView(stackedWidget);
         swpHTML = stackedWidget->addWidget(htmlWidget);
-        connect(htmlWidget, SIGNAL(loadFinished(bool)), p, SLOT(loadingFinished()));
-#else // HAVE_QTWEBKIT
-        qDebug() << "WebKit not is available, using KHTML instead for HTML/Web preview.";
-        htmlPart = locatePart(QLatin1String("khtml.desktop"), stackedWidget);
-        swpHTML = (htmlPart == NULL) ? -1 : stackedWidget->addWidget(htmlPart->widget());
-#endif // HAVE_QTWEBKIT
+        connect(htmlWidget, &QWebEngineView::loadFinished, p, &DocumentPreview::loadingFinished);
 
         loadState();
 
@@ -271,11 +258,7 @@ public:
         /// reset and clear all controls
         if (okularPart != NULL)
             okularPart->closeUrl();
-#ifdef HAVE_QTWEBKIT // krazy:exclude=cpp
         htmlWidget->stop();
-#else // HAVE_QTWEBKIT
-        if (htmlPart != NULL) htmlPart->closeUrl();
-#endif // HAVE_QTWEBKIT
         urlComboBox->setEnabled(false);
         urlComboBox->clear();
         cbxEntryToUrlInfo.clear();
@@ -423,16 +406,9 @@ public:
             stackedWidget->setCurrentIndex(swpOkular);
             stackedWidget->widget(swpOkular)->setEnabled(true);
             setupToolMenuBarForPart(okularPart);
-#ifdef HAVE_QTWEBKIT // krazy:exclude=cpp
         } else if (widget == htmlWidget) {
             stackedWidget->setCurrentIndex(swpHTML);
             stackedWidget->widget(swpHTML)->setEnabled(true);
-#else // HAVE_QTWEBKIT
-        } else if (part == htmlPart) {
-            stackedWidget->setCurrentIndex(swpHTML);
-            stackedWidget->widget(swpHTML)->setEnabled(true);
-            setupToolMenuBarForPart(htmlPart);
-#endif // HAVE_QTWEBKIT
         } else if (widget == message) {
             stackedWidget->setCurrentIndex(swpMessage);
         } else
@@ -450,11 +426,7 @@ public:
             stackedWidget->widget(swpOkular)->setEnabled(false);
             okularPart->closeUrl();
         }
-#ifdef HAVE_QTWEBKIT // krazy:exclude=cpp
         htmlWidget->stop();
-#else // HAVE_QTWEBKIT
-        if (htmlPart != NULL) htmlPart->closeUrl();
-#endif // HAVE_QTWEBKIT
 
         if (okularPart != NULL && okularMimetypes.contains(urlInfo.mimeType)) {
             p->setCursor(Qt::BusyCursor);
@@ -463,12 +435,8 @@ public:
         } else if (htmlMimetypes.contains(urlInfo.mimeType)) {
             p->setCursor(Qt::BusyCursor);
             showMessage(i18n("Loading...")); // krazy:exclude=qmethods
-#ifdef HAVE_QTWEBKIT // krazy:exclude=cpp
             htmlWidget->load(urlInfo.url);
             return true;
-#else // HAVE_QTWEBKIT
-            return htmlPart == NULL ? false : htmlPart->openUrl(urlInfo.url);
-#endif // HAVE_QTWEBKIT
         } else if (imageMimetypes.contains(urlInfo.mimeType)) {
             p->setCursor(Qt::BusyCursor);
             message->setPixmap(QPixmap(urlInfo.url.url(QUrl::PreferLocalFile)));
