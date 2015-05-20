@@ -520,7 +520,7 @@ public:
             /// application/octet-stream is a fall-back if KDE did not know better
             result.icon = QIcon::fromTheme("text-html");
             result.mimeType = QLatin1String("text/html");
-        } else if (result.mimeType == QLatin1String("inode/directory") && (result.url.scheme() == QLatin1String("http") || result.url.scheme() == QLatin1String("https"))) {
+        } else if ((result.mimeType.isEmpty() || result.mimeType == QLatin1String("inode/directory")) && (result.url.scheme() == QLatin1String("http") || result.url.scheme() == QLatin1String("https"))) {
             /// directory via http means normal webpage (not browsable directory)
             result.icon = QIcon::fromTheme("text-html");
             result.mimeType = QLatin1String("text/html");
