@@ -334,8 +334,10 @@ void KBibTeXMainWindow::openDocumentDialog()
     supportedMimeTypes.append(QLatin1String("all/all"));
     QPointer<QFileDialog> dlg = new QFileDialog(this, i18n("Open file") /* TODO better text */, startDir);
     dlg->setMimeTypeFilters(supportedMimeTypes);
+    dlg->setFileMode(QFileDialog::ExistingFile);
 
-    const QUrl url = (dlg->exec() == QFileDialog::Accept && !dlg->selectedUrls().isEmpty()) ? dlg->selectedUrls().first() : QUrl();
+    const bool dialogAccepted = dlg->exec() != 0;
+    const QUrl url = (dialogAccepted && !dlg->selectedUrls().isEmpty()) ? dlg->selectedUrls().first() : QUrl();
 
     delete dlg;
 
