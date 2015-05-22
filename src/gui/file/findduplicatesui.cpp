@@ -641,7 +641,7 @@ FindDuplicatesUI::FindDuplicatesUI(KParts::Part *part, FileView *fileView)
     QAction *newAction = new QAction(QIcon::fromTheme("tab-duplicate"), i18n("Find Duplicates"), this);
     part->actionCollection()->addAction(QLatin1String("findduplicates"), newAction);
     connect(newAction, SIGNAL(triggered()), this, SLOT(slotFindDuplicates()));
-    // FIXME necessary? // part->replaceXMLFile(QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kbibtex/findduplicatesui.rc"), QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + "kbibtex/findduplicatesui.rc", true);
+    part->replaceXMLFile(/* read default configuration from '/usr/share/kxmlgui5/kbibtex/findduplicatesui.rc' */QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kxmlgui5/kbibtex/findduplicatesui.rc"), /* write to '~/.config/.../findduplicatesui.rc' */ QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("kbibtex/findduplicatesui.rc"), true);
 }
 
 FindDuplicatesUI::~FindDuplicatesUI()
