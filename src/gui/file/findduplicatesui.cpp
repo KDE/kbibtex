@@ -688,7 +688,7 @@ void FindDuplicatesUI::slotFindDuplicates()
     }
 
     if (cliques.isEmpty()) {
-        KMessageBox::information(d->part->widget(), i18n("No duplicates have been found."), i18n("No duplicates found"));
+        KMessageBox::information(d->part->widget(), i18n("No duplicates were found."), i18n("No duplicates found"));
     } else {
         MergeWidget mw(d->view->fileModel()->bibliographyFile(), cliques, dlg);
         dlg->setMainWidget(&mw);
