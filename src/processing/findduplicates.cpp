@@ -20,7 +20,6 @@
 #include <typeinfo>
 
 #include <QLinkedList>
-#include <QDebug>
 #include <QProgressDialog>
 #include <QApplication>
 #include <QDate>
@@ -207,12 +206,11 @@ private:
     static const int dsize;
 
 public:
-    bool gotCanceled;
     int sensitivity;
     QWidget *widget;
 
     FindDuplicatesPrivate(FindDuplicates */* UNUSED parent*/, int sens, QWidget *w)
-        : /* UNUSED p(parent),*/ maxDistance(10000), gotCanceled(false), sensitivity(sens), widget(w) {
+        : /* UNUSED p(parent),*/ maxDistance(10000), sensitivity(sens), widget(w) {
         d = new int*[dsize];
         for (int i = 0; i < dsize; ++i)
             d[i] = new int[dsize];
@@ -378,15 +376,12 @@ bool FindDuplicates::findDuplicateEntries(File *file, QList<EntryClique *> &entr
     QProgressDialog *progressDlg = 0;
     if (d->widget != NULL) {
         QApplication::setOverrideCursor(Qt::WaitCursor);
-        progressDlg = new QProgressDialog(d->widget/* FIXME , i18n("Finding Duplicates")*/);
-        progressDlg->setWindowModality(Qt::WindowModal);
-        progressDlg->setLabelText(i18n("Searching ..."));
+        progressDlg = new QProgressDialog(i18n("Searching ..."), i18n("Cancel"), 0, 100000 /* to be set later to actual value */, d->widget);
+        progressDlg->setModal(true);
+        progressDlg->setWindowTitle(i18n("Finding Duplicates"));
         progressDlg->setMinimumWidth(d->widget->fontMetrics().averageCharWidth() * 48);
-        // FIXME progressDlg->setAllowCancel(true);
-        connect(progressDlg, SIGNAL(cancelClicked()), this, SLOT(gotCanceled()));
     }
     entryCliqueList.clear();
-    d->gotCanceled = false;
 
     /// assemble list of entries only (ignoring comments, macros, ...)
     QList<QSharedPointer<Entry> > listOfEntries;
@@ -403,7 +398,7 @@ bool FindDuplicates::findDuplicateEntries(File *file, QList<EntryClique *> &entr
             progressDlg->deleteLater();
             QApplication::restoreOverrideCursor();
         }
-        return d->gotCanceled;
+        return progressDlg->wasCanceled();
     }
 
     int curProgress = 0, maxProgress = listOfEntries.count() * (listOfEntries.count() - 1) / 2;
@@ -412,7 +407,6 @@ bool FindDuplicates::findDuplicateEntries(File *file, QList<EntryClique *> &entr
     if (d->widget != NULL) {
         progressDlg->setMaximum(maxProgress);
         progressDlg->show();
-        progressDlg->setLabelText(i18n("Searching..."));
     }
 
     emit maximumProgress(maxProgress);
@@ -422,7 +416,7 @@ bool FindDuplicates::findDuplicateEntries(File *file, QList<EntryClique *> &entr
         if (d->widget != NULL) {
             QApplication::instance()->processEvents();
         }
-        if (d->gotCanceled) {
+        if (progressDlg->wasCanceled()) {
             entryCliqueList.clear();
             break;
         }
@@ -449,13 +443,13 @@ bool FindDuplicates::findDuplicateEntries(File *file, QList<EntryClique *> &entr
             if (d->widget != NULL) {
                 QApplication::instance()->processEvents();
             }
-            if (d->gotCanceled) {
+            if (progressDlg->wasCanceled()) {
                 entryCliqueList.clear();
                 break;
             }
         }
 
-        if (!d->gotCanceled && !foundClique) {
+        if (!progressDlg->wasCanceled() && !foundClique) {
             /// no clique matched to current entry, so create and add new clique
             /// consisting only of the current entry
             EntryClique *newClique = new EntryClique();
@@ -474,7 +468,6 @@ bool FindDuplicates::findDuplicateEntries(File *file, QList<EntryClique *> &entr
 
     if (d->widget != NULL) {
         progressDlg->setValue(progressDlg->maximum());
-        progressDlg->close();
     }
 
     /// remove cliques with only one element (nothing to merge here) from the list of cliques
@@ -495,12 +488,7 @@ bool FindDuplicates::findDuplicateEntries(File *file, QList<EntryClique *> &entr
         progressDlg->deleteLater();
         QApplication::restoreOverrideCursor();
     }
-    return d->gotCanceled;
-}
-
-void FindDuplicates::gotCanceled()
-{
-    d->gotCanceled = true;
+    return progressDlg->wasCanceled();
 }
 
 
