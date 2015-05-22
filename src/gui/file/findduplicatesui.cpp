@@ -684,7 +684,7 @@ void FindDuplicatesUI::slotFindDuplicates()
     }
 
     if (cliques.isEmpty()) {
-        KMessageBox::information(d->part->widget(), i18n("No duplicates have been found."), i18n("No duplicates found"));
+        KMessageBox::information(d->part->widget(), i18n("No duplicates were found."), i18n("No duplicates found"));
     } else {
         QPointer<QDialog> dlg = new QDialog(d->part->widget());
         QPointer<MergeWidget> mw = new MergeWidget(d->view->fileModel()->bibliographyFile(), cliques, dlg);
