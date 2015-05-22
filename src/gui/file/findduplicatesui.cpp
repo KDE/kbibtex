@@ -32,8 +32,8 @@
 #include <QStandardPaths>
 #include <QPushButton>
 #include <QAction>
+#include <QDialog>
 
-#include <KDialog>
 #include <KActionCollection>
 #include <KLocalizedString>
 #include <KXMLGUIClient>
@@ -657,8 +657,7 @@ void FindDuplicatesUI::slotFindDuplicates()
     //if (!ok) sensitivity = 4000;
     int sensitivity = 4000;
 
-    QPointer<KDialog> dlg = new KDialog(d->part->widget());
-    FindDuplicates fd(dlg, sensitivity);
+    FindDuplicates fd(d->part->widget(), sensitivity);
     /// File to be used to find duplicate in,
     /// may be only a subset of the original one if selection is used (see below)
     File *file = d->view->fileModel()->bibliographyFile();
@@ -681,15 +680,16 @@ void FindDuplicatesUI::slotFindDuplicates()
     bool gotCanceled = fd.findDuplicateEntries(file, cliques);
     if (gotCanceled) {
         if (deleteFileLater) delete file;
-        delete dlg;
         return;
     }
 
     if (cliques.isEmpty()) {
         KMessageBox::information(d->part->widget(), i18n("No duplicates have been found."), i18n("No duplicates found"));
     } else {
-        MergeWidget mw(d->view->fileModel()->bibliographyFile(), cliques, dlg);
-        dlg->setMainWidget(&mw);
+        QPointer<QDialog> dlg = new QDialog(d->part->widget());
+        QPointer<MergeWidget> mw = new MergeWidget(d->view->fileModel()->bibliographyFile(), cliques, dlg);
+        QBoxLayout *layout = new QVBoxLayout(dlg);
+        layout->addWidget(mw);
 
         if (dlg->exec() == QDialog::Accepted) {
             MergeDuplicates md(dlg);
@@ -704,8 +704,11 @@ void FindDuplicatesUI::slotFindDuplicates()
             cliques.removeFirst();
             delete ec;
         }
+
+        delete mw;
+        delete dlg;
     }
 
     if (deleteFileLater) delete file;
-    delete dlg;
+
 }
