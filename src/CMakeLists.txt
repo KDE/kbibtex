@@ -39,6 +39,19 @@
 #     ${KDE4_INCLUDES}
 # )
 
+if(Qt5WebEngineWidgets_FOUND)
+    add_definitions(
+        -DHAVE_WEBENGINEWIDGETS
+    )
+endif(Qt5WebEngineWidgets_FOUND)
+
+if(Qt5WebKitWidgets_FOUND)
+    add_definitions(
+        -DHAVE_WEBKITWIDGETS
+    )
+endif(Qt5WebKitWidgets_FOUND)
+
+
 add_subdirectory(
     config
 )

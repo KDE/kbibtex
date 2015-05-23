@@ -48,7 +48,14 @@ find_package(
     Core
     Widgets
     Network
+)
+
+find_package(
+    Qt5 ${QT_MIN_VERSION}
+    CONFIG
+    COMPONENTS
     WebEngineWidgets
+    WebKitWidgets
 )
 
 find_package(

@@ -74,7 +74,6 @@ add_executable(
 target_link_libraries( kbibtex
     Qt5::Core
     Qt5::Widgets
-    Qt5::WebEngineWidgets
     KF5::CoreAddons
     KF5::I18n
     KF5::ConfigCore
@@ -90,6 +89,18 @@ target_link_libraries( kbibtex
     kbibtexgui
     kbibtexnetworking
 )
+
+if(Qt5WebEngineWidgets_FOUND)
+    target_link_libraries( kbibtex
+        Qt5::WebEngineWidgets
+    )
+else(Qt5WebEngineWidgets_FOUND)
+    if(Qt5WebKitWidgets_FOUND)
+        target_link_libraries( kbibtex
+            Qt5::WebKitWidgets
+        )
+    endif(Qt5WebKitWidgets_FOUND)
+endif(Qt5WebEngineWidgets_FOUND)
 
 # creates version.h using cmake script
 add_custom_target(

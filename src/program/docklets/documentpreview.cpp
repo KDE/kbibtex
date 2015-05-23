@@ -36,7 +36,13 @@
 #include <QMimeDatabase>
 #include <QMimeType>
 #include <QIcon>
+#ifdef HAVE_WEBENGINEWIDGETS
 #include <QtWebEngineWidgets/QtWebEngineWidgets>
+#else // HAVE_WEBENGINEWIDGETS
+#ifdef HAVE_WEBKITWIDGETS
+#include <QtWebKitWidgets/QtWebKitWidgets>
+#endif // HAVE_WEBKITWIDGETS
+#endif // HAVE_WEBENGINEWIDGETS
 
 #include <KLocalizedString>
 #include <KComboBox>
@@ -120,7 +126,15 @@ private:
     QMenuBar *menuBar;
     KToolBar *toolBar;
     KParts::ReadOnlyPart *okularPart;
+#ifdef HAVE_WEBENGINEWIDGETS
     QWebEngineView *htmlWidget;
+#else // HAVE_WEBENGINEWIDGETS
+#ifdef HAVE_WEBKITWIDGETS
+    QWebView *htmlWidget;
+#else // HAVE_WEBKITWIDGETS
+    KParts::ReadOnlyPart *htmlPart;
+#endif // HAVE_WEBKITWIDGETS
+#endif // HAVE_WEBENGINEWIDGETS
     int swpMessage, swpOkular, swpHTML;
 
 public:
@@ -209,9 +223,28 @@ public:
         if (okularPart == NULL || swpOkular < 0) {
             qWarning() << "No Okular part for PDF or PostScript document preview available.";
         }
+#ifdef HAVE_WEBENGINEWIDGETS
+        qDebug() << "WebEngine is available, using it instead of WebKit or HTML KPart (both neither considered nor tested for) for HTML/Web preview.";
         htmlWidget = new QWebEngineView(stackedWidget);
         swpHTML = stackedWidget->addWidget(htmlWidget);
         connect(htmlWidget, &QWebEngineView::loadFinished, p, &DocumentPreview::loadingFinished);
+#else // HAVE_WEBENGINEWIDGETS
+#ifdef HAVE_WEBKITWIDGETS
+        qDebug() << "WebKit is available, using it instead of WebEngine (missing) or HTML KPart (not considered) for HTML/Web preview.";
+        htmlWidget = new QWebView(stackedWidget);
+        swpHTML = stackedWidget->addWidget(htmlWidget);
+        connect(htmlWidget, &QWebView::loadFinished, p, &DocumentPreview::loadingFinished);
+#else // HAVE_WEBKITWIDGETS
+        htmlPart = locatePart(QLatin1String("text/html"), stackedWidget);
+        if (htmlPart != NULL) {
+            qDebug() << "HTML KPart is available, using it instead of WebEngine or WebKit (neither available) for HTML/Web preview.";
+            swpHTML = stackedWidget->addWidget(htmlPart->widget());
+        } else {
+            qDebug() << "No HTML viewing component is available, disabling HTML/Web preview.";
+            swpHTML = -1;
+        }
+#endif // HAVE_WEBKITWIDGETS
+#endif // HAVE_WEBENGINEWIDGETS
 
         loadState();
 
@@ -258,7 +291,16 @@ public:
         /// reset and clear all controls
         if (okularPart != NULL)
             okularPart->closeUrl();
+#ifdef HAVE_WEBENGINEWIDGETS
         htmlWidget->stop();
+#else // HAVE_WEBENGINEWIDGETS
+#ifdef HAVE_WEBKITWIDGETS
+        htmlWidget->stop();
+#else // HAVE_WEBKITWIDGETS
+        if (swpHTML >= 0 && htmlPart != NULL)
+            htmlPart->closeUrl();
+#endif // HAVE_WEBKITWIDGETS
+#endif // HAVE_WEBENGINEWIDGETS
         urlComboBox->setEnabled(false);
         urlComboBox->clear();
         cbxEntryToUrlInfo.clear();
@@ -406,9 +448,22 @@ public:
             stackedWidget->setCurrentIndex(swpOkular);
             stackedWidget->widget(swpOkular)->setEnabled(true);
             setupToolMenuBarForPart(okularPart);
+#ifdef HAVE_WEBENGINEWIDGETS
         } else if (widget == htmlWidget) {
             stackedWidget->setCurrentIndex(swpHTML);
             stackedWidget->widget(swpHTML)->setEnabled(true);
+#else // HAVE_WEBENGINEWIDGETS
+#ifdef HAVE_WEBKITWIDGETS
+        } else if (widget == htmlWidget) {
+            stackedWidget->setCurrentIndex(swpHTML);
+            stackedWidget->widget(swpHTML)->setEnabled(true);
+#else // HAVE_WEBKITWIDGETS
+        } else if (part == htmlPart && swpHTML >= 0) {
+            stackedWidget->setCurrentIndex(swpHTML);
+            stackedWidget->widget(swpHTML)->setEnabled(true);
+            setupToolMenuBarForPart(htmlPart);
+#endif // HAVE_WEBKITWIDGETS
+#endif // HAVE_WEBENGINEWIDGETS
         } else if (widget == message) {
             stackedWidget->setCurrentIndex(swpMessage);
         } else
@@ -426,7 +481,16 @@ public:
             stackedWidget->widget(swpOkular)->setEnabled(false);
             okularPart->closeUrl();
         }
+#ifdef HAVE_WEBENGINEWIDGETS
         htmlWidget->stop();
+#else // HAVE_WEBENGINEWIDGETS
+#ifdef HAVE_WEBKITWIDGETS
+        htmlWidget->stop();
+#else // HAVE_WEBKITWIDGETS
+        if (swpHTML >= 0 && htmlPart != NULL)
+            htmlPart->closeUrl();
+#endif // HAVE_WEBKITWIDGETS
+#endif // HAVE_WEBENGINEWIDGETS
 
         if (okularPart != NULL && okularMimetypes.contains(urlInfo.mimeType)) {
             p->setCursor(Qt::BusyCursor);
@@ -435,8 +499,17 @@ public:
         } else if (htmlMimetypes.contains(urlInfo.mimeType)) {
             p->setCursor(Qt::BusyCursor);
             showMessage(i18n("Loading...")); // krazy:exclude=qmethods
+#ifdef HAVE_WEBENGINEWIDGETS
             htmlWidget->load(urlInfo.url);
             return true;
+#else // HAVE_WEBENGINEWIDGETS
+#ifdef HAVE_WEBKITWIDGETS
+            htmlWidget->load(urlInfo.url);
+            return true;
+#else // HAVE_WEBKITWIDGETS
+            return (swpHTML >= 0 && htmlPart != NULL) ? htmlPart->openUrl(urlInfo.url) : false;
+#endif // HAVE_WEBKITWIDGETS
+#endif // HAVE_WEBENGINEWIDGETS
         } else if (imageMimetypes.contains(urlInfo.mimeType)) {
             p->setCursor(Qt::BusyCursor);
             message->setPixmap(QPixmap(urlInfo.url.url(QUrl::PreferLocalFile)));
