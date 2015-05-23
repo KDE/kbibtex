@@ -72,29 +72,6 @@ find_package(
     Service
     KDELibs4Support
 )
-#     Archive
-#     Bookmarks
-#     Config
-#     ConfigWidgets
-#     CoreAddons
-#     DocTools
-#     Emoticons
-#     I18n
-#     IdleTime
-#     NotifyConfig
-#     KIO
-#     Parts
-#     Solid
-#     Sonnet
-#     Wallet
-#     WidgetsAddons
-#     GlobalAccel
-#     DBusAddons
-#     Notifications
-#     WindowSystem
-#     IconThemes
-#     ItemViews
-
 
 # Version number for the exported headers / libs
 set(
