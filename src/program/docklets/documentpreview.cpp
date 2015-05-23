@@ -289,7 +289,7 @@ public:
         p->setCursor(Qt::WaitCursor);
 
         /// reset and clear all controls
-        if (okularPart != NULL)
+        if (swpOkular >= 0 && okularPart != NULL)
             okularPart->closeUrl();
 #ifdef HAVE_WEBENGINEWIDGETS
         htmlWidget->stop();
@@ -492,7 +492,7 @@ public:
 #endif // HAVE_WEBKITWIDGETS
 #endif // HAVE_WEBENGINEWIDGETS
 
-        if (okularPart != NULL && okularMimetypes.contains(urlInfo.mimeType)) {
+        if (swpOkular >= 0 && okularPart != NULL && okularMimetypes.contains(urlInfo.mimeType)) {
             p->setCursor(Qt::BusyCursor);
             showMessage(i18n("Loading...")); // krazy:exclude=qmethods
             return okularPart->openUrl(urlInfo.url);
