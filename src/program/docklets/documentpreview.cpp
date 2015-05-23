@@ -131,8 +131,8 @@ public:
     QUrl baseUrl;
     bool anyRemote;
 
-    KParts::ReadOnlyPart *locatePart(const QString &desktopFile, QWidget *parentWidget) {
-        KService::Ptr service = KService::serviceByDesktopPath(desktopFile);
+    KParts::ReadOnlyPart *locatePart(const QString &mimeType, QWidget *parentWidget) {
+        KService::Ptr service = KMimeTypeTrader::self()->preferredService(mimeType, QLatin1String("KParts/ReadOnlyPart"));
         if (service) {
             KParts::ReadOnlyPart *part = service->createInstance<KParts::ReadOnlyPart>(parentWidget, p);
             connect(part, SIGNAL(completed()), p, SLOT(loadingFinished()));
@@ -204,7 +204,7 @@ public:
         connect(message, SIGNAL(linkActivated(QString)), p, SLOT(linkActivated(QString)));
 
         /// add parts to stackedWidget
-        okularPart = locatePart(QLatin1String("okularPoppler.desktop"), stackedWidget);
+        okularPart = locatePart(QLatin1String("application/pdf"), stackedWidget);
         swpOkular = (okularPart == NULL) ? -1 : stackedWidget->addWidget(okularPart->widget());
         if (okularPart == NULL || swpOkular < 0) {
             qWarning() << "No Okular part for PDF or PostScript document preview available.";
