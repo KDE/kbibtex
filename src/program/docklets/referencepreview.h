@@ -43,7 +43,7 @@ private:
     class ReferencePreviewPrivate;
     ReferencePreviewPrivate *d;
 
-    void setHtml(const QString &html, const QUrl &baseUrl = QUrl());
+    void setHtml(const QString &html);
 
 private slots:
     void renderHTML();

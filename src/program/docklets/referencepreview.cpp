@@ -23,7 +23,16 @@
 
 #include <QFrame>
 #include <QBuffer>
+#ifdef HAVE_WEBENGINEWIDGETS
 #include <QtWebEngineWidgets/QtWebEngineWidgets>
+#else // HAVE_WEBENGINEWIDGETS
+#ifdef HAVE_WEBKITWIDGETS
+#include <QtWebKitWidgets/QtWebKitWidgets>
+#else // HAVE_WEBKITWIDGETS
+#include <QTextEdit>
+#include <QTextDocument>
+#endif // HAVE_WEBKITWIDGETS
+#endif // HAVE_WEBENGINEWIDGETS
 #include <QLayout>
 #include <QApplication>
 #include <QStandardPaths>
@@ -87,8 +96,16 @@ public:
 
     QPushButton *buttonOpen, *buttonSaveAsHTML;
     QString htmlText;
-    QUrl baseUrl;
-    QWebEngineView *webView;
+#ifdef HAVE_WEBENGINEWIDGETS
+    QWebEngineView *htmlView;
+#else // HAVE_WEBENGINEWIDGETS
+#ifdef HAVE_WEBKITWIDGETS
+    QWebView *htmlView;
+#else // HAVE_WEBKITWIDGETS
+    QTextDocument *htmlDocument;
+    QTextEdit *htmlView;
+#endif // HAVE_WEBKITWIDGETS
+#endif // HAVE_WEBENGINEWIDGETS
     KComboBox *comboBox;
     QSharedPointer<const Element> element;
     const File *file;
@@ -121,10 +138,22 @@ public:
 
         QVBoxLayout *layout = new QVBoxLayout(frame);
         layout->setMargin(0);
-        webView = new QWebEngineView(frame);
-        layout->addWidget(webView);
-        // FIXME webView->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
-        connect(webView->page(), &QWebEnginePage::urlChanged, p, &ReferencePreview::linkClicked);
+#ifdef HAVE_WEBENGINEWIDGETS
+        htmlView = new QWebEngineView(frame);
+        connect(htmlView->page(), &QWebEnginePage::urlChanged, p, &ReferencePreview::linkClicked);
+#else // HAVE_WEBENGINEWIDGETS
+#ifdef HAVE_WEBKITWIDGETS
+        htmlView = new QWebView(frame);
+        htmlView->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
+        connect(htmlView->page(), &QWebPage::linkClicked, p, &ReferencePreview::linkClicked);
+#else // HAVE_WEBKITWIDGETS
+        htmlView = new QTextEdit(frame);
+        htmlView->setReadOnly(true);
+        htmlDocument = new QTextDocument(htmlView);
+        htmlView->setDocument(htmlDocument);
+#endif // HAVE_WEBKITWIDGETS
+#endif // HAVE_WEBENGINEWIDGETS
+        layout->addWidget(htmlView);
 
         buttonOpen = new QPushButton(QIcon::fromTheme("document-open"), i18n("Open"), p);
         buttonOpen->setToolTip(i18n("Open reference in web browser."));
@@ -203,11 +232,18 @@ ReferencePreview::~ReferencePreview()
     delete d;
 }
 
-void ReferencePreview::setHtml(const QString &html, const QUrl &baseUrl)
+void ReferencePreview::setHtml(const QString &html)
 {
     d->htmlText = QString(html).remove(QLatin1String("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"));
-    d->baseUrl = baseUrl;
-    d->webView->setHtml(html, baseUrl);
+#ifdef HAVE_WEBENGINEWIDGETS
+    d->htmlView->setHtml(d->htmlText, QUrl());
+#else // HAVE_WEBENGINEWIDGETS
+#ifdef HAVE_WEBKITWIDGETS
+    d->htmlView->setHtml(d->htmlText, QUrl());
+#else // HAVE_WEBKITWIDGETS
+    d->htmlDocument->setHtml(d->htmlText);
+#endif // HAVE_WEBKITWIDGETS
+#endif // HAVE_WEBENGINEWIDGETS
     d->buttonOpen->setEnabled(true);
     d->buttonSaveAsHTML->setEnabled(true);
 }
@@ -215,13 +251,22 @@ void ReferencePreview::setHtml(const QString &html, const QUrl &baseUrl)
 void ReferencePreview::setEnabled(bool enabled)
 {
     if (enabled)
-        setHtml(d->htmlText, d->baseUrl);
+        setHtml(d->htmlText);
     else {
-        d->webView->setHtml(d->notAvailableMessage.arg(i18n("Preview disabled")), d->baseUrl);
+        static const QString html = d->notAvailableMessage.arg(i18n("Preview disabled"));
+#ifdef HAVE_WEBENGINEWIDGETS
+        d->htmlView->setHtml(html, QUrl());
+#else // HAVE_WEBENGINEWIDGETS
+#ifdef HAVE_WEBKITWIDGETS
+        d->htmlView->setHtml(d->htmlText, QUrl());
+#else // HAVE_WEBKITWIDGETS
+        d->htmlDocument->setHtml(html);
+#endif // HAVE_WEBKITWIDGETS
+#endif // HAVE_WEBENGINEWIDGETS
         d->buttonOpen->setEnabled(false);
         d->buttonSaveAsHTML->setEnabled(false);
     }
-    d->webView->setEnabled(enabled);
+    d->htmlView->setEnabled(enabled);
     d->comboBox->setEnabled(enabled);
 }
 
@@ -240,7 +285,16 @@ void ReferencePreview::renderHTML()
          } crossRefHandling = ignore;
 
     if (d->element.isNull()) {
-        d->webView->setHtml(d->notAvailableMessage.arg(i18n("No element selected")), d->baseUrl);
+        static const QString html = d->notAvailableMessage.arg(i18n("No element selected"));
+#ifdef HAVE_WEBENGINEWIDGETS
+        d->htmlView->setHtml(html, QUrl());
+#else // HAVE_WEBENGINEWIDGETS
+#ifdef HAVE_WEBKITWIDGETS
+        d->htmlView->setHtml(html, QUrl());
+#else // HAVE_WEBKITWIDGETS
+        d->htmlDocument->setHtml(html);
+#endif // HAVE_WEBKITWIDGETS
+#endif // HAVE_WEBENGINEWIDGETS
         d->buttonOpen->setEnabled(false);
         d->buttonSaveAsHTML->setEnabled(false);
         return;
@@ -354,7 +408,7 @@ void ReferencePreview::renderHTML()
             text.replace(QLatin1String("color: black;"), QString(QLatin1String("color: %1;")).arg(d->textColor.name()));
         }
 
-        setHtml(text, d->baseUrl);
+        setHtml(text);
 
         d->saveState();
     }
