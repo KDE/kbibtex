@@ -29,6 +29,20 @@ if(Qt5WebKitWidgets_FOUND)
     )
 endif(Qt5WebKitWidgets_FOUND)
 
+if(Qt5WebEngineWidgets_FOUND)
+    if(Qt5WebKitWidgets_FOUND)
+        message(STATUS "Found both QtWebEngine and QtWebKit, preferring to use QtWebEngine")
+    else(Qt5WebKitWidgets_FOUND)
+        message(STATUS "Found QtWebEngine, but not QtWebKit, therefore going to use QtWebEngine")
+    endif(Qt5WebKitWidgets_FOUND)
+else(Qt5WebEngineWidgets_FOUND)
+    if(Qt5WebKitWidgets_FOUND)
+        message(STATUS "Found QtWebKit, but not QtWebEngine, therefore going to use QtWebKit")
+    else(Qt5WebKitWidgets_FOUND)
+        message(STATUS "Found neither QtWebEngine nor QtWebKit, therefore trying to locate a KPart for HTML data")
+    endif(Qt5WebKitWidgets_FOUND)
+endif(Qt5WebEngineWidgets_FOUND)
+
 
 add_subdirectory(
     config
