@@ -19,7 +19,6 @@
 
 #include <QFileInfo>
 #include <QDir>
-#include <QTemporaryFile>
 #include <QDebug>
 
 #include <KIO/NetAccess>

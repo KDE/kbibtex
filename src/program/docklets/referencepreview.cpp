@@ -418,7 +418,7 @@ void ReferencePreview::renderHTML()
 
 void ReferencePreview::openAsHTML()
 {
-    QTemporaryFile file(QLatin1String("referencePreview-openAsHTML-XXXXXX.html"));
+    QTemporaryFile file(QStandardPaths::writableLocation(QStandardPaths::TempLocation) + QDir::separator() + QLatin1String("referencePreview-openAsHTML-XXXXXX.html"));
     file.setAutoRemove(false); /// let file stay alive for browser
     d->saveHTML(file);
 
