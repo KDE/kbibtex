@@ -326,7 +326,9 @@ public:
         /// essentially calling this function only to set the "default mime type" parameter
         saveDlg->setMimeTypeFilters(supportedMimeTypes.split(QLatin1Char(' '), QString::SkipEmptyParts));
         /// Setting the dialog into "Saving" mode make the "add extension" checkbox available
-        // FIXME saveDlg->setOperationMode(KFileDialog::Saving);
+        saveDlg->setAcceptMode(QFileDialog::AcceptSave);
+        saveDlg->setDefaultSuffix(QLatin1String("bib"));
+        saveDlg->setFileMode(QFileDialog::AnyFile);
         if (saveDlg->exec() != QDialog::Accepted)
             /// User cancelled saving operation, return invalid filename/URL
             return QUrl();
