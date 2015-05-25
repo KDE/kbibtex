@@ -414,7 +414,7 @@ public:
             }
         }
         KIO::NetAccess::del(realUrl, p->widget());
-        result &= KIO::NetAccess::file_copy(temporaryFile.fileName(), realUrl, p->widget());
+        result &= KIO::NetAccess::file_copy(QUrl::fromLocalFile(temporaryFile.fileName()), realUrl, p->widget());
 
         qApp->restoreOverrideCursor();
         if (!result)
@@ -703,7 +703,7 @@ bool KBibTeXPart::saveFile()
     else
         qWarning() << "watchableFilename is Empty";
 
-    const bool saveOperationSuccess = d->saveFile(localFilePath());
+    const bool saveOperationSuccess = d->saveFile(QUrl::fromLocalFile(localFilePath()));
 
     /// Continue watching local file after write operation
     if (!watchableFilename.isEmpty())
