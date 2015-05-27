@@ -33,6 +33,7 @@
 #include <QPushButton>
 #include <QAction>
 #include <QDialog>
+#include <QDialogButtonBox>
 
 #include <KActionCollection>
 #include <KLocalizedString>
@@ -687,9 +688,16 @@ void FindDuplicatesUI::slotFindDuplicates()
         KMessageBox::information(d->part->widget(), i18n("No duplicates were found."), i18n("No duplicates found"));
     } else {
         QPointer<QDialog> dlg = new QDialog(d->part->widget());
+        dlg->setWindowTitle(i18n("Merge Duplicates"));
         QPointer<MergeWidget> mw = new MergeWidget(d->view->fileModel()->bibliographyFile(), cliques, dlg);
+        mw->layout()->setMargin(0);
         QBoxLayout *layout = new QVBoxLayout(dlg);
         layout->addWidget(mw);
+        QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, dlg);
+        layout->addWidget(buttonBox);
+
+        connect(buttonBox->button(QDialogButtonBox::Ok), &QPushButton::clicked, dlg, &QDialog::accept);
+        connect(buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, dlg, &QDialog::reject);
 
         if (dlg->exec() == QDialog::Accepted) {
             MergeDuplicates md(dlg);
