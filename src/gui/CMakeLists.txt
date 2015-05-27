@@ -141,7 +141,6 @@ target_link_libraries( kbibtexgui
     KF5::IconThemes
     KF5::ItemViews
     KF5::Completion
-    KF5::KDELibs4Support
     kbibtexconfig
     kbibtexdata
     kbibtexio
