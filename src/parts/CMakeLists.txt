@@ -50,7 +50,6 @@ add_library( kbibtexpart
 
 target_link_libraries( kbibtexpart
     KF5::Parts
-    KF5::KDELibs4Support
     kbibtexconfig
     kbibtexdata
     kbibtexio

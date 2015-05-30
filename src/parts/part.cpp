@@ -35,6 +35,9 @@
 #include <QDebug>
 #include <QMessageBox>
 #include <QFileDialog>
+#include <QDialog>
+#include <QDialogButtonBox>
+#include <QPushButton>
 
 #include <KMessageBox> // FIXME deprecated
 #include <KLocalizedString>
@@ -43,7 +46,6 @@
 #include <KActionMenu>
 #include <KSelectAction>
 #include <KToggleAction>
-#include <KDialog> // FIXME deprecated
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <KTemporaryFile>
@@ -358,31 +360,38 @@ public:
             FileExporterToolchain *fet = NULL;
 
             if (typeid(*exporter) == typeid(FileExporterBibTeX)) {
-                QPointer<KDialog> dlg = new KDialog(p->widget());
+                QPointer<QDialog> dlg = new QDialog(p->widget());
+                dlg->setWindowTitle(i18n("BibTeX File Settings"));
+                QBoxLayout *layout = new QVBoxLayout(dlg);
                 FileSettingsWidget *settingsWidget = new FileSettingsWidget(dlg);
+                layout->addWidget(settingsWidget);
+                QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::RestoreDefaults | QDialogButtonBox::Reset | QDialogButtonBox::Save | QDialogButtonBox::Ok, Qt::Horizontal, dlg);
+                layout->addWidget(buttonBox);
+                connect(buttonBox->button(QDialogButtonBox::RestoreDefaults), &QPushButton::clicked, settingsWidget, &FileSettingsWidget::resetToDefaults);
+                connect(buttonBox->button(QDialogButtonBox::Reset), &QPushButton::clicked, settingsWidget, &FileSettingsWidget::resetToLoadedProperties);
+                connect(buttonBox->button(QDialogButtonBox::Save), &QPushButton::clicked, settingsWidget, &FileSettingsWidget::applyProperties);
+                connect(buttonBox->button(QDialogButtonBox::Ok), &QPushButton::clicked, dlg, &QDialog::accept);
+
                 settingsWidget->loadProperties(bibTeXFile);
-                dlg->setMainWidget(settingsWidget);
-                dlg->setCaption(i18n("BibTeX File Settings"));
-                dlg->setButtons(KDialog::Default | KDialog::Reset | KDialog::User1 | KDialog::Ok);
-                dlg->setButtonGuiItem(KDialog::User1, KGuiItem(i18n("Save as Default"), QIcon::fromTheme("edit-redo") /** matches reset button's icon */, i18n("Save this configuration as default for future Save As operations.")));
-                connect(dlg, SIGNAL(user1Clicked()), settingsWidget, SLOT(saveProperties()));
-                connect(dlg, SIGNAL(resetClicked()), settingsWidget, SLOT(loadProperties()));
-                connect(dlg, SIGNAL(defaultClicked()), settingsWidget, SLOT(resetToDefaults()));
-                dlg->exec();
-                settingsWidget->saveProperties(bibTeXFile);
+
+                if (dlg->exec() == QDialog::Accepted)
+                    settingsWidget->saveProperties(bibTeXFile);
                 delete dlg;
             } else if ((fet = qobject_cast<FileExporterToolchain *>(exporter)) != NULL) {
-                QPointer<KDialog> dlg = new KDialog(p->widget());
+                QPointer<QDialog> dlg = new QDialog(p->widget());
+                dlg->setWindowTitle(i18n("PDF/PostScript File Settings"));
+                QBoxLayout *layout = new QVBoxLayout(dlg);
                 SettingsFileExporterPDFPSWidget *settingsWidget = new SettingsFileExporterPDFPSWidget(dlg);
-                dlg->setMainWidget(settingsWidget);
-                dlg->setCaption(i18n("PDF/PostScript File Settings"));
-                dlg->setButtons(KDialog::Default | KDialog::Reset | KDialog::User1 | KDialog::Ok);
-                dlg->setButtonGuiItem(KDialog::User1, KGuiItem(i18n("Save as Default"), QIcon::fromTheme("edit-redo") /** matches reset button's icon */, i18n("Save this configuration as default for future Save As operations.")));
-                connect(dlg, SIGNAL(user1Clicked()), settingsWidget, SLOT(saveState()));
-                connect(dlg, SIGNAL(resetClicked()), settingsWidget, SLOT(loadState()));
-                connect(dlg, SIGNAL(defaultClicked()), settingsWidget, SLOT(resetToDefaults()));
-                dlg->exec();
-                settingsWidget->saveState();
+                layout->addWidget(settingsWidget);
+                QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::RestoreDefaults | QDialogButtonBox::Reset | QDialogButtonBox::Save | QDialogButtonBox::Ok, Qt::Horizontal, dlg);
+                layout->addWidget(buttonBox);
+                connect(buttonBox->button(QDialogButtonBox::RestoreDefaults), &QPushButton::clicked, settingsWidget, &SettingsFileExporterPDFPSWidget::resetToDefaults);
+                connect(buttonBox->button(QDialogButtonBox::Reset), &QPushButton::clicked, settingsWidget, &SettingsFileExporterPDFPSWidget::loadState);
+                connect(buttonBox->button(QDialogButtonBox::Save), &QPushButton::clicked, settingsWidget, &SettingsFileExporterPDFPSWidget::saveState);
+                connect(buttonBox->button(QDialogButtonBox::Ok), &QPushButton::clicked, dlg, &QDialog::accept);
+
+                if (dlg->exec() == QDialog::Accepted)
+                    settingsWidget->saveState();
                 fet->reloadConfig();
                 delete dlg;
             }
