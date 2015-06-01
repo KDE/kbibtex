@@ -42,8 +42,6 @@
 #include <KMessageBox>
 #include <KLineEdit>
 
-#include <kdeversion.h>
-
 #include "fileimporterbibtex.h"
 #include "bibtexentries.h"
 #include "radiobuttontreeview.h"
