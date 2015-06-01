@@ -49,9 +49,12 @@
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <KTemporaryFile>
-#include <KIO/NetAccess>
 #include <KRun>
 #include <KPluginFactory>
+#include <KIO/StatJob>
+#include <KIO/CopyJob>
+#include <KIO/Job>
+#include <KJobWidgets>
 
 #include "file.h"
 #include "macro.h"
@@ -101,6 +104,26 @@ class KBibTeXPart::KBibTeXPartPrivate
 private:
     KBibTeXPart *p;
     KSharedConfigPtr config;
+
+    /**
+     * Modifies a given URL to become a "backup" filename/URL.
+     * A backup level or 0 or less does not modify the URL.
+     * A backup level of 1 appends a '~' (tilde) to the URL's filename.
+     * A backup level of 2 or more appends '~N', where N is the level.
+     * The provided URL will be modified in the process. It is assumed
+     * that the URL is not yet a "backup URL".
+     */
+    void constructBackupUrl(const int level, QUrl &url) const {
+        if (level <= 0)
+            /// No modification
+            return;
+        else if (level == 1)
+            /// Simply append '~' to the URL's filename
+            url.setPath(url.path() + QLatin1String("~"));
+        else
+            /// Append '~' followed by a number to the filename
+            url.setPath(url.path() + QString(QLatin1String("~%1")).arg(level));
+    }
 
 public:
     File *bibTeXFile;
@@ -264,10 +287,6 @@ public:
     }
 
     void makeBackup(const QUrl &url) const {
-        /// Do not make backup copies if file does not exist yet
-        if (!KIO::NetAccess::exists(url, KIO::NetAccess::DestinationSide, p->widget()))
-            return;
-
         /// Fetch settings from configuration
         KConfigGroup configGroup(config, Preferences::groupGeneral);
         const Preferences::BackupScope backupScope = (Preferences::BackupScope)configGroup.readEntry(Preferences::keyBackupScope, (int)Preferences::defaultBackupScope);
@@ -278,31 +297,36 @@ public:
             return;
 
         /// For non-local files, proceed only if backups to remote storage is allowed
-        if (!url.isLocalFile() && backupScope != Preferences::BothLocalAndRemote)
+        if (backupScope != Preferences::BothLocalAndRemote && !url.isLocalFile())
             return;
 
-        bool copySucceeded = true;
-        /// copy e.g. test.bib~ to test.bib~2 and test.bib~3 to test.bib~4 etc.
-        for (int i = numberOfBackups - 1; copySucceeded && i >= 1; --i) {
-            QUrl a(url);
-            a = a.adjusted(QUrl::RemoveFilename);
-            a.setPath(a.path() + url.fileName() + (i > 1 ? QString("~%1").arg(i) : QLatin1String("~")));
-            if (KIO::NetAccess::exists(a, KIO::NetAccess::DestinationSide, p->widget())) {
-                QUrl b(url);
-                b = b.adjusted(QUrl::RemoveFilename);
-                b.setPath(b.path() + url.fileName() + QString("~%1").arg(i + 1));
-                KIO::NetAccess::del(b, p->widget());
-                copySucceeded = KIO::NetAccess::file_copy(a, b, p->widget());
-            }
+        /// Do not make backup copies if destination file does not exist yet
+        KIO::StatJob *statJob = KIO::stat(url, KIO::StatJob::DestinationSide, 0 /** not details necessary, just need to know if file exists */, KIO::HideProgressInfo);
+        KJobWidgets::setWindow(statJob, p->widget());
+        statJob->exec();
+        if (statJob->error() == KIO::ERR_DOES_NOT_EXIST)
+            return;
+        else if (statJob->error() != KIO::Job::NoError) {
+            /// Something else went wrong, quit with error
+            qWarning() << "Probing" << url.toDisplayString() << "failed:" << statJob->errorString();
+            return;
         }
 
-        if (copySucceeded && (numberOfBackups > 0)) {
-            /// copy e.g. test.bib into test.bib~
-            QUrl b(url);
-            b = b.adjusted(QUrl::RemoveFilename);
-            b.setPath(b.path() + url.fileName() + QLatin1String("~"));
-            KIO::NetAccess::del(b, p->widget());
-            copySucceeded = KIO::NetAccess::file_copy(url, b, p->widget());
+        bool copySucceeded = true;
+        /// Copy e.g. test.bib~ to test.bib~2, test.bib to test.bib~ etc.
+        for (int level = numberOfBackups; copySucceeded && level >= 1; --level) {
+            QUrl newerBackupUrl = url;
+            constructBackupUrl(level - 1, newerBackupUrl);
+            QUrl olderBackupUrl = url;
+            constructBackupUrl(level, olderBackupUrl);
+
+            statJob = KIO::stat(newerBackupUrl, KIO::StatJob::DestinationSide, 0 /** not details necessary, just need to know if file exists */, KIO::HideProgressInfo);
+            KJobWidgets::setWindow(statJob, p->widget());
+            if (statJob->exec() && statJob->error() == KIO::Job::NoError) {
+                KIO::CopyJob *moveJob = KIO::move(newerBackupUrl, olderBackupUrl, KIO::HideProgressInfo | KIO::Overwrite);
+                KJobWidgets::setWindow(moveJob, p->widget());
+                copySucceeded = moveJob->exec();
+            }
         }
 
         if (!copySucceeded)
@@ -424,8 +448,10 @@ public:
                 realUrl = QUrl::fromLocalFile(fileInfo.symLinkTarget());
             }
         }
-        KIO::NetAccess::del(realUrl, p->widget());
-        result &= KIO::NetAccess::file_copy(QUrl::fromLocalFile(temporaryFile.fileName()), realUrl, p->widget());
+
+        KIO::CopyJob *copyJob = KIO::copy(QUrl::fromLocalFile(temporaryFile.fileName()), realUrl, KIO::HideProgressInfo | KIO::Overwrite);
+        KJobWidgets::setWindow(copyJob, p->widget());
+        result &= copyJob->exec() && copyJob->error() == KIO::Job::NoError;
 
         qApp->restoreOverrideCursor();
         if (!result)
