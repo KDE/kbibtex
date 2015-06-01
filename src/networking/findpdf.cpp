@@ -277,7 +277,7 @@ bool FindPDF::search(const Entry &entry)
         /// check eprint fields as used for arXiv
         const QString fieldText = PlainTextValue::text(entry.value(QLatin1String("eprint")));
         if (!fieldText.isEmpty())
-            d->queueUrl(QUrl(QLatin1String("http://arxiv.org/pdf/") + fieldText), fieldText, QLatin1String("eprint"), maxDepth);
+            d->queueUrl(QUrl(QLatin1String("http://arxiv.org/search?query=") + fieldText), fieldText, QLatin1String("eprint"), maxDepth);
     }
 
     if (!searchWords.isEmpty()) {
