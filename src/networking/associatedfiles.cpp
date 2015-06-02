@@ -21,7 +21,8 @@
 #include <QDir>
 #include <QDebug>
 
-#include <KIO/NetAccess>
+#include <KIO/CopyJob>
+#include <KJobWidgets>
 
 bool AssociatedFiles::urlIsLocal(const QUrl &url)
 {
@@ -168,11 +169,10 @@ QUrl AssociatedFiles::copyDocument(const QUrl &sourceUrl, const QString &entryId
                 success &= QFile(internalSourceUrl.path()).remove();
             }
         } else {
-            KIO::NetAccess::del(sourceUrl, widget); // FIXME non-blocking
-            success &= KIO::NetAccess::file_copy(sourceUrl, targetUrl, widget); // FIXME non-blocking
-            if (moveCopyOperation == mcoMove) {
-                success &= KIO::NetAccess::del(sourceUrl, widget); // FIXME non-blocking
-            }
+            // FIXME non-blocking
+            KIO::CopyJob *moveCopyJob = moveCopyOperation == mcoMove ? KIO::move(sourceUrl, targetUrl, KIO::HideProgressInfo | KIO::Overwrite) : KIO::copy(sourceUrl, targetUrl, KIO::HideProgressInfo | KIO::Overwrite);
+            KJobWidgets::setWindow(moveCopyJob, widget);
+            success &= moveCopyJob->exec();
         }
 
         if (!success) return QUrl(); ///< either copy/move or delete operation failed
