@@ -368,7 +368,7 @@ public:
         bool isFirst = true;
         KConfigGroup cg(config, configGroupName);
         for (int i = 0; i < maxNumFiles; ++i) {
-            KUrl fileUrl = KUrl(cg.readEntry(QString("%1-%2").arg(OpenFileInfo::OpenFileInfoPrivate::keyURL).arg(i), ""));
+            KUrl fileUrl = KUrl::fromUserInput(cg.readEntry(QString("%1-%2").arg(OpenFileInfo::OpenFileInfoPrivate::keyURL).arg(i), QString()));
             if (!fileUrl.isValid()) break;
             if (fileUrl.scheme().isEmpty())
                 fileUrl.setScheme(QLatin1String("file"));

@@ -83,10 +83,8 @@ public:
                 if (role == Qt::DisplayRole || role == Qt::ToolTipRole || role == SortRole)
                     return ofiItem->url().pathOrUrl();
             }
-            if (role == URLRole) {
-                if (role == URLRole)
-                    return ofiItem->url();
-            }
+            if (role == URLRole)
+                return QVariant::fromValue<QUrl>(ofiItem->url());
         }
 
         return QVariant();
@@ -319,7 +317,7 @@ void MDIWidget::slotStatusFlagsChanged(OpenFileInfo::StatusFlags statusFlags)
 
 void MDIWidget::slotOpenLRU(const QModelIndex &index)
 {
-    KUrl url = index.data(LRUItemModel::URLRole).toUrl();
+    QUrl url = index.data(LRUItemModel::URLRole).toUrl();
     if (url.isValid())
         emit documentOpenURL(url);
 }
