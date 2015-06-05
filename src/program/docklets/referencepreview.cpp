@@ -48,7 +48,8 @@
 #include <KLocalizedString>
 #include <KComboBox>
 #include <KRun>
-#include <KIO/NetAccess>
+#include <KIO/CopyJob>
+#include <KJobWidgets>
 #include <KSharedConfig>
 #include <KConfigGroup>
 
@@ -171,8 +172,9 @@ public:
         bool result = saveHTML(file);
 
         if (result) {
-            KIO::NetAccess::del(url, p); /// ignore error if file does not exist
-            result = KIO::NetAccess::file_copy(QUrl(file.fileName()), url, p);
+            KIO::CopyJob *copyJob = KIO::copy(QUrl::fromLocalFile(file.fileName()), url, KIO::Overwrite);
+            KJobWidgets::setWindow(copyJob, p);
+            result = copyJob->exec();
         }
 
         return result;
