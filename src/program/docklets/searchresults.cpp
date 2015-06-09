@@ -18,6 +18,7 @@
 #include "searchresults.h"
 
 #include <QGridLayout>
+#include <QLabel>
 
 #include <KLocale>
 #include <KPushButton>
@@ -39,12 +40,14 @@ private:
 public:
     MDIWidget *m;
     File *file;
+    QWidget *widgetCannotImport;
+    QLabel *labelCannotImportMsg;
     KPushButton *buttonImport;
     FileView *resultList, *mainEditor;
     KAction *actionViewCurrent, *actionImportSelected, *actionCopySelected;
 
     SearchResultsPrivate(MDIWidget *mdiWidget, SearchResults *parent)
-        : /* UNUSED p(parent),*/ m(mdiWidget), file(new File()) {
+        : /* UNUSED p(parent),*/ m(mdiWidget), file(new File()), mainEditor(NULL) {
         QGridLayout *layout = new QGridLayout(parent);
         layout->setMargin(0);
         layout->setColumnStretch(0, 1);
@@ -59,6 +62,23 @@ public:
         layout->addWidget(resultList, 0, 0, 1, 2);
 
         clipboard = new Clipboard(resultList);
+
+        /// Create a special widget that shows a small icon and a text
+        /// stating that there are no search results. It will only be
+        /// shown until the first search results arrive.
+        // TODO nearly identical code as in ElementFormPrivate constructor, create common class
+        widgetCannotImport = new QWidget(parent);
+        layout->addWidget(widgetCannotImport, 1, 0, 1, 1);
+        QBoxLayout *layoutCannotImport = new QHBoxLayout(widgetCannotImport);
+        layoutCannotImport->addStretch(10);
+        QLabel *label = new QLabel(widgetCannotImport);
+        label->setAlignment(Qt::AlignCenter | Qt::AlignVCenter);
+        label->setPixmap(KIconLoader::global()->loadIcon("dialog-warning", KIconLoader::Dialog, KIconLoader::SizeSmall));
+        layoutCannotImport->addWidget(label);
+        labelCannotImportMsg = new QLabel(widgetCannotImport);
+        labelCannotImportMsg->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+        layoutCannotImport->addWidget(labelCannotImportMsg);
+        /// see also updateCannotImportMessage()
 
         buttonImport = new KPushButton(KIcon("svn-update"), i18n("Import"), parent);
         layout->addWidget(buttonImport, 1, 1, 1, 1);
@@ -88,6 +108,8 @@ public:
         connect(resultList, SIGNAL(doubleClicked(QModelIndex)), resultList, SLOT(viewCurrentElement()));
         connect(resultList, SIGNAL(selectedElementsChanged()), parent, SLOT(updateGUI()));
         connect(buttonImport, SIGNAL(clicked()), parent, SLOT(importSelected()));
+
+        updateCannotImportMessage();
     }
 
     ~SearchResultsPrivate() {
@@ -116,6 +138,16 @@ public:
         return result;
     }
 
+    void updateCannotImportMessage() {
+        const bool isEmpty = resultList->model()->rowCount() == 0;
+        if (mainEditor == NULL && isEmpty)
+            labelCannotImportMsg->setText(i18n("No results to import and no bibliography open to import to."));
+        else if (mainEditor == NULL)
+            labelCannotImportMsg->setText(i18n("No bibliography open to import to."));
+        else if (isEmpty)
+            labelCannotImportMsg->setText(i18n("No results to import."));
+        widgetCannotImport->setVisible(mainEditor == NULL || isEmpty);
+    }
 };
 
 SearchResults::SearchResults(MDIWidget *mdiWidget, QWidget *parent)
@@ -136,7 +168,10 @@ void SearchResults::clear()
 
 bool SearchResults::insertElement(QSharedPointer<Element> element)
 {
-    return d->insertElement(element);
+    const bool success = d->insertElement(element);
+    if (success)
+        d->updateCannotImportMessage();
+    return success;
 }
 
 void SearchResults::documentSwitched(FileView *oldEditor, FileView *newEditor)
@@ -148,6 +183,7 @@ void SearchResults::documentSwitched(FileView *oldEditor, FileView *newEditor)
 
 void SearchResults::updateGUI()
 {
+    d->updateCannotImportMessage();
     d->buttonImport->setEnabled(d->mainEditor != NULL && !d->resultList->selectedElements().isEmpty());
     d->actionImportSelected->setEnabled(d->buttonImport->isEnabled());
     d->actionCopySelected->setEnabled(!d->resultList->selectedElements().isEmpty());

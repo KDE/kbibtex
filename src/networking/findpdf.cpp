@@ -130,8 +130,9 @@ public:
                 int p1 = p + 6;
                 int p2 = text.indexOf(QLatin1Char('"'), p1 + 1);
                 QUrl url(text.mid(p1, p2 - p1));
-                kDebug() << "Google URL" << i << " : " << url.toString();
-                queueUrl(reply->url().resolved(url), term, QLatin1String("scholar.google"), depth - 1);
+                const QString googleService = reply->url().host().contains(QLatin1String("scholar.google")) ? QLatin1String("scholar.google") : QLatin1String("www.google");
+                kDebug() << "Google URL" << i << " : " << url.toString() << "(" << googleService << ")";
+                queueUrl(reply->url().resolved(url), term, googleService, depth - 1);
             }
         }
     }
@@ -244,7 +245,7 @@ bool FindPDF::search(const Entry &entry)
     QStringList urlFields = QStringList() << Entry::ftDOI << Entry::ftUrl << QLatin1String("ee");
     for (int i = 2; i < 256; ++i)
         urlFields << QString(QLatin1String("%1%2")).arg(Entry::ftDOI).arg(i) << QString(QLatin1String("%1%2")).arg(Entry::ftUrl).arg(i);
-    foreach(const QString &field, urlFields) {
+    foreach (const QString &field, urlFields) {
         if (entry.contains(field)) {
             const QString fieldText = PlainTextValue::text(entry.value(field));
             int p = -1;
@@ -261,17 +262,22 @@ bool FindPDF::search(const Entry &entry)
         /// check eprint fields as used for arXiv
         const QString fieldText = PlainTextValue::text(entry.value(QLatin1String("eprint")));
         if (!fieldText.isEmpty())
-            d->queueUrl(QUrl(QLatin1String("http://arxiv.org/pdf/") + fieldText), fieldText, QLatin1String("eprint"), maxDepth);
+            d->queueUrl(QUrl(QLatin1String("http://arxiv.org/search?query=") + fieldText), fieldText, QLatin1String("eprint"), maxDepth);
     }
 
     if (!searchWords.isEmpty()) {
+        /// use title to search in Google
+        KUrl googleUrl(QLatin1String("https://www.google.com/search?hl=en&sa=G"));
+        googleUrl.addQueryItem(QLatin1String("q"), searchWords + QLatin1String(" filetype:pdf"));
+        d->queueUrl(googleUrl, searchWords, QLatin1String("www.google"), maxDepth);
+
         /// use title to search in Google Scholar
         KUrl googleScholarUrl(QLatin1String("http://scholar.google.com/scholar?hl=en&btnG=Search&as_sdt=1"));
         googleScholarUrl.addQueryItem(QLatin1String("q"), searchWords + QLatin1String(" filetype:pdf"));
         d->queueUrl(googleScholarUrl, searchWords, QLatin1String("scholar.google"), maxDepth);
 
         /// use title to search in Bing
-        KUrl bingUrl(QLatin1String("http://www.bing.com/search?setmkt=en-IE&setlang=match"));
+        KUrl bingUrl(QLatin1String("https://www.bing.com/search?setlang=en-US"));
         bingUrl.addQueryItem(QLatin1String("q"), searchWords + QLatin1String(" filetype:pdf"));
         d->queueUrl(bingUrl, searchWords, QLatin1String("bing"), maxDepth);
 
@@ -338,7 +344,7 @@ void FindPDF::downloadFinished()
                 static const QRegExp googleScholarTitleRegExp(QLatin1String("<title>[^>]* - Google Scholar</title>"));
                 /// regular expression to check if this is a SpringerLink page
                 static const QRegExp springerLinkTitleRegExp(QLatin1String("<title>[^>]*SpringerLink - [^>]*</title>"));
-                /// regular expression to check if this is a SpringerLink page
+                /// regular expression to check if this is a CiteSeerX page
                 static const QRegExp citeseerxTitleRegExp(QLatin1String("<title>CiteSeerX &mdash; [^>]*</title>"));
 
                 if (text.indexOf(googleScholarTitleRegExp) > 0)
@@ -347,8 +353,16 @@ void FindPDF::downloadFinished()
                     d->processSpringerLink(reply, text);
                 else if (text.indexOf(citeseerxTitleRegExp) > 0)
                     d->processCiteSeerX(reply, text);
-                else
+                else {
+                    /// regular expression to extract title
+                    static QRegExp titleRegExp(QLatin1String("<title>(.*)</title>"));
+                    titleRegExp.setMinimal(true);
+                    if (titleRegExp.indexIn(text) >= 0)
+                        kDebug() << "Using general HTML processor for page" << titleRegExp.cap(1) << " URL=" << reply->url().toString();
+                    else
+                        kDebug() << "Using general HTML processor for URL=" << reply->url().toString();
                     d->processGeneralHTML(reply, text);
+                }
             }
         } else if (data.contains(pdfHead)) {
             /// looks like a PDF file -> grab it

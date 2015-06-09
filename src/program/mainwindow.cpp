@@ -317,7 +317,7 @@ void KBibTeXMainWindow::openDocumentDialog()
 {
     OpenFileInfo *currFile = d->mdiWidget->getOpenFileInfoManager()->currentFile();
     KUrl currFileUrl = currFile == NULL ? KUrl() : currFile->url();
-    QString startDir = currFileUrl.isValid() ? KUrl(currFileUrl.url()).path() : QLatin1String("kfiledialog:///opensave");
+    QString startDir = currFileUrl.isValid() ? KUrl(currFileUrl.url()).path() : QString();
     OpenFileInfo *ofi = d->mdiWidget->getOpenFileInfoManager()->currentFile();
     if (ofi != NULL) {
         KUrl url = ofi->url();

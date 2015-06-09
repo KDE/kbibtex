@@ -17,6 +17,8 @@
 
 #include "encoderlatex.h"
 
+#include <unicode/translit.h>
+
 #include <QString>
 
 #include <KDebug>
@@ -110,7 +112,7 @@ encoderLaTeXEscapedCharacters[] = {
     {'"', 'u', 0x00FC},
     {'\'', 'y', 0x00FD},
     /** 0x00FE Thorn */
-    /** 0x00FF Umlaut-y*/
+    {'"', 'y', 0x00FF},
     {'=', 'A', 0x0100},
     {'=', 'a', 0x0101},
     {'u', 'A', 0x0102},
@@ -223,8 +225,8 @@ encoderLaTeXEscapedCharacters[] = {
     {'u', 'u', 0x016D},
     {'r', 'U', 0x016E},
     {'r', 'u', 0x016F},
-    /** 0x0170 */
-    /** 0x0171 */
+    {'H', 'U', 0x0170},
+    {'H', 'u', 0x0171},
     /** 0x0172 */
     /** 0x0173 */
     /** 0x0174 */
@@ -240,12 +242,29 @@ encoderLaTeXEscapedCharacters[] = {
     {'v', 'z', 0x017E},
     /** 0x017F */
     /** 0x0180 */
-    {'=', 'Y', 0x0232},
-    {'=', 'y', 0x0233},
     {'v', 'A', 0x01CD},
     {'v', 'a', 0x01CE},
     {'v', 'G', 0x01E6},
     {'v', 'g', 0x01E7},
+    {'\'', 'F', 0x01F4},
+    {'\'', 'f', 0x01F5},
+    {'=', 'Y', 0x0232},
+    {'=', 'y', 0x0233},
+    {'"', 'H', 0x1E26},
+    {'"', 'h', 0x1E27},
+    {'`', 'W', 0x1E80},
+    {'`', 'w', 0x1E81},
+    {'\'', 'W', 0x1E82},
+    {'\'', 'w', 0x1E83},
+    {'"', 'W', 0x1E84},
+    {'"', 'w', 0x1E85},
+    {'"', 'X', 0x1E8C},
+    {'"', 'x', 0x1E8D},
+    {'"', 't', 0x1E97},
+    {'r', 'w', 0x1E98},
+    {'r', 'y', 0x1E99},
+    {'`', 'Y', 0x1EF2},
+    {'`', 'y', 0x1EF3},
     {'r', 'q', 0x2019} ///< tricky: this is \rq
 };
 static const int encoderLaTeXEscapedCharactersLen = sizeof(encoderLaTeXEscapedCharacters) / sizeof(encoderLaTeXEscapedCharacters[0]);
@@ -708,8 +727,8 @@ QString EncoderLaTeX::decode(const QString &input) const
                 /// to check for
                 QString alpha = readAlphaCharacters(input, i + 1);
                 int nextPosAfterAlpha = i + 1 + alpha.size();
-                if (alpha.size() > 1) {
-                    /// We are dealing actually with a string like \AA
+                if (alpha.size() >= 1 && alpha.at(0).isLetter()) {
+                    /// We are dealing actually with a string like \AA or \o
                     /// Check which command it is,
                     /// insert corresponding Unicode character
                     bool foundCommand = false;
@@ -757,7 +776,13 @@ QString EncoderLaTeX::decode(const QString &input) const
                     /// except for hopping over this backslash
                     if (foundCommand)
                         ++i;
-                    else {
+                    else if (i < len - 1 && input[i + 1] == QChar(0x002c /* comma */)) {
+                        /// Found a thin space: \,
+                        /// Replacing Latex-like thin space with Unicode thin space
+                        output.append(QChar(0x2009));
+                        foundCommand = true;
+                        ++i;
+                    } else {
                         /// Nothing special, copy input char to output
                         output.append(c);
                     }
@@ -915,6 +940,12 @@ QString EncoderLaTeX::encode(const QString &ninput) const
                     }
             }
 
+            if (!found && c.unicode() == 0x2009) {
+                /// Thin space
+                output.append(QLatin1String("\\,"));
+                found = true;
+            }
+
             if (!found) {
                 kWarning() << "Don't know how to encode Unicode char" << QString("0x%1").arg(c.unicode(), 4, 16, QLatin1Char('0'));
                 output.append(c);
@@ -956,17 +987,38 @@ QString EncoderLaTeX::encode(const QString &ninput) const
 
 QString EncoderLaTeX::convertToPlainAscii(const QString &ninput) const
 {
-    /// From iconv's man page:
-    /// If the string //TRANSLIT is appended to to-encoding, characters
-    /// being converted are transliterated when needed and  possible.
-    /// This means that when a character cannot be represented in the
-    /// target character set, it can be approximated through one or
-    /// several similar looking characters.  Characters that are outside
-    /// of the target character set and cannot be transliterated are
-    /// replaced with a question mark (?) in the output.
-    IConvLaTeX iconv(QLatin1String("ascii//translit"));
-    const QByteArray translit = iconv.encode(ninput);
-    return QString(translit);
+    /// Previously, iconv's //TRANSLIT feature had been used here.
+    /// However, the transliteration is locale-specific as discussed
+    /// here:
+    /// http://taschenorakel.de/mathias/2007/11/06/iconv-transliterations/
+    /// Therefore, iconv is not an acceptable solution.
+    ///
+    /// Instead, "International Components for Unicode" (ICU) is used.
+    /// It is already a dependency for Qt, so there is no "cost" involved
+    /// in using it.
+
+    const int ninputLen = ninput.length();
+    /// Make a copy of the input string into an array of UChar
+    UChar *uChars = new UChar[ninputLen];
+    for (int i = 0; i < ninputLen; ++i)
+        uChars[i] = ninput.at(i).unicode();
+    /// Create an ICU-specific unicode string
+    UnicodeString uString = UnicodeString(uChars, ninputLen);
+    /// Create an ICO Transliterator, configured to
+    /// transliterate virtually anything into plain ASCII
+    UErrorCode uec = U_ZERO_ERROR;
+    Transliterator *trans = icu::Transliterator::createInstance("Any-Latin;Latin-ASCII", UTRANS_FORWARD, uec);
+    /// Perform the actual transliteration, modifying Unicode string
+    trans->transliterate(uString);
+    /// Create regular C++ string from Unicode string
+    std::string cppString;
+    uString.toUTF8String(cppString);
+    /// Clean up any mess
+    delete[] uChars;
+    delete trans;
+    /// Convert regular C++ to Qt-specific QString,
+    /// should work as cppString contains only ASCII text
+    return QString::fromAscii(cppString.c_str());
 }
 
 bool EncoderLaTeX::containsOnlyAscii(const QString &ntext)

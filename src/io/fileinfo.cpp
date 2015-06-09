@@ -185,6 +185,33 @@ QList<KUrl> FileInfo::entryUrls(const Entry *entry, const KUrl &bibTeXUrl, TestE
     if (entry == NULL || entry->isEmpty())
         return result;
 
+    if (entry->contains(Entry::ftDOI)) {
+        const QString doi = PlainTextValue::text(entry->value(Entry::ftDOI));
+        if (!doi.isEmpty() && KBibTeX::doiRegExp.indexIn(doi) == 0) {
+            QString match = KBibTeX::doiRegExp.cap(0);
+            KUrl url(doiUrlPrefix() + match.remove("\\"));
+            result.append(url);
+        }
+    }
+    static const QString etPMID = QLatin1String("pmid");
+    if (entry->contains(etPMID)) {
+        const QString pmid = PlainTextValue::text(entry->value(etPMID));
+        bool ok = false;
+        ok &= pmid.toInt(&ok) > 0;
+        if (ok) {
+            KUrl url(QLatin1String("https://www.ncbi.nlm.nih.gov/pubmed/") + pmid);
+            result.append(url);
+        }
+    }
+    static const QString etEPrint = QLatin1String("eprint");
+    if (entry->contains(etEPrint)) {
+        const QString eprint = PlainTextValue::text(entry->value(etEPrint));
+        if (!eprint.isEmpty()) {
+            KUrl url(QLatin1String("http://arxiv.org/search?query=") + eprint);
+            result.append(url);
+        }
+    }
+
     const QString baseDirectory = bibTeXUrl.isValid() ? bibTeXUrl.directory() : QString();
 
     for (Entry::ConstIterator it = entry->constBegin(); it != entry->constEnd(); ++it) {

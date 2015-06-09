@@ -510,7 +510,7 @@ public:
             /// application/octet-stream is a fall-back if KDE did not know better
             result.icon = KIcon("text-html");
             result.mimeType = QLatin1String("text/html");
-        } else if (result.mimeType == QLatin1String("inode/directory") && (result.url.protocol() == QLatin1String("http") || result.url.protocol() == QLatin1String("https"))) {
+        } else if ((result.mimeType.isEmpty() || result.mimeType == QLatin1String("inode/directory")) && (result.url.protocol() == QLatin1String("http") || result.url.protocol() == QLatin1String("https"))) {
             /// directory via http means normal webpage (not browsable directory)
             result.icon = KIcon("text-html");
             result.mimeType = QLatin1String("text/html");
@@ -599,11 +599,7 @@ void DocumentPreview::statFinished(KJob *kjob)
     KIO::StatJob *job = static_cast<KIO::StatJob *>(kjob);
     d->runningJobs.removeOne(job);
     if (!job->error()) {
-#if KDE_IS_VERSION(4, 4, 0)
         const KUrl url = job->mostLocalUrl();
-#else // KDE_IS_VERSION
-        const KUrl url = job->url();
-#endif // KDE_IS_VERSION
         DocumentPreviewPrivate::UrlInfo urlInfo = d->urlMetaInfo(url);
         setCursor(d->runningJobs.isEmpty() ? Qt::ArrowCursor : Qt::BusyCursor);
         d->addUrl(urlInfo);

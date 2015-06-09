@@ -38,7 +38,7 @@ class KBIBTEXNETWORKING_EXPORT TagModel : public QAbstractItemModel
     Q_OBJECT
 
 public:
-    static const int TagRole, TagCountRole;
+    enum Roles { TagRole = Qt::UserRole + 6685, TagCountRole = Qt::UserRole + 6686 };
 
     explicit TagModel(Zotero::Tags *tags, QObject *parent = NULL);
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;

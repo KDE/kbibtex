@@ -102,6 +102,7 @@ public:
     KAction *editCutAction, *editDeleteAction, *editCopyAction, *editPasteAction, *editCopyReferencesAction, *elementEditAction, *elementViewDocumentAction, *fileSaveAction, *elementFindPDFAction, *entryApplyDefaultFormatString;
     KMenu *viewDocumentMenu;
     QSignalMapper *signalMapperViewDocument;
+    QSet<QObject *> signalMapperViewDocumentSenders;
     bool isSaveAsOperation;
     LyX *lyx;
     FindDuplicatesUI *findDuplicatesUI;
@@ -202,8 +203,14 @@ public:
 
         if (bibTeXFile != NULL) {
             const QUrl oldUrl = bibTeXFile->property(File::Url, QUrl()).toUrl();
-            if (oldUrl.isValid() && oldUrl.isLocalFile())
-                fileSystemWatcher.removePath(oldUrl.toString());
+            if (oldUrl.isValid() && oldUrl.isLocalFile()) {
+                const QString path = oldUrl.toString();
+                if (!path.isEmpty())
+                    fileSystemWatcher.removePath(path);
+                else
+                    kWarning() << "No filename to stop watching";
+            } else
+                kWarning() << "Not removing" << oldUrl.toString() << "from fileSystemWatcher";
             delete bibTeXFile;
         }
 
@@ -419,48 +426,84 @@ public:
         return KMessageBox::Cancel != KMessageBox::warningContinueCancel(parent, i18n("A file named '%1' already exists. Are you sure you want to overwrite it?", info.fileName()), i18n("Overwrite File?"), KStandardGuiItem::overwrite(), KStandardGuiItem::cancel(), QString(), KMessageBox::Notify | KMessageBox::Dangerous);
     }
 
+    /**
+     * Builds or resets the menu with local and remote
+     * references (URLs, files) of an entry.
+     *
+     * @return Number of known references
+     */
     int updateViewDocumentMenu() {
         viewDocumentMenu->clear();
-        int result = 0;
+        int result = 0; ///< Initially, no references are known
 
+        /// Clean signal mapper of old mappings
+        /// as stored in QSet signalMapperViewDocumentSenders
+        /// and identified by their KAction*'s
+        QSet<QObject *>::Iterator it = signalMapperViewDocumentSenders.begin();
+        while (it != signalMapperViewDocumentSenders.end()) {
+            signalMapperViewDocument->removeMappings(*it);
+            it = signalMapperViewDocumentSenders.erase(it);
+        }
+
+        /// Retrieve Entry object of currently selected line
+        /// in main list view
         QSharedPointer<const Entry> entry = partWidget->fileView()->currentElement().dynamicCast<const Entry>();
+        /// Test and continue if there was an Entry to retrieve
         if (!entry.isNull()) {
+            /// Get list of URLs associated with this entry
             QList<KUrl> urlList = FileInfo::entryUrls(entry.data(), partWidget->fileView()->fileModel()->bibliographyFile()->property(File::Url).toUrl(), FileInfo::TestExistenceYes);
             if (!urlList.isEmpty()) {
-                /// First iteration: local references only
+                /// Memorize first action, necessary to set menu title
                 KAction *firstAction = NULL;
+                /// First iteration: local references only
                 for (QList<KUrl>::ConstIterator it = urlList.constBegin(); it != urlList.constEnd(); ++it) {
-                    if (!(*it).isLocalFile()) continue;
+                    /// First iteration: local references only
+                    if (!(*it).isLocalFile()) continue; ///< skip remote URLs
 
-                    // FIXME: the signal mapper will fill up with mappings, as they are never removed
+                    /// Build a nice menu item (label, icon, ...)
                     QFileInfo fi((*it).pathOrUrl());
                     const QString label = QString("%1 [%2]").arg(fi.fileName()).arg(fi.absolutePath());
                     KAction *action = new KAction(KIcon(KMimeType::iconNameForUrl(*it)), label, p);
                     action->setData((*it).pathOrUrl());
                     action->setToolTip((*it).prettyUrl());
+                    /// Register action at signal handler to open URL when triggered
                     connect(action, SIGNAL(triggered()), signalMapperViewDocument, SLOT(map()));
                     signalMapperViewDocument->setMapping(action, action);
+                    signalMapperViewDocumentSenders.insert(action);
                     viewDocumentMenu->addAction(action);
+                    /// Memorize first action
                     if (firstAction == NULL) firstAction = action;
                 }
-                if (firstAction != NULL)
+                if (firstAction != NULL) {
+                    /// If there is 'first action', then there must be
+                    /// local URLs (i.e. local files) and firstAction
+                    /// is the first one where a title can be set above
                     viewDocumentMenu->addTitle(i18n("Local Files"), firstAction);
+                }
 
-                firstAction = NULL;
+                firstAction = NULL; /// Now the first remote action is to be memorized
+                /// Second iteration: remote references only
                 for (QList<KUrl>::ConstIterator it = urlList.constBegin(); it != urlList.constEnd(); ++it) {
-                    if ((*it).isLocalFile()) continue;
+                    if ((*it).isLocalFile()) continue; ///< skip local files
 
-                    // FIXME: the signal mapper will fill up with mappings, as they are never removed
+                    /// Build a nice menu item (label, icon, ...)
                     KAction *action = new KAction(KIcon(KMimeType::iconNameForUrl(*it)), (*it).pathOrUrl(), p);
                     action->setData((*it).pathOrUrl());
                     action->setToolTip((*it).prettyUrl());
+                    /// Register action at signal handler to open URL when triggered
                     connect(action, SIGNAL(triggered()), signalMapperViewDocument, SLOT(map()));
                     signalMapperViewDocument->setMapping(action, action);
+                    signalMapperViewDocumentSenders.insert(action);
                     viewDocumentMenu->addAction(action);
+                    /// Memorize first action
                     if (firstAction == NULL) firstAction = action;
                 }
-                if (firstAction != NULL)
+                if (firstAction != NULL) {
+                    /// If there is 'first action', then there must be
+                    /// some remote URLs and firstAction is the first
+                    /// one where a title can be set above
                     viewDocumentMenu->addTitle(i18n("Remote Files"), firstAction);
+                }
 
                 result = urlList.count();
             }
@@ -643,8 +686,7 @@ bool KBibTeXPart::saveFile()
 
     if (url().isEmpty()) {
         kDebug() << "unexpected: url is empty";
-        documentSaveAs();
-        return false;
+        return documentSaveAs();
     }
 
     /// If the current file is "watchable" (i.e. a local file),
@@ -653,12 +695,16 @@ bool KBibTeXPart::saveFile()
     /// Stop watching local file that will be written to
     if (!watchableFilename.isEmpty())
         d->fileSystemWatcher.removePath(watchableFilename);
+    else
+        kWarning() << "watchableFilename is Empty";
 
     const bool saveOperationSuccess = d->saveFile(localFilePath());
 
     /// Continue watching local file after write operation
     if (!watchableFilename.isEmpty())
         d->fileSystemWatcher.addPath(watchableFilename);
+    else
+        kWarning() << "watchableFilename is Empty";
 
     if (!saveOperationSuccess) {
         KMessageBox::error(widget(), i18n("The document could not be saved, as it was not possible to write to '%1'.\n\nCheck that you have write access to this file or that enough disk space is available.", url().pathOrUrl()));
@@ -687,9 +733,16 @@ bool KBibTeXPart::documentSaveAs()
         return false;
 
     /// Remove old URL from file system watcher
-    if (url().isValid() && url().isLocalFile())
-        d->fileSystemWatcher.removePath(url().pathOrUrl());
+    if (url().isValid() && url().isLocalFile()) {
+        const QString path = url().pathOrUrl();
+        if (!path.isEmpty())
+            d->fileSystemWatcher.removePath(path);
+        else
+            kWarning() << "No filename to stop watching";
+    } else
+        kWarning() << "Not removing" << url().pathOrUrl() << "from fileSystemWatcher";
 
+    // TODO how does SaveAs dialog know which mime types to support?
     if (KParts::ReadWritePart::saveAs(newUrl)) {
         kDebug() << "setting url to be " << newUrl.pathOrUrl();
         d->model->bibliographyFile()->setProperty(File::Url, newUrl);
@@ -912,12 +965,22 @@ void KBibTeXPart::fileExternallyChange(const QString &path)
     }
 
     /// Stop watching file while asking for user interaction
-    d->fileSystemWatcher.removePath(path);
+    if (!path.isEmpty())
+        d->fileSystemWatcher.removePath(path);
+    else
+        kWarning() << "No filename to stop watching";
 
     if (KMessageBox::warningContinueCancel(widget(), i18n("The file '%1' has changed on disk.\n\nReload file or ignore changes on disk?", path), i18n("File changed externally"), KGuiItem(i18n("Reload file"), KIcon("edit-redo")), KGuiItem(i18n("Ignore on-disk changes"), KIcon("edit-undo"))) == KMessageBox::Continue) {
         d->openFile(KUrl::fromLocalFile(path), path);
+        /// No explicit call to QFileSystemWatcher.addPath(...) necessary,
+        /// openFile(...) has done that already
+    } else {
+        kDebug() << "User chose to cancel reload";
+        /// Even if the user did not request reloaded the file,
+        /// still resume watching file for future external changes
+        if (!path.isEmpty())
+            d->fileSystemWatcher.addPath(path);
+        else
+            kWarning() << "path is Empty";
     }
-
-    /// Resume watching file
-    d->fileSystemWatcher.addPath(path);
 }

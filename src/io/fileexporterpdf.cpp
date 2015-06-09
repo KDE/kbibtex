@@ -165,8 +165,6 @@ bool FileExporterPDF::writeLatexFile(const QString &filename)
         ts << "\\bibliographystyle{" << m_bibliographyStyle << "}" << endl;
         ts << "\\begin{document}" << endl;
 
-        kDebug() << "m_fileEmbedding" << m_fileEmbedding;
-        kDebug() << "m_embeddedFileList" << m_embeddedFileList.count() << m_embeddedFileList.join(",");
         if (!m_embeddedFileList.isEmpty())
             for (QStringList::ConstIterator it = m_embeddedFileList.constBegin(); it != m_embeddedFileList.constEnd(); ++it) {
                 QStringList param = (*it).split(QLatin1String("|"));

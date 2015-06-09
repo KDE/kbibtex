@@ -34,7 +34,7 @@ public:
     QSet<QString> publicationLinks;
 
     KUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) {
-        QString urlBase = QLatin1String("http://ideas.repec.org/cgi-bin/htsearch?cmd=Search%21&form=extended&m=all&fmt=url&wm=wrd&sp=1&sy=1&dt=range");
+        QString urlBase = QLatin1String("https://ideas.repec.org/cgi-bin/htsearch?cmd=Search%21&form=extended&m=all&fmt=url&wm=wrd&sp=1&sy=1&dt=range");
 
         bool hasFreeText = !query[queryKeyFreeText].isEmpty();
         bool hasTitle = !query[queryKeyTitle].isEmpty();
@@ -106,7 +106,7 @@ QString OnlineSearchIDEASRePEc::label() const
 
 QString OnlineSearchIDEASRePEc::favIconUrl() const
 {
-    return QLatin1String("http://ideas.repec.org/favicon.ico");
+    return QLatin1String("https://ideas.repec.org/favicon.ico");
 }
 
 OnlineSearchQueryFormAbstract *OnlineSearchIDEASRePEc::customWidget(QWidget *)
@@ -116,7 +116,7 @@ OnlineSearchQueryFormAbstract *OnlineSearchIDEASRePEc::customWidget(QWidget *)
 
 KUrl OnlineSearchIDEASRePEc::homepage() const
 {
-    return KUrl("http://ideas.repec.org/");
+    return KUrl("https://ideas.repec.org/");
 }
 
 void OnlineSearchIDEASRePEc::cancel()
@@ -130,29 +130,44 @@ void OnlineSearchIDEASRePEc::downloadListDone()
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
-    if (handleErrors(reply)) {
-        /// ensure proper treatment of UTF-8 characters
-        const QString htmlCode = QString::fromUtf8(reply->readAll().data());
+    KUrl redirUrl;
+    if (handleErrors(reply, redirUrl)) {
+        if (redirUrl.isValid()) {
+            /// redirection to another url
+            ++d->numSteps;
 
-        static const QRegExp publicationLinkRegExp(QLatin1String("http://ideas.repec.org/[a-z]/\\S{,8}/\\S{2,24}/\\S{,64}.html"));
-        d->publicationLinks.clear();
-        int p = -1;
-        while ((p = publicationLinkRegExp.indexIn(htmlCode, p + 1)) >= 0) {
-            d->publicationLinks.insert(publicationLinkRegExp.cap(0));
-        }
-        d->numSteps = 2 * d->publicationLinks.count() + 1; ///< update number of steps
-
-        if (d->publicationLinks.isEmpty()) {
-            emit stoppedSearch(resultNoError);
-            emit progress(1, 1);
+            QNetworkRequest request(redirUrl);
+            QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request);
+            InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
+            connect(newReply, SIGNAL(finished()), this, SLOT(downloadListDone()));
         } else {
-            QSet<QString>::Iterator it = d->publicationLinks.begin();
-            const QString publicationLink = *it;
-            d->publicationLinks.erase(it);
-            QNetworkRequest request = QNetworkRequest(QUrl(publicationLink));
-            reply = InternalNetworkAccessManager::self()->get(request, reply);
-            InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
-            connect(reply, SIGNAL(finished()), this, SLOT(downloadPublicationDone()));
+            /// ensure proper treatment of UTF-8 characters
+            const QString htmlCode = QString::fromUtf8(reply->readAll().data());
+
+            static const QRegExp publicationLinkRegExp(QLatin1String("http[s]?://ideas.repec.org/[a-z]/\\S{,8}/\\S{2,24}/\\S{,64}.html"));
+            d->publicationLinks.clear();
+            int p = -1;
+            while ((p = publicationLinkRegExp.indexIn(htmlCode, p + 1)) >= 0) {
+                QString c = publicationLinkRegExp.cap(0);
+                /// Rewrite URL to be https instead of http, avoids HTTP redirection
+                c = c.replace(QLatin1String("http://"), QLatin1String("https://"));
+                d->publicationLinks.insert(c);
+            }
+            d->numSteps += 2 * d->publicationLinks.count(); ///< update number of steps
+
+            if (d->publicationLinks.isEmpty()) {
+                kDebug() << "No publication links found";
+                emit stoppedSearch(resultNoError);
+                emit progress(1, 1);
+            } else {
+                QSet<QString>::Iterator it = d->publicationLinks.begin();
+                const QString publicationLink = *it;
+                d->publicationLinks.erase(it);
+                QNetworkRequest request = QNetworkRequest(QUrl(publicationLink));
+                reply = InternalNetworkAccessManager::self()->get(request, reply);
+                InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
+                connect(reply, SIGNAL(finished()), this, SLOT(downloadPublicationDone()));
+            }
         }
     } else
         kDebug() << "url was" << reply->url().toString();
@@ -187,7 +202,7 @@ void OnlineSearchIDEASRePEc::downloadPublicationDone()
             ++it;
         }
 
-        const KUrl url = KUrl(QLatin1String("http://ideas.repec.org/cgi-bin/refs.cgi"));
+        const KUrl url = KUrl(QLatin1String("https://ideas.repec.org/cgi-bin/refs.cgi"));
         QNetworkRequest request(url);
         request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
         reply = InternalNetworkAccessManager::self()->post(request, body.toUtf8());
@@ -204,6 +219,7 @@ void OnlineSearchIDEASRePEc::downloadBibTeXDone()
     emit progress(++d->curStep, d->numSteps);
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
+    const QString downloadUrl = reply->property("downloadurl").toString();
 
     if (handleErrors(reply)) {
         /// ensure proper treatment of UTF-8 characters
@@ -218,7 +234,6 @@ void OnlineSearchIDEASRePEc::downloadBibTeXDone()
                 for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
                     QSharedPointer<Entry> entry = (*it).dynamicCast<Entry>();
                     if (!entry.isNull()) {
-                        const QString downloadUrl = reply->property("downloadurl").toString();
                         if (!downloadUrl.isEmpty()) {
                             /// There is an external document associated with this BibTeX entry
                             Value urlValue = entry->value(Entry::ftUrl);
@@ -236,7 +251,7 @@ void OnlineSearchIDEASRePEc::downloadBibTeXDone()
                 }
 
                 if (!hasEntries)
-                    kDebug() << "No hits found in" << reply->url().toString();
+                    kDebug() << "No hits found in" << reply->url().toString() << "(was" << downloadUrl << ")";
 
                 delete bibtexFile;
             }
@@ -255,5 +270,5 @@ void OnlineSearchIDEASRePEc::downloadBibTeXDone()
             connect(reply, SIGNAL(finished()), this, SLOT(downloadPublicationDone()));
         }
     } else
-        kDebug() << "url was" << reply->url().toString();
+        kDebug() << "url was" << reply->url().toString() << "(was" << downloadUrl << ")";
 }

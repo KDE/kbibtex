@@ -199,7 +199,7 @@ Element *FileImporterBibTeX::nextElement()
     } else if (token == tUnknown) {
         kDebug() << "Unknown token '" << m_nextChar << "(" << QString("0x%1").arg(m_nextChar.unicode(), 4, 16, QLatin1Char('0')) << ")" << "' near line " << m_lineNo << "(" << m_prevLine << endl << m_currentLine << ")" << ", treating as comment";
         ++m_statistics.countNoCommentQuote;
-        return readPlainCommentElement();
+        return readPlainCommentElement(QString(m_prevChar) + m_nextChar);
     }
 
     if (token != tEOF)
@@ -215,11 +215,15 @@ Comment *FileImporterBibTeX::readCommentElement()
     return new Comment(EncoderLaTeX::instance()->decode(readBracketString()));
 }
 
-Comment *FileImporterBibTeX::readPlainCommentElement()
+Comment *FileImporterBibTeX::readPlainCommentElement(const QString &prefix)
 {
-    QString result = EncoderLaTeX::instance()->decode(readLine());
+    QString result = EncoderLaTeX::instance()->decode(prefix + readLine());
+    while (m_nextChar == QLatin1Char('\n') || m_nextChar == QLatin1Char('\r')) readChar();
     while (!m_nextChar.isNull() && m_nextChar != QLatin1Char('@')) {
-        result.append(QLatin1String("\n")).append(EncoderLaTeX::instance()->decode(readLine()));
+        const QChar nextChar = m_nextChar;
+        const QString line = readLine();
+        while (m_nextChar == QLatin1Char('\n') || m_nextChar == QLatin1Char('\r')) readChar();
+        result.append(EncoderLaTeX::instance()->decode((nextChar == QLatin1Char('%') ? QString() : QString(nextChar)) + line));
     }
 
     if (result.startsWith(QLatin1String("x-kbibtex"))) {
@@ -771,7 +775,6 @@ QString FileImporterBibTeX::readLine()
     QString result;
     while (m_nextChar != QLatin1Char('\n') && m_nextChar != QLatin1Char('\r') && readChar())
         result.append(m_nextChar);
-    if (!readChar()) return QString();
     return result;
 }
 
@@ -855,8 +858,11 @@ QList<QSharedPointer<Person> > FileImporterBibTeX::splitNames(const QString &tex
 
     if (containsSpace) {
         /// Tokens look like "John Smith"
-        for (QStringList::ConstIterator it = authorTokenList.constBegin(); it != authorTokenList.constEnd(); ++it)
-            result.append(personFromString(*it));
+        for (QStringList::ConstIterator it = authorTokenList.constBegin(); it != authorTokenList.constEnd(); ++it) {
+            QSharedPointer<Person> person = personFromString(*it);
+            if (!person.isNull())
+                result.append(person);
+        }
     } else {
         /// Tokens look like "Smith" or "John"
         /// Assumption: two consecutive tokens form a name
@@ -865,7 +871,9 @@ QList<QSharedPointer<Person> > FileImporterBibTeX::splitNames(const QString &tex
             ++it;
             if (it != authorTokenList.constEnd()) {
                 lastname += QLatin1String(", ") + (*it);
-                result.append(personFromString(lastname));
+                QSharedPointer<Person> person = personFromString(lastname);
+                if (!person.isNull())
+                    result.append(person);
             } else
                 break;
         }
@@ -895,8 +903,11 @@ void FileImporterBibTeX::parsePersonList(const QString &text, Value &value, Comm
                 kDebug() << "Two subsequent" << tokenAnd << "found in person list";
             else if (!encounteredName)
                 kDebug() << "Found" << tokenAnd << "but no name before it";
-            else
-                value.append(personFromTokenList(tokens.mid(nameStart, i - nameStart), comma));
+            else {
+                const QSharedPointer<Person> person = personFromTokenList(tokens.mid(nameStart, i - nameStart), comma);
+                if (!person.isNull())
+                    value.append(person);
+            }
             nameStart = i + 1;
             encounteredName = false;
         } else if (tokens[i] == tokenOthers) {
@@ -911,8 +922,11 @@ void FileImporterBibTeX::parsePersonList(const QString &text, Value &value, Comm
         prevToken = tokens[i];
     }
 
-    if (nameStart < tokens.count())
-        value.append(personFromTokenList(tokens.mid(nameStart), comma));
+    if (nameStart < tokens.count()) {
+        const QSharedPointer<Person> person = personFromTokenList(tokens.mid(nameStart), comma);
+        if (!person.isNull())
+            value.append(person);
+    }
 }
 
 QSharedPointer<Person> FileImporterBibTeX::personFromString(const QString &name)

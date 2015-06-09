@@ -23,7 +23,6 @@
 #include <KLocale>
 #include <KComboBox>
 #include <KStandardDirs>
-#include <KIO/NetAccess>
 #include <KDebug>
 #include <KMessageBox>
 #include <KGuiItem>
@@ -121,21 +120,6 @@ public:
         }
         break;
         }
-    }
-
-    KIcon iconFromFavicon(const QString &url) {
-        static const QRegExp invalidChars("[^-a-z0-9_]", Qt::CaseInsensitive);
-        QString fileName = url;
-        fileName = fileName.remove(invalidChars);
-        fileName.prepend(KStandardDirs::locateLocal("cache", "favicons/")).append(".png");
-
-        if (!QFileInfo(fileName).exists()) {
-            if (!KIO::NetAccess::file_copy(KUrl(url), KUrl(fileName), NULL))
-                return KIcon();
-        }
-
-        kDebug() << "icon fileName" << fileName;
-        return KIcon(fileName);
     }
 };
 

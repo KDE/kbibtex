@@ -101,6 +101,7 @@ target_link_libraries(
     ${LIBXML2_LIBRARIES}
     ${LIBXSLT_LIBRARIES}
     ${POPPLER_QT4_LIBRARIES}
+    ${ICU_LIBRARIES}
     kbibtexconfig
     kbibtexdata
 )

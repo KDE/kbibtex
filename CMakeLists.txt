@@ -15,10 +15,16 @@ set(
 
 # Version number for the exported headers / libs
 set(
-    LIB_VERSION "0.5.0"
+    VERSION_BRANCH "0.7"
 )
 set(
-    LIB_SOVERSION "1"
+    REVISION_VERSION "0"
+)
+set(
+    LIB_VERSION ${VERSION_BRANCH}.${REVISION_VERSION}
+)
+set(
+    LIB_SOVERSION ${VERSION_BRANCH}
 )
 
 option(
@@ -133,6 +139,24 @@ find_package(
     QCA2
     REQUIRED
 )
+
+find_package(
+    ICU
+    REQUIRED
+    COMPONENTS uc i18n
+)
+if(
+    ICU_FOUND
+)
+    message(
+        STATUS
+        "Found ICU " ${ICU_VERSION}
+    )
+    include_directories(${ICU_INCLUDE_DIRS})
+endif(
+    ICU_FOUND
+)
+
 find_package(
     QtOAuth
 )

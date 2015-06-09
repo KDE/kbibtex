@@ -21,7 +21,6 @@
 #include <QFile>
 
 #include <KDebug>
-#include <kio/netaccess.h>
 
 #include <poppler-qt4.h>
 
@@ -90,26 +89,4 @@ void FileImporterPDF::cancel()
 {
     m_cancelFlag = true;
     m_bibTeXimporter->cancel();
-}
-
-bool FileImporterPDF::containsBibTeXData(const KUrl &url)
-{
-    bool result = false;
-
-    QString tmpFile;
-    if (KIO::NetAccess::download(url, tmpFile, NULL)) {
-        Poppler::Document *doc = Poppler::Document::load(tmpFile);
-        if (doc != NULL) {
-            if (doc->hasEmbeddedFiles())
-                foreach(Poppler::EmbeddedFile *file, doc->embeddedFiles())
-                if (file->name().endsWith(QLatin1String(".bib"))) {
-                    result = true;
-                    break;
-                }
-            delete doc;
-        }
-        KIO::NetAccess::removeTempFile(tmpFile);
-    }
-
-    return result;
 }

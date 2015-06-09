@@ -78,6 +78,7 @@ public:
         /// Create a special widget that shows a small icon and a text
         /// stating that there are unsaved changes. It will be shown
         /// simultaneously when the Apply and Reset buttons are enabled.
+        // TODO nearly identical code as in SearchResultsPrivate constructor, create common class
         widgetUnmodifiedChanges = new QWidget(p);
         layout->addWidget(widgetUnmodifiedChanges, 1, 1, 1, 1);
         QBoxLayout *layoutUnmodifiedChanges = new QHBoxLayout(widgetUnmodifiedChanges);

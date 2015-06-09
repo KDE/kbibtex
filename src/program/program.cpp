@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
 {
     KAboutData aboutData("kbibtex", 0, ki18n("KBibTeX"), versionNumber,
                          ki18n(description), KAboutData::License_GPL_V2,
-                         ki18n("Copyright 2004-2014 Thomas Fischer"), KLocalizedString(),
+                         ki18n("Copyright 2004-2015 Thomas Fischer"), KLocalizedString(),
                          programHomepage);
     aboutData.addAuthor(ki18n("Thomas Fischer"), ki18n("Maintainer"), "fischer@unix-ag.uni-kl.de", "http://www.t-fischer.net/");
 

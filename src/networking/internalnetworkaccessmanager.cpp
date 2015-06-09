@@ -179,7 +179,6 @@ void InternalNetworkAccessManager::setNetworkReplyTimeout(QNetworkReply *reply, 
     connect(timer, SIGNAL(timeout()), this, SLOT(networkReplyTimeout()));
     m_mapTimerToReply.insert(timer, reply);
     timer->start(timeOutSec * 1000);
-    kDebug() << "Setting timeout of" << timer->interval() << "seconds to " << reply->url().toString();
     connect(reply, SIGNAL(finished()), this, SLOT(networkReplyFinished()));
 }
 

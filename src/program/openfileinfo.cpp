@@ -59,6 +59,8 @@ public:
         :  m_counter(-1), p(p), part(NULL), internalServicePtr(KService::Ptr()), internalWidgetParent(NULL), flags(0) {
         this->openFileInfoManager = openFileInfoManager;
         this->url = url;
+        if (this->url.scheme().isEmpty())
+            kWarning() << "No scheme specified for URL" << this->url.pathOrUrl();
         this->mimeType = mimeType;
     }
 
@@ -171,6 +173,8 @@ void OpenFileInfo::setUrl(const KUrl &url)
 {
     Q_ASSERT_X(url.isValid(), "void OpenFileInfo::setUrl(const KUrl&)", "URL is not valid");
     d->url = url;
+    if (d->url.scheme().isEmpty())
+        kWarning() << "No scheme specified for URL" << d->url.pathOrUrl();
     d->mimeType = FileInfo::mimeTypeForUrl(url)->name();
     addFlags(OpenFileInfo::HasName);
 }
@@ -364,8 +368,10 @@ public:
         bool isFirst = true;
         KConfigGroup cg(config, configGroupName);
         for (int i = 0; i < maxNumFiles; ++i) {
-            KUrl fileUrl = KUrl(cg.readEntry(QString("%1-%2").arg(OpenFileInfo::OpenFileInfoPrivate::keyURL).arg(i), ""));
+            KUrl fileUrl = KUrl::fromUserInput(cg.readEntry(QString("%1-%2").arg(OpenFileInfo::OpenFileInfoPrivate::keyURL).arg(i), QString()));
             if (!fileUrl.isValid()) break;
+            if (fileUrl.scheme().isEmpty())
+                fileUrl.setScheme(QLatin1String("file"));
 
             /// For local files, test if they exist; ignore local files that do not exist
             if (fileUrl.isLocalFile()) {

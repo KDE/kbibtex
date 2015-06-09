@@ -57,7 +57,7 @@ signals:
 public slots:
     virtual void cancel() {
         // nothing
-    };
+    }
 };
 
 #endif // KBIBTEX_IO_FILEEXPORTER_H

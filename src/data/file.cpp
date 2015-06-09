@@ -116,13 +116,13 @@ File::~File()
 const QSharedPointer<Element> File::containsKey(const QString &key, ElementTypes elementTypes) const
 {
     Q_ASSERT_X(d->checkValidity(), "const QSharedPointer<Element> File::containsKey(const QString &key, ElementTypes elementTypes) const", "This File object is not valid");
-    foreach(const QSharedPointer<Element> element, *this) {
-        const QSharedPointer<Entry> entry = elementTypes.testFlag(etEntry) ? element.dynamicCast<Entry>() : QSharedPointer<Entry>();
+    for (QList<QSharedPointer<Element> >::ConstIterator it = constBegin(); it != constEnd(); ++it) {
+        const QSharedPointer<Entry> entry = elementTypes.testFlag(etEntry) ? (*it).dynamicCast<Entry>() : QSharedPointer<Entry>();
         if (!entry.isNull()) {
             if (entry->id() == key)
                 return entry;
         } else {
-            const QSharedPointer<Macro> macro = elementTypes.testFlag(etMacro) ? element.dynamicCast<Macro>() : QSharedPointer<Macro>();
+            const QSharedPointer<Macro> macro = elementTypes.testFlag(etMacro) ? (*it).dynamicCast<Macro>() : QSharedPointer<Macro>();
             if (!macro.isNull()) {
                 if (macro->key() == key)
                     return macro;
@@ -138,12 +138,12 @@ QStringList File::allKeys(ElementTypes elementTypes) const
     Q_ASSERT_X(d->checkValidity(), "QStringList File::allKeys(ElementTypes elementTypes) const", "This File object is not valid");
     QStringList result;
 
-    foreach(const QSharedPointer<Element> element, *this) {
-        const QSharedPointer<Entry> entry = elementTypes.testFlag(etEntry) ? element.dynamicCast<Entry>() : QSharedPointer<Entry>();
+    for (QList<QSharedPointer<Element> >::ConstIterator it = constBegin(); it != constEnd(); ++it) {
+        const QSharedPointer<Entry> entry = elementTypes.testFlag(etEntry) ? (*it).dynamicCast<Entry>() : QSharedPointer<Entry>();
         if (!entry.isNull())
             result.append(entry->id());
         else {
-            const QSharedPointer<Macro> macro = elementTypes.testFlag(etMacro) ? element.dynamicCast<Macro>() : QSharedPointer<Macro>();
+            const QSharedPointer<Macro> macro = elementTypes.testFlag(etMacro) ? (*it).dynamicCast<Macro>() : QSharedPointer<Macro>();
             if (!macro.isNull())
                 result.append(macro->key());
         }
@@ -158,8 +158,8 @@ QSet<QString> File::uniqueEntryValuesSet(const QString &fieldName) const
     QSet<QString> valueSet;
     const QString lcFieldName = fieldName.toLower();
 
-    foreach(const QSharedPointer<Element> element, *this) {
-        const QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
+    for (QList<QSharedPointer<Element> >::ConstIterator it = constBegin(); it != constEnd(); ++it) {
+        const QSharedPointer<Entry> entry = (*it).dynamicCast<Entry>();
         if (!entry.isNull())
             for (Entry::ConstIterator it = entry->constBegin(); it != entry->constEnd(); ++it)
                 if (it.key().toLower() == lcFieldName)

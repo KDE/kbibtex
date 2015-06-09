@@ -146,17 +146,17 @@ void EntryLayout::load()
 void EntryLayout::save()
 {
     int tabCount = 0;
-    foreach(QSharedPointer<EntryTabLayout> etl, *this) {
+    for (QVector<QSharedPointer<EntryTabLayout> >::ConstIterator it = constBegin(); it != constEnd(); ++it) {
         ++tabCount;
         QString groupName = QString("EntryLayoutTab%1").arg(tabCount);
         KConfigGroup configGroup(d->layoutConfig, groupName);
 
-        configGroup.writeEntry("uiCaption", etl->uiCaption);
-        configGroup.writeEntry("iconName", etl->iconName);
-        configGroup.writeEntry("columns", etl->columns);
+        configGroup.writeEntry("uiCaption", (*it)->uiCaption);
+        configGroup.writeEntry("iconName", (*it)->iconName);
+        configGroup.writeEntry("columns", (*it)->columns);
 
         int fieldCount = 0;
-        foreach(const SingleFieldLayout &sfl, etl->singleFieldLayouts) {
+        foreach(const SingleFieldLayout &sfl, (*it)->singleFieldLayouts) {
             ++fieldCount;
             configGroup.writeEntry(QString("bibtexLabel%1").arg(fieldCount), sfl.bibtexLabel);
             configGroup.writeEntry(QString("uiLabel%1").arg(fieldCount), sfl.uiLabel);
