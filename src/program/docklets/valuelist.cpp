@@ -88,6 +88,7 @@ public:
         lineeditFilter = new KLineEdit(p);
         layout->addWidget(lineeditFilter);
         lineeditFilter->setClearButtonShown(true);
+        lineeditFilter->setClickMessage(i18n("Filter value list"));
 
         treeviewFieldValues = new QTreeView(p);
         layout->addWidget(treeviewFieldValues);
