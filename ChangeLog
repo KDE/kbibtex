@@ -3,7 +3,7 @@ ChangeLog
 Diff 0.5.1 to 0.5.2
 
 - Migrating to KDE's Git infrastructure
-- Gna Bug 22418:: http://gna.org/bugs/?22418:
+- Gna Bug 22418: http://gna.org/bugs/?22418:
   Relative paths fail to get resolved
 - KDE Bug 339086: https://bugs.kde.org/show_bug.cgi?id=339086
   Fixing ScienceDirect search
