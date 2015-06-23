@@ -62,6 +62,15 @@ public:
                 code = code.replace(htmlEncodedChar.cap(0), c);
             }
         }
+
+        /// ACM's BibTeX code does not properly use various commands.
+        /// For example, ACM writes "Ke\ssler" instead of "Ke{\ss}ler"
+        static const QStringList inlineCommands = QStringList() << QLatin1String("ss");
+        for (QStringList::ConstIterator it = inlineCommands.constBegin(); it != inlineCommands.constEnd(); ++it) {
+            const QString cmd = QString(QLatin1String("\\%1")).arg(*it);
+            const QString wrappedCmd = QString(QLatin1String("{%1}")).arg(cmd);
+            code = code.replace(cmd, wrappedCmd);
+        }
     }
 };
 
@@ -210,8 +219,8 @@ void OnlineSearchAcmPortal::doneFetchingBibTeX()
         QString bibTeXcode = QString::fromUtf8(reply->readAll().data());
 
         FileImporterBibTeX importer;
-        File *bibtexFile = importer.fromString(bibTeXcode);
         d->sanitizeBibTeXCode(bibTeXcode);
+        File *bibtexFile = importer.fromString(bibTeXcode);
 
         if (bibtexFile != NULL) {
             for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
