@@ -97,7 +97,7 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/src
 #     ${POPPLER_QT4_INCLUDE_DIR}
     ${LIBXML2_INCLUDE_DIR}
-    ${QCA2_INCLUDE_DIR}
+    ${QTCRYPTO_INCLUDE_DIR}
 )
 
 if(
