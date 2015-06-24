@@ -29,17 +29,12 @@ set(
 )
 
 
-# include(CheckIncludeFile)
 include(KDEInstallDirs)
 include(KDECompilerSettings)
 include(KDECMakeSettings)
 include(ECMInstallIcons)
 include(ECMAddAppIcon)
-# include(ECMGenerateHeaders)
 include(GenerateExportHeader)
-# include(ECMSetupVersion)
-# include(ECMPackageConfigHelpers)
-# include(FeatureSummary)
 
 find_package(
     Qt5 ${QT_MIN_VERSION}
@@ -131,49 +126,16 @@ find_package(
     LibXslt
     REQUIRED
 )
-# macro_log_feature(
-#     LIBXSLT_FOUND
-#     "LibXSLT"
-#     "A library to transform XML files into other XML files"
-#     "http://xmlsoft.org/XSLT"
-#     TRUE
-#     ""
-#     "Required to transform XML files"
-# )
 
 find_package(
     LibXml2
     REQUIRED
 )
-# macro_log_feature(
-#     LIBXML2_FOUND
-#     "LibXML2"
-#     "Libraries used to develop XML applications"
-#     "http://xmlsoft.org"
-#     TRUE
-#     ""
-#     "Required to transform XML files"
-# )
 
 find_package(
     Poppler
     REQUIRED
 )
-
-# find_package(
-#     Qxt
-# )
-# if(QXT_FOUND_QXTCORE AND QXT_FOUND_QXTGUI)
-#     message(
-#         STATUS
-#         "Using system installation of LibQxt instead of built-in version"
-#     )
-# else()
-#     message(
-#         STATUS
-#         "No system installation of LibQxt found, using built-in version instead"
-#     )
-# endif()
 
 find_package(
     ICU
