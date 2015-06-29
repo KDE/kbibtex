@@ -56,7 +56,7 @@ public:
 
     SettingsFileExporterWidgetPrivate(SettingsFileExporterWidget *parent)
             : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))) {
-        // nothing
+        setupGUI();
     }
 
     void loadState() {
@@ -154,7 +154,6 @@ const QString SettingsFileExporterWidget::SettingsFileExporterWidgetPrivate::cit
 SettingsFileExporterWidget::SettingsFileExporterWidget(QWidget *parent)
         : SettingsAbstractWidget(parent), d(new SettingsFileExporterWidgetPrivate(this))
 {
-    d->setupGUI();
     d->loadState();
 }
 
