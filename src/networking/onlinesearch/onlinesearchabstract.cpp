@@ -64,7 +64,7 @@ QStringList OnlineSearchQueryFormAbstract::authorLastNames(const Entry &entry)
 }
 
 OnlineSearchAbstract::OnlineSearchAbstract(QWidget *parent)
-        : QObject(parent), m_name(QString())
+        : QObject(parent), m_hasBeenCanceled(false), m_name(QString())
 {
     m_parent = parent;
 }
