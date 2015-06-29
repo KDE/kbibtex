@@ -118,7 +118,7 @@ public:
 
     ReferencePreviewPrivate(ReferencePreview *parent)
             : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName(QLatin1String("Reference Preview Docklet")),
-          configKeyName(QLatin1String("Style")), fileView(NULL),
+          configKeyName(QLatin1String("Style")), file(NULL), fileView(NULL),
           textColor(QApplication::palette().text().color()),
           defaultFontSize(QFontDatabase::systemFont(QFontDatabase::GeneralFont).pointSize()),
           htmlStart("<html>\n<head>\n<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" />\n<style type=\"text/css\">\npre {\n white-space: pre-wrap;\n white-space: -moz-pre-wrap;\n white-space: -pre-wrap;\n white-space: -o-pre-wrap;\n word-wrap: break-word;\n}\n</style>\n</head>\n<body style=\"color: " + textColor.name() + "; font-size: " + QString::number(defaultFontSize) + "pt; font-family: '" + QFontDatabase::systemFont(QFontDatabase::GeneralFont).family() + "';\">"),
