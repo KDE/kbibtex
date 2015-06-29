@@ -46,7 +46,12 @@ public:
 NotificationHub::NotificationHub()
         : d(new NotificationHubPrivate(this))
 {
-    // TODO
+    /// nothing
+}
+
+NotificationHub::~NotificationHub()
+{
+    delete d;
 }
 
 NotificationHub *NotificationHub::getHub()

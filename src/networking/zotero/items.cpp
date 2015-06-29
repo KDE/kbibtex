@@ -72,6 +72,11 @@ Items::Items(API *api, QObject *parent)
     /// nothing
 }
 
+Items::~Items()
+{
+    delete d;
+}
+
 void Items::retrieveItemsByCollection(const QString &collection)
 {
     QUrl url = d->api->baseUrl().adjusted(QUrl::StripTrailingSlash);

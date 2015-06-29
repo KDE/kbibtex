@@ -57,6 +57,8 @@ public:
      */
     explicit API(RequestScope requestScope, int userOrGroupPrefix, const QString &apiKey, QObject *parent = 0);
 
+    ~API();
+
     /**
      * Add a limit parameter to a given Zotero URL.
      * @param url value of this parameter will be changed to contain the limit

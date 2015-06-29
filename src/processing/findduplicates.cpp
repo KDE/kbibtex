@@ -488,7 +488,12 @@ public:
 MergeDuplicates::MergeDuplicates(QWidget *parent)
         : d(new MergeDuplicatesPrivate(this, parent))
 {
-    // TODO
+    /// nothing
+}
+
+MergeDuplicates::~MergeDuplicates()
+{
+    delete d;
 }
 
 bool MergeDuplicates::mergeDuplicateEntries(const QList<EntryClique *> &entryCliques, File *file)

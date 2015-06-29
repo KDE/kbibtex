@@ -229,8 +229,10 @@ FindPDF::FindPDF(QObject *parent)
     /// nothing
 }
 
-FindPDF::~FindPDF() {
+FindPDF::~FindPDF()
+{
     abort();
+    delete d;
 }
 
 bool FindPDF::search(const Entry &entry)

@@ -44,6 +44,11 @@ BibUtils::BibUtils()
     /// nothing
 }
 
+BibUtils::~BibUtils()
+{
+    delete d;
+}
+
 void BibUtils::setFormat(const BibUtils::Format &format) {
     d->format = format;
 }

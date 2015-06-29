@@ -41,6 +41,7 @@ public:
     };
 
     explicit ItalicTextItemModel(QObject *parent = NULL);
+    ~ItalicTextItemModel();
 
     /**
      * Add a new entry (pair of shown text and identifier) to this model.

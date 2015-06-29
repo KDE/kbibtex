@@ -77,7 +77,12 @@ public:
 OnlineSearchIDEASRePEc::OnlineSearchIDEASRePEc(QWidget *parent)
         : OnlineSearchAbstract(parent), d(new OnlineSearchIDEASRePEc::OnlineSearchIDEASRePEcPrivate())
 {
-    // nothing
+    /// nothing
+}
+
+OnlineSearchIDEASRePEc::~OnlineSearchIDEASRePEc()
+{
+    delete d;
 }
 
 void OnlineSearchIDEASRePEc::startSearch()

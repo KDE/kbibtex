@@ -216,6 +216,11 @@ AssociatedFilesUI::AssociatedFilesUI(const QString &entryId, const File *bibTeXf
     d->bibTeXfile = bibTeXfile;
 }
 
+AssociatedFilesUI::~AssociatedFilesUI()
+{
+    delete d;
+}
+
 AssociatedFiles::RenameOperation AssociatedFilesUI::renameOperation() const {
     if (d->radioRenameToEntryId->isChecked())
         return AssociatedFiles::roEntryId;

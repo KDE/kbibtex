@@ -35,6 +35,7 @@ public:
 
 protected:
     explicit JournalAbbreviations();
+    ~JournalAbbreviations();
 
 private:
     class Private;
