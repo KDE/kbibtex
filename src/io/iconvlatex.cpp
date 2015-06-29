@@ -33,22 +33,26 @@ private:
 public:
     iconv_t iconvHandle;
 
-    IConvLaTeXPrivate(IConvLaTeX */* UNUSED parent*/)
+    IConvLaTeXPrivate(IConvLaTeX */* UNUSED parent*/, const QString &destEncoding)
     // : UNUSED p(parent)
     {
-        /// nothing
+        iconvHandle = iconv_open(destEncoding.toLatin1().data(), QLatin1String("utf-8").latin1());
+    }
+
+    ~IConvLaTeXPrivate()
+    {
+        iconv_close(iconvHandle);
     }
 };
 
 IConvLaTeX::IConvLaTeX(const QString &destEncoding)
-        : d(new IConvLaTeXPrivate(this))
+        : d(new IConvLaTeXPrivate(this, destEncoding))
 {
-    d->iconvHandle = iconv_open(destEncoding.toLatin1().data(), QLatin1String("utf-8").latin1());
+    /// nothing
 }
 
 IConvLaTeX::~IConvLaTeX()
 {
-    iconv_close(d->iconvHandle);
     delete d;
 }
 
