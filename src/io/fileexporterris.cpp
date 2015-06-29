@@ -23,7 +23,8 @@
 
 #include "entry.h"
 
-FileExporterRIS::FileExporterRIS() : FileExporter()
+FileExporterRIS::FileExporterRIS()
+        : FileExporter(), m_cancelFlag(false)
 {
     // nothing
 }
