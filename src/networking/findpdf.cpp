@@ -217,6 +217,11 @@ FindPDF::FindPDF(QObject *parent)
     /// nothing
 }
 
+FindPDF::~FindPDF()
+{
+    delete d;
+}
+
 bool FindPDF::search(const Entry &entry)
 {
     if (d->aliveCounter > 0) return false;

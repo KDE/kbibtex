@@ -102,6 +102,7 @@ public:
     enum MergePriority { None = 0, ISODateEarlier = 1, ISODateLater = 2, NumericHigher = 3, NumericLower = 4, LexicallyEarlier = 5, LexicallyLater = 6, LexicallyEarlierCaseInsensitive = 7, LexicallyLaterCaseInsensitive = 8 };
 
     explicit MergeDuplicates(QWidget *parent);
+    ~MergeDuplicates();
 
     bool mergeDuplicateEntries(const QList<EntryClique *> &entryCliques, File *file);
 

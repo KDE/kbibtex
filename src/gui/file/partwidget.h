@@ -33,6 +33,7 @@ class KBIBTEXGUI_EXPORT PartWidget : public QWidget {
 
 public:
     explicit PartWidget(QWidget *parent);
+    ~PartWidget();
 
     FileView *fileView();
     FilterBar *filterBar();

@@ -34,6 +34,8 @@ class KBIBTEXGUI_EXPORT AssociatedFilesUI: public QWidget
     Q_OBJECT
 
 public:
+    ~AssociatedFilesUI();
+
     static bool associateUrl(const QUrl &url, QSharedPointer<Entry> &entry, const File *bibTeXfile, QWidget *parent);
     static QString associateUrl(const QUrl &url, const QString &entryId, const File *bibTeXfile, QWidget *parent);
 

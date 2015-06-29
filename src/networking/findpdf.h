@@ -60,6 +60,7 @@ public:
     } ResultItem;
 
     explicit FindPDF(QObject *parent = NULL);
+    ~FindPDF();
 
     /**
      * Initiate a search for PDF files matching a given entry.

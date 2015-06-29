@@ -66,6 +66,11 @@ Groups::Groups(API *api, QObject *parent)
     d->requestZoteroUrl(url);
 }
 
+Groups::~Groups()
+{
+    delete d;
+}
+
 bool Groups::initialized() const
 {
     return d->initialized;

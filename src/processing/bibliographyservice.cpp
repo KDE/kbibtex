@@ -167,6 +167,11 @@ BibliographyService::BibliographyService(QWidget *parentWidget)
     /// nothing
 }
 
+BibliographyService::~BibliographyService()
+{
+    delete d;
+}
+
 void BibliographyService::setKBibTeXasDefault() {
     /// Go through all supported mime types
     foreach(const QString &mimeType, d->textBasedMimeTypes) {
