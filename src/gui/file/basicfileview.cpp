@@ -109,6 +109,10 @@ public:
         headerProperty->sumWidths = 0;
         for (int col = 0; col < headerProperty->columnCount; ++col)
             headerProperty->sumWidths += headerProperty->columns[col].isHidden ? 0 : headerProperty->columns[col].width;
+        if (headerProperty->sumWidths == 0) {
+            kWarning() << "headerProperty->sumWidths is zero, cannot apply header properties";
+            return;
+        }
 
         for (int col = 0; col < headerProperty->columnCount; ++col) {
             p->setColumnHidden(col, headerProperty->columns[col].isHidden);
