@@ -147,7 +147,8 @@ public:
 
         connect(comboBoxBackupScope, SIGNAL(currentIndexChanged(int)), p, SLOT(updateGUI()));
     }
-    void configGroup(QString arg1, Preferences::BackupScope arg2);
+
+    // void configGroup(QString arg1, Preferences::BackupScope arg2);
 };
 
 const QString SettingsFileExporterWidget::SettingsFileExporterWidgetPrivate::citeCmdToLabel = QLatin1String("\\%1{") + QChar(0x2026) + QChar('}');
