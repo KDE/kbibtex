@@ -35,7 +35,7 @@
 #include "xsltransform.h"
 
 FileExporterXSLT::FileExporterXSLT(const QString &xsltFilename)
-        : FileExporter()
+        : FileExporter(), m_cancelFlag(false)
 {
     if (xsltFilename.isEmpty() || !QFile(xsltFilename).exists())
         setXSLTFilename(QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kbibtex/standard.xsl"));
