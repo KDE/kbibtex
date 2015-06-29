@@ -156,8 +156,13 @@ public:
         headerProperty->sortedColumn = p->header()->sortIndicatorSection();
         headerProperty->sortOrder = p->header()->sortIndicatorOrder();
 
-        Q_ASSERT(headerProperty->sumWidths > 0);
-        Q_ASSERT(countVisible > 0);
+        if (headerProperty->sumWidths == 0) {
+            kWarning() << "headerProperty->sumWidths is zero, cannot update header properties";
+            return;
+        } else if (countVisible == 0) {
+            kWarning() << "countVisible is zero, cannot update header properties";
+            return;
+        }
         const int hiddenColumnWidth = headerProperty->sumWidths / countVisible;
         for (int col = 0; col < headerProperty->columnCount; ++col)
             if (headerProperty->columns[col].isHidden)
