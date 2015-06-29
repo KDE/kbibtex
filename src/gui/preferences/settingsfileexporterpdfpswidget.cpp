@@ -49,6 +49,8 @@ public:
         paperSizeLabelToName.insert(i18n("A4"), QLatin1String("a4"));
         paperSizeLabelToName.insert(i18n("Letter"), QLatin1String("letter"));
         paperSizeLabelToName.insert(i18n("Legal"), QLatin1String("legal"));
+
+        setupGUI();
     }
 
     void loadState() {
@@ -120,7 +122,6 @@ public:
 SettingsFileExporterPDFPSWidget::SettingsFileExporterPDFPSWidget(QWidget *parent)
         : SettingsAbstractWidget(parent), d(new SettingsFileExporterPDFPSWidgetPrivate(this))
 {
-    d->setupGUI();
     d->loadState();
 }
 
