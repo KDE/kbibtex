@@ -117,7 +117,7 @@ public:
     int numSteps, curStep;
 
     OnlineSearchBibsonomyPrivate(OnlineSearchBibsonomy *parent)
-            : p(parent), form(NULL) {
+            : p(parent), form(NULL), numSteps(0), curStep(0) {
         // nothing
     }
 
