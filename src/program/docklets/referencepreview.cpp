@@ -148,25 +148,25 @@ public:
     }
 
     bool saveHTML(const KUrl &url) const {
-        KTemporaryFile file;
-        file.setAutoRemove(true);
+        KTemporaryFile tempFile;
+        tempFile.setAutoRemove(true);
 
-        bool result = saveHTML(file);
+        bool result = saveHTML(tempFile);
 
         if (result) {
-            KIO::NetAccess::del(url, p); /// ignore error if file does not exist
-            result = KIO::NetAccess::file_copy(KUrl(file.fileName()), url, p);
+            KIO::NetAccess::del(url, p); /// ignore error if tempFile does not exist
+            result = KIO::NetAccess::file_copy(KUrl(tempFile.fileName()), url, p);
         }
 
         return result;
     }
 
-    bool saveHTML(KTemporaryFile &file) const {
-        if (file.open()) {
-            QTextStream ts(&file);
+    bool saveHTML(KTemporaryFile &tempFile) const {
+        if (tempFile.open()) {
+            QTextStream ts(&tempFile);
             ts.setCodec("utf-8");
             ts << QString(htmlText).replace(QRegExp("<a[^>]+href=\"kbibtex:[^>]+>([^<]+)</a>"), "\\1");
-            file.close();
+            tempFile.close();
             return true;
         }
 
