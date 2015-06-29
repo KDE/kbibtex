@@ -52,6 +52,8 @@ public:
         this->isMultiLine = isMultiLine;
         /// listen to configuration change events specifically concerning a MenuLineEdit widget
         NotificationHub::registerNotificationListener(this, MenuLineEdit::MenuLineConfigurationChangedEvent);
+
+        setupUI();
     }
 
     ~MenuLineEditPrivate() {
@@ -190,7 +192,6 @@ const QString MenuLineEdit::MenuLineEditPrivate::normalStyleSheet = QLatin1Strin
 MenuLineEdit::MenuLineEdit(bool isMultiLine, QWidget *parent)
         : QFrame(parent), d(new MenuLineEditPrivate(isMultiLine, this))
 {
-    d->setupUI();
     if (d->m_singleLineEditText != NULL) {
         /// Only for single-line variants stretch buttons vertically
         QTimer::singleShot(250, this, SLOT(slotVerticallyStretchButtons()));
