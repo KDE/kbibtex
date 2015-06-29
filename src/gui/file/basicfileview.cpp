@@ -221,8 +221,13 @@ public:
                 }
             }
 
-            Q_ASSERT(headerProperty->sumWidths > 0);
-            Q_ASSERT(countVisible > 0);
+            if (headerProperty->sumWidths == 0) {
+                kWarning() << "headerProperty->sumWidths is zero, cannot set column state";
+                return;
+            } else if (countVisible == 0) {
+                kWarning() << "countVisible is zero, cannot set column state";
+                return;
+            }
             const int hiddenColumnWidth = headerProperty->sumWidths / countVisible;
             headerProperty->columns[column].width = hiddenColumnWidth;
             headerProperty->sumWidths += hiddenColumnWidth;
