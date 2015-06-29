@@ -383,7 +383,7 @@ public:
 
     IdSuggestionsEditWidgetPrivate(const Entry *pe, IdSuggestionsEditWidget *parent)
             : p(parent), previewEntry(pe) {
-        // TODO
+        setupGUI();
     }
 
     void setupGUI() {
@@ -587,7 +587,7 @@ public:
 IdSuggestionsEditWidget::IdSuggestionsEditWidget(const Entry *previewEntry, QWidget *parent, Qt::WindowFlags f)
         : QWidget(parent, f), IdSuggestions(), d(new IdSuggestionsEditWidgetPrivate(previewEntry, this))
 {
-    d->setupGUI();
+    /// nothing
 }
 
 IdSuggestionsEditWidget::~IdSuggestionsEditWidget()
