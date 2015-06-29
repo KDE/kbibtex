@@ -227,7 +227,7 @@ public:
 
     SettingsIdSuggestionsWidgetPrivate(SettingsIdSuggestionsWidget *parent)
             : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroup(config, IdSuggestions::configGroupName) {
-        // nothing
+        setupGUI();
     }
 
     void loadState() {
@@ -273,8 +273,6 @@ public:
         buttonToggleDefaultString = new KPushButton(KIcon("favorites"), i18n("Toggle Default"), p);
         layout->addWidget(buttonToggleDefaultString, 5, 1, 1, 1);
 
-        p->itemChanged(QModelIndex());
-
         connect(buttonNewSuggestion, SIGNAL(clicked()), p, SLOT(buttonClicked()));
         connect(buttonEditSuggestion, SIGNAL(clicked()), p, SLOT(buttonClicked()));
         connect(buttonDeleteSuggestion, SIGNAL(clicked()), p, SLOT(buttonClicked()));
@@ -289,8 +287,8 @@ public:
 SettingsIdSuggestionsWidget::SettingsIdSuggestionsWidget(QWidget *parent)
         : SettingsAbstractWidget(parent), d(new SettingsIdSuggestionsWidgetPrivate(this))
 {
-    d->setupGUI();
     d->loadState();
+    itemChanged(QModelIndex());
 }
 
 SettingsIdSuggestionsWidget::~SettingsIdSuggestionsWidget()
