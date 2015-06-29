@@ -45,7 +45,6 @@ protected:
 
 private:
     class OnlineSearchQueryFormArXiv;
-    OnlineSearchQueryFormArXiv *form;
     class OnlineSearchArXivPrivate;
     OnlineSearchArXivPrivate *d;
 
