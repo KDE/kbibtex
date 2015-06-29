@@ -83,7 +83,7 @@ bool SortFilterFileModel::lessThan(const QModelIndex &left, const QModelIndex &r
     int column = left.column();
     Q_ASSERT_X(left.column() == right.column(), "bool SortFilterFileModel::lessThan(const QModelIndex &left, const QModelIndex &right) const", "Not comparing items in same column"); ///< assume that we only sort by column
 
-    BibTeXFields *bibtexFields = BibTeXFields::self();
+    const BibTeXFields *bibtexFields = BibTeXFields::self();
     const FieldDescription *fd = bibtexFields->at(column);
 
     if (column == right.column() && (fd->upperCamelCase == QLatin1String("Author") || fd->upperCamelCase == QLatin1String("Editor"))) {
@@ -300,7 +300,7 @@ void FileDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, 
     bool ok = false;
     double percent = index.data(FileModel::NumberRole).toDouble(&ok);
     if (ok) {
-        BibTeXFields *bibtexFields = BibTeXFields::self();
+        const BibTeXFields *bibtexFields = BibTeXFields::self();
         const FieldDescription *fd = bibtexFields->at(index.column());
         if (fd->upperCamelCase.toLower() == Entry::ftStarRating)
             StarRating::paintStars(painter, KIconLoader::DefaultState, numTotalStars, percent, option.rect);
@@ -452,7 +452,7 @@ QVariant FileModel::data(const QModelIndex &index, int role) const
     if (role != NumberRole && role != SortRole && role != Qt::DisplayRole && role != Qt::ToolTipRole && role != Qt::BackgroundRole)
         return QVariant();
 
-    BibTeXFields *bibtexFields = BibTeXFields::self();
+    const BibTeXFields *bibtexFields = BibTeXFields::self();
     if (index.row() < m_file->count() && index.column() < bibtexFields->count()) {
         const FieldDescription *fd = bibtexFields->at(index.column());
         QString raw = fd->upperCamelCase;
