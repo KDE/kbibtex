@@ -47,7 +47,7 @@ public:
      * Only one instance of this class has to be used
      * @return the class's singleton
      */
-    static BibTeXEntries *self();
+    static const BibTeXEntries *self();
 
     /**
      * Change the casing of a given entry name to one of the predefine formats.

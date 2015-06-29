@@ -177,7 +177,7 @@ public:
                 if (index.row() < values.count()) {
                     QString text = PlainTextValue::text(values.at(index.row()));
                     if (fieldName == QLatin1String("^type")) {
-                        BibTeXEntries *be = BibTeXEntries::self();
+                        const BibTeXEntries *be = BibTeXEntries::self();
                         text = be->format(text, KBibTeX::cUpperCamelCase);
                     }
 

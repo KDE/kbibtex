@@ -119,7 +119,7 @@ BibTeXEntries::~BibTeXEntries()
     delete d;
 }
 
-BibTeXEntries *BibTeXEntries::self()
+const BibTeXEntries *BibTeXEntries::self()
 {
     if (BibTeXEntriesPrivate::singleton == NULL)
         BibTeXEntriesPrivate::singleton = new BibTeXEntries();

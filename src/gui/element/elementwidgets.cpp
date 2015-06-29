@@ -236,7 +236,7 @@ void EntryConfiguredWidget::layoutGUI(bool forceVisible, const QString &entryTyp
     QStringList visibleItems;
     if (!forceVisible && !entryType.isEmpty()) {
         const QString entryTypeLc = entryType.toLower();
-        BibTeXEntries *be = BibTeXEntries::self();
+        const BibTeXEntries *be = BibTeXEntries::self();
         for (BibTeXEntries::ConstIterator bit = be->constBegin(); bit != be->constEnd(); ++bit) {
             if (entryTypeLc == bit->upperCamelCase.toLower() || entryTypeLc == bit->upperCamelCaseAlt.toLower()) {
                 /// this ugly conversion is necessary because we have a "^" (xor) and "|" (and/or)
@@ -340,7 +340,7 @@ bool ReferenceWidget::apply(QSharedPointer<Element> element) const
     bool result = false;
     QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
     if (!entry.isNull()) {
-        BibTeXEntries *be = BibTeXEntries::self();
+        const BibTeXEntries *be = BibTeXEntries::self();
         QString type;
         if (entryType->currentIndex() < 0 || entryType->lineEdit()->isModified())
             type = be->format(entryType->lineEdit()->text(), KBibTeX::cUpperCamelCase);
@@ -373,7 +373,7 @@ bool ReferenceWidget::reset(QSharedPointer<const Element> element)
     if (!entry.isNull()) {
         entryType->setEnabled(!isReadOnly);
         buttonSuggestId->setEnabled(!isReadOnly);
-        BibTeXEntries *be = BibTeXEntries::self();
+        const BibTeXEntries *be = BibTeXEntries::self();
         QString type = be->format(entry->type(), KBibTeX::cUpperCamelCase);
         entryType->setCurrentIndex(-1);
         entryType->lineEdit()->setText(type);
@@ -467,7 +467,7 @@ void ReferenceWidget::createGUI()
     layout->addWidget(label);
     layout->addWidget(entryId);
 
-    BibTeXEntries *be = BibTeXEntries::self();
+    const BibTeXEntries *be = BibTeXEntries::self();
     for (BibTeXEntries::ConstIterator it = be->constBegin(); it != be->constEnd(); ++it)
         entryType->addItem(it->label, it->upperCamelCase);
 

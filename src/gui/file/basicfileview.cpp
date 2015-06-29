@@ -88,7 +88,9 @@ public:
         headerProperty->sumWidths = 0;
         headerProperty->sortedColumn = -1;
         int col = 0;
-        foreach(const FieldDescription *fd, *BibTeXFields::self()) {
+        const BibTeXFields *bf = BibTeXFields::self();
+        for (BibTeXFields::ConstIterator it = bf->constBegin(); it != bf->constEnd(); ++it) {
+            const FieldDescription *fd = *it;
             headerProperty->columns[col].isHidden = !fd->defaultVisible;
             headerProperty->columns[col].width = fd->defaultWidth;
             headerProperty->columns[col].visualIndex = col;
@@ -174,7 +176,9 @@ public:
         KConfigGroup configGroup(config, configGroupName);
         headerProperty->sumWidths = 0;
         int col = 0;
-        foreach(const FieldDescription *fd, *BibTeXFields::self()) {
+        const BibTeXFields *bf = BibTeXFields::self();
+        for (BibTeXFields::ConstIterator it = bf->constBegin(); it != bf->constEnd(); ++it) {
+            const FieldDescription *fd = *it;
             headerProperty->columns[col].isHidden = configGroup.readEntry(configHeaderState.arg(name).append(QString::number(col)).append(QLatin1String("IsHidden")), !fd->defaultVisible);
             headerProperty->columns[col].width = configGroup.readEntry(configHeaderState.arg(name).append(QString::number(col)).append(QLatin1String("Width")), fd->defaultWidth);
             headerProperty->columns[col].visualIndex = configGroup.readEntry(configHeaderState.arg(name).append(QString::number(col)).append(QLatin1String("VisualIndex")), col);
@@ -263,7 +267,9 @@ BasicFileView::BasicFileView(const QString &name, QWidget *parent)
 
     /// build context menu for header to show/hide single columns
     int col = 0;
-    foreach(const FieldDescription *fd, *BibTeXFields::self()) {
+    const BibTeXFields *bf = BibTeXFields::self();
+    for (BibTeXFields::ConstIterator it = bf->constBegin(); it != bf->constEnd(); ++it) {
+        const FieldDescription *fd = *it;
         QAction *action = new QAction(fd->label, header());
         action->setData(col);
         action->setCheckable(true);
