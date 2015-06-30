@@ -28,6 +28,7 @@
 #include "fileimporterbibtex.h"
 
 FileImporterPDF::FileImporterPDF()
+        : FileImporter(), m_cancelFlag(false)
 {
     m_bibTeXimporter = new FileImporterBibTeX();
 }
