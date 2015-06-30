@@ -105,7 +105,9 @@ public:
     int numSteps, curStep;
 
     OnlineSearchArXivPrivate(OnlineSearchArXiv *parent)
-            : p(parent), form(NULL), arXivQueryBaseUrl("http://export.arxiv.org/api/query?") {
+            : p(parent), form(NULL), arXivQueryBaseUrl("http://export.arxiv.org/api/query?"),
+          numSteps(0), curStep(0)
+    {
         const QString xsltFilename = QLatin1String("kbibtex/arxiv2bibtex.xsl");
         xslt = XSLTransform::createXSLTransform(KStandardDirs::locate("data", xsltFilename));
         if (xslt == NULL)
