@@ -453,6 +453,7 @@ void PersonListEdit::slotAddNamesFromClipboard()
             Value *value = new Value();
             value->append(person);
             lineAdd(value);
+            delete value;
         }
         if (!personList.isEmpty())
             emit modified();
@@ -511,6 +512,7 @@ void UrlListEdit::addReference(const QUrl &url) {
         Value *value = new Value();
         value->append(QSharedPointer<VerbatimText>(new VerbatimText(visibleFilename)));
         lineAdd(value);
+        delete value;
         emit modified();
     }
 }
@@ -558,6 +560,7 @@ void UrlListEdit::downloadFinished(KJob *j) {
         Value *value = new Value();
         value->append(QSharedPointer<VerbatimText>(new VerbatimText(job->property("visibleFilename").toString())));
         lineAdd(value);
+        delete value;
     } else {
         qWarning() << "Downloading" << job->srcUrls().first().toDisplayString() << "failed with error" << job->error() << job->errorString();
     }
@@ -681,6 +684,7 @@ void KeywordListEdit::slotAddKeywordsFromList()
             Value *value = new Value();
             value->append(QSharedPointer<Keyword>(new Keyword(newKeywordText)));
             lineAdd(value);
+            delete value;
         }
         if (!newKeywordList.isEmpty())
             emit modified();
@@ -700,6 +704,7 @@ void KeywordListEdit::slotAddKeywordsFromClipboard()
             Value *value = new Value();
             value->append(*it);
             lineAdd(value);
+            delete value;
         }
         if (!keywords.isEmpty())
             emit modified();
