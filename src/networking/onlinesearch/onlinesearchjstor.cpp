@@ -39,7 +39,7 @@ public:
     QUrl queryUrl;
 
     OnlineSearchJStorPrivate(OnlineSearchJStor */* UNUSED parent*/)
-    // : UNUSED p(parent)
+        : /* UNUSED p(parent), */ numFoundResults(0), curStep(0), numSteps(0)
     {
         /// nothing
     }

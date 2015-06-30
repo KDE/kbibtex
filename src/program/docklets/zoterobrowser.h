@@ -39,8 +39,6 @@ private:
     class Private;
     Private *const d;
 
-    void setupGUI();
-
 private slots:
     void modelReset();
     void collectionDoubleClicked(const QModelIndex &index);

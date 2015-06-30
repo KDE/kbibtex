@@ -80,10 +80,93 @@ public:
     QCursor nonBusyCursor;
 
     Private(SearchResults *sr, ZoteroBrowser *parent)
-            : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), items(NULL), groups(NULL), tags(NULL), tagModel(NULL), collection(NULL), collectionModel(NULL), api(NULL), searchResults(sr), comboBoxGroupListInitialized(false), nonBusyCursor(p->cursor()) {
-        /// nothing
+        : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), items(NULL), groups(NULL), tags(NULL), tagModel(NULL), collection(NULL), collectionModel(NULL), api(NULL), searchResults(sr), comboBoxGroupListInitialized(false), nonBusyCursor(p->cursor()) {
+        setupGUI();
     }
 
+
+    void setupGUI()
+    {
+        QBoxLayout *layout = new QVBoxLayout(p);
+        tabWidget = new QTabWidget(p);
+        layout->addWidget(tabWidget);
+
+        /// Credentials
+        QWidget *container = new QWidget(tabWidget);
+        tabWidget->addTab(container, QIcon::fromTheme("preferences-web-browser-identification"), i18n("Credentials"));
+        QBoxLayout *containerLayout = new QVBoxLayout(container);
+        QFormLayout *containerForm = new QFormLayout();
+        containerLayout->addLayout(containerForm, 1);
+        containerForm->setMargin(0);
+
+        comboBoxNumericUserId = new KComboBox(container);
+        comboBoxNumericUserId->setEditable(true);
+        QSizePolicy sizePolicy = comboBoxNumericUserId->sizePolicy();
+        sizePolicy.setHorizontalPolicy(QSizePolicy::MinimumExpanding);
+        comboBoxNumericUserId->setSizePolicy(sizePolicy);
+        qobject_cast<KLineEdit *>(comboBoxNumericUserId->lineEdit())->setClearButtonShown(true);
+        containerForm->addRow(i18n("Numeric user id:"), comboBoxNumericUserId);
+        connect(comboBoxNumericUserId->lineEdit(), SIGNAL(textChanged(QString)), p, SLOT(invalidateGroupList()));
+        connect(comboBoxNumericUserId->lineEdit(), SIGNAL(textChanged(QString)), p, SLOT(updateButtons()));
+
+        comboBoxApiKey = new KComboBox(container);
+        comboBoxApiKey->setEditable(true);
+        comboBoxApiKey->setSizePolicy(sizePolicy);
+        qobject_cast<KLineEdit *>(comboBoxApiKey->lineEdit())->setClearButtonShown(true);
+        containerForm->addRow(i18n("API key:"), comboBoxApiKey);
+        connect(comboBoxApiKey->lineEdit(), SIGNAL(textChanged(QString)), p, SLOT(invalidateGroupList()));
+        connect(comboBoxApiKey->lineEdit(), SIGNAL(textChanged(QString)), p, SLOT(updateButtons()));
+
+        QWidget *libraryContainer = new QWidget(container);
+        QGridLayout *libraryContainerLayout = new QGridLayout(libraryContainer);
+        libraryContainerLayout->setMargin(0);
+        libraryContainerLayout->setColumnMinimumWidth(0, 16); // TODO determine size of a radio button
+        containerForm->addRow(QString(), libraryContainer);
+        radioPersonalLibrary = new QRadioButton(i18n("Personal library"), libraryContainer);
+        libraryContainerLayout->addWidget(radioPersonalLibrary, 0, 0, 1, 2);
+        radioGroupLibrary = new QRadioButton(i18n("Group library"), libraryContainer);
+        libraryContainerLayout->addWidget(radioGroupLibrary, 1, 0, 1, 2);
+        comboBoxGroupList = new KComboBox(false, libraryContainer);
+        libraryContainerLayout->addWidget(comboBoxGroupList, 2, 1, 1, 1);
+        comboBoxGroupList->setSizePolicy(sizePolicy);
+        radioPersonalLibrary->setChecked(true);
+        comboBoxGroupList->setEnabled(false);
+        comboBoxGroupList->addItem(i18n("No groups available"));
+        connect(radioGroupLibrary, SIGNAL(toggled(bool)), p, SLOT(radioButtonsToggled()));
+        connect(radioPersonalLibrary, SIGNAL(toggled(bool)), p, SLOT(radioButtonsToggled()));
+
+        QBoxLayout *containerButtonLayout = new QHBoxLayout();
+        containerLayout->addLayout(containerButtonLayout, 0);
+        containerButtonLayout->setMargin(0);
+        containerButtonLayout->addStretch(1);
+        buttonLoadBibliography = new QPushButton(QIcon::fromTheme("download"), i18n("Load bibliography"), container);
+        containerButtonLayout->addWidget(buttonLoadBibliography, 0);
+        connect(buttonLoadBibliography, SIGNAL(clicked()), p, SLOT(applyCredentials()));
+
+        containerLayout->addStretch(10);
+
+#ifdef HAVE_QTOAUTH // krazy:exclude=cpp
+        containerButtonLayout = new QHBoxLayout();
+        containerLayout->addLayout(containerButtonLayout, 0);
+        containerButtonLayout->setMargin(0);
+        QPushButton *buttonGetOAuthCredentials = new QPushButton(QIcon::fromTheme("preferences-web-browser-identification"), i18n("Get Credentials"), container);
+        containerButtonLayout->addWidget(buttonGetOAuthCredentials, 0);
+        connect(buttonGetOAuthCredentials, SIGNAL(clicked()), p, SLOT(getOAuthCredentials()));
+        containerButtonLayout->addStretch(1);
+#endif // HAVE_QTOAUTH
+
+        /// Collection browser
+        collectionBrowser = new QTreeView(tabWidget);
+        tabWidget->addTab(collectionBrowser, QIcon::fromTheme("folder-yellow"), i18n("Collections"));
+        collectionBrowser->setHeaderHidden(true);
+        collectionBrowser->setExpandsOnDoubleClick(false);
+        connect(collectionBrowser, SIGNAL(doubleClicked(QModelIndex)), p, SLOT(collectionDoubleClicked(QModelIndex)));
+
+        /// Tag browser
+        tagBrowser = new QListView(tabWidget);
+        tabWidget->addTab(tagBrowser, QIcon::fromTheme("mail-tagged"), i18n("Tags"));
+        connect(tagBrowser, SIGNAL(doubleClicked(QModelIndex)), p, SLOT(tagDoubleClicked(QModelIndex)));
+    }
 
     void loadState() {
         KConfigGroup configGroup(config, configGroupName);
@@ -145,98 +228,16 @@ const QString ZoteroBrowser::Private::configEntryNumericUserIds = QLatin1String(
 const QString ZoteroBrowser::Private::configEntryApiKeys = QLatin1String("ApiKeys");
 
 ZoteroBrowser::ZoteroBrowser(SearchResults *searchResults, QWidget *parent)
-        : QWidget(parent), d(new ZoteroBrowser::Private(searchResults, this))
+    : QWidget(parent), d(new ZoteroBrowser::Private(searchResults, this))
 {
-    setupGUI();
     d->loadState();
+    /// Forece GUI update
+    radioButtonsToggled();
 }
 
 ZoteroBrowser::~ZoteroBrowser()
 {
-    // TODO
-}
-
-void ZoteroBrowser::setupGUI()
-{
-    QBoxLayout *layout = new QVBoxLayout(this);
-    d->tabWidget = new QTabWidget(this);
-    layout->addWidget(d->tabWidget);
-
-    /// Credentials
-    QWidget *container = new QWidget(d->tabWidget);
-    d->tabWidget->addTab(container, QIcon::fromTheme("preferences-web-browser-identification"), i18n("Credentials"));
-    QBoxLayout *containerLayout = new QVBoxLayout(container);
-    QFormLayout *containerForm = new QFormLayout();
-    containerLayout->addLayout(containerForm, 1);
-    containerForm->setMargin(0);
-
-    d->comboBoxNumericUserId = new KComboBox(container);
-    d->comboBoxNumericUserId->setEditable(true);
-    QSizePolicy sizePolicy = d->comboBoxNumericUserId->sizePolicy();
-    sizePolicy.setHorizontalPolicy(QSizePolicy::MinimumExpanding);
-    d->comboBoxNumericUserId->setSizePolicy(sizePolicy);
-    qobject_cast<KLineEdit *>(d->comboBoxNumericUserId->lineEdit())->setClearButtonShown(true);
-    containerForm->addRow(i18n("Numeric user id:"), d->comboBoxNumericUserId);
-    connect(d->comboBoxNumericUserId->lineEdit(), SIGNAL(textChanged(QString)), this, SLOT(invalidateGroupList()));
-    connect(d->comboBoxNumericUserId->lineEdit(), SIGNAL(textChanged(QString)), this, SLOT(updateButtons()));
-
-    d->comboBoxApiKey = new KComboBox(container);
-    d->comboBoxApiKey->setEditable(true);
-    d->comboBoxApiKey->setSizePolicy(sizePolicy);
-    qobject_cast<KLineEdit *>(d->comboBoxApiKey->lineEdit())->setClearButtonShown(true);
-    containerForm->addRow(i18n("API key:"), d->comboBoxApiKey);
-    connect(d->comboBoxApiKey->lineEdit(), SIGNAL(textChanged(QString)), this, SLOT(invalidateGroupList()));
-    connect(d->comboBoxApiKey->lineEdit(), SIGNAL(textChanged(QString)), this, SLOT(updateButtons()));
-
-    QWidget *libraryContainer = new QWidget(container);
-    QGridLayout *libraryContainerLayout = new QGridLayout(libraryContainer);
-    libraryContainerLayout->setMargin(0);
-    libraryContainerLayout->setColumnMinimumWidth(0, 16); // TODO determine size of a radio button
-    containerForm->addRow(QString(), libraryContainer);
-    d->radioPersonalLibrary = new QRadioButton(i18n("Personal library"), libraryContainer);
-    libraryContainerLayout->addWidget(d->radioPersonalLibrary, 0, 0, 1, 2);
-    connect(d->radioPersonalLibrary, SIGNAL(toggled(bool)), this, SLOT(radioButtonsToggled()));
-    d->radioGroupLibrary = new QRadioButton(i18n("Group library"), libraryContainer);
-    libraryContainerLayout->addWidget(d->radioGroupLibrary, 1, 0, 1, 2);
-    connect(d->radioGroupLibrary, SIGNAL(toggled(bool)), this, SLOT(radioButtonsToggled()));
-    d->comboBoxGroupList = new KComboBox(false, libraryContainer);
-    libraryContainerLayout->addWidget(d->comboBoxGroupList, 2, 1, 1, 1);
-    d->comboBoxGroupList->setSizePolicy(sizePolicy);
-    d->radioPersonalLibrary->setChecked(true);
-    d->comboBoxGroupList->setEnabled(false);
-    d->comboBoxGroupList->addItem(i18n("No groups available"));
-
-    QBoxLayout *containerButtonLayout = new QHBoxLayout();
-    containerLayout->addLayout(containerButtonLayout, 0);
-    containerButtonLayout->setMargin(0);
-    containerButtonLayout->addStretch(1);
-    d->buttonLoadBibliography = new QPushButton(QIcon::fromTheme("download"), i18n("Load bibliography"), container);
-    containerButtonLayout->addWidget(d->buttonLoadBibliography, 0);
-    connect(d->buttonLoadBibliography, SIGNAL(clicked()), this, SLOT(applyCredentials()));
-
-    containerLayout->addStretch(10);
-
-#ifdef HAVE_QTOAUTH // krazy:exclude=cpp
-    containerButtonLayout = new QHBoxLayout();
-    containerLayout->addLayout(containerButtonLayout, 0);
-    containerButtonLayout->setMargin(0);
-    QPushButton *buttonGetOAuthCredentials = new QPushButton(QIcon::fromTheme("preferences-web-browser-identification"), i18n("Get Credentials"), container);
-    containerButtonLayout->addWidget(buttonGetOAuthCredentials, 0);
-    connect(buttonGetOAuthCredentials, SIGNAL(clicked()), this, SLOT(getOAuthCredentials()));
-    containerButtonLayout->addStretch(1);
-#endif // HAVE_QTOAUTH
-
-    /// Collection browser
-    d->collectionBrowser = new QTreeView(d->tabWidget);
-    d->tabWidget->addTab(d->collectionBrowser, QIcon::fromTheme("folder-yellow"), i18n("Collections"));
-    d->collectionBrowser->setHeaderHidden(true);
-    d->collectionBrowser->setExpandsOnDoubleClick(false);
-    connect(d->collectionBrowser, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(collectionDoubleClicked(QModelIndex)));
-
-    /// Tag browser
-    d->tagBrowser = new QListView(d->tabWidget);
-    d->tabWidget->addTab(d->tagBrowser, QIcon::fromTheme("mail-tagged"), i18n("Tags"));
-    connect(d->tagBrowser, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(tagDoubleClicked(QModelIndex)));
+    delete d;
 }
 
 void ZoteroBrowser::modelReset()
@@ -334,7 +335,7 @@ void ZoteroBrowser::applyCredentials()
 
 void ZoteroBrowser::radioButtonsToggled() {
     d->comboBoxGroupList->setEnabled(d->comboBoxGroupListInitialized && d->comboBoxGroupList->count() > 0 && d->radioGroupLibrary->isChecked());
-    if (!d->comboBoxGroupListInitialized &&  d->radioGroupLibrary->isChecked())
+    if (!d->comboBoxGroupListInitialized && d->radioGroupLibrary->isChecked())
         retrieveGroupList();
 }
 

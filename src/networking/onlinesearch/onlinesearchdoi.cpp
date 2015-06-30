@@ -88,7 +88,7 @@ public:
     int numSteps, curStep;
 
     OnlineSearchDOIPrivate(OnlineSearchDOI */* UNUSED parent*/)
-        : /* UNUSED p(parent),*/ form(NULL) {
+        : /* UNUSED p(parent),*/ form(NULL), numSteps(0), curStep(0) {
         // nothing
     }
 
