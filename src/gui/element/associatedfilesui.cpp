@@ -35,7 +35,7 @@ private:
     AssociatedFilesUI *p;
 
 public:
-    QLabel *labelGreeting, *labelFollowingOperations;
+    QLabel *labelGreeting;
     KLineEdit *lineEditSourceUrl;
     QRadioButton *radioNoCopyMove, *radioCopyFile, *radioMoveFile;
     QLabel *labelMoveCopyLocation;
