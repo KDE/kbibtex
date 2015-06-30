@@ -33,7 +33,7 @@ const QString FileExporterToolchain::keyBibliographyStyle = QLatin1String("bibli
 const QString FileExporterToolchain::defaultBibliographyStyle = QLatin1String("plain");
 
 FileExporterToolchain::FileExporterToolchain()
-        : FileExporter(), m_errorLog(NULL)
+        : FileExporter(), m_process(NULL), m_errorLog(NULL)
 {
     tempDir.setAutoRemove(true);
 }

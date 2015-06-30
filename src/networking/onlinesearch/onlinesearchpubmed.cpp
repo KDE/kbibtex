@@ -45,7 +45,8 @@ public:
     int numSteps, curStep;
 
     OnlineSearchPubMedPrivate(OnlineSearchPubMed *parent)
-            : p(parent), pubMedUrlPrefix(QLatin1String("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/")) {
+            : p(parent), pubMedUrlPrefix(QLatin1String("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/")),
+          numSteps(0), curStep(0) {
         const QString xsltFilename = QLatin1String("kbibtex/pubmed2bibtex.xsl");
         xslt = XSLTransform::createXSLTransform(KStandardDirs::locate("data", xsltFilename));
         if (xslt == NULL)

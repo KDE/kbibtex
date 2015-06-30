@@ -52,8 +52,8 @@ public:
     const Element *element;
 
     FieldInputPrivate(FieldInput *parent)
-            : p(parent), colorWidget(NULL), starRatingWidget(NULL), fieldLineEdit(NULL), fieldListEdit(NULL), bibtexFile(NULL), element(NULL) {
-        // nothing
+            : p(parent), colorWidget(NULL), starRatingWidget(NULL), fieldLineEdit(NULL), fieldListEdit(NULL), fieldInputType(KBibTeX::SingleLine), preferredTypeFlag(KBibTeX::tfSource), bibtexFile(NULL), element(NULL) {
+        /// nothing
     }
 
     ~FieldInputPrivate() {
