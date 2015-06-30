@@ -65,7 +65,7 @@ public:
     const QString configGroupName, configGroupNameGeneral;
 
     FileExporterBibTeXPrivate(FileExporterBibTeX *parent)
-            : p(parent), cancelFlag(false), iconvLaTeX(NULL), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName("FileExporterBibTeX"), configGroupNameGeneral("General") {
+            : p(parent), keywordCasing(KBibTeX::cLowerCase), quoteComment(Preferences::qcNone), protectCasing(true), cancelFlag(false), iconvLaTeX(NULL), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName("FileExporterBibTeX"), configGroupNameGeneral("General") {
         // nothing
     }
 
