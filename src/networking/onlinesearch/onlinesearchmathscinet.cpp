@@ -43,7 +43,7 @@ public:
     static const QString queryUrlStem;
 
     OnlineSearchMathSciNetPrivate(OnlineSearchMathSciNet */* UNUSED parent*/)
-    // : UNUSED p(parent)
+        : /* UNUSED p(parent), */ numResults(0)
     {
         /// nothing
     }
