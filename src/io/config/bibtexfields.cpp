@@ -68,8 +68,10 @@ public:
             FieldDescription *fd = new FieldDescription();
 
             fd->upperCamelCase = configGroup.readEntry("UpperCamelCase", QString());
-            if (fd->upperCamelCase.isEmpty())
+            if (fd->upperCamelCase.isEmpty()) {
+                delete fd;
                 continue;
+            }
 
             fd->upperCamelCaseAlt = configGroup.readEntry("UpperCamelCaseAlt", QString());
 
