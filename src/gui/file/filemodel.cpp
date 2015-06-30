@@ -330,7 +330,9 @@ void FileModel::notificationEvent(int eventId)
     if (eventId == NotificationHub::EventConfigurationChanged) {
         readConfiguration();
         int column = 0;
-        foreach(const FieldDescription *fd, *BibTeXFields::self()) {
+        const BibTeXFields *bf = BibTeXFields::self();
+        for (BibTeXFields::ConstIterator it = bf->constBegin(); it != bf->constEnd(); ++it) {
+            const FieldDescription *fd = *it;
             /// Colors may have changed
             bool columnChanged = fd->upperCamelCase.toLower() == Entry::ftColor;
             /// Person name formatting may has changed
