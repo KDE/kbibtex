@@ -120,8 +120,6 @@ public:
         default:
             return QVariant();
         }
-
-        return QVariant();
     }
 
     bool setData(const QModelIndex &idx, const QVariant &value, int role) {
