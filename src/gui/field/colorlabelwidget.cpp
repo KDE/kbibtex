@@ -133,17 +133,16 @@ private:
 public:
     ColorLabelComboBoxModel *model;
 
-    ColorLabelWidgetPrivate(ColorLabelWidget */*UNUSED p*/)
-    // UNUSED : parent(p)
+    ColorLabelWidgetPrivate(ColorLabelWidget */*UNUSED p*/, ColorLabelComboBoxModel *m)
+        : /* UNUSED parent(p), */ model(m)
     {
         /// nothing
     }
 };
 
 ColorLabelWidget::ColorLabelWidget(QWidget *parent)
-        : KComboBox(false, parent), d(new ColorLabelWidgetPrivate(this))
+        : KComboBox(false, parent), d(new ColorLabelWidgetPrivate(this, new ColorLabelComboBoxModel(this)))
 {
-    d->model = new ColorLabelComboBoxModel(this);
     setModel(d->model);
     connect(this, SIGNAL(currentIndexChanged(int)), this, SLOT(slotCurrentIndexChanged(int)));
 }
