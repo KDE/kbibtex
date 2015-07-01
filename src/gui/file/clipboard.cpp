@@ -88,7 +88,7 @@ public:
         FileImporterBibTeX importer;
         File *file = importer.fromString(text);
 
-        if (!file->isEmpty()) {
+        if (file != NULL && !file->isEmpty()) {
             FileModel *fileModel = fileView->fileModel();
             QSortFilterProxyModel *sfpModel = fileView->sortFilterProxyModel();
 
