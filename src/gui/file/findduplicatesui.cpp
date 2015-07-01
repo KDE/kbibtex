@@ -193,7 +193,8 @@ public:
                     QFont f = p->font();
                     f.setItalic(true);
                     return f;
-                }
+                } else
+                    return p->font();
             case Qt::CheckStateRole: {
                 if (selectionType(fieldName) != SelectionTypeCheck)
                     return QVariant();
