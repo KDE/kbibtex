@@ -38,7 +38,7 @@ struct FieldDescription {
     bool typeIndependent;
 
     FieldDescription()
-            : upperCamelCase(QString()), upperCamelCaseAlt(QString()), label(QString()), defaultWidth(0), typeIndependent(false) {
+            : upperCamelCase(QString()), upperCamelCaseAlt(QString()), label(QString()), preferredTypeFlag(KBibTeX::tfSource), defaultWidth(0), defaultVisible(true), typeIndependent(false) {
         /* nothing */
     }
 
