@@ -44,7 +44,7 @@ public:
 
     SettingsGeneralWidgetPrivate(SettingsGeneralWidget *parent)
             : p(parent), dummyPerson(Person(i18n("John"), i18n("Doe"), i18n("Jr."))), restartRequiredMsg(i18n("Changing this option requires a restart to take effect.")), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName(QLatin1String("General")) {
-        // nothing
+        setupGUI();
     }
 
     void loadState() {
@@ -83,7 +83,6 @@ public:
 SettingsGeneralWidget::SettingsGeneralWidget(QWidget *parent)
         : SettingsAbstractWidget(parent), d(new SettingsGeneralWidgetPrivate(this))
 {
-    d->setupGUI();
     d->loadState();
 }
 
