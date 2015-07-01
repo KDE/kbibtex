@@ -35,14 +35,14 @@ static QRegExp abstractRegExp("\\bAbstract[:]?([ ]|&nbsp;|&amp;nbsp;)*", Qt::Cas
 static QRegExp lineBreaksRegExp("[ \\t]*[\\n\\r]");
 
 FileExporterXML::FileExporterXML()
-        : FileExporter()
+        : FileExporter(), m_cancelFlag(false)
 {
-    // nothing
+    /// nothing
 }
 
 FileExporterXML::~FileExporterXML()
 {
-    // nothing
+    /// nothing
 }
 
 bool FileExporterXML::save(QIODevice *iodevice, const File *bibtexfile, QStringList * /*errorLog*/)
