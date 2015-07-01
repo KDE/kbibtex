@@ -272,6 +272,8 @@ void ReferencePreview::renderHTML()
 
     const PreviewStyles previewStyle = d->comboBox->itemData(d->comboBox->currentIndex()).value<PreviewStyles>();
 
+    // FIXME 'add' case is never used, see Coverity Scan CID 90363
+
     if (previewStyle.type == QLatin1String("exporter")) {
         if (previewStyle.style == QLatin1String("bibtex")) {
             FileExporterBibTeX *exporterBibTeX = new FileExporterBibTeX();
