@@ -172,9 +172,6 @@ public:
     bool reset(QSharedPointer<const Element> element);
     void setReadOnly(bool isReadOnly);
     void showReqOptWidgets(bool, const QString &) {}
-    void setApplyElementInterface(ElementEditor::ApplyElementInterface *applyElement) {
-        m_applyElement = applyElement;
-    }
 
     QString label();
     QIcon icon();
@@ -182,9 +179,6 @@ public:
     virtual void setFile(const File *file);
 
     bool canEdit(const Element *element);
-
-private:
-    ElementEditor::ApplyElementInterface *m_applyElement;
 };
 
 class OtherFieldsWidget : public ElementWidget

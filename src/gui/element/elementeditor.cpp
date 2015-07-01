@@ -123,7 +123,6 @@ public:
         tab->hideTab(index);
 
         FilesWidget *filesWidget = new FilesWidget(tab);
-        filesWidget->setApplyElementInterface(this);
         connect(filesWidget, SIGNAL(modified(bool)), p, SLOT(childModified(bool)));
         widgets << filesWidget;
         index = tab->addTab(filesWidget, filesWidget->icon(), filesWidget->label());
