@@ -350,10 +350,10 @@ public:
     Private(FindPDFUI *parent)
             : p(parent), findpdf(new FindPDF(parent))
     {
-        /// nothing
+        setupGUI();
     }
 
-    void createGUI()
+    void setupGUI()
     {
         QGridLayout *layout = new QGridLayout(p);
 
@@ -379,8 +379,6 @@ public:
 FindPDFUI::FindPDFUI(Entry &entry, QWidget *parent)
         : QWidget(parent), d(new Private(this))
 {
-    d->createGUI();
-
     d->labelMessage->show();
     d->labelMessage->setText(i18n("Starting to search..."));
 
