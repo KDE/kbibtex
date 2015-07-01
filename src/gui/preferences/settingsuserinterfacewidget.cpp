@@ -46,6 +46,7 @@ private:
 public:
     SettingsUserInterfaceWidgetPrivate(SettingsUserInterfaceWidget *parent)
             : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))) {
+        setupGUI();
     }
 
     void loadState() {
@@ -114,7 +115,6 @@ const QString SettingsUserInterfaceWidget::SettingsUserInterfaceWidgetPrivate::c
 SettingsUserInterfaceWidget::SettingsUserInterfaceWidget(QWidget *parent)
         : SettingsAbstractWidget(parent), d(new SettingsUserInterfaceWidgetPrivate(this))
 {
-    d->setupGUI();
     d->loadState();
 }
 
