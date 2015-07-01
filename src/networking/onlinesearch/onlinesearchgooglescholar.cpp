@@ -53,7 +53,7 @@ public:
     int numSteps, curStep;
 
     OnlineSearchGoogleScholarPrivate(OnlineSearchGoogleScholar */* UNUSED parent*/)
-    // : UNUSED p(parent)
+        : /* UNUSED p(parent), */ numResults(0), numSteps(0), curStep(0)
     {
         startPageUrl = QLatin1String("http://scholar.google.com/");
         configPageUrl = QLatin1String("http://%1/scholar_settings");
