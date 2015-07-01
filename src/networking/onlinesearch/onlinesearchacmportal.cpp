@@ -49,7 +49,7 @@ public:
 
     OnlineSearchAcmPortalPrivate(OnlineSearchAcmPortal */* UNUSED parent*/)
         : /* UNUSED p(parent),*/ numExpectedResults(0), numFoundResults(0),
-          acmPortalBaseUrl(QLatin1String("http://dl.acm.org/")) {
+          acmPortalBaseUrl(QLatin1String("http://dl.acm.org/")), currentSearchPosition(0), curStep(0), numSteps(0) {
         // nothing
     }
 
