@@ -127,7 +127,7 @@ public:
             removedKDEServiceAssociations.removeAll(kbibtexPartDesktop);
             if (isPlainTextFormat)
                 /// Remove Kate part from list
-                removedAssociations.removeAll(katePartDesktop);
+                removedKDEServiceAssociations.removeAll(katePartDesktop);
             if (removedKDEServiceAssociations.isEmpty())
                 /// Empty lists can be removed from configuration file
                 configGroupRemovedKDEServiceAssociations.deleteEntry(mimetype);
