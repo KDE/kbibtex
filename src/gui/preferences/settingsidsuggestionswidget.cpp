@@ -52,8 +52,11 @@ public:
         if (exampleBibTeXEntry.isNull()) {
             static FileImporterBibTeX fileImporterBibTeX;
             File *file = fileImporterBibTeX.fromString(exampleBibTeXEntryString);
-            exampleBibTeXEntry = file->first().dynamicCast<const Entry>();
-            delete file;
+            if (file != NULL) {
+                if (!file->isEmpty())
+                    exampleBibTeXEntry = file->first().dynamicCast<const Entry>();
+                delete file;
+            }
         }
     }
 
