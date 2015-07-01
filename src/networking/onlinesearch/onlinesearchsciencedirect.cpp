@@ -42,7 +42,7 @@ public:
     int numSteps, curStep;
 
     OnlineSearchScienceDirectPrivate(OnlineSearchScienceDirect */* UNUSED parent*/)
-        : /* UNUSED p(parent), */scienceDirectBaseUrl(QLatin1String("http://www.sciencedirect.com/")) {
+        : /* UNUSED p(parent), */ currentSearchPosition(0), numExpectedResults(0), numFoundResults(0), scienceDirectBaseUrl(QLatin1String("http://www.sciencedirect.com/")), runningJobs(0), numSteps(0), curStep(0) {
         /// nothing
     }
 
