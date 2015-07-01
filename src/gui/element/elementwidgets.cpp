@@ -1086,7 +1086,7 @@ protected:
         FileImporterBibTeX importer;
         FileExporterBibTeX exporter;
         const File *file = importer.fromString(event->mimeData()->text());
-        if (file->count() == 1)
+        if (file != NULL && file->count() == 1)
             document()->setPlainText(exporter.toString(file->first(), file));
         else
             KTextEdit::dropEvent(event);
