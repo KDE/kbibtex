@@ -80,6 +80,8 @@ public:
 
         messageList = new KListWidget(this);
         layout->addWidget(messageList, 1, 0, 4, 4);
+
+        setupMenus();
     }
 
     void setProgress(int pos, int total) {
@@ -139,7 +141,6 @@ KBibTeXTest::KBibTeXTest(QWidget *parent)
     const int fontSize = m_testWidget->fontMetrics().width(QLatin1Char('a'));
     m_testWidget->setMinimumSize(fontSize * 96, fontSize * 48);
     setMainWidget(m_testWidget);
-    m_testWidget->setupMenus();
 
     connect(this, SIGNAL(closeClicked()), this, SLOT(aboutToQuit()));
 
