@@ -479,7 +479,7 @@ struct IdSuggestions::IdSuggestionTokenInfo IdSuggestions::evalToken(const QStri
                 || (dvEnd = token[pos + 2].digitValue()) > -1) ///< last word index finite and correctly parsed
        ) {
         result.startWord = dvStart;
-        result.endWord = dvEnd < 0 ? 0x00ffffff : dvEnd;
+        result.endWord = dvEnd;
         pos += 3;
 
         /// Optionally, the last word (e.g. last author) is explicitly requested
