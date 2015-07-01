@@ -62,8 +62,12 @@ public:
         exporter.setEncoding(QLatin1String("latex"));
         QBuffer buffer(fileView);
         buffer.open(QBuffer::WriteOnly);
-        exporter.save(&buffer, file);
+        const bool success = exporter.save(&buffer, file);
         buffer.close();
+        if (!success) {
+            delete file;
+            return QString();
+        }
 
         buffer.open(QBuffer::ReadOnly);
         QTextStream ts(&buffer);
