@@ -41,7 +41,7 @@ public:
     int numSteps, curStep;
 
     OnlineSearchIEEEXplorePrivate(OnlineSearchIEEEXplore *parent)
-            : p(parent), gatewayUrl(QLatin1String("http://ieeexplore.ieee.org/gateway/ipsSearch.jsp")) {
+            : p(parent), gatewayUrl(QLatin1String("http://ieeexplore.ieee.org/gateway/ipsSearch.jsp")), numSteps(0), curStep(0) {
         const QString xsltFilename = QLatin1String("kbibtex/ieeexplore2bibtex.xsl");
         xslt = XSLTransform::createXSLTransform(KStandardDirs::locate("data", xsltFilename));
         if (xslt == NULL)
