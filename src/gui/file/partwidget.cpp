@@ -55,6 +55,11 @@ PartWidget::PartWidget(QWidget *parent)
     /// nothing
 }
 
+PartWidget::~PartWidget()
+{
+    delete d;
+}
+
 FileView *PartWidget::fileView() {
     return d->fileView;
 }

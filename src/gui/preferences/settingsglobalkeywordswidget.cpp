@@ -56,7 +56,7 @@ public:
 
     SettingsGlobalKeywordsWidgetPrivate(SettingsGlobalKeywordsWidget *parent)
             : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName(QLatin1String("Global Keywords")) {
-        // nothing
+        setupGUI();
     }
 
     void loadState() {
@@ -101,7 +101,6 @@ int SettingsGlobalKeywordsWidget::SettingsGlobalKeywordsWidgetPrivate::keywordCo
 SettingsGlobalKeywordsWidget::SettingsGlobalKeywordsWidget(QWidget *parent)
         : SettingsAbstractWidget(parent), d(new SettingsGlobalKeywordsWidgetPrivate(this))
 {
-    d->setupGUI();
     d->loadState();
 }
 

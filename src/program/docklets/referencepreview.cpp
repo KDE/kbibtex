@@ -105,7 +105,7 @@ public:
 
     ReferencePreviewPrivate(ReferencePreview *parent)
             : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName(QLatin1String("Reference Preview Docklet")),
-          configKeyName(QLatin1String("Style")), fileView(NULL),
+          configKeyName(QLatin1String("Style")), file(NULL), fileView(NULL),
           textColor(QApplication::palette().text().color()),
           defaultFontSize(KGlobalSettings::generalFont().pointSize()),
           htmlStart("<html>\n<head>\n<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" />\n<style type=\"text/css\">\npre {\n white-space: pre-wrap;\n white-space: -moz-pre-wrap;\n white-space: -pre-wrap;\n white-space: -o-pre-wrap;\n word-wrap: break-word;\n}\n</style>\n</head>\n<body style=\"color: " + textColor.name() + "; font-size: " + QString::number(defaultFontSize) + "pt; font-family: '" + KGlobalSettings::generalFont().family() + "';\">"),
@@ -148,25 +148,25 @@ public:
     }
 
     bool saveHTML(const KUrl &url) const {
-        KTemporaryFile file;
-        file.setAutoRemove(true);
+        KTemporaryFile tempFile;
+        tempFile.setAutoRemove(true);
 
-        bool result = saveHTML(file);
+        bool result = saveHTML(tempFile);
 
         if (result) {
-            KIO::NetAccess::del(url, p); /// ignore error if file does not exist
-            result = KIO::NetAccess::file_copy(KUrl(file.fileName()), url, p);
+            KIO::NetAccess::del(url, p); /// ignore error if tempFile does not exist
+            result = KIO::NetAccess::file_copy(KUrl(tempFile.fileName()), url, p);
         }
 
         return result;
     }
 
-    bool saveHTML(KTemporaryFile &file) const {
-        if (file.open()) {
-            QTextStream ts(&file);
+    bool saveHTML(KTemporaryFile &tempFile) const {
+        if (tempFile.open()) {
+            QTextStream ts(&tempFile);
             ts.setCodec("utf-8");
             ts << QString(htmlText).replace(QRegExp("<a[^>]+href=\"kbibtex:[^>]+>([^<]+)</a>"), "\\1");
-            file.close();
+            tempFile.close();
             return true;
         }
 

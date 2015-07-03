@@ -65,6 +65,11 @@ Tags::Tags(API *api, QObject *parent)
     d->requestZoteroUrl(url);
 }
 
+Tags::~Tags()
+{
+    delete d;
+}
+
 bool Tags::initialized() const
 {
     return d->initialized;

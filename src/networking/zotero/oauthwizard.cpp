@@ -123,6 +123,8 @@ public:
         qOAuth->setConsumerSecret("8bb22bb3262b5703d5b4");
         /// Set a timeout for requests (in msecs)
         qOAuth->setRequestTimeout(10000);
+
+        setupGUI();
     }
 
     ~Private() {
@@ -230,7 +232,7 @@ public:
 OAuthWizard::OAuthWizard(QWidget *parent)
         : QWizard(parent), d(new OAuthWizard::Private(this))
 {
-    d->setupGUI();
+    /// nothing
 }
 
 OAuthWizard::~OAuthWizard()

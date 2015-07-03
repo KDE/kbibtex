@@ -134,8 +134,8 @@ public:
     }
 
     bool writeEntry(QIODevice *iodevice, const Entry &entry) {
-        BibTeXEntries *be = BibTeXEntries::self();
-        BibTeXFields *bf = BibTeXFields::self();
+        const BibTeXEntries *be = BibTeXEntries::self();
+        const BibTeXFields *bf = BibTeXFields::self();
         EncoderLaTeX *laTeXEncoder = EncoderLaTeX::instance();
 
         /// write start of a entry (entry type and id) in plain ASCII
@@ -178,7 +178,7 @@ public:
     }
 
     bool writeMacro(QIODevice *iodevice, const Macro &macro) {
-        BibTeXEntries *be = BibTeXEntries::self();
+        const BibTeXEntries *be = BibTeXEntries::self();
 
         QString text = p->internalValueToBibTeX(macro.value(), QString(), leUTF8);
         if (protectCasing)
@@ -200,7 +200,7 @@ public:
     }
 
     bool writeComment(QIODevice *iodevice, const Comment &comment) {
-        BibTeXEntries *be = BibTeXEntries::self();
+        const BibTeXEntries *be = BibTeXEntries::self();
 
         QString text = comment.text() ;
 
@@ -235,7 +235,7 @@ public:
     }
 
     bool writePreamble(QIODevice *iodevice, const Preamble &preamble) {
-        BibTeXEntries *be = BibTeXEntries::self();
+        const BibTeXEntries *be = BibTeXEntries::self();
 
         iodevice->putChar('@');
         iodevice->write(be->format(QLatin1String("Preamble"), keywordCasing).toLatin1().data());

@@ -51,7 +51,22 @@ public:
             : p(parent), isReadOnly(false), percent(-1.0), maxNumberOfStars(mnos),
           unsetStarsText(i18n("Not set"))
     {
-        /// nothing
+        QHBoxLayout *layout = new QHBoxLayout(p);
+        spacing = qMax(layout->spacing(), 8);
+        layout->setContentsMargins(0, 0, 0, 0);
+
+        labelPercent = new QLabel(p);
+        layout->addWidget(labelPercent, 0, Qt::AlignRight | Qt::AlignVCenter);
+        QFontMetrics fm(labelPercent->fontMetrics());
+        labelPercent->setFixedWidth(fm.width(unsetStarsText));
+        labelPercent->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+        labelPercent->setText(unsetStarsText);
+
+        layout->addStretch(1);
+
+        clearButton = new KPushButton(KIcon("edit-clear-locationbar-rtl"), QString(), p);
+        layout->addWidget(clearButton, 0, Qt::AlignRight | Qt::AlignVCenter);
+        connect(clearButton, SIGNAL(clicked()), p, SLOT(clear()));
     }
 
     QRect starsInside() const
@@ -66,23 +81,6 @@ const int StarRating::Private::paintMargin = 2;
 StarRating::StarRating(int maxNumberOfStars, QWidget *parent)
         : QWidget(parent), d(new Private(maxNumberOfStars, this))
 {
-    QHBoxLayout *layout = new QHBoxLayout(this);
-    d->spacing = qMax(layout->spacing(), 8);
-    layout->setContentsMargins(0, 0, 0, 0);
-
-    d->labelPercent = new QLabel(this);
-    layout->addWidget(d->labelPercent, 0, Qt::AlignRight | Qt::AlignVCenter);
-    QFontMetrics fm(d->labelPercent->fontMetrics());
-    d->labelPercent->setFixedWidth(fm.width(d->unsetStarsText));
-    d->labelPercent->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
-    d->labelPercent->setText(d->unsetStarsText);
-
-    layout->addStretch(1);
-
-    d->clearButton = new KPushButton(KIcon("edit-clear-locationbar-rtl"), QString(), this);
-    layout->addWidget(d->clearButton, 0, Qt::AlignRight | Qt::AlignVCenter);
-    connect(d->clearButton, SIGNAL(clicked()), this, SLOT(clear()));
-
     QTimer::singleShot(250, this, SLOT(buttonHeight()));
 
     setMouseTracking(true);

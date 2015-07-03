@@ -43,6 +43,11 @@ ItalicTextItemModel::ItalicTextItemModel(QObject *parent)
     /// nothing
 }
 
+ItalicTextItemModel::~ItalicTextItemModel()
+{
+    delete d;
+}
+
 void ItalicTextItemModel::addItem(const QString &a, const QString &b)
 {
     /// Store both arguments in a pair of strings,

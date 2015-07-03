@@ -57,7 +57,7 @@ public:
 
     SettingsFileExporterWidgetPrivate(SettingsFileExporterWidget *parent)
             : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))) {
-        // nothing
+        setupGUI();
     }
 
     void loadState() {
@@ -147,7 +147,8 @@ public:
 
         connect(comboBoxBackupScope, SIGNAL(currentIndexChanged(int)), p, SLOT(updateGUI()));
     }
-    void configGroup(QString arg1, Preferences::BackupScope arg2);
+
+    // void configGroup(QString arg1, Preferences::BackupScope arg2);
 };
 
 const QString SettingsFileExporterWidget::SettingsFileExporterWidgetPrivate::citeCmdToLabel = QLatin1String("\\%1{") + QChar(0x2026) + QChar('}');
@@ -155,7 +156,6 @@ const QString SettingsFileExporterWidget::SettingsFileExporterWidgetPrivate::cit
 SettingsFileExporterWidget::SettingsFileExporterWidget(QWidget *parent)
         : SettingsAbstractWidget(parent), d(new SettingsFileExporterWidgetPrivate(this))
 {
-    d->setupGUI();
     d->loadState();
 }
 

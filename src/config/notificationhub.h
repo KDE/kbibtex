@@ -53,6 +53,7 @@ private:
     static NotificationHub *getHub();
 
     NotificationHub();
+    ~NotificationHub();
 };
 
 #endif // CONFIG_NOTIFICATIONHUB_H

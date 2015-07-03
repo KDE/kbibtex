@@ -60,9 +60,10 @@ public:
 
     Private(const QString &n, BasicFileView *parent)
             : p(parent), storedColumnCount(BibTeXFields::self()->count()), name(n),
-              config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))),
-              configGroupName(QLatin1String("BibliographyView")),
-              configHeaderState(QLatin1String("HeaderState_%1")) {
+          config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))),
+          configGroupName(QLatin1String("BibliographyView")),
+          configHeaderState(QLatin1String("HeaderState_%1")),
+          fileModel(NULL), sortFilterProxyModel(NULL) {
         /// Allocate memory for headerProperty structure
         headerProperty = (struct HeaderProperty *)calloc(1, sizeof(struct HeaderProperty));
         headerProperty->columnCount = BibTeXFields::self()->count();
@@ -87,7 +88,9 @@ public:
         headerProperty->sumWidths = 0;
         headerProperty->sortedColumn = -1;
         int col = 0;
-        foreach(const FieldDescription *fd, *BibTeXFields::self()) {
+        const BibTeXFields *bf = BibTeXFields::self();
+        for (BibTeXFields::ConstIterator it = bf->constBegin(); it != bf->constEnd(); ++it) {
+            const FieldDescription *fd = *it;
             headerProperty->columns[col].isHidden = !fd->defaultVisible;
             headerProperty->columns[col].width = fd->defaultWidth;
             headerProperty->columns[col].visualIndex = col;
@@ -109,6 +112,10 @@ public:
         headerProperty->sumWidths = 0;
         for (int col = 0; col < headerProperty->columnCount; ++col)
             headerProperty->sumWidths += headerProperty->columns[col].isHidden ? 0 : headerProperty->columns[col].width;
+        if (headerProperty->sumWidths == 0) {
+            kWarning() << "headerProperty->sumWidths is zero, cannot apply header properties";
+            return;
+        }
 
         for (int col = 0; col < headerProperty->columnCount; ++col) {
             p->setColumnHidden(col, headerProperty->columns[col].isHidden);
@@ -152,8 +159,13 @@ public:
         headerProperty->sortedColumn = p->header()->sortIndicatorSection();
         headerProperty->sortOrder = p->header()->sortIndicatorOrder();
 
-        Q_ASSERT(headerProperty->sumWidths > 0);
-        Q_ASSERT(countVisible > 0);
+        if (headerProperty->sumWidths == 0) {
+            kWarning() << "headerProperty->sumWidths is zero, cannot update header properties";
+            return;
+        } else if (countVisible == 0) {
+            kWarning() << "countVisible is zero, cannot update header properties";
+            return;
+        }
         const int hiddenColumnWidth = headerProperty->sumWidths / countVisible;
         for (int col = 0; col < headerProperty->columnCount; ++col)
             if (headerProperty->columns[col].isHidden)
@@ -164,7 +176,9 @@ public:
         KConfigGroup configGroup(config, configGroupName);
         headerProperty->sumWidths = 0;
         int col = 0;
-        foreach(const FieldDescription *fd, *BibTeXFields::self()) {
+        const BibTeXFields *bf = BibTeXFields::self();
+        for (BibTeXFields::ConstIterator it = bf->constBegin(); it != bf->constEnd(); ++it) {
+            const FieldDescription *fd = *it;
             headerProperty->columns[col].isHidden = configGroup.readEntry(configHeaderState.arg(name).append(QString::number(col)).append(QLatin1String("IsHidden")), !fd->defaultVisible);
             headerProperty->columns[col].width = configGroup.readEntry(configHeaderState.arg(name).append(QString::number(col)).append(QLatin1String("Width")), fd->defaultWidth);
             headerProperty->columns[col].visualIndex = configGroup.readEntry(configHeaderState.arg(name).append(QString::number(col)).append(QLatin1String("VisualIndex")), col);
@@ -211,8 +225,13 @@ public:
                 }
             }
 
-            Q_ASSERT(headerProperty->sumWidths > 0);
-            Q_ASSERT(countVisible > 0);
+            if (headerProperty->sumWidths == 0) {
+                kWarning() << "headerProperty->sumWidths is zero, cannot set column state";
+                return;
+            } else if (countVisible == 0) {
+                kWarning() << "countVisible is zero, cannot set column state";
+                return;
+            }
             const int hiddenColumnWidth = headerProperty->sumWidths / countVisible;
             headerProperty->columns[column].width = hiddenColumnWidth;
             headerProperty->sumWidths += hiddenColumnWidth;
@@ -248,7 +267,9 @@ BasicFileView::BasicFileView(const QString &name, QWidget *parent)
 
     /// build context menu for header to show/hide single columns
     int col = 0;
-    foreach(const FieldDescription *fd, *BibTeXFields::self()) {
+    const BibTeXFields *bf = BibTeXFields::self();
+    for (BibTeXFields::ConstIterator it = bf->constBegin(); it != bf->constEnd(); ++it) {
+        const FieldDescription *fd = *it;
         KAction *action = new KAction(fd->label, header());
         action->setData(col);
         action->setCheckable(true);

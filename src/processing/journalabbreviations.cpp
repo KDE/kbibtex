@@ -100,6 +100,11 @@ JournalAbbreviations::JournalAbbreviations()
     /// nothing
 }
 
+JournalAbbreviations::~JournalAbbreviations()
+{
+    delete d;
+}
+
 JournalAbbreviations *JournalAbbreviations::self() {
     if (instance == NULL)
         instance = new JournalAbbreviations();

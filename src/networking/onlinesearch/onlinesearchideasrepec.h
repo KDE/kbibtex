@@ -29,6 +29,7 @@ class KBIBTEXNETWORKING_EXPORT OnlineSearchIDEASRePEc : public OnlineSearchAbstr
 
 public:
     explicit OnlineSearchIDEASRePEc(QWidget *parent);
+    ~OnlineSearchIDEASRePEc();
 
     virtual void startSearch();
     virtual void startSearch(const QMap<QString, QString> &query, int numResults);

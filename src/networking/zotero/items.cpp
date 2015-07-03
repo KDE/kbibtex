@@ -70,6 +70,11 @@ Items::Items(API *api, QObject *parent)
     /// nothing
 }
 
+Items::~Items()
+{
+    delete d;
+}
+
 void Items::retrieveItemsByCollection(const QString &collection)
 {
     KUrl url = d->api->baseUrl();

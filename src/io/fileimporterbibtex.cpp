@@ -322,8 +322,8 @@ Preamble *FileImporterBibTeX::readPreambleElement()
 
 Entry *FileImporterBibTeX::readEntryElement(const QString &typeString)
 {
-    BibTeXEntries *be = BibTeXEntries::self();
-    BibTeXFields *bf = BibTeXFields::self();
+    const BibTeXEntries *be = BibTeXEntries::self();
+    const BibTeXFields *bf = BibTeXFields::self();
     EncoderLaTeX *encoder = EncoderLaTeX::instance();
 
     Token token = nextToken();

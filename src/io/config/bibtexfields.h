@@ -56,14 +56,13 @@ uint qHash(const FieldDescription &a);
 class KBIBTEXIO_EXPORT BibTeXFields : public QList<FieldDescription *>
 {
 public:
-    // FIXME destructor seems to crash KBibTeX ...
-    // virtual ~BibTeXFields();
+    ~BibTeXFields();
 
     /**
      * Only one instance of this class has to be used
      * @return the class's singleton
      */
-    static BibTeXFields *self();
+    static const BibTeXFields *self();
 
     void save();
     void resetToDefaults(const QString &treeViewName);

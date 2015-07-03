@@ -201,7 +201,9 @@ FilterBar::FilterBar(QWidget *parent)
     d->comboBoxField->addItem(i18n("any field"), QVariant());
     d->comboBoxField->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 
-    foreach(const FieldDescription *fd, *BibTeXFields::self()) {
+    const BibTeXFields *bf = BibTeXFields::self();
+    for (BibTeXFields::ConstIterator it = bf->constBegin(); it != bf->constEnd(); ++it) {
+        const FieldDescription *fd = *it;
         if (fd->upperCamelCaseAlt.isEmpty())
             d->comboBoxField->addItem(fd->label, fd->upperCamelCase);
     }

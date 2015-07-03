@@ -89,6 +89,11 @@ Collection::Collection(API *api, QObject *parent)
     d->requestZoteroUrl(url);
 }
 
+Collection::~Collection()
+{
+    delete d;
+}
+
 bool Collection::initialized() const
 {
     return d->initialized;
