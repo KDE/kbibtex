@@ -38,6 +38,7 @@
 #include <QDialog>
 #include <QDialogButtonBox>
 #include <QPushButton>
+#include <QTemporaryFile>
 
 #include <KMessageBox> // FIXME deprecated
 #include <KLocalizedString>
@@ -48,7 +49,6 @@
 #include <KToggleAction>
 #include <KSharedConfig>
 #include <KConfigGroup>
-#include <KTemporaryFile>
 #include <KRun>
 #include <KPluginFactory>
 #include <KIO/StatJob>
