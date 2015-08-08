@@ -581,6 +581,7 @@ public:
 KBibTeXPart::KBibTeXPart(QWidget *parentWidget, QObject *parent, const QVariantList& args)
         : KParts::ReadWritePart(parent), d(new KBibTeXPartPrivate(this))
 {
+    Q_UNUSED(args)
     // FIXME setComponentData(KBibTeXPartFactory::componentData(), false);
 
     d->partWidget = new PartWidget(parentWidget);
