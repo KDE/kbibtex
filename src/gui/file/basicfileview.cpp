@@ -21,6 +21,7 @@
 #include <QScrollBar>
 #include <QKeyEvent>
 #include <QAction>
+#include <QDebug>
 
 #include <KConfigGroup>
 #include <KLocalizedString>
@@ -110,7 +111,7 @@ public:
         for (int col = 0; col < headerProperty->columnCount; ++col)
             headerProperty->sumWidths += headerProperty->columns[col].isHidden ? 0 : headerProperty->columns[col].width;
         if (headerProperty->sumWidths == 0) {
-            kWarning() << "headerProperty->sumWidths is zero, cannot apply header properties";
+            qWarning() << "headerProperty->sumWidths is zero, cannot apply header properties";
             return;
         }
 
@@ -157,10 +158,10 @@ public:
         headerProperty->sortOrder = p->header()->sortIndicatorOrder();
 
         if (headerProperty->sumWidths == 0) {
-            kWarning() << "headerProperty->sumWidths is zero, cannot update header properties";
+            qWarning() << "headerProperty->sumWidths is zero, cannot update header properties";
             return;
         } else if (countVisible == 0) {
-            kWarning() << "countVisible is zero, cannot update header properties";
+            qWarning() << "countVisible is zero, cannot update header properties";
             return;
         }
         const int hiddenColumnWidth = headerProperty->sumWidths / countVisible;
@@ -221,10 +222,10 @@ public:
             }
 
             if (headerProperty->sumWidths == 0) {
-                kWarning() << "headerProperty->sumWidths is zero, cannot set column state";
+                qWarning() << "headerProperty->sumWidths is zero, cannot set column state";
                 return;
             } else if (countVisible == 0) {
-                kWarning() << "countVisible is zero, cannot set column state";
+                qWarning() << "countVisible is zero, cannot set column state";
                 return;
             }
             const int hiddenColumnWidth = headerProperty->sumWidths / countVisible;
