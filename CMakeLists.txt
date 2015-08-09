@@ -1,10 +1,6 @@
+cmake_minimum_required(VERSION 2.8.9)
 project(
     kbibtex
-)
-
-cmake_minimum_required(
-    VERSION
-    2.6
 )
 
 set(
