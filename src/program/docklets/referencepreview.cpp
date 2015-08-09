@@ -166,13 +166,13 @@ public:
     }
 
     bool saveHTML(const QUrl &url) const {
-        QTemporaryFile file;
-        file.setAutoRemove(true);
+        QTemporaryFile tempFile;
+        tempFile.setAutoRemove(true);
 
-        bool result = saveHTML(file);
+        bool result = saveHTML(tempFile);
 
         if (result) {
-            KIO::CopyJob *copyJob = KIO::copy(QUrl::fromLocalFile(file.fileName()), url, KIO::Overwrite);
+            KIO::CopyJob *copyJob = KIO::copy(QUrl::fromLocalFile(tempFile.fileName()), url, KIO::Overwrite);
             KJobWidgets::setWindow(copyJob, p);
             result = copyJob->exec();
         }
@@ -180,12 +180,12 @@ public:
         return result;
     }
 
-    bool saveHTML(QTemporaryFile &file) const {
-        if (file.open()) {
-            QTextStream ts(&file);
+    bool saveHTML(QTemporaryFile &tempFile) const {
+        if (tempFile.open()) {
+            QTextStream ts(&tempFile);
             ts.setCodec("utf-8");
             ts << QString(htmlText).replace(QRegExp("<a[^>]+href=\"kbibtex:[^>]+>([^<]+)</a>"), "\\1");
-            file.close();
+            tempFile.close();
             return true;
         }
 
