@@ -55,7 +55,6 @@
 #include <kio/jobclasses.h>
 #include <kio/job.h>
 #include <kio/jobuidelegate.h>
-#include <KMenuBar>
 #include <KToolBar>
 #include <KActionCollection>
 #include <KSharedConfig>
