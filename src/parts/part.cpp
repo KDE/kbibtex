@@ -91,7 +91,7 @@
 #include "browserextension.h"
 
 K_PLUGIN_FACTORY(KBibTeXPartFactory, registerPlugin<KBibTeXPart>();)
-K_EXPORT_PLUGIN(KBibTeXPartFactory("KBibTeXPart"))
+// FIXME K_EXPORT_PLUGIN(KBibTeXPartFactory("KBibTeXPart"))
 
 static const char RCFileName[] = "kbibtexpartui.rc";
 static const int smEntry = 1;
