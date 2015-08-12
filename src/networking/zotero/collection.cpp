@@ -22,9 +22,9 @@
 #include <QVector>
 #include <QNetworkReply>
 #include <QXmlStreamReader>
+#include <QDebug>
 
-#include <KDebug>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include "api.h"
 
@@ -55,9 +55,9 @@ public:
     QHash<QString, QString> collectionToParent;
     QHash<QString, QVector<QString> > collectionToChildren;
 
-    QNetworkReply *requestZoteroUrl(const KUrl &url) {
+    QNetworkReply *requestZoteroUrl(const QUrl &url) {
         busy = true;
-        KUrl internalUrl = url;
+        QUrl internalUrl = url;
         api->addLimitToUrl(internalUrl);
         QNetworkRequest request = api->request(internalUrl);
         QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
@@ -68,12 +68,12 @@ public:
     void runNextInDownloadQueue() {
         if (!downloadQueue.isEmpty()) {
             const QString head = downloadQueue.dequeue();
-            KUrl url = api->baseUrl();
-            url.addPath(QString(QLatin1String("/collections/%1/collections")).arg(head));
+            QUrl url = api->baseUrl();
+            url = url.adjusted(QUrl::StripTrailingSlash);
+            url.setPath(url.path() + '/' + (QString(QLatin1String("/collections/%1/collections")).arg(head)));
             requestZoteroUrl(url);
         } else {
             initialized = true;
-            kDebug() << "Queue is empty, number of found collections:" << collectionToLabel.count();
             p->emitFinishedLoading();
         }
     }
@@ -84,8 +84,9 @@ Collection::Collection(API *api, QObject *parent)
 {
     d->collectionToLabel[top] = i18n("Library");
 
-    KUrl url = api->baseUrl();
-    url.addPath(QLatin1String("/collections/top"));
+    QUrl url = api->baseUrl();
+    url = url.adjusted(QUrl::StripTrailingSlash);
+    url.setPath(url.path() + '/' + (QLatin1String("/collections/top")));
     d->requestZoteroUrl(url);
 }
 
@@ -204,7 +205,7 @@ void Collection::finishedFetchingCollection()
         } else
             d->runNextInDownloadQueue();
     } else {
-        kWarning() << reply->errorString(); ///< something went wrong
+        qWarning() << reply->errorString(); ///< something went wrong
         d->initialized = false;
         emitFinishedLoading();
     }

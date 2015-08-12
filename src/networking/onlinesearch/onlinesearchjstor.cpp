@@ -19,9 +19,10 @@
 
 #include <QNetworkRequest>
 #include <QNetworkReply>
+#include <QDebug>
+#include <QUrlQuery>
 
-#include <KLocale>
-#include <KDebug>
+#include <KLocalizedString>
 
 #include "internalnetworkaccessmanager.h"
 #include "iocommon.h"
@@ -35,7 +36,7 @@ private:
 public:
     int numFoundResults, curStep, numSteps;
     static const QString jstorBaseUrl;
-    KUrl queryUrl;
+    QUrl queryUrl;
 
     OnlineSearchJStorPrivate(OnlineSearchJStor */* UNUSED parent*/)
         : /* UNUSED p(parent), */ numFoundResults(0), curStep(0), numSteps(0)
@@ -66,40 +67,42 @@ void OnlineSearchJStor::startSearch(const QMap<QString, QString> &query, int num
 
     /// Build search URL, to be used in the second step
     /// after fetching the start page
-    d->queryUrl = KUrl(d->jstorBaseUrl);
+    d->queryUrl = QUrl(d->jstorBaseUrl);
+    QUrlQuery q(d->queryUrl);
     d->queryUrl.setPath("/action/doAdvancedSearch");
-    d->queryUrl.addQueryItem("Search", "Search");
-    d->queryUrl.addQueryItem("wc", "on"); /// include external references, too
-    d->queryUrl.addQueryItem("la", ""); /// no specific language
-    d->queryUrl.addQueryItem("jo", ""); /// no specific journal
-    d->queryUrl.addQueryItem("Search", "Search");
-    d->queryUrl.addQueryItem("hp", QString::number(numResults)); /// hits per page
+    q.addQueryItem("Search", "Search");
+    q.addQueryItem("wc", "on"); /// include external references, too
+    q.addQueryItem("la", ""); /// no specific language
+    q.addQueryItem("jo", ""); /// no specific journal
+    q.addQueryItem("Search", "Search");
+    q.addQueryItem("hp", QString::number(numResults)); /// hits per page
     int queryNumber = 0;
     QStringList elements = splitRespectingQuotationMarks(query[queryKeyTitle]);
     foreach(const QString &element, elements) {
-        if (queryNumber > 0) d->queryUrl.addQueryItem(QString("c%1").arg(queryNumber), "AND"); ///< join search terms with an AND operation
-        d->queryUrl.addQueryItem(QString("f%1").arg(queryNumber), "ti");
-        d->queryUrl.addQueryItem(QString("q%1").arg(queryNumber), element);
+        if (queryNumber > 0) q.addQueryItem(QString("c%1").arg(queryNumber), "AND"); ///< join search terms with an AND operation
+        q.addQueryItem(QString("f%1").arg(queryNumber), "ti");
+        q.addQueryItem(QString("q%1").arg(queryNumber), element);
         ++queryNumber;
     }
     elements = splitRespectingQuotationMarks(query[queryKeyAuthor]);
     foreach(const QString &element, elements) {
-        if (queryNumber > 0) d->queryUrl.addQueryItem(QString("c%1").arg(queryNumber), "AND"); ///< join search terms with an AND operation
-        d->queryUrl.addQueryItem(QString("f%1").arg(queryNumber), "au");
-        d->queryUrl.addQueryItem(QString("q%1").arg(queryNumber), element);
+        if (queryNumber > 0) q.addQueryItem(QString("c%1").arg(queryNumber), "AND"); ///< join search terms with an AND operation
+        q.addQueryItem(QString("f%1").arg(queryNumber), "au");
+        q.addQueryItem(QString("q%1").arg(queryNumber), element);
         ++queryNumber;
     }
     elements = splitRespectingQuotationMarks(query[queryKeyFreeText]);
     foreach(const QString &element, elements) {
-        if (queryNumber > 0) d->queryUrl.addQueryItem(QString("c%1").arg(queryNumber), "AND"); ///< join search terms with an AND operation
-        d->queryUrl.addQueryItem(QString("f%1").arg(queryNumber), "all");
-        d->queryUrl.addQueryItem(QString("q%1").arg(queryNumber), element);
+        if (queryNumber > 0) q.addQueryItem(QString("c%1").arg(queryNumber), "AND"); ///< join search terms with an AND operation
+        q.addQueryItem(QString("f%1").arg(queryNumber), "all");
+        q.addQueryItem(QString("q%1").arg(queryNumber), element);
         ++queryNumber;
     }
     if (!query[queryKeyYear].isEmpty()) {
-        d->queryUrl.addQueryItem("sd", query[queryKeyYear]);
-        d->queryUrl.addQueryItem("ed", query[queryKeyYear]);
+        q.addQueryItem("sd", query[queryKeyYear]);
+        q.addQueryItem("ed", query[queryKeyYear]);
     }
+    d->queryUrl.setQuery(q);
 
     QNetworkRequest request(d->jstorBaseUrl);
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
@@ -129,9 +132,9 @@ OnlineSearchQueryFormAbstract *OnlineSearchJStor::customWidget(QWidget *)
     return NULL;
 }
 
-KUrl OnlineSearchJStor::homepage() const
+QUrl OnlineSearchJStor::homepage() const
 {
-    return KUrl("http://www.jstor.org/");
+    return QUrl("http://www.jstor.org/");
 }
 
 void OnlineSearchJStor::cancel()
@@ -145,7 +148,7 @@ void OnlineSearchJStor::doneFetchingStartPage()
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
-    KUrl redirUrl;
+    QUrl redirUrl;
     if (handleErrors(reply, redirUrl)) {
         if (redirUrl.isValid()) {
             ++d->numSteps;
@@ -162,7 +165,7 @@ void OnlineSearchJStor::doneFetchingStartPage()
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingResultPage()));
         }
     } else
-        kDebug() << "url was" << reply->url().toString();
+        qWarning() << "url was" << reply->url().toString();
 }
 
 void OnlineSearchJStor::doneFetchingResultPage()
@@ -188,14 +191,16 @@ void OnlineSearchJStor::doneFetchingResultPage()
         } else {
             /// Build search URL, to be used in the second step
             /// after fetching the start page
-            KUrl bibTeXUrl = KUrl(d->jstorBaseUrl);
+            QUrl bibTeXUrl = QUrl(d->jstorBaseUrl);
             bibTeXUrl.setPath("/action/downloadCitation");
-            bibTeXUrl.addQueryItem("userAction", "export");
-            bibTeXUrl.addQueryItem("format", "bibtex"); /// request BibTeX format
-            bibTeXUrl.addQueryItem("include", "abs"); /// include abstracts
+            QUrlQuery query(bibTeXUrl);
+            query.addQueryItem("userAction", "export");
+            query.addQueryItem("format", "bibtex"); /// request BibTeX format
+            query.addQueryItem("include", "abs"); /// include abstracts
             foreach(const QString &doi, uniqueDOIs) {
-                bibTeXUrl.addQueryItem("doi", doi);
+                query.addQueryItem("doi", doi);
             }
+            bibTeXUrl.setQuery(query);
 
             QNetworkRequest request(bibTeXUrl);
             QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request);
@@ -203,7 +208,7 @@ void OnlineSearchJStor::doneFetchingResultPage()
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingBibTeXCode()));
         }
     } else
-        kDebug() << "url was" << reply->url().toString();
+        qWarning() << "url was" << reply->url().toString();
 }
 
 void OnlineSearchJStor::doneFetchingBibTeXCode()
@@ -232,7 +237,7 @@ void OnlineSearchJStor::doneFetchingBibTeXCode()
         emit progress(d->numSteps, d->numSteps);
         emit stoppedSearch(d->numFoundResults > 0 ? resultNoError : resultUnspecifiedError);
     } else
-        kDebug() << "url was" << reply->url().toString();
+        qWarning() << "url was" << reply->url().toString();
 }
 
 void OnlineSearchJStor::sanitizeEntry(QSharedPointer<Entry> entry)
@@ -279,7 +284,7 @@ void OnlineSearchJStor::sanitizeEntry(QSharedPointer<Entry> entry)
         entry->insert(Entry::ftMonth, v);
     } else {
         /// this case happens if the field only contains a year
-        kDebug() << "Cannot extract month/season from date" << formattedDate;
+        //qDebug() << "Cannot extract month/season from date" << formattedDate;
     }
 
     /// page field may start with "pp. ", remove that

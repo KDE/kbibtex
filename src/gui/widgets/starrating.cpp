@@ -1,5 +1,5 @@
 /*****************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de>   *
+ *   Copyright (C) 2004-2015 by Thomas Fischer <fischer@unix-ag.uni-kl.de>   *
  *                                                                           *
  *                                                                           *
  *   This program is free software; you can redistribute it and/or modify    *
@@ -25,10 +25,9 @@
 #include <QMouseEvent>
 #include <QPainter>
 #include <QTimer>
+#include <QPushButton>
 
-#include <KLocale>
-#include <KPushButton>
-#include <KDebug>
+#include <KLocalizedString>
 
 class StarRating::Private
 {
@@ -44,7 +43,7 @@ public:
     int spacing;
     const QString unsetStarsText;
     QLabel *labelPercent;
-    KPushButton *clearButton;
+    QPushButton *clearButton;
     QPoint mouseLocation;
 
     Private(int mnos, StarRating *parent)
@@ -64,7 +63,7 @@ public:
 
         layout->addStretch(1);
 
-        clearButton = new KPushButton(KIcon("edit-clear-locationbar-rtl"), QString(), p);
+        clearButton = new QPushButton(QIcon::fromTheme("edit-clear-locationbar-rtl"), QString(), p);
         layout->addWidget(clearButton, 0, Qt::AlignRight | Qt::AlignVCenter);
         connect(clearButton, SIGNAL(clicked()), p, SLOT(clear()));
     }

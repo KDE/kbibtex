@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2015 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                              and contributors                           *
  *                                                                         *
  *   Contributions to this file were made by                               *
@@ -23,26 +23,35 @@
 
 #include <QFrame>
 #include <QBuffer>
-#ifdef HAVE_QTWEBKIT // krazy:exclude=cpp
-#include <QWebView>
-#else // HAVE_QTWEBKIT
-#include <QLabel>
-#endif // HAVE_QTWEBKIT
+#ifdef HAVE_WEBENGINEWIDGETS
+#include <QtWebEngineWidgets/QtWebEngineWidgets>
+#else // HAVE_WEBENGINEWIDGETS
+#ifdef HAVE_WEBKITWIDGETS
+#include <QtWebKitWidgets/QtWebKitWidgets>
+#else // HAVE_WEBKITWIDGETS
+#include <QTextEdit>
+#include <QTextDocument>
+#endif // HAVE_WEBKITWIDGETS
+#endif // HAVE_WEBENGINEWIDGETS
 #include <QLayout>
 #include <QApplication>
+#include <QStandardPaths>
 #include <QTextStream>
+#include <QTemporaryFile>
 #include <QPalette>
+#include <QMimeType>
+#include <QDebug>
+#include <QFileDialog>
+#include <QPushButton>
+#include <QFontDatabase>
 
-#include <KTemporaryFile>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KComboBox>
-#include <KStandardDirs>
-#include <KPushButton>
-#include <KFileDialog>
-#include <KDebug>
-#include <KMimeType>
 #include <KRun>
-#include <KIO/NetAccess>
+#include <KIO/CopyJob>
+#include <KJobWidgets>
+#include <KSharedConfig>
+#include <KConfigGroup>
 
 #include "fileexporterbibtex.h"
 #include "fileexporterbibtex2html.h"
@@ -86,14 +95,18 @@ public:
     const QString configGroupName;
     const QString configKeyName;
 
-    KPushButton *buttonOpen, *buttonSaveAsHTML;
+    QPushButton *buttonOpen, *buttonSaveAsHTML;
     QString htmlText;
-    QUrl baseUrl;
-#ifdef HAVE_QTWEBKIT // krazy:exclude=cpp
-    QWebView *webView;
-#else // HAVE_QTWEBKIT
-    QLabel *messageLabel;
-#endif // HAVE_QTWEBKIT
+#ifdef HAVE_WEBENGINEWIDGETS
+    QWebEngineView *htmlView;
+#else // HAVE_WEBENGINEWIDGETS
+#ifdef HAVE_WEBKITWIDGETS
+    QWebView *htmlView;
+#else // HAVE_WEBKITWIDGETS
+    QTextDocument *htmlDocument;
+    QTextEdit *htmlView;
+#endif // HAVE_WEBKITWIDGETS
+#endif // HAVE_WEBENGINEWIDGETS
     KComboBox *comboBox;
     QSharedPointer<const Element> element;
     const File *file;
@@ -107,8 +120,8 @@ public:
             : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName(QLatin1String("Reference Preview Docklet")),
           configKeyName(QLatin1String("Style")), file(NULL), fileView(NULL),
           textColor(QApplication::palette().text().color()),
-          defaultFontSize(KGlobalSettings::generalFont().pointSize()),
-          htmlStart("<html>\n<head>\n<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" />\n<style type=\"text/css\">\npre {\n white-space: pre-wrap;\n white-space: -moz-pre-wrap;\n white-space: -pre-wrap;\n white-space: -o-pre-wrap;\n word-wrap: break-word;\n}\n</style>\n</head>\n<body style=\"color: " + textColor.name() + "; font-size: " + QString::number(defaultFontSize) + "pt; font-family: '" + KGlobalSettings::generalFont().family() + "';\">"),
+          defaultFontSize(QFontDatabase::systemFont(QFontDatabase::GeneralFont).pointSize()),
+          htmlStart("<html>\n<head>\n<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" />\n<style type=\"text/css\">\npre {\n white-space: pre-wrap;\n white-space: -moz-pre-wrap;\n white-space: -pre-wrap;\n white-space: -o-pre-wrap;\n word-wrap: break-word;\n}\n</style>\n</head>\n<body style=\"color: " + textColor.name() + "; font-size: " + QString::number(defaultFontSize) + "pt; font-family: '" + QFontDatabase::systemFont(QFontDatabase::GeneralFont).family() + "';\">"),
           notAvailableMessage(htmlStart + "<p style=\"font-style: italic;\">" + i18n("No preview available") + "</p><p style=\"font-size: 90%;\">" + i18n("Reason:") + " %1</p></body></html>") {
         QGridLayout *gridLayout = new QGridLayout(p);
         gridLayout->setMargin(0);
@@ -126,42 +139,48 @@ public:
 
         QVBoxLayout *layout = new QVBoxLayout(frame);
         layout->setMargin(0);
-#ifdef HAVE_QTWEBKIT // krazy:exclude=cpp
-        webView = new QWebView(frame);
-        layout->addWidget(webView);
-        webView->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
-        connect(webView, SIGNAL(linkClicked(QUrl)), p, SLOT(linkClicked(QUrl)));
-#else // HAVE_QTWEBKIT
-        messageLabel = new QLabel(i18n("No preview available due to missing QtWebKit support on your system."), frame);
-        messageLabel->setWordWrap(true);
-        messageLabel->setAlignment(Qt::AlignCenter);
-        layout->addWidget(messageLabel);
-#endif // HAVE_QTWEBKIT
+#ifdef HAVE_WEBENGINEWIDGETS
+        htmlView = new QWebEngineView(frame);
+        connect(htmlView->page(), &QWebEnginePage::urlChanged, p, &ReferencePreview::linkClicked);
+#else // HAVE_WEBENGINEWIDGETS
+#ifdef HAVE_WEBKITWIDGETS
+        htmlView = new QWebView(frame);
+        htmlView->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
+        connect(htmlView->page(), &QWebPage::linkClicked, p, &ReferencePreview::linkClicked);
+#else // HAVE_WEBKITWIDGETS
+        htmlView = new QTextEdit(frame);
+        htmlView->setReadOnly(true);
+        htmlDocument = new QTextDocument(htmlView);
+        htmlView->setDocument(htmlDocument);
+#endif // HAVE_WEBKITWIDGETS
+#endif // HAVE_WEBENGINEWIDGETS
+        layout->addWidget(htmlView);
 
-        buttonOpen = new KPushButton(KIcon("document-open"), i18n("Open"), p);
+        buttonOpen = new QPushButton(QIcon::fromTheme("document-open"), i18n("Open"), p);
         buttonOpen->setToolTip(i18n("Open reference in web browser."));
         gridLayout->addWidget(buttonOpen, 2, 1, 1, 1);
 
-        buttonSaveAsHTML = new KPushButton(KIcon("document-save"), i18n("Save as HTML"), p);
+        buttonSaveAsHTML = new QPushButton(QIcon::fromTheme("document-save"), i18n("Save as HTML"), p);
         buttonSaveAsHTML->setToolTip(i18n("Save reference as HTML fragment."));
         gridLayout->addWidget(buttonSaveAsHTML, 2, 2, 1, 1);
     }
 
-    bool saveHTML(const KUrl &url) const {
-        KTemporaryFile tempFile;
+    bool saveHTML(const QUrl &url) const {
+        QTemporaryFile tempFile;
         tempFile.setAutoRemove(true);
 
         bool result = saveHTML(tempFile);
 
         if (result) {
-            KIO::NetAccess::del(url, p); /// ignore error if tempFile does not exist
-            result = KIO::NetAccess::file_copy(KUrl(tempFile.fileName()), url, p);
+            KIO::CopyJob *copyJob = KIO::copy(QUrl::fromLocalFile(tempFile.fileName()), url, KIO::Overwrite);
+            KJobWidgets::setWindow(copyJob, p);
+            result = copyJob->exec();
         }
 
         return result;
     }
 
-    bool saveHTML(KTemporaryFile &tempFile) const {
+    bool saveHTML(QTemporaryFile &tempFile) const {
         if (tempFile.open()) {
             QTextStream ts(&tempFile);
             ts.setCodec("utf-8");
@@ -174,7 +193,7 @@ public:
     }
 
     void loadState() {
-        static bool hasBibTeX2HTML = !KStandardDirs::findExe(QLatin1String("bibtex2html")).isEmpty();
+        static bool hasBibTeX2HTML = !QStandardPaths::findExecutable(QLatin1String("bibtex2html")).isEmpty();
 
         int styleIndex = 0;
         KConfigGroup configGroup(config, configGroupName);
@@ -215,13 +234,18 @@ ReferencePreview::~ReferencePreview()
     delete d;
 }
 
-void ReferencePreview::setHtml(const QString &html, const KUrl &baseUrl)
+void ReferencePreview::setHtml(const QString &html)
 {
     d->htmlText = QString(html).remove(QLatin1String("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"));
-    d->baseUrl = baseUrl;
-#ifdef HAVE_QTWEBKIT // krazy:exclude=cpp
-    d->webView->setHtml(html, baseUrl);
-#endif // HAVE_QTWEBKIT
+#ifdef HAVE_WEBENGINEWIDGETS
+    d->htmlView->setHtml(d->htmlText, QUrl());
+#else // HAVE_WEBENGINEWIDGETS
+#ifdef HAVE_WEBKITWIDGETS
+    d->htmlView->setHtml(d->htmlText, QUrl());
+#else // HAVE_WEBKITWIDGETS
+    d->htmlDocument->setHtml(d->htmlText);
+#endif // HAVE_WEBKITWIDGETS
+#endif // HAVE_WEBENGINEWIDGETS
     d->buttonOpen->setEnabled(true);
     d->buttonSaveAsHTML->setEnabled(true);
 }
@@ -229,17 +253,22 @@ void ReferencePreview::setHtml(const QString &html, const KUrl &baseUrl)
 void ReferencePreview::setEnabled(bool enabled)
 {
     if (enabled)
-        setHtml(d->htmlText, d->baseUrl);
+        setHtml(d->htmlText);
     else {
-#ifdef HAVE_QTWEBKIT // krazy:exclude=cpp
-        d->webView->setHtml(d->notAvailableMessage.arg(i18n("Preview disabled")), d->baseUrl);
-#endif // HAVE_QTWEBKIT
+        static const QString html = d->notAvailableMessage.arg(i18n("Preview disabled"));
+#ifdef HAVE_WEBENGINEWIDGETS
+        d->htmlView->setHtml(html, QUrl());
+#else // HAVE_WEBENGINEWIDGETS
+#ifdef HAVE_WEBKITWIDGETS
+        d->htmlView->setHtml(d->htmlText, QUrl());
+#else // HAVE_WEBKITWIDGETS
+        d->htmlDocument->setHtml(html);
+#endif // HAVE_WEBKITWIDGETS
+#endif // HAVE_WEBENGINEWIDGETS
         d->buttonOpen->setEnabled(false);
         d->buttonSaveAsHTML->setEnabled(false);
     }
-#ifdef HAVE_QTWEBKIT // krazy:exclude=cpp
-    d->webView->setEnabled(enabled);
-#endif // HAVE_QTWEBKIT
+    d->htmlView->setEnabled(enabled);
     d->comboBox->setEnabled(enabled);
 }
 
@@ -258,9 +287,16 @@ void ReferencePreview::renderHTML()
          } crossRefHandling = ignore;
 
     if (d->element.isNull()) {
-#ifdef HAVE_QTWEBKIT // krazy:exclude=cpp
-        d->webView->setHtml(d->notAvailableMessage.arg(i18n("No element selected")), d->baseUrl);
-#endif // HAVE_QTWEBKIT
+        static const QString html = d->notAvailableMessage.arg(i18n("No element selected"));
+#ifdef HAVE_WEBENGINEWIDGETS
+        d->htmlView->setHtml(html, QUrl());
+#else // HAVE_WEBENGINEWIDGETS
+#ifdef HAVE_WEBKITWIDGETS
+        d->htmlView->setHtml(html, QUrl());
+#else // HAVE_WEBKITWIDGETS
+        d->htmlDocument->setHtml(html);
+#endif // HAVE_WEBKITWIDGETS
+#endif // HAVE_WEBENGINEWIDGETS
         d->buttonOpen->setEnabled(false);
         d->buttonSaveAsHTML->setEnabled(false);
         return;
@@ -290,10 +326,10 @@ void ReferencePreview::renderHTML()
         crossRefHandling = merge;
         FileExporterXSLT *exporterXSLT = new FileExporterXSLT();
         QString filename = previewStyle.style + ".xsl";
-        exporterXSLT->setXSLTFilename(KStandardDirs::locate("data", QLatin1String("kbibtex/") + filename));
+        exporterXSLT->setXSLTFilename(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("kbibtex/") + filename));
         exporter = exporterXSLT;
     } else
-        kWarning() << "Don't know how to handle output type " << previewStyle.type;
+        qWarning() << "Don't know how to handle output type " << previewStyle.type;
 
     if (exporter != NULL) {
         QBuffer buffer(this);
@@ -327,7 +363,7 @@ void ReferencePreview::renderHTML()
         if (!exporterResult || text.isEmpty()) {
             /// something went wrong, no output ...
             text = d->notAvailableMessage.arg(i18n("No HTML output generated"));
-            kDebug() << errorLog.join("\n");
+            qDebug() << errorLog.join("\n");
         } else {
             /// beautify text
             text.replace(QLatin1String("``"), QLatin1String("&ldquo;"));
@@ -346,7 +382,7 @@ void ReferencePreview::renderHTML()
             } else if (previewStyle.type == QLatin1String("exporter") || previewStyle.type.startsWith(QLatin1String("plain_"))) {
                 /// source
                 text.prepend(QLatin1String("';\">"));
-                text.prepend(KGlobalSettings::fixedFont().family());
+                text.prepend(QFontDatabase::systemFont(QFontDatabase::FixedFont).family());
                 text.prepend(QLatin1String("<pre style=\"font-family: '"));
                 text.prepend(d->htmlStart);
                 text.append(QLatin1String("</pre></body></html>"));
@@ -376,7 +412,7 @@ void ReferencePreview::renderHTML()
             text.replace(QLatin1String("color: black;"), QString(QLatin1String("color: %1;")).arg(d->textColor.name()));
         }
 
-        setHtml(text, d->baseUrl);
+        setHtml(text);
 
         d->saveState();
     }
@@ -386,19 +422,18 @@ void ReferencePreview::renderHTML()
 
 void ReferencePreview::openAsHTML()
 {
-    KTemporaryFile file;
-    file.setSuffix(".html");
+    QTemporaryFile file(QStandardPaths::writableLocation(QStandardPaths::TempLocation) + QDir::separator() + QLatin1String("referencePreview-openAsHTML-XXXXXX.html"));
     file.setAutoRemove(false); /// let file stay alive for browser
     d->saveHTML(file);
 
     /// Ask KDE subsystem to open url in viewer matching mime type
-    KUrl url(file.fileName());
+    QUrl url(file.fileName());
     KRun::runUrl(url, QLatin1String("text/html"), this, false, false);
 }
 
 void ReferencePreview::saveAsHTML()
 {
-    KUrl url = KFileDialog::getSaveUrl(KUrl(), "text/html", this, i18n("Save as HTML"));
+    QUrl url = QFileDialog::getSaveFileUrl(this, i18n("Save as HTML"), QUrl(), QLatin1String("text/html"));
     if (url.isValid())
         d->saveHTML(url);
 }

@@ -19,7 +19,7 @@
 
 #include "kbibtexio_export.h"
 
-#include <KUrl>
+#include <QUrl>
 
 #include "fileimporter.h"
 

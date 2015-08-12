@@ -28,20 +28,19 @@
 #include <QKeyEvent>
 #include <QSplitter>
 #include <QtCore/QPointer>
+#include <QDebug>
+#include <QStandardPaths>
+#include <QPushButton>
+#include <QAction>
+#include <QDialog>
+#include <QDialogButtonBox>
 
-#include <KPushButton>
-#include <KAction>
-#include <KDialog>
 #include <KActionCollection>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KXMLGUIClient>
-#include <KStandardDirs>
 #include <kparts/part.h>
 #include <KMessageBox>
-#include <KDebug>
 #include <KLineEdit>
-
-#include <kdeversion.h>
 
 #include "fileimporterbibtex.h"
 #include "bibtexentries.h"
@@ -296,7 +295,7 @@ public:
                                     for (QList<QSharedPointer<Keyword> >::ConstIterator it = keywordList.constBegin(); it != keywordList.constEnd(); ++it)
                                         v.append(*it);
                                 } else {
-                                    kDebug() << "Not know how to set this text:" << text;
+                                    qDebug() << "Not know how to set this text:" << text;
                                 }
                             }
                         }
@@ -510,7 +509,7 @@ private:
 public:
     File *file;
     FileView *editor;
-    KPushButton *buttonNext, *buttonPrev;
+    QPushButton *buttonNext, *buttonPrev;
     QLabel *labelWhichClique;
     static const char *whichCliqueText;
 
@@ -555,9 +554,9 @@ public:
         containerLayout->addStretch(10);
         labelWhichClique = new QLabel(p);
         containerLayout->addWidget(labelWhichClique);
-        buttonPrev = new KPushButton(KIcon("go-previous"), i18n("Previous Clique"), p);
+        buttonPrev = new QPushButton(QIcon::fromTheme("go-previous"), i18n("Previous Clique"), p);
         containerLayout->addWidget(buttonPrev, 1);
-        buttonNext = new KPushButton(KIcon("go-next"), i18n("Next Clique"), p);
+        buttonNext = new QPushButton(QIcon::fromTheme("go-next"), i18n("Next Clique"), p);
         containerLayout->addWidget(buttonNext, 1);
 
         filterModel = new FilterIdFileModel(p);
@@ -639,12 +638,10 @@ public:
 FindDuplicatesUI::FindDuplicatesUI(KParts::Part *part, FileView *fileView)
         : QObject(), d(new FindDuplicatesUIPrivate(this, part, fileView))
 {
-    KAction *newAction = new KAction(KIcon("tab-duplicate"), i18n("Find Duplicates"), this);
+    QAction *newAction = new QAction(QIcon::fromTheme("tab-duplicate"), i18n("Find Duplicates"), this);
     part->actionCollection()->addAction(QLatin1String("findduplicates"), newAction);
     connect(newAction, SIGNAL(triggered()), this, SLOT(slotFindDuplicates()));
-#if KDE_IS_VERSION(4, 4, 0)
-    part->replaceXMLFile(KStandardDirs::locate("data", "kbibtex/findduplicatesui.rc"), KStandardDirs::locateLocal("data", "kbibtex/findduplicatesui.rc"), true);
-#endif
+    part->replaceXMLFile(/* read default configuration from '/usr/share/kxmlgui5/kbibtex/findduplicatesui.rc' */QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kxmlgui5/kbibtex/findduplicatesui.rc"), /* write to '~/.config/.../findduplicatesui.rc' */ QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("kbibtex/findduplicatesui.rc"), true);
 }
 
 FindDuplicatesUI::~FindDuplicatesUI()
@@ -660,8 +657,7 @@ void FindDuplicatesUI::slotFindDuplicates()
     //if (!ok) sensitivity = 4000;
     int sensitivity = 4000;
 
-    QPointer<KDialog> dlg = new KDialog(d->part->widget());
-    FindDuplicates fd(dlg, sensitivity);
+    FindDuplicates fd(d->part->widget(), sensitivity);
     /// File to be used to find duplicate in,
     /// may be only a subset of the original one if selection is used (see below)
     File *file = d->view->fileModel()->bibliographyFile();
@@ -684,15 +680,23 @@ void FindDuplicatesUI::slotFindDuplicates()
     bool gotCanceled = fd.findDuplicateEntries(file, cliques);
     if (gotCanceled) {
         if (deleteFileLater) delete file;
-        delete dlg;
         return;
     }
 
     if (cliques.isEmpty()) {
         KMessageBox::information(d->part->widget(), i18n("No duplicates were found."), i18n("No duplicates found"));
     } else {
-        MergeWidget mw(d->view->fileModel()->bibliographyFile(), cliques, dlg);
-        dlg->setMainWidget(&mw);
+        QPointer<QDialog> dlg = new QDialog(d->part->widget());
+        dlg->setWindowTitle(i18n("Merge Duplicates"));
+        QPointer<MergeWidget> mw = new MergeWidget(d->view->fileModel()->bibliographyFile(), cliques, dlg);
+        mw->layout()->setMargin(0);
+        QBoxLayout *layout = new QVBoxLayout(dlg);
+        layout->addWidget(mw);
+        QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, dlg);
+        layout->addWidget(buttonBox);
+
+        connect(buttonBox->button(QDialogButtonBox::Ok), &QPushButton::clicked, dlg, &QDialog::accept);
+        connect(buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, dlg, &QDialog::reject);
 
         if (dlg->exec() == QDialog::Accepted) {
             MergeDuplicates md(dlg);
@@ -707,8 +711,11 @@ void FindDuplicatesUI::slotFindDuplicates()
             cliques.removeFirst();
             delete ec;
         }
+
+        delete mw;
+        delete dlg;
     }
 
     if (deleteFileLater) delete file;
-    delete dlg;
+
 }

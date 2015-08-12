@@ -22,9 +22,8 @@
 #include <QUrl>
 #include <QTextStream>
 #include <QDir>
+#include <QDebug>
 
-#include <KDebug>
-#include <KLocale>
 #include <KSharedConfig>
 #include <KConfigGroup>
 
@@ -38,7 +37,7 @@ FileExporterPDF::FileExporterPDF(FileEmbedding fileEmbedding)
         : FileExporterToolchain(), m_fileEmbedding(fileEmbedding)
 {
     m_fileBasename = QLatin1String("bibtex-to-pdf");
-    m_fileStem = tempDir.name() + QDir::separator() + m_fileBasename;
+    m_fileStem = tempDir.path() + QDir::separator() + m_fileBasename;
 
     /// If there is not embedfile.sty file, disable embedding
     /// irrespective of user's wishes
@@ -67,7 +66,7 @@ void FileExporterPDF::reloadConfig()
 bool FileExporterPDF::save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog)
 {
     if (!iodevice->isWritable() && !iodevice->open(QIODevice::WriteOnly)) {
-        kDebug() << "Output device not writable";
+        qWarning() << "Output device not writable";
         return false;
     }
 
@@ -91,7 +90,7 @@ bool FileExporterPDF::save(QIODevice *iodevice, const File *bibtexfile, QStringL
         result = generatePDF(iodevice, errorLog);
 
     if (errorLog != NULL)
-        kDebug() << "errorLog" << errorLog->join(";");
+        qDebug() << "errorLog" << errorLog->join(";");
 
     iodevice->close();
     return result;
@@ -100,7 +99,7 @@ bool FileExporterPDF::save(QIODevice *iodevice, const File *bibtexfile, QStringL
 bool FileExporterPDF::save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog)
 {
     if (!iodevice->isWritable() && !iodevice->open(QIODevice::WriteOnly)) {
-        kDebug() << "Output device not writable";
+        qWarning() << "Output device not writable";
         return false;
     }
 
@@ -204,10 +203,10 @@ void FileExporterPDF::fillEmbeddedFileList(const QSharedPointer<const Element> e
     const QSharedPointer<const Entry> entry = element.dynamicCast<const Entry>();
     if (!entry.isNull()) {
         const QString title = PlainTextValue::text(entry->value(Entry::ftTitle));
-        QList<KUrl> urlList = FileInfo::entryUrls(entry.data(), bibtexfile->property(File::Url).toUrl(), FileInfo::TestExistenceYes);
-        foreach(const KUrl &url, urlList) {
+        QList<QUrl> urlList = FileInfo::entryUrls(entry.data(), bibtexfile->property(File::Url).toUrl(), FileInfo::TestExistenceYes);
+        foreach(const QUrl &url, urlList) {
             if (!url.isLocalFile()) continue;
-            const QString filename = url.pathOrUrl();
+            const QString filename = url.url(QUrl::PreferLocalFile);
             const QString basename = QFileInfo(filename).fileName();
             m_embeddedFileList.append(QString("%1|%2|%3").arg(title).arg(filename).arg(basename));
         }

@@ -17,8 +17,8 @@
 
 #include "api.h"
 
-#include <KUrl>
-#include <KDebug>
+#include <QUrl>
+#include <QUrlQuery>
 
 using namespace Zotero;
 
@@ -28,12 +28,12 @@ private:
     // UNUSED Zotero::API *p;
 
 public:
-    const KUrl apiBaseUrl;
+    const QUrl apiBaseUrl;
     int userOrGroupPrefix;
 
     Private(RequestScope requestScope, int prefix, const QString &apiKey, Zotero::API */* UNUSED parent*/)
         : // UNUSED p(parent),
-        apiBaseUrl(KUrl(QString(QLatin1String("https://api.zotero.org/%1/%2%3")).arg(requestScope == GroupRequest ? QLatin1String("groups") : QLatin1String("users")).arg(prefix).arg(apiKey.isEmpty() ? QString() : QString(QLatin1String("?key=%1")).arg(apiKey)))),
+        apiBaseUrl(QUrl(QString(QLatin1String("https://api.zotero.org/%1/%2%3")).arg(requestScope == GroupRequest ? QLatin1String("groups") : QLatin1String("users")).arg(prefix).arg(apiKey.isEmpty() ? QString() : QString(QLatin1String("?key=%1")).arg(apiKey)))),
         userOrGroupPrefix(prefix) {
         /// nothing
     }
@@ -52,14 +52,16 @@ API::~API()
     delete d;
 }
 
-void API::addLimitToUrl(KUrl &url) const
+void API::addLimitToUrl(QUrl &url) const
 {
     static const QString limitKey = QLatin1String("limit");
-    url.removeQueryItem(limitKey);
-    url.addQueryItem(limitKey, QString::number(Zotero::API::limit));
+    QUrlQuery query(url);
+    query.removeQueryItem(limitKey);
+    query.addQueryItem(limitKey, QString::number(Zotero::API::limit));
+    url.setQuery(query);
 }
 
-KUrl API::baseUrl() const
+QUrl API::baseUrl() const
 {
     return d->apiBaseUrl;
 }
@@ -69,9 +71,8 @@ int API::userOrGroupPrefix() const
     return d->userOrGroupPrefix;
 }
 
-QNetworkRequest API::request(const KUrl &url) const
+QNetworkRequest API::request(const QUrl &url) const
 {
-    kDebug() << "url=" << url.pathOrUrl();
     QNetworkRequest request(url);
     request.setRawHeader("Zotero-API-Version", "2");
     return request;

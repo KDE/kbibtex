@@ -21,21 +21,20 @@
 #include <QTimer>
 #include <QSignalMapper>
 #include <QGridLayout>
+#include <QMessageBox>
 #include <QLabel>
 #include <QPainter>
+#include <QPushButton>
 #include <QApplication>
+#include <QIcon>
+#include <QDebug>
+#include <QAction>
 
-#include <KDebug>
-#include <KLocale>
-#include <KGlobal>
-#include <KIcon>
-#include <KMimeType>
-#include <KAction>
+#include <KIconLoader>
+#include <KLocalizedString>
 #include <KActionMenu>
 #include <KDirOperator>
-#include <KPushButton>
 #include <KService>
-#include <KMessageBox>
 
 #include "kbibtexnamespace.h"
 
@@ -52,15 +51,15 @@ public:
         layout->setColumnStretch(1, 0);
         layout->setColumnStretch(2, 1);
 
-        KPushButton *buttonUp = new KPushButton(KIcon("go-up"), "", this);
+        QPushButton *buttonUp = new QPushButton(QIcon::fromTheme("go-up"), "", this);
         buttonUp->setToolTip(i18n("One level up"));
         layout->addWidget(buttonUp, 0, 0, 1, 1);
 
-        KPushButton *buttonHome = new KPushButton(KIcon("user-home"), "", this);
+        QPushButton *buttonHome = new QPushButton(QIcon::fromTheme("user-home"), "", this);
         buttonHome->setToolTip(i18n("Go to Home folder"));
         layout->addWidget(buttonHome, 0, 1, 1, 1);
 
-        dirOperator = new KDirOperator(KUrl("file:" + QDir::homePath()), this);
+        dirOperator = new KDirOperator(QUrl("file:" + QDir::homePath()), this);
         layout->addWidget(dirOperator, 1, 0, 1, 3);
         dirOperator->setView(KFile::Detail);
 
@@ -69,8 +68,8 @@ public:
     }
 };
 
-DocumentListDelegate::DocumentListDelegate(OpenFileInfoManager *openFileInfoManager, QObject *parent)
-        : QStyledItemDelegate(parent), ofim(openFileInfoManager)
+DocumentListDelegate::DocumentListDelegate(QObject *parent)
+        : QStyledItemDelegate(parent), ofim(OpenFileInfoManager::instance())
 {
     // nothing
 }
@@ -138,19 +137,19 @@ private:
     // UNUSED DocumentListModel *p;
 
 public:
-    DocumentListModelPrivate(OpenFileInfo::StatusFlag statusFlag, OpenFileInfoManager *openFileInfoManager, DocumentListModel */* UNUSED parent*/)
-            : sf(statusFlag), ofim(openFileInfoManager)// UNUSED , p(parent)
+    DocumentListModelPrivate(OpenFileInfo::StatusFlag statusFlag, DocumentListModel */* UNUSED parent*/)
+            : sf(statusFlag), ofim(OpenFileInfoManager::instance())// UNUSED , p(parent)
     {
         /// nothing
     }
 };
 
-DocumentListModel::DocumentListModel(OpenFileInfo::StatusFlag statusFlag, OpenFileInfoManager *openFileInfoManager, QObject *parent)
-        : QAbstractListModel(parent), d(new DocumentListModel::DocumentListModelPrivate(statusFlag, openFileInfoManager, this))
+DocumentListModel::DocumentListModel(OpenFileInfo::StatusFlag statusFlag, QObject *parent)
+        : QAbstractListModel(parent), d(new DocumentListModel::DocumentListModelPrivate(statusFlag, this))
 {
     listsChanged(d->sf);
 
-    connect(openFileInfoManager, SIGNAL(flagsChanged(OpenFileInfo::StatusFlags)), this, SLOT(listsChanged(OpenFileInfo::StatusFlags)));
+    connect(OpenFileInfoManager::instance(), SIGNAL(flagsChanged(OpenFileInfo::StatusFlags)), this, SLOT(listsChanged(OpenFileInfo::StatusFlags)));
 }
 
 DocumentListModel::~DocumentListModel()
@@ -192,7 +191,7 @@ QVariant DocumentListModel::data(const QModelIndex &index, int role) const
             overlays << "document-save";
         else
             overlays << "";
-        return KIcon(iconName, NULL, overlays);
+        return KDE::icon(iconName, overlays, 0);
     }
     case Qt::ToolTipRole: return squeeze_text(openFileInfo->fullCaption(), 64);
     case Qt::UserRole: return qVariantFromValue(openFileInfo);
@@ -222,44 +221,44 @@ private:
 
 public:
     OpenFileInfoManager *ofim;
-    KAction *actionAddToFav, *actionRemFromFav;
-    KAction *actionCloseFile, *actionOpenFile;
+    QAction *actionAddToFav, *actionRemFromFav;
+    QAction *actionCloseFile, *actionOpenFile;
     KActionMenu *actionOpenMenu;
-    QList<KAction *> openMenuActions;
+    QList<QAction *> openMenuActions;
     KService::List openMenuServices;
     QSignalMapper openMenuSignalMapper;
 
-    DocumentListViewPrivate(DocumentListView *parent, OpenFileInfoManager *openFileInfoManager)
-            : p(parent), ofim(openFileInfoManager), actionAddToFav(NULL), actionRemFromFav(NULL), actionCloseFile(NULL), actionOpenFile(NULL) {
+    DocumentListViewPrivate(DocumentListView *parent)
+            : p(parent), ofim(OpenFileInfoManager::instance()), actionAddToFav(NULL), actionRemFromFav(NULL), actionCloseFile(NULL), actionOpenFile(NULL) {
         connect(&openMenuSignalMapper, SIGNAL(mapped(int)), p, SLOT(openFileWithService(int)));
     }
 };
 
-DocumentListView::DocumentListView(OpenFileInfoManager *openFileInfoManager, OpenFileInfo::StatusFlag statusFlag, QWidget *parent)
-        : QListView(parent), d(new DocumentListViewPrivate(this, openFileInfoManager))
+DocumentListView::DocumentListView(OpenFileInfo::StatusFlag statusFlag, QWidget *parent)
+        : QListView(parent), d(new DocumentListViewPrivate(this))
 {
     setContextMenuPolicy(Qt::ActionsContextMenu);
-    setItemDelegate(new DocumentListDelegate(openFileInfoManager, this));
+    setItemDelegate(new DocumentListDelegate(this));
 
     if (statusFlag == OpenFileInfo::Open) {
-        d->actionCloseFile = new KAction(KIcon("document-close"), i18n("Close File"), this);
+        d->actionCloseFile = new QAction(QIcon::fromTheme("document-close"), i18n("Close File"), this);
         connect(d->actionCloseFile, SIGNAL(triggered()), this, SLOT(closeFile()));
         addAction(d->actionCloseFile);
     } else {
-        d->actionOpenFile = new KAction(KIcon("document-open"), i18n("Open File"), this);
+        d->actionOpenFile = new QAction(QIcon::fromTheme("document-open"), i18n("Open File"), this);
         connect(d->actionOpenFile, SIGNAL(triggered()), this, SLOT(openFile()));
         addAction(d->actionOpenFile);
     }
 
-    d->actionOpenMenu = new KActionMenu(KIcon("document-open"), i18n("Open with"), this);
+    d->actionOpenMenu = new KActionMenu(QIcon::fromTheme("document-open"), i18n("Open with"), this);
     addAction(d->actionOpenMenu);
 
     if (statusFlag == OpenFileInfo::Favorite) {
-        d->actionRemFromFav = new KAction(KIcon("favorites"), i18n("Remove from Favorites"), this);
+        d->actionRemFromFav = new QAction(QIcon::fromTheme("favorites"), i18n("Remove from Favorites"), this);
         connect(d->actionRemFromFav, SIGNAL(triggered()), this, SLOT(removeFromFavorites()));
         addAction(d->actionRemFromFav);
     } else {
-        d->actionAddToFav = new KAction(KIcon("favorites"), i18n("Add to Favorites"), this);
+        d->actionAddToFav = new QAction(QIcon::fromTheme("favorites"), i18n("Add to Favorites"), this);
         connect(d->actionAddToFav, SIGNAL(triggered()), this, SLOT(addToFavorites()));
         addAction(d->actionAddToFav);
     }
@@ -306,7 +305,7 @@ void DocumentListView::openFileWithService(int i)
     QModelIndex modelIndex = currentIndex();
     if (modelIndex != QModelIndex()) {
         OpenFileInfo *ofi = qvariant_cast<OpenFileInfo *>(modelIndex.data(Qt::UserRole));
-        if (!ofi->isModified() || (KMessageBox::questionYesNo(this, i18n("The current document has to be saved before switching the viewer/editor component."), i18n("Save before switching?"), KGuiItem(i18n("Save document"), KIcon("document-save")), KGuiItem(i18n("Do not switch"), KIcon("dialog-cancel"))) == KMessageBox::Yes && ofi->save()))
+        if (!ofi->isModified() || (QMessageBox::question(this, i18n("Save before switching?"), i18n("The current document has to be saved before switching the viewer/editor component.")/*, KGuiItem(i18n("Save document"), QIcon::fromTheme("document-save")), KGuiItem(i18n("Do not switch"), QIcon::fromTheme("dialog-cancel"))*/) == QMessageBox::Yes && ofi->save()))
             d->ofim->setCurrentFile(ofi, d->openMenuServices[i]);
     }
 }
@@ -337,14 +336,15 @@ void DocumentListView::currentChanged(const QModelIndex &current, const QModelIn
     if (d->actionRemFromFav != NULL)
         d->actionRemFromFav->setEnabled(hasCurrent && isFavorite);
 
-    foreach(KAction *action, d->openMenuActions)
-    d->actionOpenMenu->removeAction(action);
+    foreach(QAction *action, d->openMenuActions) {
+         d->actionOpenMenu->removeAction(action);
+    }
     d->openMenuServices.clear();
     if (ofi != NULL) {
         d->openMenuServices = ofi->listOfServices();
         int i = 0;
         foreach(KService::Ptr servicePtr, d->openMenuServices) {
-            KAction *menuItem = new KAction(KIcon(servicePtr->icon()), servicePtr->name(), this);
+            QAction *menuItem = new QAction(QIcon::fromTheme(servicePtr->icon()), servicePtr->name(), this);
             d->actionOpenMenu->addAction(menuItem);
             d->openMenuActions << menuItem;
 
@@ -366,30 +366,30 @@ public:
     DocumentListView *listFavorites;
     DirOperatorWidget *dirOperator;
 
-    DocumentListPrivate(OpenFileInfoManager *openFileInfoManager, DocumentList *p) {
-        listOpenFiles = new DocumentListView(openFileInfoManager, OpenFileInfo::Open, p);
-        DocumentListModel *model = new DocumentListModel(OpenFileInfo::Open, openFileInfoManager, listOpenFiles);
+    DocumentListPrivate(DocumentList *p) {
+        listOpenFiles = new DocumentListView(OpenFileInfo::Open, p);
+        DocumentListModel *model = new DocumentListModel(OpenFileInfo::Open, listOpenFiles);
         listOpenFiles->setModel(model);
-        p->addTab(listOpenFiles, KIcon("document-open"), i18n("Open Files"));
+        p->addTab(listOpenFiles, QIcon::fromTheme("document-open"), i18n("Open Files"));
 
-        listRecentFiles = new DocumentListView(openFileInfoManager, OpenFileInfo::RecentlyUsed, p);
-        model = new DocumentListModel(OpenFileInfo::RecentlyUsed, openFileInfoManager, listRecentFiles);
+        listRecentFiles = new DocumentListView(OpenFileInfo::RecentlyUsed, p);
+        model = new DocumentListModel(OpenFileInfo::RecentlyUsed, listRecentFiles);
         listRecentFiles->setModel(model);
-        p->addTab(listRecentFiles, KIcon("clock"), i18n("Recently Used"));
+        p->addTab(listRecentFiles, QIcon::fromTheme("clock"), i18n("Recently Used"));
 
-        listFavorites = new DocumentListView(openFileInfoManager, OpenFileInfo::Favorite, p);
-        model = new DocumentListModel(OpenFileInfo::Favorite, openFileInfoManager, listFavorites);
+        listFavorites = new DocumentListView(OpenFileInfo::Favorite, p);
+        model = new DocumentListModel(OpenFileInfo::Favorite, listFavorites);
         listFavorites->setModel(model);
-        p->addTab(listFavorites, KIcon("favorites"), i18n("Favorites"));
+        p->addTab(listFavorites, QIcon::fromTheme("favorites"), i18n("Favorites"));
 
         dirOperator = new DirOperatorWidget(p);
-        p->addTab(dirOperator,  KIcon("system-file-manager"), i18n("Filesystem Browser"));
+        p->addTab(dirOperator,  QIcon::fromTheme("system-file-manager"), i18n("Filesystem Browser"));
         connect(dirOperator->dirOperator, SIGNAL(fileSelected(KFileItem)), p, SLOT(fileSelected(KFileItem)));
     }
 };
 
-DocumentList::DocumentList(OpenFileInfoManager *openFileInfoManager, QWidget *parent)
-        : KTabWidget(parent), d(new DocumentListPrivate(openFileInfoManager, this))
+DocumentList::DocumentList(QWidget *parent)
+        : QTabWidget(parent), d(new DocumentListPrivate(this))
 {
     setDocumentMode(true);
 }

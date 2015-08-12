@@ -19,12 +19,14 @@
 
 #include <QApplication>
 #include <QClipboard>
+#include <QMimeData>
 #include <QBuffer>
 #include <QMouseEvent>
 #include <QDrag>
+#include <QDebug>
 
 #include <KConfigGroup>
-#include <KDebug>
+#include <KSharedConfig>
 
 #include "fileview.h"
 #include "filemodel.h"
@@ -122,7 +124,7 @@ public:
 
             QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
             if (!entry.isNull()) {
-                kDebug() << "Adding in entry" << entry->id();
+                qDebug() << "Adding in entry" << entry->id();
 
                 /// Check if text looks like an URL
                 const QUrl url(text);
@@ -131,7 +133,7 @@ public:
                 }
             }
         } else
-            kDebug() << "Don't know what to do with " << text;
+            qDebug() << "Don't know what to do with " << text;
 
         return false;
     }

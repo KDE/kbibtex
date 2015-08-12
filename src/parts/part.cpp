@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2015 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -20,31 +20,41 @@
 #include <typeinfo>
 
 #include <QLabel>
+#include <QAction>
 #include <QFile>
 #include <QFileInfo>
+#include <QMenu>
 #include <QApplication>
 #include <QLayout>
 #include <QKeyEvent>
 #include <QSignalMapper>
+#include <QMimeDatabase>
+#include <QMimeType>
 #include <QtCore/QPointer>
 #include <QFileSystemWatcher>
+#include <QDebug>
+#include <QMessageBox>
+#include <QFileDialog>
+#include <QDialog>
+#include <QDialogButtonBox>
+#include <QPushButton>
+#include <QTemporaryFile>
 
-#include <KFileDialog>
-#include <KDebug>
-#include <KMessageBox>
-#include <KLocale>
-#include <KAction>
+#include <KMessageBox> // FIXME deprecated
+#include <KLocalizedString>
 #include <KActionCollection>
 #include <KStandardAction>
 #include <KActionMenu>
 #include <KSelectAction>
 #include <KToggleAction>
-#include <KMenu>
-#include <KTemporaryFile>
-#include <KIO/NetAccess>
+#include <KSharedConfig>
+#include <KConfigGroup>
 #include <KRun>
-#include <KMimeType>
-#include <KStandardDirs>
+#include <KPluginFactory>
+#include <KIO/StatJob>
+#include <KIO/CopyJob>
+#include <KIO/Job>
+#include <KJobWidgets>
 
 #include "file.h"
 #include "macro.h"
@@ -77,9 +87,11 @@
 #include "valuelistmodel.h"
 #include "clipboard.h"
 #include "idsuggestions.h"
-#include "partfactory.h"
 #include "fileview.h"
-// #include "browserextension.h" // FIXME
+#include "browserextension.h"
+
+K_PLUGIN_FACTORY(KBibTeXPartFactory, registerPlugin<KBibTeXPart>();)
+// FIXME K_EXPORT_PLUGIN(KBibTeXPartFactory("KBibTeXPart"))
 
 static const char RCFileName[] = "kbibtexpartui.rc";
 static const int smEntry = 1;
@@ -93,25 +105,45 @@ private:
     KBibTeXPart *p;
     KSharedConfigPtr config;
 
+    /**
+     * Modifies a given URL to become a "backup" filename/URL.
+     * A backup level or 0 or less does not modify the URL.
+     * A backup level of 1 appends a '~' (tilde) to the URL's filename.
+     * A backup level of 2 or more appends '~N', where N is the level.
+     * The provided URL will be modified in the process. It is assumed
+     * that the URL is not yet a "backup URL".
+     */
+    void constructBackupUrl(const int level, QUrl &url) const {
+        if (level <= 0)
+            /// No modification
+            return;
+        else if (level == 1)
+            /// Simply append '~' to the URL's filename
+            url.setPath(url.path() + QLatin1String("~"));
+        else
+            /// Append '~' followed by a number to the filename
+            url.setPath(url.path() + QString(QLatin1String("~%1")).arg(level));
+    }
+
 public:
     File *bibTeXFile;
     PartWidget *partWidget;
     FileModel *model;
     SortFilterFileModel *sortFilterProxyModel;
     QSignalMapper *signalMapperNewElement;
-    KAction *editCutAction, *editDeleteAction, *editCopyAction, *editPasteAction, *editCopyReferencesAction, *elementEditAction, *elementViewDocumentAction, *fileSaveAction, *elementFindPDFAction, *entryApplyDefaultFormatString;
-    KMenu *viewDocumentMenu;
+    QAction *editCutAction, *editDeleteAction, *editCopyAction, *editPasteAction, *editCopyReferencesAction, *elementEditAction, *elementViewDocumentAction, *fileSaveAction, *elementFindPDFAction, *entryApplyDefaultFormatString;
+    QMenu *viewDocumentMenu;
     QSignalMapper *signalMapperViewDocument;
     QSet<QObject *> signalMapperViewDocumentSenders;
     bool isSaveAsOperation;
     LyX *lyx;
     FindDuplicatesUI *findDuplicatesUI;
     ColorLabelContextMenu *colorLabelContextMenu;
-    KAction *colorLabelContextMenuAction;
+    QAction *colorLabelContextMenuAction;
     QFileSystemWatcher fileSystemWatcher;
 
     KBibTeXPartPrivate(KBibTeXPart *parent)
-            : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), bibTeXFile(NULL), model(NULL), sortFilterProxyModel(NULL), signalMapperNewElement(new QSignalMapper(parent)), viewDocumentMenu(new KMenu(i18n("View Document"), parent->widget())), signalMapperViewDocument(new QSignalMapper(parent)), isSaveAsOperation(false), fileSystemWatcher(p) {
+            : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), bibTeXFile(NULL), model(NULL), sortFilterProxyModel(NULL), signalMapperNewElement(new QSignalMapper(parent)), viewDocumentMenu(new QMenu(i18n("View Document"), parent->widget())), signalMapperViewDocument(new QSignalMapper(parent)), isSaveAsOperation(false), fileSystemWatcher(p) {
         connect(signalMapperViewDocument, SIGNAL(mapped(QObject*)), p, SLOT(elementViewDocumentMenu(QObject*)));
         connect(&fileSystemWatcher, SIGNAL(fileChanged(QString)), p, SLOT(fileExternallyChange(QString)));
     }
@@ -124,7 +156,7 @@ public:
         delete signalMapperViewDocument;
     }
 
-    FileImporter *fileImporterFactory(const KUrl &url) {
+    FileImporter *fileImporterFactory(const QUrl &url) {
         QString ending = url.path().toLower();
         int p = ending.lastIndexOf(".");
         ending = ending.mid(p + 1);
@@ -142,7 +174,7 @@ public:
         }
     }
 
-    FileExporter *fileExporterFactory(const KUrl &url) {
+    FileExporter *fileExporterFactory(const QUrl &url) {
         QString ending = url.path().toLower();
         int p = ending.lastIndexOf(".");
         ending = ending.mid(p + 1);
@@ -195,8 +227,8 @@ public:
         connect(partWidget->filterBar(), SIGNAL(filterChanged(SortFilterFileModel::FilterQuery)), sortFilterProxyModel, SLOT(updateFilter(SortFilterFileModel::FilterQuery)));
     }
 
-    bool openFile(const KUrl &url, const QString &localFilePath) {
-        p->setObjectName("KBibTeXPart::KBibTeXPart for " + url.pathOrUrl());
+    bool openFile(const QUrl &url, const QString &localFilePath) {
+        p->setObjectName("KBibTeXPart::KBibTeXPart for " + url.url(QUrl::PreferLocalFile));
 
 
         qApp->setOverrideCursor(Qt::WaitCursor);
@@ -208,15 +240,15 @@ public:
                 if (!path.isEmpty())
                     fileSystemWatcher.removePath(path);
                 else
-                    kWarning() << "No filename to stop watching";
+                    qWarning() << "No filename to stop watching";
             } else
-                kWarning() << "Not removing" << oldUrl.toString() << "from fileSystemWatcher";
+                qWarning() << "Not removing" << oldUrl.toString() << "from fileSystemWatcher";
             delete bibTeXFile;
         }
 
         QFile inputfile(localFilePath);
         if (!inputfile.open(QIODevice::ReadOnly)) {
-            kWarning() << "Opening file failed, creating new one instead:" << localFilePath;
+            qWarning() << "Opening file failed, creating new one instead:" << localFilePath;
             qApp->restoreOverrideCursor();
             /// Opening file failed, creating new one instead
             initializeNew();
@@ -230,7 +262,7 @@ public:
         delete importer;
 
         if (bibTeXFile == NULL) {
-            kWarning() << "Opening file failed, creating new one instead:" << url.pathOrUrl();
+            qWarning() << "Opening file failed, creating new one instead:" << url.url(QUrl::PreferLocalFile);
             qApp->restoreOverrideCursor();
             /// Opening file failed, creating new one instead
             initializeNew();
@@ -247,18 +279,14 @@ public:
         connect(partWidget->filterBar(), SIGNAL(filterChanged(SortFilterFileModel::FilterQuery)), sortFilterProxyModel, SLOT(updateFilter(SortFilterFileModel::FilterQuery)));
 
         if (url.isLocalFile())
-            fileSystemWatcher.addPath(url.pathOrUrl());
+            fileSystemWatcher.addPath(url.url(QUrl::PreferLocalFile));
 
         qApp->restoreOverrideCursor();
 
         return true;
     }
 
-    void makeBackup(const KUrl &url) const {
-        /// Do not make backup copies if file does not exist yet
-        if (!KIO::NetAccess::exists(url, KIO::NetAccess::DestinationSide, p->widget()))
-            return;
-
+    void makeBackup(const QUrl &url) const {
         /// Fetch settings from configuration
         KConfigGroup configGroup(config, Preferences::groupGeneral);
         const Preferences::BackupScope backupScope = (Preferences::BackupScope)configGroup.readEntry(Preferences::keyBackupScope, (int)Preferences::defaultBackupScope);
@@ -269,77 +297,86 @@ public:
             return;
 
         /// For non-local files, proceed only if backups to remote storage is allowed
-        if (!url.isLocalFile() && backupScope != Preferences::BothLocalAndRemote)
+        if (backupScope != Preferences::BothLocalAndRemote && !url.isLocalFile())
             return;
 
+        /// Do not make backup copies if destination file does not exist yet
+        KIO::StatJob *statJob = KIO::stat(url, KIO::StatJob::DestinationSide, 0 /** not details necessary, just need to know if file exists */, KIO::HideProgressInfo);
+        KJobWidgets::setWindow(statJob, p->widget());
+        statJob->exec();
+        if (statJob->error() == KIO::ERR_DOES_NOT_EXIST)
+            return;
+        else if (statJob->error() != KIO::Job::NoError) {
+            /// Something else went wrong, quit with error
+            qWarning() << "Probing" << url.toDisplayString() << "failed:" << statJob->errorString();
+            return;
+        }
+
         bool copySucceeded = true;
-        /// copy e.g. test.bib~ to test.bib~2 and test.bib~3 to test.bib~4 etc.
-        for (int i = numberOfBackups - 1; copySucceeded && i >= 1; --i) {
-            KUrl a(url);
-            a.setFileName(url.fileName() + (i > 1 ? QString("~%1").arg(i) : QLatin1String("~")));
-            if (KIO::NetAccess::exists(a, KIO::NetAccess::DestinationSide, p->widget())) {
-                KUrl b(url);
-                b.setFileName(url.fileName() + QString("~%1").arg(i + 1));
-                KIO::NetAccess::del(b, p->widget());
-                copySucceeded = KIO::NetAccess::file_copy(a, b, p->widget());
+        /// Copy e.g. test.bib~ to test.bib~2, test.bib to test.bib~ etc.
+        for (int level = numberOfBackups; copySucceeded && level >= 1; --level) {
+            QUrl newerBackupUrl = url;
+            constructBackupUrl(level - 1, newerBackupUrl);
+            QUrl olderBackupUrl = url;
+            constructBackupUrl(level, olderBackupUrl);
+
+            statJob = KIO::stat(newerBackupUrl, KIO::StatJob::DestinationSide, 0 /** not details necessary, just need to know if file exists */, KIO::HideProgressInfo);
+            KJobWidgets::setWindow(statJob, p->widget());
+            if (statJob->exec() && statJob->error() == KIO::Job::NoError) {
+                KIO::CopyJob *moveJob = KIO::move(newerBackupUrl, olderBackupUrl, KIO::HideProgressInfo | KIO::Overwrite);
+                KJobWidgets::setWindow(moveJob, p->widget());
+                copySucceeded = moveJob->exec();
             }
         }
 
-        if (copySucceeded && (numberOfBackups > 0)) {
-            /// copy e.g. test.bib into test.bib~
-            KUrl b(url);
-            b.setFileName(url.fileName() + QLatin1String("~"));
-            KIO::NetAccess::del(b, p->widget());
-            copySucceeded = KIO::NetAccess::file_copy(url, b, p->widget());
-        }
-
         if (!copySucceeded)
-            KMessageBox::error(p->widget(), i18n("<qt>Could not create backup copies of document<br/><b>%1</b>.</qt>", url.pathOrUrl()), i18n("Backup copies"));
+            QMessageBox::warning(p->widget(), i18n("Backup copies"), i18n("<qt>Could not create backup copies of document<br/><b>%1</b>.</qt>", url.url(QUrl::PreferLocalFile)));
     }
 
-    KUrl getSaveFilename(bool mustBeImportable = true) {
-        QString startDir = p->url().isValid() ? p->url().path() : QLatin1String("kfiledialog:///opensave");
+    QUrl getSaveFilename(bool mustBeImportable = true) {
+        QString startDir = p->url().isValid() ? p->url().path() : QString();
         QString supportedMimeTypes = QLatin1String("text/x-bibtex text/x-bibtex-compiled application/xml text/x-research-info-systems");
         if (BibUtils::available())
             supportedMimeTypes += QLatin1String(" application/x-isi-export-format application/x-endnote-refer");
-        if (!mustBeImportable && !KStandardDirs::findExe(QLatin1String("pdflatex")).isEmpty())
+        if (!mustBeImportable && !QStandardPaths::findExecutable(QLatin1String("pdflatex")).isEmpty())
             supportedMimeTypes += QLatin1String(" application/pdf");
-        if (!mustBeImportable && !KStandardDirs::findExe(QLatin1String("dvips")).isEmpty())
+        if (!mustBeImportable && !QStandardPaths::findExecutable(QLatin1String("dvips")).isEmpty())
             supportedMimeTypes += QLatin1String(" application/postscript");
         if (!mustBeImportable)
             supportedMimeTypes += QLatin1String(" text/html");
-        if (!mustBeImportable && !KStandardDirs::findExe(QLatin1String("latex2rtf")).isEmpty())
+        if (!mustBeImportable && !QStandardPaths::findExecutable(QLatin1String("latex2rtf")).isEmpty())
             supportedMimeTypes += QLatin1String(" application/rtf");
 
-        QPointer<KFileDialog> saveDlg = new KFileDialog(startDir, supportedMimeTypes, p->widget());
+        QPointer<QFileDialog> saveDlg = new QFileDialog(p->widget(), i18n("Save file") /* TODO better text */, startDir, supportedMimeTypes);
         /// Setting list of mime types for the second time,
         /// essentially calling this function only to set the "default mime type" parameter
-        saveDlg->setMimeFilter(supportedMimeTypes.split(QChar(' '), QString::SkipEmptyParts), QLatin1String("text/x-bibtex"));
+        saveDlg->setMimeTypeFilters(supportedMimeTypes.split(QLatin1Char(' '), QString::SkipEmptyParts));
         /// Setting the dialog into "Saving" mode make the "add extension" checkbox available
-        saveDlg->setOperationMode(KFileDialog::Saving);
+        saveDlg->setAcceptMode(QFileDialog::AcceptSave);
+        saveDlg->setDefaultSuffix(QLatin1String("bib"));
+        saveDlg->setFileMode(QFileDialog::AnyFile);
         if (saveDlg->exec() != QDialog::Accepted)
             /// User cancelled saving operation, return invalid filename/URL
-            return KUrl();
-        const KUrl selectedUrl = saveDlg->selectedUrl();
+            return QUrl();
+        const QList<QUrl> selectedUrls = saveDlg->selectedUrls();
         delete saveDlg;
-        return selectedUrl;
+        return selectedUrls.isEmpty() ? QUrl() : selectedUrls.first();
     }
 
-    bool saveFile(const KUrl &url) {
-        Q_ASSERT_X(!url.isEmpty(), "bool KBibTeXPart::KBibTeXPartPrivate:saveFile(const KUrl &url)", "url is not allowed to be empty");
+    bool saveFile(const QUrl &url) {
+        Q_ASSERT_X(!url.isEmpty(), "bool KBibTeXPart::KBibTeXPartPrivate:saveFile(const QUrl &url)", "url is not allowed to be empty");
 
         /// configure and open temporary file
-        KTemporaryFile temporaryFile;
-        const QRegExp suffixRegExp("\\.[^.]{1,4}$");
-        if (suffixRegExp.indexIn(url.pathOrUrl()) >= 0)
-            temporaryFile.setSuffix(suffixRegExp.cap(0));
+        static const QRegExp suffixRegExp("\\.[^.]{1,4}$");
+        const QString suffix = suffixRegExp.indexIn(url.url(QUrl::PreferLocalFile)) >= 0 ? suffixRegExp.cap(0) : QString();
+        QTemporaryFile temporaryFile(QStandardPaths::writableLocation(QStandardPaths::TempLocation) + QDir::separator() + QString(QLatin1String("kbibtex_savefile_XXXXXX")).append(suffix));
         temporaryFile.setAutoRemove(true);
         if (!temporaryFile.open())
             return false;
 
         /// export bibliography data into temporary file
         SortFilterFileModel *model = qobject_cast<SortFilterFileModel *>(partWidget->fileView()->model());
-        Q_ASSERT_X(model != NULL, "bool KBibTeXPart::KBibTeXPartPrivate:saveFile(const KUrl &url)", "SortFilterFileModel *model from editor->model() is invalid");
+        Q_ASSERT_X(model != NULL, "bool KBibTeXPart::KBibTeXPartPrivate:saveFile(const QUrl &url)", "SortFilterFileModel *model from editor->model() is invalid");
         FileExporter *exporter = fileExporterFactory(url);
 
         if (isSaveAsOperation) {
@@ -347,31 +384,38 @@ public:
             FileExporterToolchain *fet = NULL;
 
             if (typeid(*exporter) == typeid(FileExporterBibTeX)) {
-                QPointer<KDialog> dlg = new KDialog(p->widget());
+                QPointer<QDialog> dlg = new QDialog(p->widget());
+                dlg->setWindowTitle(i18n("BibTeX File Settings"));
+                QBoxLayout *layout = new QVBoxLayout(dlg);
                 FileSettingsWidget *settingsWidget = new FileSettingsWidget(dlg);
+                layout->addWidget(settingsWidget);
+                QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::RestoreDefaults | QDialogButtonBox::Reset | QDialogButtonBox::Save | QDialogButtonBox::Ok, Qt::Horizontal, dlg);
+                layout->addWidget(buttonBox);
+                connect(buttonBox->button(QDialogButtonBox::RestoreDefaults), &QPushButton::clicked, settingsWidget, &FileSettingsWidget::resetToDefaults);
+                connect(buttonBox->button(QDialogButtonBox::Reset), &QPushButton::clicked, settingsWidget, &FileSettingsWidget::resetToLoadedProperties);
+                connect(buttonBox->button(QDialogButtonBox::Save), &QPushButton::clicked, settingsWidget, &FileSettingsWidget::applyProperties);
+                connect(buttonBox->button(QDialogButtonBox::Ok), &QPushButton::clicked, dlg, &QDialog::accept);
+
                 settingsWidget->loadProperties(bibTeXFile);
-                dlg->setMainWidget(settingsWidget);
-                dlg->setCaption(i18n("BibTeX File Settings"));
-                dlg->setButtons(KDialog::Default | KDialog::Reset | KDialog::User1 | KDialog::Ok);
-                dlg->setButtonGuiItem(KDialog::User1, KGuiItem(i18n("Save as Default"), KIcon("edit-redo") /** matches reset button's icon */, i18n("Save this configuration as default for future Save As operations.")));
-                connect(dlg, SIGNAL(user1Clicked()), settingsWidget, SLOT(saveProperties()));
-                connect(dlg, SIGNAL(resetClicked()), settingsWidget, SLOT(loadProperties()));
-                connect(dlg, SIGNAL(defaultClicked()), settingsWidget, SLOT(resetToDefaults()));
-                dlg->exec();
-                settingsWidget->saveProperties(bibTeXFile);
+
+                if (dlg->exec() == QDialog::Accepted)
+                    settingsWidget->saveProperties(bibTeXFile);
                 delete dlg;
             } else if ((fet = qobject_cast<FileExporterToolchain *>(exporter)) != NULL) {
-                QPointer<KDialog> dlg = new KDialog(p->widget());
+                QPointer<QDialog> dlg = new QDialog(p->widget());
+                dlg->setWindowTitle(i18n("PDF/PostScript File Settings"));
+                QBoxLayout *layout = new QVBoxLayout(dlg);
                 SettingsFileExporterPDFPSWidget *settingsWidget = new SettingsFileExporterPDFPSWidget(dlg);
-                dlg->setMainWidget(settingsWidget);
-                dlg->setCaption(i18n("PDF/PostScript File Settings"));
-                dlg->setButtons(KDialog::Default | KDialog::Reset | KDialog::User1 | KDialog::Ok);
-                dlg->setButtonGuiItem(KDialog::User1, KGuiItem(i18n("Save as Default"), KIcon("edit-redo") /** matches reset button's icon */, i18n("Save this configuration as default for future Save As operations.")));
-                connect(dlg, SIGNAL(user1Clicked()), settingsWidget, SLOT(saveState()));
-                connect(dlg, SIGNAL(resetClicked()), settingsWidget, SLOT(loadState()));
-                connect(dlg, SIGNAL(defaultClicked()), settingsWidget, SLOT(resetToDefaults()));
-                dlg->exec();
-                settingsWidget->saveState();
+                layout->addWidget(settingsWidget);
+                QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::RestoreDefaults | QDialogButtonBox::Reset | QDialogButtonBox::Save | QDialogButtonBox::Ok, Qt::Horizontal, dlg);
+                layout->addWidget(buttonBox);
+                connect(buttonBox->button(QDialogButtonBox::RestoreDefaults), &QPushButton::clicked, settingsWidget, &SettingsFileExporterPDFPSWidget::resetToDefaults);
+                connect(buttonBox->button(QDialogButtonBox::Reset), &QPushButton::clicked, settingsWidget, &SettingsFileExporterPDFPSWidget::loadState);
+                connect(buttonBox->button(QDialogButtonBox::Save), &QPushButton::clicked, settingsWidget, &SettingsFileExporterPDFPSWidget::saveState);
+                connect(buttonBox->button(QDialogButtonBox::Ok), &QPushButton::clicked, dlg, &QDialog::accept);
+
+                if (dlg->exec() == QDialog::Accepted)
+                    settingsWidget->saveState();
                 fet->reloadConfig();
                 delete dlg;
             }
@@ -381,11 +425,11 @@ public:
 
         QStringList errorLog;
         bool result = exporter->save(&temporaryFile, model->fileSourceModel()->bibliographyFile(), &errorLog);
+        delete exporter;
 
         if (!result) {
-            delete exporter;
             qApp->restoreOverrideCursor();
-            KMessageBox::errorList(p->widget(), i18n("Saving the bibliography to file '%1' failed.\n\nThe following output was generated by the export filter:", url.pathOrUrl()), errorLog, i18n("Saving bibliography failed"));
+            QMessageBox::warning(p->widget(), i18n("Saving bibliography failed"), i18n("Saving the bibliography to file '%1' failed.\n\nThe following output was generated by the export filter: %2", url.url(QUrl::PreferLocalFile), errorLog.join(QLatin1String("\n"))));
             return false;
         }
 
@@ -394,28 +438,29 @@ public:
         /// make backup before overwriting target destination
         makeBackup(url);
         /// upload temporary file to target destination
-        KUrl realUrl = url;
+        QUrl realUrl = url;
         if (url.isLocalFile()) {
             /// take precautions for local files
-            QFileInfo fileInfo(url.pathOrUrl());
+            QFileInfo fileInfo(url.url(QUrl::PreferLocalFile));
             if (fileInfo.isSymLink()) {
                 /// do not overwrite symbolic link,
                 /// but linked file instead
-                realUrl = KUrl::fromLocalFile(fileInfo.symLinkTarget());
+                realUrl = QUrl::fromLocalFile(fileInfo.symLinkTarget());
             }
         }
-        KIO::NetAccess::del(realUrl, p->widget());
-        result &= KIO::NetAccess::file_copy(temporaryFile.fileName(), realUrl, p->widget());
+
+        KIO::CopyJob *copyJob = KIO::copy(QUrl::fromLocalFile(temporaryFile.fileName()), realUrl, KIO::HideProgressInfo | KIO::Overwrite);
+        KJobWidgets::setWindow(copyJob, p->widget());
+        result &= copyJob->exec() && copyJob->error() == KIO::Job::NoError;
 
         qApp->restoreOverrideCursor();
         if (!result)
-            KMessageBox::error(p->widget(), i18n("Saving the bibliography to file '%1' failed.", url.pathOrUrl()), i18n("Saving bibliography failed"));
+            QMessageBox::warning(p->widget(), i18n("Saving bibliography failed"), i18n("Saving the bibliography to file '%1' failed.", url.url(QUrl::PreferLocalFile)));
 
-        delete exporter;
         return result;
     }
 
-    bool checkOverwrite(const KUrl &url, QWidget *parent) {
+    bool checkOverwrite(const QUrl &url, QWidget *parent) {
         if (!url.isLocalFile())
             return true;
 
@@ -438,7 +483,7 @@ public:
 
         /// Clean signal mapper of old mappings
         /// as stored in QSet signalMapperViewDocumentSenders
-        /// and identified by their KAction*'s
+        /// and identified by their QAction*'s
         QSet<QObject *>::Iterator it = signalMapperViewDocumentSenders.begin();
         while (it != signalMapperViewDocumentSenders.end()) {
             signalMapperViewDocument->removeMappings(*it);
@@ -451,21 +496,22 @@ public:
         /// Test and continue if there was an Entry to retrieve
         if (!entry.isNull()) {
             /// Get list of URLs associated with this entry
-            QList<KUrl> urlList = FileInfo::entryUrls(entry.data(), partWidget->fileView()->fileModel()->bibliographyFile()->property(File::Url).toUrl(), FileInfo::TestExistenceYes);
+            QList<QUrl> urlList = FileInfo::entryUrls(entry.data(), partWidget->fileView()->fileModel()->bibliographyFile()->property(File::Url).toUrl(), FileInfo::TestExistenceYes);
             if (!urlList.isEmpty()) {
                 /// Memorize first action, necessary to set menu title
-                KAction *firstAction = NULL;
+                QAction *firstAction = NULL;
                 /// First iteration: local references only
-                for (QList<KUrl>::ConstIterator it = urlList.constBegin(); it != urlList.constEnd(); ++it) {
+                for (QList<QUrl>::ConstIterator it = urlList.constBegin(); it != urlList.constEnd(); ++it) {
                     /// First iteration: local references only
                     if (!(*it).isLocalFile()) continue; ///< skip remote URLs
 
                     /// Build a nice menu item (label, icon, ...)
-                    QFileInfo fi((*it).pathOrUrl());
+                    QFileInfo fi((*it).url(QUrl::PreferLocalFile));
                     const QString label = QString("%1 [%2]").arg(fi.fileName()).arg(fi.absolutePath());
-                    KAction *action = new KAction(KIcon(KMimeType::iconNameForUrl(*it)), label, p);
-                    action->setData((*it).pathOrUrl());
-                    action->setToolTip((*it).prettyUrl());
+                    QMimeDatabase db;
+                    QAction *action = new QAction(QIcon::fromTheme(db.mimeTypeForUrl(*it).iconName()), label, p);
+                    action->setData((*it).url(QUrl::PreferLocalFile));
+                    action->setToolTip((*it).url(QUrl::PreferLocalFile));
                     /// Register action at signal handler to open URL when triggered
                     connect(action, SIGNAL(triggered()), signalMapperViewDocument, SLOT(map()));
                     signalMapperViewDocument->setMapping(action, action);
@@ -478,18 +524,20 @@ public:
                     /// If there is 'first action', then there must be
                     /// local URLs (i.e. local files) and firstAction
                     /// is the first one where a title can be set above
-                    viewDocumentMenu->addTitle(i18n("Local Files"), firstAction);
+                    viewDocumentMenu->insertSection(firstAction, i18n("Local Files"));
                 }
 
                 firstAction = NULL; /// Now the first remote action is to be memorized
                 /// Second iteration: remote references only
-                for (QList<KUrl>::ConstIterator it = urlList.constBegin(); it != urlList.constEnd(); ++it) {
+                for (QList<QUrl>::ConstIterator it = urlList.constBegin(); it != urlList.constEnd(); ++it) {
                     if ((*it).isLocalFile()) continue; ///< skip local files
 
                     /// Build a nice menu item (label, icon, ...)
-                    KAction *action = new KAction(KIcon(KMimeType::iconNameForUrl(*it)), (*it).pathOrUrl(), p);
-                    action->setData((*it).pathOrUrl());
-                    action->setToolTip((*it).prettyUrl());
+                    const QString prettyUrl = (*it).url(QUrl::PreferLocalFile);
+                    QMimeDatabase db;
+                    QAction *action = new QAction(QIcon::fromTheme(db.mimeTypeForUrl(*it).iconName()), prettyUrl, p);
+                    action->setData(prettyUrl);
+                    action->setToolTip(prettyUrl);
                     /// Register action at signal handler to open URL when triggered
                     connect(action, SIGNAL(triggered()), signalMapperViewDocument, SLOT(map()));
                     signalMapperViewDocument->setMapping(action, action);
@@ -502,7 +550,7 @@ public:
                     /// If there is 'first action', then there must be
                     /// some remote URLs and firstAction is the first
                     /// one where a title can be set above
-                    viewDocumentMenu->addTitle(i18n("Remote Files"), firstAction);
+                    viewDocumentMenu->insertSection(firstAction, i18n("Remote Files"));
                 }
 
                 result = urlList.count();
@@ -530,25 +578,22 @@ public:
     }
 };
 
-KBibTeXPart::KBibTeXPart(QWidget *parentWidget, QObject *parent, bool browserViewWanted)
+KBibTeXPart::KBibTeXPart(QWidget *parentWidget, QObject *parent, const QVariantList& args)
         : KParts::ReadWritePart(parent), d(new KBibTeXPartPrivate(this))
 {
-    setComponentData(KBibTeXPartFactory::componentData());
-    setObjectName("KBibTeXPart::KBibTeXPart");
+    Q_UNUSED(args)
+    // FIXME setComponentData(KBibTeXPartFactory::componentData(), false);
 
     d->partWidget = new PartWidget(parentWidget);
     d->partWidget->fileView()->setReadOnly(!isReadWrite());
     connect(d->partWidget->fileView(), SIGNAL(modified()), this, SLOT(setModified()));
     setWidget(d->partWidget);
 
-    setupActions(browserViewWanted);
-
-    /* // FIXME
-    if (browserViewWanted)
-        new KBibTeXBrowserExtension(this);
-        */
+    setupActions();
 
     d->initializeNew();
+
+    new BrowserExtension(this);
 
     NotificationHub::registerNotificationListener(this, NotificationHub::EventConfigurationChanged);
     d->readConfiguration();
@@ -575,66 +620,66 @@ void KBibTeXPart::notificationEvent(int eventId)
         d->readConfiguration();
 }
 
-void KBibTeXPart::setupActions(bool /*browserViewWanted FIXME*/)
+void KBibTeXPart::setupActions()
 {
     d->fileSaveAction = actionCollection()->addAction(KStandardAction::Save, this, SLOT(documentSave()));
     d->fileSaveAction->setEnabled(false);
     actionCollection()->addAction(KStandardAction::SaveAs, this, SLOT(documentSaveAs()));
-    KAction *saveCopyAsAction = new KAction(KIcon("document-save"), i18n("Save Copy As..."), this);
+    QAction *saveCopyAsAction = new QAction(QIcon::fromTheme("document-save"), i18n("Save Copy As..."), this);
     actionCollection()->addAction("file_save_copy_as", saveCopyAsAction);
     connect(saveCopyAsAction, SIGNAL(triggered()), this, SLOT(documentSaveCopyAs()));
 
-    KAction *filterWidgetAction = new KAction(i18n("Filter"), this);
+    QAction *filterWidgetAction = new QAction(i18n("Filter"), this);
     actionCollection()->addAction("toolbar_filter_widget", filterWidgetAction);
-    filterWidgetAction->setIcon(KIcon("view-filter"));
+    filterWidgetAction->setIcon(QIcon::fromTheme("view-filter"));
     filterWidgetAction->setShortcut(Qt::CTRL + Qt::Key_F);
     connect(filterWidgetAction, SIGNAL(triggered()), d->partWidget->filterBar(), SLOT(setFocus()));
-    d->partWidget->filterBar()->setClickMessage(i18n("Filter bibliographic entries (%1)", filterWidgetAction->shortcut().toString()));
+    d->partWidget->filterBar()->setPlaceholderText(i18n("Filter bibliographic entries (%1)", filterWidgetAction->shortcut().toString()));
 
-    KActionMenu *newElementAction = new KActionMenu(KIcon("address-book-new"), i18n("New element"), this);
+    KActionMenu *newElementAction = new KActionMenu(QIcon::fromTheme("address-book-new"), i18n("New element"), this);
     actionCollection()->addAction("element_new", newElementAction);
-    KMenu *newElementMenu = new KMenu(newElementAction->text(), widget());
+    QMenu *newElementMenu = new QMenu(newElementAction->text(), widget());
     newElementAction->setMenu(newElementMenu);
     connect(newElementAction, SIGNAL(triggered()), this, SLOT(newEntryTriggered()));
-    QAction *newEntry = newElementMenu->addAction(KIcon("address-book-new"), i18n("New entry"));
+    QAction *newEntry = newElementMenu->addAction(QIcon::fromTheme("address-book-new"), i18n("New entry"));
     newEntry->setShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_N);
     connect(newEntry, SIGNAL(triggered()), d->signalMapperNewElement, SLOT(map()));
     d->signalMapperNewElement->setMapping(newEntry, smEntry);
-    QAction *newComment = newElementMenu->addAction(KIcon("address-book-new"), i18n("New comment"));
+    QAction *newComment = newElementMenu->addAction(QIcon::fromTheme("address-book-new"), i18n("New comment"));
     connect(newComment, SIGNAL(triggered()), d->signalMapperNewElement, SLOT(map()));
     d->signalMapperNewElement->setMapping(newComment, smComment);
-    QAction *newMacro = newElementMenu->addAction(KIcon("address-book-new"), i18n("New macro"));
+    QAction *newMacro = newElementMenu->addAction(QIcon::fromTheme("address-book-new"), i18n("New macro"));
     connect(newMacro, SIGNAL(triggered()), d->signalMapperNewElement, SLOT(map()));
     d->signalMapperNewElement->setMapping(newMacro, smMacro);
-    QAction *newPreamble = newElementMenu->addAction(KIcon("address-book-new"), i18n("New preamble"));
+    QAction *newPreamble = newElementMenu->addAction(QIcon::fromTheme("address-book-new"), i18n("New preamble"));
     connect(newPreamble, SIGNAL(triggered()), d->signalMapperNewElement, SLOT(map()));
     d->signalMapperNewElement->setMapping(newPreamble, smPreamble);
     connect(d->signalMapperNewElement, SIGNAL(mapped(int)), this, SLOT(newElementTriggered(int)));
-    d->elementEditAction = new KAction(KIcon("document-edit"), i18n("Edit Element"), this);
+    d->elementEditAction = new QAction(QIcon::fromTheme("document-edit"), i18n("Edit Element"), this);
     d->elementEditAction->setShortcut(Qt::CTRL + Qt::Key_E);
     actionCollection()->addAction(QLatin1String("element_edit"),  d->elementEditAction);
     connect(d->elementEditAction, SIGNAL(triggered()), d->partWidget->fileView(), SLOT(editCurrentElement()));
-    d->elementViewDocumentAction = new KAction(KIcon("application-pdf"), i18n("View Document"), this);
+    d->elementViewDocumentAction = new QAction(QIcon::fromTheme("application-pdf"), i18n("View Document"), this);
     d->elementViewDocumentAction->setShortcut(Qt::CTRL + Qt::Key_D);
     actionCollection()->addAction(QLatin1String("element_viewdocument"),  d->elementViewDocumentAction);
     connect(d->elementViewDocumentAction, SIGNAL(triggered()), this, SLOT(elementViewDocument()));
 
-    d->elementFindPDFAction = new KAction(KIcon("application-pdf"), i18n("Find PDF..."), this);
+    d->elementFindPDFAction = new QAction(QIcon::fromTheme("application-pdf"), i18n("Find PDF..."), this);
     actionCollection()->addAction(QLatin1String("element_findpdf"),  d->elementFindPDFAction);
     connect(d->elementFindPDFAction, SIGNAL(triggered()), this, SLOT(elementFindPDF()));
 
-    d->entryApplyDefaultFormatString = new KAction(KIcon("favorites"), i18n("Format entry ids"), this);
+    d->entryApplyDefaultFormatString = new QAction(QIcon::fromTheme("favorites"), i18n("Format entry ids"), this);
     actionCollection()->addAction(QLatin1String("entry_applydefaultformatstring"), d->entryApplyDefaultFormatString);
     connect(d->entryApplyDefaultFormatString, SIGNAL(triggered()), this, SLOT(applyDefaultFormatString()));
 
     Clipboard *clipboard = new Clipboard(d->partWidget->fileView());
 
-    d->editCopyReferencesAction = new KAction(KIcon("edit-copy"), i18n("Copy References"), this);
+    d->editCopyReferencesAction = new QAction(QIcon::fromTheme("edit-copy"), i18n("Copy References"), this);
     d->editCopyReferencesAction->setShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_C);
     actionCollection()->addAction(QLatin1String("edit_copy_references"),  d->editCopyReferencesAction);
     connect(d->editCopyReferencesAction, SIGNAL(triggered()), clipboard, SLOT(copyReferences()));
 
-    d->editDeleteAction = new KAction(KIcon("edit-table-delete-row"), i18n("Delete"), this);
+    d->editDeleteAction = new QAction(QIcon::fromTheme("edit-table-delete-row"), i18n("Delete"), this);
     d->editDeleteAction->setShortcut(Qt::Key_Delete);
     actionCollection()->addAction(QLatin1String("edit_delete"),  d->editDeleteAction);
     connect(d->editDeleteAction, SIGNAL(triggered()), d->partWidget->fileView(), SLOT(selectionDelete()));
@@ -684,30 +729,28 @@ bool KBibTeXPart::saveFile()
 {
     Q_ASSERT_X(isReadWrite(), "bool KBibTeXPart::saveFile()", "Trying to save although document is in read-only mode");
 
-    if (url().isEmpty()) {
-        kDebug() << "unexpected: url is empty";
+    if (url().isEmpty())
         return documentSaveAs();
-    }
 
     /// If the current file is "watchable" (i.e. a local file),
     /// memorize local filename for future reference
-    const QString watchableFilename = url().isValid() && url().isLocalFile() ? url().pathOrUrl() : QString();
+    const QString watchableFilename = url().isValid() && url().isLocalFile() ? url().url(QUrl::PreferLocalFile) : QString();
     /// Stop watching local file that will be written to
     if (!watchableFilename.isEmpty())
         d->fileSystemWatcher.removePath(watchableFilename);
     else
-        kWarning() << "watchableFilename is Empty";
+        qWarning() << "watchableFilename is Empty";
 
-    const bool saveOperationSuccess = d->saveFile(localFilePath());
+    const bool saveOperationSuccess = d->saveFile(QUrl::fromLocalFile(localFilePath()));
 
     /// Continue watching local file after write operation
     if (!watchableFilename.isEmpty())
         d->fileSystemWatcher.addPath(watchableFilename);
     else
-        kWarning() << "watchableFilename is Empty";
+        qWarning() << "watchableFilename is Empty";
 
     if (!saveOperationSuccess) {
-        KMessageBox::error(widget(), i18n("The document could not be saved, as it was not possible to write to '%1'.\n\nCheck that you have write access to this file or that enough disk space is available.", url().pathOrUrl()));
+        KMessageBox::error(widget(), i18n("The document could not be saved, as it was not possible to write to '%1'.\n\nCheck that you have write access to this file or that enough disk space is available.", url().url(QUrl::PreferLocalFile)));
         return false;
     }
 
@@ -728,23 +771,22 @@ bool KBibTeXPart::documentSave()
 bool KBibTeXPart::documentSaveAs()
 {
     d->isSaveAsOperation = true;
-    KUrl newUrl = d->getSaveFilename();
+    QUrl newUrl = d->getSaveFilename();
     if (!newUrl.isValid() || !d->checkOverwrite(newUrl, widget()))
         return false;
 
     /// Remove old URL from file system watcher
     if (url().isValid() && url().isLocalFile()) {
-        const QString path = url().pathOrUrl();
+        const QString path = url().url(QUrl::PreferLocalFile);
         if (!path.isEmpty())
             d->fileSystemWatcher.removePath(path);
         else
-            kWarning() << "No filename to stop watching";
+            qWarning() << "No filename to stop watching";
     } else
-        kWarning() << "Not removing" << url().pathOrUrl() << "from fileSystemWatcher";
+        qWarning() << "Not removing" << url().url(QUrl::PreferLocalFile) << "from fileSystemWatcher";
 
     // TODO how does SaveAs dialog know which mime types to support?
     if (KParts::ReadWritePart::saveAs(newUrl)) {
-        kDebug() << "setting url to be " << newUrl.pathOrUrl();
         d->model->bibliographyFile()->setProperty(File::Url, newUrl);
         return true;
     } else
@@ -754,8 +796,8 @@ bool KBibTeXPart::documentSaveAs()
 bool KBibTeXPart::documentSaveCopyAs()
 {
     d->isSaveAsOperation = true;
-    KUrl newUrl = d->getSaveFilename(false);
-    if (!newUrl.isValid() || !d->checkOverwrite(newUrl, widget()) || newUrl.equals(url()))
+    QUrl newUrl = d->getSaveFilename(false);
+    if (!newUrl.isValid() || !d->checkOverwrite(newUrl, widget()) || newUrl == url())
         return false;
 
     /// difference from KParts::ReadWritePart::saveAs:
@@ -765,13 +807,13 @@ bool KBibTeXPart::documentSaveCopyAs()
 
 void KBibTeXPart::elementViewDocument()
 {
-    KUrl url;
+    QUrl url;
 
     QList<QAction *> actionList = d->viewDocumentMenu->actions();
     /// Go through all actions (i.e. document URLs) for this element
     for (QList<QAction *>::ConstIterator it = actionList.constBegin(); it != actionList.constEnd(); ++it) {
         /// Make URL from action's data ...
-        KUrl tmpUrl = KUrl((*it)->data().toString());
+        QUrl tmpUrl = QUrl((*it)->data().toString());
         /// ... but skip this action if the URL is invalid
         if (!tmpUrl.isValid()) continue;
         if (tmpUrl.isLocalFile()) {
@@ -788,8 +830,8 @@ void KBibTeXPart::elementViewDocument()
     /// Open selected URL
     if (url.isValid()) {
         /// Guess mime type for url to open
-        KMimeType::Ptr mimeType = FileInfo::mimeTypeForUrl(url);
-        const QString mimeTypeName = mimeType->name();
+        QMimeType mimeType = FileInfo::mimeTypeForUrl(url);
+        const QString mimeTypeName = mimeType.name();
         /// Ask KDE subsystem to open url in viewer matching mime type
         KRun::runUrl(url, mimeTypeName, widget(), false, false);
     }
@@ -797,12 +839,12 @@ void KBibTeXPart::elementViewDocument()
 
 void KBibTeXPart::elementViewDocumentMenu(QObject *obj)
 {
-    QString text = static_cast<QAction *>(obj)->data().toString(); ///< only a KAction will be passed along
+    QString text = static_cast<QAction *>(obj)->data().toString(); ///< only a QAction will be passed along
 
     /// Guess mime type for url to open
-    KUrl url(text);
-    KMimeType::Ptr mimeType = FileInfo::mimeTypeForUrl(url);
-    const QString mimeTypeName = mimeType->name();
+    QUrl url(text);
+    QMimeType mimeType = FileInfo::mimeTypeForUrl(url);
+    const QString mimeTypeName = mimeType.name();
     /// Ask KDE subsystem to open url in viewer matching mime type
     KRun::runUrl(url, mimeTypeName, widget(), false, false);
 }
@@ -826,7 +868,7 @@ void KBibTeXPart::applyDefaultFormatString()
             static IdSuggestions idSuggestions;
             bool success = idSuggestions.applyDefaultFormatId(*entry.data());
             if (!success) {
-                KMessageBox::information(widget(), i18n("Cannot apply default formatting for entry ids: No default format specified."));
+                QMessageBox::information(widget(), i18n("Cannot Apply Default Formatting"), i18n("Cannot apply default formatting for entry ids: No default format specified."));
                 break;
             }
         }
@@ -959,8 +1001,8 @@ void KBibTeXPart::fileExternallyChange(const QString &path)
     if (!url().isValid() || !url().isLocalFile())
         return;
     /// Should never happen: triggering this slot for filenames not being the opened file
-    if (path != url().pathOrUrl()) {
-        kWarning() << "Got file modification warning for wrong file: " << path << "!=" << url().pathOrUrl();
+    if (path != url().url(QUrl::PreferLocalFile)) {
+        qWarning() << "Got file modification warning for wrong file: " << path << "!=" << url().url(QUrl::PreferLocalFile);
         return;
     }
 
@@ -968,19 +1010,20 @@ void KBibTeXPart::fileExternallyChange(const QString &path)
     if (!path.isEmpty())
         d->fileSystemWatcher.removePath(path);
     else
-        kWarning() << "No filename to stop watching";
+        qWarning() << "No filename to stop watching";
 
-    if (KMessageBox::warningContinueCancel(widget(), i18n("The file '%1' has changed on disk.\n\nReload file or ignore changes on disk?", path), i18n("File changed externally"), KGuiItem(i18n("Reload file"), KIcon("edit-redo")), KGuiItem(i18n("Ignore on-disk changes"), KIcon("edit-undo"))) == KMessageBox::Continue) {
-        d->openFile(KUrl::fromLocalFile(path), path);
+    if (KMessageBox::warningContinueCancel(widget(), i18n("The file '%1' has changed on disk.\n\nReload file or ignore changes on disk?", path), i18n("File changed externally"), KGuiItem(i18n("Reload file"), QIcon::fromTheme("edit-redo")), KGuiItem(i18n("Ignore on-disk changes"), QIcon::fromTheme("edit-undo"))) == KMessageBox::Continue) {
+        d->openFile(QUrl::fromLocalFile(path), path);
         /// No explicit call to QFileSystemWatcher.addPath(...) necessary,
         /// openFile(...) has done that already
     } else {
-        kDebug() << "User chose to cancel reload";
         /// Even if the user did not request reloaded the file,
         /// still resume watching file for future external changes
         if (!path.isEmpty())
             d->fileSystemWatcher.addPath(path);
         else
-            kWarning() << "path is Empty";
+            qWarning() << "path is Empty";
     }
 }
+
+#include "part.moc"

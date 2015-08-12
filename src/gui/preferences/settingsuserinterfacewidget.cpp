@@ -22,7 +22,7 @@
 #include <QBoxLayout>
 
 #include <KComboBox>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KSharedConfig>
 #include <KConfigGroup>
 
@@ -123,9 +123,9 @@ QString SettingsUserInterfaceWidget::label() const
     return i18n("User Interface");
 }
 
-KIcon SettingsUserInterfaceWidget::icon() const
+QIcon SettingsUserInterfaceWidget::icon() const
 {
-    return KIcon("user-identity");
+    return QIcon::fromTheme("user-identity");
 }
 
 SettingsUserInterfaceWidget::~SettingsUserInterfaceWidget()

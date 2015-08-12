@@ -21,10 +21,10 @@
 #include <QObject>
 #include <QList>
 #include <QDateTime>
+#include <QUrl>
 #include <QVariant>
 
 #include <KService>
-#include <KUrl>
 
 #include "fileinfo.h"
 
@@ -55,7 +55,7 @@ public:
     QString shortCaption() const;
     QString fullCaption() const;
     QString mimeType() const;
-    KUrl url() const;
+    QUrl url() const;
     bool isModified() const;
     bool save();
 
@@ -86,9 +86,9 @@ signals:
     void flagsChanged(OpenFileInfo::StatusFlags statusFlags);
 
 protected:
-    OpenFileInfo(OpenFileInfoManager *openFileInfoManager, const KUrl &url);
+    OpenFileInfo(OpenFileInfoManager *openFileInfoManager, const QUrl &url);
     OpenFileInfo(OpenFileInfoManager *openFileInfoManager, const QString &mimeType = FileInfo::mimetypeBibTeX);
-    void setUrl(const KUrl &url);
+    void setUrl(const QUrl &url);
 
 private:
     class OpenFileInfoPrivate;
@@ -105,7 +105,7 @@ class OpenFileInfoManager: public QObject
 public:
     typedef QVector<OpenFileInfo *> OpenFileInfoList;
 
-    explicit OpenFileInfoManager(QWidget *parent);
+    static OpenFileInfoManager *instance();
     ~OpenFileInfoManager();
 
     OpenFileInfo *createNew(const QString &mimeType = FileInfo::mimetypeBibTeX);
@@ -120,11 +120,11 @@ public:
      * @param url URL to bibliography file to open
      * @return an OpenFileInfo object representing the opened file
      */
-    OpenFileInfo *open(const KUrl &url);
+    OpenFileInfo *open(const QUrl &url);
 
-    OpenFileInfo *contains(const KUrl &url) const;
+    OpenFileInfo *contains(const QUrl &url) const;
     OpenFileInfo *currentFile() const;
-    bool changeUrl(OpenFileInfo *openFileInfo, const KUrl &url);
+    bool changeUrl(OpenFileInfo *openFileInfo, const QUrl &url);
     bool close(OpenFileInfo *openFileInfo);
 
     /**
@@ -154,9 +154,14 @@ signals:
     void currentChanged(OpenFileInfo *, KService::Ptr);
     void flagsChanged(OpenFileInfo::StatusFlags statusFlags);
 
+protected:
+    explicit OpenFileInfoManager(QObject *parent);
+
 private:
     class OpenFileInfoManagerPrivate;
     OpenFileInfoManagerPrivate *d;
+
+    static OpenFileInfoManager *singleton;
 
 private slots:
     void deferredListsChanged();

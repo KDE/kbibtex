@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2015 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -20,17 +20,18 @@
 #include <QTreeView>
 #include <QTabWidget>
 #include <QListView>
+#include <QMessageBox>
 #include <QLayout>
 #include <QFormLayout>
 #include <QAbstractItemModel>
 #include <QRadioButton>
+#include <QPushButton>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KComboBox>
 #include <KLineEdit>
-#include <KPushButton>
 #include <KConfigGroup>
-#include <KMessageBox>
+#include <KSharedConfig>
 
 #include "element.h"
 #include "searchresults.h"
@@ -74,12 +75,12 @@ public:
     QRadioButton *radioGroupLibrary;
     bool comboBoxGroupListInitialized;
     KComboBox *comboBoxGroupList;
-    KPushButton *buttonLoadBibliography;
+    QPushButton *buttonLoadBibliography;
 
     QCursor nonBusyCursor;
 
     Private(SearchResults *sr, ZoteroBrowser *parent)
-            : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), items(NULL), groups(NULL), tags(NULL), tagModel(NULL), collection(NULL), collectionModel(NULL), api(NULL), searchResults(sr), comboBoxGroupListInitialized(false), nonBusyCursor(p->cursor()) {
+        : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), items(NULL), groups(NULL), tags(NULL), tagModel(NULL), collection(NULL), collectionModel(NULL), api(NULL), searchResults(sr), comboBoxGroupListInitialized(false), nonBusyCursor(p->cursor()) {
         setupGUI();
     }
 
@@ -92,7 +93,7 @@ public:
 
         /// Credentials
         QWidget *container = new QWidget(tabWidget);
-        tabWidget->addTab(container, KIcon("preferences-web-browser-identification"), i18n("Credentials"));
+        tabWidget->addTab(container, QIcon::fromTheme("preferences-web-browser-identification"), i18n("Credentials"));
         QBoxLayout *containerLayout = new QVBoxLayout(container);
         QFormLayout *containerForm = new QFormLayout();
         containerLayout->addLayout(containerForm, 1);
@@ -138,7 +139,7 @@ public:
         containerLayout->addLayout(containerButtonLayout, 0);
         containerButtonLayout->setMargin(0);
         containerButtonLayout->addStretch(1);
-        buttonLoadBibliography = new KPushButton(KIcon("download"), i18n("Load bibliography"), container);
+        buttonLoadBibliography = new QPushButton(QIcon::fromTheme("download"), i18n("Load bibliography"), container);
         containerButtonLayout->addWidget(buttonLoadBibliography, 0);
         connect(buttonLoadBibliography, SIGNAL(clicked()), p, SLOT(applyCredentials()));
 
@@ -148,7 +149,7 @@ public:
         containerButtonLayout = new QHBoxLayout();
         containerLayout->addLayout(containerButtonLayout, 0);
         containerButtonLayout->setMargin(0);
-        KPushButton *buttonGetOAuthCredentials = new KPushButton(KIcon("preferences-web-browser-identification"), i18n("Get Credentials"), container);
+        QPushButton *buttonGetOAuthCredentials = new QPushButton(QIcon::fromTheme("preferences-web-browser-identification"), i18n("Get Credentials"), container);
         containerButtonLayout->addWidget(buttonGetOAuthCredentials, 0);
         connect(buttonGetOAuthCredentials, SIGNAL(clicked()), p, SLOT(getOAuthCredentials()));
         containerButtonLayout->addStretch(1);
@@ -156,14 +157,14 @@ public:
 
         /// Collection browser
         collectionBrowser = new QTreeView(tabWidget);
-        tabWidget->addTab(collectionBrowser, KIcon("folder-yellow"), i18n("Collections"));
+        tabWidget->addTab(collectionBrowser, QIcon::fromTheme("folder-yellow"), i18n("Collections"));
         collectionBrowser->setHeaderHidden(true);
         collectionBrowser->setExpandsOnDoubleClick(false);
         connect(collectionBrowser, SIGNAL(doubleClicked(QModelIndex)), p, SLOT(collectionDoubleClicked(QModelIndex)));
 
         /// Tag browser
         tagBrowser = new QListView(tabWidget);
-        tabWidget->addTab(tagBrowser, KIcon("mail-tagged"), i18n("Tags"));
+        tabWidget->addTab(tagBrowser, QIcon::fromTheme("mail-tagged"), i18n("Tags"));
         connect(tagBrowser, SIGNAL(doubleClicked(QModelIndex)), p, SLOT(tagDoubleClicked(QModelIndex)));
     }
 
@@ -227,7 +228,7 @@ const QString ZoteroBrowser::Private::configEntryNumericUserIds = QLatin1String(
 const QString ZoteroBrowser::Private::configEntryApiKeys = QLatin1String("ApiKeys");
 
 ZoteroBrowser::ZoteroBrowser(SearchResults *searchResults, QWidget *parent)
-        : QWidget(parent), d(new ZoteroBrowser::Private(searchResults, this))
+    : QWidget(parent), d(new ZoteroBrowser::Private(searchResults, this))
 {
     d->loadState();
     /// Forece GUI update
@@ -250,7 +251,7 @@ void ZoteroBrowser::modelReset()
     }
 
     if (!d->tags->busy() && !d->collection->busy() && !(d->collection->initialized() && d->tags->initialized()))
-        KMessageBox::sorry(this, i18n("KBibTeX failed to retrieve the bibliography from Zotero. Please check that the provided user id and API key are valid."), i18n("Failed to retrieve data from Zotero"));
+        QMessageBox::information(this, i18n("Failed to retrieve data from Zotero"), i18n("KBibTeX failed to retrieve the bibliography from Zotero. Please check that the provided user id and API key are valid."));
 }
 
 void ZoteroBrowser::collectionDoubleClicked(const QModelIndex &index)
@@ -329,7 +330,7 @@ void ZoteroBrowser::applyCredentials()
 
         d->tabWidget->setCurrentIndex(1);
     } else
-        KMessageBox::information(this, i18n("Value '%1' is not a valid numeric identifier of a user or a group.", d->comboBoxNumericUserId->currentText()), i18n("Invalid numeric identifier"));
+        QMessageBox::information(this, i18n("Invalid numeric identifier"), i18n("Value '%1' is not a valid numeric identifier of a user or a group.", d->comboBoxNumericUserId->currentText()));
 }
 
 void ZoteroBrowser::radioButtonsToggled() {

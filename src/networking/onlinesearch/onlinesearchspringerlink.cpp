@@ -24,12 +24,13 @@
 #include <QNetworkRequest>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
+#include <QDebug>
+#include <QStandardPaths>
+#include <QUrlQuery>
 
-#include <KLocale>
-#include <KDebug>
+#include <KLocalizedString>
 #include <KLineEdit>
 #include <KConfigGroup>
-#include <KStandardDirs>
 
 #include "internalnetworkaccessmanager.h"
 #include "encoderlatex.h"
@@ -148,19 +149,19 @@ public:
     OnlineSearchSpringerLinkPrivate(OnlineSearchSpringerLink *parent)
             : p(parent), springerMetadataKey(QLatin1String("7pphfmtb9rtwt3dw3e4hm7av")), form(NULL) {
         const QString xsltFilename = QLatin1String("kbibtex/pam2bibtex.xsl");
-        xslt = XSLTransform::createXSLTransform(KStandardDirs::locate("data", xsltFilename));
+        xslt = XSLTransform::createXSLTransform(QStandardPaths::locate(QStandardPaths::GenericDataLocation, xsltFilename));
         if (xslt == NULL)
-            kWarning() << "Could not create XSLT transformation for" << xsltFilename;
+            qWarning() << "Could not create XSLT transformation for" << xsltFilename;
     }
 
     ~OnlineSearchSpringerLinkPrivate() {
         delete xslt;
     }
 
-    KUrl buildQueryUrl() {
-        if (form == NULL) return KUrl();
+    QUrl buildQueryUrl() {
+        if (form == NULL) return QUrl();
 
-        KUrl queryUrl = KUrl(QString("http://api.springer.com/metadata/pam/?api_key=").append(springerMetadataKey));
+        QUrl queryUrl = QUrl(QString("http://api.springer.com/metadata/pam/?api_key=").append(springerMetadataKey));
 
         QString queryString = form->lineEditFreeText->text();
 
@@ -184,13 +185,15 @@ public:
             queryString += QString(QLatin1String(" year:%1")).arg(year);
 
         queryString = queryString.simplified();
-        queryUrl.addQueryItem(QLatin1String("q"), queryString);
+        QUrlQuery query(queryUrl);
+        query.addQueryItem(QLatin1String("q"), queryString);
+        queryUrl.setQuery(query);
 
         return queryUrl;
     }
 
-    KUrl buildQueryUrl(const QMap<QString, QString> &query) {
-        KUrl queryUrl = KUrl(QString("http://api.springer.com/metadata/pam/?api_key=").append(springerMetadataKey));
+    QUrl buildQueryUrl(const QMap<QString, QString> &query) {
+        QUrl queryUrl = QUrl(QString("http://api.springer.com/metadata/pam/?api_key=").append(springerMetadataKey));
 
         QString queryString = query[queryKeyFreeText];
 
@@ -214,7 +217,9 @@ public:
         }
 
         queryString = queryString.simplified();
-        queryUrl.addQueryItem(QLatin1String("q"), queryString);
+        QUrlQuery q(queryUrl);
+        q.addQueryItem(QLatin1String("q"), queryString);
+        queryUrl.setQuery(q);
 
         return queryUrl;
     }
@@ -236,14 +241,14 @@ void OnlineSearchSpringerLink::startSearch()
 {
     if (d->xslt == NULL) {
         /// Don't allow searches if xslt is not defined
-        kWarning() << "Cannot allow searching" << label() << "if XSL Transformation not available";
+        qWarning() << "Cannot allow searching" << label() << "if XSL Transformation not available";
         delayedStoppedSearch(resultUnspecifiedError);
         return;
     }
 
     m_hasBeenCanceled = false;
 
-    KUrl springerLinkSearchUrl = d->buildQueryUrl();
+    QUrl springerLinkSearchUrl = d->buildQueryUrl();
 
     emit progress(0, 1);
     QNetworkRequest request(springerLinkSearchUrl);
@@ -258,15 +263,17 @@ void OnlineSearchSpringerLink::startSearch(const QMap<QString, QString> &query, 
 {
     if (d->xslt == NULL) {
         /// Don't allow searches if xslt is not defined
-        kWarning() << "Cannot allow searching" << label() << "if XSL Transformation not available";
+        qWarning() << "Cannot allow searching" << label() << "if XSL Transformation not available";
         delayedStoppedSearch(resultUnspecifiedError);
         return;
     }
 
     m_hasBeenCanceled = false;
 
-    KUrl springerLinkSearchUrl = d->buildQueryUrl(query);
-    springerLinkSearchUrl.addQueryItem(QLatin1String("p"), QString::number(numResults));
+    QUrl springerLinkSearchUrl = d->buildQueryUrl(query);
+    QUrlQuery q(springerLinkSearchUrl);
+    q.addQueryItem(QLatin1String("p"), QString::number(numResults));
+    springerLinkSearchUrl.setQuery(q);
 
     emit progress(0, 1);
     QNetworkRequest request(springerLinkSearchUrl);
@@ -292,9 +299,9 @@ OnlineSearchQueryFormAbstract *OnlineSearchSpringerLink::customWidget(QWidget *p
     return d->form;
 }
 
-KUrl OnlineSearchSpringerLink::homepage() const
+QUrl OnlineSearchSpringerLink::homepage() const
 {
-    return KUrl("http://www.springerlink.com/");
+    return QUrl("http://www.springerlink.com/");
 }
 
 void OnlineSearchSpringerLink::cancel()
@@ -322,17 +329,15 @@ void OnlineSearchSpringerLink::doneFetchingPAM()
                 hasEntries |= publishEntry(entry);
             }
 
-            if (!hasEntries)
-                kDebug() << "No hits found in" << reply->url().toString();
             emit stoppedSearch(resultNoError);
             emit progress(1, 1);
 
             delete bibtexFile;
         } else {
-            kWarning() << "No valid BibTeX file results returned on request on" << reply->url().toString();
+            qWarning() << "No valid BibTeX file results returned on request on" << reply->url().toString();
             emit stoppedSearch(resultUnspecifiedError);
         }
     } else
-        kDebug() << "url was" << reply->url().toString();
+        qWarning() << "url was" << reply->url().toString();
 }
 

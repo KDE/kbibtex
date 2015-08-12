@@ -22,7 +22,7 @@
 #include <QFormLayout>
 
 #include <KComboBox>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include "preferences.h"
 #include "italictextitemmodel.h"
@@ -38,7 +38,7 @@ FileSettingsWidget::FileSettingsWidget(QWidget *parent)
     setupGUI();
 }
 
-void FileSettingsWidget::loadProperties()
+void FileSettingsWidget::resetToLoadedProperties()
 {
     if (m_file != NULL)
         loadProperties(m_file);
@@ -91,7 +91,7 @@ void FileSettingsWidget::loadProperties(File *file)
     }
 }
 
-void FileSettingsWidget::saveProperties()
+void FileSettingsWidget::applyProperties()
 {
     if (m_file != NULL)
         saveProperties(m_file);

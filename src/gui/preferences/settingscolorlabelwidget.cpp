@@ -23,13 +23,14 @@
 #include <QLayout>
 #include <QStyledItemDelegate>
 #include <QSignalMapper>
+#include <QPushButton>
+#include <QMenu>
 
-#include <KPushButton>
 #include <KColorButton>
-#include <KColorDialog>
 #include <KLineEdit>
 #include <KActionMenu>
-#include <KMenu>
+#include <KSharedConfig>
+#include <KConfigGroup>
 
 #include "file.h"
 #include "fileview.h"
@@ -293,7 +294,7 @@ private:
 
 public:
     ColorLabelSettingsModel *model;
-    KPushButton *buttonRemove;
+    QPushButton *buttonRemove;
     QTreeView *view;
 
     Private(SettingsColorLabelWidget *parent)
@@ -343,13 +344,13 @@ public:
         view->setItemDelegate(delegate);
 
         /// Button to add a new randomized color
-        KPushButton *buttonAdd = new KPushButton(KIcon("list-add"), i18n("Add..."), p);
+        QPushButton *buttonAdd = new QPushButton(QIcon::fromTheme("list-add"), i18n("Add..."), p);
         layout->addWidget(buttonAdd, 0, 1, 1, 1);
         connect(buttonAdd, SIGNAL(clicked()), p, SLOT(addColor()));
 
         /// Remove selected color-label pair; button is disabled
         /// if no row is selected in tree view
-        buttonRemove = new KPushButton(KIcon("list-remove"), i18n("Remove"), p);
+        buttonRemove = new QPushButton(QIcon::fromTheme("list-remove"), i18n("Remove"), p);
         layout->addWidget(buttonRemove, 1, 1, 1, 1);
         buttonRemove->setEnabled(false);
         connect(buttonRemove, SIGNAL(clicked()), p, SLOT(removeColor()));
@@ -379,9 +380,9 @@ QString SettingsColorLabelWidget::label() const
     return i18n("Color & Labels");
 }
 
-KIcon SettingsColorLabelWidget::icon() const
+QIcon SettingsColorLabelWidget::icon() const
 {
-    return KIcon("preferences-desktop-color");
+    return QIcon::fromTheme("preferences-desktop-color");
 }
 
 void SettingsColorLabelWidget::loadState()
@@ -445,7 +446,7 @@ public:
         : /* UNUSED p(parent),*/ fileView(fv)
     {
         sm = new QSignalMapper(parent);
-        menu = new KActionMenu(KIcon("preferences-desktop-color"), i18n("Color"), fileView);
+        menu = new KActionMenu(QIcon::fromTheme("preferences-desktop-color"), i18n("Color"), fileView);
         /// Let menu be a sub menu to the tree view's context menu
         fileView->addAction(menu);
     }
@@ -460,19 +461,19 @@ public:
         QStringList colorCodes = configGroup.readEntry(Preferences::keyColorCodes, Preferences::defaultColorCodes);
         QStringList colorLabels = configGroup.readEntry(Preferences::keyColorLabels, Preferences::defaultcolorLabels);
         for (QStringList::ConstIterator itc = colorCodes.constBegin(), itl = colorLabels.constBegin(); itc != colorCodes.constEnd() && itl != colorLabels.constEnd(); ++itc, ++itl) {
-            KAction *action = new KAction(KIcon(ColorLabelWidget::createSolidIcon(*itc)), i18n((*itl).toUtf8().constData()), menu);
+            QAction *action = new QAction(QIcon(ColorLabelWidget::createSolidIcon(*itc)), i18n((*itl).toUtf8().constData()), menu);
             menu->addAction(action);
             sm->setMapping(action, *itc);
             connect(action, SIGNAL(triggered()), sm, SLOT(map()));
         }
 
-        KAction *action = new KAction(menu);
+        QAction *action = new QAction(menu);
         action->setSeparator(true);
         menu->addAction(action);
 
         /// Special action that removes any color
         /// from a BibTeX entry by setting the color to black
-        action = new KAction(i18n("No color"), menu);
+        action = new QAction(i18n("No color"), menu);
         menu->addAction(action);
         sm->setMapping(action, QLatin1String("#000000"));
         connect(action, SIGNAL(triggered()), sm, SLOT(map()));

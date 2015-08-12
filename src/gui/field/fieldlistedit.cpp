@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2015 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -19,6 +19,7 @@
 
 #include <typeinfo>
 
+#include <QDebug>
 #include <QApplication>
 #include <QClipboard>
 #include <QScrollArea>
@@ -27,19 +28,20 @@
 #include <QCheckBox>
 #include <QDragEnterEvent>
 #include <QDropEvent>
+#include <QMimeData>
 #include <QUrl>
 #include <QTimer>
 #include <QAction>
+#include <QPushButton>
+#include <QFontDatabase>
+#include <QFileDialog>
+#include <QMenu>
 
 #include <KMessageBox>
-#include <KLocale>
-#include <KPushButton>
-#include <KFileDialog>
-#include <KInputDialog>
+#include <KLocalizedString>
 #include <KIO/CopyJob>
-#include <KGlobalSettings>
-#include <KMenu>
-#include <KDebug>
+#include <KSharedConfig>
+#include <KConfigGroup>
 
 #include "fileinfo.h"
 #include "file.h"
@@ -64,7 +66,7 @@ public:
     QList<FieldLineEdit *> lineEditList;
     QWidget *pushButtonContainer;
     QBoxLayout *pushButtonContainerLayout;
-    KPushButton *addLineButton;
+    QPushButton *addLineButton;
     const File *file;
     QString fieldKey;
     QWidget *container;
@@ -105,7 +107,7 @@ public:
         pushButtonContainerLayout->setMargin(0);
         layout->addWidget(pushButtonContainer);
 
-        addLineButton = new KPushButton(KIcon("list-add"), i18n("Add"), pushButtonContainer);
+        addLineButton = new QPushButton(QIcon::fromTheme("list-add"), i18n("Add"), pushButtonContainer);
         addLineButton->setObjectName(QLatin1String("addButton"));
         connect(addLineButton, SIGNAL(clicked()), p, SLOT(lineAdd()));
         connect(addLineButton, SIGNAL(clicked()), p, SIGNAL(modified()));
@@ -122,7 +124,7 @@ public:
         scrollArea->setWidgetResizable(true);
     }
 
-    void addButton(KPushButton *button) {
+    void addButton(QPushButton *button) {
         button->setParent(pushButtonContainer);
         pushButtonContainerLayout->addWidget(button);
     }
@@ -148,19 +150,19 @@ public:
         layout->insertWidget(layout->count() - 2, le);
         lineEditList.append(le);
 
-        KPushButton *remove = new KPushButton(KIcon("list-remove"), QLatin1String(""), le);
+        QPushButton *remove = new QPushButton(QIcon::fromTheme("list-remove"), QLatin1String(""), le);
         remove->setToolTip(i18n("Remove value"));
         le->appendWidget(remove);
         connect(remove, SIGNAL(clicked()), smRemove, SLOT(map()));
         smRemove->setMapping(remove, le);
 
-        KPushButton *goDown = new KPushButton(KIcon("go-down"), QLatin1String(""), le);
+        QPushButton *goDown = new QPushButton(QIcon::fromTheme("go-down"), QLatin1String(""), le);
         goDown->setToolTip(i18n("Move value down"));
         le->appendWidget(goDown);
         connect(goDown, SIGNAL(clicked()), smGoDown, SLOT(map()));
         smGoDown->setMapping(goDown, le);
 
-        KPushButton *goUp = new KPushButton(KIcon("go-up"), QLatin1String(""), le);
+        QPushButton *goUp = new QPushButton(QIcon::fromTheme("go-up"), QLatin1String(""), le);
         goUp->setToolTip(i18n("Move value up"));
         le->appendWidget(goUp);
         connect(goUp, SIGNAL(clicked()), smGoUp, SLOT(map()));
@@ -303,7 +305,7 @@ FieldLineEdit *FieldListEdit::addFieldLineEdit()
     return d->addFieldLineEdit();
 }
 
-void FieldListEdit::addButton(KPushButton *button)
+void FieldListEdit::addButton(QPushButton *button)
 {
     d->addButton(button);
 }
@@ -327,10 +329,10 @@ void FieldListEdit::dropEvent(QDropEvent *event)
 
         if (file != NULL && !entry.isNull() && d->fieldKey == QLatin1String("^external")) {
             /// handle "external" list differently
-            QList<KUrl> urlList = FileInfo::entryUrls(entry.data(), KUrl(file->property(File::Url).toUrl()), FileInfo::TestExistenceNo);
+            QList<QUrl> urlList = FileInfo::entryUrls(entry.data(), QUrl(file->property(File::Url).toUrl()), FileInfo::TestExistenceNo);
             Value v;
-            foreach(const KUrl &url, urlList) {
-                v.append(QSharedPointer<VerbatimText>(new VerbatimText(url.pathOrUrl())));
+            foreach(const QUrl &url, urlList) {
+                v.append(QSharedPointer<VerbatimText>(new VerbatimText(url.url(QUrl::PreferLocalFile))));
             }
             reset(v);
             emit modified();
@@ -400,7 +402,7 @@ PersonListEdit::PersonListEdit(KBibTeX::TypeFlag preferredTypeFlag, KBibTeX::Typ
     QBoxLayout *boxLayout = static_cast<QBoxLayout *>(layout());
     boxLayout->addWidget(m_checkBoxOthers);
 
-    m_buttonAddNamesFromClipboard = new KPushButton(KIcon("edit-paste"), i18n("Add from Clipboard"), this);
+    m_buttonAddNamesFromClipboard = new QPushButton(QIcon::fromTheme("edit-paste"), i18n("Add from Clipboard"), this);
     m_buttonAddNamesFromClipboard->setToolTip(i18n("Add a list of names from clipboard"));
     addButton(m_buttonAddNamesFromClipboard);
     connect(m_buttonAddNamesFromClipboard, SIGNAL(clicked()), this, SLOT(slotAddNamesFromClipboard()));
@@ -467,14 +469,14 @@ UrlListEdit::UrlListEdit(QWidget *parent)
     m_signalMapperFieldLineEditTextChanged = new QSignalMapper(this);
     connect(m_signalMapperFieldLineEditTextChanged, SIGNAL(mapped(QWidget*)), this, SLOT(textChanged(QWidget*)));
 
-    m_buttonAddFile = new KPushButton(KIcon("list-add"), i18n("Add file..."), this);
+    m_buttonAddFile = new QPushButton(QIcon::fromTheme("list-add"), i18n("Add file..."), this);
     addButton(m_buttonAddFile);
-    KMenu *menuAddFile = new KMenu(m_buttonAddFile);
+    QMenu *menuAddFile = new QMenu(m_buttonAddFile);
     m_buttonAddFile->setMenu(menuAddFile);
     connect(m_buttonAddFile, SIGNAL(clicked()), m_buttonAddFile, SLOT(showMenu()));
 
-    menuAddFile->addAction(KIcon("emblem-symbolic-link"), i18n("Add reference ..."), this, SLOT(slotAddReference()));
-    menuAddFile->addAction(KIcon("emblem-symbolic-link"), i18n("Add reference from clipboard"), this, SLOT(slotAddReferenceFromClipboard()));
+    menuAddFile->addAction(QIcon::fromTheme("emblem-symbolic-link"), i18n("Add reference ..."), this, SLOT(slotAddReference()));
+    menuAddFile->addAction(QIcon::fromTheme("emblem-symbolic-link"), i18n("Add reference from clipboard"), this, SLOT(slotAddReferenceFromClipboard()));
 }
 
 UrlListEdit::~UrlListEdit()
@@ -490,14 +492,14 @@ void UrlListEdit::slotAddReference()
         const QFileInfo fi(bibtexUrl.path());
         bibtexUrl.setPath(fi.absolutePath());
     }
-    const KUrl documentUrl = KFileDialog::getOpenUrl(bibtexUrl, QString(), this, i18n("File to Associate"));
+    const QUrl documentUrl = QFileDialog::getOpenFileUrl(this, i18n("File to Associate"), bibtexUrl);
     if (!documentUrl.isEmpty())
         addReference(documentUrl);
 }
 
 void UrlListEdit::slotAddReferenceFromClipboard()
 {
-    const KUrl url = KUrl::fromUserInput(QApplication::clipboard()->text());
+    const QUrl url = QUrl::fromUserInput(QApplication::clipboard()->text());
     if (!url.isEmpty())
         addReference(url);
 }
@@ -520,7 +522,7 @@ void UrlListEdit::slotSaveLocally(QWidget *widget)
     /// Determine FieldLineEdit widget
     FieldLineEdit *fieldLineEdit = qobject_cast<FieldLineEdit *>(widget);
     /// Build Url from line edit's content
-    const KUrl url = KUrl::fromUserInput(fieldLineEdit->text());
+    const QUrl url = QUrl::fromUserInput(fieldLineEdit->text());
 
     /// Only proceed if Url is valid and points to a remote location
     if (url.isValid() && !urlIsLocal(url)) {
@@ -531,7 +533,7 @@ void UrlListEdit::slotSaveLocally(QWidget *widget)
         /// Build proposal to a local filename for remote file
         filename = bibFileinfo.isFile() ? bibFileinfo.absolutePath() + QDir::separator() + filename : filename;
         /// Ask user for actual local filename to save remote file to
-        filename = KFileDialog::getSaveFileName(filename, QLatin1String("application/pdf application/postscript image/vnd.djvu"), this, i18n("Save file locally"));
+        filename = QFileDialog::getSaveFileName(this, i18n("Save file locally"), filename, QLatin1String("application/pdf application/postscript image/vnd.djvu"));
         /// Check if user entered a valid filename ...
         if (!filename.isEmpty()) {
             /// Ask user if reference to local file should be
@@ -542,12 +544,11 @@ void UrlListEdit::slotSaveLocally(QWidget *widget)
                 visibleFilename = askRelativeOrStaticFilename(this, absoluteFilename, d->file->property(File::Url).toUrl());
 
             /// Download remote file and save it locally
-            // FIXME: KIO::NetAccess::download is blocking
             setEnabled(false);
             setCursor(Qt::WaitCursor);
             KIO::CopyJob *job = KIO::copy(url, QUrl::fromLocalFile(absoluteFilename), KIO::Overwrite);
             job->setProperty("visibleFilename", QVariant::fromValue<QString>(visibleFilename));
-            connect(job, SIGNAL(result(KJob*)), this, SLOT(downloadFinished(KJob*)));
+            connect(job, &KJob::result, this, &UrlListEdit::downloadFinished);
         }
     }
 }
@@ -561,7 +562,7 @@ void UrlListEdit::downloadFinished(KJob *j) {
         lineAdd(value);
         delete value;
     } else {
-        qWarning() << "Downloading" << job->srcUrls().first().pathOrUrl() << "failed with error" << job->error() << job->errorString();
+        qWarning() << "Downloading" << job->srcUrls().first().toDisplayString() << "failed with error" << job->error() << job->errorString();
     }
     setEnabled(true);
     unsetCursor();
@@ -569,8 +570,8 @@ void UrlListEdit::downloadFinished(KJob *j) {
 
 void UrlListEdit::textChanged(QWidget *widget)
 {
-    /// Determine associated KPushButton "Save locally"
-    KPushButton *buttonSaveLocally = qobject_cast<KPushButton *>(widget);
+    /// Determine associated QPushButton "Save locally"
+    QPushButton *buttonSaveLocally = qobject_cast<QPushButton *>(widget);
     if (buttonSaveLocally == NULL) return; ///< should never happen!
 
     /// Assume a FieldLineEdit was the sender of this signal
@@ -599,7 +600,7 @@ QString UrlListEdit::askRelativeOrStaticFilename(QWidget *parent, const QString 
         // TODO cover level-up cases like "../../test.pdf"
         const QString relativePath = filenameInfo.absolutePath().mid(baseUrlInfo.absolutePath().length() + 1);
         const QString relativeFilename = relativePath + (relativePath.isEmpty() ? QLatin1String("") : QString(QDir::separator())) + filenameInfo.fileName();
-        if (KMessageBox::questionYesNo(parent, i18n("<qt><p>Use a filename relative to the bibliography file?</p><p>The relative path would be<br/><tt style=\"font-family: %3;\">%1</tt></p><p>The absolute path would be<br/><tt style=\"font-family: %3;\">%2</tt></p></qt>", relativeFilename, absoluteFilename, KGlobalSettings::fixedFont().family()), i18n("Relative Path"), KGuiItem(i18n("Relative Path")), KGuiItem(i18n("Absolute Path"))) == KMessageBox::Yes)
+        if (KMessageBox::questionYesNo(parent, i18n("<qt><p>Use a filename relative to the bibliography file?</p><p>The relative path would be<br/><tt style=\"font-family: %3;\">%1</tt></p><p>The absolute path would be<br/><tt style=\"font-family: %3;\">%2</tt></p></qt>", relativeFilename, absoluteFilename, QFontDatabase::systemFont(QFontDatabase::FixedFont).family()), i18n("Relative Path"), KGuiItem(i18n("Relative Path")), KGuiItem(i18n("Absolute Path"))) == KMessageBox::Yes)
             return relativeFilename;
     }
     return absoluteFilename;
@@ -619,7 +620,7 @@ FieldLineEdit *UrlListEdit::addFieldLineEdit()
     FieldLineEdit *fieldLineEdit = FieldListEdit::addFieldLineEdit();
 
     /// Create a new "save locally" button
-    KPushButton *buttonSaveLocally = new KPushButton(KIcon("document-save"), QLatin1String(""), fieldLineEdit);
+    QPushButton *buttonSaveLocally = new QPushButton(QIcon::fromTheme("document-save"), QLatin1String(""), fieldLineEdit);
     buttonSaveLocally->setToolTip(i18n("Save file locally"));
     buttonSaveLocally->setEnabled(false);
     /// Append button to new FieldLineEdit
@@ -646,11 +647,11 @@ const QString KeywordListEdit::keyGlobalKeywordList = QLatin1String("globalKeywo
 KeywordListEdit::KeywordListEdit(QWidget *parent)
         : FieldListEdit(KBibTeX::tfKeyword, KBibTeX::tfKeyword | KBibTeX::tfSource, parent), m_config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), m_configGroupName(QLatin1String("Global Keywords"))
 {
-    m_buttonAddKeywordsFromList = new KPushButton(KIcon("list-add"), i18n("Add Keywords from List"), this);
+    m_buttonAddKeywordsFromList = new QPushButton(QIcon::fromTheme("list-add"), i18n("Add Keywords from List"), this);
     m_buttonAddKeywordsFromList->setToolTip(i18n("Add keywords as selected from a pre-defined list of keywords"));
     addButton(m_buttonAddKeywordsFromList);
     connect(m_buttonAddKeywordsFromList, SIGNAL(clicked()), this, SLOT(slotAddKeywordsFromList()));
-    m_buttonAddKeywordsFromClipboard = new KPushButton(KIcon("edit-paste"), i18n("Add Keywords from Clipboard"), this);
+    m_buttonAddKeywordsFromClipboard = new QPushButton(QIcon::fromTheme("edit-paste"), i18n("Add Keywords from Clipboard"), this);
     m_buttonAddKeywordsFromClipboard->setToolTip(i18n("Add a punctuation-separated list of keywords from clipboard"));
     addButton(m_buttonAddKeywordsFromClipboard);
     connect(m_buttonAddKeywordsFromClipboard, SIGNAL(clicked()), this, SLOT(slotAddKeywordsFromClipboard()));
@@ -667,13 +668,15 @@ void KeywordListEdit::slotAddKeywordsFromList()
     QMap<QString, QString> forCaseInsensitiveSorting;
     /// insert all stored, global keywords
     foreach(const QString &keyword, keywords)
-    forCaseInsensitiveSorting.insert(keyword.toLower(), keyword);
+        forCaseInsensitiveSorting.insert(keyword.toLower(), keyword);
     /// insert all unique keywords used in this file
     foreach(const QString &keyword, m_keywordsFromFile)
-    forCaseInsensitiveSorting.insert(keyword.toLower(), keyword);
+        forCaseInsensitiveSorting.insert(keyword.toLower(), keyword);
     /// re-create string list from map's values
     keywords = forCaseInsensitiveSorting.values();
 
+    // FIXME QInputDialog does not have a 'getItemList'
+    /*
     bool ok = false;
     const QStringList newKeywordList = KInputDialog::getItemList(i18n("Add Keywords"), i18n("Select keywords to add:"), keywords, QStringList(), true, &ok, this);
     if (ok) {
@@ -686,6 +689,7 @@ void KeywordListEdit::slotAddKeywordsFromList()
         if (!newKeywordList.isEmpty())
             emit modified();
     }
+    */
 }
 
 void KeywordListEdit::slotAddKeywordsFromClipboard()
@@ -735,10 +739,10 @@ void KeywordListEdit::setCompletionItems(const QStringList &items)
     QMap<QString, QString> forCaseInsensitiveSorting;
     /// insert all stored, global keywords
     foreach(const QString &keyword, keywords)
-    forCaseInsensitiveSorting.insert(keyword.toLower(), keyword);
+        forCaseInsensitiveSorting.insert(keyword.toLower(), keyword);
     /// insert all unique keywords used in this file
     foreach(const QString &keyword, items)
-    forCaseInsensitiveSorting.insert(keyword.toLower(), keyword);
+        forCaseInsensitiveSorting.insert(keyword.toLower(), keyword);
     /// re-create string list from map's values
     keywords = forCaseInsensitiveSorting.values();
 

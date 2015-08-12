@@ -19,13 +19,13 @@
 
 #include <QBuffer>
 #include <QLayout>
+#include <QDebug>
 #include <QNetworkRequest>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
+#include <QUrlQuery>
 
-#include <KLocale>
-#include <KDebug>
-#include <kio/job.h>
+#include <KLocalizedString>
 #include <KMessageBox>
 
 #include "file.h"
@@ -129,9 +129,9 @@ OnlineSearchQueryFormAbstract *OnlineSearchAcmPortal::customWidget(QWidget *)
     return NULL;
 }
 
-KUrl OnlineSearchAcmPortal::homepage() const
+QUrl OnlineSearchAcmPortal::homepage() const
 {
-    return KUrl("http://dl.acm.org/");
+    return QUrl("http://dl.acm.org/");
 }
 
 void OnlineSearchAcmPortal::cancel()
@@ -152,7 +152,7 @@ void OnlineSearchAcmPortal::doneFetchingStartPage()
                 && (p2 = htmlSource.indexOf("action=", p1)) >= 0
                 && (p3 = htmlSource.indexOf("\"", p2 + 8)) >= 0) {
             QString action = decodeURL(htmlSource.mid(p2 + 8, p3 - p2 - 8));
-            KUrl url(d->acmPortalBaseUrl + action);
+            QUrl url(d->acmPortalBaseUrl + action);
             QString body = QString("Go=&query=%1").arg(d->joinedQueryString).simplified();
 
             QNetworkRequest request(url);
@@ -161,12 +161,12 @@ void OnlineSearchAcmPortal::doneFetchingStartPage()
             InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingSearchPage()));
         } else {
-            kWarning() << "Search using" << label() << "failed.";
+            qWarning() << "Search using" << label() << "failed.";
             KMessageBox::error(m_parent, i18n("Searching '%1' failed: Could not extract form from ACM's start page.", label()));
             emit stoppedSearch(resultUnspecifiedError);
         }
     } else
-        kDebug() << "url was" << reply->url().toString();
+        qWarning() << "url was" << reply->url().toString();
 }
 
 void OnlineSearchAcmPortal::doneFetchingSearchPage()
@@ -185,9 +185,10 @@ void OnlineSearchAcmPortal::doneFetchingSearchPage()
 
         if (d->currentSearchPosition + 20 < d->numExpectedResults) {
             d->currentSearchPosition += 20;
-            KUrl url(reply->url());
-            QMap<QString, QString> queryItems = url.queryItems();
-            queryItems["start"] = QString::number(d->currentSearchPosition);
+            QUrl url(reply->url());
+            QUrlQuery query(url);
+            query.addQueryItem(QLatin1String("start"), QString::number(d->currentSearchPosition));
+            url.setQuery(query);
 
             QNetworkRequest request(url);
             QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
@@ -204,7 +205,7 @@ void OnlineSearchAcmPortal::doneFetchingSearchPage()
             emit progress(d->numSteps, d->numSteps);
         }
     }  else
-        kDebug() << "url was" << reply->url().toString();
+        qWarning() << "url was" << reply->url().toString();
 }
 
 void OnlineSearchAcmPortal::doneFetchingBibTeX()
@@ -241,5 +242,5 @@ void OnlineSearchAcmPortal::doneFetchingBibTeX()
             emit progress(d->numSteps, d->numSteps);
         }
     } else
-        kDebug() << "url was" << reply->url().toString();
+        qWarning() << "url was" << reply->url().toString();
 }

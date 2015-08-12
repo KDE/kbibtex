@@ -26,15 +26,17 @@
 #include <QDir>
 #include <QDragEnterEvent>
 #include <QDropEvent>
+#include <QDebug>
+#include <QPushButton>
+#include <QFontDatabase>
+#include <QUrl>
+#include <QMimeDatabase>
+#include <QMimeType>
+#include <QMimeData>
 
-#include <KMimeType>
 #include <KRun>
-#include <KDebug>
 #include <KMessageBox>
-#include <KGlobalSettings>
-#include <KLocale>
-#include <KUrl>
-#include <KPushButton>
+#include <KLocalizedString>
 #include <KSharedConfig>
 #include <KConfigGroup>
 
@@ -56,7 +58,7 @@ private:
     KBibTeX::TypeFlag preferredTypeFlag;
     KBibTeX::TypeFlags typeFlags;
     QSignalMapper *menuTypesSignalMapper;
-    KPushButton *buttonOpenUrl;
+    QPushButton *buttonOpenUrl;
 
     KSharedConfigPtr config;
     const QString configGroupNameGeneral;
@@ -65,7 +67,7 @@ private:
 public:
     QMenu *menuTypes;
     KBibTeX::TypeFlag typeFlag;
-    KUrl urlToOpen;
+    QUrl urlToOpen;
     const File *file;
     QString fieldKey;
 
@@ -76,7 +78,7 @@ public:
         setupMenu();
         connect(menuTypesSignalMapper, SIGNAL(mapped(int)), parent, SLOT(slotTypeChanged(int)));
 
-        buttonOpenUrl = new KPushButton(KIcon("document-open-remote"), "", parent);
+        buttonOpenUrl = new QPushButton(QIcon::fromTheme("document-open-remote"), "", parent);
         buttonOpenUrl->setVisible(false);
         buttonOpenUrl->setProperty("isConst", true);
         parent->appendWidget(buttonOpenUrl);
@@ -140,7 +142,7 @@ public:
                                     text = verbatimText->text();
                                     result = true;
                                 } else
-                                    kWarning() << "Could not reset: " << typeFlag << "(" << (typeFlag == KBibTeX::tfSource ? "Source" : (typeFlag == KBibTeX::tfReference ? "Reference" : (typeFlag == KBibTeX::tfPerson ? "Person" : (typeFlag == KBibTeX::tfPlainText ? "PlainText" : (typeFlag == KBibTeX::tfKeyword ? "Keyword" : (typeFlag == KBibTeX::tfVerbatim ? "Verbatim" : "???")))))) << ") " << (typeFlags.testFlag(KBibTeX::tfPerson) ? "Person" : "") << (typeFlags.testFlag(KBibTeX::tfPlainText) ? "PlainText" : "") << (typeFlags.testFlag(KBibTeX::tfReference) ? "Reference" : "") << (typeFlags.testFlag(KBibTeX::tfVerbatim) ? "Verbatim" : "") << " " << typeid(*first).name() << " : " << PlainTextValue::text(value);
+                                    qWarning() << "Could not reset: " << typeFlag << "(" << (typeFlag == KBibTeX::tfSource ? "Source" : (typeFlag == KBibTeX::tfReference ? "Reference" : (typeFlag == KBibTeX::tfPerson ? "Person" : (typeFlag == KBibTeX::tfPlainText ? "PlainText" : (typeFlag == KBibTeX::tfKeyword ? "Keyword" : (typeFlag == KBibTeX::tfVerbatim ? "Verbatim" : "???")))))) << ") " << (typeFlags.testFlag(KBibTeX::tfPerson) ? "Person" : "") << (typeFlags.testFlag(KBibTeX::tfPlainText) ? "PlainText" : "") << (typeFlags.testFlag(KBibTeX::tfReference) ? "Reference" : "") << (typeFlags.testFlag(KBibTeX::tfVerbatim) ? "Verbatim" : "") << " " << typeid(*first).name() << " : " << PlainTextValue::text(value);
                             }
                         }
                     }
@@ -194,7 +196,7 @@ public:
                 delete file;
             }
             if (entry.isNull())
-                kWarning() << "Parsing " << fakeBibTeXFile << " did not result in valid entry";
+                qWarning() << "Parsing " << fakeBibTeXFile << " did not result in valid entry";
             return !value.isEmpty();
         } else if (typeFlag == KBibTeX::tfVerbatim) {
             value.append(QSharedPointer<VerbatimText>(new VerbatimText(text)));
@@ -269,20 +271,20 @@ public:
         }
     }
 
-    KIcon iconForTypeFlag(KBibTeX::TypeFlag typeFlag) {
+    QIcon iconForTypeFlag(KBibTeX::TypeFlag typeFlag) {
         switch (typeFlag) {
-        case KBibTeX::tfPlainText: return KIcon("draw-text");
-        case KBibTeX::tfReference: return KIcon("emblem-symbolic-link");
-        case KBibTeX::tfPerson: return KIcon("user-identity");
-        case KBibTeX::tfKeyword: return KIcon("edit-find");
-        case KBibTeX::tfSource: return KIcon("code-context");
-        case KBibTeX::tfVerbatim: return KIcon("preferences-desktop-keyboard");
-        default: return KIcon();
+        case KBibTeX::tfPlainText: return QIcon::fromTheme("draw-text");
+        case KBibTeX::tfReference: return QIcon::fromTheme("emblem-symbolic-link");
+        case KBibTeX::tfPerson: return QIcon::fromTheme("user-identity");
+        case KBibTeX::tfKeyword: return QIcon::fromTheme("edit-find");
+        case KBibTeX::tfSource: return QIcon::fromTheme("code-context");
+        case KBibTeX::tfVerbatim: return QIcon::fromTheme("preferences-desktop-keyboard");
+        default: return QIcon();
         };
     }
 
     void updateGUI(KBibTeX::TypeFlag typeFlag) {
-        parent->setFont(KGlobalSettings::generalFont());
+        parent->setFont(QFontDatabase::systemFont(QFontDatabase::GeneralFont));
         parent->setIcon(iconForTypeFlag(typeFlag));
         switch (typeFlag) {
         case KBibTeX::tfPlainText: parent->setButtonToolTip(i18n("Plain Text")); break;
@@ -291,7 +293,7 @@ public:
         case KBibTeX::tfKeyword: parent->setButtonToolTip(i18n("Keyword")); break;
         case KBibTeX::tfSource:
             parent->setButtonToolTip(i18n("Source Code"));
-            parent->setFont(KGlobalSettings::fixedFont());
+            parent->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
             break;
         case KBibTeX::tfVerbatim: parent->setButtonToolTip(i18n("Verbatim Text")); break;
         default: parent->setButtonToolTip(""); break;
@@ -301,8 +303,8 @@ public:
     void openUrl() {
         if (urlToOpen.isValid()) {
             /// Guess mime type for url to open
-            KMimeType::Ptr mimeType = FileInfo::mimeTypeForUrl(urlToOpen);
-            const QString mimeTypeName = mimeType->name();
+            QMimeType mimeType = FileInfo::mimeTypeForUrl(urlToOpen);
+            const QString mimeTypeName = mimeType.name();
             /// Ask KDE subsystem to open url in viewer matching mime type
             KRun::runUrl(urlToOpen, mimeTypeName, parent, false, false);
         }
@@ -383,16 +385,16 @@ public:
     }
 
     void updateURL(const QString &text) {
-        QList<KUrl> urls;
-        FileInfo::urlsInText(text, FileInfo::TestExistenceYes, file != NULL && file->property(File::Url).toUrl().isValid() ? KUrl(file->property(File::Url).toUrl()).directory() : QString(), urls);
+        QList<QUrl> urls;
+        FileInfo::urlsInText(text, FileInfo::TestExistenceYes, file != NULL && file->property(File::Url).toUrl().isValid() ? QUrl(file->property(File::Url).toUrl()).path() : QString(), urls);
         if (!urls.isEmpty() && urls.first().isValid())
             urlToOpen = urls.first();
         else
-            urlToOpen = KUrl();
+            urlToOpen = QUrl();
 
         /// set special "open URL" button visible if URL (or file or DOI) found
         buttonOpenUrl->setVisible(urlToOpen.isValid());
-        buttonOpenUrl->setToolTip(i18n("Open '%1'", urlToOpen.pathOrUrl()));
+        buttonOpenUrl->setToolTip(i18n("Open '%1'", urlToOpen.url(QUrl::PreferLocalFile) ));
     }
 
     void textChanged(const QString &text) {

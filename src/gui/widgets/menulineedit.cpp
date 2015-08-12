@@ -21,11 +21,12 @@
 #include <QApplication>
 #include <QMenu>
 #include <QTimer>
+#include <QPushButton>
 
-#include <KPushButton>
 #include <KLineEdit>
 #include <KTextEdit>
 #include <KConfigGroup>
+#include <KSharedConfig>
 
 #include "notificationhub.h"
 
@@ -43,7 +44,7 @@ private:
     bool makeInnerWidgetsTransparent;
 
 public:
-    KPushButton *m_pushButtonType;
+    QPushButton *m_pushButtonType;
     KLineEdit *m_singleLineEditText;
     KTextEdit *m_multiLineEditText;
 
@@ -89,7 +90,7 @@ public:
         hLayout->setMargin(0);
         hLayout->setSpacing(2);
 
-        m_pushButtonType = new KPushButton(p);
+        m_pushButtonType = new QPushButton(p);
         appendWidget(m_pushButtonType);
         hLayout->setStretchFactor(m_pushButtonType, 0);
         m_pushButtonType->setObjectName("FieldLineEditButton");
@@ -105,9 +106,9 @@ public:
             m_singleLineEditText = new KLineEdit(p);
             appendWidget(m_singleLineEditText);
             hLayout->setStretchFactor(m_singleLineEditText, 100);
-            m_singleLineEditText->setClearButtonShown(true);
+            m_singleLineEditText->setClearButtonEnabled(true);
             m_singleLineEditText->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
-            m_singleLineEditText->setCompletionMode(KGlobalSettings::CompletionPopup);
+            m_singleLineEditText->setCompletionMode(KCompletion::CompletionPopup);
             m_singleLineEditText->completionObject()->setIgnoreCase(true);
             p->setFocusProxy(m_singleLineEditText);
             connect(m_singleLineEditText, SIGNAL(textEdited(QString)), p, SIGNAL(textChanged(QString)));
@@ -187,7 +188,7 @@ public:
 };
 
 const QString MenuLineEdit::MenuLineEditPrivate::transparentStyleSheet = QLatin1String("KTextEdit { border-style: none; background-color: transparent; }\nKLineEdit { border-style: none; background-color: transparent; }\nKPushButton { border-style: none; background-color: transparent; padding: 0px; margin-left: 2px; margin-right:2px; text-align: left; }");
-const QString MenuLineEdit::MenuLineEditPrivate::normalStyleSheet = QLatin1String("KPushButton { padding:4px; margin:0px;  text-align: left; }\nQPushButton::menu-indicator {subcontrol-position: right center; subcontrol-origin: content;}");
+const QString MenuLineEdit::MenuLineEditPrivate::normalStyleSheet = QLatin1String("QPushButton { padding:4px; margin:0px;  text-align: left; }\nQPushButton::menu-indicator {subcontrol-position: right center; subcontrol-origin: content;}");
 
 MenuLineEdit::MenuLineEdit(bool isMultiLine, QWidget *parent)
         : QFrame(parent), d(new MenuLineEditPrivate(isMultiLine, this))
@@ -235,7 +236,7 @@ void MenuLineEdit::setText(const QString &text)
     }
 }
 
-void MenuLineEdit::setIcon(const KIcon &icon)
+void MenuLineEdit::setIcon(const QIcon &icon)
 {
     d->m_pushButtonType->setIcon(icon);
 }

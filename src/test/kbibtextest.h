@@ -49,7 +49,7 @@ private:
     QList<OnlineSearchAbstract *>::ConstIterator m_currentOnlineSearch;
     int m_currentOnlineSearchNumFoundEntries;
 
-    void addMessage(const QString &message, const KIcon &icon = KIcon());
+    void addMessage(const QString &message, const QIcon &icon = QIcon());
     void setBusy(bool isBusy);
 
     void processNextSearch();

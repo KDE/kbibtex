@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2015 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,15 +17,15 @@
 
 #include "fileinfo.h"
 
-#include <poppler-qt4.h>
+// FIXME #include <poppler-qt4.h>
 
 #include <QFileInfo>
 #include <QDir>
 #include <QTextStream>
+#include <QStandardPaths>
 
 #include <KSharedConfig>
 #include <KConfigGroup>
-#include <KStandardDirs>
 
 #include "kbibtexnamespace.h"
 #include "entry.h"
@@ -37,7 +37,7 @@ static const QStringList documentFileExtensions = QStringList() << ".pdf" << ".p
 
 FileInfo::FileInfo()
 {
-    // TODO
+    /// nothing
 }
 
 const QString FileInfo::mimetypeOctetStream = QLatin1String("application/octet-stream");
@@ -46,48 +46,49 @@ const QString FileInfo::mimetypeBibTeX = QLatin1String("text/x-bibtex");
 const QString FileInfo::mimetypeRIS = QLatin1String("application/x-research-info-systems");
 const QString FileInfo::mimetypePDF = QLatin1String("application/pdf");
 
-KMimeType::Ptr FileInfo::mimeTypeForUrl(const KUrl &url)
+QMimeType FileInfo::mimeTypeForUrl(const QUrl &url)
 {
+    static QMimeDatabase db;
     static const QString invalidExtension = QLatin1String("XXXXXXXXXXXXXXXXXXXXXXX");
-    static const KMimeType::Ptr mimetypeHTMLPtr(KMimeType::mimeType(mimetypeHTML));
-    static const KMimeType::Ptr mimetypeOctetStreamPtr(KMimeType::mimeType(mimetypeOctetStream));
-    static const KMimeType::Ptr mimetypeBibTeXPtr(KMimeType::mimeType(mimetypeBibTeX));
-    static const KMimeType::Ptr mimetypePDFPtr(KMimeType::mimeType(mimetypePDF));
+    static const QMimeType mtHTML(db.mimeTypeForName(mimetypeHTML));
+    static const QMimeType mtOctetStream(db.mimeTypeForName(mimetypeOctetStream));
+    static const QMimeType mtBibTeX(db.mimeTypeForName(mimetypeBibTeX));
+    static const QMimeType mtPDF(db.mimeTypeForName(mimetypePDF));
+    static const QMimeType mtRIS(db.mimeTypeForName(mimetypeRIS));
     /// Test if mime type for BibTeX is registered before determining file extension
-    static const QString mimetypeBibTeXExt = mimetypeBibTeXPtr.isNull() ? invalidExtension : mimetypeBibTeXPtr->mainExtension().mid(1);
-    static const KMimeType::Ptr mimetypeRISPtr(KMimeType::mimeType(mimetypeRIS));
+    static const QString mimetypeBibTeXExt = mtBibTeX.preferredSuffix();
     /// Test if mime type for RIS is registered before determining file extension
-    static const QString mimetypeRISExt = mimetypeRISPtr.isNull() ? invalidExtension : mimetypeRISPtr->mainExtension().mid(1);
+    static const QString mimetypeRISExt = mtRIS.preferredSuffix();
     /// Test if mime type for PDF is registered before determining file extension
-    static const QString mimetypePDFExt = mimetypePDFPtr.isNull() ? invalidExtension : mimetypePDFPtr->mainExtension().mid(1);
+    static const QString mimetypePDFExt = mtPDF.preferredSuffix();
 
-    const QString extension = KMimeType::extractKnownExtension(url.fileName()).toLower();
+    const QString extension = db.suffixForFileName(url.fileName()).toLower();
     if (extension == mimetypeBibTeXExt)
-        return mimetypeBibTeXPtr;
+        return mtBibTeX;
     else if (extension == mimetypeRISExt)
-        return mimetypeRISPtr;
+        return mtRIS;
     else if (extension == mimetypePDFExt)
-        return mimetypePDFPtr;
+        return mtPDF;
     // TODO other extensions
 
     /// Let the KDE subsystem guess the mime type
-    KMimeType::Ptr result = KMimeType::findByUrl(url);
+    QMimeType result = db.mimeTypeForUrl(url);
     /// Fall back to application/octet-stream if something goes wrong
-    if (result.isNull())
-        result = mimetypeOctetStreamPtr;
+    if (!result.isValid())
+        result = mtOctetStream;
 
     /// In case that KDE could not determine mime type,
     /// do some educated guesses on our own
-    if (result.isNull() || result->name() == mimetypeOctetStream) {
-        if (url.protocol().startsWith(QLatin1String("http")))
-            result = mimetypeHTMLPtr;
+    if (!result.isValid() || result.name() == mimetypeOctetStream) {
+        if (url.scheme().startsWith(QLatin1String("http")))
+            result = mtHTML;
         // TODO more tests?
     }
 
     return result;
 }
 
-void FileInfo::urlsInText(const QString &text, TestExistence testExistence, const QString &baseDirectory, QList<KUrl> &result)
+void FileInfo::urlsInText(const QString &text, TestExistence testExistence, const QString &baseDirectory, QList<QUrl> &result)
 {
     if (text.isEmpty())
         return;
@@ -99,7 +100,7 @@ void FileInfo::urlsInText(const QString &text, TestExistence testExistence, cons
     int pos = 0;
     while ((pos = KBibTeX::doiRegExp.indexIn(internalText, pos)) != -1) {
         QString match = KBibTeX::doiRegExp.cap(0);
-        KUrl url(doiUrlPrefix() + match.remove("\\"));
+        QUrl url(doiUrlPrefix() + match.remove("\\"));
         if (url.isValid() && !result.contains(url))
             result << url;
         /// remove match from internal text to avoid duplicates
@@ -123,7 +124,7 @@ void FileInfo::urlsInText(const QString &text, TestExistence testExistence, cons
                 /// To get the absolute path, prepend filename fragment with base directory
                 const QString fullFilename = baseDirectory + QDir::separator() + internalText;
                 const QFileInfo fileInfo(fullFilename);
-                const KUrl url = KUrl(fileInfo.filePath());
+                const QUrl url = QUrl(fileInfo.filePath());
                 if (fileInfo.exists() && fileInfo.isFile() && url.isValid() && !result.contains(url)) {
                     result << url;
                     /// Stop searching for URLs or filenames in current internal text
@@ -133,7 +134,7 @@ void FileInfo::urlsInText(const QString &text, TestExistence testExistence, cons
                 /// Either the filename fragment is an absolute path OR no base directory
                 /// was given (current working directory is assumed), ...
                 const QFileInfo fileInfo(internalText);
-                const KUrl url = KUrl(fileInfo.filePath());
+                const QUrl url = QUrl(fileInfo.filePath());
                 if (fileInfo.exists() && fileInfo.isFile() && url.isValid() && !result.contains(url)) {
                     result << url;
                     /// stop searching for URLs or filenames in current internal text
@@ -146,7 +147,7 @@ void FileInfo::urlsInText(const QString &text, TestExistence testExistence, cons
         pos = 0;
         while ((pos = KBibTeX::urlRegExp.indexIn(internalText, pos)) != -1) {
             const QString match = KBibTeX::urlRegExp.cap(0);
-            KUrl url(match);
+            QUrl url(match);
             if (url.isValid() && (testExistence == TestExistenceNo || !url.isLocalFile() || QFileInfo(url.toLocalFile()).exists()) && !result.contains(url))
                 result << url;
             /// remove match from internal text to avoid duplicates
@@ -159,7 +160,7 @@ void FileInfo::urlsInText(const QString &text, TestExistence testExistence, cons
             int pos2 = internalText.indexOf(" ", pos + 1);
             if (pos2 < 0) pos2 = internalText.length();
             QString match = internalText.mid(pos, pos2 - pos);
-            KUrl url("http://" + match);
+            QUrl url("http://" + match);
             if (url.isValid() && !result.contains(url))
                 result << url;
             /// remove match from internal text to avoid duplicates
@@ -170,7 +171,7 @@ void FileInfo::urlsInText(const QString &text, TestExistence testExistence, cons
         pos = 0;
         while ((pos = KBibTeX::fileRegExp.indexIn(internalText, pos)) != -1) {
             QString match = KBibTeX::fileRegExp.cap(0);
-            KUrl url(match);
+            QUrl url(match);
             if (url.isValid() && (testExistence == TestExistenceNo || !url.isLocalFile() || QFileInfo(url.toLocalFile()).exists()) && !result.contains(url))
                 result << url;
             /// remove match from internal text to avoid duplicates
@@ -179,9 +180,9 @@ void FileInfo::urlsInText(const QString &text, TestExistence testExistence, cons
     }
 }
 
-QList<KUrl> FileInfo::entryUrls(const Entry *entry, const KUrl &bibTeXUrl, TestExistence testExistence)
+QList<QUrl> FileInfo::entryUrls(const Entry *entry, const QUrl &bibTeXUrl, TestExistence testExistence)
 {
-    QList<KUrl> result;
+    QList<QUrl> result;
     if (entry == NULL || entry->isEmpty())
         return result;
 
@@ -189,7 +190,7 @@ QList<KUrl> FileInfo::entryUrls(const Entry *entry, const KUrl &bibTeXUrl, TestE
         const QString doi = PlainTextValue::text(entry->value(Entry::ftDOI));
         if (!doi.isEmpty() && KBibTeX::doiRegExp.indexIn(doi) == 0) {
             QString match = KBibTeX::doiRegExp.cap(0);
-            KUrl url(doiUrlPrefix() + match.remove("\\"));
+            QUrl url(doiUrlPrefix() + match.remove("\\"));
             result.append(url);
         }
     }
@@ -199,7 +200,7 @@ QList<KUrl> FileInfo::entryUrls(const Entry *entry, const KUrl &bibTeXUrl, TestE
         bool ok = false;
         ok &= pmid.toInt(&ok) > 0;
         if (ok) {
-            KUrl url(QLatin1String("https://www.ncbi.nlm.nih.gov/pubmed/") + pmid);
+            QUrl url(QLatin1String("https://www.ncbi.nlm.nih.gov/pubmed/") + pmid);
             result.append(url);
         }
     }
@@ -207,12 +208,12 @@ QList<KUrl> FileInfo::entryUrls(const Entry *entry, const KUrl &bibTeXUrl, TestE
     if (entry->contains(etEPrint)) {
         const QString eprint = PlainTextValue::text(entry->value(etEPrint));
         if (!eprint.isEmpty()) {
-            KUrl url(QLatin1String("http://arxiv.org/search?query=") + eprint);
+            QUrl url(QLatin1String("http://arxiv.org/search?query=") + eprint);
             result.append(url);
         }
     }
 
-    const QString baseDirectory = bibTeXUrl.isValid() ? bibTeXUrl.directory() : QString();
+    const QString baseDirectory = bibTeXUrl.isValid() ? bibTeXUrl.adjusted(QUrl::RemoveFilename | QUrl::StripTrailingSlash).path() : QString();
 
     for (Entry::ConstIterator it = entry->constBegin(); it != entry->constEnd(); ++it) {
         /// skip abstracts, they contain sometimes strange text fragments
@@ -236,8 +237,8 @@ QList<KUrl> FileInfo::entryUrls(const Entry *entry, const KUrl &bibTeXUrl, TestE
         /// check if in the same directory as the BibTeX file
         /// a PDF file exists which filename is based on the entry's id
         for (QStringList::ConstIterator extensionIt = documentFileExtensions.constBegin(); extensionIt != documentFileExtensions.constEnd(); ++extensionIt) {
-            KUrl url(baseDirectory + QDir::separator() + entry->id() + *extensionIt);
-            url.setProtocol(QLatin1String("file"));
+            QUrl url(baseDirectory + QDir::separator() + entry->id() + *extensionIt);
+            url.setScheme(QLatin1String("file"));
             if (QFileInfo(url.toLocalFile()).exists() && !result.contains(url))
                 result << url;
         }
@@ -248,8 +249,8 @@ QList<KUrl> FileInfo::entryUrls(const Entry *entry, const KUrl &bibTeXUrl, TestE
         QString basename = bibTeXUrl.fileName().remove(QRegExp("\\.[^.]{2,5}$"));
         QString directory = baseDirectory + QDir::separator() + basename;
         for (QStringList::ConstIterator extensionIt = documentFileExtensions.constBegin(); extensionIt != documentFileExtensions.constEnd(); ++extensionIt) {
-            KUrl url(directory + QDir::separator() + entry->id() + *extensionIt);
-            url.setProtocol(QLatin1String("file"));
+            QUrl url(directory + QDir::separator() + entry->id() + *extensionIt);
+            url.setScheme(QLatin1String("file"));
             if (QFileInfo(url.toLocalFile()).exists() && !result.contains(url))
                 result << url;
         }
@@ -262,7 +263,7 @@ QString FileInfo::pdfToText(const QString &pdfFilename)
 {
     /// Build filename for text file where PDF file's plain text is cached
     static const QRegExp invalidChars("[^-a-z0-9_]", Qt::CaseInsensitive);
-    QString textFilename = QString(pdfFilename).remove(invalidChars).append(QLatin1String(".txt")).prepend(KStandardDirs::locateLocal("cache", "pdftotext/"));
+    QString textFilename = QString(pdfFilename).remove(invalidChars).append(QLatin1String(".txt")).prepend(QStandardPaths::writableLocation(QStandardPaths::CacheLocation) + QLatin1Char('/') + "pdftotext/");
 
     /// Initialize return value
     QString text;
@@ -281,6 +282,8 @@ QString FileInfo::pdfToText(const QString &pdfFilename)
     /// Either no cache text file existed or could not load text from it
     if (text.isEmpty()) {
         /// Load PDF file through Poppler
+        // FIXME
+        /*
         Poppler::Document *doc = Poppler::Document::load(pdfFilename);
         if (doc != NULL) {
             /// Build text by appending each page's text
@@ -297,6 +300,7 @@ QString FileInfo::pdfToText(const QString &pdfFilename)
                 f.close();
             }
         }
+        */
     }
 
     return text;

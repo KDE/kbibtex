@@ -17,46 +17,23 @@
 
 #include "browserextension.h"
 
-#include <kaction.h>
+#include <KParts/ReadOnlyPart>
+#include <KIconLoader>
 
-#include "part.h"
-
-KBibTeXBrowserExtension::KBibTeXBrowserExtension(KBibTeXPart *p)
-        : KParts::BrowserExtension(p), part(p)
+struct BrowserExtension::Private
 {
-    setObjectName("kbibtexpartbrowserextension");
-//     connect( part->view, SIGNAL( selectionChanged( bool ) ), SLOT( onSelectionChanged( bool ) ) );
+    KParts::ReadOnlyPart *part;
+};
+
+BrowserExtension::BrowserExtension(KParts::ReadOnlyPart *part)
+    : KParts::BrowserExtension(part), d(new Private)
+{
+    d->part = part;
+    const QString iconPath = KIconLoader::global()->iconPath("text-x-bibtex", KIconLoader::SizeSmall);
+    emit setIconUrl(QUrl::fromLocalFile(iconPath));
 }
 
-/*
-void KBibTeXBrowserExtension::copy()
+BrowserExtension::~BrowserExtension()
 {
-    part->view->copy();
+    delete d;
 }
- */
-
-/*
-void KBibTeXBrowserExtension::onSelectionChanged( bool HasSelection )
-{
-    emit enableAction( "copy", HasSelection );
-}
- */
-
-void KBibTeXBrowserExtension::saveState(QDataStream &stream)
-{
-    KParts::BrowserExtension::saveState(stream);
-
-    // TODO
-}
-
-
-void KBibTeXBrowserExtension::restoreState(QDataStream &stream)
-{
-    KParts::BrowserExtension::restoreState(stream);
-
-    // TODO
-
-    part->fitActionSettings();
-}
-
-#include "browserextension.moc"

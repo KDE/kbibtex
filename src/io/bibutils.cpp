@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2015 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,12 +17,11 @@
 
 #include "bibutils.h"
 
+#include <QDebug>
 #include <QProcess>
 #include <QBuffer>
 #include <QByteArray>
-
-#include <KDebug>
-#include <KStandardDirs>
+#include <QStandardPaths>
 
 class BibUtils::Private
 {
@@ -67,16 +66,16 @@ bool BibUtils::available() {
         static const QStringList programs = QStringList() << QLatin1String("bib2xml") << QLatin1String("isi2xml") << QLatin1String("ris2xml") << QLatin1String("end2xml");
         state = avail;
         foreach(const QString &program, programs) {
-            const QString fullPath = KStandardDirs::findExe(program);
+            const QString fullPath = QStandardPaths::findExecutable(program);
             if (fullPath.isEmpty()) {
                 state = unavail; ///< missing a single program is reason to assume that BibUtils is not correctly installed
                 break;
             }
         }
         if (state == avail)
-            kDebug() << "BibUtils found, using it to import/export certain types of bibliographies";
+            qDebug() << "BibUtils found, using it to import/export certain types of bibliographies";
         else if (state == unavail)
-            kWarning() << "No or only an incomplete installation of BibUtils found";
+            qWarning() << "No or only an incomplete installation of BibUtils found";
     }
     return state == avail;
 }
@@ -113,7 +112,7 @@ bool BibUtils::convert(QIODevice &source, const BibUtils::Format &sourceFormat, 
     case Copac: bibUtilsProgram = QLatin1String("copac"); break;
     case Med: bibUtilsProgram = QLatin1String("med"); break;
     default:
-        kWarning() << "Unsupported BibUtils input format:" << sourceFormat;
+        qWarning() << "Unsupported BibUtils input format:" << sourceFormat;
         return false;
     }
 
@@ -133,12 +132,12 @@ bool BibUtils::convert(QIODevice &source, const BibUtils::Format &sourceFormat, 
         /// case Copac not supported by BibUtils
         /// case Med not supported by BibUtils
     default:
-        kWarning() << "Unsupported BibUtils output format:" << destinationFormat;
+        qWarning() << "Unsupported BibUtils output format:" << destinationFormat;
         return false;
     }
 
     /// Test if required BibUtils program is available
-    bibUtilsProgram = KStandardDirs::findExe(bibUtilsProgram);
+    bibUtilsProgram = QStandardPaths::findExecutable(bibUtilsProgram);
     if (bibUtilsProgram.isEmpty())
         return false;
 

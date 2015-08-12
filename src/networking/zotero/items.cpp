@@ -20,8 +20,8 @@
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QXmlStreamReader>
-
-#include <KDebug>
+#include <QDebug>
+#include <QUrlQuery>
 
 #include "file.h"
 #include "fileimporterbibtex.h"
@@ -44,8 +44,8 @@ public:
         /// nothing
     }
 
-    QNetworkReply *requestZoteroUrl(const KUrl &url) {
-        KUrl internalUrl = url;
+    QNetworkReply *requestZoteroUrl(const QUrl &url) {
+        QUrl internalUrl = url;
         api->addLimitToUrl(internalUrl);
         QNetworkRequest request = api->request(internalUrl);
         QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
@@ -53,12 +53,14 @@ public:
         return reply;
     }
 
-    void retrieveItems(const KUrl &url, int start) {
-        KUrl internalUrl = url;
+    void retrieveItems(const QUrl &url, int start) {
+        QUrl internalUrl = url;
 
         static const QString queryItemStart = QLatin1String("start");
-        internalUrl.removeQueryItem(queryItemStart);
-        internalUrl.addQueryItem(queryItemStart, QString::number(start));
+        QUrlQuery query(internalUrl);
+        query.removeQueryItem(queryItemStart);
+        query.addQueryItem(queryItemStart, QString::number(start));
+        internalUrl.setQuery(query);
 
         requestZoteroUrl(internalUrl);
     }
@@ -77,22 +79,26 @@ Items::~Items()
 
 void Items::retrieveItemsByCollection(const QString &collection)
 {
-    KUrl url = d->api->baseUrl();
+    QUrl url = d->api->baseUrl().adjusted(QUrl::StripTrailingSlash);
     if (collection.isEmpty())
-        url.addPath(QLatin1String("items"));
+        url.setPath(url.path() + '/' + (QLatin1String("items")));
     else
-        url.addPath(QString(QLatin1String("/collections/%1/items")).arg(collection));
-    url.addQueryItem(QLatin1String("format"), QLatin1String("bibtex"));
+        url.setPath(url.path() + '/' + (QString(QLatin1String("/collections/%1/items")).arg(collection)));
+    QUrlQuery query(url);
+    query.addQueryItem(QLatin1String("format"), QLatin1String("bibtex"));
+    url.setQuery(query);
     d->retrieveItems(url, 0);
 }
 
 void  Items::retrieveItemsByTag(const QString &tag)
 {
-    KUrl url = d->api->baseUrl();
+    QUrl url = d->api->baseUrl().adjusted(QUrl::StripTrailingSlash);
+    QUrlQuery query(url);
     if (!tag.isEmpty())
-        url.addQueryItem(QLatin1String("tag"), tag);
-    url.addPath(QLatin1String("items"));
-    url.addQueryItem(QLatin1String("format"), QLatin1String("bibtex"));
+        query.addQueryItem(QLatin1String("tag"), tag);
+    url.setPath(url.path() + '/' + (QLatin1String("items")));
+    query.addQueryItem(QLatin1String("format"), QLatin1String("bibtex"));
+    url.setQuery(query);
     d->retrieveItems(url, 0);
 }
 
@@ -101,7 +107,7 @@ void Items::finishedFetchingItems()
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
     static const QString queryItemStart = QLatin1String("start");
     bool ok = false;
-    const int start = reply->url().queryItemValue(queryItemStart).toInt(&ok);
+    const int start = QUrlQuery(reply->url()).queryItemValue(queryItemStart).toInt(&ok);
 
     if (reply->error() == QNetworkReply::NoError && ok) {
         const QString bibTeXcode = QString::fromUtf8(reply->readAll().data());
@@ -127,7 +133,7 @@ void Items::finishedFetchingItems()
             emit stoppedSearch(0); // TODO proper error codes
         }
     } else {
-        kWarning() << reply->errorString(); ///< something went wrong
+        qWarning() << reply->errorString(); ///< something went wrong
         emit stoppedSearch(1); // TODO proper error codes
     }
 }

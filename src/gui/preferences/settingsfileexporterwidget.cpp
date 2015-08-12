@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2015 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -20,14 +20,13 @@
 #include <QFormLayout>
 #include <QCheckBox>
 #include <QSpinBox>
+#include <QPushButton>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <KComboBox>
 #include <KLineEdit>
-#include <KPushButton>
-#include <KFileDialog>
 #include <KUrlRequester>
 
 #include "guihelper.h"
@@ -147,8 +146,6 @@ public:
 
         connect(comboBoxBackupScope, SIGNAL(currentIndexChanged(int)), p, SLOT(updateGUI()));
     }
-
-    // void configGroup(QString arg1, Preferences::BackupScope arg2);
 };
 
 const QString SettingsFileExporterWidget::SettingsFileExporterWidgetPrivate::citeCmdToLabel = QLatin1String("\\%1{") + QChar(0x2026) + QChar('}');
@@ -169,9 +166,9 @@ QString SettingsFileExporterWidget::label() const
     return i18n("Saving and Exporting");
 }
 
-KIcon SettingsFileExporterWidget::icon() const
+QIcon SettingsFileExporterWidget::icon() const
 {
-    return KIcon("document-save");
+    return QIcon::fromTheme("document-save");
 }
 
 void SettingsFileExporterWidget::loadState()

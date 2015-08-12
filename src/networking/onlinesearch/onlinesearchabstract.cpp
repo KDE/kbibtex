@@ -19,17 +19,16 @@
 
 #include <QFileInfo>
 #include <QNetworkReply>
+#include <QDir>
 #include <QTimer>
+#include <QDebug>
 #include <QListWidgetItem>
+#include <QStandardPaths>
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusConnectionInterface>
 
-#include <KStandardDirs>
-#include <kio/netaccess.h>
-#include <KDebug>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
-#include <KPassivePopup>
 
 #include "encoderlatex.h"
 #include "internalnetworkaccessmanager.h"
@@ -57,9 +56,9 @@ QStringList OnlineSearchQueryFormAbstract::authorLastNames(const Entry &entry)
 
     const Value v = entry[Entry::ftAuthor];
     QSharedPointer<Person> p;
-    foreach(QSharedPointer<ValueItem> vi, v)
-    if (!(p = vi.dynamicCast<Person>()).isNull())
-        result.append(encoder->convertToPlainAscii(p->lastName()));
+    foreach (QSharedPointer<ValueItem> vi, v)
+        if (!(p = vi.dynamicCast<Person>()).isNull())
+            result.append(encoder->convertToPlainAscii(p->lastName()));
 
     return result;
 }
@@ -70,16 +69,18 @@ OnlineSearchAbstract::OnlineSearchAbstract(QWidget *parent)
     m_parent = parent;
 }
 
-KIcon OnlineSearchAbstract::icon(QListWidgetItem *listWidgetItem)
+QIcon OnlineSearchAbstract::icon(QListWidgetItem *listWidgetItem)
 {
     static const QRegExp invalidChars(QLatin1String("[^-a-z0-9_]"), Qt::CaseInsensitive);
-    const QString fileNameStem = KStandardDirs::locateLocal("cache", QLatin1String("favicons/")) + QString(favIconUrl()).remove(invalidChars);
+    const QString cacheDirectory = QStandardPaths::writableLocation(QStandardPaths::CacheLocation) + QLatin1String("/favicons/");
+    QDir().mkpath(cacheDirectory);
+    const QString fileNameStem = cacheDirectory + QString(favIconUrl()).remove(invalidChars);
     const QStringList fileNameExtensions = QStringList() << QLatin1String(".ico") << QLatin1String(".png") << QString();
 
-    foreach(const QString &extension, fileNameExtensions) {
+    foreach (const QString &extension, fileNameExtensions) {
         const QString fileName = fileNameStem + extension;
         if (QFileInfo(fileName).exists())
-            return KIcon(fileName);
+            return QIcon(fileName);
     }
 
     QNetworkRequest request(favIconUrl());
@@ -88,7 +89,7 @@ KIcon OnlineSearchAbstract::icon(QListWidgetItem *listWidgetItem)
     if (listWidgetItem != NULL)
         m_iconReplyToListWidgetItem.insert(reply, listWidgetItem);
     connect(reply, SIGNAL(finished()), this, SLOT(iconDownloadFinished()));
-    return KIcon(QLatin1String("applications-internet"));
+    return QIcon::fromTheme(QLatin1String("applications-internet"));
 }
 
 QString OnlineSearchAbstract::name()
@@ -125,21 +126,20 @@ QStringList OnlineSearchAbstract::splitRespectingQuotationMarks(const QString &t
 
 bool OnlineSearchAbstract::handleErrors(QNetworkReply *reply)
 {
-    KUrl url;
+    QUrl url;
     return handleErrors(reply, url);
 }
 
-bool OnlineSearchAbstract::handleErrors(QNetworkReply *reply, KUrl &newUrl)
+bool OnlineSearchAbstract::handleErrors(QNetworkReply *reply, QUrl &newUrl)
 {
-    newUrl = KUrl();
+    newUrl = QUrl();
     if (m_hasBeenCanceled) {
-        kDebug() << "Searching" << label() << "got cancelled";
         emit stoppedSearch(resultCancelled);
         return false;
     } else if (reply->error() != QNetworkReply::NoError) {
         m_hasBeenCanceled = true;
         const QString errorString = reply->errorString();
-        kWarning() << "Search using" << label() << "failed (error code" << reply->error() << "(" << errorString << "), HTTP code" << reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() << ":" << reply->attribute(QNetworkRequest::HttpReasonPhraseAttribute).toByteArray() << ")";
+        qWarning() << "Search using" << label() << "failed (error code" << reply->error() << "(" << errorString << "), HTTP code" << reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() << ":" << reply->attribute(QNetworkRequest::HttpReasonPhraseAttribute).toByteArray() << ")";
         sendVisualNotification(errorString.isEmpty() ? i18n("Searching '%1' failed for unknown reason.", label()) : i18n("Searching '%1' failed with error message:\n\n%2", label(), errorString), label(), "kbibtex", 7 * 1000);
 
         int resultCode = resultUnspecifiedError;
@@ -160,9 +160,8 @@ bool OnlineSearchAbstract::handleErrors(QNetworkReply *reply, KUrl &newUrl)
      */
     if (reply->attribute(QNetworkRequest::RedirectionTargetAttribute).isValid()) {
         newUrl = reply->url().resolved(reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl());
-        kDebug() << "Redirection from" << reply->url().toString() << "to" << newUrl.pathOrUrl();
     } else if (reply->size() == 0)
-        kWarning() << "Search using" << label() << "on url" << reply->url().toString() << "returned no data";
+        qWarning() << "Search using" << label() << "on url" << reply->url().toString() << "returned no data";
 
     return true;
 }
@@ -180,7 +179,6 @@ void OnlineSearchAbstract::sendVisualNotification(const QString &text, const QSt
     // check if service already exists on plugin instantiation
     QDBusConnectionInterface *interface = QDBusConnection::sessionBus().interface();
     if (interface == NULL || !interface->isServiceRegistered(dbusServiceName)) {
-        //kDebug() << dbusServiceName << "D-Bus service not registered";
         return;
     }
 
@@ -199,13 +197,13 @@ void OnlineSearchAbstract::sendVisualNotification(const QString &text, const QSt
         // Not displaying any error messages as this is optional for kdialog
         // and KPassivePopup is a perfectly valid fallback.
         //else {
-        //  kDebug() << "Error: received reply with no arguments.";
+        //  qDebug() << "Error: received reply with no arguments.";
         //}
     } else if (replyMsg.type() == QDBusMessage::ErrorMessage) {
-        //kDebug() << "Error: failed to send D-Bus message";
-        //kDebug() << replyMsg;
+        //qDebug() << "Error: failed to send D-Bus message";
+        //qDebug() << replyMsg;
     } else {
-        //kDebug() << "Unexpected reply type";
+        //qDebug() << "Unexpected reply type";
     }
 }
 
@@ -257,7 +255,7 @@ QMap<QString, QString> OnlineSearchAbstract::formParameters(const QString &htmlT
     int startPos = htmlText.indexOf(formTagBegin, Qt::CaseInsensitive);
     int endPos = htmlText.indexOf(formTagEnd, startPos, Qt::CaseInsensitive);
     if (startPos < 0 || endPos < 0) {
-        kWarning() << "Could not locate form" << formTagBegin << "in text";
+        qWarning() << "Could not locate form" << formTagBegin << "in text";
         return result;
     }
 
@@ -340,6 +338,9 @@ void OnlineSearchAbstract::iconDownloadFinished()
             /// Microsoft Icon have first two bytes always 0x0000,
             /// third and fourth byte is 0x0001 (for .ico)
             extension = QLatin1String(".ico");
+        } else {
+            qWarning() << "Favicon is of unknown format: " << reply->url().toDisplayString();
+            return;
         }
         const QString filename = reply->objectName() + extension;
 
@@ -350,19 +351,22 @@ void OnlineSearchAbstract::iconDownloadFinished()
 
             QListWidgetItem *listWidgetItem = m_iconReplyToListWidgetItem.value(reply, NULL);
             if (listWidgetItem != NULL)
-                listWidgetItem->setIcon(KIcon(filename));
+                listWidgetItem->setIcon(QIcon(filename));
+        } else {
+            qWarning() << "Could not save icon data from URL" << reply->url().toDisplayString() << "to file" << filename;
+            return;
         }
     } else
-        kWarning() << "Could not download icon " << reply->url().toString();
+        qWarning() << "Could not download icon " << reply->url().toString();
 }
 
 void OnlineSearchAbstract::dumpToFile(const QString &filename, const QString &text)
 {
-    const QString usedFilename = KStandardDirs::locateLocal("tmp", filename, true);
+    const QString usedFilename = QDir::tempPath() + QLatin1Char('/') +  filename;
 
     QFile f(usedFilename);
     if (f.open(QFile::WriteOnly)) {
-        kDebug() << "Dumping text" << squeezeText(text, 96) << "to" << usedFilename;
+        qDebug() << "Dumping text" << squeezeText(text, 96) << "to" << usedFilename;
         QTextStream ts(&f);
         ts << text;
         f.close();

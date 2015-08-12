@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2015 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -20,12 +20,12 @@
 #include <QHeaderView>
 #include <QScrollBar>
 #include <QKeyEvent>
+#include <QAction>
+#include <QDebug>
 
-#include <KAction>
 #include <KConfigGroup>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KSharedConfig>
-#include <KDebug>
 
 #include "bibtexfields.h"
 #include "filemodel.h"
@@ -113,7 +113,7 @@ public:
         for (int col = 0; col < headerProperty->columnCount; ++col)
             headerProperty->sumWidths += headerProperty->columns[col].isHidden ? 0 : headerProperty->columns[col].width;
         if (headerProperty->sumWidths == 0) {
-            kWarning() << "headerProperty->sumWidths is zero, cannot apply header properties";
+            qWarning() << "headerProperty->sumWidths is zero, cannot apply header properties";
             return;
         }
 
@@ -160,10 +160,10 @@ public:
         headerProperty->sortOrder = p->header()->sortIndicatorOrder();
 
         if (headerProperty->sumWidths == 0) {
-            kWarning() << "headerProperty->sumWidths is zero, cannot update header properties";
+            qWarning() << "headerProperty->sumWidths is zero, cannot update header properties";
             return;
         } else if (countVisible == 0) {
-            kWarning() << "countVisible is zero, cannot update header properties";
+            qWarning() << "countVisible is zero, cannot update header properties";
             return;
         }
         const int hiddenColumnWidth = headerProperty->sumWidths / countVisible;
@@ -226,10 +226,10 @@ public:
             }
 
             if (headerProperty->sumWidths == 0) {
-                kWarning() << "headerProperty->sumWidths is zero, cannot set column state";
+                qWarning() << "headerProperty->sumWidths is zero, cannot set column state";
                 return;
             } else if (countVisible == 0) {
-                kWarning() << "countVisible is zero, cannot set column state";
+                qWarning() << "countVisible is zero, cannot set column state";
                 return;
             }
             const int hiddenColumnWidth = headerProperty->sumWidths / countVisible;
@@ -270,7 +270,7 @@ BasicFileView::BasicFileView(const QString &name, QWidget *parent)
     const BibTeXFields *bf = BibTeXFields::self();
     for (BibTeXFields::ConstIterator it = bf->constBegin(); it != bf->constEnd(); ++it) {
         const FieldDescription *fd = *it;
-        KAction *action = new KAction(fd->label, header());
+        QAction *action = new QAction(fd->label, header());
         action->setData(col);
         action->setCheckable(true);
         action->setChecked(!isColumnHidden(col));
@@ -280,22 +280,22 @@ BasicFileView::BasicFileView(const QString &name, QWidget *parent)
     }
 
     /// add separator to header's context menu
-    KAction *action = new KAction(header());
+    QAction *action = new QAction(header());
     action->setSeparator(true);
     header()->addAction(action);
 
     /// add action to reset to defaults (regarding column visibility) to header's context menu
-    action = new KAction(i18n("Reset to defaults"), header());
+    action = new QAction(i18n("Reset to defaults"), header());
     connect(action, SIGNAL(triggered()), this, SLOT(headerResetToDefaults()));
     header()->addAction(action);
 
     /// add separator to header's context menu
-    action = new KAction(header());
+    action = new QAction(header());
     action->setSeparator(true);
     header()->addAction(action);
 
     /// add action to disable any sorting
-    action = new KAction(i18n("No sorting"), header());
+    action = new QAction(i18n("No sorting"), header());
     connect(action, SIGNAL(triggered()), this, SLOT(noSorting()));
     header()->addAction(action);
 
@@ -373,7 +373,7 @@ void BasicFileView::columnResized(int /*column*/, int /*oldSize*/, int /*newSize
 
 void BasicFileView::headerActionToggled()
 {
-    KAction *action = static_cast<KAction *>(sender());
+    QAction *action = static_cast<QAction *>(sender());
     bool ok = false;
     const int col = (int)action->data().toInt(&ok);
     if (!ok) return;

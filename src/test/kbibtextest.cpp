@@ -21,14 +21,13 @@
 #include <QTimer>
 #include <QLayout>
 #include <QMenu>
+#include <QIcon>
+#include <QDebug>
 
 #include <KApplication>
-#include <KIcon>
 #include <KPushButton>
 #include <KListWidget>
-#include <KStandardDirs>
 #include <KAction>
-#include <KDebug>
 
 #include <onlinesearchacmportal.h>
 #include <onlinesearcharxiv.h>
@@ -49,11 +48,11 @@
 #include <onlinesearchsoanasaads.h>
 #include "version.h"
 
-KIcon iconOK(QLatin1String("dialog-ok-apply"));
-KIcon iconERROR(QLatin1String("dialog-cancel"));
-KIcon iconINFO(QLatin1String("dialog-information"));
-KIcon iconAUTH(QLatin1String("dialog-password"), NULL, QStringList() << QLatin1String("dialog-cancel"));
-KIcon iconNETWORK(QLatin1String("network-wired"), NULL, QStringList() << QLatin1String("dialog-cancel"));
+QIcon iconOK(QLatin1String("dialog-ok-apply"));
+QIcon iconERROR(QLatin1String("dialog-cancel"));
+QIcon iconINFO(QLatin1String("dialog-information"));
+QIcon iconAUTH(QLatin1String("dialog-password"), NULL, QStringList() << QLatin1String("dialog-cancel"));
+QIcon iconNETWORK(QLatin1String("network-wired"), NULL, QStringList() << QLatin1String("dialog-cancel"));
 
 int filenameCounter = 0;
 
@@ -72,7 +71,7 @@ public:
             : QWidget(parent), m_parent(parent) {
         QGridLayout *layout = new QGridLayout(this);
 
-        buttonStartTest = new KPushButton(KIcon("application-x-executable"), QLatin1String("Start Tests"), this);
+        buttonStartTest = new KPushButton(QIcon::fromTheme("application-x-executable"), QLatin1String("Start Tests"), this);
         layout->addWidget(buttonStartTest, 0, 0, 1, 1);
 
         progressBar = new QProgressBar(this);
@@ -148,7 +147,7 @@ KBibTeXTest::KBibTeXTest(QWidget *parent)
     addMessage(QString(QLatin1String("Compiled for %1")).arg(versionNumber), iconINFO);
 }
 
-void KBibTeXTest::addMessage(const QString &message, const KIcon &icon)
+void KBibTeXTest::addMessage(const QString &message, const QIcon &icon)
 {
     QListWidgetItem *item = icon.isNull() ? new QListWidgetItem(message) : new QListWidgetItem(icon, message);
     item->setToolTip(item->text());

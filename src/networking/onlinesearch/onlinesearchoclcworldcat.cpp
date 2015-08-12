@@ -19,10 +19,11 @@
 
 #include <QNetworkReply>
 #include <QNetworkRequest>
+#include <QDebug>
+#include <QStandardPaths>
+#include <QUrlQuery>
 
-#include <KLocale>
-#include <KStandardDirs>
-#include <KDebug>
+#include <KLocalizedString>
 
 #include "fileimporterbibtex.h"
 #include "xsltransform.h"
@@ -38,16 +39,16 @@ public:
     static const int countPerStep;
     int maxSteps, curStep;
 
-    KUrl baseUrl;
+    QUrl baseUrl;
 
     XSLTransform *xslt;
 
     Private(OnlineSearchOCLCWorldCat *parent)
             : p(parent), maxSteps(0), curStep(0) {
         const QString xsltFilename = QLatin1String("kbibtex/worldcatdc2bibtex.xsl");
-        xslt = XSLTransform::createXSLTransform(KStandardDirs::locate("data", xsltFilename));
+        xslt = XSLTransform::createXSLTransform(QStandardPaths::locate(QStandardPaths::GenericDataLocation, xsltFilename));
         if (xslt == NULL)
-            kWarning() << "Could not create XSLT transformation for" << xsltFilename;
+            qWarning() << "Could not create XSLT transformation for" << xsltFilename;
     }
 
     ~Private() {
@@ -82,7 +83,7 @@ public:
         /// have been assembled yet, no valid search will be possible.
         /// Invalidate base URL and return in this case.
         if (queryFragments.isEmpty()) {
-            kWarning() << "For WorldCat OCLC search to work, either a title or an author has get specified; free text or year only is not sufficient";
+            qWarning() << "For WorldCat OCLC search to work, either a title or an author has get specified; free text or year only is not sufficient";
             baseUrl.clear();
             return;
         }
@@ -95,8 +96,7 @@ public:
         }
 
         const QString queryString = queryFragments.join(QLatin1String("+and+"));
-        baseUrl = KUrl(QString(QLatin1String("http://www.worldcat.org/webservices/catalog/search/worldcat/sru?query=%1&recordSchema=%3&wskey=%2")).arg(queryString).arg(OnlineSearchOCLCWorldCat::Private::APIkey).arg(QLatin1String("info%3Asrw%2Fschema%2F1%2Fdc")));
-        baseUrl.addQueryItem(QLatin1String("maximumRecords"), QString::number(OnlineSearchOCLCWorldCat::Private::countPerStep));
+        baseUrl = QUrl(QString(QLatin1String("http://www.worldcat.org/webservices/catalog/search/worldcat/sru?query=%1&recordSchema=%3&wskey=%2&maximumRecords=%4")).arg(queryString).arg(OnlineSearchOCLCWorldCat::Private::APIkey).arg(QLatin1String("info%3Asrw%2Fschema%2F1%2Fdc")).arg(OnlineSearchOCLCWorldCat::Private::countPerStep));
     }
 };
 
@@ -120,7 +120,7 @@ void OnlineSearchOCLCWorldCat::startSearch() {
 void OnlineSearchOCLCWorldCat::startSearch(const QMap<QString, QString> &query, int numResults) {
     if (d->xslt == NULL) {
         /// Don't allow searches if xslt is not defined
-        kWarning() << "Cannot allow searching" << label() << "if XSL Transformation not available";
+        qWarning() << "Cannot allow searching" << label() << "if XSL Transformation not available";
         delayedStoppedSearch(resultUnspecifiedError);
         return;
     }
@@ -138,7 +138,7 @@ void OnlineSearchOCLCWorldCat::startSearch(const QMap<QString, QString> &query, 
         delayedStoppedSearch(resultInvalidArguments);
         return;
     }
-    KUrl startUrl = d->baseUrl;
+    QUrl startUrl = d->baseUrl;
     QNetworkRequest request(startUrl);
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
     InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
@@ -153,8 +153,8 @@ OnlineSearchQueryFormAbstract *OnlineSearchOCLCWorldCat::customWidget(QWidget *)
     return NULL;
 }
 
-KUrl OnlineSearchOCLCWorldCat::homepage() const {
-    return KUrl(QLatin1String("http://www.worldcat.org/"));
+QUrl OnlineSearchOCLCWorldCat::homepage() const {
+    return QUrl(QLatin1String("http://www.worldcat.org/"));
 }
 
 void OnlineSearchOCLCWorldCat::cancel() {
@@ -189,12 +189,14 @@ void OnlineSearchOCLCWorldCat::downloadDone() {
             delete bibtexFile;
 
             if (!hasEntries) {
-                kDebug() << "No hits found in" << reply->url().toString();
                 emit progress(d->maxSteps, d->maxSteps);
                 emit stoppedSearch(resultNoError);
             } else if (d->curStep < d->maxSteps) {
-                KUrl nextUrl = d->baseUrl;
-                nextUrl.addQueryItem(QLatin1String("start"), QString::number(d->curStep * OnlineSearchOCLCWorldCat::Private::countPerStep + 1));
+                QUrl nextUrl = d->baseUrl;
+                QUrlQuery query(nextUrl);
+                query.addQueryItem(QLatin1String("start"), QString::number(d->curStep *
+                OnlineSearchOCLCWorldCat::Private::countPerStep + 1));
+                nextUrl.setQuery(query);
                 QNetworkRequest request(nextUrl);
                 QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request);
                 InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
@@ -204,9 +206,9 @@ void OnlineSearchOCLCWorldCat::downloadDone() {
                 emit stoppedSearch(resultNoError);
             }
         } else {
-            kWarning() << "No valid BibTeX file results returned on request on" << reply->url().toString();
+            qWarning() << "No valid BibTeX file results returned on request on" << reply->url().toString();
             emit stoppedSearch(resultUnspecifiedError);
         }
     } else
-        kDebug() << "url was" << reply->url().toString();
+        qWarning() << "url was" << reply->url().toString();
 }

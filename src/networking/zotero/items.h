@@ -21,7 +21,7 @@
 #include <QObject>
 #include <QSharedPointer>
 
-#include <KUrl>
+#include <QUrl>
 
 #include "kbibtexnetworking_export.h"
 

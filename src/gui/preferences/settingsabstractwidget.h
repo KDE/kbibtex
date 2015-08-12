@@ -23,7 +23,7 @@
 #include <QAbstractItemModel>
 #include <QWidget>
 
-#include <KIcon>
+#include <QIcon>
 
 class KComboBox;
 
@@ -39,7 +39,7 @@ public:
     // virtual ~SettingsAbstractWidget() { /* nothing */ };
 
     virtual QString label() const = 0;
-    virtual KIcon icon() const = 0;
+    virtual QIcon icon() const = 0;
 
 signals:
     void changed();

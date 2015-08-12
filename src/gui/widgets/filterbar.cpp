@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2015 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -20,14 +20,14 @@
 #include <QLayout>
 #include <QLabel>
 #include <QTimer>
+#include <QIcon>
+#include <QPushButton>
 
-#include <KPushButton>
 #include <KComboBox>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KLineEdit>
 #include <KConfigGroup>
-#include <KStandardDirs>
-#include <KIcon>
+#include <KSharedConfig>
 
 #include "bibtexfields.h"
 #include "delayedexecutiontimer.h"
@@ -45,8 +45,8 @@ public:
     const int maxNumStoredFilterTexts;
     KComboBox *comboBoxCombination;
     KComboBox *comboBoxField;
-    KPushButton *buttonSearchPDFfiles;
-    KPushButton *buttonClearAll;
+    QPushButton *buttonSearchPDFfiles;
+    QPushButton *buttonClearAll;
     DelayedExecutionTimer *delayedTimer;
 
     FilterBarPrivate(FilterBar *parent)
@@ -76,8 +76,8 @@ public:
         QFontMetrics metrics(comboBoxFilterText->font());
         comboBoxFilterText->setMinimumWidth(metrics.width(QLatin1String("AIWaiw")) * 7);
         KLineEdit *lineEdit = static_cast<KLineEdit *>(comboBoxFilterText->lineEdit());
-        lineEdit->setClearButtonShown(true);
-        lineEdit->setClickMessage(i18n("Filter bibliographic entries"));
+        lineEdit->setClearButtonEnabled(true);
+        lineEdit->setPlaceholderText(i18n("Filter bibliographic entries"));
 
         comboBoxCombination = new KComboBox(false, p);
         layout->addWidget(comboBoxCombination, 1);
@@ -98,14 +98,14 @@ public:
                 comboBoxField->addItem(fd->label, fd->upperCamelCase);
         }
 
-        buttonSearchPDFfiles = new KPushButton(p);
-        buttonSearchPDFfiles->setIcon(KIcon("application-pdf"));
+        buttonSearchPDFfiles = new QPushButton(p);
+        buttonSearchPDFfiles->setIcon(QIcon::fromTheme("application-pdf"));
         buttonSearchPDFfiles->setToolTip(i18n("Include PDF files in full-text search"));
         buttonSearchPDFfiles->setCheckable(true);
         layout->addWidget(buttonSearchPDFfiles, 0);
 
-        buttonClearAll = new KPushButton(p);
-        buttonClearAll->setIcon(KIcon("edit-clear-locationbar-rtl"));
+        buttonClearAll = new QPushButton(p);
+        buttonClearAll->setIcon(QIcon::fromTheme("edit-clear-locationbar-rtl"));
         buttonClearAll->setToolTip(i18n("Reset filter criteria"));
         layout->addWidget(buttonClearAll, 0);
 
@@ -265,9 +265,9 @@ SortFilterFileModel::FilterQuery FilterBar::filter()
     return d->filter();
 }
 
-void FilterBar::setClickMessage(const QString &msg) {
+void FilterBar::setPlaceholderText(const QString &msg) {
     KLineEdit *lineEdit = static_cast<KLineEdit *>(d->comboBoxFilterText->lineEdit());
-    lineEdit->setClickMessage(msg);
+    lineEdit->setPlaceholderText(msg);
 }
 
 void FilterBar::comboboxStatusChanged()

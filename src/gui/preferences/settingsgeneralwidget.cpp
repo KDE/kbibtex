@@ -19,7 +19,7 @@
 
 #include <QFormLayout>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <KComboBox>
@@ -96,9 +96,9 @@ QString SettingsGeneralWidget::label() const
     return i18n("General");
 }
 
-KIcon SettingsGeneralWidget::icon() const
+QIcon SettingsGeneralWidget::icon() const
 {
-    return KIcon("kbibtex");
+    return QIcon::fromTheme("kbibtex");
 }
 
 void SettingsGeneralWidget::loadState()

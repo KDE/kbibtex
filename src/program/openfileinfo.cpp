@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2015 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -22,13 +22,18 @@
 #include <QTimer>
 #include <QFileInfo>
 #include <QWidget>
+#include <QUrl>
+#include <QDebug>
+#include <QApplication>
 
+#include <KLocalizedString>
 #include <KConfig>
 #include <KConfigGroup>
-#include <KDebug>
+#include <KSharedConfig>
 #include <KMimeTypeTrader>
-#include <KUrl>
-#include <kparts/part.h>
+#include <KParts/Part>
+#include <KParts/ReadOnlyPart>
+#include <KParts/ReadWritePart>
 #include <KIO/NetAccess>
 
 #include "fileimporterpdf.h"
@@ -53,14 +58,14 @@ public:
     StatusFlags flags;
     OpenFileInfoManager *openFileInfoManager;
     QString mimeType;
-    KUrl url;
+    QUrl url;
 
-    OpenFileInfoPrivate(OpenFileInfoManager *openFileInfoManager, const KUrl &url, const QString &mimeType, OpenFileInfo *p)
+    OpenFileInfoPrivate(OpenFileInfoManager *openFileInfoManager, const QUrl &url, const QString &mimeType, OpenFileInfo *p)
         :  m_counter(-1), p(p), part(NULL), internalServicePtr(KService::Ptr()), internalWidgetParent(NULL), flags(0) {
         this->openFileInfoManager = openFileInfoManager;
         this->url = url;
         if (this->url.scheme().isEmpty())
-            kWarning() << "No scheme specified for URL" << this->url.pathOrUrl();
+            qWarning() << "No scheme specified for URL" << this->url.toDisplayString();
         this->mimeType = mimeType;
     }
 
@@ -75,7 +80,7 @@ public:
 
     KParts::ReadOnlyPart *createPart(QWidget *newWidgetParent, KService::Ptr newServicePtr = KService::Ptr()) {
         if (!p->flags().testFlag(OpenFileInfo::Open)) {
-            kWarning() << "Cannot create part for a file which is not open";
+            qWarning() << "Cannot create part for a file which is not open";
             return NULL;
         }
 
@@ -97,24 +102,26 @@ public:
         internalServicePtr = KService::Ptr();
         internalWidgetParent = NULL;
 
-        if (newServicePtr.isNull()) {
+        if (!newServicePtr) {
             /// no valid KService has been passed
             /// try to find a read-write part to open file
             newServicePtr = p->defaultService();
         }
-        if (newServicePtr.isNull()) {
-            kError() << "Cannot find service to handle mimetype " << mimeType << endl;
+        if (!newServicePtr) {
+            qCritical() << "Cannot find service to handle mimetype " << mimeType << endl;
             return NULL;
         }
 
-        part = newServicePtr->createInstance<KParts::ReadWritePart>(newWidgetParent, (QObject *)newWidgetParent);
+        QString errorString;
+        part = newServicePtr->createInstance<KParts::ReadWritePart>(newWidgetParent, (QObject *)newWidgetParent, QVariantList(), &errorString);
         if (part == NULL) {
+            qDebug() << "Could not instanciate read-write part for service" << newServicePtr->name() << "(" << errorString << ")";
             /// creating a read-write part failed, so maybe it is read-only (like Okular's PDF viewer)?
-            part = newServicePtr->createInstance<KParts::ReadOnlyPart>(newWidgetParent, (QObject *)newWidgetParent);
+            part = newServicePtr->createInstance<KParts::ReadOnlyPart>(newWidgetParent, (QObject *)newWidgetParent, QVariantList(), &errorString);
         }
         if (part == NULL) {
             /// still cannot create part, must be error
-            kError() << "Cannot find part for mimetype " << mimeType << endl;
+            qCritical() << "Could not instanciate part for service" << newServicePtr->name() << "(mimeType=" << mimeType << ", error msg=" << errorString << ")";
             return NULL;
         }
 
@@ -126,7 +133,7 @@ public:
             p->addFlags(OpenFileInfo::HasName);
         } else {
             /// initialize part with empty document
-            part->openUrl(KUrl());
+            part->openUrl(QUrl());
         }
         p->addFlags(OpenFileInfo::Open);
 
@@ -141,7 +148,7 @@ public:
         if (!url.isValid() && m_counter < 0)
             m_counter = ++globalCounter;
         else if (url.isValid())
-            kWarning() << "This function should not be called if URL is valid";
+            qWarning() << "This function should not be called if URL is valid";
         return m_counter;
     }
 
@@ -152,14 +159,14 @@ const QString OpenFileInfo::OpenFileInfoPrivate::dateTimeFormat = QLatin1String(
 const QString OpenFileInfo::OpenFileInfoPrivate::keyLastAccess = QLatin1String("LastAccess");
 const QString OpenFileInfo::OpenFileInfoPrivate::keyURL = QLatin1String("URL");
 
-OpenFileInfo::OpenFileInfo(OpenFileInfoManager *openFileInfoManager, const KUrl &url)
-        : d(new OpenFileInfoPrivate(openFileInfoManager, url, FileInfo::mimeTypeForUrl(url)->name(), this))
+OpenFileInfo::OpenFileInfo(OpenFileInfoManager *openFileInfoManager, const QUrl &url)
+        : d(new OpenFileInfoPrivate(openFileInfoManager, url, FileInfo::mimeTypeForUrl(url).name(), this))
 {
     // nothing
 }
 
 OpenFileInfo::OpenFileInfo(OpenFileInfoManager *openFileInfoManager, const QString &mimeType)
-        : d(new OpenFileInfoPrivate(openFileInfoManager, KUrl(), mimeType, this))
+        : d(new OpenFileInfoPrivate(openFileInfoManager, QUrl(), mimeType, this))
 {
     // nothing
 }
@@ -169,17 +176,17 @@ OpenFileInfo::~OpenFileInfo()
     delete d;
 }
 
-void OpenFileInfo::setUrl(const KUrl &url)
+void OpenFileInfo::setUrl(const QUrl &url)
 {
-    Q_ASSERT_X(url.isValid(), "void OpenFileInfo::setUrl(const KUrl&)", "URL is not valid");
+    Q_ASSERT_X(url.isValid(), "void OpenFileInfo::setUrl(const QUrl&)", "URL is not valid");
     d->url = url;
     if (d->url.scheme().isEmpty())
-        kWarning() << "No scheme specified for URL" << d->url.pathOrUrl();
-    d->mimeType = FileInfo::mimeTypeForUrl(url)->name();
+        qWarning() << "No scheme specified for URL" << d->url.toDisplayString();
+    d->mimeType = FileInfo::mimeTypeForUrl(url).name();
     addFlags(OpenFileInfo::HasName);
 }
 
-KUrl OpenFileInfo::url() const
+QUrl OpenFileInfo::url() const
 {
     return d->url;
 }
@@ -235,7 +242,7 @@ QString OpenFileInfo::shortCaption() const
 QString OpenFileInfo::fullCaption() const
 {
     if (d->url.isValid())
-        return d->url.pathOrUrl();
+        return d->url.url(QUrl::PreferLocalFile);
     else
         return shortCaption();
 }
@@ -305,8 +312,12 @@ KService::Ptr OpenFileInfo::defaultService()
 {
     const QString mt = mimeType();
     KService::Ptr result = KMimeTypeTrader::self()->preferredService(mt, QLatin1String("KParts/ReadWritePart"));
-    if (result.isNull())
+    if (!result)
         result = KMimeTypeTrader::self()->preferredService(mt, QLatin1String("KParts/ReadOnlyPart"));
+    if (result)
+        qDebug() << "Using service" << result->name() << "(" << result->comment() << ") for mime type" << mt;
+    else
+        qWarning() << "Could not find service for mime type" << mt;
     return result;
 }
 
@@ -322,7 +333,6 @@ private:
     static const QString configGroupNameFavorites;
     static const QString configGroupNameOpen;
     static const int maxNumRecentlyUsedFiles, maxNumFavoriteFiles, maxNumOpenFiles;
-    QWidget *widget;
 
 public:
     OpenFileInfoManager *p;
@@ -330,8 +340,8 @@ public:
     OpenFileInfoManager::OpenFileInfoList openFileInfoList;
     OpenFileInfo *currentFileInfo;
 
-    OpenFileInfoManagerPrivate(OpenFileInfoManager *parent, QWidget *w)
-            : widget(w), p(parent), currentFileInfo(NULL) {
+    OpenFileInfoManagerPrivate(OpenFileInfoManager *parent)
+            : p(parent), currentFileInfo(NULL) {
         // nothing
     }
 
@@ -368,16 +378,16 @@ public:
         bool isFirst = true;
         KConfigGroup cg(config, configGroupName);
         for (int i = 0; i < maxNumFiles; ++i) {
-            KUrl fileUrl = KUrl::fromUserInput(cg.readEntry(QString("%1-%2").arg(OpenFileInfo::OpenFileInfoPrivate::keyURL).arg(i), QString()));
+            QUrl fileUrl = QUrl(cg.readEntry(QString("%1-%2").arg(OpenFileInfo::OpenFileInfoPrivate::keyURL).arg(i), ""));
             if (!fileUrl.isValid()) break;
             if (fileUrl.scheme().isEmpty())
                 fileUrl.setScheme(QLatin1String("file"));
 
             /// For local files, test if they exist; ignore local files that do not exist
             if (fileUrl.isLocalFile()) {
-                if (!QFileInfo(fileUrl.pathOrUrl()).exists())
+                if (!QFileInfo(fileUrl.url(QUrl::PreferLocalFile)).exists())
                     continue;
-            } else if (!KIO::NetAccess::exists(fileUrl, KIO::NetAccess::SourceSide, widget))
+            } else if (!KIO::NetAccess::exists(fileUrl, KIO::NetAccess::SourceSide, QApplication::activeWindow()))
                 continue;
 
             OpenFileInfo *ofi = p->contains(fileUrl);
@@ -404,7 +414,7 @@ public:
         for (OpenFileInfoManager::OpenFileInfoList::ConstIterator it = list.constBegin(); i < maxNumFiles && it != list.constEnd(); ++it, ++i) {
             OpenFileInfo *ofi = *it;
 
-            cg.writeEntry(QString("%1-%2").arg(OpenFileInfo::OpenFileInfoPrivate::keyURL).arg(i), ofi->url().pathOrUrl());
+            cg.writeEntry(QString("%1-%2").arg(OpenFileInfo::OpenFileInfoPrivate::keyURL).arg(i), ofi->url().url(QUrl::PreferLocalFile));
             cg.writeEntry(QString("%1-%2").arg(OpenFileInfo::OpenFileInfoPrivate::keyLastAccess).arg(i), ofi->lastAccess().toString(OpenFileInfo::OpenFileInfoPrivate::dateTimeFormat));
         }
         for (; i < maxNumFiles; ++i) {
@@ -422,11 +432,18 @@ const int OpenFileInfoManager::OpenFileInfoManagerPrivate::maxNumFavoriteFiles =
 const int OpenFileInfoManager::OpenFileInfoManagerPrivate::maxNumRecentlyUsedFiles = 8;
 const int OpenFileInfoManager::OpenFileInfoManagerPrivate::maxNumOpenFiles = 16;
 
+OpenFileInfoManager *OpenFileInfoManager::singleton = NULL;
 
-OpenFileInfoManager::OpenFileInfoManager(QWidget *widget)
-        : QObject(widget), d(new OpenFileInfoManagerPrivate(this, widget))
+OpenFileInfoManager::OpenFileInfoManager(QObject *parent)
+        : QObject(parent), d(new OpenFileInfoManagerPrivate(this))
 {
     QTimer::singleShot(300, this, SLOT(delayedReadConfig()));
+}
+
+OpenFileInfoManager *OpenFileInfoManager::instance() {
+    if (singleton == NULL)
+        singleton = new OpenFileInfoManager(QCoreApplication::instance());
+    return singleton;
 }
 
 OpenFileInfoManager::~OpenFileInfoManager()
@@ -443,9 +460,9 @@ OpenFileInfo *OpenFileInfoManager::createNew(const QString &mimeType)
     return result;
 }
 
-OpenFileInfo *OpenFileInfoManager::open(const KUrl &url)
+OpenFileInfo *OpenFileInfoManager::open(const QUrl &url)
 {
-    Q_ASSERT_X(url.isValid(), "OpenFileInfo *OpenFileInfoManager::open(const KUrl&)", "URL is not valid");
+    Q_ASSERT_X(url.isValid(), "OpenFileInfo *OpenFileInfoManager::open(const QUrl&)", "URL is not valid");
 
     OpenFileInfo *result = contains(url);
     if (result == NULL) {
@@ -458,32 +475,32 @@ OpenFileInfo *OpenFileInfoManager::open(const KUrl &url)
     return result;
 }
 
-OpenFileInfo *OpenFileInfoManager::contains(const KUrl &url) const
+OpenFileInfo *OpenFileInfoManager::contains(const QUrl &url) const
 {
     if (!url.isValid()) return NULL; /// can only be unnamed file
 
     for (OpenFileInfoList::ConstIterator it = d->openFileInfoList.constBegin(); it != d->openFileInfoList.constEnd(); ++it) {
         OpenFileInfo *ofi = *it;
-        if (ofi->url().equals(url))
+        if (ofi->url() == url)
             return ofi;
     }
     return NULL;
 }
 
-bool OpenFileInfoManager::changeUrl(OpenFileInfo *openFileInfo, const KUrl &url)
+bool OpenFileInfoManager::changeUrl(OpenFileInfo *openFileInfo, const QUrl &url)
 {
     OpenFileInfo *previouslyContained = contains(url);
 
     /// check if old url differs from new url and old url is valid
     if (previouslyContained != NULL && previouslyContained->flags().testFlag(OpenFileInfo::Open) && previouslyContained != openFileInfo) {
-        kDebug() << "Open file with same URL already exists, forcefully closing it" << endl;
+        qWarning() << "Open file with same URL already exists, forcefully closing it" << endl;
         close(previouslyContained);
     }
 
-    KUrl oldUrl = openFileInfo->url();
+    QUrl oldUrl = openFileInfo->url();
     openFileInfo->setUrl(url);
 
-    if (!url.equals(oldUrl) && oldUrl.isValid()) {
+    if (url != oldUrl && oldUrl.isValid()) {
         /// current document was most probabily renamed (e.g. due to "Save As")
         /// add old URL to recently used files, but exclude the open files list
         OpenFileInfo *ofi = open(oldUrl); // krazy:exclude=syscalls

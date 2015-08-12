@@ -30,18 +30,19 @@
 #include <QRadioButton>
 #include <QLabel>
 #include <QtCore/QPointer>
+#include <QDebug>
+#include <QPushButton>
+#include <QFileDialog>
+#include <QDialog>
+#include <QDialogButtonBox>
 
-#include <KDialog>
-#include <KLocale>
-#include <KDebug>
+#include <KLocalizedString>
+#include <KIconLoader>
 #include <KSqueezedTextLabel>
-#include <KMenu>
-#include <KPushButton>
-#include <KMimeType>
 #include <KRun>
 #include <KTemporaryFile>
-#include <KFileDialog>
-#include <KIO/NetAccess>
+#include <QMimeDatabase>
+#include <QMimeType>
 
 #include "fileinfo.h"
 #include "fieldlistedit.h"
@@ -90,8 +91,9 @@ void PDFItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &optio
     painter->restore();
 }
 
-QList<QWidget *> PDFItemDelegate::createItemWidgets() const
+QList<QWidget *> PDFItemDelegate::createItemWidgets(const QModelIndex &index) const
 {
+    Q_UNUSED(index) // FIXME really of no use?
     QList<QWidget *> list;
 
     /// first, the label with shows the found PDF file's origin (URL)
@@ -109,7 +111,7 @@ QList<QWidget *> PDFItemDelegate::createItemWidgets() const
     Q_ASSERT_X(list.count() == posLabelPreview + 1, "QList<QWidget *> PDFItemDelegate::createItemWidgets() const", "list.count() != posLabelPreview + 1");
 
     /// add a push button to view the PDF file
-    KPushButton *pushButton = new KPushButton(KIcon("application-pdf"), i18n("View"));
+    QPushButton *pushButton = new QPushButton(QIcon::fromTheme("application-pdf"), i18n("View"));
     list << pushButton;
     connect(pushButton, SIGNAL(clicked()), this, SLOT(slotViewPDF()));
     Q_ASSERT_X(list.count() == posViewButton + 1, "QList<QWidget *> PDFItemDelegate::createItemWidgets() const", "list.count() != posViewButton + 1");
@@ -148,7 +150,7 @@ void PDFItemDelegate::updateItemWidgets(const QList<QWidget *> widgets, const QS
 
     const PDFListModel *model = qobject_cast<const PDFListModel *>(index.model());
     if (model == NULL) {
-        kDebug() << "WARNING - INVALID MODEL!";
+        qDebug() << "WARNING - INVALID MODEL!";
         return;
     }
 
@@ -178,7 +180,7 @@ void PDFItemDelegate::updateItemWidgets(const QList<QWidget *> widgets, const QS
     }
 
     /// setup the view button
-    KPushButton *viewButton = qobject_cast<KPushButton *>(widgets[posViewButton]);
+    QPushButton *viewButton = qobject_cast<QPushButton *>(widgets[posViewButton]);
     if (viewButton != NULL) {
         viewButton->move(margin * 2 + KIconLoader::SizeMedium, option.rect.height() - margin - buttonHeight);
         viewButton->resize(buttonWidth, buttonHeight);
@@ -218,15 +220,15 @@ void PDFItemDelegate::slotViewPDF()
         QUrl url = index.data(URLRole).toUrl();
         if (!tempfileName.isEmpty()) {
             /// Guess mime type for url to open
-            KUrl tempUrl(tempfileName);
-            KMimeType::Ptr mimeType = FileInfo::mimeTypeForUrl(tempUrl);
-            const QString mimeTypeName = mimeType->name();
+            QUrl tempUrl(tempfileName);
+            QMimeType mimeType = FileInfo::mimeTypeForUrl(tempUrl);
+            const QString mimeTypeName = mimeType.name();
             /// Ask KDE subsystem to open url in viewer matching mime type
             KRun::runUrl(tempUrl, mimeTypeName, NULL, false, false);
         } else if (url.isValid()) {
             /// Guess mime type for url to open
-            KMimeType::Ptr mimeType = FileInfo::mimeTypeForUrl(url);
-            const QString mimeTypeName = mimeType->name();
+            QMimeType mimeType = FileInfo::mimeTypeForUrl(url);
+            const QString mimeTypeName = mimeType.name();
             /// Ask KDE subsystem to open url in viewer matching mime type
             KRun::runUrl(url, mimeTypeName, NULL, false, false);
         }
@@ -300,9 +302,9 @@ QVariant PDFListModel::data(const QModelIndex &index, int role) const
             return m_resultList[index.row()].downloadMode;
         else if (role == Qt::DecorationRole) {
             /// make an educated guess on the icon, based on URL or path
-            QString iconName = FileInfo::mimeTypeForUrl(m_resultList[index.row()].url)->iconName();
+            QString iconName = FileInfo::mimeTypeForUrl(m_resultList[index.row()].url).iconName();
             iconName = iconName == QLatin1String("application-octet-stream") ? QLatin1String("application-pdf") : iconName;
-            return KIcon(iconName).pixmap(KIconLoader::SizeMedium, KIconLoader::SizeMedium);
+            return QIcon::fromTheme(iconName).pixmap(KIconLoader::SizeMedium, KIconLoader::SizeMedium);
         } else
             return QVariant();
     }
@@ -397,17 +399,23 @@ FindPDFUI::~FindPDFUI()
 
 void FindPDFUI::interactiveFindPDF(Entry &entry, const File &bibtexFile, QWidget *parent)
 {
-    QPointer<KDialog> dlg = new KDialog(parent);
+    QPointer<QDialog> dlg = new QDialog(parent);
     QPointer<FindPDFUI> widget = new FindPDFUI(entry, dlg);
-    dlg->setCaption(i18n("Find PDF"));
-    dlg->setMainWidget(widget);
-    dlg->enableButtonOk(false);
+    dlg->setWindowTitle(i18n("Find PDF"));
+    QBoxLayout *layout = new QVBoxLayout(dlg);
+    layout->addWidget(widget);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, dlg);
+    layout->addWidget(buttonBox);
+    dlg->setLayout(layout);
 
-    connect(widget, SIGNAL(resultAvailable(bool)), dlg, SLOT(enableButtonOk(bool)));
+    buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
+    connect(widget, &FindPDFUI::resultAvailable, buttonBox->button(QDialogButtonBox::Ok), &QWidget::setEnabled);
+    connect(buttonBox->button(QDialogButtonBox::Ok), &QPushButton::clicked, dlg, &QDialog::accept);
+    connect(buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, dlg, &QDialog::reject);
+    connect(buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, widget, &FindPDFUI::abort);
 
-    if (dlg->exec() == KDialog::Accepted) {
+    if (dlg->exec() == QDialog::Accepted)
         widget->apply(entry, bibtexFile);
-    }
     delete dlg;
 }
 
@@ -418,7 +426,7 @@ void FindPDFUI::apply(Entry &entry, const File &bibtexFile)
         bool ok = false;
         FindPDF::DownloadMode downloadMode = (FindPDF::DownloadMode)model->data(model->index(i, 0), DownloadModeRole).toInt(&ok);
         if (!ok) {
-            kDebug() << "Could not interprete download mode";
+            qDebug() << "Could not interprete download mode";
             downloadMode = FindPDF::NoDownload;
         }
 
@@ -445,14 +453,14 @@ void FindPDFUI::apply(Entry &entry, const File &bibtexFile)
                     }
             }
         } else if (downloadMode == FindPDF::Download && !tempfileName.isEmpty()) {
-            KUrl startUrl = bibtexFile.property(File::Url, QUrl()).toUrl();
-            const QString absoluteFilename = KFileDialog::getSaveFileName(KUrl::fromLocalFile(startUrl.directory()), QLatin1String("application/pdf"), this, i18n("Save URL '%1'", url.toString()));
+            QUrl startUrl = bibtexFile.property(File::Url, QUrl()).toUrl();
+            const QString absoluteFilename = QFileDialog::getSaveFileName(this, i18n("Save URL '%1'", url.url(QUrl::PreferLocalFile)), startUrl.adjusted(QUrl::RemoveFilename | QUrl::StripTrailingSlash).path(), QLatin1String("application/pdf"));
             if (!absoluteFilename.isEmpty()) {
                 const QString visibleFilename = UrlListEdit::askRelativeOrStaticFilename(this, absoluteFilename, startUrl);
 
-                kDebug() << "Saving PDF from " << url << " to file " << absoluteFilename << " known as " << visibleFilename;
+                qDebug() << "Saving PDF from " << url << " to file " << absoluteFilename << " known as " << visibleFilename;
                 // FIXME test for overwrite
-                KIO::NetAccess::file_copy(KUrl::fromLocalFile(tempfileName), KUrl::fromLocalFile(absoluteFilename), this);
+                QFile::copy(tempfileName, absoluteFilename);
 
                 bool alreadyContained = false;
                 for (QMap<QString, Value>::ConstIterator it = entry.constBegin(); !alreadyContained && it != entry.constEnd(); ++it)
@@ -496,4 +504,8 @@ void FindPDFUI::searchProgress(int visitedPages, int runningJobs, int foundDocum
     d->listViewResult->hide();
     d->labelMessage->show();
     d->labelMessage->setText(i18n("<qt>Number of visited pages: <b>%1</b><br/>Number of running downloads: <b>%2</b><br/>Number of found documents: <b>%3</b></qt>", visitedPages, runningJobs, foundDocuments));
+}
+
+void FindPDFUI::abort() {
+    d->findpdf->abort();
 }

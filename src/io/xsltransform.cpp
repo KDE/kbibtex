@@ -20,8 +20,7 @@
 #include <libxslt/xsltutils.h>
 
 #include <QFileInfo>
-
-#include <KDebug>
+#include <QDebug>
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
@@ -29,19 +28,19 @@
 XSLTransform *XSLTransform::createXSLTransform(const QString &xsltFilename)
 {
     if (xsltFilename.isEmpty()) {
-        kWarning() << "Filename xsltFilename=" << xsltFilename << "is empty";
+        qWarning() << "Filename xsltFilename=" << xsltFilename << "is empty";
         return NULL;
     }
 
     if (!QFileInfo(xsltFilename).exists()) {
-        kWarning() << "File xsltFilename=" << xsltFilename << " does not exist";
+        qWarning() << "File xsltFilename=" << xsltFilename << " does not exist";
         return NULL;
     }
 
     /// create an internal representation of the XSL file using libxslt
     const xsltStylesheetPtr xsltStylesheet = xsltParseStylesheetFile((const xmlChar *) xsltFilename.toLatin1().data());
     if (xsltStylesheet == NULL) {
-        kWarning() << "File xsltFilename=" << xsltFilename << " resulted in empty/invalid XSLT style sheet";
+        qWarning() << "File xsltFilename=" << xsltFilename << " resulted in empty/invalid XSLT style sheet";
         return NULL;
     }
 
@@ -78,13 +77,13 @@ QString XSLTransform::transform(const QString &xmlText) const
 
                 xmlFreeDoc(resultDocument);
             } else
-                kError() << "Applying XSLT stylesheet to XML document failed";
+                qCritical() << "Applying XSLT stylesheet to XML document failed";
         } else
-            kError() << "XSLT stylesheet is not available or not valid";
+            qCritical() << "XSLT stylesheet is not available or not valid";
 
         xmlFreeDoc(document);
     } else
-        kError() << "XML document is not available or not valid";
+        qCritical() << "XML document is not available or not valid";
 
     return result;
 }

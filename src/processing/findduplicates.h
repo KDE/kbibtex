@@ -85,9 +85,6 @@ signals:
     void maximumProgress(int maxProgress);
     void currentProgress(int progress);
 
-private slots:
-    void gotCanceled();
-
 private:
     class FindDuplicatesPrivate;
     FindDuplicatesPrivate *d;

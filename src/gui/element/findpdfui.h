@@ -56,6 +56,12 @@ public:
 signals:
     void resultAvailable(bool);
 
+public slots:
+    /**
+     * Abort a running search.
+     */
+    void abort();
+
 protected:
     FindPDFUI(Entry &entry, QWidget *parent);
 

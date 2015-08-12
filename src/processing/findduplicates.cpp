@@ -20,11 +20,11 @@
 #include <typeinfo>
 
 #include <QLinkedList>
+#include <QProgressDialog>
+#include <QApplication>
+#include <QDate>
 
-#include <KDebug>
-#include <KProgressDialog>
-#include <KLocale>
-#include <KApplication>
+#include <KLocalizedString>
 
 #include "file.h"
 #include "entry.h"
@@ -200,18 +200,16 @@ void EntryClique::insertKeyValueToValueMap(const QString &fieldName, const Value
 class FindDuplicates::FindDuplicatesPrivate
 {
 private:
-    // UNUSED FindDuplicates *p;
     const unsigned int maxDistance;
     int **d;
     static const int dsize;
 
 public:
-    bool gotCanceled;
     int sensitivity;
     QWidget *widget;
 
-    FindDuplicatesPrivate(FindDuplicates */* UNUSED parent*/, int sens, QWidget *w)
-        : /* UNUSED p(parent),*/ maxDistance(10000), gotCanceled(false), sensitivity(sens), widget(w) {
+    FindDuplicatesPrivate(int sens, QWidget *w)
+            : maxDistance(10000), sensitivity(sens), widget(w == NULL ? qApp->activeWindow() : w) {
         d = new int*[dsize];
         for (int i = 0; i < dsize; ++i)
             d[i] = new int[dsize];
@@ -362,7 +360,7 @@ const int FindDuplicates::FindDuplicatesPrivate::dsize = 32;
 
 
 FindDuplicates::FindDuplicates(QWidget *parent, int sensitivity)
-        : d(new FindDuplicatesPrivate(this, sensitivity, parent))
+        : d(new FindDuplicatesPrivate(sensitivity, parent))
 {
     // nothing
 }
@@ -374,18 +372,13 @@ FindDuplicates::~FindDuplicates()
 
 bool FindDuplicates::findDuplicateEntries(File *file, QList<EntryClique *> &entryCliqueList)
 {
-    KProgressDialog *progressDlg = 0;
-    if (d->widget != NULL) {
-        KApplication::setOverrideCursor(Qt::WaitCursor);
-        progressDlg = new KProgressDialog(d->widget, i18n("Finding Duplicates"));
-        progressDlg->setModal(true);
-        progressDlg->setLabelText(i18n("Searching..."));
-        progressDlg->setMinimumWidth(d->widget->fontMetrics().averageCharWidth() * 48);
-        progressDlg->setAllowCancel(true);
-        connect(progressDlg, SIGNAL(cancelClicked()), this, SLOT(gotCanceled()));
-    }
+    QApplication::setOverrideCursor(Qt::WaitCursor);
+    QScopedPointer<QProgressDialog> progressDlg(new QProgressDialog(i18n("Searching ..."), i18n("Cancel"), 0, 100000 /* to be set later to actual value */, d->widget));
+    progressDlg->setModal(true);
+    progressDlg->setWindowTitle(i18n("Finding Duplicates"));
+    progressDlg->setMinimumWidth(d->widget->fontMetrics().averageCharWidth() * 48);
+    progressDlg->setAutoReset(false);
     entryCliqueList.clear();
-    d->gotCanceled = false;
 
     /// assemble list of entries only (ignoring comments, macros, ...)
     QList<QSharedPointer<Entry> > listOfEntries;
@@ -398,37 +391,27 @@ bool FindDuplicates::findDuplicateEntries(File *file, QList<EntryClique *> &entr
     if (listOfEntries.isEmpty()) {
         /// no entries to compare found
         entryCliqueList.clear();
-        if (d->widget != NULL) {
-            progressDlg->deleteLater();
-            KApplication::restoreOverrideCursor();
-        }
-        return d->gotCanceled;
+        QApplication::restoreOverrideCursor();
+        return progressDlg->wasCanceled();
     }
 
     int curProgress = 0, maxProgress = listOfEntries.count() * (listOfEntries.count() - 1) / 2;
     int progressDelta = 1;
 
-    if (d->widget != NULL) {
-        progressDlg->progressBar()->setMaximum(maxProgress);
-        progressDlg->show();
-        progressDlg->setLabelText(i18n("Searching..."));
-    }
+    progressDlg->setMaximum(maxProgress);
+    progressDlg->show();
 
     emit maximumProgress(maxProgress);
 
     /// go through all entries ...
     for (QList<QSharedPointer<Entry> >::ConstIterator eit = listOfEntries.constBegin(); eit != listOfEntries.constEnd(); ++eit) {
-        if (d->widget != NULL) {
-            KApplication::instance()->processEvents();
-        }
-        if (d->gotCanceled) {
+        QApplication::instance()->processEvents();
+        if (progressDlg->wasCanceled()) {
             entryCliqueList.clear();
             break;
         }
 
-        if (d->widget != NULL) {
-            progressDlg->progressBar()->setValue(curProgress);
-        }
+        progressDlg->setValue(curProgress);
         emit currentProgress(curProgress);
         /// ... and find a "clique" of entries where it will match, i.e. distance is below sensitivity
 
@@ -445,16 +428,14 @@ bool FindDuplicates::findDuplicateEntries(File *file, QList<EntryClique *> &entr
                 break;
             }
 
-            if (d->widget != NULL) {
-                KApplication::instance()->processEvents();
-            }
-            if (d->gotCanceled) {
+            QApplication::instance()->processEvents();
+            if (progressDlg->wasCanceled()) {
                 entryCliqueList.clear();
                 break;
             }
         }
 
-        if (!d->gotCanceled && !foundClique) {
+        if (!progressDlg->wasCanceled() && !foundClique) {
             /// no clique matched to current entry, so create and add new clique
             /// consisting only of the current entry
             EntryClique *newClique = new EntryClique();
@@ -464,17 +445,12 @@ bool FindDuplicates::findDuplicateEntries(File *file, QList<EntryClique *> &entr
 
         curProgress += progressDelta;
         ++progressDelta;
-        if (d->widget != NULL) {
-            progressDlg->progressBar()->setValue(curProgress);
-        }
+        progressDlg->setValue(curProgress);
 
         emit currentProgress(curProgress);
     }
 
-    if (d->widget != NULL) {
-        progressDlg->progressBar()->setValue(progressDlg->progressBar()->maximum());
-        progressDlg->close();
-    }
+    progressDlg->setValue(progressDlg->maximum());
 
     /// remove cliques with only one element (nothing to merge here) from the list of cliques
     for (QList<EntryClique *>::Iterator cit = entryCliqueList.begin(); cit != entryCliqueList.end();)
@@ -490,16 +466,8 @@ bool FindDuplicates::findDuplicateEntries(File *file, QList<EntryClique *> &entr
             ++cit;
         }
 
-    if (d->widget != NULL) {
-        progressDlg->deleteLater();
-        KApplication::restoreOverrideCursor();
-    }
-    return d->gotCanceled;
-}
-
-void FindDuplicates::gotCanceled()
-{
-    d->gotCanceled = true;
+    QApplication::restoreOverrideCursor();
+    return progressDlg->wasCanceled();
 }
 
 

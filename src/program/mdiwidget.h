@@ -21,11 +21,12 @@
 #include <QStackedWidget>
 #include <QModelIndex>
 
-#include <KUrl>
+#include <QUrl>
 #include <KService>
 
 #include "openfileinfo.h"
-#include <fileview.h>
+
+class FileView;
 
 namespace KParts
 {
@@ -44,7 +45,6 @@ public:
 
     FileView *fileView();
     OpenFileInfo *currentFile();
-    OpenFileInfoManager *getOpenFileInfoManager();
 
 public slots:
     void setFile(OpenFileInfo *openFileInfo, KService::Ptr servicePtr = KService::Ptr());
@@ -55,7 +55,7 @@ signals:
     void activePartChanged(KParts::Part *);
     void documentNew();
     void documentOpen();
-    void documentOpenURL(KUrl);
+    void documentOpenURL(QUrl);
 
 private:
     class MDIWidgetPrivate;

@@ -25,7 +25,7 @@
 #include <QTextStream>
 #include <QProcessEnvironment>
 
-#include <KLocale>
+#include <KLocalizedString>
 
 const QString FileExporterToolchain::keyBabelLanguage = QLatin1String("babelLanguage");
 const QString FileExporterToolchain::defaultBabelLanguage = QLatin1String("english");
@@ -65,10 +65,10 @@ bool FileExporterToolchain::runProcess(const QString &cmd, const QStringList &ar
     /// Avoid some paranoid security settings in BibTeX
     processEnvironment.insert("openout_any", "r");
     /// Make applications use working directory as temporary directory
-    processEnvironment.insert("TMPDIR", tempDir.name());
-    processEnvironment.insert("TEMPDIR", tempDir.name());
+    processEnvironment.insert("TMPDIR", tempDir.path());
+    processEnvironment.insert("TEMPDIR", tempDir.path());
     m_process->setProcessEnvironment(processEnvironment);
-    m_process->setWorkingDirectory(tempDir.name());
+    m_process->setWorkingDirectory(tempDir.path());
 
     if (m_errorLog != NULL) {
         connect(m_process, SIGNAL(readyReadStandardOutput()), this, SLOT(slotReadProcessStandardOutput()));

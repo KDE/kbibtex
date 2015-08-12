@@ -23,8 +23,9 @@
 #include <QFile>
 #include <QString>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KConfigGroup>
+#include <KSharedConfig>
 
 #include "starrating.h"
 #include "element.h"
@@ -206,11 +207,11 @@ bool SortFilterFileModel::filterAcceptsRow(int source_row, const QModelIndex &so
 
         /// Test associated PDF files
         if (m_filterQuery.searchPDFfiles && m_filterQuery.field.isEmpty()) ///< not filtering for any specific field
-            foreach(const KUrl &url, FileInfo::entryUrls(entry.data(), fileSourceModel()->bibliographyFile()->property(File::Url, QUrl()).toUrl(), FileInfo::TestExistenceYes)) {
+            foreach(const QUrl &url, FileInfo::entryUrls(entry.data(), fileSourceModel()->bibliographyFile()->property(File::Url, QUrl()).toUrl(), FileInfo::TestExistenceYes)) {
             if (url.isLocalFile() && url.fileName().endsWith(QLatin1String(".pdf"))) {
                 // FIXME if you have a large collection of PDF files and the text version
                 // has not been generated yet, this will freeze KBibTeX for some time
-                const QString text = FileInfo::pdfToText(url.pathOrUrl());
+                const QString text = FileInfo::pdfToText(url.url(QUrl::PreferLocalFile));
                 int i = 0;
                 for (QStringList::ConstIterator itsl = m_filterQuery.terms.constBegin(); itsl != m_filterQuery.terms.constEnd(); ++itsl, ++i)
                     eachTerm[i] |= (*itsl).isEmpty() ? true : text.contains(*itsl, Qt::CaseInsensitive);

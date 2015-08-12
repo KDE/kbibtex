@@ -17,10 +17,12 @@
 
 #include "bibliographyservice.h"
 
+#include <QMessageBox>
+#include <QStandardPaths>
+
 #include <KSharedConfig>
 #include <KConfigGroup>
-#include <KLocale>
-#include <KMessageBox>
+#include <KLocalizedString>
 
 class BibliographyService::Private
 {
@@ -47,16 +49,16 @@ public:
 
     Private(QWidget *w, BibliographyService */* UNUSED parent*/)
         : // UNUSED p(parent),
-        configXDGMimeAppsList(KSharedConfig::openConfig(QLatin1String("mimeapps.list"), KConfig::NoGlobals, "xdgdata-apps")),
-        configGroupAddedKDEServiceAssociations(configXDGMimeAppsList, "Added KDE Service Associations"),
-        configGroupRemovedKDEServiceAssociations(configXDGMimeAppsList, "Removed KDE Service Associations"),
-        configGroupAddedAssociations(configXDGMimeAppsList, "Added Associations"),
-        configGroupRemovedAssociations(configXDGMimeAppsList, "Removed Associations"),
-        parentWidget(w),
-        textBasedMimeTypes(QStringList()
-                           << QLatin1String("text/x-bibtex") ///< classical BibTeX bibliographies
-                           << QLatin1String("application/x-research-info-systems") ///< Research Information Systems (RIS) bibliographies
-                           << QLatin1String("application/x-isi-export-format")) ///< Information Sciences Institute (ISI) bibliographies
+          configXDGMimeAppsList(KSharedConfig::openConfig(QLatin1String("mimeapps.list"), KConfig::NoGlobals, QStandardPaths::ApplicationsLocation)),
+          configGroupAddedKDEServiceAssociations(configXDGMimeAppsList, "Added KDE Service Associations"),
+          configGroupRemovedKDEServiceAssociations(configXDGMimeAppsList, "Removed KDE Service Associations"),
+          configGroupAddedAssociations(configXDGMimeAppsList, "Added Associations"),
+          configGroupRemovedAssociations(configXDGMimeAppsList, "Removed Associations"),
+          parentWidget(w),
+          textBasedMimeTypes(QStringList()
+                             << QLatin1String("text/x-bibtex") ///< classical BibTeX bibliographies
+                             << QLatin1String("application/x-research-info-systems") ///< Research Information Systems (RIS) bibliographies
+                             << QLatin1String("application/x-isi-export-format")) ///< Information Sciences Institute (ISI) bibliographies
     {
         /// nothing
     }
@@ -196,5 +198,5 @@ bool BibliographyService::isKBibTeXdefault() const {
 
 void BibliographyService::kbuildsycoca4finished(int exitCode, QProcess::ExitStatus exitStatus) {
     if (exitCode != 0 || exitStatus != QProcess::NormalExit)
-        KMessageBox::error(d->parentWidget, i18n("Failed to run 'kbuildsycoca4' to update mime type associations.\n\nThe system may not know how to use KBibTeX to open bibliography files."), i18n("Failed to run 'kbuildsycoca4'"));
+        QMessageBox::warning(d->parentWidget,  i18n("Failed to run 'kbuildsycoca4'"), i18n("Failed to run 'kbuildsycoca4' to update mime type associations.\n\nThe system may not know how to use KBibTeX to open bibliography files."), i18n("Failed to run 'kbuildsycoca4'"));
 }

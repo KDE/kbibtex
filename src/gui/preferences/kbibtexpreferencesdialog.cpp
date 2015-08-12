@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2015 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -19,13 +19,13 @@
 
 #include <QSet>
 #include <QFileInfo>
+#include <QDebug>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KComboBox>
-#include <KStandardDirs>
-#include <KDebug>
 #include <KMessageBox>
 #include <KGuiItem>
+#include <QStandardPaths>
 
 #include "notificationhub.h"
 #include "settingsgeneralwidget.h"
@@ -108,17 +108,22 @@ public:
 
     void resetToDefaults() {
         switch (KMessageBox::warningYesNoCancel(p, i18n("This will reset the settings to factory defaults. Should this affect only the current page or all settings?"), i18n("Reset to Defaults"), KGuiItem(i18n("All settings"), QLatin1String("edit-undo")), KGuiItem(i18n("Only current page"), QLatin1String("document-revert")))) {
-        case KMessageBox::Yes:
+        case KMessageBox::Yes: {
             foreach(SettingsAbstractWidget *settingsWidget, settingWidgets) {
                 settingsWidget->resetToDefaults();
             }
             break;
+        }
         case KMessageBox::No: {
             SettingsAbstractWidget *widget = qobject_cast<SettingsAbstractWidget *>(p->currentPage()->widget());
             if (widget != NULL)
                 widget->resetToDefaults();
+            break;
         }
-        break;
+        case KMessageBox::Cancel:
+            break; // nothing to do here
+        default:
+            qWarning() << "There should be no use for a default case here!";
         }
     }
 };
@@ -128,11 +133,11 @@ KBibTeXPreferencesDialog::KBibTeXPreferencesDialog(QWidget *parent, Qt::WFlags f
 {
     setFaceType(KPageDialog::Tree);
     setWindowTitle(i18n("Preferences"));
-    setButtons(Default | Reset | Ok | Apply | Cancel);
-    setDefaultButton(Ok);
-    enableButtonApply(false);
+    // FIXME setButtons(Default | Reset | Ok | Apply | Cancel);
+    // FIXME setDefaultButton(Ok);
+    // FIXME enableButtonApply(false);
     setModal(true);
-    showButtonSeparator(true);
+    // FIXME showButtonSeparator(true);
 
     connect(this, SIGNAL(applyClicked()), this, SLOT(apply()));
     connect(this, SIGNAL(okClicked()), this, SLOT(ok()));
@@ -155,14 +160,14 @@ void KBibTeXPreferencesDialog::hideEvent(QHideEvent *)
 
 void KBibTeXPreferencesDialog::apply()
 {
-    enableButtonApply(false);
+    // FIXME enableButtonApply(false);
     d->saveState();
     d->notifyOfChanges = true;
 }
 
 void KBibTeXPreferencesDialog::reset()
 {
-    enableButtonApply(false);
+    // FIXME enableButtonApply(false);
     d->loadState();
 }
 
@@ -181,5 +186,5 @@ void KBibTeXPreferencesDialog::resetToDefaults()
 
 void KBibTeXPreferencesDialog::gotChanged()
 {
-    enableButtonApply(true);
+    // FIXME enableButtonApply(true);
 }

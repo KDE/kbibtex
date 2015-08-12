@@ -21,11 +21,11 @@
 #include <QLabel>
 #include <QSpinBox>
 #include <QNetworkReply>
+#include <QDebug>
+#include <QStandardPaths>
 
 #include <KLineEdit>
-#include <KLocale>
-#include <KDebug>
-#include <KStandardDirs>
+#include <KLocalizedString>
 #include <KMessageBox>
 #include <KConfigGroup>
 
@@ -57,7 +57,7 @@ public:
         QLabel *label = new QLabel(i18n("Free text:"), this);
         layout->addWidget(label, 0, 0, 1, 1);
         lineEditFreeText = new KLineEdit(this);
-        lineEditFreeText->setClearButtonShown(true);
+        lineEditFreeText->setClearButtonEnabled(true);
         lineEditFreeText->setFocus(Qt::TabFocusReason);
         layout->addWidget(lineEditFreeText, 0, 1, 1, 1);
         label->setBuddy(lineEditFreeText);
@@ -109,31 +109,31 @@ public:
           numSteps(0), curStep(0)
     {
         const QString xsltFilename = QLatin1String("kbibtex/arxiv2bibtex.xsl");
-        xslt = XSLTransform::createXSLTransform(KStandardDirs::locate("data", xsltFilename));
+        xslt = XSLTransform::createXSLTransform(QStandardPaths::locate(QStandardPaths::GenericDataLocation, xsltFilename));
         if (xslt == NULL)
-            kWarning() << "Could not create XSLT transformation for" << xsltFilename;
+            qWarning() << "Could not create XSLT transformation for" << xsltFilename;
     }
 
     ~OnlineSearchArXivPrivate() {
         delete xslt;
     }
 
-    KUrl buildQueryUrl() {
+    QUrl buildQueryUrl() {
         /// format search terms
         QStringList queryFragments;
 
         foreach (const QString &queryFragment, p->splitRespectingQuotationMarks(form->lineEditFreeText->text()))
             queryFragments.append(p->encodeURL(queryFragment));
-        return KUrl(QString("%1search_query=all:\"%3\"&start=0&max_results=%2").arg(arXivQueryBaseUrl).arg(form->numResultsField->value()).arg(queryFragments.join("\"+AND+all:\""))); ///< join search terms with an AND operation
+        return QUrl(QString("%1search_query=all:\"%3\"&start=0&max_results=%2").arg(arXivQueryBaseUrl).arg(form->numResultsField->value()).arg(queryFragments.join("\"+AND+all:\""))); ///< join search terms with an AND operation
     }
 
-    KUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) {
+    QUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) {
         /// format search terms
         QStringList queryFragments;
         for (QMap<QString, QString>::ConstIterator it = query.constBegin(); it != query.constEnd(); ++it)
             foreach (const QString &queryFragment, p->splitRespectingQuotationMarks(it.value()))
                 queryFragments.append(p->encodeURL(queryFragment));
-        return KUrl(QString("%1search_query=all:\"%3\"&start=0&max_results=%2").arg(arXivQueryBaseUrl).arg(numResults).arg(queryFragments.join("\"+AND+all:\""))); ///< join search terms with an AND operation
+        return QUrl(QString("%1search_query=all:\"%3\"&start=0&max_results=%2").arg(arXivQueryBaseUrl).arg(numResults).arg(queryFragments.join("\"+AND+all:\""))); ///< join search terms with an AND operation
     }
 
     void interpreteJournal(Entry &entry) {
@@ -288,8 +288,6 @@ public:
         if (journalText.isEmpty()) return;
         else entry.remove(Entry::ftJournal);
 
-        kDebug() << "journalText =" << journalText;
-
         if (journalRef1.indexIn(journalText, Qt::CaseInsensitive) >= 0) {
             /**
              * Captures:
@@ -299,7 +297,6 @@ public:
              *   4: page start
              *   6: page end
              */
-            kDebug() << "journalRef1 triggers";
 
             QString text;
             if (!(text = journalRef1.cap(1)).isEmpty()) {
@@ -339,7 +336,6 @@ public:
              *   5: page start
              *   7: page end
              */
-            kDebug() << "journalRef2 triggers";
 
             QString text;
             if (!(text = journalRef2.cap(1)).isEmpty()) {
@@ -384,7 +380,6 @@ public:
              *   7: page end
              *   9 or 10: year
              */
-            kDebug() << "journalRef3 triggers";
 
             QString text;
             if (!(text = journalRef3.cap(1)).isEmpty()) {
@@ -435,7 +430,6 @@ public:
              *   7: page end
              *   9 or 10: year
              */
-            kDebug() << "journalRef4 triggers";
 
             QString text;
             if (!(text = journalRef4.cap(1)).isEmpty()) {
@@ -473,7 +467,6 @@ public:
               *   4: page start
               *   6: year
               */
-            kDebug() << "journalRef5 triggers";
 
             QString text;
             if (!(text = journalRef5.cap(1)).isEmpty()) {
@@ -506,7 +499,6 @@ public:
               *   5: page start
               *   7: page end
               */
-            kDebug() << "journalRef6 triggers";
 
             QString text;
             if (!(text = journalRef6.cap(1)).isEmpty()) {
@@ -547,7 +539,6 @@ public:
                 }
             }
         } else {
-            kDebug() << "Big regular expressions failed, trying to guess";
             if (generalJour.indexIn(journalText) >= 0) {
                 Value v;
                 v.append(QSharedPointer<PlainText>(new PlainText(generalJour.cap(0))));
@@ -582,7 +573,7 @@ void OnlineSearchArXiv::startSearch()
 {
     if (d->xslt == NULL) {
         /// Don't allow searches if xslt is not defined
-        kWarning() << "Cannot allow searching" << label() << "if XSL Transformation not available";
+        qWarning() << "Cannot allow searching" << label() << "if XSL Transformation not available";
         delayedStoppedSearch(resultUnspecifiedError);
         return;
     }
@@ -605,7 +596,7 @@ void OnlineSearchArXiv::startSearch(const QMap<QString, QString> &query, int num
 {
     if (d->xslt == NULL) {
         /// Don't allow searches if xslt is not defined
-        kWarning() << "Cannot allow searching" << label() << "if XSL Transformation not available";
+        qWarning() << "Cannot allow searching" << label() << "if XSL Transformation not available";
         delayedStoppedSearch(resultUnspecifiedError);
         return;
     }
@@ -637,9 +628,9 @@ OnlineSearchQueryFormAbstract *OnlineSearchArXiv::customWidget(QWidget *parent)
     return (d->form = new OnlineSearchArXiv::OnlineSearchQueryFormArXiv(parent));
 }
 
-KUrl OnlineSearchArXiv::homepage() const
+QUrl OnlineSearchArXiv::homepage() const
 {
-    return KUrl("http://arxiv.org/");
+    return QUrl("http://arxiv.org/");
 }
 
 void OnlineSearchArXiv::cancel()
@@ -671,18 +662,16 @@ void OnlineSearchArXiv::downloadDone()
                 hasEntries |= publishEntry(entry);
             }
 
-            if (!hasEntries)
-                kDebug() << "No hits found in" << reply->url().toString();
             emit stoppedSearch(resultNoError);
             emit progress(d->numSteps, d->numSteps);
 
             delete bibtexFile;
         } else {
-            kWarning() << "No valid BibTeX file results returned on request on" << reply->url().toString();
+            qWarning() << "No valid BibTeX file results returned on request on" << reply->url().toString();
             emit stoppedSearch(resultUnspecifiedError);
         }
     } else
-        kDebug() << "url was" << reply->url().toString();
+        qWarning() << "url was" << reply->url().toString();
 }
 
 void OnlineSearchArXiv::sanitizeEntry(QSharedPointer<Entry> entry)

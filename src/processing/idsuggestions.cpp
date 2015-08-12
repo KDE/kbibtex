@@ -19,7 +19,7 @@
 
 #include <KSharedConfig>
 #include <KConfigGroup>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include "journalabbreviations.h"
 #include "encoderlatex.h"

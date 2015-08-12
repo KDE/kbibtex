@@ -21,9 +21,9 @@
 #include "kbibtexio_export.h"
 
 #include <QList>
-
-#include <KUrl>
-#include <KMimeType>
+#include <QUrl>
+#include <QMimeDatabase>
+#include <QMimeType>
 
 class Entry;
 
@@ -42,19 +42,19 @@ public:
     };
 
     /**
-     * Finds a KMimeType with the given url.
+     * Finds a QMimeType with the given url.
      * Tries to guess a file's mime type by its extension first,
-     * but falls back to KMimeType's findByUrl if that does not work.
-     * Background: If a HTTP or WebDAV server claims that a .bib file
-     * is of mime type application/octet-stream, KMimeType::findByUrl
-     * will keep that assessment instead of inspecting the file
-     * extension.
+     * but falls back to QMimeType's mimeTypeForName if that does
+     * not work. Background: If a HTTP or WebDAV server claims
+     * that a .bib file is of mime type application/octet-stream,
+     * QMimeType::mimeTypeForName will keep that assessment
+     * instead of inspecting the file extension.
      *
-     * @see KMimeType::findByUrl
+     * @see QMimeType::mimeTypeForName
      * @param url Url to analyze
      * @return Guessed mime type
      */
-    static KMimeType::Ptr mimeTypeForUrl(const KUrl &url);
+    static QMimeType mimeTypeForUrl(const QUrl &url);
 
     /**
      * Find all file or URL references in the given text. Found filenames or
@@ -68,7 +68,7 @@ public:
      * @param baseDirectory base directory for tests on relative path names
      * @param addTo add found URLs/filenames to this list
      */
-    static void urlsInText(const QString &text, TestExistence testExistence, const QString &baseDirectory, QList<KUrl> &addTo);
+    static void urlsInText(const QString &text, TestExistence testExistence, const QString &baseDirectory, QList<QUrl> &addTo);
 
     /**
      * Find all file or URL references in the given entry. Found filenames or
@@ -82,7 +82,7 @@ public:
      * @param testExistence shall be tested for file existence?
      * @return list of found URLs/filenames (duplicates are avoided)
      */
-    static QList<KUrl> entryUrls(const Entry *entry, const KUrl &bibTeXUrl, TestExistence testExistence);
+    static QList<QUrl> entryUrls(const Entry *entry, const QUrl &bibTeXUrl, TestExistence testExistence);
 
     /**
      * Load the given PDF file and return the contained plain text.

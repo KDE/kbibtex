@@ -1,13 +1,7 @@
-# Processing library
-
-include_directories(
-    ${CMAKE_SOURCE_DIR}/src/config
-    ${CMAKE_SOURCE_DIR}/src/data
-    ${CMAKE_SOURCE_DIR}/src/io
-)
+# KBibTeX Processing library
 
 set(
-    processing_LIB_SRCS
+    kbibtexproc_LIB_SRCS
     findduplicates.cpp
     idsuggestions.cpp
     lyx.cpp
@@ -17,41 +11,51 @@ set(
 )
 
 set(
-    processing_HDRS
+    kbibtexproc_HDRS
     findduplicates.h
     idsuggestions.h
     lyx.h
     checkbibtex.h
     bibliographyservice.h
     journalabbreviations.h
-    kbibtexproc_export.h
 )
 
-add_definitions(
-    -DMAKE_PROCESSING_LIB
+# add_definitions(
+#     -DMAKE_PROCESSING_LIB
+# )
+
+# # debug area for KBibTeX's processing library
+# add_definitions(
+#     -DKDE_DEFAULT_DEBUG_AREA=101016
+# )
+
+# if(UNITY_BUILD)
+#     enable_unity_build(kbibtexproc kbibtexproc_LIB_SRCS)
+# endif(UNITY_BUILD)
+
+include_directories(
+    ${CMAKE_BINARY_DIR}/src/config
+    ${CMAKE_SOURCE_DIR}/src/config
+    ${CMAKE_BINARY_DIR}/src/data
+    ${CMAKE_SOURCE_DIR}/src/data
+    ${CMAKE_BINARY_DIR}/src/io
+    ${CMAKE_SOURCE_DIR}/src/io
 )
 
-# debug area for KBibTeX's processing library
-add_definitions(
-    -DKDE_DEFAULT_DEBUG_AREA=101016
-)
-
-if(UNITY_BUILD)
-    enable_unity_build(kbibtexproc processing_LIB_SRCS)
-endif(UNITY_BUILD)
-
-kde4_add_library(
+add_library(
     kbibtexproc
     SHARED
-    ${processing_LIB_SRCS}
+    ${kbibtexproc_LIB_SRCS}
 )
 
-target_link_libraries(
-    kbibtexproc
-    LINK_PRIVATE
-    ${QT_QTCORE_LIBRARY}
-    ${KDE4_KDECORE_LIBS}
-    ${KDE4_KDEUI_LIBS}
+target_link_libraries( kbibtexproc
+    Qt5::Core
+    KF5::Parts
+#     Qt5::Widgets
+#     KF5::I18n
+#     KF5::XmlGui
+#     ${LIBXML2_LIBRARIES}
+#     ${LIBXSLT_LIBRARIES}
     kbibtexconfig
     kbibtexdata
     kbibtexio
@@ -60,6 +64,7 @@ target_link_libraries(
 set_target_properties(
     kbibtexproc
     PROPERTIES
+    EXPORT_NAME "kbibtexproc"
     VERSION
     ${LIB_VERSION}
     SOVERSION
@@ -69,26 +74,24 @@ set_target_properties(
 install(
     TARGETS
     kbibtexproc
-    RUNTIME
-    DESTINATION
-    bin
-    LIBRARY
-    DESTINATION
-    ${LIB_INSTALL_DIR}
+    ${INSTALL_TARGETS_DEFAULT_ARGS}
 )
 
 install(
     FILES
     lyx.rc
     DESTINATION
-    ${DATA_INSTALL_DIR}/kbibtex
+    ${KXMLGUI_INSTALL_DIR}/kbibtex
 )
+
+generate_export_header( kbibtexproc )
 
 install(
     FILES
-    ${processing_HDRS}
+    ${kbibtexproc_HDRS}
+    ${CMAKE_BINARY_DIR}/src/processing/kbibtexproc_export.h
     DESTINATION
-    ${INCLUDE_INSTALL_DIR}/kbibtex
+    ${INCLUDE_INSTALL_DIR}/kbibtex/proc
     COMPONENT
-    Devel
+    development
 )

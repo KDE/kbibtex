@@ -23,10 +23,10 @@
 #include <QDate>
 #include <QSignalMapper>
 #include <QSpinBox>
+#include <QPushButton>
+#include <QInputDialog>
 
-#include <KLocale>
-#include <KPushButton>
-#include <KInputDialog>
+#include <KLocalizedString>
 
 #include "file.h"
 #include "entry.h"
@@ -79,7 +79,7 @@ public:
         case KBibTeX::Month: {
             fieldLineEdit = new FieldLineEdit(preferredTypeFlag, typeFlags, false, p);
             layout->addWidget(fieldLineEdit);
-            KPushButton *monthSelector = new KPushButton(KIcon("view-calendar-month"), "");
+            QPushButton *monthSelector = new QPushButton(QIcon::fromTheme("view-calendar-month"), "");
             monthSelector->setToolTip(i18n("Select a predefined month"));
             fieldLineEdit->prependWidget(monthSelector);
 
@@ -96,7 +96,7 @@ public:
         case KBibTeX::CrossRef: {
             fieldLineEdit = new FieldLineEdit(preferredTypeFlag, typeFlags, false, p);
             layout->addWidget(fieldLineEdit);
-            KPushButton *referenceSelector = new KPushButton(KIcon("flag-gree"), ""); ///< find better icon
+            QPushButton *referenceSelector = new QPushButton(QIcon::fromTheme("flag-gree"), ""); ///< find better icon
             referenceSelector->setToolTip(i18n("Select an existing entry"));
             fieldLineEdit->prependWidget(referenceSelector);
             connect(referenceSelector, SIGNAL(clicked()), p, SLOT(selectCrossRef()));
@@ -231,7 +231,7 @@ public:
         const Entry *entry = dynamic_cast<const Entry *>(element);
         if (entry != NULL) list.removeOne(entry->id());
 
-        QString crossRef = KInputDialog::getItem(i18n("Select Cross Reference"), i18n("Select the cross reference to another entry:"), list, 0, false, &ok, p);
+        QString crossRef = QInputDialog::getItem(p, i18n("Select Cross Reference"), i18n("Select the cross reference to another entry:"), list, 0, false, &ok);
 
         if (ok && !crossRef.isEmpty()) {
             /// insert selected cross reference into edit widget

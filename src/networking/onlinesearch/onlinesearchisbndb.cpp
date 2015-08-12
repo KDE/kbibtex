@@ -18,10 +18,11 @@
 #include "onlinesearchisbndb.h"
 
 #include <QNetworkReply>
+#include <QDebug>
+#include <QStandardPaths>
+#include <QUrlQuery>
 
-#include <KStandardDirs>
-#include <KLocale>
-#include <KDebug>
+#include <KLocalizedString>
 
 #include "fileimporterbibtex.h"
 #include "xsltransform.h"
@@ -36,28 +37,29 @@ private:
 
 public:
     XSLTransform *xslt;
-    KUrl queryUrl;
+    QUrl queryUrl;
     int currentPage, maxPage;
 
     OnlineSearchIsbnDBPrivate(OnlineSearchIsbnDB */* UNUSED parent*/)
         : /* UNUSED p(parent),*/ xslt(), currentPage(0), maxPage(0) {
         const QString xsltFilename = QLatin1String("kbibtex/isbndb2bibtex.xsl");
-        xslt = XSLTransform::createXSLTransform(KStandardDirs::locate("data", xsltFilename));
+        xslt = XSLTransform::createXSLTransform(QStandardPaths::locate(QStandardPaths::GenericDataLocation, xsltFilename));
         if (xslt == NULL)
-            kWarning() << "Could not create XSLT transformation for" << xsltFilename;
+            qWarning() << "Could not create XSLT transformation for" << xsltFilename;
     }
 
     ~OnlineSearchIsbnDBPrivate() {
         delete xslt;
     }
 
-    KUrl buildBooksUrl(const QMap<QString, QString> &query, int numResults) {
+    QUrl buildBooksUrl(const QMap<QString, QString> &query, int numResults) {
         currentPage = 1;
         maxPage = (numResults + 9) / 10;
 
-        queryUrl = KUrl(booksUrl);
-        queryUrl.addQueryItem(QLatin1String("access_key"), accessKey);
-        queryUrl.addQueryItem(QLatin1String("results"), QLatin1String("texts,authors"));
+        queryUrl = QUrl(booksUrl);
+        QUrlQuery q(queryUrl);
+        q.addQueryItem(QLatin1String("access_key"), accessKey);
+        q.addQueryItem(QLatin1String("results"), QLatin1String("texts,authors"));
 
         QString index1, value1;
         if (query[queryKeyFreeText].isEmpty() && query[queryKeyAuthor].isEmpty() && !query[queryKeyTitle].isEmpty()) {
@@ -69,9 +71,10 @@ public:
             index1 = QLatin1String("full");
             value1 = query[queryKeyFreeText] + QLatin1Char(' ') + query[queryKeyAuthor] + QLatin1Char(' ') + query[queryKeyTitle];
         }
-        queryUrl.addQueryItem(QLatin1String("index1"), index1);
-        queryUrl.addQueryItem(QLatin1String("value1"), value1);
+        q.addQueryItem(QLatin1String("index1"), index1);
+        q.addQueryItem(QLatin1String("value1"), value1);
 
+        queryUrl.setQuery(q);
         return queryUrl;
     }
 };
@@ -95,7 +98,7 @@ void OnlineSearchIsbnDB::startSearch(const QMap<QString, QString> &query, int nu
 {
     if (d->xslt == NULL) {
         /// Don't allow searches if xslt is not defined
-        kWarning() << "Cannot allow searching" << label() << "if XSL Transformation not available";
+        qWarning() << "Cannot allow searching" << label() << "if XSL Transformation not available";
         delayedStoppedSearch(resultUnspecifiedError);
         return;
     }
@@ -132,9 +135,9 @@ OnlineSearchQueryFormAbstract *OnlineSearchIsbnDB::customWidget(QWidget *parent)
     return NULL;
 }
 
-KUrl OnlineSearchIsbnDB::homepage() const
+QUrl OnlineSearchIsbnDB::homepage() const
 {
-    return KUrl("http://isbndb.com/");
+    return QUrl("http://isbndb.com/");
 }
 
 void OnlineSearchIsbnDB::cancel()
@@ -167,14 +170,15 @@ void OnlineSearchIsbnDB::downloadDone()
             delete bibtexFile;
 
             if (!hasEntries) {
-                kDebug() << "No hits found in" << reply->url().toString();
                 emit stoppedSearch(resultNoError);
             } else if (d->currentPage >= d->maxPage)
                 emit stoppedSearch(resultNoError);
             else {
                 ++d->currentPage;
-                KUrl nextUrl = d->queryUrl;
-                nextUrl.addQueryItem(QLatin1String("page_number"), QString::number(d->currentPage));
+                QUrl nextUrl = d->queryUrl;
+                QUrlQuery query(nextUrl);
+                query.addQueryItem(QLatin1String("page_number"), QString::number(d->currentPage));
+                nextUrl.setQuery(query);
                 QNetworkRequest request(nextUrl);
                 QNetworkReply *nextReply = InternalNetworkAccessManager::self()->get(request);
                 InternalNetworkAccessManager::self()->setNetworkReplyTimeout(nextReply);
@@ -182,9 +186,9 @@ void OnlineSearchIsbnDB::downloadDone()
                 return;
             }
         } else {
-            kWarning() << "No valid BibTeX file results returned on request on" << reply->url().toString();
+            qWarning() << "No valid BibTeX file results returned on request on" << reply->url().toString();
             emit stoppedSearch(resultUnspecifiedError);
         }
     } else
-        kDebug() << "url was" << reply->url().toString();
+        qWarning() << "url was" << reply->url().toString();
 }

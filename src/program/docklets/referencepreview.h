@@ -21,8 +21,6 @@
 #include <QWidget>
 #include <QUrl>
 
-#include <KUrl>
-
 class Element;
 class File;
 class FileView;
@@ -45,7 +43,7 @@ private:
     class ReferencePreviewPrivate;
     ReferencePreviewPrivate *d;
 
-    void setHtml(const QString &html, const KUrl &baseUrl = KUrl());
+    void setHtml(const QString &html);
 
 private slots:
     void renderHTML();

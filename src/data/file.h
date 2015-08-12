@@ -22,8 +22,6 @@
 #include <QStringList>
 #include <QSharedPointer>
 
-#include <KUrl>
-
 #include "element.h"
 
 #include "kbibtexdata_export.h"

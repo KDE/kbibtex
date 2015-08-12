@@ -21,9 +21,8 @@
 #include <QFile>
 #include <QTextStream>
 #include <QRegExp>
-
-#include <KStandardDirs>
-#include <KDebug>
+#include <QDebug>
+#include <QStandardPaths>
 
 class JournalAbbreviations::Private
 {
@@ -35,7 +34,7 @@ private:
 
 public:
     Private(JournalAbbreviations */* UNUSED parent*/)
-        : /* UNUSED p(parent),*/ journalFilename(KGlobal::dirs()->findResource("data", QLatin1String("kbibtex/jabref_journalabbrevlist.txt")))
+        : /* UNUSED p(parent),*/ journalFilename(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("kbibtex/jabref_journalabbrevlist.txt")))
     {
         /// nothing
     }
@@ -74,7 +73,7 @@ public:
 
             return !leftToRightMap.isEmpty();
         } else {
-            kWarning() << "Cannot open journal abbreviation list file at" << journalFilename;
+            qWarning() << "Cannot open journal abbreviation list file at" << journalFilename;
             return false;
         }
     }

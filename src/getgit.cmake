@@ -36,7 +36,8 @@ else (DEFINED ENV{GIT_INFO})
                 OUTPUT_VARIABLE GIT_REV
                 OUTPUT_STRIP_TRAILING_WHITESPACE
             )
-            execute_process (WORKING_DIRECTORY
+            execute_process (
+                WORKING_DIRECTORY
                 "${SOURCE_DIR}"
                 COMMAND
                 ${GIT_EXECUTABLE} rev-parse --abbrev-ref HEAD

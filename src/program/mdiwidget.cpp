@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2015 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -26,15 +26,17 @@
 #include <QTreeView>
 #include <QAbstractItemModel>
 #include <QSortFilterProxyModel>
+#include <QMessageBox>
 #include <QHeaderView>
+#include <QPushButton>
+#include <QIcon>
+#include <QDebug>
 
-#include <KDebug>
-#include <KPushButton>
-#include <KIcon>
-#include <KMessageBox>
-#include <kparts/part.h>
+#include <KParts/Part>
+#include <KParts/ReadOnlyPart>
 #include <KConfigGroup>
 #include <KSharedConfig>
+#include <KLocalizedString>
 
 #include "kbibtexnamespace.h"
 #include "partwidget.h"
@@ -67,13 +69,13 @@ public:
             OpenFileInfo *ofiItem = ofiList[index.row()];
             if (index.column() == 0) {
                 if (role == Qt::DisplayRole || role == SortRole) {
-                    const KUrl url = ofiItem->url();
+                    const QUrl url = ofiItem->url();
                     const QString fileName = url.fileName();
-                    return fileName.isEmpty() ? squeeze_text(url.pathOrUrl(), 32) : fileName;
+                    return fileName.isEmpty() ? squeeze_text(url.url(QUrl::PreferLocalFile), 32) : fileName;
                 } else if (role == Qt::DecorationRole)
-                    return KIcon(ofiItem->mimeType().replace(QLatin1Char('/'), QLatin1Char('-')));
+                    return QIcon::fromTheme(ofiItem->mimeType().replace(QLatin1Char('/'), QLatin1Char('-')));
                 else if (role == Qt::ToolTipRole)
-                    return squeeze_text(ofiItem->url().pathOrUrl(), 64);
+                    return squeeze_text(ofiItem->url().url(QUrl::PreferLocalFile), 64);
             } else if (index.column() == 1) {
                 if (role == Qt::DisplayRole || role == Qt::ToolTipRole)
                     return ofiItem->lastAccess().toString(Qt::TextDate);
@@ -81,10 +83,10 @@ public:
                     return ofiItem->lastAccess().toTime_t();
             } else if (index.column() == 2) {
                 if (role == Qt::DisplayRole || role == Qt::ToolTipRole || role == SortRole)
-                    return ofiItem->url().pathOrUrl();
+                    return ofiItem->url().url(QUrl::PreferLocalFile);
             }
             if (role == URLRole)
-                return QVariant::fromValue<QUrl>(ofiItem->url());
+                return ofiItem->url();
         }
 
         return QVariant();
@@ -143,11 +145,11 @@ private:
         QLabel *label = new QLabel(i18n("<qt>Welcome to <b>KBibTeX</b></qt>"), welcomeWidget);
         layout->addWidget(label, 1, 2, 1, 3, Qt::AlignHCenter | Qt::AlignTop);
 
-        KPushButton *buttonNew = new KPushButton(KIcon("document-new"), i18n("New"), welcomeWidget);
+        QPushButton *buttonNew = new QPushButton(QIcon::fromTheme("document-new"), i18n("New"), welcomeWidget);
         layout->addWidget(buttonNew, 2, 2, 1, 1, Qt::AlignLeft | Qt::AlignBottom);
         connect(buttonNew, SIGNAL(clicked()), p, SIGNAL(documentNew()));
 
-        KPushButton *buttonOpen = new KPushButton(KIcon("document-open"), i18n("Open..."), welcomeWidget);
+        QPushButton *buttonOpen = new QPushButton(QIcon::fromTheme("document-open"), i18n("Open..."), welcomeWidget);
         layout->addWidget(buttonOpen, 2, 4, 1, 1, Qt::AlignRight | Qt::AlignBottom);
         connect(buttonOpen, SIGNAL(clicked()), p, SIGNAL(documentOpen()));
 
@@ -188,7 +190,7 @@ public:
     KSharedConfigPtr config;
 
     MDIWidgetPrivate(MDIWidget *parent)
-            : p(parent), ofim(new OpenFileInfoManager(parent)), currentFile(NULL), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))) {
+            : p(parent), ofim(OpenFileInfoManager::instance()), currentFile(NULL), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))) {
         createWelcomeWidget();
 
         modelLRU = new LRUItemModel(ofim, listLRU);
@@ -204,7 +206,6 @@ public:
 
     ~MDIWidgetPrivate() {
         saveColumnsState();
-        delete ofim;
         delete welcomeWidget;
     }
 
@@ -243,8 +244,12 @@ void MDIWidget::setFile(OpenFileInfo *openFileInfo, KService::Ptr servicePtr)
     if (part != NULL) {
         widget = part->widget();
     } else if (openFileInfo != NULL) {
-        KMessageBox::error(this, i18n("No part available for file '%1'.", openFileInfo->url().fileName()), i18n("No part available"));
-        d->ofim->close(openFileInfo);
+        d->ofim->close(openFileInfo); // FIXME does not close correctly if file is new
+        const QString filename = openFileInfo->url().fileName();
+        if (filename.isEmpty())
+            QMessageBox::warning(this, i18n("No Part Available"), i18n("No part available for file of mime type '%1'.", openFileInfo->mimeType()));
+        else
+            QMessageBox::warning(this, i18n("No Part Available"), i18n("No part available for file '%1'.", filename));
         return;
     }
 
@@ -267,7 +272,7 @@ void MDIWidget::setFile(OpenFileInfo *openFileInfo, KService::Ptr servicePtr)
     }
 
     if (openFileInfo != NULL) {
-        KUrl url = openFileInfo->url();
+        QUrl url = openFileInfo->url();
         if (url.isValid())
             emit setCaption(QString("%1 [%2]").arg(openFileInfo->shortCaption()).arg(squeeze_text(openFileInfo->fullCaption(), 64)));
         else
@@ -287,19 +292,14 @@ OpenFileInfo *MDIWidget::currentFile()
     return d->currentFile;
 }
 
-OpenFileInfoManager *MDIWidget::getOpenFileInfoManager()
-{
-    return d->ofim;
-}
-
 void MDIWidget::slotCompleted(QObject *obj)
 {
     OpenFileInfo *ofi = static_cast<OpenFileInfo *>(obj);
-    KUrl oldUrl = ofi->url();
-    KUrl newUrl = ofi->part(this)->url();
+    QUrl oldUrl = ofi->url();
+    QUrl newUrl = ofi->part(this)->url();
 
-    if (!oldUrl.equals(newUrl)) {
-        kDebug() << "Url changed from " << oldUrl.pathOrUrl() << " to " << newUrl.pathOrUrl() << endl;
+    if (oldUrl != newUrl) {
+        qDebug() << "Url changed from " << oldUrl.url(QUrl::PreferLocalFile) << " to " << newUrl.url(QUrl::PreferLocalFile) << endl;
         d->ofim->changeUrl(ofi, newUrl);
 
         /// completely opened or saved files should be marked as "recently used"

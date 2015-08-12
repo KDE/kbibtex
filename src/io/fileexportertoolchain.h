@@ -19,7 +19,7 @@
 
 #include <QProcess>
 
-#include <KTempDir>
+#include <QTemporaryDir>
 
 #include "fileexporter.h"
 
@@ -49,7 +49,7 @@ public slots:
     void cancel();
 
 protected:
-    KTempDir tempDir;
+    QTemporaryDir tempDir;
 
     bool runProcesses(const QStringList &progs, QStringList *errorLog = NULL);
     bool runProcess(const QString &cmd, const QStringList &args, QStringList *errorLog = NULL);

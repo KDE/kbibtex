@@ -23,7 +23,7 @@
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <KComboBox>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include "guihelper.h"
 #include "fileexportertoolchain.h"
@@ -135,9 +135,9 @@ QString SettingsFileExporterPDFPSWidget::label() const
     return i18n("PDF & Postscript");
 }
 
-KIcon SettingsFileExporterPDFPSWidget::icon() const
+QIcon SettingsFileExporterPDFPSWidget::icon() const
 {
-    return KIcon("application-pdf");
+    return QIcon::fromTheme("application-pdf");
 }
 
 void SettingsFileExporterPDFPSWidget::loadState()

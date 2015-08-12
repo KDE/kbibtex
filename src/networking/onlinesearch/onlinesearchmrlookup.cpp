@@ -22,9 +22,10 @@
 #include <QNetworkRequest>
 #include <QNetworkAccessManager>
 #include <QMap>
+#include <QDebug>
+#include <QUrlQuery>
 
-#include <KLocale>
-#include <KDebug>
+#include <KLocalizedString>
 
 #include "fileimporterbibtex.h"
 #include "kbibtexnamespace.h"
@@ -42,22 +43,24 @@ void OnlineSearchMRLookup::startSearch(const QMap<QString, QString> &query, int)
 {
     m_hasBeenCanceled = false;
 
-    KUrl url(queryUrlStem);
+    QUrl url(queryUrlStem);
+    QUrlQuery q(url);
 
     const QString title = query[queryKeyTitle];
-    url.addQueryItem(QLatin1String("ti"), title);
+    q.addQueryItem(QLatin1String("ti"), title);
 
     const QString authors = query[queryKeyAuthor];
-    url.addQueryItem(QLatin1String("au"), authors);
+    q.addQueryItem(QLatin1String("au"), authors);
 
     const QString year = query[queryKeyYear];
     if (!year.isEmpty())
-        url.addQueryItem(QLatin1String("year"), year);
+        q.addQueryItem(QLatin1String("year"), year);
 
-    url.addQueryItem(QLatin1String("format"), QLatin1String("bibtex"));
+    q.addQueryItem(QLatin1String("format"), QLatin1String("bibtex"));
 
     emit progress(0, 1);
 
+    url.setQuery(q);
     QNetworkRequest request(url);
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
     InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
@@ -85,9 +88,9 @@ OnlineSearchQueryFormAbstract *OnlineSearchMRLookup::customWidget(QWidget *)
     return NULL;
 }
 
-KUrl OnlineSearchMRLookup::homepage() const
+QUrl OnlineSearchMRLookup::homepage() const
 {
-    return KUrl("http://www.ams.org/mrlookup");
+    return QUrl("http://www.ams.org/mrlookup");
 }
 
 void OnlineSearchMRLookup::cancel()
@@ -125,7 +128,7 @@ void OnlineSearchMRLookup::doneFetchingResultPage()
 
         emit stoppedSearch(hasEntry ? resultNoError : resultUnspecifiedError);
     } else
-        kDebug() << "url was" << reply->url().toString();
+        qWarning() << "url was" << reply->url().toString();
 }
 
 void OnlineSearchMRLookup::sanitizeEntry(QSharedPointer<Entry> entry)

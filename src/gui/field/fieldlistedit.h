@@ -29,8 +29,9 @@ class QCheckBox;
 class QDropEvent;
 class QDragEnterEvent;
 class QSignalMapper;
+class QPushButton;
 
-class KPushButton;
+class KJob;
 class KJob;
 
 class Element;
@@ -64,7 +65,7 @@ protected:
     /// Add a new field line edit to this list
     /// Allows to get overwritten by descentants of this class
     virtual FieldLineEdit *addFieldLineEdit();
-    void addButton(KPushButton *button);
+    void addButton(QPushButton *button);
     void lineAdd(Value *value);
     void dragEnterEvent(QDragEnterEvent *event);
     void dropEvent(QDropEvent *);
@@ -103,7 +104,7 @@ private slots:
 
 private:
     QCheckBox *m_checkBoxOthers;
-    KPushButton *m_buttonAddNamesFromClipboard;
+    QPushButton *m_buttonAddNamesFromClipboard;
 };
 
 
@@ -122,7 +123,7 @@ public:
 
     static QString askRelativeOrStaticFilename(QWidget *parent, const QString &filename, const QUrl &baseUrl);
 
-    /// Own function as KUrl's isLocalFile is not reliable
+    /// Own function as QUrl's isLocalFile is not reliable
     static bool urlIsLocal(const QUrl &url);
 
 protected:
@@ -138,7 +139,7 @@ private slots:
     void textChanged(QWidget *widget);
 
 private:
-    KPushButton *m_buttonAddFile;
+    QPushButton *m_buttonAddFile;
     QSignalMapper *m_signalMapperSaveLocallyButtonClicked;
     QSignalMapper *m_signalMapperFieldLineEditTextChanged;
 
@@ -169,7 +170,7 @@ private slots:
 private:
     KSharedConfigPtr m_config;
     const QString m_configGroupName;
-    KPushButton *m_buttonAddKeywordsFromList, *m_buttonAddKeywordsFromClipboard;
+    QPushButton *m_buttonAddKeywordsFromList, *m_buttonAddKeywordsFromClipboard;
     QSet<QString> m_keywordsFromFile;
 };
 

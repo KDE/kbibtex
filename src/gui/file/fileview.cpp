@@ -19,13 +19,15 @@
 
 #include <QDropEvent>
 #include <QTimer>
+#include <QDebug>
 
 #include <KDialog>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 #include <KGuiItem>
 #include <KConfigGroup>
-#include <KDebug>
+#include <KSharedConfig>
+#include <KWindowConfig>
 
 #include "elementeditor.h"
 #include "entry.h"
@@ -55,7 +57,7 @@ public:
         /// restore window size
         KSharedConfigPtr config(KSharedConfig::openConfig(QLatin1String("kbibtexrc")));
         configGroup = KConfigGroup(config, configGroupNameWindowSize);
-        restoreDialogSize(configGroup);
+        KWindowConfig::restoreWindowSize(windowHandle(), configGroup);
     }
 
     /**
@@ -79,7 +81,7 @@ protected Q_SLOTS:
     virtual void slotButtonClicked(int button) {
         /// save window size of Ok is clicked
         if (button == KDialog::Ok)
-            saveDialogSize(configGroup);
+            KWindowConfig::saveWindowSize(windowHandle(), configGroup);
 
         /// ignore button event if it is from the Cancel button
         /// and the user does not want to discard his/her changes
@@ -90,7 +92,7 @@ protected Q_SLOTS:
 private:
     bool allowedToClose() {
         /// save window size
-        saveDialogSize(configGroup);
+        KWindowConfig::saveWindowSize(windowHandle(), configGroup);
 
         /// if there unapplied changes in the editor widget ...
         /// ... ask user for consent to discard changes ...
@@ -307,7 +309,7 @@ void FileView::itemActivated(const QModelIndex &index)
 void FileView::prepareEditorDialog(DialogType dialogType)
 {
     if (dialogType != DialogTypeView && isReadOnly()) {
-        kWarning() << "In read-only mode, you may only view elements, not edit them";
+        qWarning() << "In read-only mode, you may only view elements, not edit them";
         dialogType = DialogTypeView;
     }
 

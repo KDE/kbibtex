@@ -19,7 +19,7 @@
 
 #include "kbibtexgui_export.h"
 
-#include <KIcon>
+#include <QIcon>
 
 #include "value.h"
 #include "menulineedit.h"

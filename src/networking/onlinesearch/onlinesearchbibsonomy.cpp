@@ -22,11 +22,11 @@
 #include <QSpinBox>
 #include <QLabel>
 #include <QNetworkReply>
+#include <QDebug>
+#include <QIcon>
+#include <QLineEdit>
 
-#include <KLocale>
-#include <KDebug>
-#include <KIcon>
-#include <KLineEdit>
+#include <KLocalizedString>
 #include <KComboBox>
 #include <KMessageBox>
 #include <KConfigGroup>
@@ -50,7 +50,7 @@ private:
 
 public:
     KComboBox *comboBoxSearchWhere;
-    KLineEdit *lineEditSearchTerm;
+    QLineEdit *lineEditSearchTerm;
     QSpinBox *numResultsField;
 
     OnlineSearchQueryFormBibsonomy(QWidget *widget)
@@ -69,9 +69,9 @@ public:
         comboBoxSearchWhere->addItem(i18n("Everywhere"), "search");
         comboBoxSearchWhere->setCurrentIndex(comboBoxSearchWhere->count() - 1);
 
-        lineEditSearchTerm = new KLineEdit(this);
+        lineEditSearchTerm = new QLineEdit(this);
         layout->addWidget(lineEditSearchTerm, 0, 1, 1, 1);
-        lineEditSearchTerm->setClearButtonShown(true);
+        lineEditSearchTerm->setClearButtonEnabled(true);
         connect(lineEditSearchTerm, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
 
         QLabel *label = new QLabel(i18n("Number of Results:"), this);
@@ -121,17 +121,17 @@ public:
         // nothing
     }
 
-    KUrl buildQueryUrl() {
+    QUrl buildQueryUrl() {
         if (form == NULL) {
-            kWarning() << "Cannot build query url if no form is specified";
-            return KUrl();
+            qWarning() << "Cannot build query url if no form is specified";
+            return QUrl();
         }
 
         QString queryString = p->encodeURL(form->lineEditSearchTerm->text());
-        return KUrl("http://www.bibsonomy.org/bib/" + form->comboBoxSearchWhere->itemData(form->comboBoxSearchWhere->currentIndex()).toString() + "/" + queryString + QString("?items=%1").arg(form->numResultsField->value()));
+        return QUrl("http://www.bibsonomy.org/bib/" + form->comboBoxSearchWhere->itemData(form->comboBoxSearchWhere->currentIndex()).toString() + "/" + queryString + QString("?items=%1").arg(form->numResultsField->value()));
     }
 
-    KUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) {
+    QUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) {
         QString url = QLatin1String("http://www.bibsonomy.org/bib/");
 
         bool hasFreeText = !query[queryKeyFreeText].isEmpty();
@@ -154,7 +154,7 @@ public:
         QString queryString = queryFragments.join(QLatin1String("%20"));
         url.append(searchType + QLatin1Char('/') + queryString + QString(QLatin1String("?items=%1")).arg(numResults));
 
-        return KUrl(url);
+        return QUrl(url);
     }
 
     void sanitizeEntry(QSharedPointer<Entry> entry) {
@@ -227,9 +227,9 @@ OnlineSearchQueryFormAbstract *OnlineSearchBibsonomy::customWidget(QWidget *pare
     return d->form;
 }
 
-KUrl OnlineSearchBibsonomy::homepage() const
+QUrl OnlineSearchBibsonomy::homepage() const
 {
-    return KUrl("http://www.bibsonomy.org/");
+    return QUrl("http://www.bibsonomy.org/");
 }
 
 void OnlineSearchBibsonomy::cancel()
@@ -258,22 +258,19 @@ void OnlineSearchBibsonomy::downloadDone()
                     hasEntries |= publishEntry(entry);
                 }
 
-                if (!hasEntries)
-                    kDebug() << "No hits found in" << reply->url().toString();
                 emit stoppedSearch(resultNoError);
                 emit progress(d->numSteps, d->numSteps);
 
                 delete bibtexFile;
             } else {
-                kWarning() << "No valid BibTeX file results returned on request on" << reply->url().toString();
+                qWarning() << "No valid BibTeX file results returned on request on" << reply->url().toString();
                 emit stoppedSearch(resultUnspecifiedError);
             }
         } else {
             /// returned file is empty
-            kDebug() << "No hits found in" << reply->url().toString();
             emit stoppedSearch(resultNoError);
             emit progress(d->numSteps, d->numSteps);
         }
     } else
-        kDebug() << "url was" << reply->url().toString();
+        qWarning() << "url was" << reply->url().toString();
 }

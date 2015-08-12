@@ -19,9 +19,8 @@
 
 #include <QNetworkReply>
 #include <QXmlStreamReader>
-
-#include <KUrl>
-#include <KDebug>
+#include <QDebug>
+#include <QUrl>
 
 #include "internalnetworkaccessmanager.h"
 #include "api.h"
@@ -46,9 +45,9 @@ public:
 
     QMap<QString, int> tags;
 
-    QNetworkReply *requestZoteroUrl(const KUrl &url) {
+    QNetworkReply *requestZoteroUrl(const QUrl &url) {
         busy = true;
-        KUrl internalUrl = url;
+        QUrl internalUrl = url;
         api->addLimitToUrl(internalUrl);
         QNetworkRequest request = api->request(internalUrl);
         QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
@@ -60,8 +59,9 @@ public:
 Tags::Tags(API *api, QObject *parent)
         : QObject(parent), d(new Zotero::Tags::Private(api, this))
 {
-    KUrl url = api->baseUrl();
-    url.addPath(QLatin1String("/tags"));
+    QUrl url = api->baseUrl();
+    url = url.adjusted(QUrl::StripTrailingSlash);
+    url.setPath(url.path() + '/' + (QLatin1String("/tags")));
     d->requestZoteroUrl(url);
 }
 
@@ -127,7 +127,7 @@ void Tags::finishedFetchingTags()
             emit finishedLoading();
         }
     } else {
-        kWarning() << reply->errorString(); ///< something went wrong
+        qWarning() << reply->errorString(); ///< something went wrong
         d->busy = false;
         d->initialized = false;
         emit finishedLoading();

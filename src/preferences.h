@@ -21,7 +21,7 @@
 #include <QString>
 #include <QStringList>
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include "kbibtexnamespace.h"
 

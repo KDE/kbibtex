@@ -21,7 +21,7 @@
 #include <QObject>
 #include <QScopedPointer>
 
-#include <KUrl>
+#include <QUrl>
 
 #include "kbibtexnetworking_export.h"
 
@@ -54,7 +54,7 @@ signals:
 
 protected:
 
-    static const KUrl zoteroUrl;
+    static const QUrl zoteroUrl;
 
 private:
     class Private;

@@ -23,15 +23,16 @@
 #include <QRegExp>
 #include <QNetworkAccessManager>
 #include <QNetworkCookieJar>
+#include <QNetworkCookie>
 #include <QNetworkProxy>
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QtGlobal>
+#include <QApplication>
 #include <QTimer>
+#include <QDebug>
+#include <QUrl>
 
-#include <KDebug>
-#include <KUrl>
-#include <KApplication>
 #include <KProtocolManager>
 
 /**
@@ -119,7 +120,7 @@ void InternalNetworkAccessManager::mergeHtmlHeadCookies(const QString &htmlCode,
 InternalNetworkAccessManager *InternalNetworkAccessManager::self()
 {
     if (instance == NULL) {
-        instance = new InternalNetworkAccessManager(KApplication::instance());
+        instance = new InternalNetworkAccessManager(QApplication::instance());
     }
 
     return instance;
@@ -129,7 +130,7 @@ QNetworkReply *InternalNetworkAccessManager::get(QNetworkRequest &request, const
 {
     /// Query the KDE subsystem if a proxy has to be used
     /// for the host of a given URL
-    QString proxyHostName = KProtocolManager::proxyForUrl(request.url());
+    QString proxyHostName = QString();// FIXME KProtocolManager::proxyForUrl(request.url());
     if (!proxyHostName.isEmpty() && proxyHostName != QLatin1String("DIRECT")) {
         /// Extract both hostname and port number for proxy
         proxyHostName = proxyHostName.mid(proxyHostName.indexOf(QLatin1String("://")) + 3);
@@ -188,7 +189,7 @@ void InternalNetworkAccessManager::networkReplyTimeout()
     timer->stop();
     QNetworkReply *reply = m_mapTimerToReply[timer];
     if (reply != NULL) {
-        kDebug() << "Timeout on reply to " << reply->url().toString();
+        qWarning() << "Timeout on reply to " << reply->url().toString();
         reply->close();
         m_mapTimerToReply.remove(timer);
     }

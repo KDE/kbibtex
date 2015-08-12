@@ -18,13 +18,14 @@
 #include "onlinesearchieeexplore.h"
 
 #include <QNetworkReply>
+#include <QDebug>
+#include <QStandardPaths>
+#include <QUrl>
+#include <QUrlQuery>
 
 #include <KMessageBox>
 #include <KConfigGroup>
-#include <KDebug>
-#include <KLocale>
-#include <KStandardDirs>
-#include <KUrl>
+#include <KLocalizedString>
 
 #include "internalnetworkaccessmanager.h"
 #include "xsltransform.h"
@@ -43,9 +44,9 @@ public:
     OnlineSearchIEEEXplorePrivate(OnlineSearchIEEEXplore *parent)
             : p(parent), gatewayUrl(QLatin1String("http://ieeexplore.ieee.org/gateway/ipsSearch.jsp")), numSteps(0), curStep(0) {
         const QString xsltFilename = QLatin1String("kbibtex/ieeexplore2bibtex.xsl");
-        xslt = XSLTransform::createXSLTransform(KStandardDirs::locate("data", xsltFilename));
+        xslt = XSLTransform::createXSLTransform(QStandardPaths::locate(QStandardPaths::GenericDataLocation, xsltFilename));
         if (xslt == NULL)
-            kWarning() << "Could not create XSLT transformation for" << xsltFilename;
+            qWarning() << "Could not create XSLT transformation for" << xsltFilename;
     }
 
 
@@ -53,8 +54,8 @@ public:
         delete xslt;
     }
 
-    KUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) {
-        KUrl queryUrl = KUrl(gatewayUrl);
+    QUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) {
+        QUrl queryUrl = QUrl(gatewayUrl);
 
         QStringList queryText;
 
@@ -78,13 +79,13 @@ public:
         if (!query[queryKeyYear].isEmpty())
             queryText << QString(QLatin1String("\"Publication Year\":\"%1\"")).arg(query[queryKeyYear]);
 
-        queryUrl.addQueryItem(QLatin1String("queryText"), queryText.join(QLatin1String(" AND ")));
-        queryUrl.addQueryItem(QLatin1String("sortfield"), QLatin1String("py"));
-        queryUrl.addQueryItem(QLatin1String("sortorder"), QLatin1String("desc"));
-        queryUrl.addQueryItem(QLatin1String("hc"), QString::number(numResults));
-        queryUrl.addQueryItem(QLatin1String("rs"), QLatin1String("1"));
-
-        kDebug() << "buildQueryUrl=" << queryUrl.pathOrUrl();
+        QUrlQuery q(queryUrl);
+        q.addQueryItem(QLatin1String("queryText"), queryText.join(QLatin1String(" AND ")));
+        q.addQueryItem(QLatin1String("sortfield"), QLatin1String("py"));
+        q.addQueryItem(QLatin1String("sortorder"), QLatin1String("desc"));
+        q.addQueryItem(QLatin1String("hc"), QString::number(numResults));
+        q.addQueryItem(QLatin1String("rs"), QLatin1String("1"));
+        queryUrl.setQuery(q);
 
         return queryUrl;
     }
@@ -111,7 +112,7 @@ void OnlineSearchIEEEXplore::startSearch(const QMap<QString, QString> &query, in
 {
     if (d->xslt == NULL) {
         /// Don't allow searches if xslt is not defined
-        kWarning() << "Cannot allow searching" << label() << "if XSL Transformation not available";
+        qWarning() << "Cannot allow searching" << label() << "if XSL Transformation not available";
         delayedStoppedSearch(resultUnspecifiedError);
         return;
     }
@@ -135,7 +136,7 @@ void OnlineSearchIEEEXplore::doneFetchingXML()
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
-    KUrl redirUrl;
+    QUrl redirUrl;
     if (handleErrors(reply, redirUrl)) {
         if (redirUrl.isValid()) {
             /// redirection to another url
@@ -163,18 +164,18 @@ void OnlineSearchIEEEXplore::doneFetchingXML()
                 }
 
                 if (!hasEntries)
-                    kDebug() << "No hits found in" << reply->url().toString();
+                    //qDebug() << "No hits found in" << reply->url().toString();
                 emit stoppedSearch(resultNoError);
                 emit progress(d->numSteps, d->numSteps);
 
                 delete bibtexFile;
             } else {
-                kWarning() << "No valid BibTeX file results returned on request on" << reply->url().toString();
+                qWarning() << "No valid BibTeX file results returned on request on" << reply->url().toString();
                 emit stoppedSearch(resultUnspecifiedError);
             }
         }
     } else
-        kDebug() << "url was" << reply->url().toString();
+        qWarning() << "url was" << reply->url().toString();
 }
 
 QString OnlineSearchIEEEXplore::label() const
@@ -192,9 +193,9 @@ OnlineSearchQueryFormAbstract *OnlineSearchIEEEXplore::customWidget(QWidget *)
     return NULL;
 }
 
-KUrl OnlineSearchIEEEXplore::homepage() const
+QUrl OnlineSearchIEEEXplore::homepage() const
 {
-    return KUrl("http://ieeexplore.ieee.org/");
+    return QUrl("http://ieeexplore.ieee.org/");
 }
 
 void OnlineSearchIEEEXplore::cancel()

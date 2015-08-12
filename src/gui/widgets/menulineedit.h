@@ -22,7 +22,7 @@
 #include <QFrame>
 
 class QMenu;
-class KIcon;
+class QIcon;
 
 /**
 @author Thomas Fischer
@@ -52,7 +52,7 @@ public:
     virtual void setReadOnly(bool);
     QString text() const;
     void setText(const QString &);
-    void setIcon(const KIcon &icon);
+    void setIcon(const QIcon &icon);
     void setFont(const QFont &font);
     void setButtonToolTip(const QString &);
     void setChildAcceptDrops(bool acceptDrops);

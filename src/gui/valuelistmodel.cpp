@@ -19,14 +19,7 @@
 
 #include <typeinfo>
 
-#include <KComboBox>
-#include <KLocale>
-#include <KDebug>
-#include <KSharedConfig>
-#include <KConfigGroup>
-#include <KColorScheme>
-#include <KLineEdit>
-
+#include <QDebug>
 #include <QApplication>
 #include <QTextDocument>
 #include <QAbstractTextDocumentLayout>
@@ -37,6 +30,13 @@
 #include <QFrame>
 #include <QLayout>
 #include <QHeaderView>
+
+#include <KComboBox>
+#include <KLocalizedString>
+#include <KSharedConfig>
+#include <KConfigGroup>
+#include <KColorScheme>
+#include <KLineEdit>
 
 #include "fieldlineedit.h"
 #include "bibtexfields.h"
@@ -264,14 +264,14 @@ bool ValueListModel::setData(const QModelIndex &index, const QVariant &value, in
         /// Retrieve the Value object containing the user-entered data
         Value newValue = value.value<Value>(); /// nice variable names ... ;-)
         if (newValue.isEmpty()) {
-            kDebug() << "Cannot replace with empty value";
+            qWarning() << "Cannot replace with empty value";
             return false;
         }
 
         /// Fetch the string representing the new, user-entered value
         const QString newText = PlainTextValue::text(newValue);
         if (newText == origText) {
-            kDebug() << "Skipping to replace value with itself";
+            qWarning() << "Skipping to replace value with itself";
             return false;
         }
 
@@ -354,7 +354,7 @@ void ValueListModel::updateValues()
                     break;
                 }
                 if (eit.value().isEmpty())
-                    kWarning() << "value for key" << key << "in entry" << entry->id() << "is empty";
+                    qWarning() << "value for key" << key << "in entry" << entry->id() << "is empty";
             }
         }
     }
@@ -394,7 +394,7 @@ int ValueListModel::indexOf(const QString &text)
     if (fName == Entry::ftColor && !(color = colorToLabel.key(text, QLatin1String(""))).isEmpty())
         cmpText = color;
     if (cmpText.isEmpty())
-        kWarning() << "Should never happen";
+        qWarning() << "Should never happen";
 
     int i = 0;
     /// this is really slow for large data sets: O(n^2)

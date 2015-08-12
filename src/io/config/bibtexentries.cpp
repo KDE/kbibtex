@@ -17,11 +17,12 @@
 
 #include "bibtexentries.h"
 
+#include <QDebug>
+#include <QStandardPaths>
+
+#include <KLocalizedString>
 #include <KSharedConfig>
 #include <KConfigGroup>
-#include <KStandardDirs>
-#include <KDebug>
-#include <KLocale>
 
 #include "entry.h"
 
@@ -50,7 +51,7 @@ public:
         KSharedConfigPtr config(KSharedConfig::openConfig("kbibtexrc"));
         KConfigGroup configGroup(config, QString("User Interface"));
         const QString stylefile = configGroup.readEntry("CurrentStyle", "bibtex").append(".kbstyle").prepend("kbibtex/");
-        layoutConfig = KSharedConfig::openConfig(stylefile, KConfig::FullConfig, "data");
+        layoutConfig = KSharedConfig::openConfig(stylefile, KConfig::FullConfig, QStandardPaths::AppDataLocation);
     }
 
     void load() {
@@ -77,7 +78,7 @@ public:
             p->append(ed);
         }
 
-        if (p->isEmpty()) kWarning() << "List of entry descriptions is empty";
+        if (p->isEmpty()) qWarning() << "List of entry descriptions is empty";
     }
 
     void save() {

@@ -17,8 +17,6 @@
 
 #include "hidingtabwidget.h"
 
-#include <KDebug>
-
 /// required to for QSet<HiddenTabInfo>
 uint qHash(const HidingTabWidget::HiddenTabInfo &hti)
 {

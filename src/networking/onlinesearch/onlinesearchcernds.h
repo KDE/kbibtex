@@ -32,11 +32,11 @@ public:
 
     virtual QString label() const;
     virtual OnlineSearchQueryFormAbstract *customWidget(QWidget *parent);
-    virtual KUrl homepage() const;
+    virtual QUrl homepage() const;
 
 protected:
     virtual QString favIconUrl() const;
-    virtual KUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults);
+    virtual QUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults);
 };
 
 #endif // KBIBTEX_ONLINESEARCH_CERNDS_H

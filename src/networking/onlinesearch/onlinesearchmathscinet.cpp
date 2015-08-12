@@ -21,9 +21,10 @@
 #include <QNetworkRequest>
 #include <QNetworkAccessManager>
 #include <QMap>
+#include <QDebug>
+#include <QUrlQuery>
 
-#include <KLocale>
-#include <KDebug>
+#include <KLocalizedString>
 
 #include "fileimporterbibtex.h"
 #include "kbibtexnamespace.h"
@@ -134,9 +135,9 @@ OnlineSearchQueryFormAbstract *OnlineSearchMathSciNet::customWidget(QWidget *)
     return NULL;
 }
 
-KUrl OnlineSearchMathSciNet::homepage() const
+QUrl OnlineSearchMathSciNet::homepage() const
 {
-    return KUrl("http://www.ams.org/mathscinet/help/about.html");
+    return QUrl("http://www.ams.org/mathscinet/help/about.html");
 }
 
 void OnlineSearchMathSciNet::cancel()
@@ -160,11 +161,13 @@ void OnlineSearchMathSciNet::doneFetchingQueryForm()
             formParams.insert(it.key(), it.value());
 
         /// build url by appending parameters
-        KUrl url(d->queryUrlStem);
+        QUrl url(d->queryUrlStem);
+        QUrlQuery query(url);
         for (QMap<QString, QString>::ConstIterator it = formParams.constBegin(); it != formParams.constEnd(); ++it)
-            url.addQueryItem(it.key(), it.value());
+            query.addQueryItem(it.key(), it.value());
         for (int i = 1; i <= d->queryParameters.count(); ++i)
-            url.addQueryItem(QString(QLatin1String("co%1")).arg(i), QLatin1String("AND")); ///< join search terms with an AND operation
+            query.addQueryItem(QString(QLatin1String("co%1")).arg(i), QLatin1String("AND")); ///< join search terms with an AND operation
+        url.setQuery(query);
 
         /// issue request for result page
         QNetworkRequest request(url);
@@ -172,7 +175,7 @@ void OnlineSearchMathSciNet::doneFetchingQueryForm()
         InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
         connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingResultPage()));
     } else
-        kDebug() << "url was" << reply->url().toString();
+        qWarning() << "url was" << reply->url().toString();
 }
 
 void OnlineSearchMathSciNet::doneFetchingResultPage()
@@ -188,19 +191,22 @@ void OnlineSearchMathSciNet::doneFetchingResultPage()
         QMap<QString, QString> formParams = formParameters(htmlText, QLatin1String("<form name=\"batchDownload\" action="));
 
         /// build url by appending parameters
-        KUrl url(d->queryUrlStem);
+        QUrl url(d->queryUrlStem);
+        QUrlQuery query(url);
         QStringList copyParameters = QStringList() << QLatin1String("foo") << QLatin1String("reqargs") << QLatin1String("batch_title");
-        foreach(const QString &param, copyParameters)
-        url.addQueryItem(param, formParams[param]);
-        url.addQueryItem(QLatin1String("fmt"), QLatin1String("bibtex"));
+        foreach(const QString &param, copyParameters) {
+            query.addQueryItem(param, formParams[param]);
+        }
+        query.addQueryItem(QLatin1String("fmt"), QLatin1String("bibtex"));
 
         int p = -1, count = 0;
         static const QRegExp checkBoxRegExp(QLatin1String("<input class=\"hlCheckBox\" type=\"checkbox\" name=\"b\" value=\"(\\d+)\""));
         while (count < d->numResults && (p = checkBoxRegExp.indexIn(htmlText, p + 1)) >= 0) {
-            url.addQueryItem(QLatin1String("b"), checkBoxRegExp.cap(1));
+            query.addQueryItem(QLatin1String("b"), checkBoxRegExp.cap(1));
             ++count;
         }
 
+        url.setQuery(query);
         if (count > 0) {
             /// issue request for bibtex code
             QNetworkRequest request(url);
@@ -213,7 +219,7 @@ void OnlineSearchMathSciNet::doneFetchingResultPage()
             emit stoppedSearch(resultNoError);
         }
     } else
-        kDebug() << "url was" << reply->url().toString();
+        qWarning() << "url was" << reply->url().toString();
 }
 
 void OnlineSearchMathSciNet::doneFetchingBibTeXcode()
@@ -247,7 +253,7 @@ void OnlineSearchMathSciNet::doneFetchingBibTeXcode()
 
         emit stoppedSearch(hasEntry ? resultNoError : resultUnspecifiedError);
     } else
-        kDebug() << "url was" << reply->url().toString();
+        qWarning() << "url was" << reply->url().toString();
 }
 
 void OnlineSearchMathSciNet::sanitizeEntry(QSharedPointer<Entry> entry)

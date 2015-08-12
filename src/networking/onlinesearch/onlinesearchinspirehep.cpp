@@ -17,7 +17,7 @@
 
 #include "onlinesearchinspirehep.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 OnlineSearchInspireHep::OnlineSearchInspireHep(QWidget *parent)
         : OnlineSearchSimpleBibTeXDownload(parent)
@@ -36,9 +36,9 @@ OnlineSearchQueryFormAbstract *OnlineSearchInspireHep::customWidget(QWidget *par
     return NULL;
 }
 
-KUrl OnlineSearchInspireHep::homepage() const
+QUrl OnlineSearchInspireHep::homepage() const
 {
-    return KUrl("http://inspirehep.net/");
+    return QUrl("http://inspirehep.net/");
 }
 
 QString OnlineSearchInspireHep::favIconUrl() const
@@ -46,7 +46,7 @@ QString OnlineSearchInspireHep::favIconUrl() const
     return QLatin1String("http://inspirehep.net/favicon.ico");
 }
 
-KUrl OnlineSearchInspireHep::buildQueryUrl(const QMap<QString, QString> &query, int numResults)
+QUrl OnlineSearchInspireHep::buildQueryUrl(const QMap<QString, QString> &query, int numResults)
 {
     static const QString typedSearch = QLatin1String("%1 %2"); ///< no quotation marks for search term?
 
@@ -83,5 +83,5 @@ KUrl OnlineSearchInspireHep::buildQueryUrl(const QMap<QString, QString> &query, 
     /// URL-encode text
     urlText = urlText.replace(QLatin1Char(' '), QLatin1String("%20")).replace(QLatin1Char('"'), QLatin1String("%22"));
 
-    return KUrl(urlText);
+    return QUrl(urlText);
 }

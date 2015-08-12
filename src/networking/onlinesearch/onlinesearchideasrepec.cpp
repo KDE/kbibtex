@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2015 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -20,9 +20,10 @@
 #include <QSet>
 #include <QNetworkRequest>
 #include <QNetworkReply>
+#include <QDebug>
+#include <QUrlQuery>
 
-#include <KLocale>
-#include <KDebug>
+#include <KLocalizedString>
 
 #include "fileimporterbibtex.h"
 #include "internalnetworkaccessmanager.h"
@@ -33,7 +34,7 @@ public:
     int numSteps, curStep;
     QSet<QString> publicationLinks;
 
-    KUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) {
+    QUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) {
         QString urlBase = QLatin1String("https://ideas.repec.org/cgi-bin/htsearch?cmd=Search%21&form=extended&m=all&fmt=url&wm=wrd&sp=1&sy=1&dt=range");
 
         bool hasFreeText = !query[queryKeyFreeText].isEmpty();
@@ -59,12 +60,14 @@ public:
             fieldDE = QLatin1String("31/12/") + query[queryKeyYear];
         }
 
-        KUrl url(urlBase);
-        url.addQueryItem(QLatin1String("ps"), QString::number(numResults));
-        url.addQueryItem(QLatin1String("db"), fieldDB);
-        url.addQueryItem(QLatin1String("de"), fieldDE);
-        url.addQueryItem(QLatin1String("q"), fieldQ);
-        url.addQueryItem(QLatin1String("wf"), fieldWF);
+        QUrl url(urlBase);
+        QUrlQuery q(url);
+        q.addQueryItem(QLatin1String("ps"), QString::number(numResults));
+        q.addQueryItem(QLatin1String("db"), fieldDB);
+        q.addQueryItem(QLatin1String("de"), fieldDE);
+        q.addQueryItem(QLatin1String("q"), fieldQ);
+        q.addQueryItem(QLatin1String("wf"), fieldWF);
+        url.setQuery(q);
 
         return url;
     }
@@ -90,7 +93,7 @@ void OnlineSearchIDEASRePEc::startSearch()
 
 void OnlineSearchIDEASRePEc::startSearch(const QMap<QString, QString> &query, int numResults)
 {
-    const KUrl url = d->buildQueryUrl(query, numResults);
+    const QUrl url = d->buildQueryUrl(query, numResults);
     d->curStep = 0;
     d->numSteps = 2 * numResults + 1;
     m_hasBeenCanceled = false;
@@ -119,9 +122,9 @@ OnlineSearchQueryFormAbstract *OnlineSearchIDEASRePEc::customWidget(QWidget *)
     return NULL;
 }
 
-KUrl OnlineSearchIDEASRePEc::homepage() const
+QUrl OnlineSearchIDEASRePEc::homepage() const
 {
-    return KUrl("https://ideas.repec.org/");
+    return QUrl("https://ideas.repec.org/");
 }
 
 void OnlineSearchIDEASRePEc::cancel()
@@ -135,7 +138,7 @@ void OnlineSearchIDEASRePEc::downloadListDone()
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
-    KUrl redirUrl;
+    QUrl redirUrl;
     if (handleErrors(reply, redirUrl)) {
         if (redirUrl.isValid()) {
             /// redirection to another url
@@ -161,7 +164,6 @@ void OnlineSearchIDEASRePEc::downloadListDone()
             d->numSteps += 2 * d->publicationLinks.count(); ///< update number of steps
 
             if (d->publicationLinks.isEmpty()) {
-                kDebug() << "No publication links found";
                 emit stoppedSearch(resultNoError);
                 emit progress(1, 1);
             } else {
@@ -175,7 +177,7 @@ void OnlineSearchIDEASRePEc::downloadListDone()
             }
         }
     } else
-        kDebug() << "url was" << reply->url().toString();
+        qWarning() << "url was" << reply->url().toString();
 
 }
 
@@ -207,7 +209,7 @@ void OnlineSearchIDEASRePEc::downloadPublicationDone()
             ++it;
         }
 
-        const KUrl url = KUrl(QLatin1String("https://ideas.repec.org/cgi-bin/refs.cgi"));
+        const QUrl url = QUrl(QLatin1String("https://ideas.repec.org/cgi-bin/refs.cgi"));
         QNetworkRequest request(url);
         request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
         reply = InternalNetworkAccessManager::self()->post(request, body.toUtf8());
@@ -216,7 +218,7 @@ void OnlineSearchIDEASRePEc::downloadPublicationDone()
         connect(reply, SIGNAL(finished()), this, SLOT(downloadBibTeXDone()));
 
     } else
-        kDebug() << "url was" << reply->url().toString();
+        qWarning() << "url was" << reply->url().toString();
 }
 
 void OnlineSearchIDEASRePEc::downloadBibTeXDone()
@@ -234,7 +236,6 @@ void OnlineSearchIDEASRePEc::downloadBibTeXDone()
             FileImporterBibTeX importer;
             File *bibtexFile = importer.fromString(bibTeXcode);
 
-            bool hasEntries = false;
             if (bibtexFile != NULL) {
                 for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
                     QSharedPointer<Entry> entry = (*it).dynamicCast<Entry>();
@@ -250,13 +251,9 @@ void OnlineSearchIDEASRePEc::downloadBibTeXDone()
                         v.append(QSharedPointer<VerbatimText>(new VerbatimText(label())));
                         entry->insert("x-fetchedfrom", v);
                         emit foundEntry(entry);
-                        hasEntries = true;
                     }
 
                 }
-
-                if (!hasEntries)
-                    kDebug() << "No hits found in" << reply->url().toString() << "(was" << downloadUrl << ")";
 
                 delete bibtexFile;
             }
@@ -275,5 +272,5 @@ void OnlineSearchIDEASRePEc::downloadBibTeXDone()
             connect(reply, SIGNAL(finished()), this, SLOT(downloadPublicationDone()));
         }
     } else
-        kDebug() << "url was" << reply->url().toString() << "(was" << downloadUrl << ")";
+        qWarning() << "url was" << reply->url().toString() << "(was" << downloadUrl << ")";
 }

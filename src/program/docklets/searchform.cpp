@@ -23,25 +23,26 @@
 #include <QListWidget>
 #include <QSpinBox>
 #include <QStackedWidget>
+#include <QTabWidget>
 #include <QProgressBar>
+#include <QMimeDatabase>
+#include <QMimeType>
 #include <QTimer>
 #include <QSet>
+#include <QAction>
 #include <QScrollArea>
+#include <QIcon>
+#include <QPushButton>
+#include <QDebug>
 
-#include <KPushButton>
 #include <KLineEdit>
-#include <KLocale>
-#include <KIcon>
-#include <KDebug>
+#include <KLocalizedString>
 #include <KRun>
-#include <KMimeType>
 #include <KMessageBox>
-#include <KTemporaryFile>
-#include <KAction>
-#include <kparts/part.h>
-#include <KStandardDirs>
+#include <KParts/Part>
+#include <KParts/ReadOnlyPart>
 #include <KConfigGroup>
-#include <KTabWidget>
+#include <KSharedConfig>
 
 #include "element.h"
 #include "file.h"
@@ -85,7 +86,7 @@ private:
     QWidget *listContainer;
     QListWidget *enginesList;
     QLabel *whichEnginesLabel;
-    KAction *actionOpenHomepage;
+    QAction *actionOpenHomepage;
 
 public:
     KSharedConfigPtr config;
@@ -94,10 +95,10 @@ public:
     SearchResults *sr;
     QMap<QListWidgetItem *, OnlineSearchAbstract *> itemToOnlineSearch;
     QSet<OnlineSearchAbstract *> runningSearches;
-    KPushButton *searchButton;
-    KPushButton *useEntryButton;
+    QPushButton *searchButton;
+    QPushButton *useEntryButton;
     OnlineSearchQueryFormGeneral *generalQueryTermsForm;
-    KTabWidget *tabWidget;
+    QTabWidget *tabWidget;
     QSharedPointer<const Entry> currentEntry;
     QProgressBar *progressBar;
     QMap<OnlineSearchAbstract *, int> progressMap;
@@ -165,7 +166,7 @@ public:
         connect(enginesList, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)), p, SLOT(enginesListCurrentChanged(QListWidgetItem*,QListWidgetItem*)));
         enginesList->setSelectionMode(QAbstractItemView::NoSelection);
 
-        actionOpenHomepage = new KAction(KIcon("internet-web-browser"), i18n("Go to Homepage"), p);
+        actionOpenHomepage = new QAction(QIcon::fromTheme("internet-web-browser"), i18n("Go to Homepage"), p);
         connect(actionOpenHomepage, SIGNAL(triggered()), p, SLOT(openHomepage()));
         enginesList->addAction(actionOpenHomepage);
         enginesList->setContextMenuPolicy(Qt::ActionsContextMenu);
@@ -182,18 +183,18 @@ public:
         layout->setColumnStretch(1, 1);
         layout->setColumnStretch(2, 0);
 
-        tabWidget = new KTabWidget(p);
+        tabWidget = new QTabWidget(p);
         tabWidget->setDocumentMode(true);
         layout->addWidget(tabWidget, 0, 0, 1, 3);
         connect(tabWidget, SIGNAL(currentChanged(int)), p, SLOT(tabSwitched(int)));
 
         QWidget *widget = createQueryTermsStack(tabWidget);
-        tabWidget->addTab(widget, KIcon("edit-rename"), i18n("Query Terms"));
+        tabWidget->addTab(widget, QIcon::fromTheme("edit-rename"), i18n("Query Terms"));
 
         QWidget *listContainer = createEnginesGUI(tabWidget);
-        tabWidget->addTab(listContainer, KIcon("applications-engineering"), i18n("Engines"));
+        tabWidget->addTab(listContainer, QIcon::fromTheme("applications-engineering"), i18n("Engines"));
 
-        useEntryButton = new KPushButton(KIcon("go-up"), i18n("Use Entry"), p);
+        useEntryButton = new QPushButton(QIcon::fromTheme("go-up"), i18n("Use Entry"), p);
         layout->addWidget(useEntryButton, 1, 0, 1, 1);
         useEntryButton->setEnabled(false);
         connect(useEntryButton, SIGNAL(clicked()), p, SLOT(copyFromEntry()));
@@ -203,7 +204,7 @@ public:
         progressBar->setMaximum(1000);
         progressBar->hide();
 
-        searchButton = new KPushButton(KIcon("edit-find"), i18n("Search"), p);
+        searchButton = new QPushButton(QIcon::fromTheme("edit-find"), i18n("Search"), p);
         layout->addWidget(searchButton, 1, 2, 1, 1);
         connect(generalQueryTermsForm, SIGNAL(returnPressed()), searchButton, SLOT(click()));
 
@@ -268,7 +269,7 @@ public:
 
         connect(searchButton, SIGNAL(clicked()), p, SLOT(startSearch()));
         searchButton->setText(i18n("Search"));
-        searchButton->setIcon(KIcon("media-playback-start"));
+        searchButton->setIcon(QIcon::fromTheme("media-playback-start"));
         for (int i = tabWidget->count() - 1; i >= 0; --i)
             tabWidget->widget(i)->setEnabled(true);
         tabWidget->unsetCursor();
@@ -280,7 +281,7 @@ public:
         for (QMap<QListWidgetItem *, OnlineSearchAbstract *>::ConstIterator it = itemToOnlineSearch.constBegin(); it != itemToOnlineSearch.constEnd(); ++it)
             connect(searchButton, SIGNAL(clicked()), it.value(), SLOT(cancel()));
         searchButton->setText(i18n("Stop"));
-        searchButton->setIcon(KIcon("media-playback-stop"));
+        searchButton->setIcon(QIcon::fromTheme("media-playback-stop"));
         for (int i = tabWidget->count() - 1; i >= 0; --i)
             tabWidget->widget(i)->setEnabled(false);
         tabWidget->setCursor(Qt::WaitCursor);
@@ -325,10 +326,10 @@ public:
     void openHomepage() {
         QListWidgetItem *item = enginesList->currentItem();
         if (item != NULL) {
-            KUrl url = item->data(HomepageRole).value<KUrl>();
+            QUrl url = item->data(HomepageRole).value<QUrl>();
             /// Guess mime type for url to open
-            KMimeType::Ptr mimeType = FileInfo::mimeTypeForUrl(url);
-            const QString mimeTypeName = mimeType->name();
+            QMimeType mimeType = FileInfo::mimeTypeForUrl(url);
+            const QString mimeTypeName = mimeType.name();
             /// Ask KDE subsystem to open url in viewer matching mime type
             KRun::runUrl(url, mimeTypeName, p, false, false);
         }
@@ -418,11 +419,10 @@ void SearchForm::foundEntry(QSharedPointer<Entry> entry)
     d->sr->insertElement(entry);
 }
 
-void SearchForm::stoppedSearch(int resultCode)
+void SearchForm::stoppedSearch(int)
 {
     OnlineSearchAbstract *engine = static_cast<OnlineSearchAbstract *>(sender());
     if (d->runningSearches.remove(engine)) {
-        kDebug() << "Search from engine" << engine->label() << "stopped with code" << resultCode  << (resultCode == 0 ? "(OK)" : "(Error)");
         if (d->runningSearches.isEmpty()) {
             /// last search engine stopped
             d->switchToSearch();
@@ -436,7 +436,7 @@ void SearchForm::stoppedSearch(int resultCode)
                 remainingEngines.append(running->label());
             }
             if (!remainingEngines.isEmpty())
-                kDebug() << "Remaining running engines:" << remainingEngines.join(", ");
+                qDebug() << "Remaining running engines:" << remainingEngines.join(", ");
         }
     }
 }

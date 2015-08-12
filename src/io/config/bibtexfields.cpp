@@ -17,12 +17,13 @@
 
 #include "bibtexfields.h"
 
+#include <QExplicitlySharedDataPointer>
+#include <QDebug>
+#include <QStandardPaths>
+
 #include <KSharedConfig>
 #include <KConfigGroup>
-#include <KSharedPtr>
-#include <KStandardDirs>
-#include <KDebug>
-#include <KLocale>
+#include <KLocalizedString>
 
 bool operator==(const FieldDescription &a, const FieldDescription &b)
 {
@@ -48,8 +49,8 @@ public:
             : p(parent) {
         KSharedConfigPtr config(KSharedConfig::openConfig("kbibtexrc"));
         KConfigGroup configGroup(config, QString("User Interface"));
-        const QString stylefile = configGroup.readEntry("CurrentStyle", "bibtex").append(".kbstyle").prepend("kbibtex/");
-        layoutConfig = KSharedConfig::openConfig(stylefile, KConfig::FullConfig, "data");
+        const QString stylefile = configGroup.readEntry("CurrentStyle", "bibtex").append(".kbstyle");
+        layoutConfig = KSharedConfig::openConfig(stylefile, KConfig::FullConfig, QStandardPaths::AppDataLocation);
     }
 
     void load() {
@@ -95,11 +96,11 @@ public:
             p->append(fd);
         }
 
-        if (p->isEmpty()) kWarning() << "List of field descriptions is empty after load()";
+        if (p->isEmpty()) qWarning() << "List of field descriptions is empty after load()";
     }
 
     void save() {
-        if (p->isEmpty()) kWarning() << "List of field descriptions is empty before save()";
+        if (p->isEmpty()) qWarning() << "List of field descriptions is empty before save()";
 
         QStringList treeViewNames;
         int columnCount = 0;
@@ -219,7 +220,7 @@ const FieldDescription *BibTeXFields::find(const QString &name) const
         if ((*it)->upperCamelCase.toLower() == iName && (*it)->upperCamelCaseAlt.isEmpty())
             return (*it);
     }
-    kWarning() << "No field description for " << name << "(" << iName << ")";
+    qWarning() << "No field description for " << name << "(" << iName << ")";
     return NULL;
 }
 

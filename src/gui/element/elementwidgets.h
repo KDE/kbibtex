@@ -23,8 +23,8 @@
 #include <QLabel>
 #include <QWidget>
 
-#include <KUrl>
-#include <KIcon>
+#include <QUrl>
+#include <QIcon>
 
 #include "elementeditor.h"
 #include "entrylayout.h"
@@ -35,7 +35,7 @@ class QGridLayout;
 
 class KLineEdit;
 class KComboBox;
-class KPushButton;
+class QPushButton;
 
 class File;
 class Entry;
@@ -55,7 +55,7 @@ public:
     }
     virtual void showReqOptWidgets(bool, const QString &) = 0;
     virtual QString label() = 0;
-    virtual KIcon icon() = 0;
+    virtual QIcon icon() = 0;
     bool isModified() const;
     void setModified(bool);
 
@@ -106,7 +106,7 @@ public:
     void setReadOnly(bool isReadOnly);
     void showReqOptWidgets(bool forceVisible, const QString &entryType);
     QString label();
-    KIcon icon();
+    QIcon icon();
 
     virtual void setFile(const File *file);
 
@@ -120,7 +120,7 @@ class ReferenceWidget : public ElementWidget
 private:
     KComboBox *entryType;
     KLineEdit *entryId;
-    KPushButton *buttonSuggestId;
+    QPushButton *buttonSuggestId;
 
     void createGUI();
 
@@ -139,7 +139,7 @@ public:
     bool isDuplicateId() const;
 
     QString label();
-    KIcon icon();
+    QIcon icon();
 
     bool canEdit(const Element *element);
 
@@ -174,7 +174,7 @@ public:
     void showReqOptWidgets(bool, const QString &) {}
 
     QString label();
-    KIcon icon();
+    QIcon icon();
 
     virtual void setFile(const File *file);
 
@@ -189,10 +189,10 @@ private:
     KLineEdit *fieldName;
     FieldInput *fieldContent;
     QTreeWidget *otherFieldsList;
-    KPushButton *buttonDelete;
-    KPushButton *buttonOpen;
-    KPushButton *buttonAddApply;
-    KUrl currentUrl;
+    QPushButton *buttonDelete;
+    QPushButton *buttonOpen;
+    QPushButton *buttonAddApply;
+    QUrl currentUrl;
     const QStringList blackListed;
     QSharedPointer<Entry> internalEntry;
     QStringList deletedKeys, modifiedKeys;
@@ -210,7 +210,7 @@ public:
     void setReadOnly(bool isReadOnly);
     void showReqOptWidgets(bool, const QString &) {}
     QString label();
-    KIcon icon();
+    QIcon icon();
 
     bool canEdit(const Element *element);
 
@@ -239,7 +239,7 @@ public:
     void setReadOnly(bool isReadOnly);
     void showReqOptWidgets(bool, const QString &) {}
     QString label();
-    KIcon icon();
+    QIcon icon();
 
     bool canEdit(const Element *element);
 };
@@ -259,7 +259,7 @@ public:
     void setReadOnly(bool isReadOnly);
     void showReqOptWidgets(bool, const QString &) {}
     QString label();
-    KIcon icon();
+    QIcon icon();
 
     bool canEdit(const Element *element);
 };
@@ -284,7 +284,7 @@ public:
     void setReadOnly(bool isReadOnly);
     void showReqOptWidgets(bool, const QString &) {}
     QString label();
-    KIcon icon();
+    QIcon icon();
 
     bool canEdit(const Element *element);
 
@@ -292,7 +292,7 @@ private slots:
     void reset();
 
 private:
-    KPushButton *m_buttonRestore;
+    QPushButton *m_buttonRestore;
 };
 
 #endif // KBIBTEX_GUI_ELEMENTWIDGETS_H

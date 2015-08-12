@@ -1,26 +1,5 @@
 # KBibTeX GUI library
 
-include(
-    CheckIncludeFiles
-)
-
-include_directories(
-    ${CMAKE_SOURCE_DIR}/src
-    ${CMAKE_SOURCE_DIR}/src/config
-    ${CMAKE_SOURCE_DIR}/src/data
-    ${CMAKE_SOURCE_DIR}/src/io
-    ${CMAKE_SOURCE_DIR}/src/io/config
-    ${CMAKE_SOURCE_DIR}/src/networking
-    ${CMAKE_SOURCE_DIR}/src/processing
-    ${CMAKE_SOURCE_DIR}/src/gui
-    ${CMAKE_SOURCE_DIR}/src/gui/file
-    ${CMAKE_SOURCE_DIR}/src/gui/dialogs
-    ${CMAKE_SOURCE_DIR}/src/gui/element
-    ${CMAKE_SOURCE_DIR}/src/gui/field
-    ${CMAKE_SOURCE_DIR}/src/gui/widgets
-    ${CMAKE_SOURCE_DIR}/src/gui/config
-)
-
 set(
     kbibtexgui_LIB_SRCS
     field/fieldinput.cpp
@@ -80,7 +59,6 @@ set(
     valuelistmodel.h
     italictextitemmodel.h
     delayedexecutiontimer.h
-    kbibtexgui_export.h
     file/findduplicatesui.h
     file/basicfileview.h
     file/clipboard.h
@@ -92,18 +70,41 @@ set(
     element/associatedfilesui.h
 )
 
-add_definitions(
-    -DMAKE_KBIBTEXGUI_LIB
-)
+# add_definitions(
+#     -DMAKE_KBIBTEXGUI_LIB
+# )
 
-# debug area for KBibTeX's GUI library
-add_definitions(
-    -DKDE_DEFAULT_DEBUG_AREA=101012
-)
+# # debug area for KBibTeX's GUI library
+# add_definitions(
+#     -DKDE_DEFAULT_DEBUG_AREA=101012
+# )
 
-if(UNITY_BUILD)
-    enable_unity_build(kbibtexgui kbibtexgui_LIB_SRCS)
-endif(UNITY_BUILD)
+# if(UNITY_BUILD)
+#     enable_unity_build(kbibtexgui kbibtexgui_LIB_SRCS)
+# endif(UNITY_BUILD)
+
+include_directories(
+    ${CMAKE_SOURCE_DIR}/src
+    ${CMAKE_SOURCE_DIR}/src/config
+    ${CMAKE_BINARY_DIR}/src/config
+    ${CMAKE_SOURCE_DIR}/src/data
+    ${CMAKE_BINARY_DIR}/src/data
+    ${CMAKE_SOURCE_DIR}/src/io
+    ${CMAKE_BINARY_DIR}/src/io
+    ${CMAKE_SOURCE_DIR}/src/io/config
+    ${CMAKE_SOURCE_DIR}/src/networking
+    ${CMAKE_BINARY_DIR}/src/networking
+    ${CMAKE_SOURCE_DIR}/src/processing
+    ${CMAKE_BINARY_DIR}/src/processing
+    ${CMAKE_SOURCE_DIR}/src/gui
+    ${CMAKE_BINARY_DIR}/src/gui
+    ${CMAKE_SOURCE_DIR}/src/gui/file
+    ${CMAKE_SOURCE_DIR}/src/gui/dialogs
+    ${CMAKE_SOURCE_DIR}/src/gui/element
+    ${CMAKE_SOURCE_DIR}/src/gui/field
+    ${CMAKE_SOURCE_DIR}/src/gui/widgets
+    ${CMAKE_SOURCE_DIR}/src/gui/config
+)
 
 if(QXT_FOUND_QXTCORE AND QXT_FOUND_QXTGUI)
     include_directories(
@@ -129,30 +130,28 @@ else()
     )
 endif()
 
-kde4_add_library(
+add_library(
     kbibtexgui
     SHARED
     ${kbibtexgui_LIB_SRCS}
 )
 
-target_link_libraries(
-    kbibtexgui
-    LINK_PRIVATE
-    ${QT_QTCORE_LIBRARY}
-    ${QT_QTGUI_LIBRARY}
-    ${KDE4_KDEUI_LIBS}
-    ${KDE4_KIO_LIBS}
+target_link_libraries( kbibtexgui
+    Qt5::Core
+    KF5::IconThemes
+    KF5::ItemViews
+    KF5::Completion
     kbibtexconfig
     kbibtexdata
     kbibtexio
     kbibtexnetworking
     kbibtexproc
-    ${kbibtexgui_LIBS}
 )
 
 set_target_properties(
     kbibtexgui
     PROPERTIES
+    EXPORT_NAME "kbibtexgui"
     VERSION
     ${LIB_VERSION}
     SOVERSION
@@ -162,26 +161,24 @@ set_target_properties(
 install(
     TARGETS
     kbibtexgui
-    RUNTIME
-    DESTINATION
-    bin
-    LIBRARY
-    DESTINATION
-    ${LIB_INSTALL_DIR}
+    ${INSTALL_TARGETS_DEFAULT_ARGS}
 )
 
 install(
     FILES
     file/findduplicatesui.rc
     DESTINATION
-    ${DATA_INSTALL_DIR}/kbibtex
+    ${KXMLGUI_INSTALL_DIR}/kbibtex
 )
+
+generate_export_header( kbibtexgui )
 
 install(
     FILES
     ${kbibtexgui_HDRS}
+    ${CMAKE_BINARY_DIR}/src/gui/kbibtexgui_export.h
     DESTINATION
-    ${INCLUDE_INSTALL_DIR}/kbibtex
+    ${INCLUDE_INSTALL_DIR}/kbibtex/gui
     COMPONENT
-    Devel
+    development
 )

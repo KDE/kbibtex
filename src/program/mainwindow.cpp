@@ -21,20 +21,21 @@
 #include <QDragEnterEvent>
 #include <QDropEvent>
 #include <QLabel>
+#include <QMimeData>
 #include <QtCore/QPointer>
+#include <QMessageBox>
+#include <QMenu>
 #include <QTimer>
+#include <QApplication>
+#include <QFileDialog>
+#include <QAction>
 
-#include <KIO/NetAccess>
-#include <KApplication>
-#include <KAction>
 #include <KActionMenu>
-#include <KEncodingFileDialog>
-#include <KGlobal>
 #include <KActionCollection>
 #include <KPluginFactory>
 #include <KPluginLoader>
-#include <KMessageBox>
-#include <KMenu>
+#include <KLocalizedString>
+#include <KSharedConfig>
 
 #include "kbibtexnamespace.h"
 #include "preferences/kbibtexpreferencesdialog.h"
@@ -60,7 +61,7 @@ private:
     // UNUSED KBibTeXMainWindow *p;
 
 public:
-    KAction *actionClose;
+    QAction *actionClose;
     QDockWidget *dockDocumentList;
     QDockWidget *dockReferencePreview;
     QDockWidget *dockDocumentPreview;
@@ -82,7 +83,7 @@ public:
     SearchForm *searchForm;
     SearchResults *searchResults;
     ElementForm *elementForm;
-    KMenu *actionMenuRecentFilesMenu;
+    QMenu *actionMenuRecentFilesMenu;
 
     KBibTeXMainWindowPrivate(KBibTeXMainWindow */* UNUSED parent*/)
     // UNUSED : p(parent)
@@ -104,7 +105,7 @@ KBibTeXMainWindow::KBibTeXMainWindow()
 
     /*
         const char mainWindowStateKey[] = "State";
-        KConfigGroup group( KGlobal::config(), "MainWindow" );
+        KConfigGroup group( KSharedConfig::openConfig(), "MainWindow" );
         if( !group.hasKey(mainWindowStateKey) )
             group.writeEntry( mainWindowStateKey, mainWindowState );
     */
@@ -116,12 +117,12 @@ KBibTeXMainWindow::KBibTeXMainWindow()
 
     KActionMenu *showPanelsAction = new KActionMenu(i18n("Show Panels"), this);
     actionCollection()->addAction("settings_shown_panels", showPanelsAction);
-    KMenu *showPanelsMenu = new KMenu(showPanelsAction->text(), widget());
+    QMenu *showPanelsMenu = new QMenu(showPanelsAction->text(), widget());
     showPanelsAction->setMenu(showPanelsMenu);
 
-    KActionMenu *actionMenuRecentFiles = new KActionMenu(KIcon("document-open-recent"), i18n("Recently used files"), this);
+    KActionMenu *actionMenuRecentFiles = new KActionMenu(QIcon::fromTheme("document-open-recent"), i18n("Recently used files"), this);
     actionCollection()->addAction("file_open_recent", actionMenuRecentFiles);
-    d->actionMenuRecentFilesMenu = new KMenu(actionMenuRecentFiles->text(), widget());
+    d->actionMenuRecentFilesMenu = new QMenu(actionMenuRecentFiles->text(), widget());
     actionMenuRecentFiles->setMenu(d->actionMenuRecentFilesMenu);
 
     /**
@@ -139,11 +140,11 @@ KBibTeXMainWindow::KBibTeXMainWindow()
     d->dockDocumentList = new QDockWidget(i18n("List of Documents"), this);
     d->dockDocumentList->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
     addDockWidget(Qt::LeftDockWidgetArea, d->dockDocumentList);
-    d->listDocumentList = new DocumentList(d->mdiWidget->getOpenFileInfoManager(), d->dockDocumentList);
+    d->listDocumentList = new DocumentList(d->dockDocumentList);
     d->dockDocumentList->setWidget(d->listDocumentList);
     d->dockDocumentList->setObjectName("dockDocumentList");
     d->dockDocumentList->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
-    connect(d->listDocumentList, SIGNAL(openFile(KUrl)), this, SLOT(openDocument(KUrl)));
+    connect(d->listDocumentList, SIGNAL(openFile(QUrl)), this, SLOT(openDocument(QUrl)));
     showPanelsMenu->addAction(d->dockDocumentList->toggleViewAction());
 
     d->dockValueList = new QDockWidget(i18n("List of Values"), this);
@@ -251,9 +252,9 @@ KBibTeXMainWindow::KBibTeXMainWindow()
     connect(d->mdiWidget, SIGNAL(activePartChanged(KParts::Part*)), this, SLOT(createGUI(KParts::Part*)));
     connect(d->mdiWidget, SIGNAL(documentNew()), this, SLOT(newDocument()));
     connect(d->mdiWidget, SIGNAL(documentOpen()), this, SLOT(openDocumentDialog()));
-    connect(d->mdiWidget, SIGNAL(documentOpenURL(KUrl)), this, SLOT(openDocument(KUrl)));
-    connect(d->mdiWidget->getOpenFileInfoManager(), SIGNAL(currentChanged(OpenFileInfo*,KService::Ptr)), d->mdiWidget, SLOT(setFile(OpenFileInfo*,KService::Ptr)));
-    connect(d->mdiWidget->getOpenFileInfoManager(), SIGNAL(flagsChanged(OpenFileInfo::StatusFlags)), this, SLOT(documentListsChanged(OpenFileInfo::StatusFlags)));
+    connect(d->mdiWidget, SIGNAL(documentOpenURL(QUrl)), this, SLOT(openDocument(QUrl)));
+    connect(OpenFileInfoManager::instance(), SIGNAL(currentChanged(OpenFileInfo*,KService::Ptr)), d->mdiWidget, SLOT(setFile(OpenFileInfo*,KService::Ptr)));
+    connect(OpenFileInfoManager::instance(), SIGNAL(flagsChanged(OpenFileInfo::StatusFlags)), this, SLOT(documentListsChanged(OpenFileInfo::StatusFlags)));
     connect(d->mdiWidget, SIGNAL(setCaption(QString)), this, SLOT(setCaption(QString)));
 
     documentListsChanged(OpenFileInfo::RecentlyUsed); /// force initialization of menu of recently used files
@@ -305,51 +306,61 @@ void KBibTeXMainWindow::dropEvent(QDropEvent *event)
 void KBibTeXMainWindow::newDocument()
 {
     const QString mimeType = FileInfo::mimetypeBibTeX;
-    OpenFileInfo *openFileInfo = d->mdiWidget->getOpenFileInfoManager()->createNew(mimeType);
+    OpenFileInfo *openFileInfo = OpenFileInfoManager::instance()->createNew(mimeType);
     if (openFileInfo) {
-        d->mdiWidget->getOpenFileInfoManager()->setCurrentFile(openFileInfo);
+        OpenFileInfoManager::instance()->setCurrentFile(openFileInfo);
         openFileInfo->addFlags(OpenFileInfo::Open);
     } else
-        KMessageBox::error(this, i18n("Creating a new document of mime type '%1' failed as no editor component could be instantiated.", mimeType), i18n("Creating document failed"));
+        QMessageBox::warning(this, i18n("No Editor Component"), i18n("Creating a new document of mime type '%1' failed as no editor component could be instantiated.", mimeType), i18n("Creating document failed"));
 }
 
 void KBibTeXMainWindow::openDocumentDialog()
 {
-    OpenFileInfo *currFile = d->mdiWidget->getOpenFileInfoManager()->currentFile();
-    KUrl currFileUrl = currFile == NULL ? KUrl() : currFile->url();
-    QString startDir = currFileUrl.isValid() ? KUrl(currFileUrl.url()).path() : QString();
-    OpenFileInfo *ofi = d->mdiWidget->getOpenFileInfoManager()->currentFile();
+    OpenFileInfo *currFile = OpenFileInfoManager::instance()->currentFile();
+    QUrl currFileUrl = currFile == NULL ? QUrl() : currFile->url();
+    QString startDir = currFileUrl.isValid() ? QUrl(currFileUrl.url()).path() : QString();
+    OpenFileInfo *ofi = OpenFileInfoManager::instance()->currentFile();
     if (ofi != NULL) {
-        KUrl url = ofi->url();
+        QUrl url = ofi->url();
         if (url.isValid()) startDir = url.path();
     }
 
-    QString supportedMimeTypes = QLatin1String("text/x-bibtex application/x-research-info-systems application/xml");
-    if (BibUtils::available())
-        supportedMimeTypes += QLatin1String(" application/x-isi-export-format application/x-endnote-refer");
-    supportedMimeTypes += QLatin1String(" all/all");
-    KUrl url = KFileDialog::getOpenUrl(startDir, supportedMimeTypes, this);
-    if (!url.isEmpty()) {
-        openDocument(url);
+    /// Assemble list of supported mimetypes
+    QStringList supportedMimeTypes = QStringList() << QLatin1String("text/x-bibtex") << QLatin1String("application/x-research-info-systems") << QLatin1String("application/xml");
+    if (BibUtils::available()) {
+        supportedMimeTypes.append(QLatin1String("application/x-isi-export-format"));
+        supportedMimeTypes.append(QLatin1String("application/x-endnote-refer"));
     }
+    supportedMimeTypes.append(QLatin1String("all/all"));
+    QPointer<QFileDialog> dlg = new QFileDialog(this, i18n("Open file") /* TODO better text */, startDir);
+    dlg->setMimeTypeFilters(supportedMimeTypes);
+    dlg->setFileMode(QFileDialog::ExistingFile);
+
+    const bool dialogAccepted = dlg->exec() != 0;
+    const QUrl url = (dialogAccepted && !dlg->selectedUrls().isEmpty()) ? dlg->selectedUrls().first() : QUrl();
+
+    delete dlg;
+
+    if (!url.isEmpty())
+        openDocument(url);
 }
 
-void KBibTeXMainWindow::openDocument(const KUrl &url)
+void KBibTeXMainWindow::openDocument(const QUrl &url)
 {
-    OpenFileInfo *openFileInfo = d->mdiWidget->getOpenFileInfoManager()->open(url);
-    d->mdiWidget->getOpenFileInfoManager()->setCurrentFile(openFileInfo);
+    OpenFileInfo *openFileInfo = OpenFileInfoManager::instance()->open(url);
+    OpenFileInfoManager::instance()->setCurrentFile(openFileInfo);
 }
 
 void KBibTeXMainWindow::closeDocument()
 {
-    d->mdiWidget->getOpenFileInfoManager()->close(d->mdiWidget->getOpenFileInfoManager()->currentFile());
+    OpenFileInfoManager::instance()->close(OpenFileInfoManager::instance()->currentFile());
 }
 
 void KBibTeXMainWindow::closeEvent(QCloseEvent *event)
 {
     KMainWindow::closeEvent(event);
 
-    if (d->mdiWidget->getOpenFileInfoManager()->queryCloseAll())
+    if (OpenFileInfoManager::instance()->queryCloseAll())
         event->accept();
     else
         event->ignore();
@@ -395,7 +406,7 @@ void KBibTeXMainWindow::documentSwitched(FileView *oldFileView, FileView *newFil
         connect(d->elementForm, SIGNAL(elementModified()), newFileView, SLOT(externalModification()));
     }
 
-    d->documentPreview->setBibTeXUrl(validFile ? openFileInfo->url() : KUrl());
+    d->documentPreview->setBibTeXUrl(validFile ? openFileInfo->url() : QUrl());
     d->referencePreview->setElement(QSharedPointer<Element>(), NULL);
     d->elementForm->setElement(QSharedPointer<Element>(), NULL);
     d->documentPreview->setElement(QSharedPointer<Element>(), NULL);
@@ -416,7 +427,7 @@ void KBibTeXMainWindow::showSearchResults()
 void KBibTeXMainWindow::documentListsChanged(OpenFileInfo::StatusFlags statusFlags)
 {
     if (statusFlags.testFlag(OpenFileInfo::RecentlyUsed)) {
-        OpenFileInfoManager::OpenFileInfoList list = d->mdiWidget->getOpenFileInfoManager()->filteredItems(OpenFileInfo::RecentlyUsed);
+        OpenFileInfoManager::OpenFileInfoList list = OpenFileInfoManager::instance()->filteredItems(OpenFileInfo::RecentlyUsed);
         d->actionMenuRecentFilesMenu->clear();
         foreach(OpenFileInfo *cur, list) {
             /// Fixing bug 19511: too long filenames make menu too large,
@@ -424,9 +435,9 @@ void KBibTeXMainWindow::documentListsChanged(OpenFileInfo::StatusFlags statusFla
             const int squeezeLen = 64;
             const QString squeezedShortCap = squeeze_text(cur->shortCaption(), squeezeLen);
             const QString squeezedFullCap = squeeze_text(cur->fullCaption(), squeezeLen);
-            KAction *action = new KAction(QString("%1 [%2]").arg(squeezedShortCap).arg(squeezedFullCap), this);
+            QAction *action = new QAction(QString("%1 [%2]").arg(squeezedShortCap).arg(squeezedFullCap), this);
             action->setData(cur->url());
-            action->setIcon(KIcon(cur->mimeType().replace(QLatin1Char('/'), QLatin1Char('-'))));
+            action->setIcon(QIcon::fromTheme(cur->mimeType().replace(QLatin1Char('/'), QLatin1Char('-'))));
             d->actionMenuRecentFilesMenu->addAction(action);
             connect(action, SIGNAL(triggered()), this, SLOT(openRecentFile()));
         }
@@ -435,15 +446,15 @@ void KBibTeXMainWindow::documentListsChanged(OpenFileInfo::StatusFlags statusFla
 
 void KBibTeXMainWindow::openRecentFile()
 {
-    KAction *action = static_cast<KAction *>(sender());
-    KUrl url = action->data().value<KUrl>();
+    QAction *action = static_cast<QAction *>(sender());
+    QUrl url = action->data().value<QUrl>();
     openDocument(url);
 }
 
 void KBibTeXMainWindow::queryCloseAll()
 {
-    if (d->mdiWidget->getOpenFileInfoManager()->queryCloseAll())
-        kapp->quit();
+    if (OpenFileInfoManager::instance()->queryCloseAll())
+        qApp->quit();
 }
 
 void KBibTeXMainWindow::delayed() {
@@ -455,7 +466,7 @@ void KBibTeXMainWindow::delayed() {
     if (bs == NULL) {
         /// First call to this slot
         bs = new BibliographyService(this);
-        if (!bs->isKBibTeXdefault() && KMessageBox::questionYesNo(this, i18n("KBibTeX is not the default editor for its bibliography formats like BibTeX or RIS."), i18n("Default Bibliography Editor"), KGuiItem(i18n("Set as Default Editor")), KGuiItem(i18n("Keep settings unchanged"))) == KMessageBox::Yes) {
+        if (!bs->isKBibTeXdefault() && QMessageBox::question(this, i18n("Default Bibliography Editor"), i18n("KBibTeX is not the default editor for its bibliography formats like BibTeX or RIS.")/*, KGuiItem(i18n("Set as Default Editor")), KGuiItem(i18n("Keep settings unchanged"))*/) == QMessageBox::Yes) {
             bs->setKBibTeXasDefault();
             /// QTimer calls this slot again, but as 'bs' will not be NULL,
             /// the 'if' construct's 'else' path will be followed.

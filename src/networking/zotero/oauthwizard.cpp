@@ -25,12 +25,13 @@
 #include <QGridLayout>
 #include <QClipboard>
 #include <QApplication>
+#include <QDebug>
+#include <QPushButton>
+#include <QUrl>
+#include <QUrlQuery>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KLineEdit>
-#include <KPushButton>
-#include <KUrl>
-#include <KDebug>
 #include <KRun>
 
 #include "internalnetworkaccessmanager.h"
@@ -132,7 +133,7 @@ public:
     }
 
     // TODO separate GUI code from functional code
-    KUrl oAuthAuthorizationUrl() {
+    QUrl oAuthAuthorizationUrl() {
         /// Send a request for an unauthorized token
         QOAuth::ParamMap params;
         params.insert("oauth_callback", "oob");
@@ -140,21 +141,22 @@ public:
 
         /// If no error occurred, read the received token and token secret
         if (qOAuth->error() == QOAuth::NoError) {
-            kDebug() << "Correctly retrieved authorization URL parameters";
             token = reply.value(QOAuth::tokenParameterName());
             tokenSecret = reply.value(QOAuth::tokenSecretParameterName());
 
-            KUrl oauthAuthorizationUrl = KUrl(QLatin1String("https://www.zotero.org/oauth/authorize"));
-            oauthAuthorizationUrl.addQueryItem("oauth_token", token);
-            oauthAuthorizationUrl.addQueryItem("library_access", "1");
-            oauthAuthorizationUrl.addQueryItem("notes_access", "0");
-            oauthAuthorizationUrl.addQueryItem("write_access", "0");
-            oauthAuthorizationUrl.addQueryItem("all_groups", "read");
+            QUrl oauthAuthorizationUrl = QUrl(QLatin1String("https://www.zotero.org/oauth/authorize"));
+            QUrlQuery query(oauthAuthorizationUrl);
+            query.addQueryItem("oauth_token", token);
+            query.addQueryItem("library_access", "1");
+            query.addQueryItem("notes_access", "0");
+            query.addQueryItem("write_access", "0");
+            query.addQueryItem("all_groups", "read");
+            oauthAuthorizationUrl.setQuery(query);
             return oauthAuthorizationUrl;
         } else
-            kWarning() << "Error getting token" << qOAuth->error();
+            qWarning() << "Error getting token" << qOAuth->error();
 
-        return KUrl();
+        return QUrl();
     }
 
     void setupGUI() {
@@ -178,11 +180,11 @@ public:
         lineEditAuthorizationUrl = new KLineEdit(page);
         lineEditAuthorizationUrl->setReadOnly(true);
         gridLayout->addWidget(lineEditAuthorizationUrl, 0, 0, 1, 3);
-        KPushButton *buttonCopyAuthorizationUrl = new KPushButton(KIcon("edit-copy"), i18n("Copy URL"), page);
+        QPushButton *buttonCopyAuthorizationUrl = new QPushButton(QIcon::fromTheme("edit-copy"), i18n("Copy URL"), page);
         gridLayout->addWidget(buttonCopyAuthorizationUrl, 1, 1, 1, 1);
         connect(buttonCopyAuthorizationUrl, SIGNAL(clicked()), p, SLOT(copyAuthorizationUrl()));
         connect(buttonCopyAuthorizationUrl, SIGNAL(clicked()), p, SLOT(next()));
-        KPushButton *buttonOpenAuthorizationUrl = new KPushButton(KIcon("document-open-remote"), i18n("Open URL"), page);
+        QPushButton *buttonOpenAuthorizationUrl = new QPushButton(QIcon::fromTheme("document-open-remote"), i18n("Open URL"), page);
         gridLayout->addWidget(buttonOpenAuthorizationUrl, 1, 2, 1, 1);
         connect(buttonOpenAuthorizationUrl, SIGNAL(clicked()), p, SLOT(openAuthorizationUrl()));
         connect(buttonOpenAuthorizationUrl, SIGNAL(clicked()), p, SLOT(next()));
@@ -207,23 +209,22 @@ public:
             tokenSecret = oAuthVerifierRequest.value(QOAuth::tokenSecretParameterName());
 
             if (!token.isEmpty() && !tokenSecret.isEmpty()) {
-                kDebug() << "KBibTeX is authorized successfully";
                 bool ok = false;
                 userId = oAuthVerifierRequest.value("userID").toInt(&ok);
                 if (!ok) {
                     userId = -1;
                     apiKey.clear();
                     username.clear();
-                    kWarning() << "Returned user id is not a valid number:" << oAuthVerifierRequest.value("userID");
+                    qWarning() << "Returned user id is not a valid number:" << oAuthVerifierRequest.value("userID");
                 } else {
                     apiKey = oAuthVerifierRequest.value("oauth_token");
                     username = oAuthVerifierRequest.value("username");
                 }
             } else {
-                kWarning() << "QOAuth error: token or tokenSecret empty";
+                qWarning() << "QOAuth error: token or tokenSecret empty";
             }
         } else {
-            kWarning() << "QOAuth error:" << qOAuth->error();
+            qWarning() << "QOAuth error:" << qOAuth->error();
         }
     }
 };
@@ -240,10 +241,10 @@ OAuthWizard::~OAuthWizard()
     delete d;
 }
 
-bool OAuthWizard::exec()
+int OAuthWizard::exec()
 {
-    const bool result = QWizard::exec() == Accepted && d->userId >= 0;
-    return result;
+    const int result = QWizard::exec();
+    return d->userId >= 0 ? result : Rejected;
 }
 
 int OAuthWizard::userId() const
@@ -268,7 +269,7 @@ void OAuthWizard::initializePage(int id)
     } else if (id == d->pageIdAuthorizationUrl) {
         const QCursor currentCursor = cursor();
         setCursor(Qt::WaitCursor);
-        d->lineEditAuthorizationUrl->setText(d->oAuthAuthorizationUrl().pathOrUrl());
+        d->lineEditAuthorizationUrl->setText(d->oAuthAuthorizationUrl().url(QUrl::PreferLocalFile));
         setCursor(currentCursor);
     } else if (id == d->pageIdVerificationCode) {
         /// This page initializes itself, see VerificationCodePage::initializePage
@@ -292,7 +293,7 @@ void OAuthWizard::copyAuthorizationUrl()
 
 void OAuthWizard::openAuthorizationUrl()
 {
-    KRun::runUrl(KUrl(d->lineEditAuthorizationUrl->text()), QLatin1String("text/html"), this);
+    KRun::runUrl(QUrl(d->lineEditAuthorizationUrl->text()), QLatin1String("text/html"), this);
 }
 
 #endif // HAVE_QTOAUTH

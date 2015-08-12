@@ -17,11 +17,11 @@
 
 #include "fileexporterbibtex2html.h"
 
+#include <QDebug>
 #include <QFile>
+#include <QStandardPaths>
 
-#include <KDebug>
-#include <KLocale>
-#include <KStandardDirs>
+#include <KLocalizedString>
 
 #include "fileexporterbibtex.h"
 
@@ -65,7 +65,7 @@ public:
     }
 
     bool checkBibTeX2HTMLexists(QIODevice *iodevice) {
-        if (!KStandardDirs::findExe("bibtex2html").isEmpty())
+        if (!QStandardPaths::findExecutable("bibtex2html").isEmpty())
             return true;
 
         QTextStream ts(iodevice);
@@ -91,7 +91,7 @@ public:
 };
 
 FileExporterBibTeX2HTML::FileExporterBibTeX2HTML()
-        : FileExporterToolchain(), d(new FileExporterBibTeX2HTMLPrivate(this, tempDir.name()))
+        : FileExporterToolchain(), d(new FileExporterBibTeX2HTMLPrivate(this, tempDir.path()))
 {
     // nothing
 }
@@ -109,7 +109,7 @@ void FileExporterBibTeX2HTML::reloadConfig()
 bool FileExporterBibTeX2HTML::save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog)
 {
     if (!iodevice->isWritable() && !iodevice->open(QIODevice::WriteOnly)) {
-        kDebug() << "Output device not writable";
+        qWarning() << "Output device not writable";
         return false;
     }
 
@@ -134,7 +134,7 @@ bool FileExporterBibTeX2HTML::save(QIODevice *iodevice, const File *bibtexfile, 
 bool FileExporterBibTeX2HTML::save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog)
 {
     if (!iodevice->isWritable() && !iodevice->open(QIODevice::WriteOnly)) {
-        kDebug() << "Output device not writable";
+        qWarning() << "Output device not writable";
         return false;
     }
 

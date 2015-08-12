@@ -25,8 +25,8 @@
 #include <QWidget>
 #include <QMetaType>
 
-#include <KIcon>
-#include <KUrl>
+#include <QIcon>
+#include <QUrl>
 #include <KSharedConfig>
 
 #include "entry.h"
@@ -93,9 +93,9 @@ public:
     virtual void startSearch(const QMap<QString, QString> &query, int numResults) = 0;
     virtual QString label() const = 0;
     QString name();
-    virtual KIcon icon(QListWidgetItem *listWidgetItem = NULL);
+    virtual QIcon icon(QListWidgetItem *listWidgetItem = NULL);
     virtual OnlineSearchQueryFormAbstract *customWidget(QWidget *parent) = 0;
-    virtual KUrl homepage() const = 0;
+    virtual QUrl homepage() const = 0;
 
 public slots:
     void cancel();
@@ -128,7 +128,7 @@ protected:
     * @see handleErrors(KJob*)
     * @param newUrl will be set to the new URL if reply contains a redirection, otherwise reply's original URL
     */
-    bool handleErrors(QNetworkReply *reply, KUrl &newUrl);
+    bool handleErrors(QNetworkReply *reply, QUrl &newUrl);
 
     /**
      * Encode a text to be HTTP URL save, e.g. replace '=' by '%3D'.

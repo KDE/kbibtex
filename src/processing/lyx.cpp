@@ -18,22 +18,19 @@
 #include "lyx.h"
 
 #include <QWidget>
+#include <QAction>
 #include <QDir>
 #include <QTextStream>
 #include <QFileInfo>
+#include <QStandardPaths>
+#include <qplatformdefs.h>
 
-#include <KAction>
 #include <KActionCollection>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KParts/ReadOnlyPart>
 #include <KMessageBox>
-#include <KStandardDirs>
-#include <KDebug>
 #include <KSharedConfig>
 #include <KConfigGroup>
-#include <kde_file.h>
-
-#include <kdeversion.h>
 
 class LyX::LyXPrivate
 {
@@ -42,7 +39,7 @@ private:
 
 public:
     QWidget *widget;
-    KAction *action;
+    QAction *action;
     QStringList references;
 
     KSharedConfigPtr config;
@@ -93,13 +90,11 @@ const QString LyX::configGroupName = QLatin1String("LyXPipe");
 LyX::LyX(KParts::ReadOnlyPart *part, QWidget *widget)
         : QObject(part), d(new LyX::LyXPrivate(this, widget))
 {
-    d->action = new KAction(KIcon("application-x-lyx"), i18n("Send to LyX/Kile"), this);
+    d->action = new QAction(QIcon::fromTheme("application-x-lyx"), i18n("Send to LyX/Kile"), this);
     part->actionCollection()->addAction("sendtolyx", d->action);
     d->action->setEnabled(false);
     connect(d->action, SIGNAL(triggered()), this, SLOT(sendReferenceToLyX()));
-#if KDE_IS_VERSION(4, 4, 0)
-    part->replaceXMLFile(KStandardDirs::locate("data", "kbibtex/lyx.rc"), KStandardDirs::locateLocal("data", "kbibtex/lyx.rc"), true);
-#endif
+    // FIXME necessary? // part->replaceXMLFile(QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kbibtex/lyx.rc"), QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + "kbibtex/lyx.rc"), true;
     widget->addAction(d->action);
 }
 
@@ -148,7 +143,7 @@ void LyX::sendReferenceToLyX()
 
 QString LyX::guessLyXPipeLocation()
 {
-    KDE_struct_stat fileInfo;
+    QT_STATBUF statBuffer;
     const QStringList nameFilter = QStringList() << QLatin1String("*lyxpipe*in*");
     QString result;
 
@@ -157,7 +152,7 @@ QString LyX::guessLyXPipeLocation()
     QStringList files = home.entryList(nameFilter, QDir::Hidden | QDir::System | QDir::Writable, QDir::Unsorted);
     foreach(const QString &filename, files) {
         QString const absoluteFilename = home.absolutePath() + QDir::separator() + filename;
-        if (KDE_stat(absoluteFilename.toLatin1(), &fileInfo) == 0 && S_ISFIFO(fileInfo.st_mode)) {
+        if (QT_LSTAT(absoluteFilename.toLatin1(), &statBuffer) == 0 && S_ISFIFO(statBuffer.st_mode)) {
             result = absoluteFilename;
             break;
         }
@@ -171,7 +166,7 @@ QString LyX::guessLyXPipeLocation()
             QStringList files = home.entryList(nameFilter, QDir::Hidden | QDir::System | QDir::Writable, QDir::Unsorted);
             foreach(const QString &filename, files) {
                 QString const absoluteFilename = home.absolutePath() + QDir::separator() + filename;
-                if (KDE_stat(absoluteFilename.toLatin1(), &fileInfo) == 0 && S_ISFIFO(fileInfo.st_mode)) {
+                if (QT_LSTAT(absoluteFilename.toLatin1(), &statBuffer) == 0 && S_ISFIFO(statBuffer.st_mode)) {
                     result = absoluteFilename;
                     break;
                 }

@@ -23,11 +23,12 @@
 #include <QRadioButton>
 #include <QButtonGroup>
 #include <QDir>
+#include <QDialog>
+#include <QDialogButtonBox>
+#include <QPushButton>
 
 #include <KLineEdit>
-#include <KDialog>
-#include <KLocale>
-#include <KDebug>
+#include <KLocalizedString>
 
 class AssociatedFilesUI::Private
 {
@@ -145,16 +146,23 @@ public:
 };
 
 bool AssociatedFilesUI::associateUrl(const QUrl &url, QSharedPointer<Entry> &entry, const File *bibTeXfile, QWidget *parent) {
-    QPointer<KDialog> dlg = new KDialog(parent);
+    QPointer<QDialog> dlg = new QDialog(parent);
+    QBoxLayout *layout = new QVBoxLayout(dlg);
     QPointer<AssociatedFilesUI> ui = new AssociatedFilesUI(entry->id(), bibTeXfile, dlg);
-    dlg->setMainWidget(ui);
+    layout->addWidget(ui);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, dlg);
+    layout->addWidget(buttonBox);
+    dlg->setLayout(layout);
+
+    connect(buttonBox->button(QDialogButtonBox::Ok), &QPushButton::clicked, dlg, &QDialog::accept);
+    connect(buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, dlg, &QDialog::reject);
 
     if (AssociatedFiles::urlIsLocal(url))
         ui->setupForLocalFile(url, entry->id());
     else
         ui->setupForRemoteUrl(url, entry->id());
 
-    const bool accepted = dlg->exec() == KDialog::Accepted;
+    const bool accepted = dlg->exec() == QDialog::Accepted;
     bool success = true;
     if (accepted) {
         const QUrl newUrl = AssociatedFiles::copyDocument(url, entry->id(), bibTeXfile, ui->renameOperation(), ui->moveCopyOperation(), dlg, ui->userDefinedFilename());
@@ -170,16 +178,23 @@ bool AssociatedFilesUI::associateUrl(const QUrl &url, QSharedPointer<Entry> &ent
 }
 
 QString AssociatedFilesUI::associateUrl(const QUrl &url, const QString &entryId, const File *bibTeXfile, QWidget *parent) {
-    QPointer<KDialog> dlg = new KDialog(parent);
+    QPointer<QDialog> dlg = new QDialog(parent);
+    QBoxLayout *layout = new QVBoxLayout(dlg);
     QPointer<AssociatedFilesUI> ui = new AssociatedFilesUI(entryId, bibTeXfile, dlg);
-    dlg->setMainWidget(ui);
+    layout->addWidget(ui);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, dlg);
+    layout->addWidget(buttonBox);
+    dlg->setLayout(layout);
+
+    connect(buttonBox->button(QDialogButtonBox::Ok), &QPushButton::clicked, dlg, &QDialog::accept);
+    connect(buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, dlg, &QDialog::reject);
 
     if (AssociatedFiles::urlIsLocal(url))
         ui->setupForLocalFile(url, entryId);
     else
         ui->setupForRemoteUrl(url, entryId);
 
-    const bool accepted = dlg->exec() == KDialog::Accepted;
+    const bool accepted = dlg->exec() == QDialog::Accepted;
     bool success = true;
     QString referenceString;
     if (accepted) {
@@ -235,9 +250,6 @@ QString AssociatedFilesUI::userDefinedFilename() const {
 void AssociatedFilesUI::updateUIandPreview() {
     QString preview = i18n("No preview available");
     const QString entryId = d->entryId.isEmpty() && !d->entry.isNull() ? d->entry->id() : d->entryId;
-    kDebug() << "d->bibTeXfile != NULL " << (d->bibTeXfile != NULL);
-    kDebug() << "!d->sourceUrl.isEmpty() " << (!d->sourceUrl.isEmpty());
-    kDebug() << "entryId " << entryId;
 
     if (entryId.isEmpty()) {
         d->radioRenameToEntryId->setEnabled(false);
@@ -258,11 +270,9 @@ void AssociatedFilesUI::updateUIandPreview() {
 
     if (d->bibTeXfile != NULL && !d->sourceUrl.isEmpty() && !entryId.isEmpty()) {
         const QUrl newUrl = AssociatedFiles::copyDocument(d->sourceUrl, entryId, d->bibTeXfile, renameOperation(), moveCopyOperation(), NULL, d->lineEditUserDefinedName->text(), true);
-        kDebug() << "newUrl= " << newUrl.toString();
         if (!newUrl.isEmpty())
             preview = AssociatedFiles::associateDocumentURL(newUrl,  d->bibTeXfile, pathType());
     }
-    kDebug() << "preview= " << preview;
     d->linePreview->setText(preview);
 
     d->groupBoxRename->setEnabled(!d->radioNoCopyMove->isChecked());

@@ -17,13 +17,14 @@
 
 #include "searchresults.h"
 
+#include <QDebug>
 #include <QGridLayout>
 #include <QLabel>
+#include <QPushButton>
+#include <QAction>
 
-#include <KLocale>
-#include <KPushButton>
-#include <KDebug>
-#include <KAction>
+#include <KLocalizedString>
+#include <KIconLoader>
 
 #include "file.h"
 #include "clipboard.h"
@@ -42,9 +43,9 @@ public:
     File *file;
     QWidget *widgetCannotImport;
     QLabel *labelCannotImportMsg;
-    KPushButton *buttonImport;
+    QPushButton *buttonImport;
     FileView *resultList, *mainEditor;
-    KAction *actionViewCurrent, *actionImportSelected, *actionCopySelected;
+    QAction *actionViewCurrent, *actionImportSelected, *actionCopySelected;
 
     SearchResultsPrivate(MDIWidget *mdiWidget, SearchResults *parent)
         : /* UNUSED p(parent),*/ m(mdiWidget), file(new File()), mainEditor(NULL) {
@@ -80,7 +81,7 @@ public:
         layoutCannotImport->addWidget(labelCannotImportMsg);
         /// see also updateCannotImportMessage()
 
-        buttonImport = new KPushButton(KIcon("svn-update"), i18n("Import"), parent);
+        buttonImport = new QPushButton(QIcon::fromTheme("svn-update"), i18n("Import"), parent);
         layout->addWidget(buttonImport, 1, 1, 1, 1);
         buttonImport->setEnabled(false);
 
@@ -90,17 +91,17 @@ public:
         model->setSourceModel(fileModel);
         resultList->setModel(model);
 
-        actionViewCurrent = new KAction(KIcon("document-preview"), i18n("View Element"), parent);
+        actionViewCurrent = new QAction(QIcon::fromTheme("document-preview"), i18n("View Element"), parent);
         resultList->addAction(actionViewCurrent);
         actionViewCurrent->setEnabled(false);
         connect(actionViewCurrent, SIGNAL(triggered()), resultList, SLOT(viewCurrentElement()));
 
-        actionImportSelected = new KAction(KIcon("svn-update"), i18n("Import"), parent);
+        actionImportSelected = new QAction(QIcon::fromTheme("svn-update"), i18n("Import"), parent);
         resultList->addAction(actionImportSelected);
         actionImportSelected->setEnabled(false);
         connect(actionImportSelected, SIGNAL(triggered()), parent, SLOT(importSelected()));
 
-        actionCopySelected = new KAction(KIcon("edit-copy"), i18n("Copy"), parent);
+        actionCopySelected = new QAction(QIcon::fromTheme("edit-copy"), i18n("Copy"), parent);
         resultList->addAction(actionCopySelected);
         actionCopySelected->setEnabled(false);
         connect(actionCopySelected, SIGNAL(triggered()), clipboard, SLOT(copy()));
@@ -210,7 +211,7 @@ void SearchResults::importSelected()
             QSharedPointer<Entry> clone(new Entry(*entry));
             targetModel->insertRow(clone, targetModel->rowCount());
         } else
-            kWarning() << "Trying to import something that isn't an Entry";
+            qWarning() << "Trying to import something that isn't an Entry";
     }
 
     if (!selList.isEmpty())

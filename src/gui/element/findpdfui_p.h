@@ -41,13 +41,14 @@ public:
 
     virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
 
-    /// get the list of widgets
-    virtual QList<QWidget *> createItemWidgets() const;
-
     /// update the widgets
     virtual void updateItemWidgets(const QList<QWidget *> widgets, const QStyleOptionViewItem &option, const QPersistentModelIndex &index) const;
 
     virtual QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &) const;
+
+protected:
+    /// get the list of widgets
+    virtual QList<QWidget *> createItemWidgets(const QModelIndex &index) const;
 
 private slots:
     void slotViewPDF();

@@ -17,7 +17,7 @@
 
 #include "onlinesearchsoanasaads.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 OnlineSearchSOANASAADS::OnlineSearchSOANASAADS(QWidget *parent)
         : OnlineSearchSimpleBibTeXDownload(parent)
@@ -36,9 +36,9 @@ OnlineSearchQueryFormAbstract *OnlineSearchSOANASAADS::customWidget(QWidget *par
     return NULL;
 }
 
-KUrl OnlineSearchSOANASAADS::homepage() const
+QUrl OnlineSearchSOANASAADS::homepage() const
 {
-    return KUrl("http://adswww.harvard.edu/");
+    return QUrl("http://adswww.harvard.edu/");
 }
 
 QString OnlineSearchSOANASAADS::favIconUrl() const
@@ -46,7 +46,7 @@ QString OnlineSearchSOANASAADS::favIconUrl() const
     return QLatin1String("http://adsabs.harvard.edu/favicon.ico");
 }
 
-KUrl OnlineSearchSOANASAADS::buildQueryUrl(const QMap<QString, QString> &query, int numResults)
+QUrl OnlineSearchSOANASAADS::buildQueryUrl(const QMap<QString, QString> &query, int numResults)
 {
     static const QString globalSearch = QLatin1String("\"%1\"");
     static const QString rangeSearch = QLatin1String("%1:\"%2\"");
@@ -84,5 +84,5 @@ KUrl OnlineSearchSOANASAADS::buildQueryUrl(const QMap<QString, QString> &query, 
     /// set number of expected results
     urlText.append(QString(QLatin1String("&nr_to_return=%1")).arg(numResults));
 
-    return KUrl(urlText);
+    return QUrl(urlText);
 }
