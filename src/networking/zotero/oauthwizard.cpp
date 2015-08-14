@@ -15,8 +15,6 @@
  *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
  ***************************************************************************/
 
-#ifdef HAVE_QTOAUTH // krazy:exclude=cpp
-
 #include "oauthwizard.h"
 
 #include <QLabel>
@@ -36,7 +34,7 @@
 
 #include "internalnetworkaccessmanager.h"
 
-#include <QtOAuth/QtOAuth>
+#include <QtOAuth>
 
 using namespace Zotero;
 
@@ -295,5 +293,3 @@ void OAuthWizard::openAuthorizationUrl()
 {
     KRun::runUrl(QUrl(d->lineEditAuthorizationUrl->text()), QLatin1String("text/html"), this);
 }
-
-#endif // HAVE_QTOAUTH

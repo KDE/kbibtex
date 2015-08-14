@@ -35,6 +35,8 @@ set(
     associatedfiles.cpp
     findpdf.cpp
     internalnetworkaccessmanager.cpp
+    # QOAuth for Qt5 from Git
+    ../3rdparty/qoauth/src/interface.cpp
 )
 
 set(
@@ -88,6 +90,7 @@ set(
 # endif(UNITY_BUILD)
 
 include_directories(
+    ${CMAKE_SOURCE_DIR}/src/3rdparty/qoauth/include
     ${CMAKE_BINARY_DIR}/src/config
     ${CMAKE_SOURCE_DIR}/src/config
     ${CMAKE_BINARY_DIR}/src/data
@@ -98,6 +101,7 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/src/networking
     ${CMAKE_SOURCE_DIR}/src
     ${LIBXML2_INCLUDE_DIR}
+    ${QTCRYPTO_INCLUDE_DIR}
 )
 
 add_library(
@@ -122,6 +126,7 @@ target_link_libraries(
     kbibtexconfig
     kbibtexdata
     kbibtexio
+    qca-qt5
 )
 
 set_target_properties(

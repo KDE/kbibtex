@@ -42,9 +42,7 @@
 #include "zotero/tags.h"
 #include "zotero/tagmodel.h"
 #include "zotero/api.h"
-#ifdef HAVE_QTOAUTH // krazy:exclude=cpp
 #include "zotero/oauthwizard.h"
-#endif // HAVE_QTOAUTH
 
 class ZoteroBrowser::Private
 {
@@ -145,15 +143,13 @@ public:
 
         containerLayout->addStretch(10);
 
-#ifdef HAVE_QTOAUTH // krazy:exclude=cpp
         containerButtonLayout = new QHBoxLayout();
         containerLayout->addLayout(containerButtonLayout, 0);
         containerButtonLayout->setMargin(0);
         QPushButton *buttonGetOAuthCredentials = new QPushButton(QIcon::fromTheme("preferences-web-browser-identification"), i18n("Get Credentials"), container);
         containerButtonLayout->addWidget(buttonGetOAuthCredentials, 0);
-        connect(buttonGetOAuthCredentials, SIGNAL(clicked()), p, SLOT(getOAuthCredentials()));
+        connect(buttonGetOAuthCredentials, &QPushButton::clicked, p, &ZoteroBrowser::getOAuthCredentials);
         containerButtonLayout->addStretch(1);
-#endif // HAVE_QTOAUTH
 
         /// Collection browser
         collectionBrowser = new QTreeView(tabWidget);
@@ -383,7 +379,6 @@ void ZoteroBrowser::gotGroupList() {
     reenableWidget();
 }
 
-#ifdef HAVE_QTOAUTH // krazy:exclude=cpp
 void ZoteroBrowser::getOAuthCredentials()
 {
     QPointer<Zotero::OAuthWizard> wizard = new Zotero::OAuthWizard(this);
@@ -394,4 +389,3 @@ void ZoteroBrowser::getOAuthCredentials()
     }
     delete wizard;
 }
-#endif // HAVE_QTOAUTH

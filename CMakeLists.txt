@@ -158,6 +158,19 @@ endif(
     ICU_FOUND
 )
 
+find_package(
+    Qca-qt5 "2.1.0"
+    REQUIRED
+)
+
+# Make an educated guess where to find headers for QCA-Qt5
+# TODO isn't there an "official" way to determine this directory?
+find_path(
+    QTCRYPTO_INCLUDE_DIR qca.h
+    HINTS ENV ${Qt5Core_INCLUDE_DIRS} ENV ${QT_INCLUDES}
+    PATH_SUFFIXES QtCrypto
+)
+
 
 add_subdirectory(
     config
