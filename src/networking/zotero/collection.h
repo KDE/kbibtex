@@ -52,10 +52,6 @@ public:
 signals:
     void finishedLoading();
 
-protected:
-
-    static const QUrl zoteroUrl;
-
 private:
     class Private;
     Private *const d;
