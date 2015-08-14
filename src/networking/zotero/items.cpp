@@ -82,9 +82,9 @@ void Items::retrieveItemsByCollection(const QString &collection)
 {
     QUrl url = d->api->baseUrl().adjusted(QUrl::StripTrailingSlash);
     if (collection.isEmpty())
-        url.setPath(url.path() + '/' + (QLatin1String("items")));
+        url.setPath(url.path() + QLatin1String("/items"));
     else
-        url.setPath(url.path() + '/' + (QString(QLatin1String("/collections/%1/items")).arg(collection)));
+        url.setPath(url.path() + QString(QLatin1String("/collections/%1/items")).arg(collection));
     QUrlQuery query(url);
     query.addQueryItem(QLatin1String("format"), QLatin1String("bibtex"));
     url.setQuery(query);
@@ -103,7 +103,7 @@ void  Items::retrieveItemsByTag(const QString &tag)
     QUrlQuery query(url);
     if (!tag.isEmpty())
         query.addQueryItem(QLatin1String("tag"), tag);
-    url.setPath(url.path() + '/' + (QLatin1String("items")));
+    url.setPath(url.path() + QLatin1String("/items"));
     query.addQueryItem(QLatin1String("format"), QLatin1String("bibtex"));
     url.setQuery(query);
 

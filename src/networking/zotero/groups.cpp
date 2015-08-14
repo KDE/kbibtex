@@ -63,7 +63,7 @@ Groups::Groups(API *api, QObject *parent)
     QUrl url = api->baseUrl();
     Q_ASSERT_X(url.path().contains(QLatin1String("users/")), "Groups::Groups(API *api, QObject *parent)", "Provided base URL does not contain 'users/' as expected");
     url = url.adjusted(QUrl::StripTrailingSlash);
-    url.setPath(url.path() + '/' + (QLatin1String("/groups")));
+    url.setPath(url.path() + QLatin1String("/groups"));
 
     if (d->api->inBackoffMode())
         QTimer::singleShot((d->api->backoffSecondsLeft() + 1) * 1000, [ = ]() {

@@ -62,7 +62,7 @@ Tags::Tags(API *api, QObject *parent)
 {
     QUrl url = api->baseUrl();
     url = url.adjusted(QUrl::StripTrailingSlash);
-    url.setPath(url.path() + '/' + (QLatin1String("/tags")));
+    url.setPath(url.path() + QLatin1String("/tags"));
 
     if (api->inBackoffMode())
         QTimer::singleShot((d->api->backoffSecondsLeft() + 1) * 1000, [ = ]() {

@@ -72,7 +72,7 @@ public:
             const QString head = downloadQueue.dequeue();
             QUrl url = api->baseUrl();
             url = url.adjusted(QUrl::StripTrailingSlash);
-            url.setPath(url.path() + '/' + (QString(QLatin1String("/collections/%1/collections")).arg(head)));
+            url.setPath(url.path() + QString(QLatin1String("/collections/%1/collections")).arg(head));
             requestZoteroUrl(url);
         } else {
             initialized = true;
@@ -88,7 +88,7 @@ Collection::Collection(API *api, QObject *parent)
 
     QUrl url = api->baseUrl();
     url = url.adjusted(QUrl::StripTrailingSlash);
-    url.setPath(url.path() + '/' + (QLatin1String("/collections/top")));
+    url.setPath(url.path() + QLatin1String("/collections/top"));
     if (api->inBackoffMode())
         QTimer::singleShot((api->backoffSecondsLeft() + 1) * 1000, [ = ]() {
             d->requestZoteroUrl(url);
