@@ -19,6 +19,8 @@
 
 #include <QUrl>
 #include <QUrlQuery>
+#include <QDateTime>
+#include <QTimer>
 
 using namespace Zotero;
 
@@ -32,11 +34,13 @@ public:
     const int userOrGroupPrefix;
     const QString apiKey;
 
+    QDateTime backoffElapseTime;
+
     Private(RequestScope requestScope, int prefix, const QString &_apiKey, Zotero::API */* UNUSED parent*/)
         : // UNUSED p(parent),
           apiBaseUrl(QUrl(QString(QLatin1String("https://api.zotero.org/%1/%2")).arg(requestScope == GroupRequest ? QLatin1String("groups") : QLatin1String("users")).arg(prefix))),
           userOrGroupPrefix(prefix),
-          apiKey(_apiKey) {
+          apiKey(_apiKey), backoffElapseTime(QDateTime::currentDateTime().addSecs(-5)) {
         /// nothing
     }
 };
@@ -80,4 +84,28 @@ QNetworkRequest API::request(const QUrl &url) const
     request.setRawHeader("Accept", "application/atom+xml");
     request.setRawHeader("Authorization", QString(QLatin1String("Bearer ")).append(d->apiKey).toAscii().constData());
     return request;
+}
+
+void API::startBackoff(int duration) {
+    if (duration > 0) {
+        d->backoffElapseTime = QDateTime::currentDateTime().addSecs(duration + 1);
+        emit backoffModeStart();
+        /// Use single-shot timer and functor to emit signal
+        /// that backoff mode has finished
+        QTimer::singleShot((duration + 1) * 1000, [ = ]() {
+            emit backoffModeEnd();
+        });
+    }
+}
+
+bool API::inBackoffMode() const {
+    return d->backoffElapseTime >= QDateTime::currentDateTime();
+}
+
+qint64 API::backoffSecondsLeft() const {
+    const qint64 diff = QDateTime::currentDateTime().secsTo(d->backoffElapseTime);
+    if (diff < 0)
+        return 0;
+    else
+        return diff;
 }

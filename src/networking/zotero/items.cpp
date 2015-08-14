@@ -20,6 +20,7 @@
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QXmlStreamReader>
+#include <QTimer>
 #include <QDebug>
 #include <QUrlQuery>
 
@@ -87,7 +88,13 @@ void Items::retrieveItemsByCollection(const QString &collection)
     QUrlQuery query(url);
     query.addQueryItem(QLatin1String("format"), QLatin1String("bibtex"));
     url.setQuery(query);
-    d->retrieveItems(url, 0);
+
+    if (d->api->inBackoffMode())
+        QTimer::singleShot((d->api->backoffSecondsLeft() + 1) * 1000, [ = ]() {
+            d->retrieveItems(url, 0);
+        });
+    else
+        d->retrieveItems(url, 0);
 }
 
 void  Items::retrieveItemsByTag(const QString &tag)
@@ -99,7 +106,13 @@ void  Items::retrieveItemsByTag(const QString &tag)
     url.setPath(url.path() + '/' + (QLatin1String("items")));
     query.addQueryItem(QLatin1String("format"), QLatin1String("bibtex"));
     url.setQuery(query);
-    d->retrieveItems(url, 0);
+
+    if (d->api->inBackoffMode())
+        QTimer::singleShot((d->api->backoffSecondsLeft() + 1) * 1000, [ = ]() {
+            d->retrieveItems(url, 0);
+        });
+    else
+        d->retrieveItems(url, 0);
 }
 
 void Items::finishedFetchingItems()
@@ -108,6 +121,11 @@ void Items::finishedFetchingItems()
     static const QString queryItemStart = QLatin1String("start");
     bool ok = false;
     const int start = QUrlQuery(reply->url()).queryItemValue(queryItemStart).toInt(&ok);
+
+    if (reply->hasRawHeader("Backoff"))
+        d->api->startBackoff(QString::fromAscii(reply->rawHeader("Backoff").constData()).toInt());
+    else if (reply->hasRawHeader("Retry-After"))
+        d->api->startBackoff(QString::fromAscii(reply->rawHeader("Retry-After").constData()).toInt());
 
     if (reply->error() == QNetworkReply::NoError && ok) {
         const QString bibTeXcode = QString::fromUtf8(reply->readAll().data());

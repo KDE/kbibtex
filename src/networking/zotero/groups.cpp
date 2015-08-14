@@ -21,6 +21,7 @@
 #include <QXmlStreamReader>
 #include <QDebug>
 #include <QUrl>
+#include <QTimer>
 
 #include "internalnetworkaccessmanager.h"
 #include "api.h"
@@ -63,7 +64,13 @@ Groups::Groups(API *api, QObject *parent)
     Q_ASSERT_X(url.path().contains(QLatin1String("users/")), "Groups::Groups(API *api, QObject *parent)", "Provided base URL does not contain 'users/' as expected");
     url = url.adjusted(QUrl::StripTrailingSlash);
     url.setPath(url.path() + '/' + (QLatin1String("/groups")));
-    d->requestZoteroUrl(url);
+
+    if (d->api->inBackoffMode())
+        QTimer::singleShot((d->api->backoffSecondsLeft() + 1) * 1000, [ = ]() {
+            d->requestZoteroUrl(url);
+        });
+    else
+        d->requestZoteroUrl(url);
 }
 
 Groups::~Groups()
@@ -89,6 +96,11 @@ QMap<int, QString> Groups::groups() const
 void Groups::finishedFetchingGroups()
 {
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
+
+    if (reply->hasRawHeader("Backoff"))
+        d->api->startBackoff(QString::fromAscii(reply->rawHeader("Backoff").constData()).toInt());
+    else if (reply->hasRawHeader("Retry-After"))
+        d->api->startBackoff(QString::fromAscii(reply->rawHeader("Retry-After").constData()).toInt());
 
     if (reply->error() == QNetworkReply::NoError) {
         QString nextPage;

@@ -22,6 +22,7 @@
 #include <QVector>
 #include <QNetworkReply>
 #include <QXmlStreamReader>
+#include <QTimer>
 #include <QDebug>
 
 #include <KLocalizedString>
@@ -38,9 +39,10 @@ class Zotero::Collection::Private
 {
 private:
     Zotero::Collection *p;
-    Zotero::API *api;
 
 public:
+    Zotero::API *api;
+
     Private(API *a, Zotero::Collection *parent)
             : p(parent), api(a) {
         initialized = false;
@@ -87,7 +89,12 @@ Collection::Collection(API *api, QObject *parent)
     QUrl url = api->baseUrl();
     url = url.adjusted(QUrl::StripTrailingSlash);
     url.setPath(url.path() + '/' + (QLatin1String("/collections/top")));
-    d->requestZoteroUrl(url);
+    if (api->inBackoffMode())
+        QTimer::singleShot((api->backoffSecondsLeft() + 1) * 1000, [ = ]() {
+            d->requestZoteroUrl(url);
+        });
+    else
+        d->requestZoteroUrl(url);
 }
 
 Collection::~Collection()
@@ -154,6 +161,11 @@ void Collection::finishedFetchingCollection()
 {
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
     QString parentId = top;
+
+    if (reply->hasRawHeader("Backoff"))
+        d->api->startBackoff(QString::fromAscii(reply->rawHeader("Backoff").constData()).toInt());
+    else if (reply->hasRawHeader("Retry-After"))
+        d->api->startBackoff(QString::fromAscii(reply->rawHeader("Retry-After").constData()).toInt());
 
     if (reply->error() == QNetworkReply::NoError) {
         QString nextPage;

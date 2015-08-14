@@ -21,6 +21,7 @@
 #include <QXmlStreamReader>
 #include <QDebug>
 #include <QUrl>
+#include <QTimer>
 
 #include "internalnetworkaccessmanager.h"
 #include "api.h"
@@ -62,7 +63,13 @@ Tags::Tags(API *api, QObject *parent)
     QUrl url = api->baseUrl();
     url = url.adjusted(QUrl::StripTrailingSlash);
     url.setPath(url.path() + '/' + (QLatin1String("/tags")));
-    d->requestZoteroUrl(url);
+
+    if (api->inBackoffMode())
+        QTimer::singleShot((d->api->backoffSecondsLeft() + 1) * 1000, [ = ]() {
+            d->requestZoteroUrl(url);
+        });
+    else
+        d->requestZoteroUrl(url);
 }
 
 Tags::~Tags()
@@ -88,6 +95,11 @@ QMap<QString, int> Tags::tags() const
 void Tags::finishedFetchingTags()
 {
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
+
+    if (reply->hasRawHeader("Backoff"))
+        d->api->startBackoff(QString::fromAscii(reply->rawHeader("Backoff").constData()).toInt());
+    else if (reply->hasRawHeader("Retry-After"))
+        d->api->startBackoff(QString::fromAscii(reply->rawHeader("Retry-After").constData()).toInt());
 
     if (reply->error() == QNetworkReply::NoError) {
         QString nextPage;
