@@ -52,10 +52,6 @@ public:
 signals:
     void finishedLoading();
 
-protected:
-
-    static const KUrl zoteroUrl;
-
 private:
     class Private;
     Private *const d;
