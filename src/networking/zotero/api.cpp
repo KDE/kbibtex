@@ -29,12 +29,14 @@ private:
 
 public:
     const QUrl apiBaseUrl;
-    int userOrGroupPrefix;
+    const int userOrGroupPrefix;
+    const QString apiKey;
 
-    Private(RequestScope requestScope, int prefix, const QString &apiKey, Zotero::API */* UNUSED parent*/)
+    Private(RequestScope requestScope, int prefix, const QString &_apiKey, Zotero::API */* UNUSED parent*/)
         : // UNUSED p(parent),
-        apiBaseUrl(QUrl(QString(QLatin1String("https://api.zotero.org/%1/%2%3")).arg(requestScope == GroupRequest ? QLatin1String("groups") : QLatin1String("users")).arg(prefix).arg(apiKey.isEmpty() ? QString() : QString(QLatin1String("?key=%1")).arg(apiKey)))),
-        userOrGroupPrefix(prefix) {
+          apiBaseUrl(QUrl(QString(QLatin1String("https://api.zotero.org/%1/%2")).arg(requestScope == GroupRequest ? QLatin1String("groups") : QLatin1String("users")).arg(prefix))),
+          userOrGroupPrefix(prefix),
+          apiKey(_apiKey) {
         /// nothing
     }
 };
@@ -74,6 +76,8 @@ int API::userOrGroupPrefix() const
 QNetworkRequest API::request(const QUrl &url) const
 {
     QNetworkRequest request(url);
-    request.setRawHeader("Zotero-API-Version", "2");
+    request.setRawHeader("Zotero-API-Version", "3");
+    request.setRawHeader("Accept", "application/atom+xml");
+    request.setRawHeader("Authorization", QString(QLatin1String("Bearer ")).append(d->apiKey).toAscii().constData());
     return request;
 }
