@@ -443,7 +443,7 @@ public:
         menuBar->clear();
         toolBar->clear();
 
-        if (part == okularPart && swpOkular >= 0) {
+        if (okularPart != NULL && part == okularPart && swpOkular >= 0) {
             stackedWidget->setCurrentIndex(swpOkular);
             stackedWidget->widget(swpOkular)->setEnabled(true);
             setupToolMenuBarForPart(okularPart);
@@ -457,7 +457,7 @@ public:
             stackedWidget->setCurrentIndex(swpHTML);
             stackedWidget->widget(swpHTML)->setEnabled(true);
 #else // HAVE_WEBKITWIDGETS
-        } else if (part == htmlPart && swpHTML >= 0) {
+        } else if (htmlPart != NULL && part == htmlPart && swpHTML >= 0) {
             stackedWidget->setCurrentIndex(swpHTML);
             stackedWidget->widget(swpHTML)->setEnabled(true);
             setupToolMenuBarForPart(htmlPart);
