@@ -101,7 +101,6 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/src/networking
     ${CMAKE_SOURCE_DIR}/src
     ${LIBXML2_INCLUDE_DIR}
-    ${QTCRYPTO_INCLUDE_DIR}
 )
 
 add_library(
