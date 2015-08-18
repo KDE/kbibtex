@@ -530,7 +530,11 @@ bool OpenFileInfoManager::changeUrl(OpenFileInfo *openFileInfo, const QUrl &url)
 
 bool OpenFileInfoManager::close(OpenFileInfo *openFileInfo)
 {
-    Q_ASSERT_X(openFileInfo != NULL, "void OpenFileInfoManager::close(OpenFileInfo *openFileInfo)", "Cannot close openFileInfo which is NULL");
+    if (openFileInfo == NULL) {
+        qWarning() << "void OpenFileInfoManager::close(OpenFileInfo *openFileInfo): Cannot close openFileInfo which is NULL";
+        return false;
+    }
+
     bool isClosing = false;
     openFileInfo->setLastAccess();
 

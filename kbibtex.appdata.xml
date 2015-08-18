@@ -101,6 +101,7 @@
       <li xml:lang="en-GB">Import data in various bibliography file formats such as BibTeX, RIS and ISI (requires bibutils) and export data to PDF (requires pdflatex), PostScript (requires latex), RTF (requires latex2rtf), and HTML.</li>
       <li xml:lang="es">Importa datos en varios formatos de archivo de bibliografía, como por ejemplo BibTeX, RIS y ISI (requiere bibutils) y exporta datos a PDF (requiere pdflatex), PostScript (requiere latex), RTF (requiere latex2rtf), y HTML.</li>
       <li xml:lang="fi">Tuoda tietoja eri lähdetietokantamuodoista kuten BibTeXistä, RISistä tai ISIstä (vaatii bibutils-paketin) sekä viedä tietoja PDF:ksi (vaatii pdflatexin), PostScriptiksi (vaatii latexin), RTF:ksi (vaatii latex2rtf:n) tai HTML:ksi.</li>
+      <li xml:lang="gl">Importe datos in varios formatos de ficheiro bibliográficos como BibTeX, RIS e ISI (require «bibutils») e exporte os datos a PDF (require «pdflatex»), PostScript (require «latex»), RTF (require «latex2rtf»), e HTML.</li>
       <li xml:lang="it">Importare i dati in vari formati di file bibliografici, come BibTeX, RIS e ISI (richiede bibutils), ed esportare i dati in PDF (richiede pdflatex), PostScript (richiede latex), RTF (richiede latex2rtf) e HTML.</li>
       <li xml:lang="nl">Gegevens importeren in verschillende bestandsformaten voor bibliografieën zoals BibTeX, RIS en ISI (vereist bibutils) en exporteert gegevens naar PDF (vereist pdflatex), PostScript (vereist latex), RTF (vereist latex2rtf), en HTML.</li>
       <li xml:lang="pl">Importowanie danych w rozmaitych formatach plików bibliografii takich jak BibTeX, RIS oraz ISI (wymaga bibutils) i eksportowanie danych do PDF (wymaga pdflatex), PostScript (wymaga latex), RTF (wymaga latex2rtf) oraz HTML.</li>
@@ -117,6 +118,7 @@
       <li xml:lang="en-GB">Search for the bibliography entries data in online databases (e.g. Google Scholar, ACM, IEEE, arXiv, etc.)</li>
       <li xml:lang="es">Busca datos de las entradas bibliográficas en bases de datos en línea (por ejemplo Google Scholar, ACM, IEEE, arXiv, etc.)</li>
       <li xml:lang="fi">Etsiä lähdetietueiden tietoja verkon tietokannoista (Google Scholarista, ACM:stä, IEEE:stä, arXivista jne.)</li>
+      <li xml:lang="gl">Busque os datos das entradas bibliográficas en base de datos de internet (como Google Scholar, ACM, IEEE, arXiv, etc.).</li>
       <li xml:lang="it">Ricercare voci bibliografiche nei database in linea (per es., Google Scholar, ACM, IEEE, arXiv, ecc.)</li>
       <li xml:lang="nl">Zoeken naar bibliografie-items in online databases (bijv. Google Scholar, ACM, IEEE, arXiv, etc.)</li>
       <li xml:lang="pl">Wyszukiwanie wpisów bibliograficznych w bazach internetowych (np. Google Scholar, ACM, IEEE, arXiv, itp.)</li>
@@ -133,6 +135,7 @@
       <li xml:lang="en-GB">Preview local or remote (online) resources, e.g. PDF files, linked in the BibTEX entry.</li>
       <li xml:lang="es">Previsualiza los recursos locales o remotos (en línea), por ejemplo archivos PDF, que estén enlazados en una entrada BibTEX.</li>
       <li xml:lang="fi">Esikatsella BibTeX-tietueeseen kytkettyjä paikallisia tai etäresursseja, esim. PDF-tiedostoja.</li>
+      <li xml:lang="gl">Obteña unha vista previa de recursos locais ou de internet, como ficheiros PDF, que estean ligados desde a entrada de BibTeX.</li>
       <li xml:lang="it">Visualizzare in anteprima risorse locali o remote (in linea), per es. file PDF, collegate nella voce BibTEX.</li>
       <li xml:lang="nl">Bekijken van lokale hulpbronnen of op afstand (online), bijv. PDF-bestanden, gekoppeld in het BibTEX-item.</li>
       <li xml:lang="pl">Podgląd lokalnych lub zdalnych (internetowych) zasobów, np. plików PDF, do których odwołuje się wpis BibTEX.</li>
@@ -149,6 +152,7 @@
       <li xml:lang="en-GB">Find and merge duplicate entries in bibliography.</li>
       <li xml:lang="es">Busca y fusiona las entradas duplicadas en la bibliografía.</li>
       <li xml:lang="fi">Etsiä ja yhdistää lähdetietueiden kaksoiskappaleita.</li>
+      <li xml:lang="gl">Atope e fusione entradas duplicadas da bibliografía.</li>
       <li xml:lang="it">Trovare e unire voci duplicate nella bibliografia.</li>
       <li xml:lang="nl">Zoek en voeg dubbele items in de bibliografie samen.</li>
       <li xml:lang="pl">Znajdywanie i scalanie powielonych wpisów w bibliografii.</li>
@@ -165,6 +169,7 @@
       <li xml:lang="en-GB">Integrate your bibliographies with LaTeX editors such as Kile and LyX.</li>
       <li xml:lang="es">Integra sus bibliografías con editores LaTeX como Kile y LyX.</li>
       <li xml:lang="fi">Integroida lähdetietokantasi LaTeX-muokkaimeen kuten Kileen tai LyXiin.</li>
+      <li xml:lang="gl">Integre as súas bibliografías con editores de LaTeX como Kile e LyX.</li>
       <li xml:lang="it">Integrare le tue bibliografie con gli editor LaTeX, come Kile e LyX.</li>
       <li xml:lang="nl">Integreer uw bibliografieën met LaTeX bewerkers zoals Kile en LyX.</li>
       <li xml:lang="pl">Integracja bibliografii z edytorami LaTeX takimi jak Kile i LyX.</li>
@@ -181,6 +186,7 @@
       <li xml:lang="en-GB">Import your Zotero library.</li>
       <li xml:lang="es">Importa su librería Zotero.</li>
       <li xml:lang="fi">Tuoda Zotero-kirjastosi.</li>
+      <li xml:lang="gl">Importe a súa biblioteca de Zotero.</li>
       <li xml:lang="it">Importare la tua raccolta Zotero.</li>
       <li xml:lang="nl">Uw Zotero bibliotheek importeren.</li>
       <li xml:lang="pl">Importowanie bibliotek Zotero.</li>

@@ -31,6 +31,7 @@ set(
     zotero/tags.cpp
     zotero/tagmodel.cpp
     zotero/items.cpp
+    zotero/oauthwizard.cpp
     associatedfiles.cpp
     findpdf.cpp
     internalnetworkaccessmanager.cpp
@@ -67,6 +68,7 @@ set(
     zotero/tagmodel.h
     zotero/items.h
     zotero/api.h
+    zotero/oauthwizard.h
     associatedfiles.h
     findpdf.h
     internalnetworkaccessmanager.h
@@ -98,26 +100,6 @@ include_directories(
     ${LIBXML2_INCLUDE_DIR}
 )
 
-if(
-    QTOAUTH_FOUND
-)
-    include_directories(
-        ${QTOAUTH_INCLUDE_DIR}
-    )
-    set(
-        kbibtexnetworking_HDRS
-        ${kbibtexnetworking_HDRS}
-        zotero/oauthwizard.h
-    )
-    set(
-        kbibtexnetworking_LIB_SRCS
-        ${kbibtexnetworking_LIB_SRCS}
-        zotero/oauthwizard.cpp
-    )
-endif(
-    QTOAUTH_FOUND
-)
-
 add_library(
     kbibtexnetworking
     SHARED
@@ -140,18 +122,6 @@ target_link_libraries(
     kbibtexconfig
     kbibtexdata
     kbibtexio
-)
-
-if(
-    QTOAUTH_FOUND
-)
-    target_link_libraries(
-      kbibtexnetworking
-      ${cmake_2_8_12_PRIVATE}
-      ${QTOAUTH_LIBRARY}
-    )
-endif(
-    QTOAUTH_FOUND
 )
 
 set_target_properties(
