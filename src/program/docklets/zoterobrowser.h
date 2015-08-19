@@ -52,6 +52,7 @@ private slots:
     void invalidateGroupList();
     void gotGroupList();
     void getOAuthCredentials();
+    void syncApiKeys(bool);
 };
 
 

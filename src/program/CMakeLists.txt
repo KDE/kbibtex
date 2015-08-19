@@ -85,6 +85,7 @@ target_link_libraries( kbibtex
     KF5::KIOWidgets
     KF5::KIONTLM
     KF5::KDELibs4Support
+    KF5::Wallet
     kbibtexio
     kbibtexgui
     kbibtexnetworking

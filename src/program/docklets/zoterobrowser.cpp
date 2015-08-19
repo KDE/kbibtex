@@ -26,12 +26,14 @@
 #include <QAbstractItemModel>
 #include <QRadioButton>
 #include <QPushButton>
+#include <QDebug>
 
 #include <KLocalizedString>
 #include <KComboBox>
 #include <KLineEdit>
 #include <KConfigGroup>
 #include <KSharedConfig>
+#include <KWallet/KWallet>
 
 #include "element.h"
 #include "searchresults.h"
@@ -43,6 +45,8 @@
 #include "zotero/tagmodel.h"
 #include "zotero/api.h"
 #include "zotero/oauthwizard.h"
+
+using KWallet::Wallet;
 
 class ZoteroBrowser::Private
 {
@@ -77,9 +81,15 @@ public:
 
     QCursor nonBusyCursor;
 
+    Wallet *wallet;
+    static const QString walletFolderOAuth, walletEntryKBibTeXZotero;
+
     Private(SearchResults *sr, ZoteroBrowser *parent)
         : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), items(NULL), groups(NULL), tags(NULL), tagModel(NULL), collection(NULL), collectionModel(NULL), api(NULL), searchResults(sr), comboBoxGroupListInitialized(false), nonBusyCursor(p->cursor()) {
         setupGUI();
+
+        wallet = Wallet::openWallet(Wallet::NetworkWallet(), parent->winId(), Wallet::Asynchronous);
+        connect(wallet, &Wallet::walletOpened, parent, &ZoteroBrowser::syncApiKeys);
     }
 
 
@@ -172,11 +182,6 @@ public:
         comboBoxNumericUserId->addItems(numericUserIds);
         if (!numericUserIds.isEmpty()) comboBoxNumericUserId->setCurrentIndex(0);
 
-        const QStringList apiKeys = configGroup.readEntry(configEntryApiKeys, QStringList());
-        comboBoxApiKey->clear();
-        comboBoxApiKey->addItems(apiKeys);
-        if (!apiKeys.isEmpty()) comboBoxApiKey->setCurrentIndex(0);
-
         p->updateButtons();
     }
 
@@ -188,10 +193,12 @@ public:
             buffer.append(comboBoxNumericUserId->itemText(i));
         configGroup.writeEntry(configEntryNumericUserIds, buffer);
 
-        buffer.clear();
-        for (int i = 0; i < comboBoxApiKey->count(); ++i)
-            buffer.append(comboBoxApiKey->itemText(i));
-        configGroup.writeEntry(configEntryApiKeys, buffer);
+        if (wallet->isOpen())
+            p->syncApiKeys(true);
+        else {
+            wallet = Wallet::openWallet(Wallet::NetworkWallet(), p->winId(), Wallet::Asynchronous);
+            connect(wallet, &Wallet::walletOpened, p, &ZoteroBrowser::syncApiKeys);
+        }
 
         config->sync();
     }
@@ -222,6 +229,8 @@ public:
 const QString ZoteroBrowser::Private::configGroupName = QLatin1String("ZoteroBrowser");
 const QString ZoteroBrowser::Private::configEntryNumericUserIds = QLatin1String("NumericUserIds");
 const QString ZoteroBrowser::Private::configEntryApiKeys = QLatin1String("ApiKeys");
+const QString ZoteroBrowser::Private::walletFolderOAuth = QLatin1String("OAuth");
+const QString ZoteroBrowser::Private::walletEntryKBibTeXZotero = QLatin1String("KBibTeX/Zotero");
 
 ZoteroBrowser::ZoteroBrowser(SearchResults *searchResults, QWidget *parent)
     : QWidget(parent), d(new ZoteroBrowser::Private(searchResults, this))
@@ -388,4 +397,44 @@ void ZoteroBrowser::getOAuthCredentials()
         d->addTextToLists();
     }
     delete wizard;
+}
+
+void ZoteroBrowser::syncApiKeys(bool ok) {
+    if (ok && (d->wallet->hasFolder(ZoteroBrowser::Private::walletFolderOAuth) || d->wallet->createFolder(ZoteroBrowser::Private::walletFolderOAuth)) && d->wallet->setFolder(ZoteroBrowser::Private::walletFolderOAuth)) {
+        QStringList knownApiKeys;
+
+        /// Get API keys as stored in Wallet
+        if (d->wallet->hasEntry(ZoteroBrowser::Private::walletEntryKBibTeXZotero)) {
+            QByteArray value;
+            if (d->wallet->readEntry(ZoteroBrowser::Private::walletEntryKBibTeXZotero, value) == 0) {
+                const QStringList walletApiKeys = QString::fromLatin1(value).split(QLatin1Char('&'),QString::SkipEmptyParts);
+                knownApiKeys.append(walletApiKeys);
+            } else
+                qWarning() << "Reading API keys from KWallet did not succeed";
+        }
+
+        /// Get API keys as used in user interface
+        const int maxUIkeys = d->comboBoxApiKey->count();
+        for (int i = 0; i < maxUIkeys; ++i) {
+            const QString currentKey = d->comboBoxApiKey->itemText(i);
+            if (!knownApiKeys.contains(currentKey))
+                knownApiKeys.append(currentKey);
+            else
+                /// Key is not in UI, must come from Wallet,
+                /// therefore add to UI
+                d->comboBoxApiKey->addItem(currentKey);
+        }
+        if (maxUIkeys == 0 && !knownApiKeys.isEmpty()) {
+            /// At least one API key was added to UI
+            d->comboBoxApiKey->setCurrentIndex(0);
+            updateButtons();
+        }
+
+        const QByteArray value = knownApiKeys.join(QLatin1Char('&')).toLatin1();
+        if (d->wallet->writeEntry(ZoteroBrowser::Private::walletEntryKBibTeXZotero, value) != 0)
+            qWarning() << "Writing API keys to KWallet did not succeed";
+
+        d->wallet->sync();
+    } else
+        qWarning() << "Accessing KWallet to sync API keys did not succeed";
 }

@@ -70,6 +70,7 @@ find_package(
     Parts
     CoreAddons
     Service
+    Wallet
     KDELibs4Support
 )
 
