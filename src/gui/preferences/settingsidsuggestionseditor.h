@@ -22,9 +22,8 @@
 
 #include <QWidget>
 #include <QLayout>
+#include <QDialog>
 #include <QGroupBox>
-
-#include <KDialog>
 
 #include "idsuggestions.h"
 #include "entry.h"
@@ -33,6 +32,7 @@ class QFormLayout;
 class QSpinBox;
 class QLabel;
 class QCheckBox;
+class QPushButton;
 
 class KLineEdit;
 class KComboBox;
@@ -110,7 +110,7 @@ public:
 /**
  * @author Thomas Fischer
  */
-class KBIBTEXGUI_EXPORT IdSuggestionsEditDialog : public KDialog
+class KBIBTEXGUI_EXPORT IdSuggestionsEditDialog : public QDialog
 {
     Q_OBJECT
 
@@ -119,7 +119,7 @@ public:
 
     static QString editSuggestion(const Entry *previewEntry, const QString &suggestion, QWidget *parent);
 protected:
-    explicit IdSuggestionsEditDialog(QWidget *parent = 0, Qt::WFlags flags = 0);
+    explicit IdSuggestionsEditDialog(QWidget *parent = 0, Qt::WindowFlags flags = 0);
 };
 
 class IdSuggestionsEditWidget : public QWidget, public IdSuggestions
