@@ -415,9 +415,12 @@ File *FileModel::bibliographyFile()
 
 void FileModel::setBibliographyFile(File *file)
 {
-    bool doReset = m_file != file;
-    m_file = file;
-    if (doReset) reset(); // TODO necessary here?
+    bool resetNecessary = m_file != file;
+    if (resetNecessary) {
+        beginResetModel();
+        m_file = file;
+        endResetModel();
+    }
 }
 
 QModelIndex FileModel::parent(const QModelIndex &index) const
@@ -543,6 +546,12 @@ Qt::ItemFlags FileModel::flags(const QModelIndex &index) const
     return Qt::ItemIsEnabled | Qt::ItemIsSelectable; // FIXME: What about drag'n'drop?
 }
 
+void FileModel::clear() {
+    beginResetModel();
+    m_file->clear();
+    endResetModel();
+}
+
 bool FileModel::removeRow(int row, const QModelIndex &parent)
 {
     if (row < 0 || m_file == NULL || row >= rowCount() || row >= m_file->count())
@@ -641,9 +650,4 @@ int FileModel::row(QSharedPointer<Element> element) const
 {
     if (m_file == NULL) return -1;
     return m_file->indexOf(element);
-}
-
-void FileModel::reset()
-{
-    QAbstractTableModel::reset();
 }

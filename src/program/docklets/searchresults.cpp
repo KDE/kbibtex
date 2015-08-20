@@ -118,8 +118,7 @@ public:
     }
 
     void clear() {
-        file->clear();
-        resultList->fileModel()->reset();
+        resultList->fileModel()->clear();
     }
 
     bool insertElement(QSharedPointer<Element> element) {

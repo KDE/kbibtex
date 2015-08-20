@@ -117,14 +117,13 @@ public:
     virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
     virtual Qt::ItemFlags flags(const QModelIndex &index) const;
 
+    void clear();
     virtual bool removeRow(int row, const QModelIndex &parent = QModelIndex());
     bool removeRowList(const QList<int> &rows);
     bool insertRow(QSharedPointer<Element> element, int row, const QModelIndex &parent = QModelIndex());
 
     QSharedPointer<Element> element(int row) const;
     int row(QSharedPointer<Element> element) const;
-
-    void reset();
 
     void notificationEvent(int eventId);
 

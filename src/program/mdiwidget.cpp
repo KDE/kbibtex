@@ -56,7 +56,8 @@ public:
     }
 
     void reset() {
-        QAbstractItemModel::reset();
+        beginResetModel();
+        endResetModel();
     }
 
     int columnCount(const QModelIndex &) const {

@@ -69,9 +69,10 @@ public:
     }
 
     void setFormatStringList(const QStringList &formatStringList, const QString &defaultString = QString()) {
+        beginResetModel();
         m_formatStringList = formatStringList;
         m_defaultFormatStringRow = m_formatStringList.indexOf(defaultString);
-        reset();
+        endResetModel();
     }
 
     QStringList formatStringList() const {

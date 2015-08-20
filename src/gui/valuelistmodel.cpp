@@ -308,21 +308,24 @@ void ValueListModel::removeValue(const QModelIndex &index)
 
 void ValueListModel::setShowCountColumn(bool showCountColumn)
 {
+    beginResetModel();
     this->showCountColumn = showCountColumn;
-    reset();
+    endResetModel();
 }
 
 void ValueListModel::setSortBy(SortBy sortBy)
 {
+    beginResetModel();
     this->sortBy = sortBy;
-    reset();
+    endResetModel();
 }
 
 void ValueListModel::notificationEvent(int eventId)
 {
     if (eventId == NotificationHub::EventConfigurationChanged) {
+        beginResetModel();
         readConfiguration();
-        reset();
+        endResetModel();
     }
 }
 
