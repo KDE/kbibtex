@@ -70,7 +70,6 @@ find_package(
     Parts
     CoreAddons
     Service
-    KDELibs4Support
 )
 
 # Version number for the exported headers / libs
