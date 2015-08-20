@@ -95,13 +95,13 @@ public:
     }
 
     void loadState() {
-        foreach(SettingsAbstractWidget *settingsWidget, settingWidgets) {
+        foreach (SettingsAbstractWidget *settingsWidget, settingWidgets) {
             settingsWidget->loadState();
         }
     }
 
     void saveState() {
-        foreach(SettingsAbstractWidget *settingsWidget, settingWidgets) {
+        foreach (SettingsAbstractWidget *settingsWidget, settingWidgets) {
             settingsWidget->saveState();
         }
     }
@@ -109,7 +109,7 @@ public:
     void resetToDefaults() {
         switch (KMessageBox::warningYesNoCancel(p, i18n("This will reset the settings to factory defaults. Should this affect only the current page or all settings?"), i18n("Reset to Defaults"), KGuiItem(i18n("All settings"), QLatin1String("edit-undo")), KGuiItem(i18n("Only current page"), QLatin1String("document-revert")))) {
         case KMessageBox::Yes: {
-            foreach(SettingsAbstractWidget *settingsWidget, settingWidgets) {
+            foreach (SettingsAbstractWidget *settingsWidget, settingWidgets) {
                 settingsWidget->resetToDefaults();
             }
             break;

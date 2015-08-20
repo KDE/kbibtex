@@ -150,7 +150,7 @@ QString LyX::guessLyXPipeLocation()
     /// Start with scanning the user's home directory for pipes
     QDir home = QDir::home();
     QStringList files = home.entryList(nameFilter, QDir::Hidden | QDir::System | QDir::Writable, QDir::Unsorted);
-    foreach(const QString &filename, files) {
+    foreach (const QString &filename, files) {
         QString const absoluteFilename = home.absolutePath() + QDir::separator() + filename;
         if (QT_LSTAT(absoluteFilename.toLatin1(), &statBuffer) == 0 && S_ISFIFO(statBuffer.st_mode)) {
             result = absoluteFilename;
@@ -164,7 +164,7 @@ QString LyX::guessLyXPipeLocation()
         if (home.cd(QLatin1String(".lyx"))) {
             /// Same search again here
             QStringList files = home.entryList(nameFilter, QDir::Hidden | QDir::System | QDir::Writable, QDir::Unsorted);
-            foreach(const QString &filename, files) {
+            foreach (const QString &filename, files) {
                 QString const absoluteFilename = home.absolutePath() + QDir::separator() + filename;
                 if (QT_LSTAT(absoluteFilename.toLatin1(), &statBuffer) == 0 && S_ISFIFO(statBuffer.st_mode)) {
                     result = absoluteFilename;

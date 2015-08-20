@@ -529,7 +529,7 @@ public:
             delete widgetList.takeFirst();
 
         QStringList tokenList = formatString.split(QLatin1String("|"), QString::SkipEmptyParts);
-        foreach(const QString &token, tokenList) {
+        foreach (const QString &token, tokenList) {
             TokenWidget *tokenWidget = NULL;
 
             if (token[0] == 'a' || token[0] == 'A' || token[0] == 'z') {
@@ -577,7 +577,7 @@ public:
     QString apply() {
         QStringList result;
 
-        foreach(TokenWidget *widget, widgetList) {
+        foreach (TokenWidget *widget, widgetList) {
             result << widget->toString();
         }
 

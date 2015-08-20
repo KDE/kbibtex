@@ -355,7 +355,7 @@ public:
 
         /// update the enabled/disabled state of required and optional widgets/fields
         bool forceVisible = actionForceShowAllWidgets->isChecked();
-        foreach(ElementWidget *elementWidget, widgets) {
+        foreach (ElementWidget *elementWidget, widgets) {
             elementWidget->showReqOptWidgets(forceVisible, tempEntry->type());
         }
 

@@ -176,7 +176,7 @@ BibliographyService::~BibliographyService()
 
 void BibliographyService::setKBibTeXasDefault() {
     /// Go through all supported mime types
-    foreach(const QString &mimeType, d->textBasedMimeTypes) {
+    foreach (const QString &mimeType, d->textBasedMimeTypes) {
         d->setKBibTeXforMimeType(mimeType, true);
     }
 
@@ -188,7 +188,7 @@ void BibliographyService::setKBibTeXasDefault() {
 
 bool BibliographyService::isKBibTeXdefault() const {
     /// Go through all supported mime types
-    foreach(const QString &mimeType, d->textBasedMimeTypes) {
+    foreach (const QString &mimeType, d->textBasedMimeTypes) {
         /// Test if KBibTeX is default handler for mime type
         if (!d->isKBibTeXdefaultForMimeType(mimeType))
             return false; ///< Failing any test means KBibTeX is not default application/part

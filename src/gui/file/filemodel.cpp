@@ -207,16 +207,16 @@ bool SortFilterFileModel::filterAcceptsRow(int source_row, const QModelIndex &so
 
         /// Test associated PDF files
         if (m_filterQuery.searchPDFfiles && m_filterQuery.field.isEmpty()) ///< not filtering for any specific field
-            foreach(const QUrl &url, FileInfo::entryUrls(entry.data(), fileSourceModel()->bibliographyFile()->property(File::Url, QUrl()).toUrl(), FileInfo::TestExistenceYes)) {
-            if (url.isLocalFile() && url.fileName().endsWith(QLatin1String(".pdf"))) {
-                // FIXME if you have a large collection of PDF files and the text version
-                // has not been generated yet, this will freeze KBibTeX for some time
-                const QString text = FileInfo::pdfToText(url.url(QUrl::PreferLocalFile));
-                int i = 0;
-                for (QStringList::ConstIterator itsl = m_filterQuery.terms.constBegin(); itsl != m_filterQuery.terms.constEnd(); ++itsl, ++i)
-                    eachTerm[i] |= (*itsl).isEmpty() ? true : text.contains(*itsl, Qt::CaseInsensitive);
+            foreach (const QUrl &url, FileInfo::entryUrls(entry.data(), fileSourceModel()->bibliographyFile()->property(File::Url, QUrl()).toUrl(), FileInfo::TestExistenceYes)) {
+                if (url.isLocalFile() && url.fileName().endsWith(QLatin1String(".pdf"))) {
+                    // FIXME if you have a large collection of PDF files and the text version
+                    // has not been generated yet, this will freeze KBibTeX for some time
+                    const QString text = FileInfo::pdfToText(url.url(QUrl::PreferLocalFile));
+                    int i = 0;
+                    for (QStringList::ConstIterator itsl = m_filterQuery.terms.constBegin(); itsl != m_filterQuery.terms.constEnd(); ++itsl, ++i)
+                        eachTerm[i] |= (*itsl).isEmpty() ? true : text.contains(*itsl, Qt::CaseInsensitive);
+                }
             }
-        }
 
         int i = 0;
         if (m_filterQuery.field.isEmpty())
@@ -574,7 +574,7 @@ bool FileModel::removeRowList(const QList<int> &rows)
     qSort(internalRows.begin(), internalRows.end(), qGreater<int>());
 
     beginRemoveRows(QModelIndex(), internalRows.last(), internalRows.first());
-    foreach(int row, internalRows) {
+    foreach (int row, internalRows) {
         if (row < 0 || row >= rowCount() || row >= m_file->count())
             return false;
         m_file->removeAt(row);

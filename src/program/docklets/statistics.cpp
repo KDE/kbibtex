@@ -126,7 +126,7 @@ public:
         if (selectionModel != NULL && selectionModel->selectedRows().count() > 1) {
             /// Use selected items for statistics if selection contains at least two elements
             numElements = selectionModel->selectedRows().count();
-            foreach(const QModelIndex &index, selectionModel->selectedRows()) {
+            foreach (const QModelIndex &index, selectionModel->selectedRows()) {
                 const int row = index.row();
                 if (row >= 0 && row < file->count())
                     countElement(file->at(row), numEntries, numJournalArticles, numConferencePublications, numBooks, numComments, numMacros);

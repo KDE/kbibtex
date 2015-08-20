@@ -65,7 +65,7 @@ bool BibUtils::available() {
         /// Test a number of known BibUtils programs
         static const QStringList programs = QStringList() << QLatin1String("bib2xml") << QLatin1String("isi2xml") << QLatin1String("ris2xml") << QLatin1String("end2xml");
         state = avail;
-        foreach(const QString &program, programs) {
+        foreach (const QString &program, programs) {
             const QString fullPath = QStandardPaths::findExecutable(program);
             if (fullPath.isEmpty()) {
                 state = unavail; ///< missing a single program is reason to assume that BibUtils is not correctly installed

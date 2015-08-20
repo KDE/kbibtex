@@ -55,7 +55,7 @@ public:
         checkBoxShowMacros->setChecked(configGroup.readEntry(FileModel::keyShowMacros, FileModel::defaultShowMacros));
 
         const QStringList styles = configGroup.readEntry("BibTeXStyles", QStringList());
-        foreach(const QString &style, styles) {
+        foreach (const QString &style, styles) {
             QStringList item = style.split(QLatin1String("|"));
             QString itemLabel = item.at(0);
             item.removeFirst();

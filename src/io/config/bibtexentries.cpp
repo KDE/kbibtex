@@ -83,7 +83,7 @@ public:
 
     void save() {
         int typeCount = 0;
-        foreach(const EntryDescription &ed, *p) {
+        foreach (const EntryDescription &ed, *p) {
             ++typeCount;
             QString groupName = QString("EntryType%1").arg(typeCount);
             KConfigGroup configGroup(layoutConfig, groupName);

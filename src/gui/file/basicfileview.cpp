@@ -128,7 +128,7 @@ public:
                     p->header()->moveSection(fromVI, toVI);
             }
 
-            foreach(QAction *action, p->header()->actions()) {
+            foreach (QAction *action, p->header()->actions()) {
                 bool ok = false;
                 int ac = (int)action->data().toInt(&ok);
                 if (ok && ac == col) {

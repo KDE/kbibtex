@@ -58,7 +58,7 @@ File *FileImporterPDF::load(QIODevice *iodevice)
     }
 
     if (doc->hasEmbeddedFiles()) {
-        foreach(Poppler::EmbeddedFile *file, doc->embeddedFiles())
+        foreach (Poppler::EmbeddedFile *file, doc->embeddedFiles())
         if (file->name().endsWith(QLatin1String(".bib"))) {
             QByteArray data = file->data();
             QBuffer buffer(&data);

@@ -156,7 +156,7 @@ void EntryLayout::save()
         configGroup.writeEntry("columns", (*it)->columns);
 
         int fieldCount = 0;
-        foreach(const SingleFieldLayout &sfl, (*it)->singleFieldLayouts) {
+        foreach (const SingleFieldLayout &sfl, (*it)->singleFieldLayouts) {
             ++fieldCount;
             configGroup.writeEntry(QString("bibtexLabel%1").arg(fieldCount), sfl.bibtexLabel);
             configGroup.writeEntry(QString("uiLabel%1").arg(fieldCount), sfl.uiLabel);

@@ -52,14 +52,14 @@ QWidget *HidingTabWidget::hideTab(int index)
     hti.whatsThis = tabWhatsThis(index);
     m_hiddenTabInfo.insert(hti);
 
-    KTabWidget::removeTab(index);
+    QTabWidget::removeTab(index);
 
     return hti.widget;
 }
 
 int HidingTabWidget::showTab(QWidget *page)
 {
-    foreach(const HiddenTabInfo &hti, m_hiddenTabInfo) {
+    foreach (const HiddenTabInfo &hti, m_hiddenTabInfo) {
         if (hti.widget == page)
             return showTab(hti);
     }
@@ -92,19 +92,19 @@ void HidingTabWidget::removeTab(int index)
 {
     if (index >= 0 && index < count()) {
         QWidget *page = widget(index);
-        foreach(const HiddenTabInfo &hti, m_hiddenTabInfo) {
+        foreach (const HiddenTabInfo &hti, m_hiddenTabInfo) {
             if (hti.widget == page) {
                 m_hiddenTabInfo.remove(hti);
                 break;
             }
         }
-        KTabWidget::removeTab(index);
+        QTabWidget::removeTab(index);
     }
 }
 
 int HidingTabWidget::addTab(QWidget *page, const QString &label)
 {
-    foreach(const HiddenTabInfo &hti, m_hiddenTabInfo) {
+    foreach (const HiddenTabInfo &hti, m_hiddenTabInfo) {
         if (hti.widget == page) {
             int pos = showTab(hti);
             setTabText(pos, label);
@@ -112,12 +112,12 @@ int HidingTabWidget::addTab(QWidget *page, const QString &label)
         }
     }
 
-    return KTabWidget::addTab(page, label);
+    return QTabWidget::addTab(page, label);
 }
 
 int HidingTabWidget::addTab(QWidget *page, const QIcon &icon, const QString &label)
 {
-    foreach(const HiddenTabInfo &hti, m_hiddenTabInfo) {
+    foreach (const HiddenTabInfo &hti, m_hiddenTabInfo) {
         if (hti.widget == page) {
             int pos = showTab(hti);
             setTabIcon(pos, icon);
@@ -126,12 +126,12 @@ int HidingTabWidget::addTab(QWidget *page, const QIcon &icon, const QString &lab
         }
     }
 
-    return KTabWidget::addTab(page, icon, label);
+    return QTabWidget::addTab(page, icon, label);
 }
 
 int HidingTabWidget::insertTab(int index, QWidget *page, const QString &label)
 {
-    foreach(const HiddenTabInfo &hti, m_hiddenTabInfo) {
+    foreach (const HiddenTabInfo &hti, m_hiddenTabInfo) {
         if (hti.widget == page) {
             int pos = showTab(hti, index);
             setTabText(pos, label);
@@ -139,12 +139,12 @@ int HidingTabWidget::insertTab(int index, QWidget *page, const QString &label)
         }
     }
 
-    return KTabWidget::insertTab(index, page, label);
+    return QTabWidget::insertTab(index, page, label);
 }
 
 int HidingTabWidget::insertTab(int index, QWidget *page, const QIcon &icon, const QString &label)
 {
-    foreach(const HiddenTabInfo &hti, m_hiddenTabInfo) {
+    foreach (const HiddenTabInfo &hti, m_hiddenTabInfo) {
         if (hti.widget == page) {
             index = showTab(hti, index);
             setTabIcon(index, icon);
