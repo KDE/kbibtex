@@ -100,6 +100,7 @@ public:
         treeviewFieldValues->setRootIsDecorated(false);
         treeviewFieldValues->setSelectionMode(QTreeView::ExtendedSelection);
         treeviewFieldValues->setAlternatingRowColors(true);
+        treeviewFieldValues->header()->setSectionResizeMode(QHeaderView::Fixed);
 
         treeviewFieldValues->setContextMenuPolicy(Qt::ActionsContextMenu);
         /// create context menu item to start renaming
@@ -202,7 +203,6 @@ public:
             usedModel = sortingModel;
         }
         treeviewFieldValues->setModel(usedModel);
-        treeviewFieldValues->header()->setResizeMode(QHeaderView::Fixed);
 
         KConfigGroup configGroup(config, configGroupName);
         configGroup.writeEntry(configKeyFieldName, text);

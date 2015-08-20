@@ -256,7 +256,7 @@ BasicFileView::BasicFileView(const QString &name, QWidget *parent)
     setRootIsDecorated(false);
 
     /// header appearance and behaviour
-    header()->setClickable(true);
+    header()->setSectionsClickable(true);
     header()->setSortIndicatorShown(true);
     header()->setSortIndicator(-1, Qt::AscendingOrder);
     connect(header(), SIGNAL(sortIndicatorChanged(int,Qt::SortOrder)), this, SLOT(sort(int,Qt::SortOrder)));

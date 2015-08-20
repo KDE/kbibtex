@@ -158,7 +158,7 @@ private:
         listLRU = new QTreeView(p);
         listLRU->setRootIsDecorated(false);
         listLRU->setSortingEnabled(true);
-        listLRU->header()->setResizeMode(QHeaderView::ResizeToContents);
+        listLRU->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
         layout->addWidget(listLRU, 4, 1, 1, 5);
         connect(listLRU, SIGNAL(activated(QModelIndex)), p, SLOT(slotOpenLRU(QModelIndex)));
         label->setBuddy(listLRU);
