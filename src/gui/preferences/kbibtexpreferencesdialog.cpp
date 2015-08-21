@@ -128,7 +128,7 @@ public:
     }
 };
 
-KBibTeXPreferencesDialog::KBibTeXPreferencesDialog(QWidget *parent, Qt::WFlags flags)
+KBibTeXPreferencesDialog::KBibTeXPreferencesDialog(QWidget *parent, Qt::WindowFlags flags)
         : KPageDialog(parent, flags), d(new KBibTeXPreferencesDialogPrivate(this))
 {
     setFaceType(KPageDialog::Tree);
