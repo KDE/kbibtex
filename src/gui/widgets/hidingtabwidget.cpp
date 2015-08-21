@@ -32,7 +32,7 @@ bool operator==(const HidingTabWidget::HiddenTabInfo &a, const HidingTabWidget::
 const int HidingTabWidget::InvalidTabPosition = -1;
 
 HidingTabWidget::HidingTabWidget(QWidget *parent)
-        : KTabWidget(parent)
+        : QTabWidget(parent)
 {
     /// nothing to see here
 }
@@ -79,7 +79,7 @@ int HidingTabWidget::showTab(const HiddenTabInfo &hti, int index)
     }
 
     /// insert tab using KTabWidget's original function
-    index = KTabWidget::insertTab(index, hti.widget, hti.icon, hti.label);
+    index = QTabWidget::insertTab(index, hti.widget, hti.icon, hti.label);
     /// restore tab's properties
     setTabToolTip(index, hti.toolTip);
     setTabWhatsThis(index, hti.whatsThis);
@@ -153,6 +153,6 @@ int HidingTabWidget::insertTab(int index, QWidget *page, const QIcon &icon, cons
         }
     }
 
-    return KTabWidget::insertTab(index, page, icon, label);
+    return QTabWidget::insertTab(index, page, icon, label);
 }
 
