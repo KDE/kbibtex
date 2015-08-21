@@ -34,7 +34,6 @@
 #include <KLocalizedString>
 #include <KSharedConfig>
 #include <KConfigGroup>
-#include <kio/netaccess.h>
 
 #include "menulineedit.h"
 #include "entry.h"
