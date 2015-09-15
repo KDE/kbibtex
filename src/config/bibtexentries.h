@@ -15,76 +15,67 @@
  *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
  ***************************************************************************/
 
-#ifndef KBIBTEX_GUI_BIBTEXFIELDS_H
-#define KBIBTEX_GUI_BIBTEXFIELDS_H
+#ifndef KBIBTEX_CONFIG_BIBTEXENTRIES_H
+#define KBIBTEX_CONFIG_BIBTEXENTRIES_H
 
-#include "kbibtexio_export.h"
+#include "kbibtexconfig_export.h"
 
-#include <QString>
-#include <QList>
+#include <QStringList>
 
 #include "kbibtexnamespace.h"
 
-struct FieldDescription {
+typedef struct {
     QString upperCamelCase;
     QString upperCamelCaseAlt;
     QString label;
-    KBibTeX::TypeFlags typeFlags;
-    KBibTeX::TypeFlag preferredTypeFlag;
-    QMap<QString, int> width;
-    int defaultWidth;
-    QMap<QString, bool> visible;
-    bool defaultVisible;
-    bool typeIndependent;
+    QStringList requiredItems;
+    QStringList optionalItems;
+} EntryDescription;
 
-    FieldDescription()
-            : upperCamelCase(QString()), upperCamelCaseAlt(QString()), label(QString()), preferredTypeFlag(KBibTeX::tfSource), defaultWidth(0), defaultVisible(true), typeIndependent(false) {
-        /* nothing */
-    }
-
-    bool isNull() const {
-        return upperCamelCase.isEmpty() && label.isEmpty();
-    }
-};
-
-bool operator==(const FieldDescription &a, const FieldDescription &b);
-uint qHash(const FieldDescription &a);
+bool operator==(const EntryDescription &a, const EntryDescription &b);
+uint qHash(const EntryDescription &a);
 
 /**
 @author Thomas Fischer
  */
-class KBIBTEXIO_EXPORT BibTeXFields : public QList<FieldDescription *>
+class KBIBTEXCONFIG_EXPORT BibTeXEntries : public QList<EntryDescription>
 {
 public:
-    ~BibTeXFields();
+    virtual ~BibTeXEntries();
 
     /**
      * Only one instance of this class has to be used
      * @return the class's singleton
      */
-    static const BibTeXFields *self();
-
-    void save();
-    void resetToDefaults(const QString &treeViewName);
+    static const BibTeXEntries *self();
 
     /**
-     * Change the casing of a given field name to one of the predefine formats.
+     * Change the casing of a given entry name to one of the predefine formats.
+     *
+     */
+    /**
+     * Change the casing of a given entry name to one of the predefine formats.
+     * @param name entry name to format
+     * @param casing can be any of the predefined formats such as lower camel case or upper case
+     * @return returns the formatted entry name if possible or the "name" parameter's value as fall-back
      */
     QString format(const QString &name, KBibTeX::Casing casing) const;
 
-    static KBibTeX::TypeFlag typeFlagFromString(const QString &typeFlagString);
-    static KBibTeX::TypeFlags typeFlagsFromString(const QString &typeFlagsString);
-    static QString typeFlagToString(KBibTeX::TypeFlag typeFlag);
-    static QString typeFlagsToString(KBibTeX::TypeFlags typeFlags);
-
-    const FieldDescription *find(const QString &name) const;
+    /**
+     * Returns the given entry name's i18n'ized, human-readable label,
+     * for example "Journal Article" for entry name "article".
+     * @param name entry name to look up the label for
+     * @return the label for the entry if available, else an empty string
+     */
+    QString label(const QString &name) const;
 
 protected:
-    BibTeXFields();
+    BibTeXEntries();
+    void load();
 
 private:
-    class BibTeXFieldsPrivate;
-    BibTeXFieldsPrivate *d;
+    class BibTeXEntriesPrivate;
+    BibTeXEntriesPrivate *d;
 };
 
-#endif // KBIBTEX_GUI_BIBTEXFIELDS_H
+#endif // KBIBTEX_CONFIG_BIBTEXENTRIES_H

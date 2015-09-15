@@ -24,8 +24,6 @@
 #include <KSharedConfig>
 #include <KConfigGroup>
 
-#include "entry.h"
-
 bool operator==(const EntryDescription &a, const EntryDescription &b)
 {
     return a.upperCamelCase == b.upperCamelCase;

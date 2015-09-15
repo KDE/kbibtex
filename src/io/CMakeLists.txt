@@ -2,8 +2,6 @@
 
 set(
     kbibtexio_LIB_SRCS
-    config/bibtexentries.cpp
-    config/bibtexfields.cpp
     encoder.cpp
     encoderlatex.cpp
     encoderutf8.cpp
@@ -33,8 +31,6 @@ set(
 
 set(
     kbibtexio_HDRS
-    config/bibtexentries.h
-    config/bibtexfields.h
     encoder.h
     encoderlatex.h
     encoderutf8.h
