@@ -522,8 +522,6 @@ void ColorLabelContextMenu::colorActivated(const QString &colorString)
     Q_ASSERT_X(sfbfm != NULL, "ColorLabelContextMenu::colorActivated(const QString &colorString)", "SortFilterFileModel *sfbfm is NULL");
     FileModel *model = sfbfm->fileSourceModel();
     Q_ASSERT_X(model != NULL, "ColorLabelContextMenu::colorActivated(const QString &colorString)", "FileModel *model is NULL");
-    File *file = model->bibliographyFile();
-    Q_ASSERT_X(file != NULL, "ColorLabelContextMenu::colorActivated(const QString &colorString)", "File *file is NULL");
 
     /// Keep track if any changes to the bibliography is made
     bool modifying = false;
