@@ -28,7 +28,7 @@
 #include "guihelper.h"
 #include "italictextitemmodel.h"
 #include "fileview.h"
-#include "filemodel.h"
+#include "models/filemodel.h"
 #include "value.h"
 #include "iconvlatex.h"
 #include "file.h"
@@ -47,9 +47,11 @@ void FileSettings::setFileView(FileView *fileView)
     m_fileView = fileView;
 
     if (m_fileView != NULL && m_fileView->fileModel() != NULL) {
-        m_currentFile = m_fileView->fileModel()->bibliographyFile();
+        // FIXME m_currentFile = m_fileView->fileModel()->bibliographyFile();
+        /*
         if (m_currentFile != NULL)
             loadProperties(m_currentFile);
+        */
         setEnabled(true);
     } else
         setEnabled(false);

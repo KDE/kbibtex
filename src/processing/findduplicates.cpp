@@ -27,6 +27,7 @@
 #include <KLocalizedString>
 
 #include "file.h"
+#include "models/filemodel.h"
 #include "entry.h"
 
 EntryClique::EntryClique()
@@ -496,7 +497,7 @@ MergeDuplicates::~MergeDuplicates()
     delete d;
 }
 
-bool MergeDuplicates::mergeDuplicateEntries(const QList<EntryClique *> &entryCliques, File *file)
+bool MergeDuplicates::mergeDuplicateEntries(const QList<EntryClique *> &entryCliques, FileModel *fileModel)
 {
     bool didMerge = false;
 
@@ -523,6 +524,7 @@ bool MergeDuplicates::mergeDuplicateEntries(const QList<EntryClique *> &entryCli
         }
 
         bool actuallyMerged = false;
+        int preferredInsertionRow = -1;
         foreach (const QSharedPointer<Entry> &entry, entryClique->entryList()) {
             /// if merging entries with identical ids, the merged entry will not yet have an id (is null)
             if (mergedEntry->id().isEmpty())
@@ -541,14 +543,16 @@ bool MergeDuplicates::mergeDuplicateEntries(const QList<EntryClique *> &entryCli
                         mergedEntry->insert(it.key(), it.value());
                         coveredFields << it.key();
                     }
-                // TODO needs to be rewritten if File shall be based on QVector instead of QList
-                file->removeOne(QSharedPointer<Entry>(entry));
+                const int row = fileModel->row(entry);
+                if (preferredInsertionRow < 0) preferredInsertionRow = row;
+                fileModel->removeRow(row);
             }
         }
 
-        if (actuallyMerged)
-            file->append(QSharedPointer<Entry>(mergedEntry));
-        else
+        if (actuallyMerged) {
+            if (preferredInsertionRow < 0) preferredInsertionRow = fileModel->rowCount();
+            fileModel->insertRow(QSharedPointer<Entry>(mergedEntry), preferredInsertionRow);
+        } else
             delete mergedEntry;
         didMerge |= actuallyMerged;
     }

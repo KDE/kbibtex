@@ -35,7 +35,7 @@
 #include "elementeditor.h"
 #include "entry.h"
 #include "macro.h"
-#include "filemodel.h"
+#include "models/filemodel.h"
 #include "fileexporterbibtex.h"
 #include "valuelistmodel.h"
 

@@ -35,7 +35,7 @@
 #include "file.h"
 #include "fileview.h"
 #include "colorlabelwidget.h"
-#include "filemodel.h"
+#include "models/filemodel.h"
 #include "preferences.h"
 
 class ColorLabelSettingsDelegate : public QStyledItemDelegate
@@ -534,7 +534,8 @@ void ColorLabelContextMenu::colorActivated(const QString &colorString)
         /// Selection may span over multiple columns;
         /// to avoid duplicate assignments, consider only column 1
         if (mappedIndex.column() == 1) {
-            QSharedPointer<Entry> entry = file->at(mappedIndex.row()).dynamicCast<Entry>();
+            const int row = mappedIndex.row();
+            QSharedPointer<Entry> entry = model->element(row).dynamicCast<Entry>();
             if (!entry.isNull()) {
                 /// Clear old color entry
                 modifying |= entry->remove(Entry::ftColor) > 0;

@@ -28,7 +28,8 @@
 #include <KSharedConfig>
 
 #include "bibtexfields.h"
-#include "filemodel.h"
+#include "models/filemodel.h"
+#include "sortfilterfilemodel.h"
 
 class BasicFileView::Private
 {

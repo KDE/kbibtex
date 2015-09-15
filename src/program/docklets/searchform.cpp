@@ -71,7 +71,7 @@
 #include "onlinesearchoclcworldcat.h"
 #include "openfileinfo.h"
 #include "fileview.h"
-#include "filemodel.h"
+#include "models/filemodel.h"
 #include "searchresults.h"
 
 const int HomepageRole = Qt::UserRole + 5;

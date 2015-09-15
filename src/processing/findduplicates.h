@@ -27,6 +27,7 @@
 
 class Entry;
 class File;
+class FileModel;
 
 class KBIBTEXPROC_EXPORT FindDuplicates;
 
@@ -101,16 +102,7 @@ public:
     explicit MergeDuplicates(QWidget *parent);
     ~MergeDuplicates();
 
-    bool mergeDuplicateEntries(const QList<EntryClique *> &entryCliques, File *file);
-
-    /**
-     * Goes through the list of Entry cliques and automatically merge
-     * those cliques, i.e. remove all Entries in a clique and replace
-     * it by a single new Entry. This new Entry will contain values
-     * from the clique, but values will be selected from Entries as
-     * chosen by the sorting criterium field and the merge priority.
-     */
-    bool mergeDuplicateEntriesAuto(const QList<EntryClique *> &entryCliques, File *file, const QString &sortCriteriumField, MergePriority mergePriority);
+    bool mergeDuplicateEntries(const QList<EntryClique *> &entryCliques, FileModel *fileModel);
 
 private:
     class MergeDuplicatesPrivate;

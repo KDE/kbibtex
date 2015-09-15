@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2015 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -14,50 +14,26 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
  ***************************************************************************/
-#ifndef KBIBTEX_GUI_FILTERBAR_H
-#define KBIBTEX_GUI_FILTERBAR_H
 
-#include "kbibtexgui_export.h"
+#include "filedelegate.h"
 
-#include <QWidget>
+#include <KIconLoader>
 
-#include "sortfilterfilemodel.h"
+#include "models/filemodel.h"
+#include "bibtexfields.h"
+#include "starrating.h"
 
-/**
-@author Thomas Fischer
- */
-class KBIBTEXGUI_EXPORT FilterBar : public QWidget
+void FileDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-    Q_OBJECT
-public:
-    explicit FilterBar(QWidget *parent);
-    ~FilterBar();
+    QStyledItemDelegate::paint(painter, option, index);
 
-    SortFilterFileModel::FilterQuery filter();
-
-    void setPlaceholderText(const QString &msg);
-
-public slots:
-    /**
-     * Set the filter criteria to be both shown in this filter bar
-     * and applied to the list of elements.
-     * @param fq query data structure to be used
-     */
-    void setFilter(SortFilterFileModel::FilterQuery fq);
-
-signals:
-    void filterChanged(SortFilterFileModel::FilterQuery);
-
-private:
-    class FilterBarPrivate;
-    FilterBarPrivate *d;
-
-private slots:
-    void comboboxStatusChanged();
-    void resetState();
-    void userPressedEnter();
-    void publishFilter();
-    void buttonHeight();
-};
-
-#endif // KBIBTEX_GUI_FILTERBAR_H
+    static const int numTotalStars = 8;
+    bool ok = false;
+    double percent = index.data(FileModel::NumberRole).toDouble(&ok);
+    if (ok) {
+        const BibTeXFields *bibtexFields = BibTeXFields::self();
+        const FieldDescription *fd = bibtexFields->at(index.column());
+        if (fd->upperCamelCase.toLower() == Entry::ftStarRating)
+            StarRating::paintStars(painter, KIconLoader::DefaultState, numTotalStars, percent, option.rect);
+    }
+}

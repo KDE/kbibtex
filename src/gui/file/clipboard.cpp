@@ -29,7 +29,7 @@
 #include <KSharedConfig>
 
 #include "fileview.h"
-#include "filemodel.h"
+#include "models/filemodel.h"
 #include "fileimporterbibtex.h"
 #include "fileexporterbibtex.h"
 #include "file.h"

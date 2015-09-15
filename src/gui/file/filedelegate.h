@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2015 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -14,50 +14,25 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
  ***************************************************************************/
-#ifndef KBIBTEX_GUI_FILTERBAR_H
-#define KBIBTEX_GUI_FILTERBAR_H
+
+#ifndef KBIBTEX_GUI_FILEDELEGATE_H
+#define KBIBTEX_GUI_FILEDELEGATE_H
 
 #include "kbibtexgui_export.h"
 
-#include <QWidget>
+#include <QStyledItemDelegate>
 
-#include "sortfilterfilemodel.h"
-
-/**
-@author Thomas Fischer
- */
-class KBIBTEXGUI_EXPORT FilterBar : public QWidget
+class KBIBTEXGUI_EXPORT FileDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
+
 public:
-    explicit FilterBar(QWidget *parent);
-    ~FilterBar();
+    explicit FileDelegate(QWidget *parent = NULL)
+            : QStyledItemDelegate(parent) {
+        /* nothing */
+    }
 
-    SortFilterFileModel::FilterQuery filter();
-
-    void setPlaceholderText(const QString &msg);
-
-public slots:
-    /**
-     * Set the filter criteria to be both shown in this filter bar
-     * and applied to the list of elements.
-     * @param fq query data structure to be used
-     */
-    void setFilter(SortFilterFileModel::FilterQuery fq);
-
-signals:
-    void filterChanged(SortFilterFileModel::FilterQuery);
-
-private:
-    class FilterBarPrivate;
-    FilterBarPrivate *d;
-
-private slots:
-    void comboboxStatusChanged();
-    void resetState();
-    void userPressedEnter();
-    void publishFilter();
-    void buttonHeight();
+    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
 };
 
-#endif // KBIBTEX_GUI_FILTERBAR_H
+#endif // KBIBTEX_GUI_FILEDELEGATE_H

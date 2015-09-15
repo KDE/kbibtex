@@ -42,7 +42,7 @@
 #include "bibtexfields.h"
 #include "entry.h"
 #include "preferences.h"
-#include "filemodel.h"
+#include "models/filemodel.h"
 
 const int CountRole = Qt::UserRole + 611;
 

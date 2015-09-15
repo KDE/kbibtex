@@ -39,7 +39,7 @@
 #include "entry.h"
 #include "fileview.h"
 #include "valuelistmodel.h"
-#include "filemodel.h"
+#include "models/filemodel.h"
 
 class ValueList::ValueListPrivate
 {

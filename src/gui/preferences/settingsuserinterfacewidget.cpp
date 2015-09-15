@@ -28,7 +28,7 @@
 
 #include "preferences.h"
 #include "elementwidgets.h"
-#include "filemodel.h"
+#include "models/filemodel.h"
 
 class SettingsUserInterfaceWidget::SettingsUserInterfaceWidgetPrivate
 {

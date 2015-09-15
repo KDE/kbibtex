@@ -75,7 +75,7 @@
 #include "fileexporterbibtex2html.h"
 #include "fileexporterxml.h"
 #include "fileexporterxslt.h"
-#include "filemodel.h"
+#include "models/filemodel.h"
 #include "filesettingswidget.h"
 #include "filterbar.h"
 #include "findduplicatesui.h"
@@ -787,7 +787,7 @@ bool KBibTeXPart::documentSaveAs()
 
     // TODO how does SaveAs dialog know which mime types to support?
     if (KParts::ReadWritePart::saveAs(newUrl)) {
-        d->model->bibliographyFile()->setProperty(File::Url, newUrl);
+        // FIXME d->model->bibliographyFile()->setProperty(File::Url, newUrl);
         return true;
     } else
         return false;

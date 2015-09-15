@@ -23,7 +23,7 @@
 #include <QStyledItemDelegate>
 
 #include "notificationhub.h"
-#include "filemodel.h"
+#include "models/filemodel.h"
 
 class KBIBTEXGUI_EXPORT ValueListDelegate : public QStyledItemDelegate
 {

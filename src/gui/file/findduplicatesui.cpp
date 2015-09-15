@@ -46,7 +46,8 @@
 #include "bibtexentries.h"
 #include "radiobuttontreeview.h"
 #include "fileview.h"
-#include "filemodel.h"
+#include "filedelegate.h"
+#include "models/filemodel.h"
 #include "findduplicates.h"
 
 const int FieldNameRole = Qt::UserRole + 101;
@@ -700,10 +701,7 @@ void FindDuplicatesUI::slotFindDuplicates()
 
         if (dlg->exec() == QDialog::Accepted) {
             MergeDuplicates md(dlg);
-            if (md.mergeDuplicateEntries(cliques, originalFile)) {
-                d->view->fileModel()->reset();
-                d->view->externalModification();
-            }
+            md.mergeDuplicateEntries(cliques, d->view->fileModel());
         }
 
         while (!cliques.isEmpty()) {
