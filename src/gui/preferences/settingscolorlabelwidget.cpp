@@ -523,8 +523,6 @@ void ColorLabelContextMenu::colorActivated(const QString &colorString)
     FileModel *model = sfbfm->fileSourceModel();
     Q_ASSERT_X(model != NULL, "ColorLabelContextMenu::colorActivated(const QString &colorString)", "FileModel *model is NULL");
 
-    /// Keep track if any changes to the bibliography is made
-    bool modifying = false;
     /// Apply color change to all selected rows
     QModelIndexList list = d->fileView->selectionModel()->selectedIndexes();
     foreach (const QModelIndex &index, list) {
@@ -536,7 +534,7 @@ void ColorLabelContextMenu::colorActivated(const QString &colorString)
             QSharedPointer<Entry> entry = model->element(row).dynamicCast<Entry>();
             if (!entry.isNull()) {
                 /// Clear old color entry
-                modifying |= entry->remove(Entry::ftColor) > 0;
+                bool modifying = entry->remove(Entry::ftColor) > 0;
                 if (colorString != QLatin1String("#000000")) { ///< black is a special color that means "no color"
                     /// Only if valid color was selected, set this color
                     Value v;
@@ -544,11 +542,9 @@ void ColorLabelContextMenu::colorActivated(const QString &colorString)
                     entry->insert(Entry::ftColor, v);
                     modifying = true;
                 }
+                if (modifying)
+                    model->elementChanged(row);
             }
         }
     }
-
-    if (modifying)
-        /// Let the FileView widget know that its underlying data model has been changed
-        d->fileView->externalModification();
 }
