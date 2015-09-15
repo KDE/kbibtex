@@ -16,14 +16,14 @@
  *   along with this program; if not, see <http://www.gnu.org/licenses/>.    *
  *****************************************************************************/
 
-#ifndef GUI_HELPER_H
-#define GUI_HELPER_H
+#ifndef KBIBTEX_GUI_HELPER_H
+#define KBIBTEX_GUI_HELPER_H
+
+#include "kbibtexgui_export.h"
 
 #include <QAbstractItemModel>
 #include <QPoint>
 #include <QSize>
-
-#include "kbibtexgui_export.h"
 
 class QPainter;
 
@@ -52,4 +52,4 @@ public:
 };
 
 
-#endif // GUI_HELPER_H
+#endif // KBIBTEX_GUI_HELPER_H

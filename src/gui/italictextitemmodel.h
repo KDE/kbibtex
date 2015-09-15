@@ -16,8 +16,8 @@
  *   along with this program; if not, see <http://www.gnu.org/licenses/>.    *
  *****************************************************************************/
 
-#ifndef GUI_ITALICTEXTITEMMODEL_H
-#define GUI_ITALICTEXTITEMMODEL_H
+#ifndef KBIBTEX_GUI_ITALICTEXTITEMMODEL_H
+#define KBIBTEX_GUI_ITALICTEXTITEMMODEL_H
 
 #include <QAbstractItemModel>
 
@@ -61,4 +61,4 @@ private:
     Private *const d;
 };
 
-#endif // GUI_ITALICTEXTITEMMODEL_H
+#endif // KBIBTEX_GUI_ITALICTEXTITEMMODEL_H
