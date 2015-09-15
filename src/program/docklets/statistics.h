@@ -35,8 +35,10 @@ public:
 
     void setFile(const File *, const QItemSelectionModel *);
 
-private slots:
+public slots:
     void update();
+
+private slots:
     void selectionModelDestroyed();
 
 private:
