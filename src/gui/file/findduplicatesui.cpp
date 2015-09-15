@@ -661,26 +661,24 @@ void FindDuplicatesUI::slotFindDuplicates()
     FindDuplicates fd(d->part->widget(), sensitivity);
     /// File to be used to find duplicate in,
     /// may be only a subset of the original one if selection is used (see below)
-    File *file = d->view->fileModel()->bibliographyFile();
+    File *file = new File();
     /// Full file, used to remove merged elements from
     /// Stays the same even when merging is restricted to selected elements
-    File *originalFile = file;
-    bool deleteFileLater = false;
 
     const int rowCount = d->view->selectedElements().count();
-    if (rowCount > 1 && rowCount < d->view->model()->rowCount() && KMessageBox::questionYesNo(d->part->widget(), i18n("Multiple elements are selected. Do you want to search for duplicates only within the selection or in the whole document?"), i18n("Search only in selection?"), KGuiItem(i18n("Only in selection")), KGuiItem(i18n("Whole document"))) == KMessageBox::Yes) {
+    if (rowCount <= 1 || rowCount == d->view->sortFilterProxyModel()->sourceModel()->rowCount() || KMessageBox::questionYesNo(d->part->widget(), i18n("Multiple elements are selected. Do you want to search for duplicates only within the selection or in the whole document?"), i18n("Search only in selection?"), KGuiItem(i18n("Only in selection")), KGuiItem(i18n("Whole document"))) == KMessageBox::Yes) {
+        for (int i = 0; i < d->view->fileModel()->rowCount(); ++i)
+            file->append(d->view->fileModel()->element(i));
+    } else {
         QModelIndexList mil = d->view->selectionModel()->selectedRows();
-        file = new File();
-        deleteFileLater = true;
-        for (QModelIndexList::ConstIterator it = mil.constBegin(); it != mil.constEnd(); ++it) {
+        for (QModelIndexList::ConstIterator it = mil.constBegin(); it != mil.constEnd(); ++it)
             file->append(d->view->fileModel()->element(d->view->sortFilterProxyModel()->mapToSource(*it).row()));
-        }
     }
 
     QList<EntryClique *> cliques;
     bool gotCanceled = fd.findDuplicateEntries(file, cliques);
     if (gotCanceled) {
-        if (deleteFileLater) delete file;
+        delete file;
         return;
     }
 
@@ -689,7 +687,7 @@ void FindDuplicatesUI::slotFindDuplicates()
     } else {
         QPointer<QDialog> dlg = new QDialog(d->part->widget());
         dlg->setWindowTitle(i18n("Merge Duplicates"));
-        QPointer<MergeWidget> mw = new MergeWidget(d->view->fileModel()->bibliographyFile(), cliques, dlg);
+        QPointer<MergeWidget> mw = new MergeWidget(file, cliques, dlg);
         mw->layout()->setMargin(0);
         QBoxLayout *layout = new QVBoxLayout(dlg);
         layout->addWidget(mw);
@@ -714,6 +712,5 @@ void FindDuplicatesUI::slotFindDuplicates()
         delete dlg;
     }
 
-    if (deleteFileLater) delete file;
-
+    delete file;
 }
