@@ -357,7 +357,7 @@ void SearchForm::updatedConfiguration()
     d->loadEngines();
 }
 
-void SearchForm::setElement(QSharedPointer<Element> element, File *)
+void SearchForm::setElement(QSharedPointer<Element> element, const File *)
 {
     d->currentEntry = element.dynamicCast<const Entry>();
     d->useEntryButton->setEnabled(!d->currentEntry.isNull() && d->tabWidget->currentIndex() == 0);

@@ -612,7 +612,7 @@ DocumentPreview::~DocumentPreview()
     delete d;
 }
 
-void DocumentPreview::setElement(QSharedPointer<Element> element, File *)
+void DocumentPreview::setElement(QSharedPointer<Element> element, const File *)
 {
     d->entry = element.dynamicCast<const Entry>();
     d->update();

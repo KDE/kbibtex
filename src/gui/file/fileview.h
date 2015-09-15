@@ -53,7 +53,7 @@ public:
 
 signals:
     void selectedElementsChanged();
-    void currentElementChanged(QSharedPointer<Element>, File *);
+    void currentElementChanged(QSharedPointer<Element>, const File *);
     void elementExecuted(QSharedPointer<Element>);
     void editorMouseEvent(QMouseEvent *);
     void editorDragEnterEvent(QDragEnterEvent *);

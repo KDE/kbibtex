@@ -37,7 +37,7 @@ public:
     void setFileView(FileView *fileView);
 
 public slots:
-    void setElement(QSharedPointer<Element>, File *);
+    void setElement(QSharedPointer<Element>, const File *);
 
 private:
     class ReferencePreviewPrivate;
