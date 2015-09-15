@@ -31,7 +31,7 @@ public:
     Element();
     virtual ~Element() {
         /* nothing */
-    };
+    }
 
 private:
     int uniqueId;
