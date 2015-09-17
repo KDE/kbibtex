@@ -102,7 +102,7 @@ public:
         /// set number of expected results
         url.append(QString(QLatin1String("&retstart=0&retmax=%1&retmode=xml")).arg(numResults));
 
-        return QUrl(url);
+        return QUrl::fromUserInput(url);
     }
 
     QUrl buildFetchIdUrl(const QStringList &idList) {
@@ -179,7 +179,7 @@ OnlineSearchQueryFormAbstract *OnlineSearchPubMed::customWidget(QWidget *)
 
 QUrl OnlineSearchPubMed::homepage() const
 {
-    return QUrl("http://www.pubmed.gov/");
+    return QUrl("http://www.ncbi.nlm.nih.gov/pubmed/");
 }
 
 void OnlineSearchPubMed::cancel()
