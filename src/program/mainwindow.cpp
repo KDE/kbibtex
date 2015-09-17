@@ -213,7 +213,7 @@ KBibTeXMainWindow::KBibTeXMainWindow()
     d->dockDocumentPreview->setObjectName("dockDocumentPreview");
     d->dockDocumentPreview->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
     showPanelsMenu->addAction(d->dockDocumentPreview->toggleViewAction());
-    d->dockDocumentPreview->toggleViewAction()->setShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_D);
+    actionCollection()->setDefaultShortcut(d->dockDocumentPreview->toggleViewAction(), Qt::CTRL + Qt::SHIFT + Qt::Key_D);
 
     d->dockElementForm = new QDockWidget(i18n("Element Editor"), this);
     d->dockElementForm->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);

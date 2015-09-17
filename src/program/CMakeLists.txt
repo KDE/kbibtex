@@ -137,7 +137,7 @@ install(
 
 install(
     PROGRAMS
-    kbibtex.desktop
+    org.kde.kbibtex.desktop
     DESTINATION
     ${XDG_APPS_INSTALL_DIR}
 )
