@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2015 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -158,9 +158,9 @@ public:
     }
 };
 
-const QString BibliographyService::Private::kbibtexApplicationDesktop = QLatin1String("kde4-kbibtex.desktop");
+const QString BibliographyService::Private::kbibtexApplicationDesktop = QLatin1String("kbibtex.desktop"); // FIXME to be renamed 'org.kde.kbibtex.desktop'
 const QString BibliographyService::Private::kbibtexPartDesktop = QLatin1String("kbibtexpart.desktop");
-const QString BibliographyService::Private::kateApplicationDesktop = QLatin1String("kde4-kate.desktop");
+const QString BibliographyService::Private::kateApplicationDesktop = QLatin1String("org.kde.kate.desktop");
 const QString BibliographyService::Private::katePartDesktop = QLatin1String("katepart.desktop");
 
 BibliographyService::BibliographyService(QWidget *parentWidget)
@@ -180,10 +180,10 @@ void BibliographyService::setKBibTeXasDefault() {
         d->setKBibTeXforMimeType(mimeType, true);
     }
 
-    /// kbuildsycoca4 has to be run to update the mime type associations
-    QProcess *kbuildsycoca4Process = new QProcess(d->parentWidget);
-    connect(kbuildsycoca4Process, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(kbuildsycoca4finished(int,QProcess::ExitStatus)));
-    kbuildsycoca4Process->start(QLatin1String("kbuildsycoca4"));
+    /// kbuildsycoca5 has to be run to update the mime type associations
+    QProcess *kbuildsycoca5Process = new QProcess(d->parentWidget);
+    connect(kbuildsycoca5Process, static_cast<void(QProcess::*)(int,QProcess::ExitStatus)>(&QProcess::finished), this, &BibliographyService::kbuildsycoca5finished);
+    kbuildsycoca5Process->start(QLatin1String("kbuildsycoca5"));
 }
 
 bool BibliographyService::isKBibTeXdefault() const {
@@ -196,7 +196,7 @@ bool BibliographyService::isKBibTeXdefault() const {
     return true; ///< All tests passed, KBibTeX is default application/part
 }
 
-void BibliographyService::kbuildsycoca4finished(int exitCode, QProcess::ExitStatus exitStatus) {
+void BibliographyService::kbuildsycoca5finished(int exitCode, QProcess::ExitStatus exitStatus) {
     if (exitCode != 0 || exitStatus != QProcess::NormalExit)
-        QMessageBox::warning(d->parentWidget,  i18n("Failed to run 'kbuildsycoca4'"), i18n("Failed to run 'kbuildsycoca4' to update mime type associations.\n\nThe system may not know how to use KBibTeX to open bibliography files."), i18n("Failed to run 'kbuildsycoca4'"));
+        QMessageBox::warning(d->parentWidget,  i18n("Failed to run 'kbuildsycoca5'"), i18n("Failed to run 'kbuildsycoca5' to update mime type associations.\n\nThe system may not know how to use KBibTeX to open bibliography files."), i18n("Failed to run 'kbuildsycoca5'"));
 }
