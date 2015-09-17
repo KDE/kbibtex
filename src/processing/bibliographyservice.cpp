@@ -158,7 +158,7 @@ public:
     }
 };
 
-const QString BibliographyService::Private::kbibtexApplicationDesktop = QLatin1String("kbibtex.desktop"); // FIXME to be renamed 'org.kde.kbibtex.desktop'
+const QString BibliographyService::Private::kbibtexApplicationDesktop = QLatin1String("org.kde.kbibtex.desktop");
 const QString BibliographyService::Private::kbibtexPartDesktop = QLatin1String("kbibtexpart.desktop");
 const QString BibliographyService::Private::kateApplicationDesktop = QLatin1String("org.kde.kate.desktop");
 const QString BibliographyService::Private::katePartDesktop = QLatin1String("katepart.desktop");
