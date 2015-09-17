@@ -38,7 +38,7 @@ public:
     virtual QUrl homepage() const;
 
     static const int maxNumResults;
-    static const qint64 queryChokeTimeout;
+    static const uint queryChokeTimeout;
 
 public slots:
     void cancel();
@@ -54,7 +54,7 @@ private:
     class OnlineSearchPubMedPrivate;
     OnlineSearchPubMedPrivate *d;
 
-    static qint64 lastQueryEpoch;
+    static uint lastQueryEpoch;
 };
 
 #endif // KBIBTEX_ONLINESEARCH_PUBMED_H

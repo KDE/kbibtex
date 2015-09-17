@@ -32,8 +32,8 @@
 #include "internalnetworkaccessmanager.h"
 
 const int OnlineSearchPubMed::maxNumResults = 25;
-const qint64 OnlineSearchPubMed::queryChokeTimeout = 10 * 1000; /// 10 seconds
-qint64 OnlineSearchPubMed::lastQueryEpoch = 0;
+const uint OnlineSearchPubMed::queryChokeTimeout = 10; /// 10 seconds
+uint OnlineSearchPubMed::lastQueryEpoch = 0;
 
 class OnlineSearchPubMed::OnlineSearchPubMedPrivate
 {
@@ -148,7 +148,7 @@ void OnlineSearchPubMed::startSearch(const QMap<QString, QString> &query, int nu
     numResults = qMin(maxNumResults, numResults);
     /// enforcing choke on number of searchs per time
     if (QDateTime::currentDateTime().toTime_t() - lastQueryEpoch < queryChokeTimeout) {
-        qWarning() << "Too many search queries per time; choke enforces pause of" << (queryChokeTimeout / 1000) << "seconds between queries";
+        qWarning() << "Too many search queries per time; choke enforces pause of" << queryChokeTimeout << "seconds between queries";
         delayedStoppedSearch(resultNoError);
         return;
     }
