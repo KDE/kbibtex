@@ -67,7 +67,6 @@
 #include "onlinesearchisbndb.h"
 #include "onlinesearchideasrepec.h"
 #include "onlinesearchdoi.h"
-#include "onlinesearchoclcworldcat.h"
 #include "openfileinfo.h"
 #include "fileview.h"
 #include "filemodel.h"
@@ -232,7 +231,6 @@ public:
         addEngine(new OnlineSearchIsbnDB(p));
         addEngine(new OnlineSearchIDEASRePEc(p));
         addEngine(new OnlineSearchDOI(p));
-        addEngine(new OnlineSearchOCLCWorldCat(p));
 
         p->itemCheckChanged(NULL);
         updateGUI();

@@ -34,7 +34,6 @@ set(
     onlinesearch/onlinesearchisbndb.cpp
     onlinesearch/onlinesearchideasrepec.cpp
     onlinesearch/onlinesearchdoi.cpp
-    onlinesearch/onlinesearchoclcworldcat.cpp
     zotero/collectionmodel.cpp
     zotero/collection.cpp
     zotero/api.cpp
@@ -85,7 +84,6 @@ set(
     onlinesearch/onlinesearchisbndb.h
     onlinesearch/onlinesearchideasrepec.h
     onlinesearch/onlinesearchdoi.h
-    onlinesearch/onlinesearchoclcworldcat.h
     zotero/collectionmodel.h
     zotero/collection.h
     zotero/groups.h
