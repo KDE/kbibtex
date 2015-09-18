@@ -708,7 +708,7 @@ void KBibTeXPart::setupActions()
     // TODO
 
     connect(d->partWidget->fileView(), SIGNAL(selectedElementsChanged()), this, SLOT(updateActions()));
-    connect(d->partWidget->fileView(), SIGNAL(currentElementChanged(QSharedPointer<Element>,File*)), this, SLOT(updateActions()));
+    connect(d->partWidget->fileView(), &FileView::currentElementChanged, this, &KBibTeXPart::updateActions);
 
     d->partWidget->fileView()->addAction(d->elementFindPDFAction);
     d->partWidget->fileView()->addAction(d->entryApplyDefaultFormatString);
