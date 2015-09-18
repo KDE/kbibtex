@@ -26,6 +26,9 @@
 #include "basicfileview.h"
 #include "element.h"
 
+class QAbstractButton;
+class QDialogButtonBox;
+
 class ValueListModel;
 class ElementEditor;
 class ElementEditorDialog;
@@ -85,6 +88,7 @@ protected:
 
 protected slots:
     void itemActivated(const QModelIndex &index);
+    void dialogButtonClicked(QAbstractButton *);
 
 private:
     enum DialogType { DialogTypeView, DialogTypeEdit };
@@ -96,6 +100,7 @@ private:
 
     ElementEditorDialog *m_elementEditorDialog;
     ElementEditor *m_elementEditor;
+    QDialogButtonBox *m_dbb;
 
     void prepareEditorDialog(DialogType dialogType);
 };
