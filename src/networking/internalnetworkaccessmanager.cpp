@@ -199,6 +199,7 @@ void InternalNetworkAccessManager::networkReplyFinished()
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
     QTimer *timer = m_mapTimerToReply.key(reply, NULL);
     if (timer != NULL) {
+        disconnect(timer, SIGNAL(timeout()), this, SLOT(networkReplyTimeout()));
         timer->stop();
         m_mapTimerToReply.remove(timer);
     }
