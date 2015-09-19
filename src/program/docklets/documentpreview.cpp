@@ -148,7 +148,7 @@ public:
         KService::Ptr service = KMimeTypeTrader::self()->preferredService(mimeType, QLatin1String("KParts/ReadOnlyPart"));
         if (service) {
             KParts::ReadOnlyPart *part = service->createInstance<KParts::ReadOnlyPart>(parentWidget, p);
-            connect(part, SIGNAL(completed()), p, SLOT(loadingFinished()));
+            connect(part, static_cast<void(KParts::ReadOnlyPart::*)()>(&KParts::ReadOnlyPart::completed), p, &DocumentPreview::loadingFinished);
             return part;
         } else
             return NULL;
