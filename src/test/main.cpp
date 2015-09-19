@@ -16,28 +16,21 @@
  ***************************************************************************/
 
 #include <QPointer>
+#include <QApplication>
 
-#include <KCmdLineArgs>
-#include <KApplication>
 #include <KAboutData>
+#include <KLocalizedString>
 
 #include "kbibtextest.h"
-
-const char *description = I18N_NOOP("A BibTeX editor for KDE");
-const char *programHomepage = "http://home.gna.org/kbibtex/";
-const char *bugTrackerHomepage = "https://gna.org/bugs/?group=kbibtex";
+#include "version.h"
 
 int main(int argc, char *argv[])
 {
-    KAboutData aboutData("kbibtextest", 0, ki18n("KBibTeX Test"), "XXX",
-                         ki18n(description), KAboutData::License_GPL_V2,
-                         ki18n("Copyright 2004-2014 Thomas Fischer"), KLocalizedString(),
-                         programHomepage, bugTrackerHomepage);
-    aboutData.addAuthor(ki18n("Thomas Fischer"), ki18n("Maintainer"), "fischer@unix-ag.uni-kl.de", "http://www.t-fischer.net/");
-    aboutData.setCustomAuthorText(ki18n("Please use https://gna.org/bugs/?group=kbibtex to report bugs.\n"), ki18n("Please use <a href=\"https://gna.org/bugs/?group=kbibtex\">https://gna.org/bugs/?group=kbibtex</a> to report bugs.\n"));
+    QApplication programCore(argc, argv);
 
-    KCmdLineArgs::init(argc, argv, &aboutData);
-    KApplication programCore;
+    KAboutData aboutData(QLatin1String("kbibtextest"), i18n("KBibTeX Test"), QLatin1String(versionNumber), i18n("A BibTeX editor for KDE"), KAboutLicense::GPL_V2, i18n("Copyright 2004-2015 Thomas Fischer"), QString(), QLatin1String("http://home.gna.org/kbibtex/"));
+    aboutData.addAuthor(i18n("Thomas Fischer"), i18n("Maintainer"), QLatin1String("fischer@unix-ag.uni-kl.de"));
+    KAboutData::setApplicationData(aboutData);
 
     QPointer<KBibTeXTest> test = new KBibTeXTest();
     test->exec();
