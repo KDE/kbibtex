@@ -142,7 +142,7 @@ public:
     }
 
     DocumentPreviewPrivate(DocumentPreview *parent)
-            : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), entry(NULL) {
+            : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), entry(NULL), anyRemote(false) {
         setupGUI();
     }
 

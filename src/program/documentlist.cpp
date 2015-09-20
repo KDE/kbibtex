@@ -359,8 +359,6 @@ void DocumentListView::currentChanged(const QModelIndex &current, const QModelIn
 class DocumentList::DocumentListPrivate
 {
 public:
-    DocumentList *p;
-
     DocumentListView *listOpenFiles;
     DocumentListView *listRecentFiles;
     DocumentListView *listFavorites;
