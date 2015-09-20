@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2015 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -15,26 +15,25 @@
  *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
  ***************************************************************************/
 
-#include <QPointer>
-#include <QApplication>
+#include "filedelegate.h"
 
-#include <KAboutData>
-#include <KLocalizedString>
+#include <KIconLoader>
 
-#include "kbibtextest.h"
-#include "version.h"
+#include "models/filemodel.h"
+#include "bibtexfields.h"
+#include "starrating.h"
 
-int main(int argc, char *argv[])
+void FileDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-    QApplication programCore(argc, argv);
+    QStyledItemDelegate::paint(painter, option, index);
 
-    KAboutData aboutData(QLatin1String("kbibtextest"), i18n("KBibTeX Test"), QLatin1String(versionNumber), i18n("A BibTeX editor for KDE"), KAboutLicense::GPL_V2, i18n("Copyright 2004-2015 Thomas Fischer"), QString(), QLatin1String("http://home.gna.org/kbibtex/"));
-    aboutData.addAuthor(i18n("Thomas Fischer"), i18n("Maintainer"), QLatin1String("fischer@unix-ag.uni-kl.de"));
-    KAboutData::setApplicationData(aboutData);
-
-    QPointer<KBibTeXTest> test = new KBibTeXTest();
-    test->exec();
-
-    return programCore.exec();
+    static const int numTotalStars = 8;
+    bool ok = false;
+    double percent = index.data(FileModel::NumberRole).toDouble(&ok);
+    if (ok) {
+        const BibTeXFields *bibtexFields = BibTeXFields::self();
+        const FieldDescription *fd = bibtexFields->at(index.column());
+        if (fd->upperCamelCase.toLower() == Entry::ftStarRating)
+            StarRating::paintStars(painter, KIconLoader::DefaultState, numTotalStars, percent, option.rect);
+    }
 }
-

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <component type="desktop">
-  <id>kbibtex.desktop</id>
+  <id>org.kde.kbibtex.desktop</id>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-2.0+</project_license>
   <name>KBibTeX</name>
@@ -22,6 +22,7 @@
   <name xml:lang="sv">Kbibtex</name>
   <name xml:lang="uk">KBibTeX</name>
   <name xml:lang="x-test">xxKBibTeXxx</name>
+  <name xml:lang="zh-CN">KBibTeX</name>
   <summary>BibTeX editor for KDE to edit bibliographies used with LaTeX</summary>
   <summary xml:lang="bs">Uređivač BibTeX za KDE za uređivanje bibliografija korištenih sa LaTeX</summary>
   <summary xml:lang="ca">Editor de BibTeX pel KDE, per editar bibliografies emprant LaTeX</summary>

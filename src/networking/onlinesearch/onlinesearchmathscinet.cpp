@@ -73,7 +73,7 @@ void OnlineSearchMathSciNet::startSearch(const QMap<QString, QString> &query, in
 
     const QString freeText = query[queryKeyFreeText];
     QStringList elements = splitRespectingQuotationMarks(freeText);
-    foreach(const QString &element, elements) {
+    foreach (const QString &element, elements) {
         d->queryParameters.insert(QString(QLatin1String("pg%1")).arg(index), QLatin1String("ALLF"));
         d->queryParameters.insert(QString(QLatin1String("s%1")).arg(index), element);
         ++index;
@@ -81,7 +81,7 @@ void OnlineSearchMathSciNet::startSearch(const QMap<QString, QString> &query, in
 
     const QString title = query[queryKeyTitle];
     elements = splitRespectingQuotationMarks(title);
-    foreach(const QString &element, elements) {
+    foreach (const QString &element, elements) {
         d->queryParameters.insert(QString(QLatin1String("pg%1")).arg(index), QLatin1String("TI"));
         d->queryParameters.insert(QString(QLatin1String("s%1")).arg(index), element);
         ++index;
@@ -89,7 +89,7 @@ void OnlineSearchMathSciNet::startSearch(const QMap<QString, QString> &query, in
 
     const QString authors = query[queryKeyAuthor];
     elements = splitRespectingQuotationMarks(authors);
-    foreach(const QString &element, elements) {
+    foreach (const QString &element, elements) {
         d->queryParameters.insert(QString(QLatin1String("pg%1")).arg(index), QLatin1String("ICN"));
         d->queryParameters.insert(QString(QLatin1String("s%1")).arg(index), element);
         ++index;
@@ -194,7 +194,7 @@ void OnlineSearchMathSciNet::doneFetchingResultPage()
         QUrl url(d->queryUrlStem);
         QUrlQuery query(url);
         QStringList copyParameters = QStringList() << QLatin1String("foo") << QLatin1String("reqargs") << QLatin1String("batch_title");
-        foreach(const QString &param, copyParameters) {
+        foreach (const QString &param, copyParameters) {
             query.addQueryItem(param, formParams[param]);
         }
         query.addQueryItem(QLatin1String("fmt"), QLatin1String("bibtex"));

@@ -110,7 +110,7 @@ public:
                 const QStringList nameComponents = author.split(QLatin1String(" "), QString::SkipEmptyParts);
                 QStringList newNameComponents;
                 /// Camel-case each name component
-                foreach(const QString &nameComponent, nameComponents) {
+                foreach (const QString &nameComponent, nameComponents) {
                     newNameComponents.append(nameComponent[0].toUpper() + nameComponent.mid(1));
                 }
                 /// Re-assemble name from camel-cased components
@@ -265,7 +265,7 @@ QString IdSuggestions::formatId(const Entry &entry, const QString &formatStr) co
 {
     QString id;
     QStringList tokenList = formatStr.split(QLatin1String("|"), QString::SkipEmptyParts);
-    foreach(const QString &token, tokenList) {
+    foreach (const QString &token, tokenList) {
         id.append(d->translateToken(entry, token));
     }
 
@@ -296,7 +296,7 @@ QStringList IdSuggestions::formatIdList(const Entry &entry) const
 {
     const QStringList formatStrings = d->formatStringList();
     QStringList result;
-    foreach(const QString &formatString, formatStrings) {
+    foreach (const QString &formatString, formatStrings) {
         result << formatId(entry, formatString);
     }
     return result;
@@ -306,7 +306,7 @@ QStringList IdSuggestions::formatStrToHuman(const QString &formatStr) const
 {
     QStringList result;
     QStringList tokenList = formatStr.split(QLatin1String("|"), QString::SkipEmptyParts);
-    foreach(const QString &token, tokenList) {
+    foreach (const QString &token, tokenList) {
         QString text;
         if (token[0] == 'a' || token[0] == 'A' || token[0] == 'z') {
             struct IdSuggestionTokenInfo info = evalToken(token.mid(1));

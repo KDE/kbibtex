@@ -34,7 +34,6 @@
 #include <KParts/Part>
 #include <KParts/ReadOnlyPart>
 #include <KParts/ReadWritePart>
-#include <KIO/NetAccess>
 
 #include "fileimporterpdf.h"
 
@@ -387,8 +386,7 @@ public:
             if (fileUrl.isLocalFile()) {
                 if (!QFileInfo(fileUrl.url(QUrl::PreferLocalFile)).exists())
                     continue;
-            } else if (!KIO::NetAccess::exists(fileUrl, KIO::NetAccess::SourceSide, QApplication::activeWindow()))
-                continue;
+            }
 
             OpenFileInfo *ofi = p->contains(fileUrl);
             if (ofi == NULL) {
@@ -530,13 +528,17 @@ bool OpenFileInfoManager::changeUrl(OpenFileInfo *openFileInfo, const QUrl &url)
 
 bool OpenFileInfoManager::close(OpenFileInfo *openFileInfo)
 {
-    Q_ASSERT_X(openFileInfo != NULL, "void OpenFileInfoManager::close(OpenFileInfo *openFileInfo)", "Cannot close openFileInfo which is NULL");
+    if (openFileInfo == NULL) {
+        qWarning() << "void OpenFileInfoManager::close(OpenFileInfo *openFileInfo): Cannot close openFileInfo which is NULL";
+        return false;
+    }
+
     bool isClosing = false;
     openFileInfo->setLastAccess();
 
     /// remove flag "open" from file to be closed and determine which file to show instead
     OpenFileInfo *nextCurrent = (d->currentFileInfo == openFileInfo) ? NULL : d->currentFileInfo;
-    foreach(OpenFileInfo *ofi, d->openFileInfoList) {
+    foreach (OpenFileInfo *ofi, d->openFileInfoList) {
         if (!isClosing && ofi == openFileInfo && openFileInfo->close()) {
             isClosing = true;
             /// Mark file as closed (i.e. not open)
@@ -564,7 +566,7 @@ bool OpenFileInfoManager::queryCloseAll()
     OpenFileInfoList restoreLaterList;
 
     /// For each file known ...
-    foreach(OpenFileInfo *openFileInfo, d->openFileInfoList) {
+    foreach (OpenFileInfo *openFileInfo, d->openFileInfoList) {
         /// Check only open file (ignore recently used, favorites, ...)
         if (openFileInfo->flags().testFlag(OpenFileInfo::Open)) {
             if (openFileInfo->close()) {
@@ -591,7 +593,7 @@ bool OpenFileInfoManager::queryCloseAll()
         /// This makes the files to be reopened when KBibTeX is
         /// restarted again (assuming that this function was
         /// called when KBibTeX is exiting).
-        foreach(OpenFileInfo *openFileInfo, restoreLaterList) {
+        foreach (OpenFileInfo *openFileInfo, restoreLaterList) {
             openFileInfo->addFlags(OpenFileInfo::Open);
         }
 

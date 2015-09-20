@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2015 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -15,46 +15,53 @@
  *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
  ***************************************************************************/
 
-#ifndef KBIBTEX_ONLINESEARCH_PUBMED_H
-#define KBIBTEX_ONLINESEARCH_PUBMED_H
+#ifndef KBIBTEX_GUI_SORTFILTERFILEMODEL_H
+#define KBIBTEX_GUI_SORTFILTERFILEMODEL_H
 
-#include "onlinesearchabstract.h"
+#include "kbibtexgui_export.h"
+
+#include <QSortFilterProxyModel>
+
+#include "models/filemodel.h"
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
-class KBIBTEXNETWORKING_EXPORT OnlineSearchPubMed : public OnlineSearchAbstract
+class KBIBTEXGUI_EXPORT SortFilterFileModel : public QSortFilterProxyModel
 {
     Q_OBJECT
 
 public:
-    explicit OnlineSearchPubMed(QWidget *parent);
-    ~OnlineSearchPubMed();
+    enum FilterCombination {AnyTerm = 0, EveryTerm = 1 };
+    struct FilterQuery {
+        QStringList terms;
+        FilterCombination combination;
+        QString field;
+        bool searchPDFfiles;
+    };
 
-    virtual void startSearch();
-    virtual void startSearch(const QMap<QString, QString> &query, int numResults);
-    virtual QString label() const;
-    virtual OnlineSearchQueryFormAbstract *customWidget(QWidget *parent);
-    virtual QUrl homepage() const;
+    explicit SortFilterFileModel(QObject *parent = 0);
 
-    static const int maxNumResults;
-    static const uint queryChokeTimeout;
+    virtual void setSourceModel(QAbstractItemModel *model);
+    FileModel *fileSourceModel() const;
 
 public slots:
-    void cancel();
+    void updateFilter(SortFilterFileModel::FilterQuery);
 
 protected:
-    virtual QString favIconUrl() const;
-
-private slots:
-    void eSearchDone();
-    void eFetchDone();
+    virtual bool lessThan(const QModelIndex &left, const QModelIndex &right) const;
+    virtual bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const;
 
 private:
-    class OnlineSearchPubMedPrivate;
-    OnlineSearchPubMedPrivate *d;
+    FileModel *m_internalModel;
+    SortFilterFileModel::FilterQuery m_filterQuery;
 
-    static uint lastQueryEpoch;
+    KSharedConfigPtr config;
+    static const QString configGroupName;
+    bool m_showComments, m_showMacros;
+
+    void loadState();
+    bool simpleLessThan(const QModelIndex &left, const QModelIndex &right) const;
 };
 
-#endif // KBIBTEX_ONLINESEARCH_PUBMED_H
+#endif // KBIBTEX_GUI_SORTFILTERFILEMODEL_H

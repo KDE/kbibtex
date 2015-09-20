@@ -27,6 +27,7 @@
 #include <KLocalizedString>
 
 #include "file.h"
+#include "models/filemodel.h"
 #include "entry.h"
 
 EntryClique::EntryClique()
@@ -96,9 +97,9 @@ void EntryClique::setChosenValue(const QString &field, Value &value, ValueOperat
     }
     case AddValue: {
         QString text = PlainTextValue::text(value);
-        foreach(const Value &value, chosenValueMap[field])
-        if (PlainTextValue::text(value) == text)
-            return;
+        foreach (const Value &value, chosenValueMap[field])
+            if (PlainTextValue::text(value) == text)
+                return;
         chosenValueMap[field] << value;
         break;
     }
@@ -126,45 +127,45 @@ void EntryClique::recalculateValueMap()
 
     /// go through each and every entry ...
     const QList<QSharedPointer<Entry> > el = entryList();
-    foreach(QSharedPointer<Entry> entry, el)
-    if (isEntryChecked(entry)) {
+    foreach (QSharedPointer<Entry> entry, el)
+        if (isEntryChecked(entry)) {
 
-        /// cover entry type
-        Value v;
-        v.append(QSharedPointer<VerbatimText>(new VerbatimText(entry->type())));
-        insertKeyValueToValueMap(QLatin1String("^type"), v, entry->type());
+            /// cover entry type
+            Value v;
+            v.append(QSharedPointer<VerbatimText>(new VerbatimText(entry->type())));
+            insertKeyValueToValueMap(QLatin1String("^type"), v, entry->type());
 
-        /// cover entry id
-        v.clear();
-        v.append(QSharedPointer<VerbatimText>(new VerbatimText(entry->id())));
-        insertKeyValueToValueMap(QLatin1String("^id"), v, entry->id());
+            /// cover entry id
+            v.clear();
+            v.append(QSharedPointer<VerbatimText>(new VerbatimText(entry->id())));
+            insertKeyValueToValueMap(QLatin1String("^id"), v, entry->id());
 
-        /// go through each and every field of this entry
-        for (Entry::ConstIterator fieldIt = entry->constBegin(); fieldIt != entry->constEnd(); ++fieldIt) {
-            /// store both field name and value for later reference
-            const QString fieldName = fieldIt.key().toLower();
-            const Value fieldValue = fieldIt.value();
+            /// go through each and every field of this entry
+            for (Entry::ConstIterator fieldIt = entry->constBegin(); fieldIt != entry->constEnd(); ++fieldIt) {
+                /// store both field name and value for later reference
+                const QString fieldName = fieldIt.key().toLower();
+                const Value fieldValue = fieldIt.value();
 
-            if (fieldName == Entry::ftKeywords || fieldName == Entry::ftUrl) {
-                foreach(QSharedPointer<ValueItem> vi, fieldValue) {
-                    const QString text = PlainTextValue::text(*vi);
-                    Value v;
-                    v << vi;
-                    insertKeyValueToValueMap(fieldName, v, text);
+                if (fieldName == Entry::ftKeywords || fieldName == Entry::ftUrl) {
+                    foreach (QSharedPointer<ValueItem> vi, fieldValue) {
+                        const QString text = PlainTextValue::text(*vi);
+                        Value v;
+                        v << vi;
+                        insertKeyValueToValueMap(fieldName, v, text);
+                    }
+                } else {
+                    const QString fieldValueText = PlainTextValue::text(fieldValue);
+                    insertKeyValueToValueMap(fieldName, fieldValue, fieldValueText);
                 }
-            } else {
-                const QString fieldValueText = PlainTextValue::text(fieldValue);
-                insertKeyValueToValueMap(fieldName, fieldValue, fieldValueText);
             }
         }
-    }
 
     QList<QString> fl = fieldList();
-    foreach(const QString &fieldName, fl)
-    if (valueMap[fieldName].count() < 2) {
-        valueMap.remove(fieldName);
-        chosenValueMap.remove(fieldName);
-    }
+    foreach (const QString &fieldName, fl)
+        if (valueMap[fieldName].count() < 2) {
+            valueMap.remove(fieldName);
+            chosenValueMap.remove(fieldName);
+        }
 }
 
 void EntryClique::insertKeyValueToValueMap(const QString &fieldName, const Value &fieldValue, const QString &fieldValueText)
@@ -177,11 +178,11 @@ void EntryClique::insertKeyValueToValueMap(const QString &fieldName, const Value
 
         bool alreadyContained = false;
         QList<Value> alternatives = valueMap[fieldName];
-        foreach(const Value &v, alternatives)
-        if (PlainTextValue::text(v) == fieldValueText) {
-            alreadyContained = true;
-            break;
-        }
+        foreach (const Value &v, alternatives)
+            if (PlainTextValue::text(v) == fieldValueText) {
+                alreadyContained = true;
+                break;
+            }
 
         if (!alreadyContained) {
             alternatives << fieldValue;
@@ -496,17 +497,17 @@ MergeDuplicates::~MergeDuplicates()
     delete d;
 }
 
-bool MergeDuplicates::mergeDuplicateEntries(const QList<EntryClique *> &entryCliques, File *file)
+bool MergeDuplicates::mergeDuplicateEntries(const QList<EntryClique *> &entryCliques, FileModel *fileModel)
 {
     bool didMerge = false;
 
-    foreach(EntryClique *entryClique, entryCliques) {
+    foreach (EntryClique *entryClique, entryCliques) {
         /// Avoid adding fields 20 lines below
         /// which have been remove (not added) 10 lines below
         QSet<QString> coveredFields;
 
         Entry *mergedEntry = new Entry(QString(), QString());
-        foreach(const QString &field, entryClique->fieldList()) {
+        foreach (const QString &field, entryClique->fieldList()) {
             coveredFields << field;
             if (field == QLatin1String("^id"))
                 mergedEntry->setId(PlainTextValue::text(entryClique->chosenValue(field)));
@@ -514,7 +515,7 @@ bool MergeDuplicates::mergeDuplicateEntries(const QList<EntryClique *> &entryCli
                 mergedEntry->setType(PlainTextValue::text(entryClique->chosenValue(field)));
             else {
                 Value combined;
-                foreach(const Value &v, entryClique->chosenValues(field)) {
+                foreach (const Value &v, entryClique->chosenValues(field)) {
                     combined.merge(v);
                 }
                 if (!combined.isEmpty())
@@ -523,7 +524,8 @@ bool MergeDuplicates::mergeDuplicateEntries(const QList<EntryClique *> &entryCli
         }
 
         bool actuallyMerged = false;
-        foreach(const QSharedPointer<Entry> &entry, entryClique->entryList()) {
+        int preferredInsertionRow = -1;
+        foreach (const QSharedPointer<Entry> &entry, entryClique->entryList()) {
             /// if merging entries with identical ids, the merged entry will not yet have an id (is null)
             if (mergedEntry->id().isEmpty())
                 mergedEntry->setId(entry->id());
@@ -541,126 +543,19 @@ bool MergeDuplicates::mergeDuplicateEntries(const QList<EntryClique *> &entryCli
                         mergedEntry->insert(it.key(), it.value());
                         coveredFields << it.key();
                     }
-                // TODO needs to be rewritten if File shall be based on QVector instead of QList
-                file->removeOne(QSharedPointer<Entry>(entry));
+                const int row = fileModel->row(entry);
+                if (preferredInsertionRow < 0) preferredInsertionRow = row;
+                fileModel->removeRow(row);
             }
         }
 
-        if (actuallyMerged)
-            file->append(QSharedPointer<Entry>(mergedEntry));
-        else
+        if (actuallyMerged) {
+            if (preferredInsertionRow < 0) preferredInsertionRow = fileModel->rowCount();
+            fileModel->insertRow(QSharedPointer<Entry>(mergedEntry), preferredInsertionRow);
+        } else
             delete mergedEntry;
         didMerge |= actuallyMerged;
     }
 
     return didMerge;
-}
-
-bool MergeDuplicates::mergeDuplicateEntriesAuto(const QList<EntryClique *> &entryCliques, File *file, const QString &sortCriteriumField, MergePriority mergePriority)
-{
-    /**
-     * Same procedure for each clique ...
-     */
-    foreach(EntryClique *entryClique, entryCliques) {
-        /// Create a new entry which will eventually replace the clique's Entries
-        Entry *mergedEntry = new Entry(QString(), QString());
-
-        /// Sort entries in clique according into sortedEntries
-        /// according to values in field sortCriteriumField and
-        /// mergePriority.
-        QLinkedList<QSharedPointer<Entry> > sortedEntries;
-        foreach(QSharedPointer<Entry> entry, entryClique->entryList()) {
-            if (sortedEntries.isEmpty())
-                /// Just started sorting, append first entry
-                sortedEntries.append(entry);
-            else {
-                /// Get string, number and date based on current,
-                /// unsorted Entry
-                const QString a = PlainTextValue::text(entry->value(sortCriteriumField));
-                const int ai = a.toInt();
-                const QDate aDate = QDate::fromString(a, Qt::ISODate);
-
-                QLinkedList<QSharedPointer<Entry> >::Iterator it;
-                for (it = sortedEntries.begin(); it != sortedEntries.end(); ++it) {
-                    /// Get string, number and date based on iterator's
-                    /// current Entry in sortedEntries list
-                    const QString b = PlainTextValue::text((*it)->value(sortCriteriumField));
-                    const int bi = b.toInt();
-                    const QDate bDate = QDate::fromString(b, Qt::ISODate);
-
-                    /// Compare a and b based on merge priority
-                    if (mergePriority == ISODateEarlier) {
-                        if (aDate > bDate) {
-                            sortedEntries.insert(it, entry);
-                            break;
-                        }
-                    } else if (mergePriority == ISODateLater) {
-                        if (aDate <= bDate) {
-                            sortedEntries.insert(it, entry);
-                            break;
-                        }
-                    } else if (mergePriority == NumericHigher) {
-                        if (ai > bi) {
-                            sortedEntries.insert(it, entry);
-                            break;
-                        }
-                    } else if (mergePriority == NumericLower) {
-                        if (ai <= bi) {
-                            sortedEntries.insert(it, entry);
-                            break;
-                        }
-                    } else if (mergePriority == LexicallyEarlier) {
-                        if (a.compare(b, Qt::CaseSensitive) < 0) {
-                            sortedEntries.insert(it, entry);
-                            break;
-                        }
-                    } else if (mergePriority == LexicallyLater) {
-                        if (a.compare(b, Qt::CaseSensitive) >= 0) {
-                            sortedEntries.insert(it, entry);
-                            break;
-                        }
-                    } else if (mergePriority == LexicallyEarlierCaseInsensitive) {
-                        if (a.compare(b, Qt::CaseInsensitive) < 0) {
-                            sortedEntries.insert(it, entry);
-                            break;
-                        }
-                    } else if (mergePriority == LexicallyLaterCaseInsensitive) {
-                        if (a.compare(b, Qt::CaseInsensitive) >= 0) {
-                            sortedEntries.insert(it, entry);
-                            break;
-                        }
-                    }
-                }
-
-                if (it == sortedEntries.end()) {
-                    /// Not inserted at all...
-                    /// Do not forget it, just append it;
-                    /// will get lowest priority in merging process
-                    sortedEntries.append(entry);
-                }
-            }
-        }
-
-        /// Copy ID and type from first Entry in sorted list (highest priority)
-        mergedEntry->setId(sortedEntries.first()->id());
-        mergedEntry->setType(sortedEntries.first()->type());
-
-        /// Fill new entry by copying values from clique's Entries.
-        /// Sorting ensures that Entries matching sorting criteries
-        /// get higher priority
-        foreach(QSharedPointer<Entry> entry, sortedEntries) {
-            for (Entry::ConstIterator it = entry->constBegin(); it != entry->constEnd(); ++it)
-                if (!mergedEntry->contains(it.key()))
-                    mergedEntry->insert(it.key(), it.value());
-
-            /// Removed harvested Entries
-            // TODO needs to be rewritten if File shall be based on QVector instead of QList
-            file->removeOne(QSharedPointer<Entry>(entry));
-        }
-
-        /// Insert merged Entries
-        file->append(QSharedPointer<Entry>(mergedEntry));
-    }
-
-    return true;
 }

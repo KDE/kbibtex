@@ -163,33 +163,33 @@ QSet<QString> File::uniqueEntryValuesSet(const QString &fieldName) const
         if (!entry.isNull())
             for (Entry::ConstIterator it = entry->constBegin(); it != entry->constEnd(); ++it)
                 if (it.key().toLower() == lcFieldName)
-                    foreach(const QSharedPointer<ValueItem> &valueItem, it.value()) {
-                    /// Check if ValueItem to process points to a person
-                    const QSharedPointer<Person> person = valueItem.dynamicCast<Person>();
-                    if (!person.isNull()) {
-                        /// Assemble a list of formatting templates for a person's name
-                        static QStringList personNameFormattingList; ///< use static to do pattern assembly only once
-                        if (personNameFormattingList.isEmpty()) {
-                            /// Use the two default patterns last-name-first and first-name-first
-                            personNameFormattingList << Preferences::personNameFormatLastFirst << Preferences::personNameFormatFirstLast;
-                            /// Check configuration if user-specified formatting template is different
-                            KSharedConfigPtr config(KSharedConfig::openConfig(QLatin1String("kbibtexrc")));
-                            KConfigGroup configGroup(config, "General");
-                            QString personNameFormatting = configGroup.readEntry(Preferences::keyPersonNameFormatting, Preferences::defaultPersonNameFormatting);
-                            /// Add user's template if it differs from the two specified above
-                            if (!personNameFormattingList.contains(personNameFormatting))
-                                personNameFormattingList << personNameFormatting;
+                    foreach (const QSharedPointer<ValueItem> &valueItem, it.value()) {
+                        /// Check if ValueItem to process points to a person
+                        const QSharedPointer<Person> person = valueItem.dynamicCast<Person>();
+                        if (!person.isNull()) {
+                            /// Assemble a list of formatting templates for a person's name
+                            static QStringList personNameFormattingList; ///< use static to do pattern assembly only once
+                            if (personNameFormattingList.isEmpty()) {
+                                /// Use the two default patterns last-name-first and first-name-first
+                                personNameFormattingList << Preferences::personNameFormatLastFirst << Preferences::personNameFormatFirstLast;
+                                /// Check configuration if user-specified formatting template is different
+                                KSharedConfigPtr config(KSharedConfig::openConfig(QLatin1String("kbibtexrc")));
+                                KConfigGroup configGroup(config, "General");
+                                QString personNameFormatting = configGroup.readEntry(Preferences::keyPersonNameFormatting, Preferences::defaultPersonNameFormatting);
+                                /// Add user's template if it differs from the two specified above
+                                if (!personNameFormattingList.contains(personNameFormatting))
+                                    personNameFormattingList << personNameFormatting;
+                            }
+                            /// Add person's name formatted using each of the templates assembled above
+                            foreach (const QString &personNameFormatting, personNameFormattingList) {
+                                valueSet.insert(Person::transcribePersonName(person.data(), personNameFormatting));
+                            }
+                        } else {
+                            /// Default case: use PlainTextValue::text to translate ValueItem
+                            /// to a human-readable text
+                            valueSet.insert(PlainTextValue::text(*valueItem));
                         }
-                        /// Add person's name formatted using each of the templates assembled above
-                        foreach(const QString &personNameFormatting, personNameFormattingList) {
-                            valueSet.insert(Person::transcribePersonName(person.data(), personNameFormatting));
-                        }
-                    } else {
-                        /// Default case: use PlainTextValue::text to translate ValueItem
-                        /// to a human-readable text
-                        valueSet.insert(PlainTextValue::text(*valueItem));
                     }
-                }
     }
 
     return valueSet;

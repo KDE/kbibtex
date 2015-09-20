@@ -65,7 +65,7 @@ bool BibUtils::available() {
         /// Test a number of known BibUtils programs
         static const QStringList programs = QStringList() << QLatin1String("bib2xml") << QLatin1String("isi2xml") << QLatin1String("ris2xml") << QLatin1String("end2xml");
         state = avail;
-        foreach(const QString &program, programs) {
+        foreach (const QString &program, programs) {
             const QString fullPath = QStandardPaths::findExecutable(program);
             if (fullPath.isEmpty()) {
                 state = unavail; ///< missing a single program is reason to assume that BibUtils is not correctly installed
@@ -107,7 +107,7 @@ bool BibUtils::convert(QIODevice &source, const BibUtils::Format &sourceFormat, 
     case RIS: bibUtilsProgram = QLatin1String("ris"); break;
     case EndNote: bibUtilsProgram = QLatin1String("end"); break;
     case EndNoteXML: bibUtilsProgram = QLatin1String("endx"); break;
-        /// case ADS not supported by BibUtils
+    /// case ADS not supported by BibUtils
     case WordBib: bibUtilsProgram = QLatin1String("wordbib"); break;
     case Copac: bibUtilsProgram = QLatin1String("copac"); break;
     case Med: bibUtilsProgram = QLatin1String("med"); break;
@@ -122,15 +122,15 @@ bool BibUtils::convert(QIODevice &source, const BibUtils::Format &sourceFormat, 
     switch (destinationFormat) {
     case MODS: bibUtilsProgram.append(QLatin1String("xml")); break;
     case BibTeX: bibUtilsProgram.append(QLatin1String("bib")); break;
-        /// case BibLaTeX not supported by BibUtils
+    /// case BibLaTeX not supported by BibUtils
     case ISI: bibUtilsProgram.append(QLatin1String("isi")); break;
     case RIS: bibUtilsProgram.append(QLatin1String("ris")); break;
     case EndNote: bibUtilsProgram.append(QLatin1String("end")); break;
-        /// case EndNoteXML not supported by BibUtils
+    /// case EndNoteXML not supported by BibUtils
     case ADS: bibUtilsProgram.append(QLatin1String("ads")); break;
     case WordBib: bibUtilsProgram.append(QLatin1String("wordbib")); break;
-        /// case Copac not supported by BibUtils
-        /// case Med not supported by BibUtils
+    /// case Copac not supported by BibUtils
+    /// case Med not supported by BibUtils
     default:
         qWarning() << "Unsupported BibUtils output format:" << destinationFormat;
         return false;

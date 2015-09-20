@@ -29,7 +29,8 @@
 #include "file.h"
 #include "clipboard.h"
 #include "fileview.h"
-#include "filemodel.h"
+#include "filedelegate.h"
+#include "models/filemodel.h"
 #include "idsuggestions.h"
 
 class SearchResults::SearchResultsPrivate
@@ -118,8 +119,7 @@ public:
     }
 
     void clear() {
-        file->clear();
-        resultList->fileModel()->reset();
+        resultList->fileModel()->clear();
     }
 
     bool insertElement(QSharedPointer<Element> element) {

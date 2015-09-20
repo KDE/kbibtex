@@ -21,7 +21,7 @@
 
 #include <QWidget>
 
-#include "filemodel.h"
+#include "sortfilterfilemodel.h"
 
 /**
 @author Thomas Fischer

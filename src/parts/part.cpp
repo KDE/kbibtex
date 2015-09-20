@@ -75,7 +75,7 @@
 #include "fileexporterbibtex2html.h"
 #include "fileexporterxml.h"
 #include "fileexporterxslt.h"
-#include "filemodel.h"
+#include "models/filemodel.h"
 #include "filesettingswidget.h"
 #include "filterbar.h"
 #include "findduplicatesui.h"
@@ -632,7 +632,7 @@ void KBibTeXPart::setupActions()
     QAction *filterWidgetAction = new QAction(i18n("Filter"), this);
     actionCollection()->addAction("toolbar_filter_widget", filterWidgetAction);
     filterWidgetAction->setIcon(QIcon::fromTheme("view-filter"));
-    filterWidgetAction->setShortcut(Qt::CTRL + Qt::Key_F);
+    actionCollection()->setDefaultShortcut(filterWidgetAction, Qt::CTRL + Qt::Key_F);
     connect(filterWidgetAction, SIGNAL(triggered()), d->partWidget->filterBar(), SLOT(setFocus()));
     d->partWidget->filterBar()->setPlaceholderText(i18n("Filter bibliographic entries (%1)", filterWidgetAction->shortcut().toString()));
 
@@ -642,7 +642,7 @@ void KBibTeXPart::setupActions()
     newElementAction->setMenu(newElementMenu);
     connect(newElementAction, SIGNAL(triggered()), this, SLOT(newEntryTriggered()));
     QAction *newEntry = newElementMenu->addAction(QIcon::fromTheme("address-book-new"), i18n("New entry"));
-    newEntry->setShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_N);
+    actionCollection()->setDefaultShortcut(newEntry, Qt::CTRL + Qt::SHIFT + Qt::Key_N);
     connect(newEntry, SIGNAL(triggered()), d->signalMapperNewElement, SLOT(map()));
     d->signalMapperNewElement->setMapping(newEntry, smEntry);
     QAction *newComment = newElementMenu->addAction(QIcon::fromTheme("address-book-new"), i18n("New comment"));
@@ -656,11 +656,11 @@ void KBibTeXPart::setupActions()
     d->signalMapperNewElement->setMapping(newPreamble, smPreamble);
     connect(d->signalMapperNewElement, SIGNAL(mapped(int)), this, SLOT(newElementTriggered(int)));
     d->elementEditAction = new QAction(QIcon::fromTheme("document-edit"), i18n("Edit Element"), this);
-    d->elementEditAction->setShortcut(Qt::CTRL + Qt::Key_E);
+    actionCollection()->setDefaultShortcut(d->elementEditAction, Qt::CTRL + Qt::Key_E);
     actionCollection()->addAction(QLatin1String("element_edit"),  d->elementEditAction);
     connect(d->elementEditAction, SIGNAL(triggered()), d->partWidget->fileView(), SLOT(editCurrentElement()));
     d->elementViewDocumentAction = new QAction(QIcon::fromTheme("application-pdf"), i18n("View Document"), this);
-    d->elementViewDocumentAction->setShortcut(Qt::CTRL + Qt::Key_D);
+    actionCollection()->setDefaultShortcut(d->elementViewDocumentAction, Qt::CTRL + Qt::Key_D);
     actionCollection()->addAction(QLatin1String("element_viewdocument"),  d->elementViewDocumentAction);
     connect(d->elementViewDocumentAction, SIGNAL(triggered()), this, SLOT(elementViewDocument()));
 
@@ -675,12 +675,12 @@ void KBibTeXPart::setupActions()
     Clipboard *clipboard = new Clipboard(d->partWidget->fileView());
 
     d->editCopyReferencesAction = new QAction(QIcon::fromTheme("edit-copy"), i18n("Copy References"), this);
-    d->editCopyReferencesAction->setShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_C);
+    actionCollection()->setDefaultShortcut(d->editCopyReferencesAction, Qt::CTRL + Qt::SHIFT + Qt::Key_C);
     actionCollection()->addAction(QLatin1String("edit_copy_references"),  d->editCopyReferencesAction);
     connect(d->editCopyReferencesAction, SIGNAL(triggered()), clipboard, SLOT(copyReferences()));
 
     d->editDeleteAction = new QAction(QIcon::fromTheme("edit-table-delete-row"), i18n("Delete"), this);
-    d->editDeleteAction->setShortcut(Qt::Key_Delete);
+    actionCollection()->setDefaultShortcut(d->editDeleteAction, Qt::Key_Delete);
     actionCollection()->addAction(QLatin1String("edit_delete"),  d->editDeleteAction);
     connect(d->editDeleteAction, SIGNAL(triggered()), d->partWidget->fileView(), SLOT(selectionDelete()));
 
@@ -708,7 +708,7 @@ void KBibTeXPart::setupActions()
     // TODO
 
     connect(d->partWidget->fileView(), SIGNAL(selectedElementsChanged()), this, SLOT(updateActions()));
-    connect(d->partWidget->fileView(), SIGNAL(currentElementChanged(QSharedPointer<Element>,File*)), this, SLOT(updateActions()));
+    connect(d->partWidget->fileView(), &FileView::currentElementChanged, this, &KBibTeXPart::updateActions);
 
     d->partWidget->fileView()->addAction(d->elementFindPDFAction);
     d->partWidget->fileView()->addAction(d->entryApplyDefaultFormatString);
@@ -787,7 +787,7 @@ bool KBibTeXPart::documentSaveAs()
 
     // TODO how does SaveAs dialog know which mime types to support?
     if (KParts::ReadWritePart::saveAs(newUrl)) {
-        d->model->bibliographyFile()->setProperty(File::Url, newUrl);
+        // FIXME d->model->bibliographyFile()->setProperty(File::Url, newUrl);
         return true;
     } else
         return false;
@@ -862,7 +862,7 @@ void KBibTeXPart::elementFindPDF()
 void KBibTeXPart::applyDefaultFormatString()
 {
     QModelIndexList mil = d->partWidget->fileView()->selectionModel()->selectedRows();
-    foreach(const QModelIndex &index, mil) {
+    foreach (const QModelIndex &index, mil) {
         QSharedPointer<Entry> entry = d->partWidget->fileView()->fileModel()->element(d->partWidget->fileView()->sortFilterProxyModel()->mapToSource(index).row()).dynamicCast<Entry>();
         if (!entry.isNull()) {
             static IdSuggestions idSuggestions;

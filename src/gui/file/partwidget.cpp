@@ -21,6 +21,7 @@
 
 #include "filterbar.h"
 #include "fileview.h"
+#include "filedelegate.h"
 
 class PartWidget::Private
 {

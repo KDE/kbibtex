@@ -19,8 +19,7 @@
 #define KBIBTEX_GUI_HIDINGTABWIDGET_H
 
 #include <QSet>
-
-#include <KTabWidget>
+#include <QTabWidget>
 
 /**
  * @brief The HidingTabWidget class to hide and show tabs in a QTabWidget.
@@ -30,7 +29,7 @@
  *
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
-class HidingTabWidget : public KTabWidget
+class HidingTabWidget : public QTabWidget
 {
 public:
     /// Negative value to describe an invalid tab position

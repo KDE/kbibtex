@@ -57,7 +57,7 @@ public:
     ~DocumentPreview();
 
 public slots:
-    void setElement(QSharedPointer<Element>, File *);
+    void setElement(QSharedPointer<Element>, const File *);
     void setBibTeXUrl(const QUrl &);
 
 private:

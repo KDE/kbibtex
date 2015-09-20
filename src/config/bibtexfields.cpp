@@ -81,7 +81,7 @@ public:
             fd->defaultWidth = configGroup.readEntry("DefaultWidth", 10);
             fd->defaultVisible = configGroup.readEntry("Visible", true);
 
-            foreach(const QString &treeViewName, treeViewNames) {
+            foreach (const QString &treeViewName, treeViewNames) {
                 fd->width.insert(treeViewName, configGroup.readEntry("Width_" + treeViewName, fd->defaultWidth));
                 fd->visible.insert(treeViewName, configGroup.readEntry("Visible_" + treeViewName,  fd->defaultVisible));
             }
@@ -104,7 +104,7 @@ public:
 
         QStringList treeViewNames;
         int columnCount = 0;
-        foreach(const FieldDescription *fd, *p) {
+        foreach (const FieldDescription *fd, *p) {
             ++columnCount;
             QString groupName = QString("Column%1").arg(columnCount);
             KConfigGroup configGroup(layoutConfig, groupName);

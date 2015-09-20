@@ -7,11 +7,12 @@ set(
     field/fieldlistedit.cpp
     field/colorlabelwidget.cpp
     file/fileview.cpp
+    file/filedelegate.cpp
     file/partwidget.cpp
     file/findduplicatesui.cpp
     file/clipboard.cpp
-    file/filemodel.cpp
     file/basicfileview.cpp
+    file/sortfilterfilemodel.cpp
     element/elementeditor.cpp
     element/elementwidgets.cpp
     element/findpdfui.cpp
@@ -62,8 +63,9 @@ set(
     file/findduplicatesui.h
     file/basicfileview.h
     file/clipboard.h
-    file/filemodel.h
     file/fileview.h
+    file/filedelegate.h
+    file/sortfilterfilemodel.h
     file/partwidget.h
     element/findpdfui.h
     element/elementeditor.h

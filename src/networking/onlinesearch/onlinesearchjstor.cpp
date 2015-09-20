@@ -78,21 +78,21 @@ void OnlineSearchJStor::startSearch(const QMap<QString, QString> &query, int num
     q.addQueryItem("hp", QString::number(numResults)); /// hits per page
     int queryNumber = 0;
     QStringList elements = splitRespectingQuotationMarks(query[queryKeyTitle]);
-    foreach(const QString &element, elements) {
+    foreach (const QString &element, elements) {
         if (queryNumber > 0) q.addQueryItem(QString("c%1").arg(queryNumber), "AND"); ///< join search terms with an AND operation
         q.addQueryItem(QString("f%1").arg(queryNumber), "ti");
         q.addQueryItem(QString("q%1").arg(queryNumber), element);
         ++queryNumber;
     }
     elements = splitRespectingQuotationMarks(query[queryKeyAuthor]);
-    foreach(const QString &element, elements) {
+    foreach (const QString &element, elements) {
         if (queryNumber > 0) q.addQueryItem(QString("c%1").arg(queryNumber), "AND"); ///< join search terms with an AND operation
         q.addQueryItem(QString("f%1").arg(queryNumber), "au");
         q.addQueryItem(QString("q%1").arg(queryNumber), element);
         ++queryNumber;
     }
     elements = splitRespectingQuotationMarks(query[queryKeyFreeText]);
-    foreach(const QString &element, elements) {
+    foreach (const QString &element, elements) {
         if (queryNumber > 0) q.addQueryItem(QString("c%1").arg(queryNumber), "AND"); ///< join search terms with an AND operation
         q.addQueryItem(QString("f%1").arg(queryNumber), "all");
         q.addQueryItem(QString("q%1").arg(queryNumber), element);
@@ -197,7 +197,7 @@ void OnlineSearchJStor::doneFetchingResultPage()
             query.addQueryItem("userAction", "export");
             query.addQueryItem("format", "bibtex"); /// request BibTeX format
             query.addQueryItem("include", "abs"); /// include abstracts
-            foreach(const QString &doi, uniqueDOIs) {
+            foreach (const QString &doi, uniqueDOIs) {
                 query.addQueryItem("doi", doi);
             }
             bibTeXUrl.setQuery(query);

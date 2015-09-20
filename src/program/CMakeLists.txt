@@ -84,7 +84,6 @@ target_link_libraries( kbibtex
     KF5::KIOFileWidgets
     KF5::KIOWidgets
     KF5::KIONTLM
-    KF5::KDELibs4Support
     kbibtexio
     kbibtexgui
     kbibtexnetworking
@@ -138,7 +137,7 @@ install(
 
 install(
     PROGRAMS
-    kbibtex.desktop
+    org.kde.kbibtex.desktop
     DESTINATION
     ${XDG_APPS_INSTALL_DIR}
 )

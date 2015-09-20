@@ -28,6 +28,7 @@
 #include <QtCore/QPointer>
 #include <QPushButton>
 #include <QAction>
+#include <QDialogButtonBox>
 
 #include <KLineEdit>
 #include <KComboBox>
@@ -528,7 +529,7 @@ public:
             delete widgetList.takeFirst();
 
         QStringList tokenList = formatString.split(QLatin1String("|"), QString::SkipEmptyParts);
-        foreach(const QString &token, tokenList) {
+        foreach (const QString &token, tokenList) {
             TokenWidget *tokenWidget = NULL;
 
             if (token[0] == 'a' || token[0] == 'A' || token[0] == 'z') {
@@ -576,7 +577,7 @@ public:
     QString apply() {
         QStringList result;
 
-        foreach(TokenWidget *widget, widgetList) {
+        foreach (TokenWidget *widget, widgetList) {
             result << widget->toString();
         }
 
@@ -659,23 +660,26 @@ void IdSuggestionsEditWidget::addToken(int cmd)
     updatePreview();
 }
 
-IdSuggestionsEditDialog::IdSuggestionsEditDialog(QWidget *parent, Qt::WFlags flags)
-        : KDialog(parent, flags)
+IdSuggestionsEditDialog::IdSuggestionsEditDialog(QWidget *parent, Qt::WindowFlags flags)
+        : QDialog(parent, flags)
 {
-    setCaption(i18n("Edit Id Suggestion"));
-    setButtons(KDialog::Ok | KDialog::Cancel);
+    setWindowTitle(i18n("Edit Id Suggestion"));
 }
 
 IdSuggestionsEditDialog::~IdSuggestionsEditDialog()
 {
-    // TODO
+    /// nothing
 }
 
 QString IdSuggestionsEditDialog::editSuggestion(const Entry *previewEntry, const QString &suggestion, QWidget *parent)
 {
     QPointer<IdSuggestionsEditDialog> dlg = new IdSuggestionsEditDialog(parent);
+    QBoxLayout *boxLayout = new QVBoxLayout(dlg);
     IdSuggestionsEditWidget *widget = new IdSuggestionsEditWidget(previewEntry, dlg);
-    dlg->setMainWidget(widget);
+    boxLayout->addWidget(widget);
+    QDialogButtonBox *dbb = new QDialogButtonBox(dlg);
+    dbb->setStandardButtons(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+    boxLayout->addWidget(dbb);
 
     widget->setFormatString(suggestion);
     if (dlg->exec() == Accepted) {

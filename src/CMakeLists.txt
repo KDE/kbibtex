@@ -68,9 +68,9 @@ add_subdirectory(
 add_subdirectory(
     parts
 )
-# add_subdirectory(
-#     test
-# )
+add_subdirectory(
+    test
+)
 
 # install(
 #     FILES

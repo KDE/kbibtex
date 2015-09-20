@@ -57,15 +57,6 @@ target_link_libraries( kbibtexpart
     kbibtexproc
 )
 
-set_target_properties(
-    kbibtexpart
-    PROPERTIES
-    VERSION
-    ${LIB_VERSION}
-    SOVERSION
-    ${LIB_SOVERSION}
-)
-
 add_dependencies( kbibtexpart
     GITrevisionPart
 )

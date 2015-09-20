@@ -38,7 +38,7 @@ class ElementForm::ElementFormPrivate
 private:
     ElementForm *p;
     QGridLayout *layout;
-    File *file;
+    const File *file;
 
 public:
     ElementEditor *elementEditor;
@@ -110,7 +110,7 @@ public:
         loadElement(element, file);
     }
 
-    void loadElement(QSharedPointer<Element> element, File *file) {
+    void loadElement(QSharedPointer<Element> element, const File *file) {
         /// store both element and file for later refresh
         this->element = element;
         this->file = file;
@@ -174,7 +174,7 @@ ElementForm::~ElementForm()
     delete d;
 }
 
-void ElementForm::setElement(QSharedPointer<Element> element, File *file)
+void ElementForm::setElement(QSharedPointer<Element> element, const File *file)
 {
     /// Test if previous element (1) got modified, (2) the new element isn't
     /// the same as the new one, and (3) the user confirms to apply those

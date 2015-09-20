@@ -34,7 +34,6 @@
 #include <KLocalizedString>
 #include <KSharedConfig>
 #include <KConfigGroup>
-#include <kio/netaccess.h>
 
 #include "menulineedit.h"
 #include "entry.h"
@@ -90,7 +89,7 @@ public:
         widgets.clear();
     }
 
-    void setElement(QSharedPointer<Element> element, File *file) {
+    void setElement(QSharedPointer<Element> element, const File *file) {
         this->element = element;
         this->file = file;
         referenceWidget->setOriginalElement(element);
@@ -355,7 +354,7 @@ public:
 
         /// update the enabled/disabled state of required and optional widgets/fields
         bool forceVisible = actionForceShowAllWidgets->isChecked();
-        foreach(ElementWidget *elementWidget, widgets) {
+        foreach (ElementWidget *elementWidget, widgets) {
             elementWidget->showReqOptWidgets(forceVisible, tempEntry->type());
         }
 
@@ -490,14 +489,14 @@ void ElementEditor::reset()
     emit modified(false);
 }
 
-void ElementEditor::setElement(QSharedPointer<Element> element, File *file)
+void ElementEditor::setElement(QSharedPointer<Element> element, const File *file)
 {
     d->setElement(element, file);
     d->reset();
     emit modified(false);
 }
 
-void ElementEditor::setElement(QSharedPointer<const Element> element, File *file)
+void ElementEditor::setElement(QSharedPointer<const Element> element, const File *file)
 {
     QSharedPointer<Element> clone;
     QSharedPointer<const Entry> entry = element.dynamicCast<const Entry>();

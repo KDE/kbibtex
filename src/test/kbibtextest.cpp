@@ -23,11 +23,13 @@
 #include <QMenu>
 #include <QIcon>
 #include <QDebug>
+#include <QPushButton>
+#include <QAction>
+#include <QListWidget>
+#include <QApplication>
 
-#include <KApplication>
-#include <KPushButton>
-#include <KListWidget>
-#include <KAction>
+#include <KAboutData>
+#include <KIconEffect>
 
 #include <onlinesearchacmportal.h>
 #include <onlinesearcharxiv.h>
@@ -46,13 +48,12 @@
 #include <onlinesearchsciencedirect.h>
 #include <onlinesearchspringerlink.h>
 #include <onlinesearchsoanasaads.h>
-#include "version.h"
 
-QIcon iconOK(QLatin1String("dialog-ok-apply"));
-QIcon iconERROR(QLatin1String("dialog-cancel"));
-QIcon iconINFO(QLatin1String("dialog-information"));
-QIcon iconAUTH(QLatin1String("dialog-password"), NULL, QStringList() << QLatin1String("dialog-cancel"));
-QIcon iconNETWORK(QLatin1String("network-wired"), NULL, QStringList() << QLatin1String("dialog-cancel"));
+static const QIcon iconOK = QIcon::fromTheme(QLatin1String("dialog-ok-apply"));
+static const QIcon iconERROR = QIcon::fromTheme(QLatin1String("dialog-cancel"));
+static const QIcon iconINFO = QIcon::fromTheme(QLatin1String("dialog-information"));
+static const QIcon iconAUTH = QIcon::fromTheme(QLatin1String("dialog-cancel")); // FIXME "dialog-cancel" should be overlay on "dialog-password"
+static const QIcon iconNETWORK = QIcon::fromTheme(QLatin1String("dialog-cancel")); // FIXME "dialog-cancel" should be overlay on "network-wired"
 
 int filenameCounter = 0;
 
@@ -60,25 +61,25 @@ class TestWidget : public QWidget
 {
 private:
     KBibTeXTest *m_parent;
-    KPushButton *buttonStartTest;
+    QPushButton *buttonStartTest;
     QProgressBar *progressBar;
-    KAction *actionStartOnlineSearchTests;
+    QAction *actionStartOnlineSearchTests;
 
 public:
-    KListWidget *messageList;
+    QListWidget *messageList;
 
     TestWidget(KBibTeXTest *parent)
             : QWidget(parent), m_parent(parent) {
         QGridLayout *layout = new QGridLayout(this);
 
-        buttonStartTest = new KPushButton(QIcon::fromTheme("application-x-executable"), QLatin1String("Start Tests"), this);
+        buttonStartTest = new QPushButton(QIcon::fromTheme("application-x-executable"), QLatin1String("Start Tests"), this);
         layout->addWidget(buttonStartTest, 0, 0, 1, 1);
 
         progressBar = new QProgressBar(this);
         layout->addWidget(progressBar, 0, 1, 1, 3);
         progressBar->setVisible(false);
 
-        messageList = new KListWidget(this);
+        messageList = new QListWidget(this);
         layout->addWidget(messageList, 1, 0, 4, 4);
 
         setupMenus();
@@ -101,7 +102,7 @@ public:
         buttonStartTest->setMenu(menu);
 
         /// ** Online Search **
-        actionStartOnlineSearchTests = new KAction(QLatin1String("Online Search"), m_parent);
+        actionStartOnlineSearchTests = new QAction(QLatin1String("Online Search"), m_parent);
         connect(actionStartOnlineSearchTests, SIGNAL(triggered()), m_parent, SLOT(startOnlineSearchTests()));
         menu->addAction(actionStartOnlineSearchTests);
     }
@@ -113,7 +114,7 @@ public:
 };
 
 KBibTeXTest::KBibTeXTest(QWidget *parent)
-        : KDialog(parent), m_running(false), m_isBusy(false)
+        : QDialog(parent), m_running(false), m_isBusy(false)
 {
     m_onlineSearchList << new OnlineSearchAcmPortal(this);
     m_onlineSearchList << new OnlineSearchArXiv(this);
@@ -134,17 +135,17 @@ KBibTeXTest::KBibTeXTest(QWidget *parent)
     m_onlineSearchList << new OnlineSearchSpringerLink(this);
     m_currentOnlineSearch = m_onlineSearchList.constBegin();
 
-    setPlainCaption(QLatin1String("KBibTeX Test Suite"));
-    setButtons(KDialog::Close);
+    setWindowTitle(QLatin1String("KBibTeX Test Suite"));
 
     m_testWidget = new TestWidget(this);
     const int fontSize = m_testWidget->fontMetrics().width(QLatin1Char('a'));
     m_testWidget->setMinimumSize(fontSize * 96, fontSize * 48);
-    setMainWidget(m_testWidget);
+    QBoxLayout *boxLayout = new QVBoxLayout(this);
+    boxLayout->addWidget(m_testWidget);
 
-    connect(this, SIGNAL(closeClicked()), this, SLOT(aboutToQuit()));
+    connect(this, &KBibTeXTest::rejected, this, &KBibTeXTest::aboutToQuit);
 
-    addMessage(QString(QLatin1String("Compiled for %1")).arg(versionNumber), iconINFO);
+    addMessage(QString(QLatin1String("Compiled for %1")).arg(KAboutData::applicationData().version()), iconINFO);
 }
 
 void KBibTeXTest::addMessage(const QString &message, const QIcon &icon)
@@ -153,7 +154,7 @@ void KBibTeXTest::addMessage(const QString &message, const QIcon &icon)
     item->setToolTip(item->text());
     m_testWidget->messageList->addItem(item);
     m_testWidget->messageList->scrollToBottom();
-    kapp->processEvents();
+    qApp->processEvents();
 }
 
 void KBibTeXTest::setBusy(bool isBusy)
@@ -172,7 +173,7 @@ void KBibTeXTest::setBusy(bool isBusy)
 void KBibTeXTest::aboutToQuit()
 {
     m_running = false;
-    QTimer::singleShot(500, kapp, SLOT(quit()));
+    QTimer::singleShot(500, qApp, &QApplication::quit);
 }
 
 void KBibTeXTest::startOnlineSearchTests()
@@ -180,7 +181,7 @@ void KBibTeXTest::startOnlineSearchTests()
     m_running = true;
     setBusy(true);
     m_testWidget->messageList->clear();
-    kapp->processEvents();
+    qApp->processEvents();
     processNextSearch();
 }
 

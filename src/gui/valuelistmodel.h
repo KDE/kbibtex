@@ -15,15 +15,17 @@
  *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
  ***************************************************************************/
 
-#ifndef KBIBTEX_PROGRAM_VALUELISTMODEL_H
-#define KBIBTEX_PROGRAM_VALUELISTMODEL_H
+#ifndef KBIBTEX_GUI_VALUELISTMODEL_H
+#define KBIBTEX_GUI_VALUELISTMODEL_H
+
+#include "kbibtexgui_export.h"
 
 #include <QAbstractTableModel>
 #include <QTreeView>
 #include <QStyledItemDelegate>
 
 #include "notificationhub.h"
-#include "filemodel.h"
+#include "models/filemodel.h"
 
 class KBIBTEXGUI_EXPORT ValueListDelegate : public QStyledItemDelegate
 {
@@ -111,4 +113,4 @@ private:
 };
 
 
-#endif // KBIBTEX_PROGRAM_VALUELISTMODEL_H
+#endif // KBIBTEX_GUI_VALUELISTMODEL_H

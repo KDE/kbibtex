@@ -19,13 +19,13 @@
 #define KBIBTEXTEST_H
 
 #include <QList>
-
-#include <KDialog>
+#include <QDialog>
+#include <QIcon>
 
 class OnlineSearchAbstract;
 class TestWidget;
 
-class KBibTeXTest : public KDialog
+class KBibTeXTest : public QDialog
 {
     Q_OBJECT
 

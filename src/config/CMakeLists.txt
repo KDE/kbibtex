@@ -3,11 +3,15 @@
 set(
     kbibtexconfig_LIB_SRCS
     notificationhub.cpp
+    bibtexentries.cpp
+    bibtexfields.cpp
 )
 
 set(
     kbibtexconfig_HDRS
     notificationhub.h
+    bibtexentries.h
+    bibtexfields.h
 )
 
 # # debug area for KBibTeX's Config library
@@ -19,13 +23,20 @@ set(
 #     enable_unity_build(kbibtexconfig kbibtexconfig_LIB_SRCS)
 # endif(UNITY_BUILD)
 
+include_directories(
+    ${CMAKE_SOURCE_DIR}/src
+)
+
 add_library(
     kbibtexconfig
     SHARED
     ${kbibtexconfig_LIB_SRCS}
 )
+
 target_link_libraries( kbibtexconfig
     Qt5::Core
+    KF5::I18n
+    KF5::XmlGui
 )
 
 set_target_properties(

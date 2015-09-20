@@ -39,7 +39,7 @@
 #include "entry.h"
 #include "fileview.h"
 #include "valuelistmodel.h"
-#include "filemodel.h"
+#include "models/filemodel.h"
 
 class ValueList::ValueListPrivate
 {
@@ -100,6 +100,7 @@ public:
         treeviewFieldValues->setRootIsDecorated(false);
         treeviewFieldValues->setSelectionMode(QTreeView::ExtendedSelection);
         treeviewFieldValues->setAlternatingRowColors(true);
+        treeviewFieldValues->header()->setSectionResizeMode(QHeaderView::Fixed);
 
         treeviewFieldValues->setContextMenuPolicy(Qt::ActionsContextMenu);
         /// create context menu item to start renaming
@@ -153,7 +154,7 @@ public:
 
         lineeditFilter->clear();
         comboboxFieldNames->clear();
-        foreach(const FieldDescription *fd, *bibtexFields) {
+        foreach (const FieldDescription *fd, *bibtexFields) {
             if (!fd->upperCamelCaseAlt.isEmpty()) continue; /// keep only "single" fields and not combined ones like "Author or Editor"
             if (fd->upperCamelCase.startsWith('^')) continue; /// skip "type" and "id"
             comboboxFieldNames->addItem(fd->label, fd->upperCamelCase);
@@ -202,7 +203,6 @@ public:
             usedModel = sortingModel;
         }
         treeviewFieldValues->setModel(usedModel);
-        treeviewFieldValues->header()->setResizeMode(QHeaderView::Fixed);
 
         KConfigGroup configGroup(config, configGroupName);
         configGroup.writeEntry(configKeyFieldName, text);
@@ -284,7 +284,7 @@ void ValueList::searchSelection()
     SortFilterFileModel::FilterQuery fq;
     fq.combination = SortFilterFileModel::EveryTerm;
     fq.field = fieldText;
-    foreach(const QModelIndex &index, d->treeviewFieldValues->selectionModel()->selectedIndexes()) {
+    foreach (const QModelIndex &index, d->treeviewFieldValues->selectionModel()->selectedIndexes()) {
         if (index.column() == 0) {
             QString itemText = index.data(ValueListModel::SearchTextRole).toString();
             fq.terms << itemText;
@@ -310,7 +310,7 @@ void ValueList::assignSelection() {
 
     /// Go through all selected elements in current editor
     const QList<QSharedPointer<Element> > &selection = d->fileView->selectedElements();
-    foreach(const QSharedPointer<Element> &element, selection) {
+    foreach (const QSharedPointer<Element> &element, selection) {
         /// Only entries (not macros or comments) are of interest
         QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
         if (!entry.isNull()) {
@@ -321,14 +321,14 @@ void ValueList::assignSelection() {
                 /// Fields for which multiple values are valid
                 bool valueItemAlreadyContained = false; ///< add only if to-be-assigned value is not yet contained
                 Value entrysValueForField = entry->value(field);
-                foreach(const QSharedPointer<ValueItem> &containedValueItem, entrysValueForField) {
+                foreach (const QSharedPointer<ValueItem> &containedValueItem, entrysValueForField) {
                     valueItemAlreadyContained |= PlainTextValue::text(containedValueItem) == toBeAssignedValueText;
                     if (valueItemAlreadyContained) break;
                 }
 
                 if (!valueItemAlreadyContained) {
                     /// Add each ValueItem from the to-be-assigned value to the entry's value for this field
-                    foreach(const QSharedPointer<ValueItem> &newValueItem, toBeAssignedValue) {
+                    foreach (const QSharedPointer<ValueItem> &newValueItem, toBeAssignedValue) {
                         entrysValueForField.append(newValueItem);
                     }
                     /// "Write back" value to field in entry
@@ -368,7 +368,7 @@ void ValueList::removeSelection() {
 
     /// Go through all selected elements in current editor
     const QList<QSharedPointer<Element> > &selection = d->fileView->selectedElements();
-    foreach(const QSharedPointer<Element> &element, selection) {
+    foreach (const QSharedPointer<Element> &element, selection) {
         /// Only entries (not macros or comments) are of interest
         QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
         if (!entry.isNull()) {

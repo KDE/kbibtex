@@ -68,10 +68,9 @@
 #include "onlinesearchisbndb.h"
 #include "onlinesearchideasrepec.h"
 #include "onlinesearchdoi.h"
-#include "onlinesearchoclcworldcat.h"
 #include "openfileinfo.h"
 #include "fileview.h"
-#include "filemodel.h"
+#include "models/filemodel.h"
 #include "searchresults.h"
 
 const int HomepageRole = Qt::UserRole + 5;
@@ -233,7 +232,6 @@ public:
         addEngine(new OnlineSearchIsbnDB(p));
         addEngine(new OnlineSearchIDEASRePEc(p));
         addEngine(new OnlineSearchDOI(p));
-        addEngine(new OnlineSearchOCLCWorldCat(p));
 
         p->itemCheckChanged(NULL);
         updateGUI();
@@ -357,7 +355,7 @@ void SearchForm::updatedConfiguration()
     d->loadEngines();
 }
 
-void SearchForm::setElement(QSharedPointer<Element> element, File *)
+void SearchForm::setElement(QSharedPointer<Element> element, const File *)
 {
     d->currentEntry = element.dynamicCast<const Entry>();
     d->useEntryButton->setEnabled(!d->currentEntry.isNull() && d->tabWidget->currentIndex() == 0);
@@ -432,7 +430,7 @@ void SearchForm::stoppedSearch(int)
             QTimer::singleShot(1100, d->useEntryButton, SLOT(show()));
         } else {
             QStringList remainingEngines;
-            foreach(OnlineSearchAbstract *running, d->runningSearches) {
+            foreach (OnlineSearchAbstract *running, d->runningSearches) {
                 remainingEngines.append(running->label());
             }
             if (!remainingEngines.isEmpty())

@@ -70,7 +70,7 @@ public slots:
      * @param element BibTeX element, which will be cast to an Entry internally
      * @param file BibTeX file where entry belongs to
      */
-    void setElement(QSharedPointer<Element> element, File *file);
+    void setElement(QSharedPointer<Element> element, const File *file);
 
 private:
     class SearchFormPrivate;
