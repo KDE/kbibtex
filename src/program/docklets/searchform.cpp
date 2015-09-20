@@ -105,7 +105,7 @@ public:
     SearchFormPrivate(SearchResults *searchResults, SearchForm *parent)
             : p(parent), whichEnginesLabel(NULL), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))),
           configGroupName(QLatin1String("Search Engines Docklet")), sr(searchResults), searchButton(NULL), useEntryButton(NULL), currentEntry(NULL) {
-        // nothing
+        createGUI();
     }
 
     OnlineSearchQueryFormAbstract *currentQueryForm() {
@@ -184,13 +184,14 @@ public:
         tabWidget = new KTabWidget(p);
         tabWidget->setDocumentMode(true);
         layout->addWidget(tabWidget, 0, 0, 1, 3);
-        connect(tabWidget, SIGNAL(currentChanged(int)), p, SLOT(tabSwitched(int)));
 
         QWidget *widget = createQueryTermsStack(tabWidget);
         tabWidget->addTab(widget, KIcon("edit-rename"), i18n("Query Terms"));
 
         QWidget *listContainer = createEnginesGUI(tabWidget);
         tabWidget->addTab(listContainer, KIcon("applications-engineering"), i18n("Engines"));
+
+        connect(tabWidget, SIGNAL(currentChanged(int)), p, SLOT(tabSwitched(int)));
 
         useEntryButton = new KPushButton(KIcon("go-up"), i18n("Use Entry"), p);
         layout->addWidget(useEntryButton, 1, 0, 1, 1);
@@ -206,7 +207,6 @@ public:
         layout->addWidget(searchButton, 1, 2, 1, 1);
         connect(generalQueryTermsForm, SIGNAL(returnPressed()), searchButton, SLOT(click()));
 
-        loadEngines();
         updateGUI();
     }
 
@@ -340,7 +340,7 @@ public:
 SearchForm::SearchForm(SearchResults *searchResults, QWidget *parent)
         : QWidget(parent), d(new SearchFormPrivate(searchResults, this))
 {
-    d->createGUI();
+    d->loadEngines();
     d->switchToSearch();
 }
 
