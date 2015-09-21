@@ -213,7 +213,7 @@ KBibTeXMainWindow::KBibTeXMainWindow()
     d->dockDocumentPreview->setObjectName("dockDocumentPreview");
     d->dockDocumentPreview->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
     showPanelsMenu->addAction(d->dockDocumentPreview->toggleViewAction());
-    d->dockDocumentPreview->toggleViewAction()->setShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_D);
+    actionCollection()->setDefaultShortcut(d->dockDocumentPreview->toggleViewAction(), Qt::CTRL + Qt::SHIFT + Qt::Key_D);
 
     d->dockElementForm = new QDockWidget(i18n("Element Editor"), this);
     d->dockElementForm->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
@@ -386,24 +386,25 @@ void KBibTeXMainWindow::documentSwitched(FileView *oldFileView, FileView *newFil
     d->elementForm->setEnabled(newFileView != NULL);
     d->documentPreview->setEnabled(newFileView != NULL);
     if (oldFileView != NULL) {
-        disconnect(oldFileView, SIGNAL(currentElementChanged(QSharedPointer<Element>,File*)), d->referencePreview, SLOT(setElement(QSharedPointer<Element>,File*)));
-        disconnect(oldFileView, SIGNAL(currentElementChanged(QSharedPointer<Element>,File*)), d->elementForm, SLOT(setElement(QSharedPointer<Element>,File*)));
-        disconnect(oldFileView, SIGNAL(currentElementChanged(QSharedPointer<Element>,File*)), d->documentPreview, SLOT(setElement(QSharedPointer<Element>,File*)));
-        disconnect(oldFileView, SIGNAL(currentElementChanged(QSharedPointer<Element>,File*)), d->searchForm, SLOT(setElement(QSharedPointer<Element>,File*)));
-        disconnect(oldFileView, SIGNAL(modified()), d->valueList, SLOT(update()));
-        disconnect(oldFileView, SIGNAL(modified()), d->statistics, SLOT(update()));
+        disconnect(newFileView, &FileView::currentElementChanged, d->referencePreview, &ReferencePreview::setElement);
+        disconnect(newFileView, &FileView::currentElementChanged, d->elementForm, &ElementForm::setElement);
+        disconnect(newFileView, &FileView::currentElementChanged, d->documentPreview, &DocumentPreview::setElement);
+        disconnect(newFileView, &FileView::currentElementChanged, d->searchForm, &SearchForm::setElement);
+        disconnect(newFileView, &FileView::modified, d->valueList, &ValueList::update);
+        disconnect(newFileView, &FileView::modified, d->statistics, &Statistics::update);
         // FIXME disconnect(oldEditor, SIGNAL(modified()), d->elementForm, SLOT(refreshElement()));
-        disconnect(d->elementForm, SIGNAL(elementModified()), oldFileView, SLOT(externalModification()));
+        disconnect(d->elementForm, &ElementForm::elementModified, newFileView, &FileView::externalModification);
     }
     if (newFileView != NULL) {
-        connect(newFileView, SIGNAL(currentElementChanged(QSharedPointer<Element>,File*)), d->referencePreview, SLOT(setElement(QSharedPointer<Element>,File*)));
-        connect(newFileView, SIGNAL(currentElementChanged(QSharedPointer<Element>,File*)), d->elementForm, SLOT(setElement(QSharedPointer<Element>,File*)));
-        connect(newFileView, SIGNAL(currentElementChanged(QSharedPointer<Element>,File*)), d->documentPreview, SLOT(setElement(QSharedPointer<Element>,File*)));
-        connect(newFileView, SIGNAL(currentElementChanged(QSharedPointer<Element>,File*)), d->searchForm, SLOT(setElement(QSharedPointer<Element>,File*)));
-        connect(newFileView, SIGNAL(modified()), d->valueList, SLOT(update()));
-        connect(newFileView, SIGNAL(modified()), d->statistics, SLOT(update()));
+        connect(newFileView, &FileView::currentElementChanged, d->referencePreview, &ReferencePreview::setElement);
+        connect(newFileView, &FileView::currentElementChanged, d->elementForm, &ElementForm::setElement);
+        connect(newFileView, &FileView::currentElementChanged, d->documentPreview, &DocumentPreview::setElement);
+        connect(newFileView, &FileView::currentElementChanged, d->searchForm, &SearchForm::setElement);
+        connect(newFileView, &FileView::modified, d->valueList, &ValueList::update);
+        connect(newFileView, &FileView::modified, d->statistics, &Statistics::update);
         // FIXME connect(newEditor, SIGNAL(modified()), d->elementForm, SLOT(refreshElement()));
         connect(d->elementForm, SIGNAL(elementModified()), newFileView, SLOT(externalModification()));
+        connect(d->elementForm, &ElementForm::elementModified, newFileView, &FileView::externalModification);
     }
 
     d->documentPreview->setBibTeXUrl(validFile ? openFileInfo->url() : QUrl());
@@ -429,7 +430,7 @@ void KBibTeXMainWindow::documentListsChanged(OpenFileInfo::StatusFlags statusFla
     if (statusFlags.testFlag(OpenFileInfo::RecentlyUsed)) {
         OpenFileInfoManager::OpenFileInfoList list = OpenFileInfoManager::instance()->filteredItems(OpenFileInfo::RecentlyUsed);
         d->actionMenuRecentFilesMenu->clear();
-        foreach(OpenFileInfo *cur, list) {
+        foreach (OpenFileInfo *cur, list) {
             /// Fixing bug 19511: too long filenames make menu too large,
             /// therefore squeeze text if it is longer than squeezeLen.
             const int squeezeLen = 64;

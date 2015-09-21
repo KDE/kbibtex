@@ -24,8 +24,6 @@
 #include <KSharedConfig>
 #include <KConfigGroup>
 
-#include "entry.h"
-
 bool operator==(const EntryDescription &a, const EntryDescription &b)
 {
     return a.upperCamelCase == b.upperCamelCase;
@@ -50,7 +48,7 @@ public:
             : p(parent) {
         KSharedConfigPtr config(KSharedConfig::openConfig("kbibtexrc"));
         KConfigGroup configGroup(config, QString("User Interface"));
-        const QString stylefile = configGroup.readEntry("CurrentStyle", "bibtex").append(".kbstyle").prepend("kbibtex/");
+        const QString stylefile = configGroup.readEntry("CurrentStyle", "bibtex").append(".kbstyle");
         layoutConfig = KSharedConfig::openConfig(stylefile, KConfig::FullConfig, QStandardPaths::AppDataLocation);
     }
 
@@ -83,7 +81,7 @@ public:
 
     void save() {
         int typeCount = 0;
-        foreach(const EntryDescription &ed, *p) {
+        foreach (const EntryDescription &ed, *p) {
             ++typeCount;
             QString groupName = QString("EntryType%1").arg(typeCount);
             KConfigGroup configGroup(layoutConfig, groupName);

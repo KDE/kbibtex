@@ -171,7 +171,7 @@ void OnlineSearchScienceDirect::doneFetchingStartPage()
 
             QUrlQuery query(url);
             static const QStringList orderOfParameters = QString(QLatin1String("_ob|_method|_acct|_origin|_zone|md5|_eidkey|qs_issue|qs_pages|qs_title|qs_vol|sdSearch|qs_all|qs_author|resultsPerPage")).split(QLatin1String("|"));
-            foreach(const QString &key, orderOfParameters) {
+            foreach (const QString &key, orderOfParameters) {
                 if (!inputMap.contains(key)) continue;
                 query.addQueryItem(key, inputMap[key]);
             }

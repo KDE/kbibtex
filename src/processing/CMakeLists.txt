@@ -29,9 +29,9 @@ set(
 #     -DKDE_DEFAULT_DEBUG_AREA=101016
 # )
 
-# if(UNITY_BUILD)
-#     enable_unity_build(kbibtexproc kbibtexproc_LIB_SRCS)
-# endif(UNITY_BUILD)
+if(UNITY_BUILD)
+    enable_unity_build(kbibtexproc kbibtexproc_LIB_SRCS)
+endif(UNITY_BUILD)
 
 include_directories(
     ${CMAKE_BINARY_DIR}/src/config
@@ -40,6 +40,8 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/src/data
     ${CMAKE_BINARY_DIR}/src/io
     ${CMAKE_SOURCE_DIR}/src/io
+    ${CMAKE_BINARY_DIR}/src/gui
+    ${CMAKE_SOURCE_DIR}/src/gui
 )
 
 add_library(

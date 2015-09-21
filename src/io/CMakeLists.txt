@@ -2,8 +2,6 @@
 
 set(
     kbibtexio_LIB_SRCS
-    config/bibtexentries.cpp
-    config/bibtexfields.cpp
     encoder.cpp
     encoderlatex.cpp
     encoderutf8.cpp
@@ -33,8 +31,6 @@ set(
 
 set(
     kbibtexio_HDRS
-    config/bibtexentries.h
-    config/bibtexfields.h
     encoder.h
     encoderlatex.h
     encoderutf8.h
@@ -72,9 +68,9 @@ set(
 #     -DKDE_DEFAULT_DEBUG_AREA=101011
 # )
 
-# if(UNITY_BUILD)
-#     enable_unity_build(kbibtexio kbibtexio_LIB_SRCS)
-# endif(UNITY_BUILD)
+if(UNITY_BUILD)
+    enable_unity_build(kbibtexio kbibtexio_LIB_SRCS)
+endif(UNITY_BUILD)
 
 include_directories(
     ${LIBXML2_INCLUDE_DIR}

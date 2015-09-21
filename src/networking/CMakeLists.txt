@@ -23,7 +23,6 @@ set(
     onlinesearch/onlinesearchisbndb.cpp
     onlinesearch/onlinesearchideasrepec.cpp
     onlinesearch/onlinesearchdoi.cpp
-    onlinesearch/onlinesearchoclcworldcat.cpp
     zotero/collectionmodel.cpp
     zotero/collection.cpp
     zotero/api.cpp
@@ -62,7 +61,6 @@ set(
     onlinesearch/onlinesearchisbndb.h
     onlinesearch/onlinesearchideasrepec.h
     onlinesearch/onlinesearchdoi.h
-    onlinesearch/onlinesearchoclcworldcat.h
     zotero/collectionmodel.h
     zotero/collection.h
     zotero/groups.h
@@ -85,9 +83,9 @@ set(
 #     -DKDE_DEFAULT_DEBUG_AREA=101025
 # )
 
-# if(UNITY_BUILD)
-#     enable_unity_build(kbibtexnetworking kbibtexnetworking_LIB_SRCS)
-# endif(UNITY_BUILD)
+if(UNITY_BUILD)
+    enable_unity_build(kbibtexnetworking kbibtexnetworking_LIB_SRCS)
+endif(UNITY_BUILD)
 
 include_directories(
     ${CMAKE_SOURCE_DIR}/src/3rdparty/qoauth/include
@@ -121,7 +119,6 @@ target_link_libraries(
     KF5::KIOFileWidgets
     KF5::KIOWidgets
     KF5::KIONTLM
-    KF5::KDELibs4Support
     kbibtexconfig
     kbibtexdata
     kbibtexio

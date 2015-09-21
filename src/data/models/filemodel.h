@@ -18,83 +18,24 @@
 #define KBIBTEX_GUI_FILEMODEL_H
 
 #include <QAbstractItemModel>
-#include <QSortFilterProxyModel>
 #include <QLatin1String>
 #include <QList>
-#include <QRegExp>
 #include <QStringList>
-#include <QStyledItemDelegate>
 
 #include <KSharedConfig>
 
-#include "kbibtexgui_export.h"
+#include "kbibtexdata_export.h"
 
 #include "notificationhub.h"
 #include "file.h"
 #include "entry.h"
 
-class QPainter;
-
 class FileModel;
-
-/**
- * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
- */
-class KBIBTEXGUI_EXPORT SortFilterFileModel : public QSortFilterProxyModel
-{
-    Q_OBJECT
-
-public:
-    enum FilterCombination {AnyTerm = 0, EveryTerm = 1 };
-    struct FilterQuery {
-        QStringList terms;
-        FilterCombination combination;
-        QString field;
-        bool searchPDFfiles;
-    };
-
-    explicit SortFilterFileModel(QObject *parent = 0);
-
-    virtual void setSourceModel(QAbstractItemModel *model);
-    FileModel *fileSourceModel() const;
-
-public slots:
-    void updateFilter(SortFilterFileModel::FilterQuery);
-
-protected:
-    virtual bool lessThan(const QModelIndex &left, const QModelIndex &right) const;
-    virtual bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const;
-
-private:
-    FileModel *m_internalModel;
-    SortFilterFileModel::FilterQuery m_filterQuery;
-
-    KSharedConfigPtr config;
-    static const QString configGroupName;
-    bool m_showComments, m_showMacros;
-
-    void loadState();
-    bool simpleLessThan(const QModelIndex &left, const QModelIndex &right) const;
-};
-
-
-class KBIBTEXGUI_EXPORT FileDelegate : public QStyledItemDelegate
-{
-    Q_OBJECT
-
-public:
-    explicit FileDelegate(QWidget *parent = NULL)
-            : QStyledItemDelegate(parent) {
-        /* nothing */
-    }
-
-    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
-};
 
 /**
 @author Thomas Fischer
  */
-class KBIBTEXGUI_EXPORT FileModel : public QAbstractTableModel, private NotificationListener
+class KBIBTEXDATA_EXPORT FileModel : public QAbstractTableModel, private NotificationListener
 {
 public:
     static const int NumberRole;
@@ -106,7 +47,7 @@ public:
 
     explicit FileModel(QObject *parent = 0);
 
-    File *bibliographyFile();
+    const File *bibliographyFile();
     virtual void setBibliographyFile(File *file);
 
     virtual QModelIndex parent(const QModelIndex &index) const;
@@ -117,14 +58,15 @@ public:
     virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
     virtual Qt::ItemFlags flags(const QModelIndex &index) const;
 
+    void clear();
     virtual bool removeRow(int row, const QModelIndex &parent = QModelIndex());
     bool removeRowList(const QList<int> &rows);
     bool insertRow(QSharedPointer<Element> element, int row, const QModelIndex &parent = QModelIndex());
 
-    QSharedPointer<Element> element(int row) const;
+QSharedPointer<Element> element(int row) const;
     int row(QSharedPointer<Element> element) const;
-
-    void reset();
+    /// Notifies the model that a given element has been modifed
+    void elementChanged(int row);
 
     void notificationEvent(int eventId);
 

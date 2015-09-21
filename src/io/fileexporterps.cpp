@@ -165,7 +165,7 @@ bool FileExporterPS::beautifyPostscriptFile(const QString &filename, const QStri
 
         if (postscriptFile.open(QFile::WriteOnly)) {
             QTextStream ts(&postscriptFile);
-            foreach(const QString &line, lines) ts << line << endl;
+            foreach (const QString & line, lines) ts << line << endl;
             postscriptFile.close();
         } else
             return false;

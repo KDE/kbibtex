@@ -78,6 +78,9 @@ while read filename ; do
 	echo "Processing \"${filename}\""
 	astyle -n --align-reference=name --align-pointer=name --indent=spaces=4 --indent-labels --pad-oper --unpad-paren --pad-header --keep-one-line-statements --convert-tabs --indent-preprocessor <"${filename}" >${TEMPFILE}
 
+	# Astyle has problem with 'foreach' statements
+	sed -i -e 's/\bforeach(/foreach (/g' ${TEMPFILE}
+
 	# normalize SIGNAL statements as recommended at
 	# http://marcmutz.wordpress.com/effective-qt/prefer-to-use-normalised-signalslot-signatures/
 	# astyle would insert spaces etc

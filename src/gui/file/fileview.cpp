@@ -19,9 +19,12 @@
 
 #include <QDropEvent>
 #include <QTimer>
+#include <QDialog>
+#include <QDialogButtonBox>
+#include <QBoxLayout>
+#include <QPushButton>
 #include <QDebug>
 
-#include <KDialog>
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <KGuiItem>
@@ -32,7 +35,7 @@
 #include "elementeditor.h"
 #include "entry.h"
 #include "macro.h"
-#include "filemodel.h"
+#include "models/filemodel.h"
 #include "fileexporterbibtex.h"
 #include "valuelistmodel.h"
 
@@ -44,7 +47,7 @@
  *
  * @author Thomas Fischer
  */
-class ElementEditorDialog : public KDialog
+class ElementEditorDialog : public QDialog
 {
 private:
     ElementEditor *elementEditor;
@@ -53,11 +56,13 @@ private:
 
 public:
     ElementEditorDialog(QWidget *parent)
-            : KDialog(parent), elementEditor(NULL) {
+            : QDialog(parent), elementEditor(NULL) {
         /// restore window size
         KSharedConfigPtr config(KSharedConfig::openConfig(QLatin1String("kbibtexrc")));
         configGroup = KConfigGroup(config, configGroupNameWindowSize);
         KWindowConfig::restoreWindowSize(windowHandle(), configGroup);
+
+        setLayout(new QVBoxLayout(parent));
     }
 
     /**
@@ -65,28 +70,15 @@ public:
      */
     void setElementEditor(ElementEditor *elementEditor) {
         this->elementEditor = elementEditor;
-        setMainWidget(elementEditor);
+        QBoxLayout *boxLayout = qobject_cast<QBoxLayout *>(layout());
+        boxLayout->addWidget(this->elementEditor);
     }
 
 protected:
     virtual void closeEvent(QCloseEvent *e) {
         /// strangely enough, close events have always to be rejected ...
         e->setAccepted(false);
-        KDialog::closeEvent(e);
-    }
-
-protected Q_SLOTS:
-    /// Will be triggered when closing the dialog
-    /// given a re-implementation of closeEvent as above
-    virtual void slotButtonClicked(int button) {
-        /// save window size of Ok is clicked
-        if (button == KDialog::Ok)
-            KWindowConfig::saveWindowSize(windowHandle(), configGroup);
-
-        /// ignore button event if it is from the Cancel button
-        /// and the user does not want to discard his/her changes
-        if (button != KDialog::Cancel || allowedToClose())
-            KDialog::slotButtonClicked(button);
+        QDialog::closeEvent(e);
     }
 
 private:
@@ -104,7 +96,7 @@ private:
 const QString ElementEditorDialog::configGroupNameWindowSize = QLatin1String("ElementEditorDialog");
 
 FileView::FileView(const QString &name, QWidget *parent)
-        : BasicFileView(name, parent), m_isReadOnly(false), m_current(QSharedPointer<Element>()), m_filterBar(NULL), m_lastEditorPage(NULL), m_elementEditorDialog(NULL), m_elementEditor(NULL)
+        : BasicFileView(name, parent), m_isReadOnly(false), m_current(QSharedPointer<Element>()), m_filterBar(NULL), m_lastEditorPage(NULL), m_elementEditorDialog(NULL), m_elementEditor(NULL), m_dbb(NULL)
 {
     connect(this, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(itemActivated(QModelIndex)));
 }
@@ -320,31 +312,39 @@ void FileView::prepareEditorDialog(DialogType dialogType)
         m_elementEditor = new ElementEditor(false, m_elementEditorDialog);
         m_elementEditorDialog->setElementEditor(m_elementEditor);
     }
-
-    /// Disconnect all signals that could modify current element
-    /// (safety precaution for read-only mode, signals will be
-    /// re-established for edit mode further below)
-    disconnect(m_elementEditor, SIGNAL(modified(bool)), m_elementEditorDialog, SLOT(enableButtonApply(bool)));
-    disconnect(m_elementEditorDialog, SIGNAL(applyClicked()), m_elementEditor, SLOT(apply()));
-    disconnect(m_elementEditorDialog, SIGNAL(okClicked()), m_elementEditor, SLOT(apply()));
-    disconnect(m_elementEditorDialog, SIGNAL(resetClicked()), m_elementEditor, SLOT(reset()));
+    if (m_dbb != NULL) {
+        delete m_dbb;
+        m_dbb = NULL;
+    }
 
     if (dialogType == DialogTypeView) {
         /// View mode, as use in read-only situations
         m_elementEditor->setReadOnly(true);
-        m_elementEditorDialog->setCaption(i18n("View Element"));
-        m_elementEditorDialog->setButtons(KDialog::Close);
+        m_elementEditorDialog->setWindowTitle(i18n("View Element"));
+        m_dbb = new QDialogButtonBox(QDialogButtonBox::Close, m_elementEditorDialog);
+        QBoxLayout *boxLayout = qobject_cast<QBoxLayout *>(m_elementEditorDialog->layout());
+        boxLayout->addWidget(m_dbb);
     } else if (dialogType == DialogTypeEdit) {
         /// Edit mode, used in normal operations
         m_elementEditor->setReadOnly(false);
-        m_elementEditorDialog->setCaption(i18n("Edit Element"));
-        m_elementEditorDialog->setButtons(KDialog::Ok | KDialog::Apply | KDialog::Cancel | KDialog::Reset);
-        m_elementEditorDialog->enableButton(KDialog::Apply, false);
+        m_elementEditorDialog->setWindowTitle(i18n("Edit Element"));
+        m_dbb = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Apply | QDialogButtonBox::Cancel | QDialogButtonBox::Reset, m_elementEditorDialog);
+        QBoxLayout *boxLayout = qobject_cast<QBoxLayout *>(m_elementEditorDialog->layout());
+        boxLayout->addWidget(m_dbb);
+        m_dbb->button(QDialogButtonBox::Apply)->setEnabled(false);
 
         /// Establish signal-slot connections for modification/editing events
-        connect(m_elementEditor, SIGNAL(modified(bool)), m_elementEditorDialog, SLOT(enableButtonApply(bool)));
-        connect(m_elementEditorDialog, SIGNAL(applyClicked()), m_elementEditor, SLOT(apply()));
-        connect(m_elementEditorDialog, SIGNAL(okClicked()), m_elementEditor, SLOT(apply()));
-        connect(m_elementEditorDialog, SIGNAL(resetClicked()), m_elementEditor, SLOT(reset()));
+        connect(m_elementEditor, &ElementEditor::modified, m_dbb->button(QDialogButtonBox::Apply), &QPushButton::setEnabled);
+        // FIXME necessary? connect(m_dbb, &QDialogButtonBox::accepted, m_elementEditor, &ElementEditor::apply);
+        connect(m_dbb, &QDialogButtonBox::clicked, this, &FileView::dialogButtonClicked);
+        connect(m_dbb->button(QDialogButtonBox::Ok), &QPushButton::clicked, m_elementEditorDialog, &ElementEditorDialog::accept);
+        connect(m_dbb->button(QDialogButtonBox::Cancel), &QPushButton::clicked, m_elementEditorDialog, &ElementEditorDialog::reject);
     }
+}
+
+void FileView::dialogButtonClicked(QAbstractButton *button) {
+    if (button == m_dbb->button(QDialogButtonBox::Ok) || button == m_dbb->button(QDialogButtonBox::Apply))
+        m_elementEditor->apply();
+    else if (button == m_dbb->button(QDialogButtonBox::Reset))
+        m_elementEditor->reset();
 }

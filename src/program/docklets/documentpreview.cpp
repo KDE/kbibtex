@@ -148,14 +148,14 @@ public:
         KService::Ptr service = KMimeTypeTrader::self()->preferredService(mimeType, QLatin1String("KParts/ReadOnlyPart"));
         if (service) {
             KParts::ReadOnlyPart *part = service->createInstance<KParts::ReadOnlyPart>(parentWidget, p);
-            connect(part, SIGNAL(completed()), p, SLOT(loadingFinished()));
+            connect(part, static_cast<void(KParts::ReadOnlyPart::*)()>(&KParts::ReadOnlyPart::completed), p, &DocumentPreview::loadingFinished);
             return part;
         } else
             return NULL;
     }
 
     DocumentPreviewPrivate(DocumentPreview *parent)
-            : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), entry(NULL) {
+            : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), entry(NULL), anyRemote(false) {
         setupGUI();
     }
 
@@ -612,7 +612,7 @@ DocumentPreview::~DocumentPreview()
     delete d;
 }
 
-void DocumentPreview::setElement(QSharedPointer<Element> element, File *)
+void DocumentPreview::setElement(QSharedPointer<Element> element, const File *)
 {
     d->entry = element.dynamicCast<const Entry>();
     d->update();

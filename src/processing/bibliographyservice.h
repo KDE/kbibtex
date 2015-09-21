@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2015 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -25,7 +25,7 @@
 /**
  * To make (or test for) KBibTeX the default bibliography editor,
  * this class offers some essential functions. To make the association work,
- * KBibTeX's .desktop files have to be placed where KDE (including kbuildsycoca4)
+ * KBibTeX's .desktop files have to be placed where KDE (including kbuildsycoca5)
  * can find them.
  *
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
@@ -52,7 +52,7 @@ public:
     bool isKBibTeXdefault() const;
 
 private slots:
-    void kbuildsycoca4finished(int exitCode, QProcess::ExitStatus exitStatus);
+    void kbuildsycoca5finished(int exitCode, QProcess::ExitStatus exitStatus);
 
 private:
     class Private;

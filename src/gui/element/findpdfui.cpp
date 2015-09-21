@@ -35,14 +35,14 @@
 #include <QFileDialog>
 #include <QDialog>
 #include <QDialogButtonBox>
+#include <QMimeDatabase>
+#include <QMimeType>
+#include <QTemporaryFile>
 
 #include <KLocalizedString>
 #include <KIconLoader>
 #include <KSqueezedTextLabel>
 #include <KRun>
-#include <KTemporaryFile>
-#include <QMimeDatabase>
-#include <QMimeType>
 
 #include "fileinfo.h"
 #include "fieldlistedit.h"

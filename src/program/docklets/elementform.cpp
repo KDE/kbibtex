@@ -38,7 +38,7 @@ class ElementForm::ElementFormPrivate
 private:
     ElementForm *p;
     QGridLayout *layout;
-    File *file;
+    const File *file;
 
 public:
     ElementEditor *elementEditor;
@@ -55,8 +55,8 @@ public:
     /// Key to store/retrieve setting whether changes in form should be automatically applied to element or not
     static const QString configKeyAutoApply;
 
-    ElementFormPrivate(ElementForm *parent)
-            : p(parent), file(NULL), gotModified(false), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))) {
+    ElementFormPrivate(MDIWidget *_mdiWidget, ElementForm *parent)
+            : p(parent), file(NULL), mdiWidget(_mdiWidget), gotModified(false), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))) {
         KConfigGroup configGroup(config, configGroupName);
 
         layout = new QGridLayout(p);
@@ -110,7 +110,7 @@ public:
         loadElement(element, file);
     }
 
-    void loadElement(QSharedPointer<Element> element, File *file) {
+    void loadElement(QSharedPointer<Element> element, const File *file) {
         /// store both element and file for later refresh
         this->element = element;
         this->file = file;
@@ -163,10 +163,9 @@ const QString ElementForm::ElementFormPrivate::configGroupName = QLatin1String("
 const QString ElementForm::ElementFormPrivate::configKeyAutoApply = QLatin1String("AutoApply");
 
 ElementForm::ElementForm(MDIWidget *mdiWidget, QDockWidget *parent)
-        : QWidget(parent), d(new ElementFormPrivate(this))
+        : QWidget(parent), d(new ElementFormPrivate(mdiWidget, this))
 {
     connect(parent, SIGNAL(visibilityChanged(bool)), this, SLOT(visibilityChanged(bool)));
-    d->mdiWidget = mdiWidget;
 }
 
 ElementForm::~ElementForm()
@@ -174,7 +173,7 @@ ElementForm::~ElementForm()
     delete d;
 }
 
-void ElementForm::setElement(QSharedPointer<Element> element, File *file)
+void ElementForm::setElement(QSharedPointer<Element> element, const File *file)
 {
     /// Test if previous element (1) got modified, (2) the new element isn't
     /// the same as the new one, and (3) the user confirms to apply those

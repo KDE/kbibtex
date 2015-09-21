@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2015 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -15,26 +15,24 @@
  *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
  ***************************************************************************/
 
-#include <QPointer>
-#include <QApplication>
+#ifndef KBIBTEX_GUI_FILEDELEGATE_H
+#define KBIBTEX_GUI_FILEDELEGATE_H
 
-#include <KAboutData>
-#include <KLocalizedString>
+#include "kbibtexgui_export.h"
 
-#include "kbibtextest.h"
-#include "version.h"
+#include <QStyledItemDelegate>
 
-int main(int argc, char *argv[])
+class KBIBTEXGUI_EXPORT FileDelegate : public QStyledItemDelegate
 {
-    QApplication programCore(argc, argv);
+    Q_OBJECT
 
-    KAboutData aboutData(QLatin1String("kbibtextest"), i18n("KBibTeX Test"), QLatin1String(versionNumber), i18n("A BibTeX editor for KDE"), KAboutLicense::GPL_V2, i18n("Copyright 2004-2015 Thomas Fischer"), QString(), QLatin1String("http://home.gna.org/kbibtex/"));
-    aboutData.addAuthor(i18n("Thomas Fischer"), i18n("Maintainer"), QLatin1String("fischer@unix-ag.uni-kl.de"));
-    KAboutData::setApplicationData(aboutData);
+public:
+    explicit FileDelegate(QWidget *parent = NULL)
+            : QStyledItemDelegate(parent) {
+        /* nothing */
+    }
 
-    QPointer<KBibTeXTest> test = new KBibTeXTest();
-    test->exec();
+    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+};
 
-    return programCore.exec();
-}
-
+#endif // KBIBTEX_GUI_FILEDELEGATE_H

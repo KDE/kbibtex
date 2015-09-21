@@ -11,9 +11,9 @@ set(
 #     -DKDE_DEFAULT_DEBUG_AREA=101013
 # )
 
-# if(UNITY_BUILD)
-#     enable_unity_build(kbibtexpart kbibtexpart_SRCS)
-# endif(UNITY_BUILD)
+if(UNITY_BUILD)
+    enable_unity_build(kbibtexpart kbibtexpart_SRCS)
+endif(UNITY_BUILD)
 
 include_directories(
     ${CMAKE_SOURCE_DIR}/src/config
@@ -55,15 +55,6 @@ target_link_libraries( kbibtexpart
     kbibtexio
     kbibtexgui
     kbibtexproc
-)
-
-set_target_properties(
-    kbibtexpart
-    PROPERTIES
-    VERSION
-    ${LIB_VERSION}
-    SOVERSION
-    ${LIB_SOVERSION}
 )
 
 add_dependencies( kbibtexpart

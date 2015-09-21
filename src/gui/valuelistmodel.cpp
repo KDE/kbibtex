@@ -42,7 +42,7 @@
 #include "bibtexfields.h"
 #include "entry.h"
 #include "preferences.h"
-#include "filemodel.h"
+#include "models/filemodel.h"
 
 const int CountRole = Qt::UserRole + 611;
 
@@ -308,21 +308,24 @@ void ValueListModel::removeValue(const QModelIndex &index)
 
 void ValueListModel::setShowCountColumn(bool showCountColumn)
 {
+    beginResetModel();
     this->showCountColumn = showCountColumn;
-    reset();
+    endResetModel();
 }
 
 void ValueListModel::setSortBy(SortBy sortBy)
 {
+    beginResetModel();
     this->sortBy = sortBy;
-    reset();
+    endResetModel();
 }
 
 void ValueListModel::notificationEvent(int eventId)
 {
     if (eventId == NotificationHub::EventConfigurationChanged) {
+        beginResetModel();
         readConfiguration();
-        reset();
+        endResetModel();
     }
 }
 
@@ -362,7 +365,7 @@ void ValueListModel::updateValues()
 
 void ValueListModel::insertValue(const Value &value)
 {
-    foreach(QSharedPointer<ValueItem> item, value) {
+    foreach (QSharedPointer<ValueItem> item, value) {
         const QString text = PlainTextValue::text(*item);
         if (text.isEmpty()) continue; ///< skip empty values
 
@@ -399,7 +402,7 @@ int ValueListModel::indexOf(const QString &text)
     int i = 0;
     /// this is really slow for large data sets: O(n^2)
     /// maybe use a hash table instead?
-    foreach(const ValueLine &valueLine, values) {
+    foreach (const ValueLine &valueLine, values) {
         if (valueLine.text == cmpText)
             return i;
         ++i;
@@ -425,7 +428,7 @@ bool ValueListModel::searchAndReplaceValueInEntries(const QModelIndex &index, co
     }
 
     /// Go through all elements in the current file
-    foreach(QSharedPointer<Element> element, *file) {
+    foreach (QSharedPointer<Element> element, *file) {
         QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
         /// Process only Entry objects
         if (!entry.isNull()) {
@@ -507,7 +510,7 @@ void ValueListModel::removeValueFromEntries(const QModelIndex &index)
     }
 
     /// Go through all elements in the current file
-    foreach(QSharedPointer<Element> element, *file) {
+    foreach (QSharedPointer<Element> element, *file) {
         QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
         /// Process only Entry objects
         if (!entry.isNull()) {

@@ -28,7 +28,8 @@
 #include <KSharedConfig>
 
 #include "bibtexfields.h"
-#include "filemodel.h"
+#include "models/filemodel.h"
+#include "sortfilterfilemodel.h"
 
 class BasicFileView::Private
 {
@@ -128,7 +129,7 @@ public:
                     p->header()->moveSection(fromVI, toVI);
             }
 
-            foreach(QAction *action, p->header()->actions()) {
+            foreach (QAction *action, p->header()->actions()) {
                 bool ok = false;
                 int ac = (int)action->data().toInt(&ok);
                 if (ok && ac == col) {
@@ -256,7 +257,7 @@ BasicFileView::BasicFileView(const QString &name, QWidget *parent)
     setRootIsDecorated(false);
 
     /// header appearance and behaviour
-    header()->setClickable(true);
+    header()->setSectionsClickable(true);
     header()->setSortIndicatorShown(true);
     header()->setSortIndicator(-1, Qt::AscendingOrder);
     connect(header(), SIGNAL(sortIndicatorChanged(int,Qt::SortOrder)), this, SLOT(sort(int,Qt::SortOrder)));

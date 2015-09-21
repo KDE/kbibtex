@@ -150,7 +150,7 @@ QString Collection::collectionFromNumericId(uint numericId) const
 
     // TODO make those resolutions more efficient
     const QList<QString> keys = d->collectionToLabel.keys();
-    foreach(const QString &key, keys) {
+    foreach (const QString &key, keys) {
         if (numericId == qHash(key))
             return key;
     }

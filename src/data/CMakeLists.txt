@@ -9,6 +9,7 @@ set(
     macro.cpp
     preamble.cpp
     value.cpp
+    models/filemodel.cpp
 )
 
 set(
@@ -20,6 +21,7 @@ set(
     macro.h
     preamble.h
     value.h
+    models/filemodel.h
 )
 
 # # debug area for KBibTeX's Data library
@@ -27,9 +29,9 @@ set(
 #     -DKDE_DEFAULT_DEBUG_AREA=101032
 # )
 
-# if(UNITY_BUILD)
-#     enable_unity_build(kbibtexdata kbibtexdata_LIB_SRCS)
-# endif(UNITY_BUILD)
+if(UNITY_BUILD)
+    enable_unity_build(kbibtexdata kbibtexdata_LIB_SRCS)
+endif(UNITY_BUILD)
 
 include_directories(
     ${CMAKE_SOURCE_DIR}/src/config

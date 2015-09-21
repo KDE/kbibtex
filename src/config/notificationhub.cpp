@@ -91,10 +91,10 @@ void NotificationHub::publishEvent(int eventId)
         qDebug() << "Notifying about event" << eventId;
 
         QSet< NotificationListener *> set(d->listenersPerEventId.value(eventId,  QSet<NotificationListener *>()));
-        foreach(NotificationListener *listener, d->allListeners) {
+        foreach (NotificationListener *listener, d->allListeners) {
             set.insert(listener);
         }
-        foreach(NotificationListener *listener, set) {
+        foreach (NotificationListener *listener, set) {
             listener->notificationEvent(eventId);
         }
     }

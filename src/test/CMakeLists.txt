@@ -1,9 +1,7 @@
+# KBibTeX test program
+
 project(
     test
-)
-
-include(
-    AddFileDependencies
 )
 
 add_definitions(
@@ -22,7 +20,6 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/src/networking
     ${CMAKE_SOURCE_DIR}/src/networking/onlinesearch
     ${CMAKE_SOURCE_DIR}/src/processing
-    ${CMAKE_CURRENT_BINARY_DIR}
 )
 
 set(
@@ -36,39 +33,31 @@ set(
     kbibtexfilestest.cpp
 )
 
-# debug area for KBibTeX's test program
-add_definitions(
-    -DKDE_DEFAULT_DEBUG_AREA=101023
-)
-
-kde4_add_app_icon(
-    kbibtextest_SRCS
-    "${CMAKE_SOURCE_DIR}/icons/hi*-app-kbibtex.png"
-)
+# # debug area for KBibTeX's test program
+# add_definitions(
+#     -DKDE_DEFAULT_DEBUG_AREA=101023
+# )
 
 if(UNITY_BUILD AND NOT WIN32) # FIXME: Unity build of programs breaks on Windows
     enable_unity_build(kbibtextest kbibtextest_SRCS)
     enable_unity_build(kbibtexfilestest kbibtexfilestest_SRCS)
 endif(UNITY_BUILD AND NOT WIN32)
 
-kde4_add_executable(
+add_executable(
     kbibtextest
     ${kbibtextest_SRCS}
     ${CMAKE_CURRENT_BINARY_DIR}/version.h
 )
 
-kde4_add_unit_test(
-    kbibtexfilestest
-    ${kbibtexfilestest_SRCS}
-)
+# add_unit_test(
+#     kbibtexfilestest
+#     ${kbibtexfilestest_SRCS}
+#     ${CMAKE_CURRENT_BINARY_DIR}/version.h
+# )
 
-target_link_libraries(
-    kbibtextest
-    LINK_PRIVATE
-    ${QT_QTWEBKIT_LIBRARIES}
-    ${KDE4_KIO_LIBS}
-    ${KDE4_KPARTS_LIBS}
-    ${KDE4_KFILE_LIBS}
+target_link_libraries( kbibtextest
+    Qt5::Core
+    KF5::KIOCore
     kbibtexconfig
     kbibtexdata
     kbibtexio
@@ -77,28 +66,11 @@ target_link_libraries(
     kbibtexnetworking
 )
 
-target_link_libraries(
-    kbibtexfilestest
-    LINK_PRIVATE
-    ${QT_QTTEST_LIBRARY}
-    ${KDE4_KDECORE_LIBS}
-    kbibtexdata
-    kbibtexio
-)
-
-
-# creates version.h using cmake script
-add_custom_target(
-    kbibtextest-GITrevision
-    COMMAND
-    ${CMAKE_COMMAND}
-    -DSOURCE_DIR=${CMAKE_SOURCE_DIR}
-    -DBINARY_DIR=${CMAKE_CURRENT_BINARY_DIR}
-    -P
-    ${CMAKE_SOURCE_DIR}/src/getgit.cmake
-    COMMENT
-    "Determine Git revision"
-)
+# target_link_libraries( kbibtexfilestest
+#     Qt5::Test
+#     kbibtexdata
+#     kbibtexio
+# )
 
 # version.h is a generated file
 set_source_files_properties(
@@ -110,7 +82,23 @@ set_source_files_properties(
     TRUE
 )
 
-add_dependencies(
-    kbibtextest
-    kbibtextest-GITrevision
+add_dependencies( kbibtextest
+    GITrevisionTest
+)
+
+# add_dependencies( kbibtexfilestest
+#     GITrevisionTest
+# )
+
+# creates version.h using cmake script
+add_custom_target(
+    GITrevisionTest
+    COMMAND
+    ${CMAKE_COMMAND}
+    -DSOURCE_DIR=${CMAKE_SOURCE_DIR}
+    -DBINARY_DIR=${CMAKE_CURRENT_BINARY_DIR}
+    -P
+    ${CMAKE_SOURCE_DIR}/src/getgit.cmake
+    COMMENT
+    "Determine Git revision"
 )

@@ -336,14 +336,14 @@ void DocumentListView::currentChanged(const QModelIndex &current, const QModelIn
     if (d->actionRemFromFav != NULL)
         d->actionRemFromFav->setEnabled(hasCurrent && isFavorite);
 
-    foreach(QAction *action, d->openMenuActions) {
-         d->actionOpenMenu->removeAction(action);
+    foreach (QAction *action, d->openMenuActions) {
+        d->actionOpenMenu->removeAction(action);
     }
     d->openMenuServices.clear();
     if (ofi != NULL) {
         d->openMenuServices = ofi->listOfServices();
         int i = 0;
-        foreach(KService::Ptr servicePtr, d->openMenuServices) {
+        foreach (KService::Ptr servicePtr, d->openMenuServices) {
             QAction *menuItem = new QAction(QIcon::fromTheme(servicePtr->icon()), servicePtr->name(), this);
             d->actionOpenMenu->addAction(menuItem);
             d->openMenuActions << menuItem;
@@ -359,8 +359,6 @@ void DocumentListView::currentChanged(const QModelIndex &current, const QModelIn
 class DocumentList::DocumentListPrivate
 {
 public:
-    DocumentList *p;
-
     DocumentListView *listOpenFiles;
     DocumentListView *listRecentFiles;
     DocumentListView *listFavorites;
