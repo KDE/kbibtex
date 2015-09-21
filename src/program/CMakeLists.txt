@@ -27,9 +27,9 @@ set(
 #     -DKDE_DEFAULT_DEBUG_AREA=101017
 # )
 
-# if(UNITY_BUILD AND NOT WIN32) # FIXME: Unity build of programs breaks on Windows
-#     enable_unity_build(kbibtex kbibtex_SRCS)
-# endif(UNITY_BUILD AND NOT WIN32)
+if(UNITY_BUILD AND NOT WIN32) # FIXME: Unity build of programs breaks on Windows
+    enable_unity_build(kbibtex kbibtex_SRCS)
+endif(UNITY_BUILD AND NOT WIN32)
 
 include_directories(
     ${CMAKE_BINARY_DIR}/src
