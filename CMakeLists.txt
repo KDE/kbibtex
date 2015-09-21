@@ -70,6 +70,7 @@ find_package(
     Parts
     CoreAddons
     Service
+    Wallet
 )
 
 # Version number for the exported headers / libs
