@@ -123,9 +123,9 @@ void Items::finishedFetchingItems()
     const int start = QUrlQuery(reply->url()).queryItemValue(queryItemStart).toInt(&ok);
 
     if (reply->hasRawHeader("Backoff"))
-        d->api->startBackoff(QString::fromAscii(reply->rawHeader("Backoff").constData()).toInt());
+        d->api->startBackoff(QString::fromLatin1(reply->rawHeader("Backoff").constData()).toInt());
     else if (reply->hasRawHeader("Retry-After"))
-        d->api->startBackoff(QString::fromAscii(reply->rawHeader("Retry-After").constData()).toInt());
+        d->api->startBackoff(QString::fromLatin1(reply->rawHeader("Retry-After").constData()).toInt());
 
     if (reply->error() == QNetworkReply::NoError && ok) {
         const QString bibTeXcode = QString::fromUtf8(reply->readAll().data());

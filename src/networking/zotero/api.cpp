@@ -82,7 +82,7 @@ QNetworkRequest API::request(const QUrl &url) const
     QNetworkRequest request(url);
     request.setRawHeader("Zotero-API-Version", "3");
     request.setRawHeader("Accept", "application/atom+xml");
-    request.setRawHeader("Authorization", QString(QLatin1String("Bearer ")).append(d->apiKey).toAscii().constData());
+    request.setRawHeader("Authorization", QString(QLatin1String("Bearer ")).append(d->apiKey).toLatin1().constData());
     return request;
 }
 
