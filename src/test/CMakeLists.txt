@@ -89,7 +89,7 @@ target_link_libraries(
 
 # creates version.h using cmake script
 add_custom_target(
-    GITrevision
+    GITrevisionTest
     COMMAND
     ${CMAKE_COMMAND}
     -DSOURCE_DIR=${CMAKE_SOURCE_DIR}
@@ -112,5 +112,5 @@ set_source_files_properties(
 
 add_dependencies(
     kbibtextest
-    GITrevision
+    GITrevisionTest
 )
