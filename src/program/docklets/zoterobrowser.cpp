@@ -377,7 +377,6 @@ void ZoteroBrowser::gotGroupList() {
         d->comboBoxGroupList->addItem(it.value(), QVariant::fromValue<int>(it.key()));
     }
     if (groupMap.isEmpty()) {
-        d->radioPersonalLibrary->setChecked(true);
         invalidateGroupList();
     } else {
         d->comboBoxGroupListInitialized = true;

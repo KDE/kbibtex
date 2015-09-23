@@ -268,6 +268,7 @@ void OAuthWizard::initializePage(int id)
         const QCursor currentCursor = cursor();
         setCursor(Qt::WaitCursor);
         d->lineEditAuthorizationUrl->setText(d->oAuthAuthorizationUrl().url(QUrl::PreferLocalFile));
+        d->lineEditAuthorizationUrl->setCursorPosition(0);
         setCursor(currentCursor);
     } else if (id == d->pageIdVerificationCode) {
         /// This page initializes itself, see VerificationCodePage::initializePage
