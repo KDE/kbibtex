@@ -337,7 +337,6 @@ void ZoteroBrowser::gotGroupList() {
         invalidateGroupList();
     } else {
         d->comboBoxGroupListInitialized = true;
-        d->radioGroupLibrary->setChecked(true);
         d->comboBoxGroupList->setEnabled(true);
     }
 
