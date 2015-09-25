@@ -140,7 +140,6 @@ public:
 
         /// If no error occurred, read the received token and token secret
         if (qOAuth->error() == QOAuth::NoError) {
-            kDebug() << "Correctly retrieved authorization URL parameters";
             token = reply.value(QOAuth::tokenParameterName());
             tokenSecret = reply.value(QOAuth::tokenSecretParameterName());
 
@@ -207,7 +206,6 @@ public:
             tokenSecret = oAuthVerifierRequest.value(QOAuth::tokenSecretParameterName());
 
             if (!token.isEmpty() && !tokenSecret.isEmpty()) {
-                kDebug() << "KBibTeX is authorized successfully";
                 bool ok = false;
                 userId = oAuthVerifierRequest.value("userID").toInt(&ok);
                 if (!ok) {
@@ -269,6 +267,7 @@ void OAuthWizard::initializePage(int id)
         const QCursor currentCursor = cursor();
         setCursor(Qt::WaitCursor);
         d->lineEditAuthorizationUrl->setText(d->oAuthAuthorizationUrl().pathOrUrl());
+        d->lineEditAuthorizationUrl->setCursorPosition(0);
         setCursor(currentCursor);
     } else if (id == d->pageIdVerificationCode) {
         /// This page initializes itself, see VerificationCodePage::initializePage

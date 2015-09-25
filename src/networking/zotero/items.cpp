@@ -20,6 +20,7 @@
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QXmlStreamReader>
+#include <QTimer>
 
 #include <KDebug>
 
@@ -38,6 +39,7 @@ private:
 
 public:
     API *api;
+    KUrl queuedRequestZoteroUrl;
 
     Private(API *a, Zotero::Items *parent)
             : p(parent), api(a) {
@@ -83,7 +85,11 @@ void Items::retrieveItemsByCollection(const QString &collection)
     else
         url.addPath(QString(QLatin1String("/collections/%1/items")).arg(collection));
     url.addQueryItem(QLatin1String("format"), QLatin1String("bibtex"));
-    d->retrieveItems(url, 0);
+    if (d->api->inBackoffMode() && d->queuedRequestZoteroUrl.isEmpty()) {
+        d->queuedRequestZoteroUrl = url;
+        QTimer::singleShot((d->api->backoffSecondsLeft() + 1) * 1000, this, SLOT(singleShotRequestZoteroUrl()));
+    } else
+        d->retrieveItems(url, 0);
 }
 
 void  Items::retrieveItemsByTag(const QString &tag)
@@ -93,7 +99,11 @@ void  Items::retrieveItemsByTag(const QString &tag)
         url.addQueryItem(QLatin1String("tag"), tag);
     url.addPath(QLatin1String("items"));
     url.addQueryItem(QLatin1String("format"), QLatin1String("bibtex"));
-    d->retrieveItems(url, 0);
+    if (d->api->inBackoffMode() && d->queuedRequestZoteroUrl.isEmpty()) {
+        d->queuedRequestZoteroUrl = url;
+        QTimer::singleShot((d->api->backoffSecondsLeft() + 1) * 1000, this, SLOT(singleShotRequestZoteroUrl()));
+    } else
+        d->retrieveItems(url, 0);
 }
 
 void Items::finishedFetchingItems()
@@ -102,6 +112,11 @@ void Items::finishedFetchingItems()
     static const QString queryItemStart = QLatin1String("start");
     bool ok = false;
     const int start = reply->url().queryItemValue(queryItemStart).toInt(&ok);
+
+    if (reply->hasRawHeader("Backoff"))
+        d->api->startBackoff(QString::fromLatin1(reply->rawHeader("Backoff").constData()).toInt());
+    else if (reply->hasRawHeader("Retry-After"))
+        d->api->startBackoff(QString::fromLatin1(reply->rawHeader("Retry-After").constData()).toInt());
 
     if (reply->error() == QNetworkReply::NoError && ok) {
         const QString bibTeXcode = QString::fromUtf8(reply->readAll().data());
@@ -130,4 +145,9 @@ void Items::finishedFetchingItems()
         kWarning() << reply->errorString(); ///< something went wrong
         emit stoppedSearch(1); // TODO proper error codes
     }
+}
+
+void Items::singleShotRequestZoteroUrl() {
+    d->retrieveItems(d->queuedRequestZoteroUrl, 0);
+    d->queuedRequestZoteroUrl.clear();
 }

@@ -52,6 +52,7 @@ private:
 
 private slots:
     void finishedFetchingGroups();
+    void singleShotRequestZoteroUrl();
 };
 
 } // end of namespace Zotero

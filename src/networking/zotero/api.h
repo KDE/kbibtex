@@ -85,6 +85,49 @@ public:
      */
     QNetworkRequest request(const KUrl &url) const;
 
+    /**
+     * A user of this API may receive a 'backoff' or 'retry-after'
+     * notification from Zotero. In this case, this function has
+     * to be called to notify this API object of the duration of
+     * this backoff. Users can test if the API object is in 'backoff'
+     * mode by calling @see inBackoffMode.
+     * @param duration backoff's duration in seconds
+     */
+    void startBackoff(int duration);
+
+    /**
+     * Due to high load at Zotero or due to excessive use by
+     * the current user, further request to Zotero shall be
+     * backed off for some time. Before a request is made
+     * through this API, call this function to test if the
+     * API object is in 'backoff' mode.
+     * The backoff is not enforced by this API, but Zotero
+     * may deny answering request during this time period.
+     * @return true if backoff mode, false otherwise
+     */
+    bool inBackoffMode() const;
+
+    /**
+     * Computes the number of seconds still left for backoff
+     * mode (>=0). If the API is not in backoff mode, 0 will
+     * be returned.
+     * @return a non-negative number of seconds left in backoff mode
+     */
+    qint64 backoffSecondsLeft() const;
+
+signals:
+    /**
+     * Signal gets emitted when backoff mode is entered.
+     */
+    void backoffModeStart();
+    /**
+     * Signal gets emitted when backoffmode is left.
+     */
+    void backoffModeEnd();
+
+private slots:
+    void startBackoffSingleShot();
+
 private:
     class Private;
     Private *const d;

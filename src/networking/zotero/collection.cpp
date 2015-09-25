@@ -22,6 +22,7 @@
 #include <QVector>
 #include <QNetworkReply>
 #include <QXmlStreamReader>
+#include <QTimer>
 
 #include <KDebug>
 #include <KLocale>
@@ -38,9 +39,11 @@ class Zotero::Collection::Private
 {
 private:
     Zotero::Collection *p;
-    Zotero::API *api;
 
 public:
+    Zotero::API *api;
+    KUrl queuedRequestZoteroUrl;
+
     Private(API *a, Zotero::Collection *parent)
             : p(parent), api(a) {
         initialized = false;
@@ -73,7 +76,6 @@ public:
             requestZoteroUrl(url);
         } else {
             initialized = true;
-            kDebug() << "Queue is empty, number of found collections:" << collectionToLabel.count();
             p->emitFinishedLoading();
         }
     }
@@ -86,7 +88,11 @@ Collection::Collection(API *api, QObject *parent)
 
     KUrl url = api->baseUrl();
     url.addPath(QLatin1String("/collections/top"));
-    d->requestZoteroUrl(url);
+    if (api->inBackoffMode() && d->queuedRequestZoteroUrl.isEmpty()) {
+        d->queuedRequestZoteroUrl = url;
+        QTimer::singleShot((api->backoffSecondsLeft() + 1) * 1000, this, SLOT(singleShotRequestZoteroUrl()));
+    } else
+        d->requestZoteroUrl(url);
 }
 
 Collection::~Collection()
@@ -154,6 +160,11 @@ void Collection::finishedFetchingCollection()
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
     QString parentId = top;
 
+    if (reply->hasRawHeader("Backoff"))
+        d->api->startBackoff(QString::fromLatin1(reply->rawHeader("Backoff").constData()).toInt());
+    else if (reply->hasRawHeader("Retry-After"))
+        d->api->startBackoff(QString::fromLatin1(reply->rawHeader("Retry-After").constData()).toInt());
+
     if (reply->error() == QNetworkReply::NoError) {
         QString nextPage;
         QXmlStreamReader xmlReader(reply);
@@ -214,4 +225,9 @@ void Collection::emitFinishedLoading()
 {
     d->busy = false;
     emit finishedLoading();
+}
+
+void Collection::singleShotRequestZoteroUrl() {
+    d->requestZoteroUrl(d->queuedRequestZoteroUrl);
+    d->queuedRequestZoteroUrl.clear();
 }

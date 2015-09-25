@@ -55,9 +55,9 @@ private:
 
 private slots:
     void finishedFetchingItems();
+    void singleShotRequestZoteroUrl();
 };
 
 } // end of namespace Zotero
 
 #endif // KBIBTEX_NETWORKING_ZOTERO_ITEMS_H
-

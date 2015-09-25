@@ -19,6 +19,7 @@
 
 #include <QNetworkReply>
 #include <QXmlStreamReader>
+#include <QTimer>
 
 #include <KUrl>
 #include <KDebug>
@@ -35,6 +36,7 @@ private:
 
 public:
     API *api;
+    KUrl queuedRequestZoteroUrl;
 
     Private(API *a, Zotero::Groups *parent)
             : p(parent), api(a) {
@@ -63,7 +65,11 @@ Groups::Groups(API *api, QObject *parent)
     KUrl url = api->baseUrl();
     Q_ASSERT_X(url.path().contains(QLatin1String("users/")), "Groups::Groups(API *api, QObject *parent)", "Provided base URL does not contain 'users/' as expected");
     url.addPath(QLatin1String("/groups"));
-    d->requestZoteroUrl(url);
+    if (d->api->inBackoffMode() && d->queuedRequestZoteroUrl.isEmpty()) {
+        d->queuedRequestZoteroUrl = url;
+        QTimer::singleShot((d->api->backoffSecondsLeft() + 1) * 1000, this, SLOT(singleShotRequestZoteroUrl()));
+    } else
+        d->requestZoteroUrl(url);
 }
 
 Groups::~Groups()
@@ -89,6 +95,11 @@ QMap<int, QString> Groups::groups() const
 void Groups::finishedFetchingGroups()
 {
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
+
+    if (reply->hasRawHeader("Backoff"))
+        d->api->startBackoff(QString::fromLatin1(reply->rawHeader("Backoff").constData()).toInt());
+    else if (reply->hasRawHeader("Retry-After"))
+        d->api->startBackoff(QString::fromLatin1(reply->rawHeader("Retry-After").constData()).toInt());
 
     if (reply->error() == QNetworkReply::NoError) {
         QString nextPage;
@@ -133,4 +144,9 @@ void Groups::finishedFetchingGroups()
         d->initialized = false;
         emit finishedLoading();
     }
+}
+
+void Groups::singleShotRequestZoteroUrl() {
+    d->requestZoteroUrl(d->queuedRequestZoteroUrl);
+    d->queuedRequestZoteroUrl.clear();
 }

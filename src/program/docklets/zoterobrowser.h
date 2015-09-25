@@ -54,6 +54,8 @@ private slots:
 #ifdef HAVE_QTOAUTH // krazy:exclude=cpp
     void getOAuthCredentials();
 #endif // HAVE_QTOAUTH
+    void readOAuthCredentials(bool);
+    void writeOAuthCredentials(bool);
 };
 
 

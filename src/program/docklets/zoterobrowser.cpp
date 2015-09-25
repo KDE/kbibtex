@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2015 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -31,6 +31,8 @@
 #include <KPushButton>
 #include <KConfigGroup>
 #include <KMessageBox>
+#include <KDebug>
+#include <KWallet/Wallet>
 
 #include "element.h"
 #include "searchresults.h"
@@ -52,7 +54,7 @@ private:
 
     KSharedConfigPtr config;
     static const QString configGroupName;
-    static const QString configEntryNumericUserIds, configEntryApiKeys;
+    static const QString configEntryNumericUserId, configEntryApiKey;
 
 public:
     Zotero::Items *items;
@@ -68,8 +70,8 @@ public:
     QTabWidget *tabWidget;
     QTreeView *collectionBrowser;
     QListView *tagBrowser;
-    KComboBox *comboBoxNumericUserId;
-    KComboBox *comboBoxApiKey;
+    KLineEdit *lineEditNumericUserId;
+    KLineEdit *lineEditApiKey;
     QRadioButton *radioPersonalLibrary;
     QRadioButton *radioGroupLibrary;
     bool comboBoxGroupListInitialized;
@@ -78,11 +80,20 @@ public:
 
     QCursor nonBusyCursor;
 
+    KWallet::Wallet *wallet;
+    static const QString walletFolderOAuth, walletEntryKBibTeXZotero, walletKeyZoteroId, walletKeyZoteroApiKey;
+
     Private(SearchResults *sr, ZoteroBrowser *parent)
             : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), items(NULL), groups(NULL), tags(NULL), tagModel(NULL), collection(NULL), collectionModel(NULL), api(NULL), searchResults(sr), comboBoxGroupListInitialized(false), nonBusyCursor(p->cursor()) {
         setupGUI();
+
+        wallet = KWallet::Wallet::openWallet(KWallet::Wallet::NetworkWallet(), parent->winId(), KWallet::Wallet::Asynchronous);
+        connect(wallet, SIGNAL(walletOpened(bool)), parent, SLOT(readOAuthCredentials(bool)));
     }
 
+    ~Private() {
+        delete wallet;
+    }
 
     void setupGUI()
     {
@@ -90,43 +101,23 @@ public:
         tabWidget = new QTabWidget(p);
         layout->addWidget(tabWidget);
 
-        /// Credentials
         QWidget *container = new QWidget(tabWidget);
-        tabWidget->addTab(container, KIcon("preferences-web-browser-identification"), i18n("Credentials"));
+        tabWidget->addTab(container, KIcon("preferences-web-browser-identification"), i18n("Library"));
         QBoxLayout *containerLayout = new QVBoxLayout(container);
-        QFormLayout *containerForm = new QFormLayout();
-        containerLayout->addLayout(containerForm, 1);
-        containerForm->setMargin(0);
 
-        comboBoxNumericUserId = new KComboBox(container);
-        comboBoxNumericUserId->setEditable(true);
-        QSizePolicy sizePolicy = comboBoxNumericUserId->sizePolicy();
+        /// Personal or Group Library
+        QGridLayout *gridLayout = new QGridLayout();
+        containerLayout->addLayout(gridLayout);
+        gridLayout->setMargin(0);
+        gridLayout->setColumnMinimumWidth(0, 16); // TODO determine size of a radio button
+        radioPersonalLibrary = new QRadioButton(i18n("Personal library"), container);
+        gridLayout->addWidget(radioPersonalLibrary, 0, 0, 1, 2);
+        radioGroupLibrary = new QRadioButton(i18n("Group library"), container);
+        gridLayout->addWidget(radioGroupLibrary, 1, 0, 1, 2);
+        comboBoxGroupList = new KComboBox(false, container);
+        gridLayout->addWidget(comboBoxGroupList, 2, 1, 1, 1);
+        QSizePolicy sizePolicy = comboBoxGroupList->sizePolicy();
         sizePolicy.setHorizontalPolicy(QSizePolicy::MinimumExpanding);
-        comboBoxNumericUserId->setSizePolicy(sizePolicy);
-        qobject_cast<KLineEdit *>(comboBoxNumericUserId->lineEdit())->setClearButtonShown(true);
-        containerForm->addRow(i18n("Numeric user id:"), comboBoxNumericUserId);
-        connect(comboBoxNumericUserId->lineEdit(), SIGNAL(textChanged(QString)), p, SLOT(invalidateGroupList()));
-        connect(comboBoxNumericUserId->lineEdit(), SIGNAL(textChanged(QString)), p, SLOT(updateButtons()));
-
-        comboBoxApiKey = new KComboBox(container);
-        comboBoxApiKey->setEditable(true);
-        comboBoxApiKey->setSizePolicy(sizePolicy);
-        qobject_cast<KLineEdit *>(comboBoxApiKey->lineEdit())->setClearButtonShown(true);
-        containerForm->addRow(i18n("API key:"), comboBoxApiKey);
-        connect(comboBoxApiKey->lineEdit(), SIGNAL(textChanged(QString)), p, SLOT(invalidateGroupList()));
-        connect(comboBoxApiKey->lineEdit(), SIGNAL(textChanged(QString)), p, SLOT(updateButtons()));
-
-        QWidget *libraryContainer = new QWidget(container);
-        QGridLayout *libraryContainerLayout = new QGridLayout(libraryContainer);
-        libraryContainerLayout->setMargin(0);
-        libraryContainerLayout->setColumnMinimumWidth(0, 16); // TODO determine size of a radio button
-        containerForm->addRow(QString(), libraryContainer);
-        radioPersonalLibrary = new QRadioButton(i18n("Personal library"), libraryContainer);
-        libraryContainerLayout->addWidget(radioPersonalLibrary, 0, 0, 1, 2);
-        radioGroupLibrary = new QRadioButton(i18n("Group library"), libraryContainer);
-        libraryContainerLayout->addWidget(radioGroupLibrary, 1, 0, 1, 2);
-        comboBoxGroupList = new KComboBox(false, libraryContainer);
-        libraryContainerLayout->addWidget(comboBoxGroupList, 2, 1, 1, 1);
         comboBoxGroupList->setSizePolicy(sizePolicy);
         radioPersonalLibrary->setChecked(true);
         comboBoxGroupList->setEnabled(false);
@@ -144,15 +135,37 @@ public:
 
         containerLayout->addStretch(10);
 
+        /// Credentials
+        QFormLayout *containerForm = new QFormLayout();
+        containerLayout->addLayout(containerForm, 1);
+        containerForm->setMargin(0);
+        lineEditNumericUserId = new KLineEdit(container);
+        lineEditNumericUserId->setSizePolicy(sizePolicy);
 #ifdef HAVE_QTOAUTH // krazy:exclude=cpp
+        /// If OAuth is available, make widget read-only
+        /// so that it can only be set through OAuth wizard
+        lineEditNumericUserId->setReadOnly(true);
+#endif // not HAVE_QTOAUTH
+        containerForm->addRow(i18n("Numeric user id:"), lineEditNumericUserId);
+        connect(lineEditNumericUserId, SIGNAL(textChanged(QString)), p, SLOT(invalidateGroupList()));
+
+        lineEditApiKey = new KLineEdit(container);
+        lineEditApiKey->setSizePolicy(sizePolicy);
+#ifdef HAVE_QTOAUTH // krazy:exclude=cpp
+/// If OAuth is available, make widget read-only
+/// so that it can only be set through OAuth wizard
+        lineEditApiKey->setReadOnly(true);
+#endif // not HAVE_QTOAUTH
+        containerForm->addRow(i18n("API key:"), lineEditApiKey);
+        connect(lineEditApiKey, SIGNAL(textChanged(QString)), p, SLOT(invalidateGroupList()));
+
         containerButtonLayout = new QHBoxLayout();
         containerLayout->addLayout(containerButtonLayout, 0);
         containerButtonLayout->setMargin(0);
-        KPushButton *buttonGetOAuthCredentials = new KPushButton(KIcon("preferences-web-browser-identification"), i18n("Get Credentials"), container);
+        QPushButton *buttonGetOAuthCredentials = new QPushButton(QIcon::fromTheme("preferences-web-browser-identification"), i18n("Get Credentials"), container);
         containerButtonLayout->addWidget(buttonGetOAuthCredentials, 0);
         connect(buttonGetOAuthCredentials, SIGNAL(clicked()), p, SLOT(getOAuthCredentials()));
         containerButtonLayout->addStretch(1);
-#endif // HAVE_QTOAUTH
 
         /// Collection browser
         collectionBrowser = new QTreeView(tabWidget);
@@ -167,70 +180,27 @@ public:
         connect(tagBrowser, SIGNAL(doubleClicked(QModelIndex)), p, SLOT(tagDoubleClicked(QModelIndex)));
     }
 
-    void loadState() {
-        KConfigGroup configGroup(config, configGroupName);
-
-        const QStringList numericUserIds = configGroup.readEntry(configEntryNumericUserIds, QStringList());
-        comboBoxNumericUserId->clear();
-        comboBoxNumericUserId->addItems(numericUserIds);
-        if (!numericUserIds.isEmpty()) comboBoxNumericUserId->setCurrentIndex(0);
-
-        const QStringList apiKeys = configGroup.readEntry(configEntryApiKeys, QStringList());
-        comboBoxApiKey->clear();
-        comboBoxApiKey->addItems(apiKeys);
-        if (!apiKeys.isEmpty()) comboBoxApiKey->setCurrentIndex(0);
-
-        p->updateButtons();
-    }
-
-    void saveState() {
-        KConfigGroup configGroup(config, configGroupName);
-
-        QStringList buffer;
-        for (int i = 0; i < comboBoxNumericUserId->count(); ++i)
-            buffer.append(comboBoxNumericUserId->itemText(i));
-        configGroup.writeEntry(configEntryNumericUserIds, buffer);
-
-        buffer.clear();
-        for (int i = 0; i < comboBoxApiKey->count(); ++i)
-            buffer.append(comboBoxApiKey->itemText(i));
-        configGroup.writeEntry(configEntryApiKeys, buffer);
-
-        config->sync();
-    }
-
-    void addTextToLists() {
-        QString buffer = comboBoxNumericUserId->currentText();
-        if (comboBoxNumericUserId->itemText(0) != buffer) {
-            for (int i = 0; i < comboBoxNumericUserId->count(); ++i)
-                if (comboBoxNumericUserId->itemText(i) == buffer) {
-                    comboBoxNumericUserId->removeItem(i);
-                    break;
-                }
-            comboBoxNumericUserId->insertItem(0, buffer);
-        }
-
-        buffer = comboBoxApiKey->currentText();
-        if (comboBoxApiKey->itemText(0) != buffer) {
-            for (int i = 0; i < comboBoxApiKey->count(); ++i)
-                if (comboBoxApiKey->itemText(i) == buffer) {
-                    comboBoxApiKey->removeItem(i);
-                    break;
-                }
-            comboBoxApiKey->insertItem(0, buffer);
+    void queueWriteOAuthCredentials() {
+        if (wallet->isOpen())
+            p->writeOAuthCredentials(true);
+        else {
+            wallet = KWallet::Wallet::openWallet(KWallet::Wallet::NetworkWallet(), p->winId(), KWallet::Wallet::Asynchronous);
+            connect(wallet, SIGNAL(walletOpened(bool)), p, SLOT(writeOAuthCredentials(bool)));
         }
     }
 };
 
 const QString ZoteroBrowser::Private::configGroupName = QLatin1String("ZoteroBrowser");
-const QString ZoteroBrowser::Private::configEntryNumericUserIds = QLatin1String("NumericUserIds");
-const QString ZoteroBrowser::Private::configEntryApiKeys = QLatin1String("ApiKeys");
+const QString ZoteroBrowser::Private::walletFolderOAuth = QLatin1String("OAuth");
+const QString ZoteroBrowser::Private::walletEntryKBibTeXZotero = QLatin1String("KBibTeX/Zotero");
+const QString ZoteroBrowser::Private::walletKeyZoteroId = QLatin1String("UserId");
+const QString ZoteroBrowser::Private::walletKeyZoteroApiKey = QLatin1String("ApiKey");
 
 ZoteroBrowser::ZoteroBrowser(SearchResults *searchResults, QWidget *parent)
         : QWidget(parent), d(new ZoteroBrowser::Private(searchResults, this))
 {
-    d->loadState();
     /// Forece GUI update
+    updateButtons();
     radioButtonsToggled();
 }
 
@@ -286,13 +256,16 @@ void ZoteroBrowser::reenableWidget()
 
 void ZoteroBrowser::updateButtons()
 {
-    d->buttonLoadBibliography->setEnabled(!d->comboBoxNumericUserId->currentText().isEmpty() && !d->comboBoxApiKey->currentText().isEmpty());
+    const bool validNumericIdAndApiKey = !d->lineEditNumericUserId->text().isEmpty() && !d->lineEditApiKey->text().isEmpty();
+    d->buttonLoadBibliography->setEnabled(validNumericIdAndApiKey);
+    d->radioGroupLibrary->setEnabled(validNumericIdAndApiKey);
+    d->radioPersonalLibrary->setEnabled(validNumericIdAndApiKey);
 }
 
 void ZoteroBrowser::applyCredentials()
 {
     bool ok = false;
-    const int userId = d->comboBoxNumericUserId->currentText().toInt(&ok);
+    const int userId = d->lineEditNumericUserId->text().toInt(&ok);
     if (ok) {
         setCursor(Qt::WaitCursor);
         setEnabled(false);
@@ -308,11 +281,8 @@ void ZoteroBrowser::applyCredentials()
         d->collectionModel->deleteLater();
         d->tagModel->deleteLater();
 
-        d->addTextToLists();
-        d->saveState();
-
         const bool makeGroupRequest = d->radioGroupLibrary->isChecked() && groupId > 0;
-        d->api = new Zotero::API(makeGroupRequest ? Zotero::API::GroupRequest : Zotero::API::UserRequest, makeGroupRequest ? groupId : userId, d->comboBoxApiKey->currentText(), this);
+        d->api = new Zotero::API(makeGroupRequest ? Zotero::API::GroupRequest : Zotero::API::UserRequest, makeGroupRequest ? groupId : userId, d->lineEditApiKey->text(), this);
         d->items = new Zotero::Items(d->api, this);
         d->tags = new Zotero::Tags(d->api, this);
         d->tagModel = new Zotero::TagModel(d->tags, this);
@@ -329,7 +299,7 @@ void ZoteroBrowser::applyCredentials()
 
         d->tabWidget->setCurrentIndex(1);
     } else
-        KMessageBox::information(this, i18n("Value '%1' is not a valid numeric identifier of a user or a group.", d->comboBoxNumericUserId->currentText()), i18n("Invalid numeric identifier"));
+        KMessageBox::information(this, i18n("Value '%1' is not a valid numeric identifier of a user or a group.", d->lineEditNumericUserId->text()), i18n("Invalid numeric identifier"));
 }
 
 void ZoteroBrowser::radioButtonsToggled() {
@@ -340,7 +310,7 @@ void ZoteroBrowser::radioButtonsToggled() {
 
 void ZoteroBrowser::retrieveGroupList() {
     bool ok = false;
-    const int userId = d->comboBoxNumericUserId->currentText().toInt(&ok);
+    const int userId = d->lineEditNumericUserId->text().toInt(&ok);
     if (ok) {
         setCursor(Qt::WaitCursor);
         setEnabled(false);
@@ -350,7 +320,7 @@ void ZoteroBrowser::retrieveGroupList() {
         d->api->deleteLater();
         d->groups->deleteLater();
 
-        d->api = new Zotero::API(Zotero::API::UserRequest, userId, d->comboBoxApiKey->currentText(), this);
+        d->api = new Zotero::API(Zotero::API::UserRequest, userId, d->lineEditApiKey->text(), this);
         d->groups = new Zotero::Groups(d->api, this);
 
         connect(d->groups, SIGNAL(finishedLoading()), this, SLOT(gotGroupList()));
@@ -371,11 +341,9 @@ void ZoteroBrowser::gotGroupList() {
         d->comboBoxGroupList->addItem(it.value(), QVariant::fromValue<int>(it.key()));
     }
     if (groupMap.isEmpty()) {
-        d->radioPersonalLibrary->setChecked(true);
         invalidateGroupList();
     } else {
         d->comboBoxGroupListInitialized = true;
-        d->radioGroupLibrary->setChecked(true);
         d->comboBoxGroupList->setEnabled(true);
     }
 
@@ -387,10 +355,45 @@ void ZoteroBrowser::getOAuthCredentials()
 {
     QPointer<Zotero::OAuthWizard> wizard = new Zotero::OAuthWizard(this);
     if (wizard->exec() && !wizard->apiKey().isEmpty() && wizard->userId() >= 0) {
-        d->comboBoxApiKey->setEditText(wizard->apiKey());
-        d->comboBoxNumericUserId->setEditText(QString::number(wizard->userId()));
-        d->addTextToLists();
+        d->lineEditApiKey->setText(wizard->apiKey());
+        d->lineEditNumericUserId->setText(QString::number(wizard->userId()));
+        d->queueWriteOAuthCredentials();
+        updateButtons();
+        retrieveGroupList();
     }
     delete wizard;
 }
 #endif // HAVE_QTOAUTH
+
+void ZoteroBrowser::readOAuthCredentials(bool ok) {
+    /// Do not call this slot a second time
+    disconnect(d->wallet, SIGNAL(walletOpened(bool)), this, SLOT(readOAuthCredentials(bool)));
+
+    if (ok && (d->wallet->hasFolder(ZoteroBrowser::Private::walletFolderOAuth) || d->wallet->createFolder(ZoteroBrowser::Private::walletFolderOAuth)) && d->wallet->setFolder(ZoteroBrowser::Private::walletFolderOAuth)) {
+        if (d->wallet->hasEntry(ZoteroBrowser::Private::walletEntryKBibTeXZotero)) {
+            QMap<QString, QString> map;
+            if (d->wallet->readMap(ZoteroBrowser::Private::walletEntryKBibTeXZotero, map) == 0) {
+                if (map.contains(ZoteroBrowser::Private::walletKeyZoteroId) && map.contains(ZoteroBrowser::Private::walletKeyZoteroApiKey)) {
+                    d->lineEditNumericUserId->setText(map.value(ZoteroBrowser::Private::walletKeyZoteroId, QString()));
+                    d->lineEditApiKey->setText(map.value(ZoteroBrowser::Private::walletKeyZoteroApiKey, QString()));
+                    updateButtons();
+                    retrieveGroupList();
+                }
+            }
+        }
+    } else
+        kWarning() << "Accessing KWallet to sync API key did not succeed";
+}
+
+void ZoteroBrowser::writeOAuthCredentials(bool ok) {
+    disconnect(d->wallet, SIGNAL(walletOpened(bool)), this, SLOT(writeOAuthCredentials(bool)));
+
+    if (ok && (d->wallet->hasFolder(ZoteroBrowser::Private::walletFolderOAuth) || d->wallet->createFolder(ZoteroBrowser::Private::walletFolderOAuth)) && d->wallet->setFolder(ZoteroBrowser::Private::walletFolderOAuth)) {
+        QMap<QString, QString> map;
+        map.insert(ZoteroBrowser::Private::walletKeyZoteroId, d->lineEditNumericUserId->text());
+        map.insert(ZoteroBrowser::Private::walletKeyZoteroApiKey, d->lineEditApiKey->text());
+        if (d->wallet->writeMap(ZoteroBrowser::Private::walletEntryKBibTeXZotero, map) != 0)
+            kWarning() << "Writing API key to KWallet failed";
+    } else
+        kWarning() << "Accessing KWallet to sync API key did not succeed";
+}

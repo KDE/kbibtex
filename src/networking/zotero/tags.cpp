@@ -19,6 +19,7 @@
 
 #include <QNetworkReply>
 #include <QXmlStreamReader>
+#include <QTimer>
 
 #include <KUrl>
 #include <KDebug>
@@ -35,6 +36,7 @@ private:
 
 public:
     API *api;
+    KUrl queuedRequestZoteroUrl;
 
     Private(API *a, Zotero::Tags *parent)
             : p(parent), api(a) {
@@ -60,9 +62,15 @@ public:
 Tags::Tags(API *api, QObject *parent)
         : QObject(parent), d(new Zotero::Tags::Private(api, this))
 {
+
     KUrl url = api->baseUrl();
     url.addPath(QLatin1String("/tags"));
-    d->requestZoteroUrl(url);
+
+    if (api->inBackoffMode() && d->queuedRequestZoteroUrl.isEmpty()) {
+        d->queuedRequestZoteroUrl = url;
+        QTimer::singleShot((d->api->backoffSecondsLeft() + 1) * 1000, this, SLOT(singleShotRequestZoteroUrl()));
+    } else
+        d->requestZoteroUrl(url);
 }
 
 Tags::~Tags()
@@ -88,6 +96,11 @@ QMap<QString, int> Tags::tags() const
 void Tags::finishedFetchingTags()
 {
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
+
+    if (reply->hasRawHeader("Backoff"))
+        d->api->startBackoff(QString::fromLatin1(reply->rawHeader("Backoff").constData()).toInt());
+    else if (reply->hasRawHeader("Retry-After"))
+        d->api->startBackoff(QString::fromLatin1(reply->rawHeader("Retry-After").constData()).toInt());
 
     if (reply->error() == QNetworkReply::NoError) {
         QString nextPage;
@@ -132,4 +145,9 @@ void Tags::finishedFetchingTags()
         d->initialized = false;
         emit finishedLoading();
     }
+}
+
+void Tags::singleShotRequestZoteroUrl() {
+    d->requestZoteroUrl(d->queuedRequestZoteroUrl);
+    d->queuedRequestZoteroUrl.clear();
 }
