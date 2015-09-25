@@ -43,14 +43,6 @@ int main(int argc, char *argv[])
     programCore.setApplicationDisplayName(aboutData.displayName());
     programCore.setWindowIcon(QIcon::fromTheme(QLatin1String("kbibtex")));
 
-    //  KCmdLineOptions programOptions;
-    //  programOptions.add("+[URL(s)]", ki18n("File(s) to load"), 0);
-    //  KCmdLineArgs::addCmdLineOptions(programOptions);
-
-    //  KAboutData::setApplicationData(aboutData);
-    //  KCmdLineArgs::init(argc, argv, &aboutData);
-    // KApplication programCore;
-
     qDebug() << "Starting KBibTeX version" << versionNumber;
 
     QCommandLineParser cmdLineParser;
@@ -75,9 +67,6 @@ int main(int argc, char *argv[])
     }
 
     mainWindow->show();
-
-    //}
-
 
     /*
      KService::Ptr service = KService::serviceByStorageId("kbibtexpart.desktop");
