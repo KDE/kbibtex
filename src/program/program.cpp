@@ -79,6 +79,8 @@ int main(int argc, char *argv[])
 
     KService::Ptr service = KService::serviceByStorageId("kbibtexpart.desktop");
     if (service.data() == NULL) {
+        /// Dump some environment variables that may be helpful
+        /// in tracing back why the part's .desktop file was not found
         qCDebug(LOG_KBIBTEX_PROGRAM) << "PATH=" << getenv("PATH");
         qCDebug(LOG_KBIBTEX_PROGRAM) << "LD_LIBRARY_PATH=" << getenv("LD_LIBRARY_PATH");
         qCDebug(LOG_KBIBTEX_PROGRAM) << "XDG_DATA_DIRS=" << getenv("XDG_DATA_DIRS");
