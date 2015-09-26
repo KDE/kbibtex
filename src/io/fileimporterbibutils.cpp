@@ -18,9 +18,9 @@
 #include "fileimporterbibutils.h"
 
 #include <QBuffer>
-#include <QDebug>
 
 #include "fileimporterbibtex.h"
+#include "logging_io.h"
 
 class FileImporterBibUtils::Private
 {
@@ -51,7 +51,7 @@ FileImporterBibUtils::~FileImporterBibUtils()
 File *FileImporterBibUtils::load(QIODevice *iodevice)
 {
     if (!iodevice->isReadable() && !iodevice->open(QIODevice::ReadOnly)) {
-        qWarning() << "Input device not readable";
+        qCWarning(LOG_KBIBTEX_IO) << "Input device not readable";
         return NULL;
     }
 

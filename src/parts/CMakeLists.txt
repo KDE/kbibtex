@@ -4,6 +4,7 @@ set(
     kbibtexpart_SRCS
     part.cpp
     browserextension.cpp
+    logging_parts.cpp
 )
 
 # # debug area for KBibTeX's IO library

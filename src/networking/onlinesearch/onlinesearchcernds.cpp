@@ -18,10 +18,11 @@
 
 #include "onlinesearchcernds.h"
 
-#include <QDebug>
 #include <QUrlQuery>
 
 #include <KLocalizedString>
+
+#include "logging_networking.h"
 
 OnlineSearchCERNDS::OnlineSearchCERNDS(QWidget *parent)
         : OnlineSearchSimpleBibTeXDownload(parent)

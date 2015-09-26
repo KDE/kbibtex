@@ -8,6 +8,7 @@ set(
     checkbibtex.cpp
     bibliographyservice.cpp
     journalabbreviations.cpp
+    logging_processing.cpp
 )
 
 set(

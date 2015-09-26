@@ -27,7 +27,6 @@
 #include <QPushButton>
 #include <QApplication>
 #include <QIcon>
-#include <QDebug>
 #include <QAction>
 
 #include <KIconLoader>

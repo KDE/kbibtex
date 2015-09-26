@@ -20,7 +20,7 @@
 
 #include <QFont>
 
-#include <QDebug>
+#include "logging_gui.h"
 
 class ItalicTextItemModel::Private
 {
@@ -72,7 +72,7 @@ QVariant ItalicTextItemModel::data(const QModelIndex &index, int role) const
         /// Show text as passed as first parameter to function addItem
         return d->data[index.row()].first;
     } else if (role == Qt::UserRole) {
-        qWarning() << "Requesting data from Qt::UserRole is deprecated, should not happen";
+        qCWarning(LOG_KBIBTEX_GUI) << "Requesting data from Qt::UserRole is deprecated, should not happen";
     } else if (role == IdentifierRole) {
         /// Return string as passed as second parameter to function addItem
         return d->data[index.row()].second;

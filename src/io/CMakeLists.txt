@@ -27,6 +27,7 @@ set(
     iconvlatex.cpp
     bibutils.cpp
     xsltransform.cpp
+    logging_io.cpp
 )
 
 set(

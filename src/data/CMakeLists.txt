@@ -10,6 +10,7 @@ set(
     preamble.cpp
     value.cpp
     models/filemodel.cpp
+    logging_data.cpp
 )
 
 set(

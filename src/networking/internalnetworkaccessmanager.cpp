@@ -30,10 +30,11 @@
 #include <QtGlobal>
 #include <QApplication>
 #include <QTimer>
-#include <QDebug>
 #include <QUrl>
 
 #include <KProtocolManager>
+
+#include "logging_networking.h"
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
@@ -189,7 +190,7 @@ void InternalNetworkAccessManager::networkReplyTimeout()
     timer->stop();
     QNetworkReply *reply = m_mapTimerToReply[timer];
     if (reply != NULL) {
-        qWarning() << "Timeout on reply to " << reply->url().toString();
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "Timeout on reply to " << reply->url().toString();
         reply->close();
         m_mapTimerToReply.remove(timer);
     }

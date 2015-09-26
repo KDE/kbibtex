@@ -17,12 +17,13 @@
 
 #include "bibtexentries.h"
 
-#include <QDebug>
 #include <QStandardPaths>
 
 #include <KLocalizedString>
 #include <KSharedConfig>
 #include <KConfigGroup>
+
+#include "logging_config.h"
 
 bool operator==(const EntryDescription &a, const EntryDescription &b)
 {
@@ -76,7 +77,7 @@ public:
             p->append(ed);
         }
 
-        if (p->isEmpty()) qWarning() << "List of entry descriptions is empty";
+        if (p->isEmpty()) qCWarning(LOG_KBIBTEX_CONFIG) << "List of entry descriptions is empty";
     }
 
     void save() {

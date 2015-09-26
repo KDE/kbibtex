@@ -26,10 +26,16 @@
 #include <KLocalizedString>
 
 #include "mainwindow.h"
+#include "logging_program.h"
 #include "version.h"
 
 int main(int argc, char *argv[])
 {
+    if (versionNumber[0] == 'G' && versionNumber[1] == 'i' && versionNumber[2] == 't' && versionNumber[3] == ' ') {
+        /// In Git versions, enable debugging by default
+        QLoggingCategory::setFilterRules(QStringLiteral("kbibtex.*.debug = true"));
+    }
+
     QApplication programCore(argc, argv);
 
     KLocalizedString::setApplicationDomain("kbibtex");
@@ -46,7 +52,7 @@ int main(int argc, char *argv[])
     programCore.setApplicationDisplayName(aboutData.displayName());
     programCore.setWindowIcon(QIcon::fromTheme(QLatin1String("kbibtex")));
 
-    qDebug() << "Starting KBibTeX version" << versionNumber;
+    qCDebug(LOG_KBIBTEX_PROGRAM) << "Starting KBibTeX version" << versionNumber;
 
     QCommandLineParser cmdLineParser;
     cmdLineParser.addHelpOption();
@@ -73,13 +79,14 @@ int main(int argc, char *argv[])
 
     KService::Ptr service = KService::serviceByStorageId("kbibtexpart.desktop");
     if (service.data() == NULL) {
+        qCDebug(LOG_KBIBTEX_PROGRAM) << "PATH=" << getenv("PATH");
+        qCDebug(LOG_KBIBTEX_PROGRAM) << "LD_LIBRARY_PATH=" << getenv("LD_LIBRARY_PATH");
+        qCDebug(LOG_KBIBTEX_PROGRAM) << "XDG_DATA_DIRS=" << getenv("XDG_DATA_DIRS");
+        qCDebug(LOG_KBIBTEX_PROGRAM) << "QT_PLUGIN_PATH=" << getenv("QT_PLUGIN_PATH");
+        qCDebug(LOG_KBIBTEX_PROGRAM) << "KDEDIRS=" << getenv("KDEDIRS");
         QMessageBox::warning(mainWindow, i18n("Incomplete KBibTeX Installation"), i18n("KBibTeX seems to be not installed completely. KBibTeX could not locate its own KPart.\n\nOnly limited functionality will be available."));
-        qWarning() << "Environment KDEDIRS=" << getenv("KDEDIRS");
-        qWarning() << "Environment QT_LOGGING_TO_CONSOLE=" << getenv("QT_LOGGING_TO_CONSOLE");
-        qWarning() << "Environment QT_PLUGIN_PATH=" << getenv("QT_PLUGIN_PATH");
-        qWarning() << "Environment XDG_DATA_DIRS=" << getenv("XDG_DATA_DIRS");
     } else {
-        qDebug() << "Located KPart service:" << service->library() << "with description" << service->comment();
+        qCInfo(LOG_KBIBTEX_PROGRAM) << "Located KPart service:" << service->library() << "with description" << service->comment();
     }
 
     /*

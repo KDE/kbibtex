@@ -19,7 +19,8 @@
 #include "notificationhub.h"
 
 #include <QSet>
-#include <QDebug>
+
+#include "logging_config.h"
 
 NotificationListener::~NotificationListener()
 {
@@ -88,7 +89,7 @@ void NotificationHub::publishEvent(int eventId)
 {
     NotificationHub::NotificationHubPrivate *d = getHub()->d;
     if (eventId >= 0) {
-        qDebug() << "Notifying about event" << eventId;
+        qCDebug(LOG_KBIBTEX_CONFIG) << "Notifying about event" << eventId;
 
         QSet< NotificationListener *> set(d->listenersPerEventId.value(eventId,  QSet<NotificationListener *>()));
         foreach (NotificationListener *listener, d->allListeners) {

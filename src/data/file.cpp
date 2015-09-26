@@ -22,7 +22,6 @@
 #include <QIODevice>
 #include <QStringList>
 #include <QRegExp>
-#include <QDebug>
 
 #include <KSharedConfig>
 #include <KConfigGroup>
@@ -32,6 +31,7 @@
 #include "element.h"
 #include "macro.h"
 #include "comment.h"
+#include "logging_data.h"
 
 const QString File::Url = QLatin1String("Url");
 const QString File::Encoding = QLatin1String("Encoding");
@@ -61,18 +61,18 @@ public:
 
     FilePrivate(File */* UNUSED parent*/)
         : /* UNUSED p(parent),*/ validInvalidField(valid), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName(QLatin1String("FileExporterBibTeX")), internalId(++internalIdCounter) {
-        qDebug() << "Creating File instance" << internalId;
+        qCDebug(LOG_KBIBTEX_DATA) << "Creating File instance" << internalId;
         loadConfiguration();
     }
 
     FilePrivate(File */* UNUSED parent*/, const File &other)
         : /* UNUSED p(parent),*/ validInvalidField(valid), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName(QLatin1String("FileExporterBibTeX")), internalId(++internalIdCounter), properties(other.d->properties) {
-        qDebug() << "Creating File instance" << internalId;
+        qCDebug(LOG_KBIBTEX_DATA) << "Creating File instance" << internalId;
         loadConfiguration();
     }
 
     ~FilePrivate() {
-        qDebug() << "Deleting File instance" << internalId;
+        qCDebug(LOG_KBIBTEX_DATA) << "Deleting File instance" << internalId;
         validInvalidField = invalid;
     }
 

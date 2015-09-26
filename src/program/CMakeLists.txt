@@ -20,6 +20,7 @@ set(
     docklets/filesettings.cpp
     docklets/zoterobrowser.cpp
     openfileinfo.cpp
+    logging_program.cpp
 )
 
 # # debug area for KBibTeX's program

@@ -38,6 +38,7 @@ set(
     italictextitemmodel.cpp
     valuelistmodel.cpp
     delayedexecutiontimer.cpp
+    logging_gui.cpp
 )
 
 set(

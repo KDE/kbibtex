@@ -30,7 +30,6 @@
 #include <QMimeType>
 #include <QMimeData>
 #include <QStyle>
-#include <QDebug>
 #include <QPushButton>
 #include <QFontDatabase>
 
@@ -53,6 +52,7 @@
 #include "macro.h"
 #include "preamble.h"
 #include "fieldlineedit.h"
+#include "logging_gui.h"
 
 static const unsigned int interColumnSpace = 16;
 static const QStringList keyStart = QStringList() << Entry::ftUrl << QLatin1String("postscript") << Entry::ftLocalFile << Entry::ftDOI << Entry::ftFile << QLatin1String("ee") << QLatin1String("biburl");
@@ -1133,7 +1133,7 @@ bool SourceWidget::apply(QSharedPointer<Element> element) const
                     preamble->operator =(*readPreamble.data());
                     result = true;
                 } else
-                    qWarning() << "Do not know how to apply source code";
+                    qCWarning(LOG_KBIBTEX_GUI) << "Do not know how to apply source code";
             }
         }
     }

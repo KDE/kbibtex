@@ -18,7 +18,6 @@
 #include "onlinesearchieeexplore.h"
 
 #include <QNetworkReply>
-#include <QDebug>
 #include <QStandardPaths>
 #include <QUrl>
 #include <QUrlQuery>
@@ -30,6 +29,7 @@
 #include "internalnetworkaccessmanager.h"
 #include "xsltransform.h"
 #include "fileimporterbibtex.h"
+#include "logging_networking.h"
 
 class OnlineSearchIEEEXplore::OnlineSearchIEEEXplorePrivate
 {
@@ -46,7 +46,7 @@ public:
         const QString xsltFilename = QLatin1String("kbibtex/ieeexplore2bibtex.xsl");
         xslt = XSLTransform::createXSLTransform(QStandardPaths::locate(QStandardPaths::GenericDataLocation, xsltFilename));
         if (xslt == NULL)
-            qWarning() << "Could not create XSLT transformation for" << xsltFilename;
+            qCWarning(LOG_KBIBTEX_NETWORKING) << "Could not create XSLT transformation for" << xsltFilename;
     }
 
 
@@ -112,7 +112,7 @@ void OnlineSearchIEEEXplore::startSearch(const QMap<QString, QString> &query, in
 {
     if (d->xslt == NULL) {
         /// Don't allow searches if xslt is not defined
-        qWarning() << "Cannot allow searching" << label() << "if XSL Transformation not available";
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "Cannot allow searching" << label() << "if XSL Transformation not available";
         delayedStoppedSearch(resultUnspecifiedError);
         return;
     }
@@ -164,18 +164,18 @@ void OnlineSearchIEEEXplore::doneFetchingXML()
                 }
 
                 if (!hasEntries)
-                    //qDebug() << "No hits found in" << reply->url().toString();
+                    //qCDebug(LOG_KBIBTEX_NETWORKING) << "No hits found in" << reply->url().toString();
                 emit stoppedSearch(resultNoError);
                 emit progress(d->numSteps, d->numSteps);
 
                 delete bibtexFile;
             } else {
-                qWarning() << "No valid BibTeX file results returned on request on" << reply->url().toString();
+                qCWarning(LOG_KBIBTEX_NETWORKING) << "No valid BibTeX file results returned on request on" << reply->url().toString();
                 emit stoppedSearch(resultUnspecifiedError);
             }
         }
     } else
-        qWarning() << "url was" << reply->url().toString();
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
 }
 
 QString OnlineSearchIEEEXplore::label() const

@@ -22,7 +22,6 @@
 #include <QNetworkRequest>
 #include <QNetworkAccessManager>
 #include <QMap>
-#include <QDebug>
 #include <QUrlQuery>
 
 #include <KLocalizedString>
@@ -30,6 +29,7 @@
 #include "fileimporterbibtex.h"
 #include "kbibtexnamespace.h"
 #include "internalnetworkaccessmanager.h"
+#include "logging_networking.h"
 
 const QString OnlineSearchMRLookup::queryUrlStem = QLatin1String("http://www.ams.org/mrlookup");
 
@@ -128,7 +128,7 @@ void OnlineSearchMRLookup::doneFetchingResultPage()
 
         emit stoppedSearch(hasEntry ? resultNoError : resultUnspecifiedError);
     } else
-        qWarning() << "url was" << reply->url().toString();
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
 }
 
 void OnlineSearchMRLookup::sanitizeEntry(QSharedPointer<Entry> entry)

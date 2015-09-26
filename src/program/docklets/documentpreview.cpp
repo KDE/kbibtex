@@ -65,6 +65,7 @@
 #include "entry.h"
 #include "file.h"
 #include "fileinfo.h"
+#include "logging_program.h"
 
 ImageLabel::ImageLabel(const QString &text, QWidget *parent, Qt::WindowFlags f)
         : QLabel(text, parent, f)
@@ -220,26 +221,26 @@ public:
         okularPart = locatePart(QLatin1String("application/pdf"), stackedWidget);
         swpOkular = (okularPart == NULL) ? -1 : stackedWidget->addWidget(okularPart->widget());
         if (okularPart == NULL || swpOkular < 0) {
-            qWarning() << "No Okular part for PDF or PostScript document preview available.";
+            qCWarning(LOG_KBIBTEX_PROGRAM) << "No Okular part for PDF or PostScript document preview available.";
         }
 #ifdef HAVE_WEBENGINEWIDGETS
-        qDebug() << "WebEngine is available, using it instead of WebKit or HTML KPart (both neither considered nor tested for) for HTML/Web preview.";
+        qCDebug(LOG_KBIBTEX_PROGRAM) << "WebEngine is available, using it instead of WebKit or HTML KPart (both neither considered nor tested for) for HTML/Web preview.";
         htmlWidget = new QWebEngineView(stackedWidget);
         swpHTML = stackedWidget->addWidget(htmlWidget);
         connect(htmlWidget, &QWebEngineView::loadFinished, p, &DocumentPreview::loadingFinished);
 #else // HAVE_WEBENGINEWIDGETS
 #ifdef HAVE_WEBKITWIDGETS
-        qDebug() << "WebKit is available, using it instead of WebEngine (missing) or HTML KPart (not considered) for HTML/Web preview.";
+        qCDebug(LOG_KBIBTEX_PROGRAM) << "WebKit is available, using it instead of WebEngine (missing) or HTML KPart (not considered) for HTML/Web preview.";
         htmlWidget = new QWebView(stackedWidget);
         swpHTML = stackedWidget->addWidget(htmlWidget);
         connect(htmlWidget, &QWebView::loadFinished, p, &DocumentPreview::loadingFinished);
 #else // HAVE_WEBKITWIDGETS
         htmlPart = locatePart(QLatin1String("text/html"), stackedWidget);
         if (htmlPart != NULL) {
-            qDebug() << "HTML KPart is available, using it instead of WebEngine or WebKit (neither available) for HTML/Web preview.";
+            qCDebug(LOG_KBIBTEX_PROGRAM) << "HTML KPart is available, using it instead of WebEngine or WebKit (neither available) for HTML/Web preview.";
             swpHTML = stackedWidget->addWidget(htmlPart->widget());
         } else {
-            qDebug() << "No HTML viewing component is available, disabling HTML/Web preview.";
+            qCDebug(LOG_KBIBTEX_PROGRAM) << "No HTML viewing component is available, disabling HTML/Web preview.";
             swpHTML = -1;
         }
 #endif // HAVE_WEBKITWIDGETS
@@ -654,7 +655,7 @@ void DocumentPreview::statFinished(KJob *kjob)
         setCursor(d->runningJobs.isEmpty() ? Qt::ArrowCursor : Qt::BusyCursor);
         d->addUrl(urlInfo);
     } else {
-        qWarning() << job->error() << job->errorString();
+        qCWarning(LOG_KBIBTEX_PROGRAM) << job->error() << job->errorString();
     }
 
     if (d->runningJobs.isEmpty()) {

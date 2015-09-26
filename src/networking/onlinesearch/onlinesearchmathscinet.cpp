@@ -21,7 +21,6 @@
 #include <QNetworkRequest>
 #include <QNetworkAccessManager>
 #include <QMap>
-#include <QDebug>
 #include <QUrlQuery>
 
 #include <KLocalizedString>
@@ -29,6 +28,7 @@
 #include "fileimporterbibtex.h"
 #include "kbibtexnamespace.h"
 #include "internalnetworkaccessmanager.h"
+#include "logging_networking.h"
 
 class OnlineSearchMathSciNet::OnlineSearchMathSciNetPrivate
 {
@@ -175,7 +175,7 @@ void OnlineSearchMathSciNet::doneFetchingQueryForm()
         InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
         connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingResultPage()));
     } else
-        qWarning() << "url was" << reply->url().toString();
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
 }
 
 void OnlineSearchMathSciNet::doneFetchingResultPage()
@@ -219,7 +219,7 @@ void OnlineSearchMathSciNet::doneFetchingResultPage()
             emit stoppedSearch(resultNoError);
         }
     } else
-        qWarning() << "url was" << reply->url().toString();
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
 }
 
 void OnlineSearchMathSciNet::doneFetchingBibTeXcode()
@@ -253,7 +253,7 @@ void OnlineSearchMathSciNet::doneFetchingBibTeXcode()
 
         emit stoppedSearch(hasEntry ? resultNoError : resultUnspecifiedError);
     } else
-        qWarning() << "url was" << reply->url().toString();
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
 }
 
 void OnlineSearchMathSciNet::sanitizeEntry(QSharedPointer<Entry> entry)

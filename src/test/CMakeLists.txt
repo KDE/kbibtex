@@ -26,6 +26,7 @@ set(
     kbibtextest_SRCS
     main.cpp
     kbibtextest.cpp
+    logging_test.cpp
 )
 
 set(

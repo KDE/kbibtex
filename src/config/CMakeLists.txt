@@ -5,6 +5,7 @@ set(
     notificationhub.cpp
     bibtexentries.cpp
     bibtexfields.cpp
+    logging_config.cpp
 )
 
 set(

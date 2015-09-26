@@ -21,7 +21,6 @@
 #include <QStringList>
 #include <QBuffer>
 #include <QFile>
-#include <QDebug>
 #include <QStandardPaths>
 
 #include "file.h"
@@ -33,6 +32,7 @@
 #include "fileexporterxml.h"
 #include "iocommon.h"
 #include "xsltransform.h"
+#include "logging_io.h"
 
 FileExporterXSLT::FileExporterXSLT(const QString &xsltFilename)
         : FileExporter(), m_cancelFlag(false)
@@ -52,14 +52,14 @@ FileExporterXSLT::~FileExporterXSLT()
 bool FileExporterXSLT::save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog)
 {
     if (!iodevice->isWritable() && !iodevice->open(QIODevice::WriteOnly)) {
-        qWarning() << "Output device not writable";
+        qCWarning(LOG_KBIBTEX_IO) << "Output device not writable";
         return false;
     }
 
     m_cancelFlag = false;
     XSLTransform *xsltransformer = XSLTransform::createXSLTransform(m_xsltFilename);
     if (xsltransformer == NULL)
-        qWarning() << "Could not create XSLT transformation for" << m_xsltFilename;
+        qCWarning(LOG_KBIBTEX_IO) << "Could not create XSLT transformation for" << m_xsltFilename;
     else {
         FileExporterXML xmlExporter;
 
@@ -93,14 +93,14 @@ bool FileExporterXSLT::save(QIODevice *iodevice, const File *bibtexfile, QString
 bool FileExporterXSLT::save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog)
 {
     if (!iodevice->isWritable() && !iodevice->open(QIODevice::WriteOnly)) {
-        qWarning() << "Output device not writable";
+        qCWarning(LOG_KBIBTEX_IO) << "Output device not writable";
         return false;
     }
 
     m_cancelFlag = false;
     XSLTransform *xsltransformer = XSLTransform::createXSLTransform(m_xsltFilename);
     if (xsltransformer == NULL)
-        qWarning() << "Could not create XSLT transformation for" << m_xsltFilename;
+        qCWarning(LOG_KBIBTEX_IO) << "Could not create XSLT transformation for" << m_xsltFilename;
     else {
         FileExporterXML xmlExporter;
 

@@ -32,7 +32,6 @@
 #include <QMimeType>
 #include <QtCore/QPointer>
 #include <QFileSystemWatcher>
-#include <QDebug>
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QDialog>
@@ -89,6 +88,7 @@
 #include "idsuggestions.h"
 #include "fileview.h"
 #include "browserextension.h"
+#include "logging_parts.h"
 
 K_PLUGIN_FACTORY(KBibTeXPartFactory, registerPlugin<KBibTeXPart>();)
 // FIXME K_EXPORT_PLUGIN(KBibTeXPartFactory("KBibTeXPart"))
@@ -240,15 +240,15 @@ public:
                 if (!path.isEmpty())
                     fileSystemWatcher.removePath(path);
                 else
-                    qWarning() << "No filename to stop watching";
+                    qCWarning(LOG_KBIBTEX_PARTS) << "No filename to stop watching";
             } else
-                qWarning() << "Not removing" << oldUrl.toString() << "from fileSystemWatcher";
+                qCWarning(LOG_KBIBTEX_PARTS) << "Not removing" << oldUrl.toString() << "from fileSystemWatcher";
             delete bibTeXFile;
         }
 
         QFile inputfile(localFilePath);
         if (!inputfile.open(QIODevice::ReadOnly)) {
-            qWarning() << "Opening file failed, creating new one instead:" << localFilePath;
+            qCWarning(LOG_KBIBTEX_PARTS) << "Opening file failed, creating new one instead:" << localFilePath;
             qApp->restoreOverrideCursor();
             /// Opening file failed, creating new one instead
             initializeNew();
@@ -262,7 +262,7 @@ public:
         delete importer;
 
         if (bibTeXFile == NULL) {
-            qWarning() << "Opening file failed, creating new one instead:" << url.url(QUrl::PreferLocalFile);
+            qCWarning(LOG_KBIBTEX_PARTS) << "Opening file failed, creating new one instead:" << url.url(QUrl::PreferLocalFile);
             qApp->restoreOverrideCursor();
             /// Opening file failed, creating new one instead
             initializeNew();
@@ -308,7 +308,7 @@ public:
             return;
         else if (statJob->error() != KIO::Job::NoError) {
             /// Something else went wrong, quit with error
-            qWarning() << "Probing" << url.toDisplayString() << "failed:" << statJob->errorString();
+            qCWarning(LOG_KBIBTEX_PARTS) << "Probing" << url.toDisplayString() << "failed:" << statJob->errorString();
             return;
         }
 
@@ -739,7 +739,7 @@ bool KBibTeXPart::saveFile()
     if (!watchableFilename.isEmpty())
         d->fileSystemWatcher.removePath(watchableFilename);
     else
-        qWarning() << "watchableFilename is Empty";
+        qCWarning(LOG_KBIBTEX_PARTS) << "watchableFilename is Empty";
 
     const bool saveOperationSuccess = d->saveFile(QUrl::fromLocalFile(localFilePath()));
 
@@ -747,7 +747,7 @@ bool KBibTeXPart::saveFile()
     if (!watchableFilename.isEmpty())
         d->fileSystemWatcher.addPath(watchableFilename);
     else
-        qWarning() << "watchableFilename is Empty";
+        qCWarning(LOG_KBIBTEX_PARTS) << "watchableFilename is Empty";
 
     if (!saveOperationSuccess) {
         KMessageBox::error(widget(), i18n("The document could not be saved, as it was not possible to write to '%1'.\n\nCheck that you have write access to this file or that enough disk space is available.", url().url(QUrl::PreferLocalFile)));
@@ -781,9 +781,9 @@ bool KBibTeXPart::documentSaveAs()
         if (!path.isEmpty())
             d->fileSystemWatcher.removePath(path);
         else
-            qWarning() << "No filename to stop watching";
+            qCWarning(LOG_KBIBTEX_PARTS) << "No filename to stop watching";
     } else
-        qWarning() << "Not removing" << url().url(QUrl::PreferLocalFile) << "from fileSystemWatcher";
+        qCWarning(LOG_KBIBTEX_PARTS) << "Not removing" << url().url(QUrl::PreferLocalFile) << "from fileSystemWatcher";
 
     // TODO how does SaveAs dialog know which mime types to support?
     if (KParts::ReadWritePart::saveAs(newUrl)) {
@@ -1002,7 +1002,7 @@ void KBibTeXPart::fileExternallyChange(const QString &path)
         return;
     /// Should never happen: triggering this slot for filenames not being the opened file
     if (path != url().url(QUrl::PreferLocalFile)) {
-        qWarning() << "Got file modification warning for wrong file: " << path << "!=" << url().url(QUrl::PreferLocalFile);
+        qCWarning(LOG_KBIBTEX_PARTS) << "Got file modification warning for wrong file: " << path << "!=" << url().url(QUrl::PreferLocalFile);
         return;
     }
 
@@ -1010,7 +1010,7 @@ void KBibTeXPart::fileExternallyChange(const QString &path)
     if (!path.isEmpty())
         d->fileSystemWatcher.removePath(path);
     else
-        qWarning() << "No filename to stop watching";
+        qCWarning(LOG_KBIBTEX_PARTS) << "No filename to stop watching";
 
     if (KMessageBox::warningContinueCancel(widget(), i18n("The file '%1' has changed on disk.\n\nReload file or ignore changes on disk?", path), i18n("File changed externally"), KGuiItem(i18n("Reload file"), QIcon::fromTheme("edit-redo")), KGuiItem(i18n("Ignore on-disk changes"), QIcon::fromTheme("edit-undo"))) == KMessageBox::Continue) {
         d->openFile(QUrl::fromLocalFile(path), path);
@@ -1022,7 +1022,7 @@ void KBibTeXPart::fileExternallyChange(const QString &path)
         if (!path.isEmpty())
             d->fileSystemWatcher.addPath(path);
         else
-            qWarning() << "path is Empty";
+            qCWarning(LOG_KBIBTEX_PARTS) << "path is Empty";
     }
 }
 

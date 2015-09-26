@@ -34,6 +34,7 @@ set(
     associatedfiles.cpp
     findpdf.cpp
     internalnetworkaccessmanager.cpp
+    logging_networking.cpp
 )
 
 set(

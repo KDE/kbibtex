@@ -19,7 +19,6 @@
 
 #include <QSet>
 #include <QFileInfo>
-#include <QDebug>
 
 #include <KLocalizedString>
 #include <KComboBox>
@@ -35,6 +34,7 @@
 #include "settingscolorlabelwidget.h"
 #include "settingsuserinterfacewidget.h"
 #include "settingsidsuggestionswidget.h"
+#include "logging_gui.h"
 
 class KBibTeXPreferencesDialog::KBibTeXPreferencesDialogPrivate
 {
@@ -123,7 +123,7 @@ public:
         case KMessageBox::Cancel:
             break; // nothing to do here
         default:
-            qWarning() << "There should be no use for a default case here!";
+            qCWarning(LOG_KBIBTEX_GUI) << "There should be no use for a default case here!";
         }
     }
 };

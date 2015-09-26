@@ -17,7 +17,6 @@
 
 #include "fileexporterbibtexoutput.h"
 
-#include <QDebug>
 #include <QBuffer>
 #include <QFile>
 #include <QDir>
@@ -29,6 +28,7 @@
 #include "entry.h"
 #include "fileexporterbibtex.h"
 #include "kbibtexnamespace.h"
+#include "logging_io.h"
 
 FileExporterBibTeXOutput::FileExporterBibTeXOutput(OutputType outputType)
         : FileExporterToolchain(), m_outputType(outputType), m_latexLanguage("english"), m_latexBibStyle("plain")
@@ -50,7 +50,7 @@ void FileExporterBibTeXOutput::reloadConfig()
 bool FileExporterBibTeXOutput::save(QIODevice *ioDevice, const File *bibtexfile, QStringList *errorLog)
 {
     if (!ioDevice->isWritable() && !ioDevice->open(QIODevice::WriteOnly)) {
-        qWarning() << "Output device not writable";
+        qCWarning(LOG_KBIBTEX_IO) << "Output device not writable";
         return false;
     }
 
@@ -78,7 +78,7 @@ bool FileExporterBibTeXOutput::save(QIODevice *ioDevice, const File *bibtexfile,
 bool FileExporterBibTeXOutput::save(QIODevice *ioDevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog)
 {
     if (!ioDevice->isWritable() && !ioDevice->open(QIODevice::WriteOnly)) {
-        qWarning() << "Output device not writable";
+        qCWarning(LOG_KBIBTEX_IO) << "Output device not writable";
         return false;
     }
 
@@ -120,7 +120,7 @@ bool FileExporterBibTeXOutput::generateOutput(QStringList *errorLog)
     if (writeLatexFile(m_fileStem + KBibTeX::extensionTeX) && runProcesses(cmdLines, errorLog))
         return true;
     else {
-        qWarning() << "Generating BibTeX output failed";
+        qCWarning(LOG_KBIBTEX_IO) << "Generating BibTeX output failed";
         return false;
     }
 }
