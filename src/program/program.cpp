@@ -45,8 +45,19 @@ int main(int argc, char *argv[])
     kDebug() << "Starting KBibTeX version" << versionNumber;
 
     KService::Ptr service = KService::serviceByStorageId("kbibtexpart.desktop");
-    if (service.isNull())
+    if (service.isNull()) {
+        /// Dump some environment variables that may be helpful
+        /// in tracing back why the part's .desktop file was not found
+        kDebug() << "PATH=" << getenv("PATH");
+        kDebug() << "LD_LIBRARY_PATH=" << getenv("LD_LIBRARY_PATH");
+        kDebug() << "XDG_DATA_DIRS=" << getenv("XDG_DATA_DIRS");
+        kDebug() << "QT_PLUGIN_PATH=" << getenv("QT_PLUGIN_PATH");
+        kDebug() << "KDEDIRS=" << getenv("KDEDIRS");
         KMessageBox::error(NULL, i18n("KBibTeX seems to be not installed completely. KBibTeX could not locate its own KPart.\n\nOnly limited functionality will be available."), i18n("Incomplete KBibTeX Installation"));
+    } else {
+        kDebug() << "Located KPart service:" << service->library() << "with description" << service->comment();
+    }
+
 
     /// started by session management?
     if (programCore.isSessionRestored()) {
