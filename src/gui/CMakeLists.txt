@@ -73,10 +73,6 @@ set(
     element/associatedfilesui.h
 )
 
-# add_definitions(
-#     -DMAKE_KBIBTEXGUI_LIB
-# )
-
 if(UNITY_BUILD)
     enable_unity_build(kbibtexgui kbibtexgui_LIB_SRCS)
 endif(UNITY_BUILD)

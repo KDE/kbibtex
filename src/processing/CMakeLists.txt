@@ -21,10 +21,6 @@ set(
     journalabbreviations.h
 )
 
-# add_definitions(
-#     -DMAKE_PROCESSING_LIB
-# )
-
 if(UNITY_BUILD)
     enable_unity_build(kbibtexproc kbibtexproc_LIB_SRCS)
 endif(UNITY_BUILD)

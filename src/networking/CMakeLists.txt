@@ -73,10 +73,6 @@ set(
     internalnetworkaccessmanager.h
 )
 
-# add_definitions(
-#     -DMAKE_NETWORKING_LIB
-# )
-
 if(UNITY_BUILD)
     enable_unity_build(kbibtexnetworking kbibtexnetworking_LIB_SRCS)
 endif(UNITY_BUILD)

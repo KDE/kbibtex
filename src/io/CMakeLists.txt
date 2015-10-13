@@ -60,10 +60,6 @@ set(
     xsltransform.h
 )
 
-# add_definitions(
-#     -DMAKE_KBIBTEXIO_LIB
-# )
-
 if(UNITY_BUILD)
     enable_unity_build(kbibtexio kbibtexio_LIB_SRCS)
 endif(UNITY_BUILD)
