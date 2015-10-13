@@ -57,12 +57,12 @@ install(
 
 generate_export_header( kbibtexconfig )
 
-install(
-    FILES
-    ${kbibtexconfig_HDRS}
-    ${CMAKE_BINARY_DIR}/src/data/kbibtexdata_export.h
-    DESTINATION
-    ${INCLUDE_INSTALL_DIR}/kbibtex/config
-    COMPONENT
-    development
-)
+# install(
+#     FILES
+#     ${kbibtexconfig_HDRS}
+#     ${CMAKE_BINARY_DIR}/src/data/kbibtexdata_export.h
+#     DESTINATION
+#     ${INCLUDE_INSTALL_DIR}/kbibtex/config
+#     COMPONENT
+#     development
+# )

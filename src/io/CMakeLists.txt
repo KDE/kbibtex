@@ -140,12 +140,12 @@ install(
 
 generate_export_header( kbibtexio )
 
-install(
-    FILES
-    ${kbibtexio_HDRS}
-    ${CMAKE_BINARY_DIR}/src/io/kbibtexio_export.h
-    DESTINATION
-    ${INCLUDE_INSTALL_DIR}/kbibtex/io
-    COMPONENT
-    development
-)
+# install(
+#     FILES
+#     ${kbibtexio_HDRS}
+#     ${CMAKE_BINARY_DIR}/src/io/kbibtexio_export.h
+#     DESTINATION
+#     ${INCLUDE_INSTALL_DIR}/kbibtex/io
+#     COMPONENT
+#     development
+# )

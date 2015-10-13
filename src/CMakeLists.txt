@@ -78,5 +78,5 @@ add_subdirectory(
 #     DESTINATION
 #     ${INCLUDE_INSTALL_DIR}/kbibtex
 #     COMPONENT
-#     Devel
+#     development
 # )

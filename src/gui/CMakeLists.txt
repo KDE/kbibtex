@@ -176,12 +176,12 @@ install(
 
 generate_export_header( kbibtexgui )
 
-install(
-    FILES
-    ${kbibtexgui_HDRS}
-    ${CMAKE_BINARY_DIR}/src/gui/kbibtexgui_export.h
-    DESTINATION
-    ${INCLUDE_INSTALL_DIR}/kbibtex/gui
-    COMPONENT
-    development
-)
+# install(
+#     FILES
+#     ${kbibtexgui_HDRS}
+#     ${CMAKE_BINARY_DIR}/src/gui/kbibtexgui_export.h
+#     DESTINATION
+#     ${INCLUDE_INSTALL_DIR}/kbibtex/gui
+#     COMPONENT
+#     development
+# )
