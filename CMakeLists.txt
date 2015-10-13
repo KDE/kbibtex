@@ -61,6 +61,7 @@ find_package(
 find_package(
     KF5 ${KF5_MIN_VERSION}
     REQUIRED
+    DocTools
     I18n
     XmlGui
     KIO
@@ -167,9 +168,9 @@ add_subdirectory(
 add_subdirectory(
     xslt
 )
-# add_subdirectory(
-#     doc
-# )
+add_subdirectory(
+    doc
+)
 # add_subdirectory(
 #     mime
 # )
