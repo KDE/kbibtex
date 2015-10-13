@@ -77,11 +77,6 @@ set(
 #     -DMAKE_KBIBTEXGUI_LIB
 # )
 
-# # debug area for KBibTeX's GUI library
-# add_definitions(
-#     -DKDE_DEFAULT_DEBUG_AREA=101012
-# )
-
 if(UNITY_BUILD)
     enable_unity_build(kbibtexgui kbibtexgui_LIB_SRCS)
 endif(UNITY_BUILD)

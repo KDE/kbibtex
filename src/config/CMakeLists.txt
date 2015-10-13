@@ -15,11 +15,6 @@ set(
     bibtexfields.h
 )
 
-# # debug area for KBibTeX's Config library
-# add_definitions(
-#     -DKDE_DEFAULT_DEBUG_AREA=101039
-# )
-
 if(UNITY_BUILD)
     enable_unity_build(kbibtexconfig kbibtexconfig_LIB_SRCS)
 endif(UNITY_BUILD)

@@ -23,11 +23,6 @@ set(
     logging_program.cpp
 )
 
-# # debug area for KBibTeX's program
-# add_definitions(
-#     -DKDE_DEFAULT_DEBUG_AREA=101017
-# )
-
 if(UNITY_BUILD AND NOT WIN32) # FIXME: Unity build of programs breaks on Windows
     enable_unity_build(kbibtex kbibtex_SRCS)
 endif(UNITY_BUILD AND NOT WIN32)

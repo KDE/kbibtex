@@ -77,11 +77,6 @@ set(
 #     -DMAKE_NETWORKING_LIB
 # )
 
-# # debug area for KBibTeX's web search library
-# add_definitions(
-#     -DKDE_DEFAULT_DEBUG_AREA=101025
-# )
-
 if(UNITY_BUILD)
     enable_unity_build(kbibtexnetworking kbibtexnetworking_LIB_SRCS)
 endif(UNITY_BUILD)

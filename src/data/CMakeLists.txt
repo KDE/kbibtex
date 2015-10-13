@@ -25,11 +25,6 @@ set(
     models/filemodel.h
 )
 
-# # debug area for KBibTeX's Data library
-# add_definitions(
-#     -DKDE_DEFAULT_DEBUG_AREA=101032
-# )
-
 if(UNITY_BUILD)
     enable_unity_build(kbibtexdata kbibtexdata_LIB_SRCS)
 endif(UNITY_BUILD)

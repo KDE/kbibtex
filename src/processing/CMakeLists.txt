@@ -25,11 +25,6 @@ set(
 #     -DMAKE_PROCESSING_LIB
 # )
 
-# # debug area for KBibTeX's processing library
-# add_definitions(
-#     -DKDE_DEFAULT_DEBUG_AREA=101016
-# )
-
 if(UNITY_BUILD)
     enable_unity_build(kbibtexproc kbibtexproc_LIB_SRCS)
 endif(UNITY_BUILD)
