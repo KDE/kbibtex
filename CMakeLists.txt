@@ -171,9 +171,9 @@ add_subdirectory(
 add_subdirectory(
     doc
 )
-# add_subdirectory(
-#     mime
-# )
+add_subdirectory(
+    mime
+)
 # macro_optional_add_subdirectory(
 #     po
 # )
