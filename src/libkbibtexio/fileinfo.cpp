@@ -125,7 +125,7 @@ void FileInfo::urlsInText(const QString &text, TestExistance testExistance, cons
                 /// To get the absolute path, prepend filename fragment with base directory
                 const QString fullFilename = baseDirectory + QDir::separator() + internalText;
                 const QFileInfo fileInfo(fullFilename);
-                const KUrl url = KUrl(fileInfo.filePath());
+                const KUrl url = KUrl::fromPath(fileInfo.canonicalFilePath());
                 if (fileInfo.exists() && fileInfo.isFile() && url.isValid() && !result.contains(url)) {
                     result << url;
                     /// Stop searching for URLs or filenames in current internal text
@@ -135,7 +135,7 @@ void FileInfo::urlsInText(const QString &text, TestExistance testExistance, cons
                 /// Either the filename fragment is an absolute path OR no base directory
                 /// was given (current working directory is assumed), ...
                 const QFileInfo fileInfo(internalText);
-                const KUrl url = KUrl(fileInfo.filePath());
+                const KUrl url = KUrl::fromPath(fileInfo.canonicalFilePath());
                 if (fileInfo.exists() && fileInfo.isFile() && url.isValid() && !result.contains(url)) {
                     result << url;
                     /// stop searching for URLs or filenames in current internal text
@@ -211,10 +211,12 @@ QList<KUrl> FileInfo::entryUrls(const Entry *entry, const KUrl &bibTeXUrl, TestE
         /// check if in the same directory as the BibTeX file
         /// a PDF file exists which filename is based on the entry's id
         for (QStringList::ConstIterator extensionIt = documentFileExtensions.constBegin(); extensionIt != documentFileExtensions.constEnd(); ++extensionIt) {
-            KUrl url(baseDirectory + QDir::separator() + entry->id() + *extensionIt);
-            url.setProtocol(QLatin1String("file"));
-            if (QFileInfo(url.toLocalFile()).exists() && !result.contains(url))
-                result << url;
+            const QFileInfo fi(baseDirectory + QDir::separator() + entry->id() + *extensionIt);
+            if (fi.exists()) {
+                const KUrl url = KUrl::fromPath(fi.canonicalFilePath());
+                if (!result.contains(url))
+                    result << url;
+            }
         }
 
         /// check if in the same directory as the BibTeX file there is a subdirectory
@@ -223,10 +225,12 @@ QList<KUrl> FileInfo::entryUrls(const Entry *entry, const KUrl &bibTeXUrl, TestE
         QString basename = bibTeXUrl.fileName().remove(QRegExp("\\.[^.]{2,5}$"));
         QString directory = baseDirectory + QDir::separator() + basename;
         for (QStringList::ConstIterator extensionIt = documentFileExtensions.constBegin(); extensionIt != documentFileExtensions.constEnd(); ++extensionIt) {
-            KUrl url(directory + QDir::separator() + entry->id() + *extensionIt);
-            url.setProtocol(QLatin1String("file"));
-            if (QFileInfo(url.toLocalFile()).exists() && !result.contains(url))
-                result << url;
+            const QFileInfo fi(directory + QDir::separator() + entry->id() + *extensionIt);
+            if (fi.exists()) {
+                const KUrl url = KUrl::fromPath(fi.canonicalFilePath());
+                if (!result.contains(url))
+                    result << url;
+            }
         }
     }
 
