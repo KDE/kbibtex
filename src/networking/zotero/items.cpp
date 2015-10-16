@@ -21,6 +21,7 @@
 #include <QNetworkReply>
 #include <QXmlStreamReader>
 #include <QUrlQuery>
+#include <QTimer>
 
 #include "file.h"
 #include "fileimporterbibtex.h"

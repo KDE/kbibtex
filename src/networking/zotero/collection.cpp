@@ -22,6 +22,7 @@
 #include <QVector>
 #include <QNetworkReply>
 #include <QXmlStreamReader>
+#include <QTimer>
 
 #include <KLocalizedString>
 
