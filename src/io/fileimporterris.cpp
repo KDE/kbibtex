@@ -22,11 +22,11 @@
 #include <QRegExp>
 #include <QCoreApplication>
 #include <QStringList>
-#include <QDebug>
 
 #include "kbibtexnamespace.h"
 #include "entry.h"
 #include "value.h"
+#include "logging_io.h"
 
 #define appendValue(entry, fieldname, newvalue) { Value value = (entry)->value((fieldname)); value.append((newvalue)); (entry)->insert((fieldname), value); }
 
@@ -221,7 +221,7 @@ public:
                 value.append(QSharedPointer<PlainText>(new PlainText(QString::number(year))));
                 entry->insert(Entry::ftYear, value);
             } else
-                qDebug() << "invalid year: " << year;
+                qCDebug(LOG_KBIBTEX_IO) << "invalid year: " << year;
         }
         if (dateFragments.count() > 1) {
             bool ok;
@@ -231,7 +231,7 @@ public:
                 value.append(QSharedPointer<MacroKey>(new MacroKey(KBibTeX::MonthsTriple[month - 1])));
                 entry->insert(Entry::ftMonth, value);
             } else
-                qDebug() << "invalid month: " << month;
+                qCDebug(LOG_KBIBTEX_IO) << "invalid month: " << month;
         }
 
         return entry;
@@ -254,7 +254,7 @@ FileImporterRIS::~FileImporterRIS()
 File *FileImporterRIS::load(QIODevice *iodevice)
 {
     if (!iodevice->isReadable() && !iodevice->open(QIODevice::ReadOnly)) {
-        qDebug() << "Input device not readable";
+        qCDebug(LOG_KBIBTEX_IO) << "Input device not readable";
         return NULL;
     }
 

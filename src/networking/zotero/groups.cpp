@@ -19,11 +19,11 @@
 
 #include <QNetworkReply>
 #include <QXmlStreamReader>
-#include <QDebug>
 #include <QUrl>
 
 #include "internalnetworkaccessmanager.h"
 #include "api.h"
+#include "logging_networking.h"
 
 using namespace Zotero;
 
@@ -128,7 +128,7 @@ void Groups::finishedFetchingGroups()
             emit finishedLoading();
         }
     } else {
-        qWarning() << reply->errorString(); ///< something went wrong
+        qCWarning(LOG_KBIBTEX_NETWORKING) << reply->errorString(); ///< something went wrong
         d->busy = false;
         d->initialized = false;
         emit finishedLoading();

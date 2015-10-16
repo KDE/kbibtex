@@ -21,9 +21,9 @@
 
 
 #include <QString>
-#include <QDebug>
 
 #include "iconvlatex.h"
+#include "logging_io.h"
 
 /**
  * General documentation on this topic:
@@ -481,7 +481,7 @@ EncoderLaTeX::EncoderLaTeX()
             int pos = encoderLaTeXEscapedCharacters[i].letter - 'A';
             lookupTable[j]->unicode[pos] = QChar(encoderLaTeXEscapedCharacters[i].unicode);
         } else
-            qWarning() << "Cannot handle letter " << encoderLaTeXEscapedCharacters[i].letter;
+            qCWarning(LOG_KBIBTEX_IO) << "Cannot handle letter " << encoderLaTeXEscapedCharacters[i].letter;
     }
 }
 
@@ -534,7 +534,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                         /// This combination of modifier and letter is not known,
                         /// so try to preserve it
                         output.append(input.mid(i, 5));
-                        qWarning() << "Don't know how to translate this into Unicode: " << input.mid(i, 5);
+                        qCWarning(LOG_KBIBTEX_IO) << "Don't know how to translate this into Unicode: " << input.mid(i, 5);
                     } else
                         output.append(unicodeLetter);
                     /// Step over those additional characters
@@ -549,7 +549,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                             found = true;
                         }
                     if (!found)
-                        qWarning() << "Cannot interprete BACKSLASH" << input[i + 2] << "BACKSLASH" << input[i + 4];
+                        qCWarning(LOG_KBIBTEX_IO) << "Cannot interprete BACKSLASH" << input[i + 2] << "BACKSLASH" << input[i + 4];
                 } else if (lookupTablePos >= 0 && input[i + 3] == '{' && input[i + 4] >= 'A' && input[i + 4] <= 'z' && input[i + 5] == '}' && input[i + 6] == '}') {
                     /// If we found a modifier which is followed by
                     /// an opening curly bracket followed by a letter
@@ -562,7 +562,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                         /// This combination of modifier and letter is not known,
                         /// so try to preserve it
                         output.append(input.mid(i, 7));
-                        qWarning() << "Don't know how to translate this into Unicode: " << input.mid(i, 7);
+                        qCWarning(LOG_KBIBTEX_IO) << "Don't know how to translate this into Unicode: " << input.mid(i, 7);
                     } else
                         output.append(unicodeLetter);
                     /// Step over those additional characters
@@ -577,7 +577,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                             found = true;
                         }
                     if (!found)
-                        qWarning() << "Cannot interprete BACKSLASH" << input[i + 2] << "BACKSLASH {" << input[i + 5] << "}";
+                        qCWarning(LOG_KBIBTEX_IO) << "Cannot interprete BACKSLASH" << input[i + 2] << "BACKSLASH {" << input[i + 5] << "}";
                 } else {
                     /// Now, the case of something like {\AA} is left
                     /// to check for
@@ -650,7 +650,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                     /// This combination of modifier and letter is not known,
                     /// so try to preserve it
                     output.append(input.mid(i, 3));
-                    qWarning() << "Don't know how to translate this into Unicode: " << input.mid(i, 3);
+                    qCWarning(LOG_KBIBTEX_IO) << "Don't know how to translate this into Unicode: " << input.mid(i, 3);
                 } else
                     output.append(unicodeLetter);
                 /// Step over those additional characters
@@ -667,7 +667,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                     /// This combination of modifier and letter is not known,
                     /// so try to preserve it
                     output.append(input.mid(i, 3));
-                    qWarning() << "Don't know how to translate this into Unicode: " << input.mid(i, 3);
+                    qCWarning(LOG_KBIBTEX_IO) << "Don't know how to translate this into Unicode: " << input.mid(i, 3);
                 } else
                     output.append(unicodeLetter);
                 /// Step over those additional characters
@@ -695,7 +695,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                     /// This combination of modifier and letter is not known,
                     /// so try to preserve it
                     output.append(input.mid(i, 5));
-                    qWarning() << "Don't know how to translate this into Unicode: " << input.mid(i, 5);
+                    qCWarning(LOG_KBIBTEX_IO) << "Don't know how to translate this into Unicode: " << input.mid(i, 5);
                 } else
                     output.append(unicodeLetter);
                 /// Step over those additional characters
@@ -710,7 +710,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                         found = true;
                     }
                 if (!found)
-                    qWarning() << "Cannot interprete BACKSLASH" << input[i + 1] << "BACKSLASH" << input[i + 3];
+                    qCWarning(LOG_KBIBTEX_IO) << "Cannot interprete BACKSLASH" << input[i + 1] << "BACKSLASH" << input[i + 3];
             } else if (lookupTablePos >= 0 && input[i + 2] == '{' && input[i + 3] == '\\' && input[i + 4] >= 'A' && input[i + 4] <= 'z' && input[i + 5] == '}') {
                 /// This is the case for \'{\i} or alike.
                 bool found = false;
@@ -721,7 +721,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                         found = true;
                     }
                 if (!found)
-                    qWarning() << "Cannot interprete BACKSLASH" << input[i + 1] << "BACKSLASH {" << input[i + 4] << "}";
+                    qCWarning(LOG_KBIBTEX_IO) << "Cannot interprete BACKSLASH" << input[i + 1] << "BACKSLASH {" << input[i + 4] << "}";
             } else if (i < len - 1) {
                 /// Now, the case of something like \AA is left
                 /// to check for
@@ -947,7 +947,7 @@ QString EncoderLaTeX::encode(const QString &ninput) const
             }
 
             if (!found) {
-                qWarning() << "Don't know how to encode Unicode char" << QString("0x%1").arg(c.unicode(), 4, 16, QLatin1Char('0'));
+                qCWarning(LOG_KBIBTEX_IO) << "Don't know how to encode Unicode char" << QString("0x%1").arg(c.unicode(), 4, 16, QLatin1Char('0'));
                 output.append(c);
             }
         } else {

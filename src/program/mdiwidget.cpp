@@ -40,6 +40,7 @@
 
 #include "kbibtexnamespace.h"
 #include "partwidget.h"
+#include "logging_program.h"
 
 class LRUItemModel : public QAbstractItemModel
 {
@@ -300,7 +301,7 @@ void MDIWidget::slotCompleted(QObject *obj)
     QUrl newUrl = ofi->part(this)->url();
 
     if (oldUrl != newUrl) {
-        qDebug() << "Url changed from " << oldUrl.url(QUrl::PreferLocalFile) << " to " << newUrl.url(QUrl::PreferLocalFile) << endl;
+        qCDebug(LOG_KBIBTEX_PROGRAM) << "Url changed from " << oldUrl.url(QUrl::PreferLocalFile) << " to " << newUrl.url(QUrl::PreferLocalFile) << endl;
         d->ofim->changeUrl(ofi, newUrl);
 
         /// completely opened or saved files should be marked as "recently used"

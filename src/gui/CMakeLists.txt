@@ -38,6 +38,7 @@ set(
     italictextitemmodel.cpp
     valuelistmodel.cpp
     delayedexecutiontimer.cpp
+    logging_gui.cpp
 )
 
 set(
@@ -72,18 +73,9 @@ set(
     element/associatedfilesui.h
 )
 
-# add_definitions(
-#     -DMAKE_KBIBTEXGUI_LIB
-# )
-
-# # debug area for KBibTeX's GUI library
-# add_definitions(
-#     -DKDE_DEFAULT_DEBUG_AREA=101012
-# )
-
-# if(UNITY_BUILD)
-#     enable_unity_build(kbibtexgui kbibtexgui_LIB_SRCS)
-# endif(UNITY_BUILD)
+if(UNITY_BUILD)
+    enable_unity_build(kbibtexgui kbibtexgui_LIB_SRCS)
+endif(UNITY_BUILD)
 
 include_directories(
     ${CMAKE_SOURCE_DIR}/src
@@ -175,12 +167,12 @@ install(
 
 generate_export_header( kbibtexgui )
 
-install(
-    FILES
-    ${kbibtexgui_HDRS}
-    ${CMAKE_BINARY_DIR}/src/gui/kbibtexgui_export.h
-    DESTINATION
-    ${INCLUDE_INSTALL_DIR}/kbibtex/gui
-    COMPONENT
-    development
-)
+# install(
+#     FILES
+#     ${kbibtexgui_HDRS}
+#     ${CMAKE_BINARY_DIR}/src/gui/kbibtexgui_export.h
+#     DESTINATION
+#     ${INCLUDE_INSTALL_DIR}/kbibtex/gui
+#     COMPONENT
+#     development
+# )

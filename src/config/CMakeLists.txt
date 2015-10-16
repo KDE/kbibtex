@@ -5,6 +5,7 @@ set(
     notificationhub.cpp
     bibtexentries.cpp
     bibtexfields.cpp
+    logging_config.cpp
 )
 
 set(
@@ -14,14 +15,9 @@ set(
     bibtexfields.h
 )
 
-# # debug area for KBibTeX's Config library
-# add_definitions(
-#     -DKDE_DEFAULT_DEBUG_AREA=101039
-# )
-
-# if(UNITY_BUILD)
-#     enable_unity_build(kbibtexconfig kbibtexconfig_LIB_SRCS)
-# endif(UNITY_BUILD)
+if(UNITY_BUILD)
+    enable_unity_build(kbibtexconfig kbibtexconfig_LIB_SRCS)
+endif(UNITY_BUILD)
 
 include_directories(
     ${CMAKE_SOURCE_DIR}/src
@@ -56,12 +52,12 @@ install(
 
 generate_export_header( kbibtexconfig )
 
-install(
-    FILES
-    ${kbibtexconfig_HDRS}
-    ${CMAKE_BINARY_DIR}/src/data/kbibtexdata_export.h
-    DESTINATION
-    ${INCLUDE_INSTALL_DIR}/kbibtex/config
-    COMPONENT
-    development
-)
+# install(
+#     FILES
+#     ${kbibtexconfig_HDRS}
+#     ${CMAKE_BINARY_DIR}/src/data/kbibtexdata_export.h
+#     DESTINATION
+#     ${INCLUDE_INSTALL_DIR}/kbibtex/config
+#     COMPONENT
+#     development
+# )

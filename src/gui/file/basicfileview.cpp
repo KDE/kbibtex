@@ -21,7 +21,6 @@
 #include <QScrollBar>
 #include <QKeyEvent>
 #include <QAction>
-#include <QDebug>
 
 #include <KConfigGroup>
 #include <KLocalizedString>
@@ -30,6 +29,7 @@
 #include "bibtexfields.h"
 #include "models/filemodel.h"
 #include "sortfilterfilemodel.h"
+#include "logging_gui.h"
 
 class BasicFileView::Private
 {
@@ -114,7 +114,7 @@ public:
         for (int col = 0; col < headerProperty->columnCount; ++col)
             headerProperty->sumWidths += headerProperty->columns[col].isHidden ? 0 : headerProperty->columns[col].width;
         if (headerProperty->sumWidths == 0) {
-            qWarning() << "headerProperty->sumWidths is zero, cannot apply header properties";
+            qCWarning(LOG_KBIBTEX_GUI) << "headerProperty->sumWidths is zero, cannot apply header properties";
             return;
         }
 
@@ -161,10 +161,10 @@ public:
         headerProperty->sortOrder = p->header()->sortIndicatorOrder();
 
         if (headerProperty->sumWidths == 0) {
-            qWarning() << "headerProperty->sumWidths is zero, cannot update header properties";
+            qCWarning(LOG_KBIBTEX_GUI) << "headerProperty->sumWidths is zero, cannot update header properties";
             return;
         } else if (countVisible == 0) {
-            qWarning() << "countVisible is zero, cannot update header properties";
+            qCWarning(LOG_KBIBTEX_GUI) << "countVisible is zero, cannot update header properties";
             return;
         }
         const int hiddenColumnWidth = headerProperty->sumWidths / countVisible;
@@ -227,10 +227,10 @@ public:
             }
 
             if (headerProperty->sumWidths == 0) {
-                qWarning() << "headerProperty->sumWidths is zero, cannot set column state";
+                qCWarning(LOG_KBIBTEX_GUI) << "headerProperty->sumWidths is zero, cannot set column state";
                 return;
             } else if (countVisible == 0) {
-                qWarning() << "countVisible is zero, cannot set column state";
+                qCWarning(LOG_KBIBTEX_GUI) << "countVisible is zero, cannot set column state";
                 return;
             }
             const int hiddenColumnWidth = headerProperty->sumWidths / countVisible;

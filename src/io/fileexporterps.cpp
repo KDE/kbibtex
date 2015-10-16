@@ -21,7 +21,6 @@
 #include <QStringList>
 #include <QTextStream>
 #include <QDir>
-#include <QDebug>
 
 #include <KSharedConfig>
 #include <KConfigGroup>
@@ -29,6 +28,7 @@
 #include "element.h"
 #include "fileexporterbibtex.h"
 #include "kbibtexnamespace.h"
+#include "logging_io.h"
 
 FileExporterPS::FileExporterPS()
         : FileExporterToolchain()
@@ -59,7 +59,7 @@ void FileExporterPS::reloadConfig()
 bool FileExporterPS::save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog)
 {
     if (!iodevice->isWritable() && !iodevice->open(QIODevice::WriteOnly)) {
-        qWarning() << "Output device not writable";
+        qCWarning(LOG_KBIBTEX_IO) << "Output device not writable";
         return false;
     }
 
@@ -84,7 +84,7 @@ bool FileExporterPS::save(QIODevice *iodevice, const File *bibtexfile, QStringLi
 bool FileExporterPS::save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog)
 {
     if (!iodevice->isWritable() && !iodevice->open(QIODevice::WriteOnly)) {
-        qWarning() << "Output device not writable";
+        qCWarning(LOG_KBIBTEX_IO) << "Output device not writable";
         return false;
     }
 

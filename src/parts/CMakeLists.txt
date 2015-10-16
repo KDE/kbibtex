@@ -4,16 +4,12 @@ set(
     kbibtexpart_SRCS
     part.cpp
     browserextension.cpp
+    logging_parts.cpp
 )
 
-# # debug area for KBibTeX's IO library
-# add_definitions(
-#     -DKDE_DEFAULT_DEBUG_AREA=101013
-# )
-
-# if(UNITY_BUILD)
-#     enable_unity_build(kbibtexpart kbibtexpart_SRCS)
-# endif(UNITY_BUILD)
+if(UNITY_BUILD)
+    enable_unity_build(kbibtexpart kbibtexpart_SRCS)
+endif(UNITY_BUILD)
 
 include_directories(
     ${CMAKE_SOURCE_DIR}/src/config

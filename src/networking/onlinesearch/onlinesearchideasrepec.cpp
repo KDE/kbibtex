@@ -20,13 +20,13 @@
 #include <QSet>
 #include <QNetworkRequest>
 #include <QNetworkReply>
-#include <QDebug>
 #include <QUrlQuery>
 
 #include <KLocalizedString>
 
 #include "fileimporterbibtex.h"
 #include "internalnetworkaccessmanager.h"
+#include "logging_networking.h"
 
 class OnlineSearchIDEASRePEc::OnlineSearchIDEASRePEcPrivate
 {
@@ -177,7 +177,7 @@ void OnlineSearchIDEASRePEc::downloadListDone()
             }
         }
     } else
-        qWarning() << "url was" << reply->url().toString();
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
 
 }
 
@@ -218,7 +218,7 @@ void OnlineSearchIDEASRePEc::downloadPublicationDone()
         connect(reply, SIGNAL(finished()), this, SLOT(downloadBibTeXDone()));
 
     } else
-        qWarning() << "url was" << reply->url().toString();
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
 }
 
 void OnlineSearchIDEASRePEc::downloadBibTeXDone()
@@ -272,5 +272,5 @@ void OnlineSearchIDEASRePEc::downloadBibTeXDone()
             connect(reply, SIGNAL(finished()), this, SLOT(downloadPublicationDone()));
         }
     } else
-        qWarning() << "url was" << reply->url().toString() << "(was" << downloadUrl << ")";
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString() << "(was" << downloadUrl << ")";
 }

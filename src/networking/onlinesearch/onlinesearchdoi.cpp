@@ -21,7 +21,6 @@
 #include <QGridLayout>
 #include <QNetworkRequest>
 #include <QNetworkReply>
-#include <QDebug>
 
 #include <KLineEdit>
 #include <KConfigGroup>
@@ -30,6 +29,7 @@
 #include "kbibtexnamespace.h"
 #include "internalnetworkaccessmanager.h"
 #include "fileimporterbibtex.h"
+#include "logging_networking.h"
 
 class OnlineSearchDOI::OnlineSearchQueryFormDOI : public OnlineSearchQueryFormAbstract
 {
@@ -94,7 +94,7 @@ public:
 
     QUrl buildQueryUrl() {
         if (form == NULL) {
-            qWarning() << "Cannot build query url if no form is specified";
+            qCWarning(LOG_KBIBTEX_NETWORKING) << "Cannot build query url if no form is specified";
             return QUrl();
         }
 
@@ -225,7 +225,7 @@ void OnlineSearchDOI::downloadDone()
 
                     delete bibtexFile;
                 } else {
-                    qWarning() << "No valid BibTeX file results returned on request on" << reply->url().toString();
+                    qCWarning(LOG_KBIBTEX_NETWORKING) << "No valid BibTeX file results returned on request on" << reply->url().toString();
                     emit stoppedSearch(resultUnspecifiedError);
                 }
             } else {
@@ -234,5 +234,5 @@ void OnlineSearchDOI::downloadDone()
             }
         }
     } else
-        qWarning() << "url was" << reply->url().toString();
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
 }

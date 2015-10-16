@@ -19,7 +19,6 @@
 
 #include <QNetworkRequest>
 #include <QNetworkReply>
-#include <QDebug>
 #include <QUrlQuery>
 
 #include <KLocalizedString>
@@ -27,6 +26,7 @@
 #include "internalnetworkaccessmanager.h"
 #include "iocommon.h"
 #include "fileimporterbibtex.h"
+#include "logging_networking.h"
 
 class OnlineSearchJStor::OnlineSearchJStorPrivate
 {
@@ -165,7 +165,7 @@ void OnlineSearchJStor::doneFetchingStartPage()
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingResultPage()));
         }
     } else
-        qWarning() << "url was" << reply->url().toString();
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
 }
 
 void OnlineSearchJStor::doneFetchingResultPage()
@@ -208,7 +208,7 @@ void OnlineSearchJStor::doneFetchingResultPage()
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingBibTeXCode()));
         }
     } else
-        qWarning() << "url was" << reply->url().toString();
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
 }
 
 void OnlineSearchJStor::doneFetchingBibTeXCode()
@@ -237,7 +237,7 @@ void OnlineSearchJStor::doneFetchingBibTeXCode()
         emit progress(d->numSteps, d->numSteps);
         emit stoppedSearch(d->numFoundResults > 0 ? resultNoError : resultUnspecifiedError);
     } else
-        qWarning() << "url was" << reply->url().toString();
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
 }
 
 void OnlineSearchJStor::sanitizeEntry(QSharedPointer<Entry> entry)
@@ -284,7 +284,7 @@ void OnlineSearchJStor::sanitizeEntry(QSharedPointer<Entry> entry)
         entry->insert(Entry::ftMonth, v);
     } else {
         /// this case happens if the field only contains a year
-        //qDebug() << "Cannot extract month/season from date" << formattedDate;
+        //qCDebug(LOG_KBIBTEX_NETWORKING) << "Cannot extract month/season from date" << formattedDate;
     }
 
     /// page field may start with "pp. ", remove that

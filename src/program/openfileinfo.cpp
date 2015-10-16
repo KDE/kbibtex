@@ -36,6 +36,7 @@
 #include <KParts/ReadWritePart>
 
 #include "fileimporterpdf.h"
+#include "logging_program.h"
 
 class OpenFileInfo::OpenFileInfoPrivate
 {
@@ -64,7 +65,7 @@ public:
         this->openFileInfoManager = openFileInfoManager;
         this->url = url;
         if (this->url.scheme().isEmpty())
-            qWarning() << "No scheme specified for URL" << this->url.toDisplayString();
+            qCWarning(LOG_KBIBTEX_PROGRAM) << "No scheme specified for URL" << this->url.toDisplayString();
         this->mimeType = mimeType;
     }
 
@@ -79,7 +80,7 @@ public:
 
     KParts::ReadOnlyPart *createPart(QWidget *newWidgetParent, KService::Ptr newServicePtr = KService::Ptr()) {
         if (!p->flags().testFlag(OpenFileInfo::Open)) {
-            qWarning() << "Cannot create part for a file which is not open";
+            qCWarning(LOG_KBIBTEX_PROGRAM) << "Cannot create part for a file which is not open";
             return NULL;
         }
 
@@ -107,20 +108,20 @@ public:
             newServicePtr = p->defaultService();
         }
         if (!newServicePtr) {
-            qCritical() << "Cannot find service to handle mimetype " << mimeType << endl;
+            qCCritical(LOG_KBIBTEX_PROGRAM) << "Cannot find service to handle mimetype " << mimeType << endl;
             return NULL;
         }
 
         QString errorString;
         part = newServicePtr->createInstance<KParts::ReadWritePart>(newWidgetParent, (QObject *)newWidgetParent, QVariantList(), &errorString);
         if (part == NULL) {
-            qDebug() << "Could not instanciate read-write part for service" << newServicePtr->name() << "(" << errorString << ")";
+            qCDebug(LOG_KBIBTEX_PROGRAM) << "Could not instanciate read-write part for service" << newServicePtr->name() << "(" << errorString << ")";
             /// creating a read-write part failed, so maybe it is read-only (like Okular's PDF viewer)?
             part = newServicePtr->createInstance<KParts::ReadOnlyPart>(newWidgetParent, (QObject *)newWidgetParent, QVariantList(), &errorString);
         }
         if (part == NULL) {
             /// still cannot create part, must be error
-            qCritical() << "Could not instanciate part for service" << newServicePtr->name() << "(mimeType=" << mimeType << ", error msg=" << errorString << ")";
+            qCCritical(LOG_KBIBTEX_PROGRAM) << "Could not instanciate part for service" << newServicePtr->name() << "(mimeType=" << mimeType << ", error msg=" << errorString << ")";
             return NULL;
         }
 
@@ -147,7 +148,7 @@ public:
         if (!url.isValid() && m_counter < 0)
             m_counter = ++globalCounter;
         else if (url.isValid())
-            qWarning() << "This function should not be called if URL is valid";
+            qCWarning(LOG_KBIBTEX_PROGRAM) << "This function should not be called if URL is valid";
         return m_counter;
     }
 
@@ -180,7 +181,7 @@ void OpenFileInfo::setUrl(const QUrl &url)
     Q_ASSERT_X(url.isValid(), "void OpenFileInfo::setUrl(const QUrl&)", "URL is not valid");
     d->url = url;
     if (d->url.scheme().isEmpty())
-        qWarning() << "No scheme specified for URL" << d->url.toDisplayString();
+        qCWarning(LOG_KBIBTEX_PROGRAM) << "No scheme specified for URL" << d->url.toDisplayString();
     d->mimeType = FileInfo::mimeTypeForUrl(url).name();
     addFlags(OpenFileInfo::HasName);
 }
@@ -314,9 +315,9 @@ KService::Ptr OpenFileInfo::defaultService()
     if (!result)
         result = KMimeTypeTrader::self()->preferredService(mt, QLatin1String("KParts/ReadOnlyPart"));
     if (result)
-        qDebug() << "Using service" << result->name() << "(" << result->comment() << ") for mime type" << mt;
+        qCDebug(LOG_KBIBTEX_PROGRAM) << "Using service" << result->name() << "(" << result->comment() << ") for mime type" << mt;
     else
-        qWarning() << "Could not find service for mime type" << mt;
+        qCWarning(LOG_KBIBTEX_PROGRAM) << "Could not find service for mime type" << mt;
     return result;
 }
 
@@ -491,7 +492,7 @@ bool OpenFileInfoManager::changeUrl(OpenFileInfo *openFileInfo, const QUrl &url)
 
     /// check if old url differs from new url and old url is valid
     if (previouslyContained != NULL && previouslyContained->flags().testFlag(OpenFileInfo::Open) && previouslyContained != openFileInfo) {
-        qWarning() << "Open file with same URL already exists, forcefully closing it" << endl;
+        qCWarning(LOG_KBIBTEX_PROGRAM) << "Open file with same URL already exists, forcefully closing it" << endl;
         close(previouslyContained);
     }
 
@@ -529,7 +530,7 @@ bool OpenFileInfoManager::changeUrl(OpenFileInfo *openFileInfo, const QUrl &url)
 bool OpenFileInfoManager::close(OpenFileInfo *openFileInfo)
 {
     if (openFileInfo == NULL) {
-        qWarning() << "void OpenFileInfoManager::close(OpenFileInfo *openFileInfo): Cannot close openFileInfo which is NULL";
+        qCWarning(LOG_KBIBTEX_PROGRAM) << "void OpenFileInfoManager::close(OpenFileInfo *openFileInfo): Cannot close openFileInfo which is NULL";
         return false;
     }
 

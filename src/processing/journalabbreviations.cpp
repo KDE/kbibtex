@@ -21,8 +21,9 @@
 #include <QFile>
 #include <QTextStream>
 #include <QRegExp>
-#include <QDebug>
 #include <QStandardPaths>
+
+#include "logging_processing.h"
 
 class JournalAbbreviations::Private
 {
@@ -73,7 +74,7 @@ public:
 
             return !leftToRightMap.isEmpty();
         } else {
-            qWarning() << "Cannot open journal abbreviation list file at" << journalFilename;
+            qCWarning(LOG_KBIBTEX_PROCESSING) << "Cannot open journal abbreviation list file at" << journalFilename;
             return false;
         }
     }

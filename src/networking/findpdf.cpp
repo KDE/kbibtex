@@ -22,7 +22,6 @@
 #include <QRegExp>
 #include <QTextStream>
 #include <QApplication>
-#include <QDebug>
 #include <QTemporaryFile>
 #include <QUrlQuery>
 #include <QStandardPaths>
@@ -34,6 +33,7 @@
 #include "internalnetworkaccessmanager.h"
 #include "value.h"
 #include "fileinfo.h"
+#include "logging_networking.h"
 
 int maxDepth = 5;
 const char *depthProperty = "depth";
@@ -192,13 +192,13 @@ public:
                 resultItem.tempFilename->close();
                 if (lenDataWritten != data.length()) {
                     /// Failed to write to temporary file
-                    qWarning() << "Failed to write to temporary file for filename" << resultItem.tempFilename->fileName();
+                    qCWarning(LOG_KBIBTEX_NETWORKING) << "Failed to write to temporary file for filename" << resultItem.tempFilename->fileName();
                     delete resultItem.tempFilename;
                     resultItem.tempFilename = NULL;
                 }
             } else {
                 /// Failed to create temporary file
-                qWarning() << "Failed to create temporary file for templaet" << resultItem.tempFilename->fileTemplate();
+                qCWarning(LOG_KBIBTEX_NETWORKING) << "Failed to create temporary file for templaet" << resultItem.tempFilename->fileTemplate();
                 delete resultItem.tempFilename;
                 resultItem.tempFilename = NULL;
             }
@@ -320,7 +320,7 @@ bool FindPDF::search(const Entry &entry)
     }
 
     if (d->aliveCounter == 0) {
-        qWarning() << "Directly at start, no URLs are queue for a search -> this should never happen";
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "Directly at start, no URLs are queue for a search -> this should never happen";
         emit finished();
     }
 
@@ -394,9 +394,9 @@ void FindPDF::downloadFinished()
                     static QRegExp titleRegExp(QLatin1String("<title>(.*)</title>"));
                     titleRegExp.setMinimal(true);
                     if (titleRegExp.indexIn(text) >= 0)
-                        qDebug() << "Using general HTML processor for page" << titleRegExp.cap(1) << " URL=" << reply->url().toDisplayString();
+                        qCDebug(LOG_KBIBTEX_NETWORKING) << "Using general HTML processor for page" << titleRegExp.cap(1) << " URL=" << reply->url().toDisplayString();
                     else
-                        qDebug() << "Using general HTML processor for URL=" << reply->url().toDisplayString();
+                        qCDebug(LOG_KBIBTEX_NETWORKING) << "Using general HTML processor for URL=" << reply->url().toDisplayString();
                     d->processGeneralHTML(reply, text);
                 }
             }
@@ -410,10 +410,10 @@ void FindPDF::downloadFinished()
         else {
             QTextStream ts(data);
             const QString text = ts.readAll();
-            qWarning() << "don't know how to handle " << text.left(256);
+            qCWarning(LOG_KBIBTEX_NETWORKING) << "don't know how to handle " << text.left(256);
         }
     } else
-        qWarning() << "error from reply: " << reply->errorString();
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "error from reply: " << reply->errorString();
 
     if (d->aliveCounter == 0) {
         /// no more running downloads left

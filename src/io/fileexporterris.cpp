@@ -19,9 +19,9 @@
 
 #include <QRegExp>
 #include <QStringList>
-#include <QDebug>
 
 #include "entry.h"
+#include "logging_io.h"
 
 FileExporterRIS::FileExporterRIS()
         : FileExporter(), m_cancelFlag(false)
@@ -37,7 +37,7 @@ FileExporterRIS::~FileExporterRIS()
 bool FileExporterRIS::save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File * /*bibtexfile*/, QStringList * /*errorLog*/)
 {
     if (!iodevice->isWritable() && !iodevice->open(QIODevice::WriteOnly)) {
-        qDebug() << "Output device not writable";
+        qCDebug(LOG_KBIBTEX_IO) << "Output device not writable";
         return false;
     }
 
@@ -56,7 +56,7 @@ bool FileExporterRIS::save(QIODevice *iodevice, const QSharedPointer<const Eleme
 bool FileExporterRIS::save(QIODevice *iodevice, const File *bibtexfile, QStringList * /*errorLog*/)
 {
     if (!iodevice->isWritable() && !iodevice->open(QIODevice::WriteOnly)) {
-        qDebug() << "Output device not writable";
+        qCDebug(LOG_KBIBTEX_IO) << "Output device not writable";
         return false;
     }
 
@@ -121,7 +121,7 @@ bool FileExporterRIS::writeEntry(QTextStream &stream, const Entry *entry)
                 if (!person.isNull())
                     result &= writeKeyValue(stream, "AU", PlainTextValue::text(**it));
                 else
-                    qWarning() << "Cannot write value " << PlainTextValue::text(**it) << " for field AU (author), not supported by RIS format" << endl;
+                    qCWarning(LOG_KBIBTEX_IO) << "Cannot write value " << PlainTextValue::text(**it) << " for field AU (author), not supported by RIS format" << endl;
             }
         } else if (key.toLower() == Entry::ftEditor) {
             for (Value::ConstIterator it = value.constBegin(); result && it != value.constEnd(); ++it) {
@@ -129,7 +129,7 @@ bool FileExporterRIS::writeEntry(QTextStream &stream, const Entry *entry)
                 if (!person.isNull())
                     result &= writeKeyValue(stream, "ED", PlainTextValue::text(**it));
                 else
-                    qWarning() << "Cannot write value " << PlainTextValue::text(**it) << " for field ED (editor), not supported by RIS format" << endl;
+                    qCWarning(LOG_KBIBTEX_IO) << "Cannot write value " << PlainTextValue::text(**it) << " for field ED (editor), not supported by RIS format" << endl;
             }
         } else if (key == Entry::ftTitle)
             result &= writeKeyValue(stream, "TI", PlainTextValue::text(value));

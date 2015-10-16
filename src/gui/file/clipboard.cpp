@@ -23,7 +23,6 @@
 #include <QBuffer>
 #include <QMouseEvent>
 #include <QDrag>
-#include <QDebug>
 
 #include <KConfigGroup>
 #include <KSharedConfig>
@@ -34,6 +33,7 @@
 #include "fileexporterbibtex.h"
 #include "file.h"
 #include "associatedfilesui.h"
+#include "logging_gui.h"
 
 const QString Clipboard::keyCopyReferenceCommand = QLatin1String("copyReferenceCommand");
 const QString Clipboard::defaultCopyReferenceCommand = QLatin1String("");
@@ -124,7 +124,7 @@ public:
 
             QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
             if (!entry.isNull()) {
-                qDebug() << "Adding in entry" << entry->id();
+                qCDebug(LOG_KBIBTEX_GUI) << "Adding in entry" << entry->id();
 
                 /// Check if text looks like an URL
                 const QUrl url(text);
@@ -133,7 +133,7 @@ public:
                 }
             }
         } else
-            qDebug() << "Don't know what to do with " << text;
+            qCDebug(LOG_KBIBTEX_GUI) << "Don't know what to do with " << text;
 
         return false;
     }

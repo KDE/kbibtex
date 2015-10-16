@@ -61,6 +61,7 @@
 #include "file.h"
 #include "entry.h"
 #include "fileview.h"
+#include "logging_program.h"
 
 static const struct PreviewStyles {
     QString label, style, type;
@@ -329,7 +330,7 @@ void ReferencePreview::renderHTML()
         exporterXSLT->setXSLTFilename(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("kbibtex/") + filename));
         exporter = exporterXSLT;
     } else
-        qWarning() << "Don't know how to handle output type " << previewStyle.type;
+        qCWarning(LOG_KBIBTEX_PROGRAM) << "Don't know how to handle output type " << previewStyle.type;
 
     if (exporter != NULL) {
         QBuffer buffer(this);
@@ -363,7 +364,7 @@ void ReferencePreview::renderHTML()
         if (!exporterResult || text.isEmpty()) {
             /// something went wrong, no output ...
             text = d->notAvailableMessage.arg(i18n("No HTML output generated"));
-            qDebug() << errorLog.join("\n");
+            qCDebug(LOG_KBIBTEX_PROGRAM) << errorLog.join("\n");
         } else {
             /// beautify text
             text.replace(QLatin1String("``"), QLatin1String("&ldquo;"));

@@ -20,16 +20,12 @@ set(
     docklets/filesettings.cpp
     docklets/zoterobrowser.cpp
     openfileinfo.cpp
+    logging_program.cpp
 )
 
-# # debug area for KBibTeX's program
-# add_definitions(
-#     -DKDE_DEFAULT_DEBUG_AREA=101017
-# )
-
-# if(UNITY_BUILD AND NOT WIN32) # FIXME: Unity build of programs breaks on Windows
-#     enable_unity_build(kbibtex kbibtex_SRCS)
-# endif(UNITY_BUILD AND NOT WIN32)
+if(UNITY_BUILD AND NOT WIN32) # FIXME: Unity build of programs breaks on Windows
+    enable_unity_build(kbibtex kbibtex_SRCS)
+endif(UNITY_BUILD AND NOT WIN32)
 
 include_directories(
     ${CMAKE_BINARY_DIR}/src
@@ -146,6 +142,12 @@ install(
     kbibtexui.rc
     DESTINATION
     ${KXMLGUI_INSTALL_DIR}/kbibtex
+)
+install(
+    FILES
+    org.kde.kbibtex.appdata.xml
+    DESTINATION
+    ${SHARE_INSTALL_PREFIX}/appdata
 )
 
 ecm_install_icons(

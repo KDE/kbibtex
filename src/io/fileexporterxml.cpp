@@ -21,7 +21,6 @@
 
 #include <QRegExp>
 #include <QStringList>
-#include <QDebug>
 
 #include "file.h"
 #include "entry.h"
@@ -29,6 +28,7 @@
 #include "comment.h"
 #include "encoderxml.h"
 #include "iocommon.h"
+#include "logging_io.h"
 
 static QRegExp removal("[{}]+");
 static QRegExp abstractRegExp("\\bAbstract[:]?([ ]|&nbsp;|&amp;nbsp;)*", Qt::CaseInsensitive);
@@ -48,7 +48,7 @@ FileExporterXML::~FileExporterXML()
 bool FileExporterXML::save(QIODevice *iodevice, const File *bibtexfile, QStringList * /*errorLog*/)
 {
     if (!iodevice->isWritable() && !iodevice->open(QIODevice::WriteOnly)) {
-        qWarning() << "Output device not writable";
+        qCWarning(LOG_KBIBTEX_IO) << "Output device not writable";
         return false;
     }
 
@@ -74,7 +74,7 @@ bool FileExporterXML::save(QIODevice *iodevice, const File *bibtexfile, QStringL
 bool FileExporterXML::save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File * /*bibtexfile*/, QStringList * /*errorLog*/)
 {
     if (!iodevice->isWritable() && !iodevice->open(QIODevice::WriteOnly)) {
-        qWarning() << "Output device not writable";
+        qCWarning(LOG_KBIBTEX_IO) << "Output device not writable";
         return false;
     }
 

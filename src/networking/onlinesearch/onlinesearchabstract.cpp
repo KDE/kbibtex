@@ -21,7 +21,6 @@
 #include <QNetworkReply>
 #include <QDir>
 #include <QTimer>
-#include <QDebug>
 #include <QListWidgetItem>
 #include <QStandardPaths>
 #include <QtDBus/QDBusConnection>
@@ -33,6 +32,7 @@
 #include "encoderlatex.h"
 #include "internalnetworkaccessmanager.h"
 #include "kbibtexnamespace.h"
+#include "logging_networking.h"
 
 const QString OnlineSearchAbstract::queryKeyFreeText = QLatin1String("free");
 const QString OnlineSearchAbstract::queryKeyTitle = QLatin1String("title");
@@ -139,7 +139,7 @@ bool OnlineSearchAbstract::handleErrors(QNetworkReply *reply, QUrl &newUrl)
     } else if (reply->error() != QNetworkReply::NoError) {
         m_hasBeenCanceled = true;
         const QString errorString = reply->errorString();
-        qWarning() << "Search using" << label() << "failed (error code" << reply->error() << "(" << errorString << "), HTTP code" << reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() << ":" << reply->attribute(QNetworkRequest::HttpReasonPhraseAttribute).toByteArray() << ")";
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "Search using" << label() << "failed (error code" << reply->error() << "(" << errorString << "), HTTP code" << reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() << ":" << reply->attribute(QNetworkRequest::HttpReasonPhraseAttribute).toByteArray() << ")";
         sendVisualNotification(errorString.isEmpty() ? i18n("Searching '%1' failed for unknown reason.", label()) : i18n("Searching '%1' failed with error message:\n\n%2", label(), errorString), label(), "kbibtex", 7 * 1000);
 
         int resultCode = resultUnspecifiedError;
@@ -161,7 +161,7 @@ bool OnlineSearchAbstract::handleErrors(QNetworkReply *reply, QUrl &newUrl)
     if (reply->attribute(QNetworkRequest::RedirectionTargetAttribute).isValid()) {
         newUrl = reply->url().resolved(reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl());
     } else if (reply->size() == 0)
-        qWarning() << "Search using" << label() << "on url" << reply->url().toString() << "returned no data";
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "Search using" << label() << "on url" << reply->url().toString() << "returned no data";
 
     return true;
 }
@@ -197,13 +197,13 @@ void OnlineSearchAbstract::sendVisualNotification(const QString &text, const QSt
         // Not displaying any error messages as this is optional for kdialog
         // and KPassivePopup is a perfectly valid fallback.
         //else {
-        //  qDebug() << "Error: received reply with no arguments.";
+        //  qCDebug(LOG_KBIBTEX_NETWORKING) << "Error: received reply with no arguments.";
         //}
     } else if (replyMsg.type() == QDBusMessage::ErrorMessage) {
-        //qDebug() << "Error: failed to send D-Bus message";
-        //qDebug() << replyMsg;
+        //qCDebug(LOG_KBIBTEX_NETWORKING) << "Error: failed to send D-Bus message";
+        //qCDebug(LOG_KBIBTEX_NETWORKING) << replyMsg;
     } else {
-        //qDebug() << "Unexpected reply type";
+        //qCDebug(LOG_KBIBTEX_NETWORKING) << "Unexpected reply type";
     }
 }
 
@@ -255,7 +255,7 @@ QMap<QString, QString> OnlineSearchAbstract::formParameters(const QString &htmlT
     int startPos = htmlText.indexOf(formTagBegin, Qt::CaseInsensitive);
     int endPos = htmlText.indexOf(formTagEnd, startPos, Qt::CaseInsensitive);
     if (startPos < 0 || endPos < 0) {
-        qWarning() << "Could not locate form" << formTagBegin << "in text";
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "Could not locate form" << formTagBegin << "in text";
         return result;
     }
 
@@ -326,7 +326,7 @@ void OnlineSearchAbstract::iconDownloadFinished()
         if (iconData.size() < 10) {
             /// Unlikely that an icon's data is less than 10 bytes,
             /// must be an error.
-            qWarning() << "Received invalid icon data from " << reply->url().toString();
+            qCWarning(LOG_KBIBTEX_NETWORKING) << "Received invalid icon data from " << reply->url().toString();
             return;
         }
 
@@ -339,7 +339,7 @@ void OnlineSearchAbstract::iconDownloadFinished()
             /// third and fourth byte is 0x0001 (for .ico)
             extension = QLatin1String(".ico");
         } else {
-            qWarning() << "Favicon is of unknown format: " << reply->url().toDisplayString();
+            qCWarning(LOG_KBIBTEX_NETWORKING) << "Favicon is of unknown format: " << reply->url().toDisplayString();
             return;
         }
         const QString filename = reply->objectName() + extension;
@@ -353,11 +353,11 @@ void OnlineSearchAbstract::iconDownloadFinished()
             if (listWidgetItem != NULL)
                 listWidgetItem->setIcon(QIcon(filename));
         } else {
-            qWarning() << "Could not save icon data from URL" << reply->url().toDisplayString() << "to file" << filename;
+            qCWarning(LOG_KBIBTEX_NETWORKING) << "Could not save icon data from URL" << reply->url().toDisplayString() << "to file" << filename;
             return;
         }
     } else
-        qWarning() << "Could not download icon " << reply->url().toString();
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "Could not download icon " << reply->url().toString();
 }
 
 void OnlineSearchAbstract::dumpToFile(const QString &filename, const QString &text)
@@ -366,7 +366,7 @@ void OnlineSearchAbstract::dumpToFile(const QString &filename, const QString &te
 
     QFile f(usedFilename);
     if (f.open(QFile::WriteOnly)) {
-        qDebug() << "Dumping text" << squeezeText(text, 96) << "to" << usedFilename;
+        qCDebug(LOG_KBIBTEX_NETWORKING) << "Dumping text" << squeezeText(text, 96) << "to" << usedFilename;
         QTextStream ts(&f);
         ts << text;
         f.close();

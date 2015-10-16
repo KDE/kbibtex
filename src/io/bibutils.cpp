@@ -17,11 +17,12 @@
 
 #include "bibutils.h"
 
-#include <QDebug>
 #include <QProcess>
 #include <QBuffer>
 #include <QByteArray>
 #include <QStandardPaths>
+
+#include "logging_io.h"
 
 class BibUtils::Private
 {
@@ -73,9 +74,9 @@ bool BibUtils::available() {
             }
         }
         if (state == avail)
-            qDebug() << "BibUtils found, using it to import/export certain types of bibliographies";
+            qCDebug(LOG_KBIBTEX_IO) << "BibUtils found, using it to import/export certain types of bibliographies";
         else if (state == unavail)
-            qWarning() << "No or only an incomplete installation of BibUtils found";
+            qCWarning(LOG_KBIBTEX_IO) << "No or only an incomplete installation of BibUtils found";
     }
     return state == avail;
 }
@@ -112,7 +113,7 @@ bool BibUtils::convert(QIODevice &source, const BibUtils::Format &sourceFormat, 
     case Copac: bibUtilsProgram = QLatin1String("copac"); break;
     case Med: bibUtilsProgram = QLatin1String("med"); break;
     default:
-        qWarning() << "Unsupported BibUtils input format:" << sourceFormat;
+        qCWarning(LOG_KBIBTEX_IO) << "Unsupported BibUtils input format:" << sourceFormat;
         return false;
     }
 
@@ -132,7 +133,7 @@ bool BibUtils::convert(QIODevice &source, const BibUtils::Format &sourceFormat, 
     /// case Copac not supported by BibUtils
     /// case Med not supported by BibUtils
     default:
-        qWarning() << "Unsupported BibUtils output format:" << destinationFormat;
+        qCWarning(LOG_KBIBTEX_IO) << "Unsupported BibUtils output format:" << destinationFormat;
         return false;
     }
 

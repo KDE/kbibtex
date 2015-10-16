@@ -34,6 +34,7 @@ set(
     associatedfiles.cpp
     findpdf.cpp
     internalnetworkaccessmanager.cpp
+    logging_networking.cpp
 )
 
 set(
@@ -72,18 +73,9 @@ set(
     internalnetworkaccessmanager.h
 )
 
-# add_definitions(
-#     -DMAKE_NETWORKING_LIB
-# )
-
-# # debug area for KBibTeX's web search library
-# add_definitions(
-#     -DKDE_DEFAULT_DEBUG_AREA=101025
-# )
-
-# if(UNITY_BUILD)
-#     enable_unity_build(kbibtexnetworking kbibtexnetworking_LIB_SRCS)
-# endif(UNITY_BUILD)
+if(UNITY_BUILD)
+    enable_unity_build(kbibtexnetworking kbibtexnetworking_LIB_SRCS)
+endif(UNITY_BUILD)
 
 include_directories(
     ${CMAKE_BINARY_DIR}/src/config
@@ -139,12 +131,12 @@ install(
 
 generate_export_header( kbibtexnetworking )
 
-install(
-    FILES
-    ${kbibtexnetworking_HDRS}
-    ${CMAKE_BINARY_DIR}/src/networking/kbibtexnetworking_export.h
-    DESTINATION
-    ${INCLUDE_INSTALL_DIR}/kbibtex/networking
-    COMPONENT
-    development
-)
+# install(
+#     FILES
+#     ${kbibtexnetworking_HDRS}
+#     ${CMAKE_BINARY_DIR}/src/networking/kbibtexnetworking_export.h
+#     DESTINATION
+#     ${INCLUDE_INSTALL_DIR}/kbibtex/networking
+#     COMPONENT
+#     development
+# )

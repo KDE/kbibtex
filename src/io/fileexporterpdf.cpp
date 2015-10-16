@@ -22,7 +22,6 @@
 #include <QUrl>
 #include <QTextStream>
 #include <QDir>
-#include <QDebug>
 
 #include <KSharedConfig>
 #include <KConfigGroup>
@@ -32,6 +31,7 @@
 #include "entry.h"
 #include "fileexporterbibtex.h"
 #include "kbibtexnamespace.h"
+#include "logging_io.h"
 
 FileExporterPDF::FileExporterPDF(FileEmbedding fileEmbedding)
         : FileExporterToolchain(), m_fileEmbedding(fileEmbedding)
@@ -66,7 +66,7 @@ void FileExporterPDF::reloadConfig()
 bool FileExporterPDF::save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog)
 {
     if (!iodevice->isWritable() && !iodevice->open(QIODevice::WriteOnly)) {
-        qWarning() << "Output device not writable";
+        qCWarning(LOG_KBIBTEX_IO) << "Output device not writable";
         return false;
     }
 
@@ -90,7 +90,7 @@ bool FileExporterPDF::save(QIODevice *iodevice, const File *bibtexfile, QStringL
         result = generatePDF(iodevice, errorLog);
 
     if (errorLog != NULL)
-        qDebug() << "errorLog" << errorLog->join(";");
+        qCDebug(LOG_KBIBTEX_IO) << "errorLog" << errorLog->join(";");
 
     iodevice->close();
     return result;
@@ -99,7 +99,7 @@ bool FileExporterPDF::save(QIODevice *iodevice, const File *bibtexfile, QStringL
 bool FileExporterPDF::save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog)
 {
     if (!iodevice->isWritable() && !iodevice->open(QIODevice::WriteOnly)) {
-        qWarning() << "Output device not writable";
+        qCWarning(LOG_KBIBTEX_IO) << "Output device not writable";
         return false;
     }
 

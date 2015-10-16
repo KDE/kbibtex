@@ -19,10 +19,10 @@
 
 #include <QNetworkRequest>
 #include <QNetworkReply>
-#include <QDebug>
 
 #include "fileimporterbibtex.h"
 #include "internalnetworkaccessmanager.h"
+#include "logging_networking.h"
 
 OnlineSearchSimpleBibTeXDownload::OnlineSearchSimpleBibTeXDownload(QWidget *parent)
         : OnlineSearchAbstract(parent)
@@ -98,7 +98,7 @@ void OnlineSearchSimpleBibTeXDownload::downloadDone()
 
                 delete bibtexFile;
             } else {
-                qWarning() << "No valid BibTeX file results returned on request on" << reply->url().toString();
+                qCWarning(LOG_KBIBTEX_NETWORKING) << "No valid BibTeX file results returned on request on" << reply->url().toString();
                 emit stoppedSearch(resultUnspecifiedError);
             }
         } else {
@@ -106,7 +106,7 @@ void OnlineSearchSimpleBibTeXDownload::downloadDone()
             emit stoppedSearch(resultNoError);
         }
     } else
-        qWarning() << "url was" << reply->url().toString();
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
 
     emit progress(2, 2);
 }

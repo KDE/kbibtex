@@ -61,6 +61,7 @@ find_package(
 find_package(
     KF5 ${KF5_MIN_VERSION}
     REQUIRED
+    DocTools
     I18n
     XmlGui
     KIO
@@ -86,15 +87,15 @@ set(
     LIB_SOVERSION ${VERSION_BRANCH}
 )
 
-# option(
-#     UNITY_BUILD
-#     "Compile multiple C++ files in one big, merged file (\"Unity build\")\nSee also http://t-fischer.dreamwidth.org/3054.html"
-# )
-# if(UNITY_BUILD)
-#     message(STATUS "Unity build enabled")
-# else(UNITY_BUILD)
-#     message(STATUS "Unity build disabled (default), use option UNITY_BUILD to enable it")
-# endif(UNITY_BUILD)
+option(
+    UNITY_BUILD
+    "Compile multiple C++ files in one big, merged file (\"Unity build\")\nSee also http://t-fischer.dreamwidth.org/3054.html"
+)
+if(UNITY_BUILD)
+    message(STATUS "Unity build enabled")
+else(UNITY_BUILD)
+    message(STATUS "Unity build disabled (default), use option UNITY_BUILD to enable it")
+endif(UNITY_BUILD)
 
 # # FIXME may have to be cleaned up a little bit
 # # Contributed by Jeremy Cribb <cribb.jeremy@gmail.com>
@@ -167,16 +168,14 @@ add_subdirectory(
 add_subdirectory(
     xslt
 )
-# add_subdirectory(
-#     doc
-# )
-# add_subdirectory(
-#     mime
-# )
+add_subdirectory(
+    doc
+)
+add_subdirectory(
+    mime
+)
 # macro_optional_add_subdirectory(
 #     po
 # )
-
-# install(FILES kbibtex.appdata.xml DESTINATION ${SHARE_INSTALL_PREFIX}/appdata/)
 
 feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)

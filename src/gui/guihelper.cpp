@@ -21,8 +21,9 @@
 #include <QPainter>
 #include <QPixmap>
 
-#include <QDebug>
 #include <KIconLoader>
+
+#include "logging_gui.h"
 
 int GUIHelper::selectValue(QAbstractItemModel *model, const QString &value, int role)
 {
@@ -36,7 +37,7 @@ int GUIHelper::selectValue(QAbstractItemModel *model, const QString &value, int 
         ++row;
     }
 
-    qWarning() << "Could not find matching row in model for value " << value << " in role" << role;
+    qCWarning(LOG_KBIBTEX_GUI) << "Could not find matching row in model for value " << value << " in role" << role;
 
     return -1;
 }

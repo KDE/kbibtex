@@ -27,7 +27,6 @@
 #include <QPushButton>
 #include <QApplication>
 #include <QIcon>
-#include <QDebug>
 #include <QAction>
 
 #include <KIconLoader>
@@ -359,8 +358,6 @@ void DocumentListView::currentChanged(const QModelIndex &current, const QModelIn
 class DocumentList::DocumentListPrivate
 {
 public:
-    DocumentList *p;
-
     DocumentListView *listOpenFiles;
     DocumentListView *listRecentFiles;
     DocumentListView *listFavorites;
