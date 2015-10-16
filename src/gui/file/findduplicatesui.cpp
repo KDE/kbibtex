@@ -28,7 +28,6 @@
 #include <QKeyEvent>
 #include <QSplitter>
 #include <QtCore/QPointer>
-#include <QDebug>
 #include <QStandardPaths>
 #include <QPushButton>
 #include <QAction>
@@ -49,6 +48,7 @@
 #include "filedelegate.h"
 #include "models/filemodel.h"
 #include "findduplicates.h"
+#include "logging_gui.h"
 
 const int FieldNameRole = Qt::UserRole + 101;
 const int UserInputRole = Qt::UserRole + 103;
@@ -296,7 +296,7 @@ public:
                                     for (QList<QSharedPointer<Keyword> >::ConstIterator it = keywordList.constBegin(); it != keywordList.constEnd(); ++it)
                                         v.append(*it);
                                 } else {
-                                    qDebug() << "Not know how to set this text:" << text;
+                                    qCDebug(LOG_KBIBTEX_GUI) << "Not know how to set this text:" << text;
                                 }
                             }
                         }

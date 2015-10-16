@@ -18,12 +18,13 @@
 #include "bibtexfields.h"
 
 #include <QExplicitlySharedDataPointer>
-#include <QDebug>
 #include <QStandardPaths>
 
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <KLocalizedString>
+
+#include "logging_config.h"
 
 bool operator==(const FieldDescription &a, const FieldDescription &b)
 {
@@ -96,11 +97,11 @@ public:
             p->append(fd);
         }
 
-        if (p->isEmpty()) qWarning() << "List of field descriptions is empty after load()";
+        if (p->isEmpty()) qCWarning(LOG_KBIBTEX_CONFIG) << "List of field descriptions is empty after load()";
     }
 
     void save() {
-        if (p->isEmpty()) qWarning() << "List of field descriptions is empty before save()";
+        if (p->isEmpty()) qCWarning(LOG_KBIBTEX_CONFIG) << "List of field descriptions is empty before save()";
 
         QStringList treeViewNames;
         int columnCount = 0;
@@ -220,7 +221,7 @@ const FieldDescription *BibTeXFields::find(const QString &name) const
         if ((*it)->upperCamelCase.toLower() == iName && (*it)->upperCamelCaseAlt.isEmpty())
             return (*it);
     }
-    qWarning() << "No field description for " << name << "(" << iName << ")";
+    qCWarning(LOG_KBIBTEX_CONFIG) << "No field description for " << name << "(" << iName << ")";
     return NULL;
 }
 

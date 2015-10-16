@@ -10,6 +10,7 @@ set(
     preamble.cpp
     value.cpp
     models/filemodel.cpp
+    logging_data.cpp
 )
 
 set(
@@ -23,11 +24,6 @@ set(
     value.h
     models/filemodel.h
 )
-
-# # debug area for KBibTeX's Data library
-# add_definitions(
-#     -DKDE_DEFAULT_DEBUG_AREA=101032
-# )
 
 if(UNITY_BUILD)
     enable_unity_build(kbibtexdata kbibtexdata_LIB_SRCS)
@@ -83,12 +79,12 @@ install(
 
 generate_export_header( kbibtexdata )
 
-install(
-    FILES
-    ${kbibtexdata_HDRS}
-    ${CMAKE_BINARY_DIR}/src/data/kbibtexdata_export.h
-    DESTINATION
-    ${INCLUDE_INSTALL_DIR}/kbibtex/data
-    COMPONENT
-    development
-)
+# install(
+#     FILES
+#     ${kbibtexdata_HDRS}
+#     ${CMAKE_BINARY_DIR}/src/data/kbibtexdata_export.h
+#     DESTINATION
+#     ${INCLUDE_INSTALL_DIR}/kbibtex/data
+#     COMPONENT
+#     development
+# )

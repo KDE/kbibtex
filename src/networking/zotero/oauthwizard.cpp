@@ -23,7 +23,6 @@
 #include <QGridLayout>
 #include <QClipboard>
 #include <QApplication>
-#include <QDebug>
 #include <QPushButton>
 #include <QUrl>
 #include <QUrlQuery>
@@ -33,6 +32,7 @@
 #include <KRun>
 
 #include "internalnetworkaccessmanager.h"
+#include "logging_networking.h"
 
 #include <QtOAuth>
 
@@ -152,7 +152,7 @@ public:
             oauthAuthorizationUrl.setQuery(query);
             return oauthAuthorizationUrl;
         } else
-            qWarning() << "Error getting token" << qOAuth->error();
+            qCWarning(LOG_KBIBTEX_NETWORKING) << "Error getting token" << qOAuth->error();
 
         return QUrl();
     }
@@ -213,16 +213,16 @@ public:
                     userId = -1;
                     apiKey.clear();
                     username.clear();
-                    qWarning() << "Returned user id is not a valid number:" << oAuthVerifierRequest.value("userID");
+                    qCWarning(LOG_KBIBTEX_NETWORKING) << "Returned user id is not a valid number:" << oAuthVerifierRequest.value("userID");
                 } else {
                     apiKey = oAuthVerifierRequest.value("oauth_token");
                     username = oAuthVerifierRequest.value("username");
                 }
             } else {
-                qWarning() << "QOAuth error: token or tokenSecret empty";
+                qCWarning(LOG_KBIBTEX_NETWORKING) << "QOAuth error: token or tokenSecret empty";
             }
         } else {
-            qWarning() << "QOAuth error:" << qOAuth->error();
+            qCWarning(LOG_KBIBTEX_NETWORKING) << "QOAuth error:" << qOAuth->error();
         }
     }
 };

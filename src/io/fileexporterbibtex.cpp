@@ -19,7 +19,6 @@
 
 #include <typeinfo>
 
-#include <QDebug>
 #include <QTextCodec>
 #include <QTextStream>
 #include <QStringList>
@@ -40,6 +39,7 @@
 #include "config/bibtexentries.h"
 #include "config/bibtexfields.h"
 #include "iconvlatex.h"
+#include "logging_io.h"
 
 #define encodercheck(encoder, text) ((encoder)?(encoder)->encode((text)):(text))
 
@@ -147,7 +147,7 @@ public:
             QString text = p->internalValueToBibTeX(value, key, leUTF8);
             if (text.isEmpty()) {
                 /// ignore empty key-value pairs
-                qWarning() << "Value for field " << key << " is empty" << endl;
+                qCWarning(LOG_KBIBTEX_IO) << "Value for field " << key << " is empty" << endl;
                 continue;
             }
 
@@ -320,7 +320,7 @@ void FileExporterBibTeX::setEncoding(const QString &encoding)
 bool FileExporterBibTeX::save(QIODevice *iodevice, const File *bibtexfile, QStringList * /*errorLog*/)
 {
     if (!iodevice->isWritable() && !iodevice->open(QIODevice::WriteOnly)) {
-        qWarning() << "Output device not writable";
+        qCWarning(LOG_KBIBTEX_IO) << "Output device not writable";
         return false;
     }
 
@@ -415,7 +415,7 @@ bool FileExporterBibTeX::save(QIODevice *iodevice, const File *bibtexfile, QStri
 bool FileExporterBibTeX::save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList * /*errorLog*/)
 {
     if (!iodevice->isWritable() && !iodevice->open(QIODevice::WriteOnly)) {
-        qWarning() << "Output device not writable";
+        qCWarning(LOG_KBIBTEX_IO) << "Output device not writable";
         return false;
     }
 

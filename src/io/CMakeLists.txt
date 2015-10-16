@@ -27,6 +27,7 @@ set(
     iconvlatex.cpp
     bibutils.cpp
     xsltransform.cpp
+    logging_io.cpp
 )
 
 set(
@@ -58,15 +59,6 @@ set(
     bibutils.h
     xsltransform.h
 )
-
-# add_definitions(
-#     -DMAKE_KBIBTEXIO_LIB
-# )
-
-# # debug area for KBibTeX's IO library
-# add_definitions(
-#     -DKDE_DEFAULT_DEBUG_AREA=101011
-# )
 
 if(UNITY_BUILD)
     enable_unity_build(kbibtexio kbibtexio_LIB_SRCS)
@@ -139,12 +131,12 @@ install(
 
 generate_export_header( kbibtexio )
 
-install(
-    FILES
-    ${kbibtexio_HDRS}
-    ${CMAKE_BINARY_DIR}/src/io/kbibtexio_export.h
-    DESTINATION
-    ${INCLUDE_INSTALL_DIR}/kbibtex/io
-    COMPONENT
-    development
-)
+# install(
+#     FILES
+#     ${kbibtexio_HDRS}
+#     ${CMAKE_BINARY_DIR}/src/io/kbibtexio_export.h
+#     DESTINATION
+#     ${INCLUDE_INSTALL_DIR}/kbibtex/io
+#     COMPONENT
+#     development
+# )

@@ -72,6 +72,7 @@
 #include "fileview.h"
 #include "models/filemodel.h"
 #include "searchresults.h"
+#include "logging_program.h"
 
 const int HomepageRole = Qt::UserRole + 5;
 const int WidgetRole = Qt::UserRole + 6;
@@ -434,7 +435,7 @@ void SearchForm::stoppedSearch(int)
                 remainingEngines.append(running->label());
             }
             if (!remainingEngines.isEmpty())
-                qDebug() << "Remaining running engines:" << remainingEngines.join(", ");
+                qCDebug(LOG_KBIBTEX_PROGRAM) << "Remaining running engines:" << remainingEngines.join(", ");
         }
     }
 }

@@ -20,16 +20,15 @@
 #include <QNetworkReply>
 #include <QDateTime>
 #include <QTimer>
-#include <QDebug>
+#include <QStandardPaths>
 
 #include <KLocalizedString>
-
 #include <KMessageBox>
-#include <QStandardPaths>
 
 #include "xsltransform.h"
 #include "fileimporterbibtex.h"
 #include "internalnetworkaccessmanager.h"
+#include "logging_networking.h"
 
 const int OnlineSearchPubMed::maxNumResults = 25;
 const uint OnlineSearchPubMed::queryChokeTimeout = 10; /// 10 seconds
@@ -51,7 +50,7 @@ public:
         const QString xsltFilename = QLatin1String("kbibtex/pubmed2bibtex.xsl");
         xslt = XSLTransform::createXSLTransform(QStandardPaths::locate(QStandardPaths::GenericDataLocation, xsltFilename));
         if (xslt == NULL)
-            qWarning() << "Could not create XSLT transformation for" << xsltFilename;
+            qCWarning(LOG_KBIBTEX_NETWORKING) << "Could not create XSLT transformation for" << xsltFilename;
     }
 
     ~OnlineSearchPubMedPrivate() {
@@ -135,7 +134,7 @@ void OnlineSearchPubMed::startSearch(const QMap<QString, QString> &query, int nu
 {
     if (d->xslt == NULL) {
         /// Don't allow searches if xslt is not defined
-        qWarning() << "Cannot allow searching" << label() << "if XSL Transformation not available";
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "Cannot allow searching" << label() << "if XSL Transformation not available";
         delayedStoppedSearch(resultUnspecifiedError);
         return;
     }
@@ -148,7 +147,7 @@ void OnlineSearchPubMed::startSearch(const QMap<QString, QString> &query, int nu
     numResults = qMin(maxNumResults, numResults);
     /// enforcing choke on number of searchs per time
     if (QDateTime::currentDateTime().toTime_t() - lastQueryEpoch < queryChokeTimeout) {
-        qWarning() << "Too many search queries per time; choke enforces pause of" << queryChokeTimeout << "seconds between queries";
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "Too many search queries per time; choke enforces pause of" << queryChokeTimeout << "seconds between queries";
         delayedStoppedSearch(resultNoError);
         return;
     }
@@ -227,7 +226,7 @@ void OnlineSearchPubMed::eSearchDone()
             emit progress(d->numSteps, d->numSteps);
         }
     } else
-        qWarning() << "url was" << reply->url().toString();
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
 }
 
 void OnlineSearchPubMed::eFetchDone()
@@ -264,5 +263,5 @@ void OnlineSearchPubMed::eFetchDone()
             emit stoppedSearch(resultUnspecifiedError);
         }
     } else
-        qWarning() << "url was" << reply->url().toString();
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
 }

@@ -19,7 +19,6 @@
 
 #include <typeinfo>
 
-#include <QDebug>
 #include <QApplication>
 #include <QClipboard>
 #include <QScrollArea>
@@ -51,6 +50,7 @@
 #include "fieldlineedit.h"
 #include "associatedfiles.h"
 #include "associatedfilesui.h"
+#include "logging_gui.h"
 
 class FieldListEdit::FieldListEditProtected
 {
@@ -562,7 +562,7 @@ void UrlListEdit::downloadFinished(KJob *j) {
         lineAdd(value);
         delete value;
     } else {
-        qWarning() << "Downloading" << job->srcUrls().first().toDisplayString() << "failed with error" << job->error() << job->errorString();
+        qCWarning(LOG_KBIBTEX_GUI) << "Downloading" << job->srcUrls().first().toDisplayString() << "failed with error" << job->error() << job->errorString();
     }
     setEnabled(true);
     unsetCursor();

@@ -19,10 +19,11 @@
 
 #include <QFileInfo>
 #include <QDir>
-#include <QDebug>
 
 #include <KIO/CopyJob>
 #include <KJobWidgets>
+
+#include "logging_networking.h"
 
 bool AssociatedFiles::urlIsLocal(const QUrl &url)
 {
@@ -34,15 +35,15 @@ bool AssociatedFiles::urlIsLocal(const QUrl &url)
 
 QString AssociatedFiles::relativeFilename(const QUrl &documentUrl, const QUrl &baseUrl) {
     if (documentUrl.isEmpty()) {
-        qWarning() << "document URL has to point to a file location or URL";
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "document URL has to point to a file location or URL";
         return documentUrl.url(QUrl::PreferLocalFile);
     }
     if (baseUrl.isEmpty() || baseUrl.isRelative()) {
-        qWarning() << "base URL has to point to an absolute file location or URL";
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "base URL has to point to an absolute file location or URL";
         return documentUrl.url(QUrl::PreferLocalFile);
     }
     if (documentUrl.scheme() != baseUrl.scheme() || (documentUrl.scheme() != QLatin1String("file") && documentUrl.host() != baseUrl.host())) {
-        qWarning() << "document URL and base URL do not match (protocol, host, ...)";
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "document URL and base URL do not match (protocol, host, ...)";
         return documentUrl.url(QUrl::PreferLocalFile);
     }
 
@@ -61,15 +62,15 @@ QString AssociatedFiles::relativeFilename(const QUrl &documentUrl, const QUrl &b
 
 QString AssociatedFiles::absoluteFilename(const QUrl &documentUrl, const QUrl &baseUrl) {
     if (documentUrl.isEmpty()) {
-        qWarning() << "document URL has to point to a file location or URL";
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "document URL has to point to a file location or URL";
         return documentUrl.url(QUrl::PreferLocalFile);
     }
     if (documentUrl.isRelative() && (baseUrl.isEmpty() || baseUrl.isRelative())) {
-        qWarning() << "base URL has to point to an absolute file location or URL if the document URL is relative";
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "base URL has to point to an absolute file location or URL if the document URL is relative";
         return documentUrl.url(QUrl::PreferLocalFile);
     }
     if (documentUrl.isRelative() && (documentUrl.scheme() != baseUrl.scheme() || (documentUrl.scheme() != QLatin1String("file") && documentUrl.host() != baseUrl.host()))) {
-        qWarning() << "document URL and base URL do not match (protocol, host, ...), but necessary if the document URL is relative";
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "document URL and base URL do not match (protocol, host, ...), but necessary if the document URL is relative";
         return documentUrl.url(QUrl::PreferLocalFile);
     }
 

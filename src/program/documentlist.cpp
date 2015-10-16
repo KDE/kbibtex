@@ -27,7 +27,6 @@
 #include <QPushButton>
 #include <QApplication>
 #include <QIcon>
-#include <QDebug>
 #include <QAction>
 
 #include <KIconLoader>
@@ -229,7 +228,7 @@ public:
     QSignalMapper openMenuSignalMapper;
 
     DocumentListViewPrivate(DocumentListView *parent)
-            : p(parent), ofim(OpenFileInfoManager::instance()), actionAddToFav(NULL), actionRemFromFav(NULL), actionCloseFile(NULL), actionOpenFile(NULL) {
+            : p(parent), ofim(OpenFileInfoManager::instance()), actionAddToFav(NULL), actionRemFromFav(NULL), actionCloseFile(NULL), actionOpenFile(NULL), actionOpenMenu(NULL) {
         connect(&openMenuSignalMapper, SIGNAL(mapped(int)), p, SLOT(openFileWithService(int)));
     }
 };

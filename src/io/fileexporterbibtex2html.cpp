@@ -17,13 +17,13 @@
 
 #include "fileexporterbibtex2html.h"
 
-#include <QDebug>
 #include <QFile>
 #include <QStandardPaths>
 
 #include <KLocalizedString>
 
 #include "fileexporterbibtex.h"
+#include "logging_io.h"
 
 class FileExporterBibTeX2HTML::FileExporterBibTeX2HTMLPrivate
 {
@@ -109,7 +109,7 @@ void FileExporterBibTeX2HTML::reloadConfig()
 bool FileExporterBibTeX2HTML::save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog)
 {
     if (!iodevice->isWritable() && !iodevice->open(QIODevice::WriteOnly)) {
-        qWarning() << "Output device not writable";
+        qCWarning(LOG_KBIBTEX_IO) << "Output device not writable";
         return false;
     }
 
@@ -134,7 +134,7 @@ bool FileExporterBibTeX2HTML::save(QIODevice *iodevice, const File *bibtexfile, 
 bool FileExporterBibTeX2HTML::save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog)
 {
     if (!iodevice->isWritable() && !iodevice->open(QIODevice::WriteOnly)) {
-        qWarning() << "Output device not writable";
+        qCWarning(LOG_KBIBTEX_IO) << "Output device not writable";
         return false;
     }
 

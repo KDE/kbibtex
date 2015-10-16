@@ -61,6 +61,7 @@ find_package(
 find_package(
     KF5 ${KF5_MIN_VERSION}
     REQUIRED
+    DocTools
     I18n
     XmlGui
     KIO
@@ -181,16 +182,14 @@ add_subdirectory(
 add_subdirectory(
     xslt
 )
-# add_subdirectory(
-#     doc
-# )
-# add_subdirectory(
-#     mime
-# )
+add_subdirectory(
+    doc
+)
+add_subdirectory(
+    mime
+)
 # macro_optional_add_subdirectory(
 #     po
 # )
-
-# install(FILES kbibtex.appdata.xml DESTINATION ${SHARE_INSTALL_PREFIX}/appdata/)
 
 feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)

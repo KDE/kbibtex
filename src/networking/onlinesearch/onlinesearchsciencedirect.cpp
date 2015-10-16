@@ -18,7 +18,6 @@
 #include "onlinesearchsciencedirect.h"
 
 #include <QNetworkReply>
-#include <QDebug>
 #include <QUrlQuery>
 
 #include <KLocalizedString>
@@ -26,6 +25,7 @@
 #include "encoderlatex.h"
 #include "fileimporterbibtex.h"
 #include "internalnetworkaccessmanager.h"
+#include "logging_networking.h"
 
 class OnlineSearchScienceDirect::OnlineSearchScienceDirectPrivate
 {
@@ -141,7 +141,7 @@ void OnlineSearchScienceDirect::doneFetchingStartPage()
 
     --d->runningJobs;
     if (d->runningJobs != 0)
-        qWarning() << "In OnlineSearchScienceDirect::doneFetchingStartPage: Some jobs are running (" << d->runningJobs << "!= 0 )";
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "In OnlineSearchScienceDirect::doneFetchingStartPage: Some jobs are running (" << d->runningJobs << "!= 0 )";
 
     QUrl redirUrl;
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
@@ -184,14 +184,14 @@ void OnlineSearchScienceDirect::doneFetchingStartPage()
             InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
         }
     } else
-        qWarning() << "url was" << reply->url().toString();
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
 }
 
 void OnlineSearchScienceDirect::doneFetchingResultPage()
 {
     --d->runningJobs;
     if (d->runningJobs != 0)
-        qWarning() << "In OnlineSearchScienceDirect::doneFetchingResultPage: Some jobs are running (" << d->runningJobs << "!= 0 )";
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "In OnlineSearchScienceDirect::doneFetchingResultPage: Some jobs are running (" << d->runningJobs << "!= 0 )";
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
     if (handleErrors(reply)) {
@@ -232,14 +232,14 @@ void OnlineSearchScienceDirect::doneFetchingResultPage()
             emit progress(d->numSteps, d->numSteps);
         }
     } else
-        qWarning() << "url was" << reply->url().toString();
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
 }
 
 void OnlineSearchScienceDirect::doneFetchingAbstractPage()
 {
     --d->runningJobs;
     if (d->runningJobs < 0)
-        qWarning() << "In OnlineSearchScienceDirect::doneFetchingAbstractPage: Counting jobs failed (" << d->runningJobs << "< 0 )";
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "In OnlineSearchScienceDirect::doneFetchingAbstractPage: Counting jobs failed (" << d->runningJobs << "< 0 )";
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
     if (handleErrors(reply)) {
@@ -277,7 +277,7 @@ void OnlineSearchScienceDirect::doneFetchingAbstractPage()
             emit progress(d->numSteps, d->numSteps);
         }
     } else
-        qWarning() << "url was" << reply->url().toString();
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
 }
 
 void OnlineSearchScienceDirect::doneFetchingBibTeX()
@@ -286,7 +286,7 @@ void OnlineSearchScienceDirect::doneFetchingBibTeX()
 
     --d->runningJobs;
     if (d->runningJobs < 0)
-        qWarning() << "In OnlineSearchScienceDirect::doneFetchingAbstractPage: Counting jobs failed (" << d->runningJobs << "< 0 )";
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "In OnlineSearchScienceDirect::doneFetchingAbstractPage: Counting jobs failed (" << d->runningJobs << "< 0 )";
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
     if (handleErrors(reply)) {
@@ -311,5 +311,5 @@ void OnlineSearchScienceDirect::doneFetchingBibTeX()
             emit progress(d->numSteps, d->numSteps);
         }
     } else
-        qWarning() << "url was" << reply->url().toString();
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
 }

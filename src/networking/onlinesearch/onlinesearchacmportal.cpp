@@ -19,7 +19,6 @@
 
 #include <QBuffer>
 #include <QLayout>
-#include <QDebug>
 #include <QNetworkRequest>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
@@ -32,6 +31,7 @@
 #include "entry.h"
 #include "fileimporterbibtex.h"
 #include "internalnetworkaccessmanager.h"
+#include "logging_networking.h"
 
 class OnlineSearchAcmPortal::OnlineSearchAcmPortalPrivate
 {
@@ -161,12 +161,12 @@ void OnlineSearchAcmPortal::doneFetchingStartPage()
             InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingSearchPage()));
         } else {
-            qWarning() << "Search using" << label() << "failed.";
+            qCWarning(LOG_KBIBTEX_NETWORKING) << "Search using" << label() << "failed.";
             KMessageBox::error(m_parent, i18n("Searching '%1' failed: Could not extract form from ACM's start page.", label()));
             emit stoppedSearch(resultUnspecifiedError);
         }
     } else
-        qWarning() << "url was" << reply->url().toString();
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
 }
 
 void OnlineSearchAcmPortal::doneFetchingSearchPage()
@@ -205,7 +205,7 @@ void OnlineSearchAcmPortal::doneFetchingSearchPage()
             emit progress(d->numSteps, d->numSteps);
         }
     }  else
-        qWarning() << "url was" << reply->url().toString();
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
 }
 
 void OnlineSearchAcmPortal::doneFetchingBibTeX()
@@ -242,5 +242,5 @@ void OnlineSearchAcmPortal::doneFetchingBibTeX()
             emit progress(d->numSteps, d->numSteps);
         }
     } else
-        qWarning() << "url was" << reply->url().toString();
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
 }

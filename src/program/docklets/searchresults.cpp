@@ -17,7 +17,6 @@
 
 #include "searchresults.h"
 
-#include <QDebug>
 #include <QGridLayout>
 #include <QLabel>
 #include <QPushButton>
@@ -32,6 +31,7 @@
 #include "filedelegate.h"
 #include "models/filemodel.h"
 #include "idsuggestions.h"
+#include "logging_program.h"
 
 class SearchResults::SearchResultsPrivate
 {
@@ -211,7 +211,7 @@ void SearchResults::importSelected()
             QSharedPointer<Entry> clone(new Entry(*entry));
             targetModel->insertRow(clone, targetModel->rowCount());
         } else
-            qWarning() << "Trying to import something that isn't an Entry";
+            qCWarning(LOG_KBIBTEX_PROGRAM) << "Trying to import something that isn't an Entry";
     }
 
     if (!selList.isEmpty())

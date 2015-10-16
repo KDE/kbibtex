@@ -19,7 +19,6 @@
 
 #include <typeinfo>
 
-#include <QDebug>
 #include <QApplication>
 #include <QTextDocument>
 #include <QAbstractTextDocumentLayout>
@@ -43,6 +42,7 @@
 #include "entry.h"
 #include "preferences.h"
 #include "models/filemodel.h"
+#include "logging_gui.h"
 
 const int CountRole = Qt::UserRole + 611;
 
@@ -264,14 +264,14 @@ bool ValueListModel::setData(const QModelIndex &index, const QVariant &value, in
         /// Retrieve the Value object containing the user-entered data
         Value newValue = value.value<Value>(); /// nice variable names ... ;-)
         if (newValue.isEmpty()) {
-            qWarning() << "Cannot replace with empty value";
+            qCWarning(LOG_KBIBTEX_GUI) << "Cannot replace with empty value";
             return false;
         }
 
         /// Fetch the string representing the new, user-entered value
         const QString newText = PlainTextValue::text(newValue);
         if (newText == origText) {
-            qWarning() << "Skipping to replace value with itself";
+            qCWarning(LOG_KBIBTEX_GUI) << "Skipping to replace value with itself";
             return false;
         }
 
@@ -357,7 +357,7 @@ void ValueListModel::updateValues()
                     break;
                 }
                 if (eit.value().isEmpty())
-                    qWarning() << "value for key" << key << "in entry" << entry->id() << "is empty";
+                    qCWarning(LOG_KBIBTEX_GUI) << "value for key" << key << "in entry" << entry->id() << "is empty";
             }
         }
     }
@@ -397,7 +397,7 @@ int ValueListModel::indexOf(const QString &text)
     if (fName == Entry::ftColor && !(color = colorToLabel.key(text, QLatin1String(""))).isEmpty())
         cmpText = color;
     if (cmpText.isEmpty())
-        qWarning() << "Should never happen";
+        qCWarning(LOG_KBIBTEX_GUI) << "Should never happen";
 
     int i = 0;
     /// this is really slow for large data sets: O(n^2)

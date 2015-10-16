@@ -22,14 +22,12 @@
 #include <QVector>
 #include <QNetworkReply>
 #include <QXmlStreamReader>
-#include <QTimer>
-#include <QDebug>
 
 #include <KLocalizedString>
 
 #include "api.h"
-
 #include "internalnetworkaccessmanager.h"
+#include "logging_networking.h"
 
 using namespace Zotero;
 
@@ -217,7 +215,7 @@ void Collection::finishedFetchingCollection()
         } else
             d->runNextInDownloadQueue();
     } else {
-        qWarning() << reply->errorString(); ///< something went wrong
+        qCWarning(LOG_KBIBTEX_NETWORKING) << reply->errorString(); ///< something went wrong
         d->initialized = false;
         emitFinishedLoading();
     }

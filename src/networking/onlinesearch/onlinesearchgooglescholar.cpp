@@ -23,7 +23,6 @@
 #include <QFormLayout>
 #include <QNetworkReply>
 #include <QIcon>
-#include <QDebug>
 #include <QUrlQuery>
 
 #include <KLocalizedString>
@@ -33,7 +32,7 @@
 
 #include "fileimporterbibtex.h"
 #include "internalnetworkaccessmanager.h"
-
+#include "logging_networking.h"
 
 class OnlineSearchGoogleScholar::OnlineSearchGoogleScholarPrivate
 {
@@ -189,7 +188,7 @@ void OnlineSearchGoogleScholar::doneFetchingStartPage()
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingConfigPage()));
         }
     } else
-        qWarning() << "url was" << reply->url().toString();
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
 }
 
 void OnlineSearchGoogleScholar::doneFetchingConfigPage()
@@ -218,7 +217,7 @@ void OnlineSearchGoogleScholar::doneFetchingConfigPage()
         InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
         connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingSetConfigPage()));
     } else
-        qWarning() << "url was" << reply->url().toString();
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
 }
 
 void OnlineSearchGoogleScholar::doneFetchingSetConfigPage()
@@ -244,7 +243,7 @@ void OnlineSearchGoogleScholar::doneFetchingSetConfigPage()
         InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
         connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingQueryPage()));
     } else
-        qWarning() << "url was" << reply->url().toString();
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
 }
 
 void OnlineSearchGoogleScholar::doneFetchingQueryPage()
@@ -293,7 +292,7 @@ void OnlineSearchGoogleScholar::doneFetchingQueryPage()
             emit progress(d->numSteps, d->numSteps);
         }
     } else
-        qWarning() << "url was" << reply->url().toString();
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
 }
 
 void OnlineSearchGoogleScholar::doneFetchingBibTeX()
@@ -339,7 +338,7 @@ void OnlineSearchGoogleScholar::doneFetchingBibTeX()
         }
 
         if (!hasEntry) {
-            qWarning() << "Searching" << label() << "resulted in invalid BibTeX data:" << rawText;
+            qCWarning(LOG_KBIBTEX_NETWORKING) << "Searching" << label() << "resulted in invalid BibTeX data:" << rawText;
             emit stoppedSearch(resultUnspecifiedError);
             return;
         }
@@ -367,7 +366,7 @@ void OnlineSearchGoogleScholar::doneFetchingBibTeX()
             emit progress(d->numSteps, d->numSteps);
         }
     } else
-        qWarning() << "url was" << reply->url().toString();
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
 }
 
 QString OnlineSearchGoogleScholar::label() const

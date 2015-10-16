@@ -20,15 +20,13 @@
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QXmlStreamReader>
-#include <QTimer>
-#include <QDebug>
 #include <QUrlQuery>
 
 #include "file.h"
 #include "fileimporterbibtex.h"
 #include "api.h"
-
 #include "internalnetworkaccessmanager.h"
+#include "logging_networking.h"
 
 using namespace Zotero;
 
@@ -151,7 +149,7 @@ void Items::finishedFetchingItems()
             emit stoppedSearch(0); // TODO proper error codes
         }
     } else {
-        qWarning() << reply->errorString(); ///< something went wrong
+        qCWarning(LOG_KBIBTEX_NETWORKING) << reply->errorString(); ///< something went wrong
         emit stoppedSearch(1); // TODO proper error codes
     }
 }

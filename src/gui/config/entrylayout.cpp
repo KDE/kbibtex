@@ -18,11 +18,12 @@
 #include "entrylayout.h"
 
 #include <QStandardPaths>
-#include <QDebug>
 
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <KLocalizedString>
+
+#include "logging_gui.h"
 
 static const int entryLayoutMaxTabCount = 256;
 static const int entryLayoutMaxFieldPerTabCount = 256;
@@ -140,7 +141,7 @@ void EntryLayout::load()
         append(etl);
     }
 
-    if (isEmpty()) qWarning() << "List of entry layouts is empty";
+    if (isEmpty()) qCWarning(LOG_KBIBTEX_GUI) << "List of entry layouts is empty";
 }
 
 void EntryLayout::save()

@@ -22,7 +22,6 @@
 #include <QSpinBox>
 #include <QLabel>
 #include <QNetworkReply>
-#include <QDebug>
 #include <QIcon>
 #include <QLineEdit>
 
@@ -35,6 +34,7 @@
 #include "file.h"
 #include "entry.h"
 #include "internalnetworkaccessmanager.h"
+#include "logging_networking.h"
 
 class OnlineSearchBibsonomy::OnlineSearchQueryFormBibsonomy : public OnlineSearchQueryFormAbstract
 {
@@ -123,7 +123,7 @@ public:
 
     QUrl buildQueryUrl() {
         if (form == NULL) {
-            qWarning() << "Cannot build query url if no form is specified";
+            qCWarning(LOG_KBIBTEX_NETWORKING) << "Cannot build query url if no form is specified";
             return QUrl();
         }
 
@@ -263,7 +263,7 @@ void OnlineSearchBibsonomy::downloadDone()
 
                 delete bibtexFile;
             } else {
-                qWarning() << "No valid BibTeX file results returned on request on" << reply->url().toString();
+                qCWarning(LOG_KBIBTEX_NETWORKING) << "No valid BibTeX file results returned on request on" << reply->url().toString();
                 emit stoppedSearch(resultUnspecifiedError);
             }
         } else {
@@ -272,5 +272,5 @@ void OnlineSearchBibsonomy::downloadDone()
             emit progress(d->numSteps, d->numSteps);
         }
     } else
-        qWarning() << "url was" << reply->url().toString();
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
 }

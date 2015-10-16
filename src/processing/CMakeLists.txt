@@ -8,6 +8,7 @@ set(
     checkbibtex.cpp
     bibliographyservice.cpp
     journalabbreviations.cpp
+    logging_processing.cpp
 )
 
 set(
@@ -19,15 +20,6 @@ set(
     bibliographyservice.h
     journalabbreviations.h
 )
-
-# add_definitions(
-#     -DMAKE_PROCESSING_LIB
-# )
-
-# # debug area for KBibTeX's processing library
-# add_definitions(
-#     -DKDE_DEFAULT_DEBUG_AREA=101016
-# )
 
 if(UNITY_BUILD)
     enable_unity_build(kbibtexproc kbibtexproc_LIB_SRCS)
@@ -88,12 +80,12 @@ install(
 
 generate_export_header( kbibtexproc )
 
-install(
-    FILES
-    ${kbibtexproc_HDRS}
-    ${CMAKE_BINARY_DIR}/src/processing/kbibtexproc_export.h
-    DESTINATION
-    ${INCLUDE_INSTALL_DIR}/kbibtex/proc
-    COMPONENT
-    development
-)
+# install(
+#     FILES
+#     ${kbibtexproc_HDRS}
+#     ${CMAKE_BINARY_DIR}/src/processing/kbibtexproc_export.h
+#     DESTINATION
+#     ${INCLUDE_INSTALL_DIR}/kbibtex/proc
+#     COMPONENT
+#     development
+# )

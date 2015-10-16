@@ -30,7 +30,6 @@
 #include <QRadioButton>
 #include <QLabel>
 #include <QtCore/QPointer>
-#include <QDebug>
 #include <QPushButton>
 #include <QFileDialog>
 #include <QDialog>
@@ -46,6 +45,7 @@
 
 #include "fileinfo.h"
 #include "fieldlistedit.h"
+#include "logging_gui.h"
 
 class PDFListModel;
 
@@ -150,7 +150,7 @@ void PDFItemDelegate::updateItemWidgets(const QList<QWidget *> widgets, const QS
 
     const PDFListModel *model = qobject_cast<const PDFListModel *>(index.model());
     if (model == NULL) {
-        qDebug() << "WARNING - INVALID MODEL!";
+        qCDebug(LOG_KBIBTEX_GUI) << "WARNING - INVALID MODEL!";
         return;
     }
 
@@ -426,7 +426,7 @@ void FindPDFUI::apply(Entry &entry, const File &bibtexFile)
         bool ok = false;
         FindPDF::DownloadMode downloadMode = (FindPDF::DownloadMode)model->data(model->index(i, 0), DownloadModeRole).toInt(&ok);
         if (!ok) {
-            qDebug() << "Could not interprete download mode";
+            qCDebug(LOG_KBIBTEX_GUI) << "Could not interprete download mode";
             downloadMode = FindPDF::NoDownload;
         }
 
@@ -458,7 +458,7 @@ void FindPDFUI::apply(Entry &entry, const File &bibtexFile)
             if (!absoluteFilename.isEmpty()) {
                 const QString visibleFilename = UrlListEdit::askRelativeOrStaticFilename(this, absoluteFilename, startUrl);
 
-                qDebug() << "Saving PDF from " << url << " to file " << absoluteFilename << " known as " << visibleFilename;
+                qCDebug(LOG_KBIBTEX_GUI) << "Saving PDF from " << url << " to file " << absoluteFilename << " known as " << visibleFilename;
                 // FIXME test for overwrite
                 QFile::copy(tempfileName, absoluteFilename);
 

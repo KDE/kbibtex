@@ -23,7 +23,6 @@
 #include <QDialogButtonBox>
 #include <QBoxLayout>
 #include <QPushButton>
-#include <QDebug>
 
 #include <KLocalizedString>
 #include <KMessageBox>
@@ -38,6 +37,8 @@
 #include "models/filemodel.h"
 #include "fileexporterbibtex.h"
 #include "valuelistmodel.h"
+
+#include "logging_gui.h"
 
 /**
  * Specialized dialog for element editing. It will check if the used
@@ -301,7 +302,7 @@ void FileView::itemActivated(const QModelIndex &index)
 void FileView::prepareEditorDialog(DialogType dialogType)
 {
     if (dialogType != DialogTypeView && isReadOnly()) {
-        qWarning() << "In read-only mode, you may only view elements, not edit them";
+        qCWarning(LOG_KBIBTEX_GUI) << "In read-only mode, you may only view elements, not edit them";
         dialogType = DialogTypeView;
     }
 

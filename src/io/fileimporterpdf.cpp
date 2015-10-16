@@ -19,12 +19,12 @@
 
 #include <QBuffer>
 #include <QFile>
-#include <QDebug>
 
 // FIXME #include <poppler-qt4.h>
 
 #include "file.h"
 #include "fileimporterbibtex.h"
+#include "logging_io.h"
 
 FileImporterPDF::FileImporterPDF()
         : FileImporter(), m_cancelFlag(false)
@@ -40,7 +40,7 @@ FileImporterPDF::~FileImporterPDF()
 File *FileImporterPDF::load(QIODevice *iodevice)
 {
     if (!iodevice->isReadable() && !iodevice->open(QIODevice::ReadOnly)) {
-        qWarning() << "Input device not readable";
+        qCWarning(LOG_KBIBTEX_IO) << "Input device not readable";
         return NULL;
     }
 
@@ -52,7 +52,7 @@ File *FileImporterPDF::load(QIODevice *iodevice)
     /*
     Poppler::Document *doc = Poppler::Document::loadFromData(buffer);
     if (doc == NULL) {
-        qWarning() << "Could not load PDF document";
+        qCWarning(LOG_KBIBTEX_IO) << "Could not load PDF document";
         iodevice->close();
         return NULL;
     }
@@ -69,9 +69,9 @@ File *FileImporterPDF::load(QIODevice *iodevice)
             buffer.close();
 
             if (result)
-                qDebug() << "result = " << result->count() << "  " << data.size() << "  " << buffer.size();
+                qCDebug(LOG_KBIBTEX_IO) << "result = " << result->count() << "  " << data.size() << "  " << buffer.size();
             else
-                qDebug() << "result is empty";
+                qCDebug(LOG_KBIBTEX_IO) << "result is empty";
             break;
         }
     }
