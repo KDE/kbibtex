@@ -253,7 +253,7 @@ void ReferencePreview::setElement(QSharedPointer<Element> element, File *file)
 void ReferencePreview::renderHTML()
 {
     enum { ignore, /// do not include crossref'ed entry's values (one entry)
-           add, /// feed both the current entry as well as the crossref'ed entry into the exporter (two entries)
+           /// NOT USED: add, /// feed both the current entry as well as the crossref'ed entry into the exporter (two entries)
            merge /// merge the crossref'ed entry's values into the current entry (one entry)
          } crossRefHandling = ignore;
 
@@ -302,6 +302,7 @@ void ReferencePreview::renderHTML()
         bool exporterResult = false;
         QStringList errorLog;
         QSharedPointer<const Entry> entry = d->element.dynamicCast<const Entry>();
+        /** NOT USED
         if (crossRefHandling == add && !entry.isNull()) {
             QString crossRef = PlainTextValue::text(entry->value(QLatin1String("crossref")));
             QSharedPointer<const Entry> crossRefEntry = d->file == NULL ? QSharedPointer<const Entry>() : d->file->containsKey(crossRef) .dynamicCast<const Entry>();
@@ -312,7 +313,8 @@ void ReferencePreview::renderHTML()
                 exporterResult = exporter->save(&buffer, &file, &errorLog);
             } else
                 exporterResult = exporter->save(&buffer, d->element, d->file, &errorLog);
-        } else if (crossRefHandling == merge && !entry.isNull()) {
+        } else */
+        if (crossRefHandling == merge && !entry.isNull()) {
             QSharedPointer<Entry> merged = QSharedPointer<Entry>(Entry::resolveCrossref(*entry, d->file));
             exporterResult = exporter->save(&buffer, merged, d->file, &errorLog);
         } else
