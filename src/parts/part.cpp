@@ -634,7 +634,6 @@ void KBibTeXPart::setupActions(bool /*browserViewWanted FIXME*/)
     d->lyx = new LyX(this, d->partWidget->fileView());
 
     updateActions();
-    fitActionSettings();
 }
 
 bool KBibTeXPart::saveFile()
@@ -779,11 +778,6 @@ void KBibTeXPart::applyDefaultFormatString()
         }
     }
 
-}
-
-void KBibTeXPart::fitActionSettings()
-{
-    // TODO
 }
 
 bool KBibTeXPart::openFile()
