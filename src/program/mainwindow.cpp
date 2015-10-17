@@ -58,7 +58,7 @@
 class KBibTeXMainWindow::KBibTeXMainWindowPrivate
 {
 private:
-    // UNUSED KBibTeXMainWindow *p;
+    KBibTeXMainWindow *p;
 
 public:
     QAction *actionClose;
@@ -85,10 +85,143 @@ public:
     ElementForm *elementForm;
     QMenu *actionMenuRecentFilesMenu;
 
-    KBibTeXMainWindowPrivate(KBibTeXMainWindow */* UNUSED parent*/)
-    // UNUSED : p(parent)
+    KBibTeXMainWindowPrivate(KBibTeXMainWindow *parent)
+            : p(parent)
     {
-        /// nothing
+        mdiWidget = new MDIWidget(p);
+
+        KActionMenu *showPanelsAction = new KActionMenu(i18n("Show Panels"), p);
+        p->actionCollection()->addAction("settings_shown_panels", showPanelsAction);
+        QMenu *showPanelsMenu = new QMenu(showPanelsAction->text(), p->widget());
+        showPanelsAction->setMenu(showPanelsMenu);
+
+        KActionMenu *actionMenuRecentFiles = new KActionMenu(QIcon::fromTheme("document-open-recent"), i18n("Recently used files"), p);
+        p->actionCollection()->addAction("file_open_recent", actionMenuRecentFiles);
+        actionMenuRecentFilesMenu = new QMenu(actionMenuRecentFiles->text(), p->widget());
+        actionMenuRecentFiles->setMenu(actionMenuRecentFilesMenu);
+
+        /**
+         * Docklets (a.k.a. panels) will be added by default to the following
+         * positions unless otherwise configured by the user.
+         * - "List of Values" on the left
+         * - "Statistics" on the left
+         * - "List of Documents" on the left in the same tab
+         * - "Online Search" on the left in a new tab
+         * - "Reference Preview" on the left in the same tab
+         * - "Search Results" on the bottom
+         * - "Document Preview" is hidden
+         * - "Element Editor" is hidden
+         */
+        dockDocumentList = new QDockWidget(i18n("List of Documents"), p);
+        dockDocumentList->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+        p->addDockWidget(Qt::LeftDockWidgetArea, dockDocumentList);
+        listDocumentList = new DocumentList(dockDocumentList);
+        dockDocumentList->setWidget(listDocumentList);
+        dockDocumentList->setObjectName("dockDocumentList");
+        dockDocumentList->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
+        connect(listDocumentList, SIGNAL(openFile(QUrl)), p, SLOT(openDocument(QUrl)));
+        showPanelsMenu->addAction(dockDocumentList->toggleViewAction());
+
+        dockValueList = new QDockWidget(i18n("List of Values"), p);
+        dockValueList->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+        p->addDockWidget(Qt::LeftDockWidgetArea, dockValueList);
+        valueList = new ValueList(dockValueList);
+        dockValueList->setWidget(valueList);
+        dockValueList->setObjectName("dockValueList");
+        dockValueList->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
+        showPanelsMenu->addAction(dockValueList->toggleViewAction());
+
+        dockStatistics = new QDockWidget(i18n("Statistics"), p);
+        dockStatistics->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+        p->addDockWidget(Qt::LeftDockWidgetArea, dockStatistics);
+        statistics = new Statistics(dockStatistics);
+        dockStatistics->setWidget(statistics);
+        dockStatistics->setObjectName("dockStatistics");
+        dockStatistics->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
+        showPanelsMenu->addAction(dockStatistics->toggleViewAction());
+
+        dockSearchResults = new QDockWidget(i18n("Search Results"), p);
+        dockSearchResults->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+        p->addDockWidget(Qt::BottomDockWidgetArea, dockSearchResults);
+        dockSearchResults->hide();
+        searchResults = new SearchResults(mdiWidget, dockSearchResults);
+        dockSearchResults->setWidget(searchResults);
+        dockSearchResults->setObjectName("dockResultsFrom");
+        dockSearchResults->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
+        showPanelsMenu->addAction(dockSearchResults->toggleViewAction());
+        connect(mdiWidget, SIGNAL(documentSwitch(FileView*,FileView*)), searchResults, SLOT(documentSwitched(FileView*,FileView*)));
+
+        dockSearchForm = new QDockWidget(i18n("Online Search"), p);
+        dockSearchForm->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+        p->addDockWidget(Qt::LeftDockWidgetArea, dockSearchForm);
+        searchForm = new SearchForm(searchResults, dockSearchForm);
+        connect(searchForm, SIGNAL(doneSearching()), p, SLOT(showSearchResults()));
+        dockSearchForm->setWidget(searchForm);
+        dockSearchForm->setObjectName("dockSearchFrom");
+        dockSearchForm->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
+        showPanelsMenu->addAction(dockSearchForm->toggleViewAction());
+
+        dockZotero = new QDockWidget(i18n("Zotero"), p);
+        dockZotero->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+        p->addDockWidget(Qt::LeftDockWidgetArea, dockZotero);
+        zotero = new ZoteroBrowser(searchResults, dockZotero);
+        dockZotero->setWidget(zotero);
+        dockZotero->setObjectName("dockZotero");
+        dockZotero->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
+        showPanelsMenu->addAction(dockZotero->toggleViewAction());
+
+        dockReferencePreview = new QDockWidget(i18n("Reference Preview"), p);
+        dockReferencePreview->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+        p->addDockWidget(Qt::LeftDockWidgetArea, dockReferencePreview);
+        referencePreview = new ReferencePreview(dockReferencePreview);
+        dockReferencePreview->setWidget(referencePreview);
+        dockReferencePreview->setObjectName("dockReferencePreview");
+        dockReferencePreview->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
+        showPanelsMenu->addAction(dockReferencePreview->toggleViewAction());
+
+        dockDocumentPreview = new QDockWidget(i18n("Document Preview"), p);
+        dockDocumentPreview->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+        p->addDockWidget(Qt::RightDockWidgetArea, dockDocumentPreview);
+        dockDocumentPreview->hide();
+        documentPreview = new DocumentPreview(dockDocumentPreview);
+        dockDocumentPreview->setWidget(documentPreview);
+        dockDocumentPreview->setObjectName("dockDocumentPreview");
+        dockDocumentPreview->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
+        showPanelsMenu->addAction(dockDocumentPreview->toggleViewAction());
+        p->actionCollection()->setDefaultShortcut(dockDocumentPreview->toggleViewAction(), Qt::CTRL + Qt::SHIFT + Qt::Key_D);
+
+        dockElementForm = new QDockWidget(i18n("Element Editor"), p);
+        dockElementForm->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+        p->addDockWidget(Qt::BottomDockWidgetArea, dockElementForm);
+        dockElementForm->hide();
+        elementForm = new ElementForm(mdiWidget, dockElementForm);
+        dockElementForm->setWidget(elementForm);
+        dockElementForm->setObjectName("dockElementFrom");
+        dockElementForm->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
+        showPanelsMenu->addAction(dockElementForm->toggleViewAction());
+
+        dockFileSettings = new QDockWidget(i18n("File Settings"), p);
+        dockFileSettings->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+        p->addDockWidget(Qt::LeftDockWidgetArea, dockFileSettings);
+        fileSettings = new FileSettings(dockFileSettings);
+        dockFileSettings->setWidget(fileSettings);
+        dockFileSettings->setObjectName("dockFileSettings");
+        dockFileSettings->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
+        showPanelsMenu->addAction(dockFileSettings->toggleViewAction());
+
+        p->tabifyDockWidget(dockFileSettings, dockSearchForm);
+        p->tabifyDockWidget(dockZotero, dockSearchForm);
+        p->tabifyDockWidget(dockValueList, dockStatistics);
+        p->tabifyDockWidget(dockStatistics, dockFileSettings);
+        p->tabifyDockWidget(dockSearchForm, dockReferencePreview);
+        p->tabifyDockWidget(dockFileSettings, dockDocumentList);
+
+        p->actionCollection()->addAction(KStandardAction::New, p, SLOT(newDocument()));
+        p->actionCollection()->addAction(KStandardAction::Open, p, SLOT(openDocumentDialog()));
+        actionClose = p->actionCollection()->addAction(KStandardAction::Close, p, SLOT(closeDocument()));
+        actionClose->setEnabled(false);
+        p->actionCollection()->addAction(KStandardAction::Quit, p, SLOT(queryCloseAll()));
+        p->actionCollection()->addAction(KStandardAction::Preferences, p, SLOT(showPreferences()));
     }
 
     ~KBibTeXMainWindowPrivate() {
@@ -112,141 +245,7 @@ KBibTeXMainWindow::KBibTeXMainWindow()
 
     setXMLFile("kbibtexui.rc");
 
-    d->mdiWidget = new MDIWidget(this);
     setCentralWidget(d->mdiWidget);
-
-    KActionMenu *showPanelsAction = new KActionMenu(i18n("Show Panels"), this);
-    actionCollection()->addAction("settings_shown_panels", showPanelsAction);
-    QMenu *showPanelsMenu = new QMenu(showPanelsAction->text(), widget());
-    showPanelsAction->setMenu(showPanelsMenu);
-
-    KActionMenu *actionMenuRecentFiles = new KActionMenu(QIcon::fromTheme("document-open-recent"), i18n("Recently used files"), this);
-    actionCollection()->addAction("file_open_recent", actionMenuRecentFiles);
-    d->actionMenuRecentFilesMenu = new QMenu(actionMenuRecentFiles->text(), widget());
-    actionMenuRecentFiles->setMenu(d->actionMenuRecentFilesMenu);
-
-    /**
-     * Docklets (a.k.a. panels) will be added by default to the following
-     * positions unless otherwise configured by the user.
-     * - "List of Values" on the left
-     * - "Statistics" on the left
-     * - "List of Documents" on the left in the same tab
-     * - "Online Search" on the left in a new tab
-     * - "Reference Preview" on the left in the same tab
-     * - "Search Results" on the bottom
-     * - "Document Preview" is hidden
-     * - "Element Editor" is hidden
-     */
-    d->dockDocumentList = new QDockWidget(i18n("List of Documents"), this);
-    d->dockDocumentList->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-    addDockWidget(Qt::LeftDockWidgetArea, d->dockDocumentList);
-    d->listDocumentList = new DocumentList(d->dockDocumentList);
-    d->dockDocumentList->setWidget(d->listDocumentList);
-    d->dockDocumentList->setObjectName("dockDocumentList");
-    d->dockDocumentList->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
-    connect(d->listDocumentList, SIGNAL(openFile(QUrl)), this, SLOT(openDocument(QUrl)));
-    showPanelsMenu->addAction(d->dockDocumentList->toggleViewAction());
-
-    d->dockValueList = new QDockWidget(i18n("List of Values"), this);
-    d->dockValueList->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-    addDockWidget(Qt::LeftDockWidgetArea, d->dockValueList);
-    d->valueList = new ValueList(d->dockValueList);
-    d->dockValueList->setWidget(d->valueList);
-    d->dockValueList->setObjectName("dockValueList");
-    d->dockValueList->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
-    showPanelsMenu->addAction(d->dockValueList->toggleViewAction());
-
-    d->dockStatistics = new QDockWidget(i18n("Statistics"), this);
-    d->dockStatistics->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-    addDockWidget(Qt::LeftDockWidgetArea, d->dockStatistics);
-    d->statistics = new Statistics(d->dockStatistics);
-    d->dockStatistics->setWidget(d->statistics);
-    d->dockStatistics->setObjectName("dockStatistics");
-    d->dockStatistics->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
-    showPanelsMenu->addAction(d->dockStatistics->toggleViewAction());
-
-    d->dockSearchResults = new QDockWidget(i18n("Search Results"), this);
-    d->dockSearchResults->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-    addDockWidget(Qt::BottomDockWidgetArea, d->dockSearchResults);
-    d->dockSearchResults->hide();
-    d->searchResults = new SearchResults(d->mdiWidget, d->dockSearchResults);
-    d->dockSearchResults->setWidget(d->searchResults);
-    d->dockSearchResults->setObjectName("dockResultsFrom");
-    d->dockSearchResults->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
-    showPanelsMenu->addAction(d->dockSearchResults->toggleViewAction());
-    connect(d->mdiWidget, SIGNAL(documentSwitch(FileView*,FileView*)), d->searchResults, SLOT(documentSwitched(FileView*,FileView*)));
-
-    d->dockSearchForm = new QDockWidget(i18n("Online Search"), this);
-    d->dockSearchForm->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-    addDockWidget(Qt::LeftDockWidgetArea, d->dockSearchForm);
-    d->searchForm = new SearchForm(d->searchResults, d->dockSearchForm);
-    connect(d->searchForm, SIGNAL(doneSearching()), this, SLOT(showSearchResults()));
-    d->dockSearchForm->setWidget(d->searchForm);
-    d->dockSearchForm->setObjectName("dockSearchFrom");
-    d->dockSearchForm->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
-    showPanelsMenu->addAction(d->dockSearchForm->toggleViewAction());
-
-    d->dockZotero = new QDockWidget(i18n("Zotero"), this);
-    d->dockZotero->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-    addDockWidget(Qt::LeftDockWidgetArea, d->dockZotero);
-    d->zotero = new ZoteroBrowser(d->searchResults, d->dockZotero);
-    d->dockZotero->setWidget(d->zotero);
-    d->dockZotero->setObjectName("dockZotero");
-    d->dockZotero->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
-    showPanelsMenu->addAction(d->dockZotero->toggleViewAction());
-
-    d->dockReferencePreview = new QDockWidget(i18n("Reference Preview"), this);
-    d->dockReferencePreview->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-    addDockWidget(Qt::LeftDockWidgetArea, d->dockReferencePreview);
-    d->referencePreview = new ReferencePreview(d->dockReferencePreview);
-    d->dockReferencePreview->setWidget(d->referencePreview);
-    d->dockReferencePreview->setObjectName("dockReferencePreview");
-    d->dockReferencePreview->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
-    showPanelsMenu->addAction(d->dockReferencePreview->toggleViewAction());
-
-    d->dockDocumentPreview = new QDockWidget(i18n("Document Preview"), this);
-    d->dockDocumentPreview->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-    addDockWidget(Qt::RightDockWidgetArea, d->dockDocumentPreview);
-    d->dockDocumentPreview->hide();
-    d->documentPreview = new DocumentPreview(d->dockDocumentPreview);
-    d->dockDocumentPreview->setWidget(d->documentPreview);
-    d->dockDocumentPreview->setObjectName("dockDocumentPreview");
-    d->dockDocumentPreview->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
-    showPanelsMenu->addAction(d->dockDocumentPreview->toggleViewAction());
-    actionCollection()->setDefaultShortcut(d->dockDocumentPreview->toggleViewAction(), Qt::CTRL + Qt::SHIFT + Qt::Key_D);
-
-    d->dockElementForm = new QDockWidget(i18n("Element Editor"), this);
-    d->dockElementForm->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-    addDockWidget(Qt::BottomDockWidgetArea, d->dockElementForm);
-    d->dockElementForm->hide();
-    d->elementForm = new ElementForm(d->mdiWidget, d->dockElementForm);
-    d->dockElementForm->setWidget(d->elementForm);
-    d->dockElementForm->setObjectName("dockElementFrom");
-    d->dockElementForm->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
-    showPanelsMenu->addAction(d->dockElementForm->toggleViewAction());
-
-    d->dockFileSettings = new QDockWidget(i18n("File Settings"), this);
-    d->dockFileSettings->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-    addDockWidget(Qt::LeftDockWidgetArea, d->dockFileSettings);
-    d->fileSettings = new FileSettings(d->dockFileSettings);
-    d->dockFileSettings->setWidget(d->fileSettings);
-    d->dockFileSettings->setObjectName("dockFileSettings");
-    d->dockFileSettings->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
-    showPanelsMenu->addAction(d->dockFileSettings->toggleViewAction());
-
-    tabifyDockWidget(d->dockFileSettings, d->dockSearchForm);
-    tabifyDockWidget(d->dockZotero, d->dockSearchForm);
-    tabifyDockWidget(d->dockValueList, d->dockStatistics);
-    tabifyDockWidget(d->dockStatistics, d->dockFileSettings);
-    tabifyDockWidget(d->dockSearchForm, d->dockReferencePreview);
-    tabifyDockWidget(d->dockFileSettings, d->dockDocumentList);
-
-    actionCollection()->addAction(KStandardAction::New, this, SLOT(newDocument()));
-    actionCollection()->addAction(KStandardAction::Open, this, SLOT(openDocumentDialog()));
-    d->actionClose = actionCollection()->addAction(KStandardAction::Close, this, SLOT(closeDocument()));
-    d->actionClose->setEnabled(false);
-    actionCollection()->addAction(KStandardAction::Quit, this, SLOT(queryCloseAll()));
-    actionCollection()->addAction(KStandardAction::Preferences, this, SLOT(showPreferences()));
 
     connect(d->mdiWidget, SIGNAL(documentSwitch(FileView*,FileView*)), this, SLOT(documentSwitched(FileView*,FileView*)));
     connect(d->mdiWidget, SIGNAL(activePartChanged(KParts::Part*)), this, SLOT(createGUI(KParts::Part*)));
