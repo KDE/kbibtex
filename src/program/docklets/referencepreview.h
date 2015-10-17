@@ -43,7 +43,7 @@ private:
     class ReferencePreviewPrivate;
     ReferencePreviewPrivate *d;
 
-    void setHtml(const QString &html);
+    void setHtml(const QString &html, bool buttonsEnabled);
 
 private slots:
     void renderHTML();

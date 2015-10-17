@@ -235,7 +235,7 @@ ReferencePreview::~ReferencePreview()
     delete d;
 }
 
-void ReferencePreview::setHtml(const QString &html)
+void ReferencePreview::setHtml(const QString &html, bool buttonsEnabled)
 {
     d->htmlText = QString(html).remove(QLatin1String("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"));
 #ifdef HAVE_WEBENGINEWIDGETS
@@ -247,28 +247,16 @@ void ReferencePreview::setHtml(const QString &html)
     d->htmlDocument->setHtml(d->htmlText);
 #endif // HAVE_WEBKITWIDGETS
 #endif // HAVE_WEBENGINEWIDGETS
-    d->buttonOpen->setEnabled(true);
-    d->buttonSaveAsHTML->setEnabled(true);
+    d->buttonOpen->setEnabled(buttonsEnabled);
+    d->buttonSaveAsHTML->setEnabled(buttonsEnabled);
 }
 
 void ReferencePreview::setEnabled(bool enabled)
 {
     if (enabled)
-        setHtml(d->htmlText);
-    else {
-        static const QString html = d->notAvailableMessage.arg(i18n("Preview disabled"));
-#ifdef HAVE_WEBENGINEWIDGETS
-        d->htmlView->setHtml(html, QUrl());
-#else // HAVE_WEBENGINEWIDGETS
-#ifdef HAVE_WEBKITWIDGETS
-        d->htmlView->setHtml(d->htmlText, QUrl());
-#else // HAVE_WEBKITWIDGETS
-        d->htmlDocument->setHtml(html);
-#endif // HAVE_WEBKITWIDGETS
-#endif // HAVE_WEBENGINEWIDGETS
-        d->buttonOpen->setEnabled(false);
-        d->buttonSaveAsHTML->setEnabled(false);
-    }
+        setHtml(d->htmlText, true);
+    else
+        setHtml(d->notAvailableMessage.arg(i18n("Preview disabled")), false);
     d->htmlView->setEnabled(enabled);
     d->comboBox->setEnabled(enabled);
 }
@@ -288,18 +276,7 @@ void ReferencePreview::renderHTML()
          } crossRefHandling = ignore;
 
     if (d->element.isNull()) {
-        static const QString html = d->notAvailableMessage.arg(i18n("No element selected"));
-#ifdef HAVE_WEBENGINEWIDGETS
-        d->htmlView->setHtml(html, QUrl());
-#else // HAVE_WEBENGINEWIDGETS
-#ifdef HAVE_WEBKITWIDGETS
-        d->htmlView->setHtml(html, QUrl());
-#else // HAVE_WEBKITWIDGETS
-        d->htmlDocument->setHtml(html);
-#endif // HAVE_WEBKITWIDGETS
-#endif // HAVE_WEBENGINEWIDGETS
-        d->buttonOpen->setEnabled(false);
-        d->buttonSaveAsHTML->setEnabled(false);
+        setHtml(d->notAvailableMessage.arg(i18n("No element selected")), false);
         return;
     }
 
@@ -361,9 +338,12 @@ void ReferencePreview::renderHTML()
         QString text = QString::fromUtf8(buffer.readAll().data());
         buffer.close();
 
+        bool buttonsEnabled = true;
+
         if (!exporterResult || text.isEmpty()) {
             /// something went wrong, no output ...
-            text = d->notAvailableMessage.arg(i18n("No HTML output generated"));
+            text = d->notAvailableMessage.arg(i18n("No output generated"));
+            buttonsEnabled = false;
             qCDebug(LOG_KBIBTEX_PROGRAM) << errorLog.join("\n");
         } else {
             /// beautify text
@@ -413,9 +393,12 @@ void ReferencePreview::renderHTML()
             text.replace(QLatin1String("color: black;"), QString(QLatin1String("color: %1;")).arg(d->textColor.name()));
         }
 
-        setHtml(text);
+        setHtml(text, buttonsEnabled);
 
         d->saveState();
+    } else {
+        /// something went wrong, no exporter ...
+        setHtml(d->notAvailableMessage.arg(i18n("No output generated")), false);
     }
 
     QApplication::restoreOverrideCursor();
