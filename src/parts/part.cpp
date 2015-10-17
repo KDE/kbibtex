@@ -142,10 +142,16 @@ public:
     QAction *colorLabelContextMenuAction;
     QFileSystemWatcher fileSystemWatcher;
 
-    KBibTeXPartPrivate(KBibTeXPart *parent)
+    KBibTeXPartPrivate(QWidget *parentWidget, KBibTeXPart *parent)
             : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), bibTeXFile(NULL), model(NULL), sortFilterProxyModel(NULL), signalMapperNewElement(new QSignalMapper(parent)), viewDocumentMenu(new QMenu(i18n("View Document"), parent->widget())), signalMapperViewDocument(new QSignalMapper(parent)), isSaveAsOperation(false), fileSystemWatcher(p) {
         connect(signalMapperViewDocument, SIGNAL(mapped(QObject*)), p, SLOT(elementViewDocumentMenu(QObject*)));
         connect(&fileSystemWatcher, SIGNAL(fileChanged(QString)), p, SLOT(fileExternallyChange(QString)));
+
+        partWidget = new PartWidget(parentWidget);
+        partWidget->fileView()->setReadOnly(!p->isReadWrite());
+        connect(partWidget->fileView(), SIGNAL(modified()), p, SLOT(setModified()));
+
+        setupActions();
     }
 
     ~KBibTeXPartPrivate() {
@@ -154,6 +160,109 @@ public:
         delete signalMapperNewElement;
         delete viewDocumentMenu;
         delete signalMapperViewDocument;
+    }
+
+
+    void setupActions()
+    {
+        fileSaveAction = p->actionCollection()->addAction(KStandardAction::Save, p, SLOT(documentSave()));
+        fileSaveAction->setEnabled(false);
+        p->actionCollection()->addAction(KStandardAction::SaveAs, p, SLOT(documentSaveAs()));
+        QAction *saveCopyAsAction = new QAction(QIcon::fromTheme("document-save"), i18n("Save Copy As..."), p);
+        p->actionCollection()->addAction("file_save_copy_as", saveCopyAsAction);
+        connect(saveCopyAsAction, &QAction::triggered, p, &KBibTeXPart::documentSaveCopyAs);
+
+        QAction *filterWidgetAction = new QAction(i18n("Filter"), p);
+        p->actionCollection()->addAction("toolbar_filter_widget", filterWidgetAction);
+        filterWidgetAction->setIcon(QIcon::fromTheme("view-filter"));
+        p->actionCollection()->setDefaultShortcut(filterWidgetAction, Qt::CTRL + Qt::Key_F);
+        connect(filterWidgetAction, SIGNAL(triggered()), partWidget->filterBar(), SLOT(setFocus()));
+        partWidget->filterBar()->setPlaceholderText(i18n("Filter bibliographic entries (%1)", filterWidgetAction->shortcut().toString()));
+
+        KActionMenu *newElementAction = new KActionMenu(QIcon::fromTheme("address-book-new"), i18n("New element"), p);
+        p->actionCollection()->addAction("element_new", newElementAction);
+        QMenu *newElementMenu = new QMenu(newElementAction->text(), p->widget());
+        newElementAction->setMenu(newElementMenu);
+        connect(newElementAction, SIGNAL(triggered()), p, SLOT(newEntryTriggered()));
+        QAction *newEntry = newElementMenu->addAction(QIcon::fromTheme("address-book-new"), i18n("New entry"));
+        p->actionCollection()->setDefaultShortcut(newEntry, Qt::CTRL + Qt::SHIFT + Qt::Key_N);
+        connect(newEntry, SIGNAL(triggered()), signalMapperNewElement, SLOT(map()));
+        signalMapperNewElement->setMapping(newEntry, smEntry);
+        QAction *newComment = newElementMenu->addAction(QIcon::fromTheme("address-book-new"), i18n("New comment"));
+        connect(newComment, SIGNAL(triggered()), signalMapperNewElement, SLOT(map()));
+        signalMapperNewElement->setMapping(newComment, smComment);
+        QAction *newMacro = newElementMenu->addAction(QIcon::fromTheme("address-book-new"), i18n("New macro"));
+        connect(newMacro, SIGNAL(triggered()), signalMapperNewElement, SLOT(map()));
+        signalMapperNewElement->setMapping(newMacro, smMacro);
+        QAction *newPreamble = newElementMenu->addAction(QIcon::fromTheme("address-book-new"), i18n("New preamble"));
+        connect(newPreamble, SIGNAL(triggered()), signalMapperNewElement, SLOT(map()));
+        signalMapperNewElement->setMapping(newPreamble, smPreamble);
+        connect(signalMapperNewElement, SIGNAL(mapped(int)), p, SLOT(newElementTriggered(int)));
+        elementEditAction = new QAction(QIcon::fromTheme("document-edit"), i18n("Edit Element"), p);
+        p->actionCollection()->setDefaultShortcut(elementEditAction, Qt::CTRL + Qt::Key_E);
+        p->actionCollection()->addAction(QLatin1String("element_edit"), elementEditAction);
+        connect(elementEditAction, SIGNAL(triggered()), partWidget->fileView(), SLOT(editCurrentElement()));
+        elementViewDocumentAction = new QAction(QIcon::fromTheme("application-pdf"), i18n("View Document"), p);
+        p->actionCollection()->setDefaultShortcut(elementViewDocumentAction, Qt::CTRL + Qt::Key_D);
+        p->actionCollection()->addAction(QLatin1String("element_viewdocument"), elementViewDocumentAction);
+        connect(elementViewDocumentAction, SIGNAL(triggered()), p, SLOT(elementViewDocument()));
+
+        elementFindPDFAction = new QAction(QIcon::fromTheme("application-pdf"), i18n("Find PDF..."), p);
+        p->actionCollection()->addAction(QLatin1String("element_findpdf"), elementFindPDFAction);
+        connect(elementFindPDFAction, SIGNAL(triggered()), p, SLOT(elementFindPDF()));
+
+        entryApplyDefaultFormatString = new QAction(QIcon::fromTheme("favorites"), i18n("Format entry ids"), p);
+        p->actionCollection()->addAction(QLatin1String("entry_applydefaultformatstring"), entryApplyDefaultFormatString);
+        connect(entryApplyDefaultFormatString, SIGNAL(triggered()), p, SLOT(applyDefaultFormatString()));
+
+        Clipboard *clipboard = new Clipboard(partWidget->fileView());
+
+        editCopyReferencesAction = new QAction(QIcon::fromTheme("edit-copy"), i18n("Copy References"), p);
+        p->actionCollection()->setDefaultShortcut(editCopyReferencesAction, Qt::CTRL + Qt::SHIFT + Qt::Key_C);
+        p->actionCollection()->addAction(QLatin1String("edit_copy_references"), editCopyReferencesAction);
+        connect(editCopyReferencesAction, SIGNAL(triggered()), clipboard, SLOT(copyReferences()));
+
+        editDeleteAction = new QAction(QIcon::fromTheme("edit-table-delete-row"), i18n("Delete"), p);
+        p->actionCollection()->setDefaultShortcut(editDeleteAction, Qt::Key_Delete);
+        p->actionCollection()->addAction(QLatin1String("edit_delete"), editDeleteAction);
+        connect(editDeleteAction, SIGNAL(triggered()), partWidget->fileView(), SLOT(selectionDelete()));
+
+        editCutAction = p->actionCollection()->addAction(KStandardAction::Cut, clipboard, SLOT(cut()));
+        editCopyAction = p->actionCollection()->addAction(KStandardAction::Copy, clipboard, SLOT(copy()));
+        p->actionCollection()->addAction(QLatin1String("edit_copy_references"), editCopyReferencesAction);
+        editPasteAction = p->actionCollection()->addAction(KStandardAction::Paste, clipboard, SLOT(paste()));
+
+        /// build context menu for central BibTeX file view
+        partWidget->fileView()->setContextMenuPolicy(Qt::ActionsContextMenu);
+        partWidget->fileView()->addAction(elementEditAction);
+        partWidget->fileView()->addAction(elementViewDocumentAction);
+        QAction *separator = new QAction(p);
+        separator->setSeparator(true);
+        partWidget->fileView()->addAction(separator);
+        partWidget->fileView()->addAction(editCutAction);
+        partWidget->fileView()->addAction(editCopyAction);
+        partWidget->fileView()->addAction(editCopyReferencesAction);
+        partWidget->fileView()->addAction(editPasteAction);
+        partWidget->fileView()->addAction(editDeleteAction);
+        separator = new QAction(p);
+        separator->setSeparator(true);
+        partWidget->fileView()->addAction(separator);
+
+        // TODO
+
+        connect(partWidget->fileView(), SIGNAL(selectedElementsChanged()), p, SLOT(updateActions()));
+        connect(partWidget->fileView(), &FileView::currentElementChanged, p, &KBibTeXPart::updateActions);
+
+        partWidget->fileView()->addAction(elementFindPDFAction);
+        partWidget->fileView()->addAction(entryApplyDefaultFormatString);
+
+        colorLabelContextMenu = new ColorLabelContextMenu(partWidget->fileView());
+        colorLabelContextMenuAction = p->actionCollection()->addAction(QLatin1String("entry_colorlabel"), colorLabelContextMenu->menuAction());
+
+        p->setXMLFile(RCFileName);
+
+        findDuplicatesUI = new FindDuplicatesUI(p, partWidget->fileView());
+        lyx = new LyX(p, partWidget->fileView());
     }
 
     FileImporter *fileImporterFactory(const QUrl &url) {
@@ -578,18 +687,14 @@ public:
     }
 };
 
-KBibTeXPart::KBibTeXPart(QWidget *parentWidget, QObject *parent, const QVariantList& args)
-        : KParts::ReadWritePart(parent), d(new KBibTeXPartPrivate(this))
+KBibTeXPart::KBibTeXPart(QWidget *parentWidget, QObject *parent, const QVariantList &args)
+        : KParts::ReadWritePart(parent), d(new KBibTeXPartPrivate(parentWidget, this))
 {
     Q_UNUSED(args)
     // FIXME setComponentData(KBibTeXPartFactory::componentData(), false);
 
-    d->partWidget = new PartWidget(parentWidget);
-    d->partWidget->fileView()->setReadOnly(!isReadWrite());
-    connect(d->partWidget->fileView(), SIGNAL(modified()), this, SLOT(setModified()));
     setWidget(d->partWidget);
-
-    setupActions();
+    updateActions();
 
     d->initializeNew();
 
@@ -618,111 +723,6 @@ void KBibTeXPart::notificationEvent(int eventId)
 {
     if (eventId == NotificationHub::EventConfigurationChanged)
         d->readConfiguration();
-}
-
-void KBibTeXPart::setupActions()
-{
-    d->fileSaveAction = actionCollection()->addAction(KStandardAction::Save, this, SLOT(documentSave()));
-    d->fileSaveAction->setEnabled(false);
-    actionCollection()->addAction(KStandardAction::SaveAs, this, SLOT(documentSaveAs()));
-    QAction *saveCopyAsAction = new QAction(QIcon::fromTheme("document-save"), i18n("Save Copy As..."), this);
-    actionCollection()->addAction("file_save_copy_as", saveCopyAsAction);
-    connect(saveCopyAsAction, SIGNAL(triggered()), this, SLOT(documentSaveCopyAs()));
-
-    QAction *filterWidgetAction = new QAction(i18n("Filter"), this);
-    actionCollection()->addAction("toolbar_filter_widget", filterWidgetAction);
-    filterWidgetAction->setIcon(QIcon::fromTheme("view-filter"));
-    actionCollection()->setDefaultShortcut(filterWidgetAction, Qt::CTRL + Qt::Key_F);
-    connect(filterWidgetAction, SIGNAL(triggered()), d->partWidget->filterBar(), SLOT(setFocus()));
-    d->partWidget->filterBar()->setPlaceholderText(i18n("Filter bibliographic entries (%1)", filterWidgetAction->shortcut().toString()));
-
-    KActionMenu *newElementAction = new KActionMenu(QIcon::fromTheme("address-book-new"), i18n("New element"), this);
-    actionCollection()->addAction("element_new", newElementAction);
-    QMenu *newElementMenu = new QMenu(newElementAction->text(), widget());
-    newElementAction->setMenu(newElementMenu);
-    connect(newElementAction, SIGNAL(triggered()), this, SLOT(newEntryTriggered()));
-    QAction *newEntry = newElementMenu->addAction(QIcon::fromTheme("address-book-new"), i18n("New entry"));
-    actionCollection()->setDefaultShortcut(newEntry, Qt::CTRL + Qt::SHIFT + Qt::Key_N);
-    connect(newEntry, SIGNAL(triggered()), d->signalMapperNewElement, SLOT(map()));
-    d->signalMapperNewElement->setMapping(newEntry, smEntry);
-    QAction *newComment = newElementMenu->addAction(QIcon::fromTheme("address-book-new"), i18n("New comment"));
-    connect(newComment, SIGNAL(triggered()), d->signalMapperNewElement, SLOT(map()));
-    d->signalMapperNewElement->setMapping(newComment, smComment);
-    QAction *newMacro = newElementMenu->addAction(QIcon::fromTheme("address-book-new"), i18n("New macro"));
-    connect(newMacro, SIGNAL(triggered()), d->signalMapperNewElement, SLOT(map()));
-    d->signalMapperNewElement->setMapping(newMacro, smMacro);
-    QAction *newPreamble = newElementMenu->addAction(QIcon::fromTheme("address-book-new"), i18n("New preamble"));
-    connect(newPreamble, SIGNAL(triggered()), d->signalMapperNewElement, SLOT(map()));
-    d->signalMapperNewElement->setMapping(newPreamble, smPreamble);
-    connect(d->signalMapperNewElement, SIGNAL(mapped(int)), this, SLOT(newElementTriggered(int)));
-    d->elementEditAction = new QAction(QIcon::fromTheme("document-edit"), i18n("Edit Element"), this);
-    actionCollection()->setDefaultShortcut(d->elementEditAction, Qt::CTRL + Qt::Key_E);
-    actionCollection()->addAction(QLatin1String("element_edit"),  d->elementEditAction);
-    connect(d->elementEditAction, SIGNAL(triggered()), d->partWidget->fileView(), SLOT(editCurrentElement()));
-    d->elementViewDocumentAction = new QAction(QIcon::fromTheme("application-pdf"), i18n("View Document"), this);
-    actionCollection()->setDefaultShortcut(d->elementViewDocumentAction, Qt::CTRL + Qt::Key_D);
-    actionCollection()->addAction(QLatin1String("element_viewdocument"),  d->elementViewDocumentAction);
-    connect(d->elementViewDocumentAction, SIGNAL(triggered()), this, SLOT(elementViewDocument()));
-
-    d->elementFindPDFAction = new QAction(QIcon::fromTheme("application-pdf"), i18n("Find PDF..."), this);
-    actionCollection()->addAction(QLatin1String("element_findpdf"),  d->elementFindPDFAction);
-    connect(d->elementFindPDFAction, SIGNAL(triggered()), this, SLOT(elementFindPDF()));
-
-    d->entryApplyDefaultFormatString = new QAction(QIcon::fromTheme("favorites"), i18n("Format entry ids"), this);
-    actionCollection()->addAction(QLatin1String("entry_applydefaultformatstring"), d->entryApplyDefaultFormatString);
-    connect(d->entryApplyDefaultFormatString, SIGNAL(triggered()), this, SLOT(applyDefaultFormatString()));
-
-    Clipboard *clipboard = new Clipboard(d->partWidget->fileView());
-
-    d->editCopyReferencesAction = new QAction(QIcon::fromTheme("edit-copy"), i18n("Copy References"), this);
-    actionCollection()->setDefaultShortcut(d->editCopyReferencesAction, Qt::CTRL + Qt::SHIFT + Qt::Key_C);
-    actionCollection()->addAction(QLatin1String("edit_copy_references"),  d->editCopyReferencesAction);
-    connect(d->editCopyReferencesAction, SIGNAL(triggered()), clipboard, SLOT(copyReferences()));
-
-    d->editDeleteAction = new QAction(QIcon::fromTheme("edit-table-delete-row"), i18n("Delete"), this);
-    actionCollection()->setDefaultShortcut(d->editDeleteAction, Qt::Key_Delete);
-    actionCollection()->addAction(QLatin1String("edit_delete"),  d->editDeleteAction);
-    connect(d->editDeleteAction, SIGNAL(triggered()), d->partWidget->fileView(), SLOT(selectionDelete()));
-
-    d->editCutAction = actionCollection()->addAction(KStandardAction::Cut, clipboard, SLOT(cut()));
-    d->editCopyAction = actionCollection()->addAction(KStandardAction::Copy, clipboard, SLOT(copy()));
-    actionCollection()->addAction(QLatin1String("edit_copy_references"),  d->editCopyReferencesAction);
-    d->editPasteAction = actionCollection()->addAction(KStandardAction::Paste, clipboard, SLOT(paste()));
-
-    /// build context menu for central BibTeX file view
-    d->partWidget->fileView()->setContextMenuPolicy(Qt::ActionsContextMenu);
-    d->partWidget->fileView()->addAction(d->elementEditAction);
-    d->partWidget->fileView()->addAction(d->elementViewDocumentAction);
-    QAction *separator = new QAction(this);
-    separator->setSeparator(true);
-    d->partWidget->fileView()->addAction(separator);
-    d->partWidget->fileView()->addAction(d->editCutAction);
-    d->partWidget->fileView()->addAction(d->editCopyAction);
-    d->partWidget->fileView()->addAction(d->editCopyReferencesAction);
-    d->partWidget->fileView()->addAction(d->editPasteAction);
-    d->partWidget->fileView()->addAction(d->editDeleteAction);
-    separator = new QAction(this);
-    separator->setSeparator(true);
-    d->partWidget->fileView()->addAction(separator);
-
-    // TODO
-
-    connect(d->partWidget->fileView(), SIGNAL(selectedElementsChanged()), this, SLOT(updateActions()));
-    connect(d->partWidget->fileView(), &FileView::currentElementChanged, this, &KBibTeXPart::updateActions);
-
-    d->partWidget->fileView()->addAction(d->elementFindPDFAction);
-    d->partWidget->fileView()->addAction(d->entryApplyDefaultFormatString);
-
-    d->colorLabelContextMenu = new ColorLabelContextMenu(d->partWidget->fileView());
-    d->colorLabelContextMenuAction = actionCollection()->addAction(QLatin1String("entry_colorlabel"), d->colorLabelContextMenu->menuAction());
-
-    setXMLFile(RCFileName);
-
-    d->findDuplicatesUI = new FindDuplicatesUI(this, d->partWidget->fileView());
-    d->lyx = new LyX(this, d->partWidget->fileView());
-
-    updateActions();
-    fitActionSettings();
 }
 
 bool KBibTeXPart::saveFile()
