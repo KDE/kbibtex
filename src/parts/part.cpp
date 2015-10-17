@@ -876,11 +876,6 @@ void KBibTeXPart::applyDefaultFormatString()
 
 }
 
-void KBibTeXPart::fitActionSettings()
-{
-    // TODO
-}
-
 bool KBibTeXPart::openFile()
 {
     const bool success = d->openFile(url(), localFilePath());

@@ -47,7 +47,6 @@ protected:
 
 protected:
     void setupActions();
-    void fitActionSettings();
 
 protected slots:
     bool documentSave();
