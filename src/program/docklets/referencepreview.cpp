@@ -293,6 +293,8 @@ void ReferencePreview::renderHTML()
             exporter = exporterBibTeX;
         } else if (previewStyle.style == QLatin1String("ris"))
             exporter = new FileExporterRIS();
+        else
+            qCWarning(LOG_KBIBTEX_PROGRAM) << "Don't know how to handle output style " << previewStyle.style << " for type " << previewStyle.type;
     } else if (previewStyle.type == QLatin1String("bibtex2html")) {
         crossRefHandling = merge;
         FileExporterBibTeX2HTML *exporterHTML = new FileExporterBibTeX2HTML();
