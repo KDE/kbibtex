@@ -345,6 +345,10 @@ void ReferencePreview::renderHTML()
                 reAnchor.setMinimal(true);
                 text.remove(reAnchor);
 
+                /// replace ASCII art with Unicode characters
+                text.replace(QLatin1String("---"), QString(QChar(0x2014)));
+                text.replace(QLatin1String("--"), QString(QChar(0x2013)));
+
                 text.prepend(d->htmlStart);
                 text.append("</body></html>");
             } else if (type == "xml") {
