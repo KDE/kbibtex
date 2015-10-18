@@ -55,8 +55,6 @@ void KBibTeXBrowserExtension::restoreState(QDataStream &stream)
     KParts::BrowserExtension::restoreState(stream);
 
     // TODO
-
-    part->fitActionSettings();
 }
 
 #include "browserextension.moc"
