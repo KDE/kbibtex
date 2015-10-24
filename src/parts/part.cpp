@@ -131,13 +131,16 @@ public:
 
     void setupActions()
     {
+        /// "Save" action
         fileSaveAction = p->actionCollection()->addAction(KStandardAction::Save, p, SLOT(documentSave()));
         fileSaveAction->setEnabled(false);
         p->actionCollection()->addAction(KStandardAction::SaveAs, p, SLOT(documentSaveAs()));
+        /// "Save copy as" action
         KAction *saveCopyAsAction = new KAction(KIcon("document-save"), i18n("Save Copy As..."), p);
         p->actionCollection()->addAction("file_save_copy_as", saveCopyAsAction);
         connect(saveCopyAsAction, SIGNAL(triggered(bool)), p, SLOT(documentSaveCopyAs()));
 
+        /// Filter bar widget
         KAction *filterWidgetAction = new KAction(i18n("Filter"), p);
         p->actionCollection()->addAction("toolbar_filter_widget", filterWidgetAction);
         filterWidgetAction->setIcon(KIcon("view-filter"));
@@ -145,6 +148,7 @@ public:
         connect(filterWidgetAction, SIGNAL(triggered()), partWidget->filterBar(), SLOT(setFocus()));
         partWidget->filterBar()->setClickMessage(i18n("Filter bibliographic entries (%1)", filterWidgetAction->shortcut().toString()));
 
+        /// Actions for creating new elements (entries, macros, ...)
         KActionMenu *newElementAction = new KActionMenu(KIcon("address-book-new"), i18n("New element"), p);
         p->actionCollection()->addAction("element_new", newElementAction);
         KMenu *newElementMenu = new KMenu(newElementAction->text(), p->widget());
@@ -164,42 +168,53 @@ public:
         connect(newPreamble, SIGNAL(triggered()), signalMapperNewElement, SLOT(map()));
         signalMapperNewElement->setMapping(newPreamble, smPreamble);
         connect(signalMapperNewElement, SIGNAL(mapped(int)), p, SLOT(newElementTriggered(int)));
+
+        /// Action to edit an element
         elementEditAction = new KAction(KIcon("document-edit"), i18n("Edit Element"), p);
         elementEditAction->setShortcut(Qt::CTRL + Qt::Key_E);
         p->actionCollection()->addAction(QLatin1String("element_edit"), elementEditAction);
         connect(elementEditAction, SIGNAL(triggered()), partWidget->fileView(), SLOT(editCurrentElement()));
+
+        /// Action to view the document associated to the current element
         elementViewDocumentAction = new KAction(KIcon("application-pdf"), i18n("View Document"), p);
         elementViewDocumentAction->setShortcut(Qt::CTRL + Qt::Key_D);
         p->actionCollection()->addAction(QLatin1String("element_viewdocument"), elementViewDocumentAction);
         connect(elementViewDocumentAction, SIGNAL(triggered()), p, SLOT(elementViewDocument()));
 
+        /// Action to find a PDF matching the current element
         elementFindPDFAction = new KAction(KIcon("application-pdf"), i18n("Find PDF..."), p);
         p->actionCollection()->addAction(QLatin1String("element_findpdf"), elementFindPDFAction);
         connect(elementFindPDFAction, SIGNAL(triggered()), p, SLOT(elementFindPDF()));
 
+        /// Action to reformat the selected elements' ids
         entryApplyDefaultFormatString = new KAction(KIcon("favorites"), i18n("Format entry ids"), p);
         p->actionCollection()->addAction(QLatin1String("entry_applydefaultformatstring"), entryApplyDefaultFormatString);
         connect(entryApplyDefaultFormatString, SIGNAL(triggered()), p, SLOT(applyDefaultFormatString()));
 
+        /// Clipboard object, required for various copy&paste operations
         Clipboard *clipboard = new Clipboard(partWidget->fileView());
 
+        /// Actions to cut and copy selected elements as BibTeX code
+        editCutAction = p->actionCollection()->addAction(KStandardAction::Cut, clipboard, SLOT(cut()));
+        editCopyAction = p->actionCollection()->addAction(KStandardAction::Copy, clipboard, SLOT(copy()));
+
+        /// Action to copy references, e.g. '\cite{fordfulkerson1959}'
         editCopyReferencesAction = new KAction(KIcon("edit-copy"), i18n("Copy References"), p);
         editCopyReferencesAction->setShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_C);
         p->actionCollection()->addAction(QLatin1String("edit_copy_references"), editCopyReferencesAction);
         connect(editCopyReferencesAction, SIGNAL(triggered()), clipboard, SLOT(copyReferences()));
 
+        /// Action to paste BibTeX code
+        editPasteAction = p->actionCollection()->addAction(KStandardAction::Paste, clipboard, SLOT(paste()));
+
+        /// Action to delete selected rows/elements
         editDeleteAction = new KAction(KIcon("edit-table-delete-row"), i18n("Delete"), p);
         editDeleteAction->setShortcut(Qt::Key_Delete);
         p->actionCollection()->addAction(QLatin1String("edit_delete"), editDeleteAction);
         connect(editDeleteAction, SIGNAL(triggered()), partWidget->fileView(), SLOT(selectionDelete()));
 
-        editCutAction = p->actionCollection()->addAction(KStandardAction::Cut, clipboard, SLOT(cut()));
-        editCopyAction = p->actionCollection()->addAction(KStandardAction::Copy, clipboard, SLOT(copy()));
-        p->actionCollection()->addAction(QLatin1String("edit_copy_references"), editCopyReferencesAction);
-        editPasteAction = p->actionCollection()->addAction(KStandardAction::Paste, clipboard, SLOT(paste()));
-
-        /// build context menu for central BibTeX file view
-        partWidget->fileView()->setContextMenuPolicy(Qt::ActionsContextMenu);
+        /// Build context menu for central BibTeX file view
+        partWidget->fileView()->setContextMenuPolicy(Qt::ActionsContextMenu); ///< context menu is based on actions
         partWidget->fileView()->addAction(elementEditAction);
         partWidget->fileView()->addAction(elementViewDocumentAction);
         KAction *separator = new KAction(p);
@@ -214,11 +229,6 @@ public:
         separator->setSeparator(true);
         partWidget->fileView()->addAction(separator);
 
-        // TODO
-
-        connect(partWidget->fileView(), SIGNAL(selectedElementsChanged()), p, SLOT(updateActions()));
-        connect(partWidget->fileView(), SIGNAL(currentElementChanged(QSharedPointer<Element>,File*)), p, SLOT(updateActions()));
-
         partWidget->fileView()->addAction(elementFindPDFAction);
         partWidget->fileView()->addAction(entryApplyDefaultFormatString);
 
@@ -227,6 +237,9 @@ public:
 
         findDuplicatesUI = new FindDuplicatesUI(p, partWidget->fileView());
         lyx = new LyX(p, partWidget->fileView());
+
+        connect(partWidget->fileView(), SIGNAL(selectedElementsChanged()), p, SLOT(updateActions()));
+        connect(partWidget->fileView(), SIGNAL(currentElementChanged(QSharedPointer<Element>,File*)), p, SLOT(updateActions()));
     }
 
     FileImporter *fileImporterFactory(const KUrl &url) {
