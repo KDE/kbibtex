@@ -225,8 +225,6 @@ public:
         colorLabelContextMenu = new ColorLabelContextMenu(partWidget->fileView());
         colorLabelContextMenuAction = p->actionCollection()->addAction(QLatin1String("entry_colorlabel"), colorLabelContextMenu->menuAction());
 
-        p->setXMLFile(RCFileName);
-
         findDuplicatesUI = new FindDuplicatesUI(p, partWidget->fileView());
         lyx = new LyX(p, partWidget->fileView());
     }
@@ -612,6 +610,8 @@ KBibTeXPart::KBibTeXPart(QWidget *parentWidget, QObject *parent, bool browserVie
         */
 
     d->initializeNew();
+
+    setXMLFile(RCFileName);
 
     NotificationHub::registerNotificationListener(this, NotificationHub::EventConfigurationChanged);
     d->readConfiguration();
