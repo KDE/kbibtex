@@ -19,6 +19,8 @@
 
 #include <QSet>
 #include <QFileInfo>
+#include <QDialogButtonBox>
+#include <QPushButton>
 
 #include <KLocalizedString>
 #include <KComboBox>
@@ -106,7 +108,8 @@ public:
         }
     }
 
-    void resetToDefaults() {
+    void restoreDefaults() {
+        notifyOfChanges = true;
         switch (KMessageBox::warningYesNoCancel(p, i18n("This will reset the settings to factory defaults. Should this affect only the current page or all settings?"), i18n("Reset to Defaults"), KGuiItem(i18n("All settings"), QLatin1String("edit-undo")), KGuiItem(i18n("Only current page"), QLatin1String("document-revert")))) {
         case KMessageBox::Yes: {
             foreach (SettingsAbstractWidget *settingsWidget, settingWidgets) {
@@ -121,10 +124,34 @@ public:
             break;
         }
         case KMessageBox::Cancel:
-            break; // nothing to do here
+            break; /// nothing to do here
         default:
             qCWarning(LOG_KBIBTEX_GUI) << "There should be no use for a default case here!";
         }
+    }
+
+    void apply()
+    {
+        p->buttonBox()->button(QDialogButtonBox::Apply)->setEnabled(false);
+        saveState();
+        notifyOfChanges = true;
+    }
+
+    void reset()
+    {
+        p->buttonBox()->button(QDialogButtonBox::Apply)->setEnabled(false);
+        loadState();
+    }
+
+    void ok()
+    {
+        notifyOfChanges = true;
+        if (p->buttonBox()->button(QDialogButtonBox::Apply)->isEnabled()) {
+            /// Apply settings only if changes have made
+            /// (state stored by Apply button being enabled or disabled)
+            apply();
+        }
+        p->accept();
     }
 };
 
@@ -133,16 +160,12 @@ KBibTeXPreferencesDialog::KBibTeXPreferencesDialog(QWidget *parent, Qt::WindowFl
 {
     setFaceType(KPageDialog::Tree);
     setWindowTitle(i18n("Preferences"));
-    // FIXME setButtons(Default | Reset | Ok | Apply | Cancel);
-    // FIXME setDefaultButton(Ok);
-    // FIXME enableButtonApply(false);
-    setModal(true);
-    // FIXME showButtonSeparator(true);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::RestoreDefaults | QDialogButtonBox::Reset | QDialogButtonBox::Ok | QDialogButtonBox::Apply | QDialogButtonBox::Cancel, Qt::Horizontal, this);
+    buttonBox->button(QDialogButtonBox::Apply)->setEnabled(false);
+    connect(buttonBox, &QDialogButtonBox::clicked, this, &KBibTeXPreferencesDialog::buttonClicked);
+    setButtonBox(buttonBox);
 
-    connect(this, SIGNAL(applyClicked()), this, SLOT(apply()));
-    connect(this, SIGNAL(okClicked()), this, SLOT(ok()));
-    connect(this, SIGNAL(defaultClicked()), this, SLOT(resetToDefaults()));
-    connect(this, SIGNAL(resetClicked()), this, SLOT(reset()));
+    setModal(true);
 
     d->addPages();
 }
@@ -154,37 +177,31 @@ KBibTeXPreferencesDialog::~KBibTeXPreferencesDialog()
 
 void KBibTeXPreferencesDialog::hideEvent(QHideEvent *)
 {
+    // TODO missing documentation: what triggers 'hideEvent' and why is 'notifyOfChanges' necessary?
     if (d->notifyOfChanges)
         NotificationHub::publishEvent(NotificationHub::EventConfigurationChanged);
 }
 
-void KBibTeXPreferencesDialog::apply()
-{
-    // FIXME enableButtonApply(false);
-    d->saveState();
-    d->notifyOfChanges = true;
-}
-
-void KBibTeXPreferencesDialog::reset()
-{
-    // FIXME enableButtonApply(false);
-    d->loadState();
-}
-
-void KBibTeXPreferencesDialog::ok()
-{
-    d->notifyOfChanges = true;
-    apply();
-    accept();
-}
-
-void KBibTeXPreferencesDialog::resetToDefaults()
-{
-    d->notifyOfChanges = true;
-    d->resetToDefaults();
+void KBibTeXPreferencesDialog::buttonClicked(QAbstractButton *button) {
+    switch (buttonBox()->standardButton(button)) {
+    case QDialogButtonBox::Apply:
+        d->apply();
+        break;
+    case QDialogButtonBox::Ok:
+        d->ok();
+        break;
+    case QDialogButtonBox::RestoreDefaults:
+        d->restoreDefaults();
+        break;
+    case QDialogButtonBox::Reset:
+        d->reset();
+        break;
+    default:
+        qCWarning(LOG_KBIBTEX_GUI) << "There should be no use for a default case here!";
+    }
 }
 
 void KBibTeXPreferencesDialog::gotChanged()
 {
-    // FIXME enableButtonApply(true);
+    buttonBox()->button(QDialogButtonBox::Apply)->setEnabled(true);
 }

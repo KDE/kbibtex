@@ -22,6 +22,8 @@
 
 #include <KPageDialog>
 
+class QAbstractButton;
+
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
@@ -41,10 +43,7 @@ private:
     KBibTeXPreferencesDialogPrivate *d;
 
 private slots:
-    void apply();
-    void reset();
-    void ok();
-    void resetToDefaults();
+    void buttonClicked(QAbstractButton *);
     void gotChanged();
 };
 
