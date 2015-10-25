@@ -61,7 +61,7 @@ public:
             item.removeFirst();
             comboBoxBibliographySystem->addItem(itemLabel, item);
         }
-        int styleIndex = comboBoxBibliographySystem->findData(configGroup.readEntry("CurrentStyle", QString()));
+        int styleIndex = comboBoxBibliographySystem->findData(configGroup.readEntry("CurrentStyle", QString(QLatin1String("bibtex"))));
         if (styleIndex < 0) styleIndex = 0;
         comboBoxBibliographySystem->setCurrentIndex(styleIndex);
 
@@ -97,6 +97,8 @@ public:
 
         comboBoxBibliographySystem = new KComboBox(p);
         comboBoxBibliographySystem->setObjectName("comboBoxBibtexStyle");
+        comboBoxBibliographySystem->addItem(i18n("BibTeX"), QLatin1String("bibtex"));
+        comboBoxBibliographySystem->addItem(i18n("BibLaTeX"), QLatin1String("biblatex"));
         layout->addRow(i18n("Bibliography System:"), comboBoxBibliographySystem);
         connect(comboBoxBibliographySystem, SIGNAL(currentIndexChanged(int)), p, SIGNAL(changed()));
 
