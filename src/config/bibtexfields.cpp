@@ -48,22 +48,22 @@ public:
 
     BibTeXFieldsPrivate(BibTeXFields *parent)
             : p(parent) {
-        KSharedConfigPtr config(KSharedConfig::openConfig("kbibtexrc"));
-        KConfigGroup configGroup(config, QString("User Interface"));
-        const QString stylefile = configGroup.readEntry("CurrentStyle", "bibtex").append(".kbstyle");
+        KSharedConfigPtr config(KSharedConfig::openConfig(QLatin1String("kbibtexrc")));
+        KConfigGroup configGroup(config, QLatin1String("User Interface"));
+        const QString stylefile = configGroup.readEntry(QLatin1String("CurrentStyle"), QString(QLatin1String("bibtex"))).append(QLatin1String(".kbstyle"));
         layoutConfig = KSharedConfig::openConfig(stylefile, KConfig::FullConfig, QStandardPaths::AppDataLocation);
     }
 
     void load() {
         p->clear();
 
-        QString groupName = QLatin1String("Column");
+        const QString groupName = QLatin1String("Column");
         KConfigGroup configGroup(layoutConfig, groupName);
-        int columnCount = configGroup.readEntry("count", bibTeXFieldsMaxColumnCount);
-        const QStringList treeViewNames = QStringList() << QLatin1String("SearchResults") << QLatin1String("Main") << QLatin1String("MergeWidget") << QLatin1String("Zotero");
+        int columnCount = configGroup.readEntry(QLatin1String("count"), bibTeXFieldsMaxColumnCount);
+        static const QStringList treeViewNames = QStringList() << QLatin1String("SearchResults") << QLatin1String("Main") << QLatin1String("MergeWidget") << QLatin1String("Zotero");
 
         for (int col = 1; col <= columnCount; ++col) {
-            const QString groupName = QString("Column%1").arg(col);
+            const QString groupName = QString(QLatin1String("Column%1")).arg(col);
             KConfigGroup configGroup(layoutConfig, groupName);
             if (!configGroup.exists()) break;
 
