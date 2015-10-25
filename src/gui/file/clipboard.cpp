@@ -82,58 +82,83 @@ public:
         return text;
     }
 
+    /**
+     * Makes an attempt to insert the passed text as an URL to the given
+     * element. May fail for various reasons, such as the text not being
+     * a valid URL or the element being invalid.
+     */
+    bool insertUrl(const QString &text, QSharedPointer<Element> element = QSharedPointer<Element>()) {
+        if (element.isNull()) return false;
+        QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
+        if (entry.isNull()) return false;
+        const QUrl url = QUrl::fromUserInput(text);
+        if (!url.isValid()) return false;
+
+        qCDebug(LOG_KBIBTEX_GUI) << "About to add URL " << url.toString() << " to entry" << entry->id();
+        return AssociatedFilesUI::associateUrl(url, entry, fileView->fileModel()->bibliographyFile(), fileView);
+    }
+
     bool insertText(const QString &text, QSharedPointer<Element> element = QSharedPointer<Element>()) {
-        /// First assumption: user dropped a piece of BibTeX code,
+        bool insertUrlPreviouslyCalled = false;
+
+        if (text.startsWith(QLatin1String("http://")) || text.startsWith(QLatin1String("https://")) || text.startsWith(QLatin1String("file://"))) {
+            /// Quick check if passed text looks like an URL;
+            /// in this case try to add it to the current/selected entry
+            if (insertUrl(text, element))
+                return true;
+            else
+                insertUrlPreviouslyCalled = true;
+        }
+
+        /// Assumption: user dropped a piece of BibTeX code,
         /// use BibTeX importer to generate representation from plain text
         FileImporterBibTeX importer;
         File *file = importer.fromString(text);
+        if (file != NULL) {
+            if (!file->isEmpty()) {
+                FileModel *fileModel = fileView->fileModel();
+                QSortFilterProxyModel *sfpModel = fileView->sortFilterProxyModel();
 
-        if (file != NULL && !file->isEmpty()) {
-            FileModel *fileModel = fileView->fileModel();
-            QSortFilterProxyModel *sfpModel = fileView->sortFilterProxyModel();
+                /// Insert new elements one by one
+                const int startRow = fileModel->rowCount(); ///< Memorize row where insertion started
+                for (File::ConstIterator it = file->cbegin(); it != file->cend(); ++it)
+                    fileModel->insertRow(*it, fileView->model()->rowCount());
+                const int endRow = fileModel->rowCount() - 1; ///< Memorize row where insertion ended
 
-            /// insert new elements one by one
-            int startRow = fileModel->rowCount(); ///< memorize row where insertion started
-            for (File::Iterator it = file->begin(); it != file->end(); ++it)
-                fileModel->insertRow(*it, fileView->model()->rowCount());
-            int endRow = fileModel->rowCount() - 1; ///< memorize row where insertion ended
+                /// Select newly inserted elements
+                QItemSelectionModel *ism = fileView->selectionModel();
+                ism->clear();
+                /// Keep track of the insert element which is most upwards in the list when inserted
+                QModelIndex minRowTargetModelIndex;
+                /// Highlight those rows in the editor which correspond to newly inserted elements
+                for (int i = startRow; i <= endRow; ++i) {
+                    QModelIndex targetModelIndex = sfpModel->mapFromSource(fileModel->index(i, 0));
+                    ism->select(targetModelIndex, QItemSelectionModel::Rows | QItemSelectionModel::Select);
 
-            /// select newly inserted elements
-            QItemSelectionModel *ism = fileView->selectionModel();
-            ism->clear();
-            /// keep track of the insert element which is most upwards in the list when inserted
-            QModelIndex minRowTargetModelIndex;
-            /// highlight those rows in the editor which correspond to newly inserted elements
-            for (int i = startRow; i <= endRow; ++i) {
-                QModelIndex targetModelIndex = sfpModel->mapFromSource(fileModel->index(i, 0));
-                ism->select(targetModelIndex, QItemSelectionModel::Rows | QItemSelectionModel::Select);
-
-                /// update the most upward inserted element
-                if (!minRowTargetModelIndex.isValid() || minRowTargetModelIndex.row() > targetModelIndex.row())
-                    minRowTargetModelIndex = targetModelIndex;
-            }
-            /// scroll tree view to show top-most inserted element
-            fileView->scrollTo(minRowTargetModelIndex, QAbstractItemView::PositionAtTop);
-
-            /// clean up
-            delete file;
-            /// return true if at least one element was inserted
-            return startRow <= endRow;
-        } else if (!element.isNull()) {
-            /// Regular text seems to have been dropped on a specific element
-
-            QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
-            if (!entry.isNull()) {
-                qCDebug(LOG_KBIBTEX_GUI) << "Adding in entry" << entry->id();
-
-                /// Check if text looks like an URL
-                const QUrl url(text);
-                if (url.isValid()) {
-                    return AssociatedFilesUI::associateUrl(url, entry, fileView->fileModel()->bibliographyFile(), fileView);
+                    /// Update the most upward inserted element
+                    if (!minRowTargetModelIndex.isValid() || minRowTargetModelIndex.row() > targetModelIndex.row())
+                        minRowTargetModelIndex = targetModelIndex;
                 }
-            }
-        } else
-            qCDebug(LOG_KBIBTEX_GUI) << "Don't know what to do with " << text;
+                /// Scroll tree view to show top-most inserted element
+                fileView->scrollTo(minRowTargetModelIndex, QAbstractItemView::PositionAtTop);
+
+                /// Clean up
+                delete file;
+                /// Return true if at least one element was inserted
+                if (startRow <= endRow)
+                    return true;
+            } else
+                delete file; ///< clean up
+        }
+
+        if (!insertUrlPreviouslyCalled) {
+            /// If not tried above (e.g. if another protocol as the
+            /// ones listed above is passed), call insertUrl(..) now
+            if (insertUrl(text, element))
+                return true;
+        }
+
+        qCDebug(LOG_KBIBTEX_GUI) << "Don't know what to do with " << text;
 
         return false;
     }
@@ -233,7 +258,7 @@ void Clipboard::editorDragMoveEvent(QDragMoveEvent *event)
 
 void Clipboard::editorDropEvent(QDropEvent *event)
 {
-    QString text = event->mimeData()->text();
+    const QString text = event->mimeData()->text();
 
     if (!text.isEmpty() && !d->fileView->isReadOnly()) {
         QSharedPointer<Element> element;
