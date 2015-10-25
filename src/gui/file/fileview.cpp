@@ -336,16 +336,26 @@ void FileView::prepareEditorDialog(DialogType dialogType)
 
         /// Establish signal-slot connections for modification/editing events
         connect(m_elementEditor, &ElementEditor::modified, m_dbb->button(QDialogButtonBox::Apply), &QPushButton::setEnabled);
-        // FIXME necessary? connect(m_dbb, &QDialogButtonBox::accepted, m_elementEditor, &ElementEditor::apply);
         connect(m_dbb, &QDialogButtonBox::clicked, this, &FileView::dialogButtonClicked);
-        connect(m_dbb->button(QDialogButtonBox::Ok), &QPushButton::clicked, m_elementEditorDialog, &ElementEditorDialog::accept);
-        connect(m_dbb->button(QDialogButtonBox::Cancel), &QPushButton::clicked, m_elementEditorDialog, &ElementEditorDialog::reject);
     }
 }
 
 void FileView::dialogButtonClicked(QAbstractButton *button) {
-    if (button == m_dbb->button(QDialogButtonBox::Ok) || button == m_dbb->button(QDialogButtonBox::Apply))
+    switch (m_dbb->standardButton(button)) {
+    case QDialogButtonBox::Ok:
         m_elementEditor->apply();
-    else if (button == m_dbb->button(QDialogButtonBox::Reset))
+        m_elementEditorDialog->accept();
+        break;
+    case QDialogButtonBox::Apply:
+        m_elementEditor->apply();
+        break;
+    case QDialogButtonBox::Cancel:
+        m_elementEditorDialog->reject();
+        break;
+    case QDialogButtonBox::Reset:
         m_elementEditor->reset();
+        break;
+    default:
+        qCWarning(LOG_KBIBTEX_GUI) << "Default case should never get triggered in FileView::dialogButtonClicked";
+    }
 }
