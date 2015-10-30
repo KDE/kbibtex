@@ -60,13 +60,13 @@ public:
      * the return value will be negative.
      * @return either percent between 0.0 and 100.0, or a negative value
      */
-    double value() const;
+    float value() const;
 
     /**
      * Set the rating in percent (valid only >=0.0 and <=100.0).
      * @param percent value between 0.0 and 100.0
      */
-    void setValue(double percent);
+    void setValue(float percent);
 
     /**
      * Remove any value assigned to this widget.
@@ -91,7 +91,7 @@ public:
      * @param percent percent value of "glowing" starts, to be >=0.0 and <= 100.0
      * @param inside fit and paint stars inside this rectangle on the painter
      */
-    static void paintStars(QPainter *painter, KIconLoader::States defaultState, int numTotalStars, double percent, const QRect &inside);
+    static void paintStars(QPainter *painter, KIconLoader::States defaultState, int numTotalStars, float percent, const QRect &inside);
 
 signals:
     void modified();
@@ -105,7 +105,6 @@ protected:
 private slots:
     void clear();
     void buttonHeight();
-    double percentForPosition(const QPoint &pos, int numTotalStars, const QRect &inside);
 
 private:
     class Private;
