@@ -2,6 +2,7 @@
 Type=Service
 Icon=kbibtex
 Name=BibTeX Viewer and Editor
+Name[ast]=Visor y editor BiBTeX
 Name[bs]=BibTeX pregledač i Editor
 Name[ca]=Visualitzador i editor de BibTeX
 Name[cs]=Prohlížeč a editor BibTeX
@@ -25,6 +26,7 @@ Name[x-test]=xxBibTeX Viewer and Editorxx
 Name[zh_CN]=BibTex 查看编辑器
 Name[zh_TW]=BibTeX 檢視器與編輯器
 Comment=KParts component to view and edit bibliographic files
+Comment[ast]=Componente KParts pa ver y editar ficheros bibliográficos
 Comment[bs]=KParts komponenta za pregled i uređivanje bibliografskih datoteka
 Comment[ca]=Component de KParts per a visualitzar i editar fitxers bibliogràfics
 Comment[da]=KParts-komponent til at fremvise og redigere bibliografiske filer
