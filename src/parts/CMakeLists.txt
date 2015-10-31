@@ -28,7 +28,7 @@ set(
 
 # creates version.h using cmake script
 add_custom_target(
-    GITrevision
+    GITrevisionPart
     COMMAND
     ${CMAKE_COMMAND}
     -DSOURCE_DIR=${CMAKE_SOURCE_DIR}
@@ -73,7 +73,7 @@ target_link_libraries(
 
 add_dependencies(
     kbibtexpart
-    GITrevision
+    GITrevisionPart
 )
 
 install(
