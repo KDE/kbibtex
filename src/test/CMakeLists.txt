@@ -6,9 +6,11 @@ include(
     AddFileDependencies
 )
 
-add_definitions(
-    -DTESTSET_DIRECTORY=\\"${CMAKE_SOURCE_DIR}/testset/\\"
+set(
+    TESTSET_DIRECTORY
+    "${CMAKE_SOURCE_DIR}/testset/"
 )
+configure_file(test-config.h.in test-config.h @ONLY)
 
 include_directories(
     ${CMAKE_SOURCE_DIR}/src/config
