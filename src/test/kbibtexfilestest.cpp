@@ -27,6 +27,8 @@
 #include "fileimporterbibtex.h"
 #include "fileexporterbibtex.h"
 #include "file.h"
+/// Provides definition of TESTSET_DIRECTORY
+#include "test-config.h"
 
 typedef struct {
     QString filename;
