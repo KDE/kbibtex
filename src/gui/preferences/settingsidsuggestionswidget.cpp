@@ -390,4 +390,5 @@ void SettingsIdSuggestionsWidget::toggleDefault()
     QModelIndex curIndex = d->treeViewSuggestions->currentIndex();
     bool current = d->idSuggestionsModel->data(curIndex, IsDefaultFormatStringRole).toBool();
     d->idSuggestionsModel->setData(curIndex, !current, IsDefaultFormatStringRole);
+    emit changed();
 }
