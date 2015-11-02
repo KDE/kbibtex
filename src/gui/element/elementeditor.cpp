@@ -74,6 +74,11 @@ public:
 
     ElementEditorPrivate(bool scrollable, ElementEditor *parent)
             : file(NULL), p(parent), previousWidget(NULL), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), elementChanged(false), elementUnapplied(false) {
+        internalEntry = QSharedPointer<Entry>();
+        internalMacro = QSharedPointer<Macro>();
+        internalComment = QSharedPointer<Comment>();
+        internalPreamble = QSharedPointer<Preamble>();
+
         createGUI(scrollable);
     }
 
@@ -311,10 +316,6 @@ public:
             (*it)->setModified(false);
         }
 
-        internalEntry = QSharedPointer<Entry>();
-        internalMacro = QSharedPointer<Macro>();
-        internalComment = QSharedPointer<Comment>();
-        internalPreamble = QSharedPointer<Preamble>();
         QSharedPointer<const Entry> e = element.dynamicCast<const Entry>();
         if (!e.isNull())
             internalEntry = QSharedPointer<Entry>(new Entry(*e.data()));
