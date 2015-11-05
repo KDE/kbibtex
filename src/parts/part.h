@@ -44,9 +44,6 @@ protected:
     virtual bool saveFile();
 
 protected:
-    void setupActions(bool BrowserViewWanted);
-    void fitActionSettings();
-
     /*
       protected Q_SLOTS: // action slots
         void onSelectAll();
