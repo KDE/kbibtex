@@ -23,11 +23,8 @@
 
 #include <QFrame>
 #include <QBuffer>
-#ifdef HAVE_QTWEBKIT // krazy:exclude=cpp
-#include <QWebView>
-#else // HAVE_QTWEBKIT
-#include <QLabel>
-#endif // HAVE_QTWEBKIT
+#include <QTextEdit>
+#include <QTextDocument>
 #include <QLayout>
 #include <QApplication>
 #include <QTextStream>
@@ -89,11 +86,8 @@ public:
     KPushButton *buttonOpen, *buttonSaveAsHTML;
     QString htmlText;
     QUrl baseUrl;
-#ifdef HAVE_QTWEBKIT // krazy:exclude=cpp
-    QWebView *webView;
-#else // HAVE_QTWEBKIT
-    QLabel *messageLabel;
-#endif // HAVE_QTWEBKIT
+    QTextDocument *htmlDocument;
+    QTextEdit *htmlView;
     KComboBox *comboBox;
     QSharedPointer<const Element> element;
     const File *file;
@@ -126,17 +120,11 @@ public:
 
         QVBoxLayout *layout = new QVBoxLayout(frame);
         layout->setMargin(0);
-#ifdef HAVE_QTWEBKIT // krazy:exclude=cpp
-        webView = new QWebView(frame);
-        layout->addWidget(webView);
-        webView->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
-        connect(webView, SIGNAL(linkClicked(QUrl)), p, SLOT(linkClicked(QUrl)));
-#else // HAVE_QTWEBKIT
-        messageLabel = new QLabel(i18n("No preview available due to missing QtWebKit support on your system."), frame);
-        messageLabel->setWordWrap(true);
-        messageLabel->setAlignment(Qt::AlignCenter);
-        layout->addWidget(messageLabel);
-#endif // HAVE_QTWEBKIT
+        htmlView = new QTextEdit(frame);
+        htmlView->setReadOnly(true);
+        htmlDocument = new QTextDocument(htmlView);
+        htmlView->setDocument(htmlDocument);
+        layout->addWidget(htmlView);
 
         buttonOpen = new KPushButton(KIcon("document-open"), i18n("Open"), p);
         buttonOpen->setToolTip(i18n("Open reference in web browser."));
@@ -215,31 +203,21 @@ ReferencePreview::~ReferencePreview()
     delete d;
 }
 
-void ReferencePreview::setHtml(const QString &html, const KUrl &baseUrl)
+void ReferencePreview::setHtml(const QString &html, bool buttonsEnabled)
 {
-    d->htmlText = QString(html).remove(QLatin1String("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"));
-    d->baseUrl = baseUrl;
-#ifdef HAVE_QTWEBKIT // krazy:exclude=cpp
-    d->webView->setHtml(html, baseUrl);
-#endif // HAVE_QTWEBKIT
-    d->buttonOpen->setEnabled(true);
-    d->buttonSaveAsHTML->setEnabled(true);
+    d->htmlText = QString(html).remove(QLatin1String("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
+    d->htmlDocument->setHtml(d->htmlText);
+    d->buttonOpen->setEnabled(buttonsEnabled);
+    d->buttonSaveAsHTML->setEnabled(buttonsEnabled);
 }
 
 void ReferencePreview::setEnabled(bool enabled)
 {
     if (enabled)
-        setHtml(d->htmlText, d->baseUrl);
-    else {
-#ifdef HAVE_QTWEBKIT // krazy:exclude=cpp
-        d->webView->setHtml(d->notAvailableMessage.arg(i18n("Preview disabled")), d->baseUrl);
-#endif // HAVE_QTWEBKIT
-        d->buttonOpen->setEnabled(false);
-        d->buttonSaveAsHTML->setEnabled(false);
-    }
-#ifdef HAVE_QTWEBKIT // krazy:exclude=cpp
-    d->webView->setEnabled(enabled);
-#endif // HAVE_QTWEBKIT
+        setHtml(d->htmlText, true);
+    else
+        setHtml(d->notAvailableMessage.arg(i18n("Preview disabled")), false);
+    d->htmlView->setEnabled(enabled);
     d->comboBox->setEnabled(enabled);
 }
 
@@ -258,11 +236,7 @@ void ReferencePreview::renderHTML()
          } crossRefHandling = ignore;
 
     if (d->element.isNull()) {
-#ifdef HAVE_QTWEBKIT // krazy:exclude=cpp
-        d->webView->setHtml(d->notAvailableMessage.arg(i18n("No element selected")), d->baseUrl);
-#endif // HAVE_QTWEBKIT
-        d->buttonOpen->setEnabled(false);
-        d->buttonSaveAsHTML->setEnabled(false);
+        setHtml(d->notAvailableMessage.arg(i18n("No element selected")), false);
         return;
     }
 
@@ -326,9 +300,12 @@ void ReferencePreview::renderHTML()
         QString text = QString::fromUtf8(buffer.readAll().data());
         buffer.close();
 
+        bool buttonsEnabled = true;
+
         if (!exporterResult || text.isEmpty()) {
             /// something went wrong, no output ...
             text = d->notAvailableMessage.arg(i18n("No HTML output generated"));
+            buttonsEnabled = false;
             kDebug() << errorLog.join("\n");
         } else {
             /// beautify text
@@ -382,7 +359,7 @@ void ReferencePreview::renderHTML()
             text.replace(QLatin1String("color: black;"), QString(QLatin1String("color: %1;")).arg(d->textColor.name()));
         }
 
-        setHtml(text, d->baseUrl);
+        setHtml(text, buttonsEnabled);
 
         d->saveState();
     }
