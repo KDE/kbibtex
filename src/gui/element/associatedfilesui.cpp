@@ -154,8 +154,8 @@ bool AssociatedFilesUI::associateUrl(const QUrl &url, QSharedPointer<Entry> &ent
     layout->addWidget(buttonBox);
     dlg->setLayout(layout);
 
-    connect(buttonBox->button(QDialogButtonBox::Ok), &QPushButton::clicked, dlg, &QDialog::accept);
-    connect(buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, dlg, &QDialog::reject);
+    connect(buttonBox->button(QDialogButtonBox::Ok), &QPushButton::clicked, dlg.data(), &QDialog::accept);
+    connect(buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, dlg.data(), &QDialog::reject);
 
     if (AssociatedFiles::urlIsLocal(url))
         ui->setupForLocalFile(url, entry->id());
@@ -186,8 +186,8 @@ QString AssociatedFilesUI::associateUrl(const QUrl &url, const QString &entryId,
     layout->addWidget(buttonBox);
     dlg->setLayout(layout);
 
-    connect(buttonBox->button(QDialogButtonBox::Ok), &QPushButton::clicked, dlg, &QDialog::accept);
-    connect(buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, dlg, &QDialog::reject);
+    connect(buttonBox->button(QDialogButtonBox::Ok), &QPushButton::clicked, dlg.data(), &QDialog::accept);
+    connect(buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, dlg.data(), &QDialog::reject);
 
     if (AssociatedFiles::urlIsLocal(url))
         ui->setupForLocalFile(url, entryId);

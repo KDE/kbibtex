@@ -409,10 +409,10 @@ void FindPDFUI::interactiveFindPDF(Entry &entry, const File &bibtexFile, QWidget
     dlg->setLayout(layout);
 
     buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
-    connect(widget, &FindPDFUI::resultAvailable, buttonBox->button(QDialogButtonBox::Ok), &QWidget::setEnabled);
-    connect(buttonBox->button(QDialogButtonBox::Ok), &QPushButton::clicked, dlg, &QDialog::accept);
-    connect(buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, dlg, &QDialog::reject);
-    connect(buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, widget, &FindPDFUI::abort);
+    connect(widget.data(), &FindPDFUI::resultAvailable, buttonBox->button(QDialogButtonBox::Ok), &QWidget::setEnabled);
+    connect(buttonBox->button(QDialogButtonBox::Ok), &QPushButton::clicked, dlg.data(), &QDialog::accept);
+    connect(buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, dlg.data(), &QDialog::reject);
+    connect(buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, widget.data(), &FindPDFUI::abort);
 
     if (dlg->exec() == QDialog::Accepted)
         widget->apply(entry, bibtexFile);

@@ -512,7 +512,7 @@ public:
                 connect(buttonBox->button(QDialogButtonBox::RestoreDefaults), &QPushButton::clicked, settingsWidget, &FileSettingsWidget::resetToDefaults);
                 connect(buttonBox->button(QDialogButtonBox::Reset), &QPushButton::clicked, settingsWidget, &FileSettingsWidget::resetToLoadedProperties);
                 connect(buttonBox->button(QDialogButtonBox::Save), &QPushButton::clicked, settingsWidget, &FileSettingsWidget::applyProperties);
-                connect(buttonBox->button(QDialogButtonBox::Ok), &QPushButton::clicked, dlg, &QDialog::accept);
+                connect(buttonBox->button(QDialogButtonBox::Ok), &QPushButton::clicked, dlg.data(), &QDialog::accept);
 
                 settingsWidget->loadProperties(bibTeXFile);
 
@@ -530,7 +530,7 @@ public:
                 connect(buttonBox->button(QDialogButtonBox::RestoreDefaults), &QPushButton::clicked, settingsWidget, &SettingsFileExporterPDFPSWidget::resetToDefaults);
                 connect(buttonBox->button(QDialogButtonBox::Reset), &QPushButton::clicked, settingsWidget, &SettingsFileExporterPDFPSWidget::loadState);
                 connect(buttonBox->button(QDialogButtonBox::Save), &QPushButton::clicked, settingsWidget, &SettingsFileExporterPDFPSWidget::saveState);
-                connect(buttonBox->button(QDialogButtonBox::Ok), &QPushButton::clicked, dlg, &QDialog::accept);
+                connect(buttonBox->button(QDialogButtonBox::Ok), &QPushButton::clicked, dlg.data(), &QDialog::accept);
 
                 if (dlg->exec() == QDialog::Accepted)
                     settingsWidget->saveState();
