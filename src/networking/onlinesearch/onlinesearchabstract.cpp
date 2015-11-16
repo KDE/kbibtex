@@ -23,8 +23,8 @@
 #include <QTimer>
 #include <QListWidgetItem>
 #include <QStandardPaths>
-#include <QtDBus/QDBusConnection>
-#include <QtDBus/QDBusConnectionInterface>
+#include <QDBusConnection>
+#include <QDBusConnectionInterface>
 
 #include <KLocalizedString>
 #include <KMessageBox>

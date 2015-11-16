@@ -30,7 +30,7 @@
 #include <QSignalMapper>
 #include <QMimeDatabase>
 #include <QMimeType>
-#include <QtCore/QPointer>
+#include <QPointer>
 #include <QFileSystemWatcher>
 #include <QMessageBox>
 #include <QFileDialog>

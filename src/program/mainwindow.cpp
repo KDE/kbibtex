@@ -22,7 +22,7 @@
 #include <QDropEvent>
 #include <QLabel>
 #include <QMimeData>
-#include <QtCore/QPointer>
+#include <QPointer>
 #include <QMessageBox>
 #include <QMenu>
 #include <QTimer>

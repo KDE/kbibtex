@@ -53,8 +53,8 @@ class QOAUTH_EXPORT Interface : public QObject
     Q_PROPERTY( int error READ error )
 
 public:
-    Interface( QObject *parent = 0 );
-    Interface( QNetworkAccessManager *manager, QObject *parent = 0 );
+    explicit Interface( QObject *parent = 0 );
+    explicit Interface( QNetworkAccessManager *manager, QObject *parent = 0 );
     virtual ~Interface();
 
     QNetworkAccessManager* networkAccessManager() const;

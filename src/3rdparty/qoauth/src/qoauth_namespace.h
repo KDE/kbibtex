@@ -122,7 +122,7 @@ namespace QOAuth {
       \sa QOAuth::Interface::error
     */
     enum ErrorCode {
-        NoError = 200,              //!< No error occured (so far :-) )
+        NoError = 200,              //!< No error occurred (so far :-) )
         BadRequest = 400,           //!< Represents HTTP status code \c 400 (Bad Request)
         Unauthorized = 401,         //!< Represents HTTP status code \c 401 (Unauthorized)
         Forbidden = 403,            //!< Represents HTTP status code \c 403 (Forbidden)

@@ -292,12 +292,11 @@ QOAuth::ParamMap QOAuth::InterfacePrivate::replyToMap( const QByteArray &data )
     // we'll store them in a map
     ParamMap parameters;
 
-    QByteArray replyParam;
     QByteArray key;
     int separatorIndex;
 
     // iterate through name=value pairs
-    Q_FOREACH ( replyParam, replyParams ) {
+    foreach( const QByteArray &replyParam, replyParams ) {
         // find occurrence of '='
         separatorIndex = replyParam.indexOf( '=' );
         // key is on the left
@@ -367,16 +366,14 @@ QByteArray QOAuth::InterfacePrivate::paramsToString( const ParamMap &parameters,
         return QByteArray();
     }
 
-    QByteArray parameter;
     QByteArray parametersString;
 
-    Q_FOREACH( parameter, parameters.uniqueKeys() ) {
+    foreach( const QByteArray &parameter, parameters.uniqueKeys() ) {
         QList<QByteArray> values = parameters.values( parameter );
         if ( values.size() > 1 ) {
             qSort( values.begin(), values.end() );
         }
-        QByteArray value;
-        Q_FOREACH ( value, values ) {
+        foreach( const QByteArray &value, values ) {
             parametersString.append( parameter );
             parametersString.append( middleString );
             parametersString.append( value );
@@ -739,7 +736,7 @@ void QOAuth::InterfacePrivate::_q_setPassphrase( int id, const QCA::Event &event
   to complete. If the \ref requestTimeout property is set to a non-zero value, its vaue
   is applied as a request timeout, after which the request is aborted.
 
-  \returns If request succeded, the method returns all the data passed in the Service
+  \returns If request succeed, the method returns all the data passed in the Service
   Provider response (including a Request Token and Token Secret), formed in a ParamMap.
   If request fails, the \ref error property is set to an appropriate value, and an empty
   ParamMap is returned.
@@ -786,7 +783,7 @@ QOAuth::ParamMap QOAuth::Interface::requestToken( const QString &requestUrl, Htt
   to complete. If the \ref requestTimeout property is set to a non-zero value, its vaue
   is applied as a request timeout, after which the request is aborted.
 
-  \returns If request succeded, the method returns all the data passed in the Service
+  \returns If request succeed, the method returns all the data passed in the Service
   Provider response (including an authorized Access Token and Token Secret), formed in
   a ParamMap. This request ends the authorization process, and the obtained Access Token
   and Token Secret should be kept by the application and provided with every future request
@@ -949,7 +946,7 @@ QOAuth::ParamMap QOAuth::InterfacePrivate::sendRequest( const QString &requestUr
     // fire up a single shot timer if timeout was specified
     if ( requestTimeout > 0 ) {
         QTimer::singleShot( requestTimeout, loop, SLOT(quit()) );
-        // if the request finishes on time, the error value is overriden
+        // if the request finishes on time, the error value is overridden
         // if not, it remains equal to QOAuth::Interface::Timeout
         error = Timeout;
     }
