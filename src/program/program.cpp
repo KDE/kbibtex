@@ -20,10 +20,10 @@
 #include <QtDebug>
 #include <QApplication>
 #include <QCommandLineParser>
-#include <QMessageBox>
 
 #include <KAboutData>
 #include <KLocalizedString>
+#include <KMessageBox>
 
 #include "mainwindow.h"
 #include "logging_program.h"
@@ -87,7 +87,7 @@ int main(int argc, char *argv[])
         qCDebug(LOG_KBIBTEX_PROGRAM) << "QT_PLUGIN_PATH=" << getenv("QT_PLUGIN_PATH");
         qCDebug(LOG_KBIBTEX_PROGRAM) << "KDEDIRS=" << getenv("KDEDIRS");
         qCDebug(LOG_KBIBTEX_PROGRAM) << "QCoreApplication::libraryPaths=" << programCore.libraryPaths().join(QLatin1Char(':'));
-        QMessageBox::warning(mainWindow, i18n("Incomplete KBibTeX Installation"), i18n("KBibTeX seems to be not installed completely. KBibTeX could not locate its own KPart.\n\nOnly limited functionality will be available."));
+        KMessageBox::error(mainWindow, i18n("KBibTeX seems to be not installed completely. KBibTeX could not locate its own KPart.\n\nOnly limited functionality will be available."), i18n("Incomplete KBibTeX Installation"));
     } else {
         qCInfo(LOG_KBIBTEX_PROGRAM) << "Located KPart service:" << service->library() << "with description" << service->comment();
     }
@@ -115,5 +115,10 @@ int main(int argc, char *argv[])
 
     return programCore.exec();
 }
+
+
+
+
+
 
 

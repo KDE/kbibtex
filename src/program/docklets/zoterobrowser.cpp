@@ -20,7 +20,6 @@
 #include <QTreeView>
 #include <QTabWidget>
 #include <QListView>
-#include <QMessageBox>
 #include <QLayout>
 #include <QFormLayout>
 #include <QAbstractItemModel>
@@ -34,6 +33,7 @@
 #include <KConfigGroup>
 #include <KSharedConfig>
 #include <KWallet/KWallet>
+#include <KMessageBox>
 
 #include "element.h"
 #include "searchresults.h"
@@ -213,7 +213,7 @@ void ZoteroBrowser::modelReset()
     }
 
     if (!d->tags->busy() && !d->collection->busy() && !(d->collection->initialized() && d->tags->initialized()))
-        QMessageBox::information(this, i18n("Failed to retrieve data from Zotero"), i18n("KBibTeX failed to retrieve the bibliography from Zotero. Please check that the provided user id and API key are valid."));
+        KMessageBox::information(this, i18n("KBibTeX failed to retrieve the bibliography from Zotero. Please check that the provided user id and API key are valid."), i18n("Failed to retrieve data from Zotero"));
 }
 
 void ZoteroBrowser::collectionDoubleClicked(const QModelIndex &index)
@@ -292,7 +292,7 @@ void ZoteroBrowser::applyCredentials()
 
         d->tabWidget->setCurrentIndex(1);
     } else
-        QMessageBox::information(this, i18n("Invalid numeric identifier"), i18n("Value '%1' is not a valid numeric identifier of a user or a group.", d->lineEditNumericUserId->text()));
+        KMessageBox::information(this, i18n("Value '%1' is not a valid numeric identifier of a user or a group.", d->lineEditNumericUserId->text()), i18n("Invalid numeric identifier"));
 }
 
 void ZoteroBrowser::radioButtonsToggled() {
@@ -388,3 +388,8 @@ void ZoteroBrowser::writeOAuthCredentials(bool ok) {
     } else
         qWarning() << "Accessing KWallet to sync API key did not succeed";
 }
+
+
+
+
+

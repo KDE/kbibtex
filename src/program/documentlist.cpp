@@ -21,7 +21,6 @@
 #include <QTimer>
 #include <QSignalMapper>
 #include <QGridLayout>
-#include <QMessageBox>
 #include <QLabel>
 #include <QPainter>
 #include <QPushButton>
@@ -34,6 +33,7 @@
 #include <KActionMenu>
 #include <KDirOperator>
 #include <KService>
+#include <KMessageBox>
 
 #include "kbibtexnamespace.h"
 
@@ -304,7 +304,7 @@ void DocumentListView::openFileWithService(int i)
     QModelIndex modelIndex = currentIndex();
     if (modelIndex != QModelIndex()) {
         OpenFileInfo *ofi = qvariant_cast<OpenFileInfo *>(modelIndex.data(Qt::UserRole));
-        if (!ofi->isModified() || (QMessageBox::question(this, i18n("Save before switching?"), i18n("The current document has to be saved before switching the viewer/editor component.")/*, KGuiItem(i18n("Save document"), QIcon::fromTheme("document-save")), KGuiItem(i18n("Do not switch"), QIcon::fromTheme("dialog-cancel"))*/) == QMessageBox::Yes && ofi->save()))
+        if (!ofi->isModified() || (KMessageBox::questionYesNo(this, i18n("The current document has to be saved before switching the viewer/editor component."), i18n("Save before switching?"), KGuiItem(i18n("Save document"), QIcon::fromTheme("document-save")), KGuiItem(i18n("Do not switch"), QIcon::fromTheme("dialog-cancel"))) == KMessageBox::Yes && ofi->save()))
             d->ofim->setCurrentFile(ofi, d->openMenuServices[i]);
     }
 }
@@ -396,3 +396,8 @@ void DocumentList::fileSelected(const KFileItem &item)
     if (item.isFile() && item.isReadable())
         emit openFile(item.url());
 }
+
+
+
+
+

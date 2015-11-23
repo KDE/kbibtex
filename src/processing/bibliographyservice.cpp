@@ -17,12 +17,12 @@
 
 #include "bibliographyservice.h"
 
-#include <QMessageBox>
 #include <QStandardPaths>
 
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <KLocalizedString>
+#include <KMessageBox>
 
 class BibliographyService::Private
 {
@@ -198,5 +198,10 @@ bool BibliographyService::isKBibTeXdefault() const {
 
 void BibliographyService::kbuildsycoca5finished(int exitCode, QProcess::ExitStatus exitStatus) {
     if (exitCode != 0 || exitStatus != QProcess::NormalExit)
-        QMessageBox::warning(d->parentWidget,  i18n("Failed to run 'kbuildsycoca5'"), i18n("Failed to run 'kbuildsycoca5' to update mime type associations.\n\nThe system may not know how to use KBibTeX to open bibliography files."), i18n("Failed to run 'kbuildsycoca5'"));
+        KMessageBox::error(d->parentWidget, i18n("Failed to run 'kbuildsycoca5' to update mime type associations.\n\nThe system may not know how to use KBibTeX to open bibliography files."), i18n("Failed to run 'kbuildsycoca5'"));
 }
+
+
+
+
+

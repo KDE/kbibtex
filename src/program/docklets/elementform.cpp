@@ -20,7 +20,6 @@
 #include <QLayout>
 #include <QDockWidget>
 #include <QLabel>
-#include <QMessageBox>
 #include <QCheckBox>
 #include <QPushButton>
 
@@ -28,6 +27,7 @@
 #include <KIconLoader>
 #include <KConfigGroup>
 #include <KSharedConfig>
+#include <KMessageBox>
 
 #include "entry.h"
 #include "elementeditor.h"
@@ -180,7 +180,7 @@ void ElementForm::setElement(QSharedPointer<Element> element, const File *file)
     /// changes rather than to discard them -> apply changes in previous element.
     /// FIXME If the previous element got delete from the file and therefore a different
     /// element gets set, changes will be still applied to the element to-be-deleted.
-    if (d->gotModified && element != d->element && QMessageBox::question(this, i18n("Element modified"), i18n("The current element got modified.\nApply or discard changes?")/*, KGuiItem(i18n("Apply changes"), QIcon::fromTheme("dialog-ok-apply")), KGuiItem(i18n("Discard changes"), QIcon::fromTheme("edit-undo"))*/) == QMessageBox::Yes) {
+    if (d->gotModified && element != d->element && KMessageBox::questionYesNo(this, i18n("The current element got modified.\nApply or discard changes?"), i18n("Element modified"), KGuiItem(i18n("Apply changes"), QIcon::fromTheme("dialog-ok-apply")), KGuiItem(i18n("Discard changes"), QIcon::fromTheme("edit-undo"))) == KMessageBox::Yes) {
         d->apply();
     }
     if (element != d->element) {
@@ -260,3 +260,8 @@ void ElementForm::autoApplyToggled(bool isChecked)
     configGroup.writeEntry(ElementFormPrivate::configKeyAutoApply, d->checkBoxAutoApply->isChecked());
     configGroup.sync();
 }
+
+
+
+
+

@@ -26,7 +26,6 @@
 #include <QTreeView>
 #include <QAbstractItemModel>
 #include <QSortFilterProxyModel>
-#include <QMessageBox>
 #include <QHeaderView>
 #include <QPushButton>
 #include <QIcon>
@@ -37,6 +36,7 @@
 #include <KConfigGroup>
 #include <KSharedConfig>
 #include <KLocalizedString>
+#include <KMessageBox>
 
 #include "kbibtexnamespace.h"
 #include "partwidget.h"
@@ -249,9 +249,9 @@ void MDIWidget::setFile(OpenFileInfo *openFileInfo, KService::Ptr servicePtr)
         d->ofim->close(openFileInfo); // FIXME does not close correctly if file is new
         const QString filename = openFileInfo->url().fileName();
         if (filename.isEmpty())
-            QMessageBox::warning(this, i18n("No Part Available"), i18n("No part available for file of mime type '%1'.", openFileInfo->mimeType()));
+            KMessageBox::error(this, i18n("No part available for file of mime type '%1'.", openFileInfo->mimeType()), i18n("No Part Available"));
         else
-            QMessageBox::warning(this, i18n("No Part Available"), i18n("No part available for file '%1'.", filename));
+            KMessageBox::error(this, i18n("No part available for file '%1'.", filename), i18n("No Part Available"));
         return;
     }
 
@@ -323,3 +323,8 @@ void MDIWidget::slotOpenLRU(const QModelIndex &index)
     if (url.isValid())
         emit documentOpenURL(url);
 }
+
+
+
+
+

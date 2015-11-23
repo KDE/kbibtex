@@ -22,9 +22,9 @@
 #include <QApplication>
 #include <QBuffer>
 #include <QTextStream>
-#include <QMessageBox>
 
 #include <KLocalizedString>
+#include <KMessageBox>
 
 #include "fileexporterbibtexoutput.h"
 #include "file.h"
@@ -82,8 +82,7 @@ CheckBibTeX::CheckBibTeXResult CheckBibTeX::checkBibTeX(QSharedPointer<Entry> &e
 
     if (!exporterResult) {
         QApplication::restoreOverrideCursor();
-        // FIXME
-        QMessageBox::warning(parent, i18n("Running BibTeX failed."), i18n("Running BibTeX failed.\n\nSee the following output to trace the error: %1", bibtexOuput.join(QLatin1String("\n"))));
+        KMessageBox::errorList(parent, i18n("Running BibTeX failed.\n\nSee the following output to trace the error:"), bibtexOuput, i18n("Running BibTeX failed."));
         return FailedToCheck;
     }
 
@@ -143,12 +142,17 @@ CheckBibTeX::CheckBibTeXResult CheckBibTeX::checkBibTeX(QSharedPointer<Entry> &e
     QApplication::restoreOverrideCursor();
     if (!errorPlainText.isEmpty()) {
         result = BibTeXWarning;
-        QMessageBox::information(parent, i18n("Errors found"), i18n("<qt><p>The following error was found:</p><pre>%1</pre></qt>", errorPlainText));
+        KMessageBox::information(parent, i18n("<qt><p>The following error was found:</p><pre>%1</pre></qt>", errorPlainText), i18n("Errors found"));
     } else if (!warnings.isEmpty()) {
-        QMessageBox::information(parent, i18n("Warnings found"), i18n("<qt><p>The following warnings were found:</p><ul><li>%1</li></ul></qt>", warnings.join("</li><li>")));
+        KMessageBox::informationList(parent, i18n("The following warnings were found:"), warnings, i18n("Warnings found"));
         result = BibTeXError;
     } else
-        QMessageBox::information(parent, i18n("No Errors or Warnings"), i18n("No warnings or errors were found.%1", crossRefStr.isEmpty() ? QString() : i18n("\n\nSome fields missing in this entry were taken from the crossref'ed entry '%1'.", crossRefStr)));
+        KMessageBox::information(parent, i18n("No warnings or errors were found.%1", crossRefStr.isEmpty() ? QString() : i18n("\n\nSome fields missing in this entry were taken from the crossref'ed entry '%1'.", crossRefStr)), i18n("No Errors or Warnings"));
 
     return result;
 }
+
+
+
+
+
