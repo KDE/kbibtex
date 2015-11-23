@@ -49,7 +49,7 @@ class DocumentListModel : public QAbstractListModel
     Q_OBJECT
 
 public:
-    DocumentListModel(OpenFileInfo::StatusFlag statusFlag, QObject *parent = NULL);
+    explicit DocumentListModel(OpenFileInfo::StatusFlag statusFlag, QObject *parent = NULL);
     ~DocumentListModel();
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
@@ -112,3 +112,5 @@ static const int FavoritesItemType = QListWidgetItem::UserType + 24;
 
 
 #endif // KBIBTEX_PROGRAM_DOCUMENTLIST_H
+
+

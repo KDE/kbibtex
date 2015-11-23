@@ -37,10 +37,10 @@
 #include <QMimeType>
 #include <QIcon>
 #ifdef HAVE_WEBENGINEWIDGETS
-#include <QtWebEngineWidgets/QtWebEngineWidgets>
+#include <QWebEngineView>
 #else // HAVE_WEBENGINEWIDGETS
 #ifdef HAVE_WEBKITWIDGETS
-#include <QtWebKitWidgets/QtWebKitWidgets>
+#include <QWebView>
 #endif // HAVE_WEBKITWIDGETS
 #endif // HAVE_WEBENGINEWIDGETS
 
@@ -697,3 +697,5 @@ void DocumentPreview::linkActivated(const QString &link)
         }
     }
 }
+
+

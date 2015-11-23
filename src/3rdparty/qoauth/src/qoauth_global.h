@@ -28,7 +28,7 @@
 #ifndef QOAUTH_GLOBAL_H
 #define QOAUTH_GLOBAL_H
 
-#include <QtCore/qglobal.h>
+#include <QtGlobal>
 
 #if defined(QOAUTH)
 #   define QOAUTH_EXPORT Q_DECL_EXPORT
@@ -37,3 +37,5 @@
 #endif
 
 #endif // QOAUTH_GLOBAL_H
+
+

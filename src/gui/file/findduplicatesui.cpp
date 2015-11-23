@@ -27,7 +27,7 @@
 #include <QMouseEvent>
 #include <QKeyEvent>
 #include <QSplitter>
-#include <QtCore/QPointer>
+#include <QPointer>
 #include <QStandardPaths>
 #include <QPushButton>
 #include <QAction>
@@ -714,3 +714,5 @@ void FindDuplicatesUI::slotFindDuplicates()
 
     delete file;
 }
+
+

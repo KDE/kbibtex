@@ -25,8 +25,8 @@
   include it in your application. Instead please use <tt>\#include &lt;QtOAuth&gt;</tt>.
 */
 
-#ifndef QOAUTH_P_H
-#define QOAUTH_P_H
+#ifndef INTERFACE_P_H
+#define INTERFACE_P_H
 
 #include "interface.h"
 #include <QPointer>
@@ -124,3 +124,4 @@ public:
 } // namespace QOAuth
 
 #endif // INTERFACE_P_H
+

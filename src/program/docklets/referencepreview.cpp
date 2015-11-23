@@ -23,7 +23,6 @@
 
 #include <QFrame>
 #include <QBuffer>
-#include <QTextEdit>
 #include <QTextDocument>
 #include <QLayout>
 #include <QApplication>
@@ -44,6 +43,7 @@
 #include <KJobWidgets>
 #include <KSharedConfig>
 #include <KConfigGroup>
+#include <KTextEdit>
 
 #include "fileexporterbibtex.h"
 #include "fileexporterbibtex2html.h"
@@ -92,7 +92,7 @@ public:
     QString htmlText;
     QUrl baseUrl;
     QTextDocument *htmlDocument;
-    QTextEdit *htmlView;
+    KTextEdit *htmlView;
     KComboBox *comboBox;
     QSharedPointer<const Element> element;
     const File *file;
@@ -107,7 +107,7 @@ public:
           configKeyName(QLatin1String("Style")), file(NULL), fileView(NULL),
           textColor(QApplication::palette().text().color()),
           defaultFontSize(QFontDatabase::systemFont(QFontDatabase::GeneralFont).pointSize()),
-          htmlStart("<html>\n<head>\n<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" />\n<style type=\"text/css\">\npre {\n white-space: pre-wrap;\n white-space: -moz-pre-wrap;\n white-space: -pre-wrap;\n white-space: -o-pre-wrap;\n word-wrap: break-word;\n}\n</style>\n</head>\n<body style=\"color: " + textColor.name() + "; font-size: " + QString::number(defaultFontSize) + "pt; font-family: '" + QFontDatabase::systemFont(QFontDatabase::GeneralFont).family() + "';\">"),
+          htmlStart("<html>\n<head>\n<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" />\n<style type=\"text/css\">\npre {\n white-space: pre-wrap;\n white-space: -moz-pre-wrap;\n white-space: -pre-wrap;\n white-space: -o-pre-wrap;\n word-wrap: break-word;\n}\n</style>\n</head>\n<body style=\"color: " + textColor.name() + "; font-size: " + QString::number(defaultFontSize) + "pt; font-family: '" + QFontDatabase::systemFont(QFontDatabase::GeneralFont).family() + "'; background-color: '" + QApplication::palette().base().color().name(QColor::HexRgb) + "'\">"),
           notAvailableMessage(htmlStart + "<p style=\"font-style: italic;\">" + i18n("No preview available") + "</p><p style=\"font-size: 90%;\">" + i18n("Reason:") + " %1</p></body></html>") {
         QGridLayout *gridLayout = new QGridLayout(p);
         gridLayout->setMargin(0);
@@ -125,7 +125,7 @@ public:
 
         QVBoxLayout *layout = new QVBoxLayout(frame);
         layout->setMargin(0);
-        htmlView = new QTextEdit(frame);
+        htmlView = new KTextEdit(frame);
         htmlView->setReadOnly(true);
         htmlDocument = new QTextDocument(htmlView);
         htmlView->setDocument(htmlDocument);
@@ -415,3 +415,4 @@ void ReferencePreview::setFileView(FileView *fileView)
 {
     d->fileView = fileView;
 }
+

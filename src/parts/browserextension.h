@@ -24,7 +24,7 @@ class BrowserExtension : public KParts::BrowserExtension
 {
     Q_OBJECT
 public:
-    BrowserExtension(KParts::ReadOnlyPart *);
+    explicit BrowserExtension(KParts::ReadOnlyPart *);
     ~BrowserExtension();
 
 private:
@@ -33,3 +33,5 @@ private:
 };
 
 #endif // KBIBTEX_PART_BROWSEREXTENSION_H
+
+

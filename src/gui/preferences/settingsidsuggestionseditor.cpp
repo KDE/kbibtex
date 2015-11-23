@@ -25,7 +25,7 @@
 #include <QCheckBox>
 #include <QSignalMapper>
 #include <QMenu>
-#include <QtCore/QPointer>
+#include <QPointer>
 #include <QPushButton>
 #include <QAction>
 #include <QDialogButtonBox>
@@ -693,3 +693,5 @@ QString IdSuggestionsEditDialog::editSuggestion(const Entry *previewEntry, const
     /// Return unmodified original suggestion
     return suggestion;
 }
+
+
