@@ -1054,4 +1054,3 @@ EncoderLaTeX *EncoderLaTeX::instance()
         self = new EncoderLaTeX();
     return self;
 }
-

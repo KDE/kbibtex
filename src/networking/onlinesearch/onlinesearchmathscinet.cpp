@@ -267,4 +267,3 @@ void OnlineSearchMathSciNet::sanitizeEntry(QSharedPointer<Entry> entry)
         entry->insert(Entry::ftJournal, v);
     }
 }
-

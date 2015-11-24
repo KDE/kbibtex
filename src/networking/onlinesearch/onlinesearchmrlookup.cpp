@@ -152,4 +152,3 @@ void OnlineSearchMRLookup::sanitizeEntry(QSharedPointer<Entry> entry)
         }
     }
 }
-
