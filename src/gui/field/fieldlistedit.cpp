@@ -108,7 +108,7 @@ public:
         layout->addWidget(pushButtonContainer);
 
         addLineButton = new QPushButton(QIcon::fromTheme("list-add"), i18n("Add"), pushButtonContainer);
-        addLineButton->setObjectName(QLatin1String("addButton"));
+        addLineButton->setObjectName(QStringLiteral("addButton"));
         connect(addLineButton, SIGNAL(clicked()), p, SLOT(lineAdd()));
         connect(addLineButton, SIGNAL(clicked()), p, SIGNAL(modified()));
         pushButtonContainerLayout->addWidget(addLineButton);
@@ -150,19 +150,19 @@ public:
         layout->insertWidget(layout->count() - 2, le);
         lineEditList.append(le);
 
-        QPushButton *remove = new QPushButton(QIcon::fromTheme("list-remove"), QLatin1String(""), le);
+        QPushButton *remove = new QPushButton(QIcon::fromTheme("list-remove"), QStringLiteral(""), le);
         remove->setToolTip(i18n("Remove value"));
         le->appendWidget(remove);
         connect(remove, SIGNAL(clicked()), smRemove, SLOT(map()));
         smRemove->setMapping(remove, le);
 
-        QPushButton *goDown = new QPushButton(QIcon::fromTheme("go-down"), QLatin1String(""), le);
+        QPushButton *goDown = new QPushButton(QIcon::fromTheme("go-down"), QStringLiteral(""), le);
         goDown->setToolTip(i18n("Move value down"));
         le->appendWidget(goDown);
         connect(goDown, SIGNAL(clicked()), smGoDown, SLOT(map()));
         smGoDown->setMapping(goDown, le);
 
-        QPushButton *goUp = new QPushButton(QIcon::fromTheme("go-up"), QLatin1String(""), le);
+        QPushButton *goUp = new QPushButton(QIcon::fromTheme("go-up"), QStringLiteral(""), le);
         goUp->setToolTip(i18n("Move value up"));
         le->appendWidget(goUp);
         connect(goUp, SIGNAL(clicked()), smGoUp, SLOT(map()));
@@ -322,12 +322,12 @@ void FieldListEdit::dropEvent(QDropEvent *event)
     if (clipboardText.isEmpty()) return;
 
     const File *file = NULL;
-    if (!d->fieldKey.isEmpty() && clipboardText.startsWith(QLatin1String("@"))) {
+    if (!d->fieldKey.isEmpty() && clipboardText.startsWith(QStringLiteral("@"))) {
         FileImporterBibTeX importer;
         file = importer.fromString(clipboardText);
         const QSharedPointer<Entry> entry = (file != NULL && file->count() == 1) ? file->first().dynamicCast<Entry>() : QSharedPointer<Entry>();
 
-        if (file != NULL && !entry.isNull() && d->fieldKey == QLatin1String("^external")) {
+        if (file != NULL && !entry.isNull() && d->fieldKey == QStringLiteral("^external")) {
             /// handle "external" list differently
             QList<QUrl> urlList = FileInfo::entryUrls(entry.data(), QUrl(file->property(File::Url).toUrl()), FileInfo::TestExistenceNo);
             Value v;
@@ -415,7 +415,7 @@ bool PersonListEdit::reset(const Value &value)
     m_checkBoxOthers->setCheckState(Qt::Unchecked);
     QSharedPointer<PlainText> pt;
     if (!internal.isEmpty() && !(pt = internal.last().dynamicCast<PlainText>()).isNull()) {
-        if (pt->text() == QLatin1String("others")) {
+        if (pt->text() == QStringLiteral("others")) {
             internal.erase(internal.end() - 1);
             m_checkBoxOthers->setCheckState(Qt::Checked);
         }
@@ -429,7 +429,7 @@ bool PersonListEdit::apply(Value &value) const
     bool result = FieldListEdit::apply(value);
 
     if (result && m_checkBoxOthers->checkState() == Qt::Checked)
-        value.append(QSharedPointer<PlainText>(new PlainText(QLatin1String("others"))));
+        value.append(QSharedPointer<PlainText>(new PlainText(QStringLiteral("others"))));
 
     return result;
 }
@@ -533,7 +533,7 @@ void UrlListEdit::slotSaveLocally(QWidget *widget)
         /// Build proposal to a local filename for remote file
         filename = bibFileinfo.isFile() ? bibFileinfo.absolutePath() + QDir::separator() + filename : filename;
         /// Ask user for actual local filename to save remote file to
-        filename = QFileDialog::getSaveFileName(this, i18n("Save file locally"), filename, QLatin1String("application/pdf application/postscript image/vnd.djvu"));
+        filename = QFileDialog::getSaveFileName(this, i18n("Save file locally"), filename, QStringLiteral("application/pdf application/postscript image/vnd.djvu"));
         /// Check if user entered a valid filename ...
         if (!filename.isEmpty()) {
             /// Ask user if reference to local file should be
@@ -587,9 +587,9 @@ void UrlListEdit::textChanged(QWidget *widget)
     /// Enable button only if Url is valid and points to a remote
     /// DjVu, PDF, or PostScript file
     // TODO more file types?
-    const bool canBeSaved = lowerText.contains(QLatin1String("://")) && (lowerText.endsWith(QLatin1String(".djvu")) || lowerText.endsWith(QLatin1String(".pdf")) || lowerText.endsWith(QLatin1String(".ps")));
+    const bool canBeSaved = lowerText.contains(QStringLiteral("://")) && (lowerText.endsWith(QStringLiteral(".djvu")) || lowerText.endsWith(QStringLiteral(".pdf")) || lowerText.endsWith(QStringLiteral(".ps")));
     buttonSaveLocally->setEnabled(canBeSaved);
-    buttonSaveLocally->setToolTip(canBeSaved ? i18n("Save file '%1' locally", newText) : QLatin1String(""));
+    buttonSaveLocally->setToolTip(canBeSaved ? i18n("Save file '%1' locally", newText) : QStringLiteral(""));
 }
 
 QString UrlListEdit::askRelativeOrStaticFilename(QWidget *parent, const QString &absoluteFilename, const QUrl &baseUrl)
@@ -599,7 +599,7 @@ QString UrlListEdit::askRelativeOrStaticFilename(QWidget *parent, const QString 
     if (!baseUrl.isEmpty() && (filenameInfo.absolutePath() == baseUrlInfo.absolutePath() || filenameInfo.absolutePath().startsWith(baseUrlInfo.absolutePath() + QDir::separator()))) {
         // TODO cover level-up cases like "../../test.pdf"
         const QString relativePath = filenameInfo.absolutePath().mid(baseUrlInfo.absolutePath().length() + 1);
-        const QString relativeFilename = relativePath + (relativePath.isEmpty() ? QLatin1String("") : QString(QDir::separator())) + filenameInfo.fileName();
+        const QString relativeFilename = relativePath + (relativePath.isEmpty() ? QStringLiteral("") : QString(QDir::separator())) + filenameInfo.fileName();
         if (KMessageBox::questionYesNo(parent, i18n("<qt><p>Use a filename relative to the bibliography file?</p><p>The relative path would be<br/><tt style=\"font-family: %3;\">%1</tt></p><p>The absolute path would be<br/><tt style=\"font-family: %3;\">%2</tt></p></qt>", relativeFilename, absoluteFilename, QFontDatabase::systemFont(QFontDatabase::FixedFont).family()), i18n("Relative Path"), KGuiItem(i18n("Relative Path")), KGuiItem(i18n("Absolute Path"))) == KMessageBox::Yes)
             return relativeFilename;
     }
@@ -611,7 +611,7 @@ bool UrlListEdit::urlIsLocal(const QUrl &url)
     // FIXME same function as in AssociateFiles; move to common code base?
     const QString scheme = url.scheme();
     /// Test various schemes such as "http", "https", "ftp", ...
-    return !scheme.startsWith(QLatin1String("http")) && !scheme.startsWith(QLatin1String("ftp")) && !scheme.startsWith(QLatin1String("sftp")) && !scheme.startsWith(QLatin1String("fish")) && !scheme.startsWith(QLatin1String("webdav")) && scheme != QLatin1String("smb");
+    return !scheme.startsWith(QStringLiteral("http")) && !scheme.startsWith(QStringLiteral("ftp")) && !scheme.startsWith(QStringLiteral("sftp")) && !scheme.startsWith(QStringLiteral("fish")) && !scheme.startsWith(QStringLiteral("webdav")) && scheme != QStringLiteral("smb");
 }
 
 FieldLineEdit *UrlListEdit::addFieldLineEdit()
@@ -620,7 +620,7 @@ FieldLineEdit *UrlListEdit::addFieldLineEdit()
     FieldLineEdit *fieldLineEdit = FieldListEdit::addFieldLineEdit();
 
     /// Create a new "save locally" button
-    QPushButton *buttonSaveLocally = new QPushButton(QIcon::fromTheme("document-save"), QLatin1String(""), fieldLineEdit);
+    QPushButton *buttonSaveLocally = new QPushButton(QIcon::fromTheme("document-save"), QStringLiteral(""), fieldLineEdit);
     buttonSaveLocally->setToolTip(i18n("Save file locally"));
     buttonSaveLocally->setEnabled(false);
     /// Append button to new FieldLineEdit
@@ -642,10 +642,10 @@ void UrlListEdit::setReadOnly(bool isReadOnly)
 }
 
 
-const QString KeywordListEdit::keyGlobalKeywordList = QLatin1String("globalKeywordList");
+const QString KeywordListEdit::keyGlobalKeywordList = QStringLiteral("globalKeywordList");
 
 KeywordListEdit::KeywordListEdit(QWidget *parent)
-        : FieldListEdit(KBibTeX::tfKeyword, KBibTeX::tfKeyword | KBibTeX::tfSource, parent), m_config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), m_configGroupName(QLatin1String("Global Keywords"))
+        : FieldListEdit(KBibTeX::tfKeyword, KBibTeX::tfKeyword | KBibTeX::tfSource, parent), m_config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), m_configGroupName(QStringLiteral("Global Keywords"))
 {
     m_buttonAddKeywordsFromList = new QPushButton(QIcon::fromTheme("list-add"), i18n("Add Keywords from List"), this);
     m_buttonAddKeywordsFromList->setToolTip(i18n("Add keywords as selected from a pre-defined list of keywords"));

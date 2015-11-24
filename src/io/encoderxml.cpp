@@ -36,7 +36,7 @@ charmappingdataxml[] = {
 };
 static const int charmappingdataxmlcount = sizeof(charmappingdataxml) / sizeof(charmappingdataxml[ 0 ]) ;
 
-static const QStringList backslashSymbols = QStringList() << QLatin1String("\\&") << QLatin1String("\\%") << QLatin1String("\\_");
+static const QStringList backslashSymbols = QStringList() << QStringLiteral("\\&") << QStringLiteral("\\%") << QStringLiteral("\\_");
 
 /**
  * Private class to store internal variables that should not be visible

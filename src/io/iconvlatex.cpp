@@ -36,7 +36,7 @@ public:
     IConvLaTeXPrivate(IConvLaTeX */* UNUSED parent*/, const QString &destEncoding)
     // : UNUSED p(parent)
     {
-        iconvHandle = iconv_open(destEncoding.toLatin1().data(), QLatin1String("utf-8").latin1());
+        iconvHandle = iconv_open(destEncoding.toLatin1().data(), "utf-8");
     }
 
     ~IConvLaTeXPrivate()
@@ -109,7 +109,7 @@ const QStringList IConvLaTeX::encodings()
         /* FIXME this list will contain encodings that are irreversible!
         QProcess iconvProgram;
         QStringList iconvProgramArgs = QStringList() << "--list";
-        iconvProgram.start(QLatin1String("iconv"), iconvProgramArgs);
+        iconvProgram.start(QStringLiteral("iconv"), iconvProgramArgs);
         iconvProgram.waitForStarted(10000);
         if (iconvProgram.state() == QProcess::Running) {
             iconvProgram.waitForReadyRead(10000);
@@ -130,17 +130,17 @@ const QStringList IConvLaTeX::encodings()
         int dosCodepages[] = {437, 720, 737, 775, 850, 852, 855, 857, 858, 860, 861, 862, 863, 864, 865, 866, 869, -1};
         int windowsCodepages[] = {1250, 1251, 1252, 1253, 1254, 1255, 1256, 1257, 1258, -1};
         for (int *cur = dosCodepages; *cur > 0; ++cur)
-            encodingList << QLatin1String("CP") + QString::number(*cur);
+            encodingList << QStringLiteral("CP") + QString::number(*cur);
         for (int *cur = windowsCodepages; *cur > 0; ++cur)
-            encodingList << QLatin1String("CP") + QString::number(*cur);
+            encodingList << QStringLiteral("CP") + QString::number(*cur);
         for (int i = 1; i <= 16; ++i)
-            encodingList << QLatin1String("ISO-8859-") + QString::number(i);
-        encodingList << QLatin1String("KOI8-R");
+            encodingList << QStringLiteral("ISO-8859-") + QString::number(i);
+        encodingList << QStringLiteral("KOI8-R");
         for (int i = 1; i <= 10; ++i)
-            encodingList << QLatin1String("Latin") + QString::number(i);
-        encodingList << QLatin1String("UTF-8");
+            encodingList << QStringLiteral("Latin") + QString::number(i);
+        encodingList << QStringLiteral("UTF-8");
         for (int *cur = windowsCodepages; *cur > 0; ++cur)
-            encodingList << QLatin1String("Windows-") + QString::number(*cur);
+            encodingList << QStringLiteral("Windows-") + QString::number(*cur);
     }
 
     return encodingList;

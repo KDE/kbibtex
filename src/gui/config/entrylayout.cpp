@@ -47,41 +47,41 @@ public:
 
     static QString convert(KBibTeX::FieldInputType fil) {
         switch (fil) {
-        case KBibTeX::SingleLine : return QLatin1String("SingleLine");
-        case KBibTeX::MultiLine : return QLatin1String("MultiLine");
-        case KBibTeX::List : return QLatin1String("List");
-        case KBibTeX::URL : return QLatin1String("URL");
-        case KBibTeX::Month : return QLatin1String("Month");
-        case KBibTeX::Color : return QLatin1String("Color");
-        case KBibTeX::PersonList : return QLatin1String("PersonList");
-        case KBibTeX::KeywordList : return QLatin1String("KeywordList");
-        case KBibTeX::CrossRef : return QLatin1String("CrossRef");
-        case KBibTeX::StarRating : return QLatin1String("StarRating");
-        case KBibTeX::UrlList : return QLatin1String("UrlList");
+        case KBibTeX::SingleLine : return QStringLiteral("SingleLine");
+        case KBibTeX::MultiLine : return QStringLiteral("MultiLine");
+        case KBibTeX::List : return QStringLiteral("List");
+        case KBibTeX::URL : return QStringLiteral("URL");
+        case KBibTeX::Month : return QStringLiteral("Month");
+        case KBibTeX::Color : return QStringLiteral("Color");
+        case KBibTeX::PersonList : return QStringLiteral("PersonList");
+        case KBibTeX::KeywordList : return QStringLiteral("KeywordList");
+        case KBibTeX::CrossRef : return QStringLiteral("CrossRef");
+        case KBibTeX::StarRating : return QStringLiteral("StarRating");
+        case KBibTeX::UrlList : return QStringLiteral("UrlList");
         }
         return QString();
     }
 
     static KBibTeX::FieldInputType convert(const QString &text) {
-        if (text == QLatin1String("List"))
+        if (text == QStringLiteral("List"))
             return KBibTeX::List;
-        else if (text == QLatin1String("MultiLine"))
+        else if (text == QStringLiteral("MultiLine"))
             return KBibTeX::MultiLine;
-        else if (text == QLatin1String("URL"))
+        else if (text == QStringLiteral("URL"))
             return KBibTeX::URL;
-        else if (text == QLatin1String("UrlList"))
+        else if (text == QStringLiteral("UrlList"))
             return KBibTeX::UrlList;
-        else if (text == QLatin1String("Month"))
+        else if (text == QStringLiteral("Month"))
             return KBibTeX::Month;
-        else if (text == QLatin1String("Color"))
+        else if (text == QStringLiteral("Color"))
             return KBibTeX::Color;
-        else if (text == QLatin1String("PersonList"))
+        else if (text == QStringLiteral("PersonList"))
             return KBibTeX::PersonList;
-        else if (text == QLatin1String("KeywordList"))
+        else if (text == QStringLiteral("KeywordList"))
             return KBibTeX::KeywordList;
-        else if (text == QLatin1String("CrossRef"))
+        else if (text == QStringLiteral("CrossRef"))
             return KBibTeX::CrossRef;
-        else if (text == QLatin1String("StarRating"))
+        else if (text == QStringLiteral("StarRating"))
             return KBibTeX::StarRating;
         else
             return KBibTeX::SingleLine;
@@ -112,7 +112,7 @@ void EntryLayout::load()
 {
     clear();
 
-    QString groupName = QLatin1String("EntryLayoutTab");
+    QString groupName = QStringLiteral("EntryLayoutTab");
     KConfigGroup configGroup(d->layoutConfig, groupName);
     int tabCount = qMin(configGroup.readEntry("count", 0), entryLayoutMaxTabCount);
 
@@ -166,7 +166,7 @@ void EntryLayout::save()
         configGroup.writeEntry("count", fieldCount);
     }
 
-    QString groupName = QLatin1String("EntryLayoutTab");
+    QString groupName = QStringLiteral("EntryLayoutTab");
     KConfigGroup configGroup(d->layoutConfig, groupName);
     configGroup.writeEntry("count", tabCount);
 
@@ -175,7 +175,7 @@ void EntryLayout::save()
 
 void EntryLayout::resetToDefaults()
 {
-    QString groupName = QLatin1String("EntryLayoutTab");
+    QString groupName = QStringLiteral("EntryLayoutTab");
     KConfigGroup configGroup(d->layoutConfig, groupName);
     configGroup.deleteGroup();
 

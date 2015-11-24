@@ -49,8 +49,8 @@ public:
     }
 };
 
-const QString OnlineSearchMathSciNet::OnlineSearchMathSciNetPrivate::queryFormUrl = QLatin1String("http://www.ams.org/mathscinet/");
-const QString OnlineSearchMathSciNet::OnlineSearchMathSciNetPrivate::queryUrlStem = QLatin1String("http://www.ams.org/mathscinet/search/publications.html?client=KBibTeX");
+const QString OnlineSearchMathSciNet::OnlineSearchMathSciNetPrivate::queryFormUrl = QStringLiteral("http://www.ams.org/mathscinet/");
+const QString OnlineSearchMathSciNet::OnlineSearchMathSciNetPrivate::queryUrlStem = QStringLiteral("http://www.ams.org/mathscinet/search/publications.html?client=KBibTeX");
 
 OnlineSearchMathSciNet::OnlineSearchMathSciNet(QWidget *parent)
         : OnlineSearchAbstract(parent), d(new OnlineSearchMathSciNetPrivate(this))
@@ -74,34 +74,34 @@ void OnlineSearchMathSciNet::startSearch(const QMap<QString, QString> &query, in
     const QString freeText = query[queryKeyFreeText];
     QStringList elements = splitRespectingQuotationMarks(freeText);
     foreach (const QString &element, elements) {
-        d->queryParameters.insert(QString(QLatin1String("pg%1")).arg(index), QLatin1String("ALLF"));
-        d->queryParameters.insert(QString(QLatin1String("s%1")).arg(index), element);
+        d->queryParameters.insert(QString(QStringLiteral("pg%1")).arg(index), QStringLiteral("ALLF"));
+        d->queryParameters.insert(QString(QStringLiteral("s%1")).arg(index), element);
         ++index;
     }
 
     const QString title = query[queryKeyTitle];
     elements = splitRespectingQuotationMarks(title);
     foreach (const QString &element, elements) {
-        d->queryParameters.insert(QString(QLatin1String("pg%1")).arg(index), QLatin1String("TI"));
-        d->queryParameters.insert(QString(QLatin1String("s%1")).arg(index), element);
+        d->queryParameters.insert(QString(QStringLiteral("pg%1")).arg(index), QStringLiteral("TI"));
+        d->queryParameters.insert(QString(QStringLiteral("s%1")).arg(index), element);
         ++index;
     }
 
     const QString authors = query[queryKeyAuthor];
     elements = splitRespectingQuotationMarks(authors);
     foreach (const QString &element, elements) {
-        d->queryParameters.insert(QString(QLatin1String("pg%1")).arg(index), QLatin1String("ICN"));
-        d->queryParameters.insert(QString(QLatin1String("s%1")).arg(index), element);
+        d->queryParameters.insert(QString(QStringLiteral("pg%1")).arg(index), QStringLiteral("ICN"));
+        d->queryParameters.insert(QString(QStringLiteral("s%1")).arg(index), element);
         ++index;
     }
 
     const QString year = query[queryKeyYear];
     if (year.isEmpty()) {
-        d->queryParameters.insert(QLatin1String("dr"), QLatin1String("all"));
+        d->queryParameters.insert(QStringLiteral("dr"), QStringLiteral("all"));
     } else {
-        d->queryParameters.insert(QLatin1String("dr"), QLatin1String("pubyear"));
-        d->queryParameters.insert(QLatin1String("yrop"), QLatin1String("eq"));
-        d->queryParameters.insert(QLatin1String("arg3"), year);
+        d->queryParameters.insert(QStringLiteral("dr"), QStringLiteral("pubyear"));
+        d->queryParameters.insert(QStringLiteral("yrop"), QStringLiteral("eq"));
+        d->queryParameters.insert(QStringLiteral("arg3"), year);
     }
 
     emit progress(0, 3);
@@ -127,7 +127,7 @@ QString OnlineSearchMathSciNet::label() const
 
 QString OnlineSearchMathSciNet::favIconUrl() const
 {
-    return QLatin1String("http://www.ams.org/favicon.ico");
+    return QStringLiteral("http://www.ams.org/favicon.ico");
 }
 
 OnlineSearchQueryFormAbstract *OnlineSearchMathSciNet::customWidget(QWidget *)
@@ -166,7 +166,7 @@ void OnlineSearchMathSciNet::doneFetchingQueryForm()
         for (QMap<QString, QString>::ConstIterator it = formParams.constBegin(); it != formParams.constEnd(); ++it)
             query.addQueryItem(it.key(), it.value());
         for (int i = 1; i <= d->queryParameters.count(); ++i)
-            query.addQueryItem(QString(QLatin1String("co%1")).arg(i), QLatin1String("AND")); ///< join search terms with an AND operation
+            query.addQueryItem(QString(QStringLiteral("co%1")).arg(i), QStringLiteral("AND")); ///< join search terms with an AND operation
         url.setQuery(query);
 
         /// issue request for result page
@@ -188,21 +188,21 @@ void OnlineSearchMathSciNet::doneFetchingResultPage()
         const QString htmlText = QString::fromUtf8(reply->readAll().data());
 
         /// extract form's parameters ...
-        QMap<QString, QString> formParams = formParameters(htmlText, QLatin1String("<form name=\"batchDownload\" action="));
+        QMap<QString, QString> formParams = formParameters(htmlText, QStringLiteral("<form name=\"batchDownload\" action="));
 
         /// build url by appending parameters
         QUrl url(d->queryUrlStem);
         QUrlQuery query(url);
-        QStringList copyParameters = QStringList() << QLatin1String("foo") << QLatin1String("reqargs") << QLatin1String("batch_title");
+        QStringList copyParameters = QStringList() << QStringLiteral("foo") << QStringLiteral("reqargs") << QStringLiteral("batch_title");
         foreach (const QString &param, copyParameters) {
             query.addQueryItem(param, formParams[param]);
         }
-        query.addQueryItem(QLatin1String("fmt"), QLatin1String("bibtex"));
+        query.addQueryItem(QStringLiteral("fmt"), QStringLiteral("bibtex"));
 
         int p = -1, count = 0;
-        static const QRegExp checkBoxRegExp(QLatin1String("<input class=\"hlCheckBox\" type=\"checkbox\" name=\"b\" value=\"(\\d+)\""));
+        static const QRegExp checkBoxRegExp(QStringLiteral("<input class=\"hlCheckBox\" type=\"checkbox\" name=\"b\" value=\"(\\d+)\""));
         while (count < d->numResults && (p = checkBoxRegExp.indexIn(htmlText, p + 1)) >= 0) {
-            query.addQueryItem(QLatin1String("b"), checkBoxRegExp.cap(1));
+            query.addQueryItem(QStringLiteral("b"), checkBoxRegExp.cap(1));
             ++count;
         }
 
@@ -234,7 +234,7 @@ void OnlineSearchMathSciNet::doneFetchingBibTeXcode()
 
         QString bibtexCode;
         int p1 = -1, p2 = -1;
-        while ((p1 = htmlCode.indexOf(QLatin1String("<pre>"), p2 + 1)) >= 0 && (p2 = htmlCode.indexOf(QLatin1String("</pre>"), p1 + 1)) >= 0) {
+        while ((p1 = htmlCode.indexOf(QStringLiteral("<pre>"), p2 + 1)) >= 0 && (p2 = htmlCode.indexOf(QStringLiteral("</pre>"), p1 + 1)) >= 0) {
             bibtexCode += htmlCode.mid(p1 + 5, p2 - p1 - 5) + QChar('\n');
         }
 
@@ -258,7 +258,7 @@ void OnlineSearchMathSciNet::doneFetchingBibTeXcode()
 
 void OnlineSearchMathSciNet::sanitizeEntry(QSharedPointer<Entry> entry)
 {
-    const QString ftFJournal = QLatin1String("fjournal");
+    const QString ftFJournal = QStringLiteral("fjournal");
     if (entry->contains(ftFJournal)) {
         Value v = entry->value(ftFJournal);
         entry->remove(Entry::ftJournal);

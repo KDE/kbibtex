@@ -63,21 +63,21 @@ void OnlineSearchSimpleBibTeXDownload::downloadDone()
         /// ensure proper treatment of UTF-8 characters
         QString bibTeXcode = QString::fromUtf8(reply->readAll().data());
 
-        if (bibTeXcode.contains(QLatin1String("<html")) || bibTeXcode.contains(QLatin1String("<HTML"))) {
+        if (bibTeXcode.contains(QStringLiteral("<html")) || bibTeXcode.contains(QStringLiteral("<HTML"))) {
             /// Replace all linebreak-like characters, in case they occur inside the BibTeX code
-            static const QRegExp htmlLinebreakRegExp(QLatin1String("<[/]?(br|p)[^>]*[/]?>"));
+            static const QRegExp htmlLinebreakRegExp(QStringLiteral("<[/]?(br|p)[^>]*[/]?>"));
             bibTeXcode = bibTeXcode.remove(htmlLinebreakRegExp);
 
             /// Find first BibTeX entry in HTML code, clip away all HTML code before that
-            static const QRegExp elementTypeRegExp(QLatin1String("[@]\\S+\\{"));
+            static const QRegExp elementTypeRegExp(QStringLiteral("[@]\\S+\\{"));
             int p1 = -1;
             /// hop over JavaScript's "@import" statements
-            while ((p1 = bibTeXcode.indexOf(elementTypeRegExp, p1 + 1)) >= 0 && elementTypeRegExp.cap(0) == QLatin1String("@import{"));
+            while ((p1 = bibTeXcode.indexOf(elementTypeRegExp, p1 + 1)) >= 0 && elementTypeRegExp.cap(0) == QStringLiteral("@import{"));
             if (p1 > 1)
                 bibTeXcode = bibTeXcode.mid(p1);
 
             /// Find HTML code after BibTeX code, clip that away, too
-            static const QRegExp htmlContinuationRegExp(QLatin1String("<[/]?\\S+"));
+            static const QRegExp htmlContinuationRegExp(QStringLiteral("<[/]?\\S+"));
             p1 = bibTeXcode.indexOf(htmlContinuationRegExp);
             if (p1 > 1)
                 bibTeXcode = bibTeXcode.left(p1 - 1);

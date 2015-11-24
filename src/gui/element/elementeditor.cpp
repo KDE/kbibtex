@@ -73,7 +73,7 @@ public:
     bool elementChanged, elementUnapplied;
 
     ElementEditorPrivate(bool scrollable, ElementEditor *parent)
-            : file(NULL), p(parent), previousWidget(NULL), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), elementChanged(false), elementUnapplied(false) {
+            : file(NULL), p(parent), previousWidget(NULL), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), elementChanged(false), elementUnapplied(false) {
         internalEntry = QSharedPointer<Entry>();
         internalMacro = QSharedPointer<Macro>();
         internalComment = QSharedPointer<Comment>();
@@ -140,9 +140,9 @@ public:
                 blacklistedFields << (*sflit).bibtexLabel;
 
         /// blacklist fields covered by FilesWidget
-        blacklistedFields << QString(Entry::ftUrl) << QString(Entry::ftLocalFile) << QString(Entry::ftDOI) << QLatin1String("ee") << QLatin1String("biburl") << QLatin1String("postscript");
+        blacklistedFields << QString(Entry::ftUrl) << QString(Entry::ftLocalFile) << QString(Entry::ftDOI) << QStringLiteral("ee") << QStringLiteral("biburl") << QStringLiteral("postscript");
         for (int i = 2; i < 256; ++i) // FIXME replace number by constant
-            blacklistedFields << QString(Entry::ftUrl) + QString::number(i) << QString(Entry::ftLocalFile) + QString::number(i) <<  QString(Entry::ftDOI) + QString::number(i) << QLatin1String("ee") + QString::number(i) << QLatin1String("postscript") + QString::number(i);
+            blacklistedFields << QString(Entry::ftUrl) + QString::number(i) << QString(Entry::ftLocalFile) + QString::number(i) <<  QString(Entry::ftDOI) + QString::number(i) << QStringLiteral("ee") + QString::number(i) << QStringLiteral("postscript") + QString::number(i);
 
         widget = new OtherFieldsWidget(blacklistedFields, tab);
         connect(widget, SIGNAL(modified(bool)), p, SLOT(childModified(bool)));
@@ -159,8 +159,8 @@ public:
 
     void createGUI(bool scrollable) {
         /// load configuration for options push button
-        static const QString configGroupName = QLatin1String("User Interface");
-        static const QString keyEnableAllWidgets = QLatin1String("EnableAllWidgets");
+        static const QString configGroupName = QStringLiteral("User Interface");
+        static const QString keyEnableAllWidgets = QStringLiteral("EnableAllWidgets");
         KConfigGroup configGroup(config, configGroupName);
         const bool showAll = configGroup.readEntry(keyEnableAllWidgets, true);
         const bool limitKeyboardTabStops = configGroup.readEntry(MenuLineEdit::keyLimitKeyboardTabStops, false);
@@ -360,8 +360,8 @@ public:
         }
 
         /// save configuration
-        static const QString configGroupName = QLatin1String("User Interface");
-        static const QString keyEnableAllWidgets = QLatin1String("EnableAllWidgets");
+        static const QString configGroupName = QStringLiteral("User Interface");
+        static const QString keyEnableAllWidgets = QStringLiteral("EnableAllWidgets");
         KConfigGroup configGroup(config, configGroupName);
         configGroup.writeEntry(keyEnableAllWidgets, actionForceShowAllWidgets->isChecked());
         config->sync();
@@ -369,7 +369,7 @@ public:
 
     void limitKeyboardTabStops() {
         /// save configuration
-        static const QString configGroupName = QLatin1String("User Interface");
+        static const QString configGroupName = QStringLiteral("User Interface");
         KConfigGroup configGroup(config, configGroupName);
         configGroup.writeEntry(MenuLineEdit::keyLimitKeyboardTabStops, actionLimitKeyboardTabStops->isChecked());
         config->sync();

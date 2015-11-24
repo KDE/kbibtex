@@ -54,7 +54,7 @@ public:
     static int keywordCounter;
 
     SettingsGlobalKeywordsWidgetPrivate(SettingsGlobalKeywordsWidget *parent)
-            : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName(QLatin1String("Global Keywords")) {
+            : p(parent), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), configGroupName(QStringLiteral("Global Keywords")) {
         setupGUI();
     }
 

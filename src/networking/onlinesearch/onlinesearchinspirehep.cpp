@@ -43,12 +43,12 @@ QUrl OnlineSearchInspireHep::homepage() const
 
 QString OnlineSearchInspireHep::favIconUrl() const
 {
-    return QLatin1String("http://inspirehep.net/favicon.ico");
+    return QStringLiteral("http://inspirehep.net/favicon.ico");
 }
 
 QUrl OnlineSearchInspireHep::buildQueryUrl(const QMap<QString, QString> &query, int numResults)
 {
-    static const QString typedSearch = QLatin1String("%1 %2"); ///< no quotation marks for search term?
+    static const QString typedSearch = QStringLiteral("%1 %2"); ///< no quotation marks for search term?
 
     /// append search terms
     QStringList queryFragments;
@@ -56,32 +56,32 @@ QUrl OnlineSearchInspireHep::buildQueryUrl(const QMap<QString, QString> &query, 
     /// add words from "free text" field
     QStringList freeTextWords = splitRespectingQuotationMarks(query[queryKeyFreeText]);
     for (QStringList::ConstIterator it = freeTextWords.constBegin(); it != freeTextWords.constEnd(); ++it)
-        queryFragments.append(typedSearch.arg(QLatin1String("ft")).arg(*it));
+        queryFragments.append(typedSearch.arg(QStringLiteral("ft")).arg(*it));
 
     /// add words from "year" field
     QStringList yearWords = splitRespectingQuotationMarks(query[queryKeyYear]);
     for (QStringList::ConstIterator it = yearWords.constBegin(); it != yearWords.constEnd(); ++it)
-        queryFragments.append(typedSearch.arg(QLatin1String("d")).arg(*it));
+        queryFragments.append(typedSearch.arg(QStringLiteral("d")).arg(*it));
 
     /// add words from "title" field
     QStringList titleWords = splitRespectingQuotationMarks(query[queryKeyTitle]);
     for (QStringList::ConstIterator it = titleWords.constBegin(); it != titleWords.constEnd(); ++it)
-        queryFragments.append(typedSearch.arg(QLatin1String("t")).arg(*it));
+        queryFragments.append(typedSearch.arg(QStringLiteral("t")).arg(*it));
 
     /// add words from "author" field
     QStringList authorWords = splitRespectingQuotationMarks(query[queryKeyAuthor]);
     for (QStringList::ConstIterator it = authorWords.constBegin(); it != authorWords.constEnd(); ++it)
-        queryFragments.append(typedSearch.arg(QLatin1String("a")).arg(*it));
+        queryFragments.append(typedSearch.arg(QStringLiteral("a")).arg(*it));
 
     /// Build URL
-    QString urlText = QLatin1String("http://inspirehep.net/search?ln=en&ln=en&of=hx&action_search=Search&sf=&so=d&rm=&sc=0");
+    QString urlText = QStringLiteral("http://inspirehep.net/search?ln=en&ln=en&of=hx&action_search=Search&sf=&so=d&rm=&sc=0");
     /// Set number of expected results
-    urlText.append(QString(QLatin1String("&rg=%1")).arg(numResults));
+    urlText.append(QString(QStringLiteral("&rg=%1")).arg(numResults));
     /// Append actual query
-    urlText.append(QLatin1String("&p="));
-    urlText.append(queryFragments.join(QLatin1String(" and ")));
+    urlText.append(QStringLiteral("&p="));
+    urlText.append(queryFragments.join(QStringLiteral(" and ")));
     /// URL-encode text
-    urlText = urlText.replace(QLatin1Char(' '), QLatin1String("%20")).replace(QLatin1Char('"'), QLatin1String("%22"));
+    urlText = urlText.replace(QLatin1Char(' '), QStringLiteral("%20")).replace(QLatin1Char('"'), QStringLiteral("%22"));
 
     return QUrl(urlText);
 }

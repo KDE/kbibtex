@@ -40,8 +40,8 @@ private:
 
     void loadState() {
         KConfigGroup configGroup(config, configGroupName);
-        lineEditFreeText->setText(configGroup.readEntry(QLatin1String("freeText"), QString()));
-        numResultsField->setValue(configGroup.readEntry(QLatin1String("numResults"), 10));
+        lineEditFreeText->setText(configGroup.readEntry(QStringLiteral("freeText"), QString()));
+        numResultsField->setValue(configGroup.readEntry(QStringLiteral("numResults"), 10));
     }
 
 public:
@@ -49,7 +49,7 @@ public:
     QSpinBox *numResultsField;
 
     OnlineSearchQueryFormArXiv(QWidget *parent)
-            : OnlineSearchQueryFormAbstract(parent), configGroupName(QLatin1String("Search Engine arXiv.org")) {
+            : OnlineSearchQueryFormAbstract(parent), configGroupName(QStringLiteral("Search Engine arXiv.org")) {
         QGridLayout *layout = new QGridLayout(this);
         layout->setMargin(0);
 
@@ -81,13 +81,13 @@ public:
     }
 
     void copyFromEntry(const Entry &entry) {
-        lineEditFreeText->setText(authorLastNames(entry).join(QLatin1String(" ")) + QLatin1Char(' ') + PlainTextValue::text(entry[Entry::ftTitle]));
+        lineEditFreeText->setText(authorLastNames(entry).join(QStringLiteral(" ")) + QLatin1Char(' ') + PlainTextValue::text(entry[Entry::ftTitle]));
     }
 
     void saveState() {
         KConfigGroup configGroup(config, configGroupName);
-        configGroup.writeEntry(QLatin1String("freeText"), lineEditFreeText->text());
-        configGroup.writeEntry(QLatin1String("numResults"), numResultsField->value());
+        configGroup.writeEntry(QStringLiteral("freeText"), lineEditFreeText->text());
+        configGroup.writeEntry(QStringLiteral("numResults"), numResultsField->value());
         config->sync();
     }
 };
@@ -107,7 +107,7 @@ public:
             : p(parent), form(NULL), arXivQueryBaseUrl("http://export.arxiv.org/api/query?"),
           numSteps(0), curStep(0)
     {
-        const QString xsltFilename = QLatin1String("kbibtex/arxiv2bibtex.xsl");
+        const QString xsltFilename = QStringLiteral("kbibtex/arxiv2bibtex.xsl");
         xslt = XSLTransform::createXSLTransform(QStandardPaths::locate(QStandardPaths::GenericDataLocation, xsltFilename));
         if (xslt == NULL)
             qCWarning(LOG_KBIBTEX_NETWORKING) << "Could not create XSLT transformation for" << xsltFilename;
@@ -619,7 +619,7 @@ QString OnlineSearchArXiv::label() const
 
 QString OnlineSearchArXiv::favIconUrl() const
 {
-    return QLatin1String("http://arxiv.org/favicon.ico");
+    return QStringLiteral("http://arxiv.org/favicon.ico");
 }
 
 OnlineSearchQueryFormAbstract *OnlineSearchArXiv::customWidget(QWidget *parent)
@@ -649,7 +649,7 @@ void OnlineSearchArXiv::downloadDone()
         result = result.remove("xmlns=\"http://www.w3.org/2005/Atom\""); // FIXME fix arxiv2bibtex.xsl to handle namespace
 
         /// use XSL transformation to get BibTeX document from XML result
-        QString bibTeXcode = d->xslt->transform(result).remove(QLatin1String("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
+        QString bibTeXcode = d->xslt->transform(result).remove(QStringLiteral("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
 
         FileImporterBibTeX importer;
         File *bibtexFile = importer.fromString(bibTeXcode);

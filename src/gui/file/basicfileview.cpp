@@ -61,9 +61,9 @@ public:
 
     Private(const QString &n, BasicFileView *parent)
             : p(parent), storedColumnCount(BibTeXFields::self()->count()), name(n),
-          config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))),
-          configGroupName(QLatin1String("BibliographyView")),
-          configHeaderState(QLatin1String("HeaderState_%1")),
+          config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))),
+          configGroupName(QStringLiteral("BibliographyView")),
+          configHeaderState(QStringLiteral("HeaderState_%1")),
           fileModel(NULL), sortFilterProxyModel(NULL) {
         /// Allocate memory for headerProperty structure
         headerProperty = (struct HeaderProperty *)calloc(1, sizeof(struct HeaderProperty));
@@ -180,17 +180,17 @@ public:
         const BibTeXFields *bf = BibTeXFields::self();
         for (BibTeXFields::ConstIterator it = bf->constBegin(); it != bf->constEnd(); ++it) {
             const FieldDescription *fd = *it;
-            headerProperty->columns[col].isHidden = configGroup.readEntry(configHeaderState.arg(name).append(QString::number(col)).append(QLatin1String("IsHidden")), !fd->defaultVisible);
-            headerProperty->columns[col].width = configGroup.readEntry(configHeaderState.arg(name).append(QString::number(col)).append(QLatin1String("Width")), fd->defaultWidth);
-            headerProperty->columns[col].visualIndex = configGroup.readEntry(configHeaderState.arg(name).append(QString::number(col)).append(QLatin1String("VisualIndex")), col);
+            headerProperty->columns[col].isHidden = configGroup.readEntry(configHeaderState.arg(name).append(QString::number(col)).append(QStringLiteral("IsHidden")), !fd->defaultVisible);
+            headerProperty->columns[col].width = configGroup.readEntry(configHeaderState.arg(name).append(QString::number(col)).append(QStringLiteral("Width")), fd->defaultWidth);
+            headerProperty->columns[col].visualIndex = configGroup.readEntry(configHeaderState.arg(name).append(QString::number(col)).append(QStringLiteral("VisualIndex")), col);
             if (!headerProperty->columns[col].isHidden)
                 headerProperty->sumWidths += headerProperty->columns[col].width;
             ++col;
         }
         Q_ASSERT_X(headerProperty->sumWidths > 0, "BasicFileView::Private::loadHeaderProperties", "Sum of column widths over visible columns is zero.");
 
-        headerProperty->sortedColumn = configGroup.readEntry(configHeaderState.arg(name).append(QLatin1String("SortedColumn")), -1);
-        headerProperty->sortOrder = (Qt::SortOrder)configGroup.readEntry(configHeaderState.arg(name).append(QLatin1String("SortOrder")), (int)Qt::AscendingOrder);
+        headerProperty->sortedColumn = configGroup.readEntry(configHeaderState.arg(name).append(QStringLiteral("SortedColumn")), -1);
+        headerProperty->sortOrder = (Qt::SortOrder)configGroup.readEntry(configHeaderState.arg(name).append(QStringLiteral("SortOrder")), (int)Qt::AscendingOrder);
 
 
         Q_ASSERT(headerProperty->sumWidths > 0);
@@ -199,13 +199,13 @@ public:
     void saveHeaderProperties() {
         KConfigGroup configGroup(config, configGroupName);
         for (int col = 0; col < headerProperty->columnCount; ++col) {
-            configGroup.writeEntry(configHeaderState.arg(name).append(QString::number(col)).append(QLatin1String("IsHidden")), headerProperty->columns[col].isHidden);
-            configGroup.writeEntry(configHeaderState.arg(name).append(QString::number(col)).append(QLatin1String("Width")), headerProperty->columns[col].width);
-            configGroup.writeEntry(configHeaderState.arg(name).append(QString::number(col)).append(QLatin1String("VisualIndex")), headerProperty->columns[col].visualIndex);
+            configGroup.writeEntry(configHeaderState.arg(name).append(QString::number(col)).append(QStringLiteral("IsHidden")), headerProperty->columns[col].isHidden);
+            configGroup.writeEntry(configHeaderState.arg(name).append(QString::number(col)).append(QStringLiteral("Width")), headerProperty->columns[col].width);
+            configGroup.writeEntry(configHeaderState.arg(name).append(QString::number(col)).append(QStringLiteral("VisualIndex")), headerProperty->columns[col].visualIndex);
         }
 
-        configGroup.writeEntry(configHeaderState.arg(name).append(QLatin1String("SortedColumn")), headerProperty->sortedColumn);
-        configGroup.writeEntry(configHeaderState.arg(name).append(QLatin1String("SortOrder")), (int)headerProperty->sortOrder);
+        configGroup.writeEntry(configHeaderState.arg(name).append(QStringLiteral("SortedColumn")), headerProperty->sortedColumn);
+        configGroup.writeEntry(configHeaderState.arg(name).append(QStringLiteral("SortOrder")), (int)headerProperty->sortOrder);
 
         configGroup.sync();
     }
@@ -302,7 +302,7 @@ BasicFileView::BasicFileView(const QString &name, QWidget *parent)
 
     /// restore header appearance
     KConfigGroup configGroup(d->config, d->configGroupName);
-    if (configGroup.hasKey(d->configHeaderState.arg(name).append(QLatin1String("1VisualIndex")))) {
+    if (configGroup.hasKey(d->configHeaderState.arg(name).append(QStringLiteral("1VisualIndex")))) {
         d->loadHeaderProperties();
     } else {
         d->resetHeaderProperties();

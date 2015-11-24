@@ -65,7 +65,7 @@ public:
     const QString configGroupName, configGroupNameGeneral;
 
     FileExporterBibTeXPrivate(FileExporterBibTeX *parent)
-            : p(parent), keywordCasing(KBibTeX::cLowerCase), quoteComment(Preferences::qcNone), protectCasing(true), cancelFlag(false), iconvLaTeX(NULL), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName("FileExporterBibTeX"), configGroupNameGeneral("General") {
+            : p(parent), keywordCasing(KBibTeX::cLowerCase), quoteComment(Preferences::qcNone), protectCasing(true), cancelFlag(false), iconvLaTeX(NULL), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), configGroupName("FileExporterBibTeX"), configGroupNameGeneral("General") {
         // nothing
     }
 
@@ -180,7 +180,7 @@ public:
             addProtectiveCasing(text);
 
         iodevice->putChar('@');
-        iodevice->write(be->format(QLatin1String("String"), keywordCasing).toLatin1().data());
+        iodevice->write(be->format(QStringLiteral("String"), keywordCasing).toLatin1().data());
         iodevice->putChar('{');
         iodevice->write(iconvLaTeX->encode(macro.key()));
         iodevice->putChar(' ');
@@ -201,7 +201,7 @@ public:
 
         if (comment.useCommand() || quoteComment == Preferences::qcCommand) {
             iodevice->putChar('@');
-            iodevice->write(be->format(QLatin1String("Comment"), keywordCasing).toLatin1().data());
+            iodevice->write(be->format(QStringLiteral("Comment"), keywordCasing).toLatin1().data());
             iodevice->putChar('{');
             iodevice->write(iconvLaTeX->encode(text));
             iodevice->putChar('}');
@@ -233,7 +233,7 @@ public:
         const BibTeXEntries *be = BibTeXEntries::self();
 
         iodevice->putChar('@');
-        iodevice->write(be->format(QLatin1String("Preamble"), keywordCasing).toLatin1().data());
+        iodevice->write(be->format(QStringLiteral("Preamble"), keywordCasing).toLatin1().data());
         iodevice->putChar('{');
         /// Remember: strings from preamble do not get encoded,
         /// may contain raw LaTeX commands and code
@@ -267,9 +267,9 @@ public:
     }
 
     void applyEncoding(QString &encoding) {
-        encoding = encoding.isEmpty() ? QLatin1String("latex") : encoding.toLower();
+        encoding = encoding.isEmpty() ? QStringLiteral("latex") : encoding.toLower();
         delete iconvLaTeX;
-        iconvLaTeX = new IConvLaTeX(encoding == QLatin1String("latex") ? QLatin1String("us-ascii") : encoding);
+        iconvLaTeX = new IConvLaTeX(encoding == QStringLiteral("latex") ? QStringLiteral("us-ascii") : encoding);
     }
 
     bool requiresPersonQuoting(const QString &text, bool isLastName) {
@@ -331,8 +331,8 @@ bool FileExporterBibTeX::save(QIODevice *iodevice, const File *bibtexfile, QStri
     d->loadState();
     d->loadStateFromFile(bibtexfile);
 
-    if (d->encoding != QLatin1String("latex")) {
-        Comment encodingComment(QLatin1String("x-kbibtex-encoding=") + d->encoding, true);
+    if (d->encoding != QStringLiteral("latex")) {
+        Comment encodingComment(QStringLiteral("x-kbibtex-encoding=") + d->encoding, true);
         result &= d->writeComment(iodevice, encodingComment);
     }
 
@@ -379,7 +379,7 @@ bool FileExporterBibTeX::save(QIODevice *iodevice, const File *bibtexfile, QStri
             emit progress(++currentPos, totalElements);
         } else {
             QSharedPointer<const Comment> comment = element.dynamicCast<const Comment>();
-            if (!comment.isNull() && !comment->text().startsWith(QLatin1String("x-kbibtex-"))) {
+            if (!comment.isNull() && !comment->text().startsWith(QStringLiteral("x-kbibtex-"))) {
                 result &= d->writeComment(iodevice, *comment);
                 emit progress(++currentPos, totalElements);
             } else if (!allPreamblesAndMacrosProcessed) {
@@ -537,7 +537,7 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value &value, const QStr
                         if (key.toLower().startsWith(Entry::ftUrl) || key.toLower().startsWith(Entry::ftLocalFile) || key.toLower().startsWith(Entry::ftDOI))
                             /// Filenames and alike have be separated by a semicolon,
                             /// as a plain comma may be part of the filename or URL
-                            result.append(QLatin1String("; "));
+                            result.append(QStringLiteral("; "));
                         else
                             result.append(' ');
                     } else {

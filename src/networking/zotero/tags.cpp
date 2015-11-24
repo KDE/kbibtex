@@ -62,7 +62,7 @@ Tags::Tags(API *api, QObject *parent)
 {
     QUrl url = api->baseUrl();
     url = url.adjusted(QUrl::StripTrailingSlash);
-    url.setPath(url.path() + QLatin1String("/tags"));
+    url.setPath(url.path() + QStringLiteral("/tags"));
 
     if (api->inBackoffMode())
         QTimer::singleShot((d->api->backoffSecondsLeft() + 1) * 1000, [ = ]() {
@@ -106,28 +106,28 @@ void Tags::finishedFetchingTags()
         QXmlStreamReader xmlReader(reply);
         while (!xmlReader.atEnd() && !xmlReader.hasError()) {
             const QXmlStreamReader::TokenType tt = xmlReader.readNext();
-            if (tt == QXmlStreamReader::StartElement && xmlReader.name() == QLatin1String("entry")) {
+            if (tt == QXmlStreamReader::StartElement && xmlReader.name() == QStringLiteral("entry")) {
                 QString tag;
                 int count = -1;
                 while (!xmlReader.atEnd() && !xmlReader.hasError()) {
                     const QXmlStreamReader::TokenType tt = xmlReader.readNext();
-                    if (tt == QXmlStreamReader::StartElement && xmlReader.name() == QLatin1String("title"))
+                    if (tt == QXmlStreamReader::StartElement && xmlReader.name() == QStringLiteral("title"))
                         tag = xmlReader.readElementText(QXmlStreamReader::IncludeChildElements);
-                    else if (tt == QXmlStreamReader::StartElement && xmlReader.name() == QLatin1String("numItems")) {
+                    else if (tt == QXmlStreamReader::StartElement && xmlReader.name() == QStringLiteral("numItems")) {
                         bool ok = false;
                         count = xmlReader.readElementText(QXmlStreamReader::IncludeChildElements).toInt(&ok);
                         if (count < 1) count = -1;
-                    } else if (tt == QXmlStreamReader::EndElement && xmlReader.name() == QLatin1String("entry"))
+                    } else if (tt == QXmlStreamReader::EndElement && xmlReader.name() == QStringLiteral("entry"))
                         break;
                 }
 
                 if (!tag.isEmpty() && count > 0)
                     d->tags.insert(tag, count);
-            } else if (tt == QXmlStreamReader::StartElement && xmlReader.name() == QLatin1String("link")) {
+            } else if (tt == QXmlStreamReader::StartElement && xmlReader.name() == QStringLiteral("link")) {
                 const QXmlStreamAttributes attrs = xmlReader.attributes();
-                if (attrs.hasAttribute(QLatin1String("rel")) && attrs.hasAttribute(QLatin1String("href")) && attrs.value(QLatin1String("rel")) == QLatin1String("next"))
-                    nextPage = attrs.value(QLatin1String("href")).toString();
-            } else if (tt == QXmlStreamReader::EndElement && xmlReader.name() == QLatin1String("feed"))
+                if (attrs.hasAttribute(QStringLiteral("rel")) && attrs.hasAttribute(QStringLiteral("href")) && attrs.value(QStringLiteral("rel")) == QStringLiteral("next"))
+                    nextPage = attrs.value(QStringLiteral("href")).toString();
+            } else if (tt == QXmlStreamReader::EndElement && xmlReader.name() == QStringLiteral("feed"))
                 break;
         }
 

@@ -47,12 +47,12 @@ private:
 
     void loadState() {
         KConfigGroup configGroup(config, configGroupName);
-        lineEditFreeText->setText(configGroup.readEntry(QLatin1String("free"), QString()));
-        lineEditTitle->setText(configGroup.readEntry(QLatin1String("title"), QString()));
-        lineEditBookTitle->setText(configGroup.readEntry(QLatin1String("bookTitle"), QString()));
-        lineEditAuthorEditor->setText(configGroup.readEntry(QLatin1String("authorEditor"), QString()));
-        lineEditYear->setText(configGroup.readEntry(QLatin1String("year"), QString()));
-        numResultsField->setValue(configGroup.readEntry(QLatin1String("numResults"), 10));
+        lineEditFreeText->setText(configGroup.readEntry(QStringLiteral("free"), QString()));
+        lineEditTitle->setText(configGroup.readEntry(QStringLiteral("title"), QString()));
+        lineEditBookTitle->setText(configGroup.readEntry(QStringLiteral("bookTitle"), QString()));
+        lineEditAuthorEditor->setText(configGroup.readEntry(QStringLiteral("authorEditor"), QString()));
+        lineEditYear->setText(configGroup.readEntry(QStringLiteral("year"), QString()));
+        numResultsField->setValue(configGroup.readEntry(QStringLiteral("numResults"), 10));
     }
 
 public:
@@ -60,7 +60,7 @@ public:
     QSpinBox *numResultsField;
 
     OnlineSearchQueryFormSpringerLink(QWidget *parent)
-            : OnlineSearchQueryFormAbstract(parent), configGroupName(QLatin1String("Search Engine SpringerLink")) {
+            : OnlineSearchQueryFormAbstract(parent), configGroupName(QStringLiteral("Search Engine SpringerLink")) {
         QFormLayout *layout = new QFormLayout(this);
         layout->setMargin(0);
 
@@ -126,12 +126,12 @@ public:
 
     void saveState() {
         KConfigGroup configGroup(config, configGroupName);
-        configGroup.writeEntry(QLatin1String("free"), lineEditFreeText->text());
-        configGroup.writeEntry(QLatin1String("title"), lineEditTitle->text());
-        configGroup.writeEntry(QLatin1String("bookTitle"), lineEditBookTitle->text());
-        configGroup.writeEntry(QLatin1String("authorEditor"), lineEditAuthorEditor->text());
-        configGroup.writeEntry(QLatin1String("year"), lineEditYear->text());
-        configGroup.writeEntry(QLatin1String("numResults"), numResultsField->value());
+        configGroup.writeEntry(QStringLiteral("free"), lineEditFreeText->text());
+        configGroup.writeEntry(QStringLiteral("title"), lineEditTitle->text());
+        configGroup.writeEntry(QStringLiteral("bookTitle"), lineEditBookTitle->text());
+        configGroup.writeEntry(QStringLiteral("authorEditor"), lineEditAuthorEditor->text());
+        configGroup.writeEntry(QStringLiteral("year"), lineEditYear->text());
+        configGroup.writeEntry(QStringLiteral("numResults"), numResultsField->value());
         config->sync();
     }
 };
@@ -147,8 +147,8 @@ public:
     OnlineSearchQueryFormSpringerLink *form;
 
     OnlineSearchSpringerLinkPrivate(OnlineSearchSpringerLink *parent)
-            : p(parent), springerMetadataKey(QLatin1String("7pphfmtb9rtwt3dw3e4hm7av")), form(NULL) {
-        const QString xsltFilename = QLatin1String("kbibtex/pam2bibtex.xsl");
+            : p(parent), springerMetadataKey(QStringLiteral("7pphfmtb9rtwt3dw3e4hm7av")), form(NULL) {
+        const QString xsltFilename = QStringLiteral("kbibtex/pam2bibtex.xsl");
         xslt = XSLTransform::createXSLTransform(QStandardPaths::locate(QStandardPaths::GenericDataLocation, xsltFilename));
         if (xslt == NULL)
             qCWarning(LOG_KBIBTEX_NETWORKING) << "Could not create XSLT transformation for" << xsltFilename;
@@ -167,26 +167,26 @@ public:
 
         QStringList titleChunks = p->splitRespectingQuotationMarks(form->lineEditTitle->text());
         foreach (const QString &titleChunk, titleChunks) {
-            queryString += QString(QLatin1String(" title:%1")).arg(EncoderLaTeX::instance()->convertToPlainAscii(titleChunk));
+            queryString += QString(QStringLiteral(" title:%1")).arg(EncoderLaTeX::instance()->convertToPlainAscii(titleChunk));
         }
 
         titleChunks = p->splitRespectingQuotationMarks(form->lineEditBookTitle->text());
         foreach (const QString &titleChunk, titleChunks) {
-            queryString += QString(QLatin1String(" ( journal:%1 OR book:%1 )")).arg(EncoderLaTeX::instance()->convertToPlainAscii(titleChunk));
+            queryString += QString(QStringLiteral(" ( journal:%1 OR book:%1 )")).arg(EncoderLaTeX::instance()->convertToPlainAscii(titleChunk));
         }
 
         QStringList authors = p->splitRespectingQuotationMarks(form->lineEditAuthorEditor->text());
         foreach (const QString &author, authors) {
-            queryString += QString(QLatin1String(" name:%1")).arg(EncoderLaTeX::instance()->convertToPlainAscii(author));
+            queryString += QString(QStringLiteral(" name:%1")).arg(EncoderLaTeX::instance()->convertToPlainAscii(author));
         }
 
         const QString year = form->lineEditYear->text();
         if (!year.isEmpty())
-            queryString += QString(QLatin1String(" year:%1")).arg(year);
+            queryString += QString(QStringLiteral(" year:%1")).arg(year);
 
         queryString = queryString.simplified();
         QUrlQuery query(queryUrl);
-        query.addQueryItem(QLatin1String("q"), queryString);
+        query.addQueryItem(QStringLiteral("q"), queryString);
         queryUrl.setQuery(query);
 
         return queryUrl;
@@ -199,12 +199,12 @@ public:
 
         QStringList titleChunks = p->splitRespectingQuotationMarks(query[queryKeyTitle]);
         foreach (const QString &titleChunk, titleChunks) {
-            queryString += QString(QLatin1String(" title:%1")).arg(EncoderLaTeX::instance()->convertToPlainAscii(titleChunk));
+            queryString += QString(QStringLiteral(" title:%1")).arg(EncoderLaTeX::instance()->convertToPlainAscii(titleChunk));
         }
 
         QStringList authors = p->splitRespectingQuotationMarks(query[queryKeyAuthor]);
         foreach (const QString &author, authors) {
-            queryString += QString(QLatin1String(" name:%1")).arg(EncoderLaTeX::instance()->convertToPlainAscii(author));
+            queryString += QString(QStringLiteral(" name:%1")).arg(EncoderLaTeX::instance()->convertToPlainAscii(author));
         }
 
         QString year = query[queryKeyYear];
@@ -212,13 +212,13 @@ public:
             static const QRegExp yearRegExp("\\b(18|19|20)[0-9]{2}\\b");
             if (yearRegExp.indexIn(year) >= 0) {
                 year = yearRegExp.cap(0);
-                queryString += QString(QLatin1String(" year:%1")).arg(year);
+                queryString += QString(QStringLiteral(" year:%1")).arg(year);
             }
         }
 
         queryString = queryString.simplified();
         QUrlQuery q(queryUrl);
-        q.addQueryItem(QLatin1String("q"), queryString);
+        q.addQueryItem(QStringLiteral("q"), queryString);
         queryUrl.setQuery(q);
 
         return queryUrl;
@@ -272,7 +272,7 @@ void OnlineSearchSpringerLink::startSearch(const QMap<QString, QString> &query, 
 
     QUrl springerLinkSearchUrl = d->buildQueryUrl(query);
     QUrlQuery q(springerLinkSearchUrl);
-    q.addQueryItem(QLatin1String("p"), QString::number(numResults));
+    q.addQueryItem(QStringLiteral("p"), QString::number(numResults));
     springerLinkSearchUrl.setQuery(q);
 
     emit progress(0, 1);
@@ -289,7 +289,7 @@ QString OnlineSearchSpringerLink::label() const
 
 QString OnlineSearchSpringerLink::favIconUrl() const
 {
-    return QLatin1String("http://link.springer.com/static/0.6623/sites/link/images/favicon.ico");
+    return QStringLiteral("http://link.springer.com/static/0.6623/sites/link/images/favicon.ico");
 }
 
 OnlineSearchQueryFormAbstract *OnlineSearchSpringerLink::customWidget(QWidget *parent)
@@ -317,7 +317,7 @@ void OnlineSearchSpringerLink::doneFetchingPAM()
         const QString xmlSource = QString::fromUtf8(reply->readAll().data());
 
         QString bibTeXcode = d->xslt->transform(xmlSource);
-        bibTeXcode = bibTeXcode.replace(QLatin1String("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"), QString());
+        bibTeXcode = bibTeXcode.replace(QStringLiteral("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"), QString());
 
         FileImporterBibTeX importer;
         File *bibtexFile = importer.fromString(bibTeXcode);

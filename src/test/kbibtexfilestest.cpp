@@ -97,14 +97,14 @@ void KBibTeXFilesTest::testFiles_data()
 {
     QTest::addColumn<TestFile>("testFile");
 
-    QTest::newRow("bug19489.bib") << createTestFile(QLatin1String("bib/bug19489.bib"), 1, 1, QLatin1String("bart:04:1242"), QLatin1String("Ralph"), QLatin1String("a926264c17545bf6eb9a953a8e3f0970"), QLatin1String("544dc57e2a9908cfb35f35152462ac2e"));
-    QTest::newRow("names-with-braces.bib") << createTestFile(QLatin1String("bib/names-with-braces.bib"), 1, 1, QLatin1String("names1"), QLatin1String("{{{{{LastName3A LastName3B}}}}}"), QLatin1String("c4a6575e606ac513b79d1b8e18bca02e"), QLatin1String("d41d8cd98f00b204e9800998ecf8427e"));
-    QTest::newRow("duplicates.bib") << createTestFile(QLatin1String("bib/duplicates.bib"), 23, 23, QLatin1String("books/aw/Sedgewick88"), QLatin1String("Sedgewick"), QLatin1String("f743ccb08afda3514a7122710e6590ba"), QLatin1String("9ffb791547bcd10b459dec2d0022314c"));
-    QTest::newRow("minix.bib") << createTestFile(QLatin1String("bib/minix.bib"), 163, 123, QLatin1String("Jesshope:2006:ACS"), QLatin1String("Egan"), QLatin1String("c45e76eb809ba4c811f40452215bce04"), QLatin1String("4e64d5806c9be0cf2d77a152157d044c"));
-    QTest::newRow("bug19484-refs.bib") << createTestFile(QLatin1String("bib/bug19484-refs.bib"), 641, 641, QLatin1String("Bagnara-etal-2002"), QLatin1String("Hill"), QLatin1String("a6737870e88b13fd2a6dff00b583cc5b"), QLatin1String("71a66fb634275a6f46e5e0828fbceb83"));
-    QTest::newRow("bug19362-file15701-database.bib") << createTestFile(QLatin1String("bib/bug19362-file15701-database.bib"), 911, 911, QLatin1String("New1"), QLatin1String("Sunder"), QLatin1String("eb93fa136f4b114c3a6fc4a821b4117c"), QLatin1String("0ac293b3abbfa56867e5514d8bb68614"));
-    QTest::newRow("digiplay.bib") << createTestFile(QLatin1String("bib/digiplay.bib"), 3074, 3074, QLatin1String("1180"), QLatin1String("Huizinga"), QLatin1String("2daf695fccb01f4b4cfbe967db62b0a8"), QLatin1String("5d5bf8178652107ab160bc697b5b008f"));
-    QTest::newRow("backslash.bib") << createTestFile(QLatin1String("bib/backslash.bib"), 1, 1, QLatin1String("backslash-test"), QLatin1String("Doe"), QLatin1String("4f2ab90ecfa9e5e62cdfb4e55cbb0e05"), QLatin1String("f9f35d6b95b0676751bc613d1d60aa6b"));
+    QTest::newRow("bug19489.bib") << createTestFile(QStringLiteral("bib/bug19489.bib"), 1, 1, QStringLiteral("bart:04:1242"), QStringLiteral("Ralph"), QStringLiteral("a926264c17545bf6eb9a953a8e3f0970"), QStringLiteral("544dc57e2a9908cfb35f35152462ac2e"));
+    QTest::newRow("names-with-braces.bib") << createTestFile(QStringLiteral("bib/names-with-braces.bib"), 1, 1, QStringLiteral("names1"), QStringLiteral("{{{{{LastName3A LastName3B}}}}}"), QStringLiteral("c4a6575e606ac513b79d1b8e18bca02e"), QStringLiteral("d41d8cd98f00b204e9800998ecf8427e"));
+    QTest::newRow("duplicates.bib") << createTestFile(QStringLiteral("bib/duplicates.bib"), 23, 23, QStringLiteral("books/aw/Sedgewick88"), QStringLiteral("Sedgewick"), QStringLiteral("f743ccb08afda3514a7122710e6590ba"), QStringLiteral("9ffb791547bcd10b459dec2d0022314c"));
+    QTest::newRow("minix.bib") << createTestFile(QStringLiteral("bib/minix.bib"), 163, 123, QStringLiteral("Jesshope:2006:ACS"), QStringLiteral("Egan"), QStringLiteral("c45e76eb809ba4c811f40452215bce04"), QStringLiteral("4e64d5806c9be0cf2d77a152157d044c"));
+    QTest::newRow("bug19484-refs.bib") << createTestFile(QStringLiteral("bib/bug19484-refs.bib"), 641, 641, QStringLiteral("Bagnara-etal-2002"), QStringLiteral("Hill"), QStringLiteral("a6737870e88b13fd2a6dff00b583cc5b"), QStringLiteral("71a66fb634275a6f46e5e0828fbceb83"));
+    QTest::newRow("bug19362-file15701-database.bib") << createTestFile(QStringLiteral("bib/bug19362-file15701-database.bib"), 911, 911, QStringLiteral("New1"), QStringLiteral("Sunder"), QStringLiteral("eb93fa136f4b114c3a6fc4a821b4117c"), QStringLiteral("0ac293b3abbfa56867e5514d8bb68614"));
+    QTest::newRow("digiplay.bib") << createTestFile(QStringLiteral("bib/digiplay.bib"), 3074, 3074, QStringLiteral("1180"), QStringLiteral("Huizinga"), QStringLiteral("2daf695fccb01f4b4cfbe967db62b0a8"), QStringLiteral("5d5bf8178652107ab160bc697b5b008f"));
+    QTest::newRow("backslash.bib") << createTestFile(QStringLiteral("bib/backslash.bib"), 1, 1, QStringLiteral("backslash-test"), QStringLiteral("Doe"), QStringLiteral("4f2ab90ecfa9e5e62cdfb4e55cbb0e05"), QStringLiteral("f9f35d6b95b0676751bc613d1d60aa6b"));
 }
 
 void KBibTeXFilesTest::testFiles()
@@ -139,7 +139,7 @@ void KBibTeXFilesTest::loadFile(const QString &absoluteFilename, const TestFile 
     *outFile = NULL;
 
     FileImporter *importer = NULL;
-    if (currentTestFile.filename.endsWith(QLatin1String(".bib"))) {
+    if (currentTestFile.filename.endsWith(QStringLiteral(".bib"))) {
         importer = new FileImporterBibTeX(false);
     } else {
         QFAIL(qPrintable(QString::fromLatin1("Don't know format of '%1'").arg(currentTestFile.filename)));
@@ -192,7 +192,7 @@ void KBibTeXFilesTest::loadFile(const QString &absoluteFilename, const TestFile 
             }
 
             for (int index = 1; index < 100; ++index) {
-                const QString field = index == 1 ? Entry::ftUrl : QString(QLatin1String("%1%2")).arg(Entry::ftUrl).arg(index);
+                const QString field = index == 1 ? Entry::ftUrl : QString(QStringLiteral("%1%2")).arg(Entry::ftUrl).arg(index);
                 Value v = entry->value(field);
                 foreach (const QSharedPointer<ValueItem> &vi, v) {
                     filesUrlsDoiList << PlainTextValue::text(vi);
@@ -200,7 +200,7 @@ void KBibTeXFilesTest::loadFile(const QString &absoluteFilename, const TestFile 
                 if (v.isEmpty() && index > 10) break;
             }
             for (int index = 1; index < 100; ++index) {
-                const QString field = index == 1 ? Entry::ftDOI : QString(QLatin1String("%1%2")).arg(Entry::ftDOI).arg(index);
+                const QString field = index == 1 ? Entry::ftDOI : QString(QStringLiteral("%1%2")).arg(Entry::ftDOI).arg(index);
                 Value v = entry->value(field);
                 foreach (const QSharedPointer<ValueItem> &vi, v) {
                     filesUrlsDoiList << PlainTextValue::text(vi);
@@ -208,7 +208,7 @@ void KBibTeXFilesTest::loadFile(const QString &absoluteFilename, const TestFile 
                 if (v.isEmpty() && index > 10) break;
             }
             for (int index = 1; index < 100; ++index) {
-                const QString field = index == 1 ? Entry::ftLocalFile : QString(QLatin1String("%1%2")).arg(Entry::ftLocalFile).arg(index);
+                const QString field = index == 1 ? Entry::ftLocalFile : QString(QStringLiteral("%1%2")).arg(Entry::ftLocalFile).arg(index);
                 Value v = entry->value(field);
                 foreach (const QSharedPointer<ValueItem> &vi, v) {
                     filesUrlsDoiList << PlainTextValue::text(vi);
@@ -244,9 +244,9 @@ void KBibTeXFilesTest::saveFile(File *file, const TestFile &currentTestFile, QSt
     *outFile = QString();
 
     FileExporter *exporter = NULL;
-    if (currentTestFile.filename.endsWith(QLatin1String(".bib"))) {
+    if (currentTestFile.filename.endsWith(QStringLiteral(".bib"))) {
         FileExporterBibTeX *bibTeXExporter = new FileExporterBibTeX();
-        bibTeXExporter->setEncoding(QLatin1String("utf-8"));
+        bibTeXExporter->setEncoding(QStringLiteral("utf-8"));
         exporter = bibTeXExporter;
     } else {
         QFAIL(qPrintable(QString::fromLatin1("Don't know format of '%1'").arg(currentTestFile.filename)));

@@ -59,7 +59,7 @@ public:
     ElementEditorDialog(QWidget *parent)
             : QDialog(parent), elementEditor(NULL) {
         /// restore window size
-        KSharedConfigPtr config(KSharedConfig::openConfig(QLatin1String("kbibtexrc")));
+        KSharedConfigPtr config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc")));
         configGroup = KConfigGroup(config, configGroupNameWindowSize);
         KWindowConfig::restoreWindowSize(windowHandle(), configGroup);
 
@@ -94,7 +94,7 @@ private:
     }
 };
 
-const QString ElementEditorDialog::configGroupNameWindowSize = QLatin1String("ElementEditorDialog");
+const QString ElementEditorDialog::configGroupNameWindowSize = QStringLiteral("ElementEditorDialog");
 
 FileView::FileView(const QString &name, QWidget *parent)
         : BasicFileView(name, parent), m_isReadOnly(false), m_current(QSharedPointer<Element>()), m_filterBar(NULL), m_lastEditorPage(NULL), m_elementEditorDialog(NULL), m_elementEditor(NULL), m_dbb(NULL)

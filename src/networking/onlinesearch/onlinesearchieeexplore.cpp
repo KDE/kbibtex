@@ -42,8 +42,8 @@ public:
     int numSteps, curStep;
 
     OnlineSearchIEEEXplorePrivate(OnlineSearchIEEEXplore *parent)
-            : p(parent), gatewayUrl(QLatin1String("http://ieeexplore.ieee.org/gateway/ipsSearch.jsp")), numSteps(0), curStep(0) {
-        const QString xsltFilename = QLatin1String("kbibtex/ieeexplore2bibtex.xsl");
+            : p(parent), gatewayUrl(QStringLiteral("http://ieeexplore.ieee.org/gateway/ipsSearch.jsp")), numSteps(0), curStep(0) {
+        const QString xsltFilename = QStringLiteral("kbibtex/ieeexplore2bibtex.xsl");
         xslt = XSLTransform::createXSLTransform(QStandardPaths::locate(QStandardPaths::GenericDataLocation, xsltFilename));
         if (xslt == NULL)
             qCWarning(LOG_KBIBTEX_NETWORKING) << "Could not create XSLT transformation for" << xsltFilename;
@@ -62,29 +62,29 @@ public:
         /// Free text
         QStringList freeTextFragments = p->splitRespectingQuotationMarks(query[queryKeyAuthor]);
         foreach (const QString &freeTextFragment, freeTextFragments) {
-            queryText << QString(QLatin1String("\"%1\"")).arg(freeTextFragment);
+            queryText << QString(QStringLiteral("\"%1\"")).arg(freeTextFragment);
         }
 
         /// Title
         if (!query[queryKeyTitle].isEmpty())
-            queryText << QString(QLatin1String("\"Document Title\":\"%1\"")).arg(query[queryKeyTitle]);
+            queryText << QString(QStringLiteral("\"Document Title\":\"%1\"")).arg(query[queryKeyTitle]);
 
         /// Author
         QStringList authors = p->splitRespectingQuotationMarks(query[queryKeyAuthor]);
         foreach (const QString &author, authors) {
-            queryText << QString(QLatin1String("Author:\"%1\"")).arg(author);
+            queryText << QString(QStringLiteral("Author:\"%1\"")).arg(author);
         }
 
         /// Year
         if (!query[queryKeyYear].isEmpty())
-            queryText << QString(QLatin1String("\"Publication Year\":\"%1\"")).arg(query[queryKeyYear]);
+            queryText << QString(QStringLiteral("\"Publication Year\":\"%1\"")).arg(query[queryKeyYear]);
 
         QUrlQuery q(queryUrl);
-        q.addQueryItem(QLatin1String("queryText"), queryText.join(QLatin1String(" AND ")));
-        q.addQueryItem(QLatin1String("sortfield"), QLatin1String("py"));
-        q.addQueryItem(QLatin1String("sortorder"), QLatin1String("desc"));
-        q.addQueryItem(QLatin1String("hc"), QString::number(numResults));
-        q.addQueryItem(QLatin1String("rs"), QLatin1String("1"));
+        q.addQueryItem(QStringLiteral("queryText"), queryText.join(QStringLiteral(" AND ")));
+        q.addQueryItem(QStringLiteral("sortfield"), QStringLiteral("py"));
+        q.addQueryItem(QStringLiteral("sortorder"), QStringLiteral("desc"));
+        q.addQueryItem(QStringLiteral("hc"), QString::number(numResults));
+        q.addQueryItem(QStringLiteral("rs"), QStringLiteral("1"));
         queryUrl.setQuery(q);
 
         return queryUrl;
@@ -185,7 +185,7 @@ QString OnlineSearchIEEEXplore::label() const
 
 QString OnlineSearchIEEEXplore::favIconUrl() const
 {
-    return QLatin1String("http://ieeexplore.ieee.org/favicon.ico");
+    return QStringLiteral("http://ieeexplore.ieee.org/favicon.ico");
 }
 
 OnlineSearchQueryFormAbstract *OnlineSearchIEEEXplore::customWidget(QWidget *)
@@ -209,7 +209,7 @@ void OnlineSearchIEEEXplore::sanitizeEntry(QSharedPointer<Entry> entry)
 
     /// XSL file cannot yet replace semicolon-separate author list
     /// by "and"-separated author list, so do it manually
-    const QString ftXAuthor = QLatin1String("x-author");
+    const QString ftXAuthor = QStringLiteral("x-author");
     if (!entry->contains(Entry::ftAuthor) && entry->contains(ftXAuthor)) {
         const Value xAuthorValue = entry->value(ftXAuthor);
         Value authorValue;

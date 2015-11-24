@@ -174,7 +174,7 @@ void PDFItemDelegate::updateItemWidgets(const QList<QWidget *> widgets, const QS
     QLabel *previewLabel = qobject_cast<QLabel *>(widgets[posLabelPreview]);
     if (previewLabel != NULL) {
         previewLabel->setText(index.data(TextualPreviewRole).toString());
-        previewLabel->setToolTip(QLatin1String("<qt>") + previewLabel->text() + QLatin1String("</qt>"));
+        previewLabel->setToolTip(QStringLiteral("<qt>") + previewLabel->text() + QStringLiteral("</qt>"));
         previewLabel->move(margin * 2 + KIconLoader::SizeMedium, margin * 2 + labelHeight);
         previewLabel->resize(labelWidth, labelHeight);
     }
@@ -303,7 +303,7 @@ QVariant PDFListModel::data(const QModelIndex &index, int role) const
         else if (role == Qt::DecorationRole) {
             /// make an educated guess on the icon, based on URL or path
             QString iconName = FileInfo::mimeTypeForUrl(m_resultList[index.row()].url).iconName();
-            iconName = iconName == QLatin1String("application-octet-stream") ? QLatin1String("application-pdf") : iconName;
+            iconName = iconName == QStringLiteral("application-octet-stream") ? QStringLiteral("application-pdf") : iconName;
             return QIcon::fromTheme(iconName).pixmap(KIconLoader::SizeMedium, KIconLoader::SizeMedium);
         } else
             return QVariant();
@@ -454,7 +454,7 @@ void FindPDFUI::apply(Entry &entry, const File &bibtexFile)
             }
         } else if (downloadMode == FindPDF::Download && !tempfileName.isEmpty()) {
             QUrl startUrl = bibtexFile.property(File::Url, QUrl()).toUrl();
-            const QString absoluteFilename = QFileDialog::getSaveFileName(this, i18n("Save URL '%1'", url.url(QUrl::PreferLocalFile)), startUrl.adjusted(QUrl::RemoveFilename | QUrl::StripTrailingSlash).path(), QLatin1String("application/pdf"));
+            const QString absoluteFilename = QFileDialog::getSaveFileName(this, i18n("Save URL '%1'", url.url(QUrl::PreferLocalFile)), startUrl.adjusted(QUrl::RemoveFilename | QUrl::StripTrailingSlash).path(), QStringLiteral("application/pdf"));
             if (!absoluteFilename.isEmpty()) {
                 const QString visibleFilename = UrlListEdit::askRelativeOrStaticFilename(this, absoluteFilename, startUrl);
 

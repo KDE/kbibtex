@@ -49,7 +49,7 @@ public:
 
     OnlineSearchAcmPortalPrivate(OnlineSearchAcmPortal */* UNUSED parent*/)
         : /* UNUSED p(parent),*/ numExpectedResults(0), numFoundResults(0),
-          acmPortalBaseUrl(QLatin1String("http://dl.acm.org/")), currentSearchPosition(0), curStep(0), numSteps(0) {
+          acmPortalBaseUrl(QStringLiteral("http://dl.acm.org/")), currentSearchPosition(0), curStep(0), numSteps(0) {
         // nothing
     }
 
@@ -65,10 +65,10 @@ public:
 
         /// ACM's BibTeX code does not properly use various commands.
         /// For example, ACM writes "Ke\ssler" instead of "Ke{\ss}ler"
-        static const QStringList inlineCommands = QStringList() << QLatin1String("ss");
+        static const QStringList inlineCommands = QStringList() << QStringLiteral("ss");
         for (QStringList::ConstIterator it = inlineCommands.constBegin(); it != inlineCommands.constEnd(); ++it) {
-            const QString cmd = QString(QLatin1String("\\%1")).arg(*it);
-            const QString wrappedCmd = QString(QLatin1String("{%1}")).arg(cmd);
+            const QString cmd = QString(QStringLiteral("\\%1")).arg(*it);
+            const QString wrappedCmd = QString(QStringLiteral("{%1}")).arg(cmd);
             code = code.replace(cmd, wrappedCmd);
         }
     }
@@ -121,7 +121,7 @@ QString OnlineSearchAcmPortal::label() const
 
 QString OnlineSearchAcmPortal::favIconUrl() const
 {
-    return QLatin1String("http://dl.acm.org/favicon.ico");
+    return QStringLiteral("http://dl.acm.org/favicon.ico");
 }
 
 OnlineSearchQueryFormAbstract *OnlineSearchAcmPortal::customWidget(QWidget *)
@@ -187,7 +187,7 @@ void OnlineSearchAcmPortal::doneFetchingSearchPage()
             d->currentSearchPosition += 20;
             QUrl url(reply->url());
             QUrlQuery query(url);
-            query.addQueryItem(QLatin1String("start"), QString::number(d->currentSearchPosition));
+            query.addQueryItem(QStringLiteral("start"), QString::number(d->currentSearchPosition));
             url.setQuery(query);
 
             QNetworkRequest request(url);

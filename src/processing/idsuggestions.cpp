@@ -34,7 +34,7 @@ private:
 public:
 
     IdSuggestionsPrivate(IdSuggestions *parent)
-            : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), group(config, IdSuggestions::configGroupName) {
+            : p(parent), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), group(config, IdSuggestions::configGroupName) {
         // nothing
     }
 
@@ -52,11 +52,11 @@ public:
     QString translateTitleToken(const Entry &entry, const struct IdSuggestionTokenInfo &tti, bool removeSmallWords) const {
         /// list of small words taken from OCLC:
         /// http://www.oclc.org/developer/develop/web-services/worldcat-search-api/bibliographic-resource.en.html
-        static const QStringList smallWords = i18nc("Small words that can be removed from titles when generating id suggestions; separated by pipe symbol", "a|als|am|an|are|as|at|auf|aus|be|but|by|das|dass|de|der|des|dich|dir|du|er|es|for|from|had|have|he|her|his|how|ihr|ihre|ihres|im|in|is|ist|it|kein|la|le|les|mein|mich|mir|mit|of|on|sein|sie|that|the|this|to|un|une|von|was|wer|which|wie|wird|with|yousie|that|the|this|to|un|une|von|was|wer|which|wie|wird|with|you").split(QLatin1String("|"), QString::SkipEmptyParts);
+        static const QStringList smallWords = i18nc("Small words that can be removed from titles when generating id suggestions; separated by pipe symbol", "a|als|am|an|are|as|at|auf|aus|be|but|by|das|dass|de|der|des|dich|dir|du|er|es|for|from|had|have|he|her|his|how|ihr|ihre|ihres|im|in|is|ist|it|kein|la|le|les|mein|mich|mir|mit|of|on|sein|sie|that|the|this|to|un|une|von|was|wer|which|wie|wird|with|yousie|that|the|this|to|un|une|von|was|wer|which|wie|wird|with|you").split(QStringLiteral("|"), QString::SkipEmptyParts);
 
         QString result;
         bool first = true;
-        static const QRegExp sequenceOfSpaces(QLatin1String("\\s+"));
+        static const QRegExp sequenceOfSpaces(QStringLiteral("\\s+"));
         const QStringList titleWords = PlainTextValue::text(entry.value(Entry::ftTitle)).split(sequenceOfSpaces, QString::SkipEmptyParts);
         int index = 0;
         for (QStringList::ConstIterator it = titleWords.begin(); it != titleWords.end(); ++it, ++index) {
@@ -107,14 +107,14 @@ public:
             /// Check if camel case is requests
             if (ati.caseChange == IdSuggestions::ccToCamelCase) {
                 /// Get components of the author's last name
-                const QStringList nameComponents = author.split(QLatin1String(" "), QString::SkipEmptyParts);
+                const QStringList nameComponents = author.split(QStringLiteral(" "), QString::SkipEmptyParts);
                 QStringList newNameComponents;
                 /// Camel-case each name component
                 foreach (const QString &nameComponent, nameComponents) {
                     newNameComponents.append(nameComponent[0].toUpper() + nameComponent.mid(1));
                 }
                 /// Re-assemble name from camel-cased components
-                author = newNameComponents.join(QLatin1String(" "));
+                author = newNameComponents.join(QStringLiteral(" "));
             }
             if (
                 (index >= ati.startWord && index <= ati.endWord) ///< check for requested author range
@@ -146,7 +146,7 @@ public:
     }
 
     QString translateJournalToken(const Entry &entry, const struct IdSuggestionTokenInfo &jti) const {
-        static const QRegExp sequenceOfSpaces(QLatin1String("\\s+"));
+        static const QRegExp sequenceOfSpaces(QStringLiteral("\\s+"));
         QString journalName = PlainTextValue::text(entry.value(Entry::ftJournal));
         journalName = JournalAbbreviations::self()->toShortName(journalName);
         QStringList journalWords = journalName.split(sequenceOfSpaces, QString::SkipEmptyParts);
@@ -244,11 +244,11 @@ public:
     }
 };
 
-const QString IdSuggestions::keyDefaultFormatString = QLatin1String("DefaultFormatString");
+const QString IdSuggestions::keyDefaultFormatString = QStringLiteral("DefaultFormatString");
 const QString IdSuggestions::defaultDefaultFormatString = QString();
-const QString IdSuggestions::keyFormatStringList = QLatin1String("FormatStringList");
-const QStringList IdSuggestions::defaultFormatStringList = QStringList() << QLatin1String("A") << QLatin1String("A2|y") << QLatin1String("A3|y") << QLatin1String("A4|y|\":|T5") << QLatin1String("al|\":|T") << QLatin1String("al|y") << QLatin1String("al|Y") << QLatin1String("Al\"-|\"-|y") << QLatin1String("Al\"+|Y") << QLatin1String("al|y|T") << QLatin1String("al|Y|T3") << QLatin1String("al|Y|T3l") << QLatin1String("a|\":|Y|\":|T1") << QLatin1String("a|y") << QLatin1String("A|\":|Y");
-const QString IdSuggestions::configGroupName = QLatin1String("IdSuggestions");
+const QString IdSuggestions::keyFormatStringList = QStringLiteral("FormatStringList");
+const QStringList IdSuggestions::defaultFormatStringList = QStringList() << QStringLiteral("A") << QStringLiteral("A2|y") << QStringLiteral("A3|y") << QStringLiteral("A4|y|\":|T5") << QStringLiteral("al|\":|T") << QStringLiteral("al|y") << QStringLiteral("al|Y") << QStringLiteral("Al\"-|\"-|y") << QStringLiteral("Al\"+|Y") << QStringLiteral("al|y|T") << QStringLiteral("al|Y|T3") << QStringLiteral("al|Y|T3l") << QStringLiteral("a|\":|Y|\":|T1") << QStringLiteral("a|y") << QStringLiteral("A|\":|Y");
+const QString IdSuggestions::configGroupName = QStringLiteral("IdSuggestions");
 
 IdSuggestions::IdSuggestions()
         : d(new IdSuggestionsPrivate(this))
@@ -264,7 +264,7 @@ IdSuggestions::~IdSuggestions()
 QString IdSuggestions::formatId(const Entry &entry, const QString &formatStr) const
 {
     QString id;
-    QStringList tokenList = formatStr.split(QLatin1String("|"), QString::SkipEmptyParts);
+    QStringList tokenList = formatStr.split(QStringLiteral("|"), QString::SkipEmptyParts);
     foreach (const QString &token, tokenList) {
         id.append(d->translateToken(entry, token));
     }
@@ -305,7 +305,7 @@ QStringList IdSuggestions::formatIdList(const Entry &entry) const
 QStringList IdSuggestions::formatStrToHuman(const QString &formatStr) const
 {
     QStringList result;
-    QStringList tokenList = formatStr.split(QLatin1String("|"), QString::SkipEmptyParts);
+    QStringList tokenList = formatStr.split(QStringLiteral("|"), QString::SkipEmptyParts);
     foreach (const QString &token, tokenList) {
         QString text;
         if (token[0] == 'a' || token[0] == 'A' || token[0] == 'z') {

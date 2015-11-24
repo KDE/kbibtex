@@ -38,7 +38,7 @@ public:
             : p(parent) {
         bibTeXFilename = QString(workingDir).append("/bibtex-to-html.bib");
         outputFilename = QString(workingDir).append("/bibtex-to-html.html");
-        bibStyle = QLatin1String("plain");
+        bibStyle = QStringLiteral("plain");
     }
 
     bool generateHTML(QIODevice *iodevice, QStringList *errorLog) {
@@ -47,7 +47,7 @@ public:
 
         /// bibtex2html automatically appends ".html" to output filenames
         QString outputFilenameNoEnding = outputFilename;
-        outputFilenameNoEnding.remove(QLatin1String(".html"));
+        outputFilenameNoEnding.remove(QStringLiteral(".html"));
 
         QStringList args;
         args << "-s" << bibStyle; /// BibTeX style (plain, alpha, ...)
@@ -69,9 +69,9 @@ public:
             return true;
 
         QTextStream ts(iodevice);
-        ts << QLatin1String("<div style=\"color: red; background: white;\">");
+        ts << QStringLiteral("<div style=\"color: red; background: white;\">");
         ts << i18n("The program <strong>bibtex2html</strong> is not available.");
-        ts << QLatin1String("</div>") << endl;
+        ts << QStringLiteral("</div>") << endl;
         ts.flush();
         return false;
     }
@@ -82,9 +82,9 @@ public:
             return true;
 
         QTextStream ts(iodevice);
-        ts << QLatin1String("<div style=\"color: red; background: white;\">");
+        ts << QStringLiteral("<div style=\"color: red; background: white;\">");
         ts << i18n("The BibTeX style <strong>%1</strong> is not available.", bibStyle);
-        ts << QLatin1String("</div>") << endl;
+        ts << QStringLiteral("</div>") << endl;
         ts.flush();
         return false;
     }
@@ -118,7 +118,7 @@ bool FileExporterBibTeX2HTML::save(QIODevice *iodevice, const File *bibtexfile, 
     QFile output(d->bibTeXFilename);
     if (output.open(QIODevice::WriteOnly)) {
         FileExporterBibTeX *bibtexExporter = new FileExporterBibTeX();
-        bibtexExporter->setEncoding(QLatin1String("latex"));
+        bibtexExporter->setEncoding(QStringLiteral("latex"));
         result = bibtexExporter->save(&output, bibtexfile, errorLog);
         output.close();
         delete bibtexExporter;
@@ -143,7 +143,7 @@ bool FileExporterBibTeX2HTML::save(QIODevice *iodevice, const QSharedPointer<con
     QFile output(d->bibTeXFilename);
     if (output.open(QIODevice::WriteOnly)) {
         FileExporterBibTeX *bibtexExporter = new FileExporterBibTeX();
-        bibtexExporter->setEncoding(QLatin1String("latex"));
+        bibtexExporter->setEncoding(QStringLiteral("latex"));
         result = bibtexExporter->save(&output, element, bibtexfile, errorLog);
         output.close();
         delete bibtexExporter;

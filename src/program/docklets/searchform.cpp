@@ -105,8 +105,8 @@ public:
     QMap<OnlineSearchQueryFormAbstract *, QScrollArea *> formToScrollArea;
 
     SearchFormPrivate(SearchResults *searchResults, SearchForm *parent)
-            : p(parent), whichEnginesLabel(NULL), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))),
-          configGroupName(QLatin1String("Search Engines Docklet")), sr(searchResults), searchButton(NULL), useEntryButton(NULL), currentEntry(NULL) {
+            : p(parent), whichEnginesLabel(NULL), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))),
+          configGroupName(QStringLiteral("Search Engines Docklet")), sr(searchResults), searchButton(NULL), useEntryButton(NULL), currentEntry(NULL) {
         createGUI();
     }
 

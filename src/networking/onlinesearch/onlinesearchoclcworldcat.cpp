@@ -45,7 +45,7 @@ public:
 
     Private(OnlineSearchOCLCWorldCat *parent)
             : p(parent), maxSteps(0), curStep(0) {
-        const QString xsltFilename = QLatin1String("kbibtex/worldcatdc2bibtex.xsl");
+        const QString xsltFilename = QStringLiteral("kbibtex/worldcatdc2bibtex.xsl");
         xslt = XSLTransform::createXSLTransform(QStandardPaths::locate(QStandardPaths::GenericDataLocation, xsltFilename));
         if (xslt == NULL)
             qCWarning(LOG_KBIBTEX_NETWORKING) << "Could not create XSLT transformation for" << xsltFilename;
@@ -63,19 +63,19 @@ public:
         /// instead, title, keyword, subject etc are searched OR-connected
         const QStringList freeTextWords = p->splitRespectingQuotationMarks(query[queryKeyFreeText]);
         for (QStringList::ConstIterator it = freeTextWords.constBegin(); it != freeTextWords.constEnd(); ++it) {
-            static const QString freeWorldTemplate = QLatin1String("(+srw.ti+all+\"%1\"+or+srw.kw+all+\"%1\"+or+srw.au+all+\"%1\"+or+srw.bn+all+\"%1\"+or+srw.su+all+\"%1\"+)");
+            static const QString freeWorldTemplate = QStringLiteral("(+srw.ti+all+\"%1\"+or+srw.kw+all+\"%1\"+or+srw.au+all+\"%1\"+or+srw.bn+all+\"%1\"+or+srw.su+all+\"%1\"+)");
             queryFragments.append(freeWorldTemplate.arg(*it));
         }
         /// Add words from "title" field
         const QStringList titleWords = p->splitRespectingQuotationMarks(query[queryKeyTitle]);
         for (QStringList::ConstIterator it = titleWords.constBegin(); it != titleWords.constEnd(); ++it) {
-            static const QString titleTemplate = QLatin1String("srw.ti+all+\"%1\"");
+            static const QString titleTemplate = QStringLiteral("srw.ti+all+\"%1\"");
             queryFragments.append(titleTemplate.arg(*it));
         }
         /// Add words from "author" field
         const QStringList authorWords = p->splitRespectingQuotationMarks(query[queryKeyAuthor]);
         for (QStringList::ConstIterator it = authorWords.constBegin(); it != authorWords.constEnd(); ++it) {
-            static const QString authorTemplate = QLatin1String("srw.au+all+\"%1\"");
+            static const QString authorTemplate = QStringLiteral("srw.au+all+\"%1\"");
             queryFragments.append(authorTemplate.arg(*it));
         }
 
@@ -91,17 +91,17 @@ public:
         /// Add words from "year" field
         const QStringList yearWords = p->splitRespectingQuotationMarks(query[queryKeyYear]);
         for (QStringList::ConstIterator it = yearWords.constBegin(); it != yearWords.constEnd(); ++it) {
-            static const QString yearTemplate = QLatin1String("srw.yr+any+\"%1\"");
+            static const QString yearTemplate = QStringLiteral("srw.yr+any+\"%1\"");
             queryFragments.append(yearTemplate.arg(*it));
         }
 
-        const QString queryString = queryFragments.join(QLatin1String("+and+"));
-        baseUrl = QUrl(QString(QLatin1String("http://www.worldcat.org/webservices/catalog/search/worldcat/sru?query=%1&recordSchema=%3&wskey=%2&maximumRecords=%4")).arg(queryString).arg(OnlineSearchOCLCWorldCat::Private::APIkey).arg(QLatin1String("info%3Asrw%2Fschema%2F1%2Fdc")).arg(OnlineSearchOCLCWorldCat::Private::countPerStep));
+        const QString queryString = queryFragments.join(QStringLiteral("+and+"));
+        baseUrl = QUrl(QString(QStringLiteral("http://www.worldcat.org/webservices/catalog/search/worldcat/sru?query=%1&recordSchema=%3&wskey=%2&maximumRecords=%4")).arg(queryString).arg(OnlineSearchOCLCWorldCat::Private::APIkey).arg(QStringLiteral("info%3Asrw%2Fschema%2F1%2Fdc")).arg(OnlineSearchOCLCWorldCat::Private::countPerStep));
     }
 };
 
 const int OnlineSearchOCLCWorldCat::Private::countPerStep = 11; /// pseudo-randomly chosen prime number between 10 and 20
-const QString OnlineSearchOCLCWorldCat::Private::APIkey = QLatin1String("Bt6h4KIHrfbSXEahwUzpFQD6SNjQZfQUG3W2LN9oNEB5tROFGeRiDVntycEEyBe0aH17sH4wrNlnVANH");
+const QString OnlineSearchOCLCWorldCat::Private::APIkey = QStringLiteral("Bt6h4KIHrfbSXEahwUzpFQD6SNjQZfQUG3W2LN9oNEB5tROFGeRiDVntycEEyBe0aH17sH4wrNlnVANH");
 
 OnlineSearchOCLCWorldCat::OnlineSearchOCLCWorldCat(QWidget *parent)
         : OnlineSearchAbstract(parent), d(new OnlineSearchOCLCWorldCat::Private(this)) {
@@ -154,7 +154,7 @@ OnlineSearchQueryFormAbstract *OnlineSearchOCLCWorldCat::customWidget(QWidget *)
 }
 
 QUrl OnlineSearchOCLCWorldCat::homepage() const {
-    return QUrl(QLatin1String("http://www.worldcat.org/"));
+    return QUrl(QStringLiteral("http://www.worldcat.org/"));
 }
 
 void OnlineSearchOCLCWorldCat::cancel() {
@@ -162,7 +162,7 @@ void OnlineSearchOCLCWorldCat::cancel() {
 }
 
 QString OnlineSearchOCLCWorldCat::favIconUrl() const {
-    return QLatin1String("http://www.worldcat.org/favicon.ico");
+    return QStringLiteral("http://www.worldcat.org/favicon.ico");
 }
 
 void OnlineSearchOCLCWorldCat::downloadDone() {
@@ -172,10 +172,10 @@ void OnlineSearchOCLCWorldCat::downloadDone() {
 
     if (handleErrors(reply)) {
         /// Ensure proper treatment of UTF-8 characters
-        const QString atomCode = QString::fromUtf8(reply->readAll().data()).remove(QLatin1String("xmlns=\"http://www.w3.org/2005/Atom\"")).remove(QLatin1String(" xmlns=\"http://www.loc.gov/zing/srw/\"")); // FIXME fix worldcatdc2bibtex.xsl to handle namespace
+        const QString atomCode = QString::fromUtf8(reply->readAll().data()).remove(QStringLiteral("xmlns=\"http://www.w3.org/2005/Atom\"")).remove(QStringLiteral(" xmlns=\"http://www.loc.gov/zing/srw/\"")); // FIXME fix worldcatdc2bibtex.xsl to handle namespace
 
         /// Use XSL transformation to get BibTeX document from XML result
-        const QString bibTeXcode = d->xslt->transform(atomCode).remove(QLatin1String("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
+        const QString bibTeXcode = d->xslt->transform(atomCode).remove(QStringLiteral("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
 
         FileImporterBibTeX importer;
         File *bibtexFile = importer.fromString(bibTeXcode);
@@ -194,8 +194,8 @@ void OnlineSearchOCLCWorldCat::downloadDone() {
             } else if (d->curStep < d->maxSteps) {
                 QUrl nextUrl = d->baseUrl;
                 QUrlQuery query(nextUrl);
-                query.addQueryItem(QLatin1String("start"), QString::number(d->curStep *
-                OnlineSearchOCLCWorldCat::Private::countPerStep + 1));
+                query.addQueryItem(QStringLiteral("start"), QString::number(d->curStep *
+                                   OnlineSearchOCLCWorldCat::Private::countPerStep + 1));
                 nextUrl.setQuery(query);
                 QNetworkRequest request(nextUrl);
                 QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request);

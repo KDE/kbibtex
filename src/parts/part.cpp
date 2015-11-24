@@ -118,10 +118,10 @@ private:
             return;
         else if (level == 1)
             /// Simply append '~' to the URL's filename
-            url.setPath(url.path() + QLatin1String("~"));
+            url.setPath(url.path() + QStringLiteral("~"));
         else
             /// Append '~' followed by a number to the filename
-            url.setPath(url.path() + QString(QLatin1String("~%1")).arg(level));
+            url.setPath(url.path() + QString(QStringLiteral("~%1")).arg(level));
     }
 
 public:
@@ -142,7 +142,7 @@ public:
     QFileSystemWatcher fileSystemWatcher;
 
     KBibTeXPartPrivate(QWidget *parentWidget, KBibTeXPart *parent)
-            : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), bibTeXFile(NULL), model(NULL), sortFilterProxyModel(NULL), signalMapperNewElement(new QSignalMapper(parent)), viewDocumentMenu(new QMenu(i18n("View Document"), parent->widget())), signalMapperViewDocument(new QSignalMapper(parent)), isSaveAsOperation(false), fileSystemWatcher(p) {
+            : p(parent), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), bibTeXFile(NULL), model(NULL), sortFilterProxyModel(NULL), signalMapperNewElement(new QSignalMapper(parent)), viewDocumentMenu(new QMenu(i18n("View Document"), parent->widget())), signalMapperViewDocument(new QSignalMapper(parent)), isSaveAsOperation(false), fileSystemWatcher(p) {
         connect(signalMapperViewDocument, SIGNAL(mapped(QObject*)), p, SLOT(elementViewDocumentMenu(QObject*)));
         connect(&fileSystemWatcher, SIGNAL(fileChanged(QString)), p, SLOT(fileExternallyChange(QString)));
 
@@ -204,24 +204,24 @@ public:
 
         /// Action to edit an element
         elementEditAction = new QAction(QIcon::fromTheme("document-edit"), i18n("Edit Element"), p);
-        p->actionCollection()->addAction(QLatin1String("element_edit"), elementEditAction);
+        p->actionCollection()->addAction(QStringLiteral("element_edit"), elementEditAction);
         p->actionCollection()->setDefaultShortcut(elementEditAction, Qt::CTRL + Qt::Key_E);
         connect(elementEditAction, SIGNAL(triggered()), partWidget->fileView(), SLOT(editCurrentElement()));
 
         /// Action to view the document associated to the current element
         elementViewDocumentAction = new QAction(QIcon::fromTheme("application-pdf"), i18n("View Document"), p);
-        p->actionCollection()->addAction(QLatin1String("element_viewdocument"), elementViewDocumentAction);
+        p->actionCollection()->addAction(QStringLiteral("element_viewdocument"), elementViewDocumentAction);
         p->actionCollection()->setDefaultShortcut(elementViewDocumentAction, Qt::CTRL + Qt::Key_D);
         connect(elementViewDocumentAction, SIGNAL(triggered()), p, SLOT(elementViewDocument()));
 
         /// Action to find a PDF matching the current element
         elementFindPDFAction = new QAction(QIcon::fromTheme("application-pdf"), i18n("Find PDF..."), p);
-        p->actionCollection()->addAction(QLatin1String("element_findpdf"), elementFindPDFAction);
+        p->actionCollection()->addAction(QStringLiteral("element_findpdf"), elementFindPDFAction);
         connect(elementFindPDFAction, SIGNAL(triggered()), p, SLOT(elementFindPDF()));
 
         /// Action to reformat the selected elements' ids
         entryApplyDefaultFormatString = new QAction(QIcon::fromTheme("favorites"), i18n("Format entry ids"), p);
-        p->actionCollection()->addAction(QLatin1String("entry_applydefaultformatstring"), entryApplyDefaultFormatString);
+        p->actionCollection()->addAction(QStringLiteral("entry_applydefaultformatstring"), entryApplyDefaultFormatString);
         connect(entryApplyDefaultFormatString, SIGNAL(triggered()), p, SLOT(applyDefaultFormatString()));
 
         /// Clipboard object, required for various copy&paste operations
@@ -234,7 +234,7 @@ public:
         /// Action to copy references, e.g. '\cite{fordfulkerson1959}'
         editCopyReferencesAction = new QAction(QIcon::fromTheme("edit-copy"), i18n("Copy References"), p);
         p->actionCollection()->setDefaultShortcut(editCopyReferencesAction, Qt::CTRL + Qt::SHIFT + Qt::Key_C);
-        p->actionCollection()->addAction(QLatin1String("edit_copy_references"), editCopyReferencesAction);
+        p->actionCollection()->addAction(QStringLiteral("edit_copy_references"), editCopyReferencesAction);
         connect(editCopyReferencesAction, SIGNAL(triggered()), clipboard, SLOT(copyReferences()));
 
         /// Action to paste BibTeX code
@@ -243,7 +243,7 @@ public:
         /// Action to delete selected rows/elements
         editDeleteAction = new QAction(QIcon::fromTheme("edit-table-delete-row"), i18n("Delete"), p);
         p->actionCollection()->setDefaultShortcut(editDeleteAction, Qt::Key_Delete);
-        p->actionCollection()->addAction(QLatin1String("edit_delete"), editDeleteAction);
+        p->actionCollection()->addAction(QStringLiteral("edit_delete"), editDeleteAction);
         connect(editDeleteAction, SIGNAL(triggered()), partWidget->fileView(), SLOT(selectionDelete()));
 
         /// Build context menu for central BibTeX file view
@@ -264,7 +264,7 @@ public:
         partWidget->fileView()->addAction(elementFindPDFAction);
         partWidget->fileView()->addAction(entryApplyDefaultFormatString);
         colorLabelContextMenu = new ColorLabelContextMenu(partWidget->fileView());
-        colorLabelContextMenuAction = p->actionCollection()->addAction(QLatin1String("entry_colorlabel"), colorLabelContextMenu->menuAction());
+        colorLabelContextMenuAction = p->actionCollection()->addAction(QStringLiteral("entry_colorlabel"), colorLabelContextMenu->menuAction());
 
         findDuplicatesUI = new FindDuplicatesUI(p, partWidget->fileView());
         lyx = new LyX(p, partWidget->fileView());
@@ -452,17 +452,17 @@ public:
 
     QUrl getSaveFilename(bool mustBeImportable = true) {
         QString startDir = p->url().isValid() ? p->url().path() : QString();
-        QString supportedMimeTypes = QLatin1String("text/x-bibtex text/x-bibtex-compiled application/xml text/x-research-info-systems");
+        QString supportedMimeTypes = QStringLiteral("text/x-bibtex text/x-bibtex-compiled application/xml text/x-research-info-systems");
         if (BibUtils::available())
-            supportedMimeTypes += QLatin1String(" application/x-isi-export-format application/x-endnote-refer");
-        if (!mustBeImportable && !QStandardPaths::findExecutable(QLatin1String("pdflatex")).isEmpty())
-            supportedMimeTypes += QLatin1String(" application/pdf");
-        if (!mustBeImportable && !QStandardPaths::findExecutable(QLatin1String("dvips")).isEmpty())
-            supportedMimeTypes += QLatin1String(" application/postscript");
+            supportedMimeTypes += QStringLiteral(" application/x-isi-export-format application/x-endnote-refer");
+        if (!mustBeImportable && !QStandardPaths::findExecutable(QStringLiteral("pdflatex")).isEmpty())
+            supportedMimeTypes += QStringLiteral(" application/pdf");
+        if (!mustBeImportable && !QStandardPaths::findExecutable(QStringLiteral("dvips")).isEmpty())
+            supportedMimeTypes += QStringLiteral(" application/postscript");
         if (!mustBeImportable)
-            supportedMimeTypes += QLatin1String(" text/html");
-        if (!mustBeImportable && !QStandardPaths::findExecutable(QLatin1String("latex2rtf")).isEmpty())
-            supportedMimeTypes += QLatin1String(" application/rtf");
+            supportedMimeTypes += QStringLiteral(" text/html");
+        if (!mustBeImportable && !QStandardPaths::findExecutable(QStringLiteral("latex2rtf")).isEmpty())
+            supportedMimeTypes += QStringLiteral(" application/rtf");
 
         QPointer<QFileDialog> saveDlg = new QFileDialog(p->widget(), i18n("Save file") /* TODO better text */, startDir, supportedMimeTypes);
         /// Setting list of mime types for the second time,
@@ -470,7 +470,7 @@ public:
         saveDlg->setMimeTypeFilters(supportedMimeTypes.split(QLatin1Char(' '), QString::SkipEmptyParts));
         /// Setting the dialog into "Saving" mode make the "add extension" checkbox available
         saveDlg->setAcceptMode(QFileDialog::AcceptSave);
-        saveDlg->setDefaultSuffix(QLatin1String("bib"));
+        saveDlg->setDefaultSuffix(QStringLiteral("bib"));
         saveDlg->setFileMode(QFileDialog::AnyFile);
         if (saveDlg->exec() != QDialog::Accepted)
             /// User cancelled saving operation, return invalid filename/URL
@@ -486,7 +486,7 @@ public:
         /// configure and open temporary file
         static const QRegExp suffixRegExp("\\.[^.]{1,4}$");
         const QString suffix = suffixRegExp.indexIn(url.url(QUrl::PreferLocalFile)) >= 0 ? suffixRegExp.cap(0) : QString();
-        QTemporaryFile temporaryFile(QStandardPaths::writableLocation(QStandardPaths::TempLocation) + QDir::separator() + QString(QLatin1String("kbibtex_savefile_XXXXXX")).append(suffix));
+        QTemporaryFile temporaryFile(QStandardPaths::writableLocation(QStandardPaths::TempLocation) + QDir::separator() + QString(QStringLiteral("kbibtex_savefile_XXXXXX")).append(suffix));
         temporaryFile.setAutoRemove(true);
         if (!temporaryFile.open())
             return false;
@@ -912,7 +912,7 @@ void KBibTeXPart::newElementTriggered(int event)
 
 void KBibTeXPart::newEntryTriggered()
 {
-    QSharedPointer<Entry> newEntry = QSharedPointer<Entry>(new Entry(QLatin1String("Article"), d->findUnusedId()));
+    QSharedPointer<Entry> newEntry = QSharedPointer<Entry>(new Entry(QStringLiteral("Article"), d->findUnusedId()));
     d->model->insertRow(newEntry, d->model->rowCount());
     d->partWidget->fileView()->setSelectedElement(newEntry);
     if (d->partWidget->fileView()->editElement(newEntry))
@@ -985,7 +985,7 @@ void KBibTeXPart::updateActions()
     d->elementViewDocumentAction->setEnabled(!emptySelection && numDocumentsToView > 0);
     /// activate sub-menu only if there are at least two documents to view
     d->elementViewDocumentAction->setMenu(numDocumentsToView > 1 ? d->viewDocumentMenu : NULL);
-    d->elementViewDocumentAction->setToolTip(numDocumentsToView == 1 ? d->viewDocumentMenu->actions().first()->text() : QLatin1String(""));
+    d->elementViewDocumentAction->setToolTip(numDocumentsToView == 1 ? d->viewDocumentMenu->actions().first()->text() : QStringLiteral(""));
 
     /// update list of references which can be sent to LyX
     QStringList references;

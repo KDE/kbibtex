@@ -56,7 +56,7 @@ public:
     static const QString configKeyAutoApply;
 
     ElementFormPrivate(MDIWidget *_mdiWidget, ElementForm *parent)
-            : p(parent), file(NULL), mdiWidget(_mdiWidget), gotModified(false), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))) {
+            : p(parent), file(NULL), mdiWidget(_mdiWidget), gotModified(false), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))) {
         KConfigGroup configGroup(config, configGroupName);
 
         layout = new QGridLayout(p);
@@ -159,8 +159,8 @@ public:
     }
 };
 
-const QString ElementForm::ElementFormPrivate::configGroupName = QLatin1String("ElementForm");
-const QString ElementForm::ElementFormPrivate::configKeyAutoApply = QLatin1String("AutoApply");
+const QString ElementForm::ElementFormPrivate::configGroupName = QStringLiteral("ElementForm");
+const QString ElementForm::ElementFormPrivate::configKeyAutoApply = QStringLiteral("AutoApply");
 
 ElementForm::ElementForm(MDIWidget *mdiWidget, QDockWidget *parent)
         : QWidget(parent), d(new ElementFormPrivate(mdiWidget, this))

@@ -148,9 +148,9 @@ public:
             case Qt::ToolTipRole:
             case Qt::DisplayRole:
                 /// nicely formatted field names for visual representation
-                if (fieldName == QLatin1String("^id"))
+                if (fieldName == QStringLiteral("^id"))
                     return i18n("Identifier");
-                else if (fieldName == QLatin1String("^type"))
+                else if (fieldName == QStringLiteral("^type"))
                     return i18n("Type");
                 else
                     return BibTeXEntries::self()->format(fieldName, KBibTeX::cUpperCamelCase);
@@ -177,7 +177,7 @@ public:
             case Qt::DisplayRole:
                 if (index.row() < values.count()) {
                     QString text = PlainTextValue::text(values.at(index.row()));
-                    if (fieldName == QLatin1String("^type")) {
+                    if (fieldName == QStringLiteral("^type")) {
                         const BibTeXEntries *be = BibTeXEntries::self();
                         text = be->format(text, KBibTeX::cUpperCamelCase);
                     }
@@ -357,7 +357,7 @@ public:
             /// (those are the actual values).
             /// Use a plain, border-less KLineEdit.
             KLineEdit *lineEdit = new KLineEdit(parent);
-            lineEdit->setStyleSheet(QLatin1String("border: none;"));
+            lineEdit->setStyleSheet(QStringLiteral("border: none;"));
             return lineEdit;
         }
         return NULL;
@@ -541,7 +541,7 @@ public:
         QSplitter *splitter = new QSplitter(Qt::Vertical, p);
         layout->addWidget(splitter);
 
-        editor = new FileView(QLatin1String("MergeWidget"), splitter);
+        editor = new FileView(QStringLiteral("MergeWidget"), splitter);
         editor->setItemDelegate(new FileDelegate(editor));
         editor->setReadOnly(true);
 
@@ -640,9 +640,9 @@ FindDuplicatesUI::FindDuplicatesUI(KParts::Part *part, FileView *fileView)
         : QObject(), d(new FindDuplicatesUIPrivate(this, part, fileView))
 {
     QAction *newAction = new QAction(QIcon::fromTheme("tab-duplicate"), i18n("Find Duplicates"), this);
-    part->actionCollection()->addAction(QLatin1String("findduplicates"), newAction);
+    part->actionCollection()->addAction(QStringLiteral("findduplicates"), newAction);
     connect(newAction, SIGNAL(triggered()), this, SLOT(slotFindDuplicates()));
-    part->replaceXMLFile(/* read default configuration from '/usr/share/kxmlgui5/kbibtex/findduplicatesui.rc' */QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kxmlgui5/kbibtex/findduplicatesui.rc"), /* write to '~/.config/.../findduplicatesui.rc' */ QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("kbibtex/findduplicatesui.rc"), true);
+    part->replaceXMLFile(/* read default configuration from '/usr/share/kxmlgui5/kbibtex/findduplicatesui.rc' */QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kxmlgui5/kbibtex/findduplicatesui.rc"), /* write to '~/.config/.../findduplicatesui.rc' */ QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QStringLiteral("kbibtex/findduplicatesui.rc"), true);
 }
 
 FindDuplicatesUI::~FindDuplicatesUI()

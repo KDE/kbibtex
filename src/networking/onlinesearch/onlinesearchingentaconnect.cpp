@@ -42,15 +42,15 @@ private:
 
     void loadState() {
         KConfigGroup configGroup(config, configGroupName);
-        lineEditFullText->setText(configGroup.readEntry(QLatin1String("fullText"), QString()));
-        lineEditTitle->setText(configGroup.readEntry(QLatin1String("title"), QString()));
-        lineEditAuthor->setText(configGroup.readEntry(QLatin1String("author"), QString()));
-        lineEditAbstractKeywords->setText(configGroup.readEntry(QLatin1String("abstractKeywords"), QString()));
-        lineEditPublication->setText(configGroup.readEntry(QLatin1String("publication"), QString()));
-        lineEditISSNDOIISBN->setText(configGroup.readEntry(QLatin1String("ISSNDOIISBN"), QString()));
-        lineEditVolume->setText(configGroup.readEntry(QLatin1String("volume"), QString()));
-        lineEditIssue->setText(configGroup.readEntry(QLatin1String("issue"), QString()));
-        numResultsField->setValue(configGroup.readEntry(QLatin1String("numResults"), 10));
+        lineEditFullText->setText(configGroup.readEntry(QStringLiteral("fullText"), QString()));
+        lineEditTitle->setText(configGroup.readEntry(QStringLiteral("title"), QString()));
+        lineEditAuthor->setText(configGroup.readEntry(QStringLiteral("author"), QString()));
+        lineEditAbstractKeywords->setText(configGroup.readEntry(QStringLiteral("abstractKeywords"), QString()));
+        lineEditPublication->setText(configGroup.readEntry(QStringLiteral("publication"), QString()));
+        lineEditISSNDOIISBN->setText(configGroup.readEntry(QStringLiteral("ISSNDOIISBN"), QString()));
+        lineEditVolume->setText(configGroup.readEntry(QStringLiteral("volume"), QString()));
+        lineEditIssue->setText(configGroup.readEntry(QStringLiteral("issue"), QString()));
+        numResultsField->setValue(configGroup.readEntry(QStringLiteral("numResults"), 10));
     }
 
 public:
@@ -65,7 +65,7 @@ public:
     QSpinBox *numResultsField;
 
     OnlineSearchQueryFormIngentaConnect(QWidget *widget)
-            : OnlineSearchQueryFormAbstract(widget), configGroupName(QLatin1String("Search Engine IngentaConnect")) {
+            : OnlineSearchQueryFormAbstract(widget), configGroupName(QStringLiteral("Search Engine IngentaConnect")) {
         QFormLayout *layout = new QFormLayout(this);
         layout->setMargin(0);
 
@@ -137,20 +137,20 @@ public:
         lineEditPublication->setText(publication);
 
         // TODO
-        lineEditAbstractKeywords->setText(QLatin1String(""));
+        lineEditAbstractKeywords->setText(QStringLiteral(""));
     }
 
     void saveState() {
         KConfigGroup configGroup(config, configGroupName);
-        configGroup.writeEntry(QLatin1String("fullText"), lineEditFullText->text());
-        configGroup.writeEntry(QLatin1String("title"), lineEditTitle->text());
-        configGroup.writeEntry(QLatin1String("author"), lineEditAuthor->text());
-        configGroup.writeEntry(QLatin1String("abstractKeywords"), lineEditAbstractKeywords->text());
-        configGroup.writeEntry(QLatin1String("publication"), lineEditPublication->text());
-        configGroup.writeEntry(QLatin1String("ISSNDOIISBN"), lineEditISSNDOIISBN->text());
-        configGroup.writeEntry(QLatin1String("volume"), lineEditVolume->text());
-        configGroup.writeEntry(QLatin1String("issue"), lineEditIssue->text());
-        configGroup.writeEntry(QLatin1String("numResults"), numResultsField->value());
+        configGroup.writeEntry(QStringLiteral("fullText"), lineEditFullText->text());
+        configGroup.writeEntry(QStringLiteral("title"), lineEditTitle->text());
+        configGroup.writeEntry(QStringLiteral("author"), lineEditAuthor->text());
+        configGroup.writeEntry(QStringLiteral("abstractKeywords"), lineEditAbstractKeywords->text());
+        configGroup.writeEntry(QStringLiteral("publication"), lineEditPublication->text());
+        configGroup.writeEntry(QStringLiteral("ISSNDOIISBN"), lineEditISSNDOIISBN->text());
+        configGroup.writeEntry(QStringLiteral("volume"), lineEditVolume->text());
+        configGroup.writeEntry(QStringLiteral("issue"), lineEditIssue->text());
+        configGroup.writeEntry(QStringLiteral("numResults"), numResultsField->value());
         config->sync();
     }
 };
@@ -165,7 +165,7 @@ public:
     OnlineSearchQueryFormIngentaConnect *form;
 
     OnlineSearchIngentaConnectPrivate(OnlineSearchIngentaConnect *parent)
-            : p(parent), ingentaConnectBaseUrl(QLatin1String("http://www.ingentaconnect.com/search?format=bib")), form(NULL) {
+            : p(parent), ingentaConnectBaseUrl(QStringLiteral("http://www.ingentaconnect.com/search?format=bib")), form(NULL) {
         // nothing
     }
 
@@ -182,8 +182,8 @@ public:
         QStringList chunks = p->splitRespectingQuotationMarks(form->lineEditFullText->text());
         foreach (const QString &chunk, chunks) {
             if (index > 1)
-                query.addQueryItem(QString("operator%1").arg(index), QLatin1String("AND")); ///< join search terms with an AND operation
-            query.addQueryItem(QString("option%1").arg(index), QLatin1String("fulltext"));
+                query.addQueryItem(QString("operator%1").arg(index), QStringLiteral("AND")); ///< join search terms with an AND operation
+            query.addQueryItem(QString("option%1").arg(index), QStringLiteral("fulltext"));
             query.addQueryItem(QString("value%1").arg(index), chunk);
             ++index;
         }
@@ -191,8 +191,8 @@ public:
         chunks = p->splitRespectingQuotationMarks(form->lineEditAuthor->text());
         foreach (const QString &chunk, chunks) {
             if (index > 1)
-                query.addQueryItem(QString("operator%1").arg(index), QLatin1String("AND"));
-            query.addQueryItem(QString("option%1").arg(index), QLatin1String("author"));
+                query.addQueryItem(QString("operator%1").arg(index), QStringLiteral("AND"));
+            query.addQueryItem(QString("option%1").arg(index), QStringLiteral("author"));
             query.addQueryItem(QString("value%1").arg(index), chunk);
             ++index;
         }
@@ -200,8 +200,8 @@ public:
         chunks = p->splitRespectingQuotationMarks(form->lineEditTitle->text());
         foreach (const QString &chunk, chunks) {
             if (index > 1)
-                query.addQueryItem(QString("operator%1").arg(index), QLatin1String("AND"));
-            query.addQueryItem(QString("option%1").arg(index), QLatin1String("title"));
+                query.addQueryItem(QString("operator%1").arg(index), QStringLiteral("AND"));
+            query.addQueryItem(QString("option%1").arg(index), QStringLiteral("title"));
             query.addQueryItem(QString("value%1").arg(index), chunk);
             ++index;
         }
@@ -209,8 +209,8 @@ public:
         chunks = p->splitRespectingQuotationMarks(form->lineEditPublication->text());
         foreach (const QString &chunk, chunks) {
             if (index > 1)
-                query.addQueryItem(QString("operator%1").arg(index), QLatin1String("AND"));
-            query.addQueryItem(QString("option%1").arg(index), QLatin1String("journalbooktitle"));
+                query.addQueryItem(QString("operator%1").arg(index), QStringLiteral("AND"));
+            query.addQueryItem(QString("option%1").arg(index), QStringLiteral("journalbooktitle"));
             query.addQueryItem(QString("value%1").arg(index), chunk);
             ++index;
         }
@@ -218,8 +218,8 @@ public:
         chunks = p->splitRespectingQuotationMarks(form->lineEditIssue->text());
         foreach (const QString &chunk, chunks) {
             if (index > 1)
-                query.addQueryItem(QString("operator%1").arg(index), QLatin1String("AND"));
-            query.addQueryItem(QString("option%1").arg(index), QLatin1String("issue"));
+                query.addQueryItem(QString("operator%1").arg(index), QStringLiteral("AND"));
+            query.addQueryItem(QString("option%1").arg(index), QStringLiteral("issue"));
             query.addQueryItem(QString("value%1").arg(index), chunk);
             ++index;
         }
@@ -227,8 +227,8 @@ public:
         chunks = p->splitRespectingQuotationMarks(form->lineEditVolume->text());
         foreach (const QString &chunk, chunks) {
             if (index > 1)
-                query.addQueryItem(QString("operator%1").arg(index), QLatin1String("AND"));
-            query.addQueryItem(QString("option%1").arg(index), QLatin1String("volume"));
+                query.addQueryItem(QString("operator%1").arg(index), QStringLiteral("AND"));
+            query.addQueryItem(QString("option%1").arg(index), QStringLiteral("volume"));
             query.addQueryItem(QString("value%1").arg(index), chunk);
             ++index;
         }
@@ -236,18 +236,18 @@ public:
         chunks = p->splitRespectingQuotationMarks(form->lineEditAbstractKeywords->text());
         foreach (const QString &chunk, chunks) {
             if (index > 1)
-                query.addQueryItem(QString("operator%1").arg(index), QLatin1String("AND"));
-            query.addQueryItem(QString("option%1").arg(index), QLatin1String("tka"));
+                query.addQueryItem(QString("operator%1").arg(index), QStringLiteral("AND"));
+            query.addQueryItem(QString("option%1").arg(index), QStringLiteral("tka"));
             query.addQueryItem(QString("value%1").arg(index), chunk);
             ++index;
         }
 
-        query.addQueryItem(QLatin1String("pageSize"), QString::number(form->numResultsField->value()));
+        query.addQueryItem(QStringLiteral("pageSize"), QString::number(form->numResultsField->value()));
 
-        query.addQueryItem(QLatin1String("sortDescending"), QLatin1String("true"));
-        query.addQueryItem(QLatin1String("subscribed"), QLatin1String("false"));
-        query.addQueryItem(QLatin1String("sortField"), QLatin1String("default"));
-        
+        query.addQueryItem(QStringLiteral("sortDescending"), QStringLiteral("true"));
+        query.addQueryItem(QStringLiteral("subscribed"), QStringLiteral("false"));
+        query.addQueryItem(QStringLiteral("sortField"), QStringLiteral("default"));
+
         queryUrl.setQuery(query);
         return queryUrl;
     }
@@ -260,8 +260,8 @@ public:
         QStringList chunks = p->splitRespectingQuotationMarks(query[queryKeyFreeText]);
         foreach (const QString &chunk, chunks) {
             if (index > 1)
-                q.addQueryItem(QString("operator%1").arg(index), QLatin1String("AND"));
-            q.addQueryItem(QString("option%1").arg(index), QLatin1String("fulltext"));
+                q.addQueryItem(QString("operator%1").arg(index), QStringLiteral("AND"));
+            q.addQueryItem(QString("option%1").arg(index), QStringLiteral("fulltext"));
             q.addQueryItem(QString("value%1").arg(index), chunk);
             ++index;
         }
@@ -269,8 +269,8 @@ public:
         chunks = p->splitRespectingQuotationMarks(query[queryKeyAuthor]);
         foreach (const QString &chunk, chunks) {
             if (index > 1)
-                q.addQueryItem(QString("operator%1").arg(index), QLatin1String("AND"));
-            q.addQueryItem(QString("option%1").arg(index), QLatin1String("author"));
+                q.addQueryItem(QString("operator%1").arg(index), QStringLiteral("AND"));
+            q.addQueryItem(QString("option%1").arg(index), QStringLiteral("author"));
             q.addQueryItem(QString("value%1").arg(index), chunk);
             ++index;
         }
@@ -278,20 +278,20 @@ public:
         chunks = p->splitRespectingQuotationMarks(query[queryKeyTitle]);
         foreach (const QString &chunk, chunks) {
             if (index > 1)
-                q.addQueryItem(QString("operator%1").arg(index), QLatin1String("AND"));
-            q.addQueryItem(QString("option%1").arg(index), QLatin1String("title"));
+                q.addQueryItem(QString("operator%1").arg(index), QStringLiteral("AND"));
+            q.addQueryItem(QString("option%1").arg(index), QStringLiteral("title"));
             q.addQueryItem(QString("value%1").arg(index), chunk);
             ++index;
         }
 
         /// Field "year" not supported in IngentaConnect's search
 
-        q.addQueryItem(QLatin1String("pageSize"), QString::number(numResults));
+        q.addQueryItem(QStringLiteral("pageSize"), QString::number(numResults));
 
-        q.addQueryItem(QLatin1String("sortDescending"), QLatin1String("true"));
-        q.addQueryItem(QLatin1String("subscribed"), QLatin1String("false"));
-        q.addQueryItem(QLatin1String("sortField"), QLatin1String("default"));
-        
+        q.addQueryItem(QStringLiteral("sortDescending"), QStringLiteral("true"));
+        q.addQueryItem(QStringLiteral("subscribed"), QStringLiteral("false"));
+        q.addQueryItem(QStringLiteral("sortField"), QStringLiteral("default"));
+
         queryUrl.setQuery(q);
         return queryUrl;
     }
@@ -341,7 +341,7 @@ QString OnlineSearchIngentaConnect::label() const
 
 QString OnlineSearchIngentaConnect::favIconUrl() const
 {
-    return QLatin1String("http://www.ingentaconnect.com/favicon.ico");
+    return QStringLiteral("http://www.ingentaconnect.com/favicon.ico");
 }
 
 OnlineSearchQueryFormAbstract *OnlineSearchIngentaConnect::customWidget(QWidget *parent)

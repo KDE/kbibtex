@@ -54,14 +54,14 @@ public:
     RISitemList readElement(QTextStream &textStream) {
         RISitemList result;
         QString line = textStream.readLine();
-        while (!line.startsWith(QLatin1String("TY  - ")) && !textStream.atEnd())
+        while (!line.startsWith(QStringLiteral("TY  - ")) && !textStream.atEnd())
             line = textStream.readLine();
         if (textStream.atEnd())
             return result;
 
         QString key, value;
-        while (!line.startsWith(QLatin1String("ER  -")) && !textStream.atEnd()) {
-            if (line.mid(2, 3) == QLatin1String("  -")) {
+        while (!line.startsWith(QStringLiteral("ER  -")) && !textStream.atEnd()) {
+            if (line.mid(2, 3) == QStringLiteral("  -")) {
                 if (!value.isEmpty()) {
                     RISitem item;
                     item.key = key;
@@ -103,19 +103,19 @@ public:
 
         for (RISitemList::iterator it = list.begin(); it != list.end(); ++it) {
             if ((*it).key == "TY") {
-                if ((*it).value.startsWith(QLatin1String("BOOK")) || (*it).value.startsWith(QLatin1String("SER")))
+                if ((*it).value.startsWith(QStringLiteral("BOOK")) || (*it).value.startsWith(QStringLiteral("SER")))
                     entryType = Entry::etBook;
-                else if ((*it).value.startsWith(QLatin1String("CHAP")))
+                else if ((*it).value.startsWith(QStringLiteral("CHAP")))
                     entryType = Entry::etInBook;
-                else if ((*it).value.startsWith(QLatin1String("CONF")))
+                else if ((*it).value.startsWith(QStringLiteral("CONF")))
                     entryType = Entry::etInProceedings;
-                else if ((*it).value.startsWith(QLatin1String("JFULL")) || (*it).value.startsWith(QLatin1String("JOUR")) || (*it).value.startsWith(QLatin1String("MGZN")))
+                else if ((*it).value.startsWith(QStringLiteral("JFULL")) || (*it).value.startsWith(QStringLiteral("JOUR")) || (*it).value.startsWith(QStringLiteral("MGZN")))
                     entryType = Entry::etArticle;
-                else if ((*it).value.startsWith(QLatin1String("RPRT")))
+                else if ((*it).value.startsWith(QStringLiteral("RPRT")))
                     entryType = Entry::etTechReport;
-                else if ((*it).value.startsWith(QLatin1String("THES")))
+                else if ((*it).value.startsWith(QStringLiteral("THES")))
                     entryType = Entry::etPhDThesis; // FIXME what about etMastersThesis?
-                else if ((*it).value.startsWith(QLatin1String("UNPB")))
+                else if ((*it).value.startsWith(QStringLiteral("UNPB")))
                     entryType = Entry::etUnpublished;
                 entry->setType(entryType);
             } else if ((*it).key == "AU" || (*it).key == "A1") {
@@ -212,7 +212,7 @@ public:
             entry->insert(Entry::ftPages, value);
         }
 
-        QStringList dateFragments = date.split(QLatin1String("/"), QString::SkipEmptyParts);
+        QStringList dateFragments = date.split(QStringLiteral("/"), QString::SkipEmptyParts);
         if (dateFragments.count() > 0) {
             bool ok;
             int year = dateFragments[0].toInt(&ok);

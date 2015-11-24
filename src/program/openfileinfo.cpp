@@ -155,9 +155,9 @@ public:
 };
 
 int OpenFileInfo::OpenFileInfoPrivate::globalCounter = 0;
-const QString OpenFileInfo::OpenFileInfoPrivate::dateTimeFormat = QLatin1String("yyyy-MM-dd-hh-mm-ss-zzz");
-const QString OpenFileInfo::OpenFileInfoPrivate::keyLastAccess = QLatin1String("LastAccess");
-const QString OpenFileInfo::OpenFileInfoPrivate::keyURL = QLatin1String("URL");
+const QString OpenFileInfo::OpenFileInfoPrivate::dateTimeFormat = QStringLiteral("yyyy-MM-dd-hh-mm-ss-zzz");
+const QString OpenFileInfo::OpenFileInfoPrivate::keyLastAccess = QStringLiteral("LastAccess");
+const QString OpenFileInfo::OpenFileInfoPrivate::keyURL = QStringLiteral("URL");
 
 OpenFileInfo::OpenFileInfo(OpenFileInfoManager *openFileInfoManager, const QUrl &url)
         : d(new OpenFileInfoPrivate(openFileInfoManager, url, FileInfo::mimeTypeForUrl(url).name(), this))
@@ -302,18 +302,18 @@ void OpenFileInfo::setLastAccess(const QDateTime &dateTime)
 
 KService::List OpenFileInfo::listOfServices()
 {
-    KService::List result = KMimeTypeTrader::self()->query(mimeType(), QLatin1String("KParts/ReadWritePart"));
+    KService::List result = KMimeTypeTrader::self()->query(mimeType(), QStringLiteral("KParts/ReadWritePart"));
     if (result.isEmpty())
-        result = KMimeTypeTrader::self()->query(mimeType(), QLatin1String("KParts/ReadOnlyPart"));
+        result = KMimeTypeTrader::self()->query(mimeType(), QStringLiteral("KParts/ReadOnlyPart"));
     return result;
 }
 
 KService::Ptr OpenFileInfo::defaultService()
 {
     const QString mt = mimeType();
-    KService::Ptr result = KMimeTypeTrader::self()->preferredService(mt, QLatin1String("KParts/ReadWritePart"));
+    KService::Ptr result = KMimeTypeTrader::self()->preferredService(mt, QStringLiteral("KParts/ReadWritePart"));
     if (!result)
-        result = KMimeTypeTrader::self()->preferredService(mt, QLatin1String("KParts/ReadOnlyPart"));
+        result = KMimeTypeTrader::self()->preferredService(mt, QStringLiteral("KParts/ReadOnlyPart"));
     if (result)
         qCDebug(LOG_KBIBTEX_PROGRAM) << "Using service" << result->name() << "(" << result->comment() << ") for mime type" << mt;
     else
@@ -381,7 +381,7 @@ public:
             QUrl fileUrl = QUrl(cg.readEntry(QString("%1-%2").arg(OpenFileInfo::OpenFileInfoPrivate::keyURL).arg(i), ""));
             if (!fileUrl.isValid()) break;
             if (fileUrl.scheme().isEmpty())
-                fileUrl.setScheme(QLatin1String("file"));
+                fileUrl.setScheme(QStringLiteral("file"));
 
             /// For local files, test if they exist; ignore local files that do not exist
             if (fileUrl.isLocalFile()) {
@@ -424,9 +424,9 @@ public:
     }
 };
 
-const QString OpenFileInfoManager::OpenFileInfoManagerPrivate::configGroupNameRecentlyUsed = QLatin1String("DocumentList-RecentlyUsed");
-const QString OpenFileInfoManager::OpenFileInfoManagerPrivate::configGroupNameFavorites = QLatin1String("DocumentList-Favorites");
-const QString OpenFileInfoManager::OpenFileInfoManagerPrivate::configGroupNameOpen = QLatin1String("DocumentList-Open");
+const QString OpenFileInfoManager::OpenFileInfoManagerPrivate::configGroupNameRecentlyUsed = QStringLiteral("DocumentList-RecentlyUsed");
+const QString OpenFileInfoManager::OpenFileInfoManagerPrivate::configGroupNameFavorites = QStringLiteral("DocumentList-Favorites");
+const QString OpenFileInfoManager::OpenFileInfoManagerPrivate::configGroupNameOpen = QStringLiteral("DocumentList-Open");
 const int OpenFileInfoManager::OpenFileInfoManagerPrivate::maxNumFavoriteFiles = 256;
 const int OpenFileInfoManager::OpenFileInfoManagerPrivate::maxNumRecentlyUsedFiles = 8;
 const int OpenFileInfoManager::OpenFileInfoManagerPrivate::maxNumOpenFiles = 16;

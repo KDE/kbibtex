@@ -40,16 +40,16 @@ FileInfo::FileInfo()
     /// nothing
 }
 
-const QString FileInfo::mimetypeOctetStream = QLatin1String("application/octet-stream");
-const QString FileInfo::mimetypeHTML = QLatin1String("text/html");
-const QString FileInfo::mimetypeBibTeX = QLatin1String("text/x-bibtex");
-const QString FileInfo::mimetypeRIS = QLatin1String("application/x-research-info-systems");
-const QString FileInfo::mimetypePDF = QLatin1String("application/pdf");
+const QString FileInfo::mimetypeOctetStream = QStringLiteral("application/octet-stream");
+const QString FileInfo::mimetypeHTML = QStringLiteral("text/html");
+const QString FileInfo::mimetypeBibTeX = QStringLiteral("text/x-bibtex");
+const QString FileInfo::mimetypeRIS = QStringLiteral("application/x-research-info-systems");
+const QString FileInfo::mimetypePDF = QStringLiteral("application/pdf");
 
 QMimeType FileInfo::mimeTypeForUrl(const QUrl &url)
 {
     static QMimeDatabase db;
-    static const QString invalidExtension = QLatin1String("XXXXXXXXXXXXXXXXXXXXXXX");
+    static const QString invalidExtension = QStringLiteral("XXXXXXXXXXXXXXXXXXXXXXX");
     static const QMimeType mtHTML(db.mimeTypeForName(mimetypeHTML));
     static const QMimeType mtOctetStream(db.mimeTypeForName(mimetypeOctetStream));
     static const QMimeType mtBibTeX(db.mimeTypeForName(mimetypeBibTeX));
@@ -80,7 +80,7 @@ QMimeType FileInfo::mimeTypeForUrl(const QUrl &url)
     /// In case that KDE could not determine mime type,
     /// do some educated guesses on our own
     if (!result.isValid() || result.name() == mimetypeOctetStream) {
-        if (url.scheme().startsWith(QLatin1String("http")))
+        if (url.scheme().startsWith(QStringLiteral("http")))
             result = mtHTML;
         // TODO more tests?
     }
@@ -194,21 +194,21 @@ QList<QUrl> FileInfo::entryUrls(const Entry *entry, const QUrl &bibTeXUrl, TestE
             result.append(url);
         }
     }
-    static const QString etPMID = QLatin1String("pmid");
+    static const QString etPMID = QStringLiteral("pmid");
     if (entry->contains(etPMID)) {
         const QString pmid = PlainTextValue::text(entry->value(etPMID));
         bool ok = false;
         ok &= pmid.toInt(&ok) > 0;
         if (ok) {
-            QUrl url(QLatin1String("https://www.ncbi.nlm.nih.gov/pubmed/") + pmid);
+            QUrl url(QStringLiteral("https://www.ncbi.nlm.nih.gov/pubmed/") + pmid);
             result.append(url);
         }
     }
-    static const QString etEPrint = QLatin1String("eprint");
+    static const QString etEPrint = QStringLiteral("eprint");
     if (entry->contains(etEPrint)) {
         const QString eprint = PlainTextValue::text(entry->value(etEPrint));
         if (!eprint.isEmpty()) {
-            QUrl url(QLatin1String("http://arxiv.org/search?query=") + eprint);
+            QUrl url(QStringLiteral("http://arxiv.org/search?query=") + eprint);
             result.append(url);
         }
     }
@@ -267,7 +267,7 @@ QString FileInfo::pdfToText(const QString &pdfFilename)
 {
     /// Build filename for text file where PDF file's plain text is cached
     static const QRegExp invalidChars("[^-a-z0-9_]", Qt::CaseInsensitive);
-    QString textFilename = QString(pdfFilename).remove(invalidChars).append(QLatin1String(".txt")).prepend(QStandardPaths::writableLocation(QStandardPaths::CacheLocation) + QLatin1Char('/') + "pdftotext/");
+    QString textFilename = QString(pdfFilename).remove(invalidChars).append(QStringLiteral(".txt")).prepend(QStandardPaths::writableLocation(QStandardPaths::CacheLocation) + QLatin1Char('/') + "pdftotext/");
 
     /// Initialize return value
     QString text;
@@ -291,9 +291,9 @@ QString FileInfo::pdfToText(const QString &pdfFilename)
         Poppler::Document *doc = Poppler::Document::load(pdfFilename);
         if (doc != NULL) {
             /// Build text by appending each page's text
-            text = QLatin1String("");
+            text = QStringLiteral("");
             for (int i = 0; i < doc->numPages(); ++i)
-                text.append(doc->page(i)->text(QRect())).append(QLatin1String("\n\n"));
+                text.append(doc->page(i)->text(QRect())).append(QStringLiteral("\n\n"));
             delete doc;
 
             /// Save text in cache file
@@ -312,9 +312,9 @@ QString FileInfo::pdfToText(const QString &pdfFilename)
 
 QString FileInfo::doiUrlPrefix()
 {
-    KSharedConfigPtr config(KSharedConfig::openConfig(QLatin1String("kbibtexrc")));
-    static const QString configGroupNameNetworking(QLatin1String("Networking"));
-    static const QString keyDOIUrlPrefix(QLatin1String("DOIUrlPrefix"));
+    KSharedConfigPtr config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc")));
+    static const QString configGroupNameNetworking(QStringLiteral("Networking"));
+    static const QString keyDOIUrlPrefix(QStringLiteral("DOIUrlPrefix"));
     KConfigGroup configGroup(config, configGroupNameNetworking);
     return configGroup.readEntry(keyDOIUrlPrefix, KBibTeX::doiUrlPrefix);
 }

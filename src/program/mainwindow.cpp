@@ -234,7 +234,7 @@ public:
 KBibTeXMainWindow::KBibTeXMainWindow()
         : KParts::MainWindow(), d(new KBibTeXMainWindowPrivate(this))
 {
-    setObjectName(QLatin1String("KBibTeXShell"));
+    setObjectName(QStringLiteral("KBibTeXShell"));
 
     /*
         const char mainWindowStateKey[] = "State";
@@ -325,12 +325,12 @@ void KBibTeXMainWindow::openDocumentDialog()
     }
 
     /// Assemble list of supported mimetypes
-    QStringList supportedMimeTypes = QStringList() << QLatin1String("text/x-bibtex") << QLatin1String("application/x-research-info-systems") << QLatin1String("application/xml");
+    QStringList supportedMimeTypes = QStringList() << QStringLiteral("text/x-bibtex") << QStringLiteral("application/x-research-info-systems") << QStringLiteral("application/xml");
     if (BibUtils::available()) {
-        supportedMimeTypes.append(QLatin1String("application/x-isi-export-format"));
-        supportedMimeTypes.append(QLatin1String("application/x-endnote-refer"));
+        supportedMimeTypes.append(QStringLiteral("application/x-isi-export-format"));
+        supportedMimeTypes.append(QStringLiteral("application/x-endnote-refer"));
     }
-    supportedMimeTypes.append(QLatin1String("all/all"));
+    supportedMimeTypes.append(QStringLiteral("all/all"));
     QPointer<QFileDialog> dlg = new QFileDialog(this, i18n("Open file") /* TODO better text */, startDir);
     dlg->setMimeTypeFilters(supportedMimeTypes);
     dlg->setFileMode(QFileDialog::ExistingFile);

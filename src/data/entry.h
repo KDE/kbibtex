@@ -38,84 +38,84 @@ class KBIBTEXDATA_EXPORT Entry : public Element, public QMap<QString, Value>
 
 public:
     /** Representation of the BibTeX field key "abstract" */
-    static const QLatin1String ftAbstract;
+    static const QString ftAbstract;
     /** Representation of the BibTeX field key "address" */
-    static const QLatin1String ftAddress;
+    static const QString ftAddress;
     /** Representation of the BibTeX field key "author" */
-    static const QLatin1String ftAuthor;
+    static const QString ftAuthor;
     /** Representation of the BibTeX field key "booktitle" */
-    static const QLatin1String ftBookTitle;
+    static const QString ftBookTitle;
     /** Representation of the BibTeX field key "chapter" */
-    static const QLatin1String ftChapter;
+    static const QString ftChapter;
     /** Representation of the BibTeX field key "x-color" */
-    static const QLatin1String ftColor;
+    static const QString ftColor;
     /** Representation of the BibTeX field key "comment" */
-    static const QLatin1String ftComment;
+    static const QString ftComment;
     /** Representation of the BibTeX field key "crossref" */
-    static const QLatin1String ftCrossRef;
+    static const QString ftCrossRef;
     /** Representation of the BibTeX field key "doi" */
-    static const QLatin1String ftDOI;
+    static const QString ftDOI;
     /** Representation of the BibTeX field key "editor" */
-    static const QLatin1String ftEditor;
+    static const QString ftEditor;
     /** Representation of the BibTeX field key "file" */
-    static const QLatin1String ftFile;
+    static const QString ftFile;
     /** Representation of the BibTeX field key "issn" */
-    static const QLatin1String ftISSN;
+    static const QString ftISSN;
     /** Representation of the BibTeX field key "isbn" */
-    static const QLatin1String ftISBN;
+    static const QString ftISBN;
     /** Representation of the BibTeX field key "journal" */
-    static const QLatin1String ftJournal;
+    static const QString ftJournal;
     /** Representation of the BibTeX field key "keywords" */
-    static const QLatin1String ftKeywords;
+    static const QString ftKeywords;
     /** Representation of the BibTeX field key "localfile" */
-    static const QLatin1String ftLocalFile;
+    static const QString ftLocalFile;
     /** Representation of the BibTeX field key "location" */
-    static const QLatin1String ftLocation;
+    static const QString ftLocation;
     /** Representation of the BibTeX field key "month" */
-    static const QLatin1String ftMonth;
+    static const QString ftMonth;
     /** Representation of the BibTeX field key "note" */
-    static const QLatin1String ftNote;
+    static const QString ftNote;
     /** Representation of the BibTeX field key "number" */
-    static const QLatin1String ftNumber;
+    static const QString ftNumber;
     /** Representation of the BibTeX field key "pages" */
-    static const QLatin1String ftPages;
+    static const QString ftPages;
     /** Representation of the BibTeX field key "publisher" */
-    static const QLatin1String ftPublisher;
+    static const QString ftPublisher;
     /** Representation of the BibTeX field key "school" */
-    static const QLatin1String ftSchool;
+    static const QString ftSchool;
     /** Representation of the BibTeX field key "series" */
-    static const QLatin1String ftSeries;
+    static const QString ftSeries;
     /** Representation of the BibTeX field key "x-stars" */
-    static const QLatin1String ftStarRating;
+    static const QString ftStarRating;
     /** Representation of the BibTeX field key "title" */
-    static const QLatin1String ftTitle;
+    static const QString ftTitle;
     /** Representation of the BibTeX field key "url" */
-    static const QLatin1String ftUrl;
+    static const QString ftUrl;
     /** Representation of the BibLaTeX field key "urldate" */
-    static const QLatin1String ftUrlDate;
+    static const QString ftUrlDate;
     /** Representation of the BibTeX field key "volume" */
-    static const QLatin1String ftVolume;
+    static const QString ftVolume;
     /** Representation of the BibTeX field key "year" */
-    static const QLatin1String ftYear;
+    static const QString ftYear;
 
     /** Representation of the BibTeX entry type "Article" */
-    static const QLatin1String etArticle;
+    static const QString etArticle;
     /** Representation of the BibTeX entry type "Book" */
-    static const QLatin1String etBook;
+    static const QString etBook;
     /** Representation of the BibTeX entry type "InBook" */
-    static const QLatin1String etInBook;
+    static const QString etInBook;
     /** Representation of the BibTeX entry type "InProceedings" */
-    static const QLatin1String etInProceedings;
+    static const QString etInProceedings;
     /** Representation of the BibTeX entry type "Misc" */
-    static const QLatin1String etMisc;
+    static const QString etMisc;
     /** Representation of the BibTeX entry type "TechReport" */
-    static const QLatin1String etTechReport;
+    static const QString etTechReport;
     /** Representation of the BibTeX entry type "PhDThesis" */
-    static const QLatin1String etPhDThesis;
+    static const QString etPhDThesis;
     /** Representation of the BibTeX entry type "MastersThesis" */
-    static const QLatin1String etMastersThesis;
+    static const QString etMastersThesis;
     /** Representation of the BibTeX entry type "Unpublished" */
-    static const QLatin1String etUnpublished;
+    static const QString etUnpublished;
 
     /**
      * Create a new entry type. Both type and id are optionally,

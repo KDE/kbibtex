@@ -43,9 +43,9 @@ private:
 
     void loadState() {
         KConfigGroup configGroup(config, configGroupName);
-        comboBoxSearchWhere->setCurrentIndex(configGroup.readEntry(QLatin1String("searchWhere"), 0));
-        lineEditSearchTerm->setText(configGroup.readEntry(QLatin1String("searchTerm"), QString()));
-        numResultsField->setValue(configGroup.readEntry(QLatin1String("numResults"), 10));
+        comboBoxSearchWhere->setCurrentIndex(configGroup.readEntry(QStringLiteral("searchWhere"), 0));
+        lineEditSearchTerm->setText(configGroup.readEntry(QStringLiteral("searchTerm"), QString()));
+        numResultsField->setValue(configGroup.readEntry(QStringLiteral("numResults"), 10));
     }
 
 public:
@@ -54,7 +54,7 @@ public:
     QSpinBox *numResultsField;
 
     OnlineSearchQueryFormBibsonomy(QWidget *widget)
-            : OnlineSearchQueryFormAbstract(widget), configGroupName(QLatin1String("Search Engine Bibsonomy")) {
+            : OnlineSearchQueryFormAbstract(widget), configGroupName(QStringLiteral("Search Engine Bibsonomy")) {
         QGridLayout *layout = new QGridLayout(this);
         layout->setMargin(0);
 
@@ -95,14 +95,14 @@ public:
 
     void copyFromEntry(const Entry &entry) {
         comboBoxSearchWhere->setCurrentIndex(comboBoxSearchWhere->count() - 1);
-        lineEditSearchTerm->setText(authorLastNames(entry).join(QLatin1String(" ")) + QLatin1Char(' ') + PlainTextValue::text(entry[Entry::ftTitle]));
+        lineEditSearchTerm->setText(authorLastNames(entry).join(QStringLiteral(" ")) + QLatin1Char(' ') + PlainTextValue::text(entry[Entry::ftTitle]));
     }
 
     void saveState() {
         KConfigGroup configGroup(config, configGroupName);
-        configGroup.writeEntry(QLatin1String("searchWhere"), comboBoxSearchWhere->currentIndex());
-        configGroup.writeEntry(QLatin1String("searchTerm"), lineEditSearchTerm->text());
-        configGroup.writeEntry(QLatin1String("numResults"), numResultsField->value());
+        configGroup.writeEntry(QStringLiteral("searchWhere"), comboBoxSearchWhere->currentIndex());
+        configGroup.writeEntry(QStringLiteral("searchTerm"), lineEditSearchTerm->text());
+        configGroup.writeEntry(QStringLiteral("numResults"), numResultsField->value());
         config->sync();
     }
 };
@@ -132,18 +132,18 @@ public:
     }
 
     QUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) {
-        QString url = QLatin1String("http://www.bibsonomy.org/bib/");
+        QString url = QStringLiteral("http://www.bibsonomy.org/bib/");
 
         bool hasFreeText = !query[queryKeyFreeText].isEmpty();
         bool hasTitle = !query[queryKeyTitle].isEmpty();
         bool hasAuthor = !query[queryKeyAuthor].isEmpty();
         bool hasYear = !query[queryKeyYear].isEmpty();
 
-        QString searchType = QLatin1String("search");
+        QString searchType = QStringLiteral("search");
         if (hasAuthor && !hasFreeText && !hasTitle && !hasYear) {
             /// if only the author field is used, a special author search
             /// on BibSonomy can be used
-            searchType = QLatin1String("author");
+            searchType = QStringLiteral("author");
         }
 
         QStringList queryFragments;
@@ -151,8 +151,8 @@ public:
             queryFragments << p->encodeURL(it.value());
         }
 
-        QString queryString = queryFragments.join(QLatin1String("%20"));
-        url.append(searchType + QLatin1Char('/') + queryString + QString(QLatin1String("?items=%1")).arg(numResults));
+        QString queryString = queryFragments.join(QStringLiteral("%20"));
+        url.append(searchType + QLatin1Char('/') + queryString + QString(QStringLiteral("?items=%1")).arg(numResults));
 
         return QUrl(url);
     }
@@ -160,9 +160,9 @@ public:
     void sanitizeEntry(QSharedPointer<Entry> entry) {
         /// if entry contains a description field but no abstract,
         /// rename description field to abstract
-        const QString ftDescription = QLatin1String("description");
+        const QString ftDescription = QStringLiteral("description");
         if (!entry->contains(Entry::ftAbstract) && entry->contains(ftDescription)) {
-            Value v = entry->value(QLatin1String("description"));
+            Value v = entry->value(QStringLiteral("description"));
             entry->insert(Entry::ftAbstract, v);
             entry->remove(ftDescription);
         }
@@ -217,7 +217,7 @@ QString OnlineSearchBibsonomy::label() const
 
 QString OnlineSearchBibsonomy::favIconUrl() const
 {
-    return QLatin1String("http://www.bibsonomy.org/resources/image/favicon.png");
+    return QStringLiteral("http://www.bibsonomy.org/resources/image/favicon.png");
 }
 
 OnlineSearchQueryFormAbstract *OnlineSearchBibsonomy::customWidget(QWidget *parent)

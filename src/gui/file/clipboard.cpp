@@ -35,8 +35,8 @@
 #include "associatedfilesui.h"
 #include "logging_gui.h"
 
-const QString Clipboard::keyCopyReferenceCommand = QLatin1String("copyReferenceCommand");
-const QString Clipboard::defaultCopyReferenceCommand = QLatin1String("");
+const QString Clipboard::keyCopyReferenceCommand = QStringLiteral("copyReferenceCommand");
+const QString Clipboard::defaultCopyReferenceCommand = QStringLiteral("");
 
 class Clipboard::ClipboardPrivate
 {
@@ -50,7 +50,7 @@ public:
     const QString configGroupName;
 
     ClipboardPrivate(FileView *fv, Clipboard */* UNUSED p*/)
-        : /* UNUSED parent(p),*/ fileView(fv), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName(QLatin1String("General")) {
+        : /* UNUSED parent(p),*/ fileView(fv), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), configGroupName(QStringLiteral("General")) {
         /// nothing
     }
 
@@ -61,7 +61,7 @@ public:
             file->append(fileView->fileModel()->element(fileView->sortFilterProxyModel()->mapToSource(*it).row()));
 
         FileExporterBibTeX exporter;
-        exporter.setEncoding(QLatin1String("latex"));
+        exporter.setEncoding(QStringLiteral("latex"));
         QBuffer buffer(fileView);
         buffer.open(QBuffer::WriteOnly);
         const bool success = exporter.save(&buffer, file);
@@ -101,7 +101,7 @@ public:
     bool insertText(const QString &text, QSharedPointer<Element> element = QSharedPointer<Element>()) {
         bool insertUrlPreviouslyCalled = false;
 
-        if (text.startsWith(QLatin1String("http://")) || text.startsWith(QLatin1String("https://")) || text.startsWith(QLatin1String("file://"))) {
+        if (text.startsWith(QStringLiteral("http://")) || text.startsWith(QStringLiteral("https://")) || text.startsWith(QStringLiteral("file://"))) {
             /// Quick check if passed text looks like an URL;
             /// in this case try to add it to the current/selected entry
             if (insertUrl(text, element))
@@ -209,7 +209,7 @@ void Clipboard::copyReferences()
         KConfigGroup configGroup(d->config, d->configGroupName);
         const QString copyReferenceCommand = configGroup.readEntry(keyCopyReferenceCommand, defaultCopyReferenceCommand);
         if (!copyReferenceCommand.isEmpty())
-            text = QString(QLatin1String("\\%1{%2}")).arg(copyReferenceCommand).arg(text);
+            text = QString(QStringLiteral("\\%1{%2}")).arg(copyReferenceCommand).arg(text);
 
         clipboard->setText(text);
     }

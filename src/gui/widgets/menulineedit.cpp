@@ -31,7 +31,7 @@
 #include "notificationhub.h"
 
 const int MenuLineEdit::MenuLineConfigurationChangedEvent = NotificationHub::EventUserDefined + 1861;
-const QString MenuLineEdit::keyLimitKeyboardTabStops = QLatin1String("LimitKeyboardTabStops");
+const QString MenuLineEdit::keyLimitKeyboardTabStops = QStringLiteral("LimitKeyboardTabStops");
 
 class MenuLineEdit::MenuLineEditPrivate : public NotificationListener
 {
@@ -67,8 +67,8 @@ public:
     virtual void notificationEvent(int eventId) {
         if (eventId == MenuLineEdit::MenuLineConfigurationChangedEvent) {
             /// load setting limitKeyboardTabStops
-            KSharedConfigPtr config(KSharedConfig::openConfig(QLatin1String("kbibtexrc")));
-            static QString const configGroupName = QLatin1String("User Interface");
+            KSharedConfigPtr config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc")));
+            static QString const configGroupName = QStringLiteral("User Interface");
             KConfigGroup configGroup(config, configGroupName);
             const bool limitKeyboardTabStops = configGroup.readEntry(MenuLineEdit::keyLimitKeyboardTabStops, false);
 
@@ -187,8 +187,8 @@ public:
     }
 };
 
-const QString MenuLineEdit::MenuLineEditPrivate::transparentStyleSheet = QLatin1String("KTextEdit { border-style: none; background-color: transparent; }\nKLineEdit { border-style: none; background-color: transparent; }\nKPushButton { border-style: none; background-color: transparent; padding: 0px; margin-left: 2px; margin-right:2px; text-align: left; }");
-const QString MenuLineEdit::MenuLineEditPrivate::normalStyleSheet = QLatin1String("QPushButton { padding:4px; margin:0px;  text-align: left; }\nQPushButton::menu-indicator {subcontrol-position: right center; subcontrol-origin: content;}");
+const QString MenuLineEdit::MenuLineEditPrivate::transparentStyleSheet = QStringLiteral("KTextEdit { border-style: none; background-color: transparent; }\nKLineEdit { border-style: none; background-color: transparent; }\nKPushButton { border-style: none; background-color: transparent; padding: 0px; margin-left: 2px; margin-right:2px; text-align: left; }");
+const QString MenuLineEdit::MenuLineEditPrivate::normalStyleSheet = QStringLiteral("QPushButton { padding:4px; margin:0px;  text-align: left; }\nQPushButton::menu-indicator {subcontrol-position: right center; subcontrol-origin: content;}");
 
 MenuLineEdit::MenuLineEdit(bool isMultiLine, QWidget *parent)
         : QFrame(parent), d(new MenuLineEditPrivate(isMultiLine, this))
@@ -220,7 +220,7 @@ QString MenuLineEdit::text() const
         return d->m_singleLineEditText->text();
     if (d->m_multiLineEditText != NULL)
         return d->m_multiLineEditText->document()->toPlainText();
-    return QLatin1String("");
+    return QStringLiteral("");
 }
 
 void MenuLineEdit::setText(const QString &text)

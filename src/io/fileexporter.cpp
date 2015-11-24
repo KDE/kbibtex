@@ -19,10 +19,10 @@
 #include <QBuffer>
 #include <QTextStream>
 
-const QString FileExporter::keyPaperSize = QLatin1String("paperSize");
-const QString FileExporter::defaultPaperSize = QLatin1String("a4");
-const QString FileExporter::keyFont = QLatin1String("Font");
-const QString FileExporter::defaultFont = QLatin1String("");
+const QString FileExporter::keyPaperSize = QStringLiteral("paperSize");
+const QString FileExporter::defaultPaperSize = QStringLiteral("a4");
+const QString FileExporter::keyFont = QStringLiteral("Font");
+const QString FileExporter::defaultFont = QStringLiteral("");
 
 FileExporter::FileExporter() : QObject()
 {

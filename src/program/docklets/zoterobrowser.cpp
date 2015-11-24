@@ -85,7 +85,7 @@ public:
     static const QString walletFolderOAuth, walletEntryKBibTeXZotero, walletKeyZoteroId, walletKeyZoteroApiKey;
 
     Private(SearchResults *sr, ZoteroBrowser *parent)
-            : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), items(NULL), groups(NULL), tags(NULL), tagModel(NULL), collection(NULL), collectionModel(NULL), api(NULL), searchResults(sr), comboBoxGroupListInitialized(false), nonBusyCursor(p->cursor()) {
+            : p(parent), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), items(NULL), groups(NULL), tags(NULL), tagModel(NULL), collection(NULL), collectionModel(NULL), api(NULL), searchResults(sr), comboBoxGroupListInitialized(false), nonBusyCursor(p->cursor()) {
         setupGUI();
 
         wallet = Wallet::openWallet(Wallet::NetworkWallet(), parent->winId(), Wallet::Asynchronous);
@@ -183,11 +183,11 @@ public:
     }
 };
 
-const QString ZoteroBrowser::Private::configGroupName = QLatin1String("ZoteroBrowser");
-const QString ZoteroBrowser::Private::walletFolderOAuth = QLatin1String("OAuth");
-const QString ZoteroBrowser::Private::walletEntryKBibTeXZotero = QLatin1String("KBibTeX/Zotero");
-const QString ZoteroBrowser::Private::walletKeyZoteroId = QLatin1String("UserId");
-const QString ZoteroBrowser::Private::walletKeyZoteroApiKey = QLatin1String("ApiKey");
+const QString ZoteroBrowser::Private::configGroupName = QStringLiteral("ZoteroBrowser");
+const QString ZoteroBrowser::Private::walletFolderOAuth = QStringLiteral("OAuth");
+const QString ZoteroBrowser::Private::walletEntryKBibTeXZotero = QStringLiteral("KBibTeX/Zotero");
+const QString ZoteroBrowser::Private::walletKeyZoteroId = QStringLiteral("UserId");
+const QString ZoteroBrowser::Private::walletKeyZoteroApiKey = QStringLiteral("ApiKey");
 
 ZoteroBrowser::ZoteroBrowser(SearchResults *searchResults, QWidget *parent)
         : QWidget(parent), d(new ZoteroBrowser::Private(searchResults, this))

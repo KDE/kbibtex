@@ -146,7 +146,7 @@ public:
     bool anyRemote;
 
     KParts::ReadOnlyPart *locatePart(const QString &mimeType, QWidget *parentWidget) {
-        KService::Ptr service = KMimeTypeTrader::self()->preferredService(mimeType, QLatin1String("KParts/ReadOnlyPart"));
+        KService::Ptr service = KMimeTypeTrader::self()->preferredService(mimeType, QStringLiteral("KParts/ReadOnlyPart"));
         if (service) {
             KParts::ReadOnlyPart *part = service->createInstance<KParts::ReadOnlyPart>(parentWidget, p);
             connect(part, static_cast<void(KParts::ReadOnlyPart::*)()>(&KParts::ReadOnlyPart::completed), p, &DocumentPreview::loadingFinished);
@@ -156,7 +156,7 @@ public:
     }
 
     DocumentPreviewPrivate(DocumentPreview *parent)
-            : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), anyLocal(false), entry(NULL), anyRemote(false) {
+            : p(parent), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), anyLocal(false), entry(NULL), anyRemote(false) {
         setupGUI();
     }
 
@@ -218,7 +218,7 @@ public:
         connect(message, SIGNAL(linkActivated(QString)), p, SLOT(linkActivated(QString)));
 
         /// add parts to stackedWidget
-        okularPart = locatePart(QLatin1String("application/pdf"), stackedWidget);
+        okularPart = locatePart(QStringLiteral("application/pdf"), stackedWidget);
         swpOkular = (okularPart == NULL) ? -1 : stackedWidget->addWidget(okularPart->widget());
         if (okularPart == NULL || swpOkular < 0) {
             qCWarning(LOG_KBIBTEX_PROGRAM) << "No Okular part for PDF or PostScript document preview available.";
@@ -235,7 +235,7 @@ public:
         swpHTML = stackedWidget->addWidget(htmlWidget);
         connect(htmlWidget, &QWebView::loadFinished, p, &DocumentPreview::loadingFinished);
 #else // HAVE_WEBKITWIDGETS
-        htmlPart = locatePart(QLatin1String("text/html"), stackedWidget);
+        htmlPart = locatePart(QStringLiteral("text/html"), stackedWidget);
         if (htmlPart != NULL) {
             qCDebug(LOG_KBIBTEX_PROGRAM) << "HTML KPart is available, using it instead of WebEngine or WebKit (neither available) for HTML/Web preview.";
             swpHTML = stackedWidget->addWidget(htmlPart->widget());
@@ -377,10 +377,10 @@ public:
             QDomNodeList toolbarItems = toolbarNodes.at(i).childNodes();
             for (int j = 0; j < toolbarItems.count(); ++j) {
                 QDomNode toolbarItem = toolbarItems.at(j);
-                if (toolbarItem.nodeName() == QLatin1String("Action")) {
-                    QString actionName = toolbarItem.attributes().namedItem(QLatin1String("name")).nodeValue();
+                if (toolbarItem.nodeName() == QStringLiteral("Action")) {
+                    QString actionName = toolbarItem.attributes().namedItem(QStringLiteral("name")).nodeValue();
                     toolBar->addAction(part->actionCollection()->action(actionName));
-                } else if (toolbarItem.nodeName() == QLatin1String("Separator")) {
+                } else if (toolbarItem.nodeName() == QStringLiteral("Separator")) {
                     toolBar->addSeparator();
                 }
             }
@@ -392,12 +392,12 @@ public:
             QDomNodeList menubarNode = menubarNodes.at(i).childNodes();
             for (int j = 0; j < menubarNode.count(); ++j) {
                 QDomNode menubarItem = menubarNode.at(j);
-                if (menubarItem.nodeName() == QLatin1String("Menu")) {
+                if (menubarItem.nodeName() == QStringLiteral("Menu")) {
                     QDomNodeList menuNode = menubarItem.childNodes();
                     QString text;
                     for (int k = 0; k < menuNode.count(); ++k) {
                         QDomNode menuItem = menuNode.at(k);
-                        if (menuItem.nodeName() == QLatin1String("text")) {
+                        if (menuItem.nodeName() == QStringLiteral("text")) {
                             text = menuItem.firstChild().toText().data();
                             break;
                         }
@@ -406,10 +406,10 @@ public:
 
                     for (int k = 0; k < menuNode.count(); ++k) {
                         QDomNode menuItem = menuNode.at(k);
-                        if (menuItem.nodeName() == QLatin1String("Action")) {
-                            QString actionName = menuItem.attributes().namedItem(QLatin1String("name")).nodeValue();
+                        if (menuItem.nodeName() == QStringLiteral("Action")) {
+                            QString actionName = menuItem.attributes().namedItem(QStringLiteral("name")).nodeValue();
                             menu->addAction(part->actionCollection()->action(actionName));
-                        } else if (menuItem.nodeName() == QLatin1String("Separator")) {
+                        } else if (menuItem.nodeName() == QStringLiteral("Separator")) {
                             menu->addSeparator();
                         }
                     }
@@ -422,7 +422,7 @@ public:
             QDomNodeList actionProperties = actionPropertiesList.at(i).childNodes();
             for (int j = 0; j < actionProperties.count(); ++j) {
                 QDomNode actionNode = actionProperties.at(j);
-                if (actionNode.nodeName() == QLatin1String("Action")) {
+                if (actionNode.nodeName() == QStringLiteral("Action")) {
                     const QString actionName = actionNode.attributes().namedItem("name").toAttr().nodeValue();
                     const QString actionShortcut = actionNode.attributes().namedItem("shortcut").toAttr().value();
                     QAction *action = part->actionCollection()->action(actionName);
@@ -471,9 +471,9 @@ public:
     }
 
     bool showUrl(const struct UrlInfo &urlInfo) {
-        static const QStringList okularMimetypes = QStringList() << QLatin1String("application/x-pdf") << QLatin1String("application/pdf") << QLatin1String("application/x-gzpdf") << QLatin1String("application/x-bzpdf") << QLatin1String("application/x-wwf") << QLatin1String("image/vnd.djvu") << QLatin1String("application/postscript") << QLatin1String("image/x-eps") << QLatin1String("application/x-gzpostscript") << QLatin1String("application/x-bzpostscript") << QLatin1String("image/x-gzeps") << QLatin1String("image/x-bzeps");
-        static const QStringList htmlMimetypes = QStringList() << QLatin1String("text/html") << QLatin1String("application/xml") << QLatin1String("application/xhtml+xml");
-        static const QStringList imageMimetypes = QStringList() << QLatin1String("image/jpeg") << QLatin1String("image/png") << QLatin1String("image/gif") << QLatin1String("image/tiff");
+        static const QStringList okularMimetypes = QStringList() << QStringLiteral("application/x-pdf") << QStringLiteral("application/pdf") << QStringLiteral("application/x-gzpdf") << QStringLiteral("application/x-bzpdf") << QStringLiteral("application/x-wwf") << QStringLiteral("image/vnd.djvu") << QStringLiteral("application/postscript") << QStringLiteral("image/x-eps") << QStringLiteral("application/x-gzpostscript") << QStringLiteral("application/x-bzpostscript") << QStringLiteral("image/x-gzeps") << QStringLiteral("image/x-bzeps");
+        static const QStringList htmlMimetypes = QStringList() << QStringLiteral("text/html") << QStringLiteral("application/xml") << QStringLiteral("application/xhtml+xml");
+        static const QStringList imageMimetypes = QStringList() << QStringLiteral("image/jpeg") << QStringLiteral("image/png") << QStringLiteral("image/gif") << QStringLiteral("image/tiff");
 
         if (swpHTML >= 0)
             stackedWidget->widget(swpHTML)->setEnabled(false);
@@ -518,7 +518,7 @@ public:
             return true;
         } else {
             QString additionalInformation;
-            if (urlInfo.mimeType == QLatin1String("application/pdf"))
+            if (urlInfo.mimeType == QStringLiteral("application/pdf"))
                 additionalInformation = i18nc("Additional information in case there is not KPart available for mime type 'application/pdf'", "<br/><br/>Please install <a href=\"https://userbase.kde.org/Okular\">Okular</a> to make use of its PDF viewing component.");
             showMessage(i18nc("First parameter is mime type, second parameter is optional information (may be empty)", "<qt>Don't know how to show mimetype '%1'.%2</qt>", urlInfo.mimeType, additionalInformation)); // krazy:exclude=qmethods
         }
@@ -542,7 +542,7 @@ public:
         if (!isLocalOrRelative(url) && url.fileName().isEmpty()) {
             /// URLs not pointing to a specific file should be opened with a web browser component
             result.icon = QIcon::fromTheme("text-html");
-            result.mimeType = QLatin1String("text/html");
+            result.mimeType = QStringLiteral("text/html");
             return result;
         }
 
@@ -557,19 +557,19 @@ public:
         result.mimeType = mimeType.name();
         result.icon = QIcon::fromTheme(mimeType.iconName());
 
-        if (result.mimeType == QLatin1String("application/octet-stream")) {
+        if (result.mimeType == QStringLiteral("application/octet-stream")) {
             /// application/octet-stream is a fall-back if KDE did not know better
             result.icon = QIcon::fromTheme("text-html");
-            result.mimeType = QLatin1String("text/html");
-        } else if ((result.mimeType.isEmpty() || result.mimeType == QLatin1String("inode/directory")) && (result.url.scheme() == QLatin1String("http") || result.url.scheme() == QLatin1String("https"))) {
+            result.mimeType = QStringLiteral("text/html");
+        } else if ((result.mimeType.isEmpty() || result.mimeType == QStringLiteral("inode/directory")) && (result.url.scheme() == QStringLiteral("http") || result.url.scheme() == QStringLiteral("https"))) {
             /// directory via http means normal webpage (not browsable directory)
             result.icon = QIcon::fromTheme("text-html");
-            result.mimeType = QLatin1String("text/html");
+            result.mimeType = QStringLiteral("text/html");
         }
 
         if (url.url(QUrl::PreferLocalFile).startsWith(arXivPDFUrlStart)) {
             result.icon = QIcon::fromTheme("application-pdf");
-            result.mimeType = QLatin1String("application/pdf");
+            result.mimeType = QStringLiteral("application/pdf");
         }
 
         return result;
@@ -598,9 +598,9 @@ public:
     }
 };
 
-const QString DocumentPreview::DocumentPreviewPrivate::arXivPDFUrlStart = QLatin1String("http://arxiv.org/pdf/");
-const QString DocumentPreview::DocumentPreviewPrivate::configGroupName = QLatin1String("URL Preview");
-const QString DocumentPreview::DocumentPreviewPrivate::onlyLocalFilesCheckConfig = QLatin1String("OnlyLocalFiles");
+const QString DocumentPreview::DocumentPreviewPrivate::arXivPDFUrlStart = QStringLiteral("http://arxiv.org/pdf/");
+const QString DocumentPreview::DocumentPreviewPrivate::configGroupName = QStringLiteral("URL Preview");
+const QString DocumentPreview::DocumentPreviewPrivate::onlyLocalFilesCheckConfig = QStringLiteral("OnlyLocalFiles");
 
 DocumentPreview::DocumentPreview(QDockWidget *parent)
         : QWidget(parent), d(new DocumentPreviewPrivate(this))
@@ -684,9 +684,9 @@ void DocumentPreview::loadingFinished()
 
 void DocumentPreview::linkActivated(const QString &link)
 {
-    if (link == QLatin1String("disableonlylocalfiles"))
+    if (link == QStringLiteral("disableonlylocalfiles"))
         d->onlyLocalFilesButton->setChecked(true);
-    else if (link.startsWith(QLatin1String("http://")) || link.startsWith(QLatin1String("https://"))) {
+    else if (link.startsWith(QStringLiteral("http://")) || link.startsWith(QStringLiteral("https://"))) {
         const QUrl urlToOpen = QUrl::fromUserInput(link);
         if (urlToOpen.isValid()) {
             /// Guess mime type for url to open

@@ -28,8 +28,8 @@ int main(int argc, char *argv[])
 {
     QApplication programCore(argc, argv);
 
-    KAboutData aboutData(QLatin1String("kbibtextest"), i18n("KBibTeX Test"), QLatin1String(versionNumber), i18n("A BibTeX editor for KDE"), KAboutLicense::GPL_V2, i18n("Copyright 2004-2015 Thomas Fischer"), QString(), QLatin1String("http://home.gna.org/kbibtex/"));
-    aboutData.addAuthor(i18n("Thomas Fischer"), i18n("Maintainer"), QLatin1String("fischer@unix-ag.uni-kl.de"));
+    KAboutData aboutData(QStringLiteral("kbibtextest"), i18n("KBibTeX Test"), QLatin1String(versionNumber), i18n("A BibTeX editor for KDE"), KAboutLicense::GPL_V2, i18n("Copyright 2004-2015 Thomas Fischer"), QString(), QStringLiteral("http://home.gna.org/kbibtex/"));
+    aboutData.addAuthor(i18n("Thomas Fischer"), i18n("Maintainer"), QStringLiteral("fischer@unix-ag.uni-kl.de"));
     KAboutData::setApplicationData(aboutData);
 
     QPointer<KBibTeXTest> test = new KBibTeXTest();

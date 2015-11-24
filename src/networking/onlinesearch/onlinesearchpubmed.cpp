@@ -45,9 +45,9 @@ public:
     int numSteps, curStep;
 
     OnlineSearchPubMedPrivate(OnlineSearchPubMed *parent)
-            : p(parent), pubMedUrlPrefix(QLatin1String("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/")),
+            : p(parent), pubMedUrlPrefix(QStringLiteral("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/")),
           numSteps(0), curStep(0) {
-        const QString xsltFilename = QLatin1String("kbibtex/pubmed2bibtex.xsl");
+        const QString xsltFilename = QStringLiteral("kbibtex/pubmed2bibtex.xsl");
         xslt = XSLTransform::createXSLTransform(QStandardPaths::locate(QStandardPaths::GenericDataLocation, xsltFilename));
         if (xslt == NULL)
             qCWarning(LOG_KBIBTEX_NETWORKING) << "Could not create XSLT transformation for" << xsltFilename;
@@ -59,9 +59,9 @@ public:
 
     QUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) {
         /// used to auto-detect PMIDs (unique identifiers for documents) in free text search
-        static const QRegExp pmidRegExp(QLatin1String("^[0-9]{6,}$"));
+        static const QRegExp pmidRegExp(QStringLiteral("^[0-9]{6,}$"));
 
-        QString url = pubMedUrlPrefix + QLatin1String("esearch.fcgi?db=pubmed&tool=kbibtex&term=");
+        QString url = pubMedUrlPrefix + QStringLiteral("esearch.fcgi?db=pubmed&tool=kbibtex&term=");
 
         /// append search terms
         QStringList queryFragments;
@@ -70,7 +70,7 @@ public:
         QStringList freeTextWords = p->splitRespectingQuotationMarks(query[queryKeyFreeText]);
         for (QStringList::ConstIterator it = freeTextWords.constBegin(); it != freeTextWords.constEnd(); ++it) {
             QString text = *it;
-            queryFragments.append(text + (pmidRegExp.indexIn(text) >= 0 ? QLatin1String("") : QLatin1String("[All Fields]")));
+            queryFragments.append(text + (pmidRegExp.indexIn(text) >= 0 ? QStringLiteral("") : QStringLiteral("[All Fields]")));
         }
 
         /// add words from "year" field
@@ -84,30 +84,30 @@ public:
         QStringList titleWords = p->splitRespectingQuotationMarks(query[queryKeyTitle]);
         for (QStringList::ConstIterator it = titleWords.constBegin(); it != titleWords.constEnd(); ++it) {
             QString text = *it;
-            queryFragments.append(text + QLatin1String("[Title]"));
+            queryFragments.append(text + QStringLiteral("[Title]"));
         }
 
         /// add words from "author" field
         QStringList authorWords = p->splitRespectingQuotationMarks(query[queryKeyAuthor]);
         for (QStringList::ConstIterator it = authorWords.constBegin(); it != authorWords.constEnd(); ++it) {
             QString text = *it;
-            queryFragments.append(text + QLatin1String("[Author]"));
+            queryFragments.append(text + QStringLiteral("[Author]"));
         }
 
         /// Join all search terms with an AND operation
-        url.append(queryFragments.join(QLatin1String("+AND+")));
-        url = url.replace(QLatin1Char('"'), QLatin1String("%22"));
+        url.append(queryFragments.join(QStringLiteral("+AND+")));
+        url = url.replace(QLatin1Char('"'), QStringLiteral("%22"));
 
         /// set number of expected results
-        url.append(QString(QLatin1String("&retstart=0&retmax=%1&retmode=xml")).arg(numResults));
+        url.append(QString(QStringLiteral("&retstart=0&retmax=%1&retmode=xml")).arg(numResults));
 
         return QUrl::fromUserInput(url);
     }
 
     QUrl buildFetchIdUrl(const QStringList &idList) {
-        QString url = pubMedUrlPrefix + QLatin1String("efetch.fcgi?retmode=xml&db=pubmed&id=");
+        QString url = pubMedUrlPrefix + QStringLiteral("efetch.fcgi?retmode=xml&db=pubmed&id=");
 
-        url.append(idList.join(QLatin1String(",")));
+        url.append(idList.join(QStringLiteral(",")));
 
         return QUrl(url);
     }
@@ -168,7 +168,7 @@ QString OnlineSearchPubMed::label() const
 
 QString OnlineSearchPubMed::favIconUrl() const
 {
-    return QLatin1String("http://www.ncbi.nlm.nih.gov/favicon.ico");
+    return QStringLiteral("http://www.ncbi.nlm.nih.gov/favicon.ico");
 }
 
 OnlineSearchQueryFormAbstract *OnlineSearchPubMed::customWidget(QWidget *)
@@ -196,15 +196,15 @@ void OnlineSearchPubMed::eSearchDone()
     if (handleErrors(reply)) {
         const QString result = QString::fromUtf8(reply->readAll().data());
 
-        if (!result.contains(QLatin1String("<Count>0</Count>"))) {
+        if (!result.contains(QStringLiteral("<Count>0</Count>"))) {
             /// without parsing XML text correctly, just extract all PubMed ids
             QStringList idList;
             int p1, p2;
             /// All IDs are within <IdList>...</IdList>
-            if ((p1 = result.indexOf(QLatin1String("<IdList>"))) > 0 && (p2 = result.indexOf(QLatin1String("</IdList>"), p1)) > 0) {
+            if ((p1 = result.indexOf(QStringLiteral("<IdList>"))) > 0 && (p2 = result.indexOf(QStringLiteral("</IdList>"), p1)) > 0) {
                 int p3, p4 = p1;
                 /// Search for each <Id>...</Id>
-                while ((p3 = result.indexOf(QLatin1String("<Id>"), p4)) > 0 && (p4 = result.indexOf(QLatin1String("</Id>"), p3)) > 0 && p4 < p2) {
+                while ((p3 = result.indexOf(QStringLiteral("<Id>"), p4)) > 0 && (p4 = result.indexOf(QStringLiteral("</Id>"), p3)) > 0 && p4 < p2) {
                     /// Extract ID and add it to list
                     const QString id = result.mid(p3 + 4, p4 - p3 - 4);
                     idList << id;

@@ -35,38 +35,38 @@ public:
     QSet<QString> publicationLinks;
 
     QUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) {
-        QString urlBase = QLatin1String("https://ideas.repec.org/cgi-bin/htsearch?cmd=Search%21&form=extended&m=all&fmt=url&wm=wrd&sp=1&sy=1&dt=range");
+        QString urlBase = QStringLiteral("https://ideas.repec.org/cgi-bin/htsearch?cmd=Search%21&form=extended&m=all&fmt=url&wm=wrd&sp=1&sy=1&dt=range");
 
         bool hasFreeText = !query[queryKeyFreeText].isEmpty();
         bool hasTitle = !query[queryKeyTitle].isEmpty();
         bool hasAuthor = !query[queryKeyAuthor].isEmpty();
-        bool hasYear = QRegExp(QLatin1String("^(19|20)[0-9]{2}$")).indexIn(query[queryKeyYear]) == 0;
+        bool hasYear = QRegExp(QStringLiteral("^(19|20)[0-9]{2}$")).indexIn(query[queryKeyYear]) == 0;
 
-        QString fieldWF = QLatin1String("4BFF"); ///< search whole record by default
+        QString fieldWF = QStringLiteral("4BFF"); ///< search whole record by default
         QString fieldQ, fieldDB, fieldDE;
         if (hasAuthor && !hasFreeText && !hasTitle) {
             /// If only the author field is used, search explictly for author
-            fieldWF = QLatin1String("000F");
+            fieldWF = QStringLiteral("000F");
             fieldQ = query[queryKeyAuthor];
         } else if (!hasAuthor && !hasFreeText && hasTitle) {
             /// If only the title field is used, search explictly for title
-            fieldWF = QLatin1String("00F0");
+            fieldWF = QStringLiteral("00F0");
             fieldQ = query[queryKeyTitle];
         } else {
             fieldQ = query[queryKeyFreeText] + QLatin1Char(' ') + query[queryKeyTitle] + QLatin1Char(' ') + query[queryKeyAuthor] + QLatin1Char(' ');
         }
         if (hasYear) {
-            fieldDB = QLatin1String("01/01/") + query[queryKeyYear];
-            fieldDE = QLatin1String("31/12/") + query[queryKeyYear];
+            fieldDB = QStringLiteral("01/01/") + query[queryKeyYear];
+            fieldDE = QStringLiteral("31/12/") + query[queryKeyYear];
         }
 
         QUrl url(urlBase);
         QUrlQuery q(url);
-        q.addQueryItem(QLatin1String("ps"), QString::number(numResults));
-        q.addQueryItem(QLatin1String("db"), fieldDB);
-        q.addQueryItem(QLatin1String("de"), fieldDE);
-        q.addQueryItem(QLatin1String("q"), fieldQ);
-        q.addQueryItem(QLatin1String("wf"), fieldWF);
+        q.addQueryItem(QStringLiteral("ps"), QString::number(numResults));
+        q.addQueryItem(QStringLiteral("db"), fieldDB);
+        q.addQueryItem(QStringLiteral("de"), fieldDE);
+        q.addQueryItem(QStringLiteral("q"), fieldQ);
+        q.addQueryItem(QStringLiteral("wf"), fieldWF);
         url.setQuery(q);
 
         return url;
@@ -114,7 +114,7 @@ QString OnlineSearchIDEASRePEc::label() const
 
 QString OnlineSearchIDEASRePEc::favIconUrl() const
 {
-    return QLatin1String("https://ideas.repec.org/favicon.ico");
+    return QStringLiteral("https://ideas.repec.org/favicon.ico");
 }
 
 OnlineSearchQueryFormAbstract *OnlineSearchIDEASRePEc::customWidget(QWidget *)
@@ -152,13 +152,13 @@ void OnlineSearchIDEASRePEc::downloadListDone()
             /// ensure proper treatment of UTF-8 characters
             const QString htmlCode = QString::fromUtf8(reply->readAll().data());
 
-            static const QRegExp publicationLinkRegExp(QLatin1String("http[s]?://ideas.repec.org/[a-z]/\\S{,8}/\\S{2,24}/\\S{,64}.html"));
+            static const QRegExp publicationLinkRegExp(QStringLiteral("http[s]?://ideas.repec.org/[a-z]/\\S{,8}/\\S{2,24}/\\S{,64}.html"));
             d->publicationLinks.clear();
             int p = -1;
             while ((p = publicationLinkRegExp.indexIn(htmlCode, p + 1)) >= 0) {
                 QString c = publicationLinkRegExp.cap(0);
                 /// Rewrite URL to be https instead of http, avoids HTTP redirection
-                c = c.replace(QLatin1String("http://"), QLatin1String("https://"));
+                c = c.replace(QStringLiteral("http://"), QStringLiteral("https://"));
                 d->publicationLinks.insert(c);
             }
             d->numSteps += 2 * d->publicationLinks.count(); ///< update number of steps
@@ -192,14 +192,14 @@ void OnlineSearchIDEASRePEc::downloadPublicationDone()
         const QString htmlCode = QString::fromUtf8(reply->readAll().data());
 
         QString downloadUrl;
-        static const QString downloadFormStart = QLatin1String("<FORM METHOD=GET ACTION=\"/cgi-bin/get_doc.pl\"");
+        static const QString downloadFormStart = QStringLiteral("<FORM METHOD=GET ACTION=\"/cgi-bin/get_doc.pl\"");
         if (htmlCode.contains(downloadFormStart)) {
             QMap<QString, QString> form = formParameters(htmlCode, downloadFormStart);
-            downloadUrl = form[QLatin1String("url")];
+            downloadUrl = form[QStringLiteral("url")];
         }
 
-        QMap<QString, QString> form = formParameters(htmlCode, QLatin1String("<form method=\"post\" action=\"/cgi-bin/refs.cgi\""));
-        form[QLatin1String("output")] = QLatin1String("2"); ///< enforce BibTeX output
+        QMap<QString, QString> form = formParameters(htmlCode, QStringLiteral("<form method=\"post\" action=\"/cgi-bin/refs.cgi\""));
+        form[QStringLiteral("output")] = QStringLiteral("2"); ///< enforce BibTeX output
 
         QString body;
         QMap<QString, QString>::ConstIterator it = form.constBegin();
@@ -209,7 +209,7 @@ void OnlineSearchIDEASRePEc::downloadPublicationDone()
             ++it;
         }
 
-        const QUrl url = QUrl(QLatin1String("https://ideas.repec.org/cgi-bin/refs.cgi"));
+        const QUrl url = QUrl(QStringLiteral("https://ideas.repec.org/cgi-bin/refs.cgi"));
         QNetworkRequest request(url);
         request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
         reply = InternalNetworkAccessManager::self()->post(request, body.toUtf8());

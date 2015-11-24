@@ -29,7 +29,7 @@
 
 OnlineSearchQueryFormGeneral::OnlineSearchQueryFormGeneral(QWidget *parent)
         : OnlineSearchQueryFormAbstract(parent),
-      configGroupName(QLatin1String("Search Engine General"))
+      configGroupName(QStringLiteral("Search Engine General"))
 {
     QFormLayout *layout = new QFormLayout(this);
     layout->setMargin(0);
@@ -119,7 +119,7 @@ void OnlineSearchQueryFormGeneral::loadState()
     for (QMap<QString, KLineEdit *>::ConstIterator it = queryFields.constBegin(); it != queryFields.constEnd(); ++it) {
         it.value()->setText(configGroup.readEntry(it.key(), QString()));
     }
-    numResultsField->setValue(configGroup.readEntry(QLatin1String("numResults"), 10));
+    numResultsField->setValue(configGroup.readEntry(QStringLiteral("numResults"), 10));
 }
 
 void OnlineSearchQueryFormGeneral::saveState()
@@ -128,6 +128,6 @@ void OnlineSearchQueryFormGeneral::saveState()
     for (QMap<QString, KLineEdit *>::ConstIterator it = queryFields.constBegin(); it != queryFields.constEnd(); ++it) {
         configGroup.writeEntry(it.key(), it.value()->text());
     }
-    configGroup.writeEntry(QLatin1String("numResults"), numResultsField->value());
+    configGroup.writeEntry(QStringLiteral("numResults"), numResultsField->value());
     config->sync();
 }

@@ -33,7 +33,7 @@
 FileExporterRTF::FileExporterRTF()
         : FileExporterToolchain()
 {
-    m_fileBasename = QLatin1String("bibtex-to-rtf");
+    m_fileBasename = QStringLiteral("bibtex-to-rtf");
     m_fileStem = tempDir.path() + QDir::separator() + m_fileBasename;
 
     reloadConfig();
@@ -46,12 +46,12 @@ FileExporterRTF::~FileExporterRTF()
 
 void FileExporterRTF::reloadConfig()
 {
-    KSharedConfigPtr config = KSharedConfig::openConfig(QLatin1String("kbibtexrc"));
-    KConfigGroup configGroup(config, QLatin1String("FileExporterPDFPS"));
+    KSharedConfigPtr config = KSharedConfig::openConfig(QStringLiteral("kbibtexrc"));
+    KConfigGroup configGroup(config, QStringLiteral("FileExporterPDFPS"));
     m_babelLanguage = configGroup.readEntry(keyBabelLanguage, defaultBabelLanguage);
     m_bibliographyStyle = configGroup.readEntry(keyBibliographyStyle, defaultBibliographyStyle);
 
-    KConfigGroup configGroupGeneral(config, QLatin1String("General"));
+    KConfigGroup configGroupGeneral(config, QStringLiteral("General"));
     m_paperSize = configGroupGeneral.readEntry(keyPaperSize, defaultPaperSize);
 }
 
@@ -67,7 +67,7 @@ bool FileExporterRTF::save(QIODevice *iodevice, const File *bibtexfile, QStringL
     QFile output(m_fileStem + KBibTeX::extensionBibTeX);
     if (output.open(QIODevice::WriteOnly)) {
         FileExporterBibTeX *bibtexExporter = new FileExporterBibTeX();
-        bibtexExporter->setEncoding(QLatin1String("latex"));
+        bibtexExporter->setEncoding(QStringLiteral("latex"));
         result = bibtexExporter->save(&output, bibtexfile, errorLog);
         output.close();
         delete bibtexExporter;
@@ -92,7 +92,7 @@ bool FileExporterRTF::save(QIODevice *iodevice, const QSharedPointer<const Eleme
     QFile output(m_fileStem + KBibTeX::extensionBibTeX);
     if (output.open(QIODevice::WriteOnly)) {
         FileExporterBibTeX *bibtexExporter = new FileExporterBibTeX();
-        bibtexExporter->setEncoding(QLatin1String("latex"));
+        bibtexExporter->setEncoding(QStringLiteral("latex"));
         result = bibtexExporter->save(&output, element, bibtexfile, errorLog);
         output.close();
         delete bibtexExporter;
@@ -107,7 +107,7 @@ bool FileExporterRTF::save(QIODevice *iodevice, const QSharedPointer<const Eleme
 
 bool FileExporterRTF::generateRTF(QIODevice *iodevice, QStringList *errorLog)
 {
-    QStringList cmdLines = QStringList() << QLatin1String("latex -halt-on-error bibtex-to-rtf.tex") << QLatin1String("bibtex bibtex-to-rtf") << QLatin1String("latex -halt-on-error bibtex-to-rtf.tex") << QString(QLatin1String("latex2rtf -i %1 bibtex-to-rtf.tex")).arg(m_babelLanguage);
+    QStringList cmdLines = QStringList() << QStringLiteral("latex -halt-on-error bibtex-to-rtf.tex") << QStringLiteral("bibtex bibtex-to-rtf") << QStringLiteral("latex -halt-on-error bibtex-to-rtf.tex") << QString(QStringLiteral("latex2rtf -i %1 bibtex-to-rtf.tex")).arg(m_babelLanguage);
 
     return writeLatexFile(m_fileStem + KBibTeX::extensionTeX) && runProcesses(cmdLines, errorLog) && writeFileToIODevice(m_fileStem + KBibTeX::extensionRTF, iodevice, errorLog);
 }
@@ -125,9 +125,9 @@ bool FileExporterRTF::writeLatexFile(const QString &filename)
             ts << "\\usepackage[" << m_babelLanguage << "]{babel}" << endl;
         if (kpsewhich("url.sty"))
             ts << "\\usepackage{url}" << endl;
-        if (m_bibliographyStyle.startsWith(QLatin1String("apacite")) && kpsewhich("apacite.sty"))
+        if (m_bibliographyStyle.startsWith(QStringLiteral("apacite")) && kpsewhich("apacite.sty"))
             ts << "\\usepackage[bibnewpage]{apacite}" << endl;
-        if (m_bibliographyStyle == QLatin1String("dcu") && kpsewhich("harvard.sty") && kpsewhich("html.sty"))
+        if (m_bibliographyStyle == QStringLiteral("dcu") && kpsewhich("harvard.sty") && kpsewhich("html.sty"))
             ts << "\\usepackage{html}" << endl << "\\usepackage[dcucite]{harvard}" << endl << "\\renewcommand{\\harvardurl}{URL: \\url}" << endl;
         if (kpsewhich("geometry.sty"))
             ts << "\\usepackage[paper=" << m_paperSize << (m_paperSize.length() <= 2 ? "paper" : "") << "]{geometry}" << endl;

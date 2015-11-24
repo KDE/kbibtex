@@ -36,7 +36,7 @@
 FileExporterPDF::FileExporterPDF(FileEmbedding fileEmbedding)
         : FileExporterToolchain(), m_fileEmbedding(fileEmbedding)
 {
-    m_fileBasename = QLatin1String("bibtex-to-pdf");
+    m_fileBasename = QStringLiteral("bibtex-to-pdf");
     m_fileStem = tempDir.path() + QDir::separator() + m_fileBasename;
 
     /// If there is not embedfile.sty file, disable embedding
@@ -53,12 +53,12 @@ FileExporterPDF::~FileExporterPDF()
 
 void FileExporterPDF::reloadConfig()
 {
-    KSharedConfigPtr config = KSharedConfig::openConfig(QLatin1String("kbibtexrc"));
-    KConfigGroup configGroup(config, QLatin1String("FileExporterPDFPS"));
+    KSharedConfigPtr config = KSharedConfig::openConfig(QStringLiteral("kbibtexrc"));
+    KConfigGroup configGroup(config, QStringLiteral("FileExporterPDFPS"));
     m_babelLanguage = configGroup.readEntry(keyBabelLanguage, defaultBabelLanguage);
     m_bibliographyStyle = configGroup.readEntry(keyBibliographyStyle, defaultBibliographyStyle);
 
-    KConfigGroup configGroupGeneral(config, QLatin1String("General"));
+    KConfigGroup configGroupGeneral(config, QStringLiteral("General"));
     m_paperSize = configGroupGeneral.readEntry(keyPaperSize, defaultPaperSize);
     m_font = configGroupGeneral.readEntry(keyFont, defaultFont);
 }
@@ -80,7 +80,7 @@ bool FileExporterPDF::save(QIODevice *iodevice, const File *bibtexfile, QStringL
     QFile output(m_fileStem + KBibTeX::extensionBibTeX);
     if (output.open(QIODevice::WriteOnly)) {
         FileExporterBibTeX *bibtexExporter = new FileExporterBibTeX();
-        bibtexExporter->setEncoding(QLatin1String("latex"));
+        bibtexExporter->setEncoding(QStringLiteral("latex"));
         result = bibtexExporter->save(&output, bibtexfile, errorLog);
         output.close();
         delete bibtexExporter;
@@ -111,7 +111,7 @@ bool FileExporterPDF::save(QIODevice *iodevice, const QSharedPointer<const Eleme
     QFile output(m_fileStem + KBibTeX::extensionBibTeX);
     if (output.open(QIODevice::WriteOnly)) {
         FileExporterBibTeX *bibtexExporter = new FileExporterBibTeX();
-        bibtexExporter->setEncoding(QLatin1String("latex"));
+        bibtexExporter->setEncoding(QStringLiteral("latex"));
         result = bibtexExporter->save(&output, element, bibtexfile, errorLog);
         output.close();
         delete bibtexExporter;
@@ -131,7 +131,7 @@ void FileExporterPDF::setDocumentSearchPaths(const QStringList &searchPaths)
 
 bool FileExporterPDF::generatePDF(QIODevice *iodevice, QStringList *errorLog)
 {
-    QStringList cmdLines = QStringList() << QLatin1String("pdflatex -halt-on-error ") + m_fileStem + KBibTeX::extensionTeX << QLatin1String("bibtex ") + m_fileStem + KBibTeX::extensionAux << QLatin1String("pdflatex -halt-on-error ") + m_fileStem + KBibTeX::extensionTeX << QLatin1String("pdflatex -halt-on-error ") + m_fileStem + KBibTeX::extensionTeX;
+    QStringList cmdLines = QStringList() << QStringLiteral("pdflatex -halt-on-error ") + m_fileStem + KBibTeX::extensionTeX << QStringLiteral("bibtex ") + m_fileStem + KBibTeX::extensionAux << QStringLiteral("pdflatex -halt-on-error ") + m_fileStem + KBibTeX::extensionTeX << QStringLiteral("pdflatex -halt-on-error ") + m_fileStem + KBibTeX::extensionTeX;
 
     return writeLatexFile(m_fileStem + KBibTeX::extensionTeX) && runProcesses(cmdLines, errorLog) && writeFileToIODevice(m_fileStem + KBibTeX::extensionPDF, iodevice, errorLog);
 }
@@ -151,22 +151,22 @@ bool FileExporterPDF::writeLatexFile(const QString &filename)
             ts << "\\usepackage[pdfborder={0 0 0},pdfproducer={KBibTeX: http://home.gna.org/kbibtex/},pdftex]{hyperref}" << endl;
         else if (kpsewhich("url.sty"))
             ts << "\\usepackage{url}" << endl;
-        if (m_bibliographyStyle.startsWith(QLatin1String("apacite")) && kpsewhich("apacite.sty"))
+        if (m_bibliographyStyle.startsWith(QStringLiteral("apacite")) && kpsewhich("apacite.sty"))
             ts << "\\usepackage[bibnewpage]{apacite}" << endl;
-        if ((m_bibliographyStyle == QLatin1String("agsm") || m_bibliographyStyle == QLatin1String("dcu") || m_bibliographyStyle == QLatin1String("jmr") || m_bibliographyStyle == QLatin1String("jphysicsB") || m_bibliographyStyle == QLatin1String("kluwer") || m_bibliographyStyle == QLatin1String("nederlands") || m_bibliographyStyle == QLatin1String("dcu") || m_bibliographyStyle == QLatin1String("dcu")) && kpsewhich("harvard.sty") && kpsewhich("html.sty"))
+        if ((m_bibliographyStyle == QStringLiteral("agsm") || m_bibliographyStyle == QStringLiteral("dcu") || m_bibliographyStyle == QStringLiteral("jmr") || m_bibliographyStyle == QStringLiteral("jphysicsB") || m_bibliographyStyle == QStringLiteral("kluwer") || m_bibliographyStyle == QStringLiteral("nederlands") || m_bibliographyStyle == QStringLiteral("dcu") || m_bibliographyStyle == QStringLiteral("dcu")) && kpsewhich("harvard.sty") && kpsewhich("html.sty"))
             ts << "\\usepackage{html}" << endl << "\\usepackage[dcucite]{harvard}" << endl << "\\renewcommand{\\harvardurl}{URL: \\url}" << endl;
         if (kpsewhich("embedfile.sty"))
             ts << "\\usepackage{embedfile}" << endl;
         if (kpsewhich("geometry.sty"))
             ts << "\\usepackage[paper=" << m_paperSize << (m_paperSize.length() <= 2 ? "paper" : "") << "]{geometry}" << endl;
-        if (!m_font.isEmpty() && kpsewhich(m_font + QLatin1String(".sty")))
+        if (!m_font.isEmpty() && kpsewhich(m_font + QStringLiteral(".sty")))
             ts << "\\usepackage{" << m_font << "}" << endl;
         ts << "\\bibliographystyle{" << m_bibliographyStyle << "}" << endl;
         ts << "\\begin{document}" << endl;
 
         if (!m_embeddedFileList.isEmpty())
             for (QStringList::ConstIterator it = m_embeddedFileList.constBegin(); it != m_embeddedFileList.constEnd(); ++it) {
-                QStringList param = (*it).split(QLatin1String("|"));
+                QStringList param = (*it).split(QStringLiteral("|"));
                 QFile file(param[1]);
                 if (file.exists())
                     ts << "\\embedfile[desc={" << param[0] << "}";
@@ -179,7 +179,7 @@ bool FileExporterPDF::writeLatexFile(const QString &filename)
             }
 
         ts << "\\nocite{*}" << endl;
-        ts << QLatin1String("\\bibliography{") << m_fileBasename << QLatin1String("}") << endl;
+        ts << QStringLiteral("\\bibliography{") << m_fileBasename << QStringLiteral("}") << endl;
         ts << "\\end{document}" << endl;
         latexFile.close();
         return true;

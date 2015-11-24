@@ -33,7 +33,7 @@ public:
     Private(FileExporterBibUtils */* UNUSED parent*/)
     // UNUSED : p(parent)
     {
-        bibtexExporter.setEncoding(QLatin1String("utf-8"));
+        bibtexExporter.setEncoding(QStringLiteral("utf-8"));
     }
 };
 

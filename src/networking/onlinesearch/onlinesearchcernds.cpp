@@ -48,7 +48,7 @@ QUrl OnlineSearchCERNDS::homepage() const
 
 QString OnlineSearchCERNDS::favIconUrl() const
 {
-    return QLatin1String("http://cds.cern.ch/favicon.ico");
+    return QStringLiteral("http://cds.cern.ch/favicon.ico");
 }
 
 QUrl OnlineSearchCERNDS::buildQueryUrl(const QMap<QString, QString> &query, int numResults)
@@ -66,10 +66,10 @@ QUrl OnlineSearchCERNDS::buildQueryUrl(const QMap<QString, QString> &query, int 
     ///   fX   ""=any field; title; author; reportnumber; year; fulltext
 
     /// Build URL
-    QUrl url = QUrl(QLatin1String("http://cds.cern.ch/search?ln=en&action_search=Search&c=Articles+%26+Preprints&as=1&sf=&so=d&rm=&sc=0&of=hx&f="));
+    QUrl url = QUrl(QStringLiteral("http://cds.cern.ch/search?ln=en&action_search=Search&c=Articles+%26+Preprints&as=1&sf=&so=d&rm=&sc=0&of=hx&f="));
     QUrlQuery q(url);
     /// Set number of expected results
-    q.addQueryItem(QLatin1String("rg"), QString::number(numResults));
+    q.addQueryItem(QStringLiteral("rg"), QString::number(numResults));
 
     /// Number search arguments
     int argumentCount = 0;
@@ -78,40 +78,40 @@ QUrl OnlineSearchCERNDS::buildQueryUrl(const QMap<QString, QString> &query, int 
     QStringList freeTextWords = splitRespectingQuotationMarks(query[queryKeyFreeText]);
     foreach (const QString &word, freeTextWords) {
         ++argumentCount;
-        q.addQueryItem(QString(QLatin1String("p%1")).arg(argumentCount), word);
-        q.addQueryItem(QString(QLatin1String("m%1")).arg(argumentCount), QLatin1String("a"));
-        q.addQueryItem(QString(QLatin1String("op%1")).arg(argumentCount), QLatin1String("a"));
-        q.addQueryItem(QString(QLatin1String("f%1")).arg(argumentCount), QLatin1String(""));
+        q.addQueryItem(QString(QStringLiteral("p%1")).arg(argumentCount), word);
+        q.addQueryItem(QString(QStringLiteral("m%1")).arg(argumentCount), QStringLiteral("a"));
+        q.addQueryItem(QString(QStringLiteral("op%1")).arg(argumentCount), QStringLiteral("a"));
+        q.addQueryItem(QString(QStringLiteral("f%1")).arg(argumentCount), QStringLiteral(""));
     }
 
     /// add words from "author" field
     QStringList authorWords = splitRespectingQuotationMarks(query[queryKeyAuthor]);
     foreach (const QString &word, authorWords) {
         ++argumentCount;
-        q.addQueryItem(QString(QLatin1String("p%1")).arg(argumentCount), word);
-        q.addQueryItem(QString(QLatin1String("m%1")).arg(argumentCount), QLatin1String("a"));
-        q.addQueryItem(QString(QLatin1String("op%1")).arg(argumentCount), QLatin1String("a"));
-        q.addQueryItem(QString(QLatin1String("f%1")).arg(argumentCount), QLatin1String("author"));
+        q.addQueryItem(QString(QStringLiteral("p%1")).arg(argumentCount), word);
+        q.addQueryItem(QString(QStringLiteral("m%1")).arg(argumentCount), QStringLiteral("a"));
+        q.addQueryItem(QString(QStringLiteral("op%1")).arg(argumentCount), QStringLiteral("a"));
+        q.addQueryItem(QString(QStringLiteral("f%1")).arg(argumentCount), QStringLiteral("author"));
     }
 
     /// add words from "title" field
     QStringList titleWords = splitRespectingQuotationMarks(query[queryKeyTitle]);
     foreach (const QString &word, titleWords) {
         ++argumentCount;
-        q.addQueryItem(QString(QLatin1String("p%1")).arg(argumentCount), word);
-        q.addQueryItem(QString(QLatin1String("m%1")).arg(argumentCount), QLatin1String("a"));
-        q.addQueryItem(QString(QLatin1String("op%1")).arg(argumentCount), QLatin1String("a"));
-        q.addQueryItem(QString(QLatin1String("f%1")).arg(argumentCount), QLatin1String("title"));
+        q.addQueryItem(QString(QStringLiteral("p%1")).arg(argumentCount), word);
+        q.addQueryItem(QString(QStringLiteral("m%1")).arg(argumentCount), QStringLiteral("a"));
+        q.addQueryItem(QString(QStringLiteral("op%1")).arg(argumentCount), QStringLiteral("a"));
+        q.addQueryItem(QString(QStringLiteral("f%1")).arg(argumentCount), QStringLiteral("title"));
     }
 
     /// add words from "title" field
     const QString year = query[queryKeyYear];
     if (!year.isEmpty()) {
         ++argumentCount;
-        q.addQueryItem(QString(QLatin1String("p%1")).arg(argumentCount), year);
-        q.addQueryItem(QString(QLatin1String("m%1")).arg(argumentCount), QLatin1String("a"));
-        q.addQueryItem(QString(QLatin1String("op%1")).arg(argumentCount), QLatin1String("a"));
-        q.addQueryItem(QString(QLatin1String("f%1")).arg(argumentCount), QLatin1String("year"));
+        q.addQueryItem(QString(QStringLiteral("p%1")).arg(argumentCount), year);
+        q.addQueryItem(QString(QStringLiteral("m%1")).arg(argumentCount), QStringLiteral("a"));
+        q.addQueryItem(QString(QStringLiteral("op%1")).arg(argumentCount), QStringLiteral("a"));
+        q.addQueryItem(QString(QStringLiteral("f%1")).arg(argumentCount), QStringLiteral("year"));
     }
 
     url.setQuery(q);

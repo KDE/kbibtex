@@ -72,7 +72,7 @@ public:
     QString fieldKey;
 
     FieldLineEditPrivate(KBibTeX::TypeFlag ptf, KBibTeX::TypeFlags tf, FieldLineEdit *p)
-            : parent(p), preferredTypeFlag(ptf), typeFlags(tf), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupNameGeneral(QLatin1String("General")), file(NULL) {
+            : parent(p), preferredTypeFlag(ptf), typeFlags(tf), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), configGroupNameGeneral(QStringLiteral("General")), file(NULL) {
         menuTypes = new QMenu(parent);
         menuTypesSignalMapper = new QSignalMapper(parent);
         setupMenu();
@@ -406,7 +406,7 @@ FieldLineEdit::FieldLineEdit(KBibTeX::TypeFlag preferredTypeFlag, KBibTeX::TypeF
         : MenuLineEdit(isMultiLine, parent), d(new FieldLineEdit::FieldLineEditPrivate(preferredTypeFlag, typeFlags, this))
 {
     setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
-    setObjectName(QLatin1String("FieldLineEdit"));
+    setObjectName(QStringLiteral("FieldLineEdit"));
     setMenu(d->menuTypes);
     setChildAcceptDrops(false);
     setAcceptDrops(true);
@@ -483,7 +483,7 @@ void FieldLineEdit::dropEvent(QDropEvent *event)
     if (clipboardText.isEmpty()) return;
 
     const File *file = NULL;
-    if (!d->fieldKey.isEmpty() && clipboardText.startsWith(QLatin1String("@"))) {
+    if (!d->fieldKey.isEmpty() && clipboardText.startsWith(QStringLiteral("@"))) {
         FileImporterBibTeX importer;
         file = importer.fromString(clipboardText);
         const QSharedPointer<Entry> entry = (file != NULL && file->count() == 1) ? file->first().dynamicCast<Entry>() : QSharedPointer<Entry>();

@@ -118,27 +118,27 @@ AuthorWidget::AuthorWidget(const struct IdSuggestions::IdSuggestionTokenInfo &in
 
 QString AuthorWidget::toString() const
 {
-    QString result = QLatin1String("A");
+    QString result = QStringLiteral("A");
 
     if (spinBoxLength->value() > 0)
         result.append(QString::number(spinBoxLength->value()));
 
     IdSuggestions::CaseChange caseChange = (IdSuggestions::CaseChange)comboBoxChangeCase->currentIndex();
     if (caseChange == IdSuggestions::ccToLower)
-        result.append(QLatin1String("l"));
+        result.append(QStringLiteral("l"));
     else if (caseChange == IdSuggestions::ccToUpper)
-        result.append(QLatin1String("u"));
+        result.append(QStringLiteral("u"));
     else if (caseChange == IdSuggestions::ccToCamelCase)
-        result.append(QLatin1String("c"));
+        result.append(QStringLiteral("c"));
 
     if (spanSliderAuthor->lowerValue() > spanSliderAuthor->minimum() || spanSliderAuthor->upperValue() < spanSliderAuthor->maximum())
-        result.append(QString(QLatin1String("w%1%2")).arg(spanSliderAuthor->lowerValue()).arg(spanSliderAuthor->upperValue() < spanSliderAuthor->maximum() ? QString::number(spanSliderAuthor->upperValue()) : QLatin1String("I")));
+        result.append(QString(QStringLiteral("w%1%2")).arg(spanSliderAuthor->lowerValue()).arg(spanSliderAuthor->upperValue() < spanSliderAuthor->maximum() ? QString::number(spanSliderAuthor->upperValue()) : QStringLiteral("I")));
     if (checkBoxLastAuthor->isChecked())
-        result.append(QLatin1String("L"));
+        result.append(QStringLiteral("L"));
 
     const QString text = lineEditTextInBetween->text();
     if (!text.isEmpty())
-        result.append(QLatin1String("\"")).append(text);
+        result.append(QStringLiteral("\"")).append(text);
 
     return result;
 }
@@ -174,7 +174,7 @@ public:
 
     QString toString() const {
         const int year = comboBoxDigits->itemData(comboBoxDigits->currentIndex()).toInt();
-        QString result = year == 4 ? QLatin1String("Y") : QLatin1String("y");
+        QString result = year == 4 ? QStringLiteral("Y") : QStringLiteral("y");
 
         return result;
     }
@@ -243,25 +243,25 @@ TitleWidget::TitleWidget(const struct IdSuggestions::IdSuggestionTokenInfo &info
 
 QString TitleWidget::toString() const
 {
-    QString result = checkBoxRemoveSmallWords->isChecked() ? QLatin1String("T") : QLatin1String("t");
+    QString result = checkBoxRemoveSmallWords->isChecked() ? QStringLiteral("T") : QStringLiteral("t");
 
     if (spinBoxLength->value() > 0)
         result.append(QString::number(spinBoxLength->value()));
 
     IdSuggestions::CaseChange caseChange = (IdSuggestions::CaseChange)comboBoxChangeCase->currentIndex();
     if (caseChange == IdSuggestions::ccToLower)
-        result.append(QLatin1String("l"));
+        result.append(QStringLiteral("l"));
     else if (caseChange == IdSuggestions::ccToUpper)
-        result.append(QLatin1String("u"));
+        result.append(QStringLiteral("u"));
     else if (caseChange == IdSuggestions::ccToCamelCase)
-        result.append(QLatin1String("c"));
+        result.append(QStringLiteral("c"));
 
     if (spanSliderWords->lowerValue() > spanSliderWords->minimum() || spanSliderWords->upperValue() < spanSliderWords->maximum())
-        result.append(QString(QLatin1String("w%1%2")).arg(spanSliderWords->lowerValue()).arg(spanSliderWords->upperValue() < spanSliderWords->maximum() ? QString::number(spanSliderWords->upperValue()) : QLatin1String("I")));
+        result.append(QString(QStringLiteral("w%1%2")).arg(spanSliderWords->lowerValue()).arg(spanSliderWords->upperValue() < spanSliderWords->maximum() ? QString::number(spanSliderWords->upperValue()) : QStringLiteral("I")));
 
     const QString text = lineEditTextInBetween->text();
     if (!text.isEmpty())
-        result.append(QLatin1String("\"")).append(text);
+        result.append(QStringLiteral("\"")).append(text);
 
     return result;
 }
@@ -326,18 +326,18 @@ public:
 
     QString toString() const
     {
-        QString result = QLatin1String("j");
+        QString result = QStringLiteral("j");
 
         if (spinBoxLength->value() > 0)
             result.append(QString::number(spinBoxLength->value()));
 
         IdSuggestions::CaseChange caseChange = (IdSuggestions::CaseChange)comboBoxChangeCase->currentIndex();
         if (caseChange == IdSuggestions::ccToLower)
-            result.append(QLatin1String("l"));
+            result.append(QStringLiteral("l"));
         else if (caseChange == IdSuggestions::ccToUpper)
-            result.append(QLatin1String("u"));
+            result.append(QStringLiteral("u"));
         else if (caseChange == IdSuggestions::ccToCamelCase)
-            result.append(QLatin1String("c"));
+            result.append(QStringLiteral("c"));
 
         return result;
     }
@@ -361,7 +361,7 @@ public:
     }
 
     QString toString() const {
-        QString result = QLatin1String("\"") + lineEditText->text();
+        QString result = QStringLiteral("\"") + lineEditText->text();
         return result;
     }
 };
@@ -454,9 +454,9 @@ public:
 
     void addManagementButtons(TokenWidget *tokenWidget) {
         if (tokenWidget != NULL) {
-            QPushButton *buttonUp = new QPushButton(QIcon::fromTheme("go-up"), QLatin1String(""), tokenWidget);
-            QPushButton *buttonDown = new QPushButton(QIcon::fromTheme("go-down"), QLatin1String(""), tokenWidget);
-            QPushButton *buttonRemove = new QPushButton(QIcon::fromTheme("list-remove"), QLatin1String(""), tokenWidget);
+            QPushButton *buttonUp = new QPushButton(QIcon::fromTheme("go-up"), QStringLiteral(""), tokenWidget);
+            QPushButton *buttonDown = new QPushButton(QIcon::fromTheme("go-down"), QStringLiteral(""), tokenWidget);
+            QPushButton *buttonRemove = new QPushButton(QIcon::fromTheme("list-remove"), QStringLiteral(""), tokenWidget);
             tokenWidget->addButtons(buttonUp, buttonDown, buttonRemove);
             connect(buttonUp, SIGNAL(clicked(bool)), signalMapperMoveUp, SLOT(map()));
             signalMapperMoveUp->setMapping(buttonUp, tokenWidget);
@@ -528,7 +528,7 @@ public:
         while (!widgetList.isEmpty())
             delete widgetList.takeFirst();
 
-        QStringList tokenList = formatString.split(QLatin1String("|"), QString::SkipEmptyParts);
+        QStringList tokenList = formatString.split(QStringLiteral("|"), QString::SkipEmptyParts);
         foreach (const QString &token, tokenList) {
             TokenWidget *tokenWidget = NULL;
 
@@ -581,7 +581,7 @@ public:
             result << widget->toString();
         }
 
-        return result.join(QLatin1String("|"));
+        return result.join(QStringLiteral("|"));
     }
 };
 
@@ -610,7 +610,7 @@ void IdSuggestionsEditWidget::updatePreview()
 {
     const QString formatString = d->apply();
     d->labelPreview->setText(formatId(*d->previewEntry, formatString));
-    d->labelPreview->setToolTip(i18n("<qt>Structure:<ul><li>%1</li></ul>Example: %2</qt>", formatStrToHuman(formatString).join(QLatin1String("</li><li>")), formatId(*d->previewEntry, formatString)));
+    d->labelPreview->setToolTip(i18n("<qt>Structure:<ul><li>%1</li></ul>Example: %2</qt>", formatStrToHuman(formatString).join(QStringLiteral("</li><li>")), formatId(*d->previewEntry, formatString)));
 }
 
 void IdSuggestionsEditWidget::moveUpToken(QWidget *widget)

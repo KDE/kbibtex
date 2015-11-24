@@ -38,7 +38,7 @@ public:
 
     Private(RequestScope requestScope, int prefix, const QString &_apiKey, Zotero::API */* UNUSED parent*/)
         : // UNUSED p(parent),
-          apiBaseUrl(QUrl(QString(QLatin1String("https://api.zotero.org/%1/%2")).arg(requestScope == GroupRequest ? QLatin1String("groups") : QLatin1String("users")).arg(prefix))),
+          apiBaseUrl(QUrl(QString(QStringLiteral("https://api.zotero.org/%1/%2")).arg(requestScope == GroupRequest ? QStringLiteral("groups") : QStringLiteral("users")).arg(prefix))),
           userOrGroupPrefix(prefix),
           apiKey(_apiKey), backoffElapseTime(QDateTime::currentDateTime().addSecs(-5)) {
         /// nothing
@@ -60,7 +60,7 @@ API::~API()
 
 void API::addLimitToUrl(QUrl &url) const
 {
-    static const QString limitKey = QLatin1String("limit");
+    static const QString limitKey = QStringLiteral("limit");
     QUrlQuery query(url);
     query.removeQueryItem(limitKey);
     query.addQueryItem(limitKey, QString::number(Zotero::API::limit));
@@ -82,7 +82,7 @@ QNetworkRequest API::request(const QUrl &url) const
     QNetworkRequest request(url);
     request.setRawHeader("Zotero-API-Version", "3");
     request.setRawHeader("Accept", "application/atom+xml");
-    request.setRawHeader("Authorization", QString(QLatin1String("Bearer ")).append(d->apiKey).toLatin1().constData());
+    request.setRawHeader("Authorization", QString(QStringLiteral("Bearer ")).append(d->apiKey).toLatin1().constData());
     return request;
 }
 

@@ -50,8 +50,8 @@ public:
     DelayedExecutionTimer *delayedTimer;
 
     FilterBarPrivate(FilterBar *parent)
-            : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))),
-          configGroupName(QLatin1String("Filter Bar")), maxNumStoredFilterTexts(12) {
+            : p(parent), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))),
+          configGroupName(QStringLiteral("Filter Bar")), maxNumStoredFilterTexts(12) {
         delayedTimer = new DelayedExecutionTimer(p);
         setupGUI();
         connect(delayedTimer, SIGNAL(triggered()), p, SLOT(publishFilter()));
@@ -74,7 +74,7 @@ public:
         comboBoxFilterText->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Preferred);
         comboBoxFilterText->setEditable(true);
         QFontMetrics metrics(comboBoxFilterText->font());
-        comboBoxFilterText->setMinimumWidth(metrics.width(QLatin1String("AIWaiw")) * 7);
+        comboBoxFilterText->setMinimumWidth(metrics.width(QStringLiteral("AIWaiw")) * 7);
         KLineEdit *lineEdit = static_cast<KLineEdit *>(comboBoxFilterText->lineEdit());
         lineEdit->setClearButtonEnabled(true);
         lineEdit->setPlaceholderText(i18n("Filter bibliographic entries"));
@@ -122,10 +122,10 @@ public:
         /// restore history on filter texts
         /// see addCompletionString for more detailed explanation
         KConfigGroup configGroup(config, configGroupName);
-        QStringList completionListDate = configGroup.readEntry(QLatin1String("PreviousSearches"), QStringList());
+        QStringList completionListDate = configGroup.readEntry(QStringLiteral("PreviousSearches"), QStringList());
         for (QStringList::Iterator it = completionListDate.begin(); it != completionListDate.end(); ++it)
             comboBoxFilterText->addItem((*it).mid(12));
-        comboBoxFilterText->lineEdit()->setText(QLatin1String(""));
+        comboBoxFilterText->lineEdit()->setText(QStringLiteral(""));
         comboBoxCombination->setCurrentIndex(configGroup.readEntry("CurrentCombination", 0));
         comboBoxField->setCurrentIndex(configGroup.readEntry("CurrentField", 0));
     }
@@ -137,7 +137,7 @@ public:
         if (comboBoxCombination->currentIndex() == 2) /// exact phrase
             result.terms << comboBoxFilterText->lineEdit()->text();
         else /// any or every word
-            result.terms = comboBoxFilterText->lineEdit()->text().split(QRegExp(QLatin1String("\\s+")), QString::SkipEmptyParts);
+            result.terms = comboBoxFilterText->lineEdit()->text().split(QRegExp(QStringLiteral("\\s+")), QString::SkipEmptyParts);
         result.field = comboBoxField->currentIndex() == 0 ? QString() : comboBoxField->itemData(comboBoxField->currentIndex(), Qt::UserRole).toString();
         result.searchPDFfiles = buttonSearchPDFfiles->isChecked();
 
@@ -194,7 +194,7 @@ public:
         /// KConfigGroup's functions, and can be sorted lexicographically/
         /// chronologically using QStringList's sort.
         /// Disadvantage is that string fragments have to be managed manually.
-        QStringList completionListDate = configGroup.readEntry(QLatin1String("PreviousSearches"), QStringList());
+        QStringList completionListDate = configGroup.readEntry(QStringLiteral("PreviousSearches"), QStringList());
         for (QStringList::Iterator it = completionListDate.begin(); it != completionListDate.end();)
             if ((*it).mid(12) == text)
                 it = completionListDate.erase(it);
@@ -208,7 +208,7 @@ public:
         while (completionListDate.count() > maxNumStoredFilterTexts)
             completionListDate.removeFirst();
 
-        configGroup.writeEntry(QLatin1String("PreviousSearches"), completionListDate);
+        configGroup.writeEntry(QStringLiteral("PreviousSearches"), completionListDate);
         config->sync();
 
         /// add user-entered filter text to combobox's drop-down list
@@ -218,17 +218,17 @@ public:
 
     void storeComboBoxStatus() {
         KConfigGroup configGroup(config, configGroupName);
-        configGroup.writeEntry(QLatin1String("CurrentCombination"), comboBoxCombination->currentIndex());
-        configGroup.writeEntry(QLatin1String("CurrentField"), comboBoxField->currentIndex());
-        configGroup.writeEntry(QLatin1String("SearchPDFFiles"), buttonSearchPDFfiles->isChecked());
+        configGroup.writeEntry(QStringLiteral("CurrentCombination"), comboBoxCombination->currentIndex());
+        configGroup.writeEntry(QStringLiteral("CurrentField"), comboBoxField->currentIndex());
+        configGroup.writeEntry(QStringLiteral("SearchPDFFiles"), buttonSearchPDFfiles->isChecked());
         config->sync();
     }
 
     void restoreState() {
         KConfigGroup configGroup(config, configGroupName);
-        comboBoxCombination->setCurrentIndex(configGroup.readEntry(QLatin1String("CurrentCombination"), 0));
-        comboBoxField->setCurrentIndex(configGroup.readEntry(QLatin1String("CurrentField"), 0));
-        buttonSearchPDFfiles->setChecked(configGroup.readEntry(QLatin1String("SearchPDFFiles"), false));
+        comboBoxCombination->setCurrentIndex(configGroup.readEntry(QStringLiteral("CurrentCombination"), 0));
+        comboBoxField->setCurrentIndex(configGroup.readEntry(QStringLiteral("CurrentField"), 0));
+        buttonSearchPDFfiles->setChecked(configGroup.readEntry(QStringLiteral("SearchPDFFiles"), false));
     }
 
     void resetState() {

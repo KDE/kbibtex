@@ -32,7 +32,7 @@
 
 using namespace Zotero;
 
-const QString top = QLatin1String("top");
+const QString top = QStringLiteral("top");
 
 class Zotero::Collection::Private
 {
@@ -71,7 +71,7 @@ public:
             const QString head = downloadQueue.dequeue();
             QUrl url = api->baseUrl();
             url = url.adjusted(QUrl::StripTrailingSlash);
-            url.setPath(url.path() + QString(QLatin1String("/collections/%1/collections")).arg(head));
+            url.setPath(url.path() + QString(QStringLiteral("/collections/%1/collections")).arg(head));
             requestZoteroUrl(url);
         } else {
             initialized = true;
@@ -87,11 +87,11 @@ Collection::Collection(API *api, QObject *parent)
 
     QUrl url = api->baseUrl();
     url = url.adjusted(QUrl::StripTrailingSlash);
-    url.setPath(url.path() + QLatin1String("/collections/top"));
+    url.setPath(url.path() + QStringLiteral("/collections/top"));
     if (api->inBackoffMode())
         QTimer::singleShot((api->backoffSecondsLeft() + 1) * 1000, [ = ]() {
-            d->requestZoteroUrl(url);
-        });
+        d->requestZoteroUrl(url);
+    });
     else
         d->requestZoteroUrl(url);
 }
@@ -171,20 +171,20 @@ void Collection::finishedFetchingCollection()
         QXmlStreamReader xmlReader(reply);
         while (!xmlReader.atEnd() && !xmlReader.hasError()) {
             const QXmlStreamReader::TokenType tt = xmlReader.readNext();
-            if (tt == QXmlStreamReader::StartElement && xmlReader.name() == QLatin1String("title")) {
+            if (tt == QXmlStreamReader::StartElement && xmlReader.name() == QStringLiteral("title")) {
                 /// Not perfect: guess author name from collection's title
-                const QStringList titleFragments = xmlReader.readElementText(QXmlStreamReader::IncludeChildElements).split(QLatin1String(" / "));
+                const QStringList titleFragments = xmlReader.readElementText(QXmlStreamReader::IncludeChildElements).split(QStringLiteral(" / "));
                 if (titleFragments.count() == 3)
                     d->collectionToLabel[top] = i18n("%1's Library", titleFragments[1]);
-            } else if (tt == QXmlStreamReader::StartElement && xmlReader.name() == QLatin1String("entry")) {
+            } else if (tt == QXmlStreamReader::StartElement && xmlReader.name() == QStringLiteral("entry")) {
                 QString title, key;
                 while (!xmlReader.atEnd() && !xmlReader.hasError()) {
                     const QXmlStreamReader::TokenType tt = xmlReader.readNext();
-                    if (tt == QXmlStreamReader::StartElement && xmlReader.name() == QLatin1String("title"))
+                    if (tt == QXmlStreamReader::StartElement && xmlReader.name() == QStringLiteral("title"))
                         title = xmlReader.readElementText(QXmlStreamReader::IncludeChildElements);
-                    else if (tt == QXmlStreamReader::StartElement && xmlReader.name() == QLatin1String("key"))
+                    else if (tt == QXmlStreamReader::StartElement && xmlReader.name() == QStringLiteral("key"))
                         key = xmlReader.readElementText(QXmlStreamReader::IncludeChildElements);
-                    else if (tt == QXmlStreamReader::EndElement && xmlReader.name() == QLatin1String("entry"))
+                    else if (tt == QXmlStreamReader::EndElement && xmlReader.name() == QStringLiteral("entry"))
                         break;
                 }
 
@@ -196,18 +196,18 @@ void Collection::finishedFetchingCollection()
                     vec.append(key);
                     d->collectionToChildren[parentId] = vec;
                 }
-            } else if (tt == QXmlStreamReader::StartElement && xmlReader.name() == QLatin1String("link")) {
+            } else if (tt == QXmlStreamReader::StartElement && xmlReader.name() == QStringLiteral("link")) {
                 const QXmlStreamAttributes attrs = xmlReader.attributes();
-                if (attrs.hasAttribute(QLatin1String("rel")) && attrs.hasAttribute(QLatin1String("href")) && attrs.value(QLatin1String("rel")) == QLatin1String("next"))
-                    nextPage = attrs.value(QLatin1String("href")).toString();
-                else if (attrs.hasAttribute(QLatin1String("rel")) && attrs.hasAttribute(QLatin1String("href")) && attrs.value(QLatin1String("rel")) == QLatin1String("self")) {
-                    const QString text = attrs.value(QLatin1String("href")).toString();
-                    const int p1 = text.indexOf(QLatin1String("/collections/"));
-                    const int p2 = text.indexOf(QLatin1String("/"), p1 + 14);
+                if (attrs.hasAttribute(QStringLiteral("rel")) && attrs.hasAttribute(QStringLiteral("href")) && attrs.value(QStringLiteral("rel")) == QStringLiteral("next"))
+                    nextPage = attrs.value(QStringLiteral("href")).toString();
+                else if (attrs.hasAttribute(QStringLiteral("rel")) && attrs.hasAttribute(QStringLiteral("href")) && attrs.value(QStringLiteral("rel")) == QStringLiteral("self")) {
+                    const QString text = attrs.value(QStringLiteral("href")).toString();
+                    const int p1 = text.indexOf(QStringLiteral("/collections/"));
+                    const int p2 = text.indexOf(QStringLiteral("/"), p1 + 14);
                     if (p1 > 0 && p2 > p1 + 14)
                         parentId = text.mid(p1 + 13, p2 - p1 - 13);
                 }
-            } else if (tt == QXmlStreamReader::EndElement && xmlReader.name() == QLatin1String("feed"))
+            } else if (tt == QXmlStreamReader::EndElement && xmlReader.name() == QStringLiteral("feed"))
                 break;
         }
 

@@ -49,11 +49,11 @@
 #include <onlinesearchspringerlink.h>
 #include <onlinesearchsoanasaads.h>
 
-static const QIcon iconOK = QIcon::fromTheme(QLatin1String("dialog-ok-apply"));
-static const QIcon iconERROR = QIcon::fromTheme(QLatin1String("dialog-cancel"));
-static const QIcon iconINFO = QIcon::fromTheme(QLatin1String("dialog-information"));
-static const QIcon iconAUTH = QIcon::fromTheme(QLatin1String("dialog-cancel")); // FIXME "dialog-cancel" should be overlay on "dialog-password"
-static const QIcon iconNETWORK = QIcon::fromTheme(QLatin1String("dialog-cancel")); // FIXME "dialog-cancel" should be overlay on "network-wired"
+static const QIcon iconOK = QIcon::fromTheme(QStringLiteral("dialog-ok-apply"));
+static const QIcon iconERROR = QIcon::fromTheme(QStringLiteral("dialog-cancel"));
+static const QIcon iconINFO = QIcon::fromTheme(QStringLiteral("dialog-information"));
+static const QIcon iconAUTH = QIcon::fromTheme(QStringLiteral("dialog-cancel")); // FIXME "dialog-cancel" should be overlay on "dialog-password"
+static const QIcon iconNETWORK = QIcon::fromTheme(QStringLiteral("dialog-cancel")); // FIXME "dialog-cancel" should be overlay on "network-wired"
 
 int filenameCounter = 0;
 
@@ -72,7 +72,7 @@ public:
             : QWidget(parent), m_parent(parent) {
         QGridLayout *layout = new QGridLayout(this);
 
-        buttonStartTest = new QPushButton(QIcon::fromTheme("application-x-executable"), QLatin1String("Start Tests"), this);
+        buttonStartTest = new QPushButton(QIcon::fromTheme("application-x-executable"), QStringLiteral("Start Tests"), this);
         layout->addWidget(buttonStartTest, 0, 0, 1, 1);
 
         progressBar = new QProgressBar(this);
@@ -102,7 +102,7 @@ public:
         buttonStartTest->setMenu(menu);
 
         /// ** Online Search **
-        actionStartOnlineSearchTests = new QAction(QLatin1String("Online Search"), m_parent);
+        actionStartOnlineSearchTests = new QAction(QStringLiteral("Online Search"), m_parent);
         connect(actionStartOnlineSearchTests, SIGNAL(triggered()), m_parent, SLOT(startOnlineSearchTests()));
         menu->addAction(actionStartOnlineSearchTests);
     }
@@ -135,7 +135,7 @@ KBibTeXTest::KBibTeXTest(QWidget *parent)
     m_onlineSearchList << new OnlineSearchSpringerLink(this);
     m_currentOnlineSearch = m_onlineSearchList.constBegin();
 
-    setWindowTitle(QLatin1String("KBibTeX Test Suite"));
+    setWindowTitle(QStringLiteral("KBibTeX Test Suite"));
 
     m_testWidget = new TestWidget(this);
     const int fontSize = m_testWidget->fontMetrics().width(QLatin1Char('a'));
@@ -145,7 +145,7 @@ KBibTeXTest::KBibTeXTest(QWidget *parent)
 
     connect(this, &KBibTeXTest::rejected, this, &KBibTeXTest::aboutToQuit);
 
-    addMessage(QString(QLatin1String("Compiled for %1")).arg(KAboutData::applicationData().version()), iconINFO);
+    addMessage(QString(QStringLiteral("Compiled for %1")).arg(KAboutData::applicationData().version()), iconINFO);
 }
 
 void KBibTeXTest::addMessage(const QString &message, const QIcon &icon)
@@ -189,15 +189,15 @@ void KBibTeXTest::onlineSearchStoppedSearch(int searchResult)
 {
     if (searchResult == OnlineSearchAbstract::resultNoError) {
         if (m_currentOnlineSearchNumFoundEntries == 0)
-            addMessage(QString(QLatin1String("Got no error message searching '%1', but found NO entries")).arg((*m_currentOnlineSearch)->label()), iconERROR);
+            addMessage(QString(QStringLiteral("Got no error message searching '%1', but found NO entries")).arg((*m_currentOnlineSearch)->label()), iconERROR);
         else
-            addMessage(QString(QLatin1String("No error searching '%1', found %2 entries")).arg((*m_currentOnlineSearch)->label()).arg(m_currentOnlineSearchNumFoundEntries), iconOK);
+            addMessage(QString(QStringLiteral("No error searching '%1', found %2 entries")).arg((*m_currentOnlineSearch)->label()).arg(m_currentOnlineSearchNumFoundEntries), iconOK);
     } else if (searchResult == OnlineSearchAbstract::resultAuthorizationRequired) {
-        addMessage(QString(QLatin1String("Authorization required for '%1'")).arg((*m_currentOnlineSearch)->label()), iconAUTH);
+        addMessage(QString(QStringLiteral("Authorization required for '%1'")).arg((*m_currentOnlineSearch)->label()), iconAUTH);
     } else if (searchResult == OnlineSearchAbstract::resultNetworkError) {
-        addMessage(QString(QLatin1String("Network error for '%1'")).arg((*m_currentOnlineSearch)->label()), iconNETWORK);
+        addMessage(QString(QStringLiteral("Network error for '%1'")).arg((*m_currentOnlineSearch)->label()), iconNETWORK);
     } else {
-        addMessage(QString(QLatin1String("Error searching '%1'")).arg((*m_currentOnlineSearch)->label()), iconERROR);
+        addMessage(QString(QStringLiteral("Error searching '%1'")).arg((*m_currentOnlineSearch)->label()), iconERROR);
     }
     m_currentOnlineSearch++;
 
@@ -225,16 +225,16 @@ void KBibTeXTest::processNextSearch()
     if (m_running && m_currentOnlineSearch != m_onlineSearchList.constEnd()) {
         setBusy(true);
         m_currentOnlineSearchNumFoundEntries = 0;
-        addMessage(QString(QLatin1String("Searching '%1'")).arg((*m_currentOnlineSearch)->label()), iconINFO);
+        addMessage(QString(QStringLiteral("Searching '%1'")).arg((*m_currentOnlineSearch)->label()), iconINFO);
 
         QMap<QString, QString> query;
-        query.insert(OnlineSearchAbstract::queryKeyAuthor, QLatin1String("smith"));
+        query.insert(OnlineSearchAbstract::queryKeyAuthor, QStringLiteral("smith"));
         connect((*m_currentOnlineSearch), SIGNAL(stoppedSearch(int)), this, SLOT(onlineSearchStoppedSearch(int)));
         connect((*m_currentOnlineSearch), SIGNAL(foundEntry(QSharedPointer<Entry>)), this, SLOT(onlineSearchFoundEntry()));
         connect((*m_currentOnlineSearch), SIGNAL(progress(int,int)), this, SLOT(progress(int,int)));
         (*m_currentOnlineSearch)->startSearch(query, 3);
     } else {
-        addMessage(QLatin1String("Done testing"), iconINFO);
+        addMessage(QStringLiteral("Done testing"), iconINFO);
         setBusy(false);
         m_running = false;
         QTimer::singleShot(500, this, SLOT(resetProgress()));

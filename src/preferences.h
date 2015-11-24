@@ -25,25 +25,25 @@
 
 #include "kbibtexnamespace.h"
 
-const QString keyListSeparator = QLatin1String("ListSeparator");
+const QString keyListSeparator = QStringLiteral("ListSeparator");
 namespace Preferences
 {
 enum BackupScope { NoBackup, LocalOnly, BothLocalAndRemote };
 
-static const QString groupColor = QLatin1String("Color Labels");
-static const QString keyColorCodes = QLatin1String("colorCodes");
-static const QStringList defaultColorCodes = QStringList() << QLatin1String("#cc3300") << QLatin1String("#0033ff") << QLatin1String("#009966") << QLatin1String("#f0d000");
-static const QString keyColorLabels = QLatin1String("colorLabels");
+static const QString groupColor = QStringLiteral("Color Labels");
+static const QString keyColorCodes = QStringLiteral("colorCodes");
+static const QStringList defaultColorCodes = QStringList() << QStringLiteral("#cc3300") << QStringLiteral("#0033ff") << QStringLiteral("#009966") << QStringLiteral("#f0d000");
+static const QString keyColorLabels = QStringLiteral("colorLabels");
 static const QStringList defaultcolorLabels = QStringList() << I18N_NOOP("Important") << I18N_NOOP("Unread") << I18N_NOOP("Read") << I18N_NOOP("Watch");
 
-static const QString groupGeneral = QLatin1String("General");
-static const QString keyBackupScope = QLatin1String("backupScope");
+static const QString groupGeneral = QStringLiteral("General");
+static const QString keyBackupScope = QStringLiteral("backupScope");
 static const BackupScope defaultBackupScope = LocalOnly;
-static const QString keyNumberOfBackups = QLatin1String("numberOfBackups");
+static const QString keyNumberOfBackups = QStringLiteral("numberOfBackups");
 static const int defaultNumberOfBackups = 5;
 
-static const QString groupUserInterface = QLatin1String("User Interface");
-static const QString keyElementDoubleClickAction = QLatin1String("elementDoubleClickAction");
+static const QString groupUserInterface = QStringLiteral("User Interface");
+static const QString keyElementDoubleClickAction = QStringLiteral("elementDoubleClickAction");
 enum ElementDoubleClickAction { ActionOpenEditor = 0, ActionViewDocument = 1 };
 static const ElementDoubleClickAction defaultElementDoubleClickAction = ActionOpenEditor;
 
@@ -52,25 +52,25 @@ static const ElementDoubleClickAction defaultElementDoubleClickAction = ActionOp
  */
 enum QuoteComment { qcNone = 0, qcCommand = 1, qcPercentSign = 2 };
 
-const QString keyEncoding = QLatin1String("encoding");
-const QString defaultEncoding = QLatin1String("LaTeX");
-const QString keyStringDelimiter = QLatin1String("stringDelimiter");
-const QString defaultStringDelimiter = QLatin1String("{}");
-const QString keyQuoteComment = QLatin1String("quoteComment");
+const QString keyEncoding = QStringLiteral("encoding");
+const QString defaultEncoding = QStringLiteral("LaTeX");
+const QString keyStringDelimiter = QStringLiteral("stringDelimiter");
+const QString defaultStringDelimiter = QStringLiteral("{}");
+const QString keyQuoteComment = QStringLiteral("quoteComment");
 const QuoteComment defaultQuoteComment = qcNone;
-const QString keyKeywordCasing = QLatin1String("keywordCasing");
+const QString keyKeywordCasing = QStringLiteral("keywordCasing");
 const KBibTeX::Casing defaultKeywordCasing = KBibTeX::cLowerCase;
-const QString keyProtectCasing = QLatin1String("protectCasing");
+const QString keyProtectCasing = QStringLiteral("protectCasing");
 const bool defaultProtectCasing = true;
-const QString keyListSeparator = QLatin1String("ListSeparator");
-const QString defaultListSeparator = QLatin1String("; ");
+const QString keyListSeparator = QStringLiteral("ListSeparator");
+const QString defaultListSeparator = QStringLiteral("; ");
 
 /**
  * Preferences for Data objects
  */
-const QString keyPersonNameFormatting = QLatin1String("personNameFormatting");
-const QString personNameFormatLastFirst = QLatin1String("<%l><, %s><, %f>");
-const QString personNameFormatFirstLast = QLatin1String("<%f ><%l>< %s>");
+const QString keyPersonNameFormatting = QStringLiteral("personNameFormatting");
+const QString personNameFormatLastFirst = QStringLiteral("<%l><, %s><, %f>");
+const QString personNameFormatFirstLast = QStringLiteral("<%f ><%l>< %s>");
 const QString defaultPersonNameFormatting = personNameFormatLastFirst;
 
 

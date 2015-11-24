@@ -127,7 +127,7 @@ void FileSettingsWidget::setupGUI()
     m_comboBoxEncodings = new KComboBox(false, this);
     m_comboBoxEncodings->setObjectName("comboBoxEncodings");
     layout->addRow(i18n("Encoding:"), m_comboBoxEncodings);
-    m_comboBoxEncodings->addItem(QLatin1String("LaTeX"));
+    m_comboBoxEncodings->addItem(QStringLiteral("LaTeX"));
     m_comboBoxEncodings->insertSeparator(1);
     m_comboBoxEncodings->addItems(IConvLaTeX::encodings());
     connect(m_comboBoxEncodings, SIGNAL(currentIndexChanged(int)), this, SIGNAL(widgetsChanged()));
@@ -174,6 +174,6 @@ void FileSettingsWidget::setupGUI()
     m_comboBoxListSeparator = new KComboBox(false, this);
     layout->addRow(i18n("List Separator"), m_comboBoxListSeparator);
     connect(m_comboBoxListSeparator, SIGNAL(currentIndexChanged(int)), this, SIGNAL(widgetsChanged()));
-    m_comboBoxListSeparator->addItem(QLatin1String(";"), QVariant::fromValue<QString>(QLatin1String("; ")));
-    m_comboBoxListSeparator->addItem(QLatin1String(","), QVariant::fromValue<QString>(QLatin1String(", ")));
+    m_comboBoxListSeparator->addItem(QStringLiteral(";"), QVariant::fromValue<QString>(QStringLiteral("; ")));
+    m_comboBoxListSeparator->addItem(QStringLiteral(","), QVariant::fromValue<QString>(QStringLiteral(", ")));
 }

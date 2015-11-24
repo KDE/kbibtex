@@ -53,7 +53,7 @@ private:
 
 public:
     HexInputLineEdit(int expectedLength, QWidget *parent)
-            : KLineEdit(parent), correctInput(QString(QLatin1String("^[a-f0-9]{%1}$")).arg(expectedLength)) {
+            : KLineEdit(parent), correctInput(QString(QStringLiteral("^[a-f0-9]{%1}$")).arg(expectedLength)) {
         setMaxLength(expectedLength);
     }
 
@@ -142,7 +142,7 @@ public:
             token = reply.value(QOAuth::tokenParameterName());
             tokenSecret = reply.value(QOAuth::tokenSecretParameterName());
 
-            QUrl oauthAuthorizationUrl = QUrl(QLatin1String("https://www.zotero.org/oauth/authorize"));
+            QUrl oauthAuthorizationUrl = QUrl(QStringLiteral("https://www.zotero.org/oauth/authorize"));
             QUrlQuery query(oauthAuthorizationUrl);
             query.addQueryItem("oauth_token", token);
             query.addQueryItem("library_access", "1");
@@ -292,5 +292,5 @@ void OAuthWizard::copyAuthorizationUrl()
 
 void OAuthWizard::openAuthorizationUrl()
 {
-    KRun::runUrl(QUrl(d->lineEditAuthorizationUrl->text()), QLatin1String("text/html"), this);
+    KRun::runUrl(QUrl(d->lineEditAuthorizationUrl->text()), QStringLiteral("text/html"), this);
 }

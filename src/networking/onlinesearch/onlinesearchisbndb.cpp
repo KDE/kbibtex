@@ -42,7 +42,7 @@ public:
 
     OnlineSearchIsbnDBPrivate(OnlineSearchIsbnDB */* UNUSED parent*/)
         : /* UNUSED p(parent),*/ xslt(), currentPage(0), maxPage(0) {
-        const QString xsltFilename = QLatin1String("kbibtex/isbndb2bibtex.xsl");
+        const QString xsltFilename = QStringLiteral("kbibtex/isbndb2bibtex.xsl");
         xslt = XSLTransform::createXSLTransform(QStandardPaths::locate(QStandardPaths::GenericDataLocation, xsltFilename));
         if (xslt == NULL)
             qCWarning(LOG_KBIBTEX_NETWORKING) << "Could not create XSLT transformation for" << xsltFilename;
@@ -58,30 +58,30 @@ public:
 
         queryUrl = QUrl(booksUrl);
         QUrlQuery q(queryUrl);
-        q.addQueryItem(QLatin1String("access_key"), accessKey);
-        q.addQueryItem(QLatin1String("results"), QLatin1String("texts,authors"));
+        q.addQueryItem(QStringLiteral("access_key"), accessKey);
+        q.addQueryItem(QStringLiteral("results"), QStringLiteral("texts,authors"));
 
         QString index1, value1;
         if (query[queryKeyFreeText].isEmpty() && query[queryKeyAuthor].isEmpty() && !query[queryKeyTitle].isEmpty()) {
             /// only searching for title
-            index1 = QLatin1String("title");
+            index1 = QStringLiteral("title");
             value1 = query[queryKeyTitle];
         } else {
             /// multiple different values given
-            index1 = QLatin1String("full");
+            index1 = QStringLiteral("full");
             value1 = query[queryKeyFreeText] + QLatin1Char(' ') + query[queryKeyAuthor] + QLatin1Char(' ') + query[queryKeyTitle];
         }
-        q.addQueryItem(QLatin1String("index1"), index1);
-        q.addQueryItem(QLatin1String("value1"), value1);
+        q.addQueryItem(QStringLiteral("index1"), index1);
+        q.addQueryItem(QStringLiteral("value1"), value1);
 
         queryUrl.setQuery(q);
         return queryUrl;
     }
 };
 
-const QString OnlineSearchIsbnDB::OnlineSearchIsbnDBPrivate::accessKey = QLatin1String("NBTD24WJ");
-const QString OnlineSearchIsbnDB::OnlineSearchIsbnDBPrivate::booksUrl = QLatin1String("http://isbndb.com/api/books.xml");
-const QString OnlineSearchIsbnDB::OnlineSearchIsbnDBPrivate::authorsUrl = QLatin1String("http://isbndb.com/api/authors.xml");
+const QString OnlineSearchIsbnDB::OnlineSearchIsbnDBPrivate::accessKey = QStringLiteral("NBTD24WJ");
+const QString OnlineSearchIsbnDB::OnlineSearchIsbnDBPrivate::booksUrl = QStringLiteral("http://isbndb.com/api/books.xml");
+const QString OnlineSearchIsbnDB::OnlineSearchIsbnDBPrivate::authorsUrl = QStringLiteral("http://isbndb.com/api/authors.xml");
 
 OnlineSearchIsbnDB::OnlineSearchIsbnDB(QWidget *parent)
         : OnlineSearchAbstract(parent), d(new OnlineSearchIsbnDBPrivate(this))
@@ -126,7 +126,7 @@ QString OnlineSearchIsbnDB::label() const
 
 QString OnlineSearchIsbnDB::favIconUrl() const
 {
-    return QLatin1String("https://isbndb.com/favicon.ico");
+    return QStringLiteral("https://isbndb.com/favicon.ico");
 }
 
 OnlineSearchQueryFormAbstract *OnlineSearchIsbnDB::customWidget(QWidget *parent)
@@ -156,7 +156,7 @@ void OnlineSearchIsbnDB::downloadDone()
         const QString xmlCode = QString::fromUtf8(reply->readAll().data());
 
         /// use XSL transformation to get BibTeX document from XML result
-        const QString bibtexCode = d->xslt->transform(xmlCode).remove(QLatin1String("<?xml version=\"1.0\" encoding=\"UTF-8\"?>")).replace(QLatin1String("&amp;"), QLatin1String("&"));
+        const QString bibtexCode = d->xslt->transform(xmlCode).remove(QStringLiteral("<?xml version=\"1.0\" encoding=\"UTF-8\"?>")).replace(QStringLiteral("&amp;"), QStringLiteral("&"));
 
         FileImporterBibTeX importer;
         File *bibtexFile = importer.fromString(bibtexCode);
@@ -177,7 +177,7 @@ void OnlineSearchIsbnDB::downloadDone()
                 ++d->currentPage;
                 QUrl nextUrl = d->queryUrl;
                 QUrlQuery query(nextUrl);
-                query.addQueryItem(QLatin1String("page_number"), QString::number(d->currentPage));
+                query.addQueryItem(QStringLiteral("page_number"), QString::number(d->currentPage));
                 nextUrl.setQuery(query);
                 QNetworkRequest request(nextUrl);
                 QNetworkReply *nextReply = InternalNetworkAccessManager::self()->get(request);

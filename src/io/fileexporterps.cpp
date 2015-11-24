@@ -33,7 +33,7 @@
 FileExporterPS::FileExporterPS()
         : FileExporterToolchain()
 {
-    m_fileBasename = QLatin1String("bibtex-to-ps");
+    m_fileBasename = QStringLiteral("bibtex-to-ps");
     m_fileStem = tempDir.path() + QDir::separator() + m_fileBasename;
 
     reloadConfig();
@@ -46,12 +46,12 @@ FileExporterPS::~FileExporterPS()
 
 void FileExporterPS::reloadConfig()
 {
-    KSharedConfigPtr config = KSharedConfig::openConfig(QLatin1String("kbibtexrc"));
-    KConfigGroup configGroup(config, QLatin1String("FileExporterPDFPS"));
+    KSharedConfigPtr config = KSharedConfig::openConfig(QStringLiteral("kbibtexrc"));
+    KConfigGroup configGroup(config, QStringLiteral("FileExporterPDFPS"));
     m_babelLanguage = configGroup.readEntry(keyBabelLanguage, defaultBabelLanguage);
     m_bibliographyStyle = configGroup.readEntry(keyBibliographyStyle, defaultBibliographyStyle);
 
-    KConfigGroup configGroupGeneral(config, QLatin1String("General"));
+    KConfigGroup configGroupGeneral(config, QStringLiteral("General"));
     m_paperSize = configGroupGeneral.readEntry(keyPaperSize, defaultPaperSize);
     m_font = configGroupGeneral.readEntry(keyFont, defaultFont);
 }
@@ -68,7 +68,7 @@ bool FileExporterPS::save(QIODevice *iodevice, const File *bibtexfile, QStringLi
     QFile output(m_fileStem + KBibTeX::extensionBibTeX);
     if (output.open(QIODevice::WriteOnly)) {
         FileExporterBibTeX *bibtexExporter = new FileExporterBibTeX();
-        bibtexExporter->setEncoding(QLatin1String("latex"));
+        bibtexExporter->setEncoding(QStringLiteral("latex"));
         result = bibtexExporter->save(&output, bibtexfile, errorLog);
         output.close();
         delete bibtexExporter;
@@ -93,7 +93,7 @@ bool FileExporterPS::save(QIODevice *iodevice, const QSharedPointer<const Elemen
     QFile output(m_fileStem + KBibTeX::extensionBibTeX);
     if (output.open(QIODevice::WriteOnly)) {
         FileExporterBibTeX *bibtexExporter = new FileExporterBibTeX();
-        bibtexExporter->setEncoding(QLatin1String("latex"));
+        bibtexExporter->setEncoding(QStringLiteral("latex"));
         result = bibtexExporter->save(&output, element, bibtexfile, errorLog);
         output.close();
         delete bibtexExporter;
@@ -108,7 +108,7 @@ bool FileExporterPS::save(QIODevice *iodevice, const QSharedPointer<const Elemen
 
 bool FileExporterPS::generatePS(QIODevice *iodevice, QStringList *errorLog)
 {
-    QStringList cmdLines = QStringList() << QLatin1String("latex -halt-on-error bibtex-to-ps.tex") << QLatin1String("bibtex bibtex-to-ps") << QLatin1String("latex -halt-on-error bibtex-to-ps.tex") << QLatin1String("latex -halt-on-error bibtex-to-ps.tex") << QLatin1String("dvips -R2 -o bibtex-to-ps.ps bibtex-to-ps.dvi");
+    QStringList cmdLines = QStringList() << QStringLiteral("latex -halt-on-error bibtex-to-ps.tex") << QStringLiteral("bibtex bibtex-to-ps") << QStringLiteral("latex -halt-on-error bibtex-to-ps.tex") << QStringLiteral("latex -halt-on-error bibtex-to-ps.tex") << QStringLiteral("dvips -R2 -o bibtex-to-ps.ps bibtex-to-ps.dvi");
 
     return writeLatexFile(m_fileStem + KBibTeX::extensionTeX) && runProcesses(cmdLines, errorLog) && beautifyPostscriptFile(m_fileStem + KBibTeX::extensionPostScript, "Exported Bibliography") && writeFileToIODevice(m_fileStem + KBibTeX::extensionPostScript, iodevice, errorLog);
 }
@@ -126,13 +126,13 @@ bool FileExporterPS::writeLatexFile(const QString &filename)
             ts << "\\usepackage[" << m_babelLanguage << "]{babel}" << endl;
         if (kpsewhich("url.sty"))
             ts << "\\usepackage{url}" << endl;
-        if (m_bibliographyStyle.startsWith(QLatin1String("apacite")) && kpsewhich("apacite.sty"))
+        if (m_bibliographyStyle.startsWith(QStringLiteral("apacite")) && kpsewhich("apacite.sty"))
             ts << "\\usepackage[bibnewpage]{apacite}" << endl;
-        if ((m_bibliographyStyle == QLatin1String("agsm") || m_bibliographyStyle == QLatin1String("dcu") || m_bibliographyStyle == QLatin1String("jmr") || m_bibliographyStyle == QLatin1String("jphysicsB") || m_bibliographyStyle == QLatin1String("kluwer") || m_bibliographyStyle == QLatin1String("nederlands") || m_bibliographyStyle == QLatin1String("dcu") || m_bibliographyStyle == QLatin1String("dcu")) && kpsewhich("harvard.sty") && kpsewhich("html.sty"))
+        if ((m_bibliographyStyle == QStringLiteral("agsm") || m_bibliographyStyle == QStringLiteral("dcu") || m_bibliographyStyle == QStringLiteral("jmr") || m_bibliographyStyle == QStringLiteral("jphysicsB") || m_bibliographyStyle == QStringLiteral("kluwer") || m_bibliographyStyle == QStringLiteral("nederlands") || m_bibliographyStyle == QStringLiteral("dcu") || m_bibliographyStyle == QStringLiteral("dcu")) && kpsewhich("harvard.sty") && kpsewhich("html.sty"))
             ts << "\\usepackage{html}" << endl << "\\usepackage[dcucite]{harvard}" << endl << "\\renewcommand{\\harvardurl}{URL: \\url}" << endl;
         if (kpsewhich("geometry.sty"))
             ts << "\\usepackage[paper=" << m_paperSize << (m_paperSize.length() <= 2 ? "paper" : "") << "]{geometry}" << endl;
-        if (!m_font.isEmpty() && kpsewhich(m_font + QLatin1String(".sty")))
+        if (!m_font.isEmpty() && kpsewhich(m_font + QStringLiteral(".sty")))
             ts << "\\usepackage{" << m_font << "}" << endl;
         ts << "\\bibliographystyle{" << m_bibliographyStyle << "}" << endl;
         ts << "\\begin{document}" << endl;
@@ -154,9 +154,9 @@ bool FileExporterPS::beautifyPostscriptFile(const QString &filename, const QStri
         QString line;
         int i = 0;
         while (!(line = ts.readLine()).isNull()) {
-            if (i < 32 && line.startsWith(QLatin1String("%%Title:")))
+            if (i < 32 && line.startsWith(QStringLiteral("%%Title:")))
                 line = "%%Title: " + title;
-            else if (i < 32 && line.startsWith(QLatin1String("%%Creator:")))
+            else if (i < 32 && line.startsWith(QStringLiteral("%%Creator:")))
                 line += "; exported from within KBibTeX: http://home.gna.org/kbibtex/";
             lines += line;
             ++i;

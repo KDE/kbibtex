@@ -209,7 +209,7 @@ void StarRating::paintStars(QPainter *painter, KIconLoader::States defaultState,
     /// First, draw active/golden/glowing stars (on the left side)
 
     /// Create a pixmap of a single active/golden/glowing star
-    QPixmap starPixmap = KIconLoader::global()->loadIcon(QLatin1String("rating"), KIconLoader::Small, starSize, defaultState);
+    QPixmap starPixmap = KIconLoader::global()->loadIcon(QStringLiteral("rating"), KIconLoader::Small, starSize, defaultState);
     /// Calculate vertical position (same for all stars)
     const int y = inside.top() + (inside.height() - starSize) / 2;
 
@@ -234,7 +234,7 @@ void StarRating::paintStars(QPainter *painter, KIconLoader::States defaultState,
 
     /// Second, draw grey/disabled stars (on the right side)
     /// To do so, replace the previously used golden star pixmal with a grey/disabled one
-    starPixmap = KIconLoader::global()->loadIcon(QLatin1String("rating"), KIconLoader::Small, starSize, KIconLoader::DisabledState);
+    starPixmap = KIconLoader::global()->loadIcon(QStringLiteral("rating"), KIconLoader::Small, starSize, KIconLoader::DisabledState);
 
     if (coloredPartWidth > 0) {
         /// One star is partially grey, so draw star's grey right half

@@ -34,10 +34,10 @@
 #include "kbibtexnamespace.h"
 #include "logging_networking.h"
 
-const QString OnlineSearchAbstract::queryKeyFreeText = QLatin1String("free");
-const QString OnlineSearchAbstract::queryKeyTitle = QLatin1String("title");
-const QString OnlineSearchAbstract::queryKeyAuthor = QLatin1String("author");
-const QString OnlineSearchAbstract::queryKeyYear = QLatin1String("year");
+const QString OnlineSearchAbstract::queryKeyFreeText = QStringLiteral("free");
+const QString OnlineSearchAbstract::queryKeyTitle = QStringLiteral("title");
+const QString OnlineSearchAbstract::queryKeyAuthor = QStringLiteral("author");
+const QString OnlineSearchAbstract::queryKeyYear = QStringLiteral("year");
 
 const int OnlineSearchAbstract::resultNoError = 0;
 const int OnlineSearchAbstract::resultCancelled = 0; /// may get redefined in the future!
@@ -71,11 +71,11 @@ OnlineSearchAbstract::OnlineSearchAbstract(QWidget *parent)
 
 QIcon OnlineSearchAbstract::icon(QListWidgetItem *listWidgetItem)
 {
-    static const QRegExp invalidChars(QLatin1String("[^-a-z0-9_]"), Qt::CaseInsensitive);
-    const QString cacheDirectory = QStandardPaths::writableLocation(QStandardPaths::CacheLocation) + QLatin1String("/favicons/");
+    static const QRegExp invalidChars(QStringLiteral("[^-a-z0-9_]"), Qt::CaseInsensitive);
+    const QString cacheDirectory = QStandardPaths::writableLocation(QStandardPaths::CacheLocation) + QStringLiteral("/favicons/");
     QDir().mkpath(cacheDirectory);
     const QString fileNameStem = cacheDirectory + QString(favIconUrl()).remove(invalidChars);
-    const QStringList fileNameExtensions = QStringList() << QLatin1String(".ico") << QLatin1String(".png") << QString();
+    const QStringList fileNameExtensions = QStringList() << QStringLiteral(".ico") << QStringLiteral(".png") << QString();
 
     foreach (const QString &extension, fileNameExtensions) {
         const QString fileName = fileNameStem + extension;
@@ -89,7 +89,7 @@ QIcon OnlineSearchAbstract::icon(QListWidgetItem *listWidgetItem)
     if (listWidgetItem != NULL)
         m_iconReplyToListWidgetItem.insert(reply, listWidgetItem);
     connect(reply, SIGNAL(finished()), this, SLOT(iconDownloadFinished()));
-    return QIcon::fromTheme(QLatin1String("applications-internet"));
+    return QIcon::fromTheme(QStringLiteral("applications-internet"));
 }
 
 QString OnlineSearchAbstract::name()
@@ -172,9 +172,9 @@ bool OnlineSearchAbstract::handleErrors(QNetworkReply *reply, QUrl &newUrl)
  */
 void OnlineSearchAbstract::sendVisualNotification(const QString &text, const QString &title, const QString &icon, int timeout)
 {
-    static const QString dbusServiceName = QLatin1String("org.freedesktop.Notifications");
-    static const QString dbusInterfaceName = QLatin1String("org.freedesktop.Notifications");
-    static const QString dbusPath = QLatin1String("/org/freedesktop/Notifications");
+    static const QString dbusServiceName = QStringLiteral("org.freedesktop.Notifications");
+    static const QString dbusInterfaceName = QStringLiteral("org.freedesktop.Notifications");
+    static const QString dbusPath = QStringLiteral("/org/freedesktop/Notifications");
 
     // check if service already exists on plugin instantiation
     QDBusConnectionInterface *interface = QDBusConnection::sessionBus().interface();
@@ -186,7 +186,7 @@ void OnlineSearchAbstract::sendVisualNotification(const QString &text, const QSt
         timeout = 10 * 1000;
 
     QDBusMessage m = QDBusMessage::createMethodCall(dbusServiceName, dbusPath, dbusInterfaceName, "Notify");
-    QList<QVariant> args = QList<QVariant>() << QLatin1String("kdialog") << 0U << icon << title << text << QStringList() << QVariantMap() << timeout;
+    QList<QVariant> args = QList<QVariant>() << QStringLiteral("kdialog") << 0U << icon << title << text << QStringList() << QVariantMap() << timeout;
     m.setArguments(args);
 
     QDBusMessage replyMsg = QDBusConnection::sessionBus().call(m);
@@ -227,18 +227,18 @@ QString OnlineSearchAbstract::decodeURL(QString rawText)
         if (ok)
             rawText = rawText.replace(mimeRegExp.cap(0), c);
     }
-    rawText = rawText.replace(QLatin1String("&amp;"), QLatin1String("&")).replace(QLatin1Char('+'), QLatin1String(" "));
+    rawText = rawText.replace(QStringLiteral("&amp;"), QStringLiteral("&")).replace(QLatin1Char('+'), QStringLiteral(" "));
     return rawText;
 }
 
 QMap<QString, QString> OnlineSearchAbstract::formParameters(const QString &htmlText, const QString &formTagBegin)
 {
     /// how to recognize HTML tags
-    static const QString formTagEnd = QLatin1String("</form>");
-    static const QString inputTagBegin = QLatin1String("<input ");
-    static const QString selectTagBegin = QLatin1String("<select ");
-    static const QString selectTagEnd = QLatin1String("</select>");
-    static const QString optionTagBegin = QLatin1String("<option ");
+    static const QString formTagEnd = QStringLiteral("</form>");
+    static const QString inputTagBegin = QStringLiteral("<input ");
+    static const QString selectTagBegin = QStringLiteral("<select ");
+    static const QString selectTagEnd = QStringLiteral("</select>");
+    static const QString optionTagBegin = QStringLiteral("<option ");
     /// regular expressions to test or retrieve attributes in HTML tags
     static const QRegExp inputTypeRegExp("<input[^>]+\\btype=[\"]?([^\" >\n\t]*)", Qt::CaseInsensitive);
     static const QRegExp inputNameRegExp("<input[^>]+\\bname=[\"]?([^\" >\n\t]*)", Qt::CaseInsensitive);
@@ -333,11 +333,11 @@ void OnlineSearchAbstract::iconDownloadFinished()
         QString extension;
         if (iconData[1] == 'P' && iconData[2] == 'N' && iconData[3] == 'G') {
             /// PNG files have string "PNG" at second to fourth byte
-            extension = QLatin1String(".png");
+            extension = QStringLiteral(".png");
         } else if (iconData[0] == (char)0x00 && iconData[1] == (char)0x00 && iconData[2] == (char)0x01 && iconData[3] == (char)0x00) {
             /// Microsoft Icon have first two bytes always 0x0000,
             /// third and fourth byte is 0x0001 (for .ico)
-            extension = QLatin1String(".ico");
+            extension = QStringLiteral(".ico");
         } else {
             qCWarning(LOG_KBIBTEX_NETWORKING) << "Favicon is of unknown format: " << reply->url().toDisplayString();
             return;
@@ -391,9 +391,9 @@ void OnlineSearchAbstract::sanitizeEntry(QSharedPointer<Entry> entry)
 
     /// Sometimes, there is no identifier, so set a random one
     if (entry->id().isEmpty())
-        entry->setId(QString(QLatin1String("entry-%1")).arg(QString::number(qrand(), 36)));
+        entry->setId(QString(QStringLiteral("entry-%1")).arg(QString::number(qrand(), 36)));
 
-    const QString ftIssue = QLatin1String("issue");
+    const QString ftIssue = QStringLiteral("issue");
     if (entry->contains(ftIssue)) {
         /// ACM's Digital Library uses "issue" instead of "number" -> fix that
         Value v = entry->value(ftIssue);
@@ -403,7 +403,7 @@ void OnlineSearchAbstract::sanitizeEntry(QSharedPointer<Entry> entry)
 
     /// If entry contains a description field but no abstract,
     /// rename description field to abstract
-    const QString ftDescription = QLatin1String("description");
+    const QString ftDescription = QStringLiteral("description");
     if (!entry->contains(Entry::ftAbstract) && entry->contains(ftDescription)) {
         Value v = entry->value(ftDescription);
         entry->remove(ftDescription);
@@ -413,12 +413,12 @@ void OnlineSearchAbstract::sanitizeEntry(QSharedPointer<Entry> entry)
     /// Remove "dblp" artifacts in abstracts and keywords
     if (entry->contains(Entry::ftAbstract)) {
         const QString abstract = PlainTextValue::text(entry->value(Entry::ftAbstract));
-        if (abstract == QLatin1String("dblp"))
+        if (abstract == QStringLiteral("dblp"))
             entry->remove(Entry::ftAbstract);
     }
     if (entry->contains(Entry::ftKeywords)) {
         const QString keywords = PlainTextValue::text(entry->value(Entry::ftKeywords));
-        if (keywords == QLatin1String("dblp"))
+        if (keywords == QStringLiteral("dblp"))
             entry->remove(Entry::ftKeywords);
     }
 
@@ -426,7 +426,7 @@ void OnlineSearchAbstract::sanitizeEntry(QSharedPointer<Entry> entry)
         /// Fix strigns for months: "September" -> "sep"
         const QString monthStr = PlainTextValue::text(entry->value(Entry::ftMonth));
 
-        static const QRegExp longMonth = QRegExp(QLatin1String("(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]+"), Qt::CaseInsensitive);
+        static const QRegExp longMonth = QRegExp(QStringLiteral("(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]+"), Qt::CaseInsensitive);
         if (monthStr.indexOf(longMonth) == 0 && monthStr == longMonth.cap(0)) {
             /// String used for month is actually a full name, therefore replace it
             entry->remove(Entry::ftMonth);

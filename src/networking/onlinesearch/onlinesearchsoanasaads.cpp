@@ -43,13 +43,13 @@ QUrl OnlineSearchSOANASAADS::homepage() const
 
 QString OnlineSearchSOANASAADS::favIconUrl() const
 {
-    return QLatin1String("http://adsabs.harvard.edu/favicon.ico");
+    return QStringLiteral("http://adsabs.harvard.edu/favicon.ico");
 }
 
 QUrl OnlineSearchSOANASAADS::buildQueryUrl(const QMap<QString, QString> &query, int numResults)
 {
-    static const QString globalSearch = QLatin1String("\"%1\"");
-    static const QString rangeSearch = QLatin1String("%1:\"%2\"");
+    static const QString globalSearch = QStringLiteral("\"%1\"");
+    static const QString rangeSearch = QStringLiteral("%1:\"%2\"");
 
     // TODO
     /// http://adsabs.harvard.edu/cgi-bin/basic_connect?qsearch=Hansen&version=1&data_type=BIBTEXPLUS&type=FILE&sort=NDATE&nr_to_return=5
@@ -70,19 +70,19 @@ QUrl OnlineSearchSOANASAADS::buildQueryUrl(const QMap<QString, QString> &query, 
     /// add words from "title" field
     QStringList titleWords = splitRespectingQuotationMarks(query[queryKeyTitle]);
     for (QStringList::ConstIterator it = titleWords.constBegin(); it != titleWords.constEnd(); ++it)
-        queryFragments.append(rangeSearch.arg(QLatin1String("intitle")).arg(*it));
+        queryFragments.append(rangeSearch.arg(QStringLiteral("intitle")).arg(*it));
 
     /// add words from "author" field
     QStringList authorWords = splitRespectingQuotationMarks(query[queryKeyAuthor]);
     for (QStringList::ConstIterator it = authorWords.constBegin(); it != authorWords.constEnd(); ++it)
-        queryFragments.append(rangeSearch.arg(QLatin1String("author")).arg(*it));
+        queryFragments.append(rangeSearch.arg(QStringLiteral("author")).arg(*it));
 
     /// Build URL
-    QString urlText = QLatin1String("http://adsabs.harvard.edu/cgi-bin/basic_connect?version=1&data_type=BIBTEXPLUS&type=FILE&sort=NDATE&qsearch=");
-    urlText.append(queryFragments.join(QLatin1String("+")));
-    urlText = urlText.replace(QLatin1Char('"'), QLatin1String("%22"));
+    QString urlText = QStringLiteral("http://adsabs.harvard.edu/cgi-bin/basic_connect?version=1&data_type=BIBTEXPLUS&type=FILE&sort=NDATE&qsearch=");
+    urlText.append(queryFragments.join(QStringLiteral("+")));
+    urlText = urlText.replace(QLatin1Char('"'), QStringLiteral("%22"));
     /// set number of expected results
-    urlText.append(QString(QLatin1String("&nr_to_return=%1")).arg(numResults));
+    urlText.append(QString(QStringLiteral("&nr_to_return=%1")).arg(numResults));
 
     return QUrl(urlText);
 }

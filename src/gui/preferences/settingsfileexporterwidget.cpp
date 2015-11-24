@@ -55,7 +55,7 @@ public:
     QString lastUserInput;
 
     SettingsFileExporterWidgetPrivate(SettingsFileExporterWidget *parent)
-            : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))) {
+            : p(parent), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))) {
         setupGUI();
     }
 
@@ -112,14 +112,14 @@ public:
         layout->addRow(i18n("Command for 'Copy Reference':"), comboBoxCopyReferenceCmd);
         ItalicTextItemModel *itim = new ItalicTextItemModel();
         itim->addItem(i18n("No command"), QString(""));
-        const QStringList citeCommands = QStringList() << QLatin1String("cite") << QLatin1String("citealt") << QLatin1String("citeauthor") << QLatin1String("citeauthor*") << QLatin1String("citeyear") << QLatin1String("citeyearpar") << QLatin1String("shortcite") << QLatin1String("citet") << QLatin1String("citet*") << QLatin1String("citep") << QLatin1String("citep*"); // TODO more
+        const QStringList citeCommands = QStringList() << QStringLiteral("cite") << QStringLiteral("citealt") << QStringLiteral("citeauthor") << QStringLiteral("citeauthor*") << QStringLiteral("citeyear") << QStringLiteral("citeyearpar") << QStringLiteral("shortcite") << QStringLiteral("citet") << QStringLiteral("citet*") << QStringLiteral("citep") << QStringLiteral("citep*"); // TODO more
         foreach (const QString &citeCommand, citeCommands) {
             itim->addItem(citeCmdToLabel.arg(citeCommand), citeCommand);
         }
         comboBoxCopyReferenceCmd->setModel(itim);
         connect(comboBoxCopyReferenceCmd, SIGNAL(currentIndexChanged(int)), p, SIGNAL(changed()));
 
-        checkboxUseAutomaticLyXPipeDetection = new QCheckBox(QLatin1String(""), p);
+        checkboxUseAutomaticLyXPipeDetection = new QCheckBox(QStringLiteral(""), p);
         layout->addRow(i18n("Detect LyX pipe automatically:"), checkboxUseAutomaticLyXPipeDetection);
         connect(checkboxUseAutomaticLyXPipeDetection, SIGNAL(toggled(bool)), p, SIGNAL(changed()));
         connect(checkboxUseAutomaticLyXPipeDetection, SIGNAL(toggled(bool)), p, SLOT(automaticLyXDetectionToggled(bool)));
@@ -128,7 +128,7 @@ public:
         layout->addRow(i18n("Manually specified LyX pipe:"), lineeditLyXPipePath);
         connect(lineeditLyXPipePath->lineEdit(), SIGNAL(textEdited(QString)), p, SIGNAL(changed()));
         lineeditLyXPipePath->setMinimumWidth(lineeditLyXPipePath->fontMetrics().width(QChar('W')) * 20);
-        lineeditLyXPipePath->setFilter(QLatin1String("inode/fifo"));
+        lineeditLyXPipePath->setFilter(QStringLiteral("inode/fifo"));
         lineeditLyXPipePath->setMode(KFile::ExistingOnly | KFile::LocalOnly);
 
         comboBoxBackupScope = new KComboBox(false, p);
@@ -148,7 +148,7 @@ public:
     }
 };
 
-const QString SettingsFileExporterWidget::SettingsFileExporterWidgetPrivate::citeCmdToLabel = QLatin1String("\\%1{") + QChar(0x2026) + QChar('}');
+const QString SettingsFileExporterWidget::SettingsFileExporterWidgetPrivate::citeCmdToLabel = QStringLiteral("\\%1{") + QChar(0x2026) + QChar('}');
 
 SettingsFileExporterWidget::SettingsFileExporterWidget(QWidget *parent)
         : SettingsAbstractWidget(parent), d(new SettingsFileExporterWidgetPrivate(this))

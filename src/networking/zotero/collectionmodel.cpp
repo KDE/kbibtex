@@ -61,9 +61,9 @@ QVariant CollectionModel::data(const QModelIndex &index, int role) const
     if (role == Qt::DecorationRole) {
         /// Fancy icons for collections
         if (index.internalId() == 0) /// root node
-            return QIcon::fromTheme(QLatin1String("folder-orange"));
+            return QIcon::fromTheme(QStringLiteral("folder-orange"));
         else /// any other node
-            return QIcon::fromTheme(QLatin1String("folder-yellow"));
+            return QIcon::fromTheme(QStringLiteral("folder-yellow"));
     } else if (role == Qt::DisplayRole) {
         /// Show collections' human-readable description
         const QString collectionId = d->collection->collectionFromNumericId(index.internalId());

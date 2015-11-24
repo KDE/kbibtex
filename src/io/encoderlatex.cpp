@@ -600,7 +600,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                         /// (automatically skipped if command was found above)
                         for (int k = 0; !foundCommand && k < mathCommandLen; ++k) {
                             if (QLatin1String(mathCommand[k].written) == alpha) {
-                                if (output.endsWith(QLatin1String("\\ensuremath"))) {
+                                if (output.endsWith(QStringLiteral("\\ensuremath"))) {
                                     /// Remove "\ensuremath" right before this math command,
                                     /// it will be re-inserted when exporting/saving the document
                                     output = output.left(output.length() - 11);
@@ -942,7 +942,7 @@ QString EncoderLaTeX::encode(const QString &ninput) const
 
             if (!found && c.unicode() == 0x2009) {
                 /// Thin space
-                output.append(QLatin1String("\\,"));
+                output.append(QStringLiteral("\\,"));
                 found = true;
             }
 

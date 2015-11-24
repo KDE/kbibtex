@@ -88,11 +88,11 @@ public:
 
         /// regular expressions to guess links to follow
         const QRegExp anchorRegExp[5] = {
-            QRegExp(QString(QLatin1String("<a[^>]*href=\"([^\"]*%1[^\"]*[.]pdf)\"")).arg(QRegExp::escape(term)), Qt::CaseInsensitive),
-            QRegExp(QString(QLatin1String("<a[^>]*href=\"([^\"]+)\"[^>]*>[^<]*%1[^<]*[.]pdf")).arg(QRegExp::escape(term)), Qt::CaseInsensitive),
-            QRegExp(QString(QLatin1String("<a[^>]*href=\"([^\"]*%1[^\"]*)\"")).arg(QRegExp::escape(term)), Qt::CaseInsensitive),
-            QRegExp(QString(QLatin1String("<a[^>]*href=\"([^\"]+)\"[^>]*>[^<]*%1[^<]*\\b")).arg(QRegExp::escape(term)), Qt::CaseInsensitive),
-            QRegExp(QLatin1String("<a[^>]*href=\"([^\"]+)\""), Qt::CaseInsensitive) /// any link
+            QRegExp(QString(QStringLiteral("<a[^>]*href=\"([^\"]*%1[^\"]*[.]pdf)\"")).arg(QRegExp::escape(term)), Qt::CaseInsensitive),
+            QRegExp(QString(QStringLiteral("<a[^>]*href=\"([^\"]+)\"[^>]*>[^<]*%1[^<]*[.]pdf")).arg(QRegExp::escape(term)), Qt::CaseInsensitive),
+            QRegExp(QString(QStringLiteral("<a[^>]*href=\"([^\"]*%1[^\"]*)\"")).arg(QRegExp::escape(term)), Qt::CaseInsensitive),
+            QRegExp(QString(QStringLiteral("<a[^>]*href=\"([^\"]+)\"[^>]*>[^<]*%1[^<]*\\b")).arg(QRegExp::escape(term)), Qt::CaseInsensitive),
+            QRegExp(QStringLiteral("<a[^>]*href=\"([^\"]+)\""), Qt::CaseInsensitive) /// any link
         };
 
         bool gotLink = false;
@@ -116,9 +116,9 @@ public:
 
     void processGoogleResult(QNetworkReply *reply, const QString &text)
     {
-        static const QString h3Tag(QLatin1String("<h3"));
-        static const QString aTag(QLatin1String("<a"));
-        static const QString hrefAttrib(QLatin1String("href=\""));
+        static const QString h3Tag(QStringLiteral("<h3"));
+        static const QString aTag(QStringLiteral("<a"));
+        static const QString hrefAttrib(QStringLiteral("href=\""));
 
         const QString term = reply->property(termProperty).toString();
         bool ok = false;
@@ -133,7 +133,7 @@ public:
                 int p1 = p + 6;
                 int p2 = text.indexOf(QLatin1Char('"'), p1 + 1);
                 QUrl url(text.mid(p1, p2 - p1));
-                const QString googleService = reply->url().host().contains(QLatin1String("scholar.google")) ? QLatin1String("scholar.google") : QLatin1String("www.google");
+                const QString googleService = reply->url().host().contains(QStringLiteral("scholar.google")) ? QStringLiteral("scholar.google") : QStringLiteral("www.google");
                 queueUrl(reply->url().resolved(url), term, googleService, depth - 1);
             }
         }
@@ -141,7 +141,7 @@ public:
 
     void processSpringerLink(QNetworkReply *reply, const QString &text)
     {
-        static const QRegExp fulltextPDFlink(QLatin1String("href=\"([^\"]+/fulltext.pdf)\""));
+        static const QRegExp fulltextPDFlink(QStringLiteral("href=\"([^\"]+/fulltext.pdf)\""));
 
         if (fulltextPDFlink.indexIn(text) > 0) {
             bool ok = false;
@@ -149,13 +149,13 @@ public:
             if (!ok) depth = 0;
 
             QUrl url(fulltextPDFlink.cap(1));
-            queueUrl(reply->url().resolved(url), QString(), QLatin1String("springerlink"), depth - 1);
+            queueUrl(reply->url().resolved(url), QString(), QStringLiteral("springerlink"), depth - 1);
         }
     }
 
     void processCiteSeerX(QNetworkReply *reply, const QString &text)
     {
-        static const QRegExp downloadPDFlink(QLatin1String("href=\"(/viewdoc/download[^\"]+type=pdf)\""));
+        static const QRegExp downloadPDFlink(QStringLiteral("href=\"(/viewdoc/download[^\"]+type=pdf)\""));
 
         if (downloadPDFlink.indexIn(text) > 0) {
             bool ok = false;
@@ -163,7 +163,7 @@ public:
             if (!ok) depth = 0;
 
             QUrl url(QUrl::fromEncoded(downloadPDFlink.cap(1).toLatin1()));
-            queueUrl(reply->url().resolved(url), QString(), QLatin1String("citeseerx"), depth - 1);
+            queueUrl(reply->url().resolved(url), QString(), QStringLiteral("citeseerx"), depth - 1);
         }
     }
 
@@ -185,7 +185,7 @@ public:
             Poppler::Document *doc = Poppler::Document::loadFromData(data);
 
             ResultItem resultItem;
-            resultItem.tempFilename = new QTemporaryFile(QStandardPaths::writableLocation(QStandardPaths::TempLocation) + QDir::separator() + QLatin1String("kbibtex_findpdf_XXXXXX.pdf"));
+            resultItem.tempFilename = new QTemporaryFile(QStandardPaths::writableLocation(QStandardPaths::TempLocation) + QDir::separator() + QStringLiteral("kbibtex_findpdf_XXXXXX.pdf"));
             resultItem.tempFilename->setAutoRemove(true);
             if (resultItem.tempFilename->open()) {
                 const int lenDataWritten = resultItem.tempFilename->write(data);
@@ -203,7 +203,7 @@ public:
                 resultItem.tempFilename = NULL;
             }
             resultItem.url = url;
-            resultItem.textPreview = doc->info(QLatin1String("Title")).simplified();
+            resultItem.textPreview = doc->info(QStringLiteral("Title")).simplified();
             static const int maxTextLen = 1024;
             for (int i = 0; i < doc->numPages() && resultItem.textPreview.length() < maxTextLen; ++i) {
                 Poppler::Page *page = doc->page(i);
@@ -212,7 +212,7 @@ public:
                 delete page;
             }
             resultItem.downloadMode = NoDownload;
-            resultItem.relevance = origin == Entry::ftDOI ? 1.0 : (origin == QLatin1String("eprint") ? 0.75 : 0.5);
+            resultItem.relevance = origin == Entry::ftDOI ? 1.0 : (origin == QStringLiteral("eprint") ? 0.75 : 0.5);
             result << resultItem;
             progress = true;
 
@@ -248,7 +248,7 @@ bool FindPDF::search(const Entry &entry)
     /// Generate a string which contains the title's beginning
     QString searchWords;
     if (entry.contains(Entry::ftTitle)) {
-        const QStringList titleChunks = PlainTextValue::text(entry.value(Entry::ftTitle)).split(QLatin1String(" "), QString::SkipEmptyParts);
+        const QStringList titleChunks = PlainTextValue::text(entry.value(Entry::ftTitle)).split(QStringLiteral(" "), QString::SkipEmptyParts);
         if (!titleChunks.isEmpty()) {
             searchWords = titleChunks[0];
             for (int i = 1; i < titleChunks.count() && searchWords.length() < 64; ++i)
@@ -259,9 +259,9 @@ bool FindPDF::search(const Entry &entry)
     for (int i = 0; i < authors.count() && searchWords.length() < 96; ++i)
         searchWords += QLatin1Char(' ') + authors[i];
 
-    QStringList urlFields = QStringList() << Entry::ftDOI << Entry::ftUrl << QLatin1String("ee");
+    QStringList urlFields = QStringList() << Entry::ftDOI << Entry::ftUrl << QStringLiteral("ee");
     for (int i = 2; i < 256; ++i)
-        urlFields << QString(QLatin1String("%1%2")).arg(Entry::ftDOI).arg(i) << QString(QLatin1String("%1%2")).arg(Entry::ftUrl).arg(i);
+        urlFields << QString(QStringLiteral("%1%2")).arg(Entry::ftDOI).arg(i) << QString(QStringLiteral("%1%2")).arg(Entry::ftUrl).arg(i);
     foreach (const QString &field, urlFields) {
         if (entry.contains(field)) {
             const QString fieldText = PlainTextValue::text(entry.value(field));
@@ -275,48 +275,48 @@ bool FindPDF::search(const Entry &entry)
         }
     }
 
-    if (entry.contains(QLatin1String("eprint"))) {
+    if (entry.contains(QStringLiteral("eprint"))) {
         /// check eprint fields as used for arXiv
-        const QString fieldText = PlainTextValue::text(entry.value(QLatin1String("eprint")));
+        const QString fieldText = PlainTextValue::text(entry.value(QStringLiteral("eprint")));
         if (!fieldText.isEmpty())
-            d->queueUrl(QUrl(QLatin1String("http://arxiv.org/search?query=") + fieldText), fieldText, QLatin1String("eprint"), maxDepth);
+            d->queueUrl(QUrl(QStringLiteral("http://arxiv.org/search?query=") + fieldText), fieldText, QStringLiteral("eprint"), maxDepth);
     }
 
     if (!searchWords.isEmpty()) {
         /// use title to search in Google Scholar
-        QUrl googleUrl(QLatin1String("https://www.google.com/search?hl=en&sa=G"));
+        QUrl googleUrl(QStringLiteral("https://www.google.com/search?hl=en&sa=G"));
         QUrlQuery query(googleUrl);
-        query.addQueryItem(QLatin1String("q"), searchWords + QLatin1String(" filetype:pdf"));
+        query.addQueryItem(QStringLiteral("q"), searchWords + QStringLiteral(" filetype:pdf"));
         googleUrl.setQuery(query);
-        d->queueUrl(googleUrl, searchWords, QLatin1String("www.google"), maxDepth);
+        d->queueUrl(googleUrl, searchWords, QStringLiteral("www.google"), maxDepth);
 
         /// use title to search in Google Scholar
-        QUrl googleScholarUrl(QLatin1String("https://scholar.google.com/scholar?hl=en&btnG=Search&as_sdt=1"));
+        QUrl googleScholarUrl(QStringLiteral("https://scholar.google.com/scholar?hl=en&btnG=Search&as_sdt=1"));
         query = QUrlQuery(googleScholarUrl);
-        query.addQueryItem(QLatin1String("q"), searchWords + QLatin1String(" filetype:pdf"));
+        query.addQueryItem(QStringLiteral("q"), searchWords + QStringLiteral(" filetype:pdf"));
         googleScholarUrl.setQuery(query);
-        d->queueUrl(googleScholarUrl, searchWords, QLatin1String("scholar.google"), maxDepth);
+        d->queueUrl(googleScholarUrl, searchWords, QStringLiteral("scholar.google"), maxDepth);
 
         /// use title to search in Bing
-        QUrl bingUrl(QLatin1String("https://www.bing.com/search?setlang=en-US"));
+        QUrl bingUrl(QStringLiteral("https://www.bing.com/search?setlang=en-US"));
         query = QUrlQuery(bingUrl);
-        query.addQueryItem(QLatin1String("q"), searchWords + QLatin1String(" filetype:pdf"));
+        query.addQueryItem(QStringLiteral("q"), searchWords + QStringLiteral(" filetype:pdf"));
         bingUrl.setQuery(query);
-        d->queueUrl(bingUrl, searchWords, QLatin1String("bing"), maxDepth);
+        d->queueUrl(bingUrl, searchWords, QStringLiteral("bing"), maxDepth);
 
         /// use title to search in Microsoft Academic Search
-        QUrl masUrl(QLatin1String("http://academic.research.microsoft.com/Search"));
+        QUrl masUrl(QStringLiteral("http://academic.research.microsoft.com/Search"));
         query = QUrlQuery(masUrl);
-        query.addQueryItem(QLatin1String("query"), searchWords);
+        query.addQueryItem(QStringLiteral("query"), searchWords);
         masUrl.setQuery(query);
-        d->queueUrl(masUrl, searchWords, QLatin1String("academicsearch"), maxDepth);
+        d->queueUrl(masUrl, searchWords, QStringLiteral("academicsearch"), maxDepth);
 
         /// use title to search in CiteSeerX
-        QUrl citeseerXurl(QLatin1String("http://citeseerx.ist.psu.edu/search?submit=Search&sort=rlv&t=doc"));
+        QUrl citeseerXurl(QStringLiteral("http://citeseerx.ist.psu.edu/search?submit=Search&sort=rlv&t=doc"));
         query = QUrlQuery(citeseerXurl);
-        query.addQueryItem(QLatin1String("q"), searchWords);
+        query.addQueryItem(QStringLiteral("q"), searchWords);
         citeseerXurl.setQuery(query);
-        d->queueUrl(citeseerXurl, searchWords, QLatin1String("citeseerx"), maxDepth);
+        d->queueUrl(citeseerXurl, searchWords, QStringLiteral("citeseerx"), maxDepth);
     }
 
     if (d->aliveCounter == 0) {
@@ -377,11 +377,11 @@ void FindPDF::downloadFinished()
                 const QString text = ts.readAll();
 
                 /// regular expression to check if this is a Google Scholar result page
-                static const QRegExp googleScholarTitleRegExp(QLatin1String("<title>[^>]* - Google Scholar</title>"));
+                static const QRegExp googleScholarTitleRegExp(QStringLiteral("<title>[^>]* - Google Scholar</title>"));
                 /// regular expression to check if this is a SpringerLink page
-                static const QRegExp springerLinkTitleRegExp(QLatin1String("<title>[^>]*SpringerLink - [^>]*</title>"));
+                static const QRegExp springerLinkTitleRegExp(QStringLiteral("<title>[^>]*SpringerLink - [^>]*</title>"));
                 /// regular expression to check if this is a CiteSeerX page
-                static const QRegExp citeseerxTitleRegExp(QLatin1String("<title>CiteSeerX &mdash; [^>]*</title>"));
+                static const QRegExp citeseerxTitleRegExp(QStringLiteral("<title>CiteSeerX &mdash; [^>]*</title>"));
 
                 if (text.indexOf(googleScholarTitleRegExp) > 0)
                     d->processGoogleResult(reply, text);
@@ -391,7 +391,7 @@ void FindPDF::downloadFinished()
                     d->processCiteSeerX(reply, text);
                 else {
                     /// regular expression to extract title
-                    static QRegExp titleRegExp(QLatin1String("<title>(.*)</title>"));
+                    static QRegExp titleRegExp(QStringLiteral("<title>(.*)</title>"));
                     titleRegExp.setMinimal(true);
                     if (titleRegExp.indexIn(text) >= 0)
                         qCDebug(LOG_KBIBTEX_NETWORKING) << "Using general HTML processor for page" << titleRegExp.cap(1) << " URL=" << reply->url().toDisplayString();

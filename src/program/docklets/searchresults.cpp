@@ -55,7 +55,7 @@ public:
         layout->setColumnStretch(0, 1);
         layout->setColumnStretch(1, 0);
 
-        resultList = new FileView(QLatin1String("SearchResults"), parent);
+        resultList = new FileView(QStringLiteral("SearchResults"), parent);
         resultList->setItemDelegate(new FileDelegate(resultList));
         resultList->setReadOnly(true);
         resultList->setFrameShadow(QFrame::Sunken);

@@ -29,12 +29,12 @@
 #include "comment.h"
 #include "fileinfo.h"
 
-static const QRegExp curlyRegExp(QLatin1String("[{}]+"));
+static const QRegExp curlyRegExp(QStringLiteral("[{}]+"));
 
-const QString SortFilterFileModel::configGroupName = QLatin1String("User Interface");
+const QString SortFilterFileModel::configGroupName = QStringLiteral("User Interface");
 
 SortFilterFileModel::SortFilterFileModel(QObject *parent)
-        : QSortFilterProxyModel(parent), m_internalModel(NULL), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc")))
+        : QSortFilterProxyModel(parent), m_internalModel(NULL), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc")))
 {
     m_filterQuery.combination = AnyTerm;
     loadState();
@@ -78,7 +78,7 @@ bool SortFilterFileModel::lessThan(const QModelIndex &left, const QModelIndex &r
     const BibTeXFields *bibtexFields = BibTeXFields::self();
     const FieldDescription *fd = bibtexFields->at(column);
 
-    if (column == right.column() && (fd->upperCamelCase == QLatin1String("Author") || fd->upperCamelCase == QLatin1String("Editor"))) {
+    if (column == right.column() && (fd->upperCamelCase == QStringLiteral("Author") || fd->upperCamelCase == QStringLiteral("Editor"))) {
         /// special sorting for authors or editors: check all names,
         /// compare last and then first names
 
@@ -170,7 +170,7 @@ bool SortFilterFileModel::filterAcceptsRow(int source_row, const QModelIndex &so
     if (!entry.isNull()) {
         /// if current row contains an Entry ...
 
-        if (m_filterQuery.field.isEmpty() || m_filterQuery.field == QLatin1String("^id")) {
+        if (m_filterQuery.field.isEmpty() || m_filterQuery.field == QStringLiteral("^id")) {
             /// Check entry's id
             const QString id = entry->id();
             int i = 0;
@@ -178,7 +178,7 @@ bool SortFilterFileModel::filterAcceptsRow(int source_row, const QModelIndex &so
                 eachTerm[i] |= (*itsl).isEmpty() ? true : id.contains(*itsl, Qt::CaseInsensitive);
         }
 
-        if (m_filterQuery.field.isEmpty() || m_filterQuery.field == QLatin1String("^type")) {
+        if (m_filterQuery.field.isEmpty() || m_filterQuery.field == QStringLiteral("^type")) {
             /// Check entry's type
             const QString type = entry->type();
             /// Check type's description ("Journal Article")
@@ -199,7 +199,7 @@ bool SortFilterFileModel::filterAcceptsRow(int source_row, const QModelIndex &so
         /// Test associated PDF files
         if (m_filterQuery.searchPDFfiles && m_filterQuery.field.isEmpty()) ///< not filtering for any specific field
             foreach (const QUrl &url, FileInfo::entryUrls(entry.data(), fileSourceModel()->bibliographyFile()->property(File::Url, QUrl()).toUrl(), FileInfo::TestExistenceYes)) {
-                if (url.isLocalFile() && url.fileName().endsWith(QLatin1String(".pdf"))) {
+                if (url.isLocalFile() && url.fileName().endsWith(QStringLiteral(".pdf"))) {
                     // FIXME if you have a large collection of PDF files and the text version
                     // has not been generated yet, this will freeze KBibTeX for some time
                     const QString text = FileInfo::pdfToText(url.url(QUrl::PreferLocalFile));
@@ -222,8 +222,8 @@ bool SortFilterFileModel::filterAcceptsRow(int source_row, const QModelIndex &so
                     eachTerm[i] |= macro->value().containsPattern(*itsl, Qt::CaseInsensitive) || macro->key().contains(*itsl, Qt::CaseInsensitive);
             }
 
-            if (m_filterQuery.field.isEmpty() || m_filterQuery.field == QLatin1String("^type")) {
-                static const QString label = QLatin1String("macro");
+            if (m_filterQuery.field.isEmpty() || m_filterQuery.field == QStringLiteral("^type")) {
+                static const QString label = QStringLiteral("macro");
                 int i = 0;
                 for (QStringList::ConstIterator itsl = m_filterQuery.terms.constBegin(); itsl != m_filterQuery.terms.constEnd(); ++itsl, ++i)
                     eachTerm[i] = eachTerm[i] || label.contains(*itsl, Qt::CaseInsensitive);
@@ -237,8 +237,8 @@ bool SortFilterFileModel::filterAcceptsRow(int source_row, const QModelIndex &so
                         eachTerm[i] |= (*itsl).isEmpty() ? true : comment->text().contains(*itsl, Qt::CaseInsensitive);
                 }
 
-                if (m_filterQuery.field.isEmpty() || m_filterQuery.field == QLatin1String("^type")) {
-                    static const QString label = QLatin1String("comment");
+                if (m_filterQuery.field.isEmpty() || m_filterQuery.field == QStringLiteral("^type")) {
+                    static const QString label = QStringLiteral("comment");
                     int i = 0;
                     for (QStringList::ConstIterator itsl = m_filterQuery.terms.constBegin(); itsl != m_filterQuery.terms.constEnd(); ++itsl, ++i)
                         eachTerm[i] = eachTerm[i] || label.contains(*itsl, Qt::CaseInsensitive);
@@ -252,8 +252,8 @@ bool SortFilterFileModel::filterAcceptsRow(int source_row, const QModelIndex &so
                             eachTerm[i] |= preamble->value().containsPattern(*itsl, Qt::CaseInsensitive);
                     }
 
-                    if (m_filterQuery.field.isEmpty() || m_filterQuery.field == QLatin1String("^type")) {
-                        static const QString label = QLatin1String("preamble");
+                    if (m_filterQuery.field.isEmpty() || m_filterQuery.field == QStringLiteral("^type")) {
+                        static const QString label = QStringLiteral("preamble");
                         int i = 0;
                         for (QStringList::ConstIterator itsl = m_filterQuery.terms.constBegin(); itsl != m_filterQuery.terms.constEnd(); ++itsl, ++i)
                             eachTerm[i] = eachTerm[i] || label.contains(*itsl, Qt::CaseInsensitive);

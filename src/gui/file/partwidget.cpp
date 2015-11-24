@@ -40,7 +40,7 @@ public:
         filterBar = new FilterBar(parent);
         layout->addWidget(filterBar, 0);
 
-        fileView = new FileView(QLatin1String("Main"), parent);
+        fileView = new FileView(QStringLiteral("Main"), parent);
         layout->addWidget(fileView, 0xffffff);
         fileView->setFilterBar(filterBar);
         fileView->setItemDelegate(new FileDelegate(fileView));

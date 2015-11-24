@@ -59,7 +59,7 @@ public:
         EntryDescription ed;
 
         /// Field "count" is deprecated, invalid values are a common origin of bugs
-        // QString groupName = QLatin1String("EntryType");
+        // QString groupName = QStringLiteral("EntryType");
         // KConfigGroup configGroup(layoutConfig, groupName);
         // int typeCount = configGroup.readEntry("count", entryTypeMaxCount);
 
@@ -95,7 +95,7 @@ public:
         }
 
         /// Although field "count" is deprecated, it is written for backwards compatibility
-        QString groupName = QLatin1String("EntryType");
+        QString groupName = QStringLiteral("EntryType");
         KConfigGroup configGroup(layoutConfig, groupName);
         configGroup.writeEntry("count", typeCount);
 

@@ -110,7 +110,7 @@ public:
             else
                 return QIcon::fromTheme("view-filter");
         case Qt::ToolTipRole:
-            return i18n("<qt>Structure:<ul><li>%1</li></ul>Example: %2</qt>", m_idSuggestions->formatStrToHuman(m_formatStringList[index.row()]).join(QLatin1String("</li><li>")), m_idSuggestions->formatId(*exampleBibTeXEntry, m_formatStringList[index.row()]));
+            return i18n("<qt>Structure:<ul><li>%1</li></ul>Example: %2</qt>", m_idSuggestions->formatStrToHuman(m_formatStringList[index.row()]).join(QStringLiteral("</li><li>")), m_idSuggestions->formatId(*exampleBibTeXEntry, m_formatStringList[index.row()]));
         case Qt::DisplayRole:
             return m_idSuggestions->formatId(*exampleBibTeXEntry, m_formatStringList[index.row()]);
         case Qt::UserRole:
@@ -154,7 +154,7 @@ public:
         if (parent != QModelIndex()) return false;
 
         beginInsertRows(parent, row, row);
-        m_formatStringList.insert(row, QLatin1String("T"));
+        m_formatStringList.insert(row, QStringLiteral("T"));
         endInsertRows();
 
         return true;
@@ -211,7 +211,7 @@ public:
     }
 };
 
-const QString IdSuggestionsModel::exampleBibTeXEntryString = QLatin1String("@Article{ dijkstra1983terminationdetect,\nauthor = {Edsger W. Dijkstra and W. H. J. Feijen and A. J. M. {van Gasteren}},\ntitle = {{Derivation of a Termination Detection Algorithm for Distributed Computations}},\njournal = {Information Processing Letters},\nvolume = 16,\nnumber = 5,\npages = {217--219},\nmonth = jun,\nyear = 1983\n}");
+const QString IdSuggestionsModel::exampleBibTeXEntryString = QStringLiteral("@Article{ dijkstra1983terminationdetect,\nauthor = {Edsger W. Dijkstra and W. H. J. Feijen and A. J. M. {van Gasteren}},\ntitle = {{Derivation of a Termination Detection Algorithm for Distributed Computations}},\njournal = {Information Processing Letters},\nvolume = 16,\nnumber = 5,\npages = {217--219},\nmonth = jun,\nyear = 1983\n}");
 QSharedPointer<const Entry> IdSuggestionsModel::exampleBibTeXEntry;
 
 class SettingsIdSuggestionsWidget::SettingsIdSuggestionsWidgetPrivate
@@ -228,7 +228,7 @@ public:
     QPushButton *buttonNewSuggestion, *buttonEditSuggestion, *buttonDeleteSuggestion, *buttonSuggestionUp, *buttonSuggestionDown, *buttonToggleDefaultString;
 
     SettingsIdSuggestionsWidgetPrivate(SettingsIdSuggestionsWidget *parent)
-            : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroup(config, IdSuggestions::configGroupName) {
+            : p(parent), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), configGroup(config, IdSuggestions::configGroupName) {
         setupGUI();
     }
 
@@ -329,7 +329,7 @@ void SettingsIdSuggestionsWidget::buttonClicked()
     QModelIndex selectedIndex = d->treeViewSuggestions->selectionModel()->currentIndex();
 
     if (button == d->buttonNewSuggestion) {
-        const QString newSuggestion = IdSuggestionsEditDialog::editSuggestion(d->idSuggestionsModel->previewEntry().data(), QLatin1String(""), this);
+        const QString newSuggestion = IdSuggestionsEditDialog::editSuggestion(d->idSuggestionsModel->previewEntry().data(), QStringLiteral(""), this);
         const int row = d->treeViewSuggestions->model()->rowCount(QModelIndex());
         if (!newSuggestion.isEmpty() && d->idSuggestionsModel->insertRow(row)) {
             QModelIndex index = d->idSuggestionsModel->index(row, 0, QModelIndex());

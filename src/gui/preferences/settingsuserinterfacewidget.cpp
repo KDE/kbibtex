@@ -45,7 +45,7 @@ private:
 
 public:
     SettingsUserInterfaceWidgetPrivate(SettingsUserInterfaceWidget *parent)
-            : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))) {
+            : p(parent), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))) {
         setupGUI();
     }
 
@@ -56,12 +56,12 @@ public:
 
         const QStringList styles = configGroup.readEntry("BibTeXStyles", QStringList());
         foreach (const QString &style, styles) {
-            QStringList item = style.split(QLatin1String("|"));
+            QStringList item = style.split(QStringLiteral("|"));
             QString itemLabel = item.at(0);
             item.removeFirst();
             comboBoxBibliographySystem->addItem(itemLabel, item);
         }
-        int styleIndex = comboBoxBibliographySystem->findData(configGroup.readEntry("CurrentStyle", QString(QLatin1String("bibtex"))));
+        int styleIndex = comboBoxBibliographySystem->findData(configGroup.readEntry("CurrentStyle", QString(QStringLiteral("bibtex"))));
         if (styleIndex < 0) styleIndex = 0;
         comboBoxBibliographySystem->setCurrentIndex(styleIndex);
 
@@ -97,8 +97,8 @@ public:
 
         comboBoxBibliographySystem = new KComboBox(p);
         comboBoxBibliographySystem->setObjectName("comboBoxBibtexStyle");
-        comboBoxBibliographySystem->addItem(i18n("BibTeX"), QLatin1String("bibtex"));
-        comboBoxBibliographySystem->addItem(i18n("BibLaTeX"), QLatin1String("biblatex"));
+        comboBoxBibliographySystem->addItem(i18n("BibTeX"), QStringLiteral("bibtex"));
+        comboBoxBibliographySystem->addItem(i18n("BibLaTeX"), QStringLiteral("biblatex"));
         layout->addRow(i18n("Bibliography System:"), comboBoxBibliographySystem);
         connect(comboBoxBibliographySystem, SIGNAL(currentIndexChanged(int)), p, SIGNAL(changed()));
 
@@ -111,7 +111,7 @@ public:
     }
 };
 
-const QString SettingsUserInterfaceWidget::SettingsUserInterfaceWidgetPrivate::configGroupName = QLatin1String("User Interface");
+const QString SettingsUserInterfaceWidget::SettingsUserInterfaceWidgetPrivate::configGroupName = QStringLiteral("User Interface");
 
 
 SettingsUserInterfaceWidget::SettingsUserInterfaceWidget(QWidget *parent)

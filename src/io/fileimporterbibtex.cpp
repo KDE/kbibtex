@@ -79,14 +79,14 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
 
     m_textStream = new QTextStream(iodevice);
     m_textStream->setCodec(defaultCodecName); ///< unless we learn something else, assume default codec
-    result->setProperty(File::Encoding, QLatin1String("latex"));
+    result->setProperty(File::Encoding, QStringLiteral("latex"));
 
     QString rawText = "";
     while (!m_textStream->atEnd()) {
         QString line = m_textStream->readLine();
         bool skipline = evaluateParameterComments(m_textStream, line.toLower(), result);
         // FIXME XML data should be removed somewhere else? onlinesearch ...
-        if (line.startsWith(QLatin1String("<?xml")) && line.endsWith("?>"))
+        if (line.startsWith(QStringLiteral("<?xml")) && line.endsWith("?>"))
             /// Hop over XML declarations
             skipline = true;
         if (!skipline)
@@ -135,7 +135,7 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
     if (result != NULL) {
         /// Set the file's preferences for string delimiters
         /// deduced from statistics built while parsing the file
-        result->setProperty(File::StringDelimiter, m_statistics.countQuotationMarks > m_statistics.countCurlyBrackets ? QLatin1String("\"\"") : QLatin1String("{}"));
+        result->setProperty(File::StringDelimiter, m_statistics.countQuotationMarks > m_statistics.countCurlyBrackets ? QStringLiteral("\"\"") : QStringLiteral("{}"));
         /// Set the file's preferences for name formatting
         result->setProperty(File::NameFormatting, m_statistics.countFirstNameFirst > m_statistics.countLastNameFirst ? Preferences::personNameFormatFirstLast : Preferences::personNameFormatLastFirst);
         /// Set the file's preferences for title protected
@@ -182,7 +182,7 @@ Element *FileImporterBibTeX::nextElement()
             return readMacroElement();
         else if (elementType.toLower() == "preamble")
             return readPreambleElement();
-        else if (elementType.toLower() == QLatin1String("import")) {
+        else if (elementType.toLower() == QStringLiteral("import")) {
             qCDebug(LOG_KBIBTEX_IO) << "Skipping potential HTML/JavaScript @import statement";
             return NULL;
         } else if (!elementType.isEmpty())
@@ -209,7 +209,7 @@ Element *FileImporterBibTeX::nextElement()
 
 Comment *FileImporterBibTeX::readCommentElement()
 {
-    if (!readCharUntil(QLatin1String("{(")))
+    if (!readCharUntil(QStringLiteral("{(")))
         return NULL;
     return new Comment(EncoderLaTeX::instance()->decode(readBracketString()));
 }
@@ -225,7 +225,7 @@ Comment *FileImporterBibTeX::readPlainCommentElement(const QString &prefix)
         result.append(EncoderLaTeX::instance()->decode((nextChar == QLatin1Char('%') ? QString() : QString(nextChar)) + line));
     }
 
-    if (result.startsWith(QLatin1String("x-kbibtex"))) {
+    if (result.startsWith(QStringLiteral("x-kbibtex"))) {
         qCWarning(LOG_KBIBTEX_IO) << "Plain comment element starts with \"x-kbibtex\", this should not happen";
         /// ignore special comments
         return NULL;
@@ -250,7 +250,7 @@ Macro *FileImporterBibTeX::readMacroElement()
     if (key.isEmpty()) {
         /// Cope with empty keys,
         /// duplicates are handled further below
-        key = QLatin1String("EmptyId");
+        key = QStringLiteral("EmptyId");
     } else if (!EncoderLaTeX::containsOnlyAscii(key)) {
         /// Try to avoid non-ascii characters in ids
         EncoderLaTeX *encoder = EncoderLaTeX::instance();
@@ -261,7 +261,7 @@ Macro *FileImporterBibTeX::readMacroElement()
 
     /// Check for duplicate entry ids, avoid collisions
     if (m_knownElementIds.contains(key)) {
-        static const QString newIdPattern = QLatin1String("%1-%2");
+        static const QString newIdPattern = QStringLiteral("%1-%2");
         int idx = 2;
         QString newKey = newIdPattern.arg(key).arg(idx);
         while (m_knownElementIds.contains(newKey))
@@ -338,7 +338,7 @@ Entry *FileImporterBibTeX::readEntryElement(const QString &typeString)
     if (id.isEmpty()) {
         /// Cope with empty ids,
         /// duplicates are handled further below
-        id = QLatin1String("EmptyId");
+        id = QStringLiteral("EmptyId");
     } else if (!EncoderLaTeX::containsOnlyAscii(id)) {
         /// Try to avoid non-ascii characters in ids
         const QString newId = encoder->convertToPlainAscii(id);
@@ -348,7 +348,7 @@ Entry *FileImporterBibTeX::readEntryElement(const QString &typeString)
 
     /// Check for duplicate entry ids, avoid collisions
     if (m_knownElementIds.contains(id)) {
-        static const QString newIdPattern = QLatin1String("%1-%2");
+        static const QString newIdPattern = QStringLiteral("%1-%2");
         int idx = 2;
         QString newId = newIdPattern.arg(id).arg(idx);
         while (m_knownElementIds.contains(newId))
@@ -632,7 +632,7 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value &value, const QStr
                 value.append(QSharedPointer<MacroKey>(new MacroKey(text)));
             else
                 value.append(QSharedPointer<PlainText>(new PlainText(text)));
-        } else if ((iKey.startsWith(Entry::ftUrl) && !iKey.startsWith(Entry::ftUrlDate)) || iKey.startsWith(Entry::ftLocalFile) || iKey.compare(QLatin1String("ee"), Qt::CaseInsensitive) == 0 || iKey.compare(QLatin1String("biburl"), Qt::CaseInsensitive) == 0) {
+        } else if ((iKey.startsWith(Entry::ftUrl) && !iKey.startsWith(Entry::ftUrlDate)) || iKey.startsWith(Entry::ftLocalFile) || iKey.compare(QStringLiteral("ee"), Qt::CaseInsensitive) == 0 || iKey.compare(QStringLiteral("biburl"), Qt::CaseInsensitive) == 0) {
             if (isStringKey)
                 value.append(QSharedPointer<MacroKey>(new MacroKey(text)));
             else {
@@ -653,10 +653,10 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value &value, const QStr
                 ///  ::
                 ///  :Users/Fred/Library/Application Support/Mendeley Desktop/Downloaded/Hasselman et al. - 2011 - (Still) Growing Up What should we be a realist about in the cognitive and behavioural sciences Abstract.pdf:pdf
                 if (KBibTeX::mendeleyFileRegExp.indexIn(rawText) >= 0)    {
-                    const QString backslashLaTeX = QLatin1String("$\\backslash$");
+                    const QString backslashLaTeX = QStringLiteral("$\\backslash$");
                     QString filename = KBibTeX::mendeleyFileRegExp.cap(1);
                     filename = filename.remove(backslashLaTeX);
-                    if (filename.startsWith(QLatin1String("home/")) || filename.startsWith(QLatin1String("Users/"))) {
+                    if (filename.startsWith(QStringLiteral("home/")) || filename.startsWith(QStringLiteral("Users/"))) {
                         /// Mendeley doesn't have a slash at the beginning of absolute paths,
                         /// so, insert one
                         /// See bug 19833, comment 5: https://gna.org/bugs/index.php?19833#comment5
@@ -681,7 +681,7 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value &value, const QStr
                 int p = -5;
                 /// Take care of "; " which separates multiple DOIs, but which may baffle the regexp
                 QString preprocessedText = rawText;
-                preprocessedText.replace(QLatin1String("; "), QLatin1String(" "));
+                preprocessedText.replace(QStringLiteral("; "), QStringLiteral(" "));
                 /// Extract everything that looks like a DOI using a regular expression,
                 /// ignore everything else
                 while ((p = KBibTeX::doiRegExp.indexIn(preprocessedText, p + 5)) >= 0)
@@ -708,9 +708,9 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value &value, const QStr
                 /// Memorize (some) split characters for later use
                 /// (e.g. when writing file again)
                 if (splitChar == ';')
-                    m_statistics.mostRecentListSeparator = QLatin1String("; ");
+                    m_statistics.mostRecentListSeparator = QStringLiteral("; ");
                 else if (splitChar == ',')
-                    m_statistics.mostRecentListSeparator = QLatin1String(", ");
+                    m_statistics.mostRecentListSeparator = QStringLiteral(", ");
 
             }
         } else {
@@ -785,7 +785,7 @@ QList<QSharedPointer<Keyword> > FileImporterBibTeX::splitKeywords(const QString 
     static char splitChars[] = "\n;,\0";
     static const QRegExp splitAlong[] = {QRegExp(QString("\\s*%1\\s*").arg(splitChars[0])), QRegExp(QString("\\s*%1\\s*").arg(splitChars[1])), QRegExp(QString("\\s*%1\\s*").arg(splitChars[2])), QRegExp()};
     char *curSplitChar = splitChars;
-    static const QRegExp unneccessarySpacing(QLatin1String("[ \n\r\t]+"));
+    static const QRegExp unneccessarySpacing(QStringLiteral("[ \n\r\t]+"));
     int index = 0;
     if (usedSplitChar != 0)
         *usedSplitChar = '\0';
@@ -796,7 +796,7 @@ QList<QSharedPointer<Keyword> > FileImporterBibTeX::splitKeywords(const QString 
         if (text.contains(*curSplitChar)) {
             /// split text along a pattern like spaces-splitchar-spaces
             /// extract keywords
-            const QStringList keywords = text.split(splitAlong[index], QString::SkipEmptyParts).replaceInStrings(unneccessarySpacing, QLatin1String(" "));
+            const QStringList keywords = text.split(splitAlong[index], QString::SkipEmptyParts).replaceInStrings(unneccessarySpacing, QStringLiteral(" "));
             /// build QList of Keyword objects from keywords
             foreach (const QString &keyword, keywords) {
                 result.append(QSharedPointer<Keyword>(new Keyword(keyword)));
@@ -843,12 +843,12 @@ QList<QSharedPointer<Person> > FileImporterBibTeX::splitNames(const QString &tex
         /// Replacing daggers with commas ensures that they act as persons' names separator
         internalText = internalText.replace(*it, QChar(','));
     /// Remove numbers to footnotes
-    static const QRegExp numberFootnoteRegExp(QLatin1String("(\\w)\\d+\\b"));
-    internalText = internalText.replace(numberFootnoteRegExp, QLatin1String("\\1"));
+    static const QRegExp numberFootnoteRegExp(QStringLiteral("(\\w)\\d+\\b"));
+    internalText = internalText.replace(numberFootnoteRegExp, QStringLiteral("\\1"));
 
     /// Split input string into tokens which are either name components (first or last name)
     /// or full names (composed of first and last name), depending on the input string's structure
-    static const QRegExp split(QLatin1String("\\s*([,]+|[,]*\\b[au]nd\\b|[;]|&|\\n|\\s{4,})\\s*"));
+    static const QRegExp split(QStringLiteral("\\s*([,]+|[,]*\\b[au]nd\\b|[;]|&|\\n|\\s{4,})\\s*"));
     QStringList authorTokenList = internalText.split(split, QString::SkipEmptyParts);
 
     bool containsSpace = true;
@@ -869,7 +869,7 @@ QList<QSharedPointer<Person> > FileImporterBibTeX::splitNames(const QString &tex
             QString lastname = *it;
             ++it;
             if (it != authorTokenList.constEnd()) {
-                lastname += QLatin1String(", ") + (*it);
+                lastname += QStringLiteral(", ") + (*it);
                 QSharedPointer<Person> person = personFromString(lastname);
                 if (!person.isNull())
                     result.append(person);
@@ -888,8 +888,8 @@ void FileImporterBibTeX::parsePersonList(const QString &text, Value &value)
 
 void FileImporterBibTeX::parsePersonList(const QString &text, Value &value, CommaContainment *comma)
 {
-    static const QString tokenAnd = QLatin1String("and");
-    static const QString tokenOthers = QLatin1String("others");
+    static const QString tokenAnd = QStringLiteral("and");
+    static const QString tokenOthers = QStringLiteral("others");
     static QStringList tokens;
     contextSensitiveSplit(text, tokens);
 
@@ -913,7 +913,7 @@ void FileImporterBibTeX::parsePersonList(const QString &text, Value &value, Comm
             if (i < tokens.count() - 1)
                 qCDebug(LOG_KBIBTEX_IO) << "Special word" << tokenOthers << "found before last position in person name";
             else
-                value.append(QSharedPointer<PlainText>(new PlainText(QLatin1String("others"))));
+                value.append(QSharedPointer<PlainText>(new PlainText(QStringLiteral("others"))));
             nameStart = tokens.count() + 1;
             encounteredName = false;
         } else
@@ -1044,7 +1044,7 @@ QSharedPointer<Person> FileImporterBibTeX::personFromTokenList(const QStringList
     it = tokens.constEnd();
     while (it != tokens.constBegin()) {
         --it;
-        if (partB.isEmpty() && (it->toLower().startsWith(QLatin1String("jr")) || it->toLower().startsWith(QLatin1String("sr")) || it->toLower().startsWith(QLatin1String("iii"))))
+        if (partB.isEmpty() && (it->toLower().startsWith(QStringLiteral("jr")) || it->toLower().startsWith(QStringLiteral("sr")) || it->toLower().startsWith(QStringLiteral("iii"))))
             /// handle name suffices like "Jr" or "III."
             partC.prepend(*it);
         else if (partB.isEmpty() || it->at(0).isLower())
@@ -1109,7 +1109,7 @@ QString FileImporterBibTeX::bibtexAwareSimplify(const QString &text)
         /// Consume spaces, ...
         while (i < text.length() && text[i].isSpace()) ++i;
         /// ... but record only a single space
-        result.append(QLatin1String(" "));
+        result.append(QStringLiteral(" "));
     }
 
     return result;
@@ -1120,18 +1120,18 @@ bool FileImporterBibTeX::evaluateParameterComments(QTextStream *textStream, cons
     /// Assertion: variable "line" is all lower-case
 
     /** check if this file requests a special encoding */
-    if (line.startsWith(QLatin1String("@comment{x-kbibtex-encoding=")) && line.endsWith(QLatin1Char('}'))) {
+    if (line.startsWith(QStringLiteral("@comment{x-kbibtex-encoding=")) && line.endsWith(QLatin1Char('}'))) {
         QString encoding = line.mid(28, line.length() - 29);
         textStream->setCodec(encoding == "latex" ? defaultCodecName : encoding.toLatin1().data());
         file->setProperty(File::Encoding, encoding == "latex" ? encoding : textStream->codec()->name());
         return true;
-    } else if (line.startsWith(QLatin1String("@comment{x-kbibtex-personnameformatting=")) && line.endsWith(QLatin1Char('}'))) {
+    } else if (line.startsWith(QStringLiteral("@comment{x-kbibtex-personnameformatting=")) && line.endsWith(QLatin1Char('}'))) {
         // TODO usage of x-kbibtex-personnameformatting is deprecated,
         // as automatic detection is in place
         QString personNameFormatting = line.mid(40, line.length() - 41);
         file->setProperty(File::NameFormatting, personNameFormatting);
         return true;
-    } else if (line.startsWith(QLatin1String("% encoding:"))) {
+    } else if (line.startsWith(QStringLiteral("% encoding:"))) {
         /// Interprete JabRef's encoding information
         QString encoding = line.mid(12);
         qCDebug(LOG_KBIBTEX_IO) << "Using JabRef's encoding:" << encoding;

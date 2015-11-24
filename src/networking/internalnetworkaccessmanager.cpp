@@ -68,38 +68,38 @@ public:
 
 /// various browser strings to "disguise" origin
 const QStringList userAgentList = QStringList()
-                                  << QLatin1String("Mozilla/5.0 (Linux; U; Android 2.3.3; en-us; HTC_DesireS_S510e Build/GRI40) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1")
-                                  << QLatin1String("Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.6; en-US; rv:1.9.2.3) Gecko/20100402 Prism/1.0b4")
-                                  << QLatin1String("Mozilla/5.0 (Windows; U; Win 9x 4.90; SG; rv:1.9.2.4) Gecko/20101104 Netscape/9.1.0285")
-                                  << QLatin1String("Mozilla/5.0 (compatible; Konqueror/4.5; FreeBSD) KHTML/4.5.4 (like Gecko)")
-                                  << QLatin1String("Mozilla/5.0 (compatible; Yahoo! Slurp China; http://misc.yahoo.com.cn/help.html)")
-                                  << QLatin1String("yacybot (x86 Windows XP 5.1; java 1.6.0_12; Europe/de) http://yacy.net/bot.html")
-                                  << QLatin1String("Nokia6230i/2.0 (03.25) Profile/MIDP-2.0 Configuration/CLDC-1.1")
-                                  << QLatin1String("Links (2.3-pre1; NetBSD 5.0 i386; 96x36)")
-                                  << QLatin1String("Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US) AppleWebKit/523.15 (KHTML, like Gecko, Safari/419.3) Arora/0.3 (Change: 287 c9dfb30)")
-                                  << QLatin1String("Mozilla/4.0 (compatible; Dillo 2.2)")
-                                  << QLatin1String("Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/532.0 (KHTML, like Gecko) Chrome/4.0.201.1 Safari/532.0")
-                                  << QLatin1String("Mozilla/5.0 (X11; Linux i686) AppleWebKit/535.1 (KHTML, like Gecko) Ubuntu/10.04 Chromium/14.0.813.0 Chrome/14.0.813.0 Safari/535.1")
-                                  << QLatin1String("Mozilla/5.0 (X11; U; Linux; de-DE) AppleWebKit/527+ (KHTML, like Gecko, Safari/419.3) Arora/0.8.0")
-                                  << QLatin1String("Mozilla/5.0 (X11; U; Linux i686; pt-PT; rv:1.9.2.3) Gecko/20100402 Iceweasel/3.6.3 (like Firefox/3.6.3) GTB7.0")
-                                  << QLatin1String("Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.0.1) Gecko/20020919")
-                                  << QLatin1String("Lynx/2.8.8dev.3 libwww-FM/2.14 SSL-MM/1.4.1")
-                                  << QLatin1String("Opera/9.80 (X11; Linux i686; U; ru) Presto/2.8.131 Version/11.11")
-                                  << QLatin1String("Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; .NET CLR 1.1.4322; InfoPath.1; .NET CLR 2.0.50727) Sleipnir/2.8.4")
-                                  << QLatin1String("Mozilla/5.0 (X11; Linux i686; rv:2.2a1pre) Gecko/20110327 SeaMonkey/2.2a1pre")
-                                  << QLatin1String("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_3) AppleWebKit/534.55.3 (KHTML, like Gecko) Version/5.1.3 Safari/534.53.10")
-                                  << QLatin1String("Mozilla/6.0 (X11; U; Linux x86_64; en-US; rv:2.9.0.3) Gecko/2009022510 FreeBSD/ Sunrise/4.0.1/like Safari")
-                                  << QLatin1String("Mozilla/5.0 (Linux; U; Tizen/1.0 like Android; en-us; AppleWebKit/534.46 (KHTML, like Gecko) Tizen Browser/1.0 Mobile")
-                                  << QLatin1String("Emacs-W3/4.0pre.46 URL/p4.0pre.46 (i686-pc-linux; X11)")
-                                  << QLatin1String("Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.8.1.13) Gecko/20080208 Galeon/2.0.4 (2008.1) Firefox/2.0.0.13")
-                                  << QLatin1String("Lynx/2.8 (compatible; iCab 2.9.8; Macintosh; U; 68K)")
-                                  << QLatin1String("Mozilla/5.0 (Macintosh; U; Intel Mac OS X; en; rv:1.8.1.14) Gecko/20080409 Camino/1.6 (like Firefox/2.0.0.14)")
-                                  << QLatin1String("msnbot/2.1")
-                                  << QLatin1String("Mozilla/5.0 (iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.10")
-                                  << QLatin1String("Mozilla/5.0 (Windows; U; ; en-NZ) AppleWebKit/527+ (KHTML, like Gecko, Safari/419.3) Arora/0.8.0")
-                                  << QLatin1String("NCSA Mosaic/3.0 (Windows 95)")
-                                  << QLatin1String("Mozilla/5.0 (SymbianOS/9.1; U; [en]; Series60/3.0 NokiaE60/4.06.0) AppleWebKit/413 (KHTML, like Gecko) Safari/413")
-                                  << QLatin1String("Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US) AppleWebKit/534.16 (KHTML, like Gecko) Chrome/10.0.648.133 Safari/534.16");
+                                  << QStringLiteral("Mozilla/5.0 (Linux; U; Android 2.3.3; en-us; HTC_DesireS_S510e Build/GRI40) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1")
+                                  << QStringLiteral("Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.6; en-US; rv:1.9.2.3) Gecko/20100402 Prism/1.0b4")
+                                  << QStringLiteral("Mozilla/5.0 (Windows; U; Win 9x 4.90; SG; rv:1.9.2.4) Gecko/20101104 Netscape/9.1.0285")
+                                  << QStringLiteral("Mozilla/5.0 (compatible; Konqueror/4.5; FreeBSD) KHTML/4.5.4 (like Gecko)")
+                                  << QStringLiteral("Mozilla/5.0 (compatible; Yahoo! Slurp China; http://misc.yahoo.com.cn/help.html)")
+                                  << QStringLiteral("yacybot (x86 Windows XP 5.1; java 1.6.0_12; Europe/de) http://yacy.net/bot.html")
+                                  << QStringLiteral("Nokia6230i/2.0 (03.25) Profile/MIDP-2.0 Configuration/CLDC-1.1")
+                                  << QStringLiteral("Links (2.3-pre1; NetBSD 5.0 i386; 96x36)")
+                                  << QStringLiteral("Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US) AppleWebKit/523.15 (KHTML, like Gecko, Safari/419.3) Arora/0.3 (Change: 287 c9dfb30)")
+                                  << QStringLiteral("Mozilla/4.0 (compatible; Dillo 2.2)")
+                                  << QStringLiteral("Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/532.0 (KHTML, like Gecko) Chrome/4.0.201.1 Safari/532.0")
+                                  << QStringLiteral("Mozilla/5.0 (X11; Linux i686) AppleWebKit/535.1 (KHTML, like Gecko) Ubuntu/10.04 Chromium/14.0.813.0 Chrome/14.0.813.0 Safari/535.1")
+                                  << QStringLiteral("Mozilla/5.0 (X11; U; Linux; de-DE) AppleWebKit/527+ (KHTML, like Gecko, Safari/419.3) Arora/0.8.0")
+                                  << QStringLiteral("Mozilla/5.0 (X11; U; Linux i686; pt-PT; rv:1.9.2.3) Gecko/20100402 Iceweasel/3.6.3 (like Firefox/3.6.3) GTB7.0")
+                                  << QStringLiteral("Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.0.1) Gecko/20020919")
+                                  << QStringLiteral("Lynx/2.8.8dev.3 libwww-FM/2.14 SSL-MM/1.4.1")
+                                  << QStringLiteral("Opera/9.80 (X11; Linux i686; U; ru) Presto/2.8.131 Version/11.11")
+                                  << QStringLiteral("Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; .NET CLR 1.1.4322; InfoPath.1; .NET CLR 2.0.50727) Sleipnir/2.8.4")
+                                  << QStringLiteral("Mozilla/5.0 (X11; Linux i686; rv:2.2a1pre) Gecko/20110327 SeaMonkey/2.2a1pre")
+                                  << QStringLiteral("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_3) AppleWebKit/534.55.3 (KHTML, like Gecko) Version/5.1.3 Safari/534.53.10")
+                                  << QStringLiteral("Mozilla/6.0 (X11; U; Linux x86_64; en-US; rv:2.9.0.3) Gecko/2009022510 FreeBSD/ Sunrise/4.0.1/like Safari")
+                                  << QStringLiteral("Mozilla/5.0 (Linux; U; Tizen/1.0 like Android; en-us; AppleWebKit/534.46 (KHTML, like Gecko) Tizen Browser/1.0 Mobile")
+                                  << QStringLiteral("Emacs-W3/4.0pre.46 URL/p4.0pre.46 (i686-pc-linux; X11)")
+                                  << QStringLiteral("Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.8.1.13) Gecko/20080208 Galeon/2.0.4 (2008.1) Firefox/2.0.0.13")
+                                  << QStringLiteral("Lynx/2.8 (compatible; iCab 2.9.8; Macintosh; U; 68K)")
+                                  << QStringLiteral("Mozilla/5.0 (Macintosh; U; Intel Mac OS X; en; rv:1.8.1.14) Gecko/20080409 Camino/1.6 (like Firefox/2.0.0.14)")
+                                  << QStringLiteral("msnbot/2.1")
+                                  << QStringLiteral("Mozilla/5.0 (iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.10")
+                                  << QStringLiteral("Mozilla/5.0 (Windows; U; ; en-NZ) AppleWebKit/527+ (KHTML, like Gecko, Safari/419.3) Arora/0.8.0")
+                                  << QStringLiteral("NCSA Mosaic/3.0 (Windows 95)")
+                                  << QStringLiteral("Mozilla/5.0 (SymbianOS/9.1; U; [en]; Series60/3.0 NokiaE60/4.06.0) AppleWebKit/413 (KHTML, like Gecko) Safari/413")
+                                  << QStringLiteral("Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US) AppleWebKit/534.16 (KHTML, like Gecko) Chrome/10.0.648.133 Safari/534.16");
 
 QString InternalNetworkAccessManager::userAgentString;
 InternalNetworkAccessManager *InternalNetworkAccessManager::instance = NULL;
@@ -132,14 +132,14 @@ QNetworkReply *InternalNetworkAccessManager::get(QNetworkRequest &request, const
     /// Query the KDE subsystem if a proxy has to be used
     /// for the host of a given URL
     QString proxyHostName = KProtocolManager::proxyForUrl(request.url());
-    if (!proxyHostName.isEmpty() && proxyHostName != QLatin1String("DIRECT")) {
+    if (!proxyHostName.isEmpty() && proxyHostName != QStringLiteral("DIRECT")) {
         /// Extract both hostname and port number for proxy
-        proxyHostName = proxyHostName.mid(proxyHostName.indexOf(QLatin1String("://")) + 3);
-        QStringList proxyComponents = proxyHostName.split(QLatin1String(":"), QString::SkipEmptyParts);
+        proxyHostName = proxyHostName.mid(proxyHostName.indexOf(QStringLiteral("://")) + 3);
+        QStringList proxyComponents = proxyHostName.split(QStringLiteral(":"), QString::SkipEmptyParts);
         if (proxyComponents.length() == 1) {
             /// Proxy configuration is missing a port number,
             /// using 8080 as default
-            proxyComponents << QLatin1String("8080");
+            proxyComponents << QStringLiteral("8080");
         }
         if (proxyComponents.length() == 2) {
             /// Set proxy to Qt's NetworkAccessManager

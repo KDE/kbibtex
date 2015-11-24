@@ -87,7 +87,7 @@ CheckBibTeX::CheckBibTeXResult CheckBibTeX::checkBibTeX(QSharedPointer<Entry> &e
     }
 
     /// define variables how to parse BibTeX's output
-    static const QString warningStart = QLatin1String("Warning--");
+    static const QString warningStart = QStringLiteral("Warning--");
     static const QRegExp warningEmptyField("empty (\\w+) in ");
     static const QRegExp warningEmptyField2("empty (\\w+) or (\\w+) in ");
     static const QRegExp warningThereIsBut("there's a (\\w+) but no (\\w+) in");
@@ -109,7 +109,7 @@ CheckBibTeX::CheckBibTeXResult CheckBibTeX::checkBibTeX(QSharedPointer<Entry> &e
                 errorPlainText = ts.readLine();
                 buffer.close();
             }
-        } else if (line.startsWith(QLatin1String("Warning--"))) {
+        } else if (line.startsWith(QStringLiteral("Warning--"))) {
             /// is a warning ...
 
             if (warningEmptyField.indexIn(line) > -1) {

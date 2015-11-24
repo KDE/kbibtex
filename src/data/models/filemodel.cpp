@@ -37,9 +37,9 @@
 const int FileModel::NumberRole = Qt::UserRole + 9581;
 const int FileModel::SortRole = Qt::UserRole + 236; /// see also MDIWidget's SortRole
 
-const QString FileModel::keyShowComments = QLatin1String("showComments");
+const QString FileModel::keyShowComments = QStringLiteral("showComments");
 const bool FileModel::defaultShowComments = true;
-const QString FileModel::keyShowMacros = QLatin1String("showMacros");
+const QString FileModel::keyShowMacros = QStringLiteral("showMacros");
 const bool FileModel::defaultShowMacros = true;
 
 
@@ -74,7 +74,7 @@ void FileModel::notificationEvent(int eventId)
 void FileModel::readConfiguration()
 {
     /// load mapping from color value to label
-    KSharedConfigPtr config(KSharedConfig::openConfig(QLatin1String("kbibtexrc")));
+    KSharedConfigPtr config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc")));
     KConfigGroup configGroup(config, Preferences::groupColor);
     QStringList colorCodes = configGroup.readEntry(Preferences::keyColorCodes, Preferences::defaultColorCodes);
     QStringList colorLabels = configGroup.readEntry(Preferences::keyColorLabels, Preferences::defaultcolorLabels);
@@ -323,7 +323,7 @@ bool FileModel::insertRow(QSharedPointer<Element> element, int row, const QModel
         if (!m_file->containsKey(id).isNull()) {
             /// Same entry id used for an existing entry or macro
             int overflow = 2;
-            static const QString pattern = QLatin1String("%1_%2");
+            static const QString pattern = QStringLiteral("%1_%2");
             /// Test alternative ids with increasing "overflow" counter:
             /// id_2, id_3, id_4 ,...
             QString newId = pattern.arg(id).arg(overflow);
@@ -343,7 +343,7 @@ bool FileModel::insertRow(QSharedPointer<Element> element, int row, const QModel
             if (!m_file->containsKey(key).isNull()) {
                 /// Same entry key used for an existing entry or macro
                 int overflow = 2;
-                static const QString pattern = QLatin1String("%1_%2");
+                static const QString pattern = QStringLiteral("%1_%2");
                 /// Test alternative keys with increasing "overflow" counter:
                 /// key_2, key_3, key_4 ,...
                 QString newKey = pattern.arg(key).arg(overflow);

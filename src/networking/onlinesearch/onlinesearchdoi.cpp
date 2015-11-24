@@ -38,14 +38,14 @@ private:
 
     void loadState() {
         KConfigGroup configGroup(config, configGroupName);
-        lineEditDoiNumber->setText(configGroup.readEntry(QLatin1String("doiNumber"), QString()));
+        lineEditDoiNumber->setText(configGroup.readEntry(QStringLiteral("doiNumber"), QString()));
     }
 
 public:
     KLineEdit *lineEditDoiNumber;
 
     OnlineSearchQueryFormDOI(QWidget *widget)
-            : OnlineSearchQueryFormAbstract(widget), configGroupName(QLatin1String("Search Engine DOI")) {
+            : OnlineSearchQueryFormAbstract(widget), configGroupName(QStringLiteral("Search Engine DOI")) {
         QGridLayout *layout = new QGridLayout(this);
         layout->setMargin(0);
 
@@ -72,7 +72,7 @@ public:
 
     void saveState() {
         KConfigGroup configGroup(config, configGroupName);
-        configGroup.writeEntry(QLatin1String("doiNumber"), lineEditDoiNumber->text());
+        configGroup.writeEntry(QStringLiteral("doiNumber"), lineEditDoiNumber->text());
         config->sync();
     }
 };
@@ -98,14 +98,14 @@ public:
             return QUrl();
         }
 
-        return QUrl(QLatin1String("http://dx.doi.org/") + form->lineEditDoiNumber->text());
+        return QUrl(QStringLiteral("http://dx.doi.org/") + form->lineEditDoiNumber->text());
     }
 
     QUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) {
         Q_UNUSED(numResults)
 
         if (KBibTeX::doiRegExp.indexIn(query[queryKeyFreeText]) >= 0) {
-            return QUrl(QLatin1String("http://dx.doi.org/") + KBibTeX::doiRegExp.cap(0));
+            return QUrl(QStringLiteral("http://dx.doi.org/") + KBibTeX::doiRegExp.cap(0));
         }
 
         return QUrl();
@@ -178,7 +178,7 @@ OnlineSearchQueryFormAbstract *OnlineSearchDOI::customWidget(QWidget *parent)
 
 QUrl OnlineSearchDOI::homepage() const
 {
-    return QUrl(QLatin1String("http://dx.doi.org/"));
+    return QUrl(QStringLiteral("http://dx.doi.org/"));
 }
 
 void OnlineSearchDOI::cancel()
@@ -188,7 +188,7 @@ void OnlineSearchDOI::cancel()
 
 QString OnlineSearchDOI::favIconUrl() const
 {
-    return QLatin1String("http://dx.doi.org/favicon.ico");
+    return QStringLiteral("http://dx.doi.org/favicon.ico");
 }
 
 void OnlineSearchDOI::downloadDone()

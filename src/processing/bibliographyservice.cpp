@@ -49,16 +49,16 @@ public:
 
     Private(QWidget *w, BibliographyService */* UNUSED parent*/)
         : // UNUSED p(parent),
-          configXDGMimeAppsList(KSharedConfig::openConfig(QLatin1String("mimeapps.list"), KConfig::NoGlobals, QStandardPaths::ApplicationsLocation)),
+          configXDGMimeAppsList(KSharedConfig::openConfig(QStringLiteral("mimeapps.list"), KConfig::NoGlobals, QStandardPaths::ApplicationsLocation)),
           configGroupAddedKDEServiceAssociations(configXDGMimeAppsList, "Added KDE Service Associations"),
           configGroupRemovedKDEServiceAssociations(configXDGMimeAppsList, "Removed KDE Service Associations"),
           configGroupAddedAssociations(configXDGMimeAppsList, "Added Associations"),
           configGroupRemovedAssociations(configXDGMimeAppsList, "Removed Associations"),
           parentWidget(w),
           textBasedMimeTypes(QStringList()
-                             << QLatin1String("text/x-bibtex") ///< classical BibTeX bibliographies
-                             << QLatin1String("application/x-research-info-systems") ///< Research Information Systems (RIS) bibliographies
-                             << QLatin1String("application/x-isi-export-format")) ///< Information Sciences Institute (ISI) bibliographies
+                             << QStringLiteral("text/x-bibtex") ///< classical BibTeX bibliographies
+                             << QStringLiteral("application/x-research-info-systems") ///< Research Information Systems (RIS) bibliographies
+                             << QStringLiteral("application/x-isi-export-format")) ///< Information Sciences Institute (ISI) bibliographies
     {
         /// nothing
     }
@@ -158,10 +158,10 @@ public:
     }
 };
 
-const QString BibliographyService::Private::kbibtexApplicationDesktop = QLatin1String("org.kde.kbibtex.desktop");
-const QString BibliographyService::Private::kbibtexPartDesktop = QLatin1String("kbibtexpart.desktop");
-const QString BibliographyService::Private::kateApplicationDesktop = QLatin1String("org.kde.kate.desktop");
-const QString BibliographyService::Private::katePartDesktop = QLatin1String("katepart.desktop");
+const QString BibliographyService::Private::kbibtexApplicationDesktop = QStringLiteral("org.kde.kbibtex.desktop");
+const QString BibliographyService::Private::kbibtexPartDesktop = QStringLiteral("kbibtexpart.desktop");
+const QString BibliographyService::Private::kateApplicationDesktop = QStringLiteral("org.kde.kate.desktop");
+const QString BibliographyService::Private::katePartDesktop = QStringLiteral("katepart.desktop");
 
 BibliographyService::BibliographyService(QWidget *parentWidget)
         : QObject(parentWidget), d(new BibliographyService::Private(parentWidget, this))
@@ -182,8 +182,8 @@ void BibliographyService::setKBibTeXasDefault() {
 
     /// kbuildsycoca5 has to be run to update the mime type associations
     QProcess *kbuildsycoca5Process = new QProcess(d->parentWidget);
-    connect(kbuildsycoca5Process, static_cast<void(QProcess::*)(int,QProcess::ExitStatus)>(&QProcess::finished), this, &BibliographyService::kbuildsycoca5finished);
-    kbuildsycoca5Process->start(QLatin1String("kbuildsycoca5"));
+    connect(kbuildsycoca5Process, static_cast<void(QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, &BibliographyService::kbuildsycoca5finished);
+    kbuildsycoca5Process->start(QStringLiteral("kbuildsycoca5"));
 }
 
 bool BibliographyService::isKBibTeXdefault() const {

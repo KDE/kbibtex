@@ -30,7 +30,7 @@ bool AssociatedFiles::urlIsLocal(const QUrl &url)
     // FIXME same function as in UrlListEdit; move to common code base?
     const QString scheme = url.scheme();
     /// Test various schemes such as "http", "https", "ftp", ...
-    return !scheme.startsWith(QLatin1String("http")) && !scheme.startsWith(QLatin1String("ftp")) && !scheme.startsWith(QLatin1String("sftp")) && !scheme.startsWith(QLatin1String("fish")) && !scheme.startsWith(QLatin1String("webdav")) && scheme != QLatin1String("smb");
+    return !scheme.startsWith(QStringLiteral("http")) && !scheme.startsWith(QStringLiteral("ftp")) && !scheme.startsWith(QStringLiteral("sftp")) && !scheme.startsWith(QStringLiteral("fish")) && !scheme.startsWith(QStringLiteral("webdav")) && scheme != QStringLiteral("smb");
 }
 
 QString AssociatedFiles::relativeFilename(const QUrl &documentUrl, const QUrl &baseUrl) {
@@ -42,7 +42,7 @@ QString AssociatedFiles::relativeFilename(const QUrl &documentUrl, const QUrl &b
         qCWarning(LOG_KBIBTEX_NETWORKING) << "base URL has to point to an absolute file location or URL";
         return documentUrl.url(QUrl::PreferLocalFile);
     }
-    if (documentUrl.scheme() != baseUrl.scheme() || (documentUrl.scheme() != QLatin1String("file") && documentUrl.host() != baseUrl.host())) {
+    if (documentUrl.scheme() != baseUrl.scheme() || (documentUrl.scheme() != QStringLiteral("file") && documentUrl.host() != baseUrl.host())) {
         qCWarning(LOG_KBIBTEX_NETWORKING) << "document URL and base URL do not match (protocol, host, ...)";
         return documentUrl.url(QUrl::PreferLocalFile);
     }
@@ -69,7 +69,7 @@ QString AssociatedFiles::absoluteFilename(const QUrl &documentUrl, const QUrl &b
         qCWarning(LOG_KBIBTEX_NETWORKING) << "base URL has to point to an absolute file location or URL if the document URL is relative";
         return documentUrl.url(QUrl::PreferLocalFile);
     }
-    if (documentUrl.isRelative() && (documentUrl.scheme() != baseUrl.scheme() || (documentUrl.scheme() != QLatin1String("file") && documentUrl.host() != baseUrl.host()))) {
+    if (documentUrl.isRelative() && (documentUrl.scheme() != baseUrl.scheme() || (documentUrl.scheme() != QStringLiteral("file") && documentUrl.host() != baseUrl.host()))) {
         qCWarning(LOG_KBIBTEX_NETWORKING) << "document URL and base URL do not match (protocol, host, ...), but necessary if the document URL is relative";
         return documentUrl.url(QUrl::PreferLocalFile);
     }
@@ -150,16 +150,16 @@ QUrl AssociatedFiles::copyDocument(const QUrl &sourceUrl, const QString &entryId
     QString filename = internalSourceInfo.fileName();
     QString suffix = internalSourceInfo.suffix();
     if (suffix.isEmpty()) {
-        suffix = QLatin1String("html");
+        suffix = QStringLiteral("html");
         filename.append(QLatin1Char('.')).append(suffix);
     }
-    if (filename.isEmpty()) filename = internalSourceUrl.url(QUrl::PreferLocalFile).remove(QDir::separator()).remove(QLatin1Char('/')).remove(QLatin1Char(':')).remove(QLatin1Char('.')) + QLatin1String(".") + suffix;
+    if (filename.isEmpty()) filename = internalSourceUrl.url(QUrl::PreferLocalFile).remove(QDir::separator()).remove(QLatin1Char('/')).remove(QLatin1Char(':')).remove(QLatin1Char('.')) + QStringLiteral(".") + suffix;
 
     if (!bibTeXFile->hasProperty(File::Url)) return QUrl(); /// no valid URL set of BibTeX file object
     QUrl targetUrl = bibTeXFile->property(File::Url).toUrl();
     if (targetUrl.isEmpty()) return QUrl(); /// no valid URL set of BibTeX file object
     const QString targetPath = QFileInfo(targetUrl.path()).absolutePath();
-    targetUrl.setPath(targetPath + QDir::separator() + (renameOperation == roEntryId ? entryId + QLatin1String(".") + suffix : (renameOperation == roUserDefined ? userDefinedFilename : filename)));
+    targetUrl.setPath(targetPath + QDir::separator() + (renameOperation == roEntryId ? entryId + QStringLiteral(".") + suffix : (renameOperation == roUserDefined ? userDefinedFilename : filename)));
 
     if (!dryRun) { /// only if not pretending
         bool success = true;

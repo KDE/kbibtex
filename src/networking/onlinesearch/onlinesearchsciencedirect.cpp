@@ -42,7 +42,7 @@ public:
     int numSteps, curStep;
 
     OnlineSearchScienceDirectPrivate(OnlineSearchScienceDirect */* UNUSED parent*/)
-        : /* UNUSED p(parent), */ currentSearchPosition(0), numExpectedResults(0), numFoundResults(0), scienceDirectBaseUrl(QLatin1String("http://www.sciencedirect.com/")), runningJobs(0), numSteps(0), curStep(0) {
+        : /* UNUSED p(parent), */ currentSearchPosition(0), numExpectedResults(0), numFoundResults(0), scienceDirectBaseUrl(QStringLiteral("http://www.sciencedirect.com/")), runningJobs(0), numSteps(0), curStep(0) {
         /// nothing
     }
 
@@ -55,8 +55,8 @@ public:
         }
         /// Remove "<!-- Tag Not Handled -->" and other XML tags from keywords
         int i1 = -1;
-        while ((i1 = code.indexOf(QLatin1String("keywords = "), i1 + 1)) > 0) {
-            const int i2 = code.indexOf(QLatin1String("\n"), i1);
+        while ((i1 = code.indexOf(QStringLiteral("keywords = "), i1 + 1)) > 0) {
+            const int i2 = code.indexOf(QStringLiteral("\n"), i1);
             int t1 = -1;
             while ((t1 = code.indexOf(QLatin1Char('<'), i1 + 7)) > 0) {
                 const int t2 = code.indexOf(QLatin1Char('>'), t1);
@@ -117,7 +117,7 @@ QString OnlineSearchScienceDirect::label() const
 
 QString OnlineSearchScienceDirect::favIconUrl() const
 {
-    return QLatin1String("http://www.sciencedirect.com/scidirimg/faviconSD.ico");
+    return QStringLiteral("http://www.sciencedirect.com/scidirimg/faviconSD.ico");
 }
 
 OnlineSearchQueryFormAbstract *OnlineSearchScienceDirect::customWidget(QWidget *)
@@ -160,17 +160,17 @@ void OnlineSearchScienceDirect::doneFetchingStartPage()
         } else {
             InternalNetworkAccessManager::self()->mergeHtmlHeadCookies(htmlText, reply->url());
 
-            QUrl url(d->scienceDirectBaseUrl + QLatin1String("science"));
-            QMap<QString, QString> inputMap = formParameters(htmlText, QLatin1String("<form id=\"quickSearch\" name=\"qkSrch\" metho"));
-            inputMap[QLatin1String("qs_all")] = d->queryFreetext.simplified();
-            inputMap[QLatin1String("qs_author")] = d->queryAuthor.simplified();
-            inputMap[QLatin1String("resultsPerPage")] = QString::number(d->numExpectedResults);
-            inputMap[QLatin1String("_ob")] = QLatin1String("QuickSearchURL");
-            inputMap[QLatin1String("_method")] = QLatin1String("submitForm");
-            inputMap[QLatin1String("sdSearch")] = QLatin1String("Search");
+            QUrl url(d->scienceDirectBaseUrl + QStringLiteral("science"));
+            QMap<QString, QString> inputMap = formParameters(htmlText, QStringLiteral("<form id=\"quickSearch\" name=\"qkSrch\" metho"));
+            inputMap[QStringLiteral("qs_all")] = d->queryFreetext.simplified();
+            inputMap[QStringLiteral("qs_author")] = d->queryAuthor.simplified();
+            inputMap[QStringLiteral("resultsPerPage")] = QString::number(d->numExpectedResults);
+            inputMap[QStringLiteral("_ob")] = QStringLiteral("QuickSearchURL");
+            inputMap[QStringLiteral("_method")] = QStringLiteral("submitForm");
+            inputMap[QStringLiteral("sdSearch")] = QStringLiteral("Search");
 
             QUrlQuery query(url);
-            static const QStringList orderOfParameters = QString(QLatin1String("_ob|_method|_acct|_origin|_zone|md5|_eidkey|qs_issue|qs_pages|qs_title|qs_vol|sdSearch|qs_all|qs_author|resultsPerPage")).split(QLatin1String("|"));
+            static const QStringList orderOfParameters = QString(QStringLiteral("_ob|_method|_acct|_origin|_zone|md5|_eidkey|qs_issue|qs_pages|qs_title|qs_vol|sdSearch|qs_all|qs_author|resultsPerPage")).split(QStringLiteral("|"));
             foreach (const QString &key, orderOfParameters) {
                 if (!inputMap.contains(key)) continue;
                 query.addQueryItem(key, inputMap[key]);
@@ -260,9 +260,9 @@ void OnlineSearchScienceDirect::doneFetchingAbstractPage()
             if ((p1 = htmlText.indexOf("/science?_ob=DownloadURL&")) >= 0 && (p2 = htmlText.indexOf(QRegExp("[ \"<>]"), p1 + 1)) >= 0) {
                 QUrl url("http://www.sciencedirect.com" + htmlText.mid(p1, p2 - p1));
                 QUrlQuery query(url);
-                query.addQueryItem(QLatin1String("citation-type"), QLatin1String("BIBTEX"));
-                query.addQueryItem(QLatin1String("format"), QLatin1String("cite-abs"));
-                query.addQueryItem(QLatin1String("export"), QLatin1String("Export"));
+                query.addQueryItem(QStringLiteral("citation-type"), QStringLiteral("BIBTEX"));
+                query.addQueryItem(QStringLiteral("format"), QStringLiteral("cite-abs"));
+                query.addQueryItem(QStringLiteral("export"), QStringLiteral("Export"));
                 url.setQuery(query);
                 ++d->runningJobs;
                 QNetworkRequest request(url);

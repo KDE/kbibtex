@@ -56,7 +56,7 @@ public:
     void retrieveItems(const QUrl &url, int start) {
         QUrl internalUrl = url;
 
-        static const QString queryItemStart = QLatin1String("start");
+        static const QString queryItemStart = QStringLiteral("start");
         QUrlQuery query(internalUrl);
         query.removeQueryItem(queryItemStart);
         query.addQueryItem(queryItemStart, QString::number(start));
@@ -81,11 +81,11 @@ void Items::retrieveItemsByCollection(const QString &collection)
 {
     QUrl url = d->api->baseUrl().adjusted(QUrl::StripTrailingSlash);
     if (collection.isEmpty())
-        url.setPath(url.path() + QLatin1String("/items"));
+        url.setPath(url.path() + QStringLiteral("/items"));
     else
-        url.setPath(url.path() + QString(QLatin1String("/collections/%1/items")).arg(collection));
+        url.setPath(url.path() + QString(QStringLiteral("/collections/%1/items")).arg(collection));
     QUrlQuery query(url);
-    query.addQueryItem(QLatin1String("format"), QLatin1String("bibtex"));
+    query.addQueryItem(QStringLiteral("format"), QStringLiteral("bibtex"));
     url.setQuery(query);
 
     if (d->api->inBackoffMode())
@@ -101,9 +101,9 @@ void  Items::retrieveItemsByTag(const QString &tag)
     QUrl url = d->api->baseUrl().adjusted(QUrl::StripTrailingSlash);
     QUrlQuery query(url);
     if (!tag.isEmpty())
-        query.addQueryItem(QLatin1String("tag"), tag);
-    url.setPath(url.path() + QLatin1String("/items"));
-    query.addQueryItem(QLatin1String("format"), QLatin1String("bibtex"));
+        query.addQueryItem(QStringLiteral("tag"), tag);
+    url.setPath(url.path() + QStringLiteral("/items"));
+    query.addQueryItem(QStringLiteral("format"), QStringLiteral("bibtex"));
     url.setQuery(query);
 
     if (d->api->inBackoffMode())
@@ -117,7 +117,7 @@ void  Items::retrieveItemsByTag(const QString &tag)
 void Items::finishedFetchingItems()
 {
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
-    static const QString queryItemStart = QLatin1String("start");
+    static const QString queryItemStart = QStringLiteral("start");
     bool ok = false;
     const int start = QUrlQuery(reply->url()).queryItemValue(queryItemStart).toInt(&ok);
 

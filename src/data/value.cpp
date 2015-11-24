@@ -335,7 +335,7 @@ bool VerbatimText::containsPattern(const QString &pattern, Qt::CaseSensitivity c
         colorLabelPairsInitialized = true;
 
         /// Read data from config file
-        KSharedConfigPtr config(KSharedConfig::openConfig(QLatin1String("kbibtexrc")));
+        KSharedConfigPtr config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc")));
         KConfigGroup configGroup(config, Preferences::groupColor);
         QStringList colorCodes = configGroup.readEntry(Preferences::keyColorCodes, Preferences::defaultColorCodes);
         QStringList colorLabels = configGroup.readEntry(Preferences::keyColorLabels, Preferences::defaultcolorLabels);
@@ -504,7 +504,7 @@ QString PlainTextValue::text(const Value &value)
         if (!nextText.isEmpty()) {
             if (lastVit == VITPerson && vit == VITPerson)
                 result.append(i18n(" and ")); // TODO proper list of authors/editors, not just joined by "and"
-            else if (lastVit == VITPerson && vit == VITOther && nextText == QLatin1String("others")) {
+            else if (lastVit == VITPerson && vit == VITOther && nextText == QStringLiteral("others")) {
                 /// "and others" case: replace text to be appended by translated variant
                 nextText = i18n(" and others");
             } else if (lastVit == VITKeyword && vit == VITKeyword)
@@ -607,7 +607,7 @@ void PlainTextValue::notificationEvent(int eventId)
 
 void PlainTextValue::readConfiguration()
 {
-    KSharedConfigPtr config(KSharedConfig::openConfig(QLatin1String("kbibtexrc")));
+    KSharedConfigPtr config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc")));
     KConfigGroup configGroup(config, "General");
     personNameFormatting = configGroup.readEntry(Preferences::keyPersonNameFormatting, Preferences::defaultPersonNameFormatting);
 }

@@ -31,7 +31,7 @@
 #include "internalnetworkaccessmanager.h"
 #include "logging_networking.h"
 
-const QString OnlineSearchMRLookup::queryUrlStem = QLatin1String("http://www.ams.org/mrlookup");
+const QString OnlineSearchMRLookup::queryUrlStem = QStringLiteral("http://www.ams.org/mrlookup");
 
 OnlineSearchMRLookup::OnlineSearchMRLookup(QWidget *parent)
         : OnlineSearchAbstract(parent)
@@ -47,16 +47,16 @@ void OnlineSearchMRLookup::startSearch(const QMap<QString, QString> &query, int)
     QUrlQuery q(url);
 
     const QString title = query[queryKeyTitle];
-    q.addQueryItem(QLatin1String("ti"), title);
+    q.addQueryItem(QStringLiteral("ti"), title);
 
     const QString authors = query[queryKeyAuthor];
-    q.addQueryItem(QLatin1String("au"), authors);
+    q.addQueryItem(QStringLiteral("au"), authors);
 
     const QString year = query[queryKeyYear];
     if (!year.isEmpty())
-        q.addQueryItem(QLatin1String("year"), year);
+        q.addQueryItem(QStringLiteral("year"), year);
 
-    q.addQueryItem(QLatin1String("format"), QLatin1String("bibtex"));
+    q.addQueryItem(QStringLiteral("format"), QStringLiteral("bibtex"));
 
     emit progress(0, 1);
 
@@ -80,7 +80,7 @@ QString OnlineSearchMRLookup::label() const
 
 QString OnlineSearchMRLookup::favIconUrl() const
 {
-    return QLatin1String("http://www.ams.org/favicon.ico");
+    return QStringLiteral("http://www.ams.org/favicon.ico");
 }
 
 OnlineSearchQueryFormAbstract *OnlineSearchMRLookup::customWidget(QWidget *)
@@ -110,7 +110,7 @@ void OnlineSearchMRLookup::doneFetchingResultPage()
 
         QString bibtexCode;
         int p1 = -1, p2 = -1;
-        while ((p1 = htmlCode.indexOf(QLatin1String("<pre>"), p2 + 1)) >= 0 && (p2 = htmlCode.indexOf(QLatin1String("</pre>"), p1 + 1)) >= 0) {
+        while ((p1 = htmlCode.indexOf(QStringLiteral("<pre>"), p2 + 1)) >= 0 && (p2 = htmlCode.indexOf(QStringLiteral("</pre>"), p1 + 1)) >= 0) {
             bibtexCode += htmlCode.mid(p1 + 5, p2 - p1 - 5) + QChar('\n');
         }
 
@@ -135,7 +135,7 @@ void OnlineSearchMRLookup::sanitizeEntry(QSharedPointer<Entry> entry)
 {
     /// Rewrite 'fjournal' fields to become 'journal' fields
     /// (overwriting them if necessary)
-    const QString ftFJournal = QLatin1String("fjournal");
+    const QString ftFJournal = QStringLiteral("fjournal");
     if (entry->contains(ftFJournal)) {
         Value v = entry->value(ftFJournal);
         entry->remove(Entry::ftJournal);

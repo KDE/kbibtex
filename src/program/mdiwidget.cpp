@@ -192,7 +192,7 @@ public:
     KSharedConfigPtr config;
 
     MDIWidgetPrivate(MDIWidget *parent)
-            : p(parent), ofim(OpenFileInfoManager::instance()), currentFile(NULL), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))) {
+            : p(parent), ofim(OpenFileInfoManager::instance()), currentFile(NULL), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))) {
         createWelcomeWidget();
 
         modelLRU = new LRUItemModel(ofim, listLRU);
@@ -222,8 +222,8 @@ public:
     }
 };
 
-const QString MDIWidget::MDIWidgetPrivate::configGroupName = QLatin1String("WelcomeWidget");
-const QString MDIWidget::MDIWidgetPrivate::configHeaderState = QLatin1String("LRUlistHeaderState");
+const QString MDIWidget::MDIWidgetPrivate::configGroupName = QStringLiteral("WelcomeWidget");
+const QString MDIWidget::MDIWidgetPrivate::configHeaderState = QStringLiteral("LRUlistHeaderState");
 
 MDIWidget::MDIWidget(QWidget *parent)
         : QStackedWidget(parent), d(new MDIWidgetPrivate(this))

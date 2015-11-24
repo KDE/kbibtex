@@ -45,7 +45,7 @@ public:
     }
 };
 
-const QString OnlineSearchJStor::OnlineSearchJStorPrivate::jstorBaseUrl = QLatin1String("http://www.jstor.org/");
+const QString OnlineSearchJStor::OnlineSearchJStorPrivate::jstorBaseUrl = QStringLiteral("http://www.jstor.org/");
 
 OnlineSearchJStor::OnlineSearchJStor(QWidget *parent)
         : OnlineSearchAbstract(parent), d(new OnlineSearchJStorPrivate(this))
@@ -124,7 +124,7 @@ QString OnlineSearchJStor::label() const
 
 QString OnlineSearchJStor::favIconUrl() const
 {
-    return QLatin1String("http://www.jstor.org/templates/jsp/favicon.ico");
+    return QStringLiteral("http://www.jstor.org/templates/jsp/favicon.ico");
 }
 
 OnlineSearchQueryFormAbstract *OnlineSearchJStor::customWidget(QWidget *)
@@ -252,13 +252,13 @@ void OnlineSearchJStor::sanitizeEntry(QSharedPointer<Entry> entry)
     }
 
     QString url = PlainTextValue::text(entry->value(Entry::ftUrl));
-    if (url.startsWith(QLatin1String("http://www.jstor.org/stable/"))) {
+    if (url.startsWith(QStringLiteral("http://www.jstor.org/stable/"))) {
         /// use JSTOR's own stable ID for entry ID
         entry->setId("jstor" + url.mid(28).replace(QLatin1Char(','), QString()));
         /// store JSTOR's own stable ID
         Value v;
         v.append(QSharedPointer<VerbatimText>(new VerbatimText(url.mid(28))));
-        entry->insert(QLatin1String("jstor_id"), v);
+        entry->insert(QStringLiteral("jstor_id"), v);
     }
 
     const QString formattedDateKey = "jstor_formatteddate";
@@ -289,7 +289,7 @@ void OnlineSearchJStor::sanitizeEntry(QSharedPointer<Entry> entry)
 
     /// page field may start with "pp. ", remove that
     QString pages = PlainTextValue::text(entry->value(Entry::ftPages)).toLower();
-    if (pages.startsWith(QLatin1String("pp. "))) {
+    if (pages.startsWith(QStringLiteral("pp. "))) {
         pages = pages.mid(4);
         entry->remove(Entry::ftPages);
         Value v;

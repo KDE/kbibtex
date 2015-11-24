@@ -46,7 +46,7 @@ public:
     const KConfigGroup group;
 
     LyXPrivate(LyX */* UNUSED parent*/, QWidget *widget)
-        : /* UNUSED p(parent),*/ action(NULL), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), group(config, LyX::configGroupName) {
+        : /* UNUSED p(parent),*/ action(NULL), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), group(config, LyX::configGroupName) {
         this->widget = widget;
     }
 
@@ -75,8 +75,8 @@ public:
     }
 };
 
-const QString LyX::keyUseAutomaticLyXPipeDetection = QLatin1String("UseAutomaticLyXPipeDetection");
-const QString LyX::keyLyXPipePath = QLatin1String("LyXPipePath");
+const QString LyX::keyUseAutomaticLyXPipeDetection = QStringLiteral("UseAutomaticLyXPipeDetection");
+const QString LyX::keyLyXPipePath = QStringLiteral("LyXPipePath");
 const bool LyX::defaultUseAutomaticLyXPipeDetection =
 #ifdef Q_WS_WIN
     false; /// Windows is not supported yet
@@ -84,7 +84,7 @@ const bool LyX::defaultUseAutomaticLyXPipeDetection =
     true;
 #endif // Q_WS_WIN
 const QString LyX::defaultLyXPipePath = QString();
-const QString LyX::configGroupName = QLatin1String("LyXPipe");
+const QString LyX::configGroupName = QStringLiteral("LyXPipe");
 
 
 LyX::LyX(KParts::ReadOnlyPart *part, QWidget *widget)
@@ -144,7 +144,7 @@ void LyX::sendReferenceToLyX()
 QString LyX::guessLyXPipeLocation()
 {
     QT_STATBUF statBuffer;
-    const QStringList nameFilter = QStringList() << QLatin1String("*lyxpipe*in*");
+    const QStringList nameFilter = QStringList() << QStringLiteral("*lyxpipe*in*");
     QString result;
 
     /// Start with scanning the user's home directory for pipes
@@ -161,7 +161,7 @@ QString LyX::guessLyXPipeLocation()
     /// No hit yet? Search LyX's configuration directory
     if (result.isEmpty()) {
         QDir home = QDir::home();
-        if (home.cd(QLatin1String(".lyx"))) {
+        if (home.cd(QStringLiteral(".lyx"))) {
             /// Same search again here
             QStringList files = home.entryList(nameFilter, QDir::Hidden | QDir::System | QDir::Writable, QDir::Unsorted);
             foreach (const QString &filename, files) {

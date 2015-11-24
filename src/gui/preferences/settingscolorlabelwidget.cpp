@@ -92,7 +92,7 @@ public:
 
 
 ColorLabelSettingsModel::ColorLabelSettingsModel(QObject *parent)
-        : QAbstractItemModel(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc")))
+        : QAbstractItemModel(parent), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc")))
 {
     /// Load stored color-label pairs
     loadState();
@@ -298,7 +298,7 @@ public:
     QTreeView *view;
 
     Private(SettingsColorLabelWidget *parent)
-            : p(parent), delegate(NULL), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))),
+            : p(parent), delegate(NULL), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))),
           model(NULL), buttonRemove(NULL), view(NULL) {
         /// nothing
     }
@@ -456,7 +456,7 @@ public:
 
         /// Add color-label pairs to menu as stored
         /// in the user's configuration file
-        KSharedConfigPtr config(KSharedConfig::openConfig(QLatin1String("kbibtexrc")));
+        KSharedConfigPtr config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc")));
         KConfigGroup configGroup(config, Preferences::groupColor);
         QStringList colorCodes = configGroup.readEntry(Preferences::keyColorCodes, Preferences::defaultColorCodes);
         QStringList colorLabels = configGroup.readEntry(Preferences::keyColorLabels, Preferences::defaultcolorLabels);
@@ -475,7 +475,7 @@ public:
         /// from a BibTeX entry by setting the color to black
         action = new QAction(i18n("No color"), menu);
         menu->addAction(action);
-        sm->setMapping(action, QLatin1String("#000000"));
+        sm->setMapping(action, QStringLiteral("#000000"));
         connect(action, SIGNAL(triggered()), sm, SLOT(map()));
     }
 };
@@ -535,7 +535,7 @@ void ColorLabelContextMenu::colorActivated(const QString &colorString)
             if (!entry.isNull()) {
                 /// Clear old color entry
                 bool modifying = entry->remove(Entry::ftColor) > 0;
-                if (colorString != QLatin1String("#000000")) { ///< black is a special color that means "no color"
+                if (colorString != QStringLiteral("#000000")) { ///< black is a special color that means "no color"
                     /// Only if valid color was selected, set this color
                     Value v;
                     v.append(QSharedPointer<VerbatimText>(new VerbatimText(colorString)));

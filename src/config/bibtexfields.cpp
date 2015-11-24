@@ -48,22 +48,22 @@ public:
 
     BibTeXFieldsPrivate(BibTeXFields *parent)
             : p(parent) {
-        KSharedConfigPtr config(KSharedConfig::openConfig(QLatin1String("kbibtexrc")));
-        KConfigGroup configGroup(config, QLatin1String("User Interface"));
-        const QString stylefile = configGroup.readEntry(QLatin1String("CurrentStyle"), QString(QLatin1String("bibtex"))).append(QLatin1String(".kbstyle"));
+        KSharedConfigPtr config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc")));
+        KConfigGroup configGroup(config, QStringLiteral("User Interface"));
+        const QString stylefile = configGroup.readEntry(QStringLiteral("CurrentStyle"), QString(QStringLiteral("bibtex"))).append(QStringLiteral(".kbstyle"));
         layoutConfig = KSharedConfig::openConfig(stylefile, KConfig::FullConfig, QStandardPaths::AppDataLocation);
     }
 
     void load() {
         p->clear();
 
-        const QString groupName = QLatin1String("Column");
+        const QString groupName = QStringLiteral("Column");
         KConfigGroup configGroup(layoutConfig, groupName);
-        int columnCount = configGroup.readEntry(QLatin1String("count"), bibTeXFieldsMaxColumnCount);
-        static const QStringList treeViewNames = QStringList() << QLatin1String("SearchResults") << QLatin1String("Main") << QLatin1String("MergeWidget") << QLatin1String("Zotero");
+        int columnCount = configGroup.readEntry(QStringLiteral("count"), bibTeXFieldsMaxColumnCount);
+        static const QStringList treeViewNames = QStringList() << QStringLiteral("SearchResults") << QStringLiteral("Main") << QStringLiteral("MergeWidget") << QStringLiteral("Zotero");
 
         for (int col = 1; col <= columnCount; ++col) {
-            const QString groupName = QString(QLatin1String("Column%1")).arg(col);
+            const QString groupName = QString(QStringLiteral("Column%1")).arg(col);
             KConfigGroup configGroup(layoutConfig, groupName);
             if (!configGroup.exists()) break;
 
@@ -123,7 +123,7 @@ public:
                 treeViewNames.append(fd->width.keys());
         }
 
-        QString groupName = QLatin1String("Column");
+        QString groupName = QStringLiteral("Column");
         KConfigGroup configGroup(layoutConfig, groupName);
         configGroup.writeEntry("count", columnCount);
         configGroup.writeEntry("treeViewNames", treeViewNames);
@@ -229,17 +229,17 @@ KBibTeX::TypeFlag BibTeXFields::typeFlagFromString(const QString &typeFlagString
 {
     KBibTeX::TypeFlag result = (KBibTeX::TypeFlag)0;
 
-    if (typeFlagString == QLatin1String("Text"))
+    if (typeFlagString == QStringLiteral("Text"))
         result = KBibTeX::tfPlainText;
-    else if (typeFlagString == QLatin1String("Source"))
+    else if (typeFlagString == QStringLiteral("Source"))
         result = KBibTeX::tfSource;
-    else if (typeFlagString == QLatin1String("Person"))
+    else if (typeFlagString == QStringLiteral("Person"))
         result = KBibTeX::tfPerson;
-    else if (typeFlagString == QLatin1String("Keyword"))
+    else if (typeFlagString == QStringLiteral("Keyword"))
         result = KBibTeX::tfKeyword;
-    else if (typeFlagString == QLatin1String("Reference"))
+    else if (typeFlagString == QStringLiteral("Reference"))
         result = KBibTeX::tfReference;
-    else if (typeFlagString == QLatin1String("Verbatim"))
+    else if (typeFlagString == QStringLiteral("Verbatim"))
         result = KBibTeX::tfVerbatim;
 
     return result;
@@ -259,22 +259,22 @@ KBibTeX::TypeFlags BibTeXFields::typeFlagsFromString(const QString &typeFlagsStr
 QString BibTeXFields::typeFlagsToString(KBibTeX::TypeFlags typeFlags)
 {
     QStringList resultList;
-    if (typeFlags & KBibTeX::tfPlainText) resultList << QLatin1String("Text");
-    if (typeFlags & KBibTeX::tfSource) resultList << QLatin1String("Source");
-    if (typeFlags & KBibTeX::tfPerson) resultList << QLatin1String("Person");
-    if (typeFlags & KBibTeX::tfKeyword) resultList << QLatin1String("Keyword");
-    if (typeFlags & KBibTeX::tfReference) resultList << QLatin1String("Reference");
-    if (typeFlags & KBibTeX::tfVerbatim) resultList << QLatin1String("Verbatim");
+    if (typeFlags & KBibTeX::tfPlainText) resultList << QStringLiteral("Text");
+    if (typeFlags & KBibTeX::tfSource) resultList << QStringLiteral("Source");
+    if (typeFlags & KBibTeX::tfPerson) resultList << QStringLiteral("Person");
+    if (typeFlags & KBibTeX::tfKeyword) resultList << QStringLiteral("Keyword");
+    if (typeFlags & KBibTeX::tfReference) resultList << QStringLiteral("Reference");
+    if (typeFlags & KBibTeX::tfVerbatim) resultList << QStringLiteral("Verbatim");
     return resultList.join(QChar(';'));
 }
 
 QString BibTeXFields::typeFlagToString(KBibTeX::TypeFlag typeFlag)
 {
-    if (typeFlag == KBibTeX::tfPlainText) return QLatin1String("Text");
-    if (typeFlag == KBibTeX::tfSource) return QLatin1String("Source");
-    if (typeFlag == KBibTeX::tfPerson) return QLatin1String("Person");
-    if (typeFlag == KBibTeX::tfKeyword) return QLatin1String("Keyword");
-    if (typeFlag == KBibTeX::tfReference) return QLatin1String("Reference");
-    if (typeFlag == KBibTeX::tfVerbatim) return QLatin1String("Verbatim");
+    if (typeFlag == KBibTeX::tfPlainText) return QStringLiteral("Text");
+    if (typeFlag == KBibTeX::tfSource) return QStringLiteral("Source");
+    if (typeFlag == KBibTeX::tfPerson) return QStringLiteral("Person");
+    if (typeFlag == KBibTeX::tfKeyword) return QStringLiteral("Keyword");
+    if (typeFlag == KBibTeX::tfReference) return QStringLiteral("Reference");
+    if (typeFlag == KBibTeX::tfVerbatim) return QStringLiteral("Verbatim");
     return QString();
 }

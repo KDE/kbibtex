@@ -133,12 +133,12 @@ void EntryClique::recalculateValueMap()
             /// cover entry type
             Value v;
             v.append(QSharedPointer<VerbatimText>(new VerbatimText(entry->type())));
-            insertKeyValueToValueMap(QLatin1String("^type"), v, entry->type());
+            insertKeyValueToValueMap(QStringLiteral("^type"), v, entry->type());
 
             /// cover entry id
             v.clear();
             v.append(QSharedPointer<VerbatimText>(new VerbatimText(entry->id())));
-            insertKeyValueToValueMap(QLatin1String("^id"), v, entry->id());
+            insertKeyValueToValueMap(QStringLiteral("^id"), v, entry->id());
 
             /// go through each and every field of this entry
             for (Entry::ConstIterator fieldIt = entry->constBegin(); fieldIt != entry->constEnd(); ++fieldIt) {
@@ -509,9 +509,9 @@ bool MergeDuplicates::mergeDuplicateEntries(const QList<EntryClique *> &entryCli
         Entry *mergedEntry = new Entry(QString(), QString());
         foreach (const QString &field, entryClique->fieldList()) {
             coveredFields << field;
-            if (field == QLatin1String("^id"))
+            if (field == QStringLiteral("^id"))
                 mergedEntry->setId(PlainTextValue::text(entryClique->chosenValue(field)));
-            else if (field == QLatin1String("^type"))
+            else if (field == QStringLiteral("^type"))
                 mergedEntry->setType(PlainTextValue::text(entryClique->chosenValue(field)));
             else {
                 Value combined;

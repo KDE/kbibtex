@@ -61,9 +61,9 @@ Groups::Groups(API *api, QObject *parent)
         : QObject(parent), d(new Zotero::Groups::Private(api, this))
 {
     QUrl url = api->baseUrl();
-    Q_ASSERT_X(url.path().contains(QLatin1String("users/")), "Groups::Groups(API *api, QObject *parent)", "Provided base URL does not contain 'users/' as expected");
+    Q_ASSERT_X(url.path().contains(QStringLiteral("users/")), "Groups::Groups(API *api, QObject *parent)", "Provided base URL does not contain 'users/' as expected");
     url = url.adjusted(QUrl::StripTrailingSlash);
-    url.setPath(url.path() + QLatin1String("/groups"));
+    url.setPath(url.path() + QStringLiteral("/groups"));
 
     if (d->api->inBackoffMode())
         QTimer::singleShot((d->api->backoffSecondsLeft() + 1) * 1000, [ = ]() {
@@ -107,28 +107,28 @@ void Groups::finishedFetchingGroups()
         QXmlStreamReader xmlReader(reply);
         while (!xmlReader.atEnd() && !xmlReader.hasError()) {
             const QXmlStreamReader::TokenType tt = xmlReader.readNext();
-            if (tt == QXmlStreamReader::StartElement && xmlReader.name() == QLatin1String("entry")) {
+            if (tt == QXmlStreamReader::StartElement && xmlReader.name() == QStringLiteral("entry")) {
                 QString label;
                 int groupId = -1;
                 while (!xmlReader.atEnd() && !xmlReader.hasError()) {
                     const QXmlStreamReader::TokenType tt = xmlReader.readNext();
-                    if (tt == QXmlStreamReader::StartElement && xmlReader.name() == QLatin1String("title"))
+                    if (tt == QXmlStreamReader::StartElement && xmlReader.name() == QStringLiteral("title"))
                         label = xmlReader.readElementText(QXmlStreamReader::IncludeChildElements);
-                    else if (tt == QXmlStreamReader::StartElement && xmlReader.name() == QLatin1String("groupID")) {
+                    else if (tt == QXmlStreamReader::StartElement && xmlReader.name() == QStringLiteral("groupID")) {
                         bool ok = false;
                         groupId = xmlReader.readElementText(QXmlStreamReader::IncludeChildElements).toInt(&ok);
                         if (groupId < 1) groupId = -1;
-                    } else if (tt == QXmlStreamReader::EndElement && xmlReader.name() == QLatin1String("entry"))
+                    } else if (tt == QXmlStreamReader::EndElement && xmlReader.name() == QStringLiteral("entry"))
                         break;
                 }
 
                 if (!label.isEmpty() && groupId > 0)
                     d->groups.insert(groupId, label);
-            } else if (tt == QXmlStreamReader::StartElement && xmlReader.name() == QLatin1String("link")) {
+            } else if (tt == QXmlStreamReader::StartElement && xmlReader.name() == QStringLiteral("link")) {
                 const QXmlStreamAttributes attrs = xmlReader.attributes();
-                if (attrs.hasAttribute(QLatin1String("rel")) && attrs.hasAttribute(QLatin1String("href")) && attrs.value(QLatin1String("rel")) == QLatin1String("next"))
-                    nextPage = attrs.value(QLatin1String("href")).toString();
-            } else if (tt == QXmlStreamReader::EndElement && xmlReader.name() == QLatin1String("feed"))
+                if (attrs.hasAttribute(QStringLiteral("rel")) && attrs.hasAttribute(QStringLiteral("href")) && attrs.value(QStringLiteral("rel")) == QStringLiteral("next"))
+                    nextPage = attrs.value(QStringLiteral("href")).toString();
+            } else if (tt == QXmlStreamReader::EndElement && xmlReader.name() == QStringLiteral("feed"))
                 break;
         }
 

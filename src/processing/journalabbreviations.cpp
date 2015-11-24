@@ -35,7 +35,7 @@ private:
 
 public:
     Private(JournalAbbreviations */* UNUSED parent*/)
-        : /* UNUSED p(parent),*/ journalFilename(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("kbibtex/jabref_journalabbrevlist.txt")))
+        : /* UNUSED p(parent),*/ journalFilename(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kbibtex/jabref_journalabbrevlist.txt")))
     {
         /// nothing
     }
@@ -46,7 +46,7 @@ public:
 
         QFile journalFile(journalFilename);
         if (journalFile.open(QFile::ReadOnly)) {
-            static const QRegExp splitRegExp(QLatin1String("\\s*[=;]\\s*"));
+            static const QRegExp splitRegExp(QStringLiteral("\\s*[=;]\\s*"));
 
             QTextStream ts(&journalFile);
             ts.setCodec("utf8");

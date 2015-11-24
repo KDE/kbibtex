@@ -64,7 +64,7 @@ bool BibUtils::available() {
     /// Perform test only once, later rely on statically stored result
     if (state == untested) {
         /// Test a number of known BibUtils programs
-        static const QStringList programs = QStringList() << QLatin1String("bib2xml") << QLatin1String("isi2xml") << QLatin1String("ris2xml") << QLatin1String("end2xml");
+        static const QStringList programs = QStringList() << QStringLiteral("bib2xml") << QStringLiteral("isi2xml") << QStringLiteral("ris2xml") << QStringLiteral("end2xml");
         state = avail;
         foreach (const QString &program, programs) {
             const QString fullPath = QStandardPaths::findExecutable(program);
@@ -97,39 +97,39 @@ bool BibUtils::convert(QIODevice &source, const BibUtils::Format &sourceFormat, 
     }
 
     QString bibUtilsProgram;
-    QString utf8Argument = QLatin1String("-un");
+    QString utf8Argument = QStringLiteral("-un");
 
     /// Determine part of BibUtils program name that represents source format
     switch (sourceFormat) {
-    case MODS: bibUtilsProgram = QLatin1String("xml"); utf8Argument = QLatin1String("-nb"); break;
-    case BibTeX: bibUtilsProgram = QLatin1String("bib"); break;
-    case BibLaTeX: bibUtilsProgram = QLatin1String("biblatex"); break;
-    case ISI: bibUtilsProgram = QLatin1String("isi"); break;
-    case RIS: bibUtilsProgram = QLatin1String("ris"); break;
-    case EndNote: bibUtilsProgram = QLatin1String("end"); break;
-    case EndNoteXML: bibUtilsProgram = QLatin1String("endx"); break;
+    case MODS: bibUtilsProgram = QStringLiteral("xml"); utf8Argument = QStringLiteral("-nb"); break;
+    case BibTeX: bibUtilsProgram = QStringLiteral("bib"); break;
+    case BibLaTeX: bibUtilsProgram = QStringLiteral("biblatex"); break;
+    case ISI: bibUtilsProgram = QStringLiteral("isi"); break;
+    case RIS: bibUtilsProgram = QStringLiteral("ris"); break;
+    case EndNote: bibUtilsProgram = QStringLiteral("end"); break;
+    case EndNoteXML: bibUtilsProgram = QStringLiteral("endx"); break;
     /// case ADS not supported by BibUtils
-    case WordBib: bibUtilsProgram = QLatin1String("wordbib"); break;
-    case Copac: bibUtilsProgram = QLatin1String("copac"); break;
-    case Med: bibUtilsProgram = QLatin1String("med"); break;
+    case WordBib: bibUtilsProgram = QStringLiteral("wordbib"); break;
+    case Copac: bibUtilsProgram = QStringLiteral("copac"); break;
+    case Med: bibUtilsProgram = QStringLiteral("med"); break;
     default:
         qCWarning(LOG_KBIBTEX_IO) << "Unsupported BibUtils input format:" << sourceFormat;
         return false;
     }
 
-    bibUtilsProgram.append(QLatin1String("2"));
+    bibUtilsProgram.append(QStringLiteral("2"));
 
     /// Determine part of BibUtils program name that represents destination format
     switch (destinationFormat) {
-    case MODS: bibUtilsProgram.append(QLatin1String("xml")); break;
-    case BibTeX: bibUtilsProgram.append(QLatin1String("bib")); break;
+    case MODS: bibUtilsProgram.append(QStringLiteral("xml")); break;
+    case BibTeX: bibUtilsProgram.append(QStringLiteral("bib")); break;
     /// case BibLaTeX not supported by BibUtils
-    case ISI: bibUtilsProgram.append(QLatin1String("isi")); break;
-    case RIS: bibUtilsProgram.append(QLatin1String("ris")); break;
-    case EndNote: bibUtilsProgram.append(QLatin1String("end")); break;
+    case ISI: bibUtilsProgram.append(QStringLiteral("isi")); break;
+    case RIS: bibUtilsProgram.append(QStringLiteral("ris")); break;
+    case EndNote: bibUtilsProgram.append(QStringLiteral("end")); break;
     /// case EndNoteXML not supported by BibUtils
-    case ADS: bibUtilsProgram.append(QLatin1String("ads")); break;
-    case WordBib: bibUtilsProgram.append(QLatin1String("wordbib")); break;
+    case ADS: bibUtilsProgram.append(QStringLiteral("ads")); break;
+    case WordBib: bibUtilsProgram.append(QStringLiteral("wordbib")); break;
     /// case Copac not supported by BibUtils
     /// case Med not supported by BibUtils
     default:
@@ -152,7 +152,7 @@ bool BibUtils::convert(QIODevice &source, const BibUtils::Format &sourceFormat, 
     }
 
     QProcess bibUtilsProcess;
-    const QStringList arguments = QStringList() << QLatin1String("-i") << QLatin1String("utf8") << utf8Argument;
+    const QStringList arguments = QStringList() << QStringLiteral("-i") << QStringLiteral("utf8") << utf8Argument;
     /// Start BibUtils program/process
     bibUtilsProcess.start(bibUtilsProgram, arguments);
 

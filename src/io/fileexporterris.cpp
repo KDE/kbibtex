@@ -113,7 +113,7 @@ bool FileExporterRIS::writeEntry(QTextStream &stream, const Entry *entry)
         const QString key = it.key();
         const Value value = it.value();
 
-        if (key.startsWith(QLatin1String("RISfield_")))
+        if (key.startsWith(QStringLiteral("RISfield_")))
             result &= writeKeyValue(stream, key.right(2), PlainTextValue::text(value));
         else if (key == Entry::ftAuthor) {
             for (Value::ConstIterator it = value.constBegin(); result && it != value.constEnd(); ++it) {

@@ -130,7 +130,7 @@ void ValueListDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
     }
 
     /// count will be empty unless only one column is shown
-    const QString count = index.column() == 0 && index.model()->columnCount() == 1 ? QString(QLatin1String(" (%1)")).arg(index.data(CountRole).toInt()) : QLatin1String("");
+    const QString count = index.column() == 0 && index.model()->columnCount() == 1 ? QString(QStringLiteral(" (%1)")).arg(index.data(CountRole).toInt()) : QStringLiteral("");
 
     /// squeeze the folder text if it is to big and calculate the rectangles
     /// where the folder text and the unread count will be drawn to
@@ -231,7 +231,7 @@ QVariant ValueListModel::data(const QModelIndex &index, int role) const
             /// Used if (a) two columns are shown (showCountColumn is true) and column 1
             /// (the count column) is to be sorted or (b) if only one column is shown
             /// (showCountColumn is false) and this single column is to be sorted by count.
-            return QString(QLatin1String("%1%2")).arg(values[index.row()].count, 10, 10, QLatin1Char('0')).arg(buffer);
+            return QString(QStringLiteral("%1%2")).arg(values[index.row()].count, 10, 10, QLatin1Char('0')).arg(buffer);
         } else {
             /// Otherwise use lower-case text for sorting
             return QVariant(buffer);
@@ -332,7 +332,7 @@ void ValueListModel::notificationEvent(int eventId)
 void ValueListModel::readConfiguration()
 {
     /// load mapping from color value to label
-    KSharedConfigPtr config(KSharedConfig::openConfig(QLatin1String("kbibtexrc")));
+    KSharedConfigPtr config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc")));
     KConfigGroup configGroup(config, Preferences::groupColor);
     QStringList colorCodes = configGroup.readEntry(Preferences::keyColorCodes, Preferences::defaultColorCodes);
     QStringList colorLabels = configGroup.readEntry(Preferences::keyColorLabels, Preferences::defaultcolorLabels);
@@ -381,7 +381,7 @@ void ValueListModel::insertValue(const Value &value)
             /// * for persons, use last name first
             /// * in any case, use lower case
             const QSharedPointer<Person> person = item.dynamicCast<Person>();
-            newValueLine.sortBy = person.isNull() ? text.toLower() : person->lastName().toLower() + QLatin1String(" ") + person->firstName().toLower();
+            newValueLine.sortBy = person.isNull() ? text.toLower() : person->lastName().toLower() + QStringLiteral(" ") + person->firstName().toLower();
 
             values << newValueLine;
         } else {
@@ -394,7 +394,7 @@ int ValueListModel::indexOf(const QString &text)
 {
     QString color;
     QString cmpText = text;
-    if (fName == Entry::ftColor && !(color = colorToLabel.key(text, QLatin1String(""))).isEmpty())
+    if (fName == Entry::ftColor && !(color = colorToLabel.key(text, QStringLiteral(""))).isEmpty())
         cmpText = color;
     if (cmpText.isEmpty())
         qCWarning(LOG_KBIBTEX_GUI) << "Should never happen";
@@ -472,7 +472,7 @@ bool ValueListModel::searchAndReplaceValueInModel(const QModelIndex &index, cons
         values[row].text = newText;
         values[row].value = newValue;
         const QSharedPointer<Person> person = newValue.first().dynamicCast<Person>();
-        values[row].sortBy = person.isNull() ? QString() : person->lastName() + QLatin1String(" ") + person->firstName();
+        values[row].sortBy = person.isNull() ? QString() : person->lastName() + QStringLiteral(" ") + person->firstName();
     } else {
         /// The user-entered text existed before
 

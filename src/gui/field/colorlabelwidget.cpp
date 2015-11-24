@@ -45,7 +45,7 @@ public:
     KSharedConfigPtr config;
 
     ColorLabelComboBoxModel(QObject *p = NULL)
-            : QAbstractItemModel(p), userColor(Qt::black), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))) {
+            : QAbstractItemModel(p), userColor(Qt::black), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))) {
         readConfiguration();
         NotificationHub::registerNotificationListener(this, NotificationHub::EventConfigurationChanged);
     }

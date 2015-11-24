@@ -55,7 +55,7 @@
 #include "logging_gui.h"
 
 static const unsigned int interColumnSpace = 16;
-static const QStringList keyStart = QStringList() << Entry::ftUrl << QLatin1String("postscript") << Entry::ftLocalFile << Entry::ftDOI << Entry::ftFile << QLatin1String("ee") << QLatin1String("biburl");
+static const QStringList keyStart = QStringList() << Entry::ftUrl << QStringLiteral("postscript") << Entry::ftLocalFile << Entry::ftDOI << Entry::ftFile << QStringLiteral("ee") << QStringLiteral("biburl");
 static const char *PropertyIdSuggestion = "PropertyIdSuggestion";
 
 ElementWidget::ElementWidget(QWidget *parent)
@@ -242,10 +242,10 @@ void EntryConfiguredWidget::layoutGUI(bool forceVisible, const QString &entryTyp
                 /// this ugly conversion is necessary because we have a "^" (xor) and "|" (and/or)
                 /// syntax to differentiate required items (not used yet, but will be used
                 /// later if missing required items are marked).
-                QString visible = bit->requiredItems.join(QLatin1String(","));
-                visible += QLatin1Char(',') + bit->optionalItems.join(QLatin1String(","));
+                QString visible = bit->requiredItems.join(QStringLiteral(","));
+                visible += QLatin1Char(',') + bit->optionalItems.join(QStringLiteral(","));
                 visible = visible.replace(QLatin1Char('|'), QLatin1Char(',')).replace(QLatin1Char('^'), QLatin1Char(','));
-                visibleItems = visible.split(QLatin1String(","));
+                visibleItems = visible.split(QStringLiteral(","));
                 break;
             }
         }
@@ -472,7 +472,7 @@ void ReferenceWidget::createGUI()
         entryType->addItem(it->label, it->upperCamelCase);
 
     /// Button with a menu listing a set of preconfigured id suggestions
-    buttonSuggestId = new QPushButton(QIcon::fromTheme("view-filter"), QLatin1String(""), this);
+    buttonSuggestId = new QPushButton(QIcon::fromTheme("view-filter"), QStringLiteral(""), this);
     buttonSuggestId->setToolTip(i18n("Select a suggested id for this entry"));
     layout->addWidget(buttonSuggestId);
     QMenu *suggestionsMenu = new QMenu(buttonSuggestId);
@@ -579,7 +579,7 @@ FilesWidget::FilesWidget(QWidget *parent)
 {
     QVBoxLayout *layout = new QVBoxLayout(this);
     fileList = new FieldInput(KBibTeX::UrlList, KBibTeX::tfVerbatim /* eventually ignored, see constructor of UrlListEdit */, KBibTeX::tfVerbatim /* eventually ignored, see constructor of UrlListEdit */, this);
-    fileList->setFieldKey(QLatin1String("^external"));
+    fileList->setFieldKey(QStringLiteral("^external"));
     layout->addWidget(fileList);
     connect(fileList, SIGNAL(modified()), this, SLOT(gotModified()));
 }
@@ -1149,7 +1149,7 @@ bool SourceWidget::reset(QSharedPointer<const Element> element)
     disconnect(sourceEdit, SIGNAL(textChanged()), this, SLOT(gotModified()));
 
     FileExporterBibTeX exporter;
-    exporter.setEncoding(QLatin1String("utf-8"));
+    exporter.setEncoding(QStringLiteral("utf-8"));
     const QString exportedText = exporter.toString(element, m_file);
     if (!exportedText.isEmpty()) {
         originalText = exportedText;

@@ -45,10 +45,10 @@ private:
 public:
 
     SettingsFileExporterPDFPSWidgetPrivate(SettingsFileExporterPDFPSWidget *parent)
-            : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName(QLatin1String("FileExporterPDFPS")), configGroupNameGeneral(QLatin1String("General")) {
-        paperSizeLabelToName.insert(i18n("A4"), QLatin1String("a4"));
-        paperSizeLabelToName.insert(i18n("Letter"), QLatin1String("letter"));
-        paperSizeLabelToName.insert(i18n("Legal"), QLatin1String("legal"));
+            : p(parent), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), configGroupName(QStringLiteral("FileExporterPDFPS")), configGroupNameGeneral(QStringLiteral("General")) {
+        paperSizeLabelToName.insert(i18n("A4"), QStringLiteral("a4"));
+        paperSizeLabelToName.insert(i18n("Letter"), QStringLiteral("letter"));
+        paperSizeLabelToName.insert(i18n("Legal"), QStringLiteral("legal"));
 
         setupGUI();
     }
@@ -104,15 +104,16 @@ public:
         comboBoxBabelLanguage = new KComboBox(true, p);
         comboBoxBabelLanguage->setObjectName("comboBoxBabelLanguage");
         layout->addRow(i18n("Language for 'babel':"), comboBoxBabelLanguage);
-        comboBoxBabelLanguage->addItem(QLatin1String("english"));
-        comboBoxBabelLanguage->addItem(QLatin1String("ngerman"));
-        comboBoxBabelLanguage->addItem(QLatin1String("swedish"));
+        comboBoxBabelLanguage->addItem(QStringLiteral("english"));
+        comboBoxBabelLanguage->addItem(QStringLiteral("ngerman"));
+        comboBoxBabelLanguage->addItem(QStringLiteral("swedish"));
         connect(comboBoxBabelLanguage->lineEdit(), SIGNAL(textChanged(QString)), p, SIGNAL(changed()));
 
         comboBoxBibliographyStyle = new KComboBox(true, p);
         comboBoxBibliographyStyle->setObjectName("comboBoxBibliographyStyle");
         layout->addRow(i18n("Bibliography style:"), comboBoxBibliographyStyle);
-        foreach (const QString &style, QStringList() << QLatin1String("abbrv") << QLatin1String("alpha") << QLatin1String("plain") << QLatin1String("agsm") << QLatin1String("dcu") << QLatin1String("jmr") << QLatin1String("jphysicsB") << QLatin1String("kluwer") << QLatin1String("nederlands")) {
+        static const QStringList styles = QStringList() << QString(QStringLiteral("abbrv")) << QString(QStringLiteral("alpha")) << QString(QStringLiteral("plain")) << QString(QStringLiteral("agsm")) << QString(QStringLiteral("dcu")) << QString(QStringLiteral("jmr")) << QString(QStringLiteral("jphysicsB")) << QString(QStringLiteral("kluwer")) << QString(QStringLiteral("nederlands"));
+        foreach (const QString &style, styles) {
             comboBoxBibliographyStyle->addItem(style);
         }
         connect(comboBoxBibliographyStyle->lineEdit(), SIGNAL(textChanged(QString)), p, SIGNAL(changed()));

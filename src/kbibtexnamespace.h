@@ -24,14 +24,14 @@
 namespace KBibTeX
 {
 
-const QString extensionTeX = QLatin1String(".tex");
-const QString extensionAux = QLatin1String(".aux");
-const QString extensionBBL = QLatin1String(".bbl");
-const QString extensionBLG = QLatin1String(".blg");
-const QString extensionBibTeX = QLatin1String(".bib");
-const QString extensionPDF = QLatin1String(".pdf");
-const QString extensionPostScript = QLatin1String(".ps");
-const QString extensionRTF = QLatin1String(".rtf");
+const QString extensionTeX = QStringLiteral(".tex");
+const QString extensionAux = QStringLiteral(".aux");
+const QString extensionBBL = QStringLiteral(".bbl");
+const QString extensionBLG = QStringLiteral(".blg");
+const QString extensionBibTeX = QStringLiteral(".bib");
+const QString extensionPDF = QStringLiteral(".pdf");
+const QString extensionPostScript = QStringLiteral(".ps");
+const QString extensionRTF = QStringLiteral(".rtf");
 
 enum Casing {
     cLowerCase = 0,
@@ -68,7 +68,7 @@ Q_DECLARE_FLAGS(TypeFlags, TypeFlag)
 Q_DECLARE_OPERATORS_FOR_FLAGS(TypeFlags)
 
 static const QString MonthsTriple[] = {
-    QLatin1String("jan"), QLatin1String("feb"), QLatin1String("mar"), QLatin1String("apr"), QLatin1String("may"), QLatin1String("jun"), QLatin1String("jul"), QLatin1String("aug"), QLatin1String("sep"), QLatin1String("oct"), QLatin1String("nov"), QLatin1String("dec")
+    QStringLiteral("jan"), QStringLiteral("feb"), QStringLiteral("mar"), QStringLiteral("apr"), QStringLiteral("may"), QStringLiteral("jun"), QStringLiteral("jul"), QStringLiteral("aug"), QStringLiteral("sep"), QStringLiteral("oct"), QStringLiteral("nov"), QStringLiteral("dec")
 };
 
 static const QRegExp fileListSeparatorRegExp("[ \\t]*[;\\n]+[ \\t]*");
@@ -76,7 +76,7 @@ static const QRegExp fileRegExp("(\\bfile:)?[^{}\\t]+\\.\\w{2,4}\\b", Qt::CaseIn
 static const QRegExp urlRegExp("\\b(http|s?ftp|webdav|file)s?://[^ {}\"]+(\\b|[/])", Qt::CaseInsensitive);
 static const QRegExp doiRegExp("\\b10([.][0-9]+)+/[/-a-z0-9.()<>_:;\\\\]+", Qt::CaseInsensitive);
 static const QRegExp mendeleyFileRegExp(":(.*):pdf", Qt::CaseInsensitive);
-static const QString doiUrlPrefix = QLatin1String("http://dx.doi.org/"); ///< use FileInfo::doiUrlPrefix() instead
+static const QString doiUrlPrefix = QStringLiteral("http://dx.doi.org/"); ///< use FileInfo::doiUrlPrefix() instead
 static const QRegExp domainNameRegExp("[a-z0-9.-]+\\.((a[cdefgilmnoqrstuwxz]|aero|arpa)|(b[abdefghijmnorstvwyz]|biz)|(c[acdfghiklmnorsuvxyz]|cat|com|coop)|d[ejkmoz]|(e[ceghrstu]|edu)|f[ijkmor]|(g[abdefghilmnpqrstuwy]|gov)|h[kmnrtu]|(i[delmnoqrst]|info|int)|(j[emop]|jobs)|k[eghimnprwyz]|l[abcikrstuvy]|(m[acdghklmnopqrstuvwxyz]|me|mil|mobi|museum)|(n[acefgilopruz]|name|net)|(om|org)|(p[aefghklmnrstwy]|pro)|qa|r[eouw]|s[abcdeghijklmnortvyz]|(t[cdfghjklmnoprtvwz]|travel)|u[agkmsyz]|v[aceginu]|w[fs]|y[etu]|z[amw])\\b", Qt::CaseInsensitive);
 static const QRegExp htmlRegExp = QRegExp("</?(a|pre|p|br|span|i|b|italic)\\b[^>{}]{,32}>", Qt::CaseInsensitive);
 
@@ -96,14 +96,14 @@ inline static bool isLocalOrRelative(const QUrl &url)
  */
 inline static QString squeezeText(const QString &text, int n)
 {
-    return text.length() <= n ? text : text.left(n / 2 - 1) + QLatin1String("...") + text.right(n / 2 - 2);
+    return text.length() <= n ? text : text.left(n / 2 - 1) + QStringLiteral("...") + text.right(n / 2 - 2);
 }
 
 inline static QString leftSqueezeText(const QString &text, int n)
 {
-    return text.length() <= n ? text : text.left(n) + QLatin1String("...");
+    return text.length() <= n ? text : text.left(n) + QStringLiteral("...");
 }
 
-#define squeeze_text(text, n) ((text).length()<=(n)?(text):(text).left((n)/2-1)+QLatin1String("...")+(text).right((n)/2-2))
+#define squeeze_text(text, n) ((text).length()<=(n)?(text):(text).left((n)/2-1)+QStringLiteral("...")+(text).right((n)/2-2))
 
 #endif // KBIBTEX_NAMESPACE_H

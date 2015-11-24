@@ -33,14 +33,14 @@
 #include "comment.h"
 #include "logging_data.h"
 
-const QString File::Url = QLatin1String("Url");
-const QString File::Encoding = QLatin1String("Encoding");
-const QString File::StringDelimiter = QLatin1String("StringDelimiter");
-const QString File::QuoteComment = QLatin1String("QuoteComment");
-const QString File::KeywordCasing = QLatin1String("KeywordCasing");
-const QString File::ProtectCasing = QLatin1String("ProtectCasing");
-const QString File::NameFormatting = QLatin1String("NameFormatting");
-const QString File::ListSeparator = QLatin1String("ListSeparator");
+const QString File::Url = QStringLiteral("Url");
+const QString File::Encoding = QStringLiteral("Encoding");
+const QString File::StringDelimiter = QStringLiteral("StringDelimiter");
+const QString File::QuoteComment = QStringLiteral("QuoteComment");
+const QString File::KeywordCasing = QStringLiteral("KeywordCasing");
+const QString File::ProtectCasing = QStringLiteral("ProtectCasing");
+const QString File::NameFormatting = QStringLiteral("NameFormatting");
+const QString File::ListSeparator = QStringLiteral("ListSeparator");
 
 const quint64 valid = 0x08090a0b0c0d0e0f;
 const quint64 invalid = 0x0102030405060708;
@@ -60,13 +60,13 @@ public:
     QHash<QString, QVariant> properties;
 
     FilePrivate(File */* UNUSED parent*/)
-        : /* UNUSED p(parent),*/ validInvalidField(valid), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName(QLatin1String("FileExporterBibTeX")), internalId(++internalIdCounter) {
+        : /* UNUSED p(parent),*/ validInvalidField(valid), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), configGroupName(QStringLiteral("FileExporterBibTeX")), internalId(++internalIdCounter) {
         qCDebug(LOG_KBIBTEX_DATA) << "Creating File instance" << internalId;
         loadConfiguration();
     }
 
     FilePrivate(File */* UNUSED parent*/, const File &other)
-        : /* UNUSED p(parent),*/ validInvalidField(valid), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName(QLatin1String("FileExporterBibTeX")), internalId(++internalIdCounter), properties(other.d->properties) {
+        : /* UNUSED p(parent),*/ validInvalidField(valid), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), configGroupName(QStringLiteral("FileExporterBibTeX")), internalId(++internalIdCounter), properties(other.d->properties) {
         qCDebug(LOG_KBIBTEX_DATA) << "Creating File instance" << internalId;
         loadConfiguration();
     }
@@ -173,7 +173,7 @@ QSet<QString> File::uniqueEntryValuesSet(const QString &fieldName) const
                                 /// Use the two default patterns last-name-first and first-name-first
                                 personNameFormattingList << Preferences::personNameFormatLastFirst << Preferences::personNameFormatFirstLast;
                                 /// Check configuration if user-specified formatting template is different
-                                KSharedConfigPtr config(KSharedConfig::openConfig(QLatin1String("kbibtexrc")));
+                                KSharedConfigPtr config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc")));
                                 KConfigGroup configGroup(config, "General");
                                 QString personNameFormatting = configGroup.readEntry(Preferences::keyPersonNameFormatting, Preferences::defaultPersonNameFormatting);
                                 /// Add user's template if it differs from the two specified above

@@ -136,7 +136,7 @@ bool FileExporterXML::writeEntry(QTextStream &stream, const Entry *entry)
             stream << "  <" << key << "s";
             if (!value.isEmpty() && typeid(PlainText) == typeid(*internal.last())) {
                 QSharedPointer<const PlainText> pt = internal.last().staticCast<const PlainText>();
-                if (pt->text() == QLatin1String("others")) {
+                if (pt->text() == QStringLiteral("others")) {
                     internal.erase(internal.end() - 1);
                     stream << " etal=\"true\"";
                 }
@@ -249,6 +249,6 @@ QString FileExporterXML::valueToXML(const Value &value, const QString &)
 QString FileExporterXML::cleanXML(const QString &text)
 {
     QString result = text;
-    result = result.replace(lineBreaksRegExp, "<br/>").remove(removal).remove(QLatin1String("\\ensuremath"));
+    result = result.replace(lineBreaksRegExp, "<br/>").remove(removal).remove(QStringLiteral("\\ensuremath"));
     return result;
 }

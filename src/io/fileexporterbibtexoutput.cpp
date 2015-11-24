@@ -33,7 +33,7 @@
 FileExporterBibTeXOutput::FileExporterBibTeXOutput(OutputType outputType)
         : FileExporterToolchain(), m_outputType(outputType), m_latexLanguage("english"), m_latexBibStyle("plain")
 {
-    m_fileBasename = QLatin1String("bibtex-to-output");
+    m_fileBasename = QStringLiteral("bibtex-to-output");
     m_fileStem = tempDir.path() + QDir::separator() + m_fileBasename;
 }
 
@@ -59,7 +59,7 @@ bool FileExporterBibTeXOutput::save(QIODevice *ioDevice, const File *bibtexfile,
     QBuffer buffer(this);
     if (buffer.open(QIODevice::WriteOnly)) {
         FileExporterBibTeX *bibtexExporter = new FileExporterBibTeX();
-        bibtexExporter->setEncoding(QLatin1String("utf-8"));
+        bibtexExporter->setEncoding(QStringLiteral("utf-8"));
         result = bibtexExporter->save(&buffer, bibtexfile, errorLog);
         buffer.close();
         delete bibtexExporter;
@@ -87,7 +87,7 @@ bool FileExporterBibTeXOutput::save(QIODevice *ioDevice, const QSharedPointer<co
     QBuffer buffer(this);
     if (buffer.open(QIODevice::WriteOnly)) {
         FileExporterBibTeX *bibtexExporter = new FileExporterBibTeX();
-        bibtexExporter->setEncoding(QLatin1String("utf-8"));
+        bibtexExporter->setEncoding(QStringLiteral("utf-8"));
         result = bibtexExporter->save(&buffer, element, bibtexfile, errorLog);
         buffer.close();
         delete bibtexExporter;
@@ -115,7 +115,7 @@ void FileExporterBibTeXOutput::setLaTeXBibliographyStyle(const QString &bibStyle
 
 bool FileExporterBibTeXOutput::generateOutput(QStringList *errorLog)
 {
-    QStringList cmdLines = QStringList() << QLatin1String("pdflatex -halt-on-error ") + m_fileBasename + KBibTeX::extensionTeX << QLatin1String("bibtex ") + m_fileBasename + KBibTeX::extensionAux;
+    QStringList cmdLines = QStringList() << QStringLiteral("pdflatex -halt-on-error ") + m_fileBasename + KBibTeX::extensionTeX << QStringLiteral("bibtex ") + m_fileBasename + KBibTeX::extensionAux;
 
     if (writeLatexFile(m_fileStem + KBibTeX::extensionTeX) && runProcesses(cmdLines, errorLog))
         return true;
@@ -140,12 +140,12 @@ bool FileExporterBibTeXOutput::writeLatexFile(const QString &filename)
             ts << "\\usepackage[pdfproducer={KBibTeX: http://home.gna.org/kbibtex/},pdftex]{hyperref}\n";
         else if (kpsewhich("url.sty"))
             ts << "\\usepackage{url}\n";
-        if (m_latexBibStyle.startsWith(QLatin1String("apacite")) && kpsewhich("apacite.sty"))
+        if (m_latexBibStyle.startsWith(QStringLiteral("apacite")) && kpsewhich("apacite.sty"))
             ts << "\\usepackage[bibnewpage]{apacite}\n";
         ts << "\\bibliographystyle{" << m_latexBibStyle << "}\n";
         ts << "\\begin{document}\n";
         ts << "\\nocite{*}\n";
-        ts << QLatin1String("\\bibliography{") + m_fileBasename + QLatin1String("}\n");
+        ts << QStringLiteral("\\bibliography{") + m_fileBasename + QStringLiteral("}\n");
         ts << "\\end{document}\n";
         latexFile.close();
         return true;
