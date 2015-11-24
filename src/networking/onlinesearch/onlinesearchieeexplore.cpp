@@ -163,8 +163,6 @@ void OnlineSearchIEEEXplore::doneFetchingXML()
                     hasEntries |= publishEntry(entry);
                 }
 
-                if (!hasEntries)
-                    //qCDebug(LOG_KBIBTEX_NETWORKING) << "No hits found in" << reply->url().toString();
                 emit stoppedSearch(resultNoError);
                 emit progress(d->numSteps, d->numSteps);
 
