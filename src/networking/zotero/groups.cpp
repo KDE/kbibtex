@@ -146,3 +146,4 @@ void Groups::finishedFetchingGroups()
         emit finishedLoading();
     }
 }
+

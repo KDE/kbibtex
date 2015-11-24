@@ -559,3 +559,4 @@ bool MergeDuplicates::mergeDuplicateEntries(const QList<EntryClique *> &entryCli
 
     return didMerge;
 }
+

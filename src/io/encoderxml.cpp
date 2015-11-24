@@ -146,3 +146,4 @@ EncoderXML *EncoderXML::currentEncoderXML()
 
     return encoderXML;
 }
+

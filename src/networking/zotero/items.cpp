@@ -154,3 +154,4 @@ void Items::finishedFetchingItems()
         emit stoppedSearch(1); // TODO proper error codes
     }
 }
+

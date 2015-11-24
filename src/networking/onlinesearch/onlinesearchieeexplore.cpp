@@ -226,3 +226,4 @@ void OnlineSearchIEEEXplore::sanitizeEntry(QSharedPointer<Entry> entry)
         entry->remove(ftXAuthor);
     }
 }
+
