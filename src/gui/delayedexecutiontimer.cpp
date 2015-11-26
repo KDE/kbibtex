@@ -74,4 +74,3 @@ void DelayedExecutionTimer::trigger()
     m_minimumTimer->stop();
     m_minimumTimer->start(m_minimumDelay);
 }
-

@@ -181,4 +181,3 @@ QUrl AssociatedFiles::copyDocument(const QUrl &sourceUrl, const QString &entryId
 
     return targetUrl;
 }
-

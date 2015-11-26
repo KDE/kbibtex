@@ -18,4 +18,3 @@
 #include "logging_networking.h"
 
 Q_LOGGING_CATEGORY(LOG_KBIBTEX_NETWORKING, "kbibtex.networking")
-

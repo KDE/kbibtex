@@ -396,8 +396,3 @@ void DocumentList::fileSelected(const KFileItem &item)
     if (item.isFile() && item.isReadable())
         emit openFile(item.url());
 }
-
-
-
-
-

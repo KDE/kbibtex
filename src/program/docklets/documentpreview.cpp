@@ -697,5 +697,3 @@ void DocumentPreview::linkActivated(const QString &link)
         }
     }
 }
-
-

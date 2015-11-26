@@ -37,5 +37,3 @@
 #endif
 
 #endif // QOAUTH_GLOBAL_H
-
-

@@ -18,4 +18,3 @@
 #include "logging_test.h"
 
 Q_LOGGING_CATEGORY(LOG_KBIBTEX_TEST, "kbibtex.test")
-

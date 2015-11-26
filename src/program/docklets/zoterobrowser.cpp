@@ -388,8 +388,3 @@ void ZoteroBrowser::writeOAuthCredentials(bool ok) {
     } else
         qWarning() << "Accessing KWallet to sync API key did not succeed";
 }
-
-
-
-
-

@@ -26,4 +26,3 @@ QString Encoder::encode(const QString &text) const
 {
     return text;
 }
-

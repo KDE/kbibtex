@@ -380,4 +380,3 @@ int FileModel::row(QSharedPointer<Element> element) const
 void FileModel::elementChanged(int row) {
     emit dataChanged(createIndex(row, 0), createIndex(row, columnCount() - 1));
 }
-

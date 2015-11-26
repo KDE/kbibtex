@@ -483,8 +483,3 @@ void KBibTeXMainWindow::delayed() {
         bs = NULL;
     }
 }
-
-
-
-
-

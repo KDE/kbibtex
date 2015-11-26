@@ -18,4 +18,3 @@
 #include "logging_program.h"
 
 Q_LOGGING_CATEGORY(LOG_KBIBTEX_PROGRAM, "kbibtex.program")
-

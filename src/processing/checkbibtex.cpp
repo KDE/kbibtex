@@ -151,8 +151,3 @@ CheckBibTeX::CheckBibTeXResult CheckBibTeX::checkBibTeX(QSharedPointer<Entry> &e
 
     return result;
 }
-
-
-
-
-

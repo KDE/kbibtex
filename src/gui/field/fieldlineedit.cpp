@@ -508,4 +508,3 @@ void FieldLineEdit::dropEvent(QDropEvent *event)
         emit textChanged(clipboardText);
     }
 }
-

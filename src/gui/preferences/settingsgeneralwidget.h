@@ -48,4 +48,3 @@ private:
 
 
 #endif // KBIBTEX_GUI_SETTINGSGENERALWIDGET_H
-

@@ -200,8 +200,3 @@ void BibliographyService::kbuildsycoca5finished(int exitCode, QProcess::ExitStat
     if (exitCode != 0 || exitStatus != QProcess::NormalExit)
         KMessageBox::error(d->parentWidget, i18n("Failed to run 'kbuildsycoca5' to update mime type associations.\n\nThe system may not know how to use KBibTeX to open bibliography files."), i18n("Failed to run 'kbuildsycoca5'"));
 }
-
-
-
-
-

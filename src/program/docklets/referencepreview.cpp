@@ -415,4 +415,3 @@ void ReferencePreview::setFileView(FileView *fileView)
 {
     d->fileView = fileView;
 }
-

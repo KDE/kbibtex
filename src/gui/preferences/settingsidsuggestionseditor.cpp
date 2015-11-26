@@ -693,5 +693,3 @@ QString IdSuggestionsEditDialog::editSuggestion(const Entry *previewEntry, const
     /// Return unmodified original suggestion
     return suggestion;
 }
-
-

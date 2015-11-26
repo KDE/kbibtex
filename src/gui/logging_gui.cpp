@@ -18,4 +18,3 @@
 #include "logging_gui.h"
 
 Q_LOGGING_CATEGORY(LOG_KBIBTEX_GUI, "kbibtex.gui")
-

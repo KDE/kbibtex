@@ -83,4 +83,3 @@ void Macro::setValue(const Value &value)
 {
     d->value = value;
 }
-

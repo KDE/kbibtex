@@ -714,5 +714,3 @@ void FindDuplicatesUI::slotFindDuplicates()
 
     delete file;
 }
-
-

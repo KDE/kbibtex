@@ -18,4 +18,3 @@
 #include "logging_processing.h"
 
 Q_LOGGING_CATEGORY(LOG_KBIBTEX_PROCESSING, "kbibtex.processing")
-

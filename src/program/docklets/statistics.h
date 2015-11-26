@@ -47,4 +47,3 @@ private:
 };
 
 #endif // KBIBTEX_PROGRAM_STATISTICS_H
-

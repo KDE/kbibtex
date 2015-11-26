@@ -145,4 +145,3 @@ void Tags::finishedFetchingTags()
         emit finishedLoading();
     }
 }
-

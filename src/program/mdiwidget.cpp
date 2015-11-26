@@ -323,8 +323,3 @@ void MDIWidget::slotOpenLRU(const QModelIndex &index)
     if (url.isValid())
         emit documentOpenURL(url);
 }
-
-
-
-
-

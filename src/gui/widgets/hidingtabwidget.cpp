@@ -155,4 +155,3 @@ int HidingTabWidget::insertTab(int index, QWidget *page, const QIcon &icon, cons
 
     return QTabWidget::insertTab(index, page, icon, label);
 }
-

@@ -1032,5 +1032,3 @@ void KBibTeXPart::fileExternallyChange(const QString &path)
 }
 
 #include "part.moc"
-
-

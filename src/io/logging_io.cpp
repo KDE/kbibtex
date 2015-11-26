@@ -18,4 +18,3 @@
 #include "logging_io.h"
 
 Q_LOGGING_CATEGORY(LOG_KBIBTEX_IO, "kbibtex.io")
-

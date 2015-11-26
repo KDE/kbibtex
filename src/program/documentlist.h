@@ -112,5 +112,3 @@ static const int FavoritesItemType = QListWidgetItem::UserType + 24;
 
 
 #endif // KBIBTEX_PROGRAM_DOCUMENTLIST_H
-
-

@@ -94,5 +94,3 @@ private:
 };
 
 #endif // DELAYEDEXECUTIONTIMER_H
-
-

@@ -260,8 +260,3 @@ void ElementForm::autoApplyToggled(bool isChecked)
     configGroup.writeEntry(ElementFormPrivate::configKeyAutoApply, d->checkBoxAutoApply->isChecked());
     configGroup.sync();
 }
-
-
-
-
-

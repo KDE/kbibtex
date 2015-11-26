@@ -33,5 +33,3 @@ private:
 };
 
 #endif // KBIBTEX_PART_BROWSEREXTENSION_H
-
-
