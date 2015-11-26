@@ -97,12 +97,12 @@ public:
             return NULL;
 
         QString entryType = Entry::etMisc;
-        Entry *entry = new Entry(entryType, QString("RIS_%1").arg(referenceCounter++));
+        Entry *entry = new Entry(entryType, QString(QStringLiteral("RIS_%1")).arg(referenceCounter++));
         QString journalName, startPage, endPage, date;
         int fieldCounter = 0;
 
         for (RISitemList::iterator it = list.begin(); it != list.end(); ++it) {
-            if ((*it).key == "TY") {
+            if ((*it).key == QStringLiteral("TY")) {
                 if ((*it).value.startsWith(QStringLiteral("BOOK")) || (*it).value.startsWith(QStringLiteral("SER")))
                     entryType = Entry::etBook;
                 else if ((*it).value.startsWith(QStringLiteral("CHAP")))
@@ -118,31 +118,31 @@ public:
                 else if ((*it).value.startsWith(QStringLiteral("UNPB")))
                     entryType = Entry::etUnpublished;
                 entry->setType(entryType);
-            } else if ((*it).key == "AU" || (*it).key == "A1") {
+            } else if ((*it).key == QStringLiteral("AU") || (*it).key == QStringLiteral("A1")) {
                 Person *person = splitName((*it).value);
                 if (person != NULL)
                     appendValue(entry, Entry::ftAuthor, QSharedPointer<Person>(person));
-            } else if ((*it).key == "ED" || (*it).key == "A2") {
+            } else if ((*it).key == QStringLiteral("ED") || (*it).key == QStringLiteral("A2")) {
                 Person *person = splitName((*it).value);
                 if (person != NULL)
                     appendValue(entry, Entry::ftEditor, QSharedPointer<Person>(person));
-            } else if ((*it).key == "ID") {
+            } else if ((*it).key == QStringLiteral("ID")) {
                 entry->setId((*it).value);
-            } else if ((*it).key == "Y1" || (*it).key == "PY") {
+            } else if ((*it).key == QStringLiteral("Y1") || (*it).key == QStringLiteral("PY")) {
                 date = (*it).value;
-            } else if ((*it).key == "Y2") {
+            } else if ((*it).key == QStringLiteral("Y2")) {
                 if (date.isEmpty())
                     date = (*it).value;
-            } else if ((*it).key == "AB" || (*it).key == "N2") {
+            } else if ((*it).key == QStringLiteral("AB") || (*it).key == QStringLiteral("N2")) {
                 appendValue(entry, Entry::ftAbstract, QSharedPointer<PlainText>(new PlainText((*it).value)));
-            } else if ((*it).key == "N1") {
+            } else if ((*it).key == QStringLiteral("N1")) {
                 appendValue(entry, Entry::ftNote, QSharedPointer<PlainText>(new PlainText((*it).value)));
-            } else if ((*it).key == "KW") {
+            } else if ((*it).key == QStringLiteral("KW")) {
                 QString text = (*it).value;
                 QRegExp splitRegExp;
-                if (text.contains(";"))
+                if (text.contains(QStringLiteral(";")))
                     splitRegExp = QRegExp("\\s*[;\\n]\\s*");
-                else if (text.contains(","))
+                else if (text.contains(QStringLiteral(",")))
                     splitRegExp = QRegExp("\\s*[,\\n]\\s*");
                 else
                     splitRegExp = QRegExp("\\n");
@@ -150,43 +150,43 @@ public:
                 for (QStringList::Iterator it = newKeywords.begin(); it != newKeywords.end();
                         ++it)
                     appendValue(entry, Entry::ftKeywords, QSharedPointer<Keyword>(new Keyword(*it)));
-            } else if ((*it).key == "TI" || (*it).key == "T1") {
+            } else if ((*it).key == QStringLiteral("TI") || (*it).key == QStringLiteral("T1")) {
                 appendValue(entry, Entry::ftTitle, QSharedPointer<PlainText>(new PlainText((*it).value)));
-            } else if ((*it).key == "T3") {
+            } else if ((*it).key == QStringLiteral("T3")) {
                 appendValue(entry, Entry::ftSeries, QSharedPointer<PlainText>(new PlainText((*it).value)));
-            } else if ((*it).key == "JO" || (*it).key == "J1" || (*it).key == "J2") {
+            } else if ((*it).key == QStringLiteral("JO") || (*it).key == QStringLiteral("J1") || (*it).key == QStringLiteral("J2")) {
                 if (journalName.isEmpty())
                     journalName = (*it).value;
-            } else if ((*it).key == "JF" || (*it).key == "JA") {
+            } else if ((*it).key == QStringLiteral("JF") || (*it).key == QStringLiteral("JA")) {
                 journalName = (*it).value;
-            } else if ((*it).key == "VL") {
+            } else if ((*it).key == QStringLiteral("VL")) {
                 appendValue(entry, Entry::ftVolume, QSharedPointer<PlainText>(new PlainText((*it).value)));
-            } else if ((*it).key == "CP") {
+            } else if ((*it).key == QStringLiteral("CP")) {
                 appendValue(entry, Entry::ftChapter, QSharedPointer<PlainText>(new PlainText((*it).value)));
-            } else if ((*it).key == "IS") {
+            } else if ((*it).key == QStringLiteral("IS")) {
                 appendValue(entry, Entry::ftNumber, QSharedPointer<PlainText>(new PlainText((*it).value)));
-            } else if ((*it).key == "DO") {
+            } else if ((*it).key == QStringLiteral("DO")) {
                 appendValue(entry, Entry::ftDOI, QSharedPointer<PlainText>(new PlainText((*it).value)));
-            } else if ((*it).key == "PB") {
+            } else if ((*it).key == QStringLiteral("PB")) {
                 appendValue(entry, Entry::ftPublisher, QSharedPointer<PlainText>(new PlainText((*it).value)));
-            } else if ((*it).key == "IN") {
+            } else if ((*it).key == QStringLiteral("IN")) {
                 appendValue(entry, Entry::ftSchool, QSharedPointer<PlainText>(new PlainText((*it).value)));
-            } else if ((*it).key == "SN") {
+            } else if ((*it).key == QStringLiteral("SN")) {
                 const QString fieldName = entryType == Entry::etBook || entryType == Entry::etInBook ? Entry::ftISBN : Entry::ftISSN;
                 appendValue(entry, fieldName, QSharedPointer<PlainText>(new PlainText((*it).value)));
-            } else if ((*it).key == "CY") {
+            } else if ((*it).key == QStringLiteral("CY")) {
                 appendValue(entry, Entry::ftLocation, QSharedPointer<PlainText>(new PlainText((*it).value)));
-            }  else if ((*it).key == "AD") {
+            }  else if ((*it).key == QStringLiteral("AD")) {
                 appendValue(entry, Entry::ftAddress, QSharedPointer<PlainText>(new PlainText((*it).value)));
-            } else if ((*it).key == "L1" || (*it).key == "L2" || (*it).key == "L3" || (*it).key == "UR") {
+            } else if ((*it).key == QStringLiteral("L1") || (*it).key == QStringLiteral("L2") || (*it).key == QStringLiteral("L3") || (*it).key == QStringLiteral("UR")) {
                 const QString fieldName = KBibTeX::doiRegExp.indexIn((*it).value) >= 0 ? Entry::ftDOI : (KBibTeX::urlRegExp.indexIn((*it).value) >= 0 ? Entry::ftUrl : Entry::ftLocalFile);
                 appendValue(entry, fieldName, QSharedPointer<PlainText>(new PlainText((*it).value)));
-            } else if ((*it).key == "SP") {
+            } else if ((*it).key == QStringLiteral("SP")) {
                 startPage = (*it).value;
-            } else if ((*it).key == "EP") {
+            } else if ((*it).key == QStringLiteral("EP")) {
                 endPage = (*it).value;
             } else {
-                const QString fieldName = QString("RISfield_%1_%2").arg(fieldCounter++).arg((*it).key.left(2));
+                const QString fieldName = QString(QStringLiteral("RISfield_%1_%2")).arg(fieldCounter++).arg((*it).key.left(2));
                 appendValue(entry, fieldName, QSharedPointer<PlainText>(new PlainText((*it).value)));
             }
         }
@@ -284,7 +284,7 @@ File *FileImporterRIS::load(QIODevice *iodevice)
 
 bool FileImporterRIS::guessCanDecode(const QString &text)
 {
-    return text.indexOf("TY  - ") >= 0;
+    return text.indexOf(QStringLiteral("TY  - ")) >= 0;
 }
 
 void FileImporterRIS::cancel()

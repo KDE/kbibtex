@@ -38,7 +38,7 @@ OnlineSearchQueryFormAbstract *OnlineSearchSOANASAADS::customWidget(QWidget *par
 
 QUrl OnlineSearchSOANASAADS::homepage() const
 {
-    return QUrl("http://adswww.harvard.edu/");
+    return QUrl(QStringLiteral("http://adswww.harvard.edu/"));
 }
 
 QString OnlineSearchSOANASAADS::favIconUrl() const

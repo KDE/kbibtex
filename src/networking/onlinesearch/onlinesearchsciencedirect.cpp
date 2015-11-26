@@ -127,7 +127,7 @@ OnlineSearchQueryFormAbstract *OnlineSearchScienceDirect::customWidget(QWidget *
 
 QUrl OnlineSearchScienceDirect::homepage() const
 {
-    return QUrl("http://www.sciencedirect.com/");
+    return QUrl(QStringLiteral("http://www.sciencedirect.com/"));
 }
 
 void OnlineSearchScienceDirect::cancel()
@@ -210,7 +210,7 @@ void OnlineSearchScienceDirect::doneFetchingResultPage()
 
             QSet<QString> knownUrls;
             int p = -1, p2 = -1;
-            while ((p = htmlText.indexOf("http://www.sciencedirect.com/science/article/pii/", p + 1)) >= 0 && (p2 = htmlText.indexOf(QRegExp("[\"/ #]"), p + 50)) >= 0) {
+            while ((p = htmlText.indexOf(QStringLiteral("http://www.sciencedirect.com/science/article/pii/"), p + 1)) >= 0 && (p2 = htmlText.indexOf(QRegExp("[\"/ #]"), p + 50)) >= 0) {
                 const QString urlText = htmlText.mid(p, p2 - p);
                 if (knownUrls.contains(urlText)) continue;
                 knownUrls.insert(urlText);
@@ -257,7 +257,7 @@ void OnlineSearchScienceDirect::doneFetchingAbstractPage()
             InternalNetworkAccessManager::self()->mergeHtmlHeadCookies(htmlText, reply->url());
 
             int p1 = -1, p2 = -1;
-            if ((p1 = htmlText.indexOf("/science?_ob=DownloadURL&")) >= 0 && (p2 = htmlText.indexOf(QRegExp("[ \"<>]"), p1 + 1)) >= 0) {
+            if ((p1 = htmlText.indexOf(QStringLiteral("/science?_ob=DownloadURL&"))) >= 0 && (p2 = htmlText.indexOf(QRegExp("[ \"<>]"), p1 + 1)) >= 0) {
                 QUrl url("http://www.sciencedirect.com" + htmlText.mid(p1, p2 - p1));
                 QUrlQuery query(url);
                 query.addQueryItem(QStringLiteral("citation-type"), QStringLiteral("BIBTEX"));

@@ -86,9 +86,9 @@ void FileModel::readConfiguration()
 
 QVariant FileModel::entryData(const Entry *entry, const QString &raw, const QString &rawAlt, int role, bool followCrossRef) const
 {
-    if (raw == "^id") // FIXME: Use constant here?
+    if (raw == QStringLiteral("^id")) // FIXME: Use constant here?
         return QVariant(entry->id());
-    else if (raw == "^type") { // FIXME: Use constant here?
+    else if (raw == QStringLiteral("^type")) { // FIXME: Use constant here?
         /// try to beautify type, e.g. translate "proceedings" into
         /// "Conference or Workshop Proceedings"
         QString label = BibTeXEntries::self()->label(entry->type());
@@ -194,7 +194,7 @@ QVariant FileModel::data(const QModelIndex &index, int role) const
         /// if BibTeX entry has a "x-color" field, use that color to highlight row
         if (role == Qt::BackgroundRole) {
             QString colorName;
-            if (entry.isNull() || (colorName = PlainTextValue::text(entry->value(Entry::ftColor))) == "#000000" || colorName.isEmpty())
+            if (entry.isNull() || (colorName = PlainTextValue::text(entry->value(Entry::ftColor))) == QStringLiteral("#000000") || colorName.isEmpty())
                 return QVariant();
             else {
                 QColor color(colorName);
@@ -219,11 +219,11 @@ QVariant FileModel::data(const QModelIndex &index, int role) const
         } else {
             QSharedPointer<Macro> macro = element.dynamicCast<Macro>();
             if (!macro.isNull()) {
-                if (raw == "^id")
+                if (raw == QStringLiteral("^id"))
                     return QVariant(macro->key());
-                else if (raw == "^type")
+                else if (raw == QStringLiteral("^type"))
                     return QVariant(i18n("Macro"));
-                else if (raw == "Title") {
+                else if (raw == QStringLiteral("Title")) {
                     const QString text = PlainTextValue::text(macro->value()).simplified();
                     return QVariant(text);
                 } else
@@ -231,7 +231,7 @@ QVariant FileModel::data(const QModelIndex &index, int role) const
             } else {
                 QSharedPointer<Comment> comment = element.dynamicCast<Comment>();
                 if (!comment.isNull()) {
-                    if (raw == "^type")
+                    if (raw == QStringLiteral("^type"))
                         return QVariant(i18n("Comment"));
                     else if (raw == Entry::ftTitle) {
                         const QString text = comment->text().simplified();
@@ -241,7 +241,7 @@ QVariant FileModel::data(const QModelIndex &index, int role) const
                 } else {
                     QSharedPointer<Preamble> preamble = element.dynamicCast<Preamble>();
                     if (!preamble.isNull()) {
-                        if (raw == "^type")
+                        if (raw == QStringLiteral("^type"))
                             return QVariant(i18n("Preamble"));
                         else if (raw == Entry::ftTitle) {
                             const QString text = PlainTextValue::text(preamble->value()).simplified();

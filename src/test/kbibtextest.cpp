@@ -72,7 +72,7 @@ public:
             : QWidget(parent), m_parent(parent) {
         QGridLayout *layout = new QGridLayout(this);
 
-        buttonStartTest = new QPushButton(QIcon::fromTheme("application-x-executable"), QStringLiteral("Start Tests"), this);
+        buttonStartTest = new QPushButton(QIcon::fromTheme(QStringLiteral("application-x-executable")), QStringLiteral("Start Tests"), this);
         layout->addWidget(buttonStartTest, 0, 0, 1, 1);
 
         progressBar = new QProgressBar(this);

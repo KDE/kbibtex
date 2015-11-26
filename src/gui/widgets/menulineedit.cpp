@@ -84,7 +84,7 @@ public:
     }
 
     void setupUI() {
-        p->setObjectName("FieldLineEdit");
+        p->setObjectName(QStringLiteral("FieldLineEdit"));
 
         hLayout = new QHBoxLayout(p);
         hLayout->setMargin(0);
@@ -93,7 +93,7 @@ public:
         m_pushButtonType = new QPushButton(p);
         appendWidget(m_pushButtonType);
         hLayout->setStretchFactor(m_pushButtonType, 0);
-        m_pushButtonType->setObjectName("FieldLineEditButton");
+        m_pushButtonType->setObjectName(QStringLiteral("FieldLineEditButton"));
 
         if (isMultiLine) {
             m_multiLineEditText = new KTextEdit(p);

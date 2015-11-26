@@ -87,8 +87,8 @@ QString EncoderXML::decode(const QString &text) const
      * Find and replace all characters written as hexadecimal number
      */
     int p = -1;
-    while ((p = result.indexOf("&#x", p + 1)) >= 0) {
-        int p2 = result.indexOf(";", p + 1);
+    while ((p = result.indexOf(QStringLiteral("&#x"), p + 1)) >= 0) {
+        int p2 = result.indexOf(QStringLiteral(";"), p + 1);
         if (p2 < 0) break;
         bool ok = false;
         int hex = result.midRef(p + 3, p2 - p - 3).toInt(&ok, 16);
@@ -100,8 +100,8 @@ QString EncoderXML::decode(const QString &text) const
       * Find and replace all characters written as decimal number
       */
     p = -1;
-    while ((p = result.indexOf("&#", p + 1)) >= 0) {
-        int p2 = result.indexOf(";", p + 1);
+    while ((p = result.indexOf(QStringLiteral("&#"), p + 1)) >= 0) {
+        int p2 = result.indexOf(QStringLiteral(";"), p + 1);
         if (p2 < 0) break;
         bool ok = false;
         int dec = result.midRef(p + 2, p2 - p - 2).toInt(&ok, 10);

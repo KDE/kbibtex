@@ -43,7 +43,7 @@ OnlineSearchQueryFormAbstract *OnlineSearchCERNDS::customWidget(QWidget *parent)
 
 QUrl OnlineSearchCERNDS::homepage() const
 {
-    return QUrl("http://cds.cern.ch/");
+    return QUrl(QStringLiteral("http://cds.cern.ch/"));
 }
 
 QString OnlineSearchCERNDS::favIconUrl() const

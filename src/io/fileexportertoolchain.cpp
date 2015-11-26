@@ -63,10 +63,10 @@ bool FileExporterToolchain::runProcess(const QString &cmd, const QStringList &ar
     m_process = new QProcess();
     QProcessEnvironment processEnvironment = QProcessEnvironment::systemEnvironment();
     /// Avoid some paranoid security settings in BibTeX
-    processEnvironment.insert("openout_any", "r");
+    processEnvironment.insert(QStringLiteral("openout_any"), QStringLiteral("r"));
     /// Make applications use working directory as temporary directory
-    processEnvironment.insert("TMPDIR", tempDir.path());
-    processEnvironment.insert("TEMPDIR", tempDir.path());
+    processEnvironment.insert(QStringLiteral("TMPDIR"), tempDir.path());
+    processEnvironment.insert(QStringLiteral("TEMPDIR"), tempDir.path());
     m_process->setProcessEnvironment(processEnvironment);
     m_process->setWorkingDirectory(tempDir.path());
 
@@ -170,7 +170,7 @@ bool FileExporterToolchain::kpsewhich(const QString &filename)
     QProcess kpsewhich;
     QStringList param;
     param << filename;
-    kpsewhich.start("kpsewhich", param);
+    kpsewhich.start(QStringLiteral("kpsewhich"), param);
 
     if (kpsewhich.waitForStarted(3000)) {
         if (kpsewhich.waitForFinished(30000))

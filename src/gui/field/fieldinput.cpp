@@ -79,7 +79,7 @@ public:
         case KBibTeX::Month: {
             fieldLineEdit = new FieldLineEdit(preferredTypeFlag, typeFlags, false, p);
             layout->addWidget(fieldLineEdit);
-            QPushButton *monthSelector = new QPushButton(QIcon::fromTheme("view-calendar-month"), "");
+            QPushButton *monthSelector = new QPushButton(QIcon::fromTheme(QStringLiteral("view-calendar-month")), QStringLiteral(""));
             monthSelector->setToolTip(i18n("Select a predefined month"));
             fieldLineEdit->prependWidget(monthSelector);
 
@@ -96,7 +96,7 @@ public:
         case KBibTeX::CrossRef: {
             fieldLineEdit = new FieldLineEdit(preferredTypeFlag, typeFlags, false, p);
             layout->addWidget(fieldLineEdit);
-            QPushButton *referenceSelector = new QPushButton(QIcon::fromTheme("flag-gree"), ""); ///< find better icon
+            QPushButton *referenceSelector = new QPushButton(QIcon::fromTheme(QStringLiteral("flag-gree")), QStringLiteral("")); ///< find better icon
             referenceSelector->setToolTip(i18n("Select an existing entry"));
             fieldLineEdit->prependWidget(referenceSelector);
             connect(referenceSelector, SIGNAL(clicked()), p, SLOT(selectCrossRef()));
@@ -135,7 +135,7 @@ public:
     void clear() {
         disableModifiedSignal();
         if (fieldLineEdit != NULL)
-            fieldLineEdit->setText("");
+            fieldLineEdit->setText(QStringLiteral(""));
         else if (fieldListEdit != NULL)
             fieldListEdit->clear();
         else if (colorWidget != NULL)

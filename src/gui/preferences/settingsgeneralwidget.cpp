@@ -98,7 +98,7 @@ QString SettingsGeneralWidget::label() const
 
 QIcon SettingsGeneralWidget::icon() const
 {
-    return QIcon::fromTheme("kbibtex");
+    return QIcon::fromTheme(QStringLiteral("kbibtex"));
 }
 
 void SettingsGeneralWidget::loadState()

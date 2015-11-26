@@ -83,11 +83,11 @@ public:
         listViewKeywords->setModel(&stringListModel);
         connect(listViewKeywords, SIGNAL(pressed(QModelIndex)), p, SLOT(enableRemoveButton()));
 
-        QPushButton *buttonAdd = new QPushButton(QIcon::fromTheme("list-add"), i18n("Add"), p);
+        QPushButton *buttonAdd = new QPushButton(QIcon::fromTheme(QStringLiteral("list-add")), i18n("Add"), p);
         layout->addWidget(buttonAdd, 0, 1, 1, 1);
         connect(buttonAdd, SIGNAL(clicked()), p, SLOT(addKeyword()));
 
-        buttonRemove = new QPushButton(QIcon::fromTheme("list-remove"), i18n("Remove"), p);
+        buttonRemove = new QPushButton(QIcon::fromTheme(QStringLiteral("list-remove")), i18n("Remove"), p);
         layout->addWidget(buttonRemove, 1, 1, 1, 1);
         buttonRemove->setEnabled(false);
         connect(buttonRemove, SIGNAL(clicked()), p, SLOT(removeKeyword()));
@@ -115,7 +115,7 @@ QString SettingsGlobalKeywordsWidget::label() const
 
 QIcon SettingsGlobalKeywordsWidget::icon() const
 {
-    return QIcon::fromTheme("checkbox"); // TODO find better icon
+    return QIcon::fromTheme(QStringLiteral("checkbox")); // TODO find better icon
 }
 
 void SettingsGlobalKeywordsWidget::loadState()

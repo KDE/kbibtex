@@ -405,12 +405,12 @@ public:
         containerLayout = new QVBoxLayout(container);
         area->setMinimumSize(384, 256);
 
-        buttonAddTokenAtTop = new QPushButton(QIcon::fromTheme("list-add"), i18n("Add at top"), container);
+        buttonAddTokenAtTop = new QPushButton(QIcon::fromTheme(QStringLiteral("list-add")), i18n("Add at top"), container);
         containerLayout->addWidget(buttonAddTokenAtTop, 0);
 
         containerLayout->addStretch(1);
 
-        buttonAddTokenAtBottom = new QPushButton(QIcon::fromTheme("list-add"), i18n("Add at bottom"), container);
+        buttonAddTokenAtBottom = new QPushButton(QIcon::fromTheme(QStringLiteral("list-add")), i18n("Add at bottom"), container);
         containerLayout->addWidget(buttonAddTokenAtBottom, 0);
 
         QMenu *menuAddToken = new QMenu(p);
@@ -454,9 +454,9 @@ public:
 
     void addManagementButtons(TokenWidget *tokenWidget) {
         if (tokenWidget != NULL) {
-            QPushButton *buttonUp = new QPushButton(QIcon::fromTheme("go-up"), QStringLiteral(""), tokenWidget);
-            QPushButton *buttonDown = new QPushButton(QIcon::fromTheme("go-down"), QStringLiteral(""), tokenWidget);
-            QPushButton *buttonRemove = new QPushButton(QIcon::fromTheme("list-remove"), QStringLiteral(""), tokenWidget);
+            QPushButton *buttonUp = new QPushButton(QIcon::fromTheme(QStringLiteral("go-up")), QStringLiteral(""), tokenWidget);
+            QPushButton *buttonDown = new QPushButton(QIcon::fromTheme(QStringLiteral("go-down")), QStringLiteral(""), tokenWidget);
+            QPushButton *buttonRemove = new QPushButton(QIcon::fromTheme(QStringLiteral("list-remove")), QStringLiteral(""), tokenWidget);
             tokenWidget->addButtons(buttonUp, buttonDown, buttonRemove);
             connect(buttonUp, SIGNAL(clicked(bool)), signalMapperMoveUp, SLOT(map()));
             signalMapperMoveUp->setMapping(buttonUp, tokenWidget);

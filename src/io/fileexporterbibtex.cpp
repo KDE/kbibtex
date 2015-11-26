@@ -65,7 +65,7 @@ public:
     const QString configGroupName, configGroupNameGeneral;
 
     FileExporterBibTeXPrivate(FileExporterBibTeX *parent)
-            : p(parent), keywordCasing(KBibTeX::cLowerCase), quoteComment(Preferences::qcNone), protectCasing(true), cancelFlag(false), iconvLaTeX(NULL), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), configGroupName("FileExporterBibTeX"), configGroupNameGeneral("General") {
+            : p(parent), keywordCasing(KBibTeX::cLowerCase), quoteComment(Preferences::qcNone), protectCasing(true), cancelFlag(false), iconvLaTeX(NULL), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), configGroupName(QStringLiteral("FileExporterBibTeX")), configGroupNameGeneral(QStringLiteral("General")) {
         // nothing
     }
 
@@ -276,7 +276,7 @@ public:
         if (isLastName && !text.contains(QChar(' ')))
             /** Last name contains NO spaces, no quoting necessary */
             return false;
-        else if (!isLastName && !text.contains(" and "))
+        else if (!isLastName && !text.contains(QStringLiteral(" and ")))
             /** First name contains no " and " no quoting necessary */
             return false;
         else if (isLastName && !text.isEmpty() && text[0].isLower())
@@ -472,7 +472,7 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value &value, const QStr
 
     EncoderLaTeX *encoder = useLaTeXEncoding == leLaTeX ? EncoderLaTeX::instance() : (useLaTeXEncoding == leUTF8 ? EncoderUTF8::instance() : NULL);
 
-    QString result = "";
+    QString result;
     bool isOpen = false;
     /// variable to memorize which closing delimiter to use
     QChar stringCloseDelimiter = d->stringCloseDelimiter;
@@ -491,7 +491,7 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value &value, const QStr
                 QString textBody = encodercheck(encoder, plainText->text());
                 if (!isOpen) {
                     if (!result.isEmpty()) result.append(" # ");
-                    if (textBody.contains("\"")) {
+                    if (textBody.contains(QStringLiteral("\""))) {
                         /// fall back to {...} delimiters if text contains quotation marks
                         result.append(QLatin1Char('{'));
                         stringCloseDelimiter = QLatin1Char('}');
@@ -507,7 +507,7 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value &value, const QStr
                 } else {
                     result.append(stringCloseDelimiter).append(" # ");
 
-                    if (textBody.contains("\"")) {
+                    if (textBody.contains(QStringLiteral("\""))) {
                         /// fall back to {...} delimiters if text contains quotation marks
                         result.append("{");
                         stringCloseDelimiter = QLatin1Char('}');
@@ -525,7 +525,7 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value &value, const QStr
                     QString textBody = verbatimText->text();
                     if (!isOpen) {
                         if (!result.isEmpty()) result.append(" # ");
-                        if (textBody.contains("\"")) {
+                        if (textBody.contains(QStringLiteral("\""))) {
                             /// fall back to {...} delimiters if text contains quotation marks
                             result.append("{");
                             stringCloseDelimiter = QLatin1Char('}');
@@ -543,7 +543,7 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value &value, const QStr
                     } else {
                         result.append(stringCloseDelimiter).append(" # ");
 
-                        if (textBody.contains("\"")) {
+                        if (textBody.contains(QStringLiteral("\""))) {
                             /// fall back to {...} delimiters if text contains quotation marks
                             result.append("{");
                             stringCloseDelimiter = QLatin1Char('}');
@@ -576,7 +576,7 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value &value, const QStr
 
                         if (!isOpen) {
                             if (!result.isEmpty()) result.append(" # ");
-                            if (thisName.contains("\"")) {
+                            if (thisName.contains(QStringLiteral("\""))) {
                                 /// fall back to {...} delimiters if text contains quotation marks
                                 result.append("{");
                                 stringCloseDelimiter = QLatin1Char('}');
@@ -589,7 +589,7 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value &value, const QStr
                         else {
                             result.append(stringCloseDelimiter).append(" # ");
 
-                            if (thisName.contains("\"")) {
+                            if (thisName.contains(QStringLiteral("\""))) {
                                 /// fall back to {...} delimiters if text contains quotation marks
                                 result.append("{");
                                 stringCloseDelimiter = QLatin1Char('}');
@@ -608,7 +608,7 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value &value, const QStr
                             QString textBody = encodercheck(encoder, keyword->text());
                             if (!isOpen) {
                                 if (!result.isEmpty()) result.append(" # ");
-                                if (textBody.contains("\"")) {
+                                if (textBody.contains(QStringLiteral("\""))) {
                                     /// fall back to {...} delimiters if text contains quotation marks
                                     result.append("{");
                                     stringCloseDelimiter = QLatin1Char('}');
@@ -621,7 +621,7 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value &value, const QStr
                             else {
                                 result.append(stringCloseDelimiter).append(" # ");
 
-                                if (textBody.contains("\"")) {
+                                if (textBody.contains(QStringLiteral("\""))) {
                                     /// fall back to {...} delimiters if text contains quotation marks
                                     result.append("{");
                                     stringCloseDelimiter = QLatin1Char('}');

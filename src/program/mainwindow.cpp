@@ -91,12 +91,12 @@ public:
         mdiWidget = new MDIWidget(p);
 
         KActionMenu *showPanelsAction = new KActionMenu(i18n("Show Panels"), p);
-        p->actionCollection()->addAction("settings_shown_panels", showPanelsAction);
+        p->actionCollection()->addAction(QStringLiteral("settings_shown_panels"), showPanelsAction);
         QMenu *showPanelsMenu = new QMenu(showPanelsAction->text(), p->widget());
         showPanelsAction->setMenu(showPanelsMenu);
 
-        KActionMenu *actionMenuRecentFiles = new KActionMenu(QIcon::fromTheme("document-open-recent"), i18n("Recently used files"), p);
-        p->actionCollection()->addAction("file_open_recent", actionMenuRecentFiles);
+        KActionMenu *actionMenuRecentFiles = new KActionMenu(QIcon::fromTheme(QStringLiteral("document-open-recent")), i18n("Recently used files"), p);
+        p->actionCollection()->addAction(QStringLiteral("file_open_recent"), actionMenuRecentFiles);
         actionMenuRecentFilesMenu = new QMenu(actionMenuRecentFiles->text(), p->widget());
         actionMenuRecentFiles->setMenu(actionMenuRecentFilesMenu);
 
@@ -117,8 +117,8 @@ public:
         p->addDockWidget(Qt::LeftDockWidgetArea, dockDocumentList);
         listDocumentList = new DocumentList(dockDocumentList);
         dockDocumentList->setWidget(listDocumentList);
-        dockDocumentList->setObjectName("dockDocumentList");
-        dockDocumentList->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
+        dockDocumentList->setObjectName(QStringLiteral("dockDocumentList"));
+        dockDocumentList->setFeatures(QDockWidget::DockWidgetClosable    | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
         connect(listDocumentList, SIGNAL(openFile(QUrl)), p, SLOT(openDocument(QUrl)));
         showPanelsMenu->addAction(dockDocumentList->toggleViewAction());
 
@@ -127,7 +127,7 @@ public:
         p->addDockWidget(Qt::LeftDockWidgetArea, dockValueList);
         valueList = new ValueList(dockValueList);
         dockValueList->setWidget(valueList);
-        dockValueList->setObjectName("dockValueList");
+        dockValueList->setObjectName(QStringLiteral("dockValueList"));
         dockValueList->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
         showPanelsMenu->addAction(dockValueList->toggleViewAction());
 
@@ -136,7 +136,7 @@ public:
         p->addDockWidget(Qt::LeftDockWidgetArea, dockStatistics);
         statistics = new Statistics(dockStatistics);
         dockStatistics->setWidget(statistics);
-        dockStatistics->setObjectName("dockStatistics");
+        dockStatistics->setObjectName(QStringLiteral("dockStatistics"));
         dockStatistics->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
         showPanelsMenu->addAction(dockStatistics->toggleViewAction());
 
@@ -146,7 +146,7 @@ public:
         dockSearchResults->hide();
         searchResults = new SearchResults(mdiWidget, dockSearchResults);
         dockSearchResults->setWidget(searchResults);
-        dockSearchResults->setObjectName("dockResultsFrom");
+        dockSearchResults->setObjectName(QStringLiteral("dockResultsFrom"));
         dockSearchResults->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
         showPanelsMenu->addAction(dockSearchResults->toggleViewAction());
         connect(mdiWidget, SIGNAL(documentSwitch(FileView*,FileView*)), searchResults, SLOT(documentSwitched(FileView*,FileView*)));
@@ -157,7 +157,7 @@ public:
         searchForm = new SearchForm(searchResults, dockSearchForm);
         connect(searchForm, SIGNAL(doneSearching()), p, SLOT(showSearchResults()));
         dockSearchForm->setWidget(searchForm);
-        dockSearchForm->setObjectName("dockSearchFrom");
+        dockSearchForm->setObjectName(QStringLiteral("dockSearchFrom"));
         dockSearchForm->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
         showPanelsMenu->addAction(dockSearchForm->toggleViewAction());
 
@@ -166,7 +166,7 @@ public:
         p->addDockWidget(Qt::LeftDockWidgetArea, dockZotero);
         zotero = new ZoteroBrowser(searchResults, dockZotero);
         dockZotero->setWidget(zotero);
-        dockZotero->setObjectName("dockZotero");
+        dockZotero->setObjectName(QStringLiteral("dockZotero"));
         dockZotero->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
         showPanelsMenu->addAction(dockZotero->toggleViewAction());
 
@@ -175,7 +175,7 @@ public:
         p->addDockWidget(Qt::LeftDockWidgetArea, dockReferencePreview);
         referencePreview = new ReferencePreview(dockReferencePreview);
         dockReferencePreview->setWidget(referencePreview);
-        dockReferencePreview->setObjectName("dockReferencePreview");
+        dockReferencePreview->setObjectName(QStringLiteral("dockReferencePreview"));
         dockReferencePreview->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
         showPanelsMenu->addAction(dockReferencePreview->toggleViewAction());
 
@@ -185,7 +185,7 @@ public:
         dockDocumentPreview->hide();
         documentPreview = new DocumentPreview(dockDocumentPreview);
         dockDocumentPreview->setWidget(documentPreview);
-        dockDocumentPreview->setObjectName("dockDocumentPreview");
+        dockDocumentPreview->setObjectName(QStringLiteral("dockDocumentPreview"));
         dockDocumentPreview->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
         showPanelsMenu->addAction(dockDocumentPreview->toggleViewAction());
         p->actionCollection()->setDefaultShortcut(dockDocumentPreview->toggleViewAction(), Qt::CTRL + Qt::SHIFT + Qt::Key_D);
@@ -196,7 +196,7 @@ public:
         dockElementForm->hide();
         elementForm = new ElementForm(mdiWidget, dockElementForm);
         dockElementForm->setWidget(elementForm);
-        dockElementForm->setObjectName("dockElementFrom");
+        dockElementForm->setObjectName(QStringLiteral("dockElementFrom"));
         dockElementForm->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
         showPanelsMenu->addAction(dockElementForm->toggleViewAction());
 
@@ -205,7 +205,7 @@ public:
         p->addDockWidget(Qt::LeftDockWidgetArea, dockFileSettings);
         fileSettings = new FileSettings(dockFileSettings);
         dockFileSettings->setWidget(fileSettings);
-        dockFileSettings->setObjectName("dockFileSettings");
+        dockFileSettings->setObjectName(QStringLiteral("dockFileSettings"));
         dockFileSettings->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
         showPanelsMenu->addAction(dockFileSettings->toggleViewAction());
 
@@ -243,7 +243,7 @@ KBibTeXMainWindow::KBibTeXMainWindow()
             group.writeEntry( mainWindowStateKey, mainWindowState );
     */
 
-    setXMLFile("kbibtexui.rc");
+    setXMLFile(QStringLiteral("kbibtexui.rc"));
 
     setCentralWidget(d->mdiWidget);
 
@@ -435,7 +435,7 @@ void KBibTeXMainWindow::documentListsChanged(OpenFileInfo::StatusFlags statusFla
             const int squeezeLen = 64;
             const QString squeezedShortCap = squeeze_text(cur->shortCaption(), squeezeLen);
             const QString squeezedFullCap = squeeze_text(cur->fullCaption(), squeezeLen);
-            QAction *action = new QAction(QString("%1 [%2]").arg(squeezedShortCap).arg(squeezedFullCap), this);
+            QAction *action = new QAction(QString(QStringLiteral("%1 [%2]")).arg(squeezedShortCap).arg(squeezedFullCap), this);
             action->setData(cur->url());
             action->setIcon(QIcon::fromTheme(cur->mimeType().replace(QLatin1Char('/'), QLatin1Char('-'))));
             d->actionMenuRecentFilesMenu->addAction(action);

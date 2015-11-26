@@ -75,14 +75,14 @@ public:
         layoutCannotImport->addStretch(10);
         QLabel *label = new QLabel(widgetCannotImport);
         label->setAlignment(Qt::AlignCenter | Qt::AlignVCenter);
-        label->setPixmap(KIconLoader::global()->loadIcon("dialog-warning", KIconLoader::Dialog, KIconLoader::SizeSmall));
+        label->setPixmap(KIconLoader::global()->loadIcon(QStringLiteral("dialog-warning"), KIconLoader::Dialog, KIconLoader::SizeSmall));
         layoutCannotImport->addWidget(label);
         labelCannotImportMsg = new QLabel(widgetCannotImport);
         labelCannotImportMsg->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
         layoutCannotImport->addWidget(labelCannotImportMsg);
         /// see also updateCannotImportMessage()
 
-        buttonImport = new QPushButton(QIcon::fromTheme("svn-update"), i18n("Import"), parent);
+        buttonImport = new QPushButton(QIcon::fromTheme(QStringLiteral("svn-update")), i18n("Import"), parent);
         layout->addWidget(buttonImport, 1, 1, 1, 1);
         buttonImport->setEnabled(false);
 
@@ -92,17 +92,17 @@ public:
         model->setSourceModel(fileModel);
         resultList->setModel(model);
 
-        actionViewCurrent = new QAction(QIcon::fromTheme("document-preview"), i18n("View Element"), parent);
+        actionViewCurrent = new QAction(QIcon::fromTheme(QStringLiteral("document-preview")), i18n("View Element"), parent);
         resultList->addAction(actionViewCurrent);
         actionViewCurrent->setEnabled(false);
         connect(actionViewCurrent, SIGNAL(triggered()), resultList, SLOT(viewCurrentElement()));
 
-        actionImportSelected = new QAction(QIcon::fromTheme("svn-update"), i18n("Import"), parent);
+        actionImportSelected = new QAction(QIcon::fromTheme(QStringLiteral("svn-update")), i18n("Import"), parent);
         resultList->addAction(actionImportSelected);
         actionImportSelected->setEnabled(false);
         connect(actionImportSelected, SIGNAL(triggered()), parent, SLOT(importSelected()));
 
-        actionCopySelected = new QAction(QIcon::fromTheme("edit-copy"), i18n("Copy"), parent);
+        actionCopySelected = new QAction(QIcon::fromTheme(QStringLiteral("edit-copy")), i18n("Copy"), parent);
         resultList->addAction(actionCopySelected);
         actionCopySelected->setEnabled(false);
         connect(actionCopySelected, SIGNAL(triggered()), clipboard, SLOT(copy()));

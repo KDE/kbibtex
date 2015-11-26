@@ -178,7 +178,7 @@ OnlineSearchQueryFormAbstract *OnlineSearchPubMed::customWidget(QWidget *)
 
 QUrl OnlineSearchPubMed::homepage() const
 {
-    return QUrl("http://www.ncbi.nlm.nih.gov/pubmed/");
+    return QUrl(QStringLiteral("http://www.ncbi.nlm.nih.gov/pubmed/"));
 }
 
 void OnlineSearchPubMed::cancel()
@@ -244,7 +244,7 @@ void OnlineSearchPubMed::eFetchDone()
         QString bibTeXcode = d->xslt->transform(input);
         /// remove XML header
         if (bibTeXcode[0] == '<')
-            bibTeXcode = bibTeXcode.mid(bibTeXcode.indexOf(">") + 1);
+            bibTeXcode = bibTeXcode.mid(bibTeXcode.indexOf(QStringLiteral(">")) + 1);
 
         FileImporterBibTeX importer;
         File *bibtexFile = importer.fromString(bibTeXcode);

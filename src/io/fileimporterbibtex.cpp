@@ -39,7 +39,7 @@
 #include "fileexporterbibtex.h"
 #include "logging_io.h"
 
-const QString extraAlphaNumChars = QString("?'`-_:.+/$\\\"&");
+const QString extraAlphaNumChars = QString(QStringLiteral("?'`-_:.+/$\\\"&"));
 
 const char *FileImporterBibTeX::defaultCodecName = "utf-8";
 
@@ -81,12 +81,12 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
     m_textStream->setCodec(defaultCodecName); ///< unless we learn something else, assume default codec
     result->setProperty(File::Encoding, QStringLiteral("latex"));
 
-    QString rawText = "";
+    QString rawText;
     while (!m_textStream->atEnd()) {
         QString line = m_textStream->readLine();
         bool skipline = evaluateParameterComments(m_textStream, line.toLower(), result);
         // FIXME XML data should be removed somewhere else? onlinesearch ...
-        if (line.startsWith(QStringLiteral("<?xml")) && line.endsWith("?>"))
+        if (line.startsWith(QStringLiteral("<?xml")) && line.endsWith(QStringLiteral("?>")))
             /// Hop over XML declarations
             skipline = true;
         if (!skipline)
@@ -175,12 +175,12 @@ Element *FileImporterBibTeX::nextElement()
     if (token == tAt) {
         QString elementType = readSimpleString();
 
-        if (elementType.toLower() == "comment") {
+        if (elementType.toLower() == QStringLiteral("comment")) {
             ++m_statistics.countCommentCommand;
             return readCommentElement();
-        } else if (elementType.toLower() == "string")
+        } else if (elementType.toLower() == QStringLiteral("string"))
             return readMacroElement();
-        else if (elementType.toLower() == "preamble")
+        else if (elementType.toLower() == QStringLiteral("preamble"))
             return readPreambleElement();
         else if (elementType.toLower() == QStringLiteral("import")) {
             qCDebug(LOG_KBIBTEX_IO) << "Skipping potential HTML/JavaScript @import statement";
@@ -196,7 +196,7 @@ Element *FileImporterBibTeX::nextElement()
         ++m_statistics.countCommentPercent;
         return readPlainCommentElement();
     } else if (token == tUnknown) {
-        qCDebug(LOG_KBIBTEX_IO) << "Unknown token '" << m_nextChar << "(" << QString("0x%1").arg(m_nextChar.unicode(), 4, 16, QLatin1Char('0')) << ")" << "' near line " << m_lineNo << "(" << m_prevLine << endl << m_currentLine << ")" << ", treating as comment";
+        qCDebug(LOG_KBIBTEX_IO) << "Unknown token '" << m_nextChar << "(" << QString(QStringLiteral("0x%1")).arg(m_nextChar.unicode(), 4, 16, QLatin1Char('0')) << ")" << "' near line " << m_lineNo << "(" << m_prevLine << endl << m_currentLine << ")" << ", treating as comment";
         ++m_statistics.countNoCommentQuote;
         return readPlainCommentElement(QString(m_prevChar) + m_nextChar);
     }
@@ -368,9 +368,9 @@ Entry *FileImporterBibTeX::readEntryElement(const QString &typeString)
             if (m_nextChar.isLetter())
                 qCWarning(LOG_KBIBTEX_IO) << "Error in parsing entry" << id << "(near line" << m_lineNo << ":" << m_prevLine << endl << m_currentLine << "): Comma symbol (,) expected but got character" << m_nextChar << "(token" << tokenidToString(token) << ")";
             else if (m_nextChar.isPrint())
-                qCWarning(LOG_KBIBTEX_IO) << "Error in parsing entry" << id << "(near line" << m_lineNo << ":" << m_prevLine << endl << m_currentLine << "): Comma symbol (,) expected but got character" << m_nextChar << "(" << QString("0x%1").arg(m_nextChar.unicode(), 4, 16, QLatin1Char('0')) << ", token" << tokenidToString(token) << ")";
+                qCWarning(LOG_KBIBTEX_IO) << "Error in parsing entry" << id << "(near line" << m_lineNo << ":" << m_prevLine << endl << m_currentLine << "): Comma symbol (,) expected but got character" << m_nextChar << "(" << QString(QStringLiteral("0x%1")).arg(m_nextChar.unicode(), 4, 16, QLatin1Char('0')) << ", token" << tokenidToString(token) << ")";
             else
-                qCWarning(LOG_KBIBTEX_IO) << "Error in parsing entry" << id << "(near line" << m_lineNo << ":" << m_prevLine << endl << m_currentLine << "): Comma symbol (,) expected but got character" << QString("0x%1").arg(m_nextChar.unicode(), 4, 16, QLatin1Char('0')) << "(token" << tokenidToString(token) << ")";
+                qCWarning(LOG_KBIBTEX_IO) << "Error in parsing entry" << id << "(near line" << m_lineNo << ":" << m_prevLine << endl << m_currentLine << "): Comma symbol (,) expected but got character" << QString(QStringLiteral("0x%1")).arg(m_nextChar.unicode(), 4, 16, QLatin1Char('0')) << "(token" << tokenidToString(token) << ")";
             delete entry;
             return NULL;
         }
@@ -1122,8 +1122,8 @@ bool FileImporterBibTeX::evaluateParameterComments(QTextStream *textStream, cons
     /** check if this file requests a special encoding */
     if (line.startsWith(QStringLiteral("@comment{x-kbibtex-encoding=")) && line.endsWith(QLatin1Char('}'))) {
         QString encoding = line.mid(28, line.length() - 29);
-        textStream->setCodec(encoding == "latex" ? defaultCodecName : encoding.toLatin1().data());
-        file->setProperty(File::Encoding, encoding == "latex" ? encoding : textStream->codec()->name());
+        textStream->setCodec(encoding == QStringLiteral("latex") ? defaultCodecName : encoding.toLatin1().data());
+        file->setProperty(File::Encoding, encoding == QStringLiteral("latex") ? encoding : textStream->codec()->name());
         return true;
     } else if (line.startsWith(QStringLiteral("@comment{x-kbibtex-personnameformatting=")) && line.endsWith(QLatin1Char('}'))) {
         // TODO usage of x-kbibtex-personnameformatting is deprecated,
@@ -1147,15 +1147,15 @@ bool FileImporterBibTeX::evaluateParameterComments(QTextStream *textStream, cons
 QString FileImporterBibTeX::tokenidToString(Token token)
 {
     switch (token) {
-    case tAt: return QString("At");
-    case tBracketClose: return QString("BracketClose");
-    case tBracketOpen: return QString("BracketOpen");
-    case tAlphaNumText: return QString("AlphaNumText");
-    case tAssign: return QString("Assign");
-    case tComma: return QString("Comma");
-    case tDoublecross: return QString("Doublecross");
-    case tEOF: return QString("EOF");
-    case tUnknown: return QString("Unknown");
-    default: return QString("<Unknown>");
+    case tAt: return QString(QStringLiteral("At"));
+    case tBracketClose: return QString(QStringLiteral("BracketClose"));
+    case tBracketOpen: return QString(QStringLiteral("BracketOpen"));
+    case tAlphaNumText: return QString(QStringLiteral("AlphaNumText"));
+    case tAssign: return QString(QStringLiteral("Assign"));
+    case tComma: return QString(QStringLiteral("Comma"));
+    case tDoublecross: return QString(QStringLiteral("Doublecross"));
+    case tEOF: return QString(QStringLiteral("EOF"));
+    case tUnknown: return QString(QStringLiteral("Unknown"));
+    default: return QString(QStringLiteral("<Unknown>"));
     }
 }

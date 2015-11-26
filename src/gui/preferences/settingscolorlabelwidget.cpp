@@ -344,13 +344,13 @@ public:
         view->setItemDelegate(delegate);
 
         /// Button to add a new randomized color
-        QPushButton *buttonAdd = new QPushButton(QIcon::fromTheme("list-add"), i18n("Add..."), p);
+        QPushButton *buttonAdd = new QPushButton(QIcon::fromTheme(QStringLiteral("list-add")), i18n("Add..."), p);
         layout->addWidget(buttonAdd, 0, 1, 1, 1);
         connect(buttonAdd, SIGNAL(clicked()), p, SLOT(addColor()));
 
         /// Remove selected color-label pair; button is disabled
         /// if no row is selected in tree view
-        buttonRemove = new QPushButton(QIcon::fromTheme("list-remove"), i18n("Remove"), p);
+        buttonRemove = new QPushButton(QIcon::fromTheme(QStringLiteral("list-remove")), i18n("Remove"), p);
         layout->addWidget(buttonRemove, 1, 1, 1, 1);
         buttonRemove->setEnabled(false);
         connect(buttonRemove, SIGNAL(clicked()), p, SLOT(removeColor()));
@@ -382,7 +382,7 @@ QString SettingsColorLabelWidget::label() const
 
 QIcon SettingsColorLabelWidget::icon() const
 {
-    return QIcon::fromTheme("preferences-desktop-color");
+    return QIcon::fromTheme(QStringLiteral("preferences-desktop-color"));
 }
 
 void SettingsColorLabelWidget::loadState()
@@ -446,7 +446,7 @@ public:
         : /* UNUSED p(parent),*/ fileView(fv)
     {
         sm = new QSignalMapper(parent);
-        menu = new KActionMenu(QIcon::fromTheme("preferences-desktop-color"), i18n("Color"), fileView);
+        menu = new KActionMenu(QIcon::fromTheme(QStringLiteral("preferences-desktop-color")), i18n("Color"), fileView);
         /// Let menu be a sub menu to the tree view's context menu
         fileView->addAction(menu);
     }

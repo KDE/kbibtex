@@ -104,7 +104,7 @@ public:
     int numSteps, curStep;
 
     OnlineSearchArXivPrivate(OnlineSearchArXiv *parent)
-            : p(parent), form(NULL), arXivQueryBaseUrl("http://export.arxiv.org/api/query?"),
+            : p(parent), form(NULL), arXivQueryBaseUrl(QStringLiteral("http://export.arxiv.org/api/query?")),
           numSteps(0), curStep(0)
     {
         const QString xsltFilename = QStringLiteral("kbibtex/arxiv2bibtex.xsl");
@@ -123,7 +123,7 @@ public:
 
         foreach (const QString &queryFragment, p->splitRespectingQuotationMarks(form->lineEditFreeText->text()))
             queryFragments.append(p->encodeURL(queryFragment));
-        return QUrl(QString("%1search_query=all:\"%3\"&start=0&max_results=%2").arg(arXivQueryBaseUrl).arg(form->numResultsField->value()).arg(queryFragments.join("\"+AND+all:\""))); ///< join search terms with an AND operation
+        return QUrl(QString(QStringLiteral("%1search_query=all:\"%3\"&start=0&max_results=%2")).arg(arXivQueryBaseUrl).arg(form->numResultsField->value()).arg(queryFragments.join(QStringLiteral("\"+AND+all:\"")))); ///< join search terms with an AND operation
     }
 
     QUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) {
@@ -132,7 +132,7 @@ public:
         for (QMap<QString, QString>::ConstIterator it = query.constBegin(); it != query.constEnd(); ++it)
             foreach (const QString &queryFragment, p->splitRespectingQuotationMarks(it.value()))
                 queryFragments.append(p->encodeURL(queryFragment));
-        return QUrl(QString("%1search_query=all:\"%3\"&start=0&max_results=%2").arg(arXivQueryBaseUrl).arg(numResults).arg(queryFragments.join("\"+AND+all:\""))); ///< join search terms with an AND operation
+        return QUrl(QString(QStringLiteral("%1search_query=all:\"%3\"&start=0&max_results=%2")).arg(arXivQueryBaseUrl).arg(numResults).arg(queryFragments.join(QStringLiteral("\"+AND+all:\"")))); ///< join search terms with an AND operation
     }
 
     void interpreteJournal(Entry &entry) {
@@ -321,7 +321,7 @@ public:
                     entry.insert(Entry::ftPages, v);
                 } else {
                     Value v;
-                    v.append(QSharedPointer<PlainText>(new PlainText(QString("%1--%2").arg(text).arg(endPage))));
+                    v.append(QSharedPointer<PlainText>(new PlainText(QString(QStringLiteral("%1--%2")).arg(text).arg(endPage))));
                     entry.insert(Entry::ftPages, v);
                 }
             }
@@ -365,7 +365,7 @@ public:
                     entry.insert(Entry::ftPages, v);
                 } else {
                     Value v;
-                    v.append(QSharedPointer<PlainText>(new PlainText(QString("%1%3%2").arg(text).arg(endPage).arg(QChar(0x2013)))));
+                    v.append(QSharedPointer<PlainText>(new PlainText(QString(QStringLiteral("%1%3%2")).arg(text).arg(endPage).arg(QChar(0x2013)))));
                     entry.insert(Entry::ftPages, v);
                 }
             }
@@ -413,7 +413,7 @@ public:
                         entry.insert(Entry::ftPages, v);
                     } else {
                         Value v;
-                        v.append(QSharedPointer<PlainText>(new PlainText(QString("%1%3%2").arg(text).arg(endPage).arg(QChar(0x2013)))));
+                        v.append(QSharedPointer<PlainText>(new PlainText(QString(QStringLiteral("%1%3%2")).arg(text).arg(endPage).arg(QChar(0x2013)))));
                         entry.insert(Entry::ftPages, v);
                     }
                 }
@@ -533,7 +533,7 @@ public:
                     entry.insert(Entry::ftPages, v);
                 } else {
                     Value v;
-                    v.append(QSharedPointer<PlainText>(new PlainText(QString("%1%3%2").arg(text).arg(endPage).arg(QChar(0x2013)))));
+                    v.append(QSharedPointer<PlainText>(new PlainText(QString(QStringLiteral("%1%3%2")).arg(text).arg(endPage).arg(QChar(0x2013)))));
                     entry.insert(Entry::ftPages, v);
                 }
             }
@@ -629,7 +629,7 @@ OnlineSearchQueryFormAbstract *OnlineSearchArXiv::customWidget(QWidget *parent)
 
 QUrl OnlineSearchArXiv::homepage() const
 {
-    return QUrl("http://arxiv.org/");
+    return QUrl(QStringLiteral("http://arxiv.org/"));
 }
 
 void OnlineSearchArXiv::cancel()
@@ -646,7 +646,7 @@ void OnlineSearchArXiv::downloadDone()
     if (handleErrors(reply)) {
         /// ensure proper treatment of UTF-8 characters
         QString result = QString::fromUtf8(reply->readAll().data());
-        result = result.remove("xmlns=\"http://www.w3.org/2005/Atom\""); // FIXME fix arxiv2bibtex.xsl to handle namespace
+        result = result.remove(QStringLiteral("xmlns=\"http://www.w3.org/2005/Atom\"")); // FIXME fix arxiv2bibtex.xsl to handle namespace
 
         /// use XSL transformation to get BibTeX document from XML result
         QString bibTeXcode = d->xslt->transform(result).remove(QStringLiteral("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));

@@ -121,15 +121,15 @@ bool FileExporterRTF::writeLatexFile(const QString &filename)
         ts << "\\documentclass{article}" << endl;
         ts << "\\usepackage[T1]{fontenc}" << endl;
         ts << "\\usepackage[utf8]{inputenc}" << endl;
-        if (kpsewhich("babel.sty"))
+        if (kpsewhich(QStringLiteral("babel.sty")))
             ts << "\\usepackage[" << m_babelLanguage << "]{babel}" << endl;
-        if (kpsewhich("url.sty"))
+        if (kpsewhich(QStringLiteral("url.sty")))
             ts << "\\usepackage{url}" << endl;
-        if (m_bibliographyStyle.startsWith(QStringLiteral("apacite")) && kpsewhich("apacite.sty"))
+        if (m_bibliographyStyle.startsWith(QStringLiteral("apacite")) && kpsewhich(QStringLiteral("apacite.sty")))
             ts << "\\usepackage[bibnewpage]{apacite}" << endl;
-        if (m_bibliographyStyle == QStringLiteral("dcu") && kpsewhich("harvard.sty") && kpsewhich("html.sty"))
+        if (m_bibliographyStyle == QStringLiteral("dcu") && kpsewhich(QStringLiteral("harvard.sty")) && kpsewhich(QStringLiteral("html.sty")))
             ts << "\\usepackage{html}" << endl << "\\usepackage[dcucite]{harvard}" << endl << "\\renewcommand{\\harvardurl}{URL: \\url}" << endl;
-        if (kpsewhich("geometry.sty"))
+        if (kpsewhich(QStringLiteral("geometry.sty")))
             ts << "\\usepackage[paper=" << m_paperSize << (m_paperSize.length() <= 2 ? "paper" : "") << "]{geometry}" << endl;
         ts << "\\bibliographystyle{" << m_bibliographyStyle << "}" << endl;
         ts << "\\begin{document}" << endl;

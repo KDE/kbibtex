@@ -137,7 +137,7 @@ OnlineSearchQueryFormAbstract *OnlineSearchMathSciNet::customWidget(QWidget *)
 
 QUrl OnlineSearchMathSciNet::homepage() const
 {
-    return QUrl("http://www.ams.org/mathscinet/help/about.html");
+    return QUrl(QStringLiteral("http://www.ams.org/mathscinet/help/about.html"));
 }
 
 void OnlineSearchMathSciNet::cancel()

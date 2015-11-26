@@ -99,13 +99,13 @@ public:
         }
 
         buttonSearchPDFfiles = new QPushButton(p);
-        buttonSearchPDFfiles->setIcon(QIcon::fromTheme("application-pdf"));
+        buttonSearchPDFfiles->setIcon(QIcon::fromTheme(QStringLiteral("application-pdf")));
         buttonSearchPDFfiles->setToolTip(i18n("Include PDF files in full-text search"));
         buttonSearchPDFfiles->setCheckable(true);
         layout->addWidget(buttonSearchPDFfiles, 0);
 
         buttonClearAll = new QPushButton(p);
-        buttonClearAll->setIcon(QIcon::fromTheme("edit-clear-locationbar-rtl"));
+        buttonClearAll->setIcon(QIcon::fromTheme(QStringLiteral("edit-clear-locationbar-rtl")));
         buttonClearAll->setToolTip(i18n("Reset filter criteria"));
         layout->addWidget(buttonClearAll, 0);
 
@@ -177,7 +177,7 @@ public:
         /// Avoid triggering loops of activation
         comboBoxFilterText->lineEdit()->blockSignals(true);
         /// Set filter text widget's content
-        comboBoxFilterText->lineEdit()->setText(fq.terms.join(" "));
+        comboBoxFilterText->lineEdit()->setText(fq.terms.join(QStringLiteral(" ")));
         /// Reset activation block
         comboBoxFilterText->lineEdit()->blockSignals(false);
     }
@@ -200,7 +200,7 @@ public:
                 it = completionListDate.erase(it);
             else
                 ++it;
-        completionListDate << (QDateTime::currentDateTime().toString("yyyyMMddhhmm") + text);
+        completionListDate << (QDateTime::currentDateTime().toString(QStringLiteral("yyyyMMddhhmm")) + text);
 
         /// after sorting, discard all but the maxNumStoredFilterTexts most
         /// recent user-entered filter texts

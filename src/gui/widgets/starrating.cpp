@@ -63,7 +63,7 @@ public:
 
         layout->addStretch(1);
 
-        clearButton = new QPushButton(QIcon::fromTheme("edit-clear-locationbar-rtl"), QString(), p);
+        clearButton = new QPushButton(QIcon::fromTheme(QStringLiteral("edit-clear-locationbar-rtl")), QString(), p);
         layout->addWidget(clearButton, 0, Qt::AlignRight | Qt::AlignVCenter);
         connect(clearButton, SIGNAL(clicked()), p, SLOT(clear()));
     }

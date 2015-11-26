@@ -69,38 +69,38 @@ void OnlineSearchJStor::startSearch(const QMap<QString, QString> &query, int num
     /// after fetching the start page
     d->queryUrl = QUrl(d->jstorBaseUrl);
     QUrlQuery q(d->queryUrl);
-    d->queryUrl.setPath("/action/doAdvancedSearch");
-    q.addQueryItem("Search", "Search");
-    q.addQueryItem("wc", "on"); /// include external references, too
-    q.addQueryItem("la", ""); /// no specific language
-    q.addQueryItem("jo", ""); /// no specific journal
-    q.addQueryItem("Search", "Search");
-    q.addQueryItem("hp", QString::number(numResults)); /// hits per page
+    d->queryUrl.setPath(QStringLiteral("/action/doAdvancedSearch"));
+    q.addQueryItem(QStringLiteral("Search"), QStringLiteral("Search"));
+    q.addQueryItem(QStringLiteral("wc"), QStringLiteral("on")); /// include external references, too
+    q.addQueryItem(QStringLiteral("la"), QStringLiteral("")); /// no specific language
+    q.addQueryItem(QStringLiteral("jo"), QStringLiteral("")); /// no specific journal
+    q.addQueryItem(QStringLiteral("Search"), QStringLiteral("Search"));
+    q.addQueryItem(QStringLiteral("hp"), QString::number(numResults)); /// hits per page
     int queryNumber = 0;
     QStringList elements = splitRespectingQuotationMarks(query[queryKeyTitle]);
     foreach (const QString &element, elements) {
-        if (queryNumber > 0) q.addQueryItem(QString("c%1").arg(queryNumber), "AND"); ///< join search terms with an AND operation
-        q.addQueryItem(QString("f%1").arg(queryNumber), "ti");
-        q.addQueryItem(QString("q%1").arg(queryNumber), element);
+        if (queryNumber > 0) q.addQueryItem(QString(QStringLiteral("c%1")).arg(queryNumber), QStringLiteral("AND")); ///< join search terms with an AND operation
+        q.addQueryItem(QString(QStringLiteral("f%1")).arg(queryNumber), QStringLiteral("ti"));
+        q.addQueryItem(QString(QStringLiteral("q%1")).arg(queryNumber), element);
         ++queryNumber;
     }
     elements = splitRespectingQuotationMarks(query[queryKeyAuthor]);
     foreach (const QString &element, elements) {
-        if (queryNumber > 0) q.addQueryItem(QString("c%1").arg(queryNumber), "AND"); ///< join search terms with an AND operation
-        q.addQueryItem(QString("f%1").arg(queryNumber), "au");
-        q.addQueryItem(QString("q%1").arg(queryNumber), element);
+        if (queryNumber > 0) q.addQueryItem(QString(QStringLiteral("c%1")).arg(queryNumber), QStringLiteral("AND")); ///< join search terms with an AND operation
+        q.addQueryItem(QString(QStringLiteral("f%1")).arg(queryNumber), QStringLiteral("au"));
+        q.addQueryItem(QString(QStringLiteral("q%1")).arg(queryNumber), element);
         ++queryNumber;
     }
     elements = splitRespectingQuotationMarks(query[queryKeyFreeText]);
     foreach (const QString &element, elements) {
-        if (queryNumber > 0) q.addQueryItem(QString("c%1").arg(queryNumber), "AND"); ///< join search terms with an AND operation
-        q.addQueryItem(QString("f%1").arg(queryNumber), "all");
-        q.addQueryItem(QString("q%1").arg(queryNumber), element);
+        if (queryNumber > 0) q.addQueryItem(QString(QStringLiteral("c%1")).arg(queryNumber), QStringLiteral("AND")); ///< join search terms with an AND operation
+        q.addQueryItem(QString(QStringLiteral("f%1")).arg(queryNumber), QStringLiteral("all"));
+        q.addQueryItem(QString(QStringLiteral("q%1")).arg(queryNumber), element);
         ++queryNumber;
     }
     if (!query[queryKeyYear].isEmpty()) {
-        q.addQueryItem("sd", query[queryKeyYear]);
-        q.addQueryItem("ed", query[queryKeyYear]);
+        q.addQueryItem(QStringLiteral("sd"), query[queryKeyYear]);
+        q.addQueryItem(QStringLiteral("ed"), query[queryKeyYear]);
     }
     d->queryUrl.setQuery(q);
 
@@ -134,7 +134,7 @@ OnlineSearchQueryFormAbstract *OnlineSearchJStor::customWidget(QWidget *)
 
 QUrl OnlineSearchJStor::homepage() const
 {
-    return QUrl("http://www.jstor.org/");
+    return QUrl(QStringLiteral("http://www.jstor.org/"));
 }
 
 void OnlineSearchJStor::cancel()
@@ -192,13 +192,13 @@ void OnlineSearchJStor::doneFetchingResultPage()
             /// Build search URL, to be used in the second step
             /// after fetching the start page
             QUrl bibTeXUrl = QUrl(d->jstorBaseUrl);
-            bibTeXUrl.setPath("/action/downloadCitation");
+            bibTeXUrl.setPath(QStringLiteral("/action/downloadCitation"));
             QUrlQuery query(bibTeXUrl);
-            query.addQueryItem("userAction", "export");
-            query.addQueryItem("format", "bibtex"); /// request BibTeX format
-            query.addQueryItem("include", "abs"); /// include abstracts
+            query.addQueryItem(QStringLiteral("userAction"), QStringLiteral("export"));
+            query.addQueryItem(QStringLiteral("format"), QStringLiteral("bibtex")); /// request BibTeX format
+            query.addQueryItem(QStringLiteral("include"), QStringLiteral("abs")); /// include abstracts
             foreach (const QString &doi, uniqueDOIs) {
-                query.addQueryItem("doi", doi);
+                query.addQueryItem(QStringLiteral("doi"), doi);
             }
             bibTeXUrl.setQuery(query);
 
@@ -261,7 +261,7 @@ void OnlineSearchJStor::sanitizeEntry(QSharedPointer<Entry> entry)
         entry->insert(QStringLiteral("jstor_id"), v);
     }
 
-    const QString formattedDateKey = "jstor_formatteddate";
+    const QString formattedDateKey = QStringLiteral("jstor_formatteddate");
     const QString formattedDate = PlainTextValue::text(entry->value(formattedDateKey));
 
     /// first, try to guess month by inspecting the beginning
@@ -277,7 +277,7 @@ void OnlineSearchJStor::sanitizeEntry(QSharedPointer<Entry> entry)
         entry->insert(Entry::ftMonth, v);
     }
     /// guessing failed, therefore extract first part if it exists
-    else if ((i = formattedDate.indexOf(",")) >= 0) {
+    else if ((i = formattedDate.indexOf(QStringLiteral(","))) >= 0) {
         /// text may be a season ("Winter")
         Value v;
         v.append(QSharedPointer<PlainText>(new PlainText(formattedDate.left(i))));

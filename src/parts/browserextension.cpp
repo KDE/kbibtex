@@ -29,7 +29,7 @@ BrowserExtension::BrowserExtension(KParts::ReadOnlyPart *part)
     : KParts::BrowserExtension(part), d(new Private)
 {
     d->part = part;
-    const QString iconPath = KIconLoader::global()->iconPath("text-x-bibtex", KIconLoader::SizeSmall);
+    const QString iconPath = KIconLoader::global()->iconPath(QStringLiteral("text-x-bibtex"), KIconLoader::SizeSmall);
     emit setIconUrl(QUrl::fromLocalFile(iconPath));
 }
 

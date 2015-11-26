@@ -193,7 +193,7 @@ OnlineSearchQueryFormAbstract *OnlineSearchIEEEXplore::customWidget(QWidget *)
 
 QUrl OnlineSearchIEEEXplore::homepage() const
 {
-    return QUrl("http://ieeexplore.ieee.org/");
+    return QUrl(QStringLiteral("http://ieeexplore.ieee.org/"));
 }
 
 void OnlineSearchIEEEXplore::cancel()

@@ -121,7 +121,7 @@ public:
         if (bookTitle.isEmpty())
             bookTitle = PlainTextValue::text(entry[Entry::ftJournal]);
         lineEditBookTitle->setText(bookTitle);
-        lineEditAuthorEditor->setText(authorLastNames(entry).join(" "));
+        lineEditAuthorEditor->setText(authorLastNames(entry).join(QStringLiteral(" ")));
     }
 
     void saveState() {
@@ -161,7 +161,7 @@ public:
     QUrl buildQueryUrl() {
         if (form == NULL) return QUrl();
 
-        QUrl queryUrl = QUrl(QString("http://api.springer.com/metadata/pam/?api_key=").append(springerMetadataKey));
+        QUrl queryUrl = QUrl(QString(QStringLiteral("http://api.springer.com/metadata/pam/?api_key=")).append(springerMetadataKey));
 
         QString queryString = form->lineEditFreeText->text();
 
@@ -193,7 +193,7 @@ public:
     }
 
     QUrl buildQueryUrl(const QMap<QString, QString> &query) {
-        QUrl queryUrl = QUrl(QString("http://api.springer.com/metadata/pam/?api_key=").append(springerMetadataKey));
+        QUrl queryUrl = QUrl(QString(QStringLiteral("http://api.springer.com/metadata/pam/?api_key=")).append(springerMetadataKey));
 
         QString queryString = query[queryKeyFreeText];
 
@@ -301,7 +301,7 @@ OnlineSearchQueryFormAbstract *OnlineSearchSpringerLink::customWidget(QWidget *p
 
 QUrl OnlineSearchSpringerLink::homepage() const
 {
-    return QUrl("http://www.springerlink.com/");
+    return QUrl(QStringLiteral("http://www.springerlink.com/"));
 }
 
 void OnlineSearchSpringerLink::cancel()

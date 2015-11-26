@@ -373,12 +373,12 @@ public:
     }
 
     void readConfig(OpenFileInfo::StatusFlag statusFlag, const QString &configGroupName, int maxNumFiles) {
-        KSharedConfigPtr config = KSharedConfig::openConfig("kbibtexrc");
+        KSharedConfigPtr config = KSharedConfig::openConfig(QStringLiteral("kbibtexrc"));
 
         bool isFirst = true;
         KConfigGroup cg(config, configGroupName);
         for (int i = 0; i < maxNumFiles; ++i) {
-            QUrl fileUrl = QUrl(cg.readEntry(QString("%1-%2").arg(OpenFileInfo::OpenFileInfoPrivate::keyURL).arg(i), ""));
+            QUrl fileUrl = QUrl(cg.readEntry(QString(QStringLiteral("%1-%2")).arg(OpenFileInfo::OpenFileInfoPrivate::keyURL).arg(i), ""));
             if (!fileUrl.isValid()) break;
             if (fileUrl.scheme().isEmpty())
                 fileUrl.setScheme(QStringLiteral("file"));
@@ -395,7 +395,7 @@ public:
             }
             ofi->addFlags(statusFlag);
             ofi->addFlags(OpenFileInfo::HasName);
-            ofi->setLastAccess(QDateTime::fromString(cg.readEntry(QString("%1-%2").arg(OpenFileInfo::OpenFileInfoPrivate::keyLastAccess).arg(i), ""), OpenFileInfo::OpenFileInfoPrivate::dateTimeFormat));
+            ofi->setLastAccess(QDateTime::fromString(cg.readEntry(QString(QStringLiteral("%1-%2")).arg(OpenFileInfo::OpenFileInfoPrivate::keyLastAccess).arg(i), ""), OpenFileInfo::OpenFileInfoPrivate::dateTimeFormat));
             if (isFirst) {
                 isFirst = false;
                 if (statusFlag == OpenFileInfo::Open)
@@ -405,7 +405,7 @@ public:
     }
 
     void writeConfig(OpenFileInfo::StatusFlag statusFlag, const QString &configGroupName, int maxNumFiles) {
-        KSharedConfigPtr config = KSharedConfig::openConfig("kbibtexrc");
+        KSharedConfigPtr config = KSharedConfig::openConfig(QStringLiteral("kbibtexrc"));
         KConfigGroup cg(config, configGroupName);
         OpenFileInfoManager::OpenFileInfoList list = p->filteredItems(statusFlag);
 
@@ -413,12 +413,12 @@ public:
         for (OpenFileInfoManager::OpenFileInfoList::ConstIterator it = list.constBegin(); i < maxNumFiles && it != list.constEnd(); ++it, ++i) {
             OpenFileInfo *ofi = *it;
 
-            cg.writeEntry(QString("%1-%2").arg(OpenFileInfo::OpenFileInfoPrivate::keyURL).arg(i), ofi->url().url(QUrl::PreferLocalFile));
-            cg.writeEntry(QString("%1-%2").arg(OpenFileInfo::OpenFileInfoPrivate::keyLastAccess).arg(i), ofi->lastAccess().toString(OpenFileInfo::OpenFileInfoPrivate::dateTimeFormat));
+            cg.writeEntry(QString(QStringLiteral("%1-%2")).arg(OpenFileInfo::OpenFileInfoPrivate::keyURL).arg(i), ofi->url().url(QUrl::PreferLocalFile));
+            cg.writeEntry(QString(QStringLiteral("%1-%2")).arg(OpenFileInfo::OpenFileInfoPrivate::keyLastAccess).arg(i), ofi->lastAccess().toString(OpenFileInfo::OpenFileInfoPrivate::dateTimeFormat));
         }
         for (; i < maxNumFiles; ++i) {
-            cg.deleteEntry(QString("%1-%2").arg(OpenFileInfo::OpenFileInfoPrivate::keyURL).arg(i));
-            cg.deleteEntry(QString("%1-%2").arg(OpenFileInfo::OpenFileInfoPrivate::keyLastAccess).arg(i));
+            cg.deleteEntry(QString(QStringLiteral("%1-%2")).arg(OpenFileInfo::OpenFileInfoPrivate::keyURL).arg(i));
+            cg.deleteEntry(QString(QStringLiteral("%1-%2")).arg(OpenFileInfo::OpenFileInfoPrivate::keyLastAccess).arg(i));
         }
         config->sync();
     }

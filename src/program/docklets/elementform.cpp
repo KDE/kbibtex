@@ -86,16 +86,16 @@ public:
         layoutUnmodifiedChanges->addSpacing(32);
         QLabel *label = new QLabel(widgetUnmodifiedChanges);
         label->setAlignment(Qt::AlignCenter | Qt::AlignVCenter);
-        label->setPixmap(KIconLoader::global()->loadIcon("dialog-information", KIconLoader::Dialog, KIconLoader::SizeSmall));
+        label->setPixmap(KIconLoader::global()->loadIcon(QStringLiteral("dialog-information"), KIconLoader::Dialog, KIconLoader::SizeSmall));
         layoutUnmodifiedChanges->addWidget(label);
         label = new QLabel(i18n("There are unsaved changes. Please press either 'Apply' or 'Reset'."), widgetUnmodifiedChanges);
         label->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
         layoutUnmodifiedChanges->addWidget(label);
 
-        buttonApply = new QPushButton(QIcon::fromTheme("dialog-ok-apply"), i18n("Apply"), p);
+        buttonApply = new QPushButton(QIcon::fromTheme(QStringLiteral("dialog-ok-apply")), i18n("Apply"), p);
         layout->addWidget(buttonApply, 1, 2, 1, 1);
 
-        buttonReset = new QPushButton(QIcon::fromTheme("edit-undo"), i18n("Reset"), p);
+        buttonReset = new QPushButton(QIcon::fromTheme(QStringLiteral("edit-undo")), i18n("Reset"), p);
         layout->addWidget(buttonReset, 1, 3, 1, 1);
 
         connect(buttonApply, SIGNAL(clicked()), p, SIGNAL(elementModified()));
@@ -180,7 +180,7 @@ void ElementForm::setElement(QSharedPointer<Element> element, const File *file)
     /// changes rather than to discard them -> apply changes in previous element.
     /// FIXME If the previous element got delete from the file and therefore a different
     /// element gets set, changes will be still applied to the element to-be-deleted.
-    if (d->gotModified && element != d->element && KMessageBox::questionYesNo(this, i18n("The current element got modified.\nApply or discard changes?"), i18n("Element modified"), KGuiItem(i18n("Apply changes"), QIcon::fromTheme("dialog-ok-apply")), KGuiItem(i18n("Discard changes"), QIcon::fromTheme("edit-undo"))) == KMessageBox::Yes) {
+    if (d->gotModified && element != d->element && KMessageBox::questionYesNo(this, i18n("The current element got modified.\nApply or discard changes?"), i18n("Element modified"), KGuiItem(i18n("Apply changes"), QIcon::fromTheme(QStringLiteral("dialog-ok-apply"))), KGuiItem(i18n("Discard changes"), QIcon::fromTheme(QStringLiteral("edit-undo")))) == KMessageBox::Yes) {
         d->apply();
     }
     if (element != d->element) {

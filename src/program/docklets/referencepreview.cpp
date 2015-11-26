@@ -131,11 +131,11 @@ public:
         htmlView->setDocument(htmlDocument);
         layout->addWidget(htmlView);
 
-        buttonOpen = new QPushButton(QIcon::fromTheme("document-open"), i18n("Open"), p);
+        buttonOpen = new QPushButton(QIcon::fromTheme(QStringLiteral("document-open")), i18n("Open"), p);
         buttonOpen->setToolTip(i18n("Open reference in web browser."));
         gridLayout->addWidget(buttonOpen, 2, 1, 1, 1);
 
-        buttonSaveAsHTML = new QPushButton(QIcon::fromTheme("document-save"), i18n("Save as HTML"), p);
+        buttonSaveAsHTML = new QPushButton(QIcon::fromTheme(QStringLiteral("document-save")), i18n("Save as HTML"), p);
         buttonSaveAsHTML->setToolTip(i18n("Save reference as HTML fragment."));
         gridLayout->addWidget(buttonSaveAsHTML, 2, 2, 1, 1);
     }
@@ -159,7 +159,7 @@ public:
         if (tempFile.open()) {
             QTextStream ts(&tempFile);
             ts.setCodec("utf-8");
-            ts << QString(htmlText).replace(QRegExp("<a[^>]+href=\"kbibtex:[^>]+>([^<]+)</a>"), "\\1");
+            ts << QString(htmlText).replace(QRegExp("<a[^>]+href=\"kbibtex:[^>]+>([^<]+)</a>"), QStringLiteral("\\1"));
             tempFile.close();
             return true;
         }
@@ -312,7 +312,7 @@ void ReferencePreview::renderHTML()
             /// something went wrong, no output ...
             text = d->notAvailableMessage.arg(i18n("No output generated"));
             buttonsEnabled = false;
-            qCDebug(LOG_KBIBTEX_PROGRAM) << errorLog.join("\n");
+            qCDebug(LOG_KBIBTEX_PROGRAM) << errorLog.join(QStringLiteral("\n"));
         } else {
             /// beautify text
             text.replace(QStringLiteral("``"), QStringLiteral("&ldquo;"));
@@ -400,7 +400,7 @@ void ReferencePreview::linkClicked(const QUrl &url)
     if (text.startsWith(QStringLiteral("kbibtex:filter:"))) {
         text = text.mid(15);
         if (d->fileView != NULL) {
-            int p = text.indexOf("=");
+            int p = text.indexOf(QStringLiteral("="));
             SortFilterFileModel::FilterQuery fq;
             fq.terms << text.mid(p + 1);
             fq.combination = SortFilterFileModel::EveryTerm;

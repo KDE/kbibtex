@@ -111,7 +111,7 @@ QList<QWidget *> PDFItemDelegate::createItemWidgets(const QModelIndex &index) co
     Q_ASSERT_X(list.count() == posLabelPreview + 1, "QList<QWidget *> PDFItemDelegate::createItemWidgets() const", "list.count() != posLabelPreview + 1");
 
     /// add a push button to view the PDF file
-    QPushButton *pushButton = new QPushButton(QIcon::fromTheme("application-pdf"), i18n("View"));
+    QPushButton *pushButton = new QPushButton(QIcon::fromTheme(QStringLiteral("application-pdf")), i18n("View"));
     list << pushButton;
     connect(pushButton, SIGNAL(clicked()), this, SLOT(slotViewPDF()));
     Q_ASSERT_X(list.count() == posViewButton + 1, "QList<QWidget *> PDFItemDelegate::createItemWidgets() const", "list.count() != posViewButton + 1");
@@ -445,7 +445,7 @@ void FindPDFUI::apply(Entry &entry, const File &bibtexFile)
                     entry.insert(Entry::ftUrl, value);
                 else
                     for (int i = 2; i < 256; ++i) {
-                        const QString keyName = QString("%1%2").arg(Entry::ftUrl).arg(i);
+                        const QString keyName = QString(QStringLiteral("%1%2")).arg(Entry::ftUrl).arg(i);
                         if (!entry.contains(keyName)) {
                             entry.insert(keyName, value);
                             break;
@@ -472,7 +472,7 @@ void FindPDFUI::apply(Entry &entry, const File &bibtexFile)
                         entry.insert(Entry::ftLocalFile, value);
                     else
                         for (int i = 2; i < 256; ++i) {
-                            const QString keyName = QString("%1%2").arg(Entry::ftLocalFile).arg(i);
+                            const QString keyName = QString(QStringLiteral("%1%2")).arg(Entry::ftLocalFile).arg(i);
                             if (!entry.contains(keyName)) {
                                 entry.insert(keyName, value);
                                 break;

@@ -41,7 +41,7 @@ FileExporterPDF::FileExporterPDF(FileEmbedding fileEmbedding)
 
     /// If there is not embedfile.sty file, disable embedding
     /// irrespective of user's wishes
-    if (!kpsewhich("embedfile.sty")) m_fileEmbedding = NoFileEmbedding;
+    if (!kpsewhich(QStringLiteral("embedfile.sty"))) m_fileEmbedding = NoFileEmbedding;
 
     reloadConfig();
 }
@@ -73,7 +73,7 @@ bool FileExporterPDF::save(QIODevice *iodevice, const File *bibtexfile, QStringL
     bool result = false;
     m_embeddedFileList.clear();
     if (m_fileEmbedding & EmbedBibTeXFile)
-        m_embeddedFileList.append(QString("%1|%2|%3").arg("BibTeX source").arg(m_fileStem + KBibTeX::extensionBibTeX).arg(m_fileBasename + KBibTeX::extensionBibTeX));
+        m_embeddedFileList.append(QString(QStringLiteral("%1|%2|%3")).arg(QStringLiteral("BibTeX source")).arg(m_fileStem + KBibTeX::extensionBibTeX).arg(m_fileBasename + KBibTeX::extensionBibTeX));
     if (m_fileEmbedding & EmbedReferences)
         fillEmbeddedFileList(bibtexfile);
 
@@ -90,7 +90,7 @@ bool FileExporterPDF::save(QIODevice *iodevice, const File *bibtexfile, QStringL
         result = generatePDF(iodevice, errorLog);
 
     if (errorLog != NULL)
-        qCDebug(LOG_KBIBTEX_IO) << "errorLog" << errorLog->join(";");
+        qCDebug(LOG_KBIBTEX_IO) << "errorLog" << errorLog->join(QStringLiteral(";"));
 
     iodevice->close();
     return result;
@@ -145,19 +145,19 @@ bool FileExporterPDF::writeLatexFile(const QString &filename)
         ts << "\\documentclass{article}" << endl;
         ts << "\\usepackage[T1]{fontenc}" << endl;
         ts << "\\usepackage[utf8]{inputenc}" << endl;
-        if (kpsewhich("babel.sty"))
+        if (kpsewhich(QStringLiteral("babel.sty")))
             ts << "\\usepackage[" << m_babelLanguage << "]{babel}" << endl;
-        if (kpsewhich("hyperref.sty"))
+        if (kpsewhich(QStringLiteral("hyperref.sty")))
             ts << "\\usepackage[pdfborder={0 0 0},pdfproducer={KBibTeX: http://home.gna.org/kbibtex/},pdftex]{hyperref}" << endl;
-        else if (kpsewhich("url.sty"))
+        else if (kpsewhich(QStringLiteral("url.sty")))
             ts << "\\usepackage{url}" << endl;
-        if (m_bibliographyStyle.startsWith(QStringLiteral("apacite")) && kpsewhich("apacite.sty"))
+        if (m_bibliographyStyle.startsWith(QStringLiteral("apacite")) && kpsewhich(QStringLiteral("apacite.sty")))
             ts << "\\usepackage[bibnewpage]{apacite}" << endl;
-        if ((m_bibliographyStyle == QStringLiteral("agsm") || m_bibliographyStyle == QStringLiteral("dcu") || m_bibliographyStyle == QStringLiteral("jmr") || m_bibliographyStyle == QStringLiteral("jphysicsB") || m_bibliographyStyle == QStringLiteral("kluwer") || m_bibliographyStyle == QStringLiteral("nederlands") || m_bibliographyStyle == QStringLiteral("dcu") || m_bibliographyStyle == QStringLiteral("dcu")) && kpsewhich("harvard.sty") && kpsewhich("html.sty"))
+        if ((m_bibliographyStyle == QStringLiteral("agsm") || m_bibliographyStyle == QStringLiteral("dcu") || m_bibliographyStyle == QStringLiteral("jmr") || m_bibliographyStyle == QStringLiteral("jphysicsB") || m_bibliographyStyle == QStringLiteral("kluwer") || m_bibliographyStyle == QStringLiteral("nederlands") || m_bibliographyStyle == QStringLiteral("dcu") || m_bibliographyStyle == QStringLiteral("dcu")) && kpsewhich(QStringLiteral("harvard.sty")) && kpsewhich(QStringLiteral("html.sty")))
             ts << "\\usepackage{html}" << endl << "\\usepackage[dcucite]{harvard}" << endl << "\\renewcommand{\\harvardurl}{URL: \\url}" << endl;
-        if (kpsewhich("embedfile.sty"))
+        if (kpsewhich(QStringLiteral("embedfile.sty")))
             ts << "\\usepackage{embedfile}" << endl;
-        if (kpsewhich("geometry.sty"))
+        if (kpsewhich(QStringLiteral("geometry.sty")))
             ts << "\\usepackage[paper=" << m_paperSize << (m_paperSize.length() <= 2 ? "paper" : "") << "]{geometry}" << endl;
         if (!m_font.isEmpty() && kpsewhich(m_font + QStringLiteral(".sty")))
             ts << "\\usepackage{" << m_font << "}" << endl;
@@ -208,7 +208,7 @@ void FileExporterPDF::fillEmbeddedFileList(const QSharedPointer<const Element> e
             if (!url.isLocalFile()) continue;
             const QString filename = url.url(QUrl::PreferLocalFile);
             const QString basename = QFileInfo(filename).fileName();
-            m_embeddedFileList.append(QString("%1|%2|%3").arg(title).arg(filename).arg(basename));
+            m_embeddedFileList.append(QString(QStringLiteral("%1|%2|%3")).arg(title).arg(filename).arg(basename));
         }
     }
 }

@@ -124,7 +124,7 @@ OnlineSearchQueryFormAbstract *OnlineSearchIDEASRePEc::customWidget(QWidget *)
 
 QUrl OnlineSearchIDEASRePEc::homepage() const
 {
-    return QUrl("https://ideas.repec.org/");
+    return QUrl(QStringLiteral("https://ideas.repec.org/"));
 }
 
 void OnlineSearchIDEASRePEc::cancel()
@@ -249,7 +249,7 @@ void OnlineSearchIDEASRePEc::downloadBibTeXDone()
 
                         Value v;
                         v.append(QSharedPointer<VerbatimText>(new VerbatimText(label())));
-                        entry->insert("x-fetchedfrom", v);
+                        entry->insert(QStringLiteral("x-fetchedfrom"), v);
                         emit foundEntry(entry);
                     }
 

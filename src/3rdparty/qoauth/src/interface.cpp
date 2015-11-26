@@ -1048,7 +1048,7 @@ QByteArray QOAuth::InterfacePrivate::createSignature( const QString &requestUrl,
             QByteArray key( consumerSecret.toPercentEncoding() + "&" + tokenSecret.toPercentEncoding() );
 
             // create HMAC-SHA1 digest in Base64
-            QCA::MessageAuthenticationCode hmac( "hmac(sha1)", QCA::SymmetricKey( key ) );
+            QCA::MessageAuthenticationCode hmac( QStringLiteral("hmac(sha1)"), QCA::SymmetricKey( key ) );
             QCA::SecureArray array( signatureBaseString );
             hmac.update( array );
             QCA::SecureArray resultArray = hmac.final();

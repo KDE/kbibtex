@@ -78,7 +78,7 @@ public:
         setupMenu();
         connect(menuTypesSignalMapper, SIGNAL(mapped(int)), parent, SLOT(slotTypeChanged(int)));
 
-        buttonOpenUrl = new QPushButton(QIcon::fromTheme("document-open-remote"), "", parent);
+        buttonOpenUrl = new QPushButton(QIcon::fromTheme(QStringLiteral("document-open-remote")), QStringLiteral(""), parent);
         buttonOpenUrl->setVisible(false);
         buttonOpenUrl->setProperty("isConst", true);
         parent->appendWidget(buttonOpenUrl);
@@ -102,7 +102,7 @@ public:
 
     bool reset(const Value &value) {
         bool result = false;
-        QString text = "";
+        QString text;
         typeFlag = determineTypeFlag(value, typeFlag, typeFlags);
         updateGUI(typeFlag);
 
@@ -184,9 +184,9 @@ public:
                 value.append(*it);
             return true;
         } else if (typeFlag == KBibTeX::tfSource) {
-            QString key = typeFlags.testFlag(KBibTeX::tfPerson) ? "author" : "title";
+            QString key = typeFlags.testFlag(KBibTeX::tfPerson) ? QStringLiteral("author") : QStringLiteral("title");
             FileImporterBibTeX importer;
-            QString fakeBibTeXFile = QString("@article{dummy, %1=%2}").arg(key).arg(encodedText);
+            QString fakeBibTeXFile = QString(QStringLiteral("@article{dummy, %1=%2}")).arg(key).arg(encodedText);
 
             File *file = importer.fromString(fakeBibTeXFile);
             QSharedPointer<Entry> entry;
@@ -273,12 +273,12 @@ public:
 
     QIcon iconForTypeFlag(KBibTeX::TypeFlag typeFlag) {
         switch (typeFlag) {
-        case KBibTeX::tfPlainText: return QIcon::fromTheme("draw-text");
-        case KBibTeX::tfReference: return QIcon::fromTheme("emblem-symbolic-link");
-        case KBibTeX::tfPerson: return QIcon::fromTheme("user-identity");
-        case KBibTeX::tfKeyword: return QIcon::fromTheme("edit-find");
-        case KBibTeX::tfSource: return QIcon::fromTheme("code-context");
-        case KBibTeX::tfVerbatim: return QIcon::fromTheme("preferences-desktop-keyboard");
+        case KBibTeX::tfPlainText: return QIcon::fromTheme(QStringLiteral("draw-text"));
+        case KBibTeX::tfReference: return QIcon::fromTheme(QStringLiteral("emblem-symbolic-link"));
+        case KBibTeX::tfPerson: return QIcon::fromTheme(QStringLiteral("user-identity"));
+        case KBibTeX::tfKeyword: return QIcon::fromTheme(QStringLiteral("edit-find"));
+        case KBibTeX::tfSource: return QIcon::fromTheme(QStringLiteral("code-context"));
+        case KBibTeX::tfVerbatim: return QIcon::fromTheme(QStringLiteral("preferences-desktop-keyboard"));
         default: return QIcon();
         };
     }
@@ -296,7 +296,7 @@ public:
             parent->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
             break;
         case KBibTeX::tfVerbatim: parent->setButtonToolTip(i18n("Verbatim Text")); break;
-        default: parent->setButtonToolTip(""); break;
+        default: parent->setButtonToolTip(QStringLiteral("")); break;
         };
     }
 
@@ -333,7 +333,7 @@ public:
                 else {
                     const QSharedPointer<Person> person = first.dynamicCast<Person>();
                     if (!person.isNull())
-                        rawText = enc->encode(QString("%1 %2").arg(person->firstName()).arg(person->lastName())); // FIXME proper name conversion
+                        rawText = enc->encode(QString(QStringLiteral("%1 %2")).arg(person->firstName()).arg(person->lastName())); // FIXME proper name conversion
                     else {
                         const QSharedPointer<Keyword> keyword = first.dynamicCast<Keyword>();
                         if (!keyword.isNull())
@@ -473,7 +473,7 @@ void FieldLineEdit::slotTextChanged(const QString &text)
 
 void FieldLineEdit::dragEnterEvent(QDragEnterEvent *event)
 {
-    if (event->mimeData()->hasFormat("text/plain") || event->mimeData()->hasFormat("text/x-bibtex"))
+    if (event->mimeData()->hasFormat(QStringLiteral("text/plain")) || event->mimeData()->hasFormat(QStringLiteral("text/x-bibtex")))
         event->acceptProposedAction();
 }
 

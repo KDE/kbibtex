@@ -135,7 +135,7 @@ public:
         /// Send a request for an unauthorized token
         QOAuth::ParamMap params;
         params.insert("oauth_callback", "oob");
-        QOAuth::ParamMap reply = qOAuth->requestToken("https://www.zotero.org/oauth/request", QOAuth::POST, QOAuth::HMAC_SHA1, params);
+        QOAuth::ParamMap reply = qOAuth->requestToken(QStringLiteral("https://www.zotero.org/oauth/request"), QOAuth::POST, QOAuth::HMAC_SHA1, params);
 
         /// If no error occurred, read the received token and token secret
         if (qOAuth->error() == QOAuth::NoError) {
@@ -144,11 +144,11 @@ public:
 
             QUrl oauthAuthorizationUrl = QUrl(QStringLiteral("https://www.zotero.org/oauth/authorize"));
             QUrlQuery query(oauthAuthorizationUrl);
-            query.addQueryItem("oauth_token", token);
-            query.addQueryItem("library_access", "1");
-            query.addQueryItem("notes_access", "0");
-            query.addQueryItem("write_access", "0");
-            query.addQueryItem("all_groups", "read");
+            query.addQueryItem(QStringLiteral("oauth_token"), token);
+            query.addQueryItem(QStringLiteral("library_access"), QStringLiteral("1"));
+            query.addQueryItem(QStringLiteral("notes_access"), QStringLiteral("0"));
+            query.addQueryItem(QStringLiteral("write_access"), QStringLiteral("0"));
+            query.addQueryItem(QStringLiteral("all_groups"), QStringLiteral("read"));
             oauthAuthorizationUrl.setQuery(query);
             return oauthAuthorizationUrl;
         } else
@@ -178,11 +178,11 @@ public:
         lineEditAuthorizationUrl = new KLineEdit(page);
         lineEditAuthorizationUrl->setReadOnly(true);
         gridLayout->addWidget(lineEditAuthorizationUrl, 0, 0, 1, 3);
-        QPushButton *buttonCopyAuthorizationUrl = new QPushButton(QIcon::fromTheme("edit-copy"), i18n("Copy URL"), page);
+        QPushButton *buttonCopyAuthorizationUrl = new QPushButton(QIcon::fromTheme(QStringLiteral("edit-copy")), i18n("Copy URL"), page);
         gridLayout->addWidget(buttonCopyAuthorizationUrl, 1, 1, 1, 1);
         connect(buttonCopyAuthorizationUrl, SIGNAL(clicked()), p, SLOT(copyAuthorizationUrl()));
         connect(buttonCopyAuthorizationUrl, SIGNAL(clicked()), p, SLOT(next()));
-        QPushButton *buttonOpenAuthorizationUrl = new QPushButton(QIcon::fromTheme("document-open-remote"), i18n("Open URL"), page);
+        QPushButton *buttonOpenAuthorizationUrl = new QPushButton(QIcon::fromTheme(QStringLiteral("document-open-remote")), i18n("Open URL"), page);
         gridLayout->addWidget(buttonOpenAuthorizationUrl, 1, 2, 1, 1);
         connect(buttonOpenAuthorizationUrl, SIGNAL(clicked()), p, SLOT(openAuthorizationUrl()));
         connect(buttonOpenAuthorizationUrl, SIGNAL(clicked()), p, SLOT(next()));
@@ -201,7 +201,7 @@ public:
     void setOAuthVerifier(const QString &verifier) {
         QOAuth::ParamMap oAuthVerifierParams;
         oAuthVerifierParams.insert("oauth_verifier", verifier.toUtf8());
-        QOAuth::ParamMap oAuthVerifierRequest = qOAuth->accessToken("https://www.zotero.org/oauth/access", QOAuth::GET, token, tokenSecret, QOAuth::HMAC_SHA1, oAuthVerifierParams);
+        QOAuth::ParamMap oAuthVerifierRequest = qOAuth->accessToken(QStringLiteral("https://www.zotero.org/oauth/access"), QOAuth::GET, token, tokenSecret, QOAuth::HMAC_SHA1, oAuthVerifierParams);
         if (qOAuth->error() == QOAuth::NoError) {
             token = oAuthVerifierRequest.value(QOAuth::tokenParameterName());
             tokenSecret = oAuthVerifierRequest.value(QOAuth::tokenSecretParameterName());

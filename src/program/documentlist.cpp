@@ -50,15 +50,15 @@ public:
         layout->setColumnStretch(1, 0);
         layout->setColumnStretch(2, 1);
 
-        QPushButton *buttonUp = new QPushButton(QIcon::fromTheme("go-up"), "", this);
+        QPushButton *buttonUp = new QPushButton(QIcon::fromTheme(QStringLiteral("go-up")), QStringLiteral(""), this);
         buttonUp->setToolTip(i18n("One level up"));
         layout->addWidget(buttonUp, 0, 0, 1, 1);
 
-        QPushButton *buttonHome = new QPushButton(QIcon::fromTheme("user-home"), "", this);
+        QPushButton *buttonHome = new QPushButton(QIcon::fromTheme(QStringLiteral("user-home")), QStringLiteral(""), this);
         buttonHome->setToolTip(i18n("Go to Home folder"));
         layout->addWidget(buttonHome, 0, 1, 1, 1);
 
-        dirOperator = new KDirOperator(QUrl("file:" + QDir::homePath()), this);
+        dirOperator = new KDirOperator(QUrl(QStringLiteral("file:") + QDir::homePath()), this);
         layout->addWidget(dirOperator, 1, 0, 1, 3);
         dirOperator->setView(KFile::Detail);
 
@@ -175,21 +175,21 @@ QVariant DocumentListModel::data(const QModelIndex &index, int role) const
         QStringList overlays;
         QString iconName = openFileInfo->mimeType().replace(QLatin1Char('/'), QLatin1Char('-'));
         if (openFileInfo->flags().testFlag(OpenFileInfo::Favorite))
-            overlays << "favorites";
+            overlays << QStringLiteral("favorites");
         else
-            overlays << "";
+            overlays << QStringLiteral("");
         if (openFileInfo->flags().testFlag(OpenFileInfo::RecentlyUsed))
-            overlays << "clock";
+            overlays << QStringLiteral("clock");
         else
-            overlays << "";
+            overlays << QStringLiteral("");
         if (openFileInfo->flags().testFlag(OpenFileInfo::Open))
-            overlays << "folder-open";
+            overlays << QStringLiteral("folder-open");
         else
-            overlays << "";
+            overlays << QStringLiteral("");
         if (openFileInfo->isModified())
-            overlays << "document-save";
+            overlays << QStringLiteral("document-save");
         else
-            overlays << "";
+            overlays << QStringLiteral("");
         return KDE::icon(iconName, overlays, 0);
     }
     case Qt::ToolTipRole: return squeeze_text(openFileInfo->fullCaption(), 64);
@@ -240,24 +240,24 @@ DocumentListView::DocumentListView(OpenFileInfo::StatusFlag statusFlag, QWidget 
     setItemDelegate(new DocumentListDelegate(this));
 
     if (statusFlag == OpenFileInfo::Open) {
-        d->actionCloseFile = new QAction(QIcon::fromTheme("document-close"), i18n("Close File"), this);
+        d->actionCloseFile = new QAction(QIcon::fromTheme(QStringLiteral("document-close")), i18n("Close File"), this);
         connect(d->actionCloseFile, SIGNAL(triggered()), this, SLOT(closeFile()));
         addAction(d->actionCloseFile);
     } else {
-        d->actionOpenFile = new QAction(QIcon::fromTheme("document-open"), i18n("Open File"), this);
+        d->actionOpenFile = new QAction(QIcon::fromTheme(QStringLiteral("document-open")), i18n("Open File"), this);
         connect(d->actionOpenFile, SIGNAL(triggered()), this, SLOT(openFile()));
         addAction(d->actionOpenFile);
     }
 
-    d->actionOpenMenu = new KActionMenu(QIcon::fromTheme("document-open"), i18n("Open with"), this);
+    d->actionOpenMenu = new KActionMenu(QIcon::fromTheme(QStringLiteral("document-open")), i18n("Open with"), this);
     addAction(d->actionOpenMenu);
 
     if (statusFlag == OpenFileInfo::Favorite) {
-        d->actionRemFromFav = new QAction(QIcon::fromTheme("favorites"), i18n("Remove from Favorites"), this);
+        d->actionRemFromFav = new QAction(QIcon::fromTheme(QStringLiteral("favorites")), i18n("Remove from Favorites"), this);
         connect(d->actionRemFromFav, SIGNAL(triggered()), this, SLOT(removeFromFavorites()));
         addAction(d->actionRemFromFav);
     } else {
-        d->actionAddToFav = new QAction(QIcon::fromTheme("favorites"), i18n("Add to Favorites"), this);
+        d->actionAddToFav = new QAction(QIcon::fromTheme(QStringLiteral("favorites")), i18n("Add to Favorites"), this);
         connect(d->actionAddToFav, SIGNAL(triggered()), this, SLOT(addToFavorites()));
         addAction(d->actionAddToFav);
     }
@@ -304,7 +304,7 @@ void DocumentListView::openFileWithService(int i)
     QModelIndex modelIndex = currentIndex();
     if (modelIndex != QModelIndex()) {
         OpenFileInfo *ofi = qvariant_cast<OpenFileInfo *>(modelIndex.data(Qt::UserRole));
-        if (!ofi->isModified() || (KMessageBox::questionYesNo(this, i18n("The current document has to be saved before switching the viewer/editor component."), i18n("Save before switching?"), KGuiItem(i18n("Save document"), QIcon::fromTheme("document-save")), KGuiItem(i18n("Do not switch"), QIcon::fromTheme("dialog-cancel"))) == KMessageBox::Yes && ofi->save()))
+        if (!ofi->isModified() || (KMessageBox::questionYesNo(this, i18n("The current document has to be saved before switching the viewer/editor component."), i18n("Save before switching?"), KGuiItem(i18n("Save document"), QIcon::fromTheme(QStringLiteral("document-save"))), KGuiItem(i18n("Do not switch"), QIcon::fromTheme(QStringLiteral("dialog-cancel")))) == KMessageBox::Yes && ofi->save()))
             d->ofim->setCurrentFile(ofi, d->openMenuServices[i]);
     }
 }
@@ -367,20 +367,20 @@ public:
         listOpenFiles = new DocumentListView(OpenFileInfo::Open, p);
         DocumentListModel *model = new DocumentListModel(OpenFileInfo::Open, listOpenFiles);
         listOpenFiles->setModel(model);
-        p->addTab(listOpenFiles, QIcon::fromTheme("document-open"), i18n("Open Files"));
+        p->addTab(listOpenFiles, QIcon::fromTheme(QStringLiteral("document-open")), i18n("Open Files"));
 
         listRecentFiles = new DocumentListView(OpenFileInfo::RecentlyUsed, p);
         model = new DocumentListModel(OpenFileInfo::RecentlyUsed, listRecentFiles);
         listRecentFiles->setModel(model);
-        p->addTab(listRecentFiles, QIcon::fromTheme("clock"), i18n("Recently Used"));
+        p->addTab(listRecentFiles, QIcon::fromTheme(QStringLiteral("clock")), i18n("Recently Used"));
 
         listFavorites = new DocumentListView(OpenFileInfo::Favorite, p);
         model = new DocumentListModel(OpenFileInfo::Favorite, listFavorites);
         listFavorites->setModel(model);
-        p->addTab(listFavorites, QIcon::fromTheme("favorites"), i18n("Favorites"));
+        p->addTab(listFavorites, QIcon::fromTheme(QStringLiteral("favorites")), i18n("Favorites"));
 
         dirOperator = new DirOperatorWidget(p);
-        p->addTab(dirOperator,  QIcon::fromTheme("system-file-manager"), i18n("Filesystem Browser"));
+        p->addTab(dirOperator,  QIcon::fromTheme(QStringLiteral("system-file-manager")), i18n("Filesystem Browser"));
         connect(dirOperator->dirOperator, SIGNAL(fileSelected(KFileItem)), p, SLOT(fileSelected(KFileItem)));
     }
 };

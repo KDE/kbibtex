@@ -140,7 +140,7 @@ bool OnlineSearchAbstract::handleErrors(QNetworkReply *reply, QUrl &newUrl)
         m_hasBeenCanceled = true;
         const QString errorString = reply->errorString();
         qCWarning(LOG_KBIBTEX_NETWORKING) << "Search using" << label() << "failed (error code" << reply->error() << "(" << errorString << "), HTTP code" << reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() << ":" << reply->attribute(QNetworkRequest::HttpReasonPhraseAttribute).toByteArray() << ")";
-        sendVisualNotification(errorString.isEmpty() ? i18n("Searching '%1' failed for unknown reason.", label()) : i18n("Searching '%1' failed with error message:\n\n%2", label(), errorString), label(), "kbibtex", 7 * 1000);
+        sendVisualNotification(errorString.isEmpty() ? i18n("Searching '%1' failed for unknown reason.", label()) : i18n("Searching '%1' failed with error message:\n\n%2", label(), errorString), label(), QStringLiteral("kbibtex"), 7 * 1000);
 
         int resultCode = resultUnspecifiedError;
         if (reply->error() == QNetworkReply::AuthenticationRequiredError || reply->error() == QNetworkReply::ProxyAuthenticationRequiredError)
@@ -185,7 +185,7 @@ void OnlineSearchAbstract::sendVisualNotification(const QString &text, const QSt
     if (timeout <= 0)
         timeout = 10 * 1000;
 
-    QDBusMessage m = QDBusMessage::createMethodCall(dbusServiceName, dbusPath, dbusInterfaceName, "Notify");
+    QDBusMessage m = QDBusMessage::createMethodCall(dbusServiceName, dbusPath, dbusInterfaceName, QStringLiteral("Notify"));
     QList<QVariant> args = QList<QVariant>() << QStringLiteral("kdialog") << 0U << icon << title << text << QStringList() << QVariantMap() << timeout;
     m.setArguments(args);
 
@@ -269,14 +269,14 @@ QMap<QString, QString> OnlineSearchAbstract::formParameters(const QString &htmlT
 
         if (!inputName.isEmpty()) {
             /// get value of input types
-            if (inputType == "hidden" || inputType == "text" || inputType == "submit")
+            if (inputType == QStringLiteral("hidden") || inputType == QStringLiteral("text") || inputType == QStringLiteral("submit"))
                 result[inputName] = inputValue;
-            else if (inputType == "radio") {
+            else if (inputType == QStringLiteral("radio")) {
                 /// must be selected
                 if (htmlText.indexOf(inputIsCheckedRegExp, p) == p) {
                     result[inputName] = inputValue;
                 }
-            } else if (inputType == "checkbox") {
+            } else if (inputType == QStringLiteral("checkbox")) {
                 /// must be checked
                 if (htmlText.indexOf(inputIsCheckedRegExp, p) == p) {
                     /// multiple checkbox values with the same name are possible
@@ -451,7 +451,7 @@ bool OnlineSearchAbstract::publishEntry(QSharedPointer<Entry> entry)
 
     Value v;
     v.append(QSharedPointer<VerbatimText>(new VerbatimText(label())));
-    entry->insert("x-fetchedfrom", v);
+    entry->insert(QStringLiteral("x-fetchedfrom"), v);
 
     sanitizeEntry(entry);
 

@@ -50,22 +50,22 @@ public:
         outputFilenameNoEnding.remove(QStringLiteral(".html"));
 
         QStringList args;
-        args << "-s" << bibStyle; /// BibTeX style (plain, alpha, ...)
-        args << "-o" << outputFilenameNoEnding; /// redirect the output
-        args << "-nokeys"; /// do not print the BibTeX keys
-        args << "-nolinks"; /// do not print any web link
-        args << "-nodoc"; /// only produces the body of the HTML documents
-        args << "-nobibsource"; /// do not produce the BibTeX entries file
-        args << "-debug"; /// verbose mode (to find incorrect BibTeX entries)
+        args << QStringLiteral("-s") << bibStyle; /// BibTeX style (plain, alpha, ...)
+        args << QStringLiteral("-o") << outputFilenameNoEnding; /// redirect the output
+        args << QStringLiteral("-nokeys"); /// do not print the BibTeX keys
+        args << QStringLiteral("-nolinks"); /// do not print any web link
+        args << QStringLiteral("-nodoc"); /// only produces the body of the HTML documents
+        args << QStringLiteral("-nobibsource"); /// do not produce the BibTeX entries file
+        args << QStringLiteral("-debug"); /// verbose mode (to find incorrect BibTeX entries)
         args << bibTeXFilename;
 
-        bool result = p->runProcess("bibtex2html", args, errorLog) && p->writeFileToIODevice(outputFilename, iodevice, errorLog);
+        bool result = p->runProcess(QStringLiteral("bibtex2html"), args, errorLog) && p->writeFileToIODevice(outputFilename, iodevice, errorLog);
 
         return result;
     }
 
     bool checkBibTeX2HTMLexists(QIODevice *iodevice) {
-        if (!QStandardPaths::findExecutable("bibtex2html").isEmpty())
+        if (!QStandardPaths::findExecutable(QStringLiteral("bibtex2html")).isEmpty())
             return true;
 
         QTextStream ts(iodevice);

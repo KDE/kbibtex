@@ -128,7 +128,7 @@ public:
         }
 
         QString queryString = p->encodeURL(form->lineEditSearchTerm->text());
-        return QUrl("http://www.bibsonomy.org/bib/" + form->comboBoxSearchWhere->itemData(form->comboBoxSearchWhere->currentIndex()).toString() + "/" + queryString + QString("?items=%1").arg(form->numResultsField->value()));
+        return QUrl(QStringLiteral("http://www.bibsonomy.org/bib/") + form->comboBoxSearchWhere->itemData(form->comboBoxSearchWhere->currentIndex()).toString() + "/" + queryString + QString(QStringLiteral("?items=%1")).arg(form->numResultsField->value()));
     }
 
     QUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) {
@@ -229,7 +229,7 @@ OnlineSearchQueryFormAbstract *OnlineSearchBibsonomy::customWidget(QWidget *pare
 
 QUrl OnlineSearchBibsonomy::homepage() const
 {
-    return QUrl("http://www.bibsonomy.org/");
+    return QUrl(QStringLiteral("http://www.bibsonomy.org/"));
 }
 
 void OnlineSearchBibsonomy::cancel()

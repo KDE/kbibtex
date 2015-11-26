@@ -147,11 +147,11 @@ private:
         QLabel *label = new QLabel(i18n("<qt>Welcome to <b>KBibTeX</b></qt>"), welcomeWidget);
         layout->addWidget(label, 1, 2, 1, 3, Qt::AlignHCenter | Qt::AlignTop);
 
-        QPushButton *buttonNew = new QPushButton(QIcon::fromTheme("document-new"), i18n("New"), welcomeWidget);
+        QPushButton *buttonNew = new QPushButton(QIcon::fromTheme(QStringLiteral("document-new")), i18n("New"), welcomeWidget);
         layout->addWidget(buttonNew, 2, 2, 1, 1, Qt::AlignLeft | Qt::AlignBottom);
         connect(buttonNew, SIGNAL(clicked()), p, SIGNAL(documentNew()));
 
-        QPushButton *buttonOpen = new QPushButton(QIcon::fromTheme("document-open"), i18n("Open..."), welcomeWidget);
+        QPushButton *buttonOpen = new QPushButton(QIcon::fromTheme(QStringLiteral("document-open")), i18n("Open..."), welcomeWidget);
         layout->addWidget(buttonOpen, 2, 4, 1, 1, Qt::AlignRight | Qt::AlignBottom);
         connect(buttonOpen, SIGNAL(clicked()), p, SIGNAL(documentOpen()));
 
@@ -276,11 +276,11 @@ void MDIWidget::setFile(OpenFileInfo *openFileInfo, KService::Ptr servicePtr)
     if (openFileInfo != NULL) {
         QUrl url = openFileInfo->url();
         if (url.isValid())
-            emit setCaption(QString("%1 [%2]").arg(openFileInfo->shortCaption()).arg(squeeze_text(openFileInfo->fullCaption(), 64)));
+            emit setCaption(QString(QStringLiteral("%1 [%2]")).arg(openFileInfo->shortCaption()).arg(squeeze_text(openFileInfo->fullCaption(), 64)));
         else
             emit setCaption(openFileInfo->shortCaption());
     } else
-        emit setCaption("");
+        emit setCaption(QStringLiteral(""));
 }
 
 FileView *MDIWidget::fileView()
@@ -307,7 +307,7 @@ void MDIWidget::slotCompleted(QObject *obj)
         /// completely opened or saved files should be marked as "recently used"
         ofi->addFlags(OpenFileInfo::RecentlyUsed);
 
-        emit setCaption(QString("%1 [%2]").arg(ofi->shortCaption()).arg(squeeze_text(ofi->fullCaption(), 64)));
+        emit setCaption(QString(QStringLiteral("%1 [%2]")).arg(ofi->shortCaption()).arg(squeeze_text(ofi->fullCaption(), 64)));
     }
 }
 

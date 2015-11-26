@@ -33,7 +33,7 @@
 static const QRegExp regExpEscapedChars = QRegExp("\\\\+([&_~])");
 
 /// File types supported by "document preview"
-static const QStringList documentFileExtensions = QStringList() << ".pdf" << ".pdf.gz" << ".pdf.bz2" << ".ps" << ".ps.gz" << ".ps.bz2" << ".eps" << ".eps.gz" << ".eps.bz2" << ".html" << ".xhtml" << ".htm" << ".dvi" << ".djvu" << ".wwf" << ".jpeg" << ".jpg" << ".png" << ".gif" << ".tif" << ".tiff";
+static const QStringList documentFileExtensions = QStringList() << QStringLiteral(".pdf") << QStringLiteral(".pdf.gz") << QStringLiteral(".pdf.bz2") << QStringLiteral(".ps") << QStringLiteral(".ps.gz") << QStringLiteral(".ps.bz2") << QStringLiteral(".eps") << QStringLiteral(".eps.gz") << QStringLiteral(".eps.bz2") << QStringLiteral(".html") << QStringLiteral(".xhtml") << QStringLiteral(".htm") << QStringLiteral(".dvi") << QStringLiteral(".djvu") << QStringLiteral(".wwf") << QStringLiteral(".jpeg") << QStringLiteral(".jpg") << QStringLiteral(".png") << QStringLiteral(".gif") << QStringLiteral(".tif") << QStringLiteral(".tiff");
 
 FileInfo::FileInfo()
 {
@@ -100,7 +100,7 @@ void FileInfo::urlsInText(const QString &text, TestExistence testExistence, cons
     int pos = 0;
     while ((pos = KBibTeX::doiRegExp.indexIn(internalText, pos)) != -1) {
         QString match = KBibTeX::doiRegExp.cap(0);
-        QUrl url(doiUrlPrefix() + match.remove("\\"));
+        QUrl url(doiUrlPrefix() + match.remove(QStringLiteral("\\")));
         if (url.isValid() && !result.contains(url))
             result << url;
         /// remove match from internal text to avoid duplicates
@@ -157,7 +157,7 @@ void FileInfo::urlsInText(const QString &text, TestExistence testExistence, cons
         /// explicitly check URL entry, may be an URL even if http:// or alike is missing
         pos = 0;
         while ((pos = KBibTeX::domainNameRegExp.indexIn(internalText, pos)) > -1) {
-            int pos2 = internalText.indexOf(" ", pos + 1);
+            int pos2 = internalText.indexOf(QStringLiteral(" "), pos + 1);
             if (pos2 < 0) pos2 = internalText.length();
             QString match = internalText.mid(pos, pos2 - pos);
             QUrl url("http://" + match);
@@ -190,7 +190,7 @@ QList<QUrl> FileInfo::entryUrls(const Entry *entry, const QUrl &bibTeXUrl, TestE
         const QString doi = PlainTextValue::text(entry->value(Entry::ftDOI));
         if (!doi.isEmpty() && KBibTeX::doiRegExp.indexIn(doi) == 0) {
             QString match = KBibTeX::doiRegExp.cap(0);
-            QUrl url(doiUrlPrefix() + match.remove("\\"));
+            QUrl url(doiUrlPrefix() + match.remove(QStringLiteral("\\")));
             result.append(url);
         }
     }

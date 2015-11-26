@@ -38,7 +38,7 @@ OnlineSearchQueryFormAbstract *OnlineSearchInspireHep::customWidget(QWidget *par
 
 QUrl OnlineSearchInspireHep::homepage() const
 {
-    return QUrl("http://inspirehep.net/");
+    return QUrl(QStringLiteral("http://inspirehep.net/"));
 }
 
 QString OnlineSearchInspireHep::favIconUrl() const

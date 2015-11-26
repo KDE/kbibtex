@@ -555,9 +555,9 @@ public:
         containerLayout->addStretch(10);
         labelWhichClique = new QLabel(p);
         containerLayout->addWidget(labelWhichClique);
-        buttonPrev = new QPushButton(QIcon::fromTheme("go-previous"), i18n("Previous Clique"), p);
+        buttonPrev = new QPushButton(QIcon::fromTheme(QStringLiteral("go-previous")), i18n("Previous Clique"), p);
         containerLayout->addWidget(buttonPrev, 1);
-        buttonNext = new QPushButton(QIcon::fromTheme("go-next"), i18n("Next Clique"), p);
+        buttonNext = new QPushButton(QIcon::fromTheme(QStringLiteral("go-next")), i18n("Next Clique"), p);
         containerLayout->addWidget(buttonNext, 1);
 
         filterModel = new FilterIdFileModel(p);
@@ -639,10 +639,10 @@ public:
 FindDuplicatesUI::FindDuplicatesUI(KParts::Part *part, FileView *fileView)
         : QObject(), d(new FindDuplicatesUIPrivate(this, part, fileView))
 {
-    QAction *newAction = new QAction(QIcon::fromTheme("tab-duplicate"), i18n("Find Duplicates"), this);
+    QAction *newAction = new QAction(QIcon::fromTheme(QStringLiteral("tab-duplicate")), i18n("Find Duplicates"), this);
     part->actionCollection()->addAction(QStringLiteral("findduplicates"), newAction);
     connect(newAction, SIGNAL(triggered()), this, SLOT(slotFindDuplicates()));
-    part->replaceXMLFile(/* read default configuration from '/usr/share/kxmlgui5/kbibtex/findduplicatesui.rc' */QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kxmlgui5/kbibtex/findduplicatesui.rc"), /* write to '~/.config/.../findduplicatesui.rc' */ QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QStringLiteral("kbibtex/findduplicatesui.rc"), true);
+    part->replaceXMLFile(/* read default configuration from '/usr/share/kxmlgui5/kbibtex/findduplicatesui.rc' */QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kxmlgui5/kbibtex/findduplicatesui.rc")), /* write to '~/.config/.../findduplicatesui.rc' */ QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QStringLiteral("kbibtex/findduplicatesui.rc"), true);
 }
 
 FindDuplicatesUI::~FindDuplicatesUI()

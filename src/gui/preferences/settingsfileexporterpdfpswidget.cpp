@@ -92,7 +92,7 @@ public:
         QFormLayout *layout = new QFormLayout(p);
 
         comboBoxPaperSize = new KComboBox(false, p);
-        comboBoxPaperSize->setObjectName("comboBoxPaperSize");
+        comboBoxPaperSize->setObjectName(QStringLiteral("comboBoxPaperSize"));
         layout->addRow(i18n("Paper Size:"), comboBoxPaperSize);
         QStringList paperSizeLabelToNameKeys = paperSizeLabelToName.keys();
         paperSizeLabelToNameKeys.sort();
@@ -102,7 +102,7 @@ public:
         connect(comboBoxPaperSize, SIGNAL(currentIndexChanged(int)), p, SIGNAL(changed()));
 
         comboBoxBabelLanguage = new KComboBox(true, p);
-        comboBoxBabelLanguage->setObjectName("comboBoxBabelLanguage");
+        comboBoxBabelLanguage->setObjectName(QStringLiteral("comboBoxBabelLanguage"));
         layout->addRow(i18n("Language for 'babel':"), comboBoxBabelLanguage);
         comboBoxBabelLanguage->addItem(QStringLiteral("english"));
         comboBoxBabelLanguage->addItem(QStringLiteral("ngerman"));
@@ -138,7 +138,7 @@ QString SettingsFileExporterPDFPSWidget::label() const
 
 QIcon SettingsFileExporterPDFPSWidget::icon() const
 {
-    return QIcon::fromTheme("application-pdf");
+    return QIcon::fromTheme(QStringLiteral("application-pdf"));
 }
 
 void SettingsFileExporterPDFPSWidget::loadState()

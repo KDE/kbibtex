@@ -90,8 +90,8 @@ const QString LyX::configGroupName = QStringLiteral("LyXPipe");
 LyX::LyX(KParts::ReadOnlyPart *part, QWidget *widget)
         : QObject(part), d(new LyX::LyXPrivate(this, widget))
 {
-    d->action = new QAction(QIcon::fromTheme("application-x-lyx"), i18n("Send to LyX/Kile"), this);
-    part->actionCollection()->addAction("sendtolyx", d->action);
+    d->action = new QAction(QIcon::fromTheme(QStringLiteral("application-x-lyx")), i18n("Send to LyX/Kile"), this);
+    part->actionCollection()->addAction(QStringLiteral("sendtolyx"), d->action);
     d->action->setEnabled(false);
     connect(d->action, SIGNAL(triggered()), this, SLOT(sendReferenceToLyX()));
     // FIXME necessary? // part->replaceXMLFile(QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kbibtex/lyx.rc"), QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + "kbibtex/lyx.rc"), true;
@@ -133,7 +133,7 @@ void LyX::sendReferenceToLyX()
     }
 
     QTextStream ts(&pipe);
-    QString msg = QString("LYXCMD:kbibtex:citation-insert:%1").arg(d->references.join(","));
+    QString msg = QString(QStringLiteral("LYXCMD:kbibtex:citation-insert:%1")).arg(d->references.join(QStringLiteral(",")));
 
     ts << msg << endl;
     ts.flush();

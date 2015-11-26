@@ -204,7 +204,7 @@ void Clipboard::copyReferences()
 
     if (!references.isEmpty()) {
         QClipboard *clipboard = QApplication::clipboard();
-        QString text = references.join(",");
+        QString text = references.join(QStringLiteral(","));
 
         KConfigGroup configGroup(d->config, d->configGroupName);
         const QString copyReferenceCommand = configGroup.readEntry(keyCopyReferenceCommand, defaultCopyReferenceCommand);
@@ -235,7 +235,7 @@ void Clipboard::editorMouseEvent(QMouseEvent *event)
         QDrag *drag = new QDrag(d->fileView);
         QMimeData *mimeData = new QMimeData();
         QByteArray data = text.toLatin1();
-        mimeData->setData("text/plain", data);
+        mimeData->setData(QStringLiteral("text/plain"), data);
         drag->setMimeData(mimeData);
 
         drag->exec(Qt::CopyAction);

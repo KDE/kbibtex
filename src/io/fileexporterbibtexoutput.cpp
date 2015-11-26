@@ -31,7 +31,7 @@
 #include "logging_io.h"
 
 FileExporterBibTeXOutput::FileExporterBibTeXOutput(OutputType outputType)
-        : FileExporterToolchain(), m_outputType(outputType), m_latexLanguage("english"), m_latexBibStyle("plain")
+        : FileExporterToolchain(), m_outputType(outputType), m_latexLanguage(QStringLiteral("english")), m_latexBibStyle(QStringLiteral("plain"))
 {
     m_fileBasename = QStringLiteral("bibtex-to-output");
     m_fileStem = tempDir.path() + QDir::separator() + m_fileBasename;
@@ -134,13 +134,13 @@ bool FileExporterBibTeXOutput::writeLatexFile(const QString &filename)
         ts << "\\documentclass{article}\n";
         ts << "\\usepackage[T1]{fontenc}\n";
         ts << "\\usepackage[utf8]{inputenc}\n";
-        if (kpsewhich("babel.sty"))
+        if (kpsewhich(QStringLiteral("babel.sty")))
             ts << "\\usepackage[" << m_latexLanguage << "]{babel}\n";
-        if (kpsewhich("hyperref.sty"))
+        if (kpsewhich(QStringLiteral("hyperref.sty")))
             ts << "\\usepackage[pdfproducer={KBibTeX: http://home.gna.org/kbibtex/},pdftex]{hyperref}\n";
-        else if (kpsewhich("url.sty"))
+        else if (kpsewhich(QStringLiteral("url.sty")))
             ts << "\\usepackage{url}\n";
-        if (m_latexBibStyle.startsWith(QStringLiteral("apacite")) && kpsewhich("apacite.sty"))
+        if (m_latexBibStyle.startsWith(QStringLiteral("apacite")) && kpsewhich(QStringLiteral("apacite.sty")))
             ts << "\\usepackage[bibnewpage]{apacite}\n";
         ts << "\\bibliographystyle{" << m_latexBibStyle << "}\n";
         ts << "\\begin{document}\n";

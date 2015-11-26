@@ -45,9 +45,9 @@ public:
     void mergeHtmlHeadCookies(const QString &htmlCode, const QUrl &url) {
         static QRegExp cookieContent("^([^\"=; ]+)=([^\"=; ]+).*\\bpath=([^\"=; ]+)", Qt::CaseInsensitive);
         int p1 = -1;
-        if ((p1 = htmlCode.toLower().indexOf("http-equiv=\"set-cookie\"", 0, Qt::CaseInsensitive)) >= 5
-                && (p1 = htmlCode.lastIndexOf("<meta", p1, Qt::CaseInsensitive)) >= 0
-                && (p1 = htmlCode.indexOf("content=\"", p1, Qt::CaseInsensitive)) >= 0
+        if ((p1 = htmlCode.toLower().indexOf(QStringLiteral("http-equiv=\"set-cookie\""), 0, Qt::CaseInsensitive)) >= 5
+                && (p1 = htmlCode.lastIndexOf(QStringLiteral("<meta"), p1, Qt::CaseInsensitive)) >= 0
+                && (p1 = htmlCode.indexOf(QStringLiteral("content=\""), p1, Qt::CaseInsensitive)) >= 0
                 && cookieContent.indexIn(htmlCode.mid(p1 + 9, 256)) >= 0) {
             const QString key = cookieContent.cap(1);
             const QString value = cookieContent.cap(2);
@@ -150,13 +150,13 @@ QNetworkReply *InternalNetworkAccessManager::get(QNetworkRequest &request, const
         setProxy(QNetworkProxy());
     }
 
-    if (!request.hasRawHeader(QString("Accept").toLatin1()))
-        request.setRawHeader(QString("Accept").toLatin1(), QString("text/*, */*;q=0.7").toLatin1());
-    request.setRawHeader(QString("Accept-Charset").toLatin1(), QString("utf-8, us-ascii, ISO-8859-1;q=0.7, ISO-8859-15;q=0.7, windows-1252;q=0.3").toLatin1());
-    request.setRawHeader(QString("Accept-Language").toLatin1(), QString("en-US, en;q=0.9").toLatin1());
-    request.setRawHeader("User-Agent", userAgent().toLatin1());
+    if (!request.hasRawHeader(QByteArray("Accept")))
+        request.setRawHeader(QByteArray("Accept"), QByteArray("text/*, */*;q=0.7"));
+    request.setRawHeader(QByteArray("Accept-Charset"), QByteArray("utf-8, us-ascii, ISO-8859-1;q=0.7, ISO-8859-15;q=0.7, windows-1252;q=0.3"));
+    request.setRawHeader(QByteArray("Accept-Language"), QByteArray("en-US, en;q=0.9"));
+    request.setRawHeader(QByteArray("User-Agent"), userAgent().toLatin1());
     if (oldUrl.isValid())
-        request.setRawHeader("Referer", oldUrl.toString().toLatin1());
+        request.setRawHeader(QByteArray("Referer"), oldUrl.toString().toLatin1());
     QNetworkReply *reply = QNetworkAccessManager::get(request);
     return reply;
 }

@@ -169,58 +169,58 @@ public:
         fileSaveAction->setEnabled(false);
         p->actionCollection()->addAction(KStandardAction::SaveAs, p, SLOT(documentSaveAs()));
         /// "Save copy as" action
-        QAction *saveCopyAsAction = new QAction(QIcon::fromTheme("document-save"), i18n("Save Copy As..."), p);
-        p->actionCollection()->addAction("file_save_copy_as", saveCopyAsAction);
+        QAction *saveCopyAsAction = new QAction(QIcon::fromTheme(QStringLiteral("document-save")), i18n("Save Copy As..."), p);
+        p->actionCollection()->addAction(QStringLiteral("file_save_copy_as"), saveCopyAsAction);
         connect(saveCopyAsAction, &QAction::triggered, p, &KBibTeXPart::documentSaveCopyAs);
 
         /// Filter bar widget
         QAction *filterWidgetAction = new QAction(i18n("Filter"), p);
-        p->actionCollection()->addAction("toolbar_filter_widget", filterWidgetAction);
-        filterWidgetAction->setIcon(QIcon::fromTheme("view-filter"));
+        p->actionCollection()->addAction(QStringLiteral("toolbar_filter_widget"), filterWidgetAction);
+        filterWidgetAction->setIcon(QIcon::fromTheme(QStringLiteral("view-filter")));
         p->actionCollection()->setDefaultShortcut(filterWidgetAction, Qt::CTRL + Qt::Key_F);
         connect(filterWidgetAction, SIGNAL(triggered()), partWidget->filterBar(), SLOT(setFocus()));
         partWidget->filterBar()->setPlaceholderText(i18n("Filter bibliographic entries (%1)", filterWidgetAction->shortcut().toString()));
 
         /// Actions for creating new elements (entries, macros, ...)
-        KActionMenu *newElementAction = new KActionMenu(QIcon::fromTheme("address-book-new"), i18n("New element"), p);
-        p->actionCollection()->addAction("element_new", newElementAction);
+        KActionMenu *newElementAction = new KActionMenu(QIcon::fromTheme(QStringLiteral("address-book-new")), i18n("New element"), p);
+        p->actionCollection()->addAction(QStringLiteral("element_new"), newElementAction);
         QMenu *newElementMenu = new QMenu(newElementAction->text(), p->widget());
         newElementAction->setMenu(newElementMenu);
         connect(newElementAction, SIGNAL(triggered()), p, SLOT(newEntryTriggered()));
-        QAction *newEntry = newElementMenu->addAction(QIcon::fromTheme("address-book-new"), i18n("New entry"));
+        QAction *newEntry = newElementMenu->addAction(QIcon::fromTheme(QStringLiteral("address-book-new")), i18n("New entry"));
         p->actionCollection()->setDefaultShortcut(newEntry, Qt::CTRL + Qt::SHIFT + Qt::Key_N);
         connect(newEntry, SIGNAL(triggered()), signalMapperNewElement, SLOT(map()));
         signalMapperNewElement->setMapping(newEntry, smEntry);
-        QAction *newComment = newElementMenu->addAction(QIcon::fromTheme("address-book-new"), i18n("New comment"));
+        QAction *newComment = newElementMenu->addAction(QIcon::fromTheme(QStringLiteral("address-book-new")), i18n("New comment"));
         connect(newComment, SIGNAL(triggered()), signalMapperNewElement, SLOT(map()));
         signalMapperNewElement->setMapping(newComment, smComment);
-        QAction *newMacro = newElementMenu->addAction(QIcon::fromTheme("address-book-new"), i18n("New macro"));
+        QAction *newMacro = newElementMenu->addAction(QIcon::fromTheme(QStringLiteral("address-book-new")), i18n("New macro"));
         connect(newMacro, SIGNAL(triggered()), signalMapperNewElement, SLOT(map()));
         signalMapperNewElement->setMapping(newMacro, smMacro);
-        QAction *newPreamble = newElementMenu->addAction(QIcon::fromTheme("address-book-new"), i18n("New preamble"));
+        QAction *newPreamble = newElementMenu->addAction(QIcon::fromTheme(QStringLiteral("address-book-new")), i18n("New preamble"));
         connect(newPreamble, SIGNAL(triggered()), signalMapperNewElement, SLOT(map()));
         signalMapperNewElement->setMapping(newPreamble, smPreamble);
         connect(signalMapperNewElement, SIGNAL(mapped(int)), p, SLOT(newElementTriggered(int)));
 
         /// Action to edit an element
-        elementEditAction = new QAction(QIcon::fromTheme("document-edit"), i18n("Edit Element"), p);
+        elementEditAction = new QAction(QIcon::fromTheme(QStringLiteral("document-edit")), i18n("Edit Element"), p);
         p->actionCollection()->addAction(QStringLiteral("element_edit"), elementEditAction);
         p->actionCollection()->setDefaultShortcut(elementEditAction, Qt::CTRL + Qt::Key_E);
         connect(elementEditAction, SIGNAL(triggered()), partWidget->fileView(), SLOT(editCurrentElement()));
 
         /// Action to view the document associated to the current element
-        elementViewDocumentAction = new QAction(QIcon::fromTheme("application-pdf"), i18n("View Document"), p);
+        elementViewDocumentAction = new QAction(QIcon::fromTheme(QStringLiteral("application-pdf")), i18n("View Document"), p);
         p->actionCollection()->addAction(QStringLiteral("element_viewdocument"), elementViewDocumentAction);
         p->actionCollection()->setDefaultShortcut(elementViewDocumentAction, Qt::CTRL + Qt::Key_D);
         connect(elementViewDocumentAction, SIGNAL(triggered()), p, SLOT(elementViewDocument()));
 
         /// Action to find a PDF matching the current element
-        elementFindPDFAction = new QAction(QIcon::fromTheme("application-pdf"), i18n("Find PDF..."), p);
+        elementFindPDFAction = new QAction(QIcon::fromTheme(QStringLiteral("application-pdf")), i18n("Find PDF..."), p);
         p->actionCollection()->addAction(QStringLiteral("element_findpdf"), elementFindPDFAction);
         connect(elementFindPDFAction, SIGNAL(triggered()), p, SLOT(elementFindPDF()));
 
         /// Action to reformat the selected elements' ids
-        entryApplyDefaultFormatString = new QAction(QIcon::fromTheme("favorites"), i18n("Format entry ids"), p);
+        entryApplyDefaultFormatString = new QAction(QIcon::fromTheme(QStringLiteral("favorites")), i18n("Format entry ids"), p);
         p->actionCollection()->addAction(QStringLiteral("entry_applydefaultformatstring"), entryApplyDefaultFormatString);
         connect(entryApplyDefaultFormatString, SIGNAL(triggered()), p, SLOT(applyDefaultFormatString()));
 
@@ -232,7 +232,7 @@ public:
         editCopyAction = p->actionCollection()->addAction(KStandardAction::Copy, clipboard, SLOT(copy()));
 
         /// Action to copy references, e.g. '\cite{fordfulkerson1959}'
-        editCopyReferencesAction = new QAction(QIcon::fromTheme("edit-copy"), i18n("Copy References"), p);
+        editCopyReferencesAction = new QAction(QIcon::fromTheme(QStringLiteral("edit-copy")), i18n("Copy References"), p);
         p->actionCollection()->setDefaultShortcut(editCopyReferencesAction, Qt::CTRL + Qt::SHIFT + Qt::Key_C);
         p->actionCollection()->addAction(QStringLiteral("edit_copy_references"), editCopyReferencesAction);
         connect(editCopyReferencesAction, SIGNAL(triggered()), clipboard, SLOT(copyReferences()));
@@ -241,7 +241,7 @@ public:
         editPasteAction = p->actionCollection()->addAction(KStandardAction::Paste, clipboard, SLOT(paste()));
 
         /// Action to delete selected rows/elements
-        editDeleteAction = new QAction(QIcon::fromTheme("edit-table-delete-row"), i18n("Delete"), p);
+        editDeleteAction = new QAction(QIcon::fromTheme(QStringLiteral("edit-table-delete-row")), i18n("Delete"), p);
         p->actionCollection()->setDefaultShortcut(editDeleteAction, Qt::Key_Delete);
         p->actionCollection()->addAction(QStringLiteral("edit_delete"), editDeleteAction);
         connect(editDeleteAction, SIGNAL(triggered()), partWidget->fileView(), SLOT(selectionDelete()));
@@ -275,14 +275,14 @@ public:
 
     FileImporter *fileImporterFactory(const QUrl &url) {
         QString ending = url.path().toLower();
-        int p = ending.lastIndexOf(".");
+        int p = ending.lastIndexOf(QStringLiteral("."));
         ending = ending.mid(p + 1);
 
-        if (ending == "pdf") {
+        if (ending == QStringLiteral("pdf")) {
             return new FileImporterPDF();
-        } else if (ending == "ris") {
+        } else if (ending == QStringLiteral("ris")) {
             return new FileImporterRIS();
-        } else if (BibUtils::available() && ending == "isi") {
+        } else if (BibUtils::available() && ending == QStringLiteral("isi")) {
             FileImporterBibUtils *fileImporterBibUtils = new FileImporterBibUtils();
             fileImporterBibUtils->setFormat(BibUtils::ISI);
             return fileImporterBibUtils;
@@ -293,28 +293,28 @@ public:
 
     FileExporter *fileExporterFactory(const QUrl &url) {
         QString ending = url.path().toLower();
-        int p = ending.lastIndexOf(".");
+        int p = ending.lastIndexOf(QStringLiteral("."));
         ending = ending.mid(p + 1);
 
-        if (ending == "html") {
+        if (ending == QStringLiteral("html")) {
             return new FileExporterXSLT();
-        } else if (ending == "xml") {
+        } else if (ending == QStringLiteral("xml")) {
             return new FileExporterXML();
-        } else if (ending == "ris") {
+        } else if (ending == QStringLiteral("ris")) {
             return new FileExporterRIS();
-        } else if (ending == "pdf") {
+        } else if (ending == QStringLiteral("pdf")) {
             return new FileExporterPDF();
-        } else if (ending == "ps") {
+        } else if (ending == QStringLiteral("ps")) {
             return new FileExporterPS();
-        } else if (BibUtils::available() && ending == "isi") {
+        } else if (BibUtils::available() && ending == QStringLiteral("isi")) {
             FileExporterBibUtils *fileExporterBibUtils = new FileExporterBibUtils();
             fileExporterBibUtils->setFormat(BibUtils::ISI);
             return fileExporterBibUtils;
-        } else if (ending == "rtf") {
+        } else if (ending == QStringLiteral("rtf")) {
             return new FileExporterRTF();
-        } else if (ending == "html" || ending == "htm") {
+        } else if (ending == QStringLiteral("html") || ending == QStringLiteral("htm")) {
             return new FileExporterBibTeX2HTML();
-        } else if (ending == "bbl") {
+        } else if (ending == QStringLiteral("bbl")) {
             return new FileExporterBibTeXOutput(FileExporterBibTeXOutput::BibTeXBlockList);
         } else {
             return new FileExporterBibTeX();
@@ -624,7 +624,7 @@ public:
 
                     /// Build a nice menu item (label, icon, ...)
                     QFileInfo fi((*it).url(QUrl::PreferLocalFile));
-                    const QString label = QString("%1 [%2]").arg(fi.fileName()).arg(fi.absolutePath());
+                    const QString label = QString(QStringLiteral("%1 [%2]")).arg(fi.fileName()).arg(fi.absolutePath());
                     QMimeDatabase db;
                     QAction *action = new QAction(QIcon::fromTheme(db.mimeTypeForUrl(*it).iconName()), label, p);
                     action->setData((*it).url(QUrl::PreferLocalFile));
@@ -1017,7 +1017,7 @@ void KBibTeXPart::fileExternallyChange(const QString &path)
     else
         qCWarning(LOG_KBIBTEX_PARTS) << "No filename to stop watching";
 
-    if (KMessageBox::warningContinueCancel(widget(), i18n("The file '%1' has changed on disk.\n\nReload file or ignore changes on disk?", path), i18n("File changed externally"), KGuiItem(i18n("Reload file"), QIcon::fromTheme("edit-redo")), KGuiItem(i18n("Ignore on-disk changes"), QIcon::fromTheme("edit-undo"))) == KMessageBox::Continue) {
+    if (KMessageBox::warningContinueCancel(widget(), i18n("The file '%1' has changed on disk.\n\nReload file or ignore changes on disk?", path), i18n("File changed externally"), KGuiItem(i18n("Reload file"), QIcon::fromTheme(QStringLiteral("edit-redo"))), KGuiItem(i18n("Ignore on-disk changes"), QIcon::fromTheme(QStringLiteral("edit-undo")))) == KMessageBox::Continue) {
         d->openFile(QUrl::fromLocalFile(path), path);
         /// No explicit call to QFileSystemWatcher.addPath(...) necessary,
         /// openFile(...) has done that already

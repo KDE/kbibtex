@@ -103,7 +103,7 @@ public:
         layout->addWidget(tabWidget);
 
         QWidget *container = new QWidget(tabWidget);
-        tabWidget->addTab(container, QIcon::fromTheme("preferences-web-browser-identification"), i18n("Library"));
+        tabWidget->addTab(container, QIcon::fromTheme(QStringLiteral("preferences-web-browser-identification")), i18n("Library"));
         QBoxLayout *containerLayout = new QVBoxLayout(container);
 
         /// Personal or Group Library
@@ -130,7 +130,7 @@ public:
         containerLayout->addLayout(containerButtonLayout, 0);
         containerButtonLayout->setMargin(0);
         containerButtonLayout->addStretch(1);
-        buttonLoadBibliography = new QPushButton(QIcon::fromTheme("download"), i18n("Load bibliography"), container);
+        buttonLoadBibliography = new QPushButton(QIcon::fromTheme(QStringLiteral("download")), i18n("Load bibliography"), container);
         containerButtonLayout->addWidget(buttonLoadBibliography, 0);
         connect(buttonLoadBibliography, SIGNAL(clicked()), p, SLOT(applyCredentials()));
 
@@ -155,21 +155,21 @@ public:
         containerButtonLayout = new QHBoxLayout();
         containerLayout->addLayout(containerButtonLayout, 0);
         containerButtonLayout->setMargin(0);
-        QPushButton *buttonGetOAuthCredentials = new QPushButton(QIcon::fromTheme("preferences-web-browser-identification"), i18n("Get Credentials"), container);
+        QPushButton *buttonGetOAuthCredentials = new QPushButton(QIcon::fromTheme(QStringLiteral("preferences-web-browser-identification")), i18n("Get Credentials"), container);
         containerButtonLayout->addWidget(buttonGetOAuthCredentials, 0);
         connect(buttonGetOAuthCredentials, &QPushButton::clicked, p, &ZoteroBrowser::getOAuthCredentials);
         containerButtonLayout->addStretch(1);
 
         /// Collection browser
         collectionBrowser = new QTreeView(tabWidget);
-        tabWidget->addTab(collectionBrowser, QIcon::fromTheme("folder-yellow"), i18n("Collections"));
+        tabWidget->addTab(collectionBrowser, QIcon::fromTheme(QStringLiteral("folder-yellow")), i18n("Collections"));
         collectionBrowser->setHeaderHidden(true);
         collectionBrowser->setExpandsOnDoubleClick(false);
         connect(collectionBrowser, SIGNAL(doubleClicked(QModelIndex)), p, SLOT(collectionDoubleClicked(QModelIndex)));
 
         /// Tag browser
         tagBrowser = new QListView(tabWidget);
-        tabWidget->addTab(tagBrowser, QIcon::fromTheme("mail-tagged"), i18n("Tags"));
+        tabWidget->addTab(tagBrowser, QIcon::fromTheme(QStringLiteral("mail-tagged")), i18n("Tags"));
         connect(tagBrowser, SIGNAL(doubleClicked(QModelIndex)), p, SLOT(tagDoubleClicked(QModelIndex)));
     }
 

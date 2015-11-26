@@ -154,8 +154,8 @@ bool FileExporterXML::writeEntry(QTextStream &stream, const Entry *entry)
             bool ok = false;
 
             int month = -1;
-            QString tag = "";
-            QString content = "";
+            QString tag;
+            QString content;
             for (Value::ConstIterator it = value.constBegin(); it != value.constEnd(); ++it) {
                 QSharedPointer<const MacroKey> macro = (*it).dynamicCast<const MacroKey>();
                 if (!macro.isNull())
@@ -249,6 +249,6 @@ QString FileExporterXML::valueToXML(const Value &value, const QString &)
 QString FileExporterXML::cleanXML(const QString &text)
 {
     QString result = text;
-    result = result.replace(lineBreaksRegExp, "<br/>").remove(removal).remove(QStringLiteral("\\ensuremath"));
+    result = result.replace(lineBreaksRegExp, QStringLiteral("<br/>")).remove(removal).remove(QStringLiteral("\\ensuremath"));
     return result;
 }

@@ -38,7 +38,7 @@ FileExporterXSLT::FileExporterXSLT(const QString &xsltFilename)
         : FileExporter(), m_cancelFlag(false)
 {
     if (xsltFilename.isEmpty() || !QFile(xsltFilename).exists())
-        setXSLTFilename(QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kbibtex/standard.xsl"));
+        setXSLTFilename(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kbibtex/standard.xsl")));
     else
         setXSLTFilename(xsltFilename);
 }

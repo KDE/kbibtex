@@ -137,7 +137,7 @@ OnlineSearchQueryFormAbstract *OnlineSearchIsbnDB::customWidget(QWidget *parent)
 
 QUrl OnlineSearchIsbnDB::homepage() const
 {
-    return QUrl("http://isbndb.com/");
+    return QUrl(QStringLiteral("http://isbndb.com/"));
 }
 
 void OnlineSearchIsbnDB::cancel()

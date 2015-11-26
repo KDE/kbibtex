@@ -176,7 +176,7 @@ public:
         QHBoxLayout *innerLayout = new QHBoxLayout();
         layout->addLayout(innerLayout, 0);
 
-        onlyLocalFilesButton = new QPushButton(QIcon::fromTheme("applications-internet"), QString(), p);
+        onlyLocalFilesButton = new QPushButton(QIcon::fromTheme(QStringLiteral("applications-internet")), QString(), p);
         onlyLocalFilesButton->setToolTip(i18n("Toggle between local files only and all documents including remote ones"));
         innerLayout->addWidget(onlyLocalFilesButton, 0);
         onlyLocalFilesButton->setCheckable(true);
@@ -187,7 +187,7 @@ public:
         urlComboBox = new KComboBox(false, p);
         innerLayout->addWidget(urlComboBox, 1);
 
-        externalViewerButton = new QPushButton(QIcon::fromTheme("document-open"), QString(), p);
+        externalViewerButton = new QPushButton(QIcon::fromTheme(QStringLiteral("document-open")), QString(), p);
         externalViewerButton->setToolTip(i18n("Open in external program"));
         innerLayout->addWidget(externalViewerButton, 0);
         sp = externalViewerButton->sizePolicy();
@@ -265,7 +265,7 @@ public:
             QString fn = urlInfo.url.fileName();
             QString full = urlInfo.url.url(QUrl::PreferLocalFile);
             QString dir = urlInfo.url.adjusted(QUrl::RemoveFilename | QUrl::StripTrailingSlash).path();
-            QString text = fn.isEmpty() ? full : (dir.isEmpty() ? fn : QString("%1 [%2]").arg(fn).arg(dir));
+            QString text = fn.isEmpty() ? full : (dir.isEmpty() ? fn : QString(QStringLiteral("%1 [%2]")).arg(fn).arg(dir));
             urlComboBox->addItem(urlInfo.icon, text);
         } else {
             /// create a drop-down list entry if file is a remote file
@@ -278,7 +278,7 @@ public:
         if (urlComboBox->count() == 1 || ///< first entry in combobox
                 isLocal || ///< local files always preferred over URLs
                 /// prefer arXiv summary URLs over other URLs
-                (!anyLocal && urlInfo.url.host().contains("arxiv.org/abs"))) {
+                (!anyLocal && urlInfo.url.host().contains(QStringLiteral("arxiv.org/abs")))) {
             showUrl(urlInfo);
         }
 
@@ -372,7 +372,7 @@ public:
         QDomDocument doc = part->domDocument();
         QDomElement docElem = doc.documentElement();
 
-        QDomNodeList toolbarNodes = docElem.elementsByTagName("ToolBar");
+        QDomNodeList toolbarNodes = docElem.elementsByTagName(QStringLiteral("ToolBar"));
         for (int i = 0; i < toolbarNodes.count(); ++i) {
             QDomNodeList toolbarItems = toolbarNodes.at(i).childNodes();
             for (int j = 0; j < toolbarItems.count(); ++j) {
@@ -387,7 +387,7 @@ public:
         }
 
 
-        QDomNodeList menubarNodes = docElem.elementsByTagName("MenuBar");
+        QDomNodeList menubarNodes = docElem.elementsByTagName(QStringLiteral("MenuBar"));
         for (int i = 0; i < menubarNodes.count(); ++i) {
             QDomNodeList menubarNode = menubarNodes.at(i).childNodes();
             for (int j = 0; j < menubarNode.count(); ++j) {
@@ -417,14 +417,14 @@ public:
             }
         }
 
-        QDomNodeList actionPropertiesList = docElem.elementsByTagName("ActionProperties");
+        QDomNodeList actionPropertiesList = docElem.elementsByTagName(QStringLiteral("ActionProperties"));
         for (int i = 0; i < actionPropertiesList.count(); ++i) {
             QDomNodeList actionProperties = actionPropertiesList.at(i).childNodes();
             for (int j = 0; j < actionProperties.count(); ++j) {
                 QDomNode actionNode = actionProperties.at(j);
                 if (actionNode.nodeName() == QStringLiteral("Action")) {
-                    const QString actionName = actionNode.attributes().namedItem("name").toAttr().nodeValue();
-                    const QString actionShortcut = actionNode.attributes().namedItem("shortcut").toAttr().value();
+                    const QString actionName = actionNode.attributes().namedItem(QStringLiteral("name")).toAttr().nodeValue();
+                    const QString actionShortcut = actionNode.attributes().namedItem(QStringLiteral("shortcut")).toAttr().value();
                     QAction *action = part->actionCollection()->action(actionName);
                     if (action != NULL) {
                         action->setShortcut(QKeySequence(actionShortcut));
@@ -541,7 +541,7 @@ public:
 
         if (!isLocalOrRelative(url) && url.fileName().isEmpty()) {
             /// URLs not pointing to a specific file should be opened with a web browser component
-            result.icon = QIcon::fromTheme("text-html");
+            result.icon = QIcon::fromTheme(QStringLiteral("text-html"));
             result.mimeType = QStringLiteral("text/html");
             return result;
         }
@@ -559,16 +559,16 @@ public:
 
         if (result.mimeType == QStringLiteral("application/octet-stream")) {
             /// application/octet-stream is a fall-back if KDE did not know better
-            result.icon = QIcon::fromTheme("text-html");
+            result.icon = QIcon::fromTheme(QStringLiteral("text-html"));
             result.mimeType = QStringLiteral("text/html");
         } else if ((result.mimeType.isEmpty() || result.mimeType == QStringLiteral("inode/directory")) && (result.url.scheme() == QStringLiteral("http") || result.url.scheme() == QStringLiteral("https"))) {
             /// directory via http means normal webpage (not browsable directory)
-            result.icon = QIcon::fromTheme("text-html");
+            result.icon = QIcon::fromTheme(QStringLiteral("text-html"));
             result.mimeType = QStringLiteral("text/html");
         }
 
         if (url.url(QUrl::PreferLocalFile).startsWith(arXivPDFUrlStart)) {
-            result.icon = QIcon::fromTheme("application-pdf");
+            result.icon = QIcon::fromTheme(QStringLiteral("application-pdf"));
             result.mimeType = QStringLiteral("application/pdf");
         }
 

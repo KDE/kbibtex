@@ -96,14 +96,14 @@ public:
         connect(checkBoxShowMacros, SIGNAL(toggled(bool)), p, SIGNAL(changed()));
 
         comboBoxBibliographySystem = new KComboBox(p);
-        comboBoxBibliographySystem->setObjectName("comboBoxBibtexStyle");
+        comboBoxBibliographySystem->setObjectName(QStringLiteral("comboBoxBibtexStyle"));
         comboBoxBibliographySystem->addItem(i18n("BibTeX"), QStringLiteral("bibtex"));
         comboBoxBibliographySystem->addItem(i18n("BibLaTeX"), QStringLiteral("biblatex"));
         layout->addRow(i18n("Bibliography System:"), comboBoxBibliographySystem);
         connect(comboBoxBibliographySystem, SIGNAL(currentIndexChanged(int)), p, SIGNAL(changed()));
 
         comboBoxElementDoubleClickAction = new KComboBox(p);
-        comboBoxElementDoubleClickAction->setObjectName("comboBoxElementDoubleClickAction");
+        comboBoxElementDoubleClickAction->setObjectName(QStringLiteral("comboBoxElementDoubleClickAction"));
         comboBoxElementDoubleClickAction->addItem(i18n("Open Editor")); ///< ActionOpenEditor = 0
         comboBoxElementDoubleClickAction->addItem(i18n("View Document")); ///< ActionViewDocument = 1
         layout->addRow(i18n("When double-clicking an element:"), comboBoxElementDoubleClickAction);
@@ -127,7 +127,7 @@ QString SettingsUserInterfaceWidget::label() const
 
 QIcon SettingsUserInterfaceWidget::icon() const
 {
-    return QIcon::fromTheme("user-identity");
+    return QIcon::fromTheme(QStringLiteral("user-identity"));
 }
 
 SettingsUserInterfaceWidget::~SettingsUserInterfaceWidget()

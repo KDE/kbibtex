@@ -107,7 +107,7 @@ public:
         int columnCount = 0;
         foreach (const FieldDescription *fd, *p) {
             ++columnCount;
-            QString groupName = QString("Column%1").arg(columnCount);
+            QString groupName = QString(QStringLiteral("Column%1")).arg(columnCount);
             KConfigGroup configGroup(layoutConfig, groupName);
 
             for (QMap<QString, int>::ConstIterator it = fd->width.constBegin(); it != fd->width.constEnd(); ++it) {
@@ -133,7 +133,7 @@ public:
 
     void resetToDefaults(const QString &treeViewName) {
         for (int col = 1; col < bibTeXFieldsMaxColumnCount; ++col) {
-            QString groupName = QString("Column%1").arg(col);
+            QString groupName = QString(QStringLiteral("Column%1")).arg(col);
             KConfigGroup configGroup(layoutConfig, groupName);
             configGroup.deleteEntry("Width_" + treeViewName);
             configGroup.deleteEntry("Visible_" + treeViewName);

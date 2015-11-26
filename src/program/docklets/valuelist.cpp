@@ -104,23 +104,23 @@ public:
 
         treeviewFieldValues->setContextMenuPolicy(Qt::ActionsContextMenu);
         /// create context menu item to start renaming
-        QAction *action = new QAction(QIcon::fromTheme("edit-rename"), i18n("Replace all occurrences"), p);
+        QAction *action = new QAction(QIcon::fromTheme(QStringLiteral("edit-rename")), i18n("Replace all occurrences"), p);
         connect(action, SIGNAL(triggered()), p, SLOT(startItemRenaming()));
         treeviewFieldValues->addAction(action);
         /// create context menu item to delete value
-        action = new QAction(QIcon::fromTheme("edit-table-delete-row"), i18n("Delete all occurrences"), p);
+        action = new QAction(QIcon::fromTheme(QStringLiteral("edit-table-delete-row")), i18n("Delete all occurrences"), p);
         connect(action, SIGNAL(triggered()), p, SLOT(deleteAllOccurrences()));
         treeviewFieldValues->addAction(action);
         /// create context menu item to search for multiple selections
-        action = new QAction(QIcon::fromTheme("edit-find"), i18n("Search for selected values"), p);
+        action = new QAction(QIcon::fromTheme(QStringLiteral("edit-find")), i18n("Search for selected values"), p);
         connect(action, SIGNAL(triggered()), p, SLOT(searchSelection()));
         treeviewFieldValues->addAction(action);
         /// create context menu item to assign value to selected bibliography elements
-        assignSelectionAction = new QAction(QIcon::fromTheme("emblem-new"), i18n("Add value to selected entries"), p);
+        assignSelectionAction = new QAction(QIcon::fromTheme(QStringLiteral("emblem-new")), i18n("Add value to selected entries"), p);
         connect(assignSelectionAction, SIGNAL(triggered()), p, SLOT(assignSelection()));
         treeviewFieldValues->addAction(assignSelectionAction);
         /// create context menu item to remove value from selected bibliography elements
-        removeSelectionAction = new QAction(QIcon::fromTheme("list-remove"), i18n("Remove value from selected entries"), p);
+        removeSelectionAction = new QAction(QIcon::fromTheme(QStringLiteral("list-remove")), i18n("Remove value from selected entries"), p);
         connect(removeSelectionAction, SIGNAL(triggered()), p, SLOT(removeSelection()));
         treeviewFieldValues->addAction(removeSelectionAction);
 

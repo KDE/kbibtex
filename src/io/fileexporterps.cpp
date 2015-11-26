@@ -110,7 +110,7 @@ bool FileExporterPS::generatePS(QIODevice *iodevice, QStringList *errorLog)
 {
     QStringList cmdLines = QStringList() << QStringLiteral("latex -halt-on-error bibtex-to-ps.tex") << QStringLiteral("bibtex bibtex-to-ps") << QStringLiteral("latex -halt-on-error bibtex-to-ps.tex") << QStringLiteral("latex -halt-on-error bibtex-to-ps.tex") << QStringLiteral("dvips -R2 -o bibtex-to-ps.ps bibtex-to-ps.dvi");
 
-    return writeLatexFile(m_fileStem + KBibTeX::extensionTeX) && runProcesses(cmdLines, errorLog) && beautifyPostscriptFile(m_fileStem + KBibTeX::extensionPostScript, "Exported Bibliography") && writeFileToIODevice(m_fileStem + KBibTeX::extensionPostScript, iodevice, errorLog);
+    return writeLatexFile(m_fileStem + KBibTeX::extensionTeX) && runProcesses(cmdLines, errorLog) && beautifyPostscriptFile(m_fileStem + KBibTeX::extensionPostScript, QStringLiteral("Exported Bibliography")) && writeFileToIODevice(m_fileStem + KBibTeX::extensionPostScript, iodevice, errorLog);
 }
 
 bool FileExporterPS::writeLatexFile(const QString &filename)
@@ -122,15 +122,15 @@ bool FileExporterPS::writeLatexFile(const QString &filename)
         ts << "\\documentclass{article}" << endl;
         ts << "\\usepackage[T1]{fontenc}" << endl;
         ts << "\\usepackage[utf8]{inputenc}" << endl;
-        if (kpsewhich("babel.sty"))
+        if (kpsewhich(QStringLiteral("babel.sty")))
             ts << "\\usepackage[" << m_babelLanguage << "]{babel}" << endl;
-        if (kpsewhich("url.sty"))
+        if (kpsewhich(QStringLiteral("url.sty")))
             ts << "\\usepackage{url}" << endl;
-        if (m_bibliographyStyle.startsWith(QStringLiteral("apacite")) && kpsewhich("apacite.sty"))
+        if (m_bibliographyStyle.startsWith(QStringLiteral("apacite")) && kpsewhich(QStringLiteral("apacite.sty")))
             ts << "\\usepackage[bibnewpage]{apacite}" << endl;
-        if ((m_bibliographyStyle == QStringLiteral("agsm") || m_bibliographyStyle == QStringLiteral("dcu") || m_bibliographyStyle == QStringLiteral("jmr") || m_bibliographyStyle == QStringLiteral("jphysicsB") || m_bibliographyStyle == QStringLiteral("kluwer") || m_bibliographyStyle == QStringLiteral("nederlands") || m_bibliographyStyle == QStringLiteral("dcu") || m_bibliographyStyle == QStringLiteral("dcu")) && kpsewhich("harvard.sty") && kpsewhich("html.sty"))
+        if ((m_bibliographyStyle == QStringLiteral("agsm") || m_bibliographyStyle == QStringLiteral("dcu") || m_bibliographyStyle == QStringLiteral("jmr") || m_bibliographyStyle == QStringLiteral("jphysicsB") || m_bibliographyStyle == QStringLiteral("kluwer") || m_bibliographyStyle == QStringLiteral("nederlands") || m_bibliographyStyle == QStringLiteral("dcu") || m_bibliographyStyle == QStringLiteral("dcu")) && kpsewhich(QStringLiteral("harvard.sty")) && kpsewhich(QStringLiteral("html.sty")))
             ts << "\\usepackage{html}" << endl << "\\usepackage[dcucite]{harvard}" << endl << "\\renewcommand{\\harvardurl}{URL: \\url}" << endl;
-        if (kpsewhich("geometry.sty"))
+        if (kpsewhich(QStringLiteral("geometry.sty")))
             ts << "\\usepackage[paper=" << m_paperSize << (m_paperSize.length() <= 2 ? "paper" : "") << "]{geometry}" << endl;
         if (!m_font.isEmpty() && kpsewhich(m_font + QStringLiteral(".sty")))
             ts << "\\usepackage{" << m_font << "}" << endl;
@@ -157,7 +157,7 @@ bool FileExporterPS::beautifyPostscriptFile(const QString &filename, const QStri
             if (i < 32 && line.startsWith(QStringLiteral("%%Title:")))
                 line = "%%Title: " + title;
             else if (i < 32 && line.startsWith(QStringLiteral("%%Creator:")))
-                line += "; exported from within KBibTeX: http://home.gna.org/kbibtex/";
+                line += QStringLiteral("; exported from within KBibTeX: http://home.gna.org/kbibtex/");
             lines += line;
             ++i;
         }

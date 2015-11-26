@@ -133,7 +133,7 @@ void OnlineSearchDOI::startSearch()
     const QUrl url = d->buildQueryUrl();
     if (url.isValid()) {
         QNetworkRequest request(url);
-        request.setRawHeader(QString("Accept").toLatin1(), QString("text/bibliography; style=bibtex").toLatin1());
+        request.setRawHeader(QByteArray("Accept"), QByteArray("text/bibliography; style=bibtex"));
         QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
         InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
         connect(reply, SIGNAL(finished()), this, SLOT(downloadDone()));
@@ -154,7 +154,7 @@ void OnlineSearchDOI::startSearch(const QMap<QString, QString> &query, int numRe
     const QUrl url = d->buildQueryUrl(query, numResults);
     if (url.isValid()) {
         QNetworkRequest request(url);
-        request.setRawHeader(QString("Accept").toLatin1(), QString("text/bibliography; style=bibtex").toLatin1());
+        request.setRawHeader(QByteArray("Accept"), QByteArray("text/bibliography; style=bibtex"));
         QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
         InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
         connect(reply, SIGNAL(finished()), this, SLOT(downloadDone()));
@@ -203,7 +203,7 @@ void OnlineSearchDOI::downloadDone()
             ++d->numSteps;
 
             QNetworkRequest request(redirUrl);
-            request.setRawHeader(QString("Accept").toLatin1(), QString("text/bibliography; style=bibtex").toLatin1());
+            request.setRawHeader(QByteArray("Accept"), QByteArray("text/bibliography; style=bibtex"));
             QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request);
             InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
             connect(newReply, SIGNAL(finished()), this, SLOT(downloadDone()));

@@ -90,7 +90,7 @@ private:
         /// if there unapplied changes in the editor widget ...
         /// ... ask user for consent to discard changes ...
         /// only the allow to close this dialog
-        return !elementEditor->elementUnapplied() || KMessageBox::warningContinueCancel(this, i18n("The current entry has been modified. Do you want do discard your changes?"), i18n("Discard changes?"), KGuiItem(i18n("Discard"), "edit-delete-shred"), KGuiItem(i18n("Continue Editing"), "edit-rename")) == KMessageBox::Continue;
+        return !elementEditor->elementUnapplied() || KMessageBox::warningContinueCancel(this, i18n("The current entry has been modified. Do you want do discard your changes?"), i18n("Discard changes?"), KGuiItem(i18n("Discard"), QStringLiteral("edit-delete-shred")), KGuiItem(i18n("Continue Editing"), QStringLiteral("edit-rename"))) == KMessageBox::Continue;
     }
 };
 

@@ -192,7 +192,7 @@ public:
         vLayout->addLayout(hLayout, 0);
 
         /// Push button with menu to toggle various options
-        buttonOptions = new QPushButton(QIcon::fromTheme("configure"), i18n("Options"), p);
+        buttonOptions = new QPushButton(QIcon::fromTheme(QStringLiteral("configure")), i18n("Options"), p);
         hLayout->addWidget(buttonOptions, 0);
         QMenu *menuOptions = new QMenu(buttonOptions);
         buttonOptions->setMenu(menuOptions);
@@ -209,7 +209,7 @@ public:
 
         hLayout->addStretch(10);
 
-        buttonCheckWithBibTeX = new QPushButton(QIcon::fromTheme("tools-check-spelling"), i18n("Check with BibTeX"), p);
+        buttonCheckWithBibTeX = new QPushButton(QIcon::fromTheme(QStringLiteral("tools-check-spelling")), i18n("Check with BibTeX"), p);
         hLayout->addWidget(buttonCheckWithBibTeX, 0);
         connect(buttonCheckWithBibTeX, SIGNAL(clicked()), p, SLOT(checkBibTeX()));
 

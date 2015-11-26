@@ -89,9 +89,9 @@ bool OnlineSearchQueryFormGeneral::readyToStart() const
 
 void OnlineSearchQueryFormGeneral::copyFromEntry(const Entry &entry)
 {
-    queryFields[OnlineSearchAbstract::queryKeyFreeText]->setText("");
+    queryFields[OnlineSearchAbstract::queryKeyFreeText]->setText(QStringLiteral(""));
     queryFields[OnlineSearchAbstract::queryKeyTitle]->setText(PlainTextValue::text(entry[Entry::ftTitle]));
-    queryFields[OnlineSearchAbstract::queryKeyAuthor]->setText(authorLastNames(entry).join(" "));
+    queryFields[OnlineSearchAbstract::queryKeyAuthor]->setText(authorLastNames(entry).join(QStringLiteral(" ")));
     queryFields[OnlineSearchAbstract::queryKeyYear]->setText(PlainTextValue::text(entry[Entry::ftYear]));
 }
 

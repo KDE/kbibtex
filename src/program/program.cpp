@@ -77,7 +77,7 @@ int main(int argc, char *argv[])
 
     mainWindow->show();
 
-    KService::Ptr service = KService::serviceByStorageId("kbibtexpart.desktop");
+    KService::Ptr service = KService::serviceByStorageId(QStringLiteral("kbibtexpart.desktop"));
     if (service.data() == NULL) {
         /// Dump some environment variables that may be helpful
         /// in tracing back why the part's .desktop file was not found

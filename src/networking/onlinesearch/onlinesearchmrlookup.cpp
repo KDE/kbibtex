@@ -90,7 +90,7 @@ OnlineSearchQueryFormAbstract *OnlineSearchMRLookup::customWidget(QWidget *)
 
 QUrl OnlineSearchMRLookup::homepage() const
 {
-    return QUrl("http://www.ams.org/mrlookup");
+    return QUrl(QStringLiteral("http://www.ams.org/mrlookup"));
 }
 
 void OnlineSearchMRLookup::cancel()
@@ -147,7 +147,7 @@ void OnlineSearchMRLookup::sanitizeEntry(QSharedPointer<Entry> entry)
     /// Remove URL from entry if contains a DOI and the DOI field is present
     if (entry->contains(Entry::ftDOI) && entry->contains(Entry::ftUrl)) {
         Value v = entry->value(Entry::ftUrl);
-        if (v.containsPattern("http://dx.doi.org")) {
+        if (v.containsPattern(QStringLiteral("http://dx.doi.org"))) {
             entry->remove(Entry::ftUrl);
         }
     }

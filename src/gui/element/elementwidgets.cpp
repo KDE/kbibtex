@@ -215,7 +215,7 @@ void EntryConfiguredWidget::createGUI()
         labeledFieldInput->isVerticallyMinimumExpaning = sfl.fieldInputLayout == KBibTeX::MultiLine || sfl.fieldInputLayout == KBibTeX::List || sfl.fieldInputLayout == KBibTeX::PersonList || sfl.fieldInputLayout == KBibTeX::KeywordList;
 
         /// create a label next to the editing widget
-        labeledFieldInput->label = new QLabel(QString("%1:").arg(sfl.uiLabel), this);
+        labeledFieldInput->label = new QLabel(QString(QStringLiteral("%1:")).arg(sfl.uiLabel), this);
         labeledFieldInput->label->setBuddy(labeledFieldInput->fieldInput->buddy());
         /// align label's text vertically to match field input
         Qt::Alignment horizontalAlignment = (Qt::Alignment)(labeledFieldInput->label->style()->styleHint(QStyle::SH_FormLayoutLabelAlignment) & 0x001f);
@@ -472,7 +472,7 @@ void ReferenceWidget::createGUI()
         entryType->addItem(it->label, it->upperCamelCase);
 
     /// Button with a menu listing a set of preconfigured id suggestions
-    buttonSuggestId = new QPushButton(QIcon::fromTheme("view-filter"), QStringLiteral(""), this);
+    buttonSuggestId = new QPushButton(QIcon::fromTheme(QStringLiteral("view-filter")), QStringLiteral(""), this);
     buttonSuggestId->setToolTip(i18n("Select a suggested id for this entry"));
     layout->addWidget(buttonSuggestId);
     QMenu *suggestionsMenu = new QMenu(buttonSuggestId);
@@ -517,7 +517,7 @@ void ReferenceWidget::prepareSuggestionsMenu()
 
         /// Create action for suggestion, use icon depending if default or not
         QAction *suggestionAction = new QAction(suggestion, suggestionsMenu);
-        suggestionAction->setIcon(QIcon::fromTheme(isDefault ? "favorites" : "view-filter"));
+        suggestionAction->setIcon(QIcon::fromTheme(isDefault ? QStringLiteral("favorites") : QStringLiteral("view-filter")));
 
         /// Mesh action into GUI
         suggestionsMenu->addAction(suggestionAction);
@@ -686,7 +686,7 @@ QString FilesWidget::label()
 
 QIcon FilesWidget::icon()
 {
-    return QIcon::fromTheme("emblem-symbolic-link");
+    return QIcon::fromTheme(QStringLiteral("emblem-symbolic-link"));
 }
 
 void FilesWidget::setFile(const File *file)
@@ -763,7 +763,7 @@ QString OtherFieldsWidget::label()
 
 QIcon OtherFieldsWidget::icon()
 {
-    return QIcon::fromTheme("other");
+    return QIcon::fromTheme(QStringLiteral("other"));
 }
 
 bool OtherFieldsWidget::canEdit(const Element *element)
@@ -870,7 +870,7 @@ void OtherFieldsWidget::createGUI()
     layout->addWidget(fieldName, 0, 1, 1, 1);
     label->setBuddy(fieldName);
 
-    buttonAddApply = new QPushButton(QIcon::fromTheme("list-add"), i18n("Add"), this);
+    buttonAddApply = new QPushButton(QIcon::fromTheme(QStringLiteral("list-add")), i18n("Add"), this);
     buttonAddApply->setEnabled(false);
     layout->addWidget(buttonAddApply, 0, 2, 1, 1);
 
@@ -891,10 +891,10 @@ void OtherFieldsWidget::createGUI()
     layout->addWidget(otherFieldsList, 2, 1, 3, 1);
     label->setBuddy(otherFieldsList);
 
-    buttonDelete = new QPushButton(QIcon::fromTheme("list-remove"), i18n("Delete"), this);
+    buttonDelete = new QPushButton(QIcon::fromTheme(QStringLiteral("list-remove")), i18n("Delete"), this);
     buttonDelete->setEnabled(false);
     layout->addWidget(buttonDelete,  2, 2, 1, 1);
-    buttonOpen = new QPushButton(QIcon::fromTheme("document-open"), i18n("Open"), this);
+    buttonOpen = new QPushButton(QIcon::fromTheme(QStringLiteral("document-open")), i18n("Open"), this);
     buttonOpen->setEnabled(false);
     layout->addWidget(buttonOpen, 3, 2, 1, 1);
 
@@ -918,7 +918,7 @@ void OtherFieldsWidget::updateList()
             QTreeWidgetItem *item = new QTreeWidgetItem();
             item->setText(0, it.key());
             item->setText(1, PlainTextValue::text(it.value()));
-            item->setIcon(0, QIcon::fromTheme("entry")); // FIXME
+            item->setIcon(0, QIcon::fromTheme(QStringLiteral("entry"))); // FIXME
             otherFieldsList->addTopLevelItem(item);
             item->setSelected(selText == it.key());
             if (it.key() == curText)
@@ -934,7 +934,7 @@ void OtherFieldsWidget::updateGUI()
     else {
         buttonAddApply->setEnabled(!isReadOnly);
         buttonAddApply->setText(internalEntry->contains(key) ? i18n("Apply") : i18n("Add"));
-        buttonAddApply->setIcon(internalEntry->contains(key) ? QIcon::fromTheme("document-edit") : QIcon::fromTheme("list-add"));
+        buttonAddApply->setIcon(internalEntry->contains(key) ? QIcon::fromTheme(QStringLiteral("document-edit")) : QIcon::fromTheme(QStringLiteral("list-add")));
     }
 }
 
@@ -985,7 +985,7 @@ QString MacroWidget::label()
 
 QIcon MacroWidget::icon()
 {
-    return QIcon::fromTheme("macro");
+    return QIcon::fromTheme(QStringLiteral("macro"));
 }
 
 bool MacroWidget::canEdit(const Element *element)
@@ -1050,7 +1050,7 @@ QString PreambleWidget::label()
 
 QIcon PreambleWidget::icon()
 {
-    return QIcon::fromTheme("preamble");
+    return QIcon::fromTheme(QStringLiteral("preamble"));
 }
 
 bool PreambleWidget::canEdit(const Element *element)
@@ -1176,7 +1176,7 @@ QString SourceWidget::label()
 
 QIcon SourceWidget::icon()
 {
-    return QIcon::fromTheme("code-context");
+    return QIcon::fromTheme(QStringLiteral("code-context"));
 }
 
 bool SourceWidget::canEdit(const Element *element)
@@ -1198,7 +1198,7 @@ void SourceWidget::createGUI()
     sourceEdit->document()->setDefaultFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
     sourceEdit->setTabStopWidth(QFontMetrics(sourceEdit->font()).averageCharWidth() * 4);
 
-    m_buttonRestore = new QPushButton(QIcon::fromTheme("edit-undo"), i18n("Restore"), this);
+    m_buttonRestore = new QPushButton(QIcon::fromTheme(QStringLiteral("edit-undo")), i18n("Restore"), this);
     layout->addWidget(m_buttonRestore, 1, 1, 1, 1);
     connect(m_buttonRestore, SIGNAL(clicked()), this, SLOT(reset()));
 

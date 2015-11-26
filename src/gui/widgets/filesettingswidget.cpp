@@ -30,7 +30,7 @@
 #include "file.h"
 #include "guihelper.h"
 
-#define createDelimiterString(a, b) (QString("%1%2%3").arg(a).arg(QChar(8230)).arg(b))
+#define createDelimiterString(a, b) (QString(QStringLiteral("%1%2%3")).arg(a).arg(QChar(8230)).arg(b))
 
 FileSettingsWidget::FileSettingsWidget(QWidget *parent)
         : QWidget(parent), dummyPerson(Person(i18n("John"), i18n("Doe"), i18n("Jr."))), m_file(NULL)
@@ -125,7 +125,7 @@ void FileSettingsWidget::setupGUI()
     QFormLayout *layout = new QFormLayout(this);
 
     m_comboBoxEncodings = new KComboBox(false, this);
-    m_comboBoxEncodings->setObjectName("comboBoxEncodings");
+    m_comboBoxEncodings->setObjectName(QStringLiteral("comboBoxEncodings"));
     layout->addRow(i18n("Encoding:"), m_comboBoxEncodings);
     m_comboBoxEncodings->addItem(QStringLiteral("LaTeX"));
     m_comboBoxEncodings->insertSeparator(1);
@@ -133,7 +133,7 @@ void FileSettingsWidget::setupGUI()
     connect(m_comboBoxEncodings, SIGNAL(currentIndexChanged(int)), this, SIGNAL(widgetsChanged()));
 
     m_comboBoxStringDelimiters = new KComboBox(false, this);
-    m_comboBoxStringDelimiters->setObjectName("comboBoxStringDelimiters");
+    m_comboBoxStringDelimiters->setObjectName(QStringLiteral("comboBoxStringDelimiters"));
     layout->addRow(i18n("String Delimiters:"), m_comboBoxStringDelimiters);
     m_comboBoxStringDelimiters->addItem(createDelimiterString('"', '"'));
     m_comboBoxStringDelimiters->addItem(createDelimiterString('{', '}'));
@@ -161,12 +161,12 @@ void FileSettingsWidget::setupGUI()
     connect(m_checkBoxProtectCasing, SIGNAL(toggled(bool)), this, SIGNAL(widgetsChanged()));
 
     m_comboBoxPersonNameFormatting = new KComboBox(false, this);
-    m_comboBoxPersonNameFormatting->setObjectName("comboBoxPersonNameFormatting");
+    m_comboBoxPersonNameFormatting->setObjectName(QStringLiteral("comboBoxPersonNameFormatting"));
     layout->addRow(i18n("Person Names Formatting:"), m_comboBoxPersonNameFormatting);
     connect(m_comboBoxPersonNameFormatting, SIGNAL(currentIndexChanged(int)), this, SIGNAL(widgetsChanged()));
 
     ItalicTextItemModel *itim = new ItalicTextItemModel();
-    itim->addItem(i18n("Use global settings"), QString(""));
+    itim->addItem(i18n("Use global settings"), QString(QStringLiteral("")));
     itim->addItem(Person::transcribePersonName(&dummyPerson, Preferences::personNameFormatFirstLast), Preferences::personNameFormatFirstLast);
     itim->addItem(Person::transcribePersonName(&dummyPerson, Preferences::personNameFormatLastFirst), Preferences::personNameFormatLastFirst);
     m_comboBoxPersonNameFormatting->setModel(itim);

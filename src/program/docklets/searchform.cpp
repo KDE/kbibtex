@@ -166,7 +166,7 @@ public:
         connect(enginesList, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)), p, SLOT(enginesListCurrentChanged(QListWidgetItem*,QListWidgetItem*)));
         enginesList->setSelectionMode(QAbstractItemView::NoSelection);
 
-        actionOpenHomepage = new QAction(QIcon::fromTheme("internet-web-browser"), i18n("Go to Homepage"), p);
+        actionOpenHomepage = new QAction(QIcon::fromTheme(QStringLiteral("internet-web-browser")), i18n("Go to Homepage"), p);
         connect(actionOpenHomepage, SIGNAL(triggered()), p, SLOT(openHomepage()));
         enginesList->addAction(actionOpenHomepage);
         enginesList->setContextMenuPolicy(Qt::ActionsContextMenu);
@@ -188,14 +188,14 @@ public:
         layout->addWidget(tabWidget, 0, 0, 1, 3);
 
         QWidget *widget = createQueryTermsStack(tabWidget);
-        tabWidget->addTab(widget, QIcon::fromTheme("edit-rename"), i18n("Query Terms"));
+        tabWidget->addTab(widget, QIcon::fromTheme(QStringLiteral("edit-rename")), i18n("Query Terms"));
 
         QWidget *listContainer = createEnginesGUI(tabWidget);
-        tabWidget->addTab(listContainer, QIcon::fromTheme("applications-engineering"), i18n("Engines"));
+        tabWidget->addTab(listContainer, QIcon::fromTheme(QStringLiteral("applications-engineering")), i18n("Engines"));
 
         connect(tabWidget, SIGNAL(currentChanged(int)), p, SLOT(tabSwitched(int)));
 
-        useEntryButton = new QPushButton(QIcon::fromTheme("go-up"), i18n("Use Entry"), p);
+        useEntryButton = new QPushButton(QIcon::fromTheme(QStringLiteral("go-up")), i18n("Use Entry"), p);
         layout->addWidget(useEntryButton, 1, 0, 1, 1);
         useEntryButton->setEnabled(false);
         connect(useEntryButton, SIGNAL(clicked()), p, SLOT(copyFromEntry()));
@@ -205,7 +205,7 @@ public:
         progressBar->setMaximum(1000);
         progressBar->hide();
 
-        searchButton = new QPushButton(QIcon::fromTheme("edit-find"), i18n("Search"), p);
+        searchButton = new QPushButton(QIcon::fromTheme(QStringLiteral("edit-find")), i18n("Search"), p);
         layout->addWidget(searchButton, 1, 2, 1, 1);
         connect(generalQueryTermsForm, SIGNAL(returnPressed()), searchButton, SLOT(click()));
 
@@ -268,7 +268,7 @@ public:
 
         connect(searchButton, SIGNAL(clicked()), p, SLOT(startSearch()));
         searchButton->setText(i18n("Search"));
-        searchButton->setIcon(QIcon::fromTheme("media-playback-start"));
+        searchButton->setIcon(QIcon::fromTheme(QStringLiteral("media-playback-start")));
         for (int i = tabWidget->count() - 1; i >= 0; --i)
             tabWidget->widget(i)->setEnabled(true);
         tabWidget->unsetCursor();
@@ -280,7 +280,7 @@ public:
         for (QMap<QListWidgetItem *, OnlineSearchAbstract *>::ConstIterator it = itemToOnlineSearch.constBegin(); it != itemToOnlineSearch.constEnd(); ++it)
             connect(searchButton, SIGNAL(clicked()), it.value(), SLOT(cancel()));
         searchButton->setText(i18n("Stop"));
-        searchButton->setIcon(QIcon::fromTheme("media-playback-stop"));
+        searchButton->setIcon(QIcon::fromTheme(QStringLiteral("media-playback-stop")));
         for (int i = tabWidget->count() - 1; i >= 0; --i)
             tabWidget->widget(i)->setEnabled(false);
         tabWidget->setCursor(Qt::WaitCursor);
@@ -435,7 +435,7 @@ void SearchForm::stoppedSearch(int)
                 remainingEngines.append(running->label());
             }
             if (!remainingEngines.isEmpty())
-                qCDebug(LOG_KBIBTEX_PROGRAM) << "Remaining running engines:" << remainingEngines.join(", ");
+                qCDebug(LOG_KBIBTEX_PROGRAM) << "Remaining running engines:" << remainingEngines.join(QStringLiteral(", "));
         }
     }
 }

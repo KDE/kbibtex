@@ -122,7 +122,7 @@ public:
 
     void copyFromEntry(const Entry &entry) {
         lineEditTitle->setText(PlainTextValue::text(entry[Entry::ftTitle]));
-        lineEditAuthor->setText(authorLastNames(entry).join(" "));
+        lineEditAuthor->setText(authorLastNames(entry).join(QStringLiteral(" ")));
         lineEditVolume->setText(PlainTextValue::text(entry[Entry::ftVolume]));
         lineEditIssue->setText(PlainTextValue::text(entry[Entry::ftNumber]));
         QString issnDoiIsbn = PlainTextValue::text(entry[Entry::ftDOI]);
@@ -182,63 +182,63 @@ public:
         QStringList chunks = p->splitRespectingQuotationMarks(form->lineEditFullText->text());
         foreach (const QString &chunk, chunks) {
             if (index > 1)
-                query.addQueryItem(QString("operator%1").arg(index), QStringLiteral("AND")); ///< join search terms with an AND operation
-            query.addQueryItem(QString("option%1").arg(index), QStringLiteral("fulltext"));
-            query.addQueryItem(QString("value%1").arg(index), chunk);
+                query.addQueryItem(QString(QStringLiteral("operator%1")).arg(index), QStringLiteral("AND")); ///< join search terms with an AND operation
+            query.addQueryItem(QString(QStringLiteral("option%1")).arg(index), QStringLiteral("fulltext"));
+            query.addQueryItem(QString(QStringLiteral("value%1")).arg(index), chunk);
             ++index;
         }
 
         chunks = p->splitRespectingQuotationMarks(form->lineEditAuthor->text());
         foreach (const QString &chunk, chunks) {
             if (index > 1)
-                query.addQueryItem(QString("operator%1").arg(index), QStringLiteral("AND"));
-            query.addQueryItem(QString("option%1").arg(index), QStringLiteral("author"));
-            query.addQueryItem(QString("value%1").arg(index), chunk);
+                query.addQueryItem(QString(QStringLiteral("operator%1")).arg(index), QStringLiteral("AND"));
+            query.addQueryItem(QString(QStringLiteral("option%1")).arg(index), QStringLiteral("author"));
+            query.addQueryItem(QString(QStringLiteral("value%1")).arg(index), chunk);
             ++index;
         }
 
         chunks = p->splitRespectingQuotationMarks(form->lineEditTitle->text());
         foreach (const QString &chunk, chunks) {
             if (index > 1)
-                query.addQueryItem(QString("operator%1").arg(index), QStringLiteral("AND"));
-            query.addQueryItem(QString("option%1").arg(index), QStringLiteral("title"));
-            query.addQueryItem(QString("value%1").arg(index), chunk);
+                query.addQueryItem(QString(QStringLiteral("operator%1")).arg(index), QStringLiteral("AND"));
+            query.addQueryItem(QString(QStringLiteral("option%1")).arg(index), QStringLiteral("title"));
+            query.addQueryItem(QString(QStringLiteral("value%1")).arg(index), chunk);
             ++index;
         }
 
         chunks = p->splitRespectingQuotationMarks(form->lineEditPublication->text());
         foreach (const QString &chunk, chunks) {
             if (index > 1)
-                query.addQueryItem(QString("operator%1").arg(index), QStringLiteral("AND"));
-            query.addQueryItem(QString("option%1").arg(index), QStringLiteral("journalbooktitle"));
-            query.addQueryItem(QString("value%1").arg(index), chunk);
+                query.addQueryItem(QString(QStringLiteral("operator%1")).arg(index), QStringLiteral("AND"));
+            query.addQueryItem(QString(QStringLiteral("option%1")).arg(index), QStringLiteral("journalbooktitle"));
+            query.addQueryItem(QString(QStringLiteral("value%1")).arg(index), chunk);
             ++index;
         }
 
         chunks = p->splitRespectingQuotationMarks(form->lineEditIssue->text());
         foreach (const QString &chunk, chunks) {
             if (index > 1)
-                query.addQueryItem(QString("operator%1").arg(index), QStringLiteral("AND"));
-            query.addQueryItem(QString("option%1").arg(index), QStringLiteral("issue"));
-            query.addQueryItem(QString("value%1").arg(index), chunk);
+                query.addQueryItem(QString(QStringLiteral("operator%1")).arg(index), QStringLiteral("AND"));
+            query.addQueryItem(QString(QStringLiteral("option%1")).arg(index), QStringLiteral("issue"));
+            query.addQueryItem(QString(QStringLiteral("value%1")).arg(index), chunk);
             ++index;
         }
 
         chunks = p->splitRespectingQuotationMarks(form->lineEditVolume->text());
         foreach (const QString &chunk, chunks) {
             if (index > 1)
-                query.addQueryItem(QString("operator%1").arg(index), QStringLiteral("AND"));
-            query.addQueryItem(QString("option%1").arg(index), QStringLiteral("volume"));
-            query.addQueryItem(QString("value%1").arg(index), chunk);
+                query.addQueryItem(QString(QStringLiteral("operator%1")).arg(index), QStringLiteral("AND"));
+            query.addQueryItem(QString(QStringLiteral("option%1")).arg(index), QStringLiteral("volume"));
+            query.addQueryItem(QString(QStringLiteral("value%1")).arg(index), chunk);
             ++index;
         }
 
         chunks = p->splitRespectingQuotationMarks(form->lineEditAbstractKeywords->text());
         foreach (const QString &chunk, chunks) {
             if (index > 1)
-                query.addQueryItem(QString("operator%1").arg(index), QStringLiteral("AND"));
-            query.addQueryItem(QString("option%1").arg(index), QStringLiteral("tka"));
-            query.addQueryItem(QString("value%1").arg(index), chunk);
+                query.addQueryItem(QString(QStringLiteral("operator%1")).arg(index), QStringLiteral("AND"));
+            query.addQueryItem(QString(QStringLiteral("option%1")).arg(index), QStringLiteral("tka"));
+            query.addQueryItem(QString(QStringLiteral("value%1")).arg(index), chunk);
             ++index;
         }
 
@@ -260,27 +260,27 @@ public:
         QStringList chunks = p->splitRespectingQuotationMarks(query[queryKeyFreeText]);
         foreach (const QString &chunk, chunks) {
             if (index > 1)
-                q.addQueryItem(QString("operator%1").arg(index), QStringLiteral("AND"));
-            q.addQueryItem(QString("option%1").arg(index), QStringLiteral("fulltext"));
-            q.addQueryItem(QString("value%1").arg(index), chunk);
+                q.addQueryItem(QString(QStringLiteral("operator%1")).arg(index), QStringLiteral("AND"));
+            q.addQueryItem(QString(QStringLiteral("option%1")).arg(index), QStringLiteral("fulltext"));
+            q.addQueryItem(QString(QStringLiteral("value%1")).arg(index), chunk);
             ++index;
         }
 
         chunks = p->splitRespectingQuotationMarks(query[queryKeyAuthor]);
         foreach (const QString &chunk, chunks) {
             if (index > 1)
-                q.addQueryItem(QString("operator%1").arg(index), QStringLiteral("AND"));
-            q.addQueryItem(QString("option%1").arg(index), QStringLiteral("author"));
-            q.addQueryItem(QString("value%1").arg(index), chunk);
+                q.addQueryItem(QString(QStringLiteral("operator%1")).arg(index), QStringLiteral("AND"));
+            q.addQueryItem(QString(QStringLiteral("option%1")).arg(index), QStringLiteral("author"));
+            q.addQueryItem(QString(QStringLiteral("value%1")).arg(index), chunk);
             ++index;
         }
 
         chunks = p->splitRespectingQuotationMarks(query[queryKeyTitle]);
         foreach (const QString &chunk, chunks) {
             if (index > 1)
-                q.addQueryItem(QString("operator%1").arg(index), QStringLiteral("AND"));
-            q.addQueryItem(QString("option%1").arg(index), QStringLiteral("title"));
-            q.addQueryItem(QString("value%1").arg(index), chunk);
+                q.addQueryItem(QString(QStringLiteral("operator%1")).arg(index), QStringLiteral("AND"));
+            q.addQueryItem(QString(QStringLiteral("option%1")).arg(index), QStringLiteral("title"));
+            q.addQueryItem(QString(QStringLiteral("value%1")).arg(index), chunk);
             ++index;
         }
 
@@ -353,7 +353,7 @@ OnlineSearchQueryFormAbstract *OnlineSearchIngentaConnect::customWidget(QWidget 
 
 QUrl OnlineSearchIngentaConnect::homepage() const
 {
-    return QUrl("http://www.ingentaconnect.com/");
+    return QUrl(QStringLiteral("http://www.ingentaconnect.com/"));
 }
 
 void OnlineSearchIngentaConnect::cancel()

@@ -136,18 +136,18 @@ void OnlineSearchGoogleScholar::startSearch(const QMap<QString, QString> &query,
     d->numSteps = numResults + 4;
 
     QStringList queryFragments;
-    foreach (const QString &queryFragment, splitRespectingQuotationMarks(query[queryKeyFreeText])) {
+    foreach (const QString & queryFragment, splitRespectingQuotationMarks(query[queryKeyFreeText])) {
         queryFragments.append(encodeURL(queryFragment));
     }
-    foreach (const QString &queryFragment, splitRespectingQuotationMarks(query[queryKeyTitle])) {
+    foreach (const QString & queryFragment, splitRespectingQuotationMarks(query[queryKeyTitle])) {
         queryFragments.append(encodeURL(queryFragment));
     }
-    d->queryFreetext = queryFragments.join("+");
+    d->queryFreetext = queryFragments.join(QStringLiteral("+"));
     queryFragments.clear();
-    foreach (const QString &queryFragment, splitRespectingQuotationMarks(query[queryKeyAuthor])) {
+    foreach (const QString & queryFragment, splitRespectingQuotationMarks(query[queryKeyAuthor])) {
         queryFragments.append(encodeURL(queryFragment));
     }
-    d->queryAuthor = queryFragments.join("+");
+    d->queryAuthor = queryFragments.join(QStringLiteral("+"));
     d->queryYear = encodeURL(query[queryKeyYear]);
 
     QUrl url(d->startPageUrl);
@@ -178,8 +178,8 @@ void OnlineSearchGoogleScholar::doneFetchingStartPage()
             /// landed on country-specific domain
             QUrl url(d->configPageUrl.arg(reply->url().host()));
             QUrlQuery query(url);
-            query.addQueryItem("hl", "en");
-            query.addQueryItem("as_sdt", "0,5");
+            query.addQueryItem(QStringLiteral("hl"), QStringLiteral("en"));
+            query.addQueryItem(QStringLiteral("as_sdt"), QStringLiteral("0,5"));
             url.setQuery(query);
 
             QNetworkRequest request(url);
@@ -199,7 +199,7 @@ void OnlineSearchGoogleScholar::doneFetchingConfigPage()
 
     if (handleErrors(reply)) {
         const QString htmlText = QString::fromUtf8(reply->readAll().data());
-        QMap<QString, QString> inputMap = formParameters(htmlText, "<form ");
+        QMap<QString, QString> inputMap = formParameters(htmlText, QStringLiteral("<form "));
         inputMap[QStringLiteral("hl")] = QStringLiteral("en");
         inputMap[QStringLiteral("scis")] = QStringLiteral("yes");
         inputMap[QStringLiteral("scisf")] = QStringLiteral("4");
@@ -229,13 +229,13 @@ void OnlineSearchGoogleScholar::doneFetchingSetConfigPage()
     if (handleErrors(reply)) {
         QUrl url(QString(d->queryPageUrl).arg(reply->url().host()));
         QUrlQuery query(url);
-        query.addQueryItem(QString("as_q").toLatin1(), d->queryFreetext.toLatin1());
-        query.addQueryItem(QString("as_sauthors").toLatin1(), d->queryAuthor.toLatin1());
-        query.addQueryItem(QString("as_ylo").toLatin1(), d->queryYear.toLatin1());
-        query.addQueryItem(QString("as_yhi").toLatin1(), d->queryYear.toLatin1());
-        query.addQueryItem(QString("as_vis").toLatin1(), "1"); ///< include citations
-        query.addQueryItem("num", QString::number(d->numResults));
-        query.addQueryItem("btnG", "Search Scholar");
+        query.addQueryItem(QStringLiteral("as_q"), d->queryFreetext);
+        query.addQueryItem(QStringLiteral("as_sauthors"), d->queryAuthor);
+        query.addQueryItem(QStringLiteral("as_ylo"), d->queryYear);
+        query.addQueryItem(QStringLiteral("as_yhi"), d->queryYear);
+        query.addQueryItem(QStringLiteral("as_vis"), QStringLiteral("1")); ///< include citations
+        query.addQueryItem(QStringLiteral("num"), QString::number(d->numResults));
+        query.addQueryItem(QStringLiteral("btnG"), QStringLiteral("Search Scholar"));
         url.setQuery(query);
 
         QNetworkRequest request(url);
@@ -264,7 +264,7 @@ void OnlineSearchGoogleScholar::doneFetchingQueryPage()
             /// Extract primary link associated with BibTeX entry
             const QString primaryUrl = d->mainUrlForBibTeXEntry(htmlText, pos);
 
-            const QString bibtexUrl("http://" + reply->url().host() + linkToBib.cap(0).replace("&amp;", "&"));
+            const QString bibtexUrl("http://" + reply->url().host() + linkToBib.cap(0).replace(QStringLiteral("&amp;"), QStringLiteral("&")));
             d->listBibTeXurls.insert(bibtexUrl, primaryUrl + QLatin1Char('|') + documentUrl);
             pos += linkToBib.matchedLength();
         }
@@ -316,7 +316,7 @@ void OnlineSearchGoogleScholar::doneFetchingBibTeX()
                 if (!entry.isNull()) {
                     Value v;
                     v.append(QSharedPointer<VerbatimText>(new VerbatimText(label())));
-                    entry->insert("x-fetchedfrom", v);
+                    entry->insert(QStringLiteral("x-fetchedfrom"), v);
                     if (!primaryUrl.isEmpty()) {
                         /// There is an external document associated with this BibTeX entry
                         Value urlValue = entry->value(Entry::ftUrl);
@@ -386,7 +386,7 @@ OnlineSearchQueryFormAbstract *OnlineSearchGoogleScholar::customWidget(QWidget *
 
 QUrl OnlineSearchGoogleScholar::homepage() const
 {
-    return QUrl("http://scholar.google.com/");
+    return QUrl(QStringLiteral("http://scholar.google.com/"));
 }
 
 void OnlineSearchGoogleScholar::cancel()
