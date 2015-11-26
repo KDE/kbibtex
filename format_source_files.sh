@@ -93,6 +93,11 @@ while read filename ; do
 	elif [[ "${filename}" != "${filename/%.cpp/}" ]] ; then
 		sed -i -e  's/^\([ ]*\)\(:[ ][a-zA-Z]\)/\1    \2/g;s/\(foreach([^)]*\) \([&*]\) /\1 \2/g' ${TEMPFILE}
 	fi
+	
+	# Remove superfluous empty lines at file's end
+	#  http://unix.stackexchange.com/a/81687
+        #  http://sed.sourceforge.net/sed1line.txt
+	sed -i -e :a -e '/^\n*$/{$d;N;};/\n$/ba' ${TEMPFILE}
 
 	# only change/touch original file if it has been changed
 	diff -q ${TEMPFILE} "${filename}" >/dev/null || { echo "Updating \"${filename}\"" ; cp -p ${TEMPFILE} "${filename}" || echo "Cannot copy \"${TEMPFILE}\" \"${filename}\"" ; }
