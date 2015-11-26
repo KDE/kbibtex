@@ -365,7 +365,7 @@ void ValueListModel::updateValues()
 
 void ValueListModel::insertValue(const Value &value)
 {
-    foreach (QSharedPointer<ValueItem> item, value) {
+    foreach (const QSharedPointer<ValueItem> &item, value) {
         const QString text = PlainTextValue::text(*item);
         if (text.isEmpty()) continue; ///< skip empty values
 
@@ -428,7 +428,7 @@ bool ValueListModel::searchAndReplaceValueInEntries(const QModelIndex &index, co
     }
 
     /// Go through all elements in the current file
-    foreach (QSharedPointer<Element> element, *file) {
+    foreach (const QSharedPointer<Element> &element, *file) {
         QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
         /// Process only Entry objects
         if (!entry.isNull()) {
@@ -510,7 +510,7 @@ void ValueListModel::removeValueFromEntries(const QModelIndex &index)
     }
 
     /// Go through all elements in the current file
-    foreach (QSharedPointer<Element> element, *file) {
+    foreach (const QSharedPointer<Element> &element, *file) {
         QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
         /// Process only Entry objects
         if (!entry.isNull()) {

@@ -56,7 +56,7 @@ QStringList OnlineSearchQueryFormAbstract::authorLastNames(const Entry &entry)
 
     const Value v = entry[Entry::ftAuthor];
     QSharedPointer<Person> p;
-    foreach (QSharedPointer<ValueItem> vi, v)
+    foreach (const QSharedPointer<ValueItem> &vi, v)
         if (!(p = vi.dynamicCast<Person>()).isNull())
             result.append(encoder->convertToPlainAscii(p->lastName()));
 

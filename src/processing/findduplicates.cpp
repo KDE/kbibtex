@@ -127,7 +127,7 @@ void EntryClique::recalculateValueMap()
 
     /// go through each and every entry ...
     const QList<QSharedPointer<Entry> > el = entryList();
-    foreach (QSharedPointer<Entry> entry, el)
+    foreach (const QSharedPointer<Entry> &entry, el)
         if (isEntryChecked(entry)) {
 
             /// cover entry type
@@ -147,7 +147,7 @@ void EntryClique::recalculateValueMap()
                 const Value fieldValue = fieldIt.value();
 
                 if (fieldName == Entry::ftKeywords || fieldName == Entry::ftUrl) {
-                    foreach (QSharedPointer<ValueItem> vi, fieldValue) {
+                    foreach (const QSharedPointer<ValueItem> &vi, fieldValue) {
                         const QString text = PlainTextValue::text(*vi);
                         Value v;
                         v << vi;

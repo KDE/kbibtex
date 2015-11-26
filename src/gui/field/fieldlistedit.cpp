@@ -449,7 +449,7 @@ void PersonListEdit::slotAddNamesFromClipboard()
         text = clipboard->text(QClipboard::Selection);
     if (!text.isEmpty()) {
         const QList<QSharedPointer<Person> > personList = FileImporterBibTeX::splitNames(text);
-        foreach (QSharedPointer<Person> person, personList) {
+        foreach (const QSharedPointer<Person> &person, personList) {
             Value *value = new Value();
             value->append(person);
             lineAdd(value);
