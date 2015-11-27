@@ -183,7 +183,7 @@ bool FileExporterRIS::writeEntry(QTextStream &stream, const Entry *entry)
     }
 
     if (!year.isEmpty() || !month.isEmpty()) {
-        result &= writeKeyValue(stream, QStringLiteral("PY"), QString(QStringLiteral("%1/%2//")).arg(year).arg(month));
+        result &= writeKeyValue(stream, QStringLiteral("PY"), QString(QStringLiteral("%1/%2//")).arg(year, month));
     }
 
     result &= writeKeyValue(stream, QStringLiteral("ER"), QString());

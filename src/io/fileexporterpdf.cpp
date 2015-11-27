@@ -73,7 +73,7 @@ bool FileExporterPDF::save(QIODevice *iodevice, const File *bibtexfile, QStringL
     bool result = false;
     m_embeddedFileList.clear();
     if (m_fileEmbedding & EmbedBibTeXFile)
-        m_embeddedFileList.append(QString(QStringLiteral("%1|%2|%3")).arg(QStringLiteral("BibTeX source")).arg(m_fileStem + KBibTeX::extensionBibTeX).arg(m_fileBasename + KBibTeX::extensionBibTeX));
+        m_embeddedFileList.append(QString(QStringLiteral("%1|%2|%3")).arg(QStringLiteral("BibTeX source"), m_fileStem + KBibTeX::extensionBibTeX, m_fileBasename + KBibTeX::extensionBibTeX));
     if (m_fileEmbedding & EmbedReferences)
         fillEmbeddedFileList(bibtexfile);
 
@@ -208,7 +208,7 @@ void FileExporterPDF::fillEmbeddedFileList(const QSharedPointer<const Element> e
             if (!url.isLocalFile()) continue;
             const QString filename = url.url(QUrl::PreferLocalFile);
             const QString basename = QFileInfo(filename).fileName();
-            m_embeddedFileList.append(QString(QStringLiteral("%1|%2|%3")).arg(title).arg(filename).arg(basename));
+            m_embeddedFileList.append(QString(QStringLiteral("%1|%2|%3")).arg(title, filename, basename));
         }
     }
 }

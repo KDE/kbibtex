@@ -186,7 +186,7 @@ public:
         } else if (typeFlag == KBibTeX::tfSource) {
             QString key = typeFlags.testFlag(KBibTeX::tfPerson) ? QStringLiteral("author") : QStringLiteral("title");
             FileImporterBibTeX importer;
-            QString fakeBibTeXFile = QString(QStringLiteral("@article{dummy, %1=%2}")).arg(key).arg(encodedText);
+            QString fakeBibTeXFile = QString(QStringLiteral("@article{dummy, %1=%2}")).arg(key, encodedText);
 
             File *file = importer.fromString(fakeBibTeXFile);
             QSharedPointer<Entry> entry;
@@ -333,7 +333,7 @@ public:
                 else {
                     const QSharedPointer<Person> person = first.dynamicCast<Person>();
                     if (!person.isNull())
-                        rawText = enc->encode(QString(QStringLiteral("%1 %2")).arg(person->firstName()).arg(person->lastName())); // FIXME proper name conversion
+                        rawText = enc->encode(QString(QStringLiteral("%1 %2")).arg(person->firstName(), person->lastName())); // FIXME proper name conversion
                     else {
                         const QSharedPointer<Keyword> keyword = first.dynamicCast<Keyword>();
                         if (!keyword.isNull())

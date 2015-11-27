@@ -435,7 +435,7 @@ void KBibTeXMainWindow::documentListsChanged(OpenFileInfo::StatusFlags statusFla
             const int squeezeLen = 64;
             const QString squeezedShortCap = squeeze_text(cur->shortCaption(), squeezeLen);
             const QString squeezedFullCap = squeeze_text(cur->fullCaption(), squeezeLen);
-            QAction *action = new QAction(QString(QStringLiteral("%1 [%2]")).arg(squeezedShortCap).arg(squeezedFullCap), this);
+            QAction *action = new QAction(QString(QStringLiteral("%1 [%2]")).arg(squeezedShortCap, squeezedFullCap), this);
             action->setData(cur->url());
             action->setIcon(QIcon::fromTheme(cur->mimeType().replace(QLatin1Char('/'), QLatin1Char('-'))));
             d->actionMenuRecentFilesMenu->addAction(action);

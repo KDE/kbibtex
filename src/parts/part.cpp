@@ -624,7 +624,7 @@ public:
 
                     /// Build a nice menu item (label, icon, ...)
                     QFileInfo fi((*it).url(QUrl::PreferLocalFile));
-                    const QString label = QString(QStringLiteral("%1 [%2]")).arg(fi.fileName()).arg(fi.absolutePath());
+                    const QString label = QString(QStringLiteral("%1 [%2]")).arg(fi.fileName(), fi.absolutePath());
                     QMimeDatabase db;
                     QAction *action = new QAction(QIcon::fromTheme(db.mimeTypeForUrl(*it).iconName()), label, p);
                     action->setData((*it).url(QUrl::PreferLocalFile));

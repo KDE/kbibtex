@@ -70,12 +70,12 @@ QUrl OnlineSearchSOANASAADS::buildQueryUrl(const QMap<QString, QString> &query, 
     /// add words from "title" field
     QStringList titleWords = splitRespectingQuotationMarks(query[queryKeyTitle]);
     for (QStringList::ConstIterator it = titleWords.constBegin(); it != titleWords.constEnd(); ++it)
-        queryFragments.append(rangeSearch.arg(QStringLiteral("intitle")).arg(*it));
+        queryFragments.append(rangeSearch.arg(QStringLiteral("intitle"), *it));
 
     /// add words from "author" field
     QStringList authorWords = splitRespectingQuotationMarks(query[queryKeyAuthor]);
     for (QStringList::ConstIterator it = authorWords.constBegin(); it != authorWords.constEnd(); ++it)
-        queryFragments.append(rangeSearch.arg(QStringLiteral("author")).arg(*it));
+        queryFragments.append(rangeSearch.arg(QStringLiteral("author"), *it));
 
     /// Build URL
     QString urlText = QStringLiteral("http://adsabs.harvard.edu/cgi-bin/basic_connect?version=1&data_type=BIBTEXPLUS&type=FILE&sort=NDATE&qsearch=");

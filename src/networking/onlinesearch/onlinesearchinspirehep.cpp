@@ -56,22 +56,22 @@ QUrl OnlineSearchInspireHep::buildQueryUrl(const QMap<QString, QString> &query, 
     /// add words from "free text" field
     QStringList freeTextWords = splitRespectingQuotationMarks(query[queryKeyFreeText]);
     for (QStringList::ConstIterator it = freeTextWords.constBegin(); it != freeTextWords.constEnd(); ++it)
-        queryFragments.append(typedSearch.arg(QStringLiteral("ft")).arg(*it));
+        queryFragments.append(typedSearch.arg(QStringLiteral("ft"), *it));
 
     /// add words from "year" field
     QStringList yearWords = splitRespectingQuotationMarks(query[queryKeyYear]);
     for (QStringList::ConstIterator it = yearWords.constBegin(); it != yearWords.constEnd(); ++it)
-        queryFragments.append(typedSearch.arg(QStringLiteral("d")).arg(*it));
+        queryFragments.append(typedSearch.arg(QStringLiteral("d"), *it));
 
     /// add words from "title" field
     QStringList titleWords = splitRespectingQuotationMarks(query[queryKeyTitle]);
     for (QStringList::ConstIterator it = titleWords.constBegin(); it != titleWords.constEnd(); ++it)
-        queryFragments.append(typedSearch.arg(QStringLiteral("t")).arg(*it));
+        queryFragments.append(typedSearch.arg(QStringLiteral("t"), *it));
 
     /// add words from "author" field
     QStringList authorWords = splitRespectingQuotationMarks(query[queryKeyAuthor]);
     for (QStringList::ConstIterator it = authorWords.constBegin(); it != authorWords.constEnd(); ++it)
-        queryFragments.append(typedSearch.arg(QStringLiteral("a")).arg(*it));
+        queryFragments.append(typedSearch.arg(QStringLiteral("a"), *it));
 
     /// Build URL
     QString urlText = QStringLiteral("http://inspirehep.net/search?ln=en&ln=en&of=hx&action_search=Search&sf=&so=d&rm=&sc=0");

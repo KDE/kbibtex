@@ -209,7 +209,7 @@ void Clipboard::copyReferences()
         KConfigGroup configGroup(d->config, d->configGroupName);
         const QString copyReferenceCommand = configGroup.readEntry(keyCopyReferenceCommand, defaultCopyReferenceCommand);
         if (!copyReferenceCommand.isEmpty())
-            text = QString(QStringLiteral("\\%1{%2}")).arg(copyReferenceCommand).arg(text);
+            text = QString(QStringLiteral("\\%1{%2}")).arg(copyReferenceCommand, text);
 
         clipboard->setText(text);
     }
