@@ -65,8 +65,8 @@ Person *FileImporter::splitName(const QString &name)
     // FIXME: This is a rather ugly code
     QStringList segments = name.split(QRegExp("[ ,]+"));
     bool containsComma = name.contains(',');
-    QString firstName = "";
-    QString lastName = "";
+    QString firstName;
+    QString lastName;
 
     if (segments.isEmpty())
         return NULL;

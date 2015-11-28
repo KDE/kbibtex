@@ -155,8 +155,8 @@ bool FileExporterXML::writeEntry(QTextStream &stream, const Entry *entry)
             bool ok = false;
 
             int month = -1;
-            QString tag = "";
-            QString content = "";
+            QString tag;
+            QString content;
             for (Value::ConstIterator it = value.constBegin(); it != value.constEnd(); ++it) {
                 QSharedPointer<const MacroKey> macro = (*it).dynamicCast<const MacroKey>();
                 if (!macro.isNull())

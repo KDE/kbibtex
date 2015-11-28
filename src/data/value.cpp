@@ -498,7 +498,7 @@ QString PlainTextValue::text(const Value &value)
     ValueItemType vit = VITOther;
     ValueItemType lastVit = VITOther;
 
-    QString result = "";
+    QString result;
     for (Value::ConstIterator it = value.constBegin(); it != value.constEnd(); ++it) {
         QString nextText = text(**it, vit);
         if (!nextText.isEmpty()) {
