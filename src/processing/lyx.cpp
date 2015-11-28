@@ -138,7 +138,7 @@ void LyX::sendReferenceToLyX()
     }
 
     QTextStream ts(&pipe);
-    QString msg = QString("LYXCMD:kbibtex:citation-insert:%1").arg(d->references.join(","));
+    QString msg = QString(QLatin1String("LYXCMD:kbibtex:citation-insert:%1")).arg(d->references.join(","));
 
     ts << msg << endl;
     ts.flush();

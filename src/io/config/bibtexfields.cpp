@@ -47,7 +47,7 @@ public:
     BibTeXFieldsPrivate(BibTeXFields *parent)
             : p(parent) {
         KSharedConfigPtr config(KSharedConfig::openConfig("kbibtexrc"));
-        KConfigGroup configGroup(config, QString("User Interface"));
+        KConfigGroup configGroup(config, QString(QLatin1String("User Interface")));
         const QString stylefile = configGroup.readEntry("CurrentStyle", "bibtex").append(".kbstyle").prepend("kbibtex/");
         layoutConfig = KSharedConfig::openConfig(stylefile, KConfig::FullConfig, "data");
     }
@@ -61,7 +61,7 @@ public:
         const QStringList treeViewNames = QStringList() << QLatin1String("SearchResults") << QLatin1String("Main") << QLatin1String("MergeWidget") << QLatin1String("Zotero");
 
         for (int col = 1; col <= columnCount; ++col) {
-            const QString groupName = QString("Column%1").arg(col);
+            const QString groupName = QString(QLatin1String("Column%1")).arg(col);
             KConfigGroup configGroup(layoutConfig, groupName);
             if (!configGroup.exists()) break;
 
@@ -105,7 +105,7 @@ public:
         int columnCount = 0;
         foreach(const FieldDescription *fd, *p) {
             ++columnCount;
-            QString groupName = QString("Column%1").arg(columnCount);
+            QString groupName = QString(QLatin1String("Column%1")).arg(columnCount);
             KConfigGroup configGroup(layoutConfig, groupName);
 
             for (QMap<QString, int>::ConstIterator it = fd->width.constBegin(); it != fd->width.constEnd(); ++it) {
@@ -131,7 +131,7 @@ public:
 
     void resetToDefaults(const QString &treeViewName) {
         for (int col = 1; col < bibTeXFieldsMaxColumnCount; ++col) {
-            QString groupName = QString("Column%1").arg(col);
+            QString groupName = QString(QLatin1String("Column%1")).arg(col);
             KConfigGroup configGroup(layoutConfig, groupName);
             configGroup.deleteEntry("Width_" + treeViewName);
             configGroup.deleteEntry("Visible_" + treeViewName);

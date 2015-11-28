@@ -63,7 +63,7 @@ public:
     void loadState() {
         KConfigGroup configGroup(config, Preferences::groupGeneral);
         const QString copyReferenceCommand = configGroup.readEntry(Clipboard::keyCopyReferenceCommand, Clipboard::defaultCopyReferenceCommand);
-        int row = GUIHelper::selectValue(comboBoxCopyReferenceCmd->model(), copyReferenceCommand.isEmpty() ? QString("") : copyReferenceCommand, ItalicTextItemModel::IdentifierRole);
+        int row = GUIHelper::selectValue(comboBoxCopyReferenceCmd->model(), copyReferenceCommand.isEmpty() ? QString() : copyReferenceCommand, ItalicTextItemModel::IdentifierRole);
         comboBoxCopyReferenceCmd->setCurrentIndex(row);
 
         const int index = qMax(0, comboBoxBackupScope->findData(configGroup.readEntry(Preferences::keyBackupScope, (int)Preferences::defaultBackupScope)));
@@ -92,7 +92,7 @@ public:
     }
 
     void resetToDefaults() {
-        int row = GUIHelper::selectValue(comboBoxCopyReferenceCmd->model(), QString(""), Qt::UserRole);
+        int row = GUIHelper::selectValue(comboBoxCopyReferenceCmd->model(), QString(), Qt::UserRole);
         comboBoxCopyReferenceCmd->setCurrentIndex(row);
 
         const int index = qMax(0, comboBoxBackupScope->findData(Preferences::defaultBackupScope));
@@ -112,7 +112,7 @@ public:
         comboBoxCopyReferenceCmd->setObjectName("comboBoxCopyReferenceCmd");
         layout->addRow(i18n("Command for 'Copy Reference':"), comboBoxCopyReferenceCmd);
         ItalicTextItemModel *itim = new ItalicTextItemModel();
-        itim->addItem(i18n("No command"), QString(""));
+        itim->addItem(i18n("No command"), QString());
         const QStringList citeCommands = QStringList() << QLatin1String("cite") << QLatin1String("citealt") << QLatin1String("citeauthor") << QLatin1String("citeauthor*") << QLatin1String("citeyear") << QLatin1String("citeyearpar") << QLatin1String("shortcite") << QLatin1String("citet") << QLatin1String("citet*") << QLatin1String("citep") << QLatin1String("citep*"); // TODO more
         foreach(const QString &citeCommand, citeCommands) {
             itim->addItem(citeCmdToLabel.arg(citeCommand), citeCommand);

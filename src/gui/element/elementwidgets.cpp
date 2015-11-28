@@ -213,7 +213,7 @@ void EntryConfiguredWidget::createGUI()
         labeledFieldInput->isVerticallyMinimumExpaning = sfl.fieldInputLayout == KBibTeX::MultiLine || sfl.fieldInputLayout == KBibTeX::List || sfl.fieldInputLayout == KBibTeX::PersonList || sfl.fieldInputLayout == KBibTeX::KeywordList;
 
         /// create a label next to the editing widget
-        labeledFieldInput->label = new QLabel(QString("%1:").arg(sfl.uiLabel), this);
+        labeledFieldInput->label = new QLabel(QString(QLatin1String("%1:")).arg(sfl.uiLabel), this);
         labeledFieldInput->label->setBuddy(labeledFieldInput->fieldInput->buddy());
         /// align label's text vertically to match field input
         Qt::Alignment horizontalAlignment = (Qt::Alignment)(labeledFieldInput->label->style()->styleHint(QStyle::SH_FormLayoutLabelAlignment) & 0x001f);

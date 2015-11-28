@@ -98,7 +98,7 @@ public:
             return NULL;
 
         QString entryType = Entry::etMisc;
-        Entry *entry = new Entry(entryType, QString("RIS_%1").arg(referenceCounter++));
+        Entry *entry = new Entry(entryType, QString(QLatin1String("RIS_%1")).arg(referenceCounter++));
         QString journalName, startPage, endPage, date;
         int fieldCounter = 0;
 
@@ -187,7 +187,7 @@ public:
             } else if ((*it).key == QLatin1String("EP")) {
                 endPage = (*it).value;
             } else {
-                const QString fieldName = QString("RISfield_%1_%2").arg(fieldCounter++).arg((*it).key.left(2));
+                const QString fieldName = QString(QLatin1String("RISfield_%1_%2")).arg(fieldCounter++).arg((*it).key.left(2));
                 appendValue(entry, fieldName, QSharedPointer<PlainText>(new PlainText((*it).value)));
             }
         }

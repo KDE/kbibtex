@@ -269,7 +269,7 @@ void MDIWidget::setFile(OpenFileInfo *openFileInfo, KService::Ptr servicePtr)
     if (openFileInfo != NULL) {
         KUrl url = openFileInfo->url();
         if (url.isValid())
-            emit setCaption(QString("%1 [%2]").arg(openFileInfo->shortCaption()).arg(squeeze_text(openFileInfo->fullCaption(), 64)));
+            emit setCaption(QString(QLatin1String("%1 [%2]")).arg(openFileInfo->shortCaption()).arg(squeeze_text(openFileInfo->fullCaption(), 64)));
         else
             emit setCaption(openFileInfo->shortCaption());
     } else
@@ -305,7 +305,7 @@ void MDIWidget::slotCompleted(QObject *obj)
         /// completely opened or saved files should be marked as "recently used"
         ofi->addFlags(OpenFileInfo::RecentlyUsed);
 
-        emit setCaption(QString("%1 [%2]").arg(ofi->shortCaption()).arg(squeeze_text(ofi->fullCaption(), 64)));
+        emit setCaption(QString(QLatin1String("%1 [%2]")).arg(ofi->shortCaption()).arg(squeeze_text(ofi->fullCaption(), 64)));
     }
 }
 

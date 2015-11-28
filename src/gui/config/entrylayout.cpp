@@ -39,7 +39,7 @@ public:
     EntryLayoutPrivate(EntryLayout *parent)
             : p(parent) {
         KSharedConfigPtr config(KSharedConfig::openConfig("kbibtexrc"));
-        KConfigGroup configGroup(config, QString("User Interface"));
+        KConfigGroup configGroup(config, QString(QLatin1String("User Interface")));
         const QString stylefile = configGroup.readEntry("CurrentStyle", "bibtex").append(".kbstyle").prepend("kbibtex/");
         layoutConfig = KSharedConfig::openConfig(stylefile, KConfig::FullConfig, "data");
     }
@@ -116,7 +116,7 @@ void EntryLayout::load()
     int tabCount = qMin(configGroup.readEntry("count", 0), entryLayoutMaxTabCount);
 
     for (int tab = 1; tab <= tabCount; ++tab) {
-        QString groupName = QString("EntryLayoutTab%1").arg(tab);
+        QString groupName = QString(QLatin1String("EntryLayoutTab%1")).arg(tab);
         KConfigGroup configGroup(d->layoutConfig, groupName);
 
         QSharedPointer<EntryTabLayout> etl = QSharedPointer<EntryTabLayout>(new EntryTabLayout);
@@ -129,9 +129,9 @@ void EntryLayout::load()
         int fieldCount = qMin(configGroup.readEntry("count", 0), entryLayoutMaxFieldPerTabCount);
         for (int field = 1; field <= fieldCount; ++field) {
             SingleFieldLayout sfl;
-            sfl.bibtexLabel = configGroup.readEntry(QString("bibtexLabel%1").arg(field), QString());
-            sfl.uiLabel = i18n(configGroup.readEntry(QString("uiLabel%1").arg(field), QString()).toUtf8().constData());
-            sfl.fieldInputLayout = EntryLayoutPrivate::convert(configGroup.readEntry(QString("fieldInputLayout%1").arg(field), "SingleLine"));
+            sfl.bibtexLabel = configGroup.readEntry(QString(QLatin1String("bibtexLabel%1")).arg(field), QString());
+            sfl.uiLabel = i18n(configGroup.readEntry(QString(QLatin1String("uiLabel%1")).arg(field), QString()).toUtf8().constData());
+            sfl.fieldInputLayout = EntryLayoutPrivate::convert(configGroup.readEntry(QString(QLatin1String("fieldInputLayout%1")).arg(field), "SingleLine"));
             if (sfl.bibtexLabel.isEmpty() || sfl.uiLabel.isEmpty())
                 continue;
 
@@ -148,7 +148,7 @@ void EntryLayout::save()
     int tabCount = 0;
     for (QVector<QSharedPointer<EntryTabLayout> >::ConstIterator it = constBegin(); it != constEnd(); ++it) {
         ++tabCount;
-        QString groupName = QString("EntryLayoutTab%1").arg(tabCount);
+        QString groupName = QString(QLatin1String("EntryLayoutTab%1")).arg(tabCount);
         KConfigGroup configGroup(d->layoutConfig, groupName);
 
         configGroup.writeEntry("uiCaption", (*it)->uiCaption);
@@ -158,9 +158,9 @@ void EntryLayout::save()
         int fieldCount = 0;
         foreach(const SingleFieldLayout &sfl, (*it)->singleFieldLayouts) {
             ++fieldCount;
-            configGroup.writeEntry(QString("bibtexLabel%1").arg(fieldCount), sfl.bibtexLabel);
-            configGroup.writeEntry(QString("uiLabel%1").arg(fieldCount), sfl.uiLabel);
-            configGroup.writeEntry(QString("fieldInputLayout%1").arg(fieldCount), EntryLayoutPrivate::convert(sfl.fieldInputLayout));
+            configGroup.writeEntry(QString(QLatin1String("bibtexLabel%1")).arg(fieldCount), sfl.bibtexLabel);
+            configGroup.writeEntry(QString(QLatin1String("uiLabel%1")).arg(fieldCount), sfl.uiLabel);
+            configGroup.writeEntry(QString(QLatin1String("fieldInputLayout%1")).arg(fieldCount), EntryLayoutPrivate::convert(sfl.fieldInputLayout));
         }
         configGroup.writeEntry("count", fieldCount);
     }
@@ -179,7 +179,7 @@ void EntryLayout::resetToDefaults()
     configGroup.deleteGroup();
 
     for (int tab = 1; tab < entryLayoutMaxTabCount; ++tab) {
-        QString groupName = QString("EntryLayoutTab%1").arg(tab);
+        QString groupName = QString(QLatin1String("EntryLayoutTab%1")).arg(tab);
         KConfigGroup configGroup(d->layoutConfig, groupName);
         configGroup.deleteGroup();
     }

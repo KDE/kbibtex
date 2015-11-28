@@ -148,10 +148,10 @@ QNetworkReply *InternalNetworkAccessManager::get(QNetworkRequest &request, const
         setProxy(QNetworkProxy());
     }
 
-    if (!request.hasRawHeader(QString("Accept").toLatin1()))
-        request.setRawHeader(QString("Accept").toLatin1(), QString("text/*, */*;q=0.7").toLatin1());
-    request.setRawHeader(QString("Accept-Charset").toLatin1(), QString("utf-8, us-ascii, ISO-8859-1;q=0.7, ISO-8859-15;q=0.7, windows-1252;q=0.3").toLatin1());
-    request.setRawHeader(QString("Accept-Language").toLatin1(), QString("en-US, en;q=0.9").toLatin1());
+    if (!request.hasRawHeader(QString(QLatin1String("Accept")).toLatin1()))
+        request.setRawHeader(QString(QLatin1String("Accept")).toLatin1(), QString(QLatin1String("text/*, */*;q=0.7")).toLatin1());
+    request.setRawHeader(QString(QLatin1String("Accept-Charset")).toLatin1(), QString(QLatin1String("utf-8, us-ascii, ISO-8859-1;q=0.7, ISO-8859-15;q=0.7, windows-1252;q=0.3")).toLatin1());
+    request.setRawHeader(QString(QLatin1String("Accept-Language")).toLatin1(), QString(QLatin1String("en-US, en;q=0.9")).toLatin1());
     request.setRawHeader("User-Agent", userAgent().toLatin1());
     if (oldUrl.isValid())
         request.setRawHeader("Referer", oldUrl.toString().toLatin1());

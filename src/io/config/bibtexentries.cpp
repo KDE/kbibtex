@@ -48,7 +48,7 @@ public:
     BibTeXEntriesPrivate(BibTeXEntries *parent)
             : p(parent) {
         KSharedConfigPtr config(KSharedConfig::openConfig("kbibtexrc"));
-        KConfigGroup configGroup(config, QString("User Interface"));
+        KConfigGroup configGroup(config, QString(QLatin1String("User Interface")));
         const QString stylefile = configGroup.readEntry("CurrentStyle", "bibtex").append(".kbstyle").prepend("kbibtex/");
         layoutConfig = KSharedConfig::openConfig(stylefile, KConfig::FullConfig, "data");
     }
@@ -64,7 +64,7 @@ public:
         // int typeCount = configGroup.readEntry("count", entryTypeMaxCount);
 
         for (int col = 1; col <= entryTypeMaxCount; ++col) {
-            const QString groupName = QString("EntryType%1").arg(col);
+            const QString groupName = QString(QLatin1String("EntryType%1")).arg(col);
             KConfigGroup configGroup(layoutConfig, groupName);
             if (!configGroup.exists()) break;
 
@@ -84,7 +84,7 @@ public:
         int typeCount = 0;
         foreach(const EntryDescription &ed, *p) {
             ++typeCount;
-            QString groupName = QString("EntryType%1").arg(typeCount);
+            QString groupName = QString(QLatin1String("EntryType%1")).arg(typeCount);
             KConfigGroup configGroup(layoutConfig, groupName);
 
             configGroup.writeEntry("UpperCamelCase", ed.upperCamelCase);
