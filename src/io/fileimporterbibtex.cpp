@@ -82,7 +82,7 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
     m_textStream->setCodec(defaultCodecName); ///< unless we learn something else, assume default codec
     result->setProperty(File::Encoding, QLatin1String("latex"));
 
-    QString rawText = "";
+    QString rawText;
     while (!m_textStream->atEnd()) {
         QString line = m_textStream->readLine();
         bool skipline = evaluateParameterComments(m_textStream, line.toLower(), result);

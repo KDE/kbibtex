@@ -100,7 +100,7 @@ public:
 
     bool reset(const Value &value) {
         bool result = false;
-        QString text = "";
+        QString text;
         typeFlag = determineTypeFlag(value, typeFlag, typeFlags);
         updateGUI(typeFlag);
 

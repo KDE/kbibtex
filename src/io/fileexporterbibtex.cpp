@@ -477,7 +477,7 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value &value, const QStr
 
     EncoderLaTeX *encoder = useLaTeXEncoding == leLaTeX ? EncoderLaTeX::instance() : (useLaTeXEncoding == leUTF8 ? EncoderUTF8::instance() : NULL);
 
-    QString result = "";
+    QString result;
     bool isOpen = false;
     /// variable to memorize which closing delimiter to use
     QChar stringCloseDelimiter = d->stringCloseDelimiter;
