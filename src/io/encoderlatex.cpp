@@ -533,7 +533,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                     if (unicodeLetter.unicode() < 127) {
                         /// This combination of modifier and letter is not known,
                         /// so try to preserve it
-                        output.append(input.mid(i, 5));
+                        output.append(input.midRef(i, 5));
                         kDebug() << "Don't know how to translate this into Unicode: " << input.mid(i, 5);
                     } else
                         output.append(unicodeLetter);
@@ -561,7 +561,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                     if (unicodeLetter.unicode() < 127) {
                         /// This combination of modifier and letter is not known,
                         /// so try to preserve it
-                        output.append(input.mid(i, 7));
+                        output.append(input.midRef(i, 7));
                         kDebug() << "Don't know how to translate this into Unicode: " << input.mid(i, 7);
                     } else
                         output.append(unicodeLetter);
@@ -649,7 +649,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                 if (unicodeLetter.unicode() < 127) {
                     /// This combination of modifier and letter is not known,
                     /// so try to preserve it
-                    output.append(input.mid(i, 3));
+                    output.append(input.midRef(i, 3));
                     kDebug() << "Don't know how to translate this into Unicode: " << input.mid(i, 3);
                 } else
                     output.append(unicodeLetter);
@@ -666,7 +666,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                 if (unicodeLetter.unicode() < 127) {
                     /// This combination of modifier and letter is not known,
                     /// so try to preserve it
-                    output.append(input.mid(i, 3));
+                    output.append(input.midRef(i, 3));
                     kDebug() << "Don't know how to translate this into Unicode: " << input.mid(i, 3);
                 } else
                     output.append(unicodeLetter);
@@ -694,7 +694,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                 if (unicodeLetter.unicode() < 127) {
                     /// This combination of modifier and letter is not known,
                     /// so try to preserve it
-                    output.append(input.mid(i, 5));
+                    output.append(input.midRef(i, 5));
                     kDebug() << "Don't know how to translate this into Unicode: " << input.mid(i, 5);
                 } else
                     output.append(unicodeLetter);
@@ -853,7 +853,7 @@ bool EncoderLaTeX::testAndCopyVerbatimCommands(const QString &input, int &pos, Q
             else if (input[pos + copyBytesCount] == '}' && input[pos + copyBytesCount - 1] != '\\') --openedClosedCurlyBrackets;
         }
 
-        output.append(input.mid(pos, copyBytesCount));
+        output.append(input.midRef(pos, copyBytesCount));
         pos += copyBytesCount;
     }
 
