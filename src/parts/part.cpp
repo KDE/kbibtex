@@ -26,7 +26,7 @@
 #include <QLayout>
 #include <QKeyEvent>
 #include <QSignalMapper>
-#include <QtCore/QPointer>
+#include <QPointer>
 #include <QFileSystemWatcher>
 
 #include <KFileDialog>

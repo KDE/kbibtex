@@ -21,8 +21,8 @@
 #include <QNetworkReply>
 #include <QTimer>
 #include <QListWidgetItem>
-#include <QtDBus/QDBusConnection>
-#include <QtDBus/QDBusConnectionInterface>
+#include <QDBusConnection>
+#include <QDBusConnectionInterface>
 
 #include <KStandardDirs>
 #include <kio/netaccess.h>
