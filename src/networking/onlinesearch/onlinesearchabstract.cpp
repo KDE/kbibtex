@@ -271,14 +271,14 @@ QMap<QString, QString> OnlineSearchAbstract::formParameters(const QString &htmlT
 
         if (!inputName.isEmpty()) {
             /// get value of input types
-            if (inputType == "hidden" || inputType == "text" || inputType == "submit")
+            if (inputType == QLatin1String("hidden") || inputType == QLatin1String("text") || inputType == QLatin1String("submit"))
                 result[inputName] = inputValue;
-            else if (inputType == "radio") {
+            else if (inputType == QLatin1String("radio")) {
                 /// must be selected
                 if (htmlText.indexOf(inputIsCheckedRegExp, p) == p) {
                     result[inputName] = inputValue;
                 }
-            } else if (inputType == "checkbox") {
+            } else if (inputType == QLatin1String("checkbox")) {
                 /// must be checked
                 if (htmlText.indexOf(inputIsCheckedRegExp, p) == p) {
                     /// multiple checkbox values with the same name are possible

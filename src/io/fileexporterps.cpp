@@ -155,9 +155,9 @@ bool FileExporterPS::beautifyPostscriptFile(const QString &filename, const QStri
         int i = 0;
         while (!(line = ts.readLine()).isNull()) {
             if (i < 32 && line.startsWith(QLatin1String("%%Title:")))
-                line = "%%Title: " + title;
+                line = QLatin1String("%%Title: ") + title;
             else if (i < 32 && line.startsWith(QLatin1String("%%Creator:")))
-                line += "; exported from within KBibTeX: http://home.gna.org/kbibtex/";
+                line += QLatin1String("; exported from within KBibTeX: http://home.gna.org/kbibtex/");
             lines += line;
             ++i;
         }

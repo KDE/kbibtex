@@ -89,23 +89,23 @@ bool FileExporterRIS::writeEntry(QTextStream &stream, const Entry *entry)
     QString type = entry->type();
 
     if (type == Entry::etBook)
-        writeKeyValue(stream, "TY", "BOOK");
+        writeKeyValue(stream, QLatin1String("TY"), "BOOK");
     else if (type == Entry::etInBook)
-        writeKeyValue(stream, "TY", "CHAP");
+        writeKeyValue(stream, QLatin1String("TY"), "CHAP");
     else if (type == Entry::etInProceedings)
-        writeKeyValue(stream, "TY", "CONF");
+        writeKeyValue(stream, QLatin1String("TY"), "CONF");
     else if (type == Entry::etArticle)
-        writeKeyValue(stream, "TY", "JOUR");
+        writeKeyValue(stream, QLatin1String("TY"), "JOUR");
     else if (type == Entry::etTechReport)
-        writeKeyValue(stream, "TY", "RPRT");
+        writeKeyValue(stream, QLatin1String("TY"), "RPRT");
     else if (type == Entry::etPhDThesis || type == Entry::etMastersThesis)
-        writeKeyValue(stream, "TY", "THES");
+        writeKeyValue(stream, QLatin1String("TY"), "THES");
     else if (type == Entry::etUnpublished)
-        writeKeyValue(stream, "TY", "UNPB");
+        writeKeyValue(stream, QLatin1String("TY"), "UNPB");
     else
-        writeKeyValue(stream, "TY", "GEN");
+        writeKeyValue(stream, QLatin1String("TY"), "GEN");
 
-    writeKeyValue(stream, "ID", entry->id());
+    writeKeyValue(stream, QLatin1String("ID"), entry->id());
 
     QString year, month;
 
@@ -119,7 +119,7 @@ bool FileExporterRIS::writeEntry(QTextStream &stream, const Entry *entry)
             for (Value::ConstIterator it = value.constBegin(); result && it != value.constEnd(); ++it) {
                 QSharedPointer<const Person> person = (*it).dynamicCast<const Person>();
                 if (!person.isNull())
-                    result &= writeKeyValue(stream, "AU", PlainTextValue::text(**it));
+                    result &= writeKeyValue(stream, QLatin1String("AU"), PlainTextValue::text(**it));
                 else
                     kWarning() << "Cannot write value " << PlainTextValue::text(**it) << " for field AU (author), not supported by RIS format" << endl;
             }
@@ -127,66 +127,66 @@ bool FileExporterRIS::writeEntry(QTextStream &stream, const Entry *entry)
             for (Value::ConstIterator it = value.constBegin(); result && it != value.constEnd(); ++it) {
                 QSharedPointer<const Person> person = (*it).dynamicCast<const Person>();
                 if (!person.isNull())
-                    result &= writeKeyValue(stream, "ED", PlainTextValue::text(**it));
+                    result &= writeKeyValue(stream, QLatin1String("ED"), PlainTextValue::text(**it));
                 else
                     kWarning() << "Cannot write value " << PlainTextValue::text(**it) << " for field ED (editor), not supported by RIS format" << endl;
             }
         } else if (key == Entry::ftTitle)
-            result &= writeKeyValue(stream, "TI", PlainTextValue::text(value));
+            result &= writeKeyValue(stream, QLatin1String("TI"), PlainTextValue::text(value));
         else if (key == Entry::ftBookTitle)
-            result &= writeKeyValue(stream, "BT", PlainTextValue::text(value));
+            result &= writeKeyValue(stream, QLatin1String("BT"), PlainTextValue::text(value));
         else if (key == Entry::ftSeries)
-            result &= writeKeyValue(stream, "T3", PlainTextValue::text(value));
+            result &= writeKeyValue(stream, QLatin1String("T3"), PlainTextValue::text(value));
         else if (key == Entry::ftJournal)
-            result &= writeKeyValue(stream, "JO", PlainTextValue::text(value)); ///< "JF" instead?
+            result &= writeKeyValue(stream, QLatin1String("JO"), PlainTextValue::text(value)); ///< "JF" instead?
         else if (key == Entry::ftChapter)
-            result &= writeKeyValue(stream, "CP", PlainTextValue::text(value));
+            result &= writeKeyValue(stream, QLatin1String("CP"), PlainTextValue::text(value));
         else if (key == Entry::ftISSN)
-            result &= writeKeyValue(stream, "SN", PlainTextValue::text(value));
+            result &= writeKeyValue(stream, QLatin1String("SN"), PlainTextValue::text(value));
         else if (key == Entry::ftISBN)
-            result &= writeKeyValue(stream, "SN", PlainTextValue::text(value));
+            result &= writeKeyValue(stream, QLatin1String("SN"), PlainTextValue::text(value));
         else if (key == Entry::ftSchool) /// == "institution"
-            result &= writeKeyValue(stream, "IN", PlainTextValue::text(value));
+            result &= writeKeyValue(stream, QLatin1String("IN"), PlainTextValue::text(value));
         else if (key == Entry::ftVolume)
-            result &= writeKeyValue(stream, "VL", PlainTextValue::text(value));
+            result &= writeKeyValue(stream, QLatin1String("VL"), PlainTextValue::text(value));
         else if (key == Entry::ftNumber) /// == "issue"
-            result &= writeKeyValue(stream, "IS", PlainTextValue::text(value));
+            result &= writeKeyValue(stream, QLatin1String("IS"), PlainTextValue::text(value));
         else if (key == Entry::ftNote)
-            result &= writeKeyValue(stream, "N1", PlainTextValue::text(value));
+            result &= writeKeyValue(stream, QLatin1String("N1"), PlainTextValue::text(value));
         else if (key == Entry::ftAbstract)
-            result &= writeKeyValue(stream, "N2", PlainTextValue::text(value)); ///< "AB" instead?
+            result &= writeKeyValue(stream, QLatin1String("N2"), PlainTextValue::text(value)); ///< "AB" instead?
         else if (key == Entry::ftPublisher)
-            result &= writeKeyValue(stream, "PB", PlainTextValue::text(value));
+            result &= writeKeyValue(stream, QLatin1String("PB"), PlainTextValue::text(value));
         else if (key == Entry::ftLocation)
-            result &= writeKeyValue(stream, "CY", PlainTextValue::text(value));
+            result &= writeKeyValue(stream, QLatin1String("CY"), PlainTextValue::text(value));
         else if (key == Entry::ftDOI)
-            result &= writeKeyValue(stream, "DO", PlainTextValue::text(value));
+            result &= writeKeyValue(stream, QLatin1String("DO"), PlainTextValue::text(value));
         else if (key == Entry::ftKeywords)
-            result &= writeKeyValue(stream, "KW", PlainTextValue::text(value));
+            result &= writeKeyValue(stream, QLatin1String("KW"), PlainTextValue::text(value));
         else if (key == Entry::ftYear)
             year = PlainTextValue::text(value);
         else if (key == Entry::ftMonth)
             month = PlainTextValue::text(value);
         else if (key == Entry::ftAddress)
-            result &= writeKeyValue(stream, "AD", PlainTextValue::text(value));
+            result &= writeKeyValue(stream, QLatin1String("AD"), PlainTextValue::text(value));
         else if (key == Entry::ftUrl) {
             // FIXME one "UR" line per URL
             // FIXME for local files, use "L1"
-            result &= writeKeyValue(stream, "UR", PlainTextValue::text(value));
+            result &= writeKeyValue(stream, QLatin1String("UR"), PlainTextValue::text(value));
         } else if (key == Entry::ftPages) {
             QStringList pageRange = PlainTextValue::text(value).split(QRegExp(QString("--|-|%1").arg(QChar(0x2013))));
             if (pageRange.count() == 2) {
-                result &= writeKeyValue(stream, "SP", pageRange[ 0 ]);
-                result &= writeKeyValue(stream, "EP", pageRange[ 1 ]);
+                result &= writeKeyValue(stream, QLatin1String("SP"), pageRange[ 0 ]);
+                result &= writeKeyValue(stream, QLatin1String("EP"), pageRange[ 1 ]);
             }
         }
     }
 
     if (!year.isEmpty() || !month.isEmpty()) {
-        result &= writeKeyValue(stream, "PY", QString("%1/%2//").arg(year).arg(month));
+        result &= writeKeyValue(stream, QLatin1String("PY"), QString("%1/%2//").arg(year).arg(month));
     }
 
-    result &= writeKeyValue(stream, "ER", QString());
+    result &= writeKeyValue(stream, QLatin1String("ER"), QString());
     stream << endl;
 
     return result;

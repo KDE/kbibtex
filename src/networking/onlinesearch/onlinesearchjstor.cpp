@@ -256,7 +256,7 @@ void OnlineSearchJStor::sanitizeEntry(QSharedPointer<Entry> entry)
         entry->insert(QLatin1String("jstor_id"), v);
     }
 
-    const QString formattedDateKey = "jstor_formatteddate";
+    const QString formattedDateKey = QLatin1String("jstor_formatteddate");
     const QString formattedDate = PlainTextValue::text(entry->value(formattedDateKey));
 
     /// first, try to guess month by inspecting the beginning
