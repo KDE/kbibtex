@@ -110,7 +110,7 @@ Person *FileImporter::splitName(const QString &name)
     } else {
         bool inLastName = true;
         for (int i = 0; i < segments.count(); ++i) {
-            if (segments[i] == ",")
+            if (segments[i] == QLatin1String(","))
                 inLastName = false;
             else if (inLastName) {
                 if (!lastName.isEmpty()) lastName.append(" ");

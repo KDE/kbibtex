@@ -176,12 +176,12 @@ Element *FileImporterBibTeX::nextElement()
     if (token == tAt) {
         QString elementType = readSimpleString();
 
-        if (elementType.toLower() == "comment") {
+        if (elementType.toLower() == QLatin1String("comment")) {
             ++m_statistics.countCommentCommand;
             return readCommentElement();
-        } else if (elementType.toLower() == "string")
+        } else if (elementType.toLower() == QLatin1String("string"))
             return readMacroElement();
-        else if (elementType.toLower() == "preamble")
+        else if (elementType.toLower() == QLatin1String("preamble"))
             return readPreambleElement();
         else if (elementType.toLower() == QLatin1String("import")) {
             kDebug() << "Skipping potential HTML/JavaScript @import statement";
@@ -1123,8 +1123,8 @@ bool FileImporterBibTeX::evaluateParameterComments(QTextStream *textStream, cons
     /** check if this file requests a special encoding */
     if (line.startsWith(QLatin1String("@comment{x-kbibtex-encoding=")) && line.endsWith(QLatin1Char('}'))) {
         QString encoding = line.mid(28, line.length() - 29);
-        textStream->setCodec(encoding == "latex" ? defaultCodecName : encoding.toLatin1().data());
-        file->setProperty(File::Encoding, encoding == "latex" ? encoding : textStream->codec()->name());
+        textStream->setCodec(encoding == QLatin1String("latex") ? defaultCodecName : encoding.toLatin1().data());
+        file->setProperty(File::Encoding, encoding == QLatin1String("latex") ? encoding : textStream->codec()->name());
         return true;
     } else if (line.startsWith(QLatin1String("@comment{x-kbibtex-personnameformatting=")) && line.endsWith(QLatin1Char('}'))) {
         // TODO usage of x-kbibtex-personnameformatting is deprecated,

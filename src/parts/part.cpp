@@ -248,11 +248,11 @@ public:
         int p = ending.lastIndexOf(".");
         ending = ending.mid(p + 1);
 
-        if (ending == "pdf") {
+        if (ending == QLatin1String("pdf")) {
             return new FileImporterPDF();
-        } else if (ending == "ris") {
+        } else if (ending == QLatin1String("ris")) {
             return new FileImporterRIS();
-        } else if (BibUtils::available() && ending == "isi") {
+        } else if (BibUtils::available() && ending == QLatin1String("isi")) {
             FileImporterBibUtils *fileImporterBibUtils = new FileImporterBibUtils();
             fileImporterBibUtils->setFormat(BibUtils::ISI);
             return fileImporterBibUtils;
@@ -266,25 +266,25 @@ public:
         int p = ending.lastIndexOf(".");
         ending = ending.mid(p + 1);
 
-        if (ending == "html") {
+        if (ending == QLatin1String("html")) {
             return new FileExporterXSLT();
-        } else if (ending == "xml") {
+        } else if (ending == QLatin1String("xml")) {
             return new FileExporterXML();
-        } else if (ending == "ris") {
+        } else if (ending == QLatin1String("ris")) {
             return new FileExporterRIS();
-        } else if (ending == "pdf") {
+        } else if (ending == QLatin1String("pdf")) {
             return new FileExporterPDF();
-        } else if (ending == "ps") {
+        } else if (ending == QLatin1String("ps")) {
             return new FileExporterPS();
-        } else if (BibUtils::available() && ending == "isi") {
+        } else if (BibUtils::available() && ending == QLatin1String("isi")) {
             FileExporterBibUtils *fileExporterBibUtils = new FileExporterBibUtils();
             fileExporterBibUtils->setFormat(BibUtils::ISI);
             return fileExporterBibUtils;
-        } else if (ending == "rtf") {
+        } else if (ending == QLatin1String("rtf")) {
             return new FileExporterRTF();
-        } else if (ending == "html" || ending == "htm") {
+        } else if (ending == QLatin1String("html") || ending == QLatin1String("htm")) {
             return new FileExporterBibTeX2HTML();
-        } else if (ending == "bbl") {
+        } else if (ending == QLatin1String("bbl")) {
             return new FileExporterBibTeXOutput(FileExporterBibTeXOutput::BibTeXBlockList);
         } else {
             return new FileExporterBibTeX();
