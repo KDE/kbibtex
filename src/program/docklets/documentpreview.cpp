@@ -265,7 +265,7 @@ public:
             QString fn = urlInfo.url.fileName();
             QString full = urlInfo.url.url(QUrl::PreferLocalFile);
             QString dir = urlInfo.url.adjusted(QUrl::RemoveFilename | QUrl::StripTrailingSlash).path();
-                QString text = fn.isEmpty() ? full : (dir.isEmpty() ? fn : QString(QStringLiteral("%1 [%2]")).arg(fn, dir));
+            QString text = fn.isEmpty() ? full : (dir.isEmpty() ? fn : QString(QStringLiteral("%1 [%2]")).arg(fn, dir));
             urlComboBox->addItem(urlInfo.icon, text);
         } else {
             /// create a drop-down list entry if file is a remote file
