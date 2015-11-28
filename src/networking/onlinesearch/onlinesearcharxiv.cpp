@@ -323,7 +323,7 @@ public:
                     entry.insert(Entry::ftPages, v);
                 } else {
                     Value v;
-                    v.append(QSharedPointer<PlainText>(new PlainText(QString(QLatin1String("%1--%2")).arg(text).arg(endPage))));
+                    v.append(QSharedPointer<PlainText>(new PlainText(QString(QLatin1String("%1--%2")).arg(text, endPage))));
                     entry.insert(Entry::ftPages, v);
                 }
             }
@@ -368,7 +368,7 @@ public:
                     entry.insert(Entry::ftPages, v);
                 } else {
                     Value v;
-                    v.append(QSharedPointer<PlainText>(new PlainText(QString(QLatin1String("%1%3%2")).arg(text).arg(endPage).arg(QChar(0x2013)))));
+                    v.append(QSharedPointer<PlainText>(new PlainText(QString(QLatin1String("%1%3%2")).arg(text, endPage, QChar(0x2013)))));
                     entry.insert(Entry::ftPages, v);
                 }
             }
@@ -417,7 +417,7 @@ public:
                         entry.insert(Entry::ftPages, v);
                     } else {
                         Value v;
-                        v.append(QSharedPointer<PlainText>(new PlainText(QString(QLatin1String("%1%3%2")).arg(text).arg(endPage).arg(QChar(0x2013)))));
+                        v.append(QSharedPointer<PlainText>(new PlainText(QString(QLatin1String("%1%3%2")).arg(text, endPage, QChar(0x2013)))));
                         entry.insert(Entry::ftPages, v);
                     }
                 }
@@ -540,7 +540,7 @@ public:
                     entry.insert(Entry::ftPages, v);
                 } else {
                     Value v;
-                    v.append(QSharedPointer<PlainText>(new PlainText(QString(QLatin1String("%1%3%2")).arg(text).arg(endPage).arg(QChar(0x2013)))));
+                    v.append(QSharedPointer<PlainText>(new PlainText(QString(QLatin1String("%1%3%2")).arg(text, endPage, QChar(0x2013)))));
                     entry.insert(Entry::ftPages, v);
                 }
             }

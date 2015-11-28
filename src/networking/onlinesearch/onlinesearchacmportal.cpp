@@ -180,7 +180,7 @@ void OnlineSearchAcmPortal::doneFetchingSearchPage()
         static QRegExp paramRegExp("<a [^>]+\\?id=([0-9]+)\\.([0-9]+).*CFID=([0-9]+).*CFTOKEN=([0-9]+)", Qt::CaseInsensitive);
         int p1 = -1;
         while ((p1 = htmlSource.indexOf(paramRegExp, p1 + 1)) >= 0) {
-            d->bibTeXUrls << d->acmPortalBaseUrl + QString(QLatin1String("/downformats.cfm?id=%1&parent_id=%2&expformat=bibtex&CFID=%3&CFTOKEN=%4")).arg(paramRegExp.cap(2)).arg(paramRegExp.cap(1)).arg(paramRegExp.cap(3)).arg(paramRegExp.cap(4));
+            d->bibTeXUrls << d->acmPortalBaseUrl + QString(QLatin1String("/downformats.cfm?id=%1&parent_id=%2&expformat=bibtex&CFID=%3&CFTOKEN=%4")).arg(paramRegExp.cap(2), paramRegExp.cap(1), paramRegExp.cap(3), paramRegExp.cap(4));
         }
 
         if (d->currentSearchPosition + 20 < d->numExpectedResults) {

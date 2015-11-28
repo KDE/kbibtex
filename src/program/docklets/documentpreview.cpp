@@ -239,7 +239,7 @@ public:
             QString fn = urlInfo.url.fileName();
             QString full = urlInfo.url.pathOrUrl();
             QString dir = urlInfo.url.directory();
-            QString text = fn.isEmpty() ? full : (dir.isEmpty() ? fn : QString(QLatin1String("%1 [%2]")).arg(fn).arg(dir));
+            QString text = fn.isEmpty() ? full : (dir.isEmpty() ? fn : QString(QLatin1String("%1 [%2]")).arg(fn, dir));
             urlComboBox->addItem(urlInfo.icon, text);
         } else {
             /// create a drop-down list entry if file is a remote file
