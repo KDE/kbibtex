@@ -335,4 +335,3 @@ void OnlineSearchSpringerLink::doneFetchingPAM()
     } else
         kDebug() << "url was" << reply->url().toString();
 }
-

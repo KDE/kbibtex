@@ -208,4 +208,3 @@ KUrl AssociatedFiles::copyDocument(const KUrl &sourceUrl, const QString &entryId
 
     return targetUrl;
 }
-

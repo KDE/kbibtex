@@ -390,4 +390,3 @@ void FindPDF::downloadFinished()
         emit finished();
     }
 }
-

@@ -494,4 +494,3 @@ struct IdSuggestions::IdSuggestionTokenInfo IdSuggestions::evalToken(const QStri
 
     return result;
 }
-

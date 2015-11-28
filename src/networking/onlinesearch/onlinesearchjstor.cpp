@@ -299,4 +299,3 @@ void OnlineSearchJStor::sanitizeEntry(QSharedPointer<Entry> entry)
             ++it;
     }
 }
-

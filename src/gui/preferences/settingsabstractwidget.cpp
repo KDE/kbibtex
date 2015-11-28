@@ -25,4 +25,3 @@ SettingsAbstractWidget::SettingsAbstractWidget(QWidget *parent)
 {
     // nothing
 }
-
