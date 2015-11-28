@@ -126,7 +126,7 @@ void EntryClique::recalculateValueMap()
 
     /// go through each and every entry ...
     const QList<QSharedPointer<Entry> > el = entryList();
-    foreach(QSharedPointer<Entry> entry, el)
+    foreach(const QSharedPointer<Entry> &entry, el)
     if (isEntryChecked(entry)) {
 
         /// cover entry type
@@ -146,7 +146,7 @@ void EntryClique::recalculateValueMap()
             const Value fieldValue = fieldIt.value();
 
             if (fieldName == Entry::ftKeywords || fieldName == Entry::ftUrl) {
-                foreach(QSharedPointer<ValueItem> vi, fieldValue) {
+                foreach(const QSharedPointer<ValueItem> &vi, fieldValue) {
                     const QString text = PlainTextValue::text(*vi);
                     Value v;
                     v << vi;
@@ -601,7 +601,7 @@ bool MergeDuplicates::mergeDuplicateEntriesAuto(const QList<EntryClique *> &entr
         /// according to values in field sortCriteriumField and
         /// mergePriority.
         QLinkedList<QSharedPointer<Entry> > sortedEntries;
-        foreach(QSharedPointer<Entry> entry, entryClique->entryList()) {
+        foreach(const QSharedPointer<Entry> &entry, entryClique->entryList()) {
             if (sortedEntries.isEmpty())
                 /// Just started sorting, append first entry
                 sortedEntries.append(entry);
@@ -680,7 +680,7 @@ bool MergeDuplicates::mergeDuplicateEntriesAuto(const QList<EntryClique *> &entr
         /// Fill new entry by copying values from clique's Entries.
         /// Sorting ensures that Entries matching sorting criteries
         /// get higher priority
-        foreach(QSharedPointer<Entry> entry, sortedEntries) {
+        foreach(const QSharedPointer<Entry> &entry, sortedEntries) {
             for (Entry::ConstIterator it = entry->constBegin(); it != entry->constEnd(); ++it)
                 if (!mergedEntry->contains(it.key()))
                     mergedEntry->insert(it.key(), it.value());
