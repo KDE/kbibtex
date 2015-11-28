@@ -388,10 +388,10 @@ public:
         /// copy e.g. test.bib~ to test.bib~2 and test.bib~3 to test.bib~4 etc.
         for (int i = numberOfBackups - 1; copySucceeded && i >= 1; --i) {
             KUrl a(url);
-            a.setFileName(url.fileName() + (i > 1 ? QString("~%1").arg(i) : QLatin1String("~")));
+            a.setFileName(url.fileName() + (i > 1 ? QString(QLatin1String("~%1")).arg(i) : QLatin1String("~")));
             if (KIO::NetAccess::exists(a, KIO::NetAccess::DestinationSide, p->widget())) {
                 KUrl b(url);
-                b.setFileName(url.fileName() + QString("~%1").arg(i + 1));
+                b.setFileName(url.fileName() + QString(QLatin1String("~%1")).arg(i + 1));
                 KIO::NetAccess::del(b, p->widget());
                 copySucceeded = KIO::NetAccess::file_copy(a, b, p->widget());
             }
@@ -553,7 +553,7 @@ public:
 
                     // FIXME: the signal mapper will fill up with mappings, as they are never removed
                     QFileInfo fi((*it).pathOrUrl());
-                    const QString label = QString("%1 [%2]").arg(fi.fileName()).arg(fi.absolutePath());
+                    const QString label = QString(QLatin1String("%1 [%2]")).arg(fi.fileName()).arg(fi.absolutePath());
                     KAction *action = new KAction(KIcon(KMimeType::iconNameForUrl(*it)), label, p);
                     action->setData((*it).pathOrUrl());
                     action->setToolTip((*it).prettyUrl());

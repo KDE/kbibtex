@@ -160,7 +160,7 @@ public:
     KUrl buildQueryUrl() {
         if (form == NULL) return KUrl();
 
-        KUrl queryUrl = KUrl(QString("http://api.springer.com/metadata/pam/?api_key=").append(springerMetadataKey));
+        KUrl queryUrl = KUrl(QString(QLatin1String("http://api.springer.com/metadata/pam/?api_key=")).append(springerMetadataKey));
 
         QString queryString = form->lineEditFreeText->text();
 
@@ -190,7 +190,7 @@ public:
     }
 
     KUrl buildQueryUrl(const QMap<QString, QString> &query) {
-        KUrl queryUrl = KUrl(QString("http://api.springer.com/metadata/pam/?api_key=").append(springerMetadataKey));
+        KUrl queryUrl = KUrl(QString(QLatin1String("http://api.springer.com/metadata/pam/?api_key=")).append(springerMetadataKey));
 
         QString queryString = query[queryKeyFreeText];
 

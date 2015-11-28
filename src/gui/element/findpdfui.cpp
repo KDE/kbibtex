@@ -439,7 +439,7 @@ void FindPDFUI::apply(Entry &entry, const File &bibtexFile)
                     entry.insert(Entry::ftUrl, value);
                 else
                     for (int i = 2; i < 256; ++i) {
-                        const QString keyName = QString("%1%2").arg(Entry::ftUrl).arg(i);
+                        const QString keyName = QString(QLatin1String("%1%2")).arg(Entry::ftUrl).arg(i);
                         if (!entry.contains(keyName)) {
                             entry.insert(keyName, value);
                             break;
@@ -466,7 +466,7 @@ void FindPDFUI::apply(Entry &entry, const File &bibtexFile)
                         entry.insert(Entry::ftLocalFile, value);
                     else
                         for (int i = 2; i < 256; ++i) {
-                            const QString keyName = QString("%1%2").arg(Entry::ftLocalFile).arg(i);
+                            const QString keyName = QString(QLatin1String("%1%2")).arg(Entry::ftLocalFile).arg(i);
                             if (!entry.contains(keyName)) {
                                 entry.insert(keyName, value);
                                 break;

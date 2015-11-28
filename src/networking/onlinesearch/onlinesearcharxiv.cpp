@@ -122,7 +122,7 @@ public:
 
         foreach (const QString &queryFragment, p->splitRespectingQuotationMarks(form->lineEditFreeText->text()))
             queryFragments.append(p->encodeURL(queryFragment));
-        return KUrl(QString("%1search_query=all:\"%3\"&start=0&max_results=%2").arg(arXivQueryBaseUrl).arg(form->numResultsField->value()).arg(queryFragments.join("\"+AND+all:\""))); ///< join search terms with an AND operation
+        return KUrl(QString(QLatin1String("%1search_query=all:\"%3\"&start=0&max_results=%2")).arg(arXivQueryBaseUrl).arg(form->numResultsField->value()).arg(queryFragments.join("\"+AND+all:\""))); ///< join search terms with an AND operation
     }
 
     KUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) {
@@ -131,7 +131,7 @@ public:
         for (QMap<QString, QString>::ConstIterator it = query.constBegin(); it != query.constEnd(); ++it)
             foreach (const QString &queryFragment, p->splitRespectingQuotationMarks(it.value()))
                 queryFragments.append(p->encodeURL(queryFragment));
-        return KUrl(QString("%1search_query=all:\"%3\"&start=0&max_results=%2").arg(arXivQueryBaseUrl).arg(numResults).arg(queryFragments.join("\"+AND+all:\""))); ///< join search terms with an AND operation
+        return KUrl(QString(QLatin1String("%1search_query=all:\"%3\"&start=0&max_results=%2")).arg(arXivQueryBaseUrl).arg(numResults).arg(queryFragments.join("\"+AND+all:\""))); ///< join search terms with an AND operation
     }
 
     void interpreteJournal(Entry &entry) {
@@ -323,7 +323,7 @@ public:
                     entry.insert(Entry::ftPages, v);
                 } else {
                     Value v;
-                    v.append(QSharedPointer<PlainText>(new PlainText(QString("%1--%2").arg(text).arg(endPage))));
+                    v.append(QSharedPointer<PlainText>(new PlainText(QString(QLatin1String("%1--%2")).arg(text).arg(endPage))));
                     entry.insert(Entry::ftPages, v);
                 }
             }
@@ -368,7 +368,7 @@ public:
                     entry.insert(Entry::ftPages, v);
                 } else {
                     Value v;
-                    v.append(QSharedPointer<PlainText>(new PlainText(QString("%1%3%2").arg(text).arg(endPage).arg(QChar(0x2013)))));
+                    v.append(QSharedPointer<PlainText>(new PlainText(QString(QLatin1String("%1%3%2")).arg(text).arg(endPage).arg(QChar(0x2013)))));
                     entry.insert(Entry::ftPages, v);
                 }
             }
@@ -417,7 +417,7 @@ public:
                         entry.insert(Entry::ftPages, v);
                     } else {
                         Value v;
-                        v.append(QSharedPointer<PlainText>(new PlainText(QString("%1%3%2").arg(text).arg(endPage).arg(QChar(0x2013)))));
+                        v.append(QSharedPointer<PlainText>(new PlainText(QString(QLatin1String("%1%3%2")).arg(text).arg(endPage).arg(QChar(0x2013)))));
                         entry.insert(Entry::ftPages, v);
                     }
                 }
@@ -540,7 +540,7 @@ public:
                     entry.insert(Entry::ftPages, v);
                 } else {
                     Value v;
-                    v.append(QSharedPointer<PlainText>(new PlainText(QString("%1%3%2").arg(text).arg(endPage).arg(QChar(0x2013)))));
+                    v.append(QSharedPointer<PlainText>(new PlainText(QString(QLatin1String("%1%3%2")).arg(text).arg(endPage).arg(QChar(0x2013)))));
                     entry.insert(Entry::ftPages, v);
                 }
             }

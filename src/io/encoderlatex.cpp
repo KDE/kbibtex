@@ -881,7 +881,7 @@ QString EncoderLaTeX::encode(const QString &ninput) const
             /// Handle special cases of i without a dot (\i)
             for (int k = 0; !found && k < dotlessIJCharactersLen; ++k)
                 if (c.unicode() == dotlessIJCharacters[k].unicode) {
-                    output.append(QString("\\%1{\\%2}").arg(dotlessIJCharacters[k].modifier).arg(dotlessIJCharacters[k].letter));
+                    output.append(QString(QLatin1String("\\%1{\\%2}")).arg(dotlessIJCharacters[k].modifier).arg(dotlessIJCharacters[k].letter));
                     found = true;
                 }
 
@@ -902,7 +902,7 @@ QString EncoderLaTeX::encode(const QString &ninput) const
                 /// commands like \ss
                 for (int k = 0; k < encoderLaTeXCharacterCommandsLen; ++k)
                     if (encoderLaTeXCharacterCommands[k].unicode == c.unicode()) {
-                        output.append(QString("{\\%1}").arg(encoderLaTeXCharacterCommands[k].letters));
+                        output.append(QString(QLatin1String("{\\%1}")).arg(encoderLaTeXCharacterCommands[k].letters));
                         found = true;
                         break;
                     }
@@ -913,7 +913,7 @@ QString EncoderLaTeX::encode(const QString &ninput) const
                 /// escaped characters with modifiers like \"a
                 for (int k = 0; k < encoderLaTeXEscapedCharactersLen; ++k)
                     if (encoderLaTeXEscapedCharacters[k].unicode == c.unicode()) {
-                        output.append(QString("\\%1{%2}").arg(encoderLaTeXEscapedCharacters[k].modifier).arg(encoderLaTeXEscapedCharacters[k].letter));
+                        output.append(QString(QLatin1String("\\%1{%2}")).arg(encoderLaTeXEscapedCharacters[k].modifier).arg(encoderLaTeXEscapedCharacters[k].letter));
                         found = true;
                         break;
                     }
@@ -924,16 +924,16 @@ QString EncoderLaTeX::encode(const QString &ninput) const
                 for (int k = 0; k < mathCommandLen; ++k)
                     if (mathCommand[k].unicode == c.unicode()) {
                         if (inMathMode)
-                            output.append(QString("\\%1{}").arg(mathCommand[k].written));
+                            output.append(QString(QLatin1String("\\%1{}")).arg(mathCommand[k].written));
                         else
-                            output.append(QString("\\ensuremath{\\%1}").arg(mathCommand[k].written));
+                            output.append(QString(QLatin1String("\\ensuremath{\\%1}")).arg(mathCommand[k].written));
                         found = true;
                         break;
                     }
             }
 
             if (!found) {
-                kWarning() << "Don't know how to encode Unicode char" << QString("0x%1").arg(c.unicode(), 4, 16, QLatin1Char('0'));
+                kWarning() << "Don't know how to encode Unicode char" << QString(QLatin1String("0x%1")).arg(c.unicode(), 4, 16, QLatin1Char('0'));
                 output.append(c);
             }
         } else {

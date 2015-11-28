@@ -147,7 +147,7 @@ bool Person::containsPattern(const QString &pattern, Qt::CaseSensitivity caseSen
     const QString lastName = QString(m_lastName).remove(ignoredInSorting);
     const QString suffix = QString(m_suffix).remove(ignoredInSorting);
 
-    return firstName.contains(pattern, caseSensitive) || lastName.contains(pattern, caseSensitive) || suffix.contains(pattern, caseSensitive) || QString("%1 %2|%2, %1").arg(firstName).arg(lastName).contains(pattern, caseSensitive);
+    return firstName.contains(pattern, caseSensitive) || lastName.contains(pattern, caseSensitive) || suffix.contains(pattern, caseSensitive) || QString(QLatin1String("%1 %2|%2, %1")).arg(firstName).arg(lastName).contains(pattern, caseSensitive);
 }
 
 bool Person::operator==(const ValueItem &other) const

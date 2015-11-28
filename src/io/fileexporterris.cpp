@@ -174,7 +174,7 @@ bool FileExporterRIS::writeEntry(QTextStream &stream, const Entry *entry)
             // FIXME for local files, use "L1"
             result &= writeKeyValue(stream, QLatin1String("UR"), PlainTextValue::text(value));
         } else if (key == Entry::ftPages) {
-            QStringList pageRange = PlainTextValue::text(value).split(QRegExp(QString("--|-|%1").arg(QChar(0x2013))));
+            QStringList pageRange = PlainTextValue::text(value).split(QRegExp(QString(QLatin1String("--|-|%1")).arg(QChar(0x2013))));
             if (pageRange.count() == 2) {
                 result &= writeKeyValue(stream, QLatin1String("SP"), pageRange[ 0 ]);
                 result &= writeKeyValue(stream, QLatin1String("EP"), pageRange[ 1 ]);
@@ -183,7 +183,7 @@ bool FileExporterRIS::writeEntry(QTextStream &stream, const Entry *entry)
     }
 
     if (!year.isEmpty() || !month.isEmpty()) {
-        result &= writeKeyValue(stream, QLatin1String("PY"), QString("%1/%2//").arg(year).arg(month));
+        result &= writeKeyValue(stream, QLatin1String("PY"), QString(QLatin1String("%1/%2//")).arg(year).arg(month));
     }
 
     result &= writeKeyValue(stream, QLatin1String("ER"), QString());

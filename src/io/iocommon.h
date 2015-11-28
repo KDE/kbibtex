@@ -19,11 +19,11 @@
 #define KBIBTEX_IO_IOCOMMON_H
 
 static const QString Months[] = {
-    QString("January"), QString("February"), QString("March"), QString("April"), QString("May"), QString("June"), QString("July"), QString("August"), QString("September"), QString("October"), QString("November"), QString("December")
+    QString(QLatin1String("January")), QString(QLatin1String("February")), QString(QLatin1String("March")), QString(QLatin1String("April")), QString(QLatin1String("May")), QString(QLatin1String("June")), QString(QLatin1String("July")), QString(QLatin1String("August")), QString(QLatin1String("September")), QString(QLatin1String("October")), QString(QLatin1String("November")), QString(QLatin1String("December"))
 };
 
 static const QString MonthsTriple[] = {
-    QString("jan"), QString("feb"), QString("mar"), QString("apr"), QString("may"), QString("jun"), QString("jul"), QString("aug"), QString("sep"), QString("oct"), QString("nov"), QString("dec")
+    QString(QLatin1String("jan")), QString(QLatin1String("feb")), QString(QLatin1String("mar")), QString(QLatin1String("apr")), QString(QLatin1String("may")), QString(QLatin1String("jun")), QString(QLatin1String("jul")), QString(QLatin1String("aug")), QString(QLatin1String("sep")), QString(QLatin1String("oct")), QString(QLatin1String("nov")), QString(QLatin1String("dec"))
 };
 
 #endif // KBIBTEX_IO_IOCOMMON_H
