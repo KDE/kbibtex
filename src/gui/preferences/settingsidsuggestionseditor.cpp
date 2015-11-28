@@ -25,7 +25,7 @@
 #include <QCheckBox>
 #include <QSignalMapper>
 #include <QMenu>
-#include <QtCore/QPointer>
+#include <QPointer>
 
 #include <KLineEdit>
 #include <KComboBox>
