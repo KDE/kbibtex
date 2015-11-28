@@ -27,7 +27,7 @@
 #include <QMouseEvent>
 #include <QKeyEvent>
 #include <QSplitter>
-#include <QtCore/QPointer>
+#include <QPointer>
 
 #include <KPushButton>
 #include <KAction>
