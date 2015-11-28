@@ -29,7 +29,7 @@
 #include <QButtonGroup>
 #include <QRadioButton>
 #include <QLabel>
-#include <QtCore/QPointer>
+#include <QPointer>
 
 #include <KDialog>
 #include <KLocale>

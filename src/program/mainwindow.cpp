@@ -21,7 +21,7 @@
 #include <QDragEnterEvent>
 #include <QDropEvent>
 #include <QLabel>
-#include <QtCore/QPointer>
+#include <QPointer>
 #include <QTimer>
 
 #include <KIO/NetAccess>
