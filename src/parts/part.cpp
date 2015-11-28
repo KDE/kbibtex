@@ -581,7 +581,7 @@ public:
 
                     /// Build a nice menu item (label, icon, ...)
                     QFileInfo fi((*it).pathOrUrl());
-                    const QString label = QString(QLatin1String("%1 [%2]")).arg(fi.fileName()).arg(fi.absolutePath());
+                    const QString label = QString(QLatin1String("%1 [%2]")).arg(fi.fileName(), fi.absolutePath());
                     KAction *action = new KAction(KIcon(KMimeType::iconNameForUrl(*it)), label, p);
                     action->setData((*it).pathOrUrl());
                     action->setToolTip((*it).prettyUrl());
