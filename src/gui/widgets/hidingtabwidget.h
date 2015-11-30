@@ -31,6 +31,8 @@
  */
 class HidingTabWidget : public QTabWidget
 {
+    Q_OBJECT
+
 public:
     /// Negative value to describe an invalid tab position
     static const int InvalidTabPosition;

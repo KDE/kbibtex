@@ -45,6 +45,7 @@ class QPushButton;
 class KBIBTEXGUI_EXPORT StarRating : public QWidget
 {
     Q_OBJECT
+
 public:
     /**
      * Create a star rating widget with a given number of stars.
@@ -120,6 +121,8 @@ private:
  */
 class KBIBTEXGUI_EXPORT StarRatingFieldInput : public StarRating
 {
+    Q_OBJECT
+
 public:
     explicit StarRatingFieldInput(int maxNumberOfStars, QWidget *parent = NULL)
             : StarRating(maxNumberOfStars, parent) {

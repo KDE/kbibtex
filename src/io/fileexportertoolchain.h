@@ -32,6 +32,7 @@ class QStringList;
 class KBIBTEXIO_EXPORT FileExporterToolchain : public FileExporter
 {
     Q_OBJECT
+
 public:
     static const QString keyBabelLanguage;
     static const QString defaultBabelLanguage;

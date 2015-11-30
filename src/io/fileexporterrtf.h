@@ -26,6 +26,8 @@ class QTextStream;
  */
 class KBIBTEXIO_EXPORT FileExporterRTF : public FileExporterToolchain
 {
+    Q_OBJECT
+
 public:
     FileExporterRTF();
     ~FileExporterRTF();

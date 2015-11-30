@@ -33,6 +33,8 @@ class OpenFileInfoManager;
 
 class DocumentListDelegate : public QStyledItemDelegate
 {
+    Q_OBJECT
+
 private:
     OpenFileInfoManager *ofim;
 
