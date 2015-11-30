@@ -29,6 +29,8 @@ class QKeyEvent;
  */
 class RadioButtonItemDelegate : public QStyledItemDelegate
 {
+    Q_OBJECT
+
 public:
     explicit RadioButtonItemDelegate(QObject *p);
 
@@ -55,6 +57,8 @@ public:
  */
 class RadioButtonTreeView : public QTreeView
 {
+    Q_OBJECT
+
 public:
     enum RadioButtonTreeViewRole {
         RadioSelectedRole = Qt::UserRole + 102,

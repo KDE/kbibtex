@@ -81,6 +81,8 @@ signals:
 
 class EntryConfiguredWidget : public ElementWidget
 {
+    Q_OBJECT
+
 private:
     typedef struct {
         QLabel *label;
@@ -162,6 +164,8 @@ signals:
 
 class FilesWidget : public ElementWidget
 {
+    Q_OBJECT
+
 private:
     FieldInput *fileList;
 
@@ -231,6 +235,8 @@ private slots:
 
 class MacroWidget : public ElementWidget
 {
+    Q_OBJECT
+
 private:
     FieldInput *fieldInputValue;
 
@@ -252,6 +258,8 @@ public:
 
 class PreambleWidget : public ElementWidget
 {
+    Q_OBJECT
+
 private:
     FieldInput *fieldInputValue;
 

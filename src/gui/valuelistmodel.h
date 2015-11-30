@@ -54,6 +54,8 @@ private slots:
 
 class KBIBTEXGUI_EXPORT ValueListModel : public QAbstractTableModel, private NotificationListener
 {
+    Q_OBJECT
+
 public:
     enum ValueListModelRole {
         /// Role to sort values

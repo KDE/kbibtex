@@ -26,6 +26,8 @@
  */
 class KBIBTEXIO_EXPORT FileExporterBibTeXOutput : public FileExporterToolchain
 {
+    Q_OBJECT
+
 public:
     enum OutputType {BibTeXLogFile, BibTeXBlockList};
     explicit FileExporterBibTeXOutput(OutputType outputType);

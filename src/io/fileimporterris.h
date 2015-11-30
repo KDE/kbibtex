@@ -25,6 +25,8 @@
  */
 class KBIBTEXIO_EXPORT FileImporterRIS : public FileImporter
 {
+    Q_OBJECT
+
 public:
     FileImporterRIS();
     ~FileImporterRIS();
