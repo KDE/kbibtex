@@ -32,6 +32,7 @@ class Person;
 class KBIBTEXIO_EXPORT FileImporter : public QObject
 {
     Q_OBJECT
+
 public:
     FileImporter();
     ~FileImporter();

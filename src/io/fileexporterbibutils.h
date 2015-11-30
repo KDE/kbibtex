@@ -26,6 +26,8 @@
  */
 class KBIBTEXIO_EXPORT FileExporterBibUtils : public FileExporter, public BibUtils
 {
+    Q_OBJECT
+
 public:
     explicit FileExporterBibUtils();
     ~FileExporterBibUtils();

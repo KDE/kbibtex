@@ -32,6 +32,8 @@ class Comment;
  */
 class KBIBTEXIO_EXPORT FileExporterXML : public FileExporter
 {
+    Q_OBJECT
+
 public:
     FileExporterXML();
     ~FileExporterXML();

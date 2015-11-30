@@ -37,6 +37,8 @@ class IConvLaTeX;
  */
 class KBIBTEXIO_EXPORT FileExporterBibTeX : public FileExporter
 {
+    Q_OBJECT
+
 public:
     enum UseLaTeXEncoding {leUTF8, leLaTeX, leRaw};
 
