@@ -32,6 +32,7 @@
 #include <KIO/NetAccess>
 
 #include "fileimporterpdf.h"
+#include "openfileinfoadaptor.h"
 
 class OpenFileInfo::OpenFileInfoPrivate
 {
@@ -159,7 +160,7 @@ const QString OpenFileInfo::OpenFileInfoPrivate::keyURL = QLatin1String("URL");
 OpenFileInfo::OpenFileInfo(OpenFileInfoManager *openFileInfoManager, const KUrl &url)
         : d(new OpenFileInfoPrivate(openFileInfoManager, url, FileInfo::mimeTypeForUrl(url)->name(), this))
 {
-    // nothing
+    new OpenFileInfoAdaptor(this, openFileInfoManager);
 }
 
 OpenFileInfo::OpenFileInfo(OpenFileInfoManager *openFileInfoManager, const QString &mimeType)
@@ -435,6 +436,7 @@ const int OpenFileInfoManager::OpenFileInfoManagerPrivate::maxNumOpenFiles = 16;
 OpenFileInfoManager::OpenFileInfoManager(QWidget *widget)
         : QObject(widget), d(new OpenFileInfoManagerPrivate(this, widget))
 {
+    new OpenFileInfoManagerAdaptor(this);
     QTimer::singleShot(300, this, SLOT(delayedReadConfig()));
 }
 
