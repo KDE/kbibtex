@@ -475,7 +475,7 @@ QVariant FileModel::data(const QModelIndex &index, int role) const
         } else if (role == Qt::ForegroundRole) {
             /// Retrieve "color"
             QString colorName;
-            if (entry.isNull() || (colorName = PlainTextValue::text(entry->value(Entry::ftColor))) == QStringLiteral("#000000") || colorName.isEmpty())
+            if (entry.isNull() || (colorName = PlainTextValue::text(entry->value(Entry::ftColor))) == QLatin1String("#000000") || colorName.isEmpty())
                 return QVariant();
             else {
                 /// There is a valid color ...
