@@ -451,7 +451,7 @@ QVariant FileModel::data(const QModelIndex &index, int role) const
         return QVariant();
 
     /// for now, only display data (no editing or icons etc)
-    if (role != NumberRole && role != SortRole && role != Qt::DisplayRole && role != Qt::ToolTipRole && role != Qt::BackgroundRole)
+    if (role != NumberRole && role != SortRole && role != Qt::DisplayRole && role != Qt::ToolTipRole && role != Qt::BackgroundRole && role != Qt::ForegroundRole)
         return QVariant();
 
     const BibTeXFields *bibtexFields = BibTeXFields::self();
@@ -464,13 +464,31 @@ QVariant FileModel::data(const QModelIndex &index, int role) const
 
         /// if BibTeX entry has a "x-color" field, use that color to highlight row
         if (role == Qt::BackgroundRole) {
+            /// Retrieve "color"
             QString colorName;
             if (entry.isNull() || (colorName = PlainTextValue::text(entry->value(Entry::ftColor))) == QLatin1String("#000000") || colorName.isEmpty())
                 return QVariant();
             else {
                 QColor color(colorName);
-                color.setAlphaF(0.75);
+                /// Use slightly different colors for even and odd rows
+                color.setAlphaF(index.row() % 2 == 0 ? 0.75 : 1.0);
                 return QVariant(color);
+            }
+        } else if (role == Qt::ForegroundRole) {
+            /// Retrieve "color"
+            QString colorName;
+            if (entry.isNull() || (colorName = PlainTextValue::text(entry->value(Entry::ftColor))) == QStringLiteral("#000000") || colorName.isEmpty())
+                return QVariant();
+            else {
+                /// There is a valid color ...
+                const QColor color(colorName);
+                /// Retrieve red, green, blue, and alpha components
+                int r = 0, g = 0, b = 0, a = 0;
+                color.getRgb(&r, &g, &b, &a);
+                /// If gray value is rather dark, return white as foreground color
+                if (qGray(r, g, b) < 128) return QColor(Qt::white);
+                /// For light gray values, return black as foreground color
+                else return QColor(Qt::black);
             }
         } else if (role == NumberRole) {
             if (!entry.isNull() && raw.toLower() == Entry::ftStarRating) {
