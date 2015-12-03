@@ -80,6 +80,8 @@ public:
     KService::Ptr defaultService();
     KService::Ptr currentService();
 
+    int fileId() const;
+
     friend class OpenFileInfoManager;
 
 signals:

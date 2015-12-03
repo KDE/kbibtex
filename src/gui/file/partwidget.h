@@ -38,6 +38,8 @@ public:
     FileView *fileView();
     FilterBar *filterBar();
 
+    int documentId() const;
+
 private slots:
     void searchFor(QString);
 

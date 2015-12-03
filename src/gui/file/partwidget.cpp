@@ -26,13 +26,16 @@ class PartWidget::Private
 {
 private:
     PartWidget *p;
+    static int documentIdCounter;
 
 public:
     FileView *fileView;
     FilterBar *filterBar;
 
+    int documentId;
+
     Private(PartWidget *parent)
-            : p(parent) {
+            : p(parent), documentId(documentIdCounter++) {
         QBoxLayout *layout = new QVBoxLayout(parent);
         layout->setMargin(0);
 
@@ -49,6 +52,8 @@ public:
         connect(fileView, SIGNAL(searchFor(QString)), p, SLOT(searchFor(QString)));
     }
 };
+
+int PartWidget::Private::documentIdCounter = 0;
 
 PartWidget::PartWidget(QWidget *parent)
         : QWidget(parent), d(new PartWidget::Private(this)) {
@@ -76,4 +81,8 @@ void PartWidget::searchFor(QString text) {
     fq.terms = QStringList() << text;
     d->filterBar->setFilter(fq);
     d->filterBar->setFocus();
+}
+
+int PartWidget::documentId() const {
+    return d->documentId;
 }
