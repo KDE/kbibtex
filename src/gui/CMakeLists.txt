@@ -33,6 +33,7 @@ set(
     file/clipboard.cpp
     file/filemodel.cpp
     file/basicfileview.cpp
+    file/fileoperation.cpp
     element/elementeditor.cpp
     element/elementwidgets.cpp
     element/findpdfui.cpp
@@ -87,6 +88,7 @@ set(
     file/filemodel.h
     file/fileview.h
     file/partwidget.h
+    file/fileoperation.h
     element/findpdfui.h
     element/elementeditor.h
     element/associatedfilesui.h
