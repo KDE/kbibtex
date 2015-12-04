@@ -152,7 +152,7 @@ public:
 };
 
 int OpenFileInfo::OpenFileInfoPrivate::globalCounter = 0;
-int OpenFileInfo::OpenFileInfoPrivate::fileIdCounter = 1;
+int OpenFileInfo::OpenFileInfoPrivate::fileIdCounter = OpenFileInfo::FileIdStart;
 const QString OpenFileInfo::OpenFileInfoPrivate::dateTimeFormat = QLatin1String("yyyy-MM-dd-hh-mm-ss-zzz");
 const QString OpenFileInfo::OpenFileInfoPrivate::keyLastAccess = QLatin1String("LastAccess");
 const QString OpenFileInfo::OpenFileInfoPrivate::keyURL = QLatin1String("URL");

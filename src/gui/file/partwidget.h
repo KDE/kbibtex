@@ -32,6 +32,9 @@ class KBIBTEXGUI_EXPORT PartWidget : public QWidget {
     Q_OBJECT
 
 public:
+    static const int DocumentIdStart = 0;
+    static const int DocumentIdInvalid = -1;
+
     explicit PartWidget(QWidget *parent);
     ~PartWidget();
 

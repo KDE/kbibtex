@@ -40,6 +40,9 @@ class OpenFileInfo : public QObject
     Q_OBJECT
 
 public:
+    static const int FileIdStart = 0;
+    static const int FileIdInvalid = -1;
+
     enum StatusFlag {
         Open = 0x1,
         RecentlyUsed = 0x2,

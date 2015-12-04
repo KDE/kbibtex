@@ -53,7 +53,7 @@ public:
     }
 };
 
-int PartWidget::Private::documentIdCounter = 1;
+int PartWidget::Private::documentIdCounter = PartWidget::DocumentIdStart;
 
 PartWidget::PartWidget(QWidget *parent)
         : QWidget(parent), d(new PartWidget::Private(this)) {

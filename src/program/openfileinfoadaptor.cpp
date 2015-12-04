@@ -63,9 +63,9 @@ void OpenFileInfoAdaptor::setFlags(uchar flags)
 int OpenFileInfoAdaptor::documentId()
 {
     KParts::ReadOnlyPart *part = ofi->part(mdi);
-    if (!part) return 0;
+    if (part == NULL) return PartWidget::DocumentIdInvalid;
     PartWidget *w = qobject_cast<PartWidget *>(part->widget());
-    if (!w) return 0;
+    if (w == NULL) return PartWidget::DocumentIdInvalid;
     return w->documentId();
 }
 
@@ -106,7 +106,7 @@ int OpenFileInfoManagerAdaptor::openFileInfoToFileId(OpenFileInfo *ofi)
     if (ofi)
         return ofi->fileId();
     else
-        return 0;
+        return OpenFileInfo::FileIdInvalid;
 }
 
 OpenFileInfo *OpenFileInfoManagerAdaptor::fileIdToOpenFileInfo(int fileId) const
