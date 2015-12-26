@@ -31,6 +31,7 @@
 #include <KActionMenu>
 #include <KSharedConfig>
 #include <KConfigGroup>
+#include <klocale.h>
 
 #include "file.h"
 #include "fileview.h"
@@ -202,7 +203,7 @@ void ColorLabelSettingsModel::loadState()
 {
     KConfigGroup configGroup(config, Preferences::groupColor);
     QStringList colorCodes = configGroup.readEntry(Preferences::keyColorCodes, Preferences::defaultColorCodes);
-    QStringList colorLabels = configGroup.readEntry(Preferences::keyColorLabels, Preferences::defaultcolorLabels);
+    QStringList colorLabels = configGroup.readEntry(Preferences::keyColorLabels, Preferences::defaultColorLabels);
 
     colorLabelPairs.clear();
     for (QStringList::ConstIterator itc = colorCodes.constBegin(), itl = colorLabels.constBegin(); itc != colorCodes.constEnd() && itl != colorLabels.constEnd(); ++itc, ++itl) {
@@ -237,7 +238,7 @@ void ColorLabelSettingsModel::saveState()
 void ColorLabelSettingsModel::resetToDefaults()
 {
     colorLabelPairs.clear();
-    for (QStringList::ConstIterator itc = Preferences::defaultColorCodes.constBegin(), itl = Preferences::defaultcolorLabels.constBegin(); itc != Preferences::defaultColorCodes.constEnd() && itl != Preferences::defaultcolorLabels.constEnd(); ++itc, ++itl) {
+    for (QStringList::ConstIterator itc = Preferences::defaultColorCodes.constBegin(), itl = Preferences::defaultColorLabels.constBegin(); itc != Preferences::defaultColorCodes.constEnd() && itl != Preferences::defaultColorLabels.constEnd(); ++itc, ++itl) {
         ColorLabelPair clp;
         clp.color = QColor(*itc);
         clp.label = i18n((*itl).toUtf8().constData());
@@ -459,7 +460,7 @@ public:
         KSharedConfigPtr config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc")));
         KConfigGroup configGroup(config, Preferences::groupColor);
         QStringList colorCodes = configGroup.readEntry(Preferences::keyColorCodes, Preferences::defaultColorCodes);
-        QStringList colorLabels = configGroup.readEntry(Preferences::keyColorLabels, Preferences::defaultcolorLabels);
+        QStringList colorLabels = configGroup.readEntry(Preferences::keyColorLabels, Preferences::defaultColorLabels);
         for (QStringList::ConstIterator itc = colorCodes.constBegin(), itl = colorLabels.constBegin(); itc != colorCodes.constEnd() && itl != colorLabels.constEnd(); ++itc, ++itl) {
             QAction *action = new QAction(QIcon(ColorLabelWidget::createSolidIcon(*itc)), i18n((*itl).toUtf8().constData()), menu);
             menu->addAction(action);

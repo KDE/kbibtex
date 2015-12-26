@@ -28,6 +28,7 @@ set(
     bibutils.cpp
     xsltransform.cpp
     ${CMAKE_SOURCE_DIR}/src/global/kbibtex.cpp
+    ${CMAKE_SOURCE_DIR}/src/global/preferences.cpp
     logging_io.cpp
 )
 
@@ -74,7 +75,6 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/src/data
     ${CMAKE_BINARY_DIR}/src/data
     ${CMAKE_SOURCE_DIR}/src/global
-    ${CMAKE_SOURCE_DIR}/src
 )
 
 # *** taken from Okular's CMakeLists.txt files ***

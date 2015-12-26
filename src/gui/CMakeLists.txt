@@ -39,6 +39,7 @@ set(
     valuelistmodel.cpp
     delayedexecutiontimer.cpp
     ${CMAKE_SOURCE_DIR}/src/global/kbibtex.cpp
+    ${CMAKE_SOURCE_DIR}/src/global/preferences.cpp
     logging_gui.cpp
 )
 
@@ -79,7 +80,6 @@ if(UNITY_BUILD)
 endif(UNITY_BUILD)
 
 include_directories(
-    ${CMAKE_SOURCE_DIR}/src
     ${CMAKE_SOURCE_DIR}/src/config
     ${CMAKE_BINARY_DIR}/src/config
     ${CMAKE_SOURCE_DIR}/src/data

@@ -77,7 +77,7 @@ void FileModel::readConfiguration()
     KSharedConfigPtr config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc")));
     KConfigGroup configGroup(config, Preferences::groupColor);
     QStringList colorCodes = configGroup.readEntry(Preferences::keyColorCodes, Preferences::defaultColorCodes);
-    QStringList colorLabels = configGroup.readEntry(Preferences::keyColorLabels, Preferences::defaultcolorLabels);
+    QStringList colorLabels = configGroup.readEntry(Preferences::keyColorLabels, Preferences::defaultColorLabels);
     colorToLabel.clear();
     for (QStringList::ConstIterator itc = colorCodes.constBegin(), itl = colorLabels.constBegin(); itc != colorCodes.constEnd() && itl != colorLabels.constEnd(); ++itc, ++itl) {
         colorToLabel.insert(*itc, i18n((*itl).toUtf8().constData()));

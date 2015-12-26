@@ -30,7 +30,6 @@ endif(UNITY_BUILD AND NOT WIN32)
 
 include_directories(
     ${CMAKE_BINARY_DIR}/src
-    ${CMAKE_SOURCE_DIR}/src
     ${CMAKE_SOURCE_DIR}/src/config
     ${CMAKE_BINARY_DIR}/src/config
     ${CMAKE_SOURCE_DIR}/src/data

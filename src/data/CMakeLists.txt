@@ -11,6 +11,7 @@ set(
     value.cpp
     models/filemodel.cpp
     ${CMAKE_SOURCE_DIR}/src/global/kbibtex.cpp
+    ${CMAKE_SOURCE_DIR}/src/global/preferences.cpp
     logging_data.cpp
 )
 
@@ -34,7 +35,6 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/src/config
     ${CMAKE_BINARY_DIR}/src/config
     ${CMAKE_SOURCE_DIR}/src/global
-    ${CMAKE_SOURCE_DIR}/src
 )
 
 add_library(

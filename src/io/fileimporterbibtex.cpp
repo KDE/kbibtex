@@ -34,8 +34,8 @@
 #include "element.h"
 #include "value.h"
 #include "encoderlatex.h"
-#include "config/bibtexentries.h"
-#include "config/bibtexfields.h"
+#include "bibtexentries.h"
+#include "bibtexfields.h"
 #include "fileexporterbibtex.h"
 #include "logging_io.h"
 

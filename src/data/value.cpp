@@ -23,6 +23,7 @@
 
 #include <KSharedConfig>
 #include <KConfigGroup>
+#include <klocale.h>
 
 #include "file.h"
 #include "preferences.h"
@@ -338,7 +339,7 @@ bool VerbatimText::containsPattern(const QString &pattern, Qt::CaseSensitivity c
         KSharedConfigPtr config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc")));
         KConfigGroup configGroup(config, Preferences::groupColor);
         QStringList colorCodes = configGroup.readEntry(Preferences::keyColorCodes, Preferences::defaultColorCodes);
-        QStringList colorLabels = configGroup.readEntry(Preferences::keyColorLabels, Preferences::defaultcolorLabels);
+        QStringList colorLabels = configGroup.readEntry(Preferences::keyColorLabels, Preferences::defaultColorLabels);
 
         /// Translate data from config file into internal mapping
         for (QStringList::ConstIterator itc = colorCodes.constBegin(), itl = colorLabels.constBegin(); itc != colorCodes.constEnd() && itl != colorLabels.constEnd(); ++itc, ++itl) {

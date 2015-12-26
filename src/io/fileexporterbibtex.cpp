@@ -36,8 +36,8 @@
 #include "comment.h"
 #include "encoderlatex.h"
 #include "encoderutf8.h"
-#include "config/bibtexentries.h"
-#include "config/bibtexfields.h"
+#include "bibtexentries.h"
+#include "bibtexfields.h"
 #include "iconvlatex.h"
 #include "logging_io.h"
 
