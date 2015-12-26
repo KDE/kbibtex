@@ -447,7 +447,7 @@ void KBibTeXMainWindow::documentListsChanged(OpenFileInfo::StatusFlags statusFla
 void KBibTeXMainWindow::openRecentFile()
 {
     QAction *action = static_cast<QAction *>(sender());
-    QUrl url = action->data().value<QUrl>();
+    QUrl url = action->data().toUrl();
     openDocument(url);
 }
 

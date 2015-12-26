@@ -29,7 +29,7 @@ RadioButtonItemDelegate::RadioButtonItemDelegate(QObject *p)
 
 void RadioButtonItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-    if (index.data(RadioButtonTreeView::IsRadioRole).canConvert<bool>() && index.data(RadioButtonTreeView::IsRadioRole).value<bool>()) {
+    if (index.data(RadioButtonTreeView::IsRadioRole).canConvert<bool>() && index.data(RadioButtonTreeView::IsRadioRole).toBool()) {
         /// determine size and spacing of radio buttons in current style
         int radioButtonWidth = QApplication::style()->pixelMetric(QStyle::PM_ExclusiveIndicatorWidth, &option);
         int spacing = QApplication::style()->pixelMetric(QStyle::PM_RadioButtonLabelSpacing, &option);
@@ -45,7 +45,7 @@ void RadioButtonItemDelegate::paint(QPainter *painter, const QStyleOptionViewIte
         myOption.rect.setWidth(radioButtonWidth);
         if (index.data(RadioButtonTreeView::RadioSelectedRole).canConvert<bool>()) {
             /// change radio button's visual appearance if selected or not
-            bool radioButtonSelected = index.data(RadioButtonTreeView::RadioSelectedRole).value<bool>();
+            bool radioButtonSelected = index.data(RadioButtonTreeView::RadioSelectedRole).toBool();
             myOption.state |= radioButtonSelected ? QStyle::State_On : QStyle::State_Off;
         }
         QApplication::style()->drawPrimitive(QStyle::PE_IndicatorRadioButton, &myOption, painter);
@@ -56,7 +56,7 @@ void RadioButtonItemDelegate::paint(QPainter *painter, const QStyleOptionViewIte
 QSize RadioButtonItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     QSize s = QStyledItemDelegate::sizeHint(option, index);
-    if (index.data(RadioButtonTreeView::IsRadioRole).value<bool>()) {
+    if (index.data(RadioButtonTreeView::IsRadioRole).toBool()) {
         /// determine size of radio buttons in current style
         int radioButtonHeight = QApplication::style()->pixelMetric(QStyle::PM_ExclusiveIndicatorHeight, &option);
         /// ensure that line is tall enough to draw radio button
@@ -76,7 +76,7 @@ RadioButtonTreeView::RadioButtonTreeView(QWidget *parent)
 void RadioButtonTreeView::mouseReleaseEvent(QMouseEvent *event)
 {
     QModelIndex index = indexAt(event->pos());
-    if (index.data(IsRadioRole).value<bool>()) {
+    if (index.data(IsRadioRole).toBool()) {
         /// clicking on an alternative's item in tree view should select alternative
         switchRadioFlag(index);
         event->accept();
@@ -87,7 +87,7 @@ void RadioButtonTreeView::mouseReleaseEvent(QMouseEvent *event)
 void RadioButtonTreeView::keyReleaseEvent(QKeyEvent *event)
 {
     QModelIndex index = currentIndex();
-    if (index.data(IsRadioRole).value<bool>() && event->key() == Qt::Key_Space) {
+    if (index.data(IsRadioRole).toBool() && event->key() == Qt::Key_Space) {
         /// pressing space on an alternative's item in tree view should select alternative
         switchRadioFlag(index);
         event->accept();
