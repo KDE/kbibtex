@@ -159,7 +159,7 @@ bool ColorLabelSettingsModel::setData(const QModelIndex &index, const QVariant &
             }
         } else if (index.column() == 1 && value.canConvert<QString>()) {
             /// For second column if a label text is to be set ...
-            const QString text = value.value<QString>();
+            const QString text = value.toString();
             if (!text.isEmpty()) {
                 /// ... store this text in the data structure
                 colorLabelPairs[index.row()].label = text;
