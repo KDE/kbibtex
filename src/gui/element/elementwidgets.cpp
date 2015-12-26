@@ -41,7 +41,7 @@
 
 #include "idsuggestions.h"
 #include "fileinfo.h"
-#include "kbibtexnamespace.h"
+#include "kbibtex.h"
 #include "bibtexentries.h"
 #include "bibtexfields.h"
 #include "fileimporterbibtex.h"

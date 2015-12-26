@@ -23,7 +23,7 @@
 
 #include "value.h"
 #include "menulineedit.h"
-#include "kbibtexnamespace.h"
+#include "kbibtex.h"
 
 class QMenu;
 class QSignalMapper;

@@ -60,7 +60,7 @@
 #include <KSharedConfig>
 #include <KConfigGroup>
 
-#include "kbibtexnamespace.h"
+#include "kbibtex.h"
 #include "element.h"
 #include "entry.h"
 #include "file.h"
@@ -254,7 +254,7 @@ public:
     }
 
     bool addUrl(const struct UrlInfo &urlInfo) {
-        bool isLocal = isLocalOrRelative(urlInfo.url);
+        bool isLocal = KBibTeX::isLocalOrRelative(urlInfo.url);
         anyLocal |= isLocal;
 
         if (!onlyLocalFilesButton->isChecked() && !isLocal) return true; ///< ignore URL if only local files are allowed
@@ -321,7 +321,7 @@ public:
             QList<QUrl> urlList = FileInfo::entryUrls(entry.data(), baseUrl, FileInfo::TestExistenceYes);
 
             for (QList<QUrl>::ConstIterator it = urlList.constBegin(); it != urlList.constEnd(); ++it) {
-                bool isLocal = isLocalOrRelative(*it);
+                bool isLocal = KBibTeX::isLocalOrRelative(*it);
                 anyRemote |= !isLocal;
                 if (!onlyLocalFilesButton->isChecked() && !isLocal) continue;
 
@@ -539,7 +539,7 @@ public:
         UrlInfo result;
         result.url = url;
 
-        if (!isLocalOrRelative(url) && url.fileName().isEmpty()) {
+        if (!KBibTeX::isLocalOrRelative(url) && url.fileName().isEmpty()) {
             /// URLs not pointing to a specific file should be opened with a web browser component
             result.icon = QIcon::fromTheme(QStringLiteral("text-html"));
             result.mimeType = QStringLiteral("text/html");

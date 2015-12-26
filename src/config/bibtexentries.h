@@ -22,7 +22,7 @@
 
 #include <QStringList>
 
-#include "kbibtexnamespace.h"
+#include "kbibtex.h"
 
 typedef struct {
     QString upperCamelCase;

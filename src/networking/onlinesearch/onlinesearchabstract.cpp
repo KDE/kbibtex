@@ -31,7 +31,7 @@
 
 #include "encoderlatex.h"
 #include "internalnetworkaccessmanager.h"
-#include "kbibtexnamespace.h"
+#include "kbibtex.h"
 #include "logging_networking.h"
 
 const QString OnlineSearchAbstract::queryKeyFreeText = QStringLiteral("free");
@@ -366,7 +366,7 @@ void OnlineSearchAbstract::dumpToFile(const QString &filename, const QString &te
 
     QFile f(usedFilename);
     if (f.open(QFile::WriteOnly)) {
-        qCDebug(LOG_KBIBTEX_NETWORKING) << "Dumping text" << squeezeText(text, 96) << "to" << usedFilename;
+        qCDebug(LOG_KBIBTEX_NETWORKING) << "Dumping text" << KBibTeX::squeezeText(text, 96) << "to" << usedFilename;
         QTextStream ts(&f);
         ts << text;
         f.close();

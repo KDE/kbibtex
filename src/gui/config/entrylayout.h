@@ -21,7 +21,7 @@
 #include <QVector>
 #include <QSharedPointer>
 
-#include "kbibtexnamespace.h"
+#include "kbibtex.h"
 
 typedef struct {
     QString uiLabel;

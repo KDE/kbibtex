@@ -19,7 +19,7 @@
 
 #include <QTextStream>
 
-#include "kbibtexnamespace.h"
+#include "kbibtex.h"
 #include "element.h"
 #include "value.h"
 #include "fileexporter.h"

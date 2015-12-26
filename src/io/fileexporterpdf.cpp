@@ -30,7 +30,7 @@
 #include "element.h"
 #include "entry.h"
 #include "fileexporterbibtex.h"
-#include "kbibtexnamespace.h"
+#include "kbibtex.h"
 #include "logging_io.h"
 
 FileExporterPDF::FileExporterPDF(FileEmbedding fileEmbedding)

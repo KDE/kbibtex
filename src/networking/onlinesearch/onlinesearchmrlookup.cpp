@@ -27,7 +27,7 @@
 #include <KLocalizedString>
 
 #include "fileimporterbibtex.h"
-#include "kbibtexnamespace.h"
+#include "kbibtex.h"
 #include "internalnetworkaccessmanager.h"
 #include "logging_networking.h"
 

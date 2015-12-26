@@ -27,7 +27,7 @@
 #include <KSharedConfig>
 #include <KConfigGroup>
 
-#include "kbibtexnamespace.h"
+#include "kbibtex.h"
 #include "entry.h"
 
 static const QRegExp regExpEscapedChars = QRegExp("\\\\+([&_~])");

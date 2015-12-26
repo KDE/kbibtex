@@ -23,7 +23,7 @@
 #include <QWidget>
 
 #include "value.h"
-#include "kbibtexnamespace.h"
+#include "kbibtex.h"
 
 class Element;
 

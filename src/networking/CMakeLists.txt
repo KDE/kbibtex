@@ -34,6 +34,7 @@ set(
     associatedfiles.cpp
     findpdf.cpp
     internalnetworkaccessmanager.cpp
+    ${CMAKE_SOURCE_DIR}/src/global/kbibtex.cpp
     logging_networking.cpp
     # QOAuth for Qt5 from Git
     ../3rdparty/qoauth/src/interface.cpp
@@ -89,7 +90,7 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/src/io
     ${CMAKE_SOURCE_DIR}/src/networking/onlinesearch
     ${CMAKE_SOURCE_DIR}/src/networking
-    ${CMAKE_SOURCE_DIR}/src
+    ${CMAKE_SOURCE_DIR}/src/global
     ${LIBXML2_INCLUDE_DIR}
 )
 

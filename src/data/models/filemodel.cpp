@@ -126,7 +126,7 @@ QVariant FileModel::entryData(const Entry *entry, const QString &raw, const QStr
             return QVariant(text.toLower());
         else if (role == Qt::ToolTipRole) {
             // TODO: find a better solution, such as line-wrapping tooltips
-            return QVariant(leftSqueezeText(text, 128));
+            return QVariant(KBibTeX::leftSqueezeText(text, 128));
         } else
             return QVariant(text);
     }

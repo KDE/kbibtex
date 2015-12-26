@@ -23,7 +23,7 @@
 #include <QCoreApplication>
 #include <QStringList>
 
-#include "kbibtexnamespace.h"
+#include "kbibtex.h"
 #include "entry.h"
 #include "value.h"
 #include "logging_io.h"

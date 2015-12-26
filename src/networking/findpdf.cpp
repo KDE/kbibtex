@@ -29,7 +29,7 @@
 
 #include <poppler/qt5/poppler-qt5.h>
 
-#include "kbibtexnamespace.h"
+#include "kbibtex.h"
 #include "internalnetworkaccessmanager.h"
 #include "value.h"
 #include "fileinfo.h"

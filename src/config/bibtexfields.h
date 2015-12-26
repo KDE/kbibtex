@@ -23,7 +23,7 @@
 #include <QString>
 #include <QList>
 
-#include "kbibtexnamespace.h"
+#include "kbibtex.h"
 
 struct FieldDescription {
     QString upperCamelCase;

@@ -23,7 +23,7 @@
 
 #include <KLocalizedString>
 
-#include "kbibtexnamespace.h"
+#include "kbibtex.h"
 
 const QString keyListSeparator = QStringLiteral("ListSeparator");
 namespace Preferences

@@ -38,7 +38,7 @@
 #include <KLocalizedString>
 #include <KMessageBox>
 
-#include "kbibtexnamespace.h"
+#include "kbibtex.h"
 #include "partwidget.h"
 #include "logging_program.h"
 

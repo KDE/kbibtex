@@ -38,6 +38,7 @@ set(
     italictextitemmodel.cpp
     valuelistmodel.cpp
     delayedexecutiontimer.cpp
+    ${CMAKE_SOURCE_DIR}/src/global/kbibtex.cpp
     logging_gui.cpp
 )
 
@@ -98,6 +99,7 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/src/gui/field
     ${CMAKE_SOURCE_DIR}/src/gui/widgets
     ${CMAKE_SOURCE_DIR}/src/gui/config
+    ${CMAKE_SOURCE_DIR}/src/global
 )
 
 if(QXT_FOUND_QXTCORE AND QXT_FOUND_QXTGUI)

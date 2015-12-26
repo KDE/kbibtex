@@ -24,7 +24,7 @@
 #include <QStringList>
 #include <QSet>
 
-#include "kbibtexnamespace.h"
+#include "kbibtex.h"
 #include "fileimporter.h"
 
 class Element;

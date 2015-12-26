@@ -22,7 +22,7 @@
 
 #include <KSharedConfig>
 
-#include "kbibtexnamespace.h"
+#include "kbibtex.h"
 #include "value.h"
 
 class QCheckBox;

@@ -37,7 +37,7 @@
 #include <KSharedConfig>
 #include <KMessageBox>
 
-#include "kbibtexnamespace.h"
+#include "kbibtex.h"
 #include "preferences/kbibtexpreferencesdialog.h"
 #include "valuelist.h"
 #include "zoterobrowser.h"
