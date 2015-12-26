@@ -185,8 +185,6 @@ void ValueListDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
     painter->restore();
 }
 
-static QRegExp ignoredInSorting("[{}\\\\]+");
-
 ValueListModel::ValueListModel(const File *bibtexFile, const QString &fieldName, QObject *parent)
         : QAbstractTableModel(parent), file(bibtexFile), fName(fieldName.toLower()), showCountColumn(true), sortBy(SortByText)
 {
@@ -222,6 +220,8 @@ QVariant ValueListModel::data(const QModelIndex &index, int role) const
         } else
             return QVariant(values[index.row()].count);
     } else if (role == SortRole) {
+        static const QRegExp ignoredInSorting(QStringLiteral("[{}\\\\]+"));
+
         QString buffer = values[index.row()].sortBy.isEmpty() ? values[index.row()].text : values[index.row()].sortBy;
         buffer = buffer.remove(ignoredInSorting).toLower();
 

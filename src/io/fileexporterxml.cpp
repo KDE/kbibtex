@@ -30,10 +30,6 @@
 #include "iocommon.h"
 #include "logging_io.h"
 
-static QRegExp removal("[{}]+");
-static QRegExp abstractRegExp("\\bAbstract[:]?([ ]|&nbsp;|&amp;nbsp;)*", Qt::CaseInsensitive);
-static QRegExp lineBreaksRegExp("[ \\t]*[\\n\\r]");
-
 FileExporterXML::FileExporterXML()
         : FileExporter(), m_cancelFlag(false)
 {
@@ -145,6 +141,7 @@ bool FileExporterXML::writeEntry(QTextStream &stream, const Entry *entry)
             stream << valueToXML(internal, key) << endl;
             stream << "  </" << key << "s>" << endl;
         } else if (key == Entry::ftAbstract) {
+            static const QRegExp abstractRegExp(QStringLiteral("\\bAbstract[:]?([ ]|&nbsp;|&amp;nbsp;)*"), Qt::CaseInsensitive);
             /// clean up HTML artifacts
             QString text = valueToXML(value);
             text = text.remove(abstractRegExp);
@@ -248,6 +245,8 @@ QString FileExporterXML::valueToXML(const Value &value, const QString &)
 
 QString FileExporterXML::cleanXML(const QString &text)
 {
+    static const QRegExp removal(QStringLiteral("[{}]+"));
+    static const QRegExp lineBreaksRegExp(QStringLiteral("[ \\t]*[\\n\\r]"));
     QString result = text;
     result = result.replace(lineBreaksRegExp, QStringLiteral("<br/>")).remove(removal).remove(QStringLiteral("\\ensuremath"));
     return result;

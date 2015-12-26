@@ -39,8 +39,6 @@
 #include "fileexporterbibtex.h"
 #include "logging_io.h"
 
-const QString extraAlphaNumChars = QString(QStringLiteral("?'`-_:.+/$\\\"&"));
-
 const char *FileImporterBibTeX::defaultCodecName = "utf-8";
 
 FileImporterBibTeX::FileImporterBibTeX(bool ignoreComments, KBibTeX::Casing keywordCasing)
@@ -509,6 +507,8 @@ QString FileImporterBibTeX::readString(bool &isStringKey)
 
 QString FileImporterBibTeX::readSimpleString(const QChar &until)
 {
+    static const QString extraAlphaNumChars = QString(QStringLiteral("?'`-_:.+/$\\\"&"));
+
     QString result;
 
     if (!skipWhiteChar()) {

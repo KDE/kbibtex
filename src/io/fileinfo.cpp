@@ -30,11 +30,6 @@
 #include "kbibtex.h"
 #include "entry.h"
 
-static const QRegExp regExpEscapedChars = QRegExp("\\\\+([&_~])");
-
-/// File types supported by "document preview"
-static const QStringList documentFileExtensions = QStringList() << QStringLiteral(".pdf") << QStringLiteral(".pdf.gz") << QStringLiteral(".pdf.bz2") << QStringLiteral(".ps") << QStringLiteral(".ps.gz") << QStringLiteral(".ps.bz2") << QStringLiteral(".eps") << QStringLiteral(".eps.gz") << QStringLiteral(".eps.bz2") << QStringLiteral(".html") << QStringLiteral(".xhtml") << QStringLiteral(".htm") << QStringLiteral(".dvi") << QStringLiteral(".djvu") << QStringLiteral(".wwf") << QStringLiteral(".jpeg") << QStringLiteral(".jpg") << QStringLiteral(".png") << QStringLiteral(".gif") << QStringLiteral(".tif") << QStringLiteral(".tiff");
-
 FileInfo::FileInfo()
 {
     /// nothing
@@ -215,6 +210,7 @@ QList<QUrl> FileInfo::entryUrls(const Entry *entry, const QUrl &bibTeXUrl, TestE
 
     const QString baseDirectory = bibTeXUrl.isValid() ? bibTeXUrl.adjusted(QUrl::RemoveFilename | QUrl::StripTrailingSlash).path() : QString();
 
+    static const QRegExp regExpEscapedChars = QRegExp(QStringLiteral("\\\\+([&_~])"));
     for (Entry::ConstIterator it = entry->constBegin(); it != entry->constEnd(); ++it) {
         /// skip abstracts, they contain sometimes strange text fragments
         /// that are mistaken for URLs
@@ -234,6 +230,9 @@ QList<QUrl> FileInfo::entryUrls(const Entry *entry, const QUrl &bibTeXUrl, TestE
     }
 
     if (!baseDirectory.isEmpty()) {
+        /// File types supported by "document preview"
+        static const QStringList documentFileExtensions = QStringList() << QStringLiteral(".pdf") << QStringLiteral(".pdf.gz") << QStringLiteral(".pdf.bz2") << QStringLiteral(".ps") << QStringLiteral(".ps.gz") << QStringLiteral(".ps.bz2") << QStringLiteral(".eps") << QStringLiteral(".eps.gz") << QStringLiteral(".eps.bz2") << QStringLiteral(".html") << QStringLiteral(".xhtml") << QStringLiteral(".htm") << QStringLiteral(".dvi") << QStringLiteral(".djvu") << QStringLiteral(".wwf") << QStringLiteral(".jpeg") << QStringLiteral(".jpg") << QStringLiteral(".png") << QStringLiteral(".gif") << QStringLiteral(".tif") << QStringLiteral(".tiff");
+
         /// check if in the same directory as the BibTeX file
         /// a PDF file exists which filename is based on the entry's id
         for (QStringList::ConstIterator extensionIt = documentFileExtensions.constBegin(); extensionIt != documentFileExtensions.constEnd(); ++extensionIt) {

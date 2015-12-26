@@ -49,12 +49,6 @@
 #include <onlinesearchspringerlink.h>
 #include <onlinesearchsoanasaads.h>
 
-static const QIcon iconOK = QIcon::fromTheme(QStringLiteral("dialog-ok-apply"));
-static const QIcon iconERROR = QIcon::fromTheme(QStringLiteral("dialog-cancel"));
-static const QIcon iconINFO = QIcon::fromTheme(QStringLiteral("dialog-information"));
-static const QIcon iconAUTH = QIcon::fromTheme(QStringLiteral("dialog-cancel")); // FIXME "dialog-cancel" should be overlay on "dialog-password"
-static const QIcon iconNETWORK = QIcon::fromTheme(QStringLiteral("dialog-cancel")); // FIXME "dialog-cancel" should be overlay on "network-wired"
-
 int filenameCounter = 0;
 
 class TestWidget : public QWidget
@@ -116,6 +110,8 @@ public:
 KBibTeXTest::KBibTeXTest(QWidget *parent)
         : QDialog(parent), m_running(false), m_isBusy(false)
 {
+    static const QIcon iconINFO = QIcon::fromTheme(QStringLiteral("dialog-information"));
+
     m_onlineSearchList << new OnlineSearchAcmPortal(this);
     m_onlineSearchList << new OnlineSearchArXiv(this);
     m_onlineSearchList << new OnlineSearchBibsonomy(this);
@@ -187,6 +183,11 @@ void KBibTeXTest::startOnlineSearchTests()
 
 void KBibTeXTest::onlineSearchStoppedSearch(int searchResult)
 {
+    static const QIcon iconOK = QIcon::fromTheme(QStringLiteral("dialog-ok-apply"));
+    static const QIcon iconERROR = QIcon::fromTheme(QStringLiteral("dialog-cancel"));
+    static const QIcon iconAUTH = QIcon::fromTheme(QStringLiteral("dialog-cancel")); // FIXME "dialog-cancel" should be overlay on "dialog-password"
+    static const QIcon iconNETWORK = QIcon::fromTheme(QStringLiteral("dialog-cancel")); // FIXME "dialog-cancel" should be overlay on "network-wired"
+
     if (searchResult == OnlineSearchAbstract::resultNoError) {
         if (m_currentOnlineSearchNumFoundEntries == 0)
             addMessage(QString(QStringLiteral("Got no error message searching '%1', but found NO entries")).arg((*m_currentOnlineSearch)->label()), iconERROR);
@@ -222,6 +223,8 @@ void KBibTeXTest::resetProgress()
 
 void KBibTeXTest::processNextSearch()
 {
+    static const QIcon iconINFO = QIcon::fromTheme(QStringLiteral("dialog-information"));
+
     if (m_running && m_currentOnlineSearch != m_onlineSearchList.constEnd()) {
         setBusy(true);
         m_currentOnlineSearchNumFoundEntries = 0;

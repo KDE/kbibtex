@@ -55,7 +55,6 @@
 #include "logging_gui.h"
 
 static const unsigned int interColumnSpace = 16;
-static const QStringList keyStart = QStringList() << Entry::ftUrl << QStringLiteral("postscript") << Entry::ftLocalFile << Entry::ftDOI << Entry::ftFile << QStringLiteral("ee") << QStringLiteral("biburl");
 static const char *PropertyIdSuggestion = "PropertyIdSuggestion";
 
 ElementWidget::ElementWidget(QWidget *parent)
@@ -699,6 +698,9 @@ bool FilesWidget::canEdit(const Element *element)
 {
     return typeid(*element) == typeid(Entry);
 }
+
+const QStringList FilesWidget::keyStart = QStringList() << Entry::ftUrl << QStringLiteral("postscript") << Entry::ftLocalFile << Entry::ftDOI << Entry::ftFile << QStringLiteral("ee") << QStringLiteral("biburl");
+
 
 
 OtherFieldsWidget::OtherFieldsWidget(const QStringList &blacklistedFields, QWidget *parent)
