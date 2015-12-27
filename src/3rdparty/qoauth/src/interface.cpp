@@ -1004,8 +1004,8 @@ QByteArray QOAuth::InterfacePrivate::createSignature( const QString &requestUrl,
     QByteArray nonce = iv.toByteArray().toHex();
 
     // create timestamp
-    uint time = QDateTime::currentDateTime().toTime_t();
-    QByteArray timestamp = QByteArray::number( time );
+    const uint time = QDateTime::currentDateTimeUtc().toTime_t();
+    QByteArray timestamp = QByteArray::number(time);
 
     // create signature base string
     // 1. create the method string
