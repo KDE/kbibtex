@@ -176,7 +176,7 @@ void OnlineSearchJStor::doneFetchingResultPage()
 
     if (handleErrors(reply)) {
         /// ensure proper treatment of UTF-8 characters
-        QString htmlText = QString::fromUtf8(reply->readAll().data());
+        QString htmlText = QString::fromUtf8(reply->readAll().constData());
 
         /// extract all unique DOI from HTML code
         QSet<QString> uniqueDOIs;
@@ -219,7 +219,7 @@ void OnlineSearchJStor::doneFetchingBibTeXCode()
 
     if (handleErrors(reply)) {
         /// ensure proper treatment of UTF-8 characters
-        const QString bibTeXcode = QString::fromUtf8(reply->readAll().data());
+        const QString bibTeXcode = QString::fromUtf8(reply->readAll().constData());
 
         FileImporterBibTeX importer;
         File *bibtexFile = importer.fromString(bibTeXcode);

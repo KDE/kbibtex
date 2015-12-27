@@ -247,7 +247,7 @@ void OnlineSearchBibsonomy::downloadDone()
 
     if (handleErrors(reply)) {
         /// ensure proper treatment of UTF-8 characters
-        QString bibTeXcode = QString::fromUtf8(reply->readAll().data());
+        QString bibTeXcode = QString::fromUtf8(reply->readAll().constData());
 
         if (!bibTeXcode.isEmpty()) {
             FileImporterBibTeX importer;

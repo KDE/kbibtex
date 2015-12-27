@@ -61,7 +61,7 @@ void OnlineSearchSimpleBibTeXDownload::downloadDone()
 
     if (handleErrors(reply)) {
         /// ensure proper treatment of UTF-8 characters
-        QString bibTeXcode = QString::fromUtf8(reply->readAll().data());
+        QString bibTeXcode = QString::fromUtf8(reply->readAll().constData());
 
         if (bibTeXcode.contains(QStringLiteral("<html")) || bibTeXcode.contains(QStringLiteral("<HTML"))) {
             /// Replace all linebreak-like characters, in case they occur inside the BibTeX code

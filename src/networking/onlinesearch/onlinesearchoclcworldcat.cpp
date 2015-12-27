@@ -172,7 +172,7 @@ void OnlineSearchOCLCWorldCat::downloadDone() {
 
     if (handleErrors(reply)) {
         /// Ensure proper treatment of UTF-8 characters
-        const QString atomCode = QString::fromUtf8(reply->readAll().data()).remove(QStringLiteral("xmlns=\"http://www.w3.org/2005/Atom\"")).remove(QStringLiteral(" xmlns=\"http://www.loc.gov/zing/srw/\"")); // FIXME fix worldcatdc2bibtex.xsl to handle namespace
+        const QString atomCode = QString::fromUtf8(reply->readAll().constData()).remove(QStringLiteral("xmlns=\"http://www.w3.org/2005/Atom\"")).remove(QStringLiteral(" xmlns=\"http://www.loc.gov/zing/srw/\"")); // FIXME fix worldcatdc2bibtex.xsl to handle namespace
 
         /// Use XSL transformation to get BibTeX document from XML result
         const QString bibTeXcode = d->xslt->transform(atomCode).remove(QStringLiteral("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));

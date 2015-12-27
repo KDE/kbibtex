@@ -146,7 +146,7 @@ void OnlineSearchScienceDirect::doneFetchingStartPage()
     QUrl redirUrl;
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
     if (handleErrors(reply, redirUrl)) {
-        const QString htmlText = QString::fromUtf8(reply->readAll().data());
+        const QString htmlText = QString::fromUtf8(reply->readAll().constData());
 
         if (redirUrl.isValid()) {
             ++d->numSteps;
@@ -205,7 +205,7 @@ void OnlineSearchScienceDirect::doneFetchingResultPage()
         } else {
             emit progress(++d->curStep, d->numSteps);
 
-            const QString htmlText = QString::fromUtf8(reply->readAll().data());
+            const QString htmlText = QString::fromUtf8(reply->readAll().constData());
             InternalNetworkAccessManager::self()->mergeHtmlHeadCookies(htmlText, reply->url());
 
             QSet<QString> knownUrls;
@@ -253,7 +253,7 @@ void OnlineSearchScienceDirect::doneFetchingAbstractPage()
         } else {
             emit progress(++d->curStep, d->numSteps);
 
-            const QString htmlText = QString::fromUtf8(reply->readAll().data());
+            const QString htmlText = QString::fromUtf8(reply->readAll().constData());
             InternalNetworkAccessManager::self()->mergeHtmlHeadCookies(htmlText, reply->url());
 
             int p1 = -1, p2 = -1;
@@ -291,7 +291,7 @@ void OnlineSearchScienceDirect::doneFetchingBibTeX()
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
     if (handleErrors(reply)) {
         /// ensure proper treatment of UTF-8 characters
-        QString bibTeXcode = QString::fromUtf8(reply->readAll().data());
+        QString bibTeXcode = QString::fromUtf8(reply->readAll().constData());
         d->sanitizeBibTeXCode(bibTeXcode);
 
         FileImporterBibTeX importer;

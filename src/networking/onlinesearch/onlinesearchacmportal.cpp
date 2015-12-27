@@ -146,7 +146,7 @@ void OnlineSearchAcmPortal::doneFetchingStartPage()
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
     if (handleErrors(reply)) {
-        const QString htmlSource = QString::fromUtf8(reply->readAll().data());
+        const QString htmlSource = QString::fromUtf8(reply->readAll().constData());
         int p1 = -1, p2 = -1, p3 = -1;
         if ((p1 = htmlSource.indexOf(QStringLiteral("<form name=\"qiksearch\""))) >= 0
                 && (p2 = htmlSource.indexOf(QStringLiteral("action="), p1)) >= 0
@@ -176,7 +176,7 @@ void OnlineSearchAcmPortal::doneFetchingSearchPage()
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
     if (handleErrors(reply)) {
-        const QString htmlSource = QString::fromUtf8(reply->readAll().data());
+        const QString htmlSource = QString::fromUtf8(reply->readAll().constData());
         static QRegExp paramRegExp("<a [^>]+\\?id=([0-9]+)\\.([0-9]+).*CFID=([0-9]+).*CFTOKEN=([0-9]+)", Qt::CaseInsensitive);
         int p1 = -1;
         while ((p1 = htmlSource.indexOf(paramRegExp, p1 + 1)) >= 0) {
@@ -216,7 +216,7 @@ void OnlineSearchAcmPortal::doneFetchingBibTeX()
 
     if (handleErrors(reply)) {
         /// ensure proper treatment of UTF-8 characters
-        QString bibTeXcode = QString::fromUtf8(reply->readAll().data());
+        QString bibTeXcode = QString::fromUtf8(reply->readAll().constData());
 
         FileImporterBibTeX importer;
         d->sanitizeBibTeXCode(bibTeXcode);

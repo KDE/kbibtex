@@ -153,7 +153,7 @@ void OnlineSearchIsbnDB::downloadDone()
 
     if (handleErrors(reply)) {
         /// ensure proper treatment of UTF-8 characters
-        const QString xmlCode = QString::fromUtf8(reply->readAll().data());
+        const QString xmlCode = QString::fromUtf8(reply->readAll().constData());
 
         /// use XSL transformation to get BibTeX document from XML result
         const QString bibtexCode = d->xslt->transform(xmlCode).remove(QStringLiteral("<?xml version=\"1.0\" encoding=\"UTF-8\"?>")).replace(QStringLiteral("&amp;"), QStringLiteral("&"));
