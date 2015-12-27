@@ -130,8 +130,12 @@ bool FileExporterXML::writeEntry(QTextStream &stream, const Entry *entry)
 
         if (key == Entry::ftAuthor || key == Entry::ftEditor) {
             Value internal = value;
+            Value::ConstIterator lastIt = internal.constEnd();
+            --lastIt;
+            const QSharedPointer<ValueItem> last = *lastIt;
             stream << "  <" << key << "s";
-            if (!value.isEmpty() && typeid(PlainText) == typeid(*internal.last())) {
+
+            if (!value.isEmpty() && typeid(PlainText) == typeid(*last)) {
                 QSharedPointer<const PlainText> pt = internal.last().staticCast<const PlainText>();
                 if (pt->text() == QLatin1String("others")) {
                     internal.erase(internal.end() - 1);
