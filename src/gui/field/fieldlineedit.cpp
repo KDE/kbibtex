@@ -225,17 +225,19 @@ public:
     bool typeFlagSupported(const Value &value, KBibTeX::TypeFlag typeFlag) {
         if (value.isEmpty() || typeFlag == KBibTeX::tfSource)
             return true;
-        else if (value.count() > 1)
+
+        const QSharedPointer<ValueItem> first = value.first();
+        if (value.count() > 1)
             return typeFlag == KBibTeX::tfSource;
-        else if (typeFlag == KBibTeX::tfKeyword && typeid(Keyword) == typeid(*value.first()))
+        else if (typeFlag == KBibTeX::tfKeyword && typeid(Keyword) == typeid(*first))
             return true;
-        else if (typeFlag == KBibTeX::tfPerson && typeid(Person) == typeid(*value.first()))
+        else if (typeFlag == KBibTeX::tfPerson && typeid(Person) == typeid(*first))
             return true;
-        else if (typeFlag == KBibTeX::tfPlainText && typeid(PlainText) == typeid(*value.first()))
+        else if (typeFlag == KBibTeX::tfPlainText && typeid(PlainText) == typeid(*first))
             return true;
-        else if (typeFlag == KBibTeX::tfReference && typeid(MacroKey) == typeid(*value.first()))
+        else if (typeFlag == KBibTeX::tfReference && typeid(MacroKey) == typeid(*first))
             return true;
-        else if (typeFlag == KBibTeX::tfVerbatim && typeid(VerbatimText) == typeid(*value.first()))
+        else if (typeFlag == KBibTeX::tfVerbatim && typeid(VerbatimText) == typeid(*first))
             return true;
         else
             return false;

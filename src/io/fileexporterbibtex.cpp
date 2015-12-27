@@ -152,7 +152,8 @@ public:
             }
 
             // FIXME hack!
-            if (protectCasing && typeid(*value.first()) == typeid(PlainText) && (key == Entry::ftTitle || key == Entry::ftBookTitle || key == Entry::ftSeries))
+            const QSharedPointer<ValueItem> first = *value.constBegin();
+            if (protectCasing && typeid(*first) == typeid(PlainText) && (key == Entry::ftTitle || key == Entry::ftBookTitle || key == Entry::ftSeries))
                 addProtectiveCasing(text);
 
             iodevice->putChar(',');
