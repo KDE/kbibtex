@@ -281,7 +281,7 @@ void ReferencePreview::renderHTML()
         delete exporter;
 
         buffer.open(QBuffer::ReadOnly);
-        QString text = QString::fromUtf8(buffer.readAll().data());
+        QString text = QString::fromUtf8(buffer.readAll().constData());
         buffer.close();
 
         bool buttonsEnabled = true;

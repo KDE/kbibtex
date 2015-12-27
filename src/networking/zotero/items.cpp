@@ -99,7 +99,7 @@ void Items::finishedFetchingItems()
     const int start = reply->url().queryItemValue(queryItemStart).toInt(&ok);
 
     if (reply->error() == QNetworkReply::NoError && ok) {
-        const QString bibTeXcode = QString::fromUtf8(reply->readAll().data());
+        const QString bibTeXcode = QString::fromUtf8(reply->readAll().constData());
         /// Non-empty result?
         if (!bibTeXcode.isEmpty()) {
             static FileImporterBibTeX importer;

@@ -193,7 +193,7 @@ void OnlineSearchPubMed::eSearchDone()
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
     if (handleErrors(reply)) {
-        const QString result = QString::fromUtf8(reply->readAll().data());
+        const QString result = QString::fromUtf8(reply->readAll().constData());
 
         if (!result.contains(QLatin1String("<Count>0</Count>"))) {
             /// without parsing XML text correctly, just extract all PubMed ids
@@ -238,7 +238,7 @@ void OnlineSearchPubMed::eFetchDone()
 
     if (handleErrors(reply)) {
         /// ensure proper treatment of UTF-8 characters
-        QString input = QString::fromUtf8(reply->readAll().data());
+        QString input = QString::fromUtf8(reply->readAll().constData());
 
         /// use XSL transformation to get BibTeX document from XML result
         QString bibTeXcode = d->xslt->transform(input);
