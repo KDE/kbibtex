@@ -41,6 +41,8 @@
  */
 class InternalNetworkAccessManager::HTTPEquivCookieJar: public QNetworkCookieJar
 {
+    Q_OBJECT
+
 public:
     void mergeHtmlHeadCookies(const QString &htmlCode, const QUrl &url) {
         static QRegExp cookieContent("^([^\"=; ]+)=([^\"=; ]+).*\\bpath=([^\"=; ]+)", Qt::CaseInsensitive);
@@ -205,3 +207,5 @@ void InternalNetworkAccessManager::networkReplyFinished()
         m_mapTimerToReply.remove(timer);
     }
 }
+
+#include "internalnetworkaccessmanager.moc"

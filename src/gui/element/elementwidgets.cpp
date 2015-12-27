@@ -1077,6 +1077,8 @@ void PreambleWidget::createGUI()
 
 class SourceWidget::SourceWidgetTextEdit : public KTextEdit
 {
+    Q_OBJECT
+
 public:
     SourceWidgetTextEdit(QWidget *parent)
             : KTextEdit(parent) {
@@ -1218,3 +1220,5 @@ void SourceWidget::reset()
 
     connect(sourceEdit, SIGNAL(textChanged()), this, SLOT(gotModified()));
 }
+
+#include "elementwidgets.moc"

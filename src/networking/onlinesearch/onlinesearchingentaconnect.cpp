@@ -37,6 +37,8 @@
 
 class OnlineSearchIngentaConnect::OnlineSearchQueryFormIngentaConnect : public OnlineSearchQueryFormAbstract
 {
+    Q_OBJECT
+
 private:
     QString configGroupName;
 
@@ -396,3 +398,5 @@ void OnlineSearchIngentaConnect::downloadDone()
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
 }
+
+#include "onlinesearchingentaconnect.moc"

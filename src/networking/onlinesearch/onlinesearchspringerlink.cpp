@@ -42,6 +42,8 @@
  */
 class OnlineSearchSpringerLink::OnlineSearchQueryFormSpringerLink : public OnlineSearchQueryFormAbstract
 {
+    Q_OBJECT
+
 private:
     QString configGroupName;
 
@@ -340,3 +342,5 @@ void OnlineSearchSpringerLink::doneFetchingPAM()
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
 }
+
+#include "onlinesearchspringerlink.moc"

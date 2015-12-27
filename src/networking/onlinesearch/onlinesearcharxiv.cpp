@@ -35,6 +35,8 @@
 
 class OnlineSearchArXiv::OnlineSearchQueryFormArXiv : public OnlineSearchQueryFormAbstract
 {
+    Q_OBJECT
+
 private:
     QString configGroupName;
 
@@ -679,3 +681,5 @@ void OnlineSearchArXiv::sanitizeEntry(QSharedPointer<Entry> entry)
 
     d->interpreteJournal(*entry);
 }
+
+#include "onlinesearcharxiv.moc"

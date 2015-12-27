@@ -33,6 +33,8 @@
 
 class OnlineSearchDOI::OnlineSearchQueryFormDOI : public OnlineSearchQueryFormAbstract
 {
+    Q_OBJECT
+
 private:
     QString configGroupName;
 
@@ -236,3 +238,5 @@ void OnlineSearchDOI::downloadDone()
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
 }
+
+#include "onlinesearchdoi.moc"

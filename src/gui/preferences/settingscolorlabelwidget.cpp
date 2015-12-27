@@ -41,6 +41,8 @@
 
 class ColorLabelSettingsDelegate : public QStyledItemDelegate
 {
+    Q_OBJECT
+
 public:
     ColorLabelSettingsDelegate(QWidget *parent = NULL)
             : QStyledItemDelegate(parent) {
@@ -549,3 +551,5 @@ void ColorLabelContextMenu::colorActivated(const QString &colorString)
         }
     }
 }
+
+#include "settingscolorlabelwidget.moc"

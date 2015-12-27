@@ -33,6 +33,8 @@ const int ColorRole = Qt::UserRole + 521;
 
 class ColorLabelComboBoxModel : public QAbstractItemModel, private NotificationListener
 {
+    Q_OBJECT
+
 public:
     struct ColorLabelPair {
         QColor color;
@@ -220,3 +222,5 @@ QPixmap ColorLabelWidget::createSolidIcon(const QColor &color)
     painter.drawRect(0, 0, h, h);
     return pm;
 }
+
+#include "colorlabelwidget.moc"

@@ -44,6 +44,8 @@
 
 class LRUItemModel : public QAbstractItemModel
 {
+    Q_OBJECT
+
 private:
     OpenFileInfoManager *ofim;
 
@@ -323,3 +325,5 @@ void MDIWidget::slotOpenLRU(const QModelIndex &index)
     if (url.isValid())
         emit documentOpenURL(url);
 }
+
+#include "mdiwidget.moc"

@@ -155,6 +155,8 @@ void AuthorWidget::updateRangeLabel()
 
 class YearWidget : public TokenWidget
 {
+    Q_OBJECT
+
 private:
     KComboBox *comboBoxDigits;
 
@@ -292,6 +294,8 @@ void TitleWidget::updateRangeLabel()
  */
 class JournalWidget : public TokenWidget
 {
+    Q_OBJECT
+
 private:
     KComboBox *comboBoxChangeCase;
     QSpinBox *spinBoxLength;
@@ -345,6 +349,8 @@ public:
 
 class TextWidget : public TokenWidget
 {
+    Q_OBJECT
+
 private:
     KLineEdit *lineEditText;
 
@@ -693,3 +699,5 @@ QString IdSuggestionsEditDialog::editSuggestion(const Entry *previewEntry, const
     /// Return unmodified original suggestion
     return suggestion;
 }
+
+#include "settingsidsuggestionseditor.moc"

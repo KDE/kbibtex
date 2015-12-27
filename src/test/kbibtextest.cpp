@@ -53,6 +53,8 @@ int filenameCounter = 0;
 
 class TestWidget : public QWidget
 {
+    Q_OBJECT
+
 private:
     KBibTeXTest *m_parent;
     QPushButton *buttonStartTest;
@@ -243,3 +245,5 @@ void KBibTeXTest::processNextSearch()
         QTimer::singleShot(500, this, SLOT(resetProgress()));
     }
 }
+
+#include "kbibtextest.moc"

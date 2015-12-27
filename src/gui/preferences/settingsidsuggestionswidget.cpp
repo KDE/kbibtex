@@ -36,6 +36,8 @@ const int IsDefaultFormatStringRole = Qt::UserRole + 7812;
 
 class IdSuggestionsModel : public QAbstractListModel
 {
+    Q_OBJECT
+
 private:
     QStringList m_formatStringList;
     int m_defaultFormatStringRow;
@@ -392,3 +394,5 @@ void SettingsIdSuggestionsWidget::toggleDefault()
     d->idSuggestionsModel->setData(curIndex, !current, IsDefaultFormatStringRole);
     emit changed();
 }
+
+#include "settingsidsuggestionswidget.moc"

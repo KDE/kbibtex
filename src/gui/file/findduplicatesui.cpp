@@ -60,6 +60,8 @@ const int maxFieldsCount = 1024;
  */
 class AlternativesItemModel : public QAbstractItemModel
 {
+    Q_OBJECT
+
 private:
     /// marker to memorize in an index's internal id that it is a top-level index
     static const quint32 noParentInternalId;
@@ -345,6 +347,8 @@ const quint32 AlternativesItemModel::noParentInternalId = 0xffffff;
  */
 class AlternativesItemDelegate: public RadioButtonItemDelegate
 {
+    Q_OBJECT
+
 public:
     AlternativesItemDelegate(QObject *p)
             : RadioButtonItemDelegate(p) {
@@ -401,6 +405,8 @@ public:
 
 class CheckableFileModel : public FileModel
 {
+    Q_OBJECT
+
 private:
     QList<EntryClique *> cl;
     int currentClique;
@@ -464,6 +470,8 @@ public:
 
 class FilterIdFileModel : public QSortFilterProxyModel
 {
+    Q_OBJECT
+
 private:
     CheckableFileModel *internalModel;
     EntryClique *currentClique;
@@ -714,3 +722,5 @@ void FindDuplicatesUI::slotFindDuplicates()
 
     delete file;
 }
+
+#include "findduplicatesui.moc"

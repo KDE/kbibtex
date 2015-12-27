@@ -39,6 +39,8 @@
 
 class DirOperatorWidget : public QWidget
 {
+    Q_OBJECT
+
 public:
     KDirOperator *dirOperator;
 
@@ -396,3 +398,5 @@ void DocumentList::fileSelected(const KFileItem &item)
     if (item.isFile() && item.isReadable())
         emit openFile(item.url());
 }
+
+#include "documentlist.moc"

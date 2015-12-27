@@ -48,6 +48,8 @@ using namespace Zotero;
  */
 class HexInputLineEdit: public KLineEdit
 {
+    Q_OBJECT
+
 private:
     const QRegExp correctInput;
 
@@ -64,6 +66,8 @@ public:
 
 class VerificationCodePage: public QWizardPage
 {
+    Q_OBJECT
+
 private:
     Zotero::OAuthWizard *p;
 
@@ -294,3 +298,5 @@ void OAuthWizard::openAuthorizationUrl()
 {
     KRun::runUrl(QUrl(d->lineEditAuthorizationUrl->text()), QStringLiteral("text/html"), this);
 }
+
+#include "oauthwizard.moc"

@@ -50,6 +50,8 @@
  */
 class ElementEditorDialog : public QDialog
 {
+    Q_OBJECT
+
 private:
     ElementEditor *elementEditor;
     static const QString configGroupNameWindowSize;
@@ -359,3 +361,5 @@ void FileView::dialogButtonClicked(QAbstractButton *button) {
         qCWarning(LOG_KBIBTEX_GUI) << "Default case should never get triggered in FileView::dialogButtonClicked";
     }
 }
+
+#include "fileview.moc"

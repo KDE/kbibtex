@@ -38,6 +38,8 @@
 
 class OnlineSearchBibsonomy::OnlineSearchQueryFormBibsonomy : public OnlineSearchQueryFormAbstract
 {
+    Q_OBJECT
+
 private:
     QString configGroupName;
 
@@ -274,3 +276,5 @@ void OnlineSearchBibsonomy::downloadDone()
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
 }
+
+#include "onlinesearchbibsonomy.moc"

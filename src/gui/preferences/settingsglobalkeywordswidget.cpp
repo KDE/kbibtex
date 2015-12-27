@@ -30,6 +30,8 @@
 
 class DisallowEmptyStringListModel : public QStringListModel
 {
+    Q_OBJECT
+
 public:
     virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) {
         if (role == Qt::EditRole && value.canConvert<QString>() && value.toString().isEmpty())
@@ -157,3 +159,5 @@ void SettingsGlobalKeywordsWidget::enableRemoveButton()
 {
     d->buttonRemove->setEnabled(d->listViewKeywords->currentIndex() != QModelIndex());
 }
+
+#include "settingsglobalkeywordswidget.moc"
