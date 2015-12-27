@@ -147,7 +147,7 @@ void OnlineSearchIDEASRePEc::downloadListDone()
             connect(newReply, SIGNAL(finished()), this, SLOT(downloadListDone()));
         } else {
             /// ensure proper treatment of UTF-8 characters
-            const QString htmlCode = QString::fromUtf8(reply->readAll().data());
+            const QString htmlCode = QString::fromUtf8(reply->readAll().constData());
 
             static const QRegExp publicationLinkRegExp(QLatin1String("http[s]?://ideas.repec.org/[a-z]/\\S{,8}/\\S{2,24}/\\S{,64}.html"));
             d->publicationLinks.clear();
@@ -187,7 +187,7 @@ void OnlineSearchIDEASRePEc::downloadPublicationDone()
 
     if (handleErrors(reply)) {
         /// ensure proper treatment of UTF-8 characters
-        const QString htmlCode = QString::fromUtf8(reply->readAll().data());
+        const QString htmlCode = QString::fromUtf8(reply->readAll().constData());
 
         QString downloadUrl;
         static const QString downloadFormStart = QLatin1String("<FORM METHOD=GET ACTION=\"/cgi-bin/get_doc.pl\"");
@@ -228,7 +228,7 @@ void OnlineSearchIDEASRePEc::downloadBibTeXDone()
 
     if (handleErrors(reply)) {
         /// ensure proper treatment of UTF-8 characters
-        const QString bibTeXcode = QString::fromUtf8(reply->readAll().data());
+        const QString bibTeXcode = QString::fromUtf8(reply->readAll().constData());
 
         if (!bibTeXcode.isEmpty()) {
             FileImporterBibTeX importer;

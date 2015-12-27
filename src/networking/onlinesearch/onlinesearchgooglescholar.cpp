@@ -196,7 +196,7 @@ void OnlineSearchGoogleScholar::doneFetchingConfigPage()
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
     if (handleErrors(reply)) {
-        const QString htmlText = QString::fromUtf8(reply->readAll().data());
+        const QString htmlText = QString::fromUtf8(reply->readAll().constData());
         QMap<QString, QString> inputMap = formParameters(htmlText, "<form ");
         inputMap[QLatin1String("hl")] = QLatin1String("en");
         inputMap[QLatin1String("scis")] = QLatin1String("yes");
@@ -247,7 +247,7 @@ void OnlineSearchGoogleScholar::doneFetchingQueryPage()
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
     if (handleErrors(reply)) {
-        const QString htmlText = QString::fromUtf8(reply->readAll().data());
+        const QString htmlText = QString::fromUtf8(reply->readAll().constData());
 
         static const QRegExp linkToBib("/scholar.bib\\?[^\" >]+");
         int pos = 0;
@@ -300,7 +300,7 @@ void OnlineSearchGoogleScholar::doneFetchingBibTeX()
 
     if (handleErrors(reply)) {
         /// ensure proper treatment of UTF-8 characters
-        QString rawText = QString::fromUtf8(reply->readAll().data());
+        QString rawText = QString::fromUtf8(reply->readAll().constData());
         File *bibtexFile = d->importer.fromString(rawText);
 
         bool hasEntry = false;
