@@ -23,7 +23,7 @@
 
 #include <KSharedConfig>
 #include <KConfigGroup>
-#include <klocale.h>
+#include <KLocalizedString>
 
 #include "file.h"
 #include "preferences.h"

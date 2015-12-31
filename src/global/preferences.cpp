@@ -17,7 +17,7 @@
 
 #include "preferences.h"
 
-#include <klocale.h>
+#include <KLocalizedString>
 
 const QString Preferences::groupColor = QStringLiteral("Color Labels");
 const QString Preferences::keyColorCodes = QStringLiteral("colorCodes");
