@@ -66,13 +66,13 @@ public:
 class VerificationCodePage: public QWizardPage
 {
 private:
-    Zotero::OAuthWizard *p;
+    // UNUSED Zotero::OAuthWizard *p;
 
 public:
     HexInputLineEdit *lineEditVerificationCode;
 
     VerificationCodePage(Zotero::OAuthWizard *parent)
-            : QWizardPage(parent), p(parent) {
+            : QWizardPage(parent) { /* UNUSED, p(parent)*/
         QBoxLayout *layout = new QVBoxLayout(this);
         setTitle(i18n("Verification Code"));
         setSubTitle(i18n("Copy the code from the web page and paste it in the input field below."));
