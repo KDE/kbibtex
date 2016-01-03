@@ -17,8 +17,6 @@
 
 #include "sortfilterfilemodel.h"
 
-#include <typeinfo>
-
 #include <KSharedConfig>
 #include <KConfigGroup>
 
@@ -154,10 +152,10 @@ bool SortFilterFileModel::filterAcceptsRow(int source_row, const QModelIndex &so
     Q_ASSERT_X(!rowElement.isNull(), "bool SortFilterFileModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const", "rowElement is NULL");
 
     /// check if showing comments is disabled
-    if (!m_showComments && typeid(*rowElement) == typeid(Comment))
+    if (!m_showComments && Comment::isComment(*rowElement))
         return false;
     /// check if showing macros is disabled
-    if (!m_showMacros && typeid(*rowElement) == typeid(Macro))
+    if (!m_showMacros && Macro::isMacro(*rowElement))
         return false;
 
     if (m_filterQuery.terms.isEmpty()) return true; /// empty filter query

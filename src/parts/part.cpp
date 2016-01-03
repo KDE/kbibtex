@@ -17,8 +17,6 @@
 
 #include "part.h"
 
-#include <typeinfo>
-
 #include <QLabel>
 #include <QAction>
 #include <QFile>
@@ -500,7 +498,7 @@ public:
             /// only show export dialog at SaveAs or SaveCopyAs operations
             FileExporterToolchain *fet = NULL;
 
-            if (typeid(*exporter) == typeid(FileExporterBibTeX)) {
+            if (FileExporterBibTeX::isFileExporterBibTeX(*exporter)) {
                 QPointer<QDialog> dlg = new QDialog(p->widget());
                 dlg->setWindowTitle(i18n("BibTeX File Settings"));
                 QBoxLayout *layout = new QVBoxLayout(dlg);

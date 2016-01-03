@@ -46,6 +46,13 @@ public:
 
     // bool containsPattern(const QString& pattern, Field::FieldType fieldType = Field::ftUnknown, FilterType filterType = Element::ftExact, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const; // FIXME: Rewrite filtering code
 
+    /**
+     * Cheap and fast test if another Element is a Preamble object.
+     * @param other another Element object to test
+     * @return true if Element is actually a Preamble
+     */
+    static bool isPreamble(const Element &other);
+
 private:
     class PreamblePrivate;
     PreamblePrivate *const d;

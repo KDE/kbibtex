@@ -153,7 +153,7 @@ public:
 
             // FIXME hack!
             const QSharedPointer<ValueItem> first = *value.constBegin();
-            if (protectCasing && typeid(*first) == typeid(PlainText) && (key == Entry::ftTitle || key == Entry::ftBookTitle || key == Entry::ftSeries))
+            if (protectCasing && PlainText::isPlainText(*first) && (key == Entry::ftTitle || key == Entry::ftBookTitle || key == Entry::ftSeries))
                 addProtectiveCasing(text);
 
             iodevice->putChar(',');
@@ -646,4 +646,8 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value &value, const QStr
     if (isOpen) result.append(stringCloseDelimiter);
 
     return result;
+}
+
+bool FileExporterBibTeX::isFileExporterBibTeX(const FileExporter &other) {
+    return typeid(other) == typeid(FileExporterBibTeX);
 }

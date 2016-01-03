@@ -198,6 +198,13 @@ public:
 
     quint64 uniqueId() const;
 
+    /**
+     * Cheap and fast test if another Element is a Entry object.
+     * @param other another Element object to test
+     * @return true if Element is actually a Entry
+     */
+    static bool isEntry(const Element &other);
+
 private:
     /// Unique numeric identifier
     const quint64 internalUniqueId;

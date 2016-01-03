@@ -17,6 +17,8 @@
 
 #include "comment.h"
 
+#include <typeinfo>
+
 #include <QRegExp>
 #include <QStringList>
 
@@ -77,4 +79,8 @@ bool Comment::useCommand() const
 void Comment::setUseCommand(bool useCommand)
 {
     d->useCommand = useCommand;
+}
+
+bool Comment::isComment(const Element &other) {
+    return typeid(other) == typeid(Comment);
 }

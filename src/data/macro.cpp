@@ -17,6 +17,8 @@
 
 #include "macro.h"
 
+#include <typeinfo>
+
 #include <QRegExp>
 #include <QStringList>
 
@@ -82,4 +84,8 @@ const Value &Macro::value() const
 void Macro::setValue(const Value &value)
 {
     d->value = value;
+}
+
+bool Macro::isMacro(const Element &other) {
+    return typeid(other) == typeid(Macro);
 }

@@ -17,6 +17,8 @@
 
 #include "preamble.h"
 
+#include <typeinfo>
+
 #include <QRegExp>
 #include <QStringList>
 
@@ -68,4 +70,8 @@ void Preamble::setValue(const Value &value)
 {
     d->value = value;
 
+}
+
+bool Preamble::isPreamble(const Element &other) {
+    return typeid(other) == typeid(Preamble);
 }

@@ -77,6 +77,13 @@ public:
      */
     void setUseCommand(bool useCommand);
 
+    /**
+     * Cheap and fast test if another Element is a Comment object.
+     * @param other another Element object to test
+     * @return true if Element is actually a Comment
+     */
+    static bool isComment(const Element &other);
+
 private:
     class CommentPrivate;
     CommentPrivate *const d;

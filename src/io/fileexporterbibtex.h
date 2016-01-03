@@ -52,6 +52,13 @@ public:
 
     static QString valueToBibTeX(const Value &value, const QString &fieldType = QString(), UseLaTeXEncoding useLaTeXEncoding = leLaTeX);
 
+    /**
+     * Cheap and fast test if another FileExporter is a FileExporterBibTeX object.
+     * @param other another FileExporter object to test
+     * @return true if FileExporter is actually a FileExporterBibTeX
+     */
+    static bool isFileExporterBibTeX(const FileExporter &other);
+
 public slots:
     void cancel();
 
