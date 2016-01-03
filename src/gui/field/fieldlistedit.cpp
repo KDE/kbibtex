@@ -562,7 +562,7 @@ void UrlListEdit::downloadFinished(KJob *j) {
         lineAdd(value);
         delete value;
     } else {
-        qCWarning(LOG_KBIBTEX_GUI) << "Downloading" << job->srcUrls().first().toDisplayString() << "failed with error" << job->error() << job->errorString();
+        qCWarning(LOG_KBIBTEX_GUI) << "Downloading" << (*job->srcUrls().constBegin()).toDisplayString() << "failed with error" << job->error() << job->errorString();
     }
     setEnabled(true);
     unsetCursor();
