@@ -64,19 +64,19 @@ public:
 
     /**
      * Retrieve the key of this macro.
-     * @return key of this comment
+     * @return key of this macro
      */
     QString key() const;
 
     /**
      * Retrieve the key of this macro. Returns a reference which may not be modified.
-     * @return key of this comment
+     * @return key of this macro
      */
     const Value &value() const;
 
     /**
      * Retrieve the key of this macro. Returns a reference which may be modified.
-     * @return key of this comment
+     * @return key of this macro
      */
     Value &value();
 
