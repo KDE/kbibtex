@@ -124,7 +124,7 @@ QString OnlineSearchJStor::label() const
 
 QString OnlineSearchJStor::favIconUrl() const
 {
-    return QStringLiteral("http://www.jstor.org/templates/jsp/favicon.ico");
+    return QStringLiteral("http://www.jstor.org/assets/search_20151218T0921/files/search/images/favicon.ico");
 }
 
 OnlineSearchQueryFormAbstract *OnlineSearchJStor::customWidget(QWidget *)
