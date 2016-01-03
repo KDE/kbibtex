@@ -389,6 +389,7 @@ QStringList IdSuggestions::formatStrToHuman(const QString &formatStr) const
                 break;
             }
         } else if (token[0] == '"')
+            /// FIXME: False positive in 'clazy': Use midRef() instead [-Wclazy-qstring-ref]
             text.append(i18n("Text: '%1'", token.mid(1)));
         else
             text.append("?");
