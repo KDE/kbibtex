@@ -284,8 +284,8 @@ void ZoteroBrowser::applyCredentials()
         d->collectionModel = new Zotero::CollectionModel(d->collection, this);
         d->collectionBrowser->setModel(d->collectionModel);
 
-        connect(d->collectionModel, SIGNAL(modelReset()), this, SLOT(modelReset()));
-        connect(d->tagModel, SIGNAL(modelReset()), this, SLOT(modelReset()));
+        connect(d->collectionModel, &Zotero::CollectionModel::modelReset, this, &ZoteroBrowser::modelReset);
+        connect(d->tagModel, &Zotero::TagModel::modelReset, this, &ZoteroBrowser::modelReset);
         connect(d->items, SIGNAL(foundElement(QSharedPointer<Element>)), this, SLOT(showItem(QSharedPointer<Element>)));
         connect(d->items, SIGNAL(stoppedSearch(int)), this, SLOT(reenableWidget()));
         connect(d->tags, SIGNAL(finishedLoading()), this, SLOT(reenableWidget()));
