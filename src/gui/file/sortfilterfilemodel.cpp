@@ -148,7 +148,7 @@ bool SortFilterFileModel::filterAcceptsRow(int source_row, const QModelIndex &so
 {
     Q_UNUSED(source_parent)
 
-    QSharedPointer<Element> rowElement = m_internalModel->element(source_row);
+    const QSharedPointer<Element> rowElement = m_internalModel->element(source_row);
     Q_ASSERT_X(!rowElement.isNull(), "bool SortFilterFileModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const", "rowElement is NULL");
 
     /// check if showing comments is disabled
@@ -164,7 +164,7 @@ bool SortFilterFileModel::filterAcceptsRow(int source_row, const QModelIndex &so
     for (int i = m_filterQuery.terms.count() - 1; i >= 0; --i)
         eachTerm[i] = false;
 
-    QSharedPointer<Entry> entry = rowElement.dynamicCast<Entry>();
+    const QSharedPointer<Entry> entry = rowElement.dynamicCast<Entry>();
     if (!entry.isNull()) {
         /// if current row contains an Entry ...
 
