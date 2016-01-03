@@ -17,6 +17,8 @@
 
 #include "value.h"
 
+#include <typeinfo>
+
 #include <QSet>
 #include <QString>
 #include <QStringList>
@@ -95,6 +97,10 @@ bool Keyword::operator==(const ValueItem &other) const
         return otherKeyword->text() == text();
     } else
         return false;
+}
+
+bool Keyword::isKeyword(const ValueItem &other) {
+    return typeid(other) == typeid(Keyword);
 }
 
 
@@ -190,6 +196,10 @@ QString Person::transcribePersonName(const QString &formatting, const QString &f
     return result;
 }
 
+bool Person::isPerson(const ValueItem &other) {
+    return typeid(other) == typeid(Person);
+}
+
 
 const QRegExp MacroKey::validMacroKey = QRegExp("^[a-z][-.:/+_a-z0-9]*$|^[0-9]+$", Qt::CaseInsensitive);
 
@@ -245,6 +255,10 @@ bool MacroKey::operator==(const ValueItem &other) const
         return false;
 }
 
+bool MacroKey::isMacroKey(const ValueItem &other) {
+    return typeid(other) == typeid(MacroKey);
+}
+
 
 PlainText::PlainText(const PlainText &other)
         : m_text(other.text())
@@ -289,6 +303,10 @@ bool PlainText::operator==(const ValueItem &other) const
         return otherPlainText->text() == text();
     } else
         return false;
+}
+
+bool PlainText::isPlainText(const ValueItem &other) {
+    return typeid(other) == typeid(PlainText);
 }
 
 
@@ -368,6 +386,10 @@ bool VerbatimText::operator==(const ValueItem &other) const
         return otherVerbatimText->text() == text();
     } else
         return false;
+}
+
+bool VerbatimText::isVerbatimText(const ValueItem &other) {
+    return typeid(other) == typeid(VerbatimText);
 }
 
 

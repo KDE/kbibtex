@@ -17,8 +17,6 @@
 
 #include "fileimporterbibtex.h"
 
-#include <typeinfo>
-
 #include <QTextCodec>
 #include <QIODevice>
 #include <QRegExp>
@@ -115,7 +113,7 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
         Element *element = nextElement();
 
         if (element != NULL) {
-            if (!m_ignoreComments || typeid(*element) != typeid(Comment))
+            if (!m_ignoreComments || !Comment::isComment(*element))
                 result->append(QSharedPointer<Element>(element));
             else
                 delete element;

@@ -17,8 +17,6 @@
 
 #include "fileexporterxml.h"
 
-#include <typeinfo>
-
 #include <QRegExp>
 #include <QStringList>
 
@@ -135,7 +133,7 @@ bool FileExporterXML::writeEntry(QTextStream &stream, const Entry *entry)
             const QSharedPointer<ValueItem> last = *lastIt;
             stream << "  <" << key << "s";
 
-            if (!value.isEmpty() && typeid(PlainText) == typeid(*last)) {
+            if (!value.isEmpty() && PlainText::isPlainText(*last)) {
                 QSharedPointer<const PlainText> pt = internal.last().staticCast<const PlainText>();
                 if (pt->text() == QLatin1String("others")) {
                     internal.erase(internal.end() - 1);

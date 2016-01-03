@@ -17,8 +17,6 @@
 
 #include "checkbibtex.h"
 
-#include <typeinfo>
-
 #include <QApplication>
 #include <QBuffer>
 #include <QTextStream>
@@ -68,7 +66,7 @@ CheckBibTeX::CheckBibTeXResult CheckBibTeX::checkBibTeX(QSharedPointer<Entry> &e
     /// include all macro definitions, in case they are referenced
     if (file != NULL)
         for (File::ConstIterator it = file->constBegin(); it != file->constEnd(); ++it)
-            if (typeid(**it) == typeid(Macro))
+            if (Macro::isMacro(**it))
                 dummyFile << *it;
 
     /// run special exporter to get BibTeX's output

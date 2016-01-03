@@ -140,7 +140,7 @@ public:
                                     text = verbatimText->text();
                                     result = true;
                                 } else
-                                    kWarning() << "Could not reset: " << typeFlag << "(" << (typeFlag == KBibTeX::tfSource ? "Source" : (typeFlag == KBibTeX::tfReference ? "Reference" : (typeFlag == KBibTeX::tfPerson ? "Person" : (typeFlag == KBibTeX::tfPlainText ? "PlainText" : (typeFlag == KBibTeX::tfKeyword ? "Keyword" : (typeFlag == KBibTeX::tfVerbatim ? "Verbatim" : "???")))))) << ") " << (typeFlags.testFlag(KBibTeX::tfPerson) ? "Person" : "") << (typeFlags.testFlag(KBibTeX::tfPlainText) ? "PlainText" : "") << (typeFlags.testFlag(KBibTeX::tfReference) ? "Reference" : "") << (typeFlags.testFlag(KBibTeX::tfVerbatim) ? "Verbatim" : "") << " " << typeid(*first).name() << " : " << PlainTextValue::text(value);
+                                    kWarning() << "Could not reset: " << typeFlag << "(" << (typeFlag == KBibTeX::tfSource ? "Source" : (typeFlag == KBibTeX::tfReference ? "Reference" : (typeFlag == KBibTeX::tfPerson ? "Person" : (typeFlag == KBibTeX::tfPlainText ? "PlainText" : (typeFlag == KBibTeX::tfKeyword ? "Keyword" : (typeFlag == KBibTeX::tfVerbatim ? "Verbatim" : "???")))))) << ") " << (typeFlags.testFlag(KBibTeX::tfPerson) ? "Person" : "") << (typeFlags.testFlag(KBibTeX::tfPlainText) ? "PlainText" : "") << (typeFlags.testFlag(KBibTeX::tfReference) ? "Reference" : "") << (typeFlags.testFlag(KBibTeX::tfVerbatim) ? "Verbatim" : "") << " " << typeid((void)*first).name() << " : " << PlainTextValue::text(value);
                             }
                         }
                     }
@@ -227,15 +227,15 @@ public:
         const QSharedPointer<ValueItem> first = value.first();
         if (value.count() > 1)
             return typeFlag == KBibTeX::tfSource;
-        else if (typeFlag == KBibTeX::tfKeyword && typeid(Keyword) == typeid(*first))
+        else if (typeFlag == KBibTeX::tfKeyword && Keyword::isKeyword(*first))
             return true;
-        else if (typeFlag == KBibTeX::tfPerson && typeid(Person) == typeid(*first))
+        else if (typeFlag == KBibTeX::tfPerson && Person::isPerson(*first))
             return true;
-        else if (typeFlag == KBibTeX::tfPlainText && typeid(PlainText) == typeid(*first))
+        else if (typeFlag == KBibTeX::tfPlainText && PlainText::isPlainText(*first))
             return true;
-        else if (typeFlag == KBibTeX::tfReference && typeid(MacroKey) == typeid(*first))
+        else if (typeFlag == KBibTeX::tfReference && MacroKey::isMacroKey(*first))
             return true;
-        else if (typeFlag == KBibTeX::tfVerbatim && typeid(VerbatimText) == typeid(*first))
+        else if (typeFlag == KBibTeX::tfVerbatim && VerbatimText::isVerbatimText(*first))
             return true;
         else
             return false;

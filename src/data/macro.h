@@ -86,6 +86,13 @@ public:
      */
     void setValue(const Value &value);
 
+    /**
+     * Cheap and fast test if another Element is a Macro object.
+     * @param other another Element object to test
+     * @return true if Element is actually a Macro
+     */
+    static bool isMacro(const Element &other);
+
 private:
     class MacroPrivate;
     MacroPrivate *const d;

@@ -16,6 +16,9 @@
  ***************************************************************************/
 
 #include "entry.h"
+
+#include <typeinfo>
+
 #include "file.h"
 
 // FIXME: Check if using those constants in the program is really necessary
@@ -241,4 +244,8 @@ QStringList Entry::authorsLastName(const Entry &entry)
 QStringList Entry::authorsLastName() const
 {
     return authorsLastName(*this);
+}
+
+bool Entry::isEntry(const Element &other) {
+    return typeid(other) == typeid(Entry);
 }

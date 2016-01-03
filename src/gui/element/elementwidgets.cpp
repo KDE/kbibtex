@@ -17,8 +17,6 @@
 
 #include "elementwidgets.h"
 
-#include <typeinfo>
-
 #include <QLayout>
 #include <QBuffer>
 #include <QLabel>
@@ -182,7 +180,7 @@ void EntryConfiguredWidget::setFile(const File *file)
 
 bool EntryConfiguredWidget::canEdit(const Element *element)
 {
-    return typeid(*element) == typeid(Entry);
+    return Entry::isEntry(*element);
 }
 
 void EntryConfiguredWidget::createGUI()
@@ -426,7 +424,7 @@ KIcon ReferenceWidget::icon()
 
 bool ReferenceWidget::canEdit(const Element *element)
 {
-    return typeid(*element) == typeid(Entry) || typeid(*element) == typeid(Macro);
+    return Entry::isEntry(*element) || Macro::isMacro(*element);
 }
 
 void ReferenceWidget::setOriginalElement(const QSharedPointer<Element> &orig)
@@ -693,7 +691,7 @@ void FilesWidget::setFile(const File *file)
 
 bool FilesWidget::canEdit(const Element *element)
 {
-    return typeid(*element) == typeid(Entry);
+    return Entry::isEntry(*element);
 }
 
 const QStringList FilesWidget::keyStart = QStringList() << Entry::ftUrl << QLatin1String("postscript") << Entry::ftLocalFile << Entry::ftDOI << Entry::ftFile << QLatin1String("ee") << QLatin1String("biburl");
@@ -766,7 +764,7 @@ KIcon OtherFieldsWidget::icon()
 
 bool OtherFieldsWidget::canEdit(const Element *element)
 {
-    return typeid(*element) == typeid(Entry);
+    return Entry::isEntry(*element);
 }
 
 void OtherFieldsWidget::listElementExecuted(QTreeWidgetItem *item, int column)
@@ -988,7 +986,7 @@ KIcon MacroWidget::icon()
 
 bool MacroWidget::canEdit(const Element *element)
 {
-    return typeid(*element) == typeid(Macro);
+    return Macro::isMacro(*element);
 }
 
 void MacroWidget::createGUI()
@@ -1053,7 +1051,7 @@ KIcon PreambleWidget::icon()
 
 bool PreambleWidget::canEdit(const Element *element)
 {
-    return typeid(*element) == typeid(Preamble);
+    return Preamble::isPreamble(*element);
 }
 
 void PreambleWidget::createGUI()

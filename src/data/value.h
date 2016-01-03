@@ -90,6 +90,13 @@ public:
     bool containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const;
     bool operator==(const ValueItem &other) const;
 
+    /**
+     * Cheap and fast test if another ValueItem is a Keyword object.
+     * @param other another ValueItem object to test
+     * @return true if ValueItem is actually a Keyword
+     */
+    static bool isKeyword(const ValueItem &other);
+
 protected:
     QString m_text;
 };
@@ -120,6 +127,13 @@ public:
     static QString transcribePersonName(const QString &formatting, const QString &firstName, const QString &lastName, const QString &suffix = QString());
     static QString transcribePersonName(const Person *person, const QString &formatting);
 
+    /**
+     * Cheap and fast test if another ValueItem is a Person object.
+     * @param other another ValueItem object to test
+     * @return true if ValueItem is actually a Person
+     */
+    static bool isPerson(const ValueItem &other);
+
 private:
     QString m_firstName;
     QString m_lastName;
@@ -141,6 +155,13 @@ public:
     bool containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const;
     bool operator==(const ValueItem &other) const;
 
+    /**
+     * Cheap and fast test if another ValueItem is a MacroKey object.
+     * @param other another ValueItem object to test
+     * @return true if ValueItem is actually a MacroKey
+     */
+    static bool isMacroKey(const ValueItem &other);
+
 protected:
     QString m_text;
     static const QRegExp validMacroKey;
@@ -159,6 +180,13 @@ public:
     bool containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const;
     bool operator==(const ValueItem &other) const;
 
+    /**
+     * Cheap and fast test if another ValueItem is a PlainText object.
+     * @param other another ValueItem object to test
+     * @return true if ValueItem is actually a PlainText
+     */
+    static bool isPlainText(const ValueItem &other);
+
 protected:
     QString m_text;
 };
@@ -175,6 +203,13 @@ public:
     void replace(const QString &before, const QString &after, ValueItem::ReplaceMode replaceMode);
     bool containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const;
     bool operator==(const ValueItem &other) const;
+
+    /**
+     * Cheap and fast test if another ValueItem is a VerbatimText object.
+     * @param other another ValueItem object to test
+     * @return true if ValueItem is actually a VerbatimText
+     */
+    static bool isVerbatimText(const ValueItem &other);
 
 protected:
     QString m_text;
