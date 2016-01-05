@@ -60,7 +60,7 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
     m_cancelFlag = false;
 
     if (!iodevice->isReadable() && !iodevice->open(QIODevice::ReadOnly)) {
-        kDebug() << "Input device not readable";
+        kWarning() << "Input device not readable";
         return NULL;
     }
 
