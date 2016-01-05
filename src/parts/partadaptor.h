@@ -44,7 +44,6 @@ public slots:
     QString entryIndexesToReferences(const QList<int> &entryIndexes);
     bool insertUrl(const QString &text, int entryIndex);
     QList<int> insertEntries(const QString &text, const QString &mimeType);
-    QList<int> insertBibTeXEntries(const QString &text);
 
 private:
     class KBibTeXPartAdaptorPrivate;

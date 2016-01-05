@@ -29,6 +29,8 @@
 #include "fileview.h"
 #include "filemodel.h"
 #include "fileimporterbibtex.h"
+#include "fileimporterris.h"
+#include "fileimporterbibutils.h"
 #include "fileexporterbibtex.h"
 #include "file.h"
 #include "associatedfilesui.h"
@@ -40,21 +42,80 @@
 class FileOperation::FileOperationPrivate
 {
 private:
-    // UNUSED FileOperation *parent;
+    FileOperation *parent;
 
 public:
     FileView *fileView;
     KSharedConfigPtr config;
     const QString configGroupName;
 
-    FileOperationPrivate(FileView *fv, FileOperation */* UNUSED p*/)
-            : fileView(fv), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName(QLatin1String("General")) {
+    FileOperationPrivate(FileView *fv, FileOperation *p)
+            : parent(p), fileView(fv), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName(QLatin1String("General")) {
         /// nothing
     }
 
     FileModel *fileModel()
     {
         return fileView->fileModel();
+    }
+
+    QList<int> insertEntries(const QString &text, FileImporter &importer)
+    {
+        QList<int> result;
+        if (parent->checkReadOnly()) {
+            kWarning() << "Cannot insert entries in read-only mode";
+            return result;
+        }
+
+        File *file = importer.fromString(text);
+        if (file == NULL) {
+            kWarning() << "Text " << text << " could not be read by importer";
+            return result;
+        }
+        if (file->isEmpty()) {
+            kWarning() << "Text " << text << " gave no entries";
+            delete file;
+            return result;
+        }
+
+        FileModel *fm = fileModel();
+        QSortFilterProxyModel *sfpModel = fileView->sortFilterProxyModel();
+
+        /// Insert new elements one by one
+        const int startRow = fm->rowCount(); ///< Memorize row where insertion started
+        for (File::Iterator it = file->begin(); it != file->end(); ++it)
+            fm->insertRow(*it, fileView->model()->rowCount());
+        const int endRow = fm->rowCount() - 1; ///< Memorize row where insertion ended
+
+        /// Select newly inserted elements
+        QItemSelectionModel *ism = fileView->selectionModel();
+        ism->clear();
+        /// Keep track of the insert element which is most upwards in the list when inserted
+        QModelIndex minRowTargetModelIndex;
+        /// Highlight those rows in the editor which correspond to newly inserted elements
+        for (int i = startRow; i <= endRow; ++i) {
+            QModelIndex targetModelIndex = sfpModel->mapFromSource(fm->index(i, 0));
+            ism->select(targetModelIndex, QItemSelectionModel::Rows | QItemSelectionModel::Select);
+
+            /// Update the most upward inserted element
+            if (!minRowTargetModelIndex.isValid() || minRowTargetModelIndex.row() > targetModelIndex.row())
+                minRowTargetModelIndex = targetModelIndex;
+
+            // construct the result
+            result.push_back(i);
+        }
+        /// Scroll tree view to show top-most inserted element
+        fileView->scrollTo(minRowTargetModelIndex, QAbstractItemView::PositionAtTop);
+
+        /// Clean up
+        delete file;
+        /// Return true if at least one element was inserted
+
+        if (!result.isEmpty())
+            fileView->externalModification();
+        else
+            kDebug() << "Failed to insert bibliographic elements into open file";
+        return result;
     }
 
 };
@@ -158,7 +219,19 @@ bool FileOperation::insertUrl(const QString &text, int entryIndex)
 QList<int> FileOperation::insertEntries(const QString &text, const QString &mimeType)
 {
     if (mimeType == QLatin1String("application/x-bibtex") || mimeType == QLatin1String("text/x-bibtex")) {
-        return insertBibTeXEntries(text);
+        FileImporterBibTeX importerBibTeX;
+        return d->insertEntries(text, importerBibTeX);
+    } else if (mimeType == QLatin1String("application/x-research-info-systems") || mimeType == QLatin1String("text/x-research-info-systems")) {
+        FileImporterRIS importerRIS;
+        return d->insertEntries(text, importerRIS);
+    } else if (FileImporterBibUtils::available() && mimeType == QLatin1String("application/x-isi-export-format")) {
+        FileImporterBibUtils importerBibUtils;
+        importerBibUtils.setFormat(BibUtils::ISI);
+        return d->insertEntries(text, importerBibUtils);
+    } else if (FileImporterBibUtils::available() && (mimeType == QLatin1String("application/x-endnote-refer") || mimeType == QLatin1String("text/x-endnote-refer") || mimeType == QLatin1String("application/x-endnote-library"))) {
+        FileImporterBibUtils importerBibUtils;
+        importerBibUtils.setFormat(BibUtils::EndNote);
+        return d->insertEntries(text, importerBibUtils);
     } else {
         kDebug() << "Unsupported mimeType:" << mimeType;
         return QList<int>();
@@ -167,62 +240,8 @@ QList<int> FileOperation::insertEntries(const QString &text, const QString &mime
 
 /**
  * Assumption: user dropped a piece of BibTeX code,
- * use BibTeX importer to generate representation from plain text
+ * use BibTeX importer to generate representation from plain text.
  */
-QList<int> FileOperation::insertBibTeXEntries(const QString &text)
-{
-    QList<int> result;
-    if (checkReadOnly())
-        return result;
-
-    FileImporterBibTeX importer;
-    File *file = importer.fromString(text);
-    if (!file)
-        return result;
-    if (file->isEmpty()) {
-        delete file;
-        return result;
-    }
-
-    FileModel *fileModel = d->fileModel();
-    QSortFilterProxyModel *sfpModel = d->fileView->sortFilterProxyModel();
-
-    /// Insert new elements one by one
-    const int startRow = fileModel->rowCount(); ///< Memorize row where insertion started
-    for (File::Iterator it = file->begin(); it != file->end(); ++it)
-        fileModel->insertRow(*it, d->fileView->model()->rowCount());
-    const int endRow = fileModel->rowCount() - 1; ///< Memorize row where insertion ended
-
-    /// Select newly inserted elements
-    QItemSelectionModel *ism = d->fileView->selectionModel();
-    ism->clear();
-    /// Keep track of the insert element which is most upwards in the list when inserted
-    QModelIndex minRowTargetModelIndex;
-    /// Highlight those rows in the editor which correspond to newly inserted elements
-    for (int i = startRow; i <= endRow; ++i) {
-        QModelIndex targetModelIndex = sfpModel->mapFromSource(fileModel->index(i, 0));
-        ism->select(targetModelIndex, QItemSelectionModel::Rows | QItemSelectionModel::Select);
-
-        /// Update the most upward inserted element
-        if (!minRowTargetModelIndex.isValid() || minRowTargetModelIndex.row() > targetModelIndex.row())
-            minRowTargetModelIndex = targetModelIndex;
-
-        // construct the result
-        result.push_back(i);
-    }
-    /// Scroll tree view to show top-most inserted element
-    d->fileView->scrollTo(minRowTargetModelIndex, QAbstractItemView::PositionAtTop);
-
-    /// Clean up
-    delete file;
-    /// Return true if at least one element was inserted
-
-    if (!result.isEmpty())
-        d->fileView->externalModification();
-    else
-        kDebug() << "Failed to insert bibliographic elements into open file";
-    return result;
-}
 
 
 bool FileOperation::checkReadOnly()

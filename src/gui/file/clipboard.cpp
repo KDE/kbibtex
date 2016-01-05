@@ -54,7 +54,7 @@ public:
             fileOpr->insertUrl(text, entryIndex);
 
         } else {
-            fileOpr->insertBibTeXEntries(text);
+            fileOpr->insertEntries(text);
         }
     }
 };

@@ -41,8 +41,7 @@ public slots:
     QString entryIndexesToText(const QList<int> &entryIndexes);
     QString entryIndexesToReferences(const QList<int> &entryIndexes);
     bool insertUrl(const QString &text, int entryIndex);
-    QList<int> insertEntries(const QString &text, const QString &mimeType);
-    QList<int> insertBibTeXEntries(const QString &text);
+    QList<int> insertEntries(const QString &text, const QString &mimeType = QLatin1String("text/x-bibtex"));
     FileView *fileView();
 
 private:

@@ -106,12 +106,3 @@ QList<int> KBibTeXPartAdaptor::insertEntries(const QString &text, const QString 
 {
     return d->fileOpr->insertEntries(text, mimeType);
 }
-
-/**
- * Assumption: user dropped a piece of BibTeX code,
- * use BibTeX importer to generate representation from plain text
- */
-QList<int> KBibTeXPartAdaptor::insertBibTeXEntries(const QString &text)
-{
-    return d->fileOpr->insertBibTeXEntries(text);
-}
