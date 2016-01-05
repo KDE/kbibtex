@@ -22,6 +22,8 @@
 #include <QStringList>
 #include <QRegExp>
 
+#include <KDebug>
+
 #include "value.h"
 
 FileImporter::FileImporter()
@@ -37,8 +39,10 @@ FileImporter::~FileImporter()
 
 File *FileImporter::fromString(const QString &text)
 {
-    if (text.isEmpty())
+    if (text.isEmpty()) {
+        kWarning() << "Cannot create File object from empty string";
         return NULL;
+    }
 
     QBuffer buffer;
     buffer.open(QIODevice::WriteOnly);
@@ -49,6 +53,8 @@ File *FileImporter::fromString(const QString &text)
 
     buffer.open(QIODevice::ReadOnly);
     File *result = load(&buffer);
+    if (result == NULL)
+        kWarning() << "Creating File object from" << buffer.size() << "Bytes of data failed";
     buffer.close();
 
     return result;
