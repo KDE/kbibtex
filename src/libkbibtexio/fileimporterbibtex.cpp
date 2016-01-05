@@ -61,6 +61,15 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
 {
     m_cancelFlag = false;
 
+    if (!iodevice->isReadable()) {
+        kWarning() << "iodevice is not readable";
+        return NULL;
+    }
+    if (!iodevice->isOpen()) {
+        kWarning() << "iodevice is not open";
+        return NULL;
+    }
+
     File *result = new File();
     /// Used to determine if file prefers quotation marks over
     /// curly brackets or the other way around
