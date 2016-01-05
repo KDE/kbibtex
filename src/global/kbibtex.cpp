@@ -18,6 +18,7 @@
 #include "kbibtex.h"
 
 #include <QString>
+#include <QRegExp>
 
 const QString KBibTeX::extensionTeX = QStringLiteral(".tex");
 const QString KBibTeX::extensionAux = QStringLiteral(".aux");
