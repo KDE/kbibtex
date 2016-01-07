@@ -350,16 +350,16 @@ QByteArray QOAuth::InterfacePrivate::paramsToString( const ParamMap &parameters,
 
     switch ( mode ) {
     case ParseForInlineQuery:
-        prependString = "?";
+        prependString = QByteArray("?");
     case ParseForRequestContent:
     case ParseForSignatureBaseString:
-        middleString = "=";
-        endString = "&";
+        middleString = QByteArray("=");
+        endString = QByteArray("&");
         break;
     case ParseForHeaderArguments:
-        prependString = "OAuth ";
-        middleString = "=\"";
-        endString = "\",";
+        prependString = QByteArray("OAuth ");
+        middleString = QByteArray("=\"");
+        endString = QByteArray("\",");
         break;
     default:
         qWarning() << __FUNCTION__ << "- Unrecognized mode";
@@ -1035,8 +1035,8 @@ QByteArray QOAuth::InterfacePrivate::createSignature( const QString &requestUrl,
     } else {
         // 4. create signature base string
         QByteArray signatureBaseString;
-        signatureBaseString.append( httpMethodString + "&" );
-        signatureBaseString.append( percentRequestUrl + "&" );
+        signatureBaseString.append( httpMethodString + QByteArray("&") );
+        signatureBaseString.append( percentRequestUrl + QByteArray("&") );
         signatureBaseString.append( percentParametersString );
 
 
@@ -1076,7 +1076,7 @@ QByteArray QOAuth::InterfacePrivate::createPlaintextSignature( const QByteArray 
     }
 
     // get percent encoded consumer secret and token secret, join and return
-    return consumerSecret.toPercentEncoding() + "&" + tokenSecret.toPercentEncoding();
+    return consumerSecret.toPercentEncoding() + QByteArray("&") + tokenSecret.toPercentEncoding();
 }
 
 #include "moc_interface.cpp"
