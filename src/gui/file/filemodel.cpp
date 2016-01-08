@@ -37,8 +37,6 @@
 #include "fileinfo.h"
 #include "preferences.h"
 
-static const QRegExp curlyRegExp(QLatin1String("[{}]+"));
-
 const QString SortFilterFileModel::configGroupName = QLatin1String("User Interface");
 
 SortFilterFileModel::SortFilterFileModel(QObject *parent)
@@ -110,6 +108,8 @@ bool SortFilterFileModel::lessThan(const QModelIndex &left, const QModelIndex &r
 
         /// compare each person in both values
         for (Value::Iterator itA = valueA.begin(), itB = valueB.begin(); itA != valueA.end() &&  itB != valueB.end(); ++itA, ++itB) {
+            static const QRegExp curlyRegExp(QLatin1String("[{}]+"));
+
             QSharedPointer<Person>  personA = (*itA).dynamicCast<Person>();
             QSharedPointer<Person>  personB = (*itB).dynamicCast<Person>();
             /// not a Person object in value? fall back to default implementation

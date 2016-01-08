@@ -183,6 +183,9 @@ public:
     virtual void setFile(const File *file);
 
     bool canEdit(const Element *element);
+
+private:
+    static const QStringList keyStart;
 };
 
 class OtherFieldsWidget : public ElementWidget
