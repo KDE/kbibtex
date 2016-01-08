@@ -145,7 +145,7 @@ void OnlineSearchPubMed::startSearch(const QMap<QString, QString> &query, int nu
     /// enforcing limit on number of results
     numResults = qMin(maxNumResults, numResults);
     /// enforcing choke on number of searchs per time
-    if (QDateTime::currentDateTime().toTime_t() - lastQueryEpoch < queryChokeTimeout) {
+    if (QDateTime::currentDateTimeUtc().toTime_t() - lastQueryEpoch < queryChokeTimeout) {
         kDebug() << "Too many search queries per time; choke enforces pause of" << queryChokeTimeout << "seconds between queries";
         delayedStoppedSearch(resultNoError);
         return;
@@ -188,7 +188,7 @@ void OnlineSearchPubMed::cancel()
 void OnlineSearchPubMed::eSearchDone()
 {
     emit progress(++d->curStep, d->numSteps);
-    lastQueryEpoch = QDateTime::currentDateTime().toTime_t();
+    lastQueryEpoch = QDateTime::currentDateTimeUtc().toTime_t();
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
@@ -232,7 +232,7 @@ void OnlineSearchPubMed::eSearchDone()
 void OnlineSearchPubMed::eFetchDone()
 {
     emit progress(++d->curStep, d->numSteps);
-    lastQueryEpoch = QDateTime::currentDateTime().toTime_t();
+    lastQueryEpoch = QDateTime::currentDateTimeUtc().toTime_t();
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
