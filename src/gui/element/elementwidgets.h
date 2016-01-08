@@ -189,6 +189,7 @@ public:
 
 private:
     ElementEditor::ApplyElementInterface *m_applyElement;
+    static const QStringList keyStart;
 };
 
 class OtherFieldsWidget : public ElementWidget

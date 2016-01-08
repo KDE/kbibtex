@@ -30,11 +30,6 @@
 #include "kbibtexnamespace.h"
 #include "entry.h"
 
-static const QRegExp regExpEscapedChars = QRegExp("\\\\+([&_~])");
-
-/// File types supported by "document preview"
-static const QStringList documentFileExtensions = QStringList() << ".pdf" << ".pdf.gz" << ".pdf.bz2" << ".ps" << ".ps.gz" << ".ps.bz2" << ".eps" << ".eps.gz" << ".eps.bz2" << ".html" << ".xhtml" << ".htm" << ".dvi" << ".djvu" << ".wwf" << ".jpeg" << ".jpg" << ".png" << ".gif" << ".tif" << ".tiff";
-
 FileInfo::FileInfo()
 {
     // TODO
@@ -214,6 +209,7 @@ QList<KUrl> FileInfo::entryUrls(const Entry *entry, const KUrl &bibTeXUrl, TestE
 
     const QString baseDirectory = bibTeXUrl.isValid() ? bibTeXUrl.directory() : QString();
 
+    static const QRegExp regExpEscapedChars = QRegExp("\\\\+([&_~])");
     for (Entry::ConstIterator it = entry->constBegin(); it != entry->constEnd(); ++it) {
         /// skip abstracts, they contain sometimes strange text fragments
         /// that are mistaken for URLs
@@ -233,6 +229,9 @@ QList<KUrl> FileInfo::entryUrls(const Entry *entry, const KUrl &bibTeXUrl, TestE
     }
 
     if (!baseDirectory.isEmpty()) {
+        /// File types supported by "document preview"
+        static const QStringList documentFileExtensions = QStringList() << ".pdf" << ".pdf.gz" << ".pdf.bz2" << ".ps" << ".ps.gz" << ".ps.bz2" << ".eps" << ".eps.gz" << ".eps.bz2" << ".html" << ".xhtml" << ".htm" << ".dvi" << ".djvu" << ".wwf" << ".jpeg" << ".jpg" << ".png" << ".gif" << ".tif" << ".tiff";
+
         /// check if in the same directory as the BibTeX file
         /// a PDF file exists which filename is based on the entry's id
         for (QStringList::ConstIterator extensionIt = documentFileExtensions.constBegin(); extensionIt != documentFileExtensions.constEnd(); ++extensionIt) {

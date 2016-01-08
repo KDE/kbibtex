@@ -40,8 +40,6 @@
 #include "bibtexfields.h"
 #include "fileexporterbibtex.h"
 
-const QString extraAlphaNumChars = QLatin1String("?'`-_:.+/$\\\"&");
-
 const char *FileImporterBibTeX::defaultCodecName = "utf-8";
 
 FileImporterBibTeX::FileImporterBibTeX(bool ignoreComments, KBibTeX::Casing keywordCasing)
@@ -506,6 +504,8 @@ QString FileImporterBibTeX::readString(bool &isStringKey)
 
 QString FileImporterBibTeX::readSimpleString(const QChar &until)
 {
+    const QString extraAlphaNumChars = QLatin1String("?'`-_:.+/$\\\"&");
+
     QString result;
 
     if (!skipWhiteChar()) {
