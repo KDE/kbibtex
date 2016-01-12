@@ -82,3 +82,4 @@ X-KDE-StartupNotify=true
 # TODO X-DBUS-ServiceName=org.kde.kbibtex
 Categories=Qt;KDE;Office;Database;Science;Literature;Education;
 MimeType=text/x-bibtex;application/x-research-info-systems;
+Keywords=BibTeX;bibliography;editor;LaTeX;
