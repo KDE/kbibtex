@@ -38,6 +38,8 @@ class File;
 
 class ImageLabel : public QLabel
 {
+    Q_OBJECT
+
 public:
     explicit ImageLabel(const QString &text, QWidget *parent = NULL, Qt::WindowFlags f = 0);
     void setPixmap(const QPixmap &pixmap);

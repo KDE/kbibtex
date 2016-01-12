@@ -99,7 +99,7 @@ void Items::finishedFetchingItems()
     const int start = reply->url().queryItemValue(queryItemStart).toInt(&ok);
 
     if (reply->error() == QNetworkReply::NoError && ok) {
-        const QString bibTeXcode = QString::fromUtf8(reply->readAll().data());
+        const QString bibTeXcode = QString::fromUtf8(reply->readAll().constData());
         /// Non-empty result?
         if (!bibTeXcode.isEmpty()) {
             static FileImporterBibTeX importer;
@@ -108,7 +108,7 @@ void Items::finishedFetchingItems()
 
             /// Perform basic sanity checks ...
             if (bibtexFile != NULL && !bibtexFile->isEmpty()) {
-                foreach(const QSharedPointer<Element> element, *bibtexFile) {
+                foreach(const QSharedPointer<Element> &element, *bibtexFile) {
                     emit foundElement(element); ///< ... and publish result
                 }
             }

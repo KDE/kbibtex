@@ -37,8 +37,6 @@
 #include "fileinfo.h"
 #include "preferences.h"
 
-static const QRegExp curlyRegExp(QLatin1String("[{}]+"));
-
 const QString SortFilterFileModel::configGroupName = QLatin1String("User Interface");
 
 SortFilterFileModel::SortFilterFileModel(QObject *parent)
@@ -110,6 +108,8 @@ bool SortFilterFileModel::lessThan(const QModelIndex &left, const QModelIndex &r
 
         /// compare each person in both values
         for (Value::Iterator itA = valueA.begin(), itB = valueB.begin(); itA != valueA.end() &&  itB != valueB.end(); ++itA, ++itB) {
+            static const QRegExp curlyRegExp(QLatin1String("[{}]+"));
+
             QSharedPointer<Person>  personA = (*itA).dynamicCast<Person>();
             QSharedPointer<Person>  personB = (*itB).dynamicCast<Person>();
             /// not a Person object in value? fall back to default implementation
@@ -358,9 +358,9 @@ void FileModel::readConfiguration()
 
 QVariant FileModel::entryData(const Entry *entry, const QString &raw, const QString &rawAlt, int role, bool followCrossRef) const
 {
-    if (raw == "^id") // FIXME: Use constant here?
+    if (raw == QLatin1String("^id")) // FIXME: Use constant here?
         return QVariant(entry->id());
-    else if (raw == "^type") { // FIXME: Use constant here?
+    else if (raw == QLatin1String("^type")) { // FIXME: Use constant here?
         /// try to beautify type, e.g. translate "proceedings" into
         /// "Conference or Workshop Proceedings"
         QString label = BibTeXEntries::self()->label(entry->type());
@@ -449,7 +449,7 @@ QVariant FileModel::data(const QModelIndex &index, int role) const
         return QVariant();
 
     /// for now, only display data (no editing or icons etc)
-    if (role != NumberRole && role != SortRole && role != Qt::DisplayRole && role != Qt::ToolTipRole && role != Qt::BackgroundRole)
+    if (role != NumberRole && role != SortRole && role != Qt::DisplayRole && role != Qt::ToolTipRole && role != Qt::BackgroundRole && role != Qt::ForegroundRole)
         return QVariant();
 
     BibTeXFields *bibtexFields = BibTeXFields::self();
@@ -462,13 +462,31 @@ QVariant FileModel::data(const QModelIndex &index, int role) const
 
         /// if BibTeX entry has a "x-color" field, use that color to highlight row
         if (role == Qt::BackgroundRole) {
+            /// Retrieve "color"
             QString colorName;
-            if (entry.isNull() || (colorName = PlainTextValue::text(entry->value(Entry::ftColor))) == "#000000" || colorName.isEmpty())
+            if (entry.isNull() || (colorName = PlainTextValue::text(entry->value(Entry::ftColor))) == QLatin1String("#000000") || colorName.isEmpty())
                 return QVariant();
             else {
                 QColor color(colorName);
-                color.setAlphaF(0.75);
+                /// Use slightly different colors for even and odd rows
+                color.setAlphaF(index.row() % 2 == 0 ? 0.75 : 1.0);
                 return QVariant(color);
+            }
+        } else if (role == Qt::ForegroundRole) {
+            /// Retrieve "color"
+            QString colorName;
+            if (entry.isNull() || (colorName = PlainTextValue::text(entry->value(Entry::ftColor))) == QLatin1String("#000000") || colorName.isEmpty())
+                return QVariant();
+            else {
+                /// There is a valid color ...
+                const QColor color(colorName);
+                /// Retrieve red, green, blue, and alpha components
+                int r = 0, g = 0, b = 0, a = 0;
+                color.getRgb(&r, &g, &b, &a);
+                /// If gray value is rather dark, return white as foreground color
+                if (qGray(r, g, b) < 128) return QColor(Qt::white);
+                /// For light gray values, return black as foreground color
+                else return QColor(Qt::black);
             }
         } else if (role == NumberRole) {
             if (!entry.isNull() && raw.toLower() == Entry::ftStarRating) {
@@ -488,11 +506,11 @@ QVariant FileModel::data(const QModelIndex &index, int role) const
         } else {
             QSharedPointer<Macro> macro = element.dynamicCast<Macro>();
             if (!macro.isNull()) {
-                if (raw == "^id")
+                if (raw == QLatin1String("^id"))
                     return QVariant(macro->key());
-                else if (raw == "^type")
+                else if (raw == QLatin1String("^type"))
                     return QVariant(i18n("Macro"));
-                else if (raw == "Title") {
+                else if (raw == QLatin1String("Title")) {
                     const QString text = PlainTextValue::text(macro->value()).simplified();
                     return QVariant(text);
                 } else
@@ -500,7 +518,7 @@ QVariant FileModel::data(const QModelIndex &index, int role) const
             } else {
                 QSharedPointer<Comment> comment = element.dynamicCast<Comment>();
                 if (!comment.isNull()) {
-                    if (raw == "^type")
+                    if (raw == QLatin1String("^type"))
                         return QVariant(i18n("Comment"));
                     else if (raw == Entry::ftTitle) {
                         const QString text = comment->text().simplified();
@@ -510,7 +528,7 @@ QVariant FileModel::data(const QModelIndex &index, int role) const
                 } else {
                     QSharedPointer<Preamble> preamble = element.dynamicCast<Preamble>();
                     if (!preamble.isNull()) {
-                        if (raw == "^type")
+                        if (raw == QLatin1String("^type"))
                             return QVariant(i18n("Preamble"));
                         else if (raw == Entry::ftTitle) {
                             const QString text = PlainTextValue::text(preamble->value()).simplified();

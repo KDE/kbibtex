@@ -27,7 +27,7 @@
 #include <QMouseEvent>
 #include <QKeyEvent>
 #include <QSplitter>
-#include <QtCore/QPointer>
+#include <QPointer>
 
 #include <KPushButton>
 #include <KAction>
@@ -52,8 +52,6 @@
 
 const int FieldNameRole = Qt::UserRole + 101;
 const int UserInputRole = Qt::UserRole + 103;
-
-const int maxFieldsCount = 1024;
 
 /**
  * Model to hold alternative values as visualized in the RadioTreeView

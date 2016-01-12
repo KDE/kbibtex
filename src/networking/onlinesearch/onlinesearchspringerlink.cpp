@@ -160,7 +160,7 @@ public:
     KUrl buildQueryUrl() {
         if (form == NULL) return KUrl();
 
-        KUrl queryUrl = KUrl(QString("http://api.springer.com/metadata/pam/?api_key=").append(springerMetadataKey));
+        KUrl queryUrl = KUrl(QString(QLatin1String("http://api.springer.com/metadata/pam/?api_key=")).append(springerMetadataKey));
 
         QString queryString = form->lineEditFreeText->text();
 
@@ -190,7 +190,7 @@ public:
     }
 
     KUrl buildQueryUrl(const QMap<QString, QString> &query) {
-        KUrl queryUrl = KUrl(QString("http://api.springer.com/metadata/pam/?api_key=").append(springerMetadataKey));
+        KUrl queryUrl = KUrl(QString(QLatin1String("http://api.springer.com/metadata/pam/?api_key=")).append(springerMetadataKey));
 
         QString queryString = query[queryKeyFreeText];
 
@@ -307,7 +307,7 @@ void OnlineSearchSpringerLink::doneFetchingPAM()
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
     if (handleErrors(reply)) {
         /// ensure proper treatment of UTF-8 characters
-        const QString xmlSource = QString::fromUtf8(reply->readAll().data());
+        const QString xmlSource = QString::fromUtf8(reply->readAll().constData());
 
         QString bibTeXcode = d->xslt->transform(xmlSource);
         bibTeXcode = bibTeXcode.replace(QLatin1String("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"), QString());

@@ -43,6 +43,8 @@ class Keyword;
  */
 class KBIBTEXIO_EXPORT FileImporterBibTeX : public FileImporter
 {
+    Q_OBJECT
+
 public:
     static const char *defaultCodecName;
 

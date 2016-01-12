@@ -185,7 +185,6 @@ void ValueListDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
     painter->restore();
 }
 
-static QRegExp ignoredInSorting("[{}\\\\]+");
 
 ValueListModel::ValueListModel(const File *bibtexFile, const QString &fieldName, QObject *parent)
         : QAbstractTableModel(parent), file(bibtexFile), fName(fieldName.toLower()), showCountColumn(true), sortBy(SortByText)
@@ -222,6 +221,8 @@ QVariant ValueListModel::data(const QModelIndex &index, int role) const
         } else
             return QVariant(values[index.row()].count);
     } else if (role == SortRole) {
+        static const QRegExp ignoredInSorting("[{}\\\\]+");
+
         QString buffer = values[index.row()].sortBy.isEmpty() ? values[index.row()].text : values[index.row()].sortBy;
         buffer = buffer.remove(ignoredInSorting).toLower();
 
@@ -362,7 +363,7 @@ void ValueListModel::updateValues()
 
 void ValueListModel::insertValue(const Value &value)
 {
-    foreach(QSharedPointer<ValueItem> item, value) {
+    foreach(const QSharedPointer<ValueItem> &item, value) {
         const QString text = PlainTextValue::text(*item);
         if (text.isEmpty()) continue; ///< skip empty values
 
@@ -425,7 +426,7 @@ bool ValueListModel::searchAndReplaceValueInEntries(const QModelIndex &index, co
     }
 
     /// Go through all elements in the current file
-    foreach(QSharedPointer<Element> element, *file) {
+    foreach(const QSharedPointer<Element> &element, *file) {
         QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
         /// Process only Entry objects
         if (!entry.isNull()) {
@@ -507,7 +508,7 @@ void ValueListModel::removeValueFromEntries(const QModelIndex &index)
     }
 
     /// Go through all elements in the current file
-    foreach(QSharedPointer<Element> element, *file) {
+    foreach(const QSharedPointer<Element> &element, *file) {
         QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
         /// Process only Entry objects
         if (!entry.isNull()) {

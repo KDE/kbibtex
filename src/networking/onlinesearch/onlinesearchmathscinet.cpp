@@ -151,7 +151,7 @@ void OnlineSearchMathSciNet::doneFetchingQueryForm()
     emit progress(1, 3);
 
     if (handleErrors(reply)) {
-        // UNUSED const QString htmlText = QString::fromUtf8(reply->readAll().data());
+        // UNUSED const QString htmlText = QString::fromUtf8(reply->readAll().constData());
 
         /// extract form's parameters ...
         QMap<QString, QString> formParams;
@@ -182,7 +182,7 @@ void OnlineSearchMathSciNet::doneFetchingResultPage()
     emit progress(2, 3);
 
     if (handleErrors(reply)) {
-        const QString htmlText = QString::fromUtf8(reply->readAll().data());
+        const QString htmlText = QString::fromUtf8(reply->readAll().constData());
 
         /// extract form's parameters ...
         QMap<QString, QString> formParams = formParameters(htmlText, QLatin1String("<form name=\"batchDownload\" action="));
@@ -224,12 +224,13 @@ void OnlineSearchMathSciNet::doneFetchingBibTeXcode()
 
     if (handleErrors(reply)) {
         /// ensure proper treatment of UTF-8 characters
-        QString htmlCode = QString::fromUtf8(reply->readAll().data());
+        QString htmlCode = QString::fromUtf8(reply->readAll().constData());
 
         QString bibtexCode;
         int p1 = -1, p2 = -1;
         while ((p1 = htmlCode.indexOf(QLatin1String("<pre>"), p2 + 1)) >= 0 && (p2 = htmlCode.indexOf(QLatin1String("</pre>"), p1 + 1)) >= 0) {
-            bibtexCode += htmlCode.mid(p1 + 5, p2 - p1 - 5) + QChar('\n');
+            bibtexCode += htmlCode.midRef(p1 + 5, p2 - p1 - 5);
+            bibtexCode += QLatin1Char('\n');
         }
 
         FileImporterBibTeX importer;

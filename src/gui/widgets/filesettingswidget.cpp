@@ -30,7 +30,7 @@
 #include "file.h"
 #include "guihelper.h"
 
-#define createDelimiterString(a, b) (QString("%1%2%3").arg(a).arg(QChar(8230)).arg(b))
+#define createDelimiterString(a, b) (QString(QLatin1String("%1%2%3")).arg(a).arg(QChar(8230)).arg(b))
 
 FileSettingsWidget::FileSettingsWidget(QWidget *parent)
         : QWidget(parent), dummyPerson(Person(i18n("John"), i18n("Doe"), i18n("Jr."))), m_file(NULL)
@@ -166,7 +166,7 @@ void FileSettingsWidget::setupGUI()
     connect(m_comboBoxPersonNameFormatting, SIGNAL(currentIndexChanged(int)), this, SIGNAL(widgetsChanged()));
 
     ItalicTextItemModel *itim = new ItalicTextItemModel();
-    itim->addItem(i18n("Use global settings"), QString(""));
+    itim->addItem(i18n("Use global settings"), QString());
     itim->addItem(Person::transcribePersonName(&dummyPerson, Preferences::personNameFormatFirstLast), Preferences::personNameFormatFirstLast);
     itim->addItem(Person::transcribePersonName(&dummyPerson, Preferences::personNameFormatLastFirst), Preferences::personNameFormatLastFirst);
     m_comboBoxPersonNameFormatting->setModel(itim);

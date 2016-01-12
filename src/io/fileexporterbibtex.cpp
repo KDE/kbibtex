@@ -157,7 +157,8 @@ public:
             }
 
             // FIXME hack!
-            if (protectCasing && typeid(*value.first()) == typeid(PlainText) && (key == Entry::ftTitle || key == Entry::ftBookTitle || key == Entry::ftSeries))
+            const QSharedPointer<ValueItem> first = *value.constBegin();
+            if (protectCasing && typeid(*first) == typeid(PlainText) && (key == Entry::ftTitle || key == Entry::ftBookTitle || key == Entry::ftSeries))
                 addProtectiveCasing(text);
 
             iodevice->putChar(',');
@@ -478,7 +479,7 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value &value, const QStr
 
     EncoderLaTeX *encoder = useLaTeXEncoding == leLaTeX ? EncoderLaTeX::instance() : (useLaTeXEncoding == leUTF8 ? EncoderUTF8::instance() : NULL);
 
-    QString result = "";
+    QString result;
     bool isOpen = false;
     /// variable to memorize which closing delimiter to use
     QChar stringCloseDelimiter = d->stringCloseDelimiter;

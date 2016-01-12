@@ -146,14 +146,14 @@ void OnlineSearchAcmPortal::doneFetchingStartPage()
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
     if (handleErrors(reply)) {
-        const QString htmlSource = QString::fromUtf8(reply->readAll().data());
+        const QString htmlSource = QString::fromUtf8(reply->readAll().constData());
         int p1 = -1, p2 = -1, p3 = -1;
         if ((p1 = htmlSource.indexOf("<form name=\"qiksearch\"")) >= 0
                 && (p2 = htmlSource.indexOf("action=", p1)) >= 0
                 && (p3 = htmlSource.indexOf("\"", p2 + 8)) >= 0) {
             QString action = decodeURL(htmlSource.mid(p2 + 8, p3 - p2 - 8));
             KUrl url(d->acmPortalBaseUrl + action);
-            QString body = QString("Go=&query=%1").arg(d->joinedQueryString).simplified();
+            QString body = QString(QLatin1String("Go=&query=%1")).arg(d->joinedQueryString).simplified();
 
             QNetworkRequest request(url);
             request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
@@ -176,11 +176,11 @@ void OnlineSearchAcmPortal::doneFetchingSearchPage()
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
     if (handleErrors(reply)) {
-        const QString htmlSource = QString::fromUtf8(reply->readAll().data());
+        const QString htmlSource = QString::fromUtf8(reply->readAll().constData());
         static QRegExp paramRegExp("<a [^>]+\\?id=([0-9]+)\\.([0-9]+).*CFID=([0-9]+).*CFTOKEN=([0-9]+)", Qt::CaseInsensitive);
         int p1 = -1;
         while ((p1 = htmlSource.indexOf(paramRegExp, p1 + 1)) >= 0) {
-            d->bibTeXUrls << d->acmPortalBaseUrl + QString("/downformats.cfm?id=%1&parent_id=%2&expformat=bibtex&CFID=%3&CFTOKEN=%4").arg(paramRegExp.cap(2)).arg(paramRegExp.cap(1)).arg(paramRegExp.cap(3)).arg(paramRegExp.cap(4));
+            d->bibTeXUrls << d->acmPortalBaseUrl + QString(QLatin1String("/downformats.cfm?id=%1&parent_id=%2&expformat=bibtex&CFID=%3&CFTOKEN=%4")).arg(paramRegExp.cap(2), paramRegExp.cap(1), paramRegExp.cap(3), paramRegExp.cap(4));
         }
 
         if (d->currentSearchPosition + 20 < d->numExpectedResults) {
@@ -215,7 +215,7 @@ void OnlineSearchAcmPortal::doneFetchingBibTeX()
 
     if (handleErrors(reply)) {
         /// ensure proper treatment of UTF-8 characters
-        QString bibTeXcode = QString::fromUtf8(reply->readAll().data());
+        QString bibTeXcode = QString::fromUtf8(reply->readAll().constData());
 
         FileImporterBibTeX importer;
         d->sanitizeBibTeXCode(bibTeXcode);

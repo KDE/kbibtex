@@ -368,7 +368,7 @@ public:
         bool isFirst = true;
         KConfigGroup cg(config, configGroupName);
         for (int i = 0; i < maxNumFiles; ++i) {
-            KUrl fileUrl = KUrl::fromUserInput(cg.readEntry(QString("%1-%2").arg(OpenFileInfo::OpenFileInfoPrivate::keyURL).arg(i), QString()));
+            KUrl fileUrl = KUrl::fromUserInput(cg.readEntry(QString(QLatin1String("%1-%2")).arg(OpenFileInfo::OpenFileInfoPrivate::keyURL).arg(i), QString()));
             if (!fileUrl.isValid()) break;
             if (fileUrl.scheme().isEmpty())
                 fileUrl.setScheme(QLatin1String("file"));
@@ -386,7 +386,7 @@ public:
             }
             ofi->addFlags(statusFlag);
             ofi->addFlags(OpenFileInfo::HasName);
-            ofi->setLastAccess(QDateTime::fromString(cg.readEntry(QString("%1-%2").arg(OpenFileInfo::OpenFileInfoPrivate::keyLastAccess).arg(i), ""), OpenFileInfo::OpenFileInfoPrivate::dateTimeFormat));
+            ofi->setLastAccess(QDateTime::fromString(cg.readEntry(QString(QLatin1String("%1-%2")).arg(OpenFileInfo::OpenFileInfoPrivate::keyLastAccess).arg(i), ""), OpenFileInfo::OpenFileInfoPrivate::dateTimeFormat));
             if (isFirst) {
                 isFirst = false;
                 if (statusFlag == OpenFileInfo::Open)
@@ -404,12 +404,12 @@ public:
         for (OpenFileInfoManager::OpenFileInfoList::ConstIterator it = list.constBegin(); i < maxNumFiles && it != list.constEnd(); ++it, ++i) {
             OpenFileInfo *ofi = *it;
 
-            cg.writeEntry(QString("%1-%2").arg(OpenFileInfo::OpenFileInfoPrivate::keyURL).arg(i), ofi->url().pathOrUrl());
-            cg.writeEntry(QString("%1-%2").arg(OpenFileInfo::OpenFileInfoPrivate::keyLastAccess).arg(i), ofi->lastAccess().toString(OpenFileInfo::OpenFileInfoPrivate::dateTimeFormat));
+            cg.writeEntry(QString(QLatin1String("%1-%2")).arg(OpenFileInfo::OpenFileInfoPrivate::keyURL).arg(i), ofi->url().pathOrUrl());
+            cg.writeEntry(QString(QLatin1String("%1-%2")).arg(OpenFileInfo::OpenFileInfoPrivate::keyLastAccess).arg(i), ofi->lastAccess().toString(OpenFileInfo::OpenFileInfoPrivate::dateTimeFormat));
         }
         for (; i < maxNumFiles; ++i) {
-            cg.deleteEntry(QString("%1-%2").arg(OpenFileInfo::OpenFileInfoPrivate::keyURL).arg(i));
-            cg.deleteEntry(QString("%1-%2").arg(OpenFileInfo::OpenFileInfoPrivate::keyLastAccess).arg(i));
+            cg.deleteEntry(QString(QLatin1String("%1-%2")).arg(OpenFileInfo::OpenFileInfoPrivate::keyURL).arg(i));
+            cg.deleteEntry(QString(QLatin1String("%1-%2")).arg(OpenFileInfo::OpenFileInfoPrivate::keyLastAccess).arg(i));
         }
         config->sync();
     }

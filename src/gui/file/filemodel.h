@@ -96,6 +96,8 @@ public:
  */
 class KBIBTEXGUI_EXPORT FileModel : public QAbstractTableModel, private NotificationListener
 {
+    Q_OBJECT
+
 public:
     static const int NumberRole;
     static const int SortRole;

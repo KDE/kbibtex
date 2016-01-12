@@ -30,6 +30,8 @@ class FileImporterBibTeX;
  */
 class KBIBTEXIO_EXPORT FileImporterPDF : public FileImporter
 {
+    Q_OBJECT
+
 public:
     FileImporterPDF();
     ~FileImporterPDF();

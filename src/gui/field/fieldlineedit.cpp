@@ -100,7 +100,7 @@ public:
 
     bool reset(const Value &value) {
         bool result = false;
-        QString text = "";
+        QString text;
         typeFlag = determineTypeFlag(value, typeFlag, typeFlags);
         updateGUI(typeFlag);
 
@@ -184,7 +184,7 @@ public:
         } else if (typeFlag == KBibTeX::tfSource) {
             QString key = typeFlags.testFlag(KBibTeX::tfPerson) ? "author" : "title";
             FileImporterBibTeX importer;
-            QString fakeBibTeXFile = QString("@article{dummy, %1=%2}").arg(key).arg(encodedText);
+            QString fakeBibTeXFile = QString(QLatin1String("@article{dummy, %1=%2}")).arg(key, encodedText);
 
             File *file = importer.fromString(fakeBibTeXFile);
             QSharedPointer<Entry> entry;
@@ -223,17 +223,19 @@ public:
     bool typeFlagSupported(const Value &value, KBibTeX::TypeFlag typeFlag) {
         if (value.isEmpty() || typeFlag == KBibTeX::tfSource)
             return true;
-        else if (value.count() > 1)
+
+        const QSharedPointer<ValueItem> first = value.first();
+        if (value.count() > 1)
             return typeFlag == KBibTeX::tfSource;
-        else if (typeFlag == KBibTeX::tfKeyword && typeid(Keyword) == typeid(*value.first()))
+        else if (typeFlag == KBibTeX::tfKeyword && typeid(Keyword) == typeid(*first))
             return true;
-        else if (typeFlag == KBibTeX::tfPerson && typeid(Person) == typeid(*value.first()))
+        else if (typeFlag == KBibTeX::tfPerson && typeid(Person) == typeid(*first))
             return true;
-        else if (typeFlag == KBibTeX::tfPlainText && typeid(PlainText) == typeid(*value.first()))
+        else if (typeFlag == KBibTeX::tfPlainText && typeid(PlainText) == typeid(*first))
             return true;
-        else if (typeFlag == KBibTeX::tfReference && typeid(MacroKey) == typeid(*value.first()))
+        else if (typeFlag == KBibTeX::tfReference && typeid(MacroKey) == typeid(*first))
             return true;
-        else if (typeFlag == KBibTeX::tfVerbatim && typeid(VerbatimText) == typeid(*value.first()))
+        else if (typeFlag == KBibTeX::tfVerbatim && typeid(VerbatimText) == typeid(*first))
             return true;
         else
             return false;
@@ -331,7 +333,7 @@ public:
                 else {
                     const QSharedPointer<Person> person = first.dynamicCast<Person>();
                     if (!person.isNull())
-                        rawText = enc->encode(QString("%1 %2").arg(person->firstName()).arg(person->lastName())); // FIXME proper name conversion
+                        rawText = enc->encode(QString(QLatin1String("%1 %2")).arg(person->firstName(), person->lastName())); // FIXME proper name conversion
                     else {
                         const QSharedPointer<Keyword> keyword = first.dynamicCast<Keyword>();
                         if (!keyword.isNull())

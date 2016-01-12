@@ -128,7 +128,7 @@ public:
         }
 
         QString queryString = p->encodeURL(form->lineEditSearchTerm->text());
-        return KUrl("http://www.bibsonomy.org/bib/" + form->comboBoxSearchWhere->itemData(form->comboBoxSearchWhere->currentIndex()).toString() + "/" + queryString + QString("?items=%1").arg(form->numResultsField->value()));
+        return KUrl("http://www.bibsonomy.org/bib/" + form->comboBoxSearchWhere->itemData(form->comboBoxSearchWhere->currentIndex()).toString() + "/" + queryString + QString(QLatin1String("?items=%1")).arg(form->numResultsField->value()));
     }
 
     KUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) {
@@ -245,7 +245,7 @@ void OnlineSearchBibsonomy::downloadDone()
 
     if (handleErrors(reply)) {
         /// ensure proper treatment of UTF-8 characters
-        QString bibTeXcode = QString::fromUtf8(reply->readAll().data());
+        QString bibTeXcode = QString::fromUtf8(reply->readAll().constData());
 
         if (!bibTeXcode.isEmpty()) {
             FileImporterBibTeX importer;

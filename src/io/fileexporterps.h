@@ -26,6 +26,8 @@ class QStringList;
  */
 class KBIBTEXIO_EXPORT FileExporterPS : public FileExporterToolchain
 {
+    Q_OBJECT
+
 public:
     FileExporterPS();
     ~FileExporterPS();

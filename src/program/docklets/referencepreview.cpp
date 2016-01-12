@@ -23,11 +23,7 @@
 
 #include <QFrame>
 #include <QBuffer>
-#ifdef HAVE_QTWEBKIT // krazy:exclude=cpp
-#include <QWebView>
-#else // HAVE_QTWEBKIT
-#include <QLabel>
-#endif // HAVE_QTWEBKIT
+#include <QTextDocument>
 #include <QLayout>
 #include <QApplication>
 #include <QTextStream>
@@ -43,6 +39,7 @@
 #include <KMimeType>
 #include <KRun>
 #include <KIO/NetAccess>
+#include <KTextEdit>
 
 #include "fileexporterbibtex.h"
 #include "fileexporterbibtex2html.h"
@@ -66,11 +63,8 @@ public:
     KPushButton *buttonOpen, *buttonSaveAsHTML;
     QString htmlText;
     QUrl baseUrl;
-#ifdef HAVE_QTWEBKIT // krazy:exclude=cpp
-    QWebView *webView;
-#else // HAVE_QTWEBKIT
-    QLabel *messageLabel;
-#endif // HAVE_QTWEBKIT
+    QTextDocument *htmlDocument;
+    KTextEdit *htmlView;
     KComboBox *comboBox;
     QSharedPointer<const Element> element;
     const File *file;
@@ -85,7 +79,7 @@ public:
           configKeyName(QLatin1String("Style")), fileView(NULL),
           textColor(QApplication::palette().text().color()),
           defaultFontSize(KGlobalSettings::generalFont().pointSize()),
-          htmlStart("<html>\n<head>\n<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" />\n<style type=\"text/css\">\npre {\n white-space: pre-wrap;\n white-space: -moz-pre-wrap;\n white-space: -pre-wrap;\n white-space: -o-pre-wrap;\n word-wrap: break-word;\n}\n</style>\n</head>\n<body style=\"color: " + textColor.name() + "; font-size: " + QString::number(defaultFontSize) + "pt; font-family: '" + KGlobalSettings::generalFont().family() + "';\">"),
+          htmlStart("<html>\n<head>\n<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" />\n<style type=\"text/css\">\npre {\n white-space: pre-wrap;\n white-space: -moz-pre-wrap;\n white-space: -pre-wrap;\n white-space: -o-pre-wrap;\n word-wrap: break-word;\n}\n</style>\n</head>\n<body style=\"color: " + textColor.name() + "; font-size: " + QString::number(defaultFontSize) + "pt; font-family: '" + KGlobalSettings::generalFont().family() + "'; background-color: '" + QApplication::palette().base().color().name() + "';\">"),
           notAvailableMessage(htmlStart + "<p style=\"font-style: italic;\">" + i18n("No preview available") + "</p><p style=\"font-size: 90%;\">" + i18n("Reason:") + " %1</p></body></html>") {
         QGridLayout *gridLayout = new QGridLayout(p);
         gridLayout->setMargin(0);
@@ -103,17 +97,11 @@ public:
 
         QVBoxLayout *layout = new QVBoxLayout(frame);
         layout->setMargin(0);
-#ifdef HAVE_QTWEBKIT // krazy:exclude=cpp
-        webView = new QWebView(frame);
-        layout->addWidget(webView);
-        webView->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
-        connect(webView, SIGNAL(linkClicked(QUrl)), p, SLOT(linkClicked(QUrl)));
-#else // HAVE_QTWEBKIT
-        messageLabel = new QLabel(i18n("No preview available due to missing QtWebKit support on your system."), frame);
-        messageLabel->setWordWrap(true);
-        messageLabel->setAlignment(Qt::AlignCenter);
-        layout->addWidget(messageLabel);
-#endif // HAVE_QTWEBKIT
+        htmlView = new KTextEdit(frame);
+        htmlView->setReadOnly(true);
+        htmlDocument = new QTextDocument(htmlView);
+        htmlView->setDocument(htmlDocument);
+        layout->addWidget(htmlView);
 
         buttonOpen = new KPushButton(KIcon("document-open"), i18n("Open"), p);
         buttonOpen->setToolTip(i18n("Open reference in web browser."));
@@ -200,31 +188,21 @@ ReferencePreview::~ReferencePreview()
     delete d;
 }
 
-void ReferencePreview::setHtml(const QString &html, const KUrl &baseUrl)
+void ReferencePreview::setHtml(const QString &html, bool buttonsEnabled)
 {
     d->htmlText = QString(html).remove("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-    d->baseUrl = baseUrl;
-#ifdef HAVE_QTWEBKIT // krazy:exclude=cpp
-    d->webView->setHtml(html, baseUrl);
-#endif // HAVE_QTWEBKIT
-    d->buttonOpen->setEnabled(true);
-    d->buttonSaveAsHTML->setEnabled(true);
+    d->htmlDocument->setHtml(d->htmlText);
+    d->buttonOpen->setEnabled(buttonsEnabled);
+    d->buttonSaveAsHTML->setEnabled(buttonsEnabled);
 }
 
 void ReferencePreview::setEnabled(bool enabled)
 {
     if (enabled)
-        setHtml(d->htmlText, d->baseUrl);
-    else {
-#ifdef HAVE_QTWEBKIT // krazy:exclude=cpp
-        d->webView->setHtml(d->notAvailableMessage.arg(i18n("Preview disabled")), d->baseUrl);
-#endif // HAVE_QTWEBKIT
-        d->buttonOpen->setEnabled(false);
-        d->buttonSaveAsHTML->setEnabled(false);
-    }
-#ifdef HAVE_QTWEBKIT // krazy:exclude=cpp
-    d->webView->setEnabled(enabled);
-#endif // HAVE_QTWEBKIT
+        setHtml(d->htmlText, true);
+    else
+        setHtml(d->notAvailableMessage.arg(i18n("Preview disabled")), false);
+    d->htmlView->setEnabled(enabled);
     d->comboBox->setEnabled(enabled);
 }
 
@@ -243,11 +221,7 @@ void ReferencePreview::renderHTML()
          } crossRefHandling = ignore;
 
     if (d->element.isNull()) {
-#ifdef HAVE_QTWEBKIT // krazy:exclude=cpp
-        d->webView->setHtml(d->notAvailableMessage.arg(i18n("No element selected")), d->baseUrl);
-#endif // HAVE_QTWEBKIT
-        d->buttonOpen->setEnabled(false);
-        d->buttonSaveAsHTML->setEnabled(false);
+        setHtml(d->notAvailableMessage.arg(i18n("No element selected")), false);
         return;
     }
 
@@ -307,12 +281,15 @@ void ReferencePreview::renderHTML()
         delete exporter;
 
         buffer.open(QBuffer::ReadOnly);
-        QString text = QString::fromUtf8(buffer.readAll().data());
+        QString text = QString::fromUtf8(buffer.readAll().constData());
         buffer.close();
+
+        bool buttonsEnabled = true;
 
         if (!exporterResult || text.isEmpty()) {
             /// something went wrong, no output ...
             text = d->notAvailableMessage.arg(i18n("No HTML output generated"));
+            buttonsEnabled = false;
             kDebug() << errorLog.join("\n");
         } else {
             /// beautify text
@@ -363,7 +340,7 @@ void ReferencePreview::renderHTML()
             text.replace(QLatin1String("color: black;"), QString(QLatin1String("color: %1;")).arg(d->textColor.name()));
         }
 
-        setHtml(text, d->baseUrl);
+        setHtml(text, buttonsEnabled);
 
         d->saveState();
     }

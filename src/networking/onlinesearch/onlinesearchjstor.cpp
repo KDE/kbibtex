@@ -77,23 +77,23 @@ void OnlineSearchJStor::startSearch(const QMap<QString, QString> &query, int num
     int queryNumber = 0;
     QStringList elements = splitRespectingQuotationMarks(query[queryKeyTitle]);
     foreach(const QString &element, elements) {
-        if (queryNumber > 0) d->queryUrl.addQueryItem(QString("c%1").arg(queryNumber), "AND"); ///< join search terms with an AND operation
-        d->queryUrl.addQueryItem(QString("f%1").arg(queryNumber), "ti");
-        d->queryUrl.addQueryItem(QString("q%1").arg(queryNumber), element);
+        if (queryNumber > 0) d->queryUrl.addQueryItem(QString(QLatin1String("c%1")).arg(queryNumber), "AND"); ///< join search terms with an AND operation
+        d->queryUrl.addQueryItem(QString(QLatin1String("f%1")).arg(queryNumber), "ti");
+        d->queryUrl.addQueryItem(QString(QLatin1String("q%1")).arg(queryNumber), element);
         ++queryNumber;
     }
     elements = splitRespectingQuotationMarks(query[queryKeyAuthor]);
     foreach(const QString &element, elements) {
-        if (queryNumber > 0) d->queryUrl.addQueryItem(QString("c%1").arg(queryNumber), "AND"); ///< join search terms with an AND operation
-        d->queryUrl.addQueryItem(QString("f%1").arg(queryNumber), "au");
-        d->queryUrl.addQueryItem(QString("q%1").arg(queryNumber), element);
+        if (queryNumber > 0) d->queryUrl.addQueryItem(QString(QLatin1String("c%1")).arg(queryNumber), "AND"); ///< join search terms with an AND operation
+        d->queryUrl.addQueryItem(QString(QLatin1String("f%1")).arg(queryNumber), "au");
+        d->queryUrl.addQueryItem(QString(QLatin1String("q%1")).arg(queryNumber), element);
         ++queryNumber;
     }
     elements = splitRespectingQuotationMarks(query[queryKeyFreeText]);
     foreach(const QString &element, elements) {
-        if (queryNumber > 0) d->queryUrl.addQueryItem(QString("c%1").arg(queryNumber), "AND"); ///< join search terms with an AND operation
-        d->queryUrl.addQueryItem(QString("f%1").arg(queryNumber), "all");
-        d->queryUrl.addQueryItem(QString("q%1").arg(queryNumber), element);
+        if (queryNumber > 0) d->queryUrl.addQueryItem(QString(QLatin1String("c%1")).arg(queryNumber), "AND"); ///< join search terms with an AND operation
+        d->queryUrl.addQueryItem(QString(QLatin1String("f%1")).arg(queryNumber), "all");
+        d->queryUrl.addQueryItem(QString(QLatin1String("q%1")).arg(queryNumber), element);
         ++queryNumber;
     }
     if (!query[queryKeyYear].isEmpty()) {
@@ -121,7 +121,7 @@ QString OnlineSearchJStor::label() const
 
 QString OnlineSearchJStor::favIconUrl() const
 {
-    return QLatin1String("http://www.jstor.org/templates/jsp/favicon.ico");
+    return QLatin1String("http://www.jstor.org/assets/search_20151218T0921/files/search/images/favicon.ico");
 }
 
 OnlineSearchQueryFormAbstract *OnlineSearchJStor::customWidget(QWidget *)
@@ -173,7 +173,7 @@ void OnlineSearchJStor::doneFetchingResultPage()
 
     if (handleErrors(reply)) {
         /// ensure proper treatment of UTF-8 characters
-        QString htmlText = QString::fromUtf8(reply->readAll().data());
+        QString htmlText = QString::fromUtf8(reply->readAll().constData());
 
         /// extract all unique DOI from HTML code
         QSet<QString> uniqueDOIs;
@@ -214,7 +214,7 @@ void OnlineSearchJStor::doneFetchingBibTeXCode()
 
     if (handleErrors(reply)) {
         /// ensure proper treatment of UTF-8 characters
-        const QString bibTeXcode = QString::fromUtf8(reply->readAll().data());
+        const QString bibTeXcode = QString::fromUtf8(reply->readAll().constData());
 
         FileImporterBibTeX importer;
         File *bibtexFile = importer.fromString(bibTeXcode);
@@ -256,7 +256,7 @@ void OnlineSearchJStor::sanitizeEntry(QSharedPointer<Entry> entry)
         entry->insert(QLatin1String("jstor_id"), v);
     }
 
-    const QString formattedDateKey = "jstor_formatteddate";
+    const QString formattedDateKey = QLatin1String("jstor_formatteddate");
     const QString formattedDate = PlainTextValue::text(entry->value(formattedDateKey));
 
     /// first, try to guess month by inspecting the beginning

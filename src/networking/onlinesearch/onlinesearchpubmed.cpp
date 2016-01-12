@@ -145,7 +145,7 @@ void OnlineSearchPubMed::startSearch(const QMap<QString, QString> &query, int nu
     /// enforcing limit on number of results
     numResults = qMin(maxNumResults, numResults);
     /// enforcing choke on number of searchs per time
-    if (QDateTime::currentDateTime().toTime_t() - lastQueryEpoch < queryChokeTimeout) {
+    if (QDateTime::currentDateTimeUtc().toTime_t() - lastQueryEpoch < queryChokeTimeout) {
         kDebug() << "Too many search queries per time; choke enforces pause of" << queryChokeTimeout << "seconds between queries";
         delayedStoppedSearch(resultNoError);
         return;
@@ -188,12 +188,12 @@ void OnlineSearchPubMed::cancel()
 void OnlineSearchPubMed::eSearchDone()
 {
     emit progress(++d->curStep, d->numSteps);
-    lastQueryEpoch = QDateTime::currentDateTime().toTime_t();
+    lastQueryEpoch = QDateTime::currentDateTimeUtc().toTime_t();
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
     if (handleErrors(reply)) {
-        const QString result = QString::fromUtf8(reply->readAll().data());
+        const QString result = QString::fromUtf8(reply->readAll().constData());
 
         if (!result.contains(QLatin1String("<Count>0</Count>"))) {
             /// without parsing XML text correctly, just extract all PubMed ids
@@ -232,13 +232,13 @@ void OnlineSearchPubMed::eSearchDone()
 void OnlineSearchPubMed::eFetchDone()
 {
     emit progress(++d->curStep, d->numSteps);
-    lastQueryEpoch = QDateTime::currentDateTime().toTime_t();
+    lastQueryEpoch = QDateTime::currentDateTimeUtc().toTime_t();
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
     if (handleErrors(reply)) {
         /// ensure proper treatment of UTF-8 characters
-        QString input = QString::fromUtf8(reply->readAll().data());
+        QString input = QString::fromUtf8(reply->readAll().constData());
 
         /// use XSL transformation to get BibTeX document from XML result
         QString bibTeXcode = d->xslt->transform(input);

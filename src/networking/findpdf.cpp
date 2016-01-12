@@ -196,7 +196,8 @@ public:
             const int maxTextLen = 1024;
             for (int i = 0; i < doc->numPages() && resultItem.textPreview.length() < maxTextLen; ++i) {
                 Poppler::Page *page = doc->page(i);
-                resultItem.textPreview += QLatin1Char(' ') + page->text(QRect()).simplified().left(maxTextLen);
+                resultItem.textPreview += QLatin1Char(' ');
+                resultItem.textPreview += page->text(QRect()).simplified().leftRef(maxTextLen);
                 delete page;
             }
             resultItem.downloadMode = NoDownload;

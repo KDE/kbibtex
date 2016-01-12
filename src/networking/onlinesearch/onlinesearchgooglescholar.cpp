@@ -196,7 +196,7 @@ void OnlineSearchGoogleScholar::doneFetchingConfigPage()
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
     if (handleErrors(reply)) {
-        const QString htmlText = QString::fromUtf8(reply->readAll().data());
+        const QString htmlText = QString::fromUtf8(reply->readAll().constData());
         QMap<QString, QString> inputMap = formParameters(htmlText, "<form ");
         inputMap[QLatin1String("hl")] = QLatin1String("en");
         inputMap[QLatin1String("scis")] = QLatin1String("yes");
@@ -224,11 +224,11 @@ void OnlineSearchGoogleScholar::doneFetchingSetConfigPage()
 
     if (handleErrors(reply)) {
         KUrl url(QString(d->queryPageUrl).arg(reply->url().host()));
-        url.addEncodedQueryItem(QString("as_q").toLatin1(), d->queryFreetext.toLatin1());
-        url.addEncodedQueryItem(QString("as_sauthors").toLatin1(), d->queryAuthor.toLatin1());
-        url.addEncodedQueryItem(QString("as_ylo").toLatin1(), d->queryYear.toLatin1());
-        url.addEncodedQueryItem(QString("as_yhi").toLatin1(), d->queryYear.toLatin1());
-        url.addEncodedQueryItem(QString("as_vis").toLatin1(), "1"); ///< include citations
+        url.addEncodedQueryItem(QString(QLatin1String("as_q")).toLatin1(), d->queryFreetext.toLatin1());
+        url.addEncodedQueryItem(QString(QLatin1String("as_sauthors")).toLatin1(), d->queryAuthor.toLatin1());
+        url.addEncodedQueryItem(QString(QLatin1String("as_ylo")).toLatin1(), d->queryYear.toLatin1());
+        url.addEncodedQueryItem(QString(QLatin1String("as_yhi")).toLatin1(), d->queryYear.toLatin1());
+        url.addEncodedQueryItem(QString(QLatin1String("as_vis")).toLatin1(), "1"); ///< include citations
         url.addQueryItem("num", QString::number(d->numResults));
         url.addQueryItem("btnG", "Search Scholar");
 
@@ -247,7 +247,7 @@ void OnlineSearchGoogleScholar::doneFetchingQueryPage()
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
     if (handleErrors(reply)) {
-        const QString htmlText = QString::fromUtf8(reply->readAll().data());
+        const QString htmlText = QString::fromUtf8(reply->readAll().constData());
 
         static const QRegExp linkToBib("/scholar.bib\\?[^\" >]+");
         int pos = 0;
@@ -300,7 +300,7 @@ void OnlineSearchGoogleScholar::doneFetchingBibTeX()
 
     if (handleErrors(reply)) {
         /// ensure proper treatment of UTF-8 characters
-        QString rawText = QString::fromUtf8(reply->readAll().data());
+        QString rawText = QString::fromUtf8(reply->readAll().constData());
         File *bibtexFile = d->importer.fromString(rawText);
 
         bool hasEntry = false;

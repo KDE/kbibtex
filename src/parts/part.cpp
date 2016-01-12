@@ -26,7 +26,7 @@
 #include <QLayout>
 #include <QKeyEvent>
 #include <QSignalMapper>
-#include <QtCore/QPointer>
+#include <QPointer>
 #include <QFileSystemWatcher>
 
 #include <KFileDialog>
@@ -247,11 +247,11 @@ public:
         int p = ending.lastIndexOf(".");
         ending = ending.mid(p + 1);
 
-        if (ending == "pdf") {
+        if (ending == QLatin1String("pdf")) {
             return new FileImporterPDF();
-        } else if (ending == "ris") {
+        } else if (ending == QLatin1String("ris")) {
             return new FileImporterRIS();
-        } else if (BibUtils::available() && ending == "isi") {
+        } else if (BibUtils::available() && ending == QLatin1String("isi")) {
             FileImporterBibUtils *fileImporterBibUtils = new FileImporterBibUtils();
             fileImporterBibUtils->setFormat(BibUtils::ISI);
             return fileImporterBibUtils;
@@ -265,25 +265,25 @@ public:
         int p = ending.lastIndexOf(".");
         ending = ending.mid(p + 1);
 
-        if (ending == "html") {
+        if (ending == QLatin1String("html")) {
             return new FileExporterXSLT();
-        } else if (ending == "xml") {
+        } else if (ending == QLatin1String("xml")) {
             return new FileExporterXML();
-        } else if (ending == "ris") {
+        } else if (ending == QLatin1String("ris")) {
             return new FileExporterRIS();
-        } else if (ending == "pdf") {
+        } else if (ending == QLatin1String("pdf")) {
             return new FileExporterPDF();
-        } else if (ending == "ps") {
+        } else if (ending == QLatin1String("ps")) {
             return new FileExporterPS();
-        } else if (BibUtils::available() && ending == "isi") {
+        } else if (BibUtils::available() && ending == QLatin1String("isi")) {
             FileExporterBibUtils *fileExporterBibUtils = new FileExporterBibUtils();
             fileExporterBibUtils->setFormat(BibUtils::ISI);
             return fileExporterBibUtils;
-        } else if (ending == "rtf") {
+        } else if (ending == QLatin1String("rtf")) {
             return new FileExporterRTF();
-        } else if (ending == "html" || ending == "htm") {
+        } else if (ending == QLatin1String("html") || ending == QLatin1String("htm")) {
             return new FileExporterBibTeX2HTML();
-        } else if (ending == "bbl") {
+        } else if (ending == QLatin1String("bbl")) {
             return new FileExporterBibTeXOutput(FileExporterBibTeXOutput::BibTeXBlockList);
         } else {
             return new FileExporterBibTeX();
@@ -388,10 +388,10 @@ public:
         /// copy e.g. test.bib~ to test.bib~2 and test.bib~3 to test.bib~4 etc.
         for (int i = numberOfBackups - 1; copySucceeded && i >= 1; --i) {
             KUrl a(url);
-            a.setFileName(url.fileName() + (i > 1 ? QString("~%1").arg(i) : QLatin1String("~")));
+            a.setFileName(url.fileName() + (i > 1 ? QString(QLatin1String("~%1")).arg(i) : QLatin1String("~")));
             if (KIO::NetAccess::exists(a, KIO::NetAccess::DestinationSide, p->widget())) {
                 KUrl b(url);
-                b.setFileName(url.fileName() + QString("~%1").arg(i + 1));
+                b.setFileName(url.fileName() + QString(QLatin1String("~%1")).arg(i + 1));
                 KIO::NetAccess::del(b, p->widget());
                 copySucceeded = KIO::NetAccess::file_copy(a, b, p->widget());
             }
@@ -553,7 +553,7 @@ public:
 
                     // FIXME: the signal mapper will fill up with mappings, as they are never removed
                     QFileInfo fi((*it).pathOrUrl());
-                    const QString label = QString("%1 [%2]").arg(fi.fileName()).arg(fi.absolutePath());
+                    const QString label = QString(QLatin1String("%1 [%2]")).arg(fi.fileName(), fi.absolutePath());
                     KAction *action = new KAction(KIcon(KMimeType::iconNameForUrl(*it)), label, p);
                     action->setData((*it).pathOrUrl());
                     action->setToolTip((*it).prettyUrl());
@@ -894,7 +894,7 @@ void KBibTeXPart::updateActions()
     d->elementViewDocumentAction->setEnabled(!emptySelection && numDocumentsToView > 0);
     /// activate sub-menu only if there are at least two documents to view
     d->elementViewDocumentAction->setMenu(numDocumentsToView > 1 ? d->viewDocumentMenu : NULL);
-    d->elementViewDocumentAction->setToolTip(numDocumentsToView == 1 ? d->viewDocumentMenu->actions().first()->text() : QLatin1String(""));
+    d->elementViewDocumentAction->setToolTip(numDocumentsToView == 1 ? (*d->viewDocumentMenu->actions().constBegin())->text() : QLatin1String(""));
 
     /// update list of references which can be sent to LyX
     QStringList references;

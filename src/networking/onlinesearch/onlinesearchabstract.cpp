@@ -21,8 +21,8 @@
 #include <QNetworkReply>
 #include <QTimer>
 #include <QListWidgetItem>
-#include <QtDBus/QDBusConnection>
-#include <QtDBus/QDBusConnectionInterface>
+#include <QDBusConnection>
+#include <QDBusConnectionInterface>
 
 #include <KStandardDirs>
 #include <kio/netaccess.h>
@@ -57,7 +57,7 @@ QStringList OnlineSearchQueryFormAbstract::authorLastNames(const Entry &entry)
 
     const Value v = entry[Entry::ftAuthor];
     QSharedPointer<Person> p;
-    foreach(QSharedPointer<ValueItem> vi, v)
+    foreach(const QSharedPointer<ValueItem> &vi, v)
     if (!(p = vi.dynamicCast<Person>()).isNull())
         result.append(encoder->convertToPlainAscii(p->lastName()));
 
@@ -271,14 +271,14 @@ QMap<QString, QString> OnlineSearchAbstract::formParameters(const QString &htmlT
 
         if (!inputName.isEmpty()) {
             /// get value of input types
-            if (inputType == "hidden" || inputType == "text" || inputType == "submit")
+            if (inputType == QLatin1String("hidden") || inputType == QLatin1String("text") || inputType == QLatin1String("submit"))
                 result[inputName] = inputValue;
-            else if (inputType == "radio") {
+            else if (inputType == QLatin1String("radio")) {
                 /// must be selected
                 if (htmlText.indexOf(inputIsCheckedRegExp, p) == p) {
                     result[inputName] = inputValue;
                 }
-            } else if (inputType == "checkbox") {
+            } else if (inputType == QLatin1String("checkbox")) {
                 /// must be checked
                 if (htmlText.indexOf(inputIsCheckedRegExp, p) == p) {
                     /// multiple checkbox values with the same name are possible
