@@ -84,6 +84,7 @@ Categories=Qt;KDE;Office;Database;Science;Literature;Education;
 MimeType=text/x-bibtex;application/x-research-info-systems;
 Keywords=BibTeX;bibliography;editor;LaTeX;
 Keywords[ca]=BibTeX;bibliografia;editor;LaTeX;
+Keywords[es]=BibTeX;bibliografía;editor;LaTeX;
 Keywords[nl]=BibTeX;bibliografie;editor;bewerker;LaTeX;
 Keywords[pt]=BibTeX;bibliografia;editor;LaTeX;
 Keywords[pt_BR]=BibTeX;bibliografia;editor;LaTeX;
