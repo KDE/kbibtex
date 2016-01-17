@@ -3,8 +3,6 @@
 import dbus
 import re
 import sys
-from dbus.exceptions import DBusException
-from dbus import DBusException
 
 # Define a function for error output and
 # exiting script with some exit code
@@ -15,8 +13,6 @@ def error(exitcode, *objs):
 # Define a function for informational output
 def info(*objs):
 	print("info:  ", *objs, file = sys.stderr)
-
-info("AAA")
 
 # Get current session's bus
 bus = dbus.SessionBus()
