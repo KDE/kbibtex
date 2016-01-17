@@ -33,8 +33,6 @@
 
 using namespace Zotero;
 
-const QString top = QLatin1String("top");
-
 class Zotero::Collection::Private
 {
 private:
@@ -42,6 +40,8 @@ private:
 
 public:
     Zotero::API *api;
+
+    static const QString top;
     KUrl queuedRequestZoteroUrl;
 
     Private(API *a, Zotero::Collection *parent)
@@ -81,10 +81,12 @@ public:
     }
 };
 
+const QString Zotero::Collection::Private::top = QLatin1String("top");
+
 Collection::Collection(API *api, QObject *parent)
         : QObject(parent), d(new Zotero::Collection::Private(api, this))
 {
-    d->collectionToLabel[top] = i18n("Library");
+    d->collectionToLabel[Private::top] = i18n("Library");
 
     KUrl url = api->baseUrl();
     url.addPath(QLatin1String("/collections/top"));
@@ -135,7 +137,7 @@ uint Collection::collectionNumericId(const QString &collectionId) const
 {
     if (!d->initialized) return 0;
 
-    if (collectionId == top) /// root node
+    if (collectionId == Private::top) /// root node
         return 0;
 
     return qHash(collectionId);
@@ -144,7 +146,7 @@ uint Collection::collectionNumericId(const QString &collectionId) const
 QString Collection::collectionFromNumericId(uint numericId) const
 {
     if (numericId == 0) /// root node
-        return top;
+        return Private::top;
 
     // TODO make those resolutions more efficient
     const QList<QString> keys = d->collectionToLabel.keys();
@@ -158,7 +160,7 @@ QString Collection::collectionFromNumericId(uint numericId) const
 void Collection::finishedFetchingCollection()
 {
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
-    QString parentId = top;
+    QString parentId = Private::top;
 
     if (reply->hasRawHeader("Backoff"))
         d->api->startBackoff(QString::fromLatin1(reply->rawHeader("Backoff").constData()).toInt());
@@ -174,7 +176,7 @@ void Collection::finishedFetchingCollection()
                 /// Not perfect: guess author name from collection's title
                 const QStringList titleFragments = xmlReader.readElementText(QXmlStreamReader::IncludeChildElements).split(QLatin1String(" / "));
                 if (titleFragments.count() == 3)
-                    d->collectionToLabel[top] = i18n("%1's Library", titleFragments[1]);
+                    d->collectionToLabel[Private::top] = i18n("%1's Library", titleFragments[1]);
             } else if (tt == QXmlStreamReader::StartElement && xmlReader.name() == QLatin1String("entry")) {
                 QString title, key;
                 while (!xmlReader.atEnd() && !xmlReader.hasError()) {

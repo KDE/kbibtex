@@ -561,7 +561,7 @@ void UrlListEdit::downloadFinished(KJob *j) {
         lineAdd(value);
         delete value;
     } else {
-        qWarning() << "Downloading" << job->srcUrls().first().pathOrUrl() << "failed with error" << job->error() << job->errorString();
+        kWarning() << "Downloading" << (*job->srcUrls().constBegin()).pathOrUrl() << "failed with error" << job->error() << job->errorString();
     }
     setEnabled(true);
     unsetCursor();

@@ -34,6 +34,8 @@
  */
 class KBIBTEXGUI_EXPORT ItalicTextItemModel : public QAbstractItemModel
 {
+    Q_OBJECT
+
 public:
     enum ItalicTextItemModelRole {
         /// Role to retrieve identifier for a row

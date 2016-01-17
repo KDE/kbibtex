@@ -36,8 +36,6 @@ charmappingdataxml[] = {
 };
 static const int charmappingdataxmlcount = sizeof(charmappingdataxml) / sizeof(charmappingdataxml[ 0 ]) ;
 
-static const QStringList backslashSymbols = QStringList() << QLatin1String("\\&") << QLatin1String("\\%") << QLatin1String("\\_");
-
 /**
  * Private class to store internal variables that should not be visible
  * in the interface as defined in the header file.
@@ -45,6 +43,8 @@ static const QStringList backslashSymbols = QStringList() << QLatin1String("\\&"
 class EncoderXML::EncoderXMLPrivate
 {
 public:
+    static const QStringList backslashSymbols;
+
     struct CharMappingItem {
         QRegExp regExp;
         QChar unicode;
@@ -64,6 +64,9 @@ public:
     }
 
 };
+
+const QStringList EncoderXML::EncoderXMLPrivate::backslashSymbols = QStringList() << QLatin1String("\\&") << QLatin1String("\\%") << QLatin1String("\\_");
+
 
 EncoderXML::EncoderXML()
         : Encoder(), d(new EncoderXML::EncoderXMLPrivate)
@@ -110,7 +113,7 @@ QString EncoderXML::decode(const QString &text) const
     }
 
     /// Replace special symbols with backslash-encoded variant (& --> \&)
-    foreach(const QString &backslashSymbol, backslashSymbols) {
+    foreach(const QString &backslashSymbol, EncoderXMLPrivate::backslashSymbols) {
         int p = -1;
         while ((p = result.indexOf(backslashSymbol[1], p + 1)) >= 0) {
             if (p == 0 || result[p - 1] != QChar('\\')) {
@@ -132,7 +135,7 @@ QString EncoderXML::encode(const QString &text) const
         result.replace((*it).unicode, (*it).xml);
 
     /// Replace backlash-encoded symbols with plain text (\& --> &)
-    foreach(const QString &backslashSymbol, backslashSymbols) {
+    foreach(const QString &backslashSymbol, EncoderXMLPrivate::backslashSymbols) {
         result.replace(backslashSymbol, backslashSymbol[1]);
     }
 

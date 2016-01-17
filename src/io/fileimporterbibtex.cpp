@@ -40,8 +40,6 @@
 #include "bibtexfields.h"
 #include "fileexporterbibtex.h"
 
-const QString extraAlphaNumChars = QLatin1String("?'`-_:.+/$\\\"&");
-
 const char *FileImporterBibTeX::defaultCodecName = "utf-8";
 
 FileImporterBibTeX::FileImporterBibTeX(bool ignoreComments, KBibTeX::Casing keywordCasing)
@@ -60,7 +58,7 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
     m_cancelFlag = false;
 
     if (!iodevice->isReadable() && !iodevice->open(QIODevice::ReadOnly)) {
-        kDebug() << "Input device not readable";
+        kWarning() << "Input device not readable";
         return NULL;
     }
 
@@ -510,6 +508,8 @@ QString FileImporterBibTeX::readString(bool &isStringKey)
 
 QString FileImporterBibTeX::readSimpleString(const QChar &until)
 {
+    const QString extraAlphaNumChars = QLatin1String("?'`-_:.+/$\\\"&");
+
     QString result;
 
     if (!skipWhiteChar()) {

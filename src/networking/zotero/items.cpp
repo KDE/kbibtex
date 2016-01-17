@@ -119,7 +119,7 @@ void Items::finishedFetchingItems()
         d->api->startBackoff(QString::fromLatin1(reply->rawHeader("Retry-After").constData()).toInt());
 
     if (reply->error() == QNetworkReply::NoError && ok) {
-        const QString bibTeXcode = QString::fromUtf8(reply->readAll().data());
+        const QString bibTeXcode = QString::fromUtf8(reply->readAll().constData());
         /// Non-empty result?
         if (!bibTeXcode.isEmpty()) {
             static FileImporterBibTeX importer;

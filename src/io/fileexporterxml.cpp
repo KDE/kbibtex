@@ -31,10 +31,6 @@
 #include "encoderxml.h"
 #include "iocommon.h"
 
-static QRegExp removal("[{}]+");
-static QRegExp abstractRegExp("\\bAbstract[:]?([ ]|&nbsp;|&amp;nbsp;)*", Qt::CaseInsensitive);
-static QRegExp lineBreaksRegExp("[ \\t]*[\\n\\r]");
-
 FileExporterXML::FileExporterXML()
         : FileExporter(), m_cancelFlag(false)
 {
@@ -134,8 +130,12 @@ bool FileExporterXML::writeEntry(QTextStream &stream, const Entry *entry)
 
         if (key == Entry::ftAuthor || key == Entry::ftEditor) {
             Value internal = value;
+            Value::ConstIterator lastIt = internal.constEnd();
+            --lastIt;
+            const QSharedPointer<ValueItem> last = *lastIt;
             stream << "  <" << key << "s";
-            if (!value.isEmpty() && typeid(PlainText) == typeid(*internal.last())) {
+
+            if (!value.isEmpty() && typeid(PlainText) == typeid(*last)) {
                 QSharedPointer<const PlainText> pt = internal.last().staticCast<const PlainText>();
                 if (pt->text() == QLatin1String("others")) {
                     internal.erase(internal.end() - 1);
@@ -146,6 +146,7 @@ bool FileExporterXML::writeEntry(QTextStream &stream, const Entry *entry)
             stream << valueToXML(internal, key) << endl;
             stream << "  </" << key << "s>" << endl;
         } else if (key == Entry::ftAbstract) {
+            static QRegExp abstractRegExp("\\bAbstract[:]?([ ]|&nbsp;|&amp;nbsp;)*", Qt::CaseInsensitive);
             /// clean up HTML artifacts
             QString text = valueToXML(value);
             text = text.remove(abstractRegExp);
@@ -249,6 +250,8 @@ QString FileExporterXML::valueToXML(const Value &value, const QString &)
 
 QString FileExporterXML::cleanXML(const QString &text)
 {
+    static QRegExp removal("[{}]+");
+    static QRegExp lineBreaksRegExp("[ \\t]*[\\n\\r]");
     QString result = text;
     result = result.replace(lineBreaksRegExp, "<br/>").remove(removal).remove(QLatin1String("\\ensuremath"));
     return result;

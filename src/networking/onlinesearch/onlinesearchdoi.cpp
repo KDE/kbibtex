@@ -208,7 +208,7 @@ void OnlineSearchDOI::downloadDone()
             InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
             connect(newReply, SIGNAL(finished()), this, SLOT(downloadDone()));
         } else {  /// ensure proper treatment of UTF-8 characters
-            const QString bibTeXcode = QString::fromUtf8(reply->readAll().data());
+            const QString bibTeXcode = QString::fromUtf8(reply->readAll().constData());
 
             if (!bibTeXcode.isEmpty()) {
                 FileImporterBibTeX importer;

@@ -32,6 +32,8 @@ class Comment;
  */
 class KBIBTEXIO_EXPORT FileExporterXSLT : public FileExporter
 {
+    Q_OBJECT
+
 public:
     explicit FileExporterXSLT(const QString &xsltFilename = QString());
     ~FileExporterXSLT();

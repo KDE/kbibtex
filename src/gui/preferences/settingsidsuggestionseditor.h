@@ -46,6 +46,8 @@ class IdSuggestionsEditWidget;
  */
 class TokenWidget : public QGroupBox
 {
+    Q_OBJECT
+
 protected:
     QGridLayout *gridLayout;
     QFormLayout *formLayout;

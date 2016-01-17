@@ -49,12 +49,6 @@
 #include <onlinesearchsoanasaads.h>
 #include "version.h"
 
-KIcon iconOK(QLatin1String("dialog-ok-apply"));
-KIcon iconERROR(QLatin1String("dialog-cancel"));
-KIcon iconINFO(QLatin1String("dialog-information"));
-KIcon iconAUTH(QLatin1String("dialog-password"), NULL, QStringList() << QLatin1String("dialog-cancel"));
-KIcon iconNETWORK(QLatin1String("network-wired"), NULL, QStringList() << QLatin1String("dialog-cancel"));
-
 int filenameCounter = 0;
 
 class TestWidget : public QWidget
@@ -116,6 +110,8 @@ public:
 KBibTeXTest::KBibTeXTest(QWidget *parent)
         : KDialog(parent), m_running(false), m_isBusy(false)
 {
+    static const KIcon iconINFO(QLatin1String("dialog-information"));
+
     m_onlineSearchList << new OnlineSearchAcmPortal(this);
     m_onlineSearchList << new OnlineSearchArXiv(this);
     m_onlineSearchList << new OnlineSearchBibsonomy(this);
@@ -187,6 +183,11 @@ void KBibTeXTest::startOnlineSearchTests()
 
 void KBibTeXTest::onlineSearchStoppedSearch(int searchResult)
 {
+    static const KIcon iconOK(QLatin1String("dialog-ok-apply"));
+    static const KIcon iconERROR(QLatin1String("dialog-cancel"));
+    static const KIcon iconAUTH(QLatin1String("dialog-password"), NULL, QStringList() << QLatin1String("dialog-cancel"));
+    static const KIcon iconNETWORK(QLatin1String("network-wired"), NULL, QStringList() << QLatin1String("dialog-cancel"));
+
     if (searchResult == OnlineSearchAbstract::resultNoError) {
         if (m_currentOnlineSearchNumFoundEntries == 0)
             addMessage(QString(QLatin1String("Got no error message searching '%1', but found NO entries")).arg((*m_currentOnlineSearch)->label()), iconERROR);
@@ -222,6 +223,8 @@ void KBibTeXTest::resetProgress()
 
 void KBibTeXTest::processNextSearch()
 {
+    static const KIcon iconINFO(QLatin1String("dialog-information"));
+
     if (m_running && m_currentOnlineSearch != m_onlineSearchList.constEnd()) {
         setBusy(true);
         m_currentOnlineSearchNumFoundEntries = 0;
