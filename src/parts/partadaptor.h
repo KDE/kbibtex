@@ -1,5 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2015 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *                      2015 by Shunsuke Shimizu <grafi@grafi.jp>          *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -15,40 +16,38 @@
  *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
  ***************************************************************************/
 
-#ifndef KBIBTEX_GUI_PARTWIDGET_H
-#define KBIBTEX_GUI_PARTWIDGET_H
+#ifndef KBIBTEX_PART_PARTADAPTOR_H
+#define KBIBTEX_PART_PARTADAPTOR_H
 
-#include <QWidget>
+#include <QtDBus/QtDBus>
 
-#include "kbibtexgui_export.h"
-
+class KBibTeXPart;
 class FileView;
-class FilterBar;
 
 /**
- * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ * @author Shunsuke Shimizu <grafi@grafi.jp>
  */
-class KBIBTEXGUI_EXPORT PartWidget : public QWidget {
+class KBibTeXPartAdaptor : public QDBusAbstractAdaptor
+{
     Q_OBJECT
+    Q_CLASSINFO("D-Bus Interface", "org.gna.KBibTeX.Document")
 
 public:
-    static const int DocumentIdStart = 0;
-    static const int DocumentIdInvalid = -1;
+    explicit KBibTeXPartAdaptor(KBibTeXPart *part);
+    ~KBibTeXPartAdaptor();
 
-    explicit PartWidget(QWidget *parent);
-    ~PartWidget();
-
-    FileView *fileView();
-    FilterBar *filterBar();
-
-    int documentId() const;
-
-private slots:
-    void searchFor(QString);
+public slots:
+    bool isReadWrite();
+    bool documentSave();
+    QList<int> selectedEntryIndexes();
+    QString entryIndexesToText(const QList<int> &entryIndexes);
+    QString entryIndexesToReferences(const QList<int> &entryIndexes);
+    bool insertUrl(const QString &text, int entryIndex);
+    QList<int> insertEntries(const QString &text, const QString &mimeType);
 
 private:
-    class Private;
-    Private *const d;
+    class KBibTeXPartAdaptorPrivate;
+    KBibTeXPartAdaptor::KBibTeXPartAdaptorPrivate *d;
 };
 
-#endif // KBIBTEX_GUI_PARTWIDGET_H
+#endif // KBIBTEX_PART_PARTADAPTOR_H

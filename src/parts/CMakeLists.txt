@@ -23,6 +23,7 @@ set(
     part.cpp
     browserextension.cpp
     partfactory.cpp
+    partadaptor.cpp
 )
 
 

@@ -40,6 +40,7 @@ set(
     docklets/filesettings.cpp
     docklets/zoterobrowser.cpp
     openfileinfo.cpp
+    openfileinfoadaptor.cpp
 )
 
 # debug area for KBibTeX's program

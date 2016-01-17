@@ -78,7 +78,10 @@
 #include "clipboard.h"
 #include "idsuggestions.h"
 #include "partfactory.h"
+#include "fileoperation.h"
 #include "fileview.h"
+#include "fileoperation.h"
+#include "partadaptor.h"
 // #include "browserextension.h" // FIXME
 
 static const char RCFileName[] = "kbibtexpartui.rc";
@@ -673,6 +676,8 @@ KBibTeXPart::KBibTeXPart(QWidget *parentWidget, QObject *parent, bool browserVie
     d->readConfiguration();
 
     setModified(false);
+
+    new KBibTeXPartAdaptor(this);
 }
 
 KBibTeXPart::~KBibTeXPart()

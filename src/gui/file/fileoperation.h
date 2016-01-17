@@ -1,5 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2015 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *                      2015 by Shunsuke Shimizu <grafi@grafi.jp>          *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -15,40 +16,38 @@
  *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
  ***************************************************************************/
 
-#ifndef KBIBTEX_GUI_PARTWIDGET_H
-#define KBIBTEX_GUI_PARTWIDGET_H
-
-#include <QWidget>
+#ifndef KBIBTEX_GUI_FILEOPERATION_H
+#define KBIBTEX_GUI_FILEOPERATION_H
 
 #include "kbibtexgui_export.h"
 
+#include <QObject>
+
 class FileView;
-class FilterBar;
 
 /**
- * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ * @author Shunsuke Shimizu <grafi@grafi.jp>
  */
-class KBIBTEXGUI_EXPORT PartWidget : public QWidget {
+class KBIBTEXGUI_EXPORT FileOperation : public QObject
+{
     Q_OBJECT
 
 public:
-    static const int DocumentIdStart = 0;
-    static const int DocumentIdInvalid = -1;
+    explicit FileOperation(FileView *fileview);
+    ~FileOperation();
 
-    explicit PartWidget(QWidget *parent);
-    ~PartWidget();
-
+public slots:
+    QList<int> selectedEntryIndexes();
+    QString entryIndexesToText(const QList<int> &entryIndexes);
+    QString entryIndexesToReferences(const QList<int> &entryIndexes);
+    bool insertUrl(const QString &text, int entryIndex);
+    QList<int> insertEntries(const QString &text, const QString &mimeType = QLatin1String("text/x-bibtex"));
     FileView *fileView();
-    FilterBar *filterBar();
-
-    int documentId() const;
-
-private slots:
-    void searchFor(QString);
 
 private:
-    class Private;
-    Private *const d;
+    class FileOperationPrivate;
+    FileOperation::FileOperationPrivate *d;
+    bool checkReadOnly();
 };
 
-#endif // KBIBTEX_GUI_PARTWIDGET_H
+#endif // KBIBTEX_GUI_FILEOPERATION_H

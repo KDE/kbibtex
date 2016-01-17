@@ -32,11 +32,13 @@
 #include <KIO/NetAccess>
 
 #include "fileimporterpdf.h"
+#include "openfileinfoadaptor.h"
 
 class OpenFileInfo::OpenFileInfoPrivate
 {
 private:
     static int globalCounter;
+    static int fileIdCounter;
     int m_counter;
 
 public:
@@ -55,8 +57,10 @@ public:
     QString mimeType;
     KUrl url;
 
+    int fileId;
+
     OpenFileInfoPrivate(OpenFileInfoManager *openFileInfoManager, const KUrl &url, const QString &mimeType, OpenFileInfo *p)
-        :  m_counter(-1), p(p), part(NULL), internalServicePtr(KService::Ptr()), internalWidgetParent(NULL), flags(0) {
+        :  m_counter(-1), p(p), part(NULL), internalServicePtr(KService::Ptr()), internalWidgetParent(NULL), flags(0), fileId(fileIdCounter++) {
         this->openFileInfoManager = openFileInfoManager;
         this->url = url;
         if (this->url.scheme().isEmpty())
@@ -148,6 +152,7 @@ public:
 };
 
 int OpenFileInfo::OpenFileInfoPrivate::globalCounter = 0;
+int OpenFileInfo::OpenFileInfoPrivate::fileIdCounter = OpenFileInfo::FileIdStart;
 const QString OpenFileInfo::OpenFileInfoPrivate::dateTimeFormat = QLatin1String("yyyy-MM-dd-hh-mm-ss-zzz");
 const QString OpenFileInfo::OpenFileInfoPrivate::keyLastAccess = QLatin1String("LastAccess");
 const QString OpenFileInfo::OpenFileInfoPrivate::keyURL = QLatin1String("URL");
@@ -155,7 +160,7 @@ const QString OpenFileInfo::OpenFileInfoPrivate::keyURL = QLatin1String("URL");
 OpenFileInfo::OpenFileInfo(OpenFileInfoManager *openFileInfoManager, const KUrl &url)
         : d(new OpenFileInfoPrivate(openFileInfoManager, url, FileInfo::mimeTypeForUrl(url)->name(), this))
 {
-    // nothing
+    new OpenFileInfoAdaptor(this, openFileInfoManager);
 }
 
 OpenFileInfo::OpenFileInfo(OpenFileInfoManager *openFileInfoManager, const QString &mimeType)
@@ -315,6 +320,11 @@ KService::Ptr OpenFileInfo::currentService()
     return d->internalServicePtr;
 }
 
+int OpenFileInfo::fileId() const
+{
+    return d->fileId;
+}
+
 class OpenFileInfoManager::OpenFileInfoManagerPrivate
 {
 private:
@@ -426,6 +436,7 @@ const int OpenFileInfoManager::OpenFileInfoManagerPrivate::maxNumOpenFiles = 16;
 OpenFileInfoManager::OpenFileInfoManager(QWidget *widget)
         : QObject(widget), d(new OpenFileInfoManagerPrivate(this, widget))
 {
+    new OpenFileInfoManagerAdaptor(this);
     QTimer::singleShot(300, this, SLOT(delayedReadConfig()));
 }
 
