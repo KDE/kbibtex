@@ -149,7 +149,7 @@ public:
         dockSearchResults->setObjectName(QStringLiteral("dockResultsFrom"));
         dockSearchResults->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
         showPanelsMenu->addAction(dockSearchResults->toggleViewAction());
-        connect(mdiWidget, SIGNAL(documentSwitch(FileView*,FileView*)), searchResults, SLOT(documentSwitched(FileView*,FileView*)));
+        connect(mdiWidget, &MDIWidget::documentSwitch, searchResults, &SearchResults::documentSwitched);
 
         dockSearchForm = new QDockWidget(i18n("Online Search"), p);
         dockSearchForm->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
@@ -247,12 +247,12 @@ KBibTeXMainWindow::KBibTeXMainWindow()
 
     setCentralWidget(d->mdiWidget);
 
-    connect(d->mdiWidget, SIGNAL(documentSwitch(FileView*,FileView*)), this, SLOT(documentSwitched(FileView*,FileView*)));
-    connect(d->mdiWidget, SIGNAL(activePartChanged(KParts::Part*)), this, SLOT(createGUI(KParts::Part*)));
+    connect(d->mdiWidget, &MDIWidget::documentSwitch, this, &KBibTeXMainWindow::documentSwitched);
+    connect(d->mdiWidget, &MDIWidget::activePartChanged, this, &KBibTeXMainWindow::createGUI); ///< actually: KParts::MainWindow::createGUI
     connect(d->mdiWidget, SIGNAL(documentNew()), this, SLOT(newDocument()));
     connect(d->mdiWidget, SIGNAL(documentOpen()), this, SLOT(openDocumentDialog()));
     connect(d->mdiWidget, SIGNAL(documentOpenURL(QUrl)), this, SLOT(openDocument(QUrl)));
-    connect(OpenFileInfoManager::instance(), SIGNAL(currentChanged(OpenFileInfo*,KService::Ptr)), d->mdiWidget, SLOT(setFile(OpenFileInfo*,KService::Ptr)));
+    connect(OpenFileInfoManager::instance(), &OpenFileInfoManager::currentChanged, d->mdiWidget, &MDIWidget::setFile);
     connect(OpenFileInfoManager::instance(), SIGNAL(flagsChanged(OpenFileInfo::StatusFlags)), this, SLOT(documentListsChanged(OpenFileInfo::StatusFlags)));
     connect(d->mdiWidget, SIGNAL(setCaption(QString)), this, SLOT(setCaption(QString)));
 
