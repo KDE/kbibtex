@@ -288,6 +288,7 @@ void MDIWidget::setFile(OpenFileInfo *openFileInfo, KService::Ptr servicePtr)
 
     /// Notify main window about a change of current file,
     /// so that the title may contain the current file's URL.
+    /// This signal will be connected to KMainWindow::setCaption.
     if (openFileInfo != NULL) {
         QUrl url = openFileInfo->url();
         if (url.isValid())
