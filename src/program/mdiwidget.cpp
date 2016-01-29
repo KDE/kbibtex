@@ -283,7 +283,7 @@ void MDIWidget::setFile(OpenFileInfo *openFileInfo, KService::Ptr servicePtr)
         /// If new widget comes from a KBibTeX Part, retrieve its editor
         PartWidget *newPartWidget = qobject_cast<PartWidget *>(widget);
         FileView *newEditor = newPartWidget == NULL ? NULL : newPartWidget->fileView();
-        emit documentSwitch(oldEditor, newEditor);
+        emit documentSwitched(oldEditor, newEditor);
     }
 
     /// Notify main window about a change of current file,

@@ -149,7 +149,7 @@ public:
         dockSearchResults->setObjectName(QStringLiteral("dockResultsFrom"));
         dockSearchResults->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
         showPanelsMenu->addAction(dockSearchResults->toggleViewAction());
-        connect(mdiWidget, &MDIWidget::documentSwitch, searchResults, &SearchResults::documentSwitched);
+        connect(mdiWidget, &MDIWidget::documentSwitched, searchResults, &SearchResults::documentSwitched);
 
         dockSearchForm = new QDockWidget(i18n("Online Search"), p);
         dockSearchForm->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
@@ -247,7 +247,7 @@ KBibTeXMainWindow::KBibTeXMainWindow()
 
     setCentralWidget(d->mdiWidget);
 
-    connect(d->mdiWidget, &MDIWidget::documentSwitch, this, &KBibTeXMainWindow::documentSwitched);
+    connect(d->mdiWidget, &MDIWidget::documentSwitched, this, &KBibTeXMainWindow::documentSwitched);
     connect(d->mdiWidget, &MDIWidget::activePartChanged, this, &KBibTeXMainWindow::createGUI); ///< actually: KParts::MainWindow::createGUI
     connect(d->mdiWidget, SIGNAL(documentNew()), this, SLOT(newDocument()));
     connect(d->mdiWidget, SIGNAL(documentOpen()), this, SLOT(openDocumentDialog()));

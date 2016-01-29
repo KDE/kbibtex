@@ -59,7 +59,7 @@ public slots:
 
 signals:
     void setCaption(const QString &);
-    void documentSwitch(FileView *, FileView *);
+    void documentSwitched(FileView *, FileView *);
     void activePartChanged(KParts::Part *);
     void documentNew();
     void documentOpen();
