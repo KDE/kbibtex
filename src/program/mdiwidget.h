@@ -47,6 +47,14 @@ public:
     OpenFileInfo *currentFile();
 
 public slots:
+    /**
+     * Make the MDI widget show a different file using a part
+     * as specified by a service.
+     * If the OpenFileInfo object is NULL, show no file but a
+     * Welcome widget instead.
+     * Retrieving the part to be used will be delegated to the
+     * OpenFileInfo object.
+     */
     void setFile(OpenFileInfo *openFileInfo, KService::Ptr servicePtr = KService::Ptr());
 
 signals:

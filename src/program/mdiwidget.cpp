@@ -240,14 +240,16 @@ MDIWidget::~MDIWidget()
 
 void MDIWidget::setFile(OpenFileInfo *openFileInfo, KService::Ptr servicePtr)
 {
-    FileView *oldEditor = NULL;
-    bool hasChanged = true;
-
     KParts::Part *part = openFileInfo == NULL ? NULL : openFileInfo->part(this, servicePtr);
-    QWidget *widget = d->welcomeWidget;
+    /// 'part' will only be NULL if no OpenFileInfo object was given,
+    /// or if the OpenFileInfo could not locate a KPart
+    QWidget *widget = d->welcomeWidget; ///< by default use Welcome widget
     if (part != NULL) {
+        /// KPart object was located, use its object (instead of Welcome widget)
         widget = part->widget();
     } else if (openFileInfo != NULL) {
+        /// A valid OpenFileInfo was given, but no KPart could be located
+
         d->ofim->close(openFileInfo); // FIXME does not close correctly if file is new
         const QString filename = openFileInfo->url().fileName();
         if (filename.isEmpty())
@@ -257,11 +259,18 @@ void MDIWidget::setFile(OpenFileInfo *openFileInfo, KService::Ptr servicePtr)
         return;
     }
 
+    FileView *oldEditor = NULL;
+    bool hasChanged = true;
     if (indexOf(widget) >= 0) {
+        /// Chosen widget is already known (Welcome widget or a previously used KPart)
+
+        /// In case previous (still current) widget was a KBibTeX Part, remember its editor
         PartWidget *currentPartWidget = qobject_cast<PartWidget *>(currentWidget());
         oldEditor = currentPartWidget == NULL ? NULL : currentPartWidget->fileView();
+        /// Record if set widget is different from previous (still current) widget
         hasChanged = widget != currentWidget();
     } else if (openFileInfo != NULL) {
+        /// Widget was not known previously, but a valid (new?) OpenFileInfo was given
         addWidget(widget);
         d->addToMapper(openFileInfo);
     }
@@ -269,12 +278,16 @@ void MDIWidget::setFile(OpenFileInfo *openFileInfo, KService::Ptr servicePtr)
     d->currentFile = openFileInfo;
 
     if (hasChanged) {
+        /// This signal gets forwarded to KParts::MainWindow::createGUI(KParts::Part*)
+        emit activePartChanged(part);
+        /// If new widget comes from a KBibTeX Part, retrieve its editor
         PartWidget *newPartWidget = qobject_cast<PartWidget *>(widget);
         FileView *newEditor = newPartWidget == NULL ? NULL : newPartWidget->fileView();
-        emit activePartChanged(part);
         emit documentSwitch(oldEditor, newEditor);
     }
 
+    /// Notify main window about a change of current file,
+    /// so that the title may contain the current file's URL.
     if (openFileInfo != NULL) {
         QUrl url = openFileInfo->url();
         if (url.isValid())
@@ -282,7 +295,7 @@ void MDIWidget::setFile(OpenFileInfo *openFileInfo, KService::Ptr servicePtr)
         else
             emit setCaption(openFileInfo->shortCaption());
     } else
-        emit setCaption(QStringLiteral(""));
+        emit setCaption(QString());
 }
 
 FileView *MDIWidget::fileView()
