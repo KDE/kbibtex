@@ -117,6 +117,7 @@ target_link_libraries(
     kbibtexdata
     kbibtexio
     qca-qt5
+    ${Poppler_Qt5_LIBRARY}
 )
 
 set_target_properties(
