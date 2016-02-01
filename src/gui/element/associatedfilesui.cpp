@@ -119,7 +119,7 @@ public:
         radioRenameToEntryId->setChecked(true); /// by default
 
         groupBoxPathType = new QGroupBox(i18n("Path as Inserted into Entry"), p);
-        buttonGroup = new QButtonGroup(groupBoxRename);
+        buttonGroup = new QButtonGroup(groupBoxPathType);
         layout->addWidget(groupBoxPathType);
         groupBoxLayout = new QVBoxLayout(groupBoxPathType);
         radioRelativePath = new QRadioButton(i18n("Relative Path"), groupBoxPathType);
