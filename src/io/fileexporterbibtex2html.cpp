@@ -34,7 +34,7 @@ public:
     QString outputFilename;
     QString bibStyle;
 
-    FileExporterBibTeX2HTMLPrivate(FileExporterBibTeX2HTML *parent, QString workingDir)
+    FileExporterBibTeX2HTMLPrivate(FileExporterBibTeX2HTML *parent, const QString &workingDir)
             : p(parent) {
         bibTeXFilename = QString(workingDir).append("/bibtex-to-html.bib");
         outputFilename = QString(workingDir).append("/bibtex-to-html.html");

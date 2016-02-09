@@ -521,7 +521,7 @@ QString EncoderLaTeX::decode(const QString &input) const
 
                 /// Next, check if there follows a modifier after the backslash
                 /// For example an quotation mark as used in {\"a}
-                int lookupTablePos = modifierInLookupTable(input[i + 2]);
+                int lookupTablePos = modifierInLookupTable(input[i + 2].toLatin1());
 
                 if (lookupTablePos >= 0 && input[i + 3] >= 'A' && input[i + 3] <= 'z' && input[i + 4] == '}') {
                     /// If we found a modifier which is followed by
@@ -636,7 +636,7 @@ QString EncoderLaTeX::decode(const QString &input) const
 
             /// Check if there follows a modifier after the backslash
             /// For example an quotation mark as used in \"a
-            int lookupTablePos = modifierInLookupTable(input[i + 1]);
+            int lookupTablePos = modifierInLookupTable(input[i + 1].toLatin1());
 
             if (lookupTablePos >= 0 && i <= len - 3 && input[i + 2] >= 'A' && input[i + 2] <= 'z' && (i == len - 3 || input[i + 1] == '"' || input[i + 1] == '\'' || input[i + 1] == '`' || input[i + 1] == '=')) { // TODO more special cases?
                 /// We found a special modifier which is followed by
@@ -1031,9 +1031,8 @@ bool EncoderLaTeX::containsOnlyAscii(const QString &ntext)
     return true;
 }
 
-int EncoderLaTeX::modifierInLookupTable(const QChar &modifier) const
+int EncoderLaTeX::modifierInLookupTable(const char latinModifier) const
 {
-    const char latinModifier = modifier.toLatin1();
     for (int m = 0; m < lookupTableNumModifiers && lookupTable[m] != NULL; ++m)
         if (lookupTable[m]->modifier == latinModifier) return m;
     return -1;
