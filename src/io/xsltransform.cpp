@@ -48,7 +48,7 @@ XSLTransform *XSLTransform::createXSLTransform(const QString &xsltFilename)
     return new XSLTransform(xsltStylesheet);
 }
 
-XSLTransform::XSLTransform(const xsltStylesheetPtr &xsltSS)
+XSLTransform::XSLTransform(const xsltStylesheetPtr xsltSS)
         : xsltStylesheet(xsltSS)
 {
     // nothing

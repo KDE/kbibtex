@@ -155,7 +155,7 @@ private:
     Element *nextElement();
     Token nextToken();
     QString readString(bool &isStringKey);
-    QString readSimpleString(const QChar &until = QLatin1Char('\0'));
+    QString readSimpleString(const char until = '\0');
     QString readQuotedString();
     QString readBracketString();
     Token readValue(Value &value, const QString &fieldType);

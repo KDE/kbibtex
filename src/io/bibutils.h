@@ -40,7 +40,7 @@ public:
     enum Format { MODS = 0, BibTeX = 1, BibLaTeX = 2, ISI = 5, RIS = 6, EndNote = 10, EndNoteXML = 11, ADS = 15, WordBib = 16, Copac = 17, Med = 18 };
 
     BibUtils::Format format() const;
-    void setFormat(const BibUtils::Format &format);
+    void setFormat(const BibUtils::Format format);
 
     /**
      * Test if BibUtils is installed. This test checks if a number of known
@@ -55,7 +55,7 @@ protected:
     explicit BibUtils();
 
     // TODO migrate to KJob or KCompositeJob
-    bool convert(QIODevice &source, const BibUtils::Format &sourceFormat, QIODevice &destination, const BibUtils::Format &destinationFormat) const;
+    bool convert(QIODevice &source, const BibUtils::Format sourceFormat, QIODevice &destination, const BibUtils::Format destinationFormat) const;
 
 private:
     class Private;

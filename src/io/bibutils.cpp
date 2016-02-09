@@ -50,7 +50,7 @@ BibUtils::~BibUtils()
     delete d;
 }
 
-void BibUtils::setFormat(const BibUtils::Format &format) {
+void BibUtils::setFormat(const BibUtils::Format format) {
     d->format = format;
 }
 
@@ -81,7 +81,7 @@ bool BibUtils::available() {
     return state == avail;
 }
 
-bool BibUtils::convert(QIODevice &source, const BibUtils::Format &sourceFormat, QIODevice &destination, const BibUtils::Format &destinationFormat) const {
+bool BibUtils::convert(QIODevice &source, const BibUtils::Format sourceFormat, QIODevice &destination, const BibUtils::Format destinationFormat) const {
     /// To proceed, either the source format or the destination format
     /// has to be MODS, otherwise ...
     if (sourceFormat != MODS && destinationFormat != MODS) {

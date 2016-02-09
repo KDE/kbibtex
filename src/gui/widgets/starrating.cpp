@@ -74,7 +74,7 @@ public:
         return QRect(QPoint(labelPercent->width() + spacing, (p->height() - starRectHeight) / 2), QSize(p->width() - 2 * spacing - clearButton->width() - labelPercent->width(), starRectHeight));
     }
 
-    float percentForPosition(const QPoint &pos, int numTotalStars, const QRect &inside)
+    float percentForPosition(const QPoint pos, int numTotalStars, const QRect inside)
     {
         const int starSize = qMin(inside.height() - 2 * Private::paintMargin, (inside.width() - 2 * Private::paintMargin) / numTotalStars);
         const int width = starSize * numTotalStars;
@@ -198,7 +198,7 @@ void StarRating::buttonHeight()
     d->clearButton->setSizePolicy(sp.horizontalPolicy(), QSizePolicy::MinimumExpanding);
 }
 
-void StarRating::paintStars(QPainter *painter, KIconLoader::States defaultState, int numTotalStars, float percent, const QRect &inside)
+void StarRating::paintStars(QPainter *painter, KIconLoader::States defaultState, int numTotalStars, float percent, const QRect inside)
 {
     painter->save(); ///< Save the current painter's state; at this function's end restored
 

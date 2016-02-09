@@ -52,7 +52,7 @@ public:
     static void cleanupGlobals();
 
 protected:
-    XSLTransform(const xsltStylesheetPtr &xsltStylesheet);
+    XSLTransform(const xsltStylesheetPtr xsltStylesheet);
 
 private:
     const xsltStylesheetPtr xsltStylesheet;

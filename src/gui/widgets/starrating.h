@@ -92,7 +92,7 @@ public:
      * @param percent percent value of "glowing" starts, to be >=0.0 and <= 100.0
      * @param inside fit and paint stars inside this rectangle on the painter
      */
-    static void paintStars(QPainter *painter, KIconLoader::States defaultState, int numTotalStars, float percent, const QRect &inside);
+    static void paintStars(QPainter *painter, KIconLoader::States defaultState, int numTotalStars, float percent, const QRect inside);
 
 signals:
     void modified();

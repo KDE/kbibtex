@@ -330,7 +330,7 @@ Entry *FileImporterBibTeX::readEntryElement(const QString &typeString)
         token = nextToken();
     }
 
-    QString id = readSimpleString(QChar(',')).trimmed();
+    QString id = readSimpleString(',').trimmed();
     if (id.isEmpty()) {
         /// Cope with empty ids,
         /// duplicates are handled further below
@@ -503,7 +503,7 @@ QString FileImporterBibTeX::readString(bool &isStringKey)
     }
 }
 
-QString FileImporterBibTeX::readSimpleString(const QChar &until)
+QString FileImporterBibTeX::readSimpleString(const char until)
 {
     static const QString extraAlphaNumChars = QString(QStringLiteral("?'`-_:.+/$\\\"&"));
 
@@ -517,7 +517,7 @@ QString FileImporterBibTeX::readSimpleString(const QChar &until)
     while (!m_nextChar.isNull()) {
         if (until != '\0') {
             /// Variable "until" has user-defined value
-            if (m_nextChar == QLatin1Char('\n') || m_nextChar == QLatin1Char('\r') || m_nextChar == until) {
+            if (m_nextChar == QLatin1Char('\n') || m_nextChar == QLatin1Char('\r') || m_nextChar.toLatin1() == until) {
                 /// Force break on line-breaks or if the "until" char has been read
                 break;
             } else {

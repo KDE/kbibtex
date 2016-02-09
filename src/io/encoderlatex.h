@@ -74,7 +74,7 @@ private:
      * index in the lookup table or -1 if not a known
      * modifier.
      */
-    int modifierInLookupTable(const QChar &c) const;
+    int modifierInLookupTable(const char latinModifier) const;
 
     /**
      * Return a string that represents the part of
