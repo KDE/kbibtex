@@ -76,6 +76,12 @@ public:
         validInvalidField = invalid;
     }
 
+    FilePrivate &operator= (const FilePrivate &other) {
+        validInvalidField = other.validInvalidField;
+        properties = other.properties;
+        return *this;
+    }
+
     void loadConfiguration() {
         /// Load and set configuration as stored in settings
         KConfigGroup configGroup(config, configGroupName);
@@ -111,6 +117,11 @@ File::~File()
 {
     Q_ASSERT_X(d->checkValidity(), "File::~File()", "This File object is not valid");
     delete d;
+}
+
+File &File::operator= (const File &other) {
+    d->operator =(*other.d);
+    return *this;
 }
 
 const QSharedPointer<Element> File::containsKey(const QString &key, ElementTypes elementTypes) const

@@ -63,6 +63,11 @@ public:
     ~File();
 
     /**
+      * To fulfill the rule-of-three, here is a copy-assignment operator.
+      */
+    File &operator= (const File &other);
+
+    /**
      * Check if a given key (e.g. a key for a macro or an id for an entry)
      * is contained in the file object.
      * @see #allKeys() const
