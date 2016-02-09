@@ -37,7 +37,9 @@ class KBIBTEXIO_EXPORT IConvLaTeX
 {
 public:
     explicit IConvLaTeX(const QString &destEncoding);
+    explicit IConvLaTeX(const IConvLaTeX &other);
     ~IConvLaTeX();
+    IConvLaTeX &operator= (const IConvLaTeX &other);
 
     QByteArray encode(const QString &input);
 

@@ -31,10 +31,11 @@ private:
     // UNUSED IConvLaTeX *p;
 
 public:
+    const QString destEncoding;
     iconv_t iconvHandle;
 
-    IConvLaTeXPrivate(IConvLaTeX */* UNUSED parent*/, const QString &destEncoding)
-    // : UNUSED p(parent)
+    IConvLaTeXPrivate(IConvLaTeX */* UNUSED parent*/, const QString &_destEncoding)
+            : destEncoding(_destEncoding) // , UNUSED p(parent)
     {
         iconvHandle = iconv_open(destEncoding.toLatin1().data(), QLatin1String("utf-8").latin1());
     }
@@ -51,9 +52,21 @@ IConvLaTeX::IConvLaTeX(const QString &destEncoding)
     /// nothing
 }
 
+IConvLaTeX::IConvLaTeX(const IConvLaTeX &other)
+        : d(new IConvLaTeXPrivate(this, other.d->destEncoding))
+{
+    /// nothing
+}
+
 IConvLaTeX::~IConvLaTeX()
 {
     delete d;
+}
+
+IConvLaTeX &IConvLaTeX::operator=(const IConvLaTeX &other) {
+    delete d;
+    d = new IConvLaTeXPrivate(this, other.d->destEncoding);
+    return *this;
 }
 
 QByteArray IConvLaTeX::encode(const QString &ninput)
