@@ -142,7 +142,7 @@ void FileInfo::urlsInText(const QString &text, TestExistence testExistence, cons
         while ((pos = KBibTeX::urlRegExp.indexIn(internalText, pos)) != -1) {
             const QString match = KBibTeX::urlRegExp.cap(0);
             KUrl url(match);
-            if (url.isValid() && (testExistence == TestExistenceNo || !url.isLocalFile() || QFileInfo(url.toLocalFile()).exists()) && !result.contains(url))
+            if (url.isValid() && (testExistence == TestExistenceNo || !url.isLocalFile() || QFileInfo::exists(url.toLocalFile())) && !result.contains(url))
                 result << url;
             /// remove match from internal text to avoid duplicates
             internalText = internalText.left(pos) + internalText.mid(pos + match.length());
@@ -166,7 +166,7 @@ void FileInfo::urlsInText(const QString &text, TestExistence testExistence, cons
         while ((pos = KBibTeX::fileRegExp.indexIn(internalText, pos)) != -1) {
             QString match = KBibTeX::fileRegExp.cap(0);
             KUrl url(match);
-            if (url.isValid() && (testExistence == TestExistenceNo || !url.isLocalFile() || QFileInfo(url.toLocalFile()).exists()) && !result.contains(url))
+            if (url.isValid() && (testExistence == TestExistenceNo || !url.isLocalFile() || QFileInfo::exists(url.toLocalFile())) && !result.contains(url))
                 result << url;
             /// remove match from internal text to avoid duplicates
             internalText = internalText.left(pos) + internalText.mid(pos + match.length());
@@ -271,7 +271,7 @@ QString FileInfo::pdfToText(const QString &pdfFilename)
     QString text;
 
     /// First, check if there is a cache text file
-    if (QFileInfo(textFilename).exists()) {
+    if (QFileInfo::exists(textFilename)) {
         /// Load text from cache file
         QFile f(textFilename);
         if (f.open(QFile::ReadOnly)) {
