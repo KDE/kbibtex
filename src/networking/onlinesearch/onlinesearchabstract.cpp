@@ -79,7 +79,7 @@ QIcon OnlineSearchAbstract::icon(QListWidgetItem *listWidgetItem)
 
     foreach (const QString &extension, fileNameExtensions) {
         const QString fileName = fileNameStem + extension;
-        if (QFileInfo(fileName).exists())
+        if (QFileInfo::exists(fileName))
             return QIcon(fileName);
     }
 

@@ -33,7 +33,7 @@ XSLTransform *XSLTransform::createXSLTransform(const QString &xsltFilename)
         return NULL;
     }
 
-    if (!QFileInfo(xsltFilename).exists()) {
+    if (!QFileInfo::exists(xsltFilename)) {
         qCWarning(LOG_KBIBTEX_IO) << "File xsltFilename=" << xsltFilename << " does not exist";
         return NULL;
     }
