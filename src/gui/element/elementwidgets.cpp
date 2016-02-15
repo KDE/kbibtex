@@ -362,8 +362,8 @@ bool ReferenceWidget::reset(QSharedPointer<const Element> element)
 {
     /// if signals are not deactivated, the "modified" signal would be emitted when
     /// resetting the widgets' values
-    disconnect(entryType, SIGNAL(editTextChanged(QString)), this, SLOT(gotModified()));
-    disconnect(entryId, SIGNAL(textChanged(QString)), this, SLOT(entryIdManuallyChanged()));
+    disconnect(entryType->lineEdit(), &QLineEdit::textChanged, this, &ReferenceWidget::gotModified);
+    disconnect(entryId, &QLineEdit::textEdited, this, &ReferenceWidget::entryIdManuallyChanged);
 
     bool result = false;
     QSharedPointer<const Entry> entry = element.dynamicCast<const Entry>();
@@ -401,8 +401,8 @@ bool ReferenceWidget::reset(QSharedPointer<const Element> element)
         }
     }
 
-    connect(entryType, SIGNAL(editTextChanged(QString)), this, SLOT(gotModified()));
-    connect(entryId, SIGNAL(textChanged(QString)), this, SLOT(entryIdManuallyChanged()));
+    connect(entryId, &QLineEdit::textEdited, this, &ReferenceWidget::entryIdManuallyChanged);
+    connect(entryType->lineEdit(), &QLineEdit::textChanged, this, &ReferenceWidget::gotModified);
 
     return result;
 }
@@ -475,11 +475,10 @@ void ReferenceWidget::createGUI()
     QMenu *suggestionsMenu = new QMenu(buttonSuggestId);
     buttonSuggestId->setMenu(suggestionsMenu);
 
-    connect(entryType->lineEdit(), SIGNAL(textEdited(QString)), this, SLOT(gotModified()));
-    connect(entryId, SIGNAL(textEdited(QString)), this, SLOT(entryIdManuallyChanged()));
-    connect(entryType->lineEdit(), SIGNAL(textEdited(QString)), this, SIGNAL(entryTypeChanged()));
-    connect(entryType, SIGNAL(currentIndexChanged(int)), this, SIGNAL(entryTypeChanged()));
-    connect(suggestionsMenu, SIGNAL(aboutToShow()), this, SLOT(prepareSuggestionsMenu()));
+    connect(entryType->lineEdit(), &QLineEdit::textChanged, this, &ReferenceWidget::gotModified);
+    connect(entryId, &QLineEdit::textEdited, this, &ReferenceWidget::entryIdManuallyChanged);
+    connect(entryType->lineEdit(), &QLineEdit::textChanged, this, &ReferenceWidget::entryTypeChanged);
+    connect(suggestionsMenu, &QMenu::aboutToShow, this, &ReferenceWidget::prepareSuggestionsMenu);
 }
 
 void ReferenceWidget::prepareSuggestionsMenu()
@@ -563,10 +562,10 @@ void ReferenceWidget::setEntryIdByDefault()
         const QString defaultSuggestion = idSuggestions->defaultFormatId(*crossrefResolvedEntry.data());
 
         if (!defaultSuggestion.isEmpty()) {
-            disconnect(entryId, SIGNAL(textChanged(QString)), this, SLOT(entryIdManuallyChanged()));
+            disconnect(entryId, &QLineEdit::textEdited, this, &ReferenceWidget::entryIdManuallyChanged);
             /// Apply default suggestion to widget
             entryId->setText(defaultSuggestion);
-            connect(entryId, SIGNAL(textChanged(QString)), this, SLOT(entryIdManuallyChanged()));
+            connect(entryId, &QLineEdit::textEdited, this, &ReferenceWidget::entryIdManuallyChanged);
         }
     }
 }
