@@ -1,5 +1,23 @@
 ChangeLog
 
+Diff 0.6 to 0.6.1
+
+- KDE Bug 351455: https://bugs.kde.org/show_bug.cgi?id=351455
+  Removing soversion from KBibTeX Part
+- KDE Bug 353898: https://bugs.kde.org/show_bug.cgi?id=353898
+  Fixing build issues on ARM architecture
+- KDE Bug 354785: https://bugs.kde.org/show_bug.cgi?id=354785
+  Using QTextDocument/QTextEdit instead of WebKit/WebEngine: more lightweight and supported on all platforms
+- Correcting choke on PubMed searches to 10 seconds
+- Setting foreground color of colored rows to either black or white for better readability
+- Disabling OCLC WorldCat (request for support denied by this organization)
+- Generally improved code quality as detected by code checkers such as Clazy or Coverity
+- Fixing handling of URLs and their protocols for local files
+- Fixing setting default id suggestion
+- Adding 'Keywords' field to .desktop file
+- Removing file that was licensed under CC BY-NC, but never got installed
+- Updating translations
+
 Diff 0.5.2 to 0.6
 
 - Allowing "unity builds", i.e. merging source code files for faster compilation
