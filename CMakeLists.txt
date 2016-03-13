@@ -61,7 +61,6 @@ find_package(
 find_package(
     KF5 ${KF5_MIN_VERSION}
     REQUIRED
-    DocTools
     I18n
     XmlGui
     KIO
@@ -73,6 +72,8 @@ find_package(
     Service
     Wallet
 )
+
+find_package(KF5DocTools)
 
 # Version number for the exported headers / libs
 set(
@@ -183,11 +184,11 @@ add_subdirectory(
     xslt
 )
 add_subdirectory(
-    doc
-)
-add_subdirectory(
     mime
 )
+if(KF5DocTools_FOUND)
+    add_subdirectory(doc)
+endif()
 # macro_optional_add_subdirectory(
 #     po
 # )
