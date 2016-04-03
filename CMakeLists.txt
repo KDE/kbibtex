@@ -7,6 +7,26 @@ cmake_minimum_required(
     2.6
 )
 
+# Force various old and deprecated behaviors from CMake's 2.6 era
+# in modern CMake 3.3 and later
+if(POLICY CMP0002)
+    # see also: https://cmake.org/cmake/help/v3.3/policy/CMP0002.html
+    cmake_policy(SET CMP0002 OLD)
+endif()
+if(POLICY CMP0013)
+    # see also: https://cmake.org/cmake/help/v3.3/policy/CMP0013.html
+    cmake_policy(SET CMP0013 OLD)
+endif()
+if(POLICY CMP0022)
+    # see also: https://cmake.org/cmake/help/v3.3/policy/CMP0022.html
+    cmake_policy(SET CMP0022 OLD)
+endif()
+if(POLICY CMP0059)
+    # see also: https://cmake.org/cmake/help/v3.3/policy/CMP0059.html
+    cmake_policy(SET CMP0059 OLD)
+endif()
+
+
 set(
     CMAKE_MODULE_PATH
     ${CMAKE_SOURCE_DIR}/cmake/modules
