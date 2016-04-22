@@ -438,7 +438,39 @@ public:
             statJob = KIO::stat(newerBackupUrl, KIO::StatJob::DestinationSide, 0 /** not details necessary, just need to know if file exists */, KIO::HideProgressInfo);
             KJobWidgets::setWindow(statJob, p->widget());
             if (statJob->exec() && statJob->error() == KIO::Job::NoError) {
-                KIO::CopyJob *moveJob = KIO::move(newerBackupUrl, olderBackupUrl, KIO::HideProgressInfo | KIO::Overwrite);
+                KIO::CopyJob *moveJob = NULL; ///< guaranteed to be initialized in either branch of the following code
+                /**
+                 * The following 'if' block is necessary to handle the
+                 * following situation: User opens, modifies, and saves
+                 * file /tmp/b/bbb.bib which is actually a symlink to
+                 * file /tmp/a/aaa.bib. Now a 'move' operation like the
+                 * implicit 'else' section below does, would move /tmp/b/bbb.bib
+                 * to become /tmp/b/bbb.bib~ still pointing to /tmp/a/aaa.bib.
+                 * Then, the save operation would create a new file /tmp/b/bbb.bib
+                 * without any symbolic linking to /tmp/a/aaa.bib.
+                 * The following code therefore checks if /tmp/b/bbb.bib is
+                 * to be copied/moved to /tmp/b/bbb.bib~ and /tmp/b/bbb.bib
+                 * is a local file and /tmp/b/bbb.bib is a symbolic link to
+                 * another file. Then /tmp/b/bbb.bib is resolved to the real
+                 * file /tmp/a/aaa.bib which is then copied into plain file
+                 * /tmp/b/bbb.bib~. The save function (outside of this function's
+                 * scope) will then see that /tmp/b/bbb.bib is a symbolic link,
+                 * resolve this symlink to /tmp/a/aaa.bib, and then write
+                 * all changes to /tmp/a/aaa.bib keeping /tmp/b/bbb.bib a
+                 * link to.
+                 */
+                if (level == 1 && newerBackupUrl.isLocalFile() /** for level==1, this is actually the current file*/) {
+                    QFileInfo newerBackupFileInfo(newerBackupUrl.toLocalFile());
+                    if (newerBackupFileInfo.isSymLink()) {
+                        while (newerBackupFileInfo.isSymLink()) {
+                            newerBackupUrl = QUrl::fromLocalFile(newerBackupFileInfo.symLinkTarget());
+                            newerBackupFileInfo = QFileInfo(newerBackupUrl.toLocalFile());
+                        }
+                        moveJob = KIO::copy(newerBackupUrl, olderBackupUrl, KIO::HideProgressInfo | KIO::Overwrite);
+                    }
+                }
+                if (moveJob == NULL) ///< implicit 'else' section, see longer comment above
+                    moveJob = KIO::move(newerBackupUrl, olderBackupUrl, KIO::HideProgressInfo | KIO::Overwrite);
                 KJobWidgets::setWindow(moveJob, p->widget());
                 copySucceeded = moveJob->exec();
             }
