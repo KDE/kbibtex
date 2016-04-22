@@ -132,7 +132,7 @@ void LyX::sendReferenceToLyX()
     }
 
     QFile pipe(pipeName);
-    if (!QFileInfo::exists(pipeName) || !pipe.open(QFile::WriteOnly)) {
+    if (!QFileInfo(pipeName).exists() || !pipe.open(QFile::WriteOnly)) {
         KMessageBox::error(d->widget, i18n("Could not open LyX server pipe '%1'.", pipeName) + defaultHintOnLyXProblems, msgBoxTitle);
         return;
     }

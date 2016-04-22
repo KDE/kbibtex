@@ -385,7 +385,7 @@ public:
 
             /// For local files, test if they exist; ignore local files that do not exist
             if (fileUrl.isLocalFile()) {
-                if (!QFileInfo::exists(fileUrl.pathOrUrl()))
+                if (!QFileInfo(fileUrl.pathOrUrl()).exists())
                     continue;
             } else if (!KIO::NetAccess::exists(fileUrl, KIO::NetAccess::SourceSide, widget))
                 continue;

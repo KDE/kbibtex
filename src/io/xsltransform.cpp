@@ -33,7 +33,7 @@ XSLTransform *XSLTransform::createXSLTransform(const QString &xsltFilename)
         return NULL;
     }
 
-    if (!QFileInfo::exists(xsltFilename)) {
+    if (!QFileInfo(xsltFilename).exists()) {
         kWarning() << "File xsltFilename=" << xsltFilename << " does not exist";
         return NULL;
     }
