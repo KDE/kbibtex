@@ -508,12 +508,13 @@ public:
         /// upload temporary file to target destination
         KUrl realUrl = url;
         if (url.isLocalFile()) {
-            /// take precautions for local files
+            /// Take precautions for local files
             QFileInfo fileInfo(url.pathOrUrl());
-            if (fileInfo.isSymLink()) {
-                /// do not overwrite symbolic link,
+            while (fileInfo.isSymLink()) {
+                /// Do not overwrite symbolic link,
                 /// but linked file instead
                 realUrl = KUrl::fromLocalFile(fileInfo.symLinkTarget());
+                fileInfo = QFileInfo(realUrl.pathOrUrl());
             }
         }
         KIO::NetAccess::del(realUrl, p->widget());
