@@ -181,7 +181,7 @@ QVariant DocumentListModel::data(const QModelIndex &index, int role) const
         else
             overlays << "";
         if (openFileInfo->flags().testFlag(OpenFileInfo::RecentlyUsed))
-            overlays << "clock";
+            overlays << "document-open-recent";
         else
             overlays << "";
         if (openFileInfo->flags().testFlag(OpenFileInfo::Open))
@@ -373,7 +373,7 @@ public:
         listRecentFiles = new DocumentListView(openFileInfoManager, OpenFileInfo::RecentlyUsed, p);
         model = new DocumentListModel(OpenFileInfo::RecentlyUsed, openFileInfoManager, listRecentFiles);
         listRecentFiles->setModel(model);
-        p->addTab(listRecentFiles, KIcon("clock"), i18n("Recently Used"));
+        p->addTab(listRecentFiles, KIcon("document-open-recent"), i18n("Recently Used"));
 
         listFavorites = new DocumentListView(openFileInfoManager, OpenFileInfo::Favorite, p);
         model = new DocumentListModel(OpenFileInfo::Favorite, openFileInfoManager, listFavorites);
