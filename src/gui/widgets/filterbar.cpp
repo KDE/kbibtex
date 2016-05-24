@@ -54,7 +54,7 @@ public:
           configGroupName(QStringLiteral("Filter Bar")), maxNumStoredFilterTexts(12) {
         delayedTimer = new DelayedExecutionTimer(p);
         setupGUI();
-        connect(delayedTimer, SIGNAL(triggered()), p, SLOT(publishFilter()));
+        connect(delayedTimer, &DelayedExecutionTimer::triggered, p, &FilterBar::publishFilter);
     }
 
     ~FilterBarPrivate() {
@@ -109,16 +109,6 @@ public:
         buttonClearAll->setToolTip(i18n("Reset filter criteria"));
         layout->addWidget(buttonClearAll, 0);
 
-        connect(comboBoxFilterText->lineEdit(), SIGNAL(textChanged(QString)), delayedTimer, SLOT(trigger()));
-        connect(comboBoxFilterText->lineEdit(), SIGNAL(returnPressed()), p, SLOT(userPressedEnter()));
-        connect(comboBoxCombination, SIGNAL(currentIndexChanged(int)), p, SLOT(comboboxStatusChanged()));
-        connect(comboBoxField, SIGNAL(currentIndexChanged(int)), p, SLOT(comboboxStatusChanged()));
-        connect(buttonSearchPDFfiles, SIGNAL(toggled(bool)), p, SLOT(comboboxStatusChanged()));
-        connect(comboBoxCombination, SIGNAL(currentIndexChanged(int)), delayedTimer, SLOT(trigger()));
-        connect(comboBoxField, SIGNAL(currentIndexChanged(int)), delayedTimer, SLOT(trigger()));
-        connect(buttonSearchPDFfiles, SIGNAL(toggled(bool)), delayedTimer, SLOT(trigger()));
-        connect(buttonClearAll, SIGNAL(clicked()), p, SLOT(resetState()));
-
         /// restore history on filter texts
         /// see addCompletionString for more detailed explanation
         KConfigGroup configGroup(config, configGroupName);
@@ -128,6 +118,16 @@ public:
         comboBoxFilterText->lineEdit()->setText(QStringLiteral(""));
         comboBoxCombination->setCurrentIndex(configGroup.readEntry("CurrentCombination", 0));
         comboBoxField->setCurrentIndex(configGroup.readEntry("CurrentField", 0));
+
+        connect(comboBoxFilterText->lineEdit(), &QLineEdit::textChanged, delayedTimer, &DelayedExecutionTimer::trigger);
+        connect(comboBoxFilterText->lineEdit(), &QLineEdit::returnPressed, p, &FilterBar::userPressedEnter);
+        connect(comboBoxCombination, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), p, &FilterBar::comboboxStatusChanged);
+        connect(comboBoxField, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), p, &FilterBar::comboboxStatusChanged);
+        connect(buttonSearchPDFfiles, &QPushButton::toggled, p, &FilterBar::comboboxStatusChanged);
+        connect(comboBoxCombination, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), delayedTimer, &DelayedExecutionTimer::trigger);
+        connect(comboBoxField, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), delayedTimer, &DelayedExecutionTimer::trigger);
+        connect(buttonSearchPDFfiles, &QPushButton::toggled, delayedTimer, &DelayedExecutionTimer::trigger);
+        connect(buttonClearAll, &QPushButton::clicked, p, &FilterBar::resetState);
     }
 
     SortFilterFileModel::FilterQuery filter() {
