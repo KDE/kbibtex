@@ -79,13 +79,6 @@ install(
 
 install(
     FILES
-    lyx.rc
-    DESTINATION
-    ${DATA_INSTALL_DIR}/kbibtex
-)
-
-install(
-    FILES
     ${processing_HDRS}
     DESTINATION
     ${INCLUDE_INSTALL_DIR}/kbibtex

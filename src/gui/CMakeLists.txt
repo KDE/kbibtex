@@ -174,13 +174,6 @@ install(
 
 install(
     FILES
-    file/findduplicatesui.rc
-    DESTINATION
-    ${DATA_INSTALL_DIR}/kbibtex
-)
-
-install(
-    FILES
     ${kbibtexgui_HDRS}
     DESTINATION
     ${INCLUDE_INSTALL_DIR}/kbibtex

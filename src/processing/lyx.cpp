@@ -97,9 +97,6 @@ LyX::LyX(KParts::ReadOnlyPart *part, QWidget *widget)
     part->actionCollection()->addAction("sendtolyx", d->action);
     d->action->setEnabled(false);
     connect(d->action, SIGNAL(triggered()), this, SLOT(sendReferenceToLyX()));
-#if KDE_IS_VERSION(4, 4, 0)
-    part->replaceXMLFile(KStandardDirs::locate("data", "kbibtex/lyx.rc"), KStandardDirs::locateLocal("data", "kbibtex/lyx.rc"), true);
-#endif
     widget->addAction(d->action);
 }
 
