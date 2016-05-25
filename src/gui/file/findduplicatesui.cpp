@@ -36,7 +36,6 @@
 
 #include <KActionCollection>
 #include <KLocalizedString>
-#include <KXMLGUIClient>
 #include <kparts/part.h>
 #include <KMessageBox>
 #include <KLineEdit>
@@ -648,7 +647,6 @@ FindDuplicatesUI::FindDuplicatesUI(KParts::Part *part, FileView *fileView)
     QAction *newAction = new QAction(QIcon::fromTheme(QStringLiteral("tab-duplicate")), i18n("Find Duplicates"), this);
     part->actionCollection()->addAction(QStringLiteral("findduplicates"), newAction);
     connect(newAction, SIGNAL(triggered()), this, SLOT(slotFindDuplicates()));
-    part->replaceXMLFile(/* read default configuration from '/usr/share/kxmlgui5/kbibtex/findduplicatesui.rc' */QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kxmlgui5/kbibtex/findduplicatesui.rc")), /* write to '~/.config/.../findduplicatesui.rc' */ QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QStringLiteral("kbibtex/findduplicatesui.rc"), true);
 }
 
 FindDuplicatesUI::~FindDuplicatesUI()

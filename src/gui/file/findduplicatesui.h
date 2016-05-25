@@ -27,7 +27,6 @@ namespace KParts
 {
 class Part;
 }
-class KXMLGUIClient;
 class QPushButton;
 
 class FileView;

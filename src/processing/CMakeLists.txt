@@ -71,13 +71,6 @@ install(
     ${INSTALL_TARGETS_DEFAULT_ARGS}
 )
 
-install(
-    FILES
-    lyx.rc
-    DESTINATION
-    ${KXMLGUI_INSTALL_DIR}/kbibtex
-)
-
 generate_export_header( kbibtexproc )
 
 # install(

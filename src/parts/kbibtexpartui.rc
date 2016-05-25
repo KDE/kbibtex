@@ -22,6 +22,10 @@
     <Action name="element_findpdf" />
     <Action name="entry_applydefaultformatstring" />
     <Action name="entry_colorlabel" />
+    <Separator/>
+    <Action name="findduplicates" />
+    <Separator/>
+    <Action name="sendtolyx" />
   </Menu>
 </MenuBar>
 
@@ -30,5 +34,9 @@
   <Action name="file_save_as" group="file_operations" />
   <Separator/>
   <Action name="element_new" />
+  <Separator/>
+  <Action name="findduplicates" />
+  <Separator/>
+  <Action name="sendtolyx" />
 </ToolBar>
 </kpartgui>

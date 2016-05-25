@@ -94,7 +94,6 @@ LyX::LyX(KParts::ReadOnlyPart *part, QWidget *widget)
     part->actionCollection()->addAction(QStringLiteral("sendtolyx"), d->action);
     d->action->setEnabled(false);
     connect(d->action, SIGNAL(triggered()), this, SLOT(sendReferenceToLyX()));
-    // FIXME necessary? // part->replaceXMLFile(QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kbibtex/lyx.rc"), QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + "kbibtex/lyx.rc"), true;
     widget->addAction(d->action);
 }
 
