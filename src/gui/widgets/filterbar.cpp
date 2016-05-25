@@ -109,16 +109,6 @@ public:
         buttonClearAll->setToolTip(i18n("Reset filter criteria"));
         layout->addWidget(buttonClearAll, 0);
 
-        connect(comboBoxFilterText->lineEdit(), SIGNAL(textChanged(QString)), delayedTimer, SLOT(trigger()));
-        connect(comboBoxFilterText->lineEdit(), SIGNAL(returnPressed()), p, SLOT(userPressedEnter()));
-        connect(comboBoxCombination, SIGNAL(currentIndexChanged(int)), p, SLOT(comboboxStatusChanged()));
-        connect(comboBoxField, SIGNAL(currentIndexChanged(int)), p, SLOT(comboboxStatusChanged()));
-        connect(buttonSearchPDFfiles, SIGNAL(toggled(bool)), p, SLOT(comboboxStatusChanged()));
-        connect(comboBoxCombination, SIGNAL(currentIndexChanged(int)), delayedTimer, SLOT(trigger()));
-        connect(comboBoxField, SIGNAL(currentIndexChanged(int)), delayedTimer, SLOT(trigger()));
-        connect(buttonSearchPDFfiles, SIGNAL(toggled(bool)), delayedTimer, SLOT(trigger()));
-        connect(buttonClearAll, SIGNAL(clicked()), p, SLOT(resetState()));
-
         /// restore history on filter texts
         /// see addCompletionString for more detailed explanation
         KConfigGroup configGroup(config, configGroupName);
@@ -128,6 +118,16 @@ public:
         comboBoxFilterText->lineEdit()->setText(QLatin1String(""));
         comboBoxCombination->setCurrentIndex(configGroup.readEntry("CurrentCombination", 0));
         comboBoxField->setCurrentIndex(configGroup.readEntry("CurrentField", 0));
+
+        connect(comboBoxFilterText->lineEdit(), SIGNAL(textChanged(QString)), delayedTimer, SLOT(trigger()));
+        connect(comboBoxFilterText->lineEdit(), SIGNAL(returnPressed()), p, SLOT(userPressedEnter()));
+        connect(comboBoxCombination, SIGNAL(currentIndexChanged(int)), p, SLOT(comboboxStatusChanged()));
+        connect(comboBoxField, SIGNAL(currentIndexChanged(int)), p, SLOT(comboboxStatusChanged()));
+        connect(buttonSearchPDFfiles, SIGNAL(toggled(bool)), p, SLOT(comboboxStatusChanged()));
+        connect(comboBoxCombination, SIGNAL(currentIndexChanged(int)), delayedTimer, SLOT(trigger()));
+        connect(comboBoxField, SIGNAL(currentIndexChanged(int)), delayedTimer, SLOT(trigger()));
+        connect(buttonSearchPDFfiles, SIGNAL(toggled(bool)), delayedTimer, SLOT(trigger()));
+        connect(buttonClearAll, SIGNAL(clicked()), p, SLOT(resetState()));
     }
 
     SortFilterFileModel::FilterQuery filter() {
