@@ -34,8 +34,6 @@
 #include <KDialog>
 #include <KActionCollection>
 #include <KLocale>
-#include <KXMLGUIClient>
-#include <KStandardDirs>
 #include <kparts/part.h>
 #include <KMessageBox>
 #include <KDebug>
@@ -639,9 +637,6 @@ FindDuplicatesUI::FindDuplicatesUI(KParts::Part *part, FileView *fileView)
     KAction *newAction = new KAction(KIcon("tab-duplicate"), i18n("Find Duplicates"), this);
     part->actionCollection()->addAction(QLatin1String("findduplicates"), newAction);
     connect(newAction, SIGNAL(triggered()), this, SLOT(slotFindDuplicates()));
-#if KDE_IS_VERSION(4, 4, 0)
-    part->replaceXMLFile(KStandardDirs::locate("data", "kbibtex/findduplicatesui.rc"), KStandardDirs::locateLocal("data", "kbibtex/findduplicatesui.rc"), true);
-#endif
 }
 
 FindDuplicatesUI::~FindDuplicatesUI()
