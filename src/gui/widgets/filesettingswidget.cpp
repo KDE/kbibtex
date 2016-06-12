@@ -75,7 +75,7 @@ void FileSettingsWidget::loadProperties(File *file)
     }
     if (file->hasProperty(File::ProtectCasing)) {
         m_checkBoxProtectCasing->blockSignals(true);
-        m_checkBoxProtectCasing->setChecked(file->property(File::ProtectCasing).toBool());
+        m_checkBoxProtectCasing->setCheckState((Qt::CheckState)file->property(File::ProtectCasing).toInt());
         m_checkBoxProtectCasing->blockSignals(false);
     }
     if (file->hasProperty(File::NameFormatting)) {
@@ -107,7 +107,7 @@ void FileSettingsWidget::saveProperties(File *file)
     file->setProperty(File::QuoteComment, (int)quoteComment);
     KBibTeX::Casing keywordCasing = (KBibTeX::Casing)m_comboBoxKeywordCasing->currentIndex();
     file->setProperty(File::KeywordCasing, (int)keywordCasing);
-    file->setProperty(File::ProtectCasing, m_checkBoxProtectCasing->isChecked());
+    file->setProperty(File::ProtectCasing, (int)m_checkBoxProtectCasing->checkState());
     file->setProperty(File::NameFormatting, m_comboBoxPersonNameFormatting->itemData(m_comboBoxPersonNameFormatting->currentIndex(), ItalicTextItemModel::IdentifierRole));
     file->setProperty(File::ListSeparator, m_comboBoxListSeparator->itemData(m_comboBoxListSeparator->currentIndex()).toString());
 }
@@ -157,6 +157,7 @@ void FileSettingsWidget::setupGUI()
     connect(m_comboBoxKeywordCasing, SIGNAL(currentIndexChanged(int)), this, SIGNAL(widgetsChanged()));
 
     m_checkBoxProtectCasing = new QCheckBox(i18n("Protect Titles"), this);
+    m_checkBoxProtectCasing->setTristate(true);
     layout->addRow(i18n("Protect Casing?"), m_checkBoxProtectCasing);
     connect(m_checkBoxProtectCasing, SIGNAL(toggled(bool)), this, SIGNAL(widgetsChanged()));
 

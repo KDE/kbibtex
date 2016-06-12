@@ -61,7 +61,7 @@ const QuoteComment defaultQuoteComment = qcNone;
 const QString keyKeywordCasing = QLatin1String("keywordCasing");
 const KBibTeX::Casing defaultKeywordCasing = KBibTeX::cLowerCase;
 const QString keyProtectCasing = QLatin1String("protectCasing");
-const bool defaultProtectCasing = true;
+const Qt::CheckState defaultProtectCasing = Qt::PartiallyChecked;
 const QString keyListSeparator = QLatin1String("ListSeparator");
 const QString defaultListSeparator = QLatin1String("; ");
 
