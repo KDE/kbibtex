@@ -452,6 +452,7 @@ public:
         /// export bibliography data into temporary file
         SortFilterFileModel *model = qobject_cast<SortFilterFileModel *>(partWidget->fileView()->model());
         Q_ASSERT_X(model != NULL, "bool KBibTeXPart::KBibTeXPartPrivate:saveFile(const KUrl &url)", "SortFilterFileModel *model from editor->model() is invalid");
+        Q_ASSERT_X(model->fileSourceModel()->bibliographyFile() == bibTeXFile, "bool KBibTeXPart::KBibTeXPartPrivate:saveFile(const KUrl &url)", "model->fileSourceModel()->bibliographyFile() != bibTeXFile");
         FileExporter *exporter = fileExporterFactory(url);
 
         if (isSaveAsOperation) {
@@ -492,7 +493,7 @@ public:
         qApp->setOverrideCursor(Qt::WaitCursor);
 
         QStringList errorLog;
-        bool result = exporter->save(&temporaryFile, model->fileSourceModel()->bibliographyFile(), &errorLog);
+        bool result = exporter->save(&temporaryFile, bibTeXFile, &errorLog);
 
         if (!result) {
             delete exporter;
@@ -707,7 +708,8 @@ bool KBibTeXPart::documentSaveAs()
 
     if (KParts::ReadWritePart::saveAs(newUrl)) {
         kDebug() << "setting url to be " << newUrl.pathOrUrl();
-        d->model->bibliographyFile()->setProperty(File::Url, newUrl);
+        Q_ASSERT_X(d->model->bibliographyFile() == d->bibTeXFile, "bool KBibTeXPart::documentSaveAs()", "d->model->bibliographyFile() != d->bibTeXFile");
+        d->bibTeXFile->setProperty(File::Url, newUrl);
         return true;
     } else
         return false;
