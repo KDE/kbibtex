@@ -257,25 +257,30 @@ public:
         return true;
     }
 
-    void addProtectiveCasing(QString &text) {
-        if ((text[0] != '"' || text[text.length() - 1] != '"') && (text[0] != '{' || text[text.length() - 1] != '}')) {
-            /** nothing to protect, as this is no text string */
-            return;
+    QString addProtectiveCasing(QString &text) {
+        if (text.length() < 2 && (text[0] != QLatin1Char('"') || text[text.length() - 1] != QLatin1Char('"')) && (text[0] != QLatin1Char('{') || text[text.length() - 1] != QLatin1Char('}'))) {
+            /// Nothing to protect, as this is no text string
+            return text;
         }
 
         bool addBrackets = true;
 
-        if (text[1] == '{' && text[text.length() - 2] == '}') {
+        if (text[1] == QLatin1Char('{') && text[text.length() - 2] == QLatin1Char('}')) {
+            /// If the given text looks like this:  {{...}}
+            /// still check that it is not like this: {{..}..{..}}
             addBrackets = false;
             int count = 0;
-            for (int i = text.length() - 2; !addBrackets && i >= 1; --i)
-                if (text[i] == '{') ++count;
-                else if (text[i] == '}') --count;
-                else if (count == 0) addBrackets = true;
+            for (int i = text.length() - 2; !addBrackets && i > 1; --i) {
+                if (text[i] == QLatin1Char('{')) ++count;
+                else if (text[i] == QLatin1Char('}')) --count;
+                if (count == 0) addBrackets = true;
+            }
         }
 
         if (addBrackets)
-            text.insert(1, '{').insert(text.length(), '}');
+            text.insert(1, QLatin1String("{")).insert(text.length(),  QLatin1String("}"));
+
+        return text;
     }
 
     QString removeProtectiveCasing(QString &text) {
