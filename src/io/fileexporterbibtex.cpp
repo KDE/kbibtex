@@ -56,7 +56,7 @@ public:
     KBibTeX::Casing keywordCasing;
     Preferences::QuoteComment quoteComment;
     QString encoding, forcedEncoding;
-    bool protectCasing;
+    Qt::CheckState protectCasing;
     QString personNameFormatting;
     QString listSeparator;
     bool cancelFlag;
@@ -65,7 +65,7 @@ public:
     const QString configGroupName, configGroupNameGeneral;
 
     FileExporterBibTeXPrivate(FileExporterBibTeX *parent)
-            : p(parent), keywordCasing(KBibTeX::cLowerCase), quoteComment(Preferences::qcNone), protectCasing(true), cancelFlag(false), iconvLaTeX(NULL), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), configGroupName(QStringLiteral("FileExporterBibTeX")), configGroupNameGeneral(QStringLiteral("General")) {
+            : p(parent), keywordCasing(KBibTeX::cLowerCase), quoteComment(Preferences::qcNone), protectCasing(Qt::PartiallyChecked), cancelFlag(false), iconvLaTeX(NULL), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), configGroupName(QStringLiteral("FileExporterBibTeX")), configGroupNameGeneral(QStringLiteral("General")) {
         // nothing
     }
 
@@ -83,7 +83,7 @@ public:
         stringCloseDelimiter = stringDelimiter[1];
         keywordCasing = (KBibTeX::Casing)configGroup.readEntry(Preferences::keyKeywordCasing, (int)Preferences::defaultKeywordCasing);
         quoteComment = (Preferences::QuoteComment)configGroup.readEntry(Preferences::keyQuoteComment, (int)Preferences::defaultQuoteComment);
-        protectCasing = configGroup.readEntry(Preferences::keyProtectCasing, Preferences::defaultProtectCasing);
+        protectCasing = (Qt::CheckState)configGroup.readEntry(Preferences::keyProtectCasing, (int)Preferences::defaultProtectCasing);
         personNameFormatting = configGroup.readEntry(Preferences::keyPersonNameFormatting, QString());
         listSeparator = configGroup.readEntry(Preferences::keyListSeparator, Preferences::defaultListSeparator);
 
@@ -117,7 +117,7 @@ public:
         if (bibtexfile->hasProperty(File::KeywordCasing))
             keywordCasing = (KBibTeX::Casing)bibtexfile->property(File::KeywordCasing).toInt();
         if (bibtexfile->hasProperty(File::ProtectCasing))
-            protectCasing = bibtexfile->property(File::ProtectCasing).toBool();
+            protectCasing = (Qt::CheckState)bibtexfile->property(File::ProtectCasing).toInt();
         if (bibtexfile->hasProperty(File::NameFormatting)) {
             /// if the user set "use global default", this property is an empty string
             /// in this case, keep default value
@@ -153,8 +153,12 @@ public:
 
             // FIXME hack!
             const QSharedPointer<ValueItem> first = *value.constBegin();
-            if (protectCasing && PlainText::isPlainText(*first) && (key == Entry::ftTitle || key == Entry::ftBookTitle || key == Entry::ftSeries))
-                addProtectiveCasing(text);
+            if (PlainText::isPlainText(*first) && (key == Entry::ftTitle || key == Entry::ftBookTitle || key == Entry::ftSeries)) {
+                if (protectCasing == Qt::Checked)
+                    addProtectiveCasing(text);
+                else if (protectCasing == Qt::Unchecked)
+                    removeProtectiveCasing(text);
+            }
 
             iodevice->putChar(',');
             iodevice->putChar('\n');
@@ -177,8 +181,10 @@ public:
         const BibTeXEntries *be = BibTeXEntries::self();
 
         QString text = p->internalValueToBibTeX(macro.value(), QString(), leUTF8);
-        if (protectCasing)
+        if (protectCasing == Qt::Checked)
             addProtectiveCasing(text);
+        else if (protectCasing == Qt::Unchecked)
+            removeProtectiveCasing(text);
 
         iodevice->putChar('@');
         iodevice->write(be->format(QStringLiteral("String"), keywordCasing).toLatin1().data());
@@ -265,6 +271,30 @@ public:
 
         if (addBrackets)
             text.insert(1, '{').insert(text.length(), '}');
+    }
+
+    QString removeProtectiveCasing(QString &text) {
+        if (text.length() < 2 && (text[0] != QLatin1Char('"') || text[text.length() - 1] != QLatin1Char('"')) && (text[0] != QLatin1Char('{') || text[text.length() - 1] != QLatin1Char('}'))) {
+            /// Nothing to protect, as this is no text string
+            return text;
+        }
+
+        if (text[1] != QLatin1Char('{') || text[text.length() - 2] != QLatin1Char('}'))
+            /// Nothing to remove
+            return text;
+
+        bool removeBrackets = true;
+        int count = 0;
+        for (int i = text.length() - 2; removeBrackets && i > 1; --i) {
+            if (text[i] == QLatin1Char('{')) ++count;
+            else if (text[i] == QLatin1Char('}')) --count;
+            if (count == 0) removeBrackets = false;
+        }
+
+        if (removeBrackets)
+            text.remove(text.length() - 2, 1).remove(1, 1);
+
+        return text;
     }
 
     void applyEncoding(QString &encoding) {

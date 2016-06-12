@@ -135,7 +135,8 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
         /// Set the file's preferences for name formatting
         result->setProperty(File::NameFormatting, m_statistics.countFirstNameFirst > m_statistics.countLastNameFirst ? Preferences::personNameFormatFirstLast : Preferences::personNameFormatLastFirst);
         /// Set the file's preferences for title protected
-        result->setProperty(File::ProtectCasing, m_statistics.countProtectedTitle > m_statistics.countUnprotectedTitle);
+        Qt::CheckState triState = (m_statistics.countProtectedTitle > m_statistics.countUnprotectedTitle * 4) ? Qt::Checked : ((m_statistics.countProtectedTitle * 4 < m_statistics.countUnprotectedTitle) ? Qt::Unchecked : Qt::PartiallyChecked);
+        result->setProperty(File::ProtectCasing, (int)triState);
         /// Set the file's preferences for quoting of comments
         if (m_statistics.countNoCommentQuote > m_statistics.countCommentCommand && m_statistics.countNoCommentQuote > m_statistics.countCommentPercent)
             result->setProperty(File::QuoteComment, (int)Preferences::qcNone);
