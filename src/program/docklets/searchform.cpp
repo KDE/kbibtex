@@ -68,6 +68,7 @@
 #include "onlinesearchisbndb.h"
 #include "onlinesearchideasrepec.h"
 #include "onlinesearchdoi.h"
+#include "onlinesearchbiorxiv.h"
 #include "openfileinfo.h"
 #include "fileview.h"
 #include "models/filemodel.h"
@@ -217,6 +218,7 @@ public:
 
         addEngine(new OnlineSearchAcmPortal(p));
         addEngine(new OnlineSearchArXiv(p));
+        addEngine(new OnlineSearchBioRxiv(p));
         addEngine(new OnlineSearchBibsonomy(p));
         addEngine(new OnlineSearchGoogleScholar(p));
         addEngine(new OnlineSearchIEEEXplore(p));
