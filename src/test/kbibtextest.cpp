@@ -47,6 +47,7 @@
 #include <onlinesearchsciencedirect.h>
 #include <onlinesearchspringerlink.h>
 #include <onlinesearchsoanasaads.h>
+#include <onlinesearchbiorxiv.h>
 #include "version.h"
 
 int filenameCounter = 0;
@@ -129,6 +130,7 @@ KBibTeXTest::KBibTeXTest(QWidget *parent)
     m_onlineSearchList << new OnlineSearchScienceDirect(this);
     m_onlineSearchList << new OnlineSearchSOANASAADS(this);
     m_onlineSearchList << new OnlineSearchSpringerLink(this);
+    m_onlineSearchList << new OnlineSearchBioRxiv(this);
     m_currentOnlineSearch = m_onlineSearchList.constBegin();
 
     setPlainCaption(QLatin1String("KBibTeX Test Suite"));
