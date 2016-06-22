@@ -547,7 +547,7 @@ QString FileImporterBibTeX::readQuotedString()
     if (!readChar()) return QString();
 
     while (!m_nextChar.isNull()) {
-        if (m_nextChar == QLatin1Char('"') && m_prevChar != QLatin1Char('\\'))
+        if (m_nextChar == QLatin1Char('"') && m_prevChar != QLatin1Char('\\') && m_prevChar != QLatin1Char('{'))
             break;
         else
             result.append(m_nextChar);
@@ -556,6 +556,10 @@ QString FileImporterBibTeX::readQuotedString()
     }
 
     if (!readChar()) return QString();
+
+    /// Remove protection around quotation marks
+    result.replace(QLatin1String("{\"}"), QLatin1String("\""));
+
     return result;
 }
 

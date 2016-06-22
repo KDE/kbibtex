@@ -114,9 +114,6 @@ public:
             stringOpenDelimiter = stringDelimiter[0];
             stringCloseDelimiter = stringDelimiter[1];
         }
-        // FIXME due to bug in LaTeXEncoder, enforce {...} for now
-        stringOpenDelimiter = QLatin1Char('{');
-        stringCloseDelimiter = QLatin1Char('}');
         if (bibtexfile->hasProperty(File::QuoteComment))
             quoteComment = (Preferences::QuoteComment)bibtexfile->property(File::QuoteComment).toInt();
         if (bibtexfile->hasProperty(File::KeywordCasing))
@@ -304,6 +301,16 @@ public:
         if (removeBrackets)
             text.remove(text.length() - 2, 1).remove(1, 1);
 
+        return text;
+    }
+
+    QString &protectQuotationMarks(QString &text) {
+        int p = -1;
+        while ((p = text.indexOf(QLatin1Char('"'), p + 1)) > 0)
+            if (p == 0 || text[p - 1] != QLatin1Char('\\')) {
+                text.insert(p + 1, QLatin1String("}")).insert(p, QLatin1String("{"));
+                ++p;
+            }
         return text;
     }
 
@@ -515,13 +522,11 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value &value, const QStr
 
     QString result;
     bool isOpen = false;
-    /// variable to memorize which closing delimiter to use
-    QChar stringCloseDelimiter = d->stringCloseDelimiter;
     QSharedPointer<const ValueItem> prev;
     for (Value::ConstIterator it = value.constBegin(); it != value.constEnd(); ++it) {
         QSharedPointer<const MacroKey> macroKey = (*it).dynamicCast<const MacroKey>();
         if (!macroKey.isNull()) {
-            if (isOpen) result.append(stringCloseDelimiter);
+            if (isOpen) result.append(d->stringCloseDelimiter);
             isOpen = false;
             if (!result.isEmpty()) result.append(" # ");
             result.append(macroKey->text());
@@ -532,32 +537,19 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value &value, const QStr
                 QString textBody = encodercheck(encoder, plainText->text());
                 if (!isOpen) {
                     if (!result.isEmpty()) result.append(" # ");
-                    if (textBody.contains("\"")) {
-                        /// fall back to {...} delimiters if text contains quotation marks
-                        result.append(QLatin1Char('{'));
-                        stringCloseDelimiter = QLatin1Char('}');
-                    } else {
-                        result.append(d->stringOpenDelimiter);
-                        stringCloseDelimiter = d->stringCloseDelimiter;
-                    }
+                    result.append(d->stringOpenDelimiter);
                 } else if (!prev.dynamicCast<const PlainText>().isNull())
                     result.append(' ');
                 else if (!prev.dynamicCast<const Person>().isNull()) {
                     /// handle "et al." i.e. "and others"
                     result.append(" and ");
                 } else {
-                    result.append(stringCloseDelimiter).append(" # ");
-
-                    if (textBody.contains("\"")) {
-                        /// fall back to {...} delimiters if text contains quotation marks
-                        result.append("{");
-                        stringCloseDelimiter = QLatin1Char('}');
-                    } else {
-                        result.append(d->stringOpenDelimiter);
-                        stringCloseDelimiter = d->stringCloseDelimiter;
-                    }
+                    result.append(d->stringCloseDelimiter).append(" # ").append(d->stringOpenDelimiter);
                 }
                 isOpen = true;
+
+                if (d->stringOpenDelimiter == QLatin1Char('"'))
+                    d->protectQuotationMarks(textBody);
                 result.append(textBody);
                 prev = plainText;
             } else {
@@ -566,14 +558,7 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value &value, const QStr
                     QString textBody = verbatimText->text();
                     if (!isOpen) {
                         if (!result.isEmpty()) result.append(" # ");
-                        if (textBody.contains("\"")) {
-                            /// fall back to {...} delimiters if text contains quotation marks
-                            result.append("{");
-                            stringCloseDelimiter = QLatin1Char('}');
-                        } else {
-                            result.append(d->stringOpenDelimiter);
-                            stringCloseDelimiter = d->stringCloseDelimiter;
-                        }
+                        result.append(d->stringOpenDelimiter);
                     } else if (!prev.dynamicCast<const VerbatimText>().isNull()) {
                         if (key.toLower().startsWith(Entry::ftUrl) || key.toLower().startsWith(Entry::ftLocalFile) || key.toLower().startsWith(Entry::ftDOI))
                             /// Filenames and alike have be separated by a semicolon,
@@ -582,18 +567,12 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value &value, const QStr
                         else
                             result.append(' ');
                     } else {
-                        result.append(stringCloseDelimiter).append(" # ");
-
-                        if (textBody.contains("\"")) {
-                            /// fall back to {...} delimiters if text contains quotation marks
-                            result.append("{");
-                            stringCloseDelimiter = QLatin1Char('}');
-                        } else {
-                            result.append(d->stringOpenDelimiter);
-                            stringCloseDelimiter = d->stringCloseDelimiter;
-                        }
+                        result.append(d->stringCloseDelimiter).append(" # ").append(d->stringOpenDelimiter);
                     }
                     isOpen = true;
+
+                    if (d->stringOpenDelimiter == QLatin1Char('"'))
+                        d->protectQuotationMarks(textBody);
                     result.append(textBody);
                     prev = verbatimText;
                 } else {
@@ -617,30 +596,16 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value &value, const QStr
 
                         if (!isOpen) {
                             if (!result.isEmpty()) result.append(" # ");
-                            if (thisName.contains("\"")) {
-                                /// fall back to {...} delimiters if text contains quotation marks
-                                result.append("{");
-                                stringCloseDelimiter = QLatin1Char('}');
-                            } else {
-                                result.append(d->stringOpenDelimiter);
-                                stringCloseDelimiter = d->stringCloseDelimiter;
-                            }
+                            result.append(d->stringOpenDelimiter);
                         } else if (!prev.dynamicCast<const Person>().isNull())
                             result.append(" and ");
                         else {
-                            result.append(stringCloseDelimiter).append(" # ");
-
-                            if (thisName.contains("\"")) {
-                                /// fall back to {...} delimiters if text contains quotation marks
-                                result.append("{");
-                                stringCloseDelimiter = QLatin1Char('}');
-                            } else {
-                                result.append(d->stringOpenDelimiter);
-                                stringCloseDelimiter = d->stringCloseDelimiter;
-                            }
+                            result.append(d->stringCloseDelimiter).append(" # ").append(d->stringOpenDelimiter);
                         }
                         isOpen = true;
 
+                        if (d->stringOpenDelimiter == QLatin1Char('"'))
+                            d->protectQuotationMarks(thisName);
                         result.append(thisName);
                         prev = person;
                     } else {
@@ -649,30 +614,16 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value &value, const QStr
                             QString textBody = encodercheck(encoder, keyword->text());
                             if (!isOpen) {
                                 if (!result.isEmpty()) result.append(" # ");
-                                if (textBody.contains("\"")) {
-                                    /// fall back to {...} delimiters if text contains quotation marks
-                                    result.append("{");
-                                    stringCloseDelimiter = QLatin1Char('}');
-                                } else {
-                                    result.append(d->stringOpenDelimiter);
-                                    stringCloseDelimiter = d->stringCloseDelimiter;
-                                }
+                                result.append(d->stringOpenDelimiter);
                             } else if (!prev.dynamicCast<const Keyword>().isNull())
                                 result.append(d->listSeparator);
                             else {
-                                result.append(stringCloseDelimiter).append(" # ");
-
-                                if (textBody.contains("\"")) {
-                                    /// fall back to {...} delimiters if text contains quotation marks
-                                    result.append("{");
-                                    stringCloseDelimiter = QLatin1Char('}');
-                                } else {
-                                    result.append(d->stringOpenDelimiter);
-                                    stringCloseDelimiter = d->stringCloseDelimiter;
-                                }
+                                result.append(d->stringCloseDelimiter).append(" # ").append(d->stringOpenDelimiter);
                             }
                             isOpen = true;
 
+                            if (d->stringOpenDelimiter == QLatin1Char('"'))
+                                d->protectQuotationMarks(textBody);
                             result.append(textBody);
                             prev = keyword;
                         }
@@ -683,7 +634,7 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value &value, const QStr
         prev = *it;
     }
 
-    if (isOpen) result.append(stringCloseDelimiter);
+    if (isOpen) result.append(d->stringCloseDelimiter);
 
     return result;
 }
