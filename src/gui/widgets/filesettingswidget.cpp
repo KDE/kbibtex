@@ -159,7 +159,7 @@ void FileSettingsWidget::setupGUI()
     m_checkBoxProtectCasing = new QCheckBox(i18n("Protect Titles"), this);
     m_checkBoxProtectCasing->setTristate(true);
     layout->addRow(i18n("Protect Casing?"), m_checkBoxProtectCasing);
-    connect(m_checkBoxProtectCasing, SIGNAL(toggled(bool)), this, SIGNAL(widgetsChanged()));
+    connect(m_checkBoxProtectCasing, SIGNAL(stateChanged(int)), this, SIGNAL(widgetsChanged()));
 
     m_comboBoxPersonNameFormatting = new KComboBox(false, this);
     m_comboBoxPersonNameFormatting->setObjectName("comboBoxPersonNameFormatting");
