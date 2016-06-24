@@ -40,13 +40,14 @@ FileSettingsWidget::FileSettingsWidget(QWidget *parent)
 
 void FileSettingsWidget::loadProperties()
 {
-    if (m_file != NULL)
-        loadProperties(m_file);
+    loadProperties(m_file);
 }
 
 void FileSettingsWidget::loadProperties(File *file)
 {
     m_file = file;
+    if (m_file == NULL) return; /// Nothing to do
+
     if (file->hasProperty(File::Encoding)) {
         m_comboBoxEncodings->blockSignals(true);
         QString encoding = file->property(File::Encoding).toString();
@@ -93,13 +94,14 @@ void FileSettingsWidget::loadProperties(File *file)
 
 void FileSettingsWidget::saveProperties()
 {
-    if (m_file != NULL)
-        saveProperties(m_file);
+    saveProperties(m_file);
 }
 
 void FileSettingsWidget::saveProperties(File *file)
 {
     m_file = file;
+    if (m_file == NULL) return;
+
     file->setProperty(File::Encoding, m_comboBoxEncodings->currentText());
     QString stringDelimiter = m_comboBoxStringDelimiters->currentText();
     file->setProperty(File::StringDelimiter, QString(stringDelimiter[0]) + stringDelimiter[stringDelimiter.length() - 1]);
