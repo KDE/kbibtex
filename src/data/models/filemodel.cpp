@@ -133,7 +133,7 @@ QVariant FileModel::entryData(const Entry *entry, const QString &raw, const QStr
 
 }
 
-const File *FileModel::bibliographyFile()
+File *FileModel::bibliographyFile() const
 {
     return m_file;
 }

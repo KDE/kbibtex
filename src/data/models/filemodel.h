@@ -49,7 +49,7 @@ public:
 
     explicit FileModel(QObject *parent = 0);
 
-    const File *bibliographyFile();
+    File *bibliographyFile() const;
     virtual void setBibliographyFile(File *file);
 
     virtual QModelIndex parent(const QModelIndex &index) const;
