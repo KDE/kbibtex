@@ -33,12 +33,17 @@
 #include "iconvlatex.h"
 #include "file.h"
 
-FileSettings::FileSettings(QWidget *parent)
+FileSettings::FileSettings(OpenFileInfoManager *ofim, QWidget *parent)
         : FileSettingsWidget(parent), m_currentFile(NULL), m_fileView(NULL)
 {
     setEnabled(false);
 
     connect(this, SIGNAL(widgetsChanged()), this, SLOT(widgetsChangedSlot()));
+
+    /// Monitoring file flag changes to get notified of
+    /// "Save As" operations where the file settings
+    /// may get changed (requires a reload of properties)
+    connect(ofim, SIGNAL(flagsChanged(OpenFileInfo::StatusFlags)), this, SLOT(loadProperties()));
 }
 
 void FileSettings::setFileView(FileView *fileView)
