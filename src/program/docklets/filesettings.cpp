@@ -46,13 +46,11 @@ void FileSettings::setFileView(FileView *fileView)
     m_currentFile = NULL;
     m_fileView = fileView;
 
-    if (m_fileView != NULL && m_fileView->fileModel() != NULL) {
+    if (m_fileView != NULL && m_fileView->fileModel() != NULL)
         m_currentFile = m_fileView->fileModel()->bibliographyFile();
-        if (m_currentFile != NULL)
-            loadProperties(m_currentFile);
-        setEnabled(true);
-    } else
-        setEnabled(false);
+
+    loadProperties(m_currentFile);
+    setEnabled(m_currentFile != NULL);
 }
 
 void FileSettings::widgetsChangedSlot()
