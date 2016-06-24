@@ -24,6 +24,7 @@
 class FileView;
 class File;
 
+#include "openfileinfo.h"
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
@@ -33,7 +34,7 @@ class FileSettings : public FileSettingsWidget
     Q_OBJECT
 
 public:
-    explicit FileSettings(QWidget *parent);
+    explicit FileSettings(OpenFileInfoManager *ofim, QWidget *parent);
 
     void setFileView(FileView *fileView);
 

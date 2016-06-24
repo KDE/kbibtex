@@ -227,7 +227,7 @@ KBibTeXMainWindow::KBibTeXMainWindow()
     d->dockFileSettings = new QDockWidget(i18n("File Settings"), this);
     d->dockFileSettings->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
     addDockWidget(Qt::LeftDockWidgetArea, d->dockFileSettings);
-    d->fileSettings = new FileSettings(d->dockFileSettings);
+    d->fileSettings = new FileSettings(d->mdiWidget->getOpenFileInfoManager(), d->dockFileSettings);
     d->dockFileSettings->setWidget(d->fileSettings);
     d->dockFileSettings->setObjectName("dockFileSettings");
     d->dockFileSettings->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
