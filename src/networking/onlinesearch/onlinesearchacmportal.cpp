@@ -64,9 +64,8 @@ public:
 
         /// ACM's BibTeX code does not properly use various commands.
         /// For example, ACM writes "Ke\ssler" instead of "Ke{\ss}ler"
-        static const QStringList inlineCommands = QStringList() << QStringLiteral("ss");
-        for (QStringList::ConstIterator it = inlineCommands.constBegin(); it != inlineCommands.constEnd(); ++it) {
-            const QString cmd = QString(QStringLiteral("\\%1")).arg(*it);
+        static const QStringList inlineCommands = QStringList() << QStringLiteral("\\ss");
+        for (const QString &cmd : inlineCommands) {
             const QString wrappedCmd = QString(QStringLiteral("{%1}")).arg(cmd);
             code = code.replace(cmd, wrappedCmd);
         }
