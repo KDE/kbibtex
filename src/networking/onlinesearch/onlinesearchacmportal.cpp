@@ -25,7 +25,6 @@
 #include <QUrlQuery>
 
 #include <KLocalizedString>
-#include <KMessageBox>
 
 #include "file.h"
 #include "entry.h"
@@ -161,7 +160,6 @@ void OnlineSearchAcmPortal::doneFetchingStartPage()
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingSearchPage()));
         } else {
             qCWarning(LOG_KBIBTEX_NETWORKING) << "Search using" << label() << "failed.";
-            KMessageBox::error(m_parent, i18n("Searching '%1' failed: Could not extract form from ACM's start page.", label()));
             emit stoppedSearch(resultUnspecifiedError);
         }
     } else
