@@ -35,13 +35,12 @@ public:
     QString queryFreetext, queryAuthor;
     int currentSearchPosition;
     int numExpectedResults, numFoundResults;
-    const QString scienceDirectBaseUrl;
     QStringList bibTeXUrls;
     int runningJobs;
     int numSteps, curStep;
 
     OnlineSearchScienceDirectPrivate(OnlineSearchScienceDirect */* UNUSED parent*/)
-        : /* UNUSED p(parent), */ currentSearchPosition(0), numExpectedResults(0), numFoundResults(0), scienceDirectBaseUrl(QLatin1String("http://www.sciencedirect.com/")), runningJobs(0), numSteps(0), curStep(0) {
+        : /* UNUSED p(parent), */ currentSearchPosition(0), numExpectedResults(0), numFoundResults(0), runningJobs(0), numSteps(0), curStep(0) {
         /// nothing
     }
 
@@ -101,7 +100,7 @@ void OnlineSearchScienceDirect::startSearch(const QMap<QString, QString> &query,
     d->numExpectedResults = numResults;
 
     ++d->runningJobs;
-    QNetworkRequest request(d->scienceDirectBaseUrl);
+    QNetworkRequest request(QUrl(QLatin1String("http://www.sciencedirect.com/science/search")));
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
     InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
     connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingStartPage()));
@@ -159,7 +158,7 @@ void OnlineSearchScienceDirect::doneFetchingStartPage()
         } else {
             InternalNetworkAccessManager::self()->mergeHtmlHeadCookies(htmlText, reply->url());
 
-            KUrl url(d->scienceDirectBaseUrl + QLatin1String("science"));
+            KUrl url(QLatin1String("http://www.sciencedirect.com/science"));
             QMap<QString, QString> inputMap = formParameters(htmlText, QLatin1String("<form id=\"quickSearch\" name=\"qkSrch\" metho"));
             inputMap[QLatin1String("qs_all")] = d->queryFreetext.simplified();
             inputMap[QLatin1String("qs_author")] = d->queryAuthor.simplified();
