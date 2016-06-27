@@ -43,7 +43,7 @@ public:
     int numExpectedResults, numFoundResults;
     const QString acmPortalBaseUrl;
     int currentSearchPosition;
-    QStringList bibTeXUrls;
+    QStringList citationUrls;
 
     int curStep, numSteps;
 
@@ -90,10 +90,10 @@ void OnlineSearchAcmPortal::startSearch(const QMap<QString, QString> &query, int
     m_hasBeenCanceled = false;
     d->joinedQueryString.clear();
     d->currentSearchPosition = 1;
-    d->bibTeXUrls.clear();
+    d->citationUrls.clear();
     d->numFoundResults = 0;
     d->curStep = 0;
-    d->numSteps = numResults + 2;
+    d->numSteps = numResults * 2 + 2;
 
     for (QMap<QString, QString>::ConstIterator it = query.constBegin(); it != query.constEnd(); ++it) {
         // FIXME: Is there a need for percent encoding?
@@ -151,13 +151,12 @@ void OnlineSearchAcmPortal::doneFetchingStartPage()
         if ((p1 = htmlSource.indexOf(QStringLiteral("<form name=\"qiksearch\""))) >= 0
                 && (p2 = htmlSource.indexOf(QStringLiteral("action="), p1)) >= 0
                 && (p3 = htmlSource.indexOf(QStringLiteral("\""), p2 + 8)) >= 0) {
-            QString action = decodeURL(htmlSource.mid(p2 + 8, p3 - p2 - 8));
-            QUrl url(d->acmPortalBaseUrl + action);
-            QString body = QString(QStringLiteral("Go=&query=%1")).arg(d->joinedQueryString).simplified();
+            const QString body = QString(QStringLiteral("Go=&query=%1")).arg(d->joinedQueryString).simplified();
+            const QString action = decodeURL(htmlSource.mid(p2 + 8, p3 - p2 - 8));
+            QUrl url(reply->url().resolved(QUrl(action + QStringLiteral("&") + body)));
 
             QNetworkRequest request(url);
-            request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
-            QNetworkReply *newReply = InternalNetworkAccessManager::self()->post(request, body.toUtf8());
+            QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
             InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingSearchPage()));
         } else {
@@ -177,10 +176,12 @@ void OnlineSearchAcmPortal::doneFetchingSearchPage()
 
     if (handleErrors(reply)) {
         const QString htmlSource = QString::fromUtf8(reply->readAll().constData());
-        static QRegExp paramRegExp("<a [^>]+\\?id=([0-9]+)\\.([0-9]+).*CFID=([0-9]+).*CFTOKEN=([0-9]+)", Qt::CaseInsensitive);
+
+        static const QRegExp citationUrlRegExp(QStringLiteral("citation.cfm\\?id=[0-9][0-9.]+[0-9][^\">]+CFID=[0-9]+[^\">]+CFTOKEN=[0-9]+"), Qt::CaseInsensitive);
         int p1 = -1;
-        while ((p1 = htmlSource.indexOf(paramRegExp, p1 + 1)) >= 0) {
-            d->bibTeXUrls << d->acmPortalBaseUrl + QString(QStringLiteral("/downformats.cfm?id=%1&parent_id=%2&expformat=bibtex&CFID=%3&CFTOKEN=%4")).arg(paramRegExp.cap(2), paramRegExp.cap(1), paramRegExp.cap(3), paramRegExp.cap(4));
+        while ((p1 = citationUrlRegExp.indexIn(htmlSource, p1 + 1)) >= 0) {
+            const QString newUrl = d->acmPortalBaseUrl + citationUrlRegExp.cap(0);
+            d->citationUrls << newUrl;
         }
 
         if (d->currentSearchPosition + 20 < d->numExpectedResults) {
@@ -194,18 +195,63 @@ void OnlineSearchAcmPortal::doneFetchingSearchPage()
             QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
             InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingSearchPage()));
-        } else if (!d->bibTeXUrls.isEmpty()) {
-            QNetworkRequest request(d->bibTeXUrls.first());
+        } else if (!d->citationUrls.isEmpty()) {
+            QNetworkRequest request(d->citationUrls.first());
             QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
             InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
-            connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingBibTeX()));
-            d->bibTeXUrls.removeFirst();
+            connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingCitation()));
+            d->citationUrls.removeFirst();
         } else {
             emit stoppedSearch(resultNoError);
             emit progress(d->numSteps, d->numSteps);
         }
     }  else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
+}
+
+void OnlineSearchAcmPortal::doneFetchingCitation()
+{
+    emit progress(++d->curStep, d->numSteps);
+
+    QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
+    QString bibTeXUrl;
+
+    if (handleErrors(reply)) {
+        const QString htmlSource = QString::fromUtf8(reply->readAll().constData());
+
+        static const QRegExp parentIdRegExp(QStringLiteral("parent_id=([0-9]+)"));
+        const int parentId = parentIdRegExp.indexIn(htmlSource) > 0 ? parentIdRegExp.cap(1).toInt() : 0;
+
+        static const QRegExp paramRegExp(QStringLiteral("\\?id=([0-9][0-9.]+[0-9])[^\">]+CFID=([0-9]+)[^\">]+CFTOKEN=([0-9]+)"), Qt::CaseInsensitive);
+        int p1 = -1;
+        if (parentId > 0 && (p1 = paramRegExp.indexIn(htmlSource)) >= 0) {
+            bibTeXUrl = d->acmPortalBaseUrl + QString(QStringLiteral("/downformats.cfm?id=%2&parent_id=%1&expformat=bibtex&CFID=%3&CFTOKEN=%4")).arg(QString::number(parentId), paramRegExp.cap(1),  paramRegExp.cap(2), paramRegExp.cap(3));
+        } else {
+            qCWarning(LOG_KBIBTEX_NETWORKING) << "No citation link found in " << reply->url().toDisplayString() << "  parentId=" << parentId;
+            emit stoppedSearch(resultNoError);
+            emit progress(d->numSteps, d->numSteps);
+            return;
+        }
+    }  else
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
+
+    if (bibTeXUrl.isEmpty()) {
+        if (!d->citationUrls.isEmpty()) {
+            QNetworkRequest request(d->citationUrls.first());
+            QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
+            InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
+            connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingCitation()));
+            d->citationUrls.removeFirst();
+        } else {
+            emit stoppedSearch(resultNoError);
+            emit progress(d->numSteps, d->numSteps);
+        }
+    } else {
+        QNetworkRequest request(bibTeXUrl);
+        QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
+        InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
+        connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingBibTeX()));
+    }
 }
 
 void OnlineSearchAcmPortal::doneFetchingBibTeX()
@@ -231,12 +277,12 @@ void OnlineSearchAcmPortal::doneFetchingBibTeX()
             delete bibtexFile;
         }
 
-        if (!d->bibTeXUrls.isEmpty() && d->numFoundResults < d->numExpectedResults) {
-            QNetworkRequest request(d->bibTeXUrls.first());
+        if (!d->citationUrls.isEmpty() && d->numFoundResults < d->numExpectedResults) {
+            QNetworkRequest request(d->citationUrls.first());
             QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
             InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
-            connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingBibTeX()));
-            d->bibTeXUrls.removeFirst();
+            connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingCitation()));
+            d->citationUrls.removeFirst();
         } else {
             emit stoppedSearch(resultNoError);
             emit progress(d->numSteps, d->numSteps);
