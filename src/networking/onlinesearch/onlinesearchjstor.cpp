@@ -34,12 +34,12 @@ private:
     // UNUSED OnlineSearchJStor *p;
 
 public:
-    int numFoundResults, curStep, numSteps;
+    int numExpectedResults, curStep, numSteps;
     static const QString jstorBaseUrl;
     QUrl queryUrl;
 
     OnlineSearchJStorPrivate(OnlineSearchJStor */* UNUSED parent*/)
-        : /* UNUSED p(parent), */ numFoundResults(0), curStep(0), numSteps(0)
+        : /* UNUSED p(parent), */ numExpectedResults(0), curStep(0), numSteps(0)
     {
         /// nothing
     }
@@ -63,7 +63,7 @@ void OnlineSearchJStor::startSearch(const QMap<QString, QString> &query, int num
     m_hasBeenCanceled = false;
     d->curStep = 0;
     d->numSteps = 3;
-    d->numFoundResults = 0;
+    d->numExpectedResults = numResults;
 
     /// Build search URL, to be used in the second step
     /// after fetching the start page
@@ -74,7 +74,6 @@ void OnlineSearchJStor::startSearch(const QMap<QString, QString> &query, int num
     q.addQueryItem(QStringLiteral("wc"), QStringLiteral("on")); /// include external references, too
     q.addQueryItem(QStringLiteral("la"), QStringLiteral("")); /// no specific language
     q.addQueryItem(QStringLiteral("jo"), QStringLiteral("")); /// no specific journal
-    q.addQueryItem(QStringLiteral("Search"), QStringLiteral("Search"));
     q.addQueryItem(QStringLiteral("hp"), QString::number(numResults)); /// hits per page
     int queryNumber = 0;
     QStringList elements = splitRespectingQuotationMarks(query[queryKeyTitle]);
@@ -179,31 +178,34 @@ void OnlineSearchJStor::doneFetchingResultPage()
         QString htmlText = QString::fromUtf8(reply->readAll().constData());
 
         /// extract all unique DOI from HTML code
-        QSet<QString> uniqueDOIs;
-        int p = -1;
-        while ((p = KBibTeX::doiRegExp.indexIn(htmlText, p + 1)) >= 0)
-            uniqueDOIs.insert(KBibTeX::doiRegExp.cap(0));
+        QStringList uniqueDOIs;
+        int p = -6;
+        while ((p = KBibTeX::doiRegExp.indexIn(htmlText, p + 6)) >= 0) {
+            QString doi = KBibTeX::doiRegExp.cap(0);
+            // FIXME DOI RegExp accepts DOIs with question marks, causes problems here
+            const int p = doi.indexOf(QLatin1Char('?'));
+            if (p > 0) doi = doi.left(p);
+            if (!uniqueDOIs.contains(doi))
+                uniqueDOIs.append(doi);
+        }
 
         if (uniqueDOIs.isEmpty()) {
-            /// no results found
+            /// No results found
             emit progress(d->numSteps, d->numSteps);
             emit stoppedSearch(resultNoError);
         } else {
-            /// Build search URL, to be used in the second step
-            /// after fetching the start page
-            QUrl bibTeXUrl = QUrl(d->jstorBaseUrl);
-            bibTeXUrl.setPath(QStringLiteral("/action/downloadCitation"));
-            QUrlQuery query(bibTeXUrl);
-            query.addQueryItem(QStringLiteral("userAction"), QStringLiteral("export"));
-            query.addQueryItem(QStringLiteral("format"), QStringLiteral("bibtex")); /// request BibTeX format
-            query.addQueryItem(QStringLiteral("include"), QStringLiteral("abs")); /// include abstracts
-            foreach (const QString &doi, uniqueDOIs) {
-                query.addQueryItem(QStringLiteral("doi"), doi);
+            /// Build POST request that should return a BibTeX document
+            QString body;
+            int numResults = 0;
+            for (QStringList::ConstIterator it = uniqueDOIs.constBegin(); numResults < d->numExpectedResults && it != uniqueDOIs.constEnd(); ++it, ++numResults) {
+                if (!body.isEmpty()) body.append(QStringLiteral("&"));
+                body.append(QStringLiteral("citations=") + encodeURL(*it));
             }
-            bibTeXUrl.setQuery(query);
-
+            QUrl bibTeXUrl = QUrl(d->jstorBaseUrl);
+            bibTeXUrl.setPath("/citation/bulk/text");
             QNetworkRequest request(bibTeXUrl);
-            QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request);
+            request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
+            QNetworkReply *newReply = InternalNetworkAccessManager::self()->post(request, body.toUtf8());
             InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
             connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingBibTeXCode()));
         }
@@ -223,19 +225,19 @@ void OnlineSearchJStor::doneFetchingBibTeXCode()
 
         FileImporterBibTeX importer;
         File *bibtexFile = importer.fromString(bibTeXcode);
-
+        int numFoundResults = 0;
         if (bibtexFile != NULL) {
             for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
                 QSharedPointer<Entry> entry = (*it).dynamicCast<Entry>();
                 if (publishEntry(entry))
-                    ++d->numFoundResults;
+                    ++numFoundResults;
 
             }
             delete bibtexFile;
         }
 
         emit progress(d->numSteps, d->numSteps);
-        emit stoppedSearch(d->numFoundResults > 0 ? resultNoError : resultUnspecifiedError);
+        emit stoppedSearch(numFoundResults > 0 ? resultNoError : resultUnspecifiedError);
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
 }
