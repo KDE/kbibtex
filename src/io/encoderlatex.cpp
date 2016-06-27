@@ -25,6 +25,14 @@
 
 #include "iconvlatex.h"
 
+inline bool isAsciiLetter(const QChar &c) {
+    return ((c >= QLatin1Char('A') && c <= QLatin1Char('Z')) || (c >= QLatin1Char('a') && c <= QLatin1Char('z')));
+}
+
+inline bool isAsciiLetter(const char c) {
+    return ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'));
+}
+
 /**
  * General documentation on this topic:
  *   http://www.tex.ac.uk/CTAN/macros/latex/doc/encguide.pdf
@@ -545,7 +553,7 @@ EncoderLaTeX::EncoderLaTeX()
 
         /// Add the letter as of the current row in encoderLaTeXEscapedCharacters
         /// into Unicode char array in the current modifier's row in the lookup table.
-        if (encoderLaTeXEscapedCharacters[i].letter >= 'A' && encoderLaTeXEscapedCharacters[i].letter <= 'z') {
+        if (isAsciiLetter(encoderLaTeXEscapedCharacters[i].letter)) {
             int pos = encoderLaTeXEscapedCharacters[i].letter - 'A';
             lookupTable[j]->unicode[pos] = QChar(encoderLaTeXEscapedCharacters[i].unicode);
         } else
@@ -591,61 +599,66 @@ QString EncoderLaTeX::decode(const QString &input) const
                 /// For example an quotation mark as used in {\"a}
                 int lookupTablePos = modifierInLookupTable(input[i + 2].toLatin1());
 
-                if (lookupTablePos >= 0 && input[i + 3] >= 'A' && input[i + 3] <= 'z' && input[i + 4] == '}') {
+                /// Check for spaces between modifier and character, for example
+                /// like {\H o}
+                int skipSpaces = 0;
+                while (i + 3 + skipSpaces < len && input[i + 3 + skipSpaces] == ' ' && skipSpaces < 16) ++skipSpaces;
+
+                if (lookupTablePos >= 0 && i + skipSpaces < len - 4 && isAsciiLetter(input[i + 3 + skipSpaces]) && input[i + 4 + skipSpaces] == '}') {
                     /// If we found a modifier which is followed by
                     /// a letter followed by a closing curly bracket,
                     /// we are looking at something like {\"A}
                     /// Use lookup table to see what Unicode char this
                     /// represents
-                    const QChar unicodeLetter = lookupTable[lookupTablePos]->unicode[input[i + 3].toLatin1() - 'A'];
+                    const QChar unicodeLetter = lookupTable[lookupTablePos]->unicode[input[i + 3 + skipSpaces].toLatin1() - 'A'];
                     if (unicodeLetter.unicode() < 127) {
                         /// This combination of modifier and letter is not known,
                         /// so try to preserve it
-                        output.append(input.midRef(i, 5));
-                        kDebug() << "Don't know how to translate this into Unicode: " << input.mid(i, 5);
+                        output.append(input.midRef(i, 5 + skipSpaces));
+                        kDebug() << "Don't know how to translate this into Unicode: " << input.mid(i, 5 + skipSpaces);
                     } else
                         output.append(unicodeLetter);
                     /// Step over those additional characters
-                    i += 4;
-                } else if (lookupTablePos >= 0 && input[i + 3] == '\\' && input[i + 4] >= 'A' && input[i + 4] <= 'z' && input[i + 5] == '}') {
+                    i += 4 + skipSpaces;
+                } else if (lookupTablePos >= 0 && i + skipSpaces < len - 5 && input[i + 3 + skipSpaces] == '\\' && isAsciiLetter(input[i + 4 + skipSpaces]) && input[i + 5 + skipSpaces] == '}') {
                     /// This is the case for {\'\i} or alike.
                     bool found = false;
                     for (int k = 0; !found && k < dotlessIJCharactersLen; ++k)
-                        if (dotlessIJCharacters[k].letter == input[i + 4].toLatin1() && dotlessIJCharacters[k].modifier == input[i + 2].toLatin1()) {
+                        if (dotlessIJCharacters[k].letter == input[i + 4 + skipSpaces].toLatin1() && dotlessIJCharacters[k].modifier == input[i + 2].toLatin1()) {
                             output.append(QChar(dotlessIJCharacters[k].unicode));
-                            i += 5;
+                            i += 5 + skipSpaces;
                             found = true;
                         }
                     if (!found)
-                        kWarning() << "Cannot interprete BACKSLASH" << input[i + 2] << "BACKSLASH" << input[i + 4];
-                } else if (lookupTablePos >= 0 && input[i + 3] == '{' && input[i + 4] >= 'A' && input[i + 4] <= 'z' && input[i + 5] == '}' && input[i + 6] == '}') {
+                        kWarning() << "Cannot interprete BACKSLASH" << input[i + 2] << "BACKSLASH" << input[i + 4 + skipSpaces];
+                } else if (lookupTablePos >= 0 && i + skipSpaces < len - 6 && input[i + 3 + skipSpaces] == '{' && isAsciiLetter(input[i + 4 + skipSpaces]) && input[i + 5 + skipSpaces] == '}' && input[i + 6 + skipSpaces] == '}') {
                     /// If we found a modifier which is followed by
                     /// an opening curly bracket followed by a letter
                     /// followed by two closing curly brackets,
                     /// we are looking at something like {\"{A}}
                     /// Use lookup table to see what Unicode char this
                     /// represents
-                    const QChar unicodeLetter = lookupTable[lookupTablePos]->unicode[input[i + 4].toLatin1() - 'A'];
+                    const QChar unicodeLetter = lookupTable[lookupTablePos]->unicode[input[i + 4 + skipSpaces].toLatin1() - 'A'];
                     if (unicodeLetter.unicode() < 127) {
                         /// This combination of modifier and letter is not known,
                         /// so try to preserve it
-                        output.append(input.midRef(i, 7));
-                        kDebug() << "Don't know how to translate this into Unicode: " << input.mid(i, 7);
+                        output.append(input.midRef(i, 7 + skipSpaces));
+                        kDebug() << "Don't know how to translate this into Unicode: " << input.mid(i, 7 + skipSpaces);
                     } else
                         output.append(unicodeLetter);
                     /// Step over those additional characters
-                    i += 6;
-                } else if (lookupTablePos >= 0 && input[i + 3] == '{' && input[i + 4] == '\\' && input[i + 5] >= 'A' && input[i + 5] <= 'z' && input[i + 6] == '}' && input[i + 7] == '}') {
+                    i += 6 + skipSpaces;
+                } else if (lookupTablePos >= 0 && i + skipSpaces < len - 7 && input[i + 3 + skipSpaces] == '{' && input[i + 4 + skipSpaces] == '\\' && isAsciiLetter(input[i + 5 + skipSpaces]) && input[i + 6 + skipSpaces] == '}' && input[i + 7 + skipSpaces] == '}') {
                     /// This is the case for {\'{\i}} or alike.
                     bool found = false;
                     for (int k = 0; !found && k < dotlessIJCharactersLen; ++k)
-                        if (dotlessIJCharacters[k].letter == input[i + 5].toLatin1() && dotlessIJCharacters[k].modifier == input[i + 2].toLatin1()) {
+                        if (dotlessIJCharacters[k].letter == input[i + 5 + skipSpaces].toLatin1() && dotlessIJCharacters[k].modifier == input[i + 2].toLatin1()) {
                             output.append(QChar(dotlessIJCharacters[k].unicode));
-                            i += 7;
+                            i += 7 + skipSpaces;
                             found = true;
                         }
                     if (!found)
-                        kWarning() << "Cannot interprete BACKSLASH" << input[i + 2] << "BACKSLASH {" << input[i + 5] << "}";
+                        kWarning() << "Cannot interprete BACKSLASH" << input[i + 2] << "BACKSLASH {" << input[i + 5 + skipSpaces] << "}";
                 } else {
                     /// Now, the case of something like {\AA} is left
                     /// to check for
@@ -706,28 +719,33 @@ QString EncoderLaTeX::decode(const QString &input) const
             /// For example an quotation mark as used in \"a
             int lookupTablePos = modifierInLookupTable(input[i + 1].toLatin1());
 
-            if (lookupTablePos >= 0 && i <= len - 3 && input[i + 2] >= 'A' && input[i + 2] <= 'z' && (i == len - 3 || input[i + 1] == '"' || input[i + 1] == '\'' || input[i + 1] == '`' || input[i + 1] == '=')) { // TODO more special cases?
+            /// Check for spaces between modifier and character, for example
+            /// like \H o
+            int skipSpaces = 0;
+            while (i + 2 + skipSpaces < len && input[i + 2 + skipSpaces] == ' ' && skipSpaces < 16) ++skipSpaces;
+
+            if (lookupTablePos >= 0 && i + skipSpaces <= len - 3 && isAsciiLetter(input[i + 2 + skipSpaces]) && (i + skipSpaces == len - 3 || input[i + 1] == '"' || input[i + 1] == '\'' || input[i + 1] == '`' || input[i + 1] == '=')) { // TODO more special cases?
                 /// We found a special modifier which is followed by
-                /// a letter followed by a command delimiter such
-                /// as a whitespace, so we are looking at something
-                /// like \"u inside Kr\"uger
+                /// a letter followed by normal text without any
+                /// delimiter, so we are looking at something like
+                /// \"u inside Kr\"uger
                 /// Use lookup table to see what Unicode char this
                 /// represents
-                const QChar unicodeLetter = lookupTable[lookupTablePos]->unicode[input[i + 2].toLatin1() - 'A'];
+                const QChar unicodeLetter = lookupTable[lookupTablePos]->unicode[input[i + 2 + skipSpaces].toLatin1() - 'A'];
                 if (unicodeLetter.unicode() < 127) {
                     /// This combination of modifier and letter is not known,
                     /// so try to preserve it
-                    output.append(input.midRef(i, 3));
-                    kDebug() << "Don't know how to translate this into Unicode: " << input.mid(i, 3);
+                    output.append(input.midRef(i, 3 + skipSpaces));
+                    kDebug() << "Don't know how to translate this into Unicode: " << input.mid(i, 3 + skipSpaces);
                 } else
                     output.append(unicodeLetter);
                 /// Step over those additional characters
-                i += 2;
-            } else if (lookupTablePos >= 0 && i <= len - 3 && input[i + 2] >= 'A' && input[i + 2] <= 'z' && (i == len - 3 || input[i + 3] == '}' ||  input[i + 3] == '{' || input[i + 3] == ' ' || input[i + 3] == '\t' || input[i + 3] == '\\' || input[i + 3] == '\r' || input[i + 3] == '\n')) {
+                i += 2 + skipSpaces;
+            } else if (lookupTablePos >= 0 && i + skipSpaces <= len - 3 && i + skipSpaces <= len - 3 && isAsciiLetter(input[i + 2 + skipSpaces]) && (i + skipSpaces == len - 3 || input[i + 3 + skipSpaces] == '}' || input[i + 3 + skipSpaces] == '{' || input[i + 3 + skipSpaces] == ' ' || input[i + 3 + skipSpaces] == '\t' || input[i + 3 + skipSpaces] == '\\' || input[i + 3 + skipSpaces] == '\r' || input[i + 3 + skipSpaces] == '\n')) {
                 /// We found a modifier which is followed by
                 /// a letter followed by a command delimiter such
                 /// as a whitespace, so we are looking at something
-                /// like \"u
+                /// like \"u followed by a space
                 /// Use lookup table to see what Unicode char this
                 /// represents
                 const QChar unicodeLetter = lookupTable[lookupTablePos]->unicode[input[i + 2].toLatin1() - 'A'];
@@ -739,7 +757,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                 } else
                     output.append(unicodeLetter);
                 /// Step over those additional characters
-                i += 2;
+                i += 2 + skipSpaces;
 
                 /// Now, after this command, a whitespace may follow
                 /// which has to get "eaten" as it acts as a command
@@ -751,45 +769,45 @@ QString EncoderLaTeX::decode(const QString &input) const
                     /// check for extra curly brackets
                     checkForExtraCurlyAtEnd = true;
                 }
-            } else if (lookupTablePos >= 0 && i < len - 4 && input[i + 2] == '{' && input[i + 3] >= 'A' && input[i + 3] <= 'z' && input[i + 4] == '}') {
+            } else if (lookupTablePos >= 0 && i + skipSpaces < len - 4 && input[i + 2 + skipSpaces] == '{' && isAsciiLetter(input[i + 3 + skipSpaces]) && input[i + 4 + skipSpaces] == '}') {
                 /// We found a modifier which is followed by an opening
                 /// curly bracket followed a letter followed by a closing
                 /// curly bracket, so we are looking at something
                 /// like \"{u}
                 /// Use lookup table to see what Unicode char this
                 /// represents
-                const QChar unicodeLetter = lookupTable[lookupTablePos]->unicode[input[i + 3].toLatin1() - 'A'];
+                const QChar unicodeLetter = lookupTable[lookupTablePos]->unicode[input[i + 3 + skipSpaces].toLatin1() - 'A'];
                 if (unicodeLetter.unicode() < 127) {
                     /// This combination of modifier and letter is not known,
                     /// so try to preserve it
-                    output.append(input.midRef(i, 5));
-                    kDebug() << "Don't know how to translate this into Unicode: " << input.mid(i, 5);
+                    output.append(input.midRef(i, 5 + skipSpaces));
+                    kDebug() << "Don't know how to translate this into Unicode: " << input.mid(i, 5 + skipSpaces);
                 } else
                     output.append(unicodeLetter);
                 /// Step over those additional characters
-                i += 4;
-            } else if (lookupTablePos >= 0 && input[i + 2] == '\\' && input[i + 3] >= 'A' && input[i + 3] <= 'z') {
+                i += 4 + skipSpaces;
+            } else if (lookupTablePos >= 0 && i + skipSpaces < len - 3 && input[i + 2 + skipSpaces] == '\\' && isAsciiLetter(input[i + 3 + skipSpaces])) {
                 /// This is the case for \'\i or alike.
                 bool found = false;
                 for (int k = 0; !found && k < dotlessIJCharactersLen; ++k)
-                    if (dotlessIJCharacters[k].letter == input[i + 3].toLatin1() && dotlessIJCharacters[k].modifier == input[i + 1].toLatin1()) {
+                    if (dotlessIJCharacters[k].letter == input[i + 3 + skipSpaces].toLatin1() && dotlessIJCharacters[k].modifier == input[i + 1].toLatin1()) {
                         output.append(QChar(dotlessIJCharacters[k].unicode));
-                        i += 3;
+                        i += 3 + skipSpaces;
                         found = true;
                     }
                 if (!found)
-                    kWarning() << "Cannot interprete BACKSLASH" << input[i + 1] << "BACKSLASH" << input[i + 3];
-            } else if (lookupTablePos >= 0 && input[i + 2] == '{' && input[i + 3] == '\\' && input[i + 4] >= 'A' && input[i + 4] <= 'z' && input[i + 5] == '}') {
+                    kWarning() << "Cannot interprete BACKSLASH" << input[i + 1] << "BACKSLASH" << input[i + 3 + skipSpaces];
+            } else if (lookupTablePos >= 0 && i + skipSpaces < len - 5 && input[i + 2 + skipSpaces] == '{' && input[i + 3 + skipSpaces] == '\\' && isAsciiLetter(input[i + 4 + skipSpaces]) && input[i + 5 + skipSpaces] == '}') {
                 /// This is the case for \'{\i} or alike.
                 bool found = false;
                 for (int k = 0; !found && k < dotlessIJCharactersLen; ++k)
-                    if (dotlessIJCharacters[k].letter == input[i + 4].toLatin1() && dotlessIJCharacters[k].modifier == input[i + 1].toLatin1()) {
+                    if (dotlessIJCharacters[k].letter == input[i + 4 + skipSpaces].toLatin1() && dotlessIJCharacters[k].modifier == input[i + 1].toLatin1()) {
                         output.append(QChar(dotlessIJCharacters[k].unicode));
-                        i += 5;
+                        i += 5 + skipSpaces;
                         found = true;
                     }
                 if (!found)
-                    kWarning() << "Cannot interprete BACKSLASH" << input[i + 1] << "BACKSLASH {" << input[i + 4] << "}";
+                    kWarning() << "Cannot interprete BACKSLASH" << input[i + 1] << "BACKSLASH {" << input[i + 4 + skipSpaces] << "}";
             } else if (i < len - 1) {
                 /// Now, the case of something like \AA is left
                 /// to check for
@@ -989,7 +1007,9 @@ QString EncoderLaTeX::encode(const QString &ninput) const
                 /// escaped characters with modifiers like \"a
                 for (int k = 0; k < encoderLaTeXEscapedCharactersLen; ++k)
                     if (encoderLaTeXEscapedCharacters[k].unicode == c.unicode()) {
-                        output.append(QString(QLatin1String("\\%1{%2}")).arg(encoderLaTeXEscapedCharacters[k].modifier).arg(encoderLaTeXEscapedCharacters[k].letter));
+                        const char modifier = encoderLaTeXEscapedCharacters[k].modifier;
+                        const QString formatString = (modifier >= 'A' && modifier <= 'Z') || (modifier >= 'a' && modifier <= 'z') ? QLatin1String("{\\%1 %2}") : QLatin1String("{\\%1%2}");
+                        output.append(formatString.arg(modifier).arg(encoderLaTeXEscapedCharacters[k].letter));
                         found = true;
                         break;
                     }
