@@ -202,8 +202,16 @@ QList<KUrl> FileInfo::entryUrls(const Entry *entry, const KUrl &bibTeXUrl, TestE
     if (entry->contains(etEPrint)) {
         const QString eprint = PlainTextValue::text(entry->value(etEPrint));
         if (!eprint.isEmpty()) {
-            KUrl url(QLatin1String("http://arxiv.org/search?query=") + eprint);
-            result.append(url);
+            if (KBibTeX::arxivEPrintRegExp.indexIn(eprint) == 0) {
+                /// eprint value looks like arXiv id
+                const KUrl url1(QLatin1String("https://arxiv.org/search?query=") + eprint);
+                result.append(url1);
+                const KUrl url2(QLatin1String("https://arxiv.org/abs/") + eprint);
+                result.append(url2);
+            } else if (KBibTeX::urlRegExp.indexIn(eprint) == 0) {
+                /// eprint value looks like regular URL
+                result.append(KUrl::fromUserInput(eprint));
+            }
         }
     }
 

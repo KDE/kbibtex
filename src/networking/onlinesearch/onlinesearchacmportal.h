@@ -51,6 +51,7 @@ protected:
 private slots:
     void doneFetchingStartPage();
     void doneFetchingSearchPage();
+    void doneFetchingCitation();
     void doneFetchingBibTeX();
 
 private:
