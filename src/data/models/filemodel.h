@@ -65,7 +65,7 @@ public:
     bool removeRowList(const QList<int> &rows);
     bool insertRow(QSharedPointer<Element> element, int row, const QModelIndex &parent = QModelIndex());
 
-QSharedPointer<Element> element(int row) const;
+    QSharedPointer<Element> element(int row) const;
     int row(QSharedPointer<Element> element) const;
     /// Notifies the model that a given element has been modifed
     void elementChanged(int row);
