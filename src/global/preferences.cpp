@@ -47,7 +47,7 @@ const Preferences::QuoteComment Preferences::defaultQuoteComment = qcNone;
 const QString Preferences::keyKeywordCasing = QStringLiteral("keywordCasing");
 const KBibTeX::Casing Preferences::defaultKeywordCasing = KBibTeX::cLowerCase;
 const QString Preferences::keyProtectCasing = QStringLiteral("protectCasing");
-const bool Preferences::defaultProtectCasing = true;
+const Qt::CheckState Preferences::defaultProtectCasing = Qt::PartiallyChecked;
 const QString Preferences::keyListSeparator = QStringLiteral("ListSeparator");
 const QString Preferences::defaultListSeparator = QStringLiteral("; ");
 

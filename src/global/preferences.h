@@ -57,7 +57,7 @@ static const QuoteComment defaultQuoteComment;
 static const QString keyKeywordCasing;
 static const KBibTeX::Casing defaultKeywordCasing;
 static const QString keyProtectCasing;
-static const bool defaultProtectCasing;
+static const Qt::CheckState defaultProtectCasing;
 static const QString keyListSeparator;
 static const QString defaultListSeparator;
 
