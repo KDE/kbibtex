@@ -65,6 +65,9 @@ public:
                     break;
             }
         }
+
+        /// Fix some HTML-isms
+        code.replace(QStringLiteral("\\&amp;"), QStringLiteral("\\&")).replace(QStringLiteral("&amp;"), QStringLiteral("\\&"));
     }
 };
 
