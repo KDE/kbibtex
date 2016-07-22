@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
 
     KLocalizedString::setApplicationDomain("kbibtex");
 
-    KAboutData aboutData(QStringLiteral("kbibtex"), i18n("KBibTeX"), QLatin1String(versionNumber), i18n("A BibTeX editor for KDE"), KAboutLicense::GPL_V2, i18n("Copyright 2004-2015 Thomas Fischer"), QString(), QStringLiteral("http://home.gna.org/kbibtex/"));
+    KAboutData aboutData(QStringLiteral("kbibtex"), i18n("KBibTeX"), QLatin1String(versionNumber), i18n("A BibTeX editor by KDE"), KAboutLicense::GPL_V2, i18n("Copyright 2004-2015 Thomas Fischer"), QString(), QStringLiteral("http://home.gna.org/kbibtex/"));
 
     aboutData.addAuthor(i18n("Thomas Fischer"), i18n("Maintainer"), QStringLiteral("fischer@unix-ag.uni-kl.de"));
 

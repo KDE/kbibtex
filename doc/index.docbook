@@ -1,6 +1,5 @@
 <?xml version="1.0" ?>
 <!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
-  <!ENTITY kile "<application>Kile</application>">
   <!ENTITY latex "L<superscript>A</superscript>T<subscript>E</subscript>X">
   <!ENTITY pdflatex "PDFL<superscript>A</superscript>T<subscript>E</subscript>X">
   <!ENTITY pdf "<acronym>PDF</acronym>">
@@ -9,11 +8,7 @@
   <!ENTITY texlive "<application>TeX Live</application>">
   <!ENTITY bibtex "BibT<subscript>E</subscript>X">
   <!ENTITY biblatex "<application>biblatex</application>">
-  <!ENTITY makeindex "makeindex">
-  <!ENTITY kbibtex "KBibTeX">
   <!ENTITY lyx "<application>LyX</application>">
-  <!ENTITY kappname "&kbibtex;">
-  <!ENTITY package "extragear-office">
   <!ENTITY % addindex "IGNORE">
   <!ENTITY % English "INCLUDE">
 ]>
@@ -54,7 +49,7 @@
 
 <keywordset>
   <keyword>KDE</keyword>
-  <keyword>&kbibtex;</keyword>
+  <keyword>kbibtex</keyword>
   <keyword>LaTeX</keyword>
   <keyword>TeX</keyword>
   <keyword>bibliography</keyword>
@@ -72,7 +67,7 @@
     <itemizedlist>
       <listitem>
 	<para>
-	  <ulink url="http://www.kde.org/">&kde; basic libraries</ulink>.
+	  <ulink url="http://www.kde.org/">&kf5-full; libraries</ulink>.
 	</para>
       </listitem>
       <listitem>
@@ -216,6 +211,15 @@
     <title>
       Writing a Bibliography File for Beginners
     </title>
+    <!-- 1) No request from kbibtex from Distri user (Kubuntu) nor from kbibtex self compiled as devel user
+         2a) Distri user has a mimeapps.list in home, but no kbibtex in it
+         2b) Devel user has no mimeapps.list in home
+         2c) Systemsettings -> File Associations is the place to edit/chnage this in a kde desktop
+         update after rebuilding post 2014-01-12
+         Now request Dialog, but in File Associations first app for text/x-bibtext is already kbibtex
+         (why? from installation of distri?)
+         This dialog even pops up when opening a .bib file with LMB click in file manager
+    -->
     <para>
       After the first run, &kbibtex; will propose to make it the default editor for bibliography formats. We recommend you to do so.<footnote><para>If for some reasons you will decide to reconsider please remove the strings with <literal>kbibtex</literal> substring from <filename>mimeapps.list</filename> file in <filename role="directory">.local/share/applications</filename> folder of your home folder.</para></footnote>
     </para>
@@ -1702,16 +1706,6 @@ latex example</screen>
 &underFDL;
 &underGPL;
 </chapter>
-
-<appendix id="installation">
-  <title>Installation</title>
-  <para>
-    The default way to install &kbibtex; is to use the package manager and software repositories of your distribution.
-  </para>
-  <para>
-    Please use <ulink url="http://home.gna.org/kbibtex/download.html">instructions from the official &kbibtex; page</ulink> to download the source code of &kbibtex; and compile it by yourself.
-  </para>
-</appendix>
 
 <bibliography>
   <biblioentry>
