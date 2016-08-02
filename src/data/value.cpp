@@ -374,7 +374,7 @@ bool VerbatimText::operator==(const ValueItem &other) const
 Value::Value()
         : QVector<QSharedPointer<ValueItem> >()
 {
-    // nothing
+    /// nothing
 }
 
 Value::Value(const Value &other)
