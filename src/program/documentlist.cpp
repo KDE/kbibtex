@@ -169,13 +169,13 @@ QVariant DocumentListModel::data(const QModelIndex &index, int role) const
     if (index.row() < 0 || index.row() >= rowCount()) return QVariant();
 
     OpenFileInfo *openFileInfo = d->ofiList[index.row()];
+    const QString iconName = openFileInfo->mimeType().replace(QLatin1Char('/'), QLatin1Char('-'));
 
     switch (role) {
     case Qt::DisplayRole: return openFileInfo->shortCaption();
     case Qt::DecorationRole: {
         /// determine mime type-based icon and overlays (e.g. for modified files)
         QStringList overlays;
-        QString iconName = openFileInfo->mimeType().replace(QLatin1Char('/'), QLatin1Char('-'));
         if (openFileInfo->flags().testFlag(OpenFileInfo::Favorite))
             overlays << QStringLiteral("favorites");
         else
@@ -194,7 +194,33 @@ QVariant DocumentListModel::data(const QModelIndex &index, int role) const
             overlays << QStringLiteral("");
         return KDE::icon(iconName, overlays, 0);
     }
-    case Qt::ToolTipRole: return squeeze_text(openFileInfo->fullCaption(), 64);
+    case Qt::ToolTipRole: {
+        QString htmlText(QString(QStringLiteral("<qt><img src=\"%1\"> <b>%2</b>")).arg(KIconLoader::global()->iconPath(iconName, KIconLoader::Small)).arg(openFileInfo->shortCaption()));
+        const QUrl url = openFileInfo->url();
+        if (url.isValid()) {
+            QString path(QFileInfo(url.path()).path());
+            if (!path.endsWith(QLatin1Char('/')))
+                path.append(QLatin1Char('/'));
+            htmlText.append(i18n("<br/><small>located in <b>%1</b></small>").arg(path));
+        }
+        QStringList flagListItems;
+        if (openFileInfo->flags().testFlag(OpenFileInfo::Favorite))
+            flagListItems << i18n("Favorite");
+        if (openFileInfo->flags().testFlag(OpenFileInfo::RecentlyUsed))
+            flagListItems << i18n("Recently Used");
+        if (openFileInfo->flags().testFlag(OpenFileInfo::Open))
+            flagListItems << i18n("Open");
+        if (openFileInfo->isModified())
+            flagListItems << i18n("Modified");
+        if (!flagListItems.empty()) {
+            htmlText.append(QStringLiteral("<ul>"));
+            for (const QString &flagListItem : flagListItems)
+                htmlText.append(QString(QStringLiteral("<li>%1</li>")).arg(flagListItem));
+            htmlText.append(QStringLiteral("</ul>"));
+        }
+        htmlText.append(QStringLiteral("</qt>"));
+        return htmlText;
+    }
     case Qt::UserRole: return qVariantFromValue(openFileInfo);
     default: return QVariant();
     }
