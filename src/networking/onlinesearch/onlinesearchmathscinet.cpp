@@ -107,7 +107,7 @@ void OnlineSearchMathSciNet::startSearch(const QMap<QString, QString> &query, in
     emit progress(0, 3);
 
     /// issue request for start page
-    QNetworkRequest request(d->queryFormUrl);
+    QNetworkRequest request(OnlineSearchMathSciNetPrivate::queryFormUrl);
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
     InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
     connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingQueryForm()));
@@ -161,7 +161,7 @@ void OnlineSearchMathSciNet::doneFetchingQueryForm()
             formParams.insert(it.key(), it.value());
 
         /// build url by appending parameters
-        QUrl url(d->queryUrlStem);
+        QUrl url(OnlineSearchMathSciNetPrivate::queryUrlStem);
         QUrlQuery query(url);
         for (QMap<QString, QString>::ConstIterator it = formParams.constBegin(); it != formParams.constEnd(); ++it)
             query.addQueryItem(it.key(), it.value());
@@ -191,7 +191,7 @@ void OnlineSearchMathSciNet::doneFetchingResultPage()
         QMap<QString, QString> formParams = formParameters(htmlText, QStringLiteral("<form name=\"batchDownload\" action="));
 
         /// build url by appending parameters
-        QUrl url(d->queryUrlStem);
+        QUrl url(OnlineSearchMathSciNetPrivate::queryUrlStem);
         QUrlQuery query(url);
         QStringList copyParameters = QStringList() << QStringLiteral("foo") << QStringLiteral("reqargs") << QStringLiteral("batch_title");
         foreach (const QString &param, copyParameters) {

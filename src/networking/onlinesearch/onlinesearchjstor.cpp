@@ -67,7 +67,7 @@ void OnlineSearchJStor::startSearch(const QMap<QString, QString> &query, int num
 
     /// Build search URL, to be used in the second step
     /// after fetching the start page
-    d->queryUrl = QUrl(d->jstorBaseUrl);
+    d->queryUrl = QUrl(OnlineSearchJStorPrivate::jstorBaseUrl);
     QUrlQuery q(d->queryUrl);
     d->queryUrl.setPath(QStringLiteral("/action/doAdvancedSearch"));
     q.addQueryItem(QStringLiteral("Search"), QStringLiteral("Search"));
@@ -103,7 +103,7 @@ void OnlineSearchJStor::startSearch(const QMap<QString, QString> &query, int num
     }
     d->queryUrl.setQuery(q);
 
-    QNetworkRequest request(d->jstorBaseUrl);
+    QNetworkRequest request(OnlineSearchJStorPrivate::jstorBaseUrl);
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
     InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
     connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingStartPage()));
@@ -201,7 +201,7 @@ void OnlineSearchJStor::doneFetchingResultPage()
                 if (!body.isEmpty()) body.append(QStringLiteral("&"));
                 body.append(QStringLiteral("citations=") + encodeURL(*it));
             }
-            QUrl bibTeXUrl = QUrl(d->jstorBaseUrl);
+            QUrl bibTeXUrl = QUrl(OnlineSearchJStorPrivate::jstorBaseUrl);
             bibTeXUrl.setPath("/citation/bulk/text");
             QNetworkRequest request(bibTeXUrl);
             request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
