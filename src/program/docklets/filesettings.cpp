@@ -44,7 +44,7 @@ FileSettings::FileSettings(QWidget *parent)
     /// Monitoring file flag changes to get notified of
     /// "Save As" operations where the file settings
     /// may get changed (requires a reload of properties)
-    connect(OpenFileInfoManager::instance(), SIGNAL(flagsChanged(OpenFileInfo::StatusFlags)), this, SLOT(loadProperties()));
+    connect(OpenFileInfoManager::instance(), &OpenFileInfoManager::flagsChanged, this, &FileSettings::resetToLoadedProperties);
 }
 
 void FileSettings::setFileView(FileView *fileView)
