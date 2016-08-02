@@ -317,8 +317,6 @@ BasicFileView::~BasicFileView()
 
 void BasicFileView::setModel(QAbstractItemModel *model)
 {
-    QTreeView::setModel(model);
-
     d->sortFilterProxyModel = NULL;
     d->fileModel = dynamic_cast<FileModel *>(model);
     if (d->fileModel == NULL) {
@@ -326,6 +324,9 @@ void BasicFileView::setModel(QAbstractItemModel *model)
         Q_ASSERT_X(d->sortFilterProxyModel != NULL, "BasicFileView::setModel(QAbstractItemModel *model)", "d->sortFilterProxyModel is NULL");
         d->fileModel = dynamic_cast<FileModel *>(d->sortFilterProxyModel->sourceModel());
     }
+    if (d->fileModel == NULL)
+        qCWarning(LOG_KBIBTEX_GUI) << "Failed to dynamically cast model to FileModel*";
+    QTreeView::setModel(d->fileModel);
 
     /// sort according to session
     if (header()->isSortIndicatorShown())
