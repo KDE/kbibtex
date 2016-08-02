@@ -516,7 +516,7 @@ bool MergeDuplicates::mergeDuplicateEntries(const QList<EntryClique *> &entryCli
             else {
                 Value combined;
                 foreach (const Value &v, entryClique->chosenValues(field)) {
-                    combined.merge(v);
+                    combined.append(v);
                 }
                 if (!combined.isEmpty())
                     mergedEntry->insert(field, combined);

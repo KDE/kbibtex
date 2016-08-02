@@ -401,20 +401,20 @@ Value::Value()
 }
 
 Value::Value(const Value &other)
-        : QVector<QSharedPointer<ValueItem> >()
+        : QVector<QSharedPointer<ValueItem> >(other)
 {
-    clear();
-    mergeFrom(other);
+    /// nothing
+}
+
+Value::Value(Value &&other)
+        : QVector<QSharedPointer<ValueItem> >(other)
+{
+    /// nothing
 }
 
 Value::~Value()
 {
     clear();
-}
-
-void Value::merge(const Value &other)
-{
-    mergeFrom(other);
 }
 
 void Value::replace(const QString &before, const QString &after, ValueItem::ReplaceMode replaceMode)
@@ -505,15 +505,12 @@ bool Value::contains(const ValueItem &item) const
 
 Value &Value::operator=(const Value &rhs)
 {
-    clear();
-    mergeFrom(rhs);
-    return *this;
+    return static_cast<Value &>(QVector<QSharedPointer<ValueItem> >::operator =((rhs)));
 }
 
-void Value::mergeFrom(const Value &other)
+Value &Value::operator=(Value && rhs)
 {
-    for (Value::ConstIterator it = other.constBegin(); it != other.constEnd(); ++it)
-        append(*it);
+    return static_cast<Value &>(QVector<QSharedPointer<ValueItem> >::operator =((rhs)));
 }
 
 QString PlainTextValue::text(const Value &value)

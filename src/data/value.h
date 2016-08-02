@@ -234,9 +234,8 @@ class KBIBTEXDATA_EXPORT Value: public QVector<QSharedPointer<ValueItem> >
 public:
     Value();
     Value(const Value &other);
+    Value(Value &&other);
     virtual ~Value();
-
-    void merge(const Value &other);
 
     void replace(const QString &before, const QString &after, ValueItem::ReplaceMode replaceMode);
     void replace(const QString &before, const QSharedPointer<ValueItem> &after);
@@ -252,9 +251,7 @@ public:
     bool contains(const ValueItem &item) const;
 
     Value &operator=(const Value &rhs);
-
-private:
-    void mergeFrom(const Value &other);
+    Value &operator=(Value && rhs);
 };
 
 class KBIBTEXDATA_EXPORT PlainTextValue: private NotificationListener
