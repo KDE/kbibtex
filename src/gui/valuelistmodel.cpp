@@ -93,17 +93,18 @@ void ValueListDelegate::commitAndCloseEditor()
 
 void ValueListDelegate::initStyleOption(QStyleOptionViewItem *option, const QModelIndex &index) const
 {
-    QStyleOptionViewItemV4 *noTextOption = qstyleoption_cast<QStyleOptionViewItemV4 *>(option);
-    QStyledItemDelegate::initStyleOption(noTextOption, index);
+    QStyledItemDelegate::initStyleOption(option, index);
     if (option->decorationPosition != QStyleOptionViewItem::Top) {
         /// remove text from style (do not draw text)
-        noTextOption->text.clear();
+        option->text.clear();
     }
 
 }
 
-void ValueListDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
+void ValueListDelegate::paint(QPainter *painter, const QStyleOptionViewItem &_option, const QModelIndex &index) const
 {
+    QStyleOptionViewItem option = _option;
+
     /// code heavily inspired by kdepimlibs-4.6.3/akonadi/collectionstatisticsdelegate.cpp
 
     /// save painter's state, restored before leaving this function
@@ -115,14 +116,13 @@ void ValueListDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
 
     /// now, we retrieve the correct style option by calling intiStyleOption from
     /// the superclass.
-    QStyleOptionViewItemV4 option4 = option;
-    QStyledItemDelegate::initStyleOption(&option4, index);
-    QString field = option4.text;
+    QStyledItemDelegate::initStyleOption(&option, index);
+    QString field = option.text;
 
     /// now calculate the rectangle for the text
     QStyle *s = m_parent->style();
-    const QWidget *widget = option4.widget;
-    const QRect textRect = s->subElementRect(QStyle::SE_ItemViewItemText, &option4, widget);
+    const QWidget *widget = option.widget;
+    const QRect textRect = s->subElementRect(QStyle::SE_ItemViewItemText, &option, widget);
 
     if (option.state & QStyle::State_Selected) {
         /// selected lines are drawn with different color
