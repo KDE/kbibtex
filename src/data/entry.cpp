@@ -123,7 +123,7 @@ Value &Entry::operator[](const QString &key)
     return QMap<QString, Value>::operator[](key);
 }
 
-const  Value Entry::operator[](const QString &key) const
+const Value Entry::operator[](const QString &key) const
 {
     const QString lcKey = key.toLower();
     for (Entry::ConstIterator it = constBegin(); it != constEnd(); ++it)
