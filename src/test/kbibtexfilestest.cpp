@@ -16,7 +16,7 @@
  *   along with this program; if not, see <http://www.gnu.org/licenses/>.  *
  ***************************************************************************/
 
-#include <qtest_kde.h>
+#include <QtTest/QtTest>
 
 #include <QCryptographicHash>
 #include <QTemporaryFile>
@@ -274,6 +274,6 @@ TestFile KBibTeXFilesTest::createTestFile(const QString &filename, int numElemen
     return r;
 }
 
-QTEST_KDEMAIN_CORE(KBibTeXFilesTest)
+QTEST_MAIN(KBibTeXFilesTest)
 
-#include "kbibtextfilestest.moc"
+#include "kbibtexfilestest.moc"

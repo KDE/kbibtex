@@ -42,6 +42,7 @@ find_package(
     Core
     Widgets
     Network
+    Test
 )
 
 #FIXME this code fragment is intended to test for optional

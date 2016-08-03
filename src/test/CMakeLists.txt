@@ -7,6 +7,9 @@ project(
 include(
     AddFileDependencies
 )
+include(
+    ECMMarkAsTest
+)
 
 set(
     TESTSET_DIRECTORY
@@ -18,6 +21,7 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/src/config
     ${CMAKE_SOURCE_DIR}/src/data
     ${CMAKE_SOURCE_DIR}/src/io
+    ${CMAKE_SOURCE_DIR}/src/global
     ${CMAKE_SOURCE_DIR}/src/gui
     ${CMAKE_SOURCE_DIR}/src/gui/config
     ${CMAKE_SOURCE_DIR}/src/gui/bibtex
@@ -51,11 +55,11 @@ add_executable(
     ${CMAKE_CURRENT_BINARY_DIR}/version.h
 )
 
-# add_unit_test(
-#     kbibtexfilestest
-#     ${kbibtexfilestest_SRCS}
-#     ${CMAKE_CURRENT_BINARY_DIR}/version.h
-# )
+add_executable(
+    kbibtexfilestest
+    ${kbibtexfilestest_SRCS}
+    ${CMAKE_CURRENT_BINARY_DIR}/version.h
+)
 
 target_link_libraries( kbibtextest
     Qt5::Core
@@ -68,11 +72,22 @@ target_link_libraries( kbibtextest
     kbibtexnetworking
 )
 
-# target_link_libraries( kbibtexfilestest
-#     Qt5::Test
-#     kbibtexdata
-#     kbibtexio
-# )
+target_link_libraries( kbibtexfilestest
+    Qt5::Test
+    kbibtexdata
+    kbibtexio
+)
+
+ecm_mark_as_test(
+    kbibtexfilestest
+)
+
+add_test(
+    NAME
+    kbibtexfilestest
+    COMMAND
+    kbibtexfilestest
+)
 
 # version.h is a generated file
 set_source_files_properties(
@@ -88,9 +103,9 @@ add_dependencies( kbibtextest
     GITrevisionTest
 )
 
-# add_dependencies( kbibtexfilestest
-#     GITrevisionTest
-# )
+add_dependencies( kbibtexfilestest
+    GITrevisionTest
+)
 
 # creates version.h using cmake script
 add_custom_target(
