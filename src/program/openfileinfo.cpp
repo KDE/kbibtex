@@ -64,7 +64,7 @@ public:
         :  m_counter(-1), p(p), part(NULL), internalServicePtr(KService::Ptr()), internalWidgetParent(NULL), flags(0) {
         this->openFileInfoManager = openFileInfoManager;
         this->url = url;
-        if (this->url.scheme().isEmpty())
+        if (this->url.isValid() && this->url.scheme().isEmpty())
             qCWarning(LOG_KBIBTEX_PROGRAM) << "No scheme specified for URL" << this->url.toDisplayString();
         this->mimeType = mimeType;
     }
