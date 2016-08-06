@@ -44,7 +44,6 @@ const QString FileInfo::mimetypePDF = QStringLiteral("application/pdf");
 QMimeType FileInfo::mimeTypeForUrl(const QUrl &url)
 {
     static QMimeDatabase db;
-    static const QString invalidExtension = QStringLiteral("XXXXXXXXXXXXXXXXXXXXXXX");
     static const QMimeType mtHTML(db.mimeTypeForName(mimetypeHTML));
     static const QMimeType mtOctetStream(db.mimeTypeForName(mimetypeOctetStream));
     static const QMimeType mtBibTeX(db.mimeTypeForName(mimetypeBibTeX));
@@ -58,13 +57,20 @@ QMimeType FileInfo::mimeTypeForUrl(const QUrl &url)
     static const QString mimetypePDFExt = mtPDF.preferredSuffix();
 
     const QString extension = db.suffixForFileName(url.fileName()).toLower();
+    /// First, check preferred suffixes
     if (extension == mimetypeBibTeXExt)
         return mtBibTeX;
     else if (extension == mimetypeRISExt)
         return mtRIS;
     else if (extension == mimetypePDFExt)
         return mtPDF;
-    // TODO other extensions
+    /// Second, check any other suffixes
+    else if (mtBibTeX.suffixes().contains(extension))
+        return mtBibTeX;
+    else if (mtRIS.suffixes().contains(extension))
+        return mtRIS;
+    else if (mtPDF.suffixes().contains(extension))
+        return mtPDF;
 
     /// Let the KDE subsystem guess the mime type
     QMimeType result = db.mimeTypeForUrl(url);
@@ -74,7 +80,7 @@ QMimeType FileInfo::mimeTypeForUrl(const QUrl &url)
 
     /// In case that KDE could not determine mime type,
     /// do some educated guesses on our own
-    if (!result.isValid() || result.name() == mimetypeOctetStream) {
+    if (result.name() == mimetypeOctetStream) {
         if (url.scheme().startsWith(QStringLiteral("http")))
             result = mtHTML;
         // TODO more tests?
