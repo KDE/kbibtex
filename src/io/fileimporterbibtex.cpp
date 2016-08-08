@@ -555,7 +555,7 @@ QString FileImporterBibTeX::readQuotedString()
     if (!readChar()) return QString();
 
     /// Remove protection around quotation marks
-    result.replace(QLatin1String("{\"}"), QLatin1String("\""));
+    result.replace(QStringLiteral("{\"}"), QStringLiteral("\""));
 
     return result;
 }

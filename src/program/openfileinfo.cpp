@@ -18,7 +18,6 @@
 #include "openfileinfo.h"
 
 #include <QString>
-#include <QLatin1String>
 #include <QTimer>
 #include <QFileInfo>
 #include <QWidget>

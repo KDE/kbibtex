@@ -669,7 +669,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                         /// insert corresponding Unicode character
                         bool foundCommand = false;
                         for (int ci = 0; !foundCommand && ci < encoderLaTeXCharacterCommandsLen; ++ci) {
-                            if (QLatin1String(encoderLaTeXCharacterCommands[ci].letters) == alpha) {
+                            if (QLatin1String(encoderLaTeXCharacterCommands[ci].letters) == alpha) /** note: QStringLiteral won't work here (?) */ {
                                 output.append(QChar(encoderLaTeXCharacterCommands[ci].unicode));
                                 foundCommand = true;
                             }
@@ -679,7 +679,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                         /// like \subset
                         /// (automatically skipped if command was found above)
                         for (int k = 0; !foundCommand && k < mathCommandLen; ++k) {
-                            if (QLatin1String(mathCommand[k].written) == alpha) {
+                            if (QLatin1String(mathCommand[k].written) == alpha) /** note: QStringLiteral won't work here (?) */ {
                                 if (output.endsWith(QStringLiteral("\\ensuremath"))) {
                                     /// Remove "\ensuremath" right before this math command,
                                     /// it will be re-inserted when exporting/saving the document
@@ -818,7 +818,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                     /// insert corresponding Unicode character
                     bool foundCommand = false;
                     for (int ci = 0; !foundCommand && ci < encoderLaTeXCharacterCommandsLen; ++ci) {
-                        if (QLatin1String(encoderLaTeXCharacterCommands[ci].letters) == alpha) {
+                        if (QLatin1String(encoderLaTeXCharacterCommands[ci].letters) == alpha) /** note: QStringLiteral won't work here (?) */ {
                             output.append(QChar(encoderLaTeXCharacterCommands[ci].unicode));
                             foundCommand = true;
                         }

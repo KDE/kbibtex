@@ -63,22 +63,22 @@ void OnlineSearchBioRxiv::startSearch(const QMap<QString, QString> &query, int n
     d->currentStep = 0;
     emit progress(d->currentStep++, d->totalSteps);
 
-    QString urlText(QString(QLatin1String("http://biorxiv.org/search/numresults:%1 sort:relevance-rank title_flags:match-phrase format_result:standard ")).arg(numResults));
+    QString urlText(QString(QStringLiteral("http://biorxiv.org/search/numresults:%1 sort:relevance-rank title_flags:match-phrase format_result:standard ")).arg(numResults));
     urlText.append(query[queryKeyFreeText]);
 
     bool ok = false;
     int year = query[queryKeyYear].toInt(&ok);
     if (ok && year >= 1800 && year < 2100)
-        urlText.append(QString(QLatin1String(" limit_from:%1-01-01 limit_to:%1-12-31")).arg(year));
+        urlText.append(QString(QStringLiteral(" limit_from:%1-01-01 limit_to:%1-12-31")).arg(year));
 
     const QStringList authors = splitRespectingQuotationMarks(query[queryKeyAuthor]);
     int authorIndex = 1;
     for (QStringList::ConstIterator it = authors.constBegin(); it != authors.constEnd(); ++it, ++authorIndex)
-        urlText.append(QString(QLatin1String(" author%1:%2")).arg(authorIndex).arg(QString(*it).replace(QLatin1String(" "), QLatin1String("+"))));
+        urlText.append(QString(QStringLiteral(" author%1:%2")).arg(authorIndex).arg(QString(*it).replace(QStringLiteral(" "), QStringLiteral("+"))));
 
-    const QString title = QString(query[queryKeyTitle]).replace(QLatin1String(" "), QLatin1String("+"));
+    const QString title = QString(query[queryKeyTitle]).replace(QStringLiteral(" "), QStringLiteral("+"));
     if (!title.isEmpty())
-        urlText.append(QString(QLatin1String(" title:%1")).arg(title));
+        urlText.append(QString(QStringLiteral(" title:%1")).arg(title));
 
     QNetworkRequest request(urlText);
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
@@ -96,11 +96,11 @@ OnlineSearchQueryFormAbstract *OnlineSearchBioRxiv::customWidget(QWidget *parent
 }
 
 QUrl OnlineSearchBioRxiv::homepage() const {
-    return QUrl(QLatin1String("http://biorxiv.org/"));
+    return QUrl(QStringLiteral("http://biorxiv.org/"));
 }
 
 QString OnlineSearchBioRxiv::favIconUrl() const {
-    return QLatin1String("http://d2538ggaoe6cji.cloudfront.net/sites/default/files/images/favicon.ico");
+    return QStringLiteral("http://d2538ggaoe6cji.cloudfront.net/sites/default/files/images/favicon.ico");
 }
 
 void OnlineSearchBioRxiv::resultsPageDone() {
@@ -111,10 +111,10 @@ void OnlineSearchBioRxiv::resultsPageDone() {
         /// ensure proper treatment of UTF-8 characters
         const QString htmlCode = QString::fromUtf8(reply->readAll().constData());
 
-        static const QRegExp contentRegExp(QLatin1String("/content/early/[12]\\d{3}/[01]\\d/\\d{2}/\\d+"));
+        static const QRegExp contentRegExp(QStringLiteral("/content/early/[12]\\d{3}/[01]\\d/\\d{2}/\\d+"));
         int p = -1;
         while ((p = contentRegExp.indexIn(htmlCode, p + 1)) > 0) {
-            const QUrl url = QUrl(QLatin1String("http://biorxiv.org") + contentRegExp.cap(0));
+            const QUrl url = QUrl(QStringLiteral("http://biorxiv.org") + contentRegExp.cap(0));
             d->resultPageUrls.insert(url);
         }
 
@@ -139,9 +139,9 @@ void OnlineSearchBioRxiv::resultPageDone() {
         /// ensure proper treatment of UTF-8 characters
         const QString htmlCode = QString::fromUtf8(reply->readAll().constData());
 
-        static const QRegExp highwireRegExp(QLatin1String("/highwire/citation/\\d+/bibtex"));
+        static const QRegExp highwireRegExp(QStringLiteral("/highwire/citation/\\d+/bibtex"));
         if (highwireRegExp.indexIn(htmlCode) > 0) {
-            const QUrl url = QUrl(QLatin1String("http://biorxiv.org") + highwireRegExp.cap(0));
+            const QUrl url = QUrl(QStringLiteral("http://biorxiv.org") + highwireRegExp.cap(0));
             QNetworkRequest request(url);
             QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
             InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
